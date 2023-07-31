@@ -1,0 +1,21 @@
+projectpath;D:\ALM23
+logpath;D:\ALM_Discovery\LOGS
+db1path;jdbc:oracle:thin:@localhost:1523/ALM;alm;alm
+db2path;jdbc:oracle:thin:@localhost:1524/PARSER;parser;parser
+db3path;jdbc:oracle:thin:@ocalhost:1525/ALMRPT;almrpt;almrpt
+sqlpath::jdbc:sqlserver://10.22.26.73\FASTRACK:49261;DatabaseName=dwh_tkl;encrypt = true;trustServerCertificate=true;user=katelekom;password=katelekom123
+readfileAIMfrom;C:\ALM50\HW_InvtTimerExport
+copyfileAIMto;C:\ALM50\HW_InvtTimerprocessed
+readexcel;C:\ALM50\ALM
+readfileCIMfrom;C:\ALM50\HW_CIM_InvtTimerExport
+copyfileCIMto;C:\ALM50\HW_CIM_InvtTimerprocessed
+readfileBIMfrom;C:\ALM50\HW_BIM_InvtTimerExport
+copyfileBIMto;C:\ALM50\HW_BIM_InvtTimerprocessed
+readfileNokiafrom;C:\ALM50\NOKIA_InvtTimerExport
+copyfileNokiato;C:\ALM50\NOKIA_InvtTimerprocessed
+readexcelTransOptDWDMHWfrom;C:\ALM50\Transmission\Optics\DWDM\HUAWEI
+copyexcelTransOptDWDMHWto;C:\ALM50\Transmission_Processed\Optics\DWDM\HUAWEI
+readfileEntHuaweifrom;D:\Enterprise_HW
+copyfileEntHuaweito;D:\Enterprise_HW_Processed
+readexcelMWEricssonfrom;C:\ALM50\Transmission\MW\ERICSSON
+copyfileMWERICSSONto;C:\ALM50\Transmission_Processed\MW\ERICSSON

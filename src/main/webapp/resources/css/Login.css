@@ -1,0 +1,20 @@
+﻿.fo {
+     height:400px;
+    width:300px;
+    margin-top:60px;
+    background-color:#000;
+    opacity:0.8;
+    padding:30px;
+    box-shadow:0px 0px 10px 0px #000;
+    border-radius:10px;
+    color:white;
+}
+body{
+
+    background-image:url("s1.jpg");
+   height:100%;
+   
+}
+.form-group input {
+    border-radius: 15px;
+}

@@ -1,0 +1,35 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: #f1f4f7;
+    font-size: 14px;
+    color: #444444;
+    font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.alm-pagination {
+    margin-top: 10px;
+}
+
+.page-count-label {
+    /* float: left; */
+    text-align: left;
+    font-weight: normal;
+}
+
+.page-count-select {
+    display: inline-block;
+    width: auto;
+    font-size: 0.9rem !important;
+    vertical-align: middle;
+}
+
+.page-number-select {
+    display: inline-block;
+    width: auto;
+    font-size: 0.9rem !important;
+    vertical-align: middle;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+}

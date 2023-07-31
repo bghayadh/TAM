@@ -1,0 +1,85 @@
+
+/*--- navigation bar ---*/
+
+
+body {
+    margin:0;
+    padding:0;
+	font-size: 14px;
+	color: #444444;
+	font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial,
+		sans-serif;
+}
+.mynav {
+    background-color:#EEEEEE !important;
+    line-height:20px;
+}
+.navbar-brand {
+    font-family:fantasy;
+/*    color:red !important; */
+    color:#0062cc !important;
+    font-style:italic;
+    width:4rem;
+/*    width:90px; */
+    font-size:40px;
+    
+}
+    
+ .navbar-light .navbar-nav .nav-link
+/* .navbar-light .navbar-nav .nav-link */
+ {
+ 	 color:#073763 !important;
+ }
+ 
+.nav-link span:hover {
+     color:#6FA8DC !important;
+ }
+ 
+
+/*.mynav .navbar-nav a:hover { */
+.mynav .navbar-nav a:hover {
+      
+/*        color:gold!important; */
+        color:#6FA8DC !important;
+        
+}
+
+.mynav a:hover {
+        
+/*        color:gold!important; */
+        color:#6FA8DC !important;
+}
+
+/*.nav-link a{
+    margin-right:5px;
+    color:#fff !important;
+}*/
+span.active {
+    padding:40px 15px 16px ;
+/*    background-color:#DC143C; */
+	background-color:#808080;
+/*    color:gold!important; */
+	color:#ffffff !important;
+}
+ .border-bottom  {
+   border-color:#00B2EE !important;
+    border-width:4px  !important;
+    box-sizing:border-box;
+    
+}
+
+
+
+
+
+
+@media only screen and (max-width: 899px) {
+    span.active {
+/*        background-color:#DC143C; */
+		background-color:#808080;
+        padding:0px 1px 0px 1px;
+    }
+    .border-bottom {
+        border-width:0px;
+    }
+}

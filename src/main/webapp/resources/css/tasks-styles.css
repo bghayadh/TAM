@@ -1,0 +1,203 @@
+*, ::after, ::before {
+	box-sizing: border-box;
+}
+
+body {
+	background: #f1f4f7;
+	font-size: 14px;
+	color: #444444;
+	font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial,
+		sans-serif;
+}
+
+p {
+	color: #777;
+}
+
+a, a:hover, a:focus {
+	color: #30a5ff;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	color: #444444;
+}
+
+h1 {
+	font-weight: 300;
+	font-size: 40px;
+}
+
+h2 {
+	font-weight: 300;
+	margin-bottom: 20px;
+}
+
+h3, h4 {
+	font-weight: 300;
+}
+
+.large {
+	font-size: 2em;
+}
+
+.text-muted {
+	color: #c5c7cc;
+}
+
+.color-gray {
+	color: #444444;
+}
+
+.color-blue {
+	color: #30a5ff;
+}
+
+.color-teal {
+	color: #1ebfae;
+}
+
+.color-orange {
+	color: #ffb53e;
+}
+
+.color-red {
+	color: #f9243f;
+}
+
+.no-padding {
+	padding: 0;
+	margin: 0;
+}
+
+/* css for whole body ends */
+/* css for form page starts */
+.second .filter-btn {
+	padding-top: 18px;
+	/* padding-bottom: 15px; */
+}
+
+.btn3d {
+	position: relative;
+	border: 0;
+	border-radius: 3px;
+	margin: 0 10px 0 0;
+	transition: all .09s linear;
+	box-shadow: 0 0 0 1px transparent inset, 0 0 0 2px
+		rgba(255, 255, 255, 0.15) inset, 6px 6px 0 0 #ccc, 6px 6px 0 1px
+		rgba(0, 0, 0, 0.2), 6px 6px 3px 0px rgba(0, 0, 0, 0.3);
+	outline: medium none;
+	color: black;
+}
+
+.btn-group {
+	padding-top: 15px;
+	align-content: right;
+}
+
+.btn-light {
+	color: #da6815;
+	background-color: snow;
+	border-color: #939191f5;
+}
+
+.btn-light:hover {
+	color: snow;
+	background-color: #da6815;
+	border-color: teal;
+}
+
+.glyph {
+	padding-bottom: 15px;
+}
+
+.card-header {
+	border-bottom: #ffffff;
+	background-color: #4B8C8C;
+	height: 50px;
+}
+
+.card-header .card-title {
+	height: 10px;
+    color: #ffcc00;
+    font-size: 20px;
+}
+
+.card .card-body {
+	border-color: #4B8C8C;
+}
+
+.card-body .pagination {
+	float: right;;
+}
+/* css for form page ends */
+.dataTables_info {
+	float: right;
+	padding-top: 8px;
+	padding-right: 8px;
+	text-align: right;
+}
+
+.form-control-sm {
+	height: 35px;
+	width: auto;
+}
+
+.float-sm-right {
+	float: right;
+}
+
+.dataTables_filter {
+	float: rignt;
+}
+
+label {
+	text-align: center;
+	clear: both;
+	float: left;
+	margin-right: 15px;
+	margin-top: 9px;
+	font-size: 16px;
+}
+
+.mega-search-open {
+	height: 35px;
+	width: auto;
+	border-width: 1px;
+	border-radius: 5px;
+	border-color: #e1e1ea;
+	color: #444444;
+}
+
+.rowColor {
+	background-color: yellow;
+}
+
+.hideColor {
+	background-color: white;
+}
+
+.btn.btn-outline-secondary {
+	border-color: #939191f5;
+	background-color: white;
+}
+
+.btn.btn-outline-secondary:hover {
+	background-color: #e4e035e8;
+}
+
+.card {
+	border: 0px solid rgba(0, 0, 0, .125);
+	 
+}
+
+.input-group-text {
+	height:38px;
+	font-size: 0.9rem;
+	/*color: #ed6d11;*/
+}
+
+.input-group {
+	margin-top: 18px;
+}
+
+

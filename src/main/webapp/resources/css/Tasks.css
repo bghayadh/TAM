@@ -1,0 +1,108 @@
+.mynav {
+    background-color:#08526d !important;
+    line-height:20px;
+    
+}
+.navbar-brand {
+    font-family:fantasy;
+    color:red !important;
+    font-style:italic;
+    width:4rem;
+    font-size:40px;
+    
+}
+
+.navbar a:hover {
+    
+   
+        color:gold !important;
+    }
+.nav-link {
+    color:white;
+    margin-right:5px;
+    
+   
+    
+}
+span.active {
+    padding:40px 15px 14px ;
+    background-color:#45b6fe;
+}
+.border-bottom  {
+   border-color:gold !important;
+    border-width:3px  !important;
+    box-sizing:border-box;
+    
+}
+@media only screen and (max-width: 600px) {
+    span.active {
+        background-color:transparent;
+        padding:0px 0px 0px 0px
+    }
+    .border-bottom {
+        border-width:0px;
+    }
+}
+
+
+.btn.btn-outline-primary {
+    margin-left:0.2rem;
+    border-color:#e3b70b;
+    color:black;
+}
+.btn.btn-outline-secondary {
+       margin-left:0.2rem;
+       border-color: #e3b70b;
+       background-color: white;
+       color:black;
+
+}
+.btn.btn-light {
+    background-color:white;
+    float:right;
+    border-color:black;
+    box-shadow: 0px 0px 5px 0px;
+    
+    margin-left:0.1rem;
+}
+.btn.btn-danger {
+    float:right;
+    border-color:black;
+    background-color:red;
+    box-shadow: 0px 0px 10px 0px ;
+    margin-left:0.1rem;
+}
+
+
+.btn.btn-outline-secondary:hover {
+
+       background-color:red;
+
+}
+
+
+.btn-filter {
+   
+    display:inline-table;
+    margin-top:5px;
+    padding-bottom:10px;
+    padding-top:10px;
+    height:60px;
+    
+    
+}
+    
+
+.padding {
+    margin-top:16px;
+}
+
+.padding2 {
+    margin-top:16px;
+}
+r1 {
+    float:right;
+}
+nav select {
+  display: none;
+}

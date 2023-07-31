@@ -1,0 +1,1 @@
+sqldbpath;jdbc:sqlserver://192.168.0.101\\SQLALM:1433;test;sa;admin1234

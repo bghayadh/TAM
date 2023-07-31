@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+</head>
+<body>
+	<div class="container">
+		<div id="fiberCitySearch" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  data-keyboard="false" data-backdrop="static">
+			<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered" >
+				<div class="modal-content" style="width: 1000px;">
+					<div class="modal-header" style="background-color: #2678CC ; height: 55px;">
+						<h5 id="fiberSearchHeader" class="modal-title" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px;">Fiber Search</h5>
+						<div style="float: right;">
+							<button type="button" name="closePopup" class="close" onclick="ClosingConfirm()">	<i class='fa fa-times'></i></button>
+							<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change'></i></a>
+						</div>
+					</div>
+					<div class="modal-body">
+						<ul class="nav nav-tabs" id="citySearch" role="tablist" style="background-color: #00757C;">
+							<li class="nav-item"><a class="nav-link" id="fiber-search-tab" style="color: gold;" href="#custom-tabs-FindACable" data-toggle="tab" role="tab" aria-controls="fiber" aria-selected="true">Find a cable</a></li>
+							<li class="nav-item"><a class="nav-link" id="custom-tabs-filter-tab" data-toggle="tab" href="#custom-tabs-filter" role="tab" aria-controls="#custom-tabs-filter" aria-selected="false" style="color: gold;">Filter</a></li>
+							<li class="nav-item"><a class="nav-link" id="closest-search-tab" href="#closest" style="color: gold;" data-toggle="tab" role="tab" aria-controls="closest" aria-selected="false">Find Nearest Points</a></li>
+						    <li class="nav-item"><a class="nav-link" id="MultyClosest-search-tab" href="#MultyClosest" style="color: gold;" data-toggle="tab" role="tab" aria-controls="closest" aria-selected="false">Find Nearest For Multi Points</a></li> 
+							<li class="nav-item"><a class="nav-link" id="connectedSearch-tab" style="color: gold;" data-toggle="tab" href="#connectedS" role="tab" aria-controls="connectedSearch" aria-selected="false">Connected</a></li>
+						</ul>
+						<div class="tab-content" style="min-height: 300px">
+							<div class="tab-pane fade" id="custom-tabs-filter" role="tabpanel" aria-labelledby="custom-tabs-filter-tab">
+								<p></p>
+								<div>
+									<div class="container-fluid">
+										<div id="filterSection"></div>
+										<button id="submitFilter" class="btn btn-primary" style="color: white; font-size: 13px; height: 35px; margin-left: 5px;">Submit</button>
+										<input type="checkbox"	style="margin-left: 20px; transform: translateY(5%); top: 50%;" id="currentChecked" Checked /> Current
+										<input type="checkbox" style="margin-left: 20px; transform: translateY(5%); top: 50%;" id="projectChecked" /> Project 
+										<input type="checkbox" style="margin-left: 20px; transform: translateY(5%); top: 50%;" id="selectedFields" /> Only Selected Fields
+										<input type='checkbox' id="getRelatedPointsFilter"  style="margin-left: 20px; transform: translateY(5%); top: 50%;"  value='0'> Get Related Points
+										</div><p></p></div></div>
+							<div class="tab-pane" role="tabpanel" aria-labelledby="fiber-tab"
+								id="custom-tabs-FindACable">
+								<p></p>
+								<div class="container-fluid">
+									<div class="row">
+										<div class="col-sm-5" id="fromCityDiv">
+											<div class="form-group">
+												<div class="input-group-prepend pac-container">
+													<span style="font-size: 14px;" class="input-group-text"><b>From District</b></span> <input type="text" id="srcCitySearchNames" class="form-control text-input" placeholder="Enter a location" />
+												</div></div></div>
+										<div class="col-sm-5" id="toCityDiv">
+											<div class="form-group">
+												<div class="input-group-prepend pac-container">
+													<span style="font-size: 14px;" class="input-group-text"><b>To District</b></span> <input type="text" id="dstCitySearchNames" class="form-control text-input" />
+												</div></div></div>
+										<div class="col-sm-2">
+											<div class="form-group">
+												<button id="viewFiberPath" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px;">View Fibers</button>
+											</div></div></div><p></p><br>
+									<div class="row" style="height: 200px;">
+										<fieldset class="field_set">
+											<legend style="width: auto;" class="fieldset_legend">Fiber Pathes:</legend>
+											<table id="fiberCbleFullPath">
+												<tr>
+													<th style="width: 5%;" class="row-pad">Fiber ID</th>
+													<th style="width: 5%;">FiberName</th>
+													<th style="width: 5%;">Source</th>
+													<th style="width: 5%;">Destination</th>
+													<th style="width: 5%;">Distance</th>
+												</tr>
+												<tbody id="searchFiberTBody"></tbody></table></fieldset></div></div></div>
+							<div id="closest" class="tab-pane" role="tabpanel" aria-labelledby="closest-search-tab"><p></p>
+								<div class="container-fluid" >
+									<div class="row">
+									<div class="col-sm-2" style="min-width:150px;">
+											<div class="form-group">
+												<div class="input-group-prepend" >
+													<span style="min-width: 90px; font-size: 12px;  width: 100%;" class="input-group-text"><b>Circle Range </b> 
+													<input type='checkbox' id="circleRange" style='position: relative; margin-left: 10px' checked  ></span>
+												</div></div></div>
+									<div class="col-sm-3" style="min-width:150px;">
+											<div class="form-group">
+												<div class="input-group-prepend">
+													<span style="min-width: 90px; font-size: 12px; width:100%;" class="input-group-text" ><b>Start/End Coordinate </b> 
+													<input type='checkbox' id="StartEnd" style='position: relative; margin-left:15px' ></span>
+												</div></div></div>
+									<div class="col-sm-1"></div>
+									<div class="col-sm-3">
+									<div class="form-group"><div class="input-group-prepend">
+											<span style="min-width: 90px; font-size: 12px; width:100%;" class="input-group-text" ><b>Get Related Points</b> 
+											<input type='checkbox' id="getRelatedPoints" style='position: relative; margin-left:25px'  value='0'></span>
+									</div></div></div></div>
+									<div class="row" id="row_circleRange">
+										<div class="col-sm-2" style="" id="setCoordDiv">
+											<div class="form-group">
+												<button id="setCoordBtn" title="Get Coordinate From Map" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; width: 100%;">Set Coordinate</button>
+											</div>
+										</div>
+										<div class="col-sm-5" style="" id="closestLongDiv">
+											<div class="form-group">
+												<div class="input-group-prepend" style="width: auto;">
+													<span style="font-size: 12px;" class="input-group-text"><b>Longitude</b></span>
+													<input type="text" id="closestLongPoint" class="form-control text-input" />
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-5" style="" id="closestLatDiv">
+											<div class="form-group" >
+												<div class="input-group-prepend">
+													<span style="font-size: 12px;" class="input-group-text"><b>Latitude</b></span>
+													<input type="text" id="closestLatPoint"	class="form-control text-input" />
+												</div>
+											</div>
+										</div>
+										</div>
+										<div class="row" id="row_setStart">
+										<div class="col-sm-2" style="display:none;" id="setStartPointDiv">
+											<div class="form-group">
+												<button id="setStartPointBtn"	title="Get Start Point Coordinate From Map"	class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; width: 100%;">Set Start Point</button>
+											</div>
+										</div>
+										<div class="col-sm-5" style="display:none;" id="StartLongDiv">
+											<div class="form-group">
+												<div class="input-group-prepend" style="width: auto;">
+													<span style="font-size: 12px;" class="input-group-text"><b>Start Longitude</b></span>
+													<input type="text" id="startLongPoint" class="form-control text-input" />
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-5" style="display:none;" id="StartLatDiv">
+											<div class="form-group" >
+												<div class="input-group-prepend">
+													<span style="font-size: 12px;" class="input-group-text"><b>Start Latitude</b></span>
+													<input type="text" id="startLatPoint" class="form-control text-input" />
+												</div>
+											</div>
+										</div>
+										</div>
+										<div class="row">
+										<div class="col-sm-2" style="display:none;" id="setEndPointDiv">
+											<div class="form-group">
+												<button id="setEndPointBtn" title="Get End Point Coordinate From Map" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; width: 100%;">Set End Point</button>
+											</div>
+										</div>
+										<div class="col-sm-5" style="display:none;" id="EndLongDiv">
+											<div class="form-group">
+												<div class="input-group-prepend" style="width: auto;">
+													<span style="font-size: 12px;" class="input-group-text"><b>End Longitude</b></span>
+													<input type="text" id="endLongPoint" class="form-control text-input" />
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-5" style="display:none;" id="EndLatDiv">
+											<div class="form-group" >
+												<div class="input-group-prepend">
+													<span style="font-size: 12px;" class="input-group-text"><b>End Latitude</b></span>
+													<input type="text" id="endLatPoint" class="form-control text-input" />
+												</div>
+											</div>
+										</div>
+										</div>
+										<div class="row">
+										<div class="col-sm-2" style="">
+											<div class="form-group">
+												<button id="viewNearestp" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; width: 100%;">View Nearest</button>
+											</div>
+										</div>
+										<div class="col-sm-5" id="closestDistanceRange">
+											<div class="form-group">
+												<div class="input-group-prepend" style="">
+													<span style="font-size: 12px;" class="input-group-text"><b>Distance Range</b></span> <input type="text" id="closestDisRange" class="form-control text-input" />
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-5" id="NoOfPoints">
+											<div class="form-group">
+												<div class="input-group-prepend" style="">
+													<span style="font-size: 12px;" class="input-group-text"><b>No Of Points</b></span> <select class="form-control" name="noP" id="noP">
+														<option value="">All</option>
+														<option value="5">5</option>
+														<option value="10">10</option>
+														<option value="15">15</option>
+													</select>
+												</div>
+											</div>
+										</div>		
+									</div>	
+									<ul class="nav nav-tabs" id="myTab" role="tablist"
+										style="background-color: #00757C;">
+										<li class="nav-item"><a class="nav-link active"
+											id="manPoint-tab" style="color: gold;" data-toggle="tab"
+											href="#manP" role="tab" aria-controls="fiber"
+											aria-selected="true">Manhole</a></li>
+										<li class="nav-item"><a class="nav-link "
+											id="handPoint-tab" style="color: gold;" data-toggle="tab"
+											href="#handP" role="tab" aria-controls="source_dest"
+											aria-selected="false">Handhole</a></li>
+										<li class="nav-item"><a class="nav-link "
+											id="dboardPoint-tab" style="color: gold;" data-toggle="tab"
+											href="#dboardP" role="tab" aria-controls="conduit"
+											aria-selected="false">Distribution Board</a></li>
+										<li class="nav-item"><a class="nav-link "
+											id="fPaths-tab" style="color: gold;" data-toggle="tab"
+											href="#fPaths" role="tab" aria-controls="conduit"
+											aria-selected="false">Fiber Paths</a></li>
+									</ul>
+									<div class="tab-content" style="min-height: 180px">
+										<div class="tab-pane active" id="manP" role="tabpanel"
+											aria-labelledby="manPoint-tab">
+											<p></p>
+											<div class="container-fluid">
+												<div id="findNearestManRes"></div>
+												<div class="row" style="height: 100px;">
+													<fieldset class="field_set">
+														<legend style="width: auto;" class="fieldset_legend"></legend>
+														<table id="findNearstManhole" style="display: block; height: 150px; overflow-y: auto;" class="searchable sortable">
+														 <thead>
+															<tr>
+															    <th style="min-width: 30px;"><input type="checkbox" id="selectAllManhole"></th>
+																<th style="min-width: 150px;" >Manhole ID</th>
+																<th style="min-width: 150px;">ManholeName</th>
+																<th style="min-width: 100px;">Longitude</th>
+																<th style="min-width: 150px;">Latitude</th>
+																<th style="min-width: 100px;">Distance(km)</th>
+																<th style="min-width: 80px;"colspan="2">Driving Distance(km)</th>
+															</tr>
+															 </thead>
+															<tbody id="searchManhTBody">
+															</tbody>
+														</table>
+													</fieldset>
+												</div>
+											</div>
+									        <div id="manholeTotal" Style="Padding-top: 90px;"><b>Total Manholes:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="totalManhole" name="totalManhole" readonly>	 </div>
+										</div>
+										<div class="tab-pane" id="handP" role="tabpanel"
+											aria-labelledby="handPoint-tab">
+											<p></p>
+											<div class="container-fluid">
+												<div id="findNearestHandRes"></div>
+												<div class="row" style="height: 100px;">
+													<fieldset class="field_set">
+														<legend style="width: auto;" class="fieldset_legend"></legend>
+														<table id="findNearstHandhole" class="searchable sortable"
+															style="display: block; height: 150px; overflow-y: auto;">
+															 <thead>
+															<tr>
+																<th style="min-width: 30px;"><input type="checkbox" id="selectAllHandhole"></th>
+																<th style="min-width: 150px;" >Handhole ID</th>
+																<th style="min-width: 150px;">HandholeName</th>
+																<th style="min-width: 100px;">Longitude</th>
+																<th style="min-width: 100px;">Latitude</th>
+																<th style="min-width: 100px;">Distance(Km)</th>
+																<th style="min-width: 100px;" colspan="2">Driving Distance(km)</th>
+																
+															</tr>
+															</thead>
+															
+															<tbody id="searchHanhTBody">
+															</tbody>
+														</table>
+													</fieldset>
+
+												</div>
+											</div>
+                                             <div id="handholeTotal" Style="Padding-top: 90px;"><b>Total Handholes:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="totalHandhole" name="totalDB" readonly>	 </div>
+										</div>
+										<div class="tab-pane" id="dboardP" role="tabpanel"
+											aria-labelledby="dboardPoint-tab">
+											<p></p>
+											<div class="container-fluid">
+												<div id="findNearestDbRes"></div>
+												<div class="row" style="height: 100px;">
+													<fieldset class="field_set">
+														<legend style="width: auto;" class="fieldset_legend"></legend>
+														<table id="findNearstDB" style="display: block; height: 150px; overflow-y: auto;">
+														 <thead>															
+															<tr>
+																<th style="min-width: 30px;"><input type="checkbox" id="selectAllDB"></th>
+																<th style="min-width: 150px;" >DBoard ID</th>
+																<th style="min-width: 150px;">DBoard Name</th>
+																<th style="min-width: 100px;">Longitude</th>
+																<th style="min-width: 100px;">Latitude</th>
+																<th style="min-width: 100px;">Distance(km)</th>
+																<th style="min-width: 100px;" colspan="2">Driving Distance(km)</th>								
+															</tr>
+															 </thead>															
+															<tbody id="searchDBoardTBody">
+															</tbody>
+														</table>
+													</fieldset>
+												 </div>
+											</div>
+                                            <div id="DbTotal" Style="Padding-top: 90px;"><b>Total Distribution Boards:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="totalDB" name="totalDB" readonly>										
+                                            </div>
+										</div>
+										<div class="tab-pane" id="fPaths" role="tabpanel" aria-labelledby="fPaths-tab">
+											<p></p>
+											<div class="container-fluid">
+											<div class="row" style="height: 120px;">
+										<fieldset class="field_set">
+											<legend style="width: auto;" class="fieldset_legend"></legend>
+											<table id="" style="display: block; height: 100px; overflow-y: auto;">
+												<tr>
+													<th style="min-width: 150px;" class="row-pad">Strand ID</th>
+													<th style="min-width: 150px;">StrandName</th>
+													<th style="min-width: 350px;">Source</th>
+													<th style="min-width: 350px;">Destination</th>
+												</tr>
+												<tbody id="nearStrandId">
+												</tbody>
+											</table>
+										</fieldset>
+									</div>
+									<br>
+									<div class="row" style="height: 120px;">
+										<fieldset class="field_set">
+											<legend style="width: auto;" class="fieldset_legend"></legend>
+											<table id="" style="display: block; height: 100px; overflow-y: auto;">
+												<tr>
+													<th style="min-width: 150px;" class="row-pad">Tube ID</th>
+													<th style="min-width: 150px;">TubeName</th>
+													<th style="min-width: 350px;">Source</th>
+													<th style="min-width: 350px;">Destination</th>
+												</tr>
+												<tbody id="nearTubeId">
+												</tbody>
+											</table>
+										</fieldset>
+									</div>
+									<br>
+									<div class="row" style="height: 120px;">
+										<fieldset class="field_set">
+											<legend style="width: auto;" class="fieldset_legend"></legend>
+											<table id="" style="display: block; height: 100px; overflow-y: auto;">
+												<tr>
+													<th style="min-width: 150px;" class="row-pad">Fiber ID</th>
+													<th style="min-width: 150px;">FiberName</th>
+													<th style="min-width: 350px;">Source</th>
+													<th style="min-width: 350px;">Destination</th>
+												</tr>
+												<tbody id="nearFiberId"></tbody></table></fieldset></div></div></div></div></div></div>
+												
+								<div id="MultyClosest" class="tab-pane" role="tabpanel" aria-labelledby="MultyClosest-search-tab"><p></p>
+								<div class="container-fluid" >
+									<div class="row">
+									<div class="col-sm-2" style="min-width:150px;">
+											<div class="form-group">
+												<div class="input-group-prepend" >
+													<span style="min-width: 90px; font-size: 12px;  width: 100%;" class="input-group-text"><b>Circle Range </b> 
+													<input type='checkbox' id="circleRange_multy" style='position: relative; margin-left: 10px' checked  ></span>
+												</div></div></div>
+								
+									<div class="col-sm-1"></div>
+									<div class="col-sm-3">
+									<div class="form-group"><div class="input-group-prepend">
+											<span style="min-width: 90px; font-size: 12px; width:100%;" class="input-group-text" ><b>Get Related Points</b> 
+											<input type='checkbox' id="getRelatedPoints_Multy" style='position: relative; margin-left:25px'  value='0'></span>
+									</div></div></div></div>
+								
+										<div class="row">
+										<div class="col-sm-2" style="">
+											<div class="form-group">
+												<button id="viewNeareMulty" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; width: 100%;">View Nearest</button>
+											</div>
+										</div>
+									 	 <div class="col-sm-5" id="closestDistanceRange_multy">
+											<div class="form-group">
+												<div class="input-group-prepend" style="">
+													<span style="font-size: 12px;" class="input-group-text"><b>Distance Range</b></span> <input type="text" id="closestMultyDisRange" class="form-control text-input" />
+												</div>
+											</div>
+										</div> 
+										<div class="col-sm-5" id="NoOfPoints_multy">
+											<div class="form-group">
+												<div class="input-group-prepend" style="">
+													<span style="font-size: 12px;" class="input-group-text"><b>No Of Points</b></span> <select class="form-control" name="noP_Multy" id="noP_Multy">
+														<option value="1">1</option>
+														<option value="2">2</option>
+														<option value="3">3</option>
+														<option value="4">4</option>
+													</select>
+												</div>
+											</div>
+										</div>		
+									</div>	
+								<div class="container-fluid">
+								<div class="row">
+								<div class="col-sm-2">
+								<div class="form-group">
+									<div class="input-group-prepend" >
+									<span style="font-size: 12px;" class="input-group-text"><b>By Site </b> 
+									<input type='checkbox' id=Site_Autocomplete_Multy value='0' style='position: ; margin-left: 25px' class="auxPtAutocomplete"></span>
+										</div> 
+										</div>
+										</div>
+									</div>
+									<div class="row">
+									<form>
+									  	<div class="table-responsive-sm" id="Multy_auxiliaryDiv"> 
+											<table id="Multy_auxiliary"
+												class="table table-striped table-bordered table-sm"
+												style="display: block; height: 230px; overflow: auto; width:930px; margin-right:20px">
+												<thead style="background: #E9ECEF;">
+													<tr class="fixed-headerr">
+														<th >
+															<button  type="button" id="selectAll_Multy" class="main">
+																<span class="sub"></span>Select
+															</button>
+														</th>
+														<th width="60px" class="headcol">Sequence</th>
+														<th width="150px" >Site Pointes</th>
+														<th width=330px>Site Name</th>
+														<th width=220px>Site Longitude</th>
+														<th width=220px>Site Latitude</th>
+													</tr>
+												</thead>
+												<tbody>
+												</tbody>
+											</table>
+										 </div>
+										<button type="button" id="add_Multy">Add Row </button>
+										<button type="button" id="delet_Multy" >Delete Row</button>
+										<div>
+										<br>
+									    <br>
+										</div>	
+									</form>
+								</div>
+							</div>
+							</div>
+							</div>	
+							
+							<div class="tab-pane" id="connectedS" role="tabpanel" aria-labelledby="connectedSearch"><p></p>
+								<div class="container-fluid">
+									<div class="row">
+										<div class="col-sm-2" >
+											<div class="form-group" >
+												<div class="input-group-prepend" style="">
+													<select class="form-control" id="selectConnectedSearch" style="font-size: 13.8px;"  >
+														<option value="">Sites/Clients</option>
+														<option value="site">Sites</option>
+														<option value="client">Clients</option>
+													</select></div></div></div>
+										<div class="col-sm-3" style="padding-left: 0px; padding-right: 0px;">
+											<input type="text" id="autoCompleteConnectedSearch" class="form-control text-input" placeholder="search..." />
+											<input type='text' id='connectedSearchLong' hidden /> <input type='text' id='connectedSearchLat' hidden />
+										</div>
+										<div class="col-sm-3">
+											<div class="input-group-prepend">
+												<span style="font-size: 12px; background-color: white;" class="input-group-text">View on Map <label class="switch"> 
+												<input type="checkbox" id="viewOnMap" value="false"> <span class="slider"></span>
+												</label></span></div></div>
+										<div class="col-sm-3"><div class="form-group"><div class="input-group-prepend">
+											<span style="background-color: white;font-size: 12px;" class="input-group-text" ><b>Get Related Points</b> 
+											<input type='checkbox' id="getRelatedPointsCon" style='background-color: white;position: relative; margin-left:25px'  value='0'></span>
+									</div></div></div>
+										<div class="col-sm-1" style="">
+											<div class="form-group">
+												<button id="connectedSearch" class="btn btn-primary searchHeaderButton" style="color: white; font-size: 13px; height: 38px; margin-left:10px'">View
+												</button></div></div></div>
+									<div class="row" style="height: 100px;">
+										<fieldset class="field_set">
+											<legend style="width: auto;" class="fieldset_legend"></legend>
+											<table id="" style="display: block; height: 80px; overflow-y: auto;">
+												<tr>
+													<th style="min-width: 150px;" class="row-pad">Strand ID</th>
+													<th style="min-width: 300px;">StrandName</th>
+													<th style="min-width: 150px;">Source</th>
+													<th style="min-width: 150px;">Destination</th>
+												</tr>
+												<tbody id="conStrandId"></tbody></table></fieldset></div><br>
+									<div class="row" style="height: 100px;">
+										<fieldset class="field_set">
+											<legend style="width: auto;" class="fieldset_legend"></legend>
+											<table id="" style="display: block; height: 80px; overflow-y: auto;">
+												<tr><th style="min-width: 150px;" class="row-pad">Tube ID</th>
+													<th style="min-width: 300px;">TubeName</th>
+													<th style="min-width: 150px;">Source</th>
+													<th style="min-width: 150px;">Destination</th></tr>
+												<tbody id="conTubeId"></tbody></table></fieldset></div><br>
+									<div class="row" style="height: 100px;">
+										<fieldset class="field_set">
+											<legend style="width: auto;" class="fieldset_legend"></legend>
+											<table id="" style="display: block; height: 80px; overflow-y: auto;">
+												<tr><th style="min-width: 150px;" class="row-pad">Fiber ID</th>
+													<th style="min-width: 300px;">FiberName</th>
+													<th style="min-width: 150px;">Source</th>
+													<th style="min-width: 150px;">Destination</th>
+												</tr>
+												<tbody id="conFiberId"></tbody></table></fieldset></div><br>
+							<div class="row" style="height: 100px;"><fieldset class="field_set"><legend style="width: auto;" class="fieldset_legend"></legend>
+								<table id="" style="display: block; height: 80px; overflow-y: auto;">
+								<tr><th style="min-width: 150px;" class="row-pad">DB ID</th>
+									<th style="min-width: 300px;">DB Name</th>
+									<th style="min-width: 350px;">City</th></tr>
+									<tbody id="conDBId"></tbody></table></fieldset></div></div></div></div></div>
+					<div class="modal-footer"></div></div></div></div></div>
+
+<div class="container">
+		<div id="siteModalAuxiliary" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  data-keyboard="false" data-backdrop="static">
+			<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+				<div class="modal-content" style="height: 600px;">
+				
+				<div class="modal-header" style="background-color: #2678CC ; height: 55px;">
+						<h5 id="SiteIdHeader" class="modal-title" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px;"></h5>
+						<button type="button" name="closePopup" class="close" data-dismiss="modal"><i class='fa fa-times'></i></button>
+						<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change'></i></a>
+					</div>
+					
+					<div class="modal-body">
+						<ul class="nav nav-tabs" id="myTab" role="tablist" style="background-color: #00757C;">
+							<li class="nav-item"><a class="nav-link active" id="SiteAux-tab" style="color: gold;" data-toggle="tab" href="#SiteAux" role="tab" aria-labelledby="SiteAux" aria-selected="true">Site Auxiliary Points</a></li>
+						</ul>
+						<br>
+						<br>
+							<ul class="nav nav-tabs" id="myTab" role="tablist" style="background-color: #00757C;">
+										<li class="nav-item"><a class="nav-link active"
+											id="manPoint-tab_multy" style="color: gold;" data-toggle="tab"
+											href="#manP_multy" role="tab" aria-controls="fiber"
+											aria-selected="true">Manhole</a></li>
+											
+										<li class="nav-item"><a class="nav-link "
+											id="handPoint-tab_multy" style="color: gold;" data-toggle="tab"
+											href="#handP_multy" role="tab" aria-controls="source_dest"
+											aria-selected="false">Handhole</a></li>
+											
+										<li class="nav-item"><a class="nav-link "
+											id="dboardPoint-tab_multy" style="color: gold;" data-toggle="tab"
+											href="#dboardP_multy" role="tab" aria-controls="conduit"
+											aria-selected="false">Distribution Board</a></li>
+											
+										<li class="nav-item"><a class="nav-link "
+											id="fPaths-tab_multy" style="color: gold;" data-toggle="tab"
+											href="#fPaths_multy" role="tab" aria-controls="conduit"
+											aria-selected="false">Fiber Paths</a></li>
+									</ul>
+						<div class="tab-pane" id="SiteAux" role="tabpanel" aria-labelledby="SiteAux-tab">
+						<div class="tab-content" style="min-height: 180px">
+							<div class="tab-pane active" id="manP_multy" role="tabpanel" aria-labelledby="manPoint-tab_multy">
+								<p></p>
+											<div class="container-fluid">
+												<div id="findNearestManRes_multy"></div>
+												<div class="row" style="height: 300px;">
+													<fieldset class="field_set"  style="overflow-y: auto;">
+														<legend style="width: auto;" class="fieldset_legend"></legend>
+														<table id="findNearstManhole_multy" style="display: block; height: 150px; " class="searchable sortable">
+														 <thead>
+															<tr>
+															    <th style="min-width: 30px;"><input type="checkbox" id="selectAllManhole_multy"></th>
+																<th style="min-width: 150px;" >Manhole ID</th>
+																<th style="min-width: 150px;">ManholeName</th>
+																<th style="min-width: 100px;">Longitude</th>
+																<th style="min-width: 150px;">Latitude</th>
+																<th style="min-width: 100px;">Distance(km)</th>
+																<th style="min-width: 80px;"colspan="2">Driving Distance(km)</th>
+															</tr>
+															 </thead>
+															<tbody id="searchManhTBody_multy">
+															</tbody>
+														</table>
+													</fieldset>
+												</div>
+											</div>
+									        <div id="manholeTotal" Style="Padding-top: 25px;"><b>Total Manholes:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="totalManhole_multy" name="totalManhole_multy" readonly>	 </div>
+										</div>
+										<div class="tab-pane" id="handP_multy" role="tabpanel"
+											aria-labelledby="handPoint-tab_multy">
+											<p></p>
+											<div class="container-fluid">
+												<div id="findNearestHandRes_Multy"></div>
+												<div class="row" style="height: 300px;">
+													<fieldset class="field_set" style="overflow-y: auto;">
+														<legend style="width: auto;" class="fieldset_legend"></legend>
+														<table id="findNearstHandhole_multy" class="searchable sortable"
+															style="display: block; height: 150px;">
+															 <thead>
+															<tr>
+																<th style="min-width: 30px;"><input type="checkbox" id="selectAllHandhole_multy"></th>
+																<th style="min-width: 150px;" >Handhole ID</th>
+																<th style="min-width: 150px;">HandholeName</th>
+																<th style="min-width: 100px;">Longitude</th>
+																<th style="min-width: 100px;">Latitude</th>
+																<th style="min-width: 100px;">Distance(Km)</th>
+																<th style="min-width: 100px;" colspan="2">Driving Distance(km)</th>
+																
+															</tr>
+															</thead>
+															
+															<tbody id="searchHanhTBody_multy">
+															</tbody>
+														</table>
+													</fieldset>
+
+												</div>
+											</div>
+                                             <div id="handholeTotal" Style="Padding-top: 25px;"><b>Total Handholes:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="totalHandhole_multy" name="totalDB_Multy" readonly>	 </div>
+										</div>
+						
+										<div class="tab-pane" id="dboardP_multy" role="tabpanel"
+											aria-labelledby="dboardPoint-tab_multy">
+											<p></p>
+											<div class="container-fluid">
+												<div id="findNearestDbRes_Multy"></div>
+												<div class="row" style="height: 300px;">
+													<fieldset class="field_set" style="overflow-y: auto;">
+														<legend style="width: auto;" class="fieldset_legend"></legend>
+														<table id="findNearstDB_multy" style="display: block; height: 150px;">
+														 <thead>															
+															<tr>
+																<th style="min-width: 30px;"><input type="checkbox" id="selectAllDB_multy"></th>
+																<th style="min-width: 150px;" >DBoard ID</th>
+																<th style="min-width: 150px;">DBoard Name</th>
+																<th style="min-width: 100px;">Longitude</th>
+																<th style="min-width: 100px;">Latitude</th>
+																<th style="min-width: 100px;">Distance(km)</th>
+																<th style="min-width: 100px;" colspan="2">Driving Distance(km)</th>								
+															</tr>
+															 </thead>															
+															<tbody id="searchDBoardTBody_multy">
+															</tbody>
+														</table>
+													</fieldset>
+												 </div>
+											</div>
+                                            <div id="DbTotal" Style="Padding-top: 25px;"><b>Total Distribution Boards:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="totalDB_Multy" name="totalDB_Multy" readonly>										
+                                            </div>
+										</div>
+												
+
+										<div class="tab-pane" id="fPaths_multy" role="tabpanel" aria-labelledby="fPaths-tab_multy">
+											<p></p>
+											<div class="container-fluid">
+											<div class="row" style="height: 200px;">
+										<fieldset class="field_set" style="overflow-y: auto;">
+											<legend style="width: auto;" class="fieldset_legend"></legend>
+											<table id="" style="display: block; height: 100px;">
+												<tr>
+													<th style="min-width: 150px;" class="row-pad">Strand ID</th>
+													<th style="min-width: 150px;">StrandName</th>
+													<th style="min-width: 350px;">Source</th>
+													<th style="min-width: 350px;">Destination</th>
+												</tr>
+												<tbody id="nearStrandId_multy">
+												</tbody>
+											</table>
+										</fieldset>
+									</div>
+									<br>
+									<div class="row" style="height: 200px;">
+										<fieldset class="field_set" style="overflow-y: auto;">
+											<legend style="width: auto;" class="fieldset_legend"></legend>
+											<table id="" style="display: block; height: 100px;">
+												<tr>
+													<th style="min-width: 150px;" class="row-pad">Tube ID</th>
+													<th style="min-width: 150px;">TubeName</th>
+													<th style="min-width: 350px;">Source</th>
+													<th style="min-width: 350px;">Destination</th>
+												</tr>
+												<tbody id="nearTubeId_multy">
+												</tbody>
+											</table>
+										</fieldset>
+									</div>
+									<br>
+									<div class="row" style="height: 200px;">
+										<fieldset class="field_set" style="overflow-y: auto;">
+											<legend style="width: auto;" class="fieldset_legend"></legend>
+											<table id="" style="display: block; height: 100px;">
+												<tr>
+													<th style="min-width: 150px;" class="row-pad">Fiber ID</th>
+													<th style="min-width: 150px;">FiberName</th>
+													<th style="min-width: 350px;">Source</th>
+													<th style="min-width: 350px;">Destination</th>
+												</tr>
+												<tbody id="nearFiberId_multy"></tbody></table></fieldset></div></div></div></div></div></div>
+					<div class="modal-footer"></div></div></div></div></div>
+					
+					
+  					
+</body>
+</html>

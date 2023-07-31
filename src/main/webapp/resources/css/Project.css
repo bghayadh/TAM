@@ -1,0 +1,44 @@
+
+/*--- navigation bar ---*/
+
+
+.mynav {
+    background-color:#08526d !important;
+    line-height:20px;
+    
+}
+.navbar-brand {
+    font-family:fantasy;
+    color:red !important;
+    font-style:italic;
+    width:4rem;
+    font-size:40px;
+    
+}
+span.active {
+    padding:40px 15px 20px ;
+    background-color:#DC143C;
+}
+
+
+.navbar a:hover {
+    
+   
+        color:gold !important;
+    }
+.nav-link {
+    color:white;
+    margin-right:5px;
+    
+   
+    
+}
+
+
+.border-bottom  {
+    
+   border-color:gold !important;
+    border-width:3px  !important;
+    box-sizing:border-box;
+    
+}

@@ -1,0 +1,68 @@
+body, html {
+  height: 100%;
+}
+.ui-resizable{
+	height: 100% !important;
+	min-height: 100% !important;
+}
+.container-fluid{
+	padding-left: 0px !important;
+	height: 100%;
+	width:100%;
+}
+.panel-container {
+  display: flex;
+  flex-direction: row;
+ height:100%;
+  
+  
+  /* avoid browser level touch actions */
+  xtouch-action: none;
+}
+.panel-left {
+  flex: 0 0 auto;
+  /* only manually resize */
+  width: 300px;
+  height:100% !important;
+  min-width: 210px;
+  min-height:100% !important;
+  white-space: nowrap;
+  background: white;
+  color: white;
+  top:0 !important;
+  bottom: 0 !important;
+  overflow: scroll;
+/*E5E8E8*/
+}
+
+.splitter {
+  flex: 0 0 auto;  
+  background:  #535353;
+  min-height: 200px;
+  cursor: col-resize;  
+}
+
+.panel-right {
+  flex: 1 1 auto;
+  /* resizable */
+  width: 100%;
+  min-height: 200px;
+  min-width: 200px;
+  align-content: center;
+
+}
+
+
+/* vertical panel */
+
+.panel-container-vertical {
+  display: flex;
+  flex-direction: column;
+  height: 500px;
+  border: 1px solid silver;
+  overflow: hidden;
+}
+
+
+        
+        

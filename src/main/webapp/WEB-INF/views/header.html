@@ -1,0 +1,168 @@
+
+<style>
+
+    li.nav-item a svg, li.dropdown a svg
+    {
+        color:gold !important;
+    }
+    
+ li.nav-item span.active svg {
+    color: #20B2AA !important;
+}
+
+  .icon-button__badge { 
+   padding:1px 12px; 
+   background: red;  
+   border-radius: 50%;
+   position: relative;
+   display: inline-block;
+   left:  -20px; 
+   text-align: center;
+   margin-top:-20px;
+   top:-9px;     
+  }  
+
+   .all { 
+   height: 25px; 
+   width: 25px; 
+   background-color: grey; 
+   border-radius: 50%; 
+   padding:1px 12px; 
+   color: white; 
+   margin:10px; 
+   text-align:center; 
+   font-size: 14px; 
+   justify-content: center; 
+  
+   } 
+   .uncmp { 
+   height: 25px; 
+   width: 25px; 
+   background-color: red; 
+   border-radius: 50%; 
+   padding:1px 12px; 
+   color: white; 
+   text-align:center; 
+   font-size: 14px; 
+   justify-content: center; 
+   } 
+  
+   #drop-menu-notification { 
+ 	left:-30px; 
+ 	overflow: auto; 
+ 	height: 280px; 
+ 	border:none; 
+ } 
+ 
+  	.dropdown-item-notification {
+  	  text-align: center;
+  	  color:blue  !important; 
+  	}
+  	
+   	#drop-menu-notification a:hover {  
+   	color:#008080 !important;
+   	text-decoration: none;
+   	 } 
+   	 
+</style>
+
+
+
+<nav class="navbar navbar-expand-lg  navbar-light bg-light mynav">
+	<a class="navbar-brand">ALM</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarmenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+
+
+              <div class="collapse navbar-collapse" id="navbarmenu">
+                  <ul class="navbar-nav">
+                  <li class="nav-item"><a href="${pageContext.request.contextPath}/home" class="nav-link"><c:if test="${page == 'home'}"><span class="border-bottom active"></c:if><i class="fas fa-home"></i> Home <c:if test="${page == 'purchasing'}"></span></c:if></a></li>
+                       <li class="nav-item"><a href="${pageContext.request.contextPath}/Network_Index" class="nav-link"><c:if test="${page == 'network'}"><span class="border-bottom active"></c:if><i class="fas fa-wifi"></i> Network <c:if test="${page == 'network'}"></span></c:if></a></li>
+                <li class="nav-item"><a href="${pageContext.request.contextPath}/Purchase" class="nav-link "><c:if test="${page == 'purchasing'}"><span class="border-bottom active"></c:if><i class="fas fa-money-check"></i> Purchasing <c:if test="${page == 'purchasing'}"></span></c:if></a></li>
+                <li class="nav-item"><a href="${pageContext.request.contextPath}/Inventory" class="nav-link "><c:if test="${page == 'inventory'}"><span class="border-bottom active"></c:if><i class="fas fa-warehouse"></i> Inventory <c:if test="${page == 'inventory'}"></span></c:if></a></li>
+                 <li class="nav-item"><a href="${pageContext.request.contextPath}/TroubleTicketListView" class="nav-link "><c:if test="${page == 'troubleTickets'}"><span class="border-bottom active"></c:if><i class="fas fa-ticket-alt"></i> TroubleTickets <c:if test="${page == 'troubleTickets'}"></span></c:if></a></li>
+                <li class="nav-item"><a href="${pageContext.request.contextPath}/Sales" class="nav-link "><c:if test="${page == 'Sales'}"><span class="border-bottom active"></c:if><i class="fas fa-shopping-basket"></i> Sales <c:if test="${page == 'sales'}"></span></c:if></a></li>
+                <li class="nav-item"><a href="${pageContext.request.contextPath}/Contract" class="nav-link "><c:if test="${page == 'contracts'}"><span class="border-bottom active"></c:if><i class="fas fa-book"></i> Contracts <c:if test="${page == 'contracts'}"></span></c:if></a></li>
+                <li class=" dropdown nav-item"><a href="#" class="nav-link a1" data-toggle="dropdown" style="text-decoration: none;"> 
+                	<c:if test="${page == 'report'}"><span class="border-bottom active"></c:if><i class="fas fa-chart-line"></i> Report<c:if test="${page == 'report'}"></span></c:if></a>
+					<div class="dropdown-menu dropdown-menu-right">
+					
+					<a href="${pageContext.request.contextPath}/AssetAccountingVoucher" class="dropdown-item" > Asset Accounting Voucher</a>
+					<div class="dropdown-divider"></div>
+					<a href="${pageContext.request.contextPath}/ProfitLossAreaReport" class="dropdown-item">Area Profit & Loss</a>
+					<div class="dropdown-divider"></div>
+					<a href="${pageContext.request.contextPath}/SiteProfitLossReport" class="dropdown-item" > Site Profit & Loss </a>
+					<div class="dropdown-divider"></div>
+					<a href="${pageContext.request.contextPath}/AreaSiteReport" class="dropdown-item" >Area Sites Report</a>
+					<div class="dropdown-divider"></div>
+					<a href="${pageContext.request.contextPath}/RevenueReport" class="dropdown-item " >Revenue Report</a>
+					<div class="dropdown-divider"></div>
+					
+					<a href="${pageContext.request.contextPath}/SimSales" class="dropdown-item "  >SIM Card Sales</a>
+					<div class="dropdown-divider"></div>
+					
+					<a href="${pageContext.request.contextPath}/AlmGridView" class="dropdown-item" >ALM Grid View</a>
+					</div></li>
+                <li class="nav-item"><a href="${pageContext.request.contextPath}/Dashboard" class="nav-link "><c:if test="${page == 'dashboard'}"><span class="border-bottom active"></c:if><i class="fas fa-tv"></i> Dashboard <c:if test="${page == 'dashboard'}"></span></c:if></a></li>
+                <li class="nav-item"><a href="${pageContext.request.contextPath}/Setup" class="nav-link "><c:if test="${page == 'setup'}"><span class="border-bottom active"></c:if><i class="fas fa-cog"></i> Setup <c:if test="${page == 'setup'}"></span></c:if></a></li>
+               
+                  </ul>
+        <ul class="navbar-nav ml-auto ">
+  			
+  			 <li class=" dropdown nav-item"><a href="#" class="nav-link a1" data-toggle="dropdown" style="text-decoration: none;"> 
+                <i class="fas fa-bell" style="margin-right:25px; "></i><span class="icon-button__badge" style="margin-right: -25px; margin-top: -20px;" id ="notnum">0</span></a>   
+				
+				<div class="dropdown-menu dropdown-menu-right" id="drop-menu-notification">
+							<div class="dropdown-item-notification">
+						<a href="${pageContext.request.contextPath}/PurchaseReqListView" class="dropdown-item-notification" >Purchase Request</div><div class="dropdown-item-notification"><span class="all" id="PrAll">0</span><span class="uncmp" id="PrUnCmp">0</span></div></a>
+	        					<div class="dropdown-divider"></div>
+	        			<div class="dropdown-item-notification"><a href="${pageContext.request.contextPath}/PurchaseOrderListView" class="dropdown-item-notification" >Purchase Order</div><div class="dropdown-item-notification"><span class="all" id="PoAll">0</span> <span class="uncmp" id="PoUnCmp">0</span></div></a>
+	        					<div class="dropdown-divider"></div>
+	        			<div class="dropdown-item-notification"><a href="${pageContext.request.contextPath}/GoodsRcvListView" class="dropdown-item-notification" >Goods Received</div><div class="dropdown-item-notification"><span class="all" id="GrAll">0</span> <span class="uncmp" id="GrUnCmp">0</span></div></a>
+	        					<div class="dropdown-divider"></div>
+	        			<div class="dropdown-item-notification"><a href="${pageContext.request.contextPath}/WorkOrderListView" class="dropdown-item-notification" >Work Order</div><div class="dropdown-item-notification"><span class="all" id=WoAll>0</span> <span class="uncmp" id="WoUnCmp">0</span></div></a>
+	        					<div class="dropdown-divider"></div>
+	        			<div class="dropdown-item-notification"><a href="${pageContext.request.contextPath}/DiscoveryNewListView" class="dropdown-item-notification" >Discovery New</div><div class="dropdown-item-notification"><span class="all" id="DniAll">0</span> <span class="uncmp" id="DniUnCmp">0</span></div></a>
+	        					<div class="dropdown-divider"></div>
+	        			<div class="dropdown-item-notification"><a href="${pageContext.request.contextPath}/WarehouseListView" class="dropdown-item-notification" >Warehouse</div><div class="dropdown-item-notification"><span class="all" id="WhAll">0</span> <span class="uncmp" id="WhUnCmp">0</span></div></a>
+	        					<div class="dropdown-divider"></div>
+	        			<div class="dropdown-item-notification"><a href="${pageContext.request.contextPath}/TroubleTicketListView" class="dropdown-item-notification" >Trouble Tickets</div><div class="dropdown-item-notification"><span class="all" id="TkAll">0</span> <span class="uncmp" id="TkUnCmp">0</span></div></a>
+	        					<div class="dropdown-divider"></div>
+	        			<div class="dropdown-item-notification"><a href="${pageContext.request.contextPath}/ShopsListView" class="dropdown-item-notification" >Shops</div><div class="dropdown-item-notification"><span class="all" id="ShAll">0</span> <span class="uncmp" id="ShUnCmp">0</span></div></a>
+	        					<div class="dropdown-divider"></div>
+	        			<div class="dropdown-item-notification"><a href="${pageContext.request.contextPath}/AgentListView" class="dropdown-item-notification" >Agents</div><div class="dropdown-item-notification"><span class="all" id="AgnAll">0</span> <span class="uncmp" id="AgnUnCmp">0</span></div></a>
+	        					<div class="dropdown-divider"></div>
+	        			<div class="dropdown-item-notification"><a href="${pageContext.request.contextPath}/ClientsListView" class="dropdown-item-notification" >Clients</div><div class="dropdown-item-notification"><span class="all" id="ClnAll">0</span> <span class="uncmp" id="ClnUnCmp">0</span></div></a>
+	        					<div class="dropdown-divider"></div>
+	        			<div class="dropdown-item-notification"><a href="${pageContext.request.contextPath}/AreaListView" class="dropdown-item-notification" >Area</div><div class="dropdown-item-notification"><span class="all" id="ArAll">0</span> <span class="uncmp" id="ArUnCmp">0</span></div></a>
+	        					<div class="dropdown-divider"></div>
+	        			<div class="dropdown-item-notification"><a href="${pageContext.request.contextPath}/ClusterListView" class="dropdown-item-notification" >Cluster</div><div class="dropdown-item-notification"><span class="all" id="ClsAll">0</span> <span class="uncmp" id="ClsUnCmp">0</span></div></a>
+	        					<div class="dropdown-divider"></div>
+	        			<div class="dropdown-item-notification"><a href="${pageContext.request.contextPath}/RegionListView" class="dropdown-item-notification" >Region</div><div class="dropdown-item-notification"><span class="all" id="RgnAll">0</span> <span class="uncmp" id="RgnUnCmp">0</span></div></a>
+					
+</div>
+</li>
+  			
+                    <li class=" dropdown "><a href="#" class="nav-link a1" data-toggle="dropdown"
+					style="text-decoration: none;"> <span style="color: #ffbb33 ;">${userFullName}</span>&nbsp;<i
+					class="fa fa-user-circle" data-count="4b" 
+					style="font-size: 20px; color: gold;"></i></a>
+	
+					<div class="dropdown-menu dropdown-menu-right">
+					<a href="${pageContext.request.contextPath}/userList" class="dropdown-item"><i
+						class="fa fa-user-edit"></i>Edit Profile</a>
+					<div class="dropdown-divider"></div>
+					<a href="${pageContext.request.contextPath}/logout"
+						class="dropdown-item"><i class="fa fa-power-off"
+						aria-hidden="true"></i> Logout</a>
+					</div></li>
+					
+					 
+                
+            </ul>
+        </div>
+
+    </nav>
+    

@@ -1,0 +1,48 @@
+body {
+    margin:0;
+    padding:0;
+    background-color:#FFFFFF;
+    font-size: 14px;
+	color: #444444;
+	font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial,
+		sans-serif; 
+}
+.mynav {
+    background-color:#08526d !important;
+    line-height:20px;
+}
+.navbar-brand {
+    font-family:fantasy;
+    color:red !important;
+    font-style:italic;
+    width:4rem;
+    font-size:40px;
+    
+}
+.mynav a:hover {
+        
+        color:gold!important;
+    }
+.nav-link {
+    margin-right:5px;
+    color:white;
+}
+span.active {
+    padding:40px 15px 14px ;
+    background-color:#DC143C;
+}
+ .border-bottom  {
+   border-color:#00B2EE !important;
+    border-width:3px  !important;
+    box-sizing:border-box;
+    
+}
+@media only screen and (max-width: 989px) {
+    span.active {
+         background-color:#DC143C;
+        padding:0px 1px 0px 1px;
+    }
+    .border-bottom {
+        border-width:0px;
+    }
+}
