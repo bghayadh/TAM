@@ -8,7 +8,7 @@
         <property name="hibernate.connection.password">rpt</property>
         <property name="hibernate.connection.username">rpt</property>
         <property name="hibernate.default_schema">rpt</property>
-        <property name="hibernate.connection.url">jdbc:oracle:thin:@localhost:1524:RPT</property>
+        <property name="hibernate.connection.url">jdbc:oracle:thin:@localhost:1525:RPT</property>
         <property name="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</property>  
 		<property name="connection.pool_size">10</property>
 		   
