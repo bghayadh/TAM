@@ -283,7 +283,6 @@ function CreateTree_NdTypStNdCell(listNodesType,lst,map){
 	var str="<ul><li id='initial_ul' class='Initial'><input type='checkbox' id='NodesType' class='AllNodesType' style='margin-left: 15px' unchecked onclick='AllSitesCheckFilter()'></input> <span class='folder'><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Node Type</span></li></ul>";
 	$("#network_tree").append(str);
 	for (n = 0; n < listNodesType.length; n++) {
-
 		if(listNodesType[n][1]>0){
 			var str = "<ul><li class='NodeType' id='"+listNodesType[n][0]+"' style='display:none'><span class='folder' onclick='NdTypStNdCellCore("+listNodesType[n][0] +")'><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'><span class='tree-span' style='margin-left:-15px;'> <i class='fa fa-cogs fa-2x'></i> "+listNodesType[n][0]+"</span></span>";
 			str+= "<ul><li id='" +listNodesType[n][0]+"_f' class='NodeTypeFolder parent_li' style='display:none; margin-left:-45px'><input type='checkbox' id='" +listNodesType[n][0]+"_Site' class='AllSites' style='margin-left: 15px' unchecked onclick='showMarkersAllSitesOneNt("+listNodesType[n][0] +"_Site)'></input><span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Site </span></span></li></ul></li></ul>";
@@ -408,10 +407,10 @@ function NdTypStNdCellCore(id){
 			if(NodeTypeChildrenLength==0){
 				
 				if($('#EnterpriseBtn').hasClass('activee')){
-					console.log("ACTIVE ");
+					//console.log("ACTIVE ");
 					var paramEnterprise = true;
 				}else{
-					console.log("NOT ACTIVE");
+					//console.log("NOT ACTIVE");
 					var paramEnterprise = false;
 				}
 				
@@ -430,10 +429,10 @@ function NdTypStNdCellCore(id){
 						//var NodeTypeChildren=$("#" +selectedNodetType+"_f").find(' > ul > li');
 						//var NodeTypeChildrenLength=$("#" +selectedNodetType+"_f").find(' > ul > li').length;
 						var listSites=data.listSites;		
-						console.log("listSites=== " + listSites);
+					
 						if(NodeTypeChildrenLength<listSites.length){
 							var dFrag = document.createDocumentFragment();
-							for (j = 0; j < listSites.length; j++){
+							for (j = 0; j < listSites.length; j++){								
 							     str="<li id='"+ listSites[j][2] +"_"+listSites[j][3]+"' class='SingleSite' style='display:none; margin-left:-30px'><input type='checkbox' id='" + listSites[j][2] + "_" + listSites[j][3] +"_SingleSite' class='SingleSite' style='margin-left: 15px' onclick='showMarkerSingleSite("+ listSites[j][2] + "_" + listSites[j][3]+ "_SingleSite)'></input><span class='folder' onclick='StNdCellCore2folder("+ listSites[j][2] +"_"+listSites[j][3]+")'><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px' onclick='StNdCellCore2(" + listSites[j][2] + "_" + listSites[j][3] + ")'><img src='"+getContext()+"/resources/NetworkImages/site.png'> "+listSites[j][1]+"</span>";
 							     str+= "<ul><li id='" + listSites[j][2] +"_"+listSites[j][3]+"_f' class='NodeFolder parent_li' style='display:none; margin-left:15px''><span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Nodes </span></span></li></ul></li>";						
 							     const div = document.createElement('ul');
@@ -461,7 +460,7 @@ function NdTypStNdCellCore(id){
 				        		}
 				        	]
 				        });
-						}                                     
+						}     
 							}
 					 data=null;
 				 },
@@ -477,7 +476,7 @@ function NdTypStNdCellCore(id){
 function showMarkerSingleSite(id) {
 	 // console.log("showMarkerSingleSite");
 	 // console.log("id-->" , id.id);
-	  id=id.id;
+	 var  id=id.id;
 
 	//const lastUnderscoreIndex = id.lastIndexOf("_");
 	 // const previousUnderscoreIndex = id.lastIndexOf("_",  id.lastIndexOf("_") - 1);
@@ -490,7 +489,7 @@ function showMarkerSingleSite(id) {
 	 // console.log("value -->", value);
 
 	    if ($("#" + id).is(":checked")) {
-	     	console.log("checked");
+	     	//console.log("checked");
 	      	var checkboxes = $('[id$="'+value+'_SingleSite"]');
 	  		//console.log("checkboxes......",checkboxes);  
 	      	var allChecked = true;
@@ -509,7 +508,7 @@ function showMarkerSingleSite(id) {
 	      markerClusterSites.addMarker(markersSites[Id]);
 	      markerClusterSites.repaint();
 	    }else{
-		      console.log("unchecked");
+		      //console.log("unchecked");
 		      document.getElementById(value+'_Site').checked = false;		
 		      markersSites[Id].setMap(null);
 		      markerClusterSites.removeMarker(markersSites[Id]);
@@ -519,8 +518,8 @@ function showMarkerSingleSite(id) {
 
 
 function StNdCellCore2folder(id) {
-	 // console.log("StNdCellCore2 folder");  
-		id=id.id;
+	// console.log("StNdCellCore2 folder");  
+		var id=id.id;
 		//console.log("id is ", id);
 		//console.log(" markersSite...folder... "+ markersSite);
 		// $("#" + id +" > .folder").on('click',function () {
@@ -549,10 +548,10 @@ var selectedItem = id.slice(0, id.indexOf("_" +selectedNodetType)); // Output: "
 	      if (SiteChildrenLength == 0) {
 	    	  
 				if($('#EnterpriseBtn').hasClass('activee')){
-					console.log("ACTIVE ");
+					//console.log("ACTIVE ");
 					var paramEnterprise = true;
 				}else{
-					console.log("NOT ACTIVE");
+					//console.log("NOT ACTIVE");
 					var paramEnterprise = false;
 				}
 		     $.ajax({
@@ -586,7 +585,7 @@ var selectedItem = id.slice(0, id.indexOf("_" +selectedNodetType)); // Output: "
 
 function StNdCellCore2(id){
 	//console.log(" StNdCellCore2");
-	id=id.id;
+	var id=id.id;
 	//console.log("id ::: ",id);
 	//$("#" + id +" > .TreeSpan").on('click',function () {
 	//$(document).on('click', "#" + id + " > .TreeSpan", function () {
@@ -751,6 +750,15 @@ function Sumbitselection(arr){
  		 {
  			window.location.href = getContext()+"/Network_NdTypNdCell"; 			
  		 } break;	 
+ 		case "li_nodeBtn,li_cellBtn,li_nodeTypeeBtn,li_EnterpriseBtn":
+		 case "nodeBtn,cellBtn,nodeTypeeBtn,EnterpriseBtn":		
+		 	{	
+		 		var param1 = 'Enterprise';
+		 		var url = getContext() + '/Network_NdTypNdCell';
+		 		url += '?param1=' + encodeURIComponent(param1);
+		 		window.location.href = url;
+		 	}
+		break;
 		default:
 		{			
 			alert("Selection is not available");

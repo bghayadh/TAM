@@ -715,6 +715,15 @@ function Sumbitselection(arr){
  		 {
  			window.location.href = getContext()+"/Network_NdTypNdCell"; 			
  		 } break;
+ 		case "li_nodeBtn,li_cellBtn,li_nodeTypeeBtn,li_EnterpriseBtn":
+		 case "nodeBtn,cellBtn,nodeTypeeBtn,EnterpriseBtn":		
+		 	{	
+		 		var param1 = 'Enterprise';
+		 		var url = getContext() + '/Network_NdTypNdCell';
+		 		url += '?param1=' + encodeURIComponent(param1);
+		 		window.location.href = url;
+		 	}
+		break;
 		default:
 		{			
 			alert("Selection is not available");

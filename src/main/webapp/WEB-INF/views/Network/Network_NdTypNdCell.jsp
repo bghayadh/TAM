@@ -336,34 +336,51 @@ function AllSitesCheckFilter(){
 }
 
 function showMarkersAllSitesOneNt(id) {
+ var id = id.id;
+ // console.log("iddd..."+id);
   
-  var id = id.id;
   var nodeType = id.split("_")[0];
+  //console.log("nodeType..."+nodeType);
+  
   markerClusterSites.clearMarkers();
   var isChecked = $("#" + id).is(":checked");
   var ulElement = document.getElementById(nodeType);
   
   var liElements = ulElement.querySelectorAll('.SingleNode'); // Retrieve only <li> elements with <input> children
  
-  //var count = liElements.length;
+  var count = liElements.length;
   //console.log("Number of <li> elements:", count);
   var markersToAdd = []; // Array to store markers that need to be added
 
   for (var i = 0; i < liElements.length; i++) {
     liElements[i].checked = isChecked;
+   // console.log(" liElements[i].id:  ", liElements[i].id);
+  
     var nodeSiteId = liElements[i].id.split("_" + nodeType)[0]; //nodeId_wareId
-    var wareId = nodeSiteId.split("_")[3] + "_" + nodeSiteId.split("_")[4] + "_" + nodeSiteId.split("_")[5];
+   // console.log("nodeSiteId:", nodeSiteId);
     
-    if (isChecked && !markersSites[wareId].getMap()) {
+    if(nodeSiteId.split("_")[3]!= "null"){
+    	//console.log("not null");
+    	var wareId = nodeSiteId.split("_")[3] + "_" + nodeSiteId.split("_")[4] + "_" + nodeSiteId.split("_")[5];
+    	//console.log("wareId.....", wareId);
+    }else{
+    	//console.log("null");
+    	var wareId = nodeSiteId.split("_")[3];
+        //console.log("wareId null....", wareId);
+    }
+    
+    //if (isChecked && !markersSites[wareId].getMap()) {
+    if (isChecked) {  
       markersToAdd.push(markersSites[wareId]);
+      //console.log("markersToAdd..a..", markersToAdd);
     }
   }
   if (isChecked) {
-	 // console.log("ALL CHECKED");
-		$('#network_tree input[type="checkbox"][class="AllNodesType"]').prop('checked', false);
+	  //console.log("ALL CHECKED");
+		$('#network_tree input[type="checkbox"][class="AllNodesType"]').prop('checked', false);		
 	    markerClusterSites.addMarkers(markersToAdd); // Add all markers at once
 	    markerClusterSites.repaint();
-  } else {
+	  } else {
 	    markerClusterSites.clearMarkers();
 	    $('#network_tree input[type="checkbox"]').prop('checked', false);
   }
@@ -388,18 +405,29 @@ function NdTpNdCellCore(id)
 	//NodeCreated.push(selectedNdTyp); 
 	var NdTpChildrenLength=$("#" +selectedNdTyp+"_f").find(' > ul > li').length;	
 	if(NdTpChildrenLength==0){
+		
+		if($('#EnterpriseBtn').hasClass('activee')){
+			//console.log("ACTIVE ");
+			var paramEnterprise = true;
+		}else{
+			//console.log("NOT ACTIVE");
+			var paramEnterprise = false;
+		}
+		
 	$.ajax({
 		type: "GET",
 		contentType: "application/json; charset=utf-8",
 		url: getContext()+'/findNodeType_Nodes',
 		data: {
 			"selectedItem":selectedNdTyp,
+			"paramEnterprise": paramEnterprise,
 		 },
 		 dataType: "json",
 		 success: function (data) {							        	
 			 if (data != null) {
 				//var NdTpChildrenLength=$("#" +selectedNdTyp+"_f").find(' > ul > li').length;		
 				var listNodes = data.listNodes;
+				//console.log("listNodes.......",listNodes);
 				var dFrag = document.createDocumentFragment();
 				if(NdTpChildrenLength<listNodes.length){							            	
 					for (j = 0; j < listNodes.length; j++)      //  NODE_PK, SITE_ID, NODE_NAME,NODE_MODEL
@@ -421,7 +449,11 @@ function NdTpNdCellCore(id)
 		        		//console.log("selectedNodeIdContext", selectedNodeIdContext); //nodeId_wareId
 		        		var parts = selectedNodeIdContext.split('_');		
 		        		nodeId = parts[0] + "_" + parts[1]+ "_" + parts[2]; // 2023_NODE_1
-		       			SiteId = parts[3] + "_" + parts[4]+ "_" + parts[5]; // WARE_2021_13730
+		        		if(parts[3] !="null"){
+		       				SiteId = parts[3] + "_" + parts[4]+ "_" + parts[5]; // WARE_2021_13730
+		        		}else{
+		        			SiteId = parts[3]; // WARE_2021_13730
+		        		}
 		        		menuName=singleNode;			
 		        		openContext(selectedNodeIdContext,"",singleNode,event);
 		        	});
@@ -449,15 +481,34 @@ function NdTpNdCellCore(id)
 
 
 function showMarkerSingleSite(id) {
+	//console.log("id..."+id);
+	//console.log("showMarkerSingleSite");
 	
-	var parts = id.split('_');		
+	var parts = id.split('_');	
+	//console.log("parts..."+parts);
+	
 	var nodeId = parts[0] + "_" + parts[1]+ "_" + parts[2]; // 2023_NODE_1
-	var wareId = parts[3] + "_" + parts[4]+ "_" + parts[5]; // WARE_2021_13730
-	var nodeType = parts[6]; // SRanBs
+	//console.log("nodeId..."+nodeId);
+	
+	if(parts[3]!="null"){
+		//console.log("!NULL");
+		var wareId = parts[3] + "_" + parts[4]+ "_" + parts[5]; // WARE_2021_13730
+		//console.log("wareId..."+wareId);
+		var nodeType = parts[6]; // SRanBs
+		//console.log("nodeType..."+nodeType);
+	}else{
+		//console.log("NULL");
+		var wareId = parts[3]; // WARE_2021_13730
+		//console.log("wareIdddd..."+wareId);
+		var nodeType = parts[4]; // SRanBs
+		//console.log("nodeTypeeee..."+nodeType);
+	}
+	
 	
 	if ($("#" + id).is(":checked")) {
 		//console.log("checked");
 		var checkboxes = $('[id$="_'+nodeType+'"]');
+		//console.log("checkboxes....",checkboxes);
 		var allChecked = true;
 		for (var i = 0; i < checkboxes.length; i++) {
 			if (!checkboxes[i].checked) {
@@ -468,8 +519,13 @@ function showMarkerSingleSite(id) {
 		if (allChecked) {
 			document.getElementById(nodeType+'_Node').checked = true;
 		}
+		//console.log("markersSites....",markersSites);
+		//console.log("markersSites[wareId]....",markersSites[wareId]);
 		markersSites[wareId].setMap(map);
+		
+		//console.log("markerClusterSites..b..",markerClusterSites);
 		markerClusterSites.addMarker(markersSites[wareId]);
+		//console.log("markerClusterSites..a..",markerClusterSites);
 		markerClusterSites.repaint();
 	}else{
 		//console.log("unchecked");
@@ -482,11 +538,23 @@ function showMarkerSingleSite(id) {
 
 
 function PanTreeSites(id){
+	//console.log("PanTreeSites/id");
 	var parts = id.split('_');		
+	//console.log("parts ...."+parts);
 	var nodeId = parts[0] + "_" + parts[1]+ "_" + parts[2]; 
-	var selectedItem = parts[3] + "_" + parts[4]+ "_" + parts[5]; 
-	var nodeType = parts[6]; 
-
+	//console.log("nodeId ...."+nodeId);
+	if(parts[3]!="null"){
+		var selectedItem = parts[3] + "_" + parts[4]+ "_" + parts[5]; 
+		//console.log("selectedItem  ...."+selectedItem );
+		var nodeType = parts[6]; 
+		//console.log("nodeTypenodeType  ...."+nodeType);
+	}else{
+		var selectedItem = parts[3]; 
+		//console.log("selectedItem  n...."+selectedItem );
+		var nodeType = parts[4]; 
+		//console.log("nodeTypenodeType  n...."+nodeType);
+	}
+	
 	if(selectedItem!=markersSite)
 	{
 		var selMarker="";		
@@ -516,7 +584,6 @@ function NdCellCore(id)
   // tree_prop_general();
   // tree_Prop("#"+selectedItem+"> span");
   // tree_Prop("#"+selectedItem+"_f > span");
-		   
 		  // $("#"+selectedItem+ "> span").on('click',function () {
 	// var selectedNode=$(this).parent().attr('id');
 	//if(!NCellCreated.includes(selectedNode))
@@ -524,12 +591,21 @@ function NdCellCore(id)
 		//NCellCreated.push(selectedNode);
 	var NdChildrenLength=$("#" +selectedNode+"_f").find(' > ul > li').length;
 	if(NdChildrenLength==0){
+		if($('#EnterpriseBtn').hasClass('activee')){
+			//console.log("ACTIVE ");
+			var paramEnterprise = true;
+		}else{
+			//console.log("NOT ACTIVE");
+		var paramEnterprise = false;
+		}
+	
 	 $.ajax({
 		 type: "GET",
 		 contentType: "application/json; charset=utf-8",
 		 url: getContext()+'/findNode_Cells',
 		 data: {
 		      "selectedNode":selectedNode,
+		      "paramEnterprise": paramEnterprise,
 		},
 		dataType: "json",
 		success: function (data) {							        	
@@ -585,7 +661,7 @@ function Sumbitselection(arr){
 	 	{	
 	 		var param1 = 'Enterprise';
 	 		//var param2 = 'value2';
-	 		var url = getContext() + '/Network_StNdCell';s
+	 		var url = getContext() + '/Network_StNdCell';
 	 		url += '?param1=' + encodeURIComponent(param1);
 	 		//url += '&param2=' + encodeURIComponent(param2);
 	 		window.location.href = url;
@@ -676,6 +752,15 @@ function Sumbitselection(arr){
 			 {
 				window.location.href = getContext()+"/Network_NdTypNdCell"; 			
 			 } break;
+			 case "li_nodeBtn,li_cellBtn,li_nodeTypeeBtn,li_EnterpriseBtn":
+	 		 case "nodeBtn,cellBtn,nodeTypeeBtn,EnterpriseBtn":		
+	 		 	{	
+	 		 		var param1 = 'Enterprise';
+	 		 		var url = getContext() + '/Network_NdTypNdCell';
+	 		 		url += '?param1=' + encodeURIComponent(param1);
+	 		 		window.location.href = url;
+	 		 	}
+	 		break;
 		default:
 		{			
 			alert("Selection is not available");

@@ -522,14 +522,12 @@ function Sumbitselection(arr){
 	 	case "li_siteBtn,li_nodeBtn,li_cellBtn":
 	 	case "siteBtn,nodeBtn,cellBtn":		
 	 	{	
-	 		console.log("site node cell");
 	 		window.location.href = getContext()+"/Network_StNdCell";
 	 	} 
 	 break;
 	 	case "li_siteBtn,li_nodeBtn,li_cellBtn,li_EnterpriseBtn":
 	 	case "siteBtn,nodeBtn,cellBtn,EnterpriseBtn":		
 	 	{	
-	 		 console.log("site node cell Enterprise");
 	 		var param1 = 'Enterprise';
 	 		//var param2 = 'value2';
 	 		var url = getContext() + '/Network_StNdCell';
@@ -623,6 +621,15 @@ function Sumbitselection(arr){
  		 {
  			window.location.href = getContext()+"/Network_NdTypNdCell"; 			
  		 } break;
+ 		case "li_nodeBtn,li_cellBtn,li_nodeTypeeBtn,li_EnterpriseBtn":
+		 case "nodeBtn,cellBtn,nodeTypeeBtn,EnterpriseBtn":		
+		 	{	
+		 		var param1 = 'Enterprise';
+		 		var url = getContext() + '/Network_NdTypNdCell';
+		 		url += '?param1=' + encodeURIComponent(param1);
+		 		window.location.href = url;
+		 	}
+		break;
 		default:
 		{			
 			alert("Selection is not available");
