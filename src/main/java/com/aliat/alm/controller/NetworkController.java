@@ -1078,9 +1078,9 @@ public String Network_NdTypNdCell(Locale locale, Model model, HttpServletRequest
 				model.addAttribute("listSites",mapper.writeValueAsString(
 						(List<Object[]>) session.createSQLQuery("SELECT b.SITE_ID,b.WARE_NAME,b.WARE_ID,b.LATITUDE,b.LONGITUDE,"
 								+ "(select COUNT(*) from NODE_ACTIVE w where w.DOMAIN='" +param1+ "' and w.ACTIVE_RECORD = '1') as countnodes," 
-								+ "(select COUNT(*) FROM NODE_GCELL c where c.NODE_PK IN(select NODE_PK from NODE_ACTIVE o where o.DOMAIN='" +param1+ "' and o.ACTIVE_RECORD = '1') and c.DOMAIN='" +param1+ "') as countGcells,"  
-								+ "(select COUNT(*) FROM NODE_LCELL d where d.NODE_PK IN(select NODE_PK from NODE_ACTIVE o where o.DOMAIN='" +param1+ "' and o.ACTIVE_RECORD = '1') and d.DOMAIN='" +param1+ "') as countLcells," 
-								+ "(select COUNT(*) FROM NODE_UCELL e where e.NODE_PK IN(select NODE_PK from NODE_ACTIVE o where o.DOMAIN='" +param1+ "' and o.ACTIVE_RECORD = '1') and e.DOMAIN='" +param1+ "') as countUcells"  							
+								+ "(select count(*) from NODE_GCELL e  where b.NODE_PK = e.NODE_PK and ACTIVE_RECORD = '1' and e.DOMAIN='" +param1+ "') as countGCells,"
+								+ "(select count(*) from NODE_LCELL c  where b.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1' and c.DOMAIN='" +param1+ "') as countLCells,"
+								+ "(select count(*) from NODE_UCELL d  where b.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1' and d.DOMAIN='" +param1+ "') as countUCells"						
 								+ " FROM NODE_ACTIVE b WHERE b.DOMAIN='" +param1+ "'").list()));			
 				
 				System.out.println("... lst st param1 ..."+ mapper.writeValueAsString((List<Object[]>) session.createSQLQuery(
@@ -1129,9 +1129,9 @@ public String Network_NdTypNdCell(Locale locale, Model model, HttpServletRequest
 							//"SELECT distinct b.SITE_ID,b.WARE_NAME,b.WARE_ID,COALESCE(LATITUDE,'1.5') AS LATITUDE, COALESCE(LONGITUDE,'32.3') AS LONGITUDE FROM NODE_ACTIVE b")
 							"SELECT b.SITE_ID,b.WARE_NAME,b.WARE_ID,b.LATITUDE,b.LONGITUDE,"
 							+ "(select COUNT(*) from NODE_ACTIVE w where w.ACTIVE_RECORD = '1') as countnodes,"
-							+ "(select COUNT(*) from NODE_GCELL c where c.NODE_PK IN(select NODE_PK from NODE_ACTIVE o where o.ACTIVE_RECORD = '1')) as countGcells,"
-							+ "(select COUNT(*) from NODE_LCELL d where d.NODE_PK IN(select NODE_PK from NODE_ACTIVE o where o.ACTIVE_RECORD = '1')) as countLcells,"
-							+ "(select COUNT(*) from NODE_UCELL e where e.NODE_PK IN(select NODE_PK from NODE_ACTIVE o where o.ACTIVE_RECORD = '1')) as countUcells"
+							+ "(select count(*) from NODE_GCELL e  where b.NODE_PK = e.NODE_PK and ACTIVE_RECORD = '1') as countGCells,"
+							+ "(select count(*) from NODE_LCELL c  where b.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1') as countLCells,"
+							+ "(select count(*) from NODE_UCELL d  where b.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1') as countUCells"						
 							+ " FROM NODE_ACTIVE b")
 							
 					.list()));
@@ -1170,6 +1170,98 @@ public String Network_NdTypNdCell(Locale locale, Model model, HttpServletRequest
 		return "Network/Network_NdTypNdCell";
 	}
 }
+
+@SuppressWarnings("unchecked")
+@RequestMapping(value = "/Network_Node", method = RequestMethod.GET)
+public String Network_Node(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
+//		throws JsonProcessingException {
+	// logger.info("Welcome home! The client locale is {}.", locale);
+	if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+		return "redirect:/";
+	} else {
+		ObjectMapper mapper = new ObjectMapper();
+		Session session = null;
+		Transaction tx = null;
+		session = almsessions.getSession();
+
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			notifications.headerNotifications(session, model);
+			System.out.println("NODE SERVER");
+
+			String param1 = request.getParameter("param1");
+			System.out.println("param1...ndtypenodecell"+ param1);
+			if (param1 != null) {
+				System.out.println(".NOT NULL.node");			
+				try {
+					model.addAttribute("listSites",mapper.writeValueAsString((List<Object[]>) session.createSQLQuery(
+							"SELECT b.SITE_ID,b.WARE_NAME,b.WARE_ID,b.LATITUDE,b.LONGITUDE,"
+							+ "(select COUNT(*) from NODE_ACTIVE w where w.DOMAIN='" +param1+ "' and w.ACTIVE_RECORD = '1') as countnodes," 
+							+ "(select count(*) from NODE_GCELL e  where b.NODE_PK = e.NODE_PK and ACTIVE_RECORD = '1' and e.DOMAIN='" +param1+ "') as countGCells,"
+							+ "(select count(*) from NODE_LCELL c  where b.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1' and c.DOMAIN='" +param1+ "') as countLCells,"
+							+ "(select count(*) from NODE_UCELL d  where b.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1' and d.DOMAIN='" +param1+ "') as countUCells"						
+							+ " FROM NODE_ACTIVE b WHERE b.DOMAIN='" +param1+ "'").list()));			
+			
+				} catch (Exception e) {
+					logger.info("Error in retreiving Sites Data from database", e);
+					model.addAttribute("listSites", "null");
+				}
+				
+				try {
+					model.addAttribute("listNodes", mapper.writeValueAsString((List<Object[]>) session.createSQLQuery(
+							"SELECT a.NODE_PK,a.SITE_ID,a.NODE_NAME,a.NODE_TYPE,a.WARE_ID,"
+							+ "(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and ACTIVE_RECORD = '1' and b.DOMAIN='" +param1+ "') as countGCells,"
+							+ "(select count(*) from NODE_LCELL c  where a.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1' and c.DOMAIN='" +param1+ "') as countLCells,"
+							+ "(select count(*) from NODE_UCELL d  where a.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1' and d.DOMAIN='" +param1+ "') as countUCells,SUPPLIER_ID "
+							+ "FROM NODE_ACTIVE a WHERE ACTIVE_RECORD = '1' and a.DOMAIN='" +param1+ "'")
+							.list()));
+		
+				} catch (Exception e) {
+					logger.info("Error in retreiving Nodes Data from database", e);
+					model.addAttribute("listNodes", "null");
+				}
+			}else {
+				System.out.println(".NULL.node");
+				try {
+					model.addAttribute("listSites",mapper.writeValueAsString((List<Object[]>) session.createSQLQuery(
+							"SELECT b.SITE_ID,b.WARE_NAME,b.WARE_ID,b.LATITUDE,b.LONGITUDE,"
+							+ "(select COUNT(*) from NODE_ACTIVE w where w.ACTIVE_RECORD = '1') as countnodes,"
+							+ "(select count(*) from NODE_GCELL e  where b.NODE_PK = e.NODE_PK and ACTIVE_RECORD = '1') as countGCells,"
+							+ "(select count(*) from NODE_LCELL c  where b.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1') as countLCells,"
+							+ "(select count(*) from NODE_UCELL d  where b.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1') as countUCells"
+							+ " FROM NODE_ACTIVE b").list()));
+				
+				} catch (Exception e) {
+					logger.info("Error in retreiving Sites Data from database", e);
+					model.addAttribute("listSites", "null");
+				}
+				
+				try {
+					model.addAttribute("listNodes", mapper.writeValueAsString((List<Object[]>) session.createSQLQuery(
+							"SELECT a.NODE_PK,a.SITE_ID,a.NODE_NAME,a.NODE_TYPE,a.WARE_ID,"
+							+ "(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and ACTIVE_RECORD = '1') as countGCells,"
+							+ "(select count(*) from NODE_LCELL c  where a.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1') as countLCells,"
+							+ "(select count(*) from NODE_UCELL d  where a.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1') as countUCells,SUPPLIER_ID "
+							+ "FROM NODE_ACTIVE a WHERE ACTIVE_RECORD = '1'")
+							.list()));
+
+				} catch (Exception e) {
+					logger.info("Error in retreiving Nodes Data from database", e);
+					model.addAttribute("listNodes", "null");
+				}
+			}
+			//finally {
+				if (session != null && session.isOpen()) {
+					logger.info("Session Closseeed");
+					tx.commit();
+					session.close();
+				}
+			//}
+		}
+		return "Network/Network_Node";
+	}
+}
+
 
 	/*
 	// retrieve sites/nodes/cells data when supplier is clicked in

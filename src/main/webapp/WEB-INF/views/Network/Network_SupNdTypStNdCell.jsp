@@ -711,6 +711,20 @@ function Sumbitselection(arr){
  		 		window.location.href = url;
  		 	}
  		break;
+		//Node
+		 case "nodeBtn":
+		{
+			 window.location.href = getContext()+"/Network_Node"; 
+		 } break;
+		 case "li_nodeBtn,li_EnterpriseBtn":
+ 		 case "nodeBtn,EnterpriseBtn":		
+ 		 	{	
+ 		 		var param1 = 'Enterprise';
+ 		 		var url = getContext() + '/Network_Node';
+ 		 		url += '?param1=' + encodeURIComponent(param1);
+ 		 		window.location.href = url;
+ 		 	}
+ 		break;
 		default:
 		{			
 			alert("Selection is not available");
