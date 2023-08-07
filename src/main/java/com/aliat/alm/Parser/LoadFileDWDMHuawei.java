@@ -98,7 +98,7 @@ public class LoadFileDWDMHuawei {
 
 		//System.out.println("Start withh LOAD :" + System.getProperty("user.dir"));
 		
-	 	objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"/"+"almconfig.dat"));
+	 	objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"\\"+"almconfig.dat"));
 		 while ((strCurrentLine1 = objReader1.readLine()) != null){
 			 String data = strCurrentLine1;
 			 String[] data1 ;
@@ -313,7 +313,7 @@ public class LoadFileDWDMHuawei {
 
 				}
 			  	  nodeName = records.get(i).get(0);
-			  	  nodeType="Router";
+			  	  nodeType="WDM";
 				  nodeModel = records.get(i).get(1);
 				  IPaddress = records.get(i).get(2);
 				  softwareVersion = records.get(i).get(3);

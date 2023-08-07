@@ -232,6 +232,8 @@
 									<option value="Huawei" >Huawei</option>
 									<option value="zte">ZTE</option>
 									<option value="Ericsson">Ericsson</option>
+									<option value="Tejas">Tejas</option>
+									<option value="Alcatel">Alcatel</option>
 									
 					</select>
 				</div>	
@@ -479,17 +481,20 @@ $("#loadFiles").click(function() {
 	}else if(loader_vendor=="Huawei" && loader_domain=="Transmission" && loader_subdomain == "FiberOptic" && loader_type == "DWDM"){
 		url='loadFileDWDMhuawei';
 	
-    }else if(loader_vendor=="Ericsson" && loader_domain=="Transmission" && loader_subdomain == "MicrowaveLink"){
+    }else if(loader_vendor=="Tejas" && loader_domain=="Transmission" && loader_subdomain == "FiberOptic" && loader_type == "DWDM"){
+		url='loadFileDWDMtejas';
+		
+    }else if(loader_vendor=="Huawei" && loader_domain=="Transmission" && loader_subdomain == "FiberOptic" && loader_type == "SDH"){
+		url='loadFileSDHhuawei';
+		
+    }else if(loader_vendor=="Alcatel" && loader_domain=="Transmission" && loader_subdomain == "FiberOptic" && loader_type == "SDH"){
+		url='loadFileSDHalcatel';
+    }
+    else if(loader_vendor=="Ericsson" && loader_domain=="Transmission" && loader_subdomain == "MicrowaveLink"){
 	    url='loadFileMWERICSSON';
     }
     else if(loader_vendor=="Huawei" && loader_domain=="Enterprise"){
 		url='loadFilesEntHW';
-    }
-    else if(loader_vendor=="Huawei" && loader_domain=="Transmission" && loader_subdomain == "IP"){
-		url='loadFileIPHuawei';
-    }
-    else if(loader_vendor=="Nokia" && loader_domain=="Transmission" && loader_subdomain == "IP"){
-		url='loadFileIPNokia';
     }
 	else {
 		url='emptyUrl';

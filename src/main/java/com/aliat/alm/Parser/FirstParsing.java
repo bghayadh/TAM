@@ -89,18 +89,20 @@ public class FirstParsing {
 				 
 				/// select different domain and vendor from temp node active table
 				Statement stmtinit2 = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);  
-		    	 String sqlStmtinit2 = "select distinct DOMAIN, VENDOR from TEMP_NODE_ACTIVE";          
+		    	 String sqlStmtinit2 = "select distinct DOMAIN,SUB_DOMAIN_TYPE,SUB_DOMAIN,VENDOR from TEMP_NODE_ACTIVE";          
 				    ResultSet rsinit2 = stmtinit2.executeQuery(sqlStmtinit2);
 				    rsinit2.last();
+				    System.out.println(" rsinit2.last() : "+rsinit2.last());
 			 	    int totalrecinit2 = rsinit2.getRow(); 
 			 	   rsinit2.beforeFirst();
+			 	   System.out.println(" rsinit2.beforeFirst() : "+totalrecinit2);
 			 	   if (totalrecinit2 > 0 ) {
 				 		  while (rsinit2.next()) {
 				 			 
 				 			 Timestamp startTime = new Timestamp(System.currentTimeMillis());
 				 			 
 				 			    logger.info("Check if it is a new DB to run First Parsing of  "+ rsinit2.getString("DOMAIN") +","+ rsinit2.getString("VENDOR"));
-								System.out.println("Check if it is a new DB to run First Parsing of  "+ rsinit2.getString("DOMAIN") +","+ rsinit2.getString("VENDOR"));
+								System.out.println("Check if it is a new DB to run First Parsing of  "+ rsinit2.getString("DOMAIN") +","+ rsinit2.getString("VENDOR")+","+ rsinit2.getString("SUB_DOMAIN_TYPE") +","+ rsinit2.getString("SUB_DOMAIN"));
 								
 								//insert into AUTO_DISCOVERY_LOGS_DETAILS
 						 		String logs_DETAIls_ID= localgetseqNbr(1);
@@ -112,7 +114,7 @@ public class FirstParsing {
 								insert_LogsDETAIls_Statement.close();
 								
 							    // Check if new DB to run First Parsing 
-								GetDatafromTempNodeActive(rsinit2.getString("DOMAIN"),rsinit2.getString("VENDOR")); 
+								GetDatafromTempNodeActive(rsinit2.getString("DOMAIN"),rsinit2.getString("VENDOR"),rsinit2.getString("SUB_DOMAIN"),rsinit2.getString("SUB_DOMAIN_TYPE")); 
 								
 								
 								//insert into AUTO_DISCOVERY_LOGS_DETAILS
@@ -125,6 +127,7 @@ public class FirstParsing {
 								insert_LogsDETAIlsStatement.close();
 								
 								//insert into AUTO_DISCOVERY_LOGS
+								logsid= localgetseqNbr(1);
 					        	PreparedStatement insertLogsstmt = con.prepareStatement("insert into AUTO_DISCOVERY_LOGS (LOGS_ID,START_TIME,ACTIVITY_NAME,VENDOR,DOMAIN,STOP_TIME) "
 								 		+ "values('"+logsid+"',? ,'FirstParsing','"+ rsinit2.getString("VENDOR") +"','"+rsinit2.getString("DOMAIN")+"',?) ");
 								 		
@@ -176,13 +179,23 @@ public class FirstParsing {
 		
 	}
 	
-	private static void GetDatafromTempNodeActive(String vdomain, String vvendor) throws SQLException  {
+	private static void GetDatafromTempNodeActive(String vdomain, String vvendor, String subdomain, String subdomaintype) throws SQLException  {
 		Statement stmt1 = null;
 	
 		int totalrec=0;
+		String sqlStmt = null;
 		stmt1 = con.createStatement();   
 	    // Verify if no records in Node_active get data from Temp tables as first parsing
-	    String sqlStmt = "select count(1) as countnbr from NODE_ACTIVE where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"' ";          
+		if(subdomain != null && subdomaintype !=null) {
+			sqlStmt = "select count(1) as countnbr from NODE_ACTIVE where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"' "
+		    		+ "and SUB_DOMAIN='"+subdomain+"' and SUB_DOMAIN_TYPE='"+subdomaintype+"'";  
+		}else if(subdomain != null && subdomaintype == null) {
+			sqlStmt = "select count(1) as countnbr from NODE_ACTIVE where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"' "
+		    		+ "and SUB_DOMAIN='"+subdomain+"'";
+		}else if(subdomain == null && subdomaintype == null) {
+			sqlStmt = "select count(1) as countnbr from NODE_ACTIVE where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'";
+		}
+	            
 	    ResultSet rs1 = stmt1.executeQuery(sqlStmt);
 	    while (rs1.next()) {
 	    	try {
