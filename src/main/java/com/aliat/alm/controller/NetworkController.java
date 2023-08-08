@@ -1263,6 +1263,126 @@ public String Network_Node(Locale locale, Model model, HttpServletRequest reques
 }
 
 
+@SuppressWarnings("unchecked")
+@RequestMapping(value = "/Network_Cell", method = RequestMethod.GET)
+public String Network_Cell(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
+//		throws JsonProcessingException {
+	// logger.info("Welcome home! The client locale is {}.", locale);
+	if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+		return "redirect:/";
+	} else {
+		ObjectMapper mapper = new ObjectMapper();
+		Session session = null;
+		Transaction tx = null;
+		session = almsessions.getSession();
+
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			notifications.headerNotifications(session, model);
+			System.out.println("NODE SERVER");
+
+			String param1 = request.getParameter("param1");
+			System.out.println("param1...cell"+ param1);
+			if (param1 != null) {
+				System.out.println(".NOT NULL.cell");			
+				try {
+					model.addAttribute("listSites",mapper.writeValueAsString((List<Object[]>) session.createSQLQuery(
+									" SELECT b.SITE_ID,b.WARE_NAME,b.WARE_ID,b.LATITUDE,b.LONGITUDE,"
+									+ " (select COUNT(*) from NODE_ACTIVE w where w.DOMAIN='" +param1+ "' and w.ACTIVE_RECORD = '1') as countnodes,"
+									+ " (select count(*) from NODE_GCELL e  where b.NODE_PK = e.NODE_PK and e.ACTIVE_RECORD = '1' and e.DOMAIN='" +param1+ "') as countGCells,"
+									+ " (select count(*) from NODE_LCELL c  where b.NODE_PK = c.NODE_PK and c.ACTIVE_RECORD = '1' and c.DOMAIN='" +param1+ "') as countLCells,"
+									+ " (select count(*) from NODE_UCELL d  where b.NODE_PK = d.NODE_PK and d.ACTIVE_RECORD = '1' and d.DOMAIN='" +param1+ "') as countUCells"													
+									+ " FROM NODE_ACTIVE b,NODE_LCELL h,NODE_LCELL i,NODE_LCELL o WHERE b.DOMAIN='" +param1+ "' "
+									+ "and b.NODE_PK = h.NODE_PK or b.NODE_PK = i.NODE_PK or b.NODE_PK = o.NODE_PK" ).list()));			
+			
+					
+				} catch (Exception e) {
+					logger.info("Error in retreiving Sites Data from database", e);
+					model.addAttribute("listSites", "null");
+				}
+				
+				try {
+	
+					List<Object[]> result = session.createSQLQuery(
+							"SELECT a.GCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_GCELL a, NODE_ACTIVE b WHERE b.NODE_PK = a.NODE_PK AND a.ACTIVE_RECORD = '1' AND a.DOMAIN='" +param1+ "'")
+							.list();
+					List<Object[]> result1 = session.createSQLQuery(
+							"SELECT a.LCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_LCELL a, NODE_ACTIVE b WHERE b.NODE_PK = a.NODE_PK AND a.ACTIVE_RECORD = '1'AND a.DOMAIN='" +param1+ "'")
+							.list();
+					List<Object[]> result2 = session.createSQLQuery(
+							"SELECT a.UCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_UCELL a, NODE_ACTIVE b WHERE b.NODE_PK = a.NODE_PK AND a.ACTIVE_RECORD = '1'AND a.DOMAIN='" +param1+ "'")
+							.list();
+
+
+					List<Object[]> cellResult = new ArrayList<Object[]>();
+
+					cellResult.addAll(result);
+
+					cellResult.addAll(result1);
+
+					cellResult.addAll(result2);
+
+					model.addAttribute("listCells", mapper.writeValueAsString(cellResult));
+					System.out.println("lst cells param not null----> "+mapper.writeValueAsString(cellResult));
+				} catch (Exception e) {
+					logger.info("Error in retreiving cells array Data from database", e);
+					model.addAttribute("listCells", "null");
+				}
+			}else {
+				System.out.println(".NULL.cell");
+				try {
+					model.addAttribute("listSites",mapper.writeValueAsString((List<Object[]>) session.createSQLQuery(
+							" SELECT  b.SITE_ID,b.WARE_NAME,b.WARE_ID,b.LATITUDE,b.LONGITUDE,"
+							+ " (select COUNT(*) from NODE_ACTIVE w where w.ACTIVE_RECORD = '1') as countnodes,"
+							+ " (select count(*) from NODE_GCELL e where b.NODE_PK = e.NODE_PK and e.ACTIVE_RECORD = '1') as countGCells,"
+							+ " (select count(*) from NODE_LCELL c where b.NODE_PK = c.NODE_PK and c.ACTIVE_RECORD = '1') as countLCells,"
+							+ " (select count(*) from NODE_UCELL d where b.NODE_PK = d.NODE_PK and d.ACTIVE_RECORD = '1') as countUCells"													
+							+ " FROM NODE_ACTIVE b,NODE_LCELL h,NODE_LCELL i,NODE_LCELL o WHERE b.NODE_PK = h.NODE_PK OR b.NODE_PK = i.NODE_PK OR b.NODE_PK = o.NODE_PK").list()));
+				
+				} catch (Exception e) {
+					logger.info("Error in retreiving Sites Data from database", e);
+					model.addAttribute("listSites", "null");
+				}
+				
+				try {
+					List<Object[]> result = session.createSQLQuery(
+							"SELECT a.GCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_GCELL a, NODE_ACTIVE b WHERE b.NODE_PK = a.NODE_PK AND a.ACTIVE_RECORD = '1'")
+							.list();
+					List<Object[]> result1 = session.createSQLQuery(
+							"SELECT a.LCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_LCELL a, NODE_ACTIVE b WHERE b.NODE_PK = a.NODE_PK AND a.ACTIVE_RECORD = '1'")
+							.list();
+					List<Object[]> result2 = session.createSQLQuery(
+							"SELECT a.UCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_UCELL a, NODE_ACTIVE b WHERE b.NODE_PK = a.NODE_PK AND a.ACTIVE_RECORD = '1'")
+							.list();
+
+					List<Object[]> cellResult = new ArrayList<Object[]>();
+
+					cellResult.addAll(result);
+
+					cellResult.addAll(result1);
+
+					cellResult.addAll(result2);
+
+					model.addAttribute("listCells" , mapper.writeValueAsString(cellResult));
+					System.out.println("lst cells param null----> "+mapper.writeValueAsString(cellResult));
+					
+				} catch (Exception e) {
+					logger.info("Error in retreiving cells array Data from database", e);
+					model.addAttribute("listCells", "null");
+				}
+			}
+			//finally {
+				if (session != null && session.isOpen()) {
+					logger.info("Session Closseeed");
+					tx.commit();
+					session.close();
+				}
+			//}
+		}
+		return "Network/Network_Cell";
+	}
+}
+
 	/*
 	// retrieve sites/nodes/cells data when supplier is clicked in
 	// Supplier-site-node-cell method
