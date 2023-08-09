@@ -9783,7 +9783,9 @@ public class PhysicalLayerController {
 							query.executeUpdate();
 						}
 
-						Query insertJctQuery = session.createSQLQuery("INSERT INTO JUNCTION VALUES ('" + junctionID
+						Query insertJctQuery = session.createSQLQuery("INSERT INTO JUNCTION(JUNCTION_ID,JUNCTION_NAME,PHYSICAL_LAYER_ID"
+								+ ",PHYSICAL_LAYER_NAME,LONGITUDE,LATITUDE,CAPACITY,JUNCTION_NUMBER,CITY,PROJECT_ID,CREATION_DATE,LAST_MODIFIED_DATE)"
+								+ " VALUES ('" + junctionID
 								+ "','" + junctionName + "','" + physLayerIdJunction + "','" + physLayerNameJunction
 								+ "','" + junctionLong + "','" + junctionLat + "','" + junctionCapacity + "','"
 								+ junctionNumber + "','" + junctionCity + "','" + projectId + "', TIMESTAMP '"
@@ -9818,7 +9820,19 @@ public class PhysicalLayerController {
 					String JctLocationIdSideA = "";
 					String JctLocationNameSideA = "";
 					String JctWarehouseIdSideA = "";
-
+					
+					String JctStrandNBSideA ="";   
+					String JctTubeNBSideA="";
+					String JctNetworkLevelSideA ="";
+					
+					String JctStrandNBSideB ="";   
+					String JctTubeNBSideB="";
+					String JctNetworkLevelSideB ="";
+					String JctLocationTypeSideB = "";
+					String JctLocationIdSideB = "";
+					String JctLocationNameSideB = "";
+					String JctWarehouseIdSideB = "";
+//
 					if (itemParameters.getDictParameter().size() > 0) {
 						String mappingJctID = "";
 						for (int i = 0; i < itemParameters.getDictParameter().size(); i++) {
@@ -9854,9 +9868,28 @@ public class PhysicalLayerController {
 							JctTubeNameSideB = itemParameters.getDictParameter().get(i).get("JctTubeNameSideB");
 							JctFiberIdSideB = itemParameters.getDictParameter().get(i).get("JctFiberIdSideB");
 							JctFiberNameSideB = itemParameters.getDictParameter().get(i).get("JctFiberNameSideB");
-
+							
+							//
+							JctStrandNBSideA =itemParameters.getDictParameter().get(i).get("JctStrandNBSideA");   
+							JctTubeNBSideA=itemParameters.getDictParameter().get(i).get("JctTubeNBSideA");
+							JctNetworkLevelSideA = itemParameters.getDictParameter().get(i).get("JctNetworkLevelSideA");
+								
+							JctStrandNBSideB = itemParameters.getDictParameter().get(i).get("JctStrandNBSideB"); 
+							JctTubeNBSideB= itemParameters.getDictParameter().get(i).get("JctTubeNBSideB");
+						    JctNetworkLevelSideB =itemParameters.getDictParameter().get(i).get("JctNetworkLevelSideB");
+					    	JctLocationTypeSideB = itemParameters.getDictParameter().get(i).get("JctLocationTypeSideB");
+							JctLocationIdSideB = itemParameters.getDictParameter().get(i).get("JctLocationIdSideB");
+							JctLocationNameSideB = itemParameters.getDictParameter().get(i).get("JctLocationNameSideB");
+							JctWarehouseIdSideB = itemParameters.getDictParameter().get(i).get("JctWarehouseIdSideB");
+							
+							//
+							
 							Query insertMappingJctQuery = session
-									.createSQLQuery("INSERT INTO JUNCTION_MAPPING VALUES ('" + junctionID + "','"
+									.createSQLQuery("INSERT INTO JUNCTION_MAPPING(JCT_ID,SEQUENCE_NUMBER,JCT_MAPPING_ID,PHYSICAL_LAYER_ID,STRAND_ID_SIDE_A,STRAND_NAME_SIDE_A,"
+											+ "TUBE_ID_SIDE_A,TUBE_NAME_SIDE_A,FIBER_ID_SIDE_A,FIBER_NAME_SIDE_A,STRAND_ID_SIDE_B,STRAND_NAME_SIDE_B,TUBE_ID_SIDE_B,TUBE_NAME_SIDE_B"
+											+ ",FIBER_ID_SIDE_B,FIBER_NAME_SIDE_B,LOCATION_TYPE_SIDE_A,LOCATION_ID_SIDE_A,LOCATION_NAME_SIDE_A,WAREHOUSE_ID_SIDE_A,STRAND_NB_SIDE_A,"
+											+ "TUBE_NB_SIDE_A,NETWORK_LEVEL_SIDE_A,STRAND_NB_SIDE_B,TUBE_NB_SIDE_B,NETWORK_LEVEL_SIDE_B,LOCATION_TYPE_SIDE_B,LOCATION_ID_SIDE_B,LOCATION_NAME_SIDE_B,WAREHOUSE_ID_SIDE_B)"
+											+ " VALUES ('" + junctionID + "','"
 											+ JctSeq + "','" + mappingJctID + "','" + physLayerIdJunction + "','"
 											+ JctStrandIdSideA + "','" + JctStrandNameSideA + "','" + JctTubeIdSideA
 											+ "','" + JctTubeNameSideA + "','" + JctFiberIdSideA + "','"
@@ -9864,7 +9897,9 @@ public class PhysicalLayerController {
 											+ "','" + JctTubeIdSideB + "','" + JctTubeNameSideB + "','"
 											+ JctFiberIdSideB + "','" + JctFiberNameSideB + "','" + JctLocationTypeSideA
 											+ "','" + JctLocationIdSideA + "','" + JctLocationNameSideA + "','"
-											+ JctWarehouseIdSideA + "' )");
+											+ JctWarehouseIdSideA+ "','" + JctStrandNBSideA + "','" + JctTubeNBSideA + "','" + JctNetworkLevelSideA + "','" + JctStrandNBSideB+ "','" 
+											+ JctTubeNBSideB + "','" + JctNetworkLevelSideB+ "','" + JctLocationTypeSideB + "','" + JctLocationIdSideB
+											+ "','" + JctLocationNameSideB + "','" + JctWarehouseIdSideB + "' )");
 							insertMappingJctQuery.executeUpdate();
 						}
 
@@ -9897,6 +9932,19 @@ public class PhysicalLayerController {
 							JctFiberIdSideB = itemParameters.getDictParameterTemp().get(i).get("JctFiberIdSideB");
 							JctFiberNameSideB = itemParameters.getDictParameterTemp().get(i).get("JctFiberNameSideB");
 							mappingId = itemParameters.getDictParameterTemp().get(i).get("jctMappingId");
+							//
+							JctStrandNBSideA =itemParameters.getDictParameterTemp().get(i).get("JctStrandNBSideA");   
+							JctTubeNBSideA=itemParameters.getDictParameterTemp().get(i).get("JctTubeNBSideA");
+							JctNetworkLevelSideA = itemParameters.getDictParameterTemp().get(i).get("JctNetworkLevelSideA");
+								
+							JctStrandNBSideB = itemParameters.getDictParameterTemp().get(i).get("JctStrandNBSideB"); 
+							JctTubeNBSideB= itemParameters.getDictParameterTemp().get(i).get("JctTubeNBSideB");
+						    JctNetworkLevelSideB =itemParameters.getDictParameterTemp().get(i).get("JctNetworkLevelSideB");
+					    	JctLocationTypeSideB = itemParameters.getDictParameterTemp().get(i).get("JctLocationTypeSideB");
+							JctLocationIdSideB = itemParameters.getDictParameterTemp().get(i).get("JctLocationIdSideB");
+							JctLocationNameSideB = itemParameters.getDictParameterTemp().get(i).get("JctLocationNameSideB");
+							JctWarehouseIdSideB = itemParameters.getDictParameterTemp().get(i).get("JctWarehouseIdSideB");
+							//
 
 							Query insertMappingJctQuery = session
 									.createSQLQuery("UPDATE JUNCTION_MAPPING SET SEQUENCE_NUMBER= '" + JctSeq
@@ -9911,7 +9959,17 @@ public class PhysicalLayerController {
 											+ JctFiberNameSideB + "', LOCATION_TYPE_SIDE_A = '" + JctLocationTypeSideA
 											+ "',LOCATION_ID_SIDE_A = '" + JctLocationIdSideA
 											+ "',LOCATION_NAME_SIDE_A = '" + JctLocationNameSideA
-											+ "',WAREHOUSE_ID_SIDE_A = '" + JctWarehouseIdSideA + "'"
+											+ "',WAREHOUSE_ID_SIDE_A = '" + JctWarehouseIdSideA  
+											+ "',STRAND_NB_SIDE_A = '" + JctStrandNBSideA
+											+ "',TUBE_NB_SIDE_A = '" + JctTubeNBSideA
+											+ "',NETWORK_LEVEL_SIDE_A = '" + JctNetworkLevelSideA
+											+ "',STRAND_NB_SIDE_B = '" + JctStrandNBSideB
+											+ "',TUBE_NB_SIDE_B = '" + JctTubeNBSideB
+											+ "',NETWORK_LEVEL_SIDE_B = '" + JctNetworkLevelSideB
+											+ "',LOCATION_TYPE_SIDE_B = '" + JctLocationTypeSideB
+											+ "',LOCATION_ID_SIDE_B = '" + JctLocationIdSideB
+											+ "',LOCATION_NAME_SIDE_B = '" + JctLocationNameSideB
+											+ "',WAREHOUSE_ID_SIDE_B = '" + JctWarehouseIdSideB+"'"
 											+ " WHERE JCT_MAPPING_ID = '" + mappingId + "'");
 
 							insertMappingJctQuery.executeUpdate();
@@ -9930,7 +9988,7 @@ public class PhysicalLayerController {
 							"SELECT DISTINCT SEQUENCE_NUMBER,STRAND_ID_SIDE_A,STRAND_NAME_SIDE_A,TUBE_ID_SIDE_A,TUBE_NAME_SIDE_A,FIBER_ID_SIDE_A,FIBER_NAME_SIDE_A,STRAND_ID_SIDE_B,STRAND_NAME_SIDE_B,TUBE_ID_SIDE_B,TUBE_NAME_SIDE_B,FIBER_ID_SIDE_B,FIBER_NAME_SIDE_B,JCT_MAPPING_ID,JCT_ID,(SELECT JUNCTION_NAME FROM JUNCTION WHERE JUNCTION_ID='"
 									+ junctionID + "'),(SELECT PHYSICAL_LAYER_ID FROM JUNCTION WHERE JUNCTION_ID='"
 									+ junctionID
-									+ "'),LOCATION_TYPE_SIDE_A,LOCATION_ID_SIDE_A,LOCATION_NAME_SIDE_A,WAREHOUSE_ID_SIDE_A FROM JUNCTION_MAPPING B WHERE B.JCT_ID='"
+									+ "'),LOCATION_TYPE_SIDE_A,LOCATION_ID_SIDE_A,LOCATION_NAME_SIDE_A,WAREHOUSE_ID_SIDE_A,STRAND_NB_SIDE_A,TUBE_NB_SIDE_A,NETWORK_LEVEL_SIDE_A,STRAND_NB_SIDE_B,TUBE_NB_SIDE_B,NETWORK_LEVEL_SIDE_B,LOCATION_TYPE_SIDE_B,LOCATION_ID_SIDE_B,LOCATION_NAME_SIDE_B,WAREHOUSE_ID_SIDE_B FROM JUNCTION_MAPPING B WHERE B.JCT_ID='"
 									+ junctionID + "' ")
 							.list();
 
@@ -10403,7 +10461,7 @@ public class PhysicalLayerController {
 							.list();
 
 					List<Object[]> junctionMappingPts = session.createSQLQuery(
-							"SELECT DISTINCT SEQUENCE_NUMBER,JCT_MAPPING_ID,STRAND_ID_SIDE_A,STRAND_NAME_SIDE_A,TUBE_ID_SIDE_A,TUBE_NAME_SIDE_A,FIBER_ID_SIDE_A,FIBER_NAME_SIDE_A,STRAND_ID_SIDE_B,STRAND_NAME_SIDE_B,TUBE_ID_SIDE_B,TUBE_NAME_SIDE_B,FIBER_ID_SIDE_B,FIBER_NAME_SIDE_B,LOCATION_TYPE_SIDE_A,LOCATION_ID_SIDE_A,LOCATION_NAME_SIDE_A,WAREHOUSE_ID_SIDE_A FROM JUNCTION_MAPPING B WHERE B.JCT_ID='"
+							"SELECT DISTINCT SEQUENCE_NUMBER,JCT_MAPPING_ID,STRAND_ID_SIDE_A,STRAND_NAME_SIDE_A,TUBE_ID_SIDE_A,TUBE_NAME_SIDE_A,FIBER_ID_SIDE_A,FIBER_NAME_SIDE_A,STRAND_ID_SIDE_B,STRAND_NAME_SIDE_B,TUBE_ID_SIDE_B,TUBE_NAME_SIDE_B,FIBER_ID_SIDE_B,FIBER_NAME_SIDE_B,LOCATION_TYPE_SIDE_A,LOCATION_ID_SIDE_A,LOCATION_NAME_SIDE_A,WAREHOUSE_ID_SIDE_A,STRAND_NB_SIDE_A,TUBE_NB_SIDE_A,NETWORK_LEVEL_SIDE_A,STRAND_NB_SIDE_B,TUBE_NB_SIDE_B,NETWORK_LEVEL_SIDE_B,LOCATION_TYPE_SIDE_B,LOCATION_ID_SIDE_B,LOCATION_NAME_SIDE_B,WAREHOUSE_ID_SIDE_B FROM JUNCTION_MAPPING B WHERE B.JCT_ID='"
 									+ JunctionID + "' ORDER BY SEQUENCE_NUMBER ASC")
 							.list();
 
