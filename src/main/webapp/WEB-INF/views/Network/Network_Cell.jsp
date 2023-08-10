@@ -4,12 +4,7 @@
 $('#filterr').hide();
 $('#removeFilter').hide();
 
-var lst = ${listSites};
-//console.log("lst......",lst);
-
-var lstCells = ${listCells};
-//console.log("lst cells......",lstCells);
-
+var lst = ${listCells};
 
 var button ;
 var data;
@@ -250,7 +245,7 @@ map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
 */
 	map.setOptions({ minZoom: 3, maxZoom: 28});	
 	CreateMap(lst,map);
-	CreateTree_Cell(lstCells,map);
+	CreateTree_Cell(lst,map);
 
 		}
 	
@@ -271,12 +266,12 @@ map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
 /* Start of Node Tree Method */ 
 //////////////////////////////////////////////
 
-function CreateTree_Cell(lstCells,map){  
+function CreateTree_Cell(lst,map){  
 	var str="<ul><li id='initial_ul' class='Initial'><input type='checkbox' id='Cells' class='AllCells' style='margin-left: 15px' onclick='AllSitesCheckFilter()'></input><span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Cells</span></li></ul>";
 	$("#network_tree").append(str);
 	 var dFrag = document.createDocumentFragment();
-	 for (n = 0; n < lstCells.length; n++){ 
-		var str = "<li class='Cell' id='"+lstCells[n][2] +"_"+lstCells[n][3]+"' style='display:none'><input type='checkbox' id='" +lstCells[n][2] +"_"+lstCells[n][3]+"_SingleCell' class='SingleCell' onclick=\"showMarkerSingleSite('"+lstCells[n][2]+"_"+lstCells[n][3]+"_SingleCell')\"></input><span class='TreeSpan' style='width:395px;margin-left: 5px' onclick=\"PanTreeSites('"+lstCells[n][2]+"_"+lstCells[n][3]+"')\"> <i class='fa fa-server'></i> "+lstCells[n][1]+"</span></li>";
+	 for (n = 0; n < lst.length; n++){ 
+		var str = "<li class='Cell' id='"+lst[n][2] +"_"+lst[n][11]+"' style='display:none'><input type='checkbox' id='" +lst[n][2] +"_"+lst[n][11]+"_SingleCell' class='SingleCell' onclick=\"showMarkerSingleSite('"+lst[n][2]+"_"+lst[n][11]+"_SingleCell')\"></input><span class='TreeSpan' style='width:395px;margin-left: 5px' onclick=\"PanTreeSites('"+lst[n][2]+"_"+lst[n][11]+"')\"> <i class='fa fa-server'></i> "+lst[n][10]+"</span></li>";
 		const div = document.createElement('ul');
 		div.innerHTML = str;
 		dFrag.appendChild(div);
@@ -311,17 +306,10 @@ function CreateTree_Cell(lstCells,map){
 	function showMarkerSingleSite(id) {
 		var Id= id.split("_SingleCell")[0];
 		
-		var parts = Id.split('_');	
-		
+		var parts = Id.split('_');			
 		var nodeId = parts[0] + "_" + parts[1]+ "_" + parts[2]; // 2023_NODE_1
-		
-		if(parts[3]!="null"){
-			var wareId = parts[3] + "_" + parts[4]+ "_" + parts[5]; // WARE_2021_13730
-		}else{
-			var wareId = parts[3]; // WARE_2021_13730
-		}		
+				
 		if ($("#" + id).is(":checked")) {
-			//console.log("checked");
 			var checkboxes = $('[id$="_SingleCell"]');
 			var allChecked = true;
 			for (var i = 0; i < checkboxes.length; i++) {
@@ -333,33 +321,26 @@ function CreateTree_Cell(lstCells,map){
 			if (allChecked) {
 				document.getElementById('Cells').checked = true;
 			}
-			markersSites[wareId].setMap(map);			
-			markerClusterSites.addMarker(markersSites[wareId]);
+			markersSites[nodeId].setMap(map);			
+			markerClusterSites.addMarker(markersSites[nodeId]);
 			markerClusterSites.repaint();
 		}else{
-			//console.log("unchecked");
 			document.getElementById('Cells').checked = false;		
-			markersSites[wareId].setMap(null);
-			markerClusterSites.removeMarker(markersSites[wareId]);
+			markersSites[nodeId].setMap(null);
+			markerClusterSites.removeMarker(markersSites[nodeId]);
 			markerClusterSites.repaint();
 		}
 	}
 
 
-	function PanTreeSites(id){		
+	function PanTreeSites(id){
 		var parts = id.split('_');		
 		var nodeId = parts[0] + "_" + parts[1]+ "_" + parts[2]; 
 		
-		if(parts[3]!="null"){
-			var selectedItem = parts[3] + "_" + parts[4]+ "_" + parts[5]; 
-		}else{
-			var selectedItem = parts[3]; 
-		}
-		
-		if(selectedItem!=markersSite)
+		if(nodeId!=markersSite)
 		{
 			var selMarker="";		
-			markerId=selectedItem;				
+			markerId=nodeId;				
 			selMarker=markersSites[markerId];
 			var latSitee = selMarker.getPosition().lat();
 			var lngSitee = selMarker.getPosition().lng();
@@ -372,9 +353,8 @@ function CreateTree_Cell(lstCells,map){
 				var otherMarkers=markersSites[markersSite];			
 			}		
 			markersSite="";	
-			markersSite=selectedItem;		
+			markersSite=nodeId;		
 			map.setZoom(15);
-			//console.log("PANNED");
 		}	
 	} 
 ///////////////////////////////////////////////
