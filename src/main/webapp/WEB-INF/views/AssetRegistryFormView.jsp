@@ -2294,7 +2294,7 @@ if ('${ListArSerialNumber}' != "addNew") {
 		
 		var ctx = window.location.pathname;
 
-
+/**
 		// MODEL & PARTNUMBER TAB AUTOCOMPLETE
 		newRowCount =  $("#partmodTab >tbody tr").length-1;
   		PNboqAutocomplete(newRowCount,"partmodTab");
