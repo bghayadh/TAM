@@ -85,7 +85,7 @@ public class PhysicalLayerController {
 			HttpServletResponse response) throws JsonProcessingException {
 
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
-			return "redirect:/";
+			return "redirect:/"; 
 		} else {
 
 			session = almsessions.getSession();
@@ -130,6 +130,7 @@ public class PhysicalLayerController {
 					List<Object[]> newList = new ArrayList<Object[]>();
 					List<Object[]> newListPt = new ArrayList<Object[]>();
 					List<Object[]> EntrepriseList = new ArrayList<Object[]>();
+					List<Object[]> TransmissionList = new ArrayList<Object[]>();
 
 					// System.out.println("url is "+request.getParameter("selectedField"));
 					String checkedOption = "all";
@@ -1581,7 +1582,9 @@ public class PhysicalLayerController {
 						EntrepriseList =  session.createSQLQuery(
 								"SELECT DISTINCT A.NODE_PK,A.NODE_NAME,A.NODE_PK || ':'  || NODE_NAME,A.DOMAIN,A.SITE_ID,B.LONGITUDE,B.LATITUDE,A.NODE_ID FROM NODE_ACTIVE A LEFT JOIN WAREHOUSE B ON B.SITE_ID = A.SITE_ID WHERE DOMAIN = 'Enterprise'").list();
 					
-
+						TransmissionList =  session.createSQLQuery(
+								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID FROM NODE_ACTIVE  WHERE DOMAIN = 'Transmission'").list();
+						
 					}
 
 					LinkedHashMap<String, List<?>> physicalLayerData = new LinkedHashMap<String, List<?>>();// linkedHashmap
@@ -1684,6 +1687,7 @@ public class PhysicalLayerController {
 					physicalLayerList.put("Distribution_Board", distribBoardList);
 					physicalLayerList.put("Trench", trenchList);
 					physicalLayerList.put("Node", EntrepriseList);
+					physicalLayerList.put("Transmission", TransmissionList);
 					physicalLayerList.put("duct", ductList);
 					physicalLayerData.put("trench_Auxiliary", trenchAuxiliary_Data);
 					physicalLayerData.put("strands_Auxiliaries", strandsAuxiliaries);
@@ -2930,6 +2934,49 @@ public class PhysicalLayerController {
 		return rtn;
 	}
 	
+	// Transmission details
+		@SuppressWarnings("unchecked")
+		@RequestMapping(value = "/findTransmissionDetails", method = RequestMethod.GET)
+		@ResponseBody
+		public Map<String, Object> findTransmissionDetails(Locale locale, Model model, HttpServletRequest request,
+				HttpServletResponse response) throws JsonProcessingException {
+			
+
+			Map<String, Object> rtn = new LinkedHashMap<>();
+
+			session = almsessions.getSession();
+			if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+				rtn.put("Login", LoginServices.checkSession(request, response));
+				return rtn;
+			}
+			if (session != null && session.isOpen()) {
+				tx = session.beginTransaction();
+
+				String selectedTransmissionIdContext = request.getParameter("selectedTransmissionIdContext");
+				try {
+					Object[] TransmissionNodesDetails = (Object[]) session.createSQLQuery(
+							"SELECT NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_SOURCE,NODE_MODEL,SITE_ID,WARE_ID,TO_CHAR(CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(UPDATE_DATE, 'MM/dd/YYYY HH:MI AM'),LONGITUDE,LATITUDE FROM NODE_ACTIVE  WHERE DOMAIN = 'Transmission' AND NODE_PK ='"+selectedTransmissionIdContext+"'").uniqueResult();
+					
+					rtn.put("TransmissionNodesDetails", TransmissionNodesDetails);
+
+				} catch (Exception e) {
+					sw = new StringWriter(); 
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in findTransmissionDetails due to \n " + exceptionAsString);
+					logger.info("Error in findTransmissionDetails due to \n " + exceptionAsString);
+					rtn.put("TransmissionNodesDetails", null);
+
+				} finally {
+					if (session != null && session.isOpen()) {
+						tx.commit();
+						session.close();
+					}
+				}
+			}
+			return rtn;
+		}
+		
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/entrNodeSave", method = RequestMethod.POST)
 	@ResponseBody
@@ -3015,6 +3062,55 @@ public class PhysicalLayerController {
 				logger.finest("Error in entrNodeSave due to \n " + exceptionAsString);
 				logger.info("Error in entrNodeSave due to \n " + exceptionAsString);
 				rtn.put("nodePk", null);
+			}
+
+			finally {
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+				}
+			}
+		}
+		return rtn;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/transNodeSave", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> transNodeSave(Locale locale, Model model, @ModelAttribute ItemParameters itemParameters,
+			HttpServletRequest request, HttpServletResponse response) {
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		session = almsessions.getSession();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", "redirect:/");
+			return rtn;
+		}
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			try {
+				NodeActive nodeActive = new NodeActive();
+				String transNode_pk = request.getParameter("transNode_pk");
+				
+				nodeActive.setNodePK(transNode_pk);
+				nodeActive.setUniNodeID(request.getParameter("transUniqNodeId"));
+				nodeActive.setNodeID(request.getParameter("transNodeId"));
+				nodeActive.setNodeName(request.getParameter("transNodeName"));
+				nodeActive.setNodeType(request.getParameter("transNodeType"));
+				nodeActive.setNodeSrc(request.getParameter("transNodeSource"));
+				nodeActive.setNodeModel(request.getParameter("transNodeModel"));
+				nodeActive.setDomain(request.getParameter("transNodeDomin"));
+				nodeActive.setSiteID(request.getParameter("transSiteId_node"));
+				nodeActive.setWareID(request.getParameter("transWareId_node"));
+
+				rtn.put("transNode_pk", transNode_pk);
+			} catch (Exception e) {
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in transNodeSave due to \n " + exceptionAsString);
+				logger.info("Error in transNodeSave due to \n " + exceptionAsString);
+				rtn.put("transNode_pk", null);
 			}
 
 			finally {

@@ -7,7 +7,7 @@ function getContext() {
 // To let the layer tab opened when the page is loaded
 
 	
-function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,distribBoardList,fiberTubes,fiberStrands,fiberAuxiliary_Data,tubesAuxiliaries,strandsAuxiliaries,trenchList,trenchAuxiliary_Data,nodeList,filterFlag){
+function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,distribBoardList,fiberTubes,fiberStrands,fiberAuxiliary_Data,tubesAuxiliaries,strandsAuxiliaries,trenchList,trenchAuxiliary_Data,nodeList,TransmissionList,filterFlag){
 
 	var start = performance.now();
 			panPath = [];   // An array of points the current panning action will use
@@ -17,6 +17,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			markersManhole=[];		
 			markersHandhole=[];
 			markersNodes=[];
+			markersTransmission=[];
 			
 			markersDistBoard=[];
 			markersDistBoardFilter=[];
@@ -37,6 +38,8 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			markerClusterDistBoard.setMap(map);// to be checked !!!!
 			markerClusterNodes = new MarkerClusterer();
 			markerClusterNodes.setMap(map);// to be checked !!!!
+			markerClusterTransmission = new MarkerClusterer();
+			markerClusterTransmission.setMap(map);// to be checked !!!!
 	
 			kenya=new google.maps.LatLng(1,38);					
 			LatLanMouse(map);
@@ -92,6 +95,12 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			};
 			
 			iconNodes ={
+					url:""+getContext()+"/resources/NetworkImages/purpleCircle.png", // url
+					scaledSize: new google.maps.Size(15, 15), // scaled size
+					
+			};
+			
+			iconTransmission ={
 					url:""+getContext()+"/resources/NetworkImages/purpleCircle.png", // url
 					scaledSize: new google.maps.Size(15, 15), // scaled size
 					
@@ -164,6 +173,22 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 				if (markers.length >= 1) return {text: markers.length, index: 3};
 				}                   
 			});
+			
+			markerClusterTransmission.setOptions( {					  					
+			 	minimumClusterSize: 2,
+				styles: [
+				         {
+				        	 url: getContext()+'/resources/clusterIcons/blueCluster.png',
+					         height: 60,
+					         width:60,
+					         anchorText:[-2,-4]
+					      },
+				],
+				calculator: function(markers, numStyles) {
+				if (markers.length >= 1) return {text: markers.length, index: 3};
+				}                   
+			});
+	
 	
 			$(".Initial_CurrentPhysicalLayer > .TreeSpan").on("click",function(){
 		
@@ -175,6 +200,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 						markerClusterHandhole.repaint();
 						markerClusterDistBoard.repaint();	
 						markerClusterNodes.repaint();	
+						markerClusterTransmission.repaint();
 	
 				});				
 			});
@@ -230,10 +256,19 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 				//AllDistributionBoardFilter();
 			}
 			
+			/* Create node enterprise in the map*/
 			if(nodeList !=null){
 				for(i=0;i<nodeList.length;i++){
 						create_Marker_Click(nodeList[i][0],nodeList[i][1],nodeList[i][5],nodeList[i][6],markersNodes,markerClusterNodes,"","");				
 						NodesCheckFilter(nodeList[i][0]);						
+				}
+			}
+			
+			/* Create node Transmission in the map*/
+			if(TransmissionList !=null){
+				for(i=0;i<TransmissionList.length;i++){
+						create_Marker_Click(TransmissionList[i][0],TransmissionList[i][1],TransmissionList[i][5],TransmissionList[i][6],markersTransmission,markerClusterTransmission,"","");				
+						TransmissionCheckFilter(TransmissionList[i][0]);						
 				}
 			}
 			

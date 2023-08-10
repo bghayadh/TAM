@@ -232,6 +232,11 @@
 							<td><input type="checkbox" id="entrepriseCheckAllBoq" style="margin-left: 10px;"></td>
 						</tr>
 						<tr>
+							<td class="Icon "><img src="${pageContext.request.contextPath}/resources/NetworkImages/site.png">
+								<span id="definition">Transmission</span></td>
+							<td><input type="checkbox" id="transmissionCheckAllBoq" style="margin-left: 10px;"></td>
+						</tr>
+						<tr>
 							<td class="Icon "><img src="${pageContext.request.contextPath}/resources/NetworkImages/handholeYellow.png">
 								<span id="definition">HANDHOLE</span></td>
 							<td><input type="checkbox" id="handholeCheckAllBoq" style="margin-left: 10px;"></td>
@@ -673,6 +678,166 @@
 										<div class="input-group-prepend">
 											<span style="width: 140px;" class="input-group-text"><b>UPDATE DATE</b></span>
 											<input type="text" id="updateData_node" class="form-control text-input" readonly/>
+										</div>
+									</div>
+								</div>
+							</div>
+						
+			
+						</div>
+					</div>
+					<div class="modal-footer"></div>
+				</div>
+			</div>
+		</div>
+	</div> 
+	
+		<!-- Transmission Model -->
+	<div class="container">
+		<div id="TransmissionModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+			<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header" style="background-color: #2678CC ; height: 55px; ">
+						<h5 id="transNodesHeader" class="modal-title" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px">Node</h5>
+						<div style="float: right;">
+							<button id="saveTransmission" class="btn btn-save" style="color: black; font-weight:bold; margin-top:-6px">Save</button>
+							<button  type="button" name="closePopup" class="close" id="close" onclick="ClosingConfirm()" >
+								<i class='fa fa-times'></i>
+							</button>
+							<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change'></i>
+							</a>
+						</div>
+					</div>
+					<div class="modal-body">
+						<div class="tab-content">
+							<p></p>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 150px;" class="input-group-text" style="color:green;"><b>NODE_PK</b> </span> 
+											<input type="text" id="transNode_pk" readonly class="form-control text-input" readonly/>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6 nextprvItems">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 150px;" class="input-group-text"><b>UNIQUE_NODE_ID</b></span>
+											<input type="text" id="transUniqNodeId"  class="form-control text-input" readonly/>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>NODE_ID</b></span>
+											<input type="text" id="transNodeId" class="form-control text-input" readonly/>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>NODE_NAME</b></span>
+											<input type="text" id="transNodeName" class="form-control text-input" readonly/>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>NODE_TYPE</b></span>
+											<input type="text" id="transNodeType" class="form-control text-input" readonly />
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>NODE_SOURCE</b></span>
+											<input type="text" id="transNodeSource" class="form-control text-input" readonly/>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>NODE_MODEL</b></span>
+											<input type="text" id="transNodeModel" class="form-control text-input" readonly />
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>DOMAIN</b></span>
+											<input type="text" id="transNodeDomin" class="form-control text-input" readonly/>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>SITE_ID</b></span>
+											<input type="text" id="transSiteId_node" class="form-control text-input" readonly />
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>WARE_ID</b></span>
+											<input type="text" id="transWareId_node" class="form-control text-input" readonly/>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>LONGITUDE</b></span>
+											<input type="text" id="transNodeLong" class="form-control text-input" readonly />
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>Latitude</b></span>
+											<input type="text" id="transNodeLat" class="form-control text-input" readonly/>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>CREATION DATE</b></span>
+											<input type="text" id="transCreateData_node" class="form-control text-input" readonly />
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>UPDATE DATE</b></span>
+											<input type="text" id="transUpdateData_node" class="form-control text-input" readonly/>
 										</div>
 									</div>
 								</div>
@@ -5835,8 +6000,8 @@ directionsDisplay.setMap(map);
 
 		  }												  
 		      physicalLayerFilter(); // to build click event on Filter Submit.
-		      CreateTree_PhysicalLayer(${physicalLayerList}['Project'],${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['fiber'],${physicalLayerList}['Distribution_Board'],${physicalLayerData}['fiber_Tubes'],${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Auxiliary'],${physicalLayerData}['tubes_Auxiliaries'],${physicalLayerData}['strands_Auxiliaries'],${physicalLayerList}['Trench'],${physicalLayerData}['trench_Auxiliary'],${physicalLayerList}['Junction_Manhole'],${physicalLayerList}['Junction_Handhole'],filterFlag,${physicalLayerList}['duct'],${physicalLayerData}['ductAuxiliary'],${physicalLayerList}['Node']);
-			  CreateMap_PhysicalLayer(${physicalLayerList}['Project'],${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['fiber'],${physicalLayerList}['Distribution_Board'],${physicalLayerData}['fiber_Tubes'],${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Auxiliary'],${physicalLayerData}['tubes_Auxiliaries'],${physicalLayerData}['strands_Auxiliaries'],${physicalLayerList}['Trench'],${physicalLayerData}['trench_Auxiliary'],${physicalLayerList}['Node']); 
+		      CreateTree_PhysicalLayer(${physicalLayerList}['Project'],${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['fiber'],${physicalLayerList}['Distribution_Board'],${physicalLayerData}['fiber_Tubes'],${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Auxiliary'],${physicalLayerData}['tubes_Auxiliaries'],${physicalLayerData}['strands_Auxiliaries'],${physicalLayerList}['Trench'],${physicalLayerData}['trench_Auxiliary'],${physicalLayerList}['Junction_Manhole'],${physicalLayerList}['Junction_Handhole'],filterFlag,${physicalLayerList}['duct'],${physicalLayerData}['ductAuxiliary'],${physicalLayerList}['Node'],${physicalLayerList}['Transmission']);
+			  CreateMap_PhysicalLayer(${physicalLayerList}['Project'],${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['fiber'],${physicalLayerList}['Distribution_Board'],${physicalLayerData}['fiber_Tubes'],${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Auxiliary'],${physicalLayerData}['tubes_Auxiliaries'],${physicalLayerData}['strands_Auxiliaries'],${physicalLayerList}['Trench'],${physicalLayerData}['trench_Auxiliary'],${physicalLayerList}['Node'],${physicalLayerList}['Transmission']); 
 			  if(checkedOption == "circleRange"){
 				  openFindNearest(checkedOption,'${closestLatPoint}','${closestLongPoint}','${closestDisRange}','${noP}',${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['Distribution_Board'],${physicalLayerList}['fiber'],${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Tubes'],'${getRelatedPoints}');
 			  }else if(checkedOption == "StartEnd"){

@@ -240,7 +240,7 @@ var TargetFiberStrand= {
 		//tubeNumber:"tubeNumber",
 		//tubeColor:"tubeColor"
 };
-function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,distribBoardList,fiberTubes,fiberStrands,fiberAuxiliary_Data,tubesAuxiliaries,strandsAuxiliaries,trenchList,trenchAuxiliary_Data,ListManholeJunction,ListHandholeJunction,filterFlag,ductList,ductAuxiliary_Data,nodeList){
+function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,distribBoardList,fiberTubes,fiberStrands,fiberAuxiliary_Data,tubesAuxiliaries,strandsAuxiliaries,trenchList,trenchAuxiliary_Data,ListManholeJunction,ListHandholeJunction,filterFlag,ductList,ductAuxiliary_Data,nodeList,Transmission){
 	EnableOriginationFiber=false;
 	
 	fiberArray=[];
@@ -293,6 +293,9 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 		$("#initial_ul_CurrentPhysicalLayer").append(str);
 		
 		str="<ul><li id='Entreprise_f_CurrentPhysicalLayer' style='display:none;' class='Entreprise_f_CurrentPhysicalLayer'><input type='checkbox' unchecked class='AllEntreprise checkFilter'></input> <span id='Entreprise_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Entreprise_span' style='color:black;width:395px' class='TreeSpan'>Enterprise </span></li></ul>";
+		$("#initial_ul_CurrentPhysicalLayer").append(str);
+		
+		str="<ul><li id='Transmission_f_CurrentPhysicalLayer' style='display:none;' class='Transmission_f_CurrentPhysicalLayer'><input type='checkbox' unchecked class='AllTransmission checkFilter'></input> <span id='Transmission_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Transmission_span' style='color:black;width:395px' class='TreeSpan'>Transmission </span></li></ul>";
 		$("#initial_ul_CurrentPhysicalLayer").append(str);
 /*		
 		tree_Prop("#initial_ul_CurrentPhysicalLayer > .folder");
@@ -961,6 +964,36 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 			menuName=singleEntreprise;			
 			openContext(selectedNodesIdContext,"",singleEntreprise,event);
 		});	
+		
+		   	/////////////*********************	Transmission Creation In tree	***********************///////////////
+	//-------------------------------------------------------------------------------------------------//
+	if(Transmission!=null) {
+		for(i=0;i<Transmission.length;i++){
+			window[""+Transmission[i][0]]=[];
+			window[""+Transmission[i][0]]=nodeList[i];
+				
+			if(Transmission[i][0]>0){
+               str = "<ul><li id='" + Transmission[i][0] + "' class='TRANSMISSION' style='display:none;width:100px;'><input type='checkbox' class='Transmission checkFilter' class='filter' name='Element'></input>    <span  class='TreeSpan' style='color:black;width:355px'><img style='width:17px; height:17px;' src='" + getContext() + "/resources/NetworkImages/BlueCircle.png'> " + Transmission[i][2] + " </span></li></ul>";
+			   $("#Transmission_f_CurrentPhysicalLayer").append(str);  					
+				
+			}
+			else {
+               str = "<ul><li id='" + Transmission[i][0] + "' class='TRANSMISSION' style='display:none;width:100px;'><input type='checkbox' class='Transmission checkFilter' class='filter' name='Element'></input>    <span  class='TreeSpan' style='color:black;width:355px'><img style='width:17px; height:17px;' src='" + getContext() + "/resources/NetworkImages/BlueCircle.png'> " + Transmission[i][2] + " </span></li></ul>";
+               $("#Transmission_f_CurrentPhysicalLayer").append(str); 				
+			}	
+			}
+			
+			$('#Transmission_span').width($("#left").width());
+			$('.TRANSMISSION > .TreeSpan').width($("#left").width());
+			AllTransmissionCheckFilter();
+			}
+			
+			$(".TRANSMISSION > .TreeSpan").contextmenu(function(){				
+			selectedTransmissionIdContext=$(this).parent().attr('id');
+			IdTransmissionSelectedTemp=$(this).parents().eq(2).attr('id').split("Entreprise_f_")[1];
+			menuName=singleTransmission;			
+			openContext(selectedTransmissionIdContext,"",singleTransmission,event);
+		});		
 	
 	
 	/////////////*********************	Distribution Boards creation in tree	***********************///////////////
@@ -4644,6 +4677,58 @@ singleEntreprise = new ContextMenu({
 						
 						
 						data = null;
+					},
+                    error: function (result) {
+						alert("Error");
+                    }
+					})
+		 
+		}		
+	},
+]
+})
+
+/////////////*********************	Transmission li CONTEXT MENU  ***********************///////////////
+	//-------------------------------------------------------------------------------------------------//
+singleTransmission = new ContextMenu({
+	'theme': 'default',
+	
+'items': [
+    {'icon': 'edit', 'name': 'Edit or View Details ', action: () => {
+    
+         $("#TransmissionModal").modal('show');
+         $("#TransmissionModal").find("input").val('').end();
+		 $("#transNodesHeader").text("Nodes: "+selectedTransmissionIdContext);
+		 $("#transNode_pk").val(selectedTransmissionIdContext);
+		 
+		 	$.ajax({
+					type: "GET",
+					contentType: "application/json; charset=utf-8",
+					url: getContext()+'/findTransmissionDetails',
+                    async:false,
+                    data: {
+						"selectedTransmissionIdContext":selectedTransmissionIdContext
+					},
+                    dataType: "json",
+                    success: function (data) {
+					if(data.TransmissionNodesDetails != null){
+						$("#transUniqNodeId").val(data.TransmissionNodesDetails[1]);
+						$("#transNodeId").val(data.TransmissionNodesDetails[2]);
+						$("#transNodeName").val(data.TransmissionNodesDetails[3]);
+						$("#transNodeType").val(data.TransmissionNodesDetails[4]);
+						$("#transNodeSource").val(data.TransmissionNodesDetails[6]);
+						$("#transNodeModel").val(data.TransmissionNodesDetails[7]);
+						$("#transNodeDomin").val(data.TransmissionNodesDetails[5]);
+						$("#transSiteId_node").val(data.TransmissionNodesDetails[8]);
+						$("#transWareId_node").val(data.TransmissionNodesDetails[9]);
+						$("#transNodeLong").val(data.TransmissionNodesDetails[12]);
+						$("#transNodeLat").val(data.TransmissionNodesDetails[13]);
+						$("#transCreateData_node").val(data.TransmissionNodesDetails[10]);
+						$("#transUpdateData_node").val(data.TransmissionNodesDetails[11]);
+						
+						
+						data = null;
+						}
 					},
                     error: function (result) {
 						alert("Error");
@@ -16417,6 +16502,82 @@ $("#saveNode").click(function () {
 						}
 						$("#"+data.nodePk+" > span").width($("#left").width());
 						$("#nodesModal").modal('hide');
+		
+});
+
+/* Transmission Save*/
+$("#saveTransmission").click(function () {
+            transNode_pk= document.getElementById("transNode_pk").value;
+			transUniqNodeId = document.getElementById("transUniqNodeId").value;
+			transNodeId = document.getElementById("transNodeId").value;
+			transNodeName = document.getElementById("transNodeName").value;
+			transNodeType = document.getElementById("transNodeType").value;
+			transNodeSource = document.getElementById("transNodeSource").value;
+			transNodeModel = document.getElementById("transNodeModel").value;
+			transNodeDomin = document.getElementById("transNodeDomin").value;
+			transSiteId_node = document.getElementById("transSiteId_node").value;
+			transWareId_node = document.getElementById("transWareId_node").value;
+			transNodeLong = document.getElementById("transNodeLong").value;
+			transNodeLat = document.getElementById("transNodeLat").value;
+			transCreateData_node = document.getElementById("transCreateData_node").value;
+			transUpdateData_node = document.getElementById("transUpdateData_node").value;
+			
+					$.ajax({
+					type: "POST",
+					contentType: "application/json; charset=utf-8",
+					url: getContext()+"/transNodeSave",
+					async:false,
+					data: {
+					     "transNode_pk": transNode_pk,
+						 "transUniqNodeId": transUniqNodeId,
+						 "transNodeId": transNodeId,
+						 "transNodeName": transNodeName,
+						 "transNodeType": transNodeType,
+						 "transNodeSource": transNodeSource,
+						 "transNodeModel": transNodeModel,
+						 "transNodeDomin": transNodeDomin,
+						 "transSiteId_node": transSiteId_node,
+						 "transWareId_node": transWareId_node,
+						 "transCreateData_node": transCreateData_node,
+						 "transUpdateData_node": transUpdateData_node,					    
+					},				
+					dataType: "json",
+					success : function(data) {
+						if(data!=null){
+						
+						window[""+data.transNode_pk]=[];
+						window[""+data.transNode_pk]=[data.transNode_pk,transNodeName];
+						
+						$("#"+data.transNode_pk).contextmenu(function(){				
+						menuName = singleTransmission;
+						selectedTransmissionIdContext=$(this).attr('id');
+						selectedTransName=$(this).text();			
+						openContext(selectedTransmissionIdContext,selectedTransName,singleTransmission,event);
+						});	
+						MouseHoveringSpans("#" +data.transNode_pk+ " .TreeSpan");	
+						tree_prop_selection("#"+data.transNode_pk+" .TreeSpan");
+						create_Marker_Click(data.transNode_pk,nodeName,"","",markersTransmission,markerClusterTransmission,"","");
+						markerClusterTransmission.addMarker(markersTransmission[""+data.transNode_pk]);
+						TransmissionCheckFilter(data.transNode_pk);
+						map.setZoom(11);
+						
+						offset=$("#"+data.transNode_pk).offset().top;																
+						offset2=$("#initial_ul_CurrentPhysicalLayer").offset().top;
+						offsettot=(offset-offset2);
+						$("#network_tree").animate({ scrollTop: offsettot}, "slow");
+				
+						}
+					},			
+					 error: function (result) {
+						alert("Error");
+					}
+					});	
+					
+					if(typeof infowindow!== 'undefined'){		
+							infowindow.close();								
+						}
+						$("#"+data.transNode_pk+" > span").width($("#left").width());
+						$("#TransmissionModal").modal('hide');
 		
 });
 

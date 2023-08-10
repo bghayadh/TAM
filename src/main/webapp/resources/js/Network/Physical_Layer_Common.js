@@ -1142,6 +1142,11 @@ function createHandhole_Marker_Click(Id,Name,Long,Lat,markersHandhole,markerClus
 				 markerType="Entreprise";
 			 }
 			 
+			    else if (markers == markersTransmission && marker_Cluster == markerClusterTransmission) {
+				 mapIcon = iconTransmission; 
+				 markerType="Transmission";
+			 }
+			 
 			 else {
 					if(Type == "Junction"){
 						 mapIcon = iconHandholeJct; 
@@ -2607,6 +2612,112 @@ function NodesCheckFilter(Id){
 		}
 		else{
 			$("#entrepriseCheckAllBoq").prop("checked",true);
+	
+		}
+});
+}
+
+function AllTransmissionCheckFilter(){
+$('.AllTransmission').bind("change",function() {
+		markerClusterTransmission.clearMarkers();	
+				
+		if ($(this).is(':checked')){
+			$(this).parent().find('.Transmission').each(function(){		
+				$(this).prop('checked', true);
+			});
+			
+			$("#network_tree").find(".Transmission:checked" ).each(function(){
+				id=$(this).parent().attr('id');
+				if(markersTransmission[id].getMap()==null){
+					markersTransmission[id].setMap(map);			
+					markerClusterTransmission.addMarker(markersTransmission[id]);
+				}		
+			});	
+			
+			$(this).parent().find('li').each(function(){																	
+				$(this).children('input:checkbox').prop('checked', true);		
+			});	
+			
+			if($("#Transmission_f_CurrentPhysicalLayer > .AllTransmission").is(":checked") ) {	
+				$("#transmissionCheckAllBoq").prop("checked",true);
+			}																
+		}
+		
+		else{
+			
+			$(this).parent().find('.Transmission').each(function(){
+				$(this).prop('checked', false);
+			});
+			
+			$("#transmissionCheckAllBoq").prop("checked",false);
+			
+			if($("#Transmission_f_CurrentPhysicalLayer > .AllTransmission").is(":checked") ) {	
+				$("#transmissionCheckAllBoq").prop("checked",true);
+			}	
+
+			$("#network_tree").find(".Transmission:checked" ).each(function(){
+
+				id=$(this).parent().attr('id');
+				if(markersTransmission[id].getMap()==null){
+					markersTransmission[id].setMap(map);			
+					markerClusterTransmission.addMarker(markersTransmission[id]);
+				}	
+			});
+			
+			$(this).parent().find('li').each(function(){																	   
+				$(this).children('input:checkbox').prop('checked', false);		
+			});		
+		}
+	});	
+}
+
+function TransmissionCheckFilter(Id){
+	$("#"+Id).children('input').on("change",function() {
+	var folderID = $(this).parents().eq(4).attr('id');
+	
+	var TransmissionID=$(this).parent().attr('id');
+
+	if ($(this).is(':checked')){
+
+		markersTransmission[TransmissionID].setMap(map);
+		markerClusterTransmission.addMarker(markersTransmission[TransmissionID]);				
+		
+		
+		$(this).parent().find('li').each(function(){
+			$(this).children('input:checkbox').prop('checked', true);		
+		});
+}
+	else{
+		if(folderID == "initial_ul_CurrentPhysicalLayer"){
+				$("#Transmission_f_CurrentPhysicalLayer > .AllTransmission").prop("checked",false);			
+				
+		}
+		else {
+				$("#Transmission_f_CurrentPhysicalLayer  > .AllTransmission").prop("checked",false);
+								
+		}
+					
+		markersTransmission[TransmissionID].setMap(null);				
+		markerClusterTransmission.removeMarker(markersTransmission[TransmissionID]);
+
+			$(this).parent().find('li').each(function(){
+				$(this).children('input:checkbox').prop('checked', false);		
+			});
+
+		}				
+		 if ($(this).parents().eq(2).find('.Transmission:checked').length == $(this).parents().eq(2).find('.Transmission').length) {
+			$(this).parents().eq(2).children('input').prop('checked', true);
+		 }
+		 else{
+			$(this).parents().eq(2).children('input').prop('checked', false);
+		 }
+		
+		if( $("#Entreprise_f_CurrentPhysicalLayer").find(".Transmission:checked" ).length ==0){
+			$("#transmissionCheckAllBoq").prop("checked",false);
+	
+		}
+		else{
+			$("#transmissionCheckAllBoq").prop("checked",true);
 	
 		}
 });
@@ -6917,11 +7028,13 @@ function allElementsCheckFilter(){
 		markerClusterHandhole.clearMarkers();
 		markerClusterDistBoard.clearMarkers();
 		markerClusterNodes.clearMarkers();
+		markerClusterTransmission.clearMarkers();
 		
 		$("#distBoardCheckAllBoq").prop("checked",false);
 		$("#manholeCheckAllBoq").prop("checked",false);
 		$("#handholeCheckAllBoq").prop("checked",false);
 		$("#entrepriseCheckAllBoq").prop("checked",false);
+		$("#transmissionCheckAllBoq").prop("checked",false);
 			
 
 		if ($(this).is(':checked')){		
@@ -7117,6 +7230,16 @@ function allElementsCheckFilter(){
 						
 					}
 				}
+				
+				else if($(this).hasClass('Transmission')){
+					id=$(this).parent().attr('id');
+					if(markersTransmission[id].getMap()==null){
+
+						markersTransmission[id].setMap(map);			
+						markerClusterTransmission.addMarker(markersTransmission[id]);
+						$("#transmissionCheckAllBoq").prop("checked",true);
+					}
+				}
 
 			});
 			
@@ -7243,6 +7366,14 @@ function allElementsCheckFilter(){
 
 					   markersNodes[$(this).attr('id')].setMap(map);			
 					   markerClusterNodes.addMarker(markersNodes[$(this).attr('id')]);
+					}
+			   }
+			   
+			      else if($(this).hasClass('Transmission')){
+				   if(markersTransmission[$(this).attr('id')].getMap()==null){
+
+					   markersTransmission[$(this).attr('id')].setMap(map);			
+					   markerClusterTransmission.addMarker(markersTransmission[$(this).attr('id')]);
 					}
 			   }
 
@@ -17613,6 +17744,8 @@ else if($("#LoaderConfirmationModal").is(':visible')){
 c=$("#LoaderConfirmationModal");}
 else if($("#nodesModal").is(':visible')){
 c=$("#nodesModal");}
+else if($("#TransmissionModal").is(':visible')){
+c=$("#TransmissionModal");}
 var result= confirm('are you sure you want to close?')
 	if (result== false){
 		c.modal('show');
