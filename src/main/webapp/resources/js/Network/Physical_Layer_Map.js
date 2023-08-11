@@ -101,7 +101,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			};
 			
 			iconTransmission ={
-					url:""+getContext()+"/resources/NetworkImages/purpleCircle.png", // url
+					url:""+getContext()+"/resources/NetworkImages/BlueCircle.png", // url
 					scaledSize: new google.maps.Size(15, 15), // scaled size
 					
 			};
@@ -178,7 +178,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			 	minimumClusterSize: 2,
 				styles: [
 				         {
-				        	 url: getContext()+'/resources/clusterIcons/blueCluster.png',
+				        	 url: getContext()+'/resources/clusterIcons/yellowCluster.png',
 					         height: 60,
 					         width:60,
 					         anchorText:[-2,-4]
