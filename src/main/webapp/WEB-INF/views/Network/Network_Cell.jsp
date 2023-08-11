@@ -307,7 +307,7 @@ function CreateTree_Cell(lst,map){
 		var Id= id.split("_SingleCell")[0];
 		
 		var parts = Id.split('_');			
-		var nodeId = parts[0] + "_" + parts[1]+ "_" + parts[2]; // 2023_NODE_1
+		var cellId = parts[0] + "_" + parts[1]+ "_" + parts[2];
 				
 		if ($("#" + id).is(":checked")) {
 			var checkboxes = $('[id$="_SingleCell"]');
@@ -321,13 +321,13 @@ function CreateTree_Cell(lst,map){
 			if (allChecked) {
 				document.getElementById('Cells').checked = true;
 			}
-			markersSites[nodeId].setMap(map);			
-			markerClusterSites.addMarker(markersSites[nodeId]);
+			markersSites[cellId].setMap(map);			
+			markerClusterSites.addMarker(markersSites[cellId]);
 			markerClusterSites.repaint();
 		}else{
 			document.getElementById('Cells').checked = false;		
-			markersSites[nodeId].setMap(null);
-			markerClusterSites.removeMarker(markersSites[nodeId]);
+			markersSites[cellId].setMap(null);
+			markerClusterSites.removeMarker(markersSites[cellId]);
 			markerClusterSites.repaint();
 		}
 	}
@@ -335,12 +335,12 @@ function CreateTree_Cell(lst,map){
 
 	function PanTreeSites(id){
 		var parts = id.split('_');		
-		var nodeId = parts[0] + "_" + parts[1]+ "_" + parts[2]; 
+		var cellId = parts[0] + "_" + parts[1]+ "_" + parts[2];
 		
-		if(nodeId!=markersSite)
+		if(cellId!=markersSite)
 		{
 			var selMarker="";		
-			markerId=nodeId;				
+			markerId = cellId;				
 			selMarker=markersSites[markerId];
 			var latSitee = selMarker.getPosition().lat();
 			var lngSitee = selMarker.getPosition().lng();
@@ -353,7 +353,7 @@ function CreateTree_Cell(lst,map){
 				var otherMarkers=markersSites[markersSite];			
 			}		
 			markersSite="";	
-			markersSite=nodeId;		
+			markersSite = cellId;		
 			map.setZoom(15);
 		}	
 	} 

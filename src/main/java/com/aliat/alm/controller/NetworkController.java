@@ -1249,34 +1249,34 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 				
 					try {
 						List<Object[]> result = session.createSQLQuery(
-								" SELECT DISTINCT b.SITE_ID,b.WARE_NAME,j.NODE_PK,b.LATITUDE,b.LONGITUDE," + 
+								" SELECT DISTINCT b.SITE_ID,b.WARE_NAME,j.GCELL_ID,b.LATITUDE,b.LONGITUDE," + 
 								" (select COUNT(*) from NODE_ACTIVE w where w.ACTIVE_RECORD = '1' AND w.DOMAIN='" +param1+ "') as countnodes," + 
 								" (select count(*) from NODE_GCELL e where b.NODE_PK = e.NODE_PK and e.ACTIVE_RECORD = '1' AND e.DOMAIN='" +param1+ "') as countGCells," + 
 								" (select count(*) from NODE_LCELL c where b.NODE_PK = c.NODE_PK and c.ACTIVE_RECORD = '1' AND c.DOMAIN='" +param1+ "') as countLCells," + 
 								" (select count(*) from NODE_UCELL d where b.NODE_PK = d.NODE_PK and d.ACTIVE_RECORD = '1' AND d.DOMAIN='" +param1+ "') as countUCells," + 
-								" j.GCELL_ID,j.CELLNAME,b.WARE_ID" + 
+								" j.NODE_PK,j.CELLNAME,b.WARE_ID" + 
 								" FROM NODE_ACTIVE b" + 
 								" LEFT JOIN NODE_GCELL j ON b.NODE_PK = j.NODE_PK" + 
 								" WHERE b.NODE_PK = j.NODE_PK" + 
 								" AND j.ACTIVE_RECORD = '1' AND j.DOMAIN='" +param1+ "'").list();
 						List<Object[]> result1 = session.createSQLQuery(
-								" SELECT DISTINCT b.SITE_ID,b.WARE_NAME,i.NODE_PK,b.LATITUDE,b.LONGITUDE," + 
+								" SELECT DISTINCT b.SITE_ID,b.WARE_NAME,i.LCELL_ID,b.LATITUDE,b.LONGITUDE," + 
 								" (select COUNT(*) from NODE_ACTIVE w where w.ACTIVE_RECORD = '1' AND w.DOMAIN='" +param1+ "') as countnodes," + 
 								" (select count(*) from NODE_GCELL e where b.NODE_PK = e.NODE_PK and e.ACTIVE_RECORD = '1' AND e.DOMAIN='" +param1+ "') as countGCells," + 
 								" (select count(*) from NODE_LCELL c where b.NODE_PK = c.NODE_PK and c.ACTIVE_RECORD = '1' AND c.DOMAIN='" +param1+ "') as countLCells," + 
 								" (select count(*) from NODE_UCELL d where b.NODE_PK = d.NODE_PK and d.ACTIVE_RECORD = '1' AND d.DOMAIN='" +param1+ "') as countUCells," + 
-								" i.LCELL_ID,i.CELLNAME,b.WARE_ID" + 
+								" i.NODE_PK,i.CELLNAME,b.WARE_ID" + 
 								" FROM NODE_ACTIVE b" + 
 								" LEFT JOIN NODE_LCELL i ON b.NODE_PK = i.NODE_PK" +  
 								" WHERE b.NODE_PK = i.NODE_PK" + 
 								" AND i.ACTIVE_RECORD = '1' AND i.DOMAIN='" +param1+ "'").list();
 						List<Object[]> result2 = session.createSQLQuery(
-								" SELECT DISTINCT b.SITE_ID,b.WARE_NAME,k.NODE_PK,b.LATITUDE,b.LONGITUDE," + 
+								" SELECT DISTINCT b.SITE_ID,b.WARE_NAME,k.UCELL_ID,b.LATITUDE,b.LONGITUDE," + 
 								" (select COUNT(*) from NODE_ACTIVE w where w.ACTIVE_RECORD = '1' AND w.DOMAIN='" +param1+ "') as countnodes," + 
 								" (select count(*) from NODE_GCELL e where b.NODE_PK = e.NODE_PK and e.ACTIVE_RECORD = '1' AND e.DOMAIN='" +param1+ "') as countGCells," + 
 								" (select count(*) from NODE_LCELL c where b.NODE_PK = c.NODE_PK and c.ACTIVE_RECORD = '1' AND c.DOMAIN='" +param1+ "') as countLCells," + 
 								" (select count(*) from NODE_UCELL d where b.NODE_PK = d.NODE_PK and d.ACTIVE_RECORD = '1' AND d.DOMAIN='" +param1+ "') as countUCells," + 
-								" k.UCELL_ID,k.CELLNAME,b.WARE_ID" + 
+								" k.NODE_PK,k.CELLNAME,b.WARE_ID" + 
 								" FROM NODE_ACTIVE b" + 
 								" LEFT JOIN NODE_UCELL k ON b.NODE_PK = k.NODE_PK" + 
 								" WHERE b.NODE_PK = k.NODE_PK" + 
@@ -1300,34 +1300,34 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 				//System.out.println(".NULL.cell");
 				try {
 					List<Object[]> result = session.createSQLQuery(
-							" SELECT DISTINCT b.SITE_ID,b.WARE_NAME,j.NODE_PK,b.LATITUDE,b.LONGITUDE," + 
+							" SELECT DISTINCT b.SITE_ID,b.WARE_NAME,j.GCELL_ID,b.LATITUDE,b.LONGITUDE," + 
 							" (select COUNT(*) from NODE_ACTIVE w where w.ACTIVE_RECORD = '1') as countnodes," + 
 							" (select count(*) from NODE_GCELL e where b.NODE_PK = e.NODE_PK and e.ACTIVE_RECORD = '1') as countGCells," + 
 							" (select count(*) from NODE_LCELL c where b.NODE_PK = c.NODE_PK and c.ACTIVE_RECORD = '1') as countLCells," + 
 							" (select count(*) from NODE_UCELL d where b.NODE_PK = d.NODE_PK and d.ACTIVE_RECORD = '1') as countUCells," + 
-							" j.GCELL_ID,j.CELLNAME,b.WARE_ID" + 
+							" j.NODE_PK,j.CELLNAME,b.WARE_ID" + 
 							" FROM NODE_ACTIVE b" + 
 							" LEFT JOIN NODE_GCELL j ON b.NODE_PK = j.NODE_PK" + 
 							" WHERE b.NODE_PK = j.NODE_PK" + 
 							" AND j.ACTIVE_RECORD = '1'").list();
 					List<Object[]> result1 = session.createSQLQuery(
-							" SELECT DISTINCT b.SITE_ID,b.WARE_NAME,i.NODE_PK,b.LATITUDE,b.LONGITUDE," + 
+							" SELECT DISTINCT b.SITE_ID,b.WARE_NAME,i.LCELL_ID,b.LATITUDE,b.LONGITUDE," + 
 							" (select COUNT(*) from NODE_ACTIVE w where w.ACTIVE_RECORD = '1') as countnodes," + 
 							" (select count(*) from NODE_GCELL e where b.NODE_PK = e.NODE_PK and e.ACTIVE_RECORD = '1') as countGCells," + 
 							" (select count(*) from NODE_LCELL c where b.NODE_PK = c.NODE_PK and c.ACTIVE_RECORD = '1') as countLCells," + 
 							" (select count(*) from NODE_UCELL d where b.NODE_PK = d.NODE_PK and d.ACTIVE_RECORD = '1') as countUCells," + 
-							" i.LCELL_ID,i.CELLNAME,b.WARE_ID" + 
+							" i.NODE_PK,i.CELLNAME,b.WARE_ID" + 
 							" FROM NODE_ACTIVE b" + 
 							" LEFT JOIN NODE_LCELL i ON b.NODE_PK = i.NODE_PK" +  
 							" WHERE b.NODE_PK = i.NODE_PK" + 
 							" AND i.ACTIVE_RECORD = '1'").list();
 					List<Object[]> result2 = session.createSQLQuery(
-							" SELECT DISTINCT b.SITE_ID,b.WARE_NAME,k.NODE_PK,b.LATITUDE,b.LONGITUDE," + 
+							" SELECT DISTINCT b.SITE_ID,b.WARE_NAME,k.UCELL_ID,b.LATITUDE,b.LONGITUDE," + 
 							" (select COUNT(*) from NODE_ACTIVE w where w.ACTIVE_RECORD = '1') as countnodes," + 
 							" (select count(*) from NODE_GCELL e where b.NODE_PK = e.NODE_PK and e.ACTIVE_RECORD = '1') as countGCells," + 
 							" (select count(*) from NODE_LCELL c where b.NODE_PK = c.NODE_PK and c.ACTIVE_RECORD = '1') as countLCells," + 
 							" (select count(*) from NODE_UCELL d where b.NODE_PK = d.NODE_PK and d.ACTIVE_RECORD = '1') as countUCells," + 
-							" k.UCELL_ID,k.CELLNAME,b.WARE_ID" + 
+							" k.NODE_PK,k.CELLNAME,b.WARE_ID" + 
 							" FROM NODE_ACTIVE b" + 
 							" LEFT JOIN NODE_UCELL k ON b.NODE_PK = k.NODE_PK" + 
 							" WHERE b.NODE_PK = k.NODE_PK" + 
