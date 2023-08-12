@@ -1061,87 +1061,53 @@ public String Network_NdTypNdCell(Locale locale, Model model, HttpServletRequest
 			notifications.headerNotifications(session, model);
 			String param1 = request.getParameter("param1");
 			//System.out.println("param1...ndtypenodecell"+ param1);
-			if (param1 != null) {
+		  if (param1 != null) {
 				//System.out.println(".NOT NULL.ndtypenodecell");
 			try {
-				/*
-				model.addAttribute("listSites",mapper.writeValueAsString(
-						(List<Object[]>) session.createSQLQuery("SELECT DISTINCT b.SITE_ID,b.WARE_NAME,b.WARE_ID," 
-								+ "(SELECT a.LATITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LATITUDE," 
-								+ "(SELECT a.LONGITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LONGITUDE,"  
-								+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID and w.DOMAIN='" +param1+ "' and w.ACTIVE_RECORD = '1') as countnodes," 
-								+ "(select COUNT(*) FROM NODE_GCELL c where c.NODE_PK IN(select NODE_PK from NODE_ACTIVE o where o.DOMAIN='" +param1+ "' and o.ACTIVE_RECORD = '1') and c.DOMAIN='" +param1+ "') as countGcells,"  
-								+ "(select COUNT(*) FROM NODE_LCELL d where d.NODE_PK IN(select NODE_PK from NODE_ACTIVE o where o.DOMAIN='" +param1+ "' and o.ACTIVE_RECORD = '1') and d.DOMAIN='" +param1+ "') as countLcells,"  
-								+ "(select COUNT(*) FROM NODE_UCELL e where e.NODE_PK IN(select NODE_PK from NODE_ACTIVE o where o.DOMAIN='" +param1+ "' and o.ACTIVE_RECORD = '1') and e.DOMAIN='" +param1+ "') as countUcells"  
-								+ " FROM NODE_ACTIVE b WHERE b.DOMAIN='" +param1+ "' and b.WARE_ID!='0' and b.WARE_ID!='null'").list()));			
-				*/			
-				model.addAttribute("listSites",mapper.writeValueAsString(
-						(List<Object[]>) session.createSQLQuery("SELECT b.SITE_ID,b.WARE_NAME,b.WARE_ID,b.LATITUDE,b.LONGITUDE,"
-								+ "(select COUNT(*) from NODE_ACTIVE w where w.DOMAIN='" +param1+ "' and w.ACTIVE_RECORD = '1') as countnodes," 
-								+ "(select count(*) from NODE_GCELL e  where b.NODE_PK = e.NODE_PK and ACTIVE_RECORD = '1' and e.DOMAIN='" +param1+ "') as countGCells,"
-								+ "(select count(*) from NODE_LCELL c  where b.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1' and c.DOMAIN='" +param1+ "') as countLCells,"
-								+ "(select count(*) from NODE_UCELL d  where b.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1' and d.DOMAIN='" +param1+ "') as countUCells"						
-								+ " FROM NODE_ACTIVE b WHERE b.DOMAIN='" +param1+ "'").list()));			
-		
-			} catch (Exception e) {
-				logger.info("Error in retreiving Sites Data from database", e);
-				model.addAttribute("listSites", "null");
-			}
-			
-			try {
-				// List<?> nodeTypeList = session.createSQLQuery(
 				model.addAttribute("listNodesType", mapper.writeValueAsString((List<Object[]>) session.createSQLQuery(
-						"SELECT DISTINCT NODE_TYPE,(select COUNT(*) from NODE_ACTIVE a  where a.NODE_TYPE=b.NODE_TYPE and a.ACTIVE_RECORD = '1' and a.DOMAIN='" +param1+ "') as countnodes FROM NODE_ACTIVE b WHERE b.ACTIVE_RECORD = '1' and b.DOMAIN='" +param1+ "'")
-						.list()));
+						"SELECT DISTINCT NODE_TYPE,(select COUNT(*) from NODE_ACTIVE a  where a.NODE_TYPE=b.NODE_TYPE and a.ACTIVE_RECORD = '1' and a.DOMAIN='" +param1+ "') as countnodes "
+						+ "FROM NODE_ACTIVE b WHERE b.ACTIVE_RECORD = '1' and b.DOMAIN='" +param1+ "'").list()));
 
 			} catch (Exception e) {
 				logger.info("Error in retreiving sites Data from database", e);
-				model.addAttribute("listNodesType", null);		
+				model.addAttribute("listNodesType", "null");	
+			}
+			try {
+				model.addAttribute("listNodes", mapper.writeValueAsString((List<Object[]>) session.createSQLQuery(
+						" SELECT b.SITE_ID,b.WARE_NAME,b.NODE_PK,b.LATITUDE,b.LONGITUDE,"					
+						+ "(select COUNT(*) from NODE_ACTIVE w where w.ACTIVE_RECORD = '1' and w.DOMAIN='" +param1+ "') as countnodes,"	
+						+ "(select count(*) from NODE_GCELL b  where b.NODE_PK = b.NODE_PK and b.ACTIVE_RECORD = '1' and b.DOMAIN='" +param1+ "') as countGCells,"
+						+ "(select count(*) from NODE_LCELL c  where b.NODE_PK = c.NODE_PK and c.ACTIVE_RECORD = '1' and c.DOMAIN='" +param1+ "') as countLCells,"
+						+ "(select count(*) from NODE_UCELL d  where b.NODE_PK = d.NODE_PK and d.ACTIVE_RECORD = '1' and d.DOMAIN='" +param1+ "') as countUCells, "
+						+ " b.WARE_ID,b.NODE_NAME,b.NODE_TYPE"
+						+ " FROM NODE_ACTIVE b WHERE b.ACTIVE_RECORD = '1' AND b.DOMAIN='" +param1+ "'").list()));
+			}catch (Exception e) {
+				logger.info("Error in retreiving nodes Data from database", e);
+				model.addAttribute("listNodes", "null");
 			}
 			}else {
-				System.out.println(".NULL.ndtypenodecell");
+				//System.out.println(".NULL.ndtypenodecell");
 				try {
-					/*
-					model.addAttribute("listSites",mapper.writeValueAsString((List<Object[]>) session.createSQLQuery(
-							"SELECT distinct b.SITE_ID,b.SITE_NAME,b.WARE_ID,"
-					+ "(SELECT a.LATITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LATITUDE,"
-					+ "(SELECT a.LONGITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LONGITUDE,"
-					+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID  and w.ACTIVE_RECORD = '1') as countnodes,"
-					+ "(select COUNT(*) from ASSET_REGISTRY j where  j.AR_ID=b.AR_ID and j.PO_ID!='null') as countItems,"
-					+ "(select COUNT(*) from NODE_GCELL c where c.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1')) as countGcells,"
-					+ "(select COUNT(*) from NODE_LCELL d where d.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1')) as countLcells,"
-					+ "(select COUNT(*) from NODE_UCELL e where e.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1')) as countUcells"
-					+ " FROM AR_SITE b,ASSET_REGISTRY j where j.AR_ID=b.AR_ID and b.WARE_ID!='0' and b.WARE_ID!='null'")
-					.list()));
-					*/
-					
-					model.addAttribute("listSites",mapper.writeValueAsString((List<Object[]>) session.createSQLQuery(
-							//"SELECT b.SITE_ID,b.WARE_NAME,b.WARE_ID,b.LATITUDE,b.LONGITUDE"
-								//	+ " FROM NODE_ACTIVE b"
-							//"SELECT distinct b.SITE_ID,b.WARE_NAME,b.WARE_ID,COALESCE(LATITUDE,'1.5') AS LATITUDE, COALESCE(LONGITUDE,'32.3') AS LONGITUDE FROM NODE_ACTIVE b")
-							"SELECT b.SITE_ID,b.WARE_NAME,b.WARE_ID,b.LATITUDE,b.LONGITUDE,"
-							+ "(select COUNT(*) from NODE_ACTIVE w where w.ACTIVE_RECORD = '1') as countnodes,"
-							+ "(select count(*) from NODE_GCELL e  where b.NODE_PK = e.NODE_PK and ACTIVE_RECORD = '1') as countGCells,"
-							+ "(select count(*) from NODE_LCELL c  where b.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1') as countLCells,"
-							+ "(select count(*) from NODE_UCELL d  where b.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1') as countUCells"						
-							+ " FROM NODE_ACTIVE b")
-							
-					.list()));
-	
-				} catch (Exception e) {
-					logger.info("Error in retreiving Sites Data from database", e);
-					model.addAttribute("listSites", "null");
-				}
-				
-				try {
-					// List<?> nodeTypeList = session.createSQLQuery(
 					model.addAttribute("listNodesType", mapper.writeValueAsString((List<Object[]>) session.createSQLQuery(
-							"SELECT DISTINCT NODE_TYPE,(select COUNT(*) from NODE_ACTIVE a  where a.NODE_TYPE=b.NODE_TYPE and a.ACTIVE_RECORD = '1') as countnodes FROM NODE_ACTIVE b WHERE b.ACTIVE_RECORD = '1'")
-							.list()));
+							"SELECT DISTINCT NODE_TYPE,(select COUNT(*) from NODE_ACTIVE a  where a.NODE_TYPE=b.NODE_TYPE and a.ACTIVE_RECORD = '1') as countnodes "
+							+ "FROM NODE_ACTIVE b WHERE b.ACTIVE_RECORD = '1'").list()));
 					
 				} catch (Exception e) {
 					logger.info("Error in retreiving sites Data from database", e);
-					model.addAttribute("listNodesType", null);		
+					model.addAttribute("listNodesType", "null");		
+				}
+				try {
+					model.addAttribute("listNodes", mapper.writeValueAsString((List<Object[]>) session.createSQLQuery(
+							"SELECT b.SITE_ID,b.WARE_NAME,b.NODE_PK,b.LATITUDE,b.LONGITUDE,"
+							+ "(select COUNT(*) from NODE_ACTIVE w where w.ACTIVE_RECORD = '1') as countnodes,"						
+							+ "(select count(*) from NODE_GCELL b  where b.NODE_PK = b.NODE_PK and b.ACTIVE_RECORD = '1') as countGCells,"
+							+ "(select count(*) from NODE_LCELL c  where b.NODE_PK = c.NODE_PK and c.ACTIVE_RECORD = '1') as countLCells,"
+							+ "(select count(*) from NODE_UCELL d  where b.NODE_PK = d.NODE_PK and d.ACTIVE_RECORD = '1') as countUCells, "
+							+ " b.WARE_ID,b.NODE_NAME,b.NODE_TYPE"
+							+ " FROM NODE_ACTIVE b WHERE b.ACTIVE_RECORD = '1'").list()));
+				} catch (Exception e) {
+					logger.info("Error in retreiving nodes Data from database", e);
+					model.addAttribute("listNodes", "null");
 				}
 			}
 			//finally {
