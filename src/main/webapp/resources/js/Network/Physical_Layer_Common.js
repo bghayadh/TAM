@@ -16104,9 +16104,23 @@ function getSelectedRowsHandholeJctMapping() {
 				var hJctLocationNameSideA =$(this).parent().parent().children('td[name="hJctLocationNameSideA"]').children('input').val();
 				var hJctWarehouseIdSideA =$(this).parent().parent().children('td[name="hJctWarehouseIdSideA"]').children('input').val();
 				
+				var hJctStrandNBSideA =$(this).parent().parent().children('td[name="hJctStrandNBSideA"]').children('input').val();
+				var hJctTubeNBSideA=$(this).parent().parent().children('td[name="hJctTubeNBSideA"]').children('input').val();
+				var hJctNetworkLevelSideA=$(this).parent().parent().children('td[name="hJctNetworkLevelSideA"]').children('select').val();
 				
+				var hJctStrandNBSideB =$(this).parent().parent().children('td[name="hJctStrandNBSideB"]').children('input').val();
+				var hJctTubeNBSideB=$(this).parent().parent().children('td[name="hJctTubeNBSideB"]').children('input').val();
+				var hJctNetworkLevelSideB=$(this).parent().parent().children('td[name="hJctNetworkLevelSideB"]').children('select').val();
+				
+				var hJctLocationTypeSideB=$(this).parent().parent().children('td[name="hJctLocationTypeSideB"]').children('select').val();
+				var hJctLocationIdSideB =$(this).parent().parent().children('td[name="hJctLocationIdSideB"]').children('input').val();
+				var hJctLocationNameSideB =$(this).parent().parent().children('td[name="hJctLocationNameSideB"]').children('input').val();
+				var hJctWarehouseIdSideB =$(this).parent().parent().children('td[name="hJctWarehouseIdSideB"]').children('input').val();
+				
+				//+","+hJctStrandNBSideA+","+hJctTubeNBSideA+","+hJctNetworkLevelSideA+","+hJctStrandNBSideB+","+hJctTubeNBSideB+","+hJctNetworkLevelSideB+","+hJctLocationTypeSideB+","+hJctLocationIdSideB+","+hJctLocationNameSideB+","+hJctWarehouseIdSideB
 				var jctBoq=[hJctSeq,hJctStrandIdSideA,hJctStrandNameSideA,hJctTubeIdSideA,hJctTubeNameSideA,hJctFiberIdSideA,hJctFiberNameSideA,
-					hJctStrandIdSideB,hJctStrandNameSideB,hJctTubeIdSideB,hJctTubeNameSideB,hJctFiberIdSideB,hJctFiberNameSideB,hJctLocationTypeSideA,hJctLocationIdSideA,hJctLocationNameSideA,hJctWarehouseIdSideA];
+					hJctStrandIdSideB,hJctStrandNameSideB,hJctTubeIdSideB,hJctTubeNameSideB,hJctFiberIdSideB,hJctFiberNameSideB,hJctLocationTypeSideA,hJctLocationIdSideA,hJctLocationNameSideA,hJctWarehouseIdSideA,
+					hJctStrandNBSideA,hJctTubeNBSideA,hJctNetworkLevelSideA,hJctStrandNBSideB,hJctTubeNBSideB,hJctNetworkLevelSideB,hJctLocationTypeSideB,hJctLocationIdSideB,hJctLocationNameSideB,hJctWarehouseIdSideB];
 				
 				
 				console.log(">><<<"+window["HANDHOLE_JCT_Mapper"+selectedHandholeJct]);
@@ -16115,7 +16129,8 @@ function getSelectedRowsHandholeJctMapping() {
 					var jctHandholeMappingId=$(this).parent().parent().attr('id');
 				
 				index = window["HANDHOLE_JCT_Mapper"+selectedHandholeJct].findIndex(x => x==""+hJctSeq+","+hJctStrandIdSideA+","+hJctStrandNameSideA+","+hJctTubeIdSideA+","+hJctTubeNameSideA+","+hJctFiberIdSideA+","+hJctFiberNameSideA+","+
-					hJctStrandIdSideB+","+hJctStrandNameSideB+","+hJctTubeIdSideB+","+hJctTubeNameSideB+","+hJctFiberIdSideB+","+hJctFiberNameSideB+","+hJctLocationTypeSideA+","+hJctLocationIdSideA+","+hJctLocationNameSideA+","+hJctWarehouseIdSideA);
+					hJctStrandIdSideB+","+hJctStrandNameSideB+","+hJctTubeIdSideB+","+hJctTubeNameSideB+","+hJctFiberIdSideB+","+hJctFiberNameSideB+","+hJctLocationTypeSideA+","+hJctLocationIdSideA+","+hJctLocationNameSideA+","+hJctWarehouseIdSideA+","+
+					hJctStrandNBSideA+","+hJctTubeNBSideA+","+hJctNetworkLevelSideA+","+hJctStrandNBSideB+","+hJctTubeNBSideB+","+hJctNetworkLevelSideB+","+hJctLocationTypeSideB+","+hJctLocationIdSideB+","+hJctLocationNameSideB+","+hJctWarehouseIdSideB);
 				
 					
 				if(index ==-1 && !window["HANDHOLE_MAP_JCT"+jctHandholeMappingId]){
@@ -16139,7 +16154,17 @@ function getSelectedRowsHandholeJctMapping() {
 							"JctTubeIdSideB":hJctTubeIdSideB,
 							"JctTubeNameSideB":hJctTubeNameSideB,
 							"JctFiberIdSideB":hJctFiberIdSideB,
-							"JctFiberNameSideB":hJctFiberNameSideB
+							"JctFiberNameSideB":hJctFiberNameSideB,
+							"JctStrandNBSideA"     :   hJctStrandNBSideA,
+							"JctTubeNBSideA"       : hJctTubeNBSideA,
+							"JctNetworkLevelSideA" :  hJctNetworkLevelSideA,
+							"JctStrandNBSideB"     :  hJctStrandNBSideB,
+							"JctTubeNBSideB"       : hJctTubeNBSideB,
+							"JctNetworkLevelSideB" :  hJctNetworkLevelSideB,
+							"JctLocationTypeSideB" :  hJctLocationTypeSideB,
+							"JctLocationIdSideB"   :  hJctLocationIdSideB,
+							"JctLocationNameSideB" :  hJctLocationNameSideB,
+							"JctWarehouseIdSideB"  :  hJctWarehouseIdSideB
 						
 						});										
 					} 		
@@ -16147,8 +16172,9 @@ function getSelectedRowsHandholeJctMapping() {
 					else if(index==-1 && window["HANDHOLE_MAP_JCT"+jctHandholeMappingId] ||( hJctSeq !=window["HANDHOLE_MAP_JCT"+jctHandholeMappingId][0] || hJctStrandIdSideA!=window["HANDHOLE_MAP_JCT"+jctHandholeMappingId][1] || hJctStrandNameSideA !=window["HANDHOLE_MAP_JCT"+jctHandholeMappingId][2] || hJctTubeIdSideA !=window["HANDHOLE_MAP_JCT"+jctHandholeMappingId][3] 
 					|| hJctTubeNameSideA !=window["HANDHOLE_MAP_JCT"+jctHandholeMappingId][4] || hJctFiberIdSideA !=window["HANDHOLE_MAP_JCT"+jctHandholeMappingId][5] || hJctFiberNameSideA !=window["HANDHOLE_MAP_JCT"+jctHandholeMappingId][6] || hJctStrandIdSideB !=window["HANDHOLE_MAP_JCT"+jctHandholeMappingId][7] 
 					|| hJctStrandNameSideB !=window["HANDHOLE_MAP_JCT"+jctHandholeMappingId][8] || hJctTubeIdSideB !=window["HANDHOLE_MAP_JCT"+jctHandholeMappingId][9] ||hJctTubeNameSideB !=window["HANDHOLE_MAP_JCT"+jctHandholeMappingId][10] 
-					 || hJctFiberIdSideB !=window["HANDHOLE_MAP_JCT"+jctHandholeMappingId][11]  || hJctFiberNameSideB !=window["HANDHOLE_MAP_JCT"+jctHandholeMappingId][12]  || hJctLocationTypeSideA !=window["HANDHOLE_MAP_JCT"+jctHandholeMappingId][17]  || hJctLocationIdSideA !=window["HANDHOLE_MAP_JCT"+jctHandholeMappingId][18] || hJctLocationNameSideA !=window["HANDHOLE_MAP_JCT"+jctHandholeMappingId][19] || hJctWarehouseIdSideA !=window["HANDHOLE_MAP_JCT"+jctHandholeMappingId][20])){
-					
+					 || hJctFiberIdSideB !=window["HANDHOLE_MAP_JCT"+jctHandholeMappingId][11]  || hJctFiberNameSideB !=window["HANDHOLE_MAP_JCT"+jctHandholeMappingId][12]  || hJctLocationTypeSideA !=window["HANDHOLE_MAP_JCT"+jctHandholeMappingId][17]  || hJctLocationIdSideA !=window["HANDHOLE_MAP_JCT"+jctHandholeMappingId][18] || hJctLocationNameSideA !=window["HANDHOLE_MAP_JCT"+jctHandholeMappingId][19] || hJctWarehouseIdSideA !=window["HANDHOLE_MAP_JCT"+jctHandholeMappingId][20]
+					|| hJctStrandNBSideA !=window["HANDHOLE_MAP_JCT"+jctHandholeMappingId][21] || hJctTubeNBSideA !=window["HANDHOLE_MAP_JCT"+jctHandholeMappingId][22] || hJctNetworkLevelSideA !=window["HANDHOLE_MAP_JCT"+jctHandholeMappingId][23] || hJctStrandNBSideB !=window["HANDHOLE_MAP_JCT"+jctHandholeMappingId][24] || hJctTubeNBSideB!=window["HANDHOLE_MAP_JCT"+jctHandholeMappingId][25] || hJctNetworkLevelSideB!=window["HANDHOLE_MAP_JCT"+jctHandholeMappingId][26] ||
+					hJctLocationTypeSideB !=window["HANDHOLE_MAP_JCT"+jctHandholeMappingId][27] || hJctLocationIdSideB !=window["HANDHOLE_MAP_JCT"+jctHandholeMappingId][28] || hJctLocationNameSideB !=window["HANDHOLE_MAP_JCT"+jctHandholeMappingId][29] || hJctWarehouseIdSideB!=window["HANDHOLE_MAP_JCT"+jctHandholeMappingId][30])){
 					
 						// Update to be done
 						updateJctDictArr.push({
@@ -16170,6 +16196,16 @@ function getSelectedRowsHandholeJctMapping() {
 							"JctTubeNameSideB": hJctTubeNameSideB,
 							"JctFiberIdSideB": hJctFiberIdSideB,
 							"JctFiberNameSideB": hJctFiberNameSideB,
+							"JctStrandNBSideA"     :   hJctStrandNBSideA,
+							"JctTubeNBSideA"       : hJctTubeNBSideA,
+							"JctNetworkLevelSideA" :  hJctNetworkLevelSideA,
+							"JctStrandNBSideB"     :  hJctStrandNBSideB,
+							"JctTubeNBSideB"       : hJctTubeNBSideB,
+							"JctNetworkLevelSideB" :  hJctNetworkLevelSideB,
+							"JctLocationTypeSideB" :  hJctLocationTypeSideB,
+							"JctLocationIdSideB"   :  hJctLocationIdSideB,
+							"JctLocationNameSideB" :  hJctLocationNameSideB,
+							"JctWarehouseIdSideB"  :  hJctWarehouseIdSideB,
 							"jctMappingId":jctHandholeMappingId
 						});		
 										
@@ -16195,7 +16231,17 @@ function getSelectedRowsHandholeJctMapping() {
 							"JctTubeIdSideB": hJctTubeIdSideB,
 							"hJctTubeNameSideB": hJctTubeNameSideB,
 							"JctFiberIdSideB": hJctFiberIdSideB,
-							"JctFiberNameSideB": hJctFiberNameSideB
+							"JctFiberNameSideB": hJctFiberNameSideB,
+							"JctStrandNBSideA"     :   hJctStrandNBSideA,
+							"JctTubeNBSideA"       : hJctTubeNBSideA,
+							"JctNetworkLevelSideA" :  hJctNetworkLevelSideA,
+							"JctStrandNBSideB"     :  hJctStrandNBSideB,
+							"JctTubeNBSideB"       : hJctTubeNBSideB,
+							"JctNetworkLevelSideB" :  hJctNetworkLevelSideB,
+							"JctLocationTypeSideB" :  hJctLocationTypeSideB,
+							"JctLocationIdSideB"   :  hJctLocationIdSideB,
+							"JctLocationNameSideB" :  hJctLocationNameSideB,
+							"JctWarehouseIdSideB"  :  hJctWarehouseIdSideB
 							
 						});	
 							
@@ -16226,6 +16272,20 @@ function getSelectedRowsHandholeJctMapping() {
 				var hJctLocationIdSideA =$(this).parent().parent().children('td[name="hJctLocationIdSideA"]').children('input').val();
 				var hJctLocationNameSideA =$(this).parent().parent().children('td[name="hJctLocationNameSideA"]').children('input').val();
 				var hJctWarehouseIdSideA =$(this).parent().parent().children('td[name="hJctWarehouseIdSideA"]').children('input').val();
+			
+				var hJctStrandNBSideA =$(this).parent().parent().children('td[name="hJctStrandNBSideA"]').children('input').val();
+				var hJctTubeNBSideA=$(this).parent().parent().children('td[name="hJctTubeNBSideA"]').children('input').val();
+				var hJctNetworkLevelSideA=$(this).parent().parent().children('td[name="hJctNetworkLevelSideA"]').children('select').val();
+				
+				var hJctStrandNBSideB =$(this).parent().parent().children('td[name="hJctStrandNBSideB"]').children('input').val();
+				var hJctTubeNBSideB=$(this).parent().parent().children('td[name="hJctTubeNBSideB"]').children('input').val();
+				var hJctNetworkLevelSideB=$(this).parent().parent().children('td[name="hJctNetworkLevelSideB"]').children('select').val();
+				
+				var hJctLocationTypeSideB=$(this).parent().parent().children('td[name="hJctLocationTypeSideB"]').children('select').val();
+				var hJctLocationIdSideB =$(this).parent().parent().children('td[name="hJctLocationIdSideB"]').children('input').val();
+				var hJctLocationNameSideB =$(this).parent().parent().children('td[name="hJctLocationNameSideB"]').children('input').val();
+				var hJctWarehouseIdSideB =$(this).parent().parent().children('td[name="hJctWarehouseIdSideB"]').children('input').val();
+			
 			insertJctDictArr.push({
 							"JctSeq" : hJctSeq,	
 							"JctLocationTypeSideA" : hJctLocationTypeSideA,
@@ -16243,7 +16303,17 @@ function getSelectedRowsHandholeJctMapping() {
 							"JctTubeIdSideB": hJctTubeIdSideB,
 							"JctTubeNameSideB": hJctTubeNameSideB,
 							"JctFiberIdSideB": hJctFiberIdSideB,
-							"JctFiberNameSideB": hJctFiberNameSideB
+							"JctFiberNameSideB": hJctFiberNameSideB,
+							"JctStrandNBSideA"     :   hJctStrandNBSideA,
+							"JctTubeNBSideA"       : hJctTubeNBSideA,
+							"JctNetworkLevelSideA" :  hJctNetworkLevelSideA,
+							"JctStrandNBSideB"     :  hJctStrandNBSideB,
+							"JctTubeNBSideB"       : hJctTubeNBSideB,
+							"JctNetworkLevelSideB" :  hJctNetworkLevelSideB,
+							"JctLocationTypeSideB" :  hJctLocationTypeSideB,
+							"JctLocationIdSideB"   :  hJctLocationIdSideB,
+							"JctLocationNameSideB" :  hJctLocationNameSideB,
+							"JctWarehouseIdSideB"  :  hJctWarehouseIdSideB
 							
 			});			
 		

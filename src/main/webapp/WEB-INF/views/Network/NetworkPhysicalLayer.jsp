@@ -1156,9 +1156,9 @@
 													<tr><th></th>
 														<th colspan="1"></th>
 														<th style="background-color: #00757C" width="-10px"></th>
-														<th colspan="10">Side A</th>
+														<th colspan="13">Side A</th>
 														<th style="background-color: #00757C" width="-10px"></th>
-														<th colspan="8">Side B</th>
+														<th colspan="13">Side B</th>
 													</tr><tr>
 														<th> <button type="button" id="handholeJctSelectAll" class="main"><span class="sub"></span>Select </button></th>
 														<th style="min-width: 80px">Sequence</th>
@@ -1167,15 +1167,25 @@
 														<th style="min-width: 190px">Location ID</th>
 														<th style="min-width: 190px">Location Name</th>
 														<th style="min-width: 190px">Warehouse ID</th>
+														<th style="min-width: 190px">Network Level</th>
+														<th style="min-width: 80px">Strand #</th>
 														<th style="min-width: 190px">Strand ID</th>
 														<th style="min-width: 190px">Strand Name</th>
+														<th style="min-width: 80px">Tube #</th>
 														<th style="min-width: 190px">Tube ID</th>
 														<th style="min-width: 190px">Tube Name</th>
 														<th style="min-width: 190px">Fiber ID</th>
 														<th style="min-width: 190px">Fiber Name</th>
 														<th style="background-color: #00757C" width="-10px"></th>
+														<th style="min-width: 190px">Location Type</th>
+														<th style="min-width: 190px">Location ID</th>
+														<th style="min-width: 190px">Location Name</th>
+														<th style="min-width: 190px">Warehouse ID</th>
+														<th style="min-width: 190px">Network Level</th>
+														<th style="min-width: 80px">Strand #</th>
 														<th style="min-width: 190px">Strand ID</th>
 														<th style="min-width: 190px">Strand Name</th>
+														<th style="min-width: 80px">Tube #</th>
 														<th style="min-width: 190px">Tube ID</th>
 														<th style="min-width: 190px">Tube Name</th>
 														<th style="min-width: 190px">Fiber ID</th>
