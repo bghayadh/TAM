@@ -147,7 +147,7 @@ function create_Marker_Click(Id,Name,Long,Lat,markers,marker_Cluster,data) {
 		markers.metadata = { id: Id };
 		markers[Id] = marker;
 		markers.push(marker);
-		console.log("markers >>>>", markers);
+		//console.log("markers >>>>", markers);
 		
 		google.maps.event.addListener(marker, "click", function (e) {
 			var IdSelected = this.ID;
