@@ -1043,6 +1043,8 @@ public String Network_SitePoItem(Locale locale, Model model, HttpServletRequest 
 		return "Network/Network_SitePoItem";
 	}
 }
+
+
 @SuppressWarnings("unchecked")
 @RequestMapping(value = "/Network_NdTypNdCell", method = RequestMethod.GET)
 public String Network_NdTypNdCell(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
@@ -1074,11 +1076,11 @@ public String Network_NdTypNdCell(Locale locale, Model model, HttpServletRequest
 			}
 			try {
 				model.addAttribute("listNodes", mapper.writeValueAsString((List<Object[]>) session.createSQLQuery(
-						" SELECT b.SITE_ID,b.WARE_NAME,b.NODE_PK,b.LATITUDE,b.LONGITUDE,"					
+						" SELECT b.SITE_ID,b.WARE_NAME,b.NODE_PK,b.LATITUDE,b.LONGITUDE,"	
 						+ "(select COUNT(*) from NODE_ACTIVE w where w.ACTIVE_RECORD = '1' and w.DOMAIN='" +param1+ "') as countnodes,"	
-						+ "(select count(*) from NODE_GCELL b  where b.NODE_PK = b.NODE_PK and b.ACTIVE_RECORD = '1' and b.DOMAIN='" +param1+ "') as countGCells,"
-						+ "(select count(*) from NODE_LCELL c  where b.NODE_PK = c.NODE_PK and c.ACTIVE_RECORD = '1' and c.DOMAIN='" +param1+ "') as countLCells,"
-						+ "(select count(*) from NODE_UCELL d  where b.NODE_PK = d.NODE_PK and d.ACTIVE_RECORD = '1' and d.DOMAIN='" +param1+ "') as countUCells, "
+						+ "(select count(*) from NODE_GCELL e  where b.NODE_PK = e.NODE_PK and ACTIVE_RECORD = '1' and e.DOMAIN='" +param1+ "') as countGCells,"
+						+ "(select count(*) from NODE_LCELL c  where b.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1' and c.DOMAIN='" +param1+ "') as countLCells,"
+						+ "(select count(*) from NODE_UCELL d  where b.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1' and d.DOMAIN='" +param1+ "') as countUCells,"
 						+ " b.WARE_ID,b.NODE_NAME,b.NODE_TYPE"
 						+ " FROM NODE_ACTIVE b WHERE b.ACTIVE_RECORD = '1' AND b.DOMAIN='" +param1+ "'").list()));
 			}catch (Exception e) {
@@ -1100,9 +1102,9 @@ public String Network_NdTypNdCell(Locale locale, Model model, HttpServletRequest
 					model.addAttribute("listNodes", mapper.writeValueAsString((List<Object[]>) session.createSQLQuery(
 							"SELECT b.SITE_ID,b.WARE_NAME,b.NODE_PK,b.LATITUDE,b.LONGITUDE,"
 							+ "(select COUNT(*) from NODE_ACTIVE w where w.ACTIVE_RECORD = '1') as countnodes,"						
-							+ "(select count(*) from NODE_GCELL b  where b.NODE_PK = b.NODE_PK and b.ACTIVE_RECORD = '1') as countGCells,"
-							+ "(select count(*) from NODE_LCELL c  where b.NODE_PK = c.NODE_PK and c.ACTIVE_RECORD = '1') as countLCells,"
-							+ "(select count(*) from NODE_UCELL d  where b.NODE_PK = d.NODE_PK and d.ACTIVE_RECORD = '1') as countUCells, "
+							+ "(select count(*) from NODE_GCELL e  where b.NODE_PK = e.NODE_PK and ACTIVE_RECORD = '1') as countGCells,"
+							+ "(select count(*) from NODE_LCELL c  where b.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1') as countLCells,"
+							+ "(select count(*) from NODE_UCELL d  where b.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1') as countUCells,"
 							+ " b.WARE_ID,b.NODE_NAME,b.NODE_TYPE"
 							+ " FROM NODE_ACTIVE b WHERE b.ACTIVE_RECORD = '1'").list()));
 				} catch (Exception e) {
@@ -1190,6 +1192,7 @@ public String Network_Node(Locale locale, Model model, HttpServletRequest reques
 }
 
 
+
 @SuppressWarnings("unchecked")
 @RequestMapping(value = "/Network_Cell", method = RequestMethod.GET)
 public String Network_Cell(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
@@ -1220,7 +1223,7 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 								" (select count(*) from NODE_GCELL e where b.NODE_PK = e.NODE_PK and e.ACTIVE_RECORD = '1' AND e.DOMAIN='" +param1+ "') as countGCells," + 
 								" (select count(*) from NODE_LCELL c where b.NODE_PK = c.NODE_PK and c.ACTIVE_RECORD = '1' AND c.DOMAIN='" +param1+ "') as countLCells," + 
 								" (select count(*) from NODE_UCELL d where b.NODE_PK = d.NODE_PK and d.ACTIVE_RECORD = '1' AND d.DOMAIN='" +param1+ "') as countUCells," + 
-								" j.NODE_PK,j.CELLNAME,b.WARE_ID" + 
+								" j.NODE_PK,j.CELLNAME,b.WARE_ID,b.NODE_NAME" + 
 								" FROM NODE_ACTIVE b" + 
 								" LEFT JOIN NODE_GCELL j ON b.NODE_PK = j.NODE_PK" + 
 								" WHERE b.NODE_PK = j.NODE_PK" + 
@@ -1231,7 +1234,7 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 								" (select count(*) from NODE_GCELL e where b.NODE_PK = e.NODE_PK and e.ACTIVE_RECORD = '1' AND e.DOMAIN='" +param1+ "') as countGCells," + 
 								" (select count(*) from NODE_LCELL c where b.NODE_PK = c.NODE_PK and c.ACTIVE_RECORD = '1' AND c.DOMAIN='" +param1+ "') as countLCells," + 
 								" (select count(*) from NODE_UCELL d where b.NODE_PK = d.NODE_PK and d.ACTIVE_RECORD = '1' AND d.DOMAIN='" +param1+ "') as countUCells," + 
-								" i.NODE_PK,i.CELLNAME,b.WARE_ID" + 
+								" i.NODE_PK,i.CELLNAME,b.WARE_ID,b.NODE_NAME" + 
 								" FROM NODE_ACTIVE b" + 
 								" LEFT JOIN NODE_LCELL i ON b.NODE_PK = i.NODE_PK" +  
 								" WHERE b.NODE_PK = i.NODE_PK" + 
@@ -1242,7 +1245,7 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 								" (select count(*) from NODE_GCELL e where b.NODE_PK = e.NODE_PK and e.ACTIVE_RECORD = '1' AND e.DOMAIN='" +param1+ "') as countGCells," + 
 								" (select count(*) from NODE_LCELL c where b.NODE_PK = c.NODE_PK and c.ACTIVE_RECORD = '1' AND c.DOMAIN='" +param1+ "') as countLCells," + 
 								" (select count(*) from NODE_UCELL d where b.NODE_PK = d.NODE_PK and d.ACTIVE_RECORD = '1' AND d.DOMAIN='" +param1+ "') as countUCells," + 
-								" k.NODE_PK,k.CELLNAME,b.WARE_ID" + 
+								" k.NODE_PK,k.CELLNAME,b.WARE_ID,b.NODE_NAME" + 
 								" FROM NODE_ACTIVE b" + 
 								" LEFT JOIN NODE_UCELL k ON b.NODE_PK = k.NODE_PK" + 
 								" WHERE b.NODE_PK = k.NODE_PK" + 
@@ -1271,7 +1274,7 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 							" (select count(*) from NODE_GCELL e where b.NODE_PK = e.NODE_PK and e.ACTIVE_RECORD = '1') as countGCells," + 
 							" (select count(*) from NODE_LCELL c where b.NODE_PK = c.NODE_PK and c.ACTIVE_RECORD = '1') as countLCells," + 
 							" (select count(*) from NODE_UCELL d where b.NODE_PK = d.NODE_PK and d.ACTIVE_RECORD = '1') as countUCells," + 
-							" j.NODE_PK,j.CELLNAME,b.WARE_ID" + 
+							" j.NODE_PK,j.CELLNAME,b.WARE_ID,b.NODE_NAME" + 
 							" FROM NODE_ACTIVE b" + 
 							" LEFT JOIN NODE_GCELL j ON b.NODE_PK = j.NODE_PK" + 
 							" WHERE b.NODE_PK = j.NODE_PK" + 
@@ -1282,7 +1285,7 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 							" (select count(*) from NODE_GCELL e where b.NODE_PK = e.NODE_PK and e.ACTIVE_RECORD = '1') as countGCells," + 
 							" (select count(*) from NODE_LCELL c where b.NODE_PK = c.NODE_PK and c.ACTIVE_RECORD = '1') as countLCells," + 
 							" (select count(*) from NODE_UCELL d where b.NODE_PK = d.NODE_PK and d.ACTIVE_RECORD = '1') as countUCells," + 
-							" i.NODE_PK,i.CELLNAME,b.WARE_ID" + 
+							" i.NODE_PK,i.CELLNAME,b.WARE_ID,b.NODE_NAME" + 
 							" FROM NODE_ACTIVE b" + 
 							" LEFT JOIN NODE_LCELL i ON b.NODE_PK = i.NODE_PK" +  
 							" WHERE b.NODE_PK = i.NODE_PK" + 
@@ -1293,7 +1296,7 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 							" (select count(*) from NODE_GCELL e where b.NODE_PK = e.NODE_PK and e.ACTIVE_RECORD = '1') as countGCells," + 
 							" (select count(*) from NODE_LCELL c where b.NODE_PK = c.NODE_PK and c.ACTIVE_RECORD = '1') as countLCells," + 
 							" (select count(*) from NODE_UCELL d where b.NODE_PK = d.NODE_PK and d.ACTIVE_RECORD = '1') as countUCells," + 
-							" k.NODE_PK,k.CELLNAME,b.WARE_ID" + 
+							" k.NODE_PK,k.CELLNAME,b.WARE_ID,b.NODE_NAME" + 
 							" FROM NODE_ACTIVE b" + 
 							" LEFT JOIN NODE_UCELL k ON b.NODE_PK = k.NODE_PK" + 
 							" WHERE b.NODE_PK = k.NODE_PK" + 
