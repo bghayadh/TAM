@@ -682,11 +682,30 @@ public class PhysicalLayerController {
 							distribBoardList = findNearestArray(distribBoardListQuery, Double.valueOf(closestLatPoint),
 									Double.valueOf(closestLongPoint), Double.valueOf(closestDisRange), "DistribBoard",
 									noOfPoints);
-
+							
+							List<Object[]> entrepriseListQuery = session.createSQLQuery(
+									"SELECT DISTINCT NODE_ID,NODE_NAME,LONGITUDE,LATITUDE FROM NODE_ACTIVE ")
+									.list();
+							if (entrepriseListQuery != null && closestLatPoint != null && closestLongPoint != null && closestDisRange != null && noOfPoints != null) {
+							EntrepriseList = findNearestArray(entrepriseListQuery, Double.valueOf(closestLatPoint),
+									Double.valueOf(closestLongPoint), Double.valueOf(closestDisRange), "Entreprise",
+									noOfPoints);
+							}
+							
+							List<Object[]> transmissionListQuery = session.createSQLQuery(
+									"SELECT DISTINCT NODE_ID,NODE_NAME,LONGITUDE,LATITUDE FROM NODE_ACTIVE ")
+									.list();
+							if (transmissionListQuery != null && closestLatPoint != null && closestLongPoint != null && closestDisRange != null && noOfPoints != null) {
+							TransmissionList = findNearestArray(transmissionListQuery, Double.valueOf(closestLatPoint),
+									Double.valueOf(closestLongPoint), Double.valueOf(closestDisRange), "Transmission",
+									noOfPoints);
+							}
 							List<Object[]> nearstPoints = new ArrayList<Object[]>();
 							nearstPoints.addAll(manholeList);
 							nearstPoints.addAll(handholeList);
 							nearstPoints.addAll(distribBoardList);
+							nearstPoints.addAll(EntrepriseList);
+							nearstPoints.addAll(TransmissionList);
 
 							String[] idsArray = (findListId(nearstPoints, "all")).length > 0
 									? findListId(nearstPoints, "all")
@@ -921,11 +940,29 @@ public class PhysicalLayerController {
 											+ " and to_number(DB_LONGITUDE) <= " + newEndLngPt
 											+ " and  to_number(DB_LATITUDE) <= " + newEndLatPt)
 									.list();
+							
+							EntrepriseList = session.createSQLQuery(
+									"SELECT DISTINCT NODE_ID,NODE_NAME,LONGITUDE,LATITUDE FROM NODE_ACTIVE  where DOMAIN = 'Enterprise' AND to_number(LONGITUDE) >= "
+											+ newStartLngPt + " and  to_number(LATITUDE) >= " + newStartLatPt
+											+ " and to_number(LONGITUDE) <= " + newEndLngPt
+											+ " and  to_number(LATITUDE) <= " + newEndLatPt)
+									.list();
+							
+							TransmissionList = session.createSQLQuery(
+									"SELECT DISTINCT NODE_ID,LONGITUDE,LATITUDE,NODE_NAME  FROM NODE_ACTIVE  where DOMAIN = 'Transmission' AND to_number(LONGITUDE) >= "
+											+ newStartLngPt + " and  to_number(LATITUDE) >= " + newStartLatPt
+											+ " and to_number(LONGITUDE) <= " + newEndLngPt
+											+ " and  to_number(LATITUDE) <= " + newEndLatPt)
+									.list();
+							
+							
 
 							List<Object[]> nearstPoints = new ArrayList<Object[]>();
 							nearstPoints.addAll(manholeList);
 							nearstPoints.addAll(handholeList);
 							nearstPoints.addAll(distribBoardList);
+							nearstPoints.addAll(EntrepriseList);
+							nearstPoints.addAll(TransmissionList);
 
 							String[] idsArray = (findListId(nearstPoints, "all")).length > 0
 									? findListId(nearstPoints, "all")
@@ -11199,7 +11236,7 @@ public class PhysicalLayerController {
 
 			Object[] objectArray = (Object[]) ListOfObjects.get(i);
 
-			if (Target == "Manhole" || Target == "Handhole" || Target == "ManHandhole_OutOfZone") {
+			if (Target == "Manhole" || Target == "Handhole" || Target == "ManHandhole_OutOfZone" || Target == "Entreprise" || Target == "Transmission") {
 				pointDist = haversine(closestLatPoint, closestLongPoint, Double.valueOf((String) objectArray[3]),
 						Double.valueOf((String) objectArray[2]));
 			} else {

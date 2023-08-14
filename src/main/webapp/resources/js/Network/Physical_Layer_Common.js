@@ -8307,7 +8307,7 @@ function openFindNearMultySite(rowData) {
 		} */
 }
 
-function  openFindNearest(checkedOption,closestLatPoint,closestLongPoint,closestDisRange,noP,arrayManhole,arrayHandhole,arrayDB,arrayFibers,arrayStrands,arrayTubes,getRelatedPoints){
+function  openFindNearest(checkedOption,closestLatPoint,closestLongPoint,closestDisRange,noP,arrayManhole,arrayHandhole,arrayDB,arrayFibers,arrayStrands,arrayTubes,arrayEnterprise,arrayTransmission,getRelatedPoints){
 	 $("#StartEnd").prop("checked",false);
 	 document.getElementById("closestLongDiv").style.display = "block";
 	 document.getElementById("closestLatDiv").style.display = "block";
@@ -8349,10 +8349,15 @@ function  openFindNearest(checkedOption,closestLatPoint,closestLongPoint,closest
 					 finalArrayFibers.push(arrayTubes);
 					 finalArrayFibers.push(arrayFibers);
 					 appendNearestFiberPathsTable(finalArrayFibers);
+					 appendNearestEnterpriseTable(arrayEnterprise);
+			         appendNearestTransmissionTable(arrayTransmission);
+					 
 
 					 $("#totalManhole").val(arrayManhole.length);
 					 $("#totalHandhole").val(arrayHandhole.length);
 					 $("#totalDB").val(arrayDB.length);
+					 $("#totalEnter").val(arrayEnterprise.length);
+				     $("#totalTrans").val(arrayTransmission.length);
 					 const myLatLng = { lat: parseFloat(closestLatPoint), lng: parseFloat(closestLongPoint) };
 				   
 					//restMAP();
@@ -8366,7 +8371,6 @@ function  openFindNearest(checkedOption,closestLatPoint,closestLongPoint,closest
 					});
 					//var circleRadius = closestDisRange * 1.609344;
 					var circleRadius = closestDisRange *1.609344 *1.609344;
-					console.log("circleRadius "+circleRadius);
 					var circ = new google.maps.Circle({
 					         strokeColor: "blue",
 					         strokeOpacity: 0.8,
@@ -8391,7 +8395,7 @@ function  openFindNearest(checkedOption,closestLatPoint,closestLongPoint,closest
 		closestDisRange='';
 }
 
-function openFindBetweenMarkers(checkedOption,startLongPoint,startLatPoint,endLongPoint,endLatPoint,arrayManhole,arrayHandhole,arrayDB,arrayFibers,arrayStrands,arrayTubes,getRelatedPoints){
+function openFindBetweenMarkers(checkedOption,startLongPoint,startLatPoint,endLongPoint,endLatPoint,arrayManhole,arrayHandhole,arrayDB,arrayFibers,arrayStrands,arrayTubes,arrayEnterprise,arrayTransmission,getRelatedPoints){
 	 $("#circleRange").prop("checked",false);
 	 document.getElementById("closestLongDiv").style.display = "none";
 	 document.getElementById("closestLatDiv").style.display = "none";
@@ -8430,10 +8434,14 @@ function openFindBetweenMarkers(checkedOption,startLongPoint,startLatPoint,endLo
 			 finalArrayFibers.push(arrayTubes);
 			 finalArrayFibers.push(arrayFibers);
 			 appendNearestFiberPathsTable(finalArrayFibers);
+			 appendNearestEnterpriseTable(arrayEnterprise);
+			 appendNearestTransmissionTable(arrayTransmission);
 
 				$("#totalManhole").val(arrayManhole.length);
 				$("#totalHandhole").val(arrayHandhole.length);
 				$("#totalDB").val(arrayDB.length);
+				$("#totalEnter").val(arrayEnterprise.length);
+				$("#totalTrans").val(arrayTransmission.length);
 					
 					
 				startlangPath =[new google.maps.LatLng(startLatPoint,startLongPoint), new google.maps.LatLng(endLatPoint,startLongPoint)];
@@ -8480,6 +8488,140 @@ function openFindBetweenMarkers(checkedOption,startLongPoint,startLatPoint,endLo
    endLatPoint = '';
 	
 }
+
+function appendNearestEnterpriseTable(result){
+		var markupEnter="";		
+		document.getElementById("findNearestEntRes").innerHTML = "";
+		
+		if (result.length==0){
+			document.getElementById("findNearestEntRes").innerHTML = '<p style=" color:#ff0000;font-size: 1.4em;">There is no result</p>';
+		}
+		else {
+			for(var i =0 ; i<result.length;i++){
+				if($("#StartEnd").is(":checked")){
+				markupEnter +="<tr style='height: 30px;'><td ><input type='checkbox' class='EnterpriseBOQ' id=BOQ_"+result[i][0]+" ></td><td  >"+result[i][0]+"</td><td name ='enterpriseId' style='min-width:250px;'>"+result[i][1]+"</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][3]+"' readonly></input ></td>"
+			    }
+			    else{
+			    	if(result[i][8] == null || result[i][8]==""){
+				    markupEnter +="<tr style='height: 30px;'><td ><input type='checkbox' class='EnterpriseBOQ' id=BOQ_"+result[i][0]+" ></td><td  >"+result[i][0]+"</td><td name ='enterpriseId' style='min-width:250px;'>"+result[i][1]+"</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][3]+"' readonly></input ></td><td style='width:100px;'>"+(result[i][7])+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistance(this)'>Get Distance</button> </td></tr>"
+					}
+					else{
+				    markupEnter +="<tr style='height: 30px;' ><td><input type='checkbox' class='EnterpriseBOQ' id=BOQ_"+result[i][0]+" ></td><td  >"+result[i][0]+"</td><td name ='enterpriseId' style='min-width:250px;'>"+result[i][1]+"</td><td style='width:150px;'>"+result[i][2]+"</td><td style='width:150px;'>"+result[i][3]+"</td><td style='width:100px;'>"+(result[i][7])+"</td><td style='min-width:90px;'> <label name='DDistance' style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'>"+(result[i][8])+"</label></td></tr>"
+					}	
+			    }
+		}
+		}
+		$("#searchEntrTBody").append(markupEnter);
+		if($("#circleRange").is(":checked")){
+			drivingDistance("findNearstEnterprise");
+		}
+		makeAllSortable();
+		
+		$("#selectAllEnter").click(function(){
+			if($(this).is(":checked")){
+			$('input[type="checkbox"]', '#findNearstEnterprise').prop('checked', true);
+			$(".Nodes").prop('checked', true);
+			$(".AllEntreprise").prop("checked",true);
+			markerClusterManhole.clearMarkers();
+			 $("#network_tree").find(".Nodes:checked" ).each(function(){
+				id=$(this).parent().attr('id');
+				markersNodes[id].setMap(map);			
+				markerClusterNodes.addMarker(markersNodes[id]);
+								
+		     });	
+			}
+			else{
+				$('input[type="checkbox"]', '#findNearstEnterprise').prop('checked', false);
+				$(".Nodes").prop('checked', false);
+				$(".AllEntreprise").prop("checked",false);
+				markerClusterNodes.clearMarkers();
+			}
+			
+		});
+		
+		// checking single row checbox from boq
+		$('.EnterpriseBOQ').click(function(){
+				var EnterId = $(this).attr('id').split("BOQ_")[1];
+				if ($(this).is(':checked')){
+					$("#"+EnterId).children('input:checkbox').prop('checked', true);
+					markersNodes[EnterId].setMap(map);
+					markerClusterNodes.addMarker(markersNodes[EnterId]);
+				}
+				else{
+					$("#"+EnterId).children('input:checkbox').prop('checked', false);
+					markersNodes[EnterId].setMap(null);				
+					markerClusterNodes.removeMarker(markersNodes[EnterId]);
+				}			
+		});
+
+	}
+	
+	function appendNearestTransmissionTable(result){
+		var markupTrans="";		
+		document.getElementById("findNearestTransRes").innerHTML = "";
+		
+		if (result.length==0){
+			document.getElementById("findNearestTransRes").innerHTML = '<p style=" color:#ff0000;font-size: 1.4em;">There is no result</p>';
+		}
+		else {
+			for(var i =0 ; i<result.length;i++){
+				if($("#StartEnd").is(":checked")){
+				markupTrans +="<tr style='height: 30px;'><td ><input type='checkbox' class='TransmissonBOQ' id=BOQ_"+result[i][0]+" ></td><td  >"+result[i][0]+"</td><td name ='transmissionId' style='min-width:250px;'>"+result[i][1]+"</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][3]+"' readonly></input ></td>"
+			    }
+			    else{
+			    	if(result[i][8] == null || result[i][8]==""){
+				    markupTrans +="<tr style='height: 30px;'><td ><input type='checkbox' class='TransmissonBOQ' id=BOQ_"+result[i][0]+" ></td><td  >"+result[i][0]+"</td><td name ='transmissionId' style='min-width:250px;'>"+result[i][1]+"</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][3]+"' readonly></input ></td><td style='width:100px;'>"+(result[i][7])+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistance(this)'>Get Distance</button> </td></tr>"
+					}
+					else{
+				    markupTrans +="<tr style='height: 30px;' ><td><input type='checkbox' class='TransmissonBOQ' id=BOQ_"+result[i][0]+" ></td><td  >"+result[i][0]+"</td><td name ='transmissionId' style='min-width:250px;'>"+result[i][1]+"</td><td style='width:150px;'>"+result[i][2]+"</td><td style='width:150px;'>"+result[i][3]+"</td><td style='width:100px;'>"+(result[i][7])+"</td><td style='min-width:90px;'> <label name='DDistance' style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'>"+(result[i][8])+"</label></td></tr>"
+					}	
+			    }
+		}
+		}
+		$("#searchTransTBody").append(markupTrans);
+		if($("#circleRange").is(":checked")){
+			drivingDistance("findNearstTransmission");
+		}
+		makeAllSortable();
+		
+		$("#selectAllTrans").click(function(){
+			if($(this).is(":checked")){
+			$('input[type="checkbox"]', '#findNearstTransmission').prop('checked', true);
+			$(".Transmission").prop('checked', true);
+			$(".AllTransmission").prop("checked",true);
+			markerClusterTransmission.clearMarkers();
+			 $("#network_tree").find(".Transmission:checked" ).each(function(){
+				id=$(this).parent().attr('id');
+				markersTransmission[id].setMap(map);			
+				markerClusterTransmission.addMarker(markersTransmission[id]);
+								
+		     });	
+			}
+			else{
+				$('input[type="checkbox"]', '#findNearstTransmission').prop('checked', false);
+				$(".Transmission").prop('checked', false);
+				$(".AllTransmission").prop("checked",false);
+				markerClusterTransmission.clearMarkers();
+			}
+			
+		});
+		
+		// checking single row checbox from boq
+		$('.TransmissonBOQ').click(function(){
+				var TransId = $(this).attr('id').split("BOQ_")[1];
+				if ($(this).is(':checked')){
+					$("#"+TransId).children('input:checkbox').prop('checked', true);
+					markersTransmission[TransId].setMap(map);
+					markerClusterTransmission.addMarker(markersTransmission[TransId]);
+				}
+				else{
+					$("#"+TransId).children('input:checkbox').prop('checked', false);
+					markersTransmission[TransId].setMap(null);				
+					markerClusterTransmission.removeMarker(markersTransmission[TransId]);
+				}			
+		});
+
+	}
 
 
 function drawLine(color,path){
@@ -9277,7 +9419,6 @@ function SortArray(a, b) {
 	}
 	*/		
 function appendNearestFiberPathsTable(result){
-		console.log(result);
 		var markupNearStrand="";
 		var markupNearTube="";
 		var markupNearFiber="";		
@@ -9346,7 +9487,6 @@ function appendNearestDBoardTable(result){
 		}
 		$("#searchDBoardTBody").append(markupDBoard);
 		if($("#circleRange").is(":checked")){
-			console.log("entered !!!!!!!!!!!!!!!");
 			drivingDistance("findNearstDB");
 		}
         makeAllSortable();
@@ -9476,7 +9616,6 @@ function appendNearestDBoardTable(result){
 	
 	function drivingDistance(tableId) {
 		for (indxRow = 0; indxRow < 5 ; indxRow++){
-			 console.log("entered indxRow "+ indxRow);
 			 $("#"+tableId+" >tbody").find("tr").eq(indxRow).find('td[name="DDistanceB"]').children('button').click();
 	    }
 	}
