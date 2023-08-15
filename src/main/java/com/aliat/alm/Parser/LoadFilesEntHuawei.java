@@ -42,7 +42,7 @@ import com.aliat.alm.models.ManHole;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class LoadFilesEntHuawei  {
-	// updated by Bassam 09 FEB 2022
+	
 	static BufferedReader objReader1 = null;
 	static String strCurrentLine1;
 	static String projpath=null;
@@ -89,8 +89,8 @@ public class LoadFilesEntHuawei  {
 	
 	public static void main(String[] args, String vendor,String domain,String sub_domain) throws IOException, SQLException, InterruptedException {
 		
-		
-		objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"/"+"almconfig.dat"));
+	
+		objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"\\"+"almconfig.dat"));
 		System.out.println("vendor "+vendor);
 		System.out.println("vendor "+domain);
 		System.out.println("vendor "+sub_domain);
@@ -152,8 +152,10 @@ public class LoadFilesEntHuawei  {
 	 	}
 	 	 objReader1.close();
 	 	 
-		 System.out.println("get circle value  :" + System.getProperty("user.dir")+"/"+"almcircle.dat");
-		 objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"/"+"almcircle.dat"));
+		// System.out.println("get circle value  :" + System.getProperty("user.dir")+"/"+"almcircle.dat");
+		// objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"/"+"almcircle.dat"));
+		 objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"\\"+"almcircle.dat"));
+
 		 while ((strCurrentLine1 = objReader1.readLine()) != null){
 			 String data = strCurrentLine1;
 			 String[] data1 ;
@@ -264,19 +266,19 @@ public class LoadFilesEntHuawei  {
 						 conalm.close();
 							
 	}
-	public static HashMap<String, String> readfile (String filename) {
+	public static String readfile (String filename) {
 
 	   	System.out.println("filename "+filename);
 		
 	   //String unique_Node_ID = null;
 	   	
-	   	String codeid=null;
-	   	String Node_Type=null;
-	   	String Site_ID=null;
-	   	String Ware_ID=null;
-	   	String Ware_Name=null;
-	   	Float Long=null;
-	   	Float Lat=null;
+	   	String codeid="";
+	   	String Node_Type="";
+	   	String Site_ID="";
+	   	String Ware_ID="";
+	   	String Ware_Name="";
+	   	String Long="";
+	   	String Lat="";
 	   	String Node_Name;
 	   	
 	   	Node_Type="MSAN";
@@ -369,8 +371,8 @@ public class LoadFilesEntHuawei  {
 											  //System.out.println("here while "+rsinit2.getString("WARE_ID"));
 											  Ware_ID=rsinit2.getString("WARE_ID");
 											  Ware_Name = rsinit2.getString("WARE_NAME");
-											  Long=rsinit2.getFloat("LONGITUDE");
-											  Lat = rsinit2.getFloat("LATITUDE");
+											  Long=rsinit2.getString("LONGITUDE");
+											  Lat = rsinit2.getString("LATITUDE");
 											  rsinit2.close();
 										  	
 										  }
@@ -380,8 +382,8 @@ public class LoadFilesEntHuawei  {
 										  else {
 												Ware_ID="";
 												Ware_Name ="";
-												  Long=null;
-												  Lat = null;
+												  Long="";
+												  Lat = "";
 												  Site_ID = "";
 												//System.out.println("site id and site name don't exists");
 
@@ -391,8 +393,8 @@ public class LoadFilesEntHuawei  {
 								else {
 									Ware_ID="";
 									Ware_Name ="";
-									  Long=null;
-									  Lat = null;
+									  Long="";
+									  Lat = "";
 									  Site_ID = "";
 									//System.out.println("site id and site name don't exists");
 
@@ -400,16 +402,16 @@ public class LoadFilesEntHuawei  {
 								}else {
 									Ware_ID="";
 									Ware_Name ="";
-									  Long=null;
-									  Lat = null;
+									  Long="";
+									  Lat = "";
 									  Site_ID = "";
 									
 								}
 							}else {
 								Ware_ID="";
 								Ware_Name ="";
-								  Long=null;
-								  Lat = null;
+								  Long="";
+								  Lat ="";
 								  Site_ID = "";
 								//System.out.println("site id and site name don't exists");
 
@@ -462,23 +464,23 @@ public class LoadFilesEntHuawei  {
 		 
 		 	
 			
-			String NEName = null;
-			String NEModel = null;
-			String NEIP = null;
-			String SoftwareVer = null;
-			String NEMAC = null;
-			String NEID = null;
-			String SubNet = null;
-			String NESubType = null;
-			String ComStatus = null;
-			String AdminStatus = null;
-			String crtdata = null;//maybe change to time 
-			String Remark = null;
-			String PatchVerList = null;
-			String LifeCycleStatus = null;
-			String Gateway = null;
-			String GatewayType = null;
-			String GatewayIP = null;
+			String NEName = "";
+			String NEModel = "";
+			String NEIP = "";
+			String SoftwareVer = "";
+			String NEMAC = "";
+			String NEID = "";
+			String SubNet = "";
+			String NESubType = "";
+			String ComStatus = "";
+			String AdminStatus = "";
+			String crtdata = "";//maybe change to time 
+			String Remark = "";
+			String PatchVerList = "";
+			String LifeCycleStatus = "";
+			String Gateway = "";
+			String GatewayType = "";
+			String GatewayIP = "";
 			
 		 
 			Date date = new Date();
@@ -517,6 +519,9 @@ public class LoadFilesEntHuawei  {
 						break;
 					case 4:
 						NEMAC=nextCell.getStringCellValue();
+						if(NEMAC.trim().equalsIgnoreCase("--")) {
+							NEMAC="";
+						}
 						break;
 					case 5:
 						NEID=nextCell.getStringCellValue();
@@ -544,15 +549,27 @@ public class LoadFilesEntHuawei  {
 						break;
 					case 19:
 						GatewayType=nextCell.getStringCellValue();
+						if(GatewayType.trim().equalsIgnoreCase("--")) {
+							GatewayType="";
+						}
 						break;
 					case 20:
 						Gateway=nextCell.getStringCellValue();
+						if(Gateway.trim().equalsIgnoreCase("--")) {
+							Gateway="";
+						}
 						break;
 					case 21:
 						GatewayIP=nextCell.getStringCellValue();
+						if(GatewayIP.trim().equalsIgnoreCase("--")) {
+							GatewayIP="";
+						}
 						break;
 					case 23:
 						LifeCycleStatus=nextCell.getStringCellValue();
+						if(LifeCycleStatus.trim().equalsIgnoreCase("--")){
+							LifeCycleStatus="";
+						}
 						break;
 					}
 					 
