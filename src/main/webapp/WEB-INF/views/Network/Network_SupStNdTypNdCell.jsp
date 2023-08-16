@@ -670,7 +670,15 @@ function Sumbitselection(arr){
 		 window.location.href = getContext()+"/Network_SupStNdCell";
 	 }
 	 break;	
-	 
+	 case "li_supplierBtn,li_siteBtn,li_nodeBtn,li_cellBtn,li_EnterpriseBtn":
+	 case "siteBtn,nodeBtn,cellBtn,supplierBtn,EnterpriseBtn":		
+	 {
+		 	var param1 = 'Enterprise';
+	 		var url = getContext() + '/Network_SupStNdCell';
+	 		url += '?param1=' + encodeURIComponent(param1);
+	 		window.location.href = url;
+	 }
+	 break;
 	//Supplier-Site-Node type-Node-Cell
 		case "li_supplierBtn,li_siteBtn,li_nodeTypeeBtn,li_nodeBtn,li_cellBtn":
  		case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,supplierBtn":
