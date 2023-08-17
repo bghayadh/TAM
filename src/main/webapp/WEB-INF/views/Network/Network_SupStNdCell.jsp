@@ -15,6 +15,13 @@ if(!(lst==null || lst=="")){
 var wareCount=lst.length;
 }
 
+var currentUrl = window.location.href;
+console.log("currentUrl....",currentUrl);
+// Check if the Enterprise exists in the URL
+if (currentUrl.indexOf("Enterprise") !== -1) {
+  console.log("Enterpriseeeee");
+  $('#EnterpriseBtn').toggleClass('activee');
+} 
 
 function initMap() {
 
@@ -360,18 +367,29 @@ function SuppStNdCellCore(id){
 			//.push(selectedSupp);
 		var SuppChildrenLength=$("#" +selectedSupp+"_f").find(' > ul > li').length;	
 		if(SuppChildrenLength==0){
+			
+			if($('#EnterpriseBtn').hasClass('activee')){
+				//console.log("ACTIVE ");
+				var paramEnterprise = true;
+			}else{
+				//console.log("NOT ACTIVE");
+				var paramEnterprise = false;
+			}
+			
 			$.ajax({
 				type: "GET",
 				contentType: "application/json; charset=utf-8",
 				url: getContext()+'/FindOnClick_SuppSiteNodeCell',
 				data: {
-					"selectedSupp":selectedSupp,							                
+					"selectedSupp":selectedSupp,	
+					"paramEnterprise": paramEnterprise,
 				},
 				dataType: "json",
 				success: function (data) {							        	
 					if (data != null) {
 						//var SuppChildrenLength=$("#" +selectedSupp+"_f").find(' > ul > li').length;	
 						var listSuppSites=data.listSuppSites;
+						console.log("listSuppSites......",listSuppSites);
 						if(SuppChildrenLength<listSuppSites.length){
 							var dFrag = document.createDocumentFragment();
 							for (n = 0; n < listSuppSites.length; n++) {								 
@@ -482,19 +500,33 @@ function Create_TreeSites(id){
 	//	sitesNCreated.push(selectedItem);	
 	var siteChildren=$("#"+selectedItem+"_f") .find(' > ul > li').length;
 	if (siteChildren == 0) {
+		
+		if($('#EnterpriseBtn').hasClass('activee')){
+			//console.log("ACTIVE ");
+			var paramEnterprise = true;
+		}else{
+			//console.log("NOT ACTIVE");
+			var paramEnterprise = false;
+		}
+		
 	$.ajax({		
 		type: "GET",
 		contentType: "application/json; charset=utf-8",
 		url: getContext()+'/FindOnClick_SuppSiteNodeCell',
 		data: {
 			"selectedItem":selectedItem,
-			"selectedSupp":supplier			                
+			"selectedSupp":supplier,
+			"paramEnterprise": paramEnterprise,
 		},
 		dataType: "json",
 		success: function (data) {	
 			if (data != null) {
 				var listSuppNodes=data.listSuppNodes;
 				var listCells=data.listCells;
+				
+				console.log("listSuppNodes......",listSuppNodes);
+				console.log("listCells......",listCells);
+
 				if(siteChildren<listSuppNodes.length){
 					//Create_TreeNode(listSuppNodes,1,3);	
 					//Create_TreeNode_Cell(listSuppNodes,"FindOnClick_SuppSiteNodeCell",siteChildren,true,true,2,"Sup",4,"Sup",selectedItem);		
@@ -588,6 +620,15 @@ function Sumbitselection(arr){
 	 }
 	 break;	
 	 
+	 case "li_supplierBtn,li_siteBtn,li_nodeBtn,li_cellBtn,li_EnterpriseBtn":
+	 case "siteBtn,nodeBtn,cellBtn,supplierBtn,EnterpriseBtn":		
+	 {
+		 	var param1 = 'Enterprise';
+	 		var url = getContext() + '/Network_SupStNdCell';
+	 		url += '?param1=' + encodeURIComponent(param1);
+	 		window.location.href = url;
+	 }
+	 break;	
 	//Supplier-Site-Node type-Node-Cell
 		case "li_supplierBtn,li_siteBtn,li_nodeTypeeBtn,li_nodeBtn,li_cellBtn":
  		case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,supplierBtn":

@@ -1287,7 +1287,8 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 			return [order,name];
 		
 		} break;
-
+		////////////////////////////////////////////////
+		
 		case "siteBtn,nodeBtn,cellBtn,supplierBtn":
 		{	
 			var order =["supplierBtn","siteBtn","nodeBtn","cellBtn"];
@@ -1297,6 +1298,15 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 		
 		} break;
 
+		case "siteBtn,nodeBtn,cellBtn,supplierBtn,EnterpriseBtn":
+		{	
+			var order =["supplierBtn","siteBtn","nodeBtn","cellBtn"];
+			var name = ["Supplier","Site","Node","Cell","Enterprise"];
+		
+			return [order,name];
+		
+		} break;
+		
 		case "siteBtn,itemBtn,poBtn":
 		case "poBtn":
 		{	
