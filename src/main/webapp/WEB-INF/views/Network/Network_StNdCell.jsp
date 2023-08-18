@@ -5,7 +5,7 @@ $('#filterr').hide();
 $('#removeFilter').hide();
 
 var lst = ${listSites};
-console.log("LST...", lst);
+//console.log("LST...", lst);
 var Long=${Long};
 var Lat=${Lat};
 var listNodes=${listNodes};
@@ -259,7 +259,7 @@ map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
 	
 	}
 	else{
-		console.log("hi lst null");
+		//console.log("hi lst null");
 		var Nairobi=new google.maps.LatLng(0.796530,37.959529);			
 		map.setCenter(Nairobi);
 		map.setZoom(6);
@@ -273,7 +273,7 @@ map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
 /*     Strat of Site Node Cell Tree Method   */ 
 //////////////////////////////////////////////
 function CreateTree_StNdCell(lst,map){
-	console.log("CREATE TREEEEEE");
+	//console.log("CREATE TREEEEEE");
 	//Site_Boq("");
 	var str="<ul><li id='initial_ul' class='Initial'><input type='checkbox' id='StNdCell_Sites' class='AllSites' style='margin-left: 15px' unchecked onclick='AllSitesCheckFilter()'></input> <span class='folder' id='test1'><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Sites</span></li></ul>";
 	$("#network_tree").append(str);	
@@ -597,6 +597,15 @@ function Sumbitselection(arr){
      	}
 	
  		break;	
+ 		case "li_supplierBtn,li_siteBtn,li_nodeTypeeBtn,li_nodeBtn,li_cellBtn,li_EnterpriseBtn":
+ 		case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,supplierBtn,EnterpriseBtn":
+  		{
+ 			var param1 = 'Enterprise';
+	 		var url = getContext() + '/Network_SupStNdTypNdCell';
+	 		url += '?param1=' + encodeURIComponent(param1);
+	 		window.location.href = url;
+     	}
+ 		break;
  		//Supplier-NodeType-Site-Node-Cell
 		 case "li_supplierBtn,li_nodeTypeeBtn,li_siteBtn,li_nodeBtn,li_cellBtn":
 		 case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,supplierBtn":

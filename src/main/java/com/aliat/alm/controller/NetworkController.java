@@ -491,7 +491,10 @@ public class NetworkController {
 							(List<Object[]>) session.createSQLQuery(
 							"SELECT DISTINCT NODE_TYPE,WARE_ID FROM NODE_ACTIVE WHERE ACTIVE_RECORD = '1'")
 							.list()));
-					
+					System.out.println("lst nodeeee tyyype .........."+ mapper.writeValueAsString(
+							(List<Object[]>) session.createSQLQuery(
+							"SELECT DISTINCT NODE_TYPE,WARE_ID FROM NODE_ACTIVE WHERE ACTIVE_RECORD = '1'")
+							.list()));
 				} catch (Exception e) {
 					logger.info("Error in retreiving node type array Data from database", e);
 					model.addAttribute("listNodesType", null);
@@ -751,41 +754,73 @@ public String Network_SupStNdTypNdCell(Locale locale, Model model, HttpServletRe
 			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
 			System.out.println("Network_SupStNdTypNdCell");
-		try {
-				model.addAttribute("listSupp", mapper.writeValueAsString((List<Object[]>) session.createSQLQuery(
-						"SELECT distinct SUPPLIER_ID,SUPPLIER_NAME FROM NODE_ACTIVE where ACTIVE_RECORD = '1' and WARE_ID!='0' and WARE_ID!='null' and SUPPLIER_ID!='null'")
-						.list()));
-			} catch (Exception e) {
-				logger.info("Error in retreiving Nodes Data from database", e);
-				model.addAttribute("listSupp", "null");
-			}
-		
-		// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>//
+			String param1 = request.getParameter("param1");
+			
+		  if (param1 != null) {
+			  System.out.println("PARAM TRUE");
 			try {
-
-				model.addAttribute("listSites", mapper.writeValueAsString(
-						(List<Object[]>) session.createSQLQuery("SELECT distinct b.SITE_ID,b.WARE_NAME,b.WARE_ID,"
-								+ "(SELECT a.LATITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LATITUDE,"
-								+ "(SELECT a.LONGITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LONGITUDE,"
-								+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID  and w.ACTIVE_RECORD = '1') as countnodes,"
-								+ "(select COUNT(*) FROM NODE_GCELL c where c.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1')) as countGcells,"
-								+ "(select COUNT(*) FROM NODE_LCELL d where d.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1')) as countLcells,"
-								+ "(select COUNT(*) FROM NODE_UCELL e where e.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1')) as countUcells"
-								+ " FROM WAREHOUSE b where b.WARE_ID!='0' and b.WARE_ID!='null'").list()));
-
-			} catch (Exception e) {
-				logger.info("Error in retreiving Sites Data from database", e);
-				model.addAttribute("listSites", "null");
-
-			}	
-					
-			finally {
+					model.addAttribute("listSupp", mapper.writeValueAsString((List<Object[]>) session.createSQLQuery(
+							"SELECT distinct SUPPLIER_ID,SUPPLIER_NAME FROM NODE_ACTIVE where DOMAIN='" +param1+ "' and ACTIVE_RECORD = '1' and WARE_ID!='0' and WARE_ID!='null' and SUPPLIER_ID!='null'")
+							.list()));
+				} catch (Exception e) {
+					logger.info("Error in retreiving Nodes Data from database", e);
+					model.addAttribute("listSupp", "null");
+				}
+			
+			// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>//
+				try {
+	
+					model.addAttribute("listSites", mapper.writeValueAsString(
+							(List<Object[]>) session.createSQLQuery("SELECT DISTINCT b.SITE_ID,b.WARE_NAME,b.WARE_ID,b.LATITUDE,b.LONGITUDE,"  
+									+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID and w.DOMAIN='" +param1+ "' and w.ACTIVE_RECORD = '1') as countnodes," 
+									+ "(select COUNT(*) FROM NODE_GCELL c where c.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1' and o.DOMAIN='" +param1+ "') and c.DOMAIN='" +param1+ "') as countGcells,"
+									+ "(select COUNT(*) FROM NODE_LCELL d where d.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1' and o.DOMAIN='" +param1+ "') and d.DOMAIN='" +param1+ "') as countLcells,"
+									+ "(select COUNT(*) FROM NODE_UCELL e where e.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1' and o.DOMAIN='" +param1+ "') and e.DOMAIN='" +param1+ "') as countUcells"
+									+ " FROM NODE_ACTIVE b WHERE b.DOMAIN='" +param1+ "' and b.WARE_ID!='0' and b.WARE_ID!='null'").list()));			
+									
+	
+				} catch (Exception e) {
+					logger.info("Error in retreiving Sites Data from database", e);
+					model.addAttribute("listSites", "null");
+	
+				}	
+		  }else{
+			  System.out.println("PARAM FALSE");
+			  try {
+					model.addAttribute("listSupp", mapper.writeValueAsString((List<Object[]>) session.createSQLQuery(
+							"SELECT distinct SUPPLIER_ID,SUPPLIER_NAME FROM NODE_ACTIVE where ACTIVE_RECORD = '1' and WARE_ID!='0' and WARE_ID!='null' and SUPPLIER_ID!='null'")
+							.list()));
+				} catch (Exception e) {
+					logger.info("Error in retreiving Nodes Data from database", e);
+					model.addAttribute("listSupp", "null");
+				}
+			
+			// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>//
+				try {
+	
+					model.addAttribute("listSites", mapper.writeValueAsString(
+							(List<Object[]>) session.createSQLQuery("SELECT distinct b.SITE_ID,b.WARE_NAME,b.WARE_ID,"
+									+ "(SELECT a.LATITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LATITUDE,"
+									+ "(SELECT a.LONGITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LONGITUDE,"
+									+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID  and w.ACTIVE_RECORD = '1') as countnodes,"
+									+ "(select COUNT(*) FROM NODE_GCELL c where c.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1')) as countGcells,"
+									+ "(select COUNT(*) FROM NODE_LCELL d where d.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1')) as countLcells,"
+									+ "(select COUNT(*) FROM NODE_UCELL e where e.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1')) as countUcells"
+									+ " FROM WAREHOUSE b where b.WARE_ID!='0' and b.WARE_ID!='null'").list()));
+	
+				} catch (Exception e) {
+					logger.info("Error in retreiving Sites Data from database", e);
+					model.addAttribute("listSites", "null");
+	
+				}
+		  }
+			//finally {
 				if (session != null && session.isOpen()) {
 					logger.info("Session Closseeed");
 					tx.commit();
 					session.close();
 				}
-			}
+			//}
 		}
 		return "Network/Network_SupStNdTypNdCell";
 	}
@@ -2405,8 +2440,8 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 					Object Sites = session.createSQLQuery(Site_Query).uniqueResult();
 
 					String Node_Active_Query = SiteId == ""
-							? "SELECT COUNT(distinct UNIQUE_NODE_ID) FROM NODE_ACTIVE where Active_record='1' and DOMAIN='Enterprise'"
-							: "SELECT COUNT(UNIQUE_NODE_ID) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='" + SiteId
+							? "SELECT COUNT(NODE_PK) FROM NODE_ACTIVE where Active_record='1' and DOMAIN='Enterprise'"
+							: "SELECT COUNT(NODE_PK) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='" + SiteId
 							+ "' and DOMAIN='Enterprise'";
 					//System.out.println(Node_Active_Query);
 					Object CountNodes_Active = session.createSQLQuery(Node_Active_Query).uniqueResult();
@@ -2474,8 +2509,8 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 					Object Sites = session.createSQLQuery(Site_Query).uniqueResult();
 
 					String Node_Active_Query = SiteId == ""
-							? "SELECT COUNT(distinct UNIQUE_NODE_ID) FROM NODE_ACTIVE where Active_record='1'"
-							: "SELECT COUNT(UNIQUE_NODE_ID) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='" + SiteId
+							? "SELECT COUNT(NODE_PK) FROM NODE_ACTIVE where Active_record='1'"
+							: "SELECT COUNT(NODE_PK) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='" + SiteId
 							+ "'";
 					//System.out.println(Node_Active_Query);
 					Object CountNodes_Active = session.createSQLQuery(Node_Active_Query).uniqueResult();
@@ -2814,9 +2849,9 @@ LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 				Object Sites = session.createSQLQuery(Site_Query).uniqueResult();
 
 				String Node_Active_Query = SiteId == ""
-						? "SELECT COUNT(distinct UNIQUE_NODE_ID) FROM NODE_ACTIVE where Active_record='1' and NODE_TYPE='"
+						? "SELECT COUNT(NODE_PK) FROM NODE_ACTIVE where Active_record='1' and NODE_TYPE='"
 								+ NodeTId + "' AND DOMAIN='Enterprise'"
-						: "SELECT COUNT(distinct UNIQUE_NODE_ID) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"
+						: "SELECT COUNT(NODE_PK) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"
 								+ SiteId + "' and NODE_TYPE='" + NodeTId + "' and DOMAIN='Enterprise'";
 				Object CountNodes_Active = session.createSQLQuery(Node_Active_Query).uniqueResult();
 
@@ -2857,9 +2892,9 @@ LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 					Object Sites = session.createSQLQuery(Site_Query).uniqueResult();
 
 					String Node_Active_Query = SiteId == ""
-							? "SELECT COUNT(distinct UNIQUE_NODE_ID) FROM NODE_ACTIVE where Active_record='1' and NODE_TYPE='"
+							? "SELECT COUNT(NODE_PK) FROM NODE_ACTIVE where Active_record='1' and NODE_TYPE='"
 									+ NodeTId + "'"
-							: "SELECT COUNT(distinct UNIQUE_NODE_ID) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"
+							: "SELECT COUNT(NODE_PK) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"
 									+ SiteId + "' and NODE_TYPE='" + NodeTId + "'";
 					Object CountNodes_Active = session.createSQLQuery(Node_Active_Query).uniqueResult();
 
@@ -4222,8 +4257,106 @@ LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 				String selectedNodetType = request.getParameter("selectedNodetType");
 				String selectedItem = request.getParameter("selectedItem");
 				String selectedNode = request.getParameter("selectedNode");
-
+				String paramEnterprise = request.getParameter("paramEnterprise");
+				//System.out.println("paramEnterprise...."+ paramEnterprise);
+				
+				if (paramEnterprise.equals("true")) {
+					System.out.println("param trueeee");
 				if (selectedSupp != null && selectedItem == null) {
+					try {
+						List<?> site_SuppList = session.createSQLQuery(
+						"SELECT distinct b.WARE_NAME,b.WARE_ID,b.LATITUDE,b.LONGITUDE,b.SUPPLIER_ID,"
+						+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID and w.DOMAIN='Enterprise' and w.ACTIVE_RECORD = '1') as countnodes," 
+						+ "(select COUNT(*) FROM NODE_GCELL c where c.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1' and o.DOMAIN='Enterprise') and c.DOMAIN='Enterprise') as countGcells,"
+						+ "(select COUNT(*) FROM NODE_LCELL d where d.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1' and o.DOMAIN='Enterprise') and d.DOMAIN='Enterprise') as countLcells,"
+						+ "(select COUNT(*) FROM NODE_UCELL e where e.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1' and o.DOMAIN='Enterprise') and e.DOMAIN='Enterprise') as countUcells"
+						+ " FROM NODE_ACTIVE b where b.DOMAIN='Enterprise' and b.WARE_ID!='0' and b.WARE_ID!='null' and b.SUPPLIER_ID='"
+						+ selectedSupp + "'").list();
+						
+						
+						rtn.put("listSuppSites", site_SuppList);
+					} catch (Exception e) {
+						logger.info("Error in retreiving sites Data from database", e);
+						rtn.put("listSuppSites", null);
+					}
+				}
+
+				if (selectedItem != null) {
+					try {
+						List<?> nodeTypeList = session.createSQLQuery(
+								"SELECT DISTINCT NODE_TYPE,WARE_ID,SUPPLIER_ID FROM NODE_ACTIVE WHERE DOMAIN='Enterprise' AND ACTIVE_RECORD = '1' and WARE_ID='"
+										+ selectedItem + "' and SUPPLIER_ID='" + selectedSupp + "'")
+								.list();
+
+						rtn.put("listNodesType", nodeTypeList);
+					} catch (Exception e) {
+						logger.info("Error in retreiving node type Data from database", e);
+						rtn.put("listNodesType", null);
+					}
+
+				}
+
+				if (selectedNodetType != null) {
+					try {
+						List<Object[]> nodeList = (List<Object[]>) session.createSQLQuery(
+								"SELECT NODE_PK,SITE_ID,NODE_NAME,NODE_TYPE,WARE_ID,"
+								+ "(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and ACTIVE_RECORD = '1') as countGCells,"
+								+ "(select count(*) from NODE_LCELL c  where a.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1') as countLCells,"
+								+ "(select count(*) from NODE_UCELL d  where a.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1') as countUCells "
+								+ "FROM NODE_ACTIVE a WHERE a.DOMAIN='Enterprise' AND a.ACTIVE_RECORD = '1' and a.WARE_ID='"
+										+ selectedItem + "' and a.NODE_TYPE='" + selectedNodetType + "' and a.SUPPLIER_ID='"
+										+ selectedSupp + "'")
+								.list();
+
+						rtn.put("listNodes", nodeList);
+						System.out.println("===>NODES	" + mapper.writeValueAsString(nodeList));
+					} catch (Exception e) {
+						logger.info("Error in retreiving nodes Data from database", e);
+						rtn.put("listNodes", null);
+					}
+				}
+
+				if (selectedNodetType != null) {
+					try {
+						List<Object[]> result = session.createSQLQuery(
+								"SELECT a.GCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_GCELL a,NODE_ACTIVE b WHERE a.DOMAIN='Enterprise' AND a.ACTIVE_RECORD = '1' "
+								+ "and b.NODE_PK=a.NODE_PK and b.WARE_ID= '"+selectedItem+"' and b.SUPPLIER_ID='"
+										+ selectedSupp + "' and b. NODE_TYPE='"+ selectedNodetType +"'")
+								.list();
+						List<Object[]> result1 = session.createSQLQuery(
+								"SELECT a.LCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_LCELL a,NODE_ACTIVE b WHERE a.DOMAIN='Enterprise' AND a.ACTIVE_RECORD = '1' "
+								+ "and b.NODE_PK=a.NODE_PK and b.WARE_ID= '"+selectedItem+"' and b.SUPPLIER_ID='"
+										+ selectedSupp+ "' and b. NODE_TYPE='"+ selectedNodetType +"'")
+								.list();
+						List<Object[]> result2 = session.createSQLQuery(
+								"SELECT a.UCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_UCELL a,NODE_ACTIVE b WHERE a.DOMAIN='Enterprise' AND a.ACTIVE_RECORD = '1'"
+								+ " and b.NODE_PK=a.NODE_PK and b.WARE_ID= '"+selectedItem+"' and b.SUPPLIER_ID='"
+										+ selectedSupp + "' and b. NODE_TYPE='"+ selectedNodetType +"'")
+								.list();
+
+						List<Object[]> cellResult = new ArrayList<Object[]>();
+
+						if (!result.isEmpty()) {
+							cellResult.addAll(result);
+						}
+						if (!result1.isEmpty()) {
+							cellResult.addAll(result1);
+						}
+						if (!result2.isEmpty()) {
+							cellResult.addAll(result2);
+						}
+
+						rtn.put("listCells", cellResult);
+						System.out.println("===>CELLS	" + mapper.writeValueAsString(cellResult));
+					} catch (Exception e) {
+						logger.info("Error in retreiving nodes Data from database", e);
+						rtn.put("listNodes", null);
+					}
+				}
+			}// and of param true
+				else {			
+					System.out.println("param falseee");
+					if (selectedSupp != null && selectedItem == null) {
 					try {
 						List<?> site_SuppList = session.createSQLQuery(
 								"SELECT distinct a.WARE_NAME,a.WARE_ID,a.LATITUDE,a.LONGITUDE,b.SUPPLIER_ID,"
@@ -4272,23 +4405,7 @@ LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 						rtn.put("listNodes", null);
 					}
 				}
-				/*
-				if (selectedNode != null) {
 
-					try {
-						List<Object[]> result = session.createSQLQuery(
-								"SELECT a.GCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_GCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0' and b.NODE_PK='"
-										+ selectedNode + "'")
-								.list();
-						List<Object[]> result1 = session.createSQLQuery(
-								"SELECT a.LCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_LCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0' and b.NODE_PK='"
-										+ selectedNode + "'")
-								.list();
-						List<Object[]> result2 = session.createSQLQuery(
-								"SELECT a.UCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_UCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0' and b.NODE_PK='"
-										+ selectedNode + "'")
-								.list();
-*/
 				if (selectedNodetType != null) {
 					try {
 						List<Object[]> result = session.createSQLQuery(
@@ -4322,7 +4439,7 @@ LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 						logger.info("Error in retreiving nodes Data from database", e);
 						rtn.put("listNodes", null);
 					}
-				}
+				}}
 			} catch (Exception e) {
 				logger.info("Error in retreiving Data from database", e);
 			} finally {
