@@ -1324,6 +1324,16 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 			return [order,name];
 		
 		} break;
+		/////////////////////////////////
+		
+		case "siteBtn,itemBtn,poBtn,EnterpriseBtn":
+		{	
+			var order =["poBtn","siteBtn","itemBtn"];
+			var name = ["PO","Site","Item","Enterprise"];
+		
+			return [order,name];
+		
+		} break;
 
 		case "siteBtn,nodeBtn,nodeTypeeBtn,itemBtn,poBtn":
 			{

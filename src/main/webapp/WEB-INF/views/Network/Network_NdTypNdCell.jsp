@@ -9,7 +9,7 @@ $('#removeFilter').hide();
 var lstNodeType = ${listNodesType};
 
 var lst = ${listNodes};
-console.log("lst nodes....",lst);
+//console.log("lst nodes....",lst);
 
 var button ;
 var data;
@@ -801,6 +801,16 @@ function Sumbitselection(arr){
 			 window.location.href = getContext()+"/Network_SupNdTypStNdCell"; 			 
 		    }
 		break;
+		
+		 case "li_supplierBtn,li_nodeTypeeBtn,li_siteBtn,li_nodeBtn,li_cellBtn,li_EnterpriseBtn":
+		 case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,supplierBtn,EnterpriseBtn":
+		  {
+				var param1 = 'Enterprise';
+		 		var url = getContext() + '/Network_SupNdTypStNdCell';
+		 		url += '?param1=' + encodeURIComponent(param1);
+		 		window.location.href = url; 			 
+		    }
+		break;
 		//PO-Site-Items
 		 case "li_poBtn,li_siteBtn,li_itemBtn":
 		case "siteBtn,itemBtn,poBtn":
@@ -808,6 +818,15 @@ function Sumbitselection(arr){
 			 window.location.href = getContext()+"/Network_PoSiteItem"; 			 
 		 	}
 		 	break;
+		 case "li_poBtn,li_siteBtn,li_itemBtn,li_EnterpriseBtn":
+	 	 case "siteBtn,itemBtn,poBtn,EnterpriseBtn":
+	 		 	{	
+	 			var param1 = 'Enterprise';
+		 		var url = getContext() + '/Network_PoSiteItem';
+		 		url += '?param1=' + encodeURIComponent(param1);
+		 		window.location.href = url; 	 
+	 		 	}
+	 		 	break;
 		 	 //PO-Items-Site         
 		  case "li_poBtn,li_itemBtn,li_siteBtn":
 		  case "siteBtn,itemBtn,poBtn":
