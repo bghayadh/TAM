@@ -12,6 +12,8 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.springframework.ui.Model;
@@ -26,14 +28,20 @@ public class LoginServices {
 	 public String validate(String userName, String password, HttpServletResponse response, HttpServletRequest request,
 				Model model) {
 		 
-		 Configuration cfg = new Configuration().configure();
+		/* When using hibernate 5 , the code of opening a session is different  
+		 
+		 * Configuration cfg = new Configuration().configure();
 			StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
 					.applySettings(cfg.getProperties());
 			SessionFactory sf = cfg.buildSessionFactory(builder.build());
 			Session session = sf.openSession();
+			Transaction tx = session.beginTransaction(); */
+			
+			StandardServiceRegistry builder = new StandardServiceRegistryBuilder().configure().build();
+			SessionFactory sf = new MetadataSources(builder).buildMetadata().buildSessionFactory();
+			Session session = sf.openSession();
 			Transaction tx = session.beginTransaction();
-			
-			
+
 			
 			try {
 
