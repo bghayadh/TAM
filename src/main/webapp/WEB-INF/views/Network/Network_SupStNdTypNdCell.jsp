@@ -766,8 +766,8 @@ function Sumbitselection(arr){
  			 window.location.href = getContext()+"/Network_PoSiteItem"; 			 
  		 	}
  		 	break;
- 		 case "li_poBtn,li_siteBtn,li_itemBtn,li_EnterpriseBtn":
-	 	 case "siteBtn,itemBtn,poBtn,EnterpriseBtn":
+		 case "li_poBtn,li_siteBtn,li_itemBtn,li_EnterpriseBtn":
+	 	 case "siteBtn,itemBtn,EnterpriseBtn,poBtn":
 	 		 	{	
 	 			var param1 = 'Enterprise';
 		 		var url = getContext() + '/Network_PoSiteItem';

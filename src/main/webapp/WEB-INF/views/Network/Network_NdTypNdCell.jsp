@@ -9,7 +9,7 @@ $('#removeFilter').hide();
 var lstNodeType = ${listNodesType};
 
 var lst = ${listNodes};
-//console.log("lst nodes....",lst);
+console.log("lst nodes....",lst);
 
 var button ;
 var data;
@@ -819,7 +819,7 @@ function Sumbitselection(arr){
 		 	}
 		 	break;
 		 case "li_poBtn,li_siteBtn,li_itemBtn,li_EnterpriseBtn":
-	 	 case "siteBtn,itemBtn,poBtn,EnterpriseBtn":
+	 	 case "siteBtn,itemBtn,EnterpriseBtn,poBtn":
 	 		 	{	
 	 			var param1 = 'Enterprise';
 		 		var url = getContext() + '/Network_PoSiteItem';

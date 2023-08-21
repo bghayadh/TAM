@@ -849,7 +849,7 @@ public String Network_SupNdTypStCell(Locale locale, Model model, HttpServletRequ
 			System.out.println("parammmm true on load");
 			try {
 					model.addAttribute("listSupp", mapper.writeValueAsString((List<Object[]>) session.createSQLQuery(
-					"SELECT distinct SUPPLIER_ID,SUPPLIER_NAME FROM NODE_ACTIVE where DOMAIN='" +param1+ "' and ACTIVE_RECORD = '1' and WARE_ID!='0' and WARE_ID!='null' and SUPPLIER_ID!='null'")
+					"SELECT distinct SUPPLIER_ID,SUPPLIER_NAME FROM NODE_ACTIVE where DOMAIN='" +param1+ "' and ACTIVE_RECORD = '1' and WARE_ID!='0' and WARE_ID!='null' and SUPPLIER_ID!='0'")
 					.list()));
 					
 				} catch (Exception e) {
@@ -879,7 +879,7 @@ public String Network_SupNdTypStCell(Locale locale, Model model, HttpServletRequ
 
 	    	 try {
 					model.addAttribute("listSupp", mapper.writeValueAsString((List<Object[]>) session.createSQLQuery(
-							"SELECT distinct SUPPLIER_ID,SUPPLIER_NAME FROM NODE_ACTIVE where ACTIVE_RECORD = '1' and WARE_ID!='0' and WARE_ID!='null' and SUPPLIER_ID!='null'")
+							"SELECT distinct SUPPLIER_ID,SUPPLIER_NAME FROM NODE_ACTIVE where ACTIVE_RECORD = '1' and WARE_ID!='0' and WARE_ID!='null' and SUPPLIER_ID!='0'")
 							.list()));
 				} catch (Exception e) {
 					logger.info("Error in retreiving Nodes Data from database", e);
@@ -934,7 +934,41 @@ public String Network_PoSiteItem(Locale locale, Model model, HttpServletRequest 
 			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
 			//System.out.println("Network_PoSiteItem");
-		try {
+			String param1 = request.getParameter("param1");
+			
+		     if (param1 != null) {
+				System.out.println("PARAM true on load");
+				try {	
+					model.addAttribute("listSites", mapper.writeValueAsString(
+						(List<Object[]>) session.createSQLQuery("SELECT DISTINCT b.SITE_ID,b.SITE_NAME,b.WARE_ID,"
+								+ "(SELECT a.LATITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LATITUDE,"
+								+ "(SELECT a.LONGITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LONGITUDE,"						
+								+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID and w.DOMAIN='" +param1+ "' and w.ACTIVE_RECORD = '1') as countnodes," 
+								+ "(select COUNT(*) from ASSET_REGISTRY j where  j.AR_ID=b.AR_ID and j.PO_ID!='null' and j.DOMAIN='" +param1+ "') as countItems,"
+								+ "(select COUNT(*) FROM NODE_GCELL c where c.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1' and o.DOMAIN='" +param1+ "') and c.DOMAIN='" +param1+ "') as countGcells,"
+								+ "(select COUNT(*) FROM NODE_LCELL d where d.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1' and o.DOMAIN='" +param1+ "') and d.DOMAIN='" +param1+ "') as countLcells,"
+								+ "(select COUNT(*) FROM NODE_UCELL e where e.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1' and o.DOMAIN='" +param1+ "') and e.DOMAIN='" +param1+ "') as countUcells"
+								+ " FROM AR_SITE b,ASSET_REGISTRY j where j.AR_ID=b.AR_ID AND j.DOMAIN='" +param1+ "' and b.WARE_ID!='0' and b.WARE_ID!='null'").list()));
+				
+				} catch (Exception e) {
+					logger.info("Error in retreiving Sites Data from database", e);
+					model.addAttribute("listSites", "null");
+
+				}
+
+				try {
+					model.addAttribute("listPO",
+							mapper.writeValueAsString((List<Object[]>) session.createSQLQuery("SELECT distinct a.PO_ID"
+									+ " FROM ASSET_REGISTRY a,AR_SITE c where a.PO_ID!='null' and a.DOMAIN='" +param1+ "'").list()));
+
+					
+			} catch (Exception e) {
+				logger.info("Error in retreiving PO Data from database", e);
+				model.addAttribute("listPO", "null");
+				}
+		}else {
+			System.out.println("PARAM false on load");
+		   try {
 				model.addAttribute("listPO",
 						//((List<Object[]>) session.createSQLQuery("SELECT distinct a.PO_ID,"
 								//+ "(select count(*) from WAREHOUSE b where b.WARE_ID = a.WARE_ID) as countSite"
@@ -974,13 +1008,14 @@ public String Network_PoSiteItem(Locale locale, Model model, HttpServletRequest 
 				model.addAttribute("listSites", "null");
 
 			}
-			finally {
+		   }
+			//finally {
 				if (session != null && session.isOpen()) {
 					logger.info("Session Closseeed");
 					tx.commit();
 					session.close();
 				}
-			}
+			//}
 		}
 		return "Network/Network_PoSiteItem";
 	}
@@ -2621,23 +2656,24 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 				@RequestMapping(value = "/GetBoqSitePoList", method = RequestMethod.GET, produces = "application/json")
 				@ResponseBody
 
-				public LinkedHashMap<String, String> GetBoqSitePoList(@RequestParam String SiteId) {
+				public LinkedHashMap<String, String> GetBoqSitePoList(@RequestParam String SiteId, @RequestParam String paramEnterprise) {
 
 					Session session = almsessions.getSession();
 					Transaction tx = session.beginTransaction();
 
 					// if Site_id !=null --> an ajax request received
 					try {
+					  if (paramEnterprise.equals("true")) {												
 						LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 
 						String Site_Query = SiteId == "" ? "SELECT COUNT(distinct WARE_ID) FROM AR_SITE"
-								: "Select SITE_NAME From AR_SITE where  WARE_ID='" + SiteId + "'";
+								: "Select DISTINCT SITE_NAME From AR_SITE where  WARE_ID='" + SiteId + "'";
 						Object Sites = session.createSQLQuery(Site_Query).uniqueResult();
 
 						String Po_Query = SiteId == ""
-								? "SELECT COUNT(distinct a.PO_ID) FROM ASSET_REGISTRY a, AR_SITE b where b.AR_ID=a.AR_ID"
+								? "SELECT COUNT(distinct a.PO_ID) FROM ASSET_REGISTRY a, AR_SITE b where b.AR_ID=a.AR_ID AND a.DOMAIN='Enterprise'"
 								: "SELECT COUNT(DISTINCT a.PO_ID) FROM ASSET_REGISTRY a, AR_SITE b where b.AR_ID=a.AR_ID and b.WARE_ID='" + SiteId
-								+ "'";
+								+ "' AND a.DOMAIN='Enterprise'";
 						//System.out.println(Po_Query);
 						Object CountPo = session.createSQLQuery(Po_Query).uniqueResult();
 
@@ -2646,28 +2682,68 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 						
 						
 						String PO_Amount_Query = SiteId == ""
-								? "SELECT ROUND(SUM(INITIALCOST), 2) FROM FIXED_ASSET_REGISTRY"
+								? "SELECT ROUND(SUM(INITIALCOST), 2) FROM FIXED_ASSET_REGISTRY AND DOMAIN='Enterprise'"
 							    : "SELECT ROUND(SUM(INITIALCOST), 2) FROM FIXED_ASSET_REGISTRY WHERE WARE_ID='" + SiteId 
-							    + "'";
+							    + "' AND DOMAIN='Enterprise'";
 						Object PO_Amount = session.createSQLQuery(PO_Amount_Query).uniqueResult();
 						BoqHM.put(SiteId == "" ? "PO Cost" : "PO Total Cost", String.valueOf(PO_Amount));
 						
 						String PO_NET_Amount_Query = SiteId == ""
-								? "SELECT ROUND(SUM(NETCOST), 2) FROM FIXED_ASSET_REGISTRY"
+								? "SELECT ROUND(SUM(NETCOST), 2) FROM FIXED_ASSET_REGISTRY AND DOMAIN='Enterprise'"
 								:"SELECT ROUND(SUM(NETCOST), 2) FROM FIXED_ASSET_REGISTRY WHERE WARE_ID='" + SiteId 
-								+ "'"; 
+								+ "' AND DOMAIN='Enterprise'"; 
 						Object PO_NET_Amount = session.createSQLQuery(PO_NET_Amount_Query).uniqueResult();
 						BoqHM.put(SiteId == "" ? "PO Net Cost" : "PO Total Net Cost", String.valueOf(PO_NET_Amount));
 											
 						
 						if(SiteId!= "") {
-						String Item_Query = "Select COUNT(DISTINCT a.ITEM_CODE) from ASSET_REGISTRY a, AR_SITE b where a.AR_ID = b.AR_ID and b.WARE_ID='" + SiteId + "'";
+						String Item_Query = "Select COUNT(DISTINCT a.ITEM_CODE) from ASSET_REGISTRY a, AR_SITE b where a.AR_ID = b.AR_ID and b.WARE_ID='" + SiteId + "' AND a.DOMAIN='Enterprise'";
 						Object Item = session.createSQLQuery(Item_Query).uniqueResult();
 						BoqHM.put("Items", String.valueOf(Item));
 						}
 					
 						return BoqHM;
+					  }else {
+							LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 
+							String Site_Query = SiteId == "" ? "SELECT COUNT(distinct WARE_ID) FROM AR_SITE"
+									: "Select DISTINCT SITE_NAME From AR_SITE where  WARE_ID='" + SiteId + "'";
+							Object Sites = session.createSQLQuery(Site_Query).uniqueResult();
+
+							String Po_Query = SiteId == ""
+									? "SELECT COUNT(distinct a.PO_ID) FROM ASSET_REGISTRY a, AR_SITE b where b.AR_ID=a.AR_ID"
+									: "SELECT COUNT(DISTINCT a.PO_ID) FROM ASSET_REGISTRY a, AR_SITE b where b.AR_ID=a.AR_ID and b.WARE_ID='" + SiteId
+									+ "'";
+							//System.out.println(Po_Query);
+							Object CountPo = session.createSQLQuery(Po_Query).uniqueResult();
+
+							BoqHM.put(SiteId == "" ? "Sites" : "Site Name", String.valueOf(Sites));
+							BoqHM.put("PO", String.valueOf(CountPo));
+							
+							
+							String PO_Amount_Query = SiteId == ""
+									? "SELECT ROUND(SUM(INITIALCOST), 2) FROM FIXED_ASSET_REGISTRY"
+								    : "SELECT ROUND(SUM(INITIALCOST), 2) FROM FIXED_ASSET_REGISTRY WHERE WARE_ID='" + SiteId 
+								    + "'";
+							Object PO_Amount = session.createSQLQuery(PO_Amount_Query).uniqueResult();
+							BoqHM.put(SiteId == "" ? "PO Cost" : "PO Total Cost", String.valueOf(PO_Amount));
+							
+							String PO_NET_Amount_Query = SiteId == ""
+									? "SELECT ROUND(SUM(NETCOST), 2) FROM FIXED_ASSET_REGISTRY"
+									:"SELECT ROUND(SUM(NETCOST), 2) FROM FIXED_ASSET_REGISTRY WHERE WARE_ID='" + SiteId 
+									+ "'"; 
+							Object PO_NET_Amount = session.createSQLQuery(PO_NET_Amount_Query).uniqueResult();
+							BoqHM.put(SiteId == "" ? "PO Net Cost" : "PO Total Net Cost", String.valueOf(PO_NET_Amount));
+												
+							
+							if(SiteId!= "") {
+							String Item_Query = "Select COUNT(DISTINCT a.ITEM_CODE) from ASSET_REGISTRY a, AR_SITE b where a.AR_ID = b.AR_ID and b.WARE_ID='" + SiteId + "'";
+							Object Item = session.createSQLQuery(Item_Query).uniqueResult();
+							BoqHM.put("Items", String.valueOf(Item));
+							}
+						
+							return BoqHM;
+					  }
 					} catch (Exception e) {
 						logger.info("Error in retreiving Site BOQ data Data from database", e);
 						return null;
@@ -2689,7 +2765,7 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 			Transaction tx = session.beginTransaction();
 			//System.out.println("ware id....."+WareId);
 			//System.out.println("node id....."+NodeId);
-LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
+			LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 			try {
 				
 				if (paramEnterprise.equals("true")) {
@@ -3270,9 +3346,40 @@ LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 				String POAlreadyCreated = request.getParameter("POAlreadyCreated");
 				//System.out.println("===>selectedItem	" + selectedItem);
 				//System.out.println("===>POAlreadyCreated	" + POAlreadyCreated);
-
+				String paramEnterprise = request.getParameter("paramEnterprise");
+				
+				if (paramEnterprise.equals("true")) {
+				System.out.println("parm true...po...");
 				if (POAlreadyCreated.equals("false")) {
+					List<Object[]> listSites = (List<Object[]>) session.createSQLQuery(
+					"SELECT DISTINCT b.SITE_ID,b.SITE_NAME,b.WARE_ID,j.PO_ID,"
+					+ "(SELECT a.LATITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LATITUDE,"
+					+ "(SELECT a.LONGITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LONGITUDE,"						
+					+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID and w.DOMAIN='Enterprise' and w.ACTIVE_RECORD = '1') as countnodes," 
+					+ "(select COUNT(*) from ASSET_REGISTRY j where  j.AR_ID=b.AR_ID and j.PO_ID!='null' and j.DOMAIN='Enterprise') as countItems,"
+					+ "(select COUNT(*) FROM NODE_GCELL c where c.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1' and o.DOMAIN='Enterprise') and c.DOMAIN='Enterprise') as countGcells,"
+					+ "(select COUNT(*) FROM NODE_LCELL d where d.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1' and o.DOMAIN='Enterprise') and d.DOMAIN='Enterprise') as countLcells,"
+					+ "(select COUNT(*) FROM NODE_UCELL e where e.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1' and o.DOMAIN='Enterprise') and e.DOMAIN='Enterprise') as countUcells"
+					+ " FROM AR_SITE b,ASSET_REGISTRY j where j.AR_ID=b.AR_ID AND j.DOMAIN='Enterprise' and b.WARE_ID!='0' and b.WARE_ID!='null' and j.PO_ID='"+selectedItem+"'")
+							.list();
+	
+					//System.out.println("sitesssssssssss <<<<<<<<" + mapper.writeValueAsString(listSites));
+					rtn.put("listSites", listSites);
+				}else {
+					String selectedSite = request.getParameter("selectedSite");
+					System.out.println("===>selectedSite	" + selectedSite);
 
+					List<Object[]> itemList = (List<Object[]>) session.createSQLQuery(
+						 " SELECT distinct a.ITEM_CODE, a.ITEM_NAME, a.PO_ID, b.WARE_ID, a.ITEM_MODEL"
+							+" FROM ASSET_REGISTRY a, AR_SITE b WHERE a.AR_ID=b.AR_ID AND b.WARE_ID='"+selectedSite+"' AND a.PO_ID='"+selectedItem+"' AND a.DOMAIN='Enterprise'")
+							.list();
+
+					//System.out.println("===>itemList	" + mapper.writeValueAsString(itemList));
+					rtn.put("itemList", itemList);
+				}
+			}else {
+				System.out.println("parm false...po...");				
+				if (POAlreadyCreated.equals("false")) {
 					List<Object[]> listSites = (List<Object[]>) session
 /*
 							.createSQLQuery("SELECT distinct b.SITE_ID,b.WARE_NAME,b.WARE_ID,j.PO_ID,"
@@ -3317,8 +3424,8 @@ LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 					//System.out.println("===>itemList	" + mapper.writeValueAsString(itemList));
 
 					rtn.put("itemList", itemList);
-
 				}
+			}
 
 			} catch (Exception e) {
 				logger.info("Error in retreiving items and sites Data from database", e);
@@ -5001,53 +5108,93 @@ LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/GetPOBoqList", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public LinkedHashMap<String, String> GetPOBoqList(@RequestParam String POID) {
+	public LinkedHashMap<String, String> GetPOBoqList(@RequestParam String POID, @RequestParam String paramEnterprise) {
 
 		Session session = almsessions.getSession();
 		Transaction tx = session.beginTransaction();
-
+		
 		try {
+			 System.out.println("hi");
+		  if (paramEnterprise.equals("true")) {	
+			  System.out.println("param po boq true	");
 			LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 			//System.out.println("===>POID	");
 			//System.out.println("===>POID	" + POID);
-			String PO_Query = POID == "" ? "SELECT COUNT(DISTINCT PO_ID) FROM ASSET_REGISTRY"
-					: "Select DISTINCT PO_ID From ASSET_REGISTRY where PO_ID='" + POID + "'";
+			String PO_Query = POID == "" ? "SELECT COUNT(DISTINCT PO_ID) FROM ASSET_REGISTRY WHERE DOMAIN='Enterprise' AND PO_ID!='null'"
+					: "Select DISTINCT PO_ID From ASSET_REGISTRY where DOMAIN='Enterprise' and PO_ID='" + POID + "'";
 			Object PoC = session.createSQLQuery(PO_Query).uniqueResult();
-			//System.out.println("po :::"+PoC);
-/*
-			String Site_Query = POID == "" ? "SELECT COUNT(DISTINCT WARE_ID) FROM ASSET_REGISTRY"
-					: "Select COUNT(DISTINCT WARE_ID) From ASSET_REGISTRY where PO_ID='" + POID + "'";
-			Object SiteC = session.createSQLQuery(Site_Query).uniqueResult();
-*/
+			System.out.println("po :::"+PoC);
 			BoqHM.put("PO", String.valueOf(PoC));
 			
 			String PO_Amount_Query = POID == ""
-					? "SELECT ROUND(SUM(INITIALCOST), 2) FROM FIXED_ASSET_REGISTRY"
-				    : "Select TOTAL_AMOUNT from PURCHASE_ORDER where PONUMBER='" + POID  + "'";
+					? "SELECT ROUND(SUM(INITIALCOST), 2) FROM FIXED_ASSET_REGISTRY WHERE DOMAIN='Enterprise'"
+				    : "Select TOTAL_AMOUNT from PURCHASE_ORDER where PO_ID='" + POID  + "'";
 			Object PO_Amount = session.createSQLQuery(PO_Amount_Query).uniqueResult();
 			BoqHM.put(POID == "" ? "PO Cost" : "PO Amount", String.valueOf(PO_Amount));		
 			
 			String PO_NET_Amount_Query = POID == ""
-					? "SELECT ROUND(SUM(NETCOST), 2) FROM FIXED_ASSET_REGISTRY"
-					:"Select NET_TOTAL_AMOUNT from PURCHASE_ORDER where PONUMBER='" + POID  + "'";
+					? "SELECT ROUND(SUM(NETCOST), 2) FROM FIXED_ASSET_REGISTRY WHERE DOMAIN='Enterprise'"
+					:"Select NET_TOTAL_AMOUNT from PURCHASE_ORDER where PO_ID='" + POID  + "'";
 			Object PO_NET_Amount = session.createSQLQuery(PO_NET_Amount_Query).uniqueResult();
 			BoqHM.put(POID == "" ? "PO Net Cost" : "PO Net Amount", String.valueOf(PO_NET_Amount));
 
-			String Site_Query = POID == "" ? "SELECT COUNT(DISTINCT a.WARE_ID) FROM AR_SITE a, ASSET_REGISTRY b where a.AR_ID = b.AR_ID"
-					: "Select COUNT(DISTINCT WARE_ID) FROM AR_SITE a, ASSET_REGISTRY b where a.AR_ID = b.AR_ID and b.PO_ID='" + POID + "'";
+			String Site_Query = POID == "" ? "SELECT COUNT(DISTINCT a.WARE_ID) FROM AR_SITE a, ASSET_REGISTRY b where a.AR_ID = b.AR_ID and b.DOMAIN='Enterprise'"
+					: "Select COUNT(DISTINCT WARE_ID) FROM AR_SITE a, ASSET_REGISTRY b where a.AR_ID = b.AR_ID and b.PO_ID='" + POID + "' and b.DOMAIN='Enterprise'";
 			Object SiteC = session.createSQLQuery(Site_Query).uniqueResult();
 			System.out.println("SiteC :::"+SiteC);
 			
-			String Item_Query = POID == "" ? "SELECT COUNT(DISTINCT a.ITEM_CODE) FROM ASSET_REGISTRY a, AR_SITE b where a.AR_ID = b.AR_ID "
-					: "Select COUNT(DISTINCT a.ITEM_CODE) from ASSET_REGISTRY a, AR_SITE b where a.AR_ID = b.AR_ID and PO_ID='" + POID + "'";
+			String Item_Query = POID == "" ? "SELECT COUNT(DISTINCT a.ITEM_CODE) FROM ASSET_REGISTRY a, AR_SITE b where a.AR_ID = b.AR_ID and a.DOMAIN='Enterprise'"
+					: "Select COUNT(DISTINCT a.ITEM_CODE) from ASSET_REGISTRY a, AR_SITE b where a.AR_ID = b.AR_ID and PO_ID='" + POID + "' and a.DOMAIN='Enterprise'";
 			Object ItemC = session.createSQLQuery(Item_Query).uniqueResult();
-			System.out.println("ItemC :::"+ItemC);
-			
+			System.out.println("ItemC :::"+ItemC);	
 			
 			BoqHM.put("Sites", String.valueOf(SiteC));
 			BoqHM.put("Items", String.valueOf(ItemC));
 
 			return BoqHM;
+		  }else {
+			  System.out.println("param po boq false");
+				LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
+				//System.out.println("===>POID	");
+				//System.out.println("===>POID	" + POID);
+				String PO_Query = POID == "" ? "SELECT COUNT(DISTINCT PO_ID) FROM ASSET_REGISTRY WHERE PO_ID!='null'"
+						: "Select DISTINCT PO_ID From ASSET_REGISTRY where PO_ID='" + POID + "'";
+				Object PoC = session.createSQLQuery(PO_Query).uniqueResult();
+				//System.out.println("po :::"+PoC);
+	/*
+				String Site_Query = POID == "" ? "SELECT COUNT(DISTINCT WARE_ID) FROM ASSET_REGISTRY"
+						: "Select COUNT(DISTINCT WARE_ID) From ASSET_REGISTRY where PO_ID='" + POID + "'";
+				Object SiteC = session.createSQLQuery(Site_Query).uniqueResult();
+	*/
+				BoqHM.put("PO", String.valueOf(PoC));
+				
+				String PO_Amount_Query = POID == ""
+						? "SELECT ROUND(SUM(INITIALCOST), 2) FROM FIXED_ASSET_REGISTRY"
+					    : "Select TOTAL_AMOUNT from PURCHASE_ORDER where PO_ID='" + POID  + "'";
+				Object PO_Amount = session.createSQLQuery(PO_Amount_Query).uniqueResult();
+				BoqHM.put(POID == "" ? "PO Cost" : "PO Amount", String.valueOf(PO_Amount));		
+				
+				String PO_NET_Amount_Query = POID == ""
+						? "SELECT ROUND(SUM(NETCOST), 2) FROM FIXED_ASSET_REGISTRY"
+						:"Select NET_TOTAL_AMOUNT from PURCHASE_ORDER where PO_ID='" + POID  + "'";
+				Object PO_NET_Amount = session.createSQLQuery(PO_NET_Amount_Query).uniqueResult();
+				BoqHM.put(POID == "" ? "PO Net Cost" : "PO Net Amount", String.valueOf(PO_NET_Amount));
+
+				String Site_Query = POID == "" ? "SELECT COUNT(DISTINCT a.WARE_ID) FROM AR_SITE a, ASSET_REGISTRY b where a.AR_ID = b.AR_ID"
+						: "Select COUNT(DISTINCT WARE_ID) FROM AR_SITE a, ASSET_REGISTRY b where a.AR_ID = b.AR_ID and b.PO_ID='" + POID + "'";
+				Object SiteC = session.createSQLQuery(Site_Query).uniqueResult();
+				System.out.println("SiteC :::"+SiteC);
+				
+				String Item_Query = POID == "" ? "SELECT COUNT(DISTINCT a.ITEM_CODE) FROM ASSET_REGISTRY a, AR_SITE b where a.AR_ID = b.AR_ID "
+						: "Select COUNT(DISTINCT a.ITEM_CODE) from ASSET_REGISTRY a, AR_SITE b where a.AR_ID = b.AR_ID and PO_ID='" + POID + "'";
+				Object ItemC = session.createSQLQuery(Item_Query).uniqueResult();
+				System.out.println("ItemC :::"+ItemC);	
+				
+				BoqHM.put("Sites", String.valueOf(SiteC));
+				BoqHM.put("Items", String.valueOf(ItemC));
+
+				return BoqHM;
+		  }
 
 		} catch (Exception e) {
 			logger.info("Error in retreiving PO BOQ data Data from database", e);

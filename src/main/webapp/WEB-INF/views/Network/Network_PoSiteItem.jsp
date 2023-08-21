@@ -13,6 +13,13 @@ if(!(lst==null || lst=="")){
 var wareCount=lst.length;
 }
 
+var currentUrl = window.location.href;
+console.log("currentUrl....",currentUrl);
+// Check if the Enterprise exists in the URL
+if (currentUrl.indexOf("Enterprise") !== -1) {
+  console.log("Enterpriseeeee");
+  $('#EnterpriseBtn').toggleClass('activee');
+} 
 
 function initMap() {
 
@@ -262,7 +269,7 @@ function CreateTree_PoStItem(listPO,map){
 	var dFrag = document.createDocumentFragment();
 	for (n = 0; n < listPO.length; n++) {
 	str="<li id='"+listPO[n]+"' class='PO' style='display:none;width:100px;'><span class='folder' onclick='PoStItemCore("+listPO[n]+")' ><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'><i class='fa fa-file-invoice-dollar fa-2x'></i> "+listPO[n]+"</span>";
-	str+= "<ul><li id='" +listPO[n]+"_f' class='SiteFolder parent_li' style='display:none; margin-left:-40px'><input type='checkbox' id='" +listPO[n] +"_Site' class='AllSites' style='margin-left: 15px' onclick='showMarkersAllSitesOneNt("+listPO[n]+")'></input><span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Sites </span></li></ul></li></ul>";	
+	str+= "<ul><li id='" +listPO[n]+"_f' class='SiteFolder parent_li' style='display:none; margin-left:-40px'><input type='checkbox' id='" +listPO[n]+"_Site' class='AllSites' style='margin-left: 15px' onclick='showMarkersAllSitesOneNt("+listPO[n]+")'></input><span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Sites </span></li></ul></li></ul>";	
 	
 	const div = document.createElement('ul');
 	div.innerHTML = str;
@@ -332,10 +339,34 @@ function AllSitesCheckFilter(){
 	});
 }
 
+function AllSitesCheckFilter(){
+	//console.log("AllSitesCheckFilter");
+	markerClusterSites.clearMarkers();
+	CreateMap(lst,map);
+
+	$('.AllPOs').bind("change",function() {	
+			if ($(this).is(':checked')){
+				 $('#network_tree input[type="checkbox"][class="SingleSite"]').prop('checked', false);
+				 $('#network_tree input[type="checkbox"][class="AllSites"]').prop('checked', false);
+				 for(var x=0; x< markersSites.length; x++){	
+						markersSites[markersSites[x].ID].setMap(map);			
+						markerClusterSites.addMarker(markersSites[markersSites[x].ID]);
+					}									
+			}					
+			else{
+				//console.log("unChecked");
+				for(var x=0; x< markersSites.length; x++){
+					markersSites[markersSites[x].ID].setMap(null);
+					markerClusterSites.removeMarker(markersSites[markersSites[x].ID]);
+						}	
+				}
+	});
+}
+
 
 function showMarkersAllSitesOneNt(id) {
   //console.log("showMarkersAllSitesOneNt");
-//var id = id.id;
+var id = id.id;
 //console.log("id ...."+ id);
   //var newId = id + "_Site";
 
@@ -374,8 +405,8 @@ function PoStItemCore(id)
 	//console.log(".PoStItemCore.");
 	//console.log(".id...."+id);
 	//var POSCreated=[];
-	var selectedPo=id;
-	//console.log("selectedItem....."+selectedPo);
+	var selectedPo=id.id;
+	//console.log("selectedItem.....",selectedPo);
 	//tree_prop_general();
 	//tree_Prop("#"+selectedItem+ "> span");
 	//tree_Prop("#"+selectedItem+ "_f > span");
@@ -387,14 +418,23 @@ function PoStItemCore(id)
 		//var selectedPo=$(this).parent().attr('id');
 		//console.log("selectedPo...."+selectedPo);
 		//PO_Boq(selectedPo);
-		//Create_TreeParent(selectedPo,"PO");			 				     						
+		//Create_TreeParent(selectedPo,"PO");
+		
+		if($('#EnterpriseBtn').hasClass('activee')){
+			//console.log("ACTIVE ");
+			var paramEnterprise = true;
+		}else{
+			//console.log("NOT ACTIVE");
+			var paramEnterprise = false;
+		}
 		$.ajax({
 			type: "GET",
 			contentType: "application/json; charset=utf-8",
 			url: getContext()+'/findPOSt_Items',
 			data: {
 				"selectedItem":selectedPo,
-				"POAlreadyCreated":"false"
+				"POAlreadyCreated":"false",
+				"paramEnterprise": paramEnterprise,
 			},
 			dataType: "json",
 			success: function (data) {		        	
@@ -480,6 +520,7 @@ function PanTreeSites(id){
 	//console.log("id  ..... ",id);
 	//console.log("id.id  ..... ",id.id);
 	var selectedItem = id.id.split('_').slice(0, 3).join('_');
+	//console.log("selectedItem  ..... ",selectedItem);
 		//Site_Boq(selectedItem);
 	if(selectedItem!=markersSite)
 	{
@@ -505,12 +546,12 @@ function PanTreeSites(id){
 
 function PoStItemCore2(id)
 {
-//  console.log(".PoStItemCore2.");
+  //console.log(".PoStItemCore2.");
 	var selectedId= id.id;
 	var selectedItem = selectedId.split("_")[0] +"_"+ selectedId.split("_")[1] +"_"+ selectedId.split("_")[2];
-//	console.log("selectedItem....."+selectedItem);
-	var selectedPO = selectedId.split("_")[3];
-//	console.log("selectedPO....."+selectedPO);	
+	//console.log("selectedItem....."+selectedItem);
+	var selectedPO = selectedId.split("_")[3]+"_"+ selectedId.split("_")[4] +"_"+ selectedId.split("_")[5];
+	//console.log("selectedPO....."+selectedPO);	
 	/*
 	tree_prop_general();
 	tree_Prop("#"+selectedId+ "> span");
@@ -534,7 +575,15 @@ function PoStItemCore2(id)
 					//sitesPNtCreated.push(selectedItem);
 				var siteChildren=$("#"+selectedItem+ "_"+ selectedPO+ "_f") .find(' > ul > li').length;
 				//console.log("siteChildren....."+siteChildren);
-				if(siteChildren == 0){			
+				if(siteChildren == 0){
+								
+					if($('#EnterpriseBtn').hasClass('activee')){
+						//console.log("ACTIVE ");
+						var paramEnterprise = true;
+					}else{
+						//console.log("NOT ACTIVE");
+						var paramEnterprise = false;
+					}
 					$.ajax({
 						type: "GET",
 						contentType: "application/json; charset=utf-8",
@@ -542,7 +591,8 @@ function PoStItemCore2(id)
 						data: {
 							"selectedItem":selectedPO,
 							"POAlreadyCreated":"True",
-							"selectedSite":selectedItem
+							"selectedSite":selectedItem,
+							"paramEnterprise": paramEnterprise,
 						},
 						dataType: "json",
 						success: function (data) {					        	
@@ -695,7 +745,7 @@ function Sumbitselection(arr){
  		 	}
  		 	break;
 		 case "li_poBtn,li_siteBtn,li_itemBtn,li_EnterpriseBtn":
-	 	 case "siteBtn,itemBtn,poBtn,EnterpriseBtn":
+	 	 case "siteBtn,itemBtn,EnterpriseBtn,poBtn":
 	 		 	{	
 	 			var param1 = 'Enterprise';
 		 		var url = getContext() + '/Network_PoSiteItem';

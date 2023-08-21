@@ -355,14 +355,22 @@ function SitePO_Boq(SiteId){
 	var Layers= $('#Layers');
 	var Options= $('#Options');
 	
-	if(!siteList.includes(SiteId))
-	{
+	if($('#EnterpriseBtn').hasClass('activee')){
+		console.log("ACTIVE ");
+		var paramEnterprise = true;
+	}else{
+		console.log("NOT ACTIVE");
+		var paramEnterprise = false;
+	}
+	//if(!siteList.includes(SiteId))
+	//{
 		 $.ajax({
 			type: "GET",
 			contentType: "application/json; charset=utf-8",
 			url: getContext()+'/GetBoqSitePoList',
 			data: {
 			    "SiteId" : SiteId,
+			    "paramEnterprise": paramEnterprise,
 			    },
 			success : function(data)
 			    {
@@ -381,6 +389,7 @@ function SitePO_Boq(SiteId){
 				alert("Error");
 									}			
 		});
+		 /*
 	}else{
 		$('#boq_table').empty();
 		for(var i=0; i< boqList.length; i++) {
@@ -393,6 +402,7 @@ function SitePO_Boq(SiteId){
 						 }		
 								}
 		}
+		*/
 	 $("#boqBtn").removeClass().addClass("tablinks active");
 	 $("#Defaultbutton").removeClass().addClass("tablinks");
 	 $("#optionBtn").removeClass().addClass("tablinks");
@@ -537,16 +547,19 @@ var siteNTList=[];
 var boqNTList=[];
 
 function  NodeT_Boq(SiteId,NodeTId){
-	//console.log("NODE T BOQ");
+	console.log("NODE T BOQ");
+	console.log("SiteId....",SiteId);
+	console.log("NodeTId....",NodeTId);
+	
 	var Boq = $('#Boq');
 	var Layers= $('#Layers');
 	var Options= $('#Options');
 	
 	if($('#EnterpriseBtn').hasClass('activee')){
-		//console.log("ACTIVE ");
+		console.log("ACTIVE ");
 		var paramEnterprise = true;
 	}else{
-		//console.log("NOT ACTIVE");
+		console.log("NOT ACTIVE");
 		var paramEnterprise = false;
 	}
 	//if(!siteNTList.includes(NodeTId))
@@ -607,62 +620,70 @@ function  NodeT_Boq(SiteId,NodeTId){
 //////////////////////////////////////////////
 
 var boqList=[];
-var sitePList=[];
+//var sitePList=[];
 
 function PO_Boq(SiteId){
-var Boq = $('#Boq');
-var Layers= $('#Layers');
-var Options= $('#Options');
-
-if(!sitePList.includes(SiteId))
-{
+	var Boq = $('#Boq');
+	var Layers= $('#Layers');
+	var Options= $('#Options');
 	
-$.ajax({
-type: "GET",
-contentType: "application/json; charset=utf-8",
-url: getContext()+'/GetPOBoqList',
-data: {
-"POID" : SiteId,
-},
-success : function(data)
-{
-$('#boq_table').empty();
-sitePList.push(SiteId);	          	 
-$.each(data , function( key, value ) {	
-boqList.push({ SiteId,key,value });    
-var tr = "<tr>"+
-"<td class='title'> "+key+"</td>"+
-"<td> "+value+" </td>"+
-"</tr>";
-$("#boq_table").append(tr);     		    			   			
-});  	
-},	
-error: function(result) {
-alert("Error");
-}			
-});
-}
-
-else{
-$('#boq_table').empty();
-for(var i=0; i< boqList.length; i++) {
-if(SiteId==boqList[i].SiteId){	        		 
-var tr = "<tr>"+
-"<td class='title'> "+boqList[i].key+"</td>"+
-"<td> "+boqList[i].value+" </td>"+
-"</tr>";
-$("#boq_table").append(tr);     		    			   			
-}		
-}
-}
-$("#boqBtn").removeClass().addClass("tablinks active");
-$("#Defaultbutton").removeClass().addClass("tablinks");
-$("#optionBtn").removeClass().addClass("tablinks");
-Boq.css({ display:'block'});
-Layers.css({ display:'none'});
-Options.css({ display:'none'});
-Boq.tab('show');	 
-
+	if($('#EnterpriseBtn').hasClass('activee')){
+		console.log("ACTIVE ");
+		var paramEnterprise = true;
+	}else{
+		console.log("NOT ACTIVE");
+		var paramEnterprise = false;
+	}
+	
+	//if(!sitePList.includes(SiteId))
+	//{		
+		$.ajax({
+			type: "GET",
+			contentType: "application/json; charset=utf-8",
+			url: getContext()+'/GetPOBoqList',
+			data: {
+				"POID" : SiteId,
+			    "paramEnterprise": paramEnterprise,
+			},
+			success : function(data)
+			{
+				$('#boq_table').empty();
+				sitePList.push(SiteId);	          	 
+				$.each(data , function( key, value ) {	
+					boqList.push({ SiteId,key,value });    
+					var tr = "<tr>"+
+					"<td class='title'> "+key+"</td>"+
+					"<td> "+value+" </td>"+
+					"</tr>";
+					$("#boq_table").append(tr);     		    			   			
+				});  	
+			},	
+			error: function(result) {
+			alert("Error");
+			}			
+		});
+	//}
+	/*
+	else{
+		$('#boq_table').empty();
+		for(var i=0; i< boqList.length; i++) {
+			if(SiteId==boqList[i].SiteId){	        		 
+				var tr = "<tr>"+
+				"<td class='title'> "+boqList[i].key+"</td>"+
+				"<td> "+boqList[i].value+" </td>"+
+				"</tr>";
+				$("#boq_table").append(tr);     		    			   			
+			}		
+		}
+	}
+	*/
+	$("#boqBtn").removeClass().addClass("tablinks active");
+	$("#Defaultbutton").removeClass().addClass("tablinks");
+	$("#optionBtn").removeClass().addClass("tablinks");
+	Boq.css({ display:'block'});
+	Layers.css({ display:'none'});
+	Options.css({ display:'none'});
+	Boq.tab('show');	 
 }
 
 
