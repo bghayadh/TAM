@@ -6048,6 +6048,7 @@ public class PhysicalLayerController {
 					boardCreationDate = new Timestamp(
 							formatter.parse(request.getParameter("boardCreatedDate")).getTime());
 				}
+				System.out.println("net level" + request.getParameter("dbNetLevel"));
 
 				distributionBoard.setDistributionBoardId(distributionBoardId);
 				distributionBoard.setBoardCreationDate(boardCreationDate);
@@ -6057,7 +6058,7 @@ public class PhysicalLayerController {
 				distributionBoard.setDistributionBoardSiteName(request.getParameter("DistributionBoardSiteName"));
 				distributionBoard.setDistributionBoardWarehouse(request.getParameter("DistributionBoardWarehouse"));
 				distributionBoard.setDistributionBoardCity(request.getParameter("boardCity"));
-				distributionBoard.setdbNetLevel(request.getParameter("dbnetlevel"));
+				distributionBoard.setdbNetLevel(request.getParameter("dbNetLevel"));
 				distributionBoard.setDistributionBoardLat(request.getParameter("DistributionBoardLat"));
 				distributionBoard.setDistributionBoardLong(request.getParameter("DistributionBoardLong"));
 				distributionBoard.setDistributionBoardProjectId(request.getParameter("ProjectId"));

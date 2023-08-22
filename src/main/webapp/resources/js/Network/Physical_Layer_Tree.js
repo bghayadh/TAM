@@ -8044,7 +8044,6 @@ singleProject = new ContextMenu({
 									}
 									//
 									if(data.DistBoardDetails[0][1] == null){
-										console.log("null");
 										document.getElementById("site_DBAutoComplete").checked = true;
 										$('#site_DBAutoComplete').val('1');
 										document.getElementById("client_DBAutoComplete").checked = false;
@@ -13719,18 +13718,7 @@ $("#saveHandhole").click(function () {
 					var locationId =""; 
 					var locationName = ""; 
 					var location = "";
-					/*
-					if($("#BDWarehouse").is(":visible") && $("#DBSite").is(":visible") && $("#DBSiteName").is(":visible")){
-						locationId = DistributionBoardSite;
-						locationName = DistributionBoardSiteName;
-						location = DistributionBoardWarehouse;
-					}else{
-						locationId = DistributionBoardClient;
-						locationName = DistributionBoardClientName;
-						location = DistributionBoardClientPhoneNb;
-					}  
-					*/
-					//
+					
 					if (document.getElementById('site_DBAutoComplete').checked) {
 						isSiteChecked=true;
 					}
@@ -13738,9 +13726,6 @@ $("#saveHandhole").click(function () {
 					if (document.getElementById('client_DBAutoComplete').checked) {
 						isClientChecked=true;
 					}
-					
-					console.log("1 "+isSiteChecked);
-					console.log("2 "+isClientChecked);
 					if(isSiteChecked == true){
 						locationId = DistributionBoardSite;
 						locationName = DistributionBoardSiteName;
@@ -13752,16 +13737,12 @@ $("#saveHandhole").click(function () {
 					}
 					isSiteChecked = false;
 					isClientChecked = false;
-					//
 					countCablesFront=0; countCablesBack=0; countRows=0; countCols=0;
 					selectALL_DB_MappingRows();
 					getSelectedRowsDbMapping();
 					distributionBoardId="";
-
-						
-						
+	
 					var token =  $('input[name="csrfToken"]').attr('value');
-				
 						$.ajax({
 							type: "POST",
 							headers: {
@@ -13800,43 +13781,28 @@ $("#saveHandhole").click(function () {
 									str="<ul><li id='"+data.distributionBoardId+"'  class='DistributionBoard' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+DistributionBoardName+" </span></li></ul>";								
 									 $("#DistributionBoard_"+dbNetLevel+"__"+IdNodeSelectedTemp).append(str);
 									 
-									}else if(actiondistBoardContext=="Update" && DBoldNtwLevel != dbNetLevel){
+									}else if(actiondistBoardContext=="Update"){
+									  if(DBoldNtwLevel != dbNetLevel){
 									    $("#"+data.distributionBoardId).remove();
 									    str="<ul><li id='"+data.distributionBoardId+"'  class='DistributionBoard' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+DistributionBoardName+" </span></li></ul>";								
 										$("#DistributionBoard_"+dbNetLevel+"__"+IdNodeSelectedTemp).append(str);
+									}
 									}
 									else{
 									 $("#"+data.distributionBoardId).children(':checkbox').prop( "checked", true );
 						             $("#"+data.distributionBoardId+"> .TreeSpan").html("<img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+DistributionBoardName+" </span></li>");
 									 }
-									 
-												
+									 		
 									$("#"+data.distributionBoardId).contextmenu(function(){
 										menuName=singleDistBoard;
 										selectedDistBoardContext=$(this).attr('id');
 										selectedDistBoardName=$(this).text();
 										openContext(selectedDistBoardContext,selectedDistBoardName,singleDistBoard,event);
 									});			
-/*											
-									$("#"+data.distributionBoardId+" >span").on("mouseover",function(e) {
-										$(this).addClass('backgroundTree');
-									}).on("mouseout",function(e) {
-										$(this).removeClass('backgroundTree');							
-									});				
-*/								
-								    MouseHoveringSpans("#" +data.distributionBoardId+ " .TreeSpan");	
-/*				
-									 $("#"+data.distributionBoardId+" > span").bind('click', function (e) {
-										   $("#initial_ul_"+IdNodeSelectedTemp+"").find(' > ul > li').css("background-color", "");
-										   $(".tree li > span").css("background-color", "");
-										   
-										   $(this).css("background-color", "#97b9cc");
-									 });					
-*/
-									//$("#"+data.distributionBoardId+"> .TreeSpan").unbind("click");
+							    MouseHoveringSpans("#" +data.distributionBoardId+ " .TreeSpan");	
+
 									tree_prop_selection("#"+data.distributionBoardId+" .TreeSpan");								 
 									    create_Marker_Click(data.distributionBoardId,DistributionBoardName,DistributionBoardLong,DistributionBoardLat,markersDistBoard,markerClusterDistBoard,"",boardCity);
-									   // createDistBoard_Marker_Click(data.distributionBoardId,DistributionBoardName,DistributionBoardLong,DistributionBoardLat,markersDistBoard,markerClusterDistBoard,boardCity);
 										markerClusterDistBoard.addMarker(markersDistBoard[""+data.distributionBoardId]);
 										DistributionBoardCheckFilter(data.distributionBoardId,"");
 										if(data.countConnections.length>0){
@@ -13858,7 +13824,6 @@ $("#saveHandhole").click(function () {
 										// remove the selection of previous item if exist and add it to the new one
 									
 										if(IdSelectedTemp!=""){
-											console.log("IdSelectedTemp "+IdSelectedTemp);
 											$("#"+IdSelectedTemp+" > .TreeSpan").removeClass("selected-span");
 											$("#"+IdSelectedTemp+" > .TreeSpan").css("background","");
 										}
@@ -13888,6 +13853,7 @@ $("#saveHandhole").click(function () {
 										
 										$("#network_tree").animate({ scrollTop: offsettot}, "slow");
 										}
+										DBoldNtwLevel="";
 									},
 								    error: function (result) {
 									alert("Error");
