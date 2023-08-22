@@ -13,6 +13,14 @@ if(!(lst==null || lst=="")){
 var wareCount=lst.length;
 }
 
+var currentUrl = window.location.href;
+//console.log("currentUrl....",currentUrl);
+//Check if the Enterprise exists in the URL
+if (currentUrl.indexOf("Enterprise") !== -1) {
+// console.log("Enterpriseeeee");
+$('#EnterpriseBtn').toggleClass('activee');
+}
+
 
 function initMap() {
 
@@ -246,7 +254,7 @@ map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
 		var Nairobi=new google.maps.LatLng(0.796530,37.959529);			
 		map.setCenter(Nairobi);
 		map.setZoom(6);
-		var str="<ul ><li id='initial_ul' class='Initial'><span class='folder'><i class='fa fa-folder' style='color: #08526D'></i> Sites</span></li></ul>";
+		var str="<ul><li id='initial_ul' class='Initial'><input type='checkbox' id='POs' class='AllPOs' style='margin-left: 15px' onclick='AllSitesCheckFilter()'></input><span class='folder'><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> PO </span></li></ul>";
 		$("#network_tree").append(str);
 	}
 } /// End of init Map
@@ -331,9 +339,9 @@ function AllSitesCheckFilter(){
 
 function PoItemStCore(id)
 {
-	//console.log("PoItemStCore");
-	var selectedPo=id;
-	//console.log("selectedPO....."+selectedPo);
+	console.log("PoItemStCore");
+	var selectedPo=id.id;
+	console.log("selectedPO.....",selectedPo);
 	/*
 	var selectedId=n.id;
 	PO_Boq(selectedId);
@@ -345,14 +353,24 @@ function PoItemStCore(id)
 		Create_TreeParent(selectedPo,"PO");			
 	*/
 	var POChildrenLength=$("#" +selectedPo+"_f").find(' > ul > li').length;
-	if(POChildrenLength == 0){		
+	if(POChildrenLength == 0){	
+		
+		if($('#EnterpriseBtn').hasClass('activee')){
+			//console.log("ACTIVE ");
+			var paramEnterprise = true;
+		}else{
+			//console.log("NOT ACTIVE");
+			var paramEnterprise = false;
+		}
+		
 		$.ajax({
 		type: "GET",
 			contentType: "application/json; charset=utf-8",
 			url: getContext()+'/findPOItems_sites',
 			data: {
 				"selectedPo":selectedPo,
-				"POAlreadyCreated":"false"
+				"POAlreadyCreated":"false",
+				"paramEnterprise": paramEnterprise,
 			},
 			dataType: "json",
 			success: function (data) {	        	
@@ -362,7 +380,7 @@ function PoItemStCore(id)
 					//console.log("listItem......"+listItem);
 					if(POChildrenLength<listItem.length+1){						
 						for (n = POChildrenLength; n < listItem.length; n++) {							
-							var str = "<ul><li class='Items' id='" + listItem[n][0] + "_" + listItem[n][2] + "' style='display:none; margin-left:-20px'><span class='folder' onclick=\"SitesRequest('" + listItem[n][0] + "_" + listItem[n][2] + "')\"><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'><span class='tree-span' style='margin-left:-15px;'><i class='fa fa-bahai fa-2x'></i>" + listItem[n][1] + "</span></span>";
+							var str = "<ul><li class='Items' id='" + listItem[n][0] + "_" + listItem[n][2] + "' style='display:none; margin-left:-20px'><span class='folder' onclick=\"SitesRequest('" + listItem[n][0] + "_" + listItem[n][2] + "')\"><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'><span class='tree-span' style='margin-left:-15px;'><i class='fa fa-bahai fa-2x'></i>" + listItem[n][1] + " / " +listItem[n][0] + "</span></span>";
 							str+= "<ul><li id='" +listItem[n][0]+"_"+listItem[n][2]+"_f' class='SiteFolder' style='display:none; margin-left:-40px'><input type='checkbox' id='" +listItem[n][0]+"_"+listItem[n][2] +"_Site' class='AllSites' style='margin-left: 15px' onclick=\"showMarkersAllSitesOneNt('"+listItem[n][0]+"_"+listItem[n][2]+"')\"></input><span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Sites </span></li></ul></li></ul>";	
 							$("#"+listItem[n][2]+"_f").append(str); 	
 						}
@@ -383,12 +401,12 @@ function PoItemStCore(id)
 }
 
 function SitesRequest(id){
-	//console.log("SitesRequest");
-	//console.log("id....."+id);
+	console.log("SitesRequest");
+	console.log("id....."+id);
 	selectedItem = id.split("_")[0];
-	//console.log("selectedItem ....."+selectedItem);
-	selectedPo = id.split("_")[1];
-	//console.log("selectedPo ....."+selectedPo);
+	console.log("selectedItemmmmm ....."+selectedItem);
+	selectedPo = id.split("_")[1]+"_"+id.split("_")[2]+"_"+id.split("_")[3];
+	console.log("selectedPooooo ....."+selectedPo);
 	/*
 	var markersSite="";  
 	$("#"+listItem[n][0]+"_"+listItem[n][2]+" > span").on('click',function (e) {	 	
@@ -405,6 +423,15 @@ function SitesRequest(id){
 		*/
 	var ItemChildren=$("#"+selectedItem+ "_"+ selectedPo+ "_f") .find(' > ul > li').length;
 	if(ItemChildren == 0){	
+		
+		if($('#EnterpriseBtn').hasClass('activee')){
+			//console.log("ACTIVE ");
+			var paramEnterprise = true;
+		}else{
+			//console.log("NOT ACTIVE");
+			var paramEnterprise = false;
+		}
+		
 		$.ajax({
 			type: "GET",
 			contentType: "application/json; charset=utf-8",
@@ -412,7 +439,8 @@ function SitesRequest(id){
 			data: {     
 				"selectedPo":selectedPo,
 				"POAlreadyCreated":"True",
-				"selectedItem":selectedItem
+				"selectedItem":selectedItem,
+				"paramEnterprise": paramEnterprise,
 			},
 			dataType: "json",
 			success: function (data) {
@@ -501,9 +529,9 @@ function St(k){
 */
 
 function showMarkersAllSitesOneNt(id) {
- // console.log("showMarkersAllSitesOneNt");
+  console.log("showMarkersAllSitesOneNt");
 //var id = id.id;
- // console.log("id ...."+ id);
+  console.log("id ...."+ id);
   //var newId = id + "_Site";
 
   markerClusterSites.clearMarkers();
@@ -537,9 +565,9 @@ function showMarkersAllSitesOneNt(id) {
 
 
 function showMarkerSingleSite(id) {
-	//console.log("showMarkerSingleSite");
+	console.log("showMarkerSingleSite");
 	// var id=id.id;
-	// console.log("ID-->" + id);
+	 console.log("ID-->" + id);
 	 
 	 var selectedSiteId = id.split('_').slice(0, 3).join('_');
 	// console.log("selectedSiteId-->" + selectedSiteId);
@@ -576,10 +604,10 @@ function showMarkerSingleSite(id) {
 	}
 
 function PanTreeSites(id){
-	//console.log("PanTreeSites.....");
-	//console.log("id  ..... ",id);
+	console.log("PanTreeSites.....");
+	console.log("id  ..... ",id);
 	var selectedItem = id.split('_')[0] +"_"+ id.split('_')[1] +"_"+ id.split('_')[2];
-	//console.log("selected item ..... "+selectedItem );
+	console.log("selected item ..... "+selectedItem );
 		//Site_Boq(selectedItem);
 	if(selectedItem!=markersSite)
 	{
@@ -741,6 +769,15 @@ function Sumbitselection(arr){
 		  case "siteBtn,itemBtn,poBtn":
 		  {	  
 			  window.location.href = getContext()+"/Network_PoItemSite"; 			
+		  }
+		  break;
+		  case "li_poBtn,li_itemBtn,li_siteBtn,li_EnterpriseBtn":
+		  case "siteBtn,itemBtn,EnterpriseBtn,poBtn":
+		  {	  
+			  var param1 = 'Enterprise';
+		 		var url = getContext() + '/Network_PoItemSite';
+		 		url += '?param1=' + encodeURIComponent(param1);
+		 		window.location.href = url; 			
 		  }
 		  break;
 		//Site-PO-Items         

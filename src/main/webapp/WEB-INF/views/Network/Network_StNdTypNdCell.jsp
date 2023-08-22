@@ -738,6 +738,15 @@ function Sumbitselection(arr){
 			  window.location.href = getContext()+"/Network_PoItemSite"; 			
 		  }
 		  break;
+		  case "li_poBtn,li_itemBtn,li_siteBtn,li_EnterpriseBtn":
+		  case "siteBtn,itemBtn,EnterpriseBtn,poBtn":
+		  {	  
+			  var param1 = 'Enterprise';
+		 		var url = getContext() + '/Network_PoItemSite';
+		 		url += '?param1=' + encodeURIComponent(param1);
+		 		window.location.href = url; 			
+		  }
+		  break;
 		//Site-PO-Items         
 		  case "li_siteBtn,li_poBtn,li_itemBtn":
 		 case "siteBtn,itemBtn,poBtn":

@@ -495,7 +495,7 @@ function requestItem(id){
 						var listItem=data.itemList;	
 						if(PoChildrenLength<listItem.length){ 
 							for (k = 0; k <listItem.length; k++) {
-								var str="<ul><li class='Items' id='" + listItem[k][0] + "' style='display:none; margin-left:-20px'><span class='TreeSpan' style='width:395px'><span class='tree-span' ><i class='fa fa-bahai  fa-2x'></i> "+listItem[k][1]+"</span></span></li></ul>";
+								var str="<ul><li class='Items' id='" + listItem[k][0] + "' style='display:none; margin-left:-20px'><span class='TreeSpan' style='width:395px'><span class='tree-span' ><i class='fa fa-bahai  fa-2x'></i> "+listItem[k][1]+ " / " +listItem[k][0] +"</span></span></li></ul>";
 								$("#"+listItem[k][3]+"_"+listItem[k][2]+"_f").append(str);
 							}
 								//tree_prop_general();	
@@ -652,6 +652,15 @@ function Sumbitselection(arr){
 		  case "siteBtn,itemBtn,poBtn":
 		  {	  
 			  window.location.href = getContext()+"/Network_PoItemSite"; 			
+		  }
+		  break;
+		  case "li_poBtn,li_itemBtn,li_siteBtn,li_EnterpriseBtn":
+		  case "siteBtn,itemBtn,EnterpriseBtn,poBtn":
+		  {	  
+			  var param1 = 'Enterprise';
+		 		var url = getContext() + '/Network_PoItemSite';
+		 		url += '?param1=' + encodeURIComponent(param1);
+		 		window.location.href = url; 			
 		  }
 		  break;
 		//Site-PO-Items         

@@ -1038,11 +1038,51 @@ public String Network_PoItemSite(Locale locale, Model model, HttpServletRequest 
 			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
 			//System.out.println("Network_PoSiteItem");
-		try {
-				model.addAttribute("listPO",mapper.writeValueAsString((List<Object[]>) session.createSQLQuery("SELECT distinct PO_ID"
-								+ " FROM ASSET_REGISTRY where PO_ID!='null'").list()));
-
+			String param1 = request.getParameter("param1");
 			
+		     if (param1 != null) {
+				System.out.println("PARAM true on load");
+				try {	
+					model.addAttribute("listSites", mapper.writeValueAsString(
+						(List<Object[]>) session.createSQLQuery("SELECT DISTINCT b.SITE_ID,b.SITE_NAME,b.WARE_ID,"
+								+ "(SELECT a.LATITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LATITUDE,"
+								+ "(SELECT a.LONGITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LONGITUDE,"						
+								+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID and w.DOMAIN='" +param1+ "' and w.ACTIVE_RECORD = '1') as countnodes," 
+								+ "(select COUNT(*) from ASSET_REGISTRY j where  j.AR_ID=b.AR_ID and j.PO_ID!='null' and j.DOMAIN='" +param1+ "') as countItems,"
+								+ "(select COUNT(*) FROM NODE_GCELL c where c.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1' and o.DOMAIN='" +param1+ "') and c.DOMAIN='" +param1+ "') as countGcells,"
+								+ "(select COUNT(*) FROM NODE_LCELL d where d.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1' and o.DOMAIN='" +param1+ "') and d.DOMAIN='" +param1+ "') as countLcells,"
+								+ "(select COUNT(*) FROM NODE_UCELL e where e.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1' and o.DOMAIN='" +param1+ "') and e.DOMAIN='" +param1+ "') as countUcells"
+								+ " FROM AR_SITE b,ASSET_REGISTRY j where j.AR_ID=b.AR_ID AND j.DOMAIN='" +param1+ "' and b.WARE_ID!='0' and b.WARE_ID!='null'").list()));
+				
+				} catch (Exception e) {
+					logger.info("Error in retreiving Sites Data from database", e);
+					model.addAttribute("listSites", "null");
+
+				}
+
+				try {
+					model.addAttribute("listPO",
+							mapper.writeValueAsString((List<Object[]>) session.createSQLQuery("SELECT distinct a.PO_ID"
+									+ " FROM ASSET_REGISTRY a,AR_SITE c where a.PO_ID!='null' and a.DOMAIN='" +param1+ "'").list()));
+
+					
+			} catch (Exception e) {
+				logger.info("Error in retreiving PO Data from database", e);
+				model.addAttribute("listPO", "null");
+				}
+		}else {
+			System.out.println("PARAM false on load");
+		   try {
+				model.addAttribute("listPO",
+						//((List<Object[]>) session.createSQLQuery("SELECT distinct a.PO_ID,"
+								//+ "(select count(*) from WAREHOUSE b where b.WARE_ID = a.WARE_ID) as countSite"
+							//	+ "(select count(*) from WAREHOUSE b where b.NODE_ID = a.NODE_ID) as countSite"
+							//	+ " FROM ASSET_REGISTRY a").list()));
+						mapper.writeValueAsString((List<Object[]>) session.createSQLQuery("SELECT distinct a.PO_ID"
+								//+ "(select count(*) from WAREHOUSE b where b.WARE_ID = c.WARE_ID) as countSite"
+								+ " FROM ASSET_REGISTRY a,AR_SITE c where a.PO_ID!='null'").list()));
+
+				
 		} catch (Exception e) {
 			logger.info("Error in retreiving PO Data from database", e);
 			model.addAttribute("listPO", "null");
@@ -1065,19 +1105,21 @@ public String Network_PoItemSite(Locale locale, Model model, HttpServletRequest 
 				+ "(select COUNT(*) from NODE_UCELL e where e.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1')) as countUcells"
 				+ " FROM AR_SITE b,ASSET_REGISTRY j where j.AR_ID=b.AR_ID and b.WARE_ID!='0' and b.WARE_ID!='null'")
 				.list()));
-			
+				
+				
 			} catch (Exception e) {
 				logger.info("Error in retreiving Sites Data from database", e);
 				model.addAttribute("listSites", "null");
 
 			}
-			finally {
+		   }
+			//finally {
 				if (session != null && session.isOpen()) {
 					logger.info("Session Closseeed");
 					tx.commit();
 					session.close();
 				}
-			}
+			//}
 		}
 		return "Network/Network_PoItemSite";
 	}
@@ -4271,11 +4313,88 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 		}
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
-			try {
+		  try {
 
-				String selectedPo = request.getParameter("selectedPo");
-				String POAlreadyCreated = request.getParameter("POAlreadyCreated");
+			String selectedPo = request.getParameter("selectedPo");
+			String POAlreadyCreated = request.getParameter("POAlreadyCreated");
+			String paramEnterprise = request.getParameter("paramEnterprise");
+			
+			if (paramEnterprise.equals("true")) {
+				System.out.println("...PARAM TRUE....");
+				
+				if (POAlreadyCreated.equals("false")) {
+					try {
+						List<Object[]> itemList = (List<Object[]>) session.createSQLQuery(
+								"SELECT distinct ITEM_CODE, ITEM_NAME, PO_ID,ITEM_MODEL FROM ASSET_REGISTRY WHERE PO_ID='"
+										+ selectedPo + "' AND DOMAIN='Enterprise'")
+								.list();
+						System.out.println("===>itemList	" + mapper.writeValueAsString(itemList));
 
+						rtn.put("listItem", itemList);
+					} catch (Exception e) {
+						logger.info("Error in retreiving items Data from database", e);
+						rtn.put("listItem", null);
+					}
+				}
+
+				else {
+					String selectedItem = request.getParameter("selectedItem");
+					String SelectedSite = request.getParameter("SelectedSite");
+
+					try {
+						List<Object[]> listSites = (List<Object[]>) session.createSQLQuery(
+								"SELECT DISTINCT  b.SITE_ID,b.SITE_NAME,b.WARE_ID,j.ITEM_CODE,j.PO_ID,"
+								+ "(SELECT a.LATITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LATITUDE,"
+								+ "(SELECT a.LONGITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LONGITUDE,"						
+								+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID and w.DOMAIN='Enterprise' and w.ACTIVE_RECORD = '1') as countnodes," 
+								+ "(select COUNT(*) from ASSET_REGISTRY j where  j.AR_ID=b.AR_ID and j.PO_ID!='null' and j.DOMAIN='Enterprise') as countItems,"
+								+ "(select COUNT(*) FROM NODE_GCELL c where c.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1' and o.DOMAIN='Enterprise') and c.DOMAIN='Enterprise') as countGcells,"
+								+ "(select COUNT(*) FROM NODE_LCELL d where d.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1' and o.DOMAIN='Enterprise') and d.DOMAIN='Enterprise') as countLcells,"
+								+ "(select COUNT(*) FROM NODE_UCELL e where e.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1' and o.DOMAIN='Enterprise') and e.DOMAIN='Enterprise') as countUcells"
+								+ " FROM AR_SITE b,ASSET_REGISTRY j where j.AR_ID=b.AR_ID AND j.DOMAIN='Enterprise' and b.WARE_ID!='0' and b.WARE_ID!='null'"
+								+ "and j.PO_ID='" + selectedPo + "' and j.ITEM_CODE='" + selectedItem + "'").list();
+				
+						
+						rtn.put("listSites", listSites);
+					} catch (Exception e) {
+						logger.info("Error in retreiving sites Data from database", e);
+						rtn.put("listSites", null);
+					}
+/*
+					if (SelectedSite != null) {
+						try {
+							List<Object[]> listNodesType = (List<Object[]>) session.createSQLQuery(
+									"SELECT DISTINCT a.NODE_TYPE,a.WARE_ID,b.ITEM_CODE FROM NODE_ACTIVE a,ASSET_REGISTRY b "
+									+ "WHERE a.ACTIVE_RECORD = '1' and b.DOMAIN='Enterprise' and a.WARE_ID=b.WARE_ID and b.PO_ID='" + selectedPo + "' and b.ITEM_CODE='" + selectedItem + "' and b.WARE_ID='"
+											+ SelectedSite + "'")
+									.list();
+
+							rtn.put("listNodesType", listNodesType);
+						} catch (Exception e) {
+							logger.info("Error in retreiving list node type Data from database", e);
+							rtn.put("listNodesType", null);
+						}
+					}
+					String selectedNodetType = request.getParameter("selectedNodetType");
+					if (selectedNodetType != null) {
+						try {
+							List<Object[]> listNodes = (List<Object[]>) session.createSQLQuery(
+									"SELECT DISTINCT a.NODE_NAME,a.NODE_TYPE,a.NODE_PK,a.WARE_ID FROM NODE_ACTIVE a,ASSET_REGISTRY b WHERE b.DOMAIN='Enterprise' AND a.ACTIVE_RECORD = '1' and a.WARE_ID=b.WARE_ID and b.PO_ID='"
+										+ selectedPo + "' and b.ITEM_CODE='" + selectedItem + "' and b.WARE_ID='"
+										+ SelectedSite + "' and NODE_TYPE='" + selectedNodetType + "'")
+									.list();
+
+							rtn.put("listNodes", listNodes);
+						} catch (Exception e) {
+							logger.info("Error in retreiving nodes Data from database", e);
+							rtn.put("listNodes", null);
+						}
+					}
+*/					
+				}
+			}else {
+				System.out.println("...PARAM FALSE....");
+				
 				if (POAlreadyCreated.equals("false")) {
 					try {
 						List<Object[]> itemList = (List<Object[]>) session.createSQLQuery(
@@ -4296,23 +4415,7 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 					String SelectedSite = request.getParameter("SelectedSite");
 
 					try {
-						List<Object[]> listSites = (List<Object[]>) session
-								.createSQLQuery(
-									/*	
-										"SELECT distinct b.SITE_ID,b.WARE_NAME,b.WARE_ID,j.ITEM_CODE,j.PO_ID,"
-										+ "(SELECT a.LATITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LATITUDE,"
-										+ "(SELECT a.LONGITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LONGITUDE,"
-										+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID  and w.ACTIVE_RECORD = '1') as countnodes,"
-										+ "(select COUNT(*) from ASSET_REGISTRY j where j.WARE_ID=b.WARE_ID  and j.PO_ID!='null' and j.WARE_ID!='null') as countItems,"
-										+ "(select COUNT(*) from NODE_GCELL c where c.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1')) as countGcells,"
-										+ "(select COUNT(*) from NODE_LCELL d where d.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1')) as countLcells,"
-										+ "(select COUNT(*) from NODE_UCELL e where e.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1')) as countUcells"
-										+ " from WAREHOUSE b,ASSET_REGISTRY j where j.WARE_ID=b.WARE_ID and j.PO_ID='"
-										+ selectedPo + "' and ITEM_CODE='" + selectedItem + "' ")
-								.list();
-*/
-						
-						
+						List<Object[]> listSites = (List<Object[]>) session.createSQLQuery(						
 						"SELECT distinct b.SITE_ID,b.SITE_NAME,b.WARE_ID,j.ITEM_CODE,j.PO_ID,"
 						+ "(SELECT a.LATITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LATITUDE,"
 						+ "(SELECT a.LONGITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LONGITUDE,"
@@ -4361,6 +4464,7 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 						}
 					}
 				}
+			}
 			} catch (Exception e) {
 				logger.info("Error in retreiving Data from database", e);
 			} finally {
