@@ -227,19 +227,19 @@
 							<td><input type="checkbox" id="manholeCheckAllBoq" style="margin-left: 10px;"></td>
 						</tr>
 						<tr>
-							<td class="Icon "><img src="${pageContext.request.contextPath}/resources/NetworkImages/site.png">
+							<td class="Icon "><img src="${pageContext.request.contextPath}/resources/NetworkImages/handholeYellow.png">
+								<span id="definition">HANDHOLE</span></td>
+							<td><input type="checkbox" id="handholeCheckAllBoq" style="margin-left: 10px;"></td>
+						</tr>
+						<tr>
+							<td class="Icon "><img style="width: 16px; height: 16px;" src="${pageContext.request.contextPath}/resources/NetworkImages/purpleCircle.png">
 								<span id="definition">Entreprise</span></td>
 							<td><input type="checkbox" id="entrepriseCheckAllBoq" style="margin-left: 10px;"></td>
 						</tr>
 						<tr>
-							<td class="Icon "><img src="${pageContext.request.contextPath}/resources/NetworkImages/site.png">
+							<td class="Icon "><img style="width: 16px; height: 16px;" src="${pageContext.request.contextPath}/resources/NetworkImages/BlueCircle.png" >
 								<span id="definition">Transmission</span></td>
 							<td><input type="checkbox" id="transmissionCheckAllBoq" style="margin-left: 10px;"></td>
-						</tr>
-						<tr>
-							<td class="Icon "><img src="${pageContext.request.contextPath}/resources/NetworkImages/handholeYellow.png">
-								<span id="definition">HANDHOLE</span></td>
-							<td><input type="checkbox" id="handholeCheckAllBoq" style="margin-left: 10px;"></td>
 						</tr>
 						<tr>
 							<td class="Icon "><img src="${pageContext.request.contextPath}/resources/NetworkImages/electrical-panel.png">
