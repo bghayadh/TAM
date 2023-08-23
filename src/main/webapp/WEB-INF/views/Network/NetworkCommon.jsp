@@ -1335,7 +1335,7 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 			return [order,name];
 		
 		} break;
-
+/*
 		case "siteBtn,nodeBtn,nodeTypeeBtn,itemBtn,poBtn":
 			{
 
@@ -1344,10 +1344,10 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 
 			return [order,name];
 			}break;
-		
+*/	
 		default:
 		{			
-					alert("Selection is not available");
+			alert("Selection is not available");
 		}
 			
 		 }	

@@ -790,7 +790,18 @@ function Sumbitselection(arr){
 		  {	
 			 window.location.href = getContext()+"/Network_SitePoItem"; 
 		  }
-		  break;	  
+		  break;
+		  
+		  case "li_siteBtn,li_poBtn,li_itemBtn,li_EnterpriseBtn":
+  		  case "siteBtn,itemBtn,EnterpriseBtn,poBtn":
+  		  {	
+  			var param1 = 'Enterprise';
+	 		var url = getContext() + '/Network_SitePoItem';
+	 		url += '?param1=' + encodeURIComponent(param1);
+	 		window.location.href = url; 
+  		  }
+  		  break;
+  		  
 		 case "li_nodeBtn,li_cellBtn,li_nodeTypeeBtn":
  		 case "nodeBtn,cellBtn,nodeTypeeBtn":
  		 {
