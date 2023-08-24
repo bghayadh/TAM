@@ -197,11 +197,20 @@
 											href="#dboardP" role="tab" aria-controls="conduit"
 											aria-selected="false">Distribution Board</a></li>
 										<li class="nav-item"><a class="nav-link "
+											id="entPoint-tab" style="color: gold;" data-toggle="tab"
+											href="#entP" role="tab" aria-controls="conduit"
+											aria-selected="false">Entreprise</a></li>
+									    <li class="nav-item"><a class="nav-link "
+											id="transPoint-tab" style="color: gold;" data-toggle="tab"
+											href="#transP" role="tab" aria-controls="conduit"
+											aria-selected="false">Transmission</a></li>
+										<li class="nav-item"><a class="nav-link "
 											id="fPaths-tab" style="color: gold;" data-toggle="tab"
 											href="#fPaths" role="tab" aria-controls="conduit"
 											aria-selected="false">Fiber Paths</a></li>
 									</ul>
 									<div class="tab-content" style="min-height: 180px">
+										
 										<div class="tab-pane active" id="manP" role="tabpanel"
 											aria-labelledby="manPoint-tab">
 											<p></p>
@@ -291,6 +300,62 @@
                                             <div id="DbTotal" Style="Padding-top: 90px;"><b>Total Distribution Boards:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="totalDB" name="totalDB" readonly>										
                                             </div>
 										</div>
+											<div class="tab-pane active" id="entP" role="tabpanel"
+											aria-labelledby="entPoint-tab">
+											<p></p>
+											<div class="container-fluid">
+												<div id="findNearestEntRes"></div>
+												<div class="row" style="height: 100px;">
+													<fieldset class="field_set">
+														<legend style="width: auto;" class="fieldset_legend"></legend>
+														<table id="findNearstEnterprise" style="display: block; height: 150px; overflow-y: auto;" class="searchable sortable">
+														 <thead>
+															<tr>
+															    <th style="min-width: 30px;"><input type="checkbox" id="selectAllEnter"></th>
+																<th style="min-width: 150px;" >Node ID</th>
+																<th style="min-width: 150px;">Node Name</th>
+																<th style="min-width: 100px;">Longitude</th>
+																<th style="min-width: 150px;">Latitude</th>
+																<th style="min-width: 100px;">Distance(km)</th>
+																<th style="min-width: 80px;"colspan="2">Driving Distance(km)</th>
+															</tr>
+															 </thead>
+															<tbody id="searchEntrTBody">
+															</tbody>
+														</table>
+													</fieldset>
+												</div>
+											</div>
+									        <div id="enterpriseTotal" Style="Padding-top: 90px;"><b>Total Enterprise:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="totalEnter" name="totalEnter" readonly>	 </div>
+										</div>
+										<div class="tab-pane active" id="transP" role="tabpanel"
+											aria-labelledby="transPoint-tab">
+											<p></p>
+											<div class="container-fluid">
+												<div id="findNearestTransRes"></div>
+												<div class="row" style="height: 100px;">
+													<fieldset class="field_set">
+														<legend style="width: auto;" class="fieldset_legend"></legend>
+														<table id="findNearstTransmission" style="display: block; height: 150px; overflow-y: auto;" class="searchable sortable">
+														 <thead>
+															<tr>
+															    <th style="min-width: 30px;"><input type="checkbox" id="selectAllTrans"></th>
+																<th style="min-width: 150px;" >Node ID</th>
+																<th style="min-width: 150px;">Node Name</th>
+																<th style="min-width: 100px;">Longitude</th>
+																<th style="min-width: 150px;">Latitude</th>
+																<th style="min-width: 100px;">Distance(km)</th>
+																<th style="min-width: 80px;"colspan="2">Driving Distance(km)</th>
+															</tr>
+															 </thead>
+															<tbody id="searchTransTBody">
+															</tbody>
+														</table>
+													</fieldset>
+												</div>
+											</div>
+									        <div id="transmissionTotal" Style="Padding-top: 90px;"><b>Total Transmisson:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="totalTrans" name="totalTrans" readonly>	 </div>
+										</div>
 										<div class="tab-pane" id="fPaths" role="tabpanel" aria-labelledby="fPaths-tab">
 											<p></p>
 											<div class="container-fluid">
@@ -336,7 +401,8 @@
 													<th style="min-width: 350px;">Source</th>
 													<th style="min-width: 350px;">Destination</th>
 												</tr>
-												<tbody id="nearFiberId"></tbody></table></fieldset></div></div></div></div></div></div>
+												<tbody id="nearFiberId"></tbody></table></fieldset></div></div></div>
+										</div></div></div>
 												
 								<div id="MultyClosest" class="tab-pane" role="tabpanel" aria-labelledby="MultyClosest-search-tab"><p></p>
 								<div class="container-fluid" >

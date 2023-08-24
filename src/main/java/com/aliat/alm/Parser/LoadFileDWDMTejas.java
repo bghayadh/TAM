@@ -2,7 +2,6 @@ package com.aliat.alm.Parser;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -14,16 +13,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
@@ -32,13 +28,9 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.FileUtils;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
 
-public class LoadFileDWDMHuawei {
+public class LoadFileDWDMTejas {
+
 	static String readfileAIMfrom;
 	static String copyfileAIMto;
 	static String sqlQueryStr;
@@ -98,7 +90,7 @@ public class LoadFileDWDMHuawei {
 
 		//System.out.println("Start withh LOAD :" + System.getProperty("user.dir"));
 		
-	 	objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"\\"+"almconfig.dat"));
+	 	objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"/"+"almconfig.dat"));
 		 while ((strCurrentLine1 = objReader1.readLine()) != null){
 			 String data = strCurrentLine1;
 			 String[] data1 ;
@@ -132,7 +124,7 @@ public class LoadFileDWDMHuawei {
 				 System.out.println("username2 found :" + username2);
 				 System.out.println("password2 found :" + password2);*/
 			 }
-			 if (data.contains("readexcelTransOptDWDMHWfrom")) {
+			 if (data.contains("readexcelTransOptDWDMTJSfrom")) {
 				 data1=data.split(";",-1);
 				 readfileAIMfrom = data1[1];
 				 data2=readfileAIMfrom.replace("\\","/").split("/",-1);
@@ -142,7 +134,7 @@ public class LoadFileDWDMHuawei {
 				 subDomain=sub_domain;
 				 subDomainType = sub_domainType;
 			 }
-			 if (data.contains("copyexcelTransOptDWDMHWto")) {
+			 if (data.contains("copyexcelTransOptDWDMTJSto")) {
 				 data1=data.split(";",-1);
 				 copyfileAIMto=data1[1];
 				
@@ -162,8 +154,8 @@ public class LoadFileDWDMHuawei {
 		 
 		 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		 LocalDateTime now = LocalDateTime.now();
-		 String lofilename="ParserLogDWDMHW-"+dtf.format(now)+".log";
-		 
+		 String lofilename="ParserLogDWDMTJS-"+dtf.format(now)+".log";
+		 System.out.println("vfolderfrom : "+vfolderfrom);
 		 File folder = new File(vfolderfrom);
 		 File[] listOfFiles = folder.listFiles();
 		 String fileName1 = null;
@@ -262,73 +254,40 @@ public class LoadFileDWDMHuawei {
 			  //which lead to exceed the maximum number of open cursors.
 			NodeSeq = rsinit2.getInt("NODE_ACTIVE");
 			//update the seq of the node active based on the size of the list filled from the csv file
-		  	stmtp = conalm.prepareStatement("UPDATE SEQ_TABLE SET NODE_ACTIVE = NODE_ACTIVE +"+(records.size()-4));//records.size()-4) is used to remove the unnecessary header rows in the csv file
+		  	stmtp = conalm.prepareStatement("UPDATE SEQ_TABLE SET NODE_ACTIVE = NODE_ACTIVE +"+(records.size()-1));//records.size()-1) is used to remove the unnecessary header rows in the csv file
 		  	stmtp.executeUpdate();
 		  	stmtp.close();
 		  }
-		  for(int i=4;i<records.size();i++) {
+		  rsinit2.close();
+		  stmtp1.close();
+		  for(int i=1;i<records.size();i++) {
+			  
 			  vcodeid=year+"_NODE_"+NodeSeq;
-			  rsinit2.close();
-			  stmtp1.close();
-			  if(records.get(i).get(0).contains("_")) {// if the cell of the csv file contains _ then it may contain site ID
-					if(records.get(i).get(0).split("_").length >= 3) { // if the number of the elements split in the cell according to _ then it may contain site ID
-						siteID = records.get(i).get(0).split("_")[0];
-						char charArray[] = siteID.toCharArray();
-						if(Character.isDigit(charArray[0]) && !Character.isDigit(charArray[siteID.length()-1])) { // if the first character of the possible site id is number then it is a site ID.
-							siteID = siteID;
-							String sqlStmtinit3 = "select WARE_ID,WARE_NAME,LONGITUDE,LATITUDE from WAREHOUSE WHERE SITE_ID='"+siteID+"'";     
-							  stmtp1 = conalm.createStatement();
-							  ResultSet rsinit3 = stmtp1.executeQuery(sqlStmtinit3);
-							  while(rsinit3.next()) {
-								  wareID=rsinit3.getString("WARE_ID");
-								  wareName = rsinit3.getString("WARE_ID");
-								  longi=rsinit3.getString("LONGITUDE");
-								  lat = rsinit3.getString("LATITUDE");
-							  }
-							  rsinit3.close();
-							  stmtp1.close();
-						}else {
-							wareID="";
-							  wareName ="";
-							  longi="";
-							  lat = "";
-							  siteID = "";
-						}
-							
-					}else {
-						wareID="";
-						  wareName ="";
-						  longi="";
-						  lat = "";
-						  siteID = "";
-						//System.out.println("site id and site name don't exists");
-
-					}
-				}else {
-					wareID="";
-					  wareName ="";
-					  longi="";
-					  lat = "";
-					//System.out.println("site id and site name don't exists");
-
-				}
-			  	  nodeName = records.get(i).get(0);
-			  	  nodeType="WDM";
-				  nodeModel = records.get(i).get(1);
-				  IPaddress = records.get(i).get(2);
-				  softwareVersion = records.get(i).get(3);
-				  MACaddress = records.get(i).get(4);
-				  partNumber = records.get(i).get(10);
-				  commStatus= records.get(i).get(11);
-				  adminStatus= records.get(i).get(12);
-				  nodeId=records.get(i).get(2);
-				  if(!records.get(i).get(23).toString().trim().equalsIgnoreCase("--")) {LCStatus=records.get(i).get(23);}
-				  gateway=records.get(i).get(20);
-				  gatewayType=records.get(i).get(19);
-				  gatewayIP=records.get(i).get(21);
-				  patchVersion=records.get(i).get(17);
-				  unique_Node_ID = nodeId+"_HW";
-				  
+			  
+			  
+			  nodeId=records.get(i).get(0);
+			  IPaddress = records.get(i).get(0);
+			  nodeName = records.get(i).get(1);
+			  commStatus= records.get(i).get(6);
+			  nodeType="WDM";
+			  softwareVersion = records.get(i).get(9);
+			  adminStatus= "0";
+			  LCStatus="0";
+			  patchVersion=records.get(i).get(20);
+			  unique_Node_ID = nodeId+"_TJS";
+			  nodeModel = null;
+			  MACaddress = null;
+			  partNumber = null;
+			  gateway=null;
+			  gatewayType=null;
+			  gatewayIP=null;
+			  unique_Node_ID = null;
+			  siteID=null;
+			  wareID=null;
+			  wareName=null;
+			  longi=null;
+			  lat=null;
+			  
 				  	stmtp =  con.prepareStatement("insert into NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,WARE_ID,VENDOR,WARE_NAME,IP_ADDRESS,MAC_ADDRESS,SUB_DOMAIN,SOFTWARE_VERSION,STATUS_1,GATEWAY,GATEWAY_TYPE,GATEWAY_IP,STATUS_2,LONGITUDE,LATITUDE,PATCH_VERSION,PART_NUMBER,SUB_DOMAIN_TYPE)"
 					 		+ "values('"+vcodeid+"','"+unique_Node_ID+"','"+nodeId+"','"+nodeName+"','"+nodeType+"','"+Domain+"','"+nodeModel+"','"+tech2+"','"+tech3+"','"+tech4+"','"+tech5+"','"+siteID+"','"+circleid+"',sysdate,sysdate,'"+fileType+"','"+fileName+"','"+commStatus+"','"+wareID+"','"+Gprovider+"','"+wareName+"','"+IPaddress+"','"+MACaddress+"','"+subDomain+"','"+softwareVersion+"','"+adminStatus+"','"+gateway+"','"+gatewayType+"','"+gatewayIP+"','"+LCStatus+"','"+longi+"','"+lat+"','"+patchVersion+"','"+partNumber+"','"+subDomainType+"')"); 
 				  	stmtp.executeUpdate();

@@ -15,6 +15,13 @@ if(!(lst==null || lst=="")){
 var wareCount=lst.length;
 }
 
+var currentUrl = window.location.href;
+console.log("currentUrl....",currentUrl);
+// Check if the Enterprise exists in the URL
+if (currentUrl.indexOf("Enterprise") !== -1) {
+  console.log("Enterpriseeeee");
+  $('#EnterpriseBtn').toggleClass('activee');
+} 
 
 function initMap() {
 
@@ -353,12 +360,22 @@ function SuppStNdTypNdCellCore(id){
 	//		SupSCreated.push(selectedSupp);
 	var SuppChildrenLength=$("#" +selectedSupp+"_f").find(' > ul > li').length;	
 	if(SuppChildrenLength==0){
+		
+		if($('#EnterpriseBtn').hasClass('activee')){
+			//console.log("ACTIVE ");
+			var paramEnterprise = true;
+		}else{
+			//console.log("NOT ACTIVE");
+			var paramEnterprise = false;
+		}
+		
 			$.ajax({
 				type: "GET",
 				contentType: "application/json; charset=utf-8",
 				url: getContext()+'/FindOnClick_SuppSiteNodeCell',
 				data: {
-					"selectedSupp":selectedSupp,							                
+					"selectedSupp":selectedSupp,
+					"paramEnterprise": paramEnterprise,
 				},
 				dataType: "json",
 				success: function (data) {							        	
@@ -492,13 +509,23 @@ function StNdTpNdCellCore(id)
 		//if(!sitesNtCreated.includes(selectedItem))
 		//{
 			//sitesNtCreated.push(selectedItem);
+			
+			if($('#EnterpriseBtn').hasClass('activee')){
+				//console.log("ACTIVE ");
+				var paramEnterprise = true;
+			}else{
+				//console.log("NOT ACTIVE");
+				var paramEnterprise = false;
+			}
+			
 			$.ajax({
 				type: "GET",
 				contentType: "application/json; charset=utf-8",
 				url: getContext()+'/FindOnClick_SuppStNdTypNdCell',
 				data: {
 					"selectedItem":selectedItem,
-					"selectedSupp":selectedSupp							                
+					"selectedSupp":selectedSupp	,
+					"paramEnterprise": paramEnterprise,
 				},
 				dataType: "json",
 				success: function (data) {					        	
@@ -518,16 +545,25 @@ function StNdTpNdCellCore(id)
 						tree_prop_selection("#" +selectedItem+ "_" +selectedSupp +"_f .NodeType .TreeSpan");
 				        Tree_PropagationAppendedNodes(selectedItem+ "_" +selectedSupp +"_f .NodeType");
 				        
+				        var selectedSingleNt;
+				        var selectedSite;
 			            $(".NodeType > .TreeSpan").contextmenu(function(){				
-			        		selectedSingleNtIdContext=$(this).parent().attr('id').split("_")[0];
-			        		menuName=SingleNt;			
+			        		//selectedSingleNtIdContext=$(this).parent().attr('id').split("_")[0];
+			        		selectedSingleNtIdContext=$(this).parent().attr('id');
+			        		//console.log("selectedSingleNtIdContext......",selectedSingleNtIdContext);
+			        		selectedSingleNt =selectedSingleNtIdContext.split("_")[0];
+			        		selectedSite = selectedSingleNtIdContext.split("_")[1] +"_"+selectedSingleNtIdContext.split("_")[2]+"_"+selectedSingleNtIdContext.split("_")[3];
+			        		//console.log("selectedSite......",selectedSite);
+			        		menuName=SingleNt;	
 			        		openContext(selectedSingleNtIdContext,"",SingleNt,event);
 			        	});
 			            SingleNt = new ContextMenu({
 			        	  'theme': 'default',
 			        	  'items': [
-			        		  {'icon': 'braille', 'name': 'Show BoQ', action: () => {	
-			        			  NodeT_Boq(selectedItem,selectedSingleNtIdContext);
+			        		  {'icon': 'braille', 'name': 'Show BoQ', action: () => {
+			        			  console.log("selectedItem......",selectedItem);
+			        			  NodeT_Boq(selectedSite,selectedSingleNt);
+			        			  selectedItem="";
 			        			}	
 			        		}
 			        	]
@@ -568,6 +604,15 @@ function SupNdCellCore(id){
 		//if(!NdNCreated.includes(selectedNodetType))
 		//{
 			//NdNCreated.push(selectedNodetType);		
+			
+			if($('#EnterpriseBtn').hasClass('activee')){
+				//console.log("ACTIVE ");
+				var paramEnterprise = true;
+			}else{
+				//console.log("NOT ACTIVE");
+				var paramEnterprise = false;
+			}
+		
 			$.ajax({
 				type: "GET",
 				contentType: "application/json; charset=utf-8",
@@ -575,7 +620,8 @@ function SupNdCellCore(id){
 				data: {
 					"selectedItem":selectedItem,
 					"selectedNodetType":selectedNodetType,
-					"selectedSupp":selectedSupp														                
+					"selectedSupp":selectedSupp	,
+					"paramEnterprise": paramEnterprise,
 				},
 				dataType: "json",
 				success: function (data) {														        	
@@ -670,20 +716,47 @@ function Sumbitselection(arr){
 		 window.location.href = getContext()+"/Network_SupStNdCell";
 	 }
 	 break;	
-	 
+	 case "li_supplierBtn,li_siteBtn,li_nodeBtn,li_cellBtn,li_EnterpriseBtn":
+	 case "siteBtn,nodeBtn,cellBtn,supplierBtn,EnterpriseBtn":		
+	 {
+		 	var param1 = 'Enterprise';
+	 		var url = getContext() + '/Network_SupStNdCell';
+	 		url += '?param1=' + encodeURIComponent(param1);
+	 		window.location.href = url;
+	 }
+	 break;
 	//Supplier-Site-Node type-Node-Cell
 		case "li_supplierBtn,li_siteBtn,li_nodeTypeeBtn,li_nodeBtn,li_cellBtn":
  		case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,supplierBtn":
-  {
+ 	 	{
  			window.location.href = getContext()+"/Network_SupStNdTypNdCell";
      	}
 	
- 		break;	
+ 		break;
+ 		
+ 		case "li_supplierBtn,li_siteBtn,li_nodeTypeeBtn,li_nodeBtn,li_cellBtn,li_EnterpriseBtn":
+ 		case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,supplierBtn,EnterpriseBtn":
+  		{
+ 		 	var param1 = 'Enterprise';
+	 		var url = getContext() + '/Network_SupStNdTypNdCell';
+	 		url += '?param1=' + encodeURIComponent(param1);
+	 		window.location.href = url;
+     	}
+ 		break;
  		//Supplier-NodeType-Site-Node-Cell
 		 case "li_supplierBtn,li_nodeTypeeBtn,li_siteBtn,li_nodeBtn,li_cellBtn":
 		 case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,supplierBtn":
 		  {
 			 window.location.href = getContext()+"/Network_SupNdTypStNdCell"; 			 
+		    }
+		break;
+		 case "li_supplierBtn,li_nodeTypeeBtn,li_siteBtn,li_nodeBtn,li_cellBtn,li_EnterpriseBtn":
+		 case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,supplierBtn,EnterpriseBtn":
+		  {
+				var param1 = 'Enterprise';
+		 		var url = getContext() + '/Network_SupNdTypStNdCell';
+		 		url += '?param1=' + encodeURIComponent(param1);
+		 		window.location.href = url; 			 
 		    }
 		break;
 		//PO-Site-Items
@@ -693,11 +766,29 @@ function Sumbitselection(arr){
  			 window.location.href = getContext()+"/Network_PoSiteItem"; 			 
  		 	}
  		 	break;
+		 case "li_poBtn,li_siteBtn,li_itemBtn,li_EnterpriseBtn":
+	 	 case "siteBtn,itemBtn,EnterpriseBtn,poBtn":
+	 		 	{	
+	 			var param1 = 'Enterprise';
+		 		var url = getContext() + '/Network_PoSiteItem';
+		 		url += '?param1=' + encodeURIComponent(param1);
+		 		window.location.href = url; 	 
+	 		 	}
+	 		 	break;
 		 	 //PO-Items-Site         
 		  case "li_poBtn,li_itemBtn,li_siteBtn":
 		  case "siteBtn,itemBtn,poBtn":
 		  {	  
 			  window.location.href = getContext()+"/Network_PoItemSite"; 			
+		  }
+		  break;
+		  case "li_poBtn,li_itemBtn,li_siteBtn,li_EnterpriseBtn":
+		  case "siteBtn,itemBtn,EnterpriseBtn,poBtn":
+		  {	  
+			  var param1 = 'Enterprise';
+		 		var url = getContext() + '/Network_PoItemSite';
+		 		url += '?param1=' + encodeURIComponent(param1);
+		 		window.location.href = url; 			
 		  }
 		  break;
 		//Site-PO-Items         
@@ -707,6 +798,17 @@ function Sumbitselection(arr){
  			 window.location.href = getContext()+"/Network_SitePoItem"; 
  		  }
  		  break;
+ 		  
+ 		  case "li_siteBtn,li_poBtn,li_itemBtn,li_EnterpriseBtn":
+  		  case "siteBtn,itemBtn,EnterpriseBtn,poBtn":
+  		  {	
+  			var param1 = 'Enterprise';
+	 		var url = getContext() + '/Network_SitePoItem';
+	 		url += '?param1=' + encodeURIComponent(param1);
+	 		window.location.href = url; 
+  		  }
+  		  break;
+ 		  
  		case "li_nodeBtn,li_cellBtn,li_nodeTypeeBtn":
 		 case "nodeBtn,cellBtn,nodeTypeeBtn":
 		 {
@@ -731,6 +833,20 @@ function Sumbitselection(arr){
  		 	{	
  		 		var param1 = 'Enterprise';
  		 		var url = getContext() + '/Network_Node';
+ 		 		url += '?param1=' + encodeURIComponent(param1);
+ 		 		window.location.href = url;
+ 		 	}
+ 		break;
+ 		//Cell
+		 case "cellBtn":
+		{
+			 window.location.href = getContext()+"/Network_Cell"; 
+		 } break;
+		 case "li_cellBtn,li_EnterpriseBtn":
+ 		 case "cellBtn,EnterpriseBtn":		
+ 		 	{	
+ 		 		var param1 = 'Enterprise';
+ 		 		var url = getContext() + '/Network_Cell';
  		 		url += '?param1=' + encodeURIComponent(param1);
  		 		window.location.href = url;
  		 	}

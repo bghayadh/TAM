@@ -1296,7 +1296,7 @@ inputt.addEventListener ("input" ,function() {
 
 });
 
-function autoCompleteForMapping(ID,tableID,rowID,Location,LocationID,LocationM,LocationType,equipment,equipmentID,equipmentName,equipmentType,strandID,strandName,tubeID,tubeName,fiberID,fiberName,strandNb,strandColor,tubeNb,tubeColor,junctionID,junctionName){
+function autoCompleteForMapping(ID,tableID,rowID,Location,LocationID,LocationM,LocationType,equipment,equipmentID,equipmentName,equipmentType,strandID,strandName,tubeID,tubeName,fiberID,fiberName,strandNb,strandColor,tubeNb,tubeColor,junctionID,junctionName,networkLevel){
 	var url ="emptyUrl";
 	var dataTarget="";
 	var search="";				
@@ -1523,232 +1523,234 @@ $("#"+LocationID+ID).autocomplete({
 	        }
 	});				
 // auto complete equipment	
-$("#"+equipmentID+ID).autocomplete({
-	source:debounce(function(request, response,event,ui) {
-	    var searchs=$("#"+equipmentID+ID).val();
-		var line;
-	    search= $("#"+equipment+ID).val();
-	    console.log("throttle")
-		 if(search=="DistBoard"){
-			url='getDbData';
-			dataTarget = {
-	       		"search":searchs,
-			 }
-		}	
-		/*else if(search=="Node"){
-			url='searchEquipment';
-			dataTarget = {					
-				"searchs":searchs,
-			}
-		}*/
-		else {
-			url='emptyUrl';
-		}
-	if(url !="emptyUrl") {
-		$.ajax({
-			type: "GET",
-			contentType: "application/json; charset=utf-8",
-			url: getContext()+'/'+url,
-			data: dataTarget,				
-		 	dataType: "json",
-			success: function (data) {
-				if (data != null) {
-					response(data.globalList);                   
+if(equipment !=""){
+	$("#"+equipmentID+ID).autocomplete({
+		source:debounce(function(request, response,event,ui) {
+		    var searchs=$("#"+equipmentID+ID).val();
+			var line;
+		    search= $("#"+equipment+ID).val();
+		    console.log("throttle")
+			 if(search=="DistBoard"){
+				url='getDbData';
+				dataTarget = {
+		       		"search":searchs,
+				 }
+			}	
+			/*else if(search=="Node"){
+				url='searchEquipment';
+				dataTarget = {					
+					"searchs":searchs,
 				}
-			},								               
-			  error: function(result) {
-                  alert("Error");
-              }
-          });						               
-		} 
-	},900), minLength:0, maxShowItems: 40, scroll:true,
- 		select: function(event, ui) {
- 		//	if(search=="DistBoard"){
-				$("#"+equipmentID+ID).val(ui.item[0]);
-				$("#"+equipmentName+ID).val(ui.item[1]);
-				$("#"+equipmentType+ID).val("Distribution Board");
-			/*}
-			else if(search=="Node"){
-				 $("#"+equipmentID+ID).val(ui.item[0]);
-				$("#"+equipmentName+ID).val(ui.item[1]);
-				$("#"+equipmentType+ID).val(ui.item[2]);
 			}*/
-						
-		return false;
-	},	
-}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
-	//if(item[0].split("_")[0]=="DB" ) {
-		 return $("<li class='each'>")
-            .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-               item[0]+ "</span><br><span class='desc'>" +
-                item[1] +"</span></div>")
-            .appendTo(ul);
-	/*}
-	else {
-		 return $("<li class='each'>")
-            .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-               item[0] + "</span><br><span class='desc'>" +
-                item[1] +', '+ item[2] + "</span></div>")
-            .appendTo(ul);
-		}*/
-	};		    	    
-						         
-	$("#"+equipmentID+ID).focus(function(){
-		if (this.value == ""){
-			$(this).autocomplete("search");
-	        }
-	});
-/////
-$("#"+equipmentName+ID).autocomplete({
-	source: debounce(function(request, response,event,ui) {
-	    var searchs=$("#"+equipmentName+ID).val();
-		var line;
-	    search= $("#"+equipment+ID).val();
-	    console.log("no throttle");
-		 if(search=="DistBoard"){
-			url='getDbData';
-			dataTarget = {
-	       		"search":searchs,
-			 }
-		}	
-		/*else if(search=="Node"){
-			url='searchEquipment';
-			dataTarget = {					
-				"searchs":searchs,
+			else {
+				url='emptyUrl';
 			}
-		}*/
+		if(url !="emptyUrl") {
+			$.ajax({
+				type: "GET",
+				contentType: "application/json; charset=utf-8",
+				url: getContext()+'/'+url,
+				data: dataTarget,				
+			 	dataType: "json",
+				success: function (data) {
+					if (data != null) {
+						response(data.globalList);                   
+					}
+				},								               
+				  error: function(result) {
+	                  alert("Error");
+	              }
+	          });						               
+			} 
+		},900), minLength:0, maxShowItems: 40, scroll:true,
+	 		select: function(event, ui) {
+	 		//	if(search=="DistBoard"){
+					$("#"+equipmentID+ID).val(ui.item[0]);
+					$("#"+equipmentName+ID).val(ui.item[1]);
+					$("#"+equipmentType+ID).val("Distribution Board");
+				/*}
+				else if(search=="Node"){
+					 $("#"+equipmentID+ID).val(ui.item[0]);
+					$("#"+equipmentName+ID).val(ui.item[1]);
+					$("#"+equipmentType+ID).val(ui.item[2]);
+				}*/
+							
+			return false;
+		},	
+	}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
+		//if(item[0].split("_")[0]=="DB" ) {
+			 return $("<li class='each'>")
+	            .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
+	               item[0]+ "</span><br><span class='desc'>" +
+	                item[1] +"</span></div>")
+	            .appendTo(ul);
+		/*}
 		else {
-			url='emptyUrl';
-		}
-	if(url !="emptyUrl") {
-		$.ajax({
-			type: "GET",
-			contentType: "application/json; charset=utf-8",
-			url: getContext()+'/'+url,
-			data: dataTarget,				
-		 	dataType: "json",
-			success: function (data) {
-				if (data != null) {
-					response(data.globalList);                   
-				}
-			},								               
-			  error: function(result) {
-                  alert("Error");
-              }
-          });						               
-		} 
-	},900), minLength:0, maxShowItems: 40, scroll:true,
- 		select: function(event, ui) {
- 		//	if(search=="DistBoard"){
-				$("#"+equipmentID+ID).val(ui.item[0]);
-				$("#"+equipmentName+ID).val(ui.item[1]);
-				$("#"+equipmentType+ID).val("Distribution Board");
-			/*}
-			else if(search=="Node"){
-				 $("#"+equipmentID+ID).val(ui.item[0]);
-				$("#"+equipmentName+ID).val(ui.item[1]);
-				$("#"+equipmentType+ID).val(ui.item[2]);
+			 return $("<li class='each'>")
+	            .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
+	               item[0] + "</span><br><span class='desc'>" +
+	                item[1] +', '+ item[2] + "</span></div>")
+	            .appendTo(ul);
 			}*/
-						
-		return false;
-	},	
-}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
-	//if(item[0].split("_")[0]=="DB" ) {
-		 return $("<li class='each'>")
-            .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-               item[1]+ "</span><br><span class='desc'>" +
-                item[0] +"</span></div>")
-            .appendTo(ul);
-	/*}
-	else {
-		 return $("<li class='each'>")
-            .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-               item[0] + "</span><br><span class='desc'>" +
-                item[1] +', '+ item[2] + "</span></div>")
-            .appendTo(ul);
-		}*/
-	};		    	    
-						         
-	$("#"+equipmentName+ID).focus(function(){
-		if (this.value == ""){
-			$(this).autocomplete("search");
-	        }
-	});	
-	
-$("#"+equipmentType+ID).autocomplete({
-	source: debounce(function(request, response,event,ui) {
-	    var searchs=$("#"+equipmentType+ID).val();
-		var line;
-	    search= $("#"+equipment+ID).val();
-		 if(search=="DistBoard"){
-			url='getDbData';
-			dataTarget = {
-	       		"search":searchs,
-			 }
-		}	
-		/*else if(search=="Node"){
-			url='searchEquipment';
-			dataTarget = {					
-				"searchs":searchs,
+		};		    	    
+							         
+		$("#"+equipmentID+ID).focus(function(){
+			if (this.value == ""){
+				$(this).autocomplete("search");
+		        }
+		});
+	/////
+	$("#"+equipmentName+ID).autocomplete({
+		source: debounce(function(request, response,event,ui) {
+		    var searchs=$("#"+equipmentName+ID).val();
+			var line;
+		    search= $("#"+equipment+ID).val();
+		    console.log("no throttle");
+			 if(search=="DistBoard"){
+				url='getDbData';
+				dataTarget = {
+		       		"search":searchs,
+				 }
+			}	
+			/*else if(search=="Node"){
+				url='searchEquipment';
+				dataTarget = {					
+					"searchs":searchs,
+				}
+			}*/
+			else {
+				url='emptyUrl';
 			}
-		}*/
+		if(url !="emptyUrl") {
+			$.ajax({
+				type: "GET",
+				contentType: "application/json; charset=utf-8",
+				url: getContext()+'/'+url,
+				data: dataTarget,				
+			 	dataType: "json",
+				success: function (data) {
+					if (data != null) {
+						response(data.globalList);                   
+					}
+				},								               
+				  error: function(result) {
+	                  alert("Error");
+	              }
+	          });						               
+			} 
+		},900), minLength:0, maxShowItems: 40, scroll:true,
+	 		select: function(event, ui) {
+	 		//	if(search=="DistBoard"){
+					$("#"+equipmentID+ID).val(ui.item[0]);
+					$("#"+equipmentName+ID).val(ui.item[1]);
+					$("#"+equipmentType+ID).val("Distribution Board");
+				/*}
+				else if(search=="Node"){
+					 $("#"+equipmentID+ID).val(ui.item[0]);
+					$("#"+equipmentName+ID).val(ui.item[1]);
+					$("#"+equipmentType+ID).val(ui.item[2]);
+				}*/
+							
+			return false;
+		},	
+	}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
+		//if(item[0].split("_")[0]=="DB" ) {
+			 return $("<li class='each'>")
+	            .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
+	               item[1]+ "</span><br><span class='desc'>" +
+	                item[0] +"</span></div>")
+	            .appendTo(ul);
+		/*}
 		else {
-			url='emptyUrl';
-		}
-	if(url !="emptyUrl") {
-		$.ajax({
-			type: "GET",
-			contentType: "application/json; charset=utf-8",
-			url: getContext()+'/'+url,
-			data: dataTarget,				
-		 	dataType: "json",
-			success: function (data) {
-				if (data != null) {
-					response(data.globalList);                   
-				}
-			},								               
-			  error: function(result) {
-                  alert("Error");
-              }
-          });						               
-		} 
-	},900), minLength:0, maxShowItems: 40, scroll:true,
- 		select: function(event, ui) {
- 		//	if(search=="DistBoard"){
-				$("#"+equipmentID+ID).val(ui.item[0]);
-				$("#"+equipmentName+ID).val(ui.item[1]);
-				$("#"+equipmentType+ID).val("Distribution Board");
-			/*}
-			else if(search=="Node"){
-				 $("#"+equipmentID+ID).val(ui.item[0]);
-				$("#"+equipmentName+ID).val(ui.item[1]);
-				$("#"+equipmentType+ID).val(ui.item[2]);
+			 return $("<li class='each'>")
+	            .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
+	               item[0] + "</span><br><span class='desc'>" +
+	                item[1] +', '+ item[2] + "</span></div>")
+	            .appendTo(ul);
 			}*/
-						
-		return false;
-	},	
-}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
-	//if(item[0].split("_")[0]=="DB" ) {
-		 return $("<li class='each'>")
-            .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-               item[0]+ "</span><br><span class='desc'>" +
-                item[1] +"</span></div>")
-            .appendTo(ul);
-	/*}
-	else {
-		 return $("<li class='each'>")
-            .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-               item[0] + "</span><br><span class='desc'>" +
-                item[1] +', '+ item[2] + "</span></div>")
-            .appendTo(ul);
-		}*/
-	};		    	    
-						         
-	$("#"+equipmentType+ID).focus(function(){
-		if (this.value == ""){
-			$(this).autocomplete("search");
-	        }
-	});						    	    
+		};		    	    
+							         
+		$("#"+equipmentName+ID).focus(function(){
+			if (this.value == ""){
+				$(this).autocomplete("search");
+		        }
+		});	
+		
+	$("#"+equipmentType+ID).autocomplete({
+		source: debounce(function(request, response,event,ui) {
+		    var searchs=$("#"+equipmentType+ID).val();
+			var line;
+		    search= $("#"+equipment+ID).val();
+			 if(search=="DistBoard"){
+				url='getDbData';
+				dataTarget = {
+		       		"search":searchs,
+				 }
+			}	
+			/*else if(search=="Node"){
+				url='searchEquipment';
+				dataTarget = {					
+					"searchs":searchs,
+				}
+			}*/
+			else {
+				url='emptyUrl';
+			}
+		if(url !="emptyUrl") {
+			$.ajax({
+				type: "GET",
+				contentType: "application/json; charset=utf-8",
+				url: getContext()+'/'+url,
+				data: dataTarget,				
+			 	dataType: "json",
+				success: function (data) {
+					if (data != null) {
+						response(data.globalList);                   
+					}
+				},								               
+				  error: function(result) {
+	                  alert("Error");
+	              }
+	          });						               
+			} 
+		},900), minLength:0, maxShowItems: 40, scroll:true,
+	 		select: function(event, ui) {
+	 		//	if(search=="DistBoard"){
+					$("#"+equipmentID+ID).val(ui.item[0]);
+					$("#"+equipmentName+ID).val(ui.item[1]);
+					$("#"+equipmentType+ID).val("Distribution Board");
+				/*}
+				else if(search=="Node"){
+					 $("#"+equipmentID+ID).val(ui.item[0]);
+					$("#"+equipmentName+ID).val(ui.item[1]);
+					$("#"+equipmentType+ID).val(ui.item[2]);
+				}*/
+							
+			return false;
+		},	
+	}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
+		//if(item[0].split("_")[0]=="DB" ) {
+			 return $("<li class='each'>")
+	            .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
+	               item[0]+ "</span><br><span class='desc'>" +
+	                item[1] +"</span></div>")
+	            .appendTo(ul);
+		/*}
+		else {
+			 return $("<li class='each'>")
+	            .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
+	               item[0] + "</span><br><span class='desc'>" +
+	                item[1] +', '+ item[2] + "</span></div>")
+	            .appendTo(ul);
+			}*/
+		};		    	    
+							         
+		$("#"+equipmentType+ID).focus(function(){
+			if (this.value == ""){
+				$(this).autocomplete("search");
+		        }
+		});	
+	}					    	    
 		$("#"+strandID+ID).autocomplete({
 	    	    source: debounce(function(request, response,event, ui) {
 					 var sId= $("#"+strandID+ID).val();
@@ -1790,11 +1792,16 @@ $("#"+equipmentType+ID).autocomplete({
 					$(this).parents("tr").find('input[name ="'+tubeName+'"]').val(ui.item[5]);
 					$(this).parents("tr").find('input[name ="'+fiberName+'"]').val(ui.item[4]);
 					$(this).parents("tr").find('input[name ="'+strandNb+'"]').val(ui.item[6]);
-					$(this).parents("tr").find('select[name ="'+strandColor+'"]').val(ui.item[7]);
 					$(this).parents("tr").find('input[name ="'+tubeNb+'"]').val(ui.item[8]);
-					$(this).parents("tr").find('select[name ="'+tubeColor+'"]').val(ui.item[9]);
-					tubeStrandSetColor(strandColor+ID,strandNb+ID);
-					tubeStrandSetColor(tubeColor+ID,tubeNb+ID);
+					if(strandColor !=""){
+						$(this).parents("tr").find('select[name ="'+tubeColor+'"]').val(ui.item[9]);
+						$(this).parents("tr").find('select[name ="'+strandColor+'"]').val(ui.item[7]);
+						tubeStrandSetColor(strandColor+ID,strandNb+ID);
+						tubeStrandSetColor(tubeColor+ID,tubeNb+ID);
+					}
+					if(strandID.includes("mJct") || strandID.includes("hJct")){
+						$(this).parents("tr").find('select[name ="'+networkLevel+'"]').val(ui.item[10]);
+					}
 					return false;
 				}
 			}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
@@ -1848,11 +1855,19 @@ $("#"+strandName+ID).autocomplete({
 					$(this).parents("tr").find('input[name ="'+tubeName+'"]').val(ui.item[5]);
 					$(this).parents("tr").find('input[name ="'+fiberName+'"]').val(ui.item[4]);
 					$(this).parents("tr").find('input[name ="'+strandNb+'"]').val(ui.item[6]);
-					$(this).parents("tr").find('select[name ="'+strandColor+'"]').val(ui.item[7]);
 					$(this).parents("tr").find('input[name ="'+tubeNb+'"]').val(ui.item[8]);
-					$(this).parents("tr").find('select[name ="'+tubeColor+'"]').val(ui.item[9]);
-					tubeStrandSetColor(strandColor+ID,strandNb+ID);
-					tubeStrandSetColor(tubeColor+ID,tubeNb+ID);
+					
+					if(strandColor !=""){
+						$(this).parents("tr").find('select[name ="'+tubeColor+'"]').val(ui.item[9]);
+						$(this).parents("tr").find('select[name ="'+strandColor+'"]').val(ui.item[7]);
+						
+						tubeStrandSetColor(strandColor+ID,strandNb+ID);
+						tubeStrandSetColor(tubeColor+ID,tubeNb+ID);
+					}
+					
+					if(strandID.includes("mJct") || strandID.includes("hJct")){
+						$(this).parents("tr").find('select[name ="'+networkLevel+'"]').val(ui.item[10]);
+					}
 				/*	var tubesAutocomplete=[];
 					var fibersAutocomplete=[];
 					$.ajax({
@@ -1926,6 +1941,10 @@ $("#"+strandName+ID).autocomplete({
 			select: function(event, ui) {			
 				this.value = (ui.item ? ui.item[0] : '');
 				$(this).parents("tr").find('input[name ="'+fiberName+'"]').val(ui.item[1]);
+				
+				if(fiberID.includes("mJct") || fiberID.includes("hJct")){
+					$(this).parents("tr").find('select[name ="'+networkLevel+'"]').val(ui.item[2]);
+				}
 				return false;
 			}
 		}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
@@ -1975,6 +1994,11 @@ $("#"+fiberName+ID).autocomplete({
 				
 				this.value = (ui.item ? ui.item[1] : '');
 				$(this).parents("tr").find('input[name ="'+fiberID+'"]').val(ui.item[0]);
+				
+				if(fiberID.includes("mJct") || fiberID.includes("hJct")){
+					$(this).parents("tr").find('select[name ="'+networkLevel+'"]').val(ui.item[2]);
+				}
+				
 					return false;
 			}
 		}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
@@ -2027,8 +2051,15 @@ $("#"+fiberName+ID).autocomplete({
 			$(this).parents("tr").find('input[name ="'+tubeName+'"]').val(ui.item[1]);
 			$(this).parents("tr").find('input[name ="'+fiberName+'"]').val(ui.item[3]);
 			$(this).parents("tr").find('input[name ="'+tubeNb+'"]').val(ui.item[4]);
-			$(this).parents("tr").find('select[name ="'+tubeColor+'"]').val(ui.item[5]);
-			tubeStrandSetColor(tubeColor+ID,tubeNb+ID);
+			
+			if(tubeColor !=""){
+				$(this).parents("tr").find('select[name ="'+tubeColor+'"]').val(ui.item[5]);
+				tubeStrandSetColor(tubeColor+ID,tubeNb+ID);
+			}
+			
+			if(tubeID.includes("mJct") || tubeID.includes("hJct")){
+					$(this).parents("tr").find('select[name ="'+networkLevel+'"]').val(ui.item[6]);
+				}
 			return false;
 					}
 				}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
@@ -2080,8 +2111,15 @@ $("#"+tubeName+ID).autocomplete({
 		$(this).parents("tr").find('input[name ="'+tubeID+'"]').val(ui.item[0]);
 		$(this).parents("tr").find('input[name ="'+fiberName+'"]').val(ui.item[3]);
 		$(this).parents("tr").find('input[name ="'+tubeNb+'"]').val(ui.item[4]);
-		$(this).parents("tr").find('select[name ="'+tubeColor+'"]').val(ui.item[5]);
-		tubeStrandSetColor(tubeColor+ID,tubeNb+ID);
+		
+		if(tubeColor !=""){
+			$(this).parents("tr").find('select[name ="'+tubeColor+'"]').val(ui.item[5]);
+			tubeStrandSetColor(tubeColor+ID,tubeNb+ID);
+		}
+		
+		if(tubeID.includes("mJct") || tubeID.includes("hJct")){
+			$(this).parents("tr").find('select[name ="'+networkLevel+'"]').val(ui.item[6]);
+		}
 	/*	var tubesAutocomplete=[];
 		var fibersAutocomplete=[];
 		$.ajax({
@@ -2120,94 +2158,95 @@ if (this.value == ""){
 	$(this).autocomplete("search");
   }
 });
-
-$("#"+junctionID+ID).autocomplete({
-   source: function(request, response,event, ui) {
-	     var searchId =$("#"+junctionID+ID).val(); 
-	    
-	   
-        $.ajax({
-            type: "GET",
-            contentType: "application/json; charset=utf-8",
-            
-            url: getContext()+'/SearchJunction',
-            data: {
-				"searchId" : searchId,
-			 },
-            dataType: "json",
-            success: function (data) {
-                if (data != null) {
-                    response(data.clist);
-                }
-            },
-            error: function(result) {
-                alert("Error");
-            }
-        });
-      
-   }, minLength:0, maxShowItems: 4, scroll:true,
-	select: function(event, ui) {
-		$("#"+junctionID+ID).val(ui.item[0]);
-		$("#"+junctionName+ID).val(ui.item[1]);
-		
+if(junctionID !=""){
+	$("#"+junctionID+ID).autocomplete({
+	   source: function(request, response,event, ui) {
+		     var searchId =$("#"+junctionID+ID).val(); 
+		    
+		   
+	        $.ajax({
+	            type: "GET",
+	            contentType: "application/json; charset=utf-8",
+	            
+	            url: getContext()+'/SearchJunction',
+	            data: {
+					"searchId" : searchId,
+				 },
+	            dataType: "json",
+	            success: function (data) {
+	                if (data != null) {
+	                    response(data.clist);
+	                }
+	            },
+	            error: function(result) {
+	                alert("Error");
+	            }
+	        });
+	      
+	   }, minLength:0, maxShowItems: 4, scroll:true,
+		select: function(event, ui) {
+			$("#"+junctionID+ID).val(ui.item[0]);
+			$("#"+junctionName+ID).val(ui.item[1]);
 			
-		return false;
-				}
-			}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
-	    	return $('<li class="each"></li>').data( "ui-autocomplete-item", item )
-	    			.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
-                   item[0] + '</span><br><span class="desc">' +
-                   item[1] +'</span></div>').appendTo(ul);
-		};
-$("#"+junctionID+ID).focus(function(){
-if (this.value == ""){
-	$(this).autocomplete("search");
-  }
-});
-
-$("#"+junctionName+ID).autocomplete({
-   source: function(request, response,event, ui) {
-	     var searchId =$("#"+junctionName+ID).val(); 
-	    
-	   
-        $.ajax({
-            type: "GET",
-            contentType: "application/json; charset=utf-8",
-            
-            url: getContext()+'/SearchJunction',
-            data: {
-				"searchId" : searchId,
-			 },
-            dataType: "json",
-            success: function (data) {
-                if (data != null) {
-                    response(data.clist);
-                }
-            },
-            error: function(result) {
-                alert("Error");
-            }
-        });
-      
-   }, minLength:0, maxShowItems: 4, scroll:true,
-	select: function(event, ui) {
-		$("#"+junctionID+ID).val(ui.item[0]);
-		$("#"+junctionName+ID).val(ui.item[1]);
-		
+				
+			return false;
+					}
+				}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
+		    	return $('<li class="each"></li>').data( "ui-autocomplete-item", item )
+		    			.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
+	                   item[0] + '</span><br><span class="desc">' +
+	                   item[1] +'</span></div>').appendTo(ul);
+			};
+	$("#"+junctionID+ID).focus(function(){
+	if (this.value == ""){
+		$(this).autocomplete("search");
+	  }
+	});
+	
+	$("#"+junctionName+ID).autocomplete({
+	   source: function(request, response,event, ui) {
+		     var searchId =$("#"+junctionName+ID).val(); 
+		    
+		   
+	        $.ajax({
+	            type: "GET",
+	            contentType: "application/json; charset=utf-8",
+	            
+	            url: getContext()+'/SearchJunction',
+	            data: {
+					"searchId" : searchId,
+				 },
+	            dataType: "json",
+	            success: function (data) {
+	                if (data != null) {
+	                    response(data.clist);
+	                }
+	            },
+	            error: function(result) {
+	                alert("Error");
+	            }
+	        });
+	      
+	   }, minLength:0, maxShowItems: 4, scroll:true,
+		select: function(event, ui) {
+			$("#"+junctionID+ID).val(ui.item[0]);
+			$("#"+junctionName+ID).val(ui.item[1]);
 			
-		return false;
-				}
-			}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
-	    	return $('<li class="each"></li>').data( "ui-autocomplete-item", item )
-	    			.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
-                   item[1] + '</span><br><span class="desc">' +
-                   item[0] +'</span></div>').appendTo(ul);
-		};
-$("#"+junctionName+ID).focus(function(){
-if (this.value == ""){
-	$(this).autocomplete("search");
-  }
-});
+				
+			return false;
+					}
+				}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
+		    	return $('<li class="each"></li>').data( "ui-autocomplete-item", item )
+		    			.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
+	                   item[1] + '</span><br><span class="desc">' +
+	                   item[0] +'</span></div>').appendTo(ul);
+			};
+	$("#"+junctionName+ID).focus(function(){
+	if (this.value == ""){
+		$(this).autocomplete("search");
+	  }
+	});
+}
 }
 function autoCompleteforRelatedCable(){
  $("#relatedCableStrandID").autocomplete({

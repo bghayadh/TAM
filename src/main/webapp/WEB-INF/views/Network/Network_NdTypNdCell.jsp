@@ -4,10 +4,12 @@
 $('#filterr').hide();
 $('#removeFilter').hide();
 
-var lst = ${listSites};
+//var lst = ${listSites};
 
-var listNodesType = ${listNodesType};
+var lstNodeType = ${listNodesType};
 
+var lst = ${listNodes};
+console.log("lst nodes....",lst);
 
 var button ;
 var data;
@@ -250,7 +252,7 @@ map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
 */
 	map.setOptions({ minZoom: 3, maxZoom: 28});	
 	CreateMap(lst,map);
-	CreateTree_NdTpNdCell(listNodesType,map);
+	CreateTree_NdTpNdCell(lstNodeType,map);
 
 		}
 	
@@ -270,15 +272,65 @@ map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
 ///////////////////////////////////////////////
 /* Start of NodeType Node Cell Tree Method */ 
 //////////////////////////////////////////////
-function CreateTree_NdTpNdCell(listNodesType,map){
+function CreateTree_NdTpNdCell(lstNodeType,map){
+	console.log("CreateTree_NdTpNdCell");
+	console.log("lst ndty .....",lstNodeType);
+	console.log("lst nd .....",lst);
 	//Site_Boq("");
 	var str="<ul><li id='initial_ul' class='Initial'><input type='checkbox' id='NodesType' class='AllNodesType' style='margin-left: 15px' unchecked onclick='AllSitesCheckFilter()'></input><span class='folder'><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Node Type</span></li></ul>";
 	$("#network_tree").append(str);
-	for (n = 0; n < listNodesType.length; n++) {
-		var str = "<ul><li class='NodeType' id='"+listNodesType[n][0]+"' style='display:none;'><span class='folder' onclick='NdTpNdCellCore("+listNodesType[n][0]+")'><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'><span class='tree-span' style='margin-left:-15px;'><i class='fa fa-cogs fa-2x'></i> "+listNodesType[n][0]+"</span></span>";
-		str+= "<ul><li id='" +listNodesType[n][0]+"_f' class='NodeFolder parent_li' style='display:none; margin-left:-42px'><input type='checkbox' id='" +listNodesType[n][0]+"_Node' class='AllNodes' style='margin-left: 15px' unchecked onclick='showMarkersAllSitesOneNt("+listNodesType[n][0]+"_Node)'></input><span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Nodes </span></span></li></ul></li></ul>";	
+	for (n = 0; n < lstNodeType.length; n++) {
+		var str = "<ul><li class='NodeType' id='"+lstNodeType[n][0]+"' style='display:none;'><span class='folder'><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'><span class='tree-span' style='margin-left:-15px;'><i class='fa fa-cogs fa-2x'></i> "+lstNodeType[n][0]+"</span></span>";
+		str+= "<ul><li id='" +lstNodeType[n][0]+"_f' class='NodeFolder parent_li' style='display:none; margin-left:-42px'><input type='checkbox' id='" +lstNodeType[n][0]+"_Node' class='AllNodes' style='margin-left: 15px' unchecked onclick='showMarkersAllSitesOneNt("+lstNodeType[n][0]+"_Node)'></input><span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Nodes </span></span></li></ul></li></ul>";	
 		$("#initial_ul").append(str);
-		//NdTpNdCellCore(n);			 	
+		//NdTpNdCellCore(n);		
+		
+		var selectedNdTyp= lstNodeType[n][0];
+		var NdTpChildrenLength=$("#" +selectedNdTyp+"_f").find(' > ul > li').length;	
+		if(NdTpChildrenLength==0){
+			//console.log("NdTpChildrenLength.....",NdTpChildrenLength);
+			var dFrag = document.createDocumentFragment();
+			for (j = 0; j < lst.length; j++)      //  NODE_PK, SITE_ID, NODE_NAME,NODE_MODEL
+			{			
+				if(lst[j][11] == lstNodeType[n][0]){
+					console.log("equals");
+					str = "<li class='Node' id='"+ lst[j][2]+"_"+lst[j][9]+"' style='display:none; margin-left:-15px'><input type='checkbox' id='" + lst[j][2]+"_"+lst[j][9]+"_"+lst[j][11]+ "' class='SingleNode' style='margin-left: 15px' onclick=\"showMarkerSingleSite('" + lst[j][2]+"_"+lst[j][9]+"_"+lst[j][11]+ "')\"></input><span class='folder' onclick=\"NdCellCore('"+lst[j][2]+"')\"> <i class='fa fa-folder' style='color: #08526D'></i></span> <span class='TreeSpan' style='width:395px' onclick=\" PanTreeSites('"+ lst[j][2]+"_"+lst[j][9]+"_"+lst[j][11]+"')\"> <i class='fa fa-server'></i>"+lst[j][10]+"</span>";
+					str+= "<ul><li id='" +lst[j][2]+"_f' class='CellFolder parent_li' style='display:none; margin-left:10px'><span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span> <span class='TreeSpan' style='width:395px'> Cells </span></li></ul></li></ul>"; 
+					const div = document.createElement('ul');
+					div.innerHTML = str;
+					dFrag.appendChild(div);	
+				}
+			}	
+			document.getElementById(selectedNdTyp+"_f").appendChild(dFrag);		
+			//tree_prop_selection("#" +selectedNdTyp+"_f .Node .TreeSpan");
+	        //Tree_PropagationAppendedNodes(selectedNdTyp+"_f .Node");
+		}
+		
+        
+        var nodeId;
+        var SiteId;
+    	$(".Node > .TreeSpan").contextmenu(function(){				
+    		selectedNodeIdContext=$(this).parent().attr('id');
+    		//console.log("selectedNodeIdContext", selectedNodeIdContext); //nodeId_wareId
+    		var parts = selectedNodeIdContext.split('_');		
+    		nodeId = parts[0] + "_" + parts[1]+ "_" + parts[2]; // 2023_NODE_1
+    		if(parts[3] !="null"){
+   				SiteId = parts[3] + "_" + parts[4]+ "_" + parts[5]; // WARE_2021_13730
+    		}else{
+    			SiteId = parts[3]; // WARE_2021_13730
+    		}
+    		menuName=singleNode;			
+    		openContext(selectedNodeIdContext,"",singleNode,event);
+    	});
+    	singleNode = new ContextMenu({
+    		  'theme': 'default',
+    		  'items': [
+    			  {'icon': 'braille', 'name': 'Show BoQ', action: () => {				
+    					Node_Boq(SiteId,nodeId);
+    				}	
+    				   }
+    			]
+    	});
 		}	
 	tree_prop_selection();
 	folder();
@@ -357,21 +409,24 @@ function showMarkersAllSitesOneNt(id) {
    // console.log(" liElements[i].id:  ", liElements[i].id);
   
     var nodeSiteId = liElements[i].id.split("_" + nodeType)[0]; //nodeId_wareId
-   // console.log("nodeSiteId:", nodeSiteId);
+    console.log("nodeSiteId:", nodeSiteId);
     
+    var nodeId = nodeSiteId.split("_")[0] + "_" + nodeSiteId.split("_")[1] + "_" + nodeSiteId.split("_")[2];
+    console.log("nodeId:",  nodeId);
+	/*
     if(nodeSiteId.split("_")[3]!= "null"){
-    	//console.log("not null");
+    	console.log("not null");
     	var wareId = nodeSiteId.split("_")[3] + "_" + nodeSiteId.split("_")[4] + "_" + nodeSiteId.split("_")[5];
-    	//console.log("wareId.....", wareId);
+    	console.log("wareId.....", wareId);
     }else{
-    	//console.log("null");
+    	console.log("null");
     	var wareId = nodeSiteId.split("_")[3];
-        //console.log("wareId null....", wareId);
+        console.log("wareId null....", wareId);
     }
-    
+    */
     //if (isChecked && !markersSites[wareId].getMap()) {
     if (isChecked) {  
-      markersToAdd.push(markersSites[wareId]);
+      markersToAdd.push(markersSites[nodeId]);
       //console.log("markersToAdd..a..", markersToAdd);
     }
   }
@@ -385,9 +440,11 @@ function showMarkersAllSitesOneNt(id) {
 	    $('#network_tree input[type="checkbox"]').prop('checked', false);
   }
 }
-
+  
+  
 
 //var NodeCreated=[];
+/*
 function NdTpNdCellCore(id)
 {
 	//tree_prop_general();	
@@ -413,7 +470,7 @@ function NdTpNdCellCore(id)
 			//console.log("NOT ACTIVE");
 			var paramEnterprise = false;
 		}
-		
+	
 	$.ajax({
 		type: "GET",
 		contentType: "application/json; charset=utf-8",
@@ -478,7 +535,7 @@ function NdTpNdCellCore(id)
 		//	}
 				//});		
 		}
-
+*/
 
 function showMarkerSingleSite(id) {
 	//console.log("id..."+id);
@@ -492,13 +549,13 @@ function showMarkerSingleSite(id) {
 	
 	if(parts[3]!="null"){
 		//console.log("!NULL");
-		var wareId = parts[3] + "_" + parts[4]+ "_" + parts[5]; // WARE_2021_13730
+		//var wareId = parts[3] + "_" + parts[4]+ "_" + parts[5]; // WARE_2021_13730
 		//console.log("wareId..."+wareId);
 		var nodeType = parts[6]; // SRanBs
 		//console.log("nodeType..."+nodeType);
 	}else{
 		//console.log("NULL");
-		var wareId = parts[3]; // WARE_2021_13730
+		//var wareId = parts[3]; // WARE_2021_13730
 		//console.log("wareIdddd..."+wareId);
 		var nodeType = parts[4]; // SRanBs
 		//console.log("nodeTypeeee..."+nodeType);
@@ -521,17 +578,17 @@ function showMarkerSingleSite(id) {
 		}
 		//console.log("markersSites....",markersSites);
 		//console.log("markersSites[wareId]....",markersSites[wareId]);
-		markersSites[wareId].setMap(map);
+		markersSites[nodeId].setMap(map);
 		
 		//console.log("markerClusterSites..b..",markerClusterSites);
-		markerClusterSites.addMarker(markersSites[wareId]);
+		markerClusterSites.addMarker(markersSites[nodeId]);
 		//console.log("markerClusterSites..a..",markerClusterSites);
 		markerClusterSites.repaint();
 	}else{
 		//console.log("unchecked");
 		document.getElementById(nodeType+'_Node').checked = false;		
-		markersSites[wareId].setMap(null);
-		markerClusterSites.removeMarker(markersSites[wareId]);
+		markersSites[nodeId].setMap(null);
+		markerClusterSites.removeMarker(markersSites[nodeId]);
 		markerClusterSites.repaint();
 	}
 }
@@ -543,22 +600,22 @@ function PanTreeSites(id){
 	//console.log("parts ...."+parts);
 	var nodeId = parts[0] + "_" + parts[1]+ "_" + parts[2]; 
 	//console.log("nodeId ...."+nodeId);
-	if(parts[3]!="null"){
-		var selectedItem = parts[3] + "_" + parts[4]+ "_" + parts[5]; 
+	//if(parts[3]!="null"){
+		//var selectedItem = parts[3] + "_" + parts[4]+ "_" + parts[5]; 
 		//console.log("selectedItem  ...."+selectedItem );
-		var nodeType = parts[6]; 
+		///var nodeType = parts[6]; 
 		//console.log("nodeTypenodeType  ...."+nodeType);
-	}else{
-		var selectedItem = parts[3]; 
+	//}else{
+		//var selectedItem = parts[3]; 
 		//console.log("selectedItem  n...."+selectedItem );
-		var nodeType = parts[4]; 
+		//var nodeType = parts[4]; 
 		//console.log("nodeTypenodeType  n...."+nodeType);
-	}
+	//}
 	
-	if(selectedItem!=markersSite)
+	if(nodeId!=markersSite)
 	{
 		var selMarker="";		
-		markerId=selectedItem;				
+		markerId=nodeId;				
 		selMarker=markersSites[markerId];
 		var latSitee = selMarker.getPosition().lat();
 		var lngSitee = selMarker.getPosition().lng();
@@ -571,7 +628,7 @@ function PanTreeSites(id){
 			var otherMarkers=markersSites[markersSite];			
 		}		
 		markersSite="";	
-		markersSite=selectedItem;		
+		markersSite=nodeId;		
 		map.setZoom(15);
 		//console.log("PANNED");
 	}	
@@ -711,6 +768,15 @@ function Sumbitselection(arr){
 	 }
 	 break;	
 	 
+	 case "li_supplierBtn,li_siteBtn,li_nodeBtn,li_cellBtn,li_EnterpriseBtn":
+	 case "siteBtn,nodeBtn,cellBtn,supplierBtn,EnterpriseBtn":		
+	 {
+		 	var param1 = 'Enterprise';
+	 		var url = getContext() + '/Network_SupStNdCell';
+	 		url += '?param1=' + encodeURIComponent(param1);
+	 		window.location.href = url;
+	 }
+	 break;
 	//Supplier-Site-Node type-Node-Cell
 		case "li_supplierBtn,li_siteBtn,li_nodeTypeeBtn,li_nodeBtn,li_cellBtn":
 		case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,supplierBtn":
@@ -719,11 +785,30 @@ function Sumbitselection(arr){
     	}
 	
 		break;	
+		case "li_supplierBtn,li_siteBtn,li_nodeTypeeBtn,li_nodeBtn,li_cellBtn,li_EnterpriseBtn":
+ 		case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,supplierBtn,EnterpriseBtn":
+  		{
+ 		 	var param1 = 'Enterprise';
+	 		var url = getContext() + '/Network_SupStNdTypNdCell';
+	 		url += '?param1=' + encodeURIComponent(param1);
+	 		window.location.href = url;
+     	}
+ 		break;
 		//Supplier-NodeType-Site-Node-Cell
 		 case "li_supplierBtn,li_nodeTypeeBtn,li_siteBtn,li_nodeBtn,li_cellBtn":
 		 case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,supplierBtn":
 		  {
 			 window.location.href = getContext()+"/Network_SupNdTypStNdCell"; 			 
+		    }
+		break;
+		
+		 case "li_supplierBtn,li_nodeTypeeBtn,li_siteBtn,li_nodeBtn,li_cellBtn,li_EnterpriseBtn":
+		 case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,supplierBtn,EnterpriseBtn":
+		  {
+				var param1 = 'Enterprise';
+		 		var url = getContext() + '/Network_SupNdTypStNdCell';
+		 		url += '?param1=' + encodeURIComponent(param1);
+		 		window.location.href = url; 			 
 		    }
 		break;
 		//PO-Site-Items
@@ -733,11 +818,29 @@ function Sumbitselection(arr){
 			 window.location.href = getContext()+"/Network_PoSiteItem"; 			 
 		 	}
 		 	break;
+		 case "li_poBtn,li_siteBtn,li_itemBtn,li_EnterpriseBtn":
+	 	 case "siteBtn,itemBtn,EnterpriseBtn,poBtn":
+	 		 	{	
+	 			var param1 = 'Enterprise';
+		 		var url = getContext() + '/Network_PoSiteItem';
+		 		url += '?param1=' + encodeURIComponent(param1);
+		 		window.location.href = url; 	 
+	 		 	}
+	 		 	break;
 		 	 //PO-Items-Site         
 		  case "li_poBtn,li_itemBtn,li_siteBtn":
 		  case "siteBtn,itemBtn,poBtn":
 		  {	  
 			  window.location.href = getContext()+"/Network_PoItemSite"; 			
+		  }
+		  break;
+		  case "li_poBtn,li_itemBtn,li_siteBtn,li_EnterpriseBtn":
+		  case "siteBtn,itemBtn,EnterpriseBtn,poBtn":
+		  {	  
+			  var param1 = 'Enterprise';
+		 		var url = getContext() + '/Network_PoItemSite';
+		 		url += '?param1=' + encodeURIComponent(param1);
+		 		window.location.href = url; 			
 		  }
 		  break;
 		//Site-PO-Items         
@@ -747,6 +850,17 @@ function Sumbitselection(arr){
 			 window.location.href = getContext()+"/Network_SitePoItem"; 
 		  }
 		  break;
+		  
+		  case "li_siteBtn,li_poBtn,li_itemBtn,li_EnterpriseBtn":
+  		  case "siteBtn,itemBtn,EnterpriseBtn,poBtn":
+  		  {	
+  			var param1 = 'Enterprise';
+	 		var url = getContext() + '/Network_SitePoItem';
+	 		url += '?param1=' + encodeURIComponent(param1);
+	 		window.location.href = url; 
+  		  }
+  		  break;
+		  
 	 		case "li_nodeBtn,li_cellBtn,li_nodeTypeeBtn":
 			 case "nodeBtn,cellBtn,nodeTypeeBtn":
 			 {
@@ -771,6 +885,20 @@ function Sumbitselection(arr){
 	 		 	{	
 	 		 		var param1 = 'Enterprise';
 	 		 		var url = getContext() + '/Network_Node';
+	 		 		url += '?param1=' + encodeURIComponent(param1);
+	 		 		window.location.href = url;
+	 		 	}
+	 		break;
+	 		//Cell
+			 case "cellBtn":
+			{
+				 window.location.href = getContext()+"/Network_Cell"; 
+			 } break;
+			 case "li_cellBtn,li_EnterpriseBtn":
+	 		 case "cellBtn,EnterpriseBtn":		
+	 		 	{	
+	 		 		var param1 = 'Enterprise';
+	 		 		var url = getContext() + '/Network_Cell';
 	 		 		url += '?param1=' + encodeURIComponent(param1);
 	 		 		window.location.href = url;
 	 		 	}

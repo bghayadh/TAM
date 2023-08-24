@@ -90,6 +90,7 @@ function CreateMap(lst,map){
 			map.setCenter(Nairobi);
 			//LatLanMouse(map);
 			//markerClusterSites.setMap(map);
+			
 		if(lst!=null){
 			str="";
 			for(i=0;i<lst.length;i++){
@@ -99,18 +100,33 @@ function CreateMap(lst,map){
 				//var lng=lst[i][4];
 				const pos = new google.maps.LatLng(lst[i][3],lst[i][4]);
 				//var siteName=lst[i][1];
-				var siteName="<b style='font-size:13px;'><u>Site: </u></b>  "+lst[i][1];	    	
-				var listNodesCount="<b style='font-size:13px;'> Number of Nodes: </b>"+lst[i][5];
-				var listCellsCount=lst[i][6]+lst[i][7]+lst[i][8];
-				listCellsCount="<b style='font-size:13px;'>Number of Cells: </b>"+listCellsCount;
-				var data="<div>"+siteName+"</br>"+listNodesCount+"</br>"+listCellsCount+"</div>";
-					create_Marker_Click(lst[i][2],siteName,lst[i][4],lst[i][3],markersSites,markerClusterSites,data);	
-					//SitesCheckFilter(markerId);					
-				}
+				var siteName="<b style='font-size:13px;'><u>Site: </u></b>  "+lst[i][1];
+				
+				if (lst[i][2].includes("WARE")) {
+			        //console.log("Found 'WARE'");
+			        var listNodesCount="<b style='font-size:13px;'> Number of Nodes: </b>"+lst[i][5];
+					var listCellsCount=lst[i][6]+lst[i][7]+lst[i][8];
+					listCellsCount="<b style='font-size:13px;'>Number of Cells: </b>"+listCellsCount;
+					var data="<div>"+siteName+"</br>"+listNodesCount+"</br>"+listCellsCount+"</div>";
+				 }else if (lst[i][2].includes("NODE")) {
+			       // console.log("Found 'NODE'");
+			        var nodeType= "<b style='font-size:13px;'><u>Node Type: </u></b>  "+lst[i][11];	
+			        var nodeName= "<b style='font-size:13px;'><u>Node Name: </u></b>  "+lst[i][10];	
+					var listCellsCount=lst[i][6]+lst[i][7]+lst[i][8];
+					listCellsCount="<b style='font-size:13px;'>Number of Cells: </b>"+listCellsCount;
+					var data="<div>"+siteName+"</br>"+nodeType+"</br>"+nodeName+"</br>"+listCellsCount+"</div>";
+				 } else if (lst[i][2].includes("CELL")) {
+			        //console.log("Found 'CELL'");
+			        var nodeName= "<b style='font-size:13px;'><u>Node Name: </u></b>  "+lst[i][12];	
+			        var cellName= "<b style='font-size:13px;'><u>Cell Name: </u></b>  "+lst[i][10];	
+					var technology= "<b style='font-size:13px;'><u>Technology: </u></b>  "+lst[i][2].split("_")[1];	
+					var data="<div>"+siteName+"</br>"+nodeName+"</br>"+cellName+"</br>"+technology+"</div>";
+				}	
+				create_Marker_Click(lst[i][2],siteName,lst[i][4],lst[i][3],markersSites,markerClusterSites,data);
+			}
 		}
 		var end2 = performance.now();
 }
-
 function create_Marker_Click(Id,Name,Long,Lat,markers,marker_Cluster,data) {
 	//console.log("create merker click");
 	const pos = new google.maps.LatLng(Lat,Long);

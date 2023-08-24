@@ -1287,7 +1287,16 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 			return [order,name];
 		
 		} break;
-
+		case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,supplierBtn,EnterpriseBtn":
+		{	
+			var order =["supplierBtn","siteBtn","nodeTypeeBtn","nodeBtn","cellBtn"];
+			var name = ["Supplier","Site","Node Type","Node","Cell","Enterprise"];
+		
+			return [order,name];
+		
+		} break;
+		////////////////////////////////////////////////
+		
 		case "siteBtn,nodeBtn,cellBtn,supplierBtn":
 		{	
 			var order =["supplierBtn","siteBtn","nodeBtn","cellBtn"];
@@ -1297,6 +1306,15 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 		
 		} break;
 
+		case "siteBtn,nodeBtn,cellBtn,supplierBtn,EnterpriseBtn":
+		{	
+			var order =["supplierBtn","siteBtn","nodeBtn","cellBtn"];
+			var name = ["Supplier","Site","Node","Cell","Enterprise"];
+		
+			return [order,name];
+		
+		} break;
+		
 		case "siteBtn,itemBtn,poBtn":
 		case "poBtn":
 		{	
@@ -1306,7 +1324,18 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 			return [order,name];
 		
 		} break;
-
+		/////////////////////////////////
+		
+		case "siteBtn,itemBtn,EnterpriseBtn,poBtn":
+		case "poBtn":
+		{	
+			var order =["poBtn","siteBtn","itemBtn"];
+			var name = ["PO","Site","Item","Enterprise"];
+		
+			return [order,name];
+		
+		} break;
+/*
 		case "siteBtn,nodeBtn,nodeTypeeBtn,itemBtn,poBtn":
 			{
 
@@ -1315,10 +1344,10 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 
 			return [order,name];
 			}break;
-		
+*/	
 		default:
 		{			
-					alert("Selection is not available");
+			alert("Selection is not available");
 		}
 			
 		 }	

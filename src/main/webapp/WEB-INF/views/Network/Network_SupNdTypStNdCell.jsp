@@ -15,6 +15,13 @@ if(!(lst==null || lst=="")){
 var wareCount=lst.length;
 }
 
+var currentUrl = window.location.href;
+console.log("currentUrl....",currentUrl);
+// Check if the Enterprise exists in the URL
+if (currentUrl.indexOf("Enterprise") !== -1) {
+  console.log("Enterpriseeeee");
+  $('#EnterpriseBtn').toggleClass('activee');
+} 
 
 function initMap() {
 
@@ -323,12 +330,22 @@ function SuppNdTypStNdCellCore(id){
 			//SupNtCreated.push(selectedSupp);
 		var SuppChildrenLength=$("#" +selectedSupp+"_f").find(' > ul > li').length;			
 		if(SuppChildrenLength==0){
+			
+			if($('#EnterpriseBtn').hasClass('activee')){
+				//console.log("ACTIVE ");
+				var paramEnterprise = true;
+			}else{
+				//console.log("NOT ACTIVE");
+				var paramEnterprise = false;
+			}
+			
 			$.ajax({
 			type: "GET",
 			contentType: "application/json; charset=utf-8",
 			url: getContext()+'/FindOnClick_SuppNdTSiteNodeCell',
 			data: {
-			        "selectedSupp":selectedSupp,							                
+			        "selectedSupp":selectedSupp,	
+			        "paramEnterprise": paramEnterprise,
 			},
 			dataType: "json",
 			success: function (data) {							        	
@@ -382,7 +399,7 @@ function showMarkersAllSitesOneNt(id) {
     }
   }
   if (isChecked) {
-	//$('#network_tree input[type="checkbox"][class="AllSuppliers"]').prop('checked', false);
+	$('#network_tree input[type="checkbox"][class="AllSuppliers"]').prop('checked', false);
     markerClusterSites.addMarkers(markersToAdd); // Add all markers at once
     markerClusterSites.repaint();
   } else {
@@ -408,18 +425,29 @@ function RequestingSites(id) {
 			//NtSiteCreated.push(SelectedNodeType);
 		var NdTypeChildrenLength=$("#" +SelectedNodeType+"_" +selectedSupp+"_f").find(' > ul > li').length;							            	
 		if(NdTypeChildrenLength==0){
+			
+			if($('#EnterpriseBtn').hasClass('activee')){
+				//console.log("ACTIVE ");
+				var paramEnterprise = true;
+			}else{
+				//console.log("NOT ACTIVE");
+				var paramEnterprise = false;
+			}
+			
 			$.ajax({
 				type: "GET",
 				contentType: "application/json; charset=utf-8",
 				url: getContext()+'/FindOnClick_SuppNdTSiteNodeCell',
 				data: {
 					"selectedSupp":selectedSupp,
-					"SelectedNodeType":SelectedNodeType
+					"SelectedNodeType":SelectedNodeType,
+					 "paramEnterprise": paramEnterprise,
 				},
 				dataType: "json",
 				success: function (data) {	    
 					if (data != null) {
-						var listSuppSites=data.listSuppSites;
+						var listSuppSites = data.listSuppSites;
+						console.log("listSuppSites...",listSuppSites);
 						if(NdTypeChildrenLength<listSuppSites.length){
 							var dFrag = document.createDocumentFragment();
 							for (n = 0; n < listSuppSites.length; n++) {	
@@ -525,12 +553,17 @@ function PanTreeSites(id){
 function Create_Sites(id){
 	//var sitesNCreated=[];
 	//tree_prop_general();
+	console.log("id.....",id);
+	
 	var splitArray = id.id.split("_");
 	var selectedItem = splitArray[0] + "_" + splitArray[1] + "_" + splitArray[2];
 	var selectedNodeType = splitArray[3];
 	
 	//var parentLi = $("#" + id.id).closest("li.Supplier");		  
 	var selectedSupp = $("#" + id.id).closest("li.Supplier").attr("id");
+	
+	console.log("selectedItem.....",selectedItem);
+	console.log("selectedNodeType.....",selectedNodeType);
 	
 	//tree_prop_general();
 	//tree_Prop("#"+selectedId+ "> span");
@@ -556,6 +589,15 @@ function Create_Sites(id){
 			 //sitesNCreated.push(selectedItem);
 		var siteChildren=$("#"+selectedItem+"_"+selectedNodeType+"_f") .find(' > ul > li').length;
 		if(siteChildren == 0){	
+			
+			if($('#EnterpriseBtn').hasClass('activee')){
+				//console.log("ACTIVE ");
+				var paramEnterprise = true;
+			}else{
+				//console.log("NOT ACTIVE");
+				var paramEnterprise = false;
+			}
+			
 			 $.ajax({
 				  type: "GET",
 				  contentType: "application/json; charset=utf-8",
@@ -563,7 +605,8 @@ function Create_Sites(id){
 				  data: {
 			                "selectedItem":selectedItem,
 							"selectedSupp":selectedSupp,
-							"SelectedNodeType":selectedNodeType               
+							"SelectedNodeType":selectedNodeType,
+							"paramEnterprise": paramEnterprise,
 				 },
 				 dataType: "json",
 				 success: function (data) {			        	
@@ -660,7 +703,15 @@ function Sumbitselection(arr){
 		 window.location.href = getContext()+"/Network_SupStNdCell";
 	 }
 	 break;	
-	 
+	 case "li_supplierBtn,li_siteBtn,li_nodeBtn,li_cellBtn,li_EnterpriseBtn":
+	 case "siteBtn,nodeBtn,cellBtn,supplierBtn,EnterpriseBtn":		
+	 {
+		 	var param1 = 'Enterprise';
+	 		var url = getContext() + '/Network_SupStNdCell';
+	 		url += '?param1=' + encodeURIComponent(param1);
+	 		window.location.href = url;
+	 }
+	 break;
 	//Supplier-Site-Node type-Node-Cell
 		case "li_supplierBtn,li_siteBtn,li_nodeTypeeBtn,li_nodeBtn,li_cellBtn":
  		case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,supplierBtn":
@@ -669,11 +720,30 @@ function Sumbitselection(arr){
      	}
 	
  		break;	
+ 		case "li_supplierBtn,li_siteBtn,li_nodeTypeeBtn,li_nodeBtn,li_cellBtn,li_EnterpriseBtn":
+ 		case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,supplierBtn,EnterpriseBtn":
+  		{
+ 		 	var param1 = 'Enterprise';
+	 		var url = getContext() + '/Network_SupStNdTypNdCell';
+	 		url += '?param1=' + encodeURIComponent(param1);
+	 		window.location.href = url;
+     	}
+ 		break;
  		//Supplier-NodeType-Site-Node-Cell
 		 case "li_supplierBtn,li_nodeTypeeBtn,li_siteBtn,li_nodeBtn,li_cellBtn":
 		 case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,supplierBtn":
 		  {
 			 window.location.href = getContext()+"/Network_SupNdTypStNdCell"; 			 
+		    }
+		break;
+		
+		 case "li_supplierBtn,li_nodeTypeeBtn,li_siteBtn,li_nodeBtn,li_cellBtn,li_EnterpriseBtn":
+		 case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,supplierBtn,EnterpriseBtn":
+		  {
+				var param1 = 'Enterprise';
+		 		var url = getContext() + '/Network_SupNdTypStNdCell';
+		 		url += '?param1=' + encodeURIComponent(param1);
+		 		window.location.href = url; 			 
 		    }
 		break;
 		//PO-Site-Items
@@ -683,11 +753,29 @@ function Sumbitselection(arr){
  			 window.location.href = getContext()+"/Network_PoSiteItem"; 			 
  		 	}
  		 	break;
+		 case "li_poBtn,li_siteBtn,li_itemBtn,li_EnterpriseBtn":
+	 	 case "siteBtn,itemBtn,EnterpriseBtn,poBtn":
+	 		 	{	
+	 			var param1 = 'Enterprise';
+		 		var url = getContext() + '/Network_PoSiteItem';
+		 		url += '?param1=' + encodeURIComponent(param1);
+		 		window.location.href = url; 	 
+	 		 	}
+	 		 	break;
 		 	 //PO-Items-Site         
 		  case "li_poBtn,li_itemBtn,li_siteBtn":
 		  case "siteBtn,itemBtn,poBtn":
 		  {	  
 			  window.location.href = getContext()+"/Network_PoItemSite"; 			
+		  }
+		  break;
+		  case "li_poBtn,li_itemBtn,li_siteBtn,li_EnterpriseBtn":
+		  case "siteBtn,itemBtn,EnterpriseBtn,poBtn":
+		  {	  
+			  var param1 = 'Enterprise';
+		 		var url = getContext() + '/Network_PoItemSite';
+		 		url += '?param1=' + encodeURIComponent(param1);
+		 		window.location.href = url; 			
 		  }
 		  break;
 		//Site-PO-Items         
@@ -697,6 +785,17 @@ function Sumbitselection(arr){
  			 window.location.href = getContext()+"/Network_SitePoItem"; 
  		  }
  		  break;
+ 		  
+ 		  case "li_siteBtn,li_poBtn,li_itemBtn,li_EnterpriseBtn":
+  		  case "siteBtn,itemBtn,EnterpriseBtn,poBtn":
+  		  {	
+  			var param1 = 'Enterprise';
+	 		var url = getContext() + '/Network_SitePoItem';
+	 		url += '?param1=' + encodeURIComponent(param1);
+	 		window.location.href = url; 
+  		  }
+  		  break;
+ 		  
  		case "li_nodeBtn,li_cellBtn,li_nodeTypeeBtn":
 		 case "nodeBtn,cellBtn,nodeTypeeBtn":
 		 {
@@ -721,6 +820,20 @@ function Sumbitselection(arr){
  		 	{	
  		 		var param1 = 'Enterprise';
  		 		var url = getContext() + '/Network_Node';
+ 		 		url += '?param1=' + encodeURIComponent(param1);
+ 		 		window.location.href = url;
+ 		 	}
+ 		break;
+ 		//Cell
+		 case "cellBtn":
+		{
+			 window.location.href = getContext()+"/Network_Cell"; 
+		 } break;
+		 case "li_cellBtn,li_EnterpriseBtn":
+ 		 case "cellBtn,EnterpriseBtn":		
+ 		 	{	
+ 		 		var param1 = 'Enterprise';
+ 		 		var url = getContext() + '/Network_Cell';
  		 		url += '?param1=' + encodeURIComponent(param1);
  		 		window.location.href = url;
  		 	}
