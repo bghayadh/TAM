@@ -496,6 +496,12 @@ $("#loadFiles").click(function() {
     else if(loader_vendor=="Huawei" && loader_domain=="Enterprise"){
 		url='loadFilesEntHW';
     }
+    else if(loader_vendor=="Huawei" && loader_domain=="Transmission" && loader_subdomain == "IP"){
+		url='loadFileIPHuawei';
+    }
+    else if(loader_vendor=="Nokia" && loader_domain=="Transmission" && loader_subdomain == "IP"){
+		url='loadFileIPNokia';
+    }
 	else {
 		url='emptyUrl';
 	}

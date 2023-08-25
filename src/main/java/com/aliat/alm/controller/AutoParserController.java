@@ -38,6 +38,8 @@ import com.aliat.alm.Parser.FirstParsing;
 import com.aliat.alm.Parser.FirstParsing_WIN;
 import com.aliat.alm.Parser.LoadFileDWDMHuawei;
 import com.aliat.alm.Parser.LoadFileDWDMTejas;
+import com.aliat.alm.Parser.LoadFileIPHuawei;
+import com.aliat.alm.Parser.LoadFileIPNokia;
 import com.aliat.alm.Parser.LoadFileMWEricsson;
 import com.aliat.alm.Parser.LoadFileSDHAlcatel;
 import com.aliat.alm.Parser.LoadFileSDHHuawei;
@@ -204,6 +206,40 @@ public class AutoParserController {
 		System.out.println("hello ERC loader");
 //		LoadFilesAOSS_WIN myClass = new LoadFilesAOSS_WIN();
 		LoadFileMWEricsson myClass = new LoadFileMWEricsson();
+		try {
+			myClass.main(null,request.getParameter("vendor"),request.getParameter("domain"),request.getParameter("sub_domain"),request.getParameter("type"));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		rtn.put("Result", "Script is Done");
+		return rtn;
+	}
+	
+	@RequestMapping(value = "/loadFileIPHuawei", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> loadFileIPHuawei(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws SecurityException, IOException, InterruptedException, SQLException, ParseException{
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		System.out.println("hello ERC loader");
+		LoadFileIPHuawei myClass = new LoadFileIPHuawei();
+		try {
+			myClass.main(null,request.getParameter("vendor"),request.getParameter("domain"),request.getParameter("sub_domain"),request.getParameter("type"));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		rtn.put("Result", "Script is Done");
+		return rtn;
+	}
+	
+	@RequestMapping(value = "/loadFileIPNokia", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> loadFileIPNokia(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws SecurityException, IOException, InterruptedException, SQLException, ParseException{
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		System.out.println("hello ERC loader");
+		LoadFileIPNokia myClass = new LoadFileIPNokia();
 		try {
 			myClass.main(null,request.getParameter("vendor"),request.getParameter("domain"),request.getParameter("sub_domain"),request.getParameter("type"));
 		} catch (Exception e) {
