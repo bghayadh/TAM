@@ -15253,6 +15253,9 @@ $("#saveHandhole").click(function () {
 	            var city = excelRows[i].City;
 	            
 	            var  name=excelRows[i].Name;
+	            
+	            var  NetworkLevel=excelRows[i].NetworkLevel;
+	           
 	           
 
 				dictObj.longitude = longitude
@@ -15262,6 +15265,7 @@ $("#saveHandhole").click(function () {
 				dictObj.latitude = latitude
 				dictObj.city = city
 				dictObj.name =name
+				dictObj.NetworkLevel =NetworkLevel
 				//console.log(dictObj);
 				dict.push(dictObj);
 				dictObj = {};   
@@ -15303,8 +15307,8 @@ $("#saveHandhole").click(function () {
 										window[""+data.distributionBoardDetails[i][0]]=[data.distributionBoardDetails[i][0],data.distributionBoardDetails[i][1],data.distributionBoardDetails[i][2],data.distributionBoardDetails[i][3],data.distributionBoardDetails[i][4],data.distributionBoardDetails[i][5], data.distributionBoardDetails[i][6]];
 							
 										str="<ul><li id='"+data.distributionBoardDetails[i][0]+"'  class='DistributionBoard' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+data.distributionBoardDetails[i][3]+" </span></li></ul>";								
-										$("#DistributionBoard_f_"+IdNodeSelectedTemp+"").append(str);
-										
+										//$("#DistributionBoard_f_"+IdNodeSelectedTemp+"").append(str);
+										$("#DistributionBoard_"+data.distributionBoardDetails[i][7]+"__"+IdNodeSelectedTemp).append(str);
 										
 									//tree_prop_general();
 												

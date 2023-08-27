@@ -6430,6 +6430,7 @@ public class PhysicalLayerController {
 							////
 							String BoardName;
 							String name = itemParameters.getDictParameterLoadedDB().get(i).get("name");
+							String NetworkLevel = itemParameters.getDictParameterLoadedDB().get(i).get("NetworkLevel");
 							if (StringUtils.equalsIgnoreCase(name, "") || StringUtils.equalsIgnoreCase(name, null)) {
 								BoardName = sitename + "_DB_" + year;
 							}
@@ -6461,6 +6462,7 @@ public class PhysicalLayerController {
 
 							distributionBoard.setDistributionBoardRowsNum(boardrownum);
 							distributionBoard.setDistributionBoardCapacity(numberofcores);
+							distributionBoard.setdbNetLevel(NetworkLevel);
 
 							distributionBoard.setDistributionBoardSiteName(
 									itemParameters.getDictParameterLoadedDB().get(i).get("siteName") != ""
@@ -6488,6 +6490,8 @@ public class PhysicalLayerController {
 							DBDetail.add(coresnb);
 							DBDetail.add(itemParameters.getDictParameterLoadedDB().get(i).get("siteID"));
 							DBDetail.add(city);
+							DBDetail.add(NetworkLevel);
+							
 
 							DBDetails.add(DBDetail);
 
