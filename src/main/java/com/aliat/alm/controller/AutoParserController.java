@@ -36,19 +36,20 @@ import com.aliat.alm.Parser.CopyParsingDataToALM;
 import com.aliat.alm.Parser.CopyParsingDataToALM_WIN;
 import com.aliat.alm.Parser.FirstParsing;
 import com.aliat.alm.Parser.FirstParsing_WIN;
-import com.aliat.alm.Parser.LoadFileDWDMHuawei;
-import com.aliat.alm.Parser.LoadFileDWDMTejas;
-import com.aliat.alm.Parser.LoadFileIPHuawei;
-import com.aliat.alm.Parser.LoadFileIPNokia;
-import com.aliat.alm.Parser.LoadFileMWEricsson;
-import com.aliat.alm.Parser.LoadFileSDHAlcatel;
-import com.aliat.alm.Parser.LoadFileSDHHuawei;
-//import com.aliat.alm.Parser.LoadFileMWERICSSON;
 import com.aliat.alm.Parser.LoadFilesAOSS;
 import com.aliat.alm.Parser.LoadFilesAOSS_WIN;
-import com.aliat.alm.Parser.LoadFilesEntHuawei;
 import com.aliat.alm.Parser.LoadFilesNokia;
 import com.aliat.alm.services.LoginServices;
+
+import com.aliat.alm.telkom.Parser.LoadFileDWDMHuawei;
+import com.aliat.alm.telkom.Parser.LoadFileDWDMTejas;
+import com.aliat.alm.telkom.Parser.LoadFileIPHuawei;
+import com.aliat.alm.telkom.Parser.LoadFileIPNokia;
+import com.aliat.alm.telkom.Parser.LoadFileMWEricsson;
+import com.aliat.alm.telkom.Parser.LoadFileSDHAlcatel;
+import com.aliat.alm.telkom.Parser.LoadFileSDHHuawei;
+import com.aliat.alm.telkom.Parser.LoadFilesEntHuawei;
+
 
 @Controller
 public class AutoParserController {
