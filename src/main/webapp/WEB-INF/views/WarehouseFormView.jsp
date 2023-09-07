@@ -196,6 +196,11 @@ select {
 	height: 350px;
     margin: 20px;
 }
+
+.nav-link.active {
+ background-color: #FFD966 !important;
+    color: #00757c !important;
+    }
 </style>
 
 </head>
@@ -363,7 +368,7 @@ select {
 			<div class="col-12 col-sm-12 col-lg-12">
 				<ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist"
 					style="background-color: #00757c; margin-top: 0px;">
-					<li class="nav-item"><a class="nav-link active"
+					<li class="tab" class="nav-item"><a class="nav-link active"
 						id="custom-tabs-one-home-tab" data-toggle="tab"
 						href="#custom-tabs-one-home" role="tab"
 						aria-controls="custom-tabs-one-home" aria-selected="true"
@@ -395,8 +400,12 @@ select {
 						href="#custom-tabs-Image" role="tab"
 						aria-controls="#custom-tabs-Image" aria-selected="false"
 						style="color: gold;">IMAGES</a></li>
-
-					<li class="nav-item ml-auto">
+				<li class="nav-item">
+            <a class="nav-link" id="custom-tabs-Inventory-tab" data-toggle="tab"
+               href="#custom-tabs-Inventory" role="tab" aria-controls="custom-tabs-Inventory"
+               aria-selected="false" style="color: gold;">BoQ</a>
+        </li>
+                 	<li class="nav-item ml-auto">
 						<div class="dropdown" Style="display: inline-block;">
 							<button class="btn btn-secondary dropdown-toggle" type="button"
 								id="notifactionDropdown" data-toggle="dropdown"
@@ -1515,6 +1524,99 @@ select {
 
 				<p></p>
 			</div>
+			   <div class="tab-pane fade" id="custom-tabs-Inventory" role="tabpanel"
+				aria-labelledby="custom-tabs-Inventory-tab">
+<div> 
+				<form>
+			
+								
+			
+					    
+					    
+					    
+					    
+					    <div style="height:10px"></div>
+					   
+					    <h4>Inventory</h4>
+						    <table id ="inventorytab" class="table table-striped table-bordered table-sm" style="display:block; height:190px; overflow-y: auto;">
+						       <thead>
+						            <tr class="fixed-headerr">
+						                
+						                <th>Item Code</th>
+						                <th>Item Name</th>
+						                <th>Item Model</th>
+						                <th>Item Part Number</th>
+						                <th>Qantity</th></tr></thead></table></div></form>
+				
+				  <table id ="inventorytab"  class="table table-striped table-bordered table-sm" style="display:block;  overflow-y: auto;">
+						       <thead>
+						            <tr class="fixed-headerr">
+						                
+						                <th>Total Quantity</th>
+						                <th><input id="quan" style="width:240px;" type="text" readonly /></th>
+						                <th>Total Initial Cost</th>
+						                <th><input id="initial" style="width:240px;" type="text" readonly /></th>
+						                <th>Total Depreciation </th>
+						                <th><input id="dep" style="width:240px;" type="text" readonly /></th>
+						                <th>Total Net Cost</th>
+						                   <th><input id="net" style="width:240px;" type="text" readonly /></th>
+						                   </tr></thead></table>
+				 		    <div class="table-responsive-sm"> 
+				 		   
+						               
+					    <div style="height:5px"></div>
+					    <h4>Network</h4>
+						    <style>
+    
+
+    #inventorytab2 td {
+        padding: 2px; /* Add some spacing between cells */
+        width:150px;
+    }
+</style>
+
+<table id="inventorytab2" style="display:block; height:200px;   border-collapse: collapse; overflow-y: auto;">
+    <tbody>
+        <tr>
+            <td><b>Site Name</b></td>
+             </tr>
+        <tr>
+            <td> <b>Nodes</b></td>
+          </tr>
+        <tr>
+            <td><b>Node Type</b></td>
+         </tr>
+        <tr>
+            <td><b>IDU</b></td>
+         </tr>
+        <tr>
+            <td><b>SRansBs</b></td>
+          </tr>
+        <tr>
+            <td><b>G-cell</b></td>
+          </tr>
+        <tr>
+            <td><b>L-cell</b></td>
+        </tr>
+        <tr>
+            <td><b>U-cell</b></td>
+         </tr>
+    </tbody>
+</table>
+						    </div></form>
+				
+				
+				
+				
+				
+				
+				
+				
+				</div>
+
+				<p></p>
+			</div>
+			
 			<!-- end -->
 		</div>
 		</div>
@@ -1611,8 +1713,16 @@ select {
 
 
 <script>
+
+$(document).ready(function () {
+     $("#custom-tabs-Inventory-tab").on("click", function () {
+         BoQ();
+        $("#custom-tabs-Inventory").tab("show");
+    });
+
  
- 
+});
+
 /////////////////////////////////////////// SEND EMAIL  ///////////////////////////////////////////////////////////////
 $("#sendEmail").on("click", function () {
 
@@ -2578,6 +2688,111 @@ function saverowsintables()
 	    location.replace("${pageContext.request.contextPath}/WarehouseListView");
 		 
  })
+ 
+
+ 
+ 
+ 
+ 
+ function BoQ() {
+    $.ajax({
+        type: "GET",
+        url: "${pageContext.request.contextPath}/warehouseBOQ",
+        success: function(response) {
+        	sitename=${siteName}
+        	 nodes=${nodes}
+        	 nodetype=${nodeType}
+        	 SRanBs=${SRanBscount}
+        	 IDU=${IDUcount}
+        	 gcell=${g-cell}
+        	 lcell=${l-cell}
+        	 ucell=${u-cell}
+        	 $("#inventorytab2").empty();
+        	 z="";
+        	z+="<tr>"+
+        	    "<td><b>Site Name</b></td><td >"+sitename+"</td>"+
+        	    "</tr>"+
+        	"<tr>"+
+        	  " <td> <b>Nodes</b></td><td >"+nodes+"</td>"+
+        	 "</tr>"+
+        	"<tr>"+
+        	   "<td><b>Node Type</b></td><td >"+nodetype+"</td>"+
+        	"</tr>"+
+        	"<tr>"+
+        	  " <td><b>IDU</b></td><td >"+IDU+"</td>"+
+        	"</tr>"+
+        	"<tr>"+
+        	   "<td><b>SRansBs</b></td><td >"+SRanBs+"</td>"+
+        	 "</tr>"+
+        	"<tr>"+
+        	  " <td><b>G-cell</b></td><td >"+gcell+"</td>"+
+        	 "</tr>"+
+        	"<tr>"+
+        	   "<td><b>L-cell</b></td><td >"+lcell+"</td>"+
+        	"</tr>"+
+        	"<tr>"+
+        	  "<td><b>U-cell</b></td><td >"+ucell+"</td>"+
+        	"</tr>";
+        	$("#inventorytab2").append(z);
+
+        	quan=${totalquan}
+        	document.getElementById("quan").value = quan;
+
+        	initial=${InitialCost1}
+        	document.getElementById("initial").value = initial;
+
+        	dep=${accumPer1}
+        	document.getElementById("dep").value = dep;
+
+        	net=${totalNetCost1}
+        	document.getElementById("net").value = net;
+
+
+
+
+        	  boqArray1 = [];
+        	    boqArray1 = ${listInventory};
+        	    console.log(boqArray1);
+        	    var c="";
+        	    for (i = 0;i<boqArray1.length;i++){
+        	        console.log(i);
+        	     var itemcode=boqArray1[i][0];
+        	     var itemName=boqArray1[i][1];
+        	     var itemModel=boqArray1[i][2];
+        	     var itemPartNumber=boqArray1[i][3];
+        	     var quantity=boqArray1[i][4];
+
+        	     if(itemcode==null)
+        	    	 itemcode=" ";
+        	     if(itemName==null)
+        	    	 itemName=" ";
+        	     if(itemModel==null)
+        	    	 itemModel=" ";
+        	     if(itemPartNumber==null)
+        	    	 itemPartNumber=" ";
+        	     if(quantity==null)
+        	    	 quantity=" ";
+
+        		 c="<tr>"+
+        		 "<td name='ItemCode'><input name='itmCode' type='text' id = 'itmCode"+i+"'   value='" + itemcode+ "' style='width:290px;' class='form-control text-input' readonly/></td>"+
+        		 "<td name='itemName'><input name='itemName' type='text' id = 'itemName"+i+"'   value='" + itemName+ "' style='width:290px;' class='form-control text-input' readonly/></td>"+
+        		 "<td name='itemModel'><input name='itemModel' type='text' id = 'itemModel"+i+"'   value='" + itemModel+ "' style='width:290px;' class='form-control text-input' readonly/></td>"+
+        		 "<td name='itemPartNumber'><input name='itemPartNumber' type='text' id = 'itemPartNumber"+i+"' value='" + itemPartNumber+ "' style='width:290px;' class='form-control text-input' readonly/></td>"+
+        		 "<td name='quantity'><input name='quantity' type='text' id = 'quantity"+i+"'   value='" + quantity+ "' style='width:290px;' class='form-control text-input' readonly/></td></tr>";
+        		 $("#inventorytab").append(c);  
+        	    } 
+
+        },
+        error: function(xhr, status, error) {
+            console.error("AJAX request error:", error);
+        }
+    });
+}
+
+ 
+ 
+ 
+
  </script>
 
 
