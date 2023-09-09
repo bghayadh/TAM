@@ -50,6 +50,7 @@ import com.aliat.alm.telkom.Parser.LoadFileSDHAlcatel;
 import com.aliat.alm.telkom.Parser.LoadFileSDHHuawei;
 import com.aliat.alm.telkom.Parser.LoadFilesEntHuawei;
 import com.aliat.alm.telkom.Parser.LoadFilesRANZTE;
+import com.aliat.alm.telkom.Parser.LoadFilesRanHuawei;
 
 
 @Controller
@@ -89,6 +90,19 @@ public class AutoParserController {
 //		LoadFilesAOSS_WIN myClass = new LoadFilesAOSS_WIN();
 		LoadFilesAOSS myClass = new LoadFilesAOSS();
 		myClass.main(null);
+		rtn.put("Result", "Script is Done");
+		return rtn;
+	}
+	@ResponseBody
+	public Map<String, Object> loadFilesRanHuawei(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws SecurityException, IOException, InterruptedException, SQLException, ParseException{
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		LoadFilesRanHuawei myClass = new LoadFilesRanHuawei();
+		try {
+			myClass.main(null,request.getParameter("vendor"),request.getParameter("domain"),request.getParameter("sub_domain"),request.getParameter("type"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		rtn.put("Result", "Script is Done");
 		return rtn;
 	}

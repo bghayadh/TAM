@@ -27,3 +27,13 @@ readexcelTransOptSDHACLfrom;C:\ALM_V2_2\Transmission\Optics\SDH\ALCATEL
 copyexcelTransOptSDHACLto;C:\ALM_V2_2\Transmission_Processed\Optics\SDH\ALCATEL
 readfileRANZTEfrom;C:\ALM_V2_6\RAN\ZTE
 copyfileRANZTEto;C:\ALM_V2_6\RAN_Processed\ZTE
+readExcelFileRanHWFrom;C:\ALM4_V2\RAN\HUAWEI
+copyExcelFileRanHWTo;C:\ALM4_V2\RAN_Processed\HUAWEI
+readBscGSMFileRanHWFrom;C:\ALM_V2_2\RAN\HUAWEI\BSC6910GSM
+copyBscGSMFileRanHWTo;C:\ALM_V2_2\RAN_Processed\HUAWEI\BSC6910GSM
+readBscUMTSFileRanHWFrom;C:\ALM_V2_2\RAN\HUAWEI\BSC6910UMTS
+copyBscUMTSFileRanHWTo;C:\ALM_V2_2\RAN_Processed\HUAWEI\BSC6910UMTS
+readBTSFileRanHWFrom;C:\ALM_V2_2\RAN\HUAWEI\BTS3900
+copyBTSFileRanHWTo;C:\ALM_V2_2\RAN_Processed\HUAWEI\BTS3900
+readOSSFileRanHWFrom;C:\ALM_V2_2\RAN\HUAWEI\OSS
+copyOSSFileRanHWTo;C:\ALM_V2_2\RAN_Processed\HUAWEI\OSS
