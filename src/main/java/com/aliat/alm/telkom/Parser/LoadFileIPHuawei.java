@@ -1,5 +1,6 @@
 package com.aliat.alm.telkom.Parser;
 
+import java.text.SimpleDateFormat;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,6 +17,7 @@ import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -28,9 +30,13 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.Date;
 
 public class LoadFileIPHuawei {
 
+	static String node_fk;
 	static String readfileAIMfrom;
 	static String copyfileAIMto;
 	static String sqlQueryStr;
@@ -39,9 +45,11 @@ public class LoadFileIPHuawei {
 	static int totSumRow=0;
 	static int totSumCol=0;
 	static int NodeSeq;
+	static int NodeBoardSeq;
+	static int NodeModuleSeq;
 	static BufferedReader objReader1 = null;
 	static String strCurrentLine1;
-	static String projpath=null;
+	static String projpath = null;
 	static String logpath;
 	static String db1path;
 	static String username1;
@@ -66,6 +74,9 @@ public class LoadFileIPHuawei {
 	static String Gcodeattributid="0";
 	static String vline="0";
 	static String vcodeid ="0";
+	static String vBoardcodeid ="0";
+	static String vModulecodeid ="0";
+	static HashMap<String, String> nodes = new HashMap<String, String>();
 	static HashMap<String, String> vhmap = new HashMap<String, String>();
 	static HashMap<String, String> vhmap2 = new HashMap<String, String>();
 	static HashMap<String, String> vhmap10 = new HashMap<String, String>();
@@ -85,6 +96,22 @@ public class LoadFileIPHuawei {
 	static String nodeName = null;
 	static String hww;
 	static String unique_Node_ID = null;	
+	
+	static String boardName = null;
+	static String boardType = null;
+	static String hardwareVersion = null;
+	static String slotId  = null;
+	static String subrackId  = null;
+	static String biosVersion = null;
+	static String boardStatus = null;
+	static String bomCode = null;
+	//static String manifacturedDate = null;
+	static String serialNumber = null;
+	static String model = null;
+	static String moduleStatus = null;
+	static String nodeIPaddress = null;
+	static ArrayList<String> FileName = new ArrayList<String>();
+	
 	public static void main(String[] args,String vendor,String domain,String sub_domain,String sub_domainType) throws Exception {
 		
 
@@ -111,33 +138,41 @@ public class LoadFileIPHuawei {
 				 db1path=data1[1];
 				 username1=data1[2];
 				 password1=data1[3];
-				 /*System.out.println("db1path found :" + db1path);
-				 System.out.println("username1 found :" + username1);
-				 System.out.println("password1 found :" + password1);*/
+				// System.out.println("db1path found :" + db1path);
+				// System.out.println("username1 found :" + username1);
+				// System.out.println("password1 found :" + password1);
 			 }
 			 if (data.contains("db2path")) {
 				 data1=data.split(";",-1);
 				 db2path=data1[1];
 				 username2=data1[2];
 				 password2=data1[3];
-				/* System.out.println("db2path found :" + db2path);
-				 System.out.println("username2 found :" + username2);
-				 System.out.println("password2 found :" + password2);*/
+				// System.out.println("db2path found :" + db2path);
+				// System.out.println("username2 found :" + username2);
+				// System.out.println("password2 found :" + password2);
 			 }
-			 if (data.contains("readexcelTransIpHuaweifrom")) {
+			// if (data.contains("readexcelTransIpHuaweifrom")) { 
+			 if (data.contains("readfileAIMfrom")) {
+			//	 System.out.println("readfileAIMfrom");					
 				 data1=data.split(";",-1);
 				 readfileAIMfrom = data1[1];
 				 data2=readfileAIMfrom.replace("\\","/").split("/",-1);
 				 vfolderfrom=readfileAIMfrom;
+				 System.out.println("vfolderfrom "+ vfolderfrom);
 				 Gprovider=vendor;
+			//	 System.out.println("Gprovider "+ Gprovider);
 				 Domain=domain;
+			//	 System.out.println("Domain "+ Domain);
 				 subDomain=sub_domain;
+			//	 System.out.println("subDomain "+ subDomain);
 				 subDomainType = sub_domainType;
+			//	 System.out.println("subDomainType "+ subDomainType);
 			 }
-			 if (data.contains("copyexcelTransIpHuaweito")) {
+			 if (data.contains("copyfileAIMto")) {
+			//	 System.out.println("copyfileAIMto");									 
 				 data1=data.split(";",-1);
 				 copyfileAIMto=data1[1];
-				
+			//	 System.out.println("copyfileAIMto "+copyfileAIMto);
 			 }
 			
 		}
@@ -157,9 +192,16 @@ public class LoadFileIPHuawei {
 		 String lofilename="ParserLogIPHW-"+dtf.format(now)+".log";
 		 
 		 File folder = new File(vfolderfrom);
+		 System.out.println("folder....."+folder);
 		 File[] listOfFiles = folder.listFiles();
+	/*
+		 System.out.println("listOfFiles....."+ folder.listFiles());
+		 System.out.println("Number of files: " + listOfFiles.length);
+		 System.out.println("Number of files0 : " + listOfFiles[0]);
+		 System.out.println("Number of files1 : " + listOfFiles[1]); 
+	*/
 		 String fileName1 = null;
-		// System.out.println(vfolderfrom);
+		// System.out.println("fileName1....."+fileName1);
 		 logger = Logger.getLogger("MyLog"); 
 		 logger.setUseParentHandlers(false);
 		
@@ -189,39 +231,49 @@ public class LoadFileIPHuawei {
 			    ResultSet rsinit21 = stmtinit21.executeQuery(sqlStmtinit21);
 			    rsinit21.last();
 		 	    int totalrecinit2 = rsinit21.getRow();
-		 	   rsinit21.beforeFirst();
-		 	   System.out.println(totalrecinit2);
+		 	    rsinit21.beforeFirst();
 		 	  if (totalrecinit2 == 0 ) {
 		 		  PreparedStatement stmtinit = con.prepareStatement("insert into EXECUTE_DOAMIN_VENDOR_FILES (DOMAIN,VENDOR,CREATION_DATE,STATUS,SUB_DOMAIN,TYPE) values ('"+Domain+"', '"+ Gprovider +"',sysdate,'IN PROCESS','"+subDomain+"','"+subDomainType+"')");
 					 stmtinit.executeUpdate();
 					 stmtinit.close();
 					 logger.info("Load Files inprocess...");
 					//looping over all files found in the directory.
+				
 					 for (File file : listOfFiles) {
-						 if(file.isFile()) {
+						// System.out.println("for loop");
+						// System.out.println("listOfFiles >>>>>"+ listOfFiles);
+						// System.out.println("file >>>>>"+ file);
+						if(file.isFile()) {
 							 fileName1 = file.getName().toString();
-							 System.out.println("filename is : "+fileName1);
-							 //splitting to get the file name and extension
-							 String[] data1=fileName1.replace(".","_").split("_");
-							 System.out.println(data1.length);
-							 fileName=data1[0]; fileType=data1[1];
-							
-							 	readfile(fileName1);
-							 	File source = new File(readfileAIMfrom+"\\"+file.getName());
-							    File dest = new File(copyfileAIMto+"\\"+file.getName()+".bkp");
-							     
-							     copyFiles(source,dest);
-							     
-							     deleteFiles(readfileAIMfrom+"\\"+file.getName());
-						 }
-						 
-						
-					 }
-						
-		 	  }else {
-		 		  
+							// System.out.println("filename1 is : "+fileName1); //BOARD							 						 
+							 if(fileName1.contains("Network")) {
+						        	FileName.add(0,fileName1);
+						        }
+						        else {
+						        	FileName.add(fileName1);
+						        }							 
+							 //splitting to get the file name and extension						
+							 	//readfile(fileName1);
+					             	 String[] data1=fileName1.replace(".","_").split("_");
+									// System.out.println(data1.length);
+									// System.out.println("data1 ::: "+data1);
+									 fileName=data1[0]; 
+									 fileType=data1[1];
+									// System.out.println("fileName...."+fileName);	
+									// System.out.println("Done reading file");						 	 
+						 }						
+					 }				
+					 
+					for(int i=0;i<FileName.size();i++) {
+						//System.out.println("i........"+i);
+						//System.out.println("FileName.get(i)........"+FileName.get(i));
+						readfile(FileName.get(i));
+						File source = new File(readfileAIMfrom+"\\"+FileName.get(i));
+						File dest = new File(copyfileAIMto+"\\"+FileName.get(i)+".bkp");
+						copyFiles(source,dest);							     
+						deleteFiles(readfileAIMfrom+"\\"+FileName.get(i));
+					}
 		 	  }
-		 	  
 		 	 GetduplicateFilename(Domain,Gprovider,subDomain);
 		 	 logger.info("Load Files completed");
 		 	// update file status to completed
@@ -231,105 +283,291 @@ public class LoadFileIPHuawei {
 		 
 			  conalm.close();
 			  con.close();
-	}
+}	
 	
 	private static void readfile(String fileName) throws FileNotFoundException, IOException, SQLException {
-		 
-		 //csvparser used to read csv file in order to fill the data in a list of type CSVRecord row by row
+		 //System.out.println("READ FILE");
+		 //System.out.println("fileName..."+fileName);
+
 		 CSVParser csvParser = new CSVParser(new FileReader(vfolderfrom + "\\" + fileName), CSVFormat.DEFAULT);
 		  List<CSVRecord> records = new ArrayList<>();
 		  for (CSVRecord record : csvParser) {
 			  records.add(record);
-		}
-		  
-		  Calendar calendar = new GregorianCalendar();
-		  int year = calendar.get(Calendar.YEAR);
-		  
-		  //select the node active sequence from the seq table in alm.
-		  String sqlStmtinit2 = "select NODE_ACTIVE from SEQ_TABLE";     
-		  stmtp1 = conalm.createStatement();
-		  ResultSet rsinit2 = stmtp1.executeQuery(sqlStmtinit2);
-		  while(rsinit2.next()) {
-			  //store the returned result in a variable to be increased each loop instead of accessing the database all the time
-			  //which lead to exceed the maximum number of open cursors.
-			NodeSeq = rsinit2.getInt("NODE_ACTIVE");
-			//update the seq of the node active based on the size of the list filled from the csv file
-		  	stmtp = conalm.prepareStatement("UPDATE SEQ_TABLE SET NODE_ACTIVE = NODE_ACTIVE +"+(records.size()-4));//records.size()-4) is used to remove the unnecessary header rows in the csv file
-		  	stmtp.executeUpdate();
-		  	stmtp.close();
-		  }
-		  for(int i=4;i<records.size();i++) {
-			  vcodeid=year+"_NODE_"+NodeSeq;
-			  rsinit2.close();
-			  stmtp1.close();
-			  if(records.get(i).get(0).contains("_")) {// if the cell of the csv file contains _ then it may contain site ID
-					if(records.get(i).get(0).split("_").length >= 3) { // if the number of the elements split in the cell according to _ then it may contain site ID
-						siteID = records.get(i).get(0).split("_")[0];
-						char charArray[] = siteID.toCharArray();
-						if(Character.isDigit(charArray[0]) && !Character.isDigit(charArray[siteID.length()-1])) { // if the first character of the possible site id is number then it is a site ID.
-							siteID = siteID;
-							String sqlStmtinit3 = "select WARE_ID,WARE_NAME,LONGITUDE,LATITUDE from WAREHOUSE WHERE SITE_ID='"+siteID+"'";     
-							  stmtp1 = conalm.createStatement();
-							  ResultSet rsinit3 = stmtp1.executeQuery(sqlStmtinit3);
-							  while(rsinit3.next()) {
-								  wareID=rsinit3.getString("WARE_ID");
-								  wareName = rsinit3.getString("WARE_ID");
-								  longi=rsinit3.getString("LONGITUDE");
-								  lat = rsinit3.getString("LATITUDE");
-							  }
-							  rsinit3.close();
-							  stmtp1.close();
-						}else {
-							wareID="";
-							  wareName ="";
-							  longi="";
-							  lat = "";
-							  siteID = "";
-						}
-							
-					}else {
-						wareID="";
-						  wareName ="";
-						  longi="";
-						  lat = "";
-						  siteID = "";
-						//System.out.println("site id and site name don't exists");
+		  									}
+	 
+    		  Calendar calendar = new GregorianCalendar();
+    		  int year = calendar.get(Calendar.YEAR);
+    		
+    	
+    		  //select the node active sequence from the seq table in alm.
+    		  String sqlStmtinit2 = "select NODE_ACTIVE from SEQ_TABLE";     
+    		  stmtp1 = conalm.createStatement();
+    		  ResultSet rsinit2 = stmtp1.executeQuery(sqlStmtinit2);
+    		  while(rsinit2.next()) {
+    			  //store the returned result in a variable to be increased each loop instead of accessing the database all the time
+    			  //which lead to exceed the maximum number of open cursors.
+    			NodeSeq = rsinit2.getInt("NODE_ACTIVE");
+    			//update the seq of the node active based on the size of the list filled from the csv file
+    		  	stmtp = conalm.prepareStatement("UPDATE SEQ_TABLE SET NODE_ACTIVE = NODE_ACTIVE +"+(records.size()-4));//records.size()-4) is used to remove the unnecessary header rows in the csv file
+    		  	stmtp.executeUpdate();
+    		  	stmtp.close();
+    		  }
+    		 if(fileName.contains("Network")){
+    		  for(int i=4;i<records.size();i++) {
+    			  vcodeid = year+"_NODE_"+Gprovider+"_"+Domain+"_"+NodeSeq;
+    			  rsinit2.close();
+    			  stmtp1.close();
+    			  if(records.get(i).get(0).contains("_")) {// if the cell of the csv file contains _ then it may contain site ID
+    					if(records.get(i).get(0).split("_").length >= 3) { // if the number of the elements split in the cell according to _ then it may contain site ID
+    						siteID = records.get(i).get(0).split("_")[0];
+    						char charArray[] = siteID.toCharArray();
+    						if(Character.isDigit(charArray[0]) && !Character.isDigit(charArray[siteID.length()-1])) { // if the first character of the possible site id is number then it is a site ID.
+    							siteID = siteID;
+    							String sqlStmtinit3 = "select WARE_ID,WARE_NAME,LONGITUDE,LATITUDE from WAREHOUSE WHERE SITE_ID='"+siteID+"'";     
+    							  stmtp1 = conalm.createStatement();
+    							  ResultSet rsinit3 = stmtp1.executeQuery(sqlStmtinit3);
+    							  while(rsinit3.next()) {
+    								  wareID=rsinit3.getString("WARE_ID");
+    								  wareName = rsinit3.getString("WARE_ID");
+    								  longi=rsinit3.getString("LONGITUDE");
+    								  lat = rsinit3.getString("LATITUDE");
+    							  }
+    							  rsinit3.close();
+    							  stmtp1.close();
+    						}else {
+    							wareID="";
+    							  wareName ="";
+    							  longi="";
+    							  lat = "";
+    							  siteID = "";
+    						}   							
+    					}else {
+    						wareID="";
+    						  wareName ="";
+    						  longi="";
+    						  lat = "";
+    						  siteID = "";
+    						//System.out.println("site id and site name don't exists");
+    					}
+    				}else {
+    					wareID="";
+    					  wareName ="";
+    					  longi="";
+    					  lat = "";
+    					//System.out.println("site id and site name don't exists");
+    				}
+    			  	  nodeName = records.get(i).get(0);
+    			  	  nodeType="Router";
+    				  nodeModel = records.get(i).get(1);
+    				  IPaddress = records.get(i).get(2);
+    				  softwareVersion = records.get(i).get(3);
+    				  MACaddress = records.get(i).get(4);
+    				  partNumber = records.get(i).get(10);
+    				  commStatus= records.get(i).get(11);
+    				  adminStatus= records.get(i).get(12);
+    				  nodeId=records.get(i).get(2);
+    				  if(!records.get(i).get(23).toString().trim().equalsIgnoreCase("--")) {LCStatus=records.get(i).get(23);}
+    				  gateway=records.get(i).get(20);
+    				  gatewayType=records.get(i).get(19);
+    				  gatewayIP=records.get(i).get(21);
+    				  patchVersion=records.get(i).get(17);
+    				  unique_Node_ID = nodeId+"_HW";
+    				  //System.out.println("DONE NODE ACTIVEEEEEEEEE");
+    				  nodes.put(nodeId, vcodeid);
+    				  	stmtp =  con.prepareStatement("insert into NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,WARE_ID,VENDOR,WARE_NAME,IP_ADDRESS,MAC_ADDRESS,SUB_DOMAIN,SOFTWARE_VERSION,STATUS_1,GATEWAY,GATEWAY_TYPE,GATEWAY_IP,STATUS_2,LONGITUDE,LATITUDE,PATCH_VERSION,PART_NUMBER,SUB_DOMAIN_TYPE)"
+    					 		+ "values('"+vcodeid+"','"+unique_Node_ID+"','"+nodeId+"','"+nodeName+"','"+nodeType+"','"+Domain+"','"+nodeModel+"','"+tech2+"','"+tech3+"','"+tech4+"','"+tech5+"','"+siteID+"','"+circleid+"',sysdate,sysdate,'"+fileType+"','"+fileName+"','"+commStatus+"','"+wareID+"','"+Gprovider+"','"+wareName+"','"+IPaddress+"','"+MACaddress+"','"+subDomain+"','"+softwareVersion+"','"+adminStatus+"','"+gateway+"','"+gatewayType+"','"+gatewayIP+"','"+LCStatus+"','"+longi+"','"+lat+"','"+patchVersion+"','"+partNumber+"','"+subDomainType+"')"); 
+    				  	stmtp.executeUpdate();
+    				  	stmtp.close();
+    			   
+    				  	NodeSeq++;    		  
+    		  }
+    		 }else{
+    		  
+    		//select the node board sequence from the seq table in alm.
+    		  String sqlStmtinit21M= "select NODE_BOARD from SEQ_TABLE";     
+    		  stmtp1 = conalm.createStatement();
+    		  ResultSet rsinit21M = stmtp1.executeQuery(sqlStmtinit21M);
+    		  while(rsinit21M.next()) {
+    			NodeBoardSeq = rsinit21M.getInt("NODE_BOARD");
+    		  	stmtp = conalm.prepareStatement("UPDATE SEQ_TABLE SET NODE_BOARD = NODE_BOARD +"+(records.size()-4));
+    		  	stmtp.executeUpdate();
+    		  	stmtp.close();
+    		  }
+    		  
+    		//select the node module sequence from the seq table in alm.
+    		  String sqlStmtinit21B= "select NODE_MODULE from SEQ_TABLE";     
+    		  stmtp1 = conalm.createStatement();
+    		  ResultSet rsinit21B = stmtp1.executeQuery(sqlStmtinit21B);
+    		  while(rsinit21B.next()) {
+    			NodeModuleSeq = rsinit21B.getInt("NODE_MODULE");
+    		  	stmtp = conalm.prepareStatement("UPDATE SEQ_TABLE SET NODE_MODULE = NODE_MODULE +"+(records.size()-4));
+    		  	stmtp.executeUpdate();
+    		  	stmtp.close();
+    		  }
+    		  
+    	 for(int i=4;i<records.size();i++) {
+    			  //System.out.println("for");   			 
+    			  String description = records.get(i).get(24);
+    			  boardName = records.get(i).get(1);
+    			  //System.out.println("boardName;;;;; "+boardName); 
+    			  
+    		if (description.contains("fan") || description.contains("module") || description.equals("") && (boardName.contains("fan") || boardName.contains("module"))) {  				  
+  			     // The element contains "fan" or "module" --> we should fill the data in table NODE_MODULE
+  				 //System.out.println("filling in node module - contains fan/module");  				  	
+  	    		  vModulecodeid= year+"_NODE_"+Gprovider+"_"+Domain+"_MOD_"+NodeModuleSeq;  	
+  	    		 //System.out.println("vModulecodeid......."+vModulecodeid);
+  	    		  nodeIPaddress = records.get(i).get(5);
+  	    		  hardwareVersion = records.get(i).get(10);
+   				 //System.out.println("hardwareVersion......."+hardwareVersion);
+ 				  serialNumber=records.get(i).get(12);		
+ 				  moduleStatus= records.get(i).get(19);
+				  //softwareVersion = records.get(i).get(11);  
+ 				 //System.out.println("softwareVersion......."+softwareVersion);
+ 				// if (softwareVersion.isEmpty() || softwareVersion.equals("--")) {
+ 				//	softwareVersion = "null";
+ 					 //System.out.println("softwareVersion a: "+softwareVersion);         				
+			    // }
+ 				/*  
+ 				// dividing the software version into bootROM and bootLOAD and the version
+		        String[] words = softwareVersion.split("\\s+");  // Split the input string into words
+		        System.out.println("words....."+words);
+		        String bootRomVersion = null;
+		        System.out.println("bootRomVersion....."+bootRomVersion);
+		        String bootLoadVersion = null;
+		        System.out.println("bootLoadVersion....."+bootLoadVersion);
+		        for (var k = 0; k < words.length - 2; k++) {
+		            if (words[k].equals("BootROM") && words[k + 1].equals("ver")) {
+		                bootRomVersion = words[k + 2];
+		            } else if (words[k].equals("BootLoad") && words[k + 1].equals("ver")) {
+		                bootLoadVersion = words[k + 2];
+		            } else if(words[k + 1].equals("Version")){
+			            	softwareVersion = words[k + 2];
+		            }
+		        }
+		        System.out.println("BootROM version: " + bootRomVersion);
+		        System.out.println("BootLoad version: " + bootLoadVersion);
+		        System.out.println("Soft version: " + softwareVersion);	
+		        */
+		        node_fk = nodes.get(records.get(i).get(5));
+		        //System.out.println("node_fk: " + node_fk);	
+		        
+		        stmtp =  con.prepareStatement("insert into NODE_MODULE (MODULE_ID,SERIALNUMBER,NODE_PK,FILENAME,STATUS,DOMAIN,VENDOR,HARDWAREVERSION)"
+     					 		+ "values('"+ vModulecodeid+"','"+ serialNumber+"','"+node_fk+"','"+ fileName+"','"+moduleStatus+"','"+Domain+"','"+Gprovider+"','"+hardwareVersion+"')"); 
+     				  	stmtp.executeUpdate();
+     				  	stmtp.close();
+     				  	
+     				  	NodeModuleSeq++;
+     				  	
+    			  }else if(!description.contains("fan") && !description.contains("module")){
+    				 // --> we should fill the data in table NODE_BOARD
+    				  //System.out.println("filling in node board - !contains fan/module");    				  
+    	    		vBoardcodeid= year+"_NODE_"+Gprovider+"_"+Domain+"_BRD_"+NodeBoardSeq;   				
+     				boardType = records.get(i).get(3);
+     				subrackId = records.get(i).get(8);
+     				slotId = records.get(i).get(9);
+     			    hardwareVersion = records.get(i).get(10);
+     				if (hardwareVersion.isEmpty() || hardwareVersion.equals("--")) {
+     					hardwareVersion = "null";
+     				}
+     			    //softwareVersion = records.get(i).get(11);
+     				// System.out.println("softwareVersion b: "+softwareVersion);
+     				//if (softwareVersion.isEmpty() || softwareVersion.equals("--")) {
+     				//	softwareVersion = "null";
+     				// }
+     				/*  
+       				// dividing the software version into bootROM and bootLOAD and the version
+  			        String[] wordsBoard = softwareVersion.split("\\s+");  // Split the input string into words
+  			        System.out.println("wordsboard....."+wordsBoard.toString());
+  			        String bootRomVersionBoard = null;
+  			        System.out.println("bootRomVersionboard....."+bootRomVersionBoard);
+  			        String bootLoadVersionBoard = null;
+  			        System.out.println("bootLoadVersionboard....."+bootLoadVersionBoard);
+  			        
+  			        for (var k = 0; k < wordsBoard.length - 2; k++) {
+  			        	System.out.println("FOR LOOP WORDS BOARD");
+  			            if (wordsBoard[k].equals("BootROM") && wordsBoard[k + 1].equals("ver")) {
+  			            	System.out.println(".....BootROM.....");
+  			                bootRomVersionBoard = wordsBoard[k + 2];
+  			            } else if (wordsBoard[k].equals("BootLoad") && wordsBoard[k + 1].equals("ver")) {
+  			            	System.out.println(".....BootLoad.....");
+  			                bootLoadVersionBoard = wordsBoard[k + 2];
+  			            } else if(wordsBoard[k + 1].equals("Version")){
+  			            	System.out.println(".....pure.....");
+  			            	softwareVersion =  wordsBoard[k + 2];
+  			            }
+  			        }
+  			        System.out.println("BootROM versionnnnnn: " + bootRomVersionBoard);
+  			        System.out.println("BootLoad versionnnnnnnn: " + bootLoadVersionBoard);
+  			        System.out.println("Soft versionnnnnn: " + softwareVersion);				  
+       				*/ 
+  			        nodeIPaddress = records.get(i).get(5);
+  			        serialNumber=records.get(i).get(12);		
+     				model=records.get(i).get(15);
+     				biosVersion= records.get(i).get(18);
+     				boardStatus= records.get(i).get(19);
+     				bomCode=records.get(i).get(22);
+   
+     				node_fk = nodes.get(records.get(i).get(5));
+     				//System.out.println(" node_fkk "+node_fk);  
+         			
+     			// Assuming records1.get(i).get(25) contains the date as a String
+     			String manifacturedDate = records.get(i).get(25);
+     			//System.out.println("manifacturedDate : "+manifacturedDate);  
+     			//SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // Adjust the date format as needed    	     			
+			       
+     			if (manifacturedDate != null && !manifacturedDate.isEmpty() && !manifacturedDate.contains("--")) {
+     			    try {
+     			        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // Define the expected date format
+     			        Date manufacturedDate = dateFormat.parse(manifacturedDate); // Parse the date string
+     			        java.sql.Date sqlManufacturedDate = new java.sql.Date(manufacturedDate.getTime()); // Convert to java.sql.Date
 
-					}
-				}else {
-					wareID="";
-					  wareName ="";
-					  longi="";
-					  lat = "";
-					//System.out.println("site id and site name don't exists");
+     			        String sql = "INSERT INTO NODE_BOARD (BOARD_ID, SUBRACKNO, SLOTNO, BOARDNAME, BOARDTYPE, SERIALNUMBER, MODEL, HARDWAREVERSION, DATEOFMANUFACTURE, BIOSVER, BOMCODE, NODE_PK, FILENAME, STATUS, DOMAIN, VENDOR)"
+        			            + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-				}
-			  	  nodeName = records.get(i).get(0);
-			  	  nodeType="Router";
-				  nodeModel = records.get(i).get(1);
-				  IPaddress = records.get(i).get(2);
-				  softwareVersion = records.get(i).get(3);
-				  MACaddress = records.get(i).get(4);
-				  partNumber = records.get(i).get(10);
-				  commStatus= records.get(i).get(11);
-				  adminStatus= records.get(i).get(12);
-				  nodeId=records.get(i).get(2);
-				  if(!records.get(i).get(23).toString().trim().equalsIgnoreCase("--")) {LCStatus=records.get(i).get(23);}
-				  gateway=records.get(i).get(20);
-				  gatewayType=records.get(i).get(19);
-				  gatewayIP=records.get(i).get(21);
-				  patchVersion=records.get(i).get(17);
-				  unique_Node_ID = nodeId+"_";
-				  
-				  	stmtp =  con.prepareStatement("insert into NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,WARE_ID,VENDOR,WARE_NAME,IP_ADDRESS,MAC_ADDRESS,SUB_DOMAIN,SOFTWARE_VERSION,STATUS_1,GATEWAY,GATEWAY_TYPE,GATEWAY_IP,STATUS_2,LONGITUDE,LATITUDE,PATCH_VERSION,PART_NUMBER,SUB_DOMAIN_TYPE)"
-					 		+ "values('"+vcodeid+"','"+unique_Node_ID+"','"+nodeId+"','"+nodeName+"','"+nodeType+"','"+Domain+"','"+nodeModel+"','"+tech2+"','"+tech3+"','"+tech4+"','"+tech5+"','"+siteID+"','"+circleid+"',sysdate,sysdate,'"+fileType+"','"+fileName+"','"+commStatus+"','"+wareID+"','"+Gprovider+"','"+wareName+"','"+IPaddress+"','"+MACaddress+"','"+subDomain+"','"+softwareVersion+"','"+adminStatus+"','"+gateway+"','"+gatewayType+"','"+gatewayIP+"','"+LCStatus+"','"+longi+"','"+lat+"','"+patchVersion+"','"+partNumber+"','"+subDomainType+"')"); 
-				  	stmtp.executeUpdate();
-				  	stmtp.close();
-				  	
-				  	NodeSeq++;
-			 
-		  }
-	}
+        			        PreparedStatement stmtp = con.prepareStatement(sql);
+
+        			        // Set values for parameters
+        			        stmtp.setString(1, vBoardcodeid);
+        			        stmtp.setString(2, subrackId);
+        			        stmtp.setString(3, slotId);
+        			        stmtp.setString(4, boardName);
+        			        stmtp.setString(5, boardType);
+        			        stmtp.setString(6, serialNumber);
+        			        stmtp.setString(7, model);
+        			        stmtp.setString(8, hardwareVersion);
+        			        stmtp.setDate(9, sqlManufacturedDate); 
+        			        //stmtp.setString(10, softwareVersion);
+        			        stmtp.setString(10, biosVersion);
+        			        stmtp.setString(11, bomCode);
+        			        stmtp.setString(12, node_fk);
+        			        stmtp.setString(13, fileName);
+        			        stmtp.setString(14, boardStatus);
+        			        stmtp.setString(15, Domain);
+        			        stmtp.setString(16, Gprovider);
+        			       // stmtp.setString(18, bootRomVersionBoard);
+        			       // stmtp.setString(19, bootLoadVersionBoard);
+        			        stmtp.executeUpdate();
+        			        stmtp.close();
+     			    } catch (Exception e) {
+     			        // Handle the case where date parsing fails or other exceptions occur
+     			        e.printStackTrace(); // Or log an error
+     			    }
+     			}else {
+     				try {
+     				    //System.out.println("manifacturedDateeee : "+manifacturedDate);
+     					stmtp =  con.prepareStatement("insert into NODE_BOARD (BOARD_ID,SUBRACKNO,SLOTNO,BOARDNAME,BOARDTYPE,SERIALNUMBER,MODEL,HARDWAREVERSION,DATEOFMANUFACTURE,BIOSVER,BOMCODE,NODE_PK,FILENAME,STATUS,DOMAIN,VENDOR)"
+     					 		+ "values('"+vBoardcodeid+"','"+subrackId+"','"+slotId+"','"+boardName+"','"+ boardType+"','"+ serialNumber+"','"+ model+"','"+hardwareVersion+"','','"+biosVersion+"','"+ bomCode+"','"+node_fk+"','"+fileName+"','"+boardStatus+"','"+Domain+"','"+Gprovider+"')"); 
+     					stmtp.executeUpdate();
+     				  	stmtp.close();  	
+     				} catch (Exception e) {
+    			        e.printStackTrace(); // Or log an error
+    			    }
+     			}	
+     			NodeBoardSeq++;
+    		}		  
+    	 }
+    }
+}
 	
 	private static void GetduplicateFilename(String vdomain , String vvendor,String subDomain) throws SQLException  {
 		Statement stmt1 = null;
