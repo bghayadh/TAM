@@ -49,6 +49,7 @@ import com.aliat.alm.telkom.Parser.LoadFileMWEricsson;
 import com.aliat.alm.telkom.Parser.LoadFileSDHAlcatel;
 import com.aliat.alm.telkom.Parser.LoadFileSDHHuawei;
 import com.aliat.alm.telkom.Parser.LoadFilesEntHuawei;
+import com.aliat.alm.telkom.Parser.LoadFilesRANZTE;
 
 
 @Controller
@@ -247,6 +248,19 @@ public class AutoParserController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		rtn.put("Result", "Script is Done");
+		return rtn;
+	}
+	
+	@RequestMapping(value = "/loadFilesRANZTE", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> loadFilesRANZTE(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws SecurityException, IOException, InterruptedException, SQLException, ParseException {
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		System.out.println("loader ZTE RAN ");
+		System.out.println("loader ZTE RAN "+request.getParameter("vendor")+", "+request.getParameter("domain")+", "+request.getParameter("sub_domain"));
+		LoadFilesRANZTE myClass = new LoadFilesRANZTE();
+		myClass.main(null, request.getParameter("vendor"), request.getParameter("domain"), request.getParameter("sub_domain") );
 		rtn.put("Result", "Script is Done");
 		return rtn;
 	}

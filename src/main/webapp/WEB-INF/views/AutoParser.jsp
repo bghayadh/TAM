@@ -475,8 +475,9 @@ $("#loadFiles").click(function() {
 	
 	if(loader_vendor=="Huawei"&& loader_domain=="Ran"){
 		url='loadFilesAOSS';
-	}
-	else if(loader_vendor=="Nokia" && loader_domain=="Ran"){
+	}else if(loader_vendor=="zte" && loader_domain=="Ran"){
+		url='loadFilesRANZTE';
+	}else if(loader_vendor=="Nokia" && loader_domain=="Ran"){
 		url='loadFilenokia';
 	}else if(loader_vendor=="Huawei" && loader_domain=="Transmission" && loader_subdomain == "FiberOptic" && loader_type == "DWDM"){
 		url='loadFileDWDMhuawei';

@@ -25,3 +25,5 @@ readexcelTransOptSDHHWfrom;C:\ALM_V2_2\Transmission\Optics\SDH\HUAWEI
 copyexcelTransOptSDHHWto;C:\ALM_V2_2\Transmission_Processed\Optics\SDH\HUAWEI
 readexcelTransOptSDHACLfrom;C:\ALM_V2_2\Transmission\Optics\SDH\ALCATEL
 copyexcelTransOptSDHACLto;C:\ALM_V2_2\Transmission_Processed\Optics\SDH\ALCATEL
+readfileRANZTEfrom;C:\ALM_V2_6\RAN\ZTE
+copyfileRANZTEto;C:\ALM_V2_6\RAN_Processed\ZTE
