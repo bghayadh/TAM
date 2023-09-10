@@ -586,7 +586,7 @@ public class LoadFilesEntHuawei  {
 				Iterator<Cell> cellIterator=nextRow.cellIterator();
 				int rowIndex = nextRow.getRowNum();
 			
-				if(rowIndex >0) {
+				if(rowIndex >3) {
 				while(cellIterator.hasNext()) {
 					Cell nextCell=cellIterator.next();
 					int columnIndex=nextCell.getColumnIndex();
