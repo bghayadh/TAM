@@ -131,6 +131,8 @@ public class PhysicalLayerController {
 					List<Object[]> newListPt = new ArrayList<Object[]>();
 					List<Object[]> EntrepriseList = new ArrayList<Object[]>();
 					List<Object[]> TransmissionList = new ArrayList<Object[]>();
+					List<Object[]> CoreList = new ArrayList<Object[]>();
+					List<Object[]> AccessList = new ArrayList<Object[]>();
 
 					// System.out.println("url is "+request.getParameter("selectedField"));
 					String checkedOption = "all";
@@ -1622,6 +1624,12 @@ public class PhysicalLayerController {
 						TransmissionList =  session.createSQLQuery(
 								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID FROM NODE_ACTIVE  WHERE DOMAIN = 'Transmission'").list();
 						
+						CoreList =  session.createSQLQuery(
+								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID FROM NODE_ACTIVE  WHERE DOMAIN = 'Core'").list();
+						
+						AccessList =  session.createSQLQuery(
+								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID FROM NODE_ACTIVE  WHERE DOMAIN = 'Access'").list();
+						
 					}
 
 					LinkedHashMap<String, List<?>> physicalLayerData = new LinkedHashMap<String, List<?>>();// linkedHashmap
@@ -1725,6 +1733,8 @@ public class PhysicalLayerController {
 					physicalLayerList.put("Trench", trenchList);
 					physicalLayerList.put("Node", EntrepriseList);
 					physicalLayerList.put("Transmission", TransmissionList);
+					physicalLayerList.put("Core", CoreList);
+					physicalLayerList.put("Access", AccessList);
 					physicalLayerList.put("duct", ductList);
 					physicalLayerData.put("trench_Auxiliary", trenchAuxiliary_Data);
 					physicalLayerData.put("strands_Auxiliaries", strandsAuxiliaries);
@@ -2971,11 +2981,11 @@ public class PhysicalLayerController {
 		return rtn;
 	}
 	
-	// Transmission details
+	// Core details
 		@SuppressWarnings("unchecked")
-		@RequestMapping(value = "/findTransmissionDetails", method = RequestMethod.GET)
+		@RequestMapping(value = "/findCoreDetails", method = RequestMethod.GET)
 		@ResponseBody
-		public Map<String, Object> findTransmissionDetails(Locale locale, Model model, HttpServletRequest request,
+		public Map<String, Object> findCoreDetails(Locale locale, Model model, HttpServletRequest request,
 				HttpServletResponse response) throws JsonProcessingException {
 			
 
@@ -2989,20 +2999,20 @@ public class PhysicalLayerController {
 			if (session != null && session.isOpen()) {
 				tx = session.beginTransaction();
 
-				String selectedTransmissionIdContext = request.getParameter("selectedTransmissionIdContext");
+				String selectedCoreIdContext = request.getParameter("selectedCoreIdContext");
 				try {
-					Object[] TransmissionNodesDetails = (Object[]) session.createSQLQuery(
-							"SELECT NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_SOURCE,NODE_MODEL,SITE_ID,WARE_ID,TO_CHAR(CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(UPDATE_DATE, 'MM/dd/YYYY HH:MI AM'),LONGITUDE,LATITUDE FROM NODE_ACTIVE  WHERE DOMAIN = 'Transmission' AND NODE_PK ='"+selectedTransmissionIdContext+"'").uniqueResult();
+					Object[] CoreNodesDetails = (Object[]) session.createSQLQuery(
+							"SELECT NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_SOURCE,NODE_MODEL,SITE_ID,WARE_ID,TO_CHAR(CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(UPDATE_DATE, 'MM/dd/YYYY HH:MI AM'),LONGITUDE,LATITUDE FROM NODE_ACTIVE  WHERE DOMAIN = 'Core' AND NODE_PK ='"+selectedCoreIdContext+"'").uniqueResult();
 					
-					rtn.put("TransmissionNodesDetails", TransmissionNodesDetails);
+					rtn.put("CoreNodesDetails", CoreNodesDetails);
 
 				} catch (Exception e) {
 					sw = new StringWriter(); 
 					e.printStackTrace(new PrintWriter(sw));
 					exceptionAsString = sw.toString();
-					logger.finest("Error in findTransmissionDetails due to \n " + exceptionAsString);
-					logger.info("Error in findTransmissionDetails due to \n " + exceptionAsString);
-					rtn.put("TransmissionNodesDetails", null);
+					logger.finest("Error in findCoreDetails due to \n " + exceptionAsString);
+					logger.info("Error in findCoreDetails due to \n " + exceptionAsString);
+					rtn.put("CoreNodesDetails", null);
 
 				} finally {
 					if (session != null && session.isOpen()) {
@@ -3013,6 +3023,92 @@ public class PhysicalLayerController {
 			}
 			return rtn;
 		}
+	
+		// Access details
+				@SuppressWarnings("unchecked")
+				@RequestMapping(value = "/findAccessDetails", method = RequestMethod.GET)
+				@ResponseBody
+				public Map<String, Object> findAccessDetails(Locale locale, Model model, HttpServletRequest request,
+						HttpServletResponse response) throws JsonProcessingException {
+					
+
+					Map<String, Object> rtn = new LinkedHashMap<>();
+
+					session = almsessions.getSession();
+					if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+						rtn.put("Login", LoginServices.checkSession(request, response));
+						return rtn;
+					}
+					if (session != null && session.isOpen()) {
+						tx = session.beginTransaction();
+
+						String selectedRanIdContext = request.getParameter("selectedRanIdContext");
+						try {
+							Object[] AccessNodesDetails = (Object[]) session.createSQLQuery(
+									"SELECT NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_SOURCE,NODE_MODEL,SITE_ID,WARE_ID,TO_CHAR(CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(UPDATE_DATE, 'MM/dd/YYYY HH:MI AM'),LONGITUDE,LATITUDE FROM NODE_ACTIVE  WHERE DOMAIN = 'Access' AND NODE_PK ='"+selectedRanIdContext+"'").uniqueResult();
+							
+							rtn.put("AccessNodesDetails", AccessNodesDetails);
+
+						} catch (Exception e) {
+							sw = new StringWriter(); 
+							e.printStackTrace(new PrintWriter(sw));
+							exceptionAsString = sw.toString();
+							logger.finest("Error in findAccessDetails due to \n " + exceptionAsString);
+							logger.info("Error in findAccessDetails due to \n " + exceptionAsString);
+							rtn.put("AccessNodesDetails", null);
+
+						} finally {
+							if (session != null && session.isOpen()) {
+								tx.commit();
+								session.close();
+							}
+						}
+					}
+					return rtn;
+				}
+				
+				// Transmission details
+				@SuppressWarnings("unchecked")
+				@RequestMapping(value = "/findTransmissionDetails", method = RequestMethod.GET)
+				@ResponseBody
+				public Map<String, Object> findTransmissionDetails(Locale locale, Model model, HttpServletRequest request,
+						HttpServletResponse response) throws JsonProcessingException {
+					
+
+					Map<String, Object> rtn = new LinkedHashMap<>();
+
+					session = almsessions.getSession();
+					if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+						rtn.put("Login", LoginServices.checkSession(request, response));
+						return rtn;
+					}
+					if (session != null && session.isOpen()) {
+						tx = session.beginTransaction();
+
+						String selectedTransmissionIdContext = request.getParameter("selectedTransmissionIdContext");
+						try {
+							Object[] TransmissionNodesDetails = (Object[]) session.createSQLQuery(
+									"SELECT NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_SOURCE,NODE_MODEL,SITE_ID,WARE_ID,TO_CHAR(CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(UPDATE_DATE, 'MM/dd/YYYY HH:MI AM'),LONGITUDE,LATITUDE FROM NODE_ACTIVE  WHERE DOMAIN = 'Transmission' AND NODE_PK ='"+selectedTransmissionIdContext+"'").uniqueResult();
+							
+							rtn.put("TransmissionNodesDetails", TransmissionNodesDetails);
+
+						} catch (Exception e) {
+							sw = new StringWriter(); 
+							e.printStackTrace(new PrintWriter(sw));
+							exceptionAsString = sw.toString();
+							logger.finest("Error in findTransmissionDetails due to \n " + exceptionAsString);
+							logger.info("Error in findTransmissionDetails due to \n " + exceptionAsString);
+							rtn.put("TransmissionNodesDetails", null);
+
+						} finally {
+							if (session != null && session.isOpen()) {
+								tx.commit();
+								session.close();
+							}
+						}
+					}
+					return rtn;
+				}
 		
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/entrNodeSave", method = RequestMethod.POST)
@@ -3147,6 +3243,104 @@ public class PhysicalLayerController {
 				exceptionAsString = sw.toString();
 				logger.finest("Error in transNodeSave due to \n " + exceptionAsString);
 				logger.info("Error in transNodeSave due to \n " + exceptionAsString);
+				rtn.put("transNode_pk", null);
+			}
+
+			finally {
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+				}
+			}
+		}
+		return rtn;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/coreNodeSave", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> coreNodeSave(Locale locale, Model model, @ModelAttribute ItemParameters itemParameters,
+			HttpServletRequest request, HttpServletResponse response) {
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		session = almsessions.getSession();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", "redirect:/");
+			return rtn;
+		}
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			try {
+				NodeActive nodeActive = new NodeActive();
+				String coreNode_pk = request.getParameter("coreNode_pk");
+				
+				nodeActive.setNodePK(coreNode_pk);
+				nodeActive.setUniNodeID(request.getParameter("coreUniqNodeId"));
+				nodeActive.setNodeID(request.getParameter("coreNodeId"));
+				nodeActive.setNodeName(request.getParameter("coreNodeName"));
+				nodeActive.setNodeType(request.getParameter("coreNodeType"));
+				nodeActive.setNodeSrc(request.getParameter("coreNodeSource"));
+				nodeActive.setNodeModel(request.getParameter("coreNodeModel"));
+				nodeActive.setDomain(request.getParameter("coreNodeDomin"));
+				nodeActive.setSiteID(request.getParameter("coreSiteId_node"));
+				nodeActive.setWareID(request.getParameter("coreWareId_node"));
+
+				rtn.put("coreNode_pk", coreNode_pk);
+			} catch (Exception e) {
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in coreNodeSave due to \n " + exceptionAsString);
+				logger.info("Error in coreNodeSave due to \n " + exceptionAsString);
+				rtn.put("transNode_pk", null);
+			}
+
+			finally {
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+				}
+			}
+		}
+		return rtn;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/ranNodeSave", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> ranNodeSave(Locale locale, Model model, @ModelAttribute ItemParameters itemParameters,
+			HttpServletRequest request, HttpServletResponse response) {
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		session = almsessions.getSession();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", "redirect:/");
+			return rtn;
+		}
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			try {
+				NodeActive nodeActive = new NodeActive();
+				String ranNode_pk = request.getParameter("ranNode_pk");
+				
+				nodeActive.setNodePK(ranNode_pk);
+				nodeActive.setUniNodeID(request.getParameter("ranUniqNodeId"));
+				nodeActive.setNodeID(request.getParameter("ranNodeId"));
+				nodeActive.setNodeName(request.getParameter("ranNodeName"));
+				nodeActive.setNodeType(request.getParameter("ranNodeType"));
+				nodeActive.setNodeSrc(request.getParameter("ranNodeSource"));
+				nodeActive.setNodeModel(request.getParameter("ranNodeModel"));
+				nodeActive.setDomain(request.getParameter("ranNodeDomin"));
+				nodeActive.setSiteID(request.getParameter("ranSiteId_node"));
+				nodeActive.setWareID(request.getParameter("ranWareId_node"));
+
+				rtn.put("ranNode_pk", ranNode_pk);
+			} catch (Exception e) {
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in ranNodeSave due to \n " + exceptionAsString);
+				logger.info("Error in ranNodeSave due to \n " + exceptionAsString);
 				rtn.put("transNode_pk", null);
 			}
 
@@ -3824,12 +4018,14 @@ public class PhysicalLayerController {
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
-				Object nodesCount = session.createSQLQuery(
-					     "select count (*) from node_active where domain = 'Enterprise'"
-						)
-						.list();
-
+				Object nodesCount = session.createSQLQuery("select count (*) from node_active where domain = 'Enterprise'").list();
 				rtn.put("nodesCount", nodesCount);
+				Object TransmissionCount = session.createSQLQuery("select count (*) from node_active where domain = 'Transmission'").list();
+				rtn.put("TransmissionCount", TransmissionCount);
+				Object CoreCount = session.createSQLQuery("select count (*) from node_active where domain = 'Core'").list();
+				rtn.put("CoreCount", CoreCount);
+				Object AccessCount = session.createSQLQuery("select count (*) from node_active where domain = 'Access'").list();
+				rtn.put("AccessCount", AccessCount);
 
 			} catch (Exception e) {
 				sw = new StringWriter();

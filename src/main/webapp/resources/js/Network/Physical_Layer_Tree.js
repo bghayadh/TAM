@@ -240,7 +240,7 @@ var TargetFiberStrand= {
 		//tubeNumber:"tubeNumber",
 		//tubeColor:"tubeColor"
 };
-function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,distribBoardList,fiberTubes,fiberStrands,fiberAuxiliary_Data,tubesAuxiliaries,strandsAuxiliaries,trenchList,trenchAuxiliary_Data,ListManholeJunction,ListHandholeJunction,filterFlag,ductList,ductAuxiliary_Data,nodeList,Transmission){
+function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,distribBoardList,fiberTubes,fiberStrands,fiberAuxiliary_Data,tubesAuxiliaries,strandsAuxiliaries,trenchList,trenchAuxiliary_Data,ListManholeJunction,ListHandholeJunction,filterFlag,ductList,ductAuxiliary_Data,nodeList,Transmission,Core,Access){
 	EnableOriginationFiber=false;
 	
 	fiberArray=[];
@@ -296,6 +296,12 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 		$("#initial_ul_CurrentPhysicalLayer").append(str);
 		
 		str="<ul><li id='Transmission_f_CurrentPhysicalLayer' style='display:none;' class='Transmission_f_CurrentPhysicalLayer'><input type='checkbox' unchecked class='AllTransmission checkFilter'></input> <span id='Transmission_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Transmission_span' style='color:black;width:395px' class='TreeSpan'>Transmission </span></li></ul>";
+		$("#initial_ul_CurrentPhysicalLayer").append(str);
+		
+		str="<ul><li id='Core_f_CurrentPhysicalLayer' style='display:none;' class='Core_f_CurrentPhysicalLayer'><input type='checkbox' unchecked class='AllCore checkFilter'></input> <span id='Core_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Core_span' style='color:black;width:395px' class='TreeSpan'>Core</span></li></ul>";
+		$("#initial_ul_CurrentPhysicalLayer").append(str);
+		
+		str="<ul><li id='Ran_f_CurrentPhysicalLayer' style='display:none;' class='Ran_f_CurrentPhysicalLayer'><input type='checkbox' unchecked class='AllRan checkFilter'></input> <span id='Ran_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Ran_span' style='color:black;width:395px' class='TreeSpan'>Access</span></li></ul>";
 		$("#initial_ul_CurrentPhysicalLayer").append(str);
 /*		
 		tree_Prop("#initial_ul_CurrentPhysicalLayer > .folder");
@@ -970,7 +976,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 	if(Transmission!=null) {
 		for(i=0;i<Transmission.length;i++){
 			window[""+Transmission[i][0]]=[];
-			window[""+Transmission[i][0]]=nodeList[i];
+			window[""+Transmission[i][0]]=Transmission[i];
 				
 			if(Transmission[i][0]>0){
                str = "<ul><li id='" + Transmission[i][0] + "' class='TRANSMISSION' style='display:none;width:100px;'><input type='checkbox' class='Transmission checkFilter' class='filter' name='Element'></input>    <span  class='TreeSpan' style='color:black;width:355px'><img style='width:17px; height:17px;' src='" + getContext() + "/resources/NetworkImages/BlueCircle.png'> " + Transmission[i][2] + " </span></li></ul>";
@@ -990,10 +996,71 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 			
 			$(".TRANSMISSION > .TreeSpan").contextmenu(function(){				
 			selectedTransmissionIdContext=$(this).parent().attr('id');
-			IdTransmissionSelectedTemp=$(this).parents().eq(2).attr('id').split("Entreprise_f_")[1];
+			IdTransmissionSelectedTemp=$(this).parents().eq(2).attr('id').split("Transmission_f_")[1];
 			menuName=singleTransmission;			
 			openContext(selectedTransmissionIdContext,"",singleTransmission,event);
 		});		
+		
+	   	/////////////*********************	Core Creation In tree	***********************///////////////
+	//-------------------------------------------------------------------------------------------------//
+	if(Core!=null) {
+		for(i=0;i<Core.length;i++){
+			window[""+Core[i][0]]=[];
+			window[""+Core[i][0]]=Core[i];
+				
+			if(Core[i][0]>0){
+               str = "<ul><li id='" + Core[i][0] + "' class='CORE' style='display:none;width:100px;'><input type='checkbox' class='Core checkFilter' class='filter' name='Element'></input>    <span  class='TreeSpan' style='color:black;width:355px'><img style='width:15px; height:15px;' src='" + getContext() + "/resources/NetworkImages/black.png'> " + Core[i][2] + " </span></li></ul>";
+			   $("#Core_f_CurrentPhysicalLayer").append(str);  					
+				
+			}
+			else {
+               str = "<ul><li id='" + Core[i][0] + "' class='CORE' style='display:none;width:100px;'><input type='checkbox' class='Core checkFilter' class='filter' name='Element'></input>    <span  class='TreeSpan' style='color:black;width:355px'><img style='width:15px; height:15px;' src='" + getContext() + "/resources/NetworkImages/black.png'> " + Core[i][2] + " </span></li></ul>";
+               $("#Core_f_CurrentPhysicalLayer").append(str); 				
+			}	
+			}
+			
+			$('#Core_span').width($("#left").width());
+			$('.Core > .TreeSpan').width($("#left").width());
+			AllCoreCheckFilter();
+			}
+			
+			$(".CORE > .TreeSpan").contextmenu(function(){				
+			selectedCoreIdContext=$(this).parent().attr('id');
+			IdCoreSelectedTemp=$(this).parents().eq(2).attr('id').split("Core_f_")[1];
+			menuName=singleCore;			
+			openContext(selectedCoreIdContext,"",singleCore,event);
+		});		
+		
+		/////////////*********************	Access nodes Creation In tree	***********************///////////////
+	//-------------------------------------------------------------------------------------------------//
+	if(Access!=null) {
+		for(i=0;i<Access.length;i++){
+			window[""+Access[i][0]]=[];
+			window[""+Access[i][0]]=Access[i];
+				
+			if(Access[i][0]>0){
+               str = "<ul><li id='" + Access[i][0] + "' class='RAN' style='display:none;width:100px;'><input type='checkbox' class='Ran checkFilter' class='filter' name='Element'></input>    <span  class='TreeSpan' style='color:black;width:355px'><img style='width:15px; height:15px;' src='" + getContext() + "/resources/NetworkImages/green.png'> " + Access[i][2] + " </span></li></ul>";
+			   $("#Ran_f_CurrentPhysicalLayer").append(str);  					
+				
+			}
+			else {
+               str = "<ul><li id='" + Access[i][0] + "' class='RAN' style='display:none;width:100px;'><input type='checkbox' class='Ran checkFilter' class='filter' name='Element'></input>    <span  class='TreeSpan' style='color:black;width:355px'><img style='width:15px; height:15px;' src='" + getContext() + "/resources/NetworkImages/green.png'> " + Access[i][2] + " </span></li></ul>";
+               $("#Ran_f_CurrentPhysicalLayer").append(str); 				
+			}	
+			}
+			
+			$('#Ran_span').width($("#left").width());
+			$('.Ran > .TreeSpan').width($("#left").width());
+			AllRanCheckFilter();
+			}
+			
+			$(".RAN > .TreeSpan").contextmenu(function(){				
+			selectedRanIdContext=$(this).parent().attr('id');
+			IdRanSelectedTemp=$(this).parents().eq(2).attr('id').split("Ran_f_")[1];
+			menuName=singleRan;			
+			openContext(selectedRanIdContext,"",singleRan,event);
+		});		
+	
 	
 	
 	/////////////*********************	Distribution Boards creation in tree	***********************///////////////
@@ -1520,9 +1587,8 @@ Width : '200%',
 						{
 					
 						if(data != null) {
-							if(data.nodesCount!=null){
-								  
-								   var tr ="<tr>"+"<th>Nodes Count : </th> <td> "+data.nodesCount+"</td></tr>";
+							if(data.nodesCount!=null){	  
+								   var tr ="<tr>"+"<th>Enterprise Count : </th> <td> "+data.nodesCount+"</td></tr>";
 								   showBoq();
 								   $("#boq_table").append(tr);
 							   
@@ -1541,6 +1607,114 @@ Width : '200%',
 			  ]
 			  });
 		
+		menuTransmission = new ContextMenu({
+			  'theme': 'default',
+			  Width: '200%',
+			  'items': [
+			{'icon': 'paste', 'name': 'Show BoQ', action: () => {
+				$.ajax({
+					type: "GET",
+					contentType: "application/json; charset=utf-8",
+					url: getContext()+'/boqNodesCount',
+					data: {		
+				},
+				
+					success : function(data)
+						{
+						if(data != null) {
+							if(data.TransmissionCount!=null){
+								  
+								   var tr ="<tr>"+"<th>Transmission Count : </th> <td> "+data.TransmissionCount+"</td></tr>";
+								   showBoq();
+								   $("#boq_table").append(tr);
+							   
+								   data=null;
+							}
+							}
+						},
+						error: function (result) {
+							alert("Error");
+						}
+				});
+				
+			   }
+			},
+			  
+			  ]
+			  });
+			  
+		 menuCore = new ContextMenu({
+			  'theme': 'default',
+			  Width: '200%',
+			  'items': [
+			{'icon': 'paste', 'name': 'Show BoQ', action: () => {
+				$.ajax({
+					type: "GET",
+					contentType: "application/json; charset=utf-8",
+					url: getContext()+'/boqNodesCount',
+					data: {		
+				},
+				
+					success : function(data)
+						{
+						if(data != null) {
+							if(data.CoreCount!=null){
+								  
+								   var tr ="<tr>"+"<th>Core Count : </th> <td> "+data.CoreCount+"</td></tr>";
+								   showBoq();
+								   $("#boq_table").append(tr);
+							   
+								   data=null;
+							}
+							}
+						},
+						error: function (result) {
+							alert("Error");
+						}
+				});
+				
+			   }
+			},
+			  
+			  ]
+			  });
+			  
+		 menuRan = new ContextMenu({
+			  'theme': 'default',
+			  Width: '200%',
+			  'items': [
+			{'icon': 'paste', 'name': 'Show BoQ', action: () => {
+				$.ajax({
+					type: "GET",
+					contentType: "application/json; charset=utf-8",
+					url: getContext()+'/boqNodesCount',
+					data: {		
+				},
+				
+					success : function(data)
+						{
+						if(data != null) {
+							if(data.AccessCount!=null){
+								  
+								   var tr ="<tr>"+"<th>Access Count : </th> <td> "+data.AccessCount+"</td></tr>";
+								   showBoq();
+								   $("#boq_table").append(tr);
+							   
+								   data=null;
+							}
+							}
+						},
+						error: function (result) {
+							alert("Error");
+						}
+				});
+				
+			   }
+			},
+			  
+			  ]
+			  });
+			 
 	/////////////*********************	HANDHOLES li CONTEXT MENU  ***********************///////////////
 	//-------------------------------------------------------------------------------------------------//
 		menuHandhole = new ContextMenu({
@@ -4726,6 +4900,107 @@ singleTransmission = new ContextMenu({
 						$("#transCreateData_node").val(data.TransmissionNodesDetails[10]);
 						$("#transUpdateData_node").val(data.TransmissionNodesDetails[11]);
 						
+						
+						data = null;
+						}
+					},
+                    error: function (result) {
+						alert("Error");
+                    }
+					})
+		 
+		}		
+	},
+]
+})
+
+/////////////*********************	Core li CONTEXT MENU  ***********************///////////////
+	//-------------------------------------------------------------------------------------------------//
+singleCore = new ContextMenu({
+	'theme': 'default',
+	
+'items': [
+    {'icon': 'edit', 'name': 'Edit or View Details ', action: () => {
+    console.log(selectedCoreIdContext);
+         $("#CoreModal").modal('show');
+         $("#CoreModal").find("input").val('').end();
+		 $("#coreNodesHeader").text("Nodes: "+selectedCoreIdContext);
+		 $("#coreNode_pk").val(selectedCoreIdContext);
+		 
+		 	$.ajax({
+					type: "GET",
+					contentType: "application/json; charset=utf-8",
+					url: getContext()+'/findCoreDetails',
+                    async:false,
+                    data: {
+						"selectedCoreIdContext":selectedCoreIdContext
+					},
+                    dataType: "json",
+                    success: function (data) {
+					if(data.CoreNodesDetails != null){
+						$("#coreUniqNodeId").val(data.CoreNodesDetails[1]);
+						$("#coreNodeId").val(data.CoreNodesDetails[2]);
+						$("#coreNodeName").val(data.CoreNodesDetails[3]);
+						$("#coreNodeType").val(data.CoreNodesDetails[4]);
+						$("#coreNodeSource").val(data.CoreNodesDetails[6]);
+						$("#coreNodeModel").val(data.CoreNodesDetails[7]);
+						$("#coreNodeDomin").val(data.CoreNodesDetails[5]);
+						$("#coreSiteId_node").val(data.CoreNodesDetails[8]);
+						$("#coreWareId_node").val(data.CoreNodesDetails[9]);
+						$("#coreNodeLong").val(data.CoreNodesDetails[12]);
+						$("#coreNodeLat").val(data.CoreNodesDetails[13]);
+						$("#coreCreateData_node").val(data.CoreNodesDetails[10]);
+						$("#coreUpdateData_node").val(data.CoreNodesDetails[11]);
+						data = null;
+						}
+					},
+                    error: function (result) {
+						alert("Error");
+                    }
+					})
+		 
+		}		
+	},
+]
+})
+
+/////////////*********************	Access li CONTEXT MENU  ***********************///////////////
+	//-------------------------------------------------------------------------------------------------//
+singleRan = new ContextMenu({
+	'theme': 'default',
+	
+'items': [
+    {'icon': 'edit', 'name': 'Edit or View Details ', action: () => {
+    
+         $("#RanModal").modal('show');
+         $("#RanModal").find("input").val('').end();
+		 $("#ranNodesHeader").text("Nodes: "+selectedRanIdContext);
+		 $("#ranNode_pk").val(selectedRanIdContext);
+		 
+		 	$.ajax({
+					type: "GET",
+					contentType: "application/json; charset=utf-8",
+					url: getContext()+'/findAccessDetails',
+                    async:false,
+                    data: {
+						"selectedRanIdContext":selectedRanIdContext
+					},
+                    dataType: "json",
+                    success: function (data) {
+					if(data.AccessNodesDetails != null){
+						$("#ranUniqNodeId").val(data.AccessNodesDetails[1]);
+						$("#ranNodeId").val(data.AccessNodesDetails[2]);
+						$("#ranNodeName").val(data.AccessNodesDetails[3]);
+						$("#ranNodeType").val(data.AccessNodesDetails[4]);
+						$("#ranNodeSource").val(data.AccessNodesDetails[6]);
+						$("#ranNodeModel").val(data.AccessNodesDetails[7]);
+						$("#ranNodeDomin").val(data.AccessNodesDetails[5]);
+						$("#ranSiteId_node").val(data.AccessNodesDetails[8]);
+						$("#ranWareId_node").val(data.AccessNodesDetails[9]);
+						$("#ranNodeLong").val(data.AccessNodesDetails[12]);
+						$("#ranNodeLat").val(data.AccessNodesDetails[13]);
+						$("#ranCreateData_node").val(data.AccessNodesDetails[10]);
+						$("#ranUpdateData_node").val(data.AccessNodesDetails[11]);
 						
 						data = null;
 						}
@@ -11386,9 +11661,27 @@ singleProject = new ContextMenu({
 	   $(".Entreprise_f_CurrentPhysicalLayer > .TreeSpan").contextmenu(function(){
 			IdNodeSelectedTemp = $(this).parent().attr('id').split("Entreprise_f_")[1];																	 		 
 			menuName=menuNodes;			
-			openContext("","",menuNodes,event);
-																			
+			openContext("","",menuNodes,event);																
 	 	   });
+	 	   
+	   $(".Transmission_f_CurrentPhysicalLayer > .TreeSpan").contextmenu(function(){
+			IdNodeSelectedTemp = $(this).parent().attr('id').split("Transmission_f_")[1];																	 		 
+			menuName=menuTransmission;			
+			openContext("","",menuTransmission,event);															
+	 	   });
+	 	   
+	   $(".Core_f_CurrentPhysicalLayer > .TreeSpan").contextmenu(function(){
+			IdNodeSelectedTemp = $(this).parent().attr('id').split("Core_f_")[1];																	 		 
+			menuName=menuCore;			
+			openContext("","",menuCore,event);															
+	 	   });
+	 	
+	  $(".Ran_f_CurrentPhysicalLayer > .TreeSpan").contextmenu(function(){
+			IdNodeSelectedTemp = $(this).parent().attr('id').split("Ran_f_")[1];																	 		 
+			menuName=menuRan;			
+			openContext("","",menuRan,event);															
+	 	   });
+	 
 
 	    $(".FiberPath_f_CurrentPhysicalLayer > .TreeSpan, .FiberPath_f_projects > .TreeSpan").contextmenu(function(){
 	 	   // checking the fiber project id  
@@ -16674,6 +16967,158 @@ $("#saveTransmission").click(function () {
 						}
 						$("#"+data.transNode_pk+" > span").width($("#left").width());
 						$("#TransmissionModal").modal('hide');
+		
+});
+
+/* Core Save*/
+$("#saveCore").click(function () {
+            coreNode_pk= document.getElementById("coreNode_pk").value;
+			coreUniqNodeId = document.getElementById("coreUniqNodeId").value;
+			coreNodeId = document.getElementById("coreNodeId").value;
+			coreNodeName = document.getElementById("coreNodeName").value;
+			coreNodeType = document.getElementById("coreNodeType").value;
+			coreNodeSource = document.getElementById("coreNodeSource").value;
+			coreNodeModel = document.getElementById("coreNodeModel").value;
+			coreNodeDomin = document.getElementById("coreNodeDomin").value;
+			coreSiteId_node = document.getElementById("coreSiteId_node").value;
+			coreWareId_node = document.getElementById("coreWareId_node").value;
+			coreNodeLong = document.getElementById("coreNodeLong").value;
+			coreNodeLat = document.getElementById("coreNodeLat").value;
+			coreCreateData_node = document.getElementById("coreCreateData_node").value;
+			coreUpdateData_node = document.getElementById("coreUpdateData_node").value;
+			
+					$.ajax({
+					type: "POST",
+					contentType: "application/json; charset=utf-8",
+					url: getContext()+"/coreNodeSave",
+					async:false,
+					data: {
+					     "coreNode_pk": coreNode_pk,
+						 "coreUniqNodeId": coreUniqNodeId,
+						 "coreNodeId": coreNodeId,
+						 "coreNodeName": coreNodeName,
+						 "coreNodeType": coreNodeType,
+						 "coreNodeSource": coreNodeSource,
+						 "coreNodeModel": coreNodeModel,
+						 "coreNodeDomin": coreNodeDomin,
+						 "coreSiteId_node": coreSiteId_node,
+						 "coreWareId_node": coreWareId_node,
+						 "coreCreateData_node": coreCreateData_node,
+						 "coreUpdateData_node": coreUpdateData_node,					    
+					},				
+					dataType: "json",
+					success : function(data) {
+						if(data!=null){
+						
+						window[""+data.coreNode_pk]=[];
+						window[""+data.coreNode_pk]=[data.coreNode_pk,coreNodeName];
+						
+						$("#"+data.coreNode_pk).contextmenu(function(){				
+						menuName = singleCore;
+						selectedCoreIdContext=$(this).attr('id');
+						selectedCoreName=$(this).text();			
+						openContext(selectedCoreIdContext,selectedCoreName,singleCore,event);
+						});	
+						MouseHoveringSpans("#" +data.coreNode_pk+ " .TreeSpan");	
+						tree_prop_selection("#"+data.coreNode_pk+" .TreeSpan");
+						create_Marker_Click(data.coreNode_pk,nodeName,"","",markersCore,markerClusterCore,"","");
+						markerClusterCore.addMarker(markersCore[""+data.coreNode_pk]);
+						CoreCheckFilter(data.coreNode_pk);
+						map.setZoom(11);
+						
+						offset=$("#"+data.coreNode_pk).offset().top;																
+						offset2=$("#initial_ul_CurrentPhysicalLayer").offset().top;
+						offsettot=(offset-offset2);
+						$("#network_tree").animate({ scrollTop: offsettot}, "slow");
+				
+						}
+					},			
+					 error: function (result) {
+						alert("Error");
+					}
+					});	
+					
+					if(typeof infowindow!== 'undefined'){		
+							infowindow.close();								
+						}
+						$("#"+data.coreNode_pk+" > span").width($("#left").width());
+						$("#CoreModal").modal('hide');
+		
+});
+
+/* Ran(Access) Save*/
+$("#saveRan").click(function () {
+            ranNode_pk= document.getElementById("ranNode_pk").value;
+			ranUniqNodeId = document.getElementById("ranUniqNodeId").value;
+			ranNodeId = document.getElementById("ranNodeId").value;
+			ranNodeName = document.getElementById("ranNodeName").value;
+			ranNodeType = document.getElementById("ranNodeType").value;
+			ranNodeSource = document.getElementById("ranNodeSource").value;
+			ranNodeModel = document.getElementById("ranNodeModel").value;
+			ranNodeDomin = document.getElementById("ranNodeDomin").value;
+			ranSiteId_node = document.getElementById("ranSiteId_node").value;
+			ranWareId_node = document.getElementById("ranWareId_node").value;
+			ranNodeLong = document.getElementById("ranNodeLong").value;
+			ranNodeLat = document.getElementById("ranNodeLat").value;
+			ranCreateData_node = document.getElementById("ranCreateData_node").value;
+			ranUpdateData_node = document.getElementById("ranUpdateData_node").value;
+			
+					$.ajax({
+					type: "POST",
+					contentType: "application/json; charset=utf-8",
+					url: getContext()+"/ranNodeSave",
+					async:false,
+					data: {
+					     "ranNode_pk": ranNode_pk,
+						 "ranUniqNodeId": ranUniqNodeId,
+						 "ranNodeId": ranNodeId,
+						 "ranNodeName": ranNodeName,
+						 "ranNodeType": ranNodeType,
+						 "ranNodeSource": ranNodeSource,
+						 "ranNodeModel": ranNodeModel,
+						 "ranNodeDomin": ranNodeDomin,
+						 "ranSiteId_node": ranSiteId_node,
+						 "ranWareId_node": ranWareId_node,
+						 "ranCreateData_node": ranCreateData_node,
+						 "ranUpdateData_node": ranUpdateData_node,					    
+					},				
+					dataType: "json",
+					success : function(data) {
+						if(data!=null){
+						
+						window[""+data.ranNode_pk]=[];
+						window[""+data.ranNode_pk]=[data.ranNode_pk,ranNodeName];
+						
+						$("#"+data.ranNode_pk).contextmenu(function(){				
+						menuName = singleRan;
+						selectedRanIdContext=$(this).attr('id');
+						selectedRanName=$(this).text();			
+						openContext(selectedRanIdContext,selectedRanName,singleRan,event);
+						});	
+						MouseHoveringSpans("#" +data.ranNode_pk+ " .TreeSpan");	
+						tree_prop_selection("#"+data.ranNode_pk+" .TreeSpan");
+						create_Marker_Click(data.ranNode_pk,nodeName,"","",markersRan,markerClusterRan,"","");
+						markerClusterRan.addMarker(markersRan[""+data.ranNode_pk]);
+						RanCheckFilter(data.ranNode_pk);
+						map.setZoom(11);
+						
+						offset=$("#"+data.ranNode_pk).offset().top;																
+						offset2=$("#initial_ul_CurrentPhysicalLayer").offset().top;
+						offsettot=(offset-offset2);
+						$("#network_tree").animate({ scrollTop: offsettot}, "slow");
+				
+						}
+					},			
+					 error: function (result) {
+						alert("Error");
+					}
+					});	
+					
+					if(typeof infowindow!== 'undefined'){		
+							infowindow.close();								
+						}
+						$("#"+data.ranNode_pk+" > span").width($("#left").width());
+						$("#RanModal").modal('hide');
 		
 });
 
