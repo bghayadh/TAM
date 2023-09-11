@@ -506,8 +506,8 @@ public class LoadFilesRanHuawei {
 					  gateway=null;
 					  unique_Node_ID = nodeId+"_HW";
 					  
-					  	stmtp =  parserCon.prepareStatement("insert into NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,WARE_ID,VENDOR,WARE_NAME,IP_ADDRESS,MAC_ADDRESS,SUB_DOMAIN,SOFTWARE_VERSION,STATUS_1,GATEWAY,LONGITUDE,LATITUDE,PART_NUMBER,SUB_DOMAIN_TYPE)"
-						 		+ "values('"+nodePK+"','"+unique_Node_ID+"','"+nodeId+"','"+nodeName+"','"+nodeType+"','"+Domain+"','"+nodeModel+"','"+tech2+"','"+tech3+"','"+tech4+"','"+tech5+"','"+siteID+"','"+circleId+"',sysdate,sysdate,'"+fileType+"','"+fileName+"','"+commStatus+"','"+wareID+"','"+provider+"','"+wareName+"','"+IPaddress+"','"+MACaddress+"','"+subDomain+"','"+softwareVersion+"','"+adminStatus+"','"+gateway+"','"+longitude+"','"+latitude+"','"+partNumber+"','"+subDomainType+"')"); 
+					  	stmtp =  parserCon.prepareStatement("insert into NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,ACTIVE_RECORD,LINE,WARE_ID,VENDOR,WARE_NAME,IP_ADDRESS,MAC_ADDRESS,SUB_DOMAIN,SOFTWARE_VERSION,STATUS_1,GATEWAY,LONGITUDE,LATITUDE,PART_NUMBER,SUB_DOMAIN_TYPE)"
+						 		+ "values('"+nodePK+"','"+unique_Node_ID+"','"+nodeId+"','"+nodeName+"','"+nodeType+"','"+Domain+"','"+nodeModel+"','"+tech2+"','"+tech3+"','"+tech4+"','"+tech5+"','"+siteID+"','"+circleId+"',sysdate,sysdate,'"+fileType+"','"+fileName+"','"+commStatus+"','1','1','"+wareID+"','"+provider+"','"+wareName+"','"+IPaddress+"','"+MACaddress+"','"+subDomain+"','"+softwareVersion+"','"+adminStatus+"','"+gateway+"','"+longitude+"','"+latitude+"','"+partNumber+"','"+subDomainType+"')"); 
 					  	stmtp.executeUpdate();
 					  	stmtp.close();
 					  	
