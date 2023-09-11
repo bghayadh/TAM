@@ -93,6 +93,7 @@ public class AutoParserController {
 		rtn.put("Result", "Script is Done");
 		return rtn;
 	}
+	@RequestMapping(value = "/loadFilesRanHuawei", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> loadFilesRanHuawei(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws SecurityException, IOException, InterruptedException, SQLException, ParseException{
 
