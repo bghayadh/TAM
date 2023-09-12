@@ -101,6 +101,7 @@ public class LoadFilesRanHuawei {
 	static String nodeId = null,nodeType = null,nodeModel = null,nodeName=null,unique_Node_ID = null;
 	static String siteID,wareID,wareName,longitude,latitude,creationDate,IPaddress,MACaddress,commStatus="0",adminStatus="0",softwareVersion;
 	static String subDomain,subDomainType,gateway,partNumber;
+	static int NodeRackSeq=0,NodeActiveAttrSeq=0,NodeFrameSeq=0,nodeSlotSeq=0,nodeBoardSeq=0,nodePortSeq=0,nodeHostVerSeq=0,nodeCabinetSeq=0,nodeAccessorySeq=0,nodeHostSeq=0,nodeSubRackSeq=0,nodeGCellSeq=0,nodeBTSSeq=0,nodeUCellSeq=0,nodeAntennaSeq=0,nodeLCellSeq=0,nodeRRNSeq=0,nodeENodeBSeq=0,nodeNodeBSeq=0,nodeNBInterfaceSeq=0;
 
 
 		public static void main(String[] args,String vendor,String domain,String sub_domain,String sub_domainType) throws Exception {
@@ -603,6 +604,36 @@ public class LoadFilesRanHuawei {
 						
 					NodeList nList = doc.getElementsByTagName("TABLE");
 
+					 String allSeqSelectStmnt = "select NODE_RACK,NODE_ACTIVE_ATTRIBUTE,NODE_FRAME,NODE_SLOT,NODE_BOARD,NODE_PORT,NODE_HOSTVER,NODE_CABINET,NODE_ACCESSORY,NODE_HOST,NODE_SUBRACK,NODE_GCELL,NODE_BTS,NODE_UCELL,NODE_ANTENNA,NODE_LCELL,NODE_RRN,NODE_ENODEBCELL,NODE_NODEBCELL,NODE_NBInterfaces from SEQ_TABLE";     
+	 				 stmnt = almCon.createStatement();
+	 				 ResultSet allSeqResultSet = stmnt.executeQuery(allSeqSelectStmnt);
+	 					  
+	 				while(allSeqResultSet.next()) {
+	 					  
+	 					NodeRackSeq = allSeqResultSet.getInt("NODE_RACK");	
+	 					NodeActiveAttrSeq = allSeqResultSet.getInt("NODE_ACTIVE_ATTRIBUTE");
+	 					NodeFrameSeq = allSeqResultSet.getInt("NODE_FRAME");	
+	 					nodeSlotSeq = allSeqResultSet.getInt("NODE_SLOT");	
+	 					nodeBoardSeq = allSeqResultSet.getInt("NODE_BOARD");	
+	 					nodePortSeq = allSeqResultSet.getInt("NODE_PORT");	
+	 					nodeHostVerSeq = allSeqResultSet.getInt("NODE_HOSTVER");	
+	 					nodeCabinetSeq = allSeqResultSet.getInt("NODE_CABINET");	
+	 					nodeAccessorySeq = allSeqResultSet.getInt("NODE_ACCESSORY");
+	 					nodeHostSeq = allSeqResultSet.getInt("NODE_HOST");	
+	 					nodeSubRackSeq = allSeqResultSet.getInt("NODE_SUBRACK");
+	 					nodeGCellSeq = allSeqResultSet.getInt("NODE_GCELL");
+	 					nodeBTSSeq = allSeqResultSet.getInt("NODE_BTS");
+	 					nodeUCellSeq = allSeqResultSet.getInt("NODE_UCELL");
+	 					nodeAntennaSeq = allSeqResultSet.getInt("NODE_ANTENNA");
+	 					nodeLCellSeq = allSeqResultSet.getInt("NODE_LCELL");
+	 					nodeRRNSeq = allSeqResultSet.getInt("NODE_RRN");
+	 					nodeENodeBSeq = allSeqResultSet.getInt("NODE_ENODEBCELL");
+	 					nodeNodeBSeq = allSeqResultSet.getInt("NODE_NODEBCELL");
+	 					nodeNBInterfaceSeq = allSeqResultSet.getInt("NODE_NBInterfaces");
+
+	 				}
+	 					 
+	 					 
 					for (int temp = 0; temp < nList.getLength(); temp++) {
 						totRow=0;
 						Node nNode = nList.item(temp);
@@ -619,15 +650,18 @@ public class LoadFilesRanHuawei {
 							attributeTable=getAttributeTableName(eElement.getAttribute("attrname"));
 							
 
-							// Get sequence id of node_active_attribute  and fill in table NODE_ACTIVE_ATTRIBUTE
-		 					 String codeidattr= localgetseqNbr(1);
-		 					 codeidattr=currentYear+"_"+ "ATTRIBUTE"+'_'+codeidattr;
+							
+		 					 String codeidattr=currentYear+"_"+ "ATTRIBUTE"+'_'+NodeActiveAttrSeq;
 		 					 PreparedStatement stmta = parserCon.prepareStatement("insert into NODE_ACTIVE_ATTRIBUTE (NODE_ATTR_PK,ATTRIBUTE,ATTRIBUTE_TABLE,NODE_PK,NODE_TYPE,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,ACTIVE_RECORD,LINE,DOMAIN,VENDOR) "
 		 					 		+ "values('" + codeidattr +"' ,'" + eElement.getAttribute("attrname") +"','" + attributeTable +"','" + codeID  +"', '" + nodeAttrType  +"',sysdate,'" + filename +"','0','0','0','0','0','0','1','" + temp +"', 'RAN','" + provider +"') "); 
 		 	                 stmta.executeUpdate();
 		 				     stmta.close();
 							
 							
+		 				    NodeActiveAttrSeq++;
+		 					  
+		 					  
+		 					  
 		 				    String vcodeid=null;
 							String strCurrentLine;
 							objReader = new BufferedReader(new FileReader(folderName+"/"+filename));
@@ -646,7 +680,7 @@ public class LoadFilesRanHuawei {
 				                	  if (attributeTable == "NODE_FRAME") {
 				                		   vhmap=getMapColumnsFrame(data);
 				                	  }
-				                	  if (attributeTable == "NODE_SLOT") {
+				                	 if (attributeTable == "NODE_SLOT") {
 				                		   vhmap=getMapColumnsSlot(data);
 				                	  }
 				                	  if (attributeTable == "NODE_BOARD") {
@@ -703,167 +737,153 @@ public class LoadFilesRanHuawei {
 				                	   if (attributeTable =="NODE_RACK" ) {
 				                		   if (vhmap.get("DATEOFMANUFACTURE").length()== 1) {vhmap.put("DATEOFMANUFACTURE", todayDate);} else {String res = createDate(vhmap.get("DATEOFMANUFACTURE")); vhmap.put("DATEOFMANUFACTURE", res);}
 				                		   if (vhmap.get("DATEOFLASTSERVICE").length()== 1) {vhmap.put("DATEOFLASTSERVICE", todayDate);} else {String res = createDate(vhmap.get("DATEOFLASTSERVICE")); vhmap.put("DATEOFLASTSERVICE", res);}
-				                		   vcodeid= localgetseqNbr(2);  /// 2 to select rack_id 
-				                		   vcodeid=currentYear+"_"+ "RACK"+'_'+vcodeid;
+				                		   vcodeid=currentYear+"_"+ "RACK"+'_'+NodeRackSeq;
 				                		   InsertQuery="insert into " + attributeTable  + " (RACK_ID,RACKNO,INVENTORYUNITID,RACKTYPE,INVENTORYUNITTYPE,VENDORUNITFAMILYTYPE,VENDORUNITTYPENUMBER,VENDORNAME,SERIALNUMBER,HARDWAREVERSION,DATEOFMANUFACTURE,DATEOFLASTSERVICE,UNITPOSITION,MANUFACTURERDATA,MODEL,USERLABEL,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,DOMAIN,VENDOR) "
 				                		   		+ "values('" + vcodeid +"','" + vhmap.get("RACKNO") +"','" + vhmap.get("INVENTORYUNITID") +"','" + vhmap.get("RACKTYPE") +"','" + vhmap.get("INVENTORYUNITTYPE") +"','" + vhmap.get("VENDORUNITFAMILYTYPE") +"','" + vhmap.get("VENDORUNITTYPENUMBER") +"','" + vhmap.get("VENDORNAME") +"','" + vhmap.get("SERIALNUMBER") +"','" + vhmap.get("HARDWAREVERSION") +"',DATE '" + vhmap.get("DATEOFMANUFACTURE") +"',DATE '" + vhmap.get("DATEOFLASTSERVICE") +"','" + vhmap.get("UNITPOSITION") +"','" + vhmap.get("MANUFACTURERDATA") +"','" + vhmap.get("MODEL") +"','" + vhmap.get("USERLABEL") +"','" + codeID +"','" + codeidattr +"',sysdate,'" + filename +"','" + vhmap.get("STATUS") +"','0','0','0','" + vhmap.get("TRANS_ID") +"','" + vhmap.get("TRANS_TYPE") +"' ,'"+ j +"','1','RAN','" + provider +"' ) ";
-				                		   //System.out.println(filename + "    "+ InsertQuery);
+				                		   NodeRackSeq++;
 				                	   }
-				                	   if (attributeTable =="NODE_FRAME" ) {
+				                	  if (attributeTable =="NODE_FRAME" ) {
 				                		   if (vhmap.get("DATEOFMANUFACTURE").length()== 1) {vhmap.put("DATEOFMANUFACTURE", todayDate);} else {String res = createDate(vhmap.get("DATEOFMANUFACTURE")); vhmap.put("DATEOFMANUFACTURE", res);}
 				                		   if (vhmap.get("DATEOFLASTSERVICE").length()== 1) {vhmap.put("DATEOFLASTSERVICE", todayDate);} else {String res = createDate(vhmap.get("DATEOFLASTSERVICE")); vhmap.put("DATEOFLASTSERVICE", res);}
-				                		   vcodeid= localgetseqNbr(3);  /// 3 to select frame_id 
-				                		   vcodeid=currentYear+"_"+ "FRAME"+'_'+vcodeid;
+				                		   vcodeid=currentYear+"_"+ "FRAME"+'_'+NodeFrameSeq;
 				                		   InsertQuery="insert into " + attributeTable  +" (FRAME_ID,RACKNO,FRAMENO,INVENTORYUNITID,FRAMETYPE,RACKFRAMENO,MODULENO,INVENTORYUNITTYPE,VENDORUNITFAMILYTYPE,VENDORUNITTYPENUMBER,VENDORNAME,SERIALNUMBER,HARDWAREVERSION,DATEOFMANUFACTURE,DATEOFLASTSERVICE,UNITPOSITION,MANUFACTURERDATA,MODEL,USERLABEL,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,DOMAIN,VENDOR) "
 				                		   		+ "values('" + vcodeid +"','" + vhmap.get("RACKNO") +"','" + vhmap.get("FRAMENO") +"','" + vhmap.get("INVENTORYUNITID") +"','" + vhmap.get("FRAMETYPE") +"','" + vhmap.get("RACKFRAMENO") +"','" + vhmap.get("MODULENO") +"','" + vhmap.get("INVENTORYUNITTYPE") +"','" + vhmap.get("VENDORUNITFAMILYTYPE") +"','" + vhmap.get("VENDORUNITTYPENUMBER") +"','" + vhmap.get("VENDORNAME") +"', '" + vhmap.get("SERIALNUMBER") +"','" + vhmap.get("HARDWAREVERSION") +"',DATE '" + vhmap.get("DATEOFMANUFACTURE") +"',DATE '" + vhmap.get("DATEOFLASTSERVICE") +"','" + vhmap.get("UNITPOSITION") +"','" + vhmap.get("MANUFACTURERDATA") +"','" + vhmap.get("MODEL") +"','" + vhmap.get("USERLABEL") +"','" + codeID +"','" + codeidattr +"',sysdate,'" + filename +"','" + vhmap.get("STATUS") +"' ,'0','0','0','" + vhmap.get("TRANS_ID") +"','" + vhmap.get("TRANS_TYPE") +"','"+ j +"','1','RAN','" + provider +"') ";
-				                		   //System.out.println(filename + "    "+ InsertQuery);
-				                	   }
-				                	   if (attributeTable =="NODE_SLOT" ) {
+				                		   NodeFrameSeq++;
+				                	  }
+				                	  if (attributeTable =="NODE_SLOT" ) {
 				                		   almPosition ="0";
 				                		   if (vhmap.get("DATEOFMANUFACTURE").length()== 1) { vhmap.put("DATEOFMANUFACTURE", todayDate);} else {String res = createDate(vhmap.get("DATEOFMANUFACTURE")); vhmap.put("DATEOFMANUFACTURE", res);}
 				                		   if (vhmap.get("DATEOFLASTSERVICE").length()== 1) {vhmap.put("DATEOFLASTSERVICE", todayDate);} else {String res = createDate(vhmap.get("DATEOFLASTSERVICE")); vhmap.put("DATEOFLASTSERVICE", res);}
-				                		   vcodeid= localgetseqNbr(4);  /// 4 to select slot_id 
-				                		   vcodeid=currentYear+"_"+ "SLOT"+'_'+vcodeid;
+				                		   vcodeid=currentYear+"_"+ "SLOT"+'_'+nodeSlotSeq;
 				                		   almPosition =vhmap.get("CABINETNO") +'/'+vhmap.get("SUBRACKNO")+'/'+ vhmap.get("RACKNO")+'/'+ vhmap.get("SLOTNO")+'/'+ vhmap.get("SLOTPOS");
 				                		   InsertQuery="insert into " + attributeTable  +" (SLOT_ID,SITEINDEX,CABINETNO,SUBRACKNO,RACKNO,FRAMENO,SLOTNO,SLOTPOS,INVENTORYUNITID,INVENTORYUNITTYPE,VENDORUNITFAMILYTYPE,VENDORUNITTYPENUMBER,VENDORNAME,SERIALNUMBER,HARDWAREVERSION,DATEOFMANUFACTURE,DATEOFLASTSERVICE,UNITPOSITION,MANUFACTURERDATA,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,ALM_POSITION,DOMAIN,VENDOR) "
 				                		   		+ "values('" + vcodeid +"','" + vhmap.get("SITEINDEX") +"','" + vhmap.get("CABINETNO") +"','" + vhmap.get("SUBRACKNO") +"','" + vhmap.get("RACKNO") +"','" + vhmap.get("FRAMENO") +"','" + vhmap.get("SLOTNO") +"','" + vhmap.get("SLOTPOS") +"','" + vhmap.get("INVENTORYUNITID") +"','" + vhmap.get("INVENTORYUNITTYPE") +"','" + vhmap.get("VENDORUNITFAMILYTYPE") +"','" + vhmap.get("VENDORUNITTYPENUMBER") +"','" + vhmap.get("VENDORNAME") +"','" + vhmap.get("SERIALNUMBER") +"', '" + vhmap.get("HARDWAREVERSION") +"',DATE '" + vhmap.get("DATEOFMANUFACTURE") +"',DATE '" + vhmap.get("DATEOFLASTSERVICE") +"', '" + vhmap.get("UNITPOSITION") +"','" + vhmap.get("MANUFACTURERDATA") +"','" + codeID +"','" + codeidattr +"',sysdate,'" + filename +"' ,'" + vhmap.get("STATUS") +"','0','0','0','" + vhmap.get("TRANS_ID") +"','" + vhmap.get("TRANS_TYPE") +"','"+ j +"','1','"+ almPosition +"','RAN','" + provider +"') ";
-				                		   //System.out.println(filename + "    "+ InsertQuery);
+				                		   nodeSlotSeq++; 
 				                	   }
-				                	   if (attributeTable =="NODE_BOARD" ) {   
+				                	  if (attributeTable =="NODE_BOARD" ) {   
 				                		   almPosition ="0";
 				                		   if (vhmap.get("DATEOFMANUFACTURE").length()== 1) { vhmap.put("DATEOFMANUFACTURE", todayDate);} else {String res = createDate(vhmap.get("DATEOFMANUFACTURE")); vhmap.put("DATEOFMANUFACTURE", res);}
 				                		   if (vhmap.get("DATEOFLASTSERVICE").length()== 1) {vhmap.put("DATEOFLASTSERVICE", todayDate);} else {String res = createDate(vhmap.get("DATEOFLASTSERVICE")); vhmap.put("DATEOFLASTSERVICE", res);}
-				                		   vcodeid= localgetseqNbr(5);  /// 5 to select Board_id 
-				                		   vcodeid=currentYear+"_"+ "BOARD"+'_'+vcodeid;
+				                		   vcodeid=currentYear+"_"+ "BOARD"+'_'+nodeBoardSeq;
 				                		   almPosition =vhmap.get("CABINETNO") +'/'+vhmap.get("SUBRACKNO")+'/'+ vhmap.get("SLOTNO")+'/'+ vhmap.get("SLOTPOS")+'/'+ vhmap.get("SUBSLOTNO");
 				                		   InsertQuery="insert into " + attributeTable  +"(BOARD_ID,SITEINDEX,CABINETNO,SUBRACKNO,RACKNO,FRAMENO,SLOTNO,SLOTPOS,SUBSLOTNO,INVENTORYUNITID,MODULENO,BOARDNAME,BOARDTYPE,INVENTORYUNITTYPE,VENDORUNITFAMILYTYPE,VENDORUNITTYPENUMBER,VENDORNAME,SERIALNUMBER,HARDWAREVERSION,DATEOFMANUFACTURE,DATEOFLASTSERVICE,UNITPOSITION,MANUFACTURERDATA,SOFTVER,LOGICVER,BIOSVER,BIOSVEREX,LANVER,MBUSVER,ISSUENUMBER,BOMCODE,MODEL,USERLABEL,EXTINFO,APDEVINFO,WORKMODE,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,ALM_POSITION,CREATION_DATE,DOMAIN,VENDOR) "
 				                		   		+ "values('" + vcodeid +"','" + vhmap.get("SITEINDEX") +"','" + vhmap.get("CABINETNO") +"','" + vhmap.get("SUBRACKNO") +"','" + vhmap.get("RACKNO") +"','" + vhmap.get("FRAMENO") +"','" + vhmap.get("SLOTNO") +"','" + vhmap.get("SLOTPOS") +"','" + vhmap.get("SUBSLOTNO") +"','" + vhmap.get("INVENTORYUNITID") +"','" + vhmap.get("MODULENO") +"','" + vhmap.get("BOARDNAME") +"','" + vhmap.get("BOARDTYPE") +"','" + vhmap.get("INVENTORYUNITTYPE") +"', '" + vhmap.get("VENDORUNITFAMILYTYPE") +"', '" + vhmap.get("VENDORUNITTYPENUMBER") +"', '" + vhmap.get("VENDORNAME") +"', '" + vhmap.get("SERIALNUMBER") +"','" + vhmap.get("HARDWAREVERSION") +"',DATE '" + vhmap.get("DATEOFMANUFACTURE") +"',DATE '" + vhmap.get("DATEOFLASTSERVICE") +"','" + vhmap.get("UNITPOSITION") +"','" + vhmap.get("MANUFACTURERDATA") +"','" + vhmap.get("SOFTVER") +"','" + vhmap.get("LOGICVER") +"','" + vhmap.get("BIOSVER") +"','" + vhmap.get("BIOSVEREX") +"','" + vhmap.get("LANVER") +"','" + vhmap.get("MBUSVER") +"','" + vhmap.get("ISSUENUMBER") +"','" + vhmap.get("BOMCODE") +"','" + vhmap.get("MODEL") +"','" + vhmap.get("USERLABEL") +"','" + vhmap.get("EXTINFO") +"','" + vhmap.get("APDEVINFO") +"','" + vhmap.get("WORKMODE") +"','" + codeID +"','" + codeidattr +"' ,sysdate,'" + filename +"','" + vhmap.get("STATUS") +"','0','0','0','" + vhmap.get("TRANS_ID") +"','" + vhmap.get("TRANS_TYPE") +"','"+ j +"','1','"+ almPosition +"',sysdate,'RAN','" + provider +"') ";
-				                		   //System.out.println(filename + "    "+ InsertQuery);
+				                		   nodeBoardSeq++;
 				                	   }
-				                	   if (attributeTable =="NODE_PORT" ) {
+				                	  if (attributeTable =="NODE_PORT" ) {
 				                		   if (vhmap.get("DATEOFMANUFACTURE").length()== 1) { vhmap.put("DATEOFMANUFACTURE", todayDate);} else {String res = createDate(vhmap.get("DATEOFMANUFACTURE")); vhmap.put("DATEOFMANUFACTURE", res);}
 				                		   if (vhmap.get("DATEOFLASTSERVICE").length()== 1) {vhmap.put("DATEOFLASTSERVICE", todayDate);} else {String res = createDate(vhmap.get("DATEOFLASTSERVICE")); vhmap.put("DATEOFLASTSERVICE", res);}
-				                		   vcodeid= localgetseqNbr(6);  /// 6 to select Port_id 
-				                		   vcodeid=currentYear+"_"+ "PORT"+'_'+vcodeid;
+				                		   vcodeid=currentYear+"_"+ "PORT"+'_'+nodePortSeq;
 				                		   InsertQuery="insert into " + attributeTable  +" (PORT_ID,SITEINDEX,CABINETNO,SUBRACKNO,RACKNO,FRAMENO,SLOTNO,SLOTPOS,SUBSLOTNO,VENDORUNITFAMILYTYPE,INVENTORYUNITID,PORTNO,HARDWAREVERSION,SERIALNUMBER,INVENTORYUNITTYPE,VENDORNAME,VENDORUNITTYPENUMBER,DATEOFMANUFACTURE,DATEOFLASTSERVICE,UNITPOSITION,MACADDR,MANUFACTURERDATA,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,DOMAIN,VENDOR) "
 				                		   		+ "values('" + vcodeid +"','" + vhmap.get("SITEINDEX") +"','" + vhmap.get("CABINETNO") +"','" + vhmap.get("SUBRACKNO") +"','" + vhmap.get("RACKNO") +"','" + vhmap.get("FRAMENO") +"','" + vhmap.get("SLOTNO") +"','" + vhmap.get("SLOTPOS") +"','" + vhmap.get("SUBSLOTNO") +"','" + vhmap.get("VENDORUNITFAMILYTYPE") +"','" + vhmap.get("INVENTORYUNITID") +"','" + vhmap.get("PORTNO") +"','" + vhmap.get("HARDWAREVERSION") +"','" + vhmap.get("SERIALNUMBER") +"', '" + vhmap.get("INVENTORYUNITTYPE") +"','" + vhmap.get("VENDORNAME") +"', '" + vhmap.get("VENDORUNITTYPENUMBER") +"',DATE '" + vhmap.get("DATEOFMANUFACTURE") +"',DATE '" + vhmap.get("DATEOFLASTSERVICE") +"','" + vhmap.get("UNITPOSITION") +"','" + vhmap.get("MACADDR") +"','" + vhmap.get("MANUFACTURERDATA") +"','" + codeID +"','" + codeidattr +"' ,sysdate,'" + filename +"','" + vhmap.get("STATUS") +"','0','0','0','" + vhmap.get("TRANS_ID") +"','" + vhmap.get("TRANS_TYPE") +"','"+ j +"','1','RAN','" + provider +"') ";
-				                		   //System.out.println(filename + "    "+ InsertQuery);
+				                		   nodePortSeq++;
 				                	   }
 				                	   if (attributeTable =="NODE_CABINET" ) { 
 				                		   almPosition ="0";
 				                		   if (vhmap.get("DATEOFMANUFACTURE").length()== 1) { vhmap.put("DATEOFMANUFACTURE", todayDate);} else {String res = createDate(vhmap.get("DATEOFMANUFACTURE")); vhmap.put("DATEOFMANUFACTURE", res);}
 				                		   if (vhmap.get("DATEOFLASTSERVICE").length()== 1) {vhmap.put("DATEOFLASTSERVICE", todayDate);} else {String res = createDate(vhmap.get("DATEOFLASTSERVICE")); vhmap.put("DATEOFLASTSERVICE", res);}
-					                		   vcodeid= localgetseqNbr(7);  /// 7 to select cabinet_id 
-					                		   vcodeid=currentYear+"_"+ "CABINET"+'_'+vcodeid;
+					                		   vcodeid=currentYear+"_"+ "CABINET"+'_'+nodeCabinetSeq;
 					                		   almPosition =vhmap.get("CABINETNO");
 					                		   InsertQuery="insert into " + attributeTable  + " (CABINET_ID,SITEINDEX,CABINETNO,INVENTORYUNITID,RACKTYPE,BOMRACKTYPE,INVENTORYUNITTYPE,VENDORUNITFAMILYTYPE,VENDORUNITTYPENUMBER,VENDORNAME,SERIALNUMBER,HARDWAREVERSION,DATEOFMANUFACTURE,DATEOFLASTSERVICE,UNITPOSITION,MANUFACTURERDATA,ISSUENUMBER,BOMCODE,EXTINFO,MODEL,USERLABEL,SHAREMODE,CLEICODE,BOM,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,ALM_POSITION,CREATION_DATE,DOMAIN,VENDOR) "
 					                		   		+ " values('" + vcodeid +"','" + vhmap.get("SITEINDEX") +"','" + vhmap.get("CABINETNO") +"','" + vhmap.get("INVENTORYUNITID") +"','" + vhmap.get("RACKTYPE") +"','" + vhmap.get("BOMRACKTYPE") +"','" + vhmap.get("INVENTORYUNITTYPE") +"','" + vhmap.get("VENDORUNITFAMILYTYPE") +"','" + vhmap.get("VENDORUNITTYPENUMBER") +"','" + vhmap.get("VENDORNAME") +"','" + vhmap.get("SERIALNUMBER") +"','" + vhmap.get("HARDWAREVERSION") +"',DATE '" + vhmap.get("DATEOFMANUFACTURE") +"',DATE '" + vhmap.get("DATEOFLASTSERVICE") +"', '" + vhmap.get("UNITPOSITION") +"','" + vhmap.get("MANUFACTURERDATA") +"','" + vhmap.get("ISSUENUMBER") +"','" + vhmap.get("BOMCODE") +"','" + vhmap.get("EXTINFO") +"','" + vhmap.get("MODEL") +"','" + vhmap.get("USERLABEL") +"','" + vhmap.get("SHAREMODE") +"','" + vhmap.get("CLEICODE") +"','" + vhmap.get("BOM") +"','" + codeID +"','" + codeidattr +"',sysdate ,'" + filename +"','" + vhmap.get("STATUS") +"','0','0','0','" + vhmap.get("TRANS_ID") +"','" + vhmap.get("TRANS_TYPE") +"','"+ j +"','1','"+ almPosition +"',sysdate,'RAN','" + provider +"') ";
-				                		   //System.out.println(filename + "    "+ InsertQuery);
+					                		   nodeCabinetSeq++;
 				                	   }
 				                	   if (attributeTable =="NODE_HOSTVER" ) {
-				                		   vcodeid= localgetseqNbr(8);  /// 8 to select hostVer_id
-				                		   vcodeid=currentYear+"_"+ "HOSTVER"+'_'+vcodeid;
+				                		   vcodeid=currentYear+"_"+ "HOSTVER"+'_'+nodeHostVerSeq;
 				                		   InsertQuery="insert into " + attributeTable  +" (HOSTVER_ID,HOSTVERTYPE,HOSTVER,SDESC,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,CREATION_DATE,DOMAIN,VENDOR)  values('" + vcodeid +"','" + vhmap.get("HOSTVERTYPE") +"','"+ vhmap.get("HOSTVER") +"','"+ vhmap.get("SDESC") +"','" + codeID +"','" + codeidattr +"',sysdate,'" + filename +"','" + vhmap.get("STATUS") +"' ,'0','0','0','" + vhmap.get("TRANS_ID") +"','" + vhmap.get("TRANS_TYPE") +"','"+ j +"','1',sysdate,'RAN','" + provider +"') ";
-				                		   //System.out.println(filename + "    "+ InsertQuery);
+				                		   nodeHostVerSeq++;
 				                	   }
 				                	   if (attributeTable =="NODE_ACCESSORY" ) {
 				                		   if (vhmap.get("DATEOFMANUFACTURE").length()== 1) { vhmap.put("DATEOFMANUFACTURE", todayDate);} else {String res = createDate(vhmap.get("DATEOFMANUFACTURE")); vhmap.put("DATEOFMANUFACTURE", res);}
 				                		   if (vhmap.get("DATEOFLASTSERVICE").length()== 1) {vhmap.put("DATEOFLASTSERVICE", todayDate);} else {String res = createDate(vhmap.get("DATEOFLASTSERVICE")); vhmap.put("DATEOFLASTSERVICE", res);}
-				                		   vcodeid= localgetseqNbr(9);  /// 9 to select accessory_id
-				                		   vcodeid=currentYear+"_"+ "ACCESSORY"+'_'+vcodeid;
+				                		   vcodeid=currentYear+"_"+ "ACCESSORY"+'_'+nodeAccessorySeq;
 				                		   InsertQuery="insert into " + attributeTable  +" (ACCESSORY_ID,RACKPOSITION,INVENTORYUNITID,VENDORUNITFAMILYTYPE,VENDORUNITTYPENUMBER,VENDORNAME,SERIALNUMBER,HARDWAREVERSION,SOFTVER,DATEOFMANUFACTURE,DATEOFLASTSERVICE,MANUFACTURERDATA,ACCESSORYTYPE,ADDTIONALINFORMATION,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,DOMAIN,VENDOR) "
 				                		   		+ "values('" + vcodeid +"','" + vhmap.get("RACKPOSITION") +"','" + vhmap.get("INVENTORYUNITID") +"','" + vhmap.get("VENDORUNITFAMILYTYPE") +"','" + vhmap.get("VENDORUNITTYPENUMBER") +"','" + vhmap.get("VENDORNAME") +"','" + vhmap.get("SERIALNUMBER") +"','" + vhmap.get("HARDWAREVERSION") +"','" + vhmap.get("SOFTVER") +"',DATE '" + vhmap.get("DATEOFMANUFACTURE") +"',DATE '" + vhmap.get("DATEOFLASTSERVICE") +"', '" + vhmap.get("MANUFACTURERDATA") +"','" + vhmap.get("ACCESSORYTYPE") +"','" + vhmap.get("ADDTIONALINFORMATION") +"','" + codeID +"','" + codeidattr +"',sysdate,'" + filename +"' ,'" + vhmap.get("STATUS") +"','0','0','0','" + vhmap.get("TRANS_ID") +"','" + vhmap.get("TRANS_TYPE") +"','"+ j +"','1','RAN','" + provider +"') ";
-				                		   //System.out.println(filename + "    "+ InsertQuery);
+				                		   nodeAccessorySeq++;
 				                	   }
 				                	   if (attributeTable =="NODE_HOST" ) {
 				                		   if (vhmap.get("DATEOFMANUFACTURE").length()== 1) { vhmap.put("DATEOFMANUFACTURE", todayDate);} else {String res = createDate(vhmap.get("DATEOFMANUFACTURE")); vhmap.put("DATEOFMANUFACTURE", res);}
 				                		   if (vhmap.get("DATEOFLASTSERVICE").length()== 1) {vhmap.put("DATEOFLASTSERVICE", todayDate);} else {String res = createDate(vhmap.get("DATEOFLASTSERVICE")); vhmap.put("DATEOFLASTSERVICE", res);}
-				                		   vcodeid= localgetseqNbr(10);  /// 10 to select Host_id
-				                		   vcodeid=currentYear+"_"+ "HOST"+'_'+vcodeid;
+				                		   vcodeid=currentYear+"_"+ "HOST"+'_'+nodeHostSeq;
 				                		   InsertQuery="insert into " + attributeTable  + " (HOST_ID,RACKPOSITION,INVENTORYUNITID,VENDORUNITFAMILYTYPE,VENDORUNITTYPENUMBER,VENDORNAME,SERIALNUMBER,HARDWAREVERSION,SOFTVER,DATEOFMANUFACTURE,DATEOFLASTSERVICE,MANUFACTURERDATA,HOSTNAME,NUMBEROFCPU,MEMSIZE,HARDDISKSIZE,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,DOMAIN,VENDOR) "
 				                		   		+ " values('" + vcodeid +"','" + vhmap.get("RACKPOSITION") +"','" + vhmap.get("INVENTORYUNITID") +"','" + vhmap.get("VENDORUNITFAMILYTYPE") +"','" + vhmap.get("VENDORUNITTYPENUMBER") +"','" + vhmap.get("VENDORNAME") +"','" + vhmap.get("SERIALNUMBER") +"','" + vhmap.get("HARDWAREVERSION") +"','" + vhmap.get("SOFTVER") +"',DATE '" + vhmap.get("DATEOFMANUFACTURE") +"',DATE '" + vhmap.get("DATEOFLASTSERVICE") +"', '" + vhmap.get("MANUFACTURERDATA") +"','" + vhmap.get("HOSTNAME") +"','" + vhmap.get("NUMBEROFCPU") +"','" + vhmap.get("MEMSIZE") +"','" + vhmap.get("HARDDISKSIZE") +"','" + codeID +"','" + codeidattr +"',sysdate,'" + filename +"','" + vhmap.get("STATUS") +"' ,'0','0','0','" + vhmap.get("TRANS_ID") +"','" + vhmap.get("TRANS_TYPE") +"','"+ j +"','1','RAN','" + provider +"') ";
-				                		   //System.out.println(filename + "    "+ InsertQuery);
+				                		   nodeHostSeq++;
 				                	   }
 				                	   if (attributeTable =="NODE_SUBRACK" ) {
 				                		   if (vhmap.get("DATEOFMANUFACTURE").length()== 1) { vhmap.put("DATEOFMANUFACTURE", todayDate);} else {String res = createDate(vhmap.get("DATEOFMANUFACTURE")); vhmap.put("DATEOFMANUFACTURE", res);}
 				                		   if (vhmap.get("DATEOFLASTSERVICE").length()== 1) {vhmap.put("DATEOFLASTSERVICE", todayDate);} else {String res = createDate(vhmap.get("DATEOFLASTSERVICE")); vhmap.put("DATEOFLASTSERVICE", res);}
-				                		   vcodeid= localgetseqNbr(11);  /// 11 to select subrack_id  
-				                		   vcodeid=currentYear+"_"+ "SUBRACK"+'_'+vcodeid;
+				                		   vcodeid=currentYear+"_"+ "SUBRACK"+'_'+nodeSubRackSeq;
 			                			   InsertQuery="insert into " + attributeTable  +" (SUBRACK_ID,SITEINDEX,CABINETNO,SUBRACKNO,INVENTORYUNITID,RACKTYPE,BOMRACKTYPE,FRAMETYPE,RACKFRAMENO,MODULENO,INVENTORYUNITTYPE,VENDORUNITFAMILYTYPE,VENDORUNITTYPENUMBER,VENDORNAME,SERIALNUMBER,HARDWAREVERSION,DATEOFMANUFACTURE,DATEOFLASTSERVICE,UNITPOSITION,MANUFACTURERDATA,USERLABEL,BOMCODE,MODEL,ISSUENUMBER,BOMFRAMETYPE,CLEICODE,BOM,EXTINFO,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,DOMAIN,VENDOR) "
 			                			   		+ "values('" + vcodeid +"','" + vhmap.get("SITEINDEX") +"','" + vhmap.get("CABINETNO") +"','" + vhmap.get("SUBRACKNO") +"','" + vhmap.get("INVENTORYUNITID") +"','" + vhmap.get("RACKTYPE") +"','" + vhmap.get("BOMRACKTYPE") +"','" + vhmap.get("FRAMETYPE") +"','" + vhmap.get("RACKFRAMENO") +"','" + vhmap.get("MODULENO") +"','" + vhmap.get("INVENTORYUNITTYPE") +"', '" + vhmap.get("VENDORUNITFAMILYTYPE") +"', '" + vhmap.get("VENDORUNITTYPENUMBER") +"','" + vhmap.get("VENDORNAME") +"','" + vhmap.get("SERIALNUMBER") +"','" + vhmap.get("HARDWAREVERSION") +"',DATE '" + vhmap.get("DATEOFMANUFACTURE") +"',DATE '" + vhmap.get("DATEOFLASTSERVICE") +"','" + vhmap.get("UNITPOSITION") +"','" + vhmap.get("MANUFACTURERDATA") +"','" + vhmap.get("USERLABEL") +"','" + vhmap.get("BOMCODE") +"','" + vhmap.get("MODEL") +"','" + vhmap.get("ISSUENUMBER") +"','" + vhmap.get("BOMFRAMETYPE") +"','" + vhmap.get("CLEICODE") +"','" + vhmap.get("BOM") +"','" + vhmap.get("EXTINFO") +"','" + codeID +"','" + codeidattr +"',sysdate,'" + filename +"','" + vhmap.get("STATUS") +"','0','0','0','" + vhmap.get("TRANS_ID") +"','" + vhmap.get("TRANS_TYPE") +"' ,'"+ j +"','1','RAN','" + provider +"') ";
-				                		   //System.out.println(filename + "    "+ InsertQuery);
+				                		   nodeSubRackSeq++;
+
 				                		   }
 				                	   if (attributeTable =="NODE_GCELL" ) {
-				                		   vcodeid= localgetseqNbr(12);  /// 12 to select Gcell_id
-				                		   vcodeid=currentYear+"_"+ "GCELL"+'_'+vcodeid;
+				                		   vcodeid=currentYear+"_"+ "GCELL"+'_'+nodeGCellSeq;
 				                		   InsertQuery="insert into " + attributeTable  +" (GCELL_ID,CELLID,CELLNAME,MCC,MNC,LAC,CI,NCC,BCC,TYPE,BCCHNO,BASEBANDPOLICY,BASEBANDEQMID,GBTSFUNCTIONNAME,GLOCELLID,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,CREATION_DATE,DOMAIN,VENDOR) "
 				                		   		+ "values('" + vcodeid +"','" + vhmap.get("CELLID") +"','" + vhmap.get("CELLNAME") +"','" + vhmap.get("MCC") +"','" + vhmap.get("MNC") +"','" + vhmap.get("LAC") +"','" + vhmap.get("CI") +"','" + vhmap.get("NCC") +"','" + vhmap.get("BCC") +"','" + vhmap.get("TYPE") +"','" + vhmap.get("BCCHNO") +"','" + vhmap.get("BASEBANDPOLICY") +"','" + vhmap.get("BASEBANDEQMID") +"','" + vhmap.get("GBTSFUNCTIONNAME") +"','" + vhmap.get("GLOCELLID") +"','" + codeID +"','" + codeidattr +"',sysdate,'" + filename +"','" + vhmap.get("STATUS") +"','0','0','0','" + vhmap.get("TRANS_ID") +"','" + vhmap.get("TRANS_TYPE") +"','"+ j +"','1',sysdate,'RAN','" + provider +"') ";
 				                		   //System.out.println(filename + "    "+ InsertQuery);
+				                		   nodeGCellSeq++;
 				                	   }
 				                	   if (attributeTable =="NODE_BTS" ) {
-				                		   vcodeid= localgetseqNbr(13);  /// 13 to select BTS_id
-				                		   vcodeid=currentYear+"_"+ "BTS"+'_'+vcodeid;
+				                		   vcodeid=currentYear+"_"+ "BTS"+'_'+nodeBTSSeq;
 				                		   InsertQuery="insert into " + attributeTable  +" (BTS_ID,SITEINDEX,SITENAME,SITETYPE,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,DOMAIN,VENDOR) "
 				                		   		+ "values('" + vcodeid +"','" + vhmap.get("SITEINDEX") +"','" + vhmap.get("SITENAME") +"','" + vhmap.get("SITETYPE") +"','" + codeID +"','" + codeidattr +"',sysdate,'" + filename +"','" + vhmap.get("STATUS") +"','0','0','0','" + vhmap.get("TRANS_ID") +"','" + vhmap.get("TRANS_TYPE") +"' ,'"+ j +"','1','RAN','" + provider +"') ";
 				                		   //System.out.println(filename + "    "+ InsertQuery);
+				                		   nodeBTSSeq++;
 				                	   }
 				                	   if (attributeTable =="NODE_UCELL" ) {
-				                		   vcodeid= localgetseqNbr(14);  /// 14 to select Ucell_id
-				                		   vcodeid=currentYear+"_"+ "UCELL"+'_'+vcodeid;
+				                		   vcodeid=currentYear+"_"+ "UCELL"+'_'+nodeUCellSeq;
 				                		   InsertQuery="insert into " + attributeTable  +"(UCELL_ID,CELLID,CELLNAME,LOCELL,NODEBFUNCTIONNAME,ULFREQ,DLFREQ,MAXPOWER,USERLABEL,MAXTXPOWER,UARFCNUPLINK,UARFCNDOWNLINK,PSCRAMBCODE,NODEBNAME,LAC,SAC,RAC,MANUFACTURERDATA,RADIUS,HORAD,DI,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,CREATION_DATE,DOMAIN,VENDOR) "
 				                		   		+ "values('" + vcodeid +"','" + vhmap.get("CELLID") +"','" + vhmap.get("CELLNAME") +"','" + vhmap.get("LOCELL") +"','" + vhmap.get("NODEBFUNCTIONNAME") +"','" + vhmap.get("ULFREQ") +"','" + vhmap.get("DLFREQ") +"','" + vhmap.get("MAXPOWER") +"','" + vhmap.get("USERLABEL") +"','" + vhmap.get("MAXTXPOWER") +"','" + vhmap.get("UARFCNUPLINK") +"','" + vhmap.get("UARFCNDOWNLINK") +"','" + vhmap.get("PSCRAMBCODE") +"','" + vhmap.get("NODEBNAME") +"','" + vhmap.get("LAC") +"','" + vhmap.get("SAC") +"','" + vhmap.get("RAC") +"','" + vhmap.get("MANUFACTURERDATA") +"','" + vhmap.get("RADIUS") +"','" + vhmap.get("HORAD") +"','" + vhmap.get("DI") +"','" + codeID +"','" + codeidattr +"',sysdate,'" + filename +"','" + vhmap.get("STATUS") +"' ,'0','0','0','" + vhmap.get("TRANS_ID") +"','" + vhmap.get("TRANS_TYPE") +"','"+ j +"','1',sysdate,'RAN','" + provider +"') ";
-				                		   //System.out.println(filename + "    "+ InsertQuery);
+				                		   nodeUCellSeq++;
 				                	   }
 				                	   if (attributeTable =="NODE_ANTENNA" ) {
 				                		   if (vhmap.get("DATEOFMANUFACTURE").length()== 1) { vhmap.put("DATEOFMANUFACTURE", todayDate);} else {String res = createDate(vhmap.get("DATEOFMANUFACTURE")); vhmap.put("DATEOFMANUFACTURE", res);}
 				                		   if (vhmap.get("DATEOFLASTSERVICE").length()== 1) {vhmap.put("DATEOFLASTSERVICE", todayDate);} else {String res = createDate(vhmap.get("DATEOFLASTSERVICE")); vhmap.put("DATEOFLASTSERVICE", res);}
-				                		   vcodeid= localgetseqNbr(15);  /// 15 to select Antena_id 
-				                		   vcodeid=currentYear+"_"+ "ANTENNA"+'_'+vcodeid;
+				                		   vcodeid=currentYear+"_"+ "ANTENNA"+'_'+nodeAntennaSeq;
 				                			   InsertQuery="insert into " + attributeTable  +" (ANTENNA_ID,INVENTORYUNITID,INVENTORYUNITTYPE,ANTENNADEVICENO,PRODNR,VENDORUNITFAMILYTYPE,VENDORUNITTYPENUMBER,VENDORNAME,SERIALNUMBER,HARDWAREVERSION,DATEOFMANUFACTURE,DATEOFLASTSERVICE,UNITPOSITION,MANUFACTURERDATA,ANTENNADEVICETYPE,ISSUENUMBER,BOMCODE,EXTINFO,MODEL,SERIALNUMBEREX,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,CREATION_DATE,DOMAIN,VENDOR) "
 				                			   		+ "values('" + vcodeid +"','" + vhmap.get("INVENTORYUNITID") +"','" + vhmap.get("INVENTORYUNITTYPE") +"','" + vhmap.get("ANTENNADEVICENO") +"','" + vhmap.get("PRODNR") +"','" + vhmap.get("VENDORUNITFAMILYTYPE") +"','" + vhmap.get("VENDORUNITTYPENUMBER") +"','" + vhmap.get("VENDORNAME") +"','" + vhmap.get("SERIALNUMBER") +"','" + vhmap.get("HARDWAREVERSION") +"',DATE '" + vhmap.get("DATEOFMANUFACTURE") +"',DATE '" + vhmap.get("DATEOFLASTSERVICE") +"','" + vhmap.get("UNITPOSITION") +"','" + vhmap.get("MANUFACTURERDATA") +"','" + vhmap.get("ANTENNADEVICETYPE") +"','" + vhmap.get("ISSUENUMBER") +"','" + vhmap.get("BOMCODE") +"','" + vhmap.get("EXTINFO") +"','" + vhmap.get("MODEL") +"','" + vhmap.get("SERIALNUMBEREX") +"','" + codeID +"','" + codeidattr +"',sysdate,'" + filename +"','" + vhmap.get("STATUS") +"' ,'0','0','0','" + vhmap.get("TRANS_ID") +"','" + vhmap.get("TRANS_TYPE") +"','"+ j +"','1',sysdate,'RAN','" + provider +"') ";
-				                		   //System.out.println(filename + "    "+ InsertQuery);
+				                			   nodeAntennaSeq++;
 				                	   }
-				                	   if (attributeTable =="NODE_LCELL" ) {
-				                		   vcodeid= localgetseqNbr(16);  /// 16 to select LCELL_id 
-				                		   vcodeid=currentYear+"_"+ "LCELL"+'_'+vcodeid;
+				                	 if (attributeTable =="NODE_LCELL" ) {
+				                		   vcodeid=currentYear+"_"+ "LCELL"+'_'+nodeLCellSeq;
 				                		   InsertQuery="insert into " + attributeTable  +" (LCELL_ID,LOCALCELLID,CELLNAME,CELLRADIUS,FREQBAND,ULEARFCNCFGIND,ULEARFCN,DLEARFCN,ULBANDWIDTH,DLBANDWIDTH,CELLID,PHYCELLID,FDDTDDIND,ENODEBFUNCTIONNAME,NBCELLFLAG,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,CREATION_DATE,DOMAIN,VENDOR) "
 				                		   		+ "values('" + vcodeid +"','" + vhmap.get("LOCALCELLID") +"','" + vhmap.get("CELLNAME") +"','" + vhmap.get("CELLRADIUS") +"','" + vhmap.get("FREQBAND") +"','" + vhmap.get("ULEARFCNCFGIND") +"','" + vhmap.get("ULEARFCN") +"','" + vhmap.get("DLEARFCN") +"','" + vhmap.get("ULBANDWIDTH") +"','" + vhmap.get("DLBANDWIDTH") +"','" + vhmap.get("CELLID") +"','" + vhmap.get("PHYCELLID") +"','" + vhmap.get("FDDTDDIND") +"','" + vhmap.get("ENODEBFUNCTIONNAME") +"','" + vhmap.get("NBCELLFLAG") +"','" + codeID +"','" + codeidattr +"',sysdate,'" + filename +"','" + vhmap.get("STATUS") +"','0','0','0','" + vhmap.get("TRANS_ID") +"','" + vhmap.get("TRANS_TYPE") +"','"+ j +"','1',sysdate,'RAN','" + provider +"' ) ";
-				                		   //System.out.println(filename + "    "+ InsertQuery);
+				                		   nodeLCellSeq++;
 				                	   }
-				                	   if (attributeTable =="NODE_RRN" ) {
-				                		   vcodeid= localgetseqNbr(17);  /// 17 to select RNN_id
-				                		   vcodeid=currentYear+"_"+ "RRN"+'_'+vcodeid;
+				                	  if (attributeTable =="NODE_RRN" ) {
+				                		   vcodeid=currentYear+"_"+ "RRN"+'_'+nodeRRNSeq;
 				                		   InsertQuery="insert into " + attributeTable  +" (RRN_ID,SITEINDEX,SITENAME,SITETYPE,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,DOMAIN,VENDOR) "
 					                		   		+ "values('" + vcodeid +"','" + vhmap.get("SITEINDEX") +"','" + vhmap.get("SITENAME") +"','" + vhmap.get("SITETYPE") +"','" + codeID +"','" + codeidattr +"',sysdate,'" + filename +"' ,'" + vhmap.get("STATUS") +"','0','0','0','" + vhmap.get("TRANS_ID") +"','" + vhmap.get("TRANS_TYPE") +"','"+ j +"','1','RAN','" + provider +"') ";
-				                		   //System.out.println(filename + "    "+ InsertQuery);
+				                		   nodeRRNSeq++;
 				                	   }
 				                	   if (attributeTable =="NODE_ENODEBCELL" ) {
-				                		   vcodeid= localgetseqNbr(18);  /// 18 to select ENODEBCELL_id 
-				                		   vcodeid=currentYear+"_"+ "ENODEBCELL"+'_'+vcodeid;
+				                		   vcodeid=currentYear+"_"+ "ENODEBCELL"+'_'+nodeENodeBSeq;
 		                						InsertQuery="insert into " + attributeTable  +"(ENODEBCELL_ID,LOCALCELLID,CELLNAME,SECTORID,CSGIND,CYCLEPREFIX,FREQBAND,ULEARFCNCFGIND,ULEARFCN,DLEARFCN,ULBANDWIDTH,DLBANDWIDTH,CELLID,PHYCELLID,FDDTDDIND,TAC,ADDITIONALSPECTRUMEMISSION,NBCELLFLAG,ENODEBFUNCTIONNAME,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,DOMAIN,VENDOR )"
 		                								+ "values('" + vcodeid +"','" + vhmap.get("LOCALCELLID") +"','" + vhmap.get("CELLNAME") +"','" + vhmap.get("SECTORID") +"','" + vhmap.get("CSGIND") +"','" + vhmap.get("CYCLEPREFIX") +"','" + vhmap.get("FREQBAND") +"','" + vhmap.get("ULEARFCNCFGIND") +"','" + vhmap.get("ULEARFCN") +"','" + vhmap.get("DLEARFCN") +"','" + vhmap.get("ULBANDWIDTH") +"','" + vhmap.get("DLBANDWIDTH") +"','" + vhmap.get("CELLID") +"','" + vhmap.get("PHYCELLID") +"','" + vhmap.get("FDDTDDIND") +"','" + vhmap.get("TAC") +"','" + vhmap.get("ADDITIONALSPECTRUMEMISSION") +"','" + vhmap.get("NBCELLFLAG") +"','" + vhmap.get("ENODEBFUNCTIONNAME") +"','" + codeID +"','" + codeidattr +"',sysdate,'" + filename +"','" + vhmap.get("STATUS") +"','0','0','0','" + vhmap.get("TRANS_ID") +"','" + vhmap.get("TRANS_TYPE") +"','"+ j +"','1','RAN','" + provider +"') ";
 				                		   //System.out.println(filename + "    "+ InsertQuery);
+		                						nodeENodeBSeq++;
 				                	   }
 				                	   if (attributeTable =="NODE_NODEBCELL" ) {
-				                		   vcodeid= localgetseqNbr(19);  /// 19 to select NODEBCELL_id
-				                		   vcodeid=currentYear+"_"+ "NODEBCELL"+'_'+vcodeid;
+				                		   vcodeid=currentYear+"_"+ "NODEBCELL"+'_'+nodeNodeBSeq;
 				                		   InsertQuery="insert into " + attributeTable  +" (NODEBCELL_ID,LOCELL,USERLABEL,SITENO,SECNO,RADIUS,HORAD,BBPOOLTYPE,ULGROUPNO,CABINETNO1,SUBRACKNO1,SLOTNO1,CABINETNO2,SUBRACKNO2,SLOTNO2,ULFREQ,DLFREQ,MAXPOWER,HSDPA,DI,HIGHSPEEDMODE,SPEEDRATE,NODEBFUNCTIONNAME,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,DOMAIN,VENDOR) "
 				                		   		+ "values('" + vcodeid +"','" + vhmap.get("LOCELL") +"','" + vhmap.get("USERLABEL") +"','" + vhmap.get("SITENO") +"','" + vhmap.get("SECNO") +"','" + vhmap.get("RADIUS") +"','" + vhmap.get("HORAD") +"','" + vhmap.get("BBPOOLTYPE") +"','" + vhmap.get("ULGROUPNO") +"','" + vhmap.get("CABINETNO1") +"','" + vhmap.get("SUBRACKNO1") +"','" + vhmap.get("SLOTNO1") +"','" + vhmap.get("CABINETNO2") +"','" + vhmap.get("SUBRACKNO2") +"','" + vhmap.get("SLOTNO2") +"','" + vhmap.get("ULFREQ") +"','" + vhmap.get("DLFREQ") +"','" + vhmap.get("MAXPOWER") +"','" + vhmap.get("HSDPA") +"','" + vhmap.get("DI") +"','" + vhmap.get("HIGHSPEEDMODE") +"','" + vhmap.get("SPEEDRATE") +"','" + vhmap.get("NODEBFUNCTIONNAME") +"','" + codeID +"','" + codeidattr +"',sysdate,'" + filename +"','" + vhmap.get("STATUS") +"' ,'0','0','0','" + vhmap.get("TRANS_ID") +"','" + vhmap.get("TRANS_TYPE") +"','"+ j +"','1','RAN','" + provider +"') ";
-				                		   //System.out.println(filename + "    "+ InsertQuery);
+				                		   nodeNodeBSeq++;
 				                	   }
 				                	   if (attributeTable =="NODE_NBInterfaces" ) {
-				                		   vcodeid= localgetseqNbr(17);  /// 17 to select RNN_id
-				                		   vcodeid=currentYear+"_"+ "NBInterfaces"+'_'+vcodeid;
+				                		   vcodeid=currentYear+"_"+ "NBInterfaces"+'_'+nodeNBInterfaceSeq;
 				                		   InsertQuery="insert into " + attributeTable  +" (NBINTERFACE_ID,INTERFACETYPE,VERSION,ISUSED,NMSVENDOR,NMSNAME,REMARK,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,DOMAIN,VENDOR) "
 					                		   		+ "values('" + vcodeid +"','" + vhmap.get("INTERFACETYPE") +"','" + vhmap.get("VERSION") +"','" + vhmap.get("ISUSED") +"','" + vhmap.get("NMSVENDOR") +"','" + vhmap.get("NMSNAME") +"','" + vhmap.get("REMARK") +"','" + codeID +"','" + codeidattr +"',sysdate,'" + filename +"','" + vhmap.get("STATUS") +"','0','0','0','" + vhmap.get("TRANS_ID") +"','" + vhmap.get("TRANS_TYPE") +"','"+ j +"','1','RAN','" + provider +"' ) ";
-				                		   //System.out.println(filename + "    "+ InsertQuery);
+				                		   nodeNBInterfaceSeq++;
 				                	   }
+				                	   
 				                	   if (InsertQuery != null ) {
 					                	  PreparedStatement stmtattr = parserCon.prepareStatement(InsertQuery); 
 					                	  stmtattr.executeUpdate();
 					                	  stmtattr.close();
 				                	   }
-				                	  System.out.println("\n");
+				                	 // System.out.println("\n");
 				                  }  
 				                     
 				              }
@@ -872,7 +892,14 @@ public class LoadFilesRanHuawei {
 			             }
 					}
 				
-				
+					stmtp = almCon.prepareStatement("UPDATE SEQ_TABLE SET NODE_RACK = '"+NodeRackSeq+"' ,NODE_ACTIVE_ATTRIBUTE = '"+NodeActiveAttrSeq+"' , NODE_FRAME = '"+NodeFrameSeq+"'"
+							+ " , NODE_SLOT = '"+nodeSlotSeq+"', NODE_BOARD = '"+nodeBoardSeq+"' , NODE_PORT ='"+nodePortSeq+"' , NODE_HOSTVER='"+nodeHostVerSeq+"' "
+									+ " , NODE_CABINET ='"+nodeCabinetSeq+"' , NODE_ACCESSORY ='"+nodeAccessorySeq+"' , NODE_HOST='"+nodeHostSeq+"' , NODE_SUBRACK ='"+nodeSubRackSeq+"' ,"
+											+ " NODE_GCELL ='"+nodeGCellSeq+"' , NODE_BTS='"+nodeBTSSeq+"' ,  NODE_UCELL ='"+nodeUCellSeq+"' , NODE_ANTENNA = '"+nodeAntennaSeq+"' , NODE_LCELL ='"+nodeLCellSeq+"' , NODE_RRN = '"+nodeRRNSeq+"' , NODE_ENODEBCELL='"+nodeENodeBSeq+"' , NODE_NODEBCELL='"+nodeNodeBSeq+"' , NODE_NBInterfaces='"+nodeNBInterfaceSeq+"' ");
+				  	stmtp.executeUpdate();
+				  	stmtp.close();
+				  	
+				  	
 					objReader.close();	
 					
 					
@@ -895,7 +922,6 @@ public class LoadFilesRanHuawei {
 	 
 	 public static HashMap getMapColumnsHostver(String str) {
 		 System.out.println("first str " +str);
-		 String[] pr =str.split("\\s+");
 		 HashMap<String, String> hmap = new HashMap<String, String>();
 		 hmap.put("HOSTVERTYPE", "0");
 		 hmap.put("HOSTVER", "0");
@@ -904,28 +930,25 @@ public class LoadFilesRanHuawei {
 		 hmap.put("TRANS_TYPE", "0");
 		 hmap.put("TRANS_ID", "0");
 		 
-		 String col1 = str;
-		 String col2 = null;
-		 int n = col1.indexOf("<ROW");
-		 col1=col1.substring(n+5, col1.length());
-		// System.out.println("first space " +col1);
+		 String crntLine = str;
+		 String col = null;
+		 int n = crntLine.indexOf("<ROW");
+		 crntLine=crntLine.substring(n+5, crntLine.length());
 		 
 		 
-		 String val2=null;
-		 n = col1.indexOf("=\"");
+		 String val=null;
+		 n = crntLine.indexOf("=\"");
 		 while (n != -1) {
-		 String val1 = col1.substring(0, n).trim();
-		 col2=col1.substring(n+2, col1.length());
-		 //System.out.println("col2 "+ col2);
-		 n = col2.indexOf("\"");
-		 if  (n == 0) {val2 = "0";} else {val2 = col2.substring(0, n).trim();}
-		// System.out.println("val1 " +val1  + "   val2: " + val2);
+		 String key = crntLine.substring(0, n).trim();
+		 col=crntLine.substring(n+2, crntLine.length());
+		 n = col.indexOf("\"");
+		 if  (n == 0) {val = "0";} else {val = col.substring(0, n).trim();}
 		 
-		 if (StringUtils.equalsIgnoreCase (val1,"HostVerType")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"HostVer")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"sDesc")) {hmap.put( val1.toUpperCase(), val2);}
-		 col1=col2.substring(n+1, col2.length());
-		 n = col1.indexOf("=\"");
+		 if (StringUtils.equalsIgnoreCase (key,"HostVerType")) {hmap.put( key.toUpperCase(), val);}
+		 if (StringUtils.equalsIgnoreCase (key,"HostVer")) {hmap.put( key.toUpperCase(), val);}
+		 if (StringUtils.equalsIgnoreCase (key,"sDesc")) {hmap.put( key.toUpperCase(), val);}
+		 crntLine=col.substring(n+1, col.length());
+		 n = crntLine.indexOf("=\"");
 		 }
  
 		return hmap;
@@ -954,42 +977,39 @@ public class LoadFilesRanHuawei {
 		 hmap.put("TRANS_TYPE", "0");
 		 hmap.put("TRANS_ID", "0");
 		 
-		 String col1 = str;
-		 String col2 = null;
-		 int n = col1.indexOf("<ROW");
-		 col1=col1.substring(n+5, col1.length());
-		// System.out.println("first space " +col1);
+		 String crntLine = str;
+		 String col = null;
+		 int n = crntLine.indexOf("<ROW");
+		 crntLine=crntLine.substring(n+5, crntLine.length());
 		 
 		 
-		 String val2=null;
-		 n = col1.indexOf("=\"");
+		 String value=null;
+		 n = crntLine.indexOf("=\"");
 		 while (n != -1) {
-		 String val1 = col1.substring(0, n).trim();
-		 col2=col1.substring(n+2, col1.length());
-		 //System.out.println("col2 "+ col2);
-		 n = col2.indexOf("\"");
-		 if  (n == 0) {val2 = "0";} else {val2 = col2.substring(0, n).trim();}
-		 //System.out.println("val1 " +val1  + "   val2: " + val2);
+		 String key = crntLine.substring(0, n).trim();
+		 col=crntLine.substring(n+2, crntLine.length());
+		 n = col.indexOf("\"");
+		 if  (n == 0) {value = "0";} else {value = col.substring(0, n).trim();}
 		 
-		 if (StringUtils.equalsIgnoreCase (val1,"RackNo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"InventoryUnitId")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"RackType")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"InventoryUnitType")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"VendorUnitFamilyType")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"VendorUnitTypeNumber")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"VendorName")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SerialNumber")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"HardwareVersion")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"DateOfManufacture")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"DateOfLastService")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"UnitPosition")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"ManufacturerData")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"Model")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"UserLabel")) {hmap.put( val1.toUpperCase(), val2);}
+		 if (StringUtils.equalsIgnoreCase (key,"RackNo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"InventoryUnitId")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"RackType")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"InventoryUnitType")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"VendorUnitFamilyType")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"VendorUnitTypeNumber")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"VendorName")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SerialNumber")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"HardwareVersion")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"DateOfManufacture")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"DateOfLastService")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"UnitPosition")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"ManufacturerData")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"Model")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"UserLabel")) {hmap.put( key.toUpperCase(), value);}
 	 
 		 
-		 col1=col2.substring(n+1, col2.length());
-		 n = col1.indexOf("=\"");
+		 crntLine=col.substring(n+1, col.length());
+		 n = crntLine.indexOf("=\"");
 		 }
  
 		return hmap;
@@ -1022,44 +1042,41 @@ public class LoadFilesRanHuawei {
 		 hmap.put("TRANS_TYPE", "0");
 		 hmap.put("TRANS_ID", "0");
 
-		 String col1 = str;
-		 String col2 = null;
-		 int n = col1.indexOf("<ROW");
-		 col1=col1.substring(n+5, col1.length());
-		 //System.out.println("first space " +col1);
+		 String crntLine = str;
+		 String col = null;
+		 int n = crntLine.indexOf("<ROW");
+		 crntLine=crntLine.substring(n+5, crntLine.length());
 		 
 		 
-		 String val2=null;
-		 n = col1.indexOf("=\"");
+		 String value=null;
+		 n = crntLine.indexOf("=\"");
 		 while (n != -1) {
-		 String val1 = col1.substring(0, n).trim();
-		 col2=col1.substring(n+2, col1.length());
-		 //System.out.println("col2 "+ col2);
-		 n = col2.indexOf("\"");
-		 if  (n == 0) {val2 = "0";} else {val2 = col2.substring(0, n).trim();}
-		 //System.out.println("val1 " +val1  + "   val2: " + val2);
+		 String key = crntLine.substring(0, n).trim();
+		 col=crntLine.substring(n+2, crntLine.length());
+		 n = col.indexOf("\"");
+		 if  (n == 0) {value = "0";} else {value = col.substring(0, n).trim();}
 		 
-		 if (StringUtils.equalsIgnoreCase (val1,"RackNo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"FrameNo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"InventoryUnitId")) {hmap.put(val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"FrameType")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"RackFrameNo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"ModuleNo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"InventoryUnitType")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"VendorUnitFamilyType")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"VendorUnitTypeNumber")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"VendorName")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SerialNumber")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"HardwareVersion")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"DateOfManufacture")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"DateOfLastService")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"UnitPosition")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"ManufacturerData")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"Model")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"UserLabel")) {hmap.put( val1.toUpperCase(),val2);}
+		 if (StringUtils.equalsIgnoreCase (key,"RackNo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"FrameNo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"InventoryUnitId")) {hmap.put(key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"FrameType")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"RackFrameNo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"ModuleNo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"InventoryUnitType")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"VendorUnitFamilyType")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"VendorUnitTypeNumber")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"VendorName")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SerialNumber")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"HardwareVersion")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"DateOfManufacture")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"DateOfLastService")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"UnitPosition")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"ManufacturerData")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"Model")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"UserLabel")) {hmap.put( key.toUpperCase(),value);}
 	 
-		 col1=col2.substring(n+1, col2.length());
-		 n = col1.indexOf("=\"");
+		 crntLine=col.substring(n+1, col.length());
+		 n = crntLine.indexOf("=\"");
 		 }
 		 
 		
@@ -1095,45 +1112,44 @@ public class LoadFilesRanHuawei {
 		 hmap.put("TRANS_ID", "0");
 		 
 		 
-		 String col1 = str;
-		 String col2 = null;
-		 int n = col1.indexOf("<ROW");
-		 col1=col1.substring(n+5, col1.length());
-		// System.out.println("first space " +col1);
+		 String crntLine = str;
+		 String col = null;
+		 int n = crntLine.indexOf("<ROW");
+		 crntLine=crntLine.substring(n+5, crntLine.length());
+		// System.out.println("first space " +crntLine);
 		 
 		 
-		 String val2=null;
-		 n = col1.indexOf("=\"");
+		 String value=null;
+		 n = crntLine.indexOf("=\"");
 		 while (n != -1) {
-		 String val1 = col1.substring(0, n).trim();
-		 col2=col1.substring(n+2, col1.length());
-		 //System.out.println("col2 "+ col2);
-		 n = col2.indexOf("\"");
-		 if  (n == 0) {val2 = "0";} else {val2 = col2.substring(0, n).trim();}
-		 //System.out.println("val1 " +val1  + "   val2: " + val2);
+		 String key = crntLine.substring(0, n).trim();
+		 col=crntLine.substring(n+2, crntLine.length());
+		 //System.out.println("col "+ col);
+		 n = col.indexOf("\"");
+		 if  (n == 0) {value = "0";} else {value = col.substring(0, n).trim();}
 		 
-		 if (StringUtils.equalsIgnoreCase (val1,"SiteIndex")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"CabinetNo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SubrackNo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"RackNo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"FrameNo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SlotNo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SlotPos")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"InventoryUnitId")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"InventoryUnitType")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"VendorUnitFamilyType")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"VendorUnitTypeNumber")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"VendorName")) {hmap.put( val1.toUpperCase(),val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SerialNumber")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"HardwareVersion")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"DateOfManufacture")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"DateOfLastService")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"UnitPosition")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"ManufacturerData")) {hmap.put( val1.toUpperCase(), val2);}
+		 if (StringUtils.equalsIgnoreCase (key,"SiteIndex")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"CabinetNo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SubrackNo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"RackNo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"FrameNo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SlotNo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SlotPos")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"InventoryUnitId")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"InventoryUnitType")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"VendorUnitFamilyType")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"VendorUnitTypeNumber")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"VendorName")) {hmap.put( key.toUpperCase(),value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SerialNumber")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"HardwareVersion")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"DateOfManufacture")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"DateOfLastService")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"UnitPosition")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"ManufacturerData")) {hmap.put( key.toUpperCase(), value);}
 	 
 		 
-		 col1=col2.substring(n+1, col2.length());
-		 n = col1.indexOf("=\"");
+		 crntLine=col.substring(n+1, col.length());
+		 n = crntLine.indexOf("=\"");
 		 }
  
 		return hmap;
@@ -1183,61 +1199,58 @@ public class LoadFilesRanHuawei {
 		 hmap.put("TRANS_TYPE", "0");
 		 hmap.put("TRANS_ID", "0");
 		 
-		 String col1 = str;
-		 String col2 = null;
-		 int n = col1.indexOf("<ROW");
-		 col1=col1.substring(n+5, col1.length());
-		// System.out.println("first space " +col1);
+		 String crntLine = str;
+		 String col = null;
+		 int n = crntLine.indexOf("<ROW");
+		 crntLine=crntLine.substring(n+5, crntLine.length());
 		 
 		 
-		 String val2=null;
-		 n = col1.indexOf("=\"");
+		 String value=null;
+		 n = crntLine.indexOf("=\"");
 		 while (n != -1) {
-		 String val1 = col1.substring(0, n).trim();
-		 col2=col1.substring(n+2, col1.length());
-		 //System.out.println("col2 "+ col2);
-		 n = col2.indexOf("\"");
-		 if  (n == 0) {val2 = "0";} else {val2 = col2.substring(0, n).trim();}
-		 //System.out.println("val1 " +val1  + "   val2: " + val2);
+		 String key = crntLine.substring(0, n).trim();
+		 col=crntLine.substring(n+2, crntLine.length());
+		 n = col.indexOf("\"");
+		 if  (n == 0) {value = "0";} else {value = col.substring(0, n).trim();}
 		 
-		 if (StringUtils.equalsIgnoreCase (val1,"SiteIndex")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"CabinetNo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SubrackNo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"RackNo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"FrameNo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SlotNo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SlotPos")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SubSlotNo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"InventoryUnitId")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"ModuleNo")) {hmap.put( val1.toUpperCase(),val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"BoardName")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"BoardType")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"InventoryUnitType")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"VendorUnitFamilyType")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"VendorUnitTypeNumber")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"VendorName")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SerialNumber")) {hmap.put( val1.toUpperCase(),val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"HardwareVersion")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"DateOfManufacture")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"DateOfLastService")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"UnitPosition")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"ManufacturerData")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SoftVer")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"LogicVer")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"BiosVer")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"BiosVerEx")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"LANVer")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"MBUSVer")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"IssueNumber")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"BOMCode")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"Model")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"UserLabel")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"ExtInfo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"ApDevInfo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"WorkMode")) {hmap.put( val1.toUpperCase(), val2);}
+		 if (StringUtils.equalsIgnoreCase (key,"SiteIndex")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"CabinetNo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SubrackNo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"RackNo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"FrameNo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SlotNo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SlotPos")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SubSlotNo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"InventoryUnitId")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"ModuleNo")) {hmap.put( key.toUpperCase(),value);}
+		 if (StringUtils.equalsIgnoreCase (key,"BoardName")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"BoardType")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"InventoryUnitType")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"VendorUnitFamilyType")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"VendorUnitTypeNumber")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"VendorName")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SerialNumber")) {hmap.put( key.toUpperCase(),value);}
+		 if (StringUtils.equalsIgnoreCase (key,"HardwareVersion")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"DateOfManufacture")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"DateOfLastService")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"UnitPosition")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"ManufacturerData")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SoftVer")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"LogicVer")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"BiosVer")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"BiosVerEx")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"LANVer")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"MBUSVer")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"IssueNumber")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"BOMCode")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"Model")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"UserLabel")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"ExtInfo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"ApDevInfo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"WorkMode")) {hmap.put( key.toUpperCase(), value);}
 		 
-		 col1=col2.substring(n+1, col2.length());
-		 n = col1.indexOf("=\"");
+		 crntLine=col.substring(n+1, col.length());
+		 n = crntLine.indexOf("=\"");
 		 }
  
 		return hmap;
@@ -1273,48 +1286,45 @@ public class LoadFilesRanHuawei {
 		 hmap.put("TRANS_TYPE", "0");
 		 hmap.put("TRANS_ID", "0");
 		 
-		 String col1 = str;
-		 String col2 = null;
-		 int n = col1.indexOf("<ROW");
-		 col1=col1.substring(n+5, col1.length());
-		// System.out.println("first space " +col1);
+		 String crntLine = str;
+		 String col = null;
+		 int n = crntLine.indexOf("<ROW");
+		 crntLine=crntLine.substring(n+5, crntLine.length());
 		 
 		 
-		 String val2=null;
-		 n = col1.indexOf("=\"");
+		 String value=null;
+		 n = crntLine.indexOf("=\"");
 		 while (n != -1) {
-		 String val1 = col1.substring(0, n).trim();
-		 col2=col1.substring(n+2, col1.length());
-		 //System.out.println("col2 "+ col2);
-		 n = col2.indexOf("\"");
-		 if  (n == 0) {val2 = "0";} else {val2 = col2.substring(0, n).trim();}
-		 //System.out.println("val1 " +val1  + "   val2: " + val2);
+		 String key = crntLine.substring(0, n).trim();
+		 col=crntLine.substring(n+2, crntLine.length());
+		 n = col.indexOf("\"");
+		 if  (n == 0) {value = "0";} else {value = col.substring(0, n).trim();}
 		 
-		 if (StringUtils.equalsIgnoreCase (val1,"SiteIndex")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"CabinetNo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SubrackNo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"RackNo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"FrameNo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SlotNo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SlotPos")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SubSlotNo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"VendorUnitFamilyType")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"InventoryUnitId")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"PortNo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"HardwareVersion")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SerialNumber")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"InventoryUnitType")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"VendorName")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"VendorUnitTypeNumber")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"DateOfManufacture")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"DateOfLastService")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"UnitPosition")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"MacAddr")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"ManufacturerData")) {hmap.put( val1.toUpperCase(), val2);}
+		 if (StringUtils.equalsIgnoreCase (key,"SiteIndex")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"CabinetNo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SubrackNo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"RackNo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"FrameNo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SlotNo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SlotPos")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SubSlotNo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"VendorUnitFamilyType")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"InventoryUnitId")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"PortNo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"HardwareVersion")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SerialNumber")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"InventoryUnitType")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"VendorName")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"VendorUnitTypeNumber")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"DateOfManufacture")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"DateOfLastService")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"UnitPosition")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"MacAddr")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"ManufacturerData")) {hmap.put( key.toUpperCase(), value);}
 	 
 		 
-		 col1=col2.substring(n+1, col2.length());
-		 n = col1.indexOf("=\"");
+		 crntLine=col.substring(n+1, col.length());
+		 n = crntLine.indexOf("=\"");
 		 }
  
 		return hmap;
@@ -1352,50 +1362,47 @@ public class LoadFilesRanHuawei {
 		 hmap.put("TRANS_TYPE", "0");
 		 hmap.put("TRANS_ID", "0");
 		 
-		 String col1 = str;
-		 String col2 = null;
-		 int n = col1.indexOf("<ROW");
-		 col1=col1.substring(n+5, col1.length());
-		// System.out.println("first space " +col1);
+		 String crntLine = str;
+		 String col = null;
+		 int n = crntLine.indexOf("<ROW");
+		 crntLine=crntLine.substring(n+5, crntLine.length());
 		 
 		 
-		 String val2=null;
-		 n = col1.indexOf("=\"");
+		 String value=null;
+		 n = crntLine.indexOf("=\"");
 		 while (n != -1) {
-		 String val1 = col1.substring(0, n).trim();
-		 col2=col1.substring(n+2, col1.length());
-		 //System.out.println("col2 "+ col2);
-		 n = col2.indexOf("\"");
-		 if  (n == 0) {val2 = "0";} else {val2 = col2.substring(0, n).trim();}
-		 //System.out.println("val1 " +val1  + "   val2: " + val2);
+		 String key = crntLine.substring(0, n).trim();
+		 col=crntLine.substring(n+2, crntLine.length());
+		 n = col.indexOf("\"");
+		 if  (n == 0) {value = "0";} else {value = col.substring(0, n).trim();}
 		 
-		 if (StringUtils.equalsIgnoreCase (val1,"SiteIndex")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"CabinetNo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"InventoryUnitId")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"RackType")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"InventoryUnitType")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"VendorUnitFamilyType")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"VendorUnitTypeNumber")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"VendorName")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SerialNumber")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"HardwareVersion")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"DateOfManufacture")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"DateOfLastService")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"UnitPosition")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"ManufacturerData")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"BOMCode")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"ExtInfo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"Model")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"UserLabel")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"IssueNumber")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"BOMRackType")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"ShareMode")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"Cleicode")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"BOM")) {hmap.put( val1.toUpperCase(), val2);}
+		 if (StringUtils.equalsIgnoreCase (key,"SiteIndex")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"CabinetNo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"InventoryUnitId")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"RackType")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"InventoryUnitType")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"VendorUnitFamilyType")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"VendorUnitTypeNumber")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"VendorName")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SerialNumber")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"HardwareVersion")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"DateOfManufacture")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"DateOfLastService")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"UnitPosition")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"ManufacturerData")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"BOMCode")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"ExtInfo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"Model")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"UserLabel")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"IssueNumber")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"BOMRackType")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"ShareMode")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"Cleicode")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"BOM")) {hmap.put( key.toUpperCase(), value);}
 	 
 		 
-		 col1=col2.substring(n+1, col2.length());
-		 n = col1.indexOf("=\"");
+		 crntLine=col.substring(n+1, col.length());
+		 n = crntLine.indexOf("=\"");
 		 }
  
 		return hmap;
@@ -1423,41 +1430,38 @@ public class LoadFilesRanHuawei {
 		 hmap.put("TRANS_TYPE", "0");
 		 hmap.put("TRANS_ID", "0");
 		 
-		 String col1 = str;
-		 String col2 = null;
-		 int n = col1.indexOf("<ROW");
-		 col1=col1.substring(n+5, col1.length());
-		// System.out.println("first space " +col1);
+		 String crntLine = str;
+		 String col = null;
+		 int n = crntLine.indexOf("<ROW");
+		 crntLine=crntLine.substring(n+5, crntLine.length());
 		 
 		 
-		 String val2=null;
-		 n = col1.indexOf("=\"");
+		 String value=null;
+		 n = crntLine.indexOf("=\"");
 		 while (n != -1) {
-		 String val1 = col1.substring(0, n).trim();
-		 col2=col1.substring(n+2, col1.length());
-		 //System.out.println("col2 "+ col2);
-		 n = col2.indexOf("\"");
-		 if  (n == 0) {val2 = "0";} else {val2 = col2.substring(0, n).trim();}
-		 //System.out.println("val1 " +val1  + "   val2: " + val2);
+		 String key = crntLine.substring(0, n).trim();
+		 col=crntLine.substring(n+2, crntLine.length());
+		 n = col.indexOf("\"");
+		 if  (n == 0) {value = "0";} else {value = col.substring(0, n).trim();}
 		 
-		 if (StringUtils.equalsIgnoreCase (val1,"RackPosition")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"InventoryUnitId")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"VendorUnitFamilyType")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"VendorUnitTypeNumber")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"VendorName")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SerialNumber")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"HardwareVersion")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SoftVer")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"DateOfManufacture")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"DateOfLastService")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"ManufacturerData")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"AccessoryType")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"AddtionalInformation")) {hmap.put( val1.toUpperCase(), val2);}
+		 if (StringUtils.equalsIgnoreCase (key,"RackPosition")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"InventoryUnitId")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"VendorUnitFamilyType")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"VendorUnitTypeNumber")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"VendorName")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SerialNumber")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"HardwareVersion")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SoftVer")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"DateOfManufacture")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"DateOfLastService")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"ManufacturerData")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"AccessoryType")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"AddtionalInformation")) {hmap.put( key.toUpperCase(), value);}
 		 
 	 
 		 
-		 col1=col2.substring(n+1, col2.length());
-		 n = col1.indexOf("=\"");
+		 crntLine=col.substring(n+1, col.length());
+		 n = crntLine.indexOf("=\"");
 		 }
  
 		return hmap;
@@ -1487,42 +1491,39 @@ public class LoadFilesRanHuawei {
 		 hmap.put("TRANS_TYPE", "0");
 		 hmap.put("TRANS_ID", "0");
 		 
-		 String col1 = str;
-		 String col2 = null;
-		 int n = col1.indexOf("<ROW");
-		 col1=col1.substring(n+5, col1.length());
-		// System.out.println("first space " +col1);
+		 String crntLine = str;
+		 String col = null;
+		 int n = crntLine.indexOf("<ROW");
+		 crntLine=crntLine.substring(n+5, crntLine.length());
 		 
 		 
-		 String val2=null;
-		 n = col1.indexOf("=\"");
+		 String value=null;
+		 n = crntLine.indexOf("=\"");
 		 while (n != -1) {
-		 String val1 = col1.substring(0, n).trim();
-		 col2=col1.substring(n+2, col1.length());
-		 //System.out.println("col2 "+ col2);
-		 n = col2.indexOf("\"");
-		 if  (n == 0) {val2 = "0";} else {val2 = col2.substring(0, n).trim();}
-		 //System.out.println("val1 " +val1  + "   val2: " + val2);
+		 String key = crntLine.substring(0, n).trim();
+		 col=crntLine.substring(n+2, crntLine.length());
+		 n = col.indexOf("\"");
+		 if  (n == 0) {value = "0";} else {value = col.substring(0, n).trim();}
 		 
-		 if (StringUtils.equalsIgnoreCase (val1,"RackPosition")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"InventoryUnitId")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"VendorUnitFamilyType")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"VendorUnitTypeNumber")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"VendorName")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SerialNumber")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"HardwareVersion")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SoftVer")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"DateOfManufacture")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"DateOfLastService")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"ManufacturerData")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"HostName")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"NumberOfCpu")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"MemSize")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"HardDiskSize")) {hmap.put( val1.toUpperCase(), val2);}
+		 if (StringUtils.equalsIgnoreCase (key,"RackPosition")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"InventoryUnitId")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"VendorUnitFamilyType")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"VendorUnitTypeNumber")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"VendorName")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SerialNumber")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"HardwareVersion")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SoftVer")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"DateOfManufacture")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"DateOfLastService")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"ManufacturerData")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"HostName")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"NumberOfCpu")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"MemSize")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"HardDiskSize")) {hmap.put( key.toUpperCase(), value);}
 	 
 		 
-		 col1=col2.substring(n+1, col2.length());
-		 n = col1.indexOf("=\"");
+		 crntLine=col.substring(n+1, col.length());
+		 n = crntLine.indexOf("=\"");
 		 }
  
 		return hmap;
@@ -1565,54 +1566,51 @@ public class LoadFilesRanHuawei {
 		 hmap.put("TRANS_ID", "0");
 		 
 		 
-		 String col1 = str;
-		 String col2 = null;
-		 int n = col1.indexOf("<ROW");
-		 col1=col1.substring(n+5, col1.length());
-		// System.out.println("first space " +col1);
+		 String crntLine = str;
+		 String col = null;
+		 int n = crntLine.indexOf("<ROW");
+		 crntLine=crntLine.substring(n+5, crntLine.length());
 		 
 		 
-		 String val2=null;
-		 n = col1.indexOf("=\"");
+		 String value=null;
+		 n = crntLine.indexOf("=\"");
 		 while (n != -1) {
-		 String val1 = col1.substring(0, n).trim();
-		 col2=col1.substring(n+2, col1.length());
-		 //System.out.println("col2 "+ col2);
-		 n = col2.indexOf("\"");
-		 if  (n == 0) {val2 = "0";} else {val2 = col2.substring(0, n).trim();}
-		 //System.out.println("val1 " +val1  + "   val2: " + val2);
+		 String key = crntLine.substring(0, n).trim();
+		 col=crntLine.substring(n+2, crntLine.length());
+		 n = col.indexOf("\"");
+		 if  (n == 0) {value = "0";} else {value = col.substring(0, n).trim();}
 		 
-		 if (StringUtils.equalsIgnoreCase (val1,"SiteIndex")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"CabinetNo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"InventoryUnitId")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"RackType")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"BOMRackType")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"InventoryUnitType")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"VendorUnitFamilyType")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"VendorUnitTypeNumber")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"VendorName")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SerialNumber")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"HardwareVersion")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"DateOfManufacture")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"DateOfLastService")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"UnitPosition")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"ManufacturerData")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"IssueNumber")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"BOMCode")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"ExtInfo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"Model")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"BOMFrameType")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"RackFrameNo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"FrameType")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"ModuleNo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SubrackNo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"UserLabel")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"Cleicode")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"BOM")) {hmap.put( val1.toUpperCase(), val2);}
+		 if (StringUtils.equalsIgnoreCase (key,"SiteIndex")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"CabinetNo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"InventoryUnitId")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"RackType")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"BOMRackType")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"InventoryUnitType")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"VendorUnitFamilyType")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"VendorUnitTypeNumber")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"VendorName")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SerialNumber")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"HardwareVersion")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"DateOfManufacture")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"DateOfLastService")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"UnitPosition")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"ManufacturerData")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"IssueNumber")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"BOMCode")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"ExtInfo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"Model")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"BOMFrameType")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"RackFrameNo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"FrameType")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"ModuleNo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SubrackNo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"UserLabel")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"Cleicode")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"BOM")) {hmap.put( key.toUpperCase(), value);}
 
 		 
-		 col1=col2.substring(n+1, col2.length());
-		 n = col1.indexOf("=\"");
+		 crntLine=col.substring(n+1, col.length());
+		 n = crntLine.indexOf("=\"");
 		 }
  
 		return hmap;
@@ -1642,40 +1640,37 @@ public class LoadFilesRanHuawei {
 		 hmap.put("TRANS_TYPE", "0");
 		 hmap.put("TRANS_ID", "0");
 		 
-		 String col1 = str;
-		 String col2 = null;
-		 int n = col1.indexOf("<ROW");
-		 col1=col1.substring(n+5, col1.length());
-		// System.out.println("first space " +col1);
+		 String crntLine = str;
+		 String col = null;
+		 int n = crntLine.indexOf("<ROW");
+		 crntLine=crntLine.substring(n+5, crntLine.length());
 		 
 		 
-		 String val2=null;
-		 n = col1.indexOf("=\"");
+		 String value=null;
+		 n = crntLine.indexOf("=\"");
 		 while (n != -1) {
-		 String val1 = col1.substring(0, n).trim();
-		 col2=col1.substring(n+2, col1.length());
-		 //System.out.println("col2 "+ col2);
-		 n = col2.indexOf("\"");
-		 if  (n == 0) {val2 = "0";} else {val2 = col2.substring(0, n).trim();}
-		 //System.out.println("val1 " +val1  + "   val2: " + val2);
+		 String key = crntLine.substring(0, n).trim();
+		 col=crntLine.substring(n+2, crntLine.length());
+		 n = col.indexOf("\"");
+		 if  (n == 0) {value = "0";} else {value = col.substring(0, n).trim();}
 		 
-		 if (StringUtils.equalsIgnoreCase (val1,"CellId")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"CellName")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"MCC")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"MNC")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"LAC")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"CI")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"NCC")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"BCC")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"TYPE")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"BCCHNO")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"GloCellId")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"BaseBandPolicy")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"BaseBandEqmId")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"GbtsFunctionName")) {hmap.put( val1.toUpperCase(), val2);}
+		 if (StringUtils.equalsIgnoreCase (key,"CellId")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"CellName")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"MCC")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"MNC")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"LAC")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"CI")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"NCC")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"BCC")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"TYPE")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"BCCHNO")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"GloCellId")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"BaseBandPolicy")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"BaseBandEqmId")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"GbtsFunctionName")) {hmap.put( key.toUpperCase(), value);}
 		 		 
-		 col1=col2.substring(n+1, col2.length());
-		 n = col1.indexOf("=\"");
+		 crntLine=col.substring(n+1, col.length());
+		 n = crntLine.indexOf("=\"");
 		 }
  
 		return hmap;
@@ -1694,29 +1689,26 @@ public class LoadFilesRanHuawei {
 		 hmap.put("TRANS_TYPE", "0");
 		 hmap.put("TRANS_ID", "0");
 		 
-		 String col1 = str;
-		 String col2 = null;
-		 int n = col1.indexOf("<ROW");
-		 col1=col1.substring(n+5, col1.length());
-		// System.out.println("first space " +col1);
+		 String crntLine = str;
+		 String col = null;
+		 int n = crntLine.indexOf("<ROW");
+		 crntLine=crntLine.substring(n+5, crntLine.length());
 		 
 		 
-		 String val2=null;
-		 n = col1.indexOf("=\"");
+		 String value=null;
+		 n = crntLine.indexOf("=\"");
 		 while (n != -1) {
-		 String val1 = col1.substring(0, n).trim();
-		 col2=col1.substring(n+2, col1.length());
-		 //System.out.println("col2 "+ col2);
-		 n = col2.indexOf("\"");
-		 if  (n == 0) {val2 = "0";} else {val2 = col2.substring(0, n).trim();}
-		 //System.out.println("val1 " +val1  + "   val2: " + val2);
+		 String key = crntLine.substring(0, n).trim();
+		 col=crntLine.substring(n+2, crntLine.length());
+		 n = col.indexOf("\"");
+		 if  (n == 0) {value = "0";} else {value = col.substring(0, n).trim();}
 		 
-		 if (StringUtils.equalsIgnoreCase (val1,"SiteIndex")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SiteName")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SiteType")) {hmap.put( val1.toUpperCase(), val2);}
+		 if (StringUtils.equalsIgnoreCase (key,"SiteIndex")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SiteName")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SiteType")) {hmap.put( key.toUpperCase(), value);}
 		 		 
-		 col1=col2.substring(n+1, col2.length());
-		 n = col1.indexOf("=\"");
+		 crntLine=col.substring(n+1, col.length());
+		 n = crntLine.indexOf("=\"");
 		 }
  
 		return hmap;
@@ -1751,46 +1743,43 @@ public class LoadFilesRanHuawei {
 		 hmap.put("TRANS_TYPE", "0");
 		 hmap.put("TRANS_ID", "0");
 		 
-		 String col1 = str;
-		 String col2 = null;
-		 int n = col1.indexOf("<ROW");
-		 col1=col1.substring(n+5, col1.length());
-		// System.out.println("first space " +col1);
+		 String crntLine = str;
+		 String col = null;
+		 int n = crntLine.indexOf("<ROW");
+		 crntLine=crntLine.substring(n+5, crntLine.length());
 		 
 		 
-		 String val2=null;
-		 n = col1.indexOf("=\"");
+		 String value=null;
+		 n = crntLine.indexOf("=\"");
 		 while (n != -1) {
-		 String val1 = col1.substring(0, n).trim();
-		 col2=col1.substring(n+2, col1.length());
-		 //System.out.println("col2 "+ col2);
-		 n = col2.indexOf("\"");
-		 if  (n == 0) {val2 = "0";} else {val2 = col2.substring(0, n).trim();}
-		 //System.out.println("val1 " +val1  + "   val2: " + val2);
+		 String key = crntLine.substring(0, n).trim();
+		 col=crntLine.substring(n+2, crntLine.length());
+		 n = col.indexOf("\"");
+		 if  (n == 0) {value = "0";} else {value = col.substring(0, n).trim();}
 		 
-		 if (StringUtils.equalsIgnoreCase (val1,"CellId")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"Locell")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"Radius")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"HoRad")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"DI")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"NodeBFunctionName")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"UlFreq")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"DlFreq")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"MaxPower")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"Cellname")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"userlabel")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"Maxtxpower")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"LAC")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SAC")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"RAC")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"NodeBname")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"MANUFACTURERDATA")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"PSCRAMBCODE")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"UARFCNDOWNLINK")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"UARFCNUPLINK")) {hmap.put( val1.toUpperCase(), val2);}
+		 if (StringUtils.equalsIgnoreCase (key,"CellId")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"Locell")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"Radius")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"HoRad")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"DI")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"NodeBFunctionName")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"UlFreq")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"DlFreq")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"MaxPower")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"Cellname")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"userlabel")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"Maxtxpower")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"LAC")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SAC")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"RAC")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"NodeBname")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"MANUFACTURERDATA")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"PSCRAMBCODE")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"UARFCNDOWNLINK")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"UARFCNUPLINK")) {hmap.put( key.toUpperCase(), value);}
 		 		 
-		 col1=col2.substring(n+1, col2.length());
-		 n = col1.indexOf("=\"");
+		 crntLine=col.substring(n+1, col.length());
+		 n = crntLine.indexOf("=\"");
 		 }
  
 		return hmap;
@@ -1826,46 +1815,43 @@ public class LoadFilesRanHuawei {
 		 hmap.put("TRANS_ID", "0");
 		
 		 
-		 String col1 = str;
-		 String col2 = null;
-		 int n = col1.indexOf("<ROW");
-		 col1=col1.substring(n+5, col1.length());
-		// System.out.println("first space " +col1);
+		 String crntLine = str;
+		 String col = null;
+		 int n = crntLine.indexOf("<ROW");
+		 crntLine=crntLine.substring(n+5, crntLine.length());
 		 
 		 
-		 String val2=null;
-		 n = col1.indexOf("=\"");
+		 String value=null;
+		 n = crntLine.indexOf("=\"");
 		 while (n != -1) {
-		 String val1 = col1.substring(0, n).trim();
-		 col2=col1.substring(n+2, col1.length());
-		 //System.out.println("col2 "+ col2);
-		 n = col2.indexOf("\"");
-		 if  (n == 0) {val2 = "0";} else {val2 = col2.substring(0, n).trim();}
-		 //System.out.println("val1 " +val1  + "   val2: " + val2);
+		 String key = crntLine.substring(0, n).trim();
+		 col=crntLine.substring(n+2, crntLine.length());
+		 n = col.indexOf("\"");
+		 if  (n == 0) {value = "0";} else {value = col.substring(0, n).trim();}
 		 
-		 if (StringUtils.equalsIgnoreCase (val1,"InventoryUnitId")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"InventoryUnitType")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"AntennaDeviceNo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"ProdNr")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"VendorUnitFamilyType")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"VendorUnitTypeNumber")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"VendorName")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SerialNumber")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"HardwareVersion")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"DateOfManufacture")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"DateOfLastService")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"UnitPosition")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"ManufacturerData")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"AntennaDeviceType")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"IssueNumber")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"BOMCode")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"ExtInfo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"Model")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SerialNumberEx")) {hmap.put( val1.toUpperCase(), val2);}
+		 if (StringUtils.equalsIgnoreCase (key,"InventoryUnitId")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"InventoryUnitType")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"AntennaDeviceNo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"ProdNr")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"VendorUnitFamilyType")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"VendorUnitTypeNumber")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"VendorName")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SerialNumber")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"HardwareVersion")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"DateOfManufacture")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"DateOfLastService")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"UnitPosition")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"ManufacturerData")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"AntennaDeviceType")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"IssueNumber")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"BOMCode")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"ExtInfo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"Model")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SerialNumberEx")) {hmap.put( key.toUpperCase(), value);}
 		 
 		 		 
-		 col1=col2.substring(n+1, col2.length());
-		 n = col1.indexOf("=\"");
+		 crntLine=col.substring(n+1, col.length());
+		 n = crntLine.indexOf("=\"");
 		 }
  
 		return hmap;
@@ -1896,41 +1882,38 @@ public class LoadFilesRanHuawei {
 		 hmap.put("TRANS_ID", "0");
 		
 		 
-		 String col1 = str;
-		 String col2 = null;
-		 int n = col1.indexOf("<ROW");
-		 col1=col1.substring(n+5, col1.length());
-		// System.out.println("first space " +col1);
+		 String crntLine = str;
+		 String col = null;
+		 int n = crntLine.indexOf("<ROW");
+		 crntLine=crntLine.substring(n+5, crntLine.length());
 		 
 		 
-		 String val2=null;
-		 n = col1.indexOf("=\"");
+		 String value=null;
+		 n = crntLine.indexOf("=\"");
 		 while (n != -1) {
-		 String val1 = col1.substring(0, n).trim();
-		 col2=col1.substring(n+2, col1.length());
-		 //System.out.println("col2 "+ col2);
-		 n = col2.indexOf("\"");
-		 if  (n == 0) {val2 = "0";} else {val2 = col2.substring(0, n).trim();}
-		 //System.out.println("val1 " +val1  + "   val2: " + val2);
+		 String key = crntLine.substring(0, n).trim();
+		 col=crntLine.substring(n+2, crntLine.length());
+		 n = col.indexOf("\"");
+		 if  (n == 0) {value = "0";} else {value = col.substring(0, n).trim();}
 		 
-		 if (StringUtils.equalsIgnoreCase (val1,"LocalCellId")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"CellName")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"CellRadius")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"FreqBand")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"UlEarfcnCfgInd")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"UlEarfcn")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"DlEarfcn")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"UlBandWidth")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"DlBandWidth")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"CellId")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"PhyCellId")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"FddTddInd")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"ENodeBFunctionName")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"NbCellFlag")) {hmap.put( val1.toUpperCase(), val2);}
+		 if (StringUtils.equalsIgnoreCase (key,"LocalCellId")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"CellName")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"CellRadius")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"FreqBand")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"UlEarfcnCfgInd")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"UlEarfcn")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"DlEarfcn")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"UlBandWidth")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"DlBandWidth")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"CellId")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"PhyCellId")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"FddTddInd")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"ENodeBFunctionName")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"NbCellFlag")) {hmap.put( key.toUpperCase(), value);}
 		 
 		 		 
-		 col1=col2.substring(n+1, col2.length());
-		 n = col1.indexOf("=\"");
+		 crntLine=col.substring(n+1, col.length());
+		 n = crntLine.indexOf("=\"");
 		 }
  
 		return hmap;
@@ -1948,29 +1931,27 @@ public class LoadFilesRanHuawei {
 		 hmap.put("TRANS_TYPE", "0");
 		 hmap.put("TRANS_ID", "0");
 		 
-		 String col1 = str;
-		 String col2 = null;
-		 int n = col1.indexOf("<ROW");
-		 col1=col1.substring(n+5, col1.length());
-		// System.out.println("first space " +col1);
+		 String crntLine = str;
+		 String col = null;
+		 int n = crntLine.indexOf("<ROW");
+		 crntLine=crntLine.substring(n+5, crntLine.length());
 		 
 		 
-		 String val2=null;
-		 n = col1.indexOf("=\"");
+		 String value=null;
+		 n = crntLine.indexOf("=\"");
 		 while (n != -1) {
-		 String val1 = col1.substring(0, n).trim();
-		 col2=col1.substring(n+2, col1.length());
+		 String key = crntLine.substring(0, n).trim();
+		 col=crntLine.substring(n+2, crntLine.length());
 		 //System.out.println("col2 "+ col2);
-		 n = col2.indexOf("\"");
-		 if  (n == 0) {val2 = "0";} else {val2 = col2.substring(0, n).trim();}
-		 //System.out.println("val1 " +val1  + "   val2: " + val2);
+		 n = col.indexOf("\"");
+		 if  (n == 0) {value = "0";} else {value = col.substring(0, n).trim();}
 		 
-		 if (StringUtils.equalsIgnoreCase (val1,"SiteIndex")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SiteName")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SiteType")) {hmap.put( val1.toUpperCase(), val2);}
+		 if (StringUtils.equalsIgnoreCase (key,"SiteIndex")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SiteName")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SiteType")) {hmap.put( key.toUpperCase(), value);}
 		 		 
-		 col1=col2.substring(n+1, col2.length());
-		 n = col1.indexOf("=\"");
+		 crntLine=col.substring(n+1, col.length());
+		 n = crntLine.indexOf("=\"");
 		 }
  
 		return hmap;
@@ -2003,44 +1984,44 @@ public class LoadFilesRanHuawei {
 		 hmap.put("TRANS_TYPE", "0");
 		 hmap.put("TRANS_ID", "0");
 		 
-		 String col1 = str;
-		 String col2 = null;
-		 int n = col1.indexOf("<ROW");
-		 col1=col1.substring(n+5, col1.length());
+		 String crntLine = str;
+		 String col = null;
+		 int n = crntLine.indexOf("<ROW");
+		 crntLine=crntLine.substring(n+5, crntLine.length());
 		// System.out.println("first space " +col1);
 		 
 		 
-		 String val2=null;
-		 n = col1.indexOf("=\"");
+		 String value=null;
+		 n = crntLine.indexOf("=\"");
 		 while (n != -1) {
-		 String val1 = col1.substring(0, n).trim();
-		 col2=col1.substring(n+2, col1.length());
+		 String key = crntLine.substring(0, n).trim();
+		 col=crntLine.substring(n+2, crntLine.length());
 		 //System.out.println("col2 "+ col2);
-		 n = col2.indexOf("\"");
-		 if  (n == 0) {val2 = "0";} else {val2 = col2.substring(0, n).trim();}
+		 n = col.indexOf("\"");
+		 if  (n == 0) {value = "0";} else {value = col.substring(0, n).trim();}
 		 //System.out.println("val1 " +val1  + "   val2: " + val2);
 		 
-		 if (StringUtils.equalsIgnoreCase (val1,"LocalCellId")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"CellName")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SectorId")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"CsgInd")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"CyclePrefix")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"FreqBand")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"UlEarfcnCfgInd")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"UlEarfcn")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"DlEarfcn")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"UlBandWidth")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"DlBandWidth")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"CellId")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"PhyCellId")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"FddTddInd")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"TAC")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"AdditionalSpectrumEmission")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"NbCellFlag")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"ENodeBFunctionName")) {hmap.put( val1.toUpperCase(), val2);}
+		 if (StringUtils.equalsIgnoreCase (key,"LocalCellId")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"CellName")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SectorId")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"CsgInd")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"CyclePrefix")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"FreqBand")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"UlEarfcnCfgInd")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"UlEarfcn")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"DlEarfcn")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"UlBandWidth")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"DlBandWidth")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"CellId")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"PhyCellId")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"FddTddInd")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"TAC")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"AdditionalSpectrumEmission")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"NbCellFlag")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"ENodeBFunctionName")) {hmap.put( key.toUpperCase(), value);}
 		 		 
-		 col1=col2.substring(n+1, col2.length());
-		 n = col1.indexOf("=\"");
+		 crntLine=col.substring(n+1, col.length());
+		 n = crntLine.indexOf("=\"");
 		 }
  
 		return hmap;
@@ -2077,49 +2058,49 @@ public class LoadFilesRanHuawei {
 		 hmap.put("TRANS_TYPE", "0");
 		 hmap.put("TRANS_ID", "0");
 		 
-		 String col1 = str;
-		 String col2 = null;
-		 int n = col1.indexOf("<ROW");
-		 col1=col1.substring(n+5, col1.length());
+		 String crntLine = str;
+		 String col = null;
+		 int n = crntLine.indexOf("<ROW");
+		 crntLine=crntLine.substring(n+5, crntLine.length());
 		// System.out.println("first space " +col1);
 		 
 		 
-		 String val2=null;
-		 n = col1.indexOf("=\"");
+		 String value=null;
+		 n = crntLine.indexOf("=\"");
 		 while (n != -1) {
-		 String val1 = col1.substring(0, n).trim();
-		 col2=col1.substring(n+2, col1.length());
+		 String key = crntLine.substring(0, n).trim();
+		 col=crntLine.substring(n+2, crntLine.length());
 		 //System.out.println("col2 "+ col2);
-		 n = col2.indexOf("\"");
-		 if  (n == 0) {val2 = "0";} else {val2 = col2.substring(0, n).trim();}
+		 n = col.indexOf("\"");
+		 if  (n == 0) {value = "0";} else {value = col.substring(0, n).trim();}
 		 //System.out.println("val1 " +val1  + "   val2: " + val2);
 		 
-		 if (StringUtils.equalsIgnoreCase (val1,"Locell")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"UserLabel")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SiteNo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SecNo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"Radius")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"HoRad")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"BbPoolType")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"UlgroupNo")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"CabinetNo1")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SubRackNo1")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SlotNo1")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"CabinetNo2")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SubRackNo2")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SlotNo2")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"UlFreq")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"DlFreq")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"MaxPower")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"Hsdpa")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"DI")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"HighSpeedMode")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"SpeedRate")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"NodeBFunctionName")) {hmap.put( val1.toUpperCase(), val2);}
+		 if (StringUtils.equalsIgnoreCase (key,"Locell")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"UserLabel")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SiteNo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SecNo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"Radius")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"HoRad")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"BbPoolType")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"UlgroupNo")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"CabinetNo1")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SubRackNo1")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SlotNo1")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"CabinetNo2")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SubRackNo2")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SlotNo2")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"UlFreq")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"DlFreq")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"MaxPower")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"Hsdpa")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"DI")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"HighSpeedMode")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"SpeedRate")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"NodeBFunctionName")) {hmap.put( key.toUpperCase(), value);}
 		 
 		 
-		 col1=col2.substring(n+1, col2.length());
-		 n = col1.indexOf("=\"");
+		 crntLine=col.substring(n+1, col.length());
+		 n = crntLine.indexOf("=\"");
 		 }
  
 		return hmap;
@@ -2142,34 +2123,31 @@ public class LoadFilesRanHuawei {
 		 hmap.put("TRANS_TYPE", "0");
 		 hmap.put("TRANS_ID", "0");
 		 
-		 String col1 = str;
-		 String col2 = null;
-		 int n = col1.indexOf("<ROW");
-		 col1=col1.substring(n+5, col1.length());
+		 String crntLine = str;
+		 String col = null;
+		 int n = crntLine.indexOf("<ROW");
+		 crntLine=crntLine.substring(n+5, crntLine.length());
 		// System.out.println("first space " +col1);
 		 
 		 
-		 String val2=null;
-		 n = col1.indexOf("=\"");
+		 String value=null;
+		 n = crntLine.indexOf("=\"");
 		 while (n != -1) {
-		 String val1 = col1.substring(0, n).trim();
-		 col2=col1.substring(n+2, col1.length());
+		 String key = crntLine.substring(0, n).trim();
+		 col=crntLine.substring(n+2, crntLine.length());
 		 //System.out.println("col2 "+ col2);
-		 n = col2.indexOf("\"");
-		 if  (n == 0) {val2 = "0";} else {val2 = col2.substring(0, n).trim();}
-		 //System.out.println("val1 " +val1  + "   val2: " + val2);
+		 n = col.indexOf("\"");
+		 if  (n == 0) {value = "0";} else {value = col.substring(0, n).trim();}
 		 
-		 if (StringUtils.equalsIgnoreCase (val1,"InterfaceType")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"Version")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"IsUsed")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"NMSVendor")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"NMSName")) {hmap.put( val1.toUpperCase(), val2);}
-		 if (StringUtils.equalsIgnoreCase (val1,"Remark")) {hmap.put( val1.toUpperCase(), val2);}
+		 if (StringUtils.equalsIgnoreCase (key,"InterfaceType")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"Version")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"IsUsed")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"NMSVendor")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"NMSName")) {hmap.put( key.toUpperCase(), value);}
+		 if (StringUtils.equalsIgnoreCase (key,"Remark")) {hmap.put( key.toUpperCase(), value);}
 		 
-		 
-		 
-		 col1=col2.substring(n+1, col2.length());
-		 n = col1.indexOf("=\"");
+		 crntLine=col.substring(n+1, col.length());
+		 n = crntLine.indexOf("=\"");
 		 }
  
 		return hmap;
@@ -2180,37 +2158,34 @@ public class LoadFilesRanHuawei {
 	 public static String[] getNodeIdNameType(String RowLine) throws IOException {
 		 String [] result = null;
 		
-		 String Vname =null;
+		 String tempNamee =null;
 		 result =new String[4];
 		 
-		 Vname=RowLine;
+		 tempNamee=RowLine;
 		 result[3]="0";
 		 
-		// NE=263,BTS=40" found in AIM_GSMBTS_HQB BSC2 to get Node ID
-		 int n = Vname.indexOf("BTS=");
+		 int n = tempNamee.indexOf("BTS=");
 		 if (n > -1) { 
-			 Vname=Vname.substring(n+4, Vname.length());
+			 tempNamee=tempNamee.substring(n+4, tempNamee.length());
 		 } 
 		 else {
-			 // NE= found in  files to get Node ID
-			 n = Vname.indexOf("NE=");
-			 // OS= found in OSS files  to get node ID
-			 if (n == -1) { n = Vname.indexOf("OS=");}
-			 Vname=Vname.substring(n+3, Vname.length());
+			 n = tempNamee.indexOf("NE=");
+			 if (n == -1) { n = tempNamee.indexOf("OS=");}
+			 tempNamee=tempNamee.substring(n+3, tempNamee.length());
 		 }
 		 
-		  n = Vname.indexOf("\"");
-		  result[0]=Vname.substring(0, n);
+		  n = tempNamee.indexOf("\"");
+		  result[0]=tempNamee.substring(0, n);
 		 
-		   n = Vname.indexOf("NEName=\"");
-		   Vname=Vname.substring(n+8, Vname.length());
-		   n = Vname.indexOf("\"");
-		   result[1]=Vname.substring(0, n);
+		   n = tempNamee.indexOf("NEName=\"");
+		   tempNamee=tempNamee.substring(n+8, tempNamee.length());
+		   n = tempNamee.indexOf("\"");
+		   result[1]=tempNamee.substring(0, n);
 			  
-		   n = Vname.indexOf("NEType=\"");
-		   Vname=Vname.substring(n+8, Vname.length());
-		   n = Vname.indexOf("\"");
-		   result[2]=Vname.substring(0, n);
+		   n = tempNamee.indexOf("NEType=\"");
+		   tempNamee=tempNamee.substring(n+8, tempNamee.length());
+		   n = tempNamee.indexOf("\"");
+		   result[2]=tempNamee.substring(0, n);
 
 		 return result;
 	 }
@@ -2288,40 +2263,38 @@ public class LoadFilesRanHuawei {
 	    { 
 		 String res=null;
 		 String vstr =null;
-		 String vyear=null;
-		 String vmonth =null;
-		 String vday=null;
+		 String year=null;
+		 String month =null;
+		 String day=null;
 
 		 if (str.contains("/")) {
 			 vstr=str;
 			 int n = vstr.indexOf("/");
-			 vyear=vstr.substring(0, n);
+			 year=vstr.substring(0, n);
 			 vstr=vstr.substring(n+1, vstr.length());
 			 n = vstr.indexOf("/");
-			 vmonth=vstr.substring(0, n);
-			 vday=vstr.substring((n+1), (n+3)).trim();
-			 res=vyear + "-"+ vmonth +"-"+ vday;
+			 month=vstr.substring(0, n);
+			 day=vstr.substring((n+1), (n+3)).trim();
+			 res=year + "-"+ month +"-"+ day;
 		 } else {
 				 if (str.contains("-")) {
 					 //if (str.length() >8) {res=str.substring(0, 10);}
 					// else {res=str.substring(0, 8);}
 					 vstr=str;
 					 int n = vstr.indexOf("-");
-					 vyear=vstr.substring(0, n);
+					 year=vstr.substring(0, n);
 					 vstr=vstr.substring(n+1, vstr.length());
 					 n = vstr.indexOf("-");
-					 vmonth=vstr.substring(0, n);
-					 if (vmonth.length() <2) {vmonth= "0"+ vmonth;}
+					 month=vstr.substring(0, n);
+					 if (month.length() <2) {month= "0"+ month;}
 					 
-					 //System.out.println("n+3 " + (n+3));
-					 //System.out.println("vstr.length " + vstr.length());
-					 if ((n+3) > vstr.length()) {vday=vstr.substring((n+1), (n+2)).trim();vday= "0"+ vday;}
-					 else {vday=vstr.substring((n+1), (n+3)).trim();}
-					 if (vday.length() <2) {vday= "0"+ vday;}
-					 res=vyear + "-"+ vmonth +"-"+ vday;
+					 
+					 if ((n+3) > vstr.length()) {day=vstr.substring((n+1), (n+2)).trim();day= "0"+ day;}
+					 else {day=vstr.substring((n+1), (n+3)).trim();}
+					 if (day.length() <2) {day= "0"+ day;}
+					 res=year + "-"+ month +"-"+ day;
 				 } else
 					 {
-					 System.out.println("str.length " + str.length());
 
 					 if (str.length() >0) {
 						 res= "20"+str.substring(0, 2) + "-"+ str.substring(2, 4)+ "-"+ str.substring(4, 6);
@@ -2366,103 +2339,12 @@ public class LoadFilesRanHuawei {
 
 
 
-private static String localgetseqNbr(int n1) throws SQLException {
-    String min = null ;
-
-			Statement stmt2 = null;
-			Statement stmttype = null;
-			Statement stmtdetail = null;  
-     
-         
-       String SeqName = null;
-    switch(n1)
-    {
-    case 0:
-		SeqName = "NODEACTIVE_SEQ";
-		break;
-	case 1:
-		SeqName = "NODEACTIVEATTRIBUTE_SEQ";
-		break;
-	case 2:
-		SeqName = "NODERACK_SEQ";
-		break;
-	case 3:
-		SeqName = "NODEFRAME_SEQ";
-		break;
-	case 4:
-		SeqName = "NODESLOT_SEQ";
-		break;
-	case 5:
-		SeqName = "NODEBOARD_SEQ";
-		break;
-	case 6:
-		SeqName = "NODEPORT_SEQ";
-		break;
-	case 7:
-		SeqName = "NODECABINET_SEQ";
-		break;
-	case 8:
-		SeqName = "NODEHOSTVER_SEQ";
-		break;
-	case 9:
-		SeqName = "NODEACCESSORY_SEQ";
-		break;
-	case 10:
-		SeqName = "NODEHOST_SEQ";
-		break;
-	case 11:
-		SeqName = "NODESUBRACK_SEQ";
-		break;
-	case 12:
-		SeqName = "NODEGCELL_SEQ";
-		break;
-	case 13:
-		SeqName = "NODEBTS_SEQ";
-		break;
-	case 14:
-		SeqName = "NODEUCELL_SEQ";
-		break;
-	case 15:
-		SeqName = "NODEANTENNA_SEQ";
-		break;
-	case 16:
-		SeqName = "NODELCELL_SEQ";
-		break;
-	case 17:
-		SeqName = "NODERRN_SEQ";
-		break;
-	case 18:
-		SeqName = "NODEENODEBCELL_SEQ";
-		break;
-	case 19:
-		SeqName = "NODEBCELL_SEQ";
-		break;
-	case 20:
-		SeqName = "NODENBINTERFACE_SEQ";
-		break;
-		
-    }
-      String query2 = "select "+SeqName+".nextval as nbr from dual";      
-          stmttype = almCon.createStatement();
-          ResultSet rs2 = stmttype.executeQuery(query2);
-         
-          while (rs2.next()) {
-           min= rs2.getString("nbr");    
-          	}
-          rs2.close();
-
-          stmttype.close();
-
-			 return min;
-
-  }
 
 private static void GetDuplicateFileName(String vdomain , String vvendor) throws SQLException  {
 	Statement stmt1 = null;
 	Statement stmt2 = null;
 	Statement stmt3 = null;
-	Statement stmt4 = null;
-	int vcount =0;
+	int counter =0;
 	int i=0;
 	
 	// select all file having duplicata entry and same filename >1
@@ -2477,8 +2359,8 @@ private static void GetDuplicateFileName(String vdomain , String vvendor) throws
 		         ResultSet rs2 = stmt2.executeQuery(query2);
 		         // get all node_pk found duplicated
 		         while (rs2.next()) {
-		        	 vcount =0;
-		        	 vcount= (int) Long.parseLong (rs2.getString("counter"));
+		        	 counter =0;
+		        	 counter= (int) Long.parseLong (rs2.getString("counter"));
 		        	 i=0;
 			        	    //Get old creation date of the same file and update rows with old creation date
 			        	 	String query3 = "select node_pk,creation_date from NODE_ACTIVE where NODE_ID='"+ rs2.getString("NODE_ID") +"' and SITE_ID='"+ rs2.getString("SITE_ID") +"' and NODE_NAME ='"+ rs2.getString("NODE_NAME") +"' and CIRCLE_ID ='"+ rs2.getString("CIRCLE_ID") +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"' order by node_pk asc";  
@@ -2513,13 +2395,13 @@ private static void GetDuplicateFileName(String vdomain , String vvendor) throws
 					    			updtmt8.close();
 				            		
 					    			//Function to delete the filename from all tables  argument field name and field value
-					    			deleterowsinALLTABLES("NODE_PK", rs3.getString("node_pk"),vdomain,vvendor );
+					    			deleteRowsInAllTables("NODE_PK", rs3.getString("node_pk"),vdomain,vvendor );
 				            	}  
-				            	if ((i >0) && (i< (vcount-1)) ) 
+				            	if ((i >0) && (i< (counter-1)) ) 
 				            	 {  //if i< maxcount just to delete duplicate node_pk from all table 
 		
 				            		//Function to delete the filename from all tables  argument field name and field value
-				            		deleterowsinALLTABLES("NODE_PK", rs3.getString("node_pk"),vdomain,vvendor );
+				            		deleteRowsInAllTables("NODE_PK", rs3.getString("node_pk"),vdomain,vvendor );
 				            		}
 				
 			      	
@@ -2542,7 +2424,7 @@ private static void GetDuplicateFileName(String vdomain , String vvendor) throws
     }
 }
 
- private static void deleterowsinALLTABLES(String fieldname, String fieldValue,String vdomain, String vvendor) throws SQLException  {
+ private static void deleteRowsInAllTables(String fieldname, String fieldValue,String vdomain, String vvendor) throws SQLException  {
 	 try {
 	 // delete all rows related to node_pk from all nodes tables
 	 PreparedStatement stmt = parserCon.prepareStatement("delete from NODE_ACTIVE where " + fieldname +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'"); 
