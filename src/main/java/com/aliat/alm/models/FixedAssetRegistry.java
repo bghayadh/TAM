@@ -24,6 +24,34 @@ public class FixedAssetRegistry {
 	@Column(name = "ITEM_CODE", nullable = false)
 	private String faritemCode;
 	
+	
+	@Column(name = "AR_ID")
+	private String ARID;
+	
+	public String getARID() {
+		return ARID;
+	}
+
+	public void setARID(String aRID) {
+		ARID = aRID;
+	}
+
+	public String getWareID() {
+		return wareID;
+	}
+
+	public void setWareID(String wareID) {
+		this.wareID = wareID;
+	}
+
+	public String getWareName() {
+		return wareName;
+	}
+
+	public void setWareName(String wareName) {
+		this.wareName = wareName;
+	}
+
 	@Column(name = "CREATED_DATE")
 	private Timestamp farcreatedDate;
 
@@ -178,9 +206,10 @@ public class FixedAssetRegistry {
 			String shelerRoomID, String locSubType, String locClass, String locAddress, String lastModifiedUser,
 			String objectID, String itemSN, String supplierName, float monthlyDpr,
 			String position, String poItemId, String itemRootCode, String itemCatCode, String itemCatID,
-			String itemCat) {
+			String itemCat, String ARID) {
 		super();
 		this.farID = farID;
+		this.ARID=ARID;
 		FarStatus = farStatus;
 		this.FarsiteId = FarsiteId;
 		this.faritemCode = faritemCode;
