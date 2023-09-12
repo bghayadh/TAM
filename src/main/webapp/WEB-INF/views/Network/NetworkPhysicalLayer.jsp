@@ -242,6 +242,16 @@
 							<td><input type="checkbox" id="transmissionCheckAllBoq" style="margin-left: 10px;"></td>
 						</tr>
 						<tr>
+							<td class="Icon "><img style="width: 16px; height: 16px;" src="${pageContext.request.contextPath}/resources/NetworkImages/black.png" >
+								<span id="definition">Core</span></td>
+							<td><input type="checkbox" id="coreCheckAllBoq" style="margin-left: 10px;"></td>
+						</tr>
+						<tr>
+							<td class="Icon "><img style="width: 16px; height: 16px;" src="${pageContext.request.contextPath}/resources/NetworkImages/green.png" >
+								<span id="definition">Access(Ran)</span></td>
+							<td><input type="checkbox" id="ranCheckAllBoq" style="margin-left: 10px;"></td>
+						</tr>
+						<tr>
 							<td class="Icon "><img src="${pageContext.request.contextPath}/resources/NetworkImages/electrical-panel.png">
 								<span id="definition">DISTRIBUTION BOARD</span></td>
 							<td><input type="checkbox" id="distBoardCheckAllBoq" style="margin-left: 10px;"></td>
@@ -851,6 +861,327 @@
 			</div>
 		</div>
 	</div> 
+	
+			<!-- Core Model -->
+	<div class="container">
+		<div id="CoreModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+			<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header" style="background-color: #2678CC ; height: 55px; ">
+						<h5 id="coreNodesHeader" class="modal-title" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px">Node</h5>
+						<div style="float: right;">
+							<button id="saveCore" class="btn btn-save" style="color: black; font-weight:bold; margin-top:-6px">Save</button>
+							<button  type="button" name="closePopup" class="close" id="close" onclick="ClosingConfirm()" >
+								<i class='fa fa-times'></i>
+							</button>
+							<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change'></i>
+							</a>
+						</div>
+					</div>
+					<div class="modal-body">
+						<div class="tab-content">
+							<p></p>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 150px;" class="input-group-text" style="color:green;"><b>NODE_PK</b> </span> 
+											<input type="text" id="coreNode_pk" readonly class="form-control text-input" readonly/>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6 nextprvItems">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 150px;" class="input-group-text"><b>UNIQUE_NODE_ID</b></span>
+											<input type="text" id="coreUniqNodeId"  class="form-control text-input" readonly/>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>NODE_ID</b></span>
+											<input type="text" id="coreNodeId" class="form-control text-input" readonly/>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>NODE_NAME</b></span>
+											<input type="text" id="coreNodeName" class="form-control text-input" readonly/>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>NODE_TYPE</b></span>
+											<input type="text" id="coreNodeType" class="form-control text-input" readonly />
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>NODE_SOURCE</b></span>
+											<input type="text" id="coreNodeSource" class="form-control text-input" readonly/>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>NODE_MODEL</b></span>
+											<input type="text" id="coreNodeModel" class="form-control text-input" readonly />
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>DOMAIN</b></span>
+											<input type="text" id="coreNodeDomin" class="form-control text-input" readonly/>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>SITE_ID</b></span>
+											<input type="text" id="coreSiteId_node" class="form-control text-input" readonly />
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>WARE_ID</b></span>
+											<input type="text" id="coreWareId_node" class="form-control text-input" readonly/>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>LONGITUDE</b></span>
+											<input type="text" id="coreNodeLong" class="form-control text-input" readonly />
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>Latitude</b></span>
+											<input type="text" id="coreNodeLat" class="form-control text-input" readonly/>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>CREATION DATE</b></span>
+											<input type="text" id="coreCreateData_node" class="form-control text-input" readonly />
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>UPDATE DATE</b></span>
+											<input type="text" id="coreUpdateData_node" class="form-control text-input" readonly/>
+										</div>
+									</div>
+								</div>
+							</div>
+						
+			
+						</div>
+					</div>
+					<div class="modal-footer"></div>
+				</div>
+			</div>
+		</div>
+	</div> 
+	
+		<!-- Ran(Access) Model -->
+	<div class="container">
+		<div id="RanModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+			<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header" style="background-color: #2678CC ; height: 55px; ">
+						<h5 id="ranNodesHeader" class="modal-title" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px">Node</h5>
+						<div style="float: right;">
+							<button id="saveRan" class="btn btn-save" style="color: black; font-weight:bold; margin-top:-6px">Save</button>
+							<button  type="button" name="closePopup" class="close" id="close" onclick="ClosingConfirm()" >
+								<i class='fa fa-times'></i>
+							</button>
+							<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change'></i>
+							</a>
+						</div>
+					</div>
+					<div class="modal-body">
+						<div class="tab-content">
+							<p></p>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 150px;" class="input-group-text" style="color:green;"><b>NODE_PK</b> </span> 
+											<input type="text" id="ranNode_pk" readonly class="form-control text-input" readonly/>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6 nextprvItems">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 150px;" class="input-group-text"><b>UNIQUE_NODE_ID</b></span>
+											<input type="text" id="ranUniqNodeId"  class="form-control text-input" readonly/>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>NODE_ID</b></span>
+											<input type="text" id="ranNodeId" class="form-control text-input" readonly/>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>NODE_NAME</b></span>
+											<input type="text" id="ranNodeName" class="form-control text-input" readonly/>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>NODE_TYPE</b></span>
+											<input type="text" id="ranNodeType" class="form-control text-input" readonly />
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>NODE_SOURCE</b></span>
+											<input type="text" id="ranNodeSource" class="form-control text-input" readonly/>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>NODE_MODEL</b></span>
+											<input type="text" id="ranNodeModel" class="form-control text-input" readonly />
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>DOMAIN</b></span>
+											<input type="text" id="ranNodeDomin" class="form-control text-input" readonly/>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>SITE_ID</b></span>
+											<input type="text" id="ranSiteId_node" class="form-control text-input" readonly />
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>WARE_ID</b></span>
+											<input type="text" id="ranWareId_node" class="form-control text-input" readonly/>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>LONGITUDE</b></span>
+											<input type="text" id="ranNodeLong" class="form-control text-input" readonly />
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>Latitude</b></span>
+											<input type="text" id="ranNodeLat" class="form-control text-input" readonly/>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>CREATION DATE</b></span>
+											<input type="text" id="ranCreateData_node" class="form-control text-input" readonly />
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>UPDATE DATE</b></span>
+											<input type="text" id="ranUpdateData_node" class="form-control text-input" readonly/>
+										</div>
+									</div>
+								</div>
+							</div>
+						
+			
+						</div>
+					</div>
+					<div class="modal-footer"></div>
+				</div>
+			</div>
+		</div>
+	</div> 
+	
 	
 	<div class="container">
 		<div id="DeleteModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
@@ -6009,8 +6340,8 @@ directionsDisplay.setMap(map);
 		$("#filterSection").append(str);
 
 		  }	 physicalLayerFilter(); // to build click event on Filter Submit.
-	      CreateTree_PhysicalLayer(${physicalLayerList}['Project'],${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['fiber'],${physicalLayerList}['Distribution_Board'],${physicalLayerData}['fiber_Tubes'],${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Auxiliary'],${physicalLayerData}['tubes_Auxiliaries'],${physicalLayerData}['strands_Auxiliaries'],${physicalLayerList}['Trench'],${physicalLayerData}['trench_Auxiliary'],${physicalLayerList}['Junction_Manhole'],${physicalLayerList}['Junction_Handhole'],filterFlag,${physicalLayerList}['duct'],${physicalLayerData}['ductAuxiliary'],${physicalLayerList}['Node'],${physicalLayerList}['Transmission']);
-		  CreateMap_PhysicalLayer(${physicalLayerList}['Project'],${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['fiber'],${physicalLayerList}['Distribution_Board'],${physicalLayerData}['fiber_Tubes'],${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Auxiliary'],${physicalLayerData}['tubes_Auxiliaries'],${physicalLayerData}['strands_Auxiliaries'],${physicalLayerList}['Trench'],${physicalLayerData}['trench_Auxiliary'],${physicalLayerList}['Node'],${physicalLayerList}['Transmission']); 
+	      CreateTree_PhysicalLayer(${physicalLayerList}['Project'],${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['fiber'],${physicalLayerList}['Distribution_Board'],${physicalLayerData}['fiber_Tubes'],${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Auxiliary'],${physicalLayerData}['tubes_Auxiliaries'],${physicalLayerData}['strands_Auxiliaries'],${physicalLayerList}['Trench'],${physicalLayerData}['trench_Auxiliary'],${physicalLayerList}['Junction_Manhole'],${physicalLayerList}['Junction_Handhole'],filterFlag,${physicalLayerList}['duct'],${physicalLayerData}['ductAuxiliary'],${physicalLayerList}['Node'],${physicalLayerList}['Transmission'],${physicalLayerList}['Core'],${physicalLayerList}['Access']);
+		  CreateMap_PhysicalLayer(${physicalLayerList}['Project'],${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['fiber'],${physicalLayerList}['Distribution_Board'],${physicalLayerData}['fiber_Tubes'],${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Auxiliary'],${physicalLayerData}['tubes_Auxiliaries'],${physicalLayerData}['strands_Auxiliaries'],${physicalLayerList}['Trench'],${physicalLayerData}['trench_Auxiliary'],${physicalLayerList}['Node'],${physicalLayerList}['Transmission'],${physicalLayerList}['Core'],${physicalLayerList}['Access']); 
 		  if(checkedOption == "circleRange"){
 			  openFindNearest(checkedOption,'${closestLatPoint}','${closestLongPoint}','${closestDisRange}','${noP}',${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['Distribution_Board'],${physicalLayerList}['fiber'],${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Tubes'],${physicalLayerList}['Node'],${physicalLayerList}['Transmission'],'${getRelatedPoints}');
 		  }else if(checkedOption == "StartEnd"){
