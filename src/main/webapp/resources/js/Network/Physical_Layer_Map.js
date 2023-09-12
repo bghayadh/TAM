@@ -186,7 +186,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 					      },
 				],
 				calculator: function(markers, numStyles) {
-				if (markers.length >= 1) return {text: markers.length, index: 3};
+				if (markers.length >= 1) return {text: markers.length, index: 4};
 				}                   
 			});
 			
@@ -201,7 +201,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 					      },
 				],
 				calculator: function(markers, numStyles) {
-				if (markers.length >= 1) return {text: markers.length, index: 3};
+				if (markers.length >= 1) return {text: markers.length, index: 5};
 				}                   
 			});
 			
@@ -209,9 +209,9 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			 	minimumClusterSize: 2,
 				styles: [
 				         {
-				        	 url: getContext()+'/resources/clusterIcons/yellowCluster.png',
-					         height: 60,
-					         width:60,
+				        	 url: getContext()+'/resources/clusterIcons/blackCluster.png',
+					         height: 50,
+					         width:50,
 					         anchorText:[-2,-4]
 					      },
 				],
@@ -224,9 +224,9 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			 	minimumClusterSize: 2,
 				styles: [
 				         {
-				        	 url: getContext()+'/resources/clusterIcons/yellowCluster.png',
-					         height: 60,
-					         width:60,
+				        	 url: getContext()+'/resources/clusterIcons/greenCluster.png',
+					         height: 50,
+					         width: 50,
 					         anchorText:[-2,-4]
 					      },
 				],
