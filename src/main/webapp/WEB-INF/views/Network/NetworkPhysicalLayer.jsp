@@ -242,12 +242,12 @@
 							<td><input type="checkbox" id="transmissionCheckAllBoq" style="margin-left: 10px;"></td>
 						</tr>
 						<tr>
-							<td class="Icon "><img style="width: 16px; height: 16px;" src="${pageContext.request.contextPath}/resources/NetworkImages/BlueCircle.png" >
+							<td class="Icon "><img style="width: 16px; height: 16px;" src="${pageContext.request.contextPath}/resources/NetworkImages/black.png" >
 								<span id="definition">Core</span></td>
 							<td><input type="checkbox" id="coreCheckAllBoq" style="margin-left: 10px;"></td>
 						</tr>
 						<tr>
-							<td class="Icon "><img style="width: 16px; height: 16px;" src="${pageContext.request.contextPath}/resources/NetworkImages/BlueCircle.png" >
+							<td class="Icon "><img style="width: 16px; height: 16px;" src="${pageContext.request.contextPath}/resources/NetworkImages/green.png" >
 								<span id="definition">Access(Ran)</span></td>
 							<td><input type="checkbox" id="ranCheckAllBoq" style="margin-left: 10px;"></td>
 						</tr>
