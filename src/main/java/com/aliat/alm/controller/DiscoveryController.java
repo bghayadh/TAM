@@ -1319,11 +1319,11 @@ query.executeUpdate();
 				towareName = m.substring(0, part2);
 				toSiteID = m.substring(part2 + 1, m.length());
 			}*/
-			
+			String ArCode="";
 			if (ApproveType.equalsIgnoreCase("1") == true) {
 				
 				
-				String ArCode;
+				
 				//ArCode = "AR_" + year + "_" + appConfig.getSequenceNbr(9);
 				synchronized (this) {						
 					ArCode = "AR_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT ASSET_REGISTRY FROM SEQ_TABLE").uniqueResult().toString());	
@@ -1351,10 +1351,12 @@ query.executeUpdate();
 				assetregistry.setItemSN(itemParameters.getDictParameter().get(i).get(DN_ITEM_SN));
 
 				session.saveOrUpdate(assetregistry);
-
+			
 			}
 			
+			
 			if (ApproveType.equalsIgnoreCase("3") == true) {
+				 
 
 				// check, if this itemCode related to poID, exist in CIP table (get the qty and cipID)
 				
@@ -1413,7 +1415,7 @@ query.executeUpdate();
 						float initialCost = Float.parseFloat(itemParameters.getDictParameter().get(i).get(DN_RATE));
 						
 						FixedAssetRegistry FixedAssetReg = new FixedAssetRegistry();
-						
+						 FixedAssetReg.setARID(ArCode);
 						FixedAssetReg.setFarID(FarCode);
 						FixedAssetReg.setFaritemCode(itmcode);
 						FixedAssetReg.setFarcreatedDate(new Timestamp(System.currentTimeMillis()));
@@ -3714,7 +3716,7 @@ public void ApprovalFinance(String trans_Type, String getApproval, String dnStat
 			// ADD DiscoveryNewItem TO ASSET REGISTRY TABLE
 
 			FixedAssetRegistry FixedAssetReg = new FixedAssetRegistry();
-			
+			FixedAssetReg.setARID(AssetRegID);
 			FixedAssetReg.setFarID(FarCode);     
 			FixedAssetReg.setFaritemCode(itmcode);
 			FixedAssetReg.setFarcreatedDate(new Timestamp(System.currentTimeMillis()));
