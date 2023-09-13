@@ -1,11 +1,11 @@
-projectpath;D:\ALM23
-logpath;C:\ALM_V2_2\ALM_V2\LOGS
+projectpath;C:\ALM_V2_9
+logpath;C:\Users\User\Desktop\work\ALM_V2_9\ALM_V2\LOGS
 db1path;jdbc:oracle:thin:@localhost:1523/ALM;alm;alm
 db2path;jdbc:oracle:thin:@localhost:1524/PARSER;parser;parser
 db3path;jdbc:oracle:thin:@ocalhost:1525/ALMRPT;almrpt;almrpt
 sqlpath::jdbc:sqlserver://10.22.26.73\FASTRACK:49261;DatabaseName=dwh_tkl;encrypt = true;trustServerCertificate=true;user=katelekom;password=katelekom123
-readfileAIMfrom;C:\ALM_V2_2\HW_InvtTimerExport
-copyfileAIMto;C:\ALM_V2_2\HW_InvtTimerprocessed
+readfileAIMfrom;C:\Users\User\Desktop\work\ALM_V2_9\HW_InvtTimerExport
+copyfileAIMto;C:\Users\User\Desktop\work\ALM_V2_9\HW_InvtTimerprocessed
 readexcel;C:\ALM_V2_2\ALM
 readfileCIMfrom;C:\ALM_V2_2\HW_CIM_InvtTimerExport
 copyfileCIMto;C:\ALM_V2_2\HW_CIM_InvtTimerprocessed
@@ -25,3 +25,15 @@ readexcelTransOptSDHHWfrom;C:\ALM_V2_2\Transmission\Optics\SDH\HUAWEI
 copyexcelTransOptSDHHWto;C:\ALM_V2_2\Transmission_Processed\Optics\SDH\HUAWEI
 readexcelTransOptSDHACLfrom;C:\ALM_V2_2\Transmission\Optics\SDH\ALCATEL
 copyexcelTransOptSDHACLto;C:\ALM_V2_2\Transmission_Processed\Optics\SDH\ALCATEL
+readfileRANZTEfrom;C:\ALM_V2_6\RAN\ZTE
+copyfileRANZTEto;C:\ALM_V2_6\RAN_Processed\ZTE
+readExcelFileRanHWFrom;C:\ALM4_V2\RAN\HUAWEI
+copyExcelFileRanHWTo;C:\ALM4_V2\RAN_Processed\HUAWEI
+readBscGSMFileRanHWFrom;C:\ALM_V2_2\RAN\HUAWEI\BSC6910GSM
+copyBscGSMFileRanHWTo;C:\ALM_V2_2\RAN_Processed\HUAWEI\BSC6910GSM
+readBscUMTSFileRanHWFrom;C:\ALM_V2_2\RAN\HUAWEI\BSC6910UMTS
+copyBscUMTSFileRanHWTo;C:\ALM_V2_2\RAN_Processed\HUAWEI\BSC6910UMTS
+readBTSFileRanHWFrom;C:\ALM_V2_2\RAN\HUAWEI\BTS3900
+copyBTSFileRanHWTo;C:\ALM_V2_2\RAN_Processed\HUAWEI\BTS3900
+readOSSFileRanHWFrom;C:\ALM_V2_2\RAN\HUAWEI\OSS
+copyOSSFileRanHWTo;C:\ALM_V2_2\RAN_Processed\HUAWEI\OSS
