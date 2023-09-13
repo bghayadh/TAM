@@ -1,11 +1,11 @@
-projectpath;C:\ALM_V2_8
-logpath;C:\Users\User\Desktop\work\ALM_V2_8\ALM_V2\LOGS
+projectpath;C:\ALM_V2_9
+logpath;C:\Users\User\Desktop\work\ALM_V2_9\ALM_V2\LOGS
 db1path;jdbc:oracle:thin:@localhost:1523/ALM;alm;alm
 db2path;jdbc:oracle:thin:@localhost:1524/PARSER;parser;parser
 db3path;jdbc:oracle:thin:@ocalhost:1525/ALMRPT;almrpt;almrpt
 sqlpath::jdbc:sqlserver://10.22.26.73\FASTRACK:49261;DatabaseName=dwh_tkl;encrypt = true;trustServerCertificate=true;user=katelekom;password=katelekom123
-readfileAIMfrom;C:\Users\User\Desktop\work\ALM_V2_8\HW_InvtTimerExport
-copyfileAIMto;C:\Users\User\Desktop\work\ALM_V2_8\HW_InvtTimerprocessed
+readfileAIMfrom;C:\Users\User\Desktop\work\ALM_V2_9\HW_InvtTimerExport
+copyfileAIMto;C:\Users\User\Desktop\work\ALM_V2_9\HW_InvtTimerprocessed
 readexcel;C:\ALM_V2_2\ALM
 readfileCIMfrom;C:\ALM_V2_2\HW_CIM_InvtTimerExport
 copyfileCIMto;C:\ALM_V2_2\HW_CIM_InvtTimerprocessed
