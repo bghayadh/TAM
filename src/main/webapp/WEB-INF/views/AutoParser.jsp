@@ -473,10 +473,15 @@ $("#loadFiles").click(function() {
 	console.log("loader_vendor "+loader_vendor);
 	console.log("loader_type "+loader_type);
 	
-	if(loader_vendor=="Huawei"&& loader_domain=="Ran"){
+	/*if(loader_vendor=="Huawei"&& loader_domain=="Ran"){
 		url='loadFilesAOSS';
+	}*/
+	if(loader_vendor=="Huawei"&& loader_domain=="Ran"){
+		url='loadFilesRanHuawei';
 	}
-	else if(loader_vendor=="Nokia" && loader_domain=="Ran"){
+	else if(loader_vendor=="zte" && loader_domain=="Ran"){
+		url='loadFilesRANZTE';
+	}else if(loader_vendor=="Nokia" && loader_domain=="Ran"){
 		url='loadFilenokia';
 	}else if(loader_vendor=="Huawei" && loader_domain=="Transmission" && loader_subdomain == "FiberOptic" && loader_type == "DWDM"){
 		url='loadFileDWDMhuawei';

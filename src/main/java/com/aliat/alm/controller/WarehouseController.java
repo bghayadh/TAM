@@ -539,11 +539,22 @@ public class WarehouseController {
 
 					List<Object[]> Inventory = new ArrayList<Object[]>();
 					
-					query = session.createSQLQuery(
-						    "SELECT Item_code, Item_Name, Item_Model, Item_part_number, COUNT(*) AS quantity " + 
-						    "FROM asset_registry where Ar_ID in (select Ar_ID from AR_SITE where Site_id=:param1) " + 
-						    "GROUP BY Item_code, Item_Name, Item_part_number, Item_Model"
-						);
+					String queryString = "SELECT ar.Item_code, ar.Item_Name, ar.Item_Model, ar.Item_part_number, COUNT(*) AS quantity, "
+						    + "SUM(COALESCE(ar.Initial_Cost, "
+						    + "(SELECT AVG(Net_Rate) "
+						    + "FROM purchase_order_item poi "
+						    + "WHERE poi.Item_code = ar.Item_code)"
+						    + ")) AS Total_Initial_Cost, "
+						    + "SUM(COALESCE(far.ACCUMULDEPRECAMNT, 0)) AS Total_Depreciation, "
+						    + "SUM(COALESCE(far.NetCost, ar.Initial_Cost)) AS Total_Net_Cost "
+						    + "FROM asset_registry ar "
+						    + "LEFT JOIN fixed_asset_registry far ON ar.Ar_ID = far.Ar_ID "
+						    + "WHERE ar.Ar_ID IN (SELECT Ar_ID FROM AR_SITE WHERE Site_id = :param1) "
+						    + "GROUP BY ar.Item_code, ar.Item_Name, ar.Item_Model, ar.Item_part_number";
+
+						query = session.createSQLQuery(queryString);
+
+
 					
                         
 						query.setParameter("param1", siteId);
@@ -611,29 +622,6 @@ public class WarehouseController {
 								Object IDUcount = session.createSQLQuery(IDU).uniqueResult();
 								model.addAttribute("IDUcount",  mapper.writeValueAsString(IDUcount));
 									
-								query = session.createQuery(
-										"SELECT nvl(SUM(t.iniCost),'0') as initialcost ,nvl(SUM(t.accumPer),'0') as deprec,nvl(SUM(t.netCost),'0') as netcost FROM FixedAssetRegistry t where t.wareID =:param1");
-								query.setParameter("param1", wareID);
-
-								Result = (Object[]) query.uniqueResult();
-
-								double initialcost1 = (double) Math.round(Double.parseDouble(Result[0].toString()) * 100) / 100;
-								model.addAttribute("InitialCost1", initialcost1);
-
-								double accumPer1 = (double) Math.round(Double.parseDouble(Result[1].toString()) * 100) / 100;
-								model.addAttribute("accumPer1", accumPer1);
-
-								 double totalNetCost1 = (double) Math.round(Double.parseDouble(Result[2].toString()) * 100) / 100;
-								model.addAttribute("totalNetCost1", totalNetCost1);
-								
-								query = session.createSQLQuery(
-									    "SELECT  COUNT(*)  " + 
-									    "FROM asset_registry where Ar_ID in (select Ar_ID from AR_SITE where Site_id=:param1) "  
-									   
-									);
-									query.setParameter("param1", siteId);
-								String	quan =  mapper.writeValueAsString(query.uniqueResult());
-								model.addAttribute("totalquan", quan);
 								
 									
 								
@@ -702,128 +690,23 @@ public class WarehouseController {
 		return "WarehouseFormView";
 	}
 	
-	@RequestMapping(value = "/BOQ11", method = RequestMethod.GET)
-	@ResponseBody
-	public Map<String, Object> BOQ11(Locale locale, Model model, HttpServletRequest request,
-			@ModelAttribute ItemParameters itemParameters, HttpServletResponse response) throws Exception {
-      String wareID = request.getParameter("wareID");
-      String siteID = request.getParameter("siteId");
-  	
-	 //get inventory info
-      Map<String, Object> rtn = new LinkedHashMap<>();
-		
-      session = almsessions.getSession();
-		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
-			notifications.headerNotifications(session, model);
-
-	 query = session.createSQLQuery(
-			    "SELECT site_id from warehouse where ware_id=:param1"
-			);
-		query.setParameter("param1", wareID);
-		String siteId = (String) query.uniqueResult();
-		
-		System.out.println(siteId);
-
-	List<Object[]> Inventory = new ArrayList<Object[]>();
 	
-	query = session.createSQLQuery(
-		    "SELECT Item_code, Item_Name, Item_Model, Item_part_number, COUNT(*) AS quantity " + 
-		    "FROM asset_registry where Ar_ID in (select Ar_ID from AR_SITE where Site_id=:param1) " + 
-		    "GROUP BY Item_code, Item_Name, Item_part_number, Item_Model"
-		);
 	
-       
-		query.setParameter("param1", siteId);
-		ObjectMapper mapper = new ObjectMapper();
-	    String resultList =  mapper.writeValueAsString(query.list());;
-
-		System.out.println(resultList);
-		
 	
-	            List<List<Object>> listOfLists = mapper.readValue(resultList, new TypeReference<List<List<Object>>>() {});
-
-	            for (List<Object> innerList : listOfLists) {
-	                System.out.println(innerList.get(0));
-	            }
-	            rtn.put("listInventory", mapper.writeValueAsString(query.list()));
-                  
-	          
-	            
-	            
-	            LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
-
-				String Site_Query ="Select DISTINCT   Ware_Name From NODE_ACTIVE where Ware_Id='" + wareID + "'";
-				Object Sites = session.createSQLQuery(Site_Query).uniqueResult();
-				rtn.put("siteName",  mapper.writeValueAsString(Sites));
-				
-				String Node_Active_Query = wareID == ""
-						? "SELECT COUNT(distinct UNIQUE_NODE_ID) FROM NODE_ACTIVE where Active_record='1'"
-						: "SELECT COUNT(UNIQUE_NODE_ID) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='" + wareID
-						+ "'";
-				
-				Object CountNodes_Active = session.createSQLQuery(Node_Active_Query).uniqueResult();
-
-				rtn.put("nodes",  mapper.writeValueAsString(CountNodes_Active));
-				
-				String Node_GCell_Query = wareID == "" ? "SELECT COUNT(GCELL_ID) FROM NODE_GCELL"
-						: "select count(ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"
-								+ wareID + "'";
-				Object CountNodes_G_CELL = session.createSQLQuery(Node_GCell_Query).uniqueResult();
-				rtn.put("g-cell",  mapper.writeValueAsString(CountNodes_G_CELL));
-				
-				String Node_LCell_Query = wareID == "" ? "SELECT COUNT(LCELL_ID) FROM NODE_LCELL"
-						: "select count(nlc.LCell_Id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
-								+ wareID + "'";
-				Object CountNodes_L_CELL = session.createSQLQuery(Node_LCell_Query).uniqueResult();
-				rtn.put("l-cell",  mapper.writeValueAsString(CountNodes_L_CELL));
-				
-				String Node_UCell_Query = wareID == "" ? "SELECT COUNT(UCELL_ID) FROM NODE_UCELL"
-						: "select count(nlc.UCell_Id) from node_ucell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
-								+ wareID + "'";
-				Object CountNodes_U_CELL = session.createSQLQuery(Node_UCell_Query).uniqueResult();
-				rtn.put("u-cell",  mapper.writeValueAsString(CountNodes_U_CELL));
-				
-				String Node_Type_Count = "SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"
-						+ wareID + "'";
-				Object CountNodesType = session.createSQLQuery(Node_Type_Count).uniqueResult();
-				rtn.put("nodeType",  mapper.writeValueAsString(CountNodesType));
-				
-				String SRanBs = "SELECT COUNT( NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and NODE_TYPE='SRanBs' and Ware_Id='" + 
-			     wareID +"'";
-				Object SRanBscount = session.createSQLQuery(SRanBs).uniqueResult();
-				rtn.put("SRanBscount",  mapper.writeValueAsString(SRanBscount));
-				
-				String IDU = "SELECT COUNT( NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and NODE_TYPE='IDU' and Ware_Id='" + 
-					     wareID +"'";
-				Object IDUcount = session.createSQLQuery(IDU).uniqueResult();
-				rtn.put("IDUcount",  mapper.writeValueAsString(IDUcount));
-					
-		
-				query = session.createSQLQuery(
-					    "SELECT  COUNT(*)  " + 
-					    "FROM asset_registry where Ar_ID in (select Ar_ID from AR_SITE where Site_id=:param1) "  
-					   
-					);
-					query.setParameter("param1", siteId);
-				String	quan =  mapper.writeValueAsString(query.uniqueResult());
-				rtn.put("totalquan", quan);
-				
-				
-				rtn.put("zena","Zeee");
-		}
-				return rtn;
-				
-}
-				
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/warehouseBOQ", method = RequestMethod.GET)
-	public void warehouseBOQ(Locale locale, Model model, HttpServletRequest request,
+	@RequestMapping(value = "/WarehouseBOQ", method = RequestMethod.GET)
+	public void WarehouseBOQ(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) {
 
-		
 
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
 		Object[] Result;
@@ -845,12 +728,9 @@ public class WarehouseController {
 				wareID = request.getParameter("wareID");
 				navAction = request.getParameter("NavAction");
 
-	
-                    //get inventory info
+			  //get inventory info
 					
-					int zz=1;
-					if(zz==1) {
-						
+					
 					 query = session.createSQLQuery(
 							    "SELECT site_id from warehouse where ware_id=:param1"
 							);
@@ -956,13 +836,15 @@ public class WarehouseController {
 									query.setParameter("param1", siteId);
 								String	quan =  mapper.writeValueAsString(query.uniqueResult());
 								model.addAttribute("totalquan", quan);
-								System.out.println("zeeee")
-;
-					}
+								
+									
 								
 					
-				
+					// get site_IMAGE_NAME
+					
+					
 
+				
 			} catch (Exception e) {
 				System.out.println("catch messsage is " + e.getMessage());
 			}
@@ -976,14 +858,12 @@ public class WarehouseController {
 			}
 		}
 
-
+		
 	}
 	
 	
 	
-	
-	
-	
+
 
 	@RequestMapping(value = "/WarehouseFormSave", method = RequestMethod.GET)
 	@ResponseBody

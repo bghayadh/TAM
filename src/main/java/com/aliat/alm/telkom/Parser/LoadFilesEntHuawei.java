@@ -27,9 +27,6 @@ import java.util.Map;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
-
-
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
@@ -37,12 +34,11 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 import com.aliat.alm.models.ManHole;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class LoadFilesEntHuawei  {
-	
+
 	static BufferedReader objReader1 = null;
 	static String strCurrentLine1;
 	static String projpath=null;
@@ -71,37 +67,29 @@ public class LoadFilesEntHuawei  {
 	static Statement stmtp1;
 	static PreparedStatement stmtp;
 	static int NodeSeq;
+	static int NodePortSeq;
 	static HashMap<String, String> vhmap = new HashMap<String, String>();
-	
-
-
-
-	 
 	static String nodeId = null;
 	static String nodeType = null;
 	static String nodeModel = null;
 	static String nodeName = null;
 	static String hww;
 	static String fileNamess;
-	static String unique_Node_ID = null;	
-		
-	
+	static String unique_Node_ID = null;
+	static ArrayList<String> FileName = new ArrayList<String>();
 	
 	public static void main(String[] args, String vendor,String domain,String sub_domain) throws IOException, SQLException, InterruptedException {
-		
-	
+
 		objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"\\"+"almconfig.dat"));
 		System.out.println("vendor "+vendor);
 		System.out.println("vendor "+domain);
 		System.out.println("vendor "+sub_domain);
-		
 		if(vendor.equalsIgnoreCase("Huawei")) {
 			Gprovider="HW";
 		}
 		sub_domain="";
 		Domain=domain;
-		
-	
+
 	 	while ((strCurrentLine1 = objReader1.readLine()) != null){
 	 		String data = strCurrentLine1;
 			 String[] data1;
@@ -138,8 +126,6 @@ public class LoadFilesEntHuawei  {
 				 data2=readfileEntHuaweifrom.split("\\\\",-1);
 				 vfolderfrom=data2[data2.length-1];
 				 System.out.println("data2 found :" + data2[data2.length-1]);
-				 //Gprovider=vfolderfrom.substring(4,6);
-				 //System.out.println("Gprovider2 found: " + Gprovider);
 			 }
 			 if (data.contains("copyfileEntHuaweito")) {
 				 data1=data.split(";",-1);
@@ -148,12 +134,9 @@ public class LoadFilesEntHuawei  {
 				 data2=copyfileEntHuaweito.split("\\\\",-1);
 				 vfolderto=data2[data2.length-1];
 			 }
-
 	 	}
 	 	 objReader1.close();
 	 	 
-		// System.out.println("get circle value  :" + System.getProperty("user.dir")+"/"+"almcircle.dat");
-		// objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"/"+"almcircle.dat"));
 		 objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"\\"+"almcircle.dat"));
 
 		 while ((strCurrentLine1 = objReader1.readLine()) != null){
@@ -164,7 +147,6 @@ public class LoadFilesEntHuawei  {
 		 }
 		 objReader1.close();	 
 		 System.out.println(" circle is  :" + circleid);
-	 	 
 		 	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 				LocalDateTime now = LocalDateTime.now();
 				String logfilename="ParserLogEntHW-"+dtf.format(now)+".log";
@@ -173,35 +155,31 @@ public class LoadFilesEntHuawei  {
 				DateTimeFormatter dtf1 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		    	LocalDateTime now1 = LocalDateTime.now();
 		    	Gyear=dtf1.format(now1).substring(0,4);
-		    	//System.out.println(Gyear);
-
+		    	
 		    	File folder = new File(readfileEntHuaweifrom);
 				File[] listOfFiles = folder.listFiles();
 				logger = Logger.getLogger("MyLog");
 				logger.setUseParentHandlers(false);
 				
-				
 				// This block configure the logger with handler and formatter  and PATH
-
 		        fh = new FileHandler(logpath+"/"+logfilename);
 		        logger.addHandler(fh);
 		        SimpleFormatter formatter = new SimpleFormatter();
 		        fh.setFormatter(formatter);
-
+		        
 		        //connect to alm DB
 					DriverManager.registerDriver (new oracle.jdbc.driver.OracleDriver());
 					conalm = DriverManager.getConnection (db1path,username1,password1);
 
 					try {
 						//connect to ALM_PARSER DB
-					    con= DriverManager.getConnection(db2path,username2,password2);
+				con= DriverManager.getConnection(db2path,username2,password2);
 					System.out.println("Connected to oracle DB");
 					} catch (SQLException e) {
 					       System.out.println("Opss, error");
 					       e.printStackTrace();
 					   }
 					
-
 					//validate if the same process is running now if yes we cannot run it twice until finish
 					Statement stmtinit2 = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			    	 String sqlStmtinit2 = "select * from EXECUTE_DOAMIN_VENDOR_FILES where DOMAIN='Enterprise' and VENDOR='"+ Gprovider +"' and STATUS='IN PROCESS'";
@@ -218,28 +196,34 @@ public class LoadFilesEntHuawei  {
 							 System.out.println("LoadFilesEntHW inprocess...");
 							 System.out.println("It will take a few minutes..");
 							 logger.info("LoadFilesEntHW inprocess...");
+							 
 								for (File file : listOfFiles) {
-									if (file.isFile()) {
+									if (file.isFile()){
 										
-										
-										 
-
 								        String fichier =file.getName().toString();
 								        fileNamess = file.getName().toString();
-										// reading file from folder
-								        readfile(fichier);
-
-										 File source = new File(readfileEntHuaweifrom+"/"+file.getName());
-									     File dest = new File(copyfileEntHuaweito+"/"+file.getName()+".bkp");
-
-									     //coypy file after treating it to destination folder
-									     copyFiles(source,dest);
-                                         //delete file from source folder
-									     deleteFiles(readfileEntHuaweifrom+"/"+file.getName());
-
-
+								        
+								       // System.out.println("msan "+fichier);
+								        if(fichier.contains("MSAN")) {
+								        	System.out.println("msan "+fichier);
+								        	FileName.add(0,fichier);
+								        }
+								        else {
+								        	FileName.add(fichier);
+								        }
 								    }
 								}
+
+								for(int i=0;i<=FileName.size()-1;i++) {
+									 readfile(FileName.get(i));
+									 File source = new File(readfileEntHuaweifrom+"/"+FileName.get(i));
+								     File dest = new File(copyfileEntHuaweito+"/"+FileName.get(i)+".bkp");
+								     //coypy file after treating it to destination folder
+								     copyFiles(source,dest);
+                                    //delete file from source folder
+								     deleteFiles(readfileEntHuaweifrom+"/"+FileName.get(i));	
+								}
+								
                                 // remove dupliacte node 
 								GetduplicateFilename("Enterprise",Gprovider);
 								// update file status to completed
@@ -253,25 +237,20 @@ public class LoadFilesEntHuawei  {
 								   	System.out.println("it takes " + (after.getTime() - before.getTime())+ "ms");
 								   	logger.info("it takes " + (after.getTime() - before.getTime())+ "ms");
 				 	   }
-				 	   
+
 				 	   else {
 					 		  System.out.println("A process already is running , please wait until process ending");
 					 		   logger.info("A process already is running , please wait until process ending");
-
 					 	   }
 					 	  rsinit2.close();
 					 	  stmtinit2.close();
-
-					 	 con.close();
-						 conalm.close();
-							
+					 	  con.close();
+						  conalm.close();		
 	}
 	public static String readfile (String filename) {
-
 	   	System.out.println("filename "+filename);
-		
-	   //String unique_Node_ID = null;
 	   	
+	  if(filename.contains("MSAN")) {
 	   	String codeid="";
 	   	String Node_Type="";
 	   	String Site_ID="";
@@ -280,24 +259,19 @@ public class LoadFilesEntHuawei  {
 	   	String Long="";
 	   	String Lat="";
 	   	String Node_Name;
-	   	
-	   	Node_Type="MSAN";
+	  	Node_Type="MSAN";
 		String excelFilePath=readfileEntHuaweifrom+"/"+filename;
+		String sheetname="msan";
 		String [] temp;
 		temp=filename.split("\\.",-1);
-		String sheetname=temp[0];
 		String fileType=temp[1];
-		//System.out.println("sheetname "+sheetname);
-		//System.out.println("excelFilePath "+excelFilePath);
-		
 		long start = System.currentTimeMillis();
-
-
 		FileInputStream inputStream;
+		
 		try {
 			inputStream = new FileInputStream(excelFilePath);
 			Workbook workbook=new XSSFWorkbook(inputStream);
-			Sheet firstSheet=workbook.getSheet(sheetname);
+			Sheet firstSheet=workbook.getSheet("msan");
 			// get the seq of node_active and update it by number of row 
 			int rownumb=firstSheet.getLastRowNum();
 			//System.out.println("number of row "+rownumb);
@@ -308,163 +282,144 @@ public class LoadFilesEntHuawei  {
 			  while(rsinit3.next()) {
 				  NodeSeq = rsinit3.getInt("NODE_ACTIVE");
 			  	//vcodeid=year+"_NODE_"+rsinit2.getInt("NODE_ACTIVE");
-			  	stmtp = conalm.prepareStatement("UPDATE SEQ_TABLE SET NODE_ACTIVE = NODE_ACTIVE +"+(rownumb-3));//-3 to ignore non-data row of the excel sheet
+			  	stmtp = conalm.prepareStatement("UPDATE SEQ_TABLE SET NODE_ACTIVE = NODE_ACTIVE +"+(rownumb-1));//-1 to ignore non-data row of the excel sheet
 			  	stmtp.executeUpdate();
 			  	stmtp.close();
 			  }
 			  rsinit3.close();
 			  stmtp1.close();
-			  
 			
 			Iterator<Row> rowIterator=firstSheet.iterator();
 			long end;
-			
 			Row nextRow = rowIterator.next();
-			while(rowIterator.hasNext() ){//&& nextRow.getRowNum() >2) {
-				//System.out.println("nextRow.getRowNum()  "+nextRow.getRowNum() );
+			
+			while(rowIterator.hasNext() ){
 			vhmap=getexceldata(firstSheet,nextRow,rowIterator);
-					 
-				//System.out.println("vhmap "+vhmap);	
+			
 				if(!vhmap.isEmpty()) {
-					
 					codeid=Gyear+"_"+ "NODE"+'_'+NodeSeq;
 					if(vhmap.get("NodeName").contains("'")) {
-						
 						Node_Name=vhmap.get("NodeName").replace("'", "''");
 					}
 					else {
 						Node_Name=vhmap.get("NodeName");
 					}
 					
-					String [] Temp1=vhmap.get("NodeName").split("_",-1);
-					 // Site_ID=Temp1[0];
-					  
-					
-					//Statement stmtinit2 = conalm.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-			    	 //String sqlStmtinit2 = "select DISTINCT WARE_ID,LONGITUDE,LATITUDE,WARE_NAME from WAREHOUSE where SITE_ID='"+Site_ID+"'";
-					   // ResultSet rsinit2 = stmtinit2.executeQuery(sqlStmtinit2);
-					    //rsinit2.last();
-					    //int totalrecinit = rsinit2.getRow();
-					 	  //rsinit2.beforeFirst();
-					 	  
-					 	  ///
-					 	 if(vhmap.get("NodeName").contains("_")) {
-					 		 //System.out.println("here _");
-								if(vhmap.get("NodeName").split("_").length > 3) {
-									//System.out.println("here >3");
-									Site_ID = vhmap.get("NodeName").split("_",-1)[0];
-									char charArray[] = Site_ID.toCharArray();
-									if(Character.isDigit(charArray[0])) {
-										//String sqlStmtinit2 = "select WARE_ID,WARE_NAME,LONGITUDE,LATITUDE from WAREHOUSE WHERE SITE_ID='"+siteID+"'";     
-										  //stmtp1 = conalm.createStatement();
-										  //ResultSet rsinit2 = stmtp1.executeQuery(sqlStmtinit3);
-										Statement stmtinit2 = conalm.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-								    	 String sqlStmtinit2 = "select DISTINCT WARE_ID,LONGITUDE,LATITUDE,WARE_NAME from WAREHOUSE where SITE_ID='"+Site_ID+"'";
-										   ResultSet rsinit2 = stmtinit2.executeQuery(sqlStmtinit2);
-										    rsinit2.last();
-										    int totalrecinit = rsinit2.getRow();
-										    rsinit2.beforeFirst();
-										  //while(rsinit2.next()) {
-										    if(totalrecinit ==1) {
-										 		  // retrieve site_id, ware_id, long and lat from warehouse table 
-										 		rsinit2.next();
-											  //System.out.println("here while "+rsinit2.getString("WARE_ID"));
-											  Ware_ID=rsinit2.getString("WARE_ID");
-											  Ware_Name = rsinit2.getString("WARE_NAME");
-											  Long=rsinit2.getString("LONGITUDE");
-											  Lat = rsinit2.getString("LATITUDE");
-											  rsinit2.close();
-										  	
-										  }
-										    
-										  //rsinit2.close();
-										  //stmtp1.close();
-										  else {
-												Ware_ID="";
-												Ware_Name ="";
-												  Long="";
-												  Lat = "";
-												  Site_ID = "";
-												//System.out.println("site id and site name don't exists");
-
-											}
-										
-								}
-								else {
-									Ware_ID="";
-									Ware_Name ="";
-									  Long="";
-									  Lat = "";
-									  Site_ID = "";
-									//System.out.println("site id and site name don't exists");
-
-								}
-								}else {
-									Ware_ID="";
-									Ware_Name ="";
-									  Long="";
-									  Lat = "";
-									  Site_ID = "";
-									
-								}
-							}else {
-								Ware_ID="";
-								Ware_Name ="";
-								  Long="";
-								  Lat ="";
-								  Site_ID = "";
-								//System.out.println("site id and site name don't exists");
-
-							}
-					 	  
-					 	
-					 	  
-					    
+				      Site_ID = vhmap.get("SiteID");
+						if(Site_ID != null) {
+							
+								Statement stmtinit2 = conalm.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+						    	 String sqlStmtinit2 = "select DISTINCT WARE_ID,LONGITUDE,LATITUDE,WARE_NAME from WAREHOUSE where SITE_ID='"+Site_ID+"'";
+								   ResultSet rsinit2 = stmtinit2.executeQuery(sqlStmtinit2);
+								    rsinit2.last();
+								    int totalrecinit = rsinit2.getRow();
+								    rsinit2.beforeFirst();
+								  //while(rsinit2.next()) {
+								    if(totalrecinit ==1) {
+								 		  // retrieve site_id, ware_id, long and lat from warehouse table 
+								 		rsinit2.next();
+									  //System.out.println("here while "+rsinit2.getString("WARE_ID"));
+									  Ware_ID=rsinit2.getString("WARE_ID");
+									  Ware_Name = rsinit2.getString("WARE_NAME");
+									  Long=rsinit2.getString("LONGITUDE");
+									  Lat = rsinit2.getString("LATITUDE");
+									  rsinit2.close();
+									  
+								  }else {
+										Ware_ID="";
+										Ware_Name ="";
+										Long= vhmap.get("Longitude");
+										Lat = vhmap.get("Latitude");
+										Site_ID = "";
+									}
+						}
 					unique_Node_ID=vhmap.get("NodeIPAddr")+"_"+"HW";
 					
-					PreparedStatement stmt = con.prepareStatement("insert into NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_SOURCE,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,ACTIVE_RECORD,LINE,WARE_ID,VENDOR,SUPPLIER_ID,WARE_NAME,SUPPLIER_NAME,IP_ADDRESS,MAC_ADDRESS,SOFTWARE_VERSION,GATEWAY,GATEWAY_TYPE,GATEWAY_IP,STATUS_1,STATUS_2,PATCH_VERSION,LONGITUDE,LATITUDE,PART_NUMBER )"
-					 		+ "values('" +codeid +"', '"+unique_Node_ID+"' ,'" + vhmap.get("NodeIPAddr") +"' ,'"+Node_Name+"','"+Node_Type+"','"+Domain+"','0','"+vhmap.get("NodeType")+"','0','0','0','0','"+Site_ID+"','"+ circleid +"',sysdate,sysdate,'"+fileType+"','" + filename +"','"+vhmap.get("CommunicationStatus")+"','0','0','0','0','0','1','0','"+Ware_ID+"','"+ Gprovider +"','0','"+Ware_Name+"','0','"+vhmap.get("NodeIPAddr")+"','"+vhmap.get("NodeMacAddr")+"','"+vhmap.get("SoftwareVersion")+"','"+vhmap.get("Gateway")+"','"+vhmap.get("GatewayType")+"','"+vhmap.get("GatewayIP")+"','"+vhmap.get("AdministrativeStatus")+"','"+vhmap.get("LifeCycleStatus")+"','"+vhmap.get("PatchVerList")+"','"+Long+"','"+Lat+"','"+vhmap.get("NodeSubType")+"') "); 
+					PreparedStatement stmt = con.prepareStatement("insert into NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_SOURCE,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,ACTIVE_RECORD,LINE,WARE_ID,VENDOR,SUPPLIER_ID,WARE_NAME,SUPPLIER_NAME,IP_ADDRESS,MAC_ADDRESS,SOFTWARE_VERSION,PATCH_VERSION,LONGITUDE,LATITUDE,PART_NUMBER,OTHERS)"
+					 		+ "values('" +codeid +"', '"+unique_Node_ID+"' ,'" + vhmap.get("NodeIPAddr") +"' ,'"+Node_Name+"','"+Node_Type+"','"+Domain+"','0','"+vhmap.get("NodeType")+"','0','0','0','0','"+vhmap.get("SiteID")+"','"+ circleid +"',sysdate,sysdate,'"+fileType+"','" + filename +"','"+vhmap.get("CommunicationStatus")+"','0','0','0','0','0','1','0','"+Ware_ID+"','"+ Gprovider +"','0','"+Ware_Name+"','0','"+vhmap.get("NodeIPAddr")+"','"+vhmap.get("NodeMacAddr")+"','"+vhmap.get("SoftwareVersion")+"','"+vhmap.get("PatchVerList")+"','"+Long+"','"+Lat+"','"+vhmap.get("NodeSubType")+"','"+vhmap.get("Others")+"') "); 
 	                stmt.executeUpdate();
 				     stmt.close();
 					
-					
 				     NodeSeq++;
-					
 				}
-					 
-					
 					}
-				
-				
-				
-				
-			
-			
+		
 			end = System.currentTimeMillis();
 			System.out.printf("Import done in %d ms\n", (end - start));
-			//System.out.printf("HMAP " +hmap);
-			
+		
 		} catch (Exception e) {
-			
 			e.printStackTrace();
 		}
+	}else {
+	  	String codeid="";
+	   	String Node_Type="";
+		String excelFilePath=readfileEntHuaweifrom+"/"+filename;
+		String sheetname="";
+		String [] temp;
+		temp=filename.split("\\.",-1);
+		sheetname=temp[0];
+		String regex = "\\d+$";
+		String resultString = sheetname.replaceAll(regex, "");
+		String fileType=temp[1];
+		long start = System.currentTimeMillis();
+		FileInputStream inputStream;
+		try {
+			inputStream = new FileInputStream(excelFilePath);
+			Workbook workbook=new XSSFWorkbook(inputStream);
+			Sheet firstSheet=workbook.getSheet(resultString);
+			// get the seq of node_active and update it by number of row 
+			int rownumb=firstSheet.getLastRowNum();
+			//System.out.println("number of row "+rownumb);
+			
+			String sqlStmtinit3 = "select NODE_PORT from SEQ_TABLE";     
+			  stmtp1 = conalm.createStatement();
+			  ResultSet rsinit3 = stmtp1.executeQuery(sqlStmtinit3);
+			  while(rsinit3.next()) {
+				  NodePortSeq = rsinit3.getInt("NODE_PORT");
+			  	stmtp = conalm.prepareStatement("UPDATE SEQ_TABLE SET NODE_PORT = NODE_PORT +"+(rownumb-3));//-3 to ignore non-data row of the excel sheet
+			  	stmtp.executeUpdate();
+			  	stmtp.close();
+			  }
+			  rsinit3.close();
+			  stmtp1.close();
+			
+			Iterator<Row> rowIterator=firstSheet.iterator();
+			long end;
+			Row nextRow = rowIterator.next();
+			
+			while(rowIterator.hasNext() ){
+			vhmap=getexcelPortdata(firstSheet,nextRow,rowIterator);
+			
+				if(!vhmap.isEmpty()) {
+					codeid=Gyear+"_"+ "NODE_HW_ENT_PORT"+'_'+NodePortSeq;
+					String node_fk = "";
+					String node_attr_fk ="";
+					
+					PreparedStatement stmt = con.prepareStatement("insert into NODE_PORT(PORT_ID,SITEINDEX,SLOTNO,SUBSLOTNO,PORTNO,VENDORNAME,UNITPOSITION,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,DOMAIN,VENDOR,PORTTYPE,PORTRATE,OTHERS) "
+            		   		+ "values('" + codeid +"','0','" + vhmap.get("SlotNO") +"','" + vhmap.get("SubSlotNO") +"','" + vhmap.get("PortNO") +"','HW','" + vhmap.get("UnitPos") +"','" + node_fk +"','" + node_attr_fk +"' ,sysdate,'" + filename +"','" + vhmap.get("OperationStatus") +"','0','0','0','0','0','0','1','"+Domain+"','" + Gprovider +"','" + vhmap.get("PortType") +"','" + vhmap.get("PortRate") +"','" + vhmap.get("Others") +"') ");
+         		     stmt.executeUpdate();
+				     stmt.close();
+				     NodePortSeq++;
+				}
+					}
 		
+			end = System.currentTimeMillis();
+			System.out.printf("Import done in %d ms\n", (end - start));
 		
-		
-		
-		
-		
-	
-		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 		return null;
 	}
 	
 	public static HashMap getexceldata(Sheet firstSheet,Row nextRow,Iterator<Row> rowIterator) throws SQLException {
 		 HashMap<String, String> hmap = new HashMap<String, String>();
-		 
-		 	
-			
-			String NEName = "";
+
+		    String NEName = "";
+			String SiteID = "";
+			String Latitude = "";
+			String Longitude = "";
 			String NEModel = "";
 			String NEIP = "";
 			String SoftwareVer = "";
@@ -481,105 +436,118 @@ public class LoadFilesEntHuawei  {
 			String Gateway = "";
 			String GatewayType = "";
 			String GatewayIP = "";
-			
-		 
+			String Others = "";
+		
 			Date date = new Date();
 			Calendar calendar = new GregorianCalendar();
 			calendar.setTime(date);
 			int year = calendar.get(Calendar.YEAR);
 			
-			//String excelFilePath="C:\\Users\\User\\Desktop\\Data\\Backbone & Metro & Access-TKL Fiber 2021_Coordinates.xlsx";
 			 nextRow = rowIterator.next();
 				Iterator<Cell> cellIterator=nextRow.cellIterator();
 				int rowIndex = nextRow.getRowNum();
-				//System.out.println(" rowInde x"+rowIndex);
-				//Row sheetRow = firstSheet.getRow(rowIndex);
-				//Cell Str = sheetRow.getCell(1);
-				//String subStr = Str.getStringCellValue();
-				
 			
-				if(rowIndex >3) {
+				if(rowIndex >0) {
 				while(cellIterator.hasNext()) {
 					Cell nextCell=cellIterator.next();
 					int columnIndex=nextCell.getColumnIndex();
 					switch (columnIndex) {
 					case 0:
-						
 						NEName=nextCell.getStringCellValue();
 						//System.out.println("ne name "+nextCell.getStringCellValue());
 						break;
 					case 1:
-						NEModel=nextCell.getStringCellValue();
+						if (nextCell.getCellType() == Cell.CELL_TYPE_STRING) {
+							SiteID= nextCell.getStringCellValue();
+						}else {
+							SiteID= null;
+						}
 						break;
 					case 2:
-						NEIP=nextCell.getStringCellValue();
+						if (nextCell.getCellType() == Cell.CELL_TYPE_STRING) {
+							Latitude= nextCell.getStringCellValue();
+						}else {
+							Latitude= String.valueOf(nextCell.getNumericCellValue());
+						}
 						break;
 					case 3:
-						SoftwareVer=nextCell.getStringCellValue();
+						if (nextCell.getCellType() == Cell.CELL_TYPE_STRING) {
+							Longitude= nextCell.getStringCellValue();
+						}else {
+							Longitude=String.valueOf(nextCell.getNumericCellValue());
+						}
 						break;
 					case 4:
+						NEModel=nextCell.getStringCellValue();
+						break;
+					case 5:
+						NEIP=nextCell.getStringCellValue();
+						break;
+					case 6:
+						SoftwareVer=nextCell.getStringCellValue();
+						break;
+					case 7:
 						NEMAC=nextCell.getStringCellValue();
 						if(NEMAC.trim().equalsIgnoreCase("--")) {
 							NEMAC="";
 						}
 						break;
-					case 5:
+					case 8:
 						NEID=nextCell.getStringCellValue();
 						break;
-					case 7:
+					case 10:
 						SubNet=nextCell.getStringCellValue();
 						break;
-					case 10:
+					case 13:
 						NESubType=nextCell.getStringCellValue();
 						break;
-					case 11:
+					case 14:
 						ComStatus=nextCell.getStringCellValue();
 						break;
-					case 12:
+					case 15:
 						AdminStatus=nextCell.getStringCellValue();
 						break;
-					case 14:
+					case 17:
 						crtdata=nextCell.getStringCellValue();
 						break;
-					case 16:
+					case 19:
 						Remark=nextCell.getStringCellValue();
 						break;
-					case 17:
+					case 20:
 						PatchVerList=nextCell.getStringCellValue();
 						break;
-					case 19:
+					case 22:
 						GatewayType=nextCell.getStringCellValue();
 						if(GatewayType.trim().equalsIgnoreCase("--")) {
 							GatewayType="";
 						}
 						break;
-					case 20:
+					case 23:
 						Gateway=nextCell.getStringCellValue();
 						if(Gateway.trim().equalsIgnoreCase("--")) {
 							Gateway="";
 						}
 						break;
-					case 21:
+					case 24:
 						GatewayIP=nextCell.getStringCellValue();
 						if(GatewayIP.trim().equalsIgnoreCase("--")) {
 							GatewayIP="";
 						}
 						break;
-					case 23:
+					case 26:
 						LifeCycleStatus=nextCell.getStringCellValue();
 						if(LifeCycleStatus.trim().equalsIgnoreCase("--")){
 							LifeCycleStatus="";
 						}
 						break;
 					}
-					 
-			
-			
-		 
-		 
 				}
-		
-				 hmap.put( "NodeName", NEName);
+				
+				Others="{\"AdministrativeStatus\":"+"\""+AdminStatus+"\","+"\"LifeCycleStatus\":"+"\""+LifeCycleStatus+"\","+"\"Gateway\":"+"\""+Gateway+"\","+"\"GatewayType\":"+"\""+GatewayType+"\","+"\"GatewayIP\":"+"\""+GatewayIP+"\""+"}";
+				hmap.put( "NodeName", NEName);
+				 hmap.put( "SiteID", SiteID);
+				 hmap.put( "Latitude", Latitude);
+				 hmap.put( "Longitude", Longitude);
 				 hmap.put( "NodeType", NEModel);
 				 hmap.put( "NodeIPAddr", NEIP);
 				 hmap.put( "SoftwareVersion", SoftwareVer);
@@ -589,18 +557,80 @@ public class LoadFilesEntHuawei  {
 				 hmap.put( "SubNet", SubNet);
 				 hmap.put( "NodeSubType", NESubType);
 				 hmap.put( "CommunicationStatus", ComStatus);
-				 hmap.put( "AdministrativeStatus", AdminStatus);
 				 hmap.put( "CreatedON", crtdata);
 				 hmap.put( "Remark", Remark);
 				 hmap.put( "PatchVerList", PatchVerList);
-				 hmap.put("LifeCycleStatus", LifeCycleStatus);
-				 hmap.put("Gateway", Gateway);
-				 hmap.put("GatewayType", GatewayType);
-				 hmap.put("GatewayIP", GatewayIP);
-				
+				 hmap.put("Others", Others);
 				}
 				return hmap;
 	}
+	
+	public static HashMap getexcelPortdata(Sheet firstSheet,Row nextRow,Iterator<Row> rowIterator) throws SQLException {
+		 HashMap<String, String> hmap = new HashMap<String, String>();
+
+		    String SlotNO = "";
+			String SubSlotNO = "";
+			String PortNO = "";
+			String UnitPos = "";
+			String PortType = "";
+			String PortRate = "";
+			String AdminStatus = "";
+			String OperationStatus = "";
+			String Others = "";
+		
+			Date date = new Date();
+			Calendar calendar = new GregorianCalendar();
+			calendar.setTime(date);
+			int year = calendar.get(Calendar.YEAR);
+			
+			 nextRow = rowIterator.next();
+				Iterator<Cell> cellIterator=nextRow.cellIterator();
+				int rowIndex = nextRow.getRowNum();
+			
+				if(rowIndex >3) {
+				while(cellIterator.hasNext()) {
+					Cell nextCell=cellIterator.next();
+					int columnIndex=nextCell.getColumnIndex();
+					switch (columnIndex) {
+					case 3:
+						SlotNO=nextCell.getStringCellValue();
+						break;
+					case 4:
+						SubSlotNO= nextCell.getStringCellValue();
+						break;
+				   case 5:
+						PortNO= nextCell.getStringCellValue();
+						break;
+				   case 7:
+					   UnitPos= nextCell.getStringCellValue();
+						break;
+				   case 9:
+					   PortType= nextCell.getStringCellValue();
+						break;
+				   case 10:
+					   PortRate= nextCell.getStringCellValue();
+						break;
+				   case 12:
+					   AdminStatus= nextCell.getStringCellValue();
+						break;
+				   case 13:
+					   OperationStatus= nextCell.getStringCellValue();
+						break;
+					}
+				}
+				 Others="{\"AdministrativeStatus\":"+"\""+AdminStatus+"\""+"}";
+				 hmap.put( "SlotNO", SlotNO);
+				 hmap.put( "SubSlotNO", SubSlotNO);
+				 hmap.put( "PortNO", PortNO);
+				 hmap.put( "UnitPos", UnitPos);
+				 hmap.put( "OperationStatus", OperationStatus);
+				 hmap.put( "PortType", PortType);
+				 hmap.put( "PortRate", PortRate);
+				 hmap.put( "Others", Others);
+				}
+				return hmap;
+	}
+	
 	
 	 private static void copyFiles(File source, File dest) throws IOException {
 		 try {
