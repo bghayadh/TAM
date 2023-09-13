@@ -198,7 +198,7 @@
 				<span class="input-group-text" >Domain</span>
 					<select id="loaderDomain" aria-label="Default select example" class="form-control">
 									<option value="Transmission" >Transmission</option>
-									<option value="Ran" >RAN</option>
+									<option value="RAN" >RAN</option>
 									<option value="Core">Core</option>
 									<option value="Enterprise">Enterprise</option>
 									
@@ -476,12 +476,12 @@ $("#loadFiles").click(function() {
 	/*if(loader_vendor=="Huawei"&& loader_domain=="Ran"){
 		url='loadFilesAOSS';
 	}*/
-	if(loader_vendor=="Huawei"&& loader_domain=="Ran"){
+	if(loader_vendor=="Huawei"&& loader_domain=="RAN"){
 		url='loadFilesRanHuawei';
 	}
-	else if(loader_vendor=="zte" && loader_domain=="Ran"){
+	else if(loader_vendor=="zte" && loader_domain=="RAN"){
 		url='loadFilesRANZTE';
-	}else if(loader_vendor=="Nokia" && loader_domain=="Ran"){
+	}else if(loader_vendor=="Nokia" && loader_domain=="RAN"){
 		url='loadFilenokia';
 	}else if(loader_vendor=="Huawei" && loader_domain=="Transmission" && loader_subdomain == "FiberOptic" && loader_type == "DWDM"){
 		url='loadFileDWDMhuawei';
