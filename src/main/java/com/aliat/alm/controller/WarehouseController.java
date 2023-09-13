@@ -539,16 +539,21 @@ public class WarehouseController {
 
 					List<Object[]> Inventory = new ArrayList<Object[]>();
 					
-					query = session.createSQLQuery(
-						    "SELECT ar.Item_code, ar.Item_Name, ar.Item_Model, ar.Item_part_number, COUNT(*) AS quantity," +
-						    " SUM(COALESCE(ar.Initial_Cost, 0)) AS Total_Initial_Cost," +
-						    " SUM(COALESCE(far.ACCUMULDEPRECAMNT, 0)) AS Total_Depreciation," +
-						    " SUM(COALESCE(far.NetCost, ar.Initial_Cost)) AS Total_Net_Cost " +
-						    "FROM asset_registry ar " +
-						    "LEFT JOIN fixed_asset_registry far ON ar.Ar_ID = far.Ar_ID " +
-						    "WHERE ar.Ar_ID IN (SELECT Ar_ID FROM AR_SITE WHERE Site_id = :param1) " +
-						    "GROUP BY ar.Item_code, ar.Item_Name, ar.Item_Model, ar.Item_part_number"
-						);
+					String queryString = "SELECT ar.Item_code, ar.Item_Name, ar.Item_Model, ar.Item_part_number, COUNT(*) AS quantity, "
+						    + "SUM(COALESCE(ar.Initial_Cost, "
+						    + "(SELECT AVG(Net_Rate) "
+						    + "FROM purchase_order_item poi "
+						    + "WHERE poi.Item_code = ar.Item_code)"
+						    + ")) AS Total_Initial_Cost, "
+						    + "SUM(COALESCE(far.ACCUMULDEPRECAMNT, 0)) AS Total_Depreciation, "
+						    + "SUM(COALESCE(far.NetCost, ar.Initial_Cost)) AS Total_Net_Cost "
+						    + "FROM asset_registry ar "
+						    + "LEFT JOIN fixed_asset_registry far ON ar.Ar_ID = far.Ar_ID "
+						    + "WHERE ar.Ar_ID IN (SELECT Ar_ID FROM AR_SITE WHERE Site_id = :param1) "
+						    + "GROUP BY ar.Item_code, ar.Item_Name, ar.Item_Model, ar.Item_part_number";
+
+						query = session.createSQLQuery(queryString);
+
 
 					
                         
