@@ -542,8 +542,9 @@ public class LoadFilesEntHuawei  {
 						break;
 					}
 				}
-				 Others="{\"AdministrativeStatus\":"+"\""+AdminStatus+"\","+"\"LifeCycleStatus\":"+"\""+LifeCycleStatus+"\""+"\"Gateway\":"+"\""+Gateway+"\""+"\"GatewayType\":"+"\""+GatewayType+"\""+"\"GatewayIP\":"+"\""+GatewayIP+"\""+"}";
-				 hmap.put( "NodeName", NEName);
+				
+				Others="{\"AdministrativeStatus\":"+"\""+AdminStatus+"\","+"\"LifeCycleStatus\":"+"\""+LifeCycleStatus+"\","+"\"Gateway\":"+"\""+Gateway+"\","+"\"GatewayType\":"+"\""+GatewayType+"\","+"\"GatewayIP\":"+"\""+GatewayIP+"\""+"}";
+				hmap.put( "NodeName", NEName);
 				 hmap.put( "SiteID", SiteID);
 				 hmap.put( "Latitude", Latitude);
 				 hmap.put( "Longitude", Longitude);
@@ -617,7 +618,7 @@ public class LoadFilesEntHuawei  {
 						break;
 					}
 				}
-				 Others="{\"AdministrativeStatus\":"+"\""+AdminStatus+"\","+"}";
+				 Others="{\"AdministrativeStatus\":"+"\""+AdminStatus+"\""+"}";
 				 hmap.put( "SlotNO", SlotNO);
 				 hmap.put( "SubSlotNO", SubSlotNO);
 				 hmap.put( "PortNO", PortNO);

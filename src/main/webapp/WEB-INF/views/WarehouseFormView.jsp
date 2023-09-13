@@ -1546,7 +1546,12 @@ select {
 						                <th>Item Name</th>
 						                <th>Item Model</th>
 						                <th>Item Part Number</th>
-						                <th>Qantity</th></tr></thead></table></div></form>
+						                <th> Qantity </th>
+						                 <th>Total initial cost</th>
+						                <th>Total net cost</th>
+						                <th>total depreciation </th>
+						                
+						                </tr></thead></table></div></form>
 				
 				  <table id ="inventorytab"  class="table table-striped table-bordered table-sm" style="display:block;  overflow-y: auto;">
 						       <thead>
@@ -2697,7 +2702,7 @@ function saverowsintables()
  function BoQ() {
     $.ajax({
         type: "GET",
-        url: "${pageContext.request.contextPath}/warehouseBOQ",
+        url: "${pageContext.request.contextPath}/WarehouseBOQ",
         success: function(response) {
         	sitename=${siteName}
         	 nodes=${nodes}
@@ -2735,52 +2740,85 @@ function saverowsintables()
         	"</tr>";
         	$("#inventorytab2").append(z);
 
-        	quan=${totalquan}
-        	document.getElementById("quan").value = quan;
-
-        	initial=${InitialCost1}
-        	document.getElementById("initial").value = initial;
-
-        	dep=${accumPer1}
-        	document.getElementById("dep").value = dep;
-
-        	net=${totalNetCost1}
-        	document.getElementById("net").value = net;
+        	
 
 
 
 
-        	  boqArray1 = [];
-        	    boqArray1 = ${listInventory};
-        	    console.log(boqArray1);
-        	    var c="";
-        	    for (i = 0;i<boqArray1.length;i++){
-        	        console.log(i);
-        	     var itemcode=boqArray1[i][0];
-        	     var itemName=boqArray1[i][1];
-        	     var itemModel=boqArray1[i][2];
-        	     var itemPartNumber=boqArray1[i][3];
-        	     var quantity=boqArray1[i][4];
+        	// Define variables to store the sums
+        	var totalInitialCost = 0;
+        	var totalNetCost = 0;
+        	var totalDepreciation = 0;
+        	var totalQuantity = 0; // Add this variable for total quantity
 
-        	     if(itemcode==null)
-        	    	 itemcode=" ";
-        	     if(itemName==null)
-        	    	 itemName=" ";
-        	     if(itemModel==null)
-        	    	 itemModel=" ";
-        	     if(itemPartNumber==null)
-        	    	 itemPartNumber=" ";
-        	     if(quantity==null)
-        	    	 quantity=" ";
+        	// Define boqArray1 and initialize it with ${listInventory}
+        	var boqArray1 = ${listInventory};
 
-        		 c="<tr>"+
-        		 "<td name='ItemCode'><input name='itmCode' type='text' id = 'itmCode"+i+"'   value='" + itemcode+ "' style='width:290px;' class='form-control text-input' readonly/></td>"+
-        		 "<td name='itemName'><input name='itemName' type='text' id = 'itemName"+i+"'   value='" + itemName+ "' style='width:290px;' class='form-control text-input' readonly/></td>"+
-        		 "<td name='itemModel'><input name='itemModel' type='text' id = 'itemModel"+i+"'   value='" + itemModel+ "' style='width:290px;' class='form-control text-input' readonly/></td>"+
-        		 "<td name='itemPartNumber'><input name='itemPartNumber' type='text' id = 'itemPartNumber"+i+"' value='" + itemPartNumber+ "' style='width:290px;' class='form-control text-input' readonly/></td>"+
-        		 "<td name='quantity'><input name='quantity' type='text' id = 'quantity"+i+"'   value='" + quantity+ "' style='width:290px;' class='form-control text-input' readonly/></td></tr>";
-        		 $("#inventorytab").append(c);  
-        	    } 
+        	console.log(boqArray1);
+
+        	var c = "";
+
+        	for (var i = 0; i < boqArray1.length; i++) {
+        	    console.log(i);
+        	    var itemcode = boqArray1[i][0];
+        	    var itemName = boqArray1[i][1];
+        	    var itemModel = boqArray1[i][2];
+        	    var itemPartNumber = boqArray1[i][3];
+        	    var quantity = boqArray1[i][4];
+        	    var initialcost = boqArray1[i][5];
+        	    var netcost = boqArray1[i][6];
+        	    var dep = boqArray1[i][7];
+
+        	    // Handle null values
+        	    if (itemcode == null) itemcode = " ";
+        	    if (itemName == null) itemName = " ";
+        	    if (itemModel == null) itemModel = " ";
+        	    if (itemPartNumber == null) itemPartNumber = " ";
+        	    if (quantity == null) quantity = " ";
+
+        	    c = "<tr>" +
+        	        "<td name='ItemCode'><input name='itmCode' type='text' id='itmCode" + i + "' value='" + itemcode + "' style='width:290px;' class='form-control text-input' readonly/></td>" +
+        	        "<td name='itemName'><input name='itemName' type='text' id='itemName" + i + "' value='" + itemName + "' style='width:290px;' class='form-control text-input' readonly/></td>" +
+        	        "<td name='itemModel'><input name='itemModel' type='text' id='itemModel" + i + "' value='" + itemModel + "' style='width:290px;' class='form-control text-input' readonly/></td>" +
+        	        "<td name='itemPartNumber'><input name='itemPartNumber' type='text' id='itemPartNumber" + i + "' value='" + itemPartNumber + "' style='width:290px;' class='form-control text-input' readonly/></td>" +
+        	        "<td name='quantity'><input name='quantity' type='text' id='quantity" + i + "' value='" + quantity + "' style='width:290px;' class='form-control text-input' readonly/></td>" +
+        	        "<td name='itemModel'><input name='itemModel' type='text' id='initialcost" + i + "' value='" + initialcost + "' style='width:290px;' class='form-control text-input' readonly/></td>" +
+        	        "<td name='itemPartNumber'><input name='itemPartNumber' type='text' id='netcost" + i + "' value='" + netcost + "' style='width:290px;' class='form-control text-input' readonly/></td>" +
+        	        "<td name='quantity'><input name='quantity' type='text' id='dep" + i + "' value='" + dep + "' style='width:290px;' class='form-control text-input' readonly/></td></tr>";
+
+        	    $("#inventorytab").append(c);
+
+        	    // Get the initial cost, net cost, and depreciation from the current row
+        	    var initialCost = parseFloat(initialcost);
+        	    var netCost = parseFloat(netcost);
+        	    var depreciation = parseFloat(dep);
+        	    var quantityValue = parseInt(quantity); // Parse quantity as an integer
+
+        	    if (!isNaN(initialCost)) {
+        	        totalInitialCost += initialCost;
+        	    }
+        	    if (!isNaN(netCost)) {
+        	        totalNetCost += netCost;
+        	    }
+        	    if (!isNaN(depreciation)) {
+        	        totalDepreciation += depreciation;
+        	    }
+        	    if (!isNaN(quantityValue)) {
+        	        totalQuantity += quantityValue; 
+        	    }
+        	}
+
+        	console.log("Total Initial Cost: " + totalInitialCost);
+        	console.log("Total Net Cost: " + totalNetCost);
+        	console.log("Total Depreciation: " + totalDepreciation);
+        	console.log("Total Quantity: " + totalQuantity);
+
+        	document.getElementById("quan").value = totalQuantity;
+        	document.getElementById("initial").value = totalInitialCost;
+        	document.getElementById("dep").value = totalDepreciation;
+        	document.getElementById("net").value = totalNetCost;
+
+        	    
 
         },
         error: function(xhr, status, error) {

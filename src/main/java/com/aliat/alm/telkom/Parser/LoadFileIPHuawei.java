@@ -158,7 +158,7 @@ public class LoadFileIPHuawei {
 				 readfileAIMfrom = data1[1];
 				 data2=readfileAIMfrom.replace("\\","/").split("/",-1);
 				 vfolderfrom=readfileAIMfrom;
-				 System.out.println("vfolderfrom "+ vfolderfrom);
+			//	 System.out.println("vfolderfrom "+ vfolderfrom);
 				 Gprovider=vendor;
 			//	 System.out.println("Gprovider "+ Gprovider);
 				 Domain=domain;
@@ -421,38 +421,114 @@ public class LoadFileIPHuawei {
    				 //System.out.println("hardwareVersion......."+hardwareVersion);
  				  serialNumber=records.get(i).get(12);		
  				  moduleStatus= records.get(i).get(19);
-				  //softwareVersion = records.get(i).get(11);  
+				  softwareVersion = records.get(i).get(11);  
  				 //System.out.println("softwareVersion......."+softwareVersion);
- 				// if (softwareVersion.isEmpty() || softwareVersion.equals("--")) {
- 				//	softwareVersion = "null";
- 					 //System.out.println("softwareVersion a: "+softwareVersion);         				
-			    // }
- 				/*  
- 				// dividing the software version into bootROM and bootLOAD and the version
-		        String[] words = softwareVersion.split("\\s+");  // Split the input string into words
-		        System.out.println("words....."+words);
+ 				 if (softwareVersion.isEmpty() || softwareVersion.equals("--")) {
+ 					softwareVersion = "null";
+ 					//System.out.println("softwareVersion a: "+softwareVersion);         				
+			    }
+ 				  
+ 				String[] partsoft = softwareVersion.split(",");	     		      
 		        String bootRomVersion = null;
-		        System.out.println("bootRomVersion....."+bootRomVersion);
+		       // System.out.println("bootRomVersion....."+bootRomVersion);
 		        String bootLoadVersion = null;
-		        System.out.println("bootLoadVersion....."+bootLoadVersion);
-		        for (var k = 0; k < words.length - 2; k++) {
-		            if (words[k].equals("BootROM") && words[k + 1].equals("ver")) {
-		                bootRomVersion = words[k + 2];
-		            } else if (words[k].equals("BootLoad") && words[k + 1].equals("ver")) {
-		                bootLoadVersion = words[k + 2];
-		            } else if(words[k + 1].equals("Version")){
-			            	softwareVersion = words[k + 2];
-		            }
-		        }
-		        System.out.println("BootROM version: " + bootRomVersion);
-		        System.out.println("BootLoad version: " + bootLoadVersion);
-		        System.out.println("Soft version: " + softwareVersion);	
-		        */
+		       // System.out.println("bootLoadVersion....."+bootLoadVersion);
+		        
+  			  if(softwareVersion.contains("BootROM") || softwareVersion.contains("BootLoad")){  
+  			    	//System.out.println("parts.length...."+partsoft.length);
+  			    	
+  			    if(partsoft.length == 2) {  
+  			    	//System.out.println("LENGTH 2 ");
+  			    	//String softver = partsoft[0];
+		            //String romver = partsoft[1];
+		            
+		            softwareVersion =  partsoft[0].split(" ")[2];
+		            //System.out.println("softwareVersion >>>>"+softwareVersion); 
+		            
+	            	bootRomVersion = partsoft[1].split(" ")[3];
+	            	//System.out.println("bootRomVersion >>>>"+bootRomVersion);
+	            	
+	            	bootLoadVersion = null;
+   		        	//System.out.println("bootLoadVersion >>>>"+bootLoadVersion);	   	
+		            
+  			    }else if(partsoft.length == 3) {
+  	   		       System.out.println("LENGTH 3 ");
+   		            	String softver = partsoft[0];
+   		            	String romver = partsoft[1];
+   		            	String loadver = partsoft[2];
+  	   		        /*
+  	   		           System.out.println("softwareVersionsplit << "+softver); 
+	   		           System.out.println("romVersionsplit << "+romver); 
+	   		           System.out.println("loadVersionsplit << "+loadver);
+	   		           System.out.println("softver.split()[0] << "+softver.split(" ")[0]);
+	   		        */
+	   		           if(softver.split(" ")[0].equals("Version")){
+	   		        	//System.out.println(">> Version << ");
+	   		        	 softwareVersion =  softver.split(" ")[1]+ ","+ softver.split(" ")[3];
+	   		        	//System.out.println("softwareVersion >>>>"+softwareVersion);   		            		           
+	   		           }else if(softver.split(" ")[0].equals("Software")){
+	   		        	    //System.out.println(">> Software << ");
+		   		        	softwareVersion =  softver.split(" ")[2];
+	   		        	    //System.out.println("softwareVersion >>>>"+softwareVersion); 
+		   		       }	        	   
+  	   		            	bootRomVersion = romver.split(" ")[3];
+	   		            	//System.out.println("bootRomVersion >>>>"+bootRomVersion);
+  	   		            	
+  	   		            	bootLoadVersion = loadver.split(" ")[3].split("(Configure)")[0];
+		   		        	//System.out.println("bootLoadVersion >>>>"+bootLoadVersion);	   		       
+  	  			      }else if(partsoft.length == 4) {
+  	  			    	//System.out.println("LENGTH 4 ");
+ 		            	//String softver1 = partsoft[0];
+ 		            	//String softver2 = partsoft[1];
+ 		            	//String romver = partsoft[2];
+ 		            	//String loadver = partsoft[3];  		           
+	   		           /*
+	   		           System.out.println("softwareVersionsplit << "+softver1); 
+	   		           System.out.println("softwareVersionsplit << "+softver2);
+	   		           System.out.println("romVersionsplit << "+romver); 
+	   		           System.out.println("loadVersionsplit << "+loadver);
+	   		           System.out.println("softver1.split[0] << "+softver1.split(" ")[0]);
+	   		           */
+	   		           
+	   		           if(partsoft[0].split(" ")[0].equals("Software")){
+	   		        	  // System.out.println(">>> Software VER <<< ");
+	   		        	   softwareVersion =  partsoft[0].split(" ")[2]+ ": "+partsoft[0].split(" ")[5]+ ","+ partsoft[0].split(" ")[7] +" - "+partsoft[1].split(" ")[1]+ ": "+partsoft[1].split(" ")[4]+ ","+ partsoft[1].split(" ")[6];
+	   		        	  // System.out.println("softwareVersion >>>>"+softwareVersion); 
+		   		       }else if(partsoft[0].split(" ")[0].equals("FSU")){
+		   		    	  // System.out.println(">>> FSU <<<"); 
+		   		        	softwareVersion =  partsoft[0].split(" ")[3]+ ","+ partsoft[1].split(" ")[2];
+		   		        	//System.out.println("softwareVersion >>>>"+softwareVersion); 
+		   		       }
+	   		            	bootRomVersion = partsoft[2].split(" ")[3];
+	   		            	//System.out.println("bootRomVersion >>>>"+bootRomVersion);
+	   		            	
+	   		            	bootLoadVersion = partsoft[3].split(" ")[3].split("(Configure)")[0];
+		   		        	//System.out.println("bootLoadVersion >>>>"+bootLoadVersion);	   		       
+	  			      }
+  			     }else if(!softwareVersion.contains("BootROM") && !softwareVersion.contains("BootLoad") && softwareVersion.contains("Version")){  
+  			    	//System.out.println("Version");  
+  			    	String[] parts = softwareVersion.split(" ");        
+  			    	for (int k = 0; k < parts.length - 1; k++) {
+	  		            if (parts[k].equalsIgnoreCase("Version")) {
+	  		               if (k + 1 < parts.length && !parts[k + 1].isEmpty()) {
+	  		                    softwareVersion = parts[k + 1];
+	  		                }
+	  		            }
+	  		        }
+  		            //System.out.println("Version number: " + softwareVersion);
+  			     }else {
+  			    	softwareVersion = softwareVersion;
+  			    	//System.out.println("soft Version number: " + softwareVersion);
+  			     }
+		        //System.out.println("BootROM version: " + bootRomVersion);
+		        //System.out.println("BootLoad version: " + bootLoadVersion);
+		        //System.out.println("Soft version: " + softwareVersion);	
+		      
 		        node_fk = nodes.get(records.get(i).get(5));
 		        //System.out.println("node_fk: " + node_fk);	
 		        
-		        stmtp =  con.prepareStatement("insert into NODE_MODULE (MODULE_ID,SERIALNUMBER,NODE_PK,FILENAME,STATUS,DOMAIN,VENDOR,HARDWAREVERSION)"
-     					 		+ "values('"+ vModulecodeid+"','"+ serialNumber+"','"+node_fk+"','"+ fileName+"','"+moduleStatus+"','"+Domain+"','"+Gprovider+"','"+hardwareVersion+"')"); 
+		        stmtp =  con.prepareStatement("insert into NODE_MODULE (MODULE_ID,SERIALNUMBER,NODE_PK,FILENAME,STATUS,DOMAIN,VENDOR,HARDWAREVERSION,SOFTVER,ROMVER,LOADVER)"
+     					 		+ "values('"+ vModulecodeid+"','"+ serialNumber+"','"+node_fk+"','"+ fileName+"','"+moduleStatus+"','"+Domain+"','"+Gprovider+"','"+hardwareVersion+"','"+softwareVersion+"','"+bootRomVersion+"','"+bootLoadVersion+"')"); 
      				  	stmtp.executeUpdate();
      				  	stmtp.close();
      				  	
@@ -469,37 +545,110 @@ public class LoadFileIPHuawei {
      				if (hardwareVersion.isEmpty() || hardwareVersion.equals("--")) {
      					hardwareVersion = "null";
      				}
-     			    //softwareVersion = records.get(i).get(11);
-     				// System.out.println("softwareVersion b: "+softwareVersion);
-     				//if (softwareVersion.isEmpty() || softwareVersion.equals("--")) {
-     				//	softwareVersion = "null";
-     				// }
-     				/*  
-       				// dividing the software version into bootROM and bootLOAD and the version
-  			        String[] wordsBoard = softwareVersion.split("\\s+");  // Split the input string into words
-  			        System.out.println("wordsboard....."+wordsBoard.toString());
-  			        String bootRomVersionBoard = null;
-  			        System.out.println("bootRomVersionboard....."+bootRomVersionBoard);
+     			    softwareVersion = records.get(i).get(11);
+     			    //System.out.println("softwareVersion b: "+softwareVersion);
+     				if (softwareVersion.isEmpty() || softwareVersion.equals("--")) {
+     					softwareVersion = "null";
+     				 }
+     				
+     				String[] partsoft = softwareVersion.split(",");
+     		        String bootRomVersionBoard = null;
+  			        //System.out.println("bootRomVersionboard....."+bootRomVersionBoard);
   			        String bootLoadVersionBoard = null;
-  			        System.out.println("bootLoadVersionboard....."+bootLoadVersionBoard);
+  			        //System.out.println("bootLoadVersionboard....."+bootLoadVersionBoard);
   			        
-  			        for (var k = 0; k < wordsBoard.length - 2; k++) {
-  			        	System.out.println("FOR LOOP WORDS BOARD");
-  			            if (wordsBoard[k].equals("BootROM") && wordsBoard[k + 1].equals("ver")) {
-  			            	System.out.println(".....BootROM.....");
-  			                bootRomVersionBoard = wordsBoard[k + 2];
-  			            } else if (wordsBoard[k].equals("BootLoad") && wordsBoard[k + 1].equals("ver")) {
-  			            	System.out.println(".....BootLoad.....");
-  			                bootLoadVersionBoard = wordsBoard[k + 2];
-  			            } else if(wordsBoard[k + 1].equals("Version")){
-  			            	System.out.println(".....pure.....");
-  			            	softwareVersion =  wordsBoard[k + 2];
-  			            }
-  			        }
-  			        System.out.println("BootROM versionnnnnn: " + bootRomVersionBoard);
-  			        System.out.println("BootLoad versionnnnnnnn: " + bootLoadVersionBoard);
-  			        System.out.println("Soft versionnnnnn: " + softwareVersion);				  
-       				*/ 
+  			    if(softwareVersion.contains("BootROM") || softwareVersion.contains("BootLoad")){  
+  			    	//System.out.println("softwareVersion CONTAINS");
+  			    	//System.out.println("parts.length...."+partsoft.length);
+  				    
+  			    	 if(partsoft.length == 2) { 
+  			    		//System.out.println("LENGTH 2 ");
+  	  			    	//String softver = partsoft[0];
+  			            //String romver = partsoft[1];
+  			            
+  			            softwareVersion =  partsoft[0].split(" ")[2];
+  			            //System.out.println("softwareVersion >>>>"+softwareVersion); 
+  			            
+  		            	bootRomVersionBoard = partsoft[1].split(" ")[3];
+  		            	//System.out.println("bootRomVersion >>>>"+bootRomVersionBoard);
+  		            	
+  		            	bootLoadVersionBoard = null;
+  	   		        	//System.out.println("bootLoadVersion >>>>"+bootLoadVersionBoard);	   	
+  			            
+  	  			    }else if(partsoft.length == 3) {
+	   		            	//System.out.println("LENGTH 3 ");
+	   		            	//String softver = partsoft[0];
+	   		            	//String romver = partsoft[1];
+	   		            	//String loadver = partsoft[2];
+	   		            	/*
+	  	   		           System.out.println("softwareVersionboardsplit << "+softver); 
+		   		           System.out.println("romVersionboardsplit << "+romver); 
+		   		           System.out.println("loadVersionboardsplit << "+loadver);
+		   		           System.out.println("softver.split()[0] << "+softver.split(" ")[0]);
+		   		           */
+		   		        if(partsoft[0].split(" ")[0].equals("Version")){
+		   		        	//System.out.println(">> Version <<"); 
+	   		        	    softwareVersion =  partsoft[0].split(" ")[1]+ ","+ partsoft[0].split(" ")[3];
+	   		        	    //System.out.println("softwareVersion >>>>"+softwareVersion);   		            	
+		   		        }else if(partsoft[0].split(" ")[0].equals("Software")){
+		   		        	//System.out.println(">> Software<<"); 
+		   		        	softwareVersion =  partsoft[0].split(" ")[2];
+	   		        	    //System.out.println("softwareVersion >>>>"+softwareVersion); 
+		   		        }
+	   		            	bootRomVersionBoard = partsoft[1].split(" ")[3];
+	   		            	//System.out.println("bootRomVersionBoard >>>>"+bootRomVersionBoard);
+	   		            	
+	   		            	bootLoadVersionBoard = partsoft[2].split(" ")[3].split("(Configure)")[0];
+	   		            	//System.out.println("bootLoadVersionBoard >>>>"+bootLoadVersionBoard);	   		       
+	  			      }else if(partsoft.length == 4) {
+	  			    	  	//System.out.println("LENGTH 4 ");
+	 		            	//String softver1 = partsoft[0];
+	 		            	//String softver2 = partsoft[1];
+	 		            	//String romver = partsoft[2];
+	 		            	//String loadver = partsoft[3];	   		           
+		   		           /*
+		   		           System.out.println("softwareVersionboardsplit << "+softver1); 
+		   		           System.out.println("softwareVersionboardsplit << "+softver2);
+		   		           System.out.println("romVersionboardsplit << "+romver); 
+		   		           System.out.println("loadVersionboardsplit << "+loadver);
+		   		           System.out.println("softver1.split[0] << "+softver1.split(" ")[0]);
+		   		          */
+		   		           
+		   		           if(partsoft[0].split(" ")[0].equals("Software")) {
+		   		        	   //System.out.println(">>> Software<<<"); 
+			   		        	softwareVersion =  partsoft[0].split(" ")[2]+ ": "+partsoft[0].split(" ")[5]+ ","+ partsoft[0].split(" ")[7] +" - "+partsoft[1].split(" ")[1]+ ": "+partsoft[1].split(" ")[4]+ ","+ partsoft[1].split(" ")[6];
+		   		        	   // System.out.println("softwareVersion >>>>"+softwareVersion); 
+			   		       }else if(partsoft[0].split(" ")[0].equals("FSU")){
+			   		    	   	//System.out.println(">>> FSU <<<"); 
+			   		        	softwareVersion =  partsoft[0].split(" ")[3]+ ","+ partsoft[1].split(" ")[2];
+		   		        	    //System.out.println("softwareVersion >>>>"+softwareVersion); 
+			   		       }	        	   
+		   		            	bootRomVersionBoard = partsoft[2].split(" ")[3];
+		   		            	//System.out.println("bootRomVersion >>>>"+bootRomVersionBoard);
+		   		            	
+		   		            	bootLoadVersionBoard = partsoft[3].split(" ")[3].split("(Configure)")[0];
+			   		        	//System.out.println("bootLoadVersion >>>>"+bootLoadVersionBoard);	   		       
+		  			      }
+  			    	
+  			     }else if(!softwareVersion.contains("BootROM") && !softwareVersion.contains("BootLoad") && softwareVersion.contains("Version")){  
+  			    	//System.out.println("Version");  
+  			    	String[] parts = softwareVersion.split(" ");        
+	  		        for (int k = 0; k < parts.length - 1; k++) {
+	  		            if (parts[k].equalsIgnoreCase("Version")) {
+	  		                if (k + 1 < parts.length && !parts[k + 1].isEmpty()) {
+	  		                	softwareVersion = parts[k + 1];
+	  		                }
+	  		            }
+	  		        }
+  		           // System.out.println("Version number: " + softwareVersion);
+  			     }else {
+  			    	softwareVersion = softwareVersion;
+  			    	//System.out.println("soft Version number: " + softwareVersion);
+  			     }
+  			        //System.out.println("BootROM versionnnnnn: " + bootRomVersionBoard);
+  			        //System.out.println("BootLoad versionnnnnnnn: " + bootLoadVersionBoard);
+  			        //System.out.println("Soft versionnnnnn: " + softwareVersion);				  
+       			
   			        nodeIPaddress = records.get(i).get(5);
   			        serialNumber=records.get(i).get(12);		
      				model=records.get(i).get(15);
@@ -521,8 +670,8 @@ public class LoadFileIPHuawei {
      			        Date manufacturedDate = dateFormat.parse(manifacturedDate); // Parse the date string
      			        java.sql.Date sqlManufacturedDate = new java.sql.Date(manufacturedDate.getTime()); // Convert to java.sql.Date
 
-     			        String sql = "INSERT INTO NODE_BOARD (BOARD_ID, SUBRACKNO, SLOTNO, BOARDNAME, BOARDTYPE, SERIALNUMBER, MODEL, HARDWAREVERSION, DATEOFMANUFACTURE, BIOSVER, BOMCODE, NODE_PK, FILENAME, STATUS, DOMAIN, VENDOR)"
-        			            + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+     			        String sql = "INSERT INTO NODE_BOARD (BOARD_ID, SUBRACKNO, SLOTNO, BOARDNAME, BOARDTYPE, SERIALNUMBER, MODEL, HARDWAREVERSION, DATEOFMANUFACTURE,SOFTVER, BIOSVER, BOMCODE, NODE_PK, FILENAME, STATUS, DOMAIN, VENDOR, ROMVER, LOADVER)"
+        			            + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,? ,? ,?)";
 
         			        PreparedStatement stmtp = con.prepareStatement(sql);
 
@@ -536,16 +685,16 @@ public class LoadFileIPHuawei {
         			        stmtp.setString(7, model);
         			        stmtp.setString(8, hardwareVersion);
         			        stmtp.setDate(9, sqlManufacturedDate); 
-        			        //stmtp.setString(10, softwareVersion);
-        			        stmtp.setString(10, biosVersion);
-        			        stmtp.setString(11, bomCode);
-        			        stmtp.setString(12, node_fk);
-        			        stmtp.setString(13, fileName);
-        			        stmtp.setString(14, boardStatus);
-        			        stmtp.setString(15, Domain);
-        			        stmtp.setString(16, Gprovider);
-        			       // stmtp.setString(18, bootRomVersionBoard);
-        			       // stmtp.setString(19, bootLoadVersionBoard);
+        			        stmtp.setString(10, softwareVersion);
+        			        stmtp.setString(11, biosVersion);
+        			        stmtp.setString(12, bomCode);
+        			        stmtp.setString(13, node_fk);
+        			        stmtp.setString(14, fileName);
+        			        stmtp.setString(15, boardStatus);
+        			        stmtp.setString(16, Domain);
+        			        stmtp.setString(17, Gprovider);
+        			        stmtp.setString(18, bootRomVersionBoard);
+        			        stmtp.setString(19, bootLoadVersionBoard);
         			        stmtp.executeUpdate();
         			        stmtp.close();
      			    } catch (Exception e) {
@@ -555,8 +704,8 @@ public class LoadFileIPHuawei {
      			}else {
      				try {
      				    //System.out.println("manifacturedDateeee : "+manifacturedDate);
-     					stmtp =  con.prepareStatement("insert into NODE_BOARD (BOARD_ID,SUBRACKNO,SLOTNO,BOARDNAME,BOARDTYPE,SERIALNUMBER,MODEL,HARDWAREVERSION,DATEOFMANUFACTURE,BIOSVER,BOMCODE,NODE_PK,FILENAME,STATUS,DOMAIN,VENDOR)"
-     					 		+ "values('"+vBoardcodeid+"','"+subrackId+"','"+slotId+"','"+boardName+"','"+ boardType+"','"+ serialNumber+"','"+ model+"','"+hardwareVersion+"','','"+biosVersion+"','"+ bomCode+"','"+node_fk+"','"+fileName+"','"+boardStatus+"','"+Domain+"','"+Gprovider+"')"); 
+     					stmtp =  con.prepareStatement("insert into NODE_BOARD (BOARD_ID,SUBRACKNO,SLOTNO,BOARDNAME,BOARDTYPE,SERIALNUMBER,MODEL,HARDWAREVERSION,DATEOFMANUFACTURE,SOFTVER,BIOSVER,BOMCODE,NODE_PK,FILENAME,STATUS,DOMAIN,VENDOR,ROMVER,LOADVER)"
+     					 		+ "values('"+vBoardcodeid+"','"+subrackId+"','"+slotId+"','"+boardName+"','"+ boardType+"','"+ serialNumber+"','"+ model+"','"+hardwareVersion+"','','"+softwareVersion+"','"+biosVersion+"','"+ bomCode+"','"+node_fk+"','"+fileName+"','"+boardStatus+"','"+Domain+"','"+Gprovider+"','"+bootRomVersionBoard+"','"+bootLoadVersionBoard+"')"); 
      					stmtp.executeUpdate();
      				  	stmtp.close();  	
      				} catch (Exception e) {

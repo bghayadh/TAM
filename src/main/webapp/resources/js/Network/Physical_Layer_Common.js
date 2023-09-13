@@ -6453,6 +6453,130 @@ function boqCheckFilter(){
 		  			
 			}
 	})
+	
+	$("#transmissionCheckAllBoq").change(function(){
+		if($(this).is(":checked")){
+			
+			$("#Transmission_f_CurrentPhysicalLayer > .AllTransmission").prop("checked",true);				
+			$("#Transmission_f_CurrentPhysicalLayer").find(' > ul > li ').each(function(){			
+
+			var TransId=$(this).attr('id');
+					
+			if(markersTransmission[TransId].getMap()==null){						
+				markersTransmission[TransId].setMap(map);			
+				markerClusterTransmission.addMarker(markersTransmission[TransId]);
+				$("#"+TransId).children(':checkbox').prop( "checked", true );
+			}
+		  																
+			});
+				
+			}
+			else{
+			
+				$("#Transmission_f_CurrentPhysicalLayer > .AllTransmission").prop("checked",false);				
+				$("#Transmission_f_CurrentPhysicalLayer").find(' > ul > li ').each(function(){			
+
+					var TransId=$(this).attr('id');					
+									
+						markersTransmission[TransId].setMap(null);	
+						$("#"+TransId).children(':checkbox').prop( "checked", false );
+						markerClusterTransmission.clearMarkers();
+					
+		  		});
+		  		
+		  		$("#network_tree").find(".Transmission:checked" ).each(function(){
+
+					id=$(this).parent().attr('id');
+					if(markersTransmission[id].getMap()==null){
+						markersTransmission[id].setMap(map);			
+						markerClusterTransmission.addMarker(markersTransmission[id]);
+					}		
+				});
+		  			
+			}
+	})
+	
+		$("#coreCheckAllBoq").change(function(){
+		   if($(this).is(":checked")){
+			
+			$("#Core_f_CurrentPhysicalLayer > .AllCore").prop("checked",true);				
+			$("#Core_f_CurrentPhysicalLayer").find(' > ul > li ').each(function(){			
+
+			var CoreId=$(this).attr('id');
+					
+			if(markersCore[CoreId].getMap()==null){						
+				markersCore[CoreId].setMap(map);			
+				markerClusterCore.addMarker(markersCore[CoreId]);
+				$("#"+CoreId).children(':checkbox').prop("checked", true );
+			}
+		  																
+			});
+				
+			}
+			else{
+			
+				$("#Core_f_CurrentPhysicalLayer > .AllCore").prop("checked",false);				
+				$("#Core_f_CurrentPhysicalLayer").find(' > ul > li ').each(function(){			
+
+					var CoreId=$(this).attr('id');							
+						markersCore[CoreId].setMap(null);	
+						$("#"+CoreId).children(':checkbox').prop( "checked", false );
+						markerClusterCore.clearMarkers();
+					
+		  		});
+		  		
+		  		$("#network_tree").find(".Core:checked" ).each(function(){
+					id=$(this).parent().attr('id');
+					if(markersCore[id].getMap()==null){
+						markersCore[id].setMap(map);			
+						markerClusterCore.addMarker(markersCore[id]);
+					}		
+				});
+		  			
+			}
+	})
+	
+	$("#ranCheckAllBoq").change(function(){
+		   if($(this).is(":checked")){
+			
+			$("#Ran_f_CurrentPhysicalLayer > .AllRan").prop("checked",true);				
+			$("#Ran_f_CurrentPhysicalLayer").find(' > ul > li ').each(function(){			
+
+			var RanId=$(this).attr('id');
+					
+			if(markersRan[RanId].getMap()==null){						
+				markersRan[RanId].setMap(map);			
+				markerClusterRan.addMarker(markersRan[RanId]);
+				$("#"+RanId).children(':checkbox').prop("checked", true );
+			}
+		  																
+			});
+				
+			}
+			else{
+			
+				$("#Ran_f_CurrentPhysicalLayer > .AllRan").prop("checked",false);				
+				$("#Ran_f_CurrentPhysicalLayer").find(' > ul > li ').each(function(){			
+
+					var RanId=$(this).attr('id');							
+						markersRan[RanId].setMap(null);	
+						$("#"+RanId).children(':checkbox').prop( "checked", false );
+						markerClusterRan.clearMarkers();
+					
+		  		});
+		  		
+		  		$("#network_tree").find(".Ran:checked" ).each(function(){
+					id=$(this).parent().attr('id');
+					if(markersRan[id].getMap()==null){
+						markersRan[id].setMap(map);			
+						markerClusterRan.addMarker(markersRan[id]);
+					}		
+				});
+		  			
+			}
+	})
+
+	
 
 	$("#handholeCheckAllBoq").change(function(){
 
