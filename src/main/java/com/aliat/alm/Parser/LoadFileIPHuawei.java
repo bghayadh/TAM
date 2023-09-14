@@ -374,8 +374,12 @@ public class LoadFileIPHuawei {
     				  unique_Node_ID = nodeId+"_HW";
     				  //System.out.println("DONE NODE ACTIVEEEEEEEEE");
     				  nodes.put(nodeId, vcodeid);
-    				  	stmtp =  con.prepareStatement("insert into NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,WARE_ID,VENDOR,WARE_NAME,IP_ADDRESS,MAC_ADDRESS,SUB_DOMAIN,SOFTWARE_VERSION,STATUS_1,GATEWAY,GATEWAY_TYPE,GATEWAY_IP,STATUS_2,LONGITUDE,LATITUDE,PATCH_VERSION,PART_NUMBER,SUB_DOMAIN_TYPE)"
-    					 		+ "values('"+vcodeid+"','"+unique_Node_ID+"','"+nodeId+"','"+nodeName+"','"+nodeType+"','"+Domain+"','"+nodeModel+"','"+tech2+"','"+tech3+"','"+tech4+"','"+tech5+"','"+siteID+"','"+circleid+"',sysdate,sysdate,'"+fileType+"','"+fileName+"','"+commStatus+"','"+wareID+"','"+Gprovider+"','"+wareName+"','"+IPaddress+"','"+MACaddress+"','"+subDomain+"','"+softwareVersion+"','"+adminStatus+"','"+gateway+"','"+gatewayType+"','"+gatewayIP+"','"+LCStatus+"','"+longi+"','"+lat+"','"+patchVersion+"','"+partNumber+"','"+subDomainType+"')"); 
+    				  
+    				  
+    				  String Others="{\"STATUS_1\":"+"\""+adminStatus+"\","+"\"GATEWAY\":"+"\""+gateway+"\","+"\"GATEWAY_TYPE\":"+"\""+gatewayType+"\","+"\"GATEWAY_IP\":"+"\""+gatewayIP+"\""+"\"STATUS_2\":"+"\""+LCStatus+"\"}";
+    			        
+    				  	stmtp =  con.prepareStatement("insert into NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,WARE_ID,VENDOR,WARE_NAME,IP_ADDRESS,MAC_ADDRESS,SUB_DOMAIN,SOFTWARE_VERSION,LONGITUDE,LATITUDE,PATCH_VERSION,PART_NUMBER,SUB_DOMAIN_TYPE,OTHERS)"
+    					 		+ "values('"+vcodeid+"','"+unique_Node_ID+"','"+nodeId+"','"+nodeName+"','"+nodeType+"','"+Domain+"','"+nodeModel+"','"+tech2+"','"+tech3+"','"+tech4+"','"+tech5+"','"+siteID+"','"+circleid+"',sysdate,sysdate,'"+fileType+"','"+fileName+"','"+commStatus+"','"+wareID+"','"+Gprovider+"','"+wareName+"','"+IPaddress+"','"+MACaddress+"','"+subDomain+"','"+softwareVersion+"','"+longi+"','"+lat+"','"+patchVersion+"','"+partNumber+"','"+subDomainType+"','"+Others+"')"); 
     				  	stmtp.executeUpdate();
     				  	stmtp.close();
     			   
@@ -527,8 +531,10 @@ public class LoadFileIPHuawei {
 		        node_fk = nodes.get(records.get(i).get(5));
 		        //System.out.println("node_fk: " + node_fk);	
 		        
-		        stmtp =  con.prepareStatement("insert into NODE_MODULE (MODULE_ID,SERIALNUMBER,NODE_PK,FILENAME,STATUS,DOMAIN,VENDOR,HARDWAREVERSION,SOFTVER,ROMVER,LOADVER)"
-     					 		+ "values('"+ vModulecodeid+"','"+ serialNumber+"','"+node_fk+"','"+ fileName+"','"+moduleStatus+"','"+Domain+"','"+Gprovider+"','"+hardwareVersion+"','"+softwareVersion+"','"+bootRomVersion+"','"+bootLoadVersion+"')"); 
+		       String Others="{\"ROMVER\":"+"\""+bootRomVersion+"\","+"\"LOADVER\":"+"\""+bootLoadVersion+"\""+"}";
+		        
+		        stmtp =  con.prepareStatement("insert into NODE_MODULE (MODULE_ID,SERIALNUMBER,NODE_PK,FILENAME,STATUS,DOMAIN,VENDOR,HARDWAREVERSION,SOFTVER,OTHERS)"
+     					 		+ "values('"+ vModulecodeid+"','"+ serialNumber+"','"+node_fk+"','"+ fileName+"','"+moduleStatus+"','"+Domain+"','"+Gprovider+"','"+hardwareVersion+"','"+softwareVersion+"','"+Others+"')"); 
      				  	stmtp.executeUpdate();
      				  	stmtp.close();
      				  	
@@ -659,6 +665,8 @@ public class LoadFileIPHuawei {
      				node_fk = nodes.get(records.get(i).get(5));
      				//System.out.println(" node_fkk "+node_fk);  
          			
+     				String Others="{\"ROMVER\":"+"\""+bootRomVersionBoard+"\","+"\"LOADVER\":"+"\""+bootLoadVersionBoard+"\""+"}";
+     			      
      			// Assuming records1.get(i).get(25) contains the date as a String
      			String manifacturedDate = records.get(i).get(25);
      			//System.out.println("manifacturedDate : "+manifacturedDate);  
@@ -670,8 +678,8 @@ public class LoadFileIPHuawei {
      			        Date manufacturedDate = dateFormat.parse(manifacturedDate); // Parse the date string
      			        java.sql.Date sqlManufacturedDate = new java.sql.Date(manufacturedDate.getTime()); // Convert to java.sql.Date
 
-     			        String sql = "INSERT INTO NODE_BOARD (BOARD_ID, SUBRACKNO, SLOTNO, BOARDNAME, BOARDTYPE, SERIALNUMBER, MODEL, HARDWAREVERSION, DATEOFMANUFACTURE,SOFTVER, BIOSVER, BOMCODE, NODE_PK, FILENAME, STATUS, DOMAIN, VENDOR, ROMVER, LOADVER)"
-        			            + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,? ,? ,?)";
+     			        String sql = "INSERT INTO NODE_BOARD (BOARD_ID, SUBRACKNO, SLOTNO, BOARDNAME, BOARDTYPE, SERIALNUMBER, MODEL, HARDWAREVERSION, DATEOFMANUFACTURE,SOFTVER, BIOSVER, BOMCODE, NODE_PK, FILENAME, STATUS, DOMAIN, VENDOR, OTHERS)"
+        			            + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,? ,?)";
 
         			        PreparedStatement stmtp = con.prepareStatement(sql);
 
@@ -693,8 +701,8 @@ public class LoadFileIPHuawei {
         			        stmtp.setString(15, boardStatus);
         			        stmtp.setString(16, Domain);
         			        stmtp.setString(17, Gprovider);
-        			        stmtp.setString(18, bootRomVersionBoard);
-        			        stmtp.setString(19, bootLoadVersionBoard);
+        			        stmtp.setString(18, Others);
+        			     
         			        stmtp.executeUpdate();
         			        stmtp.close();
      			    } catch (Exception e) {
