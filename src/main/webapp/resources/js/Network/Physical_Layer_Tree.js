@@ -250,6 +250,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 	allFiberCables=[];
 	allTubes=[];
 	allStrands=[];
+	allDB = [];
 	
 		$("#saveManhole").unbind(); 
 		$("#saveHandhole").unbind();
@@ -320,13 +321,13 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 		str="<ul><li id ='FiberPath_access__CurrentPhysicalLayer' style='display:none;' class='accessFolder'> <input type='checkbox' class='AccessFiber checkFilter' id ='Access__CurrentPhysicalLayer' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Access </span></li></ul></li></ul>";
 		$("#FiberPath_f_CurrentPhysicalLayer").append(str);
 		
-        str="<ul><li id ='DistributionBoard_backbone__CurrentPhysicalLayer' style='display:none;' class='backboneFolder'> <input type='checkbox' class='BackboneDb checkFilter' id ='Backbone__CurrentPhysicalLayer' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Backbone </span></li></ul></li></ul>";
+        str="<ul><li id ='DistributionBoard_backbone__CurrentPhysicalLayer' style='display:none;' class='backboneDBFolder'> <input type='checkbox' class='BackboneDB checkFilter' id ='BackboneDB__CurrentPhysicalLayer' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Backbone </span></li></ul></li></ul>";
 		$("#DistributionBoard_f_CurrentPhysicalLayer").append(str);
 		
-		str="<ul><li id ='DistributionBoard_metro__CurrentPhysicalLayer' style='display:none;' class='metroFolder'> <input type='checkbox' class='MetroDb checkFilter' id ='Metro__CurrentPhysicalLayer' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Metro </span></li></ul></li></ul>";
+		str="<ul><li id ='DistributionBoard_metro__CurrentPhysicalLayer' style='display:none;' class='metroDBFolder'> <input type='checkbox' class='MetroDB checkFilter' id ='MetroDB__CurrentPhysicalLayer' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Metro </span></li></ul></li></ul>";
 		$("#DistributionBoard_f_CurrentPhysicalLayer").append(str);
 		
-		str="<ul><li id ='DistributionBoard_access__CurrentPhysicalLayer' style='display:none;' class='accessFolder'> <input type='checkbox' class='AccessDb checkFilter' id ='Access__CurrentPhysicalLayer' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Access </span></li></ul></li></ul>";
+		str="<ul><li id ='DistributionBoard_access__CurrentPhysicalLayer' style='display:none;' class='accessDBFolder'> <input type='checkbox' class='AccessDB checkFilter' id ='AccessDB__CurrentPhysicalLayer' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Access </span></li></ul></li></ul>";
 		$("#DistributionBoard_f_CurrentPhysicalLayer").append(str);
 
 		
@@ -1067,10 +1068,9 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 	
 		if(distribBoardList!=null){
 			for(i=0;i<distribBoardList.length;i++){
+			    allDB.push(distribBoardList[i][0]);
 				window[""+distribBoardList[i][0]]=[];
 				window[""+distribBoardList[i][0]]=distribBoardList[i];
-				/*str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' unchecked name='Element' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distribBoardList[i][3]+" </span></li></ul>";
-				$("#DistributionBoard_f_"+distribBoardList[i][6]+"").append(str);*/
 				
 				 if(distribBoardList[i][8]=="backbone") {
 					if(distribBoardList[i][3]>0){
@@ -1105,7 +1105,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				
 				$(".DistributionBoard > .TreeSpan").contextmenu(function(){
 					menuName=singleDistBoard;
-					IdNodeSelectedTemp=$(this).parents().eq(2).attr('id').split("DistributionBoard_f_")[1];
+					IdNodeSelectedTemp=$(this).parents().eq(2).attr('id').split("__")[1];
 					selectedDistBoardContext=$(this).parents().attr('id');
 					selectedDistBoardName=$(this).text();
 					openContext(selectedDistBoardContext,selectedDistBoardName,singleDistBoard,event);
@@ -17551,16 +17551,7 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 								}  
 							}
 							window["mapPointsNames_"+data.tubeIdArrayList[i][0]].push(tubeDst);
-							/*else{
-								if(typeof window["Auxpts_Tubes_Save"+tubeID] !='undefined'){
-									for(y=0;y<window["Auxpts_Tubes_Save"+tubeID].length;y++){
-										myLatLng=new google.maps.LatLng(window["Auxpts_Tubes_Save"+tubeID][y].aux_Latitude,window["Auxpts_Tubes_Save"+tubeID][y].aux_Longitude)
-										window["mapPoints_"+tubeID].push(myLatLng);
-										window["bounds_"+tubeID].extend(myLatLng);
-									}
-								}	
-							} 
-							*/
+					
 							myLatLng = new google.maps.LatLng(window[""+data.tubeIdArrayList[i][0]][4],window[""+data.tubeIdArrayList[i][0]][3]);
 							window["mapPoints_"+data.tubeIdArrayList[i][0]].push(myLatLng);
 							window["bounds_"+data.tubeIdArrayList[i][0]].extend(myLatLng);

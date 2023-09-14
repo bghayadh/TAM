@@ -1628,7 +1628,7 @@ public class PhysicalLayerController {
 								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID FROM NODE_ACTIVE  WHERE DOMAIN = 'Core'").list();
 						
 						AccessList =  session.createSQLQuery(
-								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID FROM NODE_ACTIVE  WHERE DOMAIN = 'Access'").list();
+								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID FROM NODE_ACTIVE  WHERE DOMAIN = 'Ran'").list();
 						
 					}
 
@@ -3964,7 +3964,7 @@ public class PhysicalLayerController {
 
 			try {
 
-				String distBoardSel = request.getParameter("DistBoardSel");
+				String distBoardSel = request.getParameter("DistBoardSel").toString();
 				List<Object[]> DBData = session.createSQLQuery(
 						"Select DB_NAME,DB_LONGITUDE,DB_LATITUDE,CITY FROM DISTRIBUTION_BOARD where" + " DB_ID='"
 								+ distBoardSel + "' and PROJECT_ID='" + request.getParameter("projectID") + "'")
