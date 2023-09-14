@@ -376,8 +376,8 @@ public class LoadFileIPHuawei {
     				  nodes.put(nodeId, vcodeid);
     				  
     				  
-    				  String Others="{\"STATUS_1\":"+"\""+adminStatus+"\","+"\"GATEWAY\":"+"\""+gateway+"\","+"\"GATEWAY_TYPE\":"+"\""+gatewayType+"\","+"\"GATEWAY_IP\":"+"\""+gatewayIP+"\""+"\"STATUS_2\":"+"\""+LCStatus+"\"}";
-    			        
+    				  String Others="{\"STATUS_ADMIN\":"+"\""+adminStatus+"\","+"\"GATEWAY\":"+"\""+gateway+"\","+"\"GATEWAY_TYPE\":"+"\""+gatewayType+"\","+"\"GATEWAY_IP\":"+"\""+gatewayIP+"\""+"\"STATUS_LIFECYCLE\":"+"\""+LCStatus+"\"}";
+     			       
     				  	stmtp =  con.prepareStatement("insert into NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,WARE_ID,VENDOR,WARE_NAME,IP_ADDRESS,MAC_ADDRESS,SUB_DOMAIN,SOFTWARE_VERSION,LONGITUDE,LATITUDE,PATCH_VERSION,PART_NUMBER,SUB_DOMAIN_TYPE,OTHERS)"
     					 		+ "values('"+vcodeid+"','"+unique_Node_ID+"','"+nodeId+"','"+nodeName+"','"+nodeType+"','"+Domain+"','"+nodeModel+"','"+tech2+"','"+tech3+"','"+tech4+"','"+tech5+"','"+siteID+"','"+circleid+"',sysdate,sysdate,'"+fileType+"','"+fileName+"','"+commStatus+"','"+wareID+"','"+Gprovider+"','"+wareName+"','"+IPaddress+"','"+MACaddress+"','"+subDomain+"','"+softwareVersion+"','"+longi+"','"+lat+"','"+patchVersion+"','"+partNumber+"','"+subDomainType+"','"+Others+"')"); 
     				  	stmtp.executeUpdate();
