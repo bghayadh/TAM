@@ -37,8 +37,8 @@ import java.util.Date;
 public class LoadFileIPHuawei {
 
 	static String node_fk;
-	static String readfileAIMfrom;
-	static String copyfileAIMto;
+	static String readfileTransIpHWfrom;
+	static String copyfileTransIpHWto;
 	static String sqlQueryStr;
 	static String logsid="0";
 	static String logsDetailsId="0";
@@ -152,12 +152,12 @@ public class LoadFileIPHuawei {
 				// System.out.println("password2 found :" + password2);
 			 }
 			// if (data.contains("readexcelTransIpHuaweifrom")) { 
-			 if (data.contains("readfileAIMfrom")) {
-			//	 System.out.println("readfileAIMfrom");					
+			 if (data.contains("readfileTransIpHWfrom")) {
+			//	 System.out.println("readfileTransIpHWfrom");					
 				 data1=data.split(";",-1);
-				 readfileAIMfrom = data1[1];
-				 data2=readfileAIMfrom.replace("\\","/").split("/",-1);
-				 vfolderfrom=readfileAIMfrom;
+				 readfileTransIpHWfrom = data1[1];
+				 data2=readfileTransIpHWfrom.replace("\\","/").split("/",-1);
+				 vfolderfrom=readfileTransIpHWfrom;
 			//	 System.out.println("vfolderfrom "+ vfolderfrom);
 				 Gprovider=vendor;
 			//	 System.out.println("Gprovider "+ Gprovider);
@@ -168,11 +168,11 @@ public class LoadFileIPHuawei {
 				 subDomainType = sub_domainType;
 			//	 System.out.println("subDomainType "+ subDomainType);
 			 }
-			 if (data.contains("copyfileAIMto")) {
-			//	 System.out.println("copyfileAIMto");									 
+			 if (data.contains("copyfileTransIpHWto")) {
+			//	 System.out.println("copyfileTransIpHWto");									 
 				 data1=data.split(";",-1);
-				 copyfileAIMto=data1[1];
-			//	 System.out.println("copyfileAIMto "+copyfileAIMto);
+				 copyfileTransIpHWto=data1[1];
+			//	 System.out.println("copyfileTransIpHWto "+copyfileTransIpHWto);
 			 }
 			
 		}
@@ -194,6 +194,7 @@ public class LoadFileIPHuawei {
 		 File folder = new File(vfolderfrom);
 		 System.out.println("folder....."+folder);
 		 File[] listOfFiles = folder.listFiles();
+		 System.out.println("Number of files: " + listOfFiles.length);
 	/*
 		 System.out.println("listOfFiles....."+ folder.listFiles());
 		 System.out.println("Number of files: " + listOfFiles.length);
@@ -268,10 +269,10 @@ public class LoadFileIPHuawei {
 						//System.out.println("i........"+i);
 						//System.out.println("FileName.get(i)........"+FileName.get(i));
 						readfile(FileName.get(i));
-						File source = new File(readfileAIMfrom+"\\"+FileName.get(i));
-						File dest = new File(copyfileAIMto+"\\"+FileName.get(i)+".bkp");
+						File source = new File(readfileTransIpHWfrom+"\\"+FileName.get(i));
+						File dest = new File(copyfileTransIpHWto+"\\"+FileName.get(i)+".bkp");
 						copyFiles(source,dest);							     
-						deleteFiles(readfileAIMfrom+"\\"+FileName.get(i));
+						deleteFiles(readfileTransIpHWfrom+"\\"+FileName.get(i));
 					}
 		 	  }
 		 	 GetduplicateFilename(Domain,Gprovider,subDomain);

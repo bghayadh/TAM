@@ -23,6 +23,8 @@ readexcelMWEricssonfrom;C:\ALM_V2_2\Transmission\MW\ERICSSON
 copyfileMWERICSSONto;C:\ALM_V2_2\Transmission_Processed\MW\ERICSSON
 readexcelTransOptSDHHWfrom;C:\ALM_V2_2\Transmission\Optics\SDH\HUAWEI
 copyexcelTransOptSDHHWto;C:\ALM_V2_2\Transmission_Processed\Optics\SDH\HUAWEI
+readfileTransIpHWfrom;C:\Users\User\Desktop\work\ALM_V2_9\Transmission\IP\HUAWEI
+copyfileTransIpHWto;C:\Users\User\Desktop\work\ALM_V2_9\Transmission_Processed\IP\HUAWEI
 readexcelTransOptSDHACLfrom;C:\ALM_V2_2\Transmission\Optics\SDH\ALCATEL
 copyexcelTransOptSDHACLto;C:\ALM_V2_2\Transmission_Processed\Optics\SDH\ALCATEL
 readfileRANZTEfrom;C:\ALM_V2_6\RAN\ZTE
