@@ -1256,6 +1256,7 @@ function createHandhole_Marker_Click(Id,Name,Long,Lat,markersHandhole,markerClus
 
 		 
 	 }
+	 
 
 
 function Create_FiberPath(fiberId){
@@ -4844,15 +4845,7 @@ $(".TubeStrands").bind("change",function(){
 					if($("#DistributionBoard_f_CurrentPhysicalLayer > .AllDistBoards").is(":checked") ) {	
 						$("#distBoardCheckAllBoq").prop("checked",true);
 					}
-					
-					/*$("#"+folderTree).find(".DistBoard:checked" ).each(function(){
-
-						id=$(this).parent().attr('id');
-						if(markersDistBoard[id].getMap()==null){
-							markersDistBoard[id].setMap(map);			
-							markerClusterDistBoard.addMarker(markersDistBoard[id]);
-						}		
-					});	*/																 
+																				 
 				}	
 			});
 		}
@@ -6636,13 +6629,18 @@ function boqCheckFilter(){
 			}
 		})
 
-	$("#distBoardCheckAllBoq").change(function(){
-			if($(this).is(":checked")){
-				$("#DistributionBoard_f_CurrentPhysicalLayer > .AllDistBoards").prop("checked",true);				
-				$("#DistributionBoard_f_CurrentPhysicalLayer").find(' > ul > li ').each(function(){			
-				
+	$("#distBoardCheckAllBoq").bind("change",function(){
+		if ($(this).is(':checked')){
+			$("#DistributionBoard_f_CurrentPhysicalLayer > .AllDistBoards").prop("checked",true);	
+			$("#BackboneDB__CurrentPhysicalLayer").prop("checked",true);	
+			$("#MetroDB__CurrentPhysicalLayer").prop("checked",true);	
+			$("#AccessDB__CurrentPhysicalLayer").prop("checked",true);	
+			
+			$("#DistributionBoard_f_CurrentPhysicalLayer").find(' > ul > li > ul >li ').each(function(){		
+			
 				var distBoardId=$(this).attr('id');
-					
+				$("#"+distBoardId).children(':checkbox').prop( "checked", true );
+				
 				if(markersDistBoard[distBoardId].getMap()==null){						
 					markersDistBoard[distBoardId].setMap(map);			
 					markerClusterDistBoard.addMarker(markersDistBoard[distBoardId]);
@@ -6652,10 +6650,15 @@ function boqCheckFilter(){
 				});
 			}
 			else{
-				$("#DistributionBoard_f_CurrentPhysicalLayer > .AllDistBoards").prop("checked",false);				
-				$("#DistributionBoard_f_CurrentPhysicalLayer").find(' > ul > li ').each(function(){			
+				$("#DistributionBoard_f_CurrentPhysicalLayer > .AllDistBoards").prop("checked",false);	
+				$("#BackboneDB__CurrentPhysicalLayer").prop("checked",false);	
+				$("#MetroDB__CurrentPhysicalLayer").prop("checked",false);	
+				$("#AccessDB__CurrentPhysicalLayer").prop("checked",false);		
+						
+				$("#DistributionBoard_f_CurrentPhysicalLayer").find(' > ul > li >ul >li ').each(function(){			
 				
 				var distBoardId=$(this).attr('id');
+				$("#"+distBoardId).children(':checkbox').prop( "checked", false );
 				
 				markersDistBoard[distBoardId].setMap(null);	
 				$("#"+distBoardId).children(':checkbox').prop( "checked", false );
@@ -6672,226 +6675,227 @@ function boqCheckFilter(){
 				});							
 			}
 	});
-	$('#fiberCheckAllBoq').bind("change",function() {	
-		
-		if ($(this).is(':checked')){
-			$("#FiberPath_f_CurrentPhysicalLayer > .AllFiberCables").prop("checked",true);	
-			$("#Backbone__CurrentPhysicalLayer").prop("checked",true);	
-			$("#Metro__CurrentPhysicalLayer").prop("checked",true);	
-			$("#Access__CurrentPhysicalLayer").prop("checked",true);	
+	
+		$('#fiberCheckAllBoq').bind("change",function() {	
 			
-			
-			$("#FiberPath_f_CurrentPhysicalLayer").find(' > ul > li >ul >li ').each(function(){
-				var fiberId=$(this).attr('id');
+			if ($(this).is(':checked')){
+				$("#FiberPath_f_CurrentPhysicalLayer > .AllFiberCables").prop("checked",true);	
+				$("#Backbone__CurrentPhysicalLayer").prop("checked",true);	
+				$("#Metro__CurrentPhysicalLayer").prop("checked",true);	
+				$("#Access__CurrentPhysicalLayer").prop("checked",true);	
 				
-				//Hide the cable in case of driving 
-				if(directionHashmap.get(fiberId) != undefined) {
-					for(ii = 0; ii < directionHashmap.get(fiberId).length; ii++) {
-						directionHashmap.get(fiberId)[ii].setMap(null); 
-	                    directionHashmap.get(fiberId).mapLabel.setMap(null);
-					}
-				}
 				
-				if(fiberArray[fiberId]){
-					fiberArray[fiberId].setMap(map);	
-				}
-				else{
-					var path=window["mapPoints_"+fiberId];
-					//buildFiberPath(fiberId,path);
-					buildPath(fiberId,path,fiberArray,allFiberCables,"FiberPath_f_",window['FiberColor_'+window[''+fiberId][22]],0.7,4.5,'blue',13);
-					fiberArray[fiberId].setMap(map);
-				}
-				$("#"+fiberId).children(':checkbox').prop( "checked", true );
-				
-				// Show and Hide the label of each cable depending on the checkLabel dropdown
-				if($("#fiberMapCheck_Labels").prop("checked")==true){
-					fiberArray[fiberId].mapLabel.setMap(map);
-				}
-				else {
-					fiberArray[fiberId].mapLabel.setMap(null);
-				}
-				$("#"+fiberId).find(' > ul > li ').each(function(){
-						var tubeFolderId =$(this).attr('id');						
-						$("#"+tubeFolderId).children(':checkbox').prop( "checked", true );
-			  	});
+				$("#FiberPath_f_CurrentPhysicalLayer").find(' > ul > li >ul >li ').each(function(){
+					var fiberId=$(this).attr('id');
 					
-				$("#"+fiberId).find(' > ul > li >ul >li').each(function(){
-					var tubeId =$(this).attr('id');		
-					//Hide the tube in case of driving 
-					if(directionHashmapTube.get(tubeId) != undefined) {
-						for(ii = 0; ii < directionHashmapTube.get(tubeId).length; ii++) {
-							directionHashmapTube.get(tubeId)[ii].setMap(null); 
-							directionHashmapTube.get(tubeId).mapLabel.setMap(null);
+					//Hide the cable in case of driving 
+					if(directionHashmap.get(fiberId) != undefined) {
+						for(ii = 0; ii < directionHashmap.get(fiberId).length; ii++) {
+							directionHashmap.get(fiberId)[ii].setMap(null); 
+		                    directionHashmap.get(fiberId).mapLabel.setMap(null);
 						}
 					}
 					
-					if(tubeArray[tubeId]){						
-						tubeArray[tubeId].setMap(map);	
+					if(fiberArray[fiberId]){
+						fiberArray[fiberId].setMap(map);	
 					}
 					else{
-						var path=window["mapPoints_"+tubeId];
-						//buildTubePath(tubeId,path);
-						buildPath(tubeId,path,tubeArray,allTubes,"Tube",'green',0.7,3.3,'green',0);
-						tubeArray[tubeId].setMap(map);
-					}			
-					$("#"+tubeId).children(':checkbox').prop( "checked", true );
+						var path=window["mapPoints_"+fiberId];
+						//buildFiberPath(fiberId,path);
+						buildPath(fiberId,path,fiberArray,allFiberCables,"FiberPath_f_",window['FiberColor_'+window[''+fiberId][22]],0.7,4.5,'blue',13);
+						fiberArray[fiberId].setMap(map);
+					}
+					$("#"+fiberId).children(':checkbox').prop( "checked", true );
 					
-					// Show and Hide the label of each tube depending on the checkLabel dropdown
-					if($("#tubeMapCheck_Labels").prop("checked")==true){
-						tubeArray[tubeId].mapLabel.setMap(map);
+					// Show and Hide the label of each cable depending on the checkLabel dropdown
+					if($("#fiberMapCheck_Labels").prop("checked")==true){
+						fiberArray[fiberId].mapLabel.setMap(map);
 					}
 					else {
-						tubeArray[tubeId].mapLabel.setMap(null);
+						fiberArray[fiberId].mapLabel.setMap(null);
 					}
-					$('#tubeCheckAllBoq').prop('checked', true);
-			  	});	
-			  		
-			  		$("#"+fiberId).find(' > ul > li >ul >li >ul >li').each(function(){
-						var strandFolderId =$(this).attr('id');						
-						$("#"+strandFolderId).children(':checkbox').prop( "checked", true );
-			  		});	
-			  		$("#"+fiberId).find(' > ul > li >ul >li >ul >li >ul >li').each(function(){
-						var strandId =$(this).attr('id');	
-						
-						//Hide the strand in case of driving 
-						if(directionHashmapStrand.get(strandId) != undefined) {
-							for(ii = 0; ii < directionHashmapStrand.get(strandId).length; ii++) {
-								directionHashmapStrand.get(strandId)[ii].setMap(null); 
-								directionHashmapStrand.get(strandId).mapLabel.setMap(null);
-							}
-						}
-						
-						if(strandArray[strandId]){						
-							strandArray[strandId].setMap(map);	
-						}
-						else{						
-							var path=window["mapPoints_"+strandId];
-							//buildStrandPath(strandId,path);
-							buildPath(strandId,path,strandArray,allStrands,"Strand",'purple',0.7,2.8,'purple',0);
-							strandArray[strandId].setMap(map);									
-						}					
-						$("#"+strandId).children(':checkbox').prop( "checked", true );
-						
-						// Show and Hide the label of each tube depending on the checkLabel dropdown
-						if($("#strandMapCheck_Labels").prop("checked")==true){
-							strandArray[strandId].mapLabel.setMap(map);
-						}
-						else {
-							strandArray[strandId].mapLabel.setMap(null);
-						}
-						$('#strandCheckAllBoq').prop('checked', true);
-			  		});	
-					
-					});
-
-				}
-				else{
-					$("#FiberPath_f_CurrentPhysicalLayer > .AllFiberCables").prop("checked",false);	
-					$("#Backbone__CurrentPhysicalLayer").prop("checked",false);	
-					$("#Metro__CurrentPhysicalLayer").prop("checked",false);	
-					$("#Access__CurrentPhysicalLayer").prop("checked",false);	
-					
-					$("#FiberPath_f_CurrentPhysicalLayer").find(' > ul > li >ul >li ').each(function(){			
-						
-						var fiberId=$(this).attr('id');
-						if(directionHashmap.get(fiberId) != undefined) {
-							for(ii = 0; ii < directionHashmap.get(fiberId).length; ii++) {
-								directionHashmap.get(fiberId)[ii].setMap(null); 
-			                    directionHashmap.get(fiberId).mapLabel.setMap(null);
-							}
-						}
-						
-						if(fiberArray[fiberId]) {
-							fiberArray[fiberId].setMap(null);
-							fiberArray[fiberId].mapLabel.setMap(null);
-						}
-						$("#"+fiberId).children(':checkbox').prop( "checked", false );
-						
 					$("#"+fiberId).find(' > ul > li ').each(function(){
-						var tubeFolderId =$(this).attr('id');						
-						$("#"+tubeFolderId).children(':checkbox').prop( "checked", false );
-			  		});
-					
+							var tubeFolderId =$(this).attr('id');						
+							$("#"+tubeFolderId).children(':checkbox').prop( "checked", true );
+				  	});
+						
 					$("#"+fiberId).find(' > ul > li >ul >li').each(function(){
 						var tubeId =$(this).attr('id');		
+						//Hide the tube in case of driving 
 						if(directionHashmapTube.get(tubeId) != undefined) {
 							for(ii = 0; ii < directionHashmapTube.get(tubeId).length; ii++) {
 								directionHashmapTube.get(tubeId)[ii].setMap(null); 
 								directionHashmapTube.get(tubeId).mapLabel.setMap(null);
 							}
 						}
-						if(tubeArray[tubeId]) {
-							tubeArray[tubeId].setMap(null);
+						
+						if(tubeArray[tubeId]){						
+							tubeArray[tubeId].setMap(map);	
+						}
+						else{
+							var path=window["mapPoints_"+tubeId];
+							//buildTubePath(tubeId,path);
+							buildPath(tubeId,path,tubeArray,allTubes,"Tube",'green',0.7,3.3,'green',0);
+							tubeArray[tubeId].setMap(map);
+						}			
+						$("#"+tubeId).children(':checkbox').prop( "checked", true );
+						
+						// Show and Hide the label of each tube depending on the checkLabel dropdown
+						if($("#tubeMapCheck_Labels").prop("checked")==true){
+							tubeArray[tubeId].mapLabel.setMap(map);
+						}
+						else {
 							tubeArray[tubeId].mapLabel.setMap(null);
 						}
-						$("#"+tubeId).children(':checkbox').prop( "checked", false );
-						$('#tubeCheckAllBoq').prop('checked', false);
-			  		});	
-			  		
-					$("#"+fiberId).find(' > ul > li >ul >li >ul >li').each(function(){
-						var strandFolderId =$(this).attr('id');						
-						$("#"+strandFolderId).children(':checkbox').prop( "checked", false );
-			  		});	
-			  		$("#"+fiberId).find(' > ul > li >ul >li >ul >li >ul >li').each(function(){
-						var strandId =$(this).attr('id');	
-						if(directionHashmapStrand.get(strandId) != undefined) {
-							for(ii = 0; ii < directionHashmapStrand.get(strandId).length; ii++) {
-								directionHashmapStrand.get(strandId)[ii].setMap(null); 
-								directionHashmapStrand.get(strandId).mapLabel.setMap(null);
+						$('#tubeCheckAllBoq').prop('checked', true);
+				  	});	
+				  		
+				  		$("#"+fiberId).find(' > ul > li >ul >li >ul >li').each(function(){
+							var strandFolderId =$(this).attr('id');						
+							$("#"+strandFolderId).children(':checkbox').prop( "checked", true );
+				  		});	
+				  		$("#"+fiberId).find(' > ul > li >ul >li >ul >li >ul >li').each(function(){
+							var strandId =$(this).attr('id');	
+							
+							//Hide the strand in case of driving 
+							if(directionHashmapStrand.get(strandId) != undefined) {
+								for(ii = 0; ii < directionHashmapStrand.get(strandId).length; ii++) {
+									directionHashmapStrand.get(strandId)[ii].setMap(null); 
+									directionHashmapStrand.get(strandId).mapLabel.setMap(null);
+								}
 							}
-						}
-						if(strandArray[strandId]) {
-							strandArray[strandId].setMap(null);
-							strandArray[strandId].mapLabel.setMap(null);
-
-						}
-									
-						$("#"+strandId).children(':checkbox').prop( "checked", false );
-						$('#strandCheckAllBoq').prop('checked', false);
-			  		});	
-			  	});
-			  		
-			  		$("#network_tree").find(".FiberCable:checked" ).each(function(){
-
-						id=$(this).parent().attr('id');
-						if(fiberArray[id]){						
-							fiberArray[id].setMap(map);	
-						}
-						else{														
-							var path=window["mapPoints_"+id];
-							//buildFiberPath(id,path);
-							buildPath(id,path,fiberArray,allFiberCables,"FiberPath_f_",window['FiberColor_'+window[''+id][22]],0.7,4.5,'blue',13);
-							fiberArray[id].setMap(map);
-						}	
-					});
-					$("#network_tree").find(".FiberTube:checked" ).each(function(){
-
-						id=$(this).parent().attr('id');
-						if(tubeArray[id]){						
-							tubeArray[id].setMap(map);	
-						}
-						else{						
-							var path=window["mapPoints_"+id];
-							//buildTubePath(id,path);
-							buildPath(id,path,tubeArray,allTubes,"Tube",'green',0.7,3.3,'green',0);
-							tubeArray[id].setMap(map);
-						}	
-					});
-						$("#network_tree").find(".FiberStrand:checked" ).each(function(){
-
-						id=$(this).parent().attr('id');
-						if(strandArray[id]){						
-							strandArray[id].setMap(map);	
-						}
-						else{						
-							var path=window["mapPoints_"+id];
-							//buildStrandPath(id,path);
-							buildPath(id,path,strandArray,allStrands,"Strand",'purple',0.7,2.8,'purple',0);
-							strandArray[id].setMap(map);									
-						}		
-					});
-				}
-			});
+							
+							if(strandArray[strandId]){						
+								strandArray[strandId].setMap(map);	
+							}
+							else{						
+								var path=window["mapPoints_"+strandId];
+								//buildStrandPath(strandId,path);
+								buildPath(strandId,path,strandArray,allStrands,"Strand",'purple',0.7,2.8,'purple',0);
+								strandArray[strandId].setMap(map);									
+							}					
+							$("#"+strandId).children(':checkbox').prop( "checked", true );
+							
+							// Show and Hide the label of each tube depending on the checkLabel dropdown
+							if($("#strandMapCheck_Labels").prop("checked")==true){
+								strandArray[strandId].mapLabel.setMap(map);
+							}
+							else {
+								strandArray[strandId].mapLabel.setMap(null);
+							}
+							$('#strandCheckAllBoq').prop('checked', true);
+				  		});	
+						
+						});
+	
+					}
+					else{
+						$("#FiberPath_f_CurrentPhysicalLayer > .AllFiberCables").prop("checked",false);	
+						$("#Backbone__CurrentPhysicalLayer").prop("checked",false);	
+						$("#Metro__CurrentPhysicalLayer").prop("checked",false);	
+						$("#Access__CurrentPhysicalLayer").prop("checked",false);	
+						
+						$("#FiberPath_f_CurrentPhysicalLayer").find(' > ul > li >ul >li ').each(function(){			
+							
+							var fiberId=$(this).attr('id');
+							if(directionHashmap.get(fiberId) != undefined) {
+								for(ii = 0; ii < directionHashmap.get(fiberId).length; ii++) {
+									directionHashmap.get(fiberId)[ii].setMap(null); 
+				                    directionHashmap.get(fiberId).mapLabel.setMap(null);
+								}
+							}
+							
+							if(fiberArray[fiberId]) {
+								fiberArray[fiberId].setMap(null);
+								fiberArray[fiberId].mapLabel.setMap(null);
+							}
+							$("#"+fiberId).children(':checkbox').prop( "checked", false );
+							
+						$("#"+fiberId).find(' > ul > li ').each(function(){
+							var tubeFolderId =$(this).attr('id');						
+							$("#"+tubeFolderId).children(':checkbox').prop( "checked", false );
+				  		});
+						
+						$("#"+fiberId).find(' > ul > li >ul >li').each(function(){
+							var tubeId =$(this).attr('id');		
+							if(directionHashmapTube.get(tubeId) != undefined) {
+								for(ii = 0; ii < directionHashmapTube.get(tubeId).length; ii++) {
+									directionHashmapTube.get(tubeId)[ii].setMap(null); 
+									directionHashmapTube.get(tubeId).mapLabel.setMap(null);
+								}
+							}
+							if(tubeArray[tubeId]) {
+								tubeArray[tubeId].setMap(null);
+								tubeArray[tubeId].mapLabel.setMap(null);
+							}
+							$("#"+tubeId).children(':checkbox').prop( "checked", false );
+							$('#tubeCheckAllBoq').prop('checked', false);
+				  		});	
+				  		
+						$("#"+fiberId).find(' > ul > li >ul >li >ul >li').each(function(){
+							var strandFolderId =$(this).attr('id');						
+							$("#"+strandFolderId).children(':checkbox').prop( "checked", false );
+				  		});	
+				  		$("#"+fiberId).find(' > ul > li >ul >li >ul >li >ul >li').each(function(){
+							var strandId =$(this).attr('id');	
+							if(directionHashmapStrand.get(strandId) != undefined) {
+								for(ii = 0; ii < directionHashmapStrand.get(strandId).length; ii++) {
+									directionHashmapStrand.get(strandId)[ii].setMap(null); 
+									directionHashmapStrand.get(strandId).mapLabel.setMap(null);
+								}
+							}
+							if(strandArray[strandId]) {
+								strandArray[strandId].setMap(null);
+								strandArray[strandId].mapLabel.setMap(null);
+	
+							}
+										
+							$("#"+strandId).children(':checkbox').prop( "checked", false );
+							$('#strandCheckAllBoq').prop('checked', false);
+				  		});	
+				  	});
+				  		
+				  		$("#network_tree").find(".FiberCable:checked" ).each(function(){
+	
+							id=$(this).parent().attr('id');
+							if(fiberArray[id]){						
+								fiberArray[id].setMap(map);	
+							}
+							else{														
+								var path=window["mapPoints_"+id];
+								//buildFiberPath(id,path);
+								buildPath(id,path,fiberArray,allFiberCables,"FiberPath_f_",window['FiberColor_'+window[''+id][22]],0.7,4.5,'blue',13);
+								fiberArray[id].setMap(map);
+							}	
+						});
+						$("#network_tree").find(".FiberTube:checked" ).each(function(){
+	
+							id=$(this).parent().attr('id');
+							if(tubeArray[id]){						
+								tubeArray[id].setMap(map);	
+							}
+							else{						
+								var path=window["mapPoints_"+id];
+								//buildTubePath(id,path);
+								buildPath(id,path,tubeArray,allTubes,"Tube",'green',0.7,3.3,'green',0);
+								tubeArray[id].setMap(map);
+							}	
+						});
+							$("#network_tree").find(".FiberStrand:checked" ).each(function(){
+	
+							id=$(this).parent().attr('id');
+							if(strandArray[id]){						
+								strandArray[id].setMap(map);	
+							}
+							else{						
+								var path=window["mapPoints_"+id];
+								//buildStrandPath(id,path);
+								buildPath(id,path,strandArray,allStrands,"Strand",'purple',0.7,2.8,'purple',0);
+								strandArray[id].setMap(map);									
+							}		
+						});
+					}
+				});
 			
 	$('#tubeCheckAllBoq').bind("change",function() {
 		
@@ -7560,7 +7564,7 @@ function allElementsCheckFilter(){
 					}
 				}
 
-				else if($(this).hasClass('DistBoard')){
+				else if($(this).hasClass('DistributionBoard')){
 					id=$(this).parent().attr('id');
 					if(markersDistBoard[id].getMap()==null){
 
