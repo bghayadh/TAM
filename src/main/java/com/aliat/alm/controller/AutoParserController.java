@@ -100,7 +100,10 @@ public class AutoParserController {
 		Map<String, Object> rtn = new LinkedHashMap<>();
 		LoadFilesRanHuawei myClass = new LoadFilesRanHuawei();
 		try {
-			myClass.main(null,request.getParameter("vendor"),request.getParameter("domain"),request.getParameter("sub_domain"),request.getParameter("type"));
+			var vendor = request.getParameter("vendor").toUpperCase();
+			var domain = request.getParameter("domain").toUpperCase();
+			
+			myClass.main(null,vendor,domain,request.getParameter("sub_domain"),request.getParameter("type"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

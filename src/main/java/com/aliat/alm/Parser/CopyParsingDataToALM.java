@@ -289,7 +289,11 @@ public class CopyParsingDataToALM {
 	     
 	     stmt = conalm.prepareStatement("delete from  TEMP_NODE_CABINET where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'"); 
 	     stmt.executeUpdate();
-	     stmt.close(); 
+	     stmt.close();
+	     
+	     stmt = conalm.prepareStatement("delete from  TEMP_NODE_SHELF where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'"); 
+	     stmt.executeUpdate();
+	     stmt.close();
 	     		 
 	     stmt1 = conalm.prepareStatement("delete from  TEMP_NODE_HOSTVER where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'"); 
 	     stmt1.executeUpdate();
@@ -415,8 +419,8 @@ public class CopyParsingDataToALM {
 			 System.out.println("count : "+rsp.getRow());
 			 System.out.println("Node_PK : "+rsp.getString("NODE_PK") );
 			 System.out.println("UNIQUE_NODE_ID : "+rsp.getString("UNIQUE_NODE_ID") );
-			 stmt0 = conalm.prepareStatement("insert into TEMP_NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_SOURCE,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,FROM_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,ACTIVE_RECORD,LINE,WARE_ID,VENDOR,SUPPLIER_ID,WARE_NAME,SUPPLIER_NAME,TO_TRANS_SOURCE,IP_ADDRESS,MAC_ADDRESS,SUB_DOMAIN,SOFTWARE_VERSION,STATUS_1,GATEWAY,GATEWAY_TYPE,GATEWAY_IP,STATUS_2,LONGITUDE,LATITUDE,PATCH_VERSION,PART_NUMBER,SUB_DOMAIN_TYPE) "
-				 		+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			 stmt0 = conalm.prepareStatement("insert into TEMP_NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_SOURCE,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,FROM_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,ACTIVE_RECORD,LINE,WARE_ID,VENDOR,SUPPLIER_ID,WARE_NAME,SUPPLIER_NAME,TO_TRANS_SOURCE,IP_ADDRESS,MAC_ADDRESS,SUB_DOMAIN,SOFTWARE_VERSION,LONGITUDE,LATITUDE,PATCH_VERSION,PART_NUMBER,SUB_DOMAIN_TYPE,OTHERS) "
+				 		+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 			 
 			 stmt0.setString(1, rsp.getString("NODE_PK"));  			stmt0.setString(25, rsp.getString("LINE")); 			
 			 stmt0.setString(2, rsp.getString("UNIQUE_NODE_ID"));    	stmt0.setString(26,rsp.getString("WARE_ID"));			
@@ -429,16 +433,16 @@ public class CopyParsingDataToALM {
 			 stmt0.setString(9, rsp.getString("TECH_2G"));  		 	stmt0.setString(33, rsp.getString("MAC_ADDRESS")); 		
 			 stmt0.setString(10, rsp.getString("TECH_3G"));  		 	stmt0.setString(34,rsp.getString("SUB_DOMAIN") );
 			 stmt0.setString(11, rsp.getString("TECH_4G"));  		 	stmt0.setString(35,rsp.getString("SOFTWARE_VERSION"));
-			 stmt0.setString(12, rsp.getString("TECH_5G"));  			stmt0.setString(36, rsp.getString("STATUS_1"));
-			 stmt0.setString(13, rsp.getString("SITE_ID"));				stmt0.setString(37, rsp.getString("GATEWAY"));
-			 stmt0.setString(14,rsp.getString("CIRCLE_ID"));			stmt0.setString(38, rsp.getString("GATEWAY_TYPE"));
-			 stmt0.setTimestamp(15, rsp.getTimestamp("CREATION_DATE"));	stmt0.setString(39, rsp.getString("GATEWAY_IP") );
-			 stmt0.setTimestamp(16, rsp.getTimestamp("UPDATE_DATE"));	stmt0.setString(40,  rsp.getString("STATUS_2") );
-			 stmt0.setString(17, rsp.getString("FILE_TYPE"));			stmt0.setString(41,rsp.getString("LONGITUDE"));
-			 stmt0.setString(18, rsp.getString("FILENAME"));			stmt0.setString(42, rsp.getString("LATITUDE"));
-			 stmt0.setString(19, rsp.getString("STATUS"));				stmt0.setString(43, rsp.getString("PATCH_VERSION"));
-			 stmt0.setString(20,  rsp.getString("FROM_TRANS_SOURCE"));	stmt0.setString(44, rsp.getString("PART_NUMBER"));
-			 stmt0.setString(21,rsp.getString("FROM_TRANS_ID"));		stmt0.setString(45, rsp.getString("SUB_DOMAIN_TYPE"));
+			 stmt0.setString(12, rsp.getString("TECH_5G"));  			stmt0.setString(36,rsp.getString("LONGITUDE"));
+			 stmt0.setString(13, rsp.getString("SITE_ID"));				stmt0.setString(37, rsp.getString("LATITUDE"));
+			 stmt0.setString(14,rsp.getString("CIRCLE_ID"));			stmt0.setString(38, rsp.getString("PATCH_VERSION"));
+			 stmt0.setTimestamp(15, rsp.getTimestamp("CREATION_DATE"));	stmt0.setString(39, rsp.getString("PART_NUMBER"));
+			 stmt0.setTimestamp(16, rsp.getTimestamp("UPDATE_DATE"));	stmt0.setString(40, rsp.getString("SUB_DOMAIN_TYPE"));
+			 stmt0.setString(17, rsp.getString("FILE_TYPE"));			stmt0.setString(41, rsp.getString("OTHERS"));
+			 stmt0.setString(18, rsp.getString("FILENAME"));			
+			 stmt0.setString(19, rsp.getString("STATUS"));				
+			 stmt0.setString(20,  rsp.getString("FROM_TRANS_SOURCE"));	
+			 stmt0.setString(21,rsp.getString("FROM_TRANS_ID"));		
 			 stmt0.setString(22, rsp.getString("TO_TRANS_ID"));
 			 stmt0.setString(23, rsp.getString("TRANS_TYPE"));
 			 stmt0.setString(24, rsp.getString("ACTIVE_RECORD"));
@@ -504,11 +508,21 @@ public class CopyParsingDataToALM {
 		     int nbOfNodeRack =0;
 			 while (rsp.next()) {
 				 dat3=rsp.getString("DATEOFMANUFACTURE");
-				 dat3 = dat3.substring(0, 10) ;
+				 if(dat3 !=null && dat3 !="null") {
+					 dat3 = dat3.substring(0, 10) ;
+					 } 
+				 else {
+					 dat3=""; 
+				 }
 				 dat4=rsp.getString("DATEOFLASTSERVICE");
-				 dat4 = dat4.substring(0, 10) ;
+				if(dat4 !=null && dat4 !="null") { 
+					dat4 = dat4.substring(0, 10) ;
+					}
+				else {
+					 dat4=""; 
+				 }
 				 stmt2 = conalm.prepareStatement("insert into TEMP_NODE_RACK (RACK_ID,RACKNO,INVENTORYUNITID,RACKTYPE,INVENTORYUNITTYPE,VENDORUNITFAMILYTYPE,VENDORUNITTYPENUMBER,VENDORNAME,SERIALNUMBER,HARDWAREVERSION,DATEOFMANUFACTURE,DATEOFLASTSERVICE,UNITPOSITION,MANUFACTURERDATA,MODEL,USERLABEL,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,DOMAIN,VENDOR,TO_TRANS_SOURCE) "
-				 		+ "values ('" + rsp.getString("RACK_ID") +"','" + rsp.getString("RACKNO") +"','" + rsp.getString("INVENTORYUNITID") +"','" + rsp.getString("RACKTYPE") +"','" + rsp.getString("INVENTORYUNITTYPE") +"','" + rsp.getString("VENDORUNITFAMILYTYPE") +"','" + rsp.getString("VENDORUNITTYPENUMBER") +"','" + rsp.getString("VENDORNAME") +"','" + rsp.getString("SERIALNUMBER") +"','" + rsp.getString("HARDWAREVERSION") +"',DATE '" + dat3 +"',DATE '" + dat4 +"','" + rsp.getString("UNITPOSITION") +"','" + rsp.getString("MANUFACTURERDATA") +"','" + rsp.getString("MODEL") +"','" + rsp.getString("USERLABEL") +"','" + rsp.getString("NODE_PK") +"','" + rsp.getString("NODE_ATTR_PK") +"',TIMESTAMP '" + rsp.getString("UPDATE_DATE") +"','" + rsp.getString("FILENAME") +"','" + rsp.getString("STATUS") +"','" + rsp.getString("FROM_TRANS_SOURCE") +"' ,'" + rsp.getString("FROM_TRANS_ID") +"','" + rsp.getString("TO_TRANS_ID") +"','" + rsp.getString("TRANS_TYPE") +"','" + rsp.getString("LINE") +"','" + rsp.getString("ACTIVE_RECORD") +"','" + rsp.getString("DOMAIN") +"','" + rsp.getString("VENDOR") +"','" + rsp.getString("TO_TRANS_SOURCE") +"' )");
+				 		+ "values ('" + rsp.getString("RACK_ID") +"','" + rsp.getString("RACKNO") +"','" + rsp.getString("INVENTORYUNITID") +"','" + rsp.getString("RACKTYPE") +"','" + rsp.getString("INVENTORYUNITTYPE") +"','" + rsp.getString("VENDORUNITFAMILYTYPE") +"','" + rsp.getString("VENDORUNITTYPENUMBER") +"','" + rsp.getString("VENDORNAME") +"','" + rsp.getString("SERIALNUMBER") +"','" + rsp.getString("HARDWAREVERSION")  +"',TO_DATE('" +dat3+"','YYYY-MM-DD')"+",TO_DATE('" +dat4+"','YYYY-MM-DD')" +",'" + rsp.getString("UNITPOSITION") +"','" + rsp.getString("MANUFACTURERDATA") +"','" + rsp.getString("MODEL") +"','" + rsp.getString("USERLABEL") +"','" + rsp.getString("NODE_PK") +"','" + rsp.getString("NODE_ATTR_PK") +"',TIMESTAMP '" + rsp.getString("UPDATE_DATE") +"','" + rsp.getString("FILENAME") +"','" + rsp.getString("STATUS") +"','" + rsp.getString("FROM_TRANS_SOURCE") +"' ,'" + rsp.getString("FROM_TRANS_ID") +"','" + rsp.getString("TO_TRANS_ID") +"','" + rsp.getString("TRANS_TYPE") +"','" + rsp.getString("LINE") +"','" + rsp.getString("ACTIVE_RECORD") +"','" + rsp.getString("DOMAIN") +"','" + rsp.getString("VENDOR") +"','" + rsp.getString("TO_TRANS_SOURCE") +"' )");
 				 stmt2.executeUpdate();
 				 stmt2.close();
 				 nbOfNodeRack++;
@@ -527,7 +541,55 @@ public class CopyParsingDataToALM {
 				 		
 				insertLogsDetailsStatmnt.executeUpdate();
 				insertLogsDetailsStatmnt.close();
-			 
+			 ///added
+			 //Insert into TEMP_NODE_SHELF
+				System.out.println("Copy to TEMP_NODE_SHELF in process...");
+				 logger.info("Copy to TEMP_NODE_SHELF in process...");
+				 
+				 
+				 queryp = "select * from NODE_SHELF where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'"; 
+				 stmtp = con.createStatement();
+			     rsp = stmtp.executeQuery(queryp);
+			     int nbOfNodeSHELF =0;
+				 while (rsp.next()) {
+					 dat3=rsp.getString("DATEOFMANUFACTURE");
+					 if(dat3 !=null && dat3 !="null") {
+						 dat3 = dat3.substring(0, 10) ;
+						 } 
+					 else {
+						 dat3=""; 
+					 }
+					 dat4=rsp.getString("DATEOFLASTSERVICE");
+					if(dat4 !=null && dat4 !="null") { 
+						dat4 = dat4.substring(0, 10) ;
+						}
+					else {
+						 dat4=""; 
+					 }
+					 stmt2 = conalm.prepareStatement("insert into TEMP_NODE_SHELF (SHELF_ID,SHELFNO,INVENTORYUNITID,INVENTORYUNITTYPE,VENDORUNITFAMILYTYPE,VENDORNAME,SERIALNUMBER,DATEOFMANUFACTURE,DATEOFLASTSERVICE,UNITPOSITION,MANUFACTURERDATA,USERLABEL,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,DOMAIN,VENDOR,VENDORUNITTYPENUMBER,HARDWAREVERSION,MODEL,STATUS) "
+       		   		+ "values('" + rsp.getString("SHELF_ID") +"','" + rsp.getString("SHELFNO") +"','" + rsp.getString("INVENTORYUNITID")  +"','" + rsp.getString("INVENTORYUNITTYPE")  +"','" + rsp.getString("VENDORUNITFAMILYTYPE")  +"','" +rsp.getString("VENDORNAME") +"','" + rsp.getString("SERIALNUMBER") +"',TO_DATE('" + dat3 +"','YYYY-MM-DD')" +",TO_DATE('" + dat4 +"','YYYY-MM-DD')" +",'" + rsp.getString("UNITPOSITION")  +"','" + rsp.getString("MANUFACTURERDATA")  +"','" + rsp.getString("USERLABEL")  +"','" + rsp.getString("NODE_PK")  +"','" + rsp.getString("NODE_ATTR_PK")  +"',TIMESTAMP '" + rsp.getString("UPDATE_DATE") +"','"+ rsp.getString("FILENAME")  +"','"+rsp.getString("FROM_TRANS_SOURCE") +"','"+rsp.getString("TO_TRANS_SOURCE") +"','"+rsp.getString("FROM_TRANS_ID") +"','"+rsp.getString("TO_TRANS_ID") +"','"+rsp.getString("TRANS_TYPE") +"','"+rsp.getString("LINE") +"','"+rsp.getString("ACTIVE_RECORD") +"','"+rsp.getString("DOMAIN") +"','" + rsp.getString("VENDOR")+"','"+ rsp.getString("VENDORUNITTYPENUMBER")+"','" + rsp.getString("HARDWAREVERSION")+"','" + rsp.getString("MODEL")+"','" + rsp.getString("STATUS") +"' ) ");
+					 
+				
+					 stmt2.executeUpdate();
+					 stmt2.close();
+					 nbOfNodeSHELF++;
+			     }
+				 rsp.close();
+				 stmtp.close();
+				 totalNbCopied = totalNbCopied + nbOfNodeSHELF;
+				 System.out.println("Copy to TEMP_NODE_SHELF COMPLETED");
+				 logger.info("Copy to TEMP_NODE_SHELF COMPLETED");
+		        
+				 //insert into AUTO_DISCOVERY_LOGS_DETAILS
+				 String logsDetailsiDdD= localgetseqNbr(1);
+				 logsDetailsiDdD=Gyear+"_"+ "LOGS_DETAILS"+'_'+logsDetailsiDdD;
+					PreparedStatement insertLogsDetailsStatmnt1 = conalm.prepareStatement("insert into AUTO_DISCOVERY_LOGS_DETAILS (LOGS_DETAILS_ID,TIME,ACTIVITY_NAME,ACTIVITY_DESCRIPTION,ATTRIBUTE_NAME,ACTIVITY_TITLE,ACTIVITY_STATUS,QUANTITY,VENDOR,DOMAIN,LOGS_ID)"
+					 		+ "values('"+logsDetailsiDdD+"',sysdate ,'CopyParsingToALM','Copy to TEMP_NODE_SHELF COMPLETED','SHELF','Number of NODE_SHELF','Completed','"+nbOfNodeSHELF+"','" + vvendor +"','" + vdomain +"','"+logsid+"') ");
+					 		
+					insertLogsDetailsStatmnt1.executeUpdate();
+					insertLogsDetailsStatmnt1.close();
+				///END ADDED
+				 
 	        //Insert into TEMP_NODE_CABINET
 			 System.out.println("Copy to TEMP_NODE_CABINET in process...");
 			 logger.info("Copy to TEMP_NODE_CABINET in process...");
@@ -540,11 +602,21 @@ public class CopyParsingDataToALM {
 				int nbOfNodeCabinet = 0;
 			 while (rsp.next()) {
 				 dat3=rsp.getString("DATEOFMANUFACTURE");
-				 dat3 = dat3.substring(0, 10) ;
+				 if(dat3 !=null && dat3 !="null") {
+					 dat3 = dat3.substring(0, 10) ;
+					 } 
+				 else {
+					 dat3=""; 
+				 }
 				 dat4=rsp.getString("DATEOFLASTSERVICE");
-				 dat4 = dat4.substring(0, 10) ;
-				 stmt0 = conalm.prepareStatement("insert into TEMP_NODE_CABINET (CABINET_ID,SITEINDEX,CABINETNO,INVENTORYUNITID,RACKTYPE,BOMRACKTYPE,INVENTORYUNITTYPE,VENDORUNITFAMILYTYPE,VENDORUNITTYPENUMBER,VENDORNAME,SERIALNUMBER,HARDWAREVERSION,DATEOFMANUFACTURE,DATEOFLASTSERVICE,UNITPOSITION,MANUFACTURERDATA,ISSUENUMBER,BOMCODE,EXTINFO,MODEL,USERLABEL,SHAREMODE,CLEICODE,BOM,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,ALM_POSITION,CREATION_DATE,DOMAIN,VENDOR) "
-				 		+ "values ('" + rsp.getString("CABINET_ID") +"','" + rsp.getString("SITEINDEX") +"','" + rsp.getString("CABINETNO") +"','" + rsp.getString("INVENTORYUNITID") +"','" + rsp.getString("RACKTYPE") +"','" + rsp.getString("BOMRACKTYPE") +"','" + rsp.getString("INVENTORYUNITTYPE") +"','" + rsp.getString("VENDORUNITFAMILYTYPE") +"','" + rsp.getString("VENDORUNITTYPENUMBER") +"','" + rsp.getString("VENDORNAME") +"','" + rsp.getString("SERIALNUMBER") +"','" + rsp.getString("HARDWAREVERSION") +"',DATE '" + dat3 +"',DATE '" + dat4 +"','" + rsp.getString("UNITPOSITION") +"','" + rsp.getString("MANUFACTURERDATA") +"','" + rsp.getString("ISSUENUMBER") +"','" + rsp.getString("BOMCODE") +"','" + rsp.getString("EXTINFO") +"','" + rsp.getString("MODEL") +"','" + rsp.getString("USERLABEL") +"','" + rsp.getString("SHAREMODE") +"','" + rsp.getString("CLEICODE") +"','" + rsp.getString("BOM") +"','" + rsp.getString("NODE_PK") +"','" + rsp.getString("NODE_ATTR_PK") +"',TIMESTAMP '" + rsp.getString("UPDATE_DATE") +"','" + rsp.getString("FILENAME") +"','" + rsp.getString("STATUS") +"','" + rsp.getString("FROM_TRANS_SOURCE") +"','" + rsp.getString("TO_TRANS_SOURCE") +"' ,'" + rsp.getString("FROM_TRANS_ID") +"','" + rsp.getString("TO_TRANS_ID") +"','" + rsp.getString("TRANS_TYPE") +"','" + rsp.getString("LINE") +"','" + rsp.getString("ACTIVE_RECORD") +"','" + rsp.getString("ALM_POSITION") +"',TIMESTAMP '" + rsp.getString("CREATION_DATE") +"','" + rsp.getString("DOMAIN") +"','" + rsp.getString("VENDOR") +"')");
+				if(dat4 !=null && dat4 !="null") { 
+					dat4 = dat4.substring(0, 10) ;
+					}
+				 else {
+					 dat4=""; 
+				 }
+				 stmt0 = conalm.prepareStatement("insert into TEMP_NODE_CABINET (CABINET_ID,SITEINDEX,CABINETNO,INVENTORYUNITID,RACKTYPE,BOMRACKTYPE,INVENTORYUNITTYPE,VENDORUNITFAMILYTYPE,VENDORUNITTYPENUMBER,VENDORNAME,SERIALNUMBER,HARDWAREVERSION,DATEOFMANUFACTURE,DATEOFLASTSERVICE,UNITPOSITION,MANUFACTURERDATA,ISSUENUMBER,BOMCODE,EXTINFO,MODEL,USERLABEL,SHAREMODE,CLEICODE,BOM,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,ALM_POSITION,CREATION_DATE,DOMAIN,VENDOR,OTHERS) "
+				 		+ "values ('" + rsp.getString("CABINET_ID") +"','" + rsp.getString("SITEINDEX") +"','" + rsp.getString("CABINETNO") +"','" + rsp.getString("INVENTORYUNITID") +"','" + rsp.getString("RACKTYPE") +"','" + rsp.getString("BOMRACKTYPE") +"','" + rsp.getString("INVENTORYUNITTYPE") +"','" + rsp.getString("VENDORUNITFAMILYTYPE") +"','" + rsp.getString("VENDORUNITTYPENUMBER") +"','" + rsp.getString("VENDORNAME") +"','" + rsp.getString("SERIALNUMBER") +"','" + rsp.getString("HARDWAREVERSION") +"',TO_DATE('" +dat3+"','YYYY-MM-DD')"+",TO_DATE('" +dat4+"','YYYY-MM-DD')" +",'" + rsp.getString("UNITPOSITION") +"','" + rsp.getString("MANUFACTURERDATA") +"','" + rsp.getString("ISSUENUMBER") +"','" + rsp.getString("BOMCODE") +"','" + rsp.getString("EXTINFO") +"','" + rsp.getString("MODEL") +"','" + rsp.getString("USERLABEL") +"','" + rsp.getString("SHAREMODE") +"','" + rsp.getString("CLEICODE") +"','" + rsp.getString("BOM") +"','" + rsp.getString("NODE_PK") +"','" + rsp.getString("NODE_ATTR_PK") +"',TIMESTAMP '" + rsp.getString("UPDATE_DATE") +"','" + rsp.getString("FILENAME") +"','" + rsp.getString("STATUS") +"','" + rsp.getString("FROM_TRANS_SOURCE") +"','" + rsp.getString("TO_TRANS_SOURCE") +"' ,'" + rsp.getString("FROM_TRANS_ID") +"','" + rsp.getString("TO_TRANS_ID") +"','" + rsp.getString("TRANS_TYPE") +"','" + rsp.getString("LINE") +"','" + rsp.getString("ACTIVE_RECORD") +"','" + rsp.getString("ALM_POSITION") +"',TIMESTAMP '" + rsp.getString("CREATION_DATE") +"','" + rsp.getString("DOMAIN") +"','" + rsp.getString("VENDOR")+"','"+rsp.getString("OTHERS") +"')");
 				 stmt0.executeUpdate();
 				 stmt0.close();
 				 nbOfNodeCabinet++;
@@ -604,11 +676,18 @@ public class CopyParsingDataToALM {
 				int nbOfNodeFrame = 0;
 			 while (rsp.next()) {
 				 dat3=rsp.getString("DATEOFMANUFACTURE");
-				 dat3 = dat3.substring(0, 10) ;
+				 if(dat3 !=null && dat3 !="null") {
+					 dat3 = dat3.substring(0, 10) ;
+					 } 
+				 else {
+					 dat3=""; 
+				 }
 				 dat4=rsp.getString("DATEOFLASTSERVICE");
-				 dat4 = dat4.substring(0, 10) ;
+				if(dat4 !=null && dat4 !="null") {
+					dat4 = dat4.substring(0, 10) ;
+							}
 				 stmt2 = conalm.prepareStatement("insert into TEMP_NODE_FRAME (FRAME_ID,RACKNO,FRAMENO,INVENTORYUNITID,FRAMETYPE,RACKFRAMENO,MODULENO,INVENTORYUNITTYPE,VENDORUNITFAMILYTYPE,VENDORUNITTYPENUMBER,VENDORNAME,SERIALNUMBER,HARDWAREVERSION,DATEOFMANUFACTURE,DATEOFLASTSERVICE,UNITPOSITION,MANUFACTURERDATA,MODEL,USERLABEL,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,DOMAIN,VENDOR) "
-				 		+ "values ('" + rsp.getString("FRAME_ID") +"','" + rsp.getString("RACKNO") +"','" + rsp.getString("FRAMENO") +"','" + rsp.getString("INVENTORYUNITID") +"','" + rsp.getString("FRAMETYPE") +"','" + rsp.getString("RACKFRAMENO") +"','" + rsp.getString("MODULENO") +"','" + rsp.getString("INVENTORYUNITTYPE") +"','" + rsp.getString("VENDORUNITFAMILYTYPE") +"','" + rsp.getString("VENDORUNITTYPENUMBER") +"','" + rsp.getString("VENDORNAME") +"','" + rsp.getString("SERIALNUMBER") +"','" + rsp.getString("HARDWAREVERSION") +"',DATE '" + dat3 +"',DATE '" + dat4 +"','" + rsp.getString("UNITPOSITION") +"','" + rsp.getString("MANUFACTURERDATA") +"','" + rsp.getString("MODEL") +"','" + rsp.getString("USERLABEL") +"','" + rsp.getString("NODE_PK") +"','" + rsp.getString("NODE_ATTR_PK") +"',TIMESTAMP '" + rsp.getString("UPDATE_DATE") +"','" + rsp.getString("FILENAME") +"','" + rsp.getString("STATUS") +"','" + rsp.getString("FROM_TRANS_SOURCE") +"','" + rsp.getString("TO_TRANS_SOURCE") +"' ,'" + rsp.getString("FROM_TRANS_ID") +"','" + rsp.getString("TO_TRANS_ID") +"','" + rsp.getString("TRANS_TYPE") +"' ,'" + rsp.getString("LINE") +"','" + rsp.getString("ACTIVE_RECORD") +"','" + rsp.getString("DOMAIN") +"','" + rsp.getString("VENDOR") +"')");
+				 		+ "values ('" + rsp.getString("FRAME_ID") +"','" + rsp.getString("RACKNO") +"','" + rsp.getString("FRAMENO") +"','" + rsp.getString("INVENTORYUNITID") +"','" + rsp.getString("FRAMETYPE") +"','" + rsp.getString("RACKFRAMENO") +"','" + rsp.getString("MODULENO") +"','" + rsp.getString("INVENTORYUNITTYPE") +"','" + rsp.getString("VENDORUNITFAMILYTYPE") +"','" + rsp.getString("VENDORUNITTYPENUMBER") +"','" + rsp.getString("VENDORNAME") +"','" + rsp.getString("SERIALNUMBER") +"','" + rsp.getString("HARDWAREVERSION")  +"',TO_DATE('" +dat3+"','YYYY-MM-DD')"+",TO_DATE('" +dat4+"','YYYY-MM-DD')" +",'" + rsp.getString("UNITPOSITION") +"','" + rsp.getString("MANUFACTURERDATA") +"','" + rsp.getString("MODEL") +"','" + rsp.getString("USERLABEL") +"','" + rsp.getString("NODE_PK") +"','" + rsp.getString("NODE_ATTR_PK") +"',TIMESTAMP '" + rsp.getString("UPDATE_DATE") +"','" + rsp.getString("FILENAME") +"','" + rsp.getString("STATUS") +"','" + rsp.getString("FROM_TRANS_SOURCE") +"','" + rsp.getString("TO_TRANS_SOURCE") +"' ,'" + rsp.getString("FROM_TRANS_ID") +"','" + rsp.getString("TO_TRANS_ID") +"','" + rsp.getString("TRANS_TYPE") +"' ,'" + rsp.getString("LINE") +"','" + rsp.getString("ACTIVE_RECORD") +"','" + rsp.getString("DOMAIN") +"','" + rsp.getString("VENDOR") +"')");
 				 stmt2.executeUpdate();
 				 stmt2.close();
 				 nbOfNodeFrame++;
@@ -638,11 +717,18 @@ public class CopyParsingDataToALM {
 				int nbOfNodeSlots = 0;
 			 while (rsp.next()) {
 				 dat3=rsp.getString("DATEOFMANUFACTURE");
-				 dat3 = dat3.substring(0, 10) ;
+				 if(dat3 !=null && dat3 !="null") {
+					 dat3 = dat3.substring(0, 10) ;
+					 } 
+				 else {
+					 dat3=""; 
+				 }
 				 dat4=rsp.getString("DATEOFLASTSERVICE");
-				 dat4 = dat4.substring(0, 10) ;
+				if(dat4 !=null && dat4 !="null") {
+					dat4 = dat4.substring(0, 10) ;
+					}
 				 stmt0 = conalm.prepareStatement("insert into TEMP_NODE_SLOT (SLOT_ID,SITEINDEX,CABINETNO,SUBRACKNO,RACKNO,FRAMENO,SLOTNO,SLOTPOS,INVENTORYUNITID,INVENTORYUNITTYPE,VENDORUNITFAMILYTYPE,VENDORUNITTYPENUMBER,VENDORNAME,SERIALNUMBER,HARDWAREVERSION,DATEOFMANUFACTURE,DATEOFLASTSERVICE,UNITPOSITION,MANUFACTURERDATA,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,ALM_POSITION,DOMAIN,VENDOR) "
-				 		+ "values ('" + rsp.getString("SLOT_ID") +"','" + rsp.getString("SITEINDEX") +"','" + rsp.getString("CABINETNO") +"','" + rsp.getString("SUBRACKNO") +"','" + rsp.getString("RACKNO") +"','" + rsp.getString("FRAMENO") +"','" + rsp.getString("SLOTNO") +"','" + rsp.getString("SLOTPOS") +"','" + rsp.getString("INVENTORYUNITID") +"','" + rsp.getString("INVENTORYUNITTYPE") +"','" + rsp.getString("VENDORUNITFAMILYTYPE") +"','" + rsp.getString("VENDORUNITTYPENUMBER") +"','" + rsp.getString("VENDORNAME") +"','" + rsp.getString("SERIALNUMBER") +"','" + rsp.getString("HARDWAREVERSION") +"',DATE '" + dat3 +"',DATE '" + dat4 +"','" + rsp.getString("UNITPOSITION") +"','" + rsp.getString("MANUFACTURERDATA") +"','" + rsp.getString("NODE_PK") +"','" + rsp.getString("NODE_ATTR_PK") +"',TIMESTAMP '" + rsp.getString("UPDATE_DATE") +"','" + rsp.getString("FILENAME") +"','" + rsp.getString("STATUS") +"','" + rsp.getString("FROM_TRANS_SOURCE") +"','" + rsp.getString("TO_TRANS_SOURCE") +"' ,'" + rsp.getString("FROM_TRANS_ID") +"','" + rsp.getString("TO_TRANS_ID") +"','" + rsp.getString("TRANS_TYPE") +"','" + rsp.getString("LINE") +"','" + rsp.getString("ACTIVE_RECORD") +"','" + rsp.getString("ALM_POSITION") +"','" + rsp.getString("DOMAIN") +"','" + rsp.getString("VENDOR") +"')");
+				 		+ "values ('" + rsp.getString("SLOT_ID") +"','" + rsp.getString("SITEINDEX") +"','" + rsp.getString("CABINETNO") +"','" + rsp.getString("SUBRACKNO") +"','" + rsp.getString("RACKNO") +"','" + rsp.getString("FRAMENO") +"','" + rsp.getString("SLOTNO") +"','" + rsp.getString("SLOTPOS") +"','" + rsp.getString("INVENTORYUNITID") +"','" + rsp.getString("INVENTORYUNITTYPE") +"','" + rsp.getString("VENDORUNITFAMILYTYPE") +"','" + rsp.getString("VENDORUNITTYPENUMBER") +"','" + rsp.getString("VENDORNAME") +"','" + rsp.getString("SERIALNUMBER") +"','" + rsp.getString("HARDWAREVERSION")  +"',TO_DATE('" +dat3+"','YYYY-MM-DD')"+",TO_DATE('" +dat4+"','YYYY-MM-DD')" +",'" + rsp.getString("UNITPOSITION") +"','" + rsp.getString("MANUFACTURERDATA") +"','" + rsp.getString("NODE_PK") +"','" + rsp.getString("NODE_ATTR_PK") +"',TIMESTAMP '" + rsp.getString("UPDATE_DATE") +"','" + rsp.getString("FILENAME") +"','" + rsp.getString("STATUS") +"','" + rsp.getString("FROM_TRANS_SOURCE") +"','" + rsp.getString("TO_TRANS_SOURCE") +"' ,'" + rsp.getString("FROM_TRANS_ID") +"','" + rsp.getString("TO_TRANS_ID") +"','" + rsp.getString("TRANS_TYPE") +"','" + rsp.getString("LINE") +"','" + rsp.getString("ACTIVE_RECORD") +"','" + rsp.getString("ALM_POSITION") +"','" + rsp.getString("DOMAIN") +"','" + rsp.getString("VENDOR") +"')");
 				 stmt0.executeUpdate();
 				 stmt0.close();
 				 nbOfNodeSlots++;
@@ -673,11 +759,23 @@ public class CopyParsingDataToALM {
 				int nbOfNodeBoard = 0;
 			 while (rsp.next()) {
 				 dat3=rsp.getString("DATEOFMANUFACTURE");
-				 dat3 = dat3.substring(0, 10) ;
+				 //System.out.println("dat3 "+dat3);
+				 if(dat3 !=null && dat3 !="null" && dat3 !="(null)") {
+					 dat3 = dat3.substring(0, 10) ;
+					 } 
+				 else {
+					 dat3=""; 
+				 }
 				 dat4=rsp.getString("DATEOFLASTSERVICE");
-				 dat4 = dat4.substring(0, 10) ;
-				 stmt1 = conalm.prepareStatement("insert into TEMP_NODE_BOARD (BOARD_ID,SITEINDEX,CABINETNO,SUBRACKNO,RACKNO,FRAMENO,SLOTNO,SLOTPOS,SUBSLOTNO,INVENTORYUNITID,MODULENO,BOARDNAME,BOARDTYPE,INVENTORYUNITTYPE,VENDORUNITFAMILYTYPE,VENDORUNITTYPENUMBER,VENDORNAME,SERIALNUMBER,HARDWAREVERSION,DATEOFMANUFACTURE,DATEOFLASTSERVICE,UNITPOSITION,MANUFACTURERDATA,SOFTVER,LOGICVER,BIOSVER,BIOSVEREX,LANVER,MBUSVER,ISSUENUMBER,BOMCODE,MODEL,USERLABEL,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,EXTINFO,APDEVINFO,WORKMODE,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,ALM_POSITION,CREATION_DATE,DOMAIN,VENDOR)"
-				 		+ "values ('" + rsp.getString("BOARD_ID") +"','" + rsp.getString("SITEINDEX") +"','" + rsp.getString("CABINETNO") +"','" + rsp.getString("SUBRACKNO") +"','" + rsp.getString("RACKNO") +"','" + rsp.getString("FRAMENO") +"','" + rsp.getString("SLOTNO") +"','" + rsp.getString("SLOTPOS") +"','" + rsp.getString("SUBSLOTNO") +"','" + rsp.getString("INVENTORYUNITID") +"','" + rsp.getString("MODULENO") +"','" + rsp.getString("BOARDNAME") +"','" + rsp.getString("BOARDTYPE") +"','" + rsp.getString("INVENTORYUNITTYPE") +"','" + rsp.getString("VENDORUNITFAMILYTYPE") +"','" + rsp.getString("VENDORUNITTYPENUMBER") +"','" + rsp.getString("VENDORNAME") +"','" + rsp.getString("SERIALNUMBER") +"','" + rsp.getString("HARDWAREVERSION") +"',DATE '" + dat3 +"',DATE '" + dat4 +"','" + rsp.getString("UNITPOSITION") +"','" + rsp.getString("MANUFACTURERDATA") +"','" + rsp.getString("SOFTVER") +"','" + rsp.getString("LOGICVER") +"','" + rsp.getString("BIOSVER") +"','" + rsp.getString("BIOSVEREX") +"','" + rsp.getString("LANVER") +"','" + rsp.getString("MBUSVER") +"','" + rsp.getString("ISSUENUMBER") +"','" + rsp.getString("BOMCODE") +"','" + rsp.getString("MODEL") +"','" + rsp.getString("USERLABEL") +"','" + rsp.getString("NODE_PK") +"','" + rsp.getString("NODE_ATTR_PK") +"',TIMESTAMP '" + rsp.getString("UPDATE_DATE") +"','" + rsp.getString("FILENAME") +"','" + rsp.getString("EXTINFO") +"','" + rsp.getString("APDEVINFO") +"','" + rsp.getString("WORKMODE") +"','" + rsp.getString("STATUS") +"','" + rsp.getString("FROM_TRANS_SOURCE") +"','" + rsp.getString("TO_TRANS_SOURCE") +"' ,'" + rsp.getString("FROM_TRANS_ID") +"','" + rsp.getString("TO_TRANS_ID") +"','" + rsp.getString("TRANS_TYPE") +"','" + rsp.getString("LINE") +"' ,'" + rsp.getString("ACTIVE_RECORD") +"','" + rsp.getString("ALM_POSITION") +"',TIMESTAMP '" + rsp.getString("CREATION_DATE") +"','" + rsp.getString("DOMAIN") +"','" + rsp.getString("VENDOR") +"' )");
+				// System.out.println("dat4 "+dat4);
+				if(dat4 !=null && dat4 !="null" && dat4 !="(null)") { 
+					dat4 = dat4.substring(0, 10) ;
+					}
+				else {
+					 dat4=""; 
+				 }
+				 stmt1 = conalm.prepareStatement("insert into TEMP_NODE_BOARD (BOARD_ID,SITEINDEX,CABINETNO,SUBRACKNO,RACKNO,FRAMENO,SLOTNO,SLOTPOS,SUBSLOTNO,INVENTORYUNITID,MODULENO,BOARDNAME,BOARDTYPE,INVENTORYUNITTYPE,VENDORUNITFAMILYTYPE,VENDORUNITTYPENUMBER,VENDORNAME,SERIALNUMBER,HARDWAREVERSION,DATEOFMANUFACTURE,DATEOFLASTSERVICE,UNITPOSITION,MANUFACTURERDATA,SOFTVER,LOGICVER,BIOSVER,BIOSVEREX,LANVER,MBUSVER,ISSUENUMBER,BOMCODE,MODEL,USERLABEL,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,EXTINFO,APDEVINFO,WORKMODE,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,ALM_POSITION,CREATION_DATE,DOMAIN,VENDOR,OTHERS)"
+				 		+ "values ('" + rsp.getString("BOARD_ID") +"','" + rsp.getString("SITEINDEX") +"','" + rsp.getString("CABINETNO") +"','" + rsp.getString("SUBRACKNO") +"','" + rsp.getString("RACKNO") +"','" + rsp.getString("FRAMENO") +"','" + rsp.getString("SLOTNO") +"','" + rsp.getString("SLOTPOS") +"','" + rsp.getString("SUBSLOTNO") +"','" + rsp.getString("INVENTORYUNITID") +"','" + rsp.getString("MODULENO") +"','" + rsp.getString("BOARDNAME") +"','" + rsp.getString("BOARDTYPE") +"','" + rsp.getString("INVENTORYUNITTYPE") +"','" + rsp.getString("VENDORUNITFAMILYTYPE") +"','" + rsp.getString("VENDORUNITTYPENUMBER") +"','" + rsp.getString("VENDORNAME") +"','" + rsp.getString("SERIALNUMBER") +"','" + rsp.getString("HARDWAREVERSION")  +"',TO_DATE('" +dat3+"','YYYY-MM-DD')"+",TO_DATE('" +dat4+"','YYYY-MM-DD')" +",'" + rsp.getString("UNITPOSITION") +"','" + rsp.getString("MANUFACTURERDATA") +"','" + rsp.getString("SOFTVER") +"','" + rsp.getString("LOGICVER") +"','" + rsp.getString("BIOSVER") +"','" + rsp.getString("BIOSVEREX") +"','" + rsp.getString("LANVER") +"','" + rsp.getString("MBUSVER") +"','" + rsp.getString("ISSUENUMBER") +"','" + rsp.getString("BOMCODE") +"','" + rsp.getString("MODEL") +"','" + rsp.getString("USERLABEL") +"','" + rsp.getString("NODE_PK") +"','" + rsp.getString("NODE_ATTR_PK") +"',TIMESTAMP '" + rsp.getString("UPDATE_DATE") +"','" + rsp.getString("FILENAME") +"','" + rsp.getString("EXTINFO") +"','" + rsp.getString("APDEVINFO") +"','" + rsp.getString("WORKMODE") +"','" + rsp.getString("STATUS") +"','" + rsp.getString("FROM_TRANS_SOURCE") +"','" + rsp.getString("TO_TRANS_SOURCE") +"' ,'" + rsp.getString("FROM_TRANS_ID") +"','" + rsp.getString("TO_TRANS_ID") +"','" + rsp.getString("TRANS_TYPE") +"','" + rsp.getString("LINE") +"' ,'" + rsp.getString("ACTIVE_RECORD") +"','" + rsp.getString("ALM_POSITION") +"',TIMESTAMP '" + rsp.getString("CREATION_DATE") +"','" + rsp.getString("DOMAIN") +"','" + rsp.getString("VENDOR")+"','"+rsp.getString("OTHERS") +"' )");
 				 stmt1.executeUpdate();
 				 stmt1.close();
 				 nbOfNodeBoard++;
@@ -707,11 +805,21 @@ public class CopyParsingDataToALM {
 					int nbOfNodePort = 0;
 				 while (rsp.next()) {
 					 dat3=rsp.getString("DATEOFMANUFACTURE");
-					 dat3 = dat3.substring(0, 10) ;
+					 if(dat3 !=null && dat3 !="null") {
+						 dat3 = dat3.substring(0, 10) ;
+						 } 
+					 else {
+						 dat3=""; 
+					 }
 					 dat4=rsp.getString("DATEOFLASTSERVICE");
-					 dat4 = dat4.substring(0, 10) ;
-					 stmt2 = conalm.prepareStatement("insert into TEMP_NODE_PORT (PORT_ID,SITEINDEX,CABINETNO,SUBRACKNO,RACKNO,FRAMENO,SLOTNO,SLOTPOS,SUBSLOTNO,VENDORUNITFAMILYTYPE,INVENTORYUNITID,PORTNO,HARDWAREVERSION,SERIALNUMBER,INVENTORYUNITTYPE,VENDORNAME,VENDORUNITTYPENUMBER,DATEOFMANUFACTURE,DATEOFLASTSERVICE,UNITPOSITION,MACADDR,MANUFACTURERDATA,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,DOMAIN,VENDOR)"
-					 		+ "values ('" + rsp.getString("PORT_ID") +"','" + rsp.getString("SITEINDEX") +"','" + rsp.getString("CABINETNO") +"','" + rsp.getString("SUBRACKNO") +"','" + rsp.getString("RACKNO") +"','" + rsp.getString("FRAMENO") +"','" + rsp.getString("SLOTNO") +"','" + rsp.getString("SLOTPOS") +"','" + rsp.getString("SUBSLOTNO") +"','" + rsp.getString("VENDORUNITFAMILYTYPE") +"','" + rsp.getString("INVENTORYUNITID") +"','" + rsp.getString("PORTNO") +"','" + rsp.getString("HARDWAREVERSION") +"','" + rsp.getString("SERIALNUMBER") +"','" + rsp.getString("INVENTORYUNITTYPE") +"','" + rsp.getString("VENDORNAME") +"','" + rsp.getString("VENDORUNITTYPENUMBER") +"',DATE '" + dat3 +"',DATE '" + dat4 +"','" + rsp.getString("UNITPOSITION") +"','" + rsp.getString("MACADDR") +"','" + rsp.getString("MANUFACTURERDATA") +"','" + rsp.getString("NODE_PK") +"','" + rsp.getString("NODE_ATTR_PK") +"',TIMESTAMP '" + rsp.getString("UPDATE_DATE") +"','" + rsp.getString("FILENAME") +"','" + rsp.getString("STATUS") +"','" + rsp.getString("FROM_TRANS_SOURCE") +"','" + rsp.getString("TO_TRANS_SOURCE") +"' ,'" + rsp.getString("FROM_TRANS_ID") +"','" + rsp.getString("TO_TRANS_ID") +"','" + rsp.getString("TRANS_TYPE") +"','" + rsp.getString("LINE") +"','" + rsp.getString("ACTIVE_RECORD") +"','" + rsp.getString("DOMAIN") +"','" + rsp.getString("VENDOR") +"' )");
+					if(dat4 !=null && dat4 !="null") { 
+						dat4 = dat4.substring(0, 10) ;
+						}
+					 else {
+						 dat4=""; 
+					 }
+					 stmt2 = conalm.prepareStatement("insert into TEMP_NODE_PORT (PORT_ID,SITEINDEX,CABINETNO,SUBRACKNO,RACKNO,FRAMENO,SLOTNO,SLOTPOS,SUBSLOTNO,VENDORUNITFAMILYTYPE,INVENTORYUNITID,PORTNO,HARDWAREVERSION,SERIALNUMBER,INVENTORYUNITTYPE,VENDORNAME,VENDORUNITTYPENUMBER,DATEOFMANUFACTURE,DATEOFLASTSERVICE,UNITPOSITION,MACADDR,MANUFACTURERDATA,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,DOMAIN,VENDOR,OTHERS,PORTTYPE,PORTRATE)"
+					 		+ "values ('" + rsp.getString("PORT_ID") +"','" + rsp.getString("SITEINDEX") +"','" + rsp.getString("CABINETNO") +"','" + rsp.getString("SUBRACKNO") +"','" + rsp.getString("RACKNO") +"','" + rsp.getString("FRAMENO") +"','" + rsp.getString("SLOTNO") +"','" + rsp.getString("SLOTPOS") +"','" + rsp.getString("SUBSLOTNO") +"','" + rsp.getString("VENDORUNITFAMILYTYPE") +"','" + rsp.getString("INVENTORYUNITID") +"','" + rsp.getString("PORTNO") +"','" + rsp.getString("HARDWAREVERSION") +"','" + rsp.getString("SERIALNUMBER") +"','" + rsp.getString("INVENTORYUNITTYPE") +"','" + rsp.getString("VENDORNAME") +"','" + rsp.getString("VENDORUNITTYPENUMBER")  +"',TO_DATE('" +dat3+"','YYYY-MM-DD')"+",TO_DATE('" +dat4+"','YYYY-MM-DD')" +",'" + rsp.getString("UNITPOSITION") +"','" + rsp.getString("MACADDR") +"','" + rsp.getString("MANUFACTURERDATA") +"','" + rsp.getString("NODE_PK") +"','" + rsp.getString("NODE_ATTR_PK") +"',TIMESTAMP '" + rsp.getString("UPDATE_DATE") +"','" + rsp.getString("FILENAME") +"','" + rsp.getString("STATUS") +"','" + rsp.getString("FROM_TRANS_SOURCE") +"','" + rsp.getString("TO_TRANS_SOURCE") +"' ,'" + rsp.getString("FROM_TRANS_ID") +"','" + rsp.getString("TO_TRANS_ID") +"','" + rsp.getString("TRANS_TYPE") +"','" + rsp.getString("LINE") +"','" + rsp.getString("ACTIVE_RECORD") +"','" + rsp.getString("DOMAIN") +"','" + rsp.getString("VENDOR")+"','"+rsp.getString("OTHERS")+"','"+rsp.getString("PORTTYPE")+"','"+rsp.getString("PORTRATE") +"' )");
 					 stmt2.executeUpdate();
 					 stmt2.close();
 					 nbOfNodePort++;
@@ -743,11 +851,21 @@ public class CopyParsingDataToALM {
 			     int nbOfNodeAccessory = 0;
 				 while (rsp.next()) {
 					 dat3=rsp.getString("DATEOFMANUFACTURE");
-					 dat3 = dat3.substring(0, 10) ;
+					 if(dat3 !=null && dat3 !="null") {
+						 dat3 = dat3.substring(0, 10) ;
+						 }
+					 else {
+						 dat3=""; 
+					 }
 					 dat4=rsp.getString("DATEOFLASTSERVICE");
-					 dat4 = dat4.substring(0, 10) ;
+					if(dat4 !=null && dat4 !="null") { 
+						dat4 = dat4.substring(0, 10) ;
+						}
+					else {
+						 dat4=""; 
+					 }
 					 stmt0 = conalm.prepareStatement("insert into TEMP_NODE_ACCESSORY (ACCESSORY_ID,RACKPOSITION,INVENTORYUNITID,VENDORUNITFAMILYTYPE,VENDORUNITTYPENUMBER,VENDORNAME,SERIALNUMBER,HARDWAREVERSION,SOFTVER,DATEOFMANUFACTURE,DATEOFLASTSERVICE,MANUFACTURERDATA,ACCESSORYTYPE,ADDTIONALINFORMATION,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,DOMAIN,VENDOR)"
-					 		+ "values ('" + rsp.getString("ACCESSORY_ID") +"','" + rsp.getString("RACKPOSITION") +"','" + rsp.getString("INVENTORYUNITID") +"','" + rsp.getString("VENDORUNITFAMILYTYPE") +"','" + rsp.getString("VENDORUNITTYPENUMBER") +"','" + rsp.getString("VENDORNAME") +"','" + rsp.getString("SERIALNUMBER") +"','" + rsp.getString("HARDWAREVERSION") +"','" + rsp.getString("SOFTVER") +"',DATE '" + dat3 +"',DATE '" + dat4 +"','" + rsp.getString("MANUFACTURERDATA") +"','" + rsp.getString("ACCESSORYTYPE") +"','" + rsp.getString("ADDTIONALINFORMATION") +"','" + rsp.getString("NODE_PK") +"','" + rsp.getString("NODE_ATTR_PK") +"',TIMESTAMP '" + rsp.getString("UPDATE_DATE") +"','" + rsp.getString("FILENAME") +"','" + rsp.getString("STATUS") +"','" + rsp.getString("FROM_TRANS_SOURCE") +"','" + rsp.getString("TO_TRANS_SOURCE") +"' ,'" + rsp.getString("FROM_TRANS_ID") +"','" + rsp.getString("TO_TRANS_ID") +"','" + rsp.getString("TRANS_TYPE") +"','" + rsp.getString("LINE") +"','" + rsp.getString("ACTIVE_RECORD") +"','" + rsp.getString("DOMAIN") +"','" + rsp.getString("VENDOR") +"' )");
+					 		+ "values ('" + rsp.getString("ACCESSORY_ID") +"','" + rsp.getString("RACKPOSITION") +"','" + rsp.getString("INVENTORYUNITID") +"','" + rsp.getString("VENDORUNITFAMILYTYPE") +"','" + rsp.getString("VENDORUNITTYPENUMBER") +"','" + rsp.getString("VENDORNAME") +"','" + rsp.getString("SERIALNUMBER") +"','" + rsp.getString("HARDWAREVERSION") +"','" + rsp.getString("SOFTVER")  +"',TO_DATE('" +dat3+"','YYYY-MM-DD')"+",TO_DATE('" +dat4+"','YYYY-MM-DD')" +",'" + rsp.getString("MANUFACTURERDATA") +"','" + rsp.getString("ACCESSORYTYPE") +"','" + rsp.getString("ADDTIONALINFORMATION") +"','" + rsp.getString("NODE_PK") +"','" + rsp.getString("NODE_ATTR_PK") +"',TIMESTAMP '" + rsp.getString("UPDATE_DATE") +"','" + rsp.getString("FILENAME") +"','" + rsp.getString("STATUS") +"','" + rsp.getString("FROM_TRANS_SOURCE") +"','" + rsp.getString("TO_TRANS_SOURCE") +"' ,'" + rsp.getString("FROM_TRANS_ID") +"','" + rsp.getString("TO_TRANS_ID") +"','" + rsp.getString("TRANS_TYPE") +"','" + rsp.getString("LINE") +"','" + rsp.getString("ACTIVE_RECORD") +"','" + rsp.getString("DOMAIN") +"','" + rsp.getString("VENDOR") +"' )");
 					 stmt0.executeUpdate();
 					 stmt0.close();
 					 nbOfNodeAccessory++;
@@ -779,11 +897,22 @@ public class CopyParsingDataToALM {
 			     int nbOfNodeHost = 0;
 				 while (rsp.next()) {
 					 dat3=rsp.getString("DATEOFMANUFACTURE");
-					 dat3 = dat3.substring(0, 10) ;
-					 dat4=rsp.getString("DATEOFLASTSERVICE");
-					 dat4 = dat4.substring(0, 10) ;
+					 if(dat3 !=null && dat3 !="null") {
+						 dat3 = dat3.substring(0, 10) ;
+					 }
+					 else {
+						 dat3=""; 
+					 }
+				 dat4=rsp.getString("DATEOFLASTSERVICE");
+					 if(dat4 !=null && dat4 !="null") {
+						 dat4 = dat4.substring(0, 10) ;
+					 }
+					 else {
+						 dat4=""; 
+					 }
+					 
 					 stmt1 = conalm.prepareStatement("insert into TEMP_NODE_HOST (HOST_ID,RACKPOSITION,INVENTORYUNITID,VENDORUNITFAMILYTYPE,VENDORUNITTYPENUMBER,VENDORNAME,SERIALNUMBER,HARDWAREVERSION,SOFTVER,DATEOFMANUFACTURE,DATEOFLASTSERVICE,MANUFACTURERDATA,HOSTNAME,NUMBEROFCPU,MEMSIZE,HARDDISKSIZE,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,DOMAIN,VENDOR)"
-					 		+ "values ('" + rsp.getString("HOST_ID") +"','" + rsp.getString("RACKPOSITION") +"','" + rsp.getString("INVENTORYUNITID") +"','" + rsp.getString("VENDORUNITFAMILYTYPE") +"','" + rsp.getString("VENDORUNITTYPENUMBER") +"','" + rsp.getString("VENDORNAME") +"','" + rsp.getString("SERIALNUMBER") +"','" + rsp.getString("HARDWAREVERSION") +"','" + rsp.getString("SOFTVER") +"',DATE '" + dat3 +"',DATE '" + dat4 +"','" + rsp.getString("MANUFACTURERDATA") +"','" + rsp.getString("HOSTNAME") +"','" + rsp.getString("NUMBEROFCPU") +"','" + rsp.getString("MEMSIZE") +"','" + rsp.getString("HARDDISKSIZE") +"','" + rsp.getString("NODE_PK") +"','" + rsp.getString("NODE_ATTR_PK") +"',TIMESTAMP '" + rsp.getString("UPDATE_DATE") +"','" + rsp.getString("FILENAME") +"','" + rsp.getString("STATUS") +"','" + rsp.getString("FROM_TRANS_SOURCE") +"','" + rsp.getString("TO_TRANS_SOURCE") +"' ,'" + rsp.getString("FROM_TRANS_ID") +"','" + rsp.getString("TO_TRANS_ID") +"','" + rsp.getString("TRANS_TYPE") +"' ,'" + rsp.getString("LINE") +"','" + rsp.getString("ACTIVE_RECORD") +"','" + rsp.getString("DOMAIN") +"','" + rsp.getString("VENDOR") +"')");
+					 		+ "values ('" + rsp.getString("HOST_ID") +"','" + rsp.getString("RACKPOSITION") +"','" + rsp.getString("INVENTORYUNITID") +"','" + rsp.getString("VENDORUNITFAMILYTYPE") +"','" + rsp.getString("VENDORUNITTYPENUMBER") +"','" + rsp.getString("VENDORNAME") +"','" + rsp.getString("SERIALNUMBER") +"','" + rsp.getString("HARDWAREVERSION") +"','" + rsp.getString("SOFTVER")  +"',TO_DATE('" +dat3+"','YYYY-MM-DD')"+",TO_DATE('" +dat4+"','YYYY-MM-DD')" +",'" + rsp.getString("MANUFACTURERDATA") +"','" + rsp.getString("HOSTNAME") +"','" + rsp.getString("NUMBEROFCPU") +"','" + rsp.getString("MEMSIZE") +"','" + rsp.getString("HARDDISKSIZE") +"','" + rsp.getString("NODE_PK") +"','" + rsp.getString("NODE_ATTR_PK") +"',TIMESTAMP '" + rsp.getString("UPDATE_DATE") +"','" + rsp.getString("FILENAME") +"','" + rsp.getString("STATUS") +"','" + rsp.getString("FROM_TRANS_SOURCE") +"','" + rsp.getString("TO_TRANS_SOURCE") +"' ,'" + rsp.getString("FROM_TRANS_ID") +"','" + rsp.getString("TO_TRANS_ID") +"','" + rsp.getString("TRANS_TYPE") +"' ,'" + rsp.getString("LINE") +"','" + rsp.getString("ACTIVE_RECORD") +"','" + rsp.getString("DOMAIN") +"','" + rsp.getString("VENDOR") +"')");
 					 stmt1.executeUpdate();
 					 stmt1.close();
 					 nbOfNodeHost++;
@@ -814,11 +943,22 @@ public class CopyParsingDataToALM {
 			     int nbOfNodeSubrack = 0;
 				 while (rsp.next()) {
 					 dat3=rsp.getString("DATEOFMANUFACTURE");
-					 dat3 = dat3.substring(0, 10) ;
+					 if(dat3 !=null && dat3 !="null") {
+						 dat3 = dat3.substring(0, 10) ;
+						 }
+					 else {
+						 dat3=""; 
+					 }
 					 dat4=rsp.getString("DATEOFLASTSERVICE");
-					 dat4 = dat4.substring(0, 10) ;
-					 stmt2 = conalm.prepareStatement("insert into TEMP_NODE_SUBRACK (SUBRACK_ID,SITEINDEX,CABINETNO,SUBRACKNO,INVENTORYUNITID,RACKTYPE,BOMRACKTYPE,FRAMETYPE,RACKFRAMENO,MODULENO,INVENTORYUNITTYPE,VENDORUNITFAMILYTYPE,VENDORUNITTYPENUMBER,VENDORNAME,SERIALNUMBER,HARDWAREVERSION,DATEOFMANUFACTURE,DATEOFLASTSERVICE,UNITPOSITION,MANUFACTURERDATA,USERLABEL,BOMCODE,MODEL,ISSUENUMBER,BOMFRAMETYPE,CLEICODE,BOM,EXTINFO,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,DOMAIN,VENDOR)"
-					 		+ "values ('" + rsp.getString("SUBRACK_ID") +"','" + rsp.getString("SITEINDEX") +"','" + rsp.getString("CABINETNO") +"','" + rsp.getString("SUBRACKNO") +"','" + rsp.getString("INVENTORYUNITID") +"','" + rsp.getString("RACKTYPE") +"','" + rsp.getString("BOMRACKTYPE") +"','" + rsp.getString("FRAMETYPE") +"','" + rsp.getString("RACKFRAMENO") +"','" + rsp.getString("MODULENO") +"','" + rsp.getString("INVENTORYUNITTYPE") +"','" + rsp.getString("VENDORUNITFAMILYTYPE") +"','" + rsp.getString("VENDORUNITTYPENUMBER") +"','" + rsp.getString("VENDORNAME") +"','" + rsp.getString("SERIALNUMBER") +"','" + rsp.getString("HARDWAREVERSION") +"',DATE '" + dat3 +"',DATE '" + dat4 +"','" + rsp.getString("UNITPOSITION") +"','" + rsp.getString("MANUFACTURERDATA") +"','" + rsp.getString("USERLABEL") +"','" + rsp.getString("BOMCODE") +"','" + rsp.getString("MODEL") +"','" + rsp.getString("ISSUENUMBER") +"','" + rsp.getString("BOMFRAMETYPE") +"','" + rsp.getString("CLEICODE") +"','" + rsp.getString("BOM") +"','" + rsp.getString("EXTINFO") +"','" + rsp.getString("NODE_PK") +"','" + rsp.getString("NODE_ATTR_PK") +"',TIMESTAMP '" + rsp.getString("UPDATE_DATE") +"','" + rsp.getString("FILENAME") +"','" + rsp.getString("STATUS") +"','" + rsp.getString("FROM_TRANS_SOURCE") +"','" + rsp.getString("TO_TRANS_SOURCE") +"' ,'" + rsp.getString("FROM_TRANS_ID") +"','" + rsp.getString("TO_TRANS_ID") +"','" + rsp.getString("TRANS_TYPE") +"','" + rsp.getString("LINE") +"' ,'" + rsp.getString("ACTIVE_RECORD") +"','" + rsp.getString("DOMAIN") +"','" + rsp.getString("VENDOR") +"')");
+					 if(dat4 !=null && dat4 !="null") {
+						 dat4 = dat4.substring(0, 10) ;
+						 
+					 }
+					 else {
+						 dat4=""; 
+					 }
+					 stmt2 = conalm.prepareStatement("insert into TEMP_NODE_SUBRACK (SUBRACK_ID,SITEINDEX,CABINETNO,SUBRACKNO,INVENTORYUNITID,RACKTYPE,BOMRACKTYPE,FRAMETYPE,RACKFRAMENO,MODULENO,INVENTORYUNITTYPE,VENDORUNITFAMILYTYPE,VENDORUNITTYPENUMBER,VENDORNAME,SERIALNUMBER,HARDWAREVERSION,DATEOFMANUFACTURE,DATEOFLASTSERVICE,UNITPOSITION,MANUFACTURERDATA,USERLABEL,BOMCODE,MODEL,ISSUENUMBER,BOMFRAMETYPE,CLEICODE,BOM,EXTINFO,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,DOMAIN,VENDOR,OTHERS)"
+					 		+ "values ('" + rsp.getString("SUBRACK_ID") +"','" + rsp.getString("SITEINDEX") +"','" + rsp.getString("CABINETNO") +"','" + rsp.getString("SUBRACKNO") +"','" + rsp.getString("INVENTORYUNITID") +"','" + rsp.getString("RACKTYPE") +"','" + rsp.getString("BOMRACKTYPE") +"','" + rsp.getString("FRAMETYPE") +"','" + rsp.getString("RACKFRAMENO") +"','" + rsp.getString("MODULENO") +"','" + rsp.getString("INVENTORYUNITTYPE") +"','" + rsp.getString("VENDORUNITFAMILYTYPE") +"','" + rsp.getString("VENDORUNITTYPENUMBER") +"','" + rsp.getString("VENDORNAME") +"','" + rsp.getString("SERIALNUMBER") +"','" + rsp.getString("HARDWAREVERSION")  +"',TO_DATE('" +dat3+"','YYYY-MM-DD')"+",TO_DATE('" +dat4+"','YYYY-MM-DD')" +",'" + rsp.getString("UNITPOSITION") +"','" + rsp.getString("MANUFACTURERDATA") +"','" + rsp.getString("USERLABEL") +"','" + rsp.getString("BOMCODE") +"','" + rsp.getString("MODEL") +"','" + rsp.getString("ISSUENUMBER") +"','" + rsp.getString("BOMFRAMETYPE") +"','" + rsp.getString("CLEICODE") +"','" + rsp.getString("BOM") +"','" + rsp.getString("EXTINFO") +"','" + rsp.getString("NODE_PK") +"','" + rsp.getString("NODE_ATTR_PK") +"',TIMESTAMP '" + rsp.getString("UPDATE_DATE") +"','" + rsp.getString("FILENAME") +"','" + rsp.getString("STATUS") +"','" + rsp.getString("FROM_TRANS_SOURCE") +"','" + rsp.getString("TO_TRANS_SOURCE") +"' ,'" + rsp.getString("FROM_TRANS_ID") +"','" + rsp.getString("TO_TRANS_ID") +"','" + rsp.getString("TRANS_TYPE") +"','" + rsp.getString("LINE") +"' ,'" + rsp.getString("ACTIVE_RECORD") +"','" + rsp.getString("DOMAIN") +"','" + rsp.getString("VENDOR")+"','"+rsp.getString("OTHERS") +"')");
 					 stmt2.executeUpdate();
 					 stmt2.close();
 					 nbOfNodeSubrack++;
@@ -944,11 +1084,22 @@ public class CopyParsingDataToALM {
 			     int nbOfNodeAntenna = 0;
 				 while (rsp.next()) {
 					 dat3=rsp.getString("DATEOFMANUFACTURE");
-					 dat3 = dat3.substring(0, 10) ;
+					 if(dat3 !=null && dat3 !="null") {
+						 dat3 = dat3.substring(0, 10) ;
+						 } 
+					 else {
+						 dat3=""; 
+					 }
 					 dat4=rsp.getString("DATEOFLASTSERVICE");
-					 dat4 = dat4.substring(0, 10) ;
+					if(dat4 !=null && dat4 !="null") {
+						dat4 = dat4.substring(0, 10) ;
+						}
+					else {
+						 dat4=""; 
+					 }
+					System.out.println("antenne date "+dat4);
 					 stmt0 = conalm.prepareStatement("insert into TEMP_NODE_ANTENNA (ANTENNA_ID,INVENTORYUNITID,INVENTORYUNITTYPE,ANTENNADEVICENO,PRODNR,VENDORUNITFAMILYTYPE,VENDORUNITTYPENUMBER,VENDORNAME,SERIALNUMBER,HARDWAREVERSION,DATEOFMANUFACTURE,DATEOFLASTSERVICE,UNITPOSITION,MANUFACTURERDATA,ANTENNADEVICETYPE,ISSUENUMBER,BOMCODE,EXTINFO,MODEL,SERIALNUMBEREX,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,CREATION_DATE,DOMAIN,VENDOR)"
-						 		+ "values ('" + rsp.getString("ANTENNA_ID") +"','" + rsp.getString("INVENTORYUNITID") +"','" + rsp.getString("INVENTORYUNITTYPE") +"','" + rsp.getString("ANTENNADEVICENO") +"','" + rsp.getString("PRODNR") +"','" + rsp.getString("VENDORUNITFAMILYTYPE") +"','" + rsp.getString("VENDORUNITTYPENUMBER") +"','" + rsp.getString("VENDORNAME") +"','" + rsp.getString("SERIALNUMBER") +"','" + rsp.getString("HARDWAREVERSION") +"', DATE '" + dat3 +"',DATE '" + dat4 +"','" + rsp.getString("UNITPOSITION") +"','" + rsp.getString("MANUFACTURERDATA") +"','" + rsp.getString("ANTENNADEVICETYPE") +"','" + rsp.getString("ISSUENUMBER") +"','" + rsp.getString("BOMCODE") +"','" + rsp.getString("EXTINFO") +"','" + rsp.getString("MODEL") +"','" + rsp.getString("SERIALNUMBEREX") +"','" + rsp.getString("NODE_PK") +"','" + rsp.getString("NODE_ATTR_PK") +"',TIMESTAMP '" + rsp.getString("UPDATE_DATE") +"','" + rsp.getString("FILENAME") +"','" + rsp.getString("STATUS") +"','" + rsp.getString("FROM_TRANS_SOURCE") +"','" + rsp.getString("TO_TRANS_SOURCE") +"' ,'" + rsp.getString("FROM_TRANS_ID") +"','" + rsp.getString("TO_TRANS_ID") +"','" + rsp.getString("TRANS_TYPE") +"','" + rsp.getString("LINE") +"','" + rsp.getString("ACTIVE_RECORD") +"', TIMESTAMP '" + rsp.getString("CREATION_DATE") +"','" + rsp.getString("DOMAIN") +"','" + rsp.getString("VENDOR") +"' )");
+						 		+ "values ('" + rsp.getString("ANTENNA_ID") +"','" + rsp.getString("INVENTORYUNITID") +"','" + rsp.getString("INVENTORYUNITTYPE") +"','" + rsp.getString("ANTENNADEVICENO") +"','" + rsp.getString("PRODNR") +"','" + rsp.getString("VENDORUNITFAMILYTYPE") +"','" + rsp.getString("VENDORUNITTYPENUMBER") +"','" + rsp.getString("VENDORNAME") +"','" + rsp.getString("SERIALNUMBER") +"','" + rsp.getString("HARDWAREVERSION")  +"',TO_DATE('" +dat3+"','YYYY-MM-DD')"+",TO_DATE('" +dat4+"','YYYY-MM-DD')" +",'" + rsp.getString("UNITPOSITION") +"','" + rsp.getString("MANUFACTURERDATA") +"','" + rsp.getString("ANTENNADEVICETYPE") +"','" + rsp.getString("ISSUENUMBER") +"','" + rsp.getString("BOMCODE") +"','" + rsp.getString("EXTINFO") +"','" + rsp.getString("MODEL") +"','" + rsp.getString("SERIALNUMBEREX") +"','" + rsp.getString("NODE_PK") +"','" + rsp.getString("NODE_ATTR_PK") +"',TIMESTAMP '" + rsp.getString("UPDATE_DATE") +"','" + rsp.getString("FILENAME") +"','" + rsp.getString("STATUS") +"','" + rsp.getString("FROM_TRANS_SOURCE") +"','" + rsp.getString("TO_TRANS_SOURCE") +"' ,'" + rsp.getString("FROM_TRANS_ID") +"','" + rsp.getString("TO_TRANS_ID") +"','" + rsp.getString("TRANS_TYPE") +"','" + rsp.getString("LINE") +"','" + rsp.getString("ACTIVE_RECORD") +"', TIMESTAMP '" + rsp.getString("CREATION_DATE") +"','" + rsp.getString("DOMAIN") +"','" + rsp.getString("VENDOR") +"' )");
 					 stmt0.executeUpdate();
 					 stmt0.close();
 					 nbOfNodeAntenna++;
@@ -1288,6 +1439,11 @@ public class CopyParsingDataToALM {
 	 		PreparedStatement stmt2 = con.prepareStatement("delete  from NODE_RACK where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'");
 	 		stmt2.executeUpdate();
      	stmt2.close();
+     	
+     	//Delete from NODE_SHELF
+ 		 stmt2 = con.prepareStatement("delete  from NODE_SHELF where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'");
+ 		 stmt2.executeUpdate();
+ 		 stmt2.close();
      
      	//Delete from NODE_CABINET
 	  		stmt0 = con.prepareStatement("delete  from NODE_CABINET where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'");

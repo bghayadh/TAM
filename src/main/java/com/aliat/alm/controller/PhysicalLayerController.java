@@ -1628,7 +1628,7 @@ public class PhysicalLayerController {
 								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID FROM NODE_ACTIVE  WHERE DOMAIN = 'Core'").list();
 						
 						AccessList =  session.createSQLQuery(
-								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID FROM NODE_ACTIVE  WHERE DOMAIN = 'Access'").list();
+								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID FROM NODE_ACTIVE  WHERE DOMAIN = 'Ran'").list();
 						
 					}
 
@@ -3964,7 +3964,7 @@ public class PhysicalLayerController {
 
 			try {
 
-				String distBoardSel = request.getParameter("DistBoardSel");
+				String distBoardSel = request.getParameter("DistBoardSel").toString();
 				List<Object[]> DBData = session.createSQLQuery(
 						"Select DB_NAME,DB_LONGITUDE,DB_LATITUDE,CITY FROM DISTRIBUTION_BOARD where" + " DB_ID='"
 								+ distBoardSel + "' and PROJECT_ID='" + request.getParameter("projectID") + "'")
@@ -7669,6 +7669,56 @@ public class PhysicalLayerController {
 				exceptionAsString = sw.toString();
 				logger.finest("Error in findCountManHoles due to \n " + exceptionAsString);
 				logger.info("Error in findCountManHoles due to \n " + exceptionAsString);
+				rtn.put("manholeCount", null);
+			} finally {
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+				}
+			}
+		}
+		return rtn;
+	}
+	
+	@RequestMapping(value = "/findCountDbNetLevel", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> findCountDbNetLevel(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException {
+		System.out.println("Passes here");
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		// ObjectMapper mapper = new ObjectMapper();
+		Session session = null;
+		Transaction tx = null;
+		session = almsessions.getSession();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			try {
+				Object BackboneCount = session.createSQLQuery(
+						"SELECT count(*) FROM DISTRIBUTION_BOARD WHERE PROJECT_ID='" + request.getParameter("ProjectId") + "' AND DB_NETWORK_LEVEL = 'backbone'")
+						.uniqueResult();
+				rtn.put("BackboneCount", BackboneCount);
+				
+				Object MetroCount = session.createSQLQuery(
+						"SELECT count(*) FROM DISTRIBUTION_BOARD WHERE PROJECT_ID='" + request.getParameter("ProjectId") + "' AND DB_NETWORK_LEVEL = 'metro'")
+						.uniqueResult();
+				rtn.put("MetroCount", MetroCount);
+				
+				Object AccessCount = session.createSQLQuery(
+						"SELECT count(*) FROM DISTRIBUTION_BOARD WHERE PROJECT_ID='" + request.getParameter("ProjectId") + "' AND DB_NETWORK_LEVEL = 'access'")
+						.uniqueResult();
+				rtn.put("AccessCount", AccessCount);
+
+
+			} catch (Exception e) {
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in findCountDbNetLevel due to \n " + exceptionAsString);
+				logger.info("Error in findCountDbNetLevel due to \n " + exceptionAsString);
 				rtn.put("manholeCount", null);
 			} finally {
 				if (session != null && session.isOpen()) {
