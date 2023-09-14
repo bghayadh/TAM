@@ -712,8 +712,8 @@ public class LoadFileIPHuawei {
      			}else {
      				try {
      				    //System.out.println("manifacturedDateeee : "+manifacturedDate);
-     					stmtp =  con.prepareStatement("insert into NODE_BOARD (BOARD_ID,SUBRACKNO,SLOTNO,BOARDNAME,BOARDTYPE,SERIALNUMBER,MODEL,HARDWAREVERSION,DATEOFMANUFACTURE,SOFTVER,BIOSVER,BOMCODE,NODE_PK,FILENAME,STATUS,DOMAIN,VENDOR,ROMVER,LOADVER)"
-     					 		+ "values('"+vBoardcodeid+"','"+subrackId+"','"+slotId+"','"+boardName+"','"+ boardType+"','"+ serialNumber+"','"+ model+"','"+hardwareVersion+"','','"+softwareVersion+"','"+biosVersion+"','"+ bomCode+"','"+node_fk+"','"+fileName+"','"+boardStatus+"','"+Domain+"','"+Gprovider+"','"+bootRomVersionBoard+"','"+bootLoadVersionBoard+"')"); 
+     					stmtp =  con.prepareStatement("insert into NODE_BOARD (BOARD_ID,SUBRACKNO,SLOTNO,BOARDNAME,BOARDTYPE,SERIALNUMBER,MODEL,HARDWAREVERSION,DATEOFMANUFACTURE,SOFTVER,BIOSVER,BOMCODE,NODE_PK,FILENAME,STATUS,DOMAIN,VENDOR,OTHERS)"
+     					 		+ "values('"+vBoardcodeid+"','"+subrackId+"','"+slotId+"','"+boardName+"','"+ boardType+"','"+ serialNumber+"','"+ model+"','"+hardwareVersion+"','','"+softwareVersion+"','"+biosVersion+"','"+ bomCode+"','"+node_fk+"','"+fileName+"','"+boardStatus+"','"+Domain+"','"+Gprovider+"','"+Others+"')"); 
      					stmtp.executeUpdate();
      				  	stmtp.close();  	
      				} catch (Exception e) {
