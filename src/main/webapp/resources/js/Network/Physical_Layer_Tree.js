@@ -3966,8 +3966,218 @@ menuAccess = new ContextMenu({
   ]
 });
   
-		
-	
+  /////////////*********************	DISTRIBUTION BOARD FOLDER (BACKBONE, METRO, ACCESS ) CONTEXT MENU  ***********************///////////////
+	//-------------------------------------------------------------------------------------------------//
+		menuAccess = new ContextMenu({
+  'theme': 'default',
+
+  'items' : [
+  {'icon': 'paste', 'name': 'Show BoQ ', action: () => {
+    $.ajax({
+      type: "GET",
+      contentType: "application/json; charset=utf-8",
+      url: getContext()+'/findCountfiber',
+      async:false,
+      data: {
+        "ProjectId": IdNodeSelectedTemp,
+      },
+      dataType: "json",
+      success: function (data) {
+      var fiberCount="";
+  
+          if(data.access!=null){
+            
+            fiberCount = data.access;
+          
+             var tr ="<tr>"+"<th>Access: </th><td> "+data.Access+"</td></tr>"	
+                     +"<tr>"+"<th>Fiber Cables Count: </th><td> "+fiberCount[0][1]+"</td></tr>"
+		             +"<tr>"+"<th>Fiber Tubes Count: </th><td> "+fiberCount[0][3]+"</td></tr>"
+			         +"<tr>"+"<th>Fiber Strands Count: </th><td> "+fiberCount[0][5]+"</td></tr>"
+			         +"<tr>"+"<th>Fiber Cables (TKL) Count: </th><td> "+data.fiberOwnerTklAccess+"</td></tr>"
+					   +"<tr>"+"<th>Fiber Cables (NOFBI) Count: </th><td> "+data.fiberOwnerNofbiAccess+"</td></tr>"
+					   +"<tr>"+"<th>Fiber Cables (OTHERS) Count: </th><td> "+data.fiberOwnerOtherAccess+"</td></tr>"
+			         +"<tr>"+"<th>Total path Length (Geo): </th><td> "+parseFloat(data.Access_total_geo).toFixed(2)+" Km</td></tr>"
+                     +"<tr>"+"<th>Total path Length (Line Of Site): </th><td> "+parseFloat(data.Access_total_LineOfsite).toFixed(2)+" Km</td></tr>"
+                     +"<tr>"+"<th>Total Strand Length (Geo): </th><td> "+parseFloat(data.geoAccessStrand).toFixed(2)+" Km</td></tr>"
+					 +"<tr>"+"<th>Total Strand Length (Line Of Site): </th><td> "+parseFloat(data.LengthAccessStrand).toFixed(2)+" Km</td></tr>"
+					   
+                     showBoq();
+                     $("#boq_table").append(tr);
+                     data=null;
+        }
+      },
+      
+     
+      error: function (result) {
+        alert("Error");
+      }
+    });
+  
+  
+  }
+  }
+  ]
+});
+
+menuAccess = new ContextMenu({
+  'theme': 'default',
+
+  'items' : [
+  {'icon': 'paste', 'name': 'Show BoQ ', action: () => {
+    $.ajax({
+      type: "GET",
+      contentType: "application/json; charset=utf-8",
+      url: getContext()+'/findCountfiber',
+      async:false,
+      data: {
+        "ProjectId": IdNodeSelectedTemp,
+      },
+      dataType: "json",
+      success: function (data) {
+      var fiberCount="";
+  
+          if(data.access!=null){
+            
+            fiberCount = data.access;
+          
+             var tr ="<tr>"+"<th>Access: </th><td> "+data.Access+"</td></tr>"	
+                     +"<tr>"+"<th>Fiber Cables Count: </th><td> "+fiberCount[0][1]+"</td></tr>"
+		             +"<tr>"+"<th>Fiber Tubes Count: </th><td> "+fiberCount[0][3]+"</td></tr>"
+			         +"<tr>"+"<th>Fiber Strands Count: </th><td> "+fiberCount[0][5]+"</td></tr>"
+			         +"<tr>"+"<th>Fiber Cables (TKL) Count: </th><td> "+data.fiberOwnerTklAccess+"</td></tr>"
+					   +"<tr>"+"<th>Fiber Cables (NOFBI) Count: </th><td> "+data.fiberOwnerNofbiAccess+"</td></tr>"
+					   +"<tr>"+"<th>Fiber Cables (OTHERS) Count: </th><td> "+data.fiberOwnerOtherAccess+"</td></tr>"
+			         +"<tr>"+"<th>Total path Length (Geo): </th><td> "+parseFloat(data.Access_total_geo).toFixed(2)+" Km</td></tr>"
+                     +"<tr>"+"<th>Total path Length (Line Of Site): </th><td> "+parseFloat(data.Access_total_LineOfsite).toFixed(2)+" Km</td></tr>"
+                     +"<tr>"+"<th>Total Strand Length (Geo): </th><td> "+parseFloat(data.geoAccessStrand).toFixed(2)+" Km</td></tr>"
+					 +"<tr>"+"<th>Total Strand Length (Line Of Site): </th><td> "+parseFloat(data.LengthAccessStrand).toFixed(2)+" Km</td></tr>"
+					   
+                     showBoq();
+                     $("#boq_table").append(tr);
+                     data=null;
+                
+        }
+      },
+      
+     
+      error: function (result) {
+        alert("Error");
+      }
+    });
+  
+  
+  }
+  }
+  ]
+});
+
+	/////////////*********************	DISTRIBUTION BOARD FOLDER(bACKBONE, METRO,ACCESS) CONTEXT MENU  ***********************///////////////
+	//-------------------------------------------------------------------------------------------------//
+menuBackboneDB = new ContextMenu({
+  'theme': 'default',
+
+  'items' : [
+  {'icon': 'paste', 'name': 'Show BoQ ', action: () => {
+    $.ajax({
+      type: "GET",
+      contentType: "application/json; charset=utf-8",
+      url: getContext()+'/findCountDbNetLevel',
+      async:false,
+      data: {
+        "ProjectId": IdNodeSelectedTemp,
+      },
+      dataType: "json",
+      success: function (data) {
+
+          if(data.BackboneCount!=null){
+             var tr ="<tr>"+"<th>Backbone Count: </th><td> "+data.BackboneCount+"</td></tr>"	
+                     showBoq();
+                     $("#boq_table").append(tr);
+                     data=null;     
+        }
+      },
+      error: function (result) {
+        alert("Error");
+      }
+    });
+  
+  
+  }
+  }
+  ]
+});
+	menuMetorDB = new ContextMenu({
+  'theme': 'default',
+
+  'items' : [
+  {'icon': 'paste', 'name': 'Show BoQ ', action: () => {
+    $.ajax({
+      type: "GET",
+      contentType: "application/json; charset=utf-8",
+      url: getContext()+'/findCountDbNetLevel',
+      async:false,
+      data: {
+        "ProjectId": IdNodeSelectedTemp,
+      },
+      dataType: "json",
+      success: function (data) {
+
+          if(data.MetroCount!=null){
+             var tr ="<tr>"+"<th>Metro Count: </th><td> "+data.MetroCount+"</td></tr>"	
+
+                     showBoq();
+                     $("#boq_table").append(tr);
+                     data=null;
+        }
+      },
+      
+      error: function (result) {
+        alert("Error");
+      }
+    });
+  
+  
+  }
+  }
+  ]
+});
+	menuAccessDB = new ContextMenu({
+  'theme': 'default',
+
+  'items' : [
+  {'icon': 'paste', 'name': 'Show BoQ ', action: () => {
+    $.ajax({
+      type: "GET",
+      contentType: "application/json; charset=utf-8",
+      url: getContext()+'/findCountDbNetLevel',
+      async:false,
+      data: {
+        "ProjectId": IdNodeSelectedTemp,
+      },
+      dataType: "json",
+      success: function (data) {
+          if(data.AccessCount!=null){
+
+             var tr ="<tr>"+"<th>Access Count: </th><td> "+data.AccessCount+"</td></tr>"	   
+                     showBoq();
+                     $("#boq_table").append(tr);
+                     data=null;
+                
+        }
+      },
+      
+     
+      error: function (result) {
+        alert("Error");
+      }
+    });
+  
+  
+  }
+  }
+  ]
+});
+
 	/////////////*********************	DISTRIBUTION BOARD FOLDER CONTEXT MENU  ***********************///////////////
 	//-------------------------------------------------------------------------------------------------//
 		
@@ -11685,14 +11895,13 @@ singleProject = new ContextMenu({
 
 	    $(".FiberPath_f_CurrentPhysicalLayer > .TreeSpan, .FiberPath_f_projects > .TreeSpan").contextmenu(function(){
 	 	   // checking the fiber project id  
-	
 			IdNodeSelectedTemp=$(this).parent().attr('id').split("FiberPath_f_")[1];
 
 			menuName=menuFiberPath;		
 			openContext("","",menuFiberPath,event);
 	 	   });
 	 	   
-	 	    $(".backboneFolder > .TreeSpan, .backboneFolder> .TreeSpan").contextmenu(function(){
+	 	   $(".backboneFolder > .TreeSpan, .backboneFolder> .TreeSpan").contextmenu(function(){
            IdNodeSelectedTemp=$(this).parent().attr('id').split("FiberPath_backbone__")[1];
 
            menuName=menuBackbone;		
@@ -11706,7 +11915,7 @@ singleProject = new ContextMenu({
            openContext("","",menuMetor,event);
            });
            
-            $(".accessFolder > .TreeSpan, .accessFolder > .TreeSpan").contextmenu(function(){
+           $(".accessFolder > .TreeSpan, .accessFolder > .TreeSpan").contextmenu(function(){
 	           IdNodeSelectedTemp=$(this).parent().attr('id').split("FiberPath_access__")[1];
 	           menuName=menuAccess;		
 	           openContext("","",menuAccess,event);
@@ -11722,6 +11931,24 @@ singleProject = new ContextMenu({
 		 	document.getElementById("projectNameDB").style.display = "none";
 																	 
 	 	   });
+	 	   
+	 	   $(".backboneDBFolder > .TreeSpan, .backboneDBFolder> .TreeSpan").contextmenu(function(){
+	           IdNodeSelectedTemp=$(this).parent().attr('id').split("DistributionBoard_backbone__")[1];
+	           menuName=menuBackboneDB;		
+	           openContext("","",menuBackboneDB,event);
+           });
+           
+           $(".metroDBFolder > .TreeSpan, .metroDBFolder > .TreeSpan").contextmenu(function(){
+	           IdNodeSelectedTemp=$(this).parent().attr('id').split("DistributionBoard_metro__")[1];
+	           menuName=menuMetorDB;		
+	           openContext("","",menuMetorDB,event);
+           });
+           
+           $(".accessDBFolder > .TreeSpan, .accessDBFolder > .TreeSpan").contextmenu(function(){
+	           IdNodeSelectedTemp=$(this).parent().attr('id').split("DistributionBoard_access__")[1];
+	           menuName=menuAccessDB;		
+	           openContext("","",menuAccessDB,event);
+           });
 
 	    //$('#Trench_f > .TreeSpan').contextmenu(function(){
 	    $(".Trench_f_CurrentPhysicalLayer > .TreeSpan, .Trench_f_projects > .TreeSpan").contextmenu(function(){
