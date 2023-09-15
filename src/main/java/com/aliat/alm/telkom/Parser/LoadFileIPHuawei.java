@@ -534,9 +534,9 @@ public class LoadFileIPHuawei {
 		        
 		       String Others="{\"ROMVER\":"+"\""+bootRomVersion+"\","+"\"LOADVER\":"+"\""+bootLoadVersion+"\""+"}";
 		        
-		        stmtp =  con.prepareStatement("insert into NODE_MODULE (MODULE_ID,SERIALNUMBER,NODE_PK,FILENAME,STATUS,DOMAIN,VENDOR,HARDWAREVERSION,SOFTVER,OTHERS)"
-     					 		+ "values('"+ vModulecodeid+"','"+ serialNumber+"','"+node_fk+"','"+ fileName+"','"+moduleStatus+"','"+Domain+"','"+Gprovider+"','"+hardwareVersion+"','"+softwareVersion+"','"+Others+"')"); 
-     				  	stmtp.executeUpdate();
+		       stmtp =  con.prepareStatement("insert into NODE_MODULE (MODULE_ID,SERIALNUMBER,NODE_PK,FILENAME,STATUS,CREATION_DATE,DOMAIN,UPDATE_DATE,VENDOR,HARDWAREVERSION,SOFTVER,OTHERS)"
+				 		+ "values('"+ vModulecodeid+"','"+ serialNumber+"','"+node_fk+"','"+ fileName+"','"+moduleStatus+"',sysdate,'"+Domain+"',sysdate,'"+Gprovider+"','"+hardwareVersion+"','"+softwareVersion+"','"+Others+"')"); 
+			  	stmtp.executeUpdate();
      				  	stmtp.close();
      				  	
      				  	NodeModuleSeq++;
@@ -675,15 +675,20 @@ public class LoadFileIPHuawei {
 			       
      			if (manifacturedDate != null && !manifacturedDate.isEmpty() && !manifacturedDate.contains("--")) {
      			    try {
-     			        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // Define the expected date format
-     			        Date manufacturedDate = dateFormat.parse(manifacturedDate); // Parse the date string
-     			        java.sql.Date sqlManufacturedDate = new java.sql.Date(manufacturedDate.getTime()); // Convert to java.sql.Date
+     			        //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // Define the expected date format
+     			        //Date manufacturedDate = dateFormat.parse(manifacturedDate); // Parse the date string
+     			        //java.sql.Date sqlManufacturedDate = new java.sql.Date(manufacturedDate.getTime()); // Convert to java.sql.Date
 
-     			        String sql = "INSERT INTO NODE_BOARD (BOARD_ID, SUBRACKNO, SLOTNO, BOARDNAME, BOARDTYPE, SERIALNUMBER, MODEL, HARDWAREVERSION, DATEOFMANUFACTURE,SOFTVER, BIOSVER, BOMCODE, NODE_PK, FILENAME, STATUS, DOMAIN, VENDOR, OTHERS)"
-        			            + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,? ,?)";
+     			    	if(!manifacturedDate.contains("-")) {
+     						manifacturedDate="";
+     					 }
+     					 String lastservicedate="";
+     			        String sql = "INSERT INTO NODE_BOARD (BOARD_ID, SUBRACKNO, SLOTNO, BOARDNAME, BOARDTYPE, SERIALNUMBER, MODEL, HARDWAREVERSION, DATEOFMANUFACTURE,DATEOFLASTSERVICE,SOFTVER, BIOSVER, BOMCODE, NODE_PK,CREATION_DATE,UPDATE_DATE, FILENAME, STATUS, DOMAIN, VENDOR, OTHERS)"
+        			            + " VALUES ('"+vBoardcodeid+"','"+subrackId+"','"+slotId+"','"+boardName+"','"+ boardType+"','"+ serialNumber+"','"+ model+"','"+hardwareVersion+"',"+"TO_DATE('" + manifacturedDate+"','YYYY-MM-DD')"+",TO_DATE('" + lastservicedate+"','YYYY-MM-DD')"+",'"+softwareVersion+"','"+biosVersion+"','"+ bomCode+"','"+node_fk+"',sysdate , sysdate,'"+fileName+"','"+boardStatus+"','"+Domain+"','"+Gprovider+"','"+Others+"')";
 
         			        PreparedStatement stmtp = con.prepareStatement(sql);
-
+        			        
+        			        /*
         			        // Set values for parameters
         			        stmtp.setString(1, vBoardcodeid);
         			        stmtp.setString(2, subrackId);
@@ -702,7 +707,7 @@ public class LoadFileIPHuawei {
         			        stmtp.setString(15, boardStatus);
         			        stmtp.setString(16, Domain);
         			        stmtp.setString(17, Gprovider);
-        			        stmtp.setString(18, Others);
+        			        stmtp.setString(18, Others);*/
         			     
         			        stmtp.executeUpdate();
         			        stmtp.close();
@@ -713,8 +718,10 @@ public class LoadFileIPHuawei {
      			}else {
      				try {
      				    //System.out.println("manifacturedDateeee : "+manifacturedDate);
-     					stmtp =  con.prepareStatement("insert into NODE_BOARD (BOARD_ID,SUBRACKNO,SLOTNO,BOARDNAME,BOARDTYPE,SERIALNUMBER,MODEL,HARDWAREVERSION,DATEOFMANUFACTURE,SOFTVER,BIOSVER,BOMCODE,NODE_PK,FILENAME,STATUS,DOMAIN,VENDOR,OTHERS)"
-     					 		+ "values('"+vBoardcodeid+"','"+subrackId+"','"+slotId+"','"+boardName+"','"+ boardType+"','"+ serialNumber+"','"+ model+"','"+hardwareVersion+"','','"+softwareVersion+"','"+biosVersion+"','"+ bomCode+"','"+node_fk+"','"+fileName+"','"+boardStatus+"','"+Domain+"','"+Gprovider+"','"+Others+"')"); 
+     					String manfdate="";
+     					String lastservicedate="";
+     					stmtp =  con.prepareStatement("insert into NODE_BOARD (BOARD_ID,SUBRACKNO,SLOTNO,BOARDNAME,BOARDTYPE,SERIALNUMBER,MODEL,HARDWAREVERSION,DATEOFMANUFACTURE,DATEOFLASTSERVICE,SOFTVER,BIOSVER,BOMCODE,NODE_PK,CREATION_DATE,UPDATE_DATE,FILENAME,STATUS,DOMAIN,VENDOR,OTHERS)"
+     					 		+ "values('"+vBoardcodeid+"','"+subrackId+"','"+slotId+"','"+boardName+"','"+ boardType+"','"+ serialNumber+"','"+ model+"','"+hardwareVersion+"',"+"TO_DATE('" + manfdate+"','YYYY-MM-DD')"+",TO_DATE('" + lastservicedate+"','YYYY-MM-DD')"+",'"+softwareVersion+"','"+biosVersion+"','"+ bomCode+"','"+node_fk+"',sysdate , sysdate,'"+fileName+"','"+boardStatus+"','"+Domain+"','"+Gprovider+"','"+Others+"')"); 
      					stmtp.executeUpdate();
      				  	stmtp.close();  	
      				} catch (Exception e) {
