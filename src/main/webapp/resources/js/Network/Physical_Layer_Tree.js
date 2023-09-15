@@ -250,6 +250,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 	allFiberCables=[];
 	allTubes=[];
 	allStrands=[];
+	allDB = [];
 	
 		$("#saveManhole").unbind(); 
 		$("#saveHandhole").unbind();
@@ -320,13 +321,13 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 		str="<ul><li id ='FiberPath_access__CurrentPhysicalLayer' style='display:none;' class='accessFolder'> <input type='checkbox' class='AccessFiber checkFilter' id ='Access__CurrentPhysicalLayer' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Access </span></li></ul></li></ul>";
 		$("#FiberPath_f_CurrentPhysicalLayer").append(str);
 		
-        str="<ul><li id ='DistributionBoard_backbone__CurrentPhysicalLayer' style='display:none;' class='backboneFolder'> <input type='checkbox' class='BackboneDb checkFilter' id ='Backbone__CurrentPhysicalLayer' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Backbone </span></li></ul></li></ul>";
+        str="<ul><li id ='DistributionBoard_backbone__CurrentPhysicalLayer' style='display:none;' class='backboneDBFolder'> <input type='checkbox' class='BackboneDB checkFilter' id ='BackboneDB__CurrentPhysicalLayer' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Backbone </span></li></ul></li></ul>";
 		$("#DistributionBoard_f_CurrentPhysicalLayer").append(str);
 		
-		str="<ul><li id ='DistributionBoard_metro__CurrentPhysicalLayer' style='display:none;' class='metroFolder'> <input type='checkbox' class='MetroDb checkFilter' id ='Metro__CurrentPhysicalLayer' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Metro </span></li></ul></li></ul>";
+		str="<ul><li id ='DistributionBoard_metro__CurrentPhysicalLayer' style='display:none;' class='metroDBFolder'> <input type='checkbox' class='MetroDB checkFilter' id ='MetroDB__CurrentPhysicalLayer' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Metro </span></li></ul></li></ul>";
 		$("#DistributionBoard_f_CurrentPhysicalLayer").append(str);
 		
-		str="<ul><li id ='DistributionBoard_access__CurrentPhysicalLayer' style='display:none;' class='accessFolder'> <input type='checkbox' class='AccessDb checkFilter' id ='Access__CurrentPhysicalLayer' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Access </span></li></ul></li></ul>";
+		str="<ul><li id ='DistributionBoard_access__CurrentPhysicalLayer' style='display:none;' class='accessDBFolder'> <input type='checkbox' class='AccessDB checkFilter' id ='AccessDB__CurrentPhysicalLayer' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Access </span></li></ul></li></ul>";
 		$("#DistributionBoard_f_CurrentPhysicalLayer").append(str);
 
 		
@@ -1067,10 +1068,9 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 	
 		if(distribBoardList!=null){
 			for(i=0;i<distribBoardList.length;i++){
+			    allDB.push(distribBoardList[i][0]);
 				window[""+distribBoardList[i][0]]=[];
 				window[""+distribBoardList[i][0]]=distribBoardList[i];
-				/*str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' unchecked name='Element' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distribBoardList[i][3]+" </span></li></ul>";
-				$("#DistributionBoard_f_"+distribBoardList[i][6]+"").append(str);*/
 				
 				 if(distribBoardList[i][8]=="backbone") {
 					if(distribBoardList[i][3]>0){
@@ -1105,7 +1105,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				
 				$(".DistributionBoard > .TreeSpan").contextmenu(function(){
 					menuName=singleDistBoard;
-					IdNodeSelectedTemp=$(this).parents().eq(2).attr('id').split("DistributionBoard_f_")[1];
+					IdNodeSelectedTemp=$(this).parents().eq(2).attr('id').split("__")[1];
 					selectedDistBoardContext=$(this).parents().attr('id');
 					selectedDistBoardName=$(this).text();
 					openContext(selectedDistBoardContext,selectedDistBoardName,singleDistBoard,event);
@@ -3966,8 +3966,218 @@ menuAccess = new ContextMenu({
   ]
 });
   
-		
-	
+  /////////////*********************	DISTRIBUTION BOARD FOLDER (BACKBONE, METRO, ACCESS ) CONTEXT MENU  ***********************///////////////
+	//-------------------------------------------------------------------------------------------------//
+		menuAccess = new ContextMenu({
+  'theme': 'default',
+
+  'items' : [
+  {'icon': 'paste', 'name': 'Show BoQ ', action: () => {
+    $.ajax({
+      type: "GET",
+      contentType: "application/json; charset=utf-8",
+      url: getContext()+'/findCountfiber',
+      async:false,
+      data: {
+        "ProjectId": IdNodeSelectedTemp,
+      },
+      dataType: "json",
+      success: function (data) {
+      var fiberCount="";
+  
+          if(data.access!=null){
+            
+            fiberCount = data.access;
+          
+             var tr ="<tr>"+"<th>Access: </th><td> "+data.Access+"</td></tr>"	
+                     +"<tr>"+"<th>Fiber Cables Count: </th><td> "+fiberCount[0][1]+"</td></tr>"
+		             +"<tr>"+"<th>Fiber Tubes Count: </th><td> "+fiberCount[0][3]+"</td></tr>"
+			         +"<tr>"+"<th>Fiber Strands Count: </th><td> "+fiberCount[0][5]+"</td></tr>"
+			         +"<tr>"+"<th>Fiber Cables (TKL) Count: </th><td> "+data.fiberOwnerTklAccess+"</td></tr>"
+					   +"<tr>"+"<th>Fiber Cables (NOFBI) Count: </th><td> "+data.fiberOwnerNofbiAccess+"</td></tr>"
+					   +"<tr>"+"<th>Fiber Cables (OTHERS) Count: </th><td> "+data.fiberOwnerOtherAccess+"</td></tr>"
+			         +"<tr>"+"<th>Total path Length (Geo): </th><td> "+parseFloat(data.Access_total_geo).toFixed(2)+" Km</td></tr>"
+                     +"<tr>"+"<th>Total path Length (Line Of Site): </th><td> "+parseFloat(data.Access_total_LineOfsite).toFixed(2)+" Km</td></tr>"
+                     +"<tr>"+"<th>Total Strand Length (Geo): </th><td> "+parseFloat(data.geoAccessStrand).toFixed(2)+" Km</td></tr>"
+					 +"<tr>"+"<th>Total Strand Length (Line Of Site): </th><td> "+parseFloat(data.LengthAccessStrand).toFixed(2)+" Km</td></tr>"
+					   
+                     showBoq();
+                     $("#boq_table").append(tr);
+                     data=null;
+        }
+      },
+      
+     
+      error: function (result) {
+        alert("Error");
+      }
+    });
+  
+  
+  }
+  }
+  ]
+});
+
+menuAccess = new ContextMenu({
+  'theme': 'default',
+
+  'items' : [
+  {'icon': 'paste', 'name': 'Show BoQ ', action: () => {
+    $.ajax({
+      type: "GET",
+      contentType: "application/json; charset=utf-8",
+      url: getContext()+'/findCountfiber',
+      async:false,
+      data: {
+        "ProjectId": IdNodeSelectedTemp,
+      },
+      dataType: "json",
+      success: function (data) {
+      var fiberCount="";
+  
+          if(data.access!=null){
+            
+            fiberCount = data.access;
+          
+             var tr ="<tr>"+"<th>Access: </th><td> "+data.Access+"</td></tr>"	
+                     +"<tr>"+"<th>Fiber Cables Count: </th><td> "+fiberCount[0][1]+"</td></tr>"
+		             +"<tr>"+"<th>Fiber Tubes Count: </th><td> "+fiberCount[0][3]+"</td></tr>"
+			         +"<tr>"+"<th>Fiber Strands Count: </th><td> "+fiberCount[0][5]+"</td></tr>"
+			         +"<tr>"+"<th>Fiber Cables (TKL) Count: </th><td> "+data.fiberOwnerTklAccess+"</td></tr>"
+					   +"<tr>"+"<th>Fiber Cables (NOFBI) Count: </th><td> "+data.fiberOwnerNofbiAccess+"</td></tr>"
+					   +"<tr>"+"<th>Fiber Cables (OTHERS) Count: </th><td> "+data.fiberOwnerOtherAccess+"</td></tr>"
+			         +"<tr>"+"<th>Total path Length (Geo): </th><td> "+parseFloat(data.Access_total_geo).toFixed(2)+" Km</td></tr>"
+                     +"<tr>"+"<th>Total path Length (Line Of Site): </th><td> "+parseFloat(data.Access_total_LineOfsite).toFixed(2)+" Km</td></tr>"
+                     +"<tr>"+"<th>Total Strand Length (Geo): </th><td> "+parseFloat(data.geoAccessStrand).toFixed(2)+" Km</td></tr>"
+					 +"<tr>"+"<th>Total Strand Length (Line Of Site): </th><td> "+parseFloat(data.LengthAccessStrand).toFixed(2)+" Km</td></tr>"
+					   
+                     showBoq();
+                     $("#boq_table").append(tr);
+                     data=null;
+                
+        }
+      },
+      
+     
+      error: function (result) {
+        alert("Error");
+      }
+    });
+  
+  
+  }
+  }
+  ]
+});
+
+	/////////////*********************	DISTRIBUTION BOARD FOLDER(bACKBONE, METRO,ACCESS) CONTEXT MENU  ***********************///////////////
+	//-------------------------------------------------------------------------------------------------//
+menuBackboneDB = new ContextMenu({
+  'theme': 'default',
+
+  'items' : [
+  {'icon': 'paste', 'name': 'Show BoQ ', action: () => {
+    $.ajax({
+      type: "GET",
+      contentType: "application/json; charset=utf-8",
+      url: getContext()+'/findCountDbNetLevel',
+      async:false,
+      data: {
+        "ProjectId": IdNodeSelectedTemp,
+      },
+      dataType: "json",
+      success: function (data) {
+
+          if(data.BackboneCount!=null){
+             var tr ="<tr>"+"<th>Backbone Count: </th><td> "+data.BackboneCount+"</td></tr>"	
+                     showBoq();
+                     $("#boq_table").append(tr);
+                     data=null;     
+        }
+      },
+      error: function (result) {
+        alert("Error");
+      }
+    });
+  
+  
+  }
+  }
+  ]
+});
+	menuMetorDB = new ContextMenu({
+  'theme': 'default',
+
+  'items' : [
+  {'icon': 'paste', 'name': 'Show BoQ ', action: () => {
+    $.ajax({
+      type: "GET",
+      contentType: "application/json; charset=utf-8",
+      url: getContext()+'/findCountDbNetLevel',
+      async:false,
+      data: {
+        "ProjectId": IdNodeSelectedTemp,
+      },
+      dataType: "json",
+      success: function (data) {
+
+          if(data.MetroCount!=null){
+             var tr ="<tr>"+"<th>Metro Count: </th><td> "+data.MetroCount+"</td></tr>"	
+
+                     showBoq();
+                     $("#boq_table").append(tr);
+                     data=null;
+        }
+      },
+      
+      error: function (result) {
+        alert("Error");
+      }
+    });
+  
+  
+  }
+  }
+  ]
+});
+	menuAccessDB = new ContextMenu({
+  'theme': 'default',
+
+  'items' : [
+  {'icon': 'paste', 'name': 'Show BoQ ', action: () => {
+    $.ajax({
+      type: "GET",
+      contentType: "application/json; charset=utf-8",
+      url: getContext()+'/findCountDbNetLevel',
+      async:false,
+      data: {
+        "ProjectId": IdNodeSelectedTemp,
+      },
+      dataType: "json",
+      success: function (data) {
+          if(data.AccessCount!=null){
+
+             var tr ="<tr>"+"<th>Access Count: </th><td> "+data.AccessCount+"</td></tr>"	   
+                     showBoq();
+                     $("#boq_table").append(tr);
+                     data=null;
+                
+        }
+      },
+      
+     
+      error: function (result) {
+        alert("Error");
+      }
+    });
+  
+  
+  }
+  }
+  ]
+});
+
 	/////////////*********************	DISTRIBUTION BOARD FOLDER CONTEXT MENU  ***********************///////////////
 	//-------------------------------------------------------------------------------------------------//
 		
@@ -11685,14 +11895,13 @@ singleProject = new ContextMenu({
 
 	    $(".FiberPath_f_CurrentPhysicalLayer > .TreeSpan, .FiberPath_f_projects > .TreeSpan").contextmenu(function(){
 	 	   // checking the fiber project id  
-	
 			IdNodeSelectedTemp=$(this).parent().attr('id').split("FiberPath_f_")[1];
 
 			menuName=menuFiberPath;		
 			openContext("","",menuFiberPath,event);
 	 	   });
 	 	   
-	 	    $(".backboneFolder > .TreeSpan, .backboneFolder> .TreeSpan").contextmenu(function(){
+	 	   $(".backboneFolder > .TreeSpan, .backboneFolder> .TreeSpan").contextmenu(function(){
            IdNodeSelectedTemp=$(this).parent().attr('id').split("FiberPath_backbone__")[1];
 
            menuName=menuBackbone;		
@@ -11706,7 +11915,7 @@ singleProject = new ContextMenu({
            openContext("","",menuMetor,event);
            });
            
-            $(".accessFolder > .TreeSpan, .accessFolder > .TreeSpan").contextmenu(function(){
+           $(".accessFolder > .TreeSpan, .accessFolder > .TreeSpan").contextmenu(function(){
 	           IdNodeSelectedTemp=$(this).parent().attr('id').split("FiberPath_access__")[1];
 	           menuName=menuAccess;		
 	           openContext("","",menuAccess,event);
@@ -11722,6 +11931,24 @@ singleProject = new ContextMenu({
 		 	document.getElementById("projectNameDB").style.display = "none";
 																	 
 	 	   });
+	 	   
+	 	   $(".backboneDBFolder > .TreeSpan, .backboneDBFolder> .TreeSpan").contextmenu(function(){
+	           IdNodeSelectedTemp=$(this).parent().attr('id').split("DistributionBoard_backbone__")[1];
+	           menuName=menuBackboneDB;		
+	           openContext("","",menuBackboneDB,event);
+           });
+           
+           $(".metroDBFolder > .TreeSpan, .metroDBFolder > .TreeSpan").contextmenu(function(){
+	           IdNodeSelectedTemp=$(this).parent().attr('id').split("DistributionBoard_metro__")[1];
+	           menuName=menuMetorDB;		
+	           openContext("","",menuMetorDB,event);
+           });
+           
+           $(".accessDBFolder > .TreeSpan, .accessDBFolder > .TreeSpan").contextmenu(function(){
+	           IdNodeSelectedTemp=$(this).parent().attr('id').split("DistributionBoard_access__")[1];
+	           menuName=menuAccessDB;		
+	           openContext("","",menuAccessDB,event);
+           });
 
 	    //$('#Trench_f > .TreeSpan').contextmenu(function(){
 	    $(".Trench_f_CurrentPhysicalLayer > .TreeSpan, .Trench_f_projects > .TreeSpan").contextmenu(function(){
@@ -17551,16 +17778,7 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 								}  
 							}
 							window["mapPointsNames_"+data.tubeIdArrayList[i][0]].push(tubeDst);
-							/*else{
-								if(typeof window["Auxpts_Tubes_Save"+tubeID] !='undefined'){
-									for(y=0;y<window["Auxpts_Tubes_Save"+tubeID].length;y++){
-										myLatLng=new google.maps.LatLng(window["Auxpts_Tubes_Save"+tubeID][y].aux_Latitude,window["Auxpts_Tubes_Save"+tubeID][y].aux_Longitude)
-										window["mapPoints_"+tubeID].push(myLatLng);
-										window["bounds_"+tubeID].extend(myLatLng);
-									}
-								}	
-							} 
-							*/
+					
 							myLatLng = new google.maps.LatLng(window[""+data.tubeIdArrayList[i][0]][4],window[""+data.tubeIdArrayList[i][0]][3]);
 							window["mapPoints_"+data.tubeIdArrayList[i][0]].push(myLatLng);
 							window["bounds_"+data.tubeIdArrayList[i][0]].extend(myLatLng);
