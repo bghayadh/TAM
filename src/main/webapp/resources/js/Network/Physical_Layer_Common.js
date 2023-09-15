@@ -1318,7 +1318,7 @@ function createSiteCltMarker(Id,Name,Lat,Long,siteCltSrcMarkers){
 	else if(Id.startsWith("CLT")==true) {
 		var icon = iconClient;
 	}
-	else if(Id.startsWith("WARE")==true) {
+	else if(Id.startsWith("WARE")==true || Id.includes("N/A")==true) {	
 		var icon = iconSite;
 	}
 	else{
