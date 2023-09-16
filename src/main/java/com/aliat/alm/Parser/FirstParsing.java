@@ -83,8 +83,8 @@ public class FirstParsing {
 				       logger.info("Error : "+e);
 				   }
 				
-				logsid = localgetseqNbr(0);
-				 logsid=Gyear+"_"+ "LOGS"+'_'+logsid;
+				//logsid = localgetseqNbr(0);
+				 //logsid=Gyear+"_"+ "LOGS"+'_'+logsid;
 				 
 				 
 				/// select different domain and vendor from temp node active table
@@ -100,6 +100,9 @@ public class FirstParsing {
 				 		  while (rsinit2.next()) {
 				 			 
 				 			 Timestamp startTime = new Timestamp(System.currentTimeMillis());
+				 			 
+				 			logsid= localgetseqNbr(0);
+							 logsid=Gyear+"_"+ "LOGS"+'_'+logsid;
 				 			 
 				 			    logger.info("Check if it is a new DB to run First Parsing of  "+ rsinit2.getString("DOMAIN") +","+ rsinit2.getString("VENDOR"));
 								System.out.println("Check if it is a new DB to run First Parsing of  "+ rsinit2.getString("DOMAIN") +","+ rsinit2.getString("VENDOR")+","+ rsinit2.getString("SUB_DOMAIN_TYPE") +","+ rsinit2.getString("SUB_DOMAIN"));
@@ -127,8 +130,9 @@ public class FirstParsing {
 								insert_LogsDETAIlsStatement.close();
 								
 								//insert into AUTO_DISCOVERY_LOGS
-								logsid= localgetseqNbr(1);
-					        	PreparedStatement insertLogsstmt = con.prepareStatement("insert into AUTO_DISCOVERY_LOGS (LOGS_ID,START_TIME,ACTIVITY_NAME,VENDOR,DOMAIN,STOP_TIME) "
+								//logsid= localgetseqNbr(1);
+								
+								PreparedStatement insertLogsstmt = con.prepareStatement("insert into AUTO_DISCOVERY_LOGS (LOGS_ID,START_TIME,ACTIVITY_NAME,VENDOR,DOMAIN,STOP_TIME) "
 								 		+ "values('"+logsid+"',? ,'FirstParsing','"+ rsinit2.getString("VENDOR") +"','"+rsinit2.getString("DOMAIN")+"',?) ");
 								 		
 					        	insertLogsstmt.setTimestamp(1, startTime);
