@@ -1085,7 +1085,7 @@ function createHandhole_Marker_Click(Id,Name,Long,Lat,markersHandhole,markerClus
 						tree_prop_selection("#DistributionBoard_f_showDB .TreeSpan");
 						treeCollapseFolder("#DistributionBoard_f_showDB .Parentfolder",null,".Parentfolder");
 								for(i=0;i<distributionBoardList.length;i++){
-									stringDiv="<ul style='list-style-type:none;cursor: pointer;'><li id='"+distributionBoardList[i][0]+"_showDB' style='display:none;' class='DistributionBoard'><input type='checkbox' class='DistBoard checkFilter' checked name='Element' ></input> <span class='TreeSpan' style='color:black;width:355px;margin-left:10px;'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distributionBoardList[i][3]+" </span></li></ul>";
+									stringDiv="<ul style='list-style-type:none;cursor: pointer;'><li id='"+distributionBoardList[i][0]+"_showDB' style='display:none;' class='DistributionBoard'><input type='checkbox' class='DistBoard checkFilter' checked name='Element' ></input> <span class='TreeSpan' style='color:black;width:355px;margin-left:10px;'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distributionBoardList[i][3]+" / "+distributionBoardList[i][0]+" </span></li></ul>";
 									$("#DistributionBoard_f_showDB").append(stringDiv);
 									
 									MouseHoveringSpans("#" +distributionBoardList[i][0]+"_showDB .TreeSpan");
@@ -4756,8 +4756,10 @@ $(".TubeStrands").bind("change",function(){
 ////>>>>>>>>>> function checkbox events for filtering of <<<< Distribution Boards >>>> ////
 	
  function DistributionBoardCheckFilter(Id,folder){
+	 markersDistBoard[Id].setMap(null);
 		$("#"+Id).children('input').bind("change",function() {
 			var folderID = $(this).parents().eq(4).attr('id');
+			markersDistBoard[Id].setMap(null);
 			if(folder == "DB"){
 				folderID = "DB";
 				Id = Id.split("_showDB")[0];
@@ -4803,6 +4805,7 @@ $(".TubeStrands").bind("change",function(){
 						$(this).prop('checked', true);
 						// for map
 						id=$(this).parent().attr('id');
+						markersDistBoard[id].setMap(null);
 						if(folderTree == "DB"){
 							id = id.split("_showDB")[0];
 						}
