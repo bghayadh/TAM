@@ -1073,33 +1073,37 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				window[""+distribBoardList[i][0]]=distribBoardList[i];
 				
 				 if(distribBoardList[i][8]=="backbone") {
-					if(distribBoardList[i][3]>0){
+					/*if(distribBoardList[i][3]>0){
 						str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
 					}
 					else{
 						str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
 					}
+					*/
+					str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
 					$("#DistributionBoard_backbone__"+distribBoardList[i][6]).append(str);
 			
 				}
 				else if(distribBoardList[i][8]=="metro") {
 					
-					if(distribBoardList[i][3]>0){
+				/*	if(distribBoardList[i][3]>0){
 						str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
 					}
 					else{
 						str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
-					}
+					}*/
+					str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
 					$("#DistributionBoard_metro__"+distribBoardList[i][6]).append(str);
 				}
 				else if(distribBoardList[i][8]=="access") {
 					
-					if(distribBoardList[i][3]>0){
+					/*if(distribBoardList[i][3]>0){
 						str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
 					}
 					else{
 						str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
-					}
+					}*/
+					str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
 					$("#DistributionBoard_access__"+distribBoardList[i][6]).append(str);
 				}
 				
@@ -1115,7 +1119,13 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 			}
 			$('#DistribBoard_span').width($("#left").width());
 			$('.DistributionBoard > span').width($("#left").width());
-			AllDistributionBoardFilter("network_tree","CurrentPhysicalLayer");
+			//AllDistributionBoardFilter("network_tree","CurrentPhysicalLayer");
+			
+			AllDistributionBoardCheckFilter("DistributionBoard_access__CurrentPhysicalLayer");
+		    AllDistributionBoardCheckFilter("DistributionBoard_metro__CurrentPhysicalLayer");
+		    AllDistributionBoardCheckFilter("DistributionBoard_backbone__CurrentPhysicalLayer");
+		    AllDistributionBoardCheckFilter("DistributionBoard_f_CurrentPhysicalLayer");
+
 		}
 	
 		if(trenchList!=null){
@@ -14351,7 +14361,7 @@ $("#saveHandhole").click(function () {
 										$("#"+data.distributionBoardId+" > .TreeSpan").css("background-color", "#97b9cc");
 										IdSelectedTemp=data.distributionBoardId;
 
-										var childrenInitial=$("#initial_ul_"+IdNodeSelectedTemp+"").find(' > ul > li');
+										/*var childrenInitial=$("#initial_ul_"+IdNodeSelectedTemp+"").find(' > ul > li');
 										var projectInitial=$("#initial_ul_Projects").find('>ul > #'+IdNodeSelectedTemp);
 										var projectRel=$("#"+IdNodeSelectedTemp+"").find('>ul > #initial_ul_'+IdNodeSelectedTemp);
 										var children =  $("#DistributionBoard_f_"+IdNodeSelectedTemp+"").find(' > ul > li');
@@ -14364,7 +14374,31 @@ $("#saveHandhole").click(function () {
 										children.show('fast');
 										childrenInitial.show('fast');
 										projectInitial.show('fast');
-										projectRel.show('fast');
+										projectRel.show('fast');*/
+										
+										
+					var childrenInitial=$("#initial_ul_"+IdNodeSelectedTemp+"").find(' > ul > li');
+					var children = $("#DistributionBoard_f_"+IdNodeSelectedTemp+"").find(' > ul > li');
+					var networkLevelFolder =  $("#DistributionBoard_f_"+IdNodeSelectedTemp+"").find(' > ul > li >ul >li');
+
+						
+						 
+					$("#initial_ul_"+IdNodeSelectedTemp+" > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
+					$("#initial_ul_Projects > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
+					$("#"+IdNodeSelectedTemp+" > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');	
+					$("#DistributionBoard_f_"+IdNodeSelectedTemp+" > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
+
+
+
+					$("#DistributionBoard_f_"+IdNodeSelectedTemp+" > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
+					$("#DistributionBoard_f_"+IdNodeSelectedTemp+"").find(' > ul > li > .Parentfolder >svg ').removeClass('fa fa-folder').addClass('fa-folder-open');
+				
+					
+											
+					children.show('fast');
+					childrenInitial.show('fast');
+					networkLevelFolder.show('fast');
+
 
 										// scroll to the created db
 										offset=$("#"+data.distributionBoardId).offset().top;																
