@@ -153,8 +153,8 @@ public class CopyParsingDataToALM {
 				       e.printStackTrace();
 				   }
 				
-				logsid = localgetseqNbr(0);
-				 logsid=Gyear+"_"+ "LOGS"+'_'+logsid;
+				//logsid = localgetseqNbr(0);
+				 //logsid=Gyear+"_"+ "LOGS"+'_'+logsid;
 				 
 				 
 			
@@ -169,6 +169,10 @@ public class CopyParsingDataToALM {
 				 		  while (rsinit2.next()) {
 				 			 
 				 			 Timestamp startTime = new Timestamp(System.currentTimeMillis());
+				 			 
+				 			logsid = localgetseqNbr(0);
+							  logsid=Gyear+"_"+ "LOGS"+'_'+logsid;
+							  
 				 			 
 				 			if (StringUtils.equalsIgnoreCase (rsinit2.getString("DOMAIN"),"Mobile Access Domain CIM")) {
 				 				gdomaine="Mobile Access Domain";
@@ -192,6 +196,8 @@ public class CopyParsingDataToALM {
 							logger.info("COPYING DATA OF  " + gdomaine +","+ rsinit2.getString("VENDOR") + "   TO TEMP Tables COMPLETED !");
 							
 							//insert into AUTO_DISCOVERY_LOGS_DETAILS
+							
+							  
 							String logsDetailsid= localgetseqNbr(1);
 							logsDetailsid=Gyear+"_"+ "LOGS_DETAILS"+'_'+logsDetailsid;
 							PreparedStatement insertLogsDetailsstmt = conalm.prepareStatement("insert into AUTO_DISCOVERY_LOGS_DETAILS (LOGS_DETAILS_ID,TIME,ACTIVITY_NAME,ACTIVITY_DESCRIPTION,ATTRIBUTE_NAME,ACTIVITY_TITLE,ACTIVITY_STATUS,QUANTITY,VENDOR,DOMAIN,LOGS_ID)"
@@ -228,7 +234,8 @@ public class CopyParsingDataToALM {
 			 					 		
 								insertLogsDEtailsStmt.executeUpdate();
 								insertLogsDEtailsStmt.close();
-							 
+								//logsid = localgetseqNbr(0);
+							  //logsid=Gyear+"_"+ "LOGS"+'_'+logsid;
 							 PreparedStatement insertLogsstmt = conalm.prepareStatement("insert into AUTO_DISCOVERY_LOGS (LOGS_ID,START_TIME,ACTIVITY_NAME,VENDOR,DOMAIN,STOP_TIME) "
 								 		+ "values('"+logsid+"',?,'CopyParsingToALM','"+ rsinit2.getString("VENDOR") +"','"+gdomaine+"',?) ");
 					 		
@@ -445,7 +452,7 @@ public class CopyParsingDataToALM {
 			 stmt0.setString(21,rsp.getString("FROM_TRANS_ID"));		
 			 stmt0.setString(22, rsp.getString("TO_TRANS_ID"));
 			 stmt0.setString(23, rsp.getString("TRANS_TYPE"));
-			 stmt0.setString(24, rsp.getString("ACTIVE_RECORD"));
+			 stmt0.setString(24, "1");
 			 
 			 stmt0.executeUpdate();      
 		     stmt0.close();
@@ -1320,8 +1327,8 @@ public class CopyParsingDataToALM {
 					     
 					     int nbOfNodeModule = 0;
 						 while (rsp.next()) {
-							 stmt2 = conalm.prepareStatement("Insert into TEMP_NODE_MODULE (MODULE_ID,CABINETNO,MODULENO,INVUNITID,IDENTIFICATIONCODE,CONFIGDN,INVUNITTYPE,PARENTDN,RUNTIMEDN,SERIALNUMBER,STATE,UNITPOSITION,VENDORUNITFAMILYTYPE,VENDORUNITTYPENUMBER,SUBRACK_SPECIFIC_TYPE,USERLABEL,VENDORNAME,VERSION,DISTNAME,NODE_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,ACTIVE_RECORD,CREATION_DATE,DOMAIN,VENDOR,TO_TRANS_SOURCE,LINE,NODE_ATTR_PK,ALM_POSITION) "
-							 		+ "values ('"+rsp.getString("MODULE_ID")+"','"+rsp.getString("CABINETNO")+"','"+rsp.getString("MODULENO")+"','"+rsp.getString("INVUNITID")+"','"+rsp.getString("IDENTIFICATIONCODE")+"','"+rsp.getString("CONFIGDN")+"','"+rsp.getString("INVUNITTYPE")+"','"+rsp.getString("PARENTDN")+"','"+rsp.getString("RUNTIMEDN")+"','"+rsp.getString("SERIALNUMBER")+"','"+rsp.getString("STATE")+"','"+rsp.getString("UNITPOSITION")+"','"+rsp.getString("VENDORUNITFAMILYTYPE")+"','"+rsp.getString("VENDORUNITTYPENUMBER")+"','"+rsp.getString("SUBRACK_SPECIFIC_TYPE")+"','"+rsp.getString("USERLABEL")+"','"+rsp.getString("VENDORNAME")+"','"+rsp.getString("VERSION")+"','"+rsp.getString("DISTNAME")+"','"+rsp.getString("NODE_PK")+"',TIMESTAMP '"+rsp.getString("UPDATE_DATE")+"','"+rsp.getString("FILENAME")+"','"+rsp.getString("STATUS")+"','"+rsp.getString("FROM_TRANS_SOURCE")+"','"+rsp.getString("FROM_TRANS_ID")+"','"+rsp.getString("TO_TRANS_ID")+"','"+rsp.getString("TRANS_TYPE")+"','"+rsp.getString("ACTIVE_RECORD")+"',TIMESTAMP '"+rsp.getString("CREATION_DATE")+"','"+rsp.getString("DOMAIN")+"','"+rsp.getString("VENDOR")+"','"+rsp.getString("TO_TRANS_SOURCE")+"','"+rsp.getString("LINE")+"','"+rsp.getString("NODE_ATTR_PK")+"','"+rsp.getString("ALM_POSITION")+"')");
+							 stmt2 = conalm.prepareStatement("Insert into TEMP_NODE_MODULE (MODULE_ID,CABINETNO,MODULENO,INVUNITID,IDENTIFICATIONCODE,CONFIGDN,INVUNITTYPE,PARENTDN,RUNTIMEDN,SERIALNUMBER,STATE,UNITPOSITION,VENDORUNITFAMILYTYPE,VENDORUNITTYPENUMBER,SUBRACK_SPECIFIC_TYPE,USERLABEL,VENDORNAME,VERSION,DISTNAME,NODE_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,ACTIVE_RECORD,CREATION_DATE,DOMAIN,VENDOR,TO_TRANS_SOURCE,LINE,NODE_ATTR_PK,ALM_POSITION,ANTENNA_STATUS,SOFTVER,HARDWAREVERSION,OTHERS) "
+							 		+ "values ('"+rsp.getString("MODULE_ID")+"','"+rsp.getString("CABINETNO")+"','"+rsp.getString("MODULENO")+"','"+rsp.getString("INVUNITID")+"','"+rsp.getString("IDENTIFICATIONCODE")+"','"+rsp.getString("CONFIGDN")+"','"+rsp.getString("INVUNITTYPE")+"','"+rsp.getString("PARENTDN")+"','"+rsp.getString("RUNTIMEDN")+"','"+rsp.getString("SERIALNUMBER")+"','"+rsp.getString("STATE")+"','"+rsp.getString("UNITPOSITION")+"','"+rsp.getString("VENDORUNITFAMILYTYPE")+"','"+rsp.getString("VENDORUNITTYPENUMBER")+"','"+rsp.getString("SUBRACK_SPECIFIC_TYPE")+"','"+rsp.getString("USERLABEL")+"','"+rsp.getString("VENDORNAME")+"','"+rsp.getString("VERSION")+"','"+rsp.getString("DISTNAME")+"','"+rsp.getString("NODE_PK")+"',TIMESTAMP '"+rsp.getString("UPDATE_DATE")+"','"+rsp.getString("FILENAME")+"','"+rsp.getString("STATUS")+"','"+rsp.getString("FROM_TRANS_SOURCE")+"','"+rsp.getString("FROM_TRANS_ID")+"','"+rsp.getString("TO_TRANS_ID")+"','"+rsp.getString("TRANS_TYPE")+"','"+rsp.getString("ACTIVE_RECORD")+"',TIMESTAMP '"+rsp.getString("CREATION_DATE")+"','"+rsp.getString("DOMAIN")+"','"+rsp.getString("VENDOR")+"','"+rsp.getString("TO_TRANS_SOURCE")+"','"+rsp.getString("LINE")+"','"+rsp.getString("NODE_ATTR_PK")+"','"+rsp.getString("ALM_POSITION")+"','"+rsp.getString("ANTENNA_STATUS")+"','"+rsp.getString("SOFTVER")+"','"+rsp.getString("HARDWAREVERSION")+"','"+rsp.getString("OTHERS")+"')");
 
 							 stmt2.executeUpdate();
 							 stmt2.close();
@@ -1604,7 +1611,7 @@ public class CopyParsingDataToALM {
 
 		          stmttype.close();
 
-					 return min;
+					 return min+1;
 
 		  }
 }

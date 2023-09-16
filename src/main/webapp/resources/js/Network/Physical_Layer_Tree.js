@@ -1074,10 +1074,10 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				
 				 if(distribBoardList[i][8]=="backbone") {
 					if(distribBoardList[i][3]>0){
-						str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distribBoardList[i][3]+" </span></li></ul>";
+						str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
 					}
 					else{
-						str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distribBoardList[i][3]+" </span></li></ul>";
+						str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
 					}
 					$("#DistributionBoard_backbone__"+distribBoardList[i][6]).append(str);
 			
@@ -1085,20 +1085,20 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				else if(distribBoardList[i][8]=="metro") {
 					
 					if(distribBoardList[i][3]>0){
-						str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distribBoardList[i][3]+" </span></li></ul>";
+						str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
 					}
 					else{
-						str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distribBoardList[i][3]+" </span></li></ul>";
+						str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
 					}
 					$("#DistributionBoard_metro__"+distribBoardList[i][6]).append(str);
 				}
 				else if(distribBoardList[i][8]=="access") {
 					
 					if(distribBoardList[i][3]>0){
-						str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distribBoardList[i][3]+" </span></li></ul>";
+						str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
 					}
 					else{
-						str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distribBoardList[i][3]+" </span></li></ul>";
+						str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
 					}
 					$("#DistributionBoard_access__"+distribBoardList[i][6]).append(str);
 				}
@@ -14298,19 +14298,19 @@ $("#saveHandhole").click(function () {
 									window[""+data.distributionBoardId]=[data.distributionBoardId,DistributionBoardLong,DistributionBoardLat,DistributionBoardName,DistributionBoardCapacity,locationId, boardCity];
 						
 									if(actiondistBoardContext=="Insert"){
-									str="<ul><li id='"+data.distributionBoardId+"'  class='DistributionBoard' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+DistributionBoardName+" </span></li></ul>";								
+									str="<ul><li id='"+data.distributionBoardId+"'  class='DistributionBoard' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li></ul>";								
 									 $("#DistributionBoard_"+dbNetLevel+"__"+IdNodeSelectedTemp).append(str);
 									 
 									}else if(actiondistBoardContext=="Update"){
 									  if(DBoldNtwLevel != dbNetLevel){
 									    $("#"+data.distributionBoardId).remove();
-									    str="<ul><li id='"+data.distributionBoardId+"'  class='DistributionBoard' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+DistributionBoardName+" </span></li></ul>";								
+									    str="<ul><li id='"+data.distributionBoardId+"'  class='DistributionBoard' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li></ul>";								
 										$("#DistributionBoard_"+dbNetLevel+"__"+IdNodeSelectedTemp).append(str);
 									}
 									}
 									else{
 									 $("#"+data.distributionBoardId).children(':checkbox').prop( "checked", true );
-						             $("#"+data.distributionBoardId+"> .TreeSpan").html("<img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+DistributionBoardName+" </span></li>");
+						             $("#"+data.distributionBoardId+"> .TreeSpan").html("<img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li>");
 									 }
 									 		
 									$("#"+data.distributionBoardId).contextmenu(function(){
@@ -15826,7 +15826,7 @@ $("#saveHandhole").click(function () {
 									//	distributionBoardId=data.distributionBoardId;
 										window[""+data.distributionBoardDetails[i][0]]=[data.distributionBoardDetails[i][0],data.distributionBoardDetails[i][1],data.distributionBoardDetails[i][2],data.distributionBoardDetails[i][3],data.distributionBoardDetails[i][4],data.distributionBoardDetails[i][5], data.distributionBoardDetails[i][6]];
 							
-										str="<ul><li id='"+data.distributionBoardDetails[i][0]+"'  class='DistributionBoard' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+data.distributionBoardDetails[i][3]+" </span></li></ul>";								
+										str="<ul><li id='"+data.distributionBoardDetails[i][0]+"'  class='DistributionBoard' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+data.distributionBoardDetails[i][3]+"/"+data.distributionBoardDetails[i][0]+" </span></li></ul>";								
 										//$("#DistributionBoard_f_"+IdNodeSelectedTemp+"").append(str);
 										$("#DistributionBoard_"+data.distributionBoardDetails[i][7]+"__"+IdNodeSelectedTemp).append(str);
 										
