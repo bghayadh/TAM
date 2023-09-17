@@ -4958,7 +4958,7 @@ function AllDistributionBoardCheckFilter(Id) {
 	function AllNodeActiveCheckFilter(Id) {
 
 	$("#"+Id).children('input').bind("change",function() {
-
+           markerClusterNodeActive.clearMarkers();
 		if ($(this).is(':checked')){				
 				
 			$(this).parent().find('input:checkbox').each(function(){
@@ -4991,7 +4991,7 @@ function AllDistributionBoardCheckFilter(Id) {
 					NodeID=$(this).parent().attr('id');
 					if(markersNodeActive[NodeID]){						
 						markersNodeActive[NodeID].setMap(null);	
-						markerClusterNodeActive.removeMarker(markersNodeActive[NodeID]);
+						//markerClusterNodeActive.removeMarker(markersNodeActive[NodeID]);
 					}
 				 }						
 					
