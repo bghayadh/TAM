@@ -1622,19 +1622,8 @@ public class PhysicalLayerController {
 								.list();
 						
 						NodeActiveList =  session.createSQLQuery(
-								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE DOMAIN IN ('Enterprise','Transmission') AND SUB_DOMAIN_TYPE IN ('DWDM','SDH','GPON','MSAN') ").list();
+								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE ").list();
 					
-						/*EntrepriseList =  session.createSQLQuery(
-								"SELECT DISTINCT A.NODE_PK,A.NODE_NAME,A.NODE_PK || ':'  || NODE_NAME,A.DOMAIN,A.SITE_ID,B.LONGITUDE,B.LATITUDE,A.NODE_ID FROM NODE_ACTIVE A LEFT JOIN WAREHOUSE B ON B.SITE_ID = A.SITE_ID WHERE DOMAIN = 'Enterprise'").list();
-					
-						TransmissionList =  session.createSQLQuery(
-								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID FROM NODE_ACTIVE  WHERE DOMAIN = 'Transmission'").list();
-						
-						CoreList =  session.createSQLQuery(
-								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID FROM NODE_ACTIVE  WHERE DOMAIN = 'Core'").list();
-						
-						AccessList =  session.createSQLQuery(
-								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID FROM NODE_ACTIVE  WHERE DOMAIN = 'Ran'").list();*/
 						
 					}
 

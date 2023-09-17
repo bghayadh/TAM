@@ -232,15 +232,15 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			}
 			
 			
-			if(NodeActiveList!=null)
+			/*if(NodeActiveList!=null)
 			{
 				for(i=0;i<NodeActiveList.length;i++){			
 			            create_Marker_Click(NodeActiveList[i][0],NodeActiveList[i][1],NodeActiveList[i][5],NodeActiveList[i][6],markersNodeActive,markerClusterNodeActive,"","");				
 						NodeActiveCheckFilter(NodeActiveList[i][0]);
 				}
-			}
+			}*/
 			
-			/*if(NodeActiveList != null){
+			if(NodeActiveList != null){
 			   for(i=0;i<NodeActiveList.length;i++){
 			   
 			   if(NodeActiveList[i][3]=='Enterprise'){
@@ -264,7 +264,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			   }
 			   
 			   }
-			}*/
+			}
 			
 	var end2 = performance.now();
 			allElementsCheckFilter();	
