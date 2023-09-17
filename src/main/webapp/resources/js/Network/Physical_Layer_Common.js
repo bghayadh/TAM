@@ -1094,11 +1094,11 @@ function createHandhole_Marker_Click(Id,Name,Long,Lat,markersHandhole,markerClus
 									//markerClusterDistBoard.addMarker(markersDistBoard[""+distributionBoardList[i][0]+"_showDB"]);
 									markerClusterDistBoard.addMarker(markersDistBoard[""+distributionBoardList[i][0]]);
 									DistributionBoardCheckFilter(distributionBoardList[i][0]+"_showDB","DB");
-									AllDistributionBoardCheckFilter(distributionBoardList[i][0]);
+									//AllDistributionBoardCheckFilter(distributionBoardList[i][0]+"_showDB");
 								}
 								
 							//	AllDistributionBoardFilter("DB","DB");
-								
+								AllDistributionBoardCheckFilter("DistributionBoard_f_showDB");
 									
 							}
 					distributionBoardList = null;
@@ -4899,7 +4899,7 @@ $(".TubeStrands").bind("change",function(){
 		});
 	}
 function AllDistributionBoardCheckFilter(Id) {
-
+	console.log("entered Id "+ Id);
 	$("#"+Id).children('input').bind("change",function() {
 
 		if ($(this).is(':checked')){				
@@ -4910,6 +4910,7 @@ function AllDistributionBoardCheckFilter(Id) {
 					
 			 if($(this).parent().hasClass('DistributionBoard')){
 					dbID=$(this).parent().attr('id');
+					console.log("entered Id "+ dbID);
 					if(markersDistBoard[dbID]){	
 					  if(markersDistBoard[dbID].getMap()==null){	
 						markerClusterDistBoard.removeMarker(markersDistBoard[dbID]);	
