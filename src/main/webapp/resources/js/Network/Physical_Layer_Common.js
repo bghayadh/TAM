@@ -1137,25 +1137,11 @@ function createHandhole_Marker_Click(Id,Name,Long,Lat,markersHandhole,markerClus
 				 markerType="DistributionBoard";
 			 }
 			 
-			  else if (markers == markersNodes && marker_Cluster == markerClusterNodes) {
-				 mapIcon = iconNodes; 
-				 markerType="Entreprise";
+			   else if (markers == markersNodeActive && marker_Cluster == markerClusterNodeActive) {
+				 mapIcon = iconNodeActive; 
+				 markerType="NodeActive";
 			 }
 			 
-			    else if (markers == markersTransmission && marker_Cluster == markerClusterTransmission) {
-				 mapIcon = iconTransmission; 
-				 markerType="Transmission";
-			 }
-			 
-			  else if (markers == markersCore && marker_Cluster == markerClusterCore) {
-				 mapIcon = iconCore; 
-				 markerType="Core";
-			 }
-			 
-			  else if (markers == markersRan && marker_Cluster == markerClusterRan) {
-				 mapIcon = iconRan; 
-				 markerType="Ran";
-			 }
 			 
 			 else {
 					if(Type == "Junction"){
@@ -1166,9 +1152,6 @@ function createHandhole_Marker_Click(Id,Name,Long,Lat,markersHandhole,markerClus
 					 }
 					 markerType="Handhole";
 			 }
-			 
-			 
-			 
 
 			 if(!markers[Id]){
 				
@@ -1183,7 +1166,7 @@ function createHandhole_Marker_Click(Id,Name,Long,Lat,markersHandhole,markerClus
 				markers.push(Mapmarker);
 				
 				
-				if(markerType=="DistributionBoard") {
+				if(markerType=="DistributionBoard" || markerType=="NodeActive") {
 					
 				   google.maps.event.addListener(Mapmarker, "click", function (e) {
 					
@@ -4867,10 +4850,57 @@ $(".TubeStrands").bind("change",function(){
 			
 		});
 	}	
+	
+	 function NodeActiveCheckFilter(Id){
+	   markersNodeActive[Id].setMap(null);
+		$("#"+Id).children('input').bind("change",function() {
+			var folderID = $(this).parents().eq(4).attr('id');
+			markersNodeActive[Id].setMap(null);
+			
+			console.log(folderID);
+			if ($(this).is(':checked')){
+				markersNodeActive[Id].setMap(map);					
+				markerClusterNodeActive.addMarker(markersNodeActive[Id]);
+			}
+			else{
+				if(folderID == "initial_ul_CurrentPhysicalLayer"){
+					$("#NodeActive_f_CurrentPhysicalLayer > .AllNodeActive").prop("checked",false);				
+				}
+				 else {
+                    $("#NodeActive_f_"+folderID+ " > .AllNodeActive").prop("checked",false);				
+            }
+				
+				markersNodeActive[Id].setMap(null);							
+				markerClusterNodeActive.removeMarker(markersNodeActive[Id]);			
+			}
+		 if ($(this).parents().eq(2).find('.Nodes:checked').length == $(this).parents().eq(2).find('.Nodes').length) {
+				$(this).parents().eq(2).children('input').prop('checked', true);
+			 }
+			 else{
+				$(this).parents().eq(2).children('input').prop('checked', false);
+			 }	
+		 
+			if( $("#NodeActive_f_CurrentPhysicalLayer").find(".Nodes:checked" ).length == 0 ){
+				$("#nodesActiveCheckAllBoq").prop("checked",false);			
+			}
+			else{
+				$("#nodesActiveCheckAllBoq").prop("checked",true);			
+			}
+		 
+	
+			if( $("#NodeActive_f_CurrentPhysicalLayer").find(".Nodes:checked" ).length ==  $("#NodeActive_f_CurrentPhysicalLayer").find(".Nodes" ).length ){
+				$("#NodeActive_f_CurrentPhysicalLayer > .AllNodeActive").prop("checked",true);	
+			}
+			else{
+				$("#NodeActive_f_CurrentPhysicalLayer > .AllNodeActive").prop("checked",false);	
+		
+			}
+			
+		});
+	}
 function AllDistributionBoardCheckFilter(Id) {
 
 	$("#"+Id).children('input').bind("change",function() {
-				//markerClusterDistBoard.clearMarkers();	
 
 		if ($(this).is(':checked')){				
 				
@@ -4895,8 +4925,6 @@ function AllDistributionBoardCheckFilter(Id) {
 			
 		}// end check  case 
 				
-				
-			
 		// uncheck case 
 			else{		
 			
@@ -4909,15 +4937,9 @@ function AllDistributionBoardCheckFilter(Id) {
 					if(markersDistBoard[dbID]){						
 						markersDistBoard[dbID].setMap(null);	
 						markerClusterDistBoard.removeMarker(markersDistBoard[dbID]);
-					}
-				
-					
-				 }	
-										
-					
-			});
-			
-	   			
+					}	
+				 }									
+			});			
 	}
 			if ($('.BackboneDB').is(':checked') && $('.MetroDB').is(':checked') && $('.AccessDB').is(':checked')){			
             	$('.AllDistBoards').prop('checked', true);  
@@ -4932,64 +4954,67 @@ function AllDistributionBoardCheckFilter(Id) {
 		});	
 	}
 	
-	
-	 //TO BE DELETED   
-	function AllDistributionBoardFilter(folderTree,folderID){
-			$(".AllDistBoards").bind("change",function() {
-				markerClusterDistBoard.clearMarkers();
-				if ($(this).is(':checked')){
-					$(this).parent().find('.DistBoard').each(function(){				
-						$(this).prop('checked', true);
-						// for map
-						id=$(this).parent().attr('id');
-						markersDistBoard[id].setMap(null);
-						if(folderTree == "DB"){
-							id = id.split("_showDB")[0];
-						}
-						
-						if(markersDistBoard[id].getMap()==null){
-							markersDistBoard[id].setMap(map);			
-							markerClusterDistBoard.addMarker(markersDistBoard[id]);
-						}
-					});
-					
-					/*$("#"+folderTree).find(".DistBoard:checked" ).each(function(){
+	function AllNodeActiveCheckFilter(Id) {
 
-						id=$(this).parent().attr('id');
-						if(markersDistBoard[id].getMap()==null){
-							markersDistBoard[id].setMap(map);			
-							markerClusterDistBoard.addMarker(markersDistBoard[id]);
-						}									
-					});	*/
-					
-					if($("#DistributionBoard_f_CurrentPhysicalLayer > .AllDistBoards").is(":checked") ) {	
-						$("#distBoardCheckAllBoq").prop("checked",true);
-					}				
-				}
+	$("#"+Id).children('input').bind("change",function() {
+
+		if ($(this).is(':checked')){				
 				
-				else{		
-					$(this).parent().find('.DistBoard').each(function(){				
-						$(this).prop('checked', false);
-						// for map
-						id=$(this).parent().attr('id');
-						if(folderTree == "DB"){
-							id = id.split("_showDB")[0];
-						}
-						markersDistBoard[id].setMap(null);							
-						markerClusterDistBoard.removeMarker(markersDistBoard[id]);	
-			
-					});
-
-					$("#distBoardCheckAllBoq").prop("checked",false);
+			$(this).parent().find('input:checkbox').each(function(){
+				$(this).prop('checked', true);
+							
 					
-					if($("#DistributionBoard_f_CurrentPhysicalLayer > .AllDistBoards").is(":checked") ) {	
-						$("#distBoardCheckAllBoq").prop("checked",true);
+			 if($(this).parent().hasClass('NodeActive')){
+					NodeID=$(this).parent().attr('id');
+					if(markersNodeActive[NodeID]){	
+					  if(markersNodeActive[NodeID].getMap()==null){	
+						markerClusterNodeActive.removeMarker(markersNodeActive[NodeID]);	
+						markersNodeActive[NodeID].setMap(map);	
+						markerClusterNodeActive.addMarker(markersNodeActive[NodeID]);
+					  }
 					}
-																				 
-				}	
+					 $("#nodesActiveCheckAllBoq").prop("checked",true);					
+				 }	
 			});
-		}
-																																								  
+			
+		}// end check  case 				
+			
+		// uncheck case 
+			else{		
+			
+				$(this).parent().find('input:checkbox').each(function(){
+				$(this).prop('checked', false);
+							
+					
+			 if($(this).parent().hasClass('NodeActive')){
+					NodeID=$(this).parent().attr('id');
+					if(markersNodeActive[NodeID]){						
+						markersNodeActive[NodeID].setMap(null);	
+						markerClusterNodeActive.removeMarker(markersNodeActive[NodeID]);
+					}
+				 }						
+					
+			});
+			
+	   			
+	}
+			if ($('.EntrepriseMSAN').is(':checked') && $('.TransmissionDWDM').is(':checked') && $('.TransmissionSDH').is(':checked') && $('.TransmissionGPON').is(':checked') ){			
+            	$('.AllNodeActive').prop('checked', true);  
+        	}
+        	else {
+            	$('.AllNodeActive').prop('checked', false);
+        	}
+        
+                if($(".EntrepriseMSAN").is(":checked") || $(".TransmissionDWDM").is(":checked") || $('.TransmissionSDH').is(':checked') || $('.TransmissionGPON').is(':checked') ) {	
+            	$("#nodesActiveCheckAllBoq").prop("checked",true);
+        	}
+        	else {
+        	$("#nodesActiveCheckAllBoq").prop("checked",false);
+        	}
+     
+		});	
+	}
+	
 
 //function checkbox events for filtering of junctions  ////
 function junctionCheckFilter(physicalLayer,manholeId){
@@ -6816,6 +6841,57 @@ function boqCheckFilter(){
 			}
 	});
 	
+	$("#nodesActiveCheckAllBoq").bind("change",function(){
+		if ($(this).is(':checked')){
+			$("#NodeActive_f_CurrentPhysicalLayer > .AllNodeActive").prop("checked",true);	
+			$("#Entreprise__CurrentPhysicalLayer").prop("checked",true);	
+			$("#TransmissionDWDM__CurrentPhysicalLayer").prop("checked",true);	
+			$("#TransmissionSDH__CurrentPhysicalLayer").prop("checked",true);
+			$("#TransmissionGPON__CurrentPhysicalLayer").prop("checked",true);	
+			
+			$("#NodeActive_f_CurrentPhysicalLayer").find(' > ul > li > ul >li ').each(function(){		
+			
+				var nodeActiveId=$(this).attr('id');
+				$("#"+nodeActiveId).children(':checkbox').prop( "checked", true );
+				
+				if(markersNodeActive[nodeActiveId].getMap()==null){				
+				
+						
+					markersNodeActive[nodeActiveId].setMap(map);			
+					markerClusterNodeActive.addMarker(markersNodeActive[nodeActiveId]);
+					$("#"+nodeActiveId).children(':checkbox').prop( "checked", true );
+				}
+					
+				});
+			}
+			else{
+				$("#NodeActive_f_CurrentPhysicalLayer > .AllNodeActive").prop("checked",false);	
+				$("#Entreprise__CurrentPhysicalLayer").prop("checked",false);	
+				$("#TransmissionDWDM__CurrentPhysicalLayer").prop("checked",false);	
+				$("#TransmissionSDH__CurrentPhysicalLayer").prop("checked",false);	
+				$("#TransmissionGPON__CurrentPhysicalLayer").prop("checked",false);	
+						
+				$("#NodeActive_f_CurrentPhysicalLayer").find(' > ul > li >ul >li ').each(function(){			
+				
+				var nodeActiveId=$(this).attr('id');
+				$("#"+nodeActiveId).children(':checkbox').prop( "checked", false );
+				
+				markersNodeActive[nodeActiveId].setMap(null);	
+				$("#"+nodeActiveId).children(':checkbox').prop( "checked", false );
+				markerClusterNodeActive.clearMarkers();
+				});
+		  		
+		  		$("#network_tree").find(".Nodes:checked" ).each(function(){
+
+					id=$(this).parent().attr('id');
+					if(markersNodeActive[id].getMap()==null){
+						markersNodeActive[id].setMap(map);			
+						markerClusterNodeActive.addMarker(markersNodeActive[id]);
+					}		
+				});							
+			}
+	});
+	
 		$('#fiberCheckAllBoq').bind("change",function() {	
 			
 			if ($(this).is(':checked')){
@@ -7517,10 +7593,7 @@ function allElementsCheckFilter(){
 		markerClusterManhole.clearMarkers();
 		markerClusterHandhole.clearMarkers();
 		markerClusterDistBoard.clearMarkers();
-		markerClusterNodes.clearMarkers();
-		markerClusterTransmission.clearMarkers();
-		markerClusterCore.clearMarkers();
-		markerClusterRan.clearMarkers();
+		markerClusterNodeActive.clearMarkers();
 		
 		$("#distBoardCheckAllBoq").prop("checked",false);
 		$("#manholeCheckAllBoq").prop("checked",false);
@@ -7529,8 +7602,8 @@ function allElementsCheckFilter(){
 		$("#transmissionCheckAllBoq").prop("checked",false);
 		$("#coreCheckAllBoq").prop("checked",false);
 		$("#ranCheckAllBoq").prop("checked",false);
+		$("#nodesActiveCheckAllBoq").prop("checked",false);
 			
-
 		if ($(this).is(':checked')){		
 			$(this).parent().find('ul > li').each(function(){
 				
@@ -7716,45 +7789,15 @@ function allElementsCheckFilter(){
 				}
 				else if($(this).hasClass('Nodes')){
 					id=$(this).parent().attr('id');
-					if(markersNodes[id].getMap()==null){
+					if(markersNodeActive[id].getMap()==null){
 
-						markersNodes[id].setMap(map);			
-						markerClusterNodes.addMarker(markersNodes[id]);
-						$("#entrepriseCheckAllBoq").prop("checked",true);
+						markersNodeActive[id].setMap(map);			
+						markerClusterNodeActive.addMarker(markersNodeActive[id]);
+						$("#nodesActiveCheckAllBoq").prop("checked",true);
 						
 					}
 				}
 				
-				else if($(this).hasClass('Transmission')){
-					id=$(this).parent().attr('id');
-					if(markersTransmission[id].getMap()==null){
-
-						markersTransmission[id].setMap(map);			
-						markerClusterTransmission.addMarker(markersTransmission[id]);
-						$("#transmissionCheckAllBoq").prop("checked",true);
-					}
-				}
-				
-				else if($(this).hasClass('Core')){
-					id=$(this).parent().attr('id');
-					if(markersCore[id].getMap()==null){
-
-						markersCore[id].setMap(map);			
-						markerClusterCore.addMarker(markersCore[id]);
-						$("#coreCheckAllBoq").prop("checked",true);
-					}
-				}
-				
-					else if($(this).hasClass('Ran')){
-					id=$(this).parent().attr('id');
-					if(markersRan[id].getMap()==null){
-
-						markersRan[id].setMap(map);			
-						markerClusterRan.addMarker(markersRan[id]);
-						$("#ranCheckAllBoq").prop("checked",true);
-					}
-				}
-
 
 			});
 			
@@ -7876,35 +7919,11 @@ function allElementsCheckFilter(){
 					}
 			   }
 			   
-			   else if($(this).hasClass('Nodes')){
-				   if(markersNodes[$(this).attr('id')].getMap()==null){
+			   else if($(this).hasClass('NodeActive')){
+				   if(markersNodeActive[$(this).attr('id')].getMap()==null){
 
-					   markersNodes[$(this).attr('id')].setMap(map);			
-					   markerClusterNodes.addMarker(markersNodes[$(this).attr('id')]);
-					}
-			   }
-			   
-			      else if($(this).hasClass('Transmission')){
-				   if(markersTransmission[$(this).attr('id')].getMap()==null){
-
-					   markersTransmission[$(this).attr('id')].setMap(map);			
-					   markerClusterTransmission.addMarker(markersTransmission[$(this).attr('id')]);
-					}
-			   }
-			   
-			    else if($(this).hasClass('Core')){
-				   if(markersCore[$(this).attr('id')].getMap()==null){
-
-					   markersCore[$(this).attr('id')].setMap(map);			
-					   markerClusterCore.addMarker(markersCore[$(this).attr('id')]);
-					}
-			   }
-			   
-			    else if($(this).hasClass('Ran')){
-				   if(markersRan[$(this).attr('id')].getMap()==null){
-
-					   markersRan[$(this).attr('id')].setMap(map);			
-					   markerClusterRan.addMarker(markersRan[$(this).attr('id')]);
+					   markersNodeActive[$(this).attr('id')].setMap(map);			
+					   markerClusterNodeActive.addMarker(markersNodeActive[$(this).attr('id')]);
 					}
 			   }
 			   

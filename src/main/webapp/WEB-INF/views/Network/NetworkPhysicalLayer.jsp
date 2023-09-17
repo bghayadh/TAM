@@ -231,26 +231,32 @@
 								<span id="definition">HANDHOLE</span></td>
 							<td><input type="checkbox" id="handholeCheckAllBoq" style="margin-left: 10px;"></td>
 						</tr>
-						<tr>
+							<tr>
+							<td class="Icon "><img style="width: 16px; height: 16px;" src="${pageContext.request.contextPath}/resources/NetworkImages/nodeIcon.png">
+								<span id="definition">Nodes</span></td>
+							<td><input type="checkbox" id="nodesActiveCheckAllBoq" style="margin-left: 10px;"></td>
+						</tr>
+					 	<!--  <tr>
 							<td class="Icon "><img style="width: 16px; height: 16px;" src="${pageContext.request.contextPath}/resources/NetworkImages/purpleCircle.png">
-								<span id="definition">Entreprise</span></td>
-							<td><input type="checkbox" id="entrepriseCheckAllBoq" style="margin-left: 10px;"></td>
+								<span id="definition">MSAN</span></td>
+							<td><input type="checkbox" id="MSANCheckAllBoq" style="margin-left: 10px;"></td>
 						</tr>
 						<tr>
 							<td class="Icon "><img style="width: 16px; height: 16px;" src="${pageContext.request.contextPath}/resources/NetworkImages/BlueCircle.png" >
-								<span id="definition">Transmission</span></td>
-							<td><input type="checkbox" id="transmissionCheckAllBoq" style="margin-left: 10px;"></td>
+								<span id="definition">DWDM</span></td>
+							<td><input type="checkbox" id="DWDMCheckAllBoq" style="margin-left: 10px;"></td>
 						</tr>
 						<tr>
 							<td class="Icon "><img style="width: 16px; height: 16px;" src="${pageContext.request.contextPath}/resources/NetworkImages/black.png" >
-								<span id="definition">Core</span></td>
-							<td><input type="checkbox" id="coreCheckAllBoq" style="margin-left: 10px;"></td>
+								<span id="definition">SDH</span></td>
+							<td><input type="checkbox" id="SDHCheckAllBoq" style="margin-left: 10px;"></td>
 						</tr>
 						<tr>
 							<td class="Icon "><img style="width: 16px; height: 16px;" src="${pageContext.request.contextPath}/resources/NetworkImages/green.png" >
-								<span id="definition">Access(Ran)</span></td>
-							<td><input type="checkbox" id="ranCheckAllBoq" style="margin-left: 10px;"></td>
-						</tr>
+								<span id="definition">GPON</span></td>
+							<td><input type="checkbox" id="GPONCheckAllBoq" style="margin-left: 10px;"></td>
+						</tr>  -->
+						
 						<tr>
 							<td class="Icon "><img src="${pageContext.request.contextPath}/resources/NetworkImages/electrical-panel.png">
 								<span id="definition">DISTRIBUTION BOARD</span></td>
@@ -634,6 +640,7 @@
 										</div>
 									</div>
 								</div>
+								
 							</div>
 							
 							<div class="row">
@@ -6340,8 +6347,8 @@ directionsDisplay.setMap(map);
 		$("#filterSection").append(str);
 
 		  }	 physicalLayerFilter(); // to build click event on Filter Submit.
-	      CreateTree_PhysicalLayer(${physicalLayerList}['Project'],${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['fiber'],${physicalLayerList}['Distribution_Board'],${physicalLayerData}['fiber_Tubes'],${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Auxiliary'],${physicalLayerData}['tubes_Auxiliaries'],${physicalLayerData}['strands_Auxiliaries'],${physicalLayerList}['Trench'],${physicalLayerData}['trench_Auxiliary'],${physicalLayerList}['Junction_Manhole'],${physicalLayerList}['Junction_Handhole'],filterFlag,${physicalLayerList}['duct'],${physicalLayerData}['ductAuxiliary'],${physicalLayerList}['Node'],${physicalLayerList}['Transmission'],${physicalLayerList}['Core'],${physicalLayerList}['Access']);
-		  CreateMap_PhysicalLayer(${physicalLayerList}['Project'],${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['fiber'],${physicalLayerList}['Distribution_Board'],${physicalLayerData}['fiber_Tubes'],${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Auxiliary'],${physicalLayerData}['tubes_Auxiliaries'],${physicalLayerData}['strands_Auxiliaries'],${physicalLayerList}['Trench'],${physicalLayerData}['trench_Auxiliary'],${physicalLayerList}['Node'],${physicalLayerList}['Transmission'],${physicalLayerList}['Core'],${physicalLayerList}['Access']); 
+	      CreateTree_PhysicalLayer(${physicalLayerList}['Project'],${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['fiber'],${physicalLayerList}['Distribution_Board'],${physicalLayerData}['fiber_Tubes'],${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Auxiliary'],${physicalLayerData}['tubes_Auxiliaries'],${physicalLayerData}['strands_Auxiliaries'],${physicalLayerList}['Trench'],${physicalLayerData}['trench_Auxiliary'],${physicalLayerList}['Junction_Manhole'],${physicalLayerList}['Junction_Handhole'],filterFlag,${physicalLayerList}['duct'],${physicalLayerData}['ductAuxiliary'],${physicalLayerList}['Node'],${physicalLayerList}['Transmission'],${physicalLayerList}['Core'],${physicalLayerList}['Access'],${physicalLayerList}['NodeActiveList']);
+		  CreateMap_PhysicalLayer(${physicalLayerList}['Project'],${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['fiber'],${physicalLayerList}['Distribution_Board'],${physicalLayerData}['fiber_Tubes'],${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Auxiliary'],${physicalLayerData}['tubes_Auxiliaries'],${physicalLayerData}['strands_Auxiliaries'],${physicalLayerList}['Trench'],${physicalLayerData}['trench_Auxiliary'],${physicalLayerList}['Node'],${physicalLayerList}['Transmission'],${physicalLayerList}['Core'],${physicalLayerList}['Access'],${physicalLayerList}['NodeActiveList']); 
 		  if(checkedOption == "circleRange"){
 			  openFindNearest(checkedOption,'${closestLatPoint}','${closestLongPoint}','${closestDisRange}','${noP}',${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['Distribution_Board'],${physicalLayerList}['fiber'],${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Tubes'],${physicalLayerList}['Node'],${physicalLayerList}['Transmission'],'${getRelatedPoints}');
 		  }else if(checkedOption == "StartEnd"){

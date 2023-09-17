@@ -7,7 +7,7 @@ function getContext() {
 // To let the layer tab opened when the page is loaded
 
 	
-function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,distribBoardList,fiberTubes,fiberStrands,fiberAuxiliary_Data,tubesAuxiliaries,strandsAuxiliaries,trenchList,trenchAuxiliary_Data,nodeList,TransmissionList,Core,Access,filterFlag){
+function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,distribBoardList,fiberTubes,fiberStrands,fiberAuxiliary_Data,tubesAuxiliaries,strandsAuxiliaries,trenchList,trenchAuxiliary_Data,nodeList,TransmissionList,Core,Access,NodeActiveList,filterFlag){
 
 	var start = performance.now();
 			panPath = [];   // An array of points the current panning action will use
@@ -16,11 +16,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 	
 			markersManhole=[];		
 			markersHandhole=[];
-			markersNodes=[];
-			markersTransmission=[];
-			markersCore=[];
-			markersRan=[];
-			
+			markersNodeActive=[];
 			markersDistBoard=[];
 			markersDistBoardFilter=[];
 			markersTempoDistBoard="";						
@@ -38,14 +34,8 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			markerClusterHandhole.setMap(map);// to be checked !!!!
 			markerClusterDistBoard = new MarkerClusterer();
 			markerClusterDistBoard.setMap(map);// to be checked !!!!
-			markerClusterNodes = new MarkerClusterer();
-			markerClusterNodes.setMap(map);// to be checked !!!!
-			markerClusterTransmission = new MarkerClusterer();
-			markerClusterTransmission.setMap(map);// to be checked !!!!
-			markerClusterCore = new MarkerClusterer();
-			markerClusterCore.setMap(map);// to be checked !!!!
-			markerClusterRan = new MarkerClusterer();
-			markerClusterRan.setMap(map);// to be checked !!!!
+			markerClusterNodeActive = new MarkerClusterer();
+			markerClusterNodeActive.setMap(map);// to be checked !!!!
 	
 			kenya=new google.maps.LatLng(1,38);					
 			LatLanMouse(map);
@@ -98,29 +88,11 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 					scaledSize: new google.maps.Size(40, 40), // scaled size
 			};
 			
-			iconNodes ={
-					url:""+getContext()+"/resources/NetworkImages/purpleCircle.png", // url
-					scaledSize: new google.maps.Size(15, 15), // scaled size
-					
+	       iconNodeActive ={
+					url:""+getContext()+"/resources/NetworkImages/nodeIcon.png", // url
+					scaledSize: new google.maps.Size(30, 30), // scaled size
 			};
-			
-			iconTransmission ={
-					url:""+getContext()+"/resources/NetworkImages/BlueCircle.png", // url
-					scaledSize: new google.maps.Size(15, 15), // scaled size
-					
-			};
-			
-			iconCore ={
-					url:""+getContext()+"/resources/NetworkImages/black.png", // url
-					scaledSize: new google.maps.Size(15, 15), // scaled size
-					
-			};
-			
-			iconRan ={
-					url:""+getContext()+"/resources/NetworkImages/green.png", // url
-					scaledSize: new google.maps.Size(15, 15), // scaled size
-					
-			};
+
 			
 			
 			// Manholes cluster Calculator
@@ -157,8 +129,8 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 				}                   
 			});
 			
-			// Distribution Boards cluster Calculator
 			
+			// Distribution Boards cluster Calculator
 			markerClusterDistBoard.setOptions({								
 				minimumClusterSize: 2,
 				styles: [
@@ -174,67 +146,25 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 				}                   
 			});
 			
-			// Nodes cluster Calculator
-			markerClusterNodes.setOptions( {					  					
-			 	minimumClusterSize: 2,
-				styles: [
-				         {
-				        	 url: getContext()+'/resources/clusterIcons/purpleCluster.png',
-					         height: 60,
-					         width:60,
-					         anchorText:[-2,-4]
-					      },
-				],
-				calculator: function(markers, numStyles) {
-				if (markers.length >= 1) return {text: markers.length, index: 4};
-				}                   
-			});
-			
-			markerClusterTransmission.setOptions( {					  					
-			 	minimumClusterSize: 2,
-				styles: [
-				         {
-				        	 url: getContext()+'/resources/clusterIcons/blueCluster.png',
-					         height: 60,
-					         width:60,
-					         anchorText:[-2,-4]
-					      },
-				],
-				calculator: function(markers, numStyles) {
-				if (markers.length >= 1) return {text: markers.length, index: 5};
-				}                   
-			});
-			
-			markerClusterCore.setOptions( {					  					
-			 	minimumClusterSize: 2,
+				markerClusterNodeActive.setOptions({								
+				minimumClusterSize: 2,
 				styles: [
 				         {
 				        	 url: getContext()+'/resources/clusterIcons/blackCluster.png',
-					         height: 50,
-					         width:50,
-					         anchorText:[-2,-4]
+					         height: 55,
+					         width:55,
+					         anchorText:[-3,-3]
 					      },
 				],
 				calculator: function(markers, numStyles) {
-				if (markers.length >= 1) return {text: markers.length, index: 3};
+					if (markers.length >= 1) return {text: markers.length,index:1}; 
 				}                   
 			});
 			
-			markerClusterRan.setOptions( {					  					
-			 	minimumClusterSize: 2,
-				styles: [
-				         {
-				        	 url: getContext()+'/resources/clusterIcons/greenCluster.png',
-					         height: 50,
-					         width: 50,
-					         anchorText:[-2,-4]
-					      },
-				],
-				calculator: function(markers, numStyles) {
-				if (markers.length >= 1) return {text: markers.length, index: 3};
-				}                   
-			});
-	
+			
+			/*    cluster for nodes folder*/
+
+		
 	
 			$(".Initial_CurrentPhysicalLayer > .TreeSpan").on("click",function(){
 		
@@ -245,10 +175,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 						markerClusterManhole.repaint();
 						markerClusterHandhole.repaint();
 						markerClusterDistBoard.repaint();	
-						markerClusterNodes.repaint();	
-						markerClusterTransmission.repaint();
-						markerClusterCore.repaint();
-						markerClusterRan.repaint();
+						markerClusterNodeActive.repaint();
 	
 				});				
 			});
@@ -304,37 +231,40 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 				//AllDistributionBoardFilter();
 			}
 			
-			/* Create node enterprise in the map*/
-			if(nodeList !=null){
-				for(i=0;i<nodeList.length;i++){
-						create_Marker_Click(nodeList[i][0],nodeList[i][1],nodeList[i][5],nodeList[i][6],markersNodes,markerClusterNodes,"","");				
-						NodesCheckFilter(nodeList[i][0]);						
+			
+			if(NodeActiveList!=null)
+			{
+				for(i=0;i<NodeActiveList.length;i++){			
+			            create_Marker_Click(NodeActiveList[i][0],NodeActiveList[i][1],NodeActiveList[i][5],NodeActiveList[i][6],markersNodeActive,markerClusterNodeActive,"","");				
+						NodeActiveCheckFilter(NodeActiveList[i][0]);
 				}
 			}
 			
-			/* Create node Transmission in the map*/
-			if(TransmissionList !=null){
-				for(i=0;i<TransmissionList.length;i++){
-						create_Marker_Click(TransmissionList[i][0],TransmissionList[i][1],TransmissionList[i][5],TransmissionList[i][6],markersTransmission,markerClusterTransmission,"","");				
-						TransmissionCheckFilter(TransmissionList[i][0]);						
-				}
-			}
-			
-			/* Create node Core in the map*/
-			if(Core !=null){
-				for(i=0;i<Core.length;i++){
-						create_Marker_Click(Core[i][0],Core[i][1],Core[i][5],Core[i][6],markersCore,markerClusterCore,"","");				
-						CoreCheckFilter(Core[i][0]);						
-				}
-			}
-			
-			/* Create node Access(Ran) in the map*/
-			if(Access !=null){
-				for(i=0;i<Access.length;i++){
-						create_Marker_Click(Access[i][0],Access[i][1],Access[i][5],Access[i][6],markersRan,markerClusterRan,"","");				
-						RanCheckFilter(Access[i][0]);						
-				}
-			}
+			/*if(NodeActiveList != null){
+			   for(i=0;i<NodeActiveList.length;i++){
+			   
+			   if(NodeActiveList[i][3]=='Enterprise'){
+			            create_Marker_Click(NodeActiveList[i][0],NodeActiveList[i][1],NodeActiveList[i][5],NodeActiveList[i][6],markersNodeActive,markerClusterNodeActive,"","");				
+						NodeActiveCheckFilter(NodeActiveList[i][0]);
+			   }
+			 
+			 else if(NodeActiveList[i][3]=='Transmission' && NodeActiveList[i][8]=='DWDM'){
+			            create_Marker_Click(NodeActiveList[i][0],NodeActiveList[i][1],NodeActiveList[i][5],NodeActiveList[i][6],markersNodeActive,markerClusterNodeActive,"","");				
+						NodeActiveCheckFilter(NodeActiveList[i][0]);
+			   }
+			   
+			 else if(NodeActiveList[i][3]=='Transmission' && NodeActiveList[i][8]=='SDH'){
+			            create_Marker_Click(NodeActiveList[i][0],NodeActiveList[i][1],NodeActiveList[i][5],NodeActiveList[i][6],markersNodeActive,markerClusterNodeActive,"","");				
+						NodeActiveCheckFilter(NodeActiveList[i][0]);
+			   }
+			   
+			 else if(NodeActiveList[i][3]=='Transmission' && NodeActiveList[i][8]=='GPON'){
+			            create_Marker_Click(NodeActiveList[i][0],NodeActiveList[i][1],NodeActiveList[i][5],NodeActiveList[i][6],markersNodeActive,markerClusterNodeActive,"","");				
+						NodeActiveCheckFilter(NodeActiveList[i][0]);
+			   }
+			   
+			   }
+			}*/
 			
 	var end2 = performance.now();
 			allElementsCheckFilter();	
