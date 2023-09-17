@@ -88,9 +88,10 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 					scaledSize: new google.maps.Size(40, 40), // scaled size
 			};
 			
-	       iconNodeActive ={
-				    url:""+getContext()+"/resources/NetworkImages/green.png", // url
-					scaledSize: new google.maps.Size(20, 20), // scaled size
+			iconNodeActive = {
+				url:getContext()+"/resources/NetworkImages/GreenCircle.png", // url
+				scaledSize: new google.maps.Size(20, 20), // scaled size
+				
 			};
 
 			
