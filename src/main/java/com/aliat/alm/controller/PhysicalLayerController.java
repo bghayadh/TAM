@@ -133,6 +133,9 @@ public class PhysicalLayerController {
 					List<Object[]> TransmissionList = new ArrayList<Object[]>();
 					List<Object[]> CoreList = new ArrayList<Object[]>();
 					List<Object[]> AccessList = new ArrayList<Object[]>();
+					List<Object[]> NodeActiveList = new ArrayList<Object[]>();
+
+					
 
 					// System.out.println("url is "+request.getParameter("selectedField"));
 					String checkedOption = "all";
@@ -1618,18 +1621,9 @@ public class PhysicalLayerController {
 								"SELECT B.LONGITUDE,B.LATITUDE,B.WARE_ID,B.AUXILIARY_POINT_ID,B.AUXILIARY_POINT_NAME,B.DUCT_ID,B.DISTANCE_FROM_SOURCE,B.SEQ_SORTING,B.AUXILIARY_ID FROM DUCTS A,DUCT_AUXILIARY_POINTS B WHERE A.DUCT_ID=B.DUCT_ID ORDER BY B.SEQ_SORTING ASC ")
 								.list();
 						
-						EntrepriseList =  session.createSQLQuery(
-								"SELECT DISTINCT A.NODE_PK,A.NODE_NAME,A.NODE_PK || ':'  || NODE_NAME,A.DOMAIN,A.SITE_ID,B.LONGITUDE,B.LATITUDE,A.NODE_ID FROM NODE_ACTIVE A LEFT JOIN WAREHOUSE B ON B.SITE_ID = A.SITE_ID WHERE DOMAIN = 'Enterprise'").list();
-					
-						TransmissionList =  session.createSQLQuery(
-								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID FROM NODE_ACTIVE  WHERE DOMAIN = 'Transmission'").list();
-						
-						CoreList =  session.createSQLQuery(
-								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID FROM NODE_ACTIVE  WHERE DOMAIN = 'Core'").list();
-						
-						AccessList =  session.createSQLQuery(
-								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID FROM NODE_ACTIVE  WHERE DOMAIN = 'Ran'").list();
-						
+						NodeActiveList =  session.createSQLQuery(
+								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE ").list();
+		
 					}
 
 					LinkedHashMap<String, List<?>> physicalLayerData = new LinkedHashMap<String, List<?>>();// linkedHashmap
@@ -1735,6 +1729,7 @@ public class PhysicalLayerController {
 					physicalLayerList.put("Transmission", TransmissionList);
 					physicalLayerList.put("Core", CoreList);
 					physicalLayerList.put("Access", AccessList);
+					physicalLayerList.put("NodeActiveList", NodeActiveList);
 					physicalLayerList.put("duct", ductList);
 					physicalLayerData.put("trench_Auxiliary", trenchAuxiliary_Data);
 					physicalLayerData.put("strands_Auxiliaries", strandsAuxiliaries);
@@ -2956,11 +2951,10 @@ public class PhysicalLayerController {
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 
-			String selectedNodesIdContext = request.getParameter("selectedNodesIdContext");
+			String selectedNodeAcvtiveContext = request.getParameter("selectedNodeAcvtiveContext");
 			try {
 				Object[] NodesDetails = (Object[]) session.createSQLQuery(
-						"SELECT A.NODE_PK,A.UNIQUE_NODE_ID,A.NODE_ID,A.NODE_NAME,A.NODE_TYPE,A.DOMAIN,A.NODE_SOURCE,A.NODE_MODEL,A.SITE_ID,A.WARE_ID,TO_CHAR(A.CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(A.UPDATE_DATE, 'MM/dd/YYYY HH:MI AM'),B.LONGITUDE,B.LATITUDE FROM NODE_ACTIVE A left join WAREHOUSE B ON A.SITE_ID = B.SITE_ID WHERE DOMAIN = 'Enterprise' AND NODE_PK ='"+selectedNodesIdContext+"'").uniqueResult();
-				
+						"SELECT NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_SOURCE,SUB_DOMAIN_TYPE,SITE_ID,WARE_ID,TO_CHAR(CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(UPDATE_DATE, 'MM/dd/YYYY HH:MI AM'),LONGITUDE,LATITUDE FROM NODE_ACTIVE WHERE NODE_PK ='"+selectedNodeAcvtiveContext+"'").uniqueResult();
 				rtn.put("NodesDetails", NodesDetails);
 
 			} catch (Exception e) {
@@ -4018,15 +4012,21 @@ public class PhysicalLayerController {
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
-				Object nodesCount = session.createSQLQuery("select count (*) from node_active where domain = 'Enterprise'").list();
-				rtn.put("nodesCount", nodesCount);
-				Object TransmissionCount = session.createSQLQuery("select count (*) from node_active where domain = 'Transmission'").list();
-				rtn.put("TransmissionCount", TransmissionCount);
-				Object CoreCount = session.createSQLQuery("select count (*) from node_active where domain = 'Core'").list();
-				rtn.put("CoreCount", CoreCount);
-				Object AccessCount = session.createSQLQuery("select count (*) from node_active where domain = 'Access'").list();
-				rtn.put("AccessCount", AccessCount);
+				Object MSANCount = session.createSQLQuery("select count (*) from node_active where domain = 'Enterprise'").list();
+				rtn.put("MSANCount", MSANCount);
+				
+				Object DWDMCount = session.createSQLQuery("select count (*) from node_active where domain = 'Transmission' AND SUB_DOMAIN_TYPE = 'DWDM'").list();
+				rtn.put("DWDMCount", DWDMCount);
+				
+				Object SDHCount = session.createSQLQuery("select count (*) from node_active where domain = 'Transmission' AND SUB_DOMAIN_TYPE = 'SDH'").list();
+				rtn.put("SDHCount", SDHCount);
+				
+				Object GPONCount = session.createSQLQuery("select count (*) from node_active where domain = 'Transmission' AND SUB_DOMAIN_TYPE = 'GPON'").list();
+				rtn.put("GPONCount", GPONCount);
 
+				Object AllNodesCount = session.createSQLQuery("SELECT COUNT(*) FROM node_active WHERE domain IN ('Enterprise' , 'Transmission') AND SUB_DOMAIN_TYPE IN ('DWDM','SDH','GPON','MSAN')  ").list();
+				rtn.put("AllNodesCount", AllNodesCount);
+				
 			} catch (Exception e) {
 				sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));

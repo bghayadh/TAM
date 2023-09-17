@@ -240,7 +240,7 @@ var TargetFiberStrand= {
 		//tubeNumber:"tubeNumber",
 		//tubeColor:"tubeColor"
 };
-function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,distribBoardList,fiberTubes,fiberStrands,fiberAuxiliary_Data,tubesAuxiliaries,strandsAuxiliaries,trenchList,trenchAuxiliary_Data,ListManholeJunction,ListHandholeJunction,filterFlag,ductList,ductAuxiliary_Data,nodeList,Transmission,Core,Access){
+function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,distribBoardList,fiberTubes,fiberStrands,fiberAuxiliary_Data,tubesAuxiliaries,strandsAuxiliaries,trenchList,trenchAuxiliary_Data,ListManholeJunction,ListHandholeJunction,filterFlag,ductList,ductAuxiliary_Data,nodeList,Transmission,Core,Access,NodeActiveList){
 	EnableOriginationFiber=false;
 	
 	fiberArray=[];
@@ -251,6 +251,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 	allTubes=[];
 	allStrands=[];
 	allDB = [];
+	allNodes = [];
 	
 		$("#saveManhole").unbind(); 
 		$("#saveHandhole").unbind();
@@ -293,17 +294,9 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 		str="<ul><li id='Trench_f_CurrentPhysicalLayer' style='display:none;' class='Trench_f_CurrentPhysicalLayer'><input type='checkbox' class='AllTrenches'></input> <span id='Trench_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Trench_span' style='color:black;width:395px' class='TreeSpan'>Trench <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' id='pushTrenchPointsCurrentPhysicalLayer' class='pushPoints'> <img src='"+getContext()+"/resources/NetworkImages/remove.png' hidden style='margin-left:10px' id='cancelTrenchPointsCurrentPhysicalLayer' class='clearPoints'></span></li></ul>";
 		$("#initial_ul_CurrentPhysicalLayer").append(str);
 		
-		str="<ul><li id='Entreprise_f_CurrentPhysicalLayer' style='display:none;' class='Entreprise_f_CurrentPhysicalLayer'><input type='checkbox' unchecked class='AllEntreprise checkFilter'></input> <span id='Entreprise_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Entreprise_span' style='color:black;width:395px' class='TreeSpan'>Enterprise </span></li></ul>";
+		str="<ul><li id='NodeActive_f_CurrentPhysicalLayer' style='display:none;' class='NodeActive_f_CurrentPhysicalLayer'><input type='checkbox' unchecked class='AllNodeActive checkFilter'></input> <span id='NodeActive_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='NodeActive_span' class='TreeSpan' style='color:black;width:395px'> Nodes </span></li></ul>";
 		$("#initial_ul_CurrentPhysicalLayer").append(str);
 		
-		str="<ul><li id='Transmission_f_CurrentPhysicalLayer' style='display:none;' class='Transmission_f_CurrentPhysicalLayer'><input type='checkbox' unchecked class='AllTransmission checkFilter'></input> <span id='Transmission_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Transmission_span' style='color:black;width:395px' class='TreeSpan'>Transmission </span></li></ul>";
-		$("#initial_ul_CurrentPhysicalLayer").append(str);
-		
-		str="<ul><li id='Core_f_CurrentPhysicalLayer' style='display:none;' class='Core_f_CurrentPhysicalLayer'><input type='checkbox' unchecked class='AllCore checkFilter'></input> <span id='Core_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Core_span' style='color:black;width:395px' class='TreeSpan'>Core</span></li></ul>";
-		$("#initial_ul_CurrentPhysicalLayer").append(str);
-		
-		str="<ul><li id='Ran_f_CurrentPhysicalLayer' style='display:none;' class='Ran_f_CurrentPhysicalLayer'><input type='checkbox' unchecked class='AllRan checkFilter'></input> <span id='Ran_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Ran_span' style='color:black;width:395px' class='TreeSpan'>Access</span></li></ul>";
-		$("#initial_ul_CurrentPhysicalLayer").append(str);
 /*		
 		tree_Prop("#initial_ul_CurrentPhysicalLayer > .folder");
 		tree_PropPhysical("#Manhole_f_CurrentPhysicalLayer > .folder"); 
@@ -330,6 +323,17 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 		str="<ul><li id ='DistributionBoard_access__CurrentPhysicalLayer' style='display:none;' class='accessDBFolder'> <input type='checkbox' class='AccessDB checkFilter' id ='AccessDB__CurrentPhysicalLayer' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Access </span></li></ul></li></ul>";
 		$("#DistributionBoard_f_CurrentPhysicalLayer").append(str);
 
+        str="<ul><li id='Entreprise_MSAN__CurrentPhysicalLayer' style='display:none;' class='EntrepriseNodeFolder'><input type='checkbox' class='EntrepriseMSAN checkFilter' id ='Entreprise__CurrentPhysicalLayer' unchecked name='filter'></input> <span class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:395px' class='TreeSpan'> MSAN </span></li></ul>";
+		$("#NodeActive_f_CurrentPhysicalLayer").append(str);
+		
+		str="<ul><li id='Transmission_DWDM__CurrentPhysicalLayer' style='display:none;' class='TransmissionDWDMFolder'><input type='checkbox' class='TransmissionDWDM checkFilter' id ='TransmissionDWDM__CurrentPhysicalLayer' unchecked name='filter'></input> <span class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:395px' class='TreeSpan'> DWDM </span></li></ul>";
+		$("#NodeActive_f_CurrentPhysicalLayer").append(str);
+		
+		str="<ul><li id='Transmission_SDH__CurrentPhysicalLayer' style='display:none;' class='TransmissionSDHFolder'><input type='checkbox' class='TransmissionSDH checkFilter' id ='TransmissionSDH__CurrentPhysicalLayer' unchecked name='filter'></input> <span class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:395px' class='TreeSpan'> SDH </span></li></ul>";
+		$("#NodeActive_f_CurrentPhysicalLayer").append(str);
+		
+		str="<ul><li id='Transmission_GPON__CurrentPhysicalLayer' style='display:none;' class='TransmissionGPONFolder'><input type='checkbox' class='TransmissionGPON checkFilter' id ='TransmissionGPON__CurrentPhysicalLayer' unchecked name='filter'></input> <span class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:395px' class='TreeSpan'> GPON </span></li></ul>";
+		$("#NodeActive_f_CurrentPhysicalLayer").append(str);
 		
 		/// creat projects node 
 		 var str_Projects="<ul style='margin-left:15px;'><li id='initial_ul_Projects' class='Initial_UlProjects'><input type='checkbox' unchecked name='filter' class='allElements'></input> <span id='initial_spanFolder_Projects' class='Parentfolder'><i class='fa fa-folder' style='color: #08526D;'></i></span><span id='initial_span_Projects' class='TreeSpan' style='color:black;width:436px;'>Projects </span></li></ul>";
@@ -941,126 +945,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				});							
 		   }
 	   }
-	   
-	   	/////////////*********************	NODES Creation In tree	***********************///////////////
-	//-------------------------------------------------------------------------------------------------//
-	if(nodeList!=null) {
-		for(i=0;i<nodeList.length;i++){
-			window[""+nodeList[i][0]]=[];
-			window[""+nodeList[i][0]]=nodeList[i];
-				
-			if(nodeList[i][0]>0){
-               str = "<ul><li id='" + nodeList[i][0] + "' class='NODES' style='display:none;width:100px;'><input type='checkbox' class='Nodes checkFilter' class='filter' name='Element'></input>    <span  class='TreeSpan' style='color:black;width:355px'><img style='width:15px; height:15px;' src='" + getContext() + "/resources/NetworkImages/purpleCircle.png'> " + nodeList[i][2] + " </span></li></ul>";
-			   $("#Entreprise_f_CurrentPhysicalLayer").append(str);  					
-				
-			}
-			else {
-               str = "<ul><li id='" + nodeList[i][0] + "' class='NODES' style='display:none;width:100px;'><input type='checkbox' class='Nodes checkFilter' class='filter' name='Element'></input>    <span  class='TreeSpan' style='color:black;width:355px'><img style='width:15px; height:15px;' src='" + getContext() + "/resources/NetworkImages/purpleCircle.png'> " + nodeList[i][2] + " </span></li></ul>";
-               $("#Entreprise_f_CurrentPhysicalLayer").append(str); 				
-			}	
-			}
-			
-			$('#Entreprise_span').width($("#left").width());
-			$('.NODES > .TreeSpan').width($("#left").width());
-			AllNodesCheckFilter();
-			}
-			
-			$(".NODES > .TreeSpan").contextmenu(function(){				
-			selectedNodesIdContext=$(this).parent().attr('id');
-			IdNodeSelectedTemp=$(this).parents().eq(2).attr('id').split("Entreprise_f_")[1];
-			menuName=singleEntreprise;			
-			openContext(selectedNodesIdContext,"",singleEntreprise,event);
-		});	
-		
-		   	/////////////*********************	Transmission Creation In tree	***********************///////////////
-	//-------------------------------------------------------------------------------------------------//
-	if(Transmission!=null) {
-		for(i=0;i<Transmission.length;i++){
-			window[""+Transmission[i][0]]=[];
-			window[""+Transmission[i][0]]=Transmission[i];
-				
-			if(Transmission[i][0]>0){
-               str = "<ul><li id='" + Transmission[i][0] + "' class='TRANSMISSION' style='display:none;width:100px;'><input type='checkbox' class='Transmission checkFilter' class='filter' name='Element'></input>    <span  class='TreeSpan' style='color:black;width:355px'><img style='width:17px; height:17px;' src='" + getContext() + "/resources/NetworkImages/BlueCircle.png'> " + Transmission[i][2] + " </span></li></ul>";
-			   $("#Transmission_f_CurrentPhysicalLayer").append(str);  					
-				
-			}
-			else {
-               str = "<ul><li id='" + Transmission[i][0] + "' class='TRANSMISSION' style='display:none;width:100px;'><input type='checkbox' class='Transmission checkFilter' class='filter' name='Element'></input>    <span  class='TreeSpan' style='color:black;width:355px'><img style='width:17px; height:17px;' src='" + getContext() + "/resources/NetworkImages/BlueCircle.png'> " + Transmission[i][2] + " </span></li></ul>";
-               $("#Transmission_f_CurrentPhysicalLayer").append(str); 				
-			}	
-			}
-			
-			$('#Transmission_span').width($("#left").width());
-			$('.TRANSMISSION > .TreeSpan').width($("#left").width());
-			AllTransmissionCheckFilter();
-			}
-			
-			$(".TRANSMISSION > .TreeSpan").contextmenu(function(){				
-			selectedTransmissionIdContext=$(this).parent().attr('id');
-			IdTransmissionSelectedTemp=$(this).parents().eq(2).attr('id').split("Transmission_f_")[1];
-			menuName=singleTransmission;			
-			openContext(selectedTransmissionIdContext,"",singleTransmission,event);
-		});		
-		
-	   	/////////////*********************	Core Creation In tree	***********************///////////////
-	//-------------------------------------------------------------------------------------------------//
-	if(Core!=null) {
-		for(i=0;i<Core.length;i++){
-			window[""+Core[i][0]]=[];
-			window[""+Core[i][0]]=Core[i];
-				
-			if(Core[i][0]>0){
-               str = "<ul><li id='" + Core[i][0] + "' class='CORE' style='display:none;width:100px;'><input type='checkbox' class='Core checkFilter' class='filter' name='Element'></input>    <span  class='TreeSpan' style='color:black;width:355px'><img style='width:15px; height:15px;' src='" + getContext() + "/resources/NetworkImages/black.png'> " + Core[i][2] + " </span></li></ul>";
-			   $("#Core_f_CurrentPhysicalLayer").append(str);  					
-				
-			}
-			else {
-               str = "<ul><li id='" + Core[i][0] + "' class='CORE' style='display:none;width:100px;'><input type='checkbox' class='Core checkFilter' class='filter' name='Element'></input>    <span  class='TreeSpan' style='color:black;width:355px'><img style='width:15px; height:15px;' src='" + getContext() + "/resources/NetworkImages/black.png'> " + Core[i][2] + " </span></li></ul>";
-               $("#Core_f_CurrentPhysicalLayer").append(str); 				
-			}	
-			}
-			
-			$('#Core_span').width($("#left").width());
-			$('.Core > .TreeSpan').width($("#left").width());
-			AllCoreCheckFilter();
-			}
-			
-			$(".CORE > .TreeSpan").contextmenu(function(){				
-			selectedCoreIdContext=$(this).parent().attr('id');
-			IdCoreSelectedTemp=$(this).parents().eq(2).attr('id').split("Core_f_")[1];
-			menuName=singleCore;			
-			openContext(selectedCoreIdContext,"",singleCore,event);
-		});		
-		
-		/////////////*********************	Access nodes Creation In tree	***********************///////////////
-	//-------------------------------------------------------------------------------------------------//
-	if(Access!=null) {
-		for(i=0;i<Access.length;i++){
-			window[""+Access[i][0]]=[];
-			window[""+Access[i][0]]=Access[i];
-				
-			if(Access[i][0]>0){
-               str = "<ul><li id='" + Access[i][0] + "' class='RAN' style='display:none;width:100px;'><input type='checkbox' class='Ran checkFilter' class='filter' name='Element'></input>    <span  class='TreeSpan' style='color:black;width:355px'><img style='width:15px; height:15px;' src='" + getContext() + "/resources/NetworkImages/green.png'> " + Access[i][2] + " </span></li></ul>";
-			   $("#Ran_f_CurrentPhysicalLayer").append(str);  					
-				
-			}
-			else {
-               str = "<ul><li id='" + Access[i][0] + "' class='RAN' style='display:none;width:100px;'><input type='checkbox' class='Ran checkFilter' class='filter' name='Element'></input>    <span  class='TreeSpan' style='color:black;width:355px'><img style='width:15px; height:15px;' src='" + getContext() + "/resources/NetworkImages/green.png'> " + Access[i][2] + " </span></li></ul>";
-               $("#Ran_f_CurrentPhysicalLayer").append(str); 				
-			}	
-			}
-			
-			$('#Ran_span').width($("#left").width());
-			$('.Ran > .TreeSpan').width($("#left").width());
-			AllRanCheckFilter();
-			}
-			
-			$(".RAN > .TreeSpan").contextmenu(function(){				
-			selectedRanIdContext=$(this).parent().attr('id');
-			IdRanSelectedTemp=$(this).parents().eq(2).attr('id').split("Ran_f_")[1];
-			menuName=singleRan;			
-			openContext(selectedRanIdContext,"",singleRan,event);
-		});		
+
 	
 	
 	
@@ -1073,36 +958,18 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				window[""+distribBoardList[i][0]]=distribBoardList[i];
 				
 				 if(distribBoardList[i][8]=="backbone") {
-					/*if(distribBoardList[i][3]>0){
-						str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
-					}
-					else{
-						str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
-					}
-					*/
+			
 					str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
 					$("#DistributionBoard_backbone__"+distribBoardList[i][6]).append(str);
 			
 				}
 				else if(distribBoardList[i][8]=="metro") {
-					
-				/*	if(distribBoardList[i][3]>0){
-						str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
-					}
-					else{
-						str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
-					}*/
+		
 					str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
 					$("#DistributionBoard_metro__"+distribBoardList[i][6]).append(str);
 				}
 				else if(distribBoardList[i][8]=="access") {
-					
-					/*if(distribBoardList[i][3]>0){
-						str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
-					}
-					else{
-						str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
-					}*/
+			
 					str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
 					$("#DistributionBoard_access__"+distribBoardList[i][6]).append(str);
 				}
@@ -1119,7 +986,6 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 			}
 			$('#DistribBoard_span').width($("#left").width());
 			$('.DistributionBoard > span').width($("#left").width());
-			//AllDistributionBoardFilter("network_tree","CurrentPhysicalLayer");
 			
 			AllDistributionBoardCheckFilter("DistributionBoard_access__CurrentPhysicalLayer");
 		    AllDistributionBoardCheckFilter("DistributionBoard_metro__CurrentPhysicalLayer");
@@ -1127,7 +993,57 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 		    AllDistributionBoardCheckFilter("DistributionBoard_f_CurrentPhysicalLayer");
 
 		}
-	
+		
+			/////////////*********************	NodeActive creation in tree	***********************///////////////
+			
+		if(NodeActiveList!=null){
+			for(i=0;i<NodeActiveList.length;i++){
+			    allNodes.push(NodeActiveList[i][0]);
+				window[""+NodeActiveList[i][0]]=[];
+				window[""+NodeActiveList[i][0]]=NodeActiveList[i];
+				
+				 if(NodeActiveList[i][3]=='Enterprise') {
+					str="<ul><li id='"+NodeActiveList[i][0]+"'  class='NodeActive' style='display:none;width:100px;'><input type='checkbox' class='Nodes checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img style='width:16px; height:16px;'  class='image' src='"+getContext()+"/resources/NetworkImages/black.png'> "+ NodeActiveList[i][2] +" </span></li></ul>";
+					$("#Entreprise_MSAN__CurrentPhysicalLayer").append(str);
+
+				}
+				
+				else if(NodeActiveList[i][3]=='Transmission' && NodeActiveList[i][8]=='DWDM') {
+					str="<ul><li id='"+NodeActiveList[i][0]+"'  class='NodeActive' style='display:none;width:100px;'><input type='checkbox' class='Nodes checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img style='width:16px; height:16px;'  class='image' src='"+getContext()+"/resources/NetworkImages/black.png'> "+ NodeActiveList[i][2] +" </span></li></ul>";
+					$("#Transmission_DWDM__CurrentPhysicalLayer").append(str);
+				}
+				
+				else if(NodeActiveList[i][3]=='Transmission' && NodeActiveList[i][8]=='SDH') {
+					str="<ul><li id='"+NodeActiveList[i][0]+"'  class='NodeActive' style='display:none;width:100px;'><input type='checkbox' class='Nodes checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img style='width:16px; height:16px;'  class='image' src='"+getContext()+"/resources/NetworkImages/black.png'> "+ NodeActiveList[i][2] +" </span></li></ul>";
+					$("#Transmission_SDH__CurrentPhysicalLayer").append(str);
+				}
+				
+				else if(NodeActiveList[i][3]=='Transmission' && NodeActiveList[i][8]=='GPON') {
+					str="<ul><li id='"+NodeActiveList[i][0]+"'  class='NodeActive' style='display:none;width:100px;'><input type='checkbox' class='Nodes checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img style='width:16px; height:16px;'  class='image' src='"+getContext()+"/resources/NetworkImages/black.png'> "+ NodeActiveList[i][2] +" </span></li></ul>";
+					$("#Transmission_GPON__CurrentPhysicalLayer").append(str);
+				}
+				
+				$(".NodeActive > .TreeSpan").contextmenu(function(){
+					menuName=singleNodeActive;
+					IdNodeSelectedTemp=$(this).parents().eq(2).attr('id').split("__")[1];
+					selectedNodeAcvtiveContext=$(this).parents().attr('id');
+					selectedNodeActiveName=$(this).text();
+					openContext(selectedNodeAcvtiveContext,selectedNodeActiveName,singleNodeActive,event);
+										
+				});	
+				
+			}
+			$('#NodeActive_span').width($("#left").width());
+			$('.NodeActive > span').width($("#left").width());
+			
+			AllNodeActiveCheckFilter("Entreprise_MSAN__CurrentPhysicalLayer");
+		    AllNodeActiveCheckFilter("Transmission_DWDM__CurrentPhysicalLayer");
+		    AllNodeActiveCheckFilter("Transmission_SDH__CurrentPhysicalLayer");
+		    AllNodeActiveCheckFilter("Transmission_GPON__CurrentPhysicalLayer");
+		    AllNodeActiveCheckFilter("NodeActive_f_CurrentPhysicalLayer");
+
+		}
+	/////////////*********************	trenchList creation in tree	***********************///////////////
 		if(trenchList!=null){
 			for(i=0;i<trenchList.length;i++){
 				var trenchId=trenchList[i][0];
@@ -4151,7 +4067,7 @@ menuBackboneDB = new ContextMenu({
   }
   ]
 });
-	menuAccessDB = new ContextMenu({
+menuAccessDB = new ContextMenu({
   'theme': 'default',
 
   'items' : [
@@ -4172,6 +4088,156 @@ menuBackboneDB = new ContextMenu({
                      showBoq();
                      $("#boq_table").append(tr);
                      data=null;
+                
+        }
+      },
+      
+     
+      error: function (result) {
+        alert("Error");
+      }
+    });
+  
+  
+  }
+  }
+  ]
+});
+
+/////////////*********************	NODE ACTIVE FOLDER CONTEXT MENU  ***********************///////////////
+	//-------------------------------------------------------------------------------------------------//
+	
+	menuMSAN = new ContextMenu({
+  'theme': 'default',
+
+  'items' : [
+  {'icon': 'paste', 'name': 'Show BoQ ', action: () => {
+    $.ajax({
+      type: "GET",
+      contentType: "application/json; charset=utf-8",
+      url: getContext()+'/boqNodesCount',
+      async:false,
+      data: {
+        "ProjectId": IdNodeSelectedTemp,
+      },
+      dataType: "json",
+      success: function (data) {
+          if(data.MSANCount!=null){
+
+             var tr ="<tr>"+"<th>MSAN Count: </th><td> "+data.MSANCount+"</td></tr>"	   
+                     showBoq();
+                     $("#boq_table").append(tr);
+                
+                
+        }
+      },
+      
+     
+      error: function (result) {
+        alert("Error");
+      }
+    });
+  
+  
+  }
+  }
+  ]
+});
+
+menuDWDM = new ContextMenu({
+  'theme': 'default',
+
+  'items' : [
+  {'icon': 'paste', 'name': 'Show BoQ ', action: () => {
+    $.ajax({
+      type: "GET",
+      contentType: "application/json; charset=utf-8",
+      url: getContext()+'/boqNodesCount',
+      async:false,
+      data: {
+        "ProjectId": IdNodeSelectedTemp,
+      },
+      dataType: "json",
+      success: function (data) {
+          if(data.DWDMCount!=null){
+
+             var tr ="<tr>"+"<th>DWDM Count: </th><td> "+data.DWDMCount+"</td></tr>"	   
+                     showBoq();
+                     $("#boq_table").append(tr);
+             
+                
+        }
+      },
+      
+     
+      error: function (result) {
+        alert("Error");
+      }
+    });
+  
+  
+  }
+  }
+  ]
+});
+
+menuSDH = new ContextMenu({
+  'theme': 'default',
+
+  'items' : [
+  {'icon': 'paste', 'name': 'Show BoQ ', action: () => {
+    $.ajax({
+      type: "GET",
+      contentType: "application/json; charset=utf-8",
+      url: getContext()+'/boqNodesCount',
+      async:false,
+      data: {
+        "ProjectId": IdNodeSelectedTemp,
+      },
+      dataType: "json",
+      success: function (data) {
+          if(data.SDHCount!=null){
+
+             var tr ="<tr>"+"<th>SDH Count: </th><td> "+data.SDHCount+"</td></tr>"	   
+                     showBoq();
+                     $("#boq_table").append(tr);
+        
+                
+        }
+      },
+      
+     
+      error: function (result) {
+        alert("Error");
+      }
+    });
+  
+  
+  }
+  }
+  ]
+});
+
+menuGPON = new ContextMenu({
+  'theme': 'default',
+
+  'items' : [
+  {'icon': 'paste', 'name': 'Show BoQ ', action: () => {
+    $.ajax({
+      type: "GET",
+      contentType: "application/json; charset=utf-8",
+      url: getContext()+'/boqNodesCount',
+      async:false,
+      data: {
+        "ProjectId": IdNodeSelectedTemp,
+      },
+      dataType: "json",
+      success: function (data) {
+          if(data.GPONCount!=null){
+
+             var tr ="<tr>"+"<th>GPON Count: </th><td> "+data.GPONCount+"</td></tr>"	   
+                     showBoq();
+                     $("#boq_table").append(tr);
                 
         }
       },
@@ -4314,6 +4380,46 @@ menuBackboneDB = new ContextMenu({
 		eventCreate=0;
 		MarkerArray=[];
 		MarkerArrayBuf=[];
+		
+		
+		
+		menuNodeesActive = new ContextMenu({
+			  'theme': 'default',
+			  
+			  'items': [
+				{'icon': 'paste', 'name': 'Show BoQ', action: () => {
+					   $.ajax({
+						   type: "GET",
+						   contentType: "application/json; charset=utf-8",
+						   url: getContext()+'/boqNodesCount',
+						   data: {
+							   "ProjectId": IdNodeSelectedTemp,	
+						   },
+						   dataType: "json",
+						   success: function (data) {
+							   if(data.AllNodesCount!=null){
+								   
+							   var tr ="<tr>"+"<th>Nodes Count: </th> <td> "+data.AllNodesCount+"</td></tr>"
+							          /* +"<tr>"+"<th>MSAN Count: </th> <td> "+data.MSANCount+"</td></tr>"
+							           +"<tr>"+"<th>DWDM Count: </th> <td> "+data.DWDMCount+"</td></tr>"
+							           +"<tr>"+"<th>SDH Count: </th> <td> "+data.SDHCount+"</td></tr>"
+							           +"<tr>"+"<th>GPON Count: </th> <td> "+data.GPONCount+"</td></tr>";*/
+							           
+							   showBoq();
+							   $("#boq_table").append(tr);
+							   }
+						   },
+						   error: function (result) {
+							   alert("Error");
+						   }
+					   });
+				}
+			  },
+				
+			
+			]
+		});
+
 		
 	/////////////*********************	MAP CONTEXT MENU  ***********************///////////////
 	//-------------------------------------------------------------------------------------------------//
@@ -5034,15 +5140,17 @@ menuBackboneDB = new ContextMenu({
 /////////////*********************	Nodes li CONTEXT MENU  ***********************///////////////
 	//-------------------------------------------------------------------------------------------------//
 
-singleEntreprise = new ContextMenu({
+singleNodeActive = new ContextMenu({
 	'theme': 'default',
 	
 'items': [
     {'icon': 'edit', 'name': 'Edit or View Details ', action: () => {
          $("#nodesModal").modal('show');
          $("#nodesModal").find("input").val('').end();
-		 $("#nodesHeader").text("Nodes: "+selectedNodesIdContext);
-		 $("#node_pk").val(selectedNodesIdContext);
+		 $("#nodesHeader").text("Nodes: "+selectedNodeAcvtiveContext);
+		 $("#node_pk").val(selectedNodeAcvtiveContext);
+		 
+		 console.log(selectedNodeAcvtiveContext);
 		 
 		 	$.ajax({
 					type: "GET",
@@ -5050,7 +5158,7 @@ singleEntreprise = new ContextMenu({
 					url: getContext()+'/findNodesDetails',
                     async:false,
                     data: {
-						"selectedNodesIdContext":selectedNodesIdContext
+						"selectedNodeAcvtiveContext":selectedNodeAcvtiveContext
 					},
                     dataType: "json",
                     success: function (data) {
@@ -11954,11 +12062,46 @@ singleProject = new ContextMenu({
 	           openContext("","",menuMetorDB,event);
            });
            
-           $(".accessDBFolder > .TreeSpan, .accessDBFolder > .TreeSpan").contextmenu(function(){
+            $(".accessDBFolder > .TreeSpan, .accessDBFolder > .TreeSpan").contextmenu(function(){
 	           IdNodeSelectedTemp=$(this).parent().attr('id').split("DistributionBoard_access__")[1];
 	           menuName=menuAccessDB;		
 	           openContext("","",menuAccessDB,event);
            });
+           
+            $(".NodeActive_f_CurrentPhysicalLayer > .TreeSpan ").contextmenu(function(){
+			IdNodeSelectedTemp=$(this).parent().attr('id').split("NodeActive_f_")[1];
+						   
+	 	   	menuName=menuNodeesActive;			
+	 	   	openContext("","",menuNodeesActive,event);
+
+															 
+	 	   });
+	 	   
+           $(".EntrepriseNodeFolder > .TreeSpan, .EntrepriseNodeFolder > .TreeSpan").contextmenu(function(){
+	           IdNodeSelectedTemp=$(this).parent().attr('id').split("Entreprise_MSAN__")[1];
+	           menuName=menuMSAN;		
+	           openContext("","",menuMSAN,event);
+           });
+           
+           $(".TransmissionDWDMFolder > .TreeSpan, .TransmissionDWDMFolder> .TreeSpan").contextmenu(function(){
+	           IdNodeSelectedTemp=$(this).parent().attr('id').split("Transmission_DWDM__")[1];
+	           menuName=menuDWDM;		
+	           openContext("","",menuDWDM,event);
+           });
+           
+           $(".TransmissionSDHFolder > .TreeSpan, .TransmissionSDHFolder > .TreeSpan").contextmenu(function(){
+	           IdNodeSelectedTemp=$(this).parent().attr('id').split("Transmission_SDH__")[1];
+	           menuName=menuSDH;		
+	           openContext("","",menuSDH,event);
+           });
+           
+           $(".TransmissionGPONFolder > .TreeSpan, .TransmissionGPONFolder > .TreeSpan").contextmenu(function(){
+	           IdNodeSelectedTemp=$(this).parent().attr('id').split("Transmission_GPON__")[1];
+	           menuName=menuGPON;		
+	           openContext("","",menuGPON,event);
+           });
+           
+            
 
 	    //$('#Trench_f > .TreeSpan').contextmenu(function(){
 	    $(".Trench_f_CurrentPhysicalLayer > .TreeSpan, .Trench_f_projects > .TreeSpan").contextmenu(function(){
@@ -17077,7 +17220,7 @@ for (var i = 0; i < parts.length; i++) {
 }
 */
 
-/* Enterprise Save*/
+/* nodes Save*/
 $("#saveNode").click(function () {
             nodePk= document.getElementById("node_pk").value;
 			UniqNodeId = document.getElementById("uniqNodeId").value;
@@ -17123,17 +17266,24 @@ $("#saveNode").click(function () {
 						window[""+data.nodePk]=[data.nodePk,nodeName];
 						
 						$("#"+data.nodePk).contextmenu(function(){				
-						menuName = singleEntreprise;
-						selectedNodesIdContext=$(this).attr('id');
-						selectedNodeName=$(this).text();			
-						openContext(selectedNodesIdContext,selectedNodeName,singleEntreprise,event);
+						menuName = singleNodeActive;
+						selectedNodeAcvtiveContext=$(this).attr('id');
+						selectedNodeActiveName=$(this).text();			
+					    openContext(selectedNodeAcvtiveContext,selectedNodeActiveName,singleNodeActive,event);
 						});	
 						MouseHoveringSpans("#" +data.nodePk+ " .TreeSpan");	
 						tree_prop_selection("#"+data.nodePk+" .TreeSpan");
-						create_Marker_Click(data.nodePk,nodeName,"","",markersNodes,markerClusterNodes,"","");
-						markerClusterNodes.addMarker(markersNodes[""+data.nodePk]);
-						NodesCheckFilter(data.nodePk);
+						create_Marker_Click(data.nodePk,nodeName,"","",markersNodeActive,markerClusterNodeActive,"","");
+						markerClusterNodeActive.addMarker(markersNodeActive[""+data.nodePk]);
+						NodeActiveCheckFilter(data.nodePk);
 						map.setZoom(11);
+						
+						
+						
+					var childrenInitial=$("#initial_ul_"+IdNodeSelectedTemp+"").find(' > ul > li');
+					var children = $("#NodeActive_f_"+IdNodeSelectedTemp+"").find(' > ul > li');
+					var domainFolder =  $("#NodeActive_f_"+IdNodeSelectedTemp+"").find(' > ul > li >ul >li');
+						
 						
 						offset=$("#"+data.nodePk).offset().top;																
 						offset2=$("#initial_ul_CurrentPhysicalLayer").offset().top;
@@ -17155,233 +17305,7 @@ $("#saveNode").click(function () {
 		
 });
 
-/* Transmission Save*/
-$("#saveTransmission").click(function () {
-            transNode_pk= document.getElementById("transNode_pk").value;
-			transUniqNodeId = document.getElementById("transUniqNodeId").value;
-			transNodeId = document.getElementById("transNodeId").value;
-			transNodeName = document.getElementById("transNodeName").value;
-			transNodeType = document.getElementById("transNodeType").value;
-			transNodeSource = document.getElementById("transNodeSource").value;
-			transNodeModel = document.getElementById("transNodeModel").value;
-			transNodeDomin = document.getElementById("transNodeDomin").value;
-			transSiteId_node = document.getElementById("transSiteId_node").value;
-			transWareId_node = document.getElementById("transWareId_node").value;
-			transNodeLong = document.getElementById("transNodeLong").value;
-			transNodeLat = document.getElementById("transNodeLat").value;
-			transCreateData_node = document.getElementById("transCreateData_node").value;
-			transUpdateData_node = document.getElementById("transUpdateData_node").value;
-			
-					$.ajax({
-					type: "POST",
-					contentType: "application/json; charset=utf-8",
-					url: getContext()+"/transNodeSave",
-					async:false,
-					data: {
-					     "transNode_pk": transNode_pk,
-						 "transUniqNodeId": transUniqNodeId,
-						 "transNodeId": transNodeId,
-						 "transNodeName": transNodeName,
-						 "transNodeType": transNodeType,
-						 "transNodeSource": transNodeSource,
-						 "transNodeModel": transNodeModel,
-						 "transNodeDomin": transNodeDomin,
-						 "transSiteId_node": transSiteId_node,
-						 "transWareId_node": transWareId_node,
-						 "transCreateData_node": transCreateData_node,
-						 "transUpdateData_node": transUpdateData_node,					    
-					},				
-					dataType: "json",
-					success : function(data) {
-						if(data!=null){
-						
-						window[""+data.transNode_pk]=[];
-						window[""+data.transNode_pk]=[data.transNode_pk,transNodeName];
-						
-						$("#"+data.transNode_pk).contextmenu(function(){				
-						menuName = singleTransmission;
-						selectedTransmissionIdContext=$(this).attr('id');
-						selectedTransName=$(this).text();			
-						openContext(selectedTransmissionIdContext,selectedTransName,singleTransmission,event);
-						});	
-						MouseHoveringSpans("#" +data.transNode_pk+ " .TreeSpan");	
-						tree_prop_selection("#"+data.transNode_pk+" .TreeSpan");
-						create_Marker_Click(data.transNode_pk,nodeName,"","",markersTransmission,markerClusterTransmission,"","");
-						markerClusterTransmission.addMarker(markersTransmission[""+data.transNode_pk]);
-						TransmissionCheckFilter(data.transNode_pk);
-						map.setZoom(11);
-						
-						offset=$("#"+data.transNode_pk).offset().top;																
-						offset2=$("#initial_ul_CurrentPhysicalLayer").offset().top;
-						offsettot=(offset-offset2);
-						$("#network_tree").animate({ scrollTop: offsettot}, "slow");
-				
-						}
-					},			
-					 error: function (result) {
-						alert("Error");
-					}
-					});	
-					
-					if(typeof infowindow!== 'undefined'){		
-							infowindow.close();								
-						}
-						$("#"+data.transNode_pk+" > span").width($("#left").width());
-						$("#TransmissionModal").modal('hide');
-		
-});
 
-/* Core Save*/
-$("#saveCore").click(function () {
-            coreNode_pk= document.getElementById("coreNode_pk").value;
-			coreUniqNodeId = document.getElementById("coreUniqNodeId").value;
-			coreNodeId = document.getElementById("coreNodeId").value;
-			coreNodeName = document.getElementById("coreNodeName").value;
-			coreNodeType = document.getElementById("coreNodeType").value;
-			coreNodeSource = document.getElementById("coreNodeSource").value;
-			coreNodeModel = document.getElementById("coreNodeModel").value;
-			coreNodeDomin = document.getElementById("coreNodeDomin").value;
-			coreSiteId_node = document.getElementById("coreSiteId_node").value;
-			coreWareId_node = document.getElementById("coreWareId_node").value;
-			coreNodeLong = document.getElementById("coreNodeLong").value;
-			coreNodeLat = document.getElementById("coreNodeLat").value;
-			coreCreateData_node = document.getElementById("coreCreateData_node").value;
-			coreUpdateData_node = document.getElementById("coreUpdateData_node").value;
-			
-					$.ajax({
-					type: "POST",
-					contentType: "application/json; charset=utf-8",
-					url: getContext()+"/coreNodeSave",
-					async:false,
-					data: {
-					     "coreNode_pk": coreNode_pk,
-						 "coreUniqNodeId": coreUniqNodeId,
-						 "coreNodeId": coreNodeId,
-						 "coreNodeName": coreNodeName,
-						 "coreNodeType": coreNodeType,
-						 "coreNodeSource": coreNodeSource,
-						 "coreNodeModel": coreNodeModel,
-						 "coreNodeDomin": coreNodeDomin,
-						 "coreSiteId_node": coreSiteId_node,
-						 "coreWareId_node": coreWareId_node,
-						 "coreCreateData_node": coreCreateData_node,
-						 "coreUpdateData_node": coreUpdateData_node,					    
-					},				
-					dataType: "json",
-					success : function(data) {
-						if(data!=null){
-						
-						window[""+data.coreNode_pk]=[];
-						window[""+data.coreNode_pk]=[data.coreNode_pk,coreNodeName];
-						
-						$("#"+data.coreNode_pk).contextmenu(function(){				
-						menuName = singleCore;
-						selectedCoreIdContext=$(this).attr('id');
-						selectedCoreName=$(this).text();			
-						openContext(selectedCoreIdContext,selectedCoreName,singleCore,event);
-						});	
-						MouseHoveringSpans("#" +data.coreNode_pk+ " .TreeSpan");	
-						tree_prop_selection("#"+data.coreNode_pk+" .TreeSpan");
-						create_Marker_Click(data.coreNode_pk,nodeName,"","",markersCore,markerClusterCore,"","");
-						markerClusterCore.addMarker(markersCore[""+data.coreNode_pk]);
-						CoreCheckFilter(data.coreNode_pk);
-						map.setZoom(11);
-						
-						offset=$("#"+data.coreNode_pk).offset().top;																
-						offset2=$("#initial_ul_CurrentPhysicalLayer").offset().top;
-						offsettot=(offset-offset2);
-						$("#network_tree").animate({ scrollTop: offsettot}, "slow");
-				
-						}
-					},			
-					 error: function (result) {
-						alert("Error");
-					}
-					});	
-					
-					if(typeof infowindow!== 'undefined'){		
-							infowindow.close();								
-						}
-						$("#"+data.coreNode_pk+" > span").width($("#left").width());
-						$("#CoreModal").modal('hide');
-		
-});
-
-/* Ran(Access) Save*/
-$("#saveRan").click(function () {
-            ranNode_pk= document.getElementById("ranNode_pk").value;
-			ranUniqNodeId = document.getElementById("ranUniqNodeId").value;
-			ranNodeId = document.getElementById("ranNodeId").value;
-			ranNodeName = document.getElementById("ranNodeName").value;
-			ranNodeType = document.getElementById("ranNodeType").value;
-			ranNodeSource = document.getElementById("ranNodeSource").value;
-			ranNodeModel = document.getElementById("ranNodeModel").value;
-			ranNodeDomin = document.getElementById("ranNodeDomin").value;
-			ranSiteId_node = document.getElementById("ranSiteId_node").value;
-			ranWareId_node = document.getElementById("ranWareId_node").value;
-			ranNodeLong = document.getElementById("ranNodeLong").value;
-			ranNodeLat = document.getElementById("ranNodeLat").value;
-			ranCreateData_node = document.getElementById("ranCreateData_node").value;
-			ranUpdateData_node = document.getElementById("ranUpdateData_node").value;
-			
-					$.ajax({
-					type: "POST",
-					contentType: "application/json; charset=utf-8",
-					url: getContext()+"/ranNodeSave",
-					async:false,
-					data: {
-					     "ranNode_pk": ranNode_pk,
-						 "ranUniqNodeId": ranUniqNodeId,
-						 "ranNodeId": ranNodeId,
-						 "ranNodeName": ranNodeName,
-						 "ranNodeType": ranNodeType,
-						 "ranNodeSource": ranNodeSource,
-						 "ranNodeModel": ranNodeModel,
-						 "ranNodeDomin": ranNodeDomin,
-						 "ranSiteId_node": ranSiteId_node,
-						 "ranWareId_node": ranWareId_node,
-						 "ranCreateData_node": ranCreateData_node,
-						 "ranUpdateData_node": ranUpdateData_node,					    
-					},				
-					dataType: "json",
-					success : function(data) {
-						if(data!=null){
-						
-						window[""+data.ranNode_pk]=[];
-						window[""+data.ranNode_pk]=[data.ranNode_pk,ranNodeName];
-						
-						$("#"+data.ranNode_pk).contextmenu(function(){				
-						menuName = singleRan;
-						selectedRanIdContext=$(this).attr('id');
-						selectedRanName=$(this).text();			
-						openContext(selectedRanIdContext,selectedRanName,singleRan,event);
-						});	
-						MouseHoveringSpans("#" +data.ranNode_pk+ " .TreeSpan");	
-						tree_prop_selection("#"+data.ranNode_pk+" .TreeSpan");
-						create_Marker_Click(data.ranNode_pk,nodeName,"","",markersRan,markerClusterRan,"","");
-						markerClusterRan.addMarker(markersRan[""+data.ranNode_pk]);
-						RanCheckFilter(data.ranNode_pk);
-						map.setZoom(11);
-						
-						offset=$("#"+data.ranNode_pk).offset().top;																
-						offset2=$("#initial_ul_CurrentPhysicalLayer").offset().top;
-						offsettot=(offset-offset2);
-						$("#network_tree").animate({ scrollTop: offsettot}, "slow");
-				
-						}
-					},			
-					 error: function (result) {
-						alert("Error");
-					}
-					});	
-					
-					if(typeof infowindow!== 'undefined'){		
-							infowindow.close();								
-						}
-						$("#"+data.ranNode_pk+" > span").width($("#left").width());
-						$("#RanModal").modal('hide');
-		
-});
 
 $("#saveFiberPath").click(function () {
 
