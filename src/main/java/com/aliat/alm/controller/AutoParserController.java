@@ -51,6 +51,7 @@ import com.aliat.alm.telkom.Parser.LoadFileSDHHuawei;
 import com.aliat.alm.telkom.Parser.LoadFilesEntHuawei;
 import com.aliat.alm.telkom.Parser.LoadFilesRANZTE;
 import com.aliat.alm.telkom.Parser.LoadFilesRanHuawei;
+import com.aliat.alm.telkom.Parser.LoadFilesRanNec;
 
 
 @Controller
@@ -158,6 +159,23 @@ public class AutoParserController {
 			myClass.main(null,request.getParameter("vendor"),request.getParameter("domain"),request.getParameter("sub_domain"),request.getParameter("type"));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		rtn.put("Result", "Script is Done");
+		return rtn;
+	}
+	@RequestMapping(value = "/loadFilesRanNec", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> loadFilesRanNec(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws SecurityException, IOException, InterruptedException, SQLException, ParseException{
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		LoadFilesRanNec myClass = new LoadFilesRanNec();
+		try {
+			var vendor = request.getParameter("vendor").toUpperCase();
+			var domain = request.getParameter("domain").toUpperCase();
+			
+			myClass.main(null,vendor,domain);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		rtn.put("Result", "Script is Done");

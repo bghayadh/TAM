@@ -234,6 +234,8 @@
 									<option value="Ericsson">Ericsson</option>
 									<option value="Tejas">Tejas</option>
 									<option value="Alcatel">Alcatel</option>
+									<option value="Nec">NEC</option>
+									
 									
 					</select>
 				</div>	
@@ -507,6 +509,9 @@ $("#loadFiles").click(function() {
     else if(loader_vendor=="Nokia" && loader_domain=="Transmission" && loader_subdomain == "IP"){
 		url='loadFileIPNokia';
     }
+    else if(loader_vendor=="Nec"&& loader_domain=="RAN"){
+		url='loadFilesRanNec';
+	}
 	else {
 		url='emptyUrl';
 	}
