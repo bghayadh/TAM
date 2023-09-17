@@ -1623,8 +1623,7 @@ public class PhysicalLayerController {
 						
 						NodeActiveList =  session.createSQLQuery(
 								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE ").list();
-					
-						
+		
 					}
 
 					LinkedHashMap<String, List<?>> physicalLayerData = new LinkedHashMap<String, List<?>>();// linkedHashmap
