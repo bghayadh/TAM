@@ -104,8 +104,8 @@ class ContextMenu {
         const mw = this.menu.offsetWidth;
         const mh = this.menu.offsetHeight;
         if (x + mw > w) { x = x - mw; }
-        if (y + mh > h && y + mh <= 1.16* h) { y = (y - 0.5*mh); }
-        if (y + mh > 1.16*h && y + mh < 1.5*h) { y = (y - 0.77*mh); }
+        if (y + mh > h && y + mh <= 1.28* h) { y = (y - 0.29*mh); }
+        if (y + mh > 1.28*h && y + mh < 1.5*h) { y = (y - 0.5*mh); }
         if (y + mh >= 1.5*h) { y = (y - 0.9*mh); }
 
         this.menu.style.left = x + 'px';
