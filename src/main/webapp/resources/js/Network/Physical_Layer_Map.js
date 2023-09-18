@@ -89,7 +89,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			};
 			
 			iconNodeActive = {
-				url:getContext()+"/resources/NetworkImages/GreenCircle.png", // url
+				url:getContext()+"/resources/NetworkImages/NodesIcon.png", // url
 				scaledSize: new google.maps.Size(20, 20), // scaled size
 				
 			};

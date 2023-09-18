@@ -232,7 +232,7 @@
 							<td><input type="checkbox" id="handholeCheckAllBoq" style="margin-left: 10px;"></td>
 						</tr>
 							<tr>
-							<td class="Icon "><img style="width: 16px; height: 16px;" src="${pageContext.request.contextPath}/resources/NetworkImages/GreenCircle.png">
+							<td class="Icon "><img style="width: 16px; height: 16px;" src="${pageContext.request.contextPath}/resources/NetworkImages/NodesIcon.png">
 								<span id="definition">Nodes</span></td>
 							<td><input type="checkbox" id="nodesActiveCheckAllBoq" style="margin-left: 10px;"></td>
 						</tr>
