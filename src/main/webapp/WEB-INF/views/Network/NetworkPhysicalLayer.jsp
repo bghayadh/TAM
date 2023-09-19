@@ -232,31 +232,10 @@
 							<td><input type="checkbox" id="handholeCheckAllBoq" style="margin-left: 10px;"></td>
 						</tr>
 							<tr>
-							<td class="Icon "><img style="width: 16px; height: 16px;" src="${pageContext.request.contextPath}/resources/NetworkImages/nodeIcon.png">
+							<td class="Icon "><img style="width: 16px; height: 16px;" src="${pageContext.request.contextPath}/resources/img/NodesIcon.png">
 								<span id="definition">Nodes</span></td>
 							<td><input type="checkbox" id="nodesActiveCheckAllBoq" style="margin-left: 10px;"></td>
 						</tr>
-					 	<!--  <tr>
-							<td class="Icon "><img style="width: 16px; height: 16px;" src="${pageContext.request.contextPath}/resources/NetworkImages/purpleCircle.png">
-								<span id="definition">MSAN</span></td>
-							<td><input type="checkbox" id="MSANCheckAllBoq" style="margin-left: 10px;"></td>
-						</tr>
-						<tr>
-							<td class="Icon "><img style="width: 16px; height: 16px;" src="${pageContext.request.contextPath}/resources/NetworkImages/BlueCircle.png" >
-								<span id="definition">DWDM</span></td>
-							<td><input type="checkbox" id="DWDMCheckAllBoq" style="margin-left: 10px;"></td>
-						</tr>
-						<tr>
-							<td class="Icon "><img style="width: 16px; height: 16px;" src="${pageContext.request.contextPath}/resources/NetworkImages/black.png" >
-								<span id="definition">SDH</span></td>
-							<td><input type="checkbox" id="SDHCheckAllBoq" style="margin-left: 10px;"></td>
-						</tr>
-						<tr>
-							<td class="Icon "><img style="width: 16px; height: 16px;" src="${pageContext.request.contextPath}/resources/NetworkImages/green.png" >
-								<span id="definition">GPON</span></td>
-							<td><input type="checkbox" id="GPONCheckAllBoq" style="margin-left: 10px;"></td>
-						</tr>  -->
-						
 						<tr>
 							<td class="Icon "><img src="${pageContext.request.contextPath}/resources/NetworkImages/electrical-panel.png">
 								<span id="definition">DISTRIBUTION BOARD</span></td>

@@ -88,9 +88,10 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 					scaledSize: new google.maps.Size(40, 40), // scaled size
 			};
 			
-	       iconNodeActive ={
-					url:""+getContext()+"/resources/NetworkImages/nodeIcon.png", // url
-					scaledSize: new google.maps.Size(30, 30), // scaled size
+			iconNodeActive = {
+				url:getContext()+"/resources/img/NodesIcon.png", // url
+				scaledSize: new google.maps.Size(20, 20), // scaled size
+				
 			};
 
 			
@@ -150,9 +151,9 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 				minimumClusterSize: 2,
 				styles: [
 				         {
-				        	 url: getContext()+'/resources/clusterIcons/blackCluster.png',
-					         height: 55,
-					         width:55,
+				        	 url: getContext()+'/resources/clusterIcons/greenCluster.png',
+					         height: 60,
+					         width:60,
 					         anchorText:[-3,-3]
 					      },
 				],
@@ -232,15 +233,15 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			}
 			
 			
-			if(NodeActiveList!=null)
+			/*if(NodeActiveList!=null)
 			{
 				for(i=0;i<NodeActiveList.length;i++){			
 			            create_Marker_Click(NodeActiveList[i][0],NodeActiveList[i][1],NodeActiveList[i][5],NodeActiveList[i][6],markersNodeActive,markerClusterNodeActive,"","");				
 						NodeActiveCheckFilter(NodeActiveList[i][0]);
 				}
-			}
+			}*/
 			
-			/*if(NodeActiveList != null){
+			if(NodeActiveList != null){
 			   for(i=0;i<NodeActiveList.length;i++){
 			   
 			   if(NodeActiveList[i][3]=='Enterprise'){
@@ -264,7 +265,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			   }
 			   
 			   }
-			}*/
+			}
 			
 	var end2 = performance.now();
 			allElementsCheckFilter();	
