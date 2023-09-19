@@ -363,7 +363,7 @@ z-index: 9003;
 								</button>
 
 								<button type="button" id="saveButton"
-									onclick='window.location.href = "${pageContext.request.contextPath}/ClientFormView?type=addNew"'
+									onclick='window.location.href = "${pageContext.request.contextPath}/ClientsFormView?type=addNew"'
 									class="btn btn-primary BtnActive">
 									<i class="fa fa-plus"></i> Add
 								</button>
