@@ -38,6 +38,8 @@ import org.apache.commons.lang3.StringUtils;
 //import org.apache.poi.ss.usermodel.Sheet;
 //import org.apache.poi.ss.usermodel.Workbook;
 //import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 import com.aliat.alm.models.ManHole;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -99,7 +101,14 @@ public class LoadFilesRANZTE  {
 	public static void main(String[] args, String vendor,String domain,String sub_domain) throws IOException, SQLException, InterruptedException {
 		
 	
-		objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"\\"+"almconfig.dat"));
+		//objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"\\"+"almconfig.dat"));
+		
+		Resource ConfigResource = new ClassPathResource("almconfig.dat");
+		File configfile = ConfigResource.getFile();
+		FileReader fr=new FileReader(configfile);  
+		BufferedReader objReader1=new BufferedReader(fr);
+		
+		
 		System.out.println("vendor "+vendor);
 		System.out.println("domain "+domain);
 		System.out.println("subdomain "+sub_domain);
@@ -162,8 +171,13 @@ public class LoadFilesRANZTE  {
 	 	 
 		// System.out.println("get circle value  :" + System.getProperty("user.dir")+"/"+"almcircle.dat");
 		// objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"/"+"almcircle.dat"));
-		 objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"\\"+"almcircle.dat"));
-
+		// objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"\\"+"almcircle.dat"));
+	 	
+	 	 Resource CircleRsource = new ClassPathResource("almcircle.dat");
+		File circlefile = CircleRsource.getFile();
+		 fr=new FileReader(circlefile);     
+		 objReader1=new BufferedReader(fr);
+		 
 		 while ((strCurrentLine1 = objReader1.readLine()) != null){
 			 String data = strCurrentLine1;
 			 String[] data1 ;
