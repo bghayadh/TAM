@@ -4899,7 +4899,7 @@ $(".TubeStrands").bind("change",function(){
 		});
 	}
 function AllDistributionBoardCheckFilter(Id) {
-	console.log("entered Id "+ Id);
+
 	$("#"+Id).children('input').bind("change",function() {
 			markerClusterDistBoard.clearMarkers();
 
@@ -9199,24 +9199,36 @@ function searchConnectedButtonEvents(hash_Project,hash_manhole,hash_handhole,has
 	});
     
 	$(".searchHeaderButton").on('click',function(){
-        var urlString = "";
+		//console.log("searchHeaderButton enterd");
+        var urlString = "", siteId = "", selectedOp = "",lng = "", lat = "";
       	$("#conStrandId").html("");
     	$("#conFiberId").html("");
     	$("#conTubeId").html("");
 		$("#conDBId").html("");
 		
+		if(document.querySelector('#autoCompleteConnectedSearch').value){
+			console.log("selectConnectedSearch "+document.querySelector('#autoCompleteConnectedSearch').value);
+			siteId = document.querySelector('#autoCompleteConnectedSearch').value;
+			lng =$("#connectedSearchLong").val();
+			lat	= $("#connectedSearchLat").val();
+			selectedOp = document.querySelector('#selectConnectedSearch').value;
+		}else{
+			console.log("autoCompleteHeaderSearch "+ document.querySelector('#autoCompleteHeaderSearch').value);
+			siteId = document.querySelector('#autoCompleteHeaderSearch').value;
+			lng =$("#headerSearchLong").val();
+			lat	= $("#headerSearchLat").val();
+			selectedOp = document.querySelector('#selectHeaderSearch').value;
+		}
+		
 		checkedOption = "connected";
-	    urlString += "&siteId="+$("#autoCompleteConnectedSearch").val()+"";
-	    urlString += "&selectConnectedSearch="+document.querySelector('#selectConnectedSearch').value+"";
-	    urlString += "&connectedSearchLong="+$("#connectedSearchLong").val()+"";
-	    urlString += "&connectedSearchLat="+$("#connectedSearchLat").val()+"";
+	    urlString += "&siteId="+siteId+"";
+	    urlString += "&selectConnectedSearch="+selectedOp+"";
+	    urlString += "&connectedSearchLong="+lng+"";
+	    urlString += "&connectedSearchLat="+lat+"";
 	    urlString += "&connectedViewOnMap="+$("#viewOnMap").val()+"";
 		urlString += "&getRelatedPoints="+$("#getRelatedPointsCon").val()+"";	
-
 		window.location.href = getContext()+"/NetworkPhysicalLayer?Checked="+checkedOption+urlString;
-		
-		// console.log("selectHeaderSearch1 "+document.querySelector('#selectHeaderSearch1').value);
-      	
+		      	
     	});
 		
 }
@@ -9229,6 +9241,11 @@ function openSearchConnected(checkedOption,siteId,selectConnectedSearch,connecte
  	$("#autoCompleteConnectedSearch").val(siteId);
  	$("#connectedSearchLong").val(connectedSearchLong);
  	$("#connectedSearchLat").val(connectedSearchLat);
+ 	
+ 	$("#selectHeaderSearch").val(selectConnectedSearch);
+ 	$("#autoCompleteHeaderSearch").val(siteId);
+	$("#headerSearchLong").val(connectedSearchLong);
+    $("#headerSearchLat").val(connectedSearchLat);
 	
  	showPointsType =getRelatedPoints;
     if(getRelatedPoints == '1') {
