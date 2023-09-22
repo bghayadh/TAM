@@ -34,6 +34,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+
 public class LoadFileIPHuawei {
 
 	static String node_fk;
@@ -117,8 +120,13 @@ public class LoadFileIPHuawei {
 
 		//System.out.println("Start withh LOAD :" + System.getProperty("user.dir"));
 		
-	 	objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"/"+"almconfig.dat"));
-		 while ((strCurrentLine1 = objReader1.readLine()) != null){
+	 	//objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"/"+"almconfig.dat"));
+		Resource ConfigResource = new ClassPathResource("almconfig.dat");
+		File configfile = ConfigResource.getFile();
+		FileReader fr=new FileReader(configfile);  
+		BufferedReader objReader1=new BufferedReader(fr);
+		
+		while ((strCurrentLine1 = objReader1.readLine()) != null){
 			 String data = strCurrentLine1;
 			 String[] data1 ;
 			 String[] data2 ;
@@ -178,7 +186,12 @@ public class LoadFileIPHuawei {
 		}
 		 objReader1.close();
 		 
-		 objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"\\"+"almcircle.dat"));
+		 //objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"\\"+"almcircle.dat"));
+		 Resource CircleRsource = new ClassPathResource("almcircle.dat");
+		 File circlefile = CircleRsource.getFile();
+		 fr=new FileReader(circlefile);     
+		 objReader1=new BufferedReader(fr);
+		 
 		 while ((strCurrentLine1 = objReader1.readLine()) != null){
 			 String data = strCurrentLine1;
 			 String[] data1 ;

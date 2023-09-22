@@ -32,6 +32,9 @@ import org.hibernate.sql.Select;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+
 public class LoadFilesRanNec {
 
 	static String readFileNecFrom;
@@ -82,8 +85,13 @@ public class LoadFilesRanNec {
 	public static void main(String[] args,String vendor,String domain) throws Exception {
 		
 		
-	 	objReader = new BufferedReader(new FileReader(System.getProperty("user.dir")+"\\"+"almconfig.dat"));
-		 while ((strCurrentLine = objReader.readLine()) != null){
+	 	//objReader = new BufferedReader(new FileReader(System.getProperty("user.dir")+"\\"+"almconfig.dat"));
+		Resource ConfigResource = new ClassPathResource("almconfig.dat");
+		File configfile = ConfigResource.getFile();
+		FileReader fr=new FileReader(configfile);  
+		BufferedReader objReader=new BufferedReader(fr);
+		
+		while ((strCurrentLine = objReader.readLine()) != null){
 			 String data = strCurrentLine;
 			 String[] splittedStr ;
 			 String[] Data ;
@@ -125,7 +133,12 @@ public class LoadFilesRanNec {
 		}
 		 objReader.close();
 		 
-		 objReader = new BufferedReader(new FileReader(System.getProperty("user.dir")+"\\"+"almcircle.dat"));
+		// objReader = new BufferedReader(new FileReader(System.getProperty("user.dir")+"\\"+"almcircle.dat"));
+		 Resource CircleRsource = new ClassPathResource("almcircle.dat");
+		 File circlefile = CircleRsource.getFile();
+		 fr=new FileReader(circlefile);     
+		 objReader=new BufferedReader(fr);
+			 
 		 while ((strCurrentLine = objReader.readLine()) != null){
 			 String data = strCurrentLine;
 			 String[] circleID ;

@@ -43,6 +43,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+
 public class LoadFilesRanHuawei {
 	private static final CopyOption REPLACE_EXISTING = null;
 	static Connection parserCon;
@@ -108,8 +111,13 @@ public class LoadFilesRanHuawei {
 
 		
 			 // Get all needed project/logs/files paths and alm/parser connections details from almconfig.dat
-		 	objReader = new BufferedReader(new FileReader(System.getProperty("user.dir")+"\\"+"almconfig.dat"));
-			 while ((strCurLine = objReader.readLine()) != null){
+		 	//objReader = new BufferedReader(new FileReader(System.getProperty("user.dir")+"\\"+"almconfig.dat"));
+			Resource ConfigResource = new ClassPathResource("almconfig.dat");
+			File configfile = ConfigResource.getFile();
+			FileReader fr=new FileReader(configfile);  
+			BufferedReader objReader=new BufferedReader(fr);
+			
+			while ((strCurLine = objReader.readLine()) != null){
 				 String currentLine = strCurLine;
 				 String[] splittedStr ;
 				 String[] data ;
@@ -207,7 +215,12 @@ public class LoadFilesRanHuawei {
 			 objReader.close();
 			 
 			 // Get the circle ID from almcircle.dat
-			 objReader = new BufferedReader(new FileReader(System.getProperty("user.dir")+"\\"+"almcircle.dat"));
+			// objReader = new BufferedReader(new FileReader(System.getProperty("user.dir")+"\\"+"almcircle.dat"));
+			 Resource CircleRsource = new ClassPathResource("almcircle.dat");
+			 File circlefile = CircleRsource.getFile();
+			 fr=new FileReader(circlefile);     
+			 objReader=new BufferedReader(fr);
+			 
 			 while ((strCurLine = objReader.readLine()) != null){
 				 String data = strCurLine;
 				 String[] circleID ;

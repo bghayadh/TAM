@@ -34,6 +34,9 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+
 public class LoadFilesNokia extends DefaultHandler {
 	// updated by Bassam 09 FEB 2022
 	static BufferedReader objReader1 = null;
@@ -87,8 +90,11 @@ public class LoadFilesNokia extends DefaultHandler {
 	
 	public static void main(String[] args) throws Exception, SAXException {
 		
-		objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"/"+"almconfig.dat"));
-		
+		//objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"/"+"almconfig.dat"));
+		Resource ConfigResource = new ClassPathResource("almconfig.dat");
+		File configfile = ConfigResource.getFile();
+		FileReader fr=new FileReader(configfile);  
+		BufferedReader objReader1=new BufferedReader(fr);
 
 	 	while ((strCurrentLine1 = objReader1.readLine()) != null){
 	 		String data = strCurrentLine1;
@@ -140,8 +146,13 @@ public class LoadFilesNokia extends DefaultHandler {
 	 	}
 	 	 objReader1.close();
 	 	 
-		 System.out.println("get circle value  :" + System.getProperty("user.dir")+"/"+"almcircle.dat");
-		 objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"/"+"almcircle.dat"));
+		// System.out.println("get circle value  :" + System.getProperty("user.dir")+"/"+"almcircle.dat");
+		// objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"/"+"almcircle.dat"));
+		 Resource CircleRsource = new ClassPathResource("almcircle.dat");
+		 File circlefile = CircleRsource.getFile();
+		 fr=new FileReader(circlefile);     
+		 objReader1=new BufferedReader(fr);
+		 
 		 while ((strCurrentLine1 = objReader1.readLine()) != null){
 			 String data = strCurrentLine1;
 			 String[] data1 ;
