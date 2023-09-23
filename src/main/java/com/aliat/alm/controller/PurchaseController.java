@@ -3,6 +3,8 @@ package com.aliat.alm.controller;
 import java.sql.Timestamp;
 
 import java.text.DateFormat;
+import java.math.BigDecimal; // Add this import statement
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -579,6 +581,14 @@ public class PurchaseController {
 						model.addAttribute("ListPRqItem", mapper.writeValueAsString(listPRqBoq));
 
 					}
+					
+				
+						
+					
+					
+					
+					
+					
 				} catch (Exception e) {
 
 					logger.info("Error in opening the purchase request view with a message of :", e.getMessage());
@@ -784,9 +794,106 @@ public class PurchaseController {
 								.setResultTransformer(Transformers.aliasToBean(PurchaseOrderBoq.class)).list();
 						model.addAttribute("docStatus", "Existed");
 						model.addAttribute("ListPoItem", mapper.writeValueAsString(listPurchaseOrderBoq));
+						
+						
+						
+						query = session.createSQLQuery("SELECT item_code, SUM(qty), net_rate  FROM purchase_order_item WHERE po_id = :param1 GROUP BY item_code,net_rate" );
+						query.setParameter("param1", pOrdrID);
+						
+						List<Object[]> resultList1 = query.list();
 
-					}
-				} catch (Exception e) {
+						double totalQty = 0.0;
+						double totalPrice = 0.0;
+
+						for (Object[] result1 : resultList1) {
+						    String itemCode = (String) result1[0];
+						    double sumQty = ((Number) result1[1]).doubleValue();
+						    double netRate = ((Number) result1[2]).doubleValue();
+
+						    double itemTotalPrice = sumQty * netRate;
+						    totalPrice += itemTotalPrice;
+						    totalQty += sumQty;
+						}
+
+						model.addAttribute("totalPrice", totalPrice);
+						model.addAttribute("totalQty", totalQty);
+
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						List<Object[]> item = new ArrayList<Object[]>();
+						
+						query = session.createSQLQuery("SELECT item_code, item_name, item_model, item_part_number, SUM(qty), net_rate  FROM purchase_order_item WHERE po_id = :param1 GROUP BY item_code,item_name,item_model,item_part_number,net_rate" );
+						query.setParameter("param1", pOrdrID);
+
+						ObjectMapper mapper = new ObjectMapper();
+					    String resultList =  mapper.writeValueAsString(query.list());
+				
+						System.out.println(resultList);
+						
+						
+						List<Object[]> purchaseOrderItems = query.list();
+						List<Object[]> discrepancy = new ArrayList<Object[]>();
+
+						for (Object[] items : purchaseOrderItems) {
+						    String itemCode = (String) items[0];
+						    String itemName = (String) items[1];
+						    String itemModel = (String) items[2];
+						    String itemPartNumber = (String) items[3];
+						    BigDecimal qty = (BigDecimal) items[4]; // Use BigDecimal for quantity
+
+						    // Use the item_code and pOrdrID to query the asset_registry table
+						    query = session.createSQLQuery("select count(*) from asset_registry where item_code=:param1 and po_id=:param2");
+						    query.setParameter("param1", itemCode);
+						    query.setParameter("param2", pOrdrID);
+
+						    BigDecimal assetCount = (BigDecimal) query.uniqueResult(); // Retrieve the count as a BigDecimal
+
+						    System.out.println("Asset Count: " + assetCount);
+
+						    if (assetCount.compareTo(BigDecimal.ZERO) > 0) {
+						        if (assetCount.compareTo(qty) == 0) { 
+						        	
+						           continue;
+						        
+						        } else {
+						        	BigDecimal discrepancyValue = qty.subtract(assetCount);
+						        	items[4]=discrepancyValue;
+						            discrepancy.add(items);
+						            System.out.println("Sufficient assets in the registry for itemCode: " + itemCode);
+						        }
+						    } else {
+						        System.out.println("Asset Count is null for itemCode: " + itemCode);
+						        
+						        discrepancy.add(items);
+						    }
+
+						  	}
+
+						System.out.println("Discrepancy List:");
+
+						for (Object[] itemo : discrepancy) {
+						    for (Object value : itemo) {
+						        System.out.print(value + " ");
+						    }
+						    System.out.println(); 
+						   
+						}
+						model.addAttribute("discrepancy", mapper.writeValueAsString(discrepancy));
+						
+
+					}} catch (Exception e) {
 					logger.info("Error on the level of showing purchase order form view, with a message : "
 							+ e.getMessage());
 					model.addAttribute("ID", "");
