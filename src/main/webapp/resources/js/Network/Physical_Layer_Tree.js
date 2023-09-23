@@ -407,7 +407,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 			if(ListManhole[i][5]>0){
 				str="<ul><li id='"+ListManhole[i][0]+"' class='MANHOLE' style='display:none;width:100px;'><input type='checkbox' class='Manhole checkFilter' class='filter' name='Element' ></input> <span class='folder' > <i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:355px' class='TreeSpan'><img style='color: #08526D;' src='"+getContext()+"/resources/NetworkImages/manholeRed.png'>  "+ListManhole[i][1]+" </span><ul><li id='"+ListManhole[i][0]+"_f' style='display:none;' class='junctionFolder'> <input type='checkbox' class='ManholeJct checkFilter' unchecked name='filter'></input> <span  class='folder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Junctions </span></li></ul></li></ul>";
 				$("#Manhole_f_"+ListManhole[i][4]+"").append(str);  					
-				$("#"+ListManhole[i][0]+"_f > .TreeSpan").width($("#left").width());	
+//				$("#"+ListManhole[i][0]+"_f > .TreeSpan").width($("#left").width());	
 			}
 			else {
 				str="<ul><li id='"+ListManhole[i][0]+"' class='MANHOLE' style='display:none;width:100px;'><input type='checkbox' class='Manhole' class='filter checkFilter' name='Element' ></input> <span class='TreeSpan' style='color:black;width:355px'><img src='"+getContext()+"/resources/NetworkImages/manholeRed.png'> "+ListManhole[i][1]+"</span></li></ul>";
@@ -418,8 +418,8 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 			tree_Prop("#"+ListManhole[i][0]+" > .folder");
 */								
 			}
-			$('#Manhole_span').width($("#left").width());
-			$('.MANHOLE > .TreeSpan').width($("#left").width());
+//			$('#Manhole_span').width($("#left").width());
+//			$('.MANHOLE > .TreeSpan').width($("#left").width());
 			AllManholeCheckFilter();
 			
 		}
@@ -468,7 +468,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 		if(ListHandhole[i][5]>0){
 			str="<ul><li id='"+ListHandhole[i][0]+"' class='HANDHOLE' style='display:none;width:100px;'><input type='checkbox' class='Handhole checkFilter' class='filter' name='Element' ></input> <span class='folder' > <i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:355px' class='TreeSpan'><img style='color: #08526D;' src='"+getContext()+"/resources/NetworkImages/handholeYellow.png'>  "+ListHandhole[i][1]+" </span><ul><li id='"+ListHandhole[i][0]+"_f' style='display:none;' class='junctionFolder'> <input type='checkbox' class='HandholeJct checkFilter' unchecked name='filter'></input> <span  class='folder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Junctions </span></li></ul></li></ul>";
 			$("#Handhole_f_"+ListHandhole[i][4]+"").append(str);  					
-			$("#"+ListHandhole[i][0]+"_f > .TreeSpan").width($("#left").width());
+//			$("#"+ListHandhole[i][0]+"_f > .TreeSpan").width($("#left").width());
 					
 		}
 		else {
@@ -481,8 +481,8 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 			tree_Prop("#"+ListHandhole[i][0]+" > .folder");
 */			
 		}
-		$('#Handhole_span').width($("#left").width());
-		$('.HANDHOLE > .TreeSpan').width($("#left").width());
+//		$('#Handhole_span').width($("#left").width());
+//		$('.HANDHOLE > .TreeSpan').width($("#left").width());
 		AllHandholeCheckFilter();
 				
 		}
@@ -560,7 +560,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 					$("#FiberPath_access__"+fiberList[i][14]).append(str);
 				}
 
-				$("#"+fiberList[i][4]+"_f > .TreeSpan").width($("#left").width());
+//				$("#"+fiberList[i][4]+"_f > .TreeSpan").width($("#left").width());
 /*				
 				tree_Prop("#"+fiberList[i][4]+"_f > .folder");
 				tree_Prop("#"+fiberList[i][4]+" > .folder");
@@ -651,8 +651,8 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 			pathCheckFilter("initial_ul","parentFolderCheck","FiberPath_f_CurrentPhysicalLayer","","","","","","","","","");
 		}
 
-		$('#FiberPath_span').width($("#left").width());
-		$('.FIBER > .TreeSpan').width($("#left").width());
+//		$('#FiberPath_span').width($("#left").width());
+//		$('.FIBER > .TreeSpan').width($("#left").width());
 		
 		// fiber auxiliary points
 		if(fiberAuxiliary_Data!=null){
@@ -682,7 +682,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				window["mapPoints_"+fiberAuxiliary_Data[i][6]].splice(window["mapPoints_"+fiberAuxiliary_Data[i][6]].length-1, 0,myLatLng);// insert at before last index which is the destination
 				window["bounds_"+fiberAuxiliary_Data[i][6]].extend(myLatLng);				
 			}
-		}																								  
+		}																				  
  
 		if(fiberTubes!=null){
 			for(i=0;i<fiberTubes.length;i++){
@@ -770,10 +770,9 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 					openContext(selectedStrandPath,"",menuStrandPath,event)
 				});
 	
-			}
-		
-			$('#FiberPath_span').width($("#left").width());
-			$('.TUBE > .TreeSpan').width($("#left").width());
+			}		
+//			$('#FiberPath_span').width($("#left").width());
+//			$('.TUBE > .TreeSpan').width($("#left").width());
 		}
 
 		// tube auxiliary points array
@@ -824,7 +823,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 	
 	/////////////*********************	Strands Creation In tree	***********************///////////////
 	
-		if(fiberStrands!=null){	    
+		if(fiberStrands!=null){  
 			for(i=0;i<fiberStrands.length;i++){
 
 				var strandId=fiberStrands[i][0];
@@ -898,7 +897,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 			        selectedFiberMain=$(this).parents().eq(6).attr('id').split("_f")[0];
 					openContext(selectedStrand,"strand",singleStrand,event)
 				});
-			}		
+			}
 		}
 	
 		if(strandsAuxiliaries){
@@ -984,8 +983,8 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				});	
 				
 			}
-			$('#DistribBoard_span').width($("#left").width());
-			$('.DistributionBoard > span').width($("#left").width());
+//			$('#DistribBoard_span').width($("#left").width());
+//			$('.DistributionBoard > span').width($("#left").width());
 			
 			AllDistributionBoardCheckFilter("DistributionBoard_access__CurrentPhysicalLayer");
 		    AllDistributionBoardCheckFilter("DistributionBoard_metro__CurrentPhysicalLayer");
@@ -1032,8 +1031,8 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				});	
 				
 			}
-			$('#NodeActive_span').width($("#left").width());
-			$('.NodeActive > span').width($("#left").width());
+//			$('#NodeActive_span').width($("#left").width());
+//			$('.NodeActive > span').width($("#left").width());
 			
 			AllNodeActiveCheckFilter("Entreprise_MSAN__CurrentPhysicalLayer");
 		    AllNodeActiveCheckFilter("Transmission_DWDM__CurrentPhysicalLayer");
@@ -1264,20 +1263,27 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 					}
 				}
 			}
-						   
+		$('.TreeSpan').css("display", "inline"); // The purpse of this command is to let the background color width in mouse hovering or mouse select to be same span text width	
+//		$('.TreeSpan').width(($("#left").width()));						   
 		// tree nodes events click show/hide children nodes
+
 		treeCollapseFolder(".Parentfolder",null,".Parentfolder");
 		treeCollapseFolder(".folder","fast",".folder");
+		
 		//tree_prop_generalPhysical();
+		
+
 		tree_prop_selection(null);
 		MouseHoveringSpans(null);		//>>>>>>>>>>>> Hover event in tree elements
-		boqCheckFilter();	
-	
+		boqCheckFilter();
+		
+
+/*	
 	$("#left").bind('resize', function(e) {
 		width=$(this).width();
 		 $('.TreeSpan').width(width);
 	 	console.log("resizing of left to "+width);
- 	});
+ 	}); */
  
 $("#ductName").on("input",function(){
 	$("#ductHeader").text("Duct: "+$(this).val());
@@ -13899,11 +13905,14 @@ $("#saveManhole").click(function () {
 						
 						str="<ul><li id='"+data.ManholeId+"' class='MANHOLE' style='width:100px;'> <input type='checkbox' class='Manhole checkFilter' checked  class='filter'  name='Element'></input> <span class='TreeSpan' style='color:black;'><img src='"+getContext()+"/resources/NetworkImages/manholeRed.png'> "+data.ManholeName+" </span></li></ul>";
 						$("#Manhole_f_"+IdNodeSelectedTemp+"").append(str);
+						
+						// To be deleted						
 						//$("#"+data.ManholeId+" > span").width($("#left").width());
 						
 						HandManJuncFormat("Manhole",IdNodeSelectedTemp,data.ManholeId);
 
-						tree_prop_selection("#" +data.ManholeId+ " .TreeSpan");
+						// To be deleted
+						// tree_prop_selection("#" +data.ManholeId+ " .TreeSpan");
 						
 				}
 				//update manhole
@@ -13964,7 +13973,8 @@ $("#saveManhole").click(function () {
 					junctionCheckFilter("Manhole");
 				}//end else junction to append 		
 																	
-			    $("#"+data.ManholeId+" > .TreeSpan").width($("#left").width());	
+				// To be deleted	
+			    //$("#"+data.ManholeId+" > .TreeSpan").width($("#left").width());	
 				//$(".TreeSpan").width($("#left").width());			
 				//unbindTreeCheckboxEvents();
 				$("#left").unbind('resize');
@@ -13977,6 +13987,7 @@ $("#saveManhole").click(function () {
 				treeCollapseFolder("#" +data.ManholeId+ " .folder","fast",".folder");
 			
 			} // end update manhole
+		$("#"+data.ManholeId+" > span").css("display", "inline");					
 		$("#manholeModal").modal('hide');
 /*
 		$('.tree li#Manhole_f_'+IdNodeSelectedTemp+' .TreeSpan').on('click', function (e) {
@@ -13987,8 +13998,8 @@ $("#saveManhole").click(function () {
 			$(".tree li#Manhole_f_"+IdNodeSelectedTemp+"  span").removeClass("selected-span");		
 			$(this).addClass("selected-span");
 		});
-*/
-		tree_prop_selection("#" +data.ManholeId+" .TreeSpan");	
+*/		
+		tree_prop_selection("#" +data.ManholeId+ " .TreeSpan");	
 		// bind context menu event to Manhole 
 		$( "#"+data.ManholeId+" > .TreeSpan" ).bind("contextmenu",function(){
 			selectedManIdContext=$(this).parent().attr('id');
@@ -14121,9 +14132,12 @@ $("#saveHandhole").click(function () {
 					checkedJunction="noJunction";													
 					str="<ul><li id='"+data.handholeId+"' class='HANDHOLE' style='width:100px;'> <input type='checkbox' class='Handhole checkFilter' checked  class='filter'  name='Element'></input> <span class='TreeSpan' style='color:black;'><img src='"+getContext()+"/resources/NetworkImages/handholeYellow.png'> "+data.handholeName+" </span></li></ul>";
 					$("#Handhole_f_"+IdNodeSelectedTemp+"").append(str);
-					$("#"+data.handholeId+" > span").width($("#left").width());				
+					
+					// To be deleted
+					// $("#"+data.handholeId+" > span").width($("#left").width());				
 					HandManJuncFormat("Handhole",IdNodeSelectedTemp,data.handholeId);
-					tree_prop_selection("#" +data.handholeId+ " .TreeSpan");
+					// To be deleted
+					//tree_prop_selection("#" +data.handholeId+ " .TreeSpan");
 			}
 			//Action is update Handhole
 			else{
@@ -14203,8 +14217,10 @@ $("#saveHandhole").click(function () {
 		$(".tree li#Handhole_f_"+IdNodeSelectedTemp+"  span").removeClass("selected-span");		
 		$(this).addClass("selected-span");
 	});
-*/				
-		tree_prop_selection("#" +data.handholeId+ " .TreeSpan");
+*/
+				
+	$("#"+data.handholeId+" > span").css("display", "inline");
+	tree_prop_selection("#" +data.handholeId+ " .TreeSpan");
 	// bind context menu event to Handhole
 	$("#"+data.handholeId+" > .TreeSpan").contextmenu(function(){
 		selectedHandIdContext=$(this).parent().attr('id');
@@ -14597,6 +14613,10 @@ $("#saveHandhole").click(function () {
 			}); // End of saveDistBoard
 				  
 	/////////////*********************	SAVE FIBER CABLE  ***********************///////////////
+		
+		
+	// To be optimized, do we really need this trigger?	
+		
 	$(document).on("triggerAuxBoq", function () {
 		$(function(){
 			
@@ -21898,8 +21918,9 @@ function hideContext(){
 	
 }
 		
-			
-function HoverClickNetworkSpans(){
+// To be deleted			
+
+/*function HoverClickNetworkSpans(){
 		$("li > .TreeSpan").unbind("mouseover");
 	
 	$("li > .TreeSpan").bind("mouseover",function(e) {
@@ -21916,15 +21937,18 @@ function HoverClickNetworkSpans(){
 		$(this).css("background-color", "#97b9cc");
 	});
 	}					
-	
+*/	
 function MouseHoveringSpans(selector){
 	if(selector==null){
 		selector="li > .TreeSpan";
 	}
 	$(selector).unbind("mouseover");
 	$(selector).bind("mouseover",function(e) {
+		console.log("selector is " +$(this).attr('id'));
+//		$(this).css("display", "inline");
 		$(this).addClass('backgroundTree');
 	}).on("mouseout",function(e) {
+//		$(this).css("display", "");
 		$(this).removeClass('backgroundTree');
 	});
 /*
@@ -21946,7 +21970,11 @@ function tree_prop_selection(selector){
 		if(IdSelectedTemp!=""){			
 			$("#"+IdSelectedTemp+" > .TreeSpan").removeClass("selected-span");
 			$("#"+IdSelectedTemp+" > .TreeSpan").css("background","");
-		}								
+		}
+		console.log("selector is " +$(this).parent().attr('id'));
+		console.log("selector width is " +$(this).width());
+		//$(this).width($("#left").width());
+//		$(this).css("display", "inline");
 		$(this).css("background-color", "#97b9cc");							
 		$(this).addClass("selected-span");	
 		IdSelectedTemp=$(this).parent().attr('id');

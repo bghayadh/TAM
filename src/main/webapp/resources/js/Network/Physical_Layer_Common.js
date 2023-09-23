@@ -8,8 +8,6 @@ var allTreePoints=[];
  $(document).on("triggerListenersEvent", function () {
 $(function(){
 	
-	
-	
 viewNearestPointEvent();	
 viewNearestMultyPointEvent();									
 searchConnectedButtonEvents();
