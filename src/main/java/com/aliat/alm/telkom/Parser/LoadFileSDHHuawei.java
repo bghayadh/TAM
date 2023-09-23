@@ -28,6 +28,12 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 public class LoadFileSDHHuawei {
 
@@ -38,7 +44,7 @@ static String logsid="0";
 static String logsDetailsId="0";
 static int totSumRow=0;
 static int totSumCol=0;
-static int NodeSeq;
+static int NodeSeq, BoardSeq,SubrackSeq;
 static BufferedReader objReader1 = null;
 static String strCurrentLine1;
 static String projpath=null;
@@ -50,7 +56,9 @@ static String db2path;
 static String username2;
 static String password2,siteID;
 static String vfolderfrom,fileType,fileName;
-static String Gprovider,Domain,subDomain,subDomainType,gateway,gatewayType,gatewayIP,patchVersion,partNumber;
+static String Gprovider,Domain,subDomain,subDomainType,gateway,gatewayType,gatewayIP,patchVersion,partNumber,others;
+static String boardId,boardName,boardType,subracknb,slotnb,serialnb,bomCode,hardwareVersion,biosVersion,issueNb,model,status;
+static String subrackId,subrackName,subrackType;
 static String copyfileNokiato;
 static String vfolderto;
 static String circleid="10";
@@ -90,8 +98,13 @@ public static void main(String[] args,String vendor,String domain,String sub_dom
 
 	//System.out.println("Start withh LOAD :" + System.getProperty("user.dir"));
 	
- 	objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"/"+"almconfig.dat"));
-	 while ((strCurrentLine1 = objReader1.readLine()) != null){
+ 	//objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"/"+"almconfig.dat"));
+	Resource ConfigResource = new ClassPathResource("almconfig.dat");
+	File configfile = ConfigResource.getFile();
+	FileReader fr=new FileReader(configfile);  
+	BufferedReader objReader1=new BufferedReader(fr);
+	
+	while ((strCurrentLine1 = objReader1.readLine()) != null){
 		 String data = strCurrentLine1;
 		 String[] data1 ;
 		 String[] data2 ;
@@ -143,7 +156,12 @@ public static void main(String[] args,String vendor,String domain,String sub_dom
 	}
 	 objReader1.close();
 	 
-	 objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"\\"+"almcircle.dat"));
+	 //objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"\\"+"almcircle.dat"));
+	 Resource CircleRsource = new ClassPathResource("almcircle.dat");
+	 File circlefile = CircleRsource.getFile();
+	 fr=new FileReader(circlefile);     
+	 objReader1=new BufferedReader(fr);
+	 
 	 while ((strCurrentLine1 = objReader1.readLine()) != null){
 		 String data = strCurrentLine1;
 		 String[] data1 ;
@@ -197,17 +215,20 @@ public static void main(String[] args,String vendor,String domain,String sub_dom
 				 stmtinit.close();
 				 logger.info("Load SDH HW Files inprocess...");
 				 System.out.println("Load SDH HW Files inprocess...");
+				 
 				//looping over all files found in the directory.
+				 int folderNb = 0;
 				 for (File file : listOfFiles) {
 					 if(file.isFile()) {
 						 fileName1 = file.getName().toString();
-						 System.out.println("filename is : "+fileName1);
+						 //System.out.println("filename is : "+fileName1);
 						 //splitting to get the file name and extension
 						 String[] data1=fileName1.replace(".","_").split("_");
-						 System.out.println(data1.length);
+						 //System.out.println(data1.length);
 						 fileName=data1[0]; fileType=data1[1];
-						
-						 	readfile(fileName1);
+						 System.out.println("fileName1 :"+ fileName1);
+						 folderNb++;
+						 	readfile(fileName1,folderNb);
 						 	File source = new File(readfileAIMfrom+"\\"+file.getName());
 						    File dest = new File(copyfileAIMto+"\\"+file.getName()+".bkp");
 						     
@@ -231,62 +252,238 @@ public static void main(String[] args,String vendor,String domain,String sub_dom
 		  conalm.close();
 		  con.close();
 }
-
-private static void readfile(String fileName) throws FileNotFoundException, IOException, SQLException {
-	 
-	 //csvparser used to read csv file in order to fill the data in a list of type CSVRecord row by row
+static List<CSVRecord> networkRecords = new ArrayList<>(); 
+static List<CSVRecord> boardRecords = new ArrayList<>();
+static List<CSVRecord> subrackRecords = new ArrayList<>();
+static String networkFileName = null,boardFileName = null,subrackFileName = null;
+private static void readfile(String fileName,int foldersNb) throws FileNotFoundException, IOException, SQLException {
+	
+	
+	//csvparser used to read csv file in order to fill the data in a list of type CSVRecord row by row
 	 CSVParser csvParser = new CSVParser(new FileReader(vfolderfrom + "\\" + fileName), CSVFormat.DEFAULT);
-	  List<CSVRecord> records = new ArrayList<>();
-	  for (CSVRecord record : csvParser) {
-		  records.add(record);
+	
+	if(StringUtils.equalsIgnoreCase(fileName, "Huawei SDH Network Elements.csv")) { 
+		  for (CSVRecord record : csvParser) {
+			  networkRecords.add(record);
+		}
+		 networkFileName = "Huawei SDH Network Elements.csv";
 	}
-	  
-	  Calendar calendar = new GregorianCalendar();
-	  int year = calendar.get(Calendar.YEAR);
-	  
-	  //select the node active sequence from the seq table in alm.
-	  String sqlStmtinit2 = "select NODE_ACTIVE from SEQ_TABLE";     
-	  stmtp1 = conalm.createStatement();
-	  ResultSet rsinit2 = stmtp1.executeQuery(sqlStmtinit2);
-	  while(rsinit2.next()) {
-		  //store the returned result in a variable to be increased each loop instead of accessing the database all the time
-		  //which lead to exceed the maximum number of open cursors.
-		NodeSeq = rsinit2.getInt("NODE_ACTIVE");
-		//update the seq of the node active based on the size of the list filled from the csv file
-	  	stmtp = conalm.prepareStatement("UPDATE SEQ_TABLE SET NODE_ACTIVE = NODE_ACTIVE +"+(records.size()-4));//records.size()-4) is used to remove the unnecessary header rows in the csv file
-	  	stmtp.executeUpdate();
-	  	stmtp.close();
-	  }
-	  for(int i=4;i<records.size();i++) {
-		  vcodeid=year+"_NODE_"+NodeSeq;
-		  rsinit2.close();
-		  stmtp1.close();
-		  
-		  	  nodeName = records.get(i).get(0);
-		  	  nodeType="SDH";
-			  nodeModel = records.get(i).get(1);
-			  IPaddress = records.get(i).get(2);
-			  softwareVersion = records.get(i).get(3);
-			  MACaddress = records.get(i).get(4);
-			  partNumber = records.get(i).get(10);
-			  commStatus= records.get(i).get(11);
-			  adminStatus= records.get(i).get(12);
-			  nodeId=records.get(i).get(2);
-			  if(!records.get(i).get(23).toString().trim().equalsIgnoreCase("--")) {LCStatus=records.get(i).get(23);}
-			  gateway=records.get(i).get(20);
-			  gatewayType=records.get(i).get(19);
-			  gatewayIP=records.get(i).get(21);
-			  patchVersion=records.get(i).get(17);
-			  unique_Node_ID = nodeId+"_HW";
+	
+	else if(StringUtils.equalsIgnoreCase(fileName,"Huawei SDH Boards.csv")) {
+		 System.out.println("Load Huawei SDH Boards Files inprocess...");
+		 for (CSVRecord record : csvParser) {
+			  boardRecords.add(record);
+		}
+		boardFileName = "Huawei SDH Boards.csv";
+	}
+	
+    else if(StringUtils.equalsIgnoreCase(fileName, "Huawei SDH Subrack.csv")) {
+		 for (CSVRecord record : csvParser) {
+			 subrackRecords.add(record);
+		}
+		subrackFileName = "Huawei SDH Subrack.csv";
+	}
+	
+	
+    
+	Calendar calendar = new GregorianCalendar();
+	int year = calendar.get(Calendar.YEAR);
+	System.out.println("foldersNb: "+ foldersNb);
+	if(foldersNb == 3) {	  
+		  //select the node active sequence from the seq table in alm.
+		  String sqlStmtinit2 = "select NODE_ACTIVE from SEQ_TABLE";     
+		  stmtp1 = conalm.createStatement();
+		  ResultSet rsinit2 = stmtp1.executeQuery(sqlStmtinit2);
+		  while(rsinit2.next()) {
+			  //store the returned result in a variable to be increased each loop instead of accessing the database all the time
+			  //which lead to exceed the maximum number of open cursors.
+			NodeSeq = rsinit2.getInt("NODE_ACTIVE");
+			//update the seq of the node active based on the size of the list filled from the csv file
+		  	stmtp = conalm.prepareStatement("UPDATE SEQ_TABLE SET NODE_ACTIVE = NODE_ACTIVE +"+(networkRecords.size()-4));//records.size()-4) is used to remove the unnecessary header rows in the csv file
+		  	stmtp.executeUpdate();
+		  	stmtp.close();
+		  }
+		  for(int i=4;i<networkRecords.size();i++) {
+			  vcodeid=year+"_NODE_"+Gprovider+"_"+Domain+"_"+NodeSeq;
+			  rsinit2.close();
+			  stmtp1.close();
 			  
-			  	stmtp =  con.prepareStatement("insert into NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,WARE_ID,VENDOR,WARE_NAME,IP_ADDRESS,MAC_ADDRESS,SUB_DOMAIN,SOFTWARE_VERSION,STATUS_1,GATEWAY,GATEWAY_TYPE,GATEWAY_IP,STATUS_2,LONGITUDE,LATITUDE,PATCH_VERSION,PART_NUMBER,SUB_DOMAIN_TYPE)"
-				 		+ "values('"+vcodeid+"','"+unique_Node_ID+"','"+nodeId+"','"+nodeName+"','"+nodeType+"','"+Domain+"','"+nodeModel+"','"+tech2+"','"+tech3+"','"+tech4+"','"+tech5+"','"+siteID+"','"+circleid+"',sysdate,sysdate,'"+fileType+"','"+fileName+"','"+commStatus+"','"+wareID+"','"+Gprovider+"','"+wareName+"','"+IPaddress+"','"+MACaddress+"','"+subDomain+"','"+softwareVersion+"','"+adminStatus+"','"+gateway+"','"+gatewayType+"','"+gatewayIP+"','"+LCStatus+"','"+longi+"','"+lat+"','"+patchVersion+"','"+partNumber+"','"+subDomainType+"')"); 
-			  	stmtp.executeUpdate();
-			  	stmtp.close();
-			  	
-			  	NodeSeq++;
+			  	  nodeName = networkRecords.get(i).get(0);
+			  	  nodeType="SDH";
+				  nodeModel = networkRecords.get(i).get(1);
+				  IPaddress = networkRecords.get(i).get(2);
+				  softwareVersion = networkRecords.get(i).get(3);
+				  MACaddress = networkRecords.get(i).get(4);
+				  partNumber = networkRecords.get(i).get(10);
+				  commStatus= networkRecords.get(i).get(11);
+				  adminStatus= networkRecords.get(i).get(12);
+				  nodeId=networkRecords.get(i).get(2);
+				  if(!networkRecords.get(i).get(23).toString().trim().equalsIgnoreCase("--")) {LCStatus=networkRecords.get(i).get(23);}
+				  gateway=networkRecords.get(i).get(20);
+				  gatewayType=networkRecords.get(i).get(19);
+				  gatewayIP=networkRecords.get(i).get(21);
+				  patchVersion=networkRecords.get(i).get(17);
+				  unique_Node_ID = nodeId+"_HW";
+				  //others = "{\"NE ID\":"+"\""+networkRecords.get(i).get(5)+"\","+"\"Fibers/Cables\":"+"\""+networkRecords.get(i).get(6)+"\","+"\"Subnet\":"+"\""+networkRecords.get(i).get(7)+"\","+"\"Subnet Path\":"+"\""+networkRecords.get(i).get(8)+"\","+"\"Subrack Type\":"+"\""+networkRecords.get(i).get(9)+"\","+"\"Physical Location\":"+"\""+networkRecords.get(i).get(13)+"\","+"\"Created On\":"+"\""+networkRecords.get(i).get(14)+"\","+"\"NE Alias\":"+"\""+networkRecords.get(i).get(15)+"\","+"\"Remarks\":"+"\""+networkRecords.get(i).get(16)+"\","+"\"LSR ID\":"+"\""+networkRecords.get(i).get(18)+"\","+"\"Optical NE\":"+"\""+networkRecords.get(i).get(22)+"\""+"}";
+				  others = "{\"NE ID\":"+"\""+networkRecords.get(i).get(5)+"\","+"\"Fibers/Cables\":"+"\""+networkRecords.get(i).get(6)+"\","+"\"Subnet\":"+"\""+networkRecords.get(i).get(7)+"\","+"\"Subnet Path\":"+"\""+networkRecords.get(i).get(8)+"\","+"\"Subrack Type\":"+"\""+networkRecords.get(i).get(9)+"\","+"\"Physical Location\":"+"\""+networkRecords.get(i).get(13)+"\","+"\"Optical NE\":"+"\""+networkRecords.get(i).get(22)+"\""+"}";
+
+				  stmtp =  con.prepareStatement("insert into NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,WARE_ID,VENDOR,WARE_NAME,IP_ADDRESS,MAC_ADDRESS,SUB_DOMAIN,SOFTWARE_VERSION,STATUS_1,GATEWAY,GATEWAY_TYPE,GATEWAY_IP,STATUS_2,LONGITUDE,LATITUDE,PATCH_VERSION,PART_NUMBER,SUB_DOMAIN_TYPE,OTHERS,ACTIVE_RECORD)"
+					 		+ "values('"+vcodeid+"','"+unique_Node_ID+"','"+nodeId+"','"+nodeName+"','"+nodeType+"','"+Domain+"','"+nodeModel+"','"+tech2+"','"+tech3+"','"+tech4+"','"+tech5+"','"+siteID+"','"+circleid+"',sysdate,sysdate,'"+fileType+"','"+networkFileName+"','"+commStatus+"','"+wareID+"','"+Gprovider+"','"+wareName+"','"+IPaddress+"','"+MACaddress+"','"+subDomain+"','"+softwareVersion+"','"+adminStatus+"','"+gateway+"','"+gatewayType+"','"+gatewayIP+"','"+LCStatus+"','"+longi+"','"+lat+"','"+patchVersion+"','"+partNumber+"','"+subDomainType+"','"+others+"','1')"); 
+				  stmtp.executeUpdate();
+				  stmtp.close();
+				  	
+				  NodeSeq++;
+	 
 		 
 	  }
+	  // end parsing of node network
+	
+	  // start board parsing
+		  
+		//select the board sequence from the seq table in alm.
+		  sqlStmtinit2 = "select NODE_BOARD from SEQ_TABLE";     
+		  stmtp1 = conalm.createStatement();
+		  rsinit2 = stmtp1.executeQuery(sqlStmtinit2);
+		  while(rsinit2.next()) {
+		  //store the returned result in a variable to be increased each loop instead of accessing the database all the time
+		  //which lead to exceed the maximum number of open cursors.
+			BoardSeq = rsinit2.getInt("NODE_BOARD");
+			//update the seq of the board based on the size of the list filled from the csv file
+		  	stmtp = conalm.prepareStatement("UPDATE SEQ_TABLE SET NODE_BOARD = NODE_BOARD +"+(boardRecords.size()-4));//records.size()-4) is used to remove the unnecessary header rows in the csv file
+		  	stmtp.executeUpdate();
+		  	stmtp.close();
+		  }	
+		  for(int i=4;i<boardRecords.size();i++) {
+			  boardId=year+"_NODE_"+Gprovider+"_"+Domain+"_BRD_"+BoardSeq;
+			  rsinit2.close();
+			  stmtp1.close();
+			  
+			  nodeName = boardRecords.get(i).get(0);
+			  //System.out.println("nodeName: "+ nodeName);
+			  nodeId = boardRecords.get(i).get(5);
+			  System.out.println("nodeId: "+ nodeId);
+			  String sqlStmtinit3 = "select NODE_PK,DOMAIN,VENDOR,SUB_DOMAIN,SUB_DOMAIN_TYPE from NODE_ACTIVE WHERE NODE_ID ='"+nodeId+"'";     
+			  stmtp1 = con.createStatement();
+			  ResultSet rsinit3 = stmtp1.executeQuery(sqlStmtinit3); 
+			  String domain = null ,vender = null ,sub_Domain = null ,sub_Domain_Type = null;
+			  while(rsinit3.next()) {
+				  vcodeid=rsinit3.getString("NODE_PK");	
+				  domain =rsinit3.getString("DOMAIN"); 
+				  vender=rsinit3.getString("VENDOR");
+				  sub_Domain=rsinit3.getString("SUB_DOMAIN");
+				  sub_Domain_Type=rsinit3.getString("SUB_DOMAIN_TYPE");
+				  
+			  }
+			  rsinit3.close();
+			  stmtp1.close();
+			  System.out.println("vcodeid: "+ vcodeid);
+			  if(vcodeid == null && domain == Domain && vender == Gprovider && sub_Domain == subDomain && sub_Domain_Type == subDomainType ) { 
+				  System.out.println("No Node ID");
+			      vcodeid = "No Node ID";
+		     }
+			  /*else {
+		    	 System.out.println("No Node ID");
+		    	 vcodeid = "No Node ID";
+		     }*/
+			  
+			boardName = boardRecords.get(i).get(1);
+			boardType = boardRecords.get(i).get(3);
+			subracknb = boardRecords.get(i).get(8);
+			slotnb = boardRecords.get(i).get(9);
+			hardwareVersion = boardRecords.get(i).get(10);
+			softwareVersion = boardRecords.get(i).get(11);
+			serialnb = boardRecords.get(i).get(12);
+			bomCode = boardRecords.get(i).get(22);
+			biosVersion = boardRecords.get(i).get(18);
+			issueNb = boardRecords.get(i).get(16);
+			model = boardRecords.get(i).get(15);
+			status= boardRecords.get(i).get(19);
+		   // others = "{\"Board Name\":"+"\""+boardRecords.get(i).get(2)+"\","+"\"NE ID\":"+"\""+boardRecords.get(i).get(4)+"\","+"\"NE IP Address\":"+"\""+boardRecords.get(i).get(5)+"\","+"\"NE Type (MPU TYPE)\":"+"\""+boardRecords.get(i).get(6)+"\","+"\"Subrack Type\":"+"\""+boardRecords.get(i).get(7)+"\","+"\"Board Alias\":"+"\""+boardRecords.get(i).get(13)+"\","+"\"Remarks\":"+"\""+boardRecords.get(i).get(14)+"\","+"\"FPGA Version\":"+"\""+boardRecords.get(i).get(17)+"\","+"\"Protection Role\":"+"\""+boardRecords.get(i).get(20)+"\","+"\"PSTQ\":"+"\""+boardRecords.get(i).get(21)+"\","+"\"Administrative Status\":"+"\""+boardRecords.get(i).get(23)+"\","+"\"Description\":"+"\""+boardRecords.get(i).get(24)+"\","+"\"Manufactured On\":"+"\""+boardRecords.get(i).get(25)+"\","+"\"Created On\":"+"\""+boardRecords.get(i).get(26)+"\""+"}";
+		    others = "{\"NE ID\":"+"\""+boardRecords.get(i).get(4)+"\","+"\"NE IP Address\":"+"\""+boardRecords.get(i).get(5)+"\","+"\"NE Type (MPU TYPE)\":"+"\""+boardRecords.get(i).get(6)+"\","+"\"Subrack Type\":"+"\""+boardRecords.get(i).get(7)+"\","+"\"FPGA Version\":"+"\""+boardRecords.get(i).get(17)+"\","+"\"Protection Role\":"+"\""+boardRecords.get(i).get(20)+"\","+"\"PSTQ\":"+"\""+boardRecords.get(i).get(21)+"\","+"\"Administrative Status\":"+"\""+boardRecords.get(i).get(23)+"\","+"\"Description\":"+"\""+boardRecords.get(i).get(24)+"\""+"}";
+
+			//stmtp =  con.prepareStatement("insert into NODE_BOARD (BOARD_ID,SITEINDEX,CABINETNO,SUBRACKNO,RACKNO,FRAMENO,SLOTNO,SLOTPOS,SUBSLOTNO,INVENTORYUNITID,MODULENO,BOARDNAME,BOARDTYPE,INVENTORYUNITTYPE,VENDORUNITFAMILYTYPE,VENDORUNITTYPENUMBER,VENDORNAME,SERIALNUMBER,HARDWAREVERSION,DATEOFMANUFACTURE,DATEOFLASTSERVICE,UNITPOSITION,MANUFACTURERDATA,SOFTVER,LOGICVER,BIOSVER,BIOSVEREX,LANVER,MBUSVER,ISSUENUMBER,BOMCODE,MODEL,USERLABEL,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,EXTINFO,APDEVINFO,WORKMODE,STATUS,FROM_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,ACTIVE_RECORD,LINE,ALM_POSITION,CREATION_DATE,DOMAIN,VENDOR,TO_TRANS_SOURCE)"
+			stmtp =  con.prepareStatement("insert into NODE_BOARD (BOARD_ID,SUBRACKNO,SLOTNO,BOARDNAME,BOARDTYPE,SERIALNUMBER,HARDWAREVERSION,SOFTVER,BIOSVER,ISSUENUMBER,BOMCODE,MODEL,NODE_PK,UPDATE_DATE,FILENAME,STATUS,CREATION_DATE,DOMAIN,VENDOR,OTHERS,ACTIVE_RECORD)"
+			     + "values('"+boardId+"','"+subracknb+"','"+slotnb+"','"+boardName+"','"+boardType+"','"+serialnb+"','"+hardwareVersion+"','"+softwareVersion+"','"+biosVersion+"','"+issueNb+"','"+bomCode+"','"+model+"','"+vcodeid+"',sysdate,'"+boardFileName+"','"+status+"',sysdate,'"+Domain+"','"+Gprovider+"','"+others+"','1')"); 
+		  	stmtp.executeUpdate();
+		  	stmtp.close();
+		  	
+		  	BoardSeq++;
+		  }
+		  
+		// end of board 
+		  
+	    // start of subrack
+		  
+		//select the subrack sequence from the seq table in alm.
+		  sqlStmtinit2 = "select NODE_SUBRACK from SEQ_TABLE";     
+		  stmtp1 = conalm.createStatement();
+		  rsinit2 = stmtp1.executeQuery(sqlStmtinit2);
+		  while(rsinit2.next()) {
+		  //store the returned result in a variable to be increased each loop instead of accessing the database all the time
+		  //which lead to exceed the maximum number of open cursors.
+			SubrackSeq = rsinit2.getInt("NODE_SUBRACK");
+			//update the seq of the subrack based on the size of the list filled from the csv file
+		  	stmtp = conalm.prepareStatement("UPDATE SEQ_TABLE SET NODE_SUBRACK = NODE_SUBRACK +"+(subrackRecords.size()-4));//records.size()-4) is used to remove the unnecessary header rows in the csv file
+		  	stmtp.executeUpdate();
+		  	stmtp.close();
+		  }	
+		  for(int i=4;i<subrackRecords.size();i++) {
+			  subrackId=year+"_NODE_"+Gprovider+"_"+Domain+"_SUBRAC_"+SubrackSeq;
+			  rsinit2.close();
+			  stmtp1.close();
+
+			  nodeId = subrackRecords.get(i).get(3);
+			  System.out.println("nodeId: "+ nodeId);
+			  String sqlStmtinit3 = "select NODE_PK,DOMAIN,VENDOR,SUB_DOMAIN,SUB_DOMAIN_TYPE from NODE_ACTIVE WHERE NODE_ID ='"+nodeId+"'";     
+			  stmtp1 = con.createStatement();
+			  ResultSet rsinit3 = stmtp1.executeQuery(sqlStmtinit3); 
+			  String domain = null ,vender = null ,sub_Domain = null ,sub_Domain_Type = null;
+			  while(rsinit3.next()) {
+				  vcodeid=rsinit3.getString("NODE_PK");	
+				  domain =rsinit3.getString("DOMAIN"); 
+				  vender=rsinit3.getString("VENDOR");
+				  sub_Domain=rsinit3.getString("SUB_DOMAIN");
+				  sub_Domain_Type=rsinit3.getString("SUB_DOMAIN_TYPE");
+				  
+			  }
+			  rsinit3.close();
+			  stmtp1.close();
+			  System.out.println("vcodeid: "+ vcodeid);
+			  if(vcodeid == null && domain == Domain && vender == Gprovider && sub_Domain == subDomain && sub_Domain_Type == subDomainType ) { 
+				  System.out.println("No Node ID");
+			      vcodeid = "No Node ID";
+		     }
+			  /*else {
+		    	 System.out.println("No Node ID");
+		    	 vcodeid = "No Node ID";
+		     }*/
+			  
+			subrackName = subrackRecords.get(i).get(1);
+			subrackType = subrackRecords.get(i).get(2);
+			subracknb = subrackRecords.get(i).get(9);
+			softwareVersion = subrackRecords.get(i).get(4);
+			serialnb = subrackRecords.get(i).get(5);
+			bomCode = subrackRecords.get(i).get(12);
+			status= subrackRecords.get(i).get(10);
+			others = "{\"NE Name\":"+"\""+subrackRecords.get(i).get(0)+"\","+"\"SN(Bar Code)\":"+"\""+subrackRecords.get(i).get(6)+"\","+"\"Subnet\":"+"\""+subrackRecords.get(i).get(7)+"\","+"\"Subnet Path\":"+"\""+subrackRecords.get(i).get(8)+"\","+"\"Description\":"+"\""+subrackRecords.get(i).get(13)+"\","+"\"Manufactured On\":"+"\""+subrackRecords.get(i).get(14)+"\","+"\"Equipment Room Name\":"+"\""+subrackRecords.get(i).get(15)+"\","+"\"Rack Name\":"+"\""+subrackRecords.get(i).get(16)+"\","+"\"Subrack Number\":"+"\""+subrackRecords.get(i).get(17)+"\","+"\"Remarks\":"+"\""+subrackRecords.get(i).get(18)+"\""+"}";
+				
+			stmtp =  con.prepareStatement("insert into NODE_SUBRACK (SUBRACK_ID,SUBRACKNO,SERIALNUMBER,BOMCODE,NODE_PK,UPDATE_DATE,FILENAME,STATUS,DOMAIN,VENDOR,OTHERS,ACTIVE_RECORD)"
+			     + "values('"+subrackId+"','"+subracknb+"','"+serialnb+"','"+bomCode+"','"+vcodeid+"',sysdate,'"+subrackFileName+"','"+status+"','"+Domain+"','"+Gprovider+"','"+others+"','1')"); 
+		  	stmtp.executeUpdate();
+		  	stmtp.close();
+		  	
+		  	SubrackSeq++;
+		  }
+		  
+		  
+		  
+	}
+	
+	
+	
+		 
+	
+	
 }
 
 private static void GetduplicateFilename(String vdomain , String vvendor,String subDomain, String type) throws SQLException  {
