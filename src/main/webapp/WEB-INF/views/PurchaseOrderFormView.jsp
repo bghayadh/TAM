@@ -197,6 +197,11 @@ max-width: 100%;
 }
 }
 
+.nav-link.active {
+ background-color: #FFD966 !important;
+    color: #00757c !important;
+    }
+
 </style>
     
 </head>
@@ -339,11 +344,16 @@ max-width: 100%;
             id="custom-tabs-one-home-tab" data-toggle="tab"
             href="#custom-tabs-one-home" role="tab"
             aria-controls="custom-tabs-one-home" aria-selected="true" style="color: gold;">INFORMATION</a></li>
-      
+       
 		<li class="nav-item"><a class="nav-link"
             id="custom-tabs-overview" data-toggle="tab"
             href="#custom-tabs-one-overview" role="tab"
             aria-controls="#custom-tabs-overview" aria-selected="false" style="color: gold;">OVERVIEW</a></li>	
+            
+            <li class="nav-item"><a class="nav-link"
+            id="custom-tabs-discrepancy" data-toggle="tab"
+            href="#custom-tabs-one-discrepancy" role="tab"
+            aria-controls="#custom-tabs-discrepancy" aria-selected="false" style="color: gold;">DISCREPANCY</a></li>	
             
             
             <li id="Buttons" class="nav-item ml-auto">
@@ -680,6 +690,56 @@ max-width: 100%;
 	</div>
 
 </div>
+
+<div class="tab-pane fade" id="custom-tabs-one-discrepancy" role="tabpanel" aria-labelledby="custom-tabs-one-discrepancy">
+<div style="height:20px;"></div>
+ <table id ="bisotab1" class="table table-striped table-bordered table-sm" style="display:block; height:300px; overflow-y: auto;">
+						        <thead>
+						            <tr class="fixed-headerr">
+						               
+						                <th>Item</th>
+						                <th>Item Model</th>
+						                <th>Item Part Number</th>
+						                <th>Discrepancy Qty</th>
+						                <th>Net rate</th>
+						             
+						                <th>Total price</th>
+						                
+						            </tr>
+						        </thead>
+						        <tbody>
+						            
+									
+						        </tbody>
+						        
+						    </table>
+
+  <table id ="disctab"  class="table table-striped table-bordered table-sm" style="display:block;  overflow-y: auto;">
+						       <thead>
+						            <tr class="fixed-headerr">
+						                
+						                <th>Total Quantity</th>
+						                <th><input id="quan" style="width:220px;" type="text" readonly /></th>
+						                <th>Total Discrepancy Price</th>
+						                <th><input id="price" style="width:220px;" type="text" readonly /></th>
+						                <th>Discrepancy Qty % </th>
+						                <th><input id="qty%" style="width:220px;" type="text" readonly /></th>
+						                <th>Discrepancy Price %</th>
+						                   <th><input id="price%" style="width:220px;" type="text" readonly /></th>
+						                   </tr></thead></table>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
 <div class="tab-pane fade" id="custom-tabs-one-overview" role="tabpanel" aria-labelledby="custom-tabs-overview">
 
 <div class="row container" style="display:flex;">
@@ -1194,7 +1254,7 @@ max-width: 100%;
 								         
 					  </th>
 					 <th width="232px">Serial Number</th>
-					 <th width="232px">Item Model</th>
+					 <th width="232px"></th>
                      <th width="232px">Item Part Number</th>
 						              
 					</tr> </thead> <tbody> </tbody> </table>
@@ -1308,6 +1368,86 @@ max-width: 100%;
 			
 			 
 		}
+
+
+boqArray1=${discrepancy};		
+console.log(boqArray1);
+var totalqty=0;
+var totalprice=0;
+for (j = 0; j < boqArray1.length; j++){
+
+	var ItemCode=boqArray1[j][0];
+	if(ItemCode==null){
+		ItemCode="";
+
+		}
+	var ItemName=boqArray1[j][1];
+	if(ItemName==null){
+		ItemName="";
+
+		}
+	var ItemModel=boqArray1[j][2];
+	if(ItemModel==null){
+		ItemModel="";
+		}
+	var ItemPNum=boqArray1[j][3];
+	if(ItemPNum==null){
+		ItemPNum="";
+		}
+	var Disquant=boqArray1[j][4];
+	console.log(Disquant);
+	if(Disquant==null){
+	
+		Disquant="";
+		}
+	var netRate=boqArray1[j][5];
+	if(netRate==null){
+		netRate="";
+		}
+    var totalPrice = parseFloat(Disquant) * parseFloat(netRate);
+   var discrepancyRow="";
+
+discrepancyRow += "<tr>"
+    + "<td name='itemCode'><input type='text' name='itmCode' value='" + ItemCode +":"+ ItemName + "' style='width:300px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input' /></td>"
+	 + "<td name='itemModel'><input name='itmModel' type='text' value='" + ItemModel + "' style='width:230px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input'/></td>"
+	 + "<td name='itemPartNo'><input name='itmPartNo' type='text' value='" + ItemPNum + "' style='width:230px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input' /></td>"		 			
+	 + "<td  name='poBarCode'><input type='text' style='width:230px;'  value='" + Disquant +"' class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>"
+	 + "<td name='qty'><input name='qty' type='text' style='width:230px;' value='" + netRate +"' class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>"
+	 + "<td name='qty'><input name='qty' type='text' style='width:230px;' value='" + totalPrice +"' class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td></tr>;"
+	 $("#bisotab1 > tbody").append(discrepancyRow);
+
+totalqty+=parseFloat(Disquant);
+totalprice+=parseFloat(totalPrice);
+	
+}
+
+
+
+Totalprice=${totalPrice};
+TotalQuant=${totalQty};
+
+
+
+document.getElementById("quan").value = totalqty;
+var p=parseFloat(totalprice).toFixed(3);
+document.getElementById("price").value = p;
+
+var qtyElement = document.getElementById("qty%");
+var priceElement = document.getElementById("price%");
+
+var qtyValue = (totalprice / parseFloat(Totalprice) * 100).toFixed(3);
+var priceValue = (totalqty / parseFloat(TotalQuant) * 100).toFixed(3);
+
+qtyElement.value = qtyValue + "%";
+priceElement.value = priceValue + "%";
+
+
+
+
+
+
+
+
 			
   
 boqArray = ${ListPoItem};
