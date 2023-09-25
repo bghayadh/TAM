@@ -60,6 +60,8 @@ var DBoldNtwLevel = ""; // used for check if network level change to decided the
 let isClientChecked=false;
 var fiberIdList = [];
 var fiberOwnerList = [];
+var markerArrayAux=[]; // It is used in create from Map to store the red marker that is appearing while clicking.
+
 ////
 var TargetFiber= {
 		Action :"",
@@ -1292,41 +1294,8 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
  
 $("#ductName").on("input",function(){
 	$("#ductHeader").text("Duct: "+$(this).val());
-});		
-	/////////////*********************	CONTEXT MENU OF INITIAL PARENT LI >> PHYSICAL LAYER  ***********************///////////////
-	//-------------------------------------------------------------------------------------------------//
-	markerArrayAux=[];
-	menu_Initial = new ContextMenu({
-		'theme': 'default',
-		
-		'items': [
-		{'icon': 'circle', 'name': 'Fit Bounds', action: () => {
-		
-				var bounds = new google.maps.LatLngBounds();
-				var latlng = new google.maps.LatLng(46,0);
-				bounds.extend(latlng);
-				latlng = new google.maps.LatLng(44,78);
-				bounds.extend(latlng);
-				
-				if (bounds.getNorthEast().equals(bounds.getSouthWest())) {
-					var extendPoint1 = new google.maps.LatLng(parseFloat(bounds.getNorthEast().lat() + 0.001), parseFloat(bounds.getNorthEast().lng() + 0.001));
-					var extendPoint2 = new google.maps.LatLng(parseFloat(bounds.getNorthEast().lat() - 0.001), parseFloat(bounds.getNorthEast().lng() - 0.001));
-					bounds.extend(extendPoint1);
-					bounds.extend(extendPoint2);
-				}
-				
-				map.fitBounds(bounds);
-				google.maps.event.addListenerOnce(map, 'idle', function() {
-						markerClusterManhole.repaint();
-						markerClusterHandhole.repaint();
-						markerClusterDistBoard.repaint();
-				});
-		
-			}				        
-		}
-		]
-	});
-	
+});
+
 /////////////*********************	Current Physical Layer li CONTEXT MENU  ***********************///////////////
 //-------------------------------------------------------------------------------------------------//
 currentPhysicalmenu = new ContextMenu({
