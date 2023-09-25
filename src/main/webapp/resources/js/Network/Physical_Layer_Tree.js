@@ -16647,16 +16647,18 @@ $("#editManHand").click(function (data) {
 					    "ID": selectedFiberContext,
 					    "dictParameter":dict,
 					    },
+					    beforeSend: function() {
+							$("#loaderDiv").show();
+					    }, 
 					    dataType: "json",
 					    success: function(data) {
-					    
+					    $("#loaderDiv").hide();
 					    if (data != null) {
 					    	var countAuxRowBoq=$("#auxiliaryTable  > tbody").children().length;
 					    	fiberAction = "Update";	 
 							TargetFiber.Action=fiberAction;
 							AuxAppendBOQ(data,"","",TargetFiber,index); 
-							TargetFiber.Action="";
-							alert("The Manhole Update Successfully ...!!");
+							alert("The Manhole and Handhole Update Successfully ...!!");
 							}
 					    },
 					    error: function(result) {
@@ -16664,6 +16666,7 @@ $("#editManHand").click(function (data) {
 					    }
 					  });
 });
+
 
 
 function checkDraw(){
