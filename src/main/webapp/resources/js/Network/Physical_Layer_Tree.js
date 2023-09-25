@@ -1263,7 +1263,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 					}
 				}
 			}
-		$('.TreeSpan').css("display", "inline"); // The purpse of this command is to let the background color width in mouse hovering or mouse select to be same span text width	
+		$('.TreeSpan').css("display", "inline"); // The purpose of this command is to let the background color width in mouse hovering or mouse select to be same span text width	
 //		$('.TreeSpan').width(($("#left").width()));						   
 		// tree nodes events click show/hide children nodes
 
