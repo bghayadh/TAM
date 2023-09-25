@@ -526,7 +526,7 @@ $("#setCoordinateTubeAux").on('click',function(){
 
 
 });
-});
+}); // End of Trigger Event: triggerListenersEvent
  
 ////>>>>>>>>>>>> function for tree --> map clicks events of <<<Manholes>>>  /////		 
 	
