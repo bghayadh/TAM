@@ -2,6 +2,7 @@ package com.aliat.alm.telkom.Parser;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
@@ -28,6 +30,16 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.hssf.usermodel.HSSFSheet;  
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 public class LoadFileDWDMTejas {
 
@@ -38,7 +50,7 @@ public class LoadFileDWDMTejas {
 	static String logsDetailsId="0";
 	static int totSumRow=0;
 	static int totSumCol=0;
-	static int NodeSeq;
+	static int NodeSeq,BoardSeq;
 	static BufferedReader objReader1 = null;
 	static String strCurrentLine1;
 	static String projpath=null;
@@ -50,7 +62,8 @@ public class LoadFileDWDMTejas {
 	static String username2;
 	static String password2,siteID;
 	static String vfolderfrom,fileType,fileName;
-	static String Gprovider,Domain,subDomain,subDomainType,gateway,gatewayType,gatewayIP,patchVersion,partNumber;
+	static String Gprovider,Domain,subDomain,subDomainType,gateway,gatewayType,gatewayIP,patchVersion,partNumber,others;
+	static String boardId,boardName,boardType,subracknb,slotnb,serialnb,bomCode,hardwareVersion,biosVersion,issueNb,model,status;
 	static String copyfileNokiato;
 	static String vfolderto;
 	static String circleid="10";
@@ -90,7 +103,12 @@ public class LoadFileDWDMTejas {
 
 		//System.out.println("Start withh LOAD :" + System.getProperty("user.dir"));
 		
-	 	objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"/"+"almconfig.dat"));
+	 	//objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"/"+"almconfig.dat"));
+		Resource ConfigResource = new ClassPathResource("almconfig.dat");
+		File configfile = ConfigResource.getFile();
+		FileReader fr=new FileReader(configfile);  
+		BufferedReader objReader1=new BufferedReader(fr);
+		
 		 while ((strCurrentLine1 = objReader1.readLine()) != null){
 			 String data = strCurrentLine1;
 			 String[] data1 ;
@@ -143,7 +161,12 @@ public class LoadFileDWDMTejas {
 		}
 		 objReader1.close();
 		 
-		 objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"\\"+"almcircle.dat"));
+		 //objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"\\"+"almcircle.dat"));
+		 Resource CircleRsource = new ClassPathResource("almcircle.dat");
+		 File circlefile = CircleRsource.getFile();
+		 fr=new FileReader(circlefile);     
+		 objReader1=new BufferedReader(fr);
+		 
 		 while ((strCurrentLine1 = objReader1.readLine()) != null){
 			 String data = strCurrentLine1;
 			 String[] data1 ;
@@ -197,16 +220,18 @@ public class LoadFileDWDMTejas {
 					 stmtinit.close();
 					 logger.info("Load DWDM HW Files inprocess...");
 					//looping over all files found in the directory.
+					 int folderNb = 0;
 					 for (File file : listOfFiles) {
 						 if(file.isFile()) {
 							 fileName1 = file.getName().toString();
 							 System.out.println("filename is : "+fileName1);
 							 //splitting to get the file name and extension
 							 String[] data1=fileName1.replace(".","_").split("_");
-							 System.out.println(data1.length);
+							 //System.out.println(data1.length);
 							 fileName=data1[0]; fileType=data1[1];
-							
-							 	readfile(fileName1);
+							 folderNb++;
+							 System.out.println("folderNb "+folderNb);
+							 	readfile(fileName1,folderNb);
 							 	File source = new File(readfileAIMfrom+"\\"+file.getName());
 							    File dest = new File(copyfileAIMto+"\\"+file.getName()+".bkp");
 							     
@@ -232,69 +257,208 @@ public class LoadFileDWDMTejas {
 			  conalm.close();
 			  con.close();
 	}
-	
-	private static void readfile(String fileName) throws FileNotFoundException, IOException, SQLException {
+	static List<CSVRecord> networkRecords = new ArrayList<>(); 
+	static String networkFileName = null,boardFileName = null,subrackFileName = null;
+	private static void readfile(String fileName,int foldersNb) throws FileNotFoundException, IOException, SQLException {
 		 
-		 //csvparser used to read csv file in order to fill the data in a list of type CSVRecord row by row
-		 CSVParser csvParser = new CSVParser(new FileReader(vfolderfrom + "\\" + fileName), CSVFormat.DEFAULT);
-		  List<CSVRecord> records = new ArrayList<>();
-		  for (CSVRecord record : csvParser) {
-			  records.add(record);
+		//csvparser used to read csv file in order to fill the data in a list of type CSVRecord row by row
+		 CSVParser csvParser = new CSVParser(new FileReader(vfolderfrom + "\\" + fileName), CSVFormat.DEFAULT); 
+		 
+		if(StringUtils.equalsIgnoreCase(fileName, "Tejas DWDM Network Elements.csv")) {
+			System.out.println("Tejas DWDM Network Elements.csv Files inprocess...");
+			  for (CSVRecord record : csvParser) {
+				  networkRecords.add(record);
+			}
+			  networkFileName = "Tejas DWDM Network Elements.csv";
+		}
+		
+		else if(StringUtils.equalsIgnoreCase(fileName,"Tejas DWDM Cards.xls")) {
+			 System.out.println("Load Tejas DWDM Cards.xls Files inprocess...");
+			 boardFileName = "Tejas DWDM Cards.xls";
+			// xss used to read xls file 
+			 String excelFilePath=vfolderfrom + "\\" + fileName;
+			// FileInputStream inputStream = new FileInputStream("readexcelTransOptDWDMTJSfrom;"+vfolderfrom + "\\" + fileName);
+			 FileInputStream inputStream = new FileInputStream(excelFilePath);
+			 Workbook workbook=new HSSFWorkbook(inputStream);
+			 Sheet firstSheet=workbook.getSheetAt(0);
+			// get the seq of node_active and update it by number of row 
+			 int rownumb=firstSheet.getLastRowNum();
+			 Iterator<Row> rowIterator=firstSheet.iterator();
+			 Row nextRow = rowIterator.next();
+			 
+			 while(rowIterator.hasNext() ){
+				 // vhmap=getexceldata(firstSheet,nextRow,rowIterator);
+				  nextRow = rowIterator.next();
+				  Iterator<Cell> cellIterator=nextRow.cellIterator();
+				  int rowIndex = nextRow.getRowNum();
+				  others = "";
+				  if(rowIndex >3) {
+						while(cellIterator.hasNext()) {
+							Cell nextCell=cellIterator.next();
+							int columnIndex=nextCell.getColumnIndex();
+							
+							switch (columnIndex) {
+							case 0:
+								nodeName =nextCell.getStringCellValue();
+								System.out.println("ne name "+nextCell.getStringCellValue());
+								break;
+							case 1:
+								boardName=nextCell.getStringCellValue();
+								break;
+							case 2:
+								boardType=nextCell.getStringCellValue();
+								break;
+							case 3:
+								others +="{\" Shelf-Slot \":"+"\""+ nextCell.getStringCellValue();
+								break;
+							case 4:
+								serialnb=nextCell.getStringCellValue();
+								break;
+							case 5:
+								softwareVersion=nextCell.getStringCellValue();
+								break;
+							case 7:
+								others += "\","+ "\" FPGA Version\":"+"\""+nextCell.getStringCellValue()+"\""+"}";
+								break;
+							case 8:
+								hardwareVersion=nextCell.getStringCellValue();
+								break;
+
+							}
+							 
+							
+						}
+				 
+				 
+						}
+				  vhmap.put("nodeName", nodeName);
+				  vhmap.put("boardType", boardType);
+				  vhmap.put("serialnb", serialnb);
+				  vhmap.put("softwareVersion", softwareVersion);
+				  vhmap.put("hardwareVersion", hardwareVersion);
+				  vhmap.put("others", others);
+				 
+				  
+					  
+				  
+				   
+			  }  
+			
 		}
 		  
 		  Calendar calendar = new GregorianCalendar();
 		  int year = calendar.get(Calendar.YEAR);
 		  
-		  //select the node active sequence from the seq table in alm.
-		  String sqlStmtinit2 = "select NODE_ACTIVE from SEQ_TABLE";     
-		  stmtp1 = conalm.createStatement();
-		  ResultSet rsinit2 = stmtp1.executeQuery(sqlStmtinit2);
-		  while(rsinit2.next()) {
-			  //store the returned result in a variable to be increased each loop instead of accessing the database all the time
-			  //which lead to exceed the maximum number of open cursors.
-			NodeSeq = rsinit2.getInt("NODE_ACTIVE");
-			//update the seq of the node active based on the size of the list filled from the csv file
-		  	stmtp = conalm.prepareStatement("UPDATE SEQ_TABLE SET NODE_ACTIVE = NODE_ACTIVE +"+(records.size()-1));//records.size()-1) is used to remove the unnecessary header rows in the csv file
-		  	stmtp.executeUpdate();
-		  	stmtp.close();
-		  }
-		  rsinit2.close();
-		  stmtp1.close();
-		  for(int i=1;i<records.size();i++) {
+		  if(foldersNb == 2) {
+			  System.out.println("Entered ");
+			  //select the node active sequence from the seq table in alm.
+			  String sqlStmtinit2 = "select NODE_ACTIVE from SEQ_TABLE";     
+			  stmtp1 = conalm.createStatement();
+			  ResultSet rsinit2 = stmtp1.executeQuery(sqlStmtinit2);
+			  while(rsinit2.next()) {
+				  //store the returned result in a variable to be increased each loop instead of accessing the database all the time
+				  //which lead to exceed the maximum number of open cursors.
+				NodeSeq = rsinit2.getInt("NODE_ACTIVE");
+				//update the seq of the node active based on the size of the list filled from the csv file
+			  	stmtp = conalm.prepareStatement("UPDATE SEQ_TABLE SET NODE_ACTIVE = NODE_ACTIVE +"+(networkRecords.size()-1));//records.size()-1) is used to remove the unnecessary header rows in the csv file
+			  	stmtp.executeUpdate();
+			  	stmtp.close();
+			  }
+			  rsinit2.close();
+			  stmtp1.close();
+			  for(int i=1;i<networkRecords.size();i++) {
+				  
+				  vcodeid=year+"_NODE_"+Gprovider+"_"+Domain+"_"+NodeSeq;
+				  
+				  
+				  nodeId=networkRecords.get(i).get(0);
+				  IPaddress = networkRecords.get(i).get(0);
+				  nodeName = networkRecords.get(i).get(1);
+				  commStatus= networkRecords.get(i).get(6);
+				  nodeType="WDM";
+				  softwareVersion = networkRecords.get(i).get(9);
+				  adminStatus= "0";
+				  LCStatus="0";
+				  patchVersion=networkRecords.get(i).get(20);
+				  unique_Node_ID = nodeId+"_TJS";
+				  nodeModel = null;
+				  MACaddress = null;
+				  partNumber = null;
+				  gateway=null;
+				  gatewayType=null;
+				  gatewayIP=null;
+				  unique_Node_ID = null;
+				  siteID=null;
+				  wareID=null;
+				  wareName=null;
+				  longi=null;
+				  lat=null;
+				  others = "{\"Partition Label\":"+"\""+networkRecords.get(i).get(2)+"\","+ "\"Product Name\":"+"\""+networkRecords.get(i).get(3)+"\","+ "\"Location\":"+"\""+networkRecords.get(i).get(4)+"\","+"\"Protocol\":"+"\""+networkRecords.get(i).get(5)+"\","+"\"EMS Sync State\":"+"\""+networkRecords.get(i).get(7)+"\","+"\"NMS Sync State\":"+"\""+networkRecords.get(i).get(8)+"\","+"\"EMS Name\":"+"\""+networkRecords.get(i).get(10)+"\","+"\"Creation Time\":"+"\""+networkRecords.get(i).get(11)+"\","+"\"Constraint\":"+"\""+networkRecords.get(i).get(12)+"\","+"\"NMS Enrolled\":"+"\""+networkRecords.get(i).get(13)+"\","+"\" Ethernet IP\":"+"\""+networkRecords.get(i).get(14)+"\","+"\"Modify Time\":"+"\""+networkRecords.get(i).get(15)+"\","+"\"Is GNE\":"+"\""+networkRecords.get(i).get(21)+"\","+"\"Load\":"+"\""+networkRecords.get(i).get(22)+"\""+"}";
+					  	stmtp =  con.prepareStatement("insert into NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,WARE_ID,VENDOR,WARE_NAME,IP_ADDRESS,MAC_ADDRESS,SUB_DOMAIN,SOFTWARE_VERSION,STATUS_1,GATEWAY,GATEWAY_TYPE,GATEWAY_IP,STATUS_2,LONGITUDE,LATITUDE,PATCH_VERSION,PART_NUMBER,SUB_DOMAIN_TYPE,OTHERS,ACTIVE_RECORD)"
+						 		+ "values('"+vcodeid+"','"+unique_Node_ID+"','"+nodeId+"','"+nodeName+"','"+nodeType+"','"+Domain+"','"+nodeModel+"','"+tech2+"','"+tech3+"','"+tech4+"','"+tech5+"','"+siteID+"','"+circleid+"',sysdate,sysdate,'"+fileType+"','"+networkFileName+"','"+commStatus+"','"+wareID+"','"+Gprovider+"','"+wareName+"','"+IPaddress+"','"+MACaddress+"','"+subDomain+"','"+softwareVersion+"','"+adminStatus+"','"+gateway+"','"+gatewayType+"','"+gatewayIP+"','"+LCStatus+"','"+longi+"','"+lat+"','"+patchVersion+"','"+partNumber+"','"+subDomainType+"','"+others+"', '1')"); 
+					  	stmtp.executeUpdate();
+					  	stmtp.close();
+					  	
+					  	NodeSeq++;
+				 
+			  }
+			  // end of node active
 			  
-			  vcodeid=year+"_NODE_"+NodeSeq;
+			  // start of Board (cards)
 			  
+			  //select the node active sequence from the seq table in alm.
+			  String sqlStmtinit3 = "select NODE_BOARD from SEQ_TABLE";     
+			  stmtp1 = conalm.createStatement();
+			  ResultSet rsinit3 = stmtp1.executeQuery(sqlStmtinit3);
+			  while(rsinit3.next()) {
+				  //store the returned result in a variable to be increased each loop instead of accessing the database all the time
+				  //which lead to exceed the maximum number of open cursors.
+				  BoardSeq = rsinit3.getInt("NODE_BOARD");
+				//update the seq of the node active based on the size of the list filled from the xls file
+			  	stmtp = conalm.prepareStatement("UPDATE SEQ_TABLE SET NODE_BOARD = NODE_BOARD +"+(vhmap.size() -1));// used to remove the unnecessary header rows in the xls file
+			  	stmtp.executeUpdate();
+			  	stmtp.close();
+			  }
+			  rsinit2.close();
+			  stmtp1.close();
 			  
-			  nodeId=records.get(i).get(0);
-			  IPaddress = records.get(i).get(0);
-			  nodeName = records.get(i).get(1);
-			  commStatus= records.get(i).get(6);
-			  nodeType="WDM";
-			  softwareVersion = records.get(i).get(9);
-			  adminStatus= "0";
-			  LCStatus="0";
-			  patchVersion=records.get(i).get(20);
-			  unique_Node_ID = nodeId+"_TJS";
-			  nodeModel = null;
-			  MACaddress = null;
-			  partNumber = null;
-			  gateway=null;
-			  gatewayType=null;
-			  gatewayIP=null;
-			  unique_Node_ID = null;
-			  siteID=null;
-			  wareID=null;
-			  wareName=null;
-			  longi=null;
-			  lat=null;
-			  
-				  	stmtp =  con.prepareStatement("insert into NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,WARE_ID,VENDOR,WARE_NAME,IP_ADDRESS,MAC_ADDRESS,SUB_DOMAIN,SOFTWARE_VERSION,STATUS_1,GATEWAY,GATEWAY_TYPE,GATEWAY_IP,STATUS_2,LONGITUDE,LATITUDE,PATCH_VERSION,PART_NUMBER,SUB_DOMAIN_TYPE)"
-					 		+ "values('"+vcodeid+"','"+unique_Node_ID+"','"+nodeId+"','"+nodeName+"','"+nodeType+"','"+Domain+"','"+nodeModel+"','"+tech2+"','"+tech3+"','"+tech4+"','"+tech5+"','"+siteID+"','"+circleid+"',sysdate,sysdate,'"+fileType+"','"+fileName+"','"+commStatus+"','"+wareID+"','"+Gprovider+"','"+wareName+"','"+IPaddress+"','"+MACaddress+"','"+subDomain+"','"+softwareVersion+"','"+adminStatus+"','"+gateway+"','"+gatewayType+"','"+gatewayIP+"','"+LCStatus+"','"+longi+"','"+lat+"','"+patchVersion+"','"+partNumber+"','"+subDomainType+"')"); 
+			  for(int i=1;i<vhmap.size();i++) {
+				  nodeName =  vhmap.get("vhmap");
+				  String sqlStmtinit4 = "select NODE_PK,DOMAIN,VENDOR,SUB_DOMAIN,SUB_DOMAIN_TYPE from NODE_ACTIVE WHERE NODE_NAME ='"+nodeName+"'";     
+				  stmtp1 = con.createStatement();
+				  ResultSet rsinit4 = stmtp1.executeQuery(sqlStmtinit4); 
+				  String domain = null ,vender = null ,sub_Domain = null ,sub_Domain_Type = null;
+				  while(rsinit4.next()) {
+					  vcodeid=rsinit3.getString("NODE_PK");	
+					  domain =rsinit3.getString("DOMAIN"); 
+					  vender=rsinit3.getString("VENDOR");
+					  sub_Domain=rsinit3.getString("SUB_DOMAIN");
+					  sub_Domain_Type=rsinit3.getString("SUB_DOMAIN_TYPE");
+					  
+				  }
+				  rsinit4.close();
+				  stmtp1.close();
+				  System.out.println("vcodeid: "+ vcodeid);
+				  if(vcodeid == null && domain == Domain && vender == Gprovider && sub_Domain == subDomain && sub_Domain_Type == subDomainType ) { 
+					  System.out.println("No Node ID");
+				      vcodeid = "No Node ID";
+			     }
+					  
+				  boardId=year+"_NODE_"+Gprovider+"_"+Domain+"_BRD_"+BoardSeq;
+				  boardType = vhmap.get("boardType");
+				  serialnb =  vhmap.get("serialnb");
+				  softwareVersion =  vhmap.get("softwareVersion");
+				  hardwareVersion =  vhmap.get("hardwareVersion");
+				  others = vhmap.get("others");
+					stmtp =  con.prepareStatement("insert into NODE_BOARD (BOARD_ID,SUBRACKNO,SLOTNO,BOARDNAME,BOARDTYPE,SERIALNUMBER,HARDWAREVERSION,SOFTVER,BIOSVER,ISSUENUMBER,BOMCODE,MODEL,NODE_PK,UPDATE_DATE,FILENAME,STATUS,CREATION_DATE,DOMAIN,VENDOR,OTHERS,ACTIVE_RECORD)"
+					     + "values('"+boardId+"','"+subracknb+"','"+slotnb+"','"+boardName+"','"+boardType+"','"+serialnb+"','"+hardwareVersion+"','"+softwareVersion+"','"+biosVersion+"','"+issueNb+"','"+bomCode+"','"+model+"','"+vcodeid+"',sysdate,'"+boardFileName+"','"+status+"',sysdate,'"+Domain+"','"+Gprovider+"','"+others+"', '1')"); 
 				  	stmtp.executeUpdate();
 				  	stmtp.close();
 				  	
-				  	NodeSeq++;
-			 
+				  	BoardSeq++;
+			  
+			  }
+		  
 		  }
 	}
 	
