@@ -91,6 +91,7 @@
 	<input type="text" id="strandAuxFlag" name="strandAuxFlag" value="" class="form-control text-input" hidden="hidden" />
 	<input type="text" id="trenchAuxFlag" name="trenchAuxFlag" value="" class="form-control text-input" hidden="hidden" />	
 	<input type="text" id="ductAuxFlag" name="ductAuxFlag" value="" class="form-control text-input" hidden="hidden" />	
+	<input type="text" id="DBMappingFlag" name="DBMappingFlag" value="" class="form-control text-input" hidden="hidden" />
 	<!-- End of Optional Bar  -->
 	<!--  Beginning for Search bar, Coordinates and View buttons -->
 	<div class="container-fluid" style="margin-top: 5px;">
@@ -5733,6 +5734,10 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 								aria-labelledby="mapping-tab">
 								<p></p>
 								<div class="container-fluid">
+									<div class="form-group">
+										<div class="input-group-prepend"><div id="loaderDivDB" style="display: none; margin-top:11px;"><img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif" width="40px" /></div>
+										</div>	
+									</div>
 									<form>
 										<div class="table-responsive-sm" id="DbMappingDiv">
 											<table id="DbMappingTable"

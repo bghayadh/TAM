@@ -13,10 +13,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 
@@ -1927,19 +1929,19 @@ public class PhysicalLayerController {
 								+ "'),A.CITY, A.SITE_NAME,A.WAREHOUSE,TO_CHAR(A.CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(A.LAST_MODIFIED_DATE, 'MM/dd/YYYY HH:MI AM') FROM DISTRIBUTION_BOARD A WHERE A.DB_ID='"
 								+ selectedDistBoardContext + "' ")
 						.list();
-
+				/*
 				List<Object[]> DistBoardMappingPts = session.createSQLQuery(
 						"SELECT DISTINCT ROW_COL_INDEX,ROW_NUMBER,COLUMN_NUMBER,DB_PORT_ID,FP_STATUS,FP_LOCATION_TYPE,FP_LOCATION_ID,FP_LOCATION_NAME,FP_LOCATION,FP_EQUIPMENT_TYPE,FP_EQUIPMENT,FP_EQUIPMENT_ID,FP_EQUIPMENT_NAME,FP_ADDRESS,BP_STATUS,BP_STRAND_ID,BP_STRAND_NAME,BP_TUBE_ID,BP_TUBE_NAME,BP_FIBER_ID,BP_FIBER_NAME,FP_STRAND_ID,FP_STRAND_NAME,FP_TUBE_ID,FP_TUBE_NAME,FP_FIBER_ID,FP_FIBER_NAME,BP_LOCATION_TYPE,BP_LOCATION_ID,BP_LOCATION_NAME,BP_LOCATION,BP_EQUIPMENT_TYPE,BP_EQUIPMENT,BP_EQUIPMENT_ID,BP_EQUIPMENT_NAME,BP_ADDRESS,FP_STRAND_Nb,FP_TUBE_Nb,BP_STRAND_Nb,BP_TUBE_Nb,FP_STRAND_COLOR,FP_TUBE_COLOR,BP_STRAND_COLOR,BP_TUBE_COLOR,FP_JUNCTION_ID,FP_JUNCTION_NAME,BP_JUNCTION_ID,BP_JUNCTION_NAME FROM DISTRIBUTION_BOARD_MAPPING B WHERE B.DB_ID='"
 								+ selectedDistBoardContext + "' ")
 						.list();
-				
+				*/
 				List<Object[]> DBnetLevel = session.createSQLQuery(
 						"SELECT DISTINCT DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD  WHERE DB_ID='"
 								+ selectedDistBoardContext + "' ")
 						.list();
 
 				rtn.put("DistBoardDetails", DistBoardDetails);
-				rtn.put("DistBoardMappingPts", DistBoardMappingPts);
+				//rtn.put("DistBoardMappingPts", DistBoardMappingPts);
 				rtn.put("DBnetLevel", DBnetLevel);
 				
 			} catch (Exception e) {
@@ -1949,7 +1951,7 @@ public class PhysicalLayerController {
 				logger.finest("Error in findDistBoardDetails due to \n " + exceptionAsString);
 				logger.info("Error in findDistBoardDetails due to \n " + exceptionAsString);
 				rtn.put("DistBoardDetails", null);
-				rtn.put("DistBoardMappingPts", null);
+				//rtn.put("DistBoardMappingPts", null);
 			} finally {
 				if (session != null && session.isOpen()) {
 					tx.commit();
@@ -1960,6 +1962,53 @@ public class PhysicalLayerController {
 		return rtn;
 	}
 
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/findDistBoardMappingData", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> findDistBoardMappingData(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) throws JsonProcessingException {
+		// logger.info("Welcome home! The client locale is {}.", locale);
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		// ObjectMapper mapper = new ObjectMapper();
+		Session session = null;
+		Transaction tx = null;
+		session = almsessions.getSession();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			String selectedDistBoardContext = request.getParameter("selectedDistBoardContext");
+			try {
+				
+
+				List<Object[]> DistBoardMappingPts = session.createSQLQuery(
+						"SELECT DISTINCT ROW_COL_INDEX,ROW_NUMBER,COLUMN_NUMBER,DB_PORT_ID,FP_STATUS,FP_LOCATION_TYPE,FP_LOCATION_ID,FP_LOCATION_NAME,FP_LOCATION,FP_EQUIPMENT_TYPE,FP_EQUIPMENT,FP_EQUIPMENT_ID,FP_EQUIPMENT_NAME,FP_ADDRESS,BP_STATUS,BP_STRAND_ID,BP_STRAND_NAME,BP_TUBE_ID,BP_TUBE_NAME,BP_FIBER_ID,BP_FIBER_NAME,FP_STRAND_ID,FP_STRAND_NAME,FP_TUBE_ID,FP_TUBE_NAME,FP_FIBER_ID,FP_FIBER_NAME,BP_LOCATION_TYPE,BP_LOCATION_ID,BP_LOCATION_NAME,BP_LOCATION,BP_EQUIPMENT_TYPE,BP_EQUIPMENT,BP_EQUIPMENT_ID,BP_EQUIPMENT_NAME,BP_ADDRESS,FP_STRAND_Nb,FP_TUBE_Nb,BP_STRAND_Nb,BP_TUBE_Nb,FP_STRAND_COLOR,FP_TUBE_COLOR,BP_STRAND_COLOR,BP_TUBE_COLOR,FP_JUNCTION_ID,FP_JUNCTION_NAME,BP_JUNCTION_ID,BP_JUNCTION_NAME FROM DISTRIBUTION_BOARD_MAPPING B WHERE B.DB_ID='"
+								+ selectedDistBoardContext + "' ")
+						.list();
+				
+
+				rtn.put("DistBoardMappingPts", DistBoardMappingPts);
+				
+			} catch (Exception e) {
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in findDistBoardMappingData due to \n " + exceptionAsString);
+				logger.info("Error in findDistBoardMappingData due to \n " + exceptionAsString);
+				rtn.put("DistBoardMappingPts", null);
+			} finally {
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+				}
+			}
+		}
+		return rtn;
+	}
+	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/findDistBoardMappingDetails", method = RequestMethod.GET)
 	@ResponseBody
@@ -4947,97 +4996,171 @@ public class PhysicalLayerController {
 	@RequestMapping(value = "/GrabManHand", method = RequestMethod.POST)
 	@ResponseBody
 	public TreeMap<Object, Object> GrabManHand(HttpServletRequest request,
-			@ModelAttribute ItemParameters itemParameters) {
+	        @ModelAttribute ItemParameters itemParameters) {
 
-		TreeMap<Object, Object> sortedMap = new TreeMap<>();
-		session = almsessions.getSession();
-		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
-			String selectedFiberContext = request.getParameter("ID");
-			try {
-				Map<Object, List<Object>> map = new HashMap<>();
+	    TreeMap<Object, Object> resultManhole = new TreeMap<>();
+	    TreeMap<Object, Object> resultMapHand = new TreeMap<>();
+	    TreeMap<Object, Object> sortedMap = new TreeMap<>();
+	    session = almsessions.getSession();
 
-				List<Object[]> listAux = session.createSQLQuery(
-						"select AUXILIARY_ID,LONGITUDE,LATITUDE,AUXILIARY_POINT_NAME from FIBER_AUXILIARY_POINTS where FIBER_CABLE_ID ='"
-								+ selectedFiberContext + "'")
-						.list();
+	    if (session != null && session.isOpen()) {
+	        tx = session.beginTransaction();
+	        String selectedFiberContext = request.getParameter("ID");
 
-				for (Object[] row : listAux) {
-					String auxiliaryId = row[0].toString();
-					String longitude = row[1].toString();
-					String latitude = row[2].toString();
-					String AuxName = row[3].toString();
+	        try {
+	            List<Object[]> auxList = session.createSQLQuery(
+	                    "SELECT AUXILIARY_ID, LONGITUDE, LATITUDE, AUXILIARY_POINT_NAME FROM FIBER_AUXILIARY_POINTS WHERE FIBER_CABLE_ID ='"
+	                            + selectedFiberContext + "'")
+	                    .list();
 
-					String[] lngparts = longitude.split("\\.");
-					String lngBeforeDecimal = lngparts[0];
-					String lngAfterDecimal = lngparts[1];
-					String newLongitude = "";
+	            // Create a set to store unique manhole Id
+	            Set<String> addedManholeNames = new HashSet<>();
+	            for (Object[] auxData : auxList) {
+	                String auxId = (String) auxData[0];
+	                double auxLng = Double.parseDouble(auxData[1].toString());
+	                double auxLat = Double.parseDouble(auxData[2].toString());
+	                String auxPointName = (String) auxData[3];
 
-					String[] latparts = latitude.split("\\.");
-					String latBeforeDecimal = latparts[0];
-					String latAfterDecimal = latparts[1];
-					String newLatitude = "";
+	                Map<String, Object> nearestManhole = findNearestManhole(auxLng, auxLat, 30.0,auxList); // Pass 30.0 meters as the maximum distance
 
-					if (lngAfterDecimal.length() > 3 && latAfterDecimal.length() > 3) {
-
-						lngAfterDecimal = lngAfterDecimal.substring(0, lngAfterDecimal.length() - 1);
-						newLongitude = lngBeforeDecimal + "." + lngAfterDecimal;
-						latAfterDecimal = latAfterDecimal.substring(0, latAfterDecimal.length() - 1);
-						newLatitude = latBeforeDecimal + "." + latAfterDecimal;
-
-						String manhoelData = "select MANHOLE_ID || ':' || MANHOLE_NAME from MANHOLE WHERE longitude LIKE '"
-								+ newLongitude + "%' AND latitude LIKE '" + newLatitude + "%' FETCH FIRST 1 ROWS ONLY ";
-						query = session.createSQLQuery(manhoelData);
-
-						List<String> manholeResult = query.list();
-						if (manholeResult != null && !manholeResult.isEmpty()) {
-							String concatenatedManholeId = manholeResult.get(0);
-							String[] manholeParts = concatenatedManholeId.split(":");
-							String manholeId = manholeParts[0];
-
-							if (!manholeId.equals(auxiliaryId) && !manholeId.equals(manholeId)) {
-								AuxName = (String) query.uniqueResult();
-								map.put(selectedFiberContext,
-										new ArrayList<>(Arrays.asList(longitude, latitude, "", AuxName, "", "")));
-							}
-						}
-
-						String handholeData = "select HANDHOLE_ID || ':' || HANDHOLE_NAME from HANDHOLE WHERE longitude LIKE '"
-								+ newLongitude + "%' AND latitude LIKE '" + newLatitude + "%' FETCH FIRST 1 ROWS ONLY ";
-						query = session.createSQLQuery(handholeData);
-
-						List<String> handholeResult = query.list();
-						if (handholeResult != null && !handholeResult.isEmpty()) {
-							String concatenatedHandholeId = handholeResult.get(0);
-							String[] handholeParts = concatenatedHandholeId.split(":");
-							String handholeId = handholeParts[0];
-
-							if (!handholeId.equals(auxiliaryId) && !handholeId.equals(handholeId)) {
-								AuxName = (String) query.uniqueResult();
-								map.put(selectedFiberContext,
-										new ArrayList<>(Arrays.asList(longitude, latitude, "", AuxName, "", "")));
-							}
-						}
-					}
-
-					sortedMap.putAll(map);
-				}
-			} catch (Exception e) {
-				sw = new StringWriter();
-				e.printStackTrace(new PrintWriter(sw));
-				exceptionAsString = sw.toString();
-				logger.finest("Error in UpdateAuxPoints due to \n " + exceptionAsString);
-				logger.info("Error in UpdateAuxPoints due to \n " + exceptionAsString);
-				e.printStackTrace();
-			} finally {
-				if (session != null && session.isOpen()) {
-					tx.commit();
-					session.close();
-				}
-			}
-		}
-		return sortedMap;
+	                if (nearestManhole != null) {
+	                	String manholeId = (String) nearestManhole.get("ManholeId");
+	                    String manholeName = (String) nearestManhole.get("ManholeName");
+	                    String combinedValue = manholeId + ":" + manholeName;
+	                    double manholeLng =  (Double) nearestManhole.get("ManholeLng");
+	        	        double manholeLat =  (Double) nearestManhole.get("ManholeLat");
+	        	       
+	                    if (!addedManholeNames.contains(manholeId)) {
+	                    	resultManhole.put(auxId,  new ArrayList<>(Arrays.asList(manholeLng, manholeLat, "", combinedValue, "", "")));
+	                        addedManholeNames.add(manholeId);
+	                        System.out.println("Nearest Manhole IS : " + combinedValue);
+	                        System.out.println("Distance: " + nearestManhole.get("Distance") + " meters");
+	                        System.out.println("--------------------------------------------------------------");
+	                    }
+	                }
+	                sortedMap.putAll(resultManhole);
+	            }
+	            
+	         // Create a set to store unique handhole Id
+	            Set<String> addedHandholeNames = new HashSet<>();
+	            for (Object[] auxData : auxList) {
+	                String auxId = (String) auxData[0];
+	                double auxLng = Double.parseDouble(auxData[1].toString());
+	                double auxLat = Double.parseDouble(auxData[2].toString());
+	                String auxPointName = (String) auxData[3];
+	                
+	                Map<String, Object> nearestHandhole = findNearestHandhole(auxLng, auxLat, 30.0,auxList); // Pass 30.0 meters as the maximum distance
+	               
+	                if (nearestHandhole != null) {
+	                	String handholeId = (String) nearestHandhole.get("HandholeId");
+	                    String handholeName = (String) nearestHandhole.get("HandholeName");
+	                    String combinedValue = handholeId + ":" + handholeName;
+	                    double handholeLng =  (Double) nearestHandhole.get("HandholeLng");
+	        	        double handholeLat =  (Double) nearestHandhole.get("HandholeLat");
+	        	       
+	                    if (!addedHandholeNames.contains(handholeId)) {
+	                        resultMapHand.put(auxId,  new ArrayList<>(Arrays.asList(handholeLng, handholeLat, "", combinedValue, "", "")));
+	                        addedHandholeNames.add(handholeId);
+	                        System.out.println("Nearest HandHole IS : " + combinedValue);
+	                        System.out.println("Distance: " + nearestHandhole.get("Distance") + " meters");
+	                        System.out.println("--------------------------------------------------------------");
+	                    }
+	                }
+	                sortedMap.putAll(resultMapHand);
+	            }
+	        } catch (Exception e) {
+	        } finally {
+	            if (session != null && session.isOpen()) {
+	                tx.commit();
+	                session.close();
+	            }
+	        }
+	    }
+	    return sortedMap;
 	}
+
+	private Map<String, Object> findNearestManhole(double auxLng, double auxLat, double maxDistance,List<Object[]> auxList) {
+	    Map<String, Object> nearestManhole = null;
+	    double minDistance = maxDistance + 1; 
+
+	    List<Object[]> manholeList = session.createSQLQuery("SELECT DISTINCT MANHOLE_ID,MANHOLE_NAME,LONGITUDE,LATITUDE FROM MANHOLE").list();
+
+	    for (Object[] manholeData : manholeList) {
+	        String manholeId = (String) manholeData[0]; 
+	        String manholeName = (String) manholeData[1];
+	        double manholeLng = Double.parseDouble(manholeData[2].toString());
+	        double manholeLat = Double.parseDouble(manholeData[3].toString());
+	     
+	        double distance = calculateDistance(auxLat, auxLng, manholeLat, manholeLng); // Swap lat and lng in calculateDistance function
+
+	     // Check if manholeID exists in auxList
+	        boolean manholeExistsInAuxList = auxList.stream().anyMatch(auxData -> auxData[3].toString().equals(manholeName));
+
+	        if (!manholeExistsInAuxList && distance <= maxDistance && distance < minDistance) {
+	            minDistance = distance;
+	            nearestManhole = new HashMap<>();
+	            nearestManhole.put("ManholeId", manholeId);
+	            nearestManhole.put("ManholeName", manholeName);
+	            nearestManhole.put("ManholeLng", manholeLng);
+	            nearestManhole.put("ManholeLat", manholeLat);
+	            nearestManhole.put("Distance", distance);
+	        }
+	    }
+
+	    return nearestManhole;
+	}
+	
+	private Map<String, Object> findNearestHandhole(double auxLng, double auxLat, double maxDistance,List<Object[]> auxList) {
+	    Map<String, Object> nearestHandhole = null;
+	    double minDistance = maxDistance + 1; 
+
+	    List<Object[]> handholeList = session.createSQLQuery("SELECT DISTINCT HANDHOLE_ID,HANDHOLE_NAME,LONGITUDE,LATITUDE FROM HANDHOLE").list();
+
+	    for (Object[] handholeData : handholeList) {
+	        String handholeId = (String) handholeData[0]; 
+	        String handholeName = (String) handholeData[1];
+	        double handholeLng = Double.parseDouble(handholeData[2].toString());
+	        double handholeLat = Double.parseDouble(handholeData[3].toString());
+	     
+	        double distance = calculateDistance(auxLat, auxLng, handholeLat, handholeLng); // Swap lat and lng in calculateDistance function
+
+	     // Check if handholeId exists in auxList
+	        boolean handholeExistsInAuxList = auxList.stream().anyMatch(auxData -> auxData[3].toString().equals(handholeName));
+
+	        if (!handholeExistsInAuxList && distance <= maxDistance && distance < minDistance) {
+	            minDistance = distance;
+	            nearestHandhole = new HashMap<>();
+	            nearestHandhole.put("HandholeId", handholeId);
+	            nearestHandhole.put("HandholeName", handholeName);
+	            nearestHandhole.put("HandholeLng", handholeLng);
+	            nearestHandhole.put("HandholeLat", handholeLat);
+	            nearestHandhole.put("Distance", distance);
+	        }
+	    }
+
+	    return nearestHandhole;
+	}
+
+	private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+	    // Convert latitude and longitude from degrees to radians
+	    double radLat1 = Math.toRadians(lat1);
+	    double radLon1 = Math.toRadians(lon1);
+	    double radLat2 = Math.toRadians(lat2);
+	    double radLon2 = Math.toRadians(lon2);
+
+	    // Radius of the Earth in meters
+	    final double R = 6371000.0;
+
+	    // Haversine formula
+	    double dLat = radLat2 - radLat1;
+	    double dLon = radLon2 - radLon1;
+	    double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(radLat1) * Math.cos(radLat2) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+	    double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+	    double distance = R * c;
+
+	    return distance; // Return distance in meters
+	}
+
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/fiberPathSave", method = RequestMethod.POST)
@@ -6279,6 +6402,10 @@ public class PhysicalLayerController {
 								? request.getParameter("DistributionBoardCapacity")
 								: "0"));
 				session.saveOrUpdate(distributionBoard);
+				
+				String distBoardMappingFlag = request.getParameter("distBoardMappingFlag");
+				if (StringUtils.equalsIgnoreCase(distBoardMappingFlag, "opened")
+						|| StringUtils.equalsIgnoreCase(distBoardMappingFlag, "new DB")) {
 				query = session.createSQLQuery(
 						"delete from DISTRIBUTION_BOARD_MAPPING where DB_ID = '" + distributionBoardId + "'");
 				query.executeUpdate();
@@ -6507,6 +6634,7 @@ public class PhysicalLayerController {
 
 					}
 
+				}
 				}
 
 				List<Object[]> countConnections = session.createSQLQuery(

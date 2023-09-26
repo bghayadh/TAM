@@ -60,6 +60,8 @@ var DBoldNtwLevel = ""; // used for check if network level change to decided the
 let isClientChecked=false;
 var fiberIdList = [];
 var fiberOwnerList = [];
+var markerArrayAux=[]; // It is used in create from Map to store the red marker that is appearing while clicking.
+
 ////
 var TargetFiber= {
 		Action :"",
@@ -253,6 +255,8 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 	allDB = [];
 	allNodes = [];
 	
+//To be deleted	
+/*
 		$("#saveManhole").unbind(); 
 		$("#saveHandhole").unbind();
 		$("#saveDistBoard").unbind();
@@ -261,7 +265,8 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 		$("#savefiberstrand").unbind();
 		$("#saveProject").unbind(); 
 		$("#saveManholeJunction").unbind(); 
-		$("#saveHandholeJunction").unbind(); 
+		$("#saveHandholeJunction").unbind();
+*/		 
 		
 		var str_CurrentPhysicalLayer="<ul style='margin-left:15px;'><li id='initial_ul_CurrentPhysicalLayer' class='Initial_CurrentPhysicalLayer'><input type='checkbox' class='allElements' unchecked name='filter'></input> <span id='initial_Span_CurrentPhysicalLayer' class='Parentfolder' > <i class='fa fa-folder' style='color: #08526D;'></i></span><span class='TreeSpan' style='color:black;width:436px'>Current Physical Layer </span></li></ul>";
 		console.log("filterFlag !!!!!!!!!!! "+filterFlag);
@@ -1157,7 +1162,8 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				$("<span class='folder' > <i class='fa fa-folder' style='color: #08526D'></i></span>").insertBefore("#"+ductList[i][18]+"> .TreeSpan");
 				str="<ul><li id='"+ductList[i][18]+"_f' style='display:none;' class='ductsFolder'> <input type='checkbox' class='trenchDucts checkFilter' unchecked name='filter'></input> <span  class='folder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='color:black;width:236px'> Ducts <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' id='pushPointsTrench"+window[""+ductList[i][0]][18]+"_f' class='pushPoints'> <img src='"+getContext()+"/resources/NetworkImages/remove.png' hidden style='margin-left:10px' id='cancelPointsTrench"+window[""+ductList[i][0]][18]+"_f' class='clearPoints'></span></li></ul>";
 				$("#"+ductList[i][18]).append(str);
-				$("#"+ductList[i][18]+" > .folder").unbind('click');		
+// To be deleted				
+//				$("#"+ductList[i][18]+" > .folder").unbind('click');		
 
 /*						
 						tree_Prop("#"+window[""+ductId][14]+" > .folder");
@@ -1174,7 +1180,8 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 					
 			str="<ul><li id='"+ductList[i][0]+"'  class='Duct' style='display:none;width:100px;'><input type='checkbox' class='DUCT checkFilter' unchecked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/duct.png' style='opacity:0.6'> "+ductList[i][1]+" / "+ductList[i][0]+" </span></li></ul>";	
 			$("#"+window[""+ductList[i][0]][18]+"_f").append(str);
-			$("#"+window[""+ductList[i][0]][18]+"_f > .folder").unbind('click');
+			// To be deleted
+//			$("#"+window[""+ductList[i][0]][18]+"_f > .folder").unbind('click');
 /*					
 					tree_Prop("#"+window[""+ductId][14]+"_f > .folder");
 */					
@@ -1263,7 +1270,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 					}
 				}
 			}
-		$('.TreeSpan').css("display", "inline"); // The purpse of this command is to let the background color width in mouse hovering or mouse select to be same span text width	
+		$('.TreeSpan').css("display", "inline"); // The purpose of this command is to let the background color width in mouse hovering or mouse select to be same span text width	
 //		$('.TreeSpan').width(($("#left").width()));						   
 		// tree nodes events click show/hide children nodes
 
@@ -1287,41 +1294,8 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
  
 $("#ductName").on("input",function(){
 	$("#ductHeader").text("Duct: "+$(this).val());
-});		
-	/////////////*********************	CONTEXT MENU OF INITIAL PARENT LI >> PHYSICAL LAYER  ***********************///////////////
-	//-------------------------------------------------------------------------------------------------//
-	markerArrayAux=[];
-	menu_Initial = new ContextMenu({
-		'theme': 'default',
-		
-		'items': [
-		{'icon': 'circle', 'name': 'Fit Bounds', action: () => {
-		
-				var bounds = new google.maps.LatLngBounds();
-				var latlng = new google.maps.LatLng(46,0);
-				bounds.extend(latlng);
-				latlng = new google.maps.LatLng(44,78);
-				bounds.extend(latlng);
-				
-				if (bounds.getNorthEast().equals(bounds.getSouthWest())) {
-					var extendPoint1 = new google.maps.LatLng(parseFloat(bounds.getNorthEast().lat() + 0.001), parseFloat(bounds.getNorthEast().lng() + 0.001));
-					var extendPoint2 = new google.maps.LatLng(parseFloat(bounds.getNorthEast().lat() - 0.001), parseFloat(bounds.getNorthEast().lng() - 0.001));
-					bounds.extend(extendPoint1);
-					bounds.extend(extendPoint2);
-				}
-				
-				map.fitBounds(bounds);
-				google.maps.event.addListenerOnce(map, 'idle', function() {
-						markerClusterManhole.repaint();
-						markerClusterHandhole.repaint();
-						markerClusterDistBoard.repaint();
-				});
-		
-			}				        
-		}
-		]
-	});
-	
+});
+
 /////////////*********************	Current Physical Layer li CONTEXT MENU  ***********************///////////////
 //-------------------------------------------------------------------------------------------------//
 currentPhysicalmenu = new ContextMenu({
@@ -1537,115 +1511,7 @@ Width : '200%',
 			  
 			  ]
 			  });
-		
-		menuTransmission = new ContextMenu({
-			  'theme': 'default',
-			  Width: '200%',
-			  'items': [
-			{'icon': 'paste', 'name': 'Show BoQ', action: () => {
-				$.ajax({
-					type: "GET",
-					contentType: "application/json; charset=utf-8",
-					url: getContext()+'/boqNodesCount',
-					data: {		
-				},
-				
-					success : function(data)
-						{
-						if(data != null) {
-							if(data.TransmissionCount!=null){
-								  
-								   var tr ="<tr>"+"<th>Transmission Count : </th> <td> "+data.TransmissionCount+"</td></tr>";
-								   showBoq();
-								   $("#boq_table").append(tr);
-							   
-								   data=null;
-							}
-							}
-						},
-						error: function (result) {
-							alert("Error");
-						}
-				});
-				
-			   }
-			},
-			  
-			  ]
-			  });
-			  
-		 menuCore = new ContextMenu({
-			  'theme': 'default',
-			  Width: '200%',
-			  'items': [
-			{'icon': 'paste', 'name': 'Show BoQ', action: () => {
-				$.ajax({
-					type: "GET",
-					contentType: "application/json; charset=utf-8",
-					url: getContext()+'/boqNodesCount',
-					data: {		
-				},
-				
-					success : function(data)
-						{
-						if(data != null) {
-							if(data.CoreCount!=null){
-								  
-								   var tr ="<tr>"+"<th>Core Count : </th> <td> "+data.CoreCount+"</td></tr>";
-								   showBoq();
-								   $("#boq_table").append(tr);
-							   
-								   data=null;
-							}
-							}
-						},
-						error: function (result) {
-							alert("Error");
-						}
-				});
-				
-			   }
-			},
-			  
-			  ]
-			  });
-			  
-		 menuRan = new ContextMenu({
-			  'theme': 'default',
-			  Width: '200%',
-			  'items': [
-			{'icon': 'paste', 'name': 'Show BoQ', action: () => {
-				$.ajax({
-					type: "GET",
-					contentType: "application/json; charset=utf-8",
-					url: getContext()+'/boqNodesCount',
-					data: {		
-				},
-				
-					success : function(data)
-						{
-						if(data != null) {
-							if(data.AccessCount!=null){
-								  
-								   var tr ="<tr>"+"<th>Access Count : </th> <td> "+data.AccessCount+"</td></tr>";
-								   showBoq();
-								   $("#boq_table").append(tr);
-							   
-								   data=null;
-							}
-							}
-						},
-						error: function (result) {
-							alert("Error");
-						}
-				});
-				
-			   }
-			},
-			  
-			  ]
-			  });
-			 
+					 
 	/////////////*********************	HANDHOLES li CONTEXT MENU  ***********************///////////////
 	//-------------------------------------------------------------------------------------------------//
 		menuHandhole = new ContextMenu({
@@ -4272,6 +4138,7 @@ menuGPON = new ContextMenu({
 					$("#distributionBoardModal").modal('show');
 					$('#distributionBoardModal').find('input:text').val('');
 					$("#DbMappingTable > tbody").empty();
+					document.querySelector("#DBMappingFlag").value = "new DB";
 					
 					//
 					document.getElementById("site_DBAutoComplete").checked = true;
@@ -8563,6 +8430,7 @@ singleProject = new ContextMenu({
 						$("#distributionBoardModal").modal('show');
 						$('#distributionBoardModal').find('input').val('');
 						$("#DbMappingTable > tbody").empty();
+						document.querySelector("#DBMappingFlag").value = "new DB";
 						//
 						document.getElementById("site_DBAutoComplete").checked = true;
 						$('#site_DBAutoComplete').val('1');
@@ -8588,10 +8456,11 @@ singleProject = new ContextMenu({
 						 },
 					
 				   
-					 {'icon': 'edit','name': 'Edit or View Details',action: () => {
+					{'icon': 'edit','name': 'Edit or View Details',action: () => {
 						
 						 document.getElementById("projectIdDB").style.display = "none";
 						 document.getElementById("projectNameDB").style.display = "none";
+						 document.querySelector("#DBMappingFlag").value = "not_opened"
 						 var dbNtLevel = document.getElementById("DBnetlevel");
 						 DBoldNtwLevel = $("#DBnetlevel").val();
 						 $.ajax({
@@ -8622,7 +8491,7 @@ singleProject = new ContextMenu({
 									$("#distributionBoardModal").find("input").val('').end();
 									
 									$("#DistributionBoardheader").text("Distribution Board: "+data.DistBoardDetails[0][0]);
-									$("#distributionBoardModal").modal('show');
+									
 									$("#DistributionBoardId").val(selectedDistBoardContext);
 									if(data.DistBoardDetails[0][1]!=null){
 										if(data.DistBoardDetails[0][1].split("_")[0] == "CLT"){//for check box site or client
@@ -8750,10 +8619,18 @@ singleProject = new ContextMenu({
 									$("#DistributionBoardheader").text("Distribution Board: "+$(this).val());
 
 									});
-
+									
+									 // active the first tab
+									$('#distributionBoardModal ul.nav-tabs li a').removeClass('active');
+									$('#distributionBoardModal ul.nav-tabs li:first-child a').addClass('active');
+			
+									// active the first form
+									$('#distributionBoardModal .tab-pane').removeClass('active');
+									$('#distributionBoardModal #D_Board').addClass('active');
+									$("#distributionBoardModal").modal('show');
 									// MAPPING DATA APPENDING
-									DistBoardMappingPts=data.DistBoardMappingPts;
-									DBMappingData(DistBoardMappingPts);
+									//DistBoardMappingPts=data.DistBoardMappingPts;
+									//DBMappingData(DistBoardMappingPts);
 									
 								/*	if(data.DistBoardMappingPts){
 									
@@ -14394,6 +14271,7 @@ $("#saveHandhole").click(function () {
 					boardCity = document.getElementById("boardCity").value;
 					dbNetLevel = document.getElementById("DBnetlevel").value;
 					boardCreatedDate = document.getElementById("boardCreationDate").value;
+					distBoardMappingFlag = document.querySelector("#DBMappingFlag ").value
 
 					if($("#projectIdDB").is(":visible") && $("#projectNameDB").is(":visible")){
 						if($("#DBProjectId").val()==""){
@@ -14453,6 +14331,7 @@ $("#saveHandhole").click(function () {
 									"boardCreatedDate":boardCreatedDate,
 									"boardCity" : boardCity,
 									"dbNetLevel" : dbNetLevel,
+									"distBoardMappingFlag" : distBoardMappingFlag,
 									"dictParameter":dict,
 									 "ProjectId": IdNodeSelectedTemp
 									   
@@ -14646,6 +14525,45 @@ $("#saveHandhole").click(function () {
 	
 		});
 	});
+	
+	$("#mapping-tab").click(function () {
+		//console.log("DistBoardMappingPts "+DistBoardMappingPts)
+		var DBMappingFlag = document.querySelector("#DBMappingFlag").value;
+		//console.log("before calling "+DBMappingFlag)
+		//DBMappingData(DistBoardMappingPts);
+		if(actiondistBoardContext === "Update" && DBMappingFlag === "not_opened"){
+			document.querySelector("#DBMappingFlag").value = 'opened'
+			//console.log("after calling "+document.querySelector("#DBMappingFlag").value)
+			$.ajax({
+				type: "GET",
+				url: getContext()+'/findDistBoardMappingData',
+				data: {
+					"selectedDistBoardContext":selectedDistBoardContext 
+				},
+				beforeSend: function() {
+					$("#loaderDivDB").show();
+				},
+				dataType: "json",
+				success: function (data) {
+					$("#loaderDivDB").hide();
+
+					console.log("before "+index)
+					index = 0
+
+					if (data != null) {
+						
+					DBMappingData(data.DistBoardMappingPts);
+
+				} // end of data != null	
+				},
+				error: function(result) {
+					alert("Error");
+				}
+			});
+		
+		}
+	});
+	
 	$("#fiber_aux_tab").click(function () {
 
 		var fiberAuxFlag = document.querySelector("#fiberAuxFlag").value;
@@ -16647,16 +16565,18 @@ $("#editManHand").click(function (data) {
 					    "ID": selectedFiberContext,
 					    "dictParameter":dict,
 					    },
+					    beforeSend: function() {
+							$("#loaderDiv").show();
+					    }, 
 					    dataType: "json",
 					    success: function(data) {
-					    
+					    $("#loaderDiv").hide();
 					    if (data != null) {
 					    	var countAuxRowBoq=$("#auxiliaryTable  > tbody").children().length;
 					    	fiberAction = "Update";	 
 							TargetFiber.Action=fiberAction;
 							AuxAppendBOQ(data,"","",TargetFiber,index); 
-							TargetFiber.Action="";
-							alert("The Manhole Update Successfully ...!!");
+							alert("The Manhole and Handhole Update Successfully ...!!");
 							}
 					    },
 					    error: function(result) {
@@ -16664,6 +16584,7 @@ $("#editManHand").click(function (data) {
 					    }
 					  });
 });
+
 
 
 function checkDraw(){
@@ -21914,30 +21835,9 @@ function hideContext(){
 		// remove the listener from the document
 		document.removeEventListener('contextmenu', hideContext);
 		document.removeEventListener('click', hideContext);		
-	}
-	
-}
-		
-// To be deleted			
+	}	
+}		
 
-/*function HoverClickNetworkSpans(){
-		$("li > .TreeSpan").unbind("mouseover");
-	
-	$("li > .TreeSpan").bind("mouseover",function(e) {
-		$(this).addClass('backgroundTree');
-	}).on("mouseout",function(e) {
-		$(this).removeClass('backgroundTree');
-
-	});
-
-	
-	$('.tree li > .TreeSpan').bind('click', function (e) {
-			$("#initial_ul_"+IdNodeSelectedTemp+"").find(' > ul > li').css("background-color", "");
-			$(".tree li > span").css("background-color", "");     	
-		$(this).css("background-color", "#97b9cc");
-	});
-	}					
-*/	
 function MouseHoveringSpans(selector){
 	if(selector==null){
 		selector="li > .TreeSpan";
