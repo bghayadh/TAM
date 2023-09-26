@@ -961,20 +961,16 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				window[""+distribBoardList[i][0]]=[];
 				window[""+distribBoardList[i][0]]=distribBoardList[i];
 				
-				 if(distribBoardList[i][8]=="backbone") {
-			
-					str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
+				if(distribBoardList[i][8]=="backbone") {
+					str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/backboneDB.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
 					$("#DistributionBoard_backbone__"+distribBoardList[i][6]).append(str);
-			
 				}
 				else if(distribBoardList[i][8]=="metro") {
-		
-					str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
+					str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/metroDb.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
 					$("#DistributionBoard_metro__"+distribBoardList[i][6]).append(str);
 				}
 				else if(distribBoardList[i][8]=="access") {
-			
-					str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
+					str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/accessDb.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
 					$("#DistributionBoard_access__"+distribBoardList[i][6]).append(str);
 				}
 				
@@ -990,12 +986,6 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 			}
 //			$('#DistribBoard_span').width($("#left").width());
 //			$('.DistributionBoard > span').width($("#left").width());
-			
-			AllDistributionBoardCheckFilter("DistributionBoard_access__CurrentPhysicalLayer");
-		    AllDistributionBoardCheckFilter("DistributionBoard_metro__CurrentPhysicalLayer");
-		    AllDistributionBoardCheckFilter("DistributionBoard_backbone__CurrentPhysicalLayer");
-		    AllDistributionBoardCheckFilter("DistributionBoard_f_CurrentPhysicalLayer");
-
 		}
 		
 			/////////////*********************	NodeActive creation in tree	***********************///////////////
@@ -3515,7 +3505,10 @@ Width : '200%',
 					}
 					markerClusterManhole.clearMarkers();
 					markerClusterHandhole.clearMarkers();
-					markerClusterDistBoard.clearMarkers();
+					markerClusterBackboneDistBoard.clearMarkers();
+					markerClusterMetroDistBoard.clearMarkers();
+					markerClusterAccessDistBoard.clearMarkers();
+					
 					
 					for (var u =0;u<allCablesShowPoint.length;u++) {
 						window['fiberCheckPoints_'+allCablesShowPoint[u]] = "unchecked";
@@ -10591,9 +10584,17 @@ singleProject = new ContextMenu({
 									}							   
 							}
 							else if(prevVal.split("_")[0] =="DB") {
-								var Id = prevVal.split(":")[0];
-									markersDistBoard[Id].setMap(null);					
-									markerClusterDistBoard.removeMarker(markersDistBoard[Id]);
+									var Id = prevVal.split(":")[0];
+									markersDistBoard[Id].setMap(null);		
+									if(window[""+Id][8]=="backbone") {
+										markerClusterBackboneDistBoard.removeMarker(markersDistBoard[Id]);
+									}
+									else if(window[""+Id][8]=="metro") {
+										markerClusterMetroDistBoard.removeMarker(markersDistBoard[Id]);
+									}
+									else if(window[""+Id][8]=="access") {
+										markerClusterAccessDistBoard.removeMarker(markersDistBoard[Id]);
+									}			
 									$("#"+Id).children(':checkbox').prop( "checked", false );
 									if( $("#DistributionBoard_f_CurrentPhysicalLayer").find(".DistBoard:checked" ).length ==0){
 										$("#distBoardCheckAllBoq").prop("checked",false);
@@ -10601,7 +10602,7 @@ singleProject = new ContextMenu({
 									else{
 										$("#distBoardCheckAllBoq").prop("checked",true);
 									}							    
-							}
+						  }
 						}
 				});
 				
@@ -10650,9 +10651,17 @@ singleProject = new ContextMenu({
 											}
 									}
 									else if(prevVal.split("_")[0] =="DB") {
-										var Id = prevVal.split(":")[0];
-											markersDistBoard[Id].setMap(null);					
-											markerClusterDistBoard.removeMarker(markersDistBoard[Id]);
+											var Id = prevVal.split(":")[0];
+											markersDistBoard[Id].setMap(null);		
+											if(window[""+Id][8]=="backbone") {
+												markerClusterBackboneDistBoard.removeMarker(markersDistBoard[Id]);
+											}
+											else if(window[""+Id][8]=="metro") {
+												markerClusterMetroDistBoard.removeMarker(markersDistBoard[Id]);
+											}
+											else if(window[""+Id][8]=="access") {
+												markerClusterAccessDistBoard.removeMarker(markersDistBoard[Id]);
+											}				
 											$("#"+Id).children(':checkbox').prop( "checked", false );
 											if( $("#DistributionBoard_f_CurrentPhysicalLayer").find(".DistBoard:checked" ).length ==0){
 												$("#distBoardCheckAllBoq").prop("checked",false);
@@ -10660,8 +10669,6 @@ singleProject = new ContextMenu({
 											else{
 												$("#distBoardCheckAllBoq").prop("checked",true);
 											}
-
-										   
 									}
 								}			
 						});
@@ -14342,22 +14349,48 @@ $("#saveHandhole").click(function () {
 								if(data!=null){
 		
 									window[""+data.distributionBoardId]=[];
-									window[""+data.distributionBoardId]=[data.distributionBoardId,DistributionBoardLong,DistributionBoardLat,DistributionBoardName,DistributionBoardCapacity,locationId, boardCity];
+									window[""+data.distributionBoardId]=[data.distributionBoardId,DistributionBoardLong,DistributionBoardLat,DistributionBoardName,DistributionBoardCapacity,locationId, IdNodeSelectedTemp,boardCity,dbNetLevel];
 						
 									if(actiondistBoardContext=="Insert"){
-									str="<ul><li id='"+data.distributionBoardId+"'  class='DistributionBoard' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li></ul>";								
+										
+										if(dbNetLevel=="backbone") {
+											str="<ul><li id='"+data.distributionBoardId+"'  class='DistributionBoard' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/backboneDB.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li></ul>";								
+										}
+										else if(dbNetLevel=="metro") {
+											str="<ul><li id='"+data.distributionBoardId+"'  class='DistributionBoard' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/metroDb.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li></ul>";								
+										}
+										else if(dbNetLevel=="access") {
+											str="<ul><li id='"+data.distributionBoardId+"'  class='DistributionBoard' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/accessDb.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li></ul>";								
+										}
 									 $("#DistributionBoard_"+dbNetLevel+"__"+IdNodeSelectedTemp).append(str);
 									 
-									}else if(actiondistBoardContext=="Update"){
+									}
+									else if(actiondistBoardContext=="Update"){
 									  if(DBoldNtwLevel != dbNetLevel){
 									    $("#"+data.distributionBoardId).remove();
-									    str="<ul><li id='"+data.distributionBoardId+"'  class='DistributionBoard' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li></ul>";								
+										if(dbNetLevel=="backbone") {
+											str="<ul><li id='"+data.distributionBoardId+"'  class='DistributionBoard' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/backboneDB.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li></ul>";								
+										}
+										else if(dbNetLevel=="metro") {
+											str="<ul><li id='"+data.distributionBoardId+"'  class='DistributionBoard' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/metroDb.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li></ul>";								
+										}
+										else if(dbNetLevel=="access") {
+											str="<ul><li id='"+data.distributionBoardId+"'  class='DistributionBoard' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/accessDb.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li></ul>";								
+										}
 										$("#DistributionBoard_"+dbNetLevel+"__"+IdNodeSelectedTemp).append(str);
 									}
 									}
 									else{
 									 $("#"+data.distributionBoardId).children(':checkbox').prop( "checked", true );
-						             $("#"+data.distributionBoardId+"> .TreeSpan").html("<img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li>");
+										if(dbNetLevel=="backbone") {
+											$("#"+data.distributionBoardId+"> .TreeSpan").html("<img class='image' src='"+getContext()+"/resources/NetworkImages/backboneDB.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li>");
+										}
+										else if(dbNetLevel=="metro") {
+											$("#"+data.distributionBoardId+"> .TreeSpan").html("<img class='image' src='"+getContext()+"/resources/NetworkImages/metroDb.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li>");
+										}
+										else if(dbNetLevel=="access") {
+											$("#"+data.distributionBoardId+"> .TreeSpan").html("<img class='image' src='"+getContext()+"/resources/NetworkImages/accessDb.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li>");
+										}
 									 }
 									 		
 									$("#"+data.distributionBoardId).contextmenu(function(){
@@ -14369,9 +14402,24 @@ $("#saveHandhole").click(function () {
 							    MouseHoveringSpans("#" +data.distributionBoardId+ " .TreeSpan");	
 
 									tree_prop_selection("#"+data.distributionBoardId+" .TreeSpan");								 
-									    create_Marker_Click(data.distributionBoardId,DistributionBoardName,DistributionBoardLong,DistributionBoardLat,markersDistBoard,markerClusterDistBoard,"",boardCity);
-										markerClusterDistBoard.addMarker(markersDistBoard[""+data.distributionBoardId]);
-										DistributionBoardCheckFilter(data.distributionBoardId,"");
+									if(dbNetLevel=="backbone"){
+									    create_Marker_Click(data.distributionBoardId,DistributionBoardName,DistributionBoardLong,DistributionBoardLat,markersDistBoard,markerClusterBackboneDistBoard,"",boardCity);
+										markerClusterBackboneDistBoard.addMarker(markersDistBoard[""+data.distributionBoardId]);
+										clusterName=markerClusterBackboneDistBoard;
+									}
+									else if(dbNetLevel=="metro"){
+									    create_Marker_Click(data.distributionBoardId,DistributionBoardName,DistributionBoardLong,DistributionBoardLat,markersDistBoard,markerClusterMetroDistBoard,"",boardCity);
+										markerClusterMetroDistBoard.addMarker(markersDistBoard[""+data.distributionBoardId]);
+										clusterName=markerClusterMetroDistBoard;
+									}
+									else {
+									    create_Marker_Click(data.distributionBoardId,DistributionBoardName,DistributionBoardLong,DistributionBoardLat,markersDistBoard,markerClusterAccessDistBoard,"",boardCity);
+										markerClusterAccessDistBoard.addMarker(markersDistBoard[""+data.distributionBoardId]);
+										clusterName=markerClusterAccessDistBoard;
+									}
+														 
+									    DistributionBoardCheckFilter(data.distributionBoardId,"",clusterName);
+									
 										if(data.countConnections.length>0){
 											countCablesFront=data.countConnections[0][2];
 											countCablesBack=data.countConnections[0][3];
@@ -14761,18 +14809,27 @@ $("#saveHandhole").click(function () {
 								markersHandhole[HandId].setLabel({text: $(this).parent().parent().children('td[name="auxiliary_Name"]').children('input').val().split(":")[1], className:"marker-position-handhole",color:"#E5C523"});
 							}										
 						}			
-						else if ($(this).parent().parent().children('td[name="auxiliary_Name"]').children('input').val().split("_")[0]=="DB") {
+					else if ($(this).parent().parent().children('td[name="auxiliary_Name"]').children('input').val().split("_")[0]=="DB") {
 							var Id = $(this).parent().parent().children('td[name="auxiliary_Name"]').children('input').val().split(":")[0];
+							if(window[""+Id][8]=="backbone") {
+								className=markerClusterBackboneDistBoard;
+							}
+							else if(window[""+Id][8]=="metro") {
+								className=markerClusterMetroDistBoard;
+							}
+							else if(window[""+Id][8]=="access") {
+								className=markerClusterAccessDistBoard;
+							}
 							if(markersDistBoard[Id]){	
-								markerClusterDistBoard.removeMarker(markersDistBoard[Id]);
+								className.removeMarker(markersDistBoard[Id]);
 								markersDistBoard[Id].setMap(map);					
-								markerClusterDistBoard.addMarker(markersDistBoard[Id]);
+								className.addMarker(markersDistBoard[Id]);
 								$("#"+Id).children(':checkbox').prop( "checked", true );
 								$("#distBoardCheckAllBoq").prop( "checked", true );
 								markersDistBoard[Id].setLabel({text: $(this).parent().parent().children('td[name="auxiliary_Name"]').children('input').val().split(":")[1], className:"marker-position-dB",color:"#5665F9"});
 							}
 						}			
-					}			
+					}		
 						//Aux point is unchecked (Hide the points from map)
 						else {
 							
@@ -14807,8 +14864,16 @@ $("#saveHandhole").click(function () {
 							}						
 							else if ($(this).parent().parent().children('td[name="auxiliary_Name"]').children('input').val().split("_")[0]=="DB"){
 								var Id = $(this).parent().parent().children('td[name="auxiliary_Name"]').children('input').val().split(":")[0];
-								markersDistBoard[Id].setMap(null);					
-								markerClusterDistBoard.removeMarker(markersDistBoard[Id]);
+								markersDistBoard[Id].setMap(null);	
+								if(window[""+Id][8]=="backbone") {
+									markerClusterBackboneDistBoard.removeMarker(markersDistBoard[Id]);
+								}
+								else if(window[""+Id][8]=="metro") {
+									markerClusterMetroDistBoard.removeMarker(markersDistBoard[Id]);
+								}
+								else if(window[""+Id][8]=="access") {
+									markerClusterAccessDistBoard.removeMarker(markersDistBoard[Id]);
+								}				
 								$("#"+Id).children(':checkbox').prop( "checked", false );
 								markersDistBoard[Id].setLabel(null);
 							}
@@ -14997,16 +15062,25 @@ $("#saveHandhole").click(function () {
 					}			
 					else if ($(this).parent().parent().children('td[name="auxiliary_NameTube"]').children('input').val().split("_")[0]=="DB") {
 						var Id = $(this).parent().parent().children('td[name="auxiliary_NameTube"]').children('input').val().split(":")[0];
+						if(window[""+Id][8]=="backbone") {
+							className=markerClusterBackboneDistBoard;
+						}
+						else if(window[""+Id][8]=="metro") {
+							className=markerClusterMetroDistBoard;
+						}
+						else if(window[""+Id][8]=="access") {
+							className=markerClusterAccessDistBoard;
+						}
 						if(markersDistBoard[Id]){	
-							markerClusterDistBoard.removeMarker(markersDistBoard[Id]);
+							className.removeMarker(markersDistBoard[Id]);
 							markersDistBoard[Id].setMap(map);					
-							markerClusterDistBoard.addMarker(markersDistBoard[Id]);
+							className.addMarker(markersDistBoard[Id]);
 							$("#"+Id).children(':checkbox').prop( "checked", true );
 							$("#distBoardCheckAllBoq").prop( "checked", true );
 							markersDistBoard[Id].setLabel({text: $(this).parent().parent().children('td[name="auxiliary_NameTube"]').children('input').val().split(":")[1], className:"marker-position-dB",color:"#5665F9"});
 						}
 					}			
-				}							
+				}						
 					//Aux point is unchecked (Hide the points from map)
 					else {
 						
@@ -15041,8 +15115,16 @@ $("#saveHandhole").click(function () {
 						}						
 						else if ($(this).parent().parent().children('td[name="auxiliary_NameTube"]').children('input').val().split("_")[0]=="DB"){
 							var Id = $(this).parent().parent().children('td[name="auxiliary_NameTube"]').children('input').val().split(":")[0];
-							markersDistBoard[Id].setMap(null);					
-							markerClusterDistBoard.removeMarker(markersDistBoard[Id]);
+							markersDistBoard[Id].setMap(null);
+							if(window[""+Id][8]=="backbone") {
+								markerClusterBackboneDistBoard.removeMarker(markersDistBoard[Id]);
+							}
+							else if(window[""+Id][8]=="metro") {
+								markerClusterMetroDistBoard.removeMarker(markersDistBoard[Id]);
+							}
+							else if(window[""+Id][8]=="access") {
+								markerClusterAccessDistBoard.removeMarker(markersDistBoard[Id]);
+							}					
 							$("#"+Id).children(':checkbox').prop( "checked", false );
 							markersDistBoard[Id].setLabel(null);
 						}
@@ -15203,17 +15285,26 @@ $("#saveHandhole").click(function () {
 						}			
 						else if ($(this).parent().parent().children('td[name="auxiliary_NameStrand"]').children('input').val().split("_")[0]=="DB") {
 							var Id = $(this).parent().parent().children('td[name="auxiliary_NameStrand"]').children('input').val().split(":")[0];
+							if(window[""+Id][8]=="backbone") {
+								className=markerClusterBackboneDistBoard;
+							}
+							else if(window[""+Id][8]=="metro") {
+								className=markerClusterMetroDistBoard;
+							}
+							else if(window[""+Id][8]=="access") {
+								className=markerClusterAccessDistBoard;
+							}
 							if(markersDistBoard[Id]){	
-								markerClusterDistBoard.removeMarker(markersDistBoard[Id]);
+								className.removeMarker(markersDistBoard[Id]);
 								markersDistBoard[Id].setMap(map);					
-								markerClusterDistBoard.addMarker(markersDistBoard[Id]);
+								className.addMarker(markersDistBoard[Id]);
 								$("#"+Id).children(':checkbox').prop( "checked", true );
 								$("#distBoardCheckAllBoq").prop( "checked", true );
 								markersDistBoard[Id].setLabel({text: $(this).parent().parent().children('td[name="auxiliary_NameStrand"]').children('input').val().split(":")[1], className:"marker-position-dB",color:"#5665F9"});
 							}
 						}			
 					}
-						
+					
 						//Aux point is unchecked (Hide the points from map)
 						else {
 							
@@ -15248,12 +15339,20 @@ $("#saveHandhole").click(function () {
 							}						
 							else if ($(this).parent().parent().children('td[name="auxiliary_NameStrand"]').children('input').val().split("_")[0]=="DB"){
 								var Id = $(this).parent().parent().children('td[name="auxiliary_NameStrand"]').children('input').val().split(":")[0];
-								markersDistBoard[Id].setMap(null);					
-								markerClusterDistBoard.removeMarker(markersDistBoard[Id]);
+								markersDistBoard[Id].setMap(null);	
+								if(window[""+Id][8]=="backbone") {
+									markerClusterBackboneDistBoard.removeMarker(markersDistBoard[Id]);
+								}
+								else if(window[""+Id][8]=="metro") {
+									markerClusterMetroDistBoard.removeMarker(markersDistBoard[Id]);
+								}
+								else if(window[""+Id][8]=="access") {
+									markerClusterAccessDistBoard.removeMarker(markersDistBoard[Id]);
+								}				
 								$("#"+Id).children(':checkbox').prop( "checked", false );
 								markersDistBoard[Id].setLabel(null);
 							}
-						}						
+						}							
 						
 						if( $("#Manhole_f_CurrentPhysicalLayer").find(".Manhole:checked" ).length ==0){
 							$("#manholeCheckAllBoq").prop("checked",false);
@@ -15406,10 +15505,19 @@ $("#saveHandhole").click(function () {
 						}			
 						else if ($(this).parent().parent().children('td[name="auxiliaryTrench_Name"]').children('input').val().split("_")[0]=="DB") {
 							var Id = $(this).parent().parent().children('td[name="auxiliaryTrench_Name"]').children('input').val().split(":")[0];
+							if(window[""+Id][8]=="backbone") {
+								className=markerClusterBackboneDistBoard;
+							}
+							else if(window[""+Id][8]=="metro") {
+								className=markerClusterMetroDistBoard;
+							}
+							else if(window[""+Id][8]=="access") {
+								className=markerClusterAccessDistBoard;
+							}
 							if(markersDistBoard[Id]){	
-								markerClusterDistBoard.removeMarker(markersDistBoard[Id]);
+								className.removeMarker(markersDistBoard[Id]);
 								markersDistBoard[Id].setMap(map);					
-								markerClusterDistBoard.addMarker(markersDistBoard[Id]);
+								className.addMarker(markersDistBoard[Id]);
 								$("#"+Id).children(':checkbox').prop( "checked", true );
 								$("#distBoardCheckAllBoq").prop( "checked", true );
 								markersDistBoard[Id].setLabel({text: $(this).parent().parent().children('td[name="auxiliaryTrench_Name"]').children('input').val().split(":")[1], className:"marker-position-dB",color:"#5665F9"});
@@ -15450,8 +15558,20 @@ $("#saveHandhole").click(function () {
 							}						
 							else if ($(this).parent().parent().children('td[name="auxiliaryTrench_Name"]').children('input').val().split("_")[0]=="DB"){
 								var Id = $(this).parent().parent().children('td[name="auxiliaryTrench_Name"]').children('input').val().split(":")[0];
-								markersDistBoard[Id].setMap(null);					
-								markerClusterDistBoard.removeMarker(markersDistBoard[Id]);
+								markersDistBoard[Id].setMap(null);	
+								
+								if(window[""+Id][8]=="backbone") {
+									markerClusterBackboneDistBoard.removeMarker(markersDistBoard[Id]);
+
+								}
+								else if(window[""+Id][8]=="metro") {
+									markerClusterMetroDistBoard.removeMarker(markersDistBoard[Id]);
+
+								}
+								else if(window[""+Id][8]=="access") {
+									markerClusterAccessDistBoard.removeMarker(markersDistBoard[Id]);
+								}
+										
 								$("#"+Id).children(':checkbox').prop( "checked", false );
 								markersDistBoard[Id].setLabel(null);
 							}
@@ -15609,12 +15729,21 @@ $("#saveHandhole").click(function () {
 								markersHandhole[HandId].setLabel({text: $(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split(":")[1], className:"marker-position-handhole",color:"#E5C523"});
 							}										
 						}			
-						else if ($(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split("_")[0]=="DB") {
+					else if ($(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split("_")[0]=="DB") {
 							var Id = $(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split(":")[0];
 							if(markersDistBoard[Id]){	
-								markerClusterDistBoard.removeMarker(markersDistBoard[Id]);
+								if(window[""+Id][8]=="backbone") {
+									className=markerClusterBackboneDistBoard;
+								}
+								else if(window[""+Id][8]=="metro") {
+									className=markerClusterMetroDistBoard;
+								}
+								else if(window[""+Id][8]=="access") {
+									className=markerClusterAccessDistBoard;
+								}
+								className.removeMarker(markersDistBoard[Id]);
 								markersDistBoard[Id].setMap(map);					
-								markerClusterDistBoard.addMarker(markersDistBoard[Id]);
+								className.addMarker(markersDistBoard[Id]);
 								$("#"+Id).children(':checkbox').prop( "checked", true );
 								$("#distBoardCheckAllBoq").prop( "checked", true );
 								markersDistBoard[Id].setLabel({text: $(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split(":")[1], className:"marker-position-dB",color:"#5665F9"});
@@ -15653,10 +15782,19 @@ $("#saveHandhole").click(function () {
 								$("#"+HandId).children(':checkbox').prop( "checked", false );
 								markersHandhole[HandId].setLabel(null);
 							}						
-							else if ($(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split("_")[0]=="DB"){
+						else if ($(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split("_")[0]=="DB"){
 								var Id = $(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split(":")[0];
-								markersDistBoard[Id].setMap(null);					
-								markerClusterDistBoard.removeMarker(markersDistBoard[Id]);
+								markersDistBoard[Id].setMap(null);	
+								if(window[""+Id][8]=="backbone") {
+									markerClusterBackboneDistBoard.removeMarker(markersDistBoard[Id]);
+								}
+								else if(window[""+Id][8]=="metro") {
+									markerClusterMetroDistBoard.removeMarker(markersDistBoard[Id]);
+
+								}
+								else if(window[""+Id][8]=="access") {
+									markerClusterAccessDistBoard.removeMarker(markersDistBoard[Id]);
+								}				
 								$("#"+Id).children(':checkbox').prop( "checked", false );
 								markersDistBoard[Id].setLabel(null);
 							}
@@ -15938,11 +16076,18 @@ $("#saveHandhole").click(function () {
 								
 									window[""+data.distributionBoardDetails[i][0]]=[];
 									//	distributionBoardId=data.distributionBoardId;
-										window[""+data.distributionBoardDetails[i][0]]=[data.distributionBoardDetails[i][0],data.distributionBoardDetails[i][1],data.distributionBoardDetails[i][2],data.distributionBoardDetails[i][3],data.distributionBoardDetails[i][4],data.distributionBoardDetails[i][5], data.distributionBoardDetails[i][6]];
+									window[""+data.distributionBoardDetails[i][0]]=[data.distributionBoardDetails[i][0],data.distributionBoardDetails[i][1],data.distributionBoardDetails[i][2],data.distributionBoardDetails[i][3],data.distributionBoardDetails[i][4],data.distributionBoardDetails[i][5],IdNodeSelectedTemp, data.distributionBoardDetails[i][6],data.distributionBoardDetails[i][7]];
 							
-										str="<ul><li id='"+data.distributionBoardDetails[i][0]+"'  class='DistributionBoard' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+data.distributionBoardDetails[i][3]+"/"+data.distributionBoardDetails[i][0]+" </span></li></ul>";								
-										//$("#DistributionBoard_f_"+IdNodeSelectedTemp+"").append(str);
-										$("#DistributionBoard_"+data.distributionBoardDetails[i][7]+"__"+IdNodeSelectedTemp).append(str);
+									if(data.distributionBoardDetails[i][7]=="backbone") {
+										str="<ul><li id='"+data.distributionBoardDetails[i][0]+"'  class='DistributionBoard' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/backboneDB.png'> "+data.distributionBoardDetails[i][3]+"/"+data.distributionBoardDetails[i][0]+" </span></li></ul>";								
+									}
+									else if(data.distributionBoardDetails[i][7]=="metro") {
+										str="<ul><li id='"+data.distributionBoardDetails[i][0]+"'  class='DistributionBoard' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/metroDb.png'> "+data.distributionBoardDetails[i][3]+"/"+data.distributionBoardDetails[i][0]+" </span></li></ul>";								
+									}
+									else if(data.distributionBoardDetails[i][7]=="access") {
+										str="<ul><li id='"+data.distributionBoardDetails[i][0]+"'  class='DistributionBoard' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/accessDb.png'> "+data.distributionBoardDetails[i][3]+"/"+data.distributionBoardDetails[i][0]+" </span></li></ul>";								
+									}
+									$("#DistributionBoard_"+data.distributionBoardDetails[i][7]+"__"+IdNodeSelectedTemp).append(str);
 										
 									//tree_prop_general();
 												
@@ -15969,11 +16114,26 @@ $("#saveHandhole").click(function () {
 									 });					
 */
 									//$("#"+data.distributionBoardId+"> .TreeSpan").unbind("click");
-									tree_prop_selection("#"+data.distributionBoardDetails[i][0]+" .TreeSpan");								 
-									    create_Marker_Click(data.distributionBoardDetails[i][0],data.distributionBoardDetails[i][3],data.distributionBoardDetails[i][1],data.distributionBoardDetails[i][2],markersDistBoard,markerClusterDistBoard,"",data.distributionBoardDetails[i][6]);
-									   // createDistBoard_Marker_Click(data.distributionBoardDetails[i][0],DistributionBoardName,DistributionBoardLong,DistributionBoardLat,markersDistBoard,markerClusterDistBoard,boardCity);
-										markerClusterDistBoard.addMarker(markersDistBoard[""+data.distributionBoardDetails[i][0]]);
-										DistributionBoardCheckFilter(data.distributionBoardDetails[i][0],"");
+									tree_prop_selection("#"+data.distributionBoardDetails[i][0]+" .TreeSpan");
+									
+									if(data.distributionBoardDetails[i][7]=="backbone"){
+										create_Marker_Click(data.distributionBoardDetails[i][0],data.distributionBoardDetails[i][3],data.distributionBoardDetails[i][1],data.distributionBoardDetails[i][2],markersDistBoard,markerClusterBackboneDistBoard,"",data.distributionBoardDetails[i][6]);
+										markerClusterBackboneDistBoard.addMarker(markersDistBoard[""+data.distributionBoardDetails[i][0]]);
+										clusterName=markerClusterBackboneDistBoard;
+									}
+									else if(data.distributionBoardDetails[i][7]=="metro"){
+										create_Marker_Click(data.distributionBoardDetails[i][0],data.distributionBoardDetails[i][3],data.distributionBoardDetails[i][1],data.distributionBoardDetails[i][2],markersDistBoard,markerClusterMetroDistBoard,"",data.distributionBoardDetails[i][6]);
+										markerClusterMetroDistBoard.addMarker(markersDistBoard[""+data.distributionBoardDetails[i][0]]);
+										clusterName=markerClusterMetroDistBoard;
+									}
+									else {
+										create_Marker_Click(data.distributionBoardDetails[i][0],data.distributionBoardDetails[i][3],data.distributionBoardDetails[i][1],data.distributionBoardDetails[i][2],markersDistBoard,markerClusterAccessDistBoard,"",data.distributionBoardDetails[i][6]);
+										markerClusterAccessDistBoard.addMarker(markersDistBoard[""+data.distributionBoardDetails[i][0]]);
+										clusterName=markerClusterAccessDistBoard;
+									}
+									
+																	 
+											DistributionBoardCheckFilter(data.distributionBoardDetails[i][0],"",clusterName);
 										
 										//map.setZoom(11);
 										if($("#dBMapCheck_Labels").prop("checked")==true){
@@ -19636,9 +19796,18 @@ $("#delete_AuxTube").click(function () {
 					}
 					else if($(this).parent().parent().children('td[name="auxiliary_NameTube"]').children('input').val().split("_")[0] =="DB") {
 						markersDistBoard[$(this).parent().parent().children('td[name="auxiliary_NameTube"]').children('input').val().split(":")[0]].setMap(null);				
-						markerClusterDistBoard.removeMarker(markersDistBoard[$(this).parent().parent().children('td[name="auxiliary_NameTube"]').children('input').val().split(":")[0]]);	
+						Id= $(this).parent().parent().children('td[name="auxiliary_NameTube"]').children('input').val().split(":")[0];
+						if(window[""+Id][8]=="backbone") {
+							markerClusterBackboneDistBoard.removeMarker(markersDistBoard[$(this).parent().parent().children('td[name="auxiliary_NameTube"]').children('input').val().split(":")[0]]);	
+						}
+						else if(window[""+Id][8]=="metro") {
+							markerClusterMetroDistBoard.removeMarker(markersDistBoard[$(this).parent().parent().children('td[name="auxiliary_NameTube"]').children('input').val().split(":")[0]]);	
+						}
+						else if(window[""+Id][8]=="access") {
+							markerClusterAccessDistBoard.removeMarker(markersDistBoard[$(this).parent().parent().children('td[name="auxiliary_NameTube"]').children('input').val().split(":")[0]]);	
+						}
 						$("#"+$(this).parent().parent().children('td[name="auxiliary_NameTube"]').children('input').val().split(":")[0]).children(':checkbox').prop( "checked", false );
-					}		
+					}			
 					//}
 				}
 					
@@ -19707,10 +19876,19 @@ $("#delete_AuxTube").click(function () {
 						}
 						else if($(this).parent().parent().children('td[name="auxiliary_NameStrand"]').children('input').val().split("_")[0] =="DB") {
 							markersDistBoard[$(this).parent().parent().children('td[name="auxiliary_NameStrand"]').children('input').val().split(":")[0]].setMap(null);				
-							markerClusterDistBoard.removeMarker(markersDistBoard[$(this).parent().parent().children('td[name="auxiliary_NameStrand"]').children('input').val().split(":")[0]]);	
+							Id= $(this).parent().parent().children('td[name="auxiliary_NameStrand"]').children('input').val().split(":")[0];
+							if(window[""+Id][8]=="backbone") {
+								markerClusterBackboneDistBoard.removeMarker(markersDistBoard[$(this).parent().parent().children('td[name="auxiliary_NameStrand"]').children('input').val().split(":")[0]]);	
+							}
+							else if(window[""+Id][8]=="metro") {
+								markerClusterMetroDistBoard.removeMarker(markersDistBoard[$(this).parent().parent().children('td[name="auxiliary_NameStrand"]').children('input').val().split(":")[0]]);	
+							}
+							else if(window[""+Id][8]=="access") {
+								markerClusterAccessDistBoard.removeMarker(markersDistBoard[$(this).parent().parent().children('td[name="auxiliary_NameStrand"]').children('input').val().split(":")[0]]);	
+							}
 							$("#"+$(this).parent().parent().children('td[name="auxiliary_NameStrand"]').children('input').val().split(":")[0]).children(':checkbox').prop( "checked", false );
 						}		
-					}					
+					}						
 										
 					$(this).parents("tr").remove();
 				}
@@ -19842,7 +20020,18 @@ if ($(this).is(":checked")) {
 		}
 		else if($(this).parent().parent().children('td[name="auxiliary_Name"]').children('input').val().split("_")[0] =="DB") {
 			markersDistBoard[$(this).parent().parent().children('td[name="auxiliary_Name"]').children('input').val().split(":")[0]].setMap(null);				
-			markerClusterDistBoard.removeMarker(markersDistBoard[$(this).parent().parent().children('td[name="auxiliary_Name"]').children('input').val().split(":")[0]]);	
+			Id=$(this).parent().parent().children('td[name="auxiliary_Name"]').children('input').val().split(":")[0];
+			if(window[""+Id][8]=="backbone") {
+				markerClusterBackboneDistBoard.removeMarker(markersDistBoard[$(this).parent().parent().children('td[name="auxiliary_Name"]').children('input').val().split(":")[0]]);	
+			}
+			else if(window[""+Id][8]=="metro") {
+				markerClusterMetroDistBoard.removeMarker(markersDistBoard[$(this).parent().parent().children('td[name="auxiliary_Name"]').children('input').val().split(":")[0]]);	
+
+			}
+			else if(window[""+Id][8]=="access") {
+				markerClusterAccessDistBoard.removeMarker(markersDistBoard[$(this).parent().parent().children('td[name="auxiliary_Name"]').children('input').val().split(":")[0]]);	
+			}
+			
 			$("#"+$(this).parent().parent().children('td[name="auxiliary_Name"]').children('input').val().split(":")[0]).children(':checkbox').prop( "checked", false );
 		}		
 		//}
@@ -19909,11 +20098,19 @@ $("#delete_Trench_Aux").click(function () {
 			}
 			else if($(this).parent().parent().children('td[name="auxiliaryTrench_Name"]').children('input').val().split("_")[0] =="DB") {
 				markersDistBoard[$(this).parent().parent().children('td[name="auxiliaryTrench_Name"]').children('input').val().split(":")[0]].setMap(null);				
-				markerClusterDistBoard.removeMarker(markersDistBoard[$(this).parent().parent().children('td[name="auxiliaryTrench_Name"]').children('input').val().split(":")[0]]);	
+				Id=$(this).parent().parent().children('td[name="auxiliaryTrench_Name"]').children('input').val().split(":")[0];
+				if(window[""+Id][8]=="backbone") {
+					markerClusterBackboneDistBoard.removeMarker(markersDistBoard[$(this).parent().parent().children('td[name="auxiliaryTrench_Name"]').children('input').val().split(":")[0]]);	
+				}
+				else if(window[""+Id][8]=="metro") {
+					markerClusterMetroDistBoard.removeMarker(markersDistBoard[$(this).parent().parent().children('td[name="auxiliaryTrench_Name"]').children('input').val().split(":")[0]]);	
+				}
+				else if(window[""+Id][8]=="access") {
+					markerClusterAccessDistBoard.removeMarker(markersDistBoard[$(this).parent().parent().children('td[name="auxiliaryTrench_Name"]').children('input').val().split(":")[0]]);	
+				}
+				
 				$("#"+$(this).parent().parent().children('td[name="auxiliaryTrench_Name"]').children('input').val().split(":")[0]).children(':checkbox').prop( "checked", false );
 			}
-		
-		
 		}
 	
 		  $(this).parents("tr").remove();
@@ -19975,9 +20172,20 @@ $("#delete_Duct_Aux").click(function () {
 				markerClusterHandhole.removeMarker(markersHandhole[$(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split(":")[0]]);	
 				$("#"+$(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split(":")[0]).children(':checkbox').prop( "checked", false );
 			}
-			else if($(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split("_")[0] =="DB") {
+		    else if($(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split("_")[0] =="DB") {
 				markersDistBoard[$(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split(":")[0]].setMap(null);				
-				markerClusterDistBoard.removeMarker(markersDistBoard[$(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split(":")[0]]);	
+				Id=$(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split(":")[0];
+				if(window[""+Id][8]=="backbone") {
+					markerClusterBackboneDistBoard.removeMarker(markersDistBoard[$(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split(":")[0]]);	
+				}
+				else if(window[""+Id][8]=="metro") {
+					markerClusterMetroDistBoard.removeMarker(markersDistBoard[$(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split(":")[0]]);	
+
+				}
+				else if(window[""+Id][8]=="access") {
+					markerClusterAccessDistBoard.removeMarker(markersDistBoard[$(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split(":")[0]]);	
+				}
+				
 				$("#"+$(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split(":")[0]).children(':checkbox').prop( "checked", false );
 			}
 		}
@@ -20051,7 +20259,19 @@ $("#delete_TubeAux").click(function () {
 				}
 				else if($(this).parent().parent().children('td[name="TubeAuxiliary"]').children('input').val().split("_")[0] =="DB") {
 					markersDistBoard[$(this).parent().parent().children('td[name="TubeAuxiliary"]').children('input').val().split(":")[0]].setMap(null);				
-					markerClusterDistBoard.removeMarker(markersDistBoard[$(this).parent().parent().children('td[name="TubeAuxiliary"]').children('input').val().split(":")[0]]);	
+					Id=$(this).parent().parent().children('td[name="TubeAuxiliary"]').children('input').val().split(":")[0];
+					if(window[""+Id][8]=="backbone") {
+						markerClusterBackboneDistBoard.removeMarker(markersDistBoard[$(this).parent().parent().children('td[name="TubeAuxiliary"]').children('input').val().split(":")[0]]);	
+
+					}
+					else if(window[""+Id][8]=="metro") {
+						markerClusterMetroDistBoard.removeMarker(markersDistBoard[$(this).parent().parent().children('td[name="TubeAuxiliary"]').children('input').val().split(":")[0]]);	
+
+					}
+					else if(window[""+Id][8]=="access") {
+						markerClusterAccessDistBoard.removeMarker(markersDistBoard[$(this).parent().parent().children('td[name="TubeAuxiliary"]').children('input').val().split(":")[0]]);	
+
+					}
 					$("#"+$(this).parent().parent().children('td[name="TubeAuxiliary"]').children('input').val().split(":")[0]).children(':checkbox').prop( "checked", false );
 				}		
 			}
@@ -20132,12 +20352,22 @@ $("#delete_StrandAux").click(function () {
 				$("#"+$(this).parent().parent().children('td[name="StrandAuxiliary"]').children('input').val().split(":")[0]).children(':checkbox').prop( "checked", false );
 			}
 			else if($(this).parent().parent().children('td[name="StrandAuxiliary"]').children('input').val().split("_")[0] =="DB") {
-				markersDistBoard[$(this).parent().parent().children('td[name="StrandAuxiliary"]').children('input').val().split(":")[0]].setMap(null);				
-				markerClusterDistBoard.removeMarker(markersDistBoard[$(this).parent().parent().children('td[name="StrandAuxiliary"]').children('input').val().split(":")[0]]);	
+				markersDistBoard[$(this).parent().parent().children('td[name="StrandAuxiliary"]').children('input').val().split(":")[0]].setMap(null);
+				Id=	$(this).parent().parent().children('td[name="StrandAuxiliary"]').children('input').val().split(":")[0];		
+				
+				if(window[""+Id][8]=="backbone") {
+					markerClusterBackboneDistBoard.removeMarker(markersDistBoard[$(this).parent().parent().children('td[name="StrandAuxiliary"]').children('input').val().split(":")[0]]);	
+				}
+				else if(window[""+Id][8]=="metro") {
+					markerClusterMetroDistBoard.removeMarker(markersDistBoard[$(this).parent().parent().children('td[name="StrandAuxiliary"]').children('input').val().split(":")[0]]);	
+				}
+				else if(window[""+Id][8]=="access") {
+					markerClusterAccessDistBoard.removeMarker(markersDistBoard[$(this).parent().parent().children('td[name="StrandAuxiliary"]').children('input').val().split(":")[0]]);	
+				}
+		
 				$("#"+$(this).parent().parent().children('td[name="StrandAuxiliary"]').children('input').val().split(":")[0]).children(':checkbox').prop( "checked", false );
 			}		
 		}
-		
 		$(this).parents("tr").remove();
 
 		//console.log("StrandRefTube is "+StrandRefTube)
@@ -21325,7 +21555,17 @@ if(window[""+orgDest].length >0) {
 			var distBoardId = $("#"+ID).val().split(":")[0];
 			markersDistBoard[distBoardId].setMap(null);	
 			$("#"+distBoardId).children(':checkbox').prop( "checked", false );
-			markerClusterDistBoard.removeMarker(markersDistBoard[distBoardId]);	
+			if(window[""+distBoardId][8]=="backbone") {
+				markerClusterBackboneDistBoard.removeMarker(markersDistBoard[distBoardId]);	
+			}
+			else if(window[""+distBoardId][8]=="metro") {
+				markerClusterMetroDistBoard.removeMarker(markersDistBoard[distBoardId]);	
+
+			}
+			else if(window[""+distBoardId][8]=="access") {
+				markerClusterAccessDistBoard.removeMarker(markersDistBoard[distBoardId]);	
+			}
+		
 			if($("#DistributionBoard_f_CurrentPhysicalLayer").find(".DistBoard:checked" ).length ==0){
 				$("#distBoardCheckAllBoq").prop("checked",false);
 			}
@@ -21426,8 +21666,16 @@ if(window[""+orgDest].length >0) {
 			else if ($("#"+ID).val().split("_")[0]=="DB") {
 				var Id = $("#"+ID).val().split(":")[0];
 				if(markersDistBoard[Id].getMap() ==null) {	
-						markersDistBoard[Id].setMap(map);					
-						markerClusterDistBoard.addMarker(markersDistBoard[Id]);
+						markersDistBoard[Id].setMap(map);	
+						if(window[""+Id][8]=="backbone") {
+							markerClusterBackboneDistBoard.addMarker(markersDistBoard[Id]);
+						}
+						else if(window[""+Id][8]=="metro") {
+							markerClusterMetroDistBoard.addMarker(markersDistBoard[Id]);
+						}
+						else if(window[""+Id][8]=="access") {
+							markerClusterAccessDistBoard.addMarker(markersDistBoard[Id]);	
+						}				
 						$("#"+Id).children(':checkbox').prop( "checked", true );
 						$("#distBoardCheckAllBoq").prop( "checked", true );
 				}
@@ -21435,6 +21683,7 @@ if(window[""+orgDest].length >0) {
 			$("#"+modalID).modal('hide');
 		}	
 	}
+	
 	
 	
 	
@@ -24657,12 +24906,24 @@ map.setZoom(11);
 						
 }
 else if(type=="DB"){
-$("#"+id).children('input:checkbox').prop('checked', true);
-$("#distBoardCheckAllBoq").prop('checked', true);
-markerClusterDistBoard.addMarker(markersDistBoard[""+id]);
-DistributionBoardCheckFilter(id,"");	
-panTo(Lat, Lng);
-map.setZoom(11);
+	$("#"+id).children('input:checkbox').prop('checked', true);
+	$("#distBoardCheckAllBoq").prop('checked', true);
+	
+	if(window[""+id][8]=="backbone") {
+		markerClusterBackboneDistBoard.addMarker(markersDistBoard[""+id]);
+		DistributionBoardCheckFilter(id,"",markerClusterBackboneDistBoard);	
+	}
+	else if(window[""+id][8]=="metro") {
+		markerClusterMetroDistBoard.addMarker(markersDistBoard[""+id]);
+		DistributionBoardCheckFilter(id,"",markerClusterMetroDistBoard);	
+
+	}
+	else if(window[""+id][8]=="access") {
+		markerClusterAccessDistBoard.addMarker(markersDistBoard[""+id]);
+		DistributionBoardCheckFilter(id,"",markerClusterAccessDistBoard);	
+	}
+	panTo(Lat, Lng);
+	map.setZoom(11);
 			if(typeof infowindow!== 'undefined'){
 				infowindow.close();
 			}
@@ -24708,12 +24969,14 @@ map.setZoom(6);
 			
 function clearMarkers(){
 
-for(var t=0;t<siteCltSrcMarkers.length;t++) {
+					for(var t=0;t<siteCltSrcMarkers.length;t++) {
 						siteCltSrcMarkers[siteCltSrcMarkers[t].ID].setMap(null);
 					}
 					markerClusterManhole.clearMarkers();
 					markerClusterHandhole.clearMarkers();
-					markerClusterDistBoard.clearMarkers();
+					markerClusterBackboneDistBoard.clearMarkers(); 
+					markerClusterMetroDistBoard.clearMarkers(); 
+					markerClusterAccessDistBoard.clearMarkers(); 
 					$("#manholeCheckAllBoq").prop("checked",false);
 					$("#handholeCheckAllBoq").prop("checked",false);
 					$("#distBoardCheckAllBoq").prop("checked",false);
