@@ -7,8 +7,8 @@
     	<property name="hibernate.connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
         <property name="hibernate.connection.password">rpt</property>
         <property name="hibernate.connection.username">rpt</property>
-        <property name="hibernate.default_schema">almrpt</property>
-        <property name="hibernate.connection.url">jdbc:oracle:thin:@localhost:1525:ALMRPT</property>
+        <property name="hibernate.default_schema">rpt</property>
+        <property name="hibernate.connection.url">jdbc:oracle:thin:@localhost:1525:RPT</property>
         <property name="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</property>  
 		<property name="connection.pool_size">10</property>
 		   
