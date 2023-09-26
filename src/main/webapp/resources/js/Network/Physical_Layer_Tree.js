@@ -4138,6 +4138,7 @@ menuGPON = new ContextMenu({
 					$("#distributionBoardModal").modal('show');
 					$('#distributionBoardModal').find('input:text').val('');
 					$("#DbMappingTable > tbody").empty();
+					document.querySelector("#DBMappingFlag").value = "new DB";
 					
 					//
 					document.getElementById("site_DBAutoComplete").checked = true;
@@ -8429,6 +8430,7 @@ singleProject = new ContextMenu({
 						$("#distributionBoardModal").modal('show');
 						$('#distributionBoardModal').find('input').val('');
 						$("#DbMappingTable > tbody").empty();
+						document.querySelector("#DBMappingFlag").value = "new DB";
 						//
 						document.getElementById("site_DBAutoComplete").checked = true;
 						$('#site_DBAutoComplete').val('1');
@@ -8454,10 +8456,11 @@ singleProject = new ContextMenu({
 						 },
 					
 				   
-					 {'icon': 'edit','name': 'Edit or View Details',action: () => {
+					{'icon': 'edit','name': 'Edit or View Details',action: () => {
 						
 						 document.getElementById("projectIdDB").style.display = "none";
 						 document.getElementById("projectNameDB").style.display = "none";
+						 document.querySelector("#DBMappingFlag").value = "not_opened"
 						 var dbNtLevel = document.getElementById("DBnetlevel");
 						 DBoldNtwLevel = $("#DBnetlevel").val();
 						 $.ajax({
@@ -8488,7 +8491,7 @@ singleProject = new ContextMenu({
 									$("#distributionBoardModal").find("input").val('').end();
 									
 									$("#DistributionBoardheader").text("Distribution Board: "+data.DistBoardDetails[0][0]);
-									$("#distributionBoardModal").modal('show');
+									
 									$("#DistributionBoardId").val(selectedDistBoardContext);
 									if(data.DistBoardDetails[0][1]!=null){
 										if(data.DistBoardDetails[0][1].split("_")[0] == "CLT"){//for check box site or client
@@ -8616,10 +8619,18 @@ singleProject = new ContextMenu({
 									$("#DistributionBoardheader").text("Distribution Board: "+$(this).val());
 
 									});
-
+									
+									 // active the first tab
+									$('#distributionBoardModal ul.nav-tabs li a').removeClass('active');
+									$('#distributionBoardModal ul.nav-tabs li:first-child a').addClass('active');
+			
+									// active the first form
+									$('#distributionBoardModal .tab-pane').removeClass('active');
+									$('#distributionBoardModal #D_Board').addClass('active');
+									$("#distributionBoardModal").modal('show');
 									// MAPPING DATA APPENDING
-									DistBoardMappingPts=data.DistBoardMappingPts;
-									DBMappingData(DistBoardMappingPts);
+									//DistBoardMappingPts=data.DistBoardMappingPts;
+									//DBMappingData(DistBoardMappingPts);
 									
 								/*	if(data.DistBoardMappingPts){
 									
@@ -14260,6 +14271,7 @@ $("#saveHandhole").click(function () {
 					boardCity = document.getElementById("boardCity").value;
 					dbNetLevel = document.getElementById("DBnetlevel").value;
 					boardCreatedDate = document.getElementById("boardCreationDate").value;
+					distBoardMappingFlag = document.querySelector("#DBMappingFlag ").value
 
 					if($("#projectIdDB").is(":visible") && $("#projectNameDB").is(":visible")){
 						if($("#DBProjectId").val()==""){
@@ -14319,6 +14331,7 @@ $("#saveHandhole").click(function () {
 									"boardCreatedDate":boardCreatedDate,
 									"boardCity" : boardCity,
 									"dbNetLevel" : dbNetLevel,
+									"distBoardMappingFlag" : distBoardMappingFlag,
 									"dictParameter":dict,
 									 "ProjectId": IdNodeSelectedTemp
 									   
@@ -14512,6 +14525,45 @@ $("#saveHandhole").click(function () {
 	
 		});
 	});
+	
+	$("#mapping-tab").click(function () {
+		//console.log("DistBoardMappingPts "+DistBoardMappingPts)
+		var DBMappingFlag = document.querySelector("#DBMappingFlag").value;
+		//console.log("before calling "+DBMappingFlag)
+		//DBMappingData(DistBoardMappingPts);
+		if(actiondistBoardContext === "Update" && DBMappingFlag === "not_opened"){
+			document.querySelector("#DBMappingFlag").value = 'opened'
+			//console.log("after calling "+document.querySelector("#DBMappingFlag").value)
+			$.ajax({
+				type: "GET",
+				url: getContext()+'/findDistBoardMappingData',
+				data: {
+					"selectedDistBoardContext":selectedDistBoardContext 
+				},
+				beforeSend: function() {
+					$("#loaderDivDB").show();
+				},
+				dataType: "json",
+				success: function (data) {
+					$("#loaderDivDB").hide();
+
+					console.log("before "+index)
+					index = 0
+
+					if (data != null) {
+						
+					DBMappingData(data.DistBoardMappingPts);
+
+				} // end of data != null	
+				},
+				error: function(result) {
+					alert("Error");
+				}
+			});
+		
+		}
+	});
+	
 	$("#fiber_aux_tab").click(function () {
 
 		var fiberAuxFlag = document.querySelector("#fiberAuxFlag").value;

@@ -1929,19 +1929,19 @@ public class PhysicalLayerController {
 								+ "'),A.CITY, A.SITE_NAME,A.WAREHOUSE,TO_CHAR(A.CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(A.LAST_MODIFIED_DATE, 'MM/dd/YYYY HH:MI AM') FROM DISTRIBUTION_BOARD A WHERE A.DB_ID='"
 								+ selectedDistBoardContext + "' ")
 						.list();
-
+				/*
 				List<Object[]> DistBoardMappingPts = session.createSQLQuery(
 						"SELECT DISTINCT ROW_COL_INDEX,ROW_NUMBER,COLUMN_NUMBER,DB_PORT_ID,FP_STATUS,FP_LOCATION_TYPE,FP_LOCATION_ID,FP_LOCATION_NAME,FP_LOCATION,FP_EQUIPMENT_TYPE,FP_EQUIPMENT,FP_EQUIPMENT_ID,FP_EQUIPMENT_NAME,FP_ADDRESS,BP_STATUS,BP_STRAND_ID,BP_STRAND_NAME,BP_TUBE_ID,BP_TUBE_NAME,BP_FIBER_ID,BP_FIBER_NAME,FP_STRAND_ID,FP_STRAND_NAME,FP_TUBE_ID,FP_TUBE_NAME,FP_FIBER_ID,FP_FIBER_NAME,BP_LOCATION_TYPE,BP_LOCATION_ID,BP_LOCATION_NAME,BP_LOCATION,BP_EQUIPMENT_TYPE,BP_EQUIPMENT,BP_EQUIPMENT_ID,BP_EQUIPMENT_NAME,BP_ADDRESS,FP_STRAND_Nb,FP_TUBE_Nb,BP_STRAND_Nb,BP_TUBE_Nb,FP_STRAND_COLOR,FP_TUBE_COLOR,BP_STRAND_COLOR,BP_TUBE_COLOR,FP_JUNCTION_ID,FP_JUNCTION_NAME,BP_JUNCTION_ID,BP_JUNCTION_NAME FROM DISTRIBUTION_BOARD_MAPPING B WHERE B.DB_ID='"
 								+ selectedDistBoardContext + "' ")
 						.list();
-				
+				*/
 				List<Object[]> DBnetLevel = session.createSQLQuery(
 						"SELECT DISTINCT DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD  WHERE DB_ID='"
 								+ selectedDistBoardContext + "' ")
 						.list();
 
 				rtn.put("DistBoardDetails", DistBoardDetails);
-				rtn.put("DistBoardMappingPts", DistBoardMappingPts);
+				//rtn.put("DistBoardMappingPts", DistBoardMappingPts);
 				rtn.put("DBnetLevel", DBnetLevel);
 				
 			} catch (Exception e) {
@@ -1951,7 +1951,7 @@ public class PhysicalLayerController {
 				logger.finest("Error in findDistBoardDetails due to \n " + exceptionAsString);
 				logger.info("Error in findDistBoardDetails due to \n " + exceptionAsString);
 				rtn.put("DistBoardDetails", null);
-				rtn.put("DistBoardMappingPts", null);
+				//rtn.put("DistBoardMappingPts", null);
 			} finally {
 				if (session != null && session.isOpen()) {
 					tx.commit();
@@ -1962,6 +1962,53 @@ public class PhysicalLayerController {
 		return rtn;
 	}
 
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/findDistBoardMappingData", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> findDistBoardMappingData(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) throws JsonProcessingException {
+		// logger.info("Welcome home! The client locale is {}.", locale);
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		// ObjectMapper mapper = new ObjectMapper();
+		Session session = null;
+		Transaction tx = null;
+		session = almsessions.getSession();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			String selectedDistBoardContext = request.getParameter("selectedDistBoardContext");
+			try {
+				
+
+				List<Object[]> DistBoardMappingPts = session.createSQLQuery(
+						"SELECT DISTINCT ROW_COL_INDEX,ROW_NUMBER,COLUMN_NUMBER,DB_PORT_ID,FP_STATUS,FP_LOCATION_TYPE,FP_LOCATION_ID,FP_LOCATION_NAME,FP_LOCATION,FP_EQUIPMENT_TYPE,FP_EQUIPMENT,FP_EQUIPMENT_ID,FP_EQUIPMENT_NAME,FP_ADDRESS,BP_STATUS,BP_STRAND_ID,BP_STRAND_NAME,BP_TUBE_ID,BP_TUBE_NAME,BP_FIBER_ID,BP_FIBER_NAME,FP_STRAND_ID,FP_STRAND_NAME,FP_TUBE_ID,FP_TUBE_NAME,FP_FIBER_ID,FP_FIBER_NAME,BP_LOCATION_TYPE,BP_LOCATION_ID,BP_LOCATION_NAME,BP_LOCATION,BP_EQUIPMENT_TYPE,BP_EQUIPMENT,BP_EQUIPMENT_ID,BP_EQUIPMENT_NAME,BP_ADDRESS,FP_STRAND_Nb,FP_TUBE_Nb,BP_STRAND_Nb,BP_TUBE_Nb,FP_STRAND_COLOR,FP_TUBE_COLOR,BP_STRAND_COLOR,BP_TUBE_COLOR,FP_JUNCTION_ID,FP_JUNCTION_NAME,BP_JUNCTION_ID,BP_JUNCTION_NAME FROM DISTRIBUTION_BOARD_MAPPING B WHERE B.DB_ID='"
+								+ selectedDistBoardContext + "' ")
+						.list();
+				
+
+				rtn.put("DistBoardMappingPts", DistBoardMappingPts);
+				
+			} catch (Exception e) {
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in findDistBoardMappingData due to \n " + exceptionAsString);
+				logger.info("Error in findDistBoardMappingData due to \n " + exceptionAsString);
+				rtn.put("DistBoardMappingPts", null);
+			} finally {
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+				}
+			}
+		}
+		return rtn;
+	}
+	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/findDistBoardMappingDetails", method = RequestMethod.GET)
 	@ResponseBody
@@ -6355,6 +6402,10 @@ public class PhysicalLayerController {
 								? request.getParameter("DistributionBoardCapacity")
 								: "0"));
 				session.saveOrUpdate(distributionBoard);
+				
+				String distBoardMappingFlag = request.getParameter("distBoardMappingFlag");
+				if (StringUtils.equalsIgnoreCase(distBoardMappingFlag, "opened")
+						|| StringUtils.equalsIgnoreCase(distBoardMappingFlag, "new DB")) {
 				query = session.createSQLQuery(
 						"delete from DISTRIBUTION_BOARD_MAPPING where DB_ID = '" + distributionBoardId + "'");
 				query.executeUpdate();
@@ -6583,6 +6634,7 @@ public class PhysicalLayerController {
 
 					}
 
+				}
 				}
 
 				List<Object[]> countConnections = session.createSQLQuery(

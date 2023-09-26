@@ -187,6 +187,7 @@ searchConnectedButtonEvents();
 		$("#distBoard-tab").addClass('active');
 		geocoder = new google.maps.Geocoder();
 		actiondistBoardContext="Insert";
+		document.querySelector("#DBMappingFlag").value = "new DB";
 		
 		//
 		$("#site_DBAutoComplete").prop("checked",true);
