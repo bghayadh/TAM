@@ -242,7 +242,7 @@ var TargetFiberStrand= {
 		//tubeNumber:"tubeNumber",
 		//tubeColor:"tubeColor"
 };
-function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,distribBoardList,fiberTubes,fiberStrands,fiberAuxiliary_Data,tubesAuxiliaries,strandsAuxiliaries,trenchList,trenchAuxiliary_Data,ListManholeJunction,ListHandholeJunction,filterFlag,ductList,ductAuxiliary_Data,nodeList,Transmission,Core,Access,NodeActiveList){
+function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,distribBoardList,fiberTubes,fiberStrands,fiberAuxiliary_Data,tubesAuxiliaries,strandsAuxiliaries,trenchList,trenchAuxiliary_Data,ListManholeJunction,ListHandholeJunction,filterFlag,ductList,ductAuxiliary_Data,NodeActiveList){
 	EnableOriginationFiber=false;
 	
 	fiberArray=[];
@@ -253,33 +253,18 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 	allTubes=[];
 	allStrands=[];
 	allDB = [];
-	allNodes = [];
-	
-//To be deleted	
-/*
-		$("#saveManhole").unbind(); 
-		$("#saveHandhole").unbind();
-		$("#saveDistBoard").unbind();
-		$("#saveFiberPath").unbind();
-		$("#savefibertube").unbind();
-		$("#savefiberstrand").unbind();
-		$("#saveProject").unbind(); 
-		$("#saveManholeJunction").unbind(); 
-		$("#saveHandholeJunction").unbind();
-*/		 
+	allNodes = [];		 
 		
 		var str_CurrentPhysicalLayer="<ul style='margin-left:15px;'><li id='initial_ul_CurrentPhysicalLayer' class='Initial_CurrentPhysicalLayer'><input type='checkbox' class='allElements' unchecked name='filter'></input> <span id='initial_Span_CurrentPhysicalLayer' class='Parentfolder' > <i class='fa fa-folder' style='color: #08526D;'></i></span><span class='TreeSpan' style='color:black;width:436px'>Current Physical Layer </span></li></ul>";
 		console.log("filterFlag !!!!!!!!!!! "+filterFlag);
 		if((filterFlag==1 && $('#currentChecked').is(':checked')) || filterFlag==2){ // filterFlag = 1 ---> Filter, filterFlag = 2 -----> Other than Filter (Nearest or Connected)
 			console.log("CurrentPhysicalLayer heree!!!!!!!!!!!");
-			//$('#removeFilterr').hide();
 			$('#removeS').show();
 		
 			var str_CurrentPhysicalLayer="<ul style='margin-left:15px'><li id='initial_ul_CurrentPhysicalLayer' class='Initial_CurrentPhysicalLayer'><input type='checkbox' class='allElements' unchecked name='filter'></input> <span id='initial_Span_CurrentPhysicalLayer' class='Parentfolder' > <i class='fa fa-folder' style='color: #08526D;'></i></span><span class='TreeSpan' style='color:black;width:436px'>Current Physical Layer </span></li></ul>";
 		}
 		else{
 			$('#removeS').hide();
-			//$('#removeFilterr').show();
 		}
 		$("#network_tree").append(str_CurrentPhysicalLayer);
 
@@ -302,14 +287,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 		str="<ul><li id='NodeActive_f_CurrentPhysicalLayer' style='display:none;' class='NodeActive_f_CurrentPhysicalLayer'><input type='checkbox' unchecked class='AllNodeActive checkFilter'></input> <span id='NodeActive_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='NodeActive_span' class='TreeSpan' style='color:black;width:395px'> Nodes </span></li></ul>";
 		$("#initial_ul_CurrentPhysicalLayer").append(str);
 		
-/*		
-		tree_Prop("#initial_ul_CurrentPhysicalLayer > .folder");
-		tree_PropPhysical("#Manhole_f_CurrentPhysicalLayer > .folder"); 
-		tree_PropPhysical("#Handhole_f_CurrentPhysicalLayer > .folder");
-		tree_Prop("#FiberPath_f_CurrentPhysicalLayer > .folder");
-		tree_PropPhysical("#DistributionBoard_f_CurrentPhysicalLayer > .folder");
-		tree_Prop("#Trench_f_CurrentPhysicalLayer > .folder");
-*/		
+		
 		str="<ul><li id ='FiberPath_backbone__CurrentPhysicalLayer' style='display:none;' class='backboneFolder'> <input type='checkbox' class='BackboneFiber checkFilter' id ='Backbone__CurrentPhysicalLayer' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Backbone </span></li></ul></li></ul>";
 		$("#FiberPath_f_CurrentPhysicalLayer").append(str);
 		
@@ -371,15 +349,6 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 			   
 			   str="<ul><li id='Trench_f_"+ListProject[iji][0]+"' style='display:none;' class='Trench_f_projects'><input type='checkbox' class='AllTrenches'></input> <span id='Trench_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Trench_span' style='color:black;width:395px' class='TreeSpan'>Trench <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' id='pushTrenchPoints"+ListProject[iji][0]+"' class='pushPoints'> <img src='"+getContext()+"/resources/NetworkImages/remove.png' hidden style='margin-left:10px' id='cancelTrenchPoints"+ListProject[iji][0]+"' class='clearPoints'></span></li></ul>";
 			   $("#initial_ul_"+ListProject[iji][0]+"").append(str);
-/*				
-			    tree_Prop("#"+ListProject[iji][0]+" > .folder"); 
-				tree_Prop("#initial_ul_"+ListProject[iji][0]+" > .folder"); 
-				tree_PropPhysical("#Manhole_f_"+ListProject[iji][0]+" > .folder"); 
-				tree_PropPhysical("#Handhole_f_"+ListProject[iji][0]+" > .folder");
-				tree_Prop("#FiberPath_f_"+ListProject[iji][0]+" > .folder");
-				tree_PropPhysical("#DistributionBoard_f_"+ListProject[iji][0]+" > .folder");
-				tree_Prop("#Trench_f_"+ListProject[iji][0]+" > .folder");
-*/				
 			
 				str="<ul><li id='FiberPath_backbone__"+ListProject[iji][0]+"' style='display:none;' class='backboneFolder'> <input type='checkbox' class='BackboneFiber checkFilter' id='Backbone__"+ListProject[iji][0]+"' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Backbone </span></li></ul></li></ul>";
 				$("#FiberPath_f_"+ListProject[iji][0]+"").append(str);
@@ -389,16 +358,8 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				
 				str="<ul><li id='FiberPath_access__"+ListProject[iji][0]+"' style='display:none;' class='accessFolder'> <input type='checkbox' class='AccessFiber checkFilter' id='Access__"+ListProject[iji][0]+"' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Access </span></li></ul></li></ul>";
 				$("#FiberPath_f_"+ListProject[iji][0]+"").append(str);
-/*
-				tree_Prop("#FiberPath_backbone__"+ListProject[iji][0]+" > .folder");
-				tree_Prop("#FiberPath_metro__"+ListProject[iji][0]+" > .folder");
-				tree_Prop("#FiberPath_access__"+ListProject[iji][0]+" > .folder");
-*/
 				
 			 }
-/*			 
-			 tree_Prop("#initial_ul_Projects > .folder"); 
-*/			 
 		 }
 	/////////////*********************	Manholes Creation In tree	***********************///////////////
 	//-------------------------------------------------------------------------------------------------//
@@ -412,19 +373,13 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 			if(ListManhole[i][5]>0){
 				str="<ul><li id='"+ListManhole[i][0]+"' class='MANHOLE' style='display:none;width:100px;'><input type='checkbox' class='Manhole checkFilter' class='filter' name='Element' ></input> <span class='folder' > <i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:355px' class='TreeSpan'><img style='color: #08526D;' src='"+getContext()+"/resources/NetworkImages/manholeRed.png'>  "+ListManhole[i][1]+" </span><ul><li id='"+ListManhole[i][0]+"_f' style='display:none;' class='junctionFolder'> <input type='checkbox' class='ManholeJct checkFilter' unchecked name='filter'></input> <span  class='folder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Junctions </span></li></ul></li></ul>";
 				$("#Manhole_f_"+ListManhole[i][4]+"").append(str);  					
-//				$("#"+ListManhole[i][0]+"_f > .TreeSpan").width($("#left").width());	
+	
 			}
 			else {
 				str="<ul><li id='"+ListManhole[i][0]+"' class='MANHOLE' style='display:none;width:100px;'><input type='checkbox' class='Manhole' class='filter checkFilter' name='Element' ></input> <span class='TreeSpan' style='color:black;width:355px'><img src='"+getContext()+"/resources/NetworkImages/manholeRed.png'> "+ListManhole[i][1]+"</span></li></ul>";
 				$("#Manhole_f_"+ListManhole[i][4]+"").append(str);  				
 			}
-/*			
-			tree_Prop("#"+ListManhole[i][0]+"_f > .folder");
-			tree_Prop("#"+ListManhole[i][0]+" > .folder");
-*/								
 			}
-//			$('#Manhole_span').width($("#left").width());
-//			$('.MANHOLE > .TreeSpan').width($("#left").width());
 			AllManholeCheckFilter();
 			
 		}
@@ -447,9 +402,6 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 			str="<ul><li id='"+ListManholeJunction[i][0]+"' class='JUNCTION' style='display:none;width:100px;'><input type='checkbox' class='JctManholes checkFilter' class='filter'></input><span  class='TreeSpan' style='color:black;width:195px'><img src='"+getContext()+"/resources/NetworkImages/junction.png'> "+manholeJctName+" </span></i></li></ul>";		
 			$("#"+ListManholeJunction[i][2]+"_f").append(str);
 			$("#Manhole_f_"+ListManholeJunction[i][2]+"").children('.folder').find('> svg').removeClass('fa-folder').addClass('fa-folder-open');					
-/*
-			tree_Prop("#"+manholeJctId+" > .folder");
-*/			
 			$( "#"+manholeJctId+" > .TreeSpan" ).bind("contextmenu",function(){
 				selectedManIdContext=$(this).parents().eq(4).attr('id');
 				selectedManholeJct=$(this).parent().attr('id');
@@ -473,7 +425,6 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 		if(ListHandhole[i][5]>0){
 			str="<ul><li id='"+ListHandhole[i][0]+"' class='HANDHOLE' style='display:none;width:100px;'><input type='checkbox' class='Handhole checkFilter' class='filter' name='Element' ></input> <span class='folder' > <i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:355px' class='TreeSpan'><img style='color: #08526D;' src='"+getContext()+"/resources/NetworkImages/handholeYellow.png'>  "+ListHandhole[i][1]+" </span><ul><li id='"+ListHandhole[i][0]+"_f' style='display:none;' class='junctionFolder'> <input type='checkbox' class='HandholeJct checkFilter' unchecked name='filter'></input> <span  class='folder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Junctions </span></li></ul></li></ul>";
 			$("#Handhole_f_"+ListHandhole[i][4]+"").append(str);  					
-//			$("#"+ListHandhole[i][0]+"_f > .TreeSpan").width($("#left").width());
 					
 		}
 		else {
@@ -481,15 +432,8 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 			$("#Handhole_f_"+ListHandhole[i][4]+"").append(str);  
 					
 		}
-/*
-			tree_Prop("#"+ListHandhole[i][0]+"_f > .folder");
-			tree_Prop("#"+ListHandhole[i][0]+" > .folder");
-*/			
 		}
-//		$('#Handhole_span').width($("#left").width());
-//		$('.HANDHOLE > .TreeSpan').width($("#left").width());
-		AllHandholeCheckFilter();
-				
+		AllHandholeCheckFilter();				
 		}
 		$(".HANDHOLE > .TreeSpan").contextmenu(function(){
     					
@@ -504,18 +448,13 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 			for(i=0;i<ListHandholeJunction.length;i++){
 			var handholeJctId=ListHandholeJunction[i][0];
 			handholeJctName=ListHandholeJunction[i][1];
-			
 			window[""+handholeJctId]=[];
 			window[""+handholeJctId]=ListHandholeJunction[i];
 				
-				
 			str="<ul><li id='"+ListHandholeJunction[i][0]+"' class='JUNCTION_H' style='display:none;width:100px;'><input type='checkbox' class='JctHandholes checkFilter' class='filter'></input><span  class='TreeSpan' style='color:black;width:195px'><img src='"+getContext()+"/resources/NetworkImages/junction.png'> "+handholeJctName+" </span></i></li></ul>";						
 			$("#"+ListHandholeJunction[i][2]+"_f").append(str);
-/*			
-			tree_Prop("#"+handholeJctId+" > .folder");
-*/				
+				
 			$( "#"+handholeJctId+" > .TreeSpan" ).bind("contextmenu",function(){
-	        	//console.log("hereee in the handhole junction");
 				selectedHandIdContext=$(this).parents().eq(4).attr('id');
 				selectedHandholeJct=$(this).parent().attr('id');
 				IdNodeSelectedTemp=$(this).parents().eq(6).attr('id').split("Handhole_f_")[1];
@@ -565,21 +504,14 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 					$("#FiberPath_access__"+fiberList[i][14]).append(str);
 				}
 
-//				$("#"+fiberList[i][4]+"_f > .TreeSpan").width($("#left").width());
-/*				
-				tree_Prop("#"+fiberList[i][4]+"_f > .folder");
-				tree_Prop("#"+fiberList[i][4]+" > .folder");
-*/				
+		
 				////////**********	Loading all FIBERS with auxiliaries data  ***********//////////
 
 				var fiberId=fiberList[i][4];
 				window[""+fiberList[i][4]]=[];
 				window["mapPoints_"+fiberList[i][4]]=[];
-				
 				// array of fiber auxiliary names
 				window["mapPointsNames_"+fiberList[i][4]]=[];
-				//window["mapPointsNames_"+fiberList[i][4]].push(fiberList[i][5]);
-				//window["mapPointsNames_"+fiberList[i][4]].push(fiberList[i][6]);
 				
 				//Case of wareHouse
 				if(fiberList[i][5] !="null"){
@@ -614,7 +546,6 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				// fiber boundaries and cable points
 				window[""+fiberList[i][4]]=fiberList[i];				
 				window["bounds_"+fiberList[i][4]] = new google.maps.LatLngBounds();			
-
 				var myLatLng = new google.maps.LatLng(fiberList[i][1],fiberList[i][0]);
 				window["bounds_"+fiberList[i][4]].extend(myLatLng);
 				window["mapPoints_"+fiberList[i][4]].push(myLatLng);
@@ -633,9 +564,6 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				fiberIdList.push(fiberList[i][4]);
 				fiberOwnerList.push(fiberList[i][22]);
 				window['FiberColor_'+fiberList[i][22]] = fiberList[i][23];
-				//console.log("The owners are "+window['FiberOwner']);
-				//console.log("The owner is "+fiberList[i][22]+" and the color is "+window['FiberColor_'+fiberList[i][22]]);
-
 
 				$( "#"+fiberList[i][4]+" > .TreeSpan" ).bind("contextmenu",function(){
 					IdNodeSelectedTemp = $(this).parents().eq(2).attr('id').split("__")[1];
@@ -645,8 +573,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				
 				$( "#"+fiberList[i][4]+"_f > span" ).bind("contextmenu",function(){
 					selectedFiberContext=$(this).parents().eq(2).attr('id');
-					selectedTube=$(this).parent().attr('id');	
-					console.log("selectedFiberContext >>>>> "+selectedFiberContext);
+					selectedTube=$(this).parent().attr('id');
 					openContext(selectedTube,"",menuTubePath,event)
 				});
 			}
@@ -656,8 +583,6 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 			pathCheckFilter("initial_ul","parentFolderCheck","FiberPath_f_CurrentPhysicalLayer","","","","","","","","","");
 		}
 
-//		$('#FiberPath_span').width($("#left").width());
-//		$('.FIBER > .TreeSpan').width($("#left").width());
 		
 		// fiber auxiliary points
 		if(fiberAuxiliary_Data!=null){
@@ -703,11 +628,6 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				else{
 					str="<ul><li id='"+tubeId+"' class='TUBE' style='display:none;width:100px;'><input type='checkbox' class='FiberTube checkFilter' name='filter'></input> <span class='TreeSpan' style='color:black;width:274px'> <div style='margin-bottom:-17px;margin-left:1px; font-size:12px; font-weight:bold; color:"+tubeColor+"'> "+tubeNumber+"</div> <img src='"+getContext()+"/resources/NetworkImages/core.png' style='margin-bottom:-10px;'> "+tubeName+" / "+tubeId+" <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' id='pushPointsStrands"+tubeId+"' class='pushPoints'> <img src='"+getContext()+"/resources/NetworkImages/remove.png' hidden style='margin-left:10px' id='cancelPointsStrands"+tubeId+"' class='clearPoints'>  </span></li></ul>";	
 				}
-				$("#"+fiberTubes[i][12]+"_f").append(str);								
-/*																   
-				tree_Prop("#"+tubeId+" > .folder");
-				tree_Prop("#"+tubeId+"_f > .folder");
-*/					
 																			  
 				pathCheckFilter(TargetTube,"parentFolderCheck",fiberTubes[i][12],"14",tubeArray,allTubes,directionHashmapTube,routeDisplayTube,"STRAND",strandArray,directionHashmapStrand,allStrands);
 				pathCheckFilter(TargetTube,"",tubeId,"14",tubeArray,allTubes,directionHashmapTube,routeDisplayTube,"STRAND",strandArray,directionHashmapStrand,allStrands);
@@ -776,8 +696,6 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				});
 	
 			}		
-//			$('#FiberPath_span').width($("#left").width());
-//			$('.TUBE > .TreeSpan').width($("#left").width());
 		}
 
 		// tube auxiliary points array
@@ -833,7 +751,6 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 
 				var strandId=fiberStrands[i][0];
 				var savedStrandId = fiberStrands[i][0];//initialized here and used in save strand function
-			//	indexOfParentTube=allTubes.indexOf(fiberStrands[i][11]);
 				allStrands.push(fiberStrands[i][0]);
 				var strandNumber=fiberStrands[i][15];
 				var strandColor=fiberStrands[i][16];
@@ -841,8 +758,6 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				str="<ul><li id='"+fiberStrands[i][0]+"' class='STRAND' style='display:none;width:100px;'><input type='checkbox' class='FiberStrand checkFilter' class='filter'></input> <span  class='TreeSpan' style='color:black;width:195px'> <div style='margin-bottom:-17px;margin-left:1px; font-size:12px; font-weight:bold; color:"+strandColor+"'> "+strandNumber+"</div> <img src='"+getContext()+"/resources/NetworkImages/strand.png' style='margin-bottom:-10px;'> "+fiberStrands[i][13]+" / "+fiberStrands[i][0]+" </span></li></ul>";		
 				$("#"+fiberStrands[i][11]+"_f").append(str);
 				
-				//tree_Prop("#"+fiberStrands[i][0]+" > span");
-
 				pathCheckFilter(TargetStrand,"parentFolderCheck",fiberStrands[i][11],"14",strandArray,allStrands,directionHashmapStrand,routeDisplayStrand,"","","","");
 				pathCheckFilter(TargetStrand,"",fiberStrands[i][0],"14",strandArray,allStrands,directionHashmapStrand,routeDisplayStrand,"","","","");
 
@@ -884,11 +799,9 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				var myLatLng = new google.maps.LatLng(fiberStrands[i][2],fiberStrands[i][1]);
 				window["bounds_"+fiberStrands[i][0]].extend(myLatLng);
 				window["mapPoints_"+fiberStrands[i][0]].push(myLatLng);
-
 				myLatLng = new google.maps.LatLng(fiberStrands[i][4],fiberStrands[i][3]);
 				window["bounds_"+fiberStrands[i][0]].extend(myLatLng);
 				window["mapPoints_"+fiberStrands[i][0]].push(myLatLng);
-				
 				Create_FiberStrand(fiberStrands[i][0]);
 				window['strandCheckPoints_'+fiberStrands[i][0]] = "unchecked";
 				window['strandCheckSequence_'+fiberStrands[i][0]] = "unchecked";
@@ -984,8 +897,6 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				});	
 				
 			}
-//			$('#DistribBoard_span').width($("#left").width());
-//			$('.DistributionBoard > span').width($("#left").width());
 		}
 		
 			/////////////*********************	NodeActive creation in tree	***********************///////////////
@@ -1026,8 +937,6 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				});	
 				
 			}
-//			$('#NodeActive_span').width($("#left").width());
-//			$('.NodeActive > span').width($("#left").width());
 			
 			AllNodeActiveCheckFilter("Entreprise_MSAN__CurrentPhysicalLayer");
 		    AllNodeActiveCheckFilter("Transmission_DWDM__CurrentPhysicalLayer");
@@ -1152,12 +1061,6 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				$("<span class='folder' > <i class='fa fa-folder' style='color: #08526D'></i></span>").insertBefore("#"+ductList[i][18]+"> .TreeSpan");
 				str="<ul><li id='"+ductList[i][18]+"_f' style='display:none;' class='ductsFolder'> <input type='checkbox' class='trenchDucts checkFilter' unchecked name='filter'></input> <span  class='folder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='color:black;width:236px'> Ducts <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' id='pushPointsTrench"+window[""+ductList[i][0]][18]+"_f' class='pushPoints'> <img src='"+getContext()+"/resources/NetworkImages/remove.png' hidden style='margin-left:10px' id='cancelPointsTrench"+window[""+ductList[i][0]][18]+"_f' class='clearPoints'></span></li></ul>";
 				$("#"+ductList[i][18]).append(str);
-// To be deleted				
-//				$("#"+ductList[i][18]+" > .folder").unbind('click');		
-
-/*						
-						tree_Prop("#"+window[""+ductId][14]+" > .folder");
-*/					
 				$("#"+ductList[i][18]+"_f > .TreeSpan").contextmenu(function(){	
 					menuName=menuDucts;
 					selectedTrenchContext=$(this).parents().eq(2).attr('id');
@@ -1170,13 +1073,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 					
 			str="<ul><li id='"+ductList[i][0]+"'  class='Duct' style='display:none;width:100px;'><input type='checkbox' class='DUCT checkFilter' unchecked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/duct.png' style='opacity:0.6'> "+ductList[i][1]+" / "+ductList[i][0]+" </span></li></ul>";	
 			$("#"+window[""+ductList[i][0]][18]+"_f").append(str);
-			// To be deleted
-//			$("#"+window[""+ductList[i][0]][18]+"_f > .folder").unbind('click');
-/*					
-					tree_Prop("#"+window[""+ductId][14]+"_f > .folder");
-*/					
-			window["mapPoints_"+ductList[i][0]]=[];
-					
+			window["mapPoints_"+ductList[i][0]]=[];					
 			window["mapPointsNames_"+ductList[i][0]]=[];	
 			
 			if(ductList[i][2] !="null"){
@@ -1235,7 +1132,6 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 
 			if(ductAuxiliary_Data!=null){
 				for(i=0;i<ductAuxiliary_Data.length;i++){ 
-					//ductId=ductAuxiliary_Data[i][5];
 					
 					if(ductAuxiliary_Data[i][2] !="null"){
 						var ductAuxPoint = ductAuxiliary_Data[i][2]+":" +ductAuxiliary_Data[i][4]+":"+ductAuxiliary_Data[i][3];		
@@ -1261,26 +1157,14 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				}
 			}
 		$('.TreeSpan').css("display", "inline"); // The purpose of this command is to let the background color width in mouse hovering or mouse select to be same span text width	
-//		$('.TreeSpan').width(($("#left").width()));						   
-		// tree nodes events click show/hide children nodes
 
 		treeCollapseFolder(".Parentfolder",null,".Parentfolder");
 		treeCollapseFolder(".folder","fast",".folder");
 		
-		//tree_prop_generalPhysical();
-		
-
 		tree_prop_selection(null);
 		MouseHoveringSpans(null);		//>>>>>>>>>>>> Hover event in tree elements
 		boqCheckFilter();
-		
 
-/*	
-	$("#left").bind('resize', function(e) {
-		width=$(this).width();
-		 $('.TreeSpan').width(width);
-	 	console.log("resizing of left to "+width);
- 	}); */
  
 $("#ductName").on("input",function(){
 	$("#ductHeader").text("Duct: "+$(this).val());
@@ -1391,33 +1275,9 @@ Width : '200%',
 			}); 
 				}
 			},
-/*			to be deleted
-				{'icon': 'paste','name': 'Details', action: () => {
-	
-					 $.ajax({
-							type: "GET",
-							contentType: "application/json; charset=utf-8",
-							url: getContext()+'/findCountManHoles',
-							data: {
-								"ProjectId": IdNodeSelectedTemp,    
-							},
-							dataType: "json",
-							success: function (data) {
-	
-									$("#manholeModalDetails").modal('show');
-									$("#numManholes").val(data.manholeCount);
-	                				data = null;
-							},
-							error: function (result) {
-								alert("Error");
-							}
-						}); 
-					}
-				},
-*/
+
 				{'icon': 'trash', 'name': 'Delete Manhole', action: () => {
 					
-					//deletePhysicalLayers("AllManholes","Manhole",IdNodeSelectedTemp);
 					numberofselected("AllManholes","Manhole",IdNodeSelectedTemp);
 					deleteprop("AllManholes","Manhole",IdNodeSelectedTemp);
 					$('#DeleteModal').find('input:text').val('');
@@ -1451,9 +1311,7 @@ Width : '200%',
 								   $("#boq_table").append(tr);
 							   
 								   data=null;
-							   }
-							   
-							  
+							   }   
 						   },
 						   error: function (result) {
 							   alert("Error");
@@ -1516,8 +1374,6 @@ Width : '200%',
 					 actionHandholeContext="Insert";
 					 document.getElementById("HandholeDMDiv").style.display = "none";
 					}
-					
-	
 					 },
 					{'icon': 'folder-plus', 'name': 'Create New Junction', action: () => {
 			
@@ -1544,7 +1400,6 @@ Width : '200%',
 				$("#handholeJunctionModal").modal('show');
 								
 				document.getElementById("handholeNameJct").readOnly = false;
-				//ManholeHandholeAutoCompleteJunction();
 				actionHandholeJct="Insert";							
 																
 				$("#handholeJctName").on("input",function(){
@@ -1559,47 +1414,9 @@ Width : '200%',
 			 }); 
 			}	
 		},
-/* 				to be deleted		
-				{'icon': 'paste','name': 'Details',action: () => {
-					$("#handholeModalDetails").modal('show');					
-					//if(countHandholes==null){
-						$.ajax({
-								   type: "GET",
-								   contentType: "application/json; charset=utf-8",
-								   url: getContext()+'/findCountHandHoles',
-								   data: {
-	   
-									   "ProjectId": IdNodeSelectedTemp,
-										  
-								   },
-								   dataType: "json",
-								   success: function (data) {
-									   var handholeCount="";
-								      //console.log("data.handholeCount "+data.handholeCount);
-									   if(data.handholeCount!=null){
-										   handholeCount=data.handholeCount;
-									   }
-										   
-									   $("#numHandholes").val(data.handholeCount);
-									   countHandholes=handholeCount;
-	   
-								   },
-								   error: function (result) {
-									   alert("Error");
-								   }
-							   });
-						 //  }
-   					
-						 //  else{
-   
-							//$("#numHandholes").val(countHandholes);
-						   //}			
-					} 
-				 },
-*/
+
 				  {'icon': 'trash', 'name': 'Delete Handhole', action: () => {					
 					
-					//deletePhysicalLayers("AllHandholes","Handhole",IdNodeSelectedTemp);
 					numberofselected("AllHandholes","Handhole",IdNodeSelectedTemp);
 					deleteprop("AllHandholes","Handhole",IdNodeSelectedTemp);
 					$('#DeleteModal').find('input:text').val('');
@@ -1781,7 +1598,6 @@ Width : '200%',
 					$("#deleteFiber").show();
 					$("#deleteMan").hide();
 					$("#deleteTrench").hide();
-					//deleteFiberCable("AllFiberStrands","FiberStrand",selectedStrandPath);
 				}
 			},
 			   {'icon': 'paste', 'name': 'Show BoQ', action: () => {
@@ -1867,38 +1683,7 @@ Width : '200%',
 		},
 				
 		{'icon': 'map', 'name': 'Create Tube from Map ', action: (once) => {
-			//to be deleted
 			
-			/*Path_Array=[];
-			auxLatLng =[];
-			var eventCreate=0;
-			allAuxDictStrand=[];
-			allAuxDictTube=[];
-			MarkerArray=[];
-			markerArrayAux=[];
-			clearCreateFromMap(markerArrayAux);	
-			$("#auxiliaryTableTubes > tbody").empty();
-			
-			$('#TubeModal').find('input:text').val('');
-			$("#auxiliaryTableTubes > tbody").empty();
-			$('#TubeModal').find('select').val('');
-			
-			$('#TubeModal').find('input:file').val('');
-			
-				$(".origination,.termination").removeClass('disabled');			
-			$("#pushPointsTubes"+selectedFiberContext).removeAttr('hidden');
-			$("#cancelPointsTubes"+selectedFiberContext).removeAttr('hidden');
-
-			 EnableOriginationFiber=true;
-			 draw=true;
-			 listener1 = map.addListener('click', createPathh);
-			 actionFiberContext="Insert";
-			 
-			 window["Termination"]=[];
-			 window["Origination"]=[];
-			
-			*/
-				
 			var incrmntTubeAux=0
 					
            var tubeChildren=$("#"+selectedFiberContext+"_f > ul").children().length;
@@ -1949,449 +1734,6 @@ Width : '200%',
 			$("#fiberCable").val(selectedFiberContext);
 				
 			event.stopPropagation();
-            
-			//to be deleted
-			
-			/*
-			$("#cancelPointsTubes"+selectedFiberContext).unbind('click');
-			$('#cancelPointsTubes'+selectedFiberContext).on('click',function(event){
-				clearCreateFromMap(markerArrayAux);	
-				EnableOriginationFiber=false;
-				//Hide the icon of site / client in case of canceling an origination or termination
-				if(window["Origination"].length>0 && window["Termination"].length==0){
-					if($("#tubeOriginationSource").val().split("_")[0]=="WARE" || $("#tubeOriginationSource").val().split("_")[0]=="CLT"){
-						 if(siteCltSrcMarkers[$("#tubeOriginationSource").val().split(":")[0]]) {
-							 siteCltSrcMarkers[$("#tubeOriginationSource").val().split(":")[0]].setMap(null);
-						 }
-					}
-				}
-				else if(window["Origination"].length==0 && window["Termination"].length>0){
-					if($("#tubeTerminationDestination").val().split("_")[0]=="WARE" || $("#tubeTerminationDestination").val().split("_")[0]=="CLT"){
-						 if(siteCltSrcMarkers[$("#tubeTerminationDestination").val().split(":")[0]]) {
-							 siteCltSrcMarkers[$("#tubeTerminationDestination").val().split(":")[0]].setMap(null);
-						 }
-					}
-				}
-				else if(window["Origination"].length>0 && window["Termination"].length>0){
-					if($("#tubeOriginationSource").val().split("_")[0]=="WARE" || $("#tubeOriginationSource").val().split("_")[0]=="CLT"){
-						if(siteCltSrcMarkers[$("#tubeOriginationSource").val().split(":")[0]]) {
-							 siteCltSrcMarkers[$("#tubeOriginationSource").val().split(":")[0]].setMap(null);
-						 }				
-					}
-					if($("#tubeTerminationDestination").val().split("_")[0]=="WARE" || $("#tubeTerminationDestination").val().split("_")[0]=="CLT"){
-						 if(siteCltSrcMarkers[$("#tubeTerminationDestination").val().split(":")[0]]) {
-							 siteCltSrcMarkers[$("#tubeTerminationDestination").val().split(":")[0]].setMap(null);
-						 }				
-					}				
-			}	
-				$(".origination,.termination").addClass('disabled');
-				event.stopPropagation();
-					 
-			});						 
-			
-			$("#pushPointsTubes"+selectedFiberContext).unbind('click');
-			$('#pushPointsTubes'+selectedFiberContext).on('click',function(event){
-					
-					$('#TubeModal').find('input:text').val('');
-					$("#auxiliaryTableTubes > tbody").empty();
-					index=0;	
-					var srclng=""; var destlng="";
-					var srclat=""; var destlat="";var auxLatLng=[];	
-											
-					document.getElementById('crtdByFiberTube').value = createdUser;
-					document.getElementById('modifiedByFiberTube').value = lstModfUser;
-									
-				//Uncheck all autocomplete checkboxes when opening the popup
-					uncheckAutoCompleteCheckboxes("auxPtTubeAutocomplete");
-					uncheckAutoCompleteCheckboxes("srcDestTubeAutoComplete");
-
-			$('body').append('<div id="loading"><img id="loading-image" src="'+getContext()+'/resources/images/ajax-loader.gif" alt="Loading..." /><span>Loading, please wait.</span></div>')
-			
-			// Origination and termination are both added
-			if(window["Origination"].length >0 && window["Termination"].length >0){
-				
-				//window["Origination"]=[$("#originationSource").val(),$("#OriginationSourceType").val(),$("#OriginationSrcCity").val(),$("#OriginationSourceLng").val(),$("#OriginationSourceLat").val()]
-				//window["Termination"]=[$("#terminationDestination").val(),$("#TerminationDestType").val(),$("#TerminationDestCity").val(),$("#TerminationDestLng").val(),$("#TerminationDestLat").val()]
-				
-				$("#SourceTube").val(window["Origination"][0]);
-				$("#sourcelong").val(window["Origination"][3]);
-				$("#sourcelat").val(window["Origination"][4]);
-				$("#srcCityTube").val(window["Origination"][2]);
-				$("#SourceTypeTube").val(window["Origination"][1]);
-				
-				$("#DestinationTube").val(window["Termination"][0]);
-				$("#destinationlong").val(window["Termination"][3]);
-				$("#destinationlat").val(window["Termination"][4]);
-				$("#dstCityTube").val(window["Termination"][2]);
-				$("#DestinationTypeTube").val(window["Termination"][1]);
-				
-			if(MarkerArray.length>0){
-				for(var x=0;x<MarkerArray.length;x++){
-					auxLat=MarkerArray[x].position.lat().toString().slice(0, -1);
-					auxLng=MarkerArray[x].position.lng().toString().slice(0, -1);
-					
-					auxLatLng.push({
-					"auxLat" : auxLat,
-					"auxLng" : auxLng
-			
-					});		
-				}
-			}
-			$.ajax({
-				type: "GET",
-				contentType: "application/json; charset=utf-8",
-				url: getContext()+'/findByLatLng',
-				data: {
-					"dictParameter":auxLatLng
-				},
-				dataType: "json",
-				success: function (data) {
-					
-				  auxTubeArray = data.auxPtSearch;
-				  index = 0
-
-				  if(auxTubeArray.length > 0){
-					  TubeAuxAppendBOQ(auxTubeArray,"createFromMap","originationTermination");
-				   }
-				  
-				  $("#loading" ).remove();
-				  $("#tubeModal").modal('show');					
-				},
-					error: function (result) {
-						alert("Error");
-					}
-				});
-
-			} // end origination and termination case 
-			
-			// Origination only
-			else if(window["Origination"].length > 0 && window["Termination"].length==0){
-				//window["Origination"]=[$("#originationSource").val(),$("#OriginationSourceType").val(),$("#OriginationSrcCity").val(),$("#OriginationSourceLng").val(),$("#OriginationSourceLat").val()]
-
-				$("#SourceTube").val(window["Origination"][0]);
-				$("#sourcelong").val(window["Origination"][3]);
-				$("#sourcelat").val(window["Origination"][4]);
-				$("#srcCityTube").val(window["Origination"][2]);
-				$("#SourceTypeTube").val(window["Origination"][1]);
-				
-				if(MarkerArray[MarkerArray.length-1]){
-					$("#destinationlong").val(""+MarkerArray[MarkerArray.length-1].position.lng());
-					$("#destinationlat").val(" "+MarkerArray[MarkerArray.length-1].position.lat());
-					destlng=MarkerArray[MarkerArray.length-1].position.lng().toString().slice(0, -1);
-					destlat=MarkerArray[MarkerArray.length-1].position.lat().toString().slice(0, -1);
-					$("#DestinationTypeTube").val("Unregistered Node");	
-					fillCityByGeocoding("dstCityTube",MarkerArray[MarkerArray.length-1].position.lat(),MarkerArray[MarkerArray.length-1].position.lng(),geocoder)
-													
-				}
-				else {
-					destlng="empty";
-					destlng="empty";
-				}
-				
-				if(MarkerArray.length>1){
-				for(var x=0;x<MarkerArray.length-1;x++){
-					auxLat=MarkerArray[x].position.lat().toString().slice(0, -1);
-					auxLng=MarkerArray[x].position.lng().toString().slice(0, -1);
-					
-					auxLatLng.push({
-					"auxLat" : auxLat,
-					"auxLng" : auxLng
-			
-					});		
-				}
-			}						
-				$.ajax({
-					type: "GET",
-					contentType: "application/json; charset=utf-8",
-					url: getContext()+'/findByLatLng',
-					data: {
-						"DestinationLng":destlng,
-						"DestinationLat":destlat,
-						"dictParameter":auxLatLng
-					},
-					dataType: "json",
-					success: function (data) {
-						var dest="N/A"; var dstCity="";
-						
-						if(typeof data.res_Type1!=='undefined'){
-							dest=data.res_Type1[0]+":"+data.res_Type1[1];
-							dstCity = data.res_Type1[2];
-							$("#dstCityTube").val(dstCity);	
-							
-							if(data.res_Type1[0].split("_")[0]=="MH"){
-								$("#DestinationTypeTube").val("Manhole");
-							}
-							else if(data.res_Type1[0].split("_")[0]=="HH"){
-								$("#DestinationTypeTube").val("Handhole");
-							}
-							else if(data.res_Type1[0].split("_")[0]=="DB"){
-								$("#DestinationTypeTube").val("Distribution Board");
-							}
-							else if(data.res_Type1[0].split("_")[0]=="CLT"){
-								$("#DestinationTypeTube").val("Client");
-							}
-							else if(data.res_Type1[0].split("_")[0]=="WARE"){
-								$("#DestinationTypeTube").val("Site");
-							}
-							else {
-								$("#DestinationTypeTube").val("Unregistered Node");
-							}
-						}
-					
-						auxTubeArray = data.auxPtSearch;
-						index = 0;
-						if(auxTubeArray.length > 0){							
-							TubeAuxAppendBOQ(auxTubeArray,"createFromMap","originationOnly");
-						}	
-						$("#DestinationTube").val(dest);
-						$("#loading").remove();
-						$("#tubeModal").modal('show');						
-					},
-					error: function (result) {
-						alert("Error");
-					}
-				});					
-			} // end case of origination only 
-			
-			// termination only
-			else if(window["Origination"].length==0 && window["Termination"].length>0){
-				//window["Termination"]=[$("#terminationDestination").val(),$("#TerminationDestType").val(),$("#TerminationDestCity").val(),$("#TerminationDestLng").val(),$("#TerminationDestLat").val()]
-				$("#DestinationTube").val(window["Termination"][0]);
-				$("#destinationlong").val(window["Termination"][3]);
-				$("#destinationlat").val(window["Termination"][4]);
-				$("#dstCityTube").val(window["Termination"][2]);
-				$("#DestinationTypeTube").val(window["Termination"][1]);
-
-				if(MarkerArray[0]){
-					$("#sourcelong").val(""+MarkerArray[0].position.lng());
-					$("#sourcelat").val(""+MarkerArray[0].position.lat());
-					srclng=MarkerArray[0].position.lng().toString().slice(0, -1);
-					srclat=MarkerArray[0].position.lat().toString().slice(0, -1);
-					$("#SourceTypeTube").val("Unregistered Node");	
-					fillCityByGeocoding("srcCityTube",MarkerArray[0].position.lat(),MarkerArray[0].position.lng(),geocoder)
-				}
-				else {
-					srclat="empty";
-					srclat="empty";
-				}
-				if(MarkerArray.length>1){
-				for(var x=1;x<MarkerArray.length;x++){
-					auxLat=MarkerArray[x].position.lat().toString().slice(0, -1);
-					auxLng=MarkerArray[x].position.lng().toString().slice(0, -1);
-					
-					auxLatLng.push({
-					"auxLat" : auxLat,
-					"auxLng" : auxLng
-			
-					});		
-				}
-			}
-				$.ajax({
-						type: "GET",
-						contentType: "application/json; charset=utf-8",
-						url: getContext()+'/findByLatLng',
-						data: {			
-							"SourceLng":srclng,
-							"SourceLat":srclat,
-							"dictParameter":auxLatLng
-						},
-						dataType: "json",
-						success: function (data) {
-							src="N/A";srcCity="";
-							if(typeof data.res_Type!== 'undefined'){
-								src=data.res_Type[0]+":"+data.res_Type[1];
-								srcCity = data.res_Type[2];
-								$("#srcCityTube").val(srcCity);							
-							
-								if(data.res_Type[0].split("_")[0]=="MH"){
-									$("#SourceTypeTube").val("Manhole");
-								}
-								else if(data.res_Type[0].split("_")[0]=="HH"){
-									$("#SourceTypeTube").val("Handhole");
-								}
-								else if(data.res_Type[0].split("_")[0]=="DB"){
-									$("#SourceTypeTube").val("Distribution Board");
-								}
-								else if(data.res_Type[0].split("_")[0]=="CLT"){
-									$("#SourceTypeTube").val("Client");
-								}
-								else if(data.res_Type[0].split("_")[0]=="WARE"){
-									$("#SourceTypeTube").val("Site");
-								}
-								else {
-									$("#SourceTypeTube").val("Unregistered Node");
-								}
-							}
-							
-						auxTubeArray = data.auxPtSearch;
-						index = 0
-						if(auxTubeArray.length > 0){	
-							TubeAuxAppendBOQ(auxTubeArray,"createFromMap","terminationOnly");
-						}	
-					$("#SourceTube").val(src);	
-					$("#loading").remove();
-					$("#tubeModal").modal('show');
-				},
-				error: function (result) {
-					alert("Error");
-				}
-				});
-			}// end termination case
-			
-			//No origination && no termination
-			else {
-				
-				
-				// Binding Of auxiliary pts 
-					 if(MarkerArray[0]){
-						$("#sourcelong").val(""+MarkerArray[0].position.lng());
-						$("#sourcelat").val(""+MarkerArray[0].position.lat());
-						srclat=MarkerArray[0].position.lat().toString().slice(0, -1);
-						srclng=MarkerArray[0].position.lng().toString().slice(0, -1);
-						$("#SourceTypeTube").val("Unregistered Node");
-						fillCityByGeocoding("srcCityTube",MarkerArray[0].position.lat(),MarkerArray[0].position.lng(),geocoder)
-						
-					}
-					else {
-						srclat="empty";
-						srclat="empty";
-					}
-					
-					if(MarkerArray[MarkerArray.length-1] && MarkerArray.length>1){
-						$("#destinationlong").val(""+MarkerArray[MarkerArray.length-1].position.lng());
-						$("#destinationlat").val(" "+MarkerArray[MarkerArray.length-1].position.lat());
-						destlat=MarkerArray[MarkerArray.length-1].position.lat().toString().slice(0, -1);
-						destlng=MarkerArray[MarkerArray.length-1].position.lng().toString().slice(0, -1);
-						$("#DestinationTypeTube").val("Unregistered Node");
-						fillCityByGeocoding("dstCityTube",MarkerArray[MarkerArray.length-1].position.lat(),MarkerArray[MarkerArray.length-1].position.lng(),geocoder)
-						
-					}
-					else {
-						destlat="empty";
-						destlng="empty";
-					}
-					if(MarkerArray.length>2){
-						auxLatLng=[];
-						for(var x=1;x<MarkerArray.length-1;x++){
-							auxLat=MarkerArray[x].position.lat().toString().slice(0, -1);
-							auxLng=MarkerArray[x].position.lng().toString().slice(0, -1);
-							
-							auxLatLng.push({
-							"auxLat" : auxLat,
-							"auxLng" : auxLng
-					
-							});		
-						}
-					}
-					
-					$.ajax({
-						type: "GET",
-						contentType: "application/json; charset=utf-8",
-						url: getContext()+'/findByLatLng',
-						data: {
-								
-							"SourceLng":srclng,
-							"SourceLat":srclat,
-							"DestinationLng":destlng,
-							"DestinationLat":destlat,
-							"dictParameter":auxLatLng
-						
-						},
-						dataType: "json",
-						success: function (data) {
-							src="N/A";
-							var dest="N/A";
-							var srcCity=""; var dstCity="";
-							if(typeof data.res_Type!== 'undefined'){
-								src=data.res_Type[0]+":"+data.res_Type[1];
-								srcCity = data.res_Type[2];
-								$("#srcCityTube").val(srcCity);							
-							
-								if(data.res_Type[0].split("_")[0]=="MH"){
-									$("#SourceTypeTube").val("Manhole");
-								}
-								else if(data.res_Type[0].split("_")[0]=="HH"){
-									$("#SourceTypeTube").val("Handhole");
-								}
-								else if(data.res_Type[0].split("_")[0]=="DB"){
-									$("#SourceTypeTube").val("Distribution Board");
-								}
-								else if(data.res_Type[0].split("_")[0]=="CLT"){
-									$("#SourceTypeTube").val("Client");
-								}
-								else if(data.res_Type[0].split("_")[0]=="WARE"){
-									$("#SourceTypeTube").val("Site");
-								}
-								else {
-									$("#SourceTypeTube").val("Unregistered Node");
-								}
-							}
-
-							if(typeof data.res_Type1!=='undefined'){
-								dest=data.res_Type1[0]+":"+data.res_Type1[1];
-								dstCity = data.res_Type1[2];
-								$("#dstCityTube").val(dstCity);	
-								
-								if(data.res_Type1[0].split("_")[0]=="MH"){
-									$("#DestinationTypeTube").val("Manhole");
-								}
-								else if(data.res_Type1[0].split("_")[0]=="HH"){
-									$("#DestinationTypeTube").val("Handhole");
-								}
-								else if(data.res_Type1[0].split("_")[0]=="DB"){
-									$("#DestinationTypeTube").val("Distribution Board");
-								}
-								else if(data.res_Type1[0].split("_")[0]=="CLT"){
-									$("#DestinationTypeTube").val("Client");
-								}
-								else if(data.res_Type1[0].split("_")[0]=="WARE"){
-									$("#DestinationTypeTube").val("Site");
-								}
-								else {
-									$("#DestinationTypeTube").val("Unregistered Node");
-								}
-							}
-
-
-						auxTubeArray = data.auxPtSearch;
-						var incrmntTubeAux=0;
-							
-					if(auxTubeArray.length > 0){	
-						TubeAuxAppendBOQ(auxTubeArray,"createFromMap","NoOrigiNotermination");
-						//TubeAuxiliary_BoqAppendMarkup("Auxiliary_Point "+incrmntTubeAux,auxLng,auxLat,x+1);
-					}
-					 //calculateDistanceSourceDestination($("#sourcelat").val(),$("#sourcelong").val(),$("#destinationlat").val(),$("#destinationlong").val(),"auxiliaryTableTubes");
-					$("#SourceTube").val(src);	
-					$("#DestinationTube").val(dest);
-					$("#loading" ).remove();
-					
-					
-																					
-				},
-				error: function (result) {
-					alert("Error");
-				}
-			});
-		} // end no origination + no termination case
-			$("#SourceTube").unbind();
-			$("#DestinationTube").unbind();
-					
-			SourceDestinationAutoComplete("srcDestTubeAutoComplete","SourceTypeTube","SourceTube","sourcelong","sourcelat","srcCityTube","destinationlat","destinationlong","auxiliaryTableTubes","source");
-			SourceDestinationAutoComplete("srcDestTubeAutoComplete","DestinationTypeTube","DestinationTube","destinationlong","destinationlat","dstCityTube","sourcelat","sourcelong","auxiliaryTableTubes","destination");
-			
-			$("#SourceTube").on('focusout',function(){
-				getTotalDrivingDistance("TubeID","sourcelat","sourcelong","destinationlat","destinationlong","tube","tubeTotalDistanceDrivg","tubeDrivDist");	
-			});
-
-			$("#DestinationTube").on('focusout',function(){
-				getTotalDrivingDistance("TubeID","sourcelat","sourcelong","destinationlat","destinationlong","tube","tubeTotalDistanceDrivg","tubeDrivDist");	
-			});
-			
-			$("#fiberCable").val(selectedFiberContext);
-			$("#TubeModal").modal('show');
-			event.stopPropagation();
-			});
-			 */
 		   }
 			  
 			else{
@@ -2458,7 +1800,6 @@ Width : '200%',
 				   tubeArray[selectedTube].mapLabel.setMap(null);
 			   }
 			    
-				//deleteFiberCable("AllFiberTubes","FiberTube",selectedTube);
 				numberofselectedFiber("AllFiberTubes","FiberTube",selectedTube);
 				deleteprop("AllFiberTubes","FiberTube",selectedTube);
 				$('#DeleteModal').find('input:text').val('');
@@ -2574,53 +1915,8 @@ Width : '200%',
 
 					
 				{'icon': 'map', 'name': 'Create Fiber From Map ', action: () => {
-					
-					
-					
-					geoFlag=1;
-					//to be deleted
-				/*	clearCreateFromMap(markerArrayAux);
-					Path_Array=[];
-					auxLatLng =[];
-					var eventCreate=0;
-					allAuxDictStrand=[];
-					allAuxDictTube=[];
-					MarkerArray=[];
-					markerArrayAux=[];
-					EnableOriginationFiber=true;
-					draw=true;
-
-					
-					$('#fiberPathModal').find('input:text').val('');
-					$('#fiberPathModal').find('input:file').val('');
-					$('#fiberPathModal').find('select').val('');
-					
-					$("#auxiliaryTable > tbody").empty();
-					
-					$(".origination,.termination").removeClass('disabled');
-					$('#fiberPathModal').find('input:checkbox').prop("checked",false);
-					
-					window["Termination"]=[];
-					window["Origination"]=[];
-					
-					$('#pushPoints'+IdNodeSelectedTemp).removeAttr('hidden');
-					$('#cancelPoints'+IdNodeSelectedTemp).removeAttr('hidden');
-					
-					
-					// function for holding and drawing markers on map 
-					actionFiberContext="Insert";
-					
-				// map click create marker listener
-				listener1 = map.addListener('click', createPathh);
-					
-					*/
-					//document.querySelector('#totalGeoDistance').innerHTML = ""
-										
-					
-																	   
+					geoFlag=1;									   
 					$("#fiberHeader").text("Fiber Cable: ");
-					
-					
 					$("#tubesTable > tbody").empty();
 					$("#TubeAuxTable > tbody").empty();
 					$("#strandsTable > tbody").empty();
@@ -2630,8 +1926,6 @@ Width : '200%',
 
 					document.querySelector("#fiberAuxFlag").value = 'new cable'
 
-					console.log(`MarkerArray1 length : ${MarkerArray.length}`)
-
 					// active the first tab
 					$('#fiberPathModal ul.nav-tabs li a').removeClass('active');
 					$('#fiberPathModal ul.nav-tabs li:nth-of-type(4) a').addClass('active');
@@ -2640,7 +1934,6 @@ Width : '200%',
 					$('#fiberPathModal .tab-pane').removeClass('active');
 					$('#fiberPathModal .tab-pane:nth-of-type(6)').addClass('active');
 
-					//$("#fiberHeader").text("FIBER Cable: ");
 					checkActionFiber ="ADD";
 
 				//Uncheck all checkboxes when opening the popup
@@ -2672,714 +1965,12 @@ Width : '200%',
 					getTotalDrivingDistance("FiberPathId","SourceLat","SourceLng","DestinationLat","DestinationLng","fiber","totalDistanceDrivg","FiberDrivDist");
 				});
 
-				/*$("#Destination").on('focusout',function(){
-					getTotalDrivingDistance("FiberPathId","SourceLat","SourceLng","DestinationLat","DestinationLng","fiber","totalDistanceDrivg","FiberDrivDist");
-				});
-				*/
 				ItemCodeFiberAutoComplete();
 				event.stopPropagation();
 				relatedCableTabEvents(" ");
 				autoCompleteforRelatedCable();
 
 				aux_array = []
-				console.log(`length of auxArray is : ${auxArray.length}`)
-				
-				//to be deleted 
-			/*	$(".cancelPoints"+IdNodeSelectedTemp).unbind('click');
-													   
-				// abort drawing and disable listeners
-				$('#cancelPoints'+IdNodeSelectedTemp).on('click',function(event){
-					clearCreateFromMap(markerArrayAux);
-					EnableOriginationFiber=false;
-					if(window["Origination"].length>0 && window["Termination"].length==0){
-						if($("#originationSource").val().split("_")[0]=="WARE" || $("#originationSource").val().split("_")[0]=="CLT"){
-							 if(siteCltSrcMarkers[$("#originationSource").val().split(":")[0]]) {
-								 siteCltSrcMarkers[$("#originationSource").val().split(":")[0]].setMap(null);
-							 }
-						}
-					}
-					else if(window["Origination"].length==0 && window["Termination"].length>0){
-						if($("#terminationDestination").val().split("_")[0]=="WARE" || $("#terminationDestination").val().split("_")[0]=="CLT"){
-							 if(siteCltSrcMarkers[$("#terminationDestination").val().split(":")[0]]) {
-								 siteCltSrcMarkers[$("#terminationDestination").val().split(":")[0]].setMap(null);
-							 }
-						}
-					}
-					else if(window["Origination"].length>0 && window["Termination"].length>0){
-						if($("#originationSource").val().split("_")[0]=="WARE" || $("#originationSource").val().split("_")[0]=="CLT"){
-							if(siteCltSrcMarkers[$("#originationSource").val().split(":")[0]]) {
-								 siteCltSrcMarkers[$("#originationSource").val().split(":")[0]].setMap(null);
-							 }				
-						}
-						
-						if($("#terminationDestination").val().split("_")[0]=="WARE" || $("#terminationDestination").val().split("_")[0]=="CLT"){
-							 if(siteCltSrcMarkers[$("#terminationDestination").val().split(":")[0]]) {
-								 siteCltSrcMarkers[$("#terminationDestination").val().split(":")[0]].setMap(null);
-							 }				
-						}				
-				}	
-
-				
-										    
-					$(".origination,.termination").addClass('disabled');
-					event.stopPropagation();
-							
-					});
-
-			
-				$("#pushPoints"+IdNodeSelectedTemp).unbind('click');
-				$("#pushPoints"+IdNodeSelectedTemp).bind('click',function(event){
-					
-				$("#auxiliaryTable > tbody").empty();
-				$('#fiberPathModal').find('input:text').val('');
-				$('#fiberPathModal').find('input:file').val('');
-				$('#fiberPathModal').find('input:checkbox').prop("checked",false);
-				//document.querySelector('#totalGeoDistance').innerHTML = ""
-
-				
-
-				$('body').append('<div id="loading"><img id="loading-image" src="'+getContext()+'/resources/images/ajax-loader.gif" alt="Loading..." /><span>Loading, please wait.</span></div>')
-				
-					// origination and termination
-					if(window["Origination"].length>0 && window["Termination"].length>0){
-						console.log("origination and termination");
-						window["Origination"]=[$("#originationSource").val(),$("#OriginationSourceType").val(),$("#OriginationSrcCity").val(),$("#OriginationSourceLng").val(),$("#OriginationSourceLat").val()]
-						window["Termination"]=[$("#terminationDestination").val(),$("#TerminationDestType").val(),$("#TerminationDestCity").val(),$("#TerminationDestLng").val(),$("#TerminationDestLat").val()]
-						
-						$("#Source").val(window["Origination"][0]);
-						$("#SourceLng").val(window["Origination"][3]);
-						$("#SourceLat").val(window["Origination"][4]);
-						$("#srcCity").val(window["Origination"][2]);
-						$("#SourceType").val(window["Origination"][1]);
-						
-						$("#Destination").val(window["Termination"][0]);
-						$("#DestinationLng").val(window["Termination"][3]);
-						$("#DestinationLat").val(window["Termination"][4]);
-						$("#dstCity").val(window["Termination"][2]);
-						$("#DestinationType").val(window["Termination"][1]);
-						
-					var auxLatLng=[];
-
-					if(MarkerArray.length>0){
-						for(var x=0;x<MarkerArray.length;x++){
-							auxLat=MarkerArray[x].position.lat().toString().slice(0, -1);
-							auxLng=MarkerArray[x].position.lng().toString().slice(0, -1);
-							
-							auxLatLng.push({
-							"auxLat" : auxLat,
-							"auxLng" : auxLng
-					
-							});		
-						}
-					}
-					$.ajax({
-						type: "GET",
-						contentType: "application/json; charset=utf-8",
-						url: getContext()+'/findByLatLng',
-						data: {
-							"dictParameter":auxLatLng
-						},
-						dataType: "json",
-						success: function (data) {
-							
-						  auxArray = data.auxPtSearch;
-						  index = 0
-
-						  if(auxArray.length > 0){							
-							/*for(j=0;j<auxArray.length;j++){
-								
-							  auxLat=MarkerArray[j+1].position.lat();
-							  auxLng=MarkerArray[j+1].position.lng();
-							
-							if (auxArray[j][0] == 'NULL' && auxArray[j][1] == 'NULL' && auxArray[j][2] == 'NULL' ){
-								incrmntAux++;
-																			
-							}
-							else {
-								var physlLyerID = auxArray[j][0]+":"+auxArray[j][1];
-									
-							}
-
-							/*calculateDistanceSourceDestination($("#SourceLat").val(),$("#SourceLng").val(),$("#DestinationLat").val(),$("#DestinationLng").val(),"auxiliaryTable");
-							$("#AuxFiber"+index).on('change',function(){ // to clarify
-								map.setZoom(15);
-								panTo($(this).parent().parent().children('td[name="auxiliary_Latitude"]').children('input').val(),$(this).parent().parent().children('td[name="auxiliary_Longitude"]').children('input').val());
-							});
-							$("#aux_Lat"+index).on('change',function(){
-								calculateDistanceSourceDestination($("#SourceLat").val(),$("#SourceLng").val(),$("#DestinationLat").val(),$("#DestinationLng").val(),"auxiliaryTable");
-							});
-							$("#aux_Long"+index).on('change',function(){
-								calculateDistanceSourceDestination($("#SourceLat").val(),$("#SourceLng").val(),$("#DestinationLat").val(),$("#DestinationLng").val(),"auxiliaryTable");
-							});
-								
-							AuxPointAutoComplete("auxPtAutocomplete","aux_Point"+index,"aux_Long"+index,"aux_Lat"+index,"SourceLat","SourceLng","DestinationLat","DestinationLng","auxiliaryTable",index);							
-								index++;
-							}// enf of forloop of aux */
-								
-								//$("#auxiliaryTable > tbody").append(markup); // back to here
-
-								//AuxAppendBOQ(auxArray,"createFromMap","origi&termination")
-								/*$("td[name='auxiliary_Name']").each(function (ind) {
-									AuxPointAutoComplete("auxPtAutocomplete","aux_Point"+ind,"aux_Long"+ind,"aux_Lat"+ind,"SourceLat","SourceLng","DestinationLat","DestinationLng","auxiliaryTable",ind);
-								});
-									
-								$("input[name='aux_Long']").focusout(function () {
-									calculateDistanceSourceDestination($("#SourceLat").val(),$("#SourceLng").val(),$("#DestinationLat").val(),$("#DestinationLng").val(),"auxiliaryTable");
-								});
-
-								$("input[name='aux_Lat']").focusout(function () {
-									calculateDistanceSourceDestination($("#SourceLat").val(),$("#SourceLng").val(),$("#DestinationLat").val(),$("#DestinationLng").val(),"auxiliaryTable");
-								});
-
-								
-
-								// added new
-								//console.log($("#auxiliaryTable input[name='record']").length)
-								$("#auxiliaryTable input[name='record']").on('change',function(e){
-									//console.log(e)
-									if(!isNaN($(this).parent().parent().children("td[name=auxiliary_Latitude]").children('input').val()) && !isNaN($(this).parent().parent().children("td[name=auxiliary_Longitude]").children('input').val())){											
-										map.setZoom(15);
-										panTo($(this).parent().parent().children("td[name=auxiliary_Latitude]").children('input').val(),$(this).parent().parent().children("td[name=auxiliary_Longitude]").children('input').val());
-									}
-								}); 
-
-							}// end of if condition
-						  $("#loading" ).remove();
-						  $("#fiberPathModal").modal('show');
-							//calculateDistanceSourceDestination($("#SourceLat").val(),$("#SourceLng").val(),$("#DestinationLat").val(),$("#DestinationLng").val(),"auxiliaryTable");
-							
-						},
-							error: function (result) {
-								alert("Error");
-							}
-						});
-
-					}
-					// origination only
-					else if(window["Origination"].length>0 && window["Termination"].length==0){
-						console.log("origination only");
-						window["Origination"]=[$("#originationSource").val(),$("#OriginationSourceType").val(),$("#OriginationSrcCity").val(),$("#OriginationSourceLng").val(),$("#OriginationSourceLat").val()]
-
-						$("#Source").val(window["Origination"][0]);
-						$("#SourceLng").val(window["Origination"][3]);
-						$("#SourceLat").val(window["Origination"][4]);
-						$("#srcCity").val(window["Origination"][2]);
-						$("#SourceType").val(window["Origination"][1]);
-
-						var destlat=""; var destlng="";var auxLatLng=[];
-						if(MarkerArray[MarkerArray.length-1]){
-							$("#DestinationLng").val(""+MarkerArray[MarkerArray.length-1].position.lng());
-							$("#DestinationLat").val(" "+MarkerArray[MarkerArray.length-1].position.lat());
-							destlng=MarkerArray[MarkerArray.length-1].position.lng().toString().slice(0, -1);
-							destlat=MarkerArray[MarkerArray.length-1].position.lat().toString().slice(0, -1);
-							$("#DestinationType").val("Unregistered Node");	
-							fillCityByGeocoding("dstCity",MarkerArray[MarkerArray.length-1].position.lat(),MarkerArray[MarkerArray.length-1].position.lng(),geocoder)
-															
-						}
-						else {
-							destlng="empty";
-							destlng="empty";
-						}
-						
-						if(MarkerArray.length>1){
-						for(var x=0;x<MarkerArray.length-1;x++){
-							auxLat=MarkerArray[x].position.lat().toString().slice(0, -1);
-							auxLng=MarkerArray[x].position.lng().toString().slice(0, -1);
-							
-							auxLatLng.push({
-							"auxLat" : auxLat,
-							"auxLng" : auxLng
-					
-							});		
-						}
-					}						
-						$.ajax({
-							type: "GET",
-							contentType: "application/json; charset=utf-8",
-							url: getContext()+'/findByLatLng',
-							data: {
-								"DestinationLng":destlng,
-								"DestinationLat":destlat,
-								"dictParameter":auxLatLng
-							},
-							dataType: "json",
-							success: function (data) {
-								var dest="N/A"; var dstCity=""
-							
-								if(typeof data.res_Type1!=='undefined'){
-									dest=data.res_Type1[0]+":"+data.res_Type1[1];
-									window["Boq"+data.res_Type1[0]]=[];
-
-									if(data.res_Type1[0].split("_")[0]=="MH"){
-										$("#DestinationType").val("Manhole");
-									}
-									else if(data.res_Type1[0].split("_")[0]=="HH"){
-										$("#DestinationType").val("Handhole");
-									}
-									else if(data.res_Type1[0].split("_")[0]=="DB"){
-										$("#DestinationType").val("Distribution Board");
-									}
-									else if(data.res_Type1[0].split("_")[0]=="CLT"){
-										$("#DestinationType").val("Client");
-									}
-									else if(data.res_Type1[0].split("_")[0]=="WARE"){
-										$("#DestinationType").val("Site");
-									}
-									else {
-										$("#DestinationType").val("Unregistered Node");										
-									}
-
-									if(data.res_Type1[2]!=null){
-										dstCity = data.res_Type1[2];
-										$("#dstCity").val(dstCity);	
-									}
-								}
-						
-								auxArray = data.auxPtSearch;
-								index = 0
-								if(auxArray.length > 0){							
-								/*	for(j=0;j<auxArray.length;j++){
-								
-									auxLat=MarkerArray[j].position.lat();
-									auxLng=MarkerArray[j].position.lng();
-							
-									if (auxArray[j][0] == 'NULL' && auxArray[j][1] == 'NULL' && auxArray[j][2] == 'NULL' ){
-										incrmntAux++;
-									}
-									else {
-										var physlLyerID = auxArray[j][0]+":"+auxArray[j][1];
-									}
-								/*calculateDistanceSourceDestination($("#SourceLat").val(),$("#SourceLng").val(),$("#DestinationLat").val(),$("#DestinationLng").val(),"auxiliaryTable");
-								$("#AuxFiber"+index).on('change',function(){
-										map.setZoom(15);
-										panTo($(this).parent().parent().children('td[name="auxiliary_Latitude"]').children('input').val(),$(this).parent().parent().children('td[name="auxiliary_Longitude"]').children('input').val());
-								});
-								$("#aux_Lat"+index).on('change',function(){
-									calculateDistanceSourceDestination($("#SourceLat").val(),$("#SourceLng").val(),$("#DestinationLat").val(),$("#DestinationLng").val(),"auxiliaryTable");
-								});
-								$("#aux_Long"+index).on('change',function(){
-									calculateDistanceSourceDestination($("#SourceLat").val(),$("#SourceLng").val(),$("#DestinationLat").val(),$("#DestinationLng").val(),"auxiliaryTable");
-								});
-								AuxPointAutoComplete("auxPtAutocomplete","aux_Point"+index,"aux_Long"+index,"aux_Lat"+index,"SourceLat","SourceLng","DestinationLat","DestinationLng","auxiliaryTable",index);
-								
-								index++;
-							}// end of forloop 
-								//$("#auxiliaryTable > tbody").append(markup); // back to here
-								AuxAppendBOQ(auxArray,"createFromMap","originationOnly")
-
-								/*$("td[name='auxiliary_Name']").each(function (ind) {
-									AuxPointAutoComplete("auxPtAutocomplete","aux_Point"+ind,"aux_Long"+ind,"aux_Lat"+ind,"SourceLat","SourceLng","DestinationLat","DestinationLng","auxiliaryTable",ind);
-								});
-									
-								$("input[name='aux_Long']").focusout(function () {
-									calculateDistanceSourceDestination($("#SourceLat").val(),$("#SourceLng").val(),$("#DestinationLat").val(),$("#DestinationLng").val(),"auxiliaryTable");
-								});
-
-								$("input[name='aux_Lat']").focusout(function () {
-									calculateDistanceSourceDestination($("#SourceLat").val(),$("#SourceLng").val(),$("#DestinationLat").val(),$("#DestinationLng").val(),"auxiliaryTable");
-								});
-
-
-								// added new
-								//console.log($("#auxiliaryTable input[name='record']").length)
-								$("#auxiliaryTable input[name='record']").on('change',function(e){
-									//console.log(e)
-									if(!isNaN($(this).parent().parent().children("td[name=auxiliary_Latitude]").children('input').val()) && !isNaN($(this).parent().parent().children("td[name=auxiliary_Longitude]").children('input').val())){											
-										map.setZoom(15);
-										panTo($(this).parent().parent().children("td[name=auxiliary_Latitude]").children('input').val(),$(this).parent().parent().children("td[name=auxiliary_Longitude]").children('input').val());
-									}
-								}); 
-							}	
-								//calculateDistanceSourceDestination($("#SourceLat").val(),$("#SourceLng").val(),$("#DestinationLat").val(),$("#DestinationLng").val(),"auxiliaryTable");
-								//$("#dstCity").val(dstCity);							
-								$("#Destination").val(dest);
-								$("#loading" ).remove();
-								$("#fiberPathModal").modal('show');
-								
-								
-							},
-							error: function (result) {
-								alert("Error");
-							}
-						});					
-					}
-					// termination only
-					else if(window["Origination"].length==0 && window["Termination"].length>0){
-						console.log("termination only");
-						window["Termination"]=[$("#terminationDestination").val(),$("#TerminationDestType").val(),$("#TerminationDestCity").val(),$("#TerminationDestLng").val(),$("#TerminationDestLat").val()]
-						
-						$("#Destination").val(window["Termination"][0]);
-						$("#DestinationLng").val(window["Termination"][3]);
-						$("#DestinationLat").val(window["Termination"][4]);
-						$("#dstCity").val(window["Termination"][2]);
-						$("#DestinationType").val(window["Termination"][1]);
-						
-						var srclat=""; var srclng="";var auxLatLng=[];
-						if(MarkerArray[0]){
-							$("#SourceLng").val(""+MarkerArray[0].position.lng());
-							$("#SourceLat").val(""+MarkerArray[0].position.lat());
-							srclng=MarkerArray[0].position.lng().toString().slice(0, -1);
-							srclat=MarkerArray[0].position.lat().toString().slice(0, -1);
-							$("#SourceType").val("Unregistered Node");	
-							fillCityByGeocoding("srcCity",MarkerArray[0].position.lat(),MarkerArray[0].position.lng(),geocoder)
-							
-						}
-							else {
-							srclat="empty";
-							srclat="empty";
-						}
-						if(MarkerArray.length>1){
-						for(var x=1;x<MarkerArray.length;x++){
-							auxLat=MarkerArray[x].position.lat().toString().slice(0, -1);
-							auxLng=MarkerArray[x].position.lng().toString().slice(0, -1);
-							
-							auxLatLng.push({
-							"auxLat" : auxLat,
-							"auxLng" : auxLng
-					
-							});		
-						}
-					}
-					// pushing stored markers to the boqs of fiber auxiliaries
-						$.ajax({
-								type: "GET",
-								contentType: "application/json; charset=utf-8",
-								url: getContext()+'/findByLatLng',
-								data: {			
-									"SourceLng":srclng,
-									"SourceLat":srclat,
-									"dictParameter":auxLatLng
-								},
-								dataType: "json",
-								success: function (data) {
-									src="N/A";srcCity="";
-									if(typeof data.res_Type!== 'undefined'){
-										src=data.res_Type[0]+":"+data.res_Type[1];
-										window["Boq"+data.res_Type[0]]=[];
-										
-										if(data.res_Type[0].split("_")[0]=="MH"){
-											$("#SourceType").val("Manhole");
-										}
-										else if(data.res_Type[0].split("_")[0]=="HH"){
-											$("#SourceType").val("Handhole");
-										}
-										else if(data.res_Type[0].split("_")[0]=="DB"){
-											$("#SourceType").val("Distribution Board");
-										}
-										else if(data.res_Type[0].split("_")[0]=="CLT"){
-											$("#SourceType").val("Client");
-										}
-										else if(data.res_Type[0].split("_")[0]=="WARE"){
-											$("#SourceType").val("Site");
-										}
-										else {
-											$("#SourceType").val("Unregistered Node");
-										}
-										if(data.res_Type[2]!=null){
-											srcCity = data.res_Type[2];
-											$("#srcCity").val(srcCity);	
-										}
-									}		
-								auxArray = data.auxPtSearch;
-								index = 0
-								if(auxArray.length > 0){							
-								/*	for(j=0;j<auxArray.length;j++){
-								
-									auxLat=MarkerArray[j+1].position.lat();
-									auxLng=MarkerArray[j+1].position.lng();
-							
-									if (auxArray[j][0] == 'NULL' && auxArray[j][1] == 'NULL' && auxArray[j][2] == 'NULL' ){
-										incrmntAux++;
-									}
-									else {
-										var physlLyerID = auxArray[j][0]+":"+auxArray[j][1];
-									}
-								/*calculateDistanceSourceDestination($("#SourceLat").val(),$("#SourceLng").val(),$("#DestinationLat").val(),$("#DestinationLng").val(),"auxiliaryTable");
-								$("#AuxFiber"+index).on('change',function(){
-										map.setZoom(15);
-										panTo($(this).parent().parent().children('td[name="auxiliary_Latitude"]').children('input').val(),$(this).parent().parent().children('td[name="auxiliary_Longitude"]').children('input').val());
-								});
-								$("#aux_Lat"+index).on('change',function(){
-									calculateDistanceSourceDestination($("#SourceLat").val(),$("#SourceLng").val(),$("#DestinationLat").val(),$("#DestinationLng").val(),"auxiliaryTable");
-								});
-								$("#aux_Long"+index).on('change',function(){
-									calculateDistanceSourceDestination($("#SourceLat").val(),$("#SourceLng").val(),$("#DestinationLat").val(),$("#DestinationLng").val(),"auxiliaryTable");
-								});
-								AuxPointAutoComplete("auxPtAutocomplete","aux_Point"+index,"aux_Long"+index,"aux_Lat"+index,"SourceLat","SourceLng","DestinationLat","DestinationLng","auxiliaryTable",index);
-								
-								index++;
-							}
-
-							//$("#auxiliaryTable > tbody").append(markup); // back to here
-
-							AuxAppendBOQ(auxArray,"createFromMap","terminationOnly")
-							/*$("td[name='auxiliary_Name']").each(function (ind) {
-								AuxPointAutoComplete("auxPtAutocomplete","aux_Point"+ind,"aux_Long"+ind,"aux_Lat"+ind,"SourceLat","SourceLng","DestinationLat","DestinationLng","auxiliaryTable",ind);
-							});
-								
-							$("input[name='aux_Long']").focusout(function () {
-								calculateDistanceSourceDestination($("#SourceLat").val(),$("#SourceLng").val(),$("#DestinationLat").val(),$("#DestinationLng").val(),"auxiliaryTable");
-							});
-
-							$("input[name='aux_Lat']").focusout(function () {
-								calculateDistanceSourceDestination($("#SourceLat").val(),$("#SourceLng").val(),$("#DestinationLat").val(),$("#DestinationLng").val(),"auxiliaryTable");
-							});
-
-
-							// added new
-							//console.log($("#auxiliaryTable input[name='record']").length)
-							$("#auxiliaryTable input[name='record']").on('change',function(e){
-								//console.log(e)
-								if(!isNaN($(this).parent().parent().children("td[name=auxiliary_Latitude]").children('input').val()) && !isNaN($(this).parent().parent().children("td[name=auxiliary_Longitude]").children('input').val())){											
-									map.setZoom(15);
-									panTo($(this).parent().parent().children("td[name=auxiliary_Latitude]").children('input').val(),$(this).parent().parent().children("td[name=auxiliary_Longitude]").children('input').val());
-								}
-							});
-						}	
-							//calculateDistanceSourceDestination($("#SourceLat").val(),$("#SourceLng").val(),$("#DestinationLat").val(),$("#DestinationLng").val(),"auxiliaryTable");
-							$("#Source").val(src);	
-							$("#loading" ).remove();
-							$("#fiberPathModal").modal('show');
-												
-								},
-								error: function (result) {
-									alert("Error");
-								}
-							});
-							
-					}
-					// neither origination nor termination are requested
-					else {
-						//console.log(`MarkerArray2 length : ${MarkerArray.length}`)
-						console.log("neither origination nor termination are requested");
-						var srclng=""; var destlng="";
-						var srclat=""; var destlat="";var auxLatLng=[];
-						if(MarkerArray[0]){
-							$("#SourceLng").val(""+MarkerArray[0].position.lng());
-							$("#SourceLat").val(""+MarkerArray[0].position.lat());
-							srclat=MarkerArray[0].position.lat().toString().slice(0, -1);
-							srclng=MarkerArray[0].position.lng().toString().slice(0, -1);
-							$("#SourceType").val("Unregistered Node");	
-							fillCityByGeocoding("srcCity",MarkerArray[0].position.lat(),MarkerArray[0].position.lng(),geocoder)
-							
-						}
-
-						else {
-							srclat="empty";
-							srclat="empty";
-						}
-						if(MarkerArray[MarkerArray.length-1] && MarkerArray.length>1){
-						
-							$("#DestinationLng").val(""+MarkerArray[MarkerArray.length-1].position.lng());
-							$("#DestinationLat").val(""+MarkerArray[MarkerArray.length-1].position.lat());
-							destlat=MarkerArray[MarkerArray.length-1].position.lat().toString().slice(0, -1);
-							destlng=MarkerArray[MarkerArray.length-1].position.lng().toString().slice(0, -1);
-							$("#DestinationType").val("Unregistered Node");	
-							fillCityByGeocoding("dstCity",MarkerArray[MarkerArray.length-1].position.lat(),MarkerArray[MarkerArray.length-1].position.lng(),geocoder)
-							
-						}
-						else {
-							destlat="empty";
-							destlng="empty";
-						}
-					
-					if(MarkerArray.length>2){
-						for(var x=1;x<MarkerArray.length-1;x++){
-							auxLat=MarkerArray[x].position.lat().toString().slice(0, -1);
-							auxLng=MarkerArray[x].position.lng().toString().slice(0, -1);
-							
-							auxLatLng.push({
-							"auxLat" : auxLat,
-							"auxLng" : auxLng
-					
-							});		
-						}
-					}
-						$.ajax({
-							type: "GET",
-							contentType: "application/json; charset=utf-8",
-							url: getContext()+'/findByLatLng',
-							data: {
-									
-								"SourceLng":srclng,
-								"SourceLat":srclat,
-								"DestinationLng":destlng,
-								"DestinationLat":destlat,
-								"dictParameter":auxLatLng
-								
-								
-							},
-							dataType: "json",
-							success: function (data) {
-								var src="N/A"; var dest="N/A"; var srcCity=""; var dstCity="";
-							if(typeof data.res_Type!== 'undefined'){
-									src=data.res_Type[0]+":"+data.res_Type[1];
-									window["Boq"+data.res_Type[0]]=[];
-
-									if(data.res_Type[0].split("_")[0]=="MH"){
-										$("#SourceType").val("Manhole");
-									}
-									else if(data.res_Type[0].split("_")[0]=="HH"){
-										$("#SourceType").val("Handhole");
-									}
-									else if(data.res_Type[0].split("_")[0]=="DB"){
-										$("#SourceType").val("Distribution Board");
-									}
-									else if(data.res_Type[0].split("_")[0]=="CLT"){
-										$("#SourceType").val("Client");
-									}
-									else if(data.res_Type[0].split("_")[0]=="WARE"){
-										$("#SourceType").val("Site");
-									}
-									else {
-										$("#SourceType").val("Unregistered Node");
-									}
-									
-									if(data.res_Type[2]!=null){
-										srcCity = data.res_Type[2];
-										$("#srcCity").val(srcCity);							
-										
-									}
-								}
-	
-								if(typeof data.res_Type1!=='undefined'){
-	
-									dest=data.res_Type1[0]+":"+data.res_Type1[1];
-									window["Boq"+data.res_Type1[0]]=[];
-
-									if(data.res_Type1[0].split("_")[0]=="MH"){
-										$("#DestinationType").val("Manhole");
-									}
-									else if(data.res_Type1[0].split("_")[0]=="HH"){
-										$("#DestinationType").val("Handhole");
-									}
-									else if(data.res_Type1[0].split("_")[0]=="DB"){
-										$("#DestinationType").val("Distribution Board");
-									}
-									else if(data.res_Type1[0].split("_")[0]=="CLT"){
-										$("#DestinationType").val("Client");
-									}
-									else if(data.res_Type1[0].split("_")[0]=="WARE"){
-										$("#DestinationType").val("Site");
-									}
-									else {
-										$("#DestinationType").val("Unregistered Node");
-									}
-
-									if(data.res_Type1[2]!=null){
-										dstCity = data.res_Type1[2];
-										$("#dstCity").val(dstCity);	
-										
-									}
-																													
-								}
-								
-								auxArray = data.auxPtSearch;
-								index = 0
-								
-								if(auxArray.length > 0){															
-								/*for(j=0;j<auxArray.length;j++){
-								
-								auxLat=MarkerArray[j+1].position.lat();
-								auxLng=MarkerArray[j+1].position.lng();
-							
-									if (auxArray[j][0] == 'NULL' && auxArray[j][1] == 'NULL' && auxArray[j][2] == 'NULL' ){
-										incrmntAux++;
-																			
-									}
-									else {
-										var physlLyerID = auxArray[j][0]+":"+auxArray[j][1];
-									
-									}
-								//console.log("index is " +index);	
-								/*calculateDistanceSourceDestination($("#SourceLat").val(),$("#SourceLng").val(),$("#DestinationLat").val(),$("#DestinationLng").val(),"auxiliaryTable");
-								$("#AuxFiber"+index).on('change',function(){
-										map.setZoom(15);
-										panTo($(this).parent().parent().children('td[name="auxiliary_Latitude"]').children('input').val(),$(this).parent().parent().children('td[name="auxiliary_Longitude"]').children('input').val());
-								});
-								$("#aux_Lat"+index).on('change',function(){
-									calculateDistanceSourceDestination($("#SourceLat").val(),$("#SourceLng").val(),$("#DestinationLat").val(),$("#DestinationLng").val(),"auxiliaryTable");
-								});
-								$("#aux_Long"+index).on('change',function(){
-									calculateDistanceSourceDestination($("#SourceLat").val(),$("#SourceLng").val(),$("#DestinationLat").val(),$("#DestinationLng").val(),"auxiliaryTable");
-								});
-								
-								AuxPointAutoComplete("auxPtAutocomplete","aux_Point"+index,"aux_Long"+index,"aux_Lat"+index,"SourceLat","SourceLng","DestinationLat","DestinationLng","auxiliaryTable",index);
-								
-								
-								//index++;
-							//}
-							//$("#auxiliaryTable > tbody").append(markup); // back to here
-
-							AuxAppendBOQ(auxArray,"createFromMap","NoOrigiNotermination")
-
-
-							/*$("td[name='auxiliary_Name']").each(function (ind) {
-								AuxPointAutoComplete("auxPtAutocomplete","aux_Point"+ind,"aux_Long"+ind,"aux_Lat"+ind,"SourceLat","SourceLng","DestinationLat","DestinationLng","auxiliaryTable",ind);
-							});
-								
-							$("input[name='aux_Long']").focusout(function () {
-								calculateDistanceSourceDestination($("#SourceLat").val(),$("#SourceLng").val(),$("#DestinationLat").val(),$("#DestinationLng").val(),"auxiliaryTable");
-							});
-
-							$("input[name='aux_Lat']").focusout(function () {
-								calculateDistanceSourceDestination($("#SourceLat").val(),$("#SourceLng").val(),$("#DestinationLat").val(),$("#DestinationLng").val(),"auxiliaryTable");
-							});
-
-
-							// added new
-							//console.log($("#auxiliaryTable input[name='record']").length)
-							$("#auxiliaryTable input[name='record']").on('change',function(e){
-								//console.log(e)
-								if(!isNaN($(this).parent().parent().children("td[name=auxiliary_Latitude]").children('input').val()) && !isNaN($(this).parent().parent().children("td[name=auxiliary_Longitude]").children('input').val())){											
-									map.setZoom(15);
-									panTo($(this).parent().parent().children("td[name=auxiliary_Latitude]").children('input').val(),$(this).parent().parent().children("td[name=auxiliary_Longitude]").children('input').val());
-								}
-							});
-								
-							}		
-								//calculateDistanceSourceDestination($("#SourceLat").val(),$("#SourceLng").val(),$("#DestinationLat").val(),$("#DestinationLng").val(),"auxiliaryTable");
-							
-								$("#Source").val(src);	
-								$("#Destination").val(dest);
-								
-								$("#loading" ).remove();
-								$("#fiberPathModal").modal('show');
-							},
-							error: function (result) {
-								alert("Error");
-							}
-						});
-
-					}
-				
-				
-	
-				$("#ItemCodeId").unbind();
-				$("#Source").unbind();
-				$("#Destination").unbind();
-				document.getElementById('crtdByFiberCable').value = createdUser;
-				document.getElementById('modifiedByFiberCable').value = lstModfUser;
-
-				
-				SourceDestinationAutoComplete("srcDestCableAutoComplete","SourceType","Source","SourceLng","SourceLat","srcCity","DestinationLat","DestinationLng","auxiliaryTable","source");
-				SourceDestinationAutoComplete("srcDestCableAutoComplete","DestinationType","Destination","DestinationLng","DestinationLat","dstCity","SourceLat","SourceLng","auxiliaryTable","destination");
-
-				$("#Source").on('focusout',function(){
-					getTotalDrivingDistance("FiberPathId","SourceLat","SourceLng","DestinationLat","DestinationLng","fiber","totalDistanceDrivg","FiberDrivDist");
-				});
-
-				$("#Destination").on('focusout',function(){
-					getTotalDrivingDistance("FiberPathId","SourceLat","SourceLng","DestinationLat","DestinationLng","fiber","totalDistanceDrivg","FiberDrivDist");
-				});
-				
-				ItemCodeFiberAutoComplete();
-				event.stopPropagation();
-
-				auxArray = []
-				console.log(`length of auxArray is : ${auxArray.length}`)
-
-			});*/
 						 
 		}					
 
@@ -3438,7 +2029,6 @@ Width : '200%',
 	},
 	
  		{'icon': 'trash', 'name': 'Delete FiberPath ', action: () => {
-				 	//deleteFiberCable("AllFiberCables","FiberCable",IdNodeSelectedTemp);
 				 	numberofselectedFiber("AllFiberCables","FiberCable",IdNodeSelectedTemp);
 					deleteprop("AllFiberCables","FiberCable",IdNodeSelectedTemp);
 					$('#DeleteModal').find('input:text').val('');
@@ -3497,9 +2087,7 @@ Width : '200%',
 					
 					}
 				},
-				{'icon': 'trash', 'name': 'Hide All Points', action: () => {
-					// marker.setMap(null);
-					
+				{'icon': 'trash', 'name': 'Hide All Points', action: () => {					
 					 for(var t=0;t<siteCltSrcMarkers.length;t++) {
 						siteCltSrcMarkers[siteCltSrcMarkers[t].ID].setMap(null);
 					}
@@ -3756,110 +2344,6 @@ menuAccess = new ContextMenu({
   ]
 });
   
-  /////////////*********************	DISTRIBUTION BOARD FOLDER (BACKBONE, METRO, ACCESS ) CONTEXT MENU  ***********************///////////////
-	//-------------------------------------------------------------------------------------------------//
-		menuAccess = new ContextMenu({
-  'theme': 'default',
-
-  'items' : [
-  {'icon': 'paste', 'name': 'Show BoQ ', action: () => {
-    $.ajax({
-      type: "GET",
-      contentType: "application/json; charset=utf-8",
-      url: getContext()+'/findCountfiber',
-      async:false,
-      data: {
-        "ProjectId": IdNodeSelectedTemp,
-      },
-      dataType: "json",
-      success: function (data) {
-      var fiberCount="";
-  
-          if(data.access!=null){
-            
-            fiberCount = data.access;
-          
-             var tr ="<tr>"+"<th>Access: </th><td> "+data.Access+"</td></tr>"	
-                     +"<tr>"+"<th>Fiber Cables Count: </th><td> "+fiberCount[0][1]+"</td></tr>"
-		             +"<tr>"+"<th>Fiber Tubes Count: </th><td> "+fiberCount[0][3]+"</td></tr>"
-			         +"<tr>"+"<th>Fiber Strands Count: </th><td> "+fiberCount[0][5]+"</td></tr>"
-			         +"<tr>"+"<th>Fiber Cables (TKL) Count: </th><td> "+data.fiberOwnerTklAccess+"</td></tr>"
-					   +"<tr>"+"<th>Fiber Cables (NOFBI) Count: </th><td> "+data.fiberOwnerNofbiAccess+"</td></tr>"
-					   +"<tr>"+"<th>Fiber Cables (OTHERS) Count: </th><td> "+data.fiberOwnerOtherAccess+"</td></tr>"
-			         +"<tr>"+"<th>Total path Length (Geo): </th><td> "+parseFloat(data.Access_total_geo).toFixed(2)+" Km</td></tr>"
-                     +"<tr>"+"<th>Total path Length (Line Of Site): </th><td> "+parseFloat(data.Access_total_LineOfsite).toFixed(2)+" Km</td></tr>"
-                     +"<tr>"+"<th>Total Strand Length (Geo): </th><td> "+parseFloat(data.geoAccessStrand).toFixed(2)+" Km</td></tr>"
-					 +"<tr>"+"<th>Total Strand Length (Line Of Site): </th><td> "+parseFloat(data.LengthAccessStrand).toFixed(2)+" Km</td></tr>"
-					   
-                     showBoq();
-                     $("#boq_table").append(tr);
-                     data=null;
-        }
-      },
-      
-     
-      error: function (result) {
-        alert("Error");
-      }
-    });
-  
-  
-  }
-  }
-  ]
-});
-
-menuAccess = new ContextMenu({
-  'theme': 'default',
-
-  'items' : [
-  {'icon': 'paste', 'name': 'Show BoQ ', action: () => {
-    $.ajax({
-      type: "GET",
-      contentType: "application/json; charset=utf-8",
-      url: getContext()+'/findCountfiber',
-      async:false,
-      data: {
-        "ProjectId": IdNodeSelectedTemp,
-      },
-      dataType: "json",
-      success: function (data) {
-      var fiberCount="";
-  
-          if(data.access!=null){
-            
-            fiberCount = data.access;
-          
-             var tr ="<tr>"+"<th>Access: </th><td> "+data.Access+"</td></tr>"	
-                     +"<tr>"+"<th>Fiber Cables Count: </th><td> "+fiberCount[0][1]+"</td></tr>"
-		             +"<tr>"+"<th>Fiber Tubes Count: </th><td> "+fiberCount[0][3]+"</td></tr>"
-			         +"<tr>"+"<th>Fiber Strands Count: </th><td> "+fiberCount[0][5]+"</td></tr>"
-			         +"<tr>"+"<th>Fiber Cables (TKL) Count: </th><td> "+data.fiberOwnerTklAccess+"</td></tr>"
-					   +"<tr>"+"<th>Fiber Cables (NOFBI) Count: </th><td> "+data.fiberOwnerNofbiAccess+"</td></tr>"
-					   +"<tr>"+"<th>Fiber Cables (OTHERS) Count: </th><td> "+data.fiberOwnerOtherAccess+"</td></tr>"
-			         +"<tr>"+"<th>Total path Length (Geo): </th><td> "+parseFloat(data.Access_total_geo).toFixed(2)+" Km</td></tr>"
-                     +"<tr>"+"<th>Total path Length (Line Of Site): </th><td> "+parseFloat(data.Access_total_LineOfsite).toFixed(2)+" Km</td></tr>"
-                     +"<tr>"+"<th>Total Strand Length (Geo): </th><td> "+parseFloat(data.geoAccessStrand).toFixed(2)+" Km</td></tr>"
-					 +"<tr>"+"<th>Total Strand Length (Line Of Site): </th><td> "+parseFloat(data.LengthAccessStrand).toFixed(2)+" Km</td></tr>"
-					   
-                     showBoq();
-                     $("#boq_table").append(tr);
-                     data=null;
-                
-        }
-      },
-      
-     
-      error: function (result) {
-        alert("Error");
-      }
-    });
-  
-  
-  }
-  }
-  ]
-});
 
 	/////////////*********************	DISTRIBUTION BOARD FOLDER(bACKBONE, METRO,ACCESS) CONTEXT MENU  ***********************///////////////
 	//-------------------------------------------------------------------------------------------------//
@@ -3931,6 +2415,7 @@ menuBackboneDB = new ContextMenu({
   }
   ]
 });
+
 menuAccessDB = new ContextMenu({
   'theme': 'default',
 
@@ -4118,6 +2603,44 @@ menuGPON = new ContextMenu({
   ]
 });
 
+/////////////*********************	NODE ACTIVE FOLDER CONTEXT MENU  ***********************///////////////
+	//-------------------------------------------------------------------------------------------------//
+	
+
+menuNodeesActive = new ContextMenu({
+			  'theme': 'default',
+			  
+			  'items': [
+				{'icon': 'paste', 'name': 'Show BoQ', action: () => {
+					   $.ajax({
+						   type: "GET",
+						   contentType: "application/json; charset=utf-8",
+						   url: getContext()+'/boqNodesCount',
+						   data: {
+							   "ProjectId": IdNodeSelectedTemp,	
+						   },
+						   dataType: "json",
+						   success: function (data) {
+							   if(data.AllNodesCount!=null){
+								   
+							   var tr ="<tr>"+"<th>Nodes Count: </th> <td> "+data.AllNodesCount+"</td></tr>"
+							   
+							           
+							   showBoq();
+							   $("#boq_table").append(tr);
+							   }
+						   },
+						   error: function (result) {
+							   alert("Error");
+						   }
+					   });
+				}
+			  },
+				
+			
+			]
+		});
+
 	/////////////*********************	DISTRIBUTION BOARD FOLDER CONTEXT MENU  ***********************///////////////
 	//-------------------------------------------------------------------------------------------------//
 		
@@ -4132,8 +2655,6 @@ menuGPON = new ContextMenu({
 					$('#distributionBoardModal').find('input:text').val('');
 					$("#DbMappingTable > tbody").empty();
 					document.querySelector("#DBMappingFlag").value = "new DB";
-					
-					//
 					document.getElementById("site_DBAutoComplete").checked = true;
 					$('#site_DBAutoComplete').val('1');
 					document.getElementById("client_DBAutoComplete").checked = false;
@@ -4144,54 +2665,13 @@ menuGPON = new ContextMenu({
 					document.getElementById("BDWarehouse").style.display = "block";
 					document.getElementById("DBSite").style.display = "block";
 					document.getElementById("DBSiteName").style.display = "block";
-					//
-					
-					//$("#distBoard-tab").addClass('active');
-				//	$(".tab-pane").removeClass('active');
-					//$("#D_Board").addClass('active');
-	
 					actiondistBoardContext="Insert";
 	
 					}
 					
 				},
-/*  			to be deleted	
-				{'icon': 'paste','name': 'Details', action: () =>{
-
-					$("#dBModalDetails").modal('show');
-					//if(distributionBoardCount==null){
-						$.ajax({
-								type: "GET",
-								contentType: "application/json; charset=utf-8",
-								url: getContext()+'/findCountDistBoard',
-								data: {
-									"ProjectId": IdNodeSelectedTemp,	
-								},
-								dataType: "json",
-								success: function (data) {
-								
-									if(data.CountDistBoard!=null){
-
-										$("#numDB").val(data.CountDistBoard);
-										distributionBoardCount=data.CountDistBoard;
-									}
-									
-								},
-								error: function (result) {
-									alert("Error");
-								}
-							});
-						
-						}
-						//else{
-							//$("#numDB").val(distributionBoardCount);							
-						}			 
-					} 
-				},
-*/				
+			
 				{'icon': 'trash', 'name': 'Delete Board', action: () => {
-												
-					//deletePhysicalLayers("AllDistBoards","DistBoard",IdNodeSelectedTemp);
 					numberofselected("AllDistBoards","DistributionBoard",IdNodeSelectedTemp);
 					deleteprop("AllDistBoards","DistributionBoard",IdNodeSelectedTemp);
 					$('#DeleteModal').find('input:text').val('');
@@ -4246,44 +2726,6 @@ menuGPON = new ContextMenu({
 		MarkerArray=[];
 		MarkerArrayBuf=[];
 		
-		
-		
-		menuNodeesActive = new ContextMenu({
-			  'theme': 'default',
-			  
-			  'items': [
-				{'icon': 'paste', 'name': 'Show BoQ', action: () => {
-					   $.ajax({
-						   type: "GET",
-						   contentType: "application/json; charset=utf-8",
-						   url: getContext()+'/boqNodesCount',
-						   data: {
-							   "ProjectId": IdNodeSelectedTemp,	
-						   },
-						   dataType: "json",
-						   success: function (data) {
-							   if(data.AllNodesCount!=null){
-								   
-							   var tr ="<tr>"+"<th>Nodes Count: </th> <td> "+data.AllNodesCount+"</td></tr>"
-							          /* +"<tr>"+"<th>MSAN Count: </th> <td> "+data.MSANCount+"</td></tr>"
-							           +"<tr>"+"<th>DWDM Count: </th> <td> "+data.DWDMCount+"</td></tr>"
-							           +"<tr>"+"<th>SDH Count: </th> <td> "+data.SDHCount+"</td></tr>"
-							           +"<tr>"+"<th>GPON Count: </th> <td> "+data.GPONCount+"</td></tr>";*/
-							           
-							   showBoq();
-							   $("#boq_table").append(tr);
-							   }
-						   },
-						   error: function (result) {
-							   alert("Error");
-						   }
-					   });
-				}
-			  },
-				
-			
-			]
-		});
 
 		
 	/////////////*********************	MAP CONTEXT MENU  ***********************///////////////
@@ -4413,15 +2855,9 @@ menuGPON = new ContextMenu({
 		
 		}
 	},
-/*		to be deleted		  
-		{'icon': 'paste','name': 'Details',action: () => {
 
-			  }
-		   }, */
 		   
 		{'icon': 'trash', 'name': 'Delete Trenches', action: () => {	
-			console.log("IdNodeSelectedTemp deleteAllTrenches "+IdNodeSelectedTemp);
-			//deleteTrenchPath("AllTrenches","TRENCH",IdNodeSelectedTemp);
 			numberofselectedTrench("AllTrenches","TRENCH",IdNodeSelectedTemp);
 			deleteprop("AllTrenches","TRENCH",IdNodeSelectedTemp);
 			$('#DeleteModal').find('input:text').val('');
@@ -4434,39 +2870,6 @@ menuGPON = new ContextMenu({
 			  
 			}
 		  }
-		
-		/*
-		{'icon': 'paste', 'name': 'Show Boq', action: () => {	
-			console.log("IdNodeSelectedTemp deleteAllTrenches "+IdNodeSelectedTemp);
-			
-			 $.ajax({
-					type: "GET",
-					contentType: "application/json; charset=utf-8",
-					url: getContext()+'/findCountTrench',
-					data: {
-						 "ProjectId": IdNodeSelectedTemp,	
-					},
-					dataType: "json",
-					success: function (data) {
-					
-							if(data.countTrench!=null){data.countTrench;
-								
-								var tr ="<tr>"+"<th>Trenches Count 		   : </th> <td> "+data.countTrench+"</td></tr>";
-								
-								showBoq();
-								$("#boq_table").append(tr);
-								data=null;
-							}
-							
-					},
-					error: function (result) {
-						alert("Error");
-					}
-				});
-			  
-			}
-		  }
-*/
 		]
   }); 
 
@@ -4923,7 +3326,6 @@ menuGPON = new ContextMenu({
 	},
 	  
 	{'icon': 'trash', 'name': 'Delete Trench', action: () => {
-		//deleteTrenchPath("TRENCH","",selectedTrenchContext);
 		deleteprop("TRENCH","",selectedTrenchContext);
 		$('#DeleteModal').find('input:text').val('');
 		$("#DeleteHeader").text("Trench Delete: ");
@@ -5015,7 +3417,6 @@ singleNodeActive = new ContextMenu({
 		 $("#nodesHeader").text("Nodes: "+selectedNodeAcvtiveContext);
 		 $("#node_pk").val(selectedNodeAcvtiveContext);
 		 
-		 console.log(selectedNodeAcvtiveContext);
 		 
 		 	$.ajax({
 					type: "GET",
@@ -5054,160 +3455,6 @@ singleNodeActive = new ContextMenu({
 	},
 ]
 })
-
-/////////////*********************	Transmission li CONTEXT MENU  ***********************///////////////
-	//-------------------------------------------------------------------------------------------------//
-singleTransmission = new ContextMenu({
-	'theme': 'default',
-	
-'items': [
-    {'icon': 'edit', 'name': 'Edit or View Details ', action: () => {
-    
-         $("#TransmissionModal").modal('show');
-         $("#TransmissionModal").find("input").val('').end();
-		 $("#transNodesHeader").text("Nodes: "+selectedTransmissionIdContext);
-		 $("#transNode_pk").val(selectedTransmissionIdContext);
-		 
-		 	$.ajax({
-					type: "GET",
-					contentType: "application/json; charset=utf-8",
-					url: getContext()+'/findTransmissionDetails',
-                    async:false,
-                    data: {
-						"selectedTransmissionIdContext":selectedTransmissionIdContext
-					},
-                    dataType: "json",
-                    success: function (data) {
-					if(data.TransmissionNodesDetails != null){
-						$("#transUniqNodeId").val(data.TransmissionNodesDetails[1]);
-						$("#transNodeId").val(data.TransmissionNodesDetails[2]);
-						$("#transNodeName").val(data.TransmissionNodesDetails[3]);
-						$("#transNodeType").val(data.TransmissionNodesDetails[4]);
-						$("#transNodeSource").val(data.TransmissionNodesDetails[6]);
-						$("#transNodeModel").val(data.TransmissionNodesDetails[7]);
-						$("#transNodeDomin").val(data.TransmissionNodesDetails[5]);
-						$("#transSiteId_node").val(data.TransmissionNodesDetails[8]);
-						$("#transWareId_node").val(data.TransmissionNodesDetails[9]);
-						$("#transNodeLong").val(data.TransmissionNodesDetails[12]);
-						$("#transNodeLat").val(data.TransmissionNodesDetails[13]);
-						$("#transCreateData_node").val(data.TransmissionNodesDetails[10]);
-						$("#transUpdateData_node").val(data.TransmissionNodesDetails[11]);
-						
-						
-						data = null;
-						}
-					},
-                    error: function (result) {
-						alert("Error");
-                    }
-					})
-		 
-		}		
-	},
-]
-})
-
-/////////////*********************	Core li CONTEXT MENU  ***********************///////////////
-	//-------------------------------------------------------------------------------------------------//
-singleCore = new ContextMenu({
-	'theme': 'default',
-	
-'items': [
-    {'icon': 'edit', 'name': 'Edit or View Details ', action: () => {
-    console.log(selectedCoreIdContext);
-         $("#CoreModal").modal('show');
-         $("#CoreModal").find("input").val('').end();
-		 $("#coreNodesHeader").text("Nodes: "+selectedCoreIdContext);
-		 $("#coreNode_pk").val(selectedCoreIdContext);
-		 
-		 	$.ajax({
-					type: "GET",
-					contentType: "application/json; charset=utf-8",
-					url: getContext()+'/findCoreDetails',
-                    async:false,
-                    data: {
-						"selectedCoreIdContext":selectedCoreIdContext
-					},
-                    dataType: "json",
-                    success: function (data) {
-					if(data.CoreNodesDetails != null){
-						$("#coreUniqNodeId").val(data.CoreNodesDetails[1]);
-						$("#coreNodeId").val(data.CoreNodesDetails[2]);
-						$("#coreNodeName").val(data.CoreNodesDetails[3]);
-						$("#coreNodeType").val(data.CoreNodesDetails[4]);
-						$("#coreNodeSource").val(data.CoreNodesDetails[6]);
-						$("#coreNodeModel").val(data.CoreNodesDetails[7]);
-						$("#coreNodeDomin").val(data.CoreNodesDetails[5]);
-						$("#coreSiteId_node").val(data.CoreNodesDetails[8]);
-						$("#coreWareId_node").val(data.CoreNodesDetails[9]);
-						$("#coreNodeLong").val(data.CoreNodesDetails[12]);
-						$("#coreNodeLat").val(data.CoreNodesDetails[13]);
-						$("#coreCreateData_node").val(data.CoreNodesDetails[10]);
-						$("#coreUpdateData_node").val(data.CoreNodesDetails[11]);
-						data = null;
-						}
-					},
-                    error: function (result) {
-						alert("Error");
-                    }
-					})
-		 
-		}		
-	},
-]
-})
-
-/////////////*********************	Access li CONTEXT MENU  ***********************///////////////
-	//-------------------------------------------------------------------------------------------------//
-singleRan = new ContextMenu({
-	'theme': 'default',
-	
-'items': [
-    {'icon': 'edit', 'name': 'Edit or View Details ', action: () => {
-    
-         $("#RanModal").modal('show');
-         $("#RanModal").find("input").val('').end();
-		 $("#ranNodesHeader").text("Nodes: "+selectedRanIdContext);
-		 $("#ranNode_pk").val(selectedRanIdContext);
-		 
-		 	$.ajax({
-					type: "GET",
-					contentType: "application/json; charset=utf-8",
-					url: getContext()+'/findAccessDetails',
-                    async:false,
-                    data: {
-						"selectedRanIdContext":selectedRanIdContext
-					},
-                    dataType: "json",
-                    success: function (data) {
-					if(data.AccessNodesDetails != null){
-						$("#ranUniqNodeId").val(data.AccessNodesDetails[1]);
-						$("#ranNodeId").val(data.AccessNodesDetails[2]);
-						$("#ranNodeName").val(data.AccessNodesDetails[3]);
-						$("#ranNodeType").val(data.AccessNodesDetails[4]);
-						$("#ranNodeSource").val(data.AccessNodesDetails[6]);
-						$("#ranNodeModel").val(data.AccessNodesDetails[7]);
-						$("#ranNodeDomin").val(data.AccessNodesDetails[5]);
-						$("#ranSiteId_node").val(data.AccessNodesDetails[8]);
-						$("#ranWareId_node").val(data.AccessNodesDetails[9]);
-						$("#ranNodeLong").val(data.AccessNodesDetails[12]);
-						$("#ranNodeLat").val(data.AccessNodesDetails[13]);
-						$("#ranCreateData_node").val(data.AccessNodesDetails[10]);
-						$("#ranUpdateData_node").val(data.AccessNodesDetails[11]);
-						
-						data = null;
-						}
-					},
-                    error: function (result) {
-						alert("Error");
-                    }
-					})
-		 
-		}		
-	},
-]
-})
-
 
 /////////////*********************	Ducts li CONTEXT MENU  ***********************///////////////
 	//-------------------------------------------------------------------------------------------------//
@@ -5252,7 +3499,6 @@ singleRan = new ContextMenu({
 	 },
 		
 	{'icon': 'map', 'name': 'Create Duct From Map', action: () => {
-
 				$("#ductHeader").text("Duct: ");
 				originationTerminationCheck="Duct";
 				uncheckAutoCompleteCheckboxes("auxPtDuctAutocomplete");
@@ -5317,8 +3563,7 @@ singleRan = new ContextMenu({
 		}
 	},
 		   
-		{'icon': 'trash', 'name': 'Delete Ducts', action: () => {					
-			//deleteTrenchPath("trenchDucts","DUCT",selectedTrenchContext+"_f");
+		{'icon': 'trash', 'name': 'Delete Ducts', action: () => {				
 			numberofselectedTrench("trenchDucts","DUCT",selectedTrenchContext+"_f");
 			deleteprop("trenchDucts","DUCT",selectedTrenchContext+"_f");
 			$('#DeleteModal').find('input:text').val('');
@@ -5559,6 +3804,10 @@ singleRan = new ContextMenu({
 			$("#auxiliary_ductTable > tbody").empty();
 			$("#ductHeader").text("Duct: ");
 			
+			$("#ductName").on("input",function(){
+	          $("#ductHeader").text("Duct: "+$(this).val());
+            });
+			
 			SourceDestinationAutoComplete("srcDestDuctAutoComplete","SourceDuctType","SourceDuct","SourceDuctLng","SourceDuctLat","srcCityDuct","DestinationDuctLat","DestinationDuctLng","auxiliary_ductTable","source");
 			SourceDestinationAutoComplete("srcDestDuctAutoComplete","DestinationDuctType","DestinationDuct","DestinationDuctLng","DestinationDuctLat","dstCityDuct","SourceDuctLat","SourceDuctLng","auxiliary_ductTable","destination");
 
@@ -5600,7 +3849,6 @@ singleRan = new ContextMenu({
 			 }
 		},  
 	{'icon': 'trash', 'name': 'Delete Duct', action: () => {	
-		//deleteTrenchPath("DUCT","",selectedDuctContext);
 		deleteprop("DUCT","",selectedDuctContext);
 		$('#DeleteModal').find('input:text').val('');
 		$("#DeleteHeader").text("Duct Delete: ");
@@ -6311,34 +4559,6 @@ singleRan = new ContextMenu({
 		  
 
 		   }
-	  
-	  /*{'icon': 'info','name': 'Details', action: () => {
-
-		   $.ajax({
-				  type: "GET",
-				  contentType: "application/json; charset=utf-8",
-				  url: getContext()+'/findCountProjects',
-				  data: {
-
-						   
-						 
-				  },
-				  dataType: "json",
-				  success: function (data) {
-
-						  //$("#projectsModalDetails").modal('show');									
-						  //var manCount=data.manholeCount;
-						  //$("#numManholes").val(manCount);
-					 
-				  },
-				  error: function (result) {
-					  alert("Error");
-				  }
-			  }); 
-
-		  }
-
-	  },*/
 	]
 });	
 
@@ -6355,8 +4575,6 @@ singleProject = new ContextMenu({
 						actionProjectContext="Update";						
 						$("#projectModal").find("input").val('').end();
 						selectedProjectIdContext = selectedProjectIdContext.replace("Project_span_", "");				
-					//	if(window[""+selectedProjectIdContext].length==0){
-                        console.log("empty window");
 
                         $.ajax({
 
@@ -6383,7 +4601,6 @@ singleProject = new ContextMenu({
                                 alert("Error");
                             }
                         });
-                 //   }
 						$("#projectHeader").text("Project: "+window[""+selectedProjectIdContext][1] + " / " + selectedProjectIdContext);
 						$("#projectModal").modal('show');
 						$("#ProjectId").val(selectedProjectIdContext);
@@ -6477,6 +4694,10 @@ singleProject = new ContextMenu({
 				$("#manholeModal").modal('show');
 				$("#ManholeId").val(selectedManIdContext);
 				
+				$("#ManholeName").on('input',function(){  
+				  $("#manholeHeader").text("Manhole: "+$(this).val());
+			    });
+				
 				$.ajax({
 					type: "GET",
 					contentType: "application/json; charset=utf-8",
@@ -6506,8 +4727,6 @@ singleProject = new ContextMenu({
 				}
 			},
 			{'icon': 'trash', 'name': 'Delete Manhole', action: () => {
-						
-				//deletePhysicalLayers("Manhole","",selectedManIdContext);
 				deleteprop("Manhole","",selectedManIdContext);
 				$('#DeleteModal').find('input:text').val('');
 				$("#DeleteHeader").text("Manhole Delete: ");
@@ -6807,10 +5026,7 @@ singleProject = new ContextMenu({
 				  ]
 			});
 	
-			$("#ManholeName").on('input',function(){
-	
-				$("#manholeHeader").text("Manhole: "+$(this).val());
-			})
+			
 	
 	/////////////*********************	SINGLE HANDHOLE li CONTEXT MENU  ***********************///////////////
 	//-------------------------------------------------------------------------------------------------//
@@ -6826,7 +5042,6 @@ singleProject = new ContextMenu({
 						actionHandholeContext="Insert";
 						document.getElementById("HandholeDMDiv").style.display = "none";
 						}						
-	
 					},
 					
 			{'icon': 'folder-plus', 'name': 'Create New Junction', action: () => {
@@ -6884,7 +5099,10 @@ singleProject = new ContextMenu({
 						$("#handholeHeader").text("Handhole: "+selectedHandIdContext);
 						$("#HandholeId").val(selectedHandIdContext);
 					
-
+                        $("#HandholeName").on("input",function(){
+				        $("#handholeHeader").text("Handhole: "+$(this).val());
+	
+			            });
                             $.ajax({
 
                                 type: "GET",
@@ -6932,8 +5150,6 @@ singleProject = new ContextMenu({
 					 },
 					 
 					  {'icon': 'trash', 'name': 'Delete Handhole', action: () => {
-						
-						//deletePhysicalLayers("Handhole","",selectedHandIdContext);
 						deleteprop("Handhole","",selectedHandIdContext);
 						$('#DeleteModal').find('input:text').val('');
 						$("#DeleteHeader").text("Handhole Delete: ");
@@ -7231,13 +5447,7 @@ singleProject = new ContextMenu({
 				}	 	 
 			]
 			});
-			actiondistBoardContext="";
 	
-			$("#HandholeName").on("input",function(){
-				console.log("text changed");
-				$("#handholeHeader").text("Handhole: "+$(this).val());
-	
-			});
 		/////////////*********************	single junction CONTEXTS MENU  ***********************///////////////
 	//-------------------------------------------------------------------------------------------------//	  
 	
@@ -7324,7 +5534,6 @@ singleProject = new ContextMenu({
 							
 							 	window["JCT_Mapper"+selectedManholeJct]=[];
 								window["JCT_Mapper"+selectedManholeJct]=data.junctionMappingPts;
-								//console.log(">>>>>"+window["JCT_Mapper"+selectedManholeJct]);
 								
 								for(i=0;i<data.junctionMappingPts.length;i++){
 								
@@ -7347,7 +5556,6 @@ singleProject = new ContextMenu({
 									locationOptions += "<option value='"+locationOptionValue+"' "+selected_option+" >"+locationArray[j]+"</option>";
 								}
 								locationOptions += "</select>";
-								///
 								
 								   var locationTypeOption_B =data.junctionMappingPts[i][24];
 								locationOptions_B = "<select class='form-control' name='mJctLocationTypeSideB' id='mJctLocationTypeSideB"+MJctBoqIndex+"'>";
@@ -7475,8 +5683,8 @@ singleProject = new ContextMenu({
 							MJctBoqIndex++;
 							
 							$("#manholeJctMappingTable tr").focusin(function () {
-			$("#manholeJctMappingTable tr").removeClass("ativeRecord")
-			  $(this).addClass("ativeRecord");
+							$("#manholeJctMappingTable tr").removeClass("ativeRecord")
+							  $(this).addClass("ativeRecord");
 		});
 													
 								}
@@ -7786,51 +5994,6 @@ singleProject = new ContextMenu({
 			$("#deleteTrench").hide();	
 			}
 		},
-/*		 to be deleted
-		 {'icon': 'paste', 'name': 'Show BoQ', action: () => {
-			 
-			
-				$.ajax({
-					type: "GET",
-					contentType: "application/json; charset=utf-8",
-					async:false,
-					url: getContext()+'/JunctionBoQ',
-					data: {
-					
-					"junctionID": selectedManholeJct,
-					"projectID":IdNodeSelectedTemp
-					
-				},
-					success : function(data)
-						{
-					
-					if(data != null) {
-						
-						var tr = "<tr><td><b>Junction ID: </b>"+data.JunctionData[0][0]+"</td></tr>"
-								+"<tr>"+"<td><b>Junction Name: </b>"+data.JunctionData[0][1]+"</td></tr>"
-							    +"<tr>"+"<td><b>Manhole Name: </b>"+data.JunctionData[0][2]+"</td></tr>"
-								+"<tr>"+"<td><b>City: </b>"+data.JunctionData[0][3]+"</td></tr>"										
-								+"<tr>"+"<td><b>Num of Junctions: </b>"+data.JunctionData[0][4]+"</td></tr>"						
-
-					
-							
-					showBoq();
-					$("#boq_table").append(tr);
-								
-					data=null;
-					}
-				
-					},
-						error: function (result) {
-							alert("Error");
-						}
-					});	
-			 
-			
-				
-		   }
-		 }
-*/
 			 ]
 		  });
 		  
@@ -7991,7 +6154,6 @@ singleProject = new ContextMenu({
 							+"<td name='hJctTubeNameSideA'><input name='hJctTubeNameSideA' id='hJctTubeNameSideA"+HJctBoqIndex+"' value='"+data.junctionMappingPts[i][5]+"' class='form-control text-input' type='text' style='width:190px;position:relative;'  /></td>"
 							+"<td name='hJctFiberIdSideA'><input name='hJctFiberIdSideA' id='hJctFiberIdSideA"+HJctBoqIndex+"' value='"+data.junctionMappingPts[i][6]+"' class='form-control text-input' type='text' style='width:190px;position:relative;'  /></td>"
 							+"<td name='hJctFiberNameSideA'><input name='hJctFiberNameSideA' id='hJctFiberNameSideA"+HJctBoqIndex+"' value='"+data.junctionMappingPts[i][6]+"' class='form-control text-input' type='text' style='width:190px;position:relative;'  /></td>"
-							//+"<td name=hJctFiberNameSideA'><input name='hJctFiberNameSideA' id='hJctFiberNameSideA"+HJctBoqIndex+"' value='"+data.junctionMappingPts[i][7]+"'  class='form-control text-input' type='text' style='width:190px;position:relative;'  /></td>"
 							+"<td style='background-color:#00757C' width='-10px'></td>"
 							
 							+"<td name='hJctLocationTypeSideB'>"+locationOptions_B+"</td>"
@@ -8060,7 +6222,6 @@ singleProject = new ContextMenu({
 								$("#hJctNetworkLevelSideB"+HJctBoqIndex).val(data.junctionMappingPts[i][23]);
 							}
 								
-							//autoCompleteHandholeJctMapping(HJctBoqIndex,"handholeJctMappingTable","Row"+HJctBoqIndex);
 							autoCompleteForMapping(HJctBoqIndex,"handholeJctMappingTable","Row"+HJctBoqIndex,"hJctWarehouseIdSideA","hJctLocationIdSideA","hJctLocationNameSideA","hJctLocationTypeSideA","","","","","hJctStrandIdSideA","hJctStrandNameSideA","hJctTubeIdSideA","hJctTubeNameSideA","hJctFiberIdSideA","hJctFiberNameSideA","hJctStrandNBSideA","","hJctTubeNBSideA","","","","hJctNetworkLevelSideA");
 							autoCompleteForMapping(HJctBoqIndex,"handholeJctMappingTable","Row"+HJctBoqIndex,"hJctWarehouseIdSideB","hJctLocationIdSideB","hJctLocationNameSideB","hJctLocationTypeSideB","","","","","hJctStrandIdSideB","hJctStrandNameSideB","hJctTubeIdSideB","hJctTubeNameSideB","hJctFiberIdSideB","hJctFiberNameSideB","hJctStrandNBSideB","","hJctTubeNBSideB","","","","hJctNetworkLevelSideB");
 							HJctBoqIndex++;
@@ -8248,7 +6409,6 @@ singleProject = new ContextMenu({
 					jctMappingId=jctMappingId[1];
 				
 				
-				
 				if(fiberArray[window['JCT_'+jctMappingId][6]]){
 					console.log("enter to null");
 					fiberArray[window['JCT_'+jctMappingId][6]].setMap(null);
@@ -8261,15 +6421,12 @@ singleProject = new ContextMenu({
 					console.log("enter to null");
 					strandArray[window['JCT_'+jctMappingId][2]].setMap(null);
 				}
-				//buildFiberPath(window['JCT_'+jctMappingId][6],window["mapPoints_"+window['JCT_'+jctMappingId][6]]);
 				buildPath(window['JCT_'+jctMappingId][6],window["mapPoints_"+window['JCT_'+jctMappingId][6]],fiberArray,allFiberCables,"FiberPath_f_", window['FiberColor_'+window[''+window['JCT_'+jctMappingId][6]][22]],0.7,4.5,'blue',13);
 				fiberArray[window['JCT_'+jctMappingId][6]].setMap(map);	 
 				
-				//buildTubePath(window['JCT_'+jctMappingId][4],window["mapPoints_"+window['JCT_'+jctMappingId][4]]);
 				buildPath(window['JCT_'+jctMappingId][4],window["mapPoints_"+window['JCT_'+jctMappingId][4]],tubeArray,allTubes,"Tube",'green',0.7,3.3,'green',0);
 				tubeArray[window['JCT_'+jctMappingId][4]].setMap(map);
 				
-				//buildStrandPath(window['JCT_'+jctMappingId][2],window["mapPoints_"+window['JCT_'+jctMappingId][2]]);
 				buildPath(window['JCT_'+jctMappingId][2],window["mapPoints_"+window['JCT_'+jctMappingId][2]],strandArray,allStrands,"Strand",'purple',0.7,2.8,'purple',0);
 				strandArray[window['JCT_'+jctMappingId][2]].setMap(map);
 				
@@ -8292,15 +6449,12 @@ singleProject = new ContextMenu({
 				if(strandArray[window['JCT_'+jctMappingId][8]]){
 					strandArray[window['JCT_'+jctMappingId][8]].setMap(null);
 				}
-				//buildFiberPath(window['JCT_'+jctMappingId][12],window["mapPoints_"+window['JCT_'+jctMappingId][12]]);
 				buildPath(window['JCT_'+jctMappingId][12],window["mapPoints_"+window['JCT_'+jctMappingId][12]],fiberArray,allFiberCables,"FiberPath_f_",window['FiberColor_'+window[''+window['JCT_'+jctMappingId][12]][22]],0.7,4.5,'blue',13);
 				fiberArray[window['JCT_'+jctMappingId][12]].setMap(map);	 
 				
-				//buildTubePath(window['JCT_'+jctMappingId][10],window["mapPoints_"+window['JCT_'+jctMappingId][10]]);
 				buildPath(window['JCT_'+jctMappingId][10],window["mapPoints_"+window['JCT_'+jctMappingId][10]],tubeArray,allTubes,"Tube",'green',0.7,3.3,'green',0);
 				tubeArray[window['JCT_'+jctMappingId][10]].setMap(map);
 				
-				//buildStrandPath(window['JCT_'+jctMappingId][8],window["mapPoints_"+window['JCT_'+jctMappingId][8]]);
 				buildPath(window['JCT_'+jctMappingId][8],window["mapPoints_"+window['JCT_'+jctMappingId][8]],strandArray,allStrands,"Strand",'purple',0.7,2.8,'purple',0);
 				strandArray[window['JCT_'+jctMappingId][8]].setMap(map);
 				
@@ -8340,7 +6494,6 @@ singleProject = new ContextMenu({
 							}
 							},
 						error : function(error) {
-						console.log("The error is " + error);
 						}
 					});
 				
@@ -8359,48 +6512,7 @@ singleProject = new ContextMenu({
 			$("#deleteTrench").hide();	
 			}
 		},
-/*		 to be deleted
-		 {'icon': 'paste', 'name': 'Show BoQ', action: () => {
-			 $.ajax({
-					type: "GET",
-					contentType: "application/json; charset=utf-8",
-					async:false,
-					url: getContext()+'/JunctionBoQ',
-					data: {
-					
-					"junctionID": selectedHandholeJct,
-					"projectID":IdNodeSelectedTemp
-					
-				},
-					success : function(data)
-						{
-					
-					if(data != null) {
-						
-						console.log()
-							var tr = "<tr><td><b>Junction ID: </b>"+data.JunctionData[0][0]+"</td></tr>"
-							+"<tr>"+"<td><b>Junction Name: </b>"+data.JunctionData[0][1]+"</td></tr>"
-						    +"<tr>"+"<td><b>HandHole Name: </b>"+data.JunctionData[0][2]+"</td></tr>"
-							+"<tr>"+"<td><b>City: </b>"+data.JunctionData[0][3]+"</td></tr>"										
-							+"<tr>"+"<td><b>Num of Junctions: </b>"+data.JunctionData[0][4]+"</td></tr>"						
 
-				
-						
-				showBoq();
-				$("#boq_table").append(tr);
-							
-				data=null;
-					}
-					},
-						error: function (result) {
-							alert("Error");
-						}
-					});	
-			 
-				
-		   }
-		 }
-*/
 			 ] //closing the items array of singleHandholeJunction ContextMenu
 		  });
 	function makeSVGJct(tag, attrs,val) { //used in View Junction Mapping
@@ -8435,11 +6547,6 @@ singleProject = new ContextMenu({
 						document.getElementById("BDWarehouse").style.display = "block";
 						document.getElementById("DBSite").style.display = "block";
 						document.getElementById("DBSiteName").style.display = "block";
-						//
-					//	$(".nav-link").removeClass('active');
-						//$("#distBoard-tab").addClass('active');
-						//$(".tab-pane").removeClass('active');
-						//$("#D_Board").addClass('active');
 						selectedDistBoardContext = "";
 					    actiondistBoardContext="Insert";
 	
@@ -8531,8 +6638,6 @@ singleProject = new ContextMenu({
 									}
 									if(data.DistBoardDetails[0][1]!=null){
 										if(data.DistBoardDetails[0][1].split("_")[0] == "CLT"){
-										//if($("#BDWarehouse").is(":visible") && $("#DBSite").is(":visible") && $("#DBSiteName").is(":visible")){
-										  // $("#DistributionBoardSite").val(""+data.DistBoardDetails[0][1]);
 											 $("#DistributionBoardClient").val(""+data.DistBoardDetails[0][1]);
 										}
 										else{
@@ -8569,7 +6674,6 @@ singleProject = new ContextMenu({
 									if(data.DistBoardDetails[0][10]!=null){ 
 										if(data.DistBoardDetails[0][1] !=null){
 											if(data.DistBoardDetails[0][1].split("_")[0] == "CLT"){
-											//if($("#BDWarehouse").is(":visible") && $("#DBSite").is(":visible") && $("#DBSiteName").is(":visible")){
 												   $("#DistributionBoardClientName").val(""+data.DistBoardDetails[0][10]);
 												}
 												else{
@@ -8585,7 +6689,6 @@ singleProject = new ContextMenu({
 									if(data.DistBoardDetails[0][11]!=null ){
 										if(data.DistBoardDetails[0][1] !=null){
 											if(data.DistBoardDetails[0][1].split("_")[0] == "CLT"){
-											//if($("#BDWarehouse").is(":visible") && $("#DBSite").is(":visible") && $("#DBSiteName").is(":visible")){
 												   $("#DistributionBoardClientPhoneNb").val(""+data.DistBoardDetails[0][11]);
 											}
 												else{
@@ -8621,385 +6724,6 @@ singleProject = new ContextMenu({
 									$('#distributionBoardModal .tab-pane').removeClass('active');
 									$('#distributionBoardModal #D_Board').addClass('active');
 									$("#distributionBoardModal").modal('show');
-									// MAPPING DATA APPENDING
-									//DistBoardMappingPts=data.DistBoardMappingPts;
-									//DBMappingData(DistBoardMappingPts);
-									
-								/*	if(data.DistBoardMappingPts){
-									
-									window["DB_Mapper"+selectedDistBoardContext]=[];
-									window["DB_Mapper"+selectedDistBoardContext]=data.DistBoardMappingPts;
-									var addMark="";
-									var addMark2="";
-									var addMark3="";
-									var fp_strandcolor="";
-									var bp_strandcolor="";
-									var fp_tubecolor="";
-									var bp_tubecolor="";
-									var addMark4='<option value='+'""'+' style='+'"background-color: white;"'+'></option>'+	
-													'<option value='+'"red"'+' style='+'"background-color: white; color:black"'+'>red</option>'+
-													'<option value='+'"yellow"'+' style='+'"background-color: white; color:black"'+'>yellow</option>'+
-													'<option value='+'"green"'+' style='+'"background-color: white; color:black"'+'>green</option>'+
-													'<option value='+'"blue"'+' style='+'"background-color: white; color:black"'+'>blue</option>'+
-													'<option value='+'"pink"'+' style='+'"background-color: white; color:black"'+'>pink</option>'+
-													'<option value='+'"orange"'+' style='+'"background-color: white; color:black"'+'>orange</option>'+
-													'<option value='+'"purple"'+' style='+'"background-color: white; color:black"'+'>purple</option>'+
-													'<option value='+'"brown"'+' style='+'"background-color: white; color:black"'+'>brown</option>'+
-													'<option value='+'"gray"'+' style='+'"background-color: white; color:black"'+'>gray</option>'+
-													'<option value='+'"black"'+' style='+'"background-color: white; color:black"'+'>black</option>';
-													
-									dBBoqIndex=0;			
-									
-									
-									for(i=0;i<data.DistBoardMappingPts.length;i++){
-										
-										/*
-										if(data.DistBoardMappingPts[i][3]=="Customer"){
-											addMark += "<option value='Customer'>Customer</option>"
- 													+"<option value='Site'>Site</option>"
-  													+"<option value='Manhole'>Manhole</option>"
-					  								+"<option value='Handhole'>Handhole</option>";
-											
-										} else if(data.DistBoardMappingPts[i][3]=="Site"){
-											addMark += "<option value='Site'>Site</option>"
-													+"<option value='Customer'>Customer</option>"
-  													+"<option value='Manhole'>Manhole</option>"
-					  								+"<option value='Handhole'>Handhole</option>";
-											
-										}else if(data.DistBoardMappingPts[i][3]=="Manhole"){
-											addMark += "<option value='Manhole'>Manhole</option>"
- 													+"<option value='Site'>Site</option>"
-  													+"<option value='Customer'>Customer</option>"
-					  								+"<option value='Handhole'>Handhole</option>";
-											
-										} else if(data.DistBoardMappingPts[i][3]=="Handhole"){
-											addMark += "<option value='Handhole'>Handhole</option>"
- 													+"<option value='Site'>Site</option>"
-  													+"<option value='Manhole'>Manhole</option>"
-					  								+"<option value='Customer'>Customer</option>";
-										}
-									*/
-								///
-								/*if(data.DistBoardMappingPts[i][40] !=null){
-									 fp_strandcolor ='<option value='+data.DistBoardMappingPts[i][40]+' style='+'"background-color: white;"'+'>'+data.DistBoardMappingPts[i][40]+'</option>'+addMark4;
-									// var id="FP_strandcolor"+i;
-								}
-								else {
-									 fp_strandcolor ='<option value='+'""'+' style='+'"background-color: white;"'+'></option>'+addMark4;
-								}
-								
-								if(data.DistBoardMappingPts[i][41] !=null){
-									 fp_tubecolor ='<option value='+data.DistBoardMappingPts[i][41]+' style='+'"background-color: white;"'+'>'+data.DistBoardMappingPts[i][41]+'</option>'+addMark4;
-								}
-								else {
-									 fp_tubecolor ='<option value='+'""'+' style='+'"background-color: white;"'+'></option>'+addMark4;
-								}
-								
-								if(data.DistBoardMappingPts[i][42] !=null){
-									 bp_strandcolor ='<option value='+data.DistBoardMappingPts[i][42]+' style='+'"background-color: white;"'+'>'+data.DistBoardMappingPts[i][42]+'</option>'+addMark4;
-								}
-								else {
-									 bp_strandcolor ='<option value='+'""'+' style='+'"background-color: white;"'+'></option>'+addMark4;
-								}
-								
-								if(data.DistBoardMappingPts[i][43] !=null){
-									 bp_tubecolor ='<option value='+data.DistBoardMappingPts[i][43]+' style='+'"background-color: white;"'+'>'+data.DistBoardMappingPts[i][43]+'</option>'+addMark4;
-								}
-								else {
-									 bp_tubecolor ='<option value='+'""'+' style='+'"background-color: white;"'+'></option>'+addMark4;
-								} */
-								////
-						/*		
-								var locationTypeOption = data.DistBoardMappingPts[i][5];
-					   	   		locationOptions = "<select class='form-control' name='FP_locationType' id='FP_LocationType"+dBBoqIndex+"'>";
-					   	   		locationOptionValue = "Select an Option";
-					   	   		var locationArray = ["Select an Option","Customer","Site","Manhole","Handhole"];
-					   	   		
-								for(j=0; j<locationArray.length; j++)
-								{
-									if(locationTypeOption == locationArray[j]){
-										selected_option = "selected='selected'";
-									}
-									else{
-										selected_option = "";
-									}
-									if(locationArray[j] != 'Select an Option'){
-										locationOptionValue = locationArray[j];
-									}
-									locationOptions += "<option value='"+locationOptionValue+"' "+selected_option+" >"+locationArray[j]+"</option>";
-								}
-								locationOptions += "</select>";
-								
-										
-								
-										if (data.DistBoardMappingPts[i][5]=="Customer"){
-											addMark2 = "<option value='Custom'>Custom</option>"
-											+"<option value='Node'>Node</option>"
- 													
-												
-										} else if (data.DistBoardMappingPts[i][5]=="Site"){
-											addMark2 = "<option value='Node'>Node</option>"
-
-												
-										} 
-										else if (data.DistBoardMappingPts[i][5]=="Manhole" || data.DistBoardMappingPts[i][5]=="Handhole"){
-											addMark2 = "<option value='Node'>Node</option>"
-
-												
-										} 
-								   
-										window["DB_"+data.DistBoardMappingPts[i][3]]=[];
-										window["DB_"+data.DistBoardMappingPts[i][3]]=data.DistBoardMappingPts[i];			
-									/*	var markup = "<tr id='"+data.DistBoardMappingPts[i][4]+"'><td><input type='checkbox' style='position:relative;left:20px;top:10px' name='record'></td>"
-												+"<td name='RowIndex'><input name='rowIndex' value='"+data.DistBoardMappingPts[i][0]+"'  class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
-												+"<td name='ColIndex'><input name='colIndex' value='"+data.DistBoardMappingPts[i][1]+"'  class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
-												+"<td name='FrontPort'><input name='frontPort' id='Front"+dBBoqIndex+"' value='"+data.DistBoardMappingPts[i][2]+"'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-												
-												+ "<td name='BackPort'> <input name='frontPort' id='Back"+dBBoqIndex+"' value='"+data.DistBoardMappingPts[i][3]+"' style='width:190px;position:relative;'  type='text'  class='form-control text-input ui-widget ui-widget-content ui-corner-all' /></td></tr>"
-												*/
-										
-									////added	
-					/*					var BP_locationTypeOption = data.DistBoardMappingPts[i][27];
-							   	   		BP_locationOptions = "<select class='form-control' name='BP_locationType' id='BP_LocationType"+dBBoqIndex+"'>";
-							   	   		BP_locationOptionValue = "Select an Option";
-							   	   		var BP_locationArray = ["Select an Option","Customer","Site","Manhole","Handhole"];
-										
-								   	   	for(j=0; j<BP_locationArray.length; j++)
-										{
-											if(BP_locationTypeOption == BP_locationArray[j]){
-												selected_option = "selected='selected'";
-											}
-											else{
-												selected_option = "";
-											}
-											if(BP_locationArray[j] != 'Select an Option'){
-												BP_locationOptionValue = BP_locationArray[j];
-											}
-											BP_locationOptions += "<option value='"+BP_locationOptionValue+"' "+selected_option+" >"+BP_locationArray[j]+"</option>";
-										}
-								   	 BP_locationOptions += "</select>";
-								   	 
-								   	if (data.DistBoardMappingPts[i][27]=="Customer"){
-										addMark3 = "<option value='Custom'>Custom</option>"
-										+"<option value='Node'>Node</option>"
-													
-											
-									} else if (data.DistBoardMappingPts[i][27]=="Site"){
-										addMark3 = "<option value='Node'>Node</option>"
-	
-											
-									} 
-									else if (data.DistBoardMappingPts[i][27]=="Manhole" || data.DistBoardMappingPts[i][27]=="Handhole"){
-										addMark3 = "<option value='Node'>Node</option>"
-	
-											
-									} 
-										////
-										
-										    var f_statusOption = "", b_statusOption = "";
-										    if (data.DistBoardMappingPts[i][4]=="Active"){
-												f_statusOption = "<option value='Active' selected >Active</option><option value='InActive'>Inactive</option>";
-											}
-										    else if (data.DistBoardMappingPts[i][4]=="InActive")
-										    {
-												f_statusOption = "<option value='InActive' selected >Inactive</option><option value='Active'>Active</option>";
-										    }
-										    else
-										    {
-										    	f_statusOption = "<option value='None' selected>Select an Option</option><option value='Active'>Active</option><option value='InActive'>Inactive</option>";
-										    }
-										    	
-											if(data.DistBoardMappingPts[i][14]== "Active"){
-												b_statusOption = "<option value='Active' selected >Active</option><option value='InActive'>Inactive</option>";
-											}
-										    else if (data.DistBoardMappingPts[i][14]=="InActive") {
-										    	b_statusOption = "<option value='InActive' selected >Inactive</option><option value='Active'>Active</option>";
-										    }
-											else{
-												b_statusOption = "<option value='None' selected>Select an Option</option><option value='Active'>Active</option><option value='InActive'>Inactive</option>";
-											}
-												
-								var markup = "<tr id='"+data.DistBoardMappingPts[i][3]+"''><td><input type='checkbox' style='position:relative;left:20px;top:10px' name='record'></td>"
-								    +"<td name='Index'><input name='Index' value='"+data.DistBoardMappingPts[i][0]+"' class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
-								    +"<td name='RowIndex'><input name='rowIndex' value='"+data.DistBoardMappingPts[i][1]+"'  class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
-									+"<td name='ColIndex'><input name='colIndex' value='"+data.DistBoardMappingPts[i][2]+"'  class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
-				
-									+"<td style='background-color:#00757C' width='-10px'></td>"
-									+"<td name='FP_Status'><select class='form-control' name='FP_Status' id='FP_Status"+dBBoqIndex+"'>"+f_statusOption+"</select></td>"
-									+"<td name='FP_LocationType'>"+locationOptions+"</td>"
-									
-									//+"<td name='FP_LocationType'>"
-									//	+"<select class='form-control' name='FP_locationType' id='FP_LocationType"+dBBoqIndex+"'>"+addMark+"</select>"
-									//+"</td>"
-									+"<td name='FP_LocationID'><input name='FP_locationID' value='"+data.DistBoardMappingPts[i][6]+"' id='FP_LocationID"+dBBoqIndex+"' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
-									+"<td name='FP_LocationM'><input name='FP_locationM' value='"+data.DistBoardMappingPts[i][7]+"' id='FP_LocationM"+dBBoqIndex+"' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
-									+"<td name='FP_Location'><input name='FP_location' value='"+data.DistBoardMappingPts[i][8]+"' id='FP_Location"+dBBoqIndex+"' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
-									+"<td name='FP_Equipment'>"
-										+"<select class='form-control' name='FP_equipment' id='FP_equipment"+dBBoqIndex+"'>"+addMark2+"</select>"
-									+"<td name='FP_EquipmentType'><input name='FP_equipmentType' value='"+data.DistBoardMappingPts[i][9]+"' id='FP_equipmentType"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-									+"<td name='FP_EquipmentID'><input name='FP_equipmentID' value='"+data.DistBoardMappingPts[i][11]+"' id='FP_equipmentID"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-									+"<td name='FP_EquipmentName'><input name='FP_equipmentName' value='"+data.DistBoardMappingPts[i][12]+"' id='FP_equipmentName"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-									+"<td name='FP_Address'><input name='FP_Address' value='"+data.DistBoardMappingPts[i][13]+"' id='FP_Address"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-									//added
-									+"<td name='FP_StrandNb'><input name='FP_strandNb' value='"+data.DistBoardMappingPts[i][36]+"' id='FP_strandNb"+dBBoqIndex+"'  class='form-control text-input' type='text' style='width:80px;position:relative;'/></td>"
-									+"<td name='FP_StrandColor'>"
-										+"<select class='form-control' name='FP_strandcolor' id='FP_strandcolor"+dBBoqIndex+"'>"+addMark4+"</select>"
-									+"<td name='FP_StrandID'><input name='FP_strandID' value='"+data.DistBoardMappingPts[i][21]+"' id='FP_strandID"+dBBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-									+"<td name='FP_StrandName'><input name='FP_strandName' value='"+data.DistBoardMappingPts[i][22]+"' id='FP_strandName"+dBBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-									+"<td name='FP_TubeNb'><input name='FP_tubeNb' value='"+data.DistBoardMappingPts[i][37]+"' id='FP_tubeNb"+dBBoqIndex+"'  class='form-control text-input' type='text' style='width:80px;position:relative;'/></td>"
-									+"<td name='FP_TubeColor'>"
-										+"<select class='form-control' name='FP_tubecolor' id='FP_tubecolor"+dBBoqIndex+"'>"+addMark4+"</select>"
-									+"<td name='FP_TubeID'><input name='FP_tubeID' value='"+data.DistBoardMappingPts[i][23]+"' id='FP_tubeID"+dBBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
-									+"<td name='FP_TubeName'><input name='FP_tubeName' value='"+data.DistBoardMappingPts[i][24]+"' id='FP_tubeName"+dBBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
-									+"<td name='FP_FiberID'><input name='FP_fiberID' value='"+data.DistBoardMappingPts[i][25]+"' id='FP_fiberID"+dBBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
-									+"<td name='FP_FiberName'><input name='FP_fiberName' value='"+data.DistBoardMappingPts[i][26]+"' id='FP_fiberName"+dBBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
-									//					
-									+"<td style='background-color:#00757C' width='-10px'></td>"
-									+"<td name='BP_Status'><select class='form-control' name='BP_Status' id='BP_Status"+dBBoqIndex+"'>"+b_statusOption+"</select></td>"
-									//added
-									+"<td name='BP_LocationType'>"+BP_locationOptions+"</td>"
-									+"<td name='BP_LocationID'><input name='BP_locationID' value='"+data.DistBoardMappingPts[i][28]+"' id='BP_LocationID"+dBBoqIndex+"' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
-									+"<td name='BP_LocationM'><input name='BP_locationM' value='"+data.DistBoardMappingPts[i][29]+"' id='BP_LocationM"+dBBoqIndex+"' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
-									+"<td name='BP_Location'><input name='BP_location' value='"+data.DistBoardMappingPts[i][30]+"' id='BP_Location"+dBBoqIndex+"' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
-									+"<td name='BP_Equipment'>"
-										+"<select class='form-control' name='BP_equipment' id='BP_equipment"+dBBoqIndex+"'>"+addMark3+"</select>"
-									+"<td name='BP_EquipmentType'><input name='BP_equipmentType' value='"+data.DistBoardMappingPts[i][31]+"' id='BP_equipmentType"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-									+"<td name='BP_EquipmentID'><input name='BP_equipmentID' value='"+data.DistBoardMappingPts[i][33]+"' id='BP_equipmentID"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-									+"<td name='BP_EquipmentName'><input name='BP_equipmentName' value='"+data.DistBoardMappingPts[i][34]+"' id='BP_equipmentName"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-									+"<td name='BP_Address'><input name='BP_Address' value='"+data.DistBoardMappingPts[i][35]+"'id='BP_Address"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-									
-									//
-									+"<td name='BP_StrandNb'><input name='BP_strandNb' value='"+data.DistBoardMappingPts[i][38]+"' id='BP_strandNb"+dBBoqIndex+"'  class='form-control text-input' type='text' style='width:80px;position:relative;'/></td>"
-									+"<td name='BP_StrandColor'>"
-										+"<select class='form-control' name='BP_strandcolor' id='BP_strandcolor"+dBBoqIndex+"'>"+addMark4+"</select>"
-									+"<td name='BP_StrandID'><input name='BP_strandID' value='"+data.DistBoardMappingPts[i][15]+"' id='BP_strandID"+dBBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-									+"<td name='BP_StrandName'><input name='BP_strandName' value='"+data.DistBoardMappingPts[i][16]+"' id='BP_strandName"+dBBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-									+"<td name='BP_TubeNb'><input name='BP_tubeNb' value='"+data.DistBoardMappingPts[i][39]+"' id='BP_tubeNb"+dBBoqIndex+"'  class='form-control text-input' type='text' style='width:80px;position:relative;'/></td>"
-									+"<td name='BP_TubeColor'>"
-										+"<select class='form-control' name='BP_tubecolor' id='BP_tubecolor"+dBBoqIndex+"'>"+addMark4+"</select>"
-									+"<td name='BP_TubeID'><input name='BP_tubeID' value='"+data.DistBoardMappingPts[i][17]+"' id='BP_tubeID"+dBBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
-									+"<td name='BP_TubeName'><input name='BP_tubeName' value='"+data.DistBoardMappingPts[i][18]+"' id='BP_tubeName"+dBBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
-									+"<td name='BP_FiberID'><input name='BP_fiberID' value='"+data.DistBoardMappingPts[i][19]+"' id='BP_fiberID"+dBBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
-									+"<td name='BP_FiberName'><input name='BP_fiberName' value='"+data.DistBoardMappingPts[i][20]+"' id='BP_fiberName"+dBBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td></tr>"
-									$("#DbMappingTable > tbody").append(markup);
-														//autoCompleteUpdated("Front"+dBBoqIndex,"DbMappingTable",data.DistBoardMappingPts[i][4],"SearchForStrand");
-														//autoCompleteUpdated("Back"+dBBoqIndex,"DbMappingTable",data.DistBoardMappingPts[i][4],"SearchForStrand");
-			
-			
-			
-				if(data.DistBoardMappingPts[i][40] !=null){
-					//fp_strandcolor ='<option value='+data.DistBoardMappingPts[i][40]+' style='+'"background-color: white;"'+'>'+data.DistBoardMappingPts[i][40]+'</option>'+addMark4;
-									// var id="FP_strandcolor"+i;
-					$("#FP_strandcolor"+dBBoqIndex).val(data.DistBoardMappingPts[i][40]);
-				}
-				
-				if(data.DistBoardMappingPts[i][41] !=null){
-					// fp_tubecolor ='<option value='+data.DistBoardMappingPts[i][41]+' style='+'"background-color: white;"'+'>'+data.DistBoardMappingPts[i][41]+'</option>'+addMark4;
-					$("#FP_tubecolor"+dBBoqIndex).val(data.DistBoardMappingPts[i][41]);
-				}
-				
-				
-				if(data.DistBoardMappingPts[i][42] !=null){
-					// bp_strandcolor ='<option value='+data.DistBoardMappingPts[i][42]+' style='+'"background-color: white;"'+'>'+data.DistBoardMappingPts[i][42]+'</option>'+addMark4;
-					$("#BP_strandcolor"+dBBoqIndex).val(data.DistBoardMappingPts[i][42]);
-				}
-				
-				
-				if(data.DistBoardMappingPts[i][43] !=null){
-					 //bp_tubecolor ='<option value='+data.DistBoardMappingPts[i][43]+' style='+'"background-color: white;"'+'>'+data.DistBoardMappingPts[i][43]+'</option>'+addMark4;
-					$("#BP_tubecolor"+dBBoqIndex).val(data.DistBoardMappingPts[i][43]);
-				}
-				
-				if(data.DistBoardMappingPts[i][10] !=null){
-				$("#FP_equipment"+dBBoqIndex).val(data.DistBoardMappingPts[i][10]);
-				}
-				
-				if(data.DistBoardMappingPts[i][32] !=null){
-					$("#BP_equipment"+dBBoqIndex).val(data.DistBoardMappingPts[i][32]);
-				}
-				
-				
-			$("#FP_LocationType"+dBBoqIndex).change(function(){
-					var thisID = $(this).attr("id");
-					console.log(thisID+"kkkkkkkkkk");
-					console.log("the Index is " +(parseInt(dBBoqIndex)-1));
-					var indexFor = parseInt(thisID.substr(thisID.length-1));
-					$('#FP_LocationM'+indexFor).val('');
-					$('#FP_Location'+indexFor).val('');
-					$('#FP_LocationID'+indexFor).val('');
-					if($(this).val()=="Customer"){					
-						$('#FP_equipment'+indexFor).children('option').remove();
-						$('#FP_equipment'+indexFor).append("<option value='none'>select an option</option><option value='Custom'>Custom</option><option value='Node'>Node</option>");
-						$('#FP_equipmentType'+indexFor).val('');						
-					} else if($(this).val()=="Manhole" || $(this).val()=="Handhole" || $(this).val()=="Site"){
-						$('#FP_equipment'+indexFor).children('option').remove();
-						$('#FP_equipment'+indexFor).append("<option value='Node'>Node</option>");
-					    $('#FP_equipmentType'+indexFor).val('');
-					}  else if($(this).val()=="None"){
-						$('#FP_equipment'+indexFor).children('option').remove();
-						$('#FP_equipmentType'+indexFor).val('');
-					}
-				});
-			
-			$("#BP_LocationType"+dBBoqIndex).change(function(){
-				var thisID = $(this).attr("id");
-				console.log(thisID+"kkkkkkkkkk");
-				console.log("the Index is " +(parseInt(dBBoqIndex)-1));
-				var indexFor = parseInt(thisID.substr(thisID.length-1));
-				$('#BP_LocationM'+indexFor).val('');
-				$('#BP_Location'+indexFor).val('');
-				$('#BP_LocationID'+indexFor).val('');
-				if($(this).val()=="Customer"){					
-					$('#BP_equipment'+indexFor).children('option').remove();
-					$('#BP_equipment'+indexFor).append("<option value='none'>select an option</option><option value='Custom'>Custom</option><option value='Node'>Node</option>");
-					$('#BP_equipmentType'+indexFor).val('');						
-				} else if($(this).val()=="Manhole" || $(this).val()=="Handhole" || $(this).val()=="Site"){
-					$('#BP_equipment'+indexFor).children('option').remove();
-					$('#BP_equipment'+indexFor).append("<option value='Node'>Node</option>");
-				    $('#BP_equipmentType'+indexFor).val('');
-				}  else if($(this).val()=="None"){
-					$('#BP_equipment'+indexFor).children('option').remove();
-					$('#BP_equipmentType'+indexFor).val('');
-				}
-			});
-				
-				$("#BP_tubecolor"+dBBoqIndex).change(function(){
-				var thisID = $(this).attr("id");
-				var indexFor = parseInt(thisID.substr(thisID.length-1));
-				colorId="BP_tubecolor"+indexFor;
-				tubeStrandSetColor(colorId);	 
-			});
-			
-			$("#FP_tubecolor"+dBBoqIndex).change(function(){
-				var thisID = $(this).attr("id");
-				var indexFor = parseInt(thisID.substr(thisID.length-1));
-				colorId="FP_tubecolor"+indexFor;
-				tubeStrandSetColor(colorId);	 
-			});
-			
-			$("#BP_strandcolor"+dBBoqIndex).change(function(){
-				var thisID = $(this).attr("id");
-				var indexFor = parseInt(thisID.substr(thisID.length-1));
-				colorId="BP_strandcolor"+indexFor;
-				tubeStrandSetColor(colorId);
-			});
-			
-			$("#FP_strandcolor"+dBBoqIndex).change(function(){
-				var thisID = $(this).attr("id");
-				var indexFor = parseInt(thisID.substr(thisID.length-1));
-				colorId="FP_strandcolor"+indexFor;
-				tubeStrandSetColor(colorId);
-			});
-									 
-				autoCompleteForMapping(dBBoqIndex,"DbMappingTable",data.DistBoardMappingPts[i][1],"FP_Location","FP_LocationID","FP_LocationM","FP_LocationType","FP_equipment","FP_equipmentID","FP_equipmentName","FP_equipmentType","FP_strandID","FP_strandName","FP_tubeID","FP_tubeName","FP_fiberID","FP_fiberName","FP_strandNb","FP_strandcolor","FP_tubeNb","FP_tubecolor");
-				autoCompleteForMapping(dBBoqIndex,"DbMappingTable",data.DistBoardMappingPts[i][1],"BP_Location","BP_LocationID","BP_LocationM","BP_LocationType","BP_equipment","BP_equipmentID","BP_equipmentName","BP_equipmentType","BP_strandID","BP_strandName","BP_tubeID","BP_tubeName","BP_fiberID","BP_fiberName","BP_strandNb","BP_strandcolor","BP_tubeNb","BP_tubecolor");
-				tubeStrandSetColor("FP_strandcolor"+dBBoqIndex);
-				tubeStrandSetColor("BP_strandcolor"+dBBoqIndex);
-				tubeStrandSetColor("FP_tubecolor"+dBBoqIndex);
-				tubeStrandSetColor("BP_tubecolor"+dBBoqIndex);
-				dBBoqIndex++;
-									}
-								}    */
 	
 							},
 							error: function (result) {
@@ -9421,8 +7145,6 @@ singleProject = new ContextMenu({
 
 			},
 			{'icon': 'trash', 'name': 'Delete Board', action: () => {
-						
-				//deletePhysicalLayers("DistBoard","",selectedDistBoardContext);
 				deleteprop("DistBoard","",selectedDistBoardContext);
 				$('#DeleteModal').find('input:text').val('');
 				$("#DeleteHeader").text("Distribution Board Delete: ");
@@ -9738,8 +7460,6 @@ singleProject = new ContextMenu({
 							$('#fiberPathModal').find('input:text').val('');
 							$('#fiberPathModal').find('input:file').val('');
 							$('#fiberPathModal').find('select').val('');
-							//document.querySelector('#totalGeoDistance').innerHTML = ""
-
 											 
 							$("#auxiliaryTable > tbody").empty();
 							$("#tubesTable > tbody").empty();
@@ -9762,11 +7482,6 @@ singleProject = new ContextMenu({
 							uncheckAutoCompleteCheckboxes("srcDestCableAutoComplete");
 							uncheckAutoCompleteCheckboxes("fiberStrandAutocomplete");
 								
-
-							//$(".nav-link").removeClass('active');
-							//$(".tab-pane").removeClass('active');
-							//$("#fiber-tab").addClass('active');					
-							//$("#fiber").addClass('active');
 							$("#fiberPathModal").modal('show');
 							actionFiberContext="Insert";
 							
@@ -9985,37 +7700,6 @@ singleProject = new ContextMenu({
 					 
  {'icon': 'map', 'name': 'Create Tube From Map ', action: () => {
 
-		//to be deleted
-		
-		/*Path_Array=[];
-		auxLatLng =[];
-		var eventCreate=0;
-		allAuxDictStrand=[];
-		allAuxDictTube=[];
-		MarkerArray=[];
-		markerArrayAux=[];
-		clearCreateFromMap(markerArrayAux);	
-		$("#auxiliaryTableTubes > tbody").empty();
-		
-		$('#TubeModal').find('input:text').val('');
-		$("#auxiliaryTableTubes > tbody").empty();
-		$('#TubeModal').find('select').val('');
-		
-		$('#TubeModal').find('input:file').val('');
-		
-			$(".origination,.termination").removeClass('disabled');			
-		$("#pushPointsTubes"+selectedFiberContext).removeAttr('hidden');
-		$("#cancelPointsTubes"+selectedFiberContext).removeAttr('hidden');
-
-		 EnableOriginationFiber=true;
-		 draw=true;
-		 listener1 = map.addListener('click', createPathh);
-		 actionFiberContext="Insert";
-		 
-		 window["Termination"]=[];
-		 window["Origination"]=[];
-		
-		*/
 			
 		var incrmntTubeAux=0
 				
@@ -10067,446 +7751,6 @@ singleProject = new ContextMenu({
 		$("#fiberCable").val(selectedFiberContext);
 			
 		event.stopPropagation();
-
-		/*
-		$("#cancelPointsTubes"+selectedFiberContext).unbind('click');
-		$('#cancelPointsTubes'+selectedFiberContext).on('click',function(event){
-			clearCreateFromMap(markerArrayAux);	
-			EnableOriginationFiber=false;
-			//Hide the icon of site / client in case of canceling an origination or termination
-			if(window["Origination"].length>0 && window["Termination"].length==0){
-				if($("#tubeOriginationSource").val().split("_")[0]=="WARE" || $("#tubeOriginationSource").val().split("_")[0]=="CLT"){
-					 if(siteCltSrcMarkers[$("#tubeOriginationSource").val().split(":")[0]]) {
-						 siteCltSrcMarkers[$("#tubeOriginationSource").val().split(":")[0]].setMap(null);
-					 }
-				}
-			}
-			else if(window["Origination"].length==0 && window["Termination"].length>0){
-				if($("#tubeTerminationDestination").val().split("_")[0]=="WARE" || $("#tubeTerminationDestination").val().split("_")[0]=="CLT"){
-					 if(siteCltSrcMarkers[$("#tubeTerminationDestination").val().split(":")[0]]) {
-						 siteCltSrcMarkers[$("#tubeTerminationDestination").val().split(":")[0]].setMap(null);
-					 }
-				}
-			}
-			else if(window["Origination"].length>0 && window["Termination"].length>0){
-				if($("#tubeOriginationSource").val().split("_")[0]=="WARE" || $("#tubeOriginationSource").val().split("_")[0]=="CLT"){
-					if(siteCltSrcMarkers[$("#tubeOriginationSource").val().split(":")[0]]) {
-						 siteCltSrcMarkers[$("#tubeOriginationSource").val().split(":")[0]].setMap(null);
-					 }				
-				}
-				if($("#tubeTerminationDestination").val().split("_")[0]=="WARE" || $("#tubeTerminationDestination").val().split("_")[0]=="CLT"){
-					 if(siteCltSrcMarkers[$("#tubeTerminationDestination").val().split(":")[0]]) {
-						 siteCltSrcMarkers[$("#tubeTerminationDestination").val().split(":")[0]].setMap(null);
-					 }				
-				}				
-		}	
-			$(".origination,.termination").addClass('disabled');
-			event.stopPropagation();
-				 
-		});						 
-		
-		$("#pushPointsTubes"+selectedFiberContext).unbind('click');
-		$('#pushPointsTubes'+selectedFiberContext).on('click',function(event){
-				
-				$('#TubeModal').find('input:text').val('');
-				$("#auxiliaryTableTubes > tbody").empty();
-				index=0;	
-				var srclng=""; var destlng="";
-				var srclat=""; var destlat="";var auxLatLng=[];	
-										
-				document.getElementById('crtdByFiberTube').value = createdUser;
-				document.getElementById('modifiedByFiberTube').value = lstModfUser;
-								
-			//Uncheck all autocomplete checkboxes when opening the popup
-				uncheckAutoCompleteCheckboxes("auxPtTubeAutocomplete");
-				uncheckAutoCompleteCheckboxes("srcDestTubeAutoComplete");
-
-		$('body').append('<div id="loading"><img id="loading-image" src="'+getContext()+'/resources/images/ajax-loader.gif" alt="Loading..." /><span>Loading, please wait.</span></div>')
-		
-		// Origination and termination are both added
-		if(window["Origination"].length >0 && window["Termination"].length >0){
-			
-			//window["Origination"]=[$("#originationSource").val(),$("#OriginationSourceType").val(),$("#OriginationSrcCity").val(),$("#OriginationSourceLng").val(),$("#OriginationSourceLat").val()]
-			//window["Termination"]=[$("#terminationDestination").val(),$("#TerminationDestType").val(),$("#TerminationDestCity").val(),$("#TerminationDestLng").val(),$("#TerminationDestLat").val()]
-			
-			$("#SourceTube").val(window["Origination"][0]);
-			$("#sourcelong").val(window["Origination"][3]);
-			$("#sourcelat").val(window["Origination"][4]);
-			$("#srcCityTube").val(window["Origination"][2]);
-			$("#SourceTypeTube").val(window["Origination"][1]);
-			
-			$("#DestinationTube").val(window["Termination"][0]);
-			$("#destinationlong").val(window["Termination"][3]);
-			$("#destinationlat").val(window["Termination"][4]);
-			$("#dstCityTube").val(window["Termination"][2]);
-			$("#DestinationTypeTube").val(window["Termination"][1]);
-			
-		if(MarkerArray.length>0){
-			for(var x=0;x<MarkerArray.length;x++){
-				auxLat=MarkerArray[x].position.lat().toString().slice(0, -1);
-				auxLng=MarkerArray[x].position.lng().toString().slice(0, -1);
-				
-				auxLatLng.push({
-				"auxLat" : auxLat,
-				"auxLng" : auxLng
-		
-				});		
-			}
-		}
-		$.ajax({
-			type: "GET",
-			contentType: "application/json; charset=utf-8",
-			url: getContext()+'/findByLatLng',
-			data: {
-				"dictParameter":auxLatLng
-			},
-			dataType: "json",
-			success: function (data) {
-				
-			  auxTubeArray = data.auxPtSearch;
-			  index = 0
-
-			  if(auxTubeArray.length > 0){
-				  TubeAuxAppendBOQ(auxTubeArray,"createFromMap","originationTermination");
-			   }
-			  
-			  $("#loading" ).remove();
-			  $("#tubeModal").modal('show');					
-			},
-				error: function (result) {
-					alert("Error");
-				}
-			});
-
-		} // end origination and termination case 
-		
-		// Origination only
-		else if(window["Origination"].length > 0 && window["Termination"].length==0){
-			//window["Origination"]=[$("#originationSource").val(),$("#OriginationSourceType").val(),$("#OriginationSrcCity").val(),$("#OriginationSourceLng").val(),$("#OriginationSourceLat").val()]
-
-			$("#SourceTube").val(window["Origination"][0]);
-			$("#sourcelong").val(window["Origination"][3]);
-			$("#sourcelat").val(window["Origination"][4]);
-			$("#srcCityTube").val(window["Origination"][2]);
-			$("#SourceTypeTube").val(window["Origination"][1]);
-			
-			if(MarkerArray[MarkerArray.length-1]){
-				$("#destinationlong").val(""+MarkerArray[MarkerArray.length-1].position.lng());
-				$("#destinationlat").val(" "+MarkerArray[MarkerArray.length-1].position.lat());
-				destlng=MarkerArray[MarkerArray.length-1].position.lng().toString().slice(0, -1);
-				destlat=MarkerArray[MarkerArray.length-1].position.lat().toString().slice(0, -1);
-				$("#DestinationTypeTube").val("Unregistered Node");	
-				fillCityByGeocoding("dstCityTube",MarkerArray[MarkerArray.length-1].position.lat(),MarkerArray[MarkerArray.length-1].position.lng(),geocoder)
-												
-			}
-			else {
-				destlng="empty";
-				destlng="empty";
-			}
-			
-			if(MarkerArray.length>1){
-			for(var x=0;x<MarkerArray.length-1;x++){
-				auxLat=MarkerArray[x].position.lat().toString().slice(0, -1);
-				auxLng=MarkerArray[x].position.lng().toString().slice(0, -1);
-				
-				auxLatLng.push({
-				"auxLat" : auxLat,
-				"auxLng" : auxLng
-		
-				});		
-			}
-		}						
-			$.ajax({
-				type: "GET",
-				contentType: "application/json; charset=utf-8",
-				url: getContext()+'/findByLatLng',
-				data: {
-					"DestinationLng":destlng,
-					"DestinationLat":destlat,
-					"dictParameter":auxLatLng
-				},
-				dataType: "json",
-				success: function (data) {
-					var dest="N/A"; var dstCity="";
-					
-					if(typeof data.res_Type1!=='undefined'){
-						dest=data.res_Type1[0]+":"+data.res_Type1[1];
-						dstCity = data.res_Type1[2];
-						$("#dstCityTube").val(dstCity);	
-						
-						if(data.res_Type1[0].split("_")[0]=="MH"){
-							$("#DestinationTypeTube").val("Manhole");
-						}
-						else if(data.res_Type1[0].split("_")[0]=="HH"){
-							$("#DestinationTypeTube").val("Handhole");
-						}
-						else if(data.res_Type1[0].split("_")[0]=="DB"){
-							$("#DestinationTypeTube").val("Distribution Board");
-						}
-						else if(data.res_Type1[0].split("_")[0]=="CLT"){
-							$("#DestinationTypeTube").val("Client");
-						}
-						else if(data.res_Type1[0].split("_")[0]=="WARE"){
-							$("#DestinationTypeTube").val("Site");
-						}
-						else {
-							$("#DestinationTypeTube").val("Unregistered Node");
-						}
-					}
-				
-					auxTubeArray = data.auxPtSearch;
-					index = 0;
-					if(auxTubeArray.length > 0){							
-						TubeAuxAppendBOQ(auxTubeArray,"createFromMap","originationOnly");
-					}	
-					$("#DestinationTube").val(dest);
-					$("#loading").remove();
-					$("#tubeModal").modal('show');						
-				},
-				error: function (result) {
-					alert("Error");
-				}
-			});					
-		} // end case of origination only 
-		
-		// termination only
-		else if(window["Origination"].length==0 && window["Termination"].length>0){
-			//window["Termination"]=[$("#terminationDestination").val(),$("#TerminationDestType").val(),$("#TerminationDestCity").val(),$("#TerminationDestLng").val(),$("#TerminationDestLat").val()]
-			$("#DestinationTube").val(window["Termination"][0]);
-			$("#destinationlong").val(window["Termination"][3]);
-			$("#destinationlat").val(window["Termination"][4]);
-			$("#dstCityTube").val(window["Termination"][2]);
-			$("#DestinationTypeTube").val(window["Termination"][1]);
-
-			if(MarkerArray[0]){
-				$("#sourcelong").val(""+MarkerArray[0].position.lng());
-				$("#sourcelat").val(""+MarkerArray[0].position.lat());
-				srclng=MarkerArray[0].position.lng().toString().slice(0, -1);
-				srclat=MarkerArray[0].position.lat().toString().slice(0, -1);
-				$("#SourceTypeTube").val("Unregistered Node");	
-				fillCityByGeocoding("srcCityTube",MarkerArray[0].position.lat(),MarkerArray[0].position.lng(),geocoder)
-			}
-			else {
-				srclat="empty";
-				srclat="empty";
-			}
-			if(MarkerArray.length>1){
-			for(var x=1;x<MarkerArray.length;x++){
-				auxLat=MarkerArray[x].position.lat().toString().slice(0, -1);
-				auxLng=MarkerArray[x].position.lng().toString().slice(0, -1);
-				
-				auxLatLng.push({
-				"auxLat" : auxLat,
-				"auxLng" : auxLng
-		
-				});		
-			}
-		}
-			$.ajax({
-					type: "GET",
-					contentType: "application/json; charset=utf-8",
-					url: getContext()+'/findByLatLng',
-					data: {			
-						"SourceLng":srclng,
-						"SourceLat":srclat,
-						"dictParameter":auxLatLng
-					},
-					dataType: "json",
-					success: function (data) {
-						src="N/A";srcCity="";
-						if(typeof data.res_Type!== 'undefined'){
-							src=data.res_Type[0]+":"+data.res_Type[1];
-							srcCity = data.res_Type[2];
-							$("#srcCityTube").val(srcCity);							
-						
-							if(data.res_Type[0].split("_")[0]=="MH"){
-								$("#SourceTypeTube").val("Manhole");
-							}
-							else if(data.res_Type[0].split("_")[0]=="HH"){
-								$("#SourceTypeTube").val("Handhole");
-							}
-							else if(data.res_Type[0].split("_")[0]=="DB"){
-								$("#SourceTypeTube").val("Distribution Board");
-							}
-							else if(data.res_Type[0].split("_")[0]=="CLT"){
-								$("#SourceTypeTube").val("Client");
-							}
-							else if(data.res_Type[0].split("_")[0]=="WARE"){
-								$("#SourceTypeTube").val("Site");
-							}
-							else {
-								$("#SourceTypeTube").val("Unregistered Node");
-							}
-						}
-						
-					auxTubeArray = data.auxPtSearch;
-					index = 0
-					if(auxTubeArray.length > 0){	
-						TubeAuxAppendBOQ(auxTubeArray,"createFromMap","terminationOnly");
-					}	
-				$("#SourceTube").val(src);	
-				$("#loading").remove();
-				$("#tubeModal").modal('show');
-			},
-			error: function (result) {
-				alert("Error");
-			}
-			});
-		}// end termination case
-		
-		//No origination && no termination
-		else {
-			
-			
-			// Binding Of auxiliary pts 
-				 if(MarkerArray[0]){
-					$("#sourcelong").val(""+MarkerArray[0].position.lng());
-					$("#sourcelat").val(""+MarkerArray[0].position.lat());
-					srclat=MarkerArray[0].position.lat().toString().slice(0, -1);
-					srclng=MarkerArray[0].position.lng().toString().slice(0, -1);
-					$("#SourceTypeTube").val("Unregistered Node");
-					fillCityByGeocoding("srcCityTube",MarkerArray[0].position.lat(),MarkerArray[0].position.lng(),geocoder)
-					
-				}
-				else {
-					srclat="empty";
-					srclat="empty";
-				}
-				
-				if(MarkerArray[MarkerArray.length-1] && MarkerArray.length>1){
-					$("#destinationlong").val(""+MarkerArray[MarkerArray.length-1].position.lng());
-					$("#destinationlat").val(" "+MarkerArray[MarkerArray.length-1].position.lat());
-					destlat=MarkerArray[MarkerArray.length-1].position.lat().toString().slice(0, -1);
-					destlng=MarkerArray[MarkerArray.length-1].position.lng().toString().slice(0, -1);
-					$("#DestinationTypeTube").val("Unregistered Node");
-					fillCityByGeocoding("dstCityTube",MarkerArray[MarkerArray.length-1].position.lat(),MarkerArray[MarkerArray.length-1].position.lng(),geocoder)
-					
-				}
-				else {
-					destlat="empty";
-					destlng="empty";
-				}
-				if(MarkerArray.length>2){
-					auxLatLng=[];
-					for(var x=1;x<MarkerArray.length-1;x++){
-						auxLat=MarkerArray[x].position.lat().toString().slice(0, -1);
-						auxLng=MarkerArray[x].position.lng().toString().slice(0, -1);
-						
-						auxLatLng.push({
-						"auxLat" : auxLat,
-						"auxLng" : auxLng
-				
-						});		
-					}
-				}
-				
-				$.ajax({
-					type: "GET",
-					contentType: "application/json; charset=utf-8",
-					url: getContext()+'/findByLatLng',
-					data: {
-							
-						"SourceLng":srclng,
-						"SourceLat":srclat,
-						"DestinationLng":destlng,
-						"DestinationLat":destlat,
-						"dictParameter":auxLatLng
-					
-					},
-					dataType: "json",
-					success: function (data) {
-						src="N/A";
-						var dest="N/A";
-						var srcCity=""; var dstCity="";
-						if(typeof data.res_Type!== 'undefined'){
-							src=data.res_Type[0]+":"+data.res_Type[1];
-							srcCity = data.res_Type[2];
-							$("#srcCityTube").val(srcCity);							
-						
-							if(data.res_Type[0].split("_")[0]=="MH"){
-								$("#SourceTypeTube").val("Manhole");
-							}
-							else if(data.res_Type[0].split("_")[0]=="HH"){
-								$("#SourceTypeTube").val("Handhole");
-							}
-							else if(data.res_Type[0].split("_")[0]=="DB"){
-								$("#SourceTypeTube").val("Distribution Board");
-							}
-							else if(data.res_Type[0].split("_")[0]=="CLT"){
-								$("#SourceTypeTube").val("Client");
-							}
-							else if(data.res_Type[0].split("_")[0]=="WARE"){
-								$("#SourceTypeTube").val("Site");
-							}
-							else {
-								$("#SourceTypeTube").val("Unregistered Node");
-							}
-						}
-
-						if(typeof data.res_Type1!=='undefined'){
-							dest=data.res_Type1[0]+":"+data.res_Type1[1];
-							dstCity = data.res_Type1[2];
-							$("#dstCityTube").val(dstCity);	
-							
-							if(data.res_Type1[0].split("_")[0]=="MH"){
-								$("#DestinationTypeTube").val("Manhole");
-							}
-							else if(data.res_Type1[0].split("_")[0]=="HH"){
-								$("#DestinationTypeTube").val("Handhole");
-							}
-							else if(data.res_Type1[0].split("_")[0]=="DB"){
-								$("#DestinationTypeTube").val("Distribution Board");
-							}
-							else if(data.res_Type1[0].split("_")[0]=="CLT"){
-								$("#DestinationTypeTube").val("Client");
-							}
-							else if(data.res_Type1[0].split("_")[0]=="WARE"){
-								$("#DestinationTypeTube").val("Site");
-							}
-							else {
-								$("#DestinationTypeTube").val("Unregistered Node");
-							}
-						}
-
-
-					auxTubeArray = data.auxPtSearch;
-					var incrmntTubeAux=0;
-						
-				if(auxTubeArray.length > 0){	
-					TubeAuxAppendBOQ(auxTubeArray,"createFromMap","NoOrigiNotermination");
-					//TubeAuxiliary_BoqAppendMarkup("Auxiliary_Point "+incrmntTubeAux,auxLng,auxLat,x+1);
-				}
-				 //calculateDistanceSourceDestination($("#sourcelat").val(),$("#sourcelong").val(),$("#destinationlat").val(),$("#destinationlong").val(),"auxiliaryTableTubes");
-				$("#SourceTube").val(src);	
-				$("#DestinationTube").val(dest);
-				$("#loading" ).remove();
-				
-				
-																				
-			},
-			error: function (result) {
-				alert("Error");
-			}
-		});
-	} // end no origination + no termination case
-		$("#SourceTube").unbind();
-		$("#DestinationTube").unbind();
-				
-		SourceDestinationAutoComplete("srcDestTubeAutoComplete","SourceTypeTube","SourceTube","sourcelong","sourcelat","srcCityTube","destinationlat","destinationlong","auxiliaryTableTubes","source");
-		SourceDestinationAutoComplete("srcDestTubeAutoComplete","DestinationTypeTube","DestinationTube","destinationlong","destinationlat","dstCityTube","sourcelat","sourcelong","auxiliaryTableTubes","destination");
-		
-		$("#SourceTube").on('focusout',function(){
-			getTotalDrivingDistance("TubeID","sourcelat","sourcelong","destinationlat","destinationlong","tube","tubeTotalDistanceDrivg","tubeDrivDist");	
-		});
-
-		$("#DestinationTube").on('focusout',function(){
-			getTotalDrivingDistance("TubeID","sourcelat","sourcelong","destinationlat","destinationlong","tube","tubeTotalDistanceDrivg","tubeDrivDist");	
-		});
-		
-		$("#fiberCable").val(selectedFiberContext);
-		$("#TubeModal").modal('show');
-		event.stopPropagation();
-		});*/
 
 	   }
 		  
@@ -10676,7 +7920,6 @@ singleProject = new ContextMenu({
 						
 						checkActionFiber ="UPDATE";
 						
-						//document.getElementById('modifiedByFiberCable').value = lstModfUser;
 						index= $("#auxiliaryTable >tbody tr").length;
 						
 						
@@ -10816,7 +8059,6 @@ singleProject = new ContextMenu({
 	},
 	{'icon': 'trash', 'name': 'Delete FiberPath ', action: () => {
 					 
-					 	//deleteFiberCable("FiberCable","",selectedFiberContext);
 					 	deleteprop("FiberCable","",selectedFiberContext);
 						$('#DeleteModal').find('input:text').val('');
 						$("#DeleteHeader").text("Fiber Cable Delete: ");
@@ -10912,7 +8154,6 @@ singleProject = new ContextMenu({
 				 },
 					
 				 { 'icon': 'braille', 'name': 'Show DB', action: () => {			
-					 //console.log("entered fiber name "+  window[""+selectedFiberContext][13]);
 					 showDB(selectedFiberContext,"Fiber",window[""+selectedFiberContext][13]);
 					
 				   }
@@ -11254,81 +8495,14 @@ singleProject = new ContextMenu({
 				$("#deleteFiber").show();	
 				$("#deleteMan").hide();
 				$("#deleteTrench").hide();
-				//deleteFiberCable("FiberStrand","",selectedStrand);
 			 			
 				}
 			}, 
 			{ 'icon': 'braille', 'name': 'Show DB', action: () => {			
-				//console.log("entered strand name  "+  window[""+selectedStrand][13]);
 				 showDB(selectedStrand,"Strand", window[""+selectedStrand][13]);
 				
 			   }
 			 }
-/*		    to be deleted
-   {'icon': 'paste', 'name': 'Show BoQ', action: () => {
-		    	
-
-				$.ajax({
-					type: "GET",
-					contentType: "application/json; charset=utf-8",
-					async:false,
-					url: getContext()+'/StrandBoQ',
-					data: {
-					
-					"strandID": selectedStrand,
-					"tubeID":selectedFiberContext,
-					"fiberID":selectedFiberMain
-					
-				},
-					success : function(data){
-					if(data != null) {
-						
-						if(data.StrandData[0][0] !="null"){
-							srcStrand = data.StrandData[0][0]+":" +data.StrandData[0][2]+":"+data.StrandData[0][1];		
-						}
-						else {
-							if (data.StrandData[0][1].split("_")[0]=="MH" || data.StrandData[0][1].split("_")[0]=="HH" || data.StrandData[0][1].split("_")[0]=="DB" || data.StrandData[0][1].split("_")[0]=="CLT") {
-								srcStrand  = data.StrandData[0][1]+":" +data.StrandData[0][2];	
-							}
-							else {
-								srcStrand = data.StrandData[0][2];
-							}
-						}
-						
-						if(data.StrandData[0][3] !="null"){
-							dstStrand = data.StrandData[0][3]+":" +data.StrandData[0][5]+":"+data.StrandData[0][4];		
-						}
-						else {
-							if (data.StrandData[0][4].split("_")[0]=="MH" || data.StrandData[0][4].split("_")[0]=="HH" || data.StrandData[0][4].split("_")[0]=="DB" || data.StrandData[0][4].split("_")[0]=="CLT") {
-								dstStrand  = data.StrandData[0][4]+":" +data.StrandData[0][5];	
-							}
-							else {
-								dstStrand = data.StrandData[0][5];
-							}
-						}
-						  
-						showBoq();
-				    	var tr = "<tr>"+"<th>"+selectedStrand+"</th></tr>"
-								+"<tr>"+"<th>Tube: </th> <td> "+selectedFiberContext+"</td></tr><hr>"
-								+"<tr>"+"<th>Fiber Cable: </th> <td> "+selectedFiberMain+"</td></tr><hr>"
-								+"<tr>"+"<th>From: </th> <td> "+srcStrand+"</td></tr><hr>"
-								+"<tr>"+"<th>To: </th> <td> "+dstStrand+"</td></tr>";
-							
-							$("#boq_table").append(tr);
-								
-					data=null;
-					}
-				
-					},
-						error: function (result) {
-							alert("Error");
-						}
-					});	
-		    	
-		    	
-			   }
-		    }
-*/			
 			 ] //Clsosing the item array of singleStrand ContextMenu
 		  });
 		
@@ -11558,7 +8732,6 @@ singleProject = new ContextMenu({
 		},			   
    
 		{'icon': 'trash', 'name': 'Delete Tube', action: () => {
-			//deleteFiberCable("FiberTube","",selectedTube);
 			deleteprop("FiberTube","",selectedTube);
 			$('#DeleteModal').find('input:text').val('');
 			$("#DeleteHeader").text("Fiber Tube Delete: ");
@@ -11733,11 +8906,7 @@ singleProject = new ContextMenu({
 		  }
 		  showHideAllSequence(selectedTube,"Hide");
 		}	
-		
-		
-			
-	
-	
+
 	}	
 	},	
 		
@@ -11811,7 +8980,6 @@ singleProject = new ContextMenu({
 		   }
 		},
 		 { 'icon': 'braille', 'name': 'Show DB', action: () => {	
-			 //console.log("entered tube name "+  window[""+selectedTube][13]);
 				showDB(selectedTube,"Tube",window[""+selectedTube][13]);
 			   }
 			 }
@@ -11872,31 +9040,6 @@ singleProject = new ContextMenu({
 			document.getElementById("projectIdHandhole").style.display = "none";
 		 	document.getElementById("projectNameHandhole").style.display = "none";
 																			
-	 	   });
-	 	   
-	 	 
-	   $(".Entreprise_f_CurrentPhysicalLayer > .TreeSpan").contextmenu(function(){
-			IdNodeSelectedTemp = $(this).parent().attr('id').split("Entreprise_f_")[1];																	 		 
-			menuName=menuNodes;			
-			openContext("","",menuNodes,event);																
-	 	   });
-	 	   
-	   $(".Transmission_f_CurrentPhysicalLayer > .TreeSpan").contextmenu(function(){
-			IdNodeSelectedTemp = $(this).parent().attr('id').split("Transmission_f_")[1];																	 		 
-			menuName=menuTransmission;			
-			openContext("","",menuTransmission,event);															
-	 	   });
-	 	   
-	   $(".Core_f_CurrentPhysicalLayer > .TreeSpan").contextmenu(function(){
-			IdNodeSelectedTemp = $(this).parent().attr('id').split("Core_f_")[1];																	 		 
-			menuName=menuCore;			
-			openContext("","",menuCore,event);															
-	 	   });
-	 	
-	  $(".Ran_f_CurrentPhysicalLayer > .TreeSpan").contextmenu(function(){
-			IdNodeSelectedTemp = $(this).parent().attr('id').split("Ran_f_")[1];																	 		 
-			menuName=menuRan;			
-			openContext("","",menuRan,event);															
 	 	   });
 	 
 
@@ -11992,11 +9135,8 @@ singleProject = new ContextMenu({
            
             
 
-	    //$('#Trench_f > .TreeSpan').contextmenu(function(){
-	    $(".Trench_f_CurrentPhysicalLayer > .TreeSpan, .Trench_f_projects > .TreeSpan").contextmenu(function(){
-	  
+	    $(".Trench_f_CurrentPhysicalLayer > .TreeSpan, .Trench_f_projects > .TreeSpan").contextmenu(function(){	  
 			IdNodeSelectedTemp=$(this).parent().attr('id').split("Trench_f_")[1];
-			
 		   	menuName=menuTrenches;
 		   	openContext("","",menuTrenches,event);
 		 });
@@ -12025,13 +9165,7 @@ singleProject = new ContextMenu({
 				   success: function (data) {
 					   
 					   if(data!=null){ 
-						   //ProjectId="";
-						   console.log("actionProjectContext "+ actionProjectContext);
 						   if(actionProjectContext=="Insert"){
-						//	   ProjectId=data.ProjectId;
-						//	   ProjectName = data.ProjectName;
-							   //console.log("ProjectId is "+ProjectId);
-							   //console.log("ProjectName is "+data.ProjectName);
 							   var str="<ul><li id='"+data.ProjectId+"' class='PROJECT' style='width:100px;'><input type='checkbox' class='Project checkFilter' unchecked  class='filter'  name='Element'></input><span id='Project_spanFolder_"+data.ProjectId+"'  class='folder'><i class='fa fa-folder' style='color: #08526D;'></i></span><span id='Project_span_"+data.ProjectId+"' class='TreeSpan' style='color:black;width:395px;'>"+data.ProjectName+" </span></li></ul>";
 							   $("#initial_ul_Projects").append(str);
 							   
@@ -12052,20 +9186,11 @@ singleProject = new ContextMenu({
 							   
 							   str="<ul><li id='Trench_f_"+data.ProjectId+"' style='display:none;' class='Trench_f_projects'><input type='checkbox' class='AllTrenches'></input> <span id='Trench_spanFolder'  class='folder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Trench_span' style='color:black;width:395px' class='TreeSpan'>Trench <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' id='pushTrenchPoints' class='pushPoints'> <img src='"+getContext()+"/resources/NetworkImages/remove.png' hidden style='margin-left:10px' id='cancelTrenchPoints' class='clearPoints'></span></li></ul>";
 							   $("#initial_ul_"+data.ProjectId+"").append(str);			
-							   
-/*						   
-						   tree_PropPhysical("#"+ProjectId+" > .folder"); 
-						   tree_PropPhysical("#initial_ul_"+ProjectId+" > .folder"); 
-						   tree_PropPhysical("#Manhole_f_"+ProjectId+" > .folder"); 
-						   tree_PropPhysical("#Handhole_f_"+ProjectId+" > .folder");
-						   tree_PropPhysical("#FiberPath_f_"+ProjectId+" > .folder");
-						   tree_PropPhysical("#DistributionBoard_f_"+ProjectId+" > .folder");
-						   tree_PropPhysical("#Trench_f_"+ProjectId+" > .folder");
-*/						   
+						   
 		                   treeCollapseFolder("#" +data.ProjectId+ " .folder",null,".folder");
 						   
 						   
-						   $("#"+data.ProjectId+"> .TreeSpan").width($("#left").width());
+						   $("#"+data.ProjectId+"> .TreeSpan").css("display", "inline");
 						   var childrenInitial = $("#initial_ul_Projects").find('> ul > li');
 						   var children = $("#"+data.ProjectId).find('li.PROJECT');
 						   if (!children.is(":visible")) {
@@ -12074,9 +9199,7 @@ singleProject = new ContextMenu({
 						   }
 						   children.show('fast');						
 						   childrenInitial.show('fast');
-						   
-
-						  // tree_prop_general();
+						  
 						   // menus
 						   $("#"+data.ProjectId+"> .TreeSpan").contextmenu(function(){
 							   menuName=singleProject;							
@@ -12119,13 +9242,7 @@ singleProject = new ContextMenu({
 							   	menuName=menuTrenches;
 							   	openContext("","",menuTrenches,event);
 							 });
-/*							   
-						   $("#"+ProjectId+" > .TreeSpan ").on('click', function (e) {
-							   $("#initial_ul_Projects").find(' > ul > li').css("background-color", "");
-							   $(".tree li > span").css("background-color", "");										
-							   $(this).css("background-color", "#97b9cc");
-						   });
-*/
+							 
 						   tree_prop_selection("#" +data.ProjectId+ " .TreeSpan");
 						   window[""+data.ProjectId]="";
 						   window[""+data.ProjectId]=[data.ProjectId,data.ProjectName];
@@ -12134,16 +9251,12 @@ singleProject = new ContextMenu({
 						   }
 						   
 						   // scroll to the created PROJECT
-						  //  console.log("ProjectId is after "+ProjectId);
 						   $("#network_tree").animate({ scrollTop: document.getElementById(""+data.ProjectId).offsetTop+document.getElementById("initial_ul_Projects").offsetTop }, "slow");
 							     
 						   }
 						   else{
-							  // $("#"+data.ProjectId).text(""+data.ProjectName+"");
 							  document.getElementById("Project_span_" + data.ProjectId).innerHTML = data.ProjectName;
-							   //$("#"+ProjectId).html(" <input type='checkbox' class='Project checkFilter' checked  class='filter'  name='Element'></input> <span id='Project_spanFolder'  class='folder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Project_span' class='TreeSpan' style='color:black;width:395px' > "+ProjectName+" </span>")
-							   //console.log("the id_project is " +$("#"+data.ProjectId).html());
-							   
+					 
 						   }
 
 						   // remove the selection of previous item if exist and add it to the new one
@@ -12156,11 +9269,7 @@ singleProject = new ContextMenu({
 						   IdSelectedTemp=data.ProjectId;
 					   
 						   //////////// Update boq data and display it //////////////						
-														   
-						
-						
-						
-						   
+					
 						   $("#"+data.ProjectId+" > .TreeSpan").on("mouseover",function(e) {
 							   $(this).addClass('backgroundTree');
 						   }).on("mouseout",function(e) {
@@ -12174,8 +9283,6 @@ singleProject = new ContextMenu({
 								   .val('').end().find("input[type=checkbox], input[type=radio]")
 								   .prop("checked", "")
 								   .end();
-						   //map.setZoom(11);
-						   //panTo(ManholeLat, ManholeLong);
 					   }
 
 				   },
@@ -12229,7 +9336,6 @@ singleProject = new ContextMenu({
 			if(actionManholeJct=="Update"){
 				junctionID = document.getElementById("junctionId").value;
 			}		  
-			//selectALLManholeJctMappingRows();
 			
 			getSelectedRowsManholeJctMapping();
 			var token =  $('input[name="csrfToken"]').attr('value');
@@ -12261,7 +9367,6 @@ singleProject = new ContextMenu({
 					if(data!=null){
 						window[""+data.JunctionID]=[];
 						if(actionManholeJct=="Insert"){
-						//	junctionID = data.JunctionID;
 							if(data.junctionDetails.length !=0){
 								for(i=0;i<data.junctionDetails.length;i++){
 									window[""+data.JunctionID]=data.junctionDetails[i];
@@ -12290,7 +9395,6 @@ singleProject = new ContextMenu({
 					
 					$("#"+manholeId+"> ul").remove();
 					$("<span class='folder' > <i class='fa fa-folder-open' style='color: #08526D'></i></span>").insertBefore("#"+manholeId+"> .TreeSpan");
-					//tree_Prop("#"+manholeId+" > .folder");
 		 
 					$("#"+manholeId+"> .TreeSpan").html("<img style='color: #08526D;' src='"+getContext()+"/resources/NetworkImages/manholeRed.png'>  " +data.ManHandholeName+"  ");					 
 							 
@@ -12325,7 +9429,6 @@ singleProject = new ContextMenu({
 					window[""+manholeId][1] = data.ManHandholeName;
 
 					create_Marker_Click(manholeId,data.ManHandholeName,junctionLong,junctionLat,markersManhole,markerClusterManhole,"Junction","");
-					//createManhole_Marker_Click(manholeId,data.ManHandholeName,junctionLong,junctionLat,markersManhole,markerClusterManhole,"Junction");				
 					markerClusterManhole.addMarker(markersManhole[""+manholeId]);
 					markersManhole[manholeId].setMap(map);
 					
@@ -12379,31 +9482,8 @@ singleProject = new ContextMenu({
 		});	
 		
 		CreateJunctionClickEvent(data.JunctionID,"Manhole");
-/*		
-		$('.tree li#Manhole_f_'+IdNodeSelectedTemp+' .TreeSpan').unbind("mouseover");
-		//$('.tree li > .TreeSpan').bind("mouseover",function(e) {
-		$('.tree li#Manhole_f_'+IdNodeSelectedTemp+' .TreeSpan').bind("mouseover",function(e) {
-			$(this).addClass('backgroundTree');
-		}).on("mouseout",function(e) {
-			$(this).removeClass('backgroundTree');
-
-		});	
-*/
-		MouseHoveringSpans("#" +manholeId+ " .TreeSpan");	
-/*	
-		$('.tree li > .TreeSpan').on('click', function (e) {
-			
-			$("#initial_ul_"+IdSelectedTemp+"").find(' > ul > li').css("background-color", "");
-			$(".tree li > span").css("background-color", "");										
-			$(this).css("background-color", "#97b9cc");
-				
-			$("#initial_ul_"+IdSelectedTemp+"").find(' > ul > li').removeClass("selected-span");
-			$(".tree li > span").removeClass("selected-span");							
-			$(this).addClass("selected-span");
-		});	
-*/			
+		MouseHoveringSpans("#" +manholeId+ " .TreeSpan");				
 		tree_prop_selection("#" +manholeId+ " .TreeSpan");
-		//treeCollapseFolder("#" +manholeId+ " .folder","fast",".folder"); No need for it because it is already excited and the events on the folder
 	} // End if data != null 
 		$("#manholeJunctionModal").modal('hide');
 		data=null;
@@ -12614,27 +9694,8 @@ $("#saveHandholeJunction").click(function () {
 	});				
 		
 	CreateJunctionClickEvent(data.JunctionID,"Handhole");
-/*	
-		$('.tree li#Handhole_f_'+IdNodeSelectedTemp+' .TreeSpan').unbind("mouseover");
-		$('.tree li#Handhole_f_'+IdNodeSelectedTemp+' .TreeSpan').bind("mouseover",function(e) {
-		$(this).addClass('backgroundTree');
-		}).on("mouseout",function(e) {
-		$(this).removeClass('backgroundTree');
-		});			
-*/
+
 		MouseHoveringSpans("#" +handholeID+ " .TreeSpan");
-/*			
-		$('.tree li > .TreeSpan').on('click', function (e) {
-			
-			$("#initial_ul_"+IdSelectedTemp+"").find(' > ul > li').css("background-color", "");
-			$(".tree li > span").css("background-color", "");										
-			$(this).css("background-color", "#97b9cc");
-				
-			$("#initial_ul_"+IdSelectedTemp+"").find(' > ul > li').removeClass("selected-span");
-			$(".tree li > span").removeClass("selected-span");							
-			$(this).addClass("selected-span");
-		});				
-*/	
 		tree_prop_selection("#" +handholeID+ " .TreeSpan");	
 		treeCollapseFolder("#" +handholeID+ " .folder","fast",".folder");
 	}
@@ -12665,442 +9726,6 @@ $("#saveHandholeJunction").click(function () {
 		
 });		
 
- /*
-function autoCompleteJctMapping(ID,tableID,rowID){
-
-	$("#mJctStrandIdSideA"+ID).autocomplete({
-		source: function(request, response,event, ui) {
-			var sId= $("#mJctStrandIdSideA"+ID).val();
-			//var sName = $(this).parents("tr").find('input[name="mJctStrandNameSideA"]').val();
-						             
-			$.ajax({
-				type: "GET",
-				contentType: "application/json; charset=utf-8",
-				url: getContext()+'/SearchStrand',
-				data: {
-					"searchId" : sId,
-					//"sName" : sName
-				},							
-	  			dataType: "json",
-	  			success: function (data) {
-	  				if (data != null) {
-	  					response(data.glist);
-	  					console.log(data.glist);
-					}
-				},
-				error: function(result) {
-					alert("Error");
-				}
-			});
-			}, minLength:0, maxShowItems: 4, scroll:true,
-			
-			select: function(event, ui) {
-				this.value = (ui.item ? ui.item[0] : '');
-				$(this).parents("tr").find('input[name ="mJctStrandNameSideA"]').val(ui.item[1]);
-				$(this).parents("tr").find('input[name ="mJctTubeIdSideA"]').val(ui.item[2]);
-				$(this).parents("tr").find('input[name ="mJctFiberIdSideA"]').val(ui.item[3]);
-				
-				var tube=[];
-				var fiber=[];
-				$.ajax({
-			                type: "GET",
-			                contentType: "application/json; charset=utf-8",
-			                url: getContext()+'/GetFiberTubeNames',
-			                data: {
-			                		cID : ui.item[2],
-									fID : ui.item[3],
-								},
-			                dataType: "json",
-			                success: function (data) {
-				
-			                    if (data != null) {
-				                	tube=data.clist;
-									fiber=data.flist;
-									$("#mJctTubeNameSideA"+ID).val(tube[0]);   
-									$("#mJctFiberNameSideA"+ID).val(fiber[0]);             
-			                    }
-			                },
-			                error: function(result) {
-			                    alert("Error");
-			                }
-			            });
-										
-									return false;
-								}
-							}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
-					    	return $('<li class="each"></li>').data( "ui-autocomplete-item", item )
-					    			.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
-				                    item[0] + '</span><br><span class="desc">' +
-				                    item[1] + '</span></div>').appendTo(ul);
-						};
-		$("#mJctStrandIdSideA"+ID).focus(function(){
-			if (this.value == ""){
-				$(this).autocomplete("search");
-			}
-		});
-		
-		$("#mJctStrandIdSideB"+ID).autocomplete({
-		source: function(request, response,event, ui) {
-			var sId= $("#mJctStrandIdSideB"+ID).val();
-			var sName = $(this).parents("tr").find('input[name="mJctStrandNameSideB"]').val();
-						             
-			$.ajax({
-				type: "GET",
-				contentType: "application/json; charset=utf-8",
-				url: getContext()+'/SearchStrand',
-				data: {
-					"searchId" : sId,
-					//"sName" : sName
-				},							
-	  			dataType: "json",
-	  			success: function (data) {
-	  				if (data != null) {
-	  					response(data.glist);
-	  					console.log(data.glist);
-					}
-				},
-				error: function(result) {
-					alert("Error");
-				}
-			});
-			}, minLength:0, maxShowItems: 4, scroll:true,
-			
-			select: function(event, ui) {
-				this.value = (ui.item ? ui.item[0] : '');
-				$(this).parents("tr").find('input[name ="mJctStrandNameSideB"]').val(ui.item[1]);
-				$(this).parents("tr").find('input[name ="mJctTubeIdSideB"]').val(ui.item[2]);
-				$(this).parents("tr").find('input[name ="mJctFiberIdSideB"]').val(ui.item[3]);
-				
-				var tube=[];
-				var fiber=[];
-				$.ajax({
-			                type: "GET",
-			                contentType: "application/json; charset=utf-8",
-			                url: getContext()+'/GetFiberTubeNames',
-			                data: {
-			                		cID : ui.item[2],
-									fID : ui.item[3],
-								},
-			                dataType: "json",
-			                success: function (data) {
-				
-			                    if (data != null) {
-				                	tube=data.clist;
-									fiber=data.flist;
-									$("#mJctTubeNameSideB"+ID).val(tube[0]);   
-									$("#mJctFiberNameSideB"+ID).val(fiber[0]);             
-			                    }
-			                },
-			                error: function(result) {
-			                    alert("Error");
-			                }
-			            });
-										
-									return false;
-								}
-							}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
-					    	return $('<li class="each"></li>').data( "ui-autocomplete-item", item )
-					    			.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
-				                    item[0] + '</span><br><span class="desc">' +
-				                    item[1] + '</span></div>').appendTo(ul);
-						};
-		$("#mJctStrandIdSideB"+ID).focus(function(){
-			if (this.value == ""){
-				$(this).autocomplete("search");
-			}
-		});
-		
-	$("#mJctLocationIdSideA"+ID).autocomplete({
-	source: debounce(function(request, response,event,ui) {
-	    var searchs=$("#mJctLocationIdSideA"+ID).val();
-		var line;
-	    search= $("#mJctLocationTypeSideA"+ID).val();
-	    console.log("debounce");
-		if(search=="Customer"){
-				url='GetAllNetworkClients';
-				dataTarget = {					
-					"search":searchs,
-				}
-			}
-			else if(search=="Site"){
-				url='GetAllWarehouse';
-				dataTarget = {
-		       		"WareName":searchs,
-					"warehouseName" : searchs,
-					"SiteId":searchs,
-				 }
-			}
-			else if(search=="Manhole"){
-				url ='getManholeData';
-				dataTarget = {					
-					"search":searchs,
-				}			
-			}
-			else if (search=="Handhole"){
-				url ='getHandholeData';
-				dataTarget = {					
-					"search":searchs,
-				}
-		}
-		 	else if(search=="DB"){
-				url='getDbData';
-				dataTarget = {
-		       		"search":searchs,
-			 }
-			 
-		}
-		else {
-			url='emptyUrl';
-		}
-	if(url !="emptyUrl") {
-		$.ajax({
-			type: "GET",
-			contentType: "application/json; charset=utf-8",
-			url: getContext()+'/'+url,
-			data: dataTarget,				
-		 	dataType: "json",
-			success: function (data) {
-				if (data != null) {
-					response(data.globalList);  
-					                 
-				}
-			},								               
-			  error: function(result) {
-                  alert("Error");
-              }
-          });						               
-		} 
-	},900), minLength:0, maxShowItems: 40, scroll:true,
- 		select: function(event, ui) {
- 			
-			if(search=="Customer"){
-				$("#mJctLocationIdSideA"+ID).val(ui.item ? ui.item[0] : '');
-				$("#mJctLocationNameSideA"+ID).val(ui.item[1]+" "+ui.item[2]);
-				//$("#"+Location+ID).val(ui.item[3]);
-			}
-			else if(search=="Site"){
-				$("#mJctLocationNameSideA"+ID).val(ui.item ? ui.item[1] : '');
-				$("#mJctLocationIdSideA"+ID).val(ui.item[2]);
-				console.log("Location is " +ui.item[0]);
-				console.log("ID is " +ID);
-				$("#mJctWarehouseIdSideA"+ID).val(ui.item[0]);
-				console.log("#FP_Location is " +$("#mJctWarehouseIdSideA"+ID).val());
-			}
-			else if(search=="Manhole"){
-				$("#mJctLocationNameSideA"+ID).val(ui.item ? ui.item[1] : '');
-				$("#mJctLocationIdSideA"+ID).val(ui.item[0]);
-				//$("#"+Location+ID).val(ui.item[2]);
-							
-			}
-			else if (search=="Handhole"){
-				$("#mJctLocationNameSideA"+ID).val(ui.item ? ui.item[1] : '');
-				$("#mJctLocationIdSideA"+ID).val(ui.item[0]);
-				//$("#"+Location+ID).val(ui.item[2]);
-			}	
-			
-			else if (search=="DB"){
-				$("#mJctLocationNameSideA"+ID).val(ui.item ? ui.item[1] : '');
-				$("#mJctLocationIdSideA"+ID).val(ui.item[0]);
-			}		
-		return false;
-	},	
-}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
-	
-	if(item[0].split("_")[0]=="CLT" ) {
-		 return $("<li class='each'>")
-            .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-               item[0] + "</span><br><span class='desc'>" +
-                item[1] +' '+ item[2] +', '+ item[3]+ "</span></div>")
-            .appendTo(ul);
-	}
-	else if(item[0].split("_")[0]=="WARE") {
-		 return $("<li class='each'>")
-        .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-           item[2] + "</span><br><span class='desc'>" +
-            item[0] +', '+ item[1] + "</span></div>")
-        .appendTo(ul);
-	}
-	else {
-		 return $("<li class='each'>")
-            .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-               item[0] + "</span><br><span class='desc'>" +
-                item[1]  +', '+ item[2] + "</span></div>")
-            .appendTo(ul);
-		}
-	};		    	    
-						         
-	$("#mJctLocationIdSideA"+ID).focus(function(){
-		if (this.value == ""){
-			$(this).autocomplete("search");
-	        }
-	});		
-		///
-	 $("#mJctLocationNameSideA"+ID).autocomplete({
-	source: debounce(function(request, response,event,ui) {
-	    var searchs=$("#mJctLocationNameSideA"+ID).val();
-		var line;
-	    search= $("#mJctLocationTypeSideA"+ID).val();
-	    console.log("debounce");
-		if(search=="Customer"){
-				url='GetAllNetworkClients';
-				dataTarget = {					
-					"search":searchs,
-				}
-			}
-			else if(search=="Site"){
-				url='GetAllWarehouse';
-				dataTarget = {
-		       		"WareName":searchs,
-					"warehouseName" : searchs,
-					"SiteId":searchs,
-				 }
-			}
-			else if(search=="Manhole"){
-				url ='getManholeData';
-				dataTarget = {					
-					"search":searchs,
-				}			
-			}
-			else if (search=="Handhole"){
-				url ='getHandholeData';
-				dataTarget = {					
-					"search":searchs,
-				}
-		}
-		else if(search=="DB"){
-				url='getDbData';
-				dataTarget = {
-		       		"search":searchs,
-			 }
-			 
-		}
-		else {
-			url='emptyUrl';
-		}
-	if(url !="emptyUrl") {
-		$.ajax({
-			type: "GET",
-			contentType: "application/json; charset=utf-8",
-			url: getContext()+'/'+url,
-			data: dataTarget,				
-		 	dataType: "json",
-			success: function (data) {
-				if (data != null) {
-					response(data.globalList);  
-					                 
-				}
-			},								               
-			  error: function(result) {
-                  alert("Error");
-              }
-          });						               
-		} 
-	},900), minLength:0, maxShowItems: 40, scroll:true,
- 		select: function(event, ui) {
- 			
-			if(search=="Customer"){
-				$("#mJctLocationIdSideA"+ID).val(ui.item ? ui.item[0] : '');
-				$("#mJctLocationNameSideA"+ID).val(ui.item[1]+" "+ui.item[2]);
-			}
-			else if(search=="Site"){
-				$("#mJctLocationNameSideA"+ID).val(ui.item ? ui.item[1] : '');
-				$("#mJctLocationIdSideA"+ID).val(ui.item[2]);
-				$("#mJctWarehouseIdSideA"+ID).val(ui.item[0]);
-			}
-			else if(search=="Manhole"){
-				$("#mJctLocationNameSideA"+ID).val(ui.item ? ui.item[1] : '');
-				$("#mJctLocationIdSideA"+ID).val(ui.item[0]);
-							
-			}
-			else if (search=="Handhole"){
-				$("#mJctLocationNameSideA"+ID).val(ui.item ? ui.item[1] : '');
-				$("#mJctLocationIdSideA"+ID).val(ui.item[0]);
-			}	
-			else if (search=="DB"){
-				$("#mJctLocationNameSideA"+ID).val(ui.item ? ui.item[1] : '');
-				$("#mJctLocationIdSideA"+ID).val(ui.item[0]);
-			}		
-		return false;
-	},	
-}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
-	
-	if(item[0].split("_")[0]=="CLT" ) {
-		 return $("<li class='each'>")
-            .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-               item[0] + "</span><br><span class='desc'>" +
-                item[1] +' '+ item[2] +', '+ item[3]+ "</span></div>")
-            .appendTo(ul);
-	}
-	else if(item[0].split("_")[0]=="WARE") {
-		 return $("<li class='each'>")
-        .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-           item[1] + "</span><br><span class='desc'>" +
-            item[2] +', '+ item[0] + "</span></div>")
-        .appendTo(ul);
-	}
-	else {
-		 return $("<li class='each'>")
-            .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-               item[1] + "</span><br><span class='desc'>" +
-                item[0]  +', '+ item[2] + "</span></div>")
-            .appendTo(ul);
-		}
-	};		    	    
-						         
-	$("#mJctLocationNameSideA"+ID).focus(function(){
-		if (this.value == ""){
-			$(this).autocomplete("search");
-	        }
-	});
-}	
-	*/
-/* $("#manholeJctAddRow").on('click',function(){
-	
-	var countManholeJctBoq=$("#manholeJctMappingTable > tbody").children().length;
-	var totalNoManholeJct =$("#manholeNumberJct").val();
-
-	if(parseFloat(countManholeJctBoq+1) <= parseFloat(totalNoManholeJct)){	
-			var nextSeq = countManholeJctBoq+1;
-						
-				var markup = "<tr id='Row"+MJctBoqIndex+"'><td name='Junction'><input type='checkbox' class='rowAboveBelowJun' style='position:relative;left:20px;top:10px' name='record'></td>"
-					+"<td name='mJctSeq' class='headcol'><input name='manholeJctSeq'  class='form-control text-input' type='text' style='width:60px;position:relative;' value='"+nextSeq+"' readonly/></td>"
-					+"<td style='background-color:#00757C' width='-10px'></td>"
-					+"<td name='mJctStrandIdSideA'><input name='mJctStrandIdSideA' id='mJctStrandIdSideA"+MJctBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-					+"<td name='mJctStrandNameSideA'><input name='mJctStrandNameSideA' id='mJctStrandNameSideA"+MJctBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;' readonly /></td>"
-					+"<td name='mJctTubeIdSideA'><input name='mJctTubeIdSideA' id='mJctTubeIdSideA"+MJctBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;' readonly /></td>"
-					+"<td name='mJctTubeNameSideA'><input name='mJctTubeNameSideA' id='mJctTubeNameSideA"+MJctBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;' readonly /></td>"
-					+"<td name='mJctFiberIdSideA'><input name='mJctFiberIdSideA' id='mJctFiberIdSideA"+MJctBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;' readonly /></td>"
-					+"<td name='mJctFiberNameSideA'><input name='mJctFiberNameSideA' id='mJctFiberNameSideA"+MJctBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;' readonly /></td>"
-					+"<td style='background-color:#00757C' width='-10px'></td>"
-					+"<td name='mJctStrandIdSideB'><input name='mJctStrandIdSideB' id='mJctStrandIdSideB"+MJctBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-					+"<td name='mJctStrandNameSideB'><input name='mJctStrandNameSideB' id='mJctStrandNameSideB"+MJctBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;' readonly /></td>"
-					+"<td name='mJctTubeIdSideB'><input name='mJctTubeIdSideB' id='mJctTubeIdSideB"+MJctBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;' readonly /></td>"
-					+"<td name='mJctTubeNameSideB'><input name='mJctTubeNameSideB' id='mJctTubeNameSideB"+MJctBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;' readonly /></td>"
-					+"<td name='mJctFiberIdSideB'><input name='mJctFiberIdSideB' id='mJctFiberIdSideB"+MJctBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;' readonly /></td>"
-					+"<td name='mJctFiberNameSideB'><input name='mJctFiberNameSideB' id='mJctFiberNameSideB"+MJctBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;' readonly /></td>"
-					
-					+"</tr>"
-				
-				$("#manholeJctMappingTable > tbody").append(markup);
-				
-				autoCompleteJctMapping(MJctBoqIndex,"manholeJctMappingTable","Row"+MJctBoqIndex);
-				
-				//autoCompleteJctMapping("Port"+MJctBoqIndex,"manholeJctMappingTable","Row"+MJctBoqIndex,"SearchForStrand");
-				MJctBoqIndex++;
-				objDiv = document.getElementById("jctMapping");
-				objDiv.scrollTop = objDiv.scrollHeight;
-				$("#manholeJctMappingTable tr").focusin(function () {
-			$("#manholeJctMappingTable tr").removeClass("ativeRecord")
-			  $(this).addClass("ativeRecord");
-		});
-			}
-			else{
-				alert("Sorry no more available junction to add.")
-			}
-				
-});	
-//to be deleted
-*/	
 $("#handholeJctAddRow").on('click',function(){
 	
 var countHandholeJctBoq=$("#handholeJctMappingTable > tbody").children().length;
@@ -13181,10 +9806,7 @@ var countHandholeJctBoq=$("#handholeJctMappingTable > tbody").children().length;
 			
 			autoCompleteForMapping(HJctBoqIndex,"handholeJctMappingTable","Row"+HJctBoqIndex,"hJctWarehouseIdSideA","hJctLocationIdSideA","hJctLocationNameSideA","hJctLocationTypeSideA","","","","","hJctStrandIdSideA","hJctStrandNameSideA","hJctTubeIdSideA","hJctTubeNameSideA","hJctFiberIdSideA","hJctFiberNameSideA","hJctStrandNBSideA","","hJctTubeNBSideA","","","","hJctNetworkLevelSideA");
 			autoCompleteForMapping(HJctBoqIndex,"handholeJctMappingTable","Row"+HJctBoqIndex,"hJctWarehouseIdSideB","hJctLocationIdSideB","hJctLocationNameSideB","hJctLocationTypeSideB","","","","","hJctStrandIdSideB","hJctStrandNameSideB","hJctTubeIdSideB","hJctTubeNameSideB","hJctFiberIdSideB","hJctFiberNameSideB","hJctStrandNBSideB","","hJctTubeNBSideB","","","","hJctNetworkLevelSideB");
-			//autoCompleteHandholeJctMapping(HJctBoqIndex,"handholeJctMappingTable","Row"+HJctBoqIndex);
 			
-				//autoCompleteUpdated("Port"+HJctBoqIndex,"handholeJctMappingTable","Row"+HJctBoqIndex,"SearchForStrand");
-				
 				$("#hJctLocationTypeSideA"+HJctBoqIndex).change(function(){
 					var thisID = $(this).attr("id");
 					var indexFor = thisID.replace('hJctLocationTypeSideA','');
@@ -13221,398 +9843,9 @@ var countHandholeJctBoq=$("#handholeJctMappingTable > tbody").children().length;
 		else{
 				alert("Sorry no more available junction to add.")
 		}
-	
-	
 				
 });	
-/*
-function autoCompleteHandholeJctMapping(ID,tableID,rowID){
 
-	$("#hJctStrandIdSideA"+ID).autocomplete({
-		source: function(request, response,event, ui) {
-			var sId= $("#hJctStrandIdSideA"+ID).val();
-			var sName = $(this).parents("tr").find('input[name="hJctStrandNameSideA"]').val();
-						             
-			$.ajax({
-				type: "GET",
-				contentType: "application/json; charset=utf-8",
-				url: getContext()+'/SearchStrand',
-				data: {
-					"searchId" : sId,
-					//"sName" : sName
-				},							
-	  			dataType: "json",
-	  			success: function (data) {
-	  				if (data != null) {
-	  					response(data.glist);
-	  					console.log(data.glist);
-					}
-				},
-				error: function(result) {
-					alert("Error");
-				}
-			});
-			}, minLength:0, maxShowItems: 4, scroll:true,
-			
-			select: function(event, ui) {
-				this.value = (ui.item ? ui.item[0] : '');
-				$(this).parents("tr").find('input[name ="hJctStrandNameSideA"]').val(ui.item[1]);
-				$(this).parents("tr").find('input[name ="hJctTubeIdSideA"]').val(ui.item[2]);
-				$(this).parents("tr").find('input[name ="hJctFiberIdSideA"]').val(ui.item[3]);
-				
-				var tube=[];
-				var fiber=[];
-				$.ajax({
-			                type: "GET",
-			                contentType: "application/json; charset=utf-8",
-			                url: getContext()+'/GetFiberTubeNames',
-			                data: {
-			                		cID : ui.item[2],
-									fID : ui.item[3],
-								},
-			                dataType: "json",
-			                success: function (data) {
-				
-			                    if (data != null) {
-				                	tube=data.clist;
-									fiber=data.flist;
-									$("#hJctTubeNameSideA"+ID).val(tube[0]);   
-									$("#hJctFiberNameSideA"+ID).val(fiber[0]);             
-			                    }
-			                },
-			                error: function(result) {
-			                    alert("Error");
-			                }
-			            });
-										
-									return false;
-								}
-							}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
-					    	return $('<li class="each"></li>').data( "ui-autocomplete-item", item )
-					    			.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
-				                    item[0] + '</span><br><span class="desc">' +
-				                    item[1] + '</span></div>').appendTo(ul);
-						};
-		$("#hJctStrandIdSideA"+ID).focus(function(){
-			if (this.value == ""){
-				$(this).autocomplete("search");
-			}
-		});
-		
-		$("#hJctStrandIdSideB"+ID).autocomplete({
-		source: function(request, response,event, ui) {
-			var sId= $("#hJctStrandIdSideB"+ID).val();
-			var sName = $(this).parents("tr").find('input[name="hJctStrandNameSideB"]').val();
-						             
-			$.ajax({
-				type: "GET",
-				contentType: "application/json; charset=utf-8",
-				url: getContext()+'/SearchStrand',
-				data: {
-					"searchId" : sId,
-					//"sName" : sName
-				},							
-	  			dataType: "json",
-	  			success: function (data) {
-	  				if (data != null) {
-	  					response(data.glist);
-	  					console.log(data.glist);
-					}
-				},
-				error: function(result) {
-					alert("Error");
-				}
-			});
-			}, minLength:0, maxShowItems: 4, scroll:true,
-			
-			select: function(event, ui) {
-				this.value = (ui.item ? ui.item[0] : '');
-				$(this).parents("tr").find('input[name ="hJctStrandNameSideB"]').val(ui.item[1]);
-				$(this).parents("tr").find('input[name ="hJctTubeIdSideB"]').val(ui.item[2]);
-				$(this).parents("tr").find('input[name ="hJctFiberIdSideB"]').val(ui.item[3]);
-				
-				var tube=[];
-				var fiber=[];
-				$.ajax({
-			                type: "GET",
-			                contentType: "application/json; charset=utf-8",
-			                url: getContext()+'/GetFiberTubeNames',
-			                data: {
-			                		cID : ui.item[2],
-									fID : ui.item[3],
-								},
-			                dataType: "json",
-			                success: function (data) {
-				
-			                    if (data != null) {
-				                	tube=data.clist;
-									fiber=data.flist;
-									$("#hJctTubeNameSideB"+ID).val(tube[0]);   
-									$("#hJctFiberNameSideB"+ID).val(fiber[0]);             
-			                    }
-			                },
-			                error: function(result) {
-			                    alert("Error");
-			                }
-			            });
-										
-									return false;
-								}
-							}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
-					    	return $('<li class="each"></li>').data( "ui-autocomplete-item", item )
-					    			.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
-				                    item[0] + '</span><br><span class="desc">' +
-				                    item[1] + '</span></div>').appendTo(ul);
-						};
-		$("#hJctStrandIdSideB"+ID).focus(function(){
-			if (this.value == ""){
-				$(this).autocomplete("search");
-			}
-		});
-		
-	$("#hJctLocationIdSideA"+ID).autocomplete({
-		source: debounce(function(request, response,event,ui) {
-		    var searchs=$("#hJctLocationIdSideA"+ID).val();
-			var line;
-		    search= $("#hJctLocationTypeSideA"+ID).val();
-		    console.log("debounce");
-			if(search=="Customer"){
-					url='GetAllNetworkClients';
-					dataTarget = {					
-						"search":searchs,
-					}
-				}
-				else if(search=="Site"){
-					url='GetAllWarehouse';
-					dataTarget = {
-			       		"WareName":searchs,
-						"warehouseName" : searchs,
-						"SiteId":searchs,
-					 }
-				}
-				else if(search=="Manhole"){
-					url ='getManholeData';
-					dataTarget = {					
-						"search":searchs,
-					}			
-				}
-				else if (search=="Handhole"){
-					url ='getHandholeData';
-					dataTarget = {					
-						"search":searchs,
-					}
-			}
-			 	else if(search=="DB"){
-					url='getDbData';
-					dataTarget = {
-			       		"search":searchs,
-				 }
-				 
-			}
-			else {
-				url='emptyUrl';
-			}
-		if(url !="emptyUrl") {
-			$.ajax({
-				type: "GET",
-				contentType: "application/json; charset=utf-8",
-				url: getContext()+'/'+url,
-				data: dataTarget,				
-			 	dataType: "json",
-				success: function (data) {
-					if (data != null) {
-						response(data.globalList);  
-						                 
-					}
-				},								               
-				  error: function(result) {
-	                  alert("Error");
-	              }
-	          });						               
-			} 
-		},900), minLength:0, maxShowItems: 40, scroll:true,
-	 		select: function(event, ui) {
-	 			
-				if(search=="Customer"){
-					$("#hJctLocationIdSideA"+ID).val(ui.item ? ui.item[0] : '');
-					$("#hJctLocationNameSideA"+ID).val(ui.item[1]+" "+ui.item[2]);
-					//$("#"+Location+ID).val(ui.item[3]);
-				}
-				else if(search=="Site"){
-					$("#hJctLocationNameSideA"+ID).val(ui.item ? ui.item[1] : '');
-					$("#hJctLocationIdSideA"+ID).val(ui.item[2]);
-					console.log("Location is " +ui.item[0]);
-					console.log("ID is " +ID);
-					$("#hJctWarehouseIdSideA"+ID).val(ui.item[0]);
-					console.log("#FP_Location is " +$("#hJctWarehouseIdSideA"+ID).val());
-				}
-				else if(search=="Manhole"){
-					$("#hJctLocationNameSideA"+ID).val(ui.item ? ui.item[1] : '');
-					$("#hJctLocationIdSideA"+ID).val(ui.item[0]);
-					//$("#"+Location+ID).val(ui.item[2]);
-								
-				}
-				else if (search=="Handhole"){
-					$("#hJctLocationNameSideA"+ID).val(ui.item ? ui.item[1] : '');
-					$("#hJctLocationIdSideA"+ID).val(ui.item[0]);
-					//$("#"+Location+ID).val(ui.item[2]);
-				}	
-				
-				else if (search=="DB"){
-					$("#hJctLocationNameSideA"+ID).val(ui.item ? ui.item[1] : '');
-					$("#hJctLocationIdSideA"+ID).val(ui.item[0]);
-				}		
-			return false;
-		},	
-	}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
-		
-		if(item[0].split("_")[0]=="CLT" ) {
-			 return $("<li class='each'>")
-	            .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-	               item[0] + "</span><br><span class='desc'>" +
-	                item[1] +' '+ item[2] +', '+ item[3]+ "</span></div>")
-	            .appendTo(ul);
-		}
-		else if(item[0].split("_")[0]=="WARE") {
-			 return $("<li class='each'>")
-	        .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-	           item[2] + "</span><br><span class='desc'>" +
-	            item[0] +', '+ item[1] + "</span></div>")
-	        .appendTo(ul);
-		}
-		else {
-			 return $("<li class='each'>")
-	            .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-	               item[0] + "</span><br><span class='desc'>" +
-	                item[1]  +', '+ item[2] + "</span></div>")
-	            .appendTo(ul);
-			}
-		};		    	    
-							         
-		$("#hJctLocationIdSideA"+ID).focus(function(){
-			if (this.value == ""){
-				$(this).autocomplete("search");
-		        }
-		});		
-		///
-	 $("#hJctLocationNameSideA"+ID).autocomplete({
-		source: debounce(function(request, response,event,ui) {
-		    var searchs=$("#hJctLocationNameSideA"+ID).val();
-			var line;
-		    search= $("#hJctLocationTypeSideA"+ID).val();
-		    console.log("debounce");
-			if(search=="Customer"){
-					url='GetAllNetworkClients';
-					dataTarget = {					
-						"search":searchs,
-					}
-				}
-				else if(search=="Site"){
-					url='GetAllWarehouse';
-					dataTarget = {
-			       		"WareName":searchs,
-						"warehouseName" : searchs,
-						"SiteId":searchs,
-					 }
-				}
-				else if(search=="Manhole"){
-					url ='getManholeData';
-					dataTarget = {					
-						"search":searchs,
-					}			
-				}
-				else if (search=="Handhole"){
-					url ='getHandholeData';
-					dataTarget = {					
-						"search":searchs,
-					}
-			}
-			else if(search=="DB"){
-					url='getDbData';
-					dataTarget = {
-			       		"search":searchs,
-				 }
-				 
-			}
-			else {
-				url='emptyUrl';
-			}
-		if(url !="emptyUrl") {
-			$.ajax({
-				type: "GET",
-				contentType: "application/json; charset=utf-8",
-				url: getContext()+'/'+url,
-				data: dataTarget,				
-			 	dataType: "json",
-				success: function (data) {
-					if (data != null) {
-						response(data.globalList);  
-						                 
-					}
-				},								               
-				  error: function(result) {
-	                  alert("Error");
-	              }
-	          });						               
-			} 
-		},900), minLength:0, maxShowItems: 40, scroll:true,
-	 		select: function(event, ui) {
-	 			
-				if(search=="Customer"){
-					$("#hJctLocationIdSideA"+ID).val(ui.item ? ui.item[0] : '');
-					$("#hJctLocationNameSideA"+ID).val(ui.item[1]+" "+ui.item[2]);
-				}
-				else if(search=="Site"){
-					$("#hJctLocationNameSideA"+ID).val(ui.item ? ui.item[1] : '');
-					$("#hJctLocationIdSideA"+ID).val(ui.item[2]);
-					$("#hJctWarehouseIdSideA"+ID).val(ui.item[0]);
-				}
-				else if(search=="Manhole"){
-					$("#hJctLocationNameSideA"+ID).val(ui.item ? ui.item[1] : '');
-					$("#hJctLocationIdSideA"+ID).val(ui.item[0]);
-								
-				}
-				else if (search=="Handhole"){
-					$("#hJctLocationNameSideA"+ID).val(ui.item ? ui.item[1] : '');
-					$("#hJctLocationIdSideA"+ID).val(ui.item[0]);
-				}	
-				else if (search=="DB"){
-					$("#hJctLocationNameSideA"+ID).val(ui.item ? ui.item[1] : '');
-					$("#hJctLocationIdSideA"+ID).val(ui.item[0]);
-				}		
-			return false;
-		},	
-	}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
-		
-		if(item[0].split("_")[0]=="CLT" ) {
-			 return $("<li class='each'>")
-	            .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-	               item[0] + "</span><br><span class='desc'>" +
-	                item[1] +' '+ item[2] +', '+ item[3]+ "</span></div>")
-	            .appendTo(ul);
-		}
-		else if(item[0].split("_")[0]=="WARE") {
-			 return $("<li class='each'>")
-	        .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-	           item[1] + "</span><br><span class='desc'>" +
-	            item[2] +', '+ item[0] + "</span></div>")
-	        .appendTo(ul);
-		}
-		else {
-			 return $("<li class='each'>")
-	            .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-	               item[1] + "</span><br><span class='desc'>" +
-	                item[0]  +', '+ item[2] + "</span></div>")
-	            .appendTo(ul);
-			}
-		};		    	    
-						         
-	$("#hJctLocationNameSideA"+ID).focus(function(){
-		if (this.value == ""){
-			$(this).autocomplete("search");
-	        }
-	});
-}	*/
 
 $("#manholeJctDelRow").click(function () {
 	slctDelMJctTemp = [];
@@ -13625,7 +9858,6 @@ $("#manholeJctDelRow").click(function () {
 	   	delJctArray=[];
 		delJctArray=[{"jctMappingId":jctMappingId}];
 		
-		//console.log(jctMappingId);
 		if (window["MAP_JCT"+jctMappingId]) {
 			slctDelMJct.push({"jctMappingId":jctMappingId});
 		}
@@ -13785,18 +10017,11 @@ $("#saveManhole").click(function () {
 				if(data!=null){ 
 					if(actionManholeContext=="Insert"){
 						checkedJunction="noJunction";
-					//	ManholeId=data.ManholeId;
 						
 						str="<ul><li id='"+data.ManholeId+"' class='MANHOLE' style='width:100px;'> <input type='checkbox' class='Manhole checkFilter' checked  class='filter'  name='Element'></input> <span class='TreeSpan' style='color:black;'><img src='"+getContext()+"/resources/NetworkImages/manholeRed.png'> "+data.ManholeName+" </span></li></ul>";
 						$("#Manhole_f_"+IdNodeSelectedTemp+"").append(str);
 						
-						// To be deleted						
-						//$("#"+data.ManholeId+" > span").width($("#left").width());
-						
 						HandManJuncFormat("Manhole",IdNodeSelectedTemp,data.ManholeId);
-
-						// To be deleted
-						// tree_prop_selection("#" +data.ManholeId+ " .TreeSpan");
 						
 				}
 				//update manhole
@@ -13830,7 +10055,6 @@ $("#saveManhole").click(function () {
 						$("#"+data.ManholeId+" > span").unbind();
 						$("#"+data.ManholeId+"_f > span").unbind();
 								
-					//$('.tree li:has(ul)').addClass('parent_li').find(' > .tree-span').attr('title', 'Collapse this branch'); 
 					$("#network_tree i").css('margin-right', '5px');
 					
 					var jctID="";		
@@ -13857,10 +10081,6 @@ $("#saveManhole").click(function () {
 					junctionCheckFilter("Manhole");
 				}//end else junction to append 		
 																	
-				// To be deleted	
-			    //$("#"+data.ManholeId+" > .TreeSpan").width($("#left").width());	
-				//$(".TreeSpan").width($("#left").width());			
-				//unbindTreeCheckboxEvents();
 				$("#left").unbind('resize');
 				EnableOrigination=false;
 		
@@ -13873,16 +10093,7 @@ $("#saveManhole").click(function () {
 			} // end update manhole
 		$("#"+data.ManholeId+" > span").css("display", "inline");					
 		$("#manholeModal").modal('hide');
-/*
-		$('.tree li#Manhole_f_'+IdNodeSelectedTemp+' .TreeSpan').on('click', function (e) {
-						
-			$(".tree li#Manhole_f_"+IdNodeSelectedTemp+" span").css("background-color", "");
-			$(this).css("background-color", "#97b9cc");
-																		
-			$(".tree li#Manhole_f_"+IdNodeSelectedTemp+"  span").removeClass("selected-span");		
-			$(this).addClass("selected-span");
-		});
-*/		
+		
 		tree_prop_selection("#" +data.ManholeId+ " .TreeSpan");	
 		// bind context menu event to Manhole 
 		$( "#"+data.ManholeId+" > .TreeSpan" ).bind("contextmenu",function(){
@@ -13922,15 +10133,6 @@ $("#saveManhole").click(function () {
 		$("#"+data.ManholeId+" > .TreeSpan").css("background-color", "#97b9cc");
 		IdSelectedTemp=data.ManholeId;
 	
-/*		
-		$('.tree li#Manhole_f_'+IdNodeSelectedTemp+' .TreeSpan').unbind("mouseover");
-		
-		$('.tree li#Manhole_f_'+IdNodeSelectedTemp+' .TreeSpan').bind("mouseover",function(e) {
-			$(this).addClass('backgroundTree');
-				}).on("mouseout",function(e) {
-				$(this).removeClass('backgroundTree');								
-		});	
-*/
 		MouseHoveringSpans("#" +data.ManholeId+" .Tree_Span");		
 		$("#manholeModal").find("input,textarea,select").val('').end().find("input[type=checkbox], input[type=radio]").prop("checked", "").end();
 		map.setZoom(11);
@@ -14016,12 +10218,9 @@ $("#saveHandhole").click(function () {
 					checkedJunction="noJunction";													
 					str="<ul><li id='"+data.handholeId+"' class='HANDHOLE' style='width:100px;'> <input type='checkbox' class='Handhole checkFilter' checked  class='filter'  name='Element'></input> <span class='TreeSpan' style='color:black;'><img src='"+getContext()+"/resources/NetworkImages/handholeYellow.png'> "+data.handholeName+" </span></li></ul>";
 					$("#Handhole_f_"+IdNodeSelectedTemp+"").append(str);
-					
-					// To be deleted
-					// $("#"+data.handholeId+" > span").width($("#left").width());				
+						
 					HandManJuncFormat("Handhole",IdNodeSelectedTemp,data.handholeId);
-					// To be deleted
-					//tree_prop_selection("#" +data.handholeId+ " .TreeSpan");
+					
 			}
 			//Action is update Handhole
 			else{
@@ -14079,7 +10278,8 @@ $("#saveHandhole").click(function () {
 					junctionCheckFilter("Handhole");
 			}//end else junction to append 
 					
-			$(".TreeSpan").width($("#left").width());			
+			
+			$('.TreeSpan').css("display", "inline");			
 			//unbindTreeCheckboxEvents();
 						
 			$("#left").unbind('resize');
@@ -14092,16 +10292,7 @@ $("#saveHandhole").click(function () {
 			treeCollapseFolder("#" +data.handholeId+ " .folder","fast",".folder");
 					
 		}// end update 
-/*					
-	$('.tree li#Handhole_f_'+IdNodeSelectedTemp+' .TreeSpan').on('click', function (e) {
-								
-		$(".tree li#Handhole_f_"+IdNodeSelectedTemp+" span").css("background-color", "");
-		$(this).css("background-color", "#97b9cc");
-														
-		$(".tree li#Handhole_f_"+IdNodeSelectedTemp+"  span").removeClass("selected-span");		
-		$(this).addClass("selected-span");
-	});
-*/
+
 				
 	$("#"+data.handholeId+" > span").css("display", "inline");
 	tree_prop_selection("#" +data.handholeId+ " .TreeSpan");
@@ -14124,14 +10315,12 @@ $("#saveHandhole").click(function () {
 	}						
 	if(checkedJunction=="noJunction"){
 		create_Marker_Click(data.handholeId,data.handholeName,HandholeLong,HandholeLat,markersHandhole,markerClusterHandhole,"No_Junction","");
-		//createHandhole_Marker_Click(data.handholeId,data.handholeName,HandholeLong,HandholeLat,markersHandhole,markerClusterHandhole,"No_Junction");
 		markerClusterHandhole.addMarker(markersHandhole[""+data.handholeId]);
 		HandholeCheckFilter(data.handholeId);
 	}
 					
 	else if(checkedJunction=="Junction"){
 		create_Marker_Click(data.handholeId,data.handholeName,HandholeLong,HandholeLat,markersHandhole,markerClusterHandhole,"Junction","");		
-		//createHandhole_Marker_Click(data.handholeId,data.handholeName,HandholeLong,HandholeLat,markersHandhole,markerClusterHandhole,"Junction");
 		markerClusterHandhole.addMarker(markersHandhole[""+data.handholeId]);
 		HandholeCheckFilter(data.handholeId);
 	}						
@@ -14145,19 +10334,6 @@ $("#saveHandhole").click(function () {
 	$("#"+data.handholeId+" > .TreeSpan").css("background-color", "#97b9cc");
 	IdSelectedTemp=data.handholeId;	
 	
-	//TO BE DELETED
-	// Update boq data and display it					
-	//console.log("count cables data >>> "+data.countCables);
-	
-/*					
-	$('.tree li#Handhole_f_'+IdNodeSelectedTemp+' .TreeSpan').unbind("mouseover");
-					
-	$('.tree li#Handhole_f_'+IdNodeSelectedTemp+' .TreeSpan').bind("mouseover",function(e) {
-		$(this).addClass('backgroundTree');
-			}).on("mouseout",function(e) {
-			$(this).removeClass('backgroundTree');								
-	});
-*/
 	MouseHoveringSpans("#" +data.handholeId+ " .TreeSpan");					
 	$("#handholeModal").modal('hide');
 										
@@ -14434,7 +10610,7 @@ $("#saveHandhole").click(function () {
 										if(typeof infowindow!=='undefined'){
 											infowindow.close();
 										}
-										$("#"+data.distributionBoardId+" > span").width($("#left").width());
+										$("#"+data.distributionBoardId+" > span").css("display", "inline");
 											  
 										// remove the selection of previous item if exist and add it to the new one
 									
@@ -14446,21 +10622,6 @@ $("#saveHandhole").click(function () {
 										$("#"+data.distributionBoardId+" > .TreeSpan").css("background-color", "#97b9cc");
 										IdSelectedTemp=data.distributionBoardId;
 
-										/*var childrenInitial=$("#initial_ul_"+IdNodeSelectedTemp+"").find(' > ul > li');
-										var projectInitial=$("#initial_ul_Projects").find('>ul > #'+IdNodeSelectedTemp);
-										var projectRel=$("#"+IdNodeSelectedTemp+"").find('>ul > #initial_ul_'+IdNodeSelectedTemp);
-										var children =  $("#DistributionBoard_f_"+IdNodeSelectedTemp+"").find(' > ul > li');
-
-										if (!children.is(":visible")) {
-											$("#DistributionBoard_f_"+IdNodeSelectedTemp+"").children('.folder').find('> svg').removeClass('fa-folder').addClass('fa-folder-open');
-											$("#initial_ul_"+IdNodeSelectedTemp+"").children('.folder').find('> svg').removeClass('fa-folder').addClass('fa-folder-open');
-														   
-										}	
-										children.show('fast');
-										childrenInitial.show('fast');
-										projectInitial.show('fast');
-										projectRel.show('fast');*/
-										
 										
 					var childrenInitial=$("#initial_ul_"+IdNodeSelectedTemp+"").find(' > ul > li');
 					var children = $("#DistributionBoard_f_"+IdNodeSelectedTemp+"").find(' > ul > li');
@@ -14502,7 +10663,7 @@ $("#saveHandhole").click(function () {
 									infowindow.close();								
 								}
 								
-								$("#"+data.distributionBoardId+" > span").width($("#left").width());
+								$("#"+data.distributionBoardId+" > span").css("display", "inline");
 
 								$("#distributionBoardModal").modal('hide');
 								
@@ -14542,9 +10703,6 @@ $("#saveHandhole").click(function () {
 	/////////////*********************	SAVE FIBER CABLE  ***********************///////////////
 		
 		
-	// To be optimized, do we really need this trigger?	
-		
-	$(document).on("triggerAuxBoq", function () {
 		$(function(){
 			
 			$("td[name='auxiliary_Name']").each(function (ind) {
@@ -14560,7 +10718,6 @@ $("#saveHandhole").click(function () {
 			});
 	
 			$("#auxiliaryTable input[name='record']").on('change',function(e){
-				//console.log(e)
 				if(!isNaN($(this).parent().parent().children("td[name=auxiliary_Latitude]").children('input').val()) && !isNaN($(this).parent().parent().children("td[name=auxiliary_Longitude]").children('input').val())){											
 					map.setZoom(15);
 					panTo($(this).parent().parent().children("td[name=auxiliary_Latitude]").children('input').val(),$(this).parent().parent().children("td[name=auxiliary_Longitude]").children('input').val());
@@ -14571,17 +10728,12 @@ $("#saveHandhole").click(function () {
 
 			$("#loading").remove();
 	
-		});
 	});
 	
 	$("#mapping-tab").click(function () {
-		//console.log("DistBoardMappingPts "+DistBoardMappingPts)
 		var DBMappingFlag = document.querySelector("#DBMappingFlag").value;
-		//console.log("before calling "+DBMappingFlag)
-		//DBMappingData(DistBoardMappingPts);
 		if(actiondistBoardContext === "Update" && DBMappingFlag === "not_opened"){
 			document.querySelector("#DBMappingFlag").value = 'opened'
-			//console.log("after calling "+document.querySelector("#DBMappingFlag").value)
 			$.ajax({
 				type: "GET",
 				url: getContext()+'/findDistBoardMappingData',
@@ -14645,55 +10797,9 @@ $("#saveHandhole").click(function () {
 						
 						AuxAppendBOQ(data.auxData,"","",TargetFiber,index);
 						fiberCableAuxData=data.auxData;
-						/* $.each(data.fiberAuxiliaryData, function (i, value) {
-	
-							let fiberCableSeq = value[5]
-							let auxName = value[3]
-							let longitude = value[0]
-							let latitude = value[1]
-							let length = value[2] // oops2
-							//console.log(value)
-							/*markup += "<tr id='auxiliary_Row"+i+"'><td name='AuxFiber'><input class='rowAboveBelow' id='AuxFiber"+index+"' type='checkbox' style='position:relative;left:20px;top:10px' name='record'></td>"
-							+"<td name='fiberSeq'><input name='fiberCableSeq'  class='form-control text-input' type='text' style='width:60px;position:relative;' value='"+fiberCableSeq+"' readonly/></td>"
-							+"<td name='auxiliary_Name' id='auxiliary_Name"+i+"'><input id='aux_Point"+i+"'  class='form-control text-input' type='text' style='width:250px;position:relative;' value='"+auxName+"'  /></td>"
-							+"<td name='auxiliary_Longitude'><input onchange='geoDistanceFlag()' id='aux_Long"+i+"'  name='aux_Long' class='form-control text-input' type='text' style='width:200px;position:relative;' value='"+longitude+"'/></td>"
-							+ "<td name='auxiliary_Latitude' style='width:200px'> <input onchange='geoDistanceFlag()' id='aux_Lat"+i+"' name='aux_Lat' style='width:200px;position:relative;'  type='text'  class='form-control text-input ui-widget ui-widget-content ui-corner-all' value='"+latitude+"' /></td>"
-							+"<td name='auxiliary_Length'> <input id='aux_Len"+i+"'style='width:150px;position:relative;'  type='text'  class='form-control text-input ui-widget ui-widget-content ui-corner-all' value='"+length+"' /></td></tr>"; 
-							markup += fiberAuxiliary_BoqAppendMarkup(auxName,longitude,latitude,fiberCableSeq,length);
-							index++
-					});*/
-
-				} // end of data != null
-
-					//$("#auxiliaryTable > tbody").append(markup);
-
-					/*calculateDistanceSourceDestination($("#SourceLat").val(),$("#SourceLng").val(),$("#DestinationLat").val(),$("#DestinationLng").val(),"auxiliaryTable");
-					$("td[name='auxiliary_Name']").each(function (ind) {
-						AuxPointAutoComplete("auxPtAutocomplete","aux_Point"+ind,"aux_Long"+ind,"aux_Lat"+ind,"SourceLat","SourceLng","DestinationLat","DestinationLng","auxiliaryTable",ind);
-					});
 						
-					$("input[name='aux_Long']").focusout(function () {
-						calculateDistanceSourceDestination($("#SourceLat").val(),$("#SourceLng").val(),$("#DestinationLat").val(),$("#DestinationLng").val(),"auxiliaryTable");
-					});
 
-					$("input[name='aux_Lat']").focusout(function () {
-						calculateDistanceSourceDestination($("#SourceLat").val(),$("#SourceLng").val(),$("#DestinationLat").val(),$("#DestinationLng").val(),"auxiliaryTable");
-					}); */
-					
-					/*
-					// added new
-					//console.log($("#auxiliaryTable input[name='record']").length)
-					$("#auxiliaryTable input[name='record']").on('change',function(e){
-						//console.log(e)
-						if(!isNaN($(this).parent().parent().children("td[name=auxiliary_Latitude]").children('input').val()) && !isNaN($(this).parent().parent().children("td[name=auxiliary_Longitude]").children('input').val())){											
-							map.setZoom(15);
-							panTo($(this).parent().parent().children("td[name=auxiliary_Latitude]").children('input').val(),$(this).parent().parent().children("td[name=auxiliary_Longitude]").children('input').val());
-						}
-					});
-					*/
-					
-
-					//console.log($("td[name='AuxFiber'] > input[type='checkbox']").length)
+				} 
 					$("td[name='auxiliary_Name']").on('focusin', 'input', function(){
 					    $(this).data('val', $(this).val());
 					});
@@ -14721,7 +10827,6 @@ $("#saveHandhole").click(function () {
 					   }
 					});
 					checkedPoints =[];	  
-					//$("td[name='AuxFiber'] > input[type='checkbox']").on('change',function(){	
 					
 					// Hide/Show the marker on check/uncheck the checkbox
 					$("#auxiliaryTable input[name='record']").on('change',function(e){	
@@ -14928,7 +11033,6 @@ $("#saveHandhole").click(function () {
 		if(actionFiberContext == "Update" && tubeAuxFlag == "not_opened"){
 			document.querySelector("#tubeAuxFlag").value = 'opened';
 			tubeAuxData=[];
-			console.log(`selectedTube is ${selectedTube}`);
 
 			$.ajax({
 				type: "GET",
@@ -15152,10 +11256,6 @@ $("#saveHandhole").click(function () {
 					});
 					objDiv = document.getElementById("auxiliaryTableTubes");
 					objDiv.scrollTop = objDiv.scrollHeight;
-
-						
-						
-    			//calculateDistanceSourceDestination($("#sourcelat").val(),$("#sourcelong").val(),$("#destinationlat").val(),$("#destinationlong").val(),"auxiliaryTableTubes");
 			
 				data = null;
 				auxArray = [];
@@ -15377,7 +11477,6 @@ $("#saveHandhole").click(function () {
 				
 					objDiv = document.getElementById("auxiliaryTableStrands");
 					objDiv.scrollTop = objDiv.scrollHeight;						
-    			//calculateDistanceSourceDestination($("#sourcelat").val(),$("#sourcelong").val(),$("#destinationlat").val(),$("#destinationlong").val(),"auxiliaryTableTubes");
 			
 				data = null;
 				auxArray = [];
@@ -15822,7 +11921,6 @@ $("#saveHandhole").click(function () {
 					objDiv = document.getElementById("auxiliary_ductTable");
 					objDiv.scrollTop = objDiv.scrollHeight;									
 					data = null;
-				//auxArray = [];
 				},
 				error: function(result) {
 					alert("Error");
@@ -15831,37 +11929,7 @@ $("#saveHandhole").click(function () {
 		}
 		
 	});
-// To be deleted	
-/*	
-	//Settings Default Size to 0
-	let bytes = 0;
-	 
-	//Caclulate each object size using Javascript 
-	function getObjectSize(obj)
-	{
-		
-		if(obj !== null && obj !== undefined) {
-			var objClass = Object.prototype.toString.call(obj).slice(8, -1);
-		 
-			if(objClass === 'Object' || objClass === 'Array') {
-			  for(var key in obj) {
-				 if(!obj.hasOwnProperty(key)) continue;
-					getObjectSize(obj[key]);
-			  }
-			} else {
-				 bytes += obj.toString().length * 2;
-				 
-			}
-		}
-		
-		if(bytes < 1024) return bytes + " bytes";
-			else if(bytes < 1048576) return(bytes / 1024).toFixed(3) + " KB";
-			else if(bytes < 1073741824) return(bytes / 1048576).toFixed(3) + " MB";
-			else return(bytes / 1073741824).toFixed(3) + " GB";
-	}   
-	 */
-	//Alert Results 
-	//alert(getObjectSize(myArray));
+
 	//-------------------------------------------------------------------------------------------------//	  
 	$("#upload").click(function () {
 		uploadExcelData("importAuxfile","AuxPt_AppendTo","auxiliaryTable");
@@ -15976,7 +12044,6 @@ $("#saveHandhole").click(function () {
 	                	else {
 	                		GetTableFromExcelSheet(data,"loaderDivTube","auxiliaryTableTubes","AuxPt_AppendTo_Tube")
 	                	}
-	                   // GetTableFromExcel(data);
 	                };
 	                reader.readAsArrayBuffer(fileUpload.files[0]);
 	            }
@@ -16038,14 +12105,10 @@ $("#saveHandhole").click(function () {
 				dictObj.city = city
 				dictObj.name =name
 				dictObj.NetworkLevel =NetworkLevel
-				//console.log(dictObj);
 				dict.push(dictObj);
 				dictObj = {};   
 	        }
 	        
-	       // console.log("excle sheet "+loaded_data.length);
-	       //console.log("IdNodeSelectedTemp "+ IdNodeSelectedTemp);	
-	       //console.log("lat "+dict[0]['latitude']+" long "+dict[0]['longitude']+" site id "+dict[0]['siteID']+" site name "+dict[0]['siteName']+" no of cores "+dict[0]['Nofports']+" city "+dict[0]['city'])
 	       var token =  $('input[name="csrfToken"]').attr('value');
 	       			
 					$.ajax({
@@ -16065,17 +12128,11 @@ $("#saveHandhole").click(function () {
 						success: function (data) {
 							
 							if(data!=null){
-								//console.log("db entered "+data.distributionBoardDetails.length)
-								//console.log("IgnoredDB "+data.IgnoredDB);
-								//console.log("IgnoredDB "+data.IgnoredDB.length);
+						
 								data_length=data.distributionBoardDetails.length;
 								for(var i=0;i<data.distributionBoardDetails.length;i++){
-									//console.log(data.distributionBoardDetails[i][0]+ " "+data.distributionBoardDetails[i][1]+" "+data.distributionBoardDetails[i][2]+ " "+data.distributionBoardDetails[i][3]+ " "+data.distributionBoardDetails[i][4]+ " "+data.distributionBoardDetails[i][5]+ " "+data.distributionBoardDetails[i][6]);
-									
-								
-								
+							
 									window[""+data.distributionBoardDetails[i][0]]=[];
-									//	distributionBoardId=data.distributionBoardId;
 									window[""+data.distributionBoardDetails[i][0]]=[data.distributionBoardDetails[i][0],data.distributionBoardDetails[i][1],data.distributionBoardDetails[i][2],data.distributionBoardDetails[i][3],data.distributionBoardDetails[i][4],data.distributionBoardDetails[i][5],IdNodeSelectedTemp, data.distributionBoardDetails[i][6],data.distributionBoardDetails[i][7]];
 							
 									if(data.distributionBoardDetails[i][7]=="backbone") {
@@ -16089,7 +12146,6 @@ $("#saveHandhole").click(function () {
 									}
 									$("#DistributionBoard_"+data.distributionBoardDetails[i][7]+"__"+IdNodeSelectedTemp).append(str);
 										
-									//tree_prop_general();
 												
 									$("#"+data.distributionBoardDetails[i][0]).contextmenu(function(){
 										menuName=singleDistBoard;
@@ -16097,23 +12153,9 @@ $("#saveHandhole").click(function () {
 										selectedDistBoardName=$(this).text();
 										openContext(selectedDistBoardContext,selectedDistBoardName,singleDistBoard,event);
 									});			
-/*											
-									$("#"+data.distributionBoardId+" >span").on("mouseover",function(e) {
-										$(this).addClass('backgroundTree');
-									}).on("mouseout",function(e) {
-										$(this).removeClass('backgroundTree');							
-									});				
-*/								
+							
 								    MouseHoveringSpans("#" +data.distributionBoardDetails[i][0]+ " .TreeSpan");	
-/*				
-									 $("#"+data.distributionBoardId+" > span").bind('click', function (e) {
-										   $("#initial_ul_"+IdNodeSelectedTemp+"").find(' > ul > li').css("background-color", "");
-										   $(".tree li > span").css("background-color", "");
-										   
-										   $(this).css("background-color", "#97b9cc");
-									 });					
-*/
-									//$("#"+data.distributionBoardId+"> .TreeSpan").unbind("click");
+
 									tree_prop_selection("#"+data.distributionBoardDetails[i][0]+" .TreeSpan");
 									
 									if(data.distributionBoardDetails[i][7]=="backbone"){
@@ -16135,20 +12177,15 @@ $("#saveHandhole").click(function () {
 																	 
 											DistributionBoardCheckFilter(data.distributionBoardDetails[i][0],"",clusterName);
 										
-										//map.setZoom(11);
 										if($("#dBMapCheck_Labels").prop("checked")==true){
 											markersDistBoard[data.distributionBoardDetails[i][0]].setLabel({text: data.distributionBoardDetails[i][3], className:"marker-position-dB",color:"#5665F9"});
 										}
-										//panTo(data.distributionBoardDetails[i][2], data.distributionBoardDetails[i][1]);
-										//if(typeof infowindow!=='undefined'){
-											//infowindow.close();
-										//}
-										$("#"+data.distributionBoardDetails[i][0]+" > span").width($("#left").width());
+										
+										$("#"+data.distributionBoardDetails[i][0]+" > span").css("display", "inline");
 											  
 										// remove the selection of previous item if exist and add it to the new one
 									
 										if(IdSelectedTemp!=""){
-											//console.log("IdSelectedTemp "+IdSelectedTemp);
 											$("#"+IdSelectedTemp+" > .TreeSpan").removeClass("selected-span");
 											$("#"+IdSelectedTemp+" > .TreeSpan").css("background","");
 										}
@@ -16181,7 +12218,6 @@ $("#saveHandhole").click(function () {
 							$("#IgnoredDBBody").text("The Following Rows Number in the Excel Sheet are Ignored: "+data.IgnoredDB);
 							}
 							$("#LoaderConfirmationModal").modal('show');
-							//alert("you have entered "+data_length+" Distribution Boards");
 								},
 							    error: function (result) {
 								alert("Error");
@@ -16703,11 +12739,7 @@ $("#calculateDrivingDistanceDuct").click(function () {
 	calculateDrivingDistance("SourceDuctLng","SourceDuctLat","DestinationDuctLng","DestinationDuctLat","duct","ductDistanceLstAuxToDestDrivg","ductTotalDistanceDrivg");
 });
 $("#calculatedrivingdistance").click(function () {	
-/*
-	if($("#auxiliaryTable > tbody").find('input[name="record"]').is(":checked")){
-		checkDraw();	
-	}
-*/
+
 
 calculateDrivingDistance("SourceLng","SourceLat","DestinationLng","DestinationLat","fiber","distanceLstAuxToDestDrivg","totalDistanceDrivg");
 
@@ -17179,7 +13211,6 @@ function sortingByLineOfSite(srcLng,srcLat,dstLng,dstLat,tableID,auxiliaryLat,au
 		}
 			
 		$("table[id='"+tableID+"'] tr").focusin(function () {
-			//console.log($(this))
 			$("table[id='"+tableID+"'] tr").removeClass("ativeRecord")
 			  $(this).addClass("ativeRecord");
 		});
@@ -17233,92 +13264,7 @@ function sortingByLineOfSite(srcLng,srcLat,dstLng,dstLat,tableID,auxiliaryLat,au
 	  }
 	
 }
-/*
-$('#drawingBy').on('change keydown', function () {
-	if($("#drawingBy").val() == "DRIVING") {
-		drawingByDriving();
-	}
-});
-*/
 
-
-
-/*
-var routeDisplay = [];
-function drawingByDriving() {
-
-var service = new google.maps.DirectionsService;
-
-fiberId= document.getElementById("FiberPathId").value;
-sourceLng = document.getElementById("SourceLng").value;
-sourceLat = document.getElementById("SourceLat").value;
-destinationLng = document.getElementById("DestinationLng").value;
-destinationLat = document.getElementById("DestinationLat").value;
-FiberLength = document.getElementById("FiberLength").value;
-var mapPoints = [];
-var directionsService = []; 
-var directionsDisplay = [];
-var newmapPoints = [];
-var start, end;
-var waypts = [];
-var orderArray = [];
-var drivingDistance = [];
-
-
-getSelectedFiberCableRows(sourceLat,sourceLng,fiberId);
-
-//get the original data from dictionary
-for(h = 0 ; h < dict.length; h++) {
-mapPoints.push(new google.maps.LatLng(dict[h].aux_Latitude,dict[h].aux_Longitude));
-}
-
-for (var s = 0; s < mapPoints.length; s = s + 10) {
-	orderArray.push(mapPoints[s]);
-}
-orderArray.unshift(new google.maps.LatLng(sourceLat,sourceLng));
-orderArray.push(mapPoints.slice(-1).pop());
-orderArray.push(new google.maps.LatLng(destinationLat,destinationLng));
-
-
-//Divide route to several parts because max stations limit is 25 (23 waypoints + 1 origin + 1 destination)
-for (var i = 0, parts = [], max = 25 - 1; i < orderArray.length; i = i + max)
-parts.push(orderArray.slice(i, i + max + 1));
-
-// Service callback to process service results
-var service_callback = function(response, status) {
-    if (status != 'OK') {
-        console.log('Directions request failed due to ' + status);
-        return;
-    }
-    var renderer = new google.maps.DirectionsRenderer;
-    renderer.setMap(map);
-    renderer.setOptions({ suppressMarkers: true, preserveViewport: true });
-    renderer.setDirections(response);
-    routeDisplay.push(renderer);
-    
-};
-
-// Send requests to service to get route (for stations count <= 25 only one request will be sent)
-for (var i = 0; i < parts.length; i++) {
-    // Waypoints does not include first station (origin) and last station (destination)
-    var waypoints = [];
-    for (var j = 1; j < parts[i].length - 1; j++)
-        //waypoints.push({location: parts[i][j], stopover: false});
-        waypoints.push({location: parts[i][0], stopover: false});  // get only first auxiliary from the splited array to 25 aux
-    	
-    // Service options
-    var service_options = {
-        origin: parts[i][0],
-        destination: parts[i][parts[i].length - 1],
-        waypoints: waypoints,
-        travelMode: 'DRIVING'
-    };
-    // Send request
-    service.route(service_options, service_callback);
-}
-
-}
-*/
 
 /* nodes Save*/
 $("#saveNode").click(function () {
@@ -17400,7 +13346,7 @@ $("#saveNode").click(function () {
 					if(typeof infowindow!== 'undefined'){		
 							infowindow.close();								
 						}
-						$("#"+data.nodePk+" > span").width($("#left").width());
+						$("#"+data.nodePk+" > span").css("display", "inline");
 						$("#nodesModal").modal('hide');
 		
 });
@@ -17950,18 +13896,7 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 							}
 						}
 						window["mapPointsNames_"+data.strandsOfTubes[i][0]].push(strandDst);
-					/*	else{
-	
-											if(typeof window["Auxpts_Strands_Save"+strandID] !='undefined'){
-											for(y=0;y<window["Auxpts_Strands_Save"+strandID].length;y++){
-			  
-												myLatLng=new google.maps.LatLng(window["Auxpts_Strands_Save"+strandID][y].aux_Latitude,window["Auxpts_Strands_Save"+strandID][y].aux_Longitude)
-												window["mapPoints_"+strandID].push(myLatLng);
-												window["bounds_"+strandID].extend(myLatLng);
-											}
-										}	
-						}
-						*/
+				
 						lat=window[""+data.strandsOfTubes[i][0]][4];
 						lng=window[""+data.strandsOfTubes[i][0]][3];
 						myLatLng = new google.maps.LatLng(lat,lng);
@@ -18044,9 +13979,7 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 					
 				}
 
-				$(".TreeSpan").width($("#left").width());
-				//fiberCableTreeFolder();   // binding the click on each folder related to fibeCable
-				//treeCollapseFolder(".Parentfolder",null,".Parentfolder");
+				$('.TreeSpan').css("display", "inline");
 				treeCollapseFolder("#" +IdSelectedTemp+ " .folder","fast",".folder");
 				data = null
 				dict = []
@@ -18066,7 +13999,6 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 	$("#left").unbind('resize');
 	EnableOrigination=false;
 	$("#left").bind('resize', function(e) {	
-				
 		$('.tree li > .TreeSpan').width($(this).width());
 		 
 	 });
@@ -18584,7 +14516,6 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 							 }
 								
 							  $( "#"+selectedFiberContext+" > .TreeSpan" ).bind("contextmenu",function(){
-									//IdNodeSelectedTemp = $(this).parents().eq(2).attr('id').split("FiberPath_f_")[1];
 									IdNodeSelectedTemp = $(this).parents().eq(2).attr('id').split("__")[1];
 									selectedFiberContext=$(this).parent().attr('id');
 									openContext(selectedFiberContext,"fiber",singleFiber,event)
@@ -19137,9 +15068,7 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 						+"<td name='BP_TubeName'><input name='BP_tubeName' id='BP_tubeName"+dBBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
 						+"<td name='BP_FiberID'><input name='BP_fiberID' id='BP_fiberID"+dBBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
 						+"<td name='BP_FiberName'><input name='BP_fiberName' id='BP_fiberName"+dBBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td></tr>"
-						//+"<td name='FrontPort'><input name='frontPort' id='Front"+dBBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;' hidden/></td>"
-						//+"<td name='BackPort'><input name='backPort'  id='Back"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;' hidden/></td><tr>"
-
+					
 					$("#DbMappingTable > tbody").append(markup);
 
 				
@@ -19281,19 +15210,6 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 				autoCompleteForMapping(dBBoqIndex,"DbMappingTable","Row"+dBBoqIndex,"FP_Location","FP_LocationID","FP_LocationM","FP_LocationType","FP_equipment","FP_equipmentID","FP_equipmentName","FP_equipmentType","FP_strandID","FP_strandName","FP_tubeID","FP_tubeName","FP_fiberID","FP_fiberName","FP_strandNb","FP_strandcolor","FP_tubeNb","FP_tubecolor","FP_junctionID","FP_junctionName");
 				
 				autoCompleteForMapping(dBBoqIndex,"DbMappingTable","Row"+dBBoqIndex,"BP_Location","BP_LocationID","BP_LocationM","BP_LocationType","BP_equipment","BP_equipmentID","BP_equipmentName","BP_equipmentType","BP_strandID","BP_strandName","BP_tubeID","BP_tubeName","BP_fiberID","BP_fiberName","BP_strandNb","BP_strandcolor","BP_tubeNb","BP_tubecolor","BP_junctionID","BP_junctionName");
-				
-				//autoCompleteUpdated("Front"+dBBoqIndex,"DbMappingTable","Row"+dBBoqIndex,"SearchForStrand");
-				//autoCompleteUpdated("Back"+dBBoqIndex,"DbMappingTable","Row"+dBBoqIndex,"SearchForStrand");
-				
-							/*	var markup = "<tr id='Row"+dBBoqIndex+"'><td><input type='checkbox' style='position:relative;left:20px;top:10px' name='record'></td>"
-					+"<td name='RowIndex'><input name='rowIndex'  class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
-					+"<td name='ColIndex'><input name='colIndex'  class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
-					+"<td name='FrontPort'><input name='frontPort' id='Front"+dBBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-					+"<td name='BackPort'><input name='backPort'  id='Back"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td></tr>"
-					$("#DbMappingTable > tbody").append(markup);
-
-				autoCompleteUpdated("Front"+dBBoqIndex,"DbMappingTable","Row"+dBBoqIndex,"SearchForStrand");
-				autoCompleteUpdated("Back"+dBBoqIndex,"DbMappingTable","Row"+dBBoqIndex,"SearchForStrand");*/
 
 				dBBoqIndex++;
 				objDiv = document.getElementById("DbMappingTable");
@@ -20216,12 +16132,7 @@ $("#delete_TubeAux").click(function () {
 	 $("#TubeAuxTable > tbody").find('input[name="record"]').each(function () {
 		 if ($(this).is(":checked")) {
 			 var tubeId=$("#tubeIdHeader").text();
-			
-			 /*var name=$(this).parent().parent().children('td[name="TubeAuxiliary"]').children('input').val();
-			if(typeof window["Auxpts_Tubes"+tubeId]!=='undefined'){
-				var pos = window["Auxpts_Tubes"+tubeId].map(function(e) { return e.aux_Name; }).indexOf(name);
-			}
-			*/	
+		
 			 
 			slctDel.push($(this).parent().parent().children('td[name="TubeAuxiliary"]').children('input').val());
 			
@@ -21327,157 +17238,6 @@ console.log(nextSeqJun+""+MJctBoqIndex);
 		});
 		
 }
-
-//	$("#addManhole").on('click',function(){
-//		console.log("addd manholeee");
-//		document.getElementById("projectIdManhole").style.display = "block";
-//		document.getElementById("projectNameManhole").style.display = "block";
-//		var city = "";
-//		$('#manholeModal').find('input:text').val('');
-//		$("#manholeHeader").text("Manhole: ");
-//		$("#manholeModal").modal('show');
-//		actionManholeContext="Insert";					
-//		var coords=document.getElementById('coords');
-//		coords=coords.textContent.split(", lng:");
-//		coordsPrime=coords[0].substring(5, coords[0].length).trim()+" "+coords[1].trim();	
-//		geocoder = new google.maps.Geocoder();
-//		//IdNodeSelectedTemp="CurrentPhysicalLayer";
-//		var latlng = new google.maps.LatLng(coordsPrime.split(" ")[0], coordsPrime.split(" ")[1]);
-//		geocoder.geocode({'latLng': latlng}, function(results, status) {
-//		 if (status == google.maps.GeocoderStatus.OK) {
-//	   
-//			if (results[2]) {
-//			city = results[2].formatted_address;
-//			}
-//			else if (results[3]) {
-//			city = results[3].formatted_address;
-//			}
-//			else if (results[4]) {
-//			city = results[4].formatted_address;
-//			}
-//			else if (results[5]) {
-//			city = results[5].formatted_address;
-//			}
-//			else {
-//			  alert("No results found");
-//			}
-//			
-//		
-//		  } else {
-//			alert("getting the latitude, longitude and the city failed due to a connection problem, please try again");
-//		  }
-//		$("#ManholeLat").val(""+coordsPrime.split(" ")[0]);
-//		$("#ManholeLong").val(""+coordsPrime.split(" ")[1]);
-//		$("#ManholeCity").val(city.split(", ")[0]);
-//		});
-//
-//	});
-
-//	$("#addHandhole").on('click',function(){
-//		document.getElementById("projectIdHandhole").style.display = "block";
-//	 	document.getElementById("projectNameHandhole").style.display = "block";
-//		var city = "";
-//		$('#handholeModal').find('input:text').val('');
-//		$("#handholeHeader").text("Handhole: ");
-//		$("#handholeModal").modal('show');
-//		actionHandholeContext="Insert";	
-//		geocoder = new google.maps.Geocoder();
-//		//IdNodeSelectedTemp="CurrentPhysicalLayer";
-//		var latlng = new google.maps.LatLng(getCoords().split(" ")[0], getCoords().split(" ")[1]);
-//		geocoder.geocode({'latLng': latlng}, function(results, status) {
-//		 if (status == google.maps.GeocoderStatus.OK) {
-//	   
-//			if (results[2]) {
-//			city = results[2].formatted_address;
-//			}
-//			else if (results[3]) {
-//			city = results[3].formatted_address;
-//			}
-//			else if (results[4]) {
-//			city = results[4].formatted_address;
-//			}
-//			else if (results[5]) {
-//			city = results[5].formatted_address;
-//			}
-//			else {
-//			  alert("No results found");
-//			}
-//		  } else {
-//			alert("getting the latitude, longitude and the city failed due to a connection problem, please try again");
-//		  }
-//		  $("#HandholeLat").val(""+getCoords().split(" ")[0]);
-//			$("#HandholeLong").val(""+getCoords().split(" ")[1]);
-//			$("#HandholeCity").val(city.split(", ")[0]);
-//		});
-//
-//	});
-//
-//	$("#addDistributionBoard").on('click',function(){
-//		document.getElementById("projectIdDB").style.display = "block";
-//	 	document.getElementById("projectNameDB").style.display = "block";
-//		$("#DistributionBoardheader").text("Distribution Board: ");
-//		$('#distributionBoardModal').find('input:text').val('');
-//		$("#distributionBoardModal").modal('show');						
-//		$("#DbMappingTable > tbody").empty();
-//		$(".nav-link").removeClass('active');
-//		$("#distBoard-tab").addClass('active');
-//		geocoder = new google.maps.Geocoder();
-//		//IdNodeSelectedTemp="CurrentPhysicalLayer";
-//		actiondistBoardContext="Insert";
-//
-//	var latlng = new google.maps.LatLng(getCoords().split(" ")[0], getCoords().split(" ")[1]);
-//
-//		geocoder.geocode({'latLng': latlng}, function(results, status) {
-//	if (status == google.maps.GeocoderStatus.OK) {
-//
-//		if (results[2]) {
-//		city = results[2].formatted_address;
-//		}
-//		else if (results[3]) {
-//		city = results[3].formatted_address;
-//		}
-//		else if (results[4]) {
-//		city = results[4].formatted_address;
-//		}
-//		else if (results[5]) {
-//		city = results[5].formatted_address;
-//		}
-//		else {
-//		alert("No results found");
-//		}
-//	} else {
-//		alert("getting the latitude, longitude and the city failed due to a connection problem, please try again");
-//	}
-//	$("#DistributionBoardLat").val(""+getCoords().split(" ")[0]);
-//		$("#DistributionBoardLong").val(""+getCoords().split(" ")[1]);
-//		$("#boardCity").val(city.split(", ")[0]);
-//		
-//	});
-//		$(".tab-pane").removeClass('active');
-//		$("#D_Board").addClass('active');
-//	});
-	
-//		$("#getCoordinatePoint").on('click',function(){
-//		
-//		window["getCoorPointLong"]=getCoords().split(" ")[1];
-//		window["getCoorPointLat"]=getCoords().split(" ")[0];
-//
-//		console.log("getCoorPointLong"+window["getCoorPointLong"]);
-//		console.log("getCoorPointLat"+window["getCoorPointLat"]);
-//
-//		});
-//		
-//		$("#setCoordinatePoint").on('click',function(){
-//		
-//		$("#closestLongPoint").val(window["getCoorPointLong"]);
-//		$("#closestLatPoint").val(window["getCoorPointLat"]);
-//
-//		console.log("closestLongPoint"+$("#closestLongPoint").val());
-//		console.log("closestLatPoint"+$("#closestLatPoint").val());
-//
-//		});
-
-	//geocoder = new google.maps.Geocoder();
 	
 $("#fireOrigination").on('click',function(){
 	if(originationTerminationCheck=="Tube") {
@@ -21789,25 +17549,7 @@ $("#HandholeProjectId").autocomplete({
 			document.getElementById("HandholeProjectId").value = ui.item[0];
             document.getElementById("HandholeProjectName").value = ui.item[1];
 
-			/*document.getElementById("addManhole").addEventListener("click", () => {
-				 document.getElementById("ManholeProjectId").value = ui.item[0];
-	             document.getElementById("ManholeProjectName").value = ui.item[1];
-			});
-			document.getElementById("addHandhole").addEventListener("click", () => {
-				 document.getElementById("HandholeProjectId").value = ui.item[0];
-	             document.getElementById("HandholeProjectName").value = ui.item[1];
-			});*/
-			/*if(document.getElementById("addManhole").checked == true ){
-				console.log("add hereeee");
-              
-            }else if($("#addHandhole").clicked ){
-            	 document.getElementById("HandholeProjectId").value = ui.item[0];
-            	 document.getElementById("HandholeProjectName").value = ui.item[1];
-            }else if($("#addDistributionBoard").clicked ){
-            	document.getElementById("DBProjectId").value = ui.item[0];
-            	document.getElementById("DBProjectName").value = ui.item[1];
-            } */
-			
+
 
 				return false;
 					}
@@ -22094,19 +17836,11 @@ function MouseHoveringSpans(selector){
 	$(selector).unbind("mouseover");
 	$(selector).bind("mouseover",function(e) {
 		console.log("selector is " +$(this).attr('id'));
-//		$(this).css("display", "inline");
 		$(this).addClass('backgroundTree');
 	}).on("mouseout",function(e) {
-//		$(this).css("display", "");
 		$(this).removeClass('backgroundTree');
 	});
-/*
-	$('.tree li > .TreeSpan').bind('click', function (e) {
-			$("#initial_ul_"+IdNodeSelectedTemp+"").find(' > ul > li').css("background-color", "");
-			$(".tree li > span").css("background-color", "");     	
-		$(this).css("background-color", "#97b9cc");
-	});
-*/	
+	
 }	
 				
 function tree_prop_selection(selector){
@@ -22115,20 +17849,16 @@ function tree_prop_selection(selector){
 	}
 	
 	$(selector).on('click', function () {
-//		if(typeof IdSelectedTemp!== 'undefined'){
 		if(IdSelectedTemp!=""){			
 			$("#"+IdSelectedTemp+" > .TreeSpan").removeClass("selected-span");
 			$("#"+IdSelectedTemp+" > .TreeSpan").css("background","");
 		}
 		console.log("selector is " +$(this).parent().attr('id'));
 		console.log("selector width is " +$(this).width());
-		//$(this).width($("#left").width());
-//		$(this).css("display", "inline");
 		$(this).css("background-color", "#97b9cc");							
 		$(this).addClass("selected-span");	
 		IdSelectedTemp=$(this).parent().attr('id');
 	});		
-	//$('.tree li:has(ul)').addClass('parent_li').find(' > .tree-span').attr('title', 'Collapse this branch');
 	$("#network_tree i").css('margin-right', '5px');
 }
 						
@@ -22138,7 +17868,6 @@ function tree_prop_selection(selector){
 function tree_prop_generalPhysical(){
 	
 		$(".tree li > .TreeSpan").on('click', function (e) {
-//		$(".tree li > .TreeSpan").removeClass("selected-span");
 		if(IdSelectedTemp!=""){
 			$("#"+IdSelectedTemp+" > .TreeSpan").removeClass("selected-span");
 			$("#"+IdSelectedTemp+" > .TreeSpan").css("background","");
@@ -22151,11 +17880,9 @@ function tree_prop_generalPhysical(){
 		
 		IdSelectedTemp=$(this).parent().attr('id');
 		// maybe there is a need to update BOQ
-		console.log("IdSelectedTemp "+IdSelectedTemp);
 		e.stopPropagation();
 	});
 
-	//$('.tree li:has(ul)').addClass('parent_li').find(' > .tree-span').attr('title', 'Collapse this branch'); 
 	$("#network_tree i").css('margin-right', '5px');
 }
 	
@@ -22173,7 +17900,6 @@ function tree_PropPhysical(selector){
 					$parent.find('>ul >li').show();
 				}
 				console.log("it took "+(Date.now()-start)+" millisecs to open the folder")
-				//e.stopPropagation(i);
 				
 	});
 }												
@@ -22188,9 +17914,7 @@ $('.FiberStrand').unbind("change");
 
 
 function ModalReset(ID){
-
 	$("#"+ID).modal('hide');
-
 	$("#"+ID).find("input,textarea,select")
 			.val('').end().find("input[type=checkbox], input[type=radio]")
 			.prop("checked", "")
@@ -22237,8 +17961,6 @@ $("#submitFilter").click(function() {
 	 }
 	 urlString += "&getRelatedPointsFilter="+$("#getRelatedPointsFilter").val()+"";	
 
-	//window.location.href = "${pageContext.request.contextPath}/NetworkPhysicalLayer?selectedField=${"+filtredValue+"}&Checked=${"+checkedOption+"} ";
-	 //window.location.href = "/NetworkPhysicalLayer?selectedField="+filtredValue+"&Checked="+checkedOption+" ";
 	 window.location.href = getContext()+"/NetworkPhysicalLayer?Checked="+checkedOption+urlString;
 });
 }
@@ -23855,13 +19577,11 @@ $('#Manhole_AutocompleteCable'). click(function(){
 			document.getElementById("circleRange").checked = false;
 			$('#SetCoordinate').val('0');
 			$(this).val('1');
-			//document.getElementById("row_circleRange").style.display = "none";
 			document.getElementById("closestLongDiv").style.display = "none";
 			document.getElementById("closestLatDiv").style.display = "none";
 			document.getElementById("closestDistanceRange").style.display = "none";
 			document.getElementById("setCoordDiv").style.display = "none";
 			document.getElementById("NoOfPoints").style.display = "none";
-			//document.getElementById("row_setStart").style.display = "block";
 			document.getElementById("StartLatDiv").style.display = "block";
 			document.getElementById("EndLatDiv").style.display = "block";
 			document.getElementById("StartLongDiv").style.display = "block";
@@ -24145,8 +19865,6 @@ function createPathFromMap(cancelpoints,selectedIdContext,originationSource,term
 	$("#"+pushPoints+selectedIdContext).unbind('click');
 	$("#"+pushPoints+selectedIdContext).bind('click',function(event){
 	
-	
-	//document.querySelector('#totalGeoDistance').innerHTML = ""
 	index=0;indextrench=0;indexduct=0;
 	var srclng=""; var destlng="";
 	var srclat=""; var destlat="";var auxLatLng=[];	

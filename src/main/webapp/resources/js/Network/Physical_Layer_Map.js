@@ -7,7 +7,7 @@ function getContext() {
 // To let the layer tab opened when the page is loaded
 
 	
-function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,distribBoardList,fiberTubes,fiberStrands,fiberAuxiliary_Data,tubesAuxiliaries,strandsAuxiliaries,trenchList,trenchAuxiliary_Data,nodeList,TransmissionList,Core,Access,NodeActiveList,filterFlag){
+function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,distribBoardList,fiberTubes,fiberStrands,fiberAuxiliary_Data,tubesAuxiliaries,strandsAuxiliaries,trenchList,trenchAuxiliary_Data,NodeActiveList,filterFlag){
 
 	var start = performance.now();
 			panPath = [];   // An array of points the current panning action will use
