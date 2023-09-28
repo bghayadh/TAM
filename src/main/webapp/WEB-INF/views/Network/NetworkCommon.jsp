@@ -114,8 +114,8 @@
 							</div>
 	
 							<div class=" top-btn-filter">
-								<button id="transpBtn" name="Transport" class="buttonTog domain">
-									<i class='fa fa-link' style='font-size: 15px'></i> Transport
+								<button id="transmBtn" name="Transmission" class="buttonTog domain">
+									<i class='fa fa-link' style='font-size: 15px'></i> Transmission
 								</button>
 							</div>
 							<div class=" top-btn-filter">
@@ -124,7 +124,7 @@
 								</button>
 							</div>
 							<div class=" top-btn-filter">
-								<button id="CoreBtn" name="Core" class="buttonTog ">
+								<button id="CoreBtn" name="Core" class="buttonTog domain">
 									<i class='fa fa-arrows-alt' style='font-size: 15px'></i><span
 										style="margin-left: 3px"> Core</span>
 								</button>
@@ -597,7 +597,7 @@
 				</div>
 				<div class="modal-footer">
 					<button id="sortableSubmit" type="button" class="btn btn-primary"
-						onclick="SubmitModel()">Submit</button>
+						onclick="SubmitDefault()">Submit</button>
 					<button id="closeModalOrderTree" type="button"
 						class="btn btn-secondary" data-dismiss="modal">Close</button>
 				</div>
@@ -667,6 +667,9 @@
 	</div>
 </body>
 <script>
+
+var select=[];	
+var domains=[];
 
 function panTo(newLat, newLng) {
 	if (panPath.length > 0) {
@@ -1154,24 +1157,26 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 
 	//Draw List of Popup Model
 	function DrawList() {
-
-		 var select=[];
-	    $("#sortable").empty();
-	    
-	    $(".buttonTog").each(function () {
-	        if ($(this).hasClass("activee")) {
-	            var buttonname = $(this).attr('name');
-	            var buttonid = $(this).attr('id');
-					select.push(buttonid);				
-	        }
-	    });  
-	    select=select.toString();
-	    var sort = DefaultSort(select);
+		 var select=[];		 
+		 var domains=[];
+		    $("#sortable").empty();	  
+			var buttons = document.querySelectorAll(".buttonTog");
+			for (var i = 0; i < buttons.length; i++) {  		
+		       if (buttons[i].classList.contains("activee")) {
+		    	 if(buttons[i].classList.contains("domain")){
+		    	    domains.push(buttons[i].id);
+		       }else{
+		    	    select.push(buttons[i].id);
+		       }
+			}
+		}
+		 	select=select.toString();
+		    
+	    var sort = DefaultSort(select,domains);
 	    if(sort!=null){
 	    var order = sort[0];
 	    var name = sort[1]; 
-	    console.log(name)
-	   for(i=0;i<order.length && i<name.length;i++){ 
+	    for(i=0;i<order.length && i<name.length;i++){ 
 		    
 		 var li_element= "<li class='ui-state-default' id= li_"+ order[i] + " ><span class='ui-icon ui-icon-arrowthick-2-n-s' style='color:#000' ></span> "+ name[i] + "</li>"; 
 	    $("#sortable").append(li_element);      
@@ -1209,10 +1214,26 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 	$("#modalOrderTree").modal('show'); 
 	    }	
 	} // End of DrawList function 
-
-	//Sort List w.r.to selection to display in popup Model
-	function DefaultSort(arr) {	
-		 switch (arr)
+//Sort List w.r.to selection to display in popup Model
+function DefaultSort(arr,domain) {	
+	var params=[];
+	if(domain.length !=0){		
+		for (var i = 0; i < domain.length; i++) {
+	    	if(domain[i]=="accessDBtn"){
+	    		params.push('"Access"');	    		
+	    	}
+	    	if(domain[i]=="transmBtn"){
+	    		params.push('"Transmission"');
+	    	}  	
+	    	if(domain[i]=="EnterpriseBtn"){
+	    		params.push('"Enterprise"');
+	    	}
+	    	if(domain[i]=="CoreBtn"){
+	    		params.push('"Core"');
+	    	}
+	    }   
+	}
+	switch (arr)
 		 {
 		case "siteBtn,nodeBtn,cellBtn":
 			{	
@@ -1223,14 +1244,7 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 			
 			} break;
 		/////////////////////////////////////////////////
-		case"siteBtn,nodeBtn,cellBtn,EnterpriseBtn":
-		{	
-			var order =["siteBtn","nodeBtn","cellBtn"];
-			var name = ["Site","Node","Cell","Enterprise"];
 		
-			return [order,name];
-		
-		} break;
 		/////////////////////////////////////////////////
 		case "nodeBtn,cellBtn,nodeTypeeBtn":
 		{
@@ -1249,6 +1263,7 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 		return [order,name];
 		}
 		break;
+
 		case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn":
 		//case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,EnterpriseBtn":
 		{	
@@ -1356,45 +1371,40 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 	// sumbit through button directly not popup
 	function SubmitDefault()
 	{
-		$('#removeFilter').hide();
-		
-		var select=[];	
-		
-		 $(".buttonTog").each(function () {
-		        if ($(this).hasClass("activee")) {
-		            var buttonid = $(this).attr('id');
-						select.push(buttonid);				
-		        }
-		    });  
-		   
-		    select=select.toString();
-		    console.log(select);
-		 Sumbitselection(select);
-		}  
-
-	var optionaltreeorder=[];
-
-	function SubmitModel() {
-	  //  console.log("SUBMIT POPUP");
-	    var optionaltreeorder1 = [];
-	    
-	    $('#sortable li').each(function () {
-	        optionaltreeorder1.push(this.id);
-	    });
-	    
-	 	const activeeDomainButtons = document.querySelectorAll(".activee.domain");
-	    for (let i = 0; i < activeeDomainButtons.length; i++) {
-	      const button = activeeDomainButtons[i];
-	      optionaltreeorder1.push("li_"+button.id);
-	    }
-
-	  	//console.log("optionaltreeorder1....",optionaltreeorder1);
-	    optionaltreeorder1 = optionaltreeorder1.toString();
-	   // console.log("optionaltreeorder......", optionaltreeorder1);
-	    $('#modalOrderTree').modal('hide');
-	    Sumbitselection(optionaltreeorder1);
+		$('#removeFilter').hide();		
+		var buttons = document.querySelectorAll(".buttonTog");
+		for (var i = 0; i < buttons.length; i++) {	  		
+	       if (buttons[i].classList.contains("activee")) {
+	    	 if(buttons[i].classList.contains("domain")){
+	    	 	domains.push(buttons[i].id);
+	       }else{
+	    		 select.push(buttons[i].id);
+	       }
+		}
 	}
-
+	    select=select.toString();
+		Sumbitselection(select,domains);
+	}  
+/*
+	// sumbit through button directly from popup
+	function SubmitModel() {	    
+		var select=[];	
+		var domains=[];
+		var buttons = document.querySelectorAll(".buttonTog");
+		for (var i = 0; i < buttons.length; i++) {	  		
+	       if (buttons[i].classList.contains("activee")) {
+	    	 if(buttons[i].classList.contains("domain")){
+	    	 	domains.push(buttons[i].id);
+	         }else{
+	    	 	select.push(buttons[i].id);
+	       }
+		}
+	}
+	    select=select.toString();
+	    $('#modalOrderTree').modal('hide');
+		Sumbitselection(select,domains);
+	}
+*/
 
 						
 	//when typing in search 

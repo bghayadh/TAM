@@ -193,167 +193,217 @@ public class NetworkController {
 	}
 	
 
-	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/Network_StNdCell", method = RequestMethod.GET)
-	public String Network_StNdCell(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
-//			throws JsonProcessingException {
-		// logger.info("Welcome home! The client locale is {}.", locale);
-		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
-			return "redirect:/";
-		} else {
-			double longitude = 0;
-			double latitude = 0;
-			ObjectMapper mapper = new ObjectMapper();
-			Session session = null;
-			Transaction tx = null;
-			session = almsessions.getSession();
+	private static String AppendQuery(String a, int [] arrayParam, String str) {
+		if(arrayParam[0] == 1 || arrayParam[1] == 1 || arrayParam[2] == 1 || arrayParam[3] == 1) {
+			str = str +" and ( ";
+			
+			if (arrayParam[0] == 1) {
+				//System.out.println("ent ");
+				str= str +a+".DOMAIN ='Enterprise' ";
+			}
+			if (arrayParam[1] == 1) {
+				if(arrayParam[0] == 0) {
+					//System.out.println("trans");
+					str= str + a +".DOMAIN ='Transmission' ";
+				}else {
+					str= str + " or " +a+".DOMAIN ='Transmission' ";
+				}
+			}
+			if (arrayParam[2] == 1) {
+				if(arrayParam[0] == 0 && arrayParam[1] == 0) {
+					//System.out.println("acc ");
+					str= str+ a+".DOMAIN ='Access' ";
+				}else {
+					str= str+ " or " +a+".DOMAIN ='Access' ";
+				}
+			}
+			if (arrayParam[3] == 1) {
+				if(arrayParam[0] == 0 && arrayParam[1] == 0 && arrayParam[2] == 0) {
+					//System.out.println("core");
+					str= str + a+ ".DOMAIN ='Core' ";
+				}else {
+					str= str + "or " +a+ ".DOMAIN ='Core' ";
+				}					
+			}	
+			str = str + " ) ";
+		}
+		 return str;
+	}
+		
+		@SuppressWarnings("unchecked")
+		@RequestMapping(value = "/Network_StNdCell", method = RequestMethod.GET)
+		public String Network_StNdCell(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
+//				throws JsonProcessingException {
+			// logger.info("Welcome home! The client locale is {}.", locale);
+			if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+				return "redirect:/";
+			} else {
+				double longitude = 0;
+				double latitude = 0;
+				ObjectMapper mapper = new ObjectMapper();
+				Session session = null;
+				Transaction tx = null;
+				session = almsessions.getSession();
 
-			if (session != null && session.isOpen()) {
-				tx = session.beginTransaction();
-				notifications.headerNotifications(session, model);
+				if (session != null && session.isOpen()) {
+					tx = session.beginTransaction();
+					notifications.headerNotifications(session, model);
 
-				String param1 = request.getParameter("param1");
-				//String param2 = request.getParameter("param2");
-				//System.out.println("param1..."+param1);
-				//System.out.println("param2..."+param2);
-				if (param1 != null) {
-					//System.out.println(".NOT NULL.");
-					try {
-						model.addAttribute("listSites", mapper.writeValueAsString(
-								(List<Object[]>) session.createSQLQuery("SELECT DISTINCT b.SITE_ID,b.WARE_NAME,b.WARE_ID," 
-								+ "(SELECT a.LATITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LATITUDE," 
-								+ "(SELECT a.LONGITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LONGITUDE,"  
-								+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID and w.DOMAIN='" +param1+ "' and w.ACTIVE_RECORD = '1') as countnodes," 
-								+ "(select COUNT(*) FROM NODE_GCELL c where c.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1' and o.DOMAIN='" +param1+ "') and c.DOMAIN='" +param1+ "') as countGcells,"
-								+ "(select COUNT(*) FROM NODE_LCELL d where d.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1' and o.DOMAIN='" +param1+ "') and d.DOMAIN='" +param1+ "') as countLcells,"
-								+ "(select COUNT(*) FROM NODE_UCELL e where e.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1' and o.DOMAIN='" +param1+ "') and e.DOMAIN='" +param1+ "') as countUcells"
-								+ " FROM NODE_ACTIVE b WHERE b.DOMAIN='" +param1+ "' and b.WARE_ID!='0' and b.WARE_ID!='null' and b.ACTIVE_RECORD = '1'").list()));			
+					String enterprise = request.getParameter("enterprise");
+					String transmission = request.getParameter("transmission");
+					String access = request.getParameter("access");
+					String core = request.getParameter("core");
 
+					int[] arrayParam = new int[4]; // Assuming you want to store 4 parameters
+			        arrayParam[0] = 0; // enterprise
+			        arrayParam[1] = 0; // transmission
+			        arrayParam[2] = 0; // access
+			        arrayParam[3] = 0; // core
+
+					List<String> listSites = new ArrayList<String>();
+					String strSites ="SELECT DISTINCT b.SITE_ID,b.WARE_NAME,b.WARE_ID,LATITUDE,LONGITUDE,"
+							+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID and w.ACTIVE_RECORD = '1' ";
+					
+					List<String> listNodes = new ArrayList<String>();
+					String strNodes ="SELECT NODE_PK,SITE_ID,NODE_NAME,NODE_TYPE,WARE_ID,"
+							+"(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and ACTIVE_RECORD = '1' ";
+					
+					List<Object[]> cellResult = new ArrayList<Object[]>();
+					String strCells1 ="SELECT a.GCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_GCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0' "; 
+					String strCells2 ="SELECT a.LCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_LCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0' "; 
+					String strCells3 ="SELECT a.UCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_UCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0' ";		
+					
+				try {
+					if (enterprise != null && !enterprise.equals("null")) {
+						arrayParam[0] = 1;	
+					}
+					if (transmission != null && !transmission.equals("null")) {
+						arrayParam[1] = 1;	
+					}
+					if (access != null && !access.equals("null")) {
+						arrayParam[2] = 1;	
+					}
+					if (core != null && !core.equals("null")) {
+						arrayParam[3] = 1;	
+					}
+					strSites = AppendQuery("w",arrayParam, strSites);
+					
+					strSites = strSites + ") as countNodes,(select COUNT(*) FROM NODE_GCELL c where c.NODE_PK IN (select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1' ";
+					strSites=  AppendQuery("o",arrayParam, strSites);	
+					strSites = strSites + " ) ";			
+					strSites=  AppendQuery("c",arrayParam, strSites);
+					
+					strSites = strSites + ") as countGcells,(select COUNT(*) FROM NODE_LCELL d where d.NODE_PK IN (select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1' ";
+					strSites=  AppendQuery("o",arrayParam, strSites);	
+					strSites = strSites + " ) ";			
+					strSites=  AppendQuery("d",arrayParam, strSites);	
+					
+					strSites = strSites + ") as countLcells,(select COUNT(*) FROM NODE_UCELL e where e.NODE_PK IN (select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1' ";
+					strSites=  AppendQuery("o",arrayParam, strSites);	
+					strSites = strSites + " ) ";			
+					strSites=  AppendQuery("e",arrayParam, strSites);
+					
+					strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.ACTIVE_RECORD = '1' ";			
+					strSites=  AppendQuery("b",arrayParam, strSites);	
 						
-						
-					} catch (Exception e) {
+					//System.out.println("final query sites"+mapper.writeValueAsString(strSites));
+					Query query = session.createSQLQuery(strSites);
+					listSites = query.list();
+					model.addAttribute("listSites", mapper.writeValueAsString(listSites));
+					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
+					//System.out.println("list sites ==> "+ mapper.writeValueAsString(listSites));
+					//System.out.println("arrayParam sites ==> "+mapper.writeValueAsString(arrayParam));
+					}catch (Exception e) {
 						logger.info("Error in retreiving Sites Data from database", e);
 						model.addAttribute("listSites", "null");
 					}
-					// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>//
-					try {
-						List<Object[]> cellResult = new ArrayList<Object[]>();
-						cellResult.addAll(session.createSQLQuery(
-								"SELECT a.GCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_GCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0' and a.DOMAIN='" +param1+ "'")
-								.list());
-						cellResult.addAll(session.createSQLQuery(
-								"SELECT a.LCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_LCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0' and a.DOMAIN='" +param1+ "'")
-								.list());
-						cellResult.addAll(session.createSQLQuery(
-								"SELECT a.UCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_UCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0' and a.DOMAIN='" +param1+ "'")
-								.list());
-
-						model.addAttribute("listCells", mapper.writeValueAsString(cellResult));
-						//System.out.println("list cells Enterprise ==> "+ mapper.writeValueAsString(cellResult));
-					} catch (Exception e) {
-						logger.info("Error in retreiving Cells Data from database", e);
-						model.addAttribute("listCells", "null");
-					}
-					// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>//
-					try {
-
-						model.addAttribute("listNodes", mapper.writeValueAsString((List<Object[]>) session.createSQLQuery(
-								"SELECT NODE_PK,SITE_ID,NODE_NAME,NODE_TYPE,WARE_ID,(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and ACTIVE_RECORD = '1' and b.DOMAIN='" +param1+ "') as countGCells,(select count(*) from NODE_LCELL c  where a.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1' and c.DOMAIN='" +param1+ "') as countLCells,(select count(*) from NODE_UCELL d  where a.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1' and d.DOMAIN='" +param1+ "') as countUCells,SUPPLIER_ID FROM NODE_ACTIVE a WHERE ACTIVE_RECORD = '1' and a.DOMAIN='" +param1+ "'")
-								.list()));
-						} catch (Exception e) {
-						logger.info("Error in retreiving Nodes Data from database", e);
-						model.addAttribute("listNodes", "null");
-					}
-				}else{
-				
-				// On-load Site-Node-Cells Arrays Selection
+					
+				// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>//
 				try {
-					List<Object[]> cellResult = new ArrayList<Object[]>();
-					cellResult.addAll(session.createSQLQuery(
-							"SELECT a.GCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_GCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0'")
-							.list());
-					cellResult.addAll(session.createSQLQuery(
-							"SELECT a.LCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_LCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0'")
-							.list());
-					cellResult.addAll(session.createSQLQuery(
-							"SELECT a.UCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_UCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0'")
-							.list());
-
+					strNodes= AppendQuery("b",arrayParam, strNodes);
+				
+					strNodes= strNodes + ") as countGcells,(select count(*) from NODE_LCELL c  where a.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1' ";
+					strNodes= AppendQuery("c",arrayParam, strNodes);
+			
+					strNodes= strNodes + ") as countLcells,(select count(*) from NODE_UCELL d  where a.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1' ";
+					strNodes= AppendQuery("d",arrayParam, strNodes);
+				
+					strNodes= strNodes + ") as countUcells,SUPPLIER_ID FROM NODE_ACTIVE a WHERE ACTIVE_RECORD = '1' ";
+					strNodes= AppendQuery("a",arrayParam, strNodes);
+						
+					//System.out.println("final query nodes"+mapper.writeValueAsString(strNodes));
+					Query query = session.createSQLQuery(strNodes);
+					listNodes = query.list();
+					model.addAttribute("listNodes", mapper.writeValueAsString(listNodes));
+					model.addAttribute("arrayPram", mapper.writeValueAsString(arrayParam));
+					//System.out.println("list nodes ==> "+ mapper.writeValueAsString(listNodes));
+					//System.out.println("arrayParam nodes ==> "+mapper.writeValueAsString(arrayParam));
+					
+					} catch (Exception e) {
+					logger.info("Error in retreiving Nodes Data from database", e);
+					model.addAttribute("listNodes", "null");
+				}	
+				// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>//
+				try {			
+					strCells1= AppendQuery("a",arrayParam, strCells1);
+					strCells2= AppendQuery("a",arrayParam, strCells2);
+					strCells3= AppendQuery("a",arrayParam, strCells3);
+				
+					//System.out.println("final query cells 1"+mapper.writeValueAsString(strCells1));
+					//System.out.println("final query cells 2"+mapper.writeValueAsString(strCells2));
+					//System.out.println("final query cells 3"+mapper.writeValueAsString(strCells3));
+					
+					Query query1 = session.createSQLQuery(strCells1);
+					Query query2 = session.createSQLQuery(strCells2);
+					Query query3 = session.createSQLQuery(strCells3);
+					cellResult.addAll(query1.list());
+					cellResult.addAll(query2.list());
+					cellResult.addAll(query3.list());
+					
 					model.addAttribute("listCells", mapper.writeValueAsString(cellResult));
+					model.addAttribute("arrayPram", mapper.writeValueAsString(arrayParam));
 					//System.out.println("list cells ==> "+ mapper.writeValueAsString(cellResult));
+					//System.out.println("arrayParam cells ==> "+mapper.writeValueAsString(arrayParam));
+					
 				} catch (Exception e) {
 					logger.info("Error in retreiving Cells Data from database", e);
 					model.addAttribute("listCells", "null");
 				}
-				// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>//
-				try {
-
-					model.addAttribute("listNodes", mapper.writeValueAsString((List<Object[]>) session.createSQLQuery(
-							"SELECT NODE_PK,SITE_ID,NODE_NAME,NODE_TYPE,WARE_ID,(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and ACTIVE_RECORD = '1') as countGCells,(select count(*) from NODE_LCELL c  where a.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1') as countLCells,(select count(*) from NODE_UCELL d  where a.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1') as countUCells,SUPPLIER_ID FROM NODE_ACTIVE a WHERE ACTIVE_RECORD = '1'")
-							.list()));
-					//System.out.println("list nodes ==> "+ mapper.writeValueAsString(listNodes));
-				} catch (Exception e) {
-					logger.info("Error in retreiving Nodes Data from database", e);
-					model.addAttribute("listNodes", "null");
-				}
-
-				// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>//
-				try {
-
-					model.addAttribute("listSites", mapper.writeValueAsString(
-							(List<Object[]>) session.createSQLQuery("SELECT distinct b.SITE_ID,b.WARE_NAME,b.WARE_ID,"
-									+ "(SELECT a.LATITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LATITUDE,"
-									+ "(SELECT a.LONGITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LONGITUDE,"
-									+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID  and w.ACTIVE_RECORD = '1') as countnodes,"
-									+ "(select COUNT(*) FROM NODE_GCELL c where c.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1')) as countGcells,"
-									+ "(select COUNT(*) FROM NODE_LCELL d where d.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1')) as countLcells,"
-									+ "(select COUNT(*) FROM NODE_UCELL e where e.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1')) as countUcells"
-									+ " FROM WAREHOUSE b where b.WARE_ID!='0' and b.WARE_ID!='null'").list()));
-
-				} catch (Exception e) {
-					logger.info("Error in retreiving Sites Data from database", e);
-					model.addAttribute("listSites", "null");
-
-				}
-			}
-				try {
-					// On-load Boq array data
-					// LinkedHashMap<String, String> BoqHM = GetBoqList("");
-					// model.addAttribute("BoqHashMap", BoqHM);
-
-					// Long and Lat of the blankmap
-					List<Object[]> coordinates = new ArrayList<Object[]>();
-					Object[] blankGisLocation = null;
-					coordinates = session.createSQLQuery(
-							"SELECT COALESCE((MAX(CAST(LONGITUDE as number))+MIN(CAST(LONGITUDE as number)))/2,0) ,"
-									+ "COALESCE( (MAX(CAST(LATITUDE as number))+MIN(CAST(LATITUDE as number)))/2,0)FROM WAREHOUSE")
-							.list();
-					//System.out.println("coordinates....."+mapper.writeValueAsString((Object[]) coordinates.toArray()[0]).toString());
-					blankGisLocation = (Object[]) coordinates.toArray()[0];
-					longitude = Double.valueOf(blankGisLocation[0].toString()).doubleValue();
-					latitude = Double.valueOf(blankGisLocation[1].toString()).doubleValue();
-					model.addAttribute("Long", longitude);
-					model.addAttribute("Lat", latitude);
-
-				} catch (Exception e) {
-					logger.info("Error in retreiving BOQ Data from database", e);
-					model.addAttribute("Long", null);
-					model.addAttribute("Lat", null);
-				}
-
-				finally {
-					if (session != null && session.isOpen()) {
-						logger.info("Session Closseeed");
-						tx.commit();
-						session.close();
+					try {
+						// On-load Boq array data
+						// LinkedHashMap<String, String> BoqHM = GetBoqList("");
+						// model.addAttribute("BoqHashMap", BoqHM);
+						// Long and Lat of the blankmap
+						List<Object[]> coordinates = new ArrayList<Object[]>();
+						Object[] blankGisLocation = null;
+						coordinates = session.createSQLQuery(
+								"SELECT COALESCE((MAX(CAST(LONGITUDE as number))+MIN(CAST(LONGITUDE as number)))/2,0) ,"
+										+ "COALESCE( (MAX(CAST(LATITUDE as number))+MIN(CAST(LATITUDE as number)))/2,0)FROM WAREHOUSE")
+								.list();
+						//System.out.println("coordinates....."+mapper.writeValueAsString((Object[]) coordinates.toArray()[0]).toString());
+						blankGisLocation = (Object[]) coordinates.toArray()[0];
+						longitude = Double.valueOf(blankGisLocation[0].toString()).doubleValue();
+						latitude = Double.valueOf(blankGisLocation[1].toString()).doubleValue();
+						model.addAttribute("Long", longitude);
+						model.addAttribute("Lat", latitude);
+					} catch (Exception e) {
+						logger.info("Error in retreiving BOQ Data from database", e);
+						model.addAttribute("Long", null);
+						model.addAttribute("Lat", null);
+					}
+					
+					finally {
+						if (session != null && session.isOpen()) {
+							logger.info("Session Closseeed");
+							tx.commit();
+							session.close();
+						}
 					}
 				}
+				return "Network/Network_StNdCell";
 			}
-
-			return "Network/Network_StNdCell";
 		}
-	}
-	
+		
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/Network_StNdTypNdCell", method = RequestMethod.GET)
 	public String Network_StNdTypNdCell(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
@@ -2501,170 +2551,227 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 	}
 
 	
-	// Sites BOQ data retrieving
-		@SuppressWarnings("unchecked")
-		@RequestMapping(value = "/GetBoqList", method = RequestMethod.GET, produces = "application/json")
-		@ResponseBody
-
-		public LinkedHashMap<String, String> GetBoqList(@RequestParam String SiteId,@RequestParam String paramEnterprise) {
-
-			Session session = almsessions.getSession();
-			Transaction tx = session.beginTransaction();
-
-			// if Site_id !=null --> an ajax request received
-
-			try {
-				//String paramEnterprise = request.getParameter("paramEnterprise");
-				if (paramEnterprise.equals("true")) {
-					//System.out.println("parm true......"+ paramEnterprise);
-					LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
-
-					String Site_Query = SiteId == "" ? "SELECT COUNT(WARE_ID) FROM NODE_ACTIVE WHERE DOMAIN='Enterprise' AND WARE_ID!='null'"
-							: "Select distinct Ware_Name From NODE_ACTIVE where Ware_Id='" + SiteId + "'";
-					Object Sites = session.createSQLQuery(Site_Query).uniqueResult();
-
-					String Node_Active_Query = SiteId == ""
-							? "SELECT COUNT(NODE_PK) FROM NODE_ACTIVE where Active_record='1' and DOMAIN='Enterprise'"
-							: "SELECT COUNT(NODE_PK) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='" + SiteId
-							+ "' and DOMAIN='Enterprise'";
-					//System.out.println(Node_Active_Query);
-					Object CountNodes_Active = session.createSQLQuery(Node_Active_Query).uniqueResult();
-
-					String Node_GCell_Query = SiteId == "" ? "SELECT COUNT(GCELL_ID) FROM NODE_GCELL WHERE DOMAIN='Enterprise'"
-							: "select count(ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"
-									+ SiteId + "' and ngc.domain='Enterprise'";
-					Object CountNodes_G_CELL = session.createSQLQuery(Node_GCell_Query).uniqueResult();
-
-					String Node_LCell_Query = SiteId == "" ? "SELECT COUNT(LCELL_ID) FROM NODE_LCELL WHERE DOMAIN='Enterprise'"
-							: "select count(nlc.LCell_Id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
-									+ SiteId + "' and nlc.domain='Enterprise'";
-					Object CountNodes_L_CELL = session.createSQLQuery(Node_LCell_Query).uniqueResult();
-
-					String Node_UCell_Query = SiteId == "" ? "SELECT COUNT(UCELL_ID) FROM NODE_UCELL WHERE DOMAIN='Enterprise'"
-							: "select count(nlc.UCell_Id) from node_ucell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
-									+ SiteId + "' and nlc.domain='Enterprise'";
-					Object CountNodes_U_CELL = session.createSQLQuery(Node_UCell_Query).uniqueResult();
-
-					BoqHM.put(SiteId == "" ? "Sites" : "Site Name", String.valueOf(Sites));
-					BoqHM.put("Nodes", String.valueOf(CountNodes_Active));
-
-					if (SiteId == "") {
-
-						String Node_Type_Count = "SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and DOMAIN='Enterprise'";
-						Object CountNodesType = session.createSQLQuery(Node_Type_Count).uniqueResult();
-						BoqHM.put("Node Type", String.valueOf(CountNodesType));
-					}
-
-					else {
-
-						String Node_Type_Count = "SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"
-								+ SiteId + "' and DOMAIN='Enterprise'";
-						Object CountNodesType = session.createSQLQuery(Node_Type_Count).uniqueResult();
-						BoqHM.put("Node Type", String.valueOf(CountNodesType));
-
-						// HashMap<String, String> hm = new HashMap<String, String>();
-						List<Object[]> CountNodesteach_Active = (List<Object[]>) session.createSQLQuery(
-								"SELECT distinct NODE_TYPE,COUNT(NODE_TYPE) from node_active where Active_record='1' and DOMAIN='Enterprise' and Ware_Id = '"
-										+ SiteId + "' GROUP BY NODE_TYPE")
-								.list();
-						List<Object[]> result = new ArrayList<>();
-						for (Object[] obj : CountNodesteach_Active) {
-
-							result.add(obj);
-						}
-
-						for (Object[] object : result) {
-							BoqHM.put(object[0].toString(), object[1].toString());
-						}
-
-					}
-
-					BoqHM.put("G-cells", String.valueOf(CountNodes_G_CELL));
-					BoqHM.put("L-cells", String.valueOf(CountNodes_L_CELL));
-					BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
-					return BoqHM;
-					
+	private static String boqDomain (String paramEnterprise,String paramTransmission,String paramAccess,String paramCore, String str) {
+//		System.out.println("boqDomain");
+		if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
+	        String[] words = str.split(" ");    
+	        // Check if the last word is "WHERE" (case-insensitive)
+	        if (words.length > 0 && "WHERE".equalsIgnoreCase(words[words.length - 1])) {
+	            //System.out.println("The last word is 'WHERE'");
+	        } else {
+	            //System.out.println("The last word is not 'WHERE'");
+	            str = str +" and ( ";
+	        }
+			
+			if (paramEnterprise.equals("true")) {
+				//System.out.println("ent ");
+				str= str +"DOMAIN ='Enterprise' ";
+				//System.out.println("str >>>> "+str);
+			}
+			if (paramTransmission.equals("true")) {
+				if(paramEnterprise.equals("false")) {
+					//System.out.println("trans");
+					str= str +"DOMAIN ='Transmission' ";
 				}else {
-				//	System.out.println("parm false....."+ paramEnterprise);
-					LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
-
-					String Site_Query = SiteId == "" ? "SELECT COUNT(WARE_ID) FROM WAREHOUSE WHERE SITE='1'"
-							: "Select Ware_Name From WareHouse where Site='1' and Ware_Id='" + SiteId + "'";
-					Object Sites = session.createSQLQuery(Site_Query).uniqueResult();
-
-					String Node_Active_Query = SiteId == ""
-							? "SELECT COUNT(NODE_PK) FROM NODE_ACTIVE where Active_record='1'"
-							: "SELECT COUNT(NODE_PK) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='" + SiteId
-							+ "'";
-					//System.out.println(Node_Active_Query);
-					Object CountNodes_Active = session.createSQLQuery(Node_Active_Query).uniqueResult();
-
-					String Node_GCell_Query = SiteId == "" ? "SELECT COUNT(GCELL_ID) FROM NODE_GCELL"
-							: "select count(ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"
-									+ SiteId + "'";
-					Object CountNodes_G_CELL = session.createSQLQuery(Node_GCell_Query).uniqueResult();
-
-					String Node_LCell_Query = SiteId == "" ? "SELECT COUNT(LCELL_ID) FROM NODE_LCELL"
-							: "select count(nlc.LCell_Id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
-									+ SiteId + "'";
-					Object CountNodes_L_CELL = session.createSQLQuery(Node_LCell_Query).uniqueResult();
-
-					String Node_UCell_Query = SiteId == "" ? "SELECT COUNT(UCELL_ID) FROM NODE_UCELL"
-							: "select count(nlc.UCell_Id) from node_ucell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
-									+ SiteId + "'";
-					Object CountNodes_U_CELL = session.createSQLQuery(Node_UCell_Query).uniqueResult();
-
-					BoqHM.put(SiteId == "" ? "Sites" : "Site Name", String.valueOf(Sites));
-					BoqHM.put("Nodes", String.valueOf(CountNodes_Active));
-
-					if (SiteId == "") {
-
-						String Node_Type_Count = "SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1'";
-						Object CountNodesType = session.createSQLQuery(Node_Type_Count).uniqueResult();
-						BoqHM.put("Node Type", String.valueOf(CountNodesType));
-					}
-
-					else {
-
-						String Node_Type_Count = "SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"
-								+ SiteId + "'";
-						Object CountNodesType = session.createSQLQuery(Node_Type_Count).uniqueResult();
-						BoqHM.put("Node Type", String.valueOf(CountNodesType));
-
-						// HashMap<String, String> hm = new HashMap<String, String>();
-						List<Object[]> CountNodesteach_Active = (List<Object[]>) session.createSQLQuery(
-								"SELECT distinct NODE_TYPE,COUNT(NODE_TYPE) from node_active where Active_record='1' and Ware_Id = '"
-										+ SiteId + "' GROUP BY NODE_TYPE")
-								.list();
-						List<Object[]> result = new ArrayList<>();
-						for (Object[] obj : CountNodesteach_Active) {
-
-							result.add(obj);
-						}
-
-						for (Object[] object : result) {
-							BoqHM.put(object[0].toString(), object[1].toString());
-						}
-
-					}
-
-					BoqHM.put("G-cells", String.valueOf(CountNodes_G_CELL));
-					BoqHM.put("L-cells", String.valueOf(CountNodes_L_CELL));
-					BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
-					return BoqHM;
-				}
-
-
-			} catch (Exception e) {
-				logger.info("Error in retreiving Site BOQ data Data from database", e);
-				return null;
-			} finally {
-				if (session != null && session.isOpen()) {
-					tx.commit();
-					session.close();
+					str= str + " or DOMAIN ='Transmission' ";
 				}
 			}
+			if (paramAccess.equals("true")) {
+				if(paramEnterprise.equals("false") && paramTransmission.equals("false")) {
+					//System.out.println("acc ");
+					str= str+ "DOMAIN ='Access' ";
+				}else {
+					str= str+ " or DOMAIN ='Access' ";
+				}
+			}
+			if (paramCore.equals("true")) {
+				if(paramEnterprise.equals("false") && paramTransmission.equals("false") && paramAccess.equals("false")) {
+					//System.out.println("core");
+					str= str +"DOMAIN ='Core' ";
+				}else {
+					str= str+ "or DOMAIN ='Core' ";
+				}					
+			}	
+	        if (words.length > 0 && "WHERE".equalsIgnoreCase(words[words.length - 1])) {
+	            //System.out.println("The last word is 'WHERE'");
+	        } else {
+	            //System.out.println("The last word is not 'WHERE'");
+	    		str = str + " ) ";
+	        }
 		}
+		//System.out.println("str >> "+str);
+		return str;
+	}
+
+	private static String boqDomainVar (String a,String paramEnterprise,String paramTransmission,String paramAccess,String paramCore, String str) {
+		//System.out.println("boqDomainVar");
+		if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
+	        String[] words = str.split(" ");    
+	        // Check if the last word is "WHERE" (case-insensitive)
+	        if (words.length > 0 && "WHERE".equalsIgnoreCase(words[words.length - 1])) {
+	           // System.out.println("The last word is 'WHERE'");
+	        } else {
+	            //System.out.println("The last word is not 'WHERE'");
+	            str = str +" and ( ";
+	        }
+				
+			if (paramEnterprise.equals("true")) {
+				//System.out.println("ent ");
+				str= str +a+ ".DOMAIN ='Enterprise' ";
+				//System.out.println("str >> "+str);
+			}
+			if (paramTransmission.equals("true")) {
+				if(paramEnterprise.equals("false")) {
+					//System.out.println("trans");
+					str= str +a+ ".DOMAIN ='Transmission' ";
+				}else {
+					str= str + " or " +a+ ".DOMAIN ='Transmission' ";
+				}
+			}
+			if (paramAccess.equals("true")) {
+				if(paramEnterprise.equals("false") && paramTransmission.equals("false")) {
+					//System.out.println("acc ");
+					str= str+ a+ ".DOMAIN ='Access' ";
+				}else {
+					str= str+ " or " +a+ ".DOMAIN ='Access' ";
+				}
+			}
+			if (paramCore.equals("true")) {
+				if(paramEnterprise.equals("false") && paramTransmission.equals("false") && paramAccess.equals("false")) {
+					//System.out.println("core");
+					str= str +a+ ".DOMAIN ='Core' ";
+				}else {
+					str= str+ " or " +a+ ".DOMAIN ='Core' ";
+				}					
+			}	
+			 if (words.length > 0 && "WHERE".equalsIgnoreCase(words[words.length - 1])) {
+		            //System.out.println("The last word is 'WHERE'");
+		        } else {
+		            //System.out.println("The last word is not 'WHERE'");
+		    		str = str + " ) ";
+		        }
+		}
+		//System.out.println("str >> "+str);
+		return str;
+	}
+
+		// Sites BOQ data retrieving
+			@SuppressWarnings("unchecked")
+			@RequestMapping(value = "/GetBoqList", method = RequestMethod.GET, produces = "application/json")
+			@ResponseBody
+
+			public LinkedHashMap<String, String> GetBoqList(@RequestParam String SiteId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
+
+				Session session = almsessions.getSession();
+				Transaction tx = session.beginTransaction();
+
+				// if Site_id !=null --> an ajax request received
+				LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
+			
+				try {
+						String strEmpty= "SELECT COUNT(WARE_ID) FROM NODE_ACTIVE WHERE WARE_ID!='null' ";	
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+						String Site_Query = SiteId == "" ? strEmpty : "Select distinct Ware_Name From NODE_ACTIVE where Ware_Id='" + SiteId + "'";
+						//System.out.println(Site_Query);
+						Object Sites = session.createSQLQuery(Site_Query).uniqueResult();
+						strEmpty="";					
+			////////////////////////////
+						strEmpty="SELECT COUNT(NODE_PK) FROM NODE_ACTIVE where Active_record='1' ";
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+						String strExist= "SELECT COUNT(NODE_PK) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='" + SiteId + "' ";	
+						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+						String Node_Active_Query = SiteId == "" ? strEmpty : strExist;
+						//System.out.println(Node_Active_Query);
+						Object CountNodes_Active = session.createSQLQuery(Node_Active_Query).uniqueResult();
+						strEmpty="";
+						strExist="";
+			////////////////////////////			
+						strEmpty="SELECT COUNT(GCELL_ID) FROM NODE_GCELL ";
+						if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
+							strEmpty= strEmpty + "WHERE ";
+						}				
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+						strExist= "select count(ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"+ SiteId +"' ";	
+						strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+						String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
+						//System.out.println(Node_GCell_Query);
+						Object CountNodes_G_CELL = session.createSQLQuery(Node_GCell_Query).uniqueResult();
+						strEmpty="";
+						strExist="";
+			/////////////////////////////
+						strEmpty="SELECT COUNT(LCELL_ID) FROM NODE_LCELL ";
+						if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
+							strEmpty= strEmpty + "WHERE ";
+						}
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+						strExist= "select count(nlc.lcell_id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"+ SiteId +"' ";	
+						strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+						String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
+						//System.out.println(Node_LCell_Query);
+						Object CountNodes_L_CELL = session.createSQLQuery(Node_LCell_Query).uniqueResult();
+						strEmpty="";
+						strExist="";
+			/////////////////////////////
+						strEmpty="SELECT COUNT(UCELL_ID) FROM NODE_UCELL ";
+						if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
+							strEmpty= strEmpty + "WHERE ";
+						}
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+						strExist= "select count(nuc.ucell_id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.Ware_Id = '"+ SiteId +"' ";	
+						strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+						String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
+						//System.out.println(Node_UCell_Query);
+						Object CountNodes_U_CELL = session.createSQLQuery(Node_UCell_Query).uniqueResult();
+						strEmpty="";
+						strExist="";			
+			/////////////////////////////
+						BoqHM.put(SiteId == "" ? "Sites" : "Site Name", String.valueOf(Sites));
+						BoqHM.put("Nodes", String.valueOf(CountNodes_Active));
+
+						if (SiteId == "") {
+							strEmpty="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' ";
+							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+							String Node_Type_Count = strEmpty;
+							//System.out.println(Node_Type_Count);
+							Object CountNodesType = session.createSQLQuery(Node_Type_Count).uniqueResult();
+							BoqHM.put("Node Type", String.valueOf(CountNodesType));
+						}else {
+							strExist="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"+ SiteId + "' ";
+							strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+							String Node_Type_Count = strExist;
+							//System.out.println(Node_Type_Count);
+							Object CountNodesType = session.createSQLQuery(Node_Type_Count).uniqueResult();
+							BoqHM.put("Node Type", String.valueOf(CountNodesType));
+							strExist="";
+						////////////////////////////////
+							strExist="SELECT distinct NODE_TYPE,COUNT(NODE_TYPE) from node_active where Active_record='1' and Ware_Id = '"+SiteId+"' ";
+							strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+							strExist = strExist +" GROUP BY NODE_TYPE";
+							System.out.println(strExist);
+							List<Object[]> CountNodesteach_Active = (List<Object[]>) session.createSQLQuery(strExist).list();
+							List<Object[]> result = new ArrayList<>();
+							for (Object[] obj : CountNodesteach_Active) {
+								result.add(obj);
+							}
+							for (Object[] object : result) {
+								BoqHM.put(object[0].toString(), object[1].toString());
+							}
+						}
+						BoqHM.put("G-cells", String.valueOf(CountNodes_G_CELL));
+						BoqHM.put("L-cells", String.valueOf(CountNodes_L_CELL));
+						BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
+						return BoqHM;
+				} catch (Exception e) {
+					logger.info("Error in retreiving Site BOQ data Data from database", e);
+					return null;
+				} finally {
+					if (session != null && session.isOpen()) {
+						tx.commit();
+						session.close();
+					}
+				}
+				//return BoqHM;
+			}
 		
 		// Sites BOQ data retrieving
 				@SuppressWarnings("unchecked")
@@ -2770,181 +2877,122 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 					}
 				}
 
-		// Nodes BOQ data retrieving
-		@SuppressWarnings("unchecked")
-		@RequestMapping(value = "/GetNodeBoqList", method = RequestMethod.GET, produces = "application/json")
-		@ResponseBody
-		public LinkedHashMap<String, String> GetNodeBoqList(@RequestParam String WareId, @RequestParam String NodeId, @RequestParam String paramEnterprise) {
+				// Nodes BOQ data retrieving
+				@SuppressWarnings("unchecked")
+				@RequestMapping(value = "/GetNodeBoqList", method = RequestMethod.GET, produces = "application/json")
+				@ResponseBody
+				public LinkedHashMap<String, String> GetNodeBoqList(@RequestParam String WareId,@RequestParam String NodeId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
 
-			Session session = almsessions.getSession();
-			Transaction tx = session.beginTransaction();
-			//System.out.println("ware id....."+WareId);
-			//System.out.println("node id....."+NodeId);
-			LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
-			try {
-				
-				if (paramEnterprise.equals("true")) {
-					//System.out.println("parm true..node...."+ paramEnterprise);
+					Session session = almsessions.getSession();
+					Transaction tx = session.beginTransaction();
+					LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 					
-					
-				// if Site_id !=null --> an ajax request received FROM NODE_ACTIVE WHERE NODE_TYPE='" + NodeTId + "' AND DOMAIN='Enterprise'"
-				String Site_Query = "Select DISTINCT Ware_Name From NODE_ACTIVE where Ware_Id='" + WareId + "' AND DOMAIN='Enterprise'";
-				Object Sites = session.createSQLQuery(Site_Query).uniqueResult();
-
-			
-				if (WareId.equals("null")) {
-					//System.out.println("null and param not null");	
-					String Node_GCell_Query = "select count(ngc.gcell_id) from node_gcell ngc , node_active na where na.Active_record='1' and na.node_pk = ngc.node_pk and na.Ware_Id is null "
-							+ "and na.NODE_PK = '" + NodeId + "' and ngc.DOMAIN='Enterprise'";
-					Object CountNodes_G_CELL = session.createSQLQuery(Node_GCell_Query).uniqueResult();
-
-					String Node_LCell_Query = "select count(nlc.LCell_Id) from node_lcell nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and na.Ware_Id is null"
-							+ " and na.NODE_PK = '" + NodeId + "' and nlc.DOMAIN='Enterprise'";
-					Object CountNodes_L_CELL = session.createSQLQuery(Node_LCell_Query).uniqueResult();
-
-					String Node_UCell_Query = "select count(nuc.UCell_Id) from node_ucell nuc , node_active na where na.Active_record='1' and na.node_pk = nuc.node_pk and na.Ware_Id is null"
-							+ " and na.NODE_PK = '" + NodeId + "' and nuc.DOMAIN='Enterprise'";
-					Object CountNodes_U_CELL = session.createSQLQuery(Node_UCell_Query).uniqueResult();
-
-					String Node_Board_Query = "select count(nlc.BOARD_ID) from NODE_BOARD nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and na.Ware_Id is null"
-							+ " and na.NODE_PK = '" + NodeId + "' and nlc.DOMAIN='Enterprise'";
-					Object CountNodesBoard = session.createSQLQuery(Node_Board_Query).uniqueResult();
-
-					String Node_Cabinet_Query = "select count(nlc.CABINET_ID) from NODE_CABINET nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and na.Ware_Id is null"
-							+ " and na.NODE_PK = '" + NodeId + "' and nlc.DOMAIN='Enterprise'";
-					Object CountNodesCabinet = session.createSQLQuery(Node_Cabinet_Query).uniqueResult();
-					
-					String NodesType_Query = "Select NODE_TYPE From NODE_ACTIVE where Active_record='1' and Ware_Id is null and NODE_PK = '" + NodeId + "' and DOMAIN='Enterprise'";
-					Object CountNodes_NodeType = session.createSQLQuery(NodesType_Query).uniqueResult();
-					
-					BoqHM.put("Site Name", String.valueOf(Sites));
-					BoqHM.put("Node Type", String.valueOf(CountNodes_NodeType));
-					BoqHM.put("G-cells", String.valueOf(CountNodes_G_CELL));
-					BoqHM.put("L-cells", String.valueOf(CountNodes_L_CELL));
-					BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
-					BoqHM.put("Boards", String.valueOf(CountNodesBoard));
-					BoqHM.put("Cabinets", String.valueOf(CountNodesCabinet));
-
-				}else {
-					//System.out.println("not null and param not null");
-					String Node_GCell_Query = "select count(ngc.gcell_id) from node_gcell ngc , node_active na where na.Active_record='1' and na.node_pk = ngc.node_pk and na.Ware_Id = '"
-							+ WareId + "' and na.NODE_PK = '" + NodeId + "' and ngc.DOMAIN='Enterprise'";
-					Object CountNodes_G_CELL = session.createSQLQuery(Node_GCell_Query).uniqueResult();
-
-					String Node_LCell_Query = "select count(nlc.LCell_Id) from node_lcell nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and na.Ware_Id = '"
-							+ WareId + "' and na.NODE_PK = '" + NodeId + "' and nlc.DOMAIN='Enterprise'";
-					Object CountNodes_L_CELL = session.createSQLQuery(Node_LCell_Query).uniqueResult();
-
-					String Node_UCell_Query = "select count(nuc.UCell_Id) from node_ucell nuc , node_active na where na.Active_record='1' and na.node_pk = nuc.node_pk and na.Ware_Id = '"
-							+ WareId + "' and na.NODE_PK = '" + NodeId + "' and nuc.DOMAIN='Enterprise'";
-					Object CountNodes_U_CELL = session.createSQLQuery(Node_UCell_Query).uniqueResult();
-
-					String Node_Board_Query = "select count(nlc.BOARD_ID) from NODE_BOARD nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and na.Ware_Id = '"
-							+ WareId + "' and na.NODE_PK = '" + NodeId + "' and nlc.DOMAIN='Enterprise'";
-					Object CountNodesBoard = session.createSQLQuery(Node_Board_Query).uniqueResult();
-
-					String Node_Cabinet_Query = "select count(nlc.CABINET_ID) from NODE_CABINET nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and na.Ware_Id = '"
-							+ WareId + "' and na.NODE_PK = '" + NodeId + "' and nlc.DOMAIN='Enterprise'";
-					Object CountNodesCabinet = session.createSQLQuery(Node_Cabinet_Query).uniqueResult();
-					
-					String NodesType_Query = "Select DISTINCT NODE_TYPE From NODE_ACTIVE where Active_record='1' and Ware_Id = '"
-							+ WareId + "' and NODE_PK = '" + NodeId + "' and DOMAIN='Enterprise'";
-					Object CountNodes_NodeType = session.createSQLQuery(NodesType_Query).uniqueResult();					
-					
-					BoqHM.put("Site Name", String.valueOf(Sites));
-					BoqHM.put("Node Type", String.valueOf(CountNodes_NodeType));
-					BoqHM.put("G-cells", String.valueOf(CountNodes_G_CELL));
-					BoqHM.put("L-cells", String.valueOf(CountNodes_L_CELL));
-					BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
-					BoqHM.put("Boards", String.valueOf(CountNodesBoard));
-					BoqHM.put("Cabinets", String.valueOf(CountNodesCabinet));
-				}						
-				return BoqHM;
-				}else {
-				//	System.out.println("parm false..node...."+ paramEnterprise);
-				// if Site_id !=null --> an ajax request received
-				//String Site_Query = "Select Ware_Name From WareHouse where Site='1' and Ware_Id='" + WareId + "'";
-				String Site_Query = "Select DISTINCT Ware_Name From NODE_ACTIVE where Ware_Id='" + WareId + "'";
-				Object Sites = session.createSQLQuery(Site_Query).uniqueResult();
-			if (WareId.equals("null")) {
-				//System.out.println("null and param  null");	
-				String Node_GCell_Query = "select count(ngc.gcell_id) from node_gcell ngc , node_active na where na.Active_record='1' and na.node_pk = ngc.node_pk and na.Ware_Id is null "
-						+ "and na.NODE_PK = '" + NodeId + "'";
-				Object CountNodes_G_CELL = session.createSQLQuery(Node_GCell_Query).uniqueResult();
-
-				String Node_LCell_Query = "select count(nlc.LCell_Id) from node_lcell nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and na.Ware_Id is null"
-						+ " and na.NODE_PK = '" + NodeId + "'";
-				Object CountNodes_L_CELL = session.createSQLQuery(Node_LCell_Query).uniqueResult();
-
-				String Node_UCell_Query = "select count(nlc.UCell_Id) from node_ucell nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and na.Ware_Id is null"
-						+ " and na.NODE_PK = '" + NodeId + "'";
-				Object CountNodes_U_CELL = session.createSQLQuery(Node_UCell_Query).uniqueResult();
-
-				String Node_Board_Query = "select count(nlc.BOARD_ID) from NODE_BOARD nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and na.Ware_Id is null"
-						+ " and na.NODE_PK = '" + NodeId + "'";
-				Object CountNodesBoard = session.createSQLQuery(Node_Board_Query).uniqueResult();
-
-				String Node_Cabinet_Query = "select count(nlc.CABINET_ID) from NODE_CABINET nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and na.Ware_Id is null"
-						+ " and na.NODE_PK = '" + NodeId + "'";
-				Object CountNodesCabinet = session.createSQLQuery(Node_Cabinet_Query).uniqueResult();
+					try {			
+						String Site_Query= "Select DISTINCT Ware_Name From NODE_ACTIVE where Ware_Id='" + WareId + "' ";	
+						Site_Query= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,Site_Query);		
+						//System.out.println(Site_Query);
+						Object Sites = session.createSQLQuery(Site_Query).uniqueResult();
+						
+						if (WareId.equals("null")) {	
+							//System.out.println("IF WARE ID NULL");
+							String Node_GCell_Query="select count(ngc.gcell_id) from node_gcell ngc , node_active na where na.Active_record='1' and na.node_pk = ngc.node_pk and na.Ware_Id is null and na.NODE_PK = '" + NodeId +"' ";
+							Node_GCell_Query= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_GCell_Query);
+							//System.out.println(Node_GCell_Query);
+				 			Object CountNodes_G_CELL = session.createSQLQuery(Node_GCell_Query).uniqueResult();			
+				    ///////////////////////////
+							String Node_LCell_Query = "select count(nlc.LCell_Id) from node_lcell nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and na.Ware_Id is null"
+									+ " and na.NODE_PK = '" + NodeId + "' ";
+							Node_LCell_Query= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_LCell_Query);
+							//System.out.println(Node_LCell_Query);
+							Object CountNodes_L_CELL = session.createSQLQuery(Node_LCell_Query).uniqueResult();
+					///////////////////////////
+							String Node_UCell_Query = "select count(nuc.UCell_Id) from node_ucell nuc , node_active na where na.Active_record='1' and na.node_pk = nuc.node_pk and na.Ware_Id is null"
+									+ " and na.NODE_PK = '" + NodeId + "' ";
+							Node_UCell_Query= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_UCell_Query);
+							//System.out.println(Node_UCell_Query);
+							Object CountNodes_U_CELL = session.createSQLQuery(Node_UCell_Query).uniqueResult();
+					///////////////////////////
+							String Node_Board_Query = "select count(nlc.BOARD_ID) from NODE_BOARD nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and na.Ware_Id is null"
+									+ " and na.NODE_PK = '" + NodeId + "' ";
+							Node_Board_Query= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_Board_Query);
+							//System.out.println(Node_Board_Query);
+							Object CountNodesBoard = session.createSQLQuery(Node_Board_Query).uniqueResult();
+					///////////////////////////
+							String Node_Cabinet_Query = "select count(nlc.CABINET_ID) from NODE_CABINET nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and na.Ware_Id is null"
+									+ " and na.NODE_PK = '" + NodeId + "' ";
+							Node_Cabinet_Query= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_Cabinet_Query);
+							//System.out.println(Node_Cabinet_Query);
+							Object CountNodesCabinet = session.createSQLQuery(Node_Cabinet_Query).uniqueResult();
+					///////////////////////////		
+							String NodesType_Query = "Select NODE_TYPE From NODE_ACTIVE where Active_record='1' and Ware_Id is null and NODE_PK = '" + NodeId + "' ";
+							NodesType_Query= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,NodesType_Query);	
+							//System.out.println(NodesType_Query);
+							Object CountNodes_NodeType = session.createSQLQuery(NodesType_Query).uniqueResult();
 							
-				String NodesType_Query = "Select DISTINCT NODE_TYPE From NODE_ACTIVE where Active_record='1' and Ware_Id is null and NODE_PK = '" + NodeId + "'";				
-				Object CountNodes_NodeType = session.createSQLQuery(NodesType_Query).uniqueResult();
-				
-				BoqHM.put("Site Name", String.valueOf(Sites));
-				BoqHM.put("Node Type", String.valueOf(CountNodes_NodeType));
-				BoqHM.put("G-cells", String.valueOf(CountNodes_G_CELL));
-				BoqHM.put("L-cells", String.valueOf(CountNodes_L_CELL));
-				BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
-				BoqHM.put("Boards", String.valueOf(CountNodesBoard));
-				BoqHM.put("Cabinets", String.valueOf(CountNodesCabinet));
-				
-				}else {
-					//System.out.println("not null and param  null");	
-					String Node_GCell_Query = "select count(ngc.gcell_id) from node_gcell ngc , node_active na where na.Active_record='1' and na.node_pk = ngc.node_pk and na.Ware_Id = '"
-							+ WareId + "' and na.NODE_PK = '" + NodeId + "'";
-					Object CountNodes_G_CELL = session.createSQLQuery(Node_GCell_Query).uniqueResult();
+							BoqHM.put("Site Name", String.valueOf(Sites));
+							BoqHM.put("Node Type", String.valueOf(CountNodes_NodeType));
+							BoqHM.put("G-cells", String.valueOf(CountNodes_G_CELL));
+							BoqHM.put("L-cells", String.valueOf(CountNodes_L_CELL));
+							BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
+							BoqHM.put("Boards", String.valueOf(CountNodesBoard));
+							BoqHM.put("Cabinets", String.valueOf(CountNodesCabinet));
 
-					String Node_LCell_Query = "select count(nlc.LCell_Id) from node_lcell nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and na.Ware_Id = '"
-							+ WareId + "' and na.NODE_PK = '" + NodeId + "'";
-					Object CountNodes_L_CELL = session.createSQLQuery(Node_LCell_Query).uniqueResult();
-
-					String Node_UCell_Query = "select count(nlc.UCell_Id) from node_ucell nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and na.Ware_Id = '"
-							+ WareId + "' and na.NODE_PK = '" + NodeId + "'";
-					Object CountNodes_U_CELL = session.createSQLQuery(Node_UCell_Query).uniqueResult();
-
-					String Node_Board_Query = "select count(nlc.BOARD_ID) from NODE_BOARD nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and na.Ware_Id = '"
-							+ WareId + "' and na.NODE_PK = '" + NodeId + "'";
-					Object CountNodesBoard = session.createSQLQuery(Node_Board_Query).uniqueResult();
-
-					String Node_Cabinet_Query = "select count(nlc.CABINET_ID) from NODE_CABINET nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and na.Ware_Id = '"
-							+ WareId + "' and na.NODE_PK = '" + NodeId + "'";
-					Object CountNodesCabinet = session.createSQLQuery(Node_Cabinet_Query).uniqueResult();
-										
-					String NodesType_Query = "Select DISTINCT NODE_TYPE From NODE_ACTIVE where Active_record='1' and Ware_Id = '"
-								+ WareId + "' and NODE_PK = '" + NodeId + "'";			
-					Object CountNodes_NodeType = session.createSQLQuery(NodesType_Query).uniqueResult();
-					
-					BoqHM.put("Site Name", String.valueOf(Sites));
-					BoqHM.put("Node Type", String.valueOf(CountNodes_NodeType));
-					BoqHM.put("G-cells", String.valueOf(CountNodes_G_CELL));
-					BoqHM.put("L-cells", String.valueOf(CountNodes_L_CELL));
-					BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
-					BoqHM.put("Boards", String.valueOf(CountNodesBoard));
-					BoqHM.put("Cabinets", String.valueOf(CountNodesCabinet));
+						}else {
+							//System.out.println("ELSE");
+							String Node_GCell_Query = "select count(ngc.gcell_id) from node_gcell ngc , node_active na where na.Active_record='1' and na.node_pk = ngc.node_pk and na.Ware_Id = '"
+									+ WareId + "' and na.NODE_PK = '" + NodeId + "' ";
+							Node_GCell_Query= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_GCell_Query);
+							//System.out.println(Node_GCell_Query);
+							Object CountNodes_G_CELL = session.createSQLQuery(Node_GCell_Query).uniqueResult();
+					///////////////////////////	
+							String Node_LCell_Query = "select count(nlc.LCell_Id) from node_lcell nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and na.Ware_Id = '"
+									+ WareId + "' and na.NODE_PK = '" + NodeId + "' ";
+							Node_LCell_Query= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_LCell_Query);
+							//System.out.println(Node_LCell_Query);
+							Object CountNodes_L_CELL = session.createSQLQuery(Node_LCell_Query).uniqueResult();
+					///////////////////////////	
+							String Node_UCell_Query = "select count(nuc.UCell_Id) from node_ucell nuc , node_active na where na.Active_record='1' and na.node_pk = nuc.node_pk and na.Ware_Id = '"
+									+ WareId + "' and na.NODE_PK = '" + NodeId + "' ";
+							Node_UCell_Query= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_UCell_Query);
+							//System.out.println(Node_UCell_Query);
+							Object CountNodes_U_CELL = session.createSQLQuery(Node_UCell_Query).uniqueResult();
+					///////////////////////////	
+							String Node_Board_Query = "select count(nlc.BOARD_ID) from NODE_BOARD nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and na.Ware_Id = '"
+									+ WareId + "' and na.NODE_PK = '" + NodeId + "' ";
+							Node_Board_Query= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_Board_Query);
+							//System.out.println(Node_Board_Query);
+							Object CountNodesBoard = session.createSQLQuery(Node_Board_Query).uniqueResult();
+					///////////////////////////	
+							String Node_Cabinet_Query = "select count(nlc.CABINET_ID) from NODE_CABINET nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and na.Ware_Id = '"
+									+ WareId + "' and na.NODE_PK = '" + NodeId + "' ";
+							Node_Cabinet_Query= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_Cabinet_Query);
+							//System.out.println(Node_Cabinet_Query);
+							Object CountNodesCabinet = session.createSQLQuery(Node_Cabinet_Query).uniqueResult();
+					///////////////////////////		
+							String NodesType_Query = "Select DISTINCT NODE_TYPE From NODE_ACTIVE where Active_record='1' and Ware_Id = '"+ WareId +"' and NODE_PK = '" + NodeId + "' ";
+							NodesType_Query= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,NodesType_Query);
+							//System.out.println(NodesType_Query);
+							Object CountNodes_NodeType = session.createSQLQuery(NodesType_Query).uniqueResult();					
+							
+							BoqHM.put("Site Name", String.valueOf(Sites));
+							BoqHM.put("Node Type", String.valueOf(CountNodes_NodeType));
+							BoqHM.put("G-cells", String.valueOf(CountNodes_G_CELL));
+							BoqHM.put("L-cells", String.valueOf(CountNodes_L_CELL));
+							BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
+							BoqHM.put("Boards", String.valueOf(CountNodesBoard));
+							BoqHM.put("Cabinets", String.valueOf(CountNodesCabinet));
+						}						
+						return BoqHM;				
+					} catch (Exception e) {
+						logger.info("Error in retreiving Node BOQ data Data from database", e);
+						return null;
+					} finally {
+						if (session != null && session.isOpen()) {
+							tx.commit();
+							session.close();
+						}
+					}
 				}
-				return BoqHM;
-				}				
-			} catch (Exception e) {
-				logger.info("Error in retreiving Node BOQ data Data from database", e);
-				return null;
-			} finally {
-				if (session != null && session.isOpen()) {
-					tx.commit();
-					session.close();
-				}
-			}
-		}
 
 		// Node Type BOQ data retrieving
 		@SuppressWarnings("unchecked")
