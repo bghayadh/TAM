@@ -1055,7 +1055,9 @@ function createHandhole_Marker_Click(Id,Name,Long,Lat,markersHandhole,markerClus
 //funtion to show DB for fiber,tube and strands from conectx menu	
 	function showDB(selectedContext,target,name){
 		 $("#DB").empty();// clear div
-		 markerClusterDistBoard.clearMarkers(); // clear map
+		 markerClusterBackboneDistBoard.clearMarkers(); // clear map
+		 markerClusterMetroDistBoard.clearMarkers(); // clear map
+		 markerClusterAccessDistBoard.clearMarkers(); // clear map
 		 opentab(event, 'DB');
 		 $("#distributionBoardBtn").removeClass("tablinks").addClass("tablinks active");
 			$.ajax({
@@ -1089,16 +1091,27 @@ function createHandhole_Marker_Click(Id,Name,Long,Lat,markersHandhole,markerClus
 									
 									MouseHoveringSpans("#" +distributionBoardList[i][0]+"_showDB .TreeSpan");
 									tree_prop_selection("#"+distributionBoardList[i][0]+"_showDB .TreeSpan");
-									create_Marker_Click(distributionBoardList[i][0]+"_showDB",distributionBoardList[i][3],distributionBoardList[i][1],distributionBoardList[i][2],markersDistBoard,markerClusterDistBoard,"",distributionBoardList[i][7]);
-									//markerClusterDistBoard.addMarker(markersDistBoard[""+distributionBoardList[i][0]+"_showDB"]);
-									markerClusterDistBoard.addMarker(markersDistBoard[""+distributionBoardList[i][0]]);
-									DistributionBoardCheckFilter(distributionBoardList[i][0]+"_showDB","DB");
-									//AllDistributionBoardCheckFilter(distributionBoardList[i][0]+"_showDB");
+									
+										if(distributionBoardList[i][8]=="backbone"){
+										create_Marker_Click(distributionBoardList[i][0]+"_showDB",distributionBoardList[i][3],distributionBoardList[i][1],distributionBoardList[i][2],markersDistBoard,markerClusterBackboneDistBoard,"",distributionBoardList[i][7]);
+										markerClusterBackboneDistBoard.addMarker(markersDistBoard[""+distributionBoardList[i][0]]);
+										clusterName=markerClusterBackboneDistBoard;
+									}
+									else if(distributionBoardList[i][8]=="metro"){
+										create_Marker_Click(distributionBoardList[i][0]+"_showDB",distributionBoardList[i][3],distributionBoardList[i][1],distributionBoardList[i][2],markersDistBoard,markerClusterMetroDistBoard,"",distributionBoardList[i][7]);
+										markerClusterMetroDistBoard.addMarker(markersDistBoard[""+distributionBoardList[i][0]]);
+										clusterName=markerClusterMetroDistBoard;
+									}
+									else {
+										create_Marker_Click(distributionBoardList[i][0]+"_showDB",distributionBoardList[i][3],distributionBoardList[i][1],distributionBoardList[i][2],markersDistBoard,markerClusterAccessDistBoard,"",distributionBoardList[i][7]);
+										markerClusterAccessDistBoard.addMarker(markersDistBoard[""+distributionBoardList[i][0]]);
+										clusterName=markerClusterAccessDistBoard;
+									}
+					
+									DistributionBoardCheckFilter(distributionBoardList[i][0]+"_showDB","DB",clusterName);
 								}
 								
-							//	AllDistributionBoardFilter("DB","DB");
-								AllDistributionBoardCheckFilter("DistributionBoard_f_showDB");
-									
+								AllDistributionBoardCheckFilter("DistributionBoard_f_showDB","");									
 							}
 					distributionBoardList = null;
 				},
@@ -1114,7 +1127,7 @@ function createHandhole_Marker_Click(Id,Name,Long,Lat,markersHandhole,markerClus
 
 // Function to create markers oon manhole, handhole and distribution board
 
-	 function create_Marker_Click(Id,Name,Long,Lat,markers,marker_Cluster,Type,city) {
+ function create_Marker_Click(Id,Name,Long,Lat,markers,marker_Cluster,Type,city) {
 
 			const pos = new google.maps.LatLng(Lat,Long);
 			var data="<div>" +Name+ "</div>"; 
@@ -1131,8 +1144,17 @@ function createHandhole_Marker_Click(Id,Name,Long,Lat,markersHandhole,markerClus
 					 markerType="Manhole";
 			 }
 			 
-			 else if (markers == markersDistBoard && marker_Cluster == markerClusterDistBoard) {
-				 mapIcon = iconDistBoard; 
+			
+		 	else if (markers == markersDistBoard && marker_Cluster == markerClusterBackboneDistBoard) {
+				 mapIcon = iconBackboneDistBoard; 
+				 markerType="DistributionBoard";
+			 }
+			else if (markers == markersDistBoard && marker_Cluster == markerClusterMetroDistBoard) {
+				 mapIcon = iconMetroDistBoard; 
+				 markerType="DistributionBoard";
+			 }
+			else if (markers == markersDistBoard && marker_Cluster == markerClusterAccessDistBoard) {
+				 mapIcon = iconAccessDistBoard; 
 				 markerType="DistributionBoard";
 			 }
 			 
@@ -1298,7 +1320,6 @@ function createHandhole_Marker_Click(Id,Name,Long,Lat,markersHandhole,markerClus
 
 		     
 	 }
-	 
 
 
 function Create_FiberPath(fiberId){
@@ -4797,8 +4818,8 @@ $(".TubeStrands").bind("change",function(){
 }	
 ////>>>>>>>>>> function checkbox events for filtering of <<<< Distribution Boards >>>> ////
 	
- function DistributionBoardCheckFilter(Id,folder){
-	 markersDistBoard[Id].setMap(null);
+function DistributionBoardCheckFilter(Id,folder,clusterName){
+	 	markersDistBoard[Id].setMap(null);
 		$("#"+Id).children('input').bind("change",function() {
 			var folderID = $(this).parents().eq(4).attr('id');
 			markersDistBoard[Id].setMap(null);
@@ -4809,7 +4830,7 @@ $(".TubeStrands").bind("change",function(){
 			//console.log("entered if folderID "+ folderID);
 			if ($(this).is(':checked')){
 				markersDistBoard[Id].setMap(map);					
-				markerClusterDistBoard.addMarker(markersDistBoard[Id]);
+				clusterName.addMarker(markersDistBoard[Id]);
 			}
 			else{
 				//$('.AllDistBoards').prop('checked', false);
@@ -4820,7 +4841,7 @@ $(".TubeStrands").bind("change",function(){
 					$("#DistributionBoard_f_"+folderID+ " > .AllDistBoards").prop("checked",false);				
 				}
 				markersDistBoard[Id].setMap(null);							
-				markerClusterDistBoard.removeMarker(markersDistBoard[Id]);			
+				clusterName.removeMarker(markersDistBoard[Id]);			
 			}
 		 if ($(this).parents().eq(2).find('.DistBoard:checked').length == $(this).parents().eq(2).find('.DistBoard').length) {
 				$(this).parents().eq(2).children('input').prop('checked', true);
@@ -4897,10 +4918,21 @@ $(".TubeStrands").bind("change",function(){
 			
 		});
 	}
-function AllDistributionBoardCheckFilter(Id) {
+function AllDistributionBoardCheckFilter(Id,clssName) {
 
+		
+		
 	$("#"+Id).children('input').bind("change",function() {
-			markerClusterDistBoard.clearMarkers();
+		
+		if(clssName=="") {
+			
+			markerClusterAccessDistBoard.clearMarkers();
+			markerClusterMetroDistBoard.clearMarkers();
+			markerClusterBackboneDistBoard.clearMarkers();
+		}
+		else {
+			clssName.clearMarkers();	
+		}
 
 		if ($(this).is(':checked')){				
 				
@@ -4911,15 +4943,25 @@ function AllDistributionBoardCheckFilter(Id) {
 			 if($(this).parent().hasClass('DistributionBoard')){
 					dbID=$(this).parent().attr('id');
 					if(markersDistBoard[dbID]){	
-					  if(markersDistBoard[dbID].getMap()==null){	
-						markerClusterDistBoard.removeMarker(markersDistBoard[dbID]);	
+					 // if(markersDistBoard[dbID].getMap()==null){	
+						
+						if(window[""+dbID][8]=="backbone") {
+							className=markerClusterBackboneDistBoard;
+						}
+						else if(window[""+dbID][8]=="metro") {
+							className=markerClusterMetroDistBoard;
+						}
+						else if(window[""+dbID][8]=="access") {
+							className=markerClusterAccessDistBoard;
+						}
+						className.removeMarker(markersDistBoard[dbID]);	
 						markersDistBoard[dbID].setMap(map);	
-						markerClusterDistBoard.addMarker(markersDistBoard[dbID]);
-					  }
+						className.addMarker(markersDistBoard[dbID]);
+					 // }
 					}
 					 $("#distBoardCheckAllBoq").prop("checked",true);					
 				 }	
-										
+									
 					
 			});
 			
@@ -4936,7 +4978,6 @@ function AllDistributionBoardCheckFilter(Id) {
 					dbID=$(this).parent().attr('id');
 					if(markersDistBoard[dbID]){						
 						markersDistBoard[dbID].setMap(null);	
-						//markerClusterDistBoard.removeMarker(markersDistBoard[dbID]);
 					}	
 				 }									
 			});			
@@ -4953,7 +4994,6 @@ function AllDistributionBoardCheckFilter(Id) {
         	}	
 		});	
 	}
-	
 	function AllNodeActiveCheckFilter(Id) {
 
 	$("#"+Id).children('input').bind("change",function() {
@@ -6794,7 +6834,7 @@ function boqCheckFilter(){
 			}
 		})
 
-	$("#distBoardCheckAllBoq").bind("change",function(){
+		$("#distBoardCheckAllBoq").bind("change",function(){
 		if ($(this).is(':checked')){
 			$("#DistributionBoard_f_CurrentPhysicalLayer > .AllDistBoards").prop("checked",true);	
 			$("#BackboneDB__CurrentPhysicalLayer").prop("checked",true);	
@@ -6807,8 +6847,16 @@ function boqCheckFilter(){
 				$("#"+distBoardId).children(':checkbox').prop( "checked", true );
 				
 				if(markersDistBoard[distBoardId].getMap()==null){						
-					markersDistBoard[distBoardId].setMap(map);			
-					markerClusterDistBoard.addMarker(markersDistBoard[distBoardId]);
+					markersDistBoard[distBoardId].setMap(map);	
+					if(window[""+distBoardId][8]=="backbone") {
+						markerClusterBackboneDistBoard.addMarker(markersDistBoard[distBoardId]);
+					}
+					else if(window[""+distBoardId][8]=="metro") {
+						markerClusterMetroDistBoard.addMarker(markersDistBoard[distBoardId]);
+					}
+					else if(window[""+distBoardId][8]=="access") {
+						markerClusterAccessDistBoard.addMarker(markersDistBoard[distBoardId]);
+					}		
 					$("#"+distBoardId).children(':checkbox').prop( "checked", true );
 				}
 					
@@ -6819,7 +6867,11 @@ function boqCheckFilter(){
 				$("#BackboneDB__CurrentPhysicalLayer").prop("checked",false);	
 				$("#MetroDB__CurrentPhysicalLayer").prop("checked",false);	
 				$("#AccessDB__CurrentPhysicalLayer").prop("checked",false);		
-						
+					
+					markerClusterBackboneDistBoard.clearMarkers();
+					markerClusterMetroDistBoard.clearMarkers();
+					markerClusterAccessDistBoard.clearMarkers();
+	
 				$("#DistributionBoard_f_CurrentPhysicalLayer").find(' > ul > li >ul >li ').each(function(){			
 				
 				var distBoardId=$(this).attr('id');
@@ -6827,19 +6879,28 @@ function boqCheckFilter(){
 				
 				markersDistBoard[distBoardId].setMap(null);	
 				$("#"+distBoardId).children(':checkbox').prop( "checked", false );
-				markerClusterDistBoard.clearMarkers();
 				});
 		  		
 		  		$("#network_tree").find(".DistBoard:checked" ).each(function(){
 
 					id=$(this).parent().attr('id');
+					
 					if(markersDistBoard[id].getMap()==null){
-						markersDistBoard[id].setMap(map);			
-						markerClusterDistBoard.addMarker(markersDistBoard[id]);
+						markersDistBoard[id].setMap(map);
+						if(window[""+distBoardId][8]=="backbone") {
+							markerClusterBackboneDistBoard.addMarker(markersDistBoard[id]);
+						}
+						else if(window[""+distBoardId][8]=="metro") {
+							markerClusterMetroDistBoard.addMarker(markersDistBoard[id]);
+						}
+						else if(window[""+distBoardId][8]=="access") {
+							markerClusterAccessDistBoard.addMarker(markersDistBoard[id]);
+						}				
 					}		
 				});							
 			}
 	});
+	
 	
 	$("#nodesActiveCheckAllBoq").bind("change",function(){
 		if ($(this).is(':checked')){
@@ -7592,7 +7653,9 @@ function allElementsCheckFilter(){
 
 		markerClusterManhole.clearMarkers();
 		markerClusterHandhole.clearMarkers();
-		markerClusterDistBoard.clearMarkers();
+		markerClusterAccessDistBoard.clearMarkers();
+		markerClusterMetroDistBoard.clearMarkers();
+		markerClusterBackboneDistBoard.clearMarkers();
 		markerClusterNodeActive.clearMarkers();
 		
 		$("#distBoardCheckAllBoq").prop("checked",false);
@@ -7780,9 +7843,17 @@ function allElementsCheckFilter(){
 				else if($(this).hasClass('DistBoard')){
 					id=$(this).parent().attr('id');
 					if(markersDistBoard[id].getMap()==null){
-
-						markersDistBoard[id].setMap(map);			
-						markerClusterDistBoard.addMarker(markersDistBoard[id]);
+ 
+						markersDistBoard[id].setMap(map);
+						if(window[""+id][8]=="backbone") {
+							markerClusterBackboneDistBoard.addMarker(markersDistBoard[id]);
+						}
+						else if(window[""+id][8]=="metro") {
+							markerClusterMetroDistBoard.addMarker(markersDistBoard[id]);
+						}
+						else if(window[""+id][8]=="access") {
+							markerClusterAccessDistBoard.addMarker(markersDistBoard[id]);
+						}			
 						$("#distBoardCheckAllBoq").prop("checked",true);
 						
 					}
@@ -7912,13 +7983,20 @@ function allElementsCheckFilter(){
 				}
 
 				else if($(this).hasClass('DistributionBoard')){
-				   if(markersDistBoard[$(this).attr('id')].getMap()==null){
-
-					   markersDistBoard[$(this).attr('id')].setMap(map);			
-					   markerClusterDistBoard.addMarker(markersDistBoard[$(this).attr('id')]);
+					id =$(this).attr('id');
+				   if(markersDistBoard[id].getMap()==null){
+					   markersDistBoard[id].setMap(map);	
+						if(window[""+id][8]=="backbone") {
+							markerClusterBackboneDistBoard.addMarker(markersDistBoard[id]);
+						}
+						else if(window[""+id][8]=="metro") {
+							markerClusterMetroDistBoard.addMarker(markersDistBoard[id]);
+						}
+						else if(window[""+id][8]=="access") {
+							markerClusterAccessDistBoard.addMarker(markersDistBoard[id]);
+						}			
 					}
 			   }
-			   
 			   else if($(this).hasClass('NodeActive')){
 				   if(markersNodeActive[$(this).attr('id')].getMap()==null){
 
@@ -8473,19 +8551,31 @@ function appendNearestDBoardTableMulty(result){
 			$('input[type="checkbox"]', '#findNearstDB_multy').prop('checked', true);
 			$(".DistBoard").prop('checked', true);
 			$(".AllDistBoards").prop("checked",true);
-			markerClusterDistBoard.clearMarkers();
+			markerClusterBackboneDistBoard.clearMarkers(); 
+			markerClusterMetroDistBoard.clearMarkers(); 
+			markerClusterAccessDistBoard.clearMarkers(); 
+
 			$("#network_tree").find(".DistBoard:checked" ).each(function(){
 				id=$(this).parent().attr('id');
-				markersDistBoard[id].setMap(map);			
-				markerClusterDistBoard.addMarker(markersDistBoard[id]);
-													
+				markersDistBoard[id].setMap(map);
+				if(window[""+id][8]=="backbone") {
+					markerClusterBackboneDistBoard.addMarker(markersDistBoard[id]);
+				}
+				else if(window[""+id][8]=="metro") {
+					markerClusterMetroDistBoard.addMarker(markersDistBoard[id]);
+				}
+				else if(window[""+id][8]=="access") {
+					markerClusterAccessDistBoard.addMarker(markersDistBoard[id]);
+				}			
 			});	
 			}
 			else{
 				$('input[type="checkbox"]', '#findNearstDB_multy').prop('checked', false);
 				$(".DistBoard").prop('checked', false);
 				$(".AllDistBoards").prop("checked",false);
-				markerClusterDistBoard.clearMarkers();
+				markerClusterBackboneDistBoard.clearMarkers(); 
+				markerClusterMetroDistBoard.clearMarkers(); 
+				markerClusterAccessDistBoard.clearMarkers(); 
 			}
 			
 		});
@@ -8495,13 +8585,29 @@ function appendNearestDBoardTableMulty(result){
 				var DBdId = $(this).attr('id').split("BOQ_")[1];
 				if ($(this).is(':checked')){
 					$("#"+DBdId).children('input:checkbox').prop('checked', true);
-					markersDistBoard[DBdId].setMap(map);					
-					markerClusterDistBoard.addMarker(markersDistBoard[DBdId]);
+					markersDistBoard[DBdId].setMap(map);	
+					if(window[""+DBdId][8]=="backbone") {
+						markerClusterBackboneDistBoard.addMarker(markersDistBoard[DBdId]);
+					}
+					else if(window[""+DBdId][8]=="metro") {
+						markerClusterMetroDistBoard.addMarker(markersDistBoard[DBdId]);
+					}
+					else if(window[""+DBdId][8]=="access") {
+						markerClusterAccessDistBoard.addMarker(markersDistBoard[DBdId]);
+					}				
 				}
 				else{
 					$("#"+DBdId).children('input:checkbox').prop('checked', false);
-					markersDistBoard[DBdId].setMap(null);				
-					markerClusterDistBoard.removeMarker(markersDistBoard[DBdId]);
+					markersDistBoard[DBdId].setMap(null);	
+					if(window[""+DBdId][8]=="backbone") {
+						markerClusterBackboneDistBoard.removeMarker(markersDistBoard[DBdId]);
+					}
+					else if(window[""+DBdId][8]=="metro") {
+						markerClusterMetroDistBoard.removeMarker(markersDistBoard[DBdId]);
+					}
+					else if(window[""+DBdId][8]=="access") {
+						markerClusterAccessDistBoard.removeMarker(markersDistBoard[DBdId]);
+					}				
 				}
 		});
 																	
@@ -10065,11 +10171,23 @@ function appendNearestDBoardTable(result){
 			$('input[type="checkbox"]', '#findNearstDB').prop('checked', true);
 			$(".DistBoard").prop('checked', true);
 			$(".AllDistBoards").prop("checked",true);
-			markerClusterDistBoard.clearMarkers();
+			markerClusterBackboneDistBoard.clearMarkers(); 
+			markerClusterMetroDistBoard.clearMarkers(); 
+			markerClusterAccessDistBoard.clearMarkers(); 
+
 			$("#network_tree").find(".DistBoard:checked" ).each(function(){
 				id=$(this).parent().attr('id');
-				markersDistBoard[id].setMap(map);			
-				markerClusterDistBoard.addMarker(markersDistBoard[id]);
+				markersDistBoard[id].setMap(map);
+				if(window[""+id][8]=="backbone") {
+					markerClusterBackboneDistBoard.addMarker(markersDistBoard[id]);
+				}
+				else if(window[""+id][8]=="metro") {
+					markerClusterMetroDistBoard.addMarker(markersDistBoard[id]);
+
+				}
+				else if(window[""+id][8]=="access") {
+					markerClusterAccessDistBoard.addMarker(markersDistBoard[id]);
+				}			
 													
 			});	
 			}
@@ -10077,26 +10195,47 @@ function appendNearestDBoardTable(result){
 				$('input[type="checkbox"]', '#findNearstDB').prop('checked', false);
 				$(".DistBoard").prop('checked', false);
 				$(".AllDistBoards").prop("checked",false);
-				markerClusterDistBoard.clearMarkers();
+				markerClusterBackboneDistBoard.clearMarkers(); 
+				markerClusterMetroDistBoard.clearMarkers(); 
+				markerClusterAccessDistBoard.clearMarkers(); 
+
 			}
 			
 		});
 		
-		// checking single row checbox from boq
-		$('.DBBOQ').click(function(){		
+	$('.DBBOQ').click(function(){		
 				console.log("entered "+ $(this).attr('id').split("BOQ_")[1]);
 				var DBdId = $(this).attr('id').split("BOQ_")[1];
 				if ($(this).is(':checked')){
 					$("#"+DBdId).children('input:checkbox').prop('checked', true);
-					markersDistBoard[DBdId].setMap(map);					
-					markerClusterDistBoard.addMarker(markersDistBoard[DBdId]);
+					markersDistBoard[DBdId].setMap(map);
+					if(window[""+DBdId][8]=="backbone") {
+						markerClusterBackboneDistBoard.addMarker(markersDistBoard[DBdId]);
+					}
+					else if(window[""+DBdId][8]=="metro") {
+						markerClusterMetroDistBoard.addMarker(markersDistBoard[DBdId]);
+	
+					}
+					else if(window[""+DBdId][8]=="access") {
+						markerClusterAccessDistBoard.addMarker(markersDistBoard[DBdId]);
+					}						
 				}
 				else{
 					$("#"+DBdId).children('input:checkbox').prop('checked', false);
-					markersDistBoard[DBdId].setMap(null);				
-					markerClusterDistBoard.removeMarker(markersDistBoard[DBdId]);
+					markersDistBoard[DBdId].setMap(null);
+					if(window[""+DBdId][8]=="backbone") {
+						markerClusterBackboneDistBoard.removeMarker(markersDistBoard[DBdId]);
+					}
+					else if(window[""+DBdId][8]=="metro") {
+						markerClusterMetroDistBoard.removeMarker(markersDistBoard[DBdId]);
+	
+					}
+					else if(window[""+DBdId][8]=="access") {
+						markerClusterAccessDistBoard.removeMarker(markersDistBoard[DBdId]);
+					}					
 				}
 		});
+				
 																	
 	}
    
@@ -11443,9 +11582,18 @@ function FindFiberData(selectedFiberContext){
 					else if ($(this).parent().parent().children('td[name="TubeAuxiliary"]').children('input').val().split("_")[0]=="DB") {
 						var Id = $(this).parent().parent().children('td[name="TubeAuxiliary"]').children('input').val().split(":")[0];
 						if(markersDistBoard[Id]){	
-							markerClusterDistBoard.removeMarker(markersDistBoard[Id]);
+							if(window[""+Id][8]=="backbone") {
+								className=markerClusterBackboneDistBoard;
+							}
+							else if(window[""+Id][8]=="metro") {
+								className=markerClusterMetroDistBoard;
+							}
+							else if(window[""+Id][8]=="access") {
+								className=markerClusterAccessDistBoard;
+							}
+							className.removeMarker(markersDistBoard[Id]);
 							markersDistBoard[Id].setMap(map);					
-							markerClusterDistBoard.addMarker(markersDistBoard[Id]);
+							className.addMarker(markersDistBoard[Id]);
 							$("#"+Id).children(':checkbox').prop( "checked", true );
 							$("#distBoardCheckAllBoq").prop( "checked", true );
 							markersDistBoard[Id].setLabel({text: $(this).parent().parent().children('td[name="TubeAuxiliary"]').children('input').val().split(":")[1], className:"marker-position-dB",color:"#5665F9"});
@@ -11484,14 +11632,23 @@ function FindFiberData(selectedFiberContext){
 							$("#"+HandId).children(':checkbox').prop( "checked", false );
 							markersHandhole[HandId].setLabel(null);
 						}						
-						else if ($(this).parent().parent().children('td[name="TubeAuxiliary"]').children('input').val().split("_")[0]=="DB"){
+					 else if ($(this).parent().parent().children('td[name="TubeAuxiliary"]').children('input').val().split("_")[0]=="DB"){
 							var Id = $(this).parent().parent().children('td[name="TubeAuxiliary"]').children('input').val().split(":")[0];
-							markersDistBoard[Id].setMap(null);					
-							markerClusterDistBoard.removeMarker(markersDistBoard[Id]);
+							markersDistBoard[Id].setMap(null);	
+							if(window[""+Id][8]=="backbone") {
+								markerClusterBackboneDistBoard.removeMarker(markersDistBoard[Id]);
+							}
+							else if(window[""+Id][8]=="metro") {
+								markerClusterMetroDistBoard.removeMarker(markersDistBoard[Id]);
+
+							}
+							else if(window[""+Id][8]=="access") {
+								markerClusterAccessDistBoard.removeMarker(markersDistBoard[Id]);
+							}				
 							$("#"+Id).children(':checkbox').prop( "checked", false );
 							markersDistBoard[Id].setLabel(null);
 						}
-					}						
+					}					
 					if( $("#Manhole_f_CurrentPhysicalLayer").find(".Manhole:checked" ).length ==0){
 						$("#manholeCheckAllBoq").prop("checked",false);
 					}
@@ -11696,12 +11853,21 @@ function FindFiberData(selectedFiberContext){
 					markersHandhole[HandId].setLabel({text: $(this).parent().parent().children('td[name="StrandAuxiliary"]').children('input').val().split(":")[1], className:"marker-position-handhole",color:"#E5C523"});
 				}										
 			}			
-			else if ($(this).parent().parent().children('td[name="StrandAuxiliary"]').children('input').val().split("_")[0]=="DB") {
+		else if ($(this).parent().parent().children('td[name="StrandAuxiliary"]').children('input').val().split("_")[0]=="DB") {
 				var Id = $(this).parent().parent().children('td[name="StrandAuxiliary"]').children('input').val().split(":")[0];
 				if(markersDistBoard[Id]){	
-					markerClusterDistBoard.removeMarker(markersDistBoard[Id]);
+					if(window[""+Id][8]=="backbone") {
+						className=markerClusterBackboneDistBoard;
+					}
+					else if(window[""+Id][8]=="metro") {
+						className=markerClusterMetroDistBoard;
+					}
+					else if(window[""+Id][8]=="access") {
+						className=markerClusterAccessDistBoard;
+					}
+					className.removeMarker(markersDistBoard[Id]);
 					markersDistBoard[Id].setMap(map);					
-					markerClusterDistBoard.addMarker(markersDistBoard[Id]);
+					className.addMarker(markersDistBoard[Id]);
 					$("#"+Id).children(':checkbox').prop( "checked", true );
 					$("#distBoardCheckAllBoq").prop( "checked", true );
 					markersDistBoard[Id].setLabel({text: $(this).parent().parent().children('td[name="StrandAuxiliary"]').children('input').val().split(":")[1], className:"marker-position-dB",color:"#5665F9"});
@@ -11742,8 +11908,16 @@ function FindFiberData(selectedFiberContext){
 				}						
 				else if ($(this).parent().parent().children('td[name="StrandAuxiliary"]').children('input').val().split("_")[0]=="DB"){
 					var Id = $(this).parent().parent().children('td[name="StrandAuxiliary"]').children('input').val().split(":")[0];
-					markersDistBoard[Id].setMap(null);					
-					markerClusterDistBoard.removeMarker(markersDistBoard[Id]);
+					markersDistBoard[Id].setMap(null);		
+					if(window[""+Id][8]=="backbone") {
+						markerClusterBackboneDistBoard.removeMarker(markersDistBoard[Id]);
+					}
+					else if(window[""+Id][8]=="metro") {
+						markerClusterMetroDistBoard.removeMarker(markersDistBoard[Id]);
+					}
+					else if(window[""+Id][8]=="access") {
+						markerClusterAccessDistBoard.removeMarker(markersDistBoard[Id]);
+					}			
 					$("#"+Id).children(':checkbox').prop( "checked", false );
 					markersDistBoard[Id].setLabel(null);
 				}
@@ -12185,9 +12359,18 @@ function showHideRealPoints(pathID,checkSeqWindowID,action) {
 				var dbID = showHidePointsArray[x].split(":")[0];
 				if(markersDistBoard[dbID]) {
 					if(markersDistBoard[dbID].getMap() ==null) {
-						markerClusterDistBoard.removeMarker(markersDistBoard[dbID]);	
+						if(window[""+dbID][8]=="backbone") {
+							className=markerClusterBackboneDistBoard;
+						}
+						else if(window[""+dbID][8]=="metro") {
+							className=markerClusterMetroDistBoard;
+						}
+						else if(window[""+dbID][8]=="access") {
+							className=markerClusterAccessDistBoard;
+						}
+						className.removeMarker(markersDistBoard[dbID]);	
 						markersDistBoard[dbID].setMap(map);					
-						markerClusterDistBoard.addMarker(markersDistBoard[dbID]);
+						className.addMarker(markersDistBoard[dbID]);
 						$("#"+dbID).children(':checkbox').prop( "checked", true );
 						$("#distBoardCheckAllBoq").prop( "checked", true );
 					}
@@ -12279,8 +12462,16 @@ function showHideRealPoints(pathID,checkSeqWindowID,action) {
 			else if(showHidePointsArray[x].startsWith("DB_")==true) {
 				var dbID = showHidePointsArray[x].split(":")[0];
 				if(markersDistBoard[dbID]) {
-					markersDistBoard[dbID].setMap(null);					
-					markerClusterDistBoard.removeMarker(markersDistBoard[dbID]);
+					markersDistBoard[dbID].setMap(null);	
+					if(window[""+dbID][8]=="backbone") {
+						markerClusterBackboneDistBoard.removeMarker(markersDistBoard[dbID]);
+					}
+					else if(window[""+dbID][8]=="metro") {
+						markerClusterMetroDistBoard.removeMarker(markersDistBoard[dbID]);
+					}
+					else if(window[""+dbID][8]=="access") {
+						markerClusterAccessDistBoard.removeMarker(markersDistBoard[dbID]);
+					}				
 					$("#"+dbID).children(':checkbox').prop( "checked", false );	
 				}					
 			}								
@@ -12499,9 +12690,6 @@ function showHideAllSequence(pathID,action) {
 	 }
 }
 
-
-
-
 function showHideAllPoints(pathID,checkSeqWindowID,action) {
 showHidePointsArray=[];
 if(window["mapPointsNames_"+pathID] != undefined) {
@@ -12698,9 +12886,18 @@ if(window["mapPointsNames_"+pathID] != undefined) {
 				var dbID = showHidePointsArray[x].split(":")[0];
 				if(markersDistBoard[dbID]) {	
 					if(markersDistBoard[dbID].getMap() ==null) {
-						markerClusterDistBoard.removeMarker(markersDistBoard[dbID]);	
+						if(window[""+dbID][8]=="backbone") {
+							className=markerClusterBackboneDistBoard;
+						}
+						else if(window[""+dbID][8]=="metro") {
+							className=markerClusterMetroDistBoard;
+						}
+						else if(window[""+dbID][8]=="access") {
+							className=markerClusterAccessDistBoard;
+						}
+						className.removeMarker(markersDistBoard[dbID]);	
 						markersDistBoard[dbID].setMap(map);					
-						markerClusterDistBoard.addMarker(markersDistBoard[dbID]);
+						className.addMarker(markersDistBoard[dbID]);
 						$("#"+dbID).children(':checkbox').prop( "checked", true );
 						$("#distBoardCheckAllBoq").prop( "checked", true );
 					}
@@ -12809,8 +13006,16 @@ if(window["mapPointsNames_"+pathID] != undefined) {
 			else if(showHidePointsArray[x].startsWith("DB_")==true) {
 				var dbID = showHidePointsArray[x].split(":")[0];
 				if(markersDistBoard[dbID]) {
-					markersDistBoard[dbID].setMap(null);					
-					markerClusterDistBoard.removeMarker(markersDistBoard[dbID]);
+					markersDistBoard[dbID].setMap(null);	
+					if(window[""+dbID][8]=="backbone") {
+						markerClusterBackboneDistBoard.removeMarker(markersDistBoard[dbID]);
+					}
+					else if(window[""+dbID][8]=="metro") {
+						markerClusterMetroDistBoard.removeMarker(markersDistBoard[dbID]);
+					}
+					else if(window[""+dbID][8]=="access") {
+						markerClusterAccessDistBoard.removeMarker(markersDistBoard[dbID]);
+					}				
 					$("#"+dbID).children(':checkbox').prop( "checked", false );	
 				}					
 			}
@@ -12831,7 +13036,6 @@ if(window["mapPointsNames_"+pathID] != undefined) {
 	showHidePointsArray=[];
 }
 }
-
 function FindFiberTube(selectedTube){
 	$('#TubeModal').find('input:text').val('');
 	$('#TubeModal').find('input:file').val('');	 
@@ -13450,10 +13654,8 @@ if (subLayer==""){
 						markerClusterHandhole.removeMarker(markersHandhole[allSelectedLayer[k]]);
 					}
 				}
-				else if(layer == "DistBoard" || layer =="AllDistBoards") {
-				
-					//markerClusterDistBoard.clearMarkers();
-					
+					else if(layer == "DistBoard" || layer =="AllDistBoards") {
+									
 					//Remove the deleted DB from tree
 					for(var k=0;k<allSelectedLayer.length;k++){
 						var node = document.getElementById(allSelectedLayer[k]);
@@ -13464,7 +13666,15 @@ if (subLayer==""){
 					//Remove the deleted DB Markers from map and array
 					markersDistBoard[allSelectedLayer[k]].setMap(null);
 					markersDistBoard.splice(allSelectedLayer[k], 1);
-					markerClusterDistBoard.removeMarker(markersDistBoard[allSelectedLayer[k]]);
+					if(window[""+allSelectedLayer[k]][8]=="backbone") {
+						markerClusterBackboneDistBoard.removeMarker(markersDistBoard[allSelectedLayer[k]]);
+					}
+					else if(window[""+allSelectedLayer[k]][8]=="metro") {
+						markerClusterMetroDistBoard.removeMarker(markersDistBoard[allSelectedLayer[k]]);
+					}
+					else if(window[""+allSelectedLayer[k]][8]=="access") {
+						markerClusterAccessDistBoard.removeMarker(markersDistBoard[allSelectedLayer[k]]);
+					}
 					
 				}				
 				}
@@ -13496,11 +13706,18 @@ if (subLayer==""){
 						}
 						//Remove the deleted DB Markers from map and array
 						if(allDBProject.length>0){
-							//markerClusterDistBoard.clearMarkers();
 							for(var D=0;D<allDBProject.length;D++){
 								markersDistBoard[allDBProject[D]].setMap(null);
 								markersDistBoard.splice(allDBProject[D], 1);
-								markerClusterDistBoard.removeMarker(markersDistBoard[allDBProject[D]]);
+								if(window[""+allDBProject[D]][8]=="backbone") {
+									markerClusterBackboneDistBoard.removeMarker(markersDistBoard[allDBProject[D]]);
+								}
+								else if(window[""+allDBProject[D]][8]=="metro") {
+									markerClusterMetroDistBoard.removeMarker(markersDistBoard[allDBProject[D]]);
+								}
+								else if(window[""+allDBProject[D]][8]=="access") {
+									markerClusterAccessDistBoard.removeMarker(markersDistBoard[allDBProject[D]]);
+								}
 							}
 						}
 
@@ -19759,11 +19976,21 @@ function showHideTubeStrandAuxPoints(auxiliaryArray,wareID,srcDstID,name,longitu
 			}
 		}			 
 		else if(auxPt.split('_')[0]=="DB"){
-			if(markersDistBoard[auxPt.split(':')[0]]){
-				markerClusterDistBoard.removeMarker(markersDistBoard[auxPt.split(':')[0]]);
+			if(markersDistBoard[auxPt.split(':')[0]]){ 
+				
+				if(window[""+auxPt.split(':')[0]][8]=="backbone") {
+					className=markerClusterBackboneDistBoard;
+				}
+				else if(window[""+auxPt.split(':')[0]][8]=="metro") {
+					className=markerClusterMetroDistBoard;
+				}
+				else if(window[""+auxPt.split(':')[0]][8]=="access") {
+					className=markerClusterAccessDistBoard;
+				}
+				className.removeMarker(markersDistBoard[auxPt.split(':')[0]]);
 				if(markersDistBoard[auxPt.split(':')[0]].getMap() ==null) {
 					markersDistBoard[auxPt.split(':')[0]].setMap(map);	
-					markerClusterDistBoard.addMarker(markersDistBoard[auxPt.split(':')[0]]);
+					className.addMarker(markersDistBoard[auxPt.split(':')[0]]);
 					$("#"+auxPt.split(':')[0]).children(':checkbox').prop( "checked", true );
 					$("#distBoardCheckAllBoq").prop( "checked", true );
 				}
@@ -19833,8 +20060,17 @@ function showHideTubeStrandAuxPoints(auxiliaryArray,wareID,srcDstID,name,longitu
 			}			 
 			else if(auxPt.split('_')[0]=="DB"){
 				if(markersDistBoard[auxPt.split(':')[0]]) {
+					if(window[""+auxPt.split(':')[0]][8]=="backbone") {
+						className=markerClusterBackboneDistBoard;
+					}
+					else if(window[""+auxPt.split(':')[0]][8]=="metro") {
+						className=markerClusterMetroDistBoard;
+					}
+					else if(window[""+auxPt.split(':')[0]][8]=="access") {
+						className=markerClusterAccessDistBoard;
+					}
 					markersDistBoard[auxPt.split(':')[0]].setMap(null);					
-					markerClusterDistBoard.removeMarker(markersDistBoard[auxPt.split(':')[0]]);
+					className.removeMarker(markersDistBoard[auxPt.split(':')[0]]);
 					$("#"+auxPt.split(':')[0]).children(':checkbox').prop( "checked", false );	
 					
 			}	
@@ -19867,5 +20103,3 @@ function showHideTubeStrandAuxPoints(auxiliaryArray,wareID,srcDstID,name,longitu
 			}	
 			
 		}
-
-

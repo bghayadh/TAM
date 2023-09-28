@@ -32,8 +32,22 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			markerClusterManhole.setMap(map); // to be checked !!!!
 			markerClusterHandhole = new MarkerClusterer();
 			markerClusterHandhole.setMap(map);// to be checked !!!!
-			markerClusterDistBoard = new MarkerClusterer();
-			markerClusterDistBoard.setMap(map);// to be checked !!!!
+			
+			/*markerClusterDistBoard = new MarkerClusterer();
+			markerClusterDistBoard.setMap(map);// to be checked !!!!*/
+			
+			markerClusterBackboneDistBoard = new MarkerClusterer();
+			markerClusterBackboneDistBoard.setMap(map);
+			
+			markerClusterMetroDistBoard = new MarkerClusterer();
+			markerClusterMetroDistBoard.setMap(map);
+			
+			markerClusterAccessDistBoard = new MarkerClusterer();
+			markerClusterAccessDistBoard.setMap(map);
+			
+			
+			
+			
 			markerClusterNodeActive = new MarkerClusterer();
 			markerClusterNodeActive.setMap(map);// to be checked !!!!
 	
@@ -52,10 +66,19 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 				scaledSize: new google.maps.Size(20, 20), // scaled size
 				
 			};
-			
-			
-			iconDistBoard = {
-				url:getContext()+"/resources/NetworkImages/electrical-panel.png", // url
+		
+			iconBackboneDistBoard = {
+				url:getContext()+"/resources/NetworkImages/backboneDB.png", // url
+				scaledSize: new google.maps.Size(20, 20), // scaled size
+				
+			};
+			iconMetroDistBoard = {
+				url:getContext()+"/resources/NetworkImages/metroDb.png", // url
+				scaledSize: new google.maps.Size(20, 20), // scaled size
+				
+			};
+			iconAccessDistBoard = {
+				url:getContext()+"/resources/NetworkImages/accessDb.png", // url
 				scaledSize: new google.maps.Size(20, 20), // scaled size
 				
 			};
@@ -131,8 +154,10 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			});
 			
 			
-			// Distribution Boards cluster Calculator
-			markerClusterDistBoard.setOptions({								
+			
+			
+			// Backbone Distribution Boards cluster Calculator
+			markerClusterBackboneDistBoard.setOptions({								
 				minimumClusterSize: 2,
 				styles: [
 				         {
@@ -146,6 +171,41 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 					if (markers.length >= 1) return {text: markers.length,index:1}; 
 				}                   
 			});
+			
+			
+			// Metro Distribution Boards cluster Calculator
+			markerClusterMetroDistBoard.setOptions({								
+				minimumClusterSize: 2,
+				styles: [
+				         {
+				        	 url: getContext()+'/resources/clusterIcons/dbMetroCluster.png',
+					         height: 60,
+					         width:60,
+					         anchorText:[-3,-3]
+					      },
+				],
+				calculator: function(markers, numStyles) {
+					if (markers.length >= 1) return {text: markers.length,index:1}; 
+				}                   
+			});
+			
+			// Access Distribution Boards cluster Calculator
+			markerClusterAccessDistBoard.setOptions({								
+				minimumClusterSize: 2,
+				styles: [
+				         {
+				        	 url: getContext()+'/resources/clusterIcons/dbAccessCluster.png',
+					         height: 60,
+					         width:60,
+					         anchorText:[-3,-3]
+					      },
+				],
+				calculator: function(markers, numStyles) {
+					if (markers.length >= 1) return {text: markers.length,index:1}; 
+				}                   
+			});
+			
+			
 			
 				markerClusterNodeActive.setOptions({								
 				minimumClusterSize: 2,
@@ -175,7 +235,9 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 				google.maps.event.addListenerOnce(map, 'idle', function() {
 						markerClusterManhole.repaint();
 						markerClusterHandhole.repaint();
-						markerClusterDistBoard.repaint();	
+						markerClusterBackboneDistBoard.repaint();	
+						markerClusterMetroDistBoard.repaint();	
+						markerClusterAccessDistBoard.repaint();	
 						markerClusterNodeActive.repaint();
 	
 				});				
@@ -221,15 +283,27 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 				}		
 				//AllHandholeCheckFilter();
 			}
-			if(distribBoardList!=null)
-			{
-				for(i=0;i<distribBoardList.length;i++){			
-					//createDistBoard_Marker_Click(distribBoardList[i][0],distribBoardList[i][3],distribBoardList[i][1],distribBoardList[i][2],markersDistBoard,markerClusterDistBoard, distribBoardList[i][7]);
-					create_Marker_Click(distribBoardList[i][0],distribBoardList[i][3],distribBoardList[i][1],distribBoardList[i][2],markersDistBoard,markerClusterDistBoard,"",distribBoardList[i][7]);
-					DistributionBoardCheckFilter(distribBoardList[i][0],"");
+			if(distribBoardList!=null){
+				for(i=0;i<distribBoardList.length;i++){		
+					if(distribBoardList[i][8]=="backbone"){
+						clusterName = markerClusterBackboneDistBoard;
+					}
+					else if(distribBoardList[i][8]=="metro"){
+						clusterName = markerClusterMetroDistBoard;
+					}
+					else {
+						clusterName = markerClusterAccessDistBoard;
+					}
+					create_Marker_Click(distribBoardList[i][0],distribBoardList[i][3],distribBoardList[i][1],distribBoardList[i][2],markersDistBoard,clusterName,"",distribBoardList[i][7]);
+					DistributionBoardCheckFilter(distribBoardList[i][0],"",clusterName);
 				}
 			
 				//AllDistributionBoardFilter();
+				
+			AllDistributionBoardCheckFilter("DistributionBoard_access__CurrentPhysicalLayer",markerClusterAccessDistBoard);
+		    AllDistributionBoardCheckFilter("DistributionBoard_metro__CurrentPhysicalLayer",markerClusterMetroDistBoard);
+		    AllDistributionBoardCheckFilter("DistributionBoard_backbone__CurrentPhysicalLayer",markerClusterBackboneDistBoard);
+		    AllDistributionBoardCheckFilter("DistributionBoard_f_CurrentPhysicalLayer","")
 			}
 			
 			

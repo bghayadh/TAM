@@ -9,8 +9,11 @@ var lst = ${listSites};
 var Long=${Long};
 var Lat=${Lat};
 var listNodes=${listNodes};
+//console.log("listNodes...", listNodes);
 var listCells=${listCells};
-
+//console.log("listCells...", listCells);
+var arrayParam=${arrayParam};
+console.log("arrayParam...", arrayParam);
 
 
 var button ;
@@ -19,14 +22,19 @@ if(!(lst==null || lst=="")){
 var wareCount=lst.length;
 }
 
-var currentUrl = window.location.href;
-console.log("currentUrl....",currentUrl);
-// Check if the Enterprise exists in the URL
-if (currentUrl.indexOf("Enterprise") !== -1) {
-  console.log("Enterpriseeeee");
-  $('#EnterpriseBtn').toggleClass('activee');
-} 
-
+if(arrayParam[0] == 1){
+	 $('#EnterpriseBtn').toggleClass('activee'); 
+	 console.log("EnterpriseBtn");
+}if(arrayParam[1] == 1){
+	 $('#transmBtn').toggleClass('activee');  
+	 console.log("transmBtn");
+}if(arrayParam[2] == 1){
+	 $('#accessDBtn').toggleClass('activee');
+	 console.log("accessDBtn");
+}if(arrayParam[3] == 1){
+	 $('#CoreBtn').toggleClass('activee');
+	 console.log("CoreBtn");
+}
 
 function initMap() {
 
@@ -273,7 +281,7 @@ map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
 /*     Strat of Site Node Cell Tree Method   */ 
 //////////////////////////////////////////////
 function CreateTree_StNdCell(lst,map){
-	//console.log("CREATE TREEEEEE");
+	console.log("CREATE TREEEEEE");
 	//Site_Boq("");
 	var str="<ul><li id='initial_ul' class='Initial'><input type='checkbox' id='StNdCell_Sites' class='AllSites' style='margin-left: 15px' unchecked onclick='AllSitesCheckFilter()'></input> <span class='folder' id='test1'><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Sites</span></li></ul>";
 	$("#network_tree").append(str);	
@@ -361,7 +369,7 @@ function AllSitesCheckFilter(){
 
 
 function showMarkersChecked(n){
-	//console.log(" showMarkersChecked");
+	console.log(" showMarkersChecked");
 	var id =n.id;
 	var Id= id.split("_SingleSite")[0]; // This Id is is used for markersSite[]
 // To be deleted		
@@ -394,7 +402,7 @@ function showMarkersChecked(n){
 
 function StNdCellCore(n)
 	{
-	//console.log(" StNdCellCore1");
+	console.log(" StNdCellCore1");
 	//console.log(" StNdCellCore1 n " , n);
 	var selectedItem=n.id;
 	//tree_prop_general();
@@ -434,8 +442,9 @@ function StNdCellCore(n)
 
 function StNdCellCoreFolder(n)
 {
-	//console.log(" StNdCellCore Folder");
-	var selectedItem=n.id;
+	console.log(" StNdCellCore Folder");
+	var selectedItem = n.id;
+	console.log("selectedItem........",selectedItem);
 	//var sitesNCreated=[];
 	markersSite="";
 	//console.log(" markersSite... folder..."+ markersSite);
@@ -456,9 +465,17 @@ function StNdCellCoreFolder(n)
 					lstNodes.push(listNodes[n]);
 				}
 			}	
+			var lstCells=[];
+			for(var n=0; n<listCells.length; n++){
+				if(listCells[n][3]==selectedItem){
+					lstCells.push(listCells[n]);
+				}
+			}
+			console.log("lstNodes.....",lstNodes);
+			console.log("lstCells.....",lstCells);
 			if(lstNodes!=null) {
 				if(SiteChildrenLength<lstNodes.length){
-					Create_TreeNode_CellGeneral(lstNodes,listCells,SiteChildrenLength,false,selectedItem);
+					Create_TreeNode_CellGeneral(lstNodes,lstCells,SiteChildrenLength,false,selectedItem);
 					nodeCreated=true;
 				}	
 			}	
@@ -512,9 +529,42 @@ function StNdCellCoreFolder(n)
 //////////////////////////////////////////////
 
 //////////////////////////////////////////////
-	
+var enterprise = null;
+var transmission = null;
+var access = null;
+var core = null;
+
 //Submit selection to draw Tree and Map w.r.to active button
-function Sumbitselection(arr){ 
+function Sumbitselection(arr,domain){ 
+    var queryParams = [];
+    console.log("domain >>>  ",domain);
+    if(domain.length !=0){
+	    for (var i = 0; i < domain.length; i++) {
+	    	if(domain[i]=="accessDBtn"){
+	    		access="Access";
+	    		queryParams.push('access=' + encodeURIComponent(access));
+	    	}
+	    	if(domain[i]=="transmBtn"){
+	    		transmission="Transmission";
+	    		queryParams.push('transmission=' + encodeURIComponent(transmission));
+	    	}  	
+	    	if(domain[i]=="EnterpriseBtn"){
+	    		enterprise="Enterprise";
+	    		queryParams.push('enterprise=' + encodeURIComponent(enterprise));
+	    	}
+	    	if(domain[i]=="CoreBtn"){
+	    		core="Core";
+	    		queryParams.push('core=' + encodeURIComponent(core));
+	    	}
+	        domain[i] = 'li_' + domain[i].trim(); 
+	    }   
+    }
+   // var modifiedDomain = domain.join(',');
+	var params=null;
+	if (queryParams.length > 0) {
+		params='?';
+		params +=  queryParams.join('&');
+	}
 
 	 switch (arr)
 	 {
@@ -522,22 +572,14 @@ function Sumbitselection(arr){
 	 	case "li_siteBtn,li_nodeBtn,li_cellBtn":
 	 	case "siteBtn,nodeBtn,cellBtn":		
 	 	{	
-	 		window.location.href = getContext()+"/Network_StNdCell";
+	 		var url = getContext() + '/Network_StNdCell';
+	 		if(params !=null){
+	 			url += params;
+	 		}
+	 		window.location.href = url;
 	 	} 
 	 break;
-	 	case "li_siteBtn,li_nodeBtn,li_cellBtn,li_EnterpriseBtn":
-	 	case "siteBtn,nodeBtn,cellBtn,EnterpriseBtn":		
-	 	{	
-	 		var param1 = 'Enterprise';
-	 		//var param2 = 'value2';
-	 		var url = getContext() + '/Network_StNdCell';
-	 		url += '?param1=' + encodeURIComponent(param1);
-	 		//url += '&param2=' + encodeURIComponent(param2);
-	 		window.location.href = url;
-	 	//	$('#EnterpriseBtn').addClass('activee');
-	 	}
-		break;
-		
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 	 //Site-NodeType-Node-Cell
 	 case "li_siteBtn,li_nodeTypeeBtn,li_nodeBtn,li_cellBtn":
 	 case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn":
