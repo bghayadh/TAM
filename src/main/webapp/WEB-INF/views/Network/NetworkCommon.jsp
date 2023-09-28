@@ -579,15 +579,15 @@
 				<div class="modal-header" style="background-color: white;">
 					<h5 class="modal-title" style="margin-top: -2px;"
 						id="mapoperations">Check Order For Tree Display</h5>
-					<button type="button" name="closePopup" class="close"
-						data-dismiss="modal" id="mapoperations">
+				<div style=float:right;">
+					<button type="button" name="closePopup" class="close" data-dismiss="modal" id="mapoperations">
 						<i class='fa fa-times'></i>
 					</button>
-					<a class="close modalMinimize ml-3"> <i
-						class='fa fa-minus icon-to-change' id="mapoperations"></i>
+					<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change' id="mapoperations"></i>
 					</a>
 				</div>
-				<div class="modal-body">
+			</div>
+		<div class="modal-body">
 					<div class="row">
 						<div class="col-md">
 							<ul id="sortable"></ul>
