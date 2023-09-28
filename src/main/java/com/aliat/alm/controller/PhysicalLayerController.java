@@ -1435,8 +1435,8 @@ public class PhysicalLayerController {
 						strandsAuxiliaries = strandsAuxiliariesQuery.list();
 
 						distribBoardList = session.createSQLQuery(
-								" SELECT DISTINCT A.DB_ID,A.DB_LONGITUDE,A.DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN DISTRIBUTION_BOARD_MAPPING B  ON B.DB_ID = A.DB_ID  where A.WAREHOUSE LIKE '%"
-										+ siteId + "%' OR B.FP_LOCATION LIKE '%" + siteId + "%' ")
+								"SELECT DISTINCT A.DB_ID,A.DB_LONGITUDE,A.DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN DISTRIBUTION_BOARD_MAPPING B  ON B.DB_ID = A.DB_ID  where A.WAREHOUSE LIKE '%"
+										+ siteId + "%' OR B.BP_LOCATION_ID LIKE '%" + siteId+ "%' OR B.FP_LOCATION_ID LIKE '%" + siteId + "%' ")
 								.list();
 						int distribBoardListSize = distribBoardList.size();
 						System.out.println("distribBoardList 1 is " + mapper.writeValueAsString(distribBoardList));
