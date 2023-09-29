@@ -126,16 +126,16 @@ public class DistributionBoardMapping {
 	@Column(name = "BP_FIBER_NAME")
 	private String bP_FiberName;
 
-	@Column(name = "BP_STRAND_Nb")
+	@Column(name = "BP_STRAND_NB")
 	private String bP_StrandNb;
 	
-	@Column(name = "FP_STRAND_Nb")
+	@Column(name = "FP_STRAND_NB")
 	private String fP_StrandNb;
 	
-	@Column(name = "FP_TUBE_Nb")
+	@Column(name = "FP_TUBE_NB")
 	private String fP_TubeNb;
 	
-	@Column(name = "BP_TUBE_Nb")
+	@Column(name = "BP_TUBE_NB")
 	private String bP_TubeNb;
 	
 	@Column(name = "BP_STRAND_COLOR")
