@@ -87,7 +87,7 @@ public class PhysicalLayerController {
 			HttpServletResponse response) throws JsonProcessingException {
 
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
-			return "redirect:/"; 
+			return "redirect:/";
 		} else {
 
 			session = almsessions.getSession();
@@ -131,13 +131,7 @@ public class PhysicalLayerController {
 					List<Object[]> ductAuxiliary_DataPt = new ArrayList<Object[]>();
 					List<Object[]> newList = new ArrayList<Object[]>();
 					List<Object[]> newListPt = new ArrayList<Object[]>();
-					List<Object[]> EntrepriseList = new ArrayList<Object[]>();
-					List<Object[]> TransmissionList = new ArrayList<Object[]>();
-					List<Object[]> CoreList = new ArrayList<Object[]>();
-					List<Object[]> AccessList = new ArrayList<Object[]>();
 					List<Object[]> NodeActiveList = new ArrayList<Object[]>();
-
-					
 
 					// System.out.println("url is "+request.getParameter("selectedField"));
 					String checkedOption = "all";
@@ -689,30 +683,11 @@ public class PhysicalLayerController {
 							distribBoardList = findNearestArray(distribBoardListQuery, Double.valueOf(closestLatPoint),
 									Double.valueOf(closestLongPoint), Double.valueOf(closestDisRange), "DistribBoard",
 									noOfPoints);
-							
-							List<Object[]> entrepriseListQuery = session.createSQLQuery(
-									"SELECT DISTINCT NODE_ID,NODE_NAME,LONGITUDE,LATITUDE FROM NODE_ACTIVE ")
-									.list();
-							if (entrepriseListQuery != null && closestLatPoint != null && closestLongPoint != null && closestDisRange != null && noOfPoints != null) {
-							EntrepriseList = findNearestArray(entrepriseListQuery, Double.valueOf(closestLatPoint),
-									Double.valueOf(closestLongPoint), Double.valueOf(closestDisRange), "Entreprise",
-									noOfPoints);
-							}
-							
-							List<Object[]> transmissionListQuery = session.createSQLQuery(
-									"SELECT DISTINCT NODE_ID,NODE_NAME,LONGITUDE,LATITUDE FROM NODE_ACTIVE ")
-									.list();
-							if (transmissionListQuery != null && closestLatPoint != null && closestLongPoint != null && closestDisRange != null && noOfPoints != null) {
-							TransmissionList = findNearestArray(transmissionListQuery, Double.valueOf(closestLatPoint),
-									Double.valueOf(closestLongPoint), Double.valueOf(closestDisRange), "Transmission",
-									noOfPoints);
-							}
+
 							List<Object[]> nearstPoints = new ArrayList<Object[]>();
 							nearstPoints.addAll(manholeList);
 							nearstPoints.addAll(handholeList);
 							nearstPoints.addAll(distribBoardList);
-							nearstPoints.addAll(EntrepriseList);
-							nearstPoints.addAll(TransmissionList);
 
 							String[] idsArray = (findListId(nearstPoints, "all")).length > 0
 									? findListId(nearstPoints, "all")
@@ -871,8 +846,8 @@ public class PhysicalLayerController {
 							model.addAttribute("closestDisRange", closestDisRange);
 							model.addAttribute("noP", noOfPoints);
 							model.addAttribute("getRelatedPoints", showPointsType);
-							
-						} else if(StringUtils.equalsIgnoreCase(request.getParameter("Checked"), "StartEnd")){
+
+						} else if (StringUtils.equalsIgnoreCase(request.getParameter("Checked"), "StartEnd")) {
 							String startLongPoint = request.getParameter("startLongPoint");
 							String newStartLngPt = startLongPoint;
 							String startLatPoint = request.getParameter("startLatPoint");
@@ -931,7 +906,7 @@ public class PhysicalLayerController {
 											+ " and to_number(LONGITUDE) <=  " + newEndLngPt
 											+ " and  to_number(LATITUDE) <= " + newEndLatPt)
 									.list();
-							// System.out.println("manholeListQuery
+//							 System.out.println("manholeListQuery
 							// "+mapper.writeValueAsString(manholeList));
 
 							handholeList = session.createSQLQuery(
@@ -947,29 +922,11 @@ public class PhysicalLayerController {
 											+ " and to_number(DB_LONGITUDE) <= " + newEndLngPt
 											+ " and  to_number(DB_LATITUDE) <= " + newEndLatPt)
 									.list();
-							
-							EntrepriseList = session.createSQLQuery(
-									"SELECT DISTINCT NODE_ID,NODE_NAME,LONGITUDE,LATITUDE FROM NODE_ACTIVE  where DOMAIN = 'Enterprise' AND to_number(LONGITUDE) >= "
-											+ newStartLngPt + " and  to_number(LATITUDE) >= " + newStartLatPt
-											+ " and to_number(LONGITUDE) <= " + newEndLngPt
-											+ " and  to_number(LATITUDE) <= " + newEndLatPt)
-									.list();
-							
-							TransmissionList = session.createSQLQuery(
-									"SELECT DISTINCT NODE_ID,LONGITUDE,LATITUDE,NODE_NAME  FROM NODE_ACTIVE  where DOMAIN = 'Transmission' AND to_number(LONGITUDE) >= "
-											+ newStartLngPt + " and  to_number(LATITUDE) >= " + newStartLatPt
-											+ " and to_number(LONGITUDE) <= " + newEndLngPt
-											+ " and  to_number(LATITUDE) <= " + newEndLatPt)
-									.list();
-							
-							
 
 							List<Object[]> nearstPoints = new ArrayList<Object[]>();
 							nearstPoints.addAll(manholeList);
 							nearstPoints.addAll(handholeList);
 							nearstPoints.addAll(distribBoardList);
-							nearstPoints.addAll(EntrepriseList);
-							nearstPoints.addAll(TransmissionList);
 
 							String[] idsArray = (findListId(nearstPoints, "all")).length > 0
 									? findListId(nearstPoints, "all")
@@ -1120,217 +1077,223 @@ public class PhysicalLayerController {
 							model.addAttribute("endLongPoint", endLongPoint);
 							model.addAttribute("endLatPoint", endLatPoint);
 							model.addAttribute("getRelatedPoints", showPointsType);
-							
-					} else if (StringUtils.equalsIgnoreCase(request.getParameter("Checked"), "circleRange_multy")) {
-						String[] seqs = request.getParameterValues("seq");
-						String[] siteIds = request.getParameterValues("name");
-						String[] lngs = request.getParameterValues("lng");
-						String[] lats = request.getParameterValues("lat");
-						String noOfPoints = request.getParameter("nop");
-						String closestDisRange = request.getParameter("closestDisRange");
-						String showPointsType = request.getParameter("getRelatedPoints");
-						
-						LinkedHashMap<String, List<?>> rowData = new LinkedHashMap<>();
-						LinkedHashMap<String, LinkedHashMap<String, List<?>>> ptPhysicalLayerList = new LinkedHashMap<String, LinkedHashMap<String, List<?>>>();
-						LinkedHashMap<String, List<?>> ptPhysicalListResult = new LinkedHashMap<String, List<?>>();
-						LinkedHashMap<String, LinkedHashMap<String, List<?>>> ptPhysicalLayerData = new LinkedHashMap<String, LinkedHashMap<String, List<?>>>();
-						LinkedHashMap<String, List<?>> ptPhysicalDataResult = new LinkedHashMap<String, List<?>>();
 
-						for (int i = 0; i < seqs.length; i++) {
-							String seq = seqs[i];
-							String siteId = siteIds[i];
-							String lng = lngs[i];
-							String lat = lats[i];
+						} else if (StringUtils.equalsIgnoreCase(request.getParameter("Checked"), "circleRange_multy")) {
+							String[] seqs = request.getParameterValues("seq");
+							String[] siteIds = request.getParameterValues("name");
+							String[] lngs = request.getParameterValues("lng");
+							String[] lats = request.getParameterValues("lat");
+							String noOfPoints = request.getParameter("nop");
+							String closestDisRange = request.getParameter("closestDisRange");
+							String showPointsType = request.getParameter("getRelatedPoints");
 
-							Map<String, Object> row = new HashMap<>();
-							row.put("seq", seqs[i]);
-							row.put("siteId", siteIds[i]);
-							row.put("lat", lats[i]);
-							row.put("lng", lngs[i]);
-							rowData.put("row" + i, new ArrayList<>(row.values()));
-							
-							List<Object[]> manholeListQuery  = session.createSQLQuery(
-									"SELECT DISTINCT MANHOLE_ID,MANHOLE_NAME,LONGITUDE,LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=MANHOLE_ID),DM_NAME FROM MANHOLE  where to_number(LONGITUDE) <=  '"
-											+ lng + "' and  to_number(LATITUDE) <= '" + lat + "' ").list();
+							LinkedHashMap<String, List<?>> rowData = new LinkedHashMap<>();
+							LinkedHashMap<String, LinkedHashMap<String, List<?>>> ptPhysicalLayerList = new LinkedHashMap<String, LinkedHashMap<String, List<?>>>();
+							LinkedHashMap<String, List<?>> ptPhysicalListResult = new LinkedHashMap<String, List<?>>();
+							LinkedHashMap<String, LinkedHashMap<String, List<?>>> ptPhysicalLayerData = new LinkedHashMap<String, LinkedHashMap<String, List<?>>>();
+							LinkedHashMap<String, List<?>> ptPhysicalDataResult = new LinkedHashMap<String, List<?>>();
 
-							manholeListPt = findNearestArray(manholeListQuery, Double.valueOf(lats[i]),
-									Double.valueOf(lngs[i]), Double.valueOf(closestDisRange), "Manhole",noOfPoints);
-							
-							
-							List<Object[]> handholeListQuery  = session.createSQLQuery(
-									"SELECT DISTINCT HANDHOLE_ID,HANDHOLE_NAME,LONGITUDE,LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=HANDHOLE_ID),DM_NAME FROM HANDHOLE  where to_number(LONGITUDE) <=  '"
-											+ lng + "' and  to_number(LATITUDE) <= '" + lat + "' ").list();
-							
-							handholeListPt = findNearestArray(handholeListQuery, Double.valueOf(lats[i]),
-									Double.valueOf(lngs[i]), Double.valueOf(closestDisRange), "Handhole",noOfPoints);
-							
-							List<Object[]> distribBoardListQuery = session.createSQLQuery(
-									"SELECT DISTINCT DB_ID,DB_LONGITUDE,DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,PROJECT_ID ,CITY,DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD  where to_number(DB_LONGITUDE) <=  '"
-											+ lng + "' and  to_number(DB_LATITUDE) <= '" + lat + "' ")
-									.list();
-							
-							distribBoardListPt = findNearestArray(distribBoardListQuery, Double.valueOf(lats[i]),
-									Double.valueOf(lngs[i]), Double.valueOf(closestDisRange), "DistribBoard",
-									noOfPoints);
+							for (int i = 0; i < seqs.length; i++) {
+								String seq = seqs[i];
+								String siteId = siteIds[i];
+								String lng = lngs[i];
+								String lat = lats[i];
 
-							List<Object[]> nearstPoints = new ArrayList<Object[]>();
-							nearstPoints.addAll(manholeListPt);
-							nearstPoints.addAll(handholeListPt);
-							nearstPoints.addAll(distribBoardListPt);
+								Map<String, Object> row = new HashMap<>();
+								row.put("seq", seqs[i]);
+								row.put("siteId", siteIds[i]);
+								row.put("lat", lats[i]);
+								row.put("lng", lngs[i]);
+								rowData.put("row" + i, new ArrayList<>(row.values()));
 
-							String[] idsArray = (findListId(nearstPoints, "all")).length > 0
-									? findListId(nearstPoints, "all")
-									: new String[] { "" };
+								List<Object[]> manholeListQuery = session.createSQLQuery(
+										"SELECT DISTINCT MANHOLE_ID,MANHOLE_NAME,LONGITUDE,LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=MANHOLE_ID),DM_NAME FROM MANHOLE  where to_number(LONGITUDE) <=  '"
+												+ lng + "' and  to_number(LATITUDE) <= '" + lat + "' ")
+										.list();
 
-							Query fiberQuery = session.createSQLQuery(
-									"SELECT distinct A.SOURCE_LNG,A.SOURCE_LAT,A.DESTINATION_LNG,A.DESTINATION_LAT, A.FIBER_CABLE_ID,A.SOURCE_WARE_ID,A.SOURCE_ID,A.SOURCE_NAME,A.DESTINATION_WARE_ID,A.DESTINATION_ID,A.DESTINATION_NAME,(SELECT COUNT(*) FROM FIBER_TUBES B WHERE B.FIBER_CABLE_ID=A.FIBER_CABLE_ID) AS Tube_Count,(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.FIBER_CABLE_ID=A.FIBER_CABLE_ID) AS Strand_Count,A.FIBER_CABLE_NAME,A.PROJECT_ID,A.SOURCE_CITY,A.DESTINATION_CITY,A.NUMBER_OF_TUBES,A.NUMBER_OF_STRANDS,A.LENGTH,A.DRAWING_TYPE,A.FIBER_NETWORK_LEVEL FROM FIBER_CABLES A "
-											+ "LEFT  JOIN FIBER_AUXILIARY_POINTS D ON A.FIBER_CABLE_ID=D.FIBER_CABLE_ID "
-											+ "LEFT  JOIN FIBER_TUBES B ON A.FIBER_CABLE_ID=B.FIBER_CABLE_ID "
-											+ "LEFT  JOIN FIBER_STRANDS C ON A.FIBER_CABLE_ID=C.FIBER_CABLE_ID "
-											+ "LEFT  JOIN TUBE_AUXILIARY_POINTS E ON A.FIBER_CABLE_ID=E.FIBER_CABLE_ID "
-											+ "LEFT  JOIN STRAND_AUXILIARY_POINTS F ON A.FIBER_CABLE_ID=F.FIBER_CABLE_ID "
-											+ "WHERE A.SOURCE_ID IN (:param1) OR A.DESTINATION_ID IN (:param1) OR D.AUXILIARY_POINT_ID IN (:param1) OR B.SOURCE_ID IN (:param1) OR B.DESTINATION_ID IN (:param1) OR C.SOURCE_ID IN (:param1) OR C.DESTINATION_ID IN (:param1) OR E.AUXILIARY_POINT_ID IN (:param1) OR F.AUXILIARY_POINT_ID IN (:param1) ");
+								manholeListPt = findNearestArray(manholeListQuery, Double.valueOf(lats[i]),
+										Double.valueOf(lngs[i]), Double.valueOf(closestDisRange), "Manhole",
+										noOfPoints);
 
-							fiberQuery.setParameterList("param1", idsArray);
-							fiberListPt = fiberQuery.list();
+								List<Object[]> handholeListQuery = session.createSQLQuery(
+										"SELECT DISTINCT HANDHOLE_ID,HANDHOLE_NAME,LONGITUDE,LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=HANDHOLE_ID),DM_NAME FROM HANDHOLE  where to_number(LONGITUDE) <=  '"
+												+ lng + "' and  to_number(LATITUDE) <= '" + lat + "' ")
+										.list();
 
-							Query fiberAuxiliaryQuery = session.createSQLQuery(
-									"SELECT B.LONGITUDE,B.LATITUDE,B.DISTANCE_FROM_SOURCE,B.WARE_ID,B.AUXILIARY_POINT_ID,B.AUXILIARY_POINT_NAME,B.FIBER_CABLE_ID,B.AUXILIARY_ID FROM FIBER_CABLES A,FIBER_AUXILIARY_POINTS B WHERE A.FIBER_CABLE_ID=B.FIBER_CABLE_ID AND B.FIBER_CABLE_ID IN (:param1) ORDER BY B.SEQ_SORTING ASC");
-							fiberAuxiliaryQuery.setParameterList("param1",
-									(findListId(fiberList, "FiberCable")).length > 0
-											? findListId(fiberList, "FiberCable")
-											: new String[] { "" });
-							fiberAuxiliary_DataPt = fiberAuxiliaryQuery.list();
+								handholeListPt = findNearestArray(handholeListQuery, Double.valueOf(lats[i]),
+										Double.valueOf(lngs[i]), Double.valueOf(closestDisRange), "Handhole",
+										noOfPoints);
 
-							Query fiberTubesQuery = session.createSQLQuery(
-									"SELECT DISTINCT b.TUBE_ID,b.SOURCE_LONGITUDE,b.SOURCE_LATITUDE,b.DESTINATION_LONGITUDE,b.DESTINATION_LATITUDE,b.SOURCE_WARE_ID,b.SOURCE_ID,b.SOURCE_NAME,b.DESTINATION_WARE_ID,b.DESTINATION_ID,b.DESTINATION_NAME,(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.TUBE_ID=b.TUBE_ID),b.FIBER_CABLE_ID,b.TUBE_NAME,b.DRAWING_TYPE,b.TUBE_NUMBER,b.TUBE_COLOR FROM FIBER_TUBES b "
-											+ "LEFT JOIN TUBE_AUXILIARY_POINTS a ON a.TUBE_ID=b.TUBE_ID "
-											+ "LEFT JOIN FIBER_STRANDS c ON b.TUBE_ID=c.TUBE_ID "
-											+ "LEFT JOIN STRAND_AUXILIARY_POINTS d ON b.FIBER_CABLE_ID=d.FIBER_CABLE_ID "
-											+ "WHERE b.SOURCE_ID IN (:param1) OR b.DESTINATION_ID IN (:param1) OR a.AUXILIARY_POINT_ID IN (:param1) OR c.SOURCE_ID IN (:param1) OR c.DESTINATION_ID IN (:param1) OR d.AUXILIARY_POINT_ID IN (:param1) ");
+								List<Object[]> distribBoardListQuery = session.createSQLQuery(
+										"SELECT DISTINCT DB_ID,DB_LONGITUDE,DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,PROJECT_ID ,CITY,DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD  where to_number(DB_LONGITUDE) <=  '"
+												+ lng + "' and  to_number(DB_LATITUDE) <= '" + lat + "' ")
+										.list();
 
-							fiberTubesQuery.setParameterList("param1", idsArray);
-							fiberTubesPt = fiberTubesQuery.list();
+								distribBoardListPt = findNearestArray(distribBoardListQuery, Double.valueOf(lats[i]),
+										Double.valueOf(lngs[i]), Double.valueOf(closestDisRange), "DistribBoard",
+										noOfPoints);
 
-							Query tubesAuxiliariesQuery = session.createSQLQuery(
-									"SELECT DISTINCT c.TUBE_ID,c.LONGITUDE,c.LATITUDE,c.WARE_ID,c.AUXILIARY_POINT_ID,c.AUXILIARY_POINT_NAME,c.DISTANCE_FROM_SOURCE,c.SEQ_SORTING,c.AUXILIARY_ID,c.DRIVING_DISTANCE, c.GEO_DISTANCE FROM TUBE_AUXILIARY_POINTS c LEFT JOIN FIBER_TUBES b ON  b.TUBE_ID=c.TUBE_ID LEFT JOIN FIBER_CABLES a ON a.FIBER_CABLE_ID=b.FIBER_CABLE_ID WHERE c.TUBE_ID IN (:param1) ORDER BY c.SEQ_SORTING ASC");
-							tubesAuxiliariesQuery.setParameterList("param1",
-									(findListId(fiberTubes, "Tube")).length > 0 ? findListId(fiberTubes, "Tube")
-											: new String[] { "" });
-							tubesAuxiliariesPt = tubesAuxiliariesQuery.list();
+								List<Object[]> nearstPoints = new ArrayList<Object[]>();
+								nearstPoints.addAll(manholeListPt);
+								nearstPoints.addAll(handholeListPt);
+								nearstPoints.addAll(distribBoardListPt);
 
-							Query fiberStrandsQuery = session.createSQLQuery(
-									"SELECT DISTINCT b.STRAND_ID,b.SOURCE_LONGITUDE,b.SOURCE_LATITUDE,b.DESTINATION_LONGITUDE,b.DESTINATION_LATITUDE,b.SOURCE_WARE_ID,b.SOURCE_ID,b.SOURCE_NAME,b.DESTINATION_WARE_ID,b.DESTINATION_ID,b.DESTINATION_NAME,b.TUBE_ID,b.FIBER_CABLE_ID,b.STRAND_NAME,b.DRAWING_TYPE,b.STRAND_NUMBER,b.STRAND_COLOR FROM FIBER_STRANDS b LEFT JOIN STRAND_AUXILIARY_POINTS a ON b.STRAND_ID=a.STRAND_ID WHERE b.SOURCE_ID IN (:param1) OR b.DESTINATION_ID IN (:param1) OR a.AUXILIARY_POINT_ID IN (:param1) ");
-							fiberStrandsQuery.setParameterList("param1", idsArray);
-							fiberStrandsPt = fiberStrandsQuery.list();
+								String[] idsArray = (findListId(nearstPoints, "all")).length > 0
+										? findListId(nearstPoints, "all")
+										: new String[] { "" };
 
-							Query strandsAuxiliariesQuery = session.createSQLQuery(
-									"SELECT DISTINCT c.STRAND_ID,c.LONGITUDE,c.LATITUDE,c.WARE_ID,c.AUXILIARY_POINT_ID,c.AUXILIARY_POINT_NAME,c.DISTANCE_FROM_SOURCE,c.SEQ_SORTING,c.AUXILIARY_ID,c.DRIVING_DISTANCE, c.GEO_DISTANCE FROM STRAND_AUXILIARY_POINTS c,FIBER_STRANDS b,FIBER_CABLES a WHERE a.FIBER_CABLE_ID=b.FIBER_CABLE_ID and b.STRAND_ID=c.STRAND_ID AND c.STRAND_ID IN (:param1) ORDER BY c.SEQ_SORTING ASC ");
-							strandsAuxiliariesQuery.setParameterList("param1",
-									(findListId(fiberStrands, "Strand")).length > 0 ? findListId(fiberStrands, "Strand")
-											: new String[] { "" });
-							strandsAuxiliariesPt = strandsAuxiliariesQuery.list();
+								Query fiberQuery = session.createSQLQuery(
+										"SELECT distinct A.SOURCE_LNG,A.SOURCE_LAT,A.DESTINATION_LNG,A.DESTINATION_LAT, A.FIBER_CABLE_ID,A.SOURCE_WARE_ID,A.SOURCE_ID,A.SOURCE_NAME,A.DESTINATION_WARE_ID,A.DESTINATION_ID,A.DESTINATION_NAME,(SELECT COUNT(*) FROM FIBER_TUBES B WHERE B.FIBER_CABLE_ID=A.FIBER_CABLE_ID) AS Tube_Count,(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.FIBER_CABLE_ID=A.FIBER_CABLE_ID) AS Strand_Count,A.FIBER_CABLE_NAME,A.PROJECT_ID,A.SOURCE_CITY,A.DESTINATION_CITY,A.NUMBER_OF_TUBES,A.NUMBER_OF_STRANDS,A.LENGTH,A.DRAWING_TYPE,A.FIBER_NETWORK_LEVEL FROM FIBER_CABLES A "
+												+ "LEFT  JOIN FIBER_AUXILIARY_POINTS D ON A.FIBER_CABLE_ID=D.FIBER_CABLE_ID "
+												+ "LEFT  JOIN FIBER_TUBES B ON A.FIBER_CABLE_ID=B.FIBER_CABLE_ID "
+												+ "LEFT  JOIN FIBER_STRANDS C ON A.FIBER_CABLE_ID=C.FIBER_CABLE_ID "
+												+ "LEFT  JOIN TUBE_AUXILIARY_POINTS E ON A.FIBER_CABLE_ID=E.FIBER_CABLE_ID "
+												+ "LEFT  JOIN STRAND_AUXILIARY_POINTS F ON A.FIBER_CABLE_ID=F.FIBER_CABLE_ID "
+												+ "WHERE A.SOURCE_ID IN (:param1) OR A.DESTINATION_ID IN (:param1) OR D.AUXILIARY_POINT_ID IN (:param1) OR B.SOURCE_ID IN (:param1) OR B.DESTINATION_ID IN (:param1) OR C.SOURCE_ID IN (:param1) OR C.DESTINATION_ID IN (:param1) OR E.AUXILIARY_POINT_ID IN (:param1) OR F.AUXILIARY_POINT_ID IN (:param1) ");
 
-						if (showPointsType.equals("1")) {
-							Query manholeData = session.createSQLQuery(
-									" SELECT * FROM (SELECT DISTINCT A.manhole_id as manhole_id ,A.manhole_name as manhole_name ,A.LONGITUDE as LONGITUDE,A.LATITUDE as LATITUDE ,A.PROJECT_ID as PROJECT_ID ,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID) as totalCount,A.CITY as city FROM MANHOLE A LEFT JOIN FIBER_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.manhole_id LEFT JOIN FIBER_CABLES C ON C.FIBER_CABLE_ID = B.FIBER_CABLE_ID where B.AUXILIARY_POINT_ID LIKE '%MH%' AND C.FIBER_CABLE_ID IN (:param1) "
-											+ " UNION "
-											+ " SELECT DISTINCT A.manhole_id,A.manhole_name,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID),A.CITY FROM MANHOLE A LEFT JOIN FIBER_CABLES B  ON B.SOURCE_ID = A.manhole_id where B.SOURCE_ID LIKE '%MH%' AND B.FIBER_CABLE_ID IN (:param1) "
-											+ " UNION "
-											+ " SELECT DISTINCT A.manhole_id,A.manhole_name,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID),A.CITY FROM MANHOLE A LEFT JOIN FIBER_CABLES B  ON B.DESTINATION_ID = A.manhole_id where B.DESTINATION_ID LIKE '%MH%' AND B.FIBER_CABLE_ID IN (:param1)  ) where manhole_id NOT IN (:param2) ");
-							manholeData.setParameterList("param1",
-									(findListId(fiberListPt, "FiberCable")).length > 0
-											? findListId(fiberListPt, "FiberCable")
-											: new String[] { "" });
-							manholeData.setParameterList("param2", idsArray);
+								fiberQuery.setParameterList("param1", idsArray);
+								fiberListPt = fiberQuery.list();
 
-							if (manholeListPt.size() > 0) {
-								newListPt = findNearestArray(manholeData.list(), Double.valueOf(lats[i]),
-										Double.valueOf(lngs[i]), Double.valueOf(closestDisRange),"ManHandhole_OutOfZone", noOfPoints);
-								manholeListPt.addAll(newListPt);
-							} else {
-								manholeListPt = findNearestArray(manholeData.list(), Double.valueOf(lats[i]),
-										Double.valueOf(lngs[i]), Double.valueOf(closestDisRange),"ManHandhole_OutOfZone", noOfPoints);
+								Query fiberAuxiliaryQuery = session.createSQLQuery(
+										"SELECT B.LONGITUDE,B.LATITUDE,B.DISTANCE_FROM_SOURCE,B.WARE_ID,B.AUXILIARY_POINT_ID,B.AUXILIARY_POINT_NAME,B.FIBER_CABLE_ID,B.AUXILIARY_ID FROM FIBER_CABLES A,FIBER_AUXILIARY_POINTS B WHERE A.FIBER_CABLE_ID=B.FIBER_CABLE_ID AND B.FIBER_CABLE_ID IN (:param1) ORDER BY B.SEQ_SORTING ASC");
+								fiberAuxiliaryQuery.setParameterList("param1",
+										(findListId(fiberList, "FiberCable")).length > 0
+												? findListId(fiberList, "FiberCable")
+												: new String[] { "" });
+								fiberAuxiliary_DataPt = fiberAuxiliaryQuery.list();
+
+								Query fiberTubesQuery = session.createSQLQuery(
+										"SELECT DISTINCT b.TUBE_ID,b.SOURCE_LONGITUDE,b.SOURCE_LATITUDE,b.DESTINATION_LONGITUDE,b.DESTINATION_LATITUDE,b.SOURCE_WARE_ID,b.SOURCE_ID,b.SOURCE_NAME,b.DESTINATION_WARE_ID,b.DESTINATION_ID,b.DESTINATION_NAME,(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.TUBE_ID=b.TUBE_ID),b.FIBER_CABLE_ID,b.TUBE_NAME,b.DRAWING_TYPE,b.TUBE_NUMBER,b.TUBE_COLOR FROM FIBER_TUBES b "
+												+ "LEFT JOIN TUBE_AUXILIARY_POINTS a ON a.TUBE_ID=b.TUBE_ID "
+												+ "LEFT JOIN FIBER_STRANDS c ON b.TUBE_ID=c.TUBE_ID "
+												+ "LEFT JOIN STRAND_AUXILIARY_POINTS d ON b.FIBER_CABLE_ID=d.FIBER_CABLE_ID "
+												+ "WHERE b.SOURCE_ID IN (:param1) OR b.DESTINATION_ID IN (:param1) OR a.AUXILIARY_POINT_ID IN (:param1) OR c.SOURCE_ID IN (:param1) OR c.DESTINATION_ID IN (:param1) OR d.AUXILIARY_POINT_ID IN (:param1) ");
+
+								fiberTubesQuery.setParameterList("param1", idsArray);
+								fiberTubesPt = fiberTubesQuery.list();
+
+								Query tubesAuxiliariesQuery = session.createSQLQuery(
+										"SELECT DISTINCT c.TUBE_ID,c.LONGITUDE,c.LATITUDE,c.WARE_ID,c.AUXILIARY_POINT_ID,c.AUXILIARY_POINT_NAME,c.DISTANCE_FROM_SOURCE,c.SEQ_SORTING,c.AUXILIARY_ID,c.DRIVING_DISTANCE, c.GEO_DISTANCE FROM TUBE_AUXILIARY_POINTS c LEFT JOIN FIBER_TUBES b ON  b.TUBE_ID=c.TUBE_ID LEFT JOIN FIBER_CABLES a ON a.FIBER_CABLE_ID=b.FIBER_CABLE_ID WHERE c.TUBE_ID IN (:param1) ORDER BY c.SEQ_SORTING ASC");
+								tubesAuxiliariesQuery.setParameterList("param1",
+										(findListId(fiberTubes, "Tube")).length > 0 ? findListId(fiberTubes, "Tube")
+												: new String[] { "" });
+								tubesAuxiliariesPt = tubesAuxiliariesQuery.list();
+
+								Query fiberStrandsQuery = session.createSQLQuery(
+										"SELECT DISTINCT b.STRAND_ID,b.SOURCE_LONGITUDE,b.SOURCE_LATITUDE,b.DESTINATION_LONGITUDE,b.DESTINATION_LATITUDE,b.SOURCE_WARE_ID,b.SOURCE_ID,b.SOURCE_NAME,b.DESTINATION_WARE_ID,b.DESTINATION_ID,b.DESTINATION_NAME,b.TUBE_ID,b.FIBER_CABLE_ID,b.STRAND_NAME,b.DRAWING_TYPE,b.STRAND_NUMBER,b.STRAND_COLOR FROM FIBER_STRANDS b LEFT JOIN STRAND_AUXILIARY_POINTS a ON b.STRAND_ID=a.STRAND_ID WHERE b.SOURCE_ID IN (:param1) OR b.DESTINATION_ID IN (:param1) OR a.AUXILIARY_POINT_ID IN (:param1) ");
+								fiberStrandsQuery.setParameterList("param1", idsArray);
+								fiberStrandsPt = fiberStrandsQuery.list();
+
+								Query strandsAuxiliariesQuery = session.createSQLQuery(
+										"SELECT DISTINCT c.STRAND_ID,c.LONGITUDE,c.LATITUDE,c.WARE_ID,c.AUXILIARY_POINT_ID,c.AUXILIARY_POINT_NAME,c.DISTANCE_FROM_SOURCE,c.SEQ_SORTING,c.AUXILIARY_ID,c.DRIVING_DISTANCE, c.GEO_DISTANCE FROM STRAND_AUXILIARY_POINTS c,FIBER_STRANDS b,FIBER_CABLES a WHERE a.FIBER_CABLE_ID=b.FIBER_CABLE_ID and b.STRAND_ID=c.STRAND_ID AND c.STRAND_ID IN (:param1) ORDER BY c.SEQ_SORTING ASC ");
+								strandsAuxiliariesQuery.setParameterList("param1",
+										(findListId(fiberStrands, "Strand")).length > 0
+												? findListId(fiberStrands, "Strand")
+												: new String[] { "" });
+								strandsAuxiliariesPt = strandsAuxiliariesQuery.list();
+
+								if (showPointsType.equals("1")) {
+									Query manholeData = session.createSQLQuery(
+											" SELECT * FROM (SELECT DISTINCT A.manhole_id as manhole_id ,A.manhole_name as manhole_name ,A.LONGITUDE as LONGITUDE,A.LATITUDE as LATITUDE ,A.PROJECT_ID as PROJECT_ID ,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID) as totalCount,A.CITY as city FROM MANHOLE A LEFT JOIN FIBER_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.manhole_id LEFT JOIN FIBER_CABLES C ON C.FIBER_CABLE_ID = B.FIBER_CABLE_ID where B.AUXILIARY_POINT_ID LIKE '%MH%' AND C.FIBER_CABLE_ID IN (:param1) "
+													+ " UNION "
+													+ " SELECT DISTINCT A.manhole_id,A.manhole_name,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID),A.CITY FROM MANHOLE A LEFT JOIN FIBER_CABLES B  ON B.SOURCE_ID = A.manhole_id where B.SOURCE_ID LIKE '%MH%' AND B.FIBER_CABLE_ID IN (:param1) "
+													+ " UNION "
+													+ " SELECT DISTINCT A.manhole_id,A.manhole_name,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID),A.CITY FROM MANHOLE A LEFT JOIN FIBER_CABLES B  ON B.DESTINATION_ID = A.manhole_id where B.DESTINATION_ID LIKE '%MH%' AND B.FIBER_CABLE_ID IN (:param1)  ) where manhole_id NOT IN (:param2) ");
+									manholeData.setParameterList("param1",
+											(findListId(fiberListPt, "FiberCable")).length > 0
+													? findListId(fiberListPt, "FiberCable")
+													: new String[] { "" });
+									manholeData.setParameterList("param2", idsArray);
+
+									if (manholeListPt.size() > 0) {
+										newListPt = findNearestArray(manholeData.list(), Double.valueOf(lats[i]),
+												Double.valueOf(lngs[i]), Double.valueOf(closestDisRange),
+												"ManHandhole_OutOfZone", noOfPoints);
+										manholeListPt.addAll(newListPt);
+									} else {
+										manholeListPt = findNearestArray(manholeData.list(), Double.valueOf(lats[i]),
+												Double.valueOf(lngs[i]), Double.valueOf(closestDisRange),
+												"ManHandhole_OutOfZone", noOfPoints);
+									}
+									Query handholeData = session.createSQLQuery(
+											" SELECT * FROM (SELECT DISTINCT A.handhole_id as handhole_id ,A.handhole_name as handhole_name,A.LONGITUDE as LONGITUDE ,A.LATITUDE as LATITUDE,A.PROJECT_ID as PROJECT_ID ,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID) as totalCount,A.DM_NAME as DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.HANDHOLE_ID LEFT JOIN FIBER_CABLES C ON C.FIBER_CABLE_ID = B.FIBER_CABLE_ID where B.AUXILIARY_POINT_ID LIKE '%HH%' AND C.FIBER_CABLE_ID IN (:param1) "
+													+ " UNION "
+													+ " SELECT DISTINCT A.handhole_id,A.handhole_name,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID),A.DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_CABLES B  ON B.SOURCE_ID = A.HANDHOLE_ID where B.SOURCE_ID LIKE '%HH%' AND B.FIBER_CABLE_ID IN (:param1) "
+													+ "UNION"
+													+ " SELECT DISTINCT A.handhole_id,A.handhole_name,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID),A.DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_CABLES B  ON B.DESTINATION_ID = A.HANDHOLE_ID where B.DESTINATION_ID LIKE '%HH%' AND B.FIBER_CABLE_ID IN (:param1) ) where handhole_id NOT IN (:param2) ");
+									handholeData.setParameterList("param1",
+											(findListId(fiberListPt, "FiberCable")).length > 0
+													? findListId(fiberListPt, "FiberCable")
+													: new String[] { "" });
+									handholeData.setParameterList("param2", idsArray);
+
+									if (handholeListPt.size() > 0) {
+										newListPt = findNearestArray(handholeData.list(), Double.valueOf(lats[i]),
+												Double.valueOf(lngs[i]), Double.valueOf(closestDisRange),
+												"ManHandhole_OutOfZone", noOfPoints);
+										handholeListPt.addAll(newListPt);
+									} else {
+										newListPt = findNearestArray(handholeData.list(), Double.valueOf(lats[i]),
+												Double.valueOf(lngs[i]), Double.valueOf(closestDisRange),
+												"ManHandhole_OutOfZone", noOfPoints);
+									}
+
+									Query dbData = session.createSQLQuery(
+											" SELECT * FROM ( SELECT DISTINCT A.DB_ID as DB_ID,A.DB_LONGITUDE as DB_LONGITUDE,A.DB_LATITUDE as DB_LATITUDE,A.DB_NAME as DB_NAME,A.MAX_CAPACITY as MAX_CAPACITY,A.SITE as SITE,A.PROJECT_ID as PROJECT_ID ,A.CITY as CITY,A.DB_NETWORK_LEVEL AS DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.DB_ID LEFT JOIN FIBER_CABLES C ON C.FIBER_CABLE_ID = B.FIBER_CABLE_ID where B.AUXILIARY_POINT_ID LIKE '%DB%' AND C.FIBER_CABLE_ID IN (:param1)   "
+													+ " UNION "
+													+ " SELECT DISTINCT A.DB_ID,A.DB_LONGITUDE,A.DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_CABLES B  ON B.SOURCE_ID = A.DB_ID where B.SOURCE_ID LIKE '%DB%' AND B.FIBER_CABLE_ID IN (:param1) "
+													+ "UNION "
+													+ " SELECT DISTINCT A.DB_ID,A.DB_LONGITUDE,A.DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_CABLES B  ON B.DESTINATION_ID = A.DB_ID where B.DESTINATION_ID LIKE '%DB%' AND B.FIBER_CABLE_ID IN (:param1) ) where DB_ID NOT IN (:param2)  ");
+									dbData.setParameterList("param1",
+											(findListId(fiberListPt, "FiberCable")).length > 0
+													? findListId(fiberListPt, "FiberCable")
+													: new String[] { "" });
+									dbData.setParameterList("param2", idsArray);
+
+									if (distribBoardListPt.size() > 0) {
+										newListPt = findNearestArray(dbData.list(), Double.valueOf(lats[i]),
+												Double.valueOf(lngs[i]), Double.valueOf(closestDisRange),
+												"DB_OutOfZone", noOfPoints);
+										distribBoardListPt.addAll(newListPt);
+									} else {
+										distribBoardListPt = findNearestArray(dbData.list(), Double.valueOf(lats[i]),
+												Double.valueOf(lngs[i]), Double.valueOf(closestDisRange),
+												"DB_OutOfZone", noOfPoints);
+									}
+								}
+								junctionManholeListPt = session.createSQLQuery(
+										"SELECT DISTINCT A.JUNCTION_ID, A.JUNCTION_NAME,A.PHYSICAL_LAYER_ID,A.PHYSICAL_LAYER_NAME,A.JUNCTION_NUMBER,A.CAPACITY,A.CITY,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID FROM JUNCTION A INNER JOIN manhole B ON A.PHYSICAL_LAYER_ID = B.manhole_id")
+										.list();
+
+								junctionHandholeListPt = session.createSQLQuery(
+										"SELECT DISTINCT A.JUNCTION_ID, A.JUNCTION_NAME,A.PHYSICAL_LAYER_ID,A.PHYSICAL_LAYER_NAME,A.JUNCTION_NUMBER,A.CAPACITY,A.CITY,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID FROM JUNCTION A INNER JOIN handhole B ON A.PHYSICAL_LAYER_ID = b.handhole_id")
+										.list();
+
+								ptPhysicalListResult.put("Junction_Manhole", junctionManholeListPt);
+								ptPhysicalListResult.put("Manhole", manholeListPt);
+								ptPhysicalListResult.put("Junction_Handhole", junctionHandholeListPt);
+								ptPhysicalListResult.put("Handhole", handholeListPt);
+								ptPhysicalListResult.put("fiber", fiberListPt);
+								ptPhysicalListResult.put("Distribution_Board", distribBoardListPt);
+								ptPhysicalListResult.put("Trench", trenchListPt);
+								ptPhysicalListResult.put("duct", ductListPt);
+								ptPhysicalLayerList.put("ptList" + i, ptPhysicalListResult);
+								ptPhysicalDataResult.put("trench_Auxiliary", trenchAuxiliary_DataPt);
+								ptPhysicalDataResult.put("strands_Auxiliaries", strandsAuxiliariesPt);
+								ptPhysicalDataResult.put("fiber_Strands", fiberStrandsPt);
+								ptPhysicalDataResult.put("tubes_Auxiliaries", tubesAuxiliariesPt);
+								ptPhysicalDataResult.put("fiber_Tubes", fiberTubesPt);
+								ptPhysicalDataResult.put("fiber_Auxiliary", fiberAuxiliary_DataPt);
+								ptPhysicalDataResult.put("ductAuxiliary", ductAuxiliary_DataPt);
+								ptPhysicalLayerData.put("ptData" + i, ptPhysicalDataResult);
 							}
-							Query handholeData = session.createSQLQuery(
-									" SELECT * FROM (SELECT DISTINCT A.handhole_id as handhole_id ,A.handhole_name as handhole_name,A.LONGITUDE as LONGITUDE ,A.LATITUDE as LATITUDE,A.PROJECT_ID as PROJECT_ID ,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID) as totalCount,A.DM_NAME as DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.HANDHOLE_ID LEFT JOIN FIBER_CABLES C ON C.FIBER_CABLE_ID = B.FIBER_CABLE_ID where B.AUXILIARY_POINT_ID LIKE '%HH%' AND C.FIBER_CABLE_ID IN (:param1) "
-											+ " UNION "
-											+ " SELECT DISTINCT A.handhole_id,A.handhole_name,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID),A.DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_CABLES B  ON B.SOURCE_ID = A.HANDHOLE_ID where B.SOURCE_ID LIKE '%HH%' AND B.FIBER_CABLE_ID IN (:param1) "
-											+ "UNION"
-											+ " SELECT DISTINCT A.handhole_id,A.handhole_name,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID),A.DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_CABLES B  ON B.DESTINATION_ID = A.HANDHOLE_ID where B.DESTINATION_ID LIKE '%HH%' AND B.FIBER_CABLE_ID IN (:param1) ) where handhole_id NOT IN (:param2) ");
-							handholeData.setParameterList("param1",
-									(findListId(fiberListPt, "FiberCable")).length > 0
-											? findListId(fiberListPt, "FiberCable")
-											: new String[] { "" });
-							handholeData.setParameterList("param2", idsArray);
-
-							if (handholeListPt.size() > 0) {
-								newListPt = findNearestArray(handholeData.list(), Double.valueOf(lats[i]),
-										Double.valueOf(lngs[i]), Double.valueOf(closestDisRange),
-										"ManHandhole_OutOfZone", noOfPoints);
-								handholeListPt.addAll(newListPt);
-							} else {
-								newListPt = findNearestArray(handholeData.list(), Double.valueOf(lats[i]),
-										Double.valueOf(lngs[i]), Double.valueOf(closestDisRange),
-										"ManHandhole_OutOfZone", noOfPoints);
-							}
-
-							Query dbData = session.createSQLQuery(
-									" SELECT * FROM ( SELECT DISTINCT A.DB_ID as DB_ID,A.DB_LONGITUDE as DB_LONGITUDE,A.DB_LATITUDE as DB_LATITUDE,A.DB_NAME as DB_NAME,A.MAX_CAPACITY as MAX_CAPACITY,A.SITE as SITE,A.PROJECT_ID as PROJECT_ID ,A.CITY as CITY,A.DB_NETWORK_LEVEL AS DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.DB_ID LEFT JOIN FIBER_CABLES C ON C.FIBER_CABLE_ID = B.FIBER_CABLE_ID where B.AUXILIARY_POINT_ID LIKE '%DB%' AND C.FIBER_CABLE_ID IN (:param1)   "
-											+ " UNION "
-											+ " SELECT DISTINCT A.DB_ID,A.DB_LONGITUDE,A.DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_CABLES B  ON B.SOURCE_ID = A.DB_ID where B.SOURCE_ID LIKE '%DB%' AND B.FIBER_CABLE_ID IN (:param1) "
-											+ "UNION "
-											+ " SELECT DISTINCT A.DB_ID,A.DB_LONGITUDE,A.DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_CABLES B  ON B.DESTINATION_ID = A.DB_ID where B.DESTINATION_ID LIKE '%DB%' AND B.FIBER_CABLE_ID IN (:param1) ) where DB_ID NOT IN (:param2)  ");
-							dbData.setParameterList("param1",
-									(findListId(fiberListPt, "FiberCable")).length > 0
-											? findListId(fiberListPt, "FiberCable")
-											: new String[] { "" });
-							dbData.setParameterList("param2", idsArray);
-
-								if (distribBoardListPt.size() > 0) {
-									newListPt = findNearestArray(dbData.list(), Double.valueOf(lats[i]),
-											Double.valueOf(lngs[i]), Double.valueOf(closestDisRange),
-											"DB_OutOfZone", noOfPoints);
-									distribBoardListPt.addAll(newListPt);
-							} else {
-								distribBoardListPt = findNearestArray(dbData.list(), Double.valueOf(lats[i]),
-										Double.valueOf(lngs[i]), Double.valueOf(closestDisRange),
-										"DB_OutOfZone", noOfPoints);
-							}
+							model.addAttribute("rowData", mapper.writeValueAsString(rowData));
+							model.addAttribute("getRelatedPoints", showPointsType);
+							model.addAttribute("noOfPoints", noOfPoints);
+							model.addAttribute("closestDisRange", closestDisRange);
+							model.addAttribute("ptList", mapper.writeValueAsString(ptPhysicalLayerList));
+							model.addAttribute("ptData", mapper.writeValueAsString(ptPhysicalLayerData));
 						}
-							junctionManholeListPt = session.createSQLQuery(
-									"SELECT DISTINCT A.JUNCTION_ID, A.JUNCTION_NAME,A.PHYSICAL_LAYER_ID,A.PHYSICAL_LAYER_NAME,A.JUNCTION_NUMBER,A.CAPACITY,A.CITY,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID FROM JUNCTION A INNER JOIN manhole B ON A.PHYSICAL_LAYER_ID = B.manhole_id")
-									.list();
-
-							junctionHandholeListPt = session.createSQLQuery(
-									"SELECT DISTINCT A.JUNCTION_ID, A.JUNCTION_NAME,A.PHYSICAL_LAYER_ID,A.PHYSICAL_LAYER_NAME,A.JUNCTION_NUMBER,A.CAPACITY,A.CITY,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID FROM JUNCTION A INNER JOIN handhole B ON A.PHYSICAL_LAYER_ID = b.handhole_id")
-									.list();
-
-							ptPhysicalListResult.put("Junction_Manhole", junctionManholeListPt);
-							ptPhysicalListResult.put("Manhole",manholeListPt);
-							ptPhysicalListResult.put("Junction_Handhole", junctionHandholeListPt);
-							ptPhysicalListResult.put("Handhole", handholeListPt);
-							ptPhysicalListResult.put("fiber", fiberListPt);
-							ptPhysicalListResult.put("Distribution_Board", distribBoardListPt);
-							ptPhysicalListResult.put("Trench", trenchListPt);
-							ptPhysicalListResult.put("duct", ductListPt);
-							ptPhysicalLayerList.put("ptList" + i, ptPhysicalListResult);
-							ptPhysicalDataResult.put("trench_Auxiliary", trenchAuxiliary_DataPt);
-							ptPhysicalDataResult.put("strands_Auxiliaries", strandsAuxiliariesPt);
-							ptPhysicalDataResult.put("fiber_Strands", fiberStrandsPt);
-							ptPhysicalDataResult.put("tubes_Auxiliaries", tubesAuxiliariesPt);
-							ptPhysicalDataResult.put("fiber_Tubes", fiberTubesPt);
-							ptPhysicalDataResult.put("fiber_Auxiliary", fiberAuxiliary_DataPt);
-							ptPhysicalDataResult.put("ductAuxiliary", ductAuxiliary_DataPt);
-							ptPhysicalLayerData.put("ptData" + i , ptPhysicalDataResult);
-						}
-						model.addAttribute("rowData",  mapper.writeValueAsString(rowData));
-						model.addAttribute("getRelatedPoints", showPointsType);
-						model.addAttribute("noOfPoints", noOfPoints);
-						model.addAttribute("closestDisRange", closestDisRange);
-					    model.addAttribute("ptList", mapper.writeValueAsString(ptPhysicalLayerList));
-						model.addAttribute("ptData",mapper.writeValueAsString(ptPhysicalLayerData));
-					 }	
 					} else if (StringUtils.equalsIgnoreCase(request.getParameter("Checked"), "connected")) {
 						System.out.println("it is inside ");
 						filterFlag = 2;
@@ -1436,7 +1399,8 @@ public class PhysicalLayerController {
 
 						distribBoardList = session.createSQLQuery(
 								"SELECT DISTINCT A.DB_ID,A.DB_LONGITUDE,A.DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN DISTRIBUTION_BOARD_MAPPING B  ON B.DB_ID = A.DB_ID  where A.WAREHOUSE LIKE '%"
-										+ siteId + "%' OR B.BP_LOCATION_ID LIKE '%" + siteId+ "%' OR B.FP_LOCATION_ID LIKE '%" + siteId + "%' ")
+										+ siteId + "%' OR B.BP_LOCATION_ID LIKE '%" + siteId
+										+ "%' OR B.FP_LOCATION_ID LIKE '%" + siteId + "%' ")
 								.list();
 						int distribBoardListSize = distribBoardList.size();
 						System.out.println("distribBoardList 1 is " + mapper.writeValueAsString(distribBoardList));
@@ -1622,10 +1586,11 @@ public class PhysicalLayerController {
 						ductAuxiliary_Data = session.createSQLQuery(
 								"SELECT B.LONGITUDE,B.LATITUDE,B.WARE_ID,B.AUXILIARY_POINT_ID,B.AUXILIARY_POINT_NAME,B.DUCT_ID,B.DISTANCE_FROM_SOURCE,B.SEQ_SORTING,B.AUXILIARY_ID FROM DUCTS A,DUCT_AUXILIARY_POINTS B WHERE A.DUCT_ID=B.DUCT_ID ORDER BY B.SEQ_SORTING ASC ")
 								.list();
-						
-						NodeActiveList =  session.createSQLQuery(
-								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' )    ").list();
-		
+
+						NodeActiveList = session.createSQLQuery(
+								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' )    ")
+								.list();
+
 					}
 
 					LinkedHashMap<String, List<?>> physicalLayerData = new LinkedHashMap<String, List<?>>();// linkedHashmap
@@ -1639,81 +1604,81 @@ public class PhysicalLayerController {
 																											// HashMap
 																											// to return
 																											// values
-				for (Object[] obj: manholeListPt) {
-					if(!(manholeList.contains(obj))) {
-						manholeList.add(obj);
+					for (Object[] obj : manholeListPt) {
+						if (!(manholeList.contains(obj))) {
+							manholeList.add(obj);
+						}
 					}
-				}	
-				for (Object[] obj: handholeListPt ) {
-					if(!(handholeList.contains(obj))) {
-						handholeList.add(obj);
+					for (Object[] obj : handholeListPt) {
+						if (!(handholeList.contains(obj))) {
+							handholeList.add(obj);
+						}
 					}
-				}
-				for (Object[] obj: distribBoardListPt ) {
-					if(!(distribBoardList.contains(obj))) {
-						distribBoardList.add(obj);
+					for (Object[] obj : distribBoardListPt) {
+						if (!(distribBoardList.contains(obj))) {
+							distribBoardList.add(obj);
+						}
 					}
-				}
-				for (Object[] obj: fiberListPt ) {
-					if(!(fiberList.contains(obj))) {
-						fiberList .add(obj);
+					for (Object[] obj : fiberListPt) {
+						if (!(fiberList.contains(obj))) {
+							fiberList.add(obj);
+						}
 					}
-				}
-				for (Object[] obj: fiberTubesPt ) {
-					if(!(fiberTubes.contains(obj))) {
-						fiberTubes.add(obj);
+					for (Object[] obj : fiberTubesPt) {
+						if (!(fiberTubes.contains(obj))) {
+							fiberTubes.add(obj);
+						}
 					}
-				}
-				for (Object[] obj: tubesAuxiliariesPt ) {
-					if(!(tubesAuxiliaries.contains(obj))) {
-						tubesAuxiliaries.add(obj);
+					for (Object[] obj : tubesAuxiliariesPt) {
+						if (!(tubesAuxiliaries.contains(obj))) {
+							tubesAuxiliaries.add(obj);
+						}
 					}
-				}
-				for (Object[] obj: fiberStrandsPt) {
-					if(!(fiberStrands.contains(obj))) {
-						fiberStrands.add(obj);
+					for (Object[] obj : fiberStrandsPt) {
+						if (!(fiberStrands.contains(obj))) {
+							fiberStrands.add(obj);
+						}
 					}
-				}
-				for (Object[] obj: strandsAuxiliariesPt) {
-					if(!(strandsAuxiliaries.contains(obj))) {
-						strandsAuxiliaries.add(obj);
+					for (Object[] obj : strandsAuxiliariesPt) {
+						if (!(strandsAuxiliaries.contains(obj))) {
+							strandsAuxiliaries.add(obj);
+						}
 					}
-				}
-				for (Object[] obj: junctionManholeListPt) {
-					if(!(junctionManholeList.contains(obj))) {
-						junctionManholeList.add(obj);
+					for (Object[] obj : junctionManholeListPt) {
+						if (!(junctionManholeList.contains(obj))) {
+							junctionManholeList.add(obj);
+						}
 					}
-				}
-				for (Object[] obj: junctionHandholeListPt) {
-					if(!(junctionHandholeList.contains(obj))) {
-						junctionHandholeList.add(obj);
+					for (Object[] obj : junctionHandholeListPt) {
+						if (!(junctionHandholeList.contains(obj))) {
+							junctionHandholeList.add(obj);
+						}
 					}
-				}
-				for (Object[] obj: fiberAuxiliary_DataPt) {
-					if(!(fiberAuxiliary_Data.contains(obj))) {
-						fiberAuxiliary_Data.add(obj);
+					for (Object[] obj : fiberAuxiliary_DataPt) {
+						if (!(fiberAuxiliary_Data.contains(obj))) {
+							fiberAuxiliary_Data.add(obj);
+						}
 					}
-				}
-				for (Object[] obj: trenchListPt ) {
-					if(!(trenchList.contains(obj))) {
-						trenchList.add(obj);
+					for (Object[] obj : trenchListPt) {
+						if (!(trenchList.contains(obj))) {
+							trenchList.add(obj);
+						}
 					}
-				}
-				for (Object[] obj: trenchAuxiliary_DataPt) {
-					if(!(trenchAuxiliary_Data.contains(obj))) {
-						trenchAuxiliary_Data.add(obj);
+					for (Object[] obj : trenchAuxiliary_DataPt) {
+						if (!(trenchAuxiliary_Data.contains(obj))) {
+							trenchAuxiliary_Data.add(obj);
+						}
 					}
-				}
-				for (Object[] obj: ductListPt) {
-					if(!(ductList.contains(obj))) {
-						ductList.add(obj);
+					for (Object[] obj : ductListPt) {
+						if (!(ductList.contains(obj))) {
+							ductList.add(obj);
+						}
 					}
-				}
-				for (Object[] obj: ductAuxiliary_DataPt ) {
-					if(!(ductAuxiliary_Data.contains(obj))) {
-						ductAuxiliary_Data.add(obj);
+					for (Object[] obj : ductAuxiliary_DataPt) {
+						if (!(ductAuxiliary_Data.contains(obj))) {
+							ductAuxiliary_Data.add(obj);
+						}
 					}
-				}
 					// in sequential order
 
 					// HashMap<String,List<?>> hash_map = new HashMap<String, List<?>>();
@@ -1727,10 +1692,6 @@ public class PhysicalLayerController {
 					physicalLayerList.put("fiber", fiberList);
 					physicalLayerList.put("Distribution_Board", distribBoardList);
 					physicalLayerList.put("Trench", trenchList);
-					physicalLayerList.put("Node", EntrepriseList);
-					physicalLayerList.put("Transmission", TransmissionList);
-					physicalLayerList.put("Core", CoreList);
-					physicalLayerList.put("Access", AccessList);
 					physicalLayerList.put("NodeActiveList", NodeActiveList);
 					physicalLayerList.put("duct", ductList);
 					physicalLayerData.put("trench_Auxiliary", trenchAuxiliary_Data);
@@ -1930,20 +1891,19 @@ public class PhysicalLayerController {
 								+ selectedDistBoardContext + "' ")
 						.list();
 				/*
-				List<Object[]> DistBoardMappingPts = session.createSQLQuery(
-						"SELECT DISTINCT ROW_COL_INDEX,ROW_NUMBER,COLUMN_NUMBER,DB_PORT_ID,FP_STATUS,FP_LOCATION_TYPE,FP_LOCATION_ID,FP_LOCATION_NAME,FP_LOCATION,FP_EQUIPMENT_TYPE,FP_EQUIPMENT,FP_EQUIPMENT_ID,FP_EQUIPMENT_NAME,FP_ADDRESS,BP_STATUS,BP_STRAND_ID,BP_STRAND_NAME,BP_TUBE_ID,BP_TUBE_NAME,BP_FIBER_ID,BP_FIBER_NAME,FP_STRAND_ID,FP_STRAND_NAME,FP_TUBE_ID,FP_TUBE_NAME,FP_FIBER_ID,FP_FIBER_NAME,BP_LOCATION_TYPE,BP_LOCATION_ID,BP_LOCATION_NAME,BP_LOCATION,BP_EQUIPMENT_TYPE,BP_EQUIPMENT,BP_EQUIPMENT_ID,BP_EQUIPMENT_NAME,BP_ADDRESS,FP_STRAND_Nb,FP_TUBE_Nb,BP_STRAND_Nb,BP_TUBE_Nb,FP_STRAND_COLOR,FP_TUBE_COLOR,BP_STRAND_COLOR,BP_TUBE_COLOR,FP_JUNCTION_ID,FP_JUNCTION_NAME,BP_JUNCTION_ID,BP_JUNCTION_NAME FROM DISTRIBUTION_BOARD_MAPPING B WHERE B.DB_ID='"
-								+ selectedDistBoardContext + "' ")
-						.list();
-				*/
-				List<Object[]> DBnetLevel = session.createSQLQuery(
-						"SELECT DISTINCT DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD  WHERE DB_ID='"
+				 * List<Object[]> DistBoardMappingPts = session.createSQLQuery(
+				 * "SELECT DISTINCT ROW_COL_INDEX,ROW_NUMBER,COLUMN_NUMBER,DB_PORT_ID,FP_STATUS,FP_LOCATION_TYPE,FP_LOCATION_ID,FP_LOCATION_NAME,FP_LOCATION,FP_EQUIPMENT_TYPE,FP_EQUIPMENT,FP_EQUIPMENT_ID,FP_EQUIPMENT_NAME,FP_ADDRESS,BP_STATUS,BP_STRAND_ID,BP_STRAND_NAME,BP_TUBE_ID,BP_TUBE_NAME,BP_FIBER_ID,BP_FIBER_NAME,FP_STRAND_ID,FP_STRAND_NAME,FP_TUBE_ID,FP_TUBE_NAME,FP_FIBER_ID,FP_FIBER_NAME,BP_LOCATION_TYPE,BP_LOCATION_ID,BP_LOCATION_NAME,BP_LOCATION,BP_EQUIPMENT_TYPE,BP_EQUIPMENT,BP_EQUIPMENT_ID,BP_EQUIPMENT_NAME,BP_ADDRESS,FP_STRAND_Nb,FP_TUBE_Nb,BP_STRAND_Nb,BP_TUBE_Nb,FP_STRAND_COLOR,FP_TUBE_COLOR,BP_STRAND_COLOR,BP_TUBE_COLOR,FP_JUNCTION_ID,FP_JUNCTION_NAME,BP_JUNCTION_ID,BP_JUNCTION_NAME FROM DISTRIBUTION_BOARD_MAPPING B WHERE B.DB_ID='"
+				 * + selectedDistBoardContext + "' ") .list();
+				 */
+				List<Object[]> DBnetLevel = session
+						.createSQLQuery("SELECT DISTINCT DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD  WHERE DB_ID='"
 								+ selectedDistBoardContext + "' ")
 						.list();
 
 				rtn.put("DistBoardDetails", DistBoardDetails);
-				//rtn.put("DistBoardMappingPts", DistBoardMappingPts);
+				// rtn.put("DistBoardMappingPts", DistBoardMappingPts);
 				rtn.put("DBnetLevel", DBnetLevel);
-				
+
 			} catch (Exception e) {
 				sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
@@ -1951,7 +1911,7 @@ public class PhysicalLayerController {
 				logger.finest("Error in findDistBoardDetails due to \n " + exceptionAsString);
 				logger.info("Error in findDistBoardDetails due to \n " + exceptionAsString);
 				rtn.put("DistBoardDetails", null);
-				//rtn.put("DistBoardMappingPts", null);
+				// rtn.put("DistBoardMappingPts", null);
 			} finally {
 				if (session != null && session.isOpen()) {
 					tx.commit();
@@ -1982,16 +1942,14 @@ public class PhysicalLayerController {
 			tx = session.beginTransaction();
 			String selectedDistBoardContext = request.getParameter("selectedDistBoardContext");
 			try {
-				
 
 				List<Object[]> DistBoardMappingPts = session.createSQLQuery(
 						"SELECT DISTINCT ROW_COL_INDEX,ROW_NUMBER,COLUMN_NUMBER,DB_PORT_ID,FP_STATUS,FP_LOCATION_TYPE,FP_LOCATION_ID,FP_LOCATION_NAME,FP_LOCATION,FP_EQUIPMENT_TYPE,FP_EQUIPMENT,FP_EQUIPMENT_ID,FP_EQUIPMENT_NAME,FP_ADDRESS,BP_STATUS,BP_STRAND_ID,BP_STRAND_NAME,BP_TUBE_ID,BP_TUBE_NAME,BP_FIBER_ID,BP_FIBER_NAME,FP_STRAND_ID,FP_STRAND_NAME,FP_TUBE_ID,FP_TUBE_NAME,FP_FIBER_ID,FP_FIBER_NAME,BP_LOCATION_TYPE,BP_LOCATION_ID,BP_LOCATION_NAME,BP_LOCATION,BP_EQUIPMENT_TYPE,BP_EQUIPMENT,BP_EQUIPMENT_ID,BP_EQUIPMENT_NAME,BP_ADDRESS,FP_STRAND_NB,FP_TUBE_NB,BP_STRAND_NB,BP_TUBE_NB,FP_STRAND_COLOR,FP_TUBE_COLOR,BP_STRAND_COLOR,BP_TUBE_COLOR,FP_JUNCTION_ID,FP_JUNCTION_NAME,BP_JUNCTION_ID,BP_JUNCTION_NAME FROM DISTRIBUTION_BOARD_MAPPING B WHERE B.DB_ID='"
 								+ selectedDistBoardContext + "' ")
 						.list();
-				
 
 				rtn.put("DistBoardMappingPts", DistBoardMappingPts);
-				
+
 			} catch (Exception e) {
 				sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
@@ -2008,7 +1966,7 @@ public class PhysicalLayerController {
 		}
 		return rtn;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/findDistBoardMappingDetails", method = RequestMethod.GET)
 	@ResponseBody
@@ -2300,9 +2258,8 @@ public class PhysicalLayerController {
 				int e = 0;
 				int f = 0;
 
-				String CableName = session
-						.createSQLQuery(
-								"SELECT DISTINCT FIBER_CABLE_NAME FROM FIBER_CABLES WHERE FIBER_CABLE_ID= '" + fiberID + "'")
+				String CableName = session.createSQLQuery(
+						"SELECT DISTINCT FIBER_CABLE_NAME FROM FIBER_CABLES WHERE FIBER_CABLE_ID= '" + fiberID + "'")
 						.uniqueResult().toString();
 				System.out.println("the cable name is " + CableName);
 
@@ -2313,24 +2270,26 @@ public class PhysicalLayerController {
 
 				ArrayList<Object[]> BackLocations = new ArrayList<>();
 				ArrayList<Object[]> FrontLocations = new ArrayList<>();
-				List<Object[]> DbIdBack = session
-						.createSQLQuery("SELECT DISTINCT DB_PORT_ID FROM DISTRIBUTION_BOARD_MAPPING WHERE BP_FIBER_ID= '"
-								+ fiberID + "' AND BP_STATUS= 'Active'")
+				List<Object[]> DbIdBack = session.createSQLQuery(
+						"SELECT DISTINCT DB_PORT_ID FROM DISTRIBUTION_BOARD_MAPPING WHERE BP_FIBER_ID= '" + fiberID
+								+ "' AND BP_STATUS= 'Active'")
 						.list();
-				//System.out.println("the db ports back are  " + mapper.writeValueAsString(DbIdBack));
+				// System.out.println("the db ports back are " +
+				// mapper.writeValueAsString(DbIdBack));
 				List<Object[]> DbIdFront = session
 						.createSQLQuery("SELECT DISTINCT DB_PORT_ID FROM DISTRIBUTION_BOARD_MAPPING WHERE FP_FIBER_ID='"
 								+ fiberID + "' AND FP_STATUS= 'Active'")
 						.list();
-			//	System.out.println("the db ports front are  " + mapper.writeValueAsString(DbIdFront));
+				// System.out.println("the db ports front are " +
+				// mapper.writeValueAsString(DbIdFront));
 
 				ArrayList<Object> FinalResultClt = new ArrayList<>();
 				ArrayList<Object> FinalResultSite = new ArrayList<>();
 				ArrayList<Object> FinalCltLongLat = new ArrayList<>();
 				ArrayList<Object> FinalSiteLongLat = new ArrayList<>();
 
-			//	 System.out.println("===> final site data BEFORE <===" + FinalResultSite);
-				 //System.out.println("===> final site data BEFORE <===" + FinalResultClt);
+				// System.out.println("===> final site data BEFORE <===" + FinalResultSite);
+				// System.out.println("===> final site data BEFORE <===" + FinalResultClt);
 
 				String BackLocId = "";
 				for (i = 0; i < DbIdBack.size(); i++) {
@@ -2340,35 +2299,41 @@ public class PhysicalLayerController {
 									+ DbIdBack.get(i) + "'");
 					BackLocations.addAll(query.list());
 					BackLocId = BackLocations.get(0)[1].toString();
-				//	 System.out.println("the backs are===> " +mapper.writeValueAsString(BackLocations));
-				//	 System.out.println("BackLocId ===> " + BackLocId);
+					// System.out.println("the backs are===> "
+					// +mapper.writeValueAsString(BackLocations));
+					// System.out.println("BackLocId ===> " + BackLocId);
 					for (j = 0; j < BackLocations.size(); j++) {
-				//		System.out.println("for on backs");
-				//		 System.out.println("back loactions are " + mapper.writeValueAsString(BackLocations.get(j)));
-						if (BackLocations.get(j)[0].equals("Site")){
+						// System.out.println("for on backs");
+						// System.out.println("back loactions are " +
+						// mapper.writeValueAsString(BackLocations.get(j)));
+						if (BackLocations.get(j)[0].equals("Site")) {
 							boolean valueExists = false;
 							for (Object row : FinalResultSite) {
 								ArrayList<Object> innerList = (ArrayList<Object>) FinalResultSite.get(f);
 								Object secondColumn = innerList.get(1);
 								// System.out.println("BACK SITE " + BackLocations.get(j)[3]);
 								if (secondColumn.equals(BackLocations.get(j)[3])) {
-								//	System.out.println("exist");
+									// System.out.println("exist");
 									valueExists = true;
 									break;
 								}
-								//System.out.println("not exist");
+								// System.out.println("not exist");
 							}
 							if (!valueExists) {
-							//	System.out.println("not exist if");
+								// System.out.println("not exist if");
 								List<Object[]> SiteIdBack = session.createSQLQuery(
 										"SELECT DISTINCT SITE_ID,WARE_NAME,LONGITUDE,LATITUDE FROM WAREHOUSE WHERE WARE_ID= '"
 												+ BackLocations.get(j)[1] + "' ")
 										.list();
-							//	 System.out.println("the site id back is " + mapper.writeValueAsString(SiteIdBack));
-							//	 System.out.println("BackLocations.get(j)[1] is " + mapper.writeValueAsString(BackLocations.get(j)[1]));
-							//	 System.out.println("SiteIdBack.get(0)[0] is " + mapper.writeValueAsString(SiteIdBack.get(0)[0]));
-							//	 System.out.println("SiteIdBack.get(0)[1] is " + mapper.writeValueAsString(SiteIdBack.get(0)[1]));
-								 
+								// System.out.println("the site id back is " +
+								// mapper.writeValueAsString(SiteIdBack));
+								// System.out.println("BackLocations.get(j)[1] is " +
+								// mapper.writeValueAsString(BackLocations.get(j)[1]));
+								// System.out.println("SiteIdBack.get(0)[0] is " +
+								// mapper.writeValueAsString(SiteIdBack.get(0)[0]));
+								// System.out.println("SiteIdBack.get(0)[1] is " +
+								// mapper.writeValueAsString(SiteIdBack.get(0)[1]));
+
 								SiteData.add(BackLocations.get(j)[1]);
 								SiteData.add(SiteIdBack.get(0)[0]);
 								SiteData.add(SiteIdBack.get(0)[1]);
@@ -2377,14 +2342,14 @@ public class PhysicalLayerController {
 								SiteLongLat.add(SiteIdBack.get(0)[3].toString());
 								FinalSiteLongLat.add(SiteLongLat);
 							}
-							
+
 						}
-						
+
 						// System.out.println("===> final site data AFTER BACK SITE <===" +
-						//		 SiteData);
-						
-							SiteData = new ArrayList<>();
-							SiteLongLat = new ArrayList<>();
+						// SiteData);
+
+						SiteData = new ArrayList<>();
+						SiteLongLat = new ArrayList<>();
 						// System.out.println("===> final site data AFTER BACK SITE <===" +
 						// FinalResultClt);
 						if (BackLocations.get(j)[0].equals("Customer")) {
@@ -2421,7 +2386,7 @@ public class PhysicalLayerController {
 				// FinalResultSite);
 				// System.out.println("===> final site data AFTER BACK CLIENT <===" +
 				// FinalResultClt);
-			//	System.out.println("===> final site data AFTER BACK  <===" + FinalResultSite);
+				// System.out.println("===> final site data AFTER BACK <===" + FinalResultSite);
 				ClientData = new ArrayList<>();
 				SiteData = new ArrayList<>();
 				CltLongLat = new ArrayList<>();
@@ -2446,21 +2411,25 @@ public class PhysicalLayerController {
 								// System.out.println("FRONT SITE " + FrontLocations.get(e)[3]);
 								if (secondColumn.equals(FrontLocations.get(e)[3])) {
 									valueExists = true;
-								//	System.out.println("existtttt");
+									// System.out.println("existtttt");
 									break;
 								}
 							}
 							if (!valueExists) {
-							//	System.out.println("dont existtttt");
+								// System.out.println("dont existtttt");
 								List<Object[]> SiteIdFront = session.createSQLQuery(
 										"SELECT DISTINCT SITE_ID,WARE_NAME,LONGITUDE,LATITUDE FROM WAREHOUSE WHERE WARE_ID= '"
 												+ FrontLocations.get(e)[1] + "' ")
 										.list();
-							//	System.out.println("the site id front is " + mapper.writeValueAsString(SiteIdFront));
-							//	 System.out.println("FrontLocations.get(e)[1] is " + mapper.writeValueAsString(FrontLocations.get(e)[1]));
-							//	 System.out.println("SiteIdFront.get(0)[0] is " + mapper.writeValueAsString(SiteIdFront.get(0)[0]));
-							//	 System.out.println("SiteIdFront.get(0)[1] is " + mapper.writeValueAsString(SiteIdFront.get(0)[1]));
-								 
+								// System.out.println("the site id front is " +
+								// mapper.writeValueAsString(SiteIdFront));
+								// System.out.println("FrontLocations.get(e)[1] is " +
+								// mapper.writeValueAsString(FrontLocations.get(e)[1]));
+								// System.out.println("SiteIdFront.get(0)[0] is " +
+								// mapper.writeValueAsString(SiteIdFront.get(0)[0]));
+								// System.out.println("SiteIdFront.get(0)[1] is " +
+								// mapper.writeValueAsString(SiteIdFront.get(0)[1]));
+
 								SiteData.add(FrontLocations.get(e)[1]);
 								SiteData.add(SiteIdFront.get(0)[0]);
 								SiteData.add(SiteIdFront.get(0)[1]);
@@ -2470,11 +2439,11 @@ public class PhysicalLayerController {
 								FinalSiteLongLat.add(SiteLongLat);
 							}
 						}
-					//	System.out.println("===> final site data AFTER FRONT SITE <===" + SiteData);							
+						// System.out.println("===> final site data AFTER FRONT SITE <===" + SiteData);
 						SiteData = new ArrayList<>();
 						SiteLongLat = new ArrayList<>();
-					//	 System.out.println("===> final site data AFTER FRONT SITE <===" +
-					//	 FinalResultClt);
+						// System.out.println("===> final site data AFTER FRONT SITE <===" +
+						// FinalResultClt);
 
 						if (FrontLocations.get(e)[0].equals("Customer")) {
 							boolean valueExists = false;
@@ -2503,7 +2472,7 @@ public class PhysicalLayerController {
 								FinalCltLongLat.add(CltLongLat);
 							}
 						}
-						ClientData = new ArrayList<>();						
+						ClientData = new ArrayList<>();
 						CltLongLat = new ArrayList<>();
 					}
 				}
@@ -2541,7 +2510,8 @@ public class PhysicalLayerController {
 					}
 					if (!valueExists) {
 						String MobileNbrSrc = session
-								.createSQLQuery("SELECT DISTINCT MOBILE_NUMBER FROM CLIENTS WHERE CLIENT_ID= '" + SrcId + "' ")
+								.createSQLQuery(
+										"SELECT DISTINCT MOBILE_NUMBER FROM CLIENTS WHERE CLIENT_ID= '" + SrcId + "' ")
 								.uniqueResult().toString();
 						// System.out.println("the mobile nbr source is " +
 						// mapper.writeValueAsString(MobileNbrSrc));
@@ -2574,9 +2544,8 @@ public class PhysicalLayerController {
 						}
 					}
 					if (!valueExists) {
-						List<Object[]> SiteIdSrc = session
-								.createSQLQuery(
-										"SELECT DISTINCT SITE_ID,WARE_NAME FROM WAREHOUSE WHERE WARE_ID= '" + SrcWareId + "' ")
+						List<Object[]> SiteIdSrc = session.createSQLQuery(
+								"SELECT DISTINCT SITE_ID,WARE_NAME FROM WAREHOUSE WHERE WARE_ID= '" + SrcWareId + "' ")
 								.list();
 						// System.out.println("the site id source client is " +
 						// mapper.writeValueAsString(SiteIdSrc));
@@ -2599,7 +2568,8 @@ public class PhysicalLayerController {
 
 				if ((Src.get(0)[0]).toString().startsWith("DB_")) {
 					List<Object[]> SiteSrcDB = session.createSQLQuery(
-							"SELECT DISTINCT SITE,WAREHOUSE,SITE_NAME FROM DISTRIBUTION_BOARD WHERE DB_ID= '" + SrcId + "' ")
+							"SELECT DISTINCT SITE,WAREHOUSE,SITE_NAME FROM DISTRIBUTION_BOARD WHERE DB_ID= '" + SrcId
+									+ "' ")
 							.list();
 					// System.out.println("the site DB source is " +
 					// mapper.writeValueAsString(SiteSrcDB));
@@ -2618,8 +2588,9 @@ public class PhysicalLayerController {
 								}
 							}
 							if (!valueExists) {
-								String WareSrcDB = session.createSQLQuery(
-										"SELECT DISTINCT WARE_NAME FROM WAREHOUSE WHERE WARE_ID= '" + SiteSrcDB.get(0)[1] + "' ")
+								String WareSrcDB = session
+										.createSQLQuery("SELECT DISTINCT WARE_NAME FROM WAREHOUSE WHERE WARE_ID= '"
+												+ SiteSrcDB.get(0)[1] + "' ")
 										.uniqueResult().toString();
 								// System.out.println("the ware DB source is " +
 								// mapper.writeValueAsString(WareSrcDB));
@@ -2635,10 +2606,10 @@ public class PhysicalLayerController {
 						}
 						SiteData = new ArrayList<>();
 						SiteLongLat = new ArrayList<>();
-					//	 System.out.println("===> final site data AFTER SRC DB SITE <===" +
-					//	 FinalResultSite);
-					//	 System.out.println("===> final site data AFTER SRC DB SITE <===" +
-					//	 FinalResultClt);
+						// System.out.println("===> final site data AFTER SRC DB SITE <===" +
+						// FinalResultSite);
+						// System.out.println("===> final site data AFTER SRC DB SITE <===" +
+						// FinalResultClt);
 
 						if ((SiteSrcDB.get(0)[0]).toString().startsWith("CLT_")) {
 							boolean valueExists = false;
@@ -2666,8 +2637,8 @@ public class PhysicalLayerController {
 						CltLongLat = new ArrayList<>();
 					}
 				}
-			//	 System.out.println("===> final site data AFTER fb src <===" +
-			//	 FinalResultSite);
+				// System.out.println("===> final site data AFTER fb src <===" +
+				// FinalResultSite);
 				// System.out.println("===> final site data AFTER SRC DB CLIENT <===" +
 				// FinalResultClt);
 				ClientData = new ArrayList<>();
@@ -2706,7 +2677,8 @@ public class PhysicalLayerController {
 					}
 					if (!valueExists) {
 						String MobileNbrDest = session
-								.createSQLQuery("SELECT DISTINCT MOBILE_NUMBER FROM CLIENTS WHERE CLIENT_ID= '" + DestId + "' ")
+								.createSQLQuery(
+										"SELECT DISTINCT MOBILE_NUMBER FROM CLIENTS WHERE CLIENT_ID= '" + DestId + "' ")
 								.uniqueResult().toString();
 						// System.out.println("the mobile nbr dest is " +
 						// mapper.writeValueAsString(MobileNbrDest));
@@ -2739,9 +2711,8 @@ public class PhysicalLayerController {
 						}
 					}
 					if (!valueExists) {
-						List<Object[]> SiteIdDest = session
-								.createSQLQuery(
-										"SELECT DISTINCT SITE_ID,WARE_NAME FROM WAREHOUSE WHERE WARE_ID= '" + DestWareId + "' ")
+						List<Object[]> SiteIdDest = session.createSQLQuery(
+								"SELECT DISTINCT SITE_ID,WARE_NAME FROM WAREHOUSE WHERE WARE_ID= '" + DestWareId + "' ")
 								.list();
 						// System.out.println("the site id dest is " +
 						// mapper.writeValueAsString(SiteIdDest));
@@ -2759,15 +2730,16 @@ public class PhysicalLayerController {
 				}
 				SiteData = new ArrayList<>();
 				SiteLongLat = new ArrayList<>();
-			//	 System.out.println("===> final site data AFTER DEST SITE <===" +
-			//	 FinalResultSite);
-			//	 System.out.println("===> final site data AFTER DEST SITE <===" +
-			//	 FinalResultClt);
+				// System.out.println("===> final site data AFTER DEST SITE <===" +
+				// FinalResultSite);
+				// System.out.println("===> final site data AFTER DEST SITE <===" +
+				// FinalResultClt);
 
 				if ((Dest.get(0)[0]).toString().startsWith("DB_")) {
 					// System.out.println("Site data dest db ===> " +SiteData);
 					List<Object[]> SiteDestDB = session.createSQLQuery(
-							"SELECT DISTINCT SITE,WAREHOUSE,SITE_NAME FROM DISTRIBUTION_BOARD WHERE DB_ID= '" + DestId + "' ")
+							"SELECT DISTINCT SITE,WAREHOUSE,SITE_NAME FROM DISTRIBUTION_BOARD WHERE DB_ID= '" + DestId
+									+ "' ")
 							.list();
 					// System.out.println("the site DB dest is " +
 					// mapper.writeValueAsString(SiteDestDB));
@@ -2804,10 +2776,10 @@ public class PhysicalLayerController {
 						}
 						SiteData = new ArrayList<>();
 						SiteLongLat = new ArrayList<>();
-					//	 System.out.println("===> final site data AFTER DEST DB SITE <===" +
-					//	 FinalResultSite);
-					//	 System.out.println("===> final site data AFTER DEST DB SITE <===" +
-					//	 FinalResultClt);
+						// System.out.println("===> final site data AFTER DEST DB SITE <===" +
+						// FinalResultSite);
+						// System.out.println("===> final site data AFTER DEST DB SITE <===" +
+						// FinalResultClt);
 
 						if ((SiteDestDB.get(0)[0]).toString().startsWith("CLT_")) {
 							boolean valueExists = false;
@@ -2835,57 +2807,57 @@ public class PhysicalLayerController {
 						CltLongLat = new ArrayList<>();
 					}
 				}
-			//	 System.out.println("===> final site data AFTER fb dest <===" +
-			//	 FinalResultSite);
+				// System.out.println("===> final site data AFTER fb dest <===" +
+				// FinalResultSite);
 				// System.out.println("===> final site data AFTER DEST DB CLIENT <===" +
 				// FinalResultClt);
-			
-					List<Object> uniqueObjectsSites = new ArrayList<>();
-					// Iterate over the original list
-					for (Object obj : FinalResultSite) {
-					    // Check if the object is already in the unique list
-					    if (!uniqueObjectsSites.contains(obj)) {
-					        uniqueObjectsSites.add(obj);
-					    }
+
+				List<Object> uniqueObjectsSites = new ArrayList<>();
+				// Iterate over the original list
+				for (Object obj : FinalResultSite) {
+					// Check if the object is already in the unique list
+					if (!uniqueObjectsSites.contains(obj)) {
+						uniqueObjectsSites.add(obj);
 					}
-					System.out.println("===> final site data AFTER removing duplicates <===" + uniqueObjectsSites);
+				}
+				System.out.println("===> final site data AFTER removing duplicates <===" + uniqueObjectsSites);
 
-					List<Object> uniqueObjectsSitesLongLat = new ArrayList<>();
-					for (Object obj : FinalSiteLongLat) {
-					    if (!uniqueObjectsSitesLongLat.contains(obj)) {
-					    	uniqueObjectsSitesLongLat.add(obj);
-					    }
+				List<Object> uniqueObjectsSitesLongLat = new ArrayList<>();
+				for (Object obj : FinalSiteLongLat) {
+					if (!uniqueObjectsSitesLongLat.contains(obj)) {
+						uniqueObjectsSitesLongLat.add(obj);
 					}
-					System.out.println("===> final site LONG LAT data AFTER removing duplicates <===" + uniqueObjectsSitesLongLat);
+				}
+				System.out.println(
+						"===> final site LONG LAT data AFTER removing duplicates <===" + uniqueObjectsSitesLongLat);
 
-				
-					List<Object> uniqueObjectsClients = new ArrayList<>();
-					for (Object obj : FinalResultClt) {
-					    if (!uniqueObjectsClients.contains(obj)) {
-					        uniqueObjectsClients.add(obj);
-					    }
+				List<Object> uniqueObjectsClients = new ArrayList<>();
+				for (Object obj : FinalResultClt) {
+					if (!uniqueObjectsClients.contains(obj)) {
+						uniqueObjectsClients.add(obj);
 					}
-					System.out.println("===> final site data AFTER removing duplicates <===" + uniqueObjectsClients);
+				}
+				System.out.println("===> final site data AFTER removing duplicates <===" + uniqueObjectsClients);
 
-
-					List<Object> uniqueObjectsClientsLongLat = new ArrayList<>();
-					for (Object obj : FinalCltLongLat) {
-					    if (!uniqueObjectsClientsLongLat.contains(obj)) {
-					    	uniqueObjectsClientsLongLat.add(obj);
-					    }
+				List<Object> uniqueObjectsClientsLongLat = new ArrayList<>();
+				for (Object obj : FinalCltLongLat) {
+					if (!uniqueObjectsClientsLongLat.contains(obj)) {
+						uniqueObjectsClientsLongLat.add(obj);
 					}
-					System.out.println("===> final site LONG LAT data AFTER removing duplicates <===" + uniqueObjectsClientsLongLat);				
-					
-					System.out.println("CLIENT DATA  " + uniqueObjectsClients);
-					System.out.println("SITE DATA  " + uniqueObjectsSites);
-					System.out.println("CLIENT LONGLAT DATA  " + FinalCltLongLat);
-					System.out.println("SITE LONGLAT DATA  " + uniqueObjectsSitesLongLat);
+				}
+				System.out.println(
+						"===> final site LONG LAT data AFTER removing duplicates <===" + uniqueObjectsClientsLongLat);
 
-					rtn.put("CableName", CableName);
-					rtn.put("ClientData", uniqueObjectsClients);
-					rtn.put("SiteData", uniqueObjectsSites);
-					rtn.put("CltLongLat", uniqueObjectsClientsLongLat);
-					rtn.put("SiteLongLat", uniqueObjectsSitesLongLat);
+				System.out.println("CLIENT DATA  " + uniqueObjectsClients);
+				System.out.println("SITE DATA  " + uniqueObjectsSites);
+				System.out.println("CLIENT LONGLAT DATA  " + FinalCltLongLat);
+				System.out.println("SITE LONGLAT DATA  " + uniqueObjectsSitesLongLat);
+
+				rtn.put("CableName", CableName);
+				rtn.put("ClientData", uniqueObjectsClients);
+				rtn.put("SiteData", uniqueObjectsSites);
+				rtn.put("CltLongLat", uniqueObjectsClientsLongLat);
+				rtn.put("SiteLongLat", uniqueObjectsSitesLongLat);
 			} catch (Exception e) {
 				sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
@@ -2903,7 +2875,6 @@ public class PhysicalLayerController {
 		}
 		return rtn;
 	}
-
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/findFiberDetails", method = RequestMethod.GET)
@@ -2988,7 +2959,6 @@ public class PhysicalLayerController {
 	@ResponseBody
 	public Map<String, Object> findNodesDetails(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
-		
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
 
@@ -3003,11 +2973,13 @@ public class PhysicalLayerController {
 			String selectedNodeAcvtiveContext = request.getParameter("selectedNodeAcvtiveContext");
 			try {
 				Object[] NodesDetails = (Object[]) session.createSQLQuery(
-						"SELECT NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_SOURCE,SUB_DOMAIN_TYPE,SITE_ID,WARE_ID,TO_CHAR(CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(UPDATE_DATE, 'MM/dd/YYYY HH:MI AM'),LONGITUDE,LATITUDE FROM NODE_ACTIVE WHERE NODE_PK ='"+selectedNodeAcvtiveContext+"'").uniqueResult();
+						"SELECT NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_SOURCE,SUB_DOMAIN_TYPE,SITE_ID,WARE_ID,TO_CHAR(CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(UPDATE_DATE, 'MM/dd/YYYY HH:MI AM'),LONGITUDE,LATITUDE FROM NODE_ACTIVE WHERE NODE_PK ='"
+								+ selectedNodeAcvtiveContext + "'")
+						.uniqueResult();
 				rtn.put("NodesDetails", NodesDetails);
 
 			} catch (Exception e) {
-				sw = new StringWriter(); 
+				sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
 				exceptionAsString = sw.toString();
 				logger.finest("Error in findNodesDetails due to \n " + exceptionAsString);
@@ -3023,136 +2995,139 @@ public class PhysicalLayerController {
 		}
 		return rtn;
 	}
-	
+
 	// Core details
-		@SuppressWarnings("unchecked")
-		@RequestMapping(value = "/findCoreDetails", method = RequestMethod.GET)
-		@ResponseBody
-		public Map<String, Object> findCoreDetails(Locale locale, Model model, HttpServletRequest request,
-				HttpServletResponse response) throws JsonProcessingException {
-			
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/findCoreDetails", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> findCoreDetails(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) throws JsonProcessingException {
 
-			Map<String, Object> rtn = new LinkedHashMap<>();
+		Map<String, Object> rtn = new LinkedHashMap<>();
 
-			session = almsessions.getSession();
-			if (LoginServices.checkSession(request, response).equals("redirect:/")) {
-				rtn.put("Login", LoginServices.checkSession(request, response));
-				return rtn;
-			}
-			if (session != null && session.isOpen()) {
-				tx = session.beginTransaction();
-
-				String selectedCoreIdContext = request.getParameter("selectedCoreIdContext");
-				try {
-					Object[] CoreNodesDetails = (Object[]) session.createSQLQuery(
-							"SELECT NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_SOURCE,NODE_MODEL,SITE_ID,WARE_ID,TO_CHAR(CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(UPDATE_DATE, 'MM/dd/YYYY HH:MI AM'),LONGITUDE,LATITUDE FROM NODE_ACTIVE  WHERE DOMAIN = 'Core' AND NODE_PK ='"+selectedCoreIdContext+"'").uniqueResult();
-					
-					rtn.put("CoreNodesDetails", CoreNodesDetails);
-
-				} catch (Exception e) {
-					sw = new StringWriter(); 
-					e.printStackTrace(new PrintWriter(sw));
-					exceptionAsString = sw.toString();
-					logger.finest("Error in findCoreDetails due to \n " + exceptionAsString);
-					logger.info("Error in findCoreDetails due to \n " + exceptionAsString);
-					rtn.put("CoreNodesDetails", null);
-
-				} finally {
-					if (session != null && session.isOpen()) {
-						tx.commit();
-						session.close();
-					}
-				}
-			}
+		session = almsessions.getSession();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
 		}
-	
-		// Access details
-				@SuppressWarnings("unchecked")
-				@RequestMapping(value = "/findAccessDetails", method = RequestMethod.GET)
-				@ResponseBody
-				public Map<String, Object> findAccessDetails(Locale locale, Model model, HttpServletRequest request,
-						HttpServletResponse response) throws JsonProcessingException {
-					
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
 
-					Map<String, Object> rtn = new LinkedHashMap<>();
+			String selectedCoreIdContext = request.getParameter("selectedCoreIdContext");
+			try {
+				Object[] CoreNodesDetails = (Object[]) session.createSQLQuery(
+						"SELECT NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_SOURCE,NODE_MODEL,SITE_ID,WARE_ID,TO_CHAR(CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(UPDATE_DATE, 'MM/dd/YYYY HH:MI AM'),LONGITUDE,LATITUDE FROM NODE_ACTIVE  WHERE DOMAIN = 'Core' AND NODE_PK ='"
+								+ selectedCoreIdContext + "'")
+						.uniqueResult();
 
-					session = almsessions.getSession();
-					if (LoginServices.checkSession(request, response).equals("redirect:/")) {
-						rtn.put("Login", LoginServices.checkSession(request, response));
-						return rtn;
-					}
-					if (session != null && session.isOpen()) {
-						tx = session.beginTransaction();
+				rtn.put("CoreNodesDetails", CoreNodesDetails);
 
-						String selectedRanIdContext = request.getParameter("selectedRanIdContext");
-						try {
-							Object[] AccessNodesDetails = (Object[]) session.createSQLQuery(
-									"SELECT NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_SOURCE,NODE_MODEL,SITE_ID,WARE_ID,TO_CHAR(CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(UPDATE_DATE, 'MM/dd/YYYY HH:MI AM'),LONGITUDE,LATITUDE FROM NODE_ACTIVE  WHERE DOMAIN = 'Access' AND NODE_PK ='"+selectedRanIdContext+"'").uniqueResult();
-							
-							rtn.put("AccessNodesDetails", AccessNodesDetails);
+			} catch (Exception e) {
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in findCoreDetails due to \n " + exceptionAsString);
+				logger.info("Error in findCoreDetails due to \n " + exceptionAsString);
+				rtn.put("CoreNodesDetails", null);
 
-						} catch (Exception e) {
-							sw = new StringWriter(); 
-							e.printStackTrace(new PrintWriter(sw));
-							exceptionAsString = sw.toString();
-							logger.finest("Error in findAccessDetails due to \n " + exceptionAsString);
-							logger.info("Error in findAccessDetails due to \n " + exceptionAsString);
-							rtn.put("AccessNodesDetails", null);
-
-						} finally {
-							if (session != null && session.isOpen()) {
-								tx.commit();
-								session.close();
-							}
-						}
-					}
-					return rtn;
+			} finally {
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
 				}
-				
-				// Transmission details
-				@SuppressWarnings("unchecked")
-				@RequestMapping(value = "/findTransmissionDetails", method = RequestMethod.GET)
-				@ResponseBody
-				public Map<String, Object> findTransmissionDetails(Locale locale, Model model, HttpServletRequest request,
-						HttpServletResponse response) throws JsonProcessingException {
-					
+			}
+		}
+		return rtn;
+	}
 
-					Map<String, Object> rtn = new LinkedHashMap<>();
+	// Access details
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/findAccessDetails", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> findAccessDetails(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) throws JsonProcessingException {
 
-					session = almsessions.getSession();
-					if (LoginServices.checkSession(request, response).equals("redirect:/")) {
-						rtn.put("Login", LoginServices.checkSession(request, response));
-						return rtn;
-					}
-					if (session != null && session.isOpen()) {
-						tx = session.beginTransaction();
+		Map<String, Object> rtn = new LinkedHashMap<>();
 
-						String selectedTransmissionIdContext = request.getParameter("selectedTransmissionIdContext");
-						try {
-							Object[] TransmissionNodesDetails = (Object[]) session.createSQLQuery(
-									"SELECT NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_SOURCE,NODE_MODEL,SITE_ID,WARE_ID,TO_CHAR(CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(UPDATE_DATE, 'MM/dd/YYYY HH:MI AM'),LONGITUDE,LATITUDE FROM NODE_ACTIVE  WHERE DOMAIN = 'Transmission' AND NODE_PK ='"+selectedTransmissionIdContext+"'").uniqueResult();
-							
-							rtn.put("TransmissionNodesDetails", TransmissionNodesDetails);
+		session = almsessions.getSession();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
 
-						} catch (Exception e) {
-							sw = new StringWriter(); 
-							e.printStackTrace(new PrintWriter(sw));
-							exceptionAsString = sw.toString();
-							logger.finest("Error in findTransmissionDetails due to \n " + exceptionAsString);
-							logger.info("Error in findTransmissionDetails due to \n " + exceptionAsString);
-							rtn.put("TransmissionNodesDetails", null);
+			String selectedRanIdContext = request.getParameter("selectedRanIdContext");
+			try {
+				Object[] AccessNodesDetails = (Object[]) session.createSQLQuery(
+						"SELECT NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_SOURCE,NODE_MODEL,SITE_ID,WARE_ID,TO_CHAR(CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(UPDATE_DATE, 'MM/dd/YYYY HH:MI AM'),LONGITUDE,LATITUDE FROM NODE_ACTIVE  WHERE DOMAIN = 'Access' AND NODE_PK ='"
+								+ selectedRanIdContext + "'")
+						.uniqueResult();
 
-						} finally {
-							if (session != null && session.isOpen()) {
-								tx.commit();
-								session.close();
-							}
-						}
-					}
-					return rtn;
+				rtn.put("AccessNodesDetails", AccessNodesDetails);
+
+			} catch (Exception e) {
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in findAccessDetails due to \n " + exceptionAsString);
+				logger.info("Error in findAccessDetails due to \n " + exceptionAsString);
+				rtn.put("AccessNodesDetails", null);
+
+			} finally {
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
 				}
-		
+			}
+		}
+		return rtn;
+	}
+
+	// Transmission details
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/findTransmissionDetails", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> findTransmissionDetails(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) throws JsonProcessingException {
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+
+		session = almsessions.getSession();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+
+			String selectedTransmissionIdContext = request.getParameter("selectedTransmissionIdContext");
+			try {
+				Object[] TransmissionNodesDetails = (Object[]) session.createSQLQuery(
+						"SELECT NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_SOURCE,NODE_MODEL,SITE_ID,WARE_ID,TO_CHAR(CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(UPDATE_DATE, 'MM/dd/YYYY HH:MI AM'),LONGITUDE,LATITUDE FROM NODE_ACTIVE  WHERE DOMAIN = 'Transmission' AND NODE_PK ='"
+								+ selectedTransmissionIdContext + "'")
+						.uniqueResult();
+
+				rtn.put("TransmissionNodesDetails", TransmissionNodesDetails);
+
+			} catch (Exception e) {
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in findTransmissionDetails due to \n " + exceptionAsString);
+				logger.info("Error in findTransmissionDetails due to \n " + exceptionAsString);
+				rtn.put("TransmissionNodesDetails", null);
+
+			} finally {
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+				}
+			}
+		}
+		return rtn;
+	}
+
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/entrNodeSave", method = RequestMethod.POST)
 	@ResponseBody
@@ -3169,51 +3144,52 @@ public class PhysicalLayerController {
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
-				
+
 				NodeActive nodeActive = new NodeActive();
 				String nodePk = request.getParameter("nodePk");
-				/*Date date = new Date();
-				Calendar calendar = new GregorianCalendar();
-				calendar.setTime(date);
-				int year = calendar.get(Calendar.YEAR);
-				if (StringUtils.equalsIgnoreCase(nodePk, "")
-						|| StringUtils.equalsIgnoreCase(nodePk, null)) {
-					synchronized (this) {
+				/*
+				 * Date date = new Date(); Calendar calendar = new GregorianCalendar();
+				 * calendar.setTime(date); int year = calendar.get(Calendar.YEAR); if
+				 * (StringUtils.equalsIgnoreCase(nodePk, "") ||
+				 * StringUtils.equalsIgnoreCase(nodePk, null)) { synchronized (this) {
+				 * 
+				 * // distributionBoardId = "DB_" + year + "_" +
+				 * appConfig.getSeqNbr(52,session); nodePk = "NODE_ACTIVE" + year + "_" +
+				 * Integer.parseInt(
+				 * session.createSQLQuery("SELECT NODE_ACTIVE FROM SEQ_TABLE").uniqueResult().
+				 * toString()); query =
+				 * session.createSQLQuery("UPDATE SEQ_TABLE SET NODE_ACTIVE = NODE_ACTIVE + 1 "
+				 * ); query.executeUpdate(); session.createSQLQuery("commit").executeUpdate(); }
+				 * }
+				 */
 
-						// distributionBoardId = "DB_" + year + "_" + appConfig.getSeqNbr(52,session);
-						nodePk = "NODE_ACTIVE" + year + "_" + Integer.parseInt(
-								session.createSQLQuery("SELECT NODE_ACTIVE FROM SEQ_TABLE").uniqueResult().toString());
-						query = session.createSQLQuery("UPDATE SEQ_TABLE SET NODE_ACTIVE = NODE_ACTIVE + 1 ");
-						query.executeUpdate();
-						session.createSQLQuery("commit").executeUpdate();
-					}
-				}*/
-			
-				/*Timestamp updateData_node = new Timestamp(new Timestamp(System.currentTimeMillis()).getTime());
+				/*
+				 * Timestamp updateData_node = new Timestamp(new
+				 * Timestamp(System.currentTimeMillis()).getTime());
+				 * 
+				 * String createData_node = request.getParameter("createData_node"); Timestamp
+				 * nodeCreationDate; if (StringUtils.equalsIgnoreCase(createData_node, "")) {
+				 * nodeCreationDate = updateData_node;
+				 * 
+				 * } else { DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+				 * nodeCreationDate = new Timestamp(
+				 * formatter.parse(request.getParameter("createData_node")).getTime()); }
+				 */
 
-				String createData_node = request.getParameter("createData_node");
-				Timestamp nodeCreationDate;
-				if (StringUtils.equalsIgnoreCase(createData_node, "")) {
-					nodeCreationDate = updateData_node;
+				/*
+				 * String UniqNodeId = request.getParameter("UniqNodeId"); String NodeId =
+				 * request.getParameter("NodeId"); String nodeName =
+				 * request.getParameter("nodeName"); String nodeType =
+				 * request.getParameter("nodeType"); String nodeSource =
+				 * request.getParameter("nodeSource"); String nodeModel =
+				 * request.getParameter("nodeModel"); String nodeDomin =
+				 * request.getParameter("nodeDomin"); String siteId_node =
+				 * request.getParameter("siteId_node"); String wareId_node =
+				 * request.getParameter("wareId_node"); String nodeLong =
+				 * request.getParameter("nodeLong"); String nodeLat =
+				 * request.getParameter("nodeLat");
+				 */
 
-				} else {
-					DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
-					nodeCreationDate = new Timestamp(
-					formatter.parse(request.getParameter("createData_node")).getTime());
-				}*/
-				
-				/*String UniqNodeId = request.getParameter("UniqNodeId");
-				String NodeId = request.getParameter("NodeId");
-				String nodeName = request.getParameter("nodeName");
-				String nodeType = request.getParameter("nodeType");
-				String nodeSource = request.getParameter("nodeSource");
-				String nodeModel = request.getParameter("nodeModel");
-				String nodeDomin = request.getParameter("nodeDomin");
-				String siteId_node = request.getParameter("siteId_node");
-				String wareId_node = request.getParameter("wareId_node");
-				String nodeLong = request.getParameter("nodeLong");
-				String nodeLat = request.getParameter("nodeLat");*/
-				
 				nodeActive.setNodePK(nodePk);
 				nodeActive.setUniNodeID(request.getParameter("UniqNodeId"));
 				nodeActive.setNodeID(request.getParameter("NodeId"));
@@ -3224,11 +3200,11 @@ public class PhysicalLayerController {
 				nodeActive.setDomain(request.getParameter("nodeDomin"));
 				nodeActive.setSiteID(request.getParameter("siteId_node"));
 				nodeActive.setWareID(request.getParameter("wareId_node"));
-				
-				//nodeActive.setUpdateDate(updateData_node);
-				//nodeActive.setCreatedDate(nodeCreationDate);
-				
-				//session.saveOrUpdate(nodeActive);
+
+				// nodeActive.setUpdateDate(updateData_node);
+				// nodeActive.setCreatedDate(nodeCreationDate);
+
+				// session.saveOrUpdate(nodeActive);
 
 				rtn.put("nodePk", nodePk);
 			} catch (Exception e) {
@@ -3249,7 +3225,7 @@ public class PhysicalLayerController {
 		}
 		return rtn;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/transNodeSave", method = RequestMethod.POST)
 	@ResponseBody
@@ -3267,7 +3243,7 @@ public class PhysicalLayerController {
 			try {
 				NodeActive nodeActive = new NodeActive();
 				String transNode_pk = request.getParameter("transNode_pk");
-				
+
 				nodeActive.setNodePK(transNode_pk);
 				nodeActive.setUniNodeID(request.getParameter("transUniqNodeId"));
 				nodeActive.setNodeID(request.getParameter("transNodeId"));
@@ -3298,7 +3274,7 @@ public class PhysicalLayerController {
 		}
 		return rtn;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/coreNodeSave", method = RequestMethod.POST)
 	@ResponseBody
@@ -3316,7 +3292,7 @@ public class PhysicalLayerController {
 			try {
 				NodeActive nodeActive = new NodeActive();
 				String coreNode_pk = request.getParameter("coreNode_pk");
-				
+
 				nodeActive.setNodePK(coreNode_pk);
 				nodeActive.setUniNodeID(request.getParameter("coreUniqNodeId"));
 				nodeActive.setNodeID(request.getParameter("coreNodeId"));
@@ -3347,7 +3323,7 @@ public class PhysicalLayerController {
 		}
 		return rtn;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ranNodeSave", method = RequestMethod.POST)
 	@ResponseBody
@@ -3365,7 +3341,7 @@ public class PhysicalLayerController {
 			try {
 				NodeActive nodeActive = new NodeActive();
 				String ranNode_pk = request.getParameter("ranNode_pk");
-				
+
 				nodeActive.setNodePK(ranNode_pk);
 				nodeActive.setUniNodeID(request.getParameter("ranUniqNodeId"));
 				nodeActive.setNodeID(request.getParameter("ranNodeId"));
@@ -3396,7 +3372,7 @@ public class PhysicalLayerController {
 		}
 		return rtn;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/GetALLFIBER", method = RequestMethod.GET)
 	@ResponseBody
@@ -4043,7 +4019,7 @@ public class PhysicalLayerController {
 		}
 		return rtn;
 	}
-	
+
 	@RequestMapping(value = "/boqNodesCount", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> boqNodesCount(Locale locale, Model model, HttpServletRequest request,
@@ -4061,21 +4037,30 @@ public class PhysicalLayerController {
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
-				Object MSANCount = session.createSQLQuery("select count (*) from node_active where domain = 'Enterprise'").list();
+				Object MSANCount = session
+						.createSQLQuery("select count (*) from node_active where domain = 'Enterprise'").list();
 				rtn.put("MSANCount", MSANCount);
-				
-				Object DWDMCount = session.createSQLQuery("select count (*) from node_active where domain = 'Transmission' AND SUB_DOMAIN_TYPE = 'DWDM'").list();
+
+				Object DWDMCount = session.createSQLQuery(
+						"select count (*) from node_active where domain = 'Transmission' AND SUB_DOMAIN_TYPE = 'DWDM'")
+						.list();
 				rtn.put("DWDMCount", DWDMCount);
-				
-				Object SDHCount = session.createSQLQuery("select count (*) from node_active where domain = 'Transmission' AND SUB_DOMAIN_TYPE = 'SDH'").list();
+
+				Object SDHCount = session.createSQLQuery(
+						"select count (*) from node_active where domain = 'Transmission' AND SUB_DOMAIN_TYPE = 'SDH'")
+						.list();
 				rtn.put("SDHCount", SDHCount);
-				
-				Object GPONCount = session.createSQLQuery("select count (*) from node_active where domain = 'Transmission' AND SUB_DOMAIN_TYPE = 'GPON'").list();
+
+				Object GPONCount = session.createSQLQuery(
+						"select count (*) from node_active where domain = 'Transmission' AND SUB_DOMAIN_TYPE = 'GPON'")
+						.list();
 				rtn.put("GPONCount", GPONCount);
 
-				Object AllNodesCount = session.createSQLQuery("SELECT COUNT(*) FROM node_active WHERE domain IN ('Enterprise' , 'Transmission') AND SUB_DOMAIN_TYPE IN ('DWDM','SDH','GPON','MSAN')  ").list();
+				Object AllNodesCount = session.createSQLQuery(
+						"SELECT COUNT(*) FROM node_active WHERE domain IN ('Enterprise' , 'Transmission') AND SUB_DOMAIN_TYPE IN ('DWDM','SDH','GPON','MSAN')  ")
+						.list();
 				rtn.put("AllNodesCount", AllNodesCount);
-				
+
 			} catch (Exception e) {
 				sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
@@ -4996,171 +4981,193 @@ public class PhysicalLayerController {
 	@RequestMapping(value = "/GrabManHand", method = RequestMethod.POST)
 	@ResponseBody
 	public TreeMap<Object, Object> GrabManHand(HttpServletRequest request,
-	        @ModelAttribute ItemParameters itemParameters) {
+			@ModelAttribute ItemParameters itemParameters) {
 
-	    TreeMap<Object, Object> resultManhole = new TreeMap<>();
-	    TreeMap<Object, Object> resultMapHand = new TreeMap<>();
-	    TreeMap<Object, Object> sortedMap = new TreeMap<>();
-	    session = almsessions.getSession();
+		TreeMap<Object, Object> resultManhole = new TreeMap<>();
+		TreeMap<Object, Object> resultMapHand = new TreeMap<>();
+		TreeMap<Object, Object> sortedMap = new TreeMap<>();
+		session = almsessions.getSession();
 
-	    if (session != null && session.isOpen()) {
-	        tx = session.beginTransaction();
-	        String selectedFiberContext = request.getParameter("ID");
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			String selectedFiberContext = request.getParameter("ID");
 
-	        try {
-	            List<Object[]> auxList = session.createSQLQuery(
-	                    "SELECT AUXILIARY_ID, LONGITUDE, LATITUDE, AUXILIARY_POINT_NAME FROM FIBER_AUXILIARY_POINTS WHERE FIBER_CABLE_ID ='"
-	                            + selectedFiberContext + "'")
-	                    .list();
+			try {
+				List<Object[]> auxList = session.createSQLQuery(
+						"SELECT AUXILIARY_ID, LONGITUDE, LATITUDE, AUXILIARY_POINT_NAME FROM FIBER_AUXILIARY_POINTS WHERE FIBER_CABLE_ID ='"
+								+ selectedFiberContext + "'")
+						.list();
 
-	            // Create a set to store unique manhole Id
-	            Set<String> addedManholeNames = new HashSet<>();
-	            for (Object[] auxData : auxList) {
-	                String auxId = (String) auxData[0];
-	                double auxLng = Double.parseDouble(auxData[1].toString());
-	                double auxLat = Double.parseDouble(auxData[2].toString());
-	                String auxPointName = (String) auxData[3];
+				// Create a set to store unique manhole Id
+				Set<String> addedManholeNames = new HashSet<>();
+				for (Object[] auxData : auxList) {
+					String auxId = (String) auxData[0];
+					double auxLng = Double.parseDouble(auxData[1].toString());
+					double auxLat = Double.parseDouble(auxData[2].toString());
+					String auxPointName = (String) auxData[3];
 
-	                Map<String, Object> nearestManhole = findNearestManhole(auxLng, auxLat, 30.0,auxList); // Pass 30.0 meters as the maximum distance
+					Map<String, Object> nearestManhole = findNearestManhole(auxLng, auxLat, 30.0, auxList); // Pass 30.0
+																											// meters as
+																											// the
+																											// maximum
+																											// distance
 
-	                if (nearestManhole != null) {
-	                	String manholeId = (String) nearestManhole.get("ManholeId");
-	                    String manholeName = (String) nearestManhole.get("ManholeName");
-	                    String combinedValue = manholeId + ":" + manholeName;
-	                    double manholeLng =  (Double) nearestManhole.get("ManholeLng");
-	        	        double manholeLat =  (Double) nearestManhole.get("ManholeLat");
-	        	       
-	                    if (!addedManholeNames.contains(manholeId)) {
-	                    	resultManhole.put(auxId,  new ArrayList<>(Arrays.asList(manholeLng, manholeLat, "", combinedValue, "", "")));
-	                        addedManholeNames.add(manholeId);
-	                        System.out.println("Nearest Manhole IS : " + combinedValue);
-	                        System.out.println("Distance: " + nearestManhole.get("Distance") + " meters");
-	                        System.out.println("--------------------------------------------------------------");
-	                    }
-	                }
-	                sortedMap.putAll(resultManhole);
-	            }
-	            
-	         // Create a set to store unique handhole Id
-	            Set<String> addedHandholeNames = new HashSet<>();
-	            for (Object[] auxData : auxList) {
-	                String auxId = (String) auxData[0];
-	                double auxLng = Double.parseDouble(auxData[1].toString());
-	                double auxLat = Double.parseDouble(auxData[2].toString());
-	                String auxPointName = (String) auxData[3];
-	                
-	                Map<String, Object> nearestHandhole = findNearestHandhole(auxLng, auxLat, 30.0,auxList); // Pass 30.0 meters as the maximum distance
-	               
-	                if (nearestHandhole != null) {
-	                	String handholeId = (String) nearestHandhole.get("HandholeId");
-	                    String handholeName = (String) nearestHandhole.get("HandholeName");
-	                    String combinedValue = handholeId + ":" + handholeName;
-	                    double handholeLng =  (Double) nearestHandhole.get("HandholeLng");
-	        	        double handholeLat =  (Double) nearestHandhole.get("HandholeLat");
-	        	       
-	                    if (!addedHandholeNames.contains(handholeId)) {
-	                        resultMapHand.put(auxId,  new ArrayList<>(Arrays.asList(handholeLng, handholeLat, "", combinedValue, "", "")));
-	                        addedHandholeNames.add(handholeId);
-	                        System.out.println("Nearest HandHole IS : " + combinedValue);
-	                        System.out.println("Distance: " + nearestHandhole.get("Distance") + " meters");
-	                        System.out.println("--------------------------------------------------------------");
-	                    }
-	                }
-	                sortedMap.putAll(resultMapHand);
-	            }
-	        } catch (Exception e) {
-	        } finally {
-	            if (session != null && session.isOpen()) {
-	                tx.commit();
-	                session.close();
-	            }
-	        }
-	    }
-	    return sortedMap;
+					if (nearestManhole != null) {
+						String manholeId = (String) nearestManhole.get("ManholeId");
+						String manholeName = (String) nearestManhole.get("ManholeName");
+						String combinedValue = manholeId + ":" + manholeName;
+						double manholeLng = (Double) nearestManhole.get("ManholeLng");
+						double manholeLat = (Double) nearestManhole.get("ManholeLat");
+
+						if (!addedManholeNames.contains(manholeId)) {
+							resultManhole.put(auxId,
+									new ArrayList<>(Arrays.asList(manholeLng, manholeLat, "", combinedValue, "", "")));
+							addedManholeNames.add(manholeId);
+							System.out.println("Nearest Manhole IS : " + combinedValue);
+							System.out.println("Distance: " + nearestManhole.get("Distance") + " meters");
+							System.out.println("--------------------------------------------------------------");
+						}
+					}
+					sortedMap.putAll(resultManhole);
+				}
+
+				// Create a set to store unique handhole Id
+				Set<String> addedHandholeNames = new HashSet<>();
+				for (Object[] auxData : auxList) {
+					String auxId = (String) auxData[0];
+					double auxLng = Double.parseDouble(auxData[1].toString());
+					double auxLat = Double.parseDouble(auxData[2].toString());
+					String auxPointName = (String) auxData[3];
+
+					Map<String, Object> nearestHandhole = findNearestHandhole(auxLng, auxLat, 30.0, auxList); // Pass
+																												// 30.0
+																												// meters
+																												// as
+																												// the
+																												// maximum
+																												// distance
+
+					if (nearestHandhole != null) {
+						String handholeId = (String) nearestHandhole.get("HandholeId");
+						String handholeName = (String) nearestHandhole.get("HandholeName");
+						String combinedValue = handholeId + ":" + handholeName;
+						double handholeLng = (Double) nearestHandhole.get("HandholeLng");
+						double handholeLat = (Double) nearestHandhole.get("HandholeLat");
+
+						if (!addedHandholeNames.contains(handholeId)) {
+							resultMapHand.put(auxId, new ArrayList<>(
+									Arrays.asList(handholeLng, handholeLat, "", combinedValue, "", "")));
+							addedHandholeNames.add(handholeId);
+							System.out.println("Nearest HandHole IS : " + combinedValue);
+							System.out.println("Distance: " + nearestHandhole.get("Distance") + " meters");
+							System.out.println("--------------------------------------------------------------");
+						}
+					}
+					sortedMap.putAll(resultMapHand);
+				}
+			} catch (Exception e) {
+			} finally {
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+				}
+			}
+		}
+		return sortedMap;
 	}
 
-	private Map<String, Object> findNearestManhole(double auxLng, double auxLat, double maxDistance,List<Object[]> auxList) {
-	    Map<String, Object> nearestManhole = null;
-	    double minDistance = maxDistance + 1; 
+	private Map<String, Object> findNearestManhole(double auxLng, double auxLat, double maxDistance,
+			List<Object[]> auxList) {
+		Map<String, Object> nearestManhole = null;
+		double minDistance = maxDistance + 1;
 
-	    List<Object[]> manholeList = session.createSQLQuery("SELECT DISTINCT MANHOLE_ID,MANHOLE_NAME,LONGITUDE,LATITUDE FROM MANHOLE").list();
+		List<Object[]> manholeList = session
+				.createSQLQuery("SELECT DISTINCT MANHOLE_ID,MANHOLE_NAME,LONGITUDE,LATITUDE FROM MANHOLE").list();
 
-	    for (Object[] manholeData : manholeList) {
-	        String manholeId = (String) manholeData[0]; 
-	        String manholeName = (String) manholeData[1];
-	        double manholeLng = Double.parseDouble(manholeData[2].toString());
-	        double manholeLat = Double.parseDouble(manholeData[3].toString());
-	     
-	        double distance = calculateDistance(auxLat, auxLng, manholeLat, manholeLng); // Swap lat and lng in calculateDistance function
+		for (Object[] manholeData : manholeList) {
+			String manholeId = (String) manholeData[0];
+			String manholeName = (String) manholeData[1];
+			double manholeLng = Double.parseDouble(manholeData[2].toString());
+			double manholeLat = Double.parseDouble(manholeData[3].toString());
 
-	     // Check if manholeID exists in auxList
-	        boolean manholeExistsInAuxList = auxList.stream().anyMatch(auxData -> auxData[3].toString().equals(manholeName));
+			double distance = calculateDistance(auxLat, auxLng, manholeLat, manholeLng); // Swap lat and lng in
+																							// calculateDistance
+																							// function
 
-	        if (!manholeExistsInAuxList && distance <= maxDistance && distance < minDistance) {
-	            minDistance = distance;
-	            nearestManhole = new HashMap<>();
-	            nearestManhole.put("ManholeId", manholeId);
-	            nearestManhole.put("ManholeName", manholeName);
-	            nearestManhole.put("ManholeLng", manholeLng);
-	            nearestManhole.put("ManholeLat", manholeLat);
-	            nearestManhole.put("Distance", distance);
-	        }
-	    }
+			// Check if manholeID exists in auxList
+			boolean manholeExistsInAuxList = auxList.stream()
+					.anyMatch(auxData -> auxData[3].toString().equals(manholeName));
 
-	    return nearestManhole;
+			if (!manholeExistsInAuxList && distance <= maxDistance && distance < minDistance) {
+				minDistance = distance;
+				nearestManhole = new HashMap<>();
+				nearestManhole.put("ManholeId", manholeId);
+				nearestManhole.put("ManholeName", manholeName);
+				nearestManhole.put("ManholeLng", manholeLng);
+				nearestManhole.put("ManholeLat", manholeLat);
+				nearestManhole.put("Distance", distance);
+			}
+		}
+
+		return nearestManhole;
 	}
-	
-	private Map<String, Object> findNearestHandhole(double auxLng, double auxLat, double maxDistance,List<Object[]> auxList) {
-	    Map<String, Object> nearestHandhole = null;
-	    double minDistance = maxDistance + 1; 
 
-	    List<Object[]> handholeList = session.createSQLQuery("SELECT DISTINCT HANDHOLE_ID,HANDHOLE_NAME,LONGITUDE,LATITUDE FROM HANDHOLE").list();
+	private Map<String, Object> findNearestHandhole(double auxLng, double auxLat, double maxDistance,
+			List<Object[]> auxList) {
+		Map<String, Object> nearestHandhole = null;
+		double minDistance = maxDistance + 1;
 
-	    for (Object[] handholeData : handholeList) {
-	        String handholeId = (String) handholeData[0]; 
-	        String handholeName = (String) handholeData[1];
-	        double handholeLng = Double.parseDouble(handholeData[2].toString());
-	        double handholeLat = Double.parseDouble(handholeData[3].toString());
-	     
-	        double distance = calculateDistance(auxLat, auxLng, handholeLat, handholeLng); // Swap lat and lng in calculateDistance function
+		List<Object[]> handholeList = session
+				.createSQLQuery("SELECT DISTINCT HANDHOLE_ID,HANDHOLE_NAME,LONGITUDE,LATITUDE FROM HANDHOLE").list();
 
-	     // Check if handholeId exists in auxList
-	        boolean handholeExistsInAuxList = auxList.stream().anyMatch(auxData -> auxData[3].toString().equals(handholeName));
+		for (Object[] handholeData : handholeList) {
+			String handholeId = (String) handholeData[0];
+			String handholeName = (String) handholeData[1];
+			double handholeLng = Double.parseDouble(handholeData[2].toString());
+			double handholeLat = Double.parseDouble(handholeData[3].toString());
 
-	        if (!handholeExistsInAuxList && distance <= maxDistance && distance < minDistance) {
-	            minDistance = distance;
-	            nearestHandhole = new HashMap<>();
-	            nearestHandhole.put("HandholeId", handholeId);
-	            nearestHandhole.put("HandholeName", handholeName);
-	            nearestHandhole.put("HandholeLng", handholeLng);
-	            nearestHandhole.put("HandholeLat", handholeLat);
-	            nearestHandhole.put("Distance", distance);
-	        }
-	    }
+			double distance = calculateDistance(auxLat, auxLng, handholeLat, handholeLng); // Swap lat and lng in
+																							// calculateDistance
+																							// function
 
-	    return nearestHandhole;
+			// Check if handholeId exists in auxList
+			boolean handholeExistsInAuxList = auxList.stream()
+					.anyMatch(auxData -> auxData[3].toString().equals(handholeName));
+
+			if (!handholeExistsInAuxList && distance <= maxDistance && distance < minDistance) {
+				minDistance = distance;
+				nearestHandhole = new HashMap<>();
+				nearestHandhole.put("HandholeId", handholeId);
+				nearestHandhole.put("HandholeName", handholeName);
+				nearestHandhole.put("HandholeLng", handholeLng);
+				nearestHandhole.put("HandholeLat", handholeLat);
+				nearestHandhole.put("Distance", distance);
+			}
+		}
+
+		return nearestHandhole;
 	}
 
 	private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
-	    // Convert latitude and longitude from degrees to radians
-	    double radLat1 = Math.toRadians(lat1);
-	    double radLon1 = Math.toRadians(lon1);
-	    double radLat2 = Math.toRadians(lat2);
-	    double radLon2 = Math.toRadians(lon2);
+		// Convert latitude and longitude from degrees to radians
+		double radLat1 = Math.toRadians(lat1);
+		double radLon1 = Math.toRadians(lon1);
+		double radLat2 = Math.toRadians(lat2);
+		double radLon2 = Math.toRadians(lon2);
 
-	    // Radius of the Earth in meters
-	    final double R = 6371000.0;
+		// Radius of the Earth in meters
+		final double R = 6371000.0;
 
-	    // Haversine formula
-	    double dLat = radLat2 - radLat1;
-	    double dLon = radLon2 - radLon1;
-	    double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(radLat1) * Math.cos(radLat2) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-	    double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-	    double distance = R * c;
+		// Haversine formula
+		double dLat = radLat2 - radLat1;
+		double dLon = radLon2 - radLon1;
+		double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+				+ Math.cos(radLat1) * Math.cos(radLat2) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+		double distance = R * c;
 
-	    return distance; // Return distance in meters
+		return distance; // Return distance in meters
 	}
-
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/fiberPathSave", method = RequestMethod.POST)
@@ -6402,239 +6409,243 @@ public class PhysicalLayerController {
 								? request.getParameter("DistributionBoardCapacity")
 								: "0"));
 				session.saveOrUpdate(distributionBoard);
-				
+
 				String distBoardMappingFlag = request.getParameter("distBoardMappingFlag");
 				if (StringUtils.equalsIgnoreCase(distBoardMappingFlag, "opened")
 						|| StringUtils.equalsIgnoreCase(distBoardMappingFlag, "new DB")) {
-				query = session.createSQLQuery(
-						"delete from DISTRIBUTION_BOARD_MAPPING where DB_ID = '" + distributionBoardId + "'");
-				query.executeUpdate();
-				rtn.put("distributionBoardId", distributionBoardId);
+					query = session.createSQLQuery(
+							"delete from DISTRIBUTION_BOARD_MAPPING where DB_ID = '" + distributionBoardId + "'");
+					query.executeUpdate();
+					rtn.put("distributionBoardId", distributionBoardId);
 
-				//System.out.println("itemParam : " + itemParameters.getDictParameter());
-				DistributionBoardMapping distributionBoardMapping;
-				String db_Port_Id = "";
-				if (itemParameters.getDictParameter().size() > 0) {
+					// System.out.println("itemParam : " + itemParameters.getDictParameter());
+					DistributionBoardMapping distributionBoardMapping;
+					String db_Port_Id = "";
+					if (itemParameters.getDictParameter().size() > 0) {
 
-					for (int i = 0; i < itemParameters.getDictParameter().size(); i++) {
-						distributionBoardMapping = new DistributionBoardMapping();
-						//System.out.println("DB_Mapping : " + itemParameters.getDictParameter().get(i));
-						//System.out.println("db_Port_Id : " + itemParameters.getDictParameter().get(i).get("portId"));
-						if (StringUtils.equalsIgnoreCase(itemParameters.getDictParameter().get(i).get("portId"), "")
-								|| StringUtils.equalsIgnoreCase(itemParameters.getDictParameter().get(i).get("portId"),
-										null)) {
-							synchronized (this) {
-								// db_Port_Id = "DB_PORT_" + year + "_" + appConfig.getSeqNbr(62,session);
-								db_Port_Id = "DB_PORT_" + year + "_" + Integer.parseInt(session
-										.createSQLQuery("SELECT DB_PORT FROM SEQ_TABLE").uniqueResult().toString());
-								query = session.createSQLQuery("UPDATE SEQ_TABLE SET DB_PORT = DB_PORT + 1 ");
-								query.executeUpdate();
-								session.createSQLQuery("commit").executeUpdate();
-								//System.out.println("the db port is " + db_Port_Id);
+						for (int i = 0; i < itemParameters.getDictParameter().size(); i++) {
+							distributionBoardMapping = new DistributionBoardMapping();
+							// System.out.println("DB_Mapping : " +
+							// itemParameters.getDictParameter().get(i));
+							// System.out.println("db_Port_Id : " +
+							// itemParameters.getDictParameter().get(i).get("portId"));
+							if (StringUtils.equalsIgnoreCase(itemParameters.getDictParameter().get(i).get("portId"), "")
+									|| StringUtils.equalsIgnoreCase(
+											itemParameters.getDictParameter().get(i).get("portId"), null)) {
+								synchronized (this) {
+									// db_Port_Id = "DB_PORT_" + year + "_" + appConfig.getSeqNbr(62,session);
+									db_Port_Id = "DB_PORT_" + year + "_" + Integer.parseInt(session
+											.createSQLQuery("SELECT DB_PORT FROM SEQ_TABLE").uniqueResult().toString());
+									query = session.createSQLQuery("UPDATE SEQ_TABLE SET DB_PORT = DB_PORT + 1 ");
+									query.executeUpdate();
+									session.createSQLQuery("commit").executeUpdate();
+									// System.out.println("the db port is " + db_Port_Id);
+								}
+							} else {
+								db_Port_Id = itemParameters.getDictParameter().get(i).get("portId");
 							}
-						} else {
-							db_Port_Id = itemParameters.getDictParameter().get(i).get("portId");
-						}
-						//System.out.println(itemParameters.getDictParameter().get(i).get("rowColIndex"));
+							// System.out.println(itemParameters.getDictParameter().get(i).get("rowColIndex"));
 
-						distributionBoardMapping.setDb_Port_Id(db_Port_Id);
-						distributionBoardMapping.setDistributionBoardId(distributionBoardId);
+							distributionBoardMapping.setDb_Port_Id(db_Port_Id);
+							distributionBoardMapping.setDistributionBoardId(distributionBoardId);
 
-						if (itemParameters.getDictParameter().get(i).get("rowColIndex") != null) {
+							if (itemParameters.getDictParameter().get(i).get("rowColIndex") != null) {
+								distributionBoardMapping
+										.setRowColIndex(itemParameters.getDictParameter().get(i).get("rowColIndex"));
+								// System.out.println("ln");
+							} else {
+								distributionBoardMapping.setRowColIndex(null);
+
+							}
+
 							distributionBoardMapping
-									.setRowColIndex(itemParameters.getDictParameter().get(i).get("rowColIndex"));
-							//System.out.println("ln");
-						} else {
-							distributionBoardMapping.setRowColIndex(null);
+									.setRowNum((itemParameters.getDictParameter().get(i).get("rowNum")));
+							distributionBoardMapping
+									.setColNum((itemParameters.getDictParameter().get(i).get("colNum")));
+							distributionBoardMapping
+									.setfP_Status(itemParameters.getDictParameter().get(i).get("fP_Status"));
+							distributionBoardMapping.setfP_LocationType(
+									itemParameters.getDictParameter().get(i).get("fP_LocationType"));
+							distributionBoardMapping.setfP_LocationId(
+									itemParameters.getDictParameter().get(i).get("fP_LocationID") != ""
+											? itemParameters.getDictParameter().get(i).get("fP_LocationID")
+											: "");
+							distributionBoardMapping.setfP_LocationName(
+									itemParameters.getDictParameter().get(i).get("fP_LocationM") != ""
+											? itemParameters.getDictParameter().get(i).get("fP_LocationM")
+											: "");
+							distributionBoardMapping
+									.setfP_Location(itemParameters.getDictParameter().get(i).get("fP_Location") != ""
+											? itemParameters.getDictParameter().get(i).get("fP_Location")
+											: "");
+							distributionBoardMapping.setfP_EquipmentType(
+									itemParameters.getDictParameter().get(i).get("fP_EquipmentType") != ""
+											? itemParameters.getDictParameter().get(i).get("fP_EquipmentType")
+											: "");
+							distributionBoardMapping
+									.setfP_Equipment(itemParameters.getDictParameter().get(i).get("fP_Equipment"));
+							distributionBoardMapping.setfP_EquipmentName(
+									itemParameters.getDictParameter().get(i).get("fP_EquipmentName") != ""
+											? itemParameters.getDictParameter().get(i).get("fP_EquipmentName")
+											: "");
+							distributionBoardMapping.setfP_EquipmentId(
+									itemParameters.getDictParameter().get(i).get("fP_EquipmentID") != ""
+											? itemParameters.getDictParameter().get(i).get("fP_EquipmentID")
+											: "");
+							distributionBoardMapping
+									.setfP_Address(itemParameters.getDictParameter().get(i).get("fP_Address") != ""
+											? itemParameters.getDictParameter().get(i).get("fP_Address")
+											: "");
+
+							distributionBoardMapping.setfP_JunctionId(
+									itemParameters.getDictParameter().get(i).get("fP_JunctionID") != ""
+											? itemParameters.getDictParameter().get(i).get("fP_JunctionID")
+											: "");
+
+							distributionBoardMapping.setfP_JunctionName(
+									itemParameters.getDictParameter().get(i).get("fP_JunctionName") != ""
+											? itemParameters.getDictParameter().get(i).get("fP_JunctionName")
+											: "");
+							/// added
+							distributionBoardMapping
+									.setfP_StrandNb(itemParameters.getDictParameter().get(i).get("fP_StrandNb") != ""
+											? itemParameters.getDictParameter().get(i).get("fP_StrandNb")
+											: "");
+							distributionBoardMapping.setfP_StrandColor(
+									itemParameters.getDictParameter().get(i).get("fP_StrandColor") != ""
+											? itemParameters.getDictParameter().get(i).get("fP_StrandColor")
+											: "");
+							distributionBoardMapping
+									.setfP_StrandId(itemParameters.getDictParameter().get(i).get("fP_StrandID") != ""
+											? itemParameters.getDictParameter().get(i).get("fP_StrandID")
+											: "");
+							distributionBoardMapping.setfP_StrandName(
+									itemParameters.getDictParameter().get(i).get("fP_StrandName") != ""
+											? itemParameters.getDictParameter().get(i).get("fP_StrandName")
+											: "");
+							distributionBoardMapping
+									.setfP_TubeNb(itemParameters.getDictParameter().get(i).get("fP_TubeNb") != ""
+											? itemParameters.getDictParameter().get(i).get("fP_TubeNb")
+											: "");
+							distributionBoardMapping
+									.setfP_TubeColor(itemParameters.getDictParameter().get(i).get("fP_TubeColor") != ""
+											? itemParameters.getDictParameter().get(i).get("fP_TubeColor")
+											: "");
+							distributionBoardMapping
+									.setfP_TubeId(itemParameters.getDictParameter().get(i).get("fP_TubeID") != ""
+											? itemParameters.getDictParameter().get(i).get("fP_TubeID")
+											: "");
+							distributionBoardMapping
+									.setfP_TubeName(itemParameters.getDictParameter().get(i).get("fP_TubeName") != ""
+											? itemParameters.getDictParameter().get(i).get("fP_TubeName")
+											: "");
+							distributionBoardMapping
+									.setfP_FiberId(itemParameters.getDictParameter().get(i).get("fP_FiberID") != ""
+											? itemParameters.getDictParameter().get(i).get("fP_FiberID")
+											: "");
+							distributionBoardMapping
+									.setfP_FiberName(itemParameters.getDictParameter().get(i).get("fP_FiberName") != ""
+											? itemParameters.getDictParameter().get(i).get("fP_FiberName")
+											: "");
+
+							///
+
+							distributionBoardMapping
+									.setbP_Status(itemParameters.getDictParameter().get(i).get("bP_Status") != ""
+											? itemParameters.getDictParameter().get(i).get("bP_Status")
+											: "");
+
+							// added
+							distributionBoardMapping.setbP_LocationType(
+									itemParameters.getDictParameter().get(i).get("bP_LocationType"));
+							distributionBoardMapping.setbP_LocationId(
+									itemParameters.getDictParameter().get(i).get("bP_LocationID") != ""
+											? itemParameters.getDictParameter().get(i).get("bP_LocationID")
+											: "");
+							distributionBoardMapping.setbP_LocationName(
+									itemParameters.getDictParameter().get(i).get("bP_LocationM") != ""
+											? itemParameters.getDictParameter().get(i).get("bP_LocationM")
+											: "");
+							distributionBoardMapping
+									.setbP_Location(itemParameters.getDictParameter().get(i).get("bP_Location") != ""
+											? itemParameters.getDictParameter().get(i).get("bP_Location")
+											: "");
+							distributionBoardMapping.setbP_EquipmentType(
+									itemParameters.getDictParameter().get(i).get("bP_EquipmentType") != ""
+											? itemParameters.getDictParameter().get(i).get("bP_EquipmentType")
+											: "");
+							distributionBoardMapping
+									.setbP_Equipment(itemParameters.getDictParameter().get(i).get("bP_Equipment"));
+							distributionBoardMapping.setbP_EquipmentName(
+									itemParameters.getDictParameter().get(i).get("bP_EquipmentName") != ""
+											? itemParameters.getDictParameter().get(i).get("bP_EquipmentName")
+											: "");
+							distributionBoardMapping.setbP_EquipmentId(
+									itemParameters.getDictParameter().get(i).get("bP_EquipmentID") != ""
+											? itemParameters.getDictParameter().get(i).get("bP_EquipmentID")
+											: "");
+							distributionBoardMapping
+									.setbP_Address(itemParameters.getDictParameter().get(i).get("bP_Address") != ""
+											? itemParameters.getDictParameter().get(i).get("bP_Address")
+											: "");
+
+							distributionBoardMapping.setbP_JunctionId(
+									itemParameters.getDictParameter().get(i).get("bP_JunctionID") != ""
+											? itemParameters.getDictParameter().get(i).get("bP_JunctionID")
+											: "");
+
+							distributionBoardMapping.setbP_JunctionName(
+									itemParameters.getDictParameter().get(i).get("bP_JunctionName") != ""
+											? itemParameters.getDictParameter().get(i).get("bP_JunctionName")
+											: "");
+
+							//
+							distributionBoardMapping
+									.setbP_StrandNb(itemParameters.getDictParameter().get(i).get("bP_StrandNb") != ""
+											? itemParameters.getDictParameter().get(i).get("bP_StrandNb")
+											: "");
+							distributionBoardMapping.setbP_StrandColor(
+									itemParameters.getDictParameter().get(i).get("bP_StrandColor") != ""
+											? itemParameters.getDictParameter().get(i).get("bP_StrandColor")
+											: "");
+							distributionBoardMapping
+									.setbP_StrandId(itemParameters.getDictParameter().get(i).get("bP_StrandID") != ""
+											? itemParameters.getDictParameter().get(i).get("bP_StrandID")
+											: "");
+							distributionBoardMapping.setbP_StrandName(
+									itemParameters.getDictParameter().get(i).get("bP_StrandName") != ""
+											? itemParameters.getDictParameter().get(i).get("bP_StrandName")
+											: "");
+							distributionBoardMapping
+									.setbP_TubeNb(itemParameters.getDictParameter().get(i).get("bP_TubeNb") != ""
+											? itemParameters.getDictParameter().get(i).get("bP_TubeNb")
+											: "");
+							distributionBoardMapping
+									.setbP_TubeColor(itemParameters.getDictParameter().get(i).get("bP_TubeColor") != ""
+											? itemParameters.getDictParameter().get(i).get("bP_TubeColor")
+											: "");
+							distributionBoardMapping
+									.setbP_TubeId(itemParameters.getDictParameter().get(i).get("bP_TubeID") != ""
+											? itemParameters.getDictParameter().get(i).get("bP_TubeID")
+											: "");
+							distributionBoardMapping
+									.setbP_TubeName(itemParameters.getDictParameter().get(i).get("bP_TubeName") != ""
+											? itemParameters.getDictParameter().get(i).get("bP_TubeName")
+											: "");
+							distributionBoardMapping
+									.setbP_FiberId(itemParameters.getDictParameter().get(i).get("bP_FiberID") != ""
+											? itemParameters.getDictParameter().get(i).get("bP_FiberID")
+											: "");
+							distributionBoardMapping
+									.setbP_FiberName(itemParameters.getDictParameter().get(i).get("bP_FiberName") != ""
+											? itemParameters.getDictParameter().get(i).get("bP_FiberName")
+											: "");
+
+							session.saveOrUpdate(distributionBoardMapping);
 
 						}
-
-						distributionBoardMapping.setRowNum((itemParameters.getDictParameter().get(i).get("rowNum")));
-						distributionBoardMapping.setColNum((itemParameters.getDictParameter().get(i).get("colNum")));
-						distributionBoardMapping
-								.setfP_Status(itemParameters.getDictParameter().get(i).get("fP_Status"));
-						distributionBoardMapping
-								.setfP_LocationType(itemParameters.getDictParameter().get(i).get("fP_LocationType"));
-						distributionBoardMapping
-								.setfP_LocationId(itemParameters.getDictParameter().get(i).get("fP_LocationID") != ""
-										? itemParameters.getDictParameter().get(i).get("fP_LocationID")
-										: "");
-						distributionBoardMapping
-								.setfP_LocationName(itemParameters.getDictParameter().get(i).get("fP_LocationM") != ""
-										? itemParameters.getDictParameter().get(i).get("fP_LocationM")
-										: "");
-						distributionBoardMapping
-								.setfP_Location(itemParameters.getDictParameter().get(i).get("fP_Location") != ""
-										? itemParameters.getDictParameter().get(i).get("fP_Location")
-										: "");
-						distributionBoardMapping.setfP_EquipmentType(
-								itemParameters.getDictParameter().get(i).get("fP_EquipmentType") != ""
-										? itemParameters.getDictParameter().get(i).get("fP_EquipmentType")
-										: "");
-						distributionBoardMapping
-								.setfP_Equipment(itemParameters.getDictParameter().get(i).get("fP_Equipment"));
-						distributionBoardMapping.setfP_EquipmentName(
-								itemParameters.getDictParameter().get(i).get("fP_EquipmentName") != ""
-										? itemParameters.getDictParameter().get(i).get("fP_EquipmentName")
-										: "");
-						distributionBoardMapping
-								.setfP_EquipmentId(itemParameters.getDictParameter().get(i).get("fP_EquipmentID") != ""
-										? itemParameters.getDictParameter().get(i).get("fP_EquipmentID")
-										: "");
-						distributionBoardMapping
-								.setfP_Address(itemParameters.getDictParameter().get(i).get("fP_Address") != ""
-										? itemParameters.getDictParameter().get(i).get("fP_Address")
-										: "");
-
-						distributionBoardMapping
-								.setfP_JunctionId(itemParameters.getDictParameter().get(i).get("fP_JunctionID") != ""
-										? itemParameters.getDictParameter().get(i).get("fP_JunctionID")
-										: "");
-
-						distributionBoardMapping.setfP_JunctionName(
-								itemParameters.getDictParameter().get(i).get("fP_JunctionName") != ""
-										? itemParameters.getDictParameter().get(i).get("fP_JunctionName")
-										: "");
-						/// added
-						distributionBoardMapping
-								.setfP_StrandNb(itemParameters.getDictParameter().get(i).get("fP_StrandNb") != ""
-										? itemParameters.getDictParameter().get(i).get("fP_StrandNb")
-										: "");
-						distributionBoardMapping
-								.setfP_StrandColor(itemParameters.getDictParameter().get(i).get("fP_StrandColor") != ""
-										? itemParameters.getDictParameter().get(i).get("fP_StrandColor")
-										: "");
-						distributionBoardMapping
-								.setfP_StrandId(itemParameters.getDictParameter().get(i).get("fP_StrandID") != ""
-										? itemParameters.getDictParameter().get(i).get("fP_StrandID")
-										: "");
-						distributionBoardMapping
-								.setfP_StrandName(itemParameters.getDictParameter().get(i).get("fP_StrandName") != ""
-										? itemParameters.getDictParameter().get(i).get("fP_StrandName")
-										: "");
-						distributionBoardMapping
-								.setfP_TubeNb(itemParameters.getDictParameter().get(i).get("fP_TubeNb") != ""
-										? itemParameters.getDictParameter().get(i).get("fP_TubeNb")
-										: "");
-						distributionBoardMapping
-								.setfP_TubeColor(itemParameters.getDictParameter().get(i).get("fP_TubeColor") != ""
-										? itemParameters.getDictParameter().get(i).get("fP_TubeColor")
-										: "");
-						distributionBoardMapping
-								.setfP_TubeId(itemParameters.getDictParameter().get(i).get("fP_TubeID") != ""
-										? itemParameters.getDictParameter().get(i).get("fP_TubeID")
-										: "");
-						distributionBoardMapping
-								.setfP_TubeName(itemParameters.getDictParameter().get(i).get("fP_TubeName") != ""
-										? itemParameters.getDictParameter().get(i).get("fP_TubeName")
-										: "");
-						distributionBoardMapping
-								.setfP_FiberId(itemParameters.getDictParameter().get(i).get("fP_FiberID") != ""
-										? itemParameters.getDictParameter().get(i).get("fP_FiberID")
-										: "");
-						distributionBoardMapping
-								.setfP_FiberName(itemParameters.getDictParameter().get(i).get("fP_FiberName") != ""
-										? itemParameters.getDictParameter().get(i).get("fP_FiberName")
-										: "");
-
-						///
-
-						distributionBoardMapping
-								.setbP_Status(itemParameters.getDictParameter().get(i).get("bP_Status") != ""
-										? itemParameters.getDictParameter().get(i).get("bP_Status")
-										: "");
-
-						// added
-						distributionBoardMapping
-								.setbP_LocationType(itemParameters.getDictParameter().get(i).get("bP_LocationType"));
-						distributionBoardMapping
-								.setbP_LocationId(itemParameters.getDictParameter().get(i).get("bP_LocationID") != ""
-										? itemParameters.getDictParameter().get(i).get("bP_LocationID")
-										: "");
-						distributionBoardMapping
-								.setbP_LocationName(itemParameters.getDictParameter().get(i).get("bP_LocationM") != ""
-										? itemParameters.getDictParameter().get(i).get("bP_LocationM")
-										: "");
-						distributionBoardMapping
-								.setbP_Location(itemParameters.getDictParameter().get(i).get("bP_Location") != ""
-										? itemParameters.getDictParameter().get(i).get("bP_Location")
-										: "");
-						distributionBoardMapping.setbP_EquipmentType(
-								itemParameters.getDictParameter().get(i).get("bP_EquipmentType") != ""
-										? itemParameters.getDictParameter().get(i).get("bP_EquipmentType")
-										: "");
-						distributionBoardMapping
-								.setbP_Equipment(itemParameters.getDictParameter().get(i).get("bP_Equipment"));
-						distributionBoardMapping.setbP_EquipmentName(
-								itemParameters.getDictParameter().get(i).get("bP_EquipmentName") != ""
-										? itemParameters.getDictParameter().get(i).get("bP_EquipmentName")
-										: "");
-						distributionBoardMapping
-								.setbP_EquipmentId(itemParameters.getDictParameter().get(i).get("bP_EquipmentID") != ""
-										? itemParameters.getDictParameter().get(i).get("bP_EquipmentID")
-										: "");
-						distributionBoardMapping
-								.setbP_Address(itemParameters.getDictParameter().get(i).get("bP_Address") != ""
-										? itemParameters.getDictParameter().get(i).get("bP_Address")
-										: "");
-
-						distributionBoardMapping
-								.setbP_JunctionId(itemParameters.getDictParameter().get(i).get("bP_JunctionID") != ""
-										? itemParameters.getDictParameter().get(i).get("bP_JunctionID")
-										: "");
-
-						distributionBoardMapping.setbP_JunctionName(
-								itemParameters.getDictParameter().get(i).get("bP_JunctionName") != ""
-										? itemParameters.getDictParameter().get(i).get("bP_JunctionName")
-										: "");
-
-						//
-						distributionBoardMapping
-								.setbP_StrandNb(itemParameters.getDictParameter().get(i).get("bP_StrandNb") != ""
-										? itemParameters.getDictParameter().get(i).get("bP_StrandNb")
-										: "");
-						distributionBoardMapping
-								.setbP_StrandColor(itemParameters.getDictParameter().get(i).get("bP_StrandColor") != ""
-										? itemParameters.getDictParameter().get(i).get("bP_StrandColor")
-										: "");
-						distributionBoardMapping
-								.setbP_StrandId(itemParameters.getDictParameter().get(i).get("bP_StrandID") != ""
-										? itemParameters.getDictParameter().get(i).get("bP_StrandID")
-										: "");
-						distributionBoardMapping
-								.setbP_StrandName(itemParameters.getDictParameter().get(i).get("bP_StrandName") != ""
-										? itemParameters.getDictParameter().get(i).get("bP_StrandName")
-										: "");
-						distributionBoardMapping
-								.setbP_TubeNb(itemParameters.getDictParameter().get(i).get("bP_TubeNb") != ""
-										? itemParameters.getDictParameter().get(i).get("bP_TubeNb")
-										: "");
-						distributionBoardMapping
-								.setbP_TubeColor(itemParameters.getDictParameter().get(i).get("bP_TubeColor") != ""
-										? itemParameters.getDictParameter().get(i).get("bP_TubeColor")
-										: "");
-						distributionBoardMapping
-								.setbP_TubeId(itemParameters.getDictParameter().get(i).get("bP_TubeID") != ""
-										? itemParameters.getDictParameter().get(i).get("bP_TubeID")
-										: "");
-						distributionBoardMapping
-								.setbP_TubeName(itemParameters.getDictParameter().get(i).get("bP_TubeName") != ""
-										? itemParameters.getDictParameter().get(i).get("bP_TubeName")
-										: "");
-						distributionBoardMapping
-								.setbP_FiberId(itemParameters.getDictParameter().get(i).get("bP_FiberID") != ""
-										? itemParameters.getDictParameter().get(i).get("bP_FiberID")
-										: "");
-						distributionBoardMapping
-								.setbP_FiberName(itemParameters.getDictParameter().get(i).get("bP_FiberName") != ""
-										? itemParameters.getDictParameter().get(i).get("bP_FiberName")
-										: "");
-
-						session.saveOrUpdate(distributionBoardMapping);
 
 					}
-
-				}
 				}
 
 				List<Object[]> countConnections = session.createSQLQuery(
@@ -6651,7 +6662,8 @@ public class PhysicalLayerController {
 				// front,(select count (*) from DISTRIBUTION_BOARD_MAPPING a where
 				// a.DB_ID='"+distributionBoardId+"' and a.BP_STRAND_NAME!='null') AS back from
 				// DISTRIBUTION_BOARD b where b.DB_ID='"+distributionBoardId+"'").list();
-				//System.out.println("countConnections " + mapper.writeValueAsString(countConnections));
+				// System.out.println("countConnections " +
+				// mapper.writeValueAsString(countConnections));
 				rtn.put("countConnections", countConnections);
 
 			} catch (Exception e) {
@@ -6750,16 +6762,15 @@ public class PhysicalLayerController {
 							Timestamp boardCreationDate = boardLastModifiedDate;
 							String coresnb = itemParameters.getDictParameterLoadedDB().get(i).get("Nofports");
 							String sitename = itemParameters.getDictParameterLoadedDB().get(i).get("siteName");
-							//String BoardName = sitename + "_DB_" + year;
+							// String BoardName = sitename + "_DB_" + year;
 							////
 							String BoardName;
 							String name = itemParameters.getDictParameterLoadedDB().get(i).get("name");
 							String NetworkLevel = itemParameters.getDictParameterLoadedDB().get(i).get("NetworkLevel");
 							if (StringUtils.equalsIgnoreCase(name, "") || StringUtils.equalsIgnoreCase(name, null)) {
 								BoardName = sitename + "_DB_" + year;
-							}
-							else {
-								BoardName=name;
+							} else {
+								BoardName = name;
 							}
 							////
 							Float numberofcores = Float.parseFloat(coresnb);
@@ -6815,7 +6826,6 @@ public class PhysicalLayerController {
 							DBDetail.add(itemParameters.getDictParameterLoadedDB().get(i).get("siteID"));
 							DBDetail.add(city);
 							DBDetail.add(NetworkLevel);
-							
 
 							DBDetails.add(DBDetail);
 
@@ -7807,7 +7817,7 @@ public class PhysicalLayerController {
 		}
 		return rtn;
 	}
-	
+
 	@RequestMapping(value = "/findCountDbNetLevel", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> findCountDbNetLevel(Locale locale, Model model, HttpServletRequest request,
@@ -7825,21 +7835,23 @@ public class PhysicalLayerController {
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
-				Object BackboneCount = session.createSQLQuery(
-						"SELECT count(*) FROM DISTRIBUTION_BOARD WHERE PROJECT_ID='" + request.getParameter("ProjectId") + "' AND DB_NETWORK_LEVEL = 'backbone'")
+				Object BackboneCount = session
+						.createSQLQuery("SELECT count(*) FROM DISTRIBUTION_BOARD WHERE PROJECT_ID='"
+								+ request.getParameter("ProjectId") + "' AND DB_NETWORK_LEVEL = 'backbone'")
 						.uniqueResult();
 				rtn.put("BackboneCount", BackboneCount);
-				
-				Object MetroCount = session.createSQLQuery(
-						"SELECT count(*) FROM DISTRIBUTION_BOARD WHERE PROJECT_ID='" + request.getParameter("ProjectId") + "' AND DB_NETWORK_LEVEL = 'metro'")
+
+				Object MetroCount = session
+						.createSQLQuery("SELECT count(*) FROM DISTRIBUTION_BOARD WHERE PROJECT_ID='"
+								+ request.getParameter("ProjectId") + "' AND DB_NETWORK_LEVEL = 'metro'")
 						.uniqueResult();
 				rtn.put("MetroCount", MetroCount);
-				
-				Object AccessCount = session.createSQLQuery(
-						"SELECT count(*) FROM DISTRIBUTION_BOARD WHERE PROJECT_ID='" + request.getParameter("ProjectId") + "' AND DB_NETWORK_LEVEL = 'access'")
+
+				Object AccessCount = session
+						.createSQLQuery("SELECT count(*) FROM DISTRIBUTION_BOARD WHERE PROJECT_ID='"
+								+ request.getParameter("ProjectId") + "' AND DB_NETWORK_LEVEL = 'access'")
 						.uniqueResult();
 				rtn.put("AccessCount", AccessCount);
-
 
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -7968,73 +7980,73 @@ public class PhysicalLayerController {
 						"select 'fiber', count(FIBER_CABLE_ID),'tube',coalesce(sum(NUMBER_OF_TUBES),0) ,'strand',coalesce(sum(NUMBER_OF_STRANDS),0),count(FIBER_NETWORK_LEVEL) from FIBER_CABLES where FIBER_NETWORK_LEVEL='backbone' and PROJECT_ID='"
 								+ request.getParameter("ProjectId") + "'")
 						.list();
-				
+
 				@SuppressWarnings("unchecked")
 				List<Object[]> fiberOwnerTklBackbone = session.createSQLQuery(
 						"select count(*) from FIBER_CABLES WHERE FIBER_OWNER = 'tkl' and FIBER_NETWORK_LEVEL = 'backbone'  and PROJECT_ID='"
 								+ request.getParameter("ProjectId") + "'")
 						.list();
-				
+
 				@SuppressWarnings("unchecked")
 				List<Object[]> fiberOwnerNofbiBackbone = session.createSQLQuery(
 						"select count(*) from FIBER_CABLES WHERE FIBER_OWNER = 'nofbi' and FIBER_NETWORK_LEVEL = 'backbone'  and PROJECT_ID='"
 								+ request.getParameter("ProjectId") + "'")
 						.list();
-				
+
 				@SuppressWarnings("unchecked")
 				List<Object[]> fiberOwnerOtherBackbone = session.createSQLQuery(
 						"select count(*) from FIBER_CABLES WHERE FIBER_OWNER = 'others' and FIBER_NETWORK_LEVEL = 'backbone'  and PROJECT_ID='"
 								+ request.getParameter("ProjectId") + "'")
 						.list();
-				
+
 				@SuppressWarnings("unchecked")
 				List<Object[]> metro = session.createSQLQuery(
 						"SELECT 'fiber', count(FIBER_CABLE_ID),'tube',coalesce(sum(NUMBER_OF_TUBES),0) ,'strand',coalesce(sum(NUMBER_OF_STRANDS),0) from FIBER_CABLES where FIBER_NETWORK_LEVEL='metro' and PROJECT_ID='"
 								+ request.getParameter("ProjectId") + "'")
 						.list();
-				
+
 				@SuppressWarnings("unchecked")
 				List<Object[]> fiberOwnerTklMetro = session.createSQLQuery(
 						"select count(*) from FIBER_CABLES WHERE FIBER_OWNER = 'tkl' and FIBER_NETWORK_LEVEL = 'metro'  and PROJECT_ID='"
 								+ request.getParameter("ProjectId") + "'")
 						.list();
-				
+
 				@SuppressWarnings("unchecked")
 				List<Object[]> fiberOwnerNofbiMetro = session.createSQLQuery(
 						"select count(*) from FIBER_CABLES WHERE FIBER_OWNER = 'nofbi' and FIBER_NETWORK_LEVEL = 'metro'  and PROJECT_ID='"
 								+ request.getParameter("ProjectId") + "'")
 						.list();
-				
+
 				@SuppressWarnings("unchecked")
 				List<Object[]> fiberOwnerOtherMetro = session.createSQLQuery(
 						"select count(*) from FIBER_CABLES WHERE FIBER_OWNER = 'others' and FIBER_NETWORK_LEVEL = 'metro'  and PROJECT_ID='"
 								+ request.getParameter("ProjectId") + "'")
 						.list();
-				
+
 				@SuppressWarnings("unchecked")
 				List<Object[]> access = session.createSQLQuery(
 						"SELECT 'fiber', count(FIBER_CABLE_ID),'tube',coalesce(sum(NUMBER_OF_TUBES),0) ,'strand',coalesce(sum(NUMBER_OF_STRANDS),0) from FIBER_CABLES where FIBER_NETWORK_LEVEL='access' and PROJECT_ID='"
 								+ request.getParameter("ProjectId") + "'")
 						.list();
-				
+
 				@SuppressWarnings("unchecked")
 				List<Object[]> fiberOwnerTklAccess = session.createSQLQuery(
 						"select count(*) from FIBER_CABLES WHERE FIBER_OWNER = 'tkl' and FIBER_NETWORK_LEVEL = 'access'  and PROJECT_ID='"
 								+ request.getParameter("ProjectId") + "'")
 						.list();
-				
+
 				@SuppressWarnings("unchecked")
 				List<Object[]> fiberOwnerNofbiAccess = session.createSQLQuery(
 						"select count(*) from FIBER_CABLES WHERE FIBER_OWNER = 'nofbi' and FIBER_NETWORK_LEVEL = 'access'  and PROJECT_ID='"
 								+ request.getParameter("ProjectId") + "'")
 						.list();
-				
+
 				@SuppressWarnings("unchecked")
 				List<Object[]> fiberOwnerOtherAccess = session.createSQLQuery(
 						"select count(*) from FIBER_CABLES WHERE FIBER_OWNER = 'others' and FIBER_NETWORK_LEVEL = 'access'  and PROJECT_ID='"
 								+ request.getParameter("ProjectId") + "'")
 						.list();
-				
+
 				String Backbone = session.createSQLQuery(
 						"SELECT COUNT(*) from FIBER_CABLES where FIBER_NETWORK_LEVEL='backbone' and PROJECT_ID='"
 								+ request.getParameter("ProjectId") + "'")
@@ -10295,13 +10307,14 @@ public class PhysicalLayerController {
 							query.executeUpdate();
 						}
 
-						Query insertJctQuery = session.createSQLQuery("INSERT INTO JUNCTION(JUNCTION_ID,JUNCTION_NAME,PHYSICAL_LAYER_ID"
-								+ ",PHYSICAL_LAYER_NAME,LONGITUDE,LATITUDE,CAPACITY,JUNCTION_NUMBER,CITY,PROJECT_ID,CREATION_DATE,LAST_MODIFIED_DATE)"
-								+ " VALUES ('" + junctionID
-								+ "','" + junctionName + "','" + physLayerIdJunction + "','" + physLayerNameJunction
-								+ "','" + junctionLong + "','" + junctionLat + "','" + junctionCapacity + "','"
-								+ junctionNumber + "','" + junctionCity + "','" + projectId + "', TIMESTAMP '"
-								+ junctionCreationDate + "',TIMESTAMP '" + lastModifiedDate + "')");
+						Query insertJctQuery = session
+								.createSQLQuery("INSERT INTO JUNCTION(JUNCTION_ID,JUNCTION_NAME,PHYSICAL_LAYER_ID"
+										+ ",PHYSICAL_LAYER_NAME,LONGITUDE,LATITUDE,CAPACITY,JUNCTION_NUMBER,CITY,PROJECT_ID,CREATION_DATE,LAST_MODIFIED_DATE)"
+										+ " VALUES ('" + junctionID + "','" + junctionName + "','" + physLayerIdJunction
+										+ "','" + physLayerNameJunction + "','" + junctionLong + "','" + junctionLat
+										+ "','" + junctionCapacity + "','" + junctionNumber + "','" + junctionCity
+										+ "','" + projectId + "', TIMESTAMP '" + junctionCreationDate + "',TIMESTAMP '"
+										+ lastModifiedDate + "')");
 						insertJctQuery.executeUpdate();
 
 						rtn.put("ManHandholeName", physLayerNameJunction);
@@ -10332,14 +10345,14 @@ public class PhysicalLayerController {
 					String JctLocationIdSideA = "";
 					String JctLocationNameSideA = "";
 					String JctWarehouseIdSideA = "";
-					
-					String JctStrandNBSideA ="";   
-					String JctTubeNBSideA="";
-					String JctNetworkLevelSideA ="";
-					
-					String JctStrandNBSideB ="";   
-					String JctTubeNBSideB="";
-					String JctNetworkLevelSideB ="";
+
+					String JctStrandNBSideA = "";
+					String JctTubeNBSideA = "";
+					String JctNetworkLevelSideA = "";
+
+					String JctStrandNBSideB = "";
+					String JctTubeNBSideB = "";
+					String JctNetworkLevelSideB = "";
 					String JctLocationTypeSideB = "";
 					String JctLocationIdSideB = "";
 					String JctLocationNameSideB = "";
@@ -10380,38 +10393,40 @@ public class PhysicalLayerController {
 							JctTubeNameSideB = itemParameters.getDictParameter().get(i).get("JctTubeNameSideB");
 							JctFiberIdSideB = itemParameters.getDictParameter().get(i).get("JctFiberIdSideB");
 							JctFiberNameSideB = itemParameters.getDictParameter().get(i).get("JctFiberNameSideB");
-							
+
 							//
-							JctStrandNBSideA =itemParameters.getDictParameter().get(i).get("JctStrandNBSideA");   
-							JctTubeNBSideA=itemParameters.getDictParameter().get(i).get("JctTubeNBSideA");
+							JctStrandNBSideA = itemParameters.getDictParameter().get(i).get("JctStrandNBSideA");
+							JctTubeNBSideA = itemParameters.getDictParameter().get(i).get("JctTubeNBSideA");
 							JctNetworkLevelSideA = itemParameters.getDictParameter().get(i).get("JctNetworkLevelSideA");
-								
-							JctStrandNBSideB = itemParameters.getDictParameter().get(i).get("JctStrandNBSideB"); 
-							JctTubeNBSideB= itemParameters.getDictParameter().get(i).get("JctTubeNBSideB");
-						    JctNetworkLevelSideB =itemParameters.getDictParameter().get(i).get("JctNetworkLevelSideB");
-					    	JctLocationTypeSideB = itemParameters.getDictParameter().get(i).get("JctLocationTypeSideB");
+
+							JctStrandNBSideB = itemParameters.getDictParameter().get(i).get("JctStrandNBSideB");
+							JctTubeNBSideB = itemParameters.getDictParameter().get(i).get("JctTubeNBSideB");
+							JctNetworkLevelSideB = itemParameters.getDictParameter().get(i).get("JctNetworkLevelSideB");
+							JctLocationTypeSideB = itemParameters.getDictParameter().get(i).get("JctLocationTypeSideB");
 							JctLocationIdSideB = itemParameters.getDictParameter().get(i).get("JctLocationIdSideB");
 							JctLocationNameSideB = itemParameters.getDictParameter().get(i).get("JctLocationNameSideB");
 							JctWarehouseIdSideB = itemParameters.getDictParameter().get(i).get("JctWarehouseIdSideB");
-							
+
 							//
-							
-							Query insertMappingJctQuery = session
-									.createSQLQuery("INSERT INTO JUNCTION_MAPPING(JCT_ID,SEQUENCE_NUMBER,JCT_MAPPING_ID,PHYSICAL_LAYER_ID,STRAND_ID_SIDE_A,STRAND_NAME_SIDE_A,"
+
+							Query insertMappingJctQuery = session.createSQLQuery(
+									"INSERT INTO JUNCTION_MAPPING(JCT_ID,SEQUENCE_NUMBER,JCT_MAPPING_ID,PHYSICAL_LAYER_ID,STRAND_ID_SIDE_A,STRAND_NAME_SIDE_A,"
 											+ "TUBE_ID_SIDE_A,TUBE_NAME_SIDE_A,FIBER_ID_SIDE_A,FIBER_NAME_SIDE_A,STRAND_ID_SIDE_B,STRAND_NAME_SIDE_B,TUBE_ID_SIDE_B,TUBE_NAME_SIDE_B"
 											+ ",FIBER_ID_SIDE_B,FIBER_NAME_SIDE_B,LOCATION_TYPE_SIDE_A,LOCATION_ID_SIDE_A,LOCATION_NAME_SIDE_A,WAREHOUSE_ID_SIDE_A,STRAND_NB_SIDE_A,"
 											+ "TUBE_NB_SIDE_A,NETWORK_LEVEL_SIDE_A,STRAND_NB_SIDE_B,TUBE_NB_SIDE_B,NETWORK_LEVEL_SIDE_B,LOCATION_TYPE_SIDE_B,LOCATION_ID_SIDE_B,LOCATION_NAME_SIDE_B,WAREHOUSE_ID_SIDE_B)"
-											+ " VALUES ('" + junctionID + "','"
-											+ JctSeq + "','" + mappingJctID + "','" + physLayerIdJunction + "','"
-											+ JctStrandIdSideA + "','" + JctStrandNameSideA + "','" + JctTubeIdSideA
-											+ "','" + JctTubeNameSideA + "','" + JctFiberIdSideA + "','"
-											+ JctFiberNameSideA + "','" + JctStrandIdSideB + "','" + JctStrandNameSideB
-											+ "','" + JctTubeIdSideB + "','" + JctTubeNameSideB + "','"
-											+ JctFiberIdSideB + "','" + JctFiberNameSideB + "','" + JctLocationTypeSideA
-											+ "','" + JctLocationIdSideA + "','" + JctLocationNameSideA + "','"
-											+ JctWarehouseIdSideA+ "','" + JctStrandNBSideA + "','" + JctTubeNBSideA + "','" + JctNetworkLevelSideA + "','" + JctStrandNBSideB+ "','" 
-											+ JctTubeNBSideB + "','" + JctNetworkLevelSideB+ "','" + JctLocationTypeSideB + "','" + JctLocationIdSideB
-											+ "','" + JctLocationNameSideB + "','" + JctWarehouseIdSideB + "' )");
+											+ " VALUES ('" + junctionID + "','" + JctSeq + "','" + mappingJctID + "','"
+											+ physLayerIdJunction + "','" + JctStrandIdSideA + "','"
+											+ JctStrandNameSideA + "','" + JctTubeIdSideA + "','" + JctTubeNameSideA
+											+ "','" + JctFiberIdSideA + "','" + JctFiberNameSideA + "','"
+											+ JctStrandIdSideB + "','" + JctStrandNameSideB + "','" + JctTubeIdSideB
+											+ "','" + JctTubeNameSideB + "','" + JctFiberIdSideB + "','"
+											+ JctFiberNameSideB + "','" + JctLocationTypeSideA + "','"
+											+ JctLocationIdSideA + "','" + JctLocationNameSideA + "','"
+											+ JctWarehouseIdSideA + "','" + JctStrandNBSideA + "','" + JctTubeNBSideA
+											+ "','" + JctNetworkLevelSideA + "','" + JctStrandNBSideB + "','"
+											+ JctTubeNBSideB + "','" + JctNetworkLevelSideB + "','"
+											+ JctLocationTypeSideB + "','" + JctLocationIdSideB + "','"
+											+ JctLocationNameSideB + "','" + JctWarehouseIdSideB + "' )");
 							insertMappingJctQuery.executeUpdate();
 						}
 
@@ -10445,17 +10460,22 @@ public class PhysicalLayerController {
 							JctFiberNameSideB = itemParameters.getDictParameterTemp().get(i).get("JctFiberNameSideB");
 							mappingId = itemParameters.getDictParameterTemp().get(i).get("jctMappingId");
 							//
-							JctStrandNBSideA =itemParameters.getDictParameterTemp().get(i).get("JctStrandNBSideA");   
-							JctTubeNBSideA=itemParameters.getDictParameterTemp().get(i).get("JctTubeNBSideA");
-							JctNetworkLevelSideA = itemParameters.getDictParameterTemp().get(i).get("JctNetworkLevelSideA");
-								
-							JctStrandNBSideB = itemParameters.getDictParameterTemp().get(i).get("JctStrandNBSideB"); 
-							JctTubeNBSideB= itemParameters.getDictParameterTemp().get(i).get("JctTubeNBSideB");
-						    JctNetworkLevelSideB =itemParameters.getDictParameterTemp().get(i).get("JctNetworkLevelSideB");
-					    	JctLocationTypeSideB = itemParameters.getDictParameterTemp().get(i).get("JctLocationTypeSideB");
+							JctStrandNBSideA = itemParameters.getDictParameterTemp().get(i).get("JctStrandNBSideA");
+							JctTubeNBSideA = itemParameters.getDictParameterTemp().get(i).get("JctTubeNBSideA");
+							JctNetworkLevelSideA = itemParameters.getDictParameterTemp().get(i)
+									.get("JctNetworkLevelSideA");
+
+							JctStrandNBSideB = itemParameters.getDictParameterTemp().get(i).get("JctStrandNBSideB");
+							JctTubeNBSideB = itemParameters.getDictParameterTemp().get(i).get("JctTubeNBSideB");
+							JctNetworkLevelSideB = itemParameters.getDictParameterTemp().get(i)
+									.get("JctNetworkLevelSideB");
+							JctLocationTypeSideB = itemParameters.getDictParameterTemp().get(i)
+									.get("JctLocationTypeSideB");
 							JctLocationIdSideB = itemParameters.getDictParameterTemp().get(i).get("JctLocationIdSideB");
-							JctLocationNameSideB = itemParameters.getDictParameterTemp().get(i).get("JctLocationNameSideB");
-							JctWarehouseIdSideB = itemParameters.getDictParameterTemp().get(i).get("JctWarehouseIdSideB");
+							JctLocationNameSideB = itemParameters.getDictParameterTemp().get(i)
+									.get("JctLocationNameSideB");
+							JctWarehouseIdSideB = itemParameters.getDictParameterTemp().get(i)
+									.get("JctWarehouseIdSideB");
 							//
 
 							Query insertMappingJctQuery = session
@@ -10471,17 +10491,15 @@ public class PhysicalLayerController {
 											+ JctFiberNameSideB + "', LOCATION_TYPE_SIDE_A = '" + JctLocationTypeSideA
 											+ "',LOCATION_ID_SIDE_A = '" + JctLocationIdSideA
 											+ "',LOCATION_NAME_SIDE_A = '" + JctLocationNameSideA
-											+ "',WAREHOUSE_ID_SIDE_A = '" + JctWarehouseIdSideA  
-											+ "',STRAND_NB_SIDE_A = '" + JctStrandNBSideA
-											+ "',TUBE_NB_SIDE_A = '" + JctTubeNBSideA
-											+ "',NETWORK_LEVEL_SIDE_A = '" + JctNetworkLevelSideA
-											+ "',STRAND_NB_SIDE_B = '" + JctStrandNBSideB
-											+ "',TUBE_NB_SIDE_B = '" + JctTubeNBSideB
-											+ "',NETWORK_LEVEL_SIDE_B = '" + JctNetworkLevelSideB
+											+ "',WAREHOUSE_ID_SIDE_A = '" + JctWarehouseIdSideA
+											+ "',STRAND_NB_SIDE_A = '" + JctStrandNBSideA + "',TUBE_NB_SIDE_A = '"
+											+ JctTubeNBSideA + "',NETWORK_LEVEL_SIDE_A = '" + JctNetworkLevelSideA
+											+ "',STRAND_NB_SIDE_B = '" + JctStrandNBSideB + "',TUBE_NB_SIDE_B = '"
+											+ JctTubeNBSideB + "',NETWORK_LEVEL_SIDE_B = '" + JctNetworkLevelSideB
 											+ "',LOCATION_TYPE_SIDE_B = '" + JctLocationTypeSideB
 											+ "',LOCATION_ID_SIDE_B = '" + JctLocationIdSideB
 											+ "',LOCATION_NAME_SIDE_B = '" + JctLocationNameSideB
-											+ "',WAREHOUSE_ID_SIDE_B = '" + JctWarehouseIdSideB+"'"
+											+ "',WAREHOUSE_ID_SIDE_B = '" + JctWarehouseIdSideB + "'"
 											+ " WHERE JCT_MAPPING_ID = '" + mappingId + "'");
 
 							insertMappingJctQuery.executeUpdate();
@@ -11615,7 +11633,8 @@ public class PhysicalLayerController {
 
 			Object[] objectArray = (Object[]) ListOfObjects.get(i);
 
-			if (Target == "Manhole" || Target == "Handhole" || Target == "ManHandhole_OutOfZone" || Target == "Entreprise" || Target == "Transmission") {
+			if (Target == "Manhole" || Target == "Handhole" || Target == "ManHandhole_OutOfZone"
+					|| Target == "Entreprise" || Target == "Transmission") {
 				pointDist = haversine(closestLatPoint, closestLongPoint, Double.valueOf((String) objectArray[3]),
 						Double.valueOf((String) objectArray[2]));
 			} else {
