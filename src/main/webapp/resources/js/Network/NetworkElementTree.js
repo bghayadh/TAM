@@ -507,6 +507,8 @@ function  Node_Boq(WareId,NodeId){
 	var Boq = $('#Boq');
 	var Layers= $('#Layers');
 	var Options= $('#Options');
+	console.log("WareId....",WareId);
+	console.log("NodeId....",NodeId);
 	
 	if(arrayParam[0]==1){
 		var paramEnterprise = true;
@@ -598,13 +600,29 @@ function  NodeT_Boq(SiteId,NodeTId){
 	var Boq = $('#Boq');
 	var Layers= $('#Layers');
 	var Options= $('#Options');
-	
-	if($('#EnterpriseBtn').hasClass('activee')){
-		console.log("ACTIVE ");
+
+	if(arrayParam[0]==1){
 		var paramEnterprise = true;
 	}else{
-		console.log("NOT ACTIVE");
 		var paramEnterprise = false;
+	}
+
+	if(arrayParam[1]==1){
+		var paramTransmission = true;
+	}else{
+		var paramTransmission = false;
+	}
+		
+	if(arrayParam[2]==1){
+		var paramAccess = true;
+	}else{
+		var paramAccess = false;
+	}
+
+	if(arrayParam[3]==1){
+		var paramCore = true;
+	}else{
+		var paramCore = false;
 	}
 	//if(!siteNTList.includes(NodeTId))
 	//{
@@ -616,6 +634,9 @@ function  NodeT_Boq(SiteId,NodeTId){
 			    "SiteId":SiteId,
 			    "NodeTId":NodeTId,
 			    "paramEnterprise": paramEnterprise,
+			    "paramTransmission":paramTransmission,
+			    "paramAccess":paramAccess,
+			    "paramCore":paramCore,
 			    },
 			success : function(data)
 			  {

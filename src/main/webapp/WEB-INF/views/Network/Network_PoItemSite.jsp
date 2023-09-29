@@ -339,9 +339,9 @@ function AllSitesCheckFilter(){
 
 function PoItemStCore(id)
 {
-	console.log("PoItemStCore");
+	//console.log("PoItemStCore");
 	var selectedPo=id.id;
-	console.log("selectedPO.....",selectedPo);
+	//console.log("selectedPO.....",selectedPo);
 	/*
 	var selectedId=n.id;
 	PO_Boq(selectedId);
@@ -401,12 +401,12 @@ function PoItemStCore(id)
 }
 
 function SitesRequest(id){
-	console.log("SitesRequest");
-	console.log("id....."+id);
+	//console.log("SitesRequest");
+	//console.log("id....."+id);
 	selectedItem = id.split("_")[0];
-	console.log("selectedItemmmmm ....."+selectedItem);
+	//console.log("selectedItemmmmm ....."+selectedItem);
 	selectedPo = id.split("_")[1]+"_"+id.split("_")[2]+"_"+id.split("_")[3];
-	console.log("selectedPooooo ....."+selectedPo);
+	//console.log("selectedPooooo ....."+selectedPo);
 	/*
 	var markersSite="";  
 	$("#"+listItem[n][0]+"_"+listItem[n][2]+" > span").on('click',function (e) {	 	
@@ -529,9 +529,9 @@ function St(k){
 */
 
 function showMarkersAllSitesOneNt(id) {
-  console.log("showMarkersAllSitesOneNt");
+  //console.log("showMarkersAllSitesOneNt");
 //var id = id.id;
-  console.log("id ...."+ id);
+ // console.log("id ...."+ id);
   //var newId = id + "_Site";
 
   markerClusterSites.clearMarkers();
@@ -565,9 +565,9 @@ function showMarkersAllSitesOneNt(id) {
 
 
 function showMarkerSingleSite(id) {
-	console.log("showMarkerSingleSite");
+	//console.log("showMarkerSingleSite");
 	// var id=id.id;
-	 console.log("ID-->" + id);
+	// console.log("ID-->" + id);
 	 
 	 var selectedSiteId = id.split('_').slice(0, 3).join('_');
 	// console.log("selectedSiteId-->" + selectedSiteId);
@@ -579,7 +579,7 @@ function showMarkerSingleSite(id) {
 	 //console.log("PoId-->" + PoId);
 	 
 	    if ($("#" + id).is(":checked")) {
-	     	console.log("checked");
+	     	//console.log("checked");
 	     	var checkboxes = $('[id$="'+itemId+'_SingleSite"]');
 	     	//var checkboxes = $('[id$="'+selectedSiteId+"_"+itemId+'_SingleSite"]');
 	  		var allChecked = true;
@@ -604,10 +604,10 @@ function showMarkerSingleSite(id) {
 	}
 
 function PanTreeSites(id){
-	console.log("PanTreeSites.....");
-	console.log("id  ..... ",id);
+	//console.log("PanTreeSites.....");
+	//console.log("id  ..... ",id);
 	var selectedItem = id.split('_')[0] +"_"+ id.split('_')[1] +"_"+ id.split('_')[2];
-	console.log("selected item ..... "+selectedItem );
+	//console.log("selected item ..... "+selectedItem );
 		//Site_Boq(selectedItem);
 	if(selectedItem!=markersSite)
 	{
@@ -635,219 +635,6 @@ function PanTreeSites(id){
 /* End of PO Item Site Tree Method */ 
 //////////////////////////////////////////////
 
-//////////////////////////////////////////////
-	
-//Submit selection to draw Tree and Map w.r.to active button
-function Sumbitselection(arr){ 
-
-	 switch (arr)
-	 {
-	 //Site-Node-Cell
-	 	case "li_siteBtn,li_nodeBtn,li_cellBtn":
-	 	case "siteBtn,nodeBtn,cellBtn":		
-	 	{	
-	 		console.log("site node cell");
-	 		window.location.href = getContext()+"/Network_StNdCell";
-	 	} 
-	 break;
-	 	case "li_siteBtn,li_nodeBtn,li_cellBtn,li_EnterpriseBtn":
-	 	case "siteBtn,nodeBtn,cellBtn,EnterpriseBtn":		
-	 	{	
-	 		 console.log("site node cell Enterprise");
-	 		var param1 = 'Enterprise';
-	 		//var param2 = 'value2';
-	 		var url = getContext() + '/Network_StNdCell';
-	 		url += '?param1=' + encodeURIComponent(param1);
-	 		//url += '&param2=' + encodeURIComponent(param2);
-	 		window.location.href = url;
-	 	//	$('#EnterpriseBtn').addClass('activee');
-	 	}
-		break;
-		
-	 //Site-NodeType-Node-Cell
-	 case "li_siteBtn,li_nodeTypeeBtn,li_nodeBtn,li_cellBtn":
-	 case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn":
-	  {	
-		 window.location.href = getContext()+"/Network_StNdTypNdCell";	
-	  } 
-	 break;
-	 case "li_siteBtn,li_nodeTypeeBtn,li_nodeBtn,li_cellBtn,li_EnterpriseBtn":
-	 case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,EnterpriseBtn":		
-	 	{	
-	 		var param1 = 'Enterprise';
-	 		var url = getContext() + '/Network_StNdTypNdCell';
-	 		url += '?param1=' + encodeURIComponent(param1);
-	 		window.location.href = url;
-	 	}
-	break;
-	 		
-	 //NodeType-Site-Node-Cell
-	 case "li_nodeTypeeBtn,li_siteBtn,li_nodeBtn,li_cellBtn":
-	 case "nodeTypeeBtn,siteBtn,nodeBtn,cellBtn":
-	 {		 
-		 window.location.href = getContext()+"/Network_NdTypStNdCell";
-	 }  
-	 break;
-	 case "li_nodeTypeeBtn,li_siteBtn,li_nodeBtn,li_cellBtn,li_EnterpriseBtn":
-	 case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,EnterpriseBtn":		
-	 	{			
-	 		var param1 = 'Enterprise';
-	 		var url = getContext() + '/Network_NdTypStNdCell';
-	 		url += '?param1=' + encodeURIComponent(param1);
-	 		window.location.href = url;
-	 	}
-	 break;
-	 
-	//Supplier-Site-Node-Cell
-	 case "li_supplierBtn,li_siteBtn,li_nodeBtn,li_cellBtn":
-	 case "siteBtn,nodeBtn,cellBtn,supplierBtn":
-	 {
-		 window.location.href = getContext()+"/Network_SupStNdCell";
-	 }
-	 break;	
-	 
-	 case "li_supplierBtn,li_siteBtn,li_nodeBtn,li_cellBtn,li_EnterpriseBtn":
-	 case "siteBtn,nodeBtn,cellBtn,supplierBtn,EnterpriseBtn":		
-	 {
-		 	var param1 = 'Enterprise';
-	 		var url = getContext() + '/Network_SupStNdCell';
-	 		url += '?param1=' + encodeURIComponent(param1);
-	 		window.location.href = url;
-	 }
-	 break;
-	//Supplier-Site-Node type-Node-Cell
-		case "li_supplierBtn,li_siteBtn,li_nodeTypeeBtn,li_nodeBtn,li_cellBtn":
- 		case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,supplierBtn":
-  {
- 			window.location.href = getContext()+"/Network_SupStNdTypNdCell";
-     	}
-	
- 		break;	
- 		case "li_supplierBtn,li_siteBtn,li_nodeTypeeBtn,li_nodeBtn,li_cellBtn,li_EnterpriseBtn":
- 		case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,supplierBtn,EnterpriseBtn":
-  		{
- 		 	var param1 = 'Enterprise';
-	 		var url = getContext() + '/Network_SupStNdTypNdCell';
-	 		url += '?param1=' + encodeURIComponent(param1);
-	 		window.location.href = url;
-     	}
- 		break;
- 		//Supplier-NodeType-Site-Node-Cell
-		 case "li_supplierBtn,li_nodeTypeeBtn,li_siteBtn,li_nodeBtn,li_cellBtn":
-		 case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,supplierBtn":
-		  {
-			 window.location.href = getContext()+"/Network_SupNdTypStNdCell"; 			 
-		    }
-		break;
-		 case "li_supplierBtn,li_nodeTypeeBtn,li_siteBtn,li_nodeBtn,li_cellBtn,li_EnterpriseBtn":
-		 case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,supplierBtn,EnterpriseBtn":
-		  {
-				var param1 = 'Enterprise';
-		 		var url = getContext() + '/Network_SupNdTypStNdCell';
-		 		url += '?param1=' + encodeURIComponent(param1);
-		 		window.location.href = url; 			 
-		    }
-		break;
-		//PO-Site-Items
- 		 case "li_poBtn,li_siteBtn,li_itemBtn":
- 		case "siteBtn,itemBtn,poBtn":
- 		 	{	
- 			 window.location.href = getContext()+"/Network_PoSiteItem"; 			 
- 		 	}
- 		 	break;
-		 case "li_poBtn,li_siteBtn,li_itemBtn,li_EnterpriseBtn":
-	 	 case "siteBtn,itemBtn,EnterpriseBtn,poBtn":
-	 		 	{	
-	 			var param1 = 'Enterprise';
-		 		var url = getContext() + '/Network_PoSiteItem';
-		 		url += '?param1=' + encodeURIComponent(param1);
-		 		window.location.href = url; 	 
-	 		 	}
-	 		 	break;
-		 	 //PO-Items-Site         
-		  case "li_poBtn,li_itemBtn,li_siteBtn":
-		  case "siteBtn,itemBtn,poBtn":
-		  {	  
-			  window.location.href = getContext()+"/Network_PoItemSite"; 			
-		  }
-		  break;
-		  case "li_poBtn,li_itemBtn,li_siteBtn,li_EnterpriseBtn":
-		  case "siteBtn,itemBtn,EnterpriseBtn,poBtn":
-		  {	  
-			  var param1 = 'Enterprise';
-		 		var url = getContext() + '/Network_PoItemSite';
-		 		url += '?param1=' + encodeURIComponent(param1);
-		 		window.location.href = url; 			
-		  }
-		  break;
-		//Site-PO-Items         
- 		  case "li_siteBtn,li_poBtn,li_itemBtn":
- 		 case "siteBtn,itemBtn,poBtn":
- 		  {	
- 			 window.location.href = getContext()+"/Network_SitePoItem"; 
- 		  }
- 		  break;
- 		  
- 		  case "li_siteBtn,li_poBtn,li_itemBtn,li_EnterpriseBtn":
-  		  case "siteBtn,itemBtn,EnterpriseBtn,poBtn":
-  		  {	
-  			var param1 = 'Enterprise';
-	 		var url = getContext() + '/Network_SitePoItem';
-	 		url += '?param1=' + encodeURIComponent(param1);
-	 		window.location.href = url; 
-  		  }
-  		  break;
- 		  
- 		case "li_nodeBtn,li_cellBtn,li_nodeTypeeBtn":
-		 case "nodeBtn,cellBtn,nodeTypeeBtn":
-		 {
-			window.location.href = getContext()+"/Network_NdTypNdCell"; 			
-		 } break;
-		 case "li_nodeBtn,li_cellBtn,li_nodeTypeeBtn,li_EnterpriseBtn":
- 		 case "nodeBtn,cellBtn,nodeTypeeBtn,EnterpriseBtn":		
- 		 	{	
- 		 		var param1 = 'Enterprise';
- 		 		var url = getContext() + '/Network_NdTypNdCell';
- 		 		url += '?param1=' + encodeURIComponent(param1);
- 		 		window.location.href = url;
- 		 	}
- 		break;
-		//Node
-		 case "nodeBtn":
-		{
-			 window.location.href = getContext()+"/Network_Node"; 
-		 } break;
-		 case "li_nodeBtn,li_EnterpriseBtn":
- 		 case "nodeBtn,EnterpriseBtn":		
- 		 	{	
- 		 		var param1 = 'Enterprise';
- 		 		var url = getContext() + '/Network_Node';
- 		 		url += '?param1=' + encodeURIComponent(param1);
- 		 		window.location.href = url;
- 		 	}
- 		break;
- 		//Cell
-		 case "cellBtn":
-		{
-			 window.location.href = getContext()+"/Network_Cell"; 
-		 } break;
-		 case "li_cellBtn,li_EnterpriseBtn":
- 		 case "cellBtn,EnterpriseBtn":		
- 		 	{	
- 		 		var param1 = 'Enterprise';
- 		 		var url = getContext() + '/Network_Cell';
- 		 		url += '?param1=' + encodeURIComponent(param1);
- 		 		window.location.href = url;
- 		 	}
- 		break;
-		default:
-		{			
-			alert("Selection is not available");
-			return null;
-		}break;
-		 
-		}
-	}
 </script>
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJXAds-Gt4I39hRFHhYHMEg3XcBqihYoo&libraries=places&callback=initMap&amp;v=3.43&amp"></script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/maplabel.js"></script>

@@ -1214,6 +1214,198 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 	$("#modalOrderTree").modal('show'); 
 	    }	
 	} // End of DrawList function 
+	
+	var enterprise = null;
+	var transmission = null;
+	var access = null;
+	var core = null;
+	
+	//Submit selection to draw Tree and Map w.r.to active button
+	function Sumbitselection(arr,domain){ 
+		console.log("Submit Selection");
+	    var queryParams = [];
+	    console.log("arr >>>  ",arr);
+	    console.log("domain >>>  ",domain);
+	    if(domain.length !=0){
+		    for (var i = 0; i < domain.length; i++) {
+		    	if(domain[i]=="accessDBtn"){
+		    		access="Access";
+		    		queryParams.push('access=' + encodeURIComponent(access));
+		    	}
+		    	if(domain[i]=="transmBtn"){
+		    		transmission="Transmission";
+		    		queryParams.push('transmission=' + encodeURIComponent(transmission));
+		    	}  	
+		    	if(domain[i]=="EnterpriseBtn"){
+		    		enterprise="Enterprise";
+		    		queryParams.push('enterprise=' + encodeURIComponent(enterprise));
+		    	}
+		    	if(domain[i]=="CoreBtn"){
+		    		core="Core";
+		    		queryParams.push('core=' + encodeURIComponent(core));
+		    	}
+		        domain[i] = 'li_' + domain[i].trim(); 
+		    }   
+	    }
+	   // var modifiedDomain = domain.join(',');
+		var params=null;
+		if (queryParams.length > 0) {
+			params='?';
+			params +=  queryParams.join('&');
+		}
+
+		 switch (arr)
+		 {
+		 //Site-Node-Cell
+		 	case "li_siteBtn,li_nodeBtn,li_cellBtn":
+		 	case "siteBtn,nodeBtn,cellBtn":		
+		 	{	
+		 		var url = getContext() + '/Network_StNdCell';
+		 		if(params !=null){
+		 			url += params;
+		 		}
+		 		window.location.href = url;
+		 	} 
+		 break;
+
+		 //Site-NodeType-Node-Cell
+		 case "li_siteBtn,li_nodeTypeeBtn":
+		 case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn":
+		  {	
+			 var url = getContext()+"/Network_StNdTypNdCell";
+			 if(params !=null){
+		 			url += params;
+		 		}
+		 		window.location.href = url;
+		 } 
+		 break;
+		 
+		 //NodeType-Site-Node-Cell
+		 case "li_nodeTypeeBtn,li_siteBtn,li_nodeBtn,li_cellBtn":
+		 case "nodeTypeeBtn,siteBtn,nodeBtn,cellBtn":
+		 {		
+			 var url = getContext()+"/Network_NdTypStNdCell";
+			 if(params !=null){
+		 			url += params;
+		 		}
+		 		window.location.href = url;
+		 }  
+		 break;
+		 
+		//Supplier-Site-Node-Cell
+		 case "li_supplierBtn,li_siteBtn,li_nodeBtn,li_cellBtn":
+		 case "siteBtn,nodeBtn,cellBtn,supplierBtn":
+		 {
+			 var url = getContext()+"/Network_SupStNdCell";
+			 if(params !=null){
+		 			url += params;
+		 		}
+		 	window.location.href = url;
+		 }
+		 break;	
+		 
+		//Supplier-Site-Node type-Node-Cell
+			case "li_supplierBtn,li_siteBtn,li_nodeTypeeBtn,li_nodeBtn,li_cellBtn":
+	 		case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,supplierBtn":
+	 		 {
+	 			var url = getContext()+"/Network_SupStNdTypNdCell";
+	 			if(params !=null){
+		 			url += params;
+		 		}
+		 		window.location.href = url;
+	     	}		
+	 		break;	
+	 		
+	 		//Supplier-NodeType-Site-Node-Cell
+			 case "li_supplierBtn,li_nodeTypeeBtn,li_siteBtn,li_nodeBtn,li_cellBtn":
+			 case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,supplierBtn":
+			  {
+				 var url = getContext()+"/Network_SupNdTypStNdCell"; 	
+				 if(params !=null){
+			 			url += params;
+			 		}
+			 		window.location.href = url;
+			    }
+			break;
+			
+			//PO-Site-Items
+	 		 case "li_poBtn,li_siteBtn,li_itemBtn":
+	 		 case "siteBtn,itemBtn,poBtn":
+	 		 	{	
+	 			 var url = getContext()+"/Network_PoSiteItem"; 
+	 			if(params !=null){
+		 			url += params;
+		 		}
+		 		window.location.href = url;
+	 		 	}
+	 		 break;
+			 
+			 	 //PO-Items-Site         
+			  case "li_poBtn,li_itemBtn,li_siteBtn":
+			  case "siteBtn,itemBtn,poBtn":
+			  {	  
+				 var url = getContext()+"/Network_PoItemSite"; 
+				 if(params !=null){
+			 			url += params;
+			 		}
+			 		window.location.href = url;
+			  }
+			  break;
+			  
+			//Site-PO-Items         
+	 		  case "li_siteBtn,li_poBtn,li_itemBtn":
+	 		 case "siteBtn,itemBtn,poBtn":
+	 		  {	
+	 			var url = getContext()+"/Network_SitePoItem"; 
+	 			if(params !=null){
+		 			url += params;
+		 		}
+		 		window.location.href = url;
+	 		  }
+	 		  break;
+	 		  	  
+	 		 case "li_nodeBtn,li_cellBtn,li_nodeTypeeBtn":
+	 		 case "nodeBtn,cellBtn,nodeTypeeBtn":
+	 		 {
+	 			var url = getContext()+"/Network_NdTypNdCell"; 
+	 			if(params !=null){
+		 			url += params;
+		 		}
+		 		window.location.href = url;
+	 		 } break;
+	 		
+			//Node
+			 case "nodeBtn":
+			{
+				 var url = getContext()+"/Network_Node"; 
+				 if(params !=null){
+			 			url += params;
+			 		}
+			 	window.location.href = url;
+			 } 
+			break;
+			
+	 		//Cell
+			 case "cellBtn":
+			{
+				var url = getContext()+"/Network_Cell"; 
+				if(params !=null){
+			 			url += params;
+			 		}
+			 	window.location.href = url;
+			 } 
+			break;
+			
+			default:
+			{			
+				alert("Selection is not available");
+				return null;
+			}break;
+			 
+			}
+		}
+	
+	
 //Sort List w.r.to selection to display in popup Model
 function DefaultSort(arr,domain) {	
 	var params=[];
@@ -1242,10 +1434,8 @@ function DefaultSort(arr,domain) {
 			
 				return [order,name];
 			
-			} break;
-		/////////////////////////////////////////////////
-		
-		/////////////////////////////////////////////////
+			} 
+		break;
 		case "nodeBtn,cellBtn,nodeTypeeBtn":
 		{
 		var order =["nodeBtn","cellBtn","nodeTypeeBtn"];
@@ -1254,18 +1444,8 @@ function DefaultSort(arr,domain) {
 		return [order,name];
 		}
 		break;
-		/////////////////////////////////////////////
-		case "nodeBtn,cellBtn,nodeTypeeBtn,EnterpriseBtn":
-		{
-		var order =["nodeBtn","cellBtn","nodeTypeeBtn"];
-		var name = ["Node Type","Node","Cell","Enterprise"];
-
-		return [order,name];
-		}
-		break;
 
 		case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn":
-		//case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,EnterpriseBtn":
 		{	
 			var order =["siteBtn","nodeTypeeBtn","nodeBtn","cellBtn"];
 			var name = ["Site","Node Type","Node","Cell"];
@@ -1273,18 +1453,8 @@ function DefaultSort(arr,domain) {
 			return [order,name];
 		
 		} break;
-		/////////////////////////////////////////////////
+	
 		
-		case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,EnterpriseBtn":
-		{	
-			var order =["siteBtn","nodeTypeeBtn","nodeBtn","cellBtn"];
-			var name = ["Site","Node Type","Node","Cell","Enterprise"];
-		
-			return [order,name];
-		
-		} break;
-		
-		/////////////////////////////////////////////////
 		case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn":
 		{	
 			var order =["siteBtn","nodeTypeeBtn","nodeBtn","cellBtn"];
@@ -1302,15 +1472,6 @@ function DefaultSort(arr,domain) {
 			return [order,name];
 		
 		} break;
-		case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,supplierBtn,EnterpriseBtn":
-		{	
-			var order =["supplierBtn","siteBtn","nodeTypeeBtn","nodeBtn","cellBtn"];
-			var name = ["Supplier","Site","Node Type","Node","Cell","Enterprise"];
-		
-			return [order,name];
-		
-		} break;
-		////////////////////////////////////////////////
 		
 		case "siteBtn,nodeBtn,cellBtn,supplierBtn":
 		{	
@@ -1321,15 +1482,6 @@ function DefaultSort(arr,domain) {
 		
 		} break;
 
-		case "siteBtn,nodeBtn,cellBtn,supplierBtn,EnterpriseBtn":
-		{	
-			var order =["supplierBtn","siteBtn","nodeBtn","cellBtn"];
-			var name = ["Supplier","Site","Node","Cell","Enterprise"];
-		
-			return [order,name];
-		
-		} break;
-		
 		case "siteBtn,itemBtn,poBtn":
 		case "poBtn":
 		{	
@@ -1339,17 +1491,8 @@ function DefaultSort(arr,domain) {
 			return [order,name];
 		
 		} break;
-		/////////////////////////////////
-		
-		case "siteBtn,itemBtn,EnterpriseBtn,poBtn":
-		case "poBtn":
-		{	
-			var order =["poBtn","siteBtn","itemBtn"];
-			var name = ["PO","Site","Item","Enterprise"];
-		
-			return [order,name];
-		
-		} break;
+
+
 /*
 		case "siteBtn,nodeBtn,nodeTypeeBtn,itemBtn,poBtn":
 			{
@@ -1757,7 +1900,7 @@ function DefaultSort(arr,domain) {
 			}
 			return results;
 			}		
-		
+	  
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
