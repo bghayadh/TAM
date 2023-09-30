@@ -1,6 +1,5 @@
 package com.aliat.alm.controller;
 
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.sql.Timestamp;
@@ -39,7 +38,6 @@ import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.AgentBorder;
 import com.aliat.alm.models.Area;
-import com.aliat.alm.models.AreaListView;
 import com.aliat.alm.models.AreaBorder;
 import com.aliat.alm.models.AreaFinance;
 import com.aliat.alm.models.AreaFinanceBOQ;
@@ -47,8 +45,6 @@ import com.aliat.alm.models.RegionBorder;
 import com.aliat.alm.services.ItemParameters;
 import com.aliat.alm.services.LoginServices;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-
 
 @Controller
 public class AreaController {
@@ -75,40 +71,36 @@ public class AreaController {
 
 	@Autowired
 	ALMSessions almsessions;
-	
+
 	@Autowired
 	Form form;
-	
+
 	@Autowired
 	Notify notification;
-	
-	@RequestMapping(value = "/AreaListView", method = RequestMethod.GET)
-	public String AreaListView(Locale locale, Model model, HttpServletRequest request,HttpServletResponse response) {
 
-		
-		
+	@RequestMapping(value = "/AreaListView", method = RequestMethod.GET)
+	public String AreaListView(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
+
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			return "redirect:/";
-		} 
-		
+		}
+
 		session = almsessions.getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			notification.headerNotifications(session, model);
-			
-			try {	
-				query = session.createSQLQuery("SELECT AREA_ID as id,AREA_ID as areaID, AREA_NAME as name,REGION_NAME as regionName,TO_CHAR(CREATION_DATE, 'YYYY-MM-DD HH24:MI:SS') as creationDate,TO_CHAR(LAST_MODIFICATION_DATE, 'YYYY-MM-DD HH24:MI:SS') as lastModifieddate from Area  ORDER BY LAST_MODIFICATION_DATE DESC");
-				System.out.print(mapper.writeValueAsString(query.list()));
-				model.addAttribute("ListGridTable", mapper.writeValueAsString(query.list()));
 
-			}catch(Exception e) {
+			try {
+				query = session.createSQLQuery(
+						"SELECT AREA_ID as id,AREA_ID as areaID, AREA_NAME as name,REGION_NAME as regionName,TO_CHAR(CREATION_DATE, 'YYYY-MM-DD HH24:MI:SS') as creationDate,TO_CHAR(LAST_MODIFICATION_DATE, 'YYYY-MM-DD HH24:MI:SS') as lastModifieddate from Area  ORDER BY LAST_MODIFICATION_DATE DESC");
+				model.addAttribute("ListGridTable", mapper.writeValueAsString(query.list()));
+			} catch (Exception e) {
 				sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
 				exceptionAsString = sw.toString();
-				logger.finest("Error in AreaListView due to \n "+ exceptionAsString);
-				logger.info("Error in AreaListView due to \n "+ exceptionAsString);
-			}
-			finally {
+				logger.finest("Error in AreaListView due to \n " + exceptionAsString);
+				logger.info("Error in AreaListView due to \n " + exceptionAsString);
+			} finally {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
@@ -117,6 +109,7 @@ public class AreaController {
 		}
 		return "AreaListView";
 	}
+
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/FilteredAreaListView", method = RequestMethod.GET)
 	@ResponseBody
@@ -125,7 +118,7 @@ public class AreaController {
 		Map<String, Object> rtn = new LinkedHashMap<>();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
-			return rtn;	
+			return rtn;
 		}
 		session = almsessions.getSession();
 		if (session != null && session.isOpen()) {
@@ -133,16 +126,15 @@ public class AreaController {
 			tx = session.beginTransaction();
 			notification.headerNotifications(session, model);
 
-			
 			try {
-				String startdate, enddate,  regionid, regionname,areaid,areaname;
+				String startdate, enddate, regionid, regionname, areaid, areaname;
 				startdate = request.getParameter("startDate");
 				enddate = request.getParameter("endDate");
 				regionid = request.getParameter("regionid");
 				regionname = request.getParameter("regionname");
 				areaid = request.getParameter("areaid");
 				areaname = request.getParameter("areaname");
-			
+
 				List<String> listArea = new ArrayList<String>();
 				String str = " select 1 as chkBox,AREA_ID as id,AREA_NAME as name,REGION_NAME as regionName,TO_CHAR(CREATION_DATE,'YYYY-MM-DD HH24:MI:SS') as creationDate,TO_CHAR(LAST_MODIFICATION_DATE,'YYYY-MM-DD HH24:MI:SS') as lastModifieddate from AREA";
 
@@ -170,22 +162,20 @@ public class AreaController {
 					str = str + " and upper(AREA_NAME) LIKE upper('%" + areaname + "%')";
 				}
 
-				
 				str = str + " ORDER BY LAST_MODIFICATION_DATE DESC ";
 
-				
 				Query query = session.createSQLQuery(str);
 
 				listArea = query.list();
-				
-				rtn.put("listArea",listArea);
-				
+
+				rtn.put("listArea", listArea);
+
 			} catch (Exception e) {
 				sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
 				exceptionAsString = sw.toString();
-				logger.finest("Error in showing the filtered Area list view due to \n "+ exceptionAsString);
-				logger.info("Error in showing the filtered Area list view due to \n "+ exceptionAsString);
+				logger.finest("Error in showing the filtered Area list view due to \n " + exceptionAsString);
+				logger.info("Error in showing the filtered Area list view due to \n " + exceptionAsString);
 			} finally {
 				if (session != null && session.isOpen()) {
 					tx.commit();
@@ -196,520 +186,513 @@ public class AreaController {
 
 		return rtn;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/AreaFormView", method = RequestMethod.GET)
-	public String AreaFormView(Locale locale, Model model, HttpServletRequest request,HttpServletResponse response) {
- 		
+	public String AreaFormView(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
+
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			return "redirect:/";
-		} 
-		
+		}
+
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
 		Area area;
 		String regionId, navAction = "2", areaID;
 		List<AreaBorder> areaBorderList = new ArrayList<>();
 		List<RegionBorder> regionBorderList = new ArrayList<>();
-	    HashMap<String, List<RegionBorder>> hash_map1 = new HashMap<String, List<RegionBorder>>();
+		HashMap<String, List<RegionBorder>> hash_map1 = new HashMap<String, List<RegionBorder>>();
 		boolean EmptyList;
-        String result [] =new String[4];
-        int SelectedIndex = 0;
-	    session = almsessions.getSession();
+		String result[] = new String[4];
+		int SelectedIndex = 0;
+		session = almsessions.getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
-			notification.headerNotifications(session, model);		
-		try {
-			 
-			
+			notification.headerNotifications(session, model);
+			try {
+
 //////////////////////////////////////Region and Region Borders//////////////////////////////////////////////////
-List<Object[]> regionIDs = new ArrayList<>();
-List<Object> regions = new ArrayList<>();
-List<Object> Region_Borders = new ArrayList<>();
-String LatLong = null;
-query = session.createSQLQuery("SELECT REGION_ID FROM REGION");
-if(query.list().size() > 0) {
-	regionIDs = query.list();
-	for(int i = 0;i<regionIDs.size();i++) {
-		regions = new ArrayList<>();
-		query = session.createSQLQuery("SELECT REGION_NAME from REGION where REGION_ID='"+regionIDs.get(i)+"'");
-		String regionName = query.uniqueResult().toString();
-		
-		query = session.createSQLQuery("SELECT REGION_CODE from REGION where REGION_ID='"+regionIDs.get(i)+"'");
-		String regionCode = query.uniqueResult().toString();
-		
-		query = session.createSQLQuery("SELECT LISTAGG(a.LATITUDE || ',' || a.LONGTITUDE, ':') WITHIN GROUP (ORDER BY a.SEQ_SORTING + 0 ASC) AS borders " + 
-		" from REGION_BORDER a" + 
-		" where REGION_ID = '"+regionIDs.get(i)+"'");
-		
-		if(query.uniqueResult() != null) {
-		LatLong = query.uniqueResult().toString();
-		}else {
-		LatLong = "N/A";
-		}
-		
-		regions.add(regionIDs.get(i));
-		regions.add(regionName);
-		regions.add(regionCode);
-		regions.add(LatLong);
-		Region_Borders.add(regions);
-	}
-}
-			
-			
-			areaID = request.getParameter("AreaID");
-			navAction= request.getParameter("NavAction");
+				List<Object[]> regionIDs = new ArrayList<>();
+				List<Object> regions = new ArrayList<>();
+				List<Object> Region_Borders = new ArrayList<>();
+				String LatLong = null;
+				query = session.createSQLQuery("SELECT REGION_ID FROM REGION");
+				if (query.list().size() > 0) {
+					regionIDs = query.list();
+					for (int i = 0; i < regionIDs.size(); i++) {
+						regions = new ArrayList<>();
+						query = session.createSQLQuery(
+								"SELECT REGION_NAME from REGION where REGION_ID='" + regionIDs.get(i) + "'");
+						String regionName = query.uniqueResult().toString();
 
-		if(areaID==null) {
+						query = session.createSQLQuery(
+								"SELECT REGION_CODE from REGION where REGION_ID='" + regionIDs.get(i) + "'");
+						String regionCode = "";
+						if (query.getSingleResult() != null)
+							regionCode = query.getSingleResult().toString();
 
-			model.addAttribute("creationDate", formatter.format( new Timestamp(System.currentTimeMillis())).toString());
-			model.addAttribute("lastModifiedDate", formatter.format( new Timestamp(System.currentTimeMillis())).toString());
-			model.addAttribute("areaLong", "addNew");
-			model.addAttribute("areaLat", "addNew" );
-			model.addAttribute("docStatus", "addNew");
-			model.addAttribute("ListAreaFinance", "addNew");	
-			model.addAttribute("listAreaBorder", "addNew");
-			model.addAttribute("listRegionBorder", "addNew");
-			model.addAttribute("SelectedIndex", "addNew");
-			model.addAttribute("AreasCount", "addNew");
-			
-			//return the region and region_borders on load
-			if(Region_Borders.size() > 0) {
-			model.addAttribute("regionsData", mapper.writeValueAsString(Region_Borders));
-			}else {
-				model.addAttribute("regionsData", "addNew");
-			}
-			return "AreaFormView";
-		}else{
+						query = session.createSQLQuery(
+								"SELECT LISTAGG(a.LATITUDE || ',' || a.LONGTITUDE, ':') WITHIN GROUP (ORDER BY a.SEQ_SORTING + 0 ASC) AS borders "
+										+ " from REGION_BORDER a" + " where REGION_ID = '" + regionIDs.get(i) + "'");
 
+						if (query.uniqueResult() != null) {
+							LatLong = query.uniqueResult().toString();
+						} else {
+							LatLong = "N/A";
+						}
 
-			//NavigateNP: Navigate for Next or Previous 
-			result = form.NavigationNP(session,"Area","AREA_ID",areaID,"last_modification_date",navAction);		
-			SelectedIndex= Integer.parseInt(result[1]);
-			areaID=result[2];
-			area = (Area) session.get(Area.class, areaID);
-			System.out.println("areaID "+areaID);
-			System.out.println("SelectedIndex "+SelectedIndex);
+						regions.add(regionIDs.get(i));
+						regions.add(regionName);
+						regions.add(regionCode);
+						regions.add(LatLong);
+						Region_Borders.add(regions);
+					}
+				}
 
-			if(area!=null) {
-				
-			query  =  session.createQuery( "from AreaBorder where areaId LIKE :param1 ORDER BY (Sequence) + 0 ASC");
-			query.setParameter( "param1", areaID);
-			areaBorderList = query.list();
-	        EmptyList = areaBorderList.isEmpty();
-			System.out.println("test2");
+				areaID = request.getParameter("AreaID");
+				navAction = request.getParameter("NavAction");
 
-			if(areaBorderList == null || EmptyList == true) {
-				System.out.println("test3");
+				if (areaID == null) {
 
-				model.addAttribute("listAreaBorder", "addNew");
+					model.addAttribute("creationDate",
+							formatter.format(new Timestamp(System.currentTimeMillis())).toString());
+					model.addAttribute("lastModifiedDate",
+							formatter.format(new Timestamp(System.currentTimeMillis())).toString());
+					model.addAttribute("areaLong", "addNew");
+					model.addAttribute("areaLat", "addNew");
+					model.addAttribute("docStatus", "addNew");
+					model.addAttribute("ListAreaFinance", "addNew");
+					model.addAttribute("listAreaBorder", "addNew");
+					model.addAttribute("listRegionBorder", "addNew");
+					model.addAttribute("SelectedIndex", "addNew");
+					model.addAttribute("AreasCount", "addNew");
 
-			}else {
-				System.out.println("test4");
+					// return the region and region_borders on load
+					if (Region_Borders.size() > 0) {
+						model.addAttribute("regionsData", mapper.writeValueAsString(Region_Borders));
+					} else {
+						model.addAttribute("regionsData", "addNew");
+					}
+					return "AreaFormView";
+				} else {
 
-				model.addAttribute("listAreaBorder", mapper.writeValueAsString(areaBorderList));
+					// NavigateNP: Navigate for Next or Previous
+					result = form.NavigationNP(session, "Area", "AREA_ID", areaID, "last_modification_date", navAction);
+					SelectedIndex = Integer.parseInt(result[1]);
+					areaID = result[2];
+					area = (Area) session.get(Area.class, areaID);
 
-			}
-    		model.addAttribute("creationDate", formatter.format(area.getCreationDate()).toString());
-       		model.addAttribute("lastModifiedDate", formatter.format( area.getLastModifieddate()).toString());
-			model.addAttribute("AreaId", areaID);
-			model.addAttribute("areaName", area.getName());
-			model.addAttribute("RegionID", area.getRegionID()+":"+area.getRegionName());
-			model.addAttribute("AreasCount", Integer.parseInt(result[0]));
-			model.addAttribute("SelectedIndex", SelectedIndex);
+					if (area != null) {
 
-					}else {
-						
-						
+						query = session
+								.createQuery("from AreaBorder where areaId LIKE :param1 ORDER BY (Sequence) + 0 ASC");
+						query.setParameter("param1", areaID);
+						areaBorderList = query.list();
+						EmptyList = areaBorderList.isEmpty();
+
+						if (areaBorderList == null || EmptyList == true) {
+							model.addAttribute("listAreaBorder", "addNew");
+						} else {
+							model.addAttribute("listAreaBorder", mapper.writeValueAsString(areaBorderList));
+						}
+						model.addAttribute("creationDate", formatter.format(area.getCreationDate()).toString());
+						model.addAttribute("lastModifiedDate", formatter.format(area.getLastModifieddate()).toString());
+						model.addAttribute("AreaId", areaID);
+						model.addAttribute("areaName", area.getName());
+						model.addAttribute("RegionID", area.getRegionID() + ":" + area.getRegionName());
+						model.addAttribute("AreasCount", Integer.parseInt(result[0]));
+						model.addAttribute("SelectedIndex", SelectedIndex);
+
+					} else {
+
 						model.addAttribute("listAreaBorder", "addNew");
 
 					}
 
+					regionId = area.getRegionID();
 
-			regionId =area.getRegionID();
+					if (regionId != null) {
 
-		if(regionId !=null) {
-			
-			query = session.createQuery("select t.lng as lng, t.lat as lat from RegionBorder t where regionId ='"+regionId+"' ORDER BY sequence + 0 ASC");
-			regionBorderList=  query.setResultTransformer(new AliasToBeanResultTransformer(AgentBorder.class)).list();			
-			hash_map1.put(regionId, regionBorderList);
-			model.addAttribute("listRegionBorder", mapper.writeValueAsString(hash_map1));
-			
-		}else {
-			model.addAttribute("listRegionBorder", "addNew");
-		}
-			
-		    query = session.createQuery( "select  TO_CHAR(t.startDate,'YYYY-MM-DD') as startDate , TO_CHAR(t.endDate,'YYYY-MM-DD') as endDate,t.areaId as areaId,t.number2gSites as number2gSites, t.number2g3gSites as number2g3gSites , t.number2g3g4gSites as number2g3g4gSites, t.pl2g as pl2g, t.pl2g3g as pl2g3g, t.pl2g3g4g as pl2g3g4g, t.totalSites as totalSites, t.sumProfitLoss as sumProfitLoss, t.id as id from AreaFinance t where t.areaId like :param1");
-		    query.setParameter("param1",areaID );
-		    List<AreaFinanceBOQ> ListAreaFin = (List<AreaFinanceBOQ>) query.setResultTransformer(Transformers.aliasToBean(AreaFinanceBOQ.class)).list();
+						query = session
+								.createQuery("select t.lng as lng, t.lat as lat from RegionBorder t where regionId ='"
+										+ regionId + "' ORDER BY sequence + 0 ASC");
+						regionBorderList = query
+								.setResultTransformer(new AliasToBeanResultTransformer(AgentBorder.class)).list();
+						hash_map1.put(regionId, regionBorderList);
+						model.addAttribute("listRegionBorder", mapper.writeValueAsString(hash_map1));
 
-		    model.addAttribute("ListAreaFinance", mapper.writeValueAsString(ListAreaFin));	
-	        model.addAttribute("docStatus", "Existed");
-	        model.addAttribute("ordStatus",area.getStatus());
-	        model.addAttribute("AreaCoordinates","0");
-	        
-	      //return the region and region_borders on load
-			if(Region_Borders.size() > 0) {
-			model.addAttribute("regionsData", mapper.writeValueAsString(Region_Borders));
-			}else {
-				model.addAttribute("regionsData", "addNew");
+					} else {
+						model.addAttribute("listRegionBorder", "addNew");
+					}
+
+					query = session.createQuery(
+							"select  TO_CHAR(t.startDate,'YYYY-MM-DD') as startDate , TO_CHAR(t.endDate,'YYYY-MM-DD') as endDate,t.areaId as areaId,t.number2gSites as number2gSites, t.number2g3gSites as number2g3gSites , t.number2g3g4gSites as number2g3g4gSites, t.pl2g as pl2g, t.pl2g3g as pl2g3g, t.pl2g3g4g as pl2g3g4g, t.totalSites as totalSites, t.sumProfitLoss as sumProfitLoss, t.id as id from AreaFinance t where t.areaId like :param1");
+					query.setParameter("param1", areaID);
+					List<AreaFinanceBOQ> ListAreaFin = (List<AreaFinanceBOQ>) query
+							.setResultTransformer(Transformers.aliasToBean(AreaFinanceBOQ.class)).list();
+
+					model.addAttribute("ListAreaFinance", mapper.writeValueAsString(ListAreaFin));
+					model.addAttribute("docStatus", "Existed");
+					model.addAttribute("ordStatus", area.getStatus());
+					model.addAttribute("AreaCoordinates", "0");
+
+					// return the region and region_borders on load
+					if (Region_Borders.size() > 0) {
+						model.addAttribute("regionsData", mapper.writeValueAsString(Region_Borders));
+					} else {
+						model.addAttribute("regionsData", "addNew");
+					}
+				}
+
+			} catch (Exception e) {
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in AreaFormView due to \n " + exceptionAsString);
+				logger.info("Error in AreaFormView due to \n " + exceptionAsString);
+			} finally {
+
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+				}
+
 			}
+
 		}
-
-		
-	}catch(Exception e) {
-		sw = new StringWriter();
-		e.printStackTrace(new PrintWriter(sw));
-		exceptionAsString = sw.toString();
-		logger.finest("Error in AreaFormView due to \n "+ exceptionAsString);
-		logger.info("Error in AreaFormView due to \n "+ exceptionAsString);
-	}
-		finally {
-
-		      if (session != null && session.isOpen()) {
-		         tx.commit();
-		         session.close();
-		      }
-
-		 }
-
-		}	
 		return "AreaFormView";
 	}
-	
 
-
-	
 	@RequestMapping(value = "/AreaDelete", method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, Object> AreaDelete(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {		
-			
+	public Map<String, Object> AreaDelete(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) {
+
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		
-		if(LoginServices.checkSession(request, response).equals("redirect:/")) {
+
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
 		}
-				
+
 		session = almsessions.getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 
-		try {			
-			
-		String[] idList = request.getParameterValues("AreaId[]");
-		
-		
-		if ( idList != null) {
-			System.out.println(idList.length);
-			for(int j=0;j<idList.length;j++) {
-				System.out.println(idList[j].toString());
-				query = session.createSQLQuery("delete Area_Border where AREA_ID ='"+idList[j].toString()+"'");
-			  	query.executeUpdate();
-			  	System.out.println("hello");
-				/*query = session.createSQLQuery("delete Area_FINANCE where AREA_ID ='"+idList[j]+"'");
-			  	query.executeUpdate();*/
-			  	
-				query = session.createSQLQuery("delete Area where AREA_ID ='"+idList[j].toString()+"'");
-				query.executeUpdate();
-			}
-			
-			
-		}
-		
-		System.out.println("after for loop");
-	}catch(Exception e) {
-		
-		sw = new StringWriter();
-		e.printStackTrace(new PrintWriter(sw));
-		exceptionAsString = sw.toString();
-		logger.finest("Error in AreaDelete due to \n "+ exceptionAsString);
-		logger.info("Error in AreaDelete due to \n "+ exceptionAsString);		
-	}
-		finally {
-			System.out.println("in finally");
-		      if (session != null && session.isOpen()) {
-		         tx.commit();
-		         session.close();
-		      }
+			try {
 
-		 }
+				String[] idList = request.getParameterValues("AreaId[]");
+
+				if (idList != null) {
+					for (int j = 0; j < idList.length; j++) {
+						query = session
+								.createSQLQuery("delete Area_Border where AREA_ID ='" + idList[j].toString() + "'");
+						query.executeUpdate();
+						/*
+						 * query =
+						 * session.createSQLQuery("delete Area_FINANCE where AREA_ID ='"+idList[j]+"'");
+						 * query.executeUpdate();
+						 */
+						query = session.createSQLQuery("delete Area where AREA_ID ='" + idList[j].toString() + "'");
+						query.executeUpdate();
+					}
+				}
+			} catch (Exception e) {
+
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in AreaDelete due to \n " + exceptionAsString);
+				logger.info("Error in AreaDelete due to \n " + exceptionAsString);
+			} finally {
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+				}
+			}
 		}
-		
+
 		rtn.put("BassamTest", "DeleteDone");
 		return rtn;
-			
+
 	}
-	
+
 	@RequestMapping(value = "/AreaFormSave", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> AreaFormSave(Locale locale, Model model, HttpServletRequest request,
 			@ModelAttribute ItemParameters itemParameters, HttpServletResponse response) {
-		
+
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		if(LoginServices.checkSession(request, response).equals("redirect:/")) {
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
 			return rtn;
 		}
-		String areaid="",  regionId="", regionName="";
-		String region, areaName, latitude = "",longitude="", areaIdFinance="", areaBorderID, streched;
+		String areaid = "", regionId = "", regionName = "";
+		String region, areaName, latitude = "", longitude = "", areaIdFinance = "", areaBorderID, streched;
 		Calendar calendar = new GregorianCalendar();
 		DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
 		DateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd");
 		Timestamp CreationDate;
-		Area area = new Area();  
+		Area area = new Area();
 
 		session = almsessions.getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
-			
-	try {
-			
-/*			
-///////////////////////////////////////////////////////// SEND EMAIL BUTTON  //////////////////////////////////////////////////////////
-String	email=request.getParameter("email");
-String	emailTo=request.getParameter("emailTo");
-String	password=request.getParameter("password");
-String	message=request.getParameter("message");
-String	subject=request.getParameter("subject");
-String	ccmail=request.getParameter("ccmail");
 
+			try {
 
+				/*
+				 * ///////////////////////////////////////////////////////// SEND EMAIL BUTTON
+				 * ////////////////////////////////////////////////////////// String
+				 * email=request.getParameter("email"); String
+				 * emailTo=request.getParameter("emailTo"); String
+				 * password=request.getParameter("password"); String
+				 * message=request.getParameter("message"); String
+				 * subject=request.getParameter("subject"); String
+				 * ccmail=request.getParameter("ccmail");
+				 * 
+				 * 
+				 * 
+				 * if(StringUtils.equalsIgnoreCase(request.getParameter("email"), "") &&
+				 * StringUtils.equalsIgnoreCase(request.getParameter("password"), "") &&
+				 * StringUtils.equalsIgnoreCase(request.getParameter("emailTo"), "") &&
+				 * StringUtils.equalsIgnoreCase(request.getParameter("message"), "") &&
+				 * StringUtils.equalsIgnoreCase(request.getParameter("subject"), "") &&
+				 * StringUtils.equalsIgnoreCase(request.getParameter("ccmail"), "") ) {
+				 * 
+				 * } else if(StringUtils.equalsIgnoreCase(request.getParameter("ccmail"), "")) {
+				 * 
+				 * JavaMailUtil.SendEmails(email,password,emailTo,subject,message);
+				 * 
+				 * } else {
+				 * JavaMailUtil.SendccEmails(email,password,emailTo,ccmail,subject,message); }
+				 * 
+				 * 
+				 * ///////////////////////////////////////////// END OF SEND EMAIL BUTTON
+				 * //////////////////////////////////////////////////////////
+				 * 
+				 */
 
-if(StringUtils.equalsIgnoreCase(request.getParameter("email"), "") && StringUtils.equalsIgnoreCase(request.getParameter("password"), "") && StringUtils.equalsIgnoreCase(request.getParameter("emailTo"), "") && StringUtils.equalsIgnoreCase(request.getParameter("message"), "")  && StringUtils.equalsIgnoreCase(request.getParameter("subject"), "") && StringUtils.equalsIgnoreCase(request.getParameter("ccmail"), "")  ) 
-{
+				if (StringUtils.equalsIgnoreCase(request.getParameter("type"), "addNew")) {
+					synchronized (this) {
+						// areaid= "AREA_"+calendar.get(Calendar.YEAR)+"_"
+						// +appConfig.getSequenceNbr(20);
+						areaid = "AREA_" + calendar.get(Calendar.YEAR) + "_" + Integer.parseInt(
+								session.createSQLQuery("SELECT AREA FROM SEQ_TABLE").uniqueResult().toString());
+						query = session.createSQLQuery("UPDATE SEQ_TABLE SET AREA = AREA + 1 ");
+						query.executeUpdate();
+						session.createSQLQuery("commit").executeUpdate();
+					}
+					model.addAttribute("AreaId", areaid);
 
-}
-else if(StringUtils.equalsIgnoreCase(request.getParameter("ccmail"), ""))
-{
+				} else {
 
-JavaMailUtil.SendEmails(email,password,emailTo,subject,message);
-
-} 
-else {
-JavaMailUtil.SendccEmails(email,password,emailTo,ccmail,subject,message);
-} 
-
-
-///////////////////////////////////////////// END OF SEND EMAIL BUTTON  //////////////////////////////////////////////////////////
-
-*/
-
-
-
-		if (StringUtils.equalsIgnoreCase(request.getParameter("type"), "addNew"))
-		{			
-			synchronized (this) {						
-				//areaid= "AREA_"+calendar.get(Calendar.YEAR)+"_" +appConfig.getSequenceNbr(20);
-				areaid= "AREA_" + calendar.get(Calendar.YEAR) + "_" + Integer.parseInt(session.createSQLQuery("SELECT AREA FROM SEQ_TABLE").uniqueResult().toString());	
-				query = session.createSQLQuery("UPDATE SEQ_TABLE SET AREA = AREA + 1 ");
-				query.executeUpdate();
-				session.createSQLQuery("commit").executeUpdate();
+					areaid = request.getParameter("AreaID");
 				}
-			model.addAttribute("AreaId", areaid);
-			
-		} else  { 
-			
-			areaid = request.getParameter("AreaID");
-		}
 
-		if(request.getParameterValues("slctDelAreaBorder[]")!=null) {			
-	    	query = session.createQuery("delete AreaBorder t where t.Id IN (:param1) ");
-	        query.setParameterList("param1", request.getParameterValues("slctDelAreaBorder[]"));
-	        query.executeUpdate();
-		}
-	
-										
-		if(request.getParameterValues("slctDelAreaFinance[]")!=null) {
-			query = session.createQuery("delete AreaFinance t where t.id IN (:param1)");
-			query.setParameterList("param1", request.getParameterValues("slctDelAreaFinance[]"));
-			query.executeUpdate();
-		}
-		
-		if (request.getParameter("creationDate") == "") {
-			
-		CreationDate = new Timestamp((new Timestamp(System.currentTimeMillis())).getTime());
-		
-		} else {
-			
-		CreationDate = new Timestamp((formatter.parse(request.getParameter("creationDate"))).getTime());
-		
-		}		
-		
-		region=request.getParameter("Region");
+				if (request.getParameterValues("slctDelAreaBorder[]") != null) {
+					query = session.createQuery("delete AreaBorder t where t.Id IN (:param1) ");
+					query.setParameterList("param1", request.getParameterValues("slctDelAreaBorder[]"));
+					query.executeUpdate();
+				}
 
-		if(region!="") {			
-			if(region.contains(":")) {
-			regionId=region.substring(0,region.indexOf(':'));
-			regionName=region.substring(region.indexOf(':')+1,region.length());
-				
-			}
-			else {				
-				 regionId=region;
-			}
-		}
-		
-		areaName=request.getParameter("AreaName");
-		streched = request.getParameter("streched")+"";
-		
-		//when polygon or Polyline streched
-		if(streched.equals("1")) {
-			query = session.createQuery("delete AreaBorder t where t.areaId IN (:param1) ");
-	        query.setParameter("param1", areaid);
-	        query.executeUpdate();
+				if (request.getParameterValues("slctDelAreaFinance[]") != null) {
+					query = session.createQuery("delete AreaFinance t where t.id IN (:param1)");
+					query.setParameterList("param1", request.getParameterValues("slctDelAreaFinance[]"));
+					query.executeUpdate();
+				}
 
-		}
-		
-		for (int i = 0; i <itemParameters.getDictParameterArea().size(); i++) {
-			AreaBorder areaBorder = new AreaBorder();  
-			if (StringUtils.equalsIgnoreCase(itemParameters.getDictParameterArea().get(i).get(Latitude), "")) {
-				latitude="0"; // HAjouz : it is wrong, waiting a request/modification to be changed 
-					   
-			} else {					   
-				latitude = itemParameters.getDictParameterArea().get(i).get(Latitude);					   
-			}	 
-				 if (StringUtils.equalsIgnoreCase(itemParameters.getDictParameterArea().get(i).get(Longitude), "")) {
-					 longitude="0"; // HAjouz : it is wrong, waiting a request/modification to be changed
-				 } else {
-					   longitude = itemParameters.getDictParameterArea().get(i).get(Longitude);
-				 }
-				 if ( StringUtils.equalsIgnoreCase(itemParameters.getDictParameterArea().get(i).get("areaBorderID") , null)) {
-						synchronized (this) {						
-							//areaBorderID= "AREA_BORDER_ID_"+calendar.get(Calendar.YEAR)+"_" +appConfig.getSequenceNbr(67);	
-							areaBorderID= "AREA_BORDER_ID_"+calendar.get(Calendar.YEAR) + "_" + Integer.parseInt(session.createSQLQuery("SELECT AREA_BORDER FROM SEQ_TABLE").uniqueResult().toString());	
+				if (request.getParameter("creationDate") == "") {
+
+					CreationDate = new Timestamp((new Timestamp(System.currentTimeMillis())).getTime());
+
+				} else {
+
+					CreationDate = new Timestamp((formatter.parse(request.getParameter("creationDate"))).getTime());
+
+				}
+
+				region = request.getParameter("Region");
+
+				if (region != "") {
+					if (region.contains(":")) {
+						regionId = region.substring(0, region.indexOf(':'));
+						regionName = region.substring(region.indexOf(':') + 1, region.length());
+
+					} else {
+						regionId = region;
+					}
+				}
+
+				areaName = request.getParameter("AreaName");
+				streched = request.getParameter("streched") + "";
+
+				// when polygon or Polyline streched
+				if (streched.equals("1")) {
+					query = session.createQuery("delete AreaBorder t where t.areaId IN (:param1) ");
+					query.setParameter("param1", areaid);
+					query.executeUpdate();
+
+				}
+
+				for (int i = 0; i < itemParameters.getDictParameterArea().size(); i++) {
+					AreaBorder areaBorder = new AreaBorder();
+					if (StringUtils.equalsIgnoreCase(itemParameters.getDictParameterArea().get(i).get(Latitude), "")) {
+						latitude = "0"; // HAjouz : it is wrong, waiting a request/modification to be changed
+
+					} else {
+						latitude = itemParameters.getDictParameterArea().get(i).get(Latitude);
+					}
+					if (StringUtils.equalsIgnoreCase(itemParameters.getDictParameterArea().get(i).get(Longitude), "")) {
+						longitude = "0"; // HAjouz : it is wrong, waiting a request/modification to be changed
+					} else {
+						longitude = itemParameters.getDictParameterArea().get(i).get(Longitude);
+					}
+					if (StringUtils.equalsIgnoreCase(itemParameters.getDictParameterArea().get(i).get("areaBorderID"),
+							null)) {
+						synchronized (this) {
+							// areaBorderID= "AREA_BORDER_ID_"+calendar.get(Calendar.YEAR)+"_"
+							// +appConfig.getSequenceNbr(67);
+							areaBorderID = "AREA_BORDER_ID_" + calendar.get(Calendar.YEAR) + "_"
+									+ Integer.parseInt(session.createSQLQuery("SELECT AREA_BORDER FROM SEQ_TABLE")
+											.uniqueResult().toString());
 							query = session.createSQLQuery("UPDATE SEQ_TABLE SET AREA_BORDER = AREA_BORDER + 1 ");
 							query.executeUpdate();
 							session.createSQLQuery("commit").executeUpdate();
-							}					
-				 } else {
-					 areaBorderID= itemParameters.getDictParameterArea().get(i).get("areaBorderID");
-				 }
-				 
-				 areaBorder.setAreaId(areaid);
-				 areaBorder.setSequence(itemParameters.getDictParameterArea().get(i).get("sequence"));
-				 areaBorder.setId(areaBorderID);
-				 areaBorder.setLat(latitude);
-				 areaBorder.setLng(longitude);
-				 session.saveOrUpdate(areaBorder);				 
+						}
+					} else {
+						areaBorderID = itemParameters.getDictParameterArea().get(i).get("areaBorderID");
+					}
+
+					areaBorder.setAreaId(areaid);
+					areaBorder.setSequence(itemParameters.getDictParameterArea().get(i).get("sequence"));
+					areaBorder.setId(areaBorderID);
+					areaBorder.setLat(latitude);
+					areaBorder.setLng(longitude);
+					session.saveOrUpdate(areaBorder);
+				}
+
+				for (int i = 0; i < itemParameters.getDictParameter().size(); i++) {
+					AreaFinance areaFinance = new AreaFinance();
+
+					if (StringUtils.equalsIgnoreCase(itemParameters.getDictParameter().get(i).get(ID), "0")) {
+
+						synchronized (this) {
+							// areaIdFinance= "AREA_FIN_"+calendar.get(Calendar.YEAR)+"_"
+							// +appConfig.getSequenceNbr(18);
+							areaIdFinance = "AREA_FIN_" + calendar.get(Calendar.YEAR) + "_" + Integer.parseInt(session
+									.createSQLQuery("SELECT AREA_FINANCE FROM SEQ_TABLE").uniqueResult().toString());
+							query = session.createSQLQuery("UPDATE SEQ_TABLE SET AREA_FINANCE = AREA_FINANCE + 1 ");
+							query.executeUpdate();
+							session.createSQLQuery("commit").executeUpdate();
+						}
+						areaFinance.setId(areaIdFinance);
+
+					} else {
+						areaIdFinance = itemParameters.getDictParameter().get(i).get(ID);
+						areaFinance.setId(areaIdFinance);
+					}
+
+					if ((itemParameters.getDictParameter().get(i).get(START_DATE)) != "") {
+						areaFinance.setStartDate(new Timestamp(
+								(formatter1.parse(itemParameters.getDictParameter().get(i).get(START_DATE)))
+										.getTime()));
+					}
+					if ((itemParameters.getDictParameter().get(i).get(END_DATE)) != "") {
+						areaFinance.setEndDate(new Timestamp(
+								(formatter1.parse(itemParameters.getDictParameter().get(i).get(END_DATE))).getTime()));
+					}
+
+					areaFinance.setCreationDate(CreationDate);
+					areaFinance.setLastModifyDate(new Timestamp((new Timestamp(System.currentTimeMillis())).getTime()));
+					areaFinance
+							.setNumber2gSites(Float.parseFloat(itemParameters.getDictParameter().get(i).get(SITES2G)));
+					areaFinance.setPl2g(Float.parseFloat(itemParameters.getDictParameter().get(i).get(PROFIT2G)));
+					areaFinance.setNumber2g3gSites(
+							Float.parseFloat(itemParameters.getDictParameter().get(i).get(SITES2G3G)));
+					areaFinance.setPl2g3g(Float.parseFloat(itemParameters.getDictParameter().get(i).get(PROFIT2G3G)));
+					areaFinance.setNumber2g3g4gSites(
+							Float.parseFloat(itemParameters.getDictParameter().get(i).get(SITES2G3G4G)));
+					areaFinance
+							.setPl2g3g4g(Float.parseFloat(itemParameters.getDictParameter().get(i).get(PROFIT2G3G4G)));
+					areaFinance
+							.setTotalSites(Float.parseFloat(itemParameters.getDictParameter().get(i).get(TOTALSITES)));
+					areaFinance.setSumProfitLoss(
+							(Float.parseFloat(itemParameters.getDictParameter().get(i).get(TOTALSUM))));
+					areaFinance.setAreaId(areaid);
+					areaFinance.setAreaName(areaName);
+					session.saveOrUpdate(areaFinance);
+				}
+
+				area.setCreationDate(CreationDate);
+				area.setLastModifieddate(new Timestamp((new Timestamp(System.currentTimeMillis())).getTime()));
+				area.setId(areaid);
+				area.setName(areaName);
+				area.setRegionID(regionId);
+				area.setRegionName(regionName);
+				area.setStatus(request.getParameter("status"));
+				session.saveOrUpdate(area);
+				rtn.put("AREAID", areaid);
+
+			} catch (Exception e) {
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in AreaFormSave due to \n " + exceptionAsString);
+				logger.info("Error in AreaFormSave due to \n " + exceptionAsString);
+			} finally {
+
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+				}
+
 			}
-					
-		for (int i = 0; i <itemParameters.getDictParameter().size(); i++) {
-			AreaFinance areaFinance=new AreaFinance();
-
-			 if (StringUtils.equalsIgnoreCase(itemParameters.getDictParameter().get(i).get(ID), "0")) {
-				 
-					synchronized (this) {						
-						//areaIdFinance= "AREA_FIN_"+calendar.get(Calendar.YEAR)+"_" +appConfig.getSequenceNbr(18);	
-						areaIdFinance= "AREA_FIN_"+calendar.get(Calendar.YEAR) + "_" + Integer.parseInt(session.createSQLQuery("SELECT AREA_FINANCE FROM SEQ_TABLE").uniqueResult().toString());	
-						query = session.createSQLQuery("UPDATE SEQ_TABLE SET AREA_FINANCE = AREA_FINANCE + 1 ");
-						query.executeUpdate();
-						session.createSQLQuery("commit").executeUpdate();
-						}			
-				 areaFinance.setId(areaIdFinance);
-				 
-			 } 
-			 else {
-			   areaIdFinance = itemParameters.getDictParameter().get(i).get(ID);
-			   areaFinance.setId(areaIdFinance);
-			 }
-			 			 
-			 if((itemParameters.getDictParameter().get(i).get(START_DATE)) !="") {				 
-				 areaFinance.setStartDate(new Timestamp((formatter1.parse(itemParameters.getDictParameter().get(i).get(START_DATE))).getTime()));			 
-			 }
-			 if((itemParameters.getDictParameter().get(i).get(END_DATE))!="") {				 
-				 areaFinance.setEndDate(new Timestamp((formatter1.parse(itemParameters.getDictParameter().get(i).get(END_DATE))).getTime()));
-			 }
-		
-			areaFinance.setCreationDate(CreationDate);
-			areaFinance.setLastModifyDate(new Timestamp((new Timestamp(System.currentTimeMillis())).getTime()));	
-			areaFinance.setNumber2gSites(Float.parseFloat(itemParameters.getDictParameter().get(i).get(SITES2G)));
-			areaFinance.setPl2g(Float.parseFloat(itemParameters.getDictParameter().get(i).get(PROFIT2G)));
-			areaFinance.setNumber2g3gSites(Float.parseFloat(itemParameters.getDictParameter().get(i).get(SITES2G3G)));
-			areaFinance.setPl2g3g(Float.parseFloat(itemParameters.getDictParameter().get(i).get(PROFIT2G3G)));
-			areaFinance.setNumber2g3g4gSites(Float.parseFloat(itemParameters.getDictParameter().get(i).get(SITES2G3G4G)));
-			areaFinance.setPl2g3g4g(Float.parseFloat(itemParameters.getDictParameter().get(i).get(PROFIT2G3G4G)));
-			areaFinance.setTotalSites(Float.parseFloat(itemParameters.getDictParameter().get(i).get(TOTALSITES)));
-			areaFinance.setSumProfitLoss((Float.parseFloat(itemParameters.getDictParameter().get(i).get(TOTALSUM))));
-			areaFinance.setAreaId(areaid);
-			areaFinance.setAreaName(areaName);			
-		    session.saveOrUpdate(areaFinance);
-		}
-
-		area.setCreationDate(CreationDate);
-		area.setLastModifieddate(new Timestamp((new Timestamp(System.currentTimeMillis())).getTime()));
-	 	area.setId(areaid);
-		area.setName(areaName);
-		area.setRegionID(regionId);
-		area.setRegionName(regionName);
-		area.setStatus(request.getParameter("status"));	
-	    session.saveOrUpdate(area);
-
-        System.out.println("End of save");
-		 
-		rtn.put("AREAID",areaid);
-		
-	}catch(Exception e) {
-		sw = new StringWriter();
-		e.printStackTrace(new PrintWriter(sw));
-		exceptionAsString = sw.toString();
-		logger.finest("Error in AreaFormSave due to \n "+ exceptionAsString);
-		logger.info("Error in AreaFormSave due to \n "+ exceptionAsString);
-	}
-	finally {
-
-	      if (session != null && session.isOpen()) {
-	    	  tx.commit();
-		      session.close();
-	      }
-
-	 }
 		}
 		return rtn;
 
 	}
-	
-
 
 	@RequestMapping(value = "/GetAllAreas", method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, Object> GetAllAreas(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
+	public Map<String, Object> GetAllAreas(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) {
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		if(LoginServices.checkSession(request, response).equals("redirect:/")) {
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
 			return rtn;
 		}
 		String Area = "%" + request.getParameter("areaId") + "%";
 		session = almsessions.getSession();
-		
+
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 
-			try {	
-				
-			query = session.createQuery("SELECT id, name from Area where id like UPPER(:param1) OR UPPER(name)like UPPER(:param1) ORDER BY lastModifieddate DESC");
-			query.setString("param1", Area);
-			query.setFirstResult(0);
-			query.setMaxResults(40);
-			rtn.put("listAreas", query.list() );
+			try {
 
-		}
-		catch(Exception e) {			
-			sw = new StringWriter();
-			e.printStackTrace(new PrintWriter(sw));
-			exceptionAsString = sw.toString();
-			logger.finest("Error in GetAllAreas due to \n "+ exceptionAsString);
-			logger.info("Error in GetAllAreas due to \n "+ exceptionAsString);
-		}
-		 finally {
-		      if (session != null && session.isOpen()) {		    	  
-		         tx.commit();
-		         session.close();		         
-		      }
-		      
-	        }
+				query = session.createQuery(
+						"SELECT id, name from Area where id like UPPER(:param1) OR UPPER(name)like UPPER(:param1) ORDER BY lastModifieddate DESC");
+				query.setString("param1", Area);
+				query.setFirstResult(0);
+				query.setMaxResults(40);
+				rtn.put("listAreas", query.list());
+
+			} catch (Exception e) {
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in GetAllAreas due to \n " + exceptionAsString);
+				logger.info("Error in GetAllAreas due to \n " + exceptionAsString);
+			} finally {
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+				}
+
+			}
 		}
 		return rtn;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/getSelectedArea", method = RequestMethod.GET)
 	@ResponseBody
@@ -743,8 +726,8 @@ JavaMailUtil.SendccEmails(email,password,emailTo,ccmail,subject,message);
 				sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
 				exceptionAsString = sw.toString();
-				logger.finest("Error in getSelectedArea due to \n "+ exceptionAsString);
-				logger.info("Error in getSelectedArea due to \n "+ exceptionAsString);
+				logger.finest("Error in getSelectedArea due to \n " + exceptionAsString);
+				logger.info("Error in getSelectedArea due to \n " + exceptionAsString);
 			} finally {
 
 				if (session != null && session.isOpen()) {
@@ -758,6 +741,6 @@ JavaMailUtil.SendccEmails(email,password,emailTo,ccmail,subject,message);
 		}
 
 		return rtn;
-	}	
-	
+	}
+
 }
