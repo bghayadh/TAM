@@ -901,26 +901,26 @@ public class PhysicalLayerController {
 							}
 
 							manholeList = session.createSQLQuery(
-									"SELECT DISTINCT MANHOLE_ID,MANHOLE_NAME,LONGITUDE,LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=MANHOLE_ID),DM_NAME FROM MANHOLE  where to_number(LONGITUDE) >= "
-											+ newStartLngPt + " and  to_number(LATITUDE) >= " + newStartLatPt
-											+ " and to_number(LONGITUDE) <=  " + newEndLngPt
-											+ " and  to_number(LATITUDE) <= " + newEndLatPt)
+									"SELECT DISTINCT MANHOLE_ID,MANHOLE_NAME,LONGITUDE,LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=MANHOLE_ID),DM_NAME FROM MANHOLE  where to_number (SUBSTR(LONGITUDE,1,6)) >= "
+											+ newStartLngPt + " and  to_number (SUBSTR(LATITUDE,1,6)) >= " + newStartLatPt
+											+ " and to_number (SUBSTR(LONGITUDE,1,6)) <=  " + newEndLngPt
+											+ " and to_number (SUBSTR(LATITUDE,1,6)) <= " + newEndLatPt)
 									.list();
 //							 System.out.println("manholeListQuery
 							// "+mapper.writeValueAsString(manholeList));
 
 							handholeList = session.createSQLQuery(
-									"SELECT DISTINCT HANDHOLE_ID,HANDHOLE_NAME,LONGITUDE,LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=HANDHOLE_ID),DM_NAME FROM HANDHOLE  where to_number(LONGITUDE) >= "
-											+ newStartLngPt + " and  to_number(LATITUDE) >= " + newStartLatPt
-											+ " and to_number(LONGITUDE) <= " + newEndLngPt
-											+ " and  to_number(LATITUDE) <= " + newEndLatPt)
+									"SELECT DISTINCT HANDHOLE_ID,HANDHOLE_NAME,LONGITUDE,LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=HANDHOLE_ID),DM_NAME FROM HANDHOLE  where to_number (SUBSTR(LONGITUDE,1,6)) >= "
+											+ newStartLngPt + " and  to_number (SUBSTR(LATITUDE,1,6)) >= " + newStartLatPt
+											+ " and to_number (SUBSTR(LONGITUDE,1,6)) <= " + newEndLngPt
+											+ " and to_number (SUBSTR(LATITUDE,1,6)) <= " + newEndLatPt)
 									.list();
 							// System.out.println("handholeList "+mapper.writeValueAsString(handholeList));
 							distribBoardList = session.createSQLQuery(
-									"SELECT DISTINCT DB_ID,DB_LONGITUDE,DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,PROJECT_ID ,CITY,DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD  where to_number(DB_LONGITUDE) >= "
-											+ newStartLngPt + " and  to_number(DB_LATITUDE) >= " + newStartLatPt
-											+ " and to_number(DB_LONGITUDE) <= " + newEndLngPt
-											+ " and  to_number(DB_LATITUDE) <= " + newEndLatPt)
+									"SELECT DISTINCT DB_ID,DB_LONGITUDE,DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,PROJECT_ID ,CITY,DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD  where to_number (SUBSTR(DB_LONGITUDE,1,6)) >= "
+											+ newStartLngPt + " and  to_number (SUBSTR(DB_LATITUDE,1,6)) >= " + newStartLatPt
+											+ " and to_number (SUBSTR(DB_LONGITUDE,1,6)) <= " + newEndLngPt
+											+ " and to_number (SUBSTR(DB_LATITUDE,1,6)) <= " + newEndLatPt)
 									.list();
 
 							List<Object[]> nearstPoints = new ArrayList<Object[]>();
