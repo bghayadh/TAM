@@ -2258,8 +2258,9 @@ public class PhysicalLayerController {
 				int e = 0;
 				int f = 0;
 
-				String CableName = session.createSQLQuery(
-						"SELECT DISTINCT FIBER_CABLE_NAME FROM FIBER_CABLES WHERE FIBER_CABLE_ID= '" + fiberID + "'")
+				String CableName = session
+						.createSQLQuery(
+								"SELECT DISTINCT FIBER_CABLE_NAME FROM FIBER_CABLES WHERE FIBER_CABLE_ID= '" + fiberID + "'")
 						.uniqueResult().toString();
 				System.out.println("the cable name is " + CableName);
 
@@ -2270,26 +2271,24 @@ public class PhysicalLayerController {
 
 				ArrayList<Object[]> BackLocations = new ArrayList<>();
 				ArrayList<Object[]> FrontLocations = new ArrayList<>();
-				List<Object[]> DbIdBack = session.createSQLQuery(
-						"SELECT DISTINCT DB_PORT_ID FROM DISTRIBUTION_BOARD_MAPPING WHERE BP_FIBER_ID= '" + fiberID
-								+ "' AND BP_STATUS= 'Active'")
+				List<Object[]> DbIdBack = session
+						.createSQLQuery("SELECT DISTINCT DB_PORT_ID FROM DISTRIBUTION_BOARD_MAPPING WHERE BP_FIBER_ID= '"
+								+ fiberID + "' AND BP_STATUS= 'Active'")
 						.list();
-				// System.out.println("the db ports back are " +
-				// mapper.writeValueAsString(DbIdBack));
+				//System.out.println("the db ports back are  " + mapper.writeValueAsString(DbIdBack));
 				List<Object[]> DbIdFront = session
 						.createSQLQuery("SELECT DISTINCT DB_PORT_ID FROM DISTRIBUTION_BOARD_MAPPING WHERE FP_FIBER_ID='"
 								+ fiberID + "' AND FP_STATUS= 'Active'")
 						.list();
-				// System.out.println("the db ports front are " +
-				// mapper.writeValueAsString(DbIdFront));
+			//	System.out.println("the db ports front are  " + mapper.writeValueAsString(DbIdFront));
 
 				ArrayList<Object> FinalResultClt = new ArrayList<>();
 				ArrayList<Object> FinalResultSite = new ArrayList<>();
 				ArrayList<Object> FinalCltLongLat = new ArrayList<>();
 				ArrayList<Object> FinalSiteLongLat = new ArrayList<>();
 
-				// System.out.println("===> final site data BEFORE <===" + FinalResultSite);
-				// System.out.println("===> final site data BEFORE <===" + FinalResultClt);
+			//	 System.out.println("===> final site data BEFORE <===" + FinalResultSite);
+				 //System.out.println("===> final site data BEFORE <===" + FinalResultClt);
 
 				String BackLocId = "";
 				for (i = 0; i < DbIdBack.size(); i++) {
@@ -2298,43 +2297,41 @@ public class PhysicalLayerController {
 							"SELECT DISTINCT BP_LOCATION_TYPE,BP_LOCATION, BP_LOCATION_NAME,BP_LOCATION_ID FROM DISTRIBUTION_BOARD_MAPPING WHERE DB_PORT_ID='"
 									+ DbIdBack.get(i) + "'");
 					BackLocations.addAll(query.list());
-					BackLocId = BackLocations.get(0)[1].toString();
-					// System.out.println("the backs are===> "
-					// +mapper.writeValueAsString(BackLocations));
-					// System.out.println("BackLocId ===> " + BackLocId);
-					for (j = 0; j < BackLocations.size(); j++) {
-						// System.out.println("for on backs");
-						// System.out.println("back loactions are " +
-						// mapper.writeValueAsString(BackLocations.get(j)));
-						if (BackLocations.get(j)[0].equals("Site")) {
+					//if(BackLocations.get(0)[0].toString().equalsIgnoreCase("Site")) {
+					//BackLocId = BackLocations.get(0)[3].toString();
+					//}
+				//	 System.out.println("the backs are===> " +mapper.writeValueAsString(BackLocations));
+				System.out.println("BackLocId ===> " + BackLocations.size());
+					//for (j = 0; j < BackLocations.size(); j++) {
+						
+				//		System.out.println("for on backs");
+				//		 System.out.println("back loactions are " + mapper.writeValueAsString(BackLocations.get(j)));
+						if (BackLocations.get(i)[0].equals("Site")){
+							BackLocId = BackLocations.get(i)[3].toString();
 							boolean valueExists = false;
 							for (Object row : FinalResultSite) {
 								ArrayList<Object> innerList = (ArrayList<Object>) FinalResultSite.get(f);
 								Object secondColumn = innerList.get(1);
 								// System.out.println("BACK SITE " + BackLocations.get(j)[3]);
-								if (secondColumn.equals(BackLocations.get(j)[3])) {
-									// System.out.println("exist");
+								if (secondColumn.equals(BackLocations.get(i)[3])) {
+								//	System.out.println("exist");
 									valueExists = true;
 									break;
 								}
-								// System.out.println("not exist");
+								//System.out.println("not exist");
 							}
 							if (!valueExists) {
-								// System.out.println("not exist if");
+							//	System.out.println("not exist if");
 								List<Object[]> SiteIdBack = session.createSQLQuery(
 										"SELECT DISTINCT SITE_ID,WARE_NAME,LONGITUDE,LATITUDE FROM WAREHOUSE WHERE WARE_ID= '"
-												+ BackLocations.get(j)[1] + "' ")
+												+ BackLocations.get(i)[1] + "' ")
 										.list();
-								// System.out.println("the site id back is " +
-								// mapper.writeValueAsString(SiteIdBack));
-								// System.out.println("BackLocations.get(j)[1] is " +
-								// mapper.writeValueAsString(BackLocations.get(j)[1]));
-								// System.out.println("SiteIdBack.get(0)[0] is " +
-								// mapper.writeValueAsString(SiteIdBack.get(0)[0]));
-								// System.out.println("SiteIdBack.get(0)[1] is " +
-								// mapper.writeValueAsString(SiteIdBack.get(0)[1]));
-
-								SiteData.add(BackLocations.get(j)[1]);
+							//	 System.out.println("the site id back is " + mapper.writeValueAsString(SiteIdBack));
+							//	 System.out.println("BackLocations.get(j)[1] is " + mapper.writeValueAsString(BackLocations.get(j)[1]));
+							//	 System.out.println("SiteIdBack.get(0)[0] is " + mapper.writeValueAsString(SiteIdBack.get(0)[0]));
+							//	 System.out.println("SiteIdBack.get(0)[1] is " + mapper.writeValueAsString(SiteIdBack.get(0)[1]));
+								 
+								SiteData.add(BackLocations.get(i)[1]);
 								SiteData.add(SiteIdBack.get(0)[0]);
 								SiteData.add(SiteIdBack.get(0)[1]);
 								FinalResultSite.add(SiteData);
@@ -2342,23 +2339,24 @@ public class PhysicalLayerController {
 								SiteLongLat.add(SiteIdBack.get(0)[3].toString());
 								FinalSiteLongLat.add(SiteLongLat);
 							}
-
+							
 						}
-
+						
 						// System.out.println("===> final site data AFTER BACK SITE <===" +
-						// SiteData);
-
-						SiteData = new ArrayList<>();
-						SiteLongLat = new ArrayList<>();
+						//		 SiteData);
+						
+							SiteData = new ArrayList<>();
+							SiteLongLat = new ArrayList<>();
 						// System.out.println("===> final site data AFTER BACK SITE <===" +
 						// FinalResultClt);
-						if (BackLocations.get(j)[0].equals("Customer")) {
+						if (BackLocations.get(i)[0].equals("Customer")) {
+							BackLocId = BackLocations.get(i)[3].toString();
 							boolean valueExists = false;
 							for (Object row : FinalResultClt) {
 								ArrayList<Object> innerList = (ArrayList<Object>) FinalResultClt.get(f);
 								Object secondColumn = innerList.get(1);
 								// System.out.println("BACK CLIENT " + BackLocations.get(j)[3]);
-								if (secondColumn.equals(BackLocations.get(j)[3])) {
+								if (secondColumn.equals(BackLocations.get(i)[3])) {
 									valueExists = true;
 									break;
 								}
@@ -2370,23 +2368,34 @@ public class PhysicalLayerController {
 										.list();
 								// System.out.println("the mobile nbr back is " +
 								// mapper.writeValueAsString(MobileNbrBack));
-								ClientData.add(BackLocations.get(j)[1]);
+								/*ClientData.add(BackLocations.get(i)[1]);
 								ClientData.add(MobileNbrBack.get(0)[0]);
 								FinalResultClt.add(ClientData);
 								CltLongLat.add(MobileNbrBack.get(0)[1].toString());
 								CltLongLat.add(MobileNbrBack.get(0)[2].toString());
 								FinalCltLongLat.add(CltLongLat);
+								*/
+								
+								ClientData.add(BackLocId);
+								ClientData.add(BackLocations.get(i)[2]);
+								ClientData.add(MobileNbrBack.get(0)[0]);
+								FinalResultClt.add(ClientData);
+								CltLongLat.add(MobileNbrBack.get(0)[2].toString());
+								CltLongLat.add(MobileNbrBack.get(0)[2].toString());
+								FinalCltLongLat.add(CltLongLat);
+								
+								
 							}
 						}
 						ClientData = new ArrayList<>();
 						CltLongLat = new ArrayList<>();
-					}
+					//}
 				}
 				// System.out.println("===> final site data AFTER BACK CLIENT <===" +
 				// FinalResultSite);
 				// System.out.println("===> final site data AFTER BACK CLIENT <===" +
 				// FinalResultClt);
-				// System.out.println("===> final site data AFTER BACK <===" + FinalResultSite);
+			//	System.out.println("===> final site data AFTER BACK  <===" + FinalResultSite);
 				ClientData = new ArrayList<>();
 				SiteData = new ArrayList<>();
 				CltLongLat = new ArrayList<>();
@@ -2398,39 +2407,37 @@ public class PhysicalLayerController {
 							"SELECT DISTINCT FP_LOCATION_TYPE,FP_LOCATION, FP_LOCATION_NAME,FP_LOCATION_ID FROM DISTRIBUTION_BOARD_MAPPING WHERE DB_PORT_ID='"
 									+ DbIdFront.get(k) + "'");
 					FrontLocations.addAll(query.list());
-					FrontLocId = FrontLocations.get(0)[1].toString();
+					//FrontLocId = FrontLocations.get(0)[3].toString();
 					// System.out.println("the fronts are "
 					// +mapper.writeValueAsString(FrontLocations));
 
-					for (e = 0; e < FrontLocations.size(); e++) {
-						if (FrontLocations.get(e)[0].equals("Site")) {
+					//for (e = 0; e < FrontLocations.size(); e++) {
+						
+						if (FrontLocations.get(k)[0].equals("Site")) {
+							FrontLocId = FrontLocations.get(k)[3].toString();
 							boolean valueExists = false;
 							for (Object row : FinalResultSite) {
 								ArrayList<Object> innerList = (ArrayList<Object>) FinalResultSite.get(f);
 								Object secondColumn = innerList.get(1);
 								// System.out.println("FRONT SITE " + FrontLocations.get(e)[3]);
-								if (secondColumn.equals(FrontLocations.get(e)[3])) {
+								if (secondColumn.equals(FrontLocations.get(k)[3])) {
 									valueExists = true;
-									// System.out.println("existtttt");
+								//	System.out.println("existtttt");
 									break;
 								}
 							}
 							if (!valueExists) {
-								// System.out.println("dont existtttt");
+							//	System.out.println("dont existtttt");
 								List<Object[]> SiteIdFront = session.createSQLQuery(
 										"SELECT DISTINCT SITE_ID,WARE_NAME,LONGITUDE,LATITUDE FROM WAREHOUSE WHERE WARE_ID= '"
-												+ FrontLocations.get(e)[1] + "' ")
+												+ FrontLocations.get(k)[1] + "' ")
 										.list();
-								// System.out.println("the site id front is " +
-								// mapper.writeValueAsString(SiteIdFront));
-								// System.out.println("FrontLocations.get(e)[1] is " +
-								// mapper.writeValueAsString(FrontLocations.get(e)[1]));
-								// System.out.println("SiteIdFront.get(0)[0] is " +
-								// mapper.writeValueAsString(SiteIdFront.get(0)[0]));
-								// System.out.println("SiteIdFront.get(0)[1] is " +
-								// mapper.writeValueAsString(SiteIdFront.get(0)[1]));
-
-								SiteData.add(FrontLocations.get(e)[1]);
+							//	System.out.println("the site id front is " + mapper.writeValueAsString(SiteIdFront));
+							//	 System.out.println("FrontLocations.get(e)[1] is " + mapper.writeValueAsString(FrontLocations.get(e)[1]));
+							//	 System.out.println("SiteIdFront.get(0)[0] is " + mapper.writeValueAsString(SiteIdFront.get(0)[0]));
+							//	 System.out.println("SiteIdFront.get(0)[1] is " + mapper.writeValueAsString(SiteIdFront.get(0)[1]));
+								 
+								SiteData.add(FrontLocations.get(k)[1]);
 								SiteData.add(SiteIdFront.get(0)[0]);
 								SiteData.add(SiteIdFront.get(0)[1]);
 								FinalResultSite.add(SiteData);
@@ -2439,42 +2446,45 @@ public class PhysicalLayerController {
 								FinalSiteLongLat.add(SiteLongLat);
 							}
 						}
-						// System.out.println("===> final site data AFTER FRONT SITE <===" + SiteData);
+					//	System.out.println("===> final site data AFTER FRONT SITE <===" + SiteData);							
 						SiteData = new ArrayList<>();
 						SiteLongLat = new ArrayList<>();
-						// System.out.println("===> final site data AFTER FRONT SITE <===" +
-						// FinalResultClt);
+					//	 System.out.println("===> final site data AFTER FRONT SITE <===" +
+					//	 FinalResultClt);
 
-						if (FrontLocations.get(e)[0].equals("Customer")) {
+						if (FrontLocations.get(k)[0].equals("Customer")) {
+							FrontLocId = FrontLocations.get(k)[3].toString();
 							boolean valueExists = false;
 							for (Object row : FinalResultClt) {
 								ArrayList<Object> innerList = (ArrayList<Object>) FinalResultClt.get(f);
 								Object secondColumn = innerList.get(1);
 								// System.out.println("FRONT CLIENT " + FrontLocations.get(e)[3]);
-								if (secondColumn.equals(FrontLocations.get(e)[3])) {
+								if (secondColumn.equals(FrontLocations.get(k)[3])) {
 									valueExists = true;
 									// System.out.println("EXIST");
 									break;
 								}
 							}
 							if (!valueExists) {
+								System.out.println("FrontLocId "+FrontLocId);
 								List<Object[]> MobileNbrFront = session.createSQLQuery(
 										"SELECT DISTINCT MOBILE_NUMBER,LONGITUDE,LATITUDE FROM CLIENTS WHERE CLIENT_ID= '"
 												+ FrontLocId + "' ")
 										.list();
 								// System.out.println("the mobile nbr front is " +
 								// mapper.writeValueAsString(MobileNbrFront));
-								ClientData.add(FrontLocations.get(e)[1]);
+								ClientData.add(FrontLocId);
+								ClientData.add(FrontLocations.get(k)[2]);
 								ClientData.add(MobileNbrFront.get(0)[0]);
 								FinalResultClt.add(ClientData);
-								CltLongLat.add(MobileNbrFront.get(0)[1].toString());
+								CltLongLat.add(MobileNbrFront.get(0)[2].toString());
 								CltLongLat.add(MobileNbrFront.get(0)[2].toString());
 								FinalCltLongLat.add(CltLongLat);
 							}
 						}
-						ClientData = new ArrayList<>();
+						ClientData = new ArrayList<>();						
 						CltLongLat = new ArrayList<>();
-					}
+					//}
 				}
 				// System.out.println("===> final site data AFTER FRONT CLIENT <===" +
 				// FinalResultSite);
@@ -2510,8 +2520,7 @@ public class PhysicalLayerController {
 					}
 					if (!valueExists) {
 						String MobileNbrSrc = session
-								.createSQLQuery(
-										"SELECT DISTINCT MOBILE_NUMBER FROM CLIENTS WHERE CLIENT_ID= '" + SrcId + "' ")
+								.createSQLQuery("SELECT DISTINCT MOBILE_NUMBER FROM CLIENTS WHERE CLIENT_ID= '" + SrcId + "' ")
 								.uniqueResult().toString();
 						// System.out.println("the mobile nbr source is " +
 						// mapper.writeValueAsString(MobileNbrSrc));
@@ -2544,8 +2553,9 @@ public class PhysicalLayerController {
 						}
 					}
 					if (!valueExists) {
-						List<Object[]> SiteIdSrc = session.createSQLQuery(
-								"SELECT DISTINCT SITE_ID,WARE_NAME FROM WAREHOUSE WHERE WARE_ID= '" + SrcWareId + "' ")
+						List<Object[]> SiteIdSrc = session
+								.createSQLQuery(
+										"SELECT DISTINCT SITE_ID,WARE_NAME FROM WAREHOUSE WHERE WARE_ID= '" + SrcWareId + "' ")
 								.list();
 						// System.out.println("the site id source client is " +
 						// mapper.writeValueAsString(SiteIdSrc));
@@ -2568,8 +2578,7 @@ public class PhysicalLayerController {
 
 				if ((Src.get(0)[0]).toString().startsWith("DB_")) {
 					List<Object[]> SiteSrcDB = session.createSQLQuery(
-							"SELECT DISTINCT SITE,WAREHOUSE,SITE_NAME FROM DISTRIBUTION_BOARD WHERE DB_ID= '" + SrcId
-									+ "' ")
+							"SELECT DISTINCT SITE,WAREHOUSE,SITE_NAME FROM DISTRIBUTION_BOARD WHERE DB_ID= '" + SrcId + "' ")
 							.list();
 					// System.out.println("the site DB source is " +
 					// mapper.writeValueAsString(SiteSrcDB));
@@ -2588,9 +2597,8 @@ public class PhysicalLayerController {
 								}
 							}
 							if (!valueExists) {
-								String WareSrcDB = session
-										.createSQLQuery("SELECT DISTINCT WARE_NAME FROM WAREHOUSE WHERE WARE_ID= '"
-												+ SiteSrcDB.get(0)[1] + "' ")
+								String WareSrcDB = session.createSQLQuery(
+										"SELECT DISTINCT WARE_NAME FROM WAREHOUSE WHERE WARE_ID= '" + SiteSrcDB.get(0)[1] + "' ")
 										.uniqueResult().toString();
 								// System.out.println("the ware DB source is " +
 								// mapper.writeValueAsString(WareSrcDB));
@@ -2606,10 +2614,10 @@ public class PhysicalLayerController {
 						}
 						SiteData = new ArrayList<>();
 						SiteLongLat = new ArrayList<>();
-						// System.out.println("===> final site data AFTER SRC DB SITE <===" +
-						// FinalResultSite);
-						// System.out.println("===> final site data AFTER SRC DB SITE <===" +
-						// FinalResultClt);
+					//	 System.out.println("===> final site data AFTER SRC DB SITE <===" +
+					//	 FinalResultSite);
+					//	 System.out.println("===> final site data AFTER SRC DB SITE <===" +
+					//	 FinalResultClt);
 
 						if ((SiteSrcDB.get(0)[0]).toString().startsWith("CLT_")) {
 							boolean valueExists = false;
@@ -2637,8 +2645,8 @@ public class PhysicalLayerController {
 						CltLongLat = new ArrayList<>();
 					}
 				}
-				// System.out.println("===> final site data AFTER fb src <===" +
-				// FinalResultSite);
+			//	 System.out.println("===> final site data AFTER fb src <===" +
+			//	 FinalResultSite);
 				// System.out.println("===> final site data AFTER SRC DB CLIENT <===" +
 				// FinalResultClt);
 				ClientData = new ArrayList<>();
@@ -2677,8 +2685,7 @@ public class PhysicalLayerController {
 					}
 					if (!valueExists) {
 						String MobileNbrDest = session
-								.createSQLQuery(
-										"SELECT DISTINCT MOBILE_NUMBER FROM CLIENTS WHERE CLIENT_ID= '" + DestId + "' ")
+								.createSQLQuery("SELECT DISTINCT MOBILE_NUMBER FROM CLIENTS WHERE CLIENT_ID= '" + DestId + "' ")
 								.uniqueResult().toString();
 						// System.out.println("the mobile nbr dest is " +
 						// mapper.writeValueAsString(MobileNbrDest));
@@ -2711,8 +2718,9 @@ public class PhysicalLayerController {
 						}
 					}
 					if (!valueExists) {
-						List<Object[]> SiteIdDest = session.createSQLQuery(
-								"SELECT DISTINCT SITE_ID,WARE_NAME FROM WAREHOUSE WHERE WARE_ID= '" + DestWareId + "' ")
+						List<Object[]> SiteIdDest = session
+								.createSQLQuery(
+										"SELECT DISTINCT SITE_ID,WARE_NAME FROM WAREHOUSE WHERE WARE_ID= '" + DestWareId + "' ")
 								.list();
 						// System.out.println("the site id dest is " +
 						// mapper.writeValueAsString(SiteIdDest));
@@ -2730,16 +2738,15 @@ public class PhysicalLayerController {
 				}
 				SiteData = new ArrayList<>();
 				SiteLongLat = new ArrayList<>();
-				// System.out.println("===> final site data AFTER DEST SITE <===" +
-				// FinalResultSite);
-				// System.out.println("===> final site data AFTER DEST SITE <===" +
-				// FinalResultClt);
+			//	 System.out.println("===> final site data AFTER DEST SITE <===" +
+			//	 FinalResultSite);
+			//	 System.out.println("===> final site data AFTER DEST SITE <===" +
+			//	 FinalResultClt);
 
 				if ((Dest.get(0)[0]).toString().startsWith("DB_")) {
 					// System.out.println("Site data dest db ===> " +SiteData);
 					List<Object[]> SiteDestDB = session.createSQLQuery(
-							"SELECT DISTINCT SITE,WAREHOUSE,SITE_NAME FROM DISTRIBUTION_BOARD WHERE DB_ID= '" + DestId
-									+ "' ")
+							"SELECT DISTINCT SITE,WAREHOUSE,SITE_NAME FROM DISTRIBUTION_BOARD WHERE DB_ID= '" + DestId + "' ")
 							.list();
 					// System.out.println("the site DB dest is " +
 					// mapper.writeValueAsString(SiteDestDB));
@@ -2776,10 +2783,10 @@ public class PhysicalLayerController {
 						}
 						SiteData = new ArrayList<>();
 						SiteLongLat = new ArrayList<>();
-						// System.out.println("===> final site data AFTER DEST DB SITE <===" +
-						// FinalResultSite);
-						// System.out.println("===> final site data AFTER DEST DB SITE <===" +
-						// FinalResultClt);
+					//	 System.out.println("===> final site data AFTER DEST DB SITE <===" +
+					//	 FinalResultSite);
+					//	 System.out.println("===> final site data AFTER DEST DB SITE <===" +
+					//	 FinalResultClt);
 
 						if ((SiteDestDB.get(0)[0]).toString().startsWith("CLT_")) {
 							boolean valueExists = false;
@@ -2807,57 +2814,57 @@ public class PhysicalLayerController {
 						CltLongLat = new ArrayList<>();
 					}
 				}
-				// System.out.println("===> final site data AFTER fb dest <===" +
-				// FinalResultSite);
+			//	 System.out.println("===> final site data AFTER fb dest <===" +
+			//	 FinalResultSite);
 				// System.out.println("===> final site data AFTER DEST DB CLIENT <===" +
 				// FinalResultClt);
-
-				List<Object> uniqueObjectsSites = new ArrayList<>();
-				// Iterate over the original list
-				for (Object obj : FinalResultSite) {
-					// Check if the object is already in the unique list
-					if (!uniqueObjectsSites.contains(obj)) {
-						uniqueObjectsSites.add(obj);
+			
+					List<Object> uniqueObjectsSites = new ArrayList<>();
+					// Iterate over the original list
+					for (Object obj : FinalResultSite) {
+					    // Check if the object is already in the unique list
+					    if (!uniqueObjectsSites.contains(obj)) {
+					        uniqueObjectsSites.add(obj);
+					    }
 					}
-				}
-				System.out.println("===> final site data AFTER removing duplicates <===" + uniqueObjectsSites);
+					System.out.println("===> final site data AFTER removing duplicates <===" + uniqueObjectsSites);
 
-				List<Object> uniqueObjectsSitesLongLat = new ArrayList<>();
-				for (Object obj : FinalSiteLongLat) {
-					if (!uniqueObjectsSitesLongLat.contains(obj)) {
-						uniqueObjectsSitesLongLat.add(obj);
+					List<Object> uniqueObjectsSitesLongLat = new ArrayList<>();
+					for (Object obj : FinalSiteLongLat) {
+					    if (!uniqueObjectsSitesLongLat.contains(obj)) {
+					    	uniqueObjectsSitesLongLat.add(obj);
+					    }
 					}
-				}
-				System.out.println(
-						"===> final site LONG LAT data AFTER removing duplicates <===" + uniqueObjectsSitesLongLat);
+					System.out.println("===> final site LONG LAT data AFTER removing duplicates <===" + uniqueObjectsSitesLongLat);
 
-				List<Object> uniqueObjectsClients = new ArrayList<>();
-				for (Object obj : FinalResultClt) {
-					if (!uniqueObjectsClients.contains(obj)) {
-						uniqueObjectsClients.add(obj);
+				
+					List<Object> uniqueObjectsClients = new ArrayList<>();
+					for (Object obj : FinalResultClt) {
+					    if (!uniqueObjectsClients.contains(obj)) {
+					        uniqueObjectsClients.add(obj);
+					    }
 					}
-				}
-				System.out.println("===> final site data AFTER removing duplicates <===" + uniqueObjectsClients);
+					System.out.println("===> final site data AFTER removing duplicates <===" + uniqueObjectsClients);
 
-				List<Object> uniqueObjectsClientsLongLat = new ArrayList<>();
-				for (Object obj : FinalCltLongLat) {
-					if (!uniqueObjectsClientsLongLat.contains(obj)) {
-						uniqueObjectsClientsLongLat.add(obj);
+
+					List<Object> uniqueObjectsClientsLongLat = new ArrayList<>();
+					for (Object obj : FinalCltLongLat) {
+					    if (!uniqueObjectsClientsLongLat.contains(obj)) {
+					    	uniqueObjectsClientsLongLat.add(obj);
+					    }
 					}
-				}
-				System.out.println(
-						"===> final site LONG LAT data AFTER removing duplicates <===" + uniqueObjectsClientsLongLat);
+					System.out.println("===> final site LONG LAT data AFTER removing duplicates <===" + uniqueObjectsClientsLongLat);				
+					
+					System.out.println("CLIENT DATA  " + uniqueObjectsClients);
+					System.out.println("SITE DATA  " + uniqueObjectsSites);
+					System.out.println("CLIENT LONGLAT DATA  " + FinalCltLongLat);
+					System.out.println("SITE LONGLAT DATA  " + uniqueObjectsSitesLongLat);
 
-				System.out.println("CLIENT DATA  " + uniqueObjectsClients);
-				System.out.println("SITE DATA  " + uniqueObjectsSites);
-				System.out.println("CLIENT LONGLAT DATA  " + FinalCltLongLat);
-				System.out.println("SITE LONGLAT DATA  " + uniqueObjectsSitesLongLat);
-
-				rtn.put("CableName", CableName);
-				rtn.put("ClientData", uniqueObjectsClients);
-				rtn.put("SiteData", uniqueObjectsSites);
-				rtn.put("CltLongLat", uniqueObjectsClientsLongLat);
-				rtn.put("SiteLongLat", uniqueObjectsSitesLongLat);
+					rtn.put("CableName", CableName);
+					rtn.put("ClientData", uniqueObjectsClients);
+					rtn.put("SiteData", uniqueObjectsSites);
+					rtn.put("CltLongLat", uniqueObjectsClientsLongLat);
+					rtn.put("SiteLongLat", uniqueObjectsSitesLongLat);
 			} catch (Exception e) {
 				sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
