@@ -387,7 +387,6 @@ public class WarehouseController {
 					model.addAttribute("wlastModifieddate",
 							formatter.format(new Timestamp(System.currentTimeMillis())).toString());
 					model.addAttribute("docStatus", "addNew");
-					//model.addAttribute("ListPRqItem", "addNew");
 					model.addAttribute("listWareProLoss", "addNew");					
 					model.addAttribute("SelectedIndex", "addNew");
 					model.addAttribute("wareCount", "addNew");
