@@ -611,6 +611,7 @@ $(document).ready(function () {
 				console.log("The error is " + error);
 			}
 		});
+		await(100);
 	    location.replace("${pageContext.request.contextPath}/WarehouseListView");
 
 	});
