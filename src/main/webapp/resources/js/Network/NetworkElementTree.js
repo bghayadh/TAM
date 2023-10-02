@@ -368,6 +368,87 @@ if(arrayParam[3]==1){
 	   	 	      
 }
 //////////////////////////////////////////////////////////////////////////////////
+function Supp_Boq(SiteId){
+	var Boq = $('#Boq');
+	var Layers= $('#Layers');
+	var Options= $('#Options');
+	
+if(arrayParam[0]==1){
+	var paramEnterprise = true;
+}else{
+	var paramEnterprise = false;
+}
+
+if(arrayParam[1]==1){
+	var paramTransmission = true;
+}else{
+	var paramTransmission = false;
+}
+	
+if(arrayParam[2]==1){
+	var paramAccess = true;
+}else{
+	var paramAccess = false;
+}
+
+if(arrayParam[3]==1){
+	var paramCore = true;
+}else{
+	var paramCore = false;
+}
+	if(!siteList.includes(SiteId))
+	{
+		 $.ajax({
+			type: "GET",
+			contentType: "application/json; charset=utf-8",
+			url: getContext()+'/GetSupBoqList',
+			data: {
+			    "SiteId" : SiteId,
+			    "paramEnterprise" : paramEnterprise,
+			    "paramTransmission" : paramTransmission,
+			    "paramAccess" : paramAccess,
+			    "paramCore" : paramCore,
+			    "arrayParam" : arrayParam
+			    },
+			success : function(data)
+			    {
+				 $('#boq_table').empty();				 
+				 siteList.push(SiteId);	          	 
+				 $.each(data , function( key, value ) {	
+					boqList.push({ SiteId,key,value });    
+					var tr = "<tr>"+
+					"<td class='title'> "+key+"</td>"+
+					"<td> "+value+" </td>"+
+					"</tr>";
+					$("#boq_table").append(tr);     		    			   			
+				});  	
+			},	
+			error: function(result) {
+				alert("Error");
+									}			
+		});
+	}else{
+		$('#boq_table').empty();
+		for(var i=0; i< boqList.length; i++) {
+		    if(SiteId==boqList[i].SiteId){	        		 
+			var tr = "<tr>"+
+			"<td class='title'> "+boqList[i].key+"</td>"+
+			"<td> "+boqList[i].value+" </td>"+
+			"</tr>";
+			$("#boq_table").append(tr);     		    			   			
+						 }		
+								}
+		}
+	 $("#boqBtn").removeClass().addClass("tablinks active");
+	 $("#Defaultbutton").removeClass().addClass("tablinks");
+	 $("#optionBtn").removeClass().addClass("tablinks");
+	 Boq.css({ display:'block'});
+	 Layers.css({ display:'none'});
+	 Options.css({ display:'none'});
+	Boq.tab('show');	 
+	   	 	      
+}
+//////////////////////////////////////////////////////////////////////////////////
 function SitePO_Boq(SiteId){
 	var Boq = $('#Boq');
 	var Layers= $('#Layers');
@@ -507,8 +588,8 @@ function  Node_Boq(WareId,NodeId){
 	var Boq = $('#Boq');
 	var Layers= $('#Layers');
 	var Options= $('#Options');
-	console.log("WareId....",WareId);
-	console.log("NodeId....",NodeId);
+	//console.log("WareId....",WareId);
+	//console.log("NodeId....",NodeId);
 	
 	if(arrayParam[0]==1){
 		var paramEnterprise = true;
@@ -593,9 +674,9 @@ var siteNTList=[];
 var boqNTList=[];
 
 function  NodeT_Boq(SiteId,NodeTId){
-	console.log("NODE T BOQ");
-	console.log("SiteId....",SiteId);
-	console.log("NodeTId....",NodeTId);
+	//console.log("NODE T BOQ");
+	//console.log("SiteId....",SiteId);
+	//console.log("NodeTId....",NodeTId);
 	
 	var Boq = $('#Boq');
 	var Layers= $('#Layers');
@@ -2887,6 +2968,8 @@ function hideContext(){
 
 function Create_TreeNode_CellGeneral(lstNodes,lstCells,ChildrenLength,concat,SiteName) {
 	console.log("Create_TreeNode_Cell STNDCELL");
+	console.log("nodes:" ,lstNodes);
+	console.log("cells:" ,lstCells);
 	for(j=ChildrenLength;j<lstNodes.length;j++)//  NODE_PK, SITE_ID, NODE_NAME,NODE_MODEL
 	{																        	
 	var str= "<ul><li class='Node' id='" + lstNodes[j][0] +"' style='display:none; margin-left:-18px' class='folder'>";
@@ -2917,9 +3000,9 @@ function Create_TreeNode_CellGeneral(lstNodes,lstCells,ChildrenLength,concat,Sit
 			$("ul").find("#"+lstNodes[j][4]+"_f").append(str);
 		}
 	}		
-
+	console.log("done");
 	$("#"+lstNodes[j][0]+" > .folder").on('click',function () {	
-		//console.log("Create_TreeNode_Cell clicking span node");
+		console.log("Create_TreeNode_Cell clicking span node");
 		var selectedNode=$(this).parent().attr('id');
 		console.log("selectedNode ......."+ selectedNode);
 		//Node_Boq(SiteName,selectedNode);

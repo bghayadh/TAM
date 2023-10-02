@@ -5,9 +5,8 @@ $('#filterr').hide();
 $('#removeFilter').hide();
 
 var lst = ${listSites};
-
 var listSupp=${listSupp};
-
+var arrayParam=${arrayParam};
 
 var button ;
 var data;
@@ -15,13 +14,19 @@ if(!(lst==null || lst=="")){
 var wareCount=lst.length;
 }
 
-var currentUrl = window.location.href;
-console.log("currentUrl....",currentUrl);
-// Check if the Enterprise exists in the URL
-if (currentUrl.indexOf("Enterprise") !== -1) {
-  console.log("Enterpriseeeee");
-  $('#EnterpriseBtn').toggleClass('activee');
-} 
+if(arrayParam[0] == 1){
+	 $('#EnterpriseBtn').toggleClass('activee'); 
+	 console.log("EnterpriseBtn");
+}if(arrayParam[1] == 1){
+	 $('#transmBtn').toggleClass('activee');  
+	 console.log("transmBtn");
+}if(arrayParam[2] == 1){
+	 $('#accessDBtn').toggleClass('activee');
+	 console.log("accessDBtn");
+}if(arrayParam[3] == 1){
+	 $('#CoreBtn').toggleClass('activee');
+	 console.log("CoreBtn");
+}
 
 function initMap() {
 
@@ -258,8 +263,10 @@ map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
 		var Nairobi=new google.maps.LatLng(0.796530,37.959529);			
 		map.setCenter(Nairobi);
 		map.setZoom(6);
-		var str="<ul ><li id='initial_ul' class='Initial'><span class='folder'><i class='fa fa-folder' style='color: #08526D'></i> Sites</span></li></ul>";
+		var str="<ul><li id='initial_ul' class='Initial'><input type='checkbox' id='Suppliers' class='AllSuppliers' style='margin-left: 15px' unchecked onclick='AllSitesCheckFilter()'></input> <span class='folder'><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Suppliers</span></li></ul>";
 		$("#network_tree").append(str);
+		tree_prop_selection();
+		folder();
 	}
 } /// End of init Map
 
@@ -292,7 +299,7 @@ folderSupp = new ContextMenu({
 	  'theme': 'default',
 	  'items': [
 		  {'icon': 'braille', 'name': 'Show BoQ', action: () => {				
-				Site_Boq("");
+				Supp_Boq("");
 			}	
 		}
 	]
@@ -323,15 +330,12 @@ function AllSitesCheckFilter(){
 
 
 function showMarkersAllSitesOneNt(id) {
-	console.log("  showMarkersAllSitesOneNt");
   var id = id.id;  
  // var suppId = id.split("_")[0];
   var suppId = id.split("_Site")[0];
  
   markerClusterSites.clearMarkers();
   var isChecked = $("#" + id).is(":checked");
-  console.log("*id ....", $("#" + id));
-  console.log("isChecked ....", isChecked);
   //var ulElement = document.getElementById(suppId);
   var liElements = document.getElementById(suppId).querySelectorAll('.SingleSiteSupp > input'); // Retrieve only <li> elements with <input> children
   var markersToAdd = []; // Array to store markers that need to be added
@@ -355,7 +359,7 @@ function showMarkersAllSitesOneNt(id) {
 
 
 function SuppStNdCellCore(id){ 
-	console.log("SuppStNdCellCore");
+	//console.log("SuppStNdCellCore");
 	//var selectedItem=id.id;
 	//tree_prop_general();
 	//tree_Prop("#"+selectedItem+ "> span");
@@ -371,14 +375,30 @@ function SuppStNdCellCore(id){
 		var SuppChildrenLength=$("#" +selectedSupp+"_f").find(' > ul > li').length;	
 		if(SuppChildrenLength==0){
 			
-			if($('#EnterpriseBtn').hasClass('activee')){
-				//console.log("ACTIVE ");
+			if(arrayParam[0]==1){
 				var paramEnterprise = true;
 			}else{
-				//console.log("NOT ACTIVE");
 				var paramEnterprise = false;
 			}
-			
+
+			if(arrayParam[1]==1){
+				var paramTransmission = true;
+			}else{
+				var paramTransmission = false;
+			}
+				
+			if(arrayParam[2]==1){
+				var paramAccess = true;
+			}else{
+				var paramAccess = false;
+			}
+
+			if(arrayParam[3]==1){
+				var paramCore = true;
+			}else{
+				var paramCore = false;
+			}
+		
 			$.ajax({
 				type: "GET",
 				contentType: "application/json; charset=utf-8",
@@ -386,13 +406,16 @@ function SuppStNdCellCore(id){
 				data: {
 					"selectedSupp":selectedSupp,	
 					"paramEnterprise": paramEnterprise,
+					"paramTransmission":paramTransmission,
+			   		"paramAccess":paramAccess,
+				    "paramCore":paramCore,
 				},
 				dataType: "json",
 				success: function (data) {							        	
 					if (data != null) {
 						//var SuppChildrenLength=$("#" +selectedSupp+"_f").find(' > ul > li').length;	
 						var listSuppSites=data.listSuppSites;
-						console.log("listSuppSites......",listSuppSites);
+						//console.log("listSuppSites......",listSuppSites);
 						if(SuppChildrenLength<listSuppSites.length){
 							var dFrag = document.createDocumentFragment();
 							for (n = 0; n < listSuppSites.length; n++) {								 
@@ -409,6 +432,7 @@ function SuppStNdCellCore(id){
 			            
 			            $(".SingleSiteSupp > .TreeSpan").contextmenu(function(){				
 			        		selectedSingleSiteIdContext=$(this).parent().attr('id');
+			        		//console.log("selectedSingleSiteIdContext: ",selectedSingleSiteIdContext);
 			        		var splitArray= selectedSingleSiteIdContext.split("_");
 			        		idSite=splitArray[0] + "_" + splitArray[1] + "_" + splitArray[2];
 			        		menuName=SingleSite;			
@@ -503,13 +527,28 @@ function Create_TreeSites(id){
 	//	sitesNCreated.push(selectedItem);	
 	var siteChildren=$("#"+selectedItem+"_f") .find(' > ul > li').length;
 	if (siteChildren == 0) {
-		
-		if($('#EnterpriseBtn').hasClass('activee')){
-			//console.log("ACTIVE ");
+		if(arrayParam[0]==1){
 			var paramEnterprise = true;
 		}else{
-			//console.log("NOT ACTIVE");
 			var paramEnterprise = false;
+		}
+
+		if(arrayParam[1]==1){
+			var paramTransmission = true;
+		}else{
+			var paramTransmission = false;
+		}
+			
+		if(arrayParam[2]==1){
+			var paramAccess = true;
+		}else{
+			var paramAccess = false;
+		}
+
+		if(arrayParam[3]==1){
+			var paramCore = true;
+		}else{
+			var paramCore = false;
 		}
 		
 	$.ajax({		
@@ -520,16 +559,15 @@ function Create_TreeSites(id){
 			"selectedItem":selectedItem,
 			"selectedSupp":supplier,
 			"paramEnterprise": paramEnterprise,
+			"paramTransmission":paramTransmission,
+	   		"paramAccess":paramAccess,
+		    "paramCore":paramCore,
 		},
 		dataType: "json",
 		success: function (data) {	
 			if (data != null) {
 				var listSuppNodes=data.listSuppNodes;
 				var listCells=data.listCells;
-				
-				console.log("listSuppNodes......",listSuppNodes);
-				console.log("listCells......",listCells);
-
 				if(siteChildren<listSuppNodes.length){
 					//Create_TreeNode(listSuppNodes,1,3);	
 					//Create_TreeNode_Cell(listSuppNodes,"FindOnClick_SuppSiteNodeCell",siteChildren,true,true,2,"Sup",4,"Sup",selectedItem);		

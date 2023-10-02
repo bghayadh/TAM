@@ -304,12 +304,20 @@ function CreateTree_Nodes(lst,map){
     	$(".Node > .TreeSpan").contextmenu(function(){				
     		selectedNodeIdContext=$(this).parent().attr('id');
     		//console.log("selectedNodeIdContext", selectedNodeIdContext); //nodeId_wareId: 2023_NODE_Huawei_Transmission_618845_WARE_2021_13763
-    		var parts = selectedNodeIdContext.split('_');		
-    		nodeId = parts[0] + "_" + parts[1]+ "_" + parts[2]+ "_" + parts[3]+ "_" + parts[4]; 
-    		if(parts[3] !="null"){
-   				SiteId = parts[5] + "_" + parts[6]+ "_" + parts[7]; // WARE_2021_13730
-   			}else{
-    			SiteId = parts[3]; // WARE_2021_13730
+ 		
+    		var index = selectedNodeIdContext.indexOf("WARE_2");
+			//console.log(" index : "+index);
+			if (index !== -1) {
+			  nodeId = selectedNodeIdContext.substring(0, index).slice(0, -1);
+			 // console.log(" nodeId : "+nodeId);
+			  SiteId = selectedNodeIdContext.substring(index);
+			 // console.log("SiteId : " + SiteId);
+			} 
+			
+			if(selectedNodeIdContext.substring(index, index + "WARE".length) !="null"){  //if "WARE" is not null
+   				SiteId = selectedNodeIdContext.substring(index); // WARE_2021_13730
+    		}else{
+    			SiteId = selectedNodeIdContext.substring(index, index + "WARE".length); // WARE_2021_13730
     		}
     		menuName=singleNode;			
     		openContext(selectedNodeIdContext,"",singleNode,event);
@@ -357,9 +365,11 @@ function CreateTree_Nodes(lst,map){
 
 	
 	function showMarkerSingleSite(id) {
-		var Id= id.split("_SingleNode")[0];		
-		var parts = Id.split('_');
-		var nodeId = parts[0] + "_" + parts[1]+ "_" + parts[2]+ "_" + parts[3]+ "_" + parts[4]; // 2023_NODE_1
+		var Id= id.split("_SingleNode")[0];	
+		var index = id.indexOf("WARE_2");
+		if (index !== -1) {
+		  nodeId = id.substring(0, index).slice(0, -1);
+		} 
 		
 		if ($("#" + id).is(":checked")) {
 			var checkboxes = $('[id$="_SingleNode"]');
@@ -386,8 +396,10 @@ function CreateTree_Nodes(lst,map){
 
 
 	function PanTreeSites(id){
-		var parts = id.split('_');		
-		var nodeId = parts[0] + "_" + parts[1]+ "_" + parts[2]+ "_" + parts[3]+ "_" + parts[4]; 
+		var index = id.indexOf("WARE_2");
+		if (index !== -1) {
+		  nodeId = id.substring(0, index).slice(0, -1);
+		} 
 		
 		if(nodeId!=markersSite)
 		{

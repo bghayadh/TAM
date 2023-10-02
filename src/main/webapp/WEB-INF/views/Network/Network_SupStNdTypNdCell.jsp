@@ -5,8 +5,8 @@ $('#filterr').hide();
 $('#removeFilter').hide();
 
 var lst = ${listSites};
-
 var listSupp=${listSupp};
+var arrayParam=${arrayParam};
 
 
 var button ;
@@ -15,13 +15,19 @@ if(!(lst==null || lst=="")){
 var wareCount=lst.length;
 }
 
-var currentUrl = window.location.href;
-console.log("currentUrl....",currentUrl);
-// Check if the Enterprise exists in the URL
-if (currentUrl.indexOf("Enterprise") !== -1) {
-  console.log("Enterpriseeeee");
-  $('#EnterpriseBtn').toggleClass('activee');
-} 
+if(arrayParam[0] == 1){
+	 $('#EnterpriseBtn').toggleClass('activee'); 
+	 console.log("EnterpriseBtn");
+}if(arrayParam[1] == 1){
+	 $('#transmBtn').toggleClass('activee');  
+	 console.log("transmBtn");
+}if(arrayParam[2] == 1){
+	 $('#accessDBtn').toggleClass('activee');
+	 console.log("accessDBtn");
+}if(arrayParam[3] == 1){
+	 $('#CoreBtn').toggleClass('activee');
+	 console.log("CoreBtn");
+}
 
 function initMap() {
 
@@ -259,8 +265,10 @@ map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
 		var Nairobi=new google.maps.LatLng(0.796530,37.959529);			
 		map.setCenter(Nairobi);
 		map.setZoom(6);
-		var str="<ul ><li id='initial_ul' class='Initial'><span class='folder'><i class='fa fa-folder' style='color: #08526D'></i> Sites</span></li></ul>";
+		var str="<ul><li id='initial_ul' class='Initial'><input type='checkbox' id='Suppliers' class='AllSuppliers' style='margin-left: 15px' unchecked onclick='AllSitesCheckFilter()'></input> <span class='folder'><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Suppliers</span></li></ul>";
 		$("#network_tree").append(str);
+		tree_prop_selection();
+		folder();
 	}
 } /// End of init Map
 
@@ -293,7 +301,7 @@ folderSupp = new ContextMenu({
 	  'theme': 'default',
 	  'items': [
 		  {'icon': 'braille', 'name': 'Show BoQ', action: () => {				
-				Site_Boq("");
+				Supp_Boq("");
 			}	
 		}
 	]
@@ -361,27 +369,45 @@ function SuppStNdTypNdCellCore(id){
 	var SuppChildrenLength=$("#" +selectedSupp+"_f").find(' > ul > li').length;	
 	if(SuppChildrenLength==0){
 		
-		if($('#EnterpriseBtn').hasClass('activee')){
-			//console.log("ACTIVE ");
+		if(arrayParam[0]==1){
 			var paramEnterprise = true;
 		}else{
-			//console.log("NOT ACTIVE");
 			var paramEnterprise = false;
 		}
-		
-			$.ajax({
+
+		if(arrayParam[1]==1){
+			var paramTransmission = true;
+		}else{
+			var paramTransmission = false;
+		}
+			
+		if(arrayParam[2]==1){
+			var paramAccess = true;
+		}else{
+			var paramAccess = false;
+		}
+
+		if(arrayParam[3]==1){
+			var paramCore = true;
+		}else{
+			var paramCore = false;
+		}
+		$.ajax({
 				type: "GET",
 				contentType: "application/json; charset=utf-8",
 				url: getContext()+'/FindOnClick_SuppSiteNodeCell',
 				data: {
 					"selectedSupp":selectedSupp,
 					"paramEnterprise": paramEnterprise,
+					"paramTransmission":paramTransmission,
+			   		"paramAccess":paramAccess,
+				    "paramCore":paramCore,
 				},
 				dataType: "json",
 				success: function (data) {							        	
 					if (data != null) {
-						//var SuppChildrenLength=$("#" +selectedSupp+"_f").find(' > ul > li').length;	
 						var listSuppSites=data.listSuppSites;
+						//console.log("listSuppSites   ",listSuppSites);
 						if(SuppChildrenLength<listSuppSites.length){
 							var dFrag = document.createDocumentFragment();
 							for (n = 0; n < listSuppSites.length; n++) {		
@@ -509,15 +535,30 @@ function StNdTpNdCellCore(id)
 		//if(!sitesNtCreated.includes(selectedItem))
 		//{
 			//sitesNtCreated.push(selectedItem);
+		if(arrayParam[0]==1){
+			var paramEnterprise = true;
+		}else{
+			var paramEnterprise = false;
+		}
+
+		if(arrayParam[1]==1){
+			var paramTransmission = true;
+		}else{
+			var paramTransmission = false;
+		}
 			
-			if($('#EnterpriseBtn').hasClass('activee')){
-				//console.log("ACTIVE ");
-				var paramEnterprise = true;
-			}else{
-				//console.log("NOT ACTIVE");
-				var paramEnterprise = false;
-			}
-			
+		if(arrayParam[2]==1){
+			var paramAccess = true;
+		}else{
+			var paramAccess = false;
+		}
+
+		if(arrayParam[3]==1){
+			var paramCore = true;
+		}else{
+			var paramCore = false;
+		}
+	
 			$.ajax({
 				type: "GET",
 				contentType: "application/json; charset=utf-8",
@@ -526,6 +567,9 @@ function StNdTpNdCellCore(id)
 					"selectedItem":selectedItem,
 					"selectedSupp":selectedSupp	,
 					"paramEnterprise": paramEnterprise,
+					"paramTransmission":paramTransmission,
+			   		"paramAccess":paramAccess,
+				    "paramCore":paramCore,
 				},
 				dataType: "json",
 				success: function (data) {					        	
@@ -561,7 +605,7 @@ function StNdTpNdCellCore(id)
 			        	  'theme': 'default',
 			        	  'items': [
 			        		  {'icon': 'braille', 'name': 'Show BoQ', action: () => {
-			        			  console.log("selectedItem......",selectedItem);
+			        			  //console.log("selectedItem......",selectedItem);
 			        			  NodeT_Boq(selectedSite,selectedSingleNt);
 			        			  selectedItem="";
 			        			}	
@@ -604,13 +648,28 @@ function SupNdCellCore(id){
 		//if(!NdNCreated.includes(selectedNodetType))
 		//{
 			//NdNCreated.push(selectedNodetType);		
-			
-			if($('#EnterpriseBtn').hasClass('activee')){
-				//console.log("ACTIVE ");
+			if(arrayParam[0]==1){
 				var paramEnterprise = true;
 			}else{
-				//console.log("NOT ACTIVE");
 				var paramEnterprise = false;
+			}
+
+			if(arrayParam[1]==1){
+				var paramTransmission = true;
+			}else{
+				var paramTransmission = false;
+			}
+				
+			if(arrayParam[2]==1){
+				var paramAccess = true;
+			}else{
+				var paramAccess = false;
+			}
+
+			if(arrayParam[3]==1){
+				var paramCore = true;
+			}else{
+				var paramCore = false;
 			}
 		
 			$.ajax({
@@ -622,12 +681,16 @@ function SupNdCellCore(id){
 					"selectedNodetType":selectedNodetType,
 					"selectedSupp":selectedSupp	,
 					"paramEnterprise": paramEnterprise,
+					"paramTransmission":paramTransmission,
+			   		"paramAccess":paramAccess,
+				    "paramCore":paramCore,
 				},
 				dataType: "json",
 				success: function (data) {														        	
 					if (data != null) {
 						var listNodes=data.listNodes;
 						var listCells=data.listCells;
+
 							//Create_TreeNode_Cell(listNodes,"FindOnClick_SuppStNdTypNdCell",NdTypeChildrenLength,true,true,4,"Sup",6,"Sup",selectedItem);
 							Create_TreeNode_CellGeneral(listNodes,listCells,NdTypeChildrenLength, true,selectedItem);
 				            Tree_PropagationAppendedNodes(selectedNodetType+ "_" +selectedItem+"_f  .Node");

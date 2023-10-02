@@ -7,22 +7,30 @@ $('#removeFilter').hide();
 //var lst = ${listSites};
 
 var lstNodeType = ${listNodesType};
-
+//console.log("lst NodeType....",lstNodeType);
 var lst = ${listNodes};
 //console.log("lst nodes....",lst);
+var arrayParam=${arrayParam};
+//console.log("arrayParam...", arrayParam);
+
+if(arrayParam[0] == 1){
+	 $('#EnterpriseBtn').toggleClass('activee'); 
+	 console.log("EnterpriseBtn");
+}if(arrayParam[1] == 1){
+	 $('#transmBtn').toggleClass('activee');  
+	 console.log("transmBtn");
+}if(arrayParam[2] == 1){
+	 $('#accessDBtn').toggleClass('activee');
+	 console.log("accessDBtn");
+}if(arrayParam[3] == 1){
+	 $('#CoreBtn').toggleClass('activee');
+	 console.log("CoreBtn");
+}
 
 var button ;
 var data;
 if(!(lst==null || lst=="")){
 var wareCount=lst.length;
-}
-
-var currentUrl = window.location.href;
-//console.log("currentUrl....",currentUrl);
-// Check if the Enterprise exists in the URL
-if (currentUrl.indexOf("Enterprise") !== -1) {
- // console.log("Enterpriseeeee");
-  $('#EnterpriseBtn').toggleClass('activee');
 }
 
 let srcCityAutocomplete, dstCityAutocomplete;
@@ -294,7 +302,7 @@ function CreateTree_NdTpNdCell(lstNodeType,map){
 			{			
 				if(lst[j][11] == lstNodeType[n][0]){
 					//console.log("equals");
-					str = "<li class='Node' id='"+ lst[j][2]+"_"+lst[j][9]+"' style='display:none; margin-left:-15px'><input type='checkbox' id='" + lst[j][2]+"_"+lst[j][9]+"_"+lst[j][11]+ "' class='SingleNode' style='margin-left: 15px' onclick=\"showMarkerSingleSite('" + lst[j][2]+"_"+lst[j][9]+"_"+lst[j][11]+ "')\"></input><span class='folder' onclick=\"NdCellCore('"+lst[j][2]+"')\"> <i class='fa fa-folder' style='color: #08526D'></i></span> <span class='TreeSpan' style='width:395px' onclick=\" PanTreeSites('"+ lst[j][2]+"_"+lst[j][9]+"_"+lst[j][11]+"')\"> <i class='fa fa-server'></i>"+lst[j][10]+"</span>";
+					str = "<li class='Node' id='"+ lst[j][2]+"_"+lst[j][9]+"' style='display:none; margin-left:-15px'><input type='checkbox' id='" + lst[j][2]+"_"+lst[j][9]+"_"+lst[j][11]+ "' class='SingleNode' style='margin-left: 15px' onclick=\"showMarkerSingleSite('" + lst[j][2]+"_"+lst[j][9]+"_"+lst[j][11]+ "')\"></input><span class='folder' onclick=\"NdCellCore('"+lst[j][2]+"')\"> <i class='fa fa-folder' style='color: #08526D'></i></span> <span class='TreeSpan' style='width:395px' onclick=\" PanTreeSites('"+ lst[j][2]+"_"+lst[j][9]+"_"+lst[j][11]+"')\"><i class='fa fa-server'></i> "+ lst[j][10] +"</span>";
 					str+= "<ul><li id='" +lst[j][2]+"_f' class='CellFolder parent_li' style='display:none; margin-left:10px'><span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span> <span class='TreeSpan' style='width:395px'> Cells </span></li></ul></li></ul>"; 
 					const div = document.createElement('ul');
 					div.innerHTML = str;
@@ -312,12 +320,20 @@ function CreateTree_NdTpNdCell(lstNodeType,map){
     	$(".Node > .TreeSpan").contextmenu(function(){				
     		selectedNodeIdContext=$(this).parent().attr('id');
     		//console.log("selectedNodeIdContext", selectedNodeIdContext); //nodeId_wareId
-    		var parts = selectedNodeIdContext.split('_');		
-    		nodeId = parts[0] + "_" + parts[1]+ "_" + parts[2]; // 2023_NODE_1
-    		if(parts[3] !="null"){
-   				SiteId = parts[3] + "_" + parts[4]+ "_" + parts[5]; // WARE_2021_13730
+    		
+    		var index = selectedNodeIdContext.indexOf("WARE_2");
+			console.log(" index : "+index);
+			if (index !== -1) {
+			  nodeId = selectedNodeIdContext.substring(0, index).slice(0, -1);
+			 // console.log(" nodeId : "+nodeId);
+			  SiteId = selectedNodeIdContext.substring(index);
+			 // console.log("SiteId : " + SiteId);
+			} 
+			
+			if(selectedNodeIdContext.substring(index, index + "WARE".length) !="null"){  //if "WARE" is not null
+   				SiteId = selectedNodeIdContext.substring(index); // WARE_2021_13730
     		}else{
-    			SiteId = parts[3]; // WARE_2021_13730
+    			SiteId = selectedNodeIdContext.substring(index, index + "WARE".length); // WARE_2021_13730
     		}
     		menuName=singleNode;			
     		openContext(selectedNodeIdContext,"",singleNode,event);
@@ -411,8 +427,14 @@ function showMarkersAllSitesOneNt(id) {
     var nodeSiteId = liElements[i].id.split("_" + nodeType)[0]; //nodeId_wareId
     //console.log("nodeSiteId:", nodeSiteId);
     
-    var nodeId = nodeSiteId.split("_")[0] + "_" + nodeSiteId.split("_")[1] + "_" + nodeSiteId.split("_")[2];
-    //console.log("nodeId:",  nodeId);
+    var index = nodeSiteId.indexOf("WARE_2");
+	//console.log(" index : "+index);
+	if (index !== -1) {
+	  var nodeId = nodeSiteId.substring(0, index).slice(0, -1);
+	  //console.log(" nodeId : "+nodeId);
+
+	} 
+
 	/*
     if(nodeSiteId.split("_")[3]!= "null"){
     	console.log("not null");
@@ -538,29 +560,18 @@ function NdTpNdCellCore(id)
 */
 
 function showMarkerSingleSite(id) {
-	//console.log("id..."+id);
+	console.log("id..."+id); //2023_NODE_Huawei_Transmission_618845_WARE_2021_13763_Router
 	//console.log("showMarkerSingleSite");
-	
-	var parts = id.split('_');	
-	//console.log("parts..."+parts);
-	
-	var nodeId = parts[0] + "_" + parts[1]+ "_" + parts[2]; // 2023_NODE_1
-	//console.log("nodeId..."+nodeId);
-	
-	if(parts[3]!="null"){
-		//console.log("!NULL");
-		//var wareId = parts[3] + "_" + parts[4]+ "_" + parts[5]; // WARE_2021_13730
-		//console.log("wareId..."+wareId);
-		var nodeType = parts[6]; // SRanBs
-		//console.log("nodeType..."+nodeType);
-	}else{
-		//console.log("NULL");
-		//var wareId = parts[3]; // WARE_2021_13730
-		//console.log("wareIdddd..."+wareId);
-		var nodeType = parts[4]; // SRanBs
-		//console.log("nodeTypeeee..."+nodeType);
-	}
-	
+	var index = id.indexOf("WARE_2");
+	//console.log(" index : "+index);
+	if (index !== -1) {
+	  var nodeId = id.substring(0, index).slice(0, -1);
+	  //console.log(" nodeId : "+nodeId);
+	} 
+
+	const parts = id.split("_");
+	var nodeType =parts[parts.length - 1]; // SRanBs
+	//console.log("nodeTypeeee..."+nodeType);
 	
 	if ($("#" + id).is(":checked")) {
 		//console.log("checked");
@@ -596,21 +607,12 @@ function showMarkerSingleSite(id) {
 
 function PanTreeSites(id){
 	//console.log("PanTreeSites/id");
-	var parts = id.split('_');		
-	//console.log("parts ...."+parts);
-	var nodeId = parts[0] + "_" + parts[1]+ "_" + parts[2]; 
-	//console.log("nodeId ...."+nodeId);
-	//if(parts[3]!="null"){
-		//var selectedItem = parts[3] + "_" + parts[4]+ "_" + parts[5]; 
-		//console.log("selectedItem  ...."+selectedItem );
-		///var nodeType = parts[6]; 
-		//console.log("nodeTypenodeType  ...."+nodeType);
-	//}else{
-		//var selectedItem = parts[3]; 
-		//console.log("selectedItem  n...."+selectedItem );
-		//var nodeType = parts[4]; 
-		//console.log("nodeTypenodeType  n...."+nodeType);
-	//}
+	var index = id.indexOf("WARE_2");
+	//console.log(" index : "+index);
+	if (index !== -1) {
+	  var nodeId = id.substring(0, index).slice(0, -1);
+	  //console.log(" nodeId : "+nodeId);
+	} 
 	
 	if(nodeId!=markersSite)
 	{
@@ -637,6 +639,7 @@ function PanTreeSites(id){
 function NdCellCore(id)
 {
   var selectedNode=id;
+  //console.log("selectedNode...",selectedNode);
   //var selectedItem=n.id;	  
   // tree_prop_general();
   // tree_Prop("#"+selectedItem+"> span");
@@ -648,14 +651,31 @@ function NdCellCore(id)
 		//NCellCreated.push(selectedNode);
 	var NdChildrenLength=$("#" +selectedNode+"_f").find(' > ul > li').length;
 	if(NdChildrenLength==0){
-		if($('#EnterpriseBtn').hasClass('activee')){
-			//console.log("ACTIVE ");
+		if(arrayParam[0]==1){
 			var paramEnterprise = true;
 		}else{
-			//console.log("NOT ACTIVE");
-		var paramEnterprise = false;
+			var paramEnterprise = false;
 		}
-	
+
+		if(arrayParam[1]==1){
+			var paramTransmission = true;
+		}else{
+			var paramTransmission = false;
+		}
+			
+		if(arrayParam[2]==1){
+			var paramAccess = true;
+		}else{
+			var paramAccess = false;
+		}
+
+		if(arrayParam[3]==1){
+			var paramCore = true;
+		}else{
+			var paramCore = false;
+		}
+		
+
 	 $.ajax({
 		 type: "GET",
 		 contentType: "application/json; charset=utf-8",
@@ -663,29 +683,35 @@ function NdCellCore(id)
 		 data: {
 		      "selectedNode":selectedNode,
 		      "paramEnterprise": paramEnterprise,
+			  "paramTransmission":paramTransmission,
+	   		  "paramAccess":paramAccess,
+		      "paramCore":paramCore,
 		},
 		dataType: "json",
 		success: function (data) {							        	
 		    if (data != null) {
 				//var NdChildrenLength=$("#" +selectedNode+"_f").find(' > ul > li').length;		
-				var listCells=data.listCells;
+				var listCells =data.listCells;
+				//console.log("listCells...",listCells);
 				var dFrag = document.createDocumentFragment();
-				if(NdChildrenLength<listCells.length){							            	
-					for(j=0;j<listCells.length;j++)//  NODE_PK, SITE_ID, NODE_NAME,NODE_MODEL
-					{												
+		
+				if(NdChildrenLength<listCells.length){		
+					
+					for(var j=0; j< listCells.length; j++)//  NODE_PK, SITE_ID, NODE_NAME,NODE_MODEL
+					{			
 						var str= "<ul><li class='Cells' id='" + listCells[j][0] +"' style='display:none; margin-left:-10px'>";					  				
 						str += "<span class='TreeSpan' style='width:395px'><span class='tree-span'><i class='fa fa-vector-square'></i> "+listCells[j][1]+"</span></span></li></ul>";
 						const div = document.createElement('ul'); 
 						div.innerHTML = str;
 						dFrag.appendChild(div);
-						$("#"+selectedNode+"_f").append(str);																																					
-								}
+						$("#"+selectedNode+"_f").append(str);																															
+					}				
 					//tree_prop_general();
 					document.getElementById(selectedNode+"_f").appendChild(dFrag);
 					tree_prop_selection("#" +selectedNode+"_f .Cells .TreeSpan");
 		            Tree_PropagationAppendedNodes(selectedNode+"_f .Cells");
-					    	}								            		                     
-			    }
+				}	
+			  }
 		    data=null;
 		},
 		error: function(result) {
