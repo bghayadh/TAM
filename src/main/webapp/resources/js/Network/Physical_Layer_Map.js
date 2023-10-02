@@ -33,9 +33,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			markerClusterHandhole = new MarkerClusterer();
 			markerClusterHandhole.setMap(map);// to be checked !!!!
 			
-			/*markerClusterDistBoard = new MarkerClusterer();
-			markerClusterDistBoard.setMap(map);// to be checked !!!!*/
-			
+		
 			markerClusterBackboneDistBoard = new MarkerClusterer();
 			markerClusterBackboneDistBoard.setMap(map);
 			
@@ -45,11 +43,18 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			markerClusterAccessDistBoard = new MarkerClusterer();
 			markerClusterAccessDistBoard.setMap(map);
 			
+			markerClusterMSANNodes = new MarkerClusterer();
+			markerClusterMSANNodes.setMap(map);
 			
+			markerClusterDWDMNodes = new MarkerClusterer();
+			markerClusterDWDMNodes.setMap(map);
 			
+			markerClusterSDHNodes = new MarkerClusterer();
+			markerClusterSDHNodes.setMap(map);
 			
-			markerClusterNodeActive = new MarkerClusterer();
-			markerClusterNodeActive.setMap(map);// to be checked !!!!
+			markerClusterGPONNodes = new MarkerClusterer();
+			markerClusterGPONNodes.setMap(map);
+			
 	
 			kenya=new google.maps.LatLng(1,38);					
 			LatLanMouse(map);
@@ -111,12 +116,26 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 					scaledSize: new google.maps.Size(40, 40), // scaled size
 			};
 			
-			iconNodeActive = {
-				url:getContext()+"/resources/img/NodesIcon.png", // url
+			iconMSANNode = {
+				url:getContext()+"/resources/NetworkImages/MSANNodeIcon.png", // url
 				scaledSize: new google.maps.Size(20, 20), // scaled size
 				
 			};
-
+			iconSDHNode = {
+				url:getContext()+"/resources/NetworkImages/SDHNodeIcon.png", // url
+				scaledSize: new google.maps.Size(20, 20), // scaled size
+				
+			};
+			iconDWDMNode = {
+				url:getContext()+"/resources/NetworkImages/DWDMNodeIcon.png", // url
+				scaledSize: new google.maps.Size(20, 20), // scaled size
+				
+			};
+			iconGPONNode = {
+				url:getContext()+"/resources/NetworkImages/GPONNodeIcon.png", // url
+				scaledSize: new google.maps.Size(20, 20), // scaled size
+				
+			};
 			
 			
 			// Manholes cluster Calculator
@@ -205,13 +224,11 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 				}                   
 			});
 			
-			
-			
-				markerClusterNodeActive.setOptions({								
+		markerClusterMSANNodes.setOptions({								
 				minimumClusterSize: 2,
 				styles: [
 				         {
-				        	 url: getContext()+'/resources/clusterIcons/greenCluster.png',
+				        	 url: getContext()+'/resources/clusterIcons/nodeMSANCluster.png',
 					         height: 60,
 					         width:60,
 					         anchorText:[-3,-3]
@@ -222,9 +239,51 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 				}                   
 			});
 			
+			markerClusterSDHNodes.setOptions({								
+				minimumClusterSize: 2,
+				styles: [
+				         {
+				        	 url: getContext()+'/resources/clusterIcons/nodeSDHCluster.png',
+					         height: 60,
+					         width:60,
+					         anchorText:[-3,-3]
+					      },
+				],
+				calculator: function(markers, numStyles) {
+					if (markers.length >= 1) return {text: markers.length,index:1}; 
+				}                   
+			});
 			
-			/*    cluster for nodes folder*/
-
+			markerClusterDWDMNodes.setOptions({								
+				minimumClusterSize: 2,
+				styles: [
+				         {
+				        	 url: getContext()+'/resources/clusterIcons/nodeDWDMCluster.png',
+					         height: 60,
+					         width:60,
+					         anchorText:[-3,-3]
+					      },
+				],
+				calculator: function(markers, numStyles) {
+					if (markers.length >= 1) return {text: markers.length,index:1}; 
+				}                   
+			});
+			
+			markerClusterGPONNodes.setOptions({								
+				minimumClusterSize: 2,
+				styles: [
+				         {
+				        	 url: getContext()+'/resources/clusterIcons/nodeGPONCluster.png',
+					         height: 60,
+					         width:60,
+					         anchorText:[-3,-3]
+					      },
+				],
+				calculator: function(markers, numStyles) {
+					if (markers.length >= 1) return {text: markers.length,index:1}; 
+				}                   
+			});
+			
 		
 	
 			$(".Initial_CurrentPhysicalLayer > .TreeSpan").on("click",function(){
@@ -238,8 +297,10 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 						markerClusterBackboneDistBoard.repaint();	
 						markerClusterMetroDistBoard.repaint();	
 						markerClusterAccessDistBoard.repaint();	
-						markerClusterNodeActive.repaint();
-	
+						markerClusterMSANNodes.repaint();
+						markerClusterSDHNodes.repaint();
+						markerClusterDWDMNodes.repaint();
+						markerClusterGPONNodes.repaint();	
 				});				
 			});
 	 var end = performance.now();
@@ -307,39 +368,37 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			}
 			
 			
-			/*if(NodeActiveList!=null)
-			{
-				for(i=0;i<NodeActiveList.length;i++){			
-			            create_Marker_Click(NodeActiveList[i][0],NodeActiveList[i][1],NodeActiveList[i][5],NodeActiveList[i][6],markersNodeActive,markerClusterNodeActive,"","");				
-						NodeActiveCheckFilter(NodeActiveList[i][0]);
-				}
-			}*/
+		
 			
 			if(NodeActiveList != null){
 			   for(i=0;i<NodeActiveList.length;i++){
-			   
-			   if(NodeActiveList[i][3]=='Enterprise'){
-			            create_Marker_Click(NodeActiveList[i][0],NodeActiveList[i][1],NodeActiveList[i][5],NodeActiveList[i][6],markersNodeActive,markerClusterNodeActive,"","");				
-						NodeActiveCheckFilter(NodeActiveList[i][0]);
+			     if(NodeActiveList[i][8]=='MSAN'){
+			            create_Marker_Click(NodeActiveList[i][0],NodeActiveList[i][1],NodeActiveList[i][5],NodeActiveList[i][6],markersNodeActive,markerClusterMSANNodes,"","");				
+						NodeActiveCheckFilter(NodeActiveList[i][0],markerClusterMSANNodes);
 			   }
 			 
-			 else if(NodeActiveList[i][3]=='Transmission' && NodeActiveList[i][8]=='DWDM'){
-			            create_Marker_Click(NodeActiveList[i][0],NodeActiveList[i][1],NodeActiveList[i][5],NodeActiveList[i][6],markersNodeActive,markerClusterNodeActive,"","");				
-						NodeActiveCheckFilter(NodeActiveList[i][0]);
+			 else if(NodeActiveList[i][8]=='DWDM'){
+			            create_Marker_Click(NodeActiveList[i][0],NodeActiveList[i][1],NodeActiveList[i][5],NodeActiveList[i][6],markersNodeActive,markerClusterDWDMNodes,"","");				
+						NodeActiveCheckFilter(NodeActiveList[i][0],markerClusterDWDMNodes);
 			   }
 			   
-			 else if(NodeActiveList[i][3]=='Transmission' && NodeActiveList[i][8]=='SDH'){
-			            create_Marker_Click(NodeActiveList[i][0],NodeActiveList[i][1],NodeActiveList[i][5],NodeActiveList[i][6],markersNodeActive,markerClusterNodeActive,"","");				
-						NodeActiveCheckFilter(NodeActiveList[i][0]);
+			 else if(NodeActiveList[i][8]=='SDH'){
+			            create_Marker_Click(NodeActiveList[i][0],NodeActiveList[i][1],NodeActiveList[i][5],NodeActiveList[i][6],markersNodeActive,markerClusterSDHNodes,"","");				
+						NodeActiveCheckFilter(NodeActiveList[i][0],markerClusterSDHNodes);
 			   }
 			   
-			 else if(NodeActiveList[i][3]=='Transmission' && NodeActiveList[i][8]=='GPON'){
-			            create_Marker_Click(NodeActiveList[i][0],NodeActiveList[i][1],NodeActiveList[i][5],NodeActiveList[i][6],markersNodeActive,markerClusterNodeActive,"","");				
-						NodeActiveCheckFilter(NodeActiveList[i][0]);
+			 else if(NodeActiveList[i][8]=='GPON'){
+			            create_Marker_Click(NodeActiveList[i][0],NodeActiveList[i][1],NodeActiveList[i][5],NodeActiveList[i][6],markersNodeActive,markerClusterGPONNodes,"","");				
+						NodeActiveCheckFilter(NodeActiveList[i][0],markerClusterGPONNodes);
 			   }
 			   
 			   }
-			}
+			AllNodesTreeCheckFilter("Entreprise_MSAN__CurrentPhysicalLayer",markerClusterMSANNodes);
+		    AllNodesTreeCheckFilter("Transmission_DWDM__CurrentPhysicalLayer",markerClusterDWDMNodes);
+		    AllNodesTreeCheckFilter("Transmission_SDH__CurrentPhysicalLayer",markerClusterSDHNodes);
+		    AllNodesTreeCheckFilter("Transmission_GPON__CurrentPhysicalLayer",markerClusterGPONNodes);
+		    AllNodesTreeCheckFilter("NodeActive_f_CurrentPhysicalLayer","");
+		}
 			
 	var end2 = performance.now();
 			allElementsCheckFilter();	
