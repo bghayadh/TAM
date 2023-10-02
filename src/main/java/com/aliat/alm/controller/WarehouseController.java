@@ -561,14 +561,10 @@ public class WarehouseController {
 						ObjectMapper mapper = new ObjectMapper();
 					    String resultList =  mapper.writeValueAsString(query.list());;
 				
-						System.out.println(resultList);
+					
 						
 					
-					            List<List<Object>> listOfLists = mapper.readValue(resultList, new TypeReference<List<List<Object>>>() {});
-
-					            for (List<Object> innerList : listOfLists) {
-					                System.out.println(innerList.get(0));
-					            }
+					          
 					            model.addAttribute("listInventory", mapper.writeValueAsString(query.list()));
 				                   
 					          
@@ -621,11 +617,39 @@ public class WarehouseController {
 									     wareID +"'";
 								Object IDUcount = session.createSQLQuery(IDU).uniqueResult();
 								model.addAttribute("IDUcount",  mapper.writeValueAsString(IDUcount));
-									
+							
 								
-									
 								
+								String queryString1 = "SELECT node_id, node_name, node_type,domain,vendor,TECH_2G,TECH_3G,TECH_4G,TECH_5G,Node_model from node_active where site_id=:param1";
+										
+								
+								query = session.createSQLQuery(queryString1);
+                              	query.setParameter("param1", siteId);
+								  String resultList1 =  mapper.writeValueAsString(query.list());;
+						           model.addAttribute("Listnode", mapper.writeValueAsString(query.list()));
+					               
+						           
+						           
+						           
+						           String str = " select GCELL_ID ,CELLNAME FROM NODE_GCELL WHERE NODE_PK IN (Select NODE_PK from node_active where site_id=:param1)"; 
+						         	query = session.createSQLQuery(str);
+	                              	query.setParameter("param1", siteId);
+	                                model.addAttribute("ListGCell", mapper.writeValueAsString(query.list()));
+						              
+	                                String str1 = " select LCELL_ID ,CELLNAME FROM NODE_LCELL WHERE NODE_PK IN (Select NODE_PK from node_active where site_id=:param1)"; 
+						         	query = session.createSQLQuery(str1);
+	                              	query.setParameter("param1", siteId);
+	                                model.addAttribute("ListLCell", mapper.writeValueAsString(query.list()));
+						            
 					
+	                                
+	                                
+	                                
+	                                String str2 = " select UCELL_ID ,CELLNAME FROM NODE_UCELL WHERE NODE_PK IN (Select NODE_PK from node_active where site_id=:param1)"; 
+						         	query = session.createSQLQuery(str2);
+	                              	query.setParameter("param1", siteId);
+	                                model.addAttribute("ListUCell", mapper.writeValueAsString(query.list()));
+						            
 					// get site_IMAGE_NAME
 					query = session.createSQLQuery("select IMAGE_PATH from WAREHOUSE_IMAGE where WARE_ID like :param1");
 					query.setParameter("param1", wareh);
