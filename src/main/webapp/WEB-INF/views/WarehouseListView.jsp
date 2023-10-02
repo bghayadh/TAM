@@ -610,11 +610,7 @@ $(document).ready(function () {
 			error: function (error) {
 				console.log("The error is " + error);
 			}
-		});
-		setTimeout(function() {
-			location.replace("${pageContext.request.contextPath}/WarehouseListView");		
-			}, 1000);
-		
+		});		
 	});
 
 
