@@ -387,10 +387,24 @@ public class WarehouseController {
 					model.addAttribute("wlastModifieddate",
 							formatter.format(new Timestamp(System.currentTimeMillis())).toString());
 					model.addAttribute("docStatus", "addNew");
-					model.addAttribute("ListPRqItem", "addNew");
+					//model.addAttribute("ListPRqItem", "addNew");
+					model.addAttribute("listWareProLoss", "addNew");					
 					model.addAttribute("SelectedIndex", "addNew");
 					model.addAttribute("wareCount", "addNew");
 					model.addAttribute("listSiteImage", "addNew");
+					model.addAttribute("Listnode", "addNew");
+					model.addAttribute("ListGCell", "addNew");
+					model.addAttribute("ListUCell", "addNew");
+					model.addAttribute("ListLCell", "addNew");
+					model.addAttribute("siteName", "addNew");
+					model.addAttribute("nodes", "addNew");
+					model.addAttribute("nodeType", "addNew");
+					model.addAttribute("SRanBscount", "addNew");
+					model.addAttribute("IDUcount", "addNew");
+					model.addAttribute("g-cell", "addNew");
+					model.addAttribute("l-cell", "addNew");
+					model.addAttribute("u-cell", "addNew");
+					model.addAttribute("listInventory", "addNew");
 
 					return "WarehouseFormView";
 				}
@@ -517,7 +531,7 @@ public class WarehouseController {
 
 					listWareProLoss = (List<WarehouseProfitloss>) query
 							.setResultTransformer(Transformers.aliasToBean(WarehouseProfitloss.class)).list();
-					model.addAttribute("ListPRqItem", mapper.writeValueAsString(listWareProLoss));
+					model.addAttribute("listWareProLoss", mapper.writeValueAsString(listWareProLoss));
 
 					wareCity = wareh.getWareCity();
 					query = session.createQuery(

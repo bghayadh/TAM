@@ -2304,10 +2304,10 @@ if ('${docStatus}' == "addNew") {
 	$(".pad").removeClass("hide-row ");
 }
 
-if ('${ListPRqItem}' != "addNew") {
+if ( '${docStatus}' != "addNew") {
 
     boqArray = [];
-    boqArray = ${ListPRqItem};
+    boqArray = ${listWareProLoss};
 	
 	for (i = 0;i<boqArray.length;i++)
 	{
@@ -2794,8 +2794,11 @@ function saverowsintables()
 
  
  
-  boqNode = [];
- boqNode = ${Listnode};
+  
+ if ('${Listnode}' != "addNew") {
+	
+ 	boqNode = [];
+ 	boqNode = ${Listnode};
 	
  console.log(boqNode);
  
@@ -2878,6 +2881,7 @@ function saverowsintables()
 	    $("#NodeTable").append(c);
           
 	 
+ 	}
  }
 
 
@@ -2886,6 +2890,7 @@ function saverowsintables()
 
 
 
+ if ('${ListGCell}' != "addNew") {
  boqGCell = [];
  boqGCell = ${ListGCell};
 	
@@ -2912,15 +2917,13 @@ function saverowsintables()
 
 
 	    $("#CellTable").append(c);
-  
-	       
-           
-           
-	 
+ 
  }
+}
 
 
-
+if ('${ListUCell}' != "addNew") {
+ 
  boqUCell = [];
  boqUCell = ${ListUCell};
 	
@@ -2953,8 +2956,11 @@ function saverowsintables()
            
 	 
  }
- boqLCell = [];
- boqLCell = ${ListLCell};
+}
+
+if ('${ListLCell}' != "addNew") {
+boqLCell = [];
+boqLCell = ${ListLCell};
 	
 
  
@@ -2977,14 +2983,10 @@ function saverowsintables()
 	          "</tr>";
 
 
-
 	    $("#CellTable").append(c);
-  
-	       
-           
-           
 	 
  }
+}
 
 
 
@@ -2996,11 +2998,15 @@ function saverowsintables()
  
  
  function BoQ() {
-    $.ajax({
+	 
+/*    $.ajax({
         type: "GET",
         url: "${pageContext.request.contextPath}/WarehouseBOQ",
         success: function(response) {
-        	sitename=${siteName}
+*/            
+
+if ('${docStatus}' != "addNew") {
+        	 sitename=${siteName}
         	 nodes=${nodes}
         	 nodetype=${nodeType}
         	 SRanBs=${SRanBscount}
@@ -3008,6 +3014,7 @@ function saverowsintables()
         	 gcell=${g-cell}
         	 lcell=${l-cell}
         	 ucell=${u-cell}
+        	 
         	 $("#inventorytab2").empty();
         	 z="";
         	z+="<tr>"+
@@ -3114,13 +3121,15 @@ function saverowsintables()
         	document.getElementById("dep").value = totalDepreciation;
         	document.getElementById("net").value = totalNetCost;
 
-        	    
+  /*      	    
 
         },
         error: function(xhr, status, error) {
             console.error("AJAX request error:", error);
         }
     });
+	*/
+	}
 }
 
  
