@@ -244,6 +244,9 @@ public class CopyParsingDataToALM {
 							insertLogsstmt.executeUpdate();
 							insertLogsstmt.close();
 							
+							//updating the site if found in the final table and not found in the temporary
+							UpdatingSiteinTemp(rsinit2.getString("DOMAIN"),rsinit2.getString("VENDOR") );
+							
 				 		  }
 			 	   } else {
 			 		   System.out.println("No completed or loaded data to copy");
@@ -1614,4 +1617,55 @@ public class CopyParsingDataToALM {
 					 return min+1;
 
 		  }
+	 
+	 private static void UpdatingSiteinTemp(String domain,String vendor) throws SQLException {
+		 
+		 Statement stmt = null,stmt1=null;
+		 String tmpSiteID = null,tmpWareName=null,tmpWareID=null,vSiteID = null,vWareName=null,vWareID=null;
+		 stmt = conalm.createStatement();  
+    	 String sqlStmtinit2 = "select distinct NODE_ID,NODE_NAME,SITE_ID,WARE_ID,WARE_NAME from TEMP_NODE_ACTIVE where DOMAIN='"+domain+"' and VENDOR='"+vendor+"'";          
+		 ResultSet rs = stmt.executeQuery(sqlStmtinit2);
+	 	 while(rs.next()) {
+	 			  tmpSiteID = rs.getString("SITE_ID");
+	 			  tmpWareID = rs.getString("SITE_ID");
+	 			  tmpWareName = rs.getString("WARE_NAME");
+	 			  stmt1 = conalm.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);  
+	 			  String sqlquery = "Select DISTINCT NODE_ID,NODE_NAME,SITE_ID,WARE_ID,WARE_NAME FROM NODE_ACTIVE WHERE NODE_ID='"+rs.getString("NODE_ID")+"' AND NODE_NAME='"+rs.getString("NODE_NAME")+"' AND ACTIVE_RECORD='1'";
+	 			  ResultSet rs1 = stmt1.executeQuery(sqlquery);
+	 			  System.out.println(rs1.getRow());
+	 			  rs1.last();
+	 			  int totalrows=rs1.getRow();
+	 			  rs1.beforeFirst();
+	 		 	  if(totalrows>0) {
+	 		 		 while(rs1.next()) {
+	 		 			vSiteID = rs1.getString("SITE_ID");
+	 		 			vWareID = rs1.getString("SITE_ID");
+	 		 			vWareName = rs1.getString("WARE_NAME");
+
+	 		 			if((vSiteID != null && !vSiteID.equalsIgnoreCase("0") && !vSiteID.equalsIgnoreCase("null"))
+	 		 				&& (vWareID != null && !vWareID.equalsIgnoreCase("0") && !vWareID.equalsIgnoreCase("null")) 
+	 		 				&& (vWareName != null && !vWareName.equalsIgnoreCase("0") && !vWareName.equalsIgnoreCase("null"))) {
+		 		 			if((tmpSiteID == null || tmpSiteID.equalsIgnoreCase("0") || tmpSiteID.equalsIgnoreCase("null")) 
+		 		 			&& (tmpWareID == null || tmpWareID.equalsIgnoreCase("0") || tmpWareID.equalsIgnoreCase("null"))
+		 		 			&& (tmpWareName != null || tmpWareName.equalsIgnoreCase("0") || tmpWareName.equalsIgnoreCase("null"))) {
+		 		 				PreparedStatement updatetemp = null;
+		 		 				updatetemp=conalm.prepareStatement("Update TEMP_NODE_ACTIVE"
+		 		 				+ " SET SITE_ID='"+vSiteID+"', WARE_ID='"+vWareID+"', WARE_NAME='"+vWareName+"'"
+		 		 				+ " WHERE NODE_ID='"+rs.getString("NODE_ID")+"' AND NODE_NAME='"+rs.getString("NODE_NAME")+"'");
+		 		 				updatetemp.executeUpdate();
+		 		 				updatetemp.close();
+		 		 			}
+	 		 			}
+	 		 			
+	 		 		 }
+	 		 		 
+	 		 		 
+	 		 	 }
+	 		 	stmt1.close();
+		 		rs1.close();
+	 	 }
+	 	 stmt.close();
+	 	 rs.close();
+	 	 
+	 }
 }

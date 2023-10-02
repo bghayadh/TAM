@@ -168,8 +168,8 @@
 }
 
 .circle1 {
-  height: 25px;
-  width: 25px;
+  height: 35px;
+  width: 35px;
   background-color: yellow;
   border-radius: 100%;
   padding:1px 7px;
@@ -312,6 +312,150 @@
 					</div>
 				</div>
 				
+				
+				<!--  New Elements -->
+				<div class="card-body cadr">
+					<div class="card-group ">
+					<div class="col-lg-4">
+						<div class="mx-auto cardsClass">
+            				<div class="card bg-light mb-3 mx-auto ">            				
+                				<div class="card-header Cardheader">
+                				<div class="row">
+                				<div class="col-sm-1" style="align:center; margin-top: 8px; margin-left: -14px;">
+                				<span class="circle1">4</span>
+                				</div>
+                				<div class="col-sm-10">                				
+                				<button class="button3" id="NewParsing" style="align:center; margin-left: 14px;">New Parsing</button>
+                				</div>
+                				</div>
+                				</div>
+                				<div class="card-body mycard CardBody">
+                					<div id="loadingmessage11" class="loadingmsg">
+                						<img src="../../resources/images/ajax-loader.gif">
+                					</div>
+                					<div id="loadingResult11" class="loadingRes"></div>
+                				</div>
+           					 </div>
+      					</div>
+      				</div>
+      				<div class="col-lg-4">
+      					<div class="mx-auto cardsClass">
+            				<div class="card bg-light mb-3 mx-auto ">
+                				<div class="card-header Cardheader">
+                				<div class="row">
+                				<div class="col-sm-1" style="align:center; margin-top: 8px; margin-left: -14px;">
+                				<span class="circle1">5</span>
+                				</div>
+                				<div class="col-sm-10">
+                				<button class="button3" id="NewCabinetMovement" style="align:center; margin-left: 14px;">Check Cabinet Movement</button>
+                				</div>
+                				</div>
+                				</div>
+                				<div class="card-body mycard CardBody">
+                					<div id="loadingmessage22" class="loadingmsg">
+                						<img src="../../resources/images/ajax-loader.gif">
+                					</div>
+                					<div id="loadingResult22" class="loadingRes"></div>
+                				</div>
+           					 </div>
+      					</div>
+      				</div>
+      				<div class="col-lg-4">
+						<div class="mx-auto cardsClass">
+            				<div class="card bg-light mb-3 mx-auto ">
+                				<div class="card-header Cardheader">
+                				<div class="row">
+                				<div class="col-sm-1" style="align:center; margin-top: 8px; margin-left: -14px;">
+                				<span class="circle1">6</span>
+                				</div>
+                				<div class="col-sm-10">                				 
+                				<button class="button3" id="NewBoardMovement" style="align:center; margin-left: 20px;">Check Board Movement</button>
+                				</div>
+                				</div>
+                				</div>
+                				<div class="card-body mycard CardBody">
+                					<div id="loadingmessage33" class="loadingmsg">
+                						<img src="../../resources/images/ajax-loader.gif">
+                					</div>
+                					<div id="loadingResult33" class="loadingRes"></div>
+                				</div>
+           					 </div>
+      					</div>
+      				</div>
+					</div>
+				</div>
+				
+				<div class="card-body cadr">
+					<div class="card-group ">
+					<div class="col-lg-4">
+						<div class="mx-auto cardsClass">
+            				<div class="card bg-light mb-3 mx-auto ">            				
+                				<div class="card-header Cardheader">
+                				<div class="row">
+                				<div class="col-sm-1" style="align:center; margin-top: 8px; margin-left: -14px;">
+                				<span class="circle1">7</span>
+                				</div>
+                				<div class="col-sm-10">                				
+                				<button class="button3" id="NewAntennaMovement" style="align:center; margin-left: 14px;">Check Antenna Movement</button>
+                				</div>
+                				</div>
+                				</div>
+                				<div class="card-body mycard CardBody">
+                					<div id="loadingmessage44" class="loadingmsg">
+                						<img src="../../resources/images/ajax-loader.gif">
+                					</div>
+                					<div id="loadingResult44" class="loadingRes"></div>
+                				</div>
+           					 </div>
+      					</div>
+      				</div>
+      				<div class="col-lg-4">
+      					<div class="mx-auto cardsClass">
+            				<div class="card bg-light mb-3 mx-auto ">
+                				<div class="card-header Cardheader">
+                				<div class="row">
+                				<div class="col-sm-1" style="align:center; margin-top: 8px; margin-left: -14px;">
+                				<span class="circle1">8</span>
+                				</div>
+                				<div class="col-sm-10">
+                				<button class="button3" id="NewHostVerMovement" style="align:center; margin-left: 14px;">Check Host Ver Movement</button>
+                				</div>
+                				</div>
+                				</div>
+                				<div class="card-body mycard CardBody">
+                					<div id="loadingmessage55" class="loadingmsg">
+                						<img src="../../resources/images/ajax-loader.gif">
+                					</div>
+                					<div id="loadingResult55" class="loadingRes"></div>
+                				</div>
+           					 </div>
+      					</div>
+      				</div>
+      				<div class="col-lg-4">
+						<div class="mx-auto cardsClass">
+            				<div class="card bg-light mb-3 mx-auto ">
+                				<div class="card-header Cardheader">
+                				<div class="row">
+                				<div class="col-sm-1" style="align:center; margin-top: 8px; margin-left: -14px;">
+                				<span class="circle1">9</span>
+                				</div>
+                				<div class="col-sm-10">                				 
+                				<button class="button3" id="NewNodeMovement" style="align:center; margin-left: 20px;">Check Node Movement</button>
+                				</div>
+                				</div>
+                				</div>
+                				<div class="card-body mycard CardBody">
+                					<div id="loadingmessage66" class="loadingmsg">
+                						<img src="../../resources/images/ajax-loader.gif">
+                					</div>
+                					<div id="loadingResult66" class="loadingRes"></div>
+                				</div>
+           					 </div>
+      					</div>
+      				</div>
+					</div>
+				</div>
+				<!--  End of New Elements -->
 
 				<div class="card-body cadr">
 					<div class="card-group ">
@@ -322,10 +466,10 @@
                 				<div class="card-header Cardheader" style="vertical-align:middle;">
                 				<div class="row">                				
                 				<div class="col-sm-1" style="align:center; margin-top: 8px; margin-left: -14px;">
-                				<span class="circle1">4</span>
+                				<span class="circle1">10</span>
                 				</div>
                 				<div class="col-sm-10">
-                				<button class="button3" id="checkNodeMovement" style="align:center; margin-left: 25px;">Check Node Movement</button>
+                				<button class="button3" id="checkNodeMovement" style="align:center; margin-left: 25px;">Old Check Node Movement</button>
                 				</div>                				
                 				</div>
                 				</div>
@@ -345,10 +489,10 @@
                 				<div class="card-header Cardheader">
                 				<div class="row">                				
                 				<div class="col-sm-1" style="align:center; margin-top: 8px; margin-left: -14px;">
-                				<span class="circle1">5</span>
+                				<span class="circle1">11</span>
                 				</div>
                 				<div class="col-sm-10">                				
-                				<button class="button3" id="checkCabinetMovement" style="align:center; margin-left: 20px;">Check Cabinet Movement</button>
+                				<button class="button3" id="checkCabinetMovement" style="align:center; margin-left: 20px;">Old Check Cabinet Movement</button>
                 				</div>
                 				</div>
                 				</div>
@@ -367,10 +511,10 @@
                 				<div class="card-header Cardheader">
                 				<div class="row">                				
                 				<div class="col-sm-1" style="align:center; margin-top: 8px; margin-left: -14px;">
-                				<span class="circle1">6</span>
+                				<span class="circle1">12</span>
                 				</div>
                 				<div class="col-sm-10">                				
-                				<button class="button3" id="checkBoardMovement" style="align:center; margin-left: 20px;">Check Board Movement</button>
+                				<button class="button3" id="checkBoardMovement" style="align:center; margin-left: 20px;">Old Check Board Movement</button>
                 				</div>
                 				</div>
                 				</div>
@@ -395,10 +539,10 @@
 									<div class="card-header Cardheader" style="vertical-align:middle;">
 									<div class="row">                				
 									<div class="col-sm-1" style="align:center; margin-top: 8px; margin-left: -14px;">
-									<span class="circle1">4</span>
+									<span class="circle1">13</span>
 									</div>
 									<div class="col-sm-10">
-									<button class="button3" id="checkAntennaMovement" style="align:center; margin-left: 25px;">Check Antenna Movement</button>
+									<button class="button3" id="checkAntennaMovement" style="align:center; margin-left: 25px;">Old Check Antenna Movement</button>
 									</div>                				
 									</div>
 									</div>
@@ -418,10 +562,10 @@
 									<div class="card-header Cardheader">
 									<div class="row">                				
 									<div class="col-sm-1" style="align:center; margin-top: 8px; margin-left: -14px;">
-									<span class="circle1">5</span>
+									<span class="circle1">14</span>
 									</div>
 									<div class="col-sm-10">                				
-									<button class="button3" id="checkHostVersionMovement" style="align:center; margin-left: 20px;">Check host Version Movement</button>
+									<button class="button3" id="checkHostVersionMovement" style="align:center; margin-left: 20px;">Old Check host Version Movement</button>
 									</div>
 									</div>
 									</div>
@@ -440,10 +584,10 @@
 									<div class="card-header Cardheader">
 									<div class="row">                				
 									<div class="col-sm-1" style="align:center; margin-top: 8px; margin-left: -14px;">
-									<span class="circle1">6</span>
+									<span class="circle1">15</span>
 									</div>
 									<div class="col-sm-10">                				
-									<button class="button3" id="NewAttribute" style="align:center; margin-left: 20px;">New Attribute</button>
+									<button class="button3" id="NewAttribute" style="align:center; margin-left: 20px;">Old New Attribute</button>
 									</div>
 									</div>
 									</div>
@@ -475,7 +619,7 @@ $("#loadFiles").click(function() {
 	console.log("loader_vendor "+loader_vendor);
 	console.log("loader_type "+loader_type);
 	
-	/*if(loader_vendor=="Huawei"&& loader_domain=="Ran"){
+	/*if(loader_vendor=="Huawei"&& loader_domain=="RAN"){
 		url='loadFilesAOSS';
 	}*/
 	if(loader_vendor=="Huawei"&& loader_domain=="RAN"){
@@ -586,6 +730,124 @@ $("#firstParsing").click(function() {
 
 });
 
+//New Parsing
+$("#NewParsing").click(function() {
+	$('#loadingmessage11').show();
+	$.ajax({
+         type: "GET",
+         url : '${pageContext.request.contextPath}/newParsing',
+         contentType: "application/json",
+         dataType: "json",
+         data: {
+         	//"Test" : "1234"            	
+         },
+      success : function(data) {
+   	   $('#loadingmessage11').hide();
+            $("#loadingResult11").html(data.Result);
+			console.log("Success Result");
+         },
+        error : function(error) {
+        	console.log("Failure in returning data ");
+         }
+	 });
+
+});
+
+//Cabinet Movement
+$("#NewCabinetMovement").click(function() {
+	$('#loadingmessage22').show();
+	$.ajax({
+         type: "GET",
+         url : '${pageContext.request.contextPath}/newCabinetMovement',
+         contentType: "application/json",
+         dataType: "json",
+         data: {
+         	//"Test" : "1234"            	
+         },
+      success : function(data) {
+   	   $('#loadingmessage22').hide();
+            $("#loadingResult22").html(data.Result);
+			console.log("Success Result");
+         },
+        error : function(error) {
+        	console.log("Failure in returning data ");
+         }
+	 });
+
+});
+
+//Board Movement
+$("#NewBoardMovement").click(function() {
+	$('#loadingmessage33').show();
+	$.ajax({
+         type: "GET",
+         url : '${pageContext.request.contextPath}/newBoardMovement',
+         contentType: "application/json",
+         dataType: "json",
+         data: {
+         	//"Test" : "1234"            	
+         },
+      success : function(data) {
+   	   $('#loadingmessage33').hide();
+            $("#loadingResult33").html(data.Result);
+			console.log("Success Result");
+         },
+        error : function(error) {
+        	console.log("Failure in returning data ");
+         }
+	 });
+});
+
+//Antenna Movement
+$("#NewAntennaMovement").click(function() {
+	$('#loadingmessage44').show();
+	$.ajax({
+         type: "GET",
+         url : '${pageContext.request.contextPath}/newAntennaMovement',
+         contentType: "application/json",
+         dataType: "json",
+         data: {
+         	//"Test" : "1234"            	
+         },
+      success : function(data) {
+   	   $('#loadingmessage44').hide();
+            $("#loadingResult44").html(data.Result);
+			console.log("Success Result");
+         },
+        error : function(error) {
+        	console.log("Failure in returning data ");
+         }
+	 });
+});
+
+//Node Movement
+$("#NewNodeMovement").click(function() {
+	$('#loadingmessage66').show();
+	var url;
+	var loader_domain=$('#loaderDomain').val();
+	var loader_subdomain=$('#loaderSubDomain').val();
+	var loader_vendor=$('#loaderVendor').val();
+	var loader_type=$('#loaderType').val();
+
+	$.ajax({
+         type: "GET",
+         url : '${pageContext.request.contextPath}/newNodeMovement',
+         contentType: "application/json",
+         dataType: "json",
+         data: {
+         	//"Test" : "1234"   
+          	domain : loader_domain         	
+         },
+      success : function(data) {
+   	   $('#loadingmessage66').hide();
+            $("#loadingResult66").html(data.Result);
+			console.log("Success Result");
+         },
+        error : function(error) {
+        	console.log("Failure in returning data ");
+         }
+	 });
+});
 $("#checkNodeMovement").click(function() {
 	$('#loadingmessage4').show();
 	$.ajax({

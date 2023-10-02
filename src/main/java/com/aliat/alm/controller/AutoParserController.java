@@ -32,6 +32,11 @@ import com.aliat.alm.Parser.CheckHostVersionMovement;
 import com.aliat.alm.Parser.CheckHostVersionMovement_WIN;
 import com.aliat.alm.Parser.NewAttribute;
 import com.aliat.alm.Parser.NewAttribute_WIN;
+import com.aliat.alm.Parser.NewBoardMovement;
+import com.aliat.alm.Parser.NewCabinetMovement;
+import com.aliat.alm.Parser.VirtualNodeMovement;
+import com.aliat.alm.Parser.NewParsing;
+import com.aliat.alm.Parser.PhysicalNodeMovement_MAC;
 import com.aliat.alm.Parser.CopyParsingDataToALM;
 import com.aliat.alm.Parser.CopyParsingDataToALM_WIN;
 import com.aliat.alm.Parser.FirstParsing;
@@ -39,6 +44,7 @@ import com.aliat.alm.Parser.FirstParsing_WIN;
 import com.aliat.alm.Parser.LoadFilesAOSS;
 import com.aliat.alm.Parser.LoadFilesAOSS_WIN;
 import com.aliat.alm.Parser.LoadFilesNokia;
+import com.aliat.alm.Parser.NewAntennaMovement;
 import com.aliat.alm.services.LoginServices;
 
 import com.aliat.alm.telkom.Parser.LoadFileDWDMHuawei;
@@ -324,7 +330,73 @@ public class AutoParserController {
 		rtn.put("Result", "Script is Done");
 		return rtn;
 	}
+	
+	@RequestMapping(value = "/newParsing", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> newParsing(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws SecurityException, IOException, InterruptedException, SQLException, ParseException {
 
+		Map<String, Object> rtn = new LinkedHashMap<>();
+//		FirstParsing_WIN myClass = new FirstParsing_WIN();
+		NewParsing newParsing = new NewParsing();
+		newParsing.main(null);
+		rtn.put("Result", "Script is Done");
+		return rtn;
+	}
+
+	@RequestMapping(value = "/newCabinetMovement", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> newCabinetMovement(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws SecurityException, IOException, InterruptedException, SQLException, ParseException {
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+//		FirstParsing_WIN myClass = new FirstParsing_WIN();
+		NewCabinetMovement cabMovement = new NewCabinetMovement();
+		cabMovement.main(null);
+		rtn.put("Result", "Script is Done");
+		return rtn;
+	}
+	
+	@RequestMapping(value = "/newBoardMovement", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> newBoardMovement(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws SecurityException, IOException, InterruptedException, SQLException, ParseException {
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+//		FirstParsing_WIN myClass = new FirstParsing_WIN();
+		NewBoardMovement boardMovement = new NewBoardMovement();
+		boardMovement.main(null);
+		rtn.put("Result", "Script is Done");
+		return rtn;
+	}
+	
+	@RequestMapping(value = "/newAntennaMovement", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> newAntennaMovement(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws SecurityException, IOException, InterruptedException, SQLException, ParseException {
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+//		FirstParsing_WIN myClass = new FirstParsing_WIN();
+		NewAntennaMovement antennaMovement = new NewAntennaMovement();
+		antennaMovement.main(null);
+		rtn.put("Result", "Script is Done");
+		return rtn;
+	}
+	
+	@RequestMapping(value = "/newNodeMovement", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> newNodeMovement(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws SecurityException, IOException, InterruptedException, SQLException, ParseException {
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+//		CheckNodeMovement_WIN myClass = new CheckNodeMovement_WIN();
+		if(request.getParameter("domain").equalsIgnoreCase("RAN")) {
+			VirtualNodeMovement nodeMovement = new VirtualNodeMovement();
+			nodeMovement.main(null);
+		}else {
+			PhysicalNodeMovement_MAC nodeMovement = new PhysicalNodeMovement_MAC();
+			nodeMovement.main(null);
+		}
+		
+		rtn.put("Result", "Script is Done");
+		return rtn;
+	}
+	
 	@RequestMapping(value = "/checkNodeMovement", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> checkNodeMovement(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws SecurityException, IOException, InterruptedException, SQLException, ParseException {

@@ -645,6 +645,8 @@ public class LoadFilesRanHuawei {
 	 					nodeNBInterfaceSeq = allSeqResultSet.getInt("NODE_NBInterfaces");
 
 	 				}
+	 				stmnt.close();
+	 				allSeqResultSet.close();
 	 					 
 	 					 
 					for (int temp = 0; temp < nList.getLength(); temp++) {
