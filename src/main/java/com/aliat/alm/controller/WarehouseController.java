@@ -19,13 +19,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.aliat.alm.models.WareHouseListView;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -64,7 +65,7 @@ public class WarehouseController {
 	private static final String TECH_3g = "tech_3g";
 	private static final String TECH_4g = "tech_4g";
 	private static final String TECH_5g = "tech_5g";
-	
+
 	private static final String Utilization2G = "Utilization2g";
 	private static final String Utilization3G = "Utilization3g";
 	private static final String Utilization4G = "Utilization4g";
@@ -93,17 +94,17 @@ public class WarehouseController {
 	private static Transaction tx = null;
 	private static ObjectMapper mapper = new ObjectMapper();
 	private static Query query = null;
+	private String str = null;
 	private String siteimgID, siteimgName;
 
 	@Autowired
 	ALMSessions almsessions;
-	
+
 	@Autowired
 	Form form;
-	
+
 	@Autowired
 	Notify notifications;
-
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/WarehouseListView", method = RequestMethod.GET)
@@ -122,7 +123,7 @@ public class WarehouseController {
 
 					List<WareHouseListView> listAR = new ArrayList<WareHouseListView>();
 
-					String str = "select WARE_ID as wareID,WARE_ID as warehouseID,WARE_NAME as warehouseName,SITE_ID as wareSiteID, TO_CHAR ( LAST_MODIFY_DATE , 'YYYY-MM-DD HH24:MI:SS') as wlastModifieddate,"
+					str = "select WARE_ID as wareID,WARE_ID as warehouseID,WARE_NAME as warehouseName,SITE_ID as wareSiteID, TO_CHAR ( LAST_MODIFY_DATE , 'YYYY-MM-DD HH24:MI:SS') as wlastModifieddate,"
 							+ " AREA_NAME as areaName,LONGITUDE as wareLong,LATITUDE as wareLat,"
 							+ "CITY as wareCity,REGION_NAME as regionName from WAREHOUSE order by LAST_MODIFY_DATE DESC";
 
@@ -187,13 +188,11 @@ public class WarehouseController {
 				lat = request.getParameter("lat");
 				radius = request.getParameter("radius");
 				double distance = 0.0;
-				
-				List<Object[]> listCrclWare = new ArrayList<Object[]>();
-				List<Object[]> listwarehouse = new ArrayList<Object[]>();					
-				
 
-				
-				String str = "select WARE_ID as wareID,WARE_ID as warehouseID,WARE_NAME as warehouseName,SITE_ID as wareSiteID,TO_CHAR(LAST_MODIFY_DATE, 'YYYY-MM-DD HH24:MI:SS') as wlastModifieddate,"
+				List<Object[]> listCrclWare = new ArrayList<Object[]>();
+				List<Object[]> listwarehouse = new ArrayList<Object[]>();
+
+				str = "select WARE_ID as wareID,WARE_ID as warehouseID,WARE_NAME as warehouseName,SITE_ID as wareSiteID,TO_CHAR(LAST_MODIFY_DATE, 'YYYY-MM-DD HH24:MI:SS') as wlastModifieddate,"
 						+ " AREA_NAME as areaName,LONGITUDE as wareLong,LATITUDE as wareLat,"
 						+ "CITY as wareCity,REGION_NAME as regionName from WAREHOUSE";
 
@@ -286,30 +285,30 @@ public class WarehouseController {
 				str = str + " ORDER BY LAST_MODIFY_DATE DESC ";
 				Query query = session.createSQLQuery(str);
 				listwarehouse = query.list();
-				
-				
-			//	rtn.put("listwarehouse", listwarehouse);
 
-			if (( radius != null && !radius.equalsIgnoreCase("") && Double.parseDouble(radius) > 0) && (longg != null && !longg.equalsIgnoreCase("")) && (lat != null
-						&& !lat.equalsIgnoreCase(""))) {
-				
+				// rtn.put("listwarehouse", listwarehouse);
+
+				if ((radius != null && !radius.equalsIgnoreCase("") && Double.parseDouble(radius) > 0)
+						&& (longg != null && !longg.equalsIgnoreCase(""))
+						&& (lat != null && !lat.equalsIgnoreCase(""))) {
+
 					for (int i = 0; i < listwarehouse.size(); i++) {
-						
-					
+
 						distance = haversine(Double.parseDouble(longg), Double.parseDouble(lat),
-								Double.valueOf(listwarehouse.get(i)[6].toString()),Double.valueOf(listwarehouse.get(i)[7].toString()));
-					
+								Double.valueOf(listwarehouse.get(i)[6].toString()),
+								Double.valueOf(listwarehouse.get(i)[7].toString()));
+
 						if (distance <= Double.parseDouble(radius)) {
 							listCrclWare.add(listwarehouse.get(i));
 						}
 					}
-			
+
 					rtn.put("listwarehouse", listCrclWare);
-				}else {
-				rtn.put("listwarehouse", listwarehouse);
-				System.out.println("Filtered Array: " + mapper.writeValueAsString(listwarehouse));
+				} else {
+					rtn.put("listwarehouse", listwarehouse);
+					System.out.println("Filtered Array: " + mapper.writeValueAsString(listwarehouse));
 				}
-				
+
 			} catch (Exception e) {
 				logger.info("Error in showing the filtered warehouse list view with a message :" + e);
 				e.printStackTrace();
@@ -387,7 +386,7 @@ public class WarehouseController {
 					model.addAttribute("wlastModifieddate",
 							formatter.format(new Timestamp(System.currentTimeMillis())).toString());
 					model.addAttribute("docStatus", "addNew");
-					model.addAttribute("listWareProLoss", "addNew");					
+					model.addAttribute("listWareProLoss", "addNew");
 					model.addAttribute("SelectedIndex", "addNew");
 					model.addAttribute("wareCount", "addNew");
 					model.addAttribute("listSiteImage", "addNew");
@@ -395,7 +394,7 @@ public class WarehouseController {
 					model.addAttribute("ListGCell", "addNew");
 					model.addAttribute("ListUCell", "addNew");
 					model.addAttribute("ListLCell", "addNew");
-					model.addAttribute("siteName", "addNew");
+//					model.addAttribute("siteName", "addNew");
 					model.addAttribute("nodes", "addNew");
 					model.addAttribute("nodeType", "addNew");
 					model.addAttribute("SRanBscount", "addNew");
@@ -539,132 +538,77 @@ public class WarehouseController {
 					query.setParameter("param1", wareCity);
 
 					model.addAttribute("listNearWares", mapper.writeValueAsString(query.list()));
-                    //get inventory info
-					
-					
-					 query = session.createSQLQuery(
-							    "SELECT site_id from warehouse where ware_id=:param1"
-							);
-						query.setParameter("param1", wareID);
-						String siteId = (String) query.uniqueResult();
-						
-						System.out.println(siteId);
+					// get inventory info
+
 
 					List<Object[]> Inventory = new ArrayList<Object[]>();
-					
-					String queryString = "SELECT ar.Item_code, ar.Item_Name, ar.Item_Model, ar.Item_part_number, COUNT(*) AS quantity, "
-						    + "SUM(COALESCE(ar.Initial_Cost, "
-						    + "(SELECT AVG(Net_Rate) "
-						    + "FROM purchase_order_item poi "
-						    + "WHERE poi.Item_code = ar.Item_code)"
-						    + ")) AS Total_Initial_Cost, "
-						    + "SUM(COALESCE(far.ACCUMULDEPRECAMNT, 0)) AS Total_Depreciation, "
-						    + "SUM(COALESCE(far.NetCost, ar.Initial_Cost)) AS Total_Net_Cost "
-						    + "FROM asset_registry ar "
-						    + "LEFT JOIN fixed_asset_registry far ON ar.Ar_ID = far.Ar_ID "
-						    + "WHERE ar.Ar_ID IN (SELECT Ar_ID FROM AR_SITE WHERE Site_id = :param1) "
-						    + "GROUP BY ar.Item_code, ar.Item_Name, ar.Item_Model, ar.Item_part_number";
 
-						query = session.createSQLQuery(queryString);
+					str = "SELECT ar.Item_code, ar.Item_Name, ar.Item_Model, ar.Item_part_number, COUNT(*) AS quantity, "
+							+ "SUM(COALESCE(ar.Initial_Cost, " + "(SELECT AVG(Net_Rate) "
+							+ "FROM purchase_order_item poi " + "WHERE poi.Item_code = ar.Item_code)"
+							+ ")) AS Total_Initial_Cost, "
+							+ "SUM(COALESCE(far.ACCUMULDEPRECAMNT, 0)) AS Total_Depreciation, "
+							+ "SUM(COALESCE(far.NetCost, COALESCE(ar.Initial_Cost, (SELECT AVG(Net_Rate) "
+							+ "FROM purchase_order_item poi "
+							+ "WHERE poi.Item_code = ar.Item_code)))) AS Total_Net_Cost "
+							+ "FROM asset_registry ar "
+							+ "LEFT JOIN fixed_asset_registry far ON ar.Ar_ID = far.Ar_ID "
+							+ "WHERE ar.Ar_ID IN (SELECT Ar_ID FROM AR_SITE WHERE WARE_ID = :param1) "
+							+ "GROUP BY ar.Item_code, ar.Item_Name, ar.Item_Model, ar.Item_part_number";
+
+					query = session.createNativeQuery(str);
+					query.setParameter("param1", wareID);
 
 
-					
-                        
-						query.setParameter("param1", siteId);
-						ObjectMapper mapper = new ObjectMapper();
-					    String resultList =  mapper.writeValueAsString(query.list());;
-				
-					
-						
-					
-					          
-					            model.addAttribute("listInventory", mapper.writeValueAsString(query.list()));
-				                   
-					          
-					            
-					            
-					            LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
+					model.addAttribute("listInventory", mapper.writeValueAsString(query.list()));
 
-								String Site_Query ="Select DISTINCT   Ware_Name From NODE_ACTIVE where Ware_Id='" + wareID + "'";
-								Object Sites = session.createSQLQuery(Site_Query).uniqueResult();
-								model.addAttribute("siteName",  mapper.writeValueAsString(Sites));
-								
-								String Node_Active_Query = wareID == ""
-										? "SELECT COUNT(distinct UNIQUE_NODE_ID) FROM NODE_ACTIVE where Active_record='1'"
-										: "SELECT COUNT(UNIQUE_NODE_ID) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='" + wareID
-										+ "'";
-								
-								Object CountNodes_Active = session.createSQLQuery(Node_Active_Query).uniqueResult();
+					str = "SELECT COUNT(UNIQUE_NODE_ID) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"+ wareID + "'";					
+					model.addAttribute("nodes", mapper.writeValueAsString(session.createNativeQuery(str).uniqueResult()));
 
-								model.addAttribute("nodes",  mapper.writeValueAsString(CountNodes_Active));
-								
-								String Node_GCell_Query = wareID == "" ? "SELECT COUNT(GCELL_ID) FROM NODE_GCELL"
-										: "select count(ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"
-												+ wareID + "'";
-								Object CountNodes_G_CELL = session.createSQLQuery(Node_GCell_Query).uniqueResult();
-								model.addAttribute("g-cell",  mapper.writeValueAsString(CountNodes_G_CELL));
-								
-								String Node_LCell_Query = wareID == "" ? "SELECT COUNT(LCELL_ID) FROM NODE_LCELL"
-										: "select count(nlc.LCell_Id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
-												+ wareID + "'";
-								Object CountNodes_L_CELL = session.createSQLQuery(Node_LCell_Query).uniqueResult();
-								model.addAttribute("l-cell",  mapper.writeValueAsString(CountNodes_L_CELL));
-								
-								String Node_UCell_Query = wareID == "" ? "SELECT COUNT(UCELL_ID) FROM NODE_UCELL"
-										: "select count(nlc.UCell_Id) from node_ucell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
-												+ wareID + "'";
-								Object CountNodes_U_CELL = session.createSQLQuery(Node_UCell_Query).uniqueResult();
-								model.addAttribute("u-cell",  mapper.writeValueAsString(CountNodes_U_CELL));
-								
-								String Node_Type_Count = "SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"
-										+ wareID + "'";
-								Object CountNodesType = session.createSQLQuery(Node_Type_Count).uniqueResult();
-								model.addAttribute("nodeType",  mapper.writeValueAsString(CountNodesType));
-								
-								String SRanBs = "SELECT COUNT( NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and NODE_TYPE='SRanBs' and Ware_Id='" + 
-							     wareID +"'";
-								Object SRanBscount = session.createSQLQuery(SRanBs).uniqueResult();
-								model.addAttribute("SRanBscount",  mapper.writeValueAsString(SRanBscount));
-								
-								String IDU = "SELECT COUNT( NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and NODE_TYPE='IDU' and Ware_Id='" + 
-									     wareID +"'";
-								Object IDUcount = session.createSQLQuery(IDU).uniqueResult();
-								model.addAttribute("IDUcount",  mapper.writeValueAsString(IDUcount));
-							
-								
-								
-								String queryString1 = "SELECT node_id, node_name, node_type,domain,vendor,TECH_2G,TECH_3G,TECH_4G,TECH_5G,Node_model from node_active where site_id=:param1";
-										
-								
-								query = session.createSQLQuery(queryString1);
-                              	query.setParameter("param1", siteId);
-								  String resultList1 =  mapper.writeValueAsString(query.list());;
-						           model.addAttribute("Listnode", mapper.writeValueAsString(query.list()));
-					               
-						           
-						           
-						           
-						           String str = " select GCELL_ID ,CELLNAME FROM NODE_GCELL WHERE NODE_PK IN (Select NODE_PK from node_active where site_id=:param1)"; 
-						         	query = session.createSQLQuery(str);
-	                              	query.setParameter("param1", siteId);
-	                                model.addAttribute("ListGCell", mapper.writeValueAsString(query.list()));
-						              
-	                                String str1 = " select LCELL_ID ,CELLNAME FROM NODE_LCELL WHERE NODE_PK IN (Select NODE_PK from node_active where site_id=:param1)"; 
-						         	query = session.createSQLQuery(str1);
-	                              	query.setParameter("param1", siteId);
-	                                model.addAttribute("ListLCell", mapper.writeValueAsString(query.list()));
-						            
-					
-	                                
-	                                
-	                                
-	                                String str2 = " select UCELL_ID ,CELLNAME FROM NODE_UCELL WHERE NODE_PK IN (Select NODE_PK from node_active where site_id=:param1)"; 
-						         	query = session.createSQLQuery(str2);
-	                              	query.setParameter("param1", siteId);
-	                                model.addAttribute("ListUCell", mapper.writeValueAsString(query.list()));
-						            
+					str = "select count(ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '" + wareID + "'";
+					model.addAttribute("g-cell", mapper.writeValueAsString(session.createNativeQuery(str).uniqueResult()));
+
+					str = "select count(nlc.LCell_Id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '" + wareID + "'";					
+					model.addAttribute("l-cell", mapper.writeValueAsString(session.createNativeQuery(str).uniqueResult()));
+
+					str = "select count(nlc.UCell_Id) from node_ucell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '" + wareID + "'";
+					model.addAttribute("u-cell", mapper.writeValueAsString(session.createNativeQuery(str).uniqueResult()));
+
+					str = "SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='" + wareID + "'";					
+					model.addAttribute("nodeType", mapper.writeValueAsString(session.createNativeQuery(str).uniqueResult()));
+
+					String SRanBs = "SELECT COUNT( NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and NODE_TYPE='SRanBs' and Ware_Id='"
+							+ wareID + "'";
+					Object SRanBscount = session.createSQLQuery(SRanBs).uniqueResult();
+					model.addAttribute("SRanBscount", mapper.writeValueAsString(SRanBscount));
+
+					String IDU = "SELECT COUNT( NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and NODE_TYPE='IDU' and Ware_Id='"
+							+ wareID + "'";
+					Object IDUcount = session.createSQLQuery(IDU).uniqueResult();
+					model.addAttribute("IDUcount", mapper.writeValueAsString(IDUcount));
+
+					str = "SELECT node_id, node_name, node_type,domain,vendor,TECH_2G,TECH_3G,TECH_4G,TECH_5G,Node_model from node_active where WARE_ID=:param1";
+					query = session.createNativeQuery(str);
+					query.setParameter("param1", wareID);										
+					model.addAttribute("Listnode", mapper.writeValueAsString(query.list()));
+
+					str = " select GCELL_ID ,CELLNAME FROM NODE_GCELL WHERE NODE_PK IN (Select NODE_PK from node_active where WARE_ID=:param1)";
+					query = session.createNativeQuery(str);
+					query.setParameter("param1", wareID);
+					model.addAttribute("ListGCell", mapper.writeValueAsString(query.list()));
+
+					str = " select LCELL_ID ,CELLNAME FROM NODE_LCELL WHERE NODE_PK IN (Select NODE_PK from node_active where WARE_ID=:param1)";
+					query = session.createNativeQuery(str);
+					query.setParameter("param1", wareID);
+					model.addAttribute("ListLCell", mapper.writeValueAsString(query.list()));
+
+					str = " select UCELL_ID ,CELLNAME FROM NODE_UCELL WHERE NODE_PK IN (Select NODE_PK from node_active where WARE_ID=:param1)";
+					query = session.createNativeQuery(str);
+					query.setParameter("param1", wareID);
+					model.addAttribute("ListUCell", mapper.writeValueAsString(query.list()));
+
 					// get site_IMAGE_NAME
-					query = session.createSQLQuery("select IMAGE_PATH from WAREHOUSE_IMAGE where WARE_ID like :param1");
+					query = session.createNativeQuery("select IMAGE_PATH from WAREHOUSE_IMAGE where WARE_ID like :param1");
 					query.setParameter("param1", wareh);
 					String imgpath = mapper.writeValueAsString(query.list());
 
@@ -705,13 +649,12 @@ public class WarehouseController {
 						imagetoweb.start();
 
 					} else {
-
 						model.addAttribute("listSiteImage", "addNew");
-
 					}
 
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 				System.out.println("catch messsage is " + e.getMessage());
 			}
 
@@ -726,24 +669,10 @@ public class WarehouseController {
 
 		return "WarehouseFormView";
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/WarehouseBOQ", method = RequestMethod.GET)
-	public void WarehouseBOQ(Locale locale, Model model, HttpServletRequest request,
-			HttpServletResponse response) {
-
+	public void WarehouseBOQ(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
 
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
 		Object[] Result;
@@ -765,123 +694,109 @@ public class WarehouseController {
 				wareID = request.getParameter("wareID");
 				navAction = request.getParameter("NavAction");
 
-			  //get inventory info
-					
-					
-					 query = session.createSQLQuery(
-							    "SELECT site_id from warehouse where ware_id=:param1"
-							);
-						query.setParameter("param1", wareID);
-						String siteId = (String) query.uniqueResult();
-						
-						System.out.println(siteId);
+				// get inventory info
 
-					List<Object[]> Inventory = new ArrayList<Object[]>();
-					
-					query = session.createSQLQuery(
-						    "SELECT Item_code, Item_Name, Item_Model, Item_part_number, COUNT(*) AS quantity " + 
-						    "FROM asset_registry where Ar_ID in (select Ar_ID from AR_SITE where Site_id=:param1) " + 
-						    "GROUP BY Item_code, Item_Name, Item_part_number, Item_Model"
-						);
-					
-                        
-						query.setParameter("param1", siteId);
-						ObjectMapper mapper = new ObjectMapper();
-					    String resultList =  mapper.writeValueAsString(query.list());;
-				
-						System.out.println(resultList);
-						
-					
-					            List<List<Object>> listOfLists = mapper.readValue(resultList, new TypeReference<List<List<Object>>>() {});
+				query = session.createSQLQuery("SELECT site_id from warehouse where ware_id=:param1");
+				query.setParameter("param1", wareID);
+				String siteId = (String) query.uniqueResult();
 
-					            for (List<Object> innerList : listOfLists) {
-					                System.out.println(innerList.get(0));
-					            }
-					            model.addAttribute("listInventory", mapper.writeValueAsString(query.list()));
-				                   
-					          
-					            
-					            
-					            LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
+				System.out.println(siteId);
 
-								String Site_Query ="Select DISTINCT   Ware_Name From NODE_ACTIVE where Ware_Id='" + wareID + "'";
-								Object Sites = session.createSQLQuery(Site_Query).uniqueResult();
-								model.addAttribute("siteName",  mapper.writeValueAsString(Sites));
-								
-								String Node_Active_Query = wareID == ""
-										? "SELECT COUNT(distinct UNIQUE_NODE_ID) FROM NODE_ACTIVE where Active_record='1'"
-										: "SELECT COUNT(UNIQUE_NODE_ID) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='" + wareID
-										+ "'";
-								
-								Object CountNodes_Active = session.createSQLQuery(Node_Active_Query).uniqueResult();
+				List<Object[]> Inventory = new ArrayList<Object[]>();
 
-								model.addAttribute("nodes",  mapper.writeValueAsString(CountNodes_Active));
-								
-								String Node_GCell_Query = wareID == "" ? "SELECT COUNT(GCELL_ID) FROM NODE_GCELL"
-										: "select count(ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"
-												+ wareID + "'";
-								Object CountNodes_G_CELL = session.createSQLQuery(Node_GCell_Query).uniqueResult();
-								model.addAttribute("g-cell",  mapper.writeValueAsString(CountNodes_G_CELL));
-								
-								String Node_LCell_Query = wareID == "" ? "SELECT COUNT(LCELL_ID) FROM NODE_LCELL"
-										: "select count(nlc.LCell_Id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
-												+ wareID + "'";
-								Object CountNodes_L_CELL = session.createSQLQuery(Node_LCell_Query).uniqueResult();
-								model.addAttribute("l-cell",  mapper.writeValueAsString(CountNodes_L_CELL));
-								
-								String Node_UCell_Query = wareID == "" ? "SELECT COUNT(UCELL_ID) FROM NODE_UCELL"
-										: "select count(nlc.UCell_Id) from node_ucell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
-												+ wareID + "'";
-								Object CountNodes_U_CELL = session.createSQLQuery(Node_UCell_Query).uniqueResult();
-								model.addAttribute("u-cell",  mapper.writeValueAsString(CountNodes_U_CELL));
-								
-								String Node_Type_Count = "SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"
-										+ wareID + "'";
-								Object CountNodesType = session.createSQLQuery(Node_Type_Count).uniqueResult();
-								model.addAttribute("nodeType",  mapper.writeValueAsString(CountNodesType));
-								
-								String SRanBs = "SELECT COUNT( NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and NODE_TYPE='SRanBs' and Ware_Id='" + 
-							     wareID +"'";
-								Object SRanBscount = session.createSQLQuery(SRanBs).uniqueResult();
-								model.addAttribute("SRanBscount",  mapper.writeValueAsString(SRanBscount));
-								
-								String IDU = "SELECT COUNT( NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and NODE_TYPE='IDU' and Ware_Id='" + 
-									     wareID +"'";
-								Object IDUcount = session.createSQLQuery(IDU).uniqueResult();
-								model.addAttribute("IDUcount",  mapper.writeValueAsString(IDUcount));
-									
-								query = session.createQuery(
-										"SELECT nvl(SUM(t.iniCost),'0') as initialcost ,nvl(SUM(t.accumPer),'0') as deprec,nvl(SUM(t.netCost),'0') as netcost FROM FixedAssetRegistry t where t.wareID =:param1");
-								query.setParameter("param1", wareID);
+				query = session.createSQLQuery(
+						"SELECT Item_code, Item_Name, Item_Model, Item_part_number, COUNT(*) AS quantity "
+								+ "FROM asset_registry where Ar_ID in (select Ar_ID from AR_SITE where Site_id=:param1) "
+								+ "GROUP BY Item_code, Item_Name, Item_part_number, Item_Model");
 
-								Result = (Object[]) query.uniqueResult();
+				query.setParameter("param1", siteId);
+				ObjectMapper mapper = new ObjectMapper();
+				String resultList = mapper.writeValueAsString(query.list());
+				;
 
-								double initialcost1 = (double) Math.round(Double.parseDouble(Result[0].toString()) * 100) / 100;
-								model.addAttribute("InitialCost1", initialcost1);
+				System.out.println(resultList);
 
-								double accumPer1 = (double) Math.round(Double.parseDouble(Result[1].toString()) * 100) / 100;
-								model.addAttribute("accumPer1", accumPer1);
+				List<List<Object>> listOfLists = mapper.readValue(resultList, new TypeReference<List<List<Object>>>() {
+				});
 
-								 double totalNetCost1 = (double) Math.round(Double.parseDouble(Result[2].toString()) * 100) / 100;
-								model.addAttribute("totalNetCost1", totalNetCost1);
-								
-								query = session.createSQLQuery(
-									    "SELECT  COUNT(*)  " + 
-									    "FROM asset_registry where Ar_ID in (select Ar_ID from AR_SITE where Site_id=:param1) "  
-									   
-									);
-									query.setParameter("param1", siteId);
-								String	quan =  mapper.writeValueAsString(query.uniqueResult());
-								model.addAttribute("totalquan", quan);
-								
-									
-								
-					
-					// get site_IMAGE_NAME
-					
-					
+				for (List<Object> innerList : listOfLists) {
+					System.out.println(innerList.get(0));
+				}
+				model.addAttribute("listInventory", mapper.writeValueAsString(query.list()));
 
-				
+				LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
+
+				String Site_Query = "Select DISTINCT   Ware_Name From NODE_ACTIVE where Ware_Id='" + wareID + "'";
+				Object Sites = session.createSQLQuery(Site_Query).uniqueResult();
+				model.addAttribute("siteName", mapper.writeValueAsString(Sites));
+
+				String Node_Active_Query = wareID == ""
+						? "SELECT COUNT(distinct UNIQUE_NODE_ID) FROM NODE_ACTIVE where Active_record='1'"
+						: "SELECT COUNT(UNIQUE_NODE_ID) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='" + wareID
+								+ "'";
+
+				Object CountNodes_Active = session.createSQLQuery(Node_Active_Query).uniqueResult();
+
+				model.addAttribute("nodes", mapper.writeValueAsString(CountNodes_Active));
+
+				String Node_GCell_Query = wareID == "" ? "SELECT COUNT(GCELL_ID) FROM NODE_GCELL"
+						: "select count(ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"
+								+ wareID + "'";
+				Object CountNodes_G_CELL = session.createSQLQuery(Node_GCell_Query).uniqueResult();
+				model.addAttribute("g-cell", mapper.writeValueAsString(CountNodes_G_CELL));
+
+				String Node_LCell_Query = wareID == "" ? "SELECT COUNT(LCELL_ID) FROM NODE_LCELL"
+						: "select count(nlc.LCell_Id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
+								+ wareID + "'";
+				Object CountNodes_L_CELL = session.createSQLQuery(Node_LCell_Query).uniqueResult();
+				model.addAttribute("l-cell", mapper.writeValueAsString(CountNodes_L_CELL));
+
+				String Node_UCell_Query = wareID == "" ? "SELECT COUNT(UCELL_ID) FROM NODE_UCELL"
+						: "select count(nlc.UCell_Id) from node_ucell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
+								+ wareID + "'";
+				Object CountNodes_U_CELL = session.createSQLQuery(Node_UCell_Query).uniqueResult();
+				model.addAttribute("u-cell", mapper.writeValueAsString(CountNodes_U_CELL));
+
+				String Node_Type_Count = "SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"
+						+ wareID + "'";
+				Object CountNodesType = session.createSQLQuery(Node_Type_Count).uniqueResult();
+				model.addAttribute("nodeType", mapper.writeValueAsString(CountNodesType));
+
+				String SRanBs = "SELECT COUNT( NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and NODE_TYPE='SRanBs' and Ware_Id='"
+						+ wareID + "'";
+				Object SRanBscount = session.createSQLQuery(SRanBs).uniqueResult();
+				model.addAttribute("SRanBscount", mapper.writeValueAsString(SRanBscount));
+
+				String IDU = "SELECT COUNT( NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and NODE_TYPE='IDU' and Ware_Id='"
+						+ wareID + "'";
+				Object IDUcount = session.createSQLQuery(IDU).uniqueResult();
+				model.addAttribute("IDUcount", mapper.writeValueAsString(IDUcount));
+
+				query = session.createQuery(
+						"SELECT nvl(SUM(t.iniCost),'0') as initialcost ,nvl(SUM(t.accumPer),'0') as deprec,nvl(SUM(t.netCost),'0') as netcost FROM FixedAssetRegistry t where t.wareID =:param1");
+				query.setParameter("param1", wareID);
+
+				Result = (Object[]) query.uniqueResult();
+
+				double initialcost1 = (double) Math.round(Double.parseDouble(Result[0].toString()) * 100) / 100;
+				model.addAttribute("InitialCost1", initialcost1);
+
+				double accumPer1 = (double) Math.round(Double.parseDouble(Result[1].toString()) * 100) / 100;
+				model.addAttribute("accumPer1", accumPer1);
+
+				double totalNetCost1 = (double) Math.round(Double.parseDouble(Result[2].toString()) * 100) / 100;
+				model.addAttribute("totalNetCost1", totalNetCost1);
+
+				query = session.createSQLQuery("SELECT  COUNT(*)  "
+						+ "FROM asset_registry where Ar_ID in (select Ar_ID from AR_SITE where Site_id=:param1) "
+
+				);
+				query.setParameter("param1", siteId);
+				String quan = mapper.writeValueAsString(query.uniqueResult());
+				model.addAttribute("totalquan", quan);
+
+				// get site_IMAGE_NAME
+
 			} catch (Exception e) {
 				System.out.println("catch messsage is " + e.getMessage());
 			}
@@ -895,12 +810,7 @@ public class WarehouseController {
 			}
 		}
 
-		
 	}
-	
-	
-	
-
 
 	@RequestMapping(value = "/WarehouseFormSave", method = RequestMethod.GET)
 	@ResponseBody
@@ -962,13 +872,15 @@ public class WarehouseController {
 
 				wareID = request.getParameter("wareID");
 				if (StringUtils.equalsIgnoreCase(wareID, "")) {
-					synchronized (this) {						
-						wareID = "WARE_" + calendar.get(Calendar.YEAR) + "_" + Integer.parseInt(session.createSQLQuery("SELECT WAREHOUSE FROM SEQ_TABLE").uniqueResult().toString());	
+					synchronized (this) {
+						wareID = "WARE_" + calendar.get(Calendar.YEAR) + "_" + Integer.parseInt(
+								session.createSQLQuery("SELECT WAREHOUSE FROM SEQ_TABLE").uniqueResult().toString());
 						query = session.createSQLQuery("UPDATE SEQ_TABLE SET WAREHOUSE = WAREHOUSE + 1 ");
 						query.executeUpdate();
 						session.createSQLQuery("commit").executeUpdate();
-						}
-					//wareID = "WARE_" + calendar.get(Calendar.YEAR) + "_" + appConfig.getSequenceNbr(12);
+					}
+					// wareID = "WARE_" + calendar.get(Calendar.YEAR) + "_" +
+					// appConfig.getSequenceNbr(12);
 				}
 				area = request.getParameter("areaID");
 				region = request.getParameter("regionID");
@@ -1064,13 +976,18 @@ public class WarehouseController {
 						if (StringUtils.equalsIgnoreCase(itemParameters.getDictParameter().get(i).get(PROFIT_LOSS_ID),
 								"0")) {
 
-							synchronized (this) {						
-								wareProfitLossID = "PrLoss_" + calendar.get(Calendar.YEAR) + "_" + Integer.parseInt(session.createSQLQuery("SELECT WARE_PROFIT_LOSS FROM SEQ_TABLE").uniqueResult().toString());	
-								query = session.createSQLQuery("UPDATE SEQ_TABLE SET WARE_PROFIT_LOSS = WARE_PROFIT_LOSS + 1 ");
+							synchronized (this) {
+								wareProfitLossID = "PrLoss_" + calendar.get(Calendar.YEAR) + "_"
+										+ Integer.parseInt(
+												session.createSQLQuery("SELECT WARE_PROFIT_LOSS FROM SEQ_TABLE")
+														.uniqueResult().toString());
+								query = session.createSQLQuery(
+										"UPDATE SEQ_TABLE SET WARE_PROFIT_LOSS = WARE_PROFIT_LOSS + 1 ");
 								query.executeUpdate();
 								session.createSQLQuery("commit").executeUpdate();
-								}
-							//wareProfitLossID = "PrLoss_" + calendar.get(Calendar.YEAR) + "_" + appConfig.getSequenceNbr(19);
+							}
+							// wareProfitLossID = "PrLoss_" + calendar.get(Calendar.YEAR) + "_" +
+							// appConfig.getSequenceNbr(19);
 						}
 
 						else {
@@ -1235,7 +1152,7 @@ public class WarehouseController {
 			try {
 				String requestValue = request.getParameter("requestValue");
 
-				String str = "select distinct wareID, warehouseName, wareSiteID, wareLong, "
+				str = "select distinct wareID, warehouseName, wareSiteID, wareLong, "
 						+ "wareLat from Warehouse where LOWER(wareID) like LOWER(:param1) or LOWER(warehouseName) like LOWER(:param1) "
 						+ "or LOWER(wareSiteID) like LOWER(:param1) ";
 

@@ -1525,26 +1525,11 @@ select {
 
            <div class="tab-pane fade" id="custom-tabs-Image" role="tabpanel"
 				aria-labelledby="custom-tabs-Image-tab">
-
+				
 				<p></p>
-				<div>
-
-					<form>
-					
-                <div class="siteimg" id="shopimage" style=" display: inline; "></div>
-        
-                
-
-
-					</form>
-				</div>
-
+				<div><form><div class="siteimg" id="shopimage" style=" display: inline; "></div></form></div>
 				<p></p>
 			</div>
-			
-			
-			
-			
 			
 			 <div class="tab-pane fade" id="custom-tabs-node" role="tabpanel"
 				aria-labelledby="custom-tabs-node-tab">
@@ -1605,51 +1590,24 @@ select {
 						    </table>
 
 			</div>
-			
-			
-			
-		
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			   <div class="tab-pane fade" id="custom-tabs-Inventory" role="tabpanel"
+			<div class="tab-pane fade" id="custom-tabs-Inventory" role="tabpanel"
 				aria-labelledby="custom-tabs-Inventory-tab">
-<div> 
-				<form>
-			
-								
-			
-					    
-					    
-					    
-					    
-					    <div style="height:10px"></div>
-					   
+				
+			<div><form><div style="height:10px"></div>
 					    <h4>Inventory</h4>
-						    <table id ="inventorytab" class="table table-striped table-bordered table-sm" style="display:block; height:190px; overflow-y: auto;">
-						       <thead>
-						            <tr class="fixed-headerr">
-						                
-						                <th>Item Code</th>
+						    <table id ="inventorytab" class="table table-striped table-bordered table-sm" style="display:block; height:400px; overflow-y: auto;">
+						       <thead><tr class="fixed-headerr">						                
+						       			<th>Item Code</th>
 						                <th>Item Name</th>
 						                <th>Item Model</th>
 						                <th>Item Part Number</th>
-						                <th> Qantity </th>
-						                 <th>Total initial cost</th>
-						                <th>Total net cost</th>
-						                <th>total depreciation </th>
-						                
-						                </tr></thead></table></div></form>
-				
+						                <th> Quantity </th>
+						                <th>Total Initial Cost</th>						                
+						                <th>Total Depreciation </th>
+										<th>Total Net Cost</th>						                
+						                </tr></thead></table>
+			</form></div>
+
 				  <table id ="inventorytab"  class="table table-striped table-bordered table-sm" style="display:block;  overflow-y: auto;">
 						       <thead>
 						            <tr class="fixed-headerr">
@@ -1816,6 +1774,8 @@ select {
 
 <script>
 
+boqArray = [];
+
 $(document).ready(function () {
      $("#custom-tabs-Inventory-tab").on("click", function () {
          BoQ();
@@ -1932,10 +1892,12 @@ $("#ordstat").click(  function() {
 	
 	
 }
- 
+
  $(document).ready(function(){
 
-	 /////fill the images
+	 /////fill the images	 
+	 
+	 
 	 			 if ('${listSiteImage}' != "addNew") {
 
 				 SiteImageName = [];
@@ -2306,7 +2268,7 @@ if ('${docStatus}' == "addNew") {
 
 if ( '${docStatus}' != "addNew") {
 
-    boqArray = [];
+//    boqArray = [];
     boqArray = ${listWareProLoss};
 	
 	for (i = 0;i<boqArray.length;i++)
@@ -3006,46 +2968,23 @@ boqLCell = ${ListLCell};
 */            
 
 if ('${docStatus}' != "addNew") {
-        	 sitename=${siteName}
-        	 nodes=${nodes}
-        	 nodetype=${nodeType}
-        	 SRanBs=${SRanBscount}
-        	 IDU=${IDUcount}
-        	 gcell=${g-cell}
-        	 lcell=${l-cell}
-        	 ucell=${u-cell}
-        	 
+
         	 $("#inventorytab2").empty();
         	 z="";
-        	z+="<tr>"+
-        	    "<td><b>Site Name</b></td><td >"+sitename+"</td>"+
-        	    "</tr>"+
+        	z+="<tr><td><b>Site Name</b></td><td >"+'${warehouseName}'+"</td></tr>"+
+        	"<tr><td> <b>Nodes</b></td><td >"+'${nodes}'+"</td></tr>"+
         	"<tr>"+
-        	  " <td> <b>Nodes</b></td><td >"+nodes+"</td>"+
-        	 "</tr>"+
-        	"<tr>"+
-        	   "<td><b>Node Type</b></td><td >"+nodetype+"</td>"+
+        	   "<td><b>Node Type</b></td><td >"+'${nodeType}'+"</td>"+
         	"</tr>"+
         	"<tr>"+
-        	  " <td><b>IDU</b></td><td >"+IDU+"</td>"+
+        	  " <td><b>IDU</b></td><td >"+'${IDUcount}'+"</td>"+
         	"</tr>"+
-        	"<tr>"+
-        	   "<td><b>SRansBs</b></td><td >"+SRanBs+"</td>"+
-        	 "</tr>"+
-        	"<tr>"+
-        	  " <td><b>G-cell</b></td><td >"+gcell+"</td>"+
-        	 "</tr>"+
-        	"<tr>"+
-        	   "<td><b>L-cell</b></td><td >"+lcell+"</td>"+
-        	"</tr>"+
-        	"<tr>"+
-        	  "<td><b>U-cell</b></td><td >"+ucell+"</td>"+
-        	"</tr>";
-        	$("#inventorytab2").append(z);
-
+        	"<tr><td><b>SRansBs</b></td><td >"+'${SRanBscount}'+"</td></tr>"+
+        	"<tr><td><b>2G-Cell</b></td><td >"+'${g-cell}'+"</td></tr>"+
+        	"<tr><td><b>3G-Cell</b></td><td >"+'${u-cell}'+"</td></tr>"+
+        	"<tr><td><b>4G-Cell</b></td><td >"+'${l-cell}'+"</td></tr>";
         	
-
-
+        	$("#inventorytab2").append(z);
 
 
         	// Define variables to store the sums
@@ -3054,23 +2993,18 @@ if ('${docStatus}' != "addNew") {
         	var totalDepreciation = 0;
         	var totalQuantity = 0; // Add this variable for total quantity
 
-        	// Define boqArray1 and initialize it with ${listInventory}
-        	var boqArray1 = ${listInventory};
-
-        	console.log(boqArray1);
-
+        	// Define boqArray and initialize it with ${listInventory}
+        	boqArray = ${listInventory};
         	var c = "";
-
-        	for (var i = 0; i < boqArray1.length; i++) {
-        	    console.log(i);
-        	    var itemcode = boqArray1[i][0];
-        	    var itemName = boqArray1[i][1];
-        	    var itemModel = boqArray1[i][2];
-        	    var itemPartNumber = boqArray1[i][3];
-        	    var quantity = boqArray1[i][4];
-        	    var initialcost = boqArray1[i][5];
-        	    var netcost = boqArray1[i][6];
-        	    var dep = boqArray1[i][7];
+        	for (var i = 0; i < boqArray.length; i++) {
+        	    var itemcode = boqArray[i][0];
+        	    var itemName = boqArray[i][1];
+        	    var itemModel = boqArray[i][2];
+        	    var itemPartNumber = boqArray[i][3];
+        	    var quantity = boqArray[i][4];
+        	    var initialcost = boqArray[i][5];
+        	    var dep = boqArray[i][6];
+        	    var netcost = boqArray[i][7];        	    
 
         	    // Handle null values
         	    if (itemcode == null) itemcode = " ";
@@ -3086,8 +3020,8 @@ if ('${docStatus}' != "addNew") {
         	        "<td name='itemPartNumber'><input name='itemPartNumber' type='text' id='itemPartNumber" + i + "' value='" + itemPartNumber + "' style='width:290px;' class='form-control text-input' readonly/></td>" +
         	        "<td name='quantity'><input name='quantity' type='text' id='quantity" + i + "' value='" + quantity + "' style='width:290px;' class='form-control text-input' readonly/></td>" +
         	        "<td name='itemModel'><input name='itemModel' type='text' id='initialcost" + i + "' value='" + initialcost + "' style='width:290px;' class='form-control text-input' readonly/></td>" +
-        	        "<td name='itemPartNumber'><input name='itemPartNumber' type='text' id='netcost" + i + "' value='" + netcost + "' style='width:290px;' class='form-control text-input' readonly/></td>" +
-        	        "<td name='quantity'><input name='quantity' type='text' id='dep" + i + "' value='" + dep + "' style='width:290px;' class='form-control text-input' readonly/></td></tr>";
+        	        "<td name='quantity'><input name='quantity' type='text' id='dep" + i + "' value='" + dep + "' style='width:290px;' class='form-control text-input' readonly/></td>" +
+        	        "<td name='itemPartNumber'><input name='itemPartNumber' type='text' id='netcost" + i + "' value='" + netcost + "' style='width:290px;' class='form-control text-input' readonly/></td></tr>";        	        
 
         	    $("#inventorytab").append(c);
 
@@ -3110,11 +3044,6 @@ if ('${docStatus}' != "addNew") {
         	        totalQuantity += quantityValue; 
         	    }
         	}
-
-        	console.log("Total Initial Cost: " + totalInitialCost);
-        	console.log("Total Net Cost: " + totalNetCost);
-        	console.log("Total Depreciation: " + totalDepreciation);
-        	console.log("Total Quantity: " + totalQuantity);
 
         	document.getElementById("quan").value = totalQuantity;
         	document.getElementById("initial").value = totalInitialCost;
