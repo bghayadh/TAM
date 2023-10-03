@@ -7,7 +7,7 @@ function getContext() {
 // To let the layer tab opened when the page is loaded
 
 	
-function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,distribBoardList,fiberTubes,fiberStrands,fiberAuxiliary_Data,tubesAuxiliaries,strandsAuxiliaries,trenchList,trenchAuxiliary_Data,NodeActiveList,filterFlag){
+function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,distribBoardList,fiberTubes,fiberStrands,fiberAuxiliary_Data,tubesAuxiliaries,strandsAuxiliaries,trenchList,trenchAuxiliary_Data,NodeList,filterFlag){
 
 	var start = performance.now();
 			panPath = [];   // An array of points the current panning action will use
@@ -370,26 +370,26 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			
 		
 			
-			if(NodeActiveList != null){
-			   for(i=0;i<NodeActiveList.length;i++){
-			     if(NodeActiveList[i][8]=='MSAN'){
-			            create_Marker_Click(NodeActiveList[i][0],NodeActiveList[i][1],NodeActiveList[i][5],NodeActiveList[i][6],markersNodeActive,markerClusterMSANNodes,"","");				
-						NodeActiveCheckFilter(NodeActiveList[i][0],markerClusterMSANNodes);
+			if(NodeList != null){
+			   for(i=0;i<NodeList.length;i++){
+			     if(NodeList[i][8]=='MSAN'){
+			            create_Marker_Click(NodeList[i][0],NodeList[i][1],NodeList[i][5],NodeList[i][6],markersNodeActive,markerClusterMSANNodes,"","");				
+						NodeActiveCheckFilter(NodeList[i][0],markerClusterMSANNodes);
 			   }
 			 
-			 else if(NodeActiveList[i][8]=='DWDM'){
-			            create_Marker_Click(NodeActiveList[i][0],NodeActiveList[i][1],NodeActiveList[i][5],NodeActiveList[i][6],markersNodeActive,markerClusterDWDMNodes,"","");				
-						NodeActiveCheckFilter(NodeActiveList[i][0],markerClusterDWDMNodes);
+			 else if(NodeList[i][8]=='DWDM'){
+			            create_Marker_Click(NodeList[i][0],NodeList[i][1],NodeList[i][5],NodeList[i][6],markersNodeActive,markerClusterDWDMNodes,"","");				
+						NodeActiveCheckFilter(NodeList[i][0],markerClusterDWDMNodes);
 			   }
 			   
-			 else if(NodeActiveList[i][8]=='SDH'){
-			            create_Marker_Click(NodeActiveList[i][0],NodeActiveList[i][1],NodeActiveList[i][5],NodeActiveList[i][6],markersNodeActive,markerClusterSDHNodes,"","");				
-						NodeActiveCheckFilter(NodeActiveList[i][0],markerClusterSDHNodes);
+			 else if(NodeList[i][8]=='SDH'){
+			            create_Marker_Click(NodeList[i][0],NodeList[i][1],NodeList[i][5],NodeList[i][6],markersNodeActive,markerClusterSDHNodes,"","");				
+						NodeActiveCheckFilter(NodeList[i][0],markerClusterSDHNodes);
 			   }
 			   
-			 else if(NodeActiveList[i][8]=='GPON'){
-			            create_Marker_Click(NodeActiveList[i][0],NodeActiveList[i][1],NodeActiveList[i][5],NodeActiveList[i][6],markersNodeActive,markerClusterGPONNodes,"","");				
-						NodeActiveCheckFilter(NodeActiveList[i][0],markerClusterGPONNodes);
+			 else if(NodeList[i][8]=='GPON'){
+			            create_Marker_Click(NodeList[i][0],NodeList[i][1],NodeList[i][5],NodeList[i][6],markersNodeActive,markerClusterGPONNodes,"","");				
+						NodeActiveCheckFilter(NodeList[i][0],markerClusterGPONNodes);
 			   }
 			   
 			   }

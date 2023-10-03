@@ -274,6 +274,9 @@ public class PhysicalLayerController {
 										+ request.getParameter("FilteredTrench") + "%'   ) ORDER BY B.SEQ_SORTING ASC ")
 								.list();
 
+						NodeList =  session.createSQLQuery(
+								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' ) AND (NODE_NAME LIKE '%"+request.getParameter("FilteredNode") + "%' OR NODE_PK  LIKE '%"+request.getParameter("FilteredNode") + "%')     ").list();
+		
 						// To retrieve the data needed in show points/real points
 						if (showPointsType.equals("1")) {
 							String[] allManIdsPointsArray = (findListId(manholeList, "all")).length > 0
@@ -1692,7 +1695,7 @@ public class PhysicalLayerController {
 					physicalLayerList.put("fiber", fiberList);
 					physicalLayerList.put("Distribution_Board", distribBoardList);
 					physicalLayerList.put("Trench", trenchList);
-					physicalLayerList.put("NodeActiveList", NodeList);
+					physicalLayerList.put("Node", NodeList);
 					physicalLayerList.put("duct", ductList);
 					physicalLayerData.put("trench_Auxiliary", trenchAuxiliary_Data);
 					physicalLayerData.put("strands_Auxiliaries", strandsAuxiliaries);
