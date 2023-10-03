@@ -382,6 +382,27 @@ select {
 						aria-controls="custom-tabs-one-passive" aria-selected="false"
 						style="color: gold;">PASSIVE</a></li>
 
+           <li class="nav-item">
+            <a class="nav-link" id="custom-tabs-Inventory-tab" data-toggle="tab"
+               href="#custom-tabs-Inventory" role="tab" aria-controls="custom-tabs-Inventory"
+               aria-selected="false" style="color: gold;">BoQ</a>
+        </li>
+        
+        
+        
+        <li class="nav-item">
+            <a class="nav-link" id="custom-tabs-node-tab" data-toggle="tab"
+               href="#custom-tabs-node" role="tab" aria-controls="custom-tabs-node"
+               aria-selected="false" style="color: gold;">NODE</a>
+        </li>
+        
+        
+         <li class="nav-item">
+            <a class="nav-link" id="custom-tabs-cell-tab" data-toggle="tab"
+               href="#custom-tabs-cell" role="tab" aria-controls="custom-tabs-cell"
+               aria-selected="false" style="color: gold;">CELL</a>
+        </li>
+
 					<li class="nav-item"><a class="nav-link"
 						id="custom-tabs-one-profile-tab" data-toggle="tab"
 						href="#custom-tabs-one-finance" role="tab"
@@ -400,11 +421,7 @@ select {
 						href="#custom-tabs-Image" role="tab"
 						aria-controls="#custom-tabs-Image" aria-selected="false"
 						style="color: gold;">IMAGES</a></li>
-				<li class="nav-item">
-            <a class="nav-link" id="custom-tabs-Inventory-tab" data-toggle="tab"
-               href="#custom-tabs-Inventory" role="tab" aria-controls="custom-tabs-Inventory"
-               aria-selected="false" style="color: gold;">BoQ</a>
-        </li>
+				
                  	<li class="nav-item ml-auto">
 						<div class="dropdown" Style="display: inline-block;">
 							<button class="btn btn-secondary dropdown-toggle" type="button"
@@ -1524,6 +1541,86 @@ select {
 
 				<p></p>
 			</div>
+			
+			
+			
+			
+			
+			 <div class="tab-pane fade" id="custom-tabs-node" role="tabpanel"
+				aria-labelledby="custom-tabs-node-tab">
+
+				<div style="height:30px;"></div>
+				
+				<div style="height:20px;"></div>
+ 				
+ <table id ="NodeTable" class="table table-striped table-bordered table-sm" style="display:block; height:700px; overflow-y: auto;">
+						        <thead>
+						            <tr class="fixed-headerr">
+						               
+						                <th>Node Id</th>
+						                <th>Node Name</th>
+						                <th>Node Type</th>
+						                 <th>Node Model</th>
+						                <th>Domain</th>
+						                <th>Vendor</th>
+						                <th>Supported Technology</th>
+						                
+						            </tr>
+						        </thead>
+						        <tbody>
+						            
+									
+						        </tbody>
+						        
+						    </table>
+
+			</div>
+			
+			
+			
+			
+			
+			 <div class="tab-pane fade" id="custom-tabs-cell" role="tabpanel"
+				aria-labelledby="custom-tabs-cell-tab">
+
+				<div style="height:30px;"></div>
+				
+				<div style="height:20px;"></div>
+ 				
+ <table id ="CellTable" class="table table-striped table-bordered table-sm" style="display:block; height:700px; overflow-y: auto;">
+						        <thead>
+						            <tr class="fixed-headerr">
+						               
+						                <th>cell Id</th>
+						                <th>cell Name</th>
+						                 <th>cell Technology</th>
+						                
+						            </tr>
+						        </thead>
+						        <tbody>
+						            
+									
+						        </tbody>
+						        
+						    </table>
+
+			</div>
+			
+			
+			
+		
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 			   <div class="tab-pane fade" id="custom-tabs-Inventory" role="tabpanel"
 				aria-labelledby="custom-tabs-Inventory-tab">
 <div> 
@@ -2207,10 +2304,10 @@ if ('${docStatus}' == "addNew") {
 	$(".pad").removeClass("hide-row ");
 }
 
-if ('${ListPRqItem}' != "addNew") {
+if ( '${docStatus}' != "addNew") {
 
     boqArray = [];
-    boqArray = ${ListPRqItem};
+    boqArray = ${listWareProLoss};
 	
 	for (i = 0;i<boqArray.length;i++)
 	{
@@ -2697,14 +2794,219 @@ function saverowsintables()
 
  
  
+  
+ if ('${Listnode}' != "addNew") {
+	
+ 	boqNode = [];
+ 	boqNode = ${Listnode};
+	
+ console.log(boqNode);
+ 
+ for (z = 0; z < boqNode.length; z++){
+	 var nodeId=boqNode[z][0];
+		if(nodeId==null){
+			nodeId="";
+
+			}
+      var nodeName=boqNode[z][1];
+			if(nodeName==null){
+				nodeName="";
+
+				}
+	   var nodeType=boqNode[z][2];
+	       if(nodeType==null){
+	    	   nodeType="";
+               }
+	       var domain=boqNode[z][3];
+	       if(domain==null){
+	    	   domain="";
+               }
+
+	       var vendor=boqNode[z][4];
+	       if(vendor==null){
+	    	   vendor="";
+               }
+	       var tech_2g=boqNode[z][5];
+	       if(tech_2g==null){
+	    	   tech_2g=0;
+               }
+	       else{
+	    	   tech_2g=1;
+		       }
+
+	       var tech_3g=boqNode[z][6];
+	       if(tech_3g==null){
+	    	   tech_3g=0;
+               }
+	       else{
+	    	   tech_3g=1;
+		       }
+
+	       var tech_4g=boqNode[z][7];
+	       if(tech_4g==null){
+	    	   tech_4g=0;
+               }
+	       else{
+	    	   tech_4g=1;
+		       }
+	       var tech_5g=boqNode[z][8];
+	       if(tech_5g==null){
+	    	   tech_5g=0;
+               }
+	       else{
+	    	   tech_5g=1;
+		       }
+	       var model=boqNode[z][9];
+	       if(model==null){
+	    	   model="";
+               }
+
+	       c = "<tr>" +
+	        "<td ><input  type='text'  value='" + nodeId + "' style='width:200px;' class='form-control text-input' readonly/></td>" +
+	        "<td ><input  type='text'  value='" + nodeName + "' style='width:200px;' class='form-control text-input' readonly/></td>" +
+	        "<td ><input  type='text'  value='" + nodeType + "' style='width:200px;' class='form-control text-input' readonly/></td>" +
+	        "<td ><input  type='text'  value='" + model + "' style='width:200px;' class='form-control text-input' readonly/></td>" +
+		     "<td ><input  type='text'  value='" + domain + "' style='width:200px;' class='form-control text-input' readonly/></td>" +
+	        "<td ><input  type='text'  value='" + vendor + "' style='width:200px;' class='form-control text-input' readonly/></td>" +
+	        
+	        "<td style='width:240px;'>" +
+	        "<input type='checkbox' name='tech_2g' value='" + tech_2g + "' " + (tech_2g ? "checked" : "") + " disabled style='opacity: 2; pointer-events: auto; background-color: blue;' /> 2G " +
+	        "<input type='checkbox' name='tech_3g' value='" + tech_3g + "' " + (tech_3g ? "checked" : "") + " disabled style='opacity: 2; pointer-events: auto; background-color: blue;' /> 3G " +
+	        "<input type='checkbox' name='tech_4g' value='" + tech_4g + "' " + (tech_4g ? "checked" : "") + " disabled style='opacity: 2; pointer-events: auto; background-color: blue;' /> 4G " +
+	        "<input type='checkbox' name='tech_5g' value='" + tech_5g + "' " + (tech_5g ? "checked" : "") + " disabled style='opacity: 2; pointer-events: auto; background-color: blue;' /> 5G " +
+	    "</td></tr>";
+
+
+
+	    $("#NodeTable").append(c);
+          
+	 
+ 	}
+ }
+
+
+
+
+
+
+
+ if ('${ListGCell}' != "addNew") {
+ boqGCell = [];
+ boqGCell = ${ListGCell};
+	
+
+ 
+ for (z = 0; z < boqGCell.length; z++){
+	 var cellId=boqGCell[z][0];
+		if(cellId==null){
+			cellId="";
+
+			}
+      var cellName=boqGCell[z][1];
+			if(cellName==null){
+				cellName="";
+}
+			var gcell="2G";
+
+	       c = "<tr>" +
+	        "<td ><input  type='text'  value='" + cellId + "' style='width:500px;' class='form-control text-input' readonly/></td>" +
+	        "<td ><input  type='text'  value='" + cellName + "' style='width:500px;' class='form-control text-input' readonly/></td>" +
+	        "<td ><input  type='text'  value='" + gcell + "' style='width:500px;' class='form-control text-input' readonly/></td>" +
+	          "</tr>";
+
+
+
+	    $("#CellTable").append(c);
+ 
+ }
+}
+
+
+if ('${ListUCell}' != "addNew") {
+ 
+ boqUCell = [];
+ boqUCell = ${ListUCell};
+	
+
+ 
+ for (z = 0; z < boqUCell.length; z++){
+	 var cellId=boqUCell[z][0];
+		if(cellId==null){
+			cellId="";
+
+			}
+      var cellName=boqUCell[z][1];
+			if(cellName==null){
+				cellName="";
+}
+			var Ucell="3G";
+
+	       c = "<tr>" +
+	        "<td ><input  type='text'  value='" + cellId + "' style='width:500px;' class='form-control text-input' readonly/></td>" +
+	        "<td ><input  type='text'  value='" + cellName + "' style='width:500px;' class='form-control text-input' readonly/></td>" +
+	        "<td ><input  type='text'  value='" + Ucell + "' style='width:500px;' class='form-control text-input' readonly/></td>" +
+	          "</tr>";
+
+
+
+	    $("#CellTable").append(c);
+  
+	       
+           
+           
+	 
+ }
+}
+
+if ('${ListLCell}' != "addNew") {
+boqLCell = [];
+boqLCell = ${ListLCell};
+	
+
+ 
+ for (z = 0; z < boqLCell.length; z++){
+	 var cellId=boqLCell[z][0];
+		if(cellId==null){
+			cellId="";
+
+			}
+      var cellName=boqLCell[z][1];
+			if(cellName==null){
+				cellName="";
+}
+			var Lcell="4G";
+
+	       c = "<tr>" +
+	        "<td ><input  type='text'  value='" + cellId + "' style='width:500px;' class='form-control text-input' readonly/></td>" +
+	        "<td ><input  type='text'  value='" + cellName + "' style='width:500px;' class='form-control text-input' readonly/></td>" +
+	        "<td ><input  type='text'  value='" + Lcell + "' style='width:500px;' class='form-control text-input' readonly/></td>" +
+	          "</tr>";
+
+
+	    $("#CellTable").append(c);
+	 
+ }
+}
+
+
+
+ 
+	 
+ 
+ 
+ 
  
  
  function BoQ() {
-    $.ajax({
+	 
+/*    $.ajax({
         type: "GET",
         url: "${pageContext.request.contextPath}/WarehouseBOQ",
         success: function(response) {
-        	sitename=${siteName}
+*/            
+
+if ('${docStatus}' != "addNew") {
+        	 sitename=${siteName}
         	 nodes=${nodes}
         	 nodetype=${nodeType}
         	 SRanBs=${SRanBscount}
@@ -2712,6 +3014,7 @@ function saverowsintables()
         	 gcell=${g-cell}
         	 lcell=${l-cell}
         	 ucell=${u-cell}
+        	 
         	 $("#inventorytab2").empty();
         	 z="";
         	z+="<tr>"+
@@ -2818,13 +3121,15 @@ function saverowsintables()
         	document.getElementById("dep").value = totalDepreciation;
         	document.getElementById("net").value = totalNetCost;
 
-        	    
+  /*      	    
 
         },
         error: function(xhr, status, error) {
             console.error("AJAX request error:", error);
         }
     });
+	*/
+	}
 }
 
  

@@ -131,7 +131,7 @@ public class PhysicalLayerController {
 					List<Object[]> ductAuxiliary_DataPt = new ArrayList<Object[]>();
 					List<Object[]> newList = new ArrayList<Object[]>();
 					List<Object[]> newListPt = new ArrayList<Object[]>();
-					List<Object[]> NodeActiveList = new ArrayList<Object[]>();
+					List<Object[]> NodeList = new ArrayList<Object[]>();
 
 					// System.out.println("url is "+request.getParameter("selectedField"));
 					String checkedOption = "all";
@@ -274,6 +274,9 @@ public class PhysicalLayerController {
 										+ request.getParameter("FilteredTrench") + "%'   ) ORDER BY B.SEQ_SORTING ASC ")
 								.list();
 
+						NodeList =  session.createSQLQuery(
+								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' ) AND (NODE_NAME LIKE '%"+request.getParameter("FilteredNode") + "%' OR NODE_PK  LIKE '%"+request.getParameter("FilteredNode") + "%')     ").list();
+		
 						// To retrieve the data needed in show points/real points
 						if (showPointsType.equals("1")) {
 							String[] allManIdsPointsArray = (findListId(manholeList, "all")).length > 0
@@ -1586,10 +1589,10 @@ public class PhysicalLayerController {
 						ductAuxiliary_Data = session.createSQLQuery(
 								"SELECT B.LONGITUDE,B.LATITUDE,B.WARE_ID,B.AUXILIARY_POINT_ID,B.AUXILIARY_POINT_NAME,B.DUCT_ID,B.DISTANCE_FROM_SOURCE,B.SEQ_SORTING,B.AUXILIARY_ID FROM DUCTS A,DUCT_AUXILIARY_POINTS B WHERE A.DUCT_ID=B.DUCT_ID ORDER BY B.SEQ_SORTING ASC ")
 								.list();
-
-						NodeActiveList = session.createSQLQuery(
-								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' )    ")
-								.list();
+						
+						NodeList =  session.createSQLQuery(
+								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' )    ").list();
+		
 
 					}
 
@@ -1692,7 +1695,7 @@ public class PhysicalLayerController {
 					physicalLayerList.put("fiber", fiberList);
 					physicalLayerList.put("Distribution_Board", distribBoardList);
 					physicalLayerList.put("Trench", trenchList);
-					physicalLayerList.put("NodeActiveList", NodeActiveList);
+					physicalLayerList.put("Node", NodeList);
 					physicalLayerList.put("duct", ductList);
 					physicalLayerData.put("trench_Auxiliary", trenchAuxiliary_Data);
 					physicalLayerData.put("strands_Auxiliaries", strandsAuxiliaries);

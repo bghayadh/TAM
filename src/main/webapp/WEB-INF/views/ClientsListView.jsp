@@ -764,9 +764,7 @@ z-index: 9003;
 								"clientID": deleteArray
 							},
 							success: function (data) {
-								
-								location.reload();
-						    	
+								location.reload();						    	
 							},
 							error: function (error) {
 								console.log("The error is " + error);

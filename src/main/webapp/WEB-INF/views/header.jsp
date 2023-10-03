@@ -298,6 +298,13 @@ display:none;
           <div class="dropdown-divider"></div>
           <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Network_Index">Elements</a></li>
            <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Network_StNdCell">Elements (New)</a></li>
+            <div class="dropdown-divider"></div>
+         
+            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/WarehouseListView">Sites</a></li>
+          <div class="dropdown-divider"></div>
+           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NodeListView">Nodes</a></li>
+         
+         
         </ul>
       </li>
                 <li class="nav-item"><a href="${pageContext.request.contextPath}/Purchase" class="nav-link "><c:if test="${page == 'purchasing'}"><span class="border-bottom active"></c:if><i class="fas fa-money-check"></i> Purchasing <c:if test="${page == 'purchasing'}"></span></c:if></a></li>

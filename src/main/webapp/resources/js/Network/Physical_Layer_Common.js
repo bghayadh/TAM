@@ -1158,10 +1158,23 @@ function createHandhole_Marker_Click(Id,Name,Long,Lat,markersHandhole,markerClus
 				 markerType="DistributionBoard";
 			 }
 			 
-			   else if (markers == markersNodeActive && marker_Cluster == markerClusterNodeActive) {
-				 mapIcon = iconNodeActive; 
+			 else if (markers == markersNodeActive && marker_Cluster == markerClusterMSANNodes) {
+				 mapIcon = iconMSANNode; 
 				 markerType="NodeActive";
-			 }
+		    }
+ 		 	else if (markers == markersNodeActive && marker_Cluster == markerClusterDWDMNodes) {
+				 mapIcon = iconDWDMNode; 
+				 markerType="NodeActive";
+		    }
+			else if (markers == markersNodeActive && marker_Cluster == markerClusterSDHNodes) {
+				 mapIcon = iconSDHNode; 
+				 markerType="NodeActive";
+		    }
+			else if (markers == markersNodeActive && marker_Cluster == markerClusterGPONNodes) {
+				 mapIcon = iconGPONNode; 
+				 markerType="NodeActive";
+		    }
+			 
 			 
 			 
 			 else {
@@ -4871,16 +4884,17 @@ function DistributionBoardCheckFilter(Id,folder,clusterName){
 		});
 	}	
 	
-	 function NodeActiveCheckFilter(Id){
+function NodeActiveCheckFilter(Id,clusterName){
 	   markersNodeActive[Id].setMap(null);
 		$("#"+Id).children('input').bind("change",function() {
+			
 			var folderID = $(this).parents().eq(4).attr('id');
 			markersNodeActive[Id].setMap(null);
 			
-			console.log(folderID);
+			
 			if ($(this).is(':checked')){
 				markersNodeActive[Id].setMap(map);					
-				markerClusterNodeActive.addMarker(markersNodeActive[Id]);
+				clusterName.addMarker(markersNodeActive[Id]);
 			}
 			else{
 				if(folderID == "initial_ul_CurrentPhysicalLayer"){
@@ -4891,12 +4905,15 @@ function DistributionBoardCheckFilter(Id,folder,clusterName){
             }
 				
 				markersNodeActive[Id].setMap(null);							
-				markerClusterNodeActive.removeMarker(markersNodeActive[Id]);			
+				clusterName.removeMarker(markersNodeActive[Id]);			
 			}
-		 if ($(this).parents().eq(2).find('.Nodes:checked').length == $(this).parents().eq(2).find('.Nodes').length) {
+		 	if ($(this).parents().eq(2).find('.Nodes:checked').length == $(this).parents().eq(2).find('.Nodes').length) {
+					console.log("Here 1 ")
 				$(this).parents().eq(2).children('input').prop('checked', true);
 			 }
 			 else{
+									console.log("Here 2 ")
+
 				$(this).parents().eq(2).children('input').prop('checked', false);
 			 }	
 		 
@@ -4994,10 +5011,20 @@ function AllDistributionBoardCheckFilter(Id,clssName) {
         	}	
 		});	
 	}
-	function AllNodeActiveCheckFilter(Id) {
+	function AllNodesTreeCheckFilter(Id,clssName) {
 
 	$("#"+Id).children('input').bind("change",function() {
-           markerClusterNodeActive.clearMarkers();
+		if(clssName=="") {
+			
+			markerClusterMSANNodes.clearMarkers();
+			markerClusterDWDMNodes.clearMarkers();
+			markerClusterSDHNodes.clearMarkers();
+			markerClusterGPONNodes.clearMarkers();
+		}
+		else {
+			clssName.clearMarkers();	
+		}
+		
 		if ($(this).is(':checked')){				
 				
 			$(this).parent().find('input:checkbox').each(function(){
@@ -5007,11 +5034,21 @@ function AllDistributionBoardCheckFilter(Id,clssName) {
 			 if($(this).parent().hasClass('NodeActive')){
 					NodeID=$(this).parent().attr('id');
 					if(markersNodeActive[NodeID]){	
-					  if(markersNodeActive[NodeID].getMap()==null){	
-						markerClusterNodeActive.removeMarker(markersNodeActive[NodeID]);	
+						if(window[""+NodeID][8]=="MSAN") {
+							className=markerClusterMSANNodes;
+						}
+						else if(window[""+NodeID][8]=="DWDM") {
+							className=markerClusterDWDMNodes;
+						}
+						else if(window[""+NodeID][8]=="SDH") {
+							className=markerClusterSDHNodes;
+						}
+						else if(window[""+NodeID][8]=="GPON") {
+							className=markerClusterGPONNodes;
+						}
+						className.removeMarker(markersNodeActive[NodeID]);	
 						markersNodeActive[NodeID].setMap(map);	
-						markerClusterNodeActive.addMarker(markersNodeActive[NodeID]);
-					  }
+						className.addMarker(markersNodeActive[NodeID]);
 					}
 					 $("#nodesActiveCheckAllBoq").prop("checked",true);					
 				 }	
@@ -5030,7 +5067,6 @@ function AllDistributionBoardCheckFilter(Id,clssName) {
 					NodeID=$(this).parent().attr('id');
 					if(markersNodeActive[NodeID]){						
 						markersNodeActive[NodeID].setMap(null);	
-						//markerClusterNodeActive.removeMarker(markersNodeActive[NodeID]);
 					}
 				 }						
 					
@@ -5045,16 +5081,18 @@ function AllDistributionBoardCheckFilter(Id,clssName) {
             	$('.AllNodeActive').prop('checked', false);
         	}
         
-                if($(".EntrepriseMSAN").is(":checked") || $(".TransmissionDWDM").is(":checked") || $('.TransmissionSDH').is(':checked') || $('.TransmissionGPON').is(':checked') ) {	
+            if($(".EntrepriseMSAN").is(":checked") || $(".TransmissionDWDM").is(":checked") || $('.TransmissionSDH').is(':checked') || $('.TransmissionGPON').is(':checked') ) {	
             	$("#nodesActiveCheckAllBoq").prop("checked",true);
         	}
         	else {
-        	$("#nodesActiveCheckAllBoq").prop("checked",false);
+        		$("#nodesActiveCheckAllBoq").prop("checked",false);
         	}
      
 		});	
 	}
 	
+
+
 
 //function checkbox events for filtering of junctions  ////
 function junctionCheckFilter(physicalLayer,manholeId){
@@ -6902,7 +6940,7 @@ function boqCheckFilter(){
 	});
 	
 	
-	$("#nodesActiveCheckAllBoq").bind("change",function(){
+$("#nodesActiveCheckAllBoq").bind("change",function(){
 		if ($(this).is(':checked')){
 			$("#NodeActive_f_CurrentPhysicalLayer > .AllNodeActive").prop("checked",true);	
 			$("#Entreprise__CurrentPhysicalLayer").prop("checked",true);	
@@ -6912,15 +6950,26 @@ function boqCheckFilter(){
 			
 			$("#NodeActive_f_CurrentPhysicalLayer").find(' > ul > li > ul >li ').each(function(){		
 			
-				var nodeActiveId=$(this).attr('id');
-				$("#"+nodeActiveId).children(':checkbox').prop( "checked", true );
+				var nodeID=$(this).attr('id');
+				$("#"+nodeID).children(':checkbox').prop( "checked", true );
 				
-				if(markersNodeActive[nodeActiveId].getMap()==null){				
-				
+				if(markersNodeActive[nodeID].getMap()==null){					
+					markersNodeActive[nodeID].setMap(map);
 						
-					markersNodeActive[nodeActiveId].setMap(map);			
-					markerClusterNodeActive.addMarker(markersNodeActive[nodeActiveId]);
-					$("#"+nodeActiveId).children(':checkbox').prop( "checked", true );
+					if(window[""+nodeID][8]=="MSAN") {
+						markerClusterMSANNodes.addMarker(markersNodeActive[nodeID]);
+					}
+					else if(window[""+nodeID][8]=="SDH") {
+						markerClusterSDHNodes.addMarker(markersNodeActive[nodeID]);
+					}
+					else if(window[""+nodeID][8]=="DWDM") {
+						markerClusterDWDMNodes.addMarker(markersNodeActive[nodeID]);
+					}	
+					else if(window[""+nodeID][8]=="GPON") {
+						markerClusterGPONNodes.addMarker(markersNodeActive[nodeID]);
+					}	
+							
+					$("#"+nodeID).children(':checkbox').prop( "checked", true );
 				}
 					
 				});
@@ -6932,22 +6981,35 @@ function boqCheckFilter(){
 				$("#TransmissionSDH__CurrentPhysicalLayer").prop("checked",false);	
 				$("#TransmissionGPON__CurrentPhysicalLayer").prop("checked",false);	
 						
+					markerClusterMSANNodes.clearMarkers();
+					markerClusterDWDMNodes.clearMarkers();
+					markerClusterSDHNodes.clearMarkers();
+					markerClusterGPONNodes.clearMarkers();
+
+
 				$("#NodeActive_f_CurrentPhysicalLayer").find(' > ul > li >ul >li ').each(function(){			
-				
-				var nodeActiveId=$(this).attr('id');
-				$("#"+nodeActiveId).children(':checkbox').prop( "checked", false );
-				
-				markersNodeActive[nodeActiveId].setMap(null);	
-				$("#"+nodeActiveId).children(':checkbox').prop( "checked", false );
-				markerClusterNodeActive.clearMarkers();
+					var nodeID=$(this).attr('id');					
+					markersNodeActive[nodeID].setMap(null);	
+					$("#"+nodeID).children(':checkbox').prop( "checked", false );
 				});
 		  		
 		  		$("#network_tree").find(".Nodes:checked" ).each(function(){
 
 					id=$(this).parent().attr('id');
 					if(markersNodeActive[id].getMap()==null){
-						markersNodeActive[id].setMap(map);			
-						markerClusterNodeActive.addMarker(markersNodeActive[id]);
+						markersNodeActive[id].setMap(map);
+						if(window[""+id][8]=="MSAN") {
+							markerClusterMSANNodes.addMarker(markersNodeActive[id]);
+						}
+						else if(window[""+id][8]=="SDH") {
+							markerClusterSDHNodes.addMarker(markersNodeActive[id]);
+						}
+						else if(window[""+id][8]=="DWDM") {
+							markerClusterDWDMNodes.addMarker(markersNodeActive[id]);
+						}	
+						else if(window[""+id][8]=="GPON") {
+							markerClusterGPONNodes.addMarker(markersNodeActive[id]);
+						}				
 					}		
 				});							
 			}
@@ -7656,8 +7718,11 @@ function allElementsCheckFilter(){
 		markerClusterAccessDistBoard.clearMarkers();
 		markerClusterMetroDistBoard.clearMarkers();
 		markerClusterBackboneDistBoard.clearMarkers();
-		markerClusterNodeActive.clearMarkers();
-		
+		markerClusterMSANNodes.clearMarkers();
+		markerClusterDWDMNodes.clearMarkers();
+		markerClusterSDHNodes.clearMarkers();
+		markerClusterGPONNodes.clearMarkers();
+				
 		$("#distBoardCheckAllBoq").prop("checked",false);
 		$("#manholeCheckAllBoq").prop("checked",false);
 		$("#handholeCheckAllBoq").prop("checked",false);
@@ -7862,8 +7927,19 @@ function allElementsCheckFilter(){
 					id=$(this).parent().attr('id');
 					if(markersNodeActive[id].getMap()==null){
 
-						markersNodeActive[id].setMap(map);			
-						markerClusterNodeActive.addMarker(markersNodeActive[id]);
+						markersNodeActive[id].setMap(map);	
+						if(window[""+id][8]=="MSAN") {
+							markerClusterMSANNodes.addMarker(markersNodeActive[id]);
+						}
+						else if(window[""+id][8]=="DWDM") {
+							markerClusterDWDMNodes.addMarker(markersNodeActive[id]);
+						}
+						else if(window[""+id][8]=="SDH") {
+							markerClusterSDHNodes.addMarker(markersNodeActive[id]);
+						}
+						else if(window[""+id][8]=="GPON") {
+							markerClusterGPONNodes.addMarker(markersNodeActive[id]);
+						}		
 						$("#nodesActiveCheckAllBoq").prop("checked",true);
 						
 					}
@@ -7997,13 +8073,26 @@ function allElementsCheckFilter(){
 						}			
 					}
 			   }
-			   else if($(this).hasClass('NodeActive')){
+			    else if($(this).hasClass('NodeActive')){
 				   if(markersNodeActive[$(this).attr('id')].getMap()==null){
-
-					   markersNodeActive[$(this).attr('id')].setMap(map);			
-					   markerClusterNodeActive.addMarker(markersNodeActive[$(this).attr('id')]);
+					
+					    markersNodeActive[$(this).attr('id')].setMap(map);
+						id=$(this).attr('id');
+						if(window[""+id][8]=="MSAN") {
+							markerClusterMSANNodes.addMarker(markersNodeActive[id]);
+						}
+						else if(window[""+id][8]=="DWDM") {
+							markerClusterDWDMNodes.addMarker(markersNodeActive[id]);
+						}
+						else if(window[""+id][8]=="SDH") {
+							markerClusterSDHNodes.addMarker(markersNodeActive[id]);
+						}
+						else if(window[""+id][8]=="GPON") {
+							markerClusterGPONNodes.addMarker(markersNodeActive[id]);
+						}				
 					}
 			   }
+			   
 			   
 
 			});		 
@@ -8532,10 +8621,10 @@ function appendNearestDBoardTableMulty(result){
 						markupDBoard +="<tr style='height: 30px;'><td ><input type='checkbox' class='DBBOQ' id=BOQ_"+result[i][0]+" ></td><td  >"+result[i][0]+"</td><td style='min-width:250px;'>"+result[i][3]+"</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][2]+"' readonly></input ></td>"
 				    }
 				    else{
-				    	if(result[i][9] == null || result[i][9]==""){
-							markupDBoard +="<tr style='height: 30px;'><td><input type='checkbox' class='DBBOQ' id=BOQ_"+result[i][0]+" ></td><td style='min-width:150px;'>"+result[i][0]+"</td><td style='min-width:150px;'>"+result[i][3]+"</td><td  name='LONGG' style='min-width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td style='min-width:150px;'  name='LATT'><input name='LATT' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='min-width:50px;'>"+result[i][8]+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistance(this)'>Get Distance</button> </td></tr>"
+				    	if(result[i][10] == null || result[i][10]==""){
+							markupDBoard +="<tr style='height: 30px;'><td><input type='checkbox' class='DBBOQ' id=BOQ_"+result[i][0]+" ></td><td style='min-width:150px;'>"+result[i][0]+"</td><td style='min-width:150px;'>"+result[i][3]+"</td><td  name='LONGG' style='min-width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td style='min-width:150px;'  name='LATT'><input name='LATT' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='min-width:50px;'>"+result[i][9]+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistance(this)'>Get Distance</button> </td></tr>"
 						}else{
-							markupDBoard +="<tr style='height: 30px;'><td><input type='checkbox' class='DBBOQ' id=BOQ_"+result[i][0]+" ></td><td style='min-width:150px;'>"+result[i][0]+"</td><td style='min-width:150px;'>"+result[i][3]+"</td><td style='min-width:150px;'>"+result[i][1]+"</td><td style='min-width:150px;'>"+result[i][2]+"</td><td style='min-width:50px;'>"+result[i][8]+"</td><td style='min-width:90px;'> <label name='DDistance' style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'>"+(result[i][9])+"</label></td></tr>"
+							markupDBoard +="<tr style='height: 30px;'><td><input type='checkbox' class='DBBOQ' id=BOQ_"+result[i][0]+" ></td><td style='min-width:150px;'>"+result[i][0]+"</td><td style='min-width:150px;'>"+result[i][3]+"</td><td style='min-width:150px;'>"+result[i][1]+"</td><td style='min-width:150px;'>"+result[i][2]+"</td><td style='min-width:50px;'>"+result[i][9]+"</td><td style='min-width:90px;'> <label name='DDistance' style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'>"+(result[i][10])+"</label></td></tr>"
 						}	
 				    }
 				}
@@ -10003,12 +10092,12 @@ function appendNearestDBoardTable(result){
 
 				    }
 				    else{
-				    	if(result[i][9] == null || result[i][9]==""){
+				    	if(result[i][10] == null || result[i][10]==""){
 							//markupDBoard +="<tr ><td style='min-width:250px;' class='row-pad'>"+result[i][0]+"</td><td style='min-width:250px;'>"+result[i][3]+"</td><td  name='LONGG' style='min-width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td style='min-width:150px;'  name='LATT'><input name='LATT' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='min-width:50px;'>"+result[i][8]/1.60934+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='SomeDeleteRowFunction(this)'>Get Distance</button> </td></tr>"
-							markupDBoard +="<tr style='height: 30px;'><td><input type='checkbox' class='DBBOQ' id=BOQ_"+result[i][0]+" ></td><td style='min-width:150px;'>"+result[i][0]+"</td><td style='min-width:150px;'>"+result[i][3]+"</td><td  name='LONGG' style='min-width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td style='min-width:150px;'  name='LATT'><input name='LATT' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='min-width:50px;'>"+result[i][8]+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistance(this)'>Get Distance</button> </td></tr>"
+							markupDBoard +="<tr style='height: 30px;'><td><input type='checkbox' class='DBBOQ' id=BOQ_"+result[i][0]+" ></td><td style='min-width:150px;'>"+result[i][0]+"</td><td style='min-width:150px;'>"+result[i][3]+"</td><td  name='LONGG' style='min-width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td style='min-width:150px;'  name='LATT'><input name='LATT' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='min-width:50px;'>"+result[i][9]+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistance(this)'>Get Distance</button> </td></tr>"
 
 						}else{
-							markupDBoard +="<tr style='height: 30px;'><td><input type='checkbox' class='DBBOQ' id=BOQ_"+result[i][0]+" ></td><td style='min-width:150px;'>"+result[i][0]+"</td><td style='min-width:150px;'>"+result[i][3]+"</td><td style='min-width:150px;'>"+result[i][1]+"</td><td style='min-width:150px;'>"+result[i][2]+"</td><td style='min-width:50px;'>"+result[i][8]+"</td><td style='min-width:90px;'> <label name='DDistance' style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'>"+(result[i][9])+"</label></td></tr>"
+							markupDBoard +="<tr style='height: 30px;'><td><input type='checkbox' class='DBBOQ' id=BOQ_"+result[i][0]+" ></td><td style='min-width:150px;'>"+result[i][0]+"</td><td style='min-width:150px;'>"+result[i][3]+"</td><td style='min-width:150px;'>"+result[i][1]+"</td><td style='min-width:150px;'>"+result[i][2]+"</td><td style='min-width:50px;'>"+result[i][8]+"</td><td style='min-width:90px;'> <label name='DDistance' style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'>"+(result[i][10])+"</label></td></tr>"
 
 						}
 				    	

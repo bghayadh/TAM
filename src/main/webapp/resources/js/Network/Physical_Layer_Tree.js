@@ -907,26 +907,25 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				window[""+NodeActiveList[i][0]]=[];
 				window[""+NodeActiveList[i][0]]=NodeActiveList[i];
 				
-				 if(NodeActiveList[i][3]=='Enterprise') {
-					str="<ul><li id='"+NodeActiveList[i][0]+"'  class='NodeActive' style='display:none;width:100px;'><input type='checkbox' class='Nodes checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' style='width:16px; height:16px;' src='"+getContext()+"/resources/img/NodesIcon.png'> "+ NodeActiveList[i][2] +" </span></li></ul>";
+				if(NodeActiveList[i][8]=='MSAN') {
+					str="<ul><li id='"+NodeActiveList[i][0]+"'  class='NodeActive' style='display:none;width:100px;'><input type='checkbox' class='Nodes checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' style='width:16px; height:16px;' src='"+getContext()+"/resources/NetworkImages/MSANNodeIcon.png'> "+ NodeActiveList[i][2] +" </span></li></ul>";
 					$("#Entreprise_MSAN__CurrentPhysicalLayer").append(str);
 				}
 				
-				else if(NodeActiveList[i][3]=='Transmission' && NodeActiveList[i][8]=='DWDM') {
-					str="<ul><li id='"+NodeActiveList[i][0]+"'  class='NodeActive' style='display:none;width:100px;'><input type='checkbox' class='Nodes checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' style='width:16px; height:16px;' src='"+getContext()+"/resources/img/NodesIcon.png'>"+ NodeActiveList[i][2] +" </span></li></ul>";
+				else if(NodeActiveList[i][8]=='DWDM') {
+					str="<ul><li id='"+NodeActiveList[i][0]+"'  class='NodeActive' style='display:none;width:100px;'><input type='checkbox' class='Nodes checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' style='width:16px; height:16px;' src='"+getContext()+"/resources/NetworkImages/DWDMNodeIcon.png'>"+ NodeActiveList[i][2] +" </span></li></ul>";
 					$("#Transmission_DWDM__CurrentPhysicalLayer").append(str);
 				}
 				
-				else if(NodeActiveList[i][3]=='Transmission' && NodeActiveList[i][8]=='SDH') {
-					str="<ul><li id='"+NodeActiveList[i][0]+"'  class='NodeActive' style='display:none;width:100px;'><input type='checkbox' class='Nodes checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' style='width:16px; height:16px;' src='"+getContext()+"/resources/img/NodesIcon.png'>"+ NodeActiveList[i][2] +" </span></li></ul>";
+				else if(NodeActiveList[i][8]=='SDH') {
+					str="<ul><li id='"+NodeActiveList[i][0]+"'  class='NodeActive' style='display:none;width:100px;'><input type='checkbox' class='Nodes checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' style='width:16px; height:16px;' src='"+getContext()+"/resources/NetworkImages/SDHNodeIcon.png'>"+ NodeActiveList[i][2] +" </span></li></ul>";
 					$("#Transmission_SDH__CurrentPhysicalLayer").append(str);
 				}
 				
-				else if(NodeActiveList[i][3]=='Transmission' && NodeActiveList[i][8]=='GPON') {
-					str="<ul><li id='"+NodeActiveList[i][0]+"'  class='NodeActive' style='display:none;width:100px;'><input type='checkbox' class='Nodes checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' style='width:16px; height:16px;' src='"+getContext()+"/resources/img/NodesIcon.png'>"+ NodeActiveList[i][2] +" </span></li></ul>";
+				else if(NodeActiveList[i][8]=='GPON') {
+					str="<ul><li id='"+NodeActiveList[i][0]+"'  class='NodeActive' style='display:none;width:100px;'><input type='checkbox' class='Nodes checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' style='width:16px; height:16px;' src='"+getContext()+"/resources/NetworkImages/GPONNodeIcon.png'>"+ NodeActiveList[i][2] +" </span></li></ul>";
 					$("#Transmission_GPON__CurrentPhysicalLayer").append(str);
 				}
-				
 				$(".NodeActive > .TreeSpan").contextmenu(function(){
 					menuName=singleNodeActive;
 					IdNodeSelectedTemp=$(this).parents().eq(2).attr('id').split("__")[1];
@@ -935,15 +934,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 					openContext(selectedNodeAcvtiveContext,selectedNodeActiveName,singleNodeActive,event);
 										
 				});	
-				
 			}
-			
-			AllNodeActiveCheckFilter("Entreprise_MSAN__CurrentPhysicalLayer");
-		    AllNodeActiveCheckFilter("Transmission_DWDM__CurrentPhysicalLayer");
-		    AllNodeActiveCheckFilter("Transmission_SDH__CurrentPhysicalLayer");
-		    AllNodeActiveCheckFilter("Transmission_GPON__CurrentPhysicalLayer");
-		    AllNodeActiveCheckFilter("NodeActive_f_CurrentPhysicalLayer");
-
 		}
 	/////////////*********************	trenchList creation in tree	***********************///////////////
 		if(trenchList!=null){
@@ -13308,9 +13299,11 @@ $("#saveNode").click(function () {
 					success : function(data) {
 						if(data!=null){
 						
+						var nodePkName = data.nodePk +":"+nodeName;
 						window[""+data.nodePk]=[];
-						window[""+data.nodePk]=[data.nodePk,nodeName];
+						window[""+data.nodePk]=[data.nodePk,nodeName,nodePkName,nodeDomin,siteId_node,nodeLong,nodeLat,NodeId,nodeType];
 						
+					
 						$("#"+data.nodePk).contextmenu(function(){				
 						menuName = singleNodeActive;
 						selectedNodeAcvtiveContext=$(this).attr('id');
@@ -13319,9 +13312,26 @@ $("#saveNode").click(function () {
 						});	
 						MouseHoveringSpans("#" +data.nodePk+ " .TreeSpan");	
 						tree_prop_selection("#"+data.nodePk+" .TreeSpan");
-						create_Marker_Click(data.nodePk,nodeName,"","",markersNodeActive,markerClusterNodeActive,"","");
-						markerClusterNodeActive.addMarker(markersNodeActive[""+data.nodePk]);
-						NodeActiveCheckFilter(data.nodePk);
+					if(nodeType=='MSAN'){
+						create_Marker_Click(data.nodePk,nodeName,"","",markersNodeActive,markerClusterMSANNodes,"","");
+						markerClusterMSANNodes.addMarker(markersNodeActive[""+data.nodePk]);
+						NodeActiveCheckFilter(data.nodePk,markerClusterMSANNodes);
+					  }
+					 else if(nodeType=='DWDM'){
+						create_Marker_Click(data.nodePk,nodeName,"","",markersNodeActive,markerClusterDWDMNodes,"","");
+						markerClusterDWDMNodes.addMarker(markersNodeActive[""+data.nodePk]);
+						NodeActiveCheckFilter(data.nodePk,markerClusterDWDMNodes);
+					 }
+					 else if(nodeType=='SDH'){
+						create_Marker_Click(data.nodePk,nodeName,"","",markersNodeActive,markerClusterSDHNodes,"","");
+						markerClusterSDHNodes.addMarker(markersNodeActive[""+data.nodePk]);
+						NodeActiveCheckFilter(data.nodePk,markerClusterSDHNodes);
+					 }
+					 else if(nodeType=='GPON'){
+						create_Marker_Click(data.nodePk,nodeName,"","",markersNodeActive,markerClusterGPONNodes,"","");
+						markerClusterGPONNodes.addMarker(markersNodeActive[""+data.nodePk]);
+						NodeActiveCheckFilter(data.nodePk,markerClusterGPONNodes);
+					 }
 						map.setZoom(11);
 						
 						
