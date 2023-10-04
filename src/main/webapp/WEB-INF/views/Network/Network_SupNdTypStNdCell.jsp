@@ -6,7 +6,11 @@ $('#removeFilter').hide();
 
 
 var lst = ${listSites};
+//console.log("lst...", lst);
 var listSupp=${listSupp};
+//console.log("listSupp...", listSupp);
+var arrayParam=${arrayParam};
+//console.log("arrayParam...", arrayParam);
 
 
 var button ;
@@ -15,14 +19,19 @@ if(!(lst==null || lst=="")){
 var wareCount=lst.length;
 }
 
-var currentUrl = window.location.href;
-console.log("currentUrl....",currentUrl);
-// Check if the Enterprise exists in the URL
-if (currentUrl.indexOf("Enterprise") !== -1) {
-  console.log("Enterpriseeeee");
-  $('#EnterpriseBtn').toggleClass('activee');
-} 
-
+if(arrayParam[0] == 1){
+	 $('#EnterpriseBtn').toggleClass('activee'); 
+	 console.log("EnterpriseBtn");
+}if(arrayParam[1] == 1){
+	 $('#transmBtn').toggleClass('activee');  
+	 console.log("transmBtn");
+}if(arrayParam[2] == 1){
+	 $('#accessDBtn').toggleClass('activee');
+	 console.log("accessDBtn");
+}if(arrayParam[3] == 1){
+	 $('#CoreBtn').toggleClass('activee');
+	 console.log("CoreBtn");
+}
 function initMap() {
 
 	$('#nodeBtn').toggleClass('activee');
@@ -259,8 +268,10 @@ map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
 		var Nairobi=new google.maps.LatLng(0.796530,37.959529);			
 		map.setCenter(Nairobi);
 		map.setZoom(6);
-		var str="<ul ><li id='initial_ul' class='Initial'><span class='folder'><i class='fa fa-folder' style='color: #08526D'></i> Sites</span></li></ul>";
+		var str="<ul><li id='initial_ul' class='Initial'><input type='checkbox' id='Suppliers' class='AllSuppliers' style='margin-left: 15px' unchecked onclick='AllSitesCheckFilter()'></input> <span class='folder'><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Suppliers</span></li></ul>";
 		$("#network_tree").append(str);
+		tree_prop_selection();
+		folder();
 	}
 } /// End of init Map
 
@@ -290,7 +301,7 @@ folderSupp = new ContextMenu({
 	  'theme': 'default',
 	  'items': [
 		  {'icon': 'braille', 'name': 'Show BoQ', action: () => {				
-				Site_Boq("");
+				Supp_Boq("");
 			}	
 		}
 	]
@@ -331,21 +342,40 @@ function SuppNdTypStNdCellCore(id){
 		var SuppChildrenLength=$("#" +selectedSupp+"_f").find(' > ul > li').length;			
 		if(SuppChildrenLength==0){
 			
-			if($('#EnterpriseBtn').hasClass('activee')){
-				//console.log("ACTIVE ");
-				var paramEnterprise = true;
-			}else{
-				//console.log("NOT ACTIVE");
-				var paramEnterprise = false;
-			}
-			
+	    	  if(arrayParam[0]==1){
+					var paramEnterprise = true;
+				}else{
+					var paramEnterprise = false;
+				}
+
+				if(arrayParam[1]==1){
+					var paramTransmission = true;
+				}else{
+					var paramTransmission = false;
+				}
+					
+				if(arrayParam[2]==1){
+					var paramAccess = true;
+				}else{
+					var paramAccess = false;
+				}
+
+				if(arrayParam[3]==1){
+					var paramCore = true;
+				}else{
+					var paramCore = false;
+				}
+		
 			$.ajax({
 			type: "GET",
 			contentType: "application/json; charset=utf-8",
 			url: getContext()+'/FindOnClick_SuppNdTSiteNodeCell',
 			data: {
 			        "selectedSupp":selectedSupp,	
-			        "paramEnterprise": paramEnterprise,
+		            "paramEnterprise": paramEnterprise,
+					"paramTransmission":paramTransmission,
+			     	"paramAccess":paramAccess,
+				    "paramCore":paramCore,
 			},
 			dataType: "json",
 			success: function (data) {							        	
@@ -426,13 +456,29 @@ function RequestingSites(id) {
 		var NdTypeChildrenLength=$("#" +SelectedNodeType+"_" +selectedSupp+"_f").find(' > ul > li').length;							            	
 		if(NdTypeChildrenLength==0){
 			
-			if($('#EnterpriseBtn').hasClass('activee')){
-				//console.log("ACTIVE ");
-				var paramEnterprise = true;
-			}else{
-				//console.log("NOT ACTIVE");
-				var paramEnterprise = false;
-			}
+	    	  if(arrayParam[0]==1){
+					var paramEnterprise = true;
+				}else{
+					var paramEnterprise = false;
+				}
+
+				if(arrayParam[1]==1){
+					var paramTransmission = true;
+				}else{
+					var paramTransmission = false;
+				}
+					
+				if(arrayParam[2]==1){
+					var paramAccess = true;
+				}else{
+					var paramAccess = false;
+				}
+
+				if(arrayParam[3]==1){
+					var paramCore = true;
+				}else{
+					var paramCore = false;
+				}
 			
 			$.ajax({
 				type: "GET",
@@ -441,13 +487,15 @@ function RequestingSites(id) {
 				data: {
 					"selectedSupp":selectedSupp,
 					"SelectedNodeType":SelectedNodeType,
-					 "paramEnterprise": paramEnterprise,
+		            "paramEnterprise": paramEnterprise,
+					"paramTransmission":paramTransmission,
+			     	"paramAccess":paramAccess,
+				    "paramCore":paramCore,
 				},
 				dataType: "json",
 				success: function (data) {	    
 					if (data != null) {
 						var listSuppSites = data.listSuppSites;
-						console.log("listSuppSites...",listSuppSites);
 						if(NdTypeChildrenLength<listSuppSites.length){
 							var dFrag = document.createDocumentFragment();
 							for (n = 0; n < listSuppSites.length; n++) {	
@@ -499,7 +547,7 @@ function showMarkerSingleSite(id) {
 	var suppId = liElements.split("_").slice(1, 4).join("_");
 	 
 	    if ($("#" + id.id).is(":checked")) {
-	     	console.log("checked");
+	     	//console.log("checked");
 	     	var checkboxes = $('[id$="'+nodeTypeId+'_SingleSite"]');
 	  		var allChecked = true;
 	      	for (var i = 0; i < checkboxes.length; i++) {
@@ -515,7 +563,7 @@ function showMarkerSingleSite(id) {
 	      markerClusterSites.addMarker(markersSites[selectedSiteId]);
 	      markerClusterSites.repaint();
 	    }else{
-		      console.log("unchecked");
+		      //console.log("unchecked");
 		      document.getElementById(nodeTypeId+"_"+suppId+'_Site').checked = false;		
 		      markersSites[selectedSiteId].setMap(null);
 		      markerClusterSites.removeMarker(markersSites[selectedSiteId]);
@@ -546,14 +594,14 @@ function PanTreeSites(id){
 				markersSite="";	
 				markersSite=selectedItem;		
 				map.setZoom(15);
-				console.log("PANNED");
+				//console.log("PANNED");
 			}	
 	}
 
 function Create_Sites(id){
 	//var sitesNCreated=[];
 	//tree_prop_general();
-	console.log("id.....",id);
+	//console.log("id.....",id);
 	
 	var splitArray = id.id.split("_");
 	var selectedItem = splitArray[0] + "_" + splitArray[1] + "_" + splitArray[2];
@@ -561,10 +609,7 @@ function Create_Sites(id){
 	
 	//var parentLi = $("#" + id.id).closest("li.Supplier");		  
 	var selectedSupp = $("#" + id.id).closest("li.Supplier").attr("id");
-	
-	console.log("selectedItem.....",selectedItem);
-	console.log("selectedNodeType.....",selectedNodeType);
-	
+
 	//tree_prop_general();
 	//tree_Prop("#"+selectedId+ "> span");
 	//tree_Prop("#"+selectedId+ "_f > span"); 
@@ -590,14 +635,30 @@ function Create_Sites(id){
 		var siteChildren=$("#"+selectedItem+"_"+selectedNodeType+"_f") .find(' > ul > li').length;
 		if(siteChildren == 0){	
 			
-			if($('#EnterpriseBtn').hasClass('activee')){
-				//console.log("ACTIVE ");
-				var paramEnterprise = true;
-			}else{
-				//console.log("NOT ACTIVE");
-				var paramEnterprise = false;
-			}
-			
+			  if(arrayParam[0]==1){
+					var paramEnterprise = true;
+				}else{
+					var paramEnterprise = false;
+				}
+
+				if(arrayParam[1]==1){
+					var paramTransmission = true;
+				}else{
+					var paramTransmission = false;
+				}
+					
+				if(arrayParam[2]==1){
+					var paramAccess = true;
+				}else{
+					var paramAccess = false;
+				}
+
+				if(arrayParam[3]==1){
+					var paramCore = true;
+				}else{
+					var paramCore = false;
+				}
+				
 			 $.ajax({
 				  type: "GET",
 				  contentType: "application/json; charset=utf-8",
@@ -607,6 +668,9 @@ function Create_Sites(id){
 							"selectedSupp":selectedSupp,
 							"SelectedNodeType":selectedNodeType,
 							"paramEnterprise": paramEnterprise,
+							"paramTransmission":paramTransmission,
+						    "paramAccess":paramAccess,
+							"paramCore":paramCore,
 				 },
 				 dataType: "json",
 				 success: function (data) {			        	

@@ -5,7 +5,11 @@ $('#filterr').hide();
 $('#removeFilter').hide();
 
 var lst = ${listSites};
+//console.log("lst...", lst);
 var listPO=${listPO};
+//console.log("listPO...", listPO);
+var arrayParam=${arrayParam};
+//console.log("arrayParam...", arrayParam);
 
 var button ;
 var data;
@@ -13,13 +17,19 @@ if(!(lst==null || lst=="")){
 var wareCount=lst.length;
 }
 
-var currentUrl = window.location.href;
-//console.log("currentUrl....",currentUrl);
-// Check if the Enterprise exists in the URL
-if (currentUrl.indexOf("Enterprise") !== -1) {
-  //console.log("Enterpriseeeee");
-  $('#EnterpriseBtn').toggleClass('activee');
-} 
+if(arrayParam[0] == 1){
+	 $('#EnterpriseBtn').toggleClass('activee'); 
+	 console.log("EnterpriseBtn");
+}if(arrayParam[1] == 1){
+	 $('#transmBtn').toggleClass('activee');  
+	 console.log("transmBtn");
+}if(arrayParam[2] == 1){
+	 $('#accessDBtn').toggleClass('activee');
+	 console.log("accessDBtn");
+}if(arrayParam[3] == 1){
+	 $('#CoreBtn').toggleClass('activee');
+	 console.log("CoreBtn");
+}
 
 function initMap() {
 
@@ -253,8 +263,10 @@ map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
 		var Nairobi=new google.maps.LatLng(0.796530,37.959529);			
 		map.setCenter(Nairobi);
 		map.setZoom(6);
-		var str="<ul ><li id='initial_ul' class='Initial'><span class='folder'><i class='fa fa-folder' style='color: #08526D'></i> Sites</span></li></ul>";
+		var str="<ul><li id='initial_ul' class='Initial'><input type='checkbox' id='POs' class='AllPOs' style='margin-left: 15px' onclick='AllSitesCheckFilter()'></input><span class='folder' id='test1'><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> PO </span></li></ul>";
 		$("#network_tree").append(str);
+		tree_prop_selection();
+		folder();
 	}
 } /// End of init Map
 
@@ -419,14 +431,30 @@ function PoStItemCore(id)
 		//console.log("selectedPo...."+selectedPo);
 		//PO_Boq(selectedPo);
 		//Create_TreeParent(selectedPo,"PO");
-		
-		if($('#EnterpriseBtn').hasClass('activee')){
-			//console.log("ACTIVE ");
+  	  if(arrayParam[0]==1){
 			var paramEnterprise = true;
 		}else{
-			//console.log("NOT ACTIVE");
 			var paramEnterprise = false;
 		}
+
+		if(arrayParam[1]==1){
+			var paramTransmission = true;
+		}else{
+			var paramTransmission = false;
+		}
+			
+		if(arrayParam[2]==1){
+			var paramAccess = true;
+		}else{
+			var paramAccess = false;
+		}
+
+		if(arrayParam[3]==1){
+			var paramCore = true;
+		}else{
+			var paramCore = false;
+		}
+	
 		$.ajax({
 			type: "GET",
 			contentType: "application/json; charset=utf-8",
@@ -434,14 +462,17 @@ function PoStItemCore(id)
 			data: {
 				"selectedItem":selectedPo,
 				"POAlreadyCreated":"false",
-				"paramEnterprise": paramEnterprise,
+	            "paramEnterprise": paramEnterprise,
+				"paramTransmission":paramTransmission,
+		     	"paramAccess":paramAccess,
+			    "paramCore":paramCore,
 			},
 			dataType: "json",
 			success: function (data) {		        	
 			if (data != null) {
 				//var POChildrenLength=$("#" +selectedPo+"_f").find(' > ul > li').length;	
 				var listSites=data.listSites;
-				//console.log("listSites......."+listSites);
+				
 				var dFrag = document.createDocumentFragment(); 					
 				for (n = 0; n < listSites.length; n++) {
 					//console.log("lst sites[n] >>>> "+listSites[n]);
@@ -577,13 +608,30 @@ function PoStItemCore2(id)
 				//console.log("siteChildren....."+siteChildren);
 				if(siteChildren == 0){
 								
-					if($('#EnterpriseBtn').hasClass('activee')){
-						//console.log("ACTIVE ");
-						var paramEnterprise = true;
-					}else{
-						//console.log("NOT ACTIVE");
-						var paramEnterprise = false;
-					}
+				 	  if(arrayParam[0]==1){
+							var paramEnterprise = true;
+						}else{
+							var paramEnterprise = false;
+						}
+
+						if(arrayParam[1]==1){
+							var paramTransmission = true;
+						}else{
+							var paramTransmission = false;
+						}
+							
+						if(arrayParam[2]==1){
+							var paramAccess = true;
+						}else{
+							var paramAccess = false;
+						}
+
+						if(arrayParam[3]==1){
+							var paramCore = true;
+						}else{
+							var paramCore = false;
+						}
+					
 					$.ajax({
 						type: "GET",
 						contentType: "application/json; charset=utf-8",
@@ -593,12 +641,14 @@ function PoStItemCore2(id)
 							"POAlreadyCreated":"True",
 							"selectedSite":selectedItem,
 							"paramEnterprise": paramEnterprise,
+							"paramTransmission":paramTransmission,
+					     	"paramAccess":paramAccess,
+						    "paramCore":paramCore,
 						},
 						dataType: "json",
 						success: function (data) {					        	
 							if (data != null) {
 								var listItem=data.itemList;
-								//console.log("listItem....."+ listItem);
 								//var siteChildren=$("#"+selectedItem+ "_"+ selectedPO+ "_f") .find(' > ul > li').length;
 								if(siteChildren<listItem.length){
 									for (k = 0; k <listItem.length; k++) {										

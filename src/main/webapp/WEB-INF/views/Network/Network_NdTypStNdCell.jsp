@@ -5,6 +5,7 @@ $('#filterr').hide();
 $('#removeFilter').hide();
 
 var lst = ${listSites};
+//console.log("list sites: ",lst);
 
 var Long=${Long};
 var Lat=${Lat};
@@ -12,7 +13,9 @@ var Lat=${Lat};
 //var listNodes=${listNodes};
 //var listCells=${listCells};
 var listNodesType = ${listNodesType};
-
+//console.log("listNodesType: ",listNodesType);
+var arrayParam=${arrayParam};
+//console.log("arrayParam...", arrayParam);
 
 var button ;
 var data;
@@ -20,12 +23,18 @@ if(!(lst==null || lst=="")){
 var wareCount=lst.length;
 }
 
-var currentUrl = window.location.href;
-//console.log("currentUrl....",currentUrl);
-// Check if the Enterprise exists in the URL
-if (currentUrl.indexOf("Enterprise") !== -1) {
- // console.log("Enterpriseeeee");
-  $('#EnterpriseBtn').toggleClass('activee');
+if(arrayParam[0] == 1){
+	 $('#EnterpriseBtn').toggleClass('activee'); 
+	 console.log("EnterpriseBtn");
+}if(arrayParam[1] == 1){
+	 $('#transmBtn').toggleClass('activee');  
+	 console.log("transmBtn");
+}if(arrayParam[2] == 1){
+	 $('#accessDBtn').toggleClass('activee');
+	 console.log("accessDBtn");
+}if(arrayParam[3] == 1){
+	 $('#CoreBtn').toggleClass('activee');
+	 console.log("CoreBtn");
 }
 
 let srcCityAutocomplete, dstCityAutocomplete;
@@ -407,14 +416,30 @@ function NdTypStNdCellCore(id){
 			//console.log("NodeTypeChildrenLength==== " + NodeTypeChildrenLength);		
 			if(NodeTypeChildrenLength==0){
 				
-				if($('#EnterpriseBtn').hasClass('activee')){
-					//console.log("ACTIVE ");
+				if(arrayParam[0]==1){
 					var paramEnterprise = true;
 				}else{
-					//console.log("NOT ACTIVE");
 					var paramEnterprise = false;
 				}
-				
+
+				if(arrayParam[1]==1){
+					var paramTransmission = true;
+				}else{
+					var paramTransmission = false;
+				}
+					
+				if(arrayParam[2]==1){
+					var paramAccess = true;
+				}else{
+					var paramAccess = false;
+				}
+
+				if(arrayParam[3]==1){
+					var paramCore = true;
+				}else{
+					var paramCore = false;
+				}
+					
 			$.ajax({
 				  type: "GET",
 				  contentType: "application/json; charset=utf-8",
@@ -422,15 +447,17 @@ function NdTypStNdCellCore(id){
 				  data: {
 				          "selectedNodetType":selectedNodetType,
 				          "paramEnterprise": paramEnterprise,
+						  "paramTransmission":paramTransmission,
+				   		  "paramAccess":paramAccess,
+					      "paramCore":paramCore,
 				 		},
 				 dataType: "json",
 				 success: function (data) {	
 					 if (data != null) {
-						// console.log("data=== "+data);
-						//var NodeTypeChildren=$("#" +selectedNodetType+"_f").find(' > ul > li');
-						//var NodeTypeChildrenLength=$("#" +selectedNodetType+"_f").find(' > ul > li').length;
+			
 						var listSites=data.listSites;		
 						//console.log("listSites === "+listSites);
+						
 						if(NodeTypeChildrenLength<listSites.length){
 							var dFrag = document.createDocumentFragment();
 							for (j = 0; j < listSites.length; j++){								
@@ -548,13 +575,30 @@ var selectedItem = id.slice(0, id.indexOf("_" +selectedNodetType)); // Output: "
 	      var SiteChildrenLength = $("#" + selectedItem + "_" + selectedNodetType + "_f").find(' > ul > li').length;
 	      if (SiteChildrenLength == 0) {
 	    	  
-				if($('#EnterpriseBtn').hasClass('activee')){
-					//console.log("ACTIVE ");
+	    	  if(arrayParam[0]==1){
 					var paramEnterprise = true;
 				}else{
-					//console.log("NOT ACTIVE");
 					var paramEnterprise = false;
 				}
+
+				if(arrayParam[1]==1){
+					var paramTransmission = true;
+				}else{
+					var paramTransmission = false;
+				}
+					
+				if(arrayParam[2]==1){
+					var paramAccess = true;
+				}else{
+					var paramAccess = false;
+				}
+
+				if(arrayParam[3]==1){
+					var paramCore = true;
+				}else{
+					var paramCore = false;
+				}
+							
 		     $.ajax({
 	          type: "GET",
 	          contentType: "application/json; charset=utf-8",
@@ -563,16 +607,21 @@ var selectedItem = id.slice(0, id.indexOf("_" +selectedNodetType)); // Output: "
 	            "selectedItem": selectedItem,
 	            "selectedNodetType": selectedNodetType,
 	            "paramEnterprise": paramEnterprise,
+				"paramTransmission":paramTransmission,
+		     	"paramAccess":paramAccess,
+			    "paramCore":paramCore,
 	          },
 	          dataType: "json",
 	          success: function (data) {
 	            if (data != null) {
-	              var listNodes = data.listNodes;
-	              var listCells= data.listCells;
-	              Create_TreeNode_CellGeneral(listNodes,listCells,SiteChildrenLength, true,selectedItem);
-	              Tree_PropagationAppendedNodes(selectedItem + "_" + selectedNodetType + "_f .Node");
-	              tree_prop_selection("#" +selectedItem + "_" +selectedNodetType+"_f .Node .TreeSpan");
-	            }
+	              var listNodes = data.listNodes;	              
+	              var listCells= data.listCells;	            
+	              if(SiteChildrenLength<listNodes.length){
+		              Create_TreeNode_CellGeneral(listNodes,listCells,SiteChildrenLength, true,selectedItem);
+		              Tree_PropagationAppendedNodes(selectedItem + "_" + selectedNodetType + " .Node");
+		              tree_prop_selection("#" +selectedItem + "_" +selectedNodetType+"_f .Node .TreeSpan");
+		            }
+	           }
 	            data= null;
 	          },
 	          error: function (result) {

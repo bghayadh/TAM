@@ -5,18 +5,18 @@ $('#filterr').hide();
 $('#removeFilter').hide();
 
 var lst = ${listSites};
-console.log("LST...", lst);
+//console.log("LST...", lst);
 var Long=${Long};
 var Lat=${Lat};
 
 var listNodes=${listNodes};
-console.log("listNodes...", listNodes);
+//console.log("listNodes...", listNodes);
 var listCells=${listCells};
-console.log("listCells...", listCells);
+//console.log("listCells...", listCells);
 var listNodesType=${listNodesType};
-console.log("listNodesType...", listNodesType);
+//console.log("listNodesType...", listNodesType);
 var arrayParam=${arrayParam};
-console.log("arrayParam...", arrayParam);
+//console.log("arrayParam...", arrayParam);
 
 
 var button ;
