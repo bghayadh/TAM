@@ -162,7 +162,9 @@ public class NewCabinetMovement {
 		query = "SELECT SERIALNUMBER FROM NODE_CABINET WHERE CABINETNO='0' AND ACTIVE_RECORD='"+recordValue+"' AND DOMAIN='"+domain+"' AND VENDOR='"+vendor+"'";
 		ResultSet rs = stmt.executeQuery(query);
 		while(rs.next()) {
-			serials.add(rs.getString("SERIALNUMBER"));
+			if(!rs.getString("SERIALNUMBER").equalsIgnoreCase("0")) {
+				serials.add(rs.getString("SERIALNUMBER"));
+			}
 		}
 		stmt.close();
 		rs.close();

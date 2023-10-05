@@ -342,7 +342,7 @@ public class LoadFileIPHuawei {
     							  ResultSet rsinit3 = stmtp1.executeQuery(sqlStmtinit3);
     							  while(rsinit3.next()) {
     								  wareID=rsinit3.getString("WARE_ID");
-    								  wareName = rsinit3.getString("WARE_ID");
+    								  wareName = rsinit3.getString("WARE_NAME");
     								  longi=rsinit3.getString("LONGITUDE");
     								  lat = rsinit3.getString("LATITUDE");
     							  }

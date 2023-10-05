@@ -1621,7 +1621,7 @@ public class CopyParsingDataToALM {
 	 private static void UpdatingSiteinTemp(String domain,String vendor) throws SQLException {
 		 
 		 Statement stmt = null,stmt1=null;
-		 String tmpSiteID = null,tmpWareName=null,tmpWareID=null,vSiteID = null,vWareName=null,vWareID=null;
+		 String tmpSiteID = null,tmpWareName=null,tmpWareID=null,vSiteID = null,vWareName=null,vWareID=null,vLong=null,vLat=null;
 		 stmt = conalm.createStatement();  
     	 String sqlStmtinit2 = "select distinct NODE_ID,NODE_NAME,SITE_ID,WARE_ID,WARE_NAME from TEMP_NODE_ACTIVE where DOMAIN='"+domain+"' and VENDOR='"+vendor+"'";          
 		 ResultSet rs = stmt.executeQuery(sqlStmtinit2);
@@ -1630,7 +1630,7 @@ public class CopyParsingDataToALM {
 	 			  tmpWareID = rs.getString("SITE_ID");
 	 			  tmpWareName = rs.getString("WARE_NAME");
 	 			  stmt1 = conalm.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);  
-	 			  String sqlquery = "Select DISTINCT NODE_ID,NODE_NAME,SITE_ID,WARE_ID,WARE_NAME FROM NODE_ACTIVE WHERE NODE_ID='"+rs.getString("NODE_ID")+"' AND NODE_NAME='"+rs.getString("NODE_NAME")+"' AND ACTIVE_RECORD='1'";
+	 			  String sqlquery = "Select DISTINCT NODE_ID,NODE_NAME,SITE_ID,WARE_ID,WARE_NAME,LONGITUDE,LATITUDE FROM NODE_ACTIVE WHERE NODE_ID='"+rs.getString("NODE_ID")+"' AND NODE_NAME='"+rs.getString("NODE_NAME")+"' AND ACTIVE_RECORD='1'";
 	 			  ResultSet rs1 = stmt1.executeQuery(sqlquery);
 	 			  System.out.println(rs1.getRow());
 	 			  rs1.last();
@@ -1641,7 +1641,8 @@ public class CopyParsingDataToALM {
 	 		 			vSiteID = rs1.getString("SITE_ID");
 	 		 			vWareID = rs1.getString("SITE_ID");
 	 		 			vWareName = rs1.getString("WARE_NAME");
-
+	 		 			vLong= rs1.getString("LONGITUDE");
+	 		 			vLat= rs1.getString("LATITUDE");
 	 		 			if((vSiteID != null && !vSiteID.equalsIgnoreCase("0") && !vSiteID.equalsIgnoreCase("null"))
 	 		 				&& (vWareID != null && !vWareID.equalsIgnoreCase("0") && !vWareID.equalsIgnoreCase("null")) 
 	 		 				&& (vWareName != null && !vWareName.equalsIgnoreCase("0") && !vWareName.equalsIgnoreCase("null"))) {
@@ -1650,7 +1651,8 @@ public class CopyParsingDataToALM {
 		 		 			&& (tmpWareName != null || tmpWareName.equalsIgnoreCase("0") || tmpWareName.equalsIgnoreCase("null"))) {
 		 		 				PreparedStatement updatetemp = null;
 		 		 				updatetemp=conalm.prepareStatement("Update TEMP_NODE_ACTIVE"
-		 		 				+ " SET SITE_ID='"+vSiteID+"', WARE_ID='"+vWareID+"', WARE_NAME='"+vWareName+"'"
+		 		 				+ " SET SITE_ID='"+vSiteID+"', WARE_ID='"+vWareID+"', WARE_NAME='"+vWareName+"',"
+		 		 				+ "LONGITUDE='"+vLong+"',LATITUDE='"+vLat+"'"
 		 		 				+ " WHERE NODE_ID='"+rs.getString("NODE_ID")+"' AND NODE_NAME='"+rs.getString("NODE_NAME")+"'");
 		 		 				updatetemp.executeUpdate();
 		 		 				updatetemp.close();
