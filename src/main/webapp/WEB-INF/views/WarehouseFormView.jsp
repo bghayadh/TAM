@@ -1595,7 +1595,7 @@ select {
 				
 			<div><form><div style="height:10px"></div>
 					    <h4>Inventory</h4>
-						    <table id ="inventorytab" class="table table-striped table-bordered table-sm" style="display:block; height:400px; overflow-y: auto;">
+						    <table id ="boqInventoryTable" class="table table-striped table-bordered table-sm" style="display:block; height:400px; overflow-y: auto;">
 						       <thead><tr class="fixed-headerr">						                
 						       			<th>Item Code</th>
 						                <th>Item Name</th>
@@ -1608,12 +1608,12 @@ select {
 						                </tr></thead></table>
 			</form></div>
 
-				  <table id ="inventorytab"  class="table table-striped table-bordered table-sm" style="display:block;  overflow-y: auto;">
+				  <table id ="totalBoqInventoryTable"  class="table table-striped table-bordered table-sm" style="display:block;  overflow-y: auto;">
 						       <thead>
 						            <tr class="fixed-headerr">
 						                
 						                <th>Total Quantity</th>
-						                <th><input id="quan" style="width:240px;" type="text" readonly /></th>
+						                <th><input id="qty" style="width:240px;" type="text" readonly /></th>
 						                <th>Total Initial Cost</th>
 						                <th><input id="initial" style="width:240px;" type="text" readonly /></th>
 						                <th>Total Depreciation </th>
@@ -3017,36 +3017,38 @@ if ('${docStatus}' != "addNew") {
         	        "<td name='itemModel'><input name='itemModel' type='text' id='itemModel" + i + "' value='" + itemModel + "' style='width:290px;' class='form-control text-input' readonly/></td>" +
         	        "<td name='itemPartNumber'><input name='itemPartNumber' type='text' id='itemPartNumber" + i + "' value='" + itemPartNumber + "' style='width:290px;' class='form-control text-input' readonly/></td>" +
         	        "<td name='quantity'><input name='quantity' type='text' id='quantity" + i + "' value='" + quantity + "' style='width:290px;' class='form-control text-input' readonly/></td>" +
-        	        "<td name='itemModel'><input name='itemModel' type='text' id='initialcost" + i + "' value='" + initialcost + "' style='width:290px;' class='form-control text-input' readonly/></td>" +
-        	        "<td name='quantity'><input name='quantity' type='text' id='dep" + i + "' value='" + dep + "' style='width:290px;' class='form-control text-input' readonly/></td>" +
-        	        "<td name='itemPartNumber'><input name='itemPartNumber' type='text' id='netcost" + i + "' value='" + netcost + "' style='width:290px;' class='form-control text-input' readonly/></td></tr>";        	        
+        	        "<td name='itemModel'><input name='initialcost' type='text' id='initialcost" + i + "' value='" + initialcost + "' style='width:290px;' class='form-control text-input' readonly/></td>" +
+        	        "<td name='quantity'><input name='dep' type='text' id='dep" + i + "' value='" + dep + "' style='width:290px;' class='form-control text-input' readonly/></td>" +
+        	        "<td name='itemPartNumber'><input name='netcost' type='text' id='netcost" + i + "' value='" + netcost + "' style='width:290px;' class='form-control text-input' readonly/></td></tr>";        	        
 
-        	    $("#inventorytab").append(c);
+        	    $("#boqInventoryTable").append(c);
 
         	    // Get the initial cost, net cost, and depreciation from the current row
+        	    /*
         	    var initialCost = parseFloat(initialcost);
         	    var netCost = parseFloat(netcost);
         	    var depreciation = parseFloat(dep);
         	    var quantityValue = parseInt(quantity); // Parse quantity as an integer
+        	    */ 
 
-        	    if (!isNaN(initialCost)) {
-        	        totalInitialCost += initialCost;
+        	    if (!isNaN(parseFloat(initialcost))) {
+        	        totalInitialCost += parseFloat(initialcost);
         	    }
-        	    if (!isNaN(netCost)) {
-        	        totalNetCost += netCost;
+        	    if (!isNaN(parseFloat(netcost))) {
+        	        totalNetCost += parseFloat(netcost);
         	    }
-        	    if (!isNaN(depreciation)) {
-        	        totalDepreciation += depreciation;
+        	    if (!isNaN(parseFloat(dep))) {
+        	        totalDepreciation += parseFloat(dep);
         	    }
-        	    if (!isNaN(quantityValue)) {
-        	        totalQuantity += quantityValue; 
+        	    if (!isNaN(parseInt(quantity))) {
+        	        totalQuantity += parseInt(quantity); // Parse quantity as an integer
         	    }
         	}
 
-        	document.getElementById("quan").value = totalQuantity;
-        	document.getElementById("initial").value = totalInitialCost;
-        	document.getElementById("dep").value = totalDepreciation;
-        	document.getElementById("net").value = totalNetCost;
+        	document.getElementById("qty").value = totalQuantity;
+        	document.getElementById("initial").value = totalInitialCost.toFixed(2);
+        	document.getElementById("dep").value = totalDepreciation.toFixed(2);
+        	document.getElementById("net").value = totalNetCost.toFixed(2);
 
   /*      	    
 
