@@ -13,19 +13,6 @@ var lst = ${listNodes};
 var arrayParam=${arrayParam};
 //console.log("arrayParam...", arrayParam);
 
-if(arrayParam[0] == 1){
-	 $('#EnterpriseBtn').toggleClass('activee'); 
-	 console.log("EnterpriseBtn");
-}if(arrayParam[1] == 1){
-	 $('#transmBtn').toggleClass('activee');  
-	 console.log("transmBtn");
-}if(arrayParam[2] == 1){
-	 $('#accessDBtn').toggleClass('activee');
-	 console.log("accessDBtn");
-}if(arrayParam[3] == 1){
-	 $('#CoreBtn').toggleClass('activee');
-	 console.log("CoreBtn");
-}
 
 var button ;
 var data;
@@ -416,7 +403,7 @@ function showMarkersAllSitesOneNt(id) {
   
   var liElements = ulElement.querySelectorAll('.SingleNode'); // Retrieve only <li> elements with <input> children
  
-  var count = liElements.length;
+  //var count = liElements.length;
   //console.log("Number of <li> elements:", count);
   var markersToAdd = []; // Array to store markers that need to be added
 
@@ -432,7 +419,6 @@ function showMarkersAllSitesOneNt(id) {
 	if (index !== -1) {
 	  var nodeId = nodeSiteId.substring(0, index).slice(0, -1);
 	  //console.log(" nodeId : "+nodeId);
-
 	} 
 
 	/*
@@ -560,7 +546,7 @@ function NdTpNdCellCore(id)
 */
 
 function showMarkerSingleSite(id) {
-	console.log("id..."+id); //2023_NODE_Huawei_Transmission_618845_WARE_2021_13763_Router
+	//console.log("id..."+id); //2023_NODE_Huawei_Transmission_618845_WARE_2021_13763_Router
 	//console.log("showMarkerSingleSite");
 	var index = id.indexOf("WARE_2");
 	//console.log(" index : "+index);
@@ -590,10 +576,7 @@ function showMarkerSingleSite(id) {
 		//console.log("markersSites....",markersSites);
 		//console.log("markersSites[wareId]....",markersSites[wareId]);
 		markersSites[nodeId].setMap(map);
-		
-		//console.log("markerClusterSites..b..",markerClusterSites);
 		markerClusterSites.addMarker(markersSites[nodeId]);
-		//console.log("markerClusterSites..a..",markerClusterSites);
 		markerClusterSites.repaint();
 	}else{
 		//console.log("unchecked");

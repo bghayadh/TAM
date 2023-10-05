@@ -275,15 +275,19 @@ public class NetworkController {
 			try {
 				if (enterprise != null && !enterprise.equals("null")) {
 					arrayParam[0] = 1;	
+					model.addAttribute("EnterpriseBtn", arrayParam[0]);
 				}
 				if (transmission != null && !transmission.equals("null")) {
 					arrayParam[1] = 1;	
+					model.addAttribute("transmBtn", arrayParam[1]);
 				}
 				if (access != null && !access.equals("null")) {
 					arrayParam[2] = 1;	
+					model.addAttribute("accessDBtn", arrayParam[2]);
 				}
 				if (core != null && !core.equals("null")) {
 					arrayParam[3] = 1;	
+					model.addAttribute("CoreBtn", arrayParam[3]);
 				}
 				strSites = AppendQuery("w",arrayParam, strSites);
 				
@@ -452,15 +456,19 @@ public class NetworkController {
 				try {
 					if (enterprise != null && !enterprise.equals("null")) {
 						arrayParam[0] = 1;	
+						model.addAttribute("EnterpriseBtn", arrayParam[0]);
 					}
 					if (transmission != null && !transmission.equals("null")) {
-						arrayParam[1] = 1;	
+						arrayParam[1] = 1;
+						model.addAttribute("transmBtn", arrayParam[1]);
 					}
 					if (access != null && !access.equals("null")) {
 						arrayParam[2] = 1;	
+						model.addAttribute("accessDBtn", arrayParam[2]);
 					}
 					if (core != null && !core.equals("null")) {
 						arrayParam[3] = 1;	
+						model.addAttribute("CoreBtn", arrayParam[3]);
 					}
 					strSites = AppendQuery("w",arrayParam, strSites);			
 					strSites = strSites + ") as countNodes,(select COUNT(*) FROM NODE_GCELL c where c.NODE_PK IN (select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1' ";
@@ -630,15 +638,19 @@ public String Network_NdTypStNdCell(Locale locale, Model model, HttpServletReque
 	        try {
 	        	if (enterprise != null && !enterprise.equals("null")) {
 					arrayParam[0] = 1;	
+					model.addAttribute("EnterpriseBtn", arrayParam[0]);
 				}
 				if (transmission != null && !transmission.equals("null")) {
 					arrayParam[1] = 1;	
+					model.addAttribute("transmBtn", arrayParam[1]);
 				}
 				if (access != null && !access.equals("null")) {
-					arrayParam[2] = 1;	
+					arrayParam[2] = 1;
+					model.addAttribute("accessDBtn", arrayParam[2]);
 				}
 				if (core != null && !core.equals("null")) {
 					arrayParam[3] = 1;	
+					model.addAttribute("CoreBtn", arrayParam[3]);
 				}
 				strSites = AppendQuery("w",arrayParam, strSites);			
 				strSites = strSites + ") as countNodes,(select COUNT(*) FROM NODE_GCELL c where c.NODE_PK IN (select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1' ";
@@ -757,15 +769,19 @@ public String Network_SupStNdCell(Locale locale, Model model, HttpServletRequest
 				try {
 					if (enterprise != null && !enterprise.equals("null")) {
 						arrayParam[0] = 1;	
+						model.addAttribute("EnterpriseBtn", arrayParam[0]);
 					}
 					if (transmission != null && !transmission.equals("null")) {
 						arrayParam[1] = 1;	
+						model.addAttribute("transmBtn", arrayParam[1]);
 					}
 					if (access != null && !access.equals("null")) {
 						arrayParam[2] = 1;	
+						model.addAttribute("accessDBtn", arrayParam[2]);
 					}
 					if (core != null && !core.equals("null")) {
 						arrayParam[3] = 1;	
+						model.addAttribute("CoreBtn", arrayParam[3]);
 					}
 					strSites = AppendQuery("w",arrayParam, strSites);			
 					strSites = strSites + ") as countNodes,(select COUNT(*) FROM NODE_GCELL c where c.NODE_PK IN (select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1' ";
@@ -863,15 +879,19 @@ public String Network_SupStNdTypNdCell(Locale locale, Model model, HttpServletRe
 				try {
 					if (enterprise != null && !enterprise.equals("null")) {
 						arrayParam[0] = 1;	
+						model.addAttribute("EnterpriseBtn", arrayParam[0]);
 					}
 					if (transmission != null && !transmission.equals("null")) {
 						arrayParam[1] = 1;	
+						model.addAttribute("transmBtn", arrayParam[1]);
 					}
 					if (access != null && !access.equals("null")) {
 						arrayParam[2] = 1;	
+						model.addAttribute("accessDBtn", arrayParam[2]);
 					}
 					if (core != null && !core.equals("null")) {
 						arrayParam[3] = 1;	
+						model.addAttribute("CoreBtn", arrayParam[3]);
 					}
 					strSites = AppendQuery("w",arrayParam, strSites);			
 					strSites = strSites + ") as countNodes,(select COUNT(*) FROM NODE_GCELL c where c.NODE_PK IN (select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1' ";
@@ -967,15 +987,19 @@ public String Network_SupNdTypStCell(Locale locale, Model model, HttpServletRequ
 			try {
 				if (enterprise != null && !enterprise.equals("null")) {
 					arrayParam[0] = 1;	
+					model.addAttribute("EnterpriseBtn", arrayParam[0]);
 				}
 				if (transmission != null && !transmission.equals("null")) {
 					arrayParam[1] = 1;	
+					model.addAttribute("transmBtn", arrayParam[1]);
 				}
 				if (access != null && !access.equals("null")) {
-					arrayParam[2] = 1;	
+					arrayParam[2] = 1;
+					model.addAttribute("accessDBtn", arrayParam[2]);
 				}
 				if (core != null && !core.equals("null")) {
 					arrayParam[3] = 1;	
+					model.addAttribute("CoreBtn", arrayParam[3]);
 				}
 				strSites = AppendQuery("w",arrayParam, strSites);			
 				strSites = strSites + ") as countNodes,(select COUNT(*) FROM NODE_GCELL c where c.NODE_PK IN (select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1' ";
@@ -1074,15 +1098,19 @@ public String Network_PoSiteItem(Locale locale, Model model, HttpServletRequest 
 		 try {	
 			 if (enterprise != null && !enterprise.equals("null")) {
 					arrayParam[0] = 1;	
+					model.addAttribute("EnterpriseBtn", arrayParam[0]);
 				}
 				if (transmission != null && !transmission.equals("null")) {
 					arrayParam[1] = 1;	
+					model.addAttribute("transmBtn", arrayParam[1]);
 				}
 				if (access != null && !access.equals("null")) {
 					arrayParam[2] = 1;	
+					model.addAttribute("accessDBtn", arrayParam[2]);
 				}
 				if (core != null && !core.equals("null")) {
 					arrayParam[3] = 1;	
+					model.addAttribute("CoreBtn", arrayParam[3]);
 				}
 				strSites = AppendQuery("w",arrayParam, strSites);			
 				strSites = strSites + ") as countNodes,(select COUNT(*) from ASSET_REGISTRY j where  j.AR_ID=b.AR_ID and j.PO_ID!='null' ";
@@ -1183,15 +1211,19 @@ public String Network_PoItemSite(Locale locale, Model model, HttpServletRequest 
 			try {	
 				 if (enterprise != null && !enterprise.equals("null")) {
 						arrayParam[0] = 1;	
+						model.addAttribute("EnterpriseBtn", arrayParam[0]);
 					}
 					if (transmission != null && !transmission.equals("null")) {
 						arrayParam[1] = 1;	
+						model.addAttribute("transmBtn", arrayParam[1]);
 					}
 					if (access != null && !access.equals("null")) {
 						arrayParam[2] = 1;	
+						model.addAttribute("accessDBtn", arrayParam[2]);
 					}
 					if (core != null && !core.equals("null")) {
 						arrayParam[3] = 1;	
+						model.addAttribute("CoreBtn", arrayParam[3]);
 					}
 					strSites = AppendQuery("w",arrayParam, strSites);			
 					strSites = strSites + ") as countNodes,(select COUNT(*) from ASSET_REGISTRY j where  j.AR_ID=b.AR_ID and j.PO_ID!='null' ";
@@ -1289,15 +1321,19 @@ public String Network_SitePoItem(Locale locale, Model model, HttpServletRequest 
 		 try {	
 			 if (enterprise != null && !enterprise.equals("null")) {
 					arrayParam[0] = 1;	
+					model.addAttribute("EnterpriseBtn", arrayParam[0]);
 				}
 				if (transmission != null && !transmission.equals("null")) {
 					arrayParam[1] = 1;	
+					model.addAttribute("transmBtn", arrayParam[1]);
 				}
 				if (access != null && !access.equals("null")) {
 					arrayParam[2] = 1;	
+					model.addAttribute("accessDBtn", arrayParam[2]);
 				}
 				if (core != null && !core.equals("null")) {
 					arrayParam[3] = 1;	
+					model.addAttribute("CoreBtn", arrayParam[3]);
 				}
 				strSites = AppendQuery("w",arrayParam, strSites);			
 				strSites = strSites + ") as countNodes,(select COUNT(*) from ASSET_REGISTRY j where  j.AR_ID=b.AR_ID and j.PO_ID!='null' ";
@@ -1381,15 +1417,19 @@ public String Network_NdTypNdCell(Locale locale, Model model, HttpServletRequest
 			try {
 				if (enterprise != null && !enterprise.equals("null")) {
 					arrayParam[0] = 1;	
+					model.addAttribute("EnterpriseBtn", arrayParam[0]);
 				}
 				if (transmission != null && !transmission.equals("null")) {
-					arrayParam[1] = 1;	
+					arrayParam[1] = 1;
+					model.addAttribute("transmBtn", arrayParam[1]);
 				}
 				if (access != null && !access.equals("null")) {
-					arrayParam[2] = 1;	
+					arrayParam[2] = 1;
+					model.addAttribute("accessDBtn", arrayParam[2]);
 				}
 				if (core != null && !core.equals("null")) {
 					arrayParam[3] = 1;	
+					model.addAttribute("CoreBtn", arrayParam[3]);
 				}
 				
 				strNodes = AppendQuery("w",arrayParam, strNodes);			
@@ -1481,15 +1521,19 @@ public String Network_Node(Locale locale, Model model, HttpServletRequest reques
 			try {
 				if (enterprise != null && !enterprise.equals("null")) {
 					arrayParam[0] = 1;	
+					model.addAttribute("EnterpriseBtn", arrayParam[0]);
 				}
 				if (transmission != null && !transmission.equals("null")) {
-					arrayParam[1] = 1;	
+					arrayParam[1] = 1;
+					model.addAttribute("transmBtn", arrayParam[1]);
 				}
 				if (access != null && !access.equals("null")) {
 					arrayParam[2] = 1;	
+					model.addAttribute("accessDBtn", arrayParam[2]);
 				}
 				if (core != null && !core.equals("null")) {
 					arrayParam[3] = 1;	
+					model.addAttribute("CoreBtn", arrayParam[3]);
 				}
 	
 				strNodes = AppendQuery("w",arrayParam, strNodes);				
@@ -1566,15 +1610,19 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 			
 			if (enterprise != null && !enterprise.equals("null")) {
 				arrayParam[0] = 1;	
+				model.addAttribute("EnterpriseBtn", arrayParam[0]);
 			}
 			if (transmission != null && !transmission.equals("null")) {
 				arrayParam[1] = 1;	
+				model.addAttribute("transmBtn", arrayParam[1]);
 			}
 			if (access != null && !access.equals("null")) {
 				arrayParam[2] = 1;	
+				model.addAttribute("accessDBtn", arrayParam[2]);
 			}
 			if (core != null && !core.equals("null")) {
 				arrayParam[3] = 1;	
+				model.addAttribute("CoreBtn", arrayParam[3]);
 			}
 				try {
 					strCells1 = AppendQuery("w",arrayParam, strCells1);				

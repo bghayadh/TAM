@@ -108,23 +108,44 @@
 							</div>
 
 							<div class=" top-btn-filter">
-								<button id="accessDBtn" name="Access" class="buttonTog domain">
-									<i class='fa fa-podcast' style='font-size: 12px'></i> Access
-								</button>
+						<button id="accessDBtn" name="Access" class="buttonTog domain
+						    <c:choose>
+						        <c:when test="${accessDBtn == 1}">
+						            activee
+						        </c:when>
+						    </c:choose>">
+						    <i class='fa fa-podcast' style='font-size: 12px'></i> Access
+						</button>
+
 							</div>
 	
 							<div class=" top-btn-filter">
-								<button id="transmBtn" name="Transmission" class="buttonTog domain">
+								<button id="transmBtn" name="Transmission" class="buttonTog domain
+								 <c:choose>
+						        <c:when test="${transmBtn == 1}">
+						            activee
+						        </c:when>
+						   		 </c:choose>">
 									<i class='fa fa-link' style='font-size: 15px'></i> Transmission
 								</button>
 							</div>
 							<div class=" top-btn-filter">
-								<button id="EnterpriseBtn" name="Enterprise" class="buttonTog domain">
+								<button id="EnterpriseBtn" name="Enterprise" class="buttonTog domain
+		 							<c:choose>
+								        <c:when test="${EnterpriseBtn == 1}">
+								            activee
+								        </c:when>
+								    </c:choose>">
 									<i class='fa fa-building' style='font-size: 12px'></i> Enterprise
 								</button>
 							</div>
 							<div class=" top-btn-filter">
-								<button id="CoreBtn" name="Core" class="buttonTog domain">
+								<button id="CoreBtn" name="Core" class="buttonTog domain
+		 							<c:choose>
+								        <c:when test="${CoreBtn == 1}">
+								            activee
+								        </c:when>
+								    </c:choose>">
 									<i class='fa fa-arrows-alt' style='font-size: 15px'></i><span
 										style="margin-left: 3px"> Core</span>
 								</button>

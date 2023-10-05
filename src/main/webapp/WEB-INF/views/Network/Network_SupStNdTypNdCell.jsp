@@ -15,19 +15,6 @@ if(!(lst==null || lst=="")){
 var wareCount=lst.length;
 }
 
-if(arrayParam[0] == 1){
-	 $('#EnterpriseBtn').toggleClass('activee'); 
-	 console.log("EnterpriseBtn");
-}if(arrayParam[1] == 1){
-	 $('#transmBtn').toggleClass('activee');  
-	 console.log("transmBtn");
-}if(arrayParam[2] == 1){
-	 $('#accessDBtn').toggleClass('activee');
-	 console.log("accessDBtn");
-}if(arrayParam[3] == 1){
-	 $('#CoreBtn').toggleClass('activee');
-	 console.log("CoreBtn");
-}
 
 function initMap() {
 
@@ -594,11 +581,14 @@ function StNdTpNdCellCore(id)
 			            $(".NodeType > .TreeSpan").contextmenu(function(){				
 			        		//selectedSingleNtIdContext=$(this).parent().attr('id').split("_")[0];
 			        		selectedSingleNtIdContext=$(this).parent().attr('id');
-			        		//console.log("selectedSingleNtIdContext......",selectedSingleNtIdContext);
-			        		selectedSingleNt =selectedSingleNtIdContext.split("_")[0];
-			        		selectedSite = selectedSingleNtIdContext.split("_")[1] +"_"+selectedSingleNtIdContext.split("_")[2]+"_"+selectedSingleNtIdContext.split("_")[3];
-			        		//console.log("selectedSite......",selectedSite);
-			        		menuName=SingleNt;	
+			        		console.log("selectedSingleNtIdContext......",selectedSingleNtIdContext);			        				        		
+			        		var index = selectedSingleNtIdContext.indexOf("WARE_2");
+			    			console.log(" index : "+index);
+			    			if (index !== -1) {
+			    				selectedSingleNt = selectedSingleNtIdContext.substring(0, index).slice(0, -1);
+			    				selectedSite = selectedSingleNtIdContext.substring(index);
+			    			}
+			    			menuName=SingleNt;	
 			        		openContext(selectedSingleNtIdContext,"",SingleNt,event);
 			        	});
 			            SingleNt = new ContextMenu({

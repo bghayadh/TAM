@@ -23,20 +23,6 @@ if(!(lst==null || lst=="")){
 var wareCount=lst.length;
 }
 
-if(arrayParam[0] == 1){
-	 $('#EnterpriseBtn').toggleClass('activee'); 
-	 console.log("EnterpriseBtn");
-}if(arrayParam[1] == 1){
-	 $('#transmBtn').toggleClass('activee');  
-	 console.log("transmBtn");
-}if(arrayParam[2] == 1){
-	 $('#accessDBtn').toggleClass('activee');
-	 console.log("accessDBtn");
-}if(arrayParam[3] == 1){
-	 $('#CoreBtn').toggleClass('activee');
-	 console.log("CoreBtn");
-}
-
 let srcCityAutocomplete, dstCityAutocomplete;
 function initMap() {
 

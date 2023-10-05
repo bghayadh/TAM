@@ -18,19 +18,6 @@ if(!(lst==null || lst=="")){
 var wareCount=lst.length;
 }
 
-if(arrayParam[0] == 1){
-	 $('#EnterpriseBtn').toggleClass('activee'); 
-	 console.log("EnterpriseBtn");
-}if(arrayParam[1] == 1){
-	 $('#transmBtn').toggleClass('activee');  
-	 console.log("transmBtn");
-}if(arrayParam[2] == 1){
-	 $('#accessDBtn').toggleClass('activee');
-	 console.log("accessDBtn");
-}if(arrayParam[3] == 1){
-	 $('#CoreBtn').toggleClass('activee');
-	 console.log("CoreBtn");
-}
 
 function initMap() {
 
@@ -477,9 +464,9 @@ function StPoItemCore(id){
 						        var selectedPo;
 						    	$(".PO > .TreeSpan").contextmenu(function(){				
 						    		selectedPoSingleIdContext=$(this).parent().attr('id');
-									selectedPo=selectedPoSingleIdContext.split("_")[0] +"_"+ selectedPoSingleIdContext.split("_")[1] +"_"+selectedPoSingleIdContext.split("_")[2];
-									//console.log("selectedPo.......",selectedPo);
-						    		menuName=folderPoSingle;			
+						    		var index = selectedPoSingleIdContext.indexOf("WARE_2");
+									selectedPo = selectedPoSingleIdContext.substring(0, index).slice(0, -1);
+									menuName=folderPoSingle;			
 						    		openContext(selectedPo,"",folderPoSingle,event);
 						    	});
 						    	
@@ -487,7 +474,6 @@ function StPoItemCore(id){
 						    		  'theme': 'default',
 						    		  'items': [
 						    			  {'icon': 'braille', 'name': 'Show BoQ', action: () => {	
-						    				 //console.log("selectedPooooooooo.......",selectedPo);
 						    			 	 POSite_Boq(selectedPo);
 						    				}	
 						    			}
@@ -508,10 +494,12 @@ function StPoItemCore(id){
 	}
 	
 function requestItem(id){
-	var selectedPo =id.split("_")[0] +"_"+ id.split("_")[1]+"_"+ id.split("_")[2];
-	//console.log("selectedPo...",selectedPo);
-	var selectedSite =id.split("_")[3] +"_"+ id.split("_")[4]+"_"+ id.split("_")[5];
-	//console.log("selectedSite...",selectedSite);
+	console.log("iddddddd  ",id);
+		var index = id.indexOf("WARE_2");
+		if (index !== -1) {
+			var selectedPo = id.substring(0, index).slice(0, -1);
+			var selectedSite = id.substring(index);
+		}
 	/*
 	$("#"+listPO[j][0]+"_"+listPO[j][1]+"> span").on('click',function () {																					
 		var res=$(this ).parents().map(function() {
