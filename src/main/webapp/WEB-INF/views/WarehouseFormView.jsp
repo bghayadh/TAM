@@ -1629,13 +1629,13 @@ select {
 						    <style>
     
 
-    #inventorytab2 td {
+    #warehouseBoqTab td {
         padding: 2px; /* Add some spacing between cells */
         width:150px;
     }
 </style>
 
-<table id="inventorytab2" style="display:block; height:200px;   border-collapse: collapse; overflow-y: auto;">
+<table id="warehouseBoqTab" style="display:block; height:200px;   border-collapse: collapse; overflow-y: auto;">
     <tbody>
         <tr>
             <td><b>Site Name</b></td>
@@ -2761,9 +2761,7 @@ function saverowsintables()
 	
  	boqNode = [];
  	boqNode = ${Listnode};
-	
- console.log(boqNode);
- 
+	 
  for (z = 0; z < boqNode.length; z++){
 	 var nodeId=boqNode[z][0];
 		if(nodeId==null){
@@ -2969,22 +2967,22 @@ boqLCell = ${ListLCell};
 
 if ('${docStatus}' != "addNew") {
 
-        	 $("#inventorytab2").empty();
-        	 z="";
+			boqArray = ${eachNodeTypeCount};
+        	$("#warehouseBoqTab").empty();
+        	z="";
         	z+="<tr><td><b>Site Name</b></td><td >"+'${warehouseName}'+"</td></tr>"+
         	"<tr><td> <b>Nodes</b></td><td >"+'${nodes}'+"</td></tr>"+
-        	"<tr>"+
-        	   "<td><b>Node Type</b></td><td >"+'${nodeType}'+"</td>"+
-        	"</tr>"+
-        	"<tr>"+
-        	  " <td><b>IDU</b></td><td >"+'${IDUcount}'+"</td>"+
-        	"</tr>"+
-        	"<tr><td><b>SRansBs</b></td><td >"+'${SRanBscount}'+"</td></tr>"+
-        	"<tr><td><b>2G-Cell</b></td><td >"+'${g-cell}'+"</td></tr>"+
+        	"<tr><td><b>Node Type</b></td><td >"+'${nodeType}'+"</td></tr>";        	
+
+        	for (i=0; i<boqArray.length; i++) {
+        		z+="<tr><td><b>" +boqArray[i][0]+ "</b></td><td >"+boqArray[i][1]+"</td></tr>"            	
+            }
+        	
+        	z+= "<tr><td><b>2G-Cell</b></td><td >"+'${g-cell}'+"</td></tr>"+
         	"<tr><td><b>3G-Cell</b></td><td >"+'${u-cell}'+"</td></tr>"+
         	"<tr><td><b>4G-Cell</b></td><td >"+'${l-cell}'+"</td></tr>";
         	
-        	$("#inventorytab2").append(z);
+        	$("#warehouseBoqTab").append(z);
 
 
         	// Define variables to store the sums

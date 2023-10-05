@@ -394,14 +394,15 @@ public class WarehouseController {
 					model.addAttribute("ListGCell", "addNew");
 					model.addAttribute("ListUCell", "addNew");
 					model.addAttribute("ListLCell", "addNew");
-//					model.addAttribute("siteName", "addNew");
-					model.addAttribute("nodes", "addNew");
-					model.addAttribute("nodeType", "addNew");
+/*					model.addAttribute("nodes", "addNew");
+					model.addAttribute("nodeType", "addNew"); */
+					model.addAttribute("eachNodeTypeCount", "addNew");
+/*					
 					model.addAttribute("SRanBscount", "addNew");
 					model.addAttribute("IDUcount", "addNew");
 					model.addAttribute("g-cell", "addNew");
 					model.addAttribute("l-cell", "addNew");
-					model.addAttribute("u-cell", "addNew");
+					model.addAttribute("u-cell", "addNew"); */
 					model.addAttribute("listInventory", "addNew");
 
 					return "WarehouseFormView";
@@ -576,6 +577,10 @@ public class WarehouseController {
 
 					str = "SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='" + wareID + "'";					
 					model.addAttribute("nodeType", mapper.writeValueAsString(session.createNativeQuery(str).uniqueResult()));
+					
+					str = "select distinct (node_type) as node_type, count(*) from node_active where active_record = 1 and ware_id = '" + wareID + "' group by node_type";
+					model.addAttribute("eachNodeTypeCount", mapper.writeValueAsString(session.createNativeQuery(str).list()));
+					//model.addAttribute("eachNodeTypeCount", session.createNativeQuery(str).list());
 
 					String SRanBs = "SELECT COUNT( NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and NODE_TYPE='SRanBs' and Ware_Id='"
 							+ wareID + "'";
