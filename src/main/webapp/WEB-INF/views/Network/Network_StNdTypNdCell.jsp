@@ -5,38 +5,24 @@ $('#filterr').hide();
 $('#removeFilter').hide();
 
 var lst = ${listSites};
-console.log("LST...", lst);
+//console.log("LST...", lst);
 var Long=${Long};
 var Lat=${Lat};
 
 var listNodes=${listNodes};
-console.log("listNodes...", listNodes);
+//console.log("listNodes...", listNodes);
 var listCells=${listCells};
-console.log("listCells...", listCells);
+//console.log("listCells...", listCells);
 var listNodesType=${listNodesType};
-console.log("listNodesType...", listNodesType);
+//console.log("listNodesType...", listNodesType);
 var arrayParam=${arrayParam};
-console.log("arrayParam...", arrayParam);
+//console.log("arrayParam...", arrayParam);
 
 
 var button ;
 var data;
 if(!(lst==null || lst=="")){
 var wareCount=lst.length;
-}
-
-if(arrayParam[0] == 1){
-	 $('#EnterpriseBtn').toggleClass('activee'); 
-	 console.log("EnterpriseBtn");
-}if(arrayParam[1] == 1){
-	 $('#transmBtn').toggleClass('activee');  
-	 console.log("transmBtn");
-}if(arrayParam[2] == 1){
-	 $('#accessDBtn').toggleClass('activee');
-	 console.log("accessDBtn");
-}if(arrayParam[3] == 1){
-	 $('#CoreBtn').toggleClass('activee');
-	 console.log("CoreBtn");
 }
 
 let srcCityAutocomplete, dstCityAutocomplete;

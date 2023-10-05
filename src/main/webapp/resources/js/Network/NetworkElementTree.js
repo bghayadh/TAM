@@ -454,13 +454,30 @@ function SitePO_Boq(SiteId){
 	var Layers= $('#Layers');
 	var Options= $('#Options');
 	
-	if($('#EnterpriseBtn').hasClass('activee')){
-		console.log("ACTIVE ");
+	if(arrayParam[0]==1){
 		var paramEnterprise = true;
 	}else{
-		console.log("NOT ACTIVE");
 		var paramEnterprise = false;
 	}
+
+	if(arrayParam[1]==1){
+		var paramTransmission = true;
+	}else{
+		var paramTransmission = false;
+	}
+		
+	if(arrayParam[2]==1){
+		var paramAccess = true;
+	}else{
+		var paramAccess = false;
+	}
+
+	if(arrayParam[3]==1){
+		var paramCore = true;
+	}else{
+		var paramCore = false;
+	}
+	
 	//if(!siteList.includes(SiteId))
 	//{
 		 $.ajax({
@@ -470,6 +487,9 @@ function SitePO_Boq(SiteId){
 			data: {
 			    "SiteId" : SiteId,
 			    "paramEnterprise": paramEnterprise,
+			    "paramTransmission":paramTransmission,
+			    "paramAccess":paramAccess,
+			    "paramCore":paramCore,
 			    },
 			success : function(data)
 			    {
@@ -521,13 +541,30 @@ function POSite_Boq(SiteId){
 	
 	//if(!sitePList.includes(SiteId))
 	//{	
-	if($('#EnterpriseBtn').hasClass('activee')){
-		console.log("ACTIVE ");
+	if(arrayParam[0]==1){
 		var paramEnterprise = true;
 	}else{
-		console.log("NOT ACTIVE");
 		var paramEnterprise = false;
 	}
+
+	if(arrayParam[1]==1){
+		var paramTransmission = true;
+	}else{
+		var paramTransmission = false;
+	}
+		
+	if(arrayParam[2]==1){
+		var paramAccess = true;
+	}else{
+		var paramAccess = false;
+	}
+
+	if(arrayParam[3]==1){
+		var paramCore = true;
+	}else{
+		var paramCore = false;
+	}
+
 		$.ajax({
 			type: "GET",
 			contentType: "application/json; charset=utf-8",
@@ -535,6 +572,9 @@ function POSite_Boq(SiteId){
 			data: {
 				"POID" : SiteId,
 				"paramEnterprise": paramEnterprise,
+				"paramTransmission":paramTransmission,
+				"paramAccess":paramAccess,
+				"paramCore":paramCore,
 				},
 			success : function(data)
 			{
@@ -588,9 +628,7 @@ function  Node_Boq(WareId,NodeId){
 	var Boq = $('#Boq');
 	var Layers= $('#Layers');
 	var Options= $('#Options');
-	//console.log("WareId....",WareId);
-	//console.log("NodeId....",NodeId);
-	
+
 	if(arrayParam[0]==1){
 		var paramEnterprise = true;
 	}else{
@@ -674,9 +712,6 @@ var siteNTList=[];
 var boqNTList=[];
 
 function  NodeT_Boq(SiteId,NodeTId){
-	//console.log("NODE T BOQ");
-	//console.log("SiteId....",SiteId);
-	//console.log("NodeTId....",NodeTId);
 	
 	var Boq = $('#Boq');
 	var Layers= $('#Layers');
@@ -773,12 +808,28 @@ function PO_Boq(SiteId){
 	var Layers= $('#Layers');
 	var Options= $('#Options');
 	
-	if($('#EnterpriseBtn').hasClass('activee')){
-		console.log("ACTIVE ");
+	if(arrayParam[0]==1){
 		var paramEnterprise = true;
 	}else{
-		console.log("NOT ACTIVE");
 		var paramEnterprise = false;
+	}
+
+	if(arrayParam[1]==1){
+		var paramTransmission = true;
+	}else{
+		var paramTransmission = false;
+	}
+		
+	if(arrayParam[2]==1){
+		var paramAccess = true;
+	}else{
+		var paramAccess = false;
+	}
+
+	if(arrayParam[3]==1){
+		var paramCore = true;
+	}else{
+		var paramCore = false;
 	}
 	
 	//if(!sitePList.includes(SiteId))
@@ -790,6 +841,9 @@ function PO_Boq(SiteId){
 			data: {
 				"POID" : SiteId,
 			    "paramEnterprise": paramEnterprise,
+			    "paramTransmission":paramTransmission,
+			    "paramAccess":paramAccess,
+			    "paramCore":paramCore,
 			},
 			success : function(data)
 			{
@@ -2967,9 +3021,7 @@ function hideContext(){
 
 
 function Create_TreeNode_CellGeneral(lstNodes,lstCells,ChildrenLength,concat,SiteName) {
-	console.log("Create_TreeNode_Cell STNDCELL");
-	console.log("nodes:" ,lstNodes);
-	console.log("cells:" ,lstCells);
+
 	for(j=ChildrenLength;j<lstNodes.length;j++)//  NODE_PK, SITE_ID, NODE_NAME,NODE_MODEL
 	{																        	
 	var str= "<ul><li class='Node' id='" + lstNodes[j][0] +"' style='display:none; margin-left:-18px' class='folder'>";
@@ -3000,11 +3052,9 @@ function Create_TreeNode_CellGeneral(lstNodes,lstCells,ChildrenLength,concat,Sit
 			$("ul").find("#"+lstNodes[j][4]+"_f").append(str);
 		}
 	}		
-	console.log("done");
+
 	$("#"+lstNodes[j][0]+" > .folder").on('click',function () {	
-		console.log("Create_TreeNode_Cell clicking span node");
 		var selectedNode=$(this).parent().attr('id');
-		console.log("selectedNode ......."+ selectedNode);
 		//Node_Boq(SiteName,selectedNode);
 		var NdChildrenLength=$("#" + selectedNode+"_f").find(' > ul > li').length;															
 		if(NdChildrenLength==0){		
@@ -3014,7 +3064,6 @@ function Create_TreeNode_CellGeneral(lstNodes,lstCells,ChildrenLength,concat,Sit
 					lstCellsFiltered.push(lstCells[c]);
 				}
 			}
-				console.log("lstCellsFiltered ......."+ lstCellsFiltered);
 				for (k = 0; k <lstCellsFiltered.length; k++) {
 					var str="<ul><li class='Cell' id='" + lstCellsFiltered[k][0] + "' style='display:none; margin-left:-15px;''><span class='TreeSpan' style='width:395px'><span class='tree-span'>  <i class='fas fa-vector-square fa-2x'></i> "+lstCellsFiltered[k][1]+" </span></span></li></ul>";
 					$("#"+lstCellsFiltered[k][2]+"_f").append(str);

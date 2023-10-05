@@ -5,7 +5,12 @@ $('#filterr').hide();
 $('#removeFilter').hide();
 
 var lst = ${listSites};
+//console.log("lst...", lst);
 //var listPO=${listPO};
+//console.log("listPO...", listPO);
+var arrayParam=${arrayParam};
+//console.log("arrayParam...", arrayParam);
+
 
 var button ;
 var data;
@@ -13,13 +18,6 @@ if(!(lst==null || lst=="")){
 var wareCount=lst.length;
 }
 
-var currentUrl = window.location.href;
-//console.log("currentUrl....",currentUrl);
-// Check if the Enterprise exists in the URL
-if (currentUrl.indexOf("Enterprise") !== -1) {
-  //console.log("Enterpriseeeee");
-  $('#EnterpriseBtn').toggleClass('activee');
-} 
 
 function initMap() {
 
@@ -255,6 +253,8 @@ map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
 		map.setZoom(6);
 		var str="<ul><li id='initial_ul' class='Initial'><input type='checkbox' id='StPoItem_Sites' class='AllSites' style='margin-left: 15px' unchecked onclick='AllSitesCheckFilter()'></input><span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Sites</span></li></ul>";
 		$("#network_tree").append(str);
+		tree_prop_selection();
+		folder();
 	}
 } /// End of init Map
 
@@ -406,13 +406,29 @@ function StPoItemCore(id){
 			var SiteChildrenLength=$("#" +selectedSite+"_f").find(' > ul > li').length;
 			if(SiteChildrenLength == 0){
 				
-				if($('#EnterpriseBtn').hasClass('activee')){
-					//console.log("ACTIVE ");
-					var paramEnterprise = true;
-				}else{
-					//console.log("NOT ACTIVE");
-					var paramEnterprise = false;
-				}
+		    	  if(arrayParam[0]==1){
+						var paramEnterprise = true;
+					}else{
+						var paramEnterprise = false;
+					}
+
+					if(arrayParam[1]==1){
+						var paramTransmission = true;
+					}else{
+						var paramTransmission = false;
+					}
+						
+					if(arrayParam[2]==1){
+						var paramAccess = true;
+					}else{
+						var paramAccess = false;
+					}
+
+					if(arrayParam[3]==1){
+						var paramCore = true;
+					}else{
+						var paramCore = false;
+					}
 				
 				 $.ajax({
 					type: "GET",
@@ -422,13 +438,16 @@ function StPoItemCore(id){
 						"selectedSite":selectedSite,
 						"POAlreadyCreated":"false",
 						"paramEnterprise": paramEnterprise,
+						"paramTransmission":paramTransmission,
+				     	"paramAccess":paramAccess,
+					    "paramCore":paramCore,
 					 },
 					dataType: "json",
 					success: function (data) {   									        	
 						if (data != null) {
 							//var SiteChildrenLength=$("#" +selectedItem+"_f").find(' > ul > li').length;	
 							var listPO=data.listPO;
-							//console.log(" listPO....",listPO);
+					
 							if(SiteChildrenLength<listPO.length){       
 								for(j=0;j<listPO.length;j++){  
 									//var str= "<ul><li class='PO' id='" + listPO[j][0] +"' style='display:none; margin-left:-20px'>";   										  					
@@ -445,9 +464,9 @@ function StPoItemCore(id){
 						        var selectedPo;
 						    	$(".PO > .TreeSpan").contextmenu(function(){				
 						    		selectedPoSingleIdContext=$(this).parent().attr('id');
-									selectedPo=selectedPoSingleIdContext.split("_")[0] +"_"+ selectedPoSingleIdContext.split("_")[1] +"_"+selectedPoSingleIdContext.split("_")[2];
-									//console.log("selectedPo.......",selectedPo);
-						    		menuName=folderPoSingle;			
+						    		var index = selectedPoSingleIdContext.indexOf("WARE_2");
+									selectedPo = selectedPoSingleIdContext.substring(0, index).slice(0, -1);
+									menuName=folderPoSingle;			
 						    		openContext(selectedPo,"",folderPoSingle,event);
 						    	});
 						    	
@@ -455,7 +474,6 @@ function StPoItemCore(id){
 						    		  'theme': 'default',
 						    		  'items': [
 						    			  {'icon': 'braille', 'name': 'Show BoQ', action: () => {	
-						    				 //console.log("selectedPooooooooo.......",selectedPo);
 						    			 	 POSite_Boq(selectedPo);
 						    				}	
 						    			}
@@ -476,10 +494,12 @@ function StPoItemCore(id){
 	}
 	
 function requestItem(id){
-	var selectedPo =id.split("_")[0] +"_"+ id.split("_")[1]+"_"+ id.split("_")[2];
-	//console.log("selectedPo...",selectedPo);
-	var selectedSite =id.split("_")[3] +"_"+ id.split("_")[4]+"_"+ id.split("_")[5];
-	//console.log("selectedSite...",selectedSite);
+	console.log("iddddddd  ",id);
+		var index = id.indexOf("WARE_2");
+		if (index !== -1) {
+			var selectedPo = id.substring(0, index).slice(0, -1);
+			var selectedSite = id.substring(index);
+		}
 	/*
 	$("#"+listPO[j][0]+"_"+listPO[j][1]+"> span").on('click',function () {																					
 		var res=$(this ).parents().map(function() {
@@ -503,13 +523,29 @@ function requestItem(id){
 	var PoChildrenLength=$("#"+selectedSite+ "_" +selectedPo+"_f").find(' > ul > li').length;
 	if(PoChildrenLength == 0){
 		
-		if($('#EnterpriseBtn').hasClass('activee')){
-			//console.log("ACTIVE ");
-			var paramEnterprise = true;
-		}else{
-			//console.log("NOT ACTIVE");
-			var paramEnterprise = false;
-		}
+	 	  if(arrayParam[0]==1){
+				var paramEnterprise = true;
+			}else{
+				var paramEnterprise = false;
+			}
+
+			if(arrayParam[1]==1){
+				var paramTransmission = true;
+			}else{
+				var paramTransmission = false;
+			}
+				
+			if(arrayParam[2]==1){
+				var paramAccess = true;
+			}else{
+				var paramAccess = false;
+			}
+
+			if(arrayParam[3]==1){
+				var paramCore = true;
+			}else{
+				var paramCore = false;
+			}
 		
 			$.ajax({
 				type: "GET",
@@ -520,13 +556,16 @@ function requestItem(id){
 					"POAlreadyCreated":"True",
 					"selectedSite":selectedSite,
 					"paramEnterprise": paramEnterprise,
+					"paramTransmission":paramTransmission,
+			     	"paramAccess":paramAccess,
+				    "paramCore":paramCore,
 				 },
 				dataType: "json",
 				success: function (data) {        	
 					if (data != null) {
 						//var PoChildrenLength=$("#" +selectedPo+"_f").find(' > ul > li').length;
 						var listItem=data.itemList;	
-					//	console.log("listItem....",listItem);
+				
 						if(PoChildrenLength<listItem.length){ 
 							for (k = 0; k <listItem.length; k++) {
 								var str="<ul><li class='Items' id='" + listItem[k][0] + "' style='display:none; margin-left:-20px'><span class='TreeSpan' style='width:395px'><span class='tree-span' ><i class='fa fa-bahai  fa-2x'></i> "+listItem[k][1]+ " / " +listItem[k][0] +"</span></span></li></ul>";

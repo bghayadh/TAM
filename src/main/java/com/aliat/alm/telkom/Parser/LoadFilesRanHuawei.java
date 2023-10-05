@@ -459,7 +459,7 @@ public class LoadFilesRanHuawei {
 								ResultSet siteDetailsResultSet = stmnt.executeQuery(siteDetailsStatement);
 								while(siteDetailsResultSet.next()) {
 									  wareID=siteDetailsResultSet.getString("WARE_ID");
-									  wareName = siteDetailsResultSet.getString("WARE_ID");
+									  wareName = siteDetailsResultSet.getString("WARE_NAME");
 									  longitude=siteDetailsResultSet.getString("LONGITUDE");
 									  latitude = siteDetailsResultSet.getString("LATITUDE");
 								 }

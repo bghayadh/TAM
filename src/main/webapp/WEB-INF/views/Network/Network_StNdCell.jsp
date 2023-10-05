@@ -22,19 +22,6 @@ if(!(lst==null || lst=="")){
 var wareCount=lst.length;
 }
 
-if(arrayParam[0] == 1){
-	 $('#EnterpriseBtn').toggleClass('activee'); 
-	 console.log("EnterpriseBtn");
-}if(arrayParam[1] == 1){
-	 $('#transmBtn').toggleClass('activee');  
-	 console.log("transmBtn");
-}if(arrayParam[2] == 1){
-	 $('#accessDBtn').toggleClass('activee');
-	 console.log("accessDBtn");
-}if(arrayParam[3] == 1){
-	 $('#CoreBtn').toggleClass('activee');
-	 console.log("CoreBtn");
-}
 
 function initMap() {
 
@@ -393,7 +380,6 @@ function showMarkersChecked(n){
 				$('#network_tree input[type="checkbox"][id="StNdCell_Sites"]').prop('checked', false);
 				markersSites[Id].setMap(null);
 				markerClusterSites.removeMarker(markersSites[Id]);
-				console.log("markerClusterSitessss....REM......", markerClusterSites);
 				markerClusterSites.repaint();
 			}
 //		  });
@@ -402,8 +388,6 @@ function showMarkersChecked(n){
 
 function StNdCellCore(n)
 	{
-	console.log(" StNdCellCore1");
-	//console.log(" StNdCellCore1 n " , n);
 	var selectedItem=n.id;
 	//tree_prop_general();
 	//tree_Prop("#"+selectedItem+ "> span");
@@ -442,9 +426,7 @@ function StNdCellCore(n)
 
 function StNdCellCoreFolder(n)
 {
-	console.log(" StNdCellCore Folder");
 	var selectedItem = n.id;
-	console.log("selectedItem........",selectedItem);
 	//var sitesNCreated=[];
 	markersSite="";
 	//console.log(" markersSite... folder..."+ markersSite);
@@ -471,12 +453,10 @@ function StNdCellCoreFolder(n)
 					lstCells.push(listCells[n]);
 				}
 			}
-			console.log("lstNodes.....",lstNodes);
-			console.log("lstCells.....",lstCells);
 			if(lstNodes!=null) {
 				if(SiteChildrenLength<lstNodes.length){
 					Create_TreeNode_CellGeneral(lstNodes,lstCells,SiteChildrenLength,false,selectedItem);
-					nodeCreated=true;
+					//nodeCreated=true;
 				}	
 			}	
 	//}

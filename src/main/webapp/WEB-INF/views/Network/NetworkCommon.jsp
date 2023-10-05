@@ -108,23 +108,44 @@
 							</div>
 
 							<div class=" top-btn-filter">
-								<button id="accessDBtn" name="Access" class="buttonTog domain">
-									<i class='fa fa-podcast' style='font-size: 12px'></i> Access
-								</button>
+						<button id="accessDBtn" name="Access" class="buttonTog domain
+						    <c:choose>
+						        <c:when test="${accessDBtn == 1}">
+						            activee
+						        </c:when>
+						    </c:choose>">
+						    <i class='fa fa-podcast' style='font-size: 12px'></i> Access
+						</button>
+
 							</div>
 	
 							<div class=" top-btn-filter">
-								<button id="transmBtn" name="Transmission" class="buttonTog domain">
+								<button id="transmBtn" name="Transmission" class="buttonTog domain
+								 <c:choose>
+						        <c:when test="${transmBtn == 1}">
+						            activee
+						        </c:when>
+						   		 </c:choose>">
 									<i class='fa fa-link' style='font-size: 15px'></i> Transmission
 								</button>
 							</div>
 							<div class=" top-btn-filter">
-								<button id="EnterpriseBtn" name="Enterprise" class="buttonTog domain">
+								<button id="EnterpriseBtn" name="Enterprise" class="buttonTog domain
+		 							<c:choose>
+								        <c:when test="${EnterpriseBtn == 1}">
+								            activee
+								        </c:when>
+								    </c:choose>">
 									<i class='fa fa-building' style='font-size: 12px'></i> Enterprise
 								</button>
 							</div>
 							<div class=" top-btn-filter">
-								<button id="CoreBtn" name="Core" class="buttonTog domain">
+								<button id="CoreBtn" name="Core" class="buttonTog domain
+		 							<c:choose>
+								        <c:when test="${CoreBtn == 1}">
+								            activee
+								        </c:when>
+								    </c:choose>">
 									<i class='fa fa-arrows-alt' style='font-size: 15px'></i><span
 										style="margin-left: 3px"> Core</span>
 								</button>
@@ -597,7 +618,7 @@
 				</div>
 				<div class="modal-footer">
 					<button id="sortableSubmit" type="button" class="btn btn-primary"
-						onclick="SubmitDefault()">Submit</button>
+						onclick="SubmitModel()">Submit</button>
 					<button id="closeModalOrderTree" type="button"
 						class="btn btn-secondary" data-dismiss="modal">Close</button>
 				</div>
@@ -700,7 +721,7 @@ function tree_prop_selection(selector){
 	console.log("selector");
 		//Site_Boq("");
 		$(selector).on('click', function () {
-			console.log("clicked");
+			//console.log("clicked");
 		if ($(this).parent('li').attr('id') == "initial_ul") {
 			markersSite="";
 			map.setZoom(6);
@@ -831,7 +852,6 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 
     $("#network_tree i").css('margin-right', '5px');
 }
-
 
 	/****************** Tree End ****************/
 
@@ -1222,10 +1242,9 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 	
 	//Submit selection to draw Tree and Map w.r.to active button
 	function Sumbitselection(arr,domain){ 
-		console.log("Submit Selection");
+		//console.log("Submit Selection");
 	    var queryParams = [];
-	    console.log("arr >>>  ",arr);
-	    console.log("domain >>>  ",domain);
+
 	    if(domain.length !=0){
 		    for (var i = 0; i < domain.length; i++) {
 		    	if(domain[i]=="accessDBtn"){
@@ -1269,28 +1288,28 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 		 break;
 
 		 //Site-NodeType-Node-Cell
-		 case "li_siteBtn,li_nodeTypeeBtn":
-		 case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn":
-		  {	
-			 var url = getContext()+"/Network_StNdTypNdCell";
-			 if(params !=null){
-		 			url += params;
-		 		}
-		 		window.location.href = url;
-		 } 
-		 break;
-		 
-		 //NodeType-Site-Node-Cell
-		 case "li_nodeTypeeBtn,li_siteBtn,li_nodeBtn,li_cellBtn":
-		 case "nodeTypeeBtn,siteBtn,nodeBtn,cellBtn":
-		 {		
-			 var url = getContext()+"/Network_NdTypStNdCell";
-			 if(params !=null){
-		 			url += params;
-		 		}
-		 		window.location.href = url;
-		 }  
-		 break;
+			 case "li_siteBtn,li_nodeTypeeBtn,li_nodeBtn,li_cellBtn":
+			 case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn":
+			  {	
+				 var url = getContext()+"/Network_StNdTypNdCell";
+				 if(params !=null){
+			 			url += params;
+			 		}
+			 		window.location.href = url;
+			 } 
+			 break;
+			 
+			 //NodeType-Site-Node-Cell
+			 case "li_nodeTypeeBtn,li_siteBtn,li_nodeBtn,li_cellBtn":
+			// case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn":
+			 {		
+				 var url = getContext()+"/Network_NdTypStNdCell";
+				 if(params !=null){
+			 			url += params;
+			 		}
+			 		window.location.href = url;
+			 }  
+			 break;
 		 
 		//Supplier-Site-Node-Cell
 		 case "li_supplierBtn,li_siteBtn,li_nodeBtn,li_cellBtn":
@@ -1457,8 +1476,8 @@ function DefaultSort(arr,domain) {
 		
 		case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn":
 		{	
-			var order =["siteBtn","nodeTypeeBtn","nodeBtn","cellBtn"];
-			var name = ["Site","Node Type","Node","Cell"];
+			var order =["nodeTypeeBtn","siteBtn","nodeBtn","cellBtn"];
+			var name = ["Node Type","Site","Node","Cell"];
 		
 			return [order,name];
 		
@@ -1528,26 +1547,30 @@ function DefaultSort(arr,domain) {
 	    select=select.toString();
 		Sumbitselection(select,domains);
 	}  
-/*
+
 	// sumbit through button directly from popup
 	function SubmitModel() {	    
 		var select=[];	
 		var domains=[];
+		$('#sortable li').each(function () {
+			  select.push(this.id);
+		});
 		var buttons = document.querySelectorAll(".buttonTog");
 		for (var i = 0; i < buttons.length; i++) {	  		
 	       if (buttons[i].classList.contains("activee")) {
 	    	 if(buttons[i].classList.contains("domain")){
 	    	 	domains.push(buttons[i].id);
-	         }else{
-	    	 	select.push(buttons[i].id);
-	       }
+	         }
+	    	 //else{
+	    	 	//select.push(buttons[i].id);
+	       	//}
 		}
 	}
 	    select=select.toString();
 	    $('#modalOrderTree').modal('hide');
 		Sumbitselection(select,domains);
 	}
-*/
+
 
 						
 	//when typing in search 

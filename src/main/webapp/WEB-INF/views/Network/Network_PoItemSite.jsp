@@ -5,20 +5,17 @@ $('#filterr').hide();
 $('#removeFilter').hide();
 
 var lst = ${listSites};
+//console.log("lst...", lst);
 var listPO=${listPO};
+//console.log("listPO...", listPO);
+var arrayParam=${arrayParam};
+//console.log("arrayParam...", arrayParam);
+
 
 var button ;
 var data;
 if(!(lst==null || lst=="")){
 var wareCount=lst.length;
-}
-
-var currentUrl = window.location.href;
-//console.log("currentUrl....",currentUrl);
-//Check if the Enterprise exists in the URL
-if (currentUrl.indexOf("Enterprise") !== -1) {
-// console.log("Enterpriseeeee");
-$('#EnterpriseBtn').toggleClass('activee');
 }
 
 
@@ -256,6 +253,8 @@ map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
 		map.setZoom(6);
 		var str="<ul><li id='initial_ul' class='Initial'><input type='checkbox' id='POs' class='AllPOs' style='margin-left: 15px' onclick='AllSitesCheckFilter()'></input><span class='folder'><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> PO </span></li></ul>";
 		$("#network_tree").append(str);
+		tree_prop_selection();
+		folder();
 	}
 } /// End of init Map
 
@@ -355,14 +354,30 @@ function PoItemStCore(id)
 	var POChildrenLength=$("#" +selectedPo+"_f").find(' > ul > li').length;
 	if(POChildrenLength == 0){	
 		
-		if($('#EnterpriseBtn').hasClass('activee')){
-			//console.log("ACTIVE ");
-			var paramEnterprise = true;
-		}else{
-			//console.log("NOT ACTIVE");
-			var paramEnterprise = false;
-		}
-		
+	 	  if(arrayParam[0]==1){
+				var paramEnterprise = true;
+			}else{
+				var paramEnterprise = false;
+			}
+
+			if(arrayParam[1]==1){
+				var paramTransmission = true;
+			}else{
+				var paramTransmission = false;
+			}
+				
+			if(arrayParam[2]==1){
+				var paramAccess = true;
+			}else{
+				var paramAccess = false;
+			}
+
+			if(arrayParam[3]==1){
+				var paramCore = true;
+			}else{
+				var paramCore = false;
+			}
+	
 		$.ajax({
 		type: "GET",
 			contentType: "application/json; charset=utf-8",
@@ -371,13 +386,15 @@ function PoItemStCore(id)
 				"selectedPo":selectedPo,
 				"POAlreadyCreated":"false",
 				"paramEnterprise": paramEnterprise,
+				"paramTransmission":paramTransmission,
+		     	"paramAccess":paramAccess,
+			    "paramCore":paramCore,
 			},
 			dataType: "json",
 			success: function (data) {	        	
 				if (data != null) {    
 					//var POChildrenLength=$("#" +selectedPo+"_f").find(' > ul > li').length;	
 					var listItem=data.listItem;	
-					//console.log("listItem......"+listItem);
 					if(POChildrenLength<listItem.length+1){						
 						for (n = POChildrenLength; n < listItem.length; n++) {							
 							var str = "<ul><li class='Items' id='" + listItem[n][0] + "_" + listItem[n][2] + "' style='display:none; margin-left:-20px'><span class='folder' onclick=\"SitesRequest('" + listItem[n][0] + "_" + listItem[n][2] + "')\"><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'><span class='tree-span' style='margin-left:-15px;'><i class='fa fa-bahai fa-2x'></i>" + listItem[n][1] + " / " +listItem[n][0] + "</span></span>";
@@ -424,14 +441,30 @@ function SitesRequest(id){
 	var ItemChildren=$("#"+selectedItem+ "_"+ selectedPo+ "_f") .find(' > ul > li').length;
 	if(ItemChildren == 0){	
 		
-		if($('#EnterpriseBtn').hasClass('activee')){
-			//console.log("ACTIVE ");
-			var paramEnterprise = true;
-		}else{
-			//console.log("NOT ACTIVE");
-			var paramEnterprise = false;
-		}
-		
+	 	  if(arrayParam[0]==1){
+				var paramEnterprise = true;
+			}else{
+				var paramEnterprise = false;
+			}
+
+			if(arrayParam[1]==1){
+				var paramTransmission = true;
+			}else{
+				var paramTransmission = false;
+			}
+				
+			if(arrayParam[2]==1){
+				var paramAccess = true;
+			}else{
+				var paramAccess = false;
+			}
+
+			if(arrayParam[3]==1){
+				var paramCore = true;
+			}else{
+				var paramCore = false;
+			}
+	
 		$.ajax({
 			type: "GET",
 			contentType: "application/json; charset=utf-8",
@@ -441,12 +474,14 @@ function SitesRequest(id){
 				"POAlreadyCreated":"True",
 				"selectedItem":selectedItem,
 				"paramEnterprise": paramEnterprise,
+				"paramTransmission":paramTransmission,
+		     	"paramAccess":paramAccess,
+			    "paramCore":paramCore,
 			},
 			dataType: "json",
 			success: function (data) {
 				if (data != null) {
 					var listSites=data.listSites;
-					//console.log("list sites....."+listSites);
 					//var ItemChildren=$("#"+selectedItem+ "_"+ selectedPO+ "_f") .find(' > ul > li').length;
 					if(ItemChildren<listSites.length){
 						var dFrag = document.createDocumentFragment();

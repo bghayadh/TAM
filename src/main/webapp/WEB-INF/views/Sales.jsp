@@ -117,6 +117,9 @@
          }else{
         	 $('#reseller').append(client);
          }
+        
+        var customer='<li class="b"><a href="${pageContext.request.contextPath}/CustomerListView" style="position:relative;left:-30px;"><i class="fas fa-user"style="color:#DCF8C6"></i> Customers </a><span class="circle1" style="position:relative;left:-30px;">0</span> <span class="circle2" style="position:relative;left:-30px;">0</span></li>'
+            $('#reseller').append(customer);
      
 	});
 	
