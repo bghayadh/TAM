@@ -1889,8 +1889,6 @@ $("#ordstat").click(  function() {
 			$("#imgpopUpDiv").fadeOut();
 			$("#imagedisplay").empty();
 			});
-	
-	
 }
 
  $(document).ready(function(){
@@ -2753,102 +2751,82 @@ function saverowsintables()
 		 
  })
  
-
  
- 
-  
  if ('${Listnode}' != "addNew") {
 	
  	boqNode = [];
  	boqNode = ${Listnode};
 	 
  for (z = 0; z < boqNode.length; z++){
-	 var nodeId=boqNode[z][0];
-		if(nodeId==null){
-			nodeId="";
+	var nodeId=boqNode[z][0];
+	if(nodeId==null){
+		nodeId="";
+	}
+    var nodeName=boqNode[z][1];
+	if(nodeName==null){
+		nodeName="";
+	}
+	var nodeType=boqNode[z][2];
+	if(nodeType==null){
+		nodeType="";
+    }
+	var domain=boqNode[z][3];
+	if(domain==null){
+		domain="";
+    }
 
-			}
-      var nodeName=boqNode[z][1];
-			if(nodeName==null){
-				nodeName="";
-
-				}
-	   var nodeType=boqNode[z][2];
-	       if(nodeType==null){
-	    	   nodeType="";
-               }
-	       var domain=boqNode[z][3];
-	       if(domain==null){
-	    	   domain="";
-               }
-
-	       var vendor=boqNode[z][4];
-	       if(vendor==null){
-	    	   vendor="";
-               }
-	       var tech_2g=boqNode[z][5];
-	       if(tech_2g==null){
-	    	   tech_2g=0;
-               }
-	       else{
-	    	   tech_2g=1;
-		       }
-
-	       var tech_3g=boqNode[z][6];
-	       if(tech_3g==null){
-	    	   tech_3g=0;
-               }
-	       else{
-	    	   tech_3g=1;
-		       }
-
-	       var tech_4g=boqNode[z][7];
-	       if(tech_4g==null){
-	    	   tech_4g=0;
-               }
-	       else{
-	    	   tech_4g=1;
-		       }
-	       var tech_5g=boqNode[z][8];
-	       if(tech_5g==null){
-	    	   tech_5g=0;
-               }
-	       else{
-	    	   tech_5g=1;
-		       }
-	       var model=boqNode[z][9];
-	       if(model==null){
-	    	   model="";
-               }
-
-	       c = "<tr>" +
-	        "<td ><input  type='text'  value='" + nodeId + "' style='width:200px;' class='form-control text-input' readonly/></td>" +
-	        "<td ><input  type='text'  value='" + nodeName + "' style='width:200px;' class='form-control text-input' readonly/></td>" +
-	        "<td ><input  type='text'  value='" + nodeType + "' style='width:200px;' class='form-control text-input' readonly/></td>" +
-	        "<td ><input  type='text'  value='" + model + "' style='width:200px;' class='form-control text-input' readonly/></td>" +
-		     "<td ><input  type='text'  value='" + domain + "' style='width:200px;' class='form-control text-input' readonly/></td>" +
-	        "<td ><input  type='text'  value='" + vendor + "' style='width:200px;' class='form-control text-input' readonly/></td>" +
-	        
-	        "<td style='width:240px;'>" +
-	        "<input type='checkbox' name='tech_2g' value='" + tech_2g + "' " + (tech_2g ? "checked" : "") + " disabled style='opacity: 2; pointer-events: auto; background-color: blue;' /> 2G " +
-	        "<input type='checkbox' name='tech_3g' value='" + tech_3g + "' " + (tech_3g ? "checked" : "") + " disabled style='opacity: 2; pointer-events: auto; background-color: blue;' /> 3G " +
-	        "<input type='checkbox' name='tech_4g' value='" + tech_4g + "' " + (tech_4g ? "checked" : "") + " disabled style='opacity: 2; pointer-events: auto; background-color: blue;' /> 4G " +
-	        "<input type='checkbox' name='tech_5g' value='" + tech_5g + "' " + (tech_5g ? "checked" : "") + " disabled style='opacity: 2; pointer-events: auto; background-color: blue;' /> 5G " +
-	    "</td></tr>";
-
-
-
+	var vendor=boqNode[z][4];
+	if(vendor==null){
+		vendor="";
+	}
+	var tech_2g=boqNode[z][5];
+	if(tech_2g==null){
+		tech_2g=0;
+	}
+	else{
+		tech_2g=1;
+	}
+	var tech_3g=boqNode[z][6];
+		if(tech_3g==null){
+			tech_3g=0;
+		}
+		else{
+			tech_3g=1;
+		}
+	var tech_4g=boqNode[z][7];
+	if(tech_4g==null){
+		tech_4g=0;
+	}
+	else{
+		tech_4g=1;
+	}
+	var tech_5g=boqNode[z][8];
+	if(tech_5g==null){
+		tech_5g=0;
+	}
+	else{
+		tech_5g=1;
+	}
+	var model=boqNode[z][9];
+	if(model==null){
+		model="";
+	}
+	c = "<tr>" +
+		"<td ><input  type='text'  value='" + nodeId + "' style='width:200px;' class='form-control text-input' readonly/></td>" +
+		"<td ><input  type='text'  value='" + nodeName + "' style='width:200px;' class='form-control text-input' readonly/></td>" +
+		"<td ><input  type='text'  value='" + nodeType + "' style='width:200px;' class='form-control text-input' readonly/></td>" +
+		"<td ><input  type='text'  value='" + model + "' style='width:200px;' class='form-control text-input' readonly/></td>" +
+		"<td ><input  type='text'  value='" + domain + "' style='width:200px;' class='form-control text-input' readonly/></td>" +
+		"<td ><input  type='text'  value='" + vendor + "' style='width:200px;' class='form-control text-input' readonly/></td>" +
+		"<td style='width:240px;'>" +
+		"<input type='checkbox' name='tech_2g' value='" + tech_2g + "' " + (tech_2g ? "checked" : "") + " disabled style='opacity: 2; pointer-events: auto; background-color: blue;' /> 2G " +
+		"<input type='checkbox' name='tech_3g' value='" + tech_3g + "' " + (tech_3g ? "checked" : "") + " disabled style='opacity: 2; pointer-events: auto; background-color: blue;' /> 3G " +
+		"<input type='checkbox' name='tech_4g' value='" + tech_4g + "' " + (tech_4g ? "checked" : "") + " disabled style='opacity: 2; pointer-events: auto; background-color: blue;' /> 4G " +
+		"<input type='checkbox' name='tech_5g' value='" + tech_5g + "' " + (tech_5g ? "checked" : "") + " disabled style='opacity: 2; pointer-events: auto; background-color: blue;' /> 5G " +
+		"</td></tr>";
 	    $("#NodeTable").append(c);
-          
-	 
  	}
  }
-
-
-
-
-
-
 
  if ('${ListGCell}' != "addNew") {
  boqGCell = [];
