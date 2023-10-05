@@ -2853,95 +2853,66 @@ function saverowsintables()
  if ('${ListGCell}' != "addNew") {
  boqGCell = [];
  boqGCell = ${ListGCell};
-	
-
  
  for (z = 0; z < boqGCell.length; z++){
 	 var cellId=boqGCell[z][0];
 		if(cellId==null){
 			cellId="";
-
-			}
+		}
       var cellName=boqGCell[z][1];
-			if(cellName==null){
-				cellName="";
-}
-			var gcell="2G";
+		if(cellName==null){
+			cellName="";
+		}
+	  c = "<tr><td ><input  type='text'  value='" + cellId + "' style='width:500px;' class='form-control text-input' readonly/></td>"
+	      +"<td ><input  type='text'  value='" + cellName + "' style='width:500px;' class='form-control text-input' readonly/></td>"
+	      +"<td ><input  type='text'  value='2G' style='width:500px;' class='form-control text-input' readonly/></td></tr>";
 
-	       c = "<tr>" +
-	        "<td ><input  type='text'  value='" + cellId + "' style='width:500px;' class='form-control text-input' readonly/></td>" +
-	        "<td ><input  type='text'  value='" + cellName + "' style='width:500px;' class='form-control text-input' readonly/></td>" +
-	        "<td ><input  type='text'  value='" + gcell + "' style='width:500px;' class='form-control text-input' readonly/></td>" +
-	          "</tr>";
-
-
-
-	    $("#CellTable").append(c);
- 
+	    $("#CellTable").append(c); 
  }
 }
-
 
 if ('${ListUCell}' != "addNew") {
  
  boqUCell = [];
  boqUCell = ${ListUCell};
-	
-
  
  for (z = 0; z < boqUCell.length; z++){
 	 var cellId=boqUCell[z][0];
 		if(cellId==null){
 			cellId="";
-
-			}
+		}
       var cellName=boqUCell[z][1];
 			if(cellName==null){
 				cellName="";
-}
-			var Ucell="3G";
-
+}			
 	       c = "<tr>" +
 	        "<td ><input  type='text'  value='" + cellId + "' style='width:500px;' class='form-control text-input' readonly/></td>" +
 	        "<td ><input  type='text'  value='" + cellName + "' style='width:500px;' class='form-control text-input' readonly/></td>" +
-	        "<td ><input  type='text'  value='" + Ucell + "' style='width:500px;' class='form-control text-input' readonly/></td>" +
+	        "<td ><input  type='text'  value='3G' style='width:500px;' class='form-control text-input' readonly/></td>" +
 	          "</tr>";
 
-
-
-	    $("#CellTable").append(c);
-  
-	       
-           
-           
-	 
+	    $("#CellTable").append(c);	 
  }
 }
 
 if ('${ListLCell}' != "addNew") {
 boqLCell = [];
-boqLCell = ${ListLCell};
-	
-
+boqLCell = ${ListLCell};	
  
  for (z = 0; z < boqLCell.length; z++){
 	 var cellId=boqLCell[z][0];
 		if(cellId==null){
 			cellId="";
-
-			}
+		}
       var cellName=boqLCell[z][1];
 			if(cellName==null){
 				cellName="";
-}
-			var Lcell="4G";
-
+}			
 	       c = "<tr>" +
 	        "<td ><input  type='text'  value='" + cellId + "' style='width:500px;' class='form-control text-input' readonly/></td>" +
 	        "<td ><input  type='text'  value='" + cellName + "' style='width:500px;' class='form-control text-input' readonly/></td>" +
-	        "<td ><input  type='text'  value='" + Lcell + "' style='width:500px;' class='form-control text-input' readonly/></td>" +
+	        "<td ><input  type='text'  value='4G' style='width:500px;' class='form-control text-input' readonly/></td>" +
 	          "</tr>";
-
 
 	    $("#CellTable").append(c);
 	 
@@ -3024,12 +2995,6 @@ if ('${docStatus}' != "addNew") {
         	    $("#boqInventoryTable").append(c);
 
         	    // Get the initial cost, net cost, and depreciation from the current row
-        	    /*
-        	    var initialCost = parseFloat(initialcost);
-        	    var netCost = parseFloat(netcost);
-        	    var depreciation = parseFloat(dep);
-        	    var quantityValue = parseInt(quantity); // Parse quantity as an integer
-        	    */ 
 
         	    if (!isNaN(parseFloat(initialcost))) {
         	        totalInitialCost += parseFloat(initialcost);
@@ -3044,7 +3009,7 @@ if ('${docStatus}' != "addNew") {
         	        totalQuantity += parseInt(quantity); // Parse quantity as an integer
         	    }
         	}
-
+        	
         	document.getElementById("qty").value = totalQuantity;
         	document.getElementById("initial").value = totalInitialCost.toFixed(2);
         	document.getElementById("dep").value = totalDepreciation.toFixed(2);
