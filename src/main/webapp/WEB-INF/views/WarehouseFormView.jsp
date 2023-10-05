@@ -3000,9 +3000,9 @@ if ('${docStatus}' != "addNew") {
         	    var itemModel = boqArray[i][2];
         	    var itemPartNumber = boqArray[i][3];
         	    var quantity = boqArray[i][4];
-        	    var initialcost = boqArray[i][5];
-        	    var dep = boqArray[i][6];
-        	    var netcost = boqArray[i][7];        	    
+        	    var initialcost = (boqArray[i][5] != null) ?  boqArray[i][5].toFixed(2) : boqArray[i][5];
+        	    var dep = (boqArray[i][6] != null) ? boqArray[i][6].toFixed(2) : boqArray[i][6];
+        	    var netcost = (boqArray[i][7] != null) ? boqArray[i][7].toFixed(2) : boqArray[i][7];
 
         	    // Handle null values
         	    if (itemcode == null) itemcode = " ";
