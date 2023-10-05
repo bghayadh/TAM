@@ -82,18 +82,10 @@ public class LoadFileDWDMHuawei {
 	static String Gcodeattributid="0";
 	static String vline="0";
 	static String vcodeid ="0";
-	static HashMap<String, String> vhmap = new HashMap<String, String>();
-	static HashMap<String, String> vhmap2 = new HashMap<String, String>();
-	static HashMap<String, String> vhmap10 = new HashMap<String, String>();
-	static HashMap<String, String> vhmap12 = new HashMap<String, String>();
 	static PreparedStatement stmtp;
 	static Statement stmtp1;
 	static ArrayList<String> FileName = new ArrayList<String>();
 	static HashMap<String, String> nodeIDhmap = new HashMap<String, String>();
-
-	static HashMap<String, HashMap<String, String>>allModules = new HashMap<String, HashMap<String,String>>();
-	static HashMap<String, HashMap<String, String>>allCabinets = new HashMap<String, HashMap<String,String>>();
-	static HashMap<String, HashMap<String, String>>allFANs = new HashMap<String, HashMap<String,String>>();
 	 
 	static String nodeId = null;
 	static String nodeType = null;
@@ -377,6 +369,28 @@ public class LoadFileDWDMHuawei {
 			  
 			// end parsing of node network 
 		 }else {
+			 
+			// get all node id 
+			  String sqlStmtinit4 = "select NODE_PK,NODE_NAME,NODE_ID,DOMAIN,VENDOR,SUB_DOMAIN,SUB_DOMAIN_TYPE from NODE_ACTIVE ";     
+			  stmtp1 = con.createStatement();
+			  ResultSet rsinit4 = stmtp1.executeQuery(sqlStmtinit4);
+			  ArrayList<Object> listofNodes = new ArrayList<Object>();
+			  String domain = null ,vender = null ,sub_Domain = null ,sub_Domain_Type = null;
+			  while(rsinit4.next()) {
+				  vcodeid=rsinit4.getString("NODE_PK");	
+				  nodeName = rsinit4.getString("NODE_NAME");
+				  domain =rsinit4.getString("DOMAIN"); 
+				  vender=rsinit4.getString("VENDOR");
+				  sub_Domain=rsinit4.getString("SUB_DOMAIN");
+				  sub_Domain_Type=rsinit4.getString("SUB_DOMAIN_TYPE");
+				  
+				  Object[] NodeObject = {vcodeid,nodeName, domain, vender,sub_Domain,sub_Domain_Type};
+				  listofNodes.add(NodeObject);
+			  }
+			  rsinit4.close();
+			  stmtp1.close();
+			 // System.out.println("listofNodes: "+ mapper.writeValueAsString(listofNodes));
+			  
 			 String sqlStmtinit2 = "" ;
 			 ResultSet rsinit2; 
 			 System.out.println("Entered ELSE");
@@ -408,29 +422,33 @@ public class LoadFileDWDMHuawei {
 					  //System.out.println("nodeName: "+ nodeName);
 					  nodeId = records.get(i).get(5);
 					  //System.out.println("nodeId: "+ nodeId);
-					  String sqlStmtinit3 = "select NODE_PK,DOMAIN,VENDOR,SUB_DOMAIN,SUB_DOMAIN_TYPE from NODE_ACTIVE WHERE NODE_ID ='"+nodeId+"'";     
-					  stmtp1 = con.createStatement();
-					  ResultSet rsinit3 = stmtp1.executeQuery(sqlStmtinit3); 
-					  String domain = null ,vender = null ,sub_Domain = null ,sub_Domain_Type = null;
-					  while(rsinit3.next()) {
-						  vcodeid=rsinit3.getString("NODE_PK");	
-						  domain =rsinit3.getString("DOMAIN"); 
-						  vender=rsinit3.getString("VENDOR");
-						  sub_Domain=rsinit3.getString("SUB_DOMAIN");
-						  sub_Domain_Type=rsinit3.getString("SUB_DOMAIN_TYPE");
-						  
+					  for(int n=0;n<listofNodes.size();n++) {
+						  Object[] node = (Object[]) listofNodes.get(n);
+						  //System.out.println("node: "+ mapper.writeValueAsString(node));
+						  //System.out.println("node[1]: "+ node[1]);
+	                     String nodeNamefrom = (String) node[1];
+	                     System.out.println("nodeNamefrom: "+ nodeNamefrom);
+						 // if(StringUtils.equalsIgnoreCase(String.valueOf(node[1]), nodeName)) {
+						 // if(nodeNamefrom == nodeName) {
+						    if(nodeNamefrom.trim().equals(nodeName)) {
+
+							  System.out.println(" Node name exist");
+							  vcodeid= (String) node[0];	
+							 // nodeName = (String) node[2];
+							  domain =(String) node[2]; 
+							  vender=(String) node[3];
+							  sub_Domain=(String) node[4];
+							  sub_Domain_Type=(String) node[5];
+							  
+							  if(vcodeid == null && domain == Domain && vender == Gprovider && sub_Domain == subDomain && sub_Domain_Type == subDomainType ) { 
+								  System.out.println("No Node ID");
+							      vcodeid = "No Node ID";
+						     }
+							  
+						  }/*else {
+							  System.out.println("NO Node name exist");
+						  }*/
 					  }
-					  rsinit3.close();
-					  stmtp1.close();
-					  //System.out.println("vcodeid: "+ vcodeid);
-					  if(vcodeid == null && domain == Domain && vender == Gprovider && sub_Domain == subDomain && sub_Domain_Type == subDomainType ) { 
-						  System.out.println("No Node ID");
-					      vcodeid = "No Node ID";
-				     }
-					  /*else {
-				    	 System.out.println("No Node ID");
-				    	 vcodeid = "No Node ID";
-				     }*/
 					  
 					boardName = records.get(i).get(1);
 					boardType = records.get(i).get(3);
@@ -479,31 +497,37 @@ public class LoadFileDWDMHuawei {
 					  rsinit2.close();
 					  stmtp1.close();
 
+					  nodeName = records.get(i).get(0);
+					  //System.out.println("nodeName: "+ nodeName);
 					  nodeId = records.get(i).get(3);
-					  //System.out.println("nodeId: "+ nodeId);
-					  String sqlStmtinit3 = "select NODE_PK,DOMAIN,VENDOR,SUB_DOMAIN,SUB_DOMAIN_TYPE from NODE_ACTIVE WHERE NODE_ID ='"+nodeId+"'";     
-					  stmtp1 = con.createStatement();
-					  ResultSet rsinit3 = stmtp1.executeQuery(sqlStmtinit3); 
-					  String domain = null ,vender = null ,sub_Domain = null ,sub_Domain_Type = null;
-					  while(rsinit3.next()) {
-						  vcodeid=rsinit3.getString("NODE_PK");	
-						  domain =rsinit3.getString("DOMAIN"); 
-						  vender=rsinit3.getString("VENDOR");
-						  sub_Domain=rsinit3.getString("SUB_DOMAIN");
-						  sub_Domain_Type=rsinit3.getString("SUB_DOMAIN_TYPE");
-						  
+					  System.out.println("nodeId: "+ nodeId);
+					  for(int n=0;n<listofNodes.size();n++) {
+						  Object[] node = (Object[]) listofNodes.get(n);
+						  //System.out.println("node: "+ mapper.writeValueAsString(node));
+						  //System.out.println("node[1]: "+ node[1]);
+						  String nodeNamefrom = (String) node[1];
+		                     System.out.println("nodeNamefrom: "+ nodeNamefrom);
+							 // if(StringUtils.equalsIgnoreCase(String.valueOf(node[1]), nodeName)) {
+							 // if(nodeNamefrom == nodeName) {
+							    if(nodeNamefrom.trim().equals(nodeName)) {
+
+							  System.out.println(" Node name exist");
+							  vcodeid= (String) node[0];	
+							 // nodeName = (String) node[2];
+							  domain =(String) node[2]; 
+							  vender=(String) node[3];
+							  sub_Domain=(String) node[4];
+							  sub_Domain_Type=(String) node[5];
+							  
+							  if(vcodeid == null && domain == Domain && vender == Gprovider && sub_Domain == subDomain && sub_Domain_Type == subDomainType ) { 
+								  System.out.println("No Node ID");
+							      vcodeid = "No Node ID";
+						     }
+							  
+						  }/*else {
+							  System.out.println("NO Node name exist");
+						  }*/
 					  }
-					  rsinit3.close();
-					  stmtp1.close();
-					  //System.out.println("vcodeid: "+ vcodeid);
-					  if(vcodeid == null && domain == Domain && vender == Gprovider && sub_Domain == subDomain && sub_Domain_Type == subDomainType ) { 
-						  System.out.println("No Node ID");
-					      vcodeid = "No Node ID";
-				     }
-					  /*else {
-				    	 System.out.println("No Node ID");
-				    	 vcodeid = "No Node ID";
-				     }*/
 					  
 					subrackName = records.get(i).get(1);
 					subrackType = records.get(i).get(2);
