@@ -394,15 +394,7 @@ public class WarehouseController {
 					model.addAttribute("ListGCell", "addNew");
 					model.addAttribute("ListUCell", "addNew");
 					model.addAttribute("ListLCell", "addNew");
-/*					model.addAttribute("nodes", "addNew");
-					model.addAttribute("nodeType", "addNew"); */
 					model.addAttribute("eachNodeTypeCount", "addNew");
-/*					
-					model.addAttribute("SRanBscount", "addNew");
-					model.addAttribute("IDUcount", "addNew");
-					model.addAttribute("g-cell", "addNew");
-					model.addAttribute("l-cell", "addNew");
-					model.addAttribute("u-cell", "addNew"); */
 					model.addAttribute("listInventory", "addNew");
 
 					return "WarehouseFormView";
