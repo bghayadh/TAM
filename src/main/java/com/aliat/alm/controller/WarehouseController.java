@@ -533,9 +533,6 @@ public class WarehouseController {
 					model.addAttribute("listNearWares", mapper.writeValueAsString(query.list()));
 					// get inventory info
 
-
-					List<Object[]> Inventory = new ArrayList<Object[]>();
-
 					str = "SELECT ar.Item_code, ar.Item_Name, ar.Item_Model, ar.Item_part_number, COUNT(*) AS quantity, "
 							+ "SUM(COALESCE(ar.Initial_Cost, " + "(SELECT AVG(Net_Rate) "
 							+ "FROM purchase_order_item poi " + "WHERE poi.Item_code = ar.Item_code)"
@@ -543,8 +540,7 @@ public class WarehouseController {
 							+ "SUM(COALESCE(far.ACCUMULDEPRECAMNT, 0)) AS Total_Depreciation, "
 							+ "SUM(COALESCE(far.NetCost, COALESCE(ar.Initial_Cost, (SELECT AVG(Net_Rate) "
 							+ "FROM purchase_order_item poi "
-							+ "WHERE poi.Item_code = ar.Item_code)))) AS Total_Net_Cost "
-							+ "FROM asset_registry ar "
+							+ "WHERE poi.Item_code = ar.Item_code)))) AS Total_Net_Cost " + "FROM asset_registry ar "
 							+ "LEFT JOIN fixed_asset_registry far ON ar.Ar_ID = far.Ar_ID "
 							+ "WHERE ar.Ar_ID IN (SELECT Ar_ID FROM AR_SITE WHERE WARE_ID = :param1) "
 							+ "GROUP BY ar.Item_code, ar.Item_Name, ar.Item_Model, ar.Item_part_number";
@@ -552,41 +548,41 @@ public class WarehouseController {
 					query = session.createNativeQuery(str);
 					query.setParameter("param1", wareID);
 
-
 					model.addAttribute("listInventory", mapper.writeValueAsString(query.list()));
 
-					str = "SELECT COUNT(UNIQUE_NODE_ID) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"+ wareID + "'";					
-					model.addAttribute("nodes", mapper.writeValueAsString(session.createNativeQuery(str).uniqueResult()));
+					str = "SELECT COUNT(UNIQUE_NODE_ID) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='" + wareID
+							+ "'";
+					model.addAttribute("nodes",
+							mapper.writeValueAsString(session.createNativeQuery(str).uniqueResult()));
 
-					str = "select count(ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '" + wareID + "'";
-					model.addAttribute("g-cell", mapper.writeValueAsString(session.createNativeQuery(str).uniqueResult()));
-
-					str = "select count(nlc.LCell_Id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '" + wareID + "'";					
-					model.addAttribute("l-cell", mapper.writeValueAsString(session.createNativeQuery(str).uniqueResult()));
-
-					str = "select count(nlc.UCell_Id) from node_ucell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '" + wareID + "'";
-					model.addAttribute("u-cell", mapper.writeValueAsString(session.createNativeQuery(str).uniqueResult()));
-
-					str = "SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='" + wareID + "'";					
-					model.addAttribute("nodeType", mapper.writeValueAsString(session.createNativeQuery(str).uniqueResult()));
-					
-					str = "select distinct (node_type) as node_type, count(*) from node_active where active_record = 1 and ware_id = '" + wareID + "' group by node_type";
-					model.addAttribute("eachNodeTypeCount", mapper.writeValueAsString(session.createNativeQuery(str).list()));
-					//model.addAttribute("eachNodeTypeCount", session.createNativeQuery(str).list());
-
-					String SRanBs = "SELECT COUNT( NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and NODE_TYPE='SRanBs' and Ware_Id='"
+					str = "select count(ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"
 							+ wareID + "'";
-					Object SRanBscount = session.createSQLQuery(SRanBs).uniqueResult();
-					model.addAttribute("SRanBscount", mapper.writeValueAsString(SRanBscount));
+					model.addAttribute("g-cell",
+							mapper.writeValueAsString(session.createNativeQuery(str).uniqueResult()));
 
-					String IDU = "SELECT COUNT( NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and NODE_TYPE='IDU' and Ware_Id='"
+					str = "select count(nlc.LCell_Id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
 							+ wareID + "'";
-					Object IDUcount = session.createSQLQuery(IDU).uniqueResult();
-					model.addAttribute("IDUcount", mapper.writeValueAsString(IDUcount));
+					model.addAttribute("l-cell",
+							mapper.writeValueAsString(session.createNativeQuery(str).uniqueResult()));
+
+					str = "select count(nlc.UCell_Id) from node_ucell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
+							+ wareID + "'";
+					model.addAttribute("u-cell",
+							mapper.writeValueAsString(session.createNativeQuery(str).uniqueResult()));
+
+					str = "SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"
+							+ wareID + "'";
+					model.addAttribute("nodeType",
+							mapper.writeValueAsString(session.createNativeQuery(str).uniqueResult()));
+
+					str = "select distinct (node_type) as node_type, count(*) from node_active where active_record = 1 and ware_id = '"
+							+ wareID + "' group by node_type";
+					model.addAttribute("eachNodeTypeCount",
+							mapper.writeValueAsString(session.createNativeQuery(str).list()));
 
 					str = "SELECT node_id, node_name, node_type,domain,vendor,TECH_2G,TECH_3G,TECH_4G,TECH_5G,Node_model from node_active where WARE_ID=:param1";
 					query = session.createNativeQuery(str);
-					query.setParameter("param1", wareID);										
+					query.setParameter("param1", wareID);
 					model.addAttribute("Listnode", mapper.writeValueAsString(query.list()));
 
 					str = " select GCELL_ID ,CELLNAME FROM NODE_GCELL WHERE NODE_PK IN (Select NODE_PK from node_active where WARE_ID=:param1)";
@@ -605,14 +601,13 @@ public class WarehouseController {
 					model.addAttribute("ListUCell", mapper.writeValueAsString(query.list()));
 
 					// get site_IMAGE_NAME
-					query = session.createNativeQuery("select IMAGE_PATH from WAREHOUSE_IMAGE where WARE_ID like :param1");
+					query = session
+							.createNativeQuery("select IMAGE_PATH from WAREHOUSE_IMAGE where WARE_ID like :param1");
 					query.setParameter("param1", wareh);
 					String imgpath = mapper.writeValueAsString(query.list());
 
 					if (!imgpath.equalsIgnoreCase("[]")) {
-
 						String data = imgpath.substring(2, Integer.parseInt(String.valueOf(imgpath.length())));
-
 						StringBuffer sb = new StringBuffer(data);
 						sb.deleteCharAt(sb.length() - 1);
 						sb.deleteCharAt(sb.length() - 1);
@@ -628,7 +623,6 @@ public class WarehouseController {
 								imgres2[1] = imgres2[1].replace("/", "");
 								imgres2[1] = imgres2[1].replace("\"", "");
 								scanlist = ArrayUtils.add(scanlist, imgres2[1]);
-
 							}
 
 						} else {
@@ -656,7 +650,6 @@ public class WarehouseController {
 			}
 
 			finally {
-
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
