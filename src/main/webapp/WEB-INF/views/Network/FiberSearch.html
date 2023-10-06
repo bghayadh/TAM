@@ -200,6 +200,10 @@
 											id="fPaths-tab" style="color: gold;" data-toggle="tab"
 											href="#fPaths" role="tab" aria-controls="conduit"
 											aria-selected="false">Fiber Paths</a></li>
+										<li class="nav-item"><a class="nav-link "
+											id="nodePoint-tab" style="color: gold;" data-toggle="tab"
+											href="#nodeP" role="tab" aria-controls="nodes"
+											aria-selected="false">Node</a></li>
 									</ul>
 									<div class="tab-content" style="min-height: 180px">
 										
@@ -338,6 +342,32 @@
 													<th style="min-width: 350px;">Destination</th>
 												</tr>
 												<tbody id="nearFiberId"></tbody></table></fieldset></div></div></div>
+								<div class="tab-pane" id="nodeP" role="tabpanel" aria-labelledby="nodePoint-tab">
+											<p></p>
+											<div class="container-fluid">
+												<div id="findNearestNodeRes"></div>
+												<div class="row" style="height: 100px;">
+													<fieldset class="field_set">
+														<legend style="width: auto;" class="fieldset_legend"></legend>
+														<table id="findNearstNode" class="searchable sortable"
+															style="display: block; height: 150px; overflow-y: auto;">
+															 <thead>
+															<tr>
+																<th style="min-width: 30px;"><input type="checkbox" id="selectAllNode"></th>
+																<th style="min-width: 150px;" >Node ID</th>
+																<th style="min-width: 150px;">Node Name</th>
+																<th style="min-width: 100px;">Longitude</th>
+																<th style="min-width: 100px;">Latitude</th>
+																<th style="min-width: 100px;">Distance(Km)</th>
+																<th style="min-width: 100px;" colspan="2">Driving Distance(km)</th>
+															</tr></thead>
+															<tbody id="searchNodeTBody"></tbody>
+														</table>
+													</fieldset>
+												</div>
+											</div>
+                                             <div id="nodeTotal" Style="Padding-top: 90px;"><b>Total Nodes:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="totalNode" name="totalNodes" readonly></div>
+										</div>
 										</div></div></div>
 												
 								<div id="MultyClosest" class="tab-pane" role="tabpanel" aria-labelledby="MultyClosest-search-tab"><p></p>
