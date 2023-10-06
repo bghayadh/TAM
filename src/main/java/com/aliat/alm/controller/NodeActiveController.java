@@ -135,6 +135,7 @@ public String NodeFormView(Locale locale, Model model, HttpServletRequest reques
 	if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 		return "redirect:/";
 	}
+	String NodePK;
 
 	session = almsessions.getSession();
 	if (session != null && session.isOpen()) {
@@ -144,9 +145,29 @@ public String NodeFormView(Locale locale, Model model, HttpServletRequest reques
 
 		try {
 			
-		
-		
-		} catch (Exception e) {
+			NodePK = request.getParameter("NodePk");
+			System.out.println(NodePK);
+			if (NodePK != null) {
+				query = session.createNativeQuery(
+						"select node_id,creation_date,update_date,node_name,node_type,node_model,site_id,ware_name,vendor,domain,node_pk from node_active where node_pk =:param1"); 
+							query.setParameter("param1", NodePK);
+				Object[] result = (Object[]) query.uniqueResult();
+
+			
+				    model.addAttribute("node_id", result[0]);
+				    model.addAttribute("creation_date", result[1]);
+				    model.addAttribute("update_date", result[2]);
+				    model.addAttribute("node_name", result[3]);
+				    model.addAttribute("node_type", result[4]);
+				    model.addAttribute("node_model", result[5]);
+				    model.addAttribute("site_id", result[6]);
+				    model.addAttribute("ware_name", result[7]);
+				    model.addAttribute("vendor", result[8]);
+				    model.addAttribute("domain", result[9]);
+				    model.addAttribute("node_pk", result[10]);
+					   
+	
+		} }catch (Exception e) {
 			sw = new StringWriter();
 			e.printStackTrace(new PrintWriter(sw));
 			exceptionAsString = sw.toString();
