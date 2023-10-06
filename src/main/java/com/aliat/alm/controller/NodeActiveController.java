@@ -94,13 +94,13 @@ public class NodeActiveController {
 			try {
 				List<NodeListView> listNodes = new ArrayList<NodeListView>();
 
-				str = "select n.NODE_PK as nodePK, n.NODE_ID as nodeID, n.NODE_NAME as nodeName, n.NODE_TYPE as nodeType, n.NODE_MODEL as nodeModel, n.SITE_ID as siteID, TO_CHAR(n.CREATION_DATE,'YYYY-MM-DD HH24:MI:SS') as createdDate,"
+				str = "select n.NODE_PK as nodePk, n.NODE_PK as nodePK, n.NODE_ID as nodeID, n.NODE_NAME as nodeName, n.NODE_TYPE as nodeType, n.NODE_MODEL as nodeModel, n.SITE_ID as siteID, TO_CHAR(n.CREATION_DATE,'YYYY-MM-DD HH24:MI:SS') as createdDate,"
 					       + "TO_CHAR(n.UPDATE_DATE,'YYYY-MM-DD HH24:MI:SS') as updateDate,"
 					       + "n.WARE_NAME as wareName "
 					       + "from NODE_ACTIVE n" + " order by n.UPDATE_DATE DESC";
 
 				Query query = session.createNativeQuery(str);
-				listNodes = ((SQLQuery) query).addScalar("nodePK").addScalar("nodeID").addScalar("nodeName")
+				listNodes = ((SQLQuery) query).addScalar("nodePk").addScalar("nodePK").addScalar("nodeID").addScalar("nodeName")
 						.addScalar("nodeType").addScalar("nodeModel").addScalar("siteID").addScalar("createdDate")
 						.addScalar("updateDate").addScalar("wareName")
 						.setResultTransformer(Transformers.aliasToBean(NodeListView.class)).list();
