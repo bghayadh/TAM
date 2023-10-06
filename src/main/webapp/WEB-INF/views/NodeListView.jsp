@@ -410,8 +410,8 @@ z-index: 9003;
 								</div>
 
 
-								<div id="clientsGridTable" class="table-responsive almgrid-table-div">
-									<table id="ClientsTable" class="table table-striped table-bordered almgrid-table">
+								<div id="NodeGridTable" class="table-responsive almgrid-table-div">
+									<table id=NodeTable" class="table table-striped table-bordered almgrid-table">
 										<thead>
 											<tr class="header">
 												<th class="table-select-all">
@@ -442,6 +442,17 @@ z-index: 9003;
 												</th>
 
 												<th>Node Name
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> <i
+																class="fa fa-list almgrid-filter-i"
+																aria-hidden="true"></i></button>
+														<ul
+															class="dropdown-menu dropdown-menu-right filter-dropdown-ul">
+
+														</ul>
+													</li>
+												</th>
+													<th>Node Type
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown"> <i
 																class="fa fa-list almgrid-filter-i"
@@ -585,15 +596,16 @@ z-index: 9003;
 
 
 
-				var ClientsListData = ${ ListGridTable };
+				var NodeListData = ${ ListGridaTable };
+		
 
 				var tab =0;
 
 				$(document).ready(function () {
 
 					var almgrid = new Almgrid({
-						tableId: "ClientsTable",
-						dataArray: ClientsListData,
+						tableId: "NodeTable",
+						dataArray: NodeListData,
 						columnLinkNb: [1],
 						selectCheckbox: true
 					});
@@ -612,9 +624,9 @@ z-index: 9003;
 				     		}
 		     			
                 		$("#poModal").modal("show");
-    					$("#ClientsTable").remove();
+    					$("#NodeTable").remove();
 
-    					$("#clientsGridTable").append('<table id="ClientsTable" class="table table-striped table-bordered almgrid-table">'
+    					$("#NodeGridTable").append('<table id="ClientsTable" class="table table-striped table-bordered almgrid-table">'
     					+'<thead><tr class="header"><th class="table-select-all"></th>'
     					+'<th>Mobile Number <li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown">'
     					+' <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
