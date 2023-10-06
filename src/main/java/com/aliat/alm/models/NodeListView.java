@@ -31,10 +31,10 @@ public class NodeListView {
 	private String siteID;
 	
 	@Column(name = "CREATION_DATE")
-	private Timestamp createdDate;
+	private String createdDate;
 	
 	@Column(name = "UPDATE_DATE")
-	private Timestamp updateDate;
+	private String updateDate;
 	
 	@Column(name = "WARE_NAME")
 	private String wareName;
@@ -48,7 +48,7 @@ public class NodeListView {
 
 	public NodeListView(String nodePK, String nodeID, String nodeName, String nodeType, 
 			String nodeModel,  String siteID,
-			 Timestamp createdDate, Timestamp updateDate,  String wareName
+			String createdDate, String updateDate,  String wareName
 			) {
 		super();
 		this.nodePK = nodePK;
@@ -119,19 +119,19 @@ public class NodeListView {
 
 	
 
-	public Timestamp getCreatedDate() {
+	public String getCreatedDate() {
 		return createdDate;
 	}
 
-	public void setCreatedDate(Timestamp createdDate) {
+	public void setCreatedDate(String createdDate) {
 		this.createdDate = createdDate;
 	}
 
-	public Timestamp getUpdateDate() {
+	public String getUpdateDate() {
 		return updateDate;
 	}
 
-	public void setUpdateDate(Timestamp updateDate) {
+	public void setUpdateDate(String updateDate) {
 		this.updateDate = updateDate;
 	}
 
