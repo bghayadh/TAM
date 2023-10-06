@@ -357,17 +357,18 @@ z-index: 9003;
 		             <li class="nav-item"><class="nav-link inactive" id="custom-tabs-one-home-tab"
 		             style="color: gold;text-align:center;line-height:2.75em; padding-left:5px;">Node LISTVIEW</li>	
 		             
-		             <li class="nav-item ml-auto">
-								<button type="button" id="deleteButton" class="btn btn-primary BtnActive">
-									<i class="fa fa-trash"></i> Delete
-								</button>
+		          <li class="nav-item ml-auto">
+    <button type="button" id="deleteButton" class="btn btn-primary BtnActive" disabled>
+        <i class="fa fa-trash"></i> Delete
+    </button>
 
-								<button type="button" id="saveButton"
-									onclick='window.location.href = "${pageContext.request.contextPath}/NodeFormView?type=addNew"'
-									class="btn btn-primary BtnActive">
-									<i class="fa fa-plus"></i> Add
-								</button>
-							</li>	
+    <button type="button" id="saveButton" disabled
+        onclick='window.location.href = "${pageContext.request.contextPath}/NodeFormView?type=addNew"'
+        class="btn btn-primary BtnActive">
+        <i class="fa fa-plus"></i> Add
+    </button>
+</li>
+
 		     </ul>
 
 					</div>
@@ -410,24 +411,27 @@ z-index: 9003;
 								</div>
 
 
-								<div id="NodeGridTable" class="table-responsive almgrid-table-div">
-									<table id=NodeTable" class="table table-striped table-bordered almgrid-table">
+								<div id="nodeGridTable" class="table-responsive almgrid-table-div">
+									<table id="NodeTable" class="table table-striped table-bordered almgrid-table">
 										<thead>
 											<tr class="header">
 												<th class="table-select-all">
 												</th>
 												
 
+											
 												<th>Node PK
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown"> <i
 																class="fa fa-list almgrid-filter-i"
 																aria-hidden="true"></i></button>
-														<ul class="dropdown-menu filter-dropdown-ul">
+														<ul
+															class="dropdown-menu dropdown-menu-right filter-dropdown-ul">
 
 														</ul>
 													</li>
 												</th>
+											
 
 												<th>Node Id
 													<li class="filter-dropdown dropdown">
@@ -452,7 +456,7 @@ z-index: 9003;
 														</ul>
 													</li>
 												</th>
-													<th>Node Type
+												<th>Node Type
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown"> <i
 																class="fa fa-list almgrid-filter-i"
@@ -486,17 +490,7 @@ z-index: 9003;
 													</li>
 												</th>
 												
-												<th>Site Name
-													<li class="filter-dropdown dropdown">
-														<button class="almgrid-filter" data-toggle="dropdown"> <i
-																class="fa fa-list almgrid-filter-i"
-																aria-hidden="true"></i></button>
-														<ul
-															class="dropdown-menu dropdown-menu-right filter-dropdown-ul">
-
-														</ul>
-													</li>
-												</th>
+											
 
 												<th>Created Date
 													<li class="filter-dropdown dropdown">
@@ -520,12 +514,24 @@ z-index: 9003;
 														</ul>
 													</li>
 												</th>
+													<th>Site Name
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> <i
+																class="fa fa-list almgrid-filter-i"
+																aria-hidden="true"></i></button>
+														<ul
+															class="dropdown-menu dropdown-menu-right filter-dropdown-ul">
+
+														</ul>
+													</li>
+												</th>
 											
 											</tr>
 
 											<tr>
 												<th class="table-select-all"><input type="checkbox"
 														class="table-select-all-checkbox"></th>
+												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
@@ -597,11 +603,11 @@ z-index: 9003;
 
 
 				var NodeListData = ${ ListGridaTable };
-		
+				
 
 				var tab =0;
-
 				$(document).ready(function () {
+
 
 					var almgrid = new Almgrid({
 						tableId: "NodeTable",
@@ -609,303 +615,13 @@ z-index: 9003;
 						columnLinkNb: [1],
 						selectCheckbox: true
 					});
+	     			
 
-	     			$("#popUpSubmit").on("click", function (e) {
-
-						
-		     			if(isNaN($("#popupAgentNumber").val())){
-						alert("Agent Number should be Numeric");
-						return false;
-			     		}
-
-		     			if(isNaN($("#popupMobileNumber").val())){
-							alert("Mobile Number should be Numeric");
-							return false;
-				     		}
-		     			
-                		$("#poModal").modal("show");
-    					$("#NodeTable").remove();
-
-    					$("#NodeGridTable").append('<table id="ClientsTable" class="table table-striped table-bordered almgrid-table">'
-    					+'<thead><tr class="header"><th class="table-select-all"></th>'
-    					+'<th>Mobile Number <li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown">'
-    					+' <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
-    					+'<th>First Name<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'
-    					+'<th>Last Name <li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button> <ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'
-    					+'<th>Client ID Number <li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button> <ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'
-    					+'<th>Created Date <li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'			
-    					+'<th>Last Modified Date <li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'				
-    					+'<th>Agent Number <li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'					
-    					+'<th>Agent Full Name <li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'							
-    					+'<th>Status<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'							
-    					+'<th>Registration Status <li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'					
-    					+'<th>Tkash Status<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th></tr>'						
-    					+'<tr><th class="table-select-all"><input type="checkbox" class="table-select-all-checkbox"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th>'
-    					+'<th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th>'				
-    					+'<th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th>'				
-    					+'<th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th>'			
-    					+'<th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th>'
-    					+'<th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th></tr></thead><tbody></tbody></table>');
-
-                	$.ajax({
-        					type : "GET",
-        					contentType: "application/json; charset=utf-8",
-        					url : "${pageContext.request.contextPath}/FilteredClientsListView",
-        					
-        					data : {
-        						"startDate":$("#popupstartdate").val(),
-        						"endDate":$("#popupenddate").val(),
-        						"mobileNumber":$("#popupMobileNumber").val(),
-        						"Fname":$("#popupFname").val(),
-        						"Lname":$("#popupLname").val(),
-        						"agentName":$("#popupAgentName").val(),
-        						"agentNumber":$("#popupAgentNumber").val(),
-                				"status":$("#popupStatus").val(),
-                				"regStatus":$("#popupRegStatus").val(),
-                				"TkashStatus":$("#popupTkashStatus").val(),
-                				"region":$("#popupRegion").val(),
-                				"area":$("#popupArea").val(),
-			
-        				},
-        				dataType : "json",
-        				success : function(data) {
-        						console.log("Success");
-        						if(data!=null){
-        							ClientsListData = data;
-        							almgrid = new Almgrid({
-        							tableId: "ClientsTable",
-        							dataArray: data,
-        							columnLinkNb: [1],
-        							selectCheckbox: true
-        							});
-
-        		             		document.getElementById('searchClient').className = 'btn btn-danger'
-        			             	document.getElementById('Lview').className = 'btn btn-light'
-        			             	$("#Lview").css('background', '#FFFFFF');	
-        		             		$("#searchClient").css('background', '#da6815');
-
-
-        		             		
-										$(".almgrid-table").on("click", ".almgrid-link", function (e) {
-											console.log("after filtering");
-	        								var param1 = $(this).parents('tr').children('td').find('input').val();
-	        								if(tab == 0){
-												var param = "${pageContext.request.contextPath}/NodeFormView?clientID=" + param1 +"&NavAction=2";
-		        								window.location.href = param;
-		        								e.preventDefault();
-		        							}
-        								});
-        						}	
-        					
-        					},
-        					error : function(error) {
-        						console.log("Failed");
-        						 
-        						
-        					}
-        				});
-            			});
-					
-					$( "#Fview" ).click(function() {
-						var id =  $(".almgrid-link").closest('tr').find('td:first-child input').val();
-		  				location.href="${pageContext.request.contextPath}/NodeFormView?clientID="+id+"&NavAction=2";
-					});
-
-					$( "#Lview" ).click(function() {
-						location.reload();
-					});
-
-					
-					$("#deleteButton").click(function () {
-
-						var deleteArray = [];
-
-						$("#ClientsTable").find(".table-select-checkbox").each(function () {
-							if ($(this).is(":checked")) {
-
-								var checkboxVal = $(this).val();
-								deleteArray.push(checkboxVal);
-							}
-
-						});
-
-						deleteArray = deleteArray.filter(function (elem, index, self) {
-							return index === self.indexOf(elem);
-						});
-
-						$.ajax({
-							type: "GET",
-							url: "${pageContext.request.contextPath}/ClientListViewDelete",
-							dataType: "json",
-							data: {
-								"clientID": deleteArray
-							},
-							success: function (data) {
-								location.reload();						    	
-							},
-							error: function (error) {
-								console.log("The error is " + error);
-							}
-						});
-
-					});
-
-					var exportArrayGrid=[];
-
-					//method to export the data into excel sheet
-	             	function exportGrid() {
-	           	
-	           		  downloadCSVFile(exportArrayGrid, "ClientsReport");
-
-	           		  function downloadCSVFile(csv, filename) {
-	           			var csv_file, download_link;
-
-	           			csv_file = new Blob([csv], {type: "text/csv"});
-
-	           			download_link = document.createElement("a");
-
-	           			download_link.download = filename;
-
-	           			download_link.href = window.URL.createObjectURL(csv_file);
-
-	           			download_link.style.display = "none";
-
-	           			document.body.appendChild(download_link);
-
-	           			download_link.click();
-	           		}
-	           		
-	           	}
-
-	             	function fillGrid(filledGrid){
-	             		exportArrayGrid=[];
-	             		exportArrayGrid.push('\r');
-	             		exportArrayGrid.push(["Mobile Number", "First Name", "Last Name","Client ID Number", "Created Date","Last Modified Date","Agent Number","Agent Name","Status","Registration Status","Tkash Status"]);
-	             		var value = Object.keys(filledGrid[0]);
-	             		for(i=0;i<filledGrid.length;i++){
-	             			exportArrayGrid.push('\r');
-	             			for(j=1;j<value.length;j++){
-	             				exportArrayGrid.push(filledGrid[i][value[j]]);
-	             			}
-	             		}
-	             		}
-
-	             	$("#export").click(function() {
-						
-	             		//check if the data is filtered or not
-		             	if(almgrid.filteredArray.length == 0 ){
-		             		fillGrid(ClientsListData);
-		             		console.log("ClientsListData is ", ClientsListData);
-		             		
-					     }else{
-			            	 fillGrid(almgrid.filteredArray);
-				             }
-						exportGrid();
-						//reload the page to clear the data array
-						//location.reload();
-						
-					});
-
-
-	             	$("#searchClient").click(function() {
-	             		$("#poModal").modal("show");
-	             		document.getElementById('searchClient').className = 'btn btn-danger';
-		             	document.getElementById('Lview').className = 'btn btn-light';
-		             	$("#Lview").css('background', '#FFFFFF');	
-	             		$("#searchClient").css('background', '#da6815');	
-	             	
-	             		var todayDate = new Date().toISOString().slice(0, 10);
-	             		var olderdate = new Date(todayDate);
-	             		olderdate.setMonth(olderdate.getMonth() -3);
-	             		
-	             		$("#popupstartdate").val(olderdate.toISOString().slice(0, 10));
-	             		$("#popupenddate").val(todayDate);
-					});
-
-
-	             // Resize and drag the image popup
-	            	$('#imgpopUpDiv').draggable({
-	            	handles: "e" ,
-	            	
-	            	});
-	             // Resize and drag the popup
-	            	$('.modal-content').resizable({
-	            	handles: "e" ,
-	            	
-	            	});
-	            	 
-	            	$('.modal-dialog').draggable({
-	            	handle: ".modal-header, .modal-footer"
-	            	});
-	            	   
-	            	$('#poModal').on('show.bs.modal', function() {
-	            	$(this).find('.modal-body').css({
-	            	'max-height': '100%',
-	            	});
-	            	});
-	                 
-	            	//Reset the popup to original size after resizing 
-	            	$('#poModal').on('hidden.bs.modal', function() {
-	            	$(this).find('.modal-content').css({'width': '', 'height': ''});
-	            	})
-	            	 
-	            	//Reset popup position after it has been dragged and closed
-	            	$('body').on('hidden.bs.modal', function() {
-	            	$('.modal-dialog').css({'top': '', 'left':''});
-	            	})
-	            			      
-	            	// Minimize and Maximize fct for popup
-	            	$(".modalMinimize").on("click", function(){
-	            	$(".modal-body").slideToggle();
-	            	$(".modal-footer").slideToggle();
-	            	
-	            	//Toggle between minimize/maximize icons
-	            	var iconToChange = $('.icon-to-change');
-	            		if(iconToChange.hasClass('fa-window-restore')){
-	                 		iconToChange.removeClass('fa-window-restore')
-	                		            .addClass('fa-minus')
-	            		}
-	            		else{
-	                 		iconToChange.addClass('fa-window-restore')
-	                		             .removeClass('fa-minus')
-	            		}    		         
-	            	}); // end minimize/maximize fct
-
-	            	// Close popup function  				
-	            	   $("#closePopup").on("click", function(){
-	            	              	  
-	            		    $("#poModal").modal("hide");
-	            		   // clearFields();
-	            		    
-	            		    
-	            			 
-	            	 }); // end close fct
-
-	            	 
-	            	$("#popUpCancel").on("click", function (e) {
-	            		$("#poModal").modal("hide");
-	            		//clearFields();
-	        			});
-
-	            
-	            	$("#popupClearFields").on("click", function (e) {
-	       			 $('#poModal').find('input:text').val('');	
-	       			 var strtDate = new Date().toISOString().slice(0, 10);
-	       	     	 var endDatee = new Date(strtDate);
-	       	     	 endDatee.setMonth(endDatee.getMonth() -3);
-	       	     	 $("#popupstartdate").val(endDatee.toISOString().slice(0, 10));
-	       	     	 $("#popupenddate").val(strtDate);		
-	       	   });
-
-        			//function clearFields()
-        			//{$("#popupstartdate").val('');$("#popupenddate").val('');$("#popupMobileNumber").val('');$("#popupFname").val('');$("#popupLname").val('');
-        			//	$("#popupAgentName").val('');$("#popupAgentNumber").val('');$("#popupStatus").val('');$("#popupRegStatus").val('');
-        			//	$("#popupTkashStatus").val('');$("#popupRegion").val('');$("#popupArea").val('');}
-
+        		
         			$(".almgrid-table").on("click", ".almgrid-link", function (e) {
             			
             				var param1 = $(this).parents('tr').children('td').find('input').val();
-        					var param = "${pageContext.request.contextPath}/NodeFormView?clientID=" + param1 +"&NavAction=2";
+        					var param = "${pageContext.request.contextPath}/NodeFormView?NodePk=" + param1 +"&NavAction=2";
         					window.location.href = param;
         					e.preventDefault();
                 	
