@@ -686,6 +686,16 @@ public class PhysicalLayerController {
 							distribBoardList = findNearestArray(distribBoardListQuery, Double.valueOf(closestLatPoint),
 									Double.valueOf(closestLongPoint), Double.valueOf(closestDisRange), "DistribBoard",
 									noOfPoints);
+							
+							
+							List<Object[]> nodeListQuery = session.createSQLQuery(
+									"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' ) "
+									+ " AND (LONGITUDE !='null' or LONGITUDE !=null ) AND (LATITUDE !='null' or LATITUDE !=null ) ").list();
+						
+							NodeList = findNearestArray(nodeListQuery, Double.valueOf(closestLatPoint),
+									Double.valueOf(closestLongPoint), Double.valueOf(closestDisRange), "Nodes",
+									noOfPoints);
+							
 
 							List<Object[]> nearstPoints = new ArrayList<Object[]>();
 							nearstPoints.addAll(manholeList);
@@ -926,6 +936,15 @@ public class PhysicalLayerController {
 											+ " and to_number (SUBSTR(DB_LATITUDE,1,6)) <= " + newEndLatPt)
 									.list();
 
+							NodeList = session.createSQLQuery(
+									"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' ) "
+									+ " AND (LONGITUDE !='null' or LONGITUDE !=null ) AND (LATITUDE !='null' or LATITUDE !=null )"
+									+ " and to_number (SUBSTR(LONGITUDE,1,6)) >=  "
+											+newStartLngPt +"  and  to_number (SUBSTR(LATITUDE,1,6)) >= " + newStartLatPt
+											+ " and to_number (SUBSTR(LONGITUDE,1,6)) <= " + newEndLngPt
+											+ " and to_number (SUBSTR(LATITUDE,1,6)) <= " + newEndLatPt).list();
+	
+							
 							List<Object[]> nearstPoints = new ArrayList<Object[]>();
 							nearstPoints.addAll(manholeList);
 							nearstPoints.addAll(handholeList);
@@ -11643,16 +11662,20 @@ public class PhysicalLayerController {
 
 			Object[] objectArray = (Object[]) ListOfObjects.get(i);
 
-			if (Target == "Manhole" || Target == "Handhole" || Target == "ManHandhole_OutOfZone"
-					|| Target == "Entreprise" || Target == "Transmission") {
+			if (Target == "Manhole" || Target == "Handhole" || Target == "ManHandhole_OutOfZone") {
 				pointDist = haversine(closestLatPoint, closestLongPoint, Double.valueOf((String) objectArray[3]),
 						Double.valueOf((String) objectArray[2]));
-			} else {
+			} 
+			else if (Target == "Nodes") {
+					pointDist = haversine(closestLatPoint, closestLongPoint, Double.valueOf((String) objectArray[6]),
+							Double.valueOf((String) objectArray[5]));				
+			}
+			else {
 				pointDist = haversine(closestLatPoint, closestLongPoint, Double.valueOf((String) objectArray[2]),
 						Double.valueOf((String) objectArray[1]));
 			}
 			// System.out.println("pointDist "+pointDist);
-			if (pointDist < closestDisRange || Target == "ManHandhole_OutOfZone" || Target == "DB_OutOfZone") {
+			if (pointDist < closestDisRange || Target == "ManHandhole_OutOfZone" || Target == "DB_OutOfZone" ) {
 				objectArray = append(objectArray, (Object) pointDist);
 				// System.out.println("pass if statment ");
 				nearstPointsArray.add(objectArray);
@@ -11667,7 +11690,7 @@ public class PhysicalLayerController {
 			double[] listofDistances = new double[nearstPointsArray.size()];
 			for (int j = 0; j < nearstPointsArray.size(); j++) {
 
-				if (Target == "DB_OutOfZone" || Target == "DistribBoard") {
+				if (Target == "DB_OutOfZone" || Target == "DistribBoard"  || Target=="Nodes") {
 					listofDistances[j] = Double.valueOf(String.valueOf(((Object[]) nearstPointsArray.get(j))[9]));
 				} else {
 					listofDistances[j] = Double.valueOf(String.valueOf(((Object[]) nearstPointsArray.get(j))[7]));
@@ -11753,7 +11776,7 @@ public class PhysicalLayerController {
 		double tempDistance = 0.0;
 
 		for (int x = 0; x < ListOfObjects.size(); x++) {
-			if (Target == "DB_OutOfZone" || Target == "DistribBoard") {
+			if (Target == "DB_OutOfZone" || Target == "DistribBoard" || Target =="Nodes") {
 				tempDistance = Double.valueOf(String.valueOf(((Object[]) ListOfObjects.get(x))[9]));
 
 			} else {

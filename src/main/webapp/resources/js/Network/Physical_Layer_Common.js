@@ -8743,21 +8743,24 @@ function appendNearestFiberPathsTableMulty(result){
 }	
 
 function viewNearestPointEvent(){
-	$("#viewNearestp").on('click', function(){
+		$("#viewNearestp").on('click', function(){
 		$("#searchManhTBody").empty();
 		$("#searchHanhTBody").empty();
 		$("#searchDBoardTBody").empty();
+		$("#searchNodeTBody").empty();
 		$("#searchManhTBody").html("");
 		$("#searchHanhTBody").html("");
 		$("#searchDBoardTBody").html("");
 		$("#nearStrandId").html("");
 		$("#nearFiberId").html("");
 		$("#nearTubeId").html("");
+		$("#searchNodeTBody").html("");
 		$('#removeS').show();
 		$("#SearchZone").prop("checked",true);
 		$("#selectAllHandhole").prop('checked', false);
 		$("#selectAllManhole").prop('checked', false);
 		$("#selectAllDB").prop('checked', false);
+		$("#selectAllNode").prop('checked', false);
 		$('#removeFilter').hide();
 		/*$("#closestLongPoint").val("");
 		$("#closestLatPoint").val("");
@@ -8784,7 +8787,7 @@ function viewNearestPointEvent(){
 		  checkedOption = "circleRange";  
 		  
 			  if (closestDisRange === "" || closestLongPoint === "" || closestLatPoint === "" || isNaN(closestDisRange) || isNaN(closestLongPoint) || isNaN(closestLatPoint)) {
-			    alert("Please enter a numeber in the input field.");
+			    alert("Please enter a number in the input field.");
 			    
 			  }else{
 			     urlString += "&closestLatPoint="+$("#closestLatPoint").val()+"";
@@ -8799,7 +8802,7 @@ function viewNearestPointEvent(){
 			 checkedOption = "StartEnd";
 			 
 			 if (startLongPoint === "" || startLatPoint === "" || endLongPoint === "" || endLatPoint === "" || isNaN(startLongPoint) || isNaN(startLatPoint) || isNaN(endLongPoint) || isNaN(endLatPoint)) {
-			    alert("Please enter a numeber in the input field.");
+			    alert("Please enter a number in the input field.");
 			    
 			 }else{
 			 urlString += "&startLongPoint="+$("#startLongPoint").val()+"";
@@ -9053,8 +9056,9 @@ function openFindNearMultySite(rowData) {
 		} */
 }
 
-function  openFindNearest(checkedOption,closestLatPoint,closestLongPoint,closestDisRange,noP,arrayManhole,arrayHandhole,arrayDB,arrayFibers,arrayStrands,arrayTubes,arrayEnterprise,arrayTransmission,getRelatedPoints){
-	 $("#StartEnd").prop("checked",false);
+function  openFindNearest(checkedOption,closestLatPoint,closestLongPoint,closestDisRange,noP,arrayManhole,arrayHandhole,arrayDB,arrayFibers,arrayStrands,arrayTubes,arrayNodes,getRelatedPoints){
+	 
+	$("#StartEnd").prop("checked",false);
 	 document.getElementById("closestLongDiv").style.display = "block";
 	 document.getElementById("closestLatDiv").style.display = "block";
 	 document.getElementById("closestDistanceRange").style.display = "block";
@@ -9095,12 +9099,13 @@ function  openFindNearest(checkedOption,closestLatPoint,closestLongPoint,closest
 					 finalArrayFibers.push(arrayTubes);
 					 finalArrayFibers.push(arrayFibers);
 					 appendNearestFiberPathsTable(finalArrayFibers);
-					 
+					 appendNearestNodesTable(arrayNodes);					        			
 
 					 $("#totalManhole").val(arrayManhole.length);
 					 $("#totalHandhole").val(arrayHandhole.length);
 					 $("#totalDB").val(arrayDB.length);
-				
+					 $("#totalNode").val(arrayNodes.length);
+
 					 const myLatLng = { lat: parseFloat(closestLatPoint), lng: parseFloat(closestLongPoint) };
 				   
 					//restMAP();
@@ -9138,7 +9143,7 @@ function  openFindNearest(checkedOption,closestLatPoint,closestLongPoint,closest
 		closestDisRange='';
 }
 
-function openFindBetweenMarkers(checkedOption,startLongPoint,startLatPoint,endLongPoint,endLatPoint,arrayManhole,arrayHandhole,arrayDB,arrayFibers,arrayStrands,arrayTubes,arrayEnterprise,arrayTransmission,getRelatedPoints){
+function openFindBetweenMarkers(checkedOption,startLongPoint,startLatPoint,endLongPoint,endLatPoint,arrayManhole,arrayHandhole,arrayDB,arrayFibers,arrayStrands,arrayTubes,arrayNodes,getRelatedPoints){	 
 	 $("#circleRange").prop("checked",false);
 	 document.getElementById("closestLongDiv").style.display = "none";
 	 document.getElementById("closestLatDiv").style.display = "none";
@@ -9177,11 +9182,12 @@ function openFindBetweenMarkers(checkedOption,startLongPoint,startLatPoint,endLo
 			 finalArrayFibers.push(arrayTubes);
 			 finalArrayFibers.push(arrayFibers);
 			 appendNearestFiberPathsTable(finalArrayFibers);
+			 appendNearestNodesTable(arrayNodes);					        			
 
 				$("#totalManhole").val(arrayManhole.length);
 				$("#totalHandhole").val(arrayHandhole.length);
 				$("#totalDB").val(arrayDB.length);
-				
+				$("#totalNode").val(arrayNodes.length);
 					
 					
 				startlangPath =[new google.maps.LatLng(startLatPoint,startLongPoint), new google.maps.LatLng(endLatPoint,startLongPoint)];
@@ -10121,6 +10127,9 @@ function appendNearestDBoardTable(result){
 			$('input[type="checkbox"]', '#findNearstDB').prop('checked', true);
 			$(".DistBoard").prop('checked', true);
 			$(".AllDistBoards").prop("checked",true);
+			$(".BackboneDB").prop("checked",true);
+			$(".MetroDB").prop("checked",true);
+			$(".AccessDB").prop("checked",true);
 			markerClusterBackboneDistBoard.clearMarkers(); 
 			markerClusterMetroDistBoard.clearMarkers(); 
 			markerClusterAccessDistBoard.clearMarkers(); 
@@ -10145,6 +10154,9 @@ function appendNearestDBoardTable(result){
 				$('input[type="checkbox"]', '#findNearstDB').prop('checked', false);
 				$(".DistBoard").prop('checked', false);
 				$(".AllDistBoards").prop("checked",false);
+				$(".BackboneDB").prop("checked",false);
+				$(".MetroDB").prop("checked",false);
+				$(".AccessDB").prop("checked",false);
 				markerClusterBackboneDistBoard.clearMarkers(); 
 				markerClusterMetroDistBoard.clearMarkers(); 
 				markerClusterAccessDistBoard.clearMarkers(); 
@@ -10189,7 +10201,128 @@ function appendNearestDBoardTable(result){
 																	
 	}
    
+	function appendNearestNodesTable(result){
+		var markupNode="";		
+		document.getElementById("findNearestNodeRes").innerHTML = "";
+		
+		if (result.length==0){
+			document.getElementById("findNearestNodeRes").innerHTML = '<p style=" color:#ff0000;font-size: 1.4em;">There is no result</p>';
+		}
+		else {
+			for(var i =0 ; i<result.length;i++){
+				if($("#StartEnd").is(":checked")){
+					markupNode +="<tr style='height: 30px;'><td ><input type='checkbox' class='nodeBOQ' id=BOQ_"+result[i][0]+" ></td><td  >"+result[i][0]+"</td><td style='min-width:250px;'>"+result[i][1]+"</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][5]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][6]+"' readonly></input ></td>"
 
+				}
+				else{
+				    	if(result[i][10] == null || result[i][10]==""){
+							markupNode +="<tr style='height: 30px;'><td><input type='checkbox' class='nodeBOQ' id=BOQ_"+result[i][0]+" ></td><td style='min-width:150px;'>"+result[i][0]+"</td><td style='min-width:150px;'>"+result[i][1]+"</td><td  name='LONGG' style='min-width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][5]+"' readonly></input ></td><td style='min-width:150px;'  name='LATT'><input name='LATT' style='border: none;' value='"+result[i][6]+"' readonly></input ></td><td style='min-width:50px;'>"+result[i][9]+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistance(this)'>Get Distance</button> </td></tr>"
+
+						}else{
+							markupNode +="<tr style='height: 30px;'><td><input type='checkbox' class='nodeBOQ' id=BOQ_"+result[i][0]+" ></td><td style='min-width:150px;'>"+result[i][0]+"</td><td style='min-width:150px;'>"+result[i][1]+"</td><td style='min-width:150px;'>"+result[i][5]+"</td><td style='min-width:150px;'>"+result[i][6]+"</td><td style='min-width:50px;'>"+result[i][9]+"</td><td style='min-width:90px;'> <label name='DDistance' style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'>"+(result[i][10])+"</label></td></tr>"
+
+						}
+				 }
+
+		}
+	
+
+		}
+		$("#searchNodeTBody").append(markupNode);
+		if($("#circleRange").is(":checked")){
+			drivingDistance("findNearstNode");
+		}
+		makeAllSortable();
+		
+		$("#selectAllNode").click(function(){
+			if($(this).is(":checked")){
+			$('input[type="checkbox"]', '#findNearstNode').prop('checked', true);
+			$(".Nodes").prop('checked', true);
+			$(".AllNodeActive").prop("checked",true);
+			$(".TransmissionSDH").prop("checked",true);
+			$(".TransmissionGPON").prop("checked",true);
+			$(".TransmissionDWDM").prop("checked",true);
+			$(".EntrepriseMSAN").prop("checked",true);
+
+			markerClusterMSANNodes.clearMarkers();
+			markerClusterDWDMNodes.clearMarkers();
+			markerClusterSDHNodes.clearMarkers();
+			markerClusterGPONNodes.clearMarkers();
+
+			 $("#network_tree").find(".Nodes:checked" ).each(function(){
+				id=$(this).parent().attr('id');
+				markersNodeActive[id].setMap(map);			
+
+				if(window[""+id][8]=="MSAN") {
+					markerClusterMSANNodes.addMarker(markersNodeActive[id]);
+				}
+				else if(window[""+id][8]=="DWDM") {
+					markerClusterDWDMNodes.addMarker(markersNodeActive[id]);
+				}
+				else if(window[""+id][8]=="SDH") {
+					markerClusterSDHNodes.addMarker(markersNodeActive[id]);
+				}
+				else if(window[""+id][8]=="GPON") {
+					markerClusterGPONNodes.addMarker(markersNodeActive[id]);
+				}										
+		     });	
+			}
+			else{
+				$('input[type="checkbox"]', '#findNearstNode').prop('checked', false);
+				$(".Nodes").prop('checked', false);
+				$(".AllNodeActive").prop("checked",false);
+				$(".TransmissionSDH").prop("checked",false);
+				$(".TransmissionGPON").prop("checked",false);
+				$(".TransmissionDWDM").prop("checked",false);
+				$(".EntrepriseMSAN").prop("checked",false);
+
+				markerClusterMSANNodes.clearMarkers();
+				markerClusterDWDMNodes.clearMarkers();
+				markerClusterSDHNodes.clearMarkers();
+				markerClusterGPONNodes.clearMarkers();
+			}
+			
+		});
+		
+		// checking single row checbox from boq
+		$('.nodeBOQ').click(function(){
+				console.log("entered "+ $(this).attr('id').split("BOQ_")[1]);
+				var Id = $(this).attr('id').split("BOQ_")[1];
+				if ($(this).is(':checked')){
+					$("#"+Id).children('input:checkbox').prop('checked', true);
+					markersNodeActive[Id].setMap(map);
+					if(window[""+Id][8]=="MSAN") {
+						markerClusterMSANNodes.addMarker(markersNodeActive[Id]);
+					}
+					else if(window[""+Id][8]=="DWDM") {
+						markerClusterDWDMNodes.addMarker(markersNodeActive[Id]);
+					}
+					else if(window[""+Id][8]=="SDH") {
+						markerClusterSDHNodes.addMarker(markersNodeActive[Id]);
+					}
+					else if(window[""+Id][8]=="GPON") {
+						markerClusterGPONNodes.addMarker(markersNodeActive[Id]);
+					}				
+				}
+				else{
+					$("#"+Id).children('input:checkbox').prop('checked', false);
+					markersNodeActive[Id].setMap(null);	
+					if(window[""+Id][8]=="MSAN") {
+						markerClusterMSANNodes.removeMarker(markersNodeActive[Id]);
+					}
+					else if(window[""+Id][8]=="DWDM") {
+						markerClusterDWDMNodes.removeMarker(markersNodeActive[Id]);
+					}
+					else if(window[""+Id][8]=="SDH") {
+						markerClusterSDHNodes.removeMarker(markersNodeActive[Id]);
+					}
+					else if(window[""+Id][8]=="GPON") {
+						markerClusterGPONNodes.removeMarker(markersNodeActive[Id]);
+					}			
+				}			
+		});
+
+	}
 	function appendNearestHandholesTable(result){
 		var markupHandh="";		
 		document.getElementById("findNearestHandRes").innerHTML = "";

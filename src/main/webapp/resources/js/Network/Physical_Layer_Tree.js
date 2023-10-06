@@ -317,7 +317,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 		
 		str="<ul><li id='Transmission_GPON__CurrentPhysicalLayer' style='display:none;' class='TransmissionGPONFolder'><input type='checkbox' class='TransmissionGPON checkFilter' id ='TransmissionGPON__CurrentPhysicalLayer' unchecked name='filter'></input> <span class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:395px' class='TreeSpan'> GPON </span></li></ul>";
 		$("#NodeActive_f_CurrentPhysicalLayer").append(str);
-		
+		  
 		/// creat projects node 
 		 var str_Projects="<ul style='margin-left:15px;'><li id='initial_ul_Projects' class='Initial_UlProjects'><input type='checkbox' unchecked name='filter' class='allElements'></input> <span id='initial_spanFolder_Projects' class='Parentfolder'><i class='fa fa-folder' style='color: #08526D;'></i></span><span id='initial_span_Projects' class='TreeSpan' style='color:black;width:436px;'>Projects </span></li></ul>";
 		
@@ -359,6 +359,14 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				str="<ul><li id='FiberPath_access__"+ListProject[iji][0]+"' style='display:none;' class='accessFolder'> <input type='checkbox' class='AccessFiber checkFilter' id='Access__"+ListProject[iji][0]+"' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Access </span></li></ul></li></ul>";
 				$("#FiberPath_f_"+ListProject[iji][0]+"").append(str);
 				
+				 str="<ul><li id ='DistributionBoard_backbone__"+ListProject[iji][0]+"' style='display:none;' class='backboneDBFolder'> <input type='checkbox' class='BackboneDB checkFilter' id ='BackboneDB__"+ListProject[iji][0]+"' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Backbone </span></li></ul></li></ul>";
+				 $("#DistributionBoard_f_"+ListProject[iji][0]+"").append(str);
+		
+				str="<ul><li id ='DistributionBoard_metro__"+ListProject[iji][0]+"' style='display:none;' class='metroDBFolder'> <input type='checkbox' class='MetroDB checkFilter' id ='MetroDB__"+ListProject[iji][0]+"' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Metro </span></li></ul></li></ul>";
+				$("#DistributionBoard_f_"+ListProject[iji][0]+"").append(str);
+		
+				str="<ul><li id ='DistributionBoard_access__"+ListProject[iji][0]+"' style='display:none;' class='accessDBFolder'> <input type='checkbox' class='AccessDB checkFilter' id ='AccessDB__"+ListProject[iji][0]+"' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Access </span></li></ul></li></ul>";
+				$("#DistributionBoard_f_"+ListProject[iji][0]+"").append(str);
 			 }
 		 }
 	/////////////*********************	Manholes Creation In tree	***********************///////////////
@@ -10518,6 +10526,7 @@ $("#saveHandhole").click(function () {
 									window[""+data.distributionBoardId]=[];
 									window[""+data.distributionBoardId]=[data.distributionBoardId,DistributionBoardLong,DistributionBoardLat,DistributionBoardName,DistributionBoardCapacity,locationId, IdNodeSelectedTemp,boardCity,dbNetLevel];
 						
+						
 									if(actiondistBoardContext=="Insert"){
 										
 										if(dbNetLevel=="backbone") {
@@ -10548,7 +10557,6 @@ $("#saveHandhole").click(function () {
 									}
 									}
 									else{
-									 $("#"+data.distributionBoardId).children(':checkbox').prop( "checked", true );
 										if(dbNetLevel=="backbone") {
 											$("#"+data.distributionBoardId+"> .TreeSpan").html("<img class='image' src='"+getContext()+"/resources/NetworkImages/backboneDB.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li>");
 										}
@@ -10559,7 +10567,8 @@ $("#saveHandhole").click(function () {
 											$("#"+data.distributionBoardId+"> .TreeSpan").html("<img class='image' src='"+getContext()+"/resources/NetworkImages/accessDb.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li>");
 										}
 									 }
-									 		
+								 $("#"+data.distributionBoardId).children(':checkbox').prop( "checked", true );
+	
 									$("#"+data.distributionBoardId).contextmenu(function(){
 										menuName=singleDistBoard;
 										selectedDistBoardContext=$(this).attr('id');
