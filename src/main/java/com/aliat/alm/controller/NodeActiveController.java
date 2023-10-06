@@ -64,7 +64,7 @@ public class NodeActiveController {
 	private static String exceptionAsString;
 	private static String str;
 	@RequestMapping(value = "/NodeListView", method = RequestMethod.GET)
-	public String Accounting(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
+	public String NodeListView(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
 
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			return "redirect:/";
@@ -83,19 +83,7 @@ public class NodeActiveController {
 					try {
 						List <NodeListView> listNodes = new ArrayList<NodeListView>();
 
-						str = "select n.NODE_PK as nodePK, n.NODE_ID as nodeID, n.NODE_NAME as nodeName, n.NODE_TYPE as nodeType, n.NODE_MODEL as nodeModel, n.SITE_ID as siteID, TO_CHAR(n.CREATION_DATE,'YYYY-MM-DD HH24:MI:SS') as createdDate,"
-							       + "TO_CHAR(n.UPDATE_DATE,'YYYY-MM-DD HH24:MI:SS') as updateDate,"
-							       + "n.WARE_NAME as wareName "
-							       + "from NODE_ACTIVE n" + " order by n.UPDATE_DATE DESC";
-
-						Query query = session.createNativeQuery(str);
-						listNodes = ((SQLQuery) query).addScalar("nodePK").addScalar("nodeID").addScalar("nodeName")
-								.addScalar("nodeType").addScalar("nodeModel").addScalar("siteID").addScalar("createdDate")
-								.addScalar("updateDate").addScalar("wareName")
-								.setResultTransformer(Transformers.aliasToBean(NodeListView.class)).list();
-
-						model.addAttribute("ListGridaTable", mapper.writeValueAsString(listNodes));
-					} catch (Exception e) {
+								} catch (Exception e) {
 						sw = new StringWriter();
 						e.printStackTrace(new PrintWriter(sw));
 						exceptionAsString = sw.toString();
@@ -109,6 +97,44 @@ public class NodeActiveController {
 					}
 				}
 		return "NodeListView";
+
+	}
+}
+	
+	
+	@RequestMapping(value = "/NodeFormView", method = RequestMethod.GET)
+	public String NodeFormVew(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
+
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			return "redirect:/";
+		} else {
+			session = almsessions.getSession(); 
+				if (session != null && session.isOpen()) {
+					tx = session.beginTransaction();
+					notifications.headerNotifications(session, model);
+					if (session != null && session.isOpen()) {
+						tx.commit();
+						session.close();
+					}
+					
+					
+					
+					try {
+					
+								} catch (Exception e) {
+						sw = new StringWriter();
+						e.printStackTrace(new PrintWriter(sw));
+						exceptionAsString = sw.toString();
+						
+						logger.info("Error in NodeFormView due to \n "+ exceptionAsString);
+					} finally {
+						if (session != null && session.isOpen()) {
+							tx.commit();
+							session.close();
+						}
+					}
+				}
+		return "NodeFormView";
 
 	}
 }
