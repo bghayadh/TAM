@@ -142,5 +142,6 @@
 <mapping class="com.aliat.alm.models.Duct"/>
 <mapping class="com.aliat.alm.models.AccessCableJunction"/>
 <mapping class="com.aliat.alm.models.Customer"/> 
+<mapping class="com.aliat.alm.models.NodeListView"/> 
    </session-factory>
 </hibernate-configuration>
