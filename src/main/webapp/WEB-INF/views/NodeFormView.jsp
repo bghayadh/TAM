@@ -229,7 +229,7 @@ select {
 				<div class="form-group">
 					<div class="input-group-prepend">
 						<span class="input-group-text" style="width: 170px;">Node
-						</span> <input type="text" id="wareID" readonly value="${wareID}"
+						</span> <input type="text" id="wareID" readonly value="${node_pk}"
 							class="form-control text-input" />
 					</div>
 				</div>
@@ -268,7 +268,7 @@ select {
 						data-target-input="nearest">
 						<span class="input-group-text" style="width: 170px;"">Created
 							Date</span> <input type="text" id="wcreationDate" readonly
-							value="${wcreationDate}"
+							value="${creation_date}"
 							class="form-control datetimepicker-input"
 							data-toggle="datetimepicker" data-target="#datetimepicker1" />
 						<div class="input-group-append" data-target="#datetimepicker1"
@@ -283,7 +283,7 @@ select {
 						data-target-input="nearest">
 						<span class="input-group-text" style="width: 210px;">Last
 							Modify Date</span> <input type="text" id="wlastModifieddate" readonly
-							value="${wlastModifieddate}"
+							value="${update_date}"
 							class="form-control datetimepicker-input"
 							data-toggle="datetimepicker" data-target="#datetimepicker2" />
 						<div class="input-group-append" data-target="#datetimepicker2"
@@ -382,7 +382,7 @@ select {
 						id="custom-tabs-one-model-tab" data-toggle="tab"
 						href="#custom-tabs-one-model" role="tab"
 						aria-controls="custom-tabs-one-profile" aria-selected="false"
-						style="color: gold;">MODEL</a></li>
+						style="color: gold;">MODULE</a></li>
         
          <li class="nav-item">
             <a class="nav-link" id="custom-tabs-board-tab" data-toggle="tab"
@@ -465,7 +465,7 @@ select {
     <td width="45%" valign="top" class="left_col">
       <div class="form-group">
         <div class="input-group-prepend">
-          <span class="input-group-text">Node Id</span> <input type="text" id="warepname" value="${warehouseName}" class="form-control text-input" readonly/>
+          <span class="input-group-text">Node Id</span> <input type="text" id="warepname" value="${node_id}" class="form-control text-input" readonly/>
         </div>
       </div>
     </td>
@@ -475,7 +475,7 @@ select {
     
       <div class="form-group">
         <div class="input-group-prepend">
-          <span class="input-group-text">Node Name</span> <input type="text" id="warepname" value="${warehouseName}" class="form-control text-input" readonly/>
+          <span class="input-group-text">Node Name</span> <input type="text" id="warepname" value="${node_name}" class="form-control text-input" readonly/>
         </div>
       </div>
     </td>
@@ -484,7 +484,7 @@ select {
       <td width="45%" valign="top" class="left_col">
       <div class="form-group">
         <div class="input-group-prepend">
-          <span class="input-group-text">Node Type</span> <input type="text" id="warepname" value="${warehouseName}" class="form-control text-input" readonly/>
+          <span class="input-group-text">Node Type</span> <input type="text" id="warepname" value="${node_type}" class="form-control text-input" readonly/>
         </div>
       </div>
     </td>
@@ -494,7 +494,7 @@ select {
     
       <div class="form-group">
         <div class="input-group-prepend">
-          <span class="input-group-text">Node Model</span> <input type="text" id="warepname" value="${warehouseName}" class="form-control text-input" readonly/>
+          <span class="input-group-text">Node Model</span> <input type="text" id="warepname" value="${node_model}" class="form-control text-input" readonly/>
         </div>
       </div>
     </td>
@@ -503,7 +503,7 @@ select {
       <td width="45%" valign="top" class="left_col">
       <div class="form-group">
         <div class="input-group-prepend">
-          <span class="input-group-text">Site Id</span> <input type="text" id="warepname" value="${warehouseName}" class="form-control text-input" readonly/>
+          <span class="input-group-text">Site Id</span> <input type="text" id="warepname" value="${site_id}" class="form-control text-input" readonly/>
         </div>
       </div>
     </td>
@@ -513,12 +513,30 @@ select {
     
       <div class="form-group">
         <div class="input-group-prepend">
-          <span class="input-group-text">Site Name</span> <input type="text" id="warepname" value="${warehouseName}" class="form-control text-input" readonly/>
+          <span class="input-group-text">Site Name</span> <input type="text" id="warepname" value="${ware_name}" class="form-control text-input" readonly/>
         </div>
       </div>
     </td>
   </tr>
-  
+   <tr>
+    <td width="45%" valign="top" class="left_col">
+      <div class="form-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Vendor</span> <input type="text" id="warepname" value="${vendor}" class="form-control text-input" readonly/>
+        </div>
+      </div>
+    </td>
+    <td width="10%" valign="top" class="left_col"></td>
+    
+    <td width="45%" valign="top" class="left_col">
+    
+      <div class="form-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Domain</span> <input type="text" id="warepname" value="${domain}" class="form-control text-input" readonly/>
+        </div>
+      </div>
+    </td>
+  </tr>
 </table>
 
 				
