@@ -19387,9 +19387,10 @@ function DBMappingData(DistBoardMappingPts){
 						+"<td name='FP_Location'><input name='FP_location' value='"+DistBoardMappingPts[i][8]+"' id='FP_Location"+dBBoqIndex+"' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
 						+"<td name='FP_Equipment'>"
 							+"<select class='form-control' name='FP_equipment' id='FP_equipment"+dBBoqIndex+"'>"+addMark2+"</select>"
-						+"<td name='FP_EquipmentType'><input name='FP_equipmentType' value='"+DistBoardMappingPts[i][9]+"' id='FP_equipmentType"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+						//+"<td name='FP_EquipmentType'><input name='FP_equipmentType' value='"+DistBoardMappingPts[i][9]+"' id='FP_equipmentType"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
 						+"<td name='FP_EquipmentID'><input name='FP_equipmentID' value='"+DistBoardMappingPts[i][11]+"' id='FP_equipmentID"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
 						+"<td name='FP_EquipmentName'><input name='FP_equipmentName' value='"+DistBoardMappingPts[i][12]+"' id='FP_equipmentName"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+						+"<td name='FP_EquipmentType'><input name='FP_equipmentType' value='"+DistBoardMappingPts[i][9]+"' id='FP_equipmentType"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
 						+"<td name='FP_Address'><input name='FP_Address' value='"+DistBoardMappingPts[i][13]+"' id='FP_Address"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
 						
 						+"<td name='FP_JunctionID'><input name='FP_junctionID' value='"+DistBoardMappingPts[i][44]+"' id='FP_junctionID"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
@@ -19418,9 +19419,10 @@ function DBMappingData(DistBoardMappingPts){
 						+"<td name='BP_Location'><input name='BP_location' value='"+DistBoardMappingPts[i][30]+"' id='BP_Location"+dBBoqIndex+"' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
 						+"<td name='BP_Equipment'>"
 							+"<select class='form-control' name='BP_equipment' id='BP_equipment"+dBBoqIndex+"'>"+addMark3+"</select>"
-						+"<td name='BP_EquipmentType'><input name='BP_equipmentType' value='"+DistBoardMappingPts[i][31]+"' id='BP_equipmentType"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+						//+"<td name='BP_EquipmentType'><input name='BP_equipmentType' value='"+DistBoardMappingPts[i][31]+"' id='BP_equipmentType"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
 						+"<td name='BP_EquipmentID'><input name='BP_equipmentID' value='"+DistBoardMappingPts[i][33]+"' id='BP_equipmentID"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
 						+"<td name='BP_EquipmentName'><input name='BP_equipmentName' value='"+DistBoardMappingPts[i][34]+"' id='BP_equipmentName"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+						+"<td name='BP_EquipmentType'><input name='BP_equipmentType' value='"+DistBoardMappingPts[i][31]+"' id='BP_equipmentType"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
 						+"<td name='BP_Address'><input name='BP_Address' value='"+DistBoardMappingPts[i][35]+"'id='BP_Address"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
 						
 						+"<td name='BP_JunctionID'><input name='BP_junctionID' value='"+DistBoardMappingPts[i][46]+"' id='BP_junctionID"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"

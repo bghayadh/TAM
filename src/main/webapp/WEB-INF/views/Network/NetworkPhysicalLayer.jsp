@@ -5769,9 +5769,9 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 														<th style="min-width: 190px">Location Name</th>
 														<th style="min-width: 190px">Warehouse ID</th>
 														<th style="min-width: 190px">Equipment </th>
-														<th style="min-width: 190px">Equipment Type</th>
 														<th style="min-width: 190px">Equipment ID</th>
 														<th style="min-width: 190px">Equipment Name</th>
+														<th style="min-width: 190px">Equipment Type</th>
                                                         <th style="min-width: 190px">Address</th>
                                                         <th style="min-width: 190px">Junction ID</th>
 														<th style="min-width: 190px">Junction Name</th>
@@ -5791,10 +5791,10 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 														<th style="min-width: 190px">Location ID</th>
 														<th style="min-width: 190px">Location Name</th>
 														<th style="min-width: 190px">Warehouse ID </th>
-														<th style="min-width: 190px">Equipment </th>
-														<th style="min-width: 190px">Equipment Type</th>
+														<th style="min-width: 190px">Equipment </th>	
 														<th style="min-width: 190px">Equipment ID</th>
 														<th style="min-width: 190px">Equipment Name</th>
+														<th style="min-width: 190px">Equipment Type</th>
                                                         <th style="min-width: 190px">Address</th>
                                                         <th style="min-width: 190px">Junction ID</th>
 														<th style="min-width: 190px">Junction Name</th>
