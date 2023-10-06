@@ -363,7 +363,7 @@ z-index: 9003;
 								</button>
 
 								<button type="button" id="saveButton"
-									onclick='window.location.href = "${pageContext.request.contextPath}/ClientsFormView?type=addNew"'
+									onclick='window.location.href = "${pageContext.request.contextPath}/NodeFormView?type=addNew"'
 									class="btn btn-primary BtnActive">
 									<i class="fa fa-plus"></i> Add
 								</button>
@@ -678,7 +678,7 @@ z-index: 9003;
 											console.log("after filtering");
 	        								var param1 = $(this).parents('tr').children('td').find('input').val();
 	        								if(tab == 0){
-												var param = "${pageContext.request.contextPath}/ClientsFormView?clientID=" + param1 +"&NavAction=2";
+												var param = "${pageContext.request.contextPath}/NodeFormView?clientID=" + param1 +"&NavAction=2";
 		        								window.location.href = param;
 		        								e.preventDefault();
 		        							}
@@ -696,7 +696,7 @@ z-index: 9003;
 					
 					$( "#Fview" ).click(function() {
 						var id =  $(".almgrid-link").closest('tr').find('td:first-child input').val();
-		  				location.href="${pageContext.request.contextPath}/ClientsFormView?clientID="+id+"&NavAction=2";
+		  				location.href="${pageContext.request.contextPath}/NodeFormView?clientID="+id+"&NavAction=2";
 					});
 
 					$( "#Lview" ).click(function() {
@@ -893,7 +893,7 @@ z-index: 9003;
         			$(".almgrid-table").on("click", ".almgrid-link", function (e) {
             			
             				var param1 = $(this).parents('tr').children('td').find('input').val();
-        					var param = "${pageContext.request.contextPath}/ClientsFormView?clientID=" + param1 +"&NavAction=2";
+        					var param = "${pageContext.request.contextPath}/NodeFormView?clientID=" + param1 +"&NavAction=2";
         					window.location.href = param;
         					e.preventDefault();
                 	
