@@ -15,6 +15,17 @@ public class NodeListView {
 	@Column(name = "NODE_PK", nullable = false)
 	private String nodePK;
 	
+	
+	public String getNodePk() {
+		return nodePk;
+	}
+
+	public void setNodePk(String nodePk) {
+		this.nodePk = nodePk;
+	}
+
+	private String nodePk;
+	
 	@Column(name = "NODE_ID")
 	private String nodeID;
 	
@@ -46,12 +57,13 @@ public class NodeListView {
 		// TODO Auto-generated constructor stub
 	}
 
-	public NodeListView(String nodePK, String nodeID, String nodeName, String nodeType, 
+	public NodeListView(String nodePK,String nodePk, String nodeID, String nodeName, String nodeType, 
 			String nodeModel,  String siteID,
 			String createdDate, String updateDate,  String wareName
 			) {
 		super();
 		this.nodePK = nodePK;
+		this.nodePk=nodePk;
 		this.nodeID = nodeID;
 		this.nodeName = nodeName;
 		this.nodeType = nodeType;
