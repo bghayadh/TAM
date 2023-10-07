@@ -550,7 +550,7 @@ select {
 			<div  class="tab-pane fade" id="custom-tabs-one-cell"
 				role="tabpanel" aria-labelledby="custom-tabs-one-cell-tab">
 				 <caption >2G CELLS</caption>
-    <table id="UCellTable" class="table table-striped table-bordered table-sm" style="display: block; height: 400px; overflow-y: auto;">
+    <table id="GCellTable" class="table table-striped table-bordered table-sm" style="display: block; height: 300px; overflow: auto;">
    				
 <thead>
 						            <tr class="fixed-headerr">
@@ -640,9 +640,9 @@ select {
       </table>
 
   <div style="height:10px;"></div>
-  <caption>4G CELSS</caption>
+  <caption>4G CELLS</caption>
       
-    <table id="CellTable" class="table table-striped table-bordered table-sm" style="display: block; height: 400px; overflow-y: auto;">
+    <table id="LCellTable" class="table table-striped table-bordered table-sm" style="display: block; height: 400px; overflow-y: auto;">
       <thead>
         <tr>
           <th>LCELL_ID</th>
@@ -844,6 +844,148 @@ select {
 
 
 <script>
+
+var BoqArray=[];
+var status='${Status}';
+if(status == "old"){
+BoqArray= ${listGCELL};
+for(i=0; i<BoqArray.length; i++){
+console.log(BoqArray[0]);
+	  c = "<tr>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][0] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][1] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][2] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][3] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][4] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][5] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][6] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][7] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][8] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][9] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][10] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][11] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][12] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][13] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][14] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][15] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][16] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][17] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][18] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][19] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][20] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][21] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][22] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][23] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][24] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][25] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][26] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][27] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][28] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][29] + "' style='width:120px;' class='form-control text-input' readonly/></td></tr>";        	        
+
+  $("#GCellTable").append(c);
+
+
+
+	
+}
+BoqArray= ${listLCELL};
+for(i=0; i<BoqArray.length; i++){
+console.log(BoqArray[0]);
+	  c = "<tr>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][0] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][1] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][2] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][3] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][4] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][5] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][6] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][7] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][8] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][9] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][10] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][11] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][12] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][13] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][14] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][15] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][16] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][17] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][18] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][19] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][20] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][21] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][22] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][23] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][24] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][25] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][26] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][27] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][28] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][29] + "' style='width:120px;' class='form-control text-input' readonly/></td></tr>";        	        
+
+  $("#LCellTable").append(c);
+
+
+
+	
+}
+BoqArray= ${listUCELL};
+for(i=0; i<BoqArray.length; i++){
+console.log(BoqArray[0]);
+	  c = "<tr>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][0] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][1] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][2] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][3] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][4] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][5] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][6] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][7] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][8] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][9] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][10] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][11] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][12] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][13] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][14] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][15] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][16] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][17] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][18] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][19] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][20] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][21] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][22] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][23] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][24] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][25] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][26] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][27] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][28] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][29] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][30] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][31] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][32] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][33] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][34] + "' style='width:120px;' class='form-control text-input' readonly/></td>" +
+      "<td ><input  type='text'  value='" + BoqArray[i][35] + "' style='width:120px;' class='form-control text-input' readonly/></td></tr>";        	        
+
+  $("#UCellTable").append(c);
+
+}
+
+
+
+
+}
+
+
+
+
+
+
+
 
  
  </script>
