@@ -199,7 +199,16 @@ public String NodeFormView(Locale locale, Model model, HttpServletRequest reques
 				    				
 				    				model.addAttribute("listLCELL", mapper.writeValueAsString(query.list()));
 									
-
+				    				query = session.createNativeQuery(
+				    						"select  board_id,siteindex,cabinetno,subrackno,rackno,frameno,slotno,slotpos,subslotno,inventoryunitid,moduleno,boardname,"
+				    						+ "boardtype,inventoryunittype,vendorunitfamilytype,vendorunittypenumber,vendorname,serialnumber,hardwareversion,"
+				    						+ "TO_CHAR(dateofmanufacture,'YYYY-MM-DD HH24:MI:SS'), TO_CHAR(dateoflastservice,'YYYY-MM-DD HH24:MI:SS'),unitposition,manufacturerdata,softver,logicver,biosver,biosverex,lanver,mbusver,"
+				    						+ "issuenumber,bomcode,model,userlabel,TO_CHAR(UPDATE_DATE,'YYYY-MM-DD HH24:MI:SS'),extinfo,apdevinfo,workmode,status,TO_CHAR(CREATION_DATE,'YYYY-MM-DD HH24:MI:SS')" + 
+				    						" from node_board where node_pk =:param1");
+				    						query.setParameter("param1", NodePK); 
+				    						model.addAttribute("listBoard", mapper.writeValueAsString(query.list()));
+				    				
+				    				
 	
 		}
 			
