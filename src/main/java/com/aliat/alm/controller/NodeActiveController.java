@@ -207,7 +207,22 @@ public String NodeFormView(Locale locale, Model model, HttpServletRequest reques
 				    						" from node_board where node_pk =:param1");
 				    						query.setParameter("param1", NodePK); 
 				    						model.addAttribute("listBoard", mapper.writeValueAsString(query.list()));
-				    				
+
+				    						
+				    						
+				    						
+				    						
+				    		       query =session.createNativeQuery( "SELECT CABINET_ID, SITEINDEX, CABINETNO, INVENTORYUNITID, RACKTYPE, OTHERS,"
+				    		       		+ " BOMRACKTYPE, INVENTORYUNITTYPE, VENDORUNITFAMILYTYPE, VENDORUNITTYPENUMBER, VENDORNAME, SERIALNUMBER,"
+				    		       		+ " HARDWAREVERSION, TO_CHAR(DATEOFMANUFACTURE,'YYYY-MM-DD HH24:MI:SS'), TO_CHAR(DATEOFLASTSERVICE,'YYYY-MM-DD HH24:MI:SS'), UNITPOSITION, "
+				    		       		+ "MANUFACTURERDATA, ISSUENUMBER, BOMCODE, EXTINFO, MODEL, USERLABEL, SHAREMODE, CLEICODE, BOM,  TO_CHAR(UPDATE_DATE,"
+				    		       		+ "'YYYY-MM-DD HH24:MI:SS'), STATUS, TO_CHAR(CREATION_DATE,'YYYY-MM-DD HH24:MI:SS'), DOMAIN, VENDOR FROM NODE_CABINET"
+				    		       		+ " WHERE NODE_PK = :param1");
+
+				    						query.setParameter("param1", NodePK);
+
+				    						model.addAttribute("listCabinet", mapper.writeValueAsString(query.list()));
+
 				    				
 	
 		}
