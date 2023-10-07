@@ -117,6 +117,11 @@
 select {
 	width: 260px;
 }
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+  }
 </style>
 <style>
 #mapText {
@@ -541,8 +546,145 @@ select {
 
 				
 			</div>
-			<div class="tab-pane fade" id="custom-tabs-one-cell"
+			<div style="height:20px;"></div>
+			<div  class="tab-pane fade" id="custom-tabs-one-cell"
 				role="tabpanel" aria-labelledby="custom-tabs-one-cell-tab">
+				 <caption >2G CELLS</caption>
+    <table id="UCellTable" class="table table-striped table-bordered table-sm" style="display: block; height: 400px; overflow-y: auto;">
+   				
+<thead>
+						            <tr class="fixed-headerr">
+						               <th>GCELL_ID</th>
+      <th>CELLID</th>
+      <th>CELLNAME</th>
+      <th>MCC</th>
+      <th>MNC</th>
+      <th>LAC</th>
+      <th>CI</th>
+      <th>NCC</th>
+      <th>BCC</th>
+      <th>TYPE</th>
+      <th>BCCHNO</th>
+      <th>BASEBANDPOLICY</th>
+      <th>BASEBANDEQMID</th>
+      <th>GBTSFUNCTIONNAME</th>
+      <th>NODE_PK</th>
+      <th>NODE_ATTR_PK</th>
+      <th>UPDATE_DATE</th>
+      <th>FILENAME</th>
+      <th>GLOCELLID</th>
+      <th>STATUS</th>
+      <th>FROM_TRANS_SOURCE</th>
+      <th>FROM_TRANS_ID</th>
+      <th>TO_TRANS_ID</th>
+      <th>TRANS_TYPE</th>
+      <th>ACTIVE_RECORD</th>
+      <th>LINE</th>
+      <th>CREATION_DATE</th>
+      <th>DOMAIN</th>
+      <th>VENDOR</th>
+      <th>TO_TRANS_SOURCE</th>
+						                
+						            </tr>
+						        </thead>
+						        <tbody>
+						            
+									
+						        </tbody>
+						        
+						    </table>
+	<div style="height:10px;"></div>
+	 <caption><b>3G CELLS</b></caption>
+     
+    <table id="UCellTable" class="table table-striped table-bordered table-sm" style="display: block; height: 400px; overflow-y: auto;">
+      <thead>
+        <tr>
+          <th>UCELL_ID</th>
+          <th>CELLID</th>
+          <th>CELLNAME</th>
+          <th>LOCELL</th>
+          <th>NODEBFUNCTIONNAME</th>
+          <th>ULFREQ</th>
+          <th>DLFREQ</th>
+          <th>MAXPOWER</th>
+          <th>USERLABEL</th>
+          <th>MAXTXPOWER</th>
+          <th>UARFCNUPLINK</th>
+          <th>UARFCNDOWNLINK</th>
+          <th>PSCRAMBCODE</th>
+          <th>NODEBNAME</th>
+          <th>LAC</th>
+          <th>SAC</th>
+          <th>RAC</th>
+          <th>MANUFACTURERDATA</th>
+          <th>RADIUS</th>
+          <th>HORAD</th>
+          <th>DI</th>
+          <th>NODE_PK</th>
+          <th>NODE_ATTR_PK</th>
+          <th>UPDATE_DATE</th>
+          <th>FILENAME</th>
+          <th>STATUS</th>
+          <th>FROM_TRANS_SOURCE</th>
+          <th>FROM_TRANS_ID</th>
+          <th>TO_TRANS_ID</th>
+          <th>TRANS_TYPE</th>
+          <th>ACTIVE_RECORD</th>
+          <th>LINE</th>
+          <th>CREATION_DATE</th>
+          <th>DOMAIN</th>
+          <th>VENDOR</th>
+          <th>TO_TRANS_SOURCE</th>
+        </tr>
+      </thead>
+      </table>
+
+  <div style="height:10px;"></div>
+  <caption>4G CELSS</caption>
+      
+    <table id="CellTable" class="table table-striped table-bordered table-sm" style="display: block; height: 400px; overflow-y: auto;">
+      <thead>
+        <tr>
+          <th>LCELL_ID</th>
+          <th>LOCALCELLID</th>
+          <th>CELLNAME</th>
+          <th>CELLRADIUS</th>
+          <th>FREQBAND</th>
+          <th>ULEARFCNCFGIND</th>
+          <th>ULEARFCN</th>
+          <th>DLEARFCN</th>
+          <th>ULBANDWIDTH</th>
+          <th>DLBANDWIDTH</th>
+          <th>CELLID</th>
+          <th>PHYCELLID</th>
+          <th>FDDTDDIND</th>
+          <th>ENODEBFUNCTIONNAME</th>
+          <th>NBCELLFLAG</th>
+          <th>NODE_PK</th>
+          <th>NODE_ATTR_PK</th>
+          <th>UPDATE_DATE</th>
+          <th>FILENAME</th>
+          <th>STATUS</th>
+          <th>FROM_TRANS_SOURCE</th>
+          <th>FROM_TRANS_ID</th>
+          <th>TO_TRANS_ID</th>
+          <th>TRANS_TYPE</th>
+          <th>ACTIVE_RECORD</th>
+          <th>LINE</th>
+          <th>CREATION_DATE</th>
+          <th>DOMAIN</th>
+          <th>VENDOR</th>
+          <th>TO_TRANS_SOURCE</th>
+        </tr>
+      </thead>
+    
+    </table>
+			
+				
+				
+				
+				
+				
 				
 				
 				
