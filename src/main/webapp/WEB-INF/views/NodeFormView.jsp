@@ -682,8 +682,46 @@ select {
 					
 					
 					
-					 <div class="tab-pane fade" id="custom-tabs-antena" role="tabpanel"
+									 <div class="tab-pane fade" id="custom-tabs-antena" role="tabpanel"
 				aria-labelledby="custom-tabs-atena-tab">
+					
+								 <table id="AntinnaTable" class="table table-striped table-bordered table-sm" style="display: block; height: 300px; overflow: auto;">
+   				
+<thead>
+						            <tr class="fixed-headerr">
+      <th>ANTENNAID</th>
+      <th>INVENTORYUNITID</th>
+      <th>INVENTORYUNITTYPE</th>
+      <th>ANTENNADEVICENO</th>
+      <th>PRODNR</th>
+      <th>VENDORUNITFAMILYTYPE</th>
+      <th>VENDORUNITTYPENUMBER</th>
+      <th>VENDORNAME</th>
+      <th>SERIALNUMBER</th>
+      <th>UNITPOSITION</th>
+      <th>MANUFACTURERDATA</th>
+      <th>ANTENNADEVICETYPE</th>
+      <th>BOMCODE</th>
+      <th>EXTINFO</th>
+      <th>MODEL</th>
+       <th>FILENAME</th>
+      <th>PARENTDN</th>
+      <th>CONFIGDN</th>
+       <th>DISTNAME</th>
+      <th>UPDATE_DATE</th>
+      <th>STATUS</th>
+      <th>CREATION_DATE</th>
+      <th>DOMAIN</th>
+      <th>VENDOR</th>
+    					                
+						            </tr>
+						        </thead>
+						        <tbody>
+						            
+									
+						        </tbody>
+						        
+						    </table>
 				
 					</div>
 			

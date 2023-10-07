@@ -224,7 +224,12 @@ public String NodeFormView(Locale locale, Model model, HttpServletRequest reques
 				    						model.addAttribute("listCabinet", mapper.writeValueAsString(query.list()));
 
 				    				
-	
+	    						query = session.createNativeQuery(
+					    			    "SELECT ANTENNA_ID, INVENTORYUNITID, INVENTORYUNITTYPE, ANTENNADEVICENO, PRODNR, VENDORUNITFAMILYTYPE, VENDORUNITTYPENUMBER, VENDORNAME, SERIALNUMBER, UNITPOSITION, MANUFACTURERDATA, ANTENNADEVICETYPE, BOMCODE, EXTINFO,MODEL,FILENAME,PARENTDN,CONFIGDN,DISTNAME ,TO_CHAR(UPDATE_DATE,'YYYY-MM-DD HH24:MI:SS'),STATUS, TO_CHAR(CREATION_DATE,'YYYY-MM-DD HH24:MI:SS'), DOMAIN, VENDOR FROM NODE_ANTENNA WHERE NODE_PK = :param1 ");
+	    						
+					    				query.setParameter("param1", NodePK);
+					    				
+					    				model.addAttribute("listAntinna", mapper.writeValueAsString(query.list()));
 		}
 			
 			else {
