@@ -62,6 +62,7 @@ public class NodeActiveController {
 	private static StringWriter sw;
 	private static String exceptionAsString;
 	private static String str;
+	private static Object[] result;
 	
 	@Autowired
 	Permissions permissions;
@@ -148,13 +149,13 @@ public String NodeFormView(Locale locale, Model model, HttpServletRequest reques
 			NodePK = request.getParameter("NodePk");
 			System.out.println(NodePK);
 			if (NodePK != null) {
+				model.addAttribute("Status", "old");
 				query = session.createNativeQuery(
-						"select node_id,creation_date,update_date,node_name,node_type,node_model,site_id,ware_name,vendor,domain,node_pk from node_active where node_pk =:param1"); 
+						"select node_id,creation_date,update_date,node_name,node_type,node_model,site_id,ware_name,"
+						+ "vendor,domain,node_pk from node_active where node_pk =:param1"); 
 							query.setParameter("param1", NodePK);
-				Object[] result = (Object[]) query.uniqueResult();
-
-			
-				    model.addAttribute("node_id", result[0]);
+			        result = (Object[]) query.uniqueResult();
+                    model.addAttribute("node_id", result[0]);
 				    model.addAttribute("creation_date", result[1]);
 				    model.addAttribute("update_date", result[2]);
 				    model.addAttribute("node_name", result[3]);
@@ -165,9 +166,54 @@ public String NodeFormView(Locale locale, Model model, HttpServletRequest reques
 				    model.addAttribute("vendor", result[8]);
 				    model.addAttribute("domain", result[9]);
 				    model.addAttribute("node_pk", result[10]);
-					   
+				    
+				    query = session.createNativeQuery(
+				    	    "SELECT GCELL_ID, CELLID, CELLNAME, MCC, MNC, LAC, CI, NCC, BCC, TYPE, BCCHNO, "
+				    	    + "BASEBANDPOLICY, BASEBANDEQMID, GBTSFUNCTIONNAME, NODE_PK, NODE_ATTR_PK, UPDATE_DATE,"
+				    	    + " FILENAME, GLOCELLID, STATUS, FROM_TRANS_SOURCE, FROM_TRANS_ID, TO_TRANS_ID, TRANS_TYPE,"
+				    	    + " ACTIVE_RECORD, LINE, CREATION_DATE, DOMAIN, VENDOR, TO_TRANS_SOURCE FROM NODE_GCELL WHERE "
+				    	    + "NODE_PK = :param1");
+				    	query.setParameter("param1", NodePK);
+
+				    	model.addAttribute("listGCELL", mapper.writeValueAsString(query.list()));
+						
+				    	query = session.createNativeQuery(
+				    		    "SELECT UCELL_ID, CELLID, CELLNAME, LOCELL, NODEBFUNCTIONNAME, ULFREQ, DLFREQ, MAXPOWER,"
+				    		    + " USERLABEL, MAXTXPOWER, UARFCNUPLINK, UARFCNDOWNLINK, PSCRAMBCODE, NODEBNAME, LAC, SAC,"
+				    		    + " RAC, MANUFACTURERDATA, RADIUS, HORAD, DI, NODE_PK, NODE_ATTR_PK, UPDATE_DATE, FILENAME, "
+				    		    + "STATUS, FROM_TRANS_SOURCE, FROM_TRANS_ID, TO_TRANS_ID, TRANS_TYPE, ACTIVE_RECORD, LINE, CREATION_DATE,"
+				    		    + " DOMAIN, VENDOR, TO_TRANS_SOURCE FROM NODE_UCELL WHERE NODE_PK = :param1");
+
+				    		query.setParameter("param1", NodePK);
+				    		
+				    		model.addAttribute("listUCELL", mapper.writeValueAsString(query.list()));
+							
+				    
+				    		query = session.createNativeQuery(
+				    			    "SELECT LCELL_ID, LOCALCELLID, CELLNAME, CELLRADIUS, FREQBAND, ULEARFCNCFGIND, ULEARFCN, DLEARFCN,"
+				    			    + " ULBANDWIDTH, DLBANDWIDTH, CELLID, PHYCELLID, FDDTDDIND, ENODEBFUNCTIONNAME, NBCELLFLAG, NODE_PK,"
+				    			    + " NODE_ATTR_PK, UPDATE_DATE, FILENAME, STATUS, FROM_TRANS_SOURCE, FROM_TRANS_ID, TO_TRANS_ID, TRANS_TYPE,"
+				    			    + " ACTIVE_RECORD, LINE, CREATION_DATE, DOMAIN, VENDOR, TO_TRANS_SOURCE"
+				    			    + " FROM NODE_LCELL WHERE NODE_PK = :param1");
+
+				    				query.setParameter("param1", NodePK);
+				    				
+				    				model.addAttribute("listLCELL", mapper.writeValueAsString(query.list()));
+									
+
 	
-		} }catch (Exception e) {
+		}
+			
+			else {
+				model.addAttribute("Status", "new");
+				
+				
+			}
+		
+		
+		
+		
+		}catch (Exception e) {
 			sw = new StringWriter();
 			e.printStackTrace(new PrintWriter(sw));
 			exceptionAsString = sw.toString();
