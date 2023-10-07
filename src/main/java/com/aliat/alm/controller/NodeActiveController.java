@@ -151,7 +151,7 @@ public String NodeFormView(Locale locale, Model model, HttpServletRequest reques
 			if (NodePK != null) {
 				model.addAttribute("Status", "old");
 				query = session.createNativeQuery(
-						"select node_id,creation_date,update_date,node_name,node_type,node_model,site_id,ware_name,"
+						"select node_id, TO_CHAR(creation_date,'YYYY-MM-DD HH24:MI:SS'), TO_CHAR(update_date,'YYYY-MM-DD HH24:MI:SS'),node_name,node_type,node_model,site_id,ware_name,"
 						+ "vendor,domain,node_pk from node_active where node_pk =:param1"); 
 							query.setParameter("param1", NodePK);
 			        result = (Object[]) query.uniqueResult();
@@ -169,9 +169,9 @@ public String NodeFormView(Locale locale, Model model, HttpServletRequest reques
 				    
 				    query = session.createNativeQuery(
 				    	    "SELECT GCELL_ID, CELLID, CELLNAME, MCC, MNC, LAC, CI, NCC, BCC, TYPE, BCCHNO, "
-				    	    + "BASEBANDPOLICY, BASEBANDEQMID, GBTSFUNCTIONNAME, NODE_PK, NODE_ATTR_PK, UPDATE_DATE,"
-				    	    + " FILENAME, GLOCELLID, STATUS, FROM_TRANS_SOURCE, FROM_TRANS_ID, TO_TRANS_ID, TRANS_TYPE,"
-				    	    + " ACTIVE_RECORD, LINE, CREATION_DATE, DOMAIN, VENDOR, TO_TRANS_SOURCE FROM NODE_GCELL WHERE "
+				    	    + "BASEBANDPOLICY, BASEBANDEQMID, GBTSFUNCTIONNAME,TO_CHAR(UPDATE_DATE,'YYYY-MM-DD HH24:MI:SS'),"
+				    	    + " GLOCELLID, STATUS,"
+				    	    + " TO_CHAR(CREATION_DATE,'YYYY-MM-DD HH24:MI:SS'), DOMAIN, VENDOR, TO_TRANS_SOURCE FROM NODE_GCELL WHERE "
 				    	    + "NODE_PK = :param1");
 				    	query.setParameter("param1", NodePK);
 
@@ -180,9 +180,9 @@ public String NodeFormView(Locale locale, Model model, HttpServletRequest reques
 				    	query = session.createNativeQuery(
 				    		    "SELECT UCELL_ID, CELLID, CELLNAME, LOCELL, NODEBFUNCTIONNAME, ULFREQ, DLFREQ, MAXPOWER,"
 				    		    + " USERLABEL, MAXTXPOWER, UARFCNUPLINK, UARFCNDOWNLINK, PSCRAMBCODE, NODEBNAME, LAC, SAC,"
-				    		    + " RAC, MANUFACTURERDATA, RADIUS, HORAD, DI, NODE_PK, NODE_ATTR_PK, UPDATE_DATE, FILENAME, "
-				    		    + "STATUS, FROM_TRANS_SOURCE, FROM_TRANS_ID, TO_TRANS_ID, TRANS_TYPE, ACTIVE_RECORD, LINE, CREATION_DATE,"
-				    		    + " DOMAIN, VENDOR, TO_TRANS_SOURCE FROM NODE_UCELL WHERE NODE_PK = :param1");
+				    		    + " RAC, MANUFACTURERDATA, RADIUS, HORAD, DI,  TO_CHAR(UPDATE_DATE,'YYYY-MM-DD HH24:MI:SS'), "
+				    		    + "STATUS, TO_CHAR(CREATION_DATE,'YYYY-MM-DD HH24:MI:SS'),"
+				    		    + " DOMAIN, VENDOR FROM NODE_UCELL WHERE NODE_PK = :param1");
 
 				    		query.setParameter("param1", NodePK);
 				    		
@@ -191,9 +191,8 @@ public String NodeFormView(Locale locale, Model model, HttpServletRequest reques
 				    
 				    		query = session.createNativeQuery(
 				    			    "SELECT LCELL_ID, LOCALCELLID, CELLNAME, CELLRADIUS, FREQBAND, ULEARFCNCFGIND, ULEARFCN, DLEARFCN,"
-				    			    + " ULBANDWIDTH, DLBANDWIDTH, CELLID, PHYCELLID, FDDTDDIND, ENODEBFUNCTIONNAME, NBCELLFLAG, NODE_PK,"
-				    			    + " NODE_ATTR_PK, UPDATE_DATE, FILENAME, STATUS, FROM_TRANS_SOURCE, FROM_TRANS_ID, TO_TRANS_ID, TRANS_TYPE,"
-				    			    + " ACTIVE_RECORD, LINE, CREATION_DATE, DOMAIN, VENDOR, TO_TRANS_SOURCE"
+				    			    + " ULBANDWIDTH, DLBANDWIDTH, CELLID, PHYCELLID, FDDTDDIND, ENODEBFUNCTIONNAME, NBCELLFLAG, "
+				    			    + "  TO_CHAR(UPDATE_DATE,'YYYY-MM-DD HH24:MI:SS'), STATUS, TO_CHAR(CREATION_DATE,'YYYY-MM-DD HH24:MI:SS'), DOMAIN, VENDOR "
 				    			    + " FROM NODE_LCELL WHERE NODE_PK = :param1");
 
 				    				query.setParameter("param1", NodePK);
