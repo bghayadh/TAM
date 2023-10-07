@@ -333,7 +333,7 @@ select {
 						</button>
 						<button type="button" id="Lview" class="btn btn-light"
 							data-toggle="tooltip"
-							onclick='window.location.href = "${pageContext.request.contextPath}/WarehouseListView"'
+							onclick='window.location.href = "${pageContext.request.contextPath}/NodeListView"'
 							data-placement="top" title="List View">
 							<i class="fa fa-bars"></i>
 						</button>
@@ -373,7 +373,7 @@ select {
            <li class="nav-item">
             <a class="nav-link" id="custom-tabs-cabinat-tab" data-toggle="tab"
                href="#custom-tabs-cabinat" role="tab" aria-controls="custom-tabs-cabinat"
-               aria-selected="false" style="color: gold;">CABINATE</a>
+               aria-selected="false" style="color: gold;">CABINAT</a>
         </li>
         
         
@@ -759,6 +759,41 @@ select {
 			<div class="tab-pane fade" id="custom-tabs-cabinat" role="tabpanel"
 				aria-labelledby="custom-tabs-cabinat-tab">
 				
+		<table id ="CabinatTable" class="table table-striped table-bordered table-sm" style="display:block; height:500px; overflow: auto;">
+					<thead>
+			            <tr class="fixed-headerr">							    
+						
+        <th>CABINET_ID</th>
+        <th>SITEINDEX</th>
+        <th>CABINETNO</th>
+        <th>INVENTORYUNITID</th>
+        <th>RACKTYPE</th>
+        <th>OTHERS</th>
+        <th>BOMRACKTYPE</th>
+        <th>INVENTORYUNITTYPE</th>
+        <th>VENDORUNITFAMILYTYPE</th>
+        <th>VENDORUNITTYPENUMBER</th>
+        <th>VENDORNAME</th>
+        <th>SERIALNUMBER</th>
+        <th>HARDWAREVERSION</th>
+        <th>DATEOFMANUFACTURE</th>
+        <th>DATEOFLASTSERVICE</th>
+        <th>UNITPOSITION</th>
+        <th>MANUFACTURERDATA</th>
+        <th>ISSUENUMBER</th>
+        <th>BOMCODE</th>
+        <th>EXTINFO</th>
+        <th>MODEL</th>
+        <th>USERLABEL</th>
+        <th>SHAREMODE</th>
+        <th>CLEICODE</th>
+        <th>BOM</th>
+        <th>UPDATE_DATE</th>
+        <th>STATUS</th>
+        <th>CREATION_DATE</th>
+        <th>DOMAIN</th>
+        <th>VENDOR</th>
+         </tr></thead></table>
 		
 		
 		
@@ -1016,20 +1051,51 @@ for(i=0; i<BoqArray.length; i++){
 
 $("#BoardTable").append(c);
 
-
-
-
-
-
-
-
-
-
-
-
 }
 
 
+
+BoqArray=${listCabinet};
+
+
+for(i=0; i<BoqArray.length; i++){
+	
+		  c = "<tr>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][0] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][1] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][2] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][3] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][4] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][5] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][6] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][7] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][8] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][9] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][10] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][11] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][12] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][13] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][14] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][15] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][16] + "' style='width:700px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][17] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][18] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][19] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][20] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][21] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][22] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][23] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][24] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][25] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][26] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][27] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][28] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][29] + "' style='width:190px;' class='form-control text-input' readonly/></td></tr>";
+	     
+
+$("#CabinatTable").append(c);
+
+}
 }
 
 
