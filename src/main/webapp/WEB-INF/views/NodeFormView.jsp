@@ -398,9 +398,9 @@ select {
 					
 
 					<li class="nav-item"><a class="nav-link"
-						id="custom-tabs-one-port-tab" data-toggle="tab"
-						href="#custom-tabs-one-sim" role="tab"
-						aria-controls="custom-tabs-one-sim" aria-selected="false"
+						id="custom-tabs-port-tab" data-toggle="tab"
+						href="#custom-tabs-port" role="tab"
+						aria-controls="custom-tabs-one-port" aria-selected="false"
 						style="color: gold;">PORT</a></li>
 						
 					<!-- IMAGE TAB -->
@@ -753,6 +753,23 @@ select {
 				
 				
 					</div>
+					
+					<div class="tab-pane fade" id="custom-tabs-port" role="tabpanel"
+				aria-labelledby="custom-tabs-port-tab"></div>
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
 					
 					
 					
