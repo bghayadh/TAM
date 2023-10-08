@@ -662,18 +662,50 @@ select {
 			</div>
 			<div class="tab-pane fade" id="custom-tabs-one-model"
 				role="tabpanel" aria-labelledby="custom-tabs-one-model-tab">
-				<p></p>
+				
+<table id="ModuleTable" class="table table-striped table-bordered table-sm" style="display: block; height: 500px; overflow-y: auto;">
+    <tr>
+        <th>MODULE_ID</th>
+        <th>CABINETNO</th>
+        <th>MODULENO</th>
+        <th>INVUNITID</th>
+        <th>SOFTVER</th>
+        <th>OTHERS</th>
+        <th>IDENTIFICATIONCODE</th>
+        <th>CONFIGDN</th>
+        <th>INVUNITTYPE</th>
+        <th>PARENTDN</th>
+        <th>RUNTIMEDN</th>
+        <th>SERIALNUMBER</th>
+        <th>STATE</th>
+        <th>UNITPOSITION</th>
+        <th>VENDORUNITFAMILYTYPE</th>
+        <th>VENDORUNITTYPENUMBER</th>
+        <th>SUBRACK_SPECIFIC_TYPE</th>
+        <th>USERLABEL</th>
+        <th>VENDORNAME</th>
+        <th>VERSION</th>
+        <th>DISTNAME</th>
+        <th>UPDATE_DATE</th>
+        <th>STATUS</th>
+        <th>CREATION_DATE</th>
+        <th>DOMAIN</th>
+        <th>VENDOR</th>
+        <th>ANTENNA_STATUS</th>
+       
+    </tr>
+</table>
+
+				
+				
+				
+				
+				
+				
+				
 			
 			</div>
-			<!-- start -->
-
-			<div class="tab-pane fade" id="custom-tabs-one-sim" role="tabpanel"
-				aria-labelledby="custom-tabs-one-model-tab">
-				
-
-			</div>
-
-
+			
 
            <div class="tab-pane fade" id="custom-tabs-version" role="tabpanel"
 				aria-labelledby="custom-tabs-version-tab">
@@ -1335,6 +1367,46 @@ for(i=0; i<BoqArray.length; i++){
 	     
 
 $("#SubrackTable").append(c);
+
+}
+
+
+BoqArray=${listNodeModule};
+
+
+for(i=0; i<BoqArray.length; i++){
+	
+		  c = "<tr>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][0] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][1] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][2] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][3] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][4] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][5] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][6] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][7] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][8] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][9] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][10] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][11] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][12] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][13] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][14] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][15] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][16] + "' style='width:700px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][17] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][18] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][19] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][20] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][21] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][22] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][23] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][24] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][25] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][26] + "' style='width:190px;' class='form-control text-input' readonly/></td></tr>";
+	     
+
+$("#ModuleTable").append(c);
 
 }
 }
