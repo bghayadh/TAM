@@ -262,7 +262,7 @@ public String NodeFormView(Locale locale, Model model, HttpServletRequest reques
 
 					    				
 					    		query = session.createNativeQuery(
-					    							    "SELECT MODULE_ID, CABINETNO, MODULENO, INVUNITID, SOFTVER, OTHERS, IDENTIFICATIONCODE, CONFIGDN, INVUNITTYPE, " +
+					    							    "SELECT MODULE_ID, CABINETNO, MODULENO, INVUNITID, IDENTIFICATIONCODE, CONFIGDN, INVUNITTYPE, " +
 					    							    "PARENTDN, RUNTIMEDN, SERIALNUMBER, STATE, UNITPOSITION, VENDORUNITFAMILYTYPE, VENDORUNITTYPENUMBER, " +
 					    							    "SUBRACK_SPECIFIC_TYPE, USERLABEL, VENDORNAME, VERSION, DISTNAME,  " +
 					    							    "TO_CHAR(UPDATE_DATE, 'YYYY-MM-DD HH24:MI:SS') , " +
@@ -274,7 +274,15 @@ public String NodeFormView(Locale locale, Model model, HttpServletRequest reques
 					    							query.setParameter("param1", NodePK);
 					    							model.addAttribute("listNodeModule", mapper.writeValueAsString(query.list()));
 					    				
-					    				
+							query = session.createNativeQuery(
+				    			    "SELECT   SUBMODULE_ID,CABINETNO, MODULENO, SUBMODULENO, INVUNITID, IDENTIFICATIONCODE,"
+				    			    + "       CONFIGDN, PARENTDN, RUNTIMEDN, SERIALNUMBER, UNITTYPE,"
+				    			    + "       VENDORUNITFAMILYTYPE, VENDORUNITTYPENUMBER, VENDORNAME, VERSION, DISTNAME, FILENAME,"
+				    			    + "        TO_CHAR(UPDATE_DATE,'YYYY-MM-DD HH24:MI:SS'), STATUS, TO_CHAR(CREATION_DATE,"
+				    			    + "       'YYYY-MM-DD HH24:MI:SS'), DOMAIN, VENDOR FROM NODE_SUBMODULE WHERE NODE_PK = :param1");
+    						
+    						        query.setParameter("param1", NodePK);
+				    				model.addAttribute("listSubModule", mapper.writeValueAsString(query.list()));
 					    				
 		}
 			
