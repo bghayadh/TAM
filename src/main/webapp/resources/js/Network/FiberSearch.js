@@ -295,8 +295,8 @@ function SourceDestinationAutoComplete(checkboxClass,Type,srcID,srcLong,srcLat,s
 			"SiteId":search,
 		 }
 	}	
-	else if(checkedCheckboxAutocomplete=="client") {
-		url='GetAllNetworkClients';
+	else if(checkedCheckboxAutocomplete=="customer") {
+		url='GetAllNetworkCustomer';
 		dataTarget = {					
 				"search":search,
 			}
@@ -354,11 +354,11 @@ function SourceDestinationAutoComplete(checkboxClass,Type,srcID,srcLong,srcLat,s
 				this.value = (ui.item ? ui.item[0]+':'+ui.item[1]+':'+ui.item[2] : '');
 		}	
 		else{
-			this.value = (ui.item ? ui.item[0]+':'+ui.item[1]+':'+ui.item[2] : '');
+			this.value = (ui.item ? ui.item[0]+':'+ui.item[1] : '');
 			$("#"+srcLong).val(ui.item[4]);
 			$("#"+srcLat).val(ui.item[5]);
-			$("#"+Type).val("Client");
-			$("#"+srcCity).val(ui.item[6]);		
+			$("#"+Type).val("Customer");
+			$("#"+srcCity).val(ui.item[3]);		
 		}	
 			//No need to calculate the distance in case of origination or termination	
 		if (checkboxClass !="OriginationAutoComplete" && checkboxClass !="TerminationAutoComplete" && checkboxClass !="tubeOriginationAutoComplete" 
@@ -378,13 +378,14 @@ function SourceDestinationAutoComplete(checkboxClass,Type,srcID,srcLong,srcLat,s
 			                .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
 			                   item[0] + "</span><br><span class='desc'>" +
 			                    item[1] +', '+ item[2] + "</span></div>")
-			                .appendTo(ul);
+			                .appendTo(
+			                ul);
 					}
-					else if (item[0].split("_")[0]=="CLT") {
+					else if (item[0].split("_")[0]=="CUST") {
 						return $("<li class='each'>")
 		                .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
 		                   item[0] + "</span><br><span class='desc'>" +
-		                    item[1] + ' ' + item[2] + ', ' + item[3] +"</span></div>")
+		                    item[1] + ', ' + item[6] +"</span></div>")
 		                .appendTo(ul);						
 					}
 					else {
@@ -525,8 +526,8 @@ function AuxPointAutoComplete(checkboxClass,auxPtID,auxPtLong,auxPtLat,srcLat,sr
 					"SiteId":search,
 				 }
 			}
-			else if(checkedCheckboxAutocomplete=="Client") {
-				url='GetAllNetworkClients';
+			else if(checkedCheckboxAutocomplete=="customer") {
+				url='GetAllNetworkCustomer';
 				dataTarget = {					
 						"search":search,
 				}			
@@ -578,10 +579,10 @@ function AuxPointAutoComplete(checkboxClass,auxPtID,auxPtLong,auxPtLat,srcLat,sr
 			 this.value = (ui.item ? ui.item[0]+':'+ui.item[1]+':'+ui.item[2] : '');
 	     }
 		 else{
-				this.value = (ui.item ? ui.item[0]+':'+ui.item[1]+':'+ui.item[2] : '');
+				this.value = (ui.item ? ui.item[0]+':'+ui.item[1] : '');
 				$("#"+auxPtLong).val(ui.item[4]);
 				$("#"+auxPtLat).val(ui.item[5]);
-				$("#"+city).val(ui.item[6]);		
+				$("#"+city).val(ui.item[3]);		
 			}		
 		if(tableID=="tubesTable") {
 					var tubeDestLat = $(this).closest("tr").find("td:eq(11) input[type='text']").val();
@@ -857,7 +858,7 @@ $("#DistributionBoardClient").autocomplete({
 		  $.ajax({
 	             type: "GET",
 	             contentType: "application/json; charset=utf-8",
-	             url:  getContext()+'/GetAllNetworkClients',
+	             url:  getContext()+'/GetAllNetworkCustomer',
 	             data:  {					
 	            	 "search":searchkey,
 				},
@@ -876,11 +877,11 @@ $("#DistributionBoardClient").autocomplete({
 			select: function(event, ui) {
 										
 			this.value = (ui.item ? ui.item[0] : '');
-			$("#DistributionBoardClientName").val(ui.item[1]+" "+ui.item[2]);
-			$("#DistributionBoardClientPhoneNb").val(ui.item[3]);
+			$("#DistributionBoardClientName").val(ui.item[1]);
+			$("#DistributionBoardClientPhoneNb").val(ui.item[2]);
 			$("#DistributionBoardLong").val(ui.item[4]);
 			$("#DistributionBoardLat").val(ui.item[5]);
-			//$("#boardCity").val(ui.item[5]);
+			$("#boardCity").val(ui.item[3]);
 			//$("#DistributionBoardName").val(ui.item[1]+"_"+ui.item[2]+"_DB");
 			if(($("#DistributionBoardName").val()) ==""){
 				$("#DistributionBoardName").val(ui.item[1]+"_DB_"+new Date().getFullYear());
@@ -892,7 +893,7 @@ $("#DistributionBoardClient").autocomplete({
 			 return $("<li class='each'>")
 		     .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
 	    		 item[0] + "</span><br><span class='desc'>" +
-		         item[1] +' '+item[2] +', '+item[3] +"</span></div>")
+		         item[1] +', '+item[2] +"</span></div>")
 		     .appendTo(ul);
 	};
 
@@ -910,7 +911,7 @@ $("#DistributionBoardClientName").autocomplete({
 		  $.ajax({
 	             type: "GET",
 	             contentType: "application/json; charset=utf-8",
-	             url:  getContext()+'/GetAllNetworkClients',
+	             url:  getContext()+'/GetAllNetworkCustomer',
 	             data:  {					
 	            	 "search":searchkey,
 				},
@@ -928,12 +929,12 @@ $("#DistributionBoardClientName").autocomplete({
 		 minLength:0, maxShowItems: 40, scroll:true,
 			select: function(event, ui) {
 										
-			this.value = (ui.item ? ui.item[1]+" "+ui.item[2] : '');
+			this.value = (ui.item ? ui.item[1] : '');
 			$("#DistributionBoardClient").val(ui.item[0]);
-			$("#DistributionBoardClientPhoneNb").val(ui.item[3]);
+			$("#DistributionBoardClientPhoneNb").val(ui.item[2]);
 			$("#DistributionBoardLong").val(ui.item[4]);
 			$("#DistributionBoardLat").val(ui.item[5]);
-			//$("#boardCity").val(ui.item[5]);
+			$("#boardCity").val(ui.item[3]);
 			//$("#DistributionBoardName").val(ui.item[1]+"_"+ui.item[2]+"_DB");
 			if(($("#DistributionBoardName").val()) ==""){
 				$("#DistributionBoardName").val(ui.item[1]+"_DB_"+new Date().getFullYear());
@@ -944,8 +945,8 @@ $("#DistributionBoardClientName").autocomplete({
 	}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
 			 return $("<li class='each'>")
 		     .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-	    		 item[1] +' '+item[2]+ "</span><br><span class='desc'>" +
-		         item[0] +', '+ item[3] + "</span></div>")
+	    		 item[1] + "</span><br><span class='desc'>" +
+		         item[0] +', '+ item[2] + "</span></div>")
 		     .appendTo(ul);
 	};
 
@@ -962,7 +963,7 @@ $("#DistributionBoardClientPhoneNb").autocomplete({
 		  $.ajax({
 	             type: "GET",
 	             contentType: "application/json; charset=utf-8",
-	             url:  getContext()+'/GetAllNetworkClients',
+	             url:  getContext()+'/GetAllNetworkCustomer',
 	             data:  {					
 	            	 "search":searchkey,
 				},
@@ -981,12 +982,12 @@ $("#DistributionBoardClientPhoneNb").autocomplete({
 		 minLength:0, maxShowItems: 40, scroll:true,
 			select: function(event, ui) {
 										
-			this.value = (ui.item ? ui.item[3] : '');
+			this.value = (ui.item ? ui.item[2] : '');
 			$("#DistributionBoardClient").val(ui.item[0]);
-			$("#DistributionBoardClientName").val(ui.item[1]+" "+ui.item[2]);
+			$("#DistributionBoardClientName").val(ui.item[1]);
 			$("#DistributionBoardLong").val(ui.item[4]);
 			$("#DistributionBoardLat").val(ui.item[5]);
-			//$("#boardCity").val(ui.item[5]);
+			$("#boardCity").val(ui.item[3]);
 			//$("#DistributionBoardName").val(ui.item[1]+"_"+ui.item[2]+"_DB");
 			if(($("#DistributionBoardName").val()) ==""){
 				$("#DistributionBoardName").val(ui.item[1]+"_DB_"+new Date().getFullYear());
@@ -997,8 +998,8 @@ $("#DistributionBoardClientPhoneNb").autocomplete({
 	}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
 			 return $("<li class='each'>")
 		     .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-	    		 item[0] + "</span><br><span class='desc'>" +
-		         item[1] +' '+item[2]+', '+ item[3] + "</span></div>")
+	    		 item[2] + "</span><br><span class='desc'>" +
+		         item[0] +', '+ item[1] + "</span></div>")
 		     .appendTo(ul);
 	};
 
@@ -1007,7 +1008,6 @@ $("#DistributionBoardClientPhoneNb").focus(function(){
 		$(this).autocomplete("search");
 	}						
 });
-
 //Add conditions for default google maps and its styles 
 $('#default').click(function () {
 	setdefaultoptions(map);})
@@ -1308,7 +1308,7 @@ $("#"+LocationID+ID).autocomplete({
 	    search= $("#"+LocationType+ID).val();
 	    console.log("debounce");
 		if(search=="Customer"){
-				url='GetAllNetworkClients';
+				url='GetAllNetworkCustomer';
 				dataTarget = {					
 					"search":searchs,
 				}
@@ -1359,7 +1359,7 @@ $("#"+LocationID+ID).autocomplete({
  			
 			if(search=="Customer"){
 				$("#"+LocationID+ID).val(ui.item ? ui.item[0] : '');
-				$("#"+LocationM+ID).val(ui.item[1]+" "+ui.item[2]);
+				$("#"+LocationM+ID).val(ui.item[1]);
 				//$("#"+Location+ID).val(ui.item[3]);
 			}
 			else if(search=="Site"){
@@ -1385,11 +1385,11 @@ $("#"+LocationID+ID).autocomplete({
 	},	
 }).data( "ui-autocomplete" )._renderItem= function(ul, item) {
 	
-	if(item[0].split("_")[0]=="CLT" ) {
+	if(item[0].split("_")[0]=="CUST" ) {
 		 return $("<li class='each'>")
             .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
                item[0] + "</span><br><span class='desc'>" +
-                item[1] +' '+ item[2] +', '+ item[3]+ "</span></div>")
+                item[1] +', '+ item[2]+ "</span></div>")
             .appendTo(ul);
 	}
 	else if(item[0].split("_")[0]=="WARE") {
@@ -1422,7 +1422,7 @@ $("#"+LocationID+ID).autocomplete({
 	    search= $("#"+LocationType+ID).val();
 	    console.log("no debounce");
 		if(search=="Customer"){
-				url='GetAllNetworkClients';
+				url='GetAllNetworkCustomer';
 				dataTarget = {					
 					"search":searchs,
 				}
@@ -1471,7 +1471,7 @@ $("#"+LocationID+ID).autocomplete({
  		select: function(event, ui) {
  			if(search=="Customer"){
  				$("#"+LocationID+ID).val(ui.item ? ui.item[0] : '');
-				$("#"+LocationM+ID).val(ui.item[1]+" "+ui.item[2]);
+				$("#"+LocationM+ID).val(ui.item[1]);
 				//$("#"+Location+ID).val(ui.item[3]);
 			}
 			else if(search=="Site"){
@@ -1494,11 +1494,11 @@ $("#"+LocationID+ID).autocomplete({
 	},	
 }).data( "ui-autocomplete" )._renderItem= function(ul, item) {
 	
-	if(item[0].split("_")[0]=="CLT" ) {
+	if(item[0].split("_")[0]=="CUST" ) {
 		 return $("<li class='each'>")
             .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-               item[1] +' '+ item[2] + "</span><br><span class='desc'>" +
-                item[0] +', '+item[3]+ "</span></div>")
+               item[1] + "</span><br><span class='desc'>" +
+                item[0] +', '+item[2]+ "</span></div>")
             .appendTo(ul);
 	}
 	else if(item[0].split("_")[0]=="WARE") {
@@ -1521,7 +1521,7 @@ $("#"+LocationID+ID).autocomplete({
 		if (this.value == ""){
 			$(this).autocomplete("search");
 	        }
-	});				
+	});			
 // auto complete equipment	
 if(equipment !=""){
 	$("#"+equipmentID+ID).autocomplete({
@@ -2580,8 +2580,8 @@ $("#relatedCableLocationID").autocomplete({
 	});
 		console.log("searchid\ "+search);
 	
-		if(search=="client"){
-				url='GetAllNetworkClients';
+		if(search=="customer"){
+				url='GetAllNetworkCustomer';
 				dataTarget = {					
 					"search":searchs,
 				}
@@ -2664,19 +2664,19 @@ $("#relatedCableLocationID").autocomplete({
 			}
 			else{
 				$("#relatedCableLocationID").val(ui.item ? ui.item[0] : '');
-				$("#relatedCableLocationName").val(ui.item[1]+" "+ui.item[2]);
-				$("#relatedCableCity").val(ui.item[3]);
-				$("#relatedCableLocationType").val("Client");
+				$("#relatedCableLocationName").val(ui.item[1]);
+				$("#relatedCableCity").val(ui.item[2]);
+				$("#relatedCableLocationType").val("Customer");
 			}						
 		return false;
 	},	
 }).data( "ui-autocomplete" )._renderItem= function(ul, item) {
 	
-	if(item[0].split("_")[0]=="CLT" ) {
+	if(item[0].split("_")[0]=="CUST" ) {
 		 return $("<li class='each'>")
             .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
                item[0] + "</span><br><span class='desc'>" +
-                item[1] +' '+ item[2] +', '+ item[3]+ "</span></div>")
+                item[1] +', '+ item[2]+ "</span></div>")
             .appendTo(ul);
 	}
 	else if(item[0].split("_")[0]=="WARE") {
@@ -2718,8 +2718,8 @@ $("#relatedCableLocationName").autocomplete({
 		search=search[0];
 	});
 		console.log("search "+search);
-		if(search=="client"){
-				url='GetAllNetworkClients';
+		if(search=="customer"){
+				url='GetAllNetworkCustomer';
 				dataTarget = {					
 					"search":searchs,
 				}
@@ -2802,19 +2802,19 @@ $("#relatedCableLocationName").autocomplete({
 			}
 			else{
 				$("#relatedCableLocationID").val(ui.item ? ui.item[0] : '');
-				$("#relatedCableLocationName").val(ui.item[1]+" "+ui.item[2]);
-				$("#relatedCableCity").val(ui.item[3]);
-				$("#relatedCableLocationType").val("Client");
+				$("#relatedCableLocationName").val(ui.item[1]);
+				$("#relatedCableCity").val(ui.item[2]);
+				$("#relatedCableLocationType").val("Customer");
 			}			
 		return false;
 	},	
 }).data( "ui-autocomplete" )._renderItem= function(ul, item) {
 	
-	if(item[0].split("_")[0]=="CLT" ) {
+	if(item[0].split("_")[0]=="CUST" ) {
 		 return $("<li class='each'>")
             .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
                item[0] + "</span><br><span class='desc'>" +
-                item[1] +' '+ item[2] +', '+ item[3]+ "</span></div>")
+                item[1] +', '+ item[2]+ "</span></div>")
             .appendTo(ul);
 	}
 	else if(item[0].split("_")[0]=="WARE") {

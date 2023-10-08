@@ -192,8 +192,8 @@ searchConnectedButtonEvents();
 		//
 		$("#site_DBAutoComplete").prop("checked",true);
 		$('#site_DBAutoComplete').val('1');
-		document.getElementById("client_DBAutoComplete").checked = false;
-		$('#client_DBAutoComplete').val('0');
+		document.getElementById("customer_DBAutoComplete").checked = false;
+		$('#customer_DBAutoComplete').val('0');
 		document.getElementById("DBClientId").style.display = "none";
 		document.getElementById("DBClientName").style.display = "none";
 		document.getElementById("BDClientPhoneNb").style.display = "none";
@@ -1391,7 +1391,7 @@ function createSiteCltMarker(Id,Name,Lat,Long,siteCltSrcMarkers){
 			|| Id.startsWith("AUXILIARY_TRENCH_PT")==true || Id.startsWith("AUXILIARY_DUCT_PT")==true) {
 		var icon = iconAuxPoint;
 	}
-	else if(Id.startsWith("CLT")==true) {
+	else if(Id.startsWith("CUST")==true) {
 		var icon = iconClient;
 	}
 	else if(Id.startsWith("WARE")==true || Id.includes("N/A")==true) {	
@@ -1406,7 +1406,7 @@ function createSiteCltMarker(Id,Name,Lat,Long,siteCltSrcMarkers){
 			allSites.push(Name);
 		}
 	}
-	else if(Id.split("_")[0]=="CLT") {
+	else if(Id.split("_")[0]=="CUST") {
 		if(allClients.includes(Name) == false){	
 			allClients.push(Name);
 		}
@@ -11028,7 +11028,7 @@ function autoCompleteSearchHeader(ID,searchTarget,longitude,latitude){
 			 }
 		}
 		else if(target=="client"){
-			url='GetAllNetworkClients';
+			url='GetAllNetworkCustomer';
 			dataTarget = {					
 					"search":searchkey,
 				}
@@ -11055,9 +11055,9 @@ function autoCompleteSearchHeader(ID,searchTarget,longitude,latitude){
 		    }
 			}, minLength:0, maxShowItems: 40, scroll:true,
 				select: function(event, ui) {
-					this.value = (ui.item ? ui.item[0]+':'+ui.item[1]+':'+ui.item[2] : '');
-					$("#"+longitude).val(ui.item[3]);
-					$("#"+latitude).val(ui.item[4]);	
+					this.value = (ui.item ? ui.item[0]+':'+ui.item[1] : '');
+					$("#"+longitude).val(ui.item[4]);
+					$("#"+latitude).val(ui.item[5]);	
 				//	console.log("long: "+$("#"+longitude).val()+" lat: "+$("#"+latitude).val());
   	
 					return false;
@@ -11070,11 +11070,11 @@ function autoCompleteSearchHeader(ID,searchTarget,longitude,latitude){
 		                    item[1] +', '+ item[2] + "</span></div>")
 		                .appendTo(ul);
 				}
-				else if (item[0].split("_")[0]=="CLT") {
+				else if (item[0].split("_")[0]=="CUST") {
 					return $("<li class='each'>")
 	                .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
 	                   item[0] + "</span><br><span class='desc'>" +
-	                    item[1] + ' ' + item[2] + ', ' + item[3] +"</span></div>")
+	                    item[1] +', ' + item[2] +"</span></div>")
 	                .appendTo(ul);						
 				}
 			};
@@ -11293,9 +11293,9 @@ function FindFiberData(selectedFiberContext){
 					src  = data.fiberDetails[0][1]+":" +data.fiberDetails[0][2];	
 					$("#SourceType").val("Distribution Board");
 				}
-				else if (data.fiberDetails[0][1].split("_")[0]=="CLT") {
+				else if (data.fiberDetails[0][1].split("_")[0]=="CUST") {
 					src  = data.fiberDetails[0][1]+":" +data.fiberDetails[0][2];
-					$("#SourceType").val("Client");
+					$("#SourceType").val("customer");
 				}
 				else {
 					src = data.fiberDetails[0][2];
@@ -11321,9 +11321,9 @@ function FindFiberData(selectedFiberContext){
 					dst = data.fiberDetails[0][4]+":" +data.fiberDetails[0][5];	
 					$("#DestinationType").val("Distribution Board")
 				}
-				else if (data.fiberDetails[0][4].split("_")[0]=="CLT") {
+				else if (data.fiberDetails[0][4].split("_")[0]=="CUST") {
 					dst = data.fiberDetails[0][4]+":" +data.fiberDetails[0][5];
-					$("#DestinationType").val("Client")
+					$("#DestinationType").val("customer")
 				}
 				else {
 					dst = data.fiberDetails[0][5];
@@ -11437,7 +11437,7 @@ function FindFiberData(selectedFiberContext){
 				strandTubeSetColor(data.fiberDetails[0][37],"relatedCableTubeColor");
 				//console.log("data realted "+data.fiberDetails[0][45].split("_")[0]);
 				if(data.fiberDetails[0][45]!=null){ 
-					if(data.fiberDetails[0][45].split("_")[0] =="CLT"){
+					if(data.fiberDetails[0][45].split("_")[0] =="CUST"){
 						$(".relatedLocationName").hide();
 						$(".relatedLocationID").hide();
 						$("#relatedLocationCity").hide();
@@ -11514,7 +11514,7 @@ function FindFiberData(selectedFiberContext){
 						tubeSrc = data.fiberTubes[i][6]+":" +data.fiberTubes[i][8]+":"+data.fiberTubes[i][7];		
 					}
 					else {
-					 if (data.fiberTubes[i][7].split("_")[0]=="MH" || data.fiberTubes[i][7].split("_")[0]=="HH" ||data.fiberTubes[i][7].split("_")[0]=="DB" || data.fiberTubes[i][7].split("_")[0]=="CLT") {
+					 if (data.fiberTubes[i][7].split("_")[0]=="MH" || data.fiberTubes[i][7].split("_")[0]=="HH" ||data.fiberTubes[i][7].split("_")[0]=="DB" || data.fiberTubes[i][7].split("_")[0]=="CUST") {
 						 tubeSrc  = data.fiberTubes[i][7]+":" +data.fiberTubes[i][8];	
 						}
 						else {
@@ -11526,7 +11526,7 @@ function FindFiberData(selectedFiberContext){
 						tubeDst = data.fiberTubes[i][9]+":" +data.fiberTubes[i][11]+":"+data.fiberTubes[i][10];		
 					}
 					else {
-						if (data.fiberTubes[i][10].split("_")[0]=="MH" || data.fiberTubes[i][10].split("_")[0]=="HH" || data.fiberTubes[i][10].split("_")[0]=="DB" || data.fiberTubes[i][10].split("_")[0]=="CLT") {
+						if (data.fiberTubes[i][10].split("_")[0]=="MH" || data.fiberTubes[i][10].split("_")[0]=="HH" || data.fiberTubes[i][10].split("_")[0]=="DB" || data.fiberTubes[i][10].split("_")[0]=="CUST") {
 							tubeDst  = data.fiberTubes[i][10]+":" +data.fiberTubes[i][11];	
 						}
 						else {
@@ -11782,7 +11782,7 @@ function FindFiberData(selectedFiberContext){
 						else if (data.fiberStrands[0][8].split("_")[0]=="DB") {
 							src  = data.fiberStrands[0][8]+":" +data.fiberStrands[0][9];	
 						}
-						else if (data.fiberStrands[0][8].split("_")[0]=="CLT") {
+						else if (data.fiberStrands[0][8].split("_")[0]=="CUST") {
 							src  = data.fiberStrands[0][8]+":" +data.fiberStrands[0][9];
 						}
 						else {
@@ -11803,7 +11803,7 @@ function FindFiberData(selectedFiberContext){
 						else if (data.fiberStrands[0][11].split("_")[0]=="DB") {
 							dst  = data.fiberStrands[0][11]+":" +data.fiberStrands[0][12];	
 						}
-						else if (data.fiberStrands[0][11].split("_")[0]=="CLT") {
+						else if (data.fiberStrands[0][11].split("_")[0]=="CUST") {
 							dst  = data.fiberStrands[0][11]+":" +data.fiberStrands[0][12];
 						}
 						else {
@@ -12089,9 +12089,9 @@ function FindFiberStrand(selectedStrand){
 					src  = data.fiberStrands[0][5]+":" +data.fiberStrands[0][6];	
 					$("#SourceTypeStrand").val("Distribution Board");
 				}
-				else if (data.fiberStrands[0][5].split("_")[0]=="CLT") {
+				else if (data.fiberStrands[0][5].split("_")[0]=="CUST") {
 					src  = data.fiberStrands[0][5]+":" +data.fiberStrands[0][6];
-					$("#SourceTypeStrand").val("Client");
+					$("#SourceTypeStrand").val("customer");
 				}
 				else {
 					src = data.fiberStrands[0][6];
@@ -12117,9 +12117,9 @@ function FindFiberStrand(selectedStrand){
 					dst  = data.fiberStrands[0][8]+":" +data.fiberStrands[0][9];	
 					$("#DestinationTypeStrand").val("Distribution Board");
 				}
-				else if (data.fiberStrands[0][8].split("_")[0]=="CLT") {
+				else if (data.fiberStrands[0][8].split("_")[0]=="CUST") {
 					dst  = data.fiberStrands[0][8]+":" +data.fiberStrands[0][9];
-					$("#DestinationTypeStrand").val("Client");
+					$("#DestinationTypeStrand").val("customer");
 				}
 				else {
 					dst = data.fiberStrands[0][9];
@@ -12334,7 +12334,7 @@ function showHideRealPoints(pathID,checkSeqWindowID,action) {
 					}
 				}
 			}
-			else if(showHidePointsArray[x].startsWith("CLT_")==true) {
+			else if(showHidePointsArray[x].startsWith("CUST_")==true) {
 				var cltID = showHidePointsArray[x].split(":")[0];
 				var longLat = String(window["mapPoints_"+pathID][x]).replaceAll(/[( )]/g, '');
 	
@@ -12513,7 +12513,7 @@ function showHideRealPoints(pathID,checkSeqWindowID,action) {
 				    siteCltSrcMarkers[wareID].setMap(null);
 				}
 			}
-			else if(showHidePointsArray[x].startsWith("CLT_")==true) {
+			else if(showHidePointsArray[x].startsWith("CUST_")==true) {
 				var cltID = showHidePointsArray[x].split(":")[0];
 				if(siteCltSrcMarkers[cltID]) {
 			    	siteCltSrcMarkers[cltID].setMap(null);
@@ -12610,7 +12610,7 @@ function showHideAllSequence(pathID,action) {
 					}	
 				}			
 			}		 
-			else if(window["mapPointsNames_"+pathID][x].startsWith("CLT_")==true) {
+			else if(window["mapPointsNames_"+pathID][x].startsWith("CUST_")==true) {
 				var cltID = window["mapPointsNames_"+pathID][x].split(":")[0];	
 			
 				if(siteCltSrcMarkers[cltID]) {
@@ -12703,7 +12703,7 @@ function showHideAllSequence(pathID,action) {
 						}	
 					}			
 				}		 
-				else if(window["mapPointsNames_"+pathID][x].startsWith("CLT_")==true) {
+				else if(window["mapPointsNames_"+pathID][x].startsWith("CUST_")==true) {
 					var cltID = window["mapPointsNames_"+pathID][x].split(":")[0];	
 				
 					if(siteCltSrcMarkers[cltID]) {
@@ -12861,7 +12861,7 @@ if(window["mapPointsNames_"+pathID] != undefined) {
 					}
 				}
 			}
-			else if(showHidePointsArray[x].startsWith("CLT_")==true) {
+			else if(showHidePointsArray[x].startsWith("CUST_")==true) {
 				var cltID = showHidePointsArray[x].split(":")[0];
 				var longLat = String(window["mapPoints_"+pathID][x]).replaceAll(/[( )]/g, '');
 	
@@ -13057,7 +13057,7 @@ if(window["mapPointsNames_"+pathID] != undefined) {
 			    	siteCltSrcMarkers[wareID].setMap(null);
 			    }
 			}
-			else if(showHidePointsArray[x].startsWith("CLT_")==true) {
+			else if(showHidePointsArray[x].startsWith("CUST_")==true) {
 				var cltID = showHidePointsArray[x].split(":")[0];
 				if(siteCltSrcMarkers[cltID]) {
 			    	siteCltSrcMarkers[cltID].setMap(null);
@@ -13163,9 +13163,9 @@ function FindFiberTube(selectedTube){
 					src  = data.fiberTubes[0][4]+":" +data.fiberTubes[0][5];	
 					$("#SourceTypeTube").val("Distribution Board");
 				}
-				else if (data.fiberTubes[0][4].split("_")[0]=="CLT") {
+				else if (data.fiberTubes[0][4].split("_")[0]=="CUST") {
 					src  = data.fiberTubes[0][4]+":" +data.fiberTubes[0][5];
-					$("#SourceTypeTube").val("Client");
+					$("#SourceTypeTube").val("customer");
 				}
 				else {
 					src = data.fiberTubes[0][5];
@@ -13191,9 +13191,9 @@ function FindFiberTube(selectedTube){
 					dst  = data.fiberTubes[0][7]+":" +data.fiberTubes[0][8];	
 					$("#DestinationTypeTube").val("Distribution Board");
 				}
-				else if (data.fiberTubes[0][7].split("_")[0]=="CLT") {
+				else if (data.fiberTubes[0][7].split("_")[0]=="CUST") {
 					dst  = data.fiberTubes[0][7]+":" +data.fiberTubes[0][8];
-					$("#DestinationTypeTube").val("Client");
+					$("#DestinationTypeTube").val("customer");
 				}
 				else {
 					dst = data.fiberTubes[0][8];
@@ -13360,9 +13360,9 @@ function FindTrenchData(selectedTrenchContext){
 					src  = data.listTrench[0][3]+":" +data.listTrench[0][4];	
 					$("#SourceTrenchType").val("Distribution Board");
 				}
-				else if (data.listTrench[0][3].split("_")[0]=="CLT") {
+				else if (data.listTrench[0][3].split("_")[0]=="CUST") {
 					src  = data.listTrench[0][3]+":" +data.listTrench[0][4];
-					$("#SourceTrenchType").val("Client");
+					$("#SourceTrenchType").val("customer");
 				}
 				else {
 					src = data.listTrench[0][4];
@@ -13388,9 +13388,9 @@ function FindTrenchData(selectedTrenchContext){
 					dst  = data.listTrench[0][6]+":" +data.listTrench[0][7];	
 					$("#DestinationTrenchType").val("Distribution Board");
 				}
-				else if (data.listTrench[0][6].split("_")[0]=="CLT") {
+				else if (data.listTrench[0][6].split("_")[0]=="CUST") {
 					dst  = data.listTrench[0][6]+":" +data.listTrench[0][7];
-					$("#DestinationTrenchType").val("Client");
+					$("#DestinationTrenchType").val("customer");
 				}
 				else {
 					dst = data.listTrench[0][7];
@@ -13492,9 +13492,9 @@ function FindDuctData(selectedDuctContext){
 					src  = data.listDuct[0][3]+":" +data.listDuct[0][4];	
 					$("#SourceDuctType").val("Distribution Board");
 				}
-				else if (data.listDuct[0][3].split("_")[0]=="CLT") {
+				else if (data.listDuct[0][3].split("_")[0]=="CUST") {
 					src  = data.listDuct[0][3]+":" +data.listDuct[0][4];
-					$("#SourceDuctType").val("Client");
+					$("#SourceDuctType").val("customer");
 				}
 				else {
 					src = data.listDuct[0][4];
@@ -13520,9 +13520,9 @@ function FindDuctData(selectedDuctContext){
 					dst  = data.listDuct[0][6]+":" +data.listDuct[0][7];	
 					$("#DestinationDuctType").val("Distribution Board");
 				}
-				else if (data.listDuct[0][6].split("_")[0]=="CLT") {
+				else if (data.listDuct[0][6].split("_")[0]=="CUST") {
 					dst  = data.listDuct[0][6]+":" +data.listDuct[0][7];
-					$("#DestinationDuctType").val("Client");
+					$("#DestinationDuctType").val("customer");
 				}
 				else {
 					dst = data.listDuct[0][7];
@@ -18899,9 +18899,9 @@ function mapOperationAutoComplete(checkboxClass,srcID,srcLong,srcLat){
 		 }
 	}
 	
-	else if(checkedCheckboxAutocomplete=="client") {
+	else if(checkedCheckboxAutocomplete=="customer") {
 
-		url='GetAllNetworkClients';
+		url='GetAllNetworkCustomer';
 		dataTarget = {					
 				"search":search,
 			}
@@ -18948,7 +18948,7 @@ function mapOperationAutoComplete(checkboxClass,srcID,srcLong,srcLat){
 				this.value = (ui.item ? ui.item[0]+':'+ui.item[1]+':'+ui.item[2] : '');
 		}	
 		else{
-			this.value = (ui.item ? ui.item[0]+':'+ui.item[1]+':'+ui.item[2] : '');
+			this.value = (ui.item ? ui.item[0]+':'+ui.item[1] : '');
 			$("#"+srcLong).val(ui.item[4]);
 			$("#"+srcLat).val(ui.item[5]);
 			}	
@@ -18956,7 +18956,7 @@ function mapOperationAutoComplete(checkboxClass,srcID,srcLong,srcLat){
 		},
 			}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
 				
-					if(item[0].split("_")[0]=="WARE" || item[0].split("_")[0]=="CLT" ) {
+					if(item[0].split("_")[0]=="WARE" || item[0].split("_")[0]=="CUST" ) {
 						 return $("<li class='each'>")
 			                .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
 			                   item[0] + "</span><br><span class='desc'>" +
@@ -19875,7 +19875,7 @@ function relatedCableTabEvents(netLevel){
 			var checkedCheckbox =  $(this).attr("id");
 			checkedCheckboxAutocomplete = checkedCheckbox.split("_");			
 			checkedCheckboxAutocomplete=checkedCheckboxAutocomplete[0]; 
-			if(checkedCheckboxAutocomplete=="client"){
+			if(checkedCheckboxAutocomplete=="customer"){
 				$(".relatedLocationName").hide();
 				$(".relatedLocationID").hide();
 				$("#relatedLocationCity").hide();
