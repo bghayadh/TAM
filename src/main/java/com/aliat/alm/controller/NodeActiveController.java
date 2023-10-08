@@ -207,12 +207,9 @@ public String NodeFormView(Locale locale, Model model, HttpServletRequest reques
 				    						" from node_board where node_pk =:param1");
 				    						query.setParameter("param1", NodePK); 
 				    						model.addAttribute("listBoard", mapper.writeValueAsString(query.list()));
-
+                           
 				    						
-				    						
-				    						
-				    						
-				    		       query =session.createNativeQuery( "SELECT CABINET_ID, SITEINDEX, CABINETNO, INVENTORYUNITID, RACKTYPE, OTHERS,"
+				    			   query =session.createNativeQuery( "SELECT CABINET_ID, SITEINDEX, CABINETNO, INVENTORYUNITID, RACKTYPE, OTHERS,"
 				    		       		+ " BOMRACKTYPE, INVENTORYUNITTYPE, VENDORUNITFAMILYTYPE, VENDORUNITTYPENUMBER, VENDORNAME, SERIALNUMBER,"
 				    		       		+ " HARDWAREVERSION, TO_CHAR(DATEOFMANUFACTURE,'YYYY-MM-DD HH24:MI:SS'), TO_CHAR(DATEOFLASTSERVICE,'YYYY-MM-DD HH24:MI:SS'), UNITPOSITION, "
 				    		       		+ "MANUFACTURERDATA, ISSUENUMBER, BOMCODE, EXTINFO, MODEL, USERLABEL, SHAREMODE, CLEICODE, BOM,  TO_CHAR(UPDATE_DATE,"
@@ -233,7 +230,7 @@ public String NodeFormView(Locale locale, Model model, HttpServletRequest reques
 	    						        query.setParameter("param1", NodePK);
 					    				model.addAttribute("listAntinna", mapper.writeValueAsString(query.list()));
 					    				
-					    				query = session.createNativeQuery(
+					    		query = session.createNativeQuery(
 					    					    "SELECT HOST_ID, RACKPOSITION, INVENTORYUNITID, VENDORUNITFAMILYTYPE, VENDORUNITTYPENUMBER, " +
 					    					    "VENDORNAME, SERIALNUMBER, HARDWAREVERSION, SOFTVER, " +
 					    					    "TO_CHAR(DATEOFMANUFACTURE, 'YYYY-MM-DD HH24:MI:SS'), " +
@@ -247,6 +244,21 @@ public String NodeFormView(Locale locale, Model model, HttpServletRequest reques
 
 					    					query.setParameter("param1", NodePK);
 					    					model.addAttribute("listNodeHost", mapper.writeValueAsString(query.list()));
+					    					
+					    					
+					    					
+					    		query = session.createNativeQuery(
+					    						    "SELECT SUBRACK_ID, SITEINDEX, CABINETNO, SUBRACKNO, INVENTORYUNITID, RACKTYPE, BOMRACKTYPE, FRAMETYPE, " +
+					    						    "RACKFRAMENO, MODULENO, INVENTORYUNITTYPE, VENDORUNITFAMILYTYPE, VENDORUNITTYPENUMBER, VENDORNAME, " +
+					    						    "SERIALNUMBER, HARDWAREVERSION, " +
+					    						    "TO_CHAR(DATEOFMANUFACTURE, 'YYYY-MM-DD HH24:MI:SS'), TO_CHAR(DATEOFLASTSERVICE, 'YYYY-MM-DD HH24:MI:SS'), " +
+					    						    "UNITPOSITION, MANUFACTURERDATA, USERLABEL, BOMCODE, MODEL, ISSUENUMBER, BOMFRAMETYPE, CLEICODE, " +
+					    						    "BOM, EXTINFO, TO_CHAR(UPDATE_DATE, 'YYYY-MM-DD HH24:MI:SS'), STATUS, " +
+					    						    " DOMAIN, VENDOR FROM NODE_SUBRACK " +
+					    						    "WHERE NODE_PK = :param1");
+
+					    						query.setParameter("param1", NodePK);
+					    						model.addAttribute("listNodeSubrack", mapper.writeValueAsString(query.list()));
 
 					    				
 					    				
