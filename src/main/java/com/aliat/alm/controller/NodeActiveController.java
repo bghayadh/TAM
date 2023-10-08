@@ -261,6 +261,18 @@ public String NodeFormView(Locale locale, Model model, HttpServletRequest reques
 					    						model.addAttribute("listNodeSubrack", mapper.writeValueAsString(query.list()));
 
 					    				
+					    		query = session.createNativeQuery(
+					    							    "SELECT MODULE_ID, CABINETNO, MODULENO, INVUNITID, SOFTVER, OTHERS, IDENTIFICATIONCODE, CONFIGDN, INVUNITTYPE, " +
+					    							    "PARENTDN, RUNTIMEDN, SERIALNUMBER, STATE, UNITPOSITION, VENDORUNITFAMILYTYPE, VENDORUNITTYPENUMBER, " +
+					    							    "SUBRACK_SPECIFIC_TYPE, USERLABEL, VENDORNAME, VERSION, DISTNAME,  " +
+					    							    "TO_CHAR(UPDATE_DATE, 'YYYY-MM-DD HH24:MI:SS') , " +
+					    							    " STATUS, TO_CHAR(CREATION_DATE, 'YYYY-MM-DD HH24:MI:SS'), " +
+					    							    "DOMAIN, VENDOR,  ANTENNA_STATUS FROM NODE_MODULE " +
+					    							    "WHERE NODE_PK = :param1"
+					    							);
+
+					    							query.setParameter("param1", NodePK);
+					    							model.addAttribute("listNodeModule", mapper.writeValueAsString(query.list()));
 					    				
 					    				
 					    				
