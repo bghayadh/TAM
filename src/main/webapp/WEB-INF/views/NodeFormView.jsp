@@ -1211,9 +1211,45 @@ for(i=0; i<BoqArray.length; i++){
 
 $("#NodeHostTable").append(c);
 }
+
+
+
+BoqArray=${listAntinna};
+console.log(BoqArray);
+
+for(i=0; i<BoqArray.length; i++){
+	
+		  c = "<tr>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][0] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][1] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][2] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][3] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][4] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][5] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][6] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][7] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][8] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][9] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][10] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][11] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][12] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][13] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][14] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][15] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][16] + "' style='width:700px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][17] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][18] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][19] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][20] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][21] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][22] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+	      "<td ><input  type='text'  value='" + BoqArray[i][23] + "' style='width:190px;' class='form-control text-input' readonly/></td></tr>";
+	     
+
+$("#AntinnaTable").append(c);
 }
 
-
+}
 
 
 
