@@ -334,7 +334,7 @@ $("#bisotab > tbody").find('td[name="itemCode"]').each(function(){
 		  if ($("#ordpaidamnt").val() == '') { ordpaidamnt.value = 0; }
 		  if ($("#ordoutstand").val() == '') { ordoutstand.value = 0; }
 		  if ($("#ordtotqty").val() == '') { ordtotqty.value = 0; }
-		  if ($("#ordtotword").val() == '') { ordtotword.value = 0; }
+		  if ($("#ordNetTotal").val() == '') { ordNetTotal.value = 0; }
 		  
 		  
 		 // validate Total Amount to be number 
@@ -368,7 +368,7 @@ $("#bisotab > tbody").find('td[name="itemCode"]').each(function(){
 		 return false;}
 		 
 		 // validate netTotal to be number
-		 if (($. isNumeric( $("#ordtotword").val()))== false) {
+		 if (($. isNumeric( $("#ordNetTotal").val()))== false) {
 		 alert('Net Total is  not Numeric');
 		 return false;}
 		 
@@ -507,8 +507,8 @@ function getSumQty_totalAT (){
 	var sumtotAT = 0;
 	var sumDiscount = 0;
 
-	if (ordtotword.value == ''){
-		ordtotword.value=0;
+	if (ordNetTotal.value == ''){
+		ordNetTotal.value=0;
 	}
 	if (orddiscamnt.value == ''){
 		orddiscamnt.value=0;
@@ -538,8 +538,8 @@ function getSumQty_totalAT (){
 
 function updateamounts(){
 	//ordtotamnt.value = ordtotamnt.value + sumTotal;
-	ordtotword.value= parseFloat(ordtotamnt.value) - parseFloat(orddiscamnt.value);
-	ordoutstand.value=parseFloat(ordtotword.value) - parseFloat(ordpaidamnt.value);
+	ordNetTotal.value= parseFloat(ordtotamnt.value) - parseFloat(orddiscamnt.value);
+	ordoutstand.value=parseFloat(ordNetTotal.value) - parseFloat(ordpaidamnt.value);
 }
 
  
@@ -938,8 +938,8 @@ function insertRowAbove(){
 		$('#ordtotqty').val(sumQty);
 		$('#ordtotamnt').val(sumTotalAt);
 		
-		ordtotword.value= parseFloat(ordtotamnt.value) - parseFloat(orddiscamnt.value);
-	    ordoutstand.value=parseFloat(ordtotword.value) - parseFloat(ordpaidamnt.value);
+		ordNetTotal.value= parseFloat(ordtotamnt.value) - parseFloat(orddiscamnt.value);
+	    ordoutstand.value=parseFloat(ordNetTotal.value) - parseFloat(ordpaidamnt.value);
  
 		
 	}
@@ -1505,8 +1505,8 @@ var ctx = getContextPath();
  function getTotalAT_SumQty(){
   var sumQty =0;
   var sumTotalAt=0;	
-   if (ordtotword.value == ''){ 
-   ordtotword.value=0;
+   if (ordNetTotal.value == ''){ 
+   ordNetTotal.value=0;
    }
    if (orddiscamnt.value == ''){
     orddiscamnt.value=0;
@@ -1534,8 +1534,8 @@ var ctx = getContextPath();
  }
  
  function amountsUpdate(){
-	ordtotword.value= parseFloat(ordtotamnt.value) - parseFloat(orddiscamnt.value);
-	ordoutstand.value=parseFloat(ordtotword.value) - parseFloat(ordpaidamnt.value);
+	ordNetTotal.value= parseFloat(ordtotamnt.value) - parseFloat(orddiscamnt.value);
+	ordoutstand.value=parseFloat(ordNetTotal.value) - parseFloat(ordpaidamnt.value);
  }
  
 	       				 
@@ -1610,12 +1610,12 @@ $("#ordpaidamnt").on("input", function(){
 			alert('Paid Amount is  not Numeric');
 			return false;
 		}
-		if (parseFloat(ordpaidamnt.value) <= parseFloat(ordtotword.value)) {
+		if (parseFloat(ordpaidamnt.value) <= parseFloat(ordNetTotal.value)) {
 			updateamounts ();
 		}
 		else {
 			ordpaidamnt.value= '0';
-			alert('Paid Amount cannot be greater than Net Total Amount: ' + parseFloat(ordtotword.value));
+			alert('Paid Amount cannot be greater than Net Total Amount: ' + parseFloat(ordNetTotal.value));
 		}
 	}
 }); // end of on change paid amount

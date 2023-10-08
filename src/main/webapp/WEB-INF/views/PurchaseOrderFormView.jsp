@@ -664,7 +664,7 @@ max-width: 100%;
 	    <div class="col-md-3">
 			<div class="input-group-prepend">
 				<span style="width:200px;" class="input-group-text">Net Total</span>
-				<input type="text" id="ordtotword" value="${netTotal}"  readonly class="form-control text-input"  />
+				<input type="text" id="ordNetTotal" value="${netTotal}"  readonly class="form-control text-input"  />
 			</div>
 		</div>
 	    
@@ -719,9 +719,9 @@ max-width: 100%;
 						            <tr class="fixed-headerr">
 						                
 						                <th>Total Quantity</th>
-						                <th><input id="quan" style="width:220px;" type="text" readonly /></th>
+						                <th><input id="discQty" style="width:220px;" type="text" readonly /></th>
 						                <th>Total Discrepancy Price</th>
-						                <th><input id="price" style="width:220px;" type="text" readonly /></th>
+						                <th><input id="discPrice" style="width:220px;" type="text" readonly /></th>
 						                <th>Discrepancy Qty % </th>
 						                <th><input id="qty%" style="width:220px;" type="text" readonly /></th>
 						                <th>Discrepancy Price %</th>
@@ -1368,87 +1368,55 @@ max-width: 100%;
 			
 			 
 		}
-
-
-boqArray1=${discrepancy};		
-console.log(boqArray1);
+//////////////////// Discrepancy Report
+boqArray=${discrepancy};
 var totalqty=0;
 var totalprice=0;
-for (j = 0; j < boqArray1.length; j++){
+for (j = 0; j < boqArray.length; j++){
 
-	var ItemCode=boqArray1[j][0];
+	var ItemCode=boqArray[j][0];
 	if(ItemCode==null){
 		ItemCode="";
-
-		}
-	var ItemName=boqArray1[j][1];
+	}
+	var ItemName=boqArray[j][1];
 	if(ItemName==null){
 		ItemName="";
-
-		}
-	var ItemModel=boqArray1[j][2];
+	}
+	var ItemModel=boqArray[j][2];
 	if(ItemModel==null){
 		ItemModel="";
-		}
-	var ItemPNum=boqArray1[j][3];
+	}
+	var ItemPNum=boqArray[j][3];
 	if(ItemPNum==null){
 		ItemPNum="";
-		}
-	var Disquant=boqArray1[j][4];
-	console.log(Disquant);
-	if(Disquant==null){
-	
-		Disquant="";
-		}
-	var netRate=boqArray1[j][5];
+	}
+	var DiscQty=boqArray[j][4];
+	if(DiscQty==null){
+		DiscQty="";
+	}
+	var netRate=boqArray[j][5];
 	if(netRate==null){
 		netRate="";
-		}
-    var totalPrice = parseFloat(Disquant) * parseFloat(netRate);
-   var discrepancyRow="";
+	}
+    var totalPrice = parseFloat(DiscQty) * parseFloat(netRate);
+    var discrepancyRow="";
 
 discrepancyRow += "<tr>"
     + "<td name='itemCode'><input type='text' name='itmCode' value='" + ItemCode +":"+ ItemName + "' style='width:300px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input' /></td>"
 	 + "<td name='itemModel'><input name='itmModel' type='text' value='" + ItemModel + "' style='width:230px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input'/></td>"
 	 + "<td name='itemPartNo'><input name='itmPartNo' type='text' value='" + ItemPNum + "' style='width:230px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input' /></td>"		 			
-	 + "<td  name='poBarCode'><input type='text' style='width:230px;'  value='" + Disquant +"' class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>"
+	 + "<td  name='poBarCode'><input type='text' style='width:230px;'  value='" + DiscQty +"' class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>"
 	 + "<td name='qty'><input name='qty' type='text' style='width:230px;' value='" + netRate +"' class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>"
 	 + "<td name='qty'><input name='qty' type='text' style='width:230px;' value='" + totalPrice +"' class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td></tr>;"
 	 $("#bisotab1 > tbody").append(discrepancyRow);
-
-totalqty+=parseFloat(Disquant);
+totalqty+=parseFloat(DiscQty);
 totalprice+=parseFloat(totalPrice);
-	
 }
+document.getElementById("discQty").value = totalqty;
+document.getElementById("discPrice").value = parseFloat(totalprice).toFixed(3);
+document.getElementById("qty%").value = (totalqty*100/parseFloat($("#ordtotqty").val())).toFixed(3); + "%";
+document.getElementById("price%").value = (totalprice*100/parseFloat($("#ordNetTotal").val())).toFixed(3); + "%";
 
-
-
-Totalprice=${totalPrice};
-TotalQuant=${totalQty};
-
-
-
-document.getElementById("quan").value = totalqty;
-var p=parseFloat(totalprice).toFixed(3);
-document.getElementById("price").value = p;
-
-var qtyElement = document.getElementById("qty%");
-var priceElement = document.getElementById("price%");
-
-var qtyValue = (totalprice / parseFloat(Totalprice) * 100).toFixed(3);
-var priceValue = (totalqty / parseFloat(TotalQuant) * 100).toFixed(3);
-
-qtyElement.value = qtyValue + "%";
-priceElement.value = priceValue + "%";
-
-
-
-
-
-
-
-
-			
   
 boqArray = ${ListPoItem};
 var itemRow="";
@@ -2839,7 +2807,7 @@ return false;
    						"paidAmount" : $("#ordpaidamnt").val(),
    						"ordOutstanding" : $("#ordoutstand").val(),
    						"ordStatus" : $("#ordstat").val(),
-   						"netTotal" : $("#ordtotword").val(),
+   						"netTotal" : $("#ordNetTotal").val(),
    						"netTotalinWord" : '0',
    						"TotalQty" : $("#ordtotqty").val(), 
    						"FarNo" : '0',
