@@ -312,8 +312,6 @@ public class PurchaseController {
 				supplierr = request.getParameter("Supplierr");
 				warehousee = request.getParameter("warehousee");
 
-				System.out.println(startdatee + " " + enddatee + " " + supplierr + " " + warehousee);
-				List<String> listPOrder = new ArrayList<String>();
 				/*
 				 * String str =
 				 * "select 1 as chkBox, PRQ_ID as ID, SUPPLIER as supplier, TOTAL_AMOUNT as TotalAmount,"
@@ -339,23 +337,7 @@ public class PurchaseController {
 							+ "%')or upper(WAREHOUSE_NAME) LIKE upper('%" + warehousee
 							+ "%') or upper(SITE_ID) LIKE upper('%" + warehousee + "%')  )";
 				}
-
-				Query query = session.createSQLQuery(str);
-
-				/*
-				 * listPReq = ((SQLQuery) query).addScalar("chkBox",new
-				 * IntegerType()).addScalar("ID").addScalar("supplier").addScalar("TotalAmount",
-				 * new FloatType()) .addScalar("TotalQty", new
-				 * FloatType()).addScalar("WareHouse")
-				 * .setResultTransformer(Transformers.aliasToBean(PurchaseRequestListView.class)
-				 * ).list();
-				 */
-
-				listPOrder = query.list();
-
-				// rtn.put("listPReq", listPReq);
-				rtn.put("listPOrder", listPOrder);
-				System.out.println("Filtered Array: " + mapper.writeValueAsString(listPOrder));
+				rtn.put("listPOrder", session.createNativeQuery(str).list());
 			} catch (Exception e) {
 				logger.info("Error in showing the filtered purchase order list view with a message :" + e);
 			} finally {
@@ -586,7 +568,7 @@ public class PurchaseController {
 //						,t.ITEM_CAT1 as \"prCat1\""
 //								+ ",t.ITEM_CAT2 as \"prCat2\",t.ITEM_CAT3 as \"prCat3\""
 //								+ ",t.ITEM_CAT4 as \"prCat4\",t.ITEM_SEQ as \"prSequ\""
-						query = session.createSQLQuery(queryString);
+						query = session.createNativeQuery(queryString);
 						query.setParameter("param1", pRqID);
 
 						List<PurchaseRequestBoq> listPRqBoq = ((SQLQuery) query).addScalar("prItemCode")
