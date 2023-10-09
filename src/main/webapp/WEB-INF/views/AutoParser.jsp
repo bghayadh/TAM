@@ -418,7 +418,7 @@
                 				<span class="circle1">8</span>
                 				</div>
                 				<div class="col-sm-10">
-                				<button class="button3" id="NewHostVerMovement" style="align:center; margin-left: 14px;">Check Host Ver Movement</button>
+                				<button class="button3" id="NewSubRackMovement" style="align:center; margin-left: 14px;">Check SubRack Movement</button>
                 				</div>
                 				</div>
                 				</div>
@@ -812,6 +812,28 @@ $("#NewAntennaMovement").click(function() {
       success : function(data) {
    	   $('#loadingmessage44').hide();
             $("#loadingResult44").html(data.Result);
+			console.log("Success Result");
+         },
+        error : function(error) {
+        	console.log("Failure in returning data ");
+         }
+	 });
+});
+
+//Subrack Movement
+$("#NewSubRackMovement").click(function() {
+	$('#loadingmessage55').show();
+	$.ajax({
+         type: "GET",
+         url : '${pageContext.request.contextPath}/newSubRackMovement',
+         contentType: "application/json",
+         dataType: "json",
+         data: {
+         	//"Test" : "1234"            	
+         },
+      success : function(data) {
+   	   $('#loadingmessage55').hide();
+            $("#loadingResult55").html(data.Result);
 			console.log("Success Result");
          },
         error : function(error) {
