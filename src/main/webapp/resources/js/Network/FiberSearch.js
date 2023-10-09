@@ -1536,12 +1536,12 @@ if(equipment !=""){
 		       		"search":searchs,
 				 }
 			}	
-			/*else if(search=="Node"){
-				url='searchEquipment';
+			else if(search=="Node"){
+				url='getNodeData';
 				dataTarget = {					
 					"searchs":searchs,
 				}
-			}*/
+			}
 			else {
 				url='emptyUrl';
 			}
@@ -1564,16 +1564,16 @@ if(equipment !=""){
 			} 
 		},900), minLength:0, maxShowItems: 40, scroll:true,
 	 		select: function(event, ui) {
-	 		//	if(search=="DistBoard"){
+	 			if(search=="DistBoard"){
 					$("#"+equipmentID+ID).val(ui.item[0]);
 					$("#"+equipmentName+ID).val(ui.item[1]);
 					$("#"+equipmentType+ID).val("Distribution Board");
-				/*}
+				}
 				else if(search=="Node"){
 					 $("#"+equipmentID+ID).val(ui.item[0]);
 					$("#"+equipmentName+ID).val(ui.item[1]);
 					$("#"+equipmentType+ID).val(ui.item[2]);
-				}*/
+				}
 							
 			return false;
 		},	
@@ -1612,12 +1612,12 @@ if(equipment !=""){
 		       		"search":searchs,
 				 }
 			}	
-			/*else if(search=="Node"){
-				url='searchEquipment';
+			else if(search=="Node"){
+				url='getNodeData';
 				dataTarget = {					
 					"searchs":searchs,
 				}
-			}*/
+			}
 			else {
 				url='emptyUrl';
 			}
@@ -1640,16 +1640,16 @@ if(equipment !=""){
 			} 
 		},900), minLength:0, maxShowItems: 40, scroll:true,
 	 		select: function(event, ui) {
-	 		//	if(search=="DistBoard"){
+	 			if(search=="DistBoard"){
 					$("#"+equipmentID+ID).val(ui.item[0]);
 					$("#"+equipmentName+ID).val(ui.item[1]);
 					$("#"+equipmentType+ID).val("Distribution Board");
-				/*}
+				}
 				else if(search=="Node"){
 					 $("#"+equipmentID+ID).val(ui.item[0]);
 					$("#"+equipmentName+ID).val(ui.item[1]);
 					$("#"+equipmentType+ID).val(ui.item[2]);
-				}*/
+				}
 							
 			return false;
 		},	
@@ -1687,12 +1687,12 @@ if(equipment !=""){
 		       		"search":searchs,
 				 }
 			}	
-			/*else if(search=="Node"){
-				url='searchEquipment';
+			else if(search=="Node"){
+				url='getNodeData';
 				dataTarget = {					
 					"searchs":searchs,
 				}
-			}*/
+			}
 			else {
 				url='emptyUrl';
 			}
@@ -1715,16 +1715,16 @@ if(equipment !=""){
 			} 
 		},900), minLength:0, maxShowItems: 40, scroll:true,
 	 		select: function(event, ui) {
-	 		//	if(search=="DistBoard"){
+	 			if(search=="DistBoard"){
 					$("#"+equipmentID+ID).val(ui.item[0]);
 					$("#"+equipmentName+ID).val(ui.item[1]);
 					$("#"+equipmentType+ID).val("Distribution Board");
-				/*}
+				}
 				else if(search=="Node"){
 					 $("#"+equipmentID+ID).val(ui.item[0]);
 					$("#"+equipmentName+ID).val(ui.item[1]);
 					$("#"+equipmentType+ID).val(ui.item[2]);
-				}*/
+				}
 							
 			return false;
 		},	

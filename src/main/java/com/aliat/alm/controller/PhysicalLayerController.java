@@ -7089,37 +7089,56 @@ public class PhysicalLayerController {
 
 	}
 
-	@RequestMapping(value = "/searchEquipment", method = RequestMethod.GET)
+	@RequestMapping(value = "/getNodeData", method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, Object> searchEquipment(Locale locale, Model model, HttpServletRequest request,
+	public Map<String, Object> getNodeData(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException {
-		System.out.println("Passes here");
+		System.out.println("Passes here getNodeData");
 		Map<String, Object> rtn = new LinkedHashMap<String, Object>();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
 		}
-
+		
+		Query query;
 		session = almsessions.getSession();
-		tx = session.beginTransaction();
-
 		String search = request.getParameter("searchs");
-		System.out.println("search " + search + "  ");
+		System.out.println("search " + search);
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			try {
+				
+				/*if(search == null) {
+					System.out.println("search is null");
+					search = "";
+				}else {
+					System.out.println("search is not null");
+				}*/
+				query = session.createSQLQuery(
+			          // "SELECT NODE_ID,NODE_NAME,NODE_TYPE FROM NODE_ACTIVE WHERE UPPER(NODE_ID) LIKE UPPER(:param) OR UPPER(NODE_NAME) LIKE UPPER(:param) ");
+				       "SELECT NODE_ID,NODE_NAME,NODE_TYPE FROM NODE_ACTIVE WHERE NODE_ID LIKE :param OR NODE_NAME LIKE :param ");
+						//"SELECT NODE_ID,NODE_NAME,NODE_TYPE FROM NODE_ACTIVE ");
 
-		query = session.createSQLQuery(
-				"SELECT NODE_NAME FROM NODE_ACTIVE WHERE LOWER(NODE_NAME) LIKE :param OR UPPER(NODE_NAME) LIKE :param");
-		query.setParameter("param", "%" + search + "%");
+				query.setParameter("param", "%" + search + "%");
+				query.setFirstResult(0);
+				query.setMaxResults(40);
 
-		if (query.list().isEmpty()) {
-			System.out.println("emptyyyy");
-			rtn.put("glist", "");
-		} else {
-			rtn.put("glist", query.list());
-			System.out.println("nottt emptyy");
+				rtn.put("globalList", query.list());
 
+			} catch (Exception e) {
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in getNodeData due to \n " + exceptionAsString);
+				logger.info("Error in getNodeData due to \n " + exceptionAsString);
+				rtn.put("searchResult", null);
+			} finally {
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+				}
+			}
 		}
-		tx.commit();
-		session.close();
 
 		return rtn;
 
