@@ -2385,7 +2385,7 @@ public class PhysicalLayerController {
 							}
 							if (!valueExists) {
 								List<Object[]> MobileNbrBack = session.createSQLQuery(
-										"SELECT DISTINCT MOBILE_NUMBER,LONGITUDE,LATITUDE FROM CLIENTS WHERE CLIENT_ID= '"
+										"SELECT DISTINCT MOBILE_NUMBER,LONGITUDE,LATITUDE FROM CUSTOMER WHERE CUSTOMER_ID= '"
 												+ BackLocId + "' ")
 										.list();
 								// System.out.println("the mobile nbr back is " +
@@ -2490,7 +2490,7 @@ public class PhysicalLayerController {
 							if (!valueExists) {
 								System.out.println("FrontLocId "+FrontLocId);
 								List<Object[]> MobileNbrFront = session.createSQLQuery(
-										"SELECT DISTINCT MOBILE_NUMBER,LONGITUDE,LATITUDE FROM CLIENTS WHERE CLIENT_ID= '"
+										"SELECT DISTINCT MOBILE_NUMBER,LONGITUDE,LATITUDE FROM CUSTOMER WHERE CUSTOMER_ID= '"
 												+ FrontLocId + "' ")
 										.list();
 								// System.out.println("the mobile nbr front is " +
@@ -2529,7 +2529,7 @@ public class PhysicalLayerController {
 				// System.out.println("the Source id is " + SrcId);
 				// System.out.println("the Source all are " + mapper.writeValueAsString(Src));
 
-				if ((Src.get(0)[0]).toString().startsWith("CLT_")) {
+				if ((Src.get(0)[0]).toString().startsWith("CUST_")) {
 					boolean valueExists = false;
 					for (Object row : FinalResultClt) {
 						ArrayList<Object> innerList = (ArrayList<Object>) FinalResultClt.get(f);
@@ -2542,7 +2542,7 @@ public class PhysicalLayerController {
 					}
 					if (!valueExists) {
 						String MobileNbrSrc = session
-								.createSQLQuery("SELECT DISTINCT MOBILE_NUMBER FROM CLIENTS WHERE CLIENT_ID= '" + SrcId + "' ")
+								.createSQLQuery("SELECT DISTINCT MOBILE_NUMBER FROM CUSTOMER WHERE CUSTOMER_ID= '" + SrcId + "' ")
 								.uniqueResult().toString();
 						// System.out.println("the mobile nbr source is " +
 						// mapper.writeValueAsString(MobileNbrSrc));
@@ -2641,7 +2641,7 @@ public class PhysicalLayerController {
 					//	 System.out.println("===> final site data AFTER SRC DB SITE <===" +
 					//	 FinalResultClt);
 
-						if ((SiteSrcDB.get(0)[0]).toString().startsWith("CLT_")) {
+						if ((SiteSrcDB.get(0)[0]).toString().startsWith("CUST_")) {
 							boolean valueExists = false;
 							for (Object row : FinalResultClt) {
 								ArrayList<Object> innerList = (ArrayList<Object>) FinalResultClt.get(f);
@@ -2694,7 +2694,7 @@ public class PhysicalLayerController {
 				 * System.out.println("the dest  2 are  "
 				 * +mapper.writeValueAsString(Dest.get(0)[2]));
 				 */
-				if ((Dest.get(0)[0]).toString().startsWith("CLT_")) {
+				if ((Dest.get(0)[0]).toString().startsWith("CUST_")) {
 					boolean valueExists = false;
 					for (Object row : FinalResultClt) {
 						ArrayList<Object> innerList = (ArrayList<Object>) FinalResultClt.get(f);
@@ -2707,7 +2707,7 @@ public class PhysicalLayerController {
 					}
 					if (!valueExists) {
 						String MobileNbrDest = session
-								.createSQLQuery("SELECT DISTINCT MOBILE_NUMBER FROM CLIENTS WHERE CLIENT_ID= '" + DestId + "' ")
+								.createSQLQuery("SELECT DISTINCT MOBILE_NUMBER FROM CUSTOMER WHERE CUSTOMER_ID= '" + DestId + "' ")
 								.uniqueResult().toString();
 						// System.out.println("the mobile nbr dest is " +
 						// mapper.writeValueAsString(MobileNbrDest));
@@ -2810,7 +2810,7 @@ public class PhysicalLayerController {
 					//	 System.out.println("===> final site data AFTER DEST DB SITE <===" +
 					//	 FinalResultClt);
 
-						if ((SiteDestDB.get(0)[0]).toString().startsWith("CLT_")) {
+						if ((SiteDestDB.get(0)[0]).toString().startsWith("CUST_")) {
 							boolean valueExists = false;
 							for (Object row : FinalResultClt) {
 								ArrayList<Object> innerList = (ArrayList<Object>) FinalResultClt.get(f);
@@ -5339,10 +5339,10 @@ public class PhysicalLayerController {
 					fibercable.setSourceWareID(source.split(":")[0]);
 					fibercable.setSourceID(source.split(":")[2]);
 					fibercable.setSourceName(source.split(":")[1]);
-				} else if (source.contains("CLT") == true) {
+				} else if (source.contains("CUST") == true) {
 					fibercable.setSourceWareID("null");
 					fibercable.setSourceID(source.split(":")[0]);
-					fibercable.setSourceName(source.split(":")[1] + ":" + source.split(":")[2]);
+					fibercable.setSourceName(source.split(":")[1]);
 				}
 
 				else if (source.contains("MH") == true || source.contains("HH") == true
@@ -5361,10 +5361,10 @@ public class PhysicalLayerController {
 					fibercable.setDestinationWareID(destination.split(":")[0]);
 					fibercable.setDestinationID(destination.split(":")[2]);
 					fibercable.setDestinationName(destination.split(":")[1]);
-				} else if (destination.contains("CLT") == true) {
+				} else if (destination.contains("CUST") == true) {
 					fibercable.setDestinationWareID("null");
 					fibercable.setDestinationID(destination.split(":")[0]);
-					fibercable.setDestinationName(destination.split(":")[1] + ":" + destination.split(":")[2]);
+					fibercable.setDestinationName(destination.split(":")[1]);
 				}
 
 				else if (destination.contains("MH") == true || destination.contains("HH") == true
@@ -5695,10 +5695,10 @@ public class PhysicalLayerController {
 						sourceWareId = strandSource.split(":")[0];
 						sourceId = strandSource.split(":")[2];
 						sourceName = strandSource.split(":")[1];
-					} else if (strandSource.contains("CLT") == true) {
+					} else if (strandSource.contains("CUST") == true) {
 						sourceWareId = "null";
 						sourceId = strandSource.split(":")[0];
-						sourceName = strandSource.split(":")[1] + ":" + strandSource.split(":")[2];
+						sourceName = strandSource.split(":")[1];
 					} else if (strandSource.contains("MH") == true || strandSource.contains("HH") == true
 							|| strandSource.contains("DB") == true) {
 						sourceWareId = "null";
@@ -5715,10 +5715,10 @@ public class PhysicalLayerController {
 						dstWareId = strandDestination.split(":")[0];
 						dstId = strandDestination.split(":")[2];
 						dstName = strandDestination.split(":")[1];
-					} else if (strandDestination.contains("CLT") == true) {
+					} else if (strandDestination.contains("CUST") == true) {
 						dstWareId = "null";
 						dstId = strandDestination.split(":")[0];
-						dstName = strandDestination.split(":")[1] + ":" + strandDestination.split(":")[2];
+						dstName = strandDestination.split(":")[1];
 					} else if (strandDestination.contains("MH") == true || strandDestination.contains("HH") == true
 							|| strandDestination.contains("DB") == true) {
 						dstWareId = "null";
@@ -5836,10 +5836,10 @@ public class PhysicalLayerController {
 						sourceWareId = tubeSource.split(":")[0];
 						sourceId = tubeSource.split(":")[2];
 						sourceName = tubeSource.split(":")[1];
-					} else if (tubeSource.contains("CLT") == true) {
+					} else if (tubeSource.contains("CUST") == true) {
 						sourceWareId = "null";
 						sourceId = tubeSource.split(":")[0];
-						sourceName = tubeSource.split(":")[1] + ":" + tubeSource.split(":")[2];
+						sourceName = tubeSource.split(":")[1];
 					} else if (tubeSource.contains("MH") == true || tubeSource.contains("HH") == true
 							|| tubeSource.contains("DB") == true) {
 						sourceWareId = "null";
@@ -5856,10 +5856,10 @@ public class PhysicalLayerController {
 						dstWareId = tubeDestination.split(":")[0];
 						dstId = tubeDestination.split(":")[2];
 						dstName = tubeDestination.split(":")[1];
-					} else if (tubeDestination.contains("CLT") == true) {
+					} else if (tubeDestination.contains("CUST") == true) {
 						dstWareId = "null";
 						dstId = tubeDestination.split(":")[0];
-						dstName = tubeDestination.split(":")[1] + ":" + tubeDestination.split(":")[2];
+						dstName = tubeDestination.split(":")[1];
 					} else if (tubeDestination.contains("MH") == true || tubeDestination.contains("HH") == true
 							|| tubeDestination.contains("DB") == true) {
 						dstWareId = "null";
@@ -9241,10 +9241,10 @@ public class PhysicalLayerController {
 					fiberStrand.setSourceName(source.split(":")[1]);
 				}
 
-				else if (source.contains("CLT") == true) {
+				else if (source.contains("CUST") == true) {
 					fiberStrand.setSourceWareId("null");
 					fiberStrand.setSourceId(source.split(":")[0]);
-					fiberStrand.setSourceName(source.split(":")[1] + ":" + source.split(":")[2]);
+					fiberStrand.setSourceName(source.split(":")[1]);
 				} else if (source.contains("MH") == true || source.contains("HH") == true
 						|| source.contains("DB") == true) {
 					fiberStrand.setSourceWareId("null");
@@ -9262,10 +9262,10 @@ public class PhysicalLayerController {
 					fiberStrand.setDestinationName(destination.split(":")[1]);
 				}
 
-				else if (destination.contains("CLT") == true) {
+				else if (destination.contains("CUST") == true) {
 					fiberStrand.setDestinationWareId("null");
 					fiberStrand.setDestinationId(destination.split(":")[0]);
-					fiberStrand.setDestinationName(destination.split(":")[1] + ":" + destination.split(":")[2]);
+					fiberStrand.setDestinationName(destination.split(":")[1]);
 				} else if (destination.contains("MH") == true || destination.contains("HH") == true
 						|| destination.contains("DB") == true) {
 					fiberStrand.setDestinationWareId("null");
@@ -9547,10 +9547,10 @@ public class PhysicalLayerController {
 					fiberTubes.setSourceName(source.split(":")[1]);
 				}
 
-				else if (source.contains("CLT") == true) {
+				else if (source.contains("CUST") == true) {
 					fiberTubes.setSourceWareId("null");
 					fiberTubes.setSourceId(source.split(":")[0]);
-					fiberTubes.setSourceName(source.split(":")[1] + ":" + source.split(":")[2]);
+					fiberTubes.setSourceName(source.split(":")[1]);
 				} else if (source.contains("MH") == true || source.contains("HH") == true
 						|| source.contains("DB") == true) {
 					fiberTubes.setSourceWareId("null");
@@ -9567,10 +9567,10 @@ public class PhysicalLayerController {
 					fiberTubes.setDestinationName(destination.split(":")[1]);
 				}
 
-				else if (destination.contains("CLT") == true) {
+				else if (destination.contains("CUST") == true) {
 					fiberTubes.setDestinationWareId("null");
 					fiberTubes.setDestinationId(destination.split(":")[0]);
-					fiberTubes.setDestinationName(destination.split(":")[1] + ":" + destination.split(":")[2]);
+					fiberTubes.setDestinationName(destination.split(":")[1]);
 				} else if (destination.contains("MH") == true || destination.contains("HH") == true
 						|| destination.contains("DB") == true) {
 					fiberTubes.setDestinationWareId("null");
@@ -9992,11 +9992,10 @@ public class PhysicalLayerController {
 				trench.setSourceName(request.getParameter("SourceTrench").split(":")[1]);
 			}
 
-			else if (request.getParameter("SourceTrench").contains("CLT") == true) {
+			else if (request.getParameter("SourceTrench").contains("CUST") == true) {
 				trench.setSourceWareId("null");
 				trench.setSourceId(request.getParameter("SourceTrench").split(":")[0]);
-				trench.setSourceName(request.getParameter("SourceTrench").split(":")[1] + ":"
-						+ request.getParameter("SourceTrench").split(":")[2]);
+				trench.setSourceName(request.getParameter("SourceTrench").split(":")[1]);
 			} else if (request.getParameter("SourceTrench").contains("MH") == true
 					|| request.getParameter("SourceTrench").contains("HH") == true
 					|| request.getParameter("SourceTrench").contains("DB") == true) {
@@ -10015,11 +10014,10 @@ public class PhysicalLayerController {
 				trench.setDestinationName(request.getParameter("DestinationTrench").split(":")[1]);
 			}
 
-			else if (request.getParameter("DestinationTrench").contains("CLT") == true) {
+			else if (request.getParameter("DestinationTrench").contains("CUST") == true) {
 				trench.setDestinationWareId("null");
 				trench.setDestinationId(request.getParameter("DestinationTrench").split(":")[0]);
-				trench.setDestinationName(request.getParameter("DestinationTrench").split(":")[1] + ":"
-						+ request.getParameter("DestinationTrench").split(":")[2]);
+				trench.setDestinationName(request.getParameter("DestinationTrench").split(":")[1]);
 			} else if (request.getParameter("DestinationTrench").contains("MH") == true
 					|| request.getParameter("DestinationTrench").contains("HH") == true
 					|| request.getParameter("DestinationTrench").contains("DB") == true) {
@@ -10754,11 +10752,10 @@ public class PhysicalLayerController {
 					duct.setSourceWareId(request.getParameter("SourceDuct").split(":")[0]);
 					duct.setSourceId(request.getParameter("SourceDuct").split(":")[2]);
 					duct.setSourceName(request.getParameter("SourceDuct").split(":")[1]);
-				} else if (request.getParameter("SourceDuct").contains("CLT") == true) {
+				} else if (request.getParameter("SourceDuct").contains("CUST") == true) {
 					duct.setSourceWareId("null");
 					duct.setSourceId(request.getParameter("SourceDuct").split(":")[0]);
-					duct.setSourceName(request.getParameter("SourceDuct").split(":")[1] + ":"
-							+ request.getParameter("SourceDuct").split(":")[2]);
+					duct.setSourceName(request.getParameter("SourceDuct").split(":")[1]);
 				} else if (request.getParameter("SourceDuct").contains("MH") == true
 						|| request.getParameter("SourceDuct").contains("HH") == true
 						|| request.getParameter("SourceDuct").contains("DB") == true) {
@@ -10774,11 +10771,10 @@ public class PhysicalLayerController {
 					duct.setDestinationWareId(request.getParameter("DestinationDuct").split(":")[0]);
 					duct.setDestinationId(request.getParameter("DestinationDuct").split(":")[2]);
 					duct.setDestinationName(request.getParameter("DestinationDuct").split(":")[1]);
-				} else if (request.getParameter("DestinationDuct").contains("CLT") == true) {
+				} else if (request.getParameter("DestinationDuct").contains("CUST") == true) {
 					duct.setDestinationWareId("null");
 					duct.setDestinationId(request.getParameter("DestinationDuct").split(":")[0]);
-					duct.setDestinationName(request.getParameter("DestinationDuct").split(":")[1] + ":"
-							+ request.getParameter("DestinationDuct").split(":")[2]);
+					duct.setDestinationName(request.getParameter("DestinationDuct").split(":")[1]);
 				} else if (request.getParameter("DestinationDuct").contains("MH") == true
 						|| request.getParameter("DestinationDuct").contains("HH") == true
 						|| request.getParameter("DestinationDuct").contains("DB") == true) {
