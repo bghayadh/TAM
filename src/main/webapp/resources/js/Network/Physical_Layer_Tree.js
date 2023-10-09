@@ -526,7 +526,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 					src = fiberList[i][5]+":" +fiberList[i][7]+":"+fiberList[i][6];		
 				}
 				else {
-				 if (fiberList[i][6].split("_")[0]=="MH" || fiberList[i][6].split("_")[0]=="HH" ||fiberList[i][6].split("_")[0]=="DB" || fiberList[i][6].split("_")[0]=="CLT") {
+				 if (fiberList[i][6].split("_")[0]=="MH" || fiberList[i][6].split("_")[0]=="HH" ||fiberList[i][6].split("_")[0]=="DB" || fiberList[i][6].split("_")[0]=="CUST") {
 						src  = fiberList[i][6]+":" +fiberList[i][7];	
 					}
 					else {
@@ -540,7 +540,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 					dst = fiberList[i][8]+":" +fiberList[i][10]+":"+fiberList[i][9];		
 				}
 				else {
-					if (fiberList[i][9].split("_")[0]=="MH" || fiberList[i][9].split("_")[0]=="HH" ||fiberList[i][9].split("_")[0]=="DB" || fiberList[i][9].split("_")[0]=="CLT") {
+					if (fiberList[i][9].split("_")[0]=="MH" || fiberList[i][9].split("_")[0]=="HH" ||fiberList[i][9].split("_")[0]=="DB" || fiberList[i][9].split("_")[0]=="CUST") {
 						dst  = fiberList[i][9]+":" +fiberList[i][10];	
 					}
 					else {
@@ -653,7 +653,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 					tubeSrc = fiberTubes[i][5]+":" +fiberTubes[i][7]+":"+fiberTubes[i][6];		
 				}
 				else {
-				 if (fiberTubes[i][6].split("_")[0]=="MH" || fiberTubes[i][6].split("_")[0]=="HH" ||fiberTubes[i][6].split("_")[0]=="DB" || fiberTubes[i][6].split("_")[0]=="CLT") {
+				 if (fiberTubes[i][6].split("_")[0]=="MH" || fiberTubes[i][6].split("_")[0]=="HH" ||fiberTubes[i][6].split("_")[0]=="DB" || fiberTubes[i][6].split("_")[0]=="CUST") {
 					 tubeSrc  = fiberTubes[i][6]+":" +fiberTubes[i][7];	
 					}
 					else {
@@ -666,7 +666,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 					tubeDst = fiberTubes[i][8]+":" +fiberTubes[i][10]+":"+fiberTubes[i][9];		
 				}
 				else {
-					if (fiberTubes[i][9].split("_")[0]=="MH" || fiberTubes[i][9].split("_")[0]=="HH" || fiberTubes[i][9].split("_")[0]=="DB" || fiberTubes[i][9].split("_")[0]=="CLT") {
+					if (fiberTubes[i][9].split("_")[0]=="MH" || fiberTubes[i][9].split("_")[0]=="HH" || fiberTubes[i][9].split("_")[0]=="DB" || fiberTubes[i][9].split("_")[0]=="CUST") {
 						tubeDst  = fiberTubes[i][9]+":" +fiberTubes[i][10];	
 					}
 					else {
@@ -781,7 +781,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 					strandSrc = fiberStrands[i][5]+":" +fiberStrands[i][7]+":"+fiberStrands[i][6];		
 				}
 				else {
-				 if (fiberStrands[i][6].split("_")[0]=="MH" || fiberStrands[i][6].split("_")[0]=="HH" ||fiberStrands[i][6].split("_")[0]=="DB" || fiberStrands[i][6].split("_")[0]=="CLT") {
+				 if (fiberStrands[i][6].split("_")[0]=="MH" || fiberStrands[i][6].split("_")[0]=="HH" ||fiberStrands[i][6].split("_")[0]=="DB" || fiberStrands[i][6].split("_")[0]=="CUST") {
 					 strandSrc  = fiberStrands[i][6]+":" +fiberStrands[i][7];	
 					}
 					else {
@@ -794,7 +794,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 					strandDst = fiberStrands[i][8]+":" +fiberStrands[i][10]+":"+fiberStrands[i][9];		
 				}
 				else {
-					if (fiberStrands[i][9].split("_")[0]=="MH" || fiberStrands[i][9].split("_")[0]=="HH" || fiberStrands[i][9].split("_")[0]=="DB" || fiberStrands[i][9].split("_")[0]=="CLT") {
+					if (fiberStrands[i][9].split("_")[0]=="MH" || fiberStrands[i][9].split("_")[0]=="HH" || fiberStrands[i][9].split("_")[0]=="DB" || fiberStrands[i][9].split("_")[0]=="CUST") {
 						strandDst  = fiberStrands[i][9]+":" +fiberStrands[i][10];	
 					}
 					else {
@@ -967,7 +967,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 					trenchSrc = trenchList[i][2]+":" +trenchList[i][4]+":"+trenchList[i][3];		
 				}
 				else {
-					if (trenchList[i][3].split("_")[0]=="MH" || trenchList[i][3].split("_")[0]=="HH" ||trenchList[i][3].split("_")[0]=="DB" || trenchList[i][3].split("_")[0]=="CLT") {
+					if (trenchList[i][3].split("_")[0]=="MH" || trenchList[i][3].split("_")[0]=="HH" ||trenchList[i][3].split("_")[0]=="DB" || trenchList[i][3].split("_")[0]=="CUST") {
 						trenchSrc  = trenchList[i][3]+":" +trenchList[i][4];	
 					}
 					else {
@@ -980,7 +980,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 					trenchDst = trenchList[i][5]+":" +trenchList[i][7]+":"+trenchList[i][6];		
 				}
 				else {
-					if (trenchList[i][6].split("_")[0]=="MH" || trenchList[i][6].split("_")[0]=="HH" || trenchList[i][6].split("_")[0]=="DB" || trenchList[i][6].split("_")[0]=="CLT") {
+					if (trenchList[i][6].split("_")[0]=="MH" || trenchList[i][6].split("_")[0]=="HH" || trenchList[i][6].split("_")[0]=="DB" || trenchList[i][6].split("_")[0]=="CUST") {
 						trenchDst  = trenchList[i][6]+":" +trenchList[i][7];	
 					}
 					else {
@@ -1079,7 +1079,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				ductSrc = ductList[i][2]+":" +ductList[i][4]+":"+ductList[i][3];		
 			}
 			else {
-				if (ductList[i][3].split("_")[0]=="MH" || ductList[i][3].split("_")[0]=="HH" || ductList[i][3].split("_")[0]=="DB" || ductList[i][3].split("_")[0]=="CLT") {
+				if (ductList[i][3].split("_")[0]=="MH" || ductList[i][3].split("_")[0]=="HH" || ductList[i][3].split("_")[0]=="DB" || ductList[i][3].split("_")[0]=="CUST") {
 					ductSrc  = ductList[i][3]+":" +ductList[i][4];	
 				}
 				else {
@@ -1092,7 +1092,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				ductDst = ductList[i][5]+":" +ductList[i][7]+":"+ductList[i][6];		
 			}
 			else {
-				if (ductList[i][6].split("_")[0]=="MH" || ductList[i][6].split("_")[0]=="HH" || ductList[i][6].split("_")[0]=="DB" || ductList[i][6].split("_")[0]=="CLT") {
+				if (ductList[i][6].split("_")[0]=="MH" || ductList[i][6].split("_")[0]=="HH" || ductList[i][6].split("_")[0]=="DB" || ductList[i][6].split("_")[0]=="CUST") {
 					ductDst  = ductList[i][6]+":" +ductList[i][7];	
 				}
 				else {
@@ -1494,7 +1494,7 @@ Width : '200%',
 						
 						//Uncheck all autocomplete checkboxes when opening the popup
 						uncheckAutoCompleteCheckboxes("auxPtStrandAutocomplete");
-						uncheckAutoCompleteCheckboxes("manhole_StrandAutoComplete","site_StrandAutoComplete","handhole_StrandAutoComplete","db_StrandAutoComplete","client_StrandAutoComplete");							
+						uncheckAutoCompleteCheckboxes("manhole_StrandAutoComplete","site_StrandAutoComplete","handhole_StrandAutoComplete","db_StrandAutoComplete","customer_StrandAutoComplete");							
 						
 						// active the aux tab
 						 $('#StrandModal ul.nav-tabs li a').removeClass('active');
@@ -2656,8 +2656,8 @@ menuNodeesActive = new ContextMenu({
 					document.querySelector("#DBMappingFlag").value = "new DB";
 					document.getElementById("site_DBAutoComplete").checked = true;
 					$('#site_DBAutoComplete').val('1');
-					document.getElementById("client_DBAutoComplete").checked = false;
-					$('#client_DBAutoComplete').val('0');
+					document.getElementById("customer_DBAutoComplete").checked = false;
+					$('#customer_DBAutoComplete').val('0');
 					document.getElementById("DBClientId").style.display = "none";
 					document.getElementById("DBClientName").style.display = "none";
 					document.getElementById("BDClientPhoneNb").style.display = "none";
@@ -2787,7 +2787,7 @@ menuNodeesActive = new ContextMenu({
 			
 			//Uncheck all autocomplete checkboxes when opening the popup
 			uncheckAutoCompleteCheckboxes("auxPtTrenchAutocomplete");
-			uncheckAutoCompleteCheckboxes("manhole_TrenchAutoComplete","site_TrenchAutoComplete","handhole_TrenchAutoComplete","db_TrenchAutoComplete","client_TrenchAutoComplete");							
+			uncheckAutoCompleteCheckboxes("manhole_TrenchAutoComplete","site_TrenchAutoComplete","handhole_TrenchAutoComplete","db_TrenchAutoComplete","customer_TrenchAutoComplete");							
 			
 			// active the aux tab
 			 $('#trenchModal ul.nav-tabs li a').removeClass('active');
@@ -2925,7 +2925,7 @@ menuNodeesActive = new ContextMenu({
 		
 		//Uncheck all autocomplete checkboxes when opening the popup
 		uncheckAutoCompleteCheckboxes("auxPtTrenchAutocomplete");
-		uncheckAutoCompleteCheckboxes("manhole_TrenchAutoComplete","site_TrenchAutoComplete","handhole_TrenchAutoComplete","db_TrenchAutoComplete","client_TrenchAutoComplete");							
+		uncheckAutoCompleteCheckboxes("manhole_TrenchAutoComplete","site_TrenchAutoComplete","handhole_TrenchAutoComplete","db_TrenchAutoComplete","customer_TrenchAutoComplete");							
 		
 		// active the aux tab
 		 $('#trenchModal ul.nav-tabs li a').removeClass('active');
@@ -3356,7 +3356,7 @@ menuNodeesActive = new ContextMenu({
 					srcTrench = data.TrenchData[0][0]+":" +data.TrenchData[0][2]+":"+data.TrenchData[0][1];		
 				}
 				else {
-					if (data.TrenchData[0][1].split("_")[0]=="MH" || data.TrenchData[0][1].split("_")[0]=="HH" || data.TrenchData[0][1].split("_")[0]=="DB" || data.TrenchData[0][1].split("_")[0]=="CLT") {
+					if (data.TrenchData[0][1].split("_")[0]=="MH" || data.TrenchData[0][1].split("_")[0]=="HH" || data.TrenchData[0][1].split("_")[0]=="DB" || data.TrenchData[0][1].split("_")[0]=="CUST") {
 						srcTrench  = data.TrenchData[0][1]+":" +data.TrenchData[0][2];	
 					}
 					else {
@@ -3368,7 +3368,7 @@ menuNodeesActive = new ContextMenu({
 					dstTrench = data.TrenchData[0][3]+":" +data.TrenchData[0][5]+":"+data.TrenchData[0][4];		
 				}
 				else {
-					if (data.TrenchData[0][4].split("_")[0]=="MH" || data.TrenchData[0][4].split("_")[0]=="HH" || data.TrenchData[0][4].split("_")[0]=="DB" || data.TrenchData[0][4].split("_")[0]=="CLT") {
+					if (data.TrenchData[0][4].split("_")[0]=="MH" || data.TrenchData[0][4].split("_")[0]=="HH" || data.TrenchData[0][4].split("_")[0]=="DB" || data.TrenchData[0][4].split("_")[0]=="CUST") {
 						dstTrench  = data.TrenchData[0][4]+":" +data.TrenchData[0][5];	
 					}
 					else {
@@ -3875,7 +3875,7 @@ singleNodeActive = new ContextMenu({
 					srcDuct = data.DuctData[0][0]+":" +data.DuctData[0][2]+":"+data.DuctData[0][1];		
 				}
 				else {
-					if (data.DuctData[0][1].split("_")[0]=="MH" || data.DuctData[0][1].split("_")[0]=="HH" || data.DuctData[0][1].split("_")[0]=="DB" || data.DuctData[0][1].split("_")[0]=="CLT") {
+					if (data.DuctData[0][1].split("_")[0]=="MH" || data.DuctData[0][1].split("_")[0]=="HH" || data.DuctData[0][1].split("_")[0]=="DB" || data.DuctData[0][1].split("_")[0]=="CUST") {
 						srcDuct  = data.DuctData[0][1]+":" +data.DuctData[0][2];	
 					}
 					else {
@@ -3887,7 +3887,7 @@ singleNodeActive = new ContextMenu({
 					dstDuct = data.DuctData[0][3]+":" +data.DuctData[0][5]+":"+data.DuctData[0][4];		
 				}
 				else {
-					if (data.DuctData[0][4].split("_")[0]=="MH" || data.DuctData[0][4].split("_")[0]=="HH" || data.DuctData[0][4].split("_")[0]=="DB" || data.DuctData[0][4].split("_")[0]=="CLT") {
+					if (data.DuctData[0][4].split("_")[0]=="MH" || data.DuctData[0][4].split("_")[0]=="HH" || data.DuctData[0][4].split("_")[0]=="DB" || data.DuctData[0][4].split("_")[0]=="CUST") {
 						dstDuct  = data.DuctData[0][4]+":" +data.DuctData[0][5];	
 					}
 					else {
@@ -4114,10 +4114,10 @@ singleNodeActive = new ContextMenu({
 							 var srcId = SourceTrench.split(":")[2];
 							 var srcName = SourceTrench.split(":")[1];
 						}
-						 else if(SourceTrench.includes("CLT") == true ) {
+						 else if(SourceTrench.includes("CUST") == true ) {
 							 var srcWareId = "null" ;
 							 var srcId = SourceTrench.split(":")[0];
-							 var srcName = SourceTrench.split(":")[1]+":"+SourceTrench.split(":")[2];
+							 var srcName = SourceTrench.split(":")[1];
 						}
 						 else if(SourceTrench.includes("MH") == true || SourceTrench.includes("HH") == true || SourceTrench.includes("DB") == true  ) {
 							 var srcWareId = "null" ;
@@ -4135,10 +4135,10 @@ singleNodeActive = new ContextMenu({
 							 var dstId = DestinationTrench.split(":")[2];
 							 var dstName = DestinationTrench.split(":")[1];
 						}
-						 else if(DestinationTrench.includes("CLT") == true ) {
+						 else if(DestinationTrench.includes("CUST") == true ) {
 							 var dstWareId = "null" ;
 							 var dstId = DestinationTrench.split(":")[0];
-							 var dstName = DestinationTrench.split(":")[1]+":"+DestinationTrench.split(":")[2];
+							 var dstName = DestinationTrench.split(":")[1];
 						}
 						 else if(DestinationTrench.includes("MH") == true || DestinationTrench.includes("HH") == true || DestinationTrench.includes("DB") == true  ) {
 							 var dstWareId = "null" ;
@@ -4406,10 +4406,10 @@ singleNodeActive = new ContextMenu({
 							 var srcId = SourceDuct.split(":")[2];
 							 var srcName = SourceDuct.split(":")[1];
 						}
-						 else if(SourceDuct.includes("CLT") == true ) {
+						 else if(SourceDuct.includes("CUST") == true ) {
 							 var srcWareId = "null" ;
 							 var srcId = SourceDuct.split(":")[0];
-							 var srcName = SourceDuct.split(":")[1]+":"+SourceDuct.split(":")[2];
+							 var srcName = SourceDuct.split(":")[1];
 						}
 						 else if(SourceDuct.includes("MH") == true || SourceDuct.includes("HH") == true || SourceDuct.includes("DB") == true  ) {
 							 var srcWareId = "null" ;
@@ -4427,10 +4427,10 @@ singleNodeActive = new ContextMenu({
 							 var dstId = DestinationDuct.split(":")[2];
 							 var dstName = DestinationDuct.split(":")[1];
 						}
-						 else if(DestinationDuct.includes("CLT") == true ) {
+						 else if(DestinationDuct.includes("CUST") == true ) {
 							 var dstWareId = "null" ;
 							 var dstId = DestinationDuct.split(":")[0];
-							 var dstName = DestinationDuct.split(":")[1]+":"+DestinationDuct.split(":")[2];
+							 var dstName = DestinationDuct.split(":")[1];
 						}
 						 else if(DestinationDuct.includes("MH") == true || DestinationDuct.includes("HH") == true || DestinationDuct.includes("DB") == true  ) {
 							 var dstWareId = "null" ;
@@ -6538,8 +6538,8 @@ singleProject = new ContextMenu({
 						//
 						document.getElementById("site_DBAutoComplete").checked = true;
 						$('#site_DBAutoComplete').val('1');
-						document.getElementById("client_DBAutoComplete").checked = false;
-						$('#client_DBAutoComplete').val('0');
+						document.getElementById("customer_DBAutoComplete").checked = false;
+						$('#customer_DBAutoComplete').val('0');
 						document.getElementById("DBClientId").style.display = "none";
 						document.getElementById("DBClientName").style.display = "none";
 						document.getElementById("BDClientPhoneNb").style.display = "none";
@@ -6593,9 +6593,9 @@ singleProject = new ContextMenu({
 									
 									$("#DistributionBoardId").val(selectedDistBoardContext);
 									if(data.DistBoardDetails[0][1]!=null){
-										if(data.DistBoardDetails[0][1].split("_")[0] == "CLT"){//for check box site or client
-											document.getElementById("client_DBAutoComplete").checked = true;
-											$('#client_DBAutoComplete').val('1');
+										if(data.DistBoardDetails[0][1].split("_")[0] == "CUST"){//for check box site or client
+											document.getElementById("customer_DBAutoComplete").checked = true;
+											$('#customer_DBAutoComplete').val('1');
 											document.getElementById("site_DBAutoComplete").checked = false;
 											$('#site_DBAutoComplete').val('0');
 											document.getElementById("BDWarehouse").style.display = "none";
@@ -6608,8 +6608,8 @@ singleProject = new ContextMenu({
 										}else{
 											document.getElementById("site_DBAutoComplete").checked = true;
 											$('#site_DBAutoComplete').val('1');
-											document.getElementById("client_DBAutoComplete").checked = false;
-											$('#client_DBAutoComplete').val('0');
+											document.getElementById("customer_DBAutoComplete").checked = false;
+											$('#customer_DBAutoComplete').val('0');
 											document.getElementById("DBClientId").style.display = "none";
 											document.getElementById("DBClientName").style.display = "none";
 											document.getElementById("BDClientPhoneNb").style.display = "none";
@@ -6622,8 +6622,8 @@ singleProject = new ContextMenu({
 									if(data.DistBoardDetails[0][1] == null){
 										document.getElementById("site_DBAutoComplete").checked = true;
 										$('#site_DBAutoComplete').val('1');
-										document.getElementById("client_DBAutoComplete").checked = false;
-										$('#client_DBAutoComplete').val('0');
+										document.getElementById("customer_DBAutoComplete").checked = false;
+										$('#customer_DBAutoComplete').val('0');
 										document.getElementById("DBClientId").style.display = "none";
 										document.getElementById("DBClientName").style.display = "none";
 										document.getElementById("BDClientPhoneNb").style.display = "none";
@@ -6636,7 +6636,7 @@ singleProject = new ContextMenu({
 										$("#DistributionBoardName").val(""+data.DistBoardDetails[0][0]);
 									}
 									if(data.DistBoardDetails[0][1]!=null){
-										if(data.DistBoardDetails[0][1].split("_")[0] == "CLT"){
+										if(data.DistBoardDetails[0][1].split("_")[0] == "CUST"){
 											 $("#DistributionBoardClient").val(""+data.DistBoardDetails[0][1]);
 										}
 										else{
@@ -6672,7 +6672,7 @@ singleProject = new ContextMenu({
 									
 									if(data.DistBoardDetails[0][10]!=null){ 
 										if(data.DistBoardDetails[0][1] !=null){
-											if(data.DistBoardDetails[0][1].split("_")[0] == "CLT"){
+											if(data.DistBoardDetails[0][1].split("_")[0] == "CUST"){
 												   $("#DistributionBoardClientName").val(""+data.DistBoardDetails[0][10]);
 												}
 												else{
@@ -6687,7 +6687,7 @@ singleProject = new ContextMenu({
 									
 									if(data.DistBoardDetails[0][11]!=null ){
 										if(data.DistBoardDetails[0][1] !=null){
-											if(data.DistBoardDetails[0][1].split("_")[0] == "CLT"){
+											if(data.DistBoardDetails[0][1].split("_")[0] == "CUST"){
 												   $("#DistributionBoardClientPhoneNb").val(""+data.DistBoardDetails[0][11]);
 											}
 												else{
@@ -7790,7 +7790,7 @@ singleProject = new ContextMenu({
 						    var prevVal = $(this).data('val');
 						    var currentVal = $("#Source").val();
 						 if(prevVal != currentVal && (window['fiberCheckPoints_'+selectedFiberContext] == "checked" || window['fiberCheckRealPoints_'+selectedFiberContext] == "checked")  ) {
-							 if(prevVal.split("_")[0] =="WARE" || prevVal.split("_")[0] =="CLT" ) {
+							 if(prevVal.split("_")[0] =="WARE" || prevVal.split("_")[0] =="CUST" ) {
 							    if(siteCltSrcMarkers[prevVal.split(":")[0]]) {
 							    	siteCltSrcMarkers[prevVal.split(":")[0]].setMap(null);	
 							    }
@@ -7857,7 +7857,7 @@ singleProject = new ContextMenu({
 							    var prevVal = $(this).data('val');
 							    var currentVal = $("#Destination").val();
 							 if(prevVal != currentVal && (window['fiberCheckPoints_'+selectedFiberContext] == "checked" || window['fiberCheckRealPoints_'+selectedFiberContext] == "checked")  ) {
-								 if(prevVal.split("_")[0] =="WARE" || prevVal.split("_")[0] =="CLT" ) {
+								 if(prevVal.split("_")[0] =="WARE" || prevVal.split("_")[0] =="CUST" ) {
 									 if(siteCltSrcMarkers[prevVal.split(":")[0]]) {
 										siteCltSrcMarkers[prevVal.split(":")[0]].setMap(null);
 									 }
@@ -8099,7 +8099,7 @@ singleProject = new ContextMenu({
 										src =data.FiberData[0][1]+":" +data.FiberData[0][3]+":"+data.FiberData[0][2];		
 									}
 									else {
-										if (data.FiberData[0][2].split("_")[0]=="MH" || data.FiberData[0][2].split("_")[0]=="HH" ||data.FiberData[0][2].split("_")[0]=="DB" || data.FiberData[0][2].split("_")[0]=="CLT") {
+										if (data.FiberData[0][2].split("_")[0]=="MH" || data.FiberData[0][2].split("_")[0]=="HH" ||data.FiberData[0][2].split("_")[0]=="DB" || data.FiberData[0][2].split("_")[0]=="CUST") {
 											src  = data.FiberData[0][2]+":" +data.FiberData[0][3];	
 										}
 										else {
@@ -8111,7 +8111,7 @@ singleProject = new ContextMenu({
 											dst =data.FiberData[0][4]+":" +data.FiberData[0][3]+":"+data.FiberData[0][5];		
 										}
 										else {
-											if (data.FiberData[0][5].split("_")[0]=="MH" || data.FiberData[0][5].split("_")[0]=="HH" ||data.FiberData[0][5].split("_")[0]=="DB" || data.FiberData[0][5].split("_")[0]=="CLT") {
+											if (data.FiberData[0][5].split("_")[0]=="MH" || data.FiberData[0][5].split("_")[0]=="HH" ||data.FiberData[0][5].split("_")[0]=="DB" || data.FiberData[0][5].split("_")[0]=="CUST") {
 												dst  = data.FiberData[0][5]+":" +data.FiberData[0][6];	
 											}
 											else {
@@ -8632,7 +8632,7 @@ singleProject = new ContextMenu({
 				
 				//Uncheck all autocomplete checkboxes when opening the popup
 				uncheckAutoCompleteCheckboxes("auxPtStrandAutocomplete");
-				uncheckAutoCompleteCheckboxes("manhole_StrandAutoComplete","site_StrandAutoComplete","handhole_StrandAutoComplete","db_StrandAutoComplete","client_StrandAutoComplete");							
+				uncheckAutoCompleteCheckboxes("manhole_StrandAutoComplete","site_StrandAutoComplete","handhole_StrandAutoComplete","db_StrandAutoComplete","customer_StrandAutoComplete");							
 				
 				// active the aux tab
 				 $('#StrandModal ul.nav-tabs li a').removeClass('active');
@@ -8932,7 +8932,7 @@ singleProject = new ContextMenu({
 							srcTube = data.TubeData[0][0]+":" +data.TubeData[0][2]+":"+data.TubeData[0][1];		
 						}
 						else {
-						 if (data.TubeData[0][1].split("_")[0]=="MH" || data.TubeData[0][1].split("_")[0]=="HH" || data.TubeData[0][1].split("_")[0]=="DB" || data.TubeData[0][1].split("_")[0]=="CLT") {
+						 if (data.TubeData[0][1].split("_")[0]=="MH" || data.TubeData[0][1].split("_")[0]=="HH" || data.TubeData[0][1].split("_")[0]=="DB" || data.TubeData[0][1].split("_")[0]=="CUST") {
 							 srcTube  = data.TubeData[0][1]+":" +data.TubeData[0][2];	
 							}
 							else {
@@ -8944,7 +8944,7 @@ singleProject = new ContextMenu({
 							dstTube = data.TubeData[0][3]+":" +data.TubeData[0][5]+":"+data.TubeData[0][4];		
 						}
 						else {
-						 if (data.TubeData[0][4].split("_")[0]=="MH" || data.TubeData[0][4].split("_")[0]=="HH" || data.TubeData[0][4].split("_")[0]=="DB" || data.TubeData[0][4].split("_")[0]=="CLT") {
+						 if (data.TubeData[0][4].split("_")[0]=="MH" || data.TubeData[0][4].split("_")[0]=="HH" || data.TubeData[0][4].split("_")[0]=="DB" || data.TubeData[0][4].split("_")[0]=="CUST") {
 								dstTube  = data.TubeData[0][4]+":" +data.TubeData[0][5];	
 							}
 							else {
@@ -10412,15 +10412,15 @@ $("#saveHandhole").click(function () {
 				return false;
 		    }
 			
-			else if(document.getElementById("DistributionBoardClient").value == "" && document.getElementById('client_DBAutoComplete').checked){
+			else if(document.getElementById("DistributionBoardClient").value == "" && document.getElementById('customer_DBAutoComplete').checked){
 				alert("ClientID cannot be empty. ");
 				return false;
 		    }
-			else if(document.getElementById("DistributionBoardClientName").value == "" && document.getElementById('client_DBAutoComplete').checked){
+			else if(document.getElementById("DistributionBoardClientName").value == "" && document.getElementById('customer_DBAutoComplete').checked){
 				alert("Client Name cannot be empty. ");
 				return false;
 		    }
-			else if(document.getElementById("DistributionBoardClientPhoneNb").value == "" && document.getElementById('client_DBAutoComplete').checked){
+			else if(document.getElementById("DistributionBoardClientPhoneNb").value == "" && document.getElementById('customer_DBAutoComplete').checked){
 				alert("Phone Number cannot be empty. ");
 				return false;
 		    }
@@ -10466,12 +10466,14 @@ $("#saveHandhole").click(function () {
 					var locationId =""; 
 					var locationName = ""; 
 					var location = "";
+					var isSiteChecked="";
+					var isClientChecked="";
 					
 					if (document.getElementById('site_DBAutoComplete').checked) {
 						isSiteChecked=true;
 					}
 					
-					if (document.getElementById('client_DBAutoComplete').checked) {
+					if (document.getElementById('customer_DBAutoComplete').checked) {
 						isClientChecked=true;
 					}
 					if(isSiteChecked == true){
@@ -13599,10 +13601,10 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 							 var srcId = source.split(":")[2];
 							 var srcName = source.split(":")[1];		
 						}
-						else if(source.includes("CLT") == true ) {
+						else if(source.includes("CUST") == true ) {
 							 var srcWareId = "null" ;
 							 var srcId = source.split(":")[0];
-							 var srcName = source.split(":")[1]+":"+source.split(":")[2];
+							 var srcName = source.split(":")[1];
 						}		
 						else if(source.includes("MH") == true || source.includes("HH") == true || source.includes("DB") == true  ) {
 							 var srcWareId = "null" ;
@@ -13619,10 +13621,10 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 							 var dstId = destination.split(":")[2];
 							 var dstName = destination.split(":")[1];
 						}
-						 else if(destination.includes("CLT") == true ) {
+						 else if(destination.includes("CUST") == true ) {
 							 var dstWareId = "null" ;
 							 var dstId = destination.split(":")[0];
-							 var dstName = destination.split(":")[1]+":"+destination.split(":")[2];
+							 var dstName = destination.split(":")[1];
 						}
 						 else if(destination.includes("MH") == true || destination.includes("HH") == true || destination.includes("DB") == true  ) {
 							 var dstWareId = "null" ;
@@ -13766,7 +13768,7 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 								tubeSrc = data.tubeIdArrayList[i][5]+":" +data.tubeIdArrayList[i][7]+":"+data.tubeIdArrayList[i][6];		
 							}
 							else {
-							 if (data.tubeIdArrayList[i][6].split("_")[0]=="MH" || data.tubeIdArrayList[i][6].split("_")[0]=="HH" ||data.tubeIdArrayList[i][6].split("_")[0]=="DB" || data.tubeIdArrayList[i][6].split("_")[0]=="CLT") {
+							 if (data.tubeIdArrayList[i][6].split("_")[0]=="MH" || data.tubeIdArrayList[i][6].split("_")[0]=="HH" ||data.tubeIdArrayList[i][6].split("_")[0]=="DB" || data.tubeIdArrayList[i][6].split("_")[0]=="CUST") {
 								 tubeSrc  = data.tubeIdArrayList[i][6]+":" +data.tubeIdArrayList[i][7];	
 								}
 								else {
@@ -13779,7 +13781,7 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 								tubeDst = data.tubeIdArrayList[i][8]+":" +data.tubeIdArrayList[i][10]+":"+data.tubeIdArrayList[i][9];		
 							}
 							else {
-								if (data.tubeIdArrayList[i][9].split("_")[0]=="MH" || data.tubeIdArrayList[i][9].split("_")[0]=="HH" || data.tubeIdArrayList[i][9].split("_")[0]=="DB" || data.tubeIdArrayList[i][9].split("_")[0]=="CLT") {
+								if (data.tubeIdArrayList[i][9].split("_")[0]=="MH" || data.tubeIdArrayList[i][9].split("_")[0]=="HH" || data.tubeIdArrayList[i][9].split("_")[0]=="DB" || data.tubeIdArrayList[i][9].split("_")[0]=="CUST") {
 									tubeDst  = data.tubeIdArrayList[i][9]+":" +data.tubeIdArrayList[i][10];	
 								}
 								else {
@@ -13886,7 +13888,7 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 							strandSrc = data.strandsOfTubes[i][5]+":" +data.strandsOfTubes[i][7]+":"+data.strandsOfTubes[i][6];		
 						}
 						else {
-						 if (data.strandsOfTubes[i][6].split("_")[0]=="MH" || data.strandsOfTubes[i][6].split("_")[0]=="HH" ||data.strandsOfTubes[i][6].split("_")[0]=="DB" || data.strandsOfTubes[i][6].split("_")[0]=="CLT") {
+						 if (data.strandsOfTubes[i][6].split("_")[0]=="MH" || data.strandsOfTubes[i][6].split("_")[0]=="HH" ||data.strandsOfTubes[i][6].split("_")[0]=="DB" || data.strandsOfTubes[i][6].split("_")[0]=="CUST") {
 							 strandSrc  = data.strandsOfTubes[i][6]+":" +data.strandsOfTubes[i][7];	
 							}
 							else {
@@ -13899,7 +13901,7 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 							strandDst = data.strandsOfTubes[i][8]+":" +data.strandsOfTubes[i][10]+":"+data.strandsOfTubes[i][9];		
 						}
 						else {
-							if (data.strandsOfTubes[i][9].split("_")[0]=="MH" || data.strandsOfTubes[i][9].split("_")[0]=="HH" || data.strandsOfTubes[i][9].split("_")[0]=="DB" || data.strandsOfTubes[i][9].split("_")[0]=="CLT") {
+							if (data.strandsOfTubes[i][9].split("_")[0]=="MH" || data.strandsOfTubes[i][9].split("_")[0]=="HH" || data.strandsOfTubes[i][9].split("_")[0]=="DB" || data.strandsOfTubes[i][9].split("_")[0]=="CUST") {
 								strandDst  = data.strandsOfTubes[i][9]+":" +data.strandsOfTubes[i][10];	
 							}
 							else {
@@ -14220,10 +14222,10 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 							 var srcId = sourceStrand.split(":")[2];
 							 var srcName = sourceStrand.split(":")[1];
 						}
-						 else if(sourceStrand.includes("CLT") == true ) {
+						 else if(sourceStrand.includes("CUST") == true ) {
 							 var srcWareId = "null" ;
 							 var srcId = sourceStrand.split(":")[0];
-							 var srcName = sourceStrand.split(":")[1]+":"+sourceStrand.split(":")[2];
+							 var srcName = sourceStrand.split(":")[1];
 						}
 						 else if(sourceStrand.includes("MH") == true || sourceStrand.includes("HH") == true || sourceStrand.includes("DB") == true  ) {
 							 var srcWareId = "null" ;
@@ -14240,10 +14242,10 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 							 var dstId = destinationStrand.split(":")[2];
 							 var dstName = destinationStrand.split(":")[1];
 						}
-						 else if(destinationStrand.includes("CLT") == true ) {
+						 else if(destinationStrand.includes("CUST") == true ) {
 							 var dstWareId = "null" ;
 							 var dstId = destinationStrand.split(":")[0];
-							 var dstName = destinationStrand.split(":")[1]+":"+destinationStrand.split(":")[2];
+							 var dstName = destinationStrand.split(":")[1];
 						}
 						 else if(destinationStrand.includes("MH") == true || destinationStrand.includes("HH") == true || destinationStrand.includes("DB") == true  ) {
 							 var dstWareId = "null" ;
@@ -14587,10 +14589,10 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 								 var srcId = SourceTube.split(":")[2];
 								 var srcName = SourceTube.split(":")[1];
 							}
-							 else if(SourceTube.includes("CLT") == true ) {
+							 else if(SourceTube.includes("CUST") == true ) {
 								 var srcWareId = "null" ;
 								 var srcId = SourceTube.split(":")[0];
-								 var srcName = SourceTube.split(":")[1]+":"+SourceTube.split(":")[2];
+								 var srcName = SourceTube.split(":")[1];
 							}
 							 else if(SourceTube.includes("MH") == true || SourceTube.includes("HH") == true || SourceTube.includes("DB") == true  ) {
 								 var srcWareId = "null" ;
@@ -14608,10 +14610,10 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 								 var dstId = DestinationTube.split(":")[2];
 								 var dstName = DestinationTube.split(":")[1];
 							}
-							 else if(DestinationTube.includes("CLT") == true ) {
+							 else if(DestinationTube.includes("CUST") == true ) {
 								 var dstWareId = "null" ;
 								 var dstId = DestinationTube.split(":")[0];
-								 var dstName = DestinationTube.split(":")[1]+":"+DestinationTube.split(":")[2];
+								 var dstName = DestinationTube.split(":")[1];
 							}
 							 else if(DestinationTube.includes("MH") == true || DestinationTube.includes("HH") == true || DestinationTube.includes("DB") == true  ) {
 								 var dstWareId = "null" ;
@@ -17299,7 +17301,7 @@ function fireManualOriginationTermination(modalID,checkboxClass,ID,Type,Longitud
 //Reset the origination / termination 
 if(window[""+orgDest].length >0) {
 	
-	if($("#"+ID).val().split("_")[0]=="WARE" || $("#"+ID).val().split("_")[0]=="CLT"){
+	if($("#"+ID).val().split("_")[0]=="WARE" || $("#"+ID).val().split("_")[0]=="CUST"){
 		 if(siteCltSrcMarkers[$("#"+ID).val().split(":")[0]]) {
 			 siteCltSrcMarkers[$("#"+ID).val().split(":")[0]].setMap(null);
 		 }
@@ -17420,7 +17422,7 @@ if(window[""+orgDest].length >0) {
 			panTo($("#"+Latitude).val(),$("#"+Longitude).val());
 			
 			
-			if($("#"+ID).val().split("_")[0]=="WARE" || $("#"+ID).val().split("_")[0]=="CLT"){
+			if($("#"+ID).val().split("_")[0]=="WARE" || $("#"+ID).val().split("_")[0]=="CUST"){
 				var wareID = $("#"+ID).val().split(":")[0];
 				createSiteCltMarker(wareID,$("#"+ID).val(),$("#"+Latitude).val(),$("#"+Longitude).val(),siteCltSrcMarkers);						
 			}
@@ -18091,7 +18093,7 @@ $('#Site_Autocomplete_Multy'). click(function(){
  });
  $('#Site_AutocompleteTubeFiber'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["Manhole_AutocompleteTubeFiber","Handhole_AutocompleteTubeFiber","DB_AutocompleteTubeFiber","Client_AutocompleteTubeFiber"]
+	var  checkboxesID=["Manhole_AutocompleteTubeFiber","Handhole_AutocompleteTubeFiber","DB_AutocompleteTubeFiber","customer_AutocompleteTubeFiber"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -18102,7 +18104,7 @@ $('#Site_Autocomplete_Multy'). click(function(){
  });
  $('#Site_AutocompleteStrandFiber'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["Manhole_AutocompleteStrandFiber","Handhole_AutocompleteStrandFiber","DB_AutocompleteStrandFiber","Client_AutocompleteStrandFiber"]
+	var  checkboxesID=["Manhole_AutocompleteStrandFiber","Handhole_AutocompleteStrandFiber","DB_AutocompleteStrandFiber","customer_AutocompleteStrandFiber"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -18192,7 +18194,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  }); 
  $('#Manhole_AutocompleteTubeFiber'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["Site_AutocompleteTubeFiber","Handhole_AutocompleteTubeFiber","DB_AutocompleteTubeFiber","Client_AutocompleteTubeFiber"]
+	var  checkboxesID=["Site_AutocompleteTubeFiber","Handhole_AutocompleteTubeFiber","DB_AutocompleteTubeFiber","customer_AutocompleteTubeFiber"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -18204,7 +18206,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  }); 
  $('#Manhole_AutocompleteStrandFiber'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["Site_AutocompleteStrandFiber","Handhole_AutocompleteStrandFiber","DB_AutocompleteStrandFiber","Client_AutocompleteStrandFiber"]
+	var  checkboxesID=["Site_AutocompleteStrandFiber","Handhole_AutocompleteStrandFiber","DB_AutocompleteStrandFiber","customer_AutocompleteStrandFiber"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -18301,7 +18303,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  }); 
   $('#Handhole_AutocompleteTubeFiber'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["Site_AutocompleteTubeFiber","Manhole_AutocompleteTubeFiber","DB_AutocompleteTubeFiber","Client_AutocompleteTubeFiber"]
+	var  checkboxesID=["Site_AutocompleteTubeFiber","Manhole_AutocompleteTubeFiber","DB_AutocompleteTubeFiber","customer_AutocompleteTubeFiber"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -18313,7 +18315,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  }); 
   $('#Handhole_AutocompleteStrandFiber'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["Site_AutocompleteStrandFiber","Manhole_AutocompleteStrandFiber","DB_AutocompleteStrandFiber","Client_AutocompleteStrandFiber"]
+	var  checkboxesID=["Site_AutocompleteStrandFiber","Manhole_AutocompleteStrandFiber","DB_AutocompleteStrandFiber","customer_AutocompleteStrandFiber"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -18408,7 +18410,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  }); 
  $('#DB_AutocompleteTubeFiber'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["Site_AutocompleteTubeFiber","Manhole_AutocompleteTubeFiber","Handhole_AutocompleteTubeFiber","Client_AutocompleteTubeFiber"]
+	var  checkboxesID=["Site_AutocompleteTubeFiber","Manhole_AutocompleteTubeFiber","Handhole_AutocompleteTubeFiber","customer_AutocompleteTubeFiber"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -18420,7 +18422,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  }); 
  $('#DB_AutocompleteStrandFiber'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["Site_AutocompleteStrandFiber","Manhole_AutocompleteStrandFiber","Handhole_AutocompleteStrandFiber","Client_AutocompleteStrandFiber"]
+	var  checkboxesID=["Site_AutocompleteStrandFiber","Manhole_AutocompleteStrandFiber","Handhole_AutocompleteStrandFiber","customer_AutocompleteStrandFiber"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -18537,7 +18539,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 
 	}     
  });
- $('#Client_AutocompleteTubeFiber'). click(function(){
+ $('#customer_AutocompleteTubeFiber'). click(function(){
 	if($(this). is(":checked")){
 	var  checkboxesID=["Site_AutocompleteTubeFiber","Manhole_AutocompleteTubeFiber","Handhole_AutocompleteTubeFiber","DB_AutocompleteTubeFiber"]
 		checkOnlyOneCheckbox(checkboxesID);			
@@ -18548,7 +18550,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 
 	}     
  });  
-  $('#Client_AutocompleteStrandFiber'). click(function(){
+  $('#customer_AutocompleteStrandFiber'). click(function(){
 	if($(this). is(":checked")){
 	var  checkboxesID=["Site_AutocompleteStrandFiber","Manhole_AutocompleteStrandFiber","Handhole_AutocompleteStrandFiber","DB_AutocompleteStrandFiber"]
 		checkOnlyOneCheckbox(checkboxesID);			
@@ -18574,7 +18576,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  }); 
  $('#site_CableAutoComplete'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["client_CableAutoComplete","manhole_CableAutoComplete","handhole_CableAutoComplete","db_CableAutoComplete"]
+	var  checkboxesID=["customer_CableAutoComplete","manhole_CableAutoComplete","handhole_CableAutoComplete","db_CableAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -18586,7 +18588,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  }); 
  $('#site_TubeAutoComplete'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["client_TubeAutoComplete","manhole_TubeAutoComplete","handhole_TubeAutoComplete","db_TubeAutoComplete"]
+	var  checkboxesID=["customer_TubeAutoComplete","manhole_TubeAutoComplete","handhole_TubeAutoComplete","db_TubeAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -18598,7 +18600,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  }); 
   $('#site_StrandAutoComplete'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["client_StrandAutoComplete","manhole_StrandAutoComplete","handhole_StrandAutoComplete","db_StrandAutoComplete"]
+	var  checkboxesID=["customer_StrandAutoComplete","manhole_StrandAutoComplete","handhole_StrandAutoComplete","db_StrandAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -18610,7 +18612,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  }); 
    $('#site_TrenchAutoComplete'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["client_TrenchAutoComplete","manhole_TrenchAutoComplete","handhole_TrenchAutoComplete","db_TrenchAutoComplete"]
+	var  checkboxesID=["customer_TrenchAutoComplete","manhole_TrenchAutoComplete","handhole_TrenchAutoComplete","db_TrenchAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -18622,7 +18624,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  }); 
   $('#site_DuctAutoComplete'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["client_DuctAutoComplete","manhole_DuctAutoComplete","handhole_DuctAutoComplete","db_DuctAutoComplete"]
+	var  checkboxesID=["customer_DuctAutoComplete","manhole_DuctAutoComplete","handhole_DuctAutoComplete","db_DuctAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -18634,7 +18636,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  });
   $('#site_OriginationAutoComplete'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["client_OriginationAutoComplete","manhole_OriginationAutoComplete","handhole_OriginationAutoComplete","db_OriginationAutoComplete"]
+	var  checkboxesID=["customer_OriginationAutoComplete","manhole_OriginationAutoComplete","handhole_OriginationAutoComplete","db_OriginationAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -18646,7 +18648,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  });
   $('#site_TubeOriginationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
-		var  checkboxesID=["client_TubeOriginationAutoComplete","manhole_TubeOriginationAutoComplete","handhole_TubeOriginationAutoComplete","db_TubeOriginationAutoComplete"]
+		var  checkboxesID=["customer_TubeOriginationAutoComplete","manhole_TubeOriginationAutoComplete","handhole_TubeOriginationAutoComplete","db_TubeOriginationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
 			$(this).val('1');
 		}
@@ -18658,7 +18660,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 	 });
   $('#site_StrandOriginationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
-		var  checkboxesID=["client_StrandOriginationAutoComplete","manhole_StrandOriginationAutoComplete","handhole_StrandOriginationAutoComplete","db_StrandOriginationAutoComplete"]
+		var  checkboxesID=["customer_StrandOriginationAutoComplete","manhole_StrandOriginationAutoComplete","handhole_StrandOriginationAutoComplete","db_StrandOriginationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
 			$(this).val('1');
 		}
@@ -18670,7 +18672,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 	 });
   $('#site_TrenchOriginationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
-		var  checkboxesID=["client_TrenchOriginationAutoComplete","manhole_TrenchOriginationAutoComplete","handhole_TrenchOriginationAutoComplete","db_TrenchOriginationAutoComplete"]
+		var  checkboxesID=["customer_TrenchOriginationAutoComplete","manhole_TrenchOriginationAutoComplete","handhole_TrenchOriginationAutoComplete","db_TrenchOriginationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
 			$(this).val('1');
 		}
@@ -18682,7 +18684,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 	 });
   $('#site_DuctOriginationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
-		var  checkboxesID=["client_DuctOriginationAutoComplete","manhole_DuctOriginationAutoComplete","handhole_DuctOriginationAutoComplete","db_DuctOriginationAutoComplete"]
+		var  checkboxesID=["customer_DuctOriginationAutoComplete","manhole_DuctOriginationAutoComplete","handhole_DuctOriginationAutoComplete","db_DuctOriginationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
 			$(this).val('1');
 		}
@@ -18694,7 +18696,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 	 });
  $('#site_TerminationAutoComplete'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["client_TerminationAutoComplete","manhole_TerminationAutoComplete","handhole_TerminationAutoComplete","db_TerminationAutoComplete"]
+	var  checkboxesID=["customer_TerminationAutoComplete","manhole_TerminationAutoComplete","handhole_TerminationAutoComplete","db_TerminationAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -18706,7 +18708,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  });
  $('#site_TubeTerminationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
-		var  checkboxesID=["client_TubeTerminationAutoComplete","manhole_TubeTerminationAutoComplete","handhole_TubeTerminationAutoComplete","db_TubeTerminationAutoComplete"]
+		var  checkboxesID=["customer_TubeTerminationAutoComplete","manhole_TubeTerminationAutoComplete","handhole_TubeTerminationAutoComplete","db_TubeTerminationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
 			$(this).val('1');
 		}
@@ -18718,7 +18720,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 	 });
  $('#site_StrandTerminationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
-		var  checkboxesID=["client_StrandTerminationAutoComplete","manhole_StrandTerminationAutoComplete","handhole_StrandTerminationAutoComplete","db_StrandTerminationAutoComplete"]
+		var  checkboxesID=["customer_StrandTerminationAutoComplete","manhole_StrandTerminationAutoComplete","handhole_StrandTerminationAutoComplete","db_StrandTerminationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
 			$(this).val('1');
 		}
@@ -18730,7 +18732,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 	 });
  $('#site_TrenchTerminationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
-		var  checkboxesID=["client_TrenchTerminationAutoComplete","manhole_TrenchTerminationAutoComplete","handhole_TrenchTerminationAutoComplete","db_StrandTerminationAutoComplete"]
+		var  checkboxesID=["customer_TrenchTerminationAutoComplete","manhole_TrenchTerminationAutoComplete","handhole_TrenchTerminationAutoComplete","db_StrandTerminationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
 			$(this).val('1');
 		}
@@ -18742,7 +18744,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 	 });
  $('#site_DuctTerminationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
-		var  checkboxesID=["client_DuctTerminationAutoComplete","manhole_DuctTerminationAutoComplete","handhole_DuctTerminationAutoComplete","db_DuctTerminationAutoComplete"]
+		var  checkboxesID=["customer_DuctTerminationAutoComplete","manhole_DuctTerminationAutoComplete","handhole_DuctTerminationAutoComplete","db_DuctTerminationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
 			$(this).val('1');
 		}
@@ -18752,7 +18754,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 
 		}     
 	 });
-  $('#client_CableAutoComplete'). click(function(){
+  $('#customer_CableAutoComplete'). click(function(){
 	if($(this). is(":checked")){
 	var  checkboxesID=["site_CableAutoComplete","manhole_CableAutoComplete","handhole_CableAutoComplete","db_CableAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
@@ -18764,7 +18766,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 
 	}     
  }); 
-  $('#client_TubeAutoComplete'). click(function(){
+  $('#customer_TubeAutoComplete'). click(function(){
 	if($(this). is(":checked")){
 	var  checkboxesID=["site_TubeAutoComplete","manhole_TubeAutoComplete","handhole_TubeAutoComplete","db_TubeAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
@@ -18776,7 +18778,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 
 	}     
  }); 
-   $('#client_StrandAutoComplete'). click(function(){
+   $('#customer_StrandAutoComplete'). click(function(){
 	if($(this). is(":checked")){
 	var  checkboxesID=["site_StrandAutoComplete","manhole_StrandAutoComplete","handhole_StrandAutoComplete","db_StrandAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
@@ -18788,7 +18790,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 
 	}     
  }); 
-  $('#client_TrenchAutoComplete'). click(function(){
+  $('#customer_TrenchAutoComplete'). click(function(){
 	if($(this). is(":checked")){
 	var  checkboxesID=["site_TrenchAutoComplete","manhole_TrenchAutoComplete","handhole_TrenchAutoComplete","db_TrenchAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
@@ -18800,7 +18802,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 
 	}     
  }); 
-  $('#client_DuctAutoComplete'). click(function(){
+  $('#customer_DuctAutoComplete'). click(function(){
 	if($(this). is(":checked")){
 	var  checkboxesID=["site_DuctAutoComplete","manhole_DuctAutoComplete","handhole_DuctAutoComplete","db_DuctAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
@@ -18812,7 +18814,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 
 	}     
  });
-   $('#client_OriginationAutoComplete'). click(function(){
+   $('#customer_OriginationAutoComplete'). click(function(){
 	if($(this). is(":checked")){
 	var  checkboxesID=["site_OriginationAutoComplete","manhole_OriginationAutoComplete","handhole_OriginationAutoComplete","db_OriginationAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
@@ -18824,7 +18826,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 
 	}     
  });
-   $('#client_TubeOriginationAutoComplete'). click(function(){
+   $('#customer_TubeOriginationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
 		var  checkboxesID=["site_TubeOriginationAutoComplete","manhole_TubeOriginationAutoComplete","handhole_TubeOriginationAutoComplete","db_TubeOriginationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
@@ -18836,7 +18838,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 
 		}     
 	 });
-   $('#client_StrandOriginationAutoComplete'). click(function(){
+   $('#customer_StrandOriginationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
 		var  checkboxesID=["site_StrandOriginationAutoComplete","manhole_StrandOriginationAutoComplete","handhole_StrandOriginationAutoComplete","db_StrandOriginationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
@@ -18848,7 +18850,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 
 		}     
 	 });
-   $('#client_TrenchOriginationAutoComplete'). click(function(){
+   $('#customer_TrenchOriginationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
 		var  checkboxesID=["site_TrenchOriginationAutoComplete","manhole_TrenchOriginationAutoComplete","handhole_TrenchOriginationAutoComplete","db_TrenchOriginationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
@@ -18860,7 +18862,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 
 		}     
 	 });
-   $('#client_DuctOriginationAutoComplete'). click(function(){
+   $('#customer_DuctOriginationAutoComplete'). click(function(){
  		if($(this). is(":checked")){
  		var  checkboxesID=["site_DuctOriginationAutoComplete","manhole_DuctOriginationAutoComplete","handhole_DuctOriginationAutoComplete","db_DuctOriginationAutoComplete"]
  			checkOnlyOneCheckbox(checkboxesID);			
@@ -18872,7 +18874,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 
  		}     
  	 });
- $('#client_TerminationAutoComplete'). click(function(){
+ $('#customer_TerminationAutoComplete'). click(function(){
 	if($(this). is(":checked")){
 	var  checkboxesID=["site_TerminationAutoComplete","manhole_TerminationAutoComplete","handhole_TerminationAutoComplete","db_TerminationAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
@@ -18884,7 +18886,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 
 	}     
  });
- $('#client_TubeTerminationAutoComplete'). click(function(){
+ $('#customer_TubeTerminationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
 		var  checkboxesID=["site_TubeTerminationAutoComplete","manhole_TubeTerminationAutoComplete","handhole_TubeTerminationAutoComplete","db_TubeTerminationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
@@ -18896,7 +18898,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 
 		}     
 	 });
- $('#client_StrandTerminationAutoComplete'). click(function(){
+ $('#customer_StrandTerminationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
 		var  checkboxesID=["site_StrandTerminationAutoComplete","manhole_StrandTerminationAutoComplete","handhole_StrandTerminationAutoComplete","db_StrandTerminationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
@@ -18908,7 +18910,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 
 		}     
 	 });
- $('#client_TrenchTerminationAutoComplete'). click(function(){
+ $('#customer_TrenchTerminationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
 		var  checkboxesID=["site_TrenchTerminationAutoComplete","manhole_TrenchTerminationAutoComplete","handhole_TrenchTerminationAutoComplete","db_TrenchTerminationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
@@ -18920,7 +18922,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 
 		}     
 	 });
- $('#client_DuctTerminationAutoComplete'). click(function(){
+ $('#customer_DuctTerminationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
 		var  checkboxesID=["site_DuctTerminationAutoComplete","manhole_DuctTerminationAutoComplete","handhole_DuctTerminationAutoComplete","db_DuctTerminationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
@@ -18934,7 +18936,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 	 });
   $('#manhole_CableAutoComplete'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["site_CableAutoComplete","client_CableAutoComplete","handhole_CableAutoComplete","db_CableAutoComplete"]
+	var  checkboxesID=["site_CableAutoComplete","customer_CableAutoComplete","handhole_CableAutoComplete","db_CableAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -18945,7 +18947,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  }); 
   $('#manhole_TubeAutoComplete'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["site_TubeAutoComplete","client_TubeAutoComplete","handhole_TubeAutoComplete","db_TubeAutoComplete"]
+	var  checkboxesID=["site_TubeAutoComplete","customer_TubeAutoComplete","handhole_TubeAutoComplete","db_TubeAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -18957,7 +18959,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  }); 
    $('#manhole_StrandAutoComplete'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["site_StrandAutoComplete","client_StrandAutoComplete","handhole_StrandAutoComplete","db_StrandAutoComplete"]
+	var  checkboxesID=["site_StrandAutoComplete","customer_StrandAutoComplete","handhole_StrandAutoComplete","db_StrandAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -18969,7 +18971,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  }); 
  $('#manhole_TrenchAutoComplete'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["site_TrenchAutoComplete","client_TrenchAutoComplete","handhole_TrenchAutoComplete","db_TrenchAutoComplete"]
+	var  checkboxesID=["site_TrenchAutoComplete","customer_TrenchAutoComplete","handhole_TrenchAutoComplete","db_TrenchAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -18982,7 +18984,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  }); 
   $('#manhole_DuctAutoComplete'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["site_DuctAutoComplete","client_DuctAutoComplete","handhole_DuctAutoComplete","db_DuctAutoComplete"]
+	var  checkboxesID=["site_DuctAutoComplete","customer_DuctAutoComplete","handhole_DuctAutoComplete","db_DuctAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -18993,7 +18995,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  });
   $('#manhole_OriginationAutoComplete'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["site_OriginationAutoComplete","client_OriginationAutoComplete","handhole_OriginationAutoComplete","db_OriginationAutoComplete"]
+	var  checkboxesID=["site_OriginationAutoComplete","customer_OriginationAutoComplete","handhole_OriginationAutoComplete","db_OriginationAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -19005,7 +19007,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  });
   $('#manhole_TubeOriginationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
-		var  checkboxesID=["site_TubeOriginationAutoComplete","client_TubeOriginationAutoComplete","handhole_TubeOriginationAutoComplete","db_TubeOriginationAutoComplete"]
+		var  checkboxesID=["site_TubeOriginationAutoComplete","customer_TubeOriginationAutoComplete","handhole_TubeOriginationAutoComplete","db_TubeOriginationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
 			$(this).val('1');
 		}
@@ -19017,7 +19019,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 	 });
   $('#manhole_StrandOriginationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
-		var  checkboxesID=["site_StrandOriginationAutoComplete","client_StrandOriginationAutoComplete","handhole_StrandOriginationAutoComplete","db_StrandOriginationAutoComplete"]
+		var  checkboxesID=["site_StrandOriginationAutoComplete","customer_StrandOriginationAutoComplete","handhole_StrandOriginationAutoComplete","db_StrandOriginationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
 			$(this).val('1');
 		}
@@ -19029,7 +19031,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 	 });
   $('#manhole_TrenchOriginationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
-		var  checkboxesID=["site_TrenchOriginationAutoComplete","client_TrenchOriginationAutoComplete","handhole_TrenchOriginationAutoComplete","db_TrenchOriginationAutoComplete"]
+		var  checkboxesID=["site_TrenchOriginationAutoComplete","customer_TrenchOriginationAutoComplete","handhole_TrenchOriginationAutoComplete","db_TrenchOriginationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
 			$(this).val('1');
 		}
@@ -19041,7 +19043,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 	 });
   $('#manhole_DuctOriginationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
-		var  checkboxesID=["site_DuctOriginationAutoComplete","client_DuctOriginationAutoComplete","handhole_DuctOriginationAutoComplete","db_DuctOriginationAutoComplete"]
+		var  checkboxesID=["site_DuctOriginationAutoComplete","customer_DuctOriginationAutoComplete","handhole_DuctOriginationAutoComplete","db_DuctOriginationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
 			$(this).val('1');
 		}
@@ -19053,7 +19055,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 	 });
   $('#manhole_TerminationAutoComplete'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["site_TerminationAutoComplete","client_TerminationAutoComplete","handhole_TerminationAutoComplete","db_TerminationAutoComplete"]
+	var  checkboxesID=["site_TerminationAutoComplete","customer_TerminationAutoComplete","handhole_TerminationAutoComplete","db_TerminationAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -19064,7 +19066,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  });
   $('#manhole_TubeTerminationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
-		var  checkboxesID=["site_TubeTerminationAutoComplete","client_TubeTerminationAutoComplete","handhole_TubeTerminationAutoComplete","db_TubeTerminationAutoComplete"]
+		var  checkboxesID=["site_TubeTerminationAutoComplete","customer_TubeTerminationAutoComplete","handhole_TubeTerminationAutoComplete","db_TubeTerminationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
 			$(this).val('1');
 		}
@@ -19075,7 +19077,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 	 });
   $('#manhole_StrandTerminationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
-		var  checkboxesID=["site_StrandTerminationAutoComplete","client_StrandTerminationAutoComplete","handhole_StrandTerminationAutoComplete","db_StrandTerminationAutoComplete"]
+		var  checkboxesID=["site_StrandTerminationAutoComplete","customer_StrandTerminationAutoComplete","handhole_StrandTerminationAutoComplete","db_StrandTerminationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
 			$(this).val('1');
 		}
@@ -19086,7 +19088,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 	 });
   $('#manhole_TrenchTerminationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
-		var  checkboxesID=["site_TrenchTerminationAutoComplete","client_TrenchTerminationAutoComplete","handhole_TrenchTerminationAutoComplete","db_TrenchTerminationAutoComplete"]
+		var  checkboxesID=["site_TrenchTerminationAutoComplete","customer_TrenchTerminationAutoComplete","handhole_TrenchTerminationAutoComplete","db_TrenchTerminationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
 			$(this).val('1');
 		}
@@ -19097,7 +19099,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 	 });
   $('#manhole_DuctTerminationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
-		var  checkboxesID=["site_DuctTerminationAutoComplete","client_DuctTerminationAutoComplete","handhole_DuctTerminationAutoComplete","db_DuctTerminationAutoComplete"]
+		var  checkboxesID=["site_DuctTerminationAutoComplete","customer_DuctTerminationAutoComplete","handhole_DuctTerminationAutoComplete","db_DuctTerminationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
 			$(this).val('1');
 		}
@@ -19108,7 +19110,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 	 });
   $('#handhole_CableAutoComplete'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["site_CableAutoComplete","client_CableAutoComplete","manhole_CableAutoComplete","db_CableAutoComplete"]
+	var  checkboxesID=["site_CableAutoComplete","customer_CableAutoComplete","manhole_CableAutoComplete","db_CableAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -19120,7 +19122,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  });
  $('#handhole_TubeAutoComplete'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["site_TubeAutoComplete","client_TubeAutoComplete","manhole_TubeAutoComplete","db_TubeAutoComplete"]
+	var  checkboxesID=["site_TubeAutoComplete","customer_TubeAutoComplete","manhole_TubeAutoComplete","db_TubeAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -19132,7 +19134,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  });
   $('#handhole_StrandAutoComplete'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["site_StrandAutoComplete","client_StrandAutoComplete","manhole_StrandAutoComplete","db_StrandAutoComplete"]
+	var  checkboxesID=["site_StrandAutoComplete","customer_StrandAutoComplete","manhole_StrandAutoComplete","db_StrandAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -19144,7 +19146,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  });
  $('#handhole_TrenchAutoComplete'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["site_TrenchAutoComplete","client_TrenchAutoComplete","manhole_TrenchAutoComplete","db_TrenchAutoComplete"]
+	var  checkboxesID=["site_TrenchAutoComplete","customer_TrenchAutoComplete","manhole_TrenchAutoComplete","db_TrenchAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -19156,7 +19158,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  });
   $('#handhole_DuctAutoComplete'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["site_DuctAutoComplete","client_DuctAutoComplete","manhole_DuctAutoComplete","db_DuctAutoComplete"]
+	var  checkboxesID=["site_DuctAutoComplete","customer_DuctAutoComplete","manhole_DuctAutoComplete","db_DuctAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -19168,7 +19170,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  });
   $('#handhole_OriginationAutoComplete'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["site_OriginationAutoComplete","client_OriginationAutoComplete","manhole_OriginationAutoComplete","db_OriginationAutoComplete"]
+	var  checkboxesID=["site_OriginationAutoComplete","customer_OriginationAutoComplete","manhole_OriginationAutoComplete","db_OriginationAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -19180,7 +19182,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  });
   $('#handhole_TubeOriginationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
-		var  checkboxesID=["site_TubeOriginationAutoComplete","client_TubeOriginationAutoComplete","manhole_TubeOriginationAutoComplete","db_TubeOriginationAutoComplete"]
+		var  checkboxesID=["site_TubeOriginationAutoComplete","customer_TubeOriginationAutoComplete","manhole_TubeOriginationAutoComplete","db_TubeOriginationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
 			$(this).val('1');
 		}
@@ -19192,7 +19194,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 	 });
   $('#handhole_StrandOriginationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
-		var  checkboxesID=["site_StrandOriginationAutoComplete","client_StrandOriginationAutoComplete","manhole_StrandOriginationAutoComplete","db_StrandOriginationAutoComplete"]
+		var  checkboxesID=["site_StrandOriginationAutoComplete","customer_StrandOriginationAutoComplete","manhole_StrandOriginationAutoComplete","db_StrandOriginationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
 			$(this).val('1');
 		}
@@ -19204,7 +19206,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 	 });
   $('#handhole_TrenchOriginationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
-		var  checkboxesID=["site_TrenchOriginationAutoComplete","client_TrenchOriginationAutoComplete","manhole_TrenchOriginationAutoComplete","db_TrenchOriginationAutoComplete"]
+		var  checkboxesID=["site_TrenchOriginationAutoComplete","customer_TrenchOriginationAutoComplete","manhole_TrenchOriginationAutoComplete","db_TrenchOriginationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
 			$(this).val('1');
 		}
@@ -19216,7 +19218,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 	 });
   $('#handhole_DuctOriginationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
-		var  checkboxesID=["site_DuctOriginationAutoComplete","client_DuctOriginationAutoComplete","manhole_DuctOriginationAutoComplete","db_DuctOriginationAutoComplete"]
+		var  checkboxesID=["site_DuctOriginationAutoComplete","customer_DuctOriginationAutoComplete","manhole_DuctOriginationAutoComplete","db_DuctOriginationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
 			$(this).val('1');
 		}
@@ -19228,7 +19230,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 	 });
    $('#handhole_TerminationAutoComplete'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["site_TerminationAutoComplete","client_TerminationAutoComplete","manhole_TerminationAutoComplete","db_TerminationAutoComplete"]
+	var  checkboxesID=["site_TerminationAutoComplete","customer_TerminationAutoComplete","manhole_TerminationAutoComplete","db_TerminationAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -19240,7 +19242,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  });
    $('#handhole_TubeTerminationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
-		var  checkboxesID=["site_TubeTerminationAutoComplete","client_TubeTerminationAutoComplete","manhole_TubeTerminationAutoComplete","db_TubeTerminationAutoComplete"]
+		var  checkboxesID=["site_TubeTerminationAutoComplete","customer_TubeTerminationAutoComplete","manhole_TubeTerminationAutoComplete","db_TubeTerminationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
 			$(this).val('1');
 		}
@@ -19252,7 +19254,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 	 });
    $('#handhole_StrandTerminationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
-		var  checkboxesID=["site_StrandTerminationAutoComplete","client_StrandTerminationAutoComplete","manhole_StrandTerminationAutoComplete","db_StrandTerminationAutoComplete"]
+		var  checkboxesID=["site_StrandTerminationAutoComplete","customer_StrandTerminationAutoComplete","manhole_StrandTerminationAutoComplete","db_StrandTerminationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
 			$(this).val('1');
 		}
@@ -19264,7 +19266,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 	 });
    $('#handhole_TrenchTerminationAutoComplete'). click(function(){
  		if($(this). is(":checked")){
- 		var  checkboxesID=["site_TrenchTerminationAutoComplete","client_TrenchTerminationAutoComplete","manhole_TrenchTerminationAutoComplete","db_TrenchTerminationAutoComplete"]
+ 		var  checkboxesID=["site_TrenchTerminationAutoComplete","customer_TrenchTerminationAutoComplete","manhole_TrenchTerminationAutoComplete","db_TrenchTerminationAutoComplete"]
  			checkOnlyOneCheckbox(checkboxesID);			
  			$(this).val('1');
  		}
@@ -19276,7 +19278,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  	 });
    $('#handhole_DuctTerminationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
-		var  checkboxesID=["site_DuctTerminationAutoComplete","client_DuctTerminationAutoComplete","manhole_DuctTerminationAutoComplete","db_DuctTerminationAutoComplete"]
+		var  checkboxesID=["site_DuctTerminationAutoComplete","customer_DuctTerminationAutoComplete","manhole_DuctTerminationAutoComplete","db_DuctTerminationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
 			$(this).val('1');
 		}
@@ -19288,7 +19290,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 	 });
  $('#db_CableAutoComplete'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["site_CableAutoComplete","client_CableAutoComplete","manhole_CableAutoComplete","handhole_CableAutoComplete"]
+	var  checkboxesID=["site_CableAutoComplete","customer_CableAutoComplete","manhole_CableAutoComplete","handhole_CableAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -19300,7 +19302,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  });
  $('#db_TubeAutoComplete'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["site_TubeAutoComplete","client_TubeAutoComplete","manhole_TubeAutoComplete","handhole_TubeAutoComplete"]
+	var  checkboxesID=["site_TubeAutoComplete","customer_TubeAutoComplete","manhole_TubeAutoComplete","handhole_TubeAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -19312,7 +19314,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  });
  $('#db_StrandAutoComplete'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["site_StrandAutoComplete","client_StrandAutoComplete","manhole_StrandAutoComplete","handhole_StrandAutoComplete"]
+	var  checkboxesID=["site_StrandAutoComplete","customer_StrandAutoComplete","manhole_StrandAutoComplete","handhole_StrandAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -19323,7 +19325,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  });
  $('#db_TrenchAutoComplete'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["site_TrenchAutoComplete","client_TrenchAutoComplete","manhole_TrenchAutoComplete","handhole_TrenchAutoComplete"]
+	var  checkboxesID=["site_TrenchAutoComplete","customer_TrenchAutoComplete","manhole_TrenchAutoComplete","handhole_TrenchAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -19334,7 +19336,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  });
  $('#db_DuctAutoComplete'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["site_DuctAutoComplete","client_DuctAutoComplete","manhole_DuctAutoComplete","handhole_DuctAutoComplete"]
+	var  checkboxesID=["site_DuctAutoComplete","customer_DuctAutoComplete","manhole_DuctAutoComplete","handhole_DuctAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -19345,7 +19347,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  });
  $('#db_OriginationAutoComplete'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["site_OriginationAutoComplete","client_OriginationAutoComplete","manhole_OriginationAutoComplete","handhole_OriginationAutoComplete"]
+	var  checkboxesID=["site_OriginationAutoComplete","customer_OriginationAutoComplete","manhole_OriginationAutoComplete","handhole_OriginationAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -19356,7 +19358,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  });
  $('#db_TubeOriginationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
-		var  checkboxesID=["site_TubeOriginationAutoComplete","client_TubeOriginationAutoComplete","manhole_TubeOriginationAutoComplete","handhole_TubeOriginationAutoComplete"]
+		var  checkboxesID=["site_TubeOriginationAutoComplete","customer_TubeOriginationAutoComplete","manhole_TubeOriginationAutoComplete","handhole_TubeOriginationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
 			$(this).val('1');
 		}
@@ -19368,7 +19370,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 	 });
  $('#db_StrandOriginationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
-		var  checkboxesID=["site_StrandOriginationAutoComplete","client_StrandOriginationAutoComplete","manhole_StrandOriginationAutoComplete","handhole_StrandOriginationAutoComplete"]
+		var  checkboxesID=["site_StrandOriginationAutoComplete","customer_StrandOriginationAutoComplete","manhole_StrandOriginationAutoComplete","handhole_StrandOriginationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
 			$(this).val('1');
 		}
@@ -19380,7 +19382,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 	 });
  $('#db_TrenchOriginationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
-		var  checkboxesID=["site_TrenchOriginationAutoComplete","client_TrenchOriginationAutoComplete","manhole_TrenchOriginationAutoComplete","handhole_TrenchOriginationAutoComplete"]
+		var  checkboxesID=["site_TrenchOriginationAutoComplete","customer_TrenchOriginationAutoComplete","manhole_TrenchOriginationAutoComplete","handhole_TrenchOriginationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
 			$(this).val('1');
 		}
@@ -19392,7 +19394,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 	 });
  $('#db_DuctOriginationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
-		var  checkboxesID=["site_DuctOriginationAutoComplete","client_DuctOriginationAutoComplete","manhole_DuctOriginationAutoComplete","handhole_DuctOriginationAutoComplete"]
+		var  checkboxesID=["site_DuctOriginationAutoComplete","customer_DuctOriginationAutoComplete","manhole_DuctOriginationAutoComplete","handhole_DuctOriginationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
 			$(this).val('1');
 		}
@@ -19404,7 +19406,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 	 });
   $('#db_TerminationAutoComplete'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["site_TerminationAutoComplete","client_TerminationAutoComplete","manhole_TerminationAutoComplete","handhole_TerminationAutoComplete"]
+	var  checkboxesID=["site_TerminationAutoComplete","customer_TerminationAutoComplete","manhole_TerminationAutoComplete","handhole_TerminationAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -19415,7 +19417,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  });
   $('#db_TubeTerminationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
-		var  checkboxesID=["site_TubeTerminationAutoComplete","client_TubeTerminationAutoComplete","manhole_TubeTerminationAutoComplete","handhole_TubeTerminationAutoComplete"]
+		var  checkboxesID=["site_TubeTerminationAutoComplete","customer_TubeTerminationAutoComplete","manhole_TubeTerminationAutoComplete","handhole_TubeTerminationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
 			$(this).val('1');
 		}
@@ -19426,7 +19428,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 	 });
   $('#db_StrandTerminationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
-		var  checkboxesID=["site_StrandTerminationAutoComplete","client_StrandTerminationAutoComplete","manhole_StrandTerminationAutoComplete","handhole_StrandTerminationAutoComplete"]
+		var  checkboxesID=["site_StrandTerminationAutoComplete","customer_StrandTerminationAutoComplete","manhole_StrandTerminationAutoComplete","handhole_StrandTerminationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
 			$(this).val('1');
 		}
@@ -19437,7 +19439,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 	 });
   $('#db_TrenchTerminationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
-		var  checkboxesID=["site_TrenchTerminationAutoComplete","client_TrenchTerminationAutoComplete","manhole_TrenchTerminationAutoComplete","handhole_TrenchTerminationAutoComplete"]
+		var  checkboxesID=["site_TrenchTerminationAutoComplete","customer_TrenchTerminationAutoComplete","manhole_TrenchTerminationAutoComplete","handhole_TrenchTerminationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
 			$(this).val('1');
 		}
@@ -19448,7 +19450,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 	 });
   $('#db_DuctTerminationAutoComplete'). click(function(){
 		if($(this). is(":checked")){
-		var  checkboxesID=["site_DuctTerminationAutoComplete","client_DuctTerminationAutoComplete","manhole_DuctTerminationAutoComplete","handhole_DuctTerminationAutoComplete"]
+		var  checkboxesID=["site_DuctTerminationAutoComplete","customer_DuctTerminationAutoComplete","manhole_DuctTerminationAutoComplete","handhole_DuctTerminationAutoComplete"]
 			checkOnlyOneCheckbox(checkboxesID);			
 			$(this).val('1');
 		}
@@ -19460,7 +19462,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
   
      $('#manhole_operationAutoComplete'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["site_operationAutoComplete","client_operationAutoComplete","handhole_operationAutoComplete","db_operationAutoComplete","place_operationAutoComplete"]
+	var  checkboxesID=["site_operationAutoComplete","customer_operationAutoComplete","handhole_operationAutoComplete","db_operationAutoComplete","place_operationAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 		
@@ -19472,7 +19474,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  }); 
    $('#site_operationAutoComplete' ). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["manhole_operationAutoComplete","client_operationAutoComplete","handhole_operationAutoComplete","db_operationAutoComplete","place_operationAutoComplete"]
+	var  checkboxesID=["manhole_operationAutoComplete","customer_operationAutoComplete","handhole_operationAutoComplete","db_operationAutoComplete","place_operationAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -19481,7 +19483,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 
 	}     
  }); 
-    $('#client_operationAutoComplete' ). click(function(){
+    $('#customer_operationAutoComplete' ). click(function(){
 	if($(this). is(":checked")){
 	var  checkboxesID=["manhole_operationAutoComplete","site_operationAutoComplete","handhole_operationAutoComplete","db_operationAutoComplete","place_operationAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
@@ -19494,7 +19496,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  });
      $('#handhole_operationAutoComplete'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["manhole_operationAutoComplete","site_operationAutoComplete","client_operationAutoComplete","db_operationAutoComplete","place_operationAutoComplete"]
+	var  checkboxesID=["manhole_operationAutoComplete","site_operationAutoComplete","customer_operationAutoComplete","db_operationAutoComplete","place_operationAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -19506,7 +19508,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  });
       $('#db_operationAutoComplete'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["manhole_operationAutoComplete","site_operationAutoComplete","client_operationAutoComplete","handhole_operationAutoComplete","place_operationAutoComplete"]
+	var  checkboxesID=["manhole_operationAutoComplete","site_operationAutoComplete","customer_operationAutoComplete","handhole_operationAutoComplete","place_operationAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -19518,7 +19520,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
  });
        $('#place_operationAutoComplete' ). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["manhole_operationAutoComplete","site_operationAutoComplete","client_operationAutoComplete","handhole_operationAutoComplete","db_operationAutoComplete"]
+	var  checkboxesID=["manhole_operationAutoComplete","site_operationAutoComplete","customer_operationAutoComplete","handhole_operationAutoComplete","db_operationAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -19529,8 +19531,8 @@ $('#Manhole_AutocompleteCable'). click(function(){
  });
        $('#site_DBAutoComplete'). click(function(){
    		if($(this). is(":checked")){
-   			document.getElementById("client_DBAutoComplete").checked = false;
-   			$('#client_DBAutoComplete').val('0');
+   			document.getElementById("customer_DBAutoComplete").checked = false;
+   			$('#customer_DBAutoComplete').val('0');
    			$(this).val('1');
    			isSiteChecked=true;
    			isClientChecked=false;
@@ -19548,8 +19550,8 @@ $('#Manhole_AutocompleteCable'). click(function(){
    			$(this).val('0');
    			isClientChecked=true;
    			isSiteChecked=false;
-   			document.getElementById("client_DBAutoComplete").checked = true;
-   			$('#client_DBAutoComplete').val('1');
+   			document.getElementById("customer_DBAutoComplete").checked = true;
+   			$('#customer_DBAutoComplete').val('1');
    			document.getElementById("BDWarehouse").style.display = "none";
    			document.getElementById("DBSite").style.display = "none";
    			document.getElementById("DBSiteName").style.display = "none";
@@ -19560,7 +19562,7 @@ $('#Manhole_AutocompleteCable'). click(function(){
 
    		}     
    	 }); 
-     $('#client_DBAutoComplete'). click(function(){
+     $('#customer_DBAutoComplete'). click(function(){
    		if($(this). is(":checked")){
    			document.getElementById("site_DBAutoComplete").checked = false;
    			$('#site_DBAutoComplete').val('0');
@@ -19846,27 +19848,27 @@ function createPathFromMap(cancelpoints,selectedIdContext,originationSource,term
 		clearCreateFromMap(markerArrayAux);
 		EnableOriginationFiber=false;
 		if(window["Origination"].length>0 && window["Termination"].length==0){
-			if($("#"+originationSource).val().split("_")[0]=="WARE" || $("#"+originationSource).val().split("_")[0]=="CLT"){
+			if($("#"+originationSource).val().split("_")[0]=="WARE" || $("#"+originationSource).val().split("_")[0]=="CUST"){
 				 if(siteCltSrcMarkers[$("#"+originationSource).val().split(":")[0]]) {
 					 siteCltSrcMarkers[$("#"+originationSource).val().split(":")[0]].setMap(null);
 				 }
 			}
 		}
 		else if(window["Origination"].length==0 && window["Termination"].length>0){
-			if($("#"+terminationDestination).val().split("_")[0]=="WARE" || $("#"+terminationDestination).val().split("_")[0]=="CLT"){
+			if($("#"+terminationDestination).val().split("_")[0]=="WARE" || $("#"+terminationDestination).val().split("_")[0]=="CUST"){
 				 if(siteCltSrcMarkers[$("#"+terminationDestination).val().split(":")[0]]) {
 					 siteCltSrcMarkers[$("#"+terminationDestination).val().split(":")[0]].setMap(null);
 				 }
 			}
 		}
 		else if(window["Origination"].length>0 && window["Termination"].length>0){
-			if($("#"+originationSource).val().split("_")[0]=="WARE" || $("#"+originationSource).val().split("_")[0]=="CLT"){
+			if($("#"+originationSource).val().split("_")[0]=="WARE" || $("#"+originationSource).val().split("_")[0]=="CUST"){
 				if(siteCltSrcMarkers[$("#"+originationSource).val().split(":")[0]]) {
 					 siteCltSrcMarkers[$("#"+originationSource).val().split(":")[0]].setMap(null);
 				 }				
 			}
 			
-			if($("#"+terminationDestination).val().split("_")[0]=="WARE" || $("#"+terminationDestination).val().split("_")[0]=="CLT"){
+			if($("#"+terminationDestination).val().split("_")[0]=="WARE" || $("#"+terminationDestination).val().split("_")[0]=="CUST"){
 				 if(siteCltSrcMarkers[$("#"+terminationDestination).val().split(":")[0]]) {
 					 siteCltSrcMarkers[$("#"+terminationDestination).val().split(":")[0]].setMap(null);
 				 }				
@@ -20022,8 +20024,8 @@ function createPathFromMap(cancelpoints,selectedIdContext,originationSource,term
 						else if(data.res_Type1[0].split("_")[0]=="DB"){
 							$("#"+DestinationType).val("Distribution Board");
 						}
-						else if(data.res_Type1[0].split("_")[0]=="CLT"){
-							$("#"+DestinationType).val("Client");
+						else if(data.res_Type1[0].split("_")[0]=="CUST"){
+							$("#"+DestinationType).val("customer");
 						}
 						else if(data.res_Type1[0].split("_")[0]=="WARE"){
 							$("#"+DestinationType).val("Site");
@@ -20129,8 +20131,8 @@ function createPathFromMap(cancelpoints,selectedIdContext,originationSource,term
 							else if(data.res_Type[0].split("_")[0]=="DB"){
 								$("#"+SourceType).val("Distribution Board");
 							}
-							else if(data.res_Type[0].split("_")[0]=="CLT"){
-								$("#"+SourceType).val("Client");
+							else if(data.res_Type[0].split("_")[0]=="CUST"){
+								$("#"+SourceType).val("customer");
 							}
 							else if(data.res_Type[0].split("_")[0]=="WARE"){
 								$("#"+SourceType).val("Site");
@@ -20247,8 +20249,8 @@ function createPathFromMap(cancelpoints,selectedIdContext,originationSource,term
 						else if(data.res_Type[0].split("_")[0]=="DB"){
 							$("#"+SourceType).val("Distribution Board");
 						}
-						else if(data.res_Type[0].split("_")[0]=="CLT"){
-							$("#"+SourceType).val("Client");
+						else if(data.res_Type[0].split("_")[0]=="CUST"){
+							$("#"+SourceType).val("customer");
 						}
 						else if(data.res_Type[0].split("_")[0]=="WARE"){
 							$("#"+SourceType).val("Site");
@@ -20277,8 +20279,8 @@ function createPathFromMap(cancelpoints,selectedIdContext,originationSource,term
 						else if(data.res_Type1[0].split("_")[0]=="DB"){
 							$("#"+DestinationType).val("Distribution Board");
 						}
-						else if(data.res_Type1[0].split("_")[0]=="CLT"){
-							$("#"+DestinationType).val("Client");
+						else if(data.res_Type1[0].split("_")[0]=="CUST"){
+							$("#"+DestinationType).val("customer");
 						}
 						else if(data.res_Type1[0].split("_")[0]=="WARE"){
 							$("#"+DestinationType).val("Site");
@@ -20686,7 +20688,7 @@ map.setZoom(6);
 			infowindow.open(map,siteCltSrcMarkers[""+id]);
 			
 }
-else if(type=="CLT"){
+else if(type=="CUST"){
 createSiteCltMarker(id,search,Lat,Lng,siteCltSrcMarkers);
 panTo(Lat, Lng);
 map.setZoom(6);

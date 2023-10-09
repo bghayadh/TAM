@@ -117,9 +117,14 @@ public class NewParsing {
 							addAllNodeDatafromTemptoNodes(TransType,rsinit2.getString("DOMAIN"),rsinit2.getString("SUB_DOMAIN"),rsinit2.getString("SUB_DOMAIN_TYPE"),rsinit2.getString("VENDOR"));
 							logger.info("Addig new data from Temporary tables to nodes tables Completed");
 							System.out.println("Addig new data from Temporary tables to nodes tables Completed");
+							
+							
+							//Updating Site id from lookup table
+					 		UpdatingSitefromLookUP(rsinit2.getString("DOMAIN"),rsinit2.getString("SUB_DOMAIN"),rsinit2.getString("SUB_DOMAIN_TYPE"),rsinit2.getString("VENDOR"));
 				 		}
 				 		rsinit2.close();
 				 		stmtinit2.close();
+				 		
 				 		
 				 		//All temporary tables to be truncated here.
 				 		TruncateTempTables();
@@ -623,6 +628,45 @@ public class NewParsing {
 					 return min;
 
 	}
+	 
+	 private static void UpdatingSitefromLookUP(String vdomain,String vsubdomain, String vtype,String vvendor) throws SQLException{
+		 
+		 String query = null,vSiteID = null,vWareName=null,vWareID=null,updatequery=null;
+		 Statement stmt = null,stmt1=null;
+		 PreparedStatement updatestmt = null;
+		 
+		 query = "Select NODE_ID,NODE_NAME,SITE_ID,WARE_ID,WARE_NAME From NODE_ACTIVE Where ACTIVE_RECORD='1' AND DOMAIN='"+vdomain+"' and VENDOR='"+vvendor+"'";
+		 query = CheckSubDomain_Type(vsubdomain,vtype,query);
+		 
+		 stmt = con.createStatement();
+		 ResultSet rs = stmt.executeQuery(query);
+		 while(rs.next()) {
+			 	vSiteID = rs.getString("SITE_ID");
+	 			vWareID = rs.getString("WARE_ID");
+	 			vWareName = rs.getString("WARE_NAME");
+	 			
+	 			if((vSiteID == null && vSiteID.equalsIgnoreCase("0") && vSiteID.equalsIgnoreCase("null"))
+ 		 				&& (vWareID == null && vWareID.equalsIgnoreCase("0") && vWareID.equalsIgnoreCase("null")) 
+ 		 				&& (vWareName == null && vWareName.equalsIgnoreCase("0") && vWareName.equalsIgnoreCase("null"))) {
+	 				stmt1 = con.createStatement();
+	 				query = "Select NODE_ID,NODE_NAME,SITE_ID,WARE_ID,WARE_NAME,LONGITUDE,LATITUDE FROM SITE_NODE_LOOKUP"
+	 						+ " WHERE NODE_ID='"+rs.getString("NODE_ID")+"' AND NODE_NAME='"+rs.getString("NODE_ID")+"'";
+	 				ResultSet rs1 = stmt1.executeQuery(query);
+	 				while(rs1.next()) {
+	 					updatequery = "UPDATE NODE_ACTIVE set SITE_ID='"+rs1.getString("SITE_ID")+"',WARE_ID='"+rs1.getString("WARE_ID")+"',"
+	 								+ "WARE_NAME='"+rs1.getString("WARE_NAME")+"',LONGITUDE='"+rs1.getString("LONGITUDE")+"', LATITUDE='"+rs1.getString("LATITUDE")+"'"
+	 								+ " WHERE NODE_ID='"+rs1.getString("NODE_ID")+"' AND NODE_NAME='"+rs1.getString("NODE_NAME")+"' AND ACTICE_RECORD='1'";
+	 					updatestmt = con.prepareStatement(updatequery);
+	 					updatestmt.executeUpdate();
+	 					updatestmt.close();
+	 				}
+	 				rs1.close();
+	 				stmt1.close();
+	 			}
+		 }
+		 rs.close();
+		 stmt.close();
+	 }
 	
 }
 

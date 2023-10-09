@@ -1,7 +1,6 @@
 package com.aliat.alm.controller;
 
 import java.io.File;
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -13,12 +12,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
-
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -49,9 +44,7 @@ import com.aliat.alm.models.WarehousePassive;
 import com.aliat.alm.models.WarehouseProfitloss;
 import com.aliat.alm.services.ItemParameters;
 import com.aliat.alm.services.LoginServices;
-import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 
@@ -127,9 +120,7 @@ public class WarehouseController {
 							+ " AREA_NAME as areaName,LONGITUDE as wareLong,LATITUDE as wareLat,"
 							+ "CITY as wareCity,REGION_NAME as regionName from WAREHOUSE order by LAST_MODIFY_DATE DESC";
 
-					Query query = session.createSQLQuery(str);
-
-					listAR = ((SQLQuery) query).addScalar("wareID").addScalar("warehouseID").addScalar("warehouseName")
+					listAR = (session.createNativeQuery(str)).addScalar("wareID").addScalar("warehouseID").addScalar("warehouseName")
 							.addScalar("wareSiteID").addScalar("wlastModifieddate").addScalar("areaName")
 							.addScalar("wareLong").addScalar("wareLat").addScalar("wareCity").addScalar("regionName")
 							.setResultTransformer(Transformers.aliasToBean(WareHouseListView.class)).list();
@@ -283,10 +274,8 @@ public class WarehouseController {
 					}
 				}
 				str = str + " ORDER BY LAST_MODIFY_DATE DESC ";
-				Query query = session.createSQLQuery(str);
-				listwarehouse = query.list();
 
-				// rtn.put("listwarehouse", listwarehouse);
+				listwarehouse = session.createNativeQuery(str).list();
 
 				if ((radius != null && !radius.equalsIgnoreCase("") && Double.parseDouble(radius) > 0)
 						&& (longg != null && !longg.equalsIgnoreCase(""))
@@ -864,10 +853,9 @@ public class WarehouseController {
 				if (StringUtils.equalsIgnoreCase(wareID, "")) {
 					synchronized (this) {
 						wareID = "WARE_" + calendar.get(Calendar.YEAR) + "_" + Integer.parseInt(
-								session.createSQLQuery("SELECT WAREHOUSE FROM SEQ_TABLE").uniqueResult().toString());
-						query = session.createSQLQuery("UPDATE SEQ_TABLE SET WAREHOUSE = WAREHOUSE + 1 ");
-						query.executeUpdate();
-						session.createSQLQuery("commit").executeUpdate();
+								session.createNativeQuery("SELECT WAREHOUSE FROM SEQ_TABLE").uniqueResult().toString());
+						session.createNativeQuery("UPDATE SEQ_TABLE SET WAREHOUSE = WAREHOUSE + 1 ").executeUpdate();						
+						session.createNativeQuery("commit").executeUpdate();
 					}
 					// wareID = "WARE_" + calendar.get(Calendar.YEAR) + "_" +
 					// appConfig.getSequenceNbr(12);
@@ -969,12 +957,11 @@ public class WarehouseController {
 							synchronized (this) {
 								wareProfitLossID = "PrLoss_" + calendar.get(Calendar.YEAR) + "_"
 										+ Integer.parseInt(
-												session.createSQLQuery("SELECT WARE_PROFIT_LOSS FROM SEQ_TABLE")
+												session.createNativeQuery("SELECT WARE_PROFIT_LOSS FROM SEQ_TABLE")
 														.uniqueResult().toString());
-								query = session.createSQLQuery(
-										"UPDATE SEQ_TABLE SET WARE_PROFIT_LOSS = WARE_PROFIT_LOSS + 1 ");
+								query = session.createNativeQuery("UPDATE SEQ_TABLE SET WARE_PROFIT_LOSS = WARE_PROFIT_LOSS + 1 ");
 								query.executeUpdate();
-								session.createSQLQuery("commit").executeUpdate();
+								session.createNativeQuery("commit").executeUpdate();
 							}
 							// wareProfitLossID = "PrLoss_" + calendar.get(Calendar.YEAR) + "_" +
 							// appConfig.getSequenceNbr(19);
@@ -1091,21 +1078,14 @@ public class WarehouseController {
 			tx = session.beginTransaction();
 			try {
 				for (int i = 0; i < idList.length; i++) {
-
 					idForm = idList[i];
-
-					query = session.createSQLQuery("Delete WAREHOUSE_PROFIT_LOSS where WARE_ID = '" + idForm + "'");
-					query.executeUpdate();
-
-					query = session.createSQLQuery("delete WAREHOUSE_PASSIVE  where WARE_ID = '" + idForm + "'");
-					query.executeUpdate();
-
-					query = session.createSQLQuery("delete WAREHOUSE  where WARE_ID = '" + idForm + "'");
-					query.executeUpdate();
-
+					session.createNativeQuery("Delete WAREHOUSE_PROFIT_LOSS where WARE_ID = '" + idForm + "'").executeUpdate();
+					session.createNativeQuery("delete WAREHOUSE_PASSIVE  where WARE_ID = '" + idForm + "'").executeUpdate();
+					session.createNativeQuery("delete WAREHOUSE  where WARE_ID = '" + idForm + "'").executeUpdate();
 				}
 
 			} catch (Exception e) {
+				e.printStackTrace();
 				System.out.println("Error in creating session with the WarehouseDelete method " + e.getMessage());
 				logger.info("could not connect to DB in WarehouseDelete method ");
 			}
@@ -1148,6 +1128,7 @@ public class WarehouseController {
 
 				query = session.createQuery(str);
 				query.setString("param1", "%" + requestValue + "%");
+				//query.setParameter("param1", "%" + requestValue + "%");
 
 				query.setFirstResult(0);
 				query.setMaxResults(40);
@@ -1321,7 +1302,7 @@ public class WarehouseController {
 					sb.deleteCharAt(sb.length() - 1);
 					String data1 = String.valueOf(sb).trim();
 
-					String[] imgresult = null, imgres2 = null;
+					String[] imgresult = null;
 
 					if (data1.contains(",")) {
 						imgresult = data1.split(",");

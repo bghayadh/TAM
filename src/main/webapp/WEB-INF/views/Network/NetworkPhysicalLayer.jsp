@@ -1727,7 +1727,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 100px; font-size: 12px;" class="input-group-text"><b>By Client </b> 
-													<input type='checkbox' id="client_StrandAutoComplete" style='position: relative; margin-left:15px' class="srcDestStrandAutoComplete"></span>
+													<input type='checkbox' id="customer_StrandAutoComplete" style='position: relative; margin-left:15px' class="srcDestStrandAutoComplete"></span>
 												</div>
 											</div>
 										</div>
@@ -2195,7 +2195,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 100px; font-size: 12px;" class="input-group-text"><b>By Client </b> 
-													<input type='checkbox' id="client_TubeAutoComplete" style='position: relative; margin-left:15px' class="srcDestTubeAutoComplete"></span>
+													<input type='checkbox' id="customer_TubeAutoComplete" style='position: relative; margin-left:15px' class="srcDestTubeAutoComplete"></span>
 												</div>
 											</div>
 										</div>
@@ -2636,7 +2636,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 <div class="row"><div class="col-sm-2"><div class="form-group"><div class="input-group-prepend"><span style="min-width: 90px; font-size: 12px;" class="input-group-text"><b>By Site </b> 
 <input type='checkbox' id="site_operationAutoComplete" style='position: relative; margin-left: 15px' class="mapOperationAutoComplete" onclick="mapFeilds()"></span>
 </div></div></div><div class="col-sm-2"><div class="form-group"><div class="input-group-prepend"><span style="min-width: 90px; font-size: 12px;" class="input-group-text"><b>By Client </b> 
-<input type='checkbox' id="client_operationAutoComplete" style='position: relative; margin-left:15px' class="mapOperationAutoComplete" onclick="mapFeilds()"></span>
+<input type='checkbox' id="customer_operationAutoComplete" style='position: relative; margin-left:15px' class="mapOperationAutoComplete" onclick="mapFeilds()"></span>
 </div></div></div><div class="col-sm-2"><div class="form-group"><div class="input-group-prepend"><span style="min-width: 120px; font-size: 12px;" class="input-group-text"><b>By Manhole </b> 
 <input type='checkbox' id="manhole_operationAutoComplete" style='position: relative; margin-left:10px' class="mapOperationAutoComplete"  onclick="mapFeilds()"></span>
 </div></div></div><div class="col-sm-2"><div class="form-group"><div class="input-group-prepend"><span style="min-width: 120px; font-size: 12px;" class="input-group-text"><b>By Handhole </b> 
@@ -2976,7 +2976,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 100px; font-size: 12px;" class="input-group-text"><b>By Client </b> 
-													<input type='checkbox' id="client_CableAutoComplete" style='position: relative; margin-left:15px' class="srcDestCableAutoComplete"></span>
+													<input type='checkbox' id="customer_CableAutoComplete" style='position: relative; margin-left:15px' class="srcDestCableAutoComplete"></span>
 												</div>
 											</div>
 										</div>
@@ -3104,7 +3104,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 												<div class="input-group-prepend">
 													<span style="min-width: 110px; font-size: 12px;position: relative; margin-left:-10px"
 														class="input-group-text"><b>By Client </b> <input
-														type='checkbox' id="Client_AutocompleteTubeFiber" value='0' class="fiberTubeAutocomplete" style='position: relative; margin-left:25px'></span>
+														type='checkbox' id="customer_AutocompleteTubeFiber" value='0' class="fiberTubeAutocomplete" style='position: relative; margin-left:25px'></span>
 												</div>
 											</div>
 										</div>
@@ -3188,7 +3188,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 												<div class="input-group-prepend">
 													<span style="min-width: 110px; font-size: 12px;position: relative; margin-left:-10px"
 														class="input-group-text"><b>By Client </b> <input
-														type='checkbox' id="Client_AutocompleteStrandFiber" value='0' class="fiberStrandAutocomplete"
+														type='checkbox' id="customer_AutocompleteStrandFiber" value='0' class="fiberStrandAutocomplete"
 														style='position: relative; margin-left:25px'></span>
 												</div>
 											</div>
@@ -3542,7 +3542,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 									<div class="form-group">
 										<div class="input-group-prepend">
 											<span style="min-width: 100px; font-size: 12px;" class="input-group-text"><b>By Client </b> 
-											<input type='checkbox' id="client_RelatedCableAutoComplete" style='position: relative; margin-left:15px' class="relatedCableAutoComplete"></span>
+											<input type='checkbox' id="customer_RelatedCableAutoComplete" style='position: relative; margin-left:15px' class="relatedCableAutoComplete"></span>
 										</div>
 									</div>
 								</div>
@@ -3788,7 +3788,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 100px; font-size: 12px;" class="input-group-text"><b>By Client </b> 
-													<input type='checkbox' id="client_TrenchAutoComplete" style='position: relative; margin-left:15px' class="srcDestTrenchAutoComplete"></span>
+													<input type='checkbox' id="customer_TrenchAutoComplete" style='position: relative; margin-left:15px' class="srcDestTrenchAutoComplete"></span>
 												</div>
 											</div>
 										</div>
@@ -4182,7 +4182,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 100px; font-size: 12px;" class="input-group-text"><b>By Client </b> 
-													<input type='checkbox' id="client_DuctAutoComplete" style='position: relative; margin-left:15px' class="srcDestDuctAutoComplete"></span>
+													<input type='checkbox' id="customer_DuctAutoComplete" style='position: relative; margin-left:15px' class="srcDestDuctAutoComplete"></span>
 												</div>
 											</div>
 										</div>
@@ -4641,7 +4641,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 									<div class="form-group">
 										<div class="input-group-prepend">
 											<span style="min-width: 110px; font-size: 12px;" class="input-group-text"><b>By Client </b> 
-											<input type='checkbox' id="client_StrandOriginationAutoComplete" style='position: relative; margin-left: 25px' class="strandOriginationAutoComplete"></span>
+											<input type='checkbox' id="customer_StrandOriginationAutoComplete" style='position: relative; margin-left: 25px' class="strandOriginationAutoComplete"></span>
 										</div></div></div>
 								<div class="col-sm-2">
 									<div class="form-group">
@@ -4723,7 +4723,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 									<div class="form-group">
 										<div class="input-group-prepend">
 											<span style="min-width: 110px; font-size: 12px;" class="input-group-text"><b>By Client </b> 
-											<input type='checkbox' id="client_TrenchOriginationAutoComplete" style='position: relative; margin-left: 25px' class="trenchOriginationAutoComplete"></span>
+											<input type='checkbox' id="customer_TrenchOriginationAutoComplete" style='position: relative; margin-left: 25px' class="trenchOriginationAutoComplete"></span>
 										</div></div></div>
 								<div class="col-sm-2">
 									<div class="form-group">
@@ -4806,7 +4806,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 									<div class="form-group">
 										<div class="input-group-prepend">
 											<span style="min-width: 110px; font-size: 12px;" class="input-group-text"><b>By Client </b> 
-											<input type='checkbox' id="client_DuctOriginationAutoComplete" style='position: relative; margin-left: 25px' class="ductOriginationAutoComplete"></span>
+											<input type='checkbox' id="customer_DuctOriginationAutoComplete" style='position: relative; margin-left: 25px' class="ductOriginationAutoComplete"></span>
 										</div></div></div>
 								<div class="col-sm-2">
 									<div class="form-group">
@@ -4890,7 +4890,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 									<div class="form-group">
 										<div class="input-group-prepend">
 											<span style="min-width: 110px; font-size: 12px;" class="input-group-text"><b>By Client </b> 
-											<input type='checkbox' id="client_TubeOriginationAutoComplete" style='position: relative; margin-left: 25px' class="tubeOriginationAutoComplete"></span>
+											<input type='checkbox' id="customer_TubeOriginationAutoComplete" style='position: relative; margin-left: 25px' class="tubeOriginationAutoComplete"></span>
 										</div></div></div>
 								<div class="col-sm-2">
 									<div class="form-group">
@@ -4973,7 +4973,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 									<div class="form-group">
 										<div class="input-group-prepend">
 											<span style="min-width: 110px; font-size: 12px;" class="input-group-text"><b>By Client </b> 
-											<input type='checkbox' id="client_OriginationAutoComplete" style='position: relative; margin-left: 25px' class="OriginationAutoComplete"></span>
+											<input type='checkbox' id="customer_OriginationAutoComplete" style='position: relative; margin-left: 25px' class="OriginationAutoComplete"></span>
 										</div></div></div>
 								<div class="col-sm-2">
 									<div class="form-group">
@@ -5054,7 +5054,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 									<div class="form-group">
 										<div class="input-group-prepend">
 											<span style="min-width: 110px; font-size: 12px;" class="input-group-text"><b>By Client </b> 
-											<input type='checkbox' id="client_TrenchTerminationAutoComplete" style='position: relative; margin-left: 25px' class="trenchTerminationAutoComplete"></span>
+											<input type='checkbox' id="customer_TrenchTerminationAutoComplete" style='position: relative; margin-left: 25px' class="trenchTerminationAutoComplete"></span>
 										</div></div></div>
 								<div class="col-sm-2">
 									<div class="form-group">
@@ -5135,7 +5135,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 									<div class="form-group">
 										<div class="input-group-prepend">
 											<span style="min-width: 110px; font-size: 12px;" class="input-group-text"><b>By Client </b> 
-											<input type='checkbox' id="client_DuctTerminationAutoComplete" style='position: relative; margin-left: 25px' class="ductTerminationAutoComplete"></span>
+											<input type='checkbox' id="customer_DuctTerminationAutoComplete" style='position: relative; margin-left: 25px' class="ductTerminationAutoComplete"></span>
 										</div></div></div>
 								<div class="col-sm-2">
 									<div class="form-group">
@@ -5215,7 +5215,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 									<div class="form-group">
 										<div class="input-group-prepend">
 											<span style="min-width: 110px; font-size: 12px;" class="input-group-text"><b>By Client </b> 
-											<input type='checkbox' id="client_TerminationAutoComplete" style='position: relative; margin-left: 25px' class="TerminationAutoComplete"></span>
+											<input type='checkbox' id="customer_TerminationAutoComplete" style='position: relative; margin-left: 25px' class="TerminationAutoComplete"></span>
 										</div></div></div>
 								<div class="col-sm-2">
 									<div class="form-group">
@@ -5304,7 +5304,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 									<div class="form-group">
 										<div class="input-group-prepend">
 											<span style="min-width: 110px; font-size: 12px;" class="input-group-text"><b>By Client </b> 
-											<input type='checkbox' id="client_StrandTerminationAutoComplete" style='position: relative; margin-left: 25px' class="strandTerminationAutoComplete"></span>
+											<input type='checkbox' id="customer_StrandTerminationAutoComplete" style='position: relative; margin-left: 25px' class="strandTerminationAutoComplete"></span>
 										</div>
 									</div>
 								</div>
@@ -5402,7 +5402,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 									<div class="form-group">
 										<div class="input-group-prepend">
 											<span style="min-width: 110px; font-size: 12px;" class="input-group-text"><b>By Client </b> 
-											<input type='checkbox' id="client_TubeTerminationAutoComplete" style='position: relative; margin-left: 25px' class="tubeTerminationAutoComplete"></span>
+											<input type='checkbox' id="customer_TubeTerminationAutoComplete" style='position: relative; margin-left: 25px' class="tubeTerminationAutoComplete"></span>
 										</div>
 									</div>
 								</div>
@@ -5580,7 +5580,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 100px; font-size: 12px;" class="input-group-text"><b>By Client </b> 
-													<input type='checkbox' id="client_DBAutoComplete" style='position: relative; margin-left:15px' ></span>
+													<input type='checkbox' id="customer_DBAutoComplete" style='position: relative; margin-left:15px' ></span>
 												</div></div></div></div>
 								<div class="row">
 									<div class="col-md-6">

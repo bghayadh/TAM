@@ -166,7 +166,7 @@ public class LoadFilesAOSS {
         	System.out.println(Gyear);  
 			
 
-			File folder = new File(readfileAIMfrom);
+			File folder = new File(projpath+"/"+readfileAIMfrom);
 			File[] listOfFiles = folder.listFiles();
 			logger = Logger.getLogger("MyLog"); 
 			logger.setUseParentHandlers(false);
@@ -228,8 +228,8 @@ public class LoadFilesAOSS {
 							        String fichier =file.getName().toString();
 									readfile(fichier); 
 									
-									 File source = new File(readfileAIMfrom+"/"+file.getName());
-								     File dest = new File(copyfileAIMto+"/"+file.getName()+".bkp");
+									 File source = new File(projpath+"/"+readfileAIMfrom+"/"+file.getName());
+								     File dest = new File(projpath+"/"+copyfileAIMto+"/"+file.getName()+".bkp");
 								     
 								     copyFiles(source,dest);
 								     
@@ -418,7 +418,7 @@ public class LoadFilesAOSS {
 					 codeid= localgetseqNbr(0);
 					 codeid=Gyear+"_"+ "NODE"+'_'+codeid;
  					 PreparedStatement stmt = con.prepareStatement("insert into NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_SOURCE,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,ACTIVE_RECORD,LINE,WARE_ID,VENDOR,SUPPLIER_ID,WARE_NAME,SUPPLIER_NAME  )"
- 					 		+ "values('" + codeid +"', '"+ Gprovider +"' ||'_'||'" + ResultNode[0] +"' ,'" + ResultNode[0] +"' ,'" + ResultNode[1] +"','" + ResultNode[2] +"','Mobile Access Domain','" + Fsource +"','" + vMODEL +"','" + tech2 +"','" + tech3 +"','" + tech4 +"','" + tech5 +"','0','"+ circleid +"',sysdate,sysdate,'AIM','" + filename +"','0','0','0','0','0','0','1','1','0','"+ Gprovider +"','0','0','0') "); 
+ 					 		+ "values('" + codeid +"', '"+ Gprovider +"' ||'_'||'" + ResultNode[0] +"' ,'" + ResultNode[0] +"' ,'" + ResultNode[1] +"','" +vMODEL+"','Mobile Access Domain','" + Fsource +"','" +  ResultNode[2]  +"','" + tech2 +"','" + tech3 +"','" + tech4 +"','" + tech5 +"','0','"+ circleid +"',sysdate,sysdate,'AIM','" + filename +"','0','0','0','0','0','0','1','1','0','"+ Gprovider +"','0','0','0') "); 
 	                 stmt.executeUpdate();
 				     stmt.close();
 					
@@ -600,6 +600,10 @@ public class LoadFilesAOSS {
 					                		   InsertQuery="insert into " + attributeTable  + " (CABINET_ID,SITEINDEX,CABINETNO,INVENTORYUNITID,RACKTYPE,BOMRACKTYPE,INVENTORYUNITTYPE,VENDORUNITFAMILYTYPE,VENDORUNITTYPENUMBER,VENDORNAME,SERIALNUMBER,HARDWAREVERSION,DATEOFMANUFACTURE,DATEOFLASTSERVICE,UNITPOSITION,MANUFACTURERDATA,ISSUENUMBER,BOMCODE,EXTINFO,MODEL,USERLABEL,SHAREMODE,CLEICODE,BOM,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,ALM_POSITION,CREATION_DATE,DOMAIN,VENDOR) "
 					                		   		+ " values('" + vcodeid +"','" + vhmap.get("SITEINDEX") +"','" + vhmap.get("CABINETNO") +"','" + vhmap.get("INVENTORYUNITID") +"','" + vhmap.get("RACKTYPE") +"','" + vhmap.get("BOMRACKTYPE") +"','" + vhmap.get("INVENTORYUNITTYPE") +"','" + vhmap.get("VENDORUNITFAMILYTYPE") +"','" + vhmap.get("VENDORUNITTYPENUMBER") +"','" + vhmap.get("VENDORNAME") +"','" + vhmap.get("SERIALNUMBER") +"','" + vhmap.get("HARDWAREVERSION") +"',DATE '" + vhmap.get("DATEOFMANUFACTURE") +"',DATE '" + vhmap.get("DATEOFLASTSERVICE") +"', '" + vhmap.get("UNITPOSITION") +"','" + vhmap.get("MANUFACTURERDATA") +"','" + vhmap.get("ISSUENUMBER") +"','" + vhmap.get("BOMCODE") +"','" + vhmap.get("EXTINFO") +"','" + vhmap.get("MODEL") +"','" + vhmap.get("USERLABEL") +"','" + vhmap.get("SHAREMODE") +"','" + vhmap.get("CLEICODE") +"','" + vhmap.get("BOM") +"','" + codeid +"','" + codeidattr +"',sysdate ,'" + filename +"','" + vhmap.get("STATUS") +"','0','0','0','" + vhmap.get("TRANS_ID") +"','" + vhmap.get("TRANS_TYPE") +"','"+ j +"','1','"+ almposition +"',sysdate,'Mobile Access Domain','" + Gprovider +"') ";
 				                		   //System.out.println(filename + "    "+ InsertQuery);
+					                		   
+					                		   PreparedStatement updateserial = con.prepareStatement("UPDATE NODE_ACTIVE SET SERIAL_NUMBER='"+vhmap.get("SERIALNUMBER")+"' WHERE NODE_PK='"+codeid+"'");
+										   		updateserial.executeUpdate();
+										   		updateserial.close();
 				                	   }
 				                	   if (attributeTable =="NODE_HOSTVER" ) {
 				                		   vcodeid= localgetseqNbr(8);  /// 8 to select hostVer_id

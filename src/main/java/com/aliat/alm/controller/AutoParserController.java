@@ -36,6 +36,7 @@ import com.aliat.alm.Parser.NewBoardMovement;
 import com.aliat.alm.Parser.NewCabinetMovement;
 import com.aliat.alm.Parser.VirtualNodeMovement;
 import com.aliat.alm.Parser.NewParsing;
+import com.aliat.alm.Parser.NewSubRackMovement;
 import com.aliat.alm.Parser.PhysicalNodeMovement_MAC;
 import com.aliat.alm.Parser.CopyParsingDataToALM;
 import com.aliat.alm.Parser.CopyParsingDataToALM_WIN;
@@ -375,6 +376,18 @@ public class AutoParserController {
 //		FirstParsing_WIN myClass = new FirstParsing_WIN();
 		NewAntennaMovement antennaMovement = new NewAntennaMovement();
 		antennaMovement.main(null);
+		rtn.put("Result", "Script is Done");
+		return rtn;
+	}
+	
+	@RequestMapping(value = "/newSubRackMovement", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> newSubRackMovement(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws SecurityException, IOException, InterruptedException, SQLException, ParseException {
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+//		FirstParsing_WIN myClass = new FirstParsing_WIN();
+		NewSubRackMovement subrackMovement = new NewSubRackMovement();
+		subrackMovement.main(null);
 		rtn.put("Result", "Script is Done");
 		return rtn;
 	}

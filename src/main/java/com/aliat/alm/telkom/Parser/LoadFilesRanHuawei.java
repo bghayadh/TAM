@@ -491,22 +491,22 @@ public class LoadFilesRanHuawei {
 					}
 				  
 			  	  	  nodeName = records.get(i).get(0);
-			  	  	  nodeType=records.get(i).get(1); 			  	  	  
+			  	  	nodeModel=records.get(i).get(1); 			  	  	  
 			  	  	  
-				    	if ((nodeName.contains("RNC")) && (nodeType.contains("BSC")))  {
-							 nodeModel="RNC";
+				    	if ((nodeModel.contains("RNC")) && (nodeModel.contains("BSC")))  {
+							 nodeType="RNC";
 						 } 
-				    	else if ((nodeName.contains("BSC")) && (nodeType.contains("BSC")))  {
-							nodeModel="BSC";
+				    	else if ((nodeModel.contains("BSC")) && (nodeModel.contains("BSC")))  {
+				    		nodeType="BSC";
 						} 
-				    	else if (nodeType.contains("OSS"))  {
-							nodeModel="OSS";
+				    	else if (nodeModel.contains("OSS"))  {
+				    		nodeType="OSS";
 						}
-				    	else if (nodeType.contains("BTS"))  {
-							nodeModel="BTS";
+				    	else if (nodeModel.contains("BTS"))  {
+				    		nodeType="BTS";
 				    	}
 				    	else {
-				    		nodeModel=null;
+				    		nodeType=null;
 				    	}					    
 				    	
 					  //nodeModel = records.get(i).get(1);

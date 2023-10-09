@@ -62,6 +62,7 @@ public class NodeActiveController {
 	private static StringWriter sw;
 	private static String exceptionAsString;
 	private static String str;
+	private static Object[] result;
 	
 	@Autowired
 	Permissions permissions;
@@ -148,13 +149,13 @@ public String NodeFormView(Locale locale, Model model, HttpServletRequest reques
 			NodePK = request.getParameter("NodePk");
 			System.out.println(NodePK);
 			if (NodePK != null) {
+				model.addAttribute("Status", "old");
 				query = session.createNativeQuery(
-						"select node_id,creation_date,update_date,node_name,node_type,node_model,site_id,ware_name,vendor,domain,node_pk from node_active where node_pk =:param1"); 
+						"select node_id, TO_CHAR(creation_date,'YYYY-MM-DD HH24:MI:SS'), TO_CHAR(update_date,'YYYY-MM-DD HH24:MI:SS'),node_name,node_type,node_model,site_id,ware_name,"
+						+ "vendor,domain,node_pk from node_active where node_pk =:param1"); 
 							query.setParameter("param1", NodePK);
-				Object[] result = (Object[]) query.uniqueResult();
-
-			
-				    model.addAttribute("node_id", result[0]);
+			        result = (Object[]) query.uniqueResult();
+                    model.addAttribute("node_id", result[0]);
 				    model.addAttribute("creation_date", result[1]);
 				    model.addAttribute("update_date", result[2]);
 				    model.addAttribute("node_name", result[3]);
@@ -165,9 +166,153 @@ public String NodeFormView(Locale locale, Model model, HttpServletRequest reques
 				    model.addAttribute("vendor", result[8]);
 				    model.addAttribute("domain", result[9]);
 				    model.addAttribute("node_pk", result[10]);
-					   
-	
-		} }catch (Exception e) {
+				    
+				    query = session.createNativeQuery(
+				    	    "SELECT GCELL_ID, CELLID, CELLNAME, MCC, MNC, LAC, CI, NCC, BCC, TYPE, BCCHNO, "
+				    	    + "BASEBANDPOLICY, BASEBANDEQMID, GBTSFUNCTIONNAME,TO_CHAR(UPDATE_DATE,'YYYY-MM-DD HH24:MI:SS'),"
+				    	    + " GLOCELLID, STATUS,"
+				    	    + " TO_CHAR(CREATION_DATE,'YYYY-MM-DD HH24:MI:SS'), DOMAIN, VENDOR, TO_TRANS_SOURCE FROM NODE_GCELL WHERE "
+				    	    + "NODE_PK = :param1");
+				    	query.setParameter("param1", NodePK);
+
+				    	model.addAttribute("listGCELL", mapper.writeValueAsString(query.list()));
+						
+				    	query = session.createNativeQuery(
+				    		    "SELECT UCELL_ID, CELLID, CELLNAME, LOCELL, NODEBFUNCTIONNAME, ULFREQ, DLFREQ, MAXPOWER,"
+				    		    + " USERLABEL, MAXTXPOWER, UARFCNUPLINK, UARFCNDOWNLINK, PSCRAMBCODE, NODEBNAME, LAC, SAC,"
+				    		    + " RAC, MANUFACTURERDATA, RADIUS, HORAD, DI,  TO_CHAR(UPDATE_DATE,'YYYY-MM-DD HH24:MI:SS'), "
+				    		    + "STATUS, TO_CHAR(CREATION_DATE,'YYYY-MM-DD HH24:MI:SS'),"
+				    		    + " DOMAIN, VENDOR FROM NODE_UCELL WHERE NODE_PK = :param1");
+
+				    		query.setParameter("param1", NodePK);
+				    		
+				    		model.addAttribute("listUCELL", mapper.writeValueAsString(query.list()));
+							
+				    
+				    		query = session.createNativeQuery(
+				    			    "SELECT LCELL_ID, LOCALCELLID, CELLNAME, CELLRADIUS, FREQBAND, ULEARFCNCFGIND, ULEARFCN, DLEARFCN,"
+				    			    + " ULBANDWIDTH, DLBANDWIDTH, CELLID, PHYCELLID, FDDTDDIND, ENODEBFUNCTIONNAME, NBCELLFLAG, "
+				    			    + "  TO_CHAR(UPDATE_DATE,'YYYY-MM-DD HH24:MI:SS'), STATUS, TO_CHAR(CREATION_DATE,'YYYY-MM-DD HH24:MI:SS'), DOMAIN, VENDOR "
+				    			    + " FROM NODE_LCELL WHERE NODE_PK = :param1");
+
+				    				query.setParameter("param1", NodePK);
+				    				
+				    				model.addAttribute("listLCELL", mapper.writeValueAsString(query.list()));
+									
+				    				query = session.createNativeQuery(
+				    						"select  board_id,siteindex,cabinetno,subrackno,rackno,frameno,slotno,slotpos,subslotno,inventoryunitid,moduleno,boardname,"
+				    						+ "boardtype,inventoryunittype,vendorunitfamilytype,vendorunittypenumber,vendorname,serialnumber,hardwareversion,"
+				    						+ "TO_CHAR(dateofmanufacture,'YYYY-MM-DD HH24:MI:SS'), TO_CHAR(dateoflastservice,'YYYY-MM-DD HH24:MI:SS'),unitposition,manufacturerdata,softver,logicver,biosver,biosverex,lanver,mbusver,"
+				    						+ "issuenumber,bomcode,model,userlabel,TO_CHAR(UPDATE_DATE,'YYYY-MM-DD HH24:MI:SS'),extinfo,apdevinfo,workmode,status,TO_CHAR(CREATION_DATE,'YYYY-MM-DD HH24:MI:SS')" + 
+				    						" from node_board where node_pk =:param1");
+				    						query.setParameter("param1", NodePK); 
+				    						model.addAttribute("listBoard", mapper.writeValueAsString(query.list()));
+                           
+				    						
+				    			   query =session.createNativeQuery( "SELECT CABINET_ID, SITEINDEX, CABINETNO, INVENTORYUNITID, RACKTYPE, OTHERS,"
+				    		       		+ " BOMRACKTYPE, INVENTORYUNITTYPE, VENDORUNITFAMILYTYPE, VENDORUNITTYPENUMBER, VENDORNAME, SERIALNUMBER,"
+				    		       		+ " HARDWAREVERSION, TO_CHAR(DATEOFMANUFACTURE,'YYYY-MM-DD HH24:MI:SS'), TO_CHAR(DATEOFLASTSERVICE,'YYYY-MM-DD HH24:MI:SS'), UNITPOSITION, "
+				    		       		+ "MANUFACTURERDATA, ISSUENUMBER, BOMCODE, EXTINFO, MODEL, USERLABEL, SHAREMODE, CLEICODE, BOM,  TO_CHAR(UPDATE_DATE,"
+				    		       		+ "'YYYY-MM-DD HH24:MI:SS'), STATUS, TO_CHAR(CREATION_DATE,'YYYY-MM-DD HH24:MI:SS'), DOMAIN, VENDOR FROM NODE_CABINET"
+				    		       		+ " WHERE NODE_PK = :param1");
+
+				    						query.setParameter("param1", NodePK);
+                                            model.addAttribute("listCabinet", mapper.writeValueAsString(query.list()));
+
+				    				
+	    						query = session.createNativeQuery(
+					    			    "SELECT ANTENNA_ID, INVENTORYUNITID, INVENTORYUNITTYPE, ANTENNADEVICENO, PRODNR, "
+					    			    + "VENDORUNITFAMILYTYPE, VENDORUNITTYPENUMBER, VENDORNAME, SERIALNUMBER, UNITPOSITION,"
+					    			    + " MANUFACTURERDATA, ANTENNADEVICETYPE, BOMCODE, EXTINFO,MODEL,FILENAME,PARENTDN,CONFIGDN,"
+					    			    + "DISTNAME ,TO_CHAR(UPDATE_DATE,'YYYY-MM-DD HH24:MI:SS'),STATUS, TO_CHAR(CREATION_DATE,"
+					    			    + "'YYYY-MM-DD HH24:MI:SS'), DOMAIN, VENDOR FROM NODE_ANTENNA WHERE NODE_PK = :param1 ");
+	    						
+	    						        query.setParameter("param1", NodePK);
+					    				model.addAttribute("listAntinna", mapper.writeValueAsString(query.list()));
+					    				
+					    		query = session.createNativeQuery(
+					    					    "SELECT HOST_ID, RACKPOSITION, INVENTORYUNITID, VENDORUNITFAMILYTYPE, VENDORUNITTYPENUMBER, " +
+					    					    "VENDORNAME, SERIALNUMBER, HARDWAREVERSION, SOFTVER, " +
+					    					    "TO_CHAR(DATEOFMANUFACTURE, 'YYYY-MM-DD HH24:MI:SS'), " +
+					    					    "TO_CHAR(DATEOFLASTSERVICE, 'YYYY-MM-DD HH24:MI:SS'), " +
+					    					    "MANUFACTURERDATA, HOSTNAME, NUMBEROFCPU, MEMSIZE, HARDDISKSIZE, " +
+					    					    "TO_CHAR(UPDATE_DATE, 'YYYY-MM-DD HH24:MI:SS'), " +
+					    					    " STATUS, DOMAIN, VENDOR " +
+					    					    "FROM NODE_HOST " +
+					    					    "WHERE NODE_PK = :param1"
+					    					);
+
+					    					query.setParameter("param1", NodePK);
+					    					model.addAttribute("listNodeHost", mapper.writeValueAsString(query.list()));
+					    					
+		    					query = session.createNativeQuery(
+		    						    "SELECT RACK_ID, RACKNO, INVENTORYUNITID, RACKTYPE, INVENTORYUNITTYPE, VENDORUNITFAMILYTYPE,VENDORUNITTYPENUMBER, " +
+		    						    "VENDORNAME, SERIALNUMBER, HARDWAREVERSION, TO_CHAR(DATEOFMANUFACTURE, 'YYYY-MM-DD HH24:MI:SS'), "+
+		    						    "TO_CHAR(DATEOFLASTSERVICE, 'YYYY-MM-DD HH24:MI:SS'), UNITPOSITION, MANUFACTURERDATA, MODEL, USERLABEL, STATUS " +
+		    						    " FROM NODE_RACK WHERE NODE_PK = :param1");
+
+		    						query.setParameter("param1", NodePK);
+		    						model.addAttribute("listRack", mapper.writeValueAsString(query.list()));
+
+					    					
+					    		query = session.createNativeQuery(
+					    						    "SELECT SUBRACK_ID, SITEINDEX, CABINETNO, SUBRACKNO, INVENTORYUNITID, RACKTYPE, BOMRACKTYPE, FRAMETYPE, " +
+					    						    "RACKFRAMENO, MODULENO, INVENTORYUNITTYPE, VENDORUNITFAMILYTYPE, VENDORUNITTYPENUMBER, VENDORNAME, " +
+					    						    "SERIALNUMBER, HARDWAREVERSION, " +
+					    						    "TO_CHAR(DATEOFMANUFACTURE, 'YYYY-MM-DD HH24:MI:SS'), TO_CHAR(DATEOFLASTSERVICE, 'YYYY-MM-DD HH24:MI:SS'), " +
+					    						    "UNITPOSITION, MANUFACTURERDATA, USERLABEL, BOMCODE, MODEL, ISSUENUMBER, BOMFRAMETYPE, CLEICODE, " +
+					    						    "BOM, EXTINFO, TO_CHAR(UPDATE_DATE, 'YYYY-MM-DD HH24:MI:SS'), STATUS, " +
+					    						    " DOMAIN, VENDOR FROM NODE_SUBRACK " +
+					    						    "WHERE NODE_PK = :param1");
+
+					    						query.setParameter("param1", NodePK);
+					    						model.addAttribute("listNodeSubrack", mapper.writeValueAsString(query.list()));
+
+					    				
+					    		query = session.createNativeQuery(
+					    							    "SELECT MODULE_ID, CABINETNO, MODULENO, INVUNITID, IDENTIFICATIONCODE, CONFIGDN, INVUNITTYPE, " +
+					    							    "PARENTDN, RUNTIMEDN, SERIALNUMBER, STATE, UNITPOSITION, VENDORUNITFAMILYTYPE, VENDORUNITTYPENUMBER, " +
+					    							    "SUBRACK_SPECIFIC_TYPE, USERLABEL, VENDORNAME, VERSION, DISTNAME,  " +
+					    							    "TO_CHAR(UPDATE_DATE, 'YYYY-MM-DD HH24:MI:SS') , " +
+					    							    " STATUS, TO_CHAR(CREATION_DATE, 'YYYY-MM-DD HH24:MI:SS'), " +
+					    							    "DOMAIN, VENDOR,  ANTENNA_STATUS FROM NODE_MODULE " +
+					    							    "WHERE NODE_PK = :param1"
+					    							);
+
+					    							query.setParameter("param1", NodePK);
+					    							model.addAttribute("listNodeModule", mapper.writeValueAsString(query.list()));
+					    				
+							query = session.createNativeQuery(
+				    			    "SELECT   SUBMODULE_ID,CABINETNO, MODULENO, SUBMODULENO, INVUNITID, IDENTIFICATIONCODE,"
+				    			    + "       CONFIGDN, PARENTDN, RUNTIMEDN, SERIALNUMBER, UNITTYPE,"
+				    			    + "       VENDORUNITFAMILYTYPE, VENDORUNITTYPENUMBER, VENDORNAME, VERSION, DISTNAME, FILENAME,"
+				    			    + "        TO_CHAR(UPDATE_DATE,'YYYY-MM-DD HH24:MI:SS'), STATUS, TO_CHAR(CREATION_DATE,"
+				    			    + "       'YYYY-MM-DD HH24:MI:SS'), DOMAIN, VENDOR FROM NODE_SUBMODULE WHERE NODE_PK = :param1");
+    						
+    						        query.setParameter("param1", NodePK);
+				    				model.addAttribute("listSubModule", mapper.writeValueAsString(query.list()));
+				    				
+				    				query = session.createNativeQuery(
+				    						"SELECT PORT_ID, SITEINDEX, CABINETNO, SUBRACKNO, RACKNO, FRAMENO, SLOTNO, SLOTPOS, SUBSLOTNO, VENDORUNITFAMILYTYPE,"
+				    						+ "INVENTORYUNITID, PORTNO HARDWAREVERSION, SERIALNUMBER, INVENTORYUNITTYPE, VENDORNAME, VENDORUNITTYPENUMBER,"
+				    						+ "TO_CHAR(DATEOFMANUFACTURE,'YYYY-MM-DD HH24:MI:SS'), TO_CHAR(DATEOFLASTSERVICE,'YYYY-MM-DD HH24:MI:SS')," 
+				    						+ "UNITPOSITION, MACADDR, MANUFACTURERDATA, STATUS, PORTTYPE, PORTRATE FROM NODE_PORT WHERE NODE_PK =:param1");		    						
+				    						query.setParameter("param1", NodePK); 	    						
+				    						model.addAttribute("listPort", mapper.writeValueAsString(query.list()));
+		                           
+					    				
+		}
+			
+			else {
+				model.addAttribute("Status", "new");
+				
+				
+			}
+		
+		
+		
+		
+		}catch (Exception e) {
 			sw = new StringWriter();
 			e.printStackTrace(new PrintWriter(sw));
 			exceptionAsString = sw.toString();

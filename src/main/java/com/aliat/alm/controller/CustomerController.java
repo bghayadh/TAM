@@ -603,7 +603,7 @@ public class CustomerController {
 			tx = session.beginTransaction();
 			try {
 				query = session.createSQLQuery(
-						"SELECT CUSTOMER_ID,CUSTOMER_NAME,MOBILE_NUMBER,CITY,LONGITUDE,LATITUDE FROM CUSTOMER WHERE UPPER(CUSTOMER_ID) LIKE UPPER(:param) OR UPPER(CUSTOMER_NAME) LIKE UPPER(:param) OR UPPER(MOBILE_NUMBER) LIKE UPPER(:param) ");
+						"SELECT CUSTOMER_ID,CUSTOMER_NAME,MOBILE_NUMBER,CITY,LONGITUDE,LATITUDE,LOCATION_ID FROM CUSTOMER WHERE UPPER(CUSTOMER_ID) LIKE UPPER(:param) OR UPPER(CUSTOMER_NAME) LIKE UPPER(:param) OR UPPER(MOBILE_NUMBER) LIKE UPPER(:param) OR UPPER(LOCATION_ID) LIKE UPPER(:param) ");
 				query.setParameter("param", "%" + search + "%");
 				query.setFirstResult(0);
 				query.setMaxResults(40);
