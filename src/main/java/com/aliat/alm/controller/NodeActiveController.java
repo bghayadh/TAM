@@ -283,6 +283,15 @@ public String NodeFormView(Locale locale, Model model, HttpServletRequest reques
     						
     						        query.setParameter("param1", NodePK);
 				    				model.addAttribute("listSubModule", mapper.writeValueAsString(query.list()));
+				    				
+				    				query = session.createNativeQuery(
+				    						"SELECT PORT_ID, SITEINDEX, CABINETNO, SUBRACKNO, RACKNO, FRAMENO, SLOTNO, SLOTPOS, SUBSLOTNO, VENDORUNITFAMILYTYPE,"
+				    						+ "INVENTORYUNITID, PORTNO HARDWAREVERSION, SERIALNUMBER, INVENTORYUNITTYPE, VENDORNAME, VENDORUNITTYPENUMBER,"
+				    						+ "TO_CHAR(DATEOFMANUFACTURE,'YYYY-MM-DD HH24:MI:SS'), TO_CHAR(DATEOFLASTSERVICE,'YYYY-MM-DD HH24:MI:SS')," 
+				    						+ "UNITPOSITION, MACADDR, MANUFACTURERDATA, STATUS, PORTTYPE, PORTRATE FROM NODE_PORT WHERE NODE_PK =:param1");		    						
+				    						query.setParameter("param1", NodePK); 	    						
+				    						model.addAttribute("listPort", mapper.writeValueAsString(query.list()));
+		                           
 					    				
 		}
 			

@@ -704,6 +704,37 @@
 
                     <div class="tab-pane fade" id="custom-tabs-port" role="tabpanel"
                         aria-labelledby="custom-tabs-port-tab">
+                         <table id="NodePortTable" class="table table-striped table-bordered table-sm"
+                            style="display:block; height:500px; overflow: auto;">
+                            <thead>
+                                <tr class="fixed-header">
+                                    <th>Port Id</th>
+                                    <th>Site Index</th>
+                                    <th>Cabinet Number</th>
+                                    <th>Subrack Number</th>
+                                    <th>Rack Number</th>
+                                    <th>Frame Number</th>
+                                    <th>Slot Number</th>
+                                    <th>Slot Position</th>
+                                    <th>Subslot Number</th>
+                                    <th>Vendor Unit Family Type</th>
+                                    <th>Inventory Unit Id</th>
+				                    <th>Hardware Version</th>
+				                    <th>Serial Number</th> 
+				                    <th>Inventory Unit Type</th> 
+				                    <th>Vendor Name</th>                                 
+				                    <th>Vendor Unit Type Number</th>                                 
+                                    <th>Date Of Manufacture</th>
+                                    <th>Date Of Last Service</th>
+                                    <th>Unit Position</th>
+                                    <th>MAC Address</th>
+                                    <th>Manufacture Data</th>
+                                    <th>Status</th>
+                                    <th>Port Type</th>
+                                    <th>Port Rate</th>
+                                </tr>
+                            </thead>
+                        </table>
                     </div>
 
                     <div class="tab-pane fade" id="custom-tabs-antena" role="tabpanel"
@@ -1341,6 +1372,42 @@
                 $("#SubModuleTable").append(c);
 
             }
+            
+            BoqArray = ${ listPort };
+            console.log(BoqArray);
+
+            for (i = 0; i < BoqArray.length; i++) {
+
+                c = "<tr>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][0] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][1] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][2] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][3] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][4] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][5] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][6] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][7] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][8] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][9] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][10] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][11] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][12] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][13] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][14] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][15] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][16] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][17] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][18] + "' style='width:700px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][19] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][20] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][21] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][22] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][23] + "' style='width:190px;' class='form-control text-input' readonly/></td></tr>";
+                    
+                $("#NodePortTable").append(c);
+
+            }
+
         }
 
 
