@@ -1627,7 +1627,7 @@ public class CopyParsingDataToALM {
 		 ResultSet rs = stmt.executeQuery(sqlStmtinit2);
 	 	 while(rs.next()) {
 	 			  tmpSiteID = rs.getString("SITE_ID");
-	 			  tmpWareID = rs.getString("SITE_ID");
+	 			  tmpWareID = rs.getString("WARE_ID");
 	 			  tmpWareName = rs.getString("WARE_NAME");
 	 			  stmt1 = conalm.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);  
 	 			  String sqlquery = "Select DISTINCT NODE_ID,NODE_NAME,SITE_ID,WARE_ID,WARE_NAME,LONGITUDE,LATITUDE FROM NODE_ACTIVE WHERE NODE_ID='"+rs.getString("NODE_ID")+"' AND NODE_NAME='"+rs.getString("NODE_NAME")+"' AND ACTIVE_RECORD='1'";
@@ -1639,7 +1639,7 @@ public class CopyParsingDataToALM {
 	 		 	  if(totalrows>0) {
 	 		 		 while(rs1.next()) {
 	 		 			vSiteID = rs1.getString("SITE_ID");
-	 		 			vWareID = rs1.getString("SITE_ID");
+	 		 			vWareID = rs1.getString("WARE_ID");
 	 		 			vWareName = rs1.getString("WARE_NAME");
 	 		 			vLong= rs1.getString("LONGITUDE");
 	 		 			vLat= rs1.getString("LATITUDE");
