@@ -333,6 +333,11 @@
                                     aria-selected="false" style="color: gold;">CABINAT</a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link" id="custom-tabs-rack-tab" data-toggle="tab"
+                                    href="#custom-tabs-rack" role="tab" aria-controls="custom-tabs-rack"
+                                    aria-selected="false" style="color: gold;">RACK</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" id="custom-tabs-subrack-tab" data-toggle="tab"
                                     href="#custom-tabs-subrack" role="tab" aria-controls="custom-tabs-subrack"
                                     aria-selected="false" style="color: gold;">SUBRACK</a>
@@ -356,7 +361,7 @@
                             </li>
                             <li class="nav-item"><a class="nav-link" id="custom-tabs-antena-tab" data-toggle="tab"
                                     href="#custom-tabs-antena" role="tab" aria-controls="#custom-tabs-antena"
-                                    aria-selected="false" style="color: gold;">ANTTENA</a>
+                                    aria-selected="false" style="color: gold;">ANTENNA</a>
                             </li>
                             <li class="nav-item"><a class="nav-link" id="custom-tabs-version-tab" data-toggle="tab"
                                     href="#custom-tabs-version" role="tab" aria-controls="#custom-tabs-version"
@@ -773,6 +778,35 @@
                             </tbody>
                         </table>
                     </div>
+
+
+ 					<div class="tab-pane fade" id="custom-tabs-rack" role="tabpanel"
+                        aria-labelledby="custom-tabs-subrack-tab">
+
+                        <table id="RackTable" class="table table-striped table-bordered table-sm"
+                            style="display: block; height: 500px; overflow: auto;">
+                            <tr>
+                                <th>Rack Id</th>
+                                <th>Rack Number</th>
+                                <th>Inventory Unit Id</th>
+                                <th>Rack Type</th>
+                                <th>Inventory Unit Type</th>
+                                <th>Vendor Unit Family Type</th>
+                                <th>Vendor Unit Type Number</th>
+                                <th>Vendor Name</th>
+                                <th>Serial Number</th>
+                                <th>Hardware Version</th>
+                                <th>Date Of Manufacture</th>
+                                <th>Date Of Last Service</th>
+                                <th>Unit Position</th>
+                                <th>Manufacture Data</th>
+                                <th>Model</th>
+                                <th>User Label</th>
+                                <th>Status</th>
+                            </tr>
+                        </table>
+                    </div>
+
 
                     <div class="tab-pane fade" id="custom-tabs-subrack" role="tabpanel"
                         aria-labelledby="custom-tabs-subrack-tab">
@@ -1258,6 +1292,35 @@
                 $("#AntinnaTable").append(c);
             }
 
+            BoqArray = ${ listRack };
+            console.log("rack list ",BoqArray);
+
+            for (i = 0; i < BoqArray.length; i++) {
+
+                c = "<tr>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][0] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][1] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][2] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][3] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][4] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][5] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][6] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][7] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][8] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][9] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][10] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][11] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][12] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][13] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][14] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][15] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
+                    "<td ><input  type='text'  value='" + BoqArray[i][16] + "' style='width:190px;' class='form-control text-input' readonly/></td></tr>";
+
+                $("#RackTable").append(c);
+
+            }
+
+            
             BoqArray = ${ listNodeSubrack };
             console.log(BoqArray);
 

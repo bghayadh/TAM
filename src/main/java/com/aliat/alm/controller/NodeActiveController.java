@@ -245,7 +245,15 @@ public String NodeFormView(Locale locale, Model model, HttpServletRequest reques
 					    					query.setParameter("param1", NodePK);
 					    					model.addAttribute("listNodeHost", mapper.writeValueAsString(query.list()));
 					    					
-					    					
+		    					query = session.createNativeQuery(
+		    						    "SELECT RACK_ID, RACKNO, INVENTORYUNITID, RACKTYPE, INVENTORYUNITTYPE, VENDORUNITFAMILYTYPE,VENDORUNITTYPENUMBER, " +
+		    						    "VENDORNAME, SERIALNUMBER, HARDWAREVERSION, TO_CHAR(DATEOFMANUFACTURE, 'YYYY-MM-DD HH24:MI:SS'), "+
+		    						    "TO_CHAR(DATEOFLASTSERVICE, 'YYYY-MM-DD HH24:MI:SS'), UNITPOSITION, MANUFACTURERDATA, MODEL, USERLABEL, STATUS " +
+		    						    " FROM NODE_RACK WHERE NODE_PK = :param1");
+
+		    						query.setParameter("param1", NodePK);
+		    						model.addAttribute("listRack", mapper.writeValueAsString(query.list()));
+
 					    					
 					    		query = session.createNativeQuery(
 					    						    "SELECT SUBRACK_ID, SITEINDEX, CABINETNO, SUBRACKNO, INVENTORYUNITID, RACKTYPE, BOMRACKTYPE, FRAMETYPE, " +
