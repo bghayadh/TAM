@@ -512,21 +512,106 @@
                       <div class="tab-pane fade" id="custom-tabs-one-pass" role="tabpanel"
                         aria-labelledby="custom-tabs-one-pass-tab">
                         
-                        <table id="PassTable" class="table table-striped table-bordered table-sm"
-                            style="display: block; height: 400px; overflow: auto;">
-   <thead>
-        <tr>
-            <th>ID</th>
-            <th>Site Type</th>
-            <th>Swap</th>
-            <th>Swap Date</th>
-            <th>Status</th>
-            <th>Circle ID</th>
-            <th>Discovery Date</th>
-            <th>Last Shown Date</th>
-            <th>Last Modified Date</th>
-        </tr>
-    </thead></table>
+                     <div style="height:10px;"></div>
+                      <table width="90%" border="0" cellpadding="0" cellspacing="0" id="warehouseInfo_tbl">
+                            <tr>
+                                <td width="45%" valign="top" class="left_col">
+                                    <div class="form-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Site Type</span> <input type="text"
+                                                id="siteType"  class="form-control text-input"
+                                                 />
+                                        </div>
+                                    </div>
+                                </td>
+                                <td width="10%" valign="top" class="left_col"></td>
+
+                                <td width="45%" valign="top" class="left_col">
+
+                                    <div class="form-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Swap</span> <input type="text"
+                                                id="swap"  class="form-control text-input"
+                                                 />
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="45%" valign="top" class="left_col">
+                                    <div class="form-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Swap Date</span> <input type="text"
+                                                id="swapdate"  class="form-control text-input"
+                                                 />
+                                        </div>
+                                    </div>
+                                </td>
+                                <td width="10%" valign="top" class="left_col"></td>
+
+                                <td width="45%" valign="top" class="left_col">
+
+                                    <div class="form-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Status</span> <input type="text"
+                                                id="status"  class="form-control text-input"
+                                                 />
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="45%" valign="top" class="left_col">
+                                    <div class="form-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Circle Id</span> <input type="text"
+                                                id="circleId"  class="form-control text-input"
+                                                 />
+                                        </div>
+                                    </div>
+                                </td>
+                                <td width="10%" valign="top" class="left_col"></td>
+
+                                <td width="45%" valign="top" class="left_col">
+
+                                    <div class="form-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Discovery Date</span> <input type="text"
+                                                id="discoveryDate"  class="form-control text-input"
+                                                 />
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="45%" valign="top" class="left_col">
+                                    <div class="form-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Last Shown Date</span> <input type="text"
+                                                id="shownDate"  class="form-control text-input"
+                                                 />
+                                        </div>
+                                    </div>
+                                </td>
+                                <td width="10%" valign="top" class="left_col"></td>
+
+                                <td width="45%" valign="top" class="left_col">
+
+                                    <div class="form-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Last Modified Date</span> <input type="text"
+                                                id="modifiedDate"  class="form-control text-input"
+                                                />
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                     
+                     
+                     
+                     
+                     
                         
                       </div>
                         
@@ -1496,24 +1581,7 @@
             }
 
 
-            BoqArray = ${ listPassive };
-            
-            for (i = 0; i < BoqArray.length; i++) {
-
-                c = "<tr>" +
-                    "<td ><input  type='text'  value='" + BoqArray[i][0] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
-                    "<td ><input  type='text'  value='" + BoqArray[i][1] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
-                    "<td ><input  type='text'  value='" + BoqArray[i][2] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
-                    "<td ><input  type='text'  value='" + BoqArray[i][3] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
-                    "<td ><input  type='text'  value='" + BoqArray[i][4] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
-                    "<td ><input  type='text'  value='" + BoqArray[i][5] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
-                    "<td ><input  type='text'  value='" + BoqArray[i][6] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
-                    "<td ><input  type='text'  value='" + BoqArray[i][7] + "' style='width:190px;' class='form-control text-input' readonly/></td>" +
-                    "<td ><input  type='text'  value='" + BoqArray[i][8] + "' style='width:190px;' class='form-control text-input' readonly/></td><tr>";
-                   
-                $("#PassTable").append(c);
-
-            }
+     
         }
 
 
