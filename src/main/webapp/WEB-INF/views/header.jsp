@@ -364,6 +364,10 @@ display:none;
  
             </ul>
           </li>
+          
+          <div class="dropdown-divider"></div>
+          <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/NetworkTransactionsReport">Network Transactions</a>
+          </li>
         </ul>
       </li>
        
@@ -530,6 +534,11 @@ display:none;
  
             </ul>
           </li>
+          
+          <div class="dropdown-divider"></div>
+          <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/NetworkTransactionsReport">Network Transactions</a>
+          </li>
+          
         </ul>
       </li>
        
@@ -747,6 +756,10 @@ display:none;
               <li><a class="dropdown-item" href="${pageContext.request.contextPath}/SpeedCoverageReport" >Average Speed and Coverage</a></li>
  
             </ul>
+          </li>
+          
+           <div class="dropdown-divider"></div>
+          <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/NetworkTransactionsReport">Network Transactions</a>
           </li>
         </ul>
       </li>
@@ -980,6 +993,10 @@ display:none;
               <li><a class="dropdown-item" href="${pageContext.request.contextPath}/SpeedCoverageReport" >Average Speed and Coverage</a></li>
  
             </ul>
+          </li>
+          
+           <div class="dropdown-divider"></div>
+          <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/NetworkTransactionsReport">Network Transactions</a>
           </li>
         </ul>
       </li>
