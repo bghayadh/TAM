@@ -2606,6 +2606,9 @@
 		<li class="menu-item mapMenuItem">
 			<button type="button" id="getCoordinatePoint" class="menu-btn"> <i class="fa fa-folder-plus"></i> <span class="menu-text">Get Coordinate</span></button>
 		</li>
+		<li class="menu-item mapMenuItem">
+			<button type="button" id="showClosePoints" class="menu-btn"> <i class="fa fa-paste"></i> <span class="menu-text">Show Close Points</span></button>
+		</li>
 		<li class="menu-item mapMenuItem disabled origination">
 		<button type="button" id="fireOrigination" class="menu-btn"> <i class="fa fa-folder-plus"></i> <span class="menu-text">Manual Origination</span></button>
 		</li>

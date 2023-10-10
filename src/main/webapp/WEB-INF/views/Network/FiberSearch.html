@@ -705,6 +705,192 @@
 												<tbody id="nearFiberId_multy"></tbody></table></fieldset></div></div></div></div></div></div>
 					<div class="modal-footer"></div></div></div></div></div>
 					
+ 
+ 	<div class="container">
+		<div id="showClosePointsPopup" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  data-keyboard="false" data-backdrop="static">
+			<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+				<div class="modal-content" style="width: 900px;">
+					<div class="modal-header" style="background-color: #2678CC ; height: 55px;">
+						<h5 class="modal-title" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px;">Close Points Search</h5>
+						<div style="float:right;">
+							<button type="button" name="closePopup" class="close" data-dismiss="modal">
+							<i class='fa fa-times'></i></button>
+							<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change'></i></a>
+						</div>
+					</div>
+					<div class="modal-body">
+						<div class="tab-content">
+							<p></p>
+							<div class="container-fluid" style="min-width: 50%;">
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<div class="input-group-prepend">
+												<span style="width: 50%;" class="input-group-text"><b>Longitude</b>
+												</span>
+												 <input type="text" id="closePtsLong" style="width: 50%;" class="form-control text-input" />
+											</div>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<div class="input-group-prepend">
+												<span style="width: 50%;" class="input-group-text"><b>Latitude</b>
+												</span>
+												 <input type="text" id="closePtsLat" style="width: 50%;" class="form-control text-input" />
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<div class="input-group-prepend">
+												<span style="width: 50%;" class="input-group-text"><b>Distance Range</b>
+												</span> <input type="text" id="closePtsDistanceRange" style="width: 50%;"  class="form-control text-input" />
+											</div>
+										</div>
+									</div> 
+									<div class="col-md-6">
+										<div class="form-group">
+											<div class="input-group-prepend">
+												<button id="searchClosePoints" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px;margin-right: -15px;">Show Close Points</button>
+											</div>
+										</div>
+									</div>
+									
+								</div>
+								
+						<ul class="nav nav-tabs" id="myTab" role="tablist" style="background-color: #00757C;">
+							<li class="nav-item"><a class="nav-link active" id="manholesClosePoint-tab" style="color: gold;" data-toggle="tab" href="#closePtsManholes" role="tab" aria-controls="fiber" aria-selected="true">Manhole</a></li>
+							<li class="nav-item"><a class="nav-link " id="handholesClosePoint-tab" style="color: gold;" data-toggle="tab" href="#closePtsHandholes" role="tab" aria-controls="hand" aria-selected="false">Handhole</a></li>
+							<li class="nav-item"><a class="nav-link " id="dbClosePoint-tab" style="color: gold;" data-toggle="tab" href="#closePtsDb" role="tab" aria-controls="db" aria-selected="false">Distribution Board</a></li>
+							<li class="nav-item"><a class="nav-link " id="nodeClosePoint-tab" style="color: gold;" data-toggle="tab" href="#closePtsNode" role="tab" aria-controls="nodes" aria-selected="false">Node</a></li>
+						</ul>
+						<div class="tab-content" style="min-height: 180px">
+										
+						<div class="tab-pane active" id="closePtsManholes" role="tabpanel" aria-labelledby="manholesClosePoint-tab">
+							<p></p>
+								<div class="container-fluid">
+									<div id="findCloseManholePts"></div>
+												<div class="row" style="height: 100px;">
+													<fieldset class="field_set">
+														<legend style="width: auto;" class="fieldset_legend"></legend>
+														<table id="findCloseManhole" style="display: block; height: 150px; overflow-y: auto;" class="searchable sortable">
+														 <thead>
+															<tr>
+															    <th style="min-width: 30px;"><input type="checkbox" id="selectAllManhole"></th>
+																<th style="min-width: 150px;" >Manhole ID</th>
+																<th style="min-width: 150px;">ManholeName</th>
+																<th style="min-width: 100px;">Longitude</th>
+																<th style="min-width: 150px;">Latitude</th>
+																<th style="min-width: 100px;">Distance(km)</th>
+																<th style="min-width: 80px;"colspan="2">Driving Distance(km)</th>
+															</tr>
+															 </thead>
+															<tbody id="searchCloseManhTBody">
+															</tbody>
+														</table>
+													</fieldset>
+												</div>
+											</div>
+									        <div id="closeManholeTotal" Style="Padding-top: 90px;"><b>Total Manholes:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="totalCloseManhole" name="totalCloseManhole" readonly>	 </div>
+										</div>
+										<div class="tab-pane" id="closePtsHandholes" role="tabpanel" aria-labelledby="handholesClosePoint-tab">
+											<p></p>
+											<div class="container-fluid">
+												<div id="findCloseHandholePts"></div>
+												<div class="row" style="height: 100px;">
+													<fieldset class="field_set">
+														<legend style="width: auto;" class="fieldset_legend"></legend>
+														<table id="findCloseHandhole" class="searchable sortable"
+															style="display: block; height: 150px; overflow-y: auto;">
+															 <thead>
+															<tr>
+																<th style="min-width: 30px;"><input type="checkbox" id="selectAllHandhole"></th>
+																<th style="min-width: 150px;" >Handhole ID</th>
+																<th style="min-width: 150px;">HandholeName</th>
+																<th style="min-width: 100px;">Longitude</th>
+																<th style="min-width: 100px;">Latitude</th>
+																<th style="min-width: 100px;">Distance(Km)</th>
+																<th style="min-width: 100px;" colspan="2">Driving Distance(km)</th>
+																
+															</tr>
+															</thead>
+															
+															<tbody id="searchCloseHandTBody">
+															</tbody>
+														</table>
+													</fieldset>
+
+												</div>
+											</div>
+                                             <div id="closeHandholeTotal" Style="Padding-top: 90px;"><b>Total Handholes:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="totalCloseHandhole" name="totalCloseHandhole" readonly>	 </div>
+										</div>
+										<div class="tab-pane" id="closePtsDb" role="tabpanel"
+											aria-labelledby="dbClosePoint-tab">
+											<p></p>
+											<div class="container-fluid">
+												<div id="findCloseDbPts"></div>
+												<div class="row" style="height: 100px;">
+													<fieldset class="field_set">
+														<legend style="width: auto;" class="fieldset_legend"></legend>
+														<table id="findCloseDB" style="display: block; height: 150px; overflow-y: auto;">
+														 <thead>															
+															<tr>
+																<th style="min-width: 30px;"><input type="checkbox" id="selectAllDB"></th>
+																<th style="min-width: 150px;" >DBoard ID</th>
+																<th style="min-width: 150px;">DBoard Name</th>
+																<th style="min-width: 100px;">Longitude</th>
+																<th style="min-width: 100px;">Latitude</th>
+																<th style="min-width: 100px;">Distance(km)</th>
+																<th style="min-width: 100px;" colspan="2">Driving Distance(km)</th>								
+															</tr>
+															 </thead>															
+															<tbody id="searchCloseDbTBody">
+															</tbody>
+														</table>
+													</fieldset>
+												 </div>
+											</div>
+                                            <div id="closeDbTotal" Style="Padding-top: 90px;"><b>Total Distribution Boards:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="totalCloseDB" name="totalCloseDB" readonly>										
+                                            </div>
+										</div>
+								<div class="tab-pane" id="closePtsNode" role="tabpanel" aria-labelledby="nodeClosePoint-tab">
+											<p></p>
+											<div class="container-fluid">
+												<div id="findCloseNodePts"></div>
+												<div class="row" style="height: 100px;">
+													<fieldset class="field_set">
+														<legend style="width: auto;" class="fieldset_legend"></legend>
+														<table id="findCloseNode" class="searchable sortable"
+															style="display: block; height: 150px; overflow-y: auto;">
+															 <thead>
+															<tr>
+																<th style="min-width: 30px;"><input type="checkbox" id="selectAllNode"></th>
+																<th style="min-width: 150px;" >Node ID</th>
+																<th style="min-width: 150px;">Node Name</th>
+																<th style="min-width: 100px;">Longitude</th>
+																<th style="min-width: 100px;">Latitude</th>
+																<th style="min-width: 100px;">Distance(Km)</th>
+																<th style="min-width: 100px;" colspan="2">Driving Distance(km)</th>
+															</tr></thead>
+															<tbody id="searchCloseNodeTBody"></tbody>
+														</table>
+													</fieldset>
+												</div>
+											</div>
+                                             <div id="closeNodeTotal" Style="Padding-top: 90px;"><b>Total Nodes:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="totalCloseNode" name="totalCloseNodes" readonly></div>
+										</div>
+										</div>
+							</div>
+						</div>
+						<div class="modal-footer"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div> 					
 					
   					
 </body>

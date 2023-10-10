@@ -61,6 +61,9 @@ let isClientChecked=false;
 var fiberIdList = [];
 var fiberOwnerList = [];
 var markerArrayAux=[]; // It is used in create from Map to store the red marker that is appearing while clicking.
+var allManholesID =[]; // It is used in show close points to access the manholes arrays
+var allHandholesID=[];
+var closePointsData=[];// It is used in show close points
 
 ////
 var TargetFiber= {
@@ -376,7 +379,8 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 		for(i=0;i<ListManhole.length;i++){
 			window[""+ListManhole[i][0]]=[];
 			window[""+ListManhole[i][0]]=ListManhole[i];
-				
+			allManholesID.push(ListManhole[i][0]);
+	
 			//Junction exists
 			if(ListManhole[i][5]>0){
 				str="<ul><li id='"+ListManhole[i][0]+"' class='MANHOLE' style='display:none;width:100px;'><input type='checkbox' class='Manhole checkFilter' class='filter' name='Element' ></input> <span class='folder' > <i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:355px' class='TreeSpan'><img style='color: #08526D;' src='"+getContext()+"/resources/NetworkImages/manholeRed.png'>  "+ListManhole[i][1]+" </span><ul><li id='"+ListManhole[i][0]+"_f' style='display:none;' class='junctionFolder'> <input type='checkbox' class='ManholeJct checkFilter' unchecked name='filter'></input> <span  class='folder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Junctions </span></li></ul></li></ul>";
@@ -429,7 +433,8 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 		for(i=0;i<ListHandhole.length;i++){
 			window[""+ListHandhole[i][0]]=[];
 			window[""+ListHandhole[i][0]]=ListHandhole[i];
-				
+			allHandholesID.push(ListHandhole[i][0]);	
+			
 		if(ListHandhole[i][5]>0){
 			str="<ul><li id='"+ListHandhole[i][0]+"' class='HANDHOLE' style='display:none;width:100px;'><input type='checkbox' class='Handhole checkFilter' class='filter' name='Element' ></input> <span class='folder' > <i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:355px' class='TreeSpan'><img style='color: #08526D;' src='"+getContext()+"/resources/NetworkImages/handholeYellow.png'>  "+ListHandhole[i][1]+" </span><ul><li id='"+ListHandhole[i][0]+"_f' style='display:none;' class='junctionFolder'> <input type='checkbox' class='HandholeJct checkFilter' unchecked name='filter'></input> <span  class='folder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Junctions </span></li></ul></li></ul>";
 			$("#Handhole_f_"+ListHandhole[i][4]+"").append(str);  					

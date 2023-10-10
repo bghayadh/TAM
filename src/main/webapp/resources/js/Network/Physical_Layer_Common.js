@@ -397,7 +397,112 @@ $("#selectConnectedSearch").on('change',function(){
 				      	});
 
 
-	
+	$("#showClosePoints").on('click',function(){
+		
+		window["showClosePointsLong"]=getCoords().split(" ")[1];
+		window["showClosePointsLat"]=getCoords().split(" ")[0];
+		
+		$("#searchCloseManhTBody").empty();
+		$("#searchCloseHandTBody").empty();
+		$("#searchCloseDbTBody").empty();
+		$("#searchCloseNodeTBody").empty();
+		$("#searchCloseManhTBody").html("");
+		$("#searchCloseHandTBody").html("");
+		$("#searchCloseDbTBody").html("");
+		$("#searchCloseNodeTBody").html("");
+		$("#closePtsDistanceRange").val("");
+		$("#showClosePointsPopup").modal('show');
+		$("#closePtsLong").val(window["showClosePointsLong"]);
+		$("#closePtsLat").val(window["showClosePointsLat"]);
+ });
+		
+	 $("#searchClosePoints").on('click',function(){
+		
+		var closePtLong = $("#closePtsLong").val();
+		var closePtLat = $("#closePtsLat").val();
+		var closePtDistRange = $("#closePtsDistanceRange").val();
+		
+		if(closePtDistRange =="" || closePtLong =="" || closePtLat == "" ) {
+			alert ("Some input fields are missing!")
+		}
+		else if (isNaN(closePtLong) ==true || isNaN(closePtLat) ==true || isNaN(closePtDistRange) ==true ) {
+			alert ("Incorrect Format ! Longitude, Latitude and Distance Range should be numbers.")
+		}
+		else {
+			
+		
+		var pointDist=0;
+		var closePointsDataTemp =[];
+		
+
+		//Loop through all manholes to get the distance and filter the closest manholes
+		for(var x=0;x<allManholesID.length;x++) {
+			pointDist =Number(haversine_distance(closePtLat,closePtLong,window[""+allManholesID[x]][3],window[""+allManholesID[x]][2]));
+			
+			if (pointDist < closePtDistRange) {
+				//Add all manhole details to the temp array
+			    closePointsDataTemp = window[""+allManholesID[x]];
+				// Append the calculated distance to the array on last free position 
+				closePointsDataTemp[7]=(pointDist);
+				// Add the temp array to the main array that will contains all closest manholes
+				closePointsData.push(closePointsDataTemp);
+				//Clear the temp array to use it on next iteration
+				closePointsDataTemp =[];
+			}
+
+		}
+				appendManholesClosePoints(closePointsData);
+				$("#totalCloseManhole").val(closePointsData.length);
+				closePointsData=[];//Clear the main array after appending all manholes to use it for next elements (HH/DB/NODES)
+				
+		//Loop through all HHs to get the distance and filter the closest HHs
+		for(var x=0;x<allHandholesID.length;x++) {
+			pointDist =Number(haversine_distance(closePtLat,closePtLong,window[""+allHandholesID[x]][3],window[""+allHandholesID[x]][2]));
+			
+			if (pointDist < closePtDistRange) {
+			    closePointsDataTemp = window[""+allHandholesID[x]];
+				closePointsDataTemp[7]=(pointDist);
+				closePointsData.push(closePointsDataTemp);
+				closePointsDataTemp =[]; // Clear the temp array to use it on next iteration
+			}
+		}
+				appendHandholesClosePoints(closePointsData);
+				$("#totalCloseHandhole").val(closePointsData.length);
+				closePointsData=[];//Clear the main array after appending all HH to use it for next elements (DB/NODES)
+				
+		//Loop through all DB to get the distance and filter the closest HHs
+		for(var x=0;x<allDB.length;x++) {
+			pointDist =Number(haversine_distance(closePtLat,closePtLong,window[""+allDB[x]][2],window[""+allDB[x]][1]));
+			
+			if (pointDist < closePtDistRange) {
+			    closePointsDataTemp = window[""+allDB[x]];
+				closePointsDataTemp[9]=(pointDist);
+				closePointsData.push(closePointsDataTemp);
+				closePointsDataTemp =[]; // Clear the temp array to use it on next iteration
+			}
+		}
+				appendDbClosePoints(closePointsData);
+				$("#totalCloseDB").val(closePointsData.length);
+				closePointsData=[];//Clear the main array after appending all HH to use it for next elements (NODES)
+			
+		//Loop through all nodes to get the distance and filter the closest HHs
+		for(var x=0;x<allNodes.length;x++) {
+			pointDist =Number(haversine_distance(closePtLat,closePtLong,window[""+allNodes[x]][6],window[""+allNodes[x]][5]));
+			
+			if (pointDist < closePtDistRange) {
+			    closePointsDataTemp = window[""+allNodes[x]];
+				closePointsDataTemp[9]=(pointDist);
+				closePointsData.push(closePointsDataTemp);
+				closePointsDataTemp =[]; // Clear the temp array to use it on next iteration
+			}
+		}
+				appendNodeClosePoints(closePointsData);
+				$("#totalCloseNode").val(closePointsData.length);
+				closePointsData=[];
+				
+								
+			}
+		});	
 
 	$("#getCoordinatePoint").on('click',function(){
 		
@@ -20188,3 +20293,112 @@ function showHideTubeStrandAuxPoints(auxiliaryArray,wareID,srcDstID,name,longitu
 			}	
 			
 		}
+function getDrivingDistanceClosePoint(e) {
+		if (typeof(e) == "object") {
+			var directionsService = new google.maps.DirectionsService();
+			
+			var lat = $(e).parent().parent().children('td[name="LATT"]').children('input').val();
+			var lng = $(e).parent().parent().children('td[name="LONGG"]').children('input').val();
+			
+			const originept = {lat: parseFloat(parseFloat($("#closePtsLat").val())), lng: parseFloat(parseFloat($("#closePtsLong").val()))};
+			const nextpt = {lat: parseFloat(lat), lng: parseFloat(lng)};
+			var request  = {
+				origin: originept,
+				destination: nextpt,
+				travelMode  : google.maps.DirectionsTravelMode.DRIVING
+			}
+			directionsService.route(request, function(response, status) {
+				if ( status == google.maps.DirectionsStatus.OK ) {
+					var resultt= ( response.routes[0].legs[0].distance.value) /1000 ;
+
+				   }
+				else {
+					resultt= "no Root";
+					//alert("no resultt ");
+				}
+				$(e).parent().parent().children('td[name="DDistanceB"]').children('button').hide();
+				$(e).parent().parent().children('td[name="DDistance"]').children('input').show();
+				$(e).parent().parent().children('td[name="DDistance"]').children('label').empty();
+				$(e).parent().parent().children('td[name="DDistance"]').children('label').append(resultt);
+				makeAllSortable();
+			  });
+			  
+		} else {
+			return false;
+		}
+
+	}
+function appendManholesClosePoints(manholesClosePtArray) {
+
+		var markupManh="";
+		document.getElementById("findCloseManholePts").innerHTML = "";
+								
+		if (manholesClosePtArray.length==0){
+			document.getElementById("findCloseManholePts").innerHTML = '<p style=" color:#ff0000;font-size: 1.4em;">There is no result</p>';
+		}
+		else {
+			for(var i =0 ; i<manholesClosePtArray.length;i++){
+				markupManh +="<tr style='height: 30px;'><td ><input type='checkbox' class='closeManholeBOQ' id=closePoint_"+manholesClosePtArray[i][0]+" ></td><td  >"+manholesClosePtArray[i][0]+"</td><td name ='closeManholeId' style='min-width:250px;'>"+manholesClosePtArray[i][1]+"</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+manholesClosePtArray[i][2]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+manholesClosePtArray[i][3]+"' readonly></input ></td><td style='width:100px;'>"+(manholesClosePtArray[i][7])+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistanceClosePoint(this)'>Get Distance</button> </td></tr>"
+			}
+		}						  
+		$("#searchCloseManhTBody").append(markupManh);
+	    drivingDistance("findCloseManhole");
+		makeAllSortable();
+		
+}
+function appendHandholesClosePoints(handholesClosePtArray) {
+
+		var markupHandhole="";
+		document.getElementById("findCloseHandholePts").innerHTML = "";
+								
+		if (handholesClosePtArray.length==0){
+			document.getElementById("findCloseHandholePts").innerHTML = '<p style=" color:#ff0000;font-size: 1.4em;">There is no result</p>';
+		}
+		else {
+			for(var i =0 ; i<handholesClosePtArray.length;i++){
+				markupHandhole +="<tr style='height: 30px;'><td ><input type='checkbox' class='closeHandholeBOQ' id=closePoint_"+handholesClosePtArray[i][0]+" ></td><td  >"+handholesClosePtArray[i][0]+"</td><td name ='closeHandholeId' style='min-width:250px;'>"+handholesClosePtArray[i][1]+"</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+handholesClosePtArray[i][2]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+handholesClosePtArray[i][3]+"' readonly></input ></td><td style='width:100px;'>"+(handholesClosePtArray[i][7])+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistanceClosePoint(this)'>Get Distance</button> </td></tr>"
+			}
+		}						  
+		$("#searchCloseHandTBody").append(markupHandhole);
+	    drivingDistance("findCloseHandhole");
+		makeAllSortable();
+
+}
+function appendDbClosePoints(dbClosePtArray) {
+
+		var markupDB="";
+		document.getElementById("findCloseDbPts").innerHTML = "";
+								
+		if (dbClosePtArray.length==0){
+			document.getElementById("findCloseDbPts").innerHTML = '<p style=" color:#ff0000;font-size: 1.4em;">There is no result</p>';
+		}
+		else {
+			for(var i =0 ; i<dbClosePtArray.length;i++){
+				markupDB +="<tr style='height: 30px;'><td ><input type='checkbox' class='closeDbBOQ' id=closePoint_"+dbClosePtArray[i][0]+" ></td><td  >"+dbClosePtArray[i][0]+"</td><td name ='closeDbId' style='min-width:250px;'>"+dbClosePtArray[i][3]+"</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+dbClosePtArray[i][1]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+dbClosePtArray[i][2]+"' readonly></input ></td><td style='width:100px;'>"+(dbClosePtArray[i][9])+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistanceClosePoint(this)'>Get Distance</button> </td></tr>"
+			}
+		}						  
+		$("#searchCloseDbTBody").append(markupDB);
+	    drivingDistance("findCloseDB");
+		makeAllSortable();
+
+	
+}
+function appendNodeClosePoints(nodeClosePtArray) {
+
+		var markupNode="";
+		document.getElementById("findCloseNodePts").innerHTML = "";
+								
+		if (nodeClosePtArray.length==0){
+			document.getElementById("findCloseNodePts").innerHTML = '<p style=" color:#ff0000;font-size: 1.4em;">There is no result</p>';
+		}
+		else {
+			for(var i =0 ; i<nodeClosePtArray.length;i++){
+				markupNode +="<tr style='height: 30px;'><td ><input type='checkbox' class='closeNodeBOQ' id=closePoint_"+nodeClosePtArray[i][0]+" ></td><td  >"+nodeClosePtArray[i][0]+"</td><td name ='closeNodeId' style='min-width:250px;'>"+nodeClosePtArray[i][1]+"</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+nodeClosePtArray[i][5]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+nodeClosePtArray[i][6]+"' readonly></input ></td><td style='width:100px;'>"+(nodeClosePtArray[i][9])+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistanceClosePoint(this)'>Get Distance</button> </td></tr>"
+			}
+		}						  
+		$("#searchCloseNodeTBody").append(markupNode);
+	    drivingDistance("findCloseNode");
+		makeAllSortable();
+		
+
+}
