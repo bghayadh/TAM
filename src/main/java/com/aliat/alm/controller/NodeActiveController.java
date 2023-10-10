@@ -19,6 +19,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -51,6 +52,8 @@ import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.common.Permissions;
 import com.aliat.alm.models.NodeListView;
+import com.aliat.alm.models.NodePassive;
+import com.aliat.alm.models.WarehousePassive;
 
 @Controller
 public class NodeActiveController {
@@ -302,22 +305,6 @@ public String NodeFormView(Locale locale, Model model, HttpServletRequest reques
 				    						
 				    						
 
-				    							 query = session.createNativeQuery("SELECT ID, SITE_TYPE, SWAP, SWAP_DATE, STATUS, CIRCLE_ID," +
-					    							    "TO_CHAR(DISCOVERY_DATE, 'YYYY-MM-DD HH24:MI:SS')," +
-					    							    "TO_CHAR(LAST_SHOWN_DATE, 'YYYY-MM-DD HH24:MI:SS')," +
-					    							    "TO_CHAR(LAST_MODIFIED_DATE, 'YYYY-MM-DD HH24:MI:SS')" +
-					    							    " FROM node_passive_2G " +
-					    							    "WHERE Node_id = (SELECT Node_id FROM node_active WHERE NODE_PK = :param1)" +
-					    							    " UNION ALL " +
-					    							    "SELECT ID, SITE_TYPE, SWAP, SWAP_DATE, STATUS, CIRCLE_ID," +
-					    							    "TO_CHAR(DISCOVERY_DATE, 'YYYY-MM-DD HH24:MI:SS')," +
-					    							    "TO_CHAR(LAST_SHOWN_DATE, 'YYYY-MM-DD HH24:MI:SS')," +
-					    							    "TO_CHAR(LAST_MODIFIED_DATE, 'YYYY-MM-DD HH24:MI:SS')" +
-					    							    " FROM node_passive_4G" +
-					    							    " WHERE LTE_NODE_ID = (SELECT Node_id FROM node_active WHERE NODE_PK = :param1)");
-				    							query.setParameter("param1", NodePK);
-				    							model.addAttribute("listPassive", mapper.writeValueAsString(query.list()));
-
 					    				
 		}
 			
@@ -346,6 +333,37 @@ public String NodeFormView(Locale locale, Model model, HttpServletRequest reques
 
 	return "NodeFormView";
 }
+@SuppressWarnings("unchecked")
+@RequestMapping(value = "/NodeFormViewSave", method = RequestMethod.GET)
 
+public String NodeFormViewSave(Locale locale, Model model, HttpServletRequest request,
+		HttpServletResponse response) {
+
+	if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+		return "redirect:/";
+	}
+	DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+	
+	NodePassive  Nodepassive = new NodePassive();
+	
+	Nodepassive.setNodeId(request.getParameter("nodeId"));
+	Nodepassive.setSiteType(request.getParameter("siteType"));
+	Nodepassive.setSwap(request.getParameter("swap"));
+	Nodepassive.setSwapDate(request.getParameter("swapdate"));
+	Nodepassive.setStatus(request.getParameter("status"));
+	Nodepassive.setCircleId(request.getParameter("circleId"));
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	return "NodeFormView";
+}
 
 }
+
