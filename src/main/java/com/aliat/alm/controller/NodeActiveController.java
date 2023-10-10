@@ -136,7 +136,7 @@ public String NodeFormView(Locale locale, Model model, HttpServletRequest reques
 	if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 		return "redirect:/";
 	}
-	String NodePK;
+	String NodePK, NodeID;
 
 	session = almsessions.getSession();
 	if (session != null && session.isOpen()) {
@@ -147,8 +147,7 @@ public String NodeFormView(Locale locale, Model model, HttpServletRequest reques
 		try {
 			
 			NodePK = request.getParameter("NodePk");
-			System.out.println(NodePK);
-			if (NodePK != null) {
+		  if (NodePK != null) {
 				model.addAttribute("Status", "old");
 				query = session.createNativeQuery(
 						"select node_id, TO_CHAR(creation_date,'YYYY-MM-DD HH24:MI:SS'), TO_CHAR(update_date,'YYYY-MM-DD HH24:MI:SS'),node_name,node_type,node_model,site_id,ware_name,"
@@ -299,7 +298,26 @@ public String NodeFormView(Locale locale, Model model, HttpServletRequest reques
 				    						+ "UNITPOSITION, MACADDR, MANUFACTURERDATA, STATUS, PORTTYPE, PORTRATE FROM NODE_PORT WHERE NODE_PK =:param1");		    						
 				    						query.setParameter("param1", NodePK); 	    						
 				    						model.addAttribute("listPort", mapper.writeValueAsString(query.list()));
-		                           
+				    					
+				    						
+				    						
+
+				    							 query = session.createNativeQuery("SELECT ID, SITE_TYPE, SWAP, SWAP_DATE, STATUS, CIRCLE_ID," +
+					    							    "TO_CHAR(DISCOVERY_DATE, 'YYYY-MM-DD HH24:MI:SS')," +
+					    							    "TO_CHAR(LAST_SHOWN_DATE, 'YYYY-MM-DD HH24:MI:SS')," +
+					    							    "TO_CHAR(LAST_MODIFIED_DATE, 'YYYY-MM-DD HH24:MI:SS')" +
+					    							    " FROM node_passive_2G " +
+					    							    "WHERE Node_id = (SELECT Node_id FROM node_active WHERE NODE_PK = :param1)" +
+					    							    " UNION ALL " +
+					    							    "SELECT ID, SITE_TYPE, SWAP, SWAP_DATE, STATUS, CIRCLE_ID," +
+					    							    "TO_CHAR(DISCOVERY_DATE, 'YYYY-MM-DD HH24:MI:SS')," +
+					    							    "TO_CHAR(LAST_SHOWN_DATE, 'YYYY-MM-DD HH24:MI:SS')," +
+					    							    "TO_CHAR(LAST_MODIFIED_DATE, 'YYYY-MM-DD HH24:MI:SS')" +
+					    							    " FROM node_passive_4G" +
+					    							    " WHERE LTE_NODE_ID = (SELECT Node_id FROM node_active WHERE NODE_PK = :param1)");
+				    							query.setParameter("param1", NodePK);
+				    							model.addAttribute("listPassive", mapper.writeValueAsString(query.list()));
+
 					    				
 		}
 			
