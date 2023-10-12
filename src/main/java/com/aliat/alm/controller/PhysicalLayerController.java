@@ -5614,15 +5614,10 @@ public class PhysicalLayerController {
 						"delete from STRAND_AUXILIARY_POINTS where FIBER_CABLE_ID='" + fiberpathID + "'");
 				query.executeUpdate();
 
-				float strandSource_Longitude = 0;
-				float strandSource_Latitude = 0;
-				float strandDest_Longitude = 0;
-				float strandDest_Latitude = 0;
 				String strandSource = "";
 				String strandDestination = "";
 				String strand_name = "";
 				String strandowner = "";
-				String strandnetlevel = "";
 				String stranddeployment = "";
 				String strandtype = "";
 
@@ -5638,26 +5633,6 @@ public class PhysicalLayerController {
 						strandDestination = itemParameters.getDictParameterStrands().get(i).get("strandDestination");
 					}
 
-					if (itemParameters.getDictParameterStrands().get(i).get("strandSource_Longitude") != "") {
-						strandSource_Longitude = Float.parseFloat(
-								itemParameters.getDictParameterStrands().get(i).get("strandSource_Longitude"));
-					}
-
-					if (itemParameters.getDictParameterStrands().get(i).get("strandSource_Latitude") != "") {
-						strandSource_Latitude = Float.parseFloat(
-								itemParameters.getDictParameterStrands().get(i).get("strandSource_Latitude"));
-					}
-
-					if (itemParameters.getDictParameterStrands().get(i).get("strandDestination_Longitude") != "") {
-						strandDest_Longitude = Float.parseFloat(
-								itemParameters.getDictParameterStrands().get(i).get("strandDestination_Longitude"));
-					}
-
-					if (itemParameters.getDictParameterStrands().get(i).get("strandDestination_Latitude") != "") {
-						strandDest_Latitude = Float.parseFloat(
-								itemParameters.getDictParameterStrands().get(i).get("strandDestination_Latitude"));
-					}
-
 					if (itemParameters.getDictParameterStrands().get(i).get("tubeId") != "") {
 						tubeId = itemParameters.getDictParameterStrands().get(i).get("tubeId");
 					}
@@ -5671,10 +5646,6 @@ public class PhysicalLayerController {
 
 					if (itemParameters.getDictParameterStrands().get(i).get("stranddeployment") != "") {
 						stranddeployment = itemParameters.getDictParameterStrands().get(i).get("stranddeployment");
-					}
-
-					if (itemParameters.getDictParameterStrands().get(i).get("strandnetlevel") != "") {
-						strandnetlevel = itemParameters.getDictParameterStrands().get(i).get("strandnetlevel");
 					}
 
 					if (itemParameters.getDictParameterStrands().get(i).get("strandowner") != "") {
