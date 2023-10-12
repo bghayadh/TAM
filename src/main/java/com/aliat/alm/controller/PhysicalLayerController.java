@@ -728,13 +728,13 @@ public class PhysicalLayerController {
 							fiberList = fiberQuery.list();
 							// System.out.println("fiberList "+mapper.writeValueAsString(fiberList));
 
-							Query fiberAuxiliaryQuery = session.createNativeQuery(
+							query = session.createNativeQuery(
 									"SELECT B.LONGITUDE,B.LATITUDE,B.DISTANCE_FROM_SOURCE,B.WARE_ID,B.AUXILIARY_POINT_ID,B.AUXILIARY_POINT_NAME,B.FIBER_CABLE_ID,B.AUXILIARY_ID FROM FIBER_CABLES A,FIBER_AUXILIARY_POINTS B WHERE A.FIBER_CABLE_ID=B.FIBER_CABLE_ID AND B.FIBER_CABLE_ID IN (:param1) ORDER BY B.SEQ_SORTING ASC");
-							fiberAuxiliaryQuery.setParameterList("param1",
+							query.setParameterList("param1",
 									(findListId(fiberList, "FiberCable")).length > 0
 											? findListId(fiberList, "FiberCable")
 											: new String[] { "" });
-							fiberAuxiliary_Data = fiberAuxiliaryQuery.list();
+							fiberAuxiliary_Data = query.list();
 
 							// Query fiberTubesQuery = session.createNativeQuery("SELECT DISTINCT
 							// b.TUBE_ID,b.SOURCE_LONGITUDE,b.SOURCE_LATITUDE,b.DESTINATION_LONGITUDE,b.DESTINATION_LATITUDE,b.SOURCE_WARE_ID,b.SOURCE_ID,b.SOURCE_NAME,b.DESTINATION_WARE_ID,b.DESTINATION_ID,b.DESTINATION_NAME,(SELECT
@@ -742,15 +742,15 @@ public class PhysicalLayerController {
 							// C.TUBE_ID=b.TUBE_ID),b.FIBER_CABLE_ID,b.TUBE_NAME FROM FIBER_TUBES
 							// b,FIBER_CABLES a WHERE a.FIBER_CABLE_ID=b.FIBER_CABLE_ID AND b.SOURCE_ID IN
 							// (:param1) OR b.DESTINATION_ID IN (:param1)");
-							Query fiberTubesQuery = session.createNativeQuery(
+							query = session.createNativeQuery(
 									"SELECT DISTINCT b.TUBE_ID,b.SOURCE_LONGITUDE,b.SOURCE_LATITUDE,b.DESTINATION_LONGITUDE,b.DESTINATION_LATITUDE,b.SOURCE_WARE_ID,b.SOURCE_ID,b.SOURCE_NAME,b.DESTINATION_WARE_ID,b.DESTINATION_ID,b.DESTINATION_NAME,(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.TUBE_ID=b.TUBE_ID),b.FIBER_CABLE_ID,b.TUBE_NAME,b.DRAWING_TYPE,b.TUBE_NUMBER,b.TUBE_COLOR FROM FIBER_TUBES b "
 											+ "LEFT JOIN TUBE_AUXILIARY_POINTS a ON a.TUBE_ID=b.TUBE_ID "
 											+ "LEFT JOIN FIBER_STRANDS c ON b.TUBE_ID=c.TUBE_ID "
 											+ "LEFT JOIN STRAND_AUXILIARY_POINTS d ON b.FIBER_CABLE_ID=d.FIBER_CABLE_ID "
 											+ "WHERE b.SOURCE_ID IN (:param1) OR b.DESTINATION_ID IN (:param1) OR a.AUXILIARY_POINT_ID IN (:param1) OR c.SOURCE_ID IN (:param1) OR c.DESTINATION_ID IN (:param1) OR d.AUXILIARY_POINT_ID IN (:param1) ");
 
-							fiberTubesQuery.setParameterList("param1", idsArray);
-							fiberTubes = fiberTubesQuery.list();
+							query.setParameterList("param1", idsArray);
+							fiberTubes = query.list();
 							// System.out.println("fiberTubes "+mapper.writeValueAsString(fiberTubes));
 
 							query = session.createNativeQuery(
@@ -1258,25 +1258,25 @@ public class PhysicalLayerController {
 												"ManHandhole_OutOfZone", noOfPoints);
 									}
 
-									Query dbData = session.createNativeQuery(
+									query = session.createNativeQuery(
 											" SELECT * FROM ( SELECT DISTINCT A.DB_ID as DB_ID,A.DB_LONGITUDE as DB_LONGITUDE,A.DB_LATITUDE as DB_LATITUDE,A.DB_NAME as DB_NAME,A.MAX_CAPACITY as MAX_CAPACITY,A.SITE as SITE,A.PROJECT_ID as PROJECT_ID ,A.CITY as CITY,A.DB_NETWORK_LEVEL AS DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.DB_ID LEFT JOIN FIBER_CABLES C ON C.FIBER_CABLE_ID = B.FIBER_CABLE_ID where B.AUXILIARY_POINT_ID LIKE '%DB%' AND C.FIBER_CABLE_ID IN (:param1)   "
 													+ " UNION "
 													+ " SELECT DISTINCT A.DB_ID,A.DB_LONGITUDE,A.DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_CABLES B  ON B.SOURCE_ID = A.DB_ID where B.SOURCE_ID LIKE '%DB%' AND B.FIBER_CABLE_ID IN (:param1) "
 													+ "UNION "
 													+ " SELECT DISTINCT A.DB_ID,A.DB_LONGITUDE,A.DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_CABLES B  ON B.DESTINATION_ID = A.DB_ID where B.DESTINATION_ID LIKE '%DB%' AND B.FIBER_CABLE_ID IN (:param1) ) where DB_ID NOT IN (:param2)  ");
-									dbData.setParameterList("param1",
+									query.setParameterList("param1",
 											(findListId(fiberListPt, "FiberCable")).length > 0
 													? findListId(fiberListPt, "FiberCable")
 													: new String[] { "" });
-									dbData.setParameterList("param2", idsArray);
+									query.setParameterList("param2", idsArray);
 
 									if (distribBoardListPt.size() > 0) {
-										newListPt = findNearestArray(dbData.list(), Double.valueOf(lats[i]),
+										newListPt = findNearestArray(query.list(), Double.valueOf(lats[i]),
 												Double.valueOf(lngs[i]), Double.valueOf(closestDisRange),
 												"DB_OutOfZone", noOfPoints);
 										distribBoardListPt.addAll(newListPt);
 									} else {
-										distribBoardListPt = findNearestArray(dbData.list(), Double.valueOf(lats[i]),
+										distribBoardListPt = findNearestArray(query.list(), Double.valueOf(lats[i]),
 												Double.valueOf(lngs[i]), Double.valueOf(closestDisRange),
 												"DB_OutOfZone", noOfPoints);
 									}
