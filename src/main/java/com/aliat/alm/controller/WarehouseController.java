@@ -13,8 +13,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.core.type.TypeReference;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.aliat.alm.models.WareHouseListView;
@@ -22,7 +20,6 @@ import com.aliat.alm.models.WareHouseListView;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.query.Query;
-import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.transform.Transformers;
@@ -86,6 +83,7 @@ public class WarehouseController {
 	private static Session session = null;
 	private static Transaction tx = null;
 	private static ObjectMapper mapper = new ObjectMapper();
+	@SuppressWarnings("rawtypes")
 	private static Query query = null;
 	private String str = null;
 	private String siteimgID, siteimgName;
@@ -99,7 +97,7 @@ public class WarehouseController {
 	@Autowired
 	Notify notifications;
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	@RequestMapping(value = "/WarehouseListView", method = RequestMethod.GET)
 	public String WarehouseListView(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -339,7 +337,7 @@ public class WarehouseController {
 		return htmlString;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	@RequestMapping(value = "/WarehouseFormView", method = RequestMethod.GET)
 	public String WarehouseFormView(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -648,8 +646,7 @@ public class WarehouseController {
 
 		return "WarehouseFormView";
 	}
-
-	@SuppressWarnings("unchecked")
+/*
 	@RequestMapping(value = "/WarehouseBOQ", method = RequestMethod.GET)
 	public void WarehouseBOQ(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
 
@@ -790,6 +787,8 @@ public class WarehouseController {
 		}
 
 	}
+
+*/
 
 	@RequestMapping(value = "/WarehouseFormSave", method = RequestMethod.GET)
 	@ResponseBody
@@ -1114,6 +1113,8 @@ public class WarehouseController {
 			rtn.put("Login", "redirect:/");
 			return rtn;
 		}
+		
+		System.out.println("getWarehouseDetails");
 
 		session = almsessions.getSession();
 		if (session != null && session.isOpen()) {
@@ -1127,7 +1128,7 @@ public class WarehouseController {
 						+ "or LOWER(wareSiteID) like LOWER(:param1) ";
 
 				query = session.createQuery(str);
-				query.setString("param1", "%" + requestValue + "%");
+				query.setParameter("param1", "%" + requestValue + "%");
 				//query.setParameter("param1", "%" + requestValue + "%");
 
 				query.setFirstResult(0);
@@ -1163,6 +1164,7 @@ public class WarehouseController {
 		String WarehouseName = request.getParameter("warehouseName");
 		String Site = request.getParameter("Site");
 
+		System.out.println("****GetAllWarehouse****");
 		System.out.println("Site is " + Site);
 		System.out.println("WarehouseName is " + WarehouseName);
 
@@ -1173,7 +1175,7 @@ public class WarehouseController {
 				if (Site == null || Site == "empty") {
 					query = session.createQuery(
 							"select wareID, warehouseName, wareSiteID, wareLong, wareLat,wareCity from Warehouse where wareID like :param1 or warehouseName like :param1 or wareSiteID like :param1");
-					query.setString("param1", "%" + WarehouseName + "%");
+					query.setParameter("param1", "%" + WarehouseName + "%");
 					query.setFirstResult(0);
 					query.setMaxResults(40);
 					rtn.put("globalList", query.list());
@@ -1211,7 +1213,7 @@ public class WarehouseController {
 				query = session.createQuery(
 						"select distinct (wareSiteID) ,(warehouseName), wareID from Warehouse where UPPER(wareSiteID) like UPPER(:param1) "
 								+ "or UPPER(warehouseName) like UPPER(:param1)  ");
-				query.setString("param1", "%" + requestValue + "%");
+				query.setParameter("param1", "%" + requestValue + "%");
 				query.setFirstResult(0);
 				query.setMaxResults(40);
 
@@ -1250,7 +1252,7 @@ public class WarehouseController {
 				String requestValue = request.getParameter("requestValue");
 				query = session.createQuery(
 						"select distinct warehouseName , wareSiteID, wareID  from Warehouse  where UPPER(warehouseName) like UPPER(:param1) ");
-				query.setString("param1", "%" + requestValue + "%");
+				query.setParameter("param1", "%" + requestValue + "%");
 				query.setFirstResult(0);
 				query.setMaxResults(40);
 

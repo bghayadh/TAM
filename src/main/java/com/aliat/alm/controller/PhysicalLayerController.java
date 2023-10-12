@@ -1049,22 +1049,22 @@ public class PhysicalLayerController {
 								} else {
 									manholeList = manholeData.list();
 								}
-								Query handholeData = session.createNativeQuery(
+								query = session.createNativeQuery(
 										" SELECT * FROM (SELECT DISTINCT A.handhole_id as handhole_id ,A.handhole_name as handhole_name,A.LONGITUDE as LONGITUDE ,A.LATITUDE as LATITUDE,A.PROJECT_ID as PROJECT_ID ,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID) as totalCount,A.DM_NAME as DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.HANDHOLE_ID LEFT JOIN FIBER_CABLES C ON C.FIBER_CABLE_ID = B.FIBER_CABLE_ID where B.AUXILIARY_POINT_ID LIKE '%HH%' AND C.FIBER_CABLE_ID IN (:param1) "
 												+ " UNION "
 												+ " SELECT DISTINCT A.handhole_id,A.handhole_name,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID),A.DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_CABLES B  ON B.SOURCE_ID = A.HANDHOLE_ID where B.SOURCE_ID LIKE '%HH%' AND B.FIBER_CABLE_ID IN (:param1) "
 												+ "UNION"
 												+ " SELECT DISTINCT A.handhole_id,A.handhole_name,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID),A.DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_CABLES B  ON B.DESTINATION_ID = A.HANDHOLE_ID where B.DESTINATION_ID LIKE '%HH%' AND B.FIBER_CABLE_ID IN (:param1) ) where handhole_id NOT IN (:param2) ");
-								handholeData.setParameterList("param1",
+								query.setParameterList("param1",
 										(findListId(fiberList, "FiberCable")).length > 0
 												? findListId(fiberList, "FiberCable")
 												: new String[] { "" });
-								handholeData.setParameterList("param2", idsArray);
+								query.setParameterList("param2", idsArray);
 
 								if (handholeList.size() > 0) {
-									handholeList.addAll(handholeData.list());
+									handholeList.addAll(query.list());
 								} else {
-									handholeList = handholeData.list();
+									handholeList = query.list();
 								}
 
 								query = session.createNativeQuery(
@@ -2242,6 +2242,7 @@ public class PhysicalLayerController {
 		return rtn;
 	}
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/findClient&Site", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> findClientSite(Locale locale, Model model, HttpServletRequest request,
@@ -3065,7 +3066,6 @@ public class PhysicalLayerController {
 	}
 
 	// Access details
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/findAccessDetails", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> findAccessDetails(Locale locale, Model model, HttpServletRequest request,
