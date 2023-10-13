@@ -274,9 +274,12 @@ public class PhysicalLayerController {
 										+ request.getParameter("FilteredTrench") + "%'   ) ORDER BY B.SEQ_SORTING ASC ")
 								.list();
 
-						NodeList =  session.createNativeQuery(
-								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' ) AND (NODE_NAME LIKE '%"+request.getParameter("FilteredNode") + "%' OR NODE_PK  LIKE '%"+request.getParameter("FilteredNode") + "%')     ").list();
-		
+						NodeList = session.createNativeQuery(
+								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' ) AND (NODE_NAME LIKE '%"
+										+ request.getParameter("FilteredNode") + "%' OR NODE_PK  LIKE '%"
+										+ request.getParameter("FilteredNode") + "%')     ")
+								.list();
+
 						// To retrieve the data needed in show points/real points
 						if (showPointsType.equals("1")) {
 							String[] allManIdsPointsArray = (findListId(manholeList, "all")).length > 0
@@ -686,16 +689,15 @@ public class PhysicalLayerController {
 							distribBoardList = findNearestArray(distribBoardListQuery, Double.valueOf(closestLatPoint),
 									Double.valueOf(closestLongPoint), Double.valueOf(closestDisRange), "DistribBoard",
 									noOfPoints);
-							
-							
+
 							List<Object[]> nodeListQuery = session.createNativeQuery(
 									"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' ) "
-									+ " AND (LONGITUDE !='null' or LONGITUDE !=null ) AND (LATITUDE !='null' or LATITUDE !=null ) ").list();
-						
+											+ " AND (LONGITUDE !='null' or LONGITUDE !=null ) AND (LATITUDE !='null' or LATITUDE !=null ) ")
+									.list();
+
 							NodeList = findNearestArray(nodeListQuery, Double.valueOf(closestLatPoint),
 									Double.valueOf(closestLongPoint), Double.valueOf(closestDisRange), "Nodes",
 									noOfPoints);
-							
 
 							List<Object[]> nearstPoints = new ArrayList<Object[]>();
 							nearstPoints.addAll(manholeList);
@@ -819,9 +821,9 @@ public class PhysicalLayerController {
 											"ManHandhole_OutOfZone", noOfPoints);
 									handholeList.addAll(newList);
 								} else {
-									handholeList = findNearestArray(query.list(),
-											Double.valueOf(closestLatPoint), Double.valueOf(closestLongPoint),
-											Double.valueOf(closestDisRange), "ManHandhole_OutOfZone", noOfPoints);
+									handholeList = findNearestArray(query.list(), Double.valueOf(closestLatPoint),
+											Double.valueOf(closestLongPoint), Double.valueOf(closestDisRange),
+											"ManHandhole_OutOfZone", noOfPoints);
 								}
 
 								Query dbData = session.createNativeQuery(
@@ -915,36 +917,37 @@ public class PhysicalLayerController {
 
 							manholeList = session.createNativeQuery(
 									"SELECT DISTINCT MANHOLE_ID,MANHOLE_NAME,LONGITUDE,LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=MANHOLE_ID),DM_NAME FROM MANHOLE  where to_number (SUBSTR(LONGITUDE,1,6)) >= "
-											+ newStartLngPt + " and  to_number (SUBSTR(LATITUDE,1,6)) >= " + newStartLatPt
-											+ " and to_number (SUBSTR(LONGITUDE,1,6)) <=  " + newEndLngPt
-											+ " and to_number (SUBSTR(LATITUDE,1,6)) <= " + newEndLatPt)
+											+ newStartLngPt + " and  to_number (SUBSTR(LATITUDE,1,6)) >= "
+											+ newStartLatPt + " and to_number (SUBSTR(LONGITUDE,1,6)) <=  "
+											+ newEndLngPt + " and to_number (SUBSTR(LATITUDE,1,6)) <= " + newEndLatPt)
 									.list();
 //							 System.out.println("manholeListQuery
 							// "+mapper.writeValueAsString(manholeList));
 
 							handholeList = session.createNativeQuery(
 									"SELECT DISTINCT HANDHOLE_ID,HANDHOLE_NAME,LONGITUDE,LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=HANDHOLE_ID),DM_NAME FROM HANDHOLE  where to_number (SUBSTR(LONGITUDE,1,6)) >= "
-											+ newStartLngPt + " and  to_number (SUBSTR(LATITUDE,1,6)) >= " + newStartLatPt
-											+ " and to_number (SUBSTR(LONGITUDE,1,6)) <= " + newEndLngPt
+											+ newStartLngPt + " and  to_number (SUBSTR(LATITUDE,1,6)) >= "
+											+ newStartLatPt + " and to_number (SUBSTR(LONGITUDE,1,6)) <= " + newEndLngPt
 											+ " and to_number (SUBSTR(LATITUDE,1,6)) <= " + newEndLatPt)
 									.list();
 							// System.out.println("handholeList "+mapper.writeValueAsString(handholeList));
 							distribBoardList = session.createNativeQuery(
 									"SELECT DISTINCT DB_ID,DB_LONGITUDE,DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,PROJECT_ID ,CITY,DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD  where to_number (SUBSTR(DB_LONGITUDE,1,6)) >= "
-											+ newStartLngPt + " and  to_number (SUBSTR(DB_LATITUDE,1,6)) >= " + newStartLatPt
-											+ " and to_number (SUBSTR(DB_LONGITUDE,1,6)) <= " + newEndLngPt
-											+ " and to_number (SUBSTR(DB_LATITUDE,1,6)) <= " + newEndLatPt)
+											+ newStartLngPt + " and  to_number (SUBSTR(DB_LATITUDE,1,6)) >= "
+											+ newStartLatPt + " and to_number (SUBSTR(DB_LONGITUDE,1,6)) <= "
+											+ newEndLngPt + " and to_number (SUBSTR(DB_LATITUDE,1,6)) <= "
+											+ newEndLatPt)
 									.list();
 
 							NodeList = session.createNativeQuery(
 									"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' ) "
-									+ " AND (LONGITUDE !='null' or LONGITUDE !=null ) AND (LATITUDE !='null' or LATITUDE !=null )"
-									+ " and to_number (SUBSTR(LONGITUDE,1,6)) >=  "
-											+newStartLngPt +"  and  to_number (SUBSTR(LATITUDE,1,6)) >= " + newStartLatPt
+											+ " AND (LONGITUDE !='null' or LONGITUDE !=null ) AND (LATITUDE !='null' or LATITUDE !=null )"
+											+ " and to_number (SUBSTR(LONGITUDE,1,6)) >=  " + newStartLngPt
+											+ "  and  to_number (SUBSTR(LATITUDE,1,6)) >= " + newStartLatPt
 											+ " and to_number (SUBSTR(LONGITUDE,1,6)) <= " + newEndLngPt
-											+ " and to_number (SUBSTR(LATITUDE,1,6)) <= " + newEndLatPt).list();
-	
-							
+											+ " and to_number (SUBSTR(LATITUDE,1,6)) <= " + newEndLatPt)
+									.list();
+
 							List<Object[]> nearstPoints = new ArrayList<Object[]>();
 							nearstPoints.addAll(manholeList);
 							nearstPoints.addAll(handholeList);
@@ -1606,10 +1609,10 @@ public class PhysicalLayerController {
 						ductAuxiliary_Data = session.createNativeQuery(
 								"SELECT B.LONGITUDE,B.LATITUDE,B.WARE_ID,B.AUXILIARY_POINT_ID,B.AUXILIARY_POINT_NAME,B.DUCT_ID,B.DISTANCE_FROM_SOURCE,B.SEQ_SORTING,B.AUXILIARY_ID FROM DUCTS A,DUCT_AUXILIARY_POINTS B WHERE A.DUCT_ID=B.DUCT_ID ORDER BY B.SEQ_SORTING ASC ")
 								.list();
-						
-						NodeList =  session.createNativeQuery(
-								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' )    ").list();
-		
+
+						NodeList = session.createNativeQuery(
+								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' )    ")
+								.list();
 
 					}
 
@@ -2241,7 +2244,8 @@ public class PhysicalLayerController {
 		}
 		return rtn;
 	}
-
+	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/findClientSite", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> findClientSite(Locale locale, Model model, HttpServletRequest request,
@@ -2251,99 +2255,97 @@ public class PhysicalLayerController {
 		// List<Object[]> SiteData=null;
 		System.out.println("the fiber id is " + fiberID);
 		session = almsessions.getSession();
-if (session != null && session.isOpen()) {
-	tx = session.beginTransaction();
-try {
-List<String> siteIds= session.createNativeQuery("select distinct site_id from ("
-	+" select distinct fp_location as site_id from distribution_board_mapping "
-	+" where (fp_location_type = 'Site' or bp_location_type = 'Site') and (fp_fiber_id = '" + fiberID + "' or bp_fiber_id = '" + fiberID + "')"
-	+" union"
-	+" select distinct bp_location as site_id from distribution_board_mapping "
-	+" where (fp_location_type = 'Site' or bp_location_type = 'Site') and (fp_fiber_id = '" + fiberID + "' or bp_fiber_id = '" + fiberID + "')"
-	+" union"
-	+" (select distinct source_ware_id as site_id from fiber_cables where (source_ware_id is not null or source_ware_id !='null') and fiber_cable_id = '" + fiberID + "')"
-	+" union"
-	+" (select distinct destination_ware_id as site_id from fiber_cables where (destination_ware_id is not null or destination_ware_id !='null') and fiber_cable_id = '" + fiberID + "')"
-	+" union"
-	+" (select distinct source_ware_id as site_id from fiber_tubes where (source_ware_id is not null or source_ware_id !='null') and fiber_cable_id ='" + fiberID + "')"
-	+" union"
-	+" (select distinct destination_ware_id as site_id from fiber_tubes where (destination_ware_id is not null or destination_ware_id !='null') and fiber_cable_id = '" + fiberID + "')"
-	+" union"
-	+" (select distinct source_ware_id as site_id from fiber_strands where (source_ware_id is not null or source_ware_id !='null') and fiber_cable_id = '" + fiberID + "')"
-	+" union"
-	+" (select distinct destination_ware_id as site_id from fiber_strands where (destination_ware_id is not null or destination_ware_id !='null') and fiber_cable_id = '" + fiberID + "')"
-	+" union"
-	+" select distinct warehouse as site_id from distribution_board where (site LIKE 'WARE&') and db_id in (" 
-	+" (select source_id from fiber_cables where fiber_cable_id ='" + fiberID + "' and source_id LIKE 'DB%') "
-	+" union"  
-	+" (select destination_id from fiber_cables where fiber_cable_id = '" + fiberID + "' and destination_id LIKE 'DB%'))) where site_id !='null' and site_id is not null")
-.list();
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			try {				
+				List<String> siteIds = session.createNativeQuery("select distinct site_id from ("
+						+ " select distinct fp_location as site_id from distribution_board_mapping "
+						+ " where (fp_location_type = 'Site' or bp_location_type = 'Site') and (fp_fiber_id = '"
+						+ fiberID + "' or bp_fiber_id = '" + fiberID + "')" + " union"
+						+ " select distinct bp_location as site_id from distribution_board_mapping "
+						+ " where (fp_location_type = 'Site' or bp_location_type = 'Site') and (fp_fiber_id = '"
+						+ fiberID + "' or bp_fiber_id = '" + fiberID + "')" + " union"
+						+ " (select distinct source_ware_id as site_id from fiber_cables where (source_ware_id is not null or source_ware_id !='null') and fiber_cable_id = '"
+						+ fiberID + "')" + " union"
+						+ " (select distinct destination_ware_id as site_id from fiber_cables where (destination_ware_id is not null or destination_ware_id !='null') and fiber_cable_id = '"
+						+ fiberID + "')" + " union"
+						+ " (select distinct source_ware_id as site_id from fiber_tubes where (source_ware_id is not null or source_ware_id !='null') and fiber_cable_id ='"
+						+ fiberID + "')" + " union"
+						+ " (select distinct destination_ware_id as site_id from fiber_tubes where (destination_ware_id is not null or destination_ware_id !='null') and fiber_cable_id = '"
+						+ fiberID + "')" + " union"
+						+ " (select distinct source_ware_id as site_id from fiber_strands where (source_ware_id is not null or source_ware_id !='null') and fiber_cable_id = '"
+						+ fiberID + "')" + " union"
+						+ " (select distinct destination_ware_id as site_id from fiber_strands where (destination_ware_id is not null or destination_ware_id !='null') and fiber_cable_id = '"
+						+ fiberID + "')" + " union"
+						+ " select distinct warehouse as site_id from distribution_board where (site LIKE 'WARE&') and db_id in ("
+						+ " (select source_id from fiber_cables where fiber_cable_id ='" + fiberID
+						+ "' and source_id LIKE 'DB%') " + " union"
+						+ " (select destination_id from fiber_cables where fiber_cable_id = '" + fiberID
+						+ "' and destination_id LIKE 'DB%'))) where site_id !='null' and site_id is not null").list();
 
-List<String> clientIds= session.createNativeQuery("select distinct customer_id from ("
-	+" select distinct fp_location_id as customer_id from distribution_board_mapping "
-	+" where (fp_location_type = 'Customer' or bp_location_type = 'Customer') and (fp_fiber_id = '" + fiberID + "' or bp_fiber_id = '" + fiberID + "') and fp_location_id LIKE 'CLT%' "
-	+" union"
-	+" select distinct bp_location_id as customer_id from distribution_board_mapping "
-	+" where (fp_location_type = 'Customer' or bp_location_type = 'Customer') and (fp_fiber_id = '" + fiberID + "' or bp_fiber_id = '" + fiberID + "') and bp_location_id LIKE 'CLT%' "
-	+" union"
-	+" (select distinct source_id as customer_id from fiber_cables where (source_ware_id is null or source_ware_id ='null') and fiber_cable_id = '" + fiberID + "' and source_id LIKE 'CLT%')"
-	+" union"
-	+" (select distinct destination_id as customer_id from fiber_cables where (destination_ware_id is null or destination_ware_id ='null') and fiber_cable_id = '" + fiberID + "' and destination_id LIKE 'CLT%')"
-	+" union"
-	+" (select distinct source_id as customer_id from fiber_tubes where (source_ware_id is null or source_ware_id ='null') and fiber_cable_id ='" + fiberID + "' and source_id LIKE 'CLT%')"
-	+" union"
-	+" (select distinct destination_id as customer_id from fiber_tubes where (destination_ware_id is null or destination_ware_id ='null') and fiber_cable_id = '" + fiberID + "' and destination_id LIKE 'CLT%')"
-	+" union"
-	+" (select distinct source_id as customer_id from fiber_strands where (source_ware_id is null or source_ware_id ='null') and fiber_cable_id = '" + fiberID + "' and source_id LIKE 'CLT%')"
-	+" union"
-	+" (select distinct destination_id as customer_id from fiber_strands where (destination_ware_id is null or destination_ware_id='null') and fiber_cable_id = '" + fiberID + "' and destination_id LIKE 'CLT%')"
-	+" union"
-	+" select distinct site as customer_id from distribution_board where (site LIKE 'CUST%') and db_id in (" 
-	+" (select source_id from fiber_cables where fiber_cable_id ='" + fiberID + "' and source_id LIKE 'DB%') "
-	+" union"  
-	+" (select destination_id from fiber_cables where fiber_cable_id = '" + fiberID + "' and destination_id LIKE 'DB%')))")
-.list();
+				List<String> clientIds = session.createNativeQuery("select distinct customer_id from ("
+						+ " select distinct fp_location_id as customer_id from distribution_board_mapping "
+						+ " where (fp_location_type = 'Customer' or bp_location_type = 'Customer') and (fp_fiber_id = '"
+						+ fiberID + "' or bp_fiber_id = '" + fiberID + "') and fp_location_id LIKE 'CLT%' " + " union"
+						+ " select distinct bp_location_id as customer_id from distribution_board_mapping "
+						+ " where (fp_location_type = 'Customer' or bp_location_type = 'Customer') and (fp_fiber_id = '"
+						+ fiberID + "' or bp_fiber_id = '" + fiberID + "') and bp_location_id LIKE 'CLT%' " + " union"
+						+ " (select distinct source_id as customer_id from fiber_cables where (source_ware_id is null or source_ware_id ='null') and fiber_cable_id = '"
+						+ fiberID + "' and source_id LIKE 'CLT%')" + " union"
+						+ " (select distinct destination_id as customer_id from fiber_cables where (destination_ware_id is null or destination_ware_id ='null') and fiber_cable_id = '"
+						+ fiberID + "' and destination_id LIKE 'CLT%')" + " union"
+						+ " (select distinct source_id as customer_id from fiber_tubes where (source_ware_id is null or source_ware_id ='null') and fiber_cable_id ='"
+						+ fiberID + "' and source_id LIKE 'CLT%')" + " union"
+						+ " (select distinct destination_id as customer_id from fiber_tubes where (destination_ware_id is null or destination_ware_id ='null') and fiber_cable_id = '"
+						+ fiberID + "' and destination_id LIKE 'CLT%')" + " union"
+						+ " (select distinct source_id as customer_id from fiber_strands where (source_ware_id is null or source_ware_id ='null') and fiber_cable_id = '"
+						+ fiberID + "' and source_id LIKE 'CLT%')" + " union"
+						+ " (select distinct destination_id as customer_id from fiber_strands where (destination_ware_id is null or destination_ware_id='null') and fiber_cable_id = '"
+						+ fiberID + "' and destination_id LIKE 'CLT%')" + " union"
+						+ " select distinct site as customer_id from distribution_board where (site LIKE 'CUST%') and db_id in ("
+						+ " (select source_id from fiber_cables where fiber_cable_id ='" + fiberID
+						+ "' and source_id LIKE 'DB%') " + " union"
+						+ " (select destination_id from fiber_cables where fiber_cable_id = '" + fiberID
+						+ "' and destination_id LIKE 'DB%')))").list();
 
-	 System.out.println("the site ids are:  " + siteIds);
-	 System.out.println("the client ids are: " + clientIds);
+				System.out.println("the site ids are:  " + siteIds);
+				System.out.println("the client ids are: " + clientIds);
 
-	 query = session.createNativeQuery(
-			 "SELECT DISTINCT WARE_ID,SITE_ID,WARE_NAME,LONGITUDE,LATITUDE FROM WAREHOUSE WHERE WARE_ID IN (:param1)");
-	 query.setParameter("param1", siteIds);
-	 List<Object[]> sitesData= query.list();
+				query = session.createNativeQuery(
+						"SELECT DISTINCT WARE_ID,SITE_ID,WARE_NAME,LONGITUDE,LATITUDE FROM WAREHOUSE WHERE WARE_ID IN (:param1)");
+				query.setParameter("param1", siteIds);
+				List<Object[]> sitesData = query.list();
 
-		 
-	 query = session.createNativeQuery(
-			 "SELECT DISTINCT CUSTOMER_ID,CUSTOMER_NAME,MOBILE_NUMBER,LONGITUDE,LATITUDE FROM CUSTOMER WHERE CUSTOMER_ID IN (:param1)");
-	 query.setParameter("param1", clientIds);
-	 List<Object[]> clientsData= query.list();
+				query = session.createNativeQuery(
+						"SELECT DISTINCT CUSTOMER_ID,CUSTOMER_NAME,MOBILE_NUMBER,LONGITUDE,LATITUDE FROM CUSTOMER WHERE CUSTOMER_ID IN (:param1)");
+				query.setParameter("param1", clientIds);
+				List<Object[]> clientsData = query.list();
 
-	 
-	// System.out.println("the site data is:  " + mapper.writeValueAsString(sitesData));
-	// System.out.println("the client data is: " + mapper.writeValueAsString(clientsData));
-	 
+				// System.out.println("the site data is: " +
+				// mapper.writeValueAsString(sitesData));
+				// System.out.println("the client data is: " +
+				// mapper.writeValueAsString(clientsData));
 
-	rtn.put("ClientData", clientsData);
-	rtn.put("SiteData",  sitesData);
-	
-	} catch (Exception e) {
-		sw = new StringWriter();
-		e.printStackTrace(new PrintWriter(sw));
-		exceptionAsString = sw.toString();
-		logger.info("Error in retreiving  Data from database \n" + exceptionAsString);
-		rtn.put("ClientData", null);
-		rtn.put("SiteData", null);
+				rtn.put("ClientData", clientsData);
+				rtn.put("SiteData", sitesData);
 
-		} finally {
-			if (session != null && session.isOpen()) {
-				tx.commit();
-				session.close();
+			} catch (Exception e) {
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.info("Error in retreiving  Data from database \n" + exceptionAsString);
+				rtn.put("ClientData", null);
+				rtn.put("SiteData", null);
+
+			} finally {
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+				}
 			}
 		}
+		return rtn;
 	}
-	return rtn;
-}
-
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/findFiberDetails", method = RequestMethod.GET)
@@ -2465,7 +2467,7 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 		return rtn;
 	}
 
-	// Core details	
+	// Core details
 	@RequestMapping(value = "/findCoreDetails", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> findCoreDetails(Locale locale, Model model, HttpServletRequest request,
@@ -2622,10 +2624,10 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 				 * // distributionBoardId = "DB_" + year + "_" +
 				 * appConfig.getSeqNbr(52,session); nodePk = "NODE_ACTIVE" + year + "_" +
 				 * Integer.parseInt(
-				 * session.createNativeQuery("SELECT NODE_ACTIVE FROM SEQ_TABLE").uniqueResult().
-				 * toString()); query =
-				 * session.createNativeQuery("UPDATE SEQ_TABLE SET NODE_ACTIVE = NODE_ACTIVE + 1 "
-				 * ); query.executeUpdate(); session.createNativeQuery("commit").executeUpdate(); }
+				 * session.createNativeQuery("SELECT NODE_ACTIVE FROM SEQ_TABLE").uniqueResult()
+				 * . toString()); query = session.
+				 * createNativeQuery("UPDATE SEQ_TABLE SET NODE_ACTIVE = NODE_ACTIVE + 1 " );
+				 * query.executeUpdate(); session.createNativeQuery("commit").executeUpdate(); }
 				 * }
 				 */
 
@@ -3127,8 +3129,8 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 								+ manhole_Id + "' AND PROJECT_ID ='" + request.getParameter("ProjectId") + "'")
 						.list();
 
-				query = session.createNativeQuery("select count(*) from FIBER_CABLES a where a.SOURCE_ID = '" + manhole_Id
-						+ "' or a.DESTINATION_ID = '" + manhole_Id + "' AND a.PROJECT_ID ='"
+				query = session.createNativeQuery("select count(*) from FIBER_CABLES a where a.SOURCE_ID = '"
+						+ manhole_Id + "' or a.DESTINATION_ID = '" + manhole_Id + "' AND a.PROJECT_ID ='"
 						+ request.getParameter("ProjectId") + "' ");
 
 				countFiberCablesSrcDest = query.uniqueResult().toString();
@@ -3220,8 +3222,8 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 								+ handhole_Id + "' AND PROJECT_ID ='" + request.getParameter("ProjectId") + "'")
 						.list();
 
-				query = session.createNativeQuery("select count(*) from FIBER_CABLES a where a.SOURCE_ID = '" + handhole_Id
-						+ "' or a.DESTINATION_ID = '" + handhole_Id + "' AND a.PROJECT_ID ='"
+				query = session.createNativeQuery("select count(*) from FIBER_CABLES a where a.SOURCE_ID = '"
+						+ handhole_Id + "' or a.DESTINATION_ID = '" + handhole_Id + "' AND a.PROJECT_ID ='"
 						+ request.getParameter("ProjectId") + "' ");
 
 				countFiberCablesSrcDest = query.uniqueResult().toString();
@@ -3778,8 +3780,8 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 								"actionProjectContext insidde insert>>" + request.getParameter("actionProjectContext"));
 						synchronized (this) {
 							// ProjectId = "PROJECT_" + year + "_" + appConfig.getSeqNbr(71,session);
-							ProjectId = "PROJECT_" + year + "_" + Integer.parseInt(
-									session.createNativeQuery("SELECT PROJECT FROM SEQ_TABLE").uniqueResult().toString());
+							ProjectId = "PROJECT_" + year + "_" + Integer.parseInt(session
+									.createNativeQuery("SELECT PROJECT FROM SEQ_TABLE").uniqueResult().toString());
 							System.out.println("the project id is " + ProjectId);
 							query = session.createNativeQuery("UPDATE SEQ_TABLE SET PROJECT = PROJECT + 1 ");
 							query.executeUpdate();
@@ -3792,8 +3794,8 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 						rtn.put("ProjectId", ProjectId);
 					} else {
 						ProjectId = request.getParameter("ProjectId");
-						query = session
-								.createNativeQuery("UPDATE PROJECT SET PROJECT_ID= '" + request.getParameter("ProjectId")
+						query = session.createNativeQuery(
+								"UPDATE PROJECT SET PROJECT_ID= '" + request.getParameter("ProjectId")
 										+ "',PROJECT_NAME= '" + request.getParameter("ProjectName")
 										+ "' where PROJECT_ID='" + request.getParameter("ProjectId") + "'");
 						query.executeUpdate();
@@ -3825,7 +3827,7 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 			return rtn;
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/saveManhole", method = RequestMethod.GET)
 	@ResponseBody
@@ -3867,8 +3869,8 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 					if (request.getParameter("actionManholeContext").equals("Insert")) {
 						synchronized (this) {
 
-							manholeId = "MH_" + year + "_" + Integer.parseInt(
-									session.createNativeQuery("SELECT MANHOLE FROM SEQ_TABLE").uniqueResult().toString());
+							manholeId = "MH_" + year + "_" + Integer.parseInt(session
+									.createNativeQuery("SELECT MANHOLE FROM SEQ_TABLE").uniqueResult().toString());
 							String[] idSplit;
 							idSplit = manholeId.split("_");
 
@@ -3954,7 +3956,6 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 
 					}
 
-
 					countCables = session.createNativeQuery(
 							"select 'fiber', count(a.FIBER_CABLE_ID),'tube', count(b.TUBE_ID) ,'strand', count(c.STRAND_ID) from FIBER_CABLES a "
 									+ "LEFT JOIN  FIBER_TUBES b ON  a.FIBER_CABLE_ID = b.FIBER_CABLE_ID AND ( b.SOURCE_ID='"
@@ -3970,14 +3971,14 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 							.list();
 					rtn.put("countCables", countCables);
 					// rtn.put("ManholeName", manholeName);
-					
+
 					List<Object[]> countJct = session.createNativeQuery(
 							"select JUNCTION_ID,JUNCTION_NAME,PHYSICAL_LAYER_ID,PHYSICAL_LAYER_NAME,JUNCTION_NUMBER,CAPACITY,CITY,LONGITUDE,LATITUDE,count(*) from JUNCTION  where PHYSICAL_LAYER_ID = '"
 									+ request.getParameter("ManholeId")
 									+ "' group by JUNCTION_ID,JUNCTION_NAME,PHYSICAL_LAYER_ID,PHYSICAL_LAYER_NAME,JUNCTION_NUMBER,CAPACITY,CITY,LONGITUDE,LATITUDE ")
 							.list();
 					rtn.put("countJct", countJct);
-					
+
 					List<Object[]> junctionTotalCount = session
 							.createNativeQuery("select coalesce(count(*),0) from JUNCTION  where PHYSICAL_LAYER_ID = '"
 									+ request.getParameter("ManholeId") + "' ")
@@ -4668,8 +4669,8 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 				if (StringUtils.equalsIgnoreCase(fiberpathID, "")) {
 					synchronized (this) {
 						// fiberpathID = "FIBER" + year + "_" + appConfig.getSeqNbr(51,session);
-						fiberpathID = "FIBER" + year + "_" + Integer.parseInt(
-								session.createNativeQuery("SELECT FIBER_CABLE FROM SEQ_TABLE").uniqueResult().toString());
+						fiberpathID = "FIBER" + year + "_" + Integer.parseInt(session
+								.createNativeQuery("SELECT FIBER_CABLE FROM SEQ_TABLE").uniqueResult().toString());
 						query = session.createNativeQuery("UPDATE SEQ_TABLE SET FIBER_CABLE = FIBER_CABLE + 1 ");
 						query.executeUpdate();
 						session.createNativeQuery("commit").executeUpdate();
@@ -4915,8 +4916,8 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 										+ Integer.parseInt(
 												session.createNativeQuery("SELECT FIBER_CABLE_AUX FROM SEQ_TABLE")
 														.uniqueResult().toString());
-								query = session
-										.createNativeQuery("UPDATE SEQ_TABLE SET FIBER_CABLE_AUX = FIBER_CABLE_AUX + 1 ");
+								query = session.createNativeQuery(
+										"UPDATE SEQ_TABLE SET FIBER_CABLE_AUX = FIBER_CABLE_AUX + 1 ");
 								query.executeUpdate();
 								session.createNativeQuery("commit").executeUpdate();
 							}
@@ -5048,10 +5049,11 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 
 				query = session.createNativeQuery("delete from FIBER_TUBES where FIBER_CABLE_ID='" + fiberpathID + "'");
 				query.executeUpdate();
-				query = session.createNativeQuery("delete from FIBER_STRANDS where FIBER_CABLE_ID='" + fiberpathID + "'");
-				query.executeUpdate();
 				query = session
-						.createNativeQuery("delete from TUBE_AUXILIARY_POINTS where FIBER_CABLE_ID='" + fiberpathID + "'");
+						.createNativeQuery("delete from FIBER_STRANDS where FIBER_CABLE_ID='" + fiberpathID + "'");
+				query.executeUpdate();
+				query = session.createNativeQuery(
+						"delete from TUBE_AUXILIARY_POINTS where FIBER_CABLE_ID='" + fiberpathID + "'");
 				query.executeUpdate();
 				query = session.createNativeQuery(
 						"delete from STRAND_AUXILIARY_POINTS where FIBER_CABLE_ID='" + fiberpathID + "'");
@@ -5478,7 +5480,8 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 						// appConfig.getSeqNbr(57,session);
 						auxStrand_ID = "AUXILIARY_STRAND_PT_" + year + "_" + Integer.parseInt(session
 								.createNativeQuery("SELECT FIBER_STRAND_AUX FROM SEQ_TABLE").uniqueResult().toString());
-						query = session.createNativeQuery("UPDATE SEQ_TABLE SET FIBER_STRAND_AUX = FIBER_STRAND_AUX + 1 ");
+						query = session
+								.createNativeQuery("UPDATE SEQ_TABLE SET FIBER_STRAND_AUX = FIBER_STRAND_AUX + 1 ");
 						query.executeUpdate();
 						session.createNativeQuery("commit").executeUpdate();
 					}
@@ -5735,8 +5738,8 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 				String[] markersArray = request.getParameterValues("markersArray[]");
 				System.out.println("delete aux array " + mapper.writeValueAsString(markersArray));
 
-				query = session.createNativeQuery("delete from FIBER_AUXILIARY_POINTS where FIBER_CABLE_ID='" + fiberpathID
-						+ "' and AUXILIARY_POINT_ID IN (:param1) ");
+				query = session.createNativeQuery("delete from FIBER_AUXILIARY_POINTS where FIBER_CABLE_ID='"
+						+ fiberpathID + "' and AUXILIARY_POINT_ID IN (:param1) ");
 
 				query.setParameterList("param1", markersArray);
 				query.executeUpdate();
@@ -5789,8 +5792,8 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 					synchronized (this) {
 
 						// distributionBoardId = "DB_" + year + "_" + appConfig.getSeqNbr(52,session);
-						distributionBoardId = "DB_" + year + "_" + Integer
-								.parseInt(session.createNativeQuery("SELECT DB FROM SEQ_TABLE").uniqueResult().toString());
+						distributionBoardId = "DB_" + year + "_" + Integer.parseInt(
+								session.createNativeQuery("SELECT DB FROM SEQ_TABLE").uniqueResult().toString());
 						query = session.createNativeQuery("UPDATE SEQ_TABLE SET DB = DB + 1 ");
 						query.executeUpdate();
 						session.createNativeQuery("commit").executeUpdate();
@@ -5869,8 +5872,10 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 											itemParameters.getDictParameter().get(i).get("portId"), null)) {
 								synchronized (this) {
 									// db_Port_Id = "DB_PORT_" + year + "_" + appConfig.getSeqNbr(62,session);
-									db_Port_Id = "DB_PORT_" + year + "_" + Integer.parseInt(session
-											.createNativeQuery("SELECT DB_PORT FROM SEQ_TABLE").uniqueResult().toString());
+									db_Port_Id = "DB_PORT_" + year + "_"
+											+ Integer
+													.parseInt(session.createNativeQuery("SELECT DB_PORT FROM SEQ_TABLE")
+															.uniqueResult().toString());
 									query = session.createNativeQuery("UPDATE SEQ_TABLE SET DB_PORT = DB_PORT + 1 ");
 									query.executeUpdate();
 									session.createNativeQuery("commit").executeUpdate();
@@ -6179,8 +6184,8 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 							ArrayList<String> DBDetail = new ArrayList<String>();
 							synchronized (this) {
 
-								distributionBoardId = "DB_" + year + "_" + Integer.parseInt(
-										session.createNativeQuery("SELECT DB FROM SEQ_TABLE").uniqueResult().toString());
+								distributionBoardId = "DB_" + year + "_" + Integer.parseInt(session
+										.createNativeQuery("SELECT DB FROM SEQ_TABLE").uniqueResult().toString());
 								query = session.createNativeQuery("UPDATE SEQ_TABLE SET DB = DB + 1 ");
 								query.executeUpdate();
 								session.createNativeQuery("commit").executeUpdate();
@@ -6505,7 +6510,7 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
 		}
-		
+
 		Query query;
 		session = almsessions.getSession();
 		String search = request.getParameter("searchs");
@@ -6513,17 +6518,16 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
-				
-				/*if(search == null) {
-					System.out.println("search is null");
-					search = "";
-				}else {
-					System.out.println("search is not null");
-				}*/
+
+				/*
+				 * if(search == null) { System.out.println("search is null"); search = ""; }else
+				 * { System.out.println("search is not null"); }
+				 */
 				query = session.createNativeQuery(
-			          // "SELECT NODE_ID,NODE_NAME,NODE_TYPE FROM NODE_ACTIVE WHERE UPPER(NODE_ID) LIKE UPPER(:param) OR UPPER(NODE_NAME) LIKE UPPER(:param) ");
-				       "SELECT NODE_ID,NODE_NAME,NODE_TYPE FROM NODE_ACTIVE WHERE NODE_ID LIKE :param OR NODE_NAME LIKE :param ");
-						//"SELECT NODE_ID,NODE_NAME,NODE_TYPE FROM NODE_ACTIVE ");
+						// "SELECT NODE_ID,NODE_NAME,NODE_TYPE FROM NODE_ACTIVE WHERE UPPER(NODE_ID)
+						// LIKE UPPER(:param) OR UPPER(NODE_NAME) LIKE UPPER(:param) ");
+						"SELECT NODE_ID,NODE_NAME,NODE_TYPE FROM NODE_ACTIVE WHERE NODE_ID LIKE :param OR NODE_NAME LIKE :param ");
+				// "SELECT NODE_ID,NODE_NAME,NODE_TYPE FROM NODE_ACTIVE ");
 
 				query.setParameter("param", "%" + search + "%");
 				query.setFirstResult(0);
@@ -7168,16 +7172,20 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
-				Object StrandsCount = session.createNativeQuery("SELECT count(*) FROM FIBER_STRANDS WHERE FIBER_CABLE_ID='"
-						+ request.getParameter("fiberID") + "'").uniqueResult();
+				Object StrandsCount = session
+						.createNativeQuery("SELECT count(*) FROM FIBER_STRANDS WHERE FIBER_CABLE_ID='"
+								+ request.getParameter("fiberID") + "'")
+						.uniqueResult();
 
 				rtn.put("StrandsCount", StrandsCount);
 				Object cablegeo = session
 						.createNativeQuery("SELECT total_geo_distance FROM FIBER_cables WHERE FIBER_CABLE_ID='"
 								+ request.getParameter("fiberID") + "'")
 						.list();
-				Object cableLineOfSite = session.createNativeQuery("SELECT Length FROM FIBER_cables WHERE FIBER_CABLE_ID='"
-						+ request.getParameter("fiberID") + "'").list();
+				Object cableLineOfSite = session
+						.createNativeQuery("SELECT Length FROM FIBER_cables WHERE FIBER_CABLE_ID='"
+								+ request.getParameter("fiberID") + "'")
+						.list();
 				rtn.put("cablegeo", cablegeo);
 				rtn.put("cableLineOfSite", cableLineOfSite);
 
@@ -7544,8 +7552,8 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 								+ request.getParameter("ProjectId") + "'")
 						.uniqueResult().toString();
 				String totalgeotube = session
-						.createNativeQuery("SELECT  coalesce(sum(total_geo_distance),0) from FIBER_tubes ").uniqueResult()
-						.toString();
+						.createNativeQuery("SELECT  coalesce(sum(total_geo_distance),0) from FIBER_tubes ")
+						.uniqueResult().toString();
 				String totalgeostrand = session
 						.createNativeQuery("SELECT  coalesce(sum(total_geo_distance),0) from FIBER_Strands ")
 						.uniqueResult().toString();
@@ -7556,8 +7564,9 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 						.uniqueResult().toString();
 				String totalLinetube = session.createNativeQuery("SELECT  coalesce(sum(Length),0) from FIBER_tubes ")
 						.uniqueResult().toString();
-				String totalLinestrand = session.createNativeQuery("SELECT  coalesce(sum(Length),0) from FIBER_Strands ")
-						.uniqueResult().toString();
+				String totalLinestrand = session
+						.createNativeQuery("SELECT  coalesce(sum(Length),0) from FIBER_Strands ").uniqueResult()
+						.toString();
 
 				String backboneStrand = session.createNativeQuery(
 						"select coalesce(sum((total_geo_distance*number_of_strands*number_of_tubes)),0) from FIBER_CABLES where FIBER_NETWORK_LEVEL='backbone' and PROJECT_ID='"
@@ -7925,7 +7934,7 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 							 * "SELECT MANHOLE_ID,MANHOLE_NAME,city FROM MANHOLE WHERE LONGITUDE like '" +
 							 * aux_Long + "%' and LATITUDE like '" + aux_Lat + "%' ";
 							 */
-							
+
 							finalList.addAll(session.createNativeQuery(querySearch).list());
 						}
 					}
@@ -8024,9 +8033,9 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 			Object lng = request.getParameter("lng");
 			String type = "";
 
-			Object[] res_Type = (Object[]) session
-					.createNativeQuery("SELECT MANHOLE_ID,MANHOLE_NAME,MANHOLE_MODEL,CITY FROM MANHOLE WHERE LONGITUDE='"
-							+ lng + "' and LATITUDE='" + lat + "'")
+			Object[] res_Type = (Object[]) session.createNativeQuery(
+					"SELECT MANHOLE_ID,MANHOLE_NAME,MANHOLE_MODEL,CITY FROM MANHOLE WHERE LONGITUDE='" + lng
+							+ "' and LATITUDE='" + lat + "'")
 					.uniqueResult();
 
 			if (res_Type != null) {
@@ -8314,7 +8323,8 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 								.uniqueResult();
 						rtn.put("ManholeCount", newCount);
 						// newCount = session
-						// .createNativeQuery("SELECT count(*) FROM HANDHOLE where PROJECT_ID ='" + NodeID
+						// .createNativeQuery("SELECT count(*) FROM HANDHOLE where PROJECT_ID ='" +
+						// NodeID
 						// + "' ")
 						// .uniqueResult();
 						// rtn.put("HandholeCount", newCount);
@@ -8327,8 +8337,8 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 						physicalLayerDeleteQuery.setParameterList("param1", idList);
 						physicalLayerDeleteQuery.executeUpdate();
 
-						physicalLayerDeleteQuery = session
-								.createNativeQuery("delete from distribution_board_mapping b  where b.DB_ID IN (:param1)");
+						physicalLayerDeleteQuery = session.createNativeQuery(
+								"delete from distribution_board_mapping b  where b.DB_ID IN (:param1)");
 						physicalLayerDeleteQuery.setParameterList("param1", idList);
 						physicalLayerDeleteQuery.executeUpdate();
 
@@ -8412,8 +8422,8 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 						strandDeleteQuery.setParameterList("param1", idList);
 						strandDeleteQuery.executeUpdate();
 
-						strandDeleteQuery = session
-								.createNativeQuery("delete from strand_auxiliary_points b where b.STRAND_ID IN (:param1)");
+						strandDeleteQuery = session.createNativeQuery(
+								"delete from strand_auxiliary_points b where b.STRAND_ID IN (:param1)");
 						strandDeleteQuery.setParameterList("param1", idList);
 						strandDeleteQuery.executeUpdate();
 
@@ -8430,8 +8440,8 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 						trenchPathDeleteQuery.setParameterList("param1", idList);
 						trenchPathDeleteQuery.executeUpdate();
 
-						trenchPathDeleteQuery = session
-								.createNativeQuery("delete from TRENCH_AUXILIARY_POINTS b where b.TRENCH_ID IN (:param1)");
+						trenchPathDeleteQuery = session.createNativeQuery(
+								"delete from TRENCH_AUXILIARY_POINTS b where b.TRENCH_ID IN (:param1)");
 						trenchPathDeleteQuery.setParameterList("param1", idList);
 						trenchPathDeleteQuery.executeUpdate();
 
@@ -8572,8 +8582,8 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 				if (StringUtils.equalsIgnoreCase(strandID, "")) {
 					synchronized (this) {
 						// strandID = "STRAND" + year + "_" + appConfig.getSeqNbr(48,session);
-						strandID = "STRAND" + year + "_" + Integer.parseInt(
-								session.createNativeQuery("SELECT FIBER_STRAND FROM SEQ_TABLE").uniqueResult().toString());
+						strandID = "STRAND" + year + "_" + Integer.parseInt(session
+								.createNativeQuery("SELECT FIBER_STRAND FROM SEQ_TABLE").uniqueResult().toString());
 						query = session.createNativeQuery("UPDATE SEQ_TABLE SET FIBER_STRAND = FIBER_STRAND + 1 ");
 						query.executeUpdate();
 						session.createNativeQuery("commit").executeUpdate();
@@ -8721,8 +8731,8 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 				int auxArraySize = 0;
 				if (StringUtils.equalsIgnoreCase(strandAuxFlag, "opened")
 						|| StringUtils.equalsIgnoreCase(strandAuxFlag, "new strand")) {
-					query = session
-							.createNativeQuery("delete from STRAND_AUXILIARY_POINTS where STRAND_ID='" + strandID + "'");
+					query = session.createNativeQuery(
+							"delete from STRAND_AUXILIARY_POINTS where STRAND_ID='" + strandID + "'");
 					query.executeUpdate();
 
 					if (itemParameters.getDictParameter().size() > 0) {
@@ -8884,8 +8894,8 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 				if (StringUtils.equalsIgnoreCase(tubeID, "")) {
 					synchronized (this) {
 						// tubeID = "TUBE_" + year + "_" + appConfig.getSeqNbr(47,session);
-						tubeID = "TUBE_" + year + "_" + Integer.parseInt(
-								session.createNativeQuery("SELECT FIBER_TUBE FROM SEQ_TABLE").uniqueResult().toString());
+						tubeID = "TUBE_" + year + "_" + Integer.parseInt(session
+								.createNativeQuery("SELECT FIBER_TUBE FROM SEQ_TABLE").uniqueResult().toString());
 						System.out.println("the tube id is " + tubeID);
 						query = session.createNativeQuery("UPDATE SEQ_TABLE SET FIBER_TUBE = FIBER_TUBE + 1 ");
 						query.executeUpdate();
@@ -9025,7 +9035,8 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 				if (StringUtils.equalsIgnoreCase(tubeAuxFlag, "opened")
 						|| StringUtils.equalsIgnoreCase(tubeAuxFlag, "new tube")) {
 
-					query = session.createNativeQuery("delete from TUBE_AUXILIARY_POINTS where TUBE_ID='" + tubeID + "'");
+					query = session
+							.createNativeQuery("delete from TUBE_AUXILIARY_POINTS where TUBE_ID='" + tubeID + "'");
 					query.executeUpdate();
 
 					if (itemParameters.getDictParameter().size() > 0) {
@@ -9042,8 +9053,8 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 								// String aux_ID = "AUXILIARY_TUBE_PT_" + year + "_" +
 								// appConfig.getSeqNbr(56,session);
 								aux_ID = "AUXILIARY_TUBE_PT_" + year + "_"
-										+ Integer
-												.parseInt(session.createNativeQuery("SELECT FIBER_TUBE_AUX FROM SEQ_TABLE")
+										+ Integer.parseInt(
+												session.createNativeQuery("SELECT FIBER_TUBE_AUX FROM SEQ_TABLE")
 														.uniqueResult().toString());
 								query = session
 										.createNativeQuery("UPDATE SEQ_TABLE SET FIBER_TUBE_AUX = FIBER_TUBE_AUX + 1 ");
@@ -9335,8 +9346,8 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 			if (StringUtils.equalsIgnoreCase(trenchId, "")) {
 				synchronized (this) {
 					// trenchId = "Trench_" + year + "_" + appConfig.getSeqNbr(71,session);
-					trenchId = "Trench_" + year + "_" + Integer
-							.parseInt(session.createNativeQuery("SELECT TRENCH FROM SEQ_TABLE").uniqueResult().toString());
+					trenchId = "Trench_" + year + "_" + Integer.parseInt(
+							session.createNativeQuery("SELECT TRENCH FROM SEQ_TABLE").uniqueResult().toString());
 					query = session.createNativeQuery("UPDATE SEQ_TABLE SET TRENCH = TRENCH + 1 ");
 					query.executeUpdate();
 					session.createNativeQuery("commit").executeUpdate();
@@ -9731,8 +9742,8 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 					if (StringUtils.equalsIgnoreCase(junctionID, "")) {
 						synchronized (this) {
 							// junctionID = "JCT_" + year + "_" + appConfig.getSeqNbr(76,session);
-							junctionID = "JCT_" + year + "_" + Integer.parseInt(
-									session.createNativeQuery("SELECT JUNCTION FROM SEQ_TABLE").uniqueResult().toString());
+							junctionID = "JCT_" + year + "_" + Integer.parseInt(session
+									.createNativeQuery("SELECT JUNCTION FROM SEQ_TABLE").uniqueResult().toString());
 							System.out.println("man id " + junctionID);
 							query = session.createNativeQuery("UPDATE SEQ_TABLE SET JUNCTION = JUNCTION +1");
 							query.executeUpdate();
@@ -9745,8 +9756,8 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 						if (StringUtils.equalsIgnoreCase(countJunc, "0")) {
 
 							physLayerNameJunction = physLayerNameJunction.concat("_J");
-							query = session.createNativeQuery("UPDATE MANHOLE SET MANHOLE_NAME= '" + physLayerNameJunction
-									+ "' where MANHOLE_ID='" + physLayerIdJunction + "' ");
+							query = session.createNativeQuery("UPDATE MANHOLE SET MANHOLE_NAME= '"
+									+ physLayerNameJunction + "' where MANHOLE_ID='" + physLayerIdJunction + "' ");
 							query.executeUpdate();
 							query = session.createNativeQuery("UPDATE HANDHOLE SET HANDHOLE_NAME= '"
 									+ physLayerNameJunction + "' where HANDHOLE_ID='" + physLayerIdJunction + "' ");
@@ -9811,10 +9822,12 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 							synchronized (this) {
 								// mappingJctID = "JCT_MAP_" + year + "_" + appConfig.getSeqNbr(77,session);
 								mappingJctID = "JCT_MAP_" + year + "_"
-										+ Integer.parseInt(session.createNativeQuery("SELECT JUNCTION_MAP FROM SEQ_TABLE")
-												.uniqueResult().toString());
+										+ Integer.parseInt(
+												session.createNativeQuery("SELECT JUNCTION_MAP FROM SEQ_TABLE")
+														.uniqueResult().toString());
 								System.out.println("man id " + junctionID);
-								query = session.createNativeQuery("UPDATE SEQ_TABLE SET JUNCTION_MAP = JUNCTION_MAP +1");
+								query = session
+										.createNativeQuery("UPDATE SEQ_TABLE SET JUNCTION_MAP = JUNCTION_MAP +1");
 								query.executeUpdate();
 								session.createNativeQuery("commit").executeUpdate();
 								System.out.println("the junction id map is " + mappingJctID);
@@ -10237,7 +10250,8 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 				int auxArraySize = 0;
 				if (StringUtils.equalsIgnoreCase(ductAuxFlag, "opened")
 						|| StringUtils.equalsIgnoreCase(ductAuxFlag, "new duct")) {
-					query = session.createNativeQuery("delete from DUCT_AUXILIARY_POINTS where DUCT_ID='" + ductId + "'");
+					query = session
+							.createNativeQuery("delete from DUCT_AUXILIARY_POINTS where DUCT_ID='" + ductId + "'");
 					query.executeUpdate();
 
 					if (itemParameters.getDictParameter().size() > 0) {
@@ -10553,9 +10567,9 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 						junctionNumber = Float.parseFloat(request.getParameter("JunctionNum"));
 					}
 
-					Query updateJunction = session.createNativeQuery("UPDATE JUNCTION SET JUNCTION_NAME = '" + junctionName
-							+ "',CAPACITY = '" + junctionCapacity + "',JUNCTION_NUMBER ='" + junctionNumber + "' "
-							+ " WHERE JUNCTION_ID = '" + junctionID + "'");
+					Query updateJunction = session.createNativeQuery("UPDATE JUNCTION SET JUNCTION_NAME = '"
+							+ junctionName + "',CAPACITY = '" + junctionCapacity + "',JUNCTION_NUMBER ='"
+							+ junctionNumber + "' " + " WHERE JUNCTION_ID = '" + junctionID + "'");
 					updateJunction.executeUpdate();
 
 					float JctSeq = 0;
@@ -10580,8 +10594,9 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 							synchronized (this) {
 								// mappingId = "JCT_MAP_" + year + "_" + appConfig.getSeqNbr(77,session);
 								mappingId = "JCT_MAP_" + year + "_"
-										+ Integer.parseInt(session.createNativeQuery("SELECT JUNCTION_MAP FROM SEQ_TABLE")
-												.uniqueResult().toString());
+										+ Integer.parseInt(
+												session.createNativeQuery("SELECT JUNCTION_MAP FROM SEQ_TABLE")
+														.uniqueResult().toString());
 								System.out.println("man id " + junctionID);
 								query = session.createNativeQuery("UPDATE SEQ_TABLE SET JUNCTIN_MAP = JUNCTION_MAP +1");
 								query.executeUpdate();
@@ -10897,15 +10912,15 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 						color = itemParameters.getDictParameter().get(i).get("color");
 						System.out.println(itemParameters.getDictParameter().get(i).get("owner") + " color "
 								+ itemParameters.getDictParameter().get(i).get("color"));
-						List Query = session
-								.createNativeQuery("select * from FIBER_OWNER_COLOR WHERE FIBER_OWNER = '" + owner + "' ")
-								.list();
+						List Query = session.createNativeQuery(
+								"select * from FIBER_OWNER_COLOR WHERE FIBER_OWNER = '" + owner + "' ").list();
 						System.out.println("yes size " + Query.size());
 						// if(update == String.valueOf("0") ) {
 						// if(StringUtils.equalsIgnoreCase(update, "0")) {
 						if (Query.size() > 0) {
 							// System.out.println("yes update is 1 "+update);
-							// saveCableColorQuery = session.createNativeQuery("INSERT INTO FIBER_OWNER_COLOR
+							// saveCableColorQuery = session.createNativeQuery("INSERT INTO
+							// FIBER_OWNER_COLOR
 							// (FIBER_COLOR_OWNER_ID,FIBER_COLOR_OWNER,FIBER_OWNER) VALUES ( '" + id + "' ,
 							// '" + color + "' , '"+ owner+"') ");
 							saveCableColorQuery = session
@@ -11080,17 +11095,15 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 			if (Target == "Manhole" || Target == "Handhole" || Target == "ManHandhole_OutOfZone") {
 				pointDist = haversine(closestLatPoint, closestLongPoint, Double.valueOf((String) objectArray[3]),
 						Double.valueOf((String) objectArray[2]));
-			} 
-			else if (Target == "Nodes") {
-					pointDist = haversine(closestLatPoint, closestLongPoint, Double.valueOf((String) objectArray[6]),
-							Double.valueOf((String) objectArray[5]));				
-			}
-			else {
+			} else if (Target == "Nodes") {
+				pointDist = haversine(closestLatPoint, closestLongPoint, Double.valueOf((String) objectArray[6]),
+						Double.valueOf((String) objectArray[5]));
+			} else {
 				pointDist = haversine(closestLatPoint, closestLongPoint, Double.valueOf((String) objectArray[2]),
 						Double.valueOf((String) objectArray[1]));
 			}
 			// System.out.println("pointDist "+pointDist);
-			if (pointDist < closestDisRange || Target == "ManHandhole_OutOfZone" || Target == "DB_OutOfZone" ) {
+			if (pointDist < closestDisRange || Target == "ManHandhole_OutOfZone" || Target == "DB_OutOfZone") {
 				objectArray = append(objectArray, (Object) pointDist);
 				// System.out.println("pass if statment ");
 				nearstPointsArray.add(objectArray);
@@ -11105,7 +11118,7 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 			double[] listofDistances = new double[nearstPointsArray.size()];
 			for (int j = 0; j < nearstPointsArray.size(); j++) {
 
-				if (Target == "DB_OutOfZone" || Target == "DistribBoard"  || Target=="Nodes") {
+				if (Target == "DB_OutOfZone" || Target == "DistribBoard" || Target == "Nodes") {
 					listofDistances[j] = Double.valueOf(String.valueOf(((Object[]) nearstPointsArray.get(j))[9]));
 				} else {
 					listofDistances[j] = Double.valueOf(String.valueOf(((Object[]) nearstPointsArray.get(j))[7]));
@@ -11191,7 +11204,7 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 		double tempDistance = 0.0;
 
 		for (int x = 0; x < ListOfObjects.size(); x++) {
-			if (Target == "DB_OutOfZone" || Target == "DistribBoard" || Target =="Nodes") {
+			if (Target == "DB_OutOfZone" || Target == "DistribBoard" || Target == "Nodes") {
 				tempDistance = Double.valueOf(String.valueOf(((Object[]) ListOfObjects.get(x))[9]));
 
 			} else {
