@@ -10,7 +10,7 @@ $(function(){
 	
 viewNearestPointEvent();	
 viewNearestMultyPointEvent();									
-searchConnectedButtonEvents();
+autoCompleteSearchHeader();
 
 //$(document).ready(function (){
 
@@ -9389,7 +9389,7 @@ function searchConnectedButtonEvents(hash_Project,hash_manhole,hash_handhole,has
 		 }
 	});
 	 var urlString = "", siteId = "", selectedOp = "",lng = "", lat = "";
-	
+		console.log("ENTEREDDDDD");
 		$("#searchHeaderButton").on('click',function(){
 			 urlString = "", siteId = "", selectedOp = "",lng = "", lat = "";
 		     $("#conStrandId").html("");
@@ -9397,7 +9397,7 @@ function searchConnectedButtonEvents(hash_Project,hash_manhole,hash_handhole,has
 		     $("#conTubeId").html("");
 			 $("#conDBId").html("");
 				
-			//console.log("autoCompleteHeaderSearch "+ document.querySelector('#autoCompleteHeaderSearch').value);
+			console.log("autoCompleteHeaderSearch "+ document.querySelector('#autoCompleteHeaderSearch').value);
 			siteId = document.querySelector('#autoCompleteHeaderSearch').value;
 			lng =$("#headerSearchLong").val();
 			lat	= $("#headerSearchLat").val();
@@ -9421,12 +9421,12 @@ function searchConnectedButtonEvents(hash_Project,hash_manhole,hash_handhole,has
 		     $("#conTubeId").html("");
 			 $("#conDBId").html("");
 			 
-			//console.log("selectConnectedSearch "+document.querySelector('#autoCompleteConnectedSearch').value);
+			console.log("selectConnectedSearch "+document.querySelector('#autoCompleteConnectedSearch').value);
 			siteId = document.querySelector('#autoCompleteConnectedSearch').value;
 			lng =$("#connectedSearchLong").val();
 			lat	= $("#connectedSearchLat").val();
 			selectedOp = document.querySelector('#selectConnectedSearch').value;
-			
+
 			checkedOption = "connected";
 		    urlString += "&siteId="+siteId+"";
 		    urlString += "&selectConnectedSearch="+selectedOp+"";
@@ -9460,6 +9460,8 @@ function openSearchConnected(checkedOption,siteId,selectConnectedSearch,connecte
 	else {
 		$("#getRelatedPointsCon").prop('checked', false);
 	}
+	//console.log("lat:"+ parseFloat(connectedSearchLat)+", lng:"+ parseFloat(connectedSearchLong));
+
  	const myLatLng = { lat: parseFloat(connectedSearchLat), lng: parseFloat(connectedSearchLong) };
  	 var siteArray = [];
  	siteArray.push(arrayStrands);
@@ -11201,9 +11203,9 @@ function autoCompleteSearchHeader(ID,searchTarget,longitude,latitude){
 			}, minLength:0, maxShowItems: 40, scroll:true,
 				select: function(event, ui) {
 					this.value = (ui.item ? ui.item[0]+':'+ui.item[1] : '');
-					$("#"+longitude).val(ui.item[4]);
-					$("#"+latitude).val(ui.item[5]);	
-				//	console.log("long: "+$("#"+longitude).val()+" lat: "+$("#"+latitude).val());
+					$("#"+longitude).val(ui.item[3]);
+					$("#"+latitude).val(ui.item[4]);	
+					//console.log("long: "+$("#"+longitude).val()+" lat: "+$("#"+latitude).val());
   	
 					return false;
 					}
