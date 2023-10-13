@@ -64,6 +64,7 @@ var markerArrayAux=[]; // It is used in create from Map to store the red marker 
 var allManholesID =[]; // It is used in show close points to access the manholes arrays
 var allHandholesID=[];
 var closePointsData=[];// It is used in show close points
+var closePointPopupFlag="notOpened"; // It is used to set the coordinates only in the first time opening the popup
 
 ////
 var TargetFiber= {
@@ -8205,19 +8206,13 @@ singleProject = new ContextMenu({
 							type: "GET",
 							async: false,
 							contentType: "application/json; charset=utf-8",
-							url: getContext()+'/findClient&Site',
+							url: getContext()+'/findClientSite',
 							data: {
 								"selectedFiberContext":selectedFiberContext 
 							},									
 							dataType: "json",
-							success: function (data) {
-					
-								console.log("Clt data " + data.ClientData);
-								console.log("Site data " + data.SiteData);
-								console.log("clt long lat " + data.CltLongLat)
-								console.log("site long lat " + data.SiteLongLat);
-
-								//client	
+							success: function (data) {								
+								$("#ClientSite").append("<tr><td><b>Fiber Path: </b>" +window[""+selectedFiberContext][13] +" / "+selectedFiberContext);
 								$("#ClientSite").append("<table style='width:100%;'><tr>"+"<th style='font-size:18px;width:100%;'><u>Clients</u></th></tr></table>"
 										+"<table style='width:100%;'><tr>"+"<td style='width: 5%'></td>"+"<th style='width: 30%'>ID </th>"
 										+"<th style='width: 35%'>Name </th>"
@@ -8228,7 +8223,7 @@ singleProject = new ContextMenu({
 											+"<td style='width: 35%'> "+data.ClientData[i][1]+"</td>"
 											+"<td style='width: 25%'> "+data.ClientData[i][2]+"</td></tr></table>");
 									var markerNameClt  = data.ClientData[i][0]+":" +data.ClientData[i][1]+":"+data.ClientData[i][2];
-									createSiteCltMarker(data.ClientData[i][0],markerNameClt,data.CltLongLat[i][1],data.CltLongLat[i][0],siteCltSrcMarkers);
+									createSiteCltMarker(data.ClientData[i][0],markerNameClt,data.ClientData[i][4],data.ClientData[i][3],siteCltSrcMarkers);
 									showMarkersCheckedClientSite(data.ClientData[i][0]+'_ClientsChechbox',data.ClientData[i][0]);
 								}
 								
@@ -8245,7 +8240,7 @@ singleProject = new ContextMenu({
 											+"<td style='width: 40%'> "+data.SiteData[i][0]+"</td>"                                         
 											+"<td style='width: 35%'> "+data.SiteData[i][2]+"</td></tr></table>");	
 									var markerNameSite  = data.SiteData[i][0]+":" +data.SiteData[i][1]+":" +data.SiteData[i][2];	
-									createSiteCltMarker(data.SiteData[i][0],markerNameSite,data.SiteLongLat[i][1],data.SiteLongLat[i][0],siteCltSrcMarkers);
+									createSiteCltMarker(data.SiteData[i][0],markerNameSite,data.SiteData[i][4],data.SiteData[i][3],siteCltSrcMarkers);
 							      	showMarkersCheckedClientSite(data.SiteData[i][0]+'_SitesChechbox',data.SiteData[i][0]);
 								}
 						     },

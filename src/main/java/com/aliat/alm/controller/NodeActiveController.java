@@ -1,56 +1,33 @@
 package com.aliat.alm.controller;
 
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.Socket;
-import java.net.URL;
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.transform.Transformers;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import com.aliat.alm.services.ItemParameters;
 import com.aliat.alm.services.LoginServices;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonObject;
 import com.aliat.alm.common.ALMSessions;
 import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.common.Permissions;
 import com.aliat.alm.models.NodeListView;
+//import com.aliat.alm.models.NodePassive;
+
 
 @Controller
 public class NodeActiveController {
@@ -302,22 +279,6 @@ public String NodeFormView(Locale locale, Model model, HttpServletRequest reques
 				    						
 				    						
 
-				    							 query = session.createNativeQuery("SELECT ID, SITE_TYPE, SWAP, SWAP_DATE, STATUS, CIRCLE_ID," +
-					    							    "TO_CHAR(DISCOVERY_DATE, 'YYYY-MM-DD HH24:MI:SS')," +
-					    							    "TO_CHAR(LAST_SHOWN_DATE, 'YYYY-MM-DD HH24:MI:SS')," +
-					    							    "TO_CHAR(LAST_MODIFIED_DATE, 'YYYY-MM-DD HH24:MI:SS')" +
-					    							    " FROM node_passive_2G " +
-					    							    "WHERE Node_id = (SELECT Node_id FROM node_active WHERE NODE_PK = :param1)" +
-					    							    " UNION ALL " +
-					    							    "SELECT ID, SITE_TYPE, SWAP, SWAP_DATE, STATUS, CIRCLE_ID," +
-					    							    "TO_CHAR(DISCOVERY_DATE, 'YYYY-MM-DD HH24:MI:SS')," +
-					    							    "TO_CHAR(LAST_SHOWN_DATE, 'YYYY-MM-DD HH24:MI:SS')," +
-					    							    "TO_CHAR(LAST_MODIFIED_DATE, 'YYYY-MM-DD HH24:MI:SS')" +
-					    							    " FROM node_passive_4G" +
-					    							    " WHERE LTE_NODE_ID = (SELECT Node_id FROM node_active WHERE NODE_PK = :param1)");
-				    							query.setParameter("param1", NodePK);
-				    							model.addAttribute("listPassive", mapper.writeValueAsString(query.list()));
-
 					    				
 		}
 			
@@ -346,6 +307,38 @@ public String NodeFormView(Locale locale, Model model, HttpServletRequest reques
 
 	return "NodeFormView";
 }
+/*
+@SuppressWarnings("unchecked")
+@RequestMapping(value = "/NodeFormViewSave", method = RequestMethod.GET)
 
+public String NodeFormViewSave(Locale locale, Model model, HttpServletRequest request,
+		HttpServletResponse response) {
 
+	if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+		return "redirect:/";
+	}
+	DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+	
+	NodePassive  Nodepassive = new NodePassive();
+	
+	Nodepassive.setNodeId(request.getParameter("nodeId"));
+	Nodepassive.setSiteType(request.getParameter("siteType"));
+	Nodepassive.setSwap(request.getParameter("swap"));
+	Nodepassive.setSwapDate(request.getParameter("swapdate"));
+	Nodepassive.setStatus(request.getParameter("status"));
+	Nodepassive.setCircleId(request.getParameter("circleId"));
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	return "NodeFormView";
 }
+*/
+}
+
