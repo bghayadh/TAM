@@ -9388,39 +9388,54 @@ function searchConnectedButtonEvents(hash_Project,hash_manhole,hash_handhole,has
 			 $(this).attr('value', 'false');
 		 }
 	});
-    
-	$(".searchHeaderButton").on('click',function(){
-		//console.log("searchHeaderButton enterd");
-        var urlString = "", siteId = "", selectedOp = "",lng = "", lat = "";
-      	$("#conStrandId").html("");
-    	$("#conFiberId").html("");
-    	$("#conTubeId").html("");
-		$("#conDBId").html("");
-		
-		if(document.querySelector('#autoCompleteConnectedSearch').value){
-			console.log("selectConnectedSearch "+document.querySelector('#autoCompleteConnectedSearch').value);
-			siteId = document.querySelector('#autoCompleteConnectedSearch').value;
-			lng =$("#connectedSearchLong").val();
-			lat	= $("#connectedSearchLat").val();
-			selectedOp = document.querySelector('#selectConnectedSearch').value;
-		}else{
-			console.log("autoCompleteHeaderSearch "+ document.querySelector('#autoCompleteHeaderSearch').value);
+	 var urlString = "", siteId = "", selectedOp = "",lng = "", lat = "";
+	
+		$("#searchHeaderButton").on('click',function(){
+			 urlString = "", siteId = "", selectedOp = "",lng = "", lat = "";
+		     $("#conStrandId").html("");
+		     $("#conFiberId").html("");
+		     $("#conTubeId").html("");
+			 $("#conDBId").html("");
+				
+			//console.log("autoCompleteHeaderSearch "+ document.querySelector('#autoCompleteHeaderSearch').value);
 			siteId = document.querySelector('#autoCompleteHeaderSearch').value;
 			lng =$("#headerSearchLong").val();
 			lat	= $("#headerSearchLat").val();
 			selectedOp = document.querySelector('#selectHeaderSearch').value;
-		}
+			
+			checkedOption = "connected";
+		    urlString += "&siteId="+siteId+"";
+		    urlString += "&selectConnectedSearch="+selectedOp+"";
+		    urlString += "&connectedSearchLong="+lng+"";
+		    urlString += "&connectedSearchLat="+lat+"";
+		    urlString += "&connectedViewOnMap="+$("#viewOnMap").val()+"";
+			urlString += "&getRelatedPoints="+$("#getRelatedPointsCon").val()+"";	
+			window.location.href = getContext()+"/NetworkPhysicalLayer?Checked="+checkedOption+urlString;
+			});
 		
-		checkedOption = "connected";
-	    urlString += "&siteId="+siteId+"";
-	    urlString += "&selectConnectedSearch="+selectedOp+"";
-	    urlString += "&connectedSearchLong="+lng+"";
-	    urlString += "&connectedSearchLat="+lat+"";
-	    urlString += "&connectedViewOnMap="+$("#viewOnMap").val()+"";
-		urlString += "&getRelatedPoints="+$("#getRelatedPointsCon").val()+"";	
-		window.location.href = getContext()+"/NetworkPhysicalLayer?Checked="+checkedOption+urlString;
-		      	
-    	});
+		
+		$("#connectedSearch").on('click',function(){
+			urlString = "", siteId = "", selectedOp = "",lng = "", lat = "";
+		     $("#conStrandId").html("");
+		     $("#conFiberId").html("");
+		     $("#conTubeId").html("");
+			 $("#conDBId").html("");
+			 
+			//console.log("selectConnectedSearch "+document.querySelector('#autoCompleteConnectedSearch').value);
+			siteId = document.querySelector('#autoCompleteConnectedSearch').value;
+			lng =$("#connectedSearchLong").val();
+			lat	= $("#connectedSearchLat").val();
+			selectedOp = document.querySelector('#selectConnectedSearch').value;
+			
+			checkedOption = "connected";
+		    urlString += "&siteId="+siteId+"";
+		    urlString += "&selectConnectedSearch="+selectedOp+"";
+		    urlString += "&connectedSearchLong="+lng+"";
+		    urlString += "&connectedSearchLat="+lat+"";
+		    urlString += "&connectedViewOnMap="+$("#viewOnMap").val()+"";
+			urlString += "&getRelatedPoints="+$("#getRelatedPointsCon").val()+"";	
+			window.location.href = getContext()+"/NetworkPhysicalLayer?Checked="+checkedOption+urlString;
+			});
 		
 }
 
@@ -10691,7 +10706,7 @@ function appendNearestDBoardTable(result){
 	}
 	
 	function appendConnectedTable(result){
-		console.log("array of sites "+result);
+		//console.log("array of sites "+result);
 		var markupConStrand="";
 		var markupConTube="";
 		var markupConFiber="";

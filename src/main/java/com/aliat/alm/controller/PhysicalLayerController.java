@@ -1326,7 +1326,7 @@ public class PhysicalLayerController {
 
 						// String headerSearchlong = request.getParameter("headerSearchLong");
 						// String headerSearchlat = request.getParameter("headerSearchLat");
-						System.out.println("siteId " + request.getParameter("siteId"));
+						//System.out.println("siteId " + request.getParameter("siteId"));
 						// System.out.println("selectHeaderSearch
 						// "+request.getParameter("selectHeaderSearch"));
 						// fiberList = session.createNativeQuery("SELECT distinct
@@ -1340,24 +1340,48 @@ public class PhysicalLayerController {
 						// A.FIBER_CABLE_ID=D.FIBER_CABLE_ID WHERE A.SOURCE_WARE_ID LIKE '%"+siteId+"%'
 						// OR A.DESTINATION_WARE_ID LIKE '%"+siteId+"%' OR D.AUXILIARY_POINT_ID LIKE
 						// '%"+siteId+"%' ").list();
-						fiberList = session.createNativeQuery(
-								"SELECT distinct A.SOURCE_LNG,A.SOURCE_LAT,A.DESTINATION_LNG,A.DESTINATION_LAT, A.FIBER_CABLE_ID,A.SOURCE_WARE_ID,A.SOURCE_ID,A.SOURCE_NAME,A.DESTINATION_WARE_ID,A.DESTINATION_ID,A.DESTINATION_NAME,(SELECT COUNT(*) FROM FIBER_TUBES B WHERE B.FIBER_CABLE_ID=A.FIBER_CABLE_ID) AS Tube_Count,(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.FIBER_CABLE_ID=A.FIBER_CABLE_ID) AS Strand_Count,A.FIBER_CABLE_NAME,A.PROJECT_ID,A.SOURCE_CITY,A.DESTINATION_CITY,A.NUMBER_OF_TUBES,A.NUMBER_OF_STRANDS,A.LENGTH,A.DRAWING_TYPE,A.FIBER_NETWORK_LEVEL,A.FIBER_OWNER,(select B.FIBER_COLOR_OWNER from FIBER_OWNER_COLOR B WHERE B.FIBER_OWNER=A.FIBER_OWNER) AS FIBER_CABLE_COLOR FROM FIBER_CABLES A "
-										+ "LEFT  JOIN FIBER_AUXILIARY_POINTS D ON A.FIBER_CABLE_ID=D.FIBER_CABLE_ID "
-										+ "LEFT  JOIN FIBER_TUBES B ON A.FIBER_CABLE_ID=B.FIBER_CABLE_ID "
-										+ "LEFT  JOIN FIBER_STRANDS C ON A.FIBER_CABLE_ID=C.FIBER_CABLE_ID "
-										+ "LEFT  JOIN TUBE_AUXILIARY_POINTS E ON A.FIBER_CABLE_ID=E.FIBER_CABLE_ID "
-										+ "LEFT  JOIN STRAND_AUXILIARY_POINTS F ON A.FIBER_CABLE_ID=F.FIBER_CABLE_ID "
-										+ "WHERE A.SOURCE_WARE_ID LIKE '%" + siteId
-										+ "%' OR A.DESTINATION_WARE_ID LIKE '%" + siteId
-										+ "%' OR D.AUXILIARY_POINT_ID LIKE '%" + siteId
-										+ "%' OR B.SOURCE_WARE_ID LIKE '%" + siteId
-										+ "%' OR B.DESTINATION_WARE_ID LIKE '%" + siteId
-										+ "%' OR C.SOURCE_WARE_ID LIKE '%" + siteId
-										+ "%' OR C.DESTINATION_WARE_ID LIKE '%" + siteId
-										+ "%' OR E.AUXILIARY_POINT_ID LIKE '%" + siteId
-										+ "%' OR F.AUXILIARY_POINT_ID LIKE '%" + siteId + "%' ")
-								.list();
-						System.out.println("fiberList " + mapper.writeValueAsString(fiberList));
+						
+						fiberList = session.createSQLQuery(
+								"SELECT distinct SOURCE_LNG,SOURCE_LAT,DESTINATION_LNG,DESTINATION_LAT,FIBER_CABLE_ID,SOURCE_WARE_ID,SOURCE_ID," + 
+								"SOURCE_NAME,DESTINATION_WARE_ID,DESTINATION_ID,DESTINATION_NAME,Tube_Count,Strand_Count,FIBER_CABLE_NAME,PROJECT_ID," + 
+								"SOURCE_CITY,DESTINATION_CITY,NUMBER_OF_TUBES,NUMBER_OF_STRANDS,LENGTH,DRAWING_TYPE,FIBER_NETWORK_LEVEL,FIBER_OWNER," + 
+								"FIBER_CABLE_COLOR FROM(" + 
+			
+								"SELECT distinct A.SOURCE_LNG,A.SOURCE_LAT,A.DESTINATION_LNG,A.DESTINATION_LAT, A.FIBER_CABLE_ID,A.SOURCE_WARE_ID,A.SOURCE_ID," + 
+								"A.SOURCE_NAME,A.DESTINATION_WARE_ID,A.DESTINATION_ID,A.DESTINATION_NAME," + 
+								"(SELECT COUNT(*) FROM FIBER_TUBES B WHERE B.FIBER_CABLE_ID=A.FIBER_CABLE_ID) AS Tube_Count," + 
+								"(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.FIBER_CABLE_ID=A.FIBER_CABLE_ID) AS Strand_Count,A.FIBER_CABLE_NAME,A.PROJECT_ID," + 
+								"A.SOURCE_CITY,A.DESTINATION_CITY,A.NUMBER_OF_TUBES,A.NUMBER_OF_STRANDS,A.LENGTH,A.DRAWING_TYPE,A.FIBER_NETWORK_LEVEL,A.FIBER_OWNER," + 
+								"(select B.FIBER_COLOR_OWNER from FIBER_OWNER_COLOR B WHERE B.FIBER_OWNER=A.FIBER_OWNER) AS FIBER_CABLE_COLOR FROM FIBER_CABLES A " + 
+								"LEFT  JOIN FIBER_AUXILIARY_POINTS D ON A.FIBER_CABLE_ID=D.FIBER_CABLE_ID " + 
+								"LEFT  JOIN FIBER_TUBES B ON A.FIBER_CABLE_ID=B.FIBER_CABLE_ID " + 
+								"LEFT  JOIN FIBER_STRANDS C ON A.FIBER_CABLE_ID=C.FIBER_CABLE_ID " + 
+								"LEFT  JOIN TUBE_AUXILIARY_POINTS E ON A.FIBER_CABLE_ID=E.FIBER_CABLE_ID " + 
+								"LEFT  JOIN STRAND_AUXILIARY_POINTS F ON A.FIBER_CABLE_ID=F.FIBER_CABLE_ID " + 
+								"WHERE A.SOURCE_WARE_ID LIKE '%" + siteId+ "%' OR A.DESTINATION_WARE_ID LIKE '%" + siteId+ "%' OR A.SOURCE_ID LIKE '%" + siteId+ "%' OR A.DESTINATION_ID LIKE '%" + siteId+ "%' " + 
+								"OR D.AUXILIARY_POINT_ID LIKE '%" + siteId+ "%' OR B.SOURCE_WARE_ID LIKE '%" + siteId+ "%' OR B.DESTINATION_WARE_ID LIKE '%" + siteId+ "%' " + 
+								"OR C.SOURCE_WARE_ID LIKE '%" + siteId+ "%' OR C.DESTINATION_WARE_ID LIKE '%" + siteId+ "%' OR E.AUXILIARY_POINT_ID LIKE '%" + siteId+ "%' " + 
+								"OR F.AUXILIARY_POINT_ID LIKE '%" + siteId+ "%' " + 
+								"UNION " + 
+								"SELECT distinct A.SOURCE_LNG,A.SOURCE_LAT,A.DESTINATION_LNG,A.DESTINATION_LAT, A.FIBER_CABLE_ID,A.SOURCE_WARE_ID,A.SOURCE_ID," + 
+								"A.SOURCE_NAME,A.DESTINATION_WARE_ID,A.DESTINATION_ID,A.DESTINATION_NAME," + 
+								"(SELECT COUNT(*) FROM FIBER_TUBES B WHERE B.FIBER_CABLE_ID=A.FIBER_CABLE_ID) AS Tube_Count," + 
+								"(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.FIBER_CABLE_ID=A.FIBER_CABLE_ID) AS Strand_Count,A.FIBER_CABLE_NAME,A.PROJECT_ID," + 
+								"A.SOURCE_CITY,A.DESTINATION_CITY,A.NUMBER_OF_TUBES,A.NUMBER_OF_STRANDS,A.LENGTH,A.DRAWING_TYPE,A.FIBER_NETWORK_LEVEL,A.FIBER_OWNER," + 
+								"(select B.FIBER_COLOR_OWNER from FIBER_OWNER_COLOR B WHERE B.FIBER_OWNER=A.FIBER_OWNER) AS FIBER_CABLE_COLOR FROM FIBER_CABLES A " + 
+								"LEFT  JOIN DISTRIBUTION_BOARD_MAPPING G ON A.FIBER_CABLE_ID=G.FP_FIBER_ID OR A.FIBER_CABLE_ID=G.BP_FIBER_ID " + 
+								"WHERE  G.BP_LOCATION_ID LIKE '%" + siteId+ "%' OR G.FP_LOCATION_ID LIKE '%" + siteId+ "%' " +  
+								"UNION " + 
+								"SELECT distinct A.SOURCE_LNG,A.SOURCE_LAT,A.DESTINATION_LNG,A.DESTINATION_LAT, A.FIBER_CABLE_ID,A.SOURCE_WARE_ID,A.SOURCE_ID," + 
+								"A.SOURCE_NAME,A.DESTINATION_WARE_ID,A.DESTINATION_ID,A.DESTINATION_NAME," + 
+								"(SELECT COUNT(*) FROM FIBER_TUBES B WHERE B.FIBER_CABLE_ID=A.FIBER_CABLE_ID) AS Tube_Count," + 
+								"(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.FIBER_CABLE_ID=A.FIBER_CABLE_ID) AS Strand_Count,A.FIBER_CABLE_NAME,A.PROJECT_ID," + 
+								"A.SOURCE_CITY,A.DESTINATION_CITY,A.NUMBER_OF_TUBES,A.NUMBER_OF_STRANDS,A.LENGTH,A.DRAWING_TYPE,A.FIBER_NETWORK_LEVEL,A.FIBER_OWNER," + 
+								"(select B.FIBER_COLOR_OWNER from FIBER_OWNER_COLOR B WHERE B.FIBER_OWNER=A.FIBER_OWNER) AS FIBER_CABLE_COLOR FROM FIBER_CABLES A " + 
+								"LEFT  JOIN DISTRIBUTION_BOARD D  ON A.SOURCE_ID = D.DB_ID OR A.DESTINATION_ID = D.DB_ID " + 
+								"WHERE D.WAREHOUSE LIKE '%" + siteId+ "%' " + 
+								")" ) .list();
+						//System.out.println("fiberList " + mapper.writeValueAsString(fiberList));
 
 						// fiberAuxiliary_Data = session.createNativeQuery("SELECT
 						// B.LONGITUDE,B.LATITUDE,B.DISTANCE_FROM_SOURCE,B.WARE_ID,B.AUXILIARY_POINT_ID,B.AUXILIARY_POINT_NAME,B.FIBER_CABLE_ID,B.AUXILIARY_ID
@@ -1412,7 +1436,7 @@ public class PhysicalLayerController {
 										+ "%' OR b.DESTINATION_WARE_ID LIKE '%" + siteId
 										+ "%' OR a.AUXILIARY_POINT_ID LIKE '%" + siteId + "%' ")
 								.list();
-						System.out.println("fiberStrands " + mapper.writeValueAsString(fiberStrands));
+						//System.out.println("fiberStrands " + mapper.writeValueAsString(fiberStrands));
 						Query strandsAuxiliariesQuery = session.createNativeQuery(
 								"SELECT DISTINCT c.STRAND_ID,c.LONGITUDE,c.LATITUDE,c.WARE_ID,c.AUXILIARY_POINT_ID,c.AUXILIARY_POINT_NAME,c.DISTANCE_FROM_SOURCE,c.SEQ_SORTING,c.AUXILIARY_ID,c.DRIVING_DISTANCE, c.GEO_DISTANCE FROM STRAND_AUXILIARY_POINTS c,FIBER_STRANDS b,FIBER_CABLES a WHERE a.FIBER_CABLE_ID=b.FIBER_CABLE_ID and b.STRAND_ID=c.STRAND_ID AND c.STRAND_ID IN (:param1) ORDER BY c.SEQ_SORTING ASC ");
 						strandsAuxiliariesQuery.setParameterList("param1",
@@ -1426,7 +1450,7 @@ public class PhysicalLayerController {
 										+ "%' OR B.FP_LOCATION_ID LIKE '%" + siteId + "%' ")
 								.list();
 						int distribBoardListSize = distribBoardList.size();
-						System.out.println("distribBoardList 1 is " + mapper.writeValueAsString(distribBoardList));
+						//System.out.println("distribBoardList 1 is " + mapper.writeValueAsString(distribBoardList));
 						List<Object[]> nearstPoints = new ArrayList<Object[]>();
 						// nearstPoints.addAll(manholeList);
 						// nearstPoints.addAll(handholeList);
@@ -1541,7 +1565,7 @@ public class PhysicalLayerController {
 						model.addAttribute("distribBoardListSize", distribBoardListSize);
 						model.addAttribute("getRelatedPoints", showPointsType);
 
-						System.out.println("distribBoardList 2 is " + mapper.writeValueAsString(distribBoardList));
+						//System.out.println("distribBoardList 2 is " + mapper.writeValueAsString(distribBoardList));
 					} else {
 
 						filterFlag = 0;
