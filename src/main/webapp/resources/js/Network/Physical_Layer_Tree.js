@@ -64,6 +64,7 @@ var markerArrayAux=[]; // It is used in create from Map to store the red marker 
 var allManholesID =[]; // It is used in show close points to access the manholes arrays
 var allHandholesID=[];
 var closePointsData=[];// It is used in show close points
+var closePointPopupFlag="notOpened"; // It is used to set the coordinates only in the first time opening the popup
 
 ////
 var TargetFiber= {

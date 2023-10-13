@@ -398,9 +398,18 @@ $("#selectConnectedSearch").on('change',function(){
 
 
 	$("#showClosePoints").on('click',function(){
-		
 		window["showClosePointsLong"]=getCoords().split(" ")[1];
-		window["showClosePointsLat"]=getCoords().split(" ")[0];
+		window["showClosePointsLat"]=getCoords().split(" ")[0];		
+		if(closePointPopupFlag=="notOpened") {
+			$("#closePtsLong").val(window["showClosePointsLong"]);
+			$("#closePtsLat").val(window["showClosePointsLat"]);
+			closePointPopupFlag="";
+		}
+		$("#showClosePointsPopup").modal('show');
+		
+	 });
+	
+	$("#captureNewCoordinate").on('click',function(){
 		
 		$("#searchCloseManhTBody").empty();
 		$("#searchCloseHandTBody").empty();
@@ -411,11 +420,27 @@ $("#selectConnectedSearch").on('change',function(){
 		$("#searchCloseDbTBody").html("");
 		$("#searchCloseNodeTBody").html("");
 		$("#closePtsDistanceRange").val("");
-		$("#showClosePointsPopup").modal('show');
+		$("#totalCloseDB").val("");
+		$("#totalCloseNode").val("");
+		$("#totalCloseManhole").val("");
+		$("#totalCloseHandhole").val("");
+		document.getElementById("findCloseNodePts").innerHTML = "";
+		document.getElementById("findCloseManholePts").innerHTML = "";
+		document.getElementById("findCloseHandholePts").innerHTML = "";
+		document.getElementById("findCloseDbPts").innerHTML = "";
+		
+		// active the first tab
+		$('#showClosePointsPopup ul.nav-tabs li a').removeClass('active');
+		$('#showClosePointsPopup ul.nav-tabs li:first-child a').addClass('active');
+		// active the first form
+		$('#showClosePointsPopup .tab-pane').removeClass('active');
+		$('#showClosePointsPopup .tab-pane:first-child').addClass('active');	
+		
 		$("#closePtsLong").val(window["showClosePointsLong"]);
 		$("#closePtsLat").val(window["showClosePointsLat"]);
- });
-		
+
+	 });
+
 	 $("#searchClosePoints").on('click',function(){
 		
 		var closePtLong = $("#closePtsLong").val();
@@ -499,9 +524,9 @@ $("#selectConnectedSearch").on('change',function(){
 				appendNodeClosePoints(closePointsData);
 				$("#totalCloseNode").val(closePointsData.length);
 				closePointsData=[];
-				
 								
 			}
+
 		});	
 
 	$("#getCoordinatePoint").on('click',function(){
@@ -20338,12 +20363,19 @@ function appendManholesClosePoints(manholesClosePtArray) {
 		}
 		else {
 			for(var i =0 ; i<manholesClosePtArray.length;i++){
-				markupManh +="<tr style='height: 30px;'><td ><input type='checkbox' class='closeManholeBOQ' id=closePoint_"+manholesClosePtArray[i][0]+" ></td><td  >"+manholesClosePtArray[i][0]+"</td><td name ='closeManholeId' style='min-width:250px;'>"+manholesClosePtArray[i][1]+"</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+manholesClosePtArray[i][2]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+manholesClosePtArray[i][3]+"' readonly></input ></td><td style='width:100px;'>"+(manholesClosePtArray[i][7])+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistanceClosePoint(this)'>Get Distance</button> </td></tr>"
+				markupManh +="<tr style='height: 30px;'><td ><input type='checkbox' class='closeManholePoint' id=closePoint_"+manholesClosePtArray[i][0]+" ></td><td  >"+manholesClosePtArray[i][0]+"</td><td name ='closeManholeId' style='min-width:250px;'>"+manholesClosePtArray[i][1]+"</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+manholesClosePtArray[i][2]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+manholesClosePtArray[i][3]+"' readonly></input ></td><td style='width:100px;'>"+(manholesClosePtArray[i][7])+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistanceClosePoint(this)'>Get Distance</button> </td></tr>"
 			}
 		}						  
 		$("#searchCloseManhTBody").append(markupManh);
 	    drivingDistance("findCloseManhole");
 		makeAllSortable();
+		
+		$('.closeManholePoint').click(function(){
+			var ManId = $(this).attr('id').split("closePoint_")[1];
+			if ($(this).is(':checked')){
+				treeSelectForClosePoints(ManId,"Manhole");
+			}
+		});
 		
 }
 function appendHandholesClosePoints(handholesClosePtArray) {
@@ -20362,7 +20394,13 @@ function appendHandholesClosePoints(handholesClosePtArray) {
 		$("#searchCloseHandTBody").append(markupHandhole);
 	    drivingDistance("findCloseHandhole");
 		makeAllSortable();
-
+		
+		$('.closeHandholeBOQ').click(function(){
+			var handId = $(this).attr('id').split("closePoint_")[1];
+			if ($(this).is(':checked')){
+				treeSelectForClosePoints(handId,"Handhole");
+			}
+		});
 }
 function appendDbClosePoints(dbClosePtArray) {
 
@@ -20380,6 +20418,14 @@ function appendDbClosePoints(dbClosePtArray) {
 		$("#searchCloseDbTBody").append(markupDB);
 	    drivingDistance("findCloseDB");
 		makeAllSortable();
+		
+		
+		$('.closeDbBOQ').click(function(){			
+			var DBId = $(this).attr('id').split("closePoint_")[1];
+			if ($(this).is(':checked')){
+				treeSelectForClosePoints(DBId,"DistributionBoard");
+			}
+		});
 
 	
 }
@@ -20400,5 +20446,68 @@ function appendNodeClosePoints(nodeClosePtArray) {
 	    drivingDistance("findCloseNode");
 		makeAllSortable();
 		
+		$('.closeNodeBOQ').click(function(){
+			var nodeId = $(this).attr('id').split("closePoint_")[1];
+			if ($(this).is(':checked')){
+				treeSelectForClosePoints(nodeId,"NodeActive");
+			}			
+		});
 
+
+
+}
+
+function treeSelectForClosePoints(idSelected,markerType) {
+	
+			if(markerType=="DistributionBoard" || markerType=="NodeActive"){
+					
+				 nodeFileId=$("#"+idSelected).parent().parent().attr('id').split("__")[1];
+ 			     var childrenInitial=$("#initial_ul_"+nodeFileId+"").find(' > ul > li');
+		   		 var children =  $("#"+markerType+"_f_"+nodeFileId+"").find(' > ul > li');			
+			 	 var networkLevelFolder =  $("#"+markerType+"_f_"+nodeFileId+"").find(' > ul > li >ul >li');
+					
+				childrenInitial.show('fast');
+				if(!children.is(":visible")){
+					children.show();
+				}				
+				networkLevelFolder.show(); 
+
+				$("#"+markerType+"_f_"+nodeFileId+" > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
+				$("#"+markerType+"_f_"+nodeFileId+"").find(' > ul > li > .Parentfolder >svg ').removeClass('fa fa-folder').addClass('fa-folder-open');				
+
+				var elementScrollTo = document.getElementById(""+idSelected);				
+				elementScrollTo.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});		
+			}
+			else {
+									
+				nodeFileId = $("#"+idSelected).parents().eq(3).attr("id").split("initial_ul_")[1];
+				var projectInitial=$("#initial_ul_Projects").find('>ul > #'+nodeFileId);
+				var projectRel=$("#"+nodeFileId+"").find('>ul > #initial_ul_'+nodeFileId);
+				var childrenInitial=$("#initial_ul_"+nodeFileId+"").find(' > ul > li');
+				var children = $("#"+markerType+"_f_"+nodeFileId+"").find(' > ul > li');				
+				
+				childrenInitial.show('fast');
+				if(!children.is(":visible")){
+					children.show();
+				}
+				offset=$("#"+idSelected).offset().top;
+				projectOffset=$("#initial_ul_"+nodeFileId).offset().top;
+				offsetTotal=(offset-projectOffset);
+				$("#network_tree").animate({ scrollTop: offsetTotal}, "slow");
+			}
+			
+			$("#initial_ul_"+nodeFileId+" > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
+			$("#"+nodeFileId+" > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');						
+			$("#"+markerType+"_f_"+nodeFileId+" > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
+
+			//Remove the selection of previous selected element before selecting the new one 
+			if(IdSelectedTemp!=""){
+				$("#"+IdSelectedTemp+" > .TreeSpan").removeClass("selected-span");
+				$("#"+IdSelectedTemp+" > .TreeSpan").css("background","");
+			}
+			// Select the checked element in tree
+			$("#"+idSelected+" > .TreeSpan").addClass("selected-span");
+			$("#"+idSelected+" > .TreeSpan").css("background-color", "#97b9cc");
+			IdSelectedTemp=idSelected;
+				
 }
