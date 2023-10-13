@@ -2250,10 +2250,9 @@ public class PhysicalLayerController {
 	@ResponseBody
 	public Map<String, Object> findClientSite(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) {
+		
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		String fiberID = request.getParameter("selectedFiberContext").toString();
-		// List<Object[]> SiteData=null;
-		System.out.println("the fiber id is " + fiberID);
+		String fiberID = request.getParameter("selectedFiberContext").toString();		
 		session = almsessions.getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
@@ -2308,26 +2307,15 @@ public class PhysicalLayerController {
 						+ " (select destination_id from fiber_cables where fiber_cable_id = '" + fiberID
 						+ "' and destination_id LIKE 'DB%')))").list();
 
-				System.out.println("the site ids are:  " + siteIds);
-				System.out.println("the client ids are: " + clientIds);
-
 				query = session.createNativeQuery(
 						"SELECT DISTINCT WARE_ID,SITE_ID,WARE_NAME,LONGITUDE,LATITUDE FROM WAREHOUSE WHERE WARE_ID IN (:param1)");
 				query.setParameter("param1", siteIds);
-				List<Object[]> sitesData = query.list();
+				rtn.put("SiteData", query.list());
 
 				query = session.createNativeQuery(
 						"SELECT DISTINCT CUSTOMER_ID,CUSTOMER_NAME,MOBILE_NUMBER,LONGITUDE,LATITUDE FROM CUSTOMER WHERE CUSTOMER_ID IN (:param1)");
 				query.setParameter("param1", clientIds);
-				List<Object[]> clientsData = query.list();
-
-				// System.out.println("the site data is: " +
-				// mapper.writeValueAsString(sitesData));
-				// System.out.println("the client data is: " +
-				// mapper.writeValueAsString(clientsData));
-
-				rtn.put("ClientData", clientsData);
-				rtn.put("SiteData", sitesData);
+				rtn.put("ClientData", query.list());
 
 			} catch (Exception e) {
 				sw = new StringWriter();
