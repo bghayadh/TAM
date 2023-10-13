@@ -2242,8 +2242,7 @@ public class PhysicalLayerController {
 		return rtn;
 	}
 
-	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/findClient&Site", method = RequestMethod.GET)
+	@RequestMapping(value = "/findClientSite", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> findClientSite(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -2253,654 +2252,108 @@ public class PhysicalLayerController {
 		// List<Object[]> SiteData=null;
 		System.out.println("the fiber id is " + fiberID);
 		session = almsessions.getSession();
-		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
-			try {
-				/*
-				 * ArrayList<Object> ClientData = new ArrayList<>(); List<Object[]>
-				 * StrandsID=session.
-				 * createNativeQuery("SELECT STRAND_ID FROM FIBER_STRANDS WHERE FIBER_CABLE_ID='" +
-				 * fiberID+ "' ").list();
-				 * System.out.println("the strands from the controller is  " +
-				 * mapper.writeValueAsString(StrandsID)); int i=0; int j=0; int k=0; int e=0;
-				 * for(i=0; i< StrandsID.size(); i++) { System.out.println("std ids i  " +
-				 * StrandsID.get(i)); query=session.
-				 * createNativeQuery("SELECT DB_ID FROM DISTRIBUTION_BOARD_MAPPING WHERE BP_STATUS= 'Active' AND FP_STATUS= 'Active' AND BP_STRAND_ID = '"
-				 * + StrandsID.get(i)+"' OR FP_STRAND_ID= '"+ StrandsID.get(i)+"'");
-				 * System.out.println("the db is " +query.list()); List Clt =query.list(); if
-				 * (!Clt.isEmpty()) { for (j=0; j< Clt.size(); j++) {
-				 * ClientData.add(Clt.get(j)); } } }
-				 */
-				int i = 0;
-				int j = 0;
-				int k = 0;
-				int e = 0;
-				int f = 0;
+if (session != null && session.isOpen()) {
+	tx = session.beginTransaction();
+try {
+String CableName = session
+		.createNativeQuery(
+				"SELECT DISTINCT FIBER_CABLE_NAME FROM FIBER_CABLES WHERE FIBER_CABLE_ID= '" + fiberID + "'")
+		.uniqueResult().toString();
+System.out.println("the cable name is " + CableName);
 
-				String CableName = session
-						.createNativeQuery(
-								"SELECT DISTINCT FIBER_CABLE_NAME FROM FIBER_CABLES WHERE FIBER_CABLE_ID= '" + fiberID + "'")
-						.uniqueResult().toString();
-				System.out.println("the cable name is " + CableName);
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
+List<String> siteIds= session.createNativeQuery("select distinct site_id from ("
+	+" select distinct fp_location as site_id from distribution_board_mapping "
+	+" where (fp_location_type = 'Site' or bp_location_type = 'Site') and (fp_fiber_id = '" + fiberID + "' or bp_fiber_id = '" + fiberID + "')"
+	+" union"
+	+" select distinct bp_location as site_id from distribution_board_mapping "
+	+" where (fp_location_type = 'Site' or bp_location_type = 'Site') and (fp_fiber_id = '" + fiberID + "' or bp_fiber_id = '" + fiberID + "')"
+	+" union"
+	+" (select distinct source_ware_id as site_id from fiber_cables where (source_ware_id is not null or source_ware_id !='null') and fiber_cable_id = '" + fiberID + "')"
+	+" union"
+	+" (select distinct destination_ware_id as site_id from fiber_cables where (destination_ware_id is not null or destination_ware_id !='null') and fiber_cable_id = '" + fiberID + "')"
+	+" union"
+	+" (select distinct source_ware_id as site_id from fiber_tubes where (source_ware_id is not null or source_ware_id !='null') and fiber_cable_id ='" + fiberID + "')"
+	+" union"
+	+" (select distinct destination_ware_id as site_id from fiber_tubes where (destination_ware_id is not null or destination_ware_id !='null') and fiber_cable_id = '" + fiberID + "')"
+	+" union"
+	+" (select distinct source_ware_id as site_id from fiber_strands where (source_ware_id is not null or source_ware_id !='null') and fiber_cable_id = '" + fiberID + "')"
+	+" union"
+	+" (select distinct destination_ware_id as site_id from fiber_strands where (destination_ware_id is not null or destination_ware_id !='null') and fiber_cable_id = '" + fiberID + "')"
+	+" union"
+	+" select distinct warehouse as site_id from distribution_board where ((site is not null or site !='null') and db_id in (" 
+	+" (select source_id from fiber_cables where fiber_cable_id ='" + fiberID + "' and source_id LIKE 'DB%') "
+	+" union"  
+	+" (select destination_id from fiber_cables where fiber_cable_id = '" + fiberID + "' and destination_id LIKE 'DB%')))) where site_id !='null' and site_id is not null")
+.list();
 
-				List<Object> ClientData = new ArrayList<>();
-				List<Object> SiteData = new ArrayList<>();
-				List<Object> CltLongLat = new ArrayList<>();
-				List<Object> SiteLongLat = new ArrayList<>();
+List<String> clientIds= session.createNativeQuery("select distinct customer_id from ("
+	+" select distinct fp_location_id as customer_id from distribution_board_mapping "
+	+" where (fp_location_type = 'Customer' or bp_location_type = 'Customer') and (fp_fiber_id = '" + fiberID + "' or bp_fiber_id = '" + fiberID + "') and fp_location_id LIKE 'CLT%' "
+	+" union"
+	+" select distinct bp_location_id as customer_id from distribution_board_mapping "
+	+" where (fp_location_type = 'Customer' or bp_location_type = 'Customer') and (fp_fiber_id = '" + fiberID + "' or bp_fiber_id = '" + fiberID + "') and bp_location_id LIKE 'CLT%' "
+	+" union"
+	+" (select distinct source_id as customer_id from fiber_cables where (source_ware_id is null or source_ware_id ='null') and fiber_cable_id = '" + fiberID + "' and source_id LIKE 'CLT%')"
+	+" union"
+	+" (select distinct destination_id as customer_id from fiber_cables where (destination_ware_id is null or destination_ware_id ='null') and fiber_cable_id = '" + fiberID + "' and destination_id LIKE 'CLT%')"
+	+" union"
+	+" (select distinct source_id as customer_id from fiber_tubes where (source_ware_id is null or source_ware_id ='null') and fiber_cable_id ='" + fiberID + "' and source_id LIKE 'CLT%')"
+	+" union"
+	+" (select distinct destination_id as customer_id from fiber_tubes where (destination_ware_id is null or destination_ware_id ='null') and fiber_cable_id = '" + fiberID + "' and destination_id LIKE 'CLT%')"
+	+" union"
+	+" (select distinct source_id as customer_id from fiber_strands where (source_ware_id is null or source_ware_id ='null') and fiber_cable_id = '" + fiberID + "' and source_id LIKE 'CLT%')"
+	+" union"
+	+" (select distinct destination_id as customer_id from fiber_strands where (destination_ware_id is null or destination_ware_id='null') and fiber_cable_id = '" + fiberID + "' and destination_id LIKE 'CLT%')"
+	+" union"
+	+" select distinct site as customer_id from distribution_board where (site LIKE 'CLT%') and db_id in (" 
+	+" (select source_id from fiber_cables where fiber_cable_id ='" + fiberID + "' and source_id LIKE 'DB%') "
+	+" union"  
+	+" (select destination_id from fiber_cables where fiber_cable_id = '" + fiberID + "' and destination_id LIKE 'DB%')))")
+.list();
 
-				ArrayList<Object[]> BackLocations = new ArrayList<>();
-				ArrayList<Object[]> FrontLocations = new ArrayList<>();
-				List<Object[]> DbIdBack = session
-						.createNativeQuery("SELECT DISTINCT DB_PORT_ID FROM DISTRIBUTION_BOARD_MAPPING WHERE BP_FIBER_ID= '"
-								+ fiberID + "' AND BP_STATUS= 'Active'")
-						.list();
-				//System.out.println("the db ports back are  " + mapper.writeValueAsString(DbIdBack));
-				List<Object[]> DbIdFront = session
-						.createNativeQuery("SELECT DISTINCT DB_PORT_ID FROM DISTRIBUTION_BOARD_MAPPING WHERE FP_FIBER_ID='"
-								+ fiberID + "' AND FP_STATUS= 'Active'")
-						.list();
-			//	System.out.println("the db ports front are  " + mapper.writeValueAsString(DbIdFront));
+	 System.out.println("the site ids are:  " + siteIds);
+	 System.out.println("the client ids are: " + clientIds);
 
-				ArrayList<Object> FinalResultClt = new ArrayList<>();
-				ArrayList<Object> FinalResultSite = new ArrayList<>();
-				ArrayList<Object> FinalCltLongLat = new ArrayList<>();
-				ArrayList<Object> FinalSiteLongLat = new ArrayList<>();
+	 query = session.createNativeQuery(
+			 "SELECT DISTINCT WARE_ID,SITE_ID,WARE_NAME,LONGITUDE,LATITUDE FROM WAREHOUSE WHERE WARE_ID IN (:param1)");
+	 query.setParameter("param1", siteIds);
+	 List<Object[]> sitesData= query.list();
 
-			//	 System.out.println("===> final site data BEFORE <===" + FinalResultSite);
-				 //System.out.println("===> final site data BEFORE <===" + FinalResultClt);
+		 
+	 query = session.createNativeQuery(
+			 "SELECT DISTINCT CUSTOMER_ID,CUSTOMER_NAME,MOBILE_NUMBER,LONGITUDE,LATITUDE FROM CUSTOMER WHERE CUSTOMER_ID IN (:param1)");
+	 query.setParameter("param1", clientIds);
+	 List<Object[]> clientsData= query.list();
 
-				String BackLocId = "";
-				for (i = 0; i < DbIdBack.size(); i++) {
-					// System.out.println("back ids are " + DbIdBack.get(i));
-					query = session.createNativeQuery(
-							"SELECT DISTINCT BP_LOCATION_TYPE,BP_LOCATION, BP_LOCATION_NAME,BP_LOCATION_ID FROM DISTRIBUTION_BOARD_MAPPING WHERE DB_PORT_ID='"
-									+ DbIdBack.get(i) + "'");
-					BackLocations.addAll(query.list());
-					//if(BackLocations.get(0)[0].toString().equalsIgnoreCase("Site")) {
-					//BackLocId = BackLocations.get(0)[3].toString();
-					//}
-				//	 System.out.println("the backs are===> " +mapper.writeValueAsString(BackLocations));
-				System.out.println("BackLocId ===> " + BackLocations.size());
-					//for (j = 0; j < BackLocations.size(); j++) {
-						
-				//		System.out.println("for on backs");
-				//		 System.out.println("back loactions are " + mapper.writeValueAsString(BackLocations.get(j)));
-						if (BackLocations.get(i)[0].equals("Site")){
-							BackLocId = BackLocations.get(i)[3].toString();
-							boolean valueExists = false;
-							for (Object row : FinalResultSite) {
-								ArrayList<Object> innerList = (ArrayList<Object>) FinalResultSite.get(f);
-								Object secondColumn = innerList.get(1);
-								// System.out.println("BACK SITE " + BackLocations.get(j)[3]);
-								if (secondColumn.equals(BackLocations.get(i)[3])) {
-								//	System.out.println("exist");
-									valueExists = true;
-									break;
-								}
-								//System.out.println("not exist");
-							}
-							if (!valueExists) {
-							//	System.out.println("not exist if");
-								List<Object[]> SiteIdBack = session.createNativeQuery(
-										"SELECT DISTINCT SITE_ID,WARE_NAME,LONGITUDE,LATITUDE FROM WAREHOUSE WHERE WARE_ID= '"
-												+ BackLocations.get(i)[1] + "' ")
-										.list();
-							//	 System.out.println("the site id back is " + mapper.writeValueAsString(SiteIdBack));
-							//	 System.out.println("BackLocations.get(j)[1] is " + mapper.writeValueAsString(BackLocations.get(j)[1]));
-							//	 System.out.println("SiteIdBack.get(0)[0] is " + mapper.writeValueAsString(SiteIdBack.get(0)[0]));
-							//	 System.out.println("SiteIdBack.get(0)[1] is " + mapper.writeValueAsString(SiteIdBack.get(0)[1]));
-								 
-								SiteData.add(BackLocations.get(i)[1]);
-								SiteData.add(SiteIdBack.get(0)[0]);
-								SiteData.add(SiteIdBack.get(0)[1]);
-								FinalResultSite.add(SiteData);
-								SiteLongLat.add(SiteIdBack.get(0)[2].toString());
-								SiteLongLat.add(SiteIdBack.get(0)[3].toString());
-								FinalSiteLongLat.add(SiteLongLat);
-							}
-							
-						}
-						
-						// System.out.println("===> final site data AFTER BACK SITE <===" +
-						//		 SiteData);
-						
-							SiteData = new ArrayList<>();
-							SiteLongLat = new ArrayList<>();
-						// System.out.println("===> final site data AFTER BACK SITE <===" +
-						// FinalResultClt);
-						if (BackLocations.get(i)[0].equals("Customer")) {
-							BackLocId = BackLocations.get(i)[3].toString();
-							boolean valueExists = false;
-							for (Object row : FinalResultClt) {
-								ArrayList<Object> innerList = (ArrayList<Object>) FinalResultClt.get(f);
-								Object secondColumn = innerList.get(1);
-								// System.out.println("BACK CLIENT " + BackLocations.get(j)[3]);
-								if (secondColumn.equals(BackLocations.get(i)[3])) {
-									valueExists = true;
-									break;
-								}
-							}
-							if (!valueExists) {
-								List<Object[]> MobileNbrBack = session.createNativeQuery(
-										"SELECT DISTINCT MOBILE_NUMBER,LONGITUDE,LATITUDE FROM CUSTOMER WHERE CUSTOMER_ID= '"
-												+ BackLocId + "' ")
-										.list();
-								// System.out.println("the mobile nbr back is " +
-								// mapper.writeValueAsString(MobileNbrBack));
-								/*ClientData.add(BackLocations.get(i)[1]);
-								ClientData.add(MobileNbrBack.get(0)[0]);
-								FinalResultClt.add(ClientData);
-								CltLongLat.add(MobileNbrBack.get(0)[1].toString());
-								CltLongLat.add(MobileNbrBack.get(0)[2].toString());
-								FinalCltLongLat.add(CltLongLat);
-								*/
-								
-								ClientData.add(BackLocId);
-								ClientData.add(BackLocations.get(i)[2]);
-								ClientData.add(MobileNbrBack.get(0)[0]);
-								FinalResultClt.add(ClientData);
-								CltLongLat.add(MobileNbrBack.get(0)[2].toString());
-								CltLongLat.add(MobileNbrBack.get(0)[2].toString());
-								FinalCltLongLat.add(CltLongLat);
-								
-								
-							}
-						}
-						ClientData = new ArrayList<>();
-						CltLongLat = new ArrayList<>();
-					//}
-				}
-				// System.out.println("===> final site data AFTER BACK CLIENT <===" +
-				// FinalResultSite);
-				// System.out.println("===> final site data AFTER BACK CLIENT <===" +
-				// FinalResultClt);
-			//	System.out.println("===> final site data AFTER BACK  <===" + FinalResultSite);
-				ClientData = new ArrayList<>();
-				SiteData = new ArrayList<>();
-				CltLongLat = new ArrayList<>();
-				SiteLongLat = new ArrayList<>();
-				String FrontLocId = "";
-				for (k = 0; k < DbIdFront.size(); k++) {
-					// System.out.println("front ids are " + DbIdFront.get(k));
-					query = session.createNativeQuery(
-							"SELECT DISTINCT FP_LOCATION_TYPE,FP_LOCATION, FP_LOCATION_NAME,FP_LOCATION_ID FROM DISTRIBUTION_BOARD_MAPPING WHERE DB_PORT_ID='"
-									+ DbIdFront.get(k) + "'");
-					FrontLocations.addAll(query.list());
-					//FrontLocId = FrontLocations.get(0)[3].toString();
-					// System.out.println("the fronts are "
-					// +mapper.writeValueAsString(FrontLocations));
+	 
+	 System.out.println("the site data is:  " + mapper.writeValueAsString(sitesData));
+	 System.out.println("the client data is: " + mapper.writeValueAsString(clientsData));
+	 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-					//for (e = 0; e < FrontLocations.size(); e++) {
-						
-						if (FrontLocations.get(k)[0].equals("Site")) {
-							FrontLocId = FrontLocations.get(k)[3].toString();
-							boolean valueExists = false;
-							for (Object row : FinalResultSite) {
-								ArrayList<Object> innerList = (ArrayList<Object>) FinalResultSite.get(f);
-								Object secondColumn = innerList.get(1);
-								// System.out.println("FRONT SITE " + FrontLocations.get(e)[3]);
-								if (secondColumn.equals(FrontLocations.get(k)[3])) {
-									valueExists = true;
-								//	System.out.println("existtttt");
-									break;
-								}
-							}
-							if (!valueExists) {
-							//	System.out.println("dont existtttt");
-								List<Object[]> SiteIdFront = session.createNativeQuery(
-										"SELECT DISTINCT SITE_ID,WARE_NAME,LONGITUDE,LATITUDE FROM WAREHOUSE WHERE WARE_ID= '"
-												+ FrontLocations.get(k)[1] + "' ")
-										.list();
-							//	System.out.println("the site id front is " + mapper.writeValueAsString(SiteIdFront));
-							//	 System.out.println("FrontLocations.get(e)[1] is " + mapper.writeValueAsString(FrontLocations.get(e)[1]));
-							//	 System.out.println("SiteIdFront.get(0)[0] is " + mapper.writeValueAsString(SiteIdFront.get(0)[0]));
-							//	 System.out.println("SiteIdFront.get(0)[1] is " + mapper.writeValueAsString(SiteIdFront.get(0)[1]));
-								 
-								SiteData.add(FrontLocations.get(k)[1]);
-								SiteData.add(SiteIdFront.get(0)[0]);
-								SiteData.add(SiteIdFront.get(0)[1]);
-								FinalResultSite.add(SiteData);
-								SiteLongLat.add(SiteIdFront.get(0)[2].toString());
-								SiteLongLat.add(SiteIdFront.get(0)[3].toString());
-								FinalSiteLongLat.add(SiteLongLat);
-							}
-						}
-					//	System.out.println("===> final site data AFTER FRONT SITE <===" + SiteData);							
-						SiteData = new ArrayList<>();
-						SiteLongLat = new ArrayList<>();
-					//	 System.out.println("===> final site data AFTER FRONT SITE <===" +
-					//	 FinalResultClt);
+	rtn.put("CableName", CableName);
+	rtn.put("ClientData", clientsData);
+	rtn.put("SiteData",  sitesData);
+	
+	} catch (Exception e) {
+		sw = new StringWriter();
+		e.printStackTrace(new PrintWriter(sw));
+		exceptionAsString = sw.toString();
+		logger.info("Error in retreiving  Data from database \n" + exceptionAsString);
+		rtn.put("ClientData", null);
+		rtn.put("SiteData", null);
 
-						if (FrontLocations.get(k)[0].equals("Customer")) {
-							FrontLocId = FrontLocations.get(k)[3].toString();
-							boolean valueExists = false;
-							for (Object row : FinalResultClt) {
-								ArrayList<Object> innerList = (ArrayList<Object>) FinalResultClt.get(f);
-								Object secondColumn = innerList.get(1);
-								// System.out.println("FRONT CLIENT " + FrontLocations.get(e)[3]);
-								if (secondColumn.equals(FrontLocations.get(k)[3])) {
-									valueExists = true;
-									// System.out.println("EXIST");
-									break;
-								}
-							}
-							if (!valueExists) {
-								System.out.println("FrontLocId "+FrontLocId);
-								List<Object[]> MobileNbrFront = session.createNativeQuery(
-										"SELECT DISTINCT MOBILE_NUMBER,LONGITUDE,LATITUDE FROM CUSTOMER WHERE CUSTOMER_ID= '"
-												+ FrontLocId + "' ")
-										.list();
-								// System.out.println("the mobile nbr front is " +
-								// mapper.writeValueAsString(MobileNbrFront));
-								ClientData.add(FrontLocId);
-								ClientData.add(FrontLocations.get(k)[2]);
-								ClientData.add(MobileNbrFront.get(0)[0]);
-								FinalResultClt.add(ClientData);
-								CltLongLat.add(MobileNbrFront.get(0)[2].toString());
-								CltLongLat.add(MobileNbrFront.get(0)[2].toString());
-								FinalCltLongLat.add(CltLongLat);
-							}
-						}
-						ClientData = new ArrayList<>();						
-						CltLongLat = new ArrayList<>();
-					//}
-				}
-				// System.out.println("===> final site data AFTER FRONT CLIENT <===" +
-				// FinalResultSite);
-				// System.out.println("===> final site data AFTER FRONT CLIENT <===" +
-				// FinalResultClt);
-				System.out.println("===> final site data AFTER FRONT <===" + FinalResultSite);
-				ClientData = new ArrayList<>();
-				SiteData = new ArrayList<>();
-				CltLongLat = new ArrayList<>();
-				SiteLongLat = new ArrayList<>();
-				ArrayList<Object[]> Src = new ArrayList<>();
-				String SrcId = "";
-				String SrcWareId = "";
-				query = session.createNativeQuery(
-						"SELECT DISTINCT SOURCE_ID,SOURCE_WARE_ID,SOURCE_NAME,SOURCE_LNG,SOURCE_LAT FROM FIBER_CABLES WHERE FIBER_CABLE_ID= '"
-								+ fiberID + "' ");
-				Src.addAll(query.list());
-				SrcId = Src.get(0)[0].toString();
-				SrcWareId = Src.get(0)[1].toString();
-				// System.out.println("the Source id is " + SrcId);
-				// System.out.println("the Source all are " + mapper.writeValueAsString(Src));
-
-				if ((Src.get(0)[0]).toString().startsWith("CUST_")) {
-					boolean valueExists = false;
-					for (Object row : FinalResultClt) {
-						ArrayList<Object> innerList = (ArrayList<Object>) FinalResultClt.get(f);
-						Object secondColumn = innerList.get(1);
-						// System.out.println("SRC SITE " +Src.get(0)[0]);
-						if (secondColumn.equals(Src.get(0)[0])) {
-							valueExists = true;
-							break;
-						}
-					}
-					if (!valueExists) {
-						String MobileNbrSrc = session
-								.createNativeQuery("SELECT DISTINCT MOBILE_NUMBER FROM CUSTOMER WHERE CUSTOMER_ID= '" + SrcId + "' ")
-								.uniqueResult().toString();
-						// System.out.println("the mobile nbr source is " +
-						// mapper.writeValueAsString(MobileNbrSrc));
-						ClientData.add(Src.get(0)[0]);
-						ClientData.add(Src.get(0)[2]);
-						ClientData.add(MobileNbrSrc);
-						FinalResultClt.add(ClientData);
-
-						CltLongLat.add(Src.get(0)[3].toString());
-						CltLongLat.add(Src.get(0)[4].toString());
-						FinalCltLongLat.add(CltLongLat);
-					}
-				}
-				ClientData = new ArrayList<>();
-				CltLongLat = new ArrayList<>();
-				// System.out.println("===> final site data AFTER SRC CLIENT <===" +
-				// FinalResultSite);
-				// System.out.println("===> final site data AFTER SRC CLIENT <===" +
-				// FinalResultClt);
-
-				if ((Src.get(0)[1]).toString().startsWith("WARE_")) {
-					boolean valueExists = false;
-					for (Object row : FinalResultSite) {
-						ArrayList<Object> innerList = (ArrayList<Object>) FinalResultSite.get(f);
-						Object secondColumn = innerList.get(1);
-						// System.out.println("SRC DEST " +Src.get(0)[0]);
-						if (secondColumn.equals(Src.get(0)[0])) {
-							valueExists = true;
-							break;
-						}
-					}
-					if (!valueExists) {
-						List<Object[]> SiteIdSrc = session
-								.createNativeQuery(
-										"SELECT DISTINCT SITE_ID,WARE_NAME FROM WAREHOUSE WHERE WARE_ID= '" + SrcWareId + "' ")
-								.list();
-						// System.out.println("the site id source client is " +
-						// mapper.writeValueAsString(SiteIdSrc));
-						SiteData.add(Src.get(0)[1]);
-						SiteData.add(SiteIdSrc.get(0)[0]);
-						SiteData.add(SiteIdSrc.get(0)[1]);
-						FinalResultSite.add(SiteData);
-
-						SiteLongLat.add(Src.get(0)[3].toString());
-						SiteLongLat.add(Src.get(0)[4].toString());
-						FinalSiteLongLat.add(SiteLongLat);
-					}
-				}
-				SiteData = new ArrayList<>();
-				SiteLongLat = new ArrayList<>();
-				// System.out.println("===> final site data AFTER SRC SITE <===" +
-				// FinalResultSite);
-				// System.out.println("===> final site data AFTER SRC SITE <===" +
-				// FinalResultClt);
-
-				if ((Src.get(0)[0]).toString().startsWith("DB_")) {
-					List<Object[]> SiteSrcDB = session.createNativeQuery(
-							"SELECT DISTINCT SITE,WAREHOUSE,SITE_NAME FROM DISTRIBUTION_BOARD WHERE DB_ID= '" + SrcId + "' ")
-							.list();
-					// System.out.println("the site DB source is " +
-					// mapper.writeValueAsString(SiteSrcDB));
-					if (SiteSrcDB.get(0)[0] != null && SiteSrcDB.get(0)[1] != null) {
-						SiteSrcDB.get(0)[0].toString();
-						SiteSrcDB.get(0)[1].toString();
-						if ((SiteSrcDB.get(0)[1]).toString().startsWith("WARE_")) {
-							boolean valueExists = false;
-							for (Object row : FinalResultSite) {
-								ArrayList<Object> innerList = (ArrayList<Object>) FinalResultSite.get(f);
-								Object secondColumn = innerList.get(1);
-								// System.out.println("SRC DB SITE " +Src.get(0)[0]);
-								if (secondColumn.equals(Src.get(0)[0])) {
-									valueExists = true;
-									break;
-								}
-							}
-							if (!valueExists) {
-								String WareSrcDB = session.createNativeQuery(
-										"SELECT DISTINCT WARE_NAME FROM WAREHOUSE WHERE WARE_ID= '" + SiteSrcDB.get(0)[1] + "' ")
-										.uniqueResult().toString();
-								// System.out.println("the ware DB source is " +
-								// mapper.writeValueAsString(WareSrcDB));
-								SiteData.add(SiteSrcDB.get(0)[1]);
-								SiteData.add(SiteSrcDB.get(0)[0]);
-								SiteData.add(WareSrcDB);
-								FinalResultSite.add(SiteData);
-
-								SiteLongLat.add(Src.get(0)[3].toString());
-								SiteLongLat.add(Src.get(0)[4].toString());
-								FinalSiteLongLat.add(SiteLongLat);
-							}
-						}
-						SiteData = new ArrayList<>();
-						SiteLongLat = new ArrayList<>();
-					//	 System.out.println("===> final site data AFTER SRC DB SITE <===" +
-					//	 FinalResultSite);
-					//	 System.out.println("===> final site data AFTER SRC DB SITE <===" +
-					//	 FinalResultClt);
-
-						if ((SiteSrcDB.get(0)[0]).toString().startsWith("CUST_")) {
-							boolean valueExists = false;
-							for (Object row : FinalResultClt) {
-								ArrayList<Object> innerList = (ArrayList<Object>) FinalResultClt.get(f);
-								Object secondColumn = innerList.get(1);
-								// System.out.println("SRC DB CLIENT " +SiteSrcDB.get(0)[0]);
-								if (secondColumn.equals(SiteSrcDB.get(0)[0])) {
-									valueExists = true;
-									break;
-								}
-							}
-							if (!valueExists) {
-								ClientData.add(SiteSrcDB.get(0)[0]);
-								ClientData.add(SiteSrcDB.get(0)[2]);
-								ClientData.add(SiteSrcDB.get(0)[1]);
-								FinalResultClt.add(ClientData);
-
-								CltLongLat.add(Src.get(0)[3].toString());
-								CltLongLat.add(Src.get(0)[4].toString());
-								FinalCltLongLat.add(CltLongLat);
-							}
-						}
-						ClientData = new ArrayList<>();
-						CltLongLat = new ArrayList<>();
-					}
-				}
-			//	 System.out.println("===> final site data AFTER fb src <===" +
-			//	 FinalResultSite);
-				// System.out.println("===> final site data AFTER SRC DB CLIENT <===" +
-				// FinalResultClt);
-				ClientData = new ArrayList<>();
-				SiteData = new ArrayList<>();
-				CltLongLat = new ArrayList<>();
-				SiteLongLat = new ArrayList<>();
-				ArrayList<Object[]> Dest = new ArrayList<>();
-				String DestId = "";
-				String DestWareId = "";
-				query = session.createNativeQuery(
-						"SELECT DISTINCT DESTINATION_ID,DESTINATION_WARE_ID,DESTINATION_NAME,DESTINATION_LNG,DESTINATION_LAT FROM FIBER_CABLES WHERE FIBER_CABLE_ID= '"
-								+ fiberID + "' ");
-				Dest.addAll(query.list());
-				DestWareId = Dest.get(0)[1].toString();
-				DestId = Dest.get(0)[0].toString();
-				/*
-				 * System.out.println("the Dest id is " + DestId);
-				 * System.out.println("the dest  are  " + mapper.writeValueAsString(Dest));
-				 * System.out.println("the dest  0 are  "
-				 * +mapper.writeValueAsString(Dest.get(0)[0]));
-				 * System.out.println("the dest  1 are  "
-				 * +mapper.writeValueAsString(Dest.get(0)[1]));
-				 * System.out.println("the dest  2 are  "
-				 * +mapper.writeValueAsString(Dest.get(0)[2]));
-				 */
-				if ((Dest.get(0)[0]).toString().startsWith("CUST_")) {
-					boolean valueExists = false;
-					for (Object row : FinalResultClt) {
-						ArrayList<Object> innerList = (ArrayList<Object>) FinalResultClt.get(f);
-						Object secondColumn = innerList.get(1);
-						// System.out.println("DEST CLIENT " + Dest.get(0)[0]);
-						if (secondColumn.equals(Dest.get(0)[0])) {
-							valueExists = true;
-							break;
-						}
-					}
-					if (!valueExists) {
-						String MobileNbrDest = session
-								.createNativeQuery("SELECT DISTINCT MOBILE_NUMBER FROM CUSTOMER WHERE CUSTOMER_ID= '" + DestId + "' ")
-								.uniqueResult().toString();
-						// System.out.println("the mobile nbr dest is " +
-						// mapper.writeValueAsString(MobileNbrDest));
-						ClientData.add(Dest.get(0)[0]);
-						ClientData.add(Dest.get(0)[2]);
-						ClientData.add(MobileNbrDest);
-						FinalResultClt.add(ClientData);
-
-						CltLongLat.add(Dest.get(0)[3].toString());
-						CltLongLat.add(Dest.get(0)[4].toString());
-						FinalCltLongLat.add(CltLongLat);
-					}
-				}
-				ClientData = new ArrayList<>();
-				CltLongLat = new ArrayList<>();
-				// System.out.println("===> final site data AFTER DEST CLIENT <===" +
-				// FinalResultSite);
-				// System.out.println("===> final site data AFTER DEST CLIENT <===" +
-				// FinalResultClt);
-
-				if ((Dest.get(0)[1]).toString().startsWith("WARE_")) {
-					boolean valueExists = false;
-					for (Object row : FinalResultSite) {
-						ArrayList<Object> innerList = (ArrayList<Object>) FinalResultSite.get(f);
-						Object secondColumn = innerList.get(1);
-						// System.out.println("DEST SITE " + Dest.get(0)[0]);
-						if (secondColumn.equals(Dest.get(0)[0])) {
-							valueExists = true;
-							break;
-						}
-					}
-					if (!valueExists) {
-						List<Object[]> SiteIdDest = session
-								.createNativeQuery(
-										"SELECT DISTINCT SITE_ID,WARE_NAME FROM WAREHOUSE WHERE WARE_ID= '" + DestWareId + "' ")
-								.list();
-						// System.out.println("the site id dest is " +
-						// mapper.writeValueAsString(SiteIdDest));
-						SiteData.add(Dest.get(0)[1]);
-						// System.out.println("SiteIdDest.get(0)[0] " +
-						// mapper.writeValueAsString(SiteIdDest.get(0)[0]));
-						SiteData.add(SiteIdDest.get(0)[0]);
-						SiteData.add(SiteIdDest.get(0)[1]);
-						FinalResultSite.add(SiteData);
-
-						SiteLongLat.add(Dest.get(0)[3].toString());
-						SiteLongLat.add(Dest.get(0)[4].toString());
-						FinalSiteLongLat.add(SiteLongLat);
-					}
-				}
-				SiteData = new ArrayList<>();
-				SiteLongLat = new ArrayList<>();
-			//	 System.out.println("===> final site data AFTER DEST SITE <===" +
-			//	 FinalResultSite);
-			//	 System.out.println("===> final site data AFTER DEST SITE <===" +
-			//	 FinalResultClt);
-
-				if ((Dest.get(0)[0]).toString().startsWith("DB_")) {
-					// System.out.println("Site data dest db ===> " +SiteData);
-					List<Object[]> SiteDestDB = session.createNativeQuery(
-							"SELECT DISTINCT SITE,WAREHOUSE,SITE_NAME FROM DISTRIBUTION_BOARD WHERE DB_ID= '" + DestId + "' ")
-							.list();
-					// System.out.println("the site DB dest is " +
-					// mapper.writeValueAsString(SiteDestDB));
-					if (SiteDestDB.get(0)[0] != null && SiteDestDB.get(0)[1] != null) {
-						SiteDestDB.get(0)[0].toString();
-						SiteDestDB.get(0)[1].toString();
-						if ((SiteDestDB.get(0)[1]).toString().startsWith("WARE_")) {
-							boolean valueExists = false;
-							for (Object row : FinalResultSite) {
-								ArrayList<Object> innerList = (ArrayList<Object>) FinalResultSite.get(f);
-								Object secondColumn = innerList.get(1);
-								// System.out.println("DEST DB SITE " + Dest.get(0)[0]);
-								if (secondColumn.equals(Dest.get(0)[0])) {
-									valueExists = true;
-									break;
-								}
-							}
-							if (!valueExists) {
-								String WareDestDB = session
-										.createNativeQuery("SELECT DISTINCT WARE_NAME FROM WAREHOUSE WHERE WARE_ID= '"
-												+ SiteDestDB.get(0)[1] + "' ")
-										.uniqueResult().toString();
-								// System.out.println("the ware DB dest is " +
-								// mapper.writeValueAsString(WareDestDB));
-								SiteData.add(SiteDestDB.get(0)[1]);
-								SiteData.add(SiteDestDB.get(0)[0]);
-								SiteData.add(WareDestDB);
-								FinalResultSite.add(SiteData);
-
-								SiteLongLat.add(Dest.get(0)[3].toString());
-								SiteLongLat.add(Dest.get(0)[4].toString());
-								FinalSiteLongLat.add(SiteLongLat);
-							}
-						}
-						SiteData = new ArrayList<>();
-						SiteLongLat = new ArrayList<>();
-					//	 System.out.println("===> final site data AFTER DEST DB SITE <===" +
-					//	 FinalResultSite);
-					//	 System.out.println("===> final site data AFTER DEST DB SITE <===" +
-					//	 FinalResultClt);
-
-						if ((SiteDestDB.get(0)[0]).toString().startsWith("CUST_")) {
-							boolean valueExists = false;
-							for (Object row : FinalResultClt) {
-								ArrayList<Object> innerList = (ArrayList<Object>) FinalResultClt.get(f);
-								Object secondColumn = innerList.get(1);
-								// System.out.println("DEST DB CLIENT " + Dest.get(0)[0]);
-								if (secondColumn.equals(Dest.get(0)[0])) {
-									valueExists = true;
-									break;
-								}
-							}
-							if (!valueExists) {
-								ClientData.add(SiteDestDB.get(0)[0]);
-								ClientData.add(SiteDestDB.get(0)[2]);
-								ClientData.add(SiteDestDB.get(0)[1]);
-								FinalResultClt.add(ClientData);
-
-								CltLongLat.add(Dest.get(0)[3].toString());
-								CltLongLat.add(Dest.get(0)[4].toString());
-								FinalCltLongLat.add(CltLongLat);
-							}
-						}
-						ClientData = new ArrayList<>();
-						CltLongLat = new ArrayList<>();
-					}
-				}
-			//	 System.out.println("===> final site data AFTER fb dest <===" +
-			//	 FinalResultSite);
-				// System.out.println("===> final site data AFTER DEST DB CLIENT <===" +
-				// FinalResultClt);
-			
-					List<Object> uniqueObjectsSites = new ArrayList<>();
-					// Iterate over the original list
-					for (Object obj : FinalResultSite) {
-					    // Check if the object is already in the unique list
-					    if (!uniqueObjectsSites.contains(obj)) {
-					        uniqueObjectsSites.add(obj);
-					    }
-					}
-					System.out.println("===> final site data AFTER removing duplicates <===" + uniqueObjectsSites);
-
-					List<Object> uniqueObjectsSitesLongLat = new ArrayList<>();
-					for (Object obj : FinalSiteLongLat) {
-					    if (!uniqueObjectsSitesLongLat.contains(obj)) {
-					    	uniqueObjectsSitesLongLat.add(obj);
-					    }
-					}
-					System.out.println("===> final site LONG LAT data AFTER removing duplicates <===" + uniqueObjectsSitesLongLat);
-
-				
-					List<Object> uniqueObjectsClients = new ArrayList<>();
-					for (Object obj : FinalResultClt) {
-					    if (!uniqueObjectsClients.contains(obj)) {
-					        uniqueObjectsClients.add(obj);
-					    }
-					}
-					System.out.println("===> final site data AFTER removing duplicates <===" + uniqueObjectsClients);
-
-
-					List<Object> uniqueObjectsClientsLongLat = new ArrayList<>();
-					for (Object obj : FinalCltLongLat) {
-					    if (!uniqueObjectsClientsLongLat.contains(obj)) {
-					    	uniqueObjectsClientsLongLat.add(obj);
-					    }
-					}
-					System.out.println("===> final site LONG LAT data AFTER removing duplicates <===" + uniqueObjectsClientsLongLat);				
-					
-					System.out.println("CLIENT DATA  " + uniqueObjectsClients);
-					System.out.println("SITE DATA  " + uniqueObjectsSites);
-					System.out.println("CLIENT LONGLAT DATA  " + FinalCltLongLat);
-					System.out.println("SITE LONGLAT DATA  " + uniqueObjectsSitesLongLat);
-
-					rtn.put("CableName", CableName);
-					rtn.put("ClientData", uniqueObjectsClients);
-					rtn.put("SiteData", uniqueObjectsSites);
-					rtn.put("CltLongLat", uniqueObjectsClientsLongLat);
-					rtn.put("SiteLongLat", uniqueObjectsSitesLongLat);
-			} catch (Exception e) {
-				sw = new StringWriter();
-				e.printStackTrace(new PrintWriter(sw));
-				exceptionAsString = sw.toString();
-				logger.info("Error in retreiving  Data from database \n" + exceptionAsString);
-				rtn.put("ClientData", null);
-				rtn.put("SiteData", null);
-
-			} finally {
-				if (session != null && session.isOpen()) {
-					tx.commit();
-					session.close();
-				}
+		} finally {
+			if (session != null && session.isOpen()) {
+				tx.commit();
+				session.close();
 			}
 		}
-		return rtn;
 	}
+	return rtn;
+}
+
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/findFiberDetails", method = RequestMethod.GET)
