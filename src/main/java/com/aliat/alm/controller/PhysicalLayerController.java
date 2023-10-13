@@ -2246,7 +2246,6 @@ public class PhysicalLayerController {
 	@ResponseBody
 	public Map<String, Object> findClientSite(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) {
-		ObjectMapper mapper = new ObjectMapper();
 		Map<String, Object> rtn = new LinkedHashMap<>();
 		String fiberID = request.getParameter("selectedFiberContext").toString();
 		// List<Object[]> SiteData=null;
@@ -2255,13 +2254,6 @@ public class PhysicalLayerController {
 if (session != null && session.isOpen()) {
 	tx = session.beginTransaction();
 try {
-String CableName = session
-		.createNativeQuery(
-				"SELECT DISTINCT FIBER_CABLE_NAME FROM FIBER_CABLES WHERE FIBER_CABLE_ID= '" + fiberID + "'")
-		.uniqueResult().toString();
-System.out.println("the cable name is " + CableName);
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 List<String> siteIds= session.createNativeQuery("select distinct site_id from ("
 	+" select distinct fp_location as site_id from distribution_board_mapping "
 	+" where (fp_location_type = 'Site' or bp_location_type = 'Site') and (fp_fiber_id = '" + fiberID + "' or bp_fiber_id = '" + fiberID + "')"
@@ -2281,10 +2273,10 @@ List<String> siteIds= session.createNativeQuery("select distinct site_id from ("
 	+" union"
 	+" (select distinct destination_ware_id as site_id from fiber_strands where (destination_ware_id is not null or destination_ware_id !='null') and fiber_cable_id = '" + fiberID + "')"
 	+" union"
-	+" select distinct warehouse as site_id from distribution_board where ((site is not null or site !='null') and db_id in (" 
+	+" select distinct warehouse as site_id from distribution_board where (site LIKE 'WARE&') and db_id in (" 
 	+" (select source_id from fiber_cables where fiber_cable_id ='" + fiberID + "' and source_id LIKE 'DB%') "
 	+" union"  
-	+" (select destination_id from fiber_cables where fiber_cable_id = '" + fiberID + "' and destination_id LIKE 'DB%')))) where site_id !='null' and site_id is not null")
+	+" (select destination_id from fiber_cables where fiber_cable_id = '" + fiberID + "' and destination_id LIKE 'DB%'))) where site_id !='null' and site_id is not null")
 .list();
 
 List<String> clientIds= session.createNativeQuery("select distinct customer_id from ("
@@ -2306,7 +2298,7 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 	+" union"
 	+" (select distinct destination_id as customer_id from fiber_strands where (destination_ware_id is null or destination_ware_id='null') and fiber_cable_id = '" + fiberID + "' and destination_id LIKE 'CLT%')"
 	+" union"
-	+" select distinct site as customer_id from distribution_board where (site LIKE 'CLT%') and db_id in (" 
+	+" select distinct site as customer_id from distribution_board where (site LIKE 'CUST%') and db_id in (" 
 	+" (select source_id from fiber_cables where fiber_cable_id ='" + fiberID + "' and source_id LIKE 'DB%') "
 	+" union"  
 	+" (select destination_id from fiber_cables where fiber_cable_id = '" + fiberID + "' and destination_id LIKE 'DB%')))")
@@ -2327,12 +2319,10 @@ List<String> clientIds= session.createNativeQuery("select distinct customer_id f
 	 List<Object[]> clientsData= query.list();
 
 	 
-	 System.out.println("the site data is:  " + mapper.writeValueAsString(sitesData));
-	 System.out.println("the client data is: " + mapper.writeValueAsString(clientsData));
+	// System.out.println("the site data is:  " + mapper.writeValueAsString(sitesData));
+	// System.out.println("the client data is: " + mapper.writeValueAsString(clientsData));
 	 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	rtn.put("CableName", CableName);
 	rtn.put("ClientData", clientsData);
 	rtn.put("SiteData",  sitesData);
 	
