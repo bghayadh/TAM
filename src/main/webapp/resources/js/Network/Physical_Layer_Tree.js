@@ -8211,14 +8211,8 @@ singleProject = new ContextMenu({
 								"selectedFiberContext":selectedFiberContext 
 							},									
 							dataType: "json",
-							success: function (data) {
-					
-								console.log("Clt data " + data.ClientData);
-								console.log("Site data " + data.SiteData);
-								//console.log("clt long lat " + data.CltLongLat)
-								//console.log("site long lat " + data.SiteLongLat);
-
-								//client	
+							success: function (data) {								
+								$("#ClientSite").append("<tr><td><b>Fiber Path: </b>" +window[""+selectedFiberContext][13] +" / "+selectedFiberContext);
 								$("#ClientSite").append("<table style='width:100%;'><tr>"+"<th style='font-size:18px;width:100%;'><u>Clients</u></th></tr></table>"
 										+"<table style='width:100%;'><tr>"+"<td style='width: 5%'></td>"+"<th style='width: 30%'>ID </th>"
 										+"<th style='width: 35%'>Name </th>"
