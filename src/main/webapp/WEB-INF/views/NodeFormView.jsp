@@ -220,7 +220,7 @@
                         <div class="form-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text" style="width: 170px;">Node
-                                </span> <input type="text" id="wareID" readonly value="${node_pk}"
+                                </span> <input type="text" id="nodepk" readonly value="${node_pk}"
                                     class="form-control text-input" />
                             </div>
                         </div>
@@ -324,6 +324,12 @@
                                     data-toggle="tab" href="#custom-tabs-one-home" role="tab"
                                     aria-controls="custom-tabs-one-home" aria-selected="true"
                                     style="color: gold;">INFORMATION</a></li>
+                                    
+                                           <li class="nav-item"><a class="nav-link" id="custom-tabs-one-cell-tab" data-toggle="tab"
+                                    href="#custom-tabs-one-pass" role="tab" aria-controls="custom-tabs-one-pass"
+                                    aria-selected="false" style="color: gold;">PASSIVE</a></li>
+                                      
+                                    
                             <li class="nav-item"><a class="nav-link" id="custom-tabs-one-cell-tab" data-toggle="tab"
                                     href="#custom-tabs-one-cell" role="tab" aria-controls="custom-tabs-one-cell"
                                     aria-selected="false" style="color: gold;">CELLS</a></li>
@@ -410,7 +416,7 @@
                                     <div class="form-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">Node Id</span> <input type="text"
-                                                id="warepname" value="${node_id}" class="form-control text-input"
+                                                id="nodeId" value="${node_id}" class="form-control text-input"
                                                 readonly />
                                         </div>
                                     </div>
@@ -501,7 +507,115 @@
 
 
                     </div>
-                    <div style="height:20px;"></div>
+                    
+                    
+                      <div class="tab-pane fade" id="custom-tabs-one-pass" role="tabpanel"
+                        aria-labelledby="custom-tabs-one-pass-tab">
+                        
+                     <div style="height:10px;"></div>
+                      <table width="90%" border="0" cellpadding="0" cellspacing="0" id="warehouseInfo_tbl">
+                            <tr>
+                                <td width="45%" valign="top" class="left_col">
+                                    <div class="form-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Site Type</span> <input type="text"
+                                                id="siteType"  class="form-control text-input"
+                                                 />
+                                        </div>
+                                    </div>
+                                </td>
+                                <td width="10%" valign="top" class="left_col"></td>
+
+                                <td width="45%" valign="top" class="left_col">
+
+                                    <div class="form-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Swap</span> <input type="text"
+                                                id="swap"  class="form-control text-input"
+                                                 />
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="45%" valign="top" class="left_col">
+                                    <div class="form-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Swap Date</span> <input type="text"
+                                                id="swapdate"  class="form-control text-input"
+                                                 />
+                                        </div>
+                                    </div>
+                                </td>
+                                <td width="10%" valign="top" class="left_col"></td>
+
+                                <td width="45%" valign="top" class="left_col">
+
+                                    <div class="form-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Status</span> <input type="text"
+                                                id="status"  class="form-control text-input"
+                                                 />
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="45%" valign="top" class="left_col">
+                                    <div class="form-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Circle Id</span> <input type="text"
+                                                id="circleId"  class="form-control text-input"
+                                                 />
+                                        </div>
+                                    </div>
+                                </td>
+                                <td width="10%" valign="top" class="left_col"></td>
+
+                                <td width="45%" valign="top" class="left_col">
+
+                                    <div class="form-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Discovery Date</span> <input type="text"
+                                                id="discoveryDate"  class="form-control text-input"
+                                                 />
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="45%" valign="top" class="left_col">
+                                    <div class="form-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Last Shown Date</span> <input type="text"
+                                                id="shownDate"  class="form-control text-input"
+                                                 />
+                                        </div>
+                                    </div>
+                                </td>
+                                <td width="10%" valign="top" class="left_col"></td>
+
+                                <td width="45%" valign="top" class="left_col">
+
+                                    <div class="form-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Last Modified Date</span> <input type="text"
+                                                id="modifiedDate"  class="form-control text-input"
+                                                />
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                     
+                     
+                     
+                     
+                     
+                        
+                      </div>
+                        
+                   
                     <div class="tab-pane fade" id="custom-tabs-one-cell" role="tabpanel"
                         aria-labelledby="custom-tabs-one-cell-tab">
                         <caption>2G CELLS</caption>
@@ -1225,8 +1339,7 @@
 
 
             BoqArray = ${ listNodeHost };
-            console.log(BoqArray);
-
+            
             for (i = 0; i < BoqArray.length; i++) {
 
                 c = "<tr>" +
@@ -1258,8 +1371,7 @@
 
 
             BoqArray = ${ listAntinna };
-            console.log(BoqArray);
-
+            
             for (i = 0; i < BoqArray.length; i++) {
 
                 c = "<tr>" +
@@ -1293,8 +1405,7 @@
             }
 
             BoqArray = ${ listRack };
-            console.log("rack list ",BoqArray);
-
+            
             for (i = 0; i < BoqArray.length; i++) {
 
                 c = "<tr>" +
@@ -1322,8 +1433,7 @@
 
             
             BoqArray = ${ listNodeSubrack };
-            console.log(BoqArray);
-
+          
             for (i = 0; i < BoqArray.length; i++) {
 
                 c = "<tr>" +
@@ -1437,8 +1547,7 @@
             }
             
             BoqArray = ${ listPort };
-            console.log(BoqArray);
-
+          
             for (i = 0; i < BoqArray.length; i++) {
 
                 c = "<tr>" +
@@ -1471,6 +1580,8 @@
 
             }
 
+
+     
         }
 
 
