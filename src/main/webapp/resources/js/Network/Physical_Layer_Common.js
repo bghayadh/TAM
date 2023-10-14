@@ -9,8 +9,9 @@ var allTreePoints=[];
 $(function(){
 	
 viewNearestPointEvent();	
-viewNearestMultyPointEvent();									
-autoCompleteSearchHeader();
+viewNearestMultyPointEvent();
+searchConnectedButtonEvents();
+//autoCompleteSearchHeader();
 
 //$(document).ready(function (){
 
