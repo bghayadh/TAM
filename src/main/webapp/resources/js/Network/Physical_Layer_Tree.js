@@ -3416,7 +3416,7 @@ singleNodeActive = new ContextMenu({
 	'theme': 'default',
 	
 'items': [
-    {'icon': 'edit', 'name': 'Edit or View Details ', action: () => {
+    {'icon': 'edit', 'name': 'View Node Details', action: () => {
          $("#nodesModal").modal('show');
          $("#nodesModal").find("input").val('').end();
 		 $("#nodesHeader").text("Nodes: "+selectedNodeAcvtiveContext);
@@ -13266,113 +13266,6 @@ function sortingByLineOfSite(srcLng,srcLat,dstLng,dstLat,tableID,auxiliaryLat,au
 	  }
 	
 }
-
-
-/* nodes Save*/
-$("#saveNode").click(function () {
-            nodePk= document.getElementById("node_pk").value;
-			UniqNodeId = document.getElementById("uniqNodeId").value;
-			NodeId = document.getElementById("nodeId").value;
-			nodeName = document.getElementById("nodeName").value;
-			nodeType = document.getElementById("nodeType").value;
-			nodeSource = document.getElementById("nodeSource").value;
-			nodeModel = document.getElementById("nodeModel").value;
-			nodeDomin = document.getElementById("nodeDomin").value;
-			siteId_node = document.getElementById("siteId_node").value;
-			wareId_node = document.getElementById("wareId_node").value;
-			nodeLong = document.getElementById("nodeLong").value;
-			nodeLat = document.getElementById("nodeLat").value;
-			createData_node = document.getElementById("createData_node").value;
-			updateData_node = document.getElementById("updateData_node").value;
-			
-					$.ajax({
-					type: "POST",
-					contentType: "application/json; charset=utf-8",
-					url: getContext()+"/entrNodeSave",
-					async:false,
-					data: {
-					     "nodePk": nodePk,
-						 "UniqNodeId": UniqNodeId,
-						 "NodeId": NodeId,
-						 "nodeName": nodeName,
-						 "nodeType": nodeType,
-						 "nodeSource": nodeSource,
-						 "nodeModel": nodeModel,
-						 "nodeDomin": nodeDomin,
-						 "siteId_node": siteId_node,
-						 "wareId_node": wareId_node,
-						// "nodeLong": nodeLong,
-						// "nodeLat": nodeLat,
-						 "createData_node": createData_node,
-						 "updateData_node": updateData_node,					    
-					},				
-					dataType: "json",
-					success : function(data) {
-						if(data!=null){
-						
-						var nodePkName = data.nodePk +":"+nodeName;
-						window[""+data.nodePk]=[];
-						window[""+data.nodePk]=[data.nodePk,nodeName,nodePkName,nodeDomin,siteId_node,nodeLong,nodeLat,NodeId,nodeType];
-						
-					
-						$("#"+data.nodePk).contextmenu(function(){				
-						menuName = singleNodeActive;
-						selectedNodeAcvtiveContext=$(this).attr('id');
-						selectedNodeActiveName=$(this).text();			
-					    openContext(selectedNodeAcvtiveContext,selectedNodeActiveName,singleNodeActive,event);
-						});	
-						MouseHoveringSpans("#" +data.nodePk+ " .TreeSpan");	
-						tree_prop_selection("#"+data.nodePk+" .TreeSpan");
-					if(nodeType=='MSAN'){
-						create_Marker_Click(data.nodePk,nodeName,"","",markersNodeActive,markerClusterMSANNodes,"","");
-						markerClusterMSANNodes.addMarker(markersNodeActive[""+data.nodePk]);
-						NodeActiveCheckFilter(data.nodePk,markerClusterMSANNodes);
-					  }
-					 else if(nodeType=='DWDM'){
-						create_Marker_Click(data.nodePk,nodeName,"","",markersNodeActive,markerClusterDWDMNodes,"","");
-						markerClusterDWDMNodes.addMarker(markersNodeActive[""+data.nodePk]);
-						NodeActiveCheckFilter(data.nodePk,markerClusterDWDMNodes);
-					 }
-					 else if(nodeType=='SDH'){
-						create_Marker_Click(data.nodePk,nodeName,"","",markersNodeActive,markerClusterSDHNodes,"","");
-						markerClusterSDHNodes.addMarker(markersNodeActive[""+data.nodePk]);
-						NodeActiveCheckFilter(data.nodePk,markerClusterSDHNodes);
-					 }
-					 else if(nodeType=='GPON'){
-						create_Marker_Click(data.nodePk,nodeName,"","",markersNodeActive,markerClusterGPONNodes,"","");
-						markerClusterGPONNodes.addMarker(markersNodeActive[""+data.nodePk]);
-						NodeActiveCheckFilter(data.nodePk,markerClusterGPONNodes);
-					 }
-						map.setZoom(11);
-						
-						
-						
-					var childrenInitial=$("#initial_ul_"+IdNodeSelectedTemp+"").find(' > ul > li');
-					var children = $("#NodeActive_f_"+IdNodeSelectedTemp+"").find(' > ul > li');
-					var domainFolder =  $("#NodeActive_f_"+IdNodeSelectedTemp+"").find(' > ul > li >ul >li');
-						
-						
-						offset=$("#"+data.nodePk).offset().top;																
-						offset2=$("#initial_ul_CurrentPhysicalLayer").offset().top;
-						offsettot=(offset-offset2);
-						$("#network_tree").animate({ scrollTop: offsettot}, "slow");
-				
-						}
-					},			
-					 error: function (result) {
-						alert("Error");
-					}
-					});	
-					
-					if(typeof infowindow!== 'undefined'){		
-							infowindow.close();								
-						}
-						$("#"+data.nodePk+" > span").css("display", "inline");
-						$("#nodesModal").modal('hide');
-		
-});
-
-
 
 $("#saveFiberPath").click(function () {
 

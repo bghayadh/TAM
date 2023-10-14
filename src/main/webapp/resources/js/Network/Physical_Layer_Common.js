@@ -1353,7 +1353,7 @@ function createHandhole_Marker_Click(Id,Name,Long,Lat,markersHandhole,markerClus
 					if(!children.is(":visible")){
 						children.show();
 					}
-					networkLevelFolder.show('fast'); 
+					networkLevelFolder.show(); 
 
 
 					
