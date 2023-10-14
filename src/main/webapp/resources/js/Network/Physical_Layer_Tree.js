@@ -14103,11 +14103,11 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 					  else {	
 						  $("#"+data.StrandID).children(':checkbox').prop( "checked", true );
 						  if(document.getElementById("strandNumber").value!=""){
-							  $("#"+data.StrandID+"> .TreeSpan").html("<div style='margin-bottom:-17px;margin-left:1px; font-size:12px; font-weight:bold; color:"+document.getElementById("strandColor").value+"'>"+document.getElementById("strandNumber").value+"</div> <img style='color: #08526D; margin-bottom:-10px;' src='"+getContext()+"/resources/NetworkImages/strand.png'>  " +strandName+" / "+data.StrandID+" <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' > ");  
+							  $("#"+data.StrandID+"> .TreeSpan").html("<span style='font-size:12px; font-weight:bold; transform: translateY(-4px); color:"+document.getElementById("strandColor").value+"'>"+document.getElementById("strandNumber").value+"</span> <img style='margin-bottom:-3px; margin-left:-25px' src='"+getContext()+"/resources/NetworkImages/strand.png'>  " +strandName+" / "+data.StrandID+" <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' > ");  
 						  }else{
-							  $("#"+data.StrandID+"> .TreeSpan").html("<div style='margin-bottom:-17px;margin-left:1px; font-size:12px; font-weight:bold; color:"+document.getElementById("strandColor").value+"'>null</div> <img style='color: #08526D; margin-bottom:-10px;' src='"+getContext()+"/resources/NetworkImages/strand.png'>  " +strandName+" / "+data.StrandID+" <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' > ");  
+							  $("#"+data.StrandID+"> .TreeSpan").html("<span style='font-size:12px; font-weight:bold; transform: translateY(-4px); color:"+document.getElementById("strandColor").value+"'>null</span> <img style='margin-bottom:-3px; margin-left:-25px' src='"+getContext()+"/resources/NetworkImages/strand.png'>  " +strandName+" / "+data.StrandID+" <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' > ");  
 						  }
-						}
+						} // End Updating Strand Case
 										  					  
 					  window[""+data.StrandID]=[];
 					  window["mapPoints_"+data.StrandID]=[];
@@ -14243,21 +14243,27 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 					    
 						Create_FiberStrandClick_Event(data.StrandID);
 						ModalReset("StrandModal");
-					
-					$('.tree li#FiberPath_f_'+IdNodeSelectedTemp+' .TreeSpan').unbind("mouseover");	
+											
+					$("#" + data.StrandID + " > .TreeSpan").unbind("mouseover");						
+						
+					//$('.tree li#FiberPath_f_'+IdNodeSelectedTemp+' .TreeSpan').unbind("mouseover");	
 
-					$('.tree li#FiberPath_f_'+IdNodeSelectedTemp+' .TreeSpan').bind("mouseover",function(e) {
+					// $('.tree li#FiberPath_f_'+IdNodeSelectedTemp+' .TreeSpan').bind("mouseover",function(e) {
+					$("#" + data.StrandID + " > .TreeSpan").bind("mouseover",function(e) {
 						$(this).addClass('backgroundTree');
 							}).on("mouseout",function(e) {
 						$(this).removeClass('backgroundTree');
 		
 					});
-					
-					$('.tree li#FiberPath_f_'+IdNodeSelectedTemp+' .TreeSpan').on('click', function (e) {
-						$(".tree li#FiberPath_f_"+IdNodeSelectedTemp+" span").css("background-color", "");
+					console.log("IdNodeSelectedTemp is " +IdNodeSelectedTemp);
+//					$('.tree li#FiberPath_f_'+IdNodeSelectedTemp+' .TreeSpan').on('click', function (e) {
+					$("#" + data.StrandID + " > .TreeSpan").on('click', function (e) {						
+//						$(".tree li#FiberPath_f_"+IdNodeSelectedTemp+" span").css("background-color", "");
+						$("#" + IdSelectedTemp + " span").css("background-color", "");
 						$(this).css("background-color", "#97b9cc");
 						
-						$(".tree li#FiberPath_f_"+IdNodeSelectedTemp+"  span").removeClass("selected-span");		
+						//$(".tree li#FiberPath_f_"+IdNodeSelectedTemp+"  span").removeClass("selected-span");
+						$("#" + IdSelectedTemp + " span").removeClass("selected-span");
 						$(this).addClass("selected-span");
 						 IdSelectedTemp=$(this).parent().attr('id');
 					});
