@@ -629,6 +629,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 		}																				  
  
 		if(fiberTubes!=null){
+			console.log("fiber tube length is " ,fiberTubes.length);
 			for(i=0;i<fiberTubes.length;i++){
 				var tubeId=fiberTubes[i][0];
 				var savedTubeId = fiberTubes[i][0];//initialized here and used in save tube function
@@ -637,11 +638,14 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				var tubeNumber=fiberTubes[i][15];
 				var tubeColor=fiberTubes[i][16];
 				if(fiberTubes[i][11]>0){				
-					str="<ul><li id='"+tubeId+"' class='TUBE' style='display:none;width:100px;'><input type='checkbox' class='FiberTube checkFilter' class='filter'></input> <span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='color:black;width:274px'> <div style='margin-bottom:-17px;margin-left:1px; font-size:12px; font-weight:bold; color:"+tubeColor+"'> "+tubeNumber+"</div> <img style='color: #08526D; margin-bottom:-10px' src='"+getContext()+"/resources/NetworkImages/core.png'> "+tubeName+" / "+tubeId+" <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' id='pushPointsStrands"+tubeId+"' class='pushPoints'> <img src='"+getContext()+"/resources/NetworkImages/remove.png' hidden style='margin-left:10px' id='cancelPointsStrands"+tubeId+"' class='clearPoints'> </span><ul><li id='"+tubeId+"_f' style='display:none;' class='strandsFolder'> <input type='checkbox' class='TubeStrands checkFilter' unchecked name='filter'></input> <span  class='folder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='color:black;width:236px'>Strands </span></li></ul></li></ul>";
+					str="<ul><li id='"+tubeId+"' class='TUBE' style='display:none;width:100px;'><input type='checkbox' class='FiberTube checkFilter' class='filter'></input> <span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='color:black;width:274px'> <span style='font-size:12px; font-weight:bold; transform: translateY(-4px); color:"+tubeColor+"'> "+tubeNumber+"</span> <img style='color: #08526D; margin-bottom:-3px; margin-left:-25px' src='"+getContext()+"/resources/NetworkImages/core.png'> "+tubeName+" / "+tubeId+" <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' id='pushPointsStrands"+tubeId+"' class='pushPoints'> <img src='"+getContext()+"/resources/NetworkImages/remove.png' hidden style='margin-left:10px' id='cancelPointsStrands"+tubeId+"' class='clearPoints'> </span><ul><li id='"+tubeId+"_f' style='display:none;' class='strandsFolder'> <input type='checkbox' class='TubeStrands checkFilter' unchecked name='filter'></input> <span  class='folder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='color:black;width:236px'>Strands </span></li></ul></li></ul>";
 				}
 				else{
-					str="<ul><li id='"+tubeId+"' class='TUBE' style='display:none;width:100px;'><input type='checkbox' class='FiberTube checkFilter' name='filter'></input> <span class='TreeSpan' style='color:black;width:274px'> <div style='margin-bottom:-17px;margin-left:1px; font-size:12px; font-weight:bold; color:"+tubeColor+"'> "+tubeNumber+"</div> <img src='"+getContext()+"/resources/NetworkImages/core.png' style='margin-bottom:-10px;'> "+tubeName+" / "+tubeId+" <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' id='pushPointsStrands"+tubeId+"' class='pushPoints'> <img src='"+getContext()+"/resources/NetworkImages/remove.png' hidden style='margin-left:10px' id='cancelPointsStrands"+tubeId+"' class='clearPoints'>  </span></li></ul>";	
+					console.log("There is no strand for the tube");
+					str="<ul><li id='"+tubeId+"' class='TUBE' style='display:none;width:100px;'><input type='checkbox' class='FiberTube checkFilter' name='filter'></input> <span class='TreeSpan' style='color:black;width:274px'> <span style='font-size:12px; font-weight:bold; transform: translateY(-4px); color:"+tubeColor+"'> "+tubeNumber+"</span> <img style='color: #08526D; margin-bottom:-3px; margin-left:-25px' src='"+getContext()+"/resources/NetworkImages/core.png'> "+tubeName+" / "+tubeId+" <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' id='pushPointsStrands"+tubeId+"' class='pushPoints'> <img src='"+getContext()+"/resources/NetworkImages/remove.png' hidden style='margin-left:10px' id='cancelPointsStrands"+tubeId+"' class='clearPoints'> </span></li></ul>";	
 				}
+				console.log("the tube id is " +fiberTubes[i][12]);
+				$("#"+fiberTubes[i][12]+"_f").append(str);
 																			  
 				pathCheckFilter(TargetTube,"parentFolderCheck",fiberTubes[i][12],"14",tubeArray,allTubes,directionHashmapTube,routeDisplayTube,"STRAND",strandArray,directionHashmapStrand,allStrands);
 				pathCheckFilter(TargetTube,"",tubeId,"14",tubeArray,allTubes,directionHashmapTube,routeDisplayTube,"STRAND",strandArray,directionHashmapStrand,allStrands);
@@ -769,7 +773,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				var strandNumber=fiberStrands[i][15];
 				var strandColor=fiberStrands[i][16];
 
-				str="<ul><li id='"+fiberStrands[i][0]+"' class='STRAND' style='display:none;width:100px;'><input type='checkbox' class='FiberStrand checkFilter' class='filter'></input> <span  class='TreeSpan' style='color:black;width:195px'> <div style='margin-bottom:-17px;margin-left:1px; font-size:12px; font-weight:bold; color:"+strandColor+"'> "+strandNumber+"</div> <img src='"+getContext()+"/resources/NetworkImages/strand.png' style='margin-bottom:-10px;'> "+fiberStrands[i][13]+" / "+fiberStrands[i][0]+" </span></li></ul>";		
+				str="<ul><li id='"+fiberStrands[i][0]+"' class='STRAND' style='display:none;width:100px;'><input type='checkbox' class='FiberStrand checkFilter' class='filter'></input> <span  class='TreeSpan' style='color:black;width:195px'> <span style='font-size:12px; font-weight:bold; transform: translateY(-4px); color:"+strandColor+"'> "+strandNumber+"</span> <img style='margin-bottom:-3px; margin-left:-25px' src='"+getContext()+"/resources/NetworkImages/strand.png'> "+fiberStrands[i][13]+" / "+fiberStrands[i][0]+" </span></li></ul>";		
 				$("#"+fiberStrands[i][11]+"_f").append(str);
 				
 				pathCheckFilter(TargetStrand,"parentFolderCheck",fiberStrands[i][11],"14",strandArray,allStrands,directionHashmapStrand,routeDisplayStrand,"","","","");
@@ -17749,7 +17753,7 @@ function MouseHoveringSpans(selector){
 	}
 	$(selector).unbind("mouseover");
 	$(selector).bind("mouseover",function(e) {
-		console.log("selector is " +$(this).attr('id'));
+		//console.log("selector is " +$(this).parent().attr('id'));
 		$(this).addClass('backgroundTree');
 	}).on("mouseout",function(e) {
 		$(this).removeClass('backgroundTree');
