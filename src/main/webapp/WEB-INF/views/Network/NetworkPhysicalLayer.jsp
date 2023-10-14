@@ -536,7 +536,6 @@
 					<div class="modal-header" style="background-color: #2678CC ; height: 55px; ">
 						<h5 id="nodesHeader" class="modal-title" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px">Node</h5>
 						<div style="float: right;">
-							<button id="saveNode" class="btn btn-save" style="color: black; font-weight:bold; margin-top:-6px">Save</button>
 							<button  type="button" name="closePopup" class="close" id="close" onclick="ClosingConfirm()" >
 								<i class='fa fa-times'></i>
 							</button>
