@@ -1768,6 +1768,7 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -1814,6 +1815,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -1858,6 +1860,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -1901,6 +1904,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -1961,6 +1965,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -2006,6 +2011,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -2057,6 +2063,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -2129,6 +2136,7 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -2201,6 +2209,7 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -2263,6 +2272,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -2353,6 +2363,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -2429,6 +2440,7 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -2473,6 +2485,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -2516,6 +2529,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -2559,6 +2573,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -2603,6 +2618,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -2652,6 +2668,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -2700,6 +2717,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -2748,6 +2766,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -2794,6 +2813,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -2905,6 +2925,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -3017,6 +3038,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 
@@ -3110,6 +3132,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -3204,6 +3227,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -3243,6 +3267,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -3301,6 +3326,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -3341,6 +3367,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -3397,6 +3424,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 
@@ -3456,6 +3484,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -3623,6 +3652,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 
@@ -3663,6 +3693,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -3735,6 +3766,7 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 
@@ -3915,6 +3947,7 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 
@@ -4092,6 +4125,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -4145,6 +4179,7 @@ public class PhysicalLayerController {
 
 			tx.commit();
 			session.close();
+			session.getSessionFactory().close();
 		}
 		return rtn;
 	}
@@ -4243,6 +4278,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -4352,6 +4388,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -4451,6 +4488,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -5522,6 +5560,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -5574,6 +5613,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -5625,6 +5665,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -5672,6 +5713,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -6035,6 +6077,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -6211,6 +6254,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -6251,6 +6295,7 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 
@@ -6309,6 +6354,7 @@ public class PhysicalLayerController {
 
 		tx.commit();
 		session.close();
+		session.getSessionFactory().close();
 
 		return map;
 
@@ -6411,6 +6457,7 @@ public class PhysicalLayerController {
 		}
 		tx.commit();
 		session.close();
+		session.getSessionFactory().close();
 
 		return rtn;
 
@@ -6462,6 +6509,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -6498,6 +6546,7 @@ public class PhysicalLayerController {
 		rtn.put("glist", query.list());
 		tx.commit();
 		session.close();
+		session.getSessionFactory().close();
 
 		return rtn;
 
@@ -6546,6 +6595,7 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 
@@ -6614,6 +6664,7 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 
@@ -6681,6 +6732,7 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 
@@ -6730,6 +6782,7 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 
@@ -6779,6 +6832,7 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 
@@ -6943,6 +6997,7 @@ public class PhysicalLayerController {
 
 		tx.commit();
 		session.close();
+		session.getSessionFactory().close();
 
 		return rtn;
 
@@ -7067,6 +7122,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -7150,6 +7206,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -7190,6 +7247,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -7242,6 +7300,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -7283,6 +7342,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -7325,6 +7385,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -7574,6 +7635,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -7615,6 +7677,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -7696,6 +7759,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -7762,6 +7826,7 @@ public class PhysicalLayerController {
 			if (session != null && session.isOpen()) {
 				tx.commit();
 				session.close();
+				session.getSessionFactory().close();
 			}
 		}
 
@@ -7884,6 +7949,7 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 
@@ -7924,6 +7990,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -8051,6 +8118,7 @@ public class PhysicalLayerController {
 
 			tx.commit();
 			session.close();
+			session.getSessionFactory().close();
 		}
 		return rtn;
 	}
@@ -8425,6 +8493,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -8463,6 +8532,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -8774,6 +8844,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -9079,6 +9150,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -9153,6 +9225,7 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -9229,6 +9302,7 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -9522,6 +9596,7 @@ public class PhysicalLayerController {
 			if (session != null && session.isOpen()) {
 				tx.commit();
 				session.close();
+				session.getSessionFactory().close();
 				// }
 			}
 		}
@@ -9584,6 +9659,7 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -9921,6 +9997,7 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -9994,6 +10071,7 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -10284,6 +10362,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -10329,6 +10408,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -10383,6 +10463,7 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -10434,6 +10515,7 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -10611,6 +10693,7 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -10655,6 +10738,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -10700,6 +10784,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -10745,6 +10830,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -10791,6 +10877,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -10866,6 +10953,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -11241,6 +11329,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
