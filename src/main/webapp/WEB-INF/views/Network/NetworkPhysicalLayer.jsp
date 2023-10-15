@@ -131,7 +131,7 @@
                        	<button type="submit" id="Lview" class="btn btn-light" data-toggle="tooltip" data-placement="top" title="List View">
 								<!--  onclick='window.location.href = "${pageContext.request.contextPath}/SiteListView"' -->
 								<i class="fa fa-bars"></i></button></a>
-					  <button type="button" class="btn btn-light" data-toggle="tooltip" data-placement="top" title="Search" id="changeColorCable"  onclick="changeColor()"><i class="fa fa-paint-brush"></i></button>
+					  <button type="button" class="btn btn-light" data-toggle="tooltip" data-placement="top" title="Cable Color" id="changeColorCable"  onclick="changeColor()"><i class="fa fa-paint-brush"></i></button>
 					</div>
 				</div>
 			</div>
@@ -2632,7 +2632,7 @@
 	</menu>	
 	<div id="mapOperationModal"class="modal fade  custom-class-assignedto-modal" tabindex="-1"role="dialog" aria-labelledby="exampleModalCenterTitle"aria-hidden="true"  data-keyboard="false" data-backdrop="static"><div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
 	<div class="modal-content"><div class="modal-header"style="background-color: #2678CC ; height: 55px; "><h5  class="modal-title"
-style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px;">Operations</h5><div style="float: right;"><button class="btn btn-save"style="color: black; font-weight:bold; margin-top:-6px" onclick="MapOperationmarking()">Add Marker</button><button type="button"  onClick="clearMarkers()" class="btn btn-save" style=" margin-left:10px;color: black; font-weight:bold; margin-top:-6px" id="clearMarkers">clear Markers</button>
+style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px;">Operations</h5><div style="float: right;"><button class="btn btn-save"style="color: black; font-weight:bold; margin-top:-6px" onclick="MapOperationmarking()">Add Marker</button><button type="button"  onClick="clearMarkers()" class="btn btn-save" style=" margin-left:10px;color: black; font-weight:bold; margin-top:-6px" id="clearMarkers">Clear Markers</button>
 <button type="button" name="closePopup" class="close" onclick="ClosingConfirm()"><i class='fa fa-times'></i></button><a class="close modalMinimize ml-3"> <i
 class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><div class="tab-pane" ><p></p><div class="container-fluid">
 <div class="row"><div class="col-sm-2"><div class="form-group"><div class="input-group-prepend"><span style="min-width: 90px; font-size: 12px;" class="input-group-text"><b>By Site </b> 
