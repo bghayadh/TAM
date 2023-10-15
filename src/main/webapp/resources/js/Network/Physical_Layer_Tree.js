@@ -6571,7 +6571,6 @@ singleProject = new ContextMenu({
 						 document.getElementById("projectNameDB").style.display = "none";
 						 document.querySelector("#DBMappingFlag").value = "not_opened"
 						 var dbNtLevel = document.getElementById("DBnetlevel");
-						 DBoldNtwLevel = $("#DBnetlevel").val();
 						 $.ajax({
 								type: "GET",
 								contentType: "application/json; charset=utf-8",
@@ -6580,11 +6579,11 @@ singleProject = new ContextMenu({
 									  "selectedDistBoardContext":selectedDistBoardContext 
 								},
 								dataType: "json",
-								success: function (data) {
-								
+								success: function (data) {									
 									$("#DbMappingTable > tbody").empty();
 									actiondistBoardContext="Update";  
 									$("#DBnetlevel").val(data.DBnetLevel);
+									DBoldNtwLevel = $("#DBnetlevel").val();
 									dbNtLevel.value = data.DBnetLevel;
 									
 									//project id
@@ -10528,13 +10527,10 @@ $("#saveHandhole").click(function () {
 							success: function (data) {
 								
 								if(data!=null){
-		
 									window[""+data.distributionBoardId]=[];
 									window[""+data.distributionBoardId]=[data.distributionBoardId,DistributionBoardLong,DistributionBoardLat,DistributionBoardName,DistributionBoardCapacity,locationId, IdNodeSelectedTemp,boardCity,dbNetLevel];
-						
-						
+												
 									if(actiondistBoardContext=="Insert"){
-										
 										if(dbNetLevel=="backbone") {
 											str="<ul><li id='"+data.distributionBoardId+"'  class='DistributionBoard' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/backboneDB.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li></ul>";								
 										}
@@ -10544,11 +10540,12 @@ $("#saveHandhole").click(function () {
 										else if(dbNetLevel=="access") {
 											str="<ul><li id='"+data.distributionBoardId+"'  class='DistributionBoard' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/accessDb.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li></ul>";								
 										}
-									 $("#DistributionBoard_"+dbNetLevel+"__"+IdNodeSelectedTemp).append(str);
-									 
+									 $("#DistributionBoard_"+dbNetLevel+"__"+IdNodeSelectedTemp).append(str);									 
 									}
 									else if(actiondistBoardContext=="Update"){
+										console.log("DBoldNtwLevel and dbNetLevel are" +DBoldNtwLevel + " " + dbNetLevel);
 									  if(DBoldNtwLevel != dbNetLevel){
+										  console.log("Different DB Network Level");
 									    $("#"+data.distributionBoardId).remove();
 										if(dbNetLevel=="backbone") {
 											str="<ul><li id='"+data.distributionBoardId+"'  class='DistributionBoard' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/backboneDB.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li></ul>";								
@@ -10559,9 +10556,8 @@ $("#saveHandhole").click(function () {
 										else if(dbNetLevel=="access") {
 											str="<ul><li id='"+data.distributionBoardId+"'  class='DistributionBoard' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/accessDb.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li></ul>";								
 										}
-										$("#DistributionBoard_"+dbNetLevel+"__"+IdNodeSelectedTemp).append(str);
-									}
-									}
+										$("#DistributionBoard_"+dbNetLevel+"__"+IdNodeSelectedTemp).append(str);									
+									}		
 									else{
 										if(dbNetLevel=="backbone") {
 											$("#"+data.distributionBoardId+"> .TreeSpan").html("<img class='image' src='"+getContext()+"/resources/NetworkImages/backboneDB.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li>");
@@ -10573,6 +10569,7 @@ $("#saveHandhole").click(function () {
 											$("#"+data.distributionBoardId+"> .TreeSpan").html("<img class='image' src='"+getContext()+"/resources/NetworkImages/accessDb.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li>");
 										}
 									 }
+									}
 								 $("#"+data.distributionBoardId).children(':checkbox').prop( "checked", true );
 	
 									$("#"+data.distributionBoardId).contextmenu(function(){
@@ -10659,7 +10656,6 @@ $("#saveHandhole").click(function () {
 										
 										$("#network_tree").animate({ scrollTop: offsettot}, "slow");
 										}
-										DBoldNtwLevel="";
 									},
 								    error: function (result) {
 									alert("Error");
