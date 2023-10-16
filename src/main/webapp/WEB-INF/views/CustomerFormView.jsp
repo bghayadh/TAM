@@ -836,12 +836,26 @@ if ('${ListCustomer}' == "addNew") {
 }
 
 
-$("#custstat").click(  function() {
+$("#custstat").change(  function() {
 
 	$("#formStatus").text("Not Saved");
 	$('.dot').css({"background-color" : "orange"});
 	
 })
+
+$("#custCategory").change(  function() {
+
+	$("#formStatus").text("Not Saved");
+	$('.dot').css({"background-color" : "orange"});
+	
+})
+
+	$("#custType").change(  function() {
+	
+		$("#formStatus").text("Not Saved");
+		$('.dot').css({"background-color" : "orange"});
+		
+	})
 
 
 $("#Activatewh").click(  function() {	
