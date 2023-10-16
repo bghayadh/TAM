@@ -447,10 +447,16 @@ z-index: 9003;
     
                       <span class="input-group-text">Customer Category</span>
 							<select name="cars" id="custCategory"  style="width: 175px;  text-align-last:center;"class="form-control text-input"    >
-				
+								
+								<option value="Normal" <c:if test = "${customerCategory =='Normal'}"> selected </c:if>>Normal</option>
 								<option value="Vip" <c:if test = "${customerCategory =='Vip'}" > selected </c:if>  >VIP</option>
-								<option value="Class" <c:if test = "${customerCategory =='Class'}"> selected </c:if>>Class</option>
-								<option value="Limited" <c:if test = "${customerCategory =='Limited'}"> selected </c:if>>Limited</option>
+								<option value="Loyal" <c:if test = "${customerCategory =='Loyal'}"> selected </c:if>>Loyal</option>
+								<option value="Impulse" <c:if test = "${customerCategory =='Impulse'}"> selected </c:if>>Impulse</option>
+								<option value="Discount" <c:if test = "${customerCategory =='Discount'}"> selected </c:if>>Discount</option>
+								<option value="Need-based" <c:if test = "${customerCategory =='Need-based'}"> selected </c:if>>Need-based</option>
+								<option value="Wandering" <c:if test = "${customerCategory =='Wandering'}"> selected </c:if>>Wandering</option>
+								
+								
 							  </select>	
                     </div>
 			</div>

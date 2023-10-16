@@ -133,6 +133,7 @@ public class WarehouseController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -303,6 +304,7 @@ public class WarehouseController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -640,6 +642,7 @@ public class WarehouseController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -1050,6 +1053,7 @@ public class WarehouseController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -1093,6 +1097,7 @@ public class WarehouseController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 
@@ -1143,6 +1148,7 @@ public class WarehouseController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -1189,6 +1195,7 @@ public class WarehouseController {
 			} catch (Exception e) {
 				logger.info("Error in GetAllWarehouse  Data from database", e);
 			}
+			session.getSessionFactory().close();
 		}
 		return rtn;
 	}
@@ -1227,6 +1234,7 @@ public class WarehouseController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -1266,6 +1274,7 @@ public class WarehouseController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}

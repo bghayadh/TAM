@@ -1,19 +1,9 @@
 package com.aliat.alm.controller;
 
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.Socket;
-import java.net.URL;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -35,7 +25,6 @@ import org.hibernate.Transaction;
 import org.hibernate.transform.Transformers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -45,7 +34,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.aliat.alm.services.ItemParameters;
 import com.aliat.alm.services.LoginServices;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonObject;
 import com.aliat.alm.common.ALMSessions;
 import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
@@ -101,7 +89,7 @@ public class CustomerController {
 						+ "STATUS as status"
 						+ " from CUSTOMER" + " order by LAST_MODIFIED_DATE DESC";
 
-				Query query = session.createSQLQuery(str);
+				Query query = session.createNativeQuery(str);
 				listCustomer = ((SQLQuery) query).addScalar("customerId").addScalar("customerIdd").addScalar("customerName").addScalar("mobile")
 						.addScalar("customerAcronyms").addScalar("createdDate").addScalar("lastModifiedDate")
 						.addScalar("status")
@@ -119,6 +107,7 @@ public class CustomerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -248,6 +237,7 @@ public class CustomerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -256,7 +246,6 @@ public class CustomerController {
 	}
 	*/
 
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/CustomerFormView", method = RequestMethod.GET)
 	public String CustomerFormView(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -330,6 +319,7 @@ public class CustomerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -441,6 +431,7 @@ public class CustomerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -489,6 +480,7 @@ public class CustomerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 
 			}
@@ -518,7 +510,7 @@ public class CustomerController {
 					// Get Customer_ID from the listview form
 					String idForm = idList[i];
 
-					query = session.createSQLQuery("delete CUSTOMER  where CUSTOMER_ID ='" + idForm + "'");
+					query = session.createNativeQuery("delete CUSTOMER  where CUSTOMER_ID ='" + idForm + "'");
 					query.executeUpdate();
 				}
 			} catch (Exception e) {
@@ -532,6 +524,7 @@ public class CustomerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -580,13 +573,13 @@ public class CustomerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
 		return rtn;
 	}
 
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/GetAllNetworkCustomer", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> GetAllNetworkCustomer(Locale locale, Model model, HttpServletRequest request,
@@ -602,7 +595,7 @@ public class CustomerController {
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
-				query = session.createSQLQuery(
+				query = session.createNativeQuery(
 						"SELECT CUSTOMER_ID,CUSTOMER_NAME,MOBILE_NUMBER,CITY,LONGITUDE,LATITUDE,LOCATION_ID FROM CUSTOMER WHERE UPPER(CUSTOMER_ID) LIKE UPPER(:param) OR UPPER(CUSTOMER_NAME) LIKE UPPER(:param) OR UPPER(MOBILE_NUMBER) LIKE UPPER(:param) OR UPPER(LOCATION_ID) LIKE UPPER(:param) ");
 				query.setParameter("param", "%" + search + "%");
 				query.setFirstResult(0);
@@ -619,6 +612,7 @@ public class CustomerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
