@@ -4278,7 +4278,8 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				String paramCore = request.getParameter("paramCore");
 					
 				List<Object[]> listSites = new ArrayList<Object[]>();
-				String strSites ="SELECT distinct SITE_ID,WARE_NAME,WARE_ID,NODE_TYPE,LONGITUDE,LATITUDE FROM NODE_ACTIVE where ACTIVE_RECORD = '1' and NODE_TYPE='"+ selectedNdTyp + "' ";
+				String strSites ="SELECT distinct SITE_ID,WARE_NAME,WARE_ID,NODE_TYPE,LONGITUDE,LATITUDE FROM NODE_ACTIVE "
+						+ "where ACTIVE_RECORD = '1' and WARE_ID!= 'null' and WARE_ID is not null and WARE_ID!= '0' and NODE_TYPE='"+ selectedNdTyp + "' ";
 				
 				List<Object[]> listNodes = new ArrayList<Object[]>();
 				String strNodes ="SELECT a.NODE_PK,a.SITE_ID,a.NODE_NAME,a.WARE_ID,a.NODE_TYPE,"
