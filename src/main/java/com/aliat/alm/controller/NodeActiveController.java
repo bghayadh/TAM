@@ -1,32 +1,63 @@
 package com.aliat.alm.controller;
 
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.util.Calendar;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.Socket;
+import java.net.URL;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.transform.Transformers;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import com.aliat.alm.services.ItemParameters;
 import com.aliat.alm.services.LoginServices;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonObject;
+
+import oracle.sql.TIMESTAMP;
+
 import com.aliat.alm.common.ALMSessions;
 import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.common.Permissions;
 import com.aliat.alm.models.NodeListView;
-//import com.aliat.alm.models.NodePassive;
+import com.aliat.alm.models.NodePassive;
+
 
 
 @Controller
@@ -127,8 +158,8 @@ public String NodeFormView(Locale locale, Model model, HttpServletRequest reques
 		  if (NodePK != null) {
 				model.addAttribute("Status", "old");
 				query = session.createNativeQuery(
-						"select node_id, TO_CHAR(creation_date,'YYYY-MM-DD HH24:MI:SS'), TO_CHAR(update_date,'YYYY-MM-DD HH24:MI:SS'),node_name,node_type,node_model,site_id,ware_name,"
-						+ "vendor,domain,node_pk from node_active where node_pk =:param1"); 
+						"select  node_id, TO_CHAR(creation_date,'YYYY-MM-DD HH24:MI:SS'), TO_CHAR(update_date,'YYYY-MM-DD HH24:MI:SS'),node_name,node_type,node_model,site_id,ware_name,"
+						+ "vendor,domain,node_pk,unique_node_id from node_active where node_pk =:param1"); 
 							query.setParameter("param1", NodePK);
 			        result = (Object[]) query.uniqueResult();
                     model.addAttribute("node_id", result[0]);
@@ -142,7 +173,41 @@ public String NodeFormView(Locale locale, Model model, HttpServletRequest reques
 				    model.addAttribute("vendor", result[8]);
 				    model.addAttribute("domain", result[9]);
 				    model.addAttribute("node_pk", result[10]);
+				    model.addAttribute("unique_node_id", result[11]);
 				    
+				    query = session.createNativeQuery("select passive_pk,site_type,swap,swap_date,"+
+				    		"status,circle_id,TO_CHAR(discovery_date,'YYYY-MM-DD HH24:MI:SS'),"
+				    		+ "TO_CHAR(last_shown_date,'YYYY-MM-DD HH24:MI:SS') ,TO_CHAR(creation_date,'YYYY-MM-DD HH24:MI:SS'),"
+				    		+ " TO_CHAR(last_modified_date,'YYYY-MM-DD HH24:MI:SS')"+
+				    		"from node_passive where unique_node_id=:param1 and node_name=:param2");
+				    	query.setParameter("param1", result[11]);
+				    	query.setParameter("param2", result[3]);
+				    	   
+				        result = (Object[]) query.uniqueResult();
+		                if(result!=null) {
+		                	model.addAttribute("passivePk", result[0]);
+		   				    model.addAttribute("siteType", result[1]);
+		   				    model.addAttribute("swap", result[2]);
+		   				    model.addAttribute("swapDate", result[3]);
+		   				    model.addAttribute("status", result[4]);
+		   				    model.addAttribute("circleId", result[5]);
+		   				    String discoveryDateString = result[6].toString();
+		   			        String shownDateString = result[7].toString();
+
+		   			    SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		   			    Date discoveryDate = inputDateFormat.parse(discoveryDateString);
+		   			    Date shownDate = inputDateFormat.parse(shownDateString);
+
+		   			    SimpleDateFormat outputDateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+		   			    String formattedDiscoveryDate = outputDateFormat.format(discoveryDate);
+		   			    String formattedShownDate = outputDateFormat.format(shownDate);
+
+		   			    model.addAttribute("discoveryDate", formattedDiscoveryDate);
+		   			    model.addAttribute("shownDate", formattedShownDate);
+                            model.addAttribute("creationDate", result[8]);
+		   				    model.addAttribute("modifiedDate", result[9]);
+		   				   
+		                }
 				    query = session.createNativeQuery(
 				    	    "SELECT GCELL_ID, CELLID, CELLNAME, MCC, MNC, LAC, CI, NCC, BCC, TYPE, BCCHNO, "
 				    	    + "BASEBANDPOLICY, BASEBANDEQMID, GBTSFUNCTIONNAME,TO_CHAR(UPDATE_DATE,'YYYY-MM-DD HH24:MI:SS'),"
@@ -307,38 +372,76 @@ public String NodeFormView(Locale locale, Model model, HttpServletRequest reques
 
 	return "NodeFormView";
 }
-/*
-@SuppressWarnings("unchecked")
 @RequestMapping(value = "/NodeFormViewSave", method = RequestMethod.GET)
+@ResponseBody
+public  Map<String, Object> NodeFormViewSave(Locale locale, Model model, HttpServletRequest request,
+		@ModelAttribute ItemParameters itemParameters, HttpServletResponse response) throws Exception {
 
-public String NodeFormViewSave(Locale locale, Model model, HttpServletRequest request,
-		HttpServletResponse response) {
+    Map<String, Object> rtn = new LinkedHashMap<>();
+    String nodePk = null;
 
-	if (LoginServices.checkSession(request, response).equals("redirect:/")) {
-		return "redirect:/";
-	}
-	DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
-	
-	NodePassive  Nodepassive = new NodePassive();
-	
-	Nodepassive.setNodeId(request.getParameter("nodeId"));
-	Nodepassive.setSiteType(request.getParameter("siteType"));
-	Nodepassive.setSwap(request.getParameter("swap"));
-	Nodepassive.setSwapDate(request.getParameter("swapdate"));
-	Nodepassive.setStatus(request.getParameter("status"));
-	Nodepassive.setCircleId(request.getParameter("circleId"));
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	return "NodeFormView";
+    session = almsessions.getSession();
+    if (session != null && session.isOpen()) {
+        tx = session.beginTransaction();
+        notification.headerNotifications(session, model);
+        try {
+        	nodePk=request.getParameter("nodepk");
+            NodePassive nodePassive = new NodePassive();
+            String passivePk;
+            Timestamp CreationDate;
+            Calendar calendar = new GregorianCalendar();
+            DateFormat inputFormatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+            DateFormat outputFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+            System.out.println(request.getParameter("passivePk"));
+            if (request.getParameter("passivePk") == "") {
+                 passivePk = "Passive_" + calendar.get(Calendar.YEAR) + "_"
+                        + Integer.parseInt(session.createNativeQuery("SELECT NODE_PASSIVE FROM SEQ_TABLE")
+                                .uniqueResult().toString());
+                 CreationDate=new Timestamp((new Timestamp(System.currentTimeMillis())).getTime());
+            }
+            else {
+            	 passivePk=request.getParameter("passivePk");
+            	  CreationDate=(new Timestamp((outputFormatter.parse(request.getParameter("creationDate"))).getTime()));
+            	
+            }
+                session.createNativeQuery("UPDATE SEQ_TABLE SET NODE_PASSIVE = NODE_PASSIVE + 1 ").executeUpdate();
+                session.createNativeQuery("commit").executeUpdate();
+                nodePassive.setPassivePk(passivePk);
+                nodePassive.setNodeId(request.getParameter("uniqueNodeId"));
+                nodePassive.setNodeName(request.getParameter("nodeName"));
+                nodePassive.setSiteType(request.getParameter("siteType"));
+                nodePassive.setSwap(request.getParameter("swap"));
+                nodePassive.setSwapDate(request.getParameter("SwapDate"));
+                nodePassive.setStatus(request.getParameter("status"));
+                nodePassive.setCircleId(request.getParameter("circleId"));
+                nodePassive.setDiscoveryDate(Timestamp.valueOf(outputFormatter.format(inputFormatter.parse(request.getParameter("discoveryDate")))));
+                nodePassive.setLastShownDate(Timestamp.valueOf(outputFormatter.format(inputFormatter.parse(request.getParameter("shownDate")))));
+                nodePassive.setLastModifiedDate(new Timestamp((new Timestamp(System.currentTimeMillis())).getTime()));
+                nodePassive.setCreationDate(CreationDate);
+                
+                session.saveOrUpdate(nodePassive);
+                System.out.println(nodePk);
+                 }
+       
+
+           
+         catch (Exception e) {
+            sw = new StringWriter();
+            e.printStackTrace(new PrintWriter(sw));
+            exceptionAsString = sw.toString();
+            logger.finest("Error in NodeFormView due to \n " + exceptionAsString);
+            logger.info("Error in NodeFormView due to \n " + exceptionAsString);
+        } finally {
+            if (session != null && session.isOpen()) {
+                tx.commit();
+                session.close();
+            }
+        }
+        rtn.put("nodePK", nodePk);
+    }
+
+  return rtn; 
+   
 }
-*/
-}
 
+}
