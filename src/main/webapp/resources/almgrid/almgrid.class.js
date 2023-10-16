@@ -1024,63 +1024,24 @@ var filterRowsPrevious = function (prevResult,prevPageNo,maxNoOfPages) {
 
             })
             
-            // Draw Custom Filter one time only
-            
-            
-            
+            // Draw Custom Filter one time only            
 
-            // Draw Custom Filter one time only
-            document.querySelectorAll(".almgrid-filter").forEach(item => {
+  			document.querySelectorAll(".almgrid-filter").forEach(item => {
                 item.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    
-                    var clickedForm = $(item).next().find("form").attr("id");
-                    document.getElementById("loaderDiv").style.display = "block";
-                    
-                   //Clear the popup when loading new data
-                   if(clusterize !=undefined) {
-                       var temp=[];
-                      clusterize.update(temp);
-                  	$("#" +clickedForm).find(".totalNoPages").val("0");
-                  	$("#" +clickedForm).find(".nextPrevPage").val("0");
-
-                   }
-                   
-                   setTimeout(function() {
-
-                	   
-                    var clickedIndex = clickedForm.split(almgrid.tableId + "_filterform");
+                e.preventDefault();			  		
+					var clickedForm = $(item).next().find("form").attr("id");                   
+			 		var clickedIndex = clickedForm.split(almgrid.tableId + "_filterform");
                     var columnNumberPressed = clickedIndex[1];
-
-                    let indexVarColPressed
+ 					let indexVarColPressed;
+				
                     if(almgrid.selectCheckbox === true){
-                        indexVarColPressed = columnNumberPressed
+                        indexVarColPressed = columnNumberPressed;
                     }else{
-                        indexVarColPressed = columnNumberPressed - 1
+                        indexVarColPressed = columnNumberPressed - 1;
                     }
-                    
-                   
-                    availableArray = almgrid.dataArray;
-                    availableArray = headerFilter(availableArray)
-                    availableArray = dropdownFilter(availableArray,columnNumberPressed,"showavailable")
-                    availableArray = globalSearchFilter(availableArray)
 
-                    		
-                    var newArray = [];
-                    var availablenewArray = []
 
-                    // need to select all the checkbox for the available options when pressed the first time
-                    //if(!$(item).hasClass('clicked')){
-                   if(checkboxArray[columnNumberPressed].length === 0){
-                       /*$.each(almgrid.dataArray, function (i, value) {
-                            checkboxArray[columnNumberPressed].push(almgrid.dataArray[i][almgrid.ArrayKeys[indexVarColPressed]]);
-                            checkboxArray[columnNumberPressed] = Array.from(new Set(checkboxArray[columnNumberPressed]));
-
-                            /*uncheckboxArray[columnNumberPressed] = $.grep(uncheckboxArray[columnNumberPressed], function (e) {
-                            return e != dataArray[i][ArrayKeys[columnNumberPressed]];
-                            });*/
-                       // });
-                    	
+			         if(checkboxArray[columnNumberPressed].length === 0){
                     	// Create a temporary set to store unique values
                     	var uniqueValues = new Set();
 
@@ -1097,7 +1058,66 @@ var filterRowsPrevious = function (prevResult,prevPageNo,maxNoOfPages) {
                     	checkboxArray[columnNumberPressed] = Array.from(uniqueValues);
 						
                     }
+
+ 				   //Clear the popup when loading new data
+                   if(clusterize !=undefined) {
+                       var temp=[];
+                      clusterize.update(temp);
+                  	  $("#" +clickedForm).find(".totalNoPages").val("0");
+                  	  $("#" +clickedForm).find(".nextPrevPage").val("0");
+                   }
+					if(checkboxArray[columnNumberPressed].length > 35000 ) {
+						
+						document.getElementById("loaderDiv").style.display = "none";
+						document.getElementById("alertMsgDiv").style.display = "block";
+					}
+					else {	
+						document.getElementById("loaderDiv").style.display = "block";
+						document.getElementById("alertMsgDiv").style.display = "none";
+
+                 setTimeout(function() {
+
+                  
                    
+                    availableArray = almgrid.dataArray;
+                    availableArray = headerFilter(availableArray);
+                    availableArray = dropdownFilter(availableArray,columnNumberPressed,"showavailable");
+                    availableArray = globalSearchFilter(availableArray);
+
+                    		
+                    var newArray = [];
+                    var availablenewArray = []
+
+                    // need to select all the checkbox for the available options when pressed the first time
+                    //if(!$(item).hasClass('clicked')){
+                 /*  if(checkboxArray[columnNumberPressed].length === 0){
+                       /*$.each(almgrid.dataArray, function (i, value) {
+                            checkboxArray[columnNumberPressed].push(almgrid.dataArray[i][almgrid.ArrayKeys[indexVarColPressed]]);
+                            checkboxArray[columnNumberPressed] = Array.from(new Set(checkboxArray[columnNumberPressed]));
+
+                            /*uncheckboxArray[columnNumberPressed] = $.grep(uncheckboxArray[columnNumberPressed], function (e) {
+                            return e != dataArray[i][ArrayKeys[columnNumberPressed]];
+                            });*/
+                       // });
+                    	
+                    	// Create a temporary set to store unique values
+                   /* 	var uniqueValues = new Set();
+
+                    	// Iterate over almgrid.dataArray using a for loop instead of $.each
+                    	for (var i = 0; i < almgrid.dataArray.length; i++) {
+                    	    // Get the value at the desired column index
+                    	    var value = almgrid.dataArray[i][almgrid.ArrayKeys[indexVarColPressed]];
+
+                    	    // Add the value to the uniqueValues set
+                    	    uniqueValues.add(value);
+                    	}
+
+                    	// Convert the uniqueValues set back to an array
+                    	checkboxArray[columnNumberPressed] = Array.from(uniqueValues);
+						
+                    }
+                   	 console.log("uniqueValues "+checkboxArray[columnNumberPressed].length)                 
+						*/
 
                     /*$.each(almgrid.dataArray, function (i, value) {
                         newArray.push(almgrid.dataArray[i][almgrid.ArrayKeys[indexVarColPressed]]);
@@ -1108,7 +1128,8 @@ var filterRowsPrevious = function (prevResult,prevPageNo,maxNoOfPages) {
                             availablenewArray.push(almgrid.dataArray[i][almgrid.ArrayKeys[indexVarColPressed]]);
                         
                         }
-                    }); */                    
+                    }); */   
+
                  // Create a Set to store unique values
                     var uniqueValues = new Set();
 
@@ -1144,12 +1165,13 @@ var filterRowsPrevious = function (prevResult,prevPageNo,maxNoOfPages) {
                     let nextPageNum="1";
 
                     almgrid.drawCustomFilters(columnNumberPressed, clickedForm, uniqueArray, availablenewArray,checkboxArray,uncheckboxArray,"0","30000","30000","1");
-                    document.getElementById("loaderDiv").style.display = "none";
+					document.getElementById("loaderDiv").style.display = "none";
 
                 })
+				}
                 }, 0); // Simulating 0 second delay
-
             });
+
 
 
             // Check whether to show or hide select all checkboxes inside table

@@ -5805,6 +5805,7 @@ public class PhysicalLayerController {
 								? request.getParameter("DistributionBoardCapacity")
 								: "0"));
 				session.saveOrUpdate(distributionBoard);
+				rtn.put("distributionBoardId", distributionBoardId);
 
 				String distBoardMappingFlag = request.getParameter("distBoardMappingFlag");
 				if (StringUtils.equalsIgnoreCase(distBoardMappingFlag, "opened")
@@ -5812,7 +5813,6 @@ public class PhysicalLayerController {
 					query = session.createNativeQuery(
 							"delete from DISTRIBUTION_BOARD_MAPPING where DB_ID = '" + distributionBoardId + "'");
 					query.executeUpdate();
-					rtn.put("distributionBoardId", distributionBoardId);
 
 					// System.out.println("itemParam : " + itemParameters.getDictParameter());
 					DistributionBoardMapping distributionBoardMapping;

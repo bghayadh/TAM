@@ -629,6 +629,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 		}																				  
  
 		if(fiberTubes!=null){
+			console.log("fiber tube length is " ,fiberTubes.length);
 			for(i=0;i<fiberTubes.length;i++){
 				var tubeId=fiberTubes[i][0];
 				var savedTubeId = fiberTubes[i][0];//initialized here and used in save tube function
@@ -637,11 +638,14 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				var tubeNumber=fiberTubes[i][15];
 				var tubeColor=fiberTubes[i][16];
 				if(fiberTubes[i][11]>0){				
-					str="<ul><li id='"+tubeId+"' class='TUBE' style='display:none;width:100px;'><input type='checkbox' class='FiberTube checkFilter' class='filter'></input> <span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='color:black;width:274px'> <div style='margin-bottom:-17px;margin-left:1px; font-size:12px; font-weight:bold; color:"+tubeColor+"'> "+tubeNumber+"</div> <img style='color: #08526D; margin-bottom:-10px' src='"+getContext()+"/resources/NetworkImages/core.png'> "+tubeName+" / "+tubeId+" <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' id='pushPointsStrands"+tubeId+"' class='pushPoints'> <img src='"+getContext()+"/resources/NetworkImages/remove.png' hidden style='margin-left:10px' id='cancelPointsStrands"+tubeId+"' class='clearPoints'> </span><ul><li id='"+tubeId+"_f' style='display:none;' class='strandsFolder'> <input type='checkbox' class='TubeStrands checkFilter' unchecked name='filter'></input> <span  class='folder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='color:black;width:236px'>Strands </span></li></ul></li></ul>";
+					str="<ul><li id='"+tubeId+"' class='TUBE' style='display:none;width:100px;'><input type='checkbox' class='FiberTube checkFilter' class='filter'></input> <span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='color:black;width:274px'> <span style='font-size:12px; font-weight:bold; transform: translateY(-4px); color:"+tubeColor+"'> "+tubeNumber+"</span> <img style='color: #08526D; margin-bottom:-3px; margin-left:-25px' src='"+getContext()+"/resources/NetworkImages/core.png'> "+tubeName+" / "+tubeId+" <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' id='pushPointsStrands"+tubeId+"' class='pushPoints'> <img src='"+getContext()+"/resources/NetworkImages/remove.png' hidden style='margin-left:10px' id='cancelPointsStrands"+tubeId+"' class='clearPoints'> </span><ul><li id='"+tubeId+"_f' style='display:none;' class='strandsFolder'> <input type='checkbox' class='TubeStrands checkFilter' unchecked name='filter'></input> <span  class='folder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='color:black;width:236px'>Strands </span></li></ul></li></ul>";
 				}
 				else{
-					str="<ul><li id='"+tubeId+"' class='TUBE' style='display:none;width:100px;'><input type='checkbox' class='FiberTube checkFilter' name='filter'></input> <span class='TreeSpan' style='color:black;width:274px'> <div style='margin-bottom:-17px;margin-left:1px; font-size:12px; font-weight:bold; color:"+tubeColor+"'> "+tubeNumber+"</div> <img src='"+getContext()+"/resources/NetworkImages/core.png' style='margin-bottom:-10px;'> "+tubeName+" / "+tubeId+" <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' id='pushPointsStrands"+tubeId+"' class='pushPoints'> <img src='"+getContext()+"/resources/NetworkImages/remove.png' hidden style='margin-left:10px' id='cancelPointsStrands"+tubeId+"' class='clearPoints'>  </span></li></ul>";	
+					console.log("There is no strand for the tube");
+					str="<ul><li id='"+tubeId+"' class='TUBE' style='display:none;width:100px;'><input type='checkbox' class='FiberTube checkFilter' name='filter'></input> <span class='TreeSpan' style='color:black;width:274px'> <span style='font-size:12px; font-weight:bold; transform: translateY(-4px); color:"+tubeColor+"'> "+tubeNumber+"</span> <img style='color: #08526D; margin-bottom:-3px; margin-left:-25px' src='"+getContext()+"/resources/NetworkImages/core.png'> "+tubeName+" / "+tubeId+" <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' id='pushPointsStrands"+tubeId+"' class='pushPoints'> <img src='"+getContext()+"/resources/NetworkImages/remove.png' hidden style='margin-left:10px' id='cancelPointsStrands"+tubeId+"' class='clearPoints'> </span></li></ul>";	
 				}
+				console.log("the tube id is " +fiberTubes[i][12]);
+				$("#"+fiberTubes[i][12]+"_f").append(str);
 																			  
 				pathCheckFilter(TargetTube,"parentFolderCheck",fiberTubes[i][12],"14",tubeArray,allTubes,directionHashmapTube,routeDisplayTube,"STRAND",strandArray,directionHashmapStrand,allStrands);
 				pathCheckFilter(TargetTube,"",tubeId,"14",tubeArray,allTubes,directionHashmapTube,routeDisplayTube,"STRAND",strandArray,directionHashmapStrand,allStrands);
@@ -769,7 +773,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				var strandNumber=fiberStrands[i][15];
 				var strandColor=fiberStrands[i][16];
 
-				str="<ul><li id='"+fiberStrands[i][0]+"' class='STRAND' style='display:none;width:100px;'><input type='checkbox' class='FiberStrand checkFilter' class='filter'></input> <span  class='TreeSpan' style='color:black;width:195px'> <div style='margin-bottom:-17px;margin-left:1px; font-size:12px; font-weight:bold; color:"+strandColor+"'> "+strandNumber+"</div> <img src='"+getContext()+"/resources/NetworkImages/strand.png' style='margin-bottom:-10px;'> "+fiberStrands[i][13]+" / "+fiberStrands[i][0]+" </span></li></ul>";		
+				str="<ul><li id='"+fiberStrands[i][0]+"' class='STRAND' style='display:none;width:100px;'><input type='checkbox' class='FiberStrand checkFilter' class='filter'></input> <span  class='TreeSpan' style='color:black;width:195px'> <span style='font-size:12px; font-weight:bold; transform: translateY(-4px); color:"+strandColor+"'> "+strandNumber+"</span> <img style='margin-bottom:-3px; margin-left:-25px' src='"+getContext()+"/resources/NetworkImages/strand.png'> "+fiberStrands[i][13]+" / "+fiberStrands[i][0]+" </span></li></ul>";		
 				$("#"+fiberStrands[i][11]+"_f").append(str);
 				
 				pathCheckFilter(TargetStrand,"parentFolderCheck",fiberStrands[i][11],"14",strandArray,allStrands,directionHashmapStrand,routeDisplayStrand,"","","","");
@@ -6567,7 +6571,6 @@ singleProject = new ContextMenu({
 						 document.getElementById("projectNameDB").style.display = "none";
 						 document.querySelector("#DBMappingFlag").value = "not_opened"
 						 var dbNtLevel = document.getElementById("DBnetlevel");
-						 DBoldNtwLevel = $("#DBnetlevel").val();
 						 $.ajax({
 								type: "GET",
 								contentType: "application/json; charset=utf-8",
@@ -6576,11 +6579,11 @@ singleProject = new ContextMenu({
 									  "selectedDistBoardContext":selectedDistBoardContext 
 								},
 								dataType: "json",
-								success: function (data) {
-								
+								success: function (data) {									
 									$("#DbMappingTable > tbody").empty();
 									actiondistBoardContext="Update";  
 									$("#DBnetlevel").val(data.DBnetLevel);
+									DBoldNtwLevel = $("#DBnetlevel").val();
 									dbNtLevel.value = data.DBnetLevel;
 									
 									//project id
@@ -8134,8 +8137,8 @@ singleProject = new ContextMenu({
 												+"<tr>"+"<td><b>To: </b>"+dst+"</td></tr>"
 												+"<tr>"+"<td><b>From City: </b>"+data.FiberData[0][7]+"</td></tr>"
 												+"<tr>"+"<td><b>To City: </b>"+data.FiberData[0][8]+"</td></tr>"
-												+"<tr>"+"<td><b>Num of Tubes: </b>"+data.FiberData[0][9]+"</td></tr>"
-												+"<tr>"+"<td><b>Num of Strands: </b>"+data.FiberData[0][10]+"</td></tr>"
+												+"<tr>"+"<td><b>Num of Tubes: </b>"+data.FiberData[0][10]+"</td></tr>"
+												+"<tr>"+"<td><b>Num of Strands: </b>"+data.FiberData[0][9]+"</td></tr>"
 												+"<tr>"+"<td><b>Total Num of Strands: </b>"+data.FiberData[0][11]+"</td></tr>"
 												+"<tr>"+"<td><b>Cable Distance (Geo): </b>"+parseFloat(data.FiberData[0][13]).toFixed(2)+" km</td></tr>"
 												+"<tr>"+"<td><b>Cable Distance (Line Of site): </b>"+parseFloat(data.FiberData[0][12]).toFixed(2)+" km</td></tr>"
@@ -10524,13 +10527,10 @@ $("#saveHandhole").click(function () {
 							success: function (data) {
 								
 								if(data!=null){
-		
 									window[""+data.distributionBoardId]=[];
 									window[""+data.distributionBoardId]=[data.distributionBoardId,DistributionBoardLong,DistributionBoardLat,DistributionBoardName,DistributionBoardCapacity,locationId, IdNodeSelectedTemp,boardCity,dbNetLevel];
-						
-						
+												
 									if(actiondistBoardContext=="Insert"){
-										
 										if(dbNetLevel=="backbone") {
 											str="<ul><li id='"+data.distributionBoardId+"'  class='DistributionBoard' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/backboneDB.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li></ul>";								
 										}
@@ -10540,11 +10540,12 @@ $("#saveHandhole").click(function () {
 										else if(dbNetLevel=="access") {
 											str="<ul><li id='"+data.distributionBoardId+"'  class='DistributionBoard' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/accessDb.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li></ul>";								
 										}
-									 $("#DistributionBoard_"+dbNetLevel+"__"+IdNodeSelectedTemp).append(str);
-									 
+									 $("#DistributionBoard_"+dbNetLevel+"__"+IdNodeSelectedTemp).append(str);									 
 									}
 									else if(actiondistBoardContext=="Update"){
+										console.log("DBoldNtwLevel and dbNetLevel are" +DBoldNtwLevel + " " + dbNetLevel);
 									  if(DBoldNtwLevel != dbNetLevel){
+										  console.log("Different DB Network Level");
 									    $("#"+data.distributionBoardId).remove();
 										if(dbNetLevel=="backbone") {
 											str="<ul><li id='"+data.distributionBoardId+"'  class='DistributionBoard' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/backboneDB.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li></ul>";								
@@ -10555,9 +10556,8 @@ $("#saveHandhole").click(function () {
 										else if(dbNetLevel=="access") {
 											str="<ul><li id='"+data.distributionBoardId+"'  class='DistributionBoard' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/accessDb.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li></ul>";								
 										}
-										$("#DistributionBoard_"+dbNetLevel+"__"+IdNodeSelectedTemp).append(str);
-									}
-									}
+										$("#DistributionBoard_"+dbNetLevel+"__"+IdNodeSelectedTemp).append(str);									
+									}		
 									else{
 										if(dbNetLevel=="backbone") {
 											$("#"+data.distributionBoardId+"> .TreeSpan").html("<img class='image' src='"+getContext()+"/resources/NetworkImages/backboneDB.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li>");
@@ -10569,6 +10569,7 @@ $("#saveHandhole").click(function () {
 											$("#"+data.distributionBoardId+"> .TreeSpan").html("<img class='image' src='"+getContext()+"/resources/NetworkImages/accessDb.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li>");
 										}
 									 }
+									}
 								 $("#"+data.distributionBoardId).children(':checkbox').prop( "checked", true );
 	
 									$("#"+data.distributionBoardId).contextmenu(function(){
@@ -10655,7 +10656,6 @@ $("#saveHandhole").click(function () {
 										
 										$("#network_tree").animate({ scrollTop: offsettot}, "slow");
 										}
-										DBoldNtwLevel="";
 									},
 								    error: function (result) {
 									alert("Error");
@@ -14044,9 +14044,9 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 						  //if more than 1 strand exist under the tubes folder( No need to append the strands folder (already exists) ) 
 						  if($("#"+tubeId+"_f").find('ul').length > 0){
 						  if(document.getElementById("strandNumber").value!=""){
-							str="<ul><li id='"+data.StrandID+"' class='STRAND' style='display:none;'><input type='checkbox' class='FiberStrand checkFilter' checked class='filter'></input> <span class='TreeSpan' style='color:black;'> <div style='margin-bottom:-17px;margin-left:1px; font-size:12px; font-weight:bold; color:"+document.getElementById("strandColor").value+"'>"+document.getElementById("strandNumber").value+"</div> <img src='"+getContext()+"/resources/NetworkImages/strand.png' style='margin-bottom:-10px;'> "+strandName+" / "+data.StrandID+" </span></li></ul>";
+							str="<ul><li id='"+data.StrandID+"' class='STRAND' style='display:none;'><input type='checkbox' class='FiberStrand checkFilter' checked class='filter'></input> <span class='TreeSpan' style='color:black;'> <span style='font-size:12px; font-weight:bold; transform: translateY(-4px); color:"+document.getElementById("strandColor").value+"'>"+document.getElementById("strandNumber").value+"</span> <img style='margin-bottom:-3px; margin-left:-25px' src='"+getContext()+"/resources/NetworkImages/strand.png'> "+strandName+" / "+data.StrandID+" </span></li></ul>";
 						  }else{
-						  	str="<ul><li id='"+data.StrandID+"' class='STRAND' style='display:none;'><input type='checkbox' class='FiberStrand checkFilter' checked class='filter'></input> <span class='TreeSpan' style='color:black;'> <div style='margin-bottom:-17px;margin-left:1px; font-size:12px; font-weight:bold; color:"+document.getElementById("strandColor").value+"'>null</div> <img src='"+getContext()+"/resources/NetworkImages/strand.png' style='margin-bottom:-10px;'> "+strandName+" / "+data.StrandID+" </span></li></ul>";
+						  	str="<ul><li id='"+data.StrandID+"' class='STRAND' style='display:none;'><input type='checkbox' class='FiberStrand checkFilter' checked class='filter'></input> <span class='TreeSpan' style='color:black;'> <span style='font-size:12px; font-weight:bold; transform: translateY(-4px); color:"+document.getElementById("strandColor").value+"'>null</span> <img style='margin-bottom:-3px; margin-left:-25px' src='"+getContext()+"/resources/NetworkImages/strand.png'> "+strandName+" / "+data.StrandID+" </span></li></ul>";
 						  }
 							 $("#"+tubeId+"_f").append(str);
 						 }
@@ -14063,9 +14063,9 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 							 
 							 //Append the saved strand to the Strands folder created above
 							 if(document.getElementById("strandNumber").value!=""){
-								 str="<ul><li id='"+data.StrandID+"' class='STRAND' style='display:none;'><input type='checkbox' class='FiberStrand checkFilter' checked class='filter'></input> <span class='TreeSpan' style='color:black;'> <div style='margin-bottom:-17px;margin-left:1px; font-size:12px; font-weight:bold; color:"+document.getElementById("strandColor").value+"'>"+document.getElementById("strandNumber").value+"</div> <img src='"+getContext()+"/resources/NetworkImages/strand.png' style='margin-bottom:-10px;'> "+strandName+" / "+data.StrandID+" </span></li></ul>";
+								 str="<ul><li id='"+data.StrandID+"' class='STRAND' style='display:none;'><input type='checkbox' class='FiberStrand checkFilter' checked class='filter'></input> <span class='TreeSpan' style='color:black;'> <span style='font-size:12px; font-weight:bold; transform: translateY(-4px); color:"+document.getElementById("strandColor").value+"'>"+document.getElementById("strandNumber").value+"</span> <img style='margin-bottom:-3px; margin-left:-25px' src='"+getContext()+"/resources/NetworkImages/strand.png'> "+strandName+" / "+data.StrandID+" </span></li></ul>";
 							 }else{
-							 	str="<ul><li id='"+data.StrandID+"' class='STRAND' style='display:none;'><input type='checkbox' class='FiberStrand checkFilter' checked class='filter'></input> <span class='TreeSpan' style='color:black;'> <div style='margin-bottom:-17px;margin-left:1px; font-size:12px; font-weight:bold; color:"+document.getElementById("strandColor").value+"'>null</div> <img src='"+getContext()+"/resources/NetworkImages/strand.png' style='margin-bottom:-10px;'> "+strandName+" / "+data.StrandID+" </span></li></ul>";
+							 	str="<ul><li id='"+data.StrandID+"' class='STRAND' style='display:none;'><input type='checkbox' class='FiberStrand checkFilter' checked class='filter'></input> <span class='TreeSpan' style='color:black;'> <span style='font-size:12px; font-weight:bold; transform: translateY(-4px); color:"+document.getElementById("strandColor").value+"'>null</span> <img style='margin-bottom:-3px; margin-left:-25px' src='"+getContext()+"/resources/NetworkImages/strand.png'> "+strandName+" / "+data.StrandID+" </span></li></ul>";
 							 }
 							 $("#"+tubeId+"_f").append(str);
 								
@@ -14099,11 +14099,11 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 					  else {	
 						  $("#"+data.StrandID).children(':checkbox').prop( "checked", true );
 						  if(document.getElementById("strandNumber").value!=""){
-							  $("#"+data.StrandID+"> .TreeSpan").html("<div style='margin-bottom:-17px;margin-left:1px; font-size:12px; font-weight:bold; color:"+document.getElementById("strandColor").value+"'>"+document.getElementById("strandNumber").value+"</div> <img style='color: #08526D; margin-bottom:-10px;' src='"+getContext()+"/resources/NetworkImages/strand.png'>  " +strandName+" / "+data.StrandID+" <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' > ");  
+							  $("#"+data.StrandID+"> .TreeSpan").html("<span style='font-size:12px; font-weight:bold; transform: translateY(-4px); color:"+document.getElementById("strandColor").value+"'>"+document.getElementById("strandNumber").value+"</span> <img style='margin-bottom:-3px; margin-left:-25px' src='"+getContext()+"/resources/NetworkImages/strand.png'>  " +strandName+" / "+data.StrandID+" <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' > ");  
 						  }else{
-							  $("#"+data.StrandID+"> .TreeSpan").html("<div style='margin-bottom:-17px;margin-left:1px; font-size:12px; font-weight:bold; color:"+document.getElementById("strandColor").value+"'>null</div> <img style='color: #08526D; margin-bottom:-10px;' src='"+getContext()+"/resources/NetworkImages/strand.png'>  " +strandName+" / "+data.StrandID+" <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' > ");  
+							  $("#"+data.StrandID+"> .TreeSpan").html("<span style='font-size:12px; font-weight:bold; transform: translateY(-4px); color:"+document.getElementById("strandColor").value+"'>null</span> <img style='margin-bottom:-3px; margin-left:-25px' src='"+getContext()+"/resources/NetworkImages/strand.png'>  " +strandName+" / "+data.StrandID+" <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' > ");  
 						  }
-						}
+						} // End Updating Strand Case
 										  					  
 					  window[""+data.StrandID]=[];
 					  window["mapPoints_"+data.StrandID]=[];
@@ -14239,21 +14239,27 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 					    
 						Create_FiberStrandClick_Event(data.StrandID);
 						ModalReset("StrandModal");
-					
-					$('.tree li#FiberPath_f_'+IdNodeSelectedTemp+' .TreeSpan').unbind("mouseover");	
+											
+					$("#" + data.StrandID + " > .TreeSpan").unbind("mouseover");						
+						
+					//$('.tree li#FiberPath_f_'+IdNodeSelectedTemp+' .TreeSpan').unbind("mouseover");	
 
-					$('.tree li#FiberPath_f_'+IdNodeSelectedTemp+' .TreeSpan').bind("mouseover",function(e) {
+					// $('.tree li#FiberPath_f_'+IdNodeSelectedTemp+' .TreeSpan').bind("mouseover",function(e) {
+					$("#" + data.StrandID + " > .TreeSpan").bind("mouseover",function(e) {
 						$(this).addClass('backgroundTree');
 							}).on("mouseout",function(e) {
 						$(this).removeClass('backgroundTree');
 		
 					});
-					
-					$('.tree li#FiberPath_f_'+IdNodeSelectedTemp+' .TreeSpan').on('click', function (e) {
-						$(".tree li#FiberPath_f_"+IdNodeSelectedTemp+" span").css("background-color", "");
+					console.log("IdNodeSelectedTemp is " +IdNodeSelectedTemp);
+//					$('.tree li#FiberPath_f_'+IdNodeSelectedTemp+' .TreeSpan').on('click', function (e) {
+					$("#" + data.StrandID + " > .TreeSpan").on('click', function (e) {						
+//						$(".tree li#FiberPath_f_"+IdNodeSelectedTemp+" span").css("background-color", "");
+						$("#" + IdSelectedTemp + " span").css("background-color", "");
 						$(this).css("background-color", "#97b9cc");
 						
-						$(".tree li#FiberPath_f_"+IdNodeSelectedTemp+"  span").removeClass("selected-span");		
+						//$(".tree li#FiberPath_f_"+IdNodeSelectedTemp+"  span").removeClass("selected-span");
+						$("#" + IdSelectedTemp + " span").removeClass("selected-span");
 						$(this).addClass("selected-span");
 						 IdSelectedTemp=$(this).parent().attr('id');
 					});
@@ -17749,7 +17755,7 @@ function MouseHoveringSpans(selector){
 	}
 	$(selector).unbind("mouseover");
 	$(selector).bind("mouseover",function(e) {
-		console.log("selector is " +$(this).attr('id'));
+		//console.log("selector is " +$(this).parent().attr('id'));
 		$(this).addClass('backgroundTree');
 	}).on("mouseout",function(e) {
 		$(this).removeClass('backgroundTree');
