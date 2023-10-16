@@ -306,7 +306,7 @@ public class NetworkController {
 				strSites = strSites + " ) ";			
 				strSites=  AppendQuery("e",arrayParam, strSites);
 				
-				strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.ACTIVE_RECORD = '1' ";			
+				strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.ACTIVE_RECORD = '1' ";			
 				strSites=  AppendQuery("b",arrayParam, strSites);	
 					
 				//System.out.println("final query sites"+mapper.writeValueAsString(strSites));
@@ -483,7 +483,7 @@ public class NetworkController {
 					strSites=  AppendQuery("o",arrayParam, strSites);	
 					strSites = strSites + " ) ";			
 					strSites=  AppendQuery("e",arrayParam, strSites);
-					strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.ACTIVE_RECORD = '1' ";			
+					strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.ACTIVE_RECORD = '1' ";			
 					strSites=  AppendQuery("b",arrayParam, strSites);	
 						
 					//System.out.println("final query sites"+mapper.writeValueAsString(strSites));
@@ -665,7 +665,7 @@ public String Network_NdTypStNdCell(Locale locale, Model model, HttpServletReque
 				strSites=  AppendQuery("o",arrayParam, strSites);	
 				strSites = strSites + " ) ";			
 				strSites=  AppendQuery("e",arrayParam, strSites);
-				strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.ACTIVE_RECORD = '1' ";			
+				strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.ACTIVE_RECORD = '1' ";			
 				strSites=  AppendQuery("b",arrayParam, strSites);	
 					
 				//System.out.println("final query sites"+mapper.writeValueAsString(strSites));
@@ -764,7 +764,8 @@ public String Network_SupStNdCell(Locale locale, Model model, HttpServletRequest
 					+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID and w.ACTIVE_RECORD = '1' ";
 			
 			List<String> listSupp = new ArrayList<String>();
-			String strSup ="SELECT distinct a.SUPPLIER_ID,a.SUPPLIER_NAME FROM NODE_ACTIVE a where a.ACTIVE_RECORD = '1' and a.WARE_ID!='0' and a.WARE_ID!='null' and a.SUPPLIER_ID!='null' ";
+			String strSup ="SELECT distinct a.SUPPLIER_ID,a.SUPPLIER_NAME FROM NODE_ACTIVE a where a.ACTIVE_RECORD = '1' "
+					+ "and a.WARE_ID!='0' and a.WARE_ID!='null' and a.WARE_ID is not null and a.SUPPLIER_ID!='null' and a.SUPPLIER_ID is not null and a.SUPPLIER_ID!='0' ";
 
 				try {
 					if (enterprise != null && !enterprise.equals("null")) {
@@ -796,7 +797,7 @@ public String Network_SupStNdCell(Locale locale, Model model, HttpServletRequest
 					strSites=  AppendQuery("o",arrayParam, strSites);	
 					strSites = strSites + " ) ";			
 					strSites=  AppendQuery("e",arrayParam, strSites);
-					strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.ACTIVE_RECORD = '1' AND b.SUPPLIER_ID!='null' ";			
+					strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.ACTIVE_RECORD = '1' AND b.SUPPLIER_ID!='null' ";			
 					strSites=  AppendQuery("b",arrayParam, strSites);	
 						
 					//System.out.println("final query sites"+mapper.writeValueAsString(strSites));
@@ -874,7 +875,8 @@ public String Network_SupStNdTypNdCell(Locale locale, Model model, HttpServletRe
 					+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID and w.ACTIVE_RECORD = '1' ";
 			
 			List<String> listSupp = new ArrayList<String>();
-			String strSup ="SELECT distinct a.SUPPLIER_ID,a.SUPPLIER_NAME FROM NODE_ACTIVE a where a.ACTIVE_RECORD = '1' and a.WARE_ID!='0' and a.WARE_ID!='null' and a.SUPPLIER_ID!='null' ";
+			String strSup ="SELECT distinct a.SUPPLIER_ID,a.SUPPLIER_NAME FROM NODE_ACTIVE a where a.ACTIVE_RECORD = '1' and "
+					+ "a.WARE_ID!='0' and a.WARE_ID!='null' and a.WARE_ID is not null and a.SUPPLIER_ID!='null' and a.SUPPLIER_ID is not null and a.SUPPLIER_ID!='0' ";
 
 				try {
 					if (enterprise != null && !enterprise.equals("null")) {
@@ -906,7 +908,7 @@ public String Network_SupStNdTypNdCell(Locale locale, Model model, HttpServletRe
 					strSites=  AppendQuery("o",arrayParam, strSites);	
 					strSites = strSites + " ) ";			
 					strSites=  AppendQuery("e",arrayParam, strSites);
-					strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.ACTIVE_RECORD = '1' AND b.SUPPLIER_ID!='null' ";			
+					strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.ACTIVE_RECORD = '1' AND b.SUPPLIER_ID!='null' ";			
 					strSites=  AppendQuery("b",arrayParam, strSites);	
 						
 					//System.out.println("final query sites"+mapper.writeValueAsString(strSites));
@@ -982,7 +984,8 @@ public String Network_SupNdTypStCell(Locale locale, Model model, HttpServletRequ
 					+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID and w.ACTIVE_RECORD = '1' ";
 			
 			List<String> listSupp = new ArrayList<String>();
-			String strSup ="SELECT distinct a.SUPPLIER_ID,a.SUPPLIER_NAME FROM NODE_ACTIVE a where a.ACTIVE_RECORD = '1' and a.WARE_ID!='0' and a.WARE_ID!='null' and a.SUPPLIER_ID!='null' ";
+			String strSup ="SELECT distinct a.SUPPLIER_ID,a.SUPPLIER_NAME FROM NODE_ACTIVE a where a.ACTIVE_RECORD = '1' and "
+					+ "a.WARE_ID!='0' and a.WARE_ID!='null' and a.WARE_ID is not null and a.SUPPLIER_ID!='0' and a.SUPPLIER_ID is not null and a.SUPPLIER_ID!='null' ";
 			
 			try {
 				if (enterprise != null && !enterprise.equals("null")) {
@@ -1014,7 +1017,7 @@ public String Network_SupNdTypStCell(Locale locale, Model model, HttpServletRequ
 				strSites=  AppendQuery("o",arrayParam, strSites);	
 				strSites = strSites + " ) ";			
 				strSites=  AppendQuery("e",arrayParam, strSites);
-				strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.ACTIVE_RECORD = '1' AND b.SUPPLIER_ID!='null' ";			
+				strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.ACTIVE_RECORD = '1' AND b.SUPPLIER_ID!='null' ";			
 				strSites=  AppendQuery("b",arrayParam, strSites);	
 					
 				//System.out.println("final query sites"+mapper.writeValueAsString(strSites));
@@ -1093,7 +1096,7 @@ public String Network_PoSiteItem(Locale locale, Model model, HttpServletRequest 
 					+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID and w.ACTIVE_RECORD = '1' ";
 			
 			List<String> listPO = new ArrayList<String>();
-			String strPO ="SELECT distinct a.PO_ID FROM ASSET_REGISTRY a WHERE a.PO_ID!='null' ";
+			String strPO ="SELECT distinct a.PO_ID FROM ASSET_REGISTRY a WHERE a.PO_ID!='0' and a.PO_ID is not null and a.PO_ID!='null' ";
 			
 		 try {	
 			 if (enterprise != null && !enterprise.equals("null")) {
@@ -1127,7 +1130,7 @@ public String Network_PoSiteItem(Locale locale, Model model, HttpServletRequest 
 				strSites=  AppendQuery("o",arrayParam, strSites);	
 				strSites = strSites + " ) ";			
 				strSites=  AppendQuery("e",arrayParam, strSites);
-				strSites = strSites + ") as countUcells FROM AR_SITE b,ASSET_REGISTRY j where j.AR_ID=b.AR_ID AND b.WARE_ID!='0' and b.WARE_ID!='null' ";			
+				strSites = strSites + ") as countUcells FROM AR_SITE b,ASSET_REGISTRY j where j.AR_ID=b.AR_ID and b.WARE_ID!='0' and b.WARE_ID is not null and b.WARE_ID!='null' ";			
 				strSites=  AppendQuery("j",arrayParam, strSites);	
 					
 				//System.out.println("final query sites"+mapper.writeValueAsString(strSites));
@@ -1206,7 +1209,7 @@ public String Network_PoItemSite(Locale locale, Model model, HttpServletRequest 
 					+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID and w.ACTIVE_RECORD = '1' ";
 			
 			List<String> listPO = new ArrayList<String>();
-			String strPO ="SELECT distinct a.PO_ID FROM ASSET_REGISTRY a WHERE a.PO_ID!='null' ";
+			String strPO ="SELECT distinct a.PO_ID FROM ASSET_REGISTRY a WHERE a.PO_ID!='0' and a.PO_ID is not null and a.PO_ID!='null' ";
 			
 			try {	
 				 if (enterprise != null && !enterprise.equals("null")) {
@@ -1240,7 +1243,7 @@ public String Network_PoItemSite(Locale locale, Model model, HttpServletRequest 
 					strSites=  AppendQuery("o",arrayParam, strSites);	
 					strSites = strSites + " ) ";			
 					strSites=  AppendQuery("e",arrayParam, strSites);
-					strSites = strSites + ") as countUcells FROM AR_SITE b,ASSET_REGISTRY j where j.AR_ID=b.AR_ID AND b.WARE_ID!='0' and b.WARE_ID!='null' ";			
+					strSites = strSites + ") as countUcells FROM AR_SITE b,ASSET_REGISTRY j where j.AR_ID=b.AR_ID AND b.WARE_ID!='0' and b.WARE_ID is not null and b.WARE_ID!='null' ";			
 					strSites=  AppendQuery("j",arrayParam, strSites);	
 						
 					//System.out.println("final query sites"+mapper.writeValueAsString(strSites));
@@ -1350,7 +1353,7 @@ public String Network_SitePoItem(Locale locale, Model model, HttpServletRequest 
 				strSites=  AppendQuery("o",arrayParam, strSites);	
 				strSites = strSites + " ) ";			
 				strSites=  AppendQuery("e",arrayParam, strSites);
-				strSites = strSites + ") as countUcells FROM AR_SITE b,ASSET_REGISTRY j where j.AR_ID=b.AR_ID AND b.WARE_ID!='0' and b.WARE_ID!='null' ";			
+				strSites = strSites + ") as countUcells FROM AR_SITE b,ASSET_REGISTRY j where j.AR_ID=b.AR_ID AND b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null ";			
 				strSites=  AppendQuery("j",arrayParam, strSites);	
 					
 				//System.out.println("final query sites"+mapper.writeValueAsString(strSites));
@@ -1816,7 +1819,7 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 			String paramCore = request.getParameter("paramCore");
 				
 			List<String> site_SuppList = new ArrayList<String>();
-			String strSites ="SELECT distinct b.WARE_NAME,b.WARE_ID,b.LATITUDE,b.LONGITUDE,b.SUPPLIER_ID FROM NODE_ACTIVE b where b.WARE_ID!='0' and b.WARE_ID!='null' and b.SUPPLIER_ID='"+ selectedSupp + "' ";
+			String strSites ="SELECT distinct b.WARE_NAME,b.WARE_ID,b.LATITUDE,b.LONGITUDE,b.SUPPLIER_ID FROM NODE_ACTIVE b where b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.SUPPLIER_ID='"+ selectedSupp + "' ";
 			
 			List<String> nodeSuppList = new ArrayList<String>();
 			String strNodes ="SELECT NODE_PK,NODE_TYPE,NODE_NAME,WARE_ID,SUPPLIER_ID,"
@@ -3575,7 +3578,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				String paramCore = request.getParameter("paramCore");
 				
 				List<String> listSites = new ArrayList<String>();
-				String strSites ="SELECT DISTINCT b.SITE_ID,b.SITE_NAME,b.WARE_ID,j.PO_ID FROM AR_SITE b,ASSET_REGISTRY j where j.AR_ID=b.AR_ID AND b.WARE_ID!='0' and b.WARE_ID!='null' and j.PO_ID='"+selectedItem+"' ";
+				String strSites ="SELECT DISTINCT b.SITE_ID,b.SITE_NAME,b.WARE_ID,j.PO_ID FROM AR_SITE b,ASSET_REGISTRY j WHERE j.AR_ID=b.AR_ID AND b.WARE_ID!='0' AND b.WARE_ID!='null' AND b.WARE_ID is not null AND j.PO_ID='"+selectedItem+"' ";
 				
 				List<String> itemList = new ArrayList<String>();
 				String strItems ="SELECT distinct a.ITEM_CODE, a.ITEM_NAME, a.PO_ID, b.WARE_ID, a.ITEM_MODEL FROM ASSET_REGISTRY a, AR_SITE b WHERE a.AR_ID=b.AR_ID AND b.WARE_ID='"+selectedSite+"' AND a.PO_ID='"+selectedItem+"' ";			
@@ -4399,7 +4402,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			String strItems ="SELECT distinct a.ITEM_CODE, a.ITEM_NAME, a.PO_ID, a.ITEM_MODEL FROM ASSET_REGISTRY a WHERE a.PO_ID='"+selectedPo+"' ";			
 		
 			List<String> listSites = new ArrayList<String>();
-			String strSites ="SELECT DISTINCT b.SITE_ID,b.SITE_NAME,b.WARE_ID,j.ITEM_CODE,j.PO_ID FROM AR_SITE b,ASSET_REGISTRY j where j.AR_ID=b.AR_ID AND b.WARE_ID!='0' and b.WARE_ID!='null' and j.PO_ID='" + selectedPo + "' and j.ITEM_CODE='" + selectedItem + "' ";		
+			String strSites ="SELECT DISTINCT b.SITE_ID,b.SITE_NAME,b.WARE_ID,j.ITEM_CODE,j.PO_ID FROM AR_SITE b,ASSET_REGISTRY j where j.AR_ID=b.AR_ID AND b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and j.PO_ID='" + selectedPo + "' and j.ITEM_CODE='" + selectedItem + "' ";		
 			
 			
 			if (POAlreadyCreated.equals("false")) {
@@ -4642,7 +4645,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				String paramCore = request.getParameter("paramCore");
 				
 				List<String> site_SuppList = new ArrayList<String>();
-				String strSites ="SELECT distinct b.WARE_NAME,b.WARE_ID,b.LATITUDE,b.LONGITUDE,b.SUPPLIER_ID,b.NODE_TYPE FROM NODE_ACTIVE b where b.WARE_ID!='0' and b.WARE_ID!='null' and b.SUPPLIER_ID='"+ selectedSupp + "' AND b.NODE_TYPE='" + SelectedNodeType + "' ";
+				String strSites ="SELECT distinct b.WARE_NAME,b.WARE_ID,b.LATITUDE,b.LONGITUDE,b.SUPPLIER_ID,b.NODE_TYPE FROM NODE_ACTIVE b where b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.SUPPLIER_ID='"+ selectedSupp + "' AND b.NODE_TYPE='" + SelectedNodeType + "' ";
 				
 				List<String> listNodeType = new ArrayList<String>();
 				String strNodesType ="SELECT DISTINCT b.NODE_TYPE,b.SUPPLIER_ID FROM NODE_ACTIVE b WHERE b.ACTIVE_RECORD = '1' and b.SUPPLIER_ID='" + selectedSupp + "' ";			
