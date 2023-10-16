@@ -1015,42 +1015,59 @@ class AlmgridTable {
                     e.preventDefault();
                     
                     var clickedForm = $(item).next().find("form").attr("id");
-                    document.getElementById("loaderDiv").style.display = "block";
-
-                    //Clear the popup when loading new data
-                    if(clusterize !=undefined) {
-                        var temp=[];
-                       clusterize.update(temp);
-                   	$("#" +clickedForm).find(".totalNoPages").val("0");
-                   	$("#" +clickedForm).find(".nextPrevPage").val("0");
-
-                    }
-                    
-                    setTimeout(function() {
-                    
-                    var clickedIndex = clickedForm.split(almgrid.tableId + "_filterform");
+					var clickedIndex = clickedForm.split(almgrid.tableId + "_filterform");
                     var columnNumberPressed = clickedIndex[1];
 
-                    let indexVarColPressed
+                    let indexVarColPressed;
                     if(almgrid.selectCheckbox === true){
-                        indexVarColPressed = columnNumberPressed
+                        indexVarColPressed = columnNumberPressed;
                     }else{
-                        indexVarColPressed = columnNumberPressed - 1
+                        indexVarColPressed = columnNumberPressed - 1;
+                    }
+					
+					if(checkboxArray[columnNumberPressed].length === 0){
+                    	// Create a temporary set to store unique values
+                      	var uniqueValues = new Set();
+
+                      	// Iterate over almgrid.dataArray using a for loop instead of $.each
+                      	for (var i = 0; i < almgrid.dataArray.length; i++) {
+                      	    // Get the value at the desired column index
+                      	    var value = almgrid.dataArray[i][almgrid.ArrayKeys[indexVarColPressed]];
+
+                      	    // Add the value to the uniqueValues set
+                      	    uniqueValues.add(value);
+                      	}
+                      	// Convert the uniqueValues set back to an array
+                         checkboxArray[columnNumberPressed] = Array.from(uniqueValues);                              
                     }
 
-                    availableArray = almgrid.dataArray;
-                    
-                    availableArray = headerFilter(availableArray)
+					//Clear the popup when loading new data
+                    if(clusterize !=undefined) {
+                        var temp=[];
+                       	clusterize.update(temp);
+                   		$("#" +clickedForm).find(".totalNoPages").val("0");
+                   		$("#" +clickedForm).find(".nextPrevPage").val("0");
 
+                    }
+					                    
+                   if(checkboxArray[columnNumberPressed].length > 35000 ) {
+						
+						document.getElementById("loaderDiv").style.display = "none";
+						document.getElementById("alertMsgDiv").style.display = "block";
+					}
+					else {	
+						document.getElementById("loaderDiv").style.display = "block";
+						document.getElementById("alertMsgDiv").style.display = "none";
+ 
+                    setTimeout(function() {
+                    
+                    
+                    availableArray = almgrid.dataArray;
+                    availableArray = headerFilter(availableArray)
                     availableArray = dropdownFilter(availableArray,columnNumberPressed,"showavailable")
-                       
                     availableArray = globalSearchFilter(availableArray)
 
-                    
-
-                  
-
-                    var newArray = [];
+		            var newArray = [];
                     var availablenewArray = []
 
                     // need to select all the checkbox for the available options when pressed the first time
@@ -1069,21 +1086,7 @@ class AlmgridTable {
                         //console.log("after the first loop")
                     }
                     */
-                    if(checkboxArray[columnNumberPressed].length === 0){
-                    	// Create a temporary set to store unique values
-                      	var uniqueValues = new Set();
-
-                      	// Iterate over almgrid.dataArray using a for loop instead of $.each
-                      	for (var i = 0; i < almgrid.dataArray.length; i++) {
-                      	    // Get the value at the desired column index
-                      	    var value = almgrid.dataArray[i][almgrid.ArrayKeys[indexVarColPressed]];
-
-                      	    // Add the value to the uniqueValues set
-                      	    uniqueValues.add(value);
-                      	}
-                      	// Convert the uniqueValues set back to an array
-                         checkboxArray[columnNumberPressed] = Array.from(uniqueValues);                              
-                    }
+                    
                     
                    // console.log("before the second loop")
                    /* $.each(almgrid.dataArray, function (i, value) {
@@ -1133,6 +1136,7 @@ class AlmgridTable {
                     almgrid.drawCustomFilters(columnNumberPressed, clickedForm, uniqueArray, uniqueAvailableArray,checkboxArray,uncheckboxArray,"0","30000","30000","1");
                     document.getElementById("loaderDiv").style.display = "none";
                 })
+				}
                 }, 0); // Simulating 0 second delay
 
 
