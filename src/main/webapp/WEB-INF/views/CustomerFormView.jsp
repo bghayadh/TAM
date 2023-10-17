@@ -1052,7 +1052,7 @@ $("#deleteButton").click(  function() {
 	        			}
 					}
 				
-				if(SelectedIndex === 1){ //first record in database
+				if(SelectedIndex == 1){ //first record in database
 					
 	        		document.getElementById("btnFirst").style.opacity = 0.5;
 	        		$("#btnFirst").hasClass("disabled");
