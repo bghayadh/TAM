@@ -14233,6 +14233,7 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 							}	
 						} 
 						
+						$("#" + data.StrandID + " > .TreeSpan").css("display", "inline");
 						$("#strandCheckAllBoq").prop('checked', true);
 						map.fitBounds(window["bounds_"+data.StrandID]);
 					    
