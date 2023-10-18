@@ -258,7 +258,7 @@
                 				</div>
                 				<div class="card-body mycard CardBody">
                 					<div id="loadingmessage1" class="loadingmsg">
-                						<img src="../../alm/resources/images/ajax-loader.gif">
+                						<img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif">
                 					</div>
                 					<div id="loadingResult1" class="loadingRes"></div>
                 				</div>
@@ -280,7 +280,7 @@
                 				</div>
                 				<div class="card-body mycard CardBody">
                 					<div id="loadingmessage2" class="loadingmsg">
-                						<img src="../../alm/resources/images/ajax-loader.gif">
+                						<img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif">
                 					</div>
                 					<div id="loadingResult2" class="loadingRes"></div>
                 				</div>
@@ -302,7 +302,7 @@
                 				</div>
                 				<div class="card-body mycard CardBody">
                 					<div id="loadingmessage3" class="loadingmsg">
-                						<img src="../../alm/resources/images/ajax-loader.gif">
+                						<img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif">
                 					</div>
                 					<div id="loadingResult3" class="loadingRes"></div>
                 				</div>
@@ -331,7 +331,7 @@
                 				</div>
                 				<div class="card-body mycard CardBody">
                 					<div id="loadingmessage11" class="loadingmsg">
-                						<img src="../../alm/resources/images/ajax-loader.gif">
+                						<img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif">
                 					</div>
                 					<div id="loadingResult11" class="loadingRes"></div>
                 				</div>
@@ -353,7 +353,7 @@
                 				</div>
                 				<div class="card-body mycard CardBody">
                 					<div id="loadingmessage22" class="loadingmsg">
-                						<img src="../../alm/resources/images/ajax-loader.gif">
+                						<img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif">
                 					</div>
                 					<div id="loadingResult22" class="loadingRes"></div>
                 				</div>
@@ -375,7 +375,7 @@
                 				</div>
                 				<div class="card-body mycard CardBody">
                 					<div id="loadingmessage33" class="loadingmsg">
-                						<img src="../../alm/resources/images/ajax-loader.gif">
+                						<img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif">
                 					</div>
                 					<div id="loadingResult33" class="loadingRes"></div>
                 				</div>
@@ -402,7 +402,7 @@
                 				</div>
                 				<div class="card-body mycard CardBody">
                 					<div id="loadingmessage44" class="loadingmsg">
-                						<img src="../../alm/resources/images/ajax-loader.gif">
+                						<img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif">
                 					</div>
                 					<div id="loadingResult44" class="loadingRes"></div>
                 				</div>
@@ -424,7 +424,7 @@
                 				</div>
                 				<div class="card-body mycard CardBody">
                 					<div id="loadingmessage55" class="loadingmsg">
-                						<img src="../../alm/resources/images/ajax-loader.gif">
+                						<img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif">
                 					</div>
                 					<div id="loadingResult55" class="loadingRes"></div>
                 				</div>
@@ -446,7 +446,7 @@
                 				</div>
                 				<div class="card-body mycard CardBody">
                 					<div id="loadingmessage66" class="loadingmsg">
-                						<img src="../../alm/resources/images/ajax-loader.gif">
+                						<img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif">
                 					</div>
                 					<div id="loadingResult66" class="loadingRes"></div>
                 				</div>
@@ -476,7 +476,7 @@
                 				
                 				<div class="card-body mycard CardBody">
                 					<div id="loadingmessage4" class="loadingmsg">
-                						<img src="../../alm/resources/images/ajax-loader.gif">
+                						<img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif">
                 					</div>
                 					<div id="loadingResult4" class="loadingRes"></div>
                 				</div>
@@ -498,7 +498,7 @@
                 				</div>
                 				<div class="card-body mycard CardBody">
                 					<div id="loadingmessage5" class="loadingmsg">
-                						<img src="../../alm/resources/images/ajax-loader.gif">
+                						<img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif">
                 					</div>
                 					<div id="loadingResult5" class="loadingRes"></div>
                 				</div>
@@ -520,7 +520,7 @@
                 				</div>
                 				<div class="card-body mycard CardBody">
                 					<div id="loadingmessage6" class="loadingmsg">
-                						<img src="../../alm/resources/images/ajax-loader.gif">
+                						<img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif">
                 					</div>
                 					<div id="loadingResult6" class="loadingRes"></div>
                 				</div>
@@ -549,7 +549,7 @@
 									
 									<div class="card-body mycard CardBody">
 										<div id="loadingmessage7" class="loadingmsg">
-											<img src="../../alm/resources/images/ajax-loader.gif">
+											<img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif">
 										</div>
 										<div id="loadingResult7" class="loadingRes"></div>
 									</div>
@@ -571,7 +571,7 @@
 									</div>
 									<div class="card-body mycard CardBody">
 										<div id="loadingmessage8" class="loadingmsg">
-											<img src="../../alm/resources/images/ajax-loader.gif">
+											<img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif">
 										</div>
 										<div id="loadingResult8" class="loadingRes"></div>
 									</div>
@@ -593,7 +593,7 @@
 									</div>
 									<div class="card-body mycard CardBody">
 										<div id="loadingmessage9" class="loadingmsg">
-											<img src="../../alm/resources/images/ajax-loader.gif">
+											<img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif">
 										</div>
 										<div id="loadingResult9" class="loadingRes"></div>
 									</div>
