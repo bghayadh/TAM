@@ -14457,9 +14457,9 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 						  else {					  
 							  $("#"+data.tubeID).children(':checkbox').prop( "checked", true );
 							  if(document.getElementById("tubeNumber").value!=""){
-								 $("#"+data.tubeID+"> .TreeSpan").html("<span style='font-size:12px; font-weight:bold; transform: translateY(-4px); color:"+document.getElementById("tubeColor").value+"'>"+document.getElementById("tubeNumber").value+"</span> <img style='color: #08526D; margin-bottom:-3px; margin-left:-25px;' src='"+getContext()+"/resources/NetworkImages/core.png'> " +data.TubeName+" / "+data.tubeID+" <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' id='pushPointsStrands"+data.tubeID+"' class='pushPoints'> <img src='"+getContext()+"/resources/NetworkImages/remove.png' hidden style='margin-left:10px' id='cancelPointsStrands"+data.tubeID+"' class='clearPoints'> ");												  
+								 $("#"+data.tubeID+"> .TreeSpan").html(" <span style='font-size:12px; font-weight:bold; transform: translateY(-4px); color:"+document.getElementById("tubeColor").value+"'>"+document.getElementById("tubeNumber").value+"</span> <img style='color: #08526D; margin-bottom:-3px; margin-left:-25px;' src='"+getContext()+"/resources/NetworkImages/core.png'> " +data.TubeName+" / "+data.tubeID+" <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' id='pushPointsStrands"+data.tubeID+"' class='pushPoints'> <img src='"+getContext()+"/resources/NetworkImages/remove.png' hidden style='margin-left:10px' id='cancelPointsStrands"+data.tubeID+"' class='clearPoints'> ");												  
 							  } else{
-								  $("#"+data.tubeID+"> .TreeSpan").html("<span style='font-size:12px; font-weight:bold; transform: translateY(-4px); color:"+document.getElementById("tubeColor").value+"'>null</span> <img style='color: #08526D; margin-bottom:-3px; margin-left:-25px;' src='"+getContext()+"/resources/NetworkImages/core.png'> " +data.TubeName+" / "+data.tubeID+" <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' id='pushPointsStrands"+data.tubeID+"' class='pushPoints'> <img src='"+getContext()+"/resources/NetworkImages/remove.png' hidden style='margin-left:10px' id='cancelPointsStrands"+data.tubeID+"' class='clearPoints'> ");												  
+								  $("#"+data.tubeID+"> .TreeSpan").html(" <span style='font-size:12px; font-weight:bold; transform: translateY(-4px); color:"+document.getElementById("tubeColor").value+"'>null</span> <img style='color: #08526D; margin-bottom:-3px; margin-left:-25px;' src='"+getContext()+"/resources/NetworkImages/core.png'> " +data.TubeName+" / "+data.tubeID+" <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' id='pushPointsStrands"+data.tubeID+"' class='pushPoints'> <img src='"+getContext()+"/resources/NetworkImages/remove.png' hidden style='margin-left:10px' id='cancelPointsStrands"+data.tubeID+"' class='clearPoints'> ");												  
 							  }
 						  
 							//For update (To hide the strand from Map if exist)
@@ -14612,7 +14612,9 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 								 tubeArray[data.tubeID].setMap(map);		
 							}	
 						}
-							$("#tubeCheckAllBoq").prop('checked', true);
+						
+						$("#"+data.tubeID + '> .TreeSpan').css("display", "inline");
+						$("#tubeCheckAllBoq").prop('checked', true);
 							
 							
 						  if(data.strandsCount>0) {  
@@ -14636,9 +14638,9 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 						Create_FiberTubeClick_Event(data.tubeID);
 						ModalReset("TubeModal"); 
 									
-						$('.tree li#FiberPath_f_'+IdNodeSelectedTemp+' .TreeSpan').unbind("mouseover");	
+						$("#"+data.tubeID + ' .TreeSpan').unbind("mouseover");	
 
-						$('.tree li#FiberPath_f_'+IdNodeSelectedTemp+' .TreeSpan').bind("mouseover",function(e) {
+						$("#"+data.tubeID + ' .TreeSpan').bind("mouseover",function(e) {
 							$(this).addClass('backgroundTree');
 								}).on("mouseout",function(e) {
 							$(this).removeClass('backgroundTree');
@@ -14646,11 +14648,12 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 						});
 													 										
 				
-						$('.tree li#FiberPath_f_'+IdNodeSelectedTemp+' .TreeSpan').on('click', function (e) {
-							$(".tree li#FiberPath_f_"+IdNodeSelectedTemp+" span").css("background-color", "");
+						//$('.tree li#FiberPath_f_'+IdNodeSelectedTemp+' .TreeSpan').on('click', function (e) {
+						$("#"+data.tubeID + ' .TreeSpan').on('click', function (e) {
+							$("#"+data.tubeID + ' .TreeSpan').css("background-color", "");
 							$(this).css("background-color", "#97b9cc");
 							
-							$(".tree li#FiberPath_f_"+IdNodeSelectedTemp+"  span").removeClass("selected-span");		
+							$("#"+data.tubeID + ' .TreeSpan').removeClass("selected-span");		
 							$(this).addClass("selected-span");
 							 IdSelectedTemp=$(this).parent().attr('id');
 						});
