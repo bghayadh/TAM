@@ -10280,8 +10280,7 @@ $("#saveHandhole").click(function () {
 					junctionCheckFilter("Handhole");
 			}//end else junction to append 
 					
-			
-			$('.TreeSpan').css("display", "inline");			
+						
 			//unbindTreeCheckboxEvents();
 						
 			$("#left").unbind('resize');
@@ -10296,7 +10295,7 @@ $("#saveHandhole").click(function () {
 		}// end update 
 
 				
-	$("#"+data.handholeId+" > span").css("display", "inline");
+	$("#"+data.handholeId+" > .TreeSpan").css("display", "inline");
 	tree_prop_selection("#" +data.handholeId+ " .TreeSpan");
 	// bind context menu event to Handhole
 	$("#"+data.handholeId+" > .TreeSpan").contextmenu(function(){
