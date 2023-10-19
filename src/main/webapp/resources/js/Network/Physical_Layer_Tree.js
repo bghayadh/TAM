@@ -4228,7 +4228,7 @@ singleNodeActive = new ContextMenu({
 						Create_Trench(data.trenchId);
 
 						$("#"+data.trenchId).children(':checkbox').prop("checked", true );
-
+						$("#"+data.trenchId+"> .TreeSpan").css("display", "inline");
 						pathMapListener(data.trenchId,"Trench_f_");
 						$("#trenchCheckAllBoq").prop("checked",true);
 
@@ -4518,7 +4518,7 @@ singleNodeActive = new ContextMenu({
 						 }
 						
 						Create_Duct(data.ductId);
-		
+						$("#"+data.ductId+"> .TreeSpan").css("display", "inline");
 						$("#ductCheckAllBoq").prop('checked', true);
 						map.fitBounds(window["bounds_"+data.ductId]);
 
@@ -10083,17 +10083,17 @@ $("#saveManhole").click(function () {
 					junctionCheckFilter("Manhole");
 				}//end else junction to append 		
 																	
-				$("#left").unbind('resize');
+				//$("#left").unbind('resize');
 				EnableOrigination=false;
 		
-				$("#left").bind('resize', function(e) {	
-					$('.tree li > .TreeSpan').width($(this).width());
-				});
+				//$("#left").bind('resize', function(e) {	
+				//	$('.tree li > .TreeSpan').width($(this).width());
+				//});
 	
 				treeCollapseFolder("#" +data.ManholeId+ " .folder","fast",".folder");
 			
 			} // end update manhole
-		$("#"+data.ManholeId+" > span").css("display", "inline");					
+		$("#"+data.ManholeId+" > .TreeSpan").css("display", "inline");					
 		$("#manholeModal").modal('hide');
 		
 		tree_prop_selection("#" +data.ManholeId+ " .TreeSpan");	
@@ -10283,12 +10283,12 @@ $("#saveHandhole").click(function () {
 						
 			//unbindTreeCheckboxEvents();
 						
-			$("#left").unbind('resize');
+			//$("#left").unbind('resize');
 			EnableOrigination=false;
 
-			$("#left").bind('resize', function(e) {	
-				$('.tree li > .TreeSpan').width($(this).width());														
-			});
+			//$("#left").bind('resize', function(e) {	
+			//	$('.tree li > .TreeSpan').width($(this).width());														
+			//});
 			console.log("selector is " + "#" +data.handholeId+ " .folder","fast",".folder");
 			treeCollapseFolder("#" +data.handholeId+ " .folder","fast",".folder");
 					
@@ -10612,7 +10612,7 @@ $("#saveHandhole").click(function () {
 										if(typeof infowindow!=='undefined'){
 											infowindow.close();
 										}
-										$("#"+data.distributionBoardId+" > span").css("display", "inline");
+										$("#"+data.distributionBoardId+" > .TreeSpan").css("display", "inline");
 											  
 										// remove the selection of previous item if exist and add it to the new one
 									
@@ -10664,7 +10664,7 @@ $("#saveHandhole").click(function () {
 									infowindow.close();								
 								}
 								
-								$("#"+data.distributionBoardId+" > span").css("display", "inline");
+								$("#"+data.distributionBoardId+" > .TreeSpan").css("display", "inline");
 
 								$("#distributionBoardModal").modal('hide');
 								
@@ -12182,7 +12182,7 @@ $("#saveHandhole").click(function () {
 											markersDistBoard[data.distributionBoardDetails[i][0]].setLabel({text: data.distributionBoardDetails[i][3], className:"marker-position-dB",color:"#5665F9"});
 										}
 										
-										$("#"+data.distributionBoardDetails[i][0]+" > span").css("display", "inline");
+										$("#"+data.distributionBoardDetails[i][0]+" > .TreeSpan").css("display", "inline");
 											  
 										// remove the selection of previous item if exist and add it to the new one
 									
@@ -13909,12 +13909,12 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 		 clearCreateFromMap(markerArrayAux);
 			 
 	}
-	$("#left").unbind('resize');
+	//$("#left").unbind('resize');
 	EnableOrigination=false;
-	$("#left").bind('resize', function(e) {	
-		$('.tree li > .TreeSpan').width($(this).width());
+	//$("#left").bind('resize', function(e) {	
+	//	$('.tree li > .TreeSpan').width($(this).width());
 		 
-	 });
+	// });
 
 });
 
@@ -14098,9 +14098,9 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 					  else {	
 						  $("#"+data.StrandID).children(':checkbox').prop( "checked", true );
 						  if(document.getElementById("strandNumber").value!=""){
-							  $("#"+data.StrandID+"> .TreeSpan").html("<span style='font-size:12px; font-weight:bold; transform: translateY(-4px); color:"+document.getElementById("strandColor").value+"'>"+document.getElementById("strandNumber").value+"</span> <img style='margin-bottom:-3px; margin-left:-25px' src='"+getContext()+"/resources/NetworkImages/strand.png'>  " +strandName+" / "+data.StrandID+" <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' > ");  
+							  $("#"+data.StrandID+"> .TreeSpan").html(" <span style='font-size:12px; font-weight:bold; transform: translateY(-4px); color:"+document.getElementById("strandColor").value+"'>"+document.getElementById("strandNumber").value+"</span> <img style='margin-bottom:-3px; margin-left:-25px' src='"+getContext()+"/resources/NetworkImages/strand.png'>  " +strandName+" / "+data.StrandID+" <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' > ");  
 						  }else{
-							  $("#"+data.StrandID+"> .TreeSpan").html("<span style='font-size:12px; font-weight:bold; transform: translateY(-4px); color:"+document.getElementById("strandColor").value+"'>null</span> <img style='margin-bottom:-3px; margin-left:-25px' src='"+getContext()+"/resources/NetworkImages/strand.png'>  " +strandName+" / "+data.StrandID+" <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' > ");  
+							  $("#"+data.StrandID+"> .TreeSpan").html(" <span style='font-size:12px; font-weight:bold; transform: translateY(-4px); color:"+document.getElementById("strandColor").value+"'>null</span> <img style='margin-bottom:-3px; margin-left:-25px' src='"+getContext()+"/resources/NetworkImages/strand.png'>  " +strandName+" / "+data.StrandID+" <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' > ");  
 						  }
 						} // End Updating Strand Case
 										  					  
