@@ -5593,7 +5593,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 												<div class="col-sm-2">
 												<div class="form-group">
 												<div class="input-group-prepend">
-													<button id="getCity" type="button" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; width: 100%; margin-left:25px" onclick="getCity()">get City</button>
+													<button id="getDBCity" type="button" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; width: 100%; margin-left:25px" onclick="getDBCity()">get City</button>
 												</div></div></div></div>
 								<div class="row">
 									<div class="col-md-6">

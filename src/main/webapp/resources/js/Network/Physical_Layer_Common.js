@@ -18774,11 +18774,11 @@ function HideContextMenuGoolge(ContextMenu) {
 
 }
 
-function getCity(){
+function getDBCity(){
 	
-	console.log("getCity ");
-	
-	geocoder = new google.maps.Geocoder();
+	console.log("getDBCity ");
+	fillCityByGeocoding("boardCity",$("#DistributionBoardLat").val(),$("#DistributionBoardLong").val(),geocoder)
+	/*geocoder = new google.maps.Geocoder();
 	var latlng = new google.maps.LatLng($("#DistributionBoardLat").val(),$("#DistributionBoardLong").val());
 	geocoder.geocode({'latLng': latlng}, function(results, status) {
 		 if (status == google.maps.GeocoderStatus.OK) {
@@ -18798,7 +18798,7 @@ function getCity(){
 				$("#boardCity").val("null");
 			}
 		  }	
-	});
+	});*/
 	
 	
 	
