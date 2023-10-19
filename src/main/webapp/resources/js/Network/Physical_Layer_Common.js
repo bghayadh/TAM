@@ -656,6 +656,64 @@ $("#setCoordinateTubeAux").on('click',function(){
 			autoCompleteSearchHeader('autoCompleteHeaderSearch','selectHeaderSearch','headerSearchLong','headerSearchLat');
 			autoCompleteSearchHeader('autoCompleteConnectedSearch','selectConnectedSearch','connectedSearchLong','connectedSearchLat');
 
+		/*	$("#getCity").on('click',function(){
+				console.log("getCity ");
+				//var Long = $("#DistributionBoardLong").val();
+				//var Lat =  $("#DistributionBoardLat").val();
+				
+				geocoder = new google.maps.Geocoder();
+				var latlng = new google.maps.LatLng(getCoords().split(" ")[0], getCoords().split(" ")[1]);
+				geocoder.geocode({'latLng': latlng}, function(results, status) {
+				 if (status == google.maps.GeocoderStatus.OK) {
+			   
+					if (results[2]) {
+					city = results[2].formatted_address;
+					}
+					else if (results[3]) {
+					city = results[3].formatted_address;
+					}
+					else if (results[4]) {
+					city = results[4].formatted_address;
+					}
+					else if (results[5]) {
+					city = results[5].formatted_address;
+					}
+					else {
+					  alert("No results found");
+					}
+					
+				
+				  } else {
+					alert("getting the latitude, longitude and the city failed due to a connection problem, please try again");
+				  }
+				 
+				$("#DistributionBoardLat").val(""+getCoords().split(" ")[0]);		
+				$("#DistributionBoardLong").val(""+getCoords().split(" ")[1]);		
+				$("#boardCity").val(city.split(", ")[0]);
+				});
+					
+			/*	$.ajax({
+					type: "GET",
+					async: false,
+					contentType: "application/json; charset=utf-8",
+					url: getContext()+'/getCity',
+					data: {
+						"Long":Long,
+						"Lat": Lat
+					},									
+					dataType: "json",
+					success: function (data) {	
+						console.log("entered "+ data.City);
+						 
+						//if(City !=null){}
+						
+					},
+					error: function (result) {
+						alert("Error");
+					}
+				});*/
+				
+			//});
 
 });
 }); // End of Trigger Event: triggerListenersEvent
@@ -9390,7 +9448,7 @@ function searchConnectedButtonEvents(hash_Project,hash_manhole,hash_handhole,has
 		 }
 	});
 	 var urlString = "", siteId = "", selectedOp = "",lng = "", lat = "";
-		console.log("ENTEREDDDDD");
+		//console.log("ENTEREDDDDD");
 		$("#searchHeaderButton").on('click',function(){
 			 urlString = "", siteId = "", selectedOp = "",lng = "", lat = "";
 		     $("#conStrandId").html("");
@@ -18714,6 +18772,37 @@ function ShowContextMenuGoolge(ContextMenu, eventX,eventY) {
 function HideContextMenuGoolge(ContextMenu) {
     ContextMenu.classList.remove('show-menu');
 
+}
+
+function getCity(){
+	
+	console.log("getCity ");
+	
+	geocoder = new google.maps.Geocoder();
+	var latlng = new google.maps.LatLng($("#DistributionBoardLat").val(),$("#DistributionBoardLong").val());
+	geocoder.geocode({'latLng': latlng}, function(results, status) {
+		 if (status == google.maps.GeocoderStatus.OK) {
+			if (results[2]) {
+				$("#boardCity").val(results[2].formatted_address.split(",")[0]);
+			}
+			else if (results[3]) {
+				$("#boardCity").val(results[3].formatted_address.split(",")[0]);
+			}
+			else if (results[4]) {
+				$("#boardCity").val(results[4].formatted_address.split(",")[0]);
+			}
+			else if (results[5]) {
+				$("#boardCity").val(results[5].formatted_address.split(",")[0]);
+			}
+			else {
+				$("#boardCity").val("null");
+			}
+		  }	
+	});
+	
+	
+	
+	
 }
 
 /*function showMenu(x, y){

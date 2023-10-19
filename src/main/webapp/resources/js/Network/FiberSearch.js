@@ -719,8 +719,17 @@ $("#DistributionBoardSite").autocomplete({
 			this.value = (ui.item ? ui.item[2] : '');
 			$("#DistributionBoardSiteName").val(ui.item[1]);
 			$("#DistributionBoardWarehouse").val(ui.item[0]);
-			$("#DistributionBoardLong").val(ui.item[3]);
-			$("#DistributionBoardLat").val(ui.item[4]);
+			if (document.getElementById('customCoordinates').checked) {
+				console.log("customCoordinates");
+				if($("#DistributionBoardLong").val() =="" && $("#DistributionBoardLat").val() =="" ) {
+					$("#DistributionBoardLong").val(ui.item[3]);
+					$("#DistributionBoardLat").val(ui.item[4]);
+				}
+			}else{
+				$("#DistributionBoardLong").val(ui.item[3]);
+				$("#DistributionBoardLat").val(ui.item[4]);
+			}
+			
 			$("#boardCity").val(ui.item[5]);
 			//$("#DistributionBoardName").val(ui.item[1]+"_DB_"+new Date().getFullYear());
 			if(($("#DistributionBoardName").val()) ==""){
@@ -879,8 +888,17 @@ $("#DistributionBoardClient").autocomplete({
 			this.value = (ui.item ? ui.item[0] : '');
 			$("#DistributionBoardClientName").val(ui.item[1]);
 			$("#DistributionBoardClientPhoneNb").val(ui.item[2]);
-			$("#DistributionBoardLong").val(ui.item[4]);
-			$("#DistributionBoardLat").val(ui.item[5]);
+			if (document.getElementById('customCoordinates').checked) {
+				console.log("customCoordinates");
+				if($("#DistributionBoardLong").val() =="" && $("#DistributionBoardLat").val() =="" ) {
+					$("#DistributionBoardLong").val(ui.item[4]);
+					$("#DistributionBoardLat").val(ui.item[5]);
+				}
+			}else{
+				$("#DistributionBoardLong").val(ui.item[4]);
+				$("#DistributionBoardLat").val(ui.item[5]);
+			}
+			
 			$("#boardCity").val(ui.item[3]);
 			//$("#DistributionBoardName").val(ui.item[1]+"_"+ui.item[2]+"_DB");
 			if(($("#DistributionBoardName").val()) ==""){
