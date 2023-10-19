@@ -283,13 +283,27 @@ function CreateTree_SupNdTpStNdCell(listSupp,map){
 		menuName=folderSupp;			
 		openContext(selectedfolderSuppIdContext,"",folderSupp,event);
 	});
+	$(".Supplier > .TreeSpan").contextmenu(function(){				
+		selectedSuppIdContext=$(this).parent().attr('id');
+		//console.log("selectedSuppIdContext: ",selectedSuppIdContext);
+		menuName=folderSupp;			
+		openContext(selectedSuppIdContext,"",singleSupp,event);
+	});
 }
-
 folderSupp = new ContextMenu({
 	  'theme': 'default',
 	  'items': [
 		  {'icon': 'braille', 'name': 'Show BoQ', action: () => {				
 				Supp_Boq("");
+			}	
+		}
+	]
+});
+singleSupp = new ContextMenu({
+	  'theme': 'default',
+	  'items': [
+		  {'icon': 'braille', 'name': 'Show BoQ', action: () => {				
+				Supp_Boq(selectedSuppIdContext);
 			}	
 		}
 	]

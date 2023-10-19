@@ -2880,27 +2880,27 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				@RequestMapping(value = "/GetSupBoqList", method = RequestMethod.GET, produces = "application/json")
 				@ResponseBody
 
-				public LinkedHashMap<String, String> GetSupBoqList(@RequestParam String SiteId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
+				public LinkedHashMap<String, String> GetSupBoqList(@RequestParam String SuppId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
 
 					Session session = almsessions.getSession();
 					Transaction tx = session.beginTransaction();
 
 					// if Site_id !=null --> an ajax request received
 					LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
-				
+				System.out.println("id : : : "+SuppId);
 					try {
 							String strEmpty= "SELECT COUNT(WARE_ID) FROM NODE_ACTIVE WHERE WARE_ID!='null' AND SUPPLIER_ID!='null' ";	
 							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
-							String Site_Query = SiteId == "" ? strEmpty : "Select distinct Ware_Name From NODE_ACTIVE where Ware_Id='" + SiteId + "' AND SUPPLIER_ID!='null' ";
+							String Site_Query = SuppId == "" ? strEmpty : "Select distinct Supplier_Name From NODE_ACTIVE where Supplier_Id='" + SuppId + "' ";
 							//System.out.println(Site_Query);
 							Object Sites = session.createSQLQuery(Site_Query).uniqueResult();
 							strEmpty="";					
 				////////////////////////////
-							strEmpty="SELECT COUNT(NODE_PK) FROM NODE_ACTIVE where Active_record='1'AND SUPPLIER_ID!='null' ";
+							strEmpty="SELECT COUNT(NODE_PK) FROM NODE_ACTIVE where Active_record='1' AND SUPPLIER_ID!='null' ";
 							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
-							String strExist= "SELECT COUNT(NODE_PK) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='" + SiteId + "' AND SUPPLIER_ID!='null' ";	
+							String strExist= "SELECT COUNT(NODE_PK) FROM NODE_ACTIVE where Active_record='1' and Supplier_Id='" + SuppId + "' ";	
 							strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
-							String Node_Active_Query = SiteId == "" ? strEmpty : strExist;
+							String Node_Active_Query = SuppId == "" ? strEmpty : strExist;
 							//System.out.println(Node_Active_Query);
 							Object CountNodes_Active = session.createSQLQuery(Node_Active_Query).uniqueResult();
 							strEmpty="";
@@ -2911,9 +2911,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 								strEmpty= strEmpty + "WHERE ";
 							}				
 							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
-							strExist= "select count(ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"+ SiteId +"' ";	
+							strExist= "select count(ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Supplier_Id = '"+ SuppId +"' ";	
 							strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
-							String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
+							String Node_GCell_Query = SuppId == "" ? strEmpty : strExist;
 							//System.out.println(Node_GCell_Query);
 							Object CountNodes_G_CELL = session.createSQLQuery(Node_GCell_Query).uniqueResult();
 							strEmpty="";
@@ -2924,9 +2924,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 								strEmpty= strEmpty + "WHERE ";
 							}
 							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
-							strExist= "select count(nlc.lcell_id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"+ SiteId +"' ";	
+							strExist= "select count(nlc.lcell_id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Supplier_Id = '"+ SuppId +"' ";	
 							strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
-							String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
+							String Node_LCell_Query = SuppId == "" ? strEmpty : strExist;
 							//System.out.println(Node_LCell_Query);
 							Object CountNodes_L_CELL = session.createSQLQuery(Node_LCell_Query).uniqueResult();
 							strEmpty="";
@@ -2937,18 +2937,18 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 								strEmpty= strEmpty + "WHERE ";
 							}
 							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
-							strExist= "select count(nuc.ucell_id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.Ware_Id = '"+ SiteId +"' ";	
+							strExist= "select count(nuc.ucell_id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.Supplier_Id = '"+ SuppId +"' ";	
 							strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
-							String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
+							String Node_UCell_Query = SuppId == "" ? strEmpty : strExist;
 							//System.out.println(Node_UCell_Query);
 							Object CountNodes_U_CELL = session.createSQLQuery(Node_UCell_Query).uniqueResult();
 							strEmpty="";
 							strExist="";			
 				/////////////////////////////
-							BoqHM.put(SiteId == "" ? "Sites" : "Site Name", String.valueOf(Sites));
+							BoqHM.put(SuppId == "" ? "Sites" : "Site Name", String.valueOf(Sites));
 							BoqHM.put("Nodes", String.valueOf(CountNodes_Active));
 
-							if (SiteId == "") {
+							if (SuppId == "") {
 								strEmpty="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' ";
 								strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
 								String Node_Type_Count = strEmpty;
@@ -2956,7 +2956,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 								Object CountNodesType = session.createSQLQuery(Node_Type_Count).uniqueResult();
 								BoqHM.put("Node Type", String.valueOf(CountNodesType));
 							}else {
-								strExist="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"+ SiteId + "' ";
+								strExist="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and Supplier_Id='"+ SuppId + "' ";
 								strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 								String Node_Type_Count = strExist;
 								//System.out.println(Node_Type_Count);
@@ -2964,7 +2964,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 								BoqHM.put("Node Type", String.valueOf(CountNodesType));
 								strExist="";
 							////////////////////////////////
-								strExist="SELECT distinct NODE_TYPE,COUNT(NODE_TYPE) from node_active where Active_record='1' and Ware_Id = '"+SiteId+"' ";
+								strExist="SELECT distinct NODE_TYPE,COUNT(NODE_TYPE) from node_active where Active_record='1' and Supplier_Id = '"+SuppId+"' ";
 								strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 								strExist = strExist +" GROUP BY NODE_TYPE";
 								//System.out.println(strExist);
