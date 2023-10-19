@@ -18775,33 +18775,18 @@ function HideContextMenuGoolge(ContextMenu) {
 }
 
 function getDBCity(){
+	//console.log("getDBCity ");
+	fillCityByGeocoding("boardCity",$("#DistributionBoardLat").val(),$("#DistributionBoardLong").val(),geocoder);	
 	
-	console.log("getDBCity ");
-	fillCityByGeocoding("boardCity",$("#DistributionBoardLat").val(),$("#DistributionBoardLong").val(),geocoder)
-	/*geocoder = new google.maps.Geocoder();
-	var latlng = new google.maps.LatLng($("#DistributionBoardLat").val(),$("#DistributionBoardLong").val());
-	geocoder.geocode({'latLng': latlng}, function(results, status) {
-		 if (status == google.maps.GeocoderStatus.OK) {
-			if (results[2]) {
-				$("#boardCity").val(results[2].formatted_address.split(",")[0]);
-			}
-			else if (results[3]) {
-				$("#boardCity").val(results[3].formatted_address.split(",")[0]);
-			}
-			else if (results[4]) {
-				$("#boardCity").val(results[4].formatted_address.split(",")[0]);
-			}
-			else if (results[5]) {
-				$("#boardCity").val(results[5].formatted_address.split(",")[0]);
-			}
-			else {
-				$("#boardCity").val("null");
-			}
-		  }	
-	});*/
+}
+function getSrcCity(){
+	//console.log("getSrcCity ");
+	fillCityByGeocoding("srcCity",$("#SourceLat").val(),$("#SourceLng").val(),geocoder);	
 	
-	
-	
+}
+function getDstCity(){
+	//console.log("getDstCity ");
+	fillCityByGeocoding("dstCity",$("#DestinationLat").val(),$("#DestinationLng").val(),geocoder);	
 	
 }
 
