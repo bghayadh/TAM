@@ -10083,12 +10083,12 @@ $("#saveManhole").click(function () {
 					junctionCheckFilter("Manhole");
 				}//end else junction to append 		
 																	
-				$("#left").unbind('resize');
+				//$("#left").unbind('resize');
 				EnableOrigination=false;
 		
-				$("#left").bind('resize', function(e) {	
-					$('.tree li > .TreeSpan').width($(this).width());
-				});
+				//$("#left").bind('resize', function(e) {	
+				//	$('.tree li > .TreeSpan').width($(this).width());
+				//});
 	
 				treeCollapseFolder("#" +data.ManholeId+ " .folder","fast",".folder");
 			
@@ -10283,12 +10283,12 @@ $("#saveHandhole").click(function () {
 						
 			//unbindTreeCheckboxEvents();
 						
-			$("#left").unbind('resize');
+			//$("#left").unbind('resize');
 			EnableOrigination=false;
 
-			$("#left").bind('resize', function(e) {	
-				$('.tree li > .TreeSpan').width($(this).width());														
-			});
+			//$("#left").bind('resize', function(e) {	
+			//	$('.tree li > .TreeSpan').width($(this).width());														
+			//});
 			console.log("selector is " + "#" +data.handholeId+ " .folder","fast",".folder");
 			treeCollapseFolder("#" +data.handholeId+ " .folder","fast",".folder");
 					
@@ -13909,12 +13909,12 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 		 clearCreateFromMap(markerArrayAux);
 			 
 	}
-	$("#left").unbind('resize');
+	//$("#left").unbind('resize');
 	EnableOrigination=false;
-	$("#left").bind('resize', function(e) {	
-		$('.tree li > .TreeSpan').width($(this).width());
+	//$("#left").bind('resize', function(e) {	
+	//	$('.tree li > .TreeSpan').width($(this).width());
 		 
-	 });
+	// });
 
 });
 

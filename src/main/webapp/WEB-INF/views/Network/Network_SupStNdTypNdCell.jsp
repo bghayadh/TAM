@@ -284,7 +284,7 @@ function CreateTree_SuppStNdTypNdCell(listSupp,map){
 	});
 	$(".Supplier > .TreeSpan").contextmenu(function(){				
 		selectedSuppIdContext=$(this).parent().attr('id');
-		console.log("selectedSuppIdContext: ",selectedSuppIdContext);
+		//console.log("selectedSuppIdContext: ",selectedSuppIdContext);
 		menuName=folderSupp;			
 		openContext(selectedSuppIdContext,"",singleSupp,event);
 	});
