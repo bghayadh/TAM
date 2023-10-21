@@ -77,7 +77,7 @@ public class LoadFilesEntHuawei  {
 	public static void main(String[] args, String vendor,String domain,String sub_domain) throws IOException, SQLException, InterruptedException {
 
 		//objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"\\"+"almconfig.dat"));
-		ArrayList<String> FileName = new ArrayList<String>();
+		FileName = new ArrayList<String>();
 		Resource ConfigResource = new ClassPathResource("almconfig.dat");
 		File configfile = ConfigResource.getFile();
 		FileReader fr=new FileReader(configfile);  
