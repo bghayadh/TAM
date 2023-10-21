@@ -32,6 +32,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -87,10 +89,16 @@ public class LoadFilesAOSS {
 		
 		    // Read all required paths ex(DB1,DB2,Log file, Path to read file AIM ,path to copy processed)
 		
-			System.out.println("Start withh LOAD :" + System.getProperty("user.dir"));
+			//System.out.println("Start withh LOAD :" + System.getProperty("user.dir"));
 		
-		 	objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"/"+"almconfig.dat"));
-			 while ((strCurrentLine1 = objReader1.readLine()) != null){
+		 	//objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"/"+"almconfig.dat"));
+			 System.out.println("aosssss");
+			Resource ConfigResource = new ClassPathResource("almconfig.dat");
+			File configfile = ConfigResource.getFile();
+			FileReader fr=new FileReader(configfile);  
+			BufferedReader objReader1=new BufferedReader(fr);
+			
+			while ((strCurrentLine1 = objReader1.readLine()) != null){
 				 String data = strCurrentLine1;
 				 String[] data1 ;
 				 String[] data2 ;
@@ -130,7 +138,8 @@ public class LoadFilesAOSS {
 					 data2=readfileAIMfrom.split("/",-1);
 					 vfolderfrom=data2[data2.length-1];
 					 System.out.println("vfolderfrom :" + data2[data2.length-1]);
-					 Gprovider=vfolderfrom.substring(0,2);
+					 //Gprovider=vfolderfrom.substring(0,2);
+					 Gprovider="HW";
 					 System.out.println("Gprovider2 found :" + Gprovider);
 				 }
 				 if (data.contains("copyfileAIMto")) {
@@ -145,7 +154,13 @@ public class LoadFilesAOSS {
 			 objReader1.close();
 			 
 			 System.out.println("get cricle value  :" + System.getProperty("user.dir")+"/"+"almcircle.dat");
-			 objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"/"+"almcircle.dat"));
+			// objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"/"+"almcircle.dat"));
+			 
+			 Resource CircleRsource = new ClassPathResource("almcircle.dat");
+			 File circlefile = CircleRsource.getFile();
+			 fr=new FileReader(circlefile);     
+			 objReader1=new BufferedReader(fr);
+			 
 			 while ((strCurrentLine1 = objReader1.readLine()) != null){
 				 String data = strCurrentLine1;
 				 String[] data1 ;
@@ -166,7 +181,7 @@ public class LoadFilesAOSS {
         	System.out.println(Gyear);  
 			
 
-			File folder = new File(projpath+"/"+readfileAIMfrom);
+			File folder = new File(readfileAIMfrom);
 			File[] listOfFiles = folder.listFiles();
 			logger = Logger.getLogger("MyLog"); 
 			logger.setUseParentHandlers(false);
@@ -228,8 +243,8 @@ public class LoadFilesAOSS {
 							        String fichier =file.getName().toString();
 									readfile(fichier); 
 									
-									 File source = new File(projpath+"/"+readfileAIMfrom+"/"+file.getName());
-								     File dest = new File(projpath+"/"+copyfileAIMto+"/"+file.getName()+".bkp");
+									 File source = new File(readfileAIMfrom+"/"+file.getName());
+								     File dest = new File(copyfileAIMto+"/"+file.getName()+".bkp");
 								     
 								     copyFiles(source,dest);
 								     
@@ -304,7 +319,7 @@ public class LoadFilesAOSS {
 					 //projpath=projpath.substring(0, projpath.length()-3);
 					
 					
-					BufferedReader objReader0 = new BufferedReader(new FileReader(projpath+"/"+vfolderfrom+"/"+filename));
+					BufferedReader objReader0 = new BufferedReader(new FileReader(vfolderfrom+"/"+filename));
 					while ((objReader0.readLine()) != null) {
 						objReader0.readLine();
 						String data = objReader0.readLine();
@@ -424,7 +439,7 @@ public class LoadFilesAOSS {
 					
 					//logger.info("Node ID is  : " + ResultNode[0] +" ; " +"Node Name is  : " + ResultNode[1] +" ; " +"Node Type is  : " + ResultNode[2]);
 					
-					File fXmlFile = new File(projpath+"/"+vfolderfrom+"/"+filename);
+					File fXmlFile = new File(vfolderfrom+"/"+filename);
 					DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 					DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 					Document doc = dBuilder.parse(fXmlFile);   
@@ -471,7 +486,7 @@ public class LoadFilesAOSS {
 		 				    ArrayList<String> varaaaray = null;
 		 				    String vcodeid=null;
 							String strCurrentLine;
-							objReader = new BufferedReader(new FileReader(projpath+"/"+vfolderfrom+"/"+filename));
+							objReader = new BufferedReader(new FileReader(vfolderfrom+"/"+filename));
 							while ((strCurrentLine = objReader.readLine()) != null) {
 								String data = strCurrentLine;
 								String str1="TABLE attrname=\""+eElement.getAttribute("attrname")+"\"";
@@ -600,10 +615,10 @@ public class LoadFilesAOSS {
 					                		   InsertQuery="insert into " + attributeTable  + " (CABINET_ID,SITEINDEX,CABINETNO,INVENTORYUNITID,RACKTYPE,BOMRACKTYPE,INVENTORYUNITTYPE,VENDORUNITFAMILYTYPE,VENDORUNITTYPENUMBER,VENDORNAME,SERIALNUMBER,HARDWAREVERSION,DATEOFMANUFACTURE,DATEOFLASTSERVICE,UNITPOSITION,MANUFACTURERDATA,ISSUENUMBER,BOMCODE,EXTINFO,MODEL,USERLABEL,SHAREMODE,CLEICODE,BOM,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,ALM_POSITION,CREATION_DATE,DOMAIN,VENDOR) "
 					                		   		+ " values('" + vcodeid +"','" + vhmap.get("SITEINDEX") +"','" + vhmap.get("CABINETNO") +"','" + vhmap.get("INVENTORYUNITID") +"','" + vhmap.get("RACKTYPE") +"','" + vhmap.get("BOMRACKTYPE") +"','" + vhmap.get("INVENTORYUNITTYPE") +"','" + vhmap.get("VENDORUNITFAMILYTYPE") +"','" + vhmap.get("VENDORUNITTYPENUMBER") +"','" + vhmap.get("VENDORNAME") +"','" + vhmap.get("SERIALNUMBER") +"','" + vhmap.get("HARDWAREVERSION") +"',DATE '" + vhmap.get("DATEOFMANUFACTURE") +"',DATE '" + vhmap.get("DATEOFLASTSERVICE") +"', '" + vhmap.get("UNITPOSITION") +"','" + vhmap.get("MANUFACTURERDATA") +"','" + vhmap.get("ISSUENUMBER") +"','" + vhmap.get("BOMCODE") +"','" + vhmap.get("EXTINFO") +"','" + vhmap.get("MODEL") +"','" + vhmap.get("USERLABEL") +"','" + vhmap.get("SHAREMODE") +"','" + vhmap.get("CLEICODE") +"','" + vhmap.get("BOM") +"','" + codeid +"','" + codeidattr +"',sysdate ,'" + filename +"','" + vhmap.get("STATUS") +"','0','0','0','" + vhmap.get("TRANS_ID") +"','" + vhmap.get("TRANS_TYPE") +"','"+ j +"','1','"+ almposition +"',sysdate,'Mobile Access Domain','" + Gprovider +"') ";
 				                		   //System.out.println(filename + "    "+ InsertQuery);
-					                		   
+					                		  /* 
 					                		   PreparedStatement updateserial = con.prepareStatement("UPDATE NODE_ACTIVE SET SERIAL_NUMBER='"+vhmap.get("SERIALNUMBER")+"' WHERE NODE_PK='"+codeid+"'");
 										   		updateserial.executeUpdate();
-										   		updateserial.close();
+										   		updateserial.close();*/
 				                	   }
 				                	   if (attributeTable =="NODE_HOSTVER" ) {
 				                		   vcodeid= localgetseqNbr(8);  /// 8 to select hostVer_id
@@ -1093,6 +1108,10 @@ public class LoadFilesAOSS {
 		 col1=col2.substring(n+1, col2.length());
 		 n = col1.indexOf("=\"");
 		 }
+		 
+		 if(!(StringUtils.equalsIgnoreCase (hmap.get("BOARDTYPE"),"")) && !(StringUtils.equalsIgnoreCase (hmap.get("BOARDTYPE"),"0"))) {
+			 	hmap.put( "MODEL", hmap.get("BOARDTYPE"));
+			 }
  
 		return hmap;
 				
@@ -1250,6 +1269,16 @@ public class LoadFilesAOSS {
 		 
 		 col1=col2.substring(n+1, col2.length());
 		 n = col1.indexOf("=\"");
+		 }
+		 
+		 String model="";
+		 String[] data1;
+		 if(!(StringUtils.equalsIgnoreCase (hmap.get("MANUFACTURERDATA"),"")) && !(StringUtils.equalsIgnoreCase (hmap.get("MANUFACTURERDATA"),"0") )){
+			 data1=hmap.get("MANUFACTURERDATA").split(",",-1);
+			 model=data1[1];
+			if(model.contains("wd") || model.contains("WD")){	
+					 hmap.put( "MODEL", model);
+			 }
 		 }
  
 		return hmap;
@@ -1467,6 +1496,21 @@ public class LoadFilesAOSS {
 		 
 		 col1=col2.substring(n+1, col2.length());
 		 n = col1.indexOf("=\"");
+		 }
+		 
+		 String model="";
+		 String[] data1;
+		 if(!(StringUtils.equalsIgnoreCase (hmap.get("MANUFACTURERDATA"),"")) && !(StringUtils.equalsIgnoreCase (hmap.get("MANUFACTURERDATA"),"0") )){
+			 data1=hmap.get("MANUFACTURERDATA").split(",",-1);
+			 if(data1[1].contains("wd") || data1[1].contains("WD") || data1[1].contains("wp") || data1[1].contains("WP")) {
+				 model=data1[1];
+				 hmap.put( "MODEL", model);
+			 }
+			 else if(data1[2].contains("wd") || data1[2].contains("WD") || data1[2].contains("wp") || data1[2].contains("WP")) {
+				 model=data1[2];
+				 hmap.put( "MODEL", model);
+			 }
+			 
 		 }
  
 		return hmap;
@@ -1721,6 +1765,10 @@ public class LoadFilesAOSS {
 		 col1=col2.substring(n+1, col2.length());
 		 n = col1.indexOf("=\"");
 		 }
+		 
+		 if(!(StringUtils.equalsIgnoreCase (hmap.get("ANTENNADEVICETYPE"),"")) && !(StringUtils.equalsIgnoreCase (hmap.get("ANTENNADEVICETYPE"),"0"))) {
+			 	hmap.put( "MODEL", hmap.get("ANTENNADEVICETYPE"));
+			 }
  
 		return hmap;
 				
