@@ -14929,9 +14929,10 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 						+"<td name='FP_Equipment'>"
 							+"<select class='form-control' name='FP_equipment' id='FP_equipment"+dBBoqIndex+"'>"
 							+"</select>"
-						+"<td name='FP_EquipmentType'><input name=' FP_equipmentType' id='FP_equipmentType"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+						//+"<td name='FP_EquipmentType'><input name=' FP_equipmentType' id='FP_equipmentType"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
 						+"<td name='FP_EquipmentID'><input name='FP_equipmentID' id='FP_equipmentID"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
 						+"<td name='FP_EquipmentName'><input name='FP_equipmentName' id='FP_equipmentName"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+						+"<td name='FP_EquipmentType'><input name=' FP_equipmentType' id='FP_equipmentType"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
 						+"<td name='FP_Address'><input name='FP_Address' id='FP_Address"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
 						
 						+"<td name='FP_JunctionID'><input name='FP_junctionID' id='FP_junctionID"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
@@ -14971,9 +14972,10 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 						+"<td name='BP_Equipment'>"
 							+"<select class='form-control' name='BP_equipment' id='BP_equipment"+dBBoqIndex+"'>"
 							+"</select>"
-						+"<td name='BP_EquipmentType'><input name=' BP_equipmentType' id='BP_equipmentType"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+						//+"<td name='BP_EquipmentType'><input name=' BP_equipmentType' id='BP_equipmentType"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
 						+"<td name='BP_EquipmentID'><input name='BP_equipmentID' id='BP_equipmentID"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
 						+"<td name='BP_EquipmentName'><input name='BP_equipmentName' id='BP_equipmentName"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+						+"<td name='BP_EquipmentType'><input name=' BP_equipmentType' id='BP_equipmentType"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
 						+"<td name='BP_Address'><input name='BP_Address' id='BP_Address"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
 						
 						+"<td name='BP_JunctionID'><input name='BP_junctionID' id='BP_junctionID"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"

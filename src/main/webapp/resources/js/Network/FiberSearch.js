@@ -1623,7 +1623,7 @@ if(equipment !=""){
 		    var searchs=$("#"+equipmentName+ID).val();
 			var line;
 		    search= $("#"+equipment+ID).val();
-		    console.log("no throttle");
+		  //  console.log("no throttle");
 			 if(search=="DistBoard"){
 				url='getDbData';
 				dataTarget = {

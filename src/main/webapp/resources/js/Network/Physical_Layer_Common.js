@@ -11,7 +11,6 @@ $(function(){
 viewNearestPointEvent();	
 viewNearestMultyPointEvent();
 searchConnectedButtonEvents();
-//autoCompleteSearchHeader();
 
 //$(document).ready(function (){
 
@@ -1575,12 +1574,13 @@ function Create_FiberStrandClick_Event(strandId){
 }
 
 function createSiteCltMarker(Id,Name,Lat,Long,siteCltSrcMarkers){
-	//console.log("Id is "+Id)
+	//console.log("Id is "+Id);
 	if(Id.startsWith("null")==true || Id.startsWith("AUXILIARY_PT_")==true || Id.startsWith("AUXILIARY_TUBE_PT")==true || Id.startsWith("AUXILIARY_STRAND_PT")==true
 			|| Id.startsWith("AUXILIARY_TRENCH_PT")==true || Id.startsWith("AUXILIARY_DUCT_PT")==true) {
 		var icon = iconAuxPoint;
 	}
 	else if(Id.startsWith("CUST")==true) {
+		//console.log("passed ");
 		var icon = iconClient;
 	}
 	else if(Id.startsWith("WARE")==true || Id.includes("N/A")==true) {	
@@ -9529,12 +9529,16 @@ function openSearchConnected(checkedOption,siteId,selectConnectedSearch,connecte
  	siteArray.push(arrayDB.splice(0,distribBoardListSize));
  	appendConnectedTable(siteArray);
  	
- 	 
+ 	//console.log("id is "+ $("#autoCompleteConnectedSearch").val().split(":")[0]);
+ 	var markerName = $("#autoCompleteConnectedSearch").val().split(":")[1]+":" +$("#autoCompleteConnectedSearch").val().split(":")[0]+":"+$("#autoCompleteConnectedSearch").val().split(":")[2];
+	createSiteCltMarker($("#autoCompleteConnectedSearch").val().split(":")[0],markerName,connectedSearchLat,connectedSearchLong,siteCltSrcMarkers);	  
+	//siteCltSrcMarkers[wareID].setLabel({text: type , className:"marker-position-sequence",color:"red"}); 
+	
  	if (connectedViewOnMap == "true") {
 		$("#viewOnMap").prop("checked",true);
 	  
- 	    	var markerName = $("#autoCompleteConnectedSearch").val().split(":")[1]+":" +$("#autoCompleteConnectedSearch").val().split(":")[0]+":"+$("#autoCompleteConnectedSearch").val().split(":")[2];
-			createSiteCltMarker($("#autoCompleteConnectedSearch").val().split(":")[1],markerName,connectedSearchLat,connectedSearchLong,siteCltSrcMarkers);	  
+ 	    	//var markerName = $("#autoCompleteConnectedSearch").val().split(":")[1]+":" +$("#autoCompleteConnectedSearch").val().split(":")[0]+":"+$("#autoCompleteConnectedSearch").val().split(":")[2];
+			//createSiteCltMarker($("#autoCompleteConnectedSearch").val().split(":")[1],markerName,connectedSearchLat,connectedSearchLong,siteCltSrcMarkers);	  
 				
 			var circ = new google.maps.Circle({
 		         strokeColor: "blue",

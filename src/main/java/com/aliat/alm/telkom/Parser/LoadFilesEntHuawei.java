@@ -305,7 +305,7 @@ public class LoadFilesEntHuawei  {
 				if(!vhmap.isEmpty()) {
 					codeid=Gyear+"_"+ "NODE"+'_'+NodeSeq;
 					if(vhmap.get("NodeName").contains("'")) {
-						Node_Name=vhmap.get("NodeName").replace("'", "''");
+						Node_Name=vhmap.get("NodeName").replace("'", " ");
 					}
 					else {
 						Node_Name=vhmap.get("NodeName");
@@ -894,7 +894,7 @@ public class LoadFilesEntHuawei  {
 				        	 String nodename;
 				        	 if(rs2.getString("NODE_NAME").contains("'")) {
 									
-				        		 nodename=rs2.getString("NODE_NAME").replace("'", "''");
+				        		 nodename=rs2.getString("NODE_NAME").replace("'", "");
 								}
 								else {
 									nodename=rs2.getString("NODE_NAME");
