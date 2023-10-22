@@ -1,64 +1,37 @@
 package com.aliat.alm.controller;
 
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
-import org.jsmpp.bean.OptionalParameter.Int;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.hibernate.SQLQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.aliat.alm.common.ALMSessions;
 import com.aliat.alm.common.Notify;
-import com.aliat.alm.models.DistributionBoard;
-import com.aliat.alm.models.DistributionBoardMapping;
-import com.aliat.alm.models.Duct;
-import com.aliat.alm.models.DuctAuxPoints;
-import com.aliat.alm.models.FiberAuxPoints;
-import com.aliat.alm.models.FiberCable;
-import com.aliat.alm.models.FiberStrands;
-import com.aliat.alm.models.FiberTubes;
 import com.aliat.alm.models.Item;
-import com.aliat.alm.models.StrandAuxPoints;
 import com.aliat.alm.models.Supplier;
-import com.aliat.alm.models.Trench;
-import com.aliat.alm.models.TrenchAuxPoints;
-import com.aliat.alm.models.TubeAuxPoints;
 import com.aliat.alm.models.Warehouse;
-import com.aliat.alm.services.ItemParameters;
 import com.aliat.alm.services.LoginServices;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -71,6 +44,7 @@ public class NetworkController {
 	private static Transaction tx = null;
 	private static ObjectMapper mapper = new ObjectMapper();
 	private static final Logger logger = LoggerFactory.getLogger(NetworkController.class);
+	@SuppressWarnings("rawtypes")
 	private static Query query = null;
 	/**
 	 * Simply selects the home view to render by returning its name.
@@ -95,26 +69,22 @@ public class NetworkController {
 			return "redirect:/";
 		} else {
 			double longitude = 0;
-			double latitude = 0;
-			ObjectMapper mapper = new ObjectMapper();
-			Session session = null;
-			Transaction tx = null;
+			double latitude = 0;			
 			session = almsessions.getSession();
 
 			if (session != null && session.isOpen()) {
 				tx = session.beginTransaction();
 				notifications.headerNotifications(session, model);
-
 				// On-load Site-Node-Cells Arrays Selection
 				try {
 					List<Object[]> cellResult = new ArrayList<Object[]>();
-					cellResult.addAll(session.createSQLQuery(
+					cellResult.addAll(session.createNativeQuery(
 							"SELECT a.GCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_GCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0'")
 							.list());
-					cellResult.addAll(session.createSQLQuery(
+					cellResult.addAll(session.createNativeQuery(
 							"SELECT a.LCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_LCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0'")
 							.list());
-					cellResult.addAll(session.createSQLQuery(
+					cellResult.addAll(session.createNativeQuery(
 							"SELECT a.UCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_UCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0'")
 							.list());
 
@@ -126,7 +96,7 @@ public class NetworkController {
 				// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>//
 				try {
 
-					model.addAttribute("listNodes", mapper.writeValueAsString((List<Object[]>) session.createSQLQuery(
+					model.addAttribute("listNodes", mapper.writeValueAsString((List<Object[]>) session.createNativeQuery(
 							"SELECT NODE_PK,SITE_ID,NODE_NAME,NODE_TYPE,WARE_ID,(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and ACTIVE_RECORD = '1') as countGCells,(select count(*) from NODE_LCELL c  where a.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1') as countLCells,(select count(*) from NODE_UCELL d  where a.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1') as countUCells,SUPPLIER_ID FROM NODE_ACTIVE a WHERE ACTIVE_RECORD = '1'")
 							.list()));
 
@@ -139,7 +109,7 @@ public class NetworkController {
 				try {
 
 					model.addAttribute("listSites", mapper.writeValueAsString(
-							(List<Object[]>) session.createSQLQuery("SELECT distinct b.SITE_ID,b.WARE_NAME,b.WARE_ID,"
+							(List<Object[]>) session.createNativeQuery("SELECT distinct b.SITE_ID,b.WARE_NAME,b.WARE_ID,"
 									+ "(SELECT a.LATITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LATITUDE,"
 									+ "(SELECT a.LONGITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LONGITUDE,"
 									+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID  and w.ACTIVE_RECORD = '1') as countnodes,"
@@ -153,20 +123,13 @@ public class NetworkController {
 					model.addAttribute("listSites", "null");
 
 				}
-
 				try {
-					// On-load Boq array data
-					// LinkedHashMap<String, String> BoqHM = GetBoqList("");
-					// model.addAttribute("BoqHashMap", BoqHM);
-
-					// Long and Lat of the blankmap
 					List<Object[]> coordinates = new ArrayList<Object[]>();
 					Object[] blankGisLocation = null;
-					coordinates = session.createSQLQuery(
+					coordinates = session.createNativeQuery(
 							"SELECT COALESCE((MAX(CAST(LONGITUDE as number))+MIN(CAST(LONGITUDE as number)))/2,0) ,"
 									+ "COALESCE( (MAX(CAST(LATITUDE as number))+MIN(CAST(LATITUDE as number)))/2,0)FROM WAREHOUSE")
 							.list();
-					System.out.println(mapper.writeValueAsString((Object[]) coordinates.toArray()[0]).toString());
 					blankGisLocation = (Object[]) coordinates.toArray()[0];
 					longitude = Double.valueOf(blankGisLocation[0].toString()).doubleValue();
 					latitude = Double.valueOf(blankGisLocation[1].toString()).doubleValue();
@@ -184,6 +147,7 @@ public class NetworkController {
 						logger.info("Session Closseeed");
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -239,9 +203,6 @@ public class NetworkController {
 		} else {
 			double longitude = 0;
 			double latitude = 0;
-			ObjectMapper mapper = new ObjectMapper();
-			Session session = null;
-			Transaction tx = null;
 			session = almsessions.getSession();
 
 			if (session != null && session.isOpen()) {
@@ -310,7 +271,7 @@ public class NetworkController {
 				strSites=  AppendQuery("b",arrayParam, strSites);	
 					
 				//System.out.println("final query sites"+mapper.writeValueAsString(strSites));
-				Query query = session.createSQLQuery(strSites);
+				query = session.createNativeQuery(strSites);
 				listSites = query.list();
 				model.addAttribute("listSites", mapper.writeValueAsString(listSites));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
@@ -335,7 +296,7 @@ public class NetworkController {
 				strNodes= AppendQuery("a",arrayParam, strNodes);
 					
 				//System.out.println("final query nodes"+mapper.writeValueAsString(strNodes));
-				Query query = session.createSQLQuery(strNodes);
+				query = session.createNativeQuery(strNodes);
 				listNodes = query.list();
 				model.addAttribute("listNodes", mapper.writeValueAsString(listNodes));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
@@ -356,12 +317,9 @@ public class NetworkController {
 				//System.out.println("final query cells 2"+mapper.writeValueAsString(strCells2));
 				//System.out.println("final query cells 3"+mapper.writeValueAsString(strCells3));
 				
-				Query query1 = session.createSQLQuery(strCells1);
-				Query query2 = session.createSQLQuery(strCells2);
-				Query query3 = session.createSQLQuery(strCells3);
-				cellResult.addAll(query1.list());
-				cellResult.addAll(query2.list());
-				cellResult.addAll(query3.list());
+				cellResult.addAll(session.createNativeQuery(strCells1).list());
+				cellResult.addAll(session.createNativeQuery(strCells2).list());
+				cellResult.addAll(session.createNativeQuery(strCells3).list());
 				
 				model.addAttribute("listCells", mapper.writeValueAsString(cellResult));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
@@ -373,17 +331,12 @@ public class NetworkController {
 				model.addAttribute("listCells", "null");
 			}
 				try {
-					// On-load Boq array data
-					// LinkedHashMap<String, String> BoqHM = GetBoqList("");
-					// model.addAttribute("BoqHashMap", BoqHM);
-					// Long and Lat of the blankmap
 					List<Object[]> coordinates = new ArrayList<Object[]>();
 					Object[] blankGisLocation = null;
-					coordinates = session.createSQLQuery(
+					coordinates = session.createNativeQuery(
 							"SELECT COALESCE((MAX(CAST(LONGITUDE as number))+MIN(CAST(LONGITUDE as number)))/2,0) ,"
 									+ "COALESCE( (MAX(CAST(LATITUDE as number))+MIN(CAST(LATITUDE as number)))/2,0)FROM WAREHOUSE")
 							.list();
-					//System.out.println("coordinates....."+mapper.writeValueAsString((Object[]) coordinates.toArray()[0]).toString());
 					blankGisLocation = (Object[]) coordinates.toArray()[0];
 					longitude = Double.valueOf(blankGisLocation[0].toString()).doubleValue();
 					latitude = Double.valueOf(blankGisLocation[1].toString()).doubleValue();
@@ -400,6 +353,7 @@ public class NetworkController {
 						logger.info("Session Closseeed");
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -487,7 +441,7 @@ public class NetworkController {
 					strSites=  AppendQuery("b",arrayParam, strSites);	
 						
 					//System.out.println("final query sites"+mapper.writeValueAsString(strSites));
-					Query query = session.createSQLQuery(strSites);
+					query = session.createNativeQuery(strSites);
 					listSites = query.list();
 					model.addAttribute("listSites", mapper.writeValueAsString(listSites));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
@@ -510,7 +464,7 @@ public class NetworkController {
 				strNodes= AppendQuery("a",arrayParam, strNodes);
 					
 				//System.out.println("final query nodes"+mapper.writeValueAsString(strNodes));
-				Query query = session.createSQLQuery(strNodes);
+				query = session.createNativeQuery(strNodes);
 				listNodes = query.list();
 				model.addAttribute("listNodes", mapper.writeValueAsString(listNodes));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
@@ -531,13 +485,10 @@ public class NetworkController {
 				//System.out.println("final query cells 1 "+mapper.writeValueAsString(strCells1));
 				//System.out.println("final query cells 2 "+mapper.writeValueAsString(strCells2));
 				//System.out.println("final query cells 3 "+mapper.writeValueAsString(strCells3));
-				
-				Query query1 = session.createSQLQuery(strCells1);
-				Query query2 = session.createSQLQuery(strCells2);
-				Query query3 = session.createSQLQuery(strCells3);
-				cellResult.addAll(query1.list());
-				cellResult.addAll(query2.list());
-				cellResult.addAll(query3.list());
+							
+				cellResult.addAll(session.createNativeQuery(strCells1).list());
+				cellResult.addAll(session.createNativeQuery(strCells2).list());
+				cellResult.addAll(session.createNativeQuery(strCells3).list());
 				
 				model.addAttribute("listCells", mapper.writeValueAsString(cellResult));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
@@ -553,7 +504,7 @@ public class NetworkController {
 					strNodesType =AppendQuery("a",arrayParam, strNodesType);
 					
 					//System.out.println("final query nodes type "+mapper.writeValueAsString(strNodesType));
-					Query query = session.createSQLQuery(strNodesType);
+					query = session.createNativeQuery(strNodesType);
 					listNodesType = query.list();
 					model.addAttribute("listNodesType", mapper.writeValueAsString(listNodesType));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
@@ -568,11 +519,10 @@ public class NetworkController {
 				try {
 					List<Object[]> coordinates = new ArrayList<Object[]>();
 					Object[] blankGisLocation = null;
-					coordinates = session.createSQLQuery(
+					coordinates = session.createNativeQuery(
 							"SELECT COALESCE((MAX(CAST(LONGITUDE as number))+MIN(CAST(LONGITUDE as number)))/2,0) ,"
 									+ "COALESCE( (MAX(CAST(LATITUDE as number))+MIN(CAST(LATITUDE as number)))/2,0)FROM WAREHOUSE")
 							.list();
-					System.out.println(mapper.writeValueAsString((Object[]) coordinates.toArray()[0]).toString());
 					blankGisLocation = (Object[]) coordinates.toArray()[0];
 					longitude = Double.valueOf(blankGisLocation[0].toString()).doubleValue();
 					latitude = Double.valueOf(blankGisLocation[1].toString()).doubleValue();
@@ -590,6 +540,7 @@ public class NetworkController {
 						logger.info("Session Closseeed");
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -667,15 +618,10 @@ public String Network_NdTypStNdCell(Locale locale, Model model, HttpServletReque
 				strSites=  AppendQuery("e",arrayParam, strSites);
 				strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.ACTIVE_RECORD = '1' ";			
 				strSites=  AppendQuery("b",arrayParam, strSites);	
-					
-				//System.out.println("final query sites"+mapper.writeValueAsString(strSites));
-				Query query = session.createSQLQuery(strSites);
+				query = session.createNativeQuery(strSites);
 				listSites = query.list();
 				model.addAttribute("listSites", mapper.writeValueAsString(listSites));
-				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
-				//System.out.println("list sites ==> "+ mapper.writeValueAsString(listSites));
-				//System.out.println("arrayParam sites ==> "+mapper.writeValueAsString(arrayParam));  
-					
+				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));					
 			} catch (Exception e) {
 				logger.info("Error in retreiving Sites Data from database", e);
 				model.addAttribute("listSites", "null");
@@ -687,13 +633,10 @@ public String Network_NdTypStNdCell(Locale locale, Model model, HttpServletReque
 				strNodesType=  AppendQuery("b",arrayParam, strNodesType);
 				
 				//System.out.println("final query nodes type "+mapper.writeValueAsString(strNodesType));
-				Query query = session.createSQLQuery(strNodesType);
+				query = session.createNativeQuery(strNodesType);
 				listNodesType = query.list();
 				model.addAttribute("listNodesType", mapper.writeValueAsString(listNodesType));
-				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
-				//System.out.println("list nodes type ==> "+ mapper.writeValueAsString(listNodesType));
-				//System.out.println("arrayParam nodes type ==> "+mapper.writeValueAsString(arrayParam));		
-	
+				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));	
 			} catch (Exception e) {
 				logger.info("Error in retreiving node type array Data from database", e);
 				model.addAttribute("listNodesType", null);
@@ -701,11 +644,10 @@ public String Network_NdTypStNdCell(Locale locale, Model model, HttpServletReque
 			try {
 				List<Object[]> coordinates = new ArrayList<Object[]>();
 				Object[] blankGisLocation = null;
-				coordinates = session.createSQLQuery(
+				coordinates = session.createNativeQuery(
 						"SELECT COALESCE((MAX(CAST(LONGITUDE as number))+MIN(CAST(LONGITUDE as number)))/2,0) ,"
 								+ "COALESCE( (MAX(CAST(LATITUDE as number))+MIN(CAST(LATITUDE as number)))/2,0)FROM WAREHOUSE")
 						.list();
-				System.out.println(mapper.writeValueAsString((Object[]) coordinates.toArray()[0]).toString());
 				blankGisLocation = (Object[]) coordinates.toArray()[0];
 				longitude = Double.valueOf(blankGisLocation[0].toString()).doubleValue();
 				latitude = Double.valueOf(blankGisLocation[1].toString()).doubleValue();
@@ -723,6 +665,7 @@ public String Network_NdTypStNdCell(Locale locale, Model model, HttpServletReque
 					logger.info("Session Closseeed");
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -740,11 +683,7 @@ public String Network_SupStNdCell(Locale locale, Model model, HttpServletRequest
 	if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 		return "redirect:/";
 	} else {
-		ObjectMapper mapper = new ObjectMapper();
-		Session session = null;
-		Transaction tx = null;
 		session = almsessions.getSession();
-
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
@@ -815,15 +754,10 @@ public String Network_SupStNdCell(Locale locale, Model model, HttpServletRequest
 			
 			try {
 				strSup=  AppendQuery("a",arrayParam, strSup);	
-				
-				//System.out.println("final query supp "+mapper.writeValueAsString(strSup));
-				Query query = session.createSQLQuery(strSup);
+				query = session.createNativeQuery(strSup);
 				listSupp = query.list();
 				model.addAttribute("listSupp", mapper.writeValueAsString(listSupp));
-				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
-				//System.out.println("list supp ==> "+ mapper.writeValueAsString(listSupp));
-				//System.out.println("arrayParam supp ==> "+mapper.writeValueAsString(arrayParam));
-				
+				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));				
 			} catch (Exception e) {
 				logger.info("Error in retreiving Nodes Data from database", e);
 				model.addAttribute("listSupp", "null");
@@ -834,6 +768,7 @@ public String Network_SupStNdCell(Locale locale, Model model, HttpServletRequest
 					logger.info("Session Closseeed");
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}

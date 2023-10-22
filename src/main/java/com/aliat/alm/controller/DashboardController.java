@@ -65,6 +65,7 @@ public class DashboardController {
 				tx.commit();
 				
 				sessionALM.close();
+				sessionALM.getSessionFactory().close();
 				
 			}
 			
@@ -192,6 +193,7 @@ public class DashboardController {
 
 			 txRPT.commit();
 			 sessionRPT.close();
+			 sessionRPT.getSessionFactory().close();
 		 }
 
 		 }
@@ -256,6 +258,7 @@ public class DashboardController {
 
 					 txRPT.commit();
 					 sessionRPT.close();
+					 sessionRPT.getSessionFactory().close();
 				 }
 
 				 }

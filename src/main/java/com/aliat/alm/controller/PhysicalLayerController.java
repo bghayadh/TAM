@@ -6494,7 +6494,7 @@ public class PhysicalLayerController {
 				query = session.createNativeQuery(
 						// "SELECT NODE_ID,NODE_NAME,NODE_TYPE FROM NODE_ACTIVE WHERE UPPER(NODE_ID)
 						// LIKE UPPER(:param) OR UPPER(NODE_NAME) LIKE UPPER(:param) ");
-						"SELECT NODE_ID,NODE_NAME,NODE_TYPE FROM NODE_ACTIVE WHERE NODE_ID LIKE :param OR NODE_NAME LIKE :param ");
+						"SELECT UNIQUE_NODE_ID,NODE_NAME,NODE_TYPE FROM NODE_ACTIVE WHERE NODE_ID LIKE :param OR NODE_NAME LIKE :param ");
 				// "SELECT NODE_ID,NODE_NAME,NODE_TYPE FROM NODE_ACTIVE ");
 
 				query.setParameter("param", "%" + search + "%");
