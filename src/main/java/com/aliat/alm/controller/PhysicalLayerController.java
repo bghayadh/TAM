@@ -1777,6 +1777,7 @@ public class PhysicalLayerController {
 					}
 				}
 			}
+			System.out.println("Loading NetworkPhysicalLayer Controller Finished");
 			return "Network/NetworkPhysicalLayer";
 		}
 	}
