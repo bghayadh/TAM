@@ -92,7 +92,7 @@ public class NodeActiveController {
 						.addScalar("siteID").addScalar("createdDate").addScalar("updateDate").addScalar("wareName")
 						.setResultTransformer(Transformers.aliasToBean(NodeListView.class)).list();
 
-				model.addAttribute("ListGridaTable", mapper.writeValueAsString(listNodes));
+				model.addAttribute("ListGridTable", mapper.writeValueAsString(listNodes));
 			} catch (Exception e) {
 				sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
@@ -118,7 +118,9 @@ public class NodeActiveController {
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			return "redirect:/";
 		}
-		String NodePK;
+		String NodePK, navAction="2",nodecount;
+		int SelectedIndex;
+
 
 		session = almsessions.getSession();
 		if (session != null && session.isOpen()) {
@@ -129,6 +131,18 @@ public class NodeActiveController {
 			try {
 
 				NodePK = request.getParameter("NodePk");
+				navAction = request.getParameter("NavAction");
+                
+				String Result[] = new String[4];
+				
+				Result = form.NavigationNP(session, "Node_Active", "Node_PK", NodePK, "UPDATE_DATE", navAction);
+
+				SelectedIndex = Integer.parseInt(Result[1]);
+				NodePK= Result[2];
+
+				model.addAttribute("SelectedIndex",SelectedIndex);
+				model.addAttribute("nodeCount", Integer.parseInt(Result[0]));
+
 				if (NodePK != null) {
 					model.addAttribute("Status", "old");
 					query = session.createNativeQuery(
@@ -311,6 +325,8 @@ public class NodeActiveController {
 					model.addAttribute("Status", "new");
 
 				}
+				
+
 
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -400,6 +416,45 @@ public class NodeActiveController {
 
 		return rtn;
 
+	}
+	@RequestMapping(value = "/GetAllNode", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> GetAllNode(Locale locale, Model model, HttpServletRequest request,
+	        HttpServletResponse response) {
+
+	    Map<String, Object> rtn = new LinkedHashMap<>();
+
+	    String itemCategory = "%" + request.getParameter("itemCategory") + "%"; // Get the itemCategory from the request.
+	System.out.println(itemCategory+" zeinaaa");
+	    session = almsessions.getSession();
+	    if (session != null && session.isOpen()) {
+	        tx = session.beginTransaction();
+	        try {
+	        	query = session.createQuery("SELECT t1.nodeName, t1.nodePK, t1.uniNodeID FROM NodeActive t1"
+	        	        + " WHERE LOWER(t1.nodeName) LIKE LOWER(:itemCategory) OR LOWER(t1.nodePK) "
+	        	        + "LIKE LOWER(:itemCategory) OR LOWER(t1.uniNodeID) LIKE LOWER(:itemCategory)");
+	        query.setParameter("itemCategory", itemCategory); // Set the itemCategory parameter in the query.
+	        	query.setFirstResult(0);
+				query.setMaxResults(40);
+				
+	        	List<Object[]> results = query.list();
+
+	        	
+	        	rtn.put("ListItemCategory", results);
+	   } catch (Exception e) {
+	            sw = new StringWriter();
+	            e.printStackTrace(new PrintWriter(sw));
+	            exceptionAsString = sw.toString();
+	            logger.finest("Error in GetAllCategory due to \n " + exceptionAsString);
+	            logger.info("Error in GetAllCategory due to \n " + exceptionAsString);
+	        } finally {
+	            if (session != null && session.isOpen()) {
+	                tx.commit();
+	                session.close();
+	            }
+	        }
+	    }
+	    return rtn;
 	}
 
 }
