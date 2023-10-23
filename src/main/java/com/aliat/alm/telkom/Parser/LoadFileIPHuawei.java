@@ -298,26 +298,27 @@ public class LoadFileIPHuawei {
 		  List<CSVRecord> records = new ArrayList<>();
 		  for (CSVRecord record : csvParser) {
 			  records.add(record);
-		  									}
+		  }
 	 
     		  Calendar calendar = new GregorianCalendar();
     		  int year = calendar.get(Calendar.YEAR);
     		
     	
-    		  //select the node active sequence from the seq table in alm.
-    		  String sqlStmtinit2 = "select NODE_ACTIVE from SEQ_TABLE";     
-    		  stmtp1 = conalm.createStatement();
-    		  ResultSet rsinit2 = stmtp1.executeQuery(sqlStmtinit2);
-    		  while(rsinit2.next()) {
-    			  //store the returned result in a variable to be increased each loop instead of accessing the database all the time
-    			  //which lead to exceed the maximum number of open cursors.
-    			NodeSeq = rsinit2.getInt("NODE_ACTIVE");
-    			//update the seq of the node active based on the size of the list filled from the csv file
-    		  	stmtp = conalm.prepareStatement("UPDATE SEQ_TABLE SET NODE_ACTIVE = NODE_ACTIVE +"+(records.size()-4));//records.size()-4) is used to remove the unnecessary header rows in the csv file
-    		  	stmtp.executeUpdate();
-    		  	stmtp.close();
-    		  }
+    		  
     		 if(fileName.contains("Network")){
+    			//select the node active sequence from the seq table in alm.
+       		  String sqlStmtinit2 = "select NODE_ACTIVE from SEQ_TABLE";     
+       		  stmtp1 = conalm.createStatement();
+       		  ResultSet rsinit2 = stmtp1.executeQuery(sqlStmtinit2);
+       		  while(rsinit2.next()) {
+       			  //store the returned result in a variable to be increased each loop instead of accessing the database all the time
+       			  //which lead to exceed the maximum number of open cursors.
+       			NodeSeq = rsinit2.getInt("NODE_ACTIVE");
+       			//update the seq of the node active based on the size of the list filled from the csv file
+       		  	stmtp = conalm.prepareStatement("UPDATE SEQ_TABLE SET NODE_ACTIVE = NODE_ACTIVE +"+(records.size()-4));//records.size()-4) is used to remove the unnecessary header rows in the csv file
+       		  	stmtp.executeUpdate();
+       		  	stmtp.close();
+       		  }
     		  for(int i=4;i<records.size();i++) {
     			  vcodeid = year+"_NODE_"+Gprovider+"_"+Domain+"_"+NodeSeq;
     			  rsinit2.close();
