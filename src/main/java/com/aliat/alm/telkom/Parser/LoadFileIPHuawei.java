@@ -376,8 +376,8 @@ public class LoadFileIPHuawei {
     				  
     				  String Others="{\"STATUS_ADMIN\":"+"\""+adminStatus+"\","+"\"GATEWAY\":"+"\""+gateway+"\","+"\"GATEWAY_TYPE\":"+"\""+gatewayType+"\","+"\"GATEWAY_IP\":"+"\""+gatewayIP+"\","+"\"STATUS_LIFECYCLE\":"+"\""+LCStatus+"\"}";
      			       
-    				  	stmtp =  con.prepareStatement("insert into NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,WARE_ID,VENDOR,WARE_NAME,IP_ADDRESS,MAC_ADDRESS,SUB_DOMAIN,SOFTWARE_VERSION,LONGITUDE,LATITUDE,PATCH_VERSION,PART_NUMBER,SUB_DOMAIN_TYPE,OTHERS)"
-    					 		+ "values('"+vcodeid+"','"+unique_Node_ID+"','"+nodeId+"','"+nodeName+"','"+nodeType+"','"+Domain+"','"+nodeModel+"','"+tech2+"','"+tech3+"','"+tech4+"','"+tech5+"','"+siteID+"','"+circleid+"',sysdate,sysdate,'"+fileType+"','"+fileName+"','"+commStatus+"','"+wareID+"','"+Gprovider+"','"+wareName+"','"+IPaddress+"','"+MACaddress+"','"+subDomain+"','"+softwareVersion+"','"+longi+"','"+lat+"','"+patchVersion+"','"+partNumber+"','"+subDomainType+"','"+Others+"')"); 
+    				  	stmtp =  con.prepareStatement("insert into NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,WARE_ID,VENDOR,WARE_NAME,IP_ADDRESS,MAC_ADDRESS,SUB_DOMAIN,SOFTWARE_VERSION,LONGITUDE,LATITUDE,PATCH_VERSION,PART_NUMBER,SUB_DOMAIN_TYPE,OTHERS,ACTIVE_RECORD)"
+    					 		+ "values('"+vcodeid+"','"+unique_Node_ID+"','"+nodeId+"','"+nodeName+"','"+nodeType+"','"+Domain+"','"+nodeModel+"','"+tech2+"','"+tech3+"','"+tech4+"','"+tech5+"','"+siteID+"','"+circleid+"',sysdate,sysdate,'"+fileType+"','"+fileName+"','"+commStatus+"','"+wareID+"','"+Gprovider+"','"+wareName+"','"+IPaddress+"','"+MACaddress+"','"+subDomain+"','"+softwareVersion+"','"+longi+"','"+lat+"','"+patchVersion+"','"+partNumber+"','"+subDomainType+"','"+Others+"','1')"); 
     				  	stmtp.executeUpdate();
     				  	stmtp.close();
     			   
@@ -531,8 +531,8 @@ public class LoadFileIPHuawei {
 		        
 		       String Others="{\"ROMVER\":"+"\""+bootRomVersion+"\","+"\"LOADVER\":"+"\""+bootLoadVersion+"\""+"}";
 		        
-		       stmtp =  con.prepareStatement("insert into NODE_MODULE (MODULE_ID,SERIALNUMBER,NODE_PK,FILENAME,STATUS,CREATION_DATE,DOMAIN,UPDATE_DATE,VENDOR,HARDWAREVERSION,SOFTVER,OTHERS)"
-				 		+ "values('"+ vModulecodeid+"','"+ serialNumber+"','"+node_fk+"','"+ fileName+"','"+moduleStatus+"',sysdate,'"+Domain+"',sysdate,'"+Gprovider+"','"+hardwareVersion+"','"+softwareVersion+"','"+Others+"')"); 
+		       stmtp =  con.prepareStatement("insert into NODE_MODULE (MODULE_ID,SERIALNUMBER,NODE_PK,FILENAME,STATUS,CREATION_DATE,DOMAIN,UPDATE_DATE,VENDOR,HARDWAREVERSION,SOFTVER,OTHERS,ACTIVE_RECORD)"
+				 		+ "values('"+ vModulecodeid+"','"+ serialNumber+"','"+node_fk+"','"+ fileName+"','"+moduleStatus+"',sysdate,'"+Domain+"',sysdate,'"+Gprovider+"','"+hardwareVersion+"','"+softwareVersion+"','"+Others+"','1')"); 
 			  	stmtp.executeUpdate();
      				  	stmtp.close();
      				  	
@@ -680,8 +680,8 @@ public class LoadFileIPHuawei {
      						manifacturedDate="";
      					 }
      					 String lastservicedate="";
-     			        String sql = "INSERT INTO NODE_BOARD (BOARD_ID, SUBRACKNO, SLOTNO, BOARDNAME, BOARDTYPE, SERIALNUMBER, MODEL, HARDWAREVERSION, DATEOFMANUFACTURE,DATEOFLASTSERVICE,SOFTVER, BIOSVER, BOMCODE, NODE_PK,CREATION_DATE,UPDATE_DATE, FILENAME, STATUS, DOMAIN, VENDOR, OTHERS)"
-        			            + " VALUES ('"+vBoardcodeid+"','"+subrackId+"','"+slotId+"','"+boardName+"','"+ boardType+"','"+ serialNumber+"','"+ model+"','"+hardwareVersion+"',"+"TO_DATE('" + manifacturedDate+"','YYYY-MM-DD')"+",TO_DATE('" + lastservicedate+"','YYYY-MM-DD')"+",'"+softwareVersion+"','"+biosVersion+"','"+ bomCode+"','"+node_fk+"',sysdate , sysdate,'"+fileName+"','"+boardStatus+"','"+Domain+"','"+Gprovider+"','"+Others+"')";
+     			        String sql = "INSERT INTO NODE_BOARD (BOARD_ID, SUBRACKNO, SLOTNO, BOARDNAME, BOARDTYPE, SERIALNUMBER, MODEL, HARDWAREVERSION, DATEOFMANUFACTURE,DATEOFLASTSERVICE,SOFTVER, BIOSVER, BOMCODE, NODE_PK,CREATION_DATE,UPDATE_DATE, FILENAME, STATUS, DOMAIN, VENDOR, OTHERS,ACTIVE_RECORD)"
+        			            + " VALUES ('"+vBoardcodeid+"','"+subrackId+"','"+slotId+"','"+boardName+"','"+ boardType+"','"+ serialNumber+"','"+ model+"','"+hardwareVersion+"',"+"TO_DATE('" + manifacturedDate+"','YYYY-MM-DD')"+",TO_DATE('" + lastservicedate+"','YYYY-MM-DD')"+",'"+softwareVersion+"','"+biosVersion+"','"+ bomCode+"','"+node_fk+"',sysdate , sysdate,'"+fileName+"','"+boardStatus+"','"+Domain+"','"+Gprovider+"','"+Others+"','1')";
 
         			        PreparedStatement stmtp = con.prepareStatement(sql);
         			        
