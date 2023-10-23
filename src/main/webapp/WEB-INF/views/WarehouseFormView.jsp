@@ -2780,32 +2780,32 @@ function saverowsintables()
 		vendor="";
 	}
 	var tech_2g=boqNode[z][5];
-	if(tech_2g==null){
-		tech_2g=0;
-	}
-	else{
+	if(tech_2g=="1"){
 		tech_2g=1;
 	}
+	else{
+		tech_2g=0;
+	}
 	var tech_3g=boqNode[z][6];
-		if(tech_3g==null){
-			tech_3g=0;
-		}
-		else{
+		if(tech_3g=="1"){
 			tech_3g=1;
 		}
+		else{
+			tech_3g=0;
+		}
 	var tech_4g=boqNode[z][7];
-	if(tech_4g==null){
-		tech_4g=0;
-	}
-	else{
+	if(tech_4g=="1"){
 		tech_4g=1;
 	}
+	else{
+		tech_4g=0;
+	}
 	var tech_5g=boqNode[z][8];
-	if(tech_5g==null){
-		tech_5g=0;
+	if(tech_5g=="1"){
+		tech_5g=1;
 	}
 	else{
-		tech_5g=1;
+		tech_5g=0;
 	}
 	var model=boqNode[z][9];
 	if(model==null){
