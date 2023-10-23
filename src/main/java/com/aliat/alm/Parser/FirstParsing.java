@@ -524,9 +524,9 @@ private static void UpdatingSitefromLookUP(String vdomain,String vsubdomain, Str
 	 			vWareID = rs.getString("WARE_ID");
 	 			vWareName = rs.getString("WARE_NAME");
 	 			
-	 			if((vSiteID == null && vSiteID.equalsIgnoreCase("0") && vSiteID.equalsIgnoreCase("null"))
- 		 				&& (vWareID == null && vWareID.equalsIgnoreCase("0") && vWareID.equalsIgnoreCase("null")) 
- 		 				&& (vWareName == null && vWareName.equalsIgnoreCase("0") && vWareName.equalsIgnoreCase("null"))) {
+	 			if((vSiteID == null || vSiteID.equalsIgnoreCase("0") || vSiteID.equalsIgnoreCase("null"))
+ 		 				|| (vWareID == null || vWareID.equalsIgnoreCase("0") || vWareID.equalsIgnoreCase("null")) 
+ 		 				|| (vWareName == null || vWareName.equalsIgnoreCase("0") || vWareName.equalsIgnoreCase("null"))) {
 	 				stmt1 = con.createStatement();
 	 				query = "Select NODE_ID,NODE_NAME,SITE_ID,WARE_ID,WARE_NAME,LONGITUDE,LATITUDE FROM SITE_NODE_LOOKUP"
 	 						+ " WHERE NODE_ID='"+rs.getString("NODE_ID")+"' AND NODE_NAME='"+rs.getString("NODE_ID")+"'";
