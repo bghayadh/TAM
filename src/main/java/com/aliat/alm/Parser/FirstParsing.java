@@ -136,7 +136,8 @@ public class FirstParsing {
 								
 								//insert into AUTO_DISCOVERY_LOGS
 								//logsid= localgetseqNbr(1);
-								
+								logsid= localgetseqNbr(0);
+								logsid=Gyear+"_"+ "LOGS"+'_'+logsid;
 								PreparedStatement insertLogsstmt = con.prepareStatement("insert into AUTO_DISCOVERY_LOGS (LOGS_ID,START_TIME,ACTIVITY_NAME,VENDOR,DOMAIN,STOP_TIME) "
 								 		+ "values('"+logsid+"',? ,'FirstParsing','"+ rsinit2.getString("VENDOR") +"','"+rsinit2.getString("DOMAIN")+"',?) ");
 								 		
