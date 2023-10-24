@@ -62,7 +62,17 @@ public class FixedAssetRegistry {
 	private String faritemName;
 	
 	@Column(name = "DOMAIN")
-	private String fardomain;
+	private String farDomain;
+	
+	@Column(name = "SUB_DOMAIN")
+	private String farSubDomain;
+	
+	@Column(name = "VENDOR")
+	private String farVendor;
+	
+	@Column(name = "SUB_DOMAIN_TYPE")
+	private String farType;
+	
 	
 	@Column(name = "INITIALCOST")
 	private float iniCost;
@@ -198,7 +208,8 @@ public class FixedAssetRegistry {
 	}
 
 	public FixedAssetRegistry(String farID, String farStatus, String FarsiteId, String faritemCode, Timestamp farcreatedDate,
-			Timestamp farlastModifiedDate, String faritemName, String fardomain, float iniCost, float deprPer,
+			Timestamp farlastModifiedDate, String faritemName, String farDomain, String farSubDomain, String farVendor, String farType,
+			float iniCost, float deprPer,
 			float dailyPercent, float accumPer, float netCost, String salvageValue, String poId, String accumDeprCode,
 			String deprCode, float usefulLifeMon, String supplierID, String vendorNb, String projNb,
 			String itemPartNb, String assetNb, String itemModel, String dniID, String itemNameReg, String nodeID,
@@ -216,7 +227,10 @@ public class FixedAssetRegistry {
 		this.farcreatedDate = farcreatedDate;
 		this.farlastModifiedDate = farlastModifiedDate;
 		this.faritemName = faritemName;
-		this.fardomain = fardomain;
+		this.farDomain = farDomain;
+		this.farSubDomain = farSubDomain;
+		this.farVendor = farVendor;
+		this.farType = farType;
 		this.iniCost = iniCost;
 		this.deprPer = deprPer;
 		this.dailyPercent = dailyPercent;
@@ -318,12 +332,37 @@ public class FixedAssetRegistry {
 		this.faritemName = faritemName;
 	}
 
-	public String getFardomain() {
-		return fardomain;
+
+	public String getFarDomain() {
+		return farDomain;
 	}
 
-	public void setFardomain(String fardomain) {
-		this.fardomain = fardomain;
+	public void setFarDomain(String farDomain) {
+		this.farDomain = farDomain;
+	}
+
+	public String getFarSubDomain() {
+		return farSubDomain;
+	}
+
+	public void setFarSubDomain(String farSubDomain) {
+		this.farSubDomain = farSubDomain;
+	}
+
+	public String getFarVendor() {
+		return farVendor;
+	}
+
+	public void setFarVendor(String farVendor) {
+		this.farVendor = farVendor;
+	}
+
+	public String getFarType() {
+		return farType;
+	}
+
+	public void setFarType(String farType) {
+		this.farType = farType;
 	}
 
 	public float getIniCost() {
