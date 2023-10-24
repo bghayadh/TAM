@@ -303,6 +303,8 @@ display:none;
             <li><a class="dropdown-item" href="${pageContext.request.contextPath}/WarehouseListView">Sites</a></li>
           <div class="dropdown-divider"></div>
            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NodeListView">Nodes</a></li>
+          <div class="dropdown-divider"></div>
+           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/CellListView">Cells</a></li>
          
          
         </ul>
@@ -475,6 +477,11 @@ display:none;
           <div class="dropdown-divider"></div>
           <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Network_Index">Elements</a></li>
           <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Network_StNdCell">Elements (New)</a></li>
+           <div class="dropdown-divider"></div>
+           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NodeListView">Nodes</a></li>
+         <div class="dropdown-divider"></div>
+           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/CellListView">Cells</a></li>
+         
         </ul>
       </li>
                <li class="nav-item"><a href="${pageContext.request.contextPath}/Sales" class="nav-link "><c:if test="${page == 'Sales'}"><span class="border-bottom active"></c:if><i class="fas fa-shopping-basket"></i> Sales <c:if test="${page == 'sales'}"></span></c:if></a></li>
@@ -691,6 +698,11 @@ display:none;
           <div class="dropdown-divider"></div>
           <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Network_Index">Elements</a></li>
           <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Network_StNdCell">Elements (New)</a></li>
+           <div class="dropdown-divider"></div>
+           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NodeListView">Nodes</a></li>
+          <div class="dropdown-divider"></div>
+           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/CellListView">Cells</a></li>
+         
         </ul>
   <!--     <li class="nav-item"><a href="${pageContext.request.contextPath}/Account" class="nav-link "><c:if test="${page == 'account'}"><span class="border-bottom active"></c:if><i class="fas fa-book"></i> Account <c:if test="${page == 'account'}"></span></c:if></a></li> -->  
         
@@ -935,6 +947,11 @@ display:none;
           <div class="dropdown-divider"></div>
           <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Network_Index">Elements</a></li>
           <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Network_StNdCell">Elements (New)</a></li>
+           <div class="dropdown-divider"></div>
+           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NodeListView">Nodes</a></li>
+          <div class="dropdown-divider"></div>
+           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/CellListView">Cells</a></li>
+         
         </ul>
       </li>
                <li class="nav-item"><a href="${pageContext.request.contextPath}/Inventory" class="nav-link "><c:if test="${page == 'inventory'}"><span class="border-bottom active"></c:if><i class="fas fa-warehouse"></i> Inventory <c:if test="${page == 'inventory'}"></span></c:if></a></li>
