@@ -92,6 +92,7 @@ function CreateMap(lst,map){
 			//markerClusterSites.setMap(map);
 			
 		if(lst!=null){
+			//console.log("lst in map>> ", lst);
 			str="";
 			for(i=0;i<lst.length;i++){
 				//markerId=lst[i][2];	
@@ -150,6 +151,7 @@ function create_Marker_Click(Id,Name,Long,Lat,markers,marker_Cluster,data) {
 		//console.log("markers >>>>", markers);
 		
 		google.maps.event.addListener(marker, "click", function (e) {
+			//console.log("---clicked---");
 			var IdSelected = this.ID;
 			window.infowindow.setContent(this.data);
 	        window.infowindow.open(map, this);
@@ -158,10 +160,19 @@ function create_Marker_Click(Id,Name,Long,Lat,markers,marker_Cluster,data) {
 	        var liElement = $("#network_tree").find('li[id*="' + IdSelected + '"]'); // Select the <li> element with the ID IdSelected
 	    	//console.log("liElement-------",liElement);
 	        var spanElement = liElement.find('.TreeSpan')[0];
-	        //console.log("spanElement-------",spanElement);
-	
-	    	$(".TreeSpan").removeClass("selected-span").css("background", "");
-
+	       // console.log("spanElement-------",spanElement);
+	        
+	    	var Initialparent = $("#initial_ul").find(' > ul > li');
+	        Initialparent.show();
+	  
+	        //$("#initial_ul").children('.folder').find('> svg').addClass('fa-folder-open').removeClass('fa-folder'); 
+	      // var children = $("#initial_ul_nodetype").find(' > ul > li > ul > li');
+	      // console.log("chlidren",children);
+	      // children.show();
+	      // $("#"+IdSelected+" > .folder>svg").removeClass('fa fa-folder').addClass('fa-folder-open');	
+	       
+	       
+	    		$(".TreeSpan").removeClass("selected-span").css("background", "");
 	    		// $("#" + IdSelected + " > .TreeSpan").addClass("selected-span").css("background-color", "#97b9cc");	
 	    		$(spanElement).addClass("selected-span").css("background-color", "#97b9cc");	
 	    		 offset=$(spanElement).offset().top;

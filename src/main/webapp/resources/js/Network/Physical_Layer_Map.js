@@ -287,7 +287,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 		
 	
 			$(".Initial_CurrentPhysicalLayer > .TreeSpan").on("click",function(){
-		
+		console.log("click1");
 				map.setZoom(7);	
 				map.setCenter(kenya);
 	
@@ -430,10 +430,12 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
     });
 
     google.maps.event.addListener(map, 'click', function () {	
+		console.log("click2");
        HideContextMenuGoolge(MenuMap);
      });
     //This to hide the map menu when clicking on the mainDiv
     $("#mainDiv").on('click', function(){
+		console.log("click3");
     	HideContextMenuGoolge(MenuMap);
     })
 }
@@ -883,7 +885,7 @@ $('body').on('hidden.bs.modal', function() {
 })
 
 $(".modalMinimize").on("click", function(){
-  
+	console.log("click4");
   $(".modal-body").slideToggle();
   $(".modal-footer").slideToggle();
   
@@ -901,7 +903,7 @@ $(".modalMinimize").on("click", function(){
 
     //Later use  
 $('#arrow_up').click(function() { 
-
+	console.log("click5");
 	 $("#network_tree").animate({height: "0px"});
 	 $(".searchcontainer").css("display", "none");
 	 $(".tabcontent").animate({height: "613px"});
@@ -911,6 +913,7 @@ $('#arrow_up').click(function() {
    	       
     });	
 $('#arrow_down').click(function() {
+	console.log("click6");
     	$(".searchcontainer").css("display", "block");
     	$("#network_tree").animate({height: "572px"});
     	$('#arrow_down').hide();
