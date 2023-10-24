@@ -1,7 +1,5 @@
 package com.aliat.alm.controller;
 
-
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.sql.Timestamp;
@@ -18,8 +16,8 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Query;
-import org.hibernate.SQLQuery;
+import org.hibernate.query.Query;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.transform.Transformers;
@@ -48,6 +46,7 @@ public class CustomerController {
 	private static Session session = null;
 	private static Transaction tx = null;
 	private static ObjectMapper mapper = new ObjectMapper();
+	@SuppressWarnings("rawtypes")
 	private static Query query = null;
 	private static StringWriter sw;
 	private static String exceptionAsString;
@@ -65,7 +64,7 @@ public class CustomerController {
 	@Autowired
 	Notify notification;
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	@RequestMapping(value = "/CustomerListView", method = RequestMethod.GET)
 
 	public String CustomerListView(Locale locale, Model model, HttpServletRequest request,
@@ -89,8 +88,8 @@ public class CustomerController {
 						+ "STATUS as status"
 						+ " from CUSTOMER" + " order by LAST_MODIFIED_DATE DESC";
 
-				Query query = session.createNativeQuery(str);
-				listCustomer = ((SQLQuery) query).addScalar("customerId").addScalar("customerIdd").addScalar("customerName").addScalar("mobile")
+				query = session.createNativeQuery(str);
+				listCustomer = ((NativeQuery<CustomerListView>) query).addScalar("customerId").addScalar("customerIdd").addScalar("customerName").addScalar("mobile")
 						.addScalar("customerAcronyms").addScalar("createdDate").addScalar("lastModifiedDate")
 						.addScalar("status")
 						.setResultTransformer(Transformers.aliasToBean(CustomerListView.class)).list();
@@ -557,7 +556,7 @@ public class CustomerController {
 			try {
 				query = session.createQuery(
 						"SELECT customerId,customerName,mobile from Customer where customerId like UPPER(:param1) OR UPPER(customerName)like UPPER(:param1) or mobile like UPPER(:param1) ORDER BY lastModifiedDate DESC");
-				query.setString("param1", "%" + request.getParameter("customer") + "%");
+				query.setParameter("param1", "%" + request.getParameter("customer") + "%");
 				query.setFirstResult(0);
 				query.setMaxResults(40);				
 				rtn.put("ListCustomer", query.list());

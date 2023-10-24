@@ -603,7 +603,7 @@ z-index: 9003;
 
 
 
-				var NodeListData = ${ ListGridaTable };
+				var NodeListData = ${ ListGridTable };
 				
 
 				var tab =0;
@@ -616,7 +616,7 @@ z-index: 9003;
 						columnLinkNb: [1],
 						selectCheckbox: true
 					});
-	     			
+					
 
         		
         			$(".almgrid-table").on("click", ".almgrid-link", function (e) {

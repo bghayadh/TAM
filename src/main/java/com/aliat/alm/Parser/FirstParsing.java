@@ -1,5 +1,6 @@
 package com.aliat.alm.Parser;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,6 +14,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 public class FirstParsing {
 	static Connection con ;
@@ -30,12 +34,13 @@ public class FirstParsing {
 	
 	public static void main(String[] args) {
 		
-
-	    BufferedReader objReader = null;
 	try	{
 	    	
-		objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"/"+"almconfig.dat"));
-		 while ((strCurrentLine1 = objReader1.readLine()) != null){
+		Resource ConfigResource = new ClassPathResource("almconfig.dat");
+		File configfile = ConfigResource.getFile();
+		FileReader fr=new FileReader(configfile);  
+		objReader1=new BufferedReader(fr);
+		while ((strCurrentLine1 = objReader1.readLine()) != null){
 			 String data = strCurrentLine1;
 			 String[] data1 ;
 			 if (data.contains("logpath")) {
@@ -131,7 +136,8 @@ public class FirstParsing {
 								
 								//insert into AUTO_DISCOVERY_LOGS
 								//logsid= localgetseqNbr(1);
-								
+								logsid= localgetseqNbr(0);
+								logsid=Gyear+"_"+ "LOGS"+'_'+logsid;
 								PreparedStatement insertLogsstmt = con.prepareStatement("insert into AUTO_DISCOVERY_LOGS (LOGS_ID,START_TIME,ACTIVITY_NAME,VENDOR,DOMAIN,STOP_TIME) "
 								 		+ "values('"+logsid+"',? ,'FirstParsing','"+ rsinit2.getString("VENDOR") +"','"+rsinit2.getString("DOMAIN")+"',?) ");
 								 		
@@ -519,9 +525,9 @@ private static void UpdatingSitefromLookUP(String vdomain,String vsubdomain, Str
 	 			vWareID = rs.getString("WARE_ID");
 	 			vWareName = rs.getString("WARE_NAME");
 	 			
-	 			if((vSiteID == null && vSiteID.equalsIgnoreCase("0") && vSiteID.equalsIgnoreCase("null"))
- 		 				&& (vWareID == null && vWareID.equalsIgnoreCase("0") && vWareID.equalsIgnoreCase("null")) 
- 		 				&& (vWareName == null && vWareName.equalsIgnoreCase("0") && vWareName.equalsIgnoreCase("null"))) {
+	 			if((vSiteID == null || vSiteID.equalsIgnoreCase("0") || vSiteID.equalsIgnoreCase("null"))
+ 		 				|| (vWareID == null || vWareID.equalsIgnoreCase("0") || vWareID.equalsIgnoreCase("null")) 
+ 		 				|| (vWareName == null || vWareName.equalsIgnoreCase("0") || vWareName.equalsIgnoreCase("null"))) {
 	 				stmt1 = con.createStatement();
 	 				query = "Select NODE_ID,NODE_NAME,SITE_ID,WARE_ID,WARE_NAME,LONGITUDE,LATITUDE FROM SITE_NODE_LOOKUP"
 	 						+ " WHERE NODE_ID='"+rs.getString("NODE_ID")+"' AND NODE_NAME='"+rs.getString("NODE_ID")+"'";

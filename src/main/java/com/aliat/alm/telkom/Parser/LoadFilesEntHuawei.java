@@ -3,7 +3,6 @@ package com.aliat.alm.telkom.Parser;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,26 +16,19 @@ import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import com.aliat.alm.models.ManHole;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
@@ -71,6 +63,7 @@ public class LoadFilesEntHuawei  {
 	static PreparedStatement stmtp;
 	static int NodeSeq;
 	static int NodePortSeq;
+	static int NodeBoardSeq;
 	static HashMap<String, String> vhmap = new HashMap<String, String>();
 	static String nodeId = null;
 	static String nodeType = null;
@@ -84,6 +77,7 @@ public class LoadFilesEntHuawei  {
 	public static void main(String[] args, String vendor,String domain,String sub_domain) throws IOException, SQLException, InterruptedException {
 
 		//objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"\\"+"almconfig.dat"));
+		FileName = new ArrayList<String>();
 		Resource ConfigResource = new ClassPathResource("almconfig.dat");
 		File configfile = ConfigResource.getFile();
 		FileReader fr=new FileReader(configfile);  
@@ -259,6 +253,7 @@ public class LoadFilesEntHuawei  {
 					 	  con.close();
 						  conalm.close();		
 	}
+	@SuppressWarnings("unchecked")
 	public static String readfile (String filename) {
 	   	System.out.println("filename "+filename);
 	   	
@@ -273,7 +268,6 @@ public class LoadFilesEntHuawei  {
 	   	String Node_Name;
 	  	Node_Type="MSAN";
 		String excelFilePath=readfileEntHuaweifrom+"/"+filename;
-		String sheetname="msan";
 		String [] temp;
 		temp=filename.split("\\.",-1);
 		String fileType=temp[1];
@@ -283,7 +277,7 @@ public class LoadFilesEntHuawei  {
 		try {
 			inputStream = new FileInputStream(excelFilePath);
 			Workbook workbook=new XSSFWorkbook(inputStream);
-			Sheet firstSheet=workbook.getSheet("msan");
+			Sheet firstSheet=workbook.getSheet("NE_DB");
 			// get the seq of node_active and update it by number of row 
 			int rownumb=firstSheet.getLastRowNum();
 			//System.out.println("number of row "+rownumb);
@@ -311,13 +305,13 @@ public class LoadFilesEntHuawei  {
 				if(!vhmap.isEmpty()) {
 					codeid=Gyear+"_"+ "NODE"+'_'+NodeSeq;
 					if(vhmap.get("NodeName").contains("'")) {
-						Node_Name=vhmap.get("NodeName").replace("'", "''");
+						Node_Name=vhmap.get("NodeName").replace("'", " ");
 					}
 					else {
 						Node_Name=vhmap.get("NodeName");
 					}
 					
-				      Site_ID = vhmap.get("SiteID");
+				      Site_ID = vhmap.get("NodeName").split("_")[0];
 						if(Site_ID != null) {
 							
 								Statement stmtinit2 = conalm.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -328,22 +322,23 @@ public class LoadFilesEntHuawei  {
 								    rsinit2.beforeFirst();
 								  //while(rsinit2.next()) {
 								    if(totalrecinit ==1) {
-								 		  // retrieve site_id, ware_id, long and lat from warehouse table 
-								 		rsinit2.next();
+								 		  // retrieve site_id, ware_id, long and lat from warehouse table
+								    	rsinit2.next();
 									  //System.out.println("here while "+rsinit2.getString("WARE_ID"));
 									  Ware_ID=rsinit2.getString("WARE_ID");
 									  Ware_Name = rsinit2.getString("WARE_NAME");
 									  Long=rsinit2.getString("LONGITUDE");
 									  Lat = rsinit2.getString("LATITUDE");
-									  rsinit2.close();
 									  
 								  }else {
-										Ware_ID="";
-										Ware_Name ="";
-										Long= vhmap.get("Longitude");
-										Lat = vhmap.get("Latitude");
-										Site_ID = "";
+										Ware_ID="0";
+										Ware_Name ="0";
+										Long= "0";
+										Lat = "0";
+										Site_ID = "0";
 									}
+								    stmtinit2.close();
+								    rsinit2.close();
 						}
 					unique_Node_ID=vhmap.get("NodeIPAddr")+"_"+"HW";
 					
@@ -358,13 +353,72 @@ public class LoadFilesEntHuawei  {
 		
 			end = System.currentTimeMillis();
 			System.out.printf("Import done in %d ms\n", (end - start));
-		
+			workbook.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}else {
+	}else if(filename.contains("Boards")){
+		System.out.println(filename);
+		String codeid="";
+		String excelFilePath=readfileEntHuaweifrom+"/"+filename;
+		System.out.println(excelFilePath);
+		String sheetname="";
+		String [] temp;
+		temp=filename.split("\\.",-1);
+		sheetname=temp[0];
+		String regex = "\\d+$";
+		String resultString = sheetname.replaceAll(regex, "");
+		System.out.println(resultString);
+		long start = System.currentTimeMillis();
+		FileInputStream inputStream;
+		
+		try {
+			inputStream = new FileInputStream(excelFilePath);
+			Workbook workbook=new XSSFWorkbook(inputStream);
+			Sheet firstSheet=workbook.getSheet(resultString);
+			// get the seq of node_active and update it by number of row 
+			int rownumb=firstSheet.getLastRowNum();
+			//System.out.println("number of row "+rownumb);
+			
+			String sqlStmtinit3 = "select NODE_BOARD from SEQ_TABLE";     
+			  stmtp1 = conalm.createStatement();
+			  ResultSet rsinit3 = stmtp1.executeQuery(sqlStmtinit3);
+			  while(rsinit3.next()) {
+				  NodeBoardSeq = rsinit3.getInt("NODE_BOARD");
+			  	stmtp = conalm.prepareStatement("UPDATE SEQ_TABLE SET NODE_BOARD = NODE_BOARD +"+(rownumb-2));//-2 to ignore non-data row of the excel sheet
+			  	stmtp.executeUpdate();
+			  	stmtp.close();
+			  }
+			  rsinit3.close();
+			  stmtp1.close();
+			
+			Iterator<Row> rowIterator=firstSheet.iterator();
+			long end;
+			Row nextRow = rowIterator.next();
+			
+			while(rowIterator.hasNext() ){
+			vhmap=getexcelBoarddata(firstSheet,nextRow,rowIterator);
+			
+				if(!vhmap.isEmpty()) {
+					codeid=Gyear+"_"+ "NODE_HW_ENT_BRD"+'_'+NodeBoardSeq;
+					stmtp =  con.prepareStatement("insert into NODE_BOARD (BOARD_ID,SUBRACKNO,SLOTNO,BOARDNAME,BOARDTYPE,SERIALNUMBER,HARDWAREVERSION,SOFTVER,BIOSVER,ISSUENUMBER,BOMCODE,MODEL,NODE_PK,UPDATE_DATE,FILENAME,STATUS,CREATION_DATE,DOMAIN,VENDOR,OTHERS,ACTIVE_RECORD)"
+						     + "values('"+codeid+"','"+vhmap.get("SubrackID")+"','"+vhmap.get("SlotID")+"','"+vhmap.get("BoardFullName")+"','"+vhmap.get("BoardType")+"','"+vhmap.get("SN")+"','"+vhmap.get("HardwareVersion")+"','"+vhmap.get("SoftwareVersion")+"','"+vhmap.get("BIOSVersion")+"','"+vhmap.get("IssueNumber")+"','"+vhmap.get("BOMCode")+"','"+vhmap.get("Model")+"',(Select DISTINCT NODE_PK from node_active where IP_ADDRESS='"+vhmap.get("NEIPAddress")+"' and active_record='1' and domain='"+Domain+"' and vendor='"+Gprovider+"' fetch first 1 row only) ,sysdate,'"+filename+"','"+vhmap.get("BoardStatus")+"',sysdate,'"+Domain+"','"+Gprovider+"','"+vhmap.get("others")+"','1')"); 
+					  	stmtp.executeUpdate();
+					  	stmtp.close();
+					NodeBoardSeq++;
+				}
+					}
+		
+			end = System.currentTimeMillis();
+			System.out.printf("Import done in %d ms\n", (end - start));
+			workbook.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	  else {
 	  	String codeid="";
-	   	String Node_Type="";
 		String excelFilePath=readfileEntHuaweifrom+"/"+filename;
 		String sheetname="";
 		String [] temp;
@@ -372,7 +426,6 @@ public class LoadFilesEntHuawei  {
 		sheetname=temp[0];
 		String regex = "\\d+$";
 		String resultString = sheetname.replaceAll(regex, "");
-		String fileType=temp[1];
 		long start = System.currentTimeMillis();
 		FileInputStream inputStream;
 		try {
@@ -408,8 +461,9 @@ public class LoadFilesEntHuawei  {
 					String node_attr_fk ="";
 					
 					PreparedStatement stmt = con.prepareStatement("insert into NODE_PORT(PORT_ID,SITEINDEX,SLOTNO,SUBSLOTNO,PORTNO,VENDORNAME,UNITPOSITION,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,DOMAIN,VENDOR,PORTTYPE,PORTRATE,OTHERS) "
-            		   		+ "values('" + codeid +"','0','" + vhmap.get("SlotNO") +"','" + vhmap.get("SubSlotNO") +"','" + vhmap.get("PortNO") +"','HW','" + vhmap.get("UnitPos") +"','" + node_fk +"','" + node_attr_fk +"' ,sysdate,'" + filename +"','" + vhmap.get("OperationStatus") +"','0','0','0','0','0','0','1','"+Domain+"','" + Gprovider +"','" + vhmap.get("PortType") +"','" + vhmap.get("PortRate") +"','" + vhmap.get("Others") +"') ");
-         		     stmt.executeUpdate();
+            		   		+ "values('" + codeid +"','0','" + vhmap.get("SlotNO") +"','" + vhmap.get("SubSlotNO") +"','" + vhmap.get("PortNO") +"','HW','" + vhmap.get("UnitPos") +"',(select NODE_PK from NODE_ACTIVE where NODE_NAME='"+vhmap.get("NE_Name")+"' AND ACTIVE_RECORD='1' and domain='"+Domain+"' and vendor='"+Gprovider+"' order by creation_date desc fetch first 1 row only),'" + node_attr_fk +"' ,sysdate,'" + filename +"','" + vhmap.get("OperationStatus") +"','0','0','0','0','0','0','1','"+Domain+"','" + Gprovider +"','" + vhmap.get("PortType") +"','" + vhmap.get("PortRate") +"','" + vhmap.get("Others") +"') ");
+         		    stmt.setEscapeProcessing(false); 
+					stmt.executeUpdate();
 				     stmt.close();
 				     NodePortSeq++;
 				}
@@ -417,7 +471,7 @@ public class LoadFilesEntHuawei  {
 		
 			end = System.currentTimeMillis();
 			System.out.printf("Import done in %d ms\n", (end - start));
-		
+			workbook.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -425,13 +479,133 @@ public class LoadFilesEntHuawei  {
 		return null;
 	}
 	
+	@SuppressWarnings("unused")
+	private static HashMap<String, String> getexcelBoarddata(Sheet firstSheet, Row nextRow, Iterator<Row> rowIterator) {
+		HashMap<String, String> hmap = new HashMap<String, String>();
+		
+		String NEName="",BoardFullName="",BoardName="",BoardType="",NEID="",NEIPAddress="",NEType="",SubrackType="",SubrackID="",SlotID="",HardwareVersion="",SoftwareVersion="",SN="",BoardAlias="",Remarks="",Model="",IssueNumber="",FPGAVersion="",BIOSVersion="",BoardStatus="",ProtectionRole="",PSTQ="",BOMCode="",AdministrativeStatus="",Description="",ManufacturedOn="",CreatedOn="";
+		
+		nextRow = rowIterator.next();
+			Iterator<Cell> cellIterator=nextRow.cellIterator();
+			int rowIndex = nextRow.getRowNum();
+		
+			if(rowIndex >1) {
+			while(cellIterator.hasNext()) {
+				
+				Cell nextCell=cellIterator.next();
+				int columnIndex=nextCell.getColumnIndex();
+				switch (columnIndex) {
+				case 0:
+					NEName=nextCell.getStringCellValue();
+					break;
+				case 1:
+					BoardFullName=nextCell.getStringCellValue();
+					break;
+				case 2:
+					BoardName=nextCell.getStringCellValue();
+					break;
+				case 3:
+					BoardType=nextCell.getStringCellValue();
+					break;
+				case 4:
+					NEID=nextCell.getStringCellValue();
+					break;
+				case 5:
+					NEIPAddress=nextCell.getStringCellValue();
+					break;
+				case 6:
+					NEType=nextCell.getStringCellValue();
+					break;
+				case 7:
+					SubrackType=nextCell.getStringCellValue();
+					break;
+				case 8:
+					SubrackID=nextCell.getStringCellValue();
+					break;
+				case 9:
+					SlotID=nextCell.getStringCellValue();
+					break;
+				case 10:
+					HardwareVersion=nextCell.getStringCellValue();
+					break;
+				case 11:
+					SoftwareVersion=nextCell.getStringCellValue();
+					break;
+				case 12:
+					SN=nextCell.getStringCellValue();
+					break;
+				case 13:
+					BoardAlias=nextCell.getStringCellValue();
+					break;
+				case 14:
+					Remarks=nextCell.getStringCellValue();
+					break;
+				case 15:
+					Model=nextCell.getStringCellValue();
+					break;
+				case 16:
+					IssueNumber=nextCell.getStringCellValue();
+					break;
+				case 17:
+					FPGAVersion=nextCell.getStringCellValue();
+					break;
+				case 18:
+					BIOSVersion=nextCell.getStringCellValue();
+					break;
+				case 19:
+					BoardStatus=nextCell.getStringCellValue();
+					break;
+				case 20:
+					ProtectionRole=nextCell.getStringCellValue();
+					break;
+				case 21:
+					PSTQ=nextCell.getStringCellValue();
+					break;
+				case 22:
+					BOMCode=nextCell.getStringCellValue();
+					break;
+				case 23:
+					AdministrativeStatus=nextCell.getStringCellValue();
+					break;
+				case 24:
+					Description=nextCell.getStringCellValue();
+					break;
+				case 25:
+					ManufacturedOn=nextCell.getStringCellValue();
+					break;
+				case 26:
+					CreatedOn=nextCell.getStringCellValue();
+					break;
+					
+					}
+				}
+			
+		    String others = "{\"NE ID\":"+"\""+NEID+"\","+"\"NE IP Address\":"+"\""+NEIPAddress+"\","+"\"NE Type (MPU TYPE)\":"+"\""+NEType+"\","+"\"Subrack Type\":"+"\""+SubrackType+"\","+"\"FPGA Version\":"+"\""+FPGAVersion+"\","+"\"Protection Role\":"+"\""+ProtectionRole+"\","+"\"PSTQ\":"+"\""+PSTQ+"\","+"\"Administrative Status\":"+"\""+AdministrativeStatus+"\","+"\"Description\":"+"\""+Description+"\""+"}";
+		    hmap.put( "BoardFullName", BoardFullName);
+		    hmap.put( "BoardType", BoardType);
+			 hmap.put( "SubrackID", SubrackID);
+			 hmap.put( "SlotID", SlotID);
+			 hmap.put( "HardwareVersion", HardwareVersion);
+			 hmap.put( "SoftwareVersion", SoftwareVersion);
+			 hmap.put( "SN", SN);
+			 hmap.put( "Model", Model);
+			 hmap.put( "IssueNumber", IssueNumber);
+			 hmap.put( "BIOSVersion", BIOSVersion);
+			 hmap.put( "BoardStatus", BoardStatus);
+			 hmap.put( "BOMCode", BOMCode);
+			 hmap.put("others", others);
+			 hmap.put("NEIPAddress", NEIPAddress);
+
+			}
+		
+		return hmap;
+	}
+	
+	@SuppressWarnings({ "rawtypes", "deprecation" })
 	public static HashMap getexceldata(Sheet firstSheet,Row nextRow,Iterator<Row> rowIterator) throws SQLException {
 		 HashMap<String, String> hmap = new HashMap<String, String>();
 
 		    String NEName = "";
-			String SiteID = "";
-			String Latitude = "";
-			String Longitude = "";
 			String NEModel = "";
 			String NEIP = "";
 			String SoftwareVer = "";
@@ -450,11 +624,6 @@ public class LoadFilesEntHuawei  {
 			String GatewayIP = "";
 			String Others = "";
 		
-			Date date = new Date();
-			Calendar calendar = new GregorianCalendar();
-			calendar.setTime(date);
-			int year = calendar.get(Calendar.YEAR);
-			
 			 nextRow = rowIterator.next();
 				Iterator<Cell> cellIterator=nextRow.cellIterator();
 				int rowIndex = nextRow.getRowNum();
@@ -465,101 +634,112 @@ public class LoadFilesEntHuawei  {
 					int columnIndex=nextCell.getColumnIndex();
 					switch (columnIndex) {
 					case 0:
-						NEName=nextCell.getStringCellValue();
-						//System.out.println("ne name "+nextCell.getStringCellValue());
-						break;
-					case 1:
-						if (nextCell.getCellType() == Cell.CELL_TYPE_STRING) {
-							SiteID= nextCell.getStringCellValue();
-						}else {
-							SiteID= null;
-						}
-						break;
-					case 2:
-						if (nextCell.getCellType() == Cell.CELL_TYPE_STRING) {
-							Latitude= nextCell.getStringCellValue();
-						}else {
-							Latitude= String.valueOf(nextCell.getNumericCellValue());
-						}
-						break;
-					case 3:
-						if (nextCell.getCellType() == Cell.CELL_TYPE_STRING) {
-							Longitude= nextCell.getStringCellValue();
-						}else {
-							Longitude=String.valueOf(nextCell.getNumericCellValue());
-						}
-						break;
-					case 4:
-						NEModel=nextCell.getStringCellValue();
-						break;
-					case 5:
-						NEIP=nextCell.getStringCellValue();
-						break;
-					case 6:
-						SoftwareVer=nextCell.getStringCellValue();
-						break;
-					case 7:
-						NEMAC=nextCell.getStringCellValue();
-						if(NEMAC.trim().equalsIgnoreCase("--")) {
-							NEMAC="";
-						}
-						break;
-					case 8:
-						NEID=nextCell.getStringCellValue();
-						break;
-					case 10:
-						SubNet=nextCell.getStringCellValue();
-						break;
-					case 13:
-						NESubType=nextCell.getStringCellValue();
-						break;
-					case 14:
-						ComStatus=nextCell.getStringCellValue();
-						break;
-					case 15:
-						AdminStatus=nextCell.getStringCellValue();
-						break;
-					case 17:
-						crtdata=nextCell.getStringCellValue();
-						break;
-					case 19:
-						Remark=nextCell.getStringCellValue();
-						break;
-					case 20:
-						PatchVerList=nextCell.getStringCellValue();
-						break;
-					case 22:
-						GatewayType=nextCell.getStringCellValue();
-						if(GatewayType.trim().equalsIgnoreCase("--")) {
-							GatewayType="";
-						}
-						break;
-					case 23:
-						Gateway=nextCell.getStringCellValue();
-						if(Gateway.trim().equalsIgnoreCase("--")) {
-							Gateway="";
-						}
-						break;
-					case 24:
-						GatewayIP=nextCell.getStringCellValue();
-						if(GatewayIP.trim().equalsIgnoreCase("--")) {
-							GatewayIP="";
-						}
-						break;
-					case 26:
-						LifeCycleStatus=nextCell.getStringCellValue();
-						if(LifeCycleStatus.trim().equalsIgnoreCase("--")){
-							LifeCycleStatus="";
-						}
-						break;
+				        if (nextCell.getCellTypeEnum() == CellType.STRING) {
+			        	NEIP = nextCell.getStringCellValue();
+			        
+			       }
+					break;
+				case 1:
+				        if (nextCell.getCellTypeEnum() == CellType.STRING) {
+					NEName=nextCell.getStringCellValue();
 					}
+					break;
+				case 2:
+				        if (nextCell.getCellTypeEnum() == CellType.STRING) {
+			        	NEModel=nextCell.getStringCellValue();
+						}
+					break;
+				case 3:
+				        if (nextCell.getCellTypeEnum() == CellType.STRING) {
+
+					SoftwareVer=nextCell.getStringCellValue();
+					}
+					break;
+				case 4:
+				        if (nextCell.getCellTypeEnum() == CellType.STRING) {
+					NEMAC=nextCell.getStringCellValue();
+					if(NEMAC.trim().equalsIgnoreCase("--")) {
+						NEMAC="";
+					}
+					}
+					break;
+				case 5:
+				        if (nextCell.getCellTypeEnum() == CellType.STRING) {
+					NEID=nextCell.getStringCellValue();
+					}
+					break;
+				case 7:
+				        if (nextCell.getCellTypeEnum() == CellType.STRING) {
+					SubNet=nextCell.getStringCellValue();
+					}
+					break;
+				case 10:
+				        if (nextCell.getCellTypeEnum() == CellType.STRING) {
+					NESubType=nextCell.getStringCellValue();
+					}
+					break;
+				case 11:
+				        if (nextCell.getCellTypeEnum() == CellType.STRING) {
+					ComStatus=nextCell.getStringCellValue();
+					}
+					break;
+				case 12:
+				        if (nextCell.getCellTypeEnum() == CellType.STRING) {
+					AdminStatus=nextCell.getStringCellValue();
+					}
+					break;
+				case 14:
+				        if (nextCell.getCellTypeEnum() == CellType.STRING) {
+					crtdata=nextCell.getStringCellValue();
+					}
+					break;
+				case 16:
+				        if (nextCell.getCellTypeEnum() == CellType.STRING) {
+					Remark=nextCell.getStringCellValue();
+					}
+					break;
+				case 17:
+				        if (nextCell.getCellTypeEnum() == CellType.STRING) {
+					PatchVerList=nextCell.getStringCellValue();
+					}
+					break;
+				case 19:
+				        if (nextCell.getCellTypeEnum() == CellType.STRING) {
+					GatewayType=nextCell.getStringCellValue();
+					if(GatewayType.trim().equalsIgnoreCase("--")) {
+						GatewayType="";
+					}
+					}
+					break;
+				case 20:
+				        if (nextCell.getCellTypeEnum() == CellType.STRING) {
+					Gateway=nextCell.getStringCellValue();
+					if(Gateway.trim().equalsIgnoreCase("--")) {
+						Gateway="";
+					}
+					}
+					break;
+				case 21:
+				        if (nextCell.getCellTypeEnum() == CellType.STRING) {
+					GatewayIP=nextCell.getStringCellValue();
+					if(GatewayIP.trim().equalsIgnoreCase("--")) {
+						GatewayIP="";
+					}
+					}
+					break;
+				case 23:
+				        if (nextCell.getCellTypeEnum() == CellType.STRING) {
+					LifeCycleStatus=nextCell.getStringCellValue();
+					if(LifeCycleStatus.trim().equalsIgnoreCase("--")){
+						LifeCycleStatus="";
+					}
+					}
+					break;
+				}
 				}
 				
-				Others="{\"AdministrativeStatus\":"+"\""+AdminStatus+"\","+"\"LifeCycleStatus\":"+"\""+LifeCycleStatus+"\","+"\"Gateway\":"+"\""+Gateway+"\","+"\"GatewayType\":"+"\""+GatewayType+"\","+"\"GatewayIP\":"+"\""+GatewayIP+"\""+"}";
-				hmap.put( "NodeName", NEName);
-				 hmap.put( "SiteID", SiteID);
-				 hmap.put( "Latitude", Latitude);
-				 hmap.put( "Longitude", Longitude);
+				 Others="{\"AdministrativeStatus\":"+"\""+AdminStatus+"\","+"\"LifeCycleStatus\":"+"\""+LifeCycleStatus+"\","+"\"Gateway\":"+"\""+Gateway+"\","+"\"GatewayType\":"+"\""+GatewayType+"\","+"\"GatewayIP\":"+"\""+GatewayIP+"\""+"}";
+				 hmap.put( "NodeName", NEName);
 				 hmap.put( "NodeType", NEModel);
 				 hmap.put( "NodeIPAddr", NEIP);
 				 hmap.put( "SoftwareVersion", SoftwareVer);
@@ -577,6 +757,7 @@ public class LoadFilesEntHuawei  {
 				return hmap;
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public static HashMap getexcelPortdata(Sheet firstSheet,Row nextRow,Iterator<Row> rowIterator) throws SQLException {
 		 HashMap<String, String> hmap = new HashMap<String, String>();
 
@@ -589,11 +770,7 @@ public class LoadFilesEntHuawei  {
 			String AdminStatus = "";
 			String OperationStatus = "";
 			String Others = "";
-		
-			Date date = new Date();
-			Calendar calendar = new GregorianCalendar();
-			calendar.setTime(date);
-			int year = calendar.get(Calendar.YEAR);
+			String NE_Name="";
 			
 			 nextRow = rowIterator.next();
 				Iterator<Cell> cellIterator=nextRow.cellIterator();
@@ -604,6 +781,11 @@ public class LoadFilesEntHuawei  {
 					Cell nextCell=cellIterator.next();
 					int columnIndex=nextCell.getColumnIndex();
 					switch (columnIndex) {
+					case 0:
+						NE_Name=nextCell.getStringCellValue();
+						if(NE_Name.contains("'")) {
+							NE_Name=NE_Name.replace("'"," ");
+						}
 					case 3:
 						SlotNO=nextCell.getStringCellValue();
 						break;
@@ -615,22 +797,35 @@ public class LoadFilesEntHuawei  {
 						break;
 				   case 7:
 					   UnitPos= nextCell.getStringCellValue();
+					   if(UnitPos.contains("'")) {
+						   UnitPos = UnitPos.replace("'"," ");
+					   }
 						break;
 				   case 9:
 					   PortType= nextCell.getStringCellValue();
+					   if(PortType.contains("'")) {
+						   PortType = PortType.replace("'"," ");
+					   }
 						break;
 				   case 10:
 					   PortRate= nextCell.getStringCellValue();
+					   if(PortRate.contains("'")) {
+						   PortRate = PortRate.replace("'"," ");
+					   }
 						break;
 				   case 12:
 					   AdminStatus= nextCell.getStringCellValue();
 						break;
 				   case 13:
 					   OperationStatus= nextCell.getStringCellValue();
+					   if(OperationStatus.contains("'")) {
+						   OperationStatus = OperationStatus.replace("'"," ");
+					   }
 						break;
 					}
 				}
 				 Others="{\"AdministrativeStatus\":"+"\""+AdminStatus+"\""+"}";
+				 hmap.put("NE_Name",NE_Name);
 				 hmap.put( "SlotNO", SlotNO);
 				 hmap.put( "SubSlotNO", SubSlotNO);
 				 hmap.put( "PortNO", PortNO);
@@ -672,7 +867,6 @@ public class LoadFilesEntHuawei  {
 			Statement stmt1 = null;
 			Statement stmt2 = null;
 			Statement stmt3 = null;
-			Statement stmt4 = null;
 			int vcount =0;
 			int i=0;
 			
@@ -682,7 +876,8 @@ public class LoadFilesEntHuawei  {
 			stmt1 = con.createStatement();
 		    ResultSet rs1 = stmt1.executeQuery(query1);
 		    while (rs1.next()) {
-		    	 String nodenamee;
+		    	 String nodenamee=null;
+		    	 if(rs1.getString("NODE_NAME") != null) {
 	        	 if(rs1.getString("NODE_NAME").contains("'")) {
 						
 	        		 nodenamee=rs1.getString("NODE_NAME").replace("'", "''");
@@ -690,6 +885,7 @@ public class LoadFilesEntHuawei  {
 					else {
 						nodenamee=rs1.getString("NODE_NAME");
 					}
+		    	 }
 		    	//try {
 		                 // select all rows related to a file identified by rs1 having count >=1
 						 //String query2 = "select NODE_ID,NODE_NAME,SITE_ID,CIRCLE_ID,DOMAIN,VENDOR,count() counter from (select NODE_ID,NODE_NAME,SITE_ID,CIRCLE_ID,DOMAIN,VENDOR from NODE_ACTIVE where (SITE_ID ='"+ rs1.getString("SITE_ID") +"' OR SITE_ID IS NULL) and CIRCLE_ID ='"+ rs1.getString("CIRCLE_ID") +"' and NODE_ID ='"+ rs1.getString("NODE_ID") +"' and NODE_NAME ='"+ rs1.getString("NODE_NAME") +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor+"' ) group by  NODE_ID,NODE_NAME,SITE_ID,CIRCLE_ID,DOMAIN,VENDOR having count() >=1 and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'";  
@@ -704,7 +900,7 @@ public class LoadFilesEntHuawei  {
 				        	 String nodename;
 				        	 if(rs2.getString("NODE_NAME").contains("'")) {
 									
-				        		 nodename=rs2.getString("NODE_NAME").replace("'", "''");
+				        		 nodename=rs2.getString("NODE_NAME").replace("'", "");
 								}
 								else {
 									nodename=rs2.getString("NODE_NAME");

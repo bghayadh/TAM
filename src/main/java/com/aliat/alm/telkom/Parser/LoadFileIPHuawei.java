@@ -1,6 +1,5 @@
 package com.aliat.alm.telkom.Parser;
 
-import java.text.SimpleDateFormat;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -17,7 +16,6 @@ import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -25,15 +23,10 @@ import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
-
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.Date;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
@@ -117,7 +110,7 @@ public class LoadFileIPHuawei {
 	
 	public static void main(String[] args,String vendor,String domain,String sub_domain,String sub_domainType) throws Exception {
 		
-
+		FileName = new ArrayList<String>();
 		//System.out.println("Start withh LOAD :" + System.getProperty("user.dir"));
 		
 	 	//objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"/"+"almconfig.dat"));
@@ -129,7 +122,6 @@ public class LoadFileIPHuawei {
 		while ((strCurrentLine1 = objReader1.readLine()) != null){
 			 String data = strCurrentLine1;
 			 String[] data1 ;
-			 String[] data2 ;
 			 
 			 if (data.contains("projectpath")) {
 				 data1=data.split(";",-1);
@@ -164,7 +156,6 @@ public class LoadFileIPHuawei {
 			//	 System.out.println("readfileTransIpHWfrom");					
 				 data1=data.split(";",-1);
 				 readfileTransIpHWfrom = data1[1];
-				 data2=readfileTransIpHWfrom.replace("\\","/").split("/",-1);
 				 vfolderfrom=readfileTransIpHWfrom;
 			//	 System.out.println("vfolderfrom "+ vfolderfrom);
 				 Gprovider=vendor;
@@ -221,7 +212,7 @@ public class LoadFileIPHuawei {
 		
 		 // This block configure the logger with handler and formatter  and PATH
 			
-	        fh = new FileHandler(logpath+"\\"+lofilename);
+	        fh = new FileHandler(logpath+"/"+lofilename);
 	        logger.addHandler(fh);
 	        SimpleFormatter formatter = new SimpleFormatter();  
 	        fh.setFormatter(formatter);
@@ -282,10 +273,10 @@ public class LoadFileIPHuawei {
 						//System.out.println("i........"+i);
 						//System.out.println("FileName.get(i)........"+FileName.get(i));
 						readfile(FileName.get(i));
-						File source = new File(readfileTransIpHWfrom+"\\"+FileName.get(i));
-						File dest = new File(copyfileTransIpHWto+"\\"+FileName.get(i)+".bkp");
+						File source = new File(readfileTransIpHWfrom+"/"+FileName.get(i));
+						File dest = new File(copyfileTransIpHWto+"/"+FileName.get(i)+".bkp");
 						copyFiles(source,dest);							     
-						deleteFiles(readfileTransIpHWfrom+"\\"+FileName.get(i));
+						deleteFiles(readfileTransIpHWfrom+"/"+FileName.get(i));
 					}
 		 	  }
 		 	 GetduplicateFilename(Domain,Gprovider,subDomain);
@@ -303,39 +294,39 @@ public class LoadFileIPHuawei {
 		 //System.out.println("READ FILE");
 		 //System.out.println("fileName..."+fileName);
 
-		 CSVParser csvParser = new CSVParser(new FileReader(vfolderfrom + "\\" + fileName), CSVFormat.DEFAULT);
+		 CSVParser csvParser = new CSVParser(new FileReader(vfolderfrom + "/" + fileName), CSVFormat.DEFAULT);
 		  List<CSVRecord> records = new ArrayList<>();
 		  for (CSVRecord record : csvParser) {
 			  records.add(record);
-		  									}
+		  }
 	 
     		  Calendar calendar = new GregorianCalendar();
     		  int year = calendar.get(Calendar.YEAR);
     		
     	
-    		  //select the node active sequence from the seq table in alm.
-    		  String sqlStmtinit2 = "select NODE_ACTIVE from SEQ_TABLE";     
-    		  stmtp1 = conalm.createStatement();
-    		  ResultSet rsinit2 = stmtp1.executeQuery(sqlStmtinit2);
-    		  while(rsinit2.next()) {
-    			  //store the returned result in a variable to be increased each loop instead of accessing the database all the time
-    			  //which lead to exceed the maximum number of open cursors.
-    			NodeSeq = rsinit2.getInt("NODE_ACTIVE");
-    			//update the seq of the node active based on the size of the list filled from the csv file
-    		  	stmtp = conalm.prepareStatement("UPDATE SEQ_TABLE SET NODE_ACTIVE = NODE_ACTIVE +"+(records.size()-4));//records.size()-4) is used to remove the unnecessary header rows in the csv file
-    		  	stmtp.executeUpdate();
-    		  	stmtp.close();
-    		  }
+    		  
     		 if(fileName.contains("Network")){
+    			//select the node active sequence from the seq table in alm.
+       		  String sqlStmtinit2 = "select NODE_ACTIVE from SEQ_TABLE";     
+       		  stmtp1 = conalm.createStatement();
+       		  ResultSet rsinit2 = stmtp1.executeQuery(sqlStmtinit2);
+       		  while(rsinit2.next()) {
+       			  //store the returned result in a variable to be increased each loop instead of accessing the database all the time
+       			  //which lead to exceed the maximum number of open cursors.
+       			NodeSeq = rsinit2.getInt("NODE_ACTIVE");
+       			//update the seq of the node active based on the size of the list filled from the csv file
+       		  	stmtp = conalm.prepareStatement("UPDATE SEQ_TABLE SET NODE_ACTIVE = NODE_ACTIVE +"+(records.size()-4));//records.size()-4) is used to remove the unnecessary header rows in the csv file
+       		  	stmtp.executeUpdate();
+       		  	stmtp.close();
+       		  }
     		  for(int i=4;i<records.size();i++) {
     			  vcodeid = year+"_NODE_"+Gprovider+"_"+Domain+"_"+NodeSeq;
     			  rsinit2.close();
     			  stmtp1.close();
     			  if(records.get(i).get(0).contains("_")) {// if the cell of the csv file contains _ then it may contain site ID
-    					if(records.get(i).get(0).split("_").length >= 3) { // if the number of the elements split in the cell according to _ then it may contain site ID
     						siteID = records.get(i).get(0).split("_")[0];
     						char charArray[] = siteID.toCharArray();
-    						if(Character.isDigit(charArray[0]) && !Character.isDigit(charArray[siteID.length()-1])) { // if the first character of the possible site id is number then it is a site ID.
+    					if(Character.isDigit(charArray[0]) && !Character.isDigit(charArray[siteID.length()-1])) { // if the first character of the possible site id is number then it is a site ID.
     							siteID = siteID;
     							String sqlStmtinit3 = "select WARE_ID,WARE_NAME,LONGITUDE,LATITUDE from WAREHOUSE WHERE SITE_ID='"+siteID+"'";     
     							  stmtp1 = conalm.createStatement();
@@ -355,19 +346,13 @@ public class LoadFileIPHuawei {
     							  lat = "";
     							  siteID = "";
     						}   							
-    					}else {
-    						wareID="";
-    						  wareName ="";
-    						  longi="";
-    						  lat = "";
-    						  siteID = "";
-    						//System.out.println("site id and site name don't exists");
-    					}
+    					
     				}else {
     					wareID="";
     					  wareName ="";
     					  longi="";
     					  lat = "";
+    					  siteID="";
     					//System.out.println("site id and site name don't exists");
     				}
     			  	  nodeName = records.get(i).get(0);
@@ -392,8 +377,8 @@ public class LoadFileIPHuawei {
     				  
     				  String Others="{\"STATUS_ADMIN\":"+"\""+adminStatus+"\","+"\"GATEWAY\":"+"\""+gateway+"\","+"\"GATEWAY_TYPE\":"+"\""+gatewayType+"\","+"\"GATEWAY_IP\":"+"\""+gatewayIP+"\","+"\"STATUS_LIFECYCLE\":"+"\""+LCStatus+"\"}";
      			       
-    				  	stmtp =  con.prepareStatement("insert into NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,WARE_ID,VENDOR,WARE_NAME,IP_ADDRESS,MAC_ADDRESS,SUB_DOMAIN,SOFTWARE_VERSION,LONGITUDE,LATITUDE,PATCH_VERSION,PART_NUMBER,SUB_DOMAIN_TYPE,OTHERS)"
-    					 		+ "values('"+vcodeid+"','"+unique_Node_ID+"','"+nodeId+"','"+nodeName+"','"+nodeType+"','"+Domain+"','"+nodeModel+"','"+tech2+"','"+tech3+"','"+tech4+"','"+tech5+"','"+siteID+"','"+circleid+"',sysdate,sysdate,'"+fileType+"','"+fileName+"','"+commStatus+"','"+wareID+"','"+Gprovider+"','"+wareName+"','"+IPaddress+"','"+MACaddress+"','"+subDomain+"','"+softwareVersion+"','"+longi+"','"+lat+"','"+patchVersion+"','"+partNumber+"','"+subDomainType+"','"+Others+"')"); 
+    				  	stmtp =  con.prepareStatement("insert into NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,WARE_ID,VENDOR,WARE_NAME,IP_ADDRESS,MAC_ADDRESS,SUB_DOMAIN,SOFTWARE_VERSION,LONGITUDE,LATITUDE,PATCH_VERSION,PART_NUMBER,SUB_DOMAIN_TYPE,OTHERS,ACTIVE_RECORD)"
+    					 		+ "values('"+vcodeid+"','"+unique_Node_ID+"','"+nodeId+"','"+nodeName+"','"+nodeType+"','"+Domain+"','"+nodeModel+"','"+tech2+"','"+tech3+"','"+tech4+"','"+tech5+"','"+siteID+"','"+circleid+"',sysdate,sysdate,'"+fileType+"','"+fileName+"','"+commStatus+"','"+wareID+"','"+Gprovider+"','"+wareName+"','"+IPaddress+"','"+MACaddress+"','"+subDomain+"','"+softwareVersion+"','"+longi+"','"+lat+"','"+patchVersion+"','"+partNumber+"','"+subDomainType+"','"+Others+"','1')"); 
     				  	stmtp.executeUpdate();
     				  	stmtp.close();
     			   
@@ -547,8 +532,8 @@ public class LoadFileIPHuawei {
 		        
 		       String Others="{\"ROMVER\":"+"\""+bootRomVersion+"\","+"\"LOADVER\":"+"\""+bootLoadVersion+"\""+"}";
 		        
-		       stmtp =  con.prepareStatement("insert into NODE_MODULE (MODULE_ID,SERIALNUMBER,NODE_PK,FILENAME,STATUS,CREATION_DATE,DOMAIN,UPDATE_DATE,VENDOR,HARDWAREVERSION,SOFTVER,OTHERS)"
-				 		+ "values('"+ vModulecodeid+"','"+ serialNumber+"','"+node_fk+"','"+ fileName+"','"+moduleStatus+"',sysdate,'"+Domain+"',sysdate,'"+Gprovider+"','"+hardwareVersion+"','"+softwareVersion+"','"+Others+"')"); 
+		       stmtp =  con.prepareStatement("insert into NODE_MODULE (MODULE_ID,SERIALNUMBER,NODE_PK,FILENAME,STATUS,CREATION_DATE,DOMAIN,UPDATE_DATE,VENDOR,HARDWAREVERSION,SOFTVER,OTHERS,ACTIVE_RECORD)"
+				 		+ "values('"+ vModulecodeid+"','"+ serialNumber+"','"+node_fk+"','"+ fileName+"','"+moduleStatus+"',sysdate,'"+Domain+"',sysdate,'"+Gprovider+"','"+hardwareVersion+"','"+softwareVersion+"','"+Others+"','1')"); 
 			  	stmtp.executeUpdate();
      				  	stmtp.close();
      				  	
@@ -696,8 +681,8 @@ public class LoadFileIPHuawei {
      						manifacturedDate="";
      					 }
      					 String lastservicedate="";
-     			        String sql = "INSERT INTO NODE_BOARD (BOARD_ID, SUBRACKNO, SLOTNO, BOARDNAME, BOARDTYPE, SERIALNUMBER, MODEL, HARDWAREVERSION, DATEOFMANUFACTURE,DATEOFLASTSERVICE,SOFTVER, BIOSVER, BOMCODE, NODE_PK,CREATION_DATE,UPDATE_DATE, FILENAME, STATUS, DOMAIN, VENDOR, OTHERS)"
-        			            + " VALUES ('"+vBoardcodeid+"','"+subrackId+"','"+slotId+"','"+boardName+"','"+ boardType+"','"+ serialNumber+"','"+ model+"','"+hardwareVersion+"',"+"TO_DATE('" + manifacturedDate+"','YYYY-MM-DD')"+",TO_DATE('" + lastservicedate+"','YYYY-MM-DD')"+",'"+softwareVersion+"','"+biosVersion+"','"+ bomCode+"','"+node_fk+"',sysdate , sysdate,'"+fileName+"','"+boardStatus+"','"+Domain+"','"+Gprovider+"','"+Others+"')";
+     			        String sql = "INSERT INTO NODE_BOARD (BOARD_ID, SUBRACKNO, SLOTNO, BOARDNAME, BOARDTYPE, SERIALNUMBER, MODEL, HARDWAREVERSION, DATEOFMANUFACTURE,DATEOFLASTSERVICE,SOFTVER, BIOSVER, BOMCODE, NODE_PK,CREATION_DATE,UPDATE_DATE, FILENAME, STATUS, DOMAIN, VENDOR, OTHERS,ACTIVE_RECORD)"
+        			            + " VALUES ('"+vBoardcodeid+"','"+subrackId+"','"+slotId+"','"+boardName+"','"+ boardType+"','"+ serialNumber+"','"+ model+"','"+hardwareVersion+"',"+"TO_DATE('" + manifacturedDate+"','YYYY-MM-DD')"+",TO_DATE('" + lastservicedate+"','YYYY-MM-DD')"+",'"+softwareVersion+"','"+biosVersion+"','"+ bomCode+"','"+node_fk+"',sysdate , sysdate,'"+fileName+"','"+boardStatus+"','"+Domain+"','"+Gprovider+"','"+Others+"','1')";
 
         			        PreparedStatement stmtp = con.prepareStatement(sql);
         			        
@@ -751,7 +736,6 @@ public class LoadFileIPHuawei {
 		Statement stmt1 = null;
 		Statement stmt2 = null;
 		Statement stmt3 = null;
-		Statement stmt4 = null;
 		int vcount =0;
 		int i=0;
 		
@@ -842,6 +826,10 @@ public class LoadFileIPHuawei {
 	     stmt.executeUpdate();
 	     stmt.close();
 	     
+	     stmt = con.prepareStatement("delete from  NODE_BOARD where " + fieldname +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor+"'"); 
+	     stmt.executeUpdate(); 
+		 stmt.close();
+		
 			/*
 			 * PreparedStatement stmt1 =
 			 * con.prepareStatement("delete from  NODE_ACTIVE_ATTRIBUTE where " + fieldname
@@ -948,125 +936,6 @@ public class LoadFileIPHuawei {
 		}
 	     
 	}
-	 
-	 private static void deleteTempNodeTables() throws SQLException  {
-		 try {
-		 // delete all rows related to node_pk from all nodes tables
-		 PreparedStatement stmt = conalm.prepareStatement("delete from TEMP_NODE_ACTIVE where  DOMAIN='Mobile Access Domain' and VENDOR='" + Gprovider +"'"); 
-	     stmt.executeUpdate();
-	     stmt.close();
-	     
-			/*
-			 * PreparedStatement stmt1 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_ACTIVE_ATTRIBUTE where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt1.executeUpdate(); stmt1.close();
-			 * 
-			 * PreparedStatement stmt2 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_RACK where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt2.executeUpdate(); stmt2.close();
-			 * 
-			 * stmt = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_CABINET where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt.executeUpdate(); stmt.close();
-			 * 
-			 * stmt1 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_HOSTVER where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt1.executeUpdate(); stmt1.close();
-			 * 
-			 * stmt2 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_FRAME where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt2.executeUpdate(); stmt2.close();
-			 * 
-			 * stmt = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_SLOT where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt.executeUpdate(); stmt.close();
-			 * 
-			 * stmt1 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_BOARD where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt1.executeUpdate(); stmt1.close();
-			 * 
-			 * stmt2 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_PORT where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt2.executeUpdate(); stmt2.close();
-			 * 
-			 * stmt = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_ACCESSORY where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt.executeUpdate(); stmt.close();
-			 * 
-			 * stmt1 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_HOST where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt1.executeUpdate(); stmt1.close();
-			 * 
-			 * stmt2 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_SUBRACK where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt2.executeUpdate(); stmt2.close();
-			 * 
-			 * stmt = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_GCELL where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt.executeUpdate(); stmt.close();
-			 * 
-			 * stmt1 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_BTS where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt1.executeUpdate(); stmt1.close();
-			 * 
-			 * stmt2 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_UCELL where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt2.executeUpdate(); stmt2.close();
-			 * 
-			 * stmt = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_ANTENNA where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt.executeUpdate(); stmt.close();
-			 * 
-			 * stmt1 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_LCELL where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt1.executeUpdate(); stmt1.close();
-			 * 
-			 * stmt2 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_RRN where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt2.executeUpdate(); stmt2.close();
-			 * 
-			 * stmt = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_ENODEBCELL where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt.executeUpdate(); stmt.close();
-			 * 
-			 * stmt1 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_NODEBCELL where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt1.executeUpdate(); stmt1.close();
-			 * 
-			 * stmt = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_NBINTERFACES where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt.executeUpdate(); stmt.close();
-			 * 
-			 * stmt = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_CHILD_PARENT where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt.executeUpdate(); stmt.close();
-			 */
-		 }
-			catch(Exception e)  
-			{  
-				/*
-				 * logger.info("error at deleteTempNodeTables is :"+ e.toString());
-				 * System.out.println("error at deleteTempNodeTables is :"+ e.toString());
-				 * 
-				 * //insert into AUTO_DISCOVERY_LOGS_DETAILS String logsDEtailsid=
-				 * localgetseqNbr(22); logsDEtailsid=Gyear+"_"+
-				 * "LOGS_DETAILS"+'_'+logsDEtailsid; PreparedStatement insertLogsDEtailsstmt =
-				 * conalm.
-				 * prepareStatement("insert into AUTO_DISCOVERY_LOGS_DETAILS (LOGS_DETAILS_ID,TIME,ACTIVITY_NAME,ACTIVITY_DESCRIPTION,ATTRIBUTE_NAME,ACTIVITY_TITLE,ACTIVITY_STATUS,QUANTITY,VENDOR,DOMAIN,LOGS_ID)"
-				 * + "values('"+
-				 * logsDEtailsid+"',sysdate ,'ParserLogAIM','error at deleteTempNodeTables ','','','','','"
-				 * + Gprovider +"','Mobile Access Domain','"+logsid+"') ");
-				 * 
-				 * insertLogsDEtailsstmt.executeUpdate(); insertLogsDEtailsstmt.close();
-				 * nbOfErrors++;
-				 */
-				
-			}
-	     
-	}
-	 
-	 
-	 
 	 private static void copyFiles(File source, File dest) throws IOException {
 		 try {
 		 Files.copy(source.toPath(), dest.toPath(),StandardCopyOption.COPY_ATTRIBUTES,StandardCopyOption.REPLACE_EXISTING);
@@ -1087,6 +956,4 @@ public class LoadFileIPHuawei {
 		 }
     
 	}
-
-
 }

@@ -1267,6 +1267,10 @@ public class LoadFilesRanHuawei {
 		 crntLine=col.substring(n+1, col.length());
 		 n = crntLine.indexOf("=\"");
 		 }
+		 
+		 if(!(StringUtils.equalsIgnoreCase (hmap.get("BOARDTYPE"),"")) && !(StringUtils.equalsIgnoreCase (hmap.get("BOARDTYPE"),"0"))) {
+			 	hmap.put( "MODEL", hmap.get("BOARDTYPE"));
+			 }
  
 		return hmap;
 				
@@ -1418,6 +1422,16 @@ public class LoadFilesRanHuawei {
 		 
 		 crntLine=col.substring(n+1, col.length());
 		 n = crntLine.indexOf("=\"");
+		 }
+		 
+		 String model="";
+		 String[] data1;
+		 if(!(StringUtils.equalsIgnoreCase (hmap.get("MANUFACTURERDATA"),"")) && !(StringUtils.equalsIgnoreCase (hmap.get("MANUFACTURERDATA"),"0") )){
+			 data1=hmap.get("MANUFACTURERDATA").split(",",-1);
+			 model=data1[1];
+			 if(model.contains("wd") || model.contains("WD")){	
+					 hmap.put( "MODEL", model);
+			 }
 		 }
  
 		return hmap;
@@ -1626,6 +1640,16 @@ public class LoadFilesRanHuawei {
 		 
 		 crntLine=col.substring(n+1, col.length());
 		 n = crntLine.indexOf("=\"");
+		 }
+		 
+		 String model="";
+		 String[] data1;
+		 if(!(StringUtils.equalsIgnoreCase (hmap.get("MANUFACTURERDATA"),"")) && !(StringUtils.equalsIgnoreCase (hmap.get("MANUFACTURERDATA"),"0") )){
+			 data1=hmap.get("MANUFACTURERDATA").split(",",-1);
+			 model=data1[2];
+			 if(model.contains("wd") || model.contains("WD") || model.contains("wp") || model.contains("WP")){
+				 hmap.put( "MODEL", model);
+			 }
 		 }
  
 		return hmap;
@@ -1868,6 +1892,10 @@ public class LoadFilesRanHuawei {
 		 crntLine=col.substring(n+1, col.length());
 		 n = crntLine.indexOf("=\"");
 		 }
+		 
+		 if(!(StringUtils.equalsIgnoreCase (hmap.get("ANTENNADEVICETYPE"),"")) && !(StringUtils.equalsIgnoreCase (hmap.get("ANTENNADEVICETYPE"),"0"))) {
+			 	hmap.put( "MODEL", hmap.get("ANTENNADEVICETYPE"));
+			 }
  
 		return hmap;
 				

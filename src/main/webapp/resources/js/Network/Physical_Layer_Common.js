@@ -11,7 +11,6 @@ $(function(){
 viewNearestPointEvent();	
 viewNearestMultyPointEvent();
 searchConnectedButtonEvents();
-//autoCompleteSearchHeader();
 
 //$(document).ready(function (){
 
@@ -656,6 +655,64 @@ $("#setCoordinateTubeAux").on('click',function(){
 			autoCompleteSearchHeader('autoCompleteHeaderSearch','selectHeaderSearch','headerSearchLong','headerSearchLat');
 			autoCompleteSearchHeader('autoCompleteConnectedSearch','selectConnectedSearch','connectedSearchLong','connectedSearchLat');
 
+		/*	$("#getCity").on('click',function(){
+				console.log("getCity ");
+				//var Long = $("#DistributionBoardLong").val();
+				//var Lat =  $("#DistributionBoardLat").val();
+				
+				geocoder = new google.maps.Geocoder();
+				var latlng = new google.maps.LatLng(getCoords().split(" ")[0], getCoords().split(" ")[1]);
+				geocoder.geocode({'latLng': latlng}, function(results, status) {
+				 if (status == google.maps.GeocoderStatus.OK) {
+			   
+					if (results[2]) {
+					city = results[2].formatted_address;
+					}
+					else if (results[3]) {
+					city = results[3].formatted_address;
+					}
+					else if (results[4]) {
+					city = results[4].formatted_address;
+					}
+					else if (results[5]) {
+					city = results[5].formatted_address;
+					}
+					else {
+					  alert("No results found");
+					}
+					
+				
+				  } else {
+					alert("getting the latitude, longitude and the city failed due to a connection problem, please try again");
+				  }
+				 
+				$("#DistributionBoardLat").val(""+getCoords().split(" ")[0]);		
+				$("#DistributionBoardLong").val(""+getCoords().split(" ")[1]);		
+				$("#boardCity").val(city.split(", ")[0]);
+				});
+					
+			/*	$.ajax({
+					type: "GET",
+					async: false,
+					contentType: "application/json; charset=utf-8",
+					url: getContext()+'/getCity',
+					data: {
+						"Long":Long,
+						"Lat": Lat
+					},									
+					dataType: "json",
+					success: function (data) {	
+						console.log("entered "+ data.City);
+						 
+						//if(City !=null){}
+						
+					},
+					error: function (result) {
+						alert("Error");
+					}
+				});*/
+				
+			//});
 
 });
 }); // End of Trigger Event: triggerListenersEvent
@@ -1517,12 +1574,13 @@ function Create_FiberStrandClick_Event(strandId){
 }
 
 function createSiteCltMarker(Id,Name,Lat,Long,siteCltSrcMarkers){
-	//console.log("Id is "+Id)
+	//console.log("Id is "+Id);
 	if(Id.startsWith("null")==true || Id.startsWith("AUXILIARY_PT_")==true || Id.startsWith("AUXILIARY_TUBE_PT")==true || Id.startsWith("AUXILIARY_STRAND_PT")==true
 			|| Id.startsWith("AUXILIARY_TRENCH_PT")==true || Id.startsWith("AUXILIARY_DUCT_PT")==true) {
 		var icon = iconAuxPoint;
 	}
 	else if(Id.startsWith("CUST")==true) {
+		//console.log("passed ");
 		var icon = iconClient;
 	}
 	else if(Id.startsWith("WARE")==true || Id.includes("N/A")==true) {	
@@ -9390,7 +9448,7 @@ function searchConnectedButtonEvents(hash_Project,hash_manhole,hash_handhole,has
 		 }
 	});
 	 var urlString = "", siteId = "", selectedOp = "",lng = "", lat = "";
-		console.log("ENTEREDDDDD");
+		//console.log("ENTEREDDDDD");
 		$("#searchHeaderButton").on('click',function(){
 			 urlString = "", siteId = "", selectedOp = "",lng = "", lat = "";
 		     $("#conStrandId").html("");
@@ -9471,12 +9529,16 @@ function openSearchConnected(checkedOption,siteId,selectConnectedSearch,connecte
  	siteArray.push(arrayDB.splice(0,distribBoardListSize));
  	appendConnectedTable(siteArray);
  	
- 	 
+ 	//console.log("id is "+ $("#autoCompleteConnectedSearch").val().split(":")[0]);
+ 	var markerName = $("#autoCompleteConnectedSearch").val().split(":")[1]+":" +$("#autoCompleteConnectedSearch").val().split(":")[0]+":"+$("#autoCompleteConnectedSearch").val().split(":")[2];
+	createSiteCltMarker($("#autoCompleteConnectedSearch").val().split(":")[0],markerName,connectedSearchLat,connectedSearchLong,siteCltSrcMarkers);	  
+	//siteCltSrcMarkers[wareID].setLabel({text: type , className:"marker-position-sequence",color:"red"}); 
+	
  	if (connectedViewOnMap == "true") {
 		$("#viewOnMap").prop("checked",true);
 	  
- 	    	var markerName = $("#autoCompleteConnectedSearch").val().split(":")[1]+":" +$("#autoCompleteConnectedSearch").val().split(":")[0]+":"+$("#autoCompleteConnectedSearch").val().split(":")[2];
-			createSiteCltMarker($("#autoCompleteConnectedSearch").val().split(":")[1],markerName,connectedSearchLat,connectedSearchLong,siteCltSrcMarkers);	  
+ 	    	//var markerName = $("#autoCompleteConnectedSearch").val().split(":")[1]+":" +$("#autoCompleteConnectedSearch").val().split(":")[0]+":"+$("#autoCompleteConnectedSearch").val().split(":")[2];
+			//createSiteCltMarker($("#autoCompleteConnectedSearch").val().split(":")[1],markerName,connectedSearchLat,connectedSearchLong,siteCltSrcMarkers);	  
 				
 			var circ = new google.maps.Circle({
 		         strokeColor: "blue",
@@ -18714,6 +18776,22 @@ function ShowContextMenuGoolge(ContextMenu, eventX,eventY) {
 function HideContextMenuGoolge(ContextMenu) {
     ContextMenu.classList.remove('show-menu');
 
+}
+
+function getDBCity(){
+	//console.log("getDBCity ");
+	fillCityByGeocoding("boardCity",$("#DistributionBoardLat").val(),$("#DistributionBoardLong").val(),geocoder);	
+	
+}
+function getSrcCity(){
+	//console.log("getSrcCity ");
+	fillCityByGeocoding("srcCity",$("#SourceLat").val(),$("#SourceLng").val(),geocoder);	
+	
+}
+function getDstCity(){
+	//console.log("getDstCity ");
+	fillCityByGeocoding("dstCity",$("#DestinationLat").val(),$("#DestinationLng").val(),geocoder);	
+	
 }
 
 /*function showMenu(x, y){

@@ -248,6 +248,14 @@
                     <div class="col-md-3 nextprvItems">
                         <div class="form-group">
                             <div class="input-group-prepend">
+                    <span class="input-group-text">Node Id</span>
+                    <input type="text" id="nodeId" value="${node_id}" class="form-control text-input" readonly />
+                </div>
+                        </div>
+                    </div>
+                     <div class="col-md-3 nextprvItems">
+                        <div class="form-group">
+                            <div class="input-group-prepend">
                                 <span class="input-group-text">Other Node</span>
                                 <input type="text" id="selectnav" value="${selectnav}" style="width: 430px"
                                     class="form-control text-input" />
@@ -1221,6 +1229,8 @@
 
     <script>
 
+  
+
         var BoqArray = [];
         var status = '${Status}';
         if (status == "old") {
@@ -1719,6 +1729,151 @@
         });
 
 
+
+        if('${SelectedIndex}' != "addNew"){
+        				var SelectedIndex = ${SelectedIndex};
+        				if('${nodeCount}' != "addNew"){
+
+        					
+        			var nodeCount = ${nodeCount};
+        			
+        			if(($("#nodepk").val()) != "" && ($("#nodepk").val()) != null){
+
+        			if(SelectedIndex === nodeCount){
+        				
+                		document.getElementById("btnLast").style.opacity = 0.5;
+                		$("#btnLast").hasClass("disabled");
+                		document.getElementById("btnLast").style.pointerEvents = "none";
+                		
+                		document.getElementById("btnNexta").style.opacity = 0.5;
+                		document.getElementById("btnNexta").style.pointerEvents = "none";
+
+        				
+        				$("#btnNexta").hasClass("disabled");
+        				
+        				}else{
+        					
+        					if(!$("#btnNexta").hasClass("disabled")){
+        						
+        						$("#btnNext").click(function(){
+        							
+        							var param ="${pageContext.request.contextPath}/NodeFormView?NodePk="+$("#nodepk").val()+"&NavAction=1";
+
+        							window.location.href =param;
+        				
+        						});
+        			
+        					}
+        					if(!$("#btnLst").hasClass("disabled")){
+                				
+                				$("#btnLst").click(function(){
+                					
+        							var param ="${pageContext.request.contextPath}/NodeFormView?NodePk="+$("#nodepk").val()+"&NavAction=4";
+                					window.location.href =param;
+                		
+                				});
+                	
+                			}
+        				}
+        			
+        			if(SelectedIndex === 1){ //first record in database
+        				
+                		document.getElementById("btnFirst").style.opacity = 0.5;
+                		$("#btnFirst").hasClass("disabled");
+                		document.getElementById("btnFirst").style.pointerEvents = "none";
+                		
+                		document.getElementById("btnPrva").style.opacity = 0.5;
+                		$("#btnPrva").hasClass("disabled");
+                		document.getElementById("btnPrv").style.pointerEvents = "none";
+        			
+        			}else{
+        				if(!$("#btnPrva").hasClass("disabled")){
+        					
+        					$("#btnPrv").click(function(){
+        						
+        						var param ="${pageContext.request.contextPath}/NodeFormView?NodePk="+$("#nodepk").val()+"&NavAction=0";
+        						window.location.href =param;
+        						
+        					 });
+        				}
+        				$("#btnFrst").click(function(){
+
+                			if(!$("#btnFrst").hasClass("disabled")){
+                					
+        						var param ="${pageContext.request.contextPath}/NodeFormView?NodePk="+$("#nodepk").val()+"&NavAction=3";
+                				window.location.href =param;
+                						
+                				}
+                				 });
+
+        			}
+        			
+        			}}
+        		}
+        			$("#label-1").text((SelectedIndex)+"/"+nodeCount);
+
+
+        			
+        $("#selectnav").autocomplete({
+        	  source: debounce(function(request, response, event, ui) {
+        	    $.ajax({
+        	      type: "GET",
+        	      contentType: "application/json; charset=utf-8",
+        	      url: '${pageContext.request.contextPath}/GetAllNode',
+        	      data: {
+        	        "itemCategory": $("#selectnav").val(),
+        	      },
+        	      dataType: "json",
+        	      success: function(data) {
+        	        if (data != null) {
+        	          response(data.ListItemCategory);
+        	        }
+        	      },
+        	      error: function(result) {
+        	        alert("Error");
+        	      }
+        	    });
+        	  }, 900),
+        	  minLength: 0,
+        	  maxShowItems: 40,
+        	  scroll: true,
+        	  select: function(event, ui) {
+        	    this.value = ui.item ? ui.item[0] + ":" + ui.item[2] : '';
+
+        	    var param = '${pageContext.request.contextPath}/NodeFormView?NodePk=' + ui.item[1]+"&NavAction=2";
+        	    window.location.href = param;
+        	    return false;
+        	  }
+        	}).autocomplete("instance")._renderItem = function(ul, item) {
+        	  return $("<li class='each'>")
+        	    .append("<div class='acItem'><span class='desc'>" +
+        	      item[0] + ', ' + item[2] + "</span><br><span class='name' style='font-weight:bold'>" +
+        	      item[1] + "</span>")
+        	    .appendTo(ul);
+        	};
+
+
+
+    $("#selectnav").focus(function () {
+        
+        if (this.value == "") {
+            $(this).autocomplete("search");
+        }
+    });
+      		
+      		function debounce(fn, delay) {
+      		    var timer;
+      		    return function() {
+      		      var args = [].slice.call(arguments);
+      		      var context = this;
+      		      if (timer) {
+      		        window.clearTimeout(timer);
+      		      }
+      		      timer = window.setTimeout(function() {
+      		        fn.apply(context, args);
+      		      }, delay);
+      		    };
+      		  };
 
 
     </script>

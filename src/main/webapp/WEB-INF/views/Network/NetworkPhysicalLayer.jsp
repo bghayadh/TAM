@@ -3089,6 +3089,22 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 											</div>
 										</div>
 									</div>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group">
+												<div class="input-group-prepend">
+												  <button id="getSrcCity" type="button" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; width: 40%;" onclick="getSrcCity()">get Source City</button>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<div class="input-group-prepend">
+												  <button id="getDstCity" type="button" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; width: 40%;" onclick="getDstCity()">get Destination City</button>
+												</div>
+											</div>
+										</div>
+									</div>
 								</div>
 							</div>
 							<div class="tab-pane " id="tubes" role="tabpanel"
@@ -5583,6 +5599,17 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 												<div class="input-group-prepend">
 													<span style="min-width: 100px; font-size: 12px;" class="input-group-text"><b>By Client </b> 
 													<input type='checkbox' id="customer_DBAutoComplete" style='position: relative; margin-left:15px' ></span>
+												</div></div></div>
+												<div class="col-sm-2">
+											<div class="form-group">
+												<div class="input-group-prepend">
+													<span style="min-width: 170px; font-size: 12px;" class="input-group-text"><b>Custom Coordinates </b> 
+													<input type="checkbox" id="customCoordinates" value="0" style='position: relative; margin-left:5px ' ></span>
+												</div></div></div>
+												<div class="col-sm-2">
+												<div class="form-group">
+												<div class="input-group-prepend">
+													<button id="getDBCity" type="button" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; width: 100%; margin-left:25px" onclick="getDBCity()">Get City</button>
 												</div></div></div></div>
 								<div class="row">
 									<div class="col-md-6">
@@ -5744,7 +5771,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 										<div class="table-responsive-sm" id="DbMappingDiv">
 											<table id="DbMappingTable"
 												class="table table-striped table-bordered table-sm "
-												style="display: block; height: 250px; overflow-y: auto;">
+												style="display: block; height: 450px; overflow-y: auto;">
 												<thead style="background: #E9ECEF;">
 													<tr>
 														<th></th>

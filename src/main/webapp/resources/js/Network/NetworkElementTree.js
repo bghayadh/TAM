@@ -368,7 +368,7 @@ if(arrayParam[3]==1){
 	   	 	      
 }
 //////////////////////////////////////////////////////////////////////////////////
-function Supp_Boq(SiteId){
+function Supp_Boq(SuppId){
 	var Boq = $('#Boq');
 	var Layers= $('#Layers');
 	var Options= $('#Options');
@@ -396,14 +396,14 @@ if(arrayParam[3]==1){
 }else{
 	var paramCore = false;
 }
-	if(!siteList.includes(SiteId))
-	{
+	//if(!siteList.includes(SiteId))
+	//{
 		 $.ajax({
 			type: "GET",
 			contentType: "application/json; charset=utf-8",
 			url: getContext()+'/GetSupBoqList',
 			data: {
-			    "SiteId" : SiteId,
+			    "SuppId" : SuppId,
 			    "paramEnterprise" : paramEnterprise,
 			    "paramTransmission" : paramTransmission,
 			    "paramAccess" : paramAccess,
@@ -413,9 +413,9 @@ if(arrayParam[3]==1){
 			success : function(data)
 			    {
 				 $('#boq_table').empty();				 
-				 siteList.push(SiteId);	          	 
+				 siteList.push(SuppId);	          	 
 				 $.each(data , function( key, value ) {	
-					boqList.push({ SiteId,key,value });    
+					boqList.push({ SuppId,key,value });    
 					var tr = "<tr>"+
 					"<td class='title'> "+key+"</td>"+
 					"<td> "+value+" </td>"+
@@ -427,10 +427,11 @@ if(arrayParam[3]==1){
 				alert("Error");
 									}			
 		});
+		 /*
 	}else{
 		$('#boq_table').empty();
 		for(var i=0; i< boqList.length; i++) {
-		    if(SiteId==boqList[i].SiteId){	        		 
+		    if(SuppId==boqList[i].SuppId){	        		 
 			var tr = "<tr>"+
 			"<td class='title'> "+boqList[i].key+"</td>"+
 			"<td> "+boqList[i].value+" </td>"+
@@ -439,6 +440,7 @@ if(arrayParam[3]==1){
 						 }		
 								}
 		}
+		*/
 	 $("#boqBtn").removeClass().addClass("tablinks active");
 	 $("#Defaultbutton").removeClass().addClass("tablinks");
 	 $("#optionBtn").removeClass().addClass("tablinks");

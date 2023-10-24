@@ -1,16 +1,9 @@
 package com.aliat.alm.Parser;
-import org.apache.commons.io.FileUtils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.CopyOption;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,28 +11,17 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
-  
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.apache.commons.lang3.StringUtils;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 public class CopyParsingDataToALM {
-	private static final CopyOption REPLACE_EXISTING = null;
 	static Connection con;
 	static Connection conalm;
     static String Gyear ;
@@ -83,7 +65,11 @@ public class CopyParsingDataToALM {
 		//try {
 		    // Read all required paths ex(DB1,DB2,Log file, Path to read file AIM ,path to copy processed)
 					
-		objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"/"+"almconfig.dat"));
+		//objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"\\"+"almconfig.dat"));
+				Resource ConfigResource = new ClassPathResource("almconfig.dat");
+				File configfile = ConfigResource.getFile();
+				FileReader fr=new FileReader(configfile);  
+				objReader1=new BufferedReader(fr);
 			 while ((strCurrentLine1 = objReader1.readLine()) != null){
 				 String data = strCurrentLine1;
 				 String[] data1 ;
@@ -109,16 +95,7 @@ public class CopyParsingDataToALM {
 			
 			}
 			 objReader1.close();
-			 
-			 objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"/"+"almcircle.dat"));
-			 while ((strCurrentLine1 = objReader1.readLine()) != null){
-				 String data = strCurrentLine1;
-				 String[] data1 ;
-				 data1=data.split(";",-1);
-				 circleid=data1[1];
-			 }
-			 objReader1.close();	 
-
+			
 			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 			LocalDateTime now = LocalDateTime.now();
 			String lofilename="CopyParsingToALM-"+dtf.format(now)+".log";
@@ -1614,25 +1591,31 @@ public class CopyParsingDataToALM {
 
 		          stmttype.close();
 
-					 return min+1;
+					 return min;
 
 		  }
 	 
 	 private static void UpdatingSiteinTemp(String domain,String vendor) throws SQLException {
-		 
+		 try {
 		 Statement stmt = null,stmt1=null;
-		 String tmpSiteID = null,tmpWareName=null,tmpWareID=null,vSiteID = null,vWareName=null,vWareID=null,vLong=null,vLat=null;
+		 String tmpSiteID = null,tmpWareName=null,tmpWareID=null,vSiteID = null,vWareName=null,vWareID=null,vLong=null,vLat=null,tmpNodeName=null;
 		 stmt = conalm.createStatement();  
     	 String sqlStmtinit2 = "select distinct NODE_ID,NODE_NAME,SITE_ID,WARE_ID,WARE_NAME from TEMP_NODE_ACTIVE where DOMAIN='"+domain+"' and VENDOR='"+vendor+"'";          
 		 ResultSet rs = stmt.executeQuery(sqlStmtinit2);
 	 	 while(rs.next()) {
+	 		 if(rs.getString("NODE_NAME") != null) {
+	 			if(rs.getString("NODE_NAME").contains("'")) {
+	 		 		  tmpNodeName = rs.getString("NODE_NAME").replace("'", " ");
+	 		 	  }else {
+	 		 		  tmpNodeName = rs.getString("NODE_NAME");
+	 		 	  }
 	 			  tmpSiteID = rs.getString("SITE_ID");
 	 			  tmpWareID = rs.getString("WARE_ID");
 	 			  tmpWareName = rs.getString("WARE_NAME");
+	 			  
 	 			  stmt1 = conalm.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);  
-	 			  String sqlquery = "Select DISTINCT NODE_ID,NODE_NAME,SITE_ID,WARE_ID,WARE_NAME,LONGITUDE,LATITUDE FROM NODE_ACTIVE WHERE NODE_ID='"+rs.getString("NODE_ID")+"' AND NODE_NAME='"+rs.getString("NODE_NAME")+"' AND ACTIVE_RECORD='1'";
+	 			  String sqlquery = "Select DISTINCT NODE_ID,NODE_NAME,SITE_ID,WARE_ID,WARE_NAME,LONGITUDE,LATITUDE FROM NODE_ACTIVE WHERE NODE_ID='"+rs.getString("NODE_ID")+"' AND NODE_NAME='"+tmpNodeName+"' AND ACTIVE_RECORD='1'";
 	 			  ResultSet rs1 = stmt1.executeQuery(sqlquery);
-	 			  System.out.println(rs1.getRow());
 	 			  rs1.last();
 	 			  int totalrows=rs1.getRow();
 	 			  rs1.beforeFirst();
@@ -1666,8 +1649,12 @@ public class CopyParsingDataToALM {
 	 		 	stmt1.close();
 		 		rs1.close();
 	 	 }
+	 		 }
+	 		 	  
 	 	 stmt.close();
 	 	 rs.close();
-	 	 
+		 }catch(Exception e) {
+			 e.printStackTrace();
+		 }
 	 }
 }
