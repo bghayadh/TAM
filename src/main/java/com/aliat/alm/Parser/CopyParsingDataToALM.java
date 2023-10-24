@@ -1591,7 +1591,7 @@ public class CopyParsingDataToALM {
 
 		          stmttype.close();
 
-					 return min+1;
+					 return min;
 
 		  }
 	 
