@@ -1,0 +1,223 @@
+package com.aliat.alm.models;
+
+import java.math.BigDecimal;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "FIXED_ASSET_REGISTRY")
+public class FinancialReport {
+	
+	@Id
+	@Column(name = "FAR_ID", nullable = false)
+	private String farID;
+		
+	@Column(name = "ITEM_CODE", nullable = false)
+	private String itemCode;
+	
+	@Column(name = "ITEM_NAME")
+	private String itemName;
+	
+	@Column(name = "LAST_MODIFIED_DATE")
+	private String lastModifiedDate;
+	
+	@Column(name = "ITEM_SN")
+	private String itemSN;
+	
+	@Column(name = "ITEM_NAME_REGISTER")
+	private String itemNameRegister;
+	
+	@Column(name = "PO_ID")
+	private String poID;
+	
+	@Column(name = "NODE_ID")
+	private String nodeID;
+	
+	@Column(name = "NODE_NAME")
+	private String nodeName;
+	
+	@Column(name = "SITE_ID")
+	private String siteID;
+
+	@Column(name = "SITE_NAME")
+	private String siteName;
+	
+	@Column(name = "INITIALCOST")
+	private BigDecimal initCost;
+	
+	@Column(name = "NETCOST")
+	private BigDecimal netCost;
+	
+	@Column(name = "ACCUMULDEPRECAMNT")
+	private BigDecimal accuDepr;
+				
+	
+	public FinancialReport() {	
+	}
+
+
+	public FinancialReport(String farID, String itemCode, String itemName,
+			String lastModifiedDate, String itemSN, String itemNameRegister, String poID, String nodeID,
+			String nodeName,String siteID, String siteName,BigDecimal initCost, BigDecimal netCost,BigDecimal accuDepr) {
+		super();
+		this.farID = farID;
+		this.itemCode = itemCode;
+		this.itemName = itemName;
+		this.lastModifiedDate = lastModifiedDate;
+		this.itemSN = itemSN;
+		this.itemNameRegister = itemNameRegister;
+		this.poID = poID;
+		this.nodeID = nodeID;
+		this.nodeName = nodeName;
+		this.siteID = siteID;
+		this.siteName=siteName;
+		this.initCost=initCost;
+		this.netCost=netCost;
+		this.accuDepr=accuDepr;
+	}
+
+
+	public String getFarID() {
+		return farID;
+	}
+
+
+	public void setFarID(String farID) {
+		this.farID = farID;
+	}
+
+	public String getItemCode() {
+		return itemCode;
+	}
+
+
+	public void setItemCode(String itemCode) {
+		this.itemCode = itemCode;
+	}
+
+
+	public String getItemName() {
+		return itemName;
+	}
+
+
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
+	}
+
+
+	public String getLastModifiedDate() {
+		return lastModifiedDate;
+	}
+
+
+	public void setLastModifiedDate(String lastModifiedDate) {
+		this.lastModifiedDate = lastModifiedDate;
+	}
+
+
+	public String getItemSN() {
+		return itemSN;
+	}
+
+
+	public void setItemSN(String itemSN) {
+		this.itemSN = itemSN;
+	}
+
+
+	public String getItemNameRegister() {
+		return itemNameRegister;
+	}
+
+
+	public void setItemNameRegister(String itemNameRegister) {
+		this.itemNameRegister = itemNameRegister;
+	}
+
+
+	public String getPoID() {
+		return poID;
+	}
+
+
+	public void setPoID(String poID) {
+		this.poID = poID;
+	}
+
+
+	public String getNodeID() {
+		return nodeID;
+	}
+
+
+	public void setNodeID(String nodeID) {
+		this.nodeID = nodeID;
+	}
+
+
+	public String getNodeName() {
+		return nodeName;
+	}
+
+
+	public void setNodeName(String nodeName) {
+		this.nodeName = nodeName;
+	}
+
+
+	public String getSiteID() {
+		return siteID;
+	}
+
+
+	public void setSiteID(String siteID) {
+		this.siteID = siteID;
+	}
+
+
+	public String getSiteName() {
+		return siteName;
+	}
+
+
+	public void setSiteName(String siteName) {
+		this.siteName = siteName;
+	}
+
+
+	public BigDecimal getInitCost() {
+		return initCost;
+	}
+
+
+	public void setInitCost(BigDecimal initCost) {
+		this.initCost = initCost;
+	}
+
+
+	public BigDecimal getNetCost() {
+		return netCost;
+	}
+
+
+	public void setNetCost(BigDecimal netCost) {
+		this.netCost = netCost;
+	}
+
+
+	public BigDecimal getAccuDepr() {
+		return accuDepr;
+	}
+
+
+	public void setAccuDepr(BigDecimal accuDepr) {
+		this.accuDepr = accuDepr;
+	}
+
+
+
+}
