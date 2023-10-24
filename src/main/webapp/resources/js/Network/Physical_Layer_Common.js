@@ -11266,8 +11266,13 @@ function autoCompleteSearchHeader(ID,searchTarget,longitude,latitude){
 			}, minLength:0, maxShowItems: 40, scroll:true,
 				select: function(event, ui) {
 					this.value = (ui.item ? ui.item[0]+':'+ui.item[1] : '');
-					$("#"+longitude).val(ui.item[3]);
-					$("#"+latitude).val(ui.item[4]);	
+					if(ui.item[0].split("_")[0]=="WARE") {
+						$("#"+longitude).val(ui.item[3]);
+						$("#"+latitude).val(ui.item[4]);
+					}else if (ui.item[0].split("_")[0]=="CUST") {
+						$("#"+longitude).val(ui.item[4]);
+						$("#"+latitude).val(ui.item[5]);
+					}
 					//console.log("long: "+$("#"+longitude).val()+" lat: "+$("#"+latitude).val());
   	
 					return false;

@@ -417,7 +417,7 @@ public class FixedAssetRegistryController {
 					model.addAttribute("itemSizeUOM",itm.getSizeUOM());
 					model.addAttribute("itemDesc",itm.getItemDescription());
 	
-					model.addAttribute("itemDomain",itm.getDomain());
+				//	model.addAttribute("itemDomain",itm.getDomain());
 					model.addAttribute("itemCableType",itm.getCableType());
 					model.addAttribute("itemType",itm.getItemType());
 					model.addAttribute("itemWarrantyPer",itm.getWarrantyPeriod());
@@ -505,7 +505,11 @@ public class FixedAssetRegistryController {
 				model.addAttribute("supplierID", fassetreg.getSupplierID());
 				model.addAttribute("supplierName", fassetreg.getSupplierName());
 				model.addAttribute("farStatus", fassetreg.getFarStatus());
-			    	
+				model.addAttribute("farDomain", fassetreg.getFarDomain());
+				model.addAttribute("farSubDomain", fassetreg.getFarSubDomain());
+				model.addAttribute("farVendor", fassetreg.getFarVendor());
+				model.addAttribute("farType", fassetreg.getFarType());
+	
 			    	
 				// get Related Orders
 				
@@ -672,6 +676,12 @@ public class FixedAssetRegistryController {
 		fassetreg.setDeprPer(depPercentage);
 		fassetreg.setNetCost(netCost);
 		fassetreg.setPosition(request.getParameter("faritemPosition"));
+		fassetreg.setFarDomain(request.getParameter("farDomain"));
+		fassetreg.setFarSubDomain(request.getParameter("farSubDomain"));
+		fassetreg.setFarVendor(request.getParameter("farVendor"));
+		fassetreg.setFarType(request.getParameter("farType"));
+
+
 
 		if(scrapDate != "")
 		{

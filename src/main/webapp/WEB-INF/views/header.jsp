@@ -370,6 +370,11 @@ display:none;
           <div class="dropdown-divider"></div>
           <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/NetworkTransactionsReport">Network Transactions</a>
           </li>
+          
+           <div class="dropdown-divider"></div>
+          <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/FinancialReport">Financial Report</a>
+          </li>
+          
         </ul>
       </li>
        
@@ -544,6 +549,10 @@ display:none;
           
           <div class="dropdown-divider"></div>
           <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/NetworkTransactionsReport">Network Transactions</a>
+          </li>
+          
+           <div class="dropdown-divider"></div>
+          <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/FinancialReport">Financial Report</a>
           </li>
           
         </ul>
@@ -773,6 +782,12 @@ display:none;
            <div class="dropdown-divider"></div>
           <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/NetworkTransactionsReport">Network Transactions</a>
           </li>
+          
+           <div class="dropdown-divider"></div>
+          <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/FinancialReport">Financial Report</a>
+          </li>
+          
+          
         </ul>
       </li>
        
@@ -1015,6 +1030,12 @@ display:none;
            <div class="dropdown-divider"></div>
           <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/NetworkTransactionsReport">Network Transactions</a>
           </li>
+          
+           <div class="dropdown-divider"></div>
+          <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/FinancialReport">Financial Report</a>
+          </li>
+          
+          
         </ul>
       </li>
        
