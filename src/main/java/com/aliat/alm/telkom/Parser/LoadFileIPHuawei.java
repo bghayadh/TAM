@@ -662,21 +662,14 @@ public class LoadFileIPHuawei {
      				bomCode=records.get(i).get(22);
    
      				node_fk = nodes.get(records.get(i).get(5));
-     				//System.out.println(" node_fkk "+node_fk);  
          			
      				String Others="{\"ROMVER\":"+"\""+bootRomVersionBoard+"\","+"\"LOADVER\":"+"\""+bootLoadVersionBoard+"\""+"}";
      			      
      			// Assuming records1.get(i).get(25) contains the date as a String
      			String manifacturedDate = records.get(i).get(25);
-     			//System.out.println("manifacturedDate : "+manifacturedDate);  
-     			//SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // Adjust the date format as needed    	     			
-			       
+     			
      			if (manifacturedDate != null && !manifacturedDate.isEmpty() && !manifacturedDate.contains("--")) {
      			    try {
-     			        //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // Define the expected date format
-     			        //Date manufacturedDate = dateFormat.parse(manifacturedDate); // Parse the date string
-     			        //java.sql.Date sqlManufacturedDate = new java.sql.Date(manufacturedDate.getTime()); // Convert to java.sql.Date
-
      			    	if(!manifacturedDate.contains("-")) {
      						manifacturedDate="";
      					 }
@@ -685,28 +678,6 @@ public class LoadFileIPHuawei {
         			            + " VALUES ('"+vBoardcodeid+"','"+subrackId+"','"+slotId+"','"+boardName+"','"+ boardType+"','"+ serialNumber+"','"+ model+"','"+hardwareVersion+"',"+"TO_DATE('" + manifacturedDate+"','YYYY-MM-DD')"+",TO_DATE('" + lastservicedate+"','YYYY-MM-DD')"+",'"+softwareVersion+"','"+biosVersion+"','"+ bomCode+"','"+node_fk+"',sysdate , sysdate,'"+fileName+"','"+boardStatus+"','"+Domain+"','"+Gprovider+"','"+Others+"','1')";
 
         			        PreparedStatement stmtp = con.prepareStatement(sql);
-        			        
-        			        /*
-        			        // Set values for parameters
-        			        stmtp.setString(1, vBoardcodeid);
-        			        stmtp.setString(2, subrackId);
-        			        stmtp.setString(3, slotId);
-        			        stmtp.setString(4, boardName);
-        			        stmtp.setString(5, boardType);
-        			        stmtp.setString(6, serialNumber);
-        			        stmtp.setString(7, model);
-        			        stmtp.setString(8, hardwareVersion);
-        			        stmtp.setDate(9, sqlManufacturedDate); 
-        			        stmtp.setString(10, softwareVersion);
-        			        stmtp.setString(11, biosVersion);
-        			        stmtp.setString(12, bomCode);
-        			        stmtp.setString(13, node_fk);
-        			        stmtp.setString(14, fileName);
-        			        stmtp.setString(15, boardStatus);
-        			        stmtp.setString(16, Domain);
-        			        stmtp.setString(17, Gprovider);
-        			        stmtp.setString(18, Others);*/
-        			     
         			        stmtp.executeUpdate();
         			        stmtp.close();
      			    } catch (Exception e) {

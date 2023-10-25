@@ -58,7 +58,7 @@ public class LoadFileIPNokia {
 	static String copyfileNokiato;
 	static String vfolderto;
 	static String circleid="10";
-	static String Gyear,wareID,wareName,longi,lat,creationDate,IPaddress,MACaddress,commStatus="0",adminStatus="0",softwareVersion,LCStatus="0";
+	static String Gyear,wareID,wareName,longi,lat,creationDate,IPaddress,MACaddress=null,commStatus="0",adminStatus="0",softwareVersion,LCStatus="0";
 	static Logger logger;
 	static FileHandler fh;
 	static Connection conalm;
@@ -103,7 +103,7 @@ public class LoadFileIPNokia {
 		while ((strCurrentLine1 = objReader1.readLine()) != null){
 			 String data = strCurrentLine1;
 			 String[] data1 ;
-			 String[] data2 ;
+			 
 			 
 			 if (data.contains("projectpath")) {
 				 data1=data.split(";",-1);
@@ -133,17 +133,16 @@ public class LoadFileIPNokia {
 				 System.out.println("username2 found :" + username2);
 				 System.out.println("password2 found :" + password2);*/
 			 }
-			 if (data.contains("readexcelTransIpNokiafrom")) {
+			 if (data.contains("readexcelTransIpNokiaFrom")) {
 				 data1=data.split(";",-1);
 				 readfileAIMfrom = data1[1];
-				 data2=readfileAIMfrom.replace("\\","/").split("/",-1);
 				 vfolderfrom=readfileAIMfrom;
 				 Gprovider=vendor;
 				 Domain=domain;
 				 subDomain=sub_domain;
 				 subDomainType = sub_domainType;
 			 }
-			 if (data.contains("copyexcelTransIpNokiato")) {
+			 if (data.contains("copyexcelTransIpNokiaTo")) {
 				 data1=data.split(";",-1);
 				 copyfileAIMto=data1[1];
 				
@@ -179,7 +178,7 @@ public class LoadFileIPNokia {
 		
 		 // This block configure the logger with handler and formatter  and PATH
 			
-	        fh = new FileHandler(logpath+"\\"+lofilename);
+	        fh = new FileHandler(logpath+"/"+lofilename);
 	        logger.addHandler(fh);
 	        SimpleFormatter formatter = new SimpleFormatter();  
 	        fh.setFormatter(formatter);
@@ -221,12 +220,12 @@ public class LoadFileIPNokia {
 							 fileName=data1[0]; fileType=data1[1];
 							
 							 	readfile(fileName1);
-							 	File source = new File(readfileAIMfrom+"\\"+file.getName());
-							    File dest = new File(copyfileAIMto+"\\"+file.getName()+".bkp");
+							 	File source = new File(readfileAIMfrom+"/"+file.getName());
+							    File dest = new File(copyfileAIMto+"/"+file.getName()+".bkp");
 							     
 							     copyFiles(source,dest);
 							     
-							     deleteFiles(readfileAIMfrom+"\\"+file.getName());
+							     deleteFiles(readfileAIMfrom+"/"+file.getName());
 						 }
 						 
 						
@@ -250,7 +249,7 @@ public class LoadFileIPNokia {
 	private static void readfile(String fileName) throws FileNotFoundException, IOException, SQLException {
 		 
 		 //csvparser used to read csv file in order to fill the data in a list of type CSVRecord row by row
-		 CSVParser csvParser = new CSVParser(new FileReader(vfolderfrom + "\\" + fileName), CSVFormat.DEFAULT);
+		 CSVParser csvParser = new CSVParser(new FileReader(vfolderfrom + "/" + fileName), CSVFormat.DEFAULT);
 		  List<CSVRecord> records = new ArrayList<>();
 		  for (CSVRecord record : csvParser) {
 			  records.add(record);
@@ -276,8 +275,7 @@ public class LoadFileIPNokia {
 			  vcodeid=year+"_NODE_"+NodeSeq;
 			  rsinit2.close();
 			  stmtp1.close();
-			  if(records.get(i).get(0).contains("-")) {// if the cell of the csv file contains _ then it may contain site ID
-					if(records.get(i).get(0).split("-").length >= 3) { // if the number of the elements split in the cell according to _ then it may contain site ID
+			  if(records.get(i).get(2).contains("-")) {// if the cell of the csv file contains _ then it may contain site ID
 						siteID = records.get(i).get(2).split("-")[0];
 						char charArray[] = siteID.toCharArray();
 						if(Character.isDigit(charArray[0]) && !Character.isDigit(charArray[siteID.length()-1])) { // if the first character of the possible site id is number then it is a site ID.
@@ -300,30 +298,19 @@ public class LoadFileIPNokia {
 							  lat = "";
 							  siteID = "";
 						}
-							
-					}else {
-						wareID="";
-						  wareName ="";
-						  longi="";
-						  lat = "";
-						  siteID = "";
-						//System.out.println("site id and site name don't exists");
-
-					}
 				}else {
 					wareID="";
 					  wareName ="";
 					  longi="";
 					  lat = "";
-					//System.out.println("site id and site name don't exists");
-
+					  siteID = "";
 				}
 			  	  nodeName = records.get(i).get(2);
 			  	  nodeType="Router";
 				  nodeModel = records.get(i).get(11);
 				  IPaddress = records.get(i).get(1);
 				  softwareVersion = records.get(i).get(13);
-				  MACaddress = records.get(i).get(45);
+				  //MACaddress = records.get(i).get(45);
 				  //partNumber = records.get(i).get(10);
 				  //commStatus= records.get(i).get(11);
 				 // adminStatus= records.get(i).get(12);
@@ -349,7 +336,6 @@ public class LoadFileIPNokia {
 		Statement stmt1 = null;
 		Statement stmt2 = null;
 		Statement stmt3 = null;
-		Statement stmt4 = null;
 		int vcount =0;
 		int i=0;
 		
@@ -546,124 +532,6 @@ public class LoadFileIPNokia {
 		}
 	     
 	}
-	 
-	 private static void deleteTempNodeTables() throws SQLException  {
-		 try {
-		 // delete all rows related to node_pk from all nodes tables
-		 PreparedStatement stmt = conalm.prepareStatement("delete from TEMP_NODE_ACTIVE where  DOMAIN='Mobile Access Domain' and VENDOR='" + Gprovider +"'"); 
-	     stmt.executeUpdate();
-	     stmt.close();
-	     
-			/*
-			 * PreparedStatement stmt1 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_ACTIVE_ATTRIBUTE where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt1.executeUpdate(); stmt1.close();
-			 * 
-			 * PreparedStatement stmt2 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_RACK where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt2.executeUpdate(); stmt2.close();
-			 * 
-			 * stmt = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_CABINET where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt.executeUpdate(); stmt.close();
-			 * 
-			 * stmt1 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_HOSTVER where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt1.executeUpdate(); stmt1.close();
-			 * 
-			 * stmt2 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_FRAME where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt2.executeUpdate(); stmt2.close();
-			 * 
-			 * stmt = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_SLOT where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt.executeUpdate(); stmt.close();
-			 * 
-			 * stmt1 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_BOARD where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt1.executeUpdate(); stmt1.close();
-			 * 
-			 * stmt2 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_PORT where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt2.executeUpdate(); stmt2.close();
-			 * 
-			 * stmt = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_ACCESSORY where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt.executeUpdate(); stmt.close();
-			 * 
-			 * stmt1 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_HOST where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt1.executeUpdate(); stmt1.close();
-			 * 
-			 * stmt2 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_SUBRACK where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt2.executeUpdate(); stmt2.close();
-			 * 
-			 * stmt = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_GCELL where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt.executeUpdate(); stmt.close();
-			 * 
-			 * stmt1 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_BTS where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt1.executeUpdate(); stmt1.close();
-			 * 
-			 * stmt2 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_UCELL where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt2.executeUpdate(); stmt2.close();
-			 * 
-			 * stmt = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_ANTENNA where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt.executeUpdate(); stmt.close();
-			 * 
-			 * stmt1 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_LCELL where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt1.executeUpdate(); stmt1.close();
-			 * 
-			 * stmt2 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_RRN where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt2.executeUpdate(); stmt2.close();
-			 * 
-			 * stmt = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_ENODEBCELL where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt.executeUpdate(); stmt.close();
-			 * 
-			 * stmt1 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_NODEBCELL where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt1.executeUpdate(); stmt1.close();
-			 * 
-			 * stmt = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_NBINTERFACES where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt.executeUpdate(); stmt.close();
-			 * 
-			 * stmt = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_CHILD_PARENT where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt.executeUpdate(); stmt.close();
-			 */
-		 }
-			catch(Exception e)  
-			{  
-				/*
-				 * logger.info("error at deleteTempNodeTables is :"+ e.toString());
-				 * System.out.println("error at deleteTempNodeTables is :"+ e.toString());
-				 * 
-				 * //insert into AUTO_DISCOVERY_LOGS_DETAILS String logsDEtailsid=
-				 * localgetseqNbr(22); logsDEtailsid=Gyear+"_"+
-				 * "LOGS_DETAILS"+'_'+logsDEtailsid; PreparedStatement insertLogsDEtailsstmt =
-				 * conalm.
-				 * prepareStatement("insert into AUTO_DISCOVERY_LOGS_DETAILS (LOGS_DETAILS_ID,TIME,ACTIVITY_NAME,ACTIVITY_DESCRIPTION,ATTRIBUTE_NAME,ACTIVITY_TITLE,ACTIVITY_STATUS,QUANTITY,VENDOR,DOMAIN,LOGS_ID)"
-				 * + "values('"+
-				 * logsDEtailsid+"',sysdate ,'ParserLogAIM','error at deleteTempNodeTables ','','','','','"
-				 * + Gprovider +"','Mobile Access Domain','"+logsid+"') ");
-				 * 
-				 * insertLogsDEtailsstmt.executeUpdate(); insertLogsDEtailsstmt.close();
-				 * nbOfErrors++;
-				 */
-				
-			}
-	     
-	}
-	 
-	 
 	 
 	 private static void copyFiles(File source, File dest) throws IOException {
 		 try {

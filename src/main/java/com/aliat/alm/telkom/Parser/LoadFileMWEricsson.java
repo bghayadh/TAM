@@ -179,7 +179,7 @@ public class LoadFileMWEricsson {
 		
 		 // This block configure the logger with handler and formatter  and PATH
 			
-	        fh = new FileHandler(logpath+"\\"+lofilename);
+	        fh = new FileHandler(logpath+"/"+lofilename);
 	        logger.addHandler(fh);
 	        SimpleFormatter formatter = new SimpleFormatter();  
 	        fh.setFormatter(formatter);
@@ -209,6 +209,7 @@ public class LoadFileMWEricsson {
 		 		  PreparedStatement stmtinit = con.prepareStatement("insert into EXECUTE_DOAMIN_VENDOR_FILES (DOMAIN,VENDOR,CREATION_DATE,STATUS,SUB_DOMAIN,TYPE) values ('"+Domain+"', '"+ Gprovider +"',sysdate,'IN PROCESS','"+subDomain+"','"+subDomainType+"')");
 					 stmtinit.executeUpdate();
 					 stmtinit.close();
+					 System.out.println("Load Files inprocess...");
 					 logger.info("Load Files inprocess...");
 					//looping over all files found in the directory.
 					 for (File file : listOfFiles) {
@@ -221,27 +222,31 @@ public class LoadFileMWEricsson {
 							 fileName=data1[0]; fileType=data1[1];
 							
 							 	readfile(fileName1);
-							 	File source = new File(readfileAIMfrom+"\\"+file.getName());
-							    File dest = new File(copyfileAIMto+"\\"+file.getName()+".bkp");
+							 	File source = new File(readfileAIMfrom+"/"+file.getName());
+							    File dest = new File(copyfileAIMto+"/"+file.getName()+".bkp");
 							     
 							     copyFiles(source,dest);
 							     
-							     deleteFiles(readfileAIMfrom+"\\"+file.getName());
+							     deleteFiles(readfileAIMfrom+"/"+file.getName());
 						 }
 						 
 						
 					 }
+					 logger.info("Load Files completed");
+					 System.out.println("Load Files completed");
+					// update file status to completed
+					 stmtp = con.prepareStatement("update EXECUTE_DOAMIN_VENDOR_FILES set STATUS ='COMPLETED' where DOMAIN='"+Domain+"' and VENDOR='"+ Gprovider +"' and STATUS='IN PROCESS' and SUB_DOMAIN='"+subDomain+"'");
+					 stmtp.executeUpdate();
+					 stmtp.close();
 						
 		 	  }else {
-		 		  
+		 		 System.out.println("A process already is running , please wait until process ending");
+		 		 logger.info("A process already is running , please wait until process ending");
 		 	  }
 		 	  
 		 	 GetduplicateFilename(Domain,Gprovider,subDomain);
-		 	 logger.info("Load Files completed");
-		 	// update file status to completed
-				 stmtp = con.prepareStatement("update EXECUTE_DOAMIN_VENDOR_FILES set STATUS ='COMPLETED' where DOMAIN='"+Domain+"' and VENDOR='"+ Gprovider +"' and STATUS='IN PROCESS' and SUB_DOMAIN='"+subDomain+"'");
-				 stmtp.executeUpdate();
-				 stmtp.close();
+		 	
+		 	
 		 
 			  conalm.close();
 			  con.close();
@@ -250,7 +255,7 @@ public class LoadFileMWEricsson {
 	private static void readfile(String fileName) throws FileNotFoundException, IOException, SQLException {
 		 
 		 //csvparser used to read csv file in order to fill the data in a list of type CSVRecord row by row
-		 CSVParser csvParser = new CSVParser(new FileReader(vfolderfrom + "\\" + fileName), CSVFormat.DEFAULT);
+		 CSVParser csvParser = new CSVParser(new FileReader(vfolderfrom + "/" + fileName), CSVFormat.DEFAULT);
 		  List<CSVRecord> records = new ArrayList<>();
 		  for (CSVRecord record : csvParser) {
 			  records.add(record);
@@ -272,13 +277,13 @@ public class LoadFileMWEricsson {
 		  	stmtp.executeUpdate();
 		  	stmtp.close();
 		  }
+		  
 		  for(int i=1;i<records.size();i++) {
 			  vcodeid=year+"_NODE_"+NodeSeq;
 			  rsinit2.close();
 			  stmtp1.close();
-			  if(records.get(i).get(0).contains("-")) {// if the cell of the csv file contains - then it may contain site ID
-					if(records.get(i).get(0).split("-").length >= 3) { // if the number of the elements split in the cell according to - then it may contain site ID
-						siteID = records.get(i).get(0).split("-")[2];
+			  if(records.get(i).get(0).contains("-") && records.get(i).get(4).split("-").length > 2) {// if the cell of the csv file contains - then it may contain site ID
+						siteID = records.get(i).get(4).split("-")[2];
 						char charArray[] = siteID.toCharArray();
 						if(Character.isDigit(charArray[0]) && !Character.isDigit(charArray[siteID.length()-1])) { // if the first character of the possible site id is number then it is a site ID.
 							siteID = siteID;
@@ -300,38 +305,41 @@ public class LoadFileMWEricsson {
 							  lat = "";
 							  siteID = "";
 						}
-							
-					}else {
-						wareID="";
-						  wareName ="";
-						  longi="";
-						  lat = "";
-						  siteID = "";
-						//System.out.println("site id and site name don't exists");
-
-					}
 				}else {
 					wareID="";
 					  wareName ="";
 					  longi="";
 					  lat = "";
-					//System.out.println("site id and site name don't exists");
-
+					  siteID="";
 				}
 			  nodeType="IDU";
-			  IPaddress = records.get(i).get(7);
+			  IPaddress = records.get(i).get(3);
 			  softwareVersion = records.get(i).get(9);
-			  nodeId=records.get(i).get(7);
+			  nodeId=records.get(i).get(3);
+			  nodeName=records.get(i).get(4);
 			  unique_Node_ID = nodeId+"_ERC";
-				  
+			  nodeModel= records.get(i).get(2);
+			  
 				  	stmtp =  con.prepareStatement("insert into NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,WARE_ID,VENDOR,WARE_NAME,IP_ADDRESS,MAC_ADDRESS,SUB_DOMAIN,SOFTWARE_VERSION,STATUS_1,GATEWAY,GATEWAY_TYPE,GATEWAY_IP,STATUS_2,LONGITUDE,LATITUDE,PATCH_VERSION,PART_NUMBER,SUB_DOMAIN_TYPE)"
 					 		+ "values('"+vcodeid+"','"+unique_Node_ID+"','"+nodeId+"','"+nodeName+"','"+nodeType+"','"+Domain+"','"+nodeModel+"','"+tech2+"','"+tech3+"','"+tech4+"','"+tech5+"','"+siteID+"','"+circleid+"',sysdate,sysdate,'"+fileType+"','"+fileName+"','"+commStatus+"','"+wareID+"','"+Gprovider+"','"+wareName+"','"+IPaddress+"','"+MACaddress+"','"+subDomain+"','"+softwareVersion+"','"+adminStatus+"','"+gateway+"','"+gatewayType+"','"+gatewayIP+"','"+LCStatus+"','"+longi+"','"+lat+"','"+patchVersion+"','"+partNumber+"','"+subDomainType+"')"); 
 				  	stmtp.executeUpdate();
 				  	stmtp.close();
 				  	
+				  	System.out.println("row number inserted : "+i +" query :insert into NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,WARE_ID,VENDOR,WARE_NAME,IP_ADDRESS,MAC_ADDRESS,SUB_DOMAIN,SOFTWARE_VERSION,STATUS_1,GATEWAY,GATEWAY_TYPE,GATEWAY_IP,STATUS_2,LONGITUDE,LATITUDE,PATCH_VERSION,PART_NUMBER,SUB_DOMAIN_TYPE)"  
+				  	+ "values('"+vcodeid+"','"+unique_Node_ID+"','"+nodeId+"','"+nodeName+"','"+nodeType+"','"+Domain+"','"+nodeModel+"','"+tech2+"','"+tech3+"','"+tech4+"','"+tech5+"','"+siteID+"','"+circleid+"',sysdate,sysdate,'"+fileType+"','"+fileName+"','"+commStatus+"','"+wareID+"','"+Gprovider+"','"+wareName+"','"+IPaddress+"','"+MACaddress+"','"+subDomain+"','"+softwareVersion+"','"+adminStatus+"','"+gateway+"','"+gatewayType+"','"+gatewayIP+"','"+LCStatus+"','"+longi+"','"+lat+"','"+patchVersion+"','"+partNumber+"','"+subDomainType+"') ");
+				  	
 				  	NodeSeq++;
 			 
 		  }
+		  
+		  stmtp1 = conalm.createStatement();
+		  ResultSet rsinit21 = stmtp1.executeQuery("SELECT COUNT(*) FROM NODE_ACTIVE");
+		  while (rsinit21.next()) {
+			  System.out.println("Count is : "+rsinit21.getString("COUNT(*)"));
+		  }
+		  stmtp1.close();
+		  rsinit21.close();
+		  
 	}
 	
 	private static void GetduplicateFilename(String vdomain , String vvendor,String subDomain) throws SQLException  {
@@ -674,6 +682,5 @@ public class LoadFileMWEricsson {
 		 }
     
 	}
-
 
 }

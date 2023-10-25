@@ -28,10 +28,6 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
@@ -89,7 +85,7 @@ public static void main(String[] args,String vendor,String domain,String sub_dom
 	
 
 	//System.out.println("Start withh LOAD :" + System.getProperty("user.dir"));
-	
+	FileName = new ArrayList<String>();
  	//objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"/"+"almconfig.dat"));
 	Resource ConfigResource = new ClassPathResource("almconfig.dat");
 	File configfile = ConfigResource.getFile();
@@ -99,7 +95,6 @@ public static void main(String[] args,String vendor,String domain,String sub_dom
 	while ((strCurrentLine1 = objReader1.readLine()) != null){
 		 String data = strCurrentLine1;
 		 String[] data1 ;
-		 String[] data2 ;
 		 
 		 if (data.contains("projectpath")) {
 			 data1=data.split(";",-1);
@@ -132,7 +127,6 @@ public static void main(String[] args,String vendor,String domain,String sub_dom
 		 if (data.contains("readexcelTransOptSDHHWfrom")) {
 			 data1=data.split(";",-1);
 			 readfileAIMfrom = data1[1];
-			 data2=readfileAIMfrom.replace("\\","/").split("/",-1);
 			 vfolderfrom=readfileAIMfrom;
 			 Gprovider=vendor;
 			 Domain=domain;
@@ -175,7 +169,7 @@ public static void main(String[] args,String vendor,String domain,String sub_dom
 	
 	 // This block configure the logger with handler and formatter  and PATH
 		
-        fh = new FileHandler(logpath+"\\"+lofilename);
+        fh = new FileHandler(logpath+"/"+lofilename);
         logger.addHandler(fh);
         SimpleFormatter formatter = new SimpleFormatter();  
         fh.setFormatter(formatter);
@@ -241,30 +235,36 @@ public static void main(String[] args,String vendor,String domain,String sub_dom
 								//System.out.println("i........"+i);
 								//System.out.println("FileName.get(i)........"+FileName.get(i));
 								readfile(FileName.get(i));
-								File source = new File(readfileAIMfrom+"\\"+FileName.get(i));
-								File dest = new File(copyfileAIMto+"\\"+FileName.get(i)+".bkp");
+								File source = new File(readfileAIMfrom+"/"+FileName.get(i));
+								File dest = new File(copyfileAIMto+"/"+FileName.get(i)+".bkp");
 								copyFiles(source,dest);							     
-								deleteFiles(readfileAIMfrom+"\\"+FileName.get(i));
+								deleteFiles(readfileAIMfrom+"/"+FileName.get(i));
 							}
+							 System.out.println("Load SDH HW Files completed");
+							 logger.info("Load SDH HW Files completed");
+							 	// update file status to completed
+									 stmtp = con.prepareStatement("update EXECUTE_DOAMIN_VENDOR_FILES set STATUS ='COMPLETED' where DOMAIN='"+Domain+"' and VENDOR='"+ Gprovider +"' and STATUS='IN PROCESS' and SUB_DOMAIN='"+subDomain+"' and TYPE='"+subDomainType+"'");
+									 stmtp.executeUpdate();
+									 stmtp.close();
+				 	  }else {
+				 		 System.out.println("A process already is running , please wait until process ending");
+				 		   logger.info("A process already is running , please wait until process ending");
 				 	  }
 	 	  
 	 	 GetduplicateFilename(Domain,Gprovider,subDomain,subDomainType);
-	 	 logger.info("Load DWDM HW Files completed");
-	 	// update file status to completed
-			 stmtp = con.prepareStatement("update EXECUTE_DOAMIN_VENDOR_FILES set STATUS ='COMPLETED' where DOMAIN='"+Domain+"' and VENDOR='"+ Gprovider +"' and STATUS='IN PROCESS' and SUB_DOMAIN='"+subDomain+"' and TYPE='"+subDomainType+"'");
-			 stmtp.executeUpdate();
-			 stmtp.close();
+	 	 
 	 
 		  conalm.close();
 		  con.close();
 }
 
 private static void readfile(String fileName) throws FileNotFoundException, IOException, SQLException {
+	try {
 	Calendar calendar = new GregorianCalendar();
 	int year = calendar.get(Calendar.YEAR);
 		  
 		//csvparser used to read csv file in order to fill the data in a list of type CSVRecord row by row
-		 CSVParser csvParser = new CSVParser(new FileReader(vfolderfrom + "\\" + fileName), CSVFormat.DEFAULT); 
+		 CSVParser csvParser = new CSVParser(new FileReader(vfolderfrom + "/" + fileName), CSVFormat.DEFAULT); 
 		 List<CSVRecord> records = new ArrayList<>();
 		 for (CSVRecord record : csvParser) {
 			  records.add(record);
@@ -286,9 +286,45 @@ private static void readfile(String fileName) throws FileNotFoundException, IOEx
 			  	stmtp.close();
 			  }
 			  for(int i=4;i<records.size();i++) {
+				  wareID="";
+				  wareName ="";
+				  longi="";
+				  lat = "";
+				  siteID = "";
+				  
 				  vcodeid=year+"_NODE_"+Gprovider+"_"+Domain+"_"+NodeSeq;
 				  rsinit2.close();
 				  stmtp1.close();
+				  if(records.get(i).get(0).contains("_")){
+					  siteID = records.get(i).get(0).split("_")[0];
+						char charArray[] = siteID.toCharArray();
+						if(Character.isDigit(charArray[0]) && !Character.isDigit(charArray[siteID.length()-1])) { // if the first character of the possible site id is number then it is a site ID.
+							siteID = siteID;
+							String sqlStmtinit3 = "select WARE_ID,WARE_NAME,LONGITUDE,LATITUDE from WAREHOUSE WHERE SITE_ID='"+siteID+"'";     
+							  stmtp1 = conalm.createStatement();
+							  ResultSet rsinit3 = stmtp1.executeQuery(sqlStmtinit3);
+							  while(rsinit3.next()) {
+								  wareID=rsinit3.getString("WARE_ID");
+								  wareName = rsinit3.getString("WARE_NAME");
+								  longi=rsinit3.getString("LONGITUDE");
+								  lat = rsinit3.getString("LATITUDE");
+							  }
+							  rsinit3.close();
+							  stmtp1.close();
+						}else {
+							wareID="";
+							  wareName ="";
+							  longi="";
+							  lat = "";
+							  siteID = "";
+						}
+				}else {
+					wareID="";
+					  wareName ="";
+					  longi="";
+					  lat = "";
+					  siteID="";
+				}
 				  
 				  	  nodeName = records.get(i).get(0);
 				  	  nodeType="SDH";
@@ -345,10 +381,8 @@ private static void readfile(String fileName) throws FileNotFoundException, IOEx
 			  
 			 String sqlStmtinit2 = "" ;
 			 ResultSet rsinit2; 
-			 System.out.println("Entered ELSE");
 			// start board parsing
 			 if(fileName.contains("Boards")){  
-				 System.out.println("Boards entered");
 				// start board parsing
 				  
 					//select the board sequence from the seq table in alm.
@@ -372,40 +406,17 @@ private static void readfile(String fileName) throws FileNotFoundException, IOEx
 						  nodeName = records.get(i).get(0);
 						  //System.out.println("nodeName: "+ nodeName);
 						  nodeId = records.get(i).get(5);
-						 // System.out.println("nodeId: "+ nodeId);
-						  for(int n=0;n<listofNodes.size();n++) {
-							  Object[] node = (Object[]) listofNodes.get(n);
-							  //System.out.println("node: "+ mapper.writeValueAsString(node));
-							  //System.out.println("node[1]: "+ node[1]);
-		                     String nodeNamefrom = (String) node[1];
-		                     System.out.println("nodeNamefrom: "+ nodeNamefrom);
-							 // if(StringUtils.equalsIgnoreCase(String.valueOf(node[1]), nodeName)) {
-							 // if(nodeNamefrom == nodeName) {
-							    if(nodeNamefrom.trim().equals(nodeName)) {
-
-								  System.out.println(" Node name exist");
-								  vcodeid= (String) node[0];	
-								 // nodeName = (String) node[2];
-								  domain =(String) node[2]; 
-								  vender=(String) node[3];
-								  sub_Domain=(String) node[4];
-								  sub_Domain_Type=(String) node[5];
-								  
-								  if(vcodeid == null && domain == Domain && vender == Gprovider && sub_Domain == subDomain && sub_Domain_Type == subDomainType ) { 
-									  System.out.println("No Node ID");
-								      vcodeid = "No Node ID";
-							     }
-								  
-							  }/*else {
-								  System.out.println("NO Node name exist");
-							  }*/
-						  }
+						 
 						  
 						boardName = records.get(i).get(1);
 						boardType = records.get(i).get(3);
 						subracknb = records.get(i).get(8);
 						slotnb = records.get(i).get(9);
-						hardwareVersion = records.get(i).get(10);
+						if(records.get(i).get(10).contains("--")) {
+							hardwareVersion=null;
+						}else {
+							hardwareVersion = records.get(i).get(10);
+						}
 						softwareVersion = records.get(i).get(11);
 						serialnb = records.get(i).get(12);
 						bomCode = records.get(i).get(22);
@@ -414,11 +425,11 @@ private static void readfile(String fileName) throws FileNotFoundException, IOEx
 						model = records.get(i).get(15);
 						status= records.get(i).get(19);
 					   // others = "{\"Board Name\":"+"\""+boardRecords.get(i).get(2)+"\","+"\"NE ID\":"+"\""+boardRecords.get(i).get(4)+"\","+"\"NE IP Address\":"+"\""+boardRecords.get(i).get(5)+"\","+"\"NE Type (MPU TYPE)\":"+"\""+boardRecords.get(i).get(6)+"\","+"\"Subrack Type\":"+"\""+boardRecords.get(i).get(7)+"\","+"\"Board Alias\":"+"\""+boardRecords.get(i).get(13)+"\","+"\"Remarks\":"+"\""+boardRecords.get(i).get(14)+"\","+"\"FPGA Version\":"+"\""+boardRecords.get(i).get(17)+"\","+"\"Protection Role\":"+"\""+boardRecords.get(i).get(20)+"\","+"\"PSTQ\":"+"\""+boardRecords.get(i).get(21)+"\","+"\"Administrative Status\":"+"\""+boardRecords.get(i).get(23)+"\","+"\"Description\":"+"\""+boardRecords.get(i).get(24)+"\","+"\"Manufactured On\":"+"\""+boardRecords.get(i).get(25)+"\","+"\"Created On\":"+"\""+boardRecords.get(i).get(26)+"\""+"}";
-					    others = "{\"NE ID\":"+"\""+records.get(i).get(4)+"\","+"\"NE IP Address\":"+"\""+records.get(i).get(5)+"\","+"\"NE Type (MPU TYPE)\":"+"\""+records.get(i).get(6)+"\","+"\"Subrack Type\":"+"\""+records.get(i).get(7)+"\","+"\"FPGA Version\":"+"\""+records.get(i).get(17)+"\","+"\"Protection Role\":"+"\""+records.get(i).get(20)+"\","+"\"PSTQ\":"+"\""+records.get(i).get(21)+"\","+"\"Administrative Status\":"+"\""+records.get(i).get(23)+"\","+"\"Description\":"+"\""+records.get(i).get(24)+"\""+"}";
+					    others = "{\"Subrack Type\":"+"\""+records.get(i).get(7)+"\","+"\"FPGA Version\":"+"\""+records.get(i).get(17)+"\","+"\"Protection Role\":"+"\""+records.get(i).get(20)+"\","+"\"PSTQ\":"+"\""+records.get(i).get(21)+"\","+"\"Administrative Status\":"+"\""+records.get(i).get(23)+"\","+"\"Description\":"+"\""+records.get(i).get(24)+"\""+"}";
 
 						//stmtp =  con.prepareStatement("insert into NODE_BOARD (BOARD_ID,SITEINDEX,CABINETNO,SUBRACKNO,RACKNO,FRAMENO,SLOTNO,SLOTPOS,SUBSLOTNO,INVENTORYUNITID,MODULENO,BOARDNAME,BOARDTYPE,INVENTORYUNITTYPE,VENDORUNITFAMILYTYPE,VENDORUNITTYPENUMBER,VENDORNAME,SERIALNUMBER,HARDWAREVERSION,DATEOFMANUFACTURE,DATEOFLASTSERVICE,UNITPOSITION,MANUFACTURERDATA,SOFTVER,LOGICVER,BIOSVER,BIOSVEREX,LANVER,MBUSVER,ISSUENUMBER,BOMCODE,MODEL,USERLABEL,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,EXTINFO,APDEVINFO,WORKMODE,STATUS,FROM_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,ACTIVE_RECORD,LINE,ALM_POSITION,CREATION_DATE,DOMAIN,VENDOR,TO_TRANS_SOURCE)"
 						stmtp =  con.prepareStatement("insert into NODE_BOARD (BOARD_ID,SUBRACKNO,SLOTNO,BOARDNAME,BOARDTYPE,SERIALNUMBER,HARDWAREVERSION,SOFTVER,BIOSVER,ISSUENUMBER,BOMCODE,MODEL,NODE_PK,UPDATE_DATE,FILENAME,STATUS,CREATION_DATE,DOMAIN,VENDOR,OTHERS,ACTIVE_RECORD)"
-						     + "values('"+boardId+"','"+subracknb+"','"+slotnb+"','"+boardName+"','"+boardType+"','"+serialnb+"','"+hardwareVersion+"','"+softwareVersion+"','"+biosVersion+"','"+issueNb+"','"+bomCode+"','"+model+"','"+vcodeid+"',sysdate,'"+fileName+"','"+status+"',sysdate,'"+Domain+"','"+Gprovider+"','"+others+"','1')"); 
+						     + "values('"+boardId+"','"+subracknb+"','"+slotnb+"','"+boardName+"','"+boardType+"','"+serialnb+"','"+hardwareVersion+"','"+softwareVersion+"','"+biosVersion+"','"+issueNb+"','"+bomCode+"','"+model+"',(select NODE_PK from NODE_ACTIVE where NODE_ID='"+nodeId+"' and domain='"+Domain+"' and vendor='"+Gprovider+"' order by creation_date desc fetch first 1 row only),sysdate,'"+fileName+"','"+status+"',sysdate,'"+Domain+"','"+Gprovider+"','"+others+"','1')"); 
 					  	stmtp.executeUpdate();
 					  	stmtp.close();
 					  	
@@ -432,7 +443,7 @@ private static void readfile(String fileName) throws FileNotFoundException, IOEx
 				// end of board 
 			  
 			    // start of subrack
-			 if(fileName.contains("subrack")){ 
+			 if(fileName.contains("Subrack")){ 
 				 System.out.println("subrack Entered ");
 				 
 				// start of subrack
@@ -451,87 +462,60 @@ private static void readfile(String fileName) throws FileNotFoundException, IOEx
 					  	stmtp.close();
 					  }	
 					  for(int i=4;i<records.size();i++) {
-						  subrackId=year+"_NODE_"+Gprovider+"_"+Domain+"_SUBRAC_"+SubrackSeq;
+						  
+						  subrackId=year+"_NODE_"+Gprovider+"_"+Domain+"_SUBRACK_"+SubrackSeq;
 						  rsinit2.close();
 						  stmtp1.close();
 						  nodeName = records.get(i).get(0);
 						  //System.out.println("nodeName: "+ nodeName);
-						  nodeId = records.get(i).get(3);
+						  nodeId = records.get(i).get(4);
 						  System.out.println("nodeId: "+ nodeId);
-						  for(int n=0;n<listofNodes.size();n++) {
-							  Object[] node = (Object[]) listofNodes.get(n);
-							  //System.out.println("node: "+ mapper.writeValueAsString(node));
-							  //System.out.println("node[1]: "+ node[1]);
-							  String nodeNamefrom = (String) node[1];
-			                     System.out.println("nodeNamefrom: "+ nodeNamefrom);
-								 // if(StringUtils.equalsIgnoreCase(String.valueOf(node[1]), nodeName)) {
-								 // if(nodeNamefrom == nodeName) {
-								    if(nodeNamefrom.trim().equals(nodeName)) {
-
-								  System.out.println(" Node name exist");
-								  vcodeid= (String) node[0];	
-								 // nodeName = (String) node[2];
-								  domain =(String) node[2]; 
-								  vender=(String) node[3];
-								  sub_Domain=(String) node[4];
-								  sub_Domain_Type=(String) node[5];
-								  
-								  if(vcodeid == null && domain == Domain && vender == Gprovider && sub_Domain == subDomain && sub_Domain_Type == subDomainType ) { 
-									  System.out.println("No Node ID");
-								      vcodeid = "No Node ID";
-							     }
-								  
-							  }/*else {
-								  System.out.println("NO Node name exist");
-							  }*/
-						  }
-						  
+						
+						
 						subrackName = records.get(i).get(1);
 						subrackType = records.get(i).get(2);
 						subracknb = records.get(i).get(9);
-						softwareVersion = records.get(i).get(4);
-						serialnb = records.get(i).get(5);
+						softwareVersion = records.get(i).get(5);
+						serialnb = records.get(i).get(6);
 						bomCode = records.get(i).get(12);
 						status= records.get(i).get(10);
-						others = "{\"NE Name\":"+"\""+records.get(i).get(0)+"\","+"\"SN(Bar Code)\":"+"\""+records.get(i).get(6)+"\","+"\"Subnet\":"+"\""+records.get(i).get(7)+"\","+"\"Subnet Path\":"+"\""+records.get(i).get(8)+"\","+"\"Description\":"+"\""+records.get(i).get(13)+"\","+"\"Manufactured On\":"+"\""+records.get(i).get(14)+"\","+"\"Equipment Room Name\":"+"\""+records.get(i).get(15)+"\","+"\"Rack Name\":"+"\""+records.get(i).get(16)+"\","+"\"Subrack Number\":"+"\""+records.get(i).get(17)+"\","+"\"Remarks\":"+"\""+records.get(i).get(18)+"\""+"}";
-							
-						stmtp =  con.prepareStatement("insert into NODE_SUBRACK (SUBRACK_ID,SUBRACKNO,SERIALNUMBER,BOMCODE,NODE_PK,UPDATE_DATE,FILENAME,STATUS,DOMAIN,VENDOR,OTHERS,ACTIVE_RECORD)"
-						     + "values('"+subrackId+"','"+subracknb+"','"+serialnb+"','"+bomCode+"','"+vcodeid+"',sysdate,'"+fileName+"','"+status+"','"+Domain+"','"+Gprovider+"','"+others+"','1')"); 
-					  	stmtp.executeUpdate();
+						others = "{\"Rack Name\":"+"\""+records.get(i).get(16)+"\"}";
+						
+						String sql=null;
+						String manifacturedDate = records.get(i).get(14);
+						if (manifacturedDate != null && !manifacturedDate.isEmpty() && !manifacturedDate.contains("--")) {
+							if(!manifacturedDate.contains("-")) {
+	     						manifacturedDate="";
+	     					 }
+							sql = "insert into NODE_SUBRACK (SUBRACK_ID,SUBRACKNO,SERIALNUMBER,BOMCODE,NODE_PK,UPDATE_DATE,FILENAME,STATUS,DOMAIN,VENDOR,OTHERS,ACTIVE_RECORD,RACKTYPE,MODEL,DATEOFMANUFACTURE)"
+								     + "values('"+subrackId+"','"+subracknb+"','"+serialnb+"','"+bomCode+"',(select NODE_PK from NODE_ACTIVE where NODE_ID='"+nodeId+"' and domain='"+Domain+"' and vendor='"+Gprovider+"' order by creation_date desc fetch first 1 row only),sysdate,'"+fileName+"','"+status+"','"+Domain+"','"+Gprovider+"','"+others+"','1','"+subrackType+"','"+subrackType+"',TO_DATE('" + manifacturedDate+"','YYYY-MM-DD'))"; 
+									  	
+						}else {
+							String manfdate="";
+							sql = "insert into NODE_SUBRACK (SUBRACK_ID,SUBRACKNO,SERIALNUMBER,BOMCODE,NODE_PK,UPDATE_DATE,FILENAME,STATUS,DOMAIN,VENDOR,OTHERS,ACTIVE_RECORD,RACKTYPE,MODEL,DATEOFMANUFACTURE)"
+								     + "values('"+subrackId+"','"+subracknb+"','"+serialnb+"','"+bomCode+"',(select NODE_PK from NODE_ACTIVE where NODE_ID='"+nodeId+"' and domain='"+Domain+"' and vendor='"+Gprovider+"' order by creation_date desc fetch first 1 row only),sysdate,'"+fileName+"','"+status+"','"+Domain+"','"+Gprovider+"','"+others+"','1','"+subrackType+"','"+subrackType+"',TO_DATE('" + manfdate+"','YYYY-MM-DD'))"; 
+						}
+						
+						stmtp=con.prepareStatement(sql);
+						stmtp.executeUpdate();
 					  	stmtp.close();
 					  	
 					  	SubrackSeq++;
+					  	
+					  	System.out.println("Insert Inside Subrack at record number : "+i +"query : "+sql);
 					  }
-				 
 			}
 			 
 		 }
-	
-	
-    
-	  
-		 
-	
-	  
-		  
-	    
-		  
-		  
-		  
-	//}
-	
-	
-	
-		 
-	
-	
+	}catch(Exception e) {
+		e.printStackTrace();
+	}
 }
 
 private static void GetduplicateFilename(String vdomain , String vvendor,String subDomain, String type) throws SQLException  {
 	Statement stmt1 = null;
 	Statement stmt2 = null;
 	Statement stmt3 = null;
-	Statement stmt4 = null;
 	int vcount =0;
 	int i=0;
 	
@@ -622,6 +606,14 @@ private static void GetduplicateFilename(String vdomain , String vvendor,String 
      stmt.executeUpdate();
      stmt.close();
      
+      stmt = con.prepareStatement("delete from  NODE_BOARD where " + fieldname+" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor+"'"); 
+      stmt.executeUpdate();
+      stmt.close();
+      
+      stmt= con.prepareStatement("delete from  NODE_SUBRACK where " + fieldname+" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor+"'");
+      stmt.executeUpdate(); 
+      stmt.close();
+      
 		/*
 		 * PreparedStatement stmt1 =
 		 * con.prepareStatement("delete from  NODE_ACTIVE_ATTRIBUTE where " + fieldname
@@ -728,124 +720,6 @@ private static void GetduplicateFilename(String vdomain , String vvendor,String 
 	}
      
 }
- 
- private static void deleteTempNodeTables() throws SQLException  {
-	 try {
-	 // delete all rows related to node_pk from all nodes tables
-	 PreparedStatement stmt = conalm.prepareStatement("delete from TEMP_NODE_ACTIVE where  DOMAIN='Mobile Access Domain' and VENDOR='" + Gprovider +"'"); 
-     stmt.executeUpdate();
-     stmt.close();
-     
-		/*
-		 * PreparedStatement stmt1 = conalm.
-		 * prepareStatement("delete from  TEMP_NODE_ACTIVE_ATTRIBUTE where  DOMAIN='Mobile Access Domain' and VENDOR='"
-		 * + Gprovider +"'"); stmt1.executeUpdate(); stmt1.close();
-		 * 
-		 * PreparedStatement stmt2 = conalm.
-		 * prepareStatement("delete from  TEMP_NODE_RACK where  DOMAIN='Mobile Access Domain' and VENDOR='"
-		 * + Gprovider +"'"); stmt2.executeUpdate(); stmt2.close();
-		 * 
-		 * stmt = conalm.
-		 * prepareStatement("delete from  TEMP_NODE_CABINET where  DOMAIN='Mobile Access Domain' and VENDOR='"
-		 * + Gprovider +"'"); stmt.executeUpdate(); stmt.close();
-		 * 
-		 * stmt1 = conalm.
-		 * prepareStatement("delete from  TEMP_NODE_HOSTVER where  DOMAIN='Mobile Access Domain' and VENDOR='"
-		 * + Gprovider +"'"); stmt1.executeUpdate(); stmt1.close();
-		 * 
-		 * stmt2 = conalm.
-		 * prepareStatement("delete from  TEMP_NODE_FRAME where  DOMAIN='Mobile Access Domain' and VENDOR='"
-		 * + Gprovider +"'"); stmt2.executeUpdate(); stmt2.close();
-		 * 
-		 * stmt = conalm.
-		 * prepareStatement("delete from  TEMP_NODE_SLOT where  DOMAIN='Mobile Access Domain' and VENDOR='"
-		 * + Gprovider +"'"); stmt.executeUpdate(); stmt.close();
-		 * 
-		 * stmt1 = conalm.
-		 * prepareStatement("delete from  TEMP_NODE_BOARD where  DOMAIN='Mobile Access Domain' and VENDOR='"
-		 * + Gprovider +"'"); stmt1.executeUpdate(); stmt1.close();
-		 * 
-		 * stmt2 = conalm.
-		 * prepareStatement("delete from  TEMP_NODE_PORT where  DOMAIN='Mobile Access Domain' and VENDOR='"
-		 * + Gprovider +"'"); stmt2.executeUpdate(); stmt2.close();
-		 * 
-		 * stmt = conalm.
-		 * prepareStatement("delete from  TEMP_NODE_ACCESSORY where  DOMAIN='Mobile Access Domain' and VENDOR='"
-		 * + Gprovider +"'"); stmt.executeUpdate(); stmt.close();
-		 * 
-		 * stmt1 = conalm.
-		 * prepareStatement("delete from  TEMP_NODE_HOST where  DOMAIN='Mobile Access Domain' and VENDOR='"
-		 * + Gprovider +"'"); stmt1.executeUpdate(); stmt1.close();
-		 * 
-		 * stmt2 = conalm.
-		 * prepareStatement("delete from  TEMP_NODE_SUBRACK where  DOMAIN='Mobile Access Domain' and VENDOR='"
-		 * + Gprovider +"'"); stmt2.executeUpdate(); stmt2.close();
-		 * 
-		 * stmt = conalm.
-		 * prepareStatement("delete from  TEMP_NODE_GCELL where  DOMAIN='Mobile Access Domain' and VENDOR='"
-		 * + Gprovider +"'"); stmt.executeUpdate(); stmt.close();
-		 * 
-		 * stmt1 = conalm.
-		 * prepareStatement("delete from  TEMP_NODE_BTS where  DOMAIN='Mobile Access Domain' and VENDOR='"
-		 * + Gprovider +"'"); stmt1.executeUpdate(); stmt1.close();
-		 * 
-		 * stmt2 = conalm.
-		 * prepareStatement("delete from  TEMP_NODE_UCELL where  DOMAIN='Mobile Access Domain' and VENDOR='"
-		 * + Gprovider +"'"); stmt2.executeUpdate(); stmt2.close();
-		 * 
-		 * stmt = conalm.
-		 * prepareStatement("delete from  TEMP_NODE_ANTENNA where  DOMAIN='Mobile Access Domain' and VENDOR='"
-		 * + Gprovider +"'"); stmt.executeUpdate(); stmt.close();
-		 * 
-		 * stmt1 = conalm.
-		 * prepareStatement("delete from  TEMP_NODE_LCELL where  DOMAIN='Mobile Access Domain' and VENDOR='"
-		 * + Gprovider +"'"); stmt1.executeUpdate(); stmt1.close();
-		 * 
-		 * stmt2 = conalm.
-		 * prepareStatement("delete from  TEMP_NODE_RRN where  DOMAIN='Mobile Access Domain' and VENDOR='"
-		 * + Gprovider +"'"); stmt2.executeUpdate(); stmt2.close();
-		 * 
-		 * stmt = conalm.
-		 * prepareStatement("delete from  TEMP_NODE_ENODEBCELL where  DOMAIN='Mobile Access Domain' and VENDOR='"
-		 * + Gprovider +"'"); stmt.executeUpdate(); stmt.close();
-		 * 
-		 * stmt1 = conalm.
-		 * prepareStatement("delete from  TEMP_NODE_NODEBCELL where  DOMAIN='Mobile Access Domain' and VENDOR='"
-		 * + Gprovider +"'"); stmt1.executeUpdate(); stmt1.close();
-		 * 
-		 * stmt = conalm.
-		 * prepareStatement("delete from  TEMP_NODE_NBINTERFACES where  DOMAIN='Mobile Access Domain' and VENDOR='"
-		 * + Gprovider +"'"); stmt.executeUpdate(); stmt.close();
-		 * 
-		 * stmt = conalm.
-		 * prepareStatement("delete from  TEMP_NODE_CHILD_PARENT where  DOMAIN='Mobile Access Domain' and VENDOR='"
-		 * + Gprovider +"'"); stmt.executeUpdate(); stmt.close();
-		 */
-	 }
-		catch(Exception e)  
-		{  
-			/*
-			 * logger.info("error at deleteTempNodeTables is :"+ e.toString());
-			 * System.out.println("error at deleteTempNodeTables is :"+ e.toString());
-			 * 
-			 * //insert into AUTO_DISCOVERY_LOGS_DETAILS String logsDEtailsid=
-			 * localgetseqNbr(22); logsDEtailsid=Gyear+"_"+
-			 * "LOGS_DETAILS"+'_'+logsDEtailsid; PreparedStatement insertLogsDEtailsstmt =
-			 * conalm.
-			 * prepareStatement("insert into AUTO_DISCOVERY_LOGS_DETAILS (LOGS_DETAILS_ID,TIME,ACTIVITY_NAME,ACTIVITY_DESCRIPTION,ATTRIBUTE_NAME,ACTIVITY_TITLE,ACTIVITY_STATUS,QUANTITY,VENDOR,DOMAIN,LOGS_ID)"
-			 * + "values('"+
-			 * logsDEtailsid+"',sysdate ,'ParserLogAIM','error at deleteTempNodeTables ','','','','','"
-			 * + Gprovider +"','Mobile Access Domain','"+logsid+"') ");
-			 * 
-			 * insertLogsDEtailsstmt.executeUpdate(); insertLogsDEtailsstmt.close();
-			 * nbOfErrors++;
-			 */
-			
-		}
-     
-}
- 
- 
  
  private static void copyFiles(File source, File dest) throws IOException {
 	 try {
