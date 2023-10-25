@@ -151,34 +151,33 @@ function create_Marker_Click(Id,Name,Long,Lat,markers,marker_Cluster,data) {
 		//console.log("markers >>>>", markers);
 		
 		google.maps.event.addListener(marker, "click", function (e) {
-			//console.log("---clicked---");
+			console.log("---clicked---");
 			var IdSelected = this.ID;
 			window.infowindow.setContent(this.data);
 	        window.infowindow.open(map, this);
-	    	//console.log("IdSelected-------"+IdSelected);
+	    	console.log("IdSelected-------"+IdSelected);
 	        
 	        var liElement = $("#network_tree").find('li[id*="' + IdSelected + '"]'); // Select the <li> element with the ID IdSelected
 	    	//console.log("liElement-------",liElement);
 	        var spanElement = liElement.find('.TreeSpan')[0];
 	       // console.log("spanElement-------",spanElement);
 	        
-	    	var Initialparent = $("#initial_ul").find(' > ul > li');
+	        var Initialparent = $("#initial_ul").find(' > ul > li');
+	        console.log("Initialparent-------",Initialparent);
+	    	$("#initial_ul > .folder > svg").addClass('fa-folder-open').removeClass('fa-folder'); 
 	        Initialparent.show();
-	  
-	        //$("#initial_ul").children('.folder').find('> svg').addClass('fa-folder-open').removeClass('fa-folder'); 
-	      // var children = $("#initial_ul_nodetype").find(' > ul > li > ul > li');
-	      // console.log("chlidren",children);
-	      // children.show();
-	      // $("#"+IdSelected+" > .folder>svg").removeClass('fa fa-folder').addClass('fa-folder-open');	
+	        liElement.closest('.NodeType').find('.NodeTypeFolder').find('> .folder > svg').removeClass('fa fa-folder').addClass('fa-folder-open');	
+	        var parentFolder = liElement.closest('.NodeType').find('.NodeTypeFolder').find(' > ul > li');
+		    parentFolder.show();
+	     
 	       
-	       
-	    		$(".TreeSpan").removeClass("selected-span").css("background", "");
-	    		// $("#" + IdSelected + " > .TreeSpan").addClass("selected-span").css("background-color", "#97b9cc");	
-	    		$(spanElement).addClass("selected-span").css("background-color", "#97b9cc");	
-	    		 offset=$(spanElement).offset().top;
-	 			 projectOffset=$("#initial_ul").offset().top;
-	 			 offsetTotal=(offset-projectOffset);
-	 			$("#network_tree").animate({ scrollTop: offsetTotal}, "slow");
+    		$(".TreeSpan").removeClass("selected-span").css("background", "");
+    		// $("#" + IdSelected + " > .TreeSpan").addClass("selected-span").css("background-color", "#97b9cc");	
+    		$(spanElement).addClass("selected-span").css("background-color", "#97b9cc");	
+    		 offset=$(spanElement).offset().top;
+ 			 projectOffset=$("#initial_ul").offset().top;
+ 			 offsetTotal=(offset-projectOffset);
+ 			$("#network_tree").animate({ scrollTop: offsetTotal}, "slow");
 	    	//}
 	    	/*
 	    	if(liClass=="Site"){

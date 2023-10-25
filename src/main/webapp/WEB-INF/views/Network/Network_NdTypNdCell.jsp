@@ -391,16 +391,12 @@ function AllSitesCheckFilter(){
 }
 
 function showMarkersAllSitesOneNt(id) {
- var id = id.id;
- // console.log("iddd..."+id);
-  
+  var id = id.id;
   var nodeType = id.split("_")[0];
-  //console.log("nodeType..."+nodeType);
   
   markerClusterSites.clearMarkers();
   var isChecked = $("#" + id).is(":checked");
   var ulElement = document.getElementById(nodeType);
-  
   var liElements = ulElement.querySelectorAll('.SingleNode'); // Retrieve only <li> elements with <input> children
  
   //var count = liElements.length;
@@ -412,15 +408,13 @@ function showMarkersAllSitesOneNt(id) {
    // console.log(" liElements[i].id:  ", liElements[i].id);
   
     var nodeSiteId = liElements[i].id.split("_" + nodeType)[0]; //nodeId_wareId
-    //console.log("nodeSiteId:", nodeSiteId);
     
     var index = nodeSiteId.indexOf("WARE_2");
-	//console.log(" index : "+index);
 	if (index !== -1) {
 	  var nodeId = nodeSiteId.substring(0, index).slice(0, -1);
-	  //console.log(" nodeId : "+nodeId);
-	} 
-
+	}else{
+		nodeId = nodeSiteId.slice(0, -2);
+	}
 	/*
     if(nodeSiteId.split("_")[3]!= "null"){
     	console.log("not null");
@@ -547,17 +541,17 @@ function NdTpNdCellCore(id)
 
 function showMarkerSingleSite(id) {
 	//console.log("id..."+id); //2023_NODE_Huawei_Transmission_618845_WARE_2021_13763_Router
-	//console.log("showMarkerSingleSite");
 	var index = id.indexOf("WARE_2");
-	//console.log(" index : "+index);
-	if (index !== -1) {
-	  var nodeId = id.substring(0, index).slice(0, -1);
-	  //console.log(" nodeId : "+nodeId);
-	} 
-
+	
 	const parts = id.split("_");
 	var nodeType =parts[parts.length - 1]; // SRanBs
-	//console.log("nodeTypeeee..."+nodeType);
+	
+	if (index !== -1) {
+		  var nodeId = id.substring(0, index).slice(0, -1);
+	}else{
+		  var splittedNodeId = id.split(nodeType)[0];
+		  var nodeId= splittedNodeId.split("_0_")[0];
+	}
 	
 	if ($("#" + id).is(":checked")) {
 		//console.log("checked");
@@ -589,13 +583,17 @@ function showMarkerSingleSite(id) {
 
 
 function PanTreeSites(id){
-	//console.log("PanTreeSites/id");
+	console.log("PanTreeSites/id");
+	console.log(" id : "+id);
 	var index = id.indexOf("WARE_2");
-	//console.log(" index : "+index);
+	console.log(" index : "+index);
 	if (index !== -1) {
 	  var nodeId = id.substring(0, index).slice(0, -1);
-	  //console.log(" nodeId : "+nodeId);
-	} 
+	  console.log(" nodeId : "+nodeId);
+	}else{
+		var secondLastIndex = id.lastIndexOf("_", id.lastIndexOf("_") - 1); // Find the second last index of '_'
+		var nodeId = id.substring(0, secondLastIndex); // Get the substring from 0 to the second last index
+	}
 	
 	if(nodeId!=markersSite)
 	{
