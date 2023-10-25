@@ -159,7 +159,6 @@ public class AutoParserController {
 	public Map<String, Object> loadFileDWDMhuawei(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws SecurityException, IOException, InterruptedException, SQLException, ParseException{
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		System.out.println("hello nokia loader");
 //		LoadFilesAOSS_WIN myClass = new LoadFilesAOSS_WIN();
 		LoadFileDWDMHuawei myClass = new LoadFileDWDMHuawei();
 		try {
