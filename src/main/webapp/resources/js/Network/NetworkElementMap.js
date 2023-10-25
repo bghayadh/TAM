@@ -163,7 +163,7 @@ function create_Marker_Click(Id,Name,Long,Lat,markers,marker_Cluster,data) {
 	       // console.log("spanElement-------",spanElement);
 	        
 	        var Initialparent = $("#initial_ul").find(' > ul > li');
-	        console.log("Initialparent-------",Initialparent);
+	        //console.log("Initialparent-------",Initialparent);
 	    	$("#initial_ul > .folder > svg").addClass('fa-folder-open').removeClass('fa-folder'); 
 	        Initialparent.show();
 	        liElement.closest('.NodeType').find('.NodeTypeFolder').find('> .folder > svg').removeClass('fa fa-folder').addClass('fa-folder-open');	
