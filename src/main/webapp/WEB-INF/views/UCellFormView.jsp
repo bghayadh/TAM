@@ -477,70 +477,12 @@
 </tr>
 
 
-     <tr>
-    <td width="40%" valign="top" class="left_col" style="margin-right: 10px;">
-        <div class="form-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text">	Mode Of Operation </span>
-                <input type="text" id="modeOfOperation" value="${modeOfOperation}" class="form-control text-input"  />
-            </div>
-        </div>
-    </td>
-    <td width="5%" valign="top" class="left_col"></td>
-     
-    <td width="40%" valign="top" class="left_col">
-        <div class="form-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text">Antena Shared With 4G</span>
-                <input type="text" id="antena4G" value="${antena4G}" class="form-control text-input"  />
-            </div>
-        </div>
-    </td>
-</tr>
+  
 
 
-     <tr>
-    <td width="40%" valign="top" class="left_col" style="margin-right: 10px;">
-        <div class="form-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text">GSM Antenna 1 Manufacturer </span>
-                <input type="text" id="manufacture1" value="${manufacture1}" class="form-control text-input"  />
-            </div>
-        </div>
-    </td>
-    <td width="5%" valign="top" class="left_col"></td>
-     
-    <td width="40%" valign="top" class="left_col">
-        <div class="form-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text">GSM Antenna Model 1</span>
-                <input type="text" id="model1" value="${model1}" class="form-control text-input"  />
-            </div>
-        </div>
-    </td>
-</tr>
+    
 
 
-<tr>
-    <td width="40%" valign="top" class="left_col" style="margin-right: 10px;">
-        <div class="form-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text">GSM Antenna 2 Manufacturer </span>
-                <input type="text" id="manufacture2" value="${manufacture2}" class="form-control text-input"  />
-            </div>
-        </div>
-    </td>
-    <td width="5%" valign="top" class="left_col"></td>
-     
-    <td width="40%" valign="top" class="left_col">
-        <div class="form-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text">GSM Antenna Model 2</span>
-                <input type="text" id="model2" value="${model2}" class="form-control text-input"  />
-            </div>
-        </div>
-    </td>
-</tr>
 
 <tr>
     <td width="40%" valign="top" class="left_col" style="margin-right: 10px;">
@@ -757,28 +699,7 @@
 </tr>
     </table>
 </div>
-
-                   
-                   
-                    
-                   
-
-                   
-
-
-                   
-
-                   
-
-                  
-
- 					
-
-                   
-
-                   
-                 
-                </div>
+        </div>
 
                    </div>
             </div>
@@ -897,12 +818,6 @@
                         "cellName":$("#cellName").val(),
                 	    "datOnAir": $("#datOnAir").val(),
                 	    "siteSubType": $("#siteSubType").val(),
-                	    "modeOfOperation": $("#modeOfOperation").val(),
-                	    "antena4G": $("#antena4G").val(),
-                	    "manufacture1": $("#manufacture1").val(),
-                	    "model1": $("#model1").val(),
-                	    "manufacture2": $("#manufacture2").val(),
-                	    "model2": $("#model2").val(),
                 	    "gain": $("#gain").val(),
                 	    "beam": $("#beam").val(),
                 	    "azimuth": $("#azimuth").val(),

@@ -478,21 +478,21 @@
 
 
      <tr>
-    <td width="40%" valign="top" class="left_col" style="margin-right: 10px;">
+ <td width="40%" valign="top" class="left_col">
         <div class="form-group">
             <div class="input-group-prepend">
-                <span class="input-group-text">	Mode Of Operation </span>
-                <input type="text" id="modeOfOperation" value="${modeOfOperation}" class="form-control text-input"  />
+                <span class="input-group-text">Antena Shared With 2G</span>
+                <input type="text" id="antena2G" value="${antena2G}" class="form-control text-input"  />
             </div>
         </div>
     </td>
     <td width="5%" valign="top" class="left_col"></td>
      
-    <td width="40%" valign="top" class="left_col">
+    <td width="40%" valign="top" class="left_col" style="margin-right: 10px;">
         <div class="form-group">
             <div class="input-group-prepend">
-                <span class="input-group-text">Antena Shared With 4G</span>
-                <input type="text" id="antena4G" value="${antena4G}" class="form-control text-input"  />
+                <span class="input-group-text"> Antenna  Manufacturer </span>
+                <input type="text" id="manufacture" value="${manufacture}" class="form-control text-input"  />
             </div>
         </div>
     </td>
@@ -500,50 +500,17 @@
 
 
      <tr>
-    <td width="40%" valign="top" class="left_col" style="margin-right: 10px;">
+     <td width="40%" valign="top" class="left_col">
         <div class="form-group">
             <div class="input-group-prepend">
-                <span class="input-group-text">GSM Antenna 1 Manufacturer </span>
-                <input type="text" id="manufacture1" value="${manufacture1}" class="form-control text-input"  />
+                <span class="input-group-text"> Antenna Model</span>
+                <input type="text" id="model" value="${model}" class="form-control text-input"  />
             </div>
         </div>
     </td>
     <td width="5%" valign="top" class="left_col"></td>
      
-    <td width="40%" valign="top" class="left_col">
-        <div class="form-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text">GSM Antenna Model 1</span>
-                <input type="text" id="model1" value="${model1}" class="form-control text-input"  />
-            </div>
-        </div>
-    </td>
-</tr>
-
-
-<tr>
-    <td width="40%" valign="top" class="left_col" style="margin-right: 10px;">
-        <div class="form-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text">GSM Antenna 2 Manufacturer </span>
-                <input type="text" id="manufacture2" value="${manufacture2}" class="form-control text-input"  />
-            </div>
-        </div>
-    </td>
-    <td width="5%" valign="top" class="left_col"></td>
-     
-    <td width="40%" valign="top" class="left_col">
-        <div class="form-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text">GSM Antenna Model 2</span>
-                <input type="text" id="model2" value="${model2}" class="form-control text-input"  />
-            </div>
-        </div>
-    </td>
-</tr>
-
-<tr>
-    <td width="40%" valign="top" class="left_col" style="margin-right: 10px;">
+   <td width="40%" valign="top" class="left_col" style="margin-right: 10px;">
         <div class="form-group">
             <div class="input-group-prepend">
                 <span class="input-group-text">Antenna Gain </span>
@@ -551,9 +518,10 @@
             </div>
         </div>
     </td>
-    <td width="5%" valign="top" class="left_col"></td>
-     
-    <td width="40%" valign="top" class="left_col">
+</tr>
+
+<tr>
+   <td width="40%" valign="top" class="left_col">
         <div class="form-group">
             <div class="input-group-prepend">
                 <span class="input-group-text">Beam Width</span>
@@ -561,10 +529,8 @@
             </div>
         </div>
     </td>
-</tr>
-
-
-<tr>
+    <td width="5%" valign="top" class="left_col"></td>
+     
     <td width="40%" valign="top" class="left_col" style="margin-right: 10px;">
         <div class="form-group">
             <div class="input-group-prepend">
@@ -573,8 +539,10 @@
             </div>
         </div>
     </td>
-    <td width="5%" valign="top" class="left_col"></td>
-     
+</tr>
+
+
+<tr>
     <td width="40%" valign="top" class="left_col">
         <div class="form-group">
             <div class="input-group-prepend">
@@ -583,11 +551,9 @@
             </div>
         </div>
     </td>
-</tr>
-
-
-<tr>
-    <td width="40%" valign="top" class="left_col" style="margin-right: 10px;">
+    <td width="5%" valign="top" class="left_col"></td>
+     
+     <td width="40%" valign="top" class="left_col" style="margin-right: 10px;">
         <div class="form-group">
             <div class="input-group-prepend">
                 <span class="input-group-text">Electrical Tilt </span>
@@ -595,9 +561,11 @@
             </div>
         </div>
     </td>
-    <td width="5%" valign="top" class="left_col"></td>
-     
-    <td width="40%" valign="top" class="left_col">
+</tr>
+
+
+<tr>
+   <td width="40%" valign="top" class="left_col">
         <div class="form-group">
             <div class="input-group-prepend">
                 <span class="input-group-text">Mechanical Tilt </span>
@@ -605,10 +573,8 @@
             </div>
         </div>
     </td>
-</tr>
-
-
-<tr>
+    <td width="5%" valign="top" class="left_col"></td>
+     
     <td width="40%" valign="top" class="left_col" style="margin-right: 10px;">
         <div class="form-group">
             <div class="input-group-prepend">
@@ -617,8 +583,10 @@
             </div>
         </div>
     </td>
-    <td width="5%" valign="top" class="left_col"></td>
-     
+</tr>
+
+
+<tr>
     <td width="40%" valign="top" class="left_col">
         <div class="form-group">
             <div class="input-group-prepend">
@@ -627,14 +595,24 @@
             </div>
         </div>
     </td>
-</tr>
-
-<tr>
+    <td width="5%" valign="top" class="left_col"></td>
+     
     <td width="40%" valign="top" class="left_col" style="margin-right: 10px;">
         <div class="form-group">
             <div class="input-group-prepend">
-                <span class="input-group-text">Approximate Feeder Size </span>
+                <span class="input-group-text">Approximate Feeder Length </span>
                 <input type="text" id="approx" value="${approx}" class="form-control text-input"  />
+            </div>
+        </div>
+    </td>
+</tr>
+
+<tr>
+    <td width="40%" valign="top" class="left_col">
+        <div class="form-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">TMA MHA </span>
+                <input type="text" id="TMA" value="${TMA}" class="form-control text-input"  />
             </div>
         </div>
     </td>
@@ -643,8 +621,8 @@
     <td width="40%" valign="top" class="left_col">
         <div class="form-group">
             <div class="input-group-prepend">
-                <span class="input-group-text">TMA MHA </span>
-                <input type="text" id="TMA" value="${TMA}" class="form-control text-input"  />
+                <span class="input-group-text">Shared Site </span>
+                <input type="text" id="sharedSite" value="${sharedSite}" class="form-control text-input"  />
             </div>
         </div>
     </td>
@@ -675,7 +653,7 @@
     <td width="40%" valign="top" class="left_col" style="margin-right: 10px;">
         <div class="form-group">
             <div class="input-group-prepend">
-                <span class="input-group-text">Sector Looked Date </span>
+                <span class="input-group-text">Sector Locked Date </span>
                 <input type="text" id="sectorDate" value="${sectorDate}" class="form-control text-input"  />
             </div>
         </div>
@@ -697,8 +675,28 @@
     <td width="40%" valign="top" class="left_col" style="margin-right: 10px;">
         <div class="form-group">
             <div class="input-group-prepend">
-                <span class="input-group-text">AT </span>
-                <input type="text" id="AT" value="${AT}" class="form-control text-input"  />
+                <span class="input-group-text">Diplexer </span>
+                <input type="text" id="Diplexer" value="${Diplexer}" class="form-control text-input"  />
+            </div>
+        </div>
+    </td>
+    <td width="5%" valign="top" class="left_col"></td>
+     
+    <td width="40%" valign="top" class="left_col">
+        <div class="form-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Diplexer Purpose </span>
+                <input type="text" id="dipPurpose" value="${dipPurpose}" class="form-control text-input"  />
+            </div>
+        </div>
+    </td>
+</tr>
+        <tr>
+    <td width="40%" valign="top" class="left_col" style="margin-right: 10px;">
+        <div class="form-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Status </span>
+                <input type="text" id="Status" value="${status}" class="form-control text-input"  />
             </div>
         </div>
     </td>
@@ -708,27 +706,7 @@
         <div class="form-group">
             <div class="input-group-prepend">
                 <span class="input-group-text">Master Sector Id </span>
-                <input type="text" id="masterId" value="${masterId}" class="form-control text-input"  />
-            </div>
-        </div>
-    </td>
-</tr>
-        <tr>
-    <td width="40%" valign="top" class="left_col" style="margin-right: 10px;">
-        <div class="form-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text">Flag </span>
-                <input type="text" id="flag" value="${flag}" class="form-control text-input"  />
-            </div>
-        </div>
-    </td>
-    <td width="5%" valign="top" class="left_col"></td>
-     
-    <td width="40%" valign="top" class="left_col">
-        <div class="form-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text">Status </span>
-                <input type="text" id="status" value="${status}" class="form-control text-input"  />
+                <input type="text" id="masterSectorID" value="${masterSectorID}" class="form-control text-input"  />
             </div>
         </div>
     </td>
@@ -739,8 +717,8 @@
     <td width="40%" valign="top" class="left_col" style="margin-right: 10px;">
         <div class="form-group">
             <div class="input-group-prepend">
-                <span class="input-group-text">Nep Synch </span>
-                <input type="text" id="nepSynch" value="${nepSynch}" class="form-control text-input"  />
+                <span class="input-group-text">AT </span>
+                <input type="text" id="AT" value="${AT}" class="form-control text-input"  />
             </div>
         </div>
     </td>
@@ -749,12 +727,35 @@
     <td width="40%" valign="top" class="left_col">
         <div class="form-group">
             <div class="input-group-prepend">
+                <span class="input-group-text">Flag </span>
+                <input type="text" id="flag" value="${flag}" class="form-control text-input"  />
+            </div>
+        </div>
+    </td>
+</tr>
+
+      <tr>
+   <td width="40%" valign="top" class="left_col" style="margin-right: 10px;">
+        <div class="form-group">
+            <div class="input-group-prepend">
                 <span class="input-group-text">Circle Id </span>
                 <input type="text" id="circleId" value="${circleId}" class="form-control text-input"  />
             </div>
         </div>
     </td>
+    <td width="5%" valign="top" class="left_col"></td>
+     
+    <td width="40%" valign="top" class="left_col">
+        <div class="form-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Nep Synch </span>
+                <input type="text" id="nepSynch" value="${nepSynch}" class="form-control text-input"  />
+            </div>
+        </div>
+    </td>
 </tr>
+
+   
     </table>
 </div>
 
@@ -891,38 +892,43 @@
                 url: "${pageContext.request.contextPath}/CellFormViewSave",
                 dataType: "json",
                 data: {
-                        "cellpk":$("#cellpk").val(),
-                        "passivePK":$("#passivePK").val(),
-                        "cellId":$("#cellId").val(),
-                        "cellName":$("#cellName").val(),
-                	    "datOnAir": $("#datOnAir").val(),
-                	    "siteSubType": $("#siteSubType").val(),
-                	    "modeOfOperation": $("#modeOfOperation").val(),
-                	    "antena4G": $("#antena4G").val(),
-                	    "manufacture1": $("#manufacture1").val(),
-                	    "model1": $("#model1").val(),
-                	    "manufacture2": $("#manufacture2").val(),
-                	    "model2": $("#model2").val(),
-                	    "gain": $("#gain").val(),
-                	    "beam": $("#beam").val(),
-                	    "azimuth": $("#azimuth").val(),
-                	    "AGL": $("#AGL").val(),
-                	    "electric": $("#electric").val(),
-                	    "mechanical": $("#mechanical").val(),
-                	    "ret": $("#ret").val(),
-                	    "feederSize": $("#feederSize").val(),
-                	    "approx": $("#approx").val(),
-                	    "TMA": $("#TMA").val(),
-                	    "remarks": $("#remarks").val(),
-                	    "sectorStatus": $("#sectorStatus").val(),
-                	    "sectorDate": $("#sectorDate").val(),
-                	    "lockedReason": $("#lockedReason").val(),
-                	    "AT": $("#AT").val(),
-                	    "masterId": $("#masterId").val(),
-                	    "flag": $("#flag").val(),
-                	    "status": $("#status").val(),
-                	    "nepSynch": $("#nepSynch").val(),
-                	    "circleId": $("#circleId").val(),
+                               "cellpk":$("#cellpk").val(),
+                               "passivePK":$("#passivePK").val(),
+                                "cellId":$("#cellId").val(),
+                                 "cellName":$("#cellName").val(),
+                                 "datOnAir": $("#datOnAir").val(),
+                         	    "siteSubType": $("#siteSubType").val(),
+                         	    "antena2G": $("#antena2G").val(),
+                         	    "manufacture": $("#manufacture").val(),
+                         	    "model": $("#model").val(),
+                         	    "gain": $("#gain").val(),
+                         	    "beam": $("#beam").val(),
+                         	    "azimuth": $("#azimuth").val(),
+                         	    "AGL": $("#AGL").val(),
+                         	    "electric": $("#electric").val(),
+                         	    "mechanical": $("#mechanical").val(),
+                         	    "ret": $("#ret").val(),
+                         	    "feederSize": $("#feederSize").val(),
+                         	    "approx": $("#approx").val(),
+                         	    "TMA": $("#TMA").val(),
+                         	    "remarks": $("#remarks").val(),
+                         	    "sectorStatus": $("#sectorStatus").val(),
+                         	    "sectorDate": $("#sectorDate").val(),
+                         	    "lockedReason": $("#lockedReason").val(),
+                         	    "AT": $("#AT").val(),
+                         	    "flag": $("#flag").val(),
+                         	    "status": $("#Status").val(),
+                         	    "nepSynch": $("#nepSynch").val(),
+                         	    "circleId": $("#circleId").val(),
+                         	    "sharedSite": $("#sharedSite").val(),
+                         	    "Diplexer": $("#Diplexer").val(),
+                         	    "dipPurpose": $("#dipPurpose").val(),
+                         	    "masterSectorID": $("#masterSectorID").val(),
+                         	
+                             
+                                	
+                                	                        	   
+                        	
                 },
                 success: function (data) {
                     if (data.cellPK) {
