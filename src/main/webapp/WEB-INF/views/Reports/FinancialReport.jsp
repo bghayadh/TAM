@@ -42,14 +42,6 @@
 	    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/almgrid/Collapse.css" />
 		<script type="text/javascript" src="${pageContext.request.contextPath}/resources/almgrid/gridAppendRows.js"></script>
 		
-		<!--  Chart script -->
-        <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.easypiechart.js"></script>
-        <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/Chart.js"></script>
-        <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/fusioncharts.js"></script>
-        <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/fusioncharts.charts.js"></script>
-        <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/fusioncharts.theme.candy.js"></script>
-        <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/fusioncharts.theme.zune.js"></script>
-        <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/fusioncharts.theme.ocean.js"></script>
 	    
 	    <!--  MultiSelect Script -->
         <link href="${pageContext.request.contextPath}/resources/css/virtual-select.min.css" rel="stylesheet"    >
@@ -60,7 +52,6 @@
 			
 		<!-- Google Maps Script -->
 		<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/clustererplus.js"></script>
-	    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/Reports/SimAgentSalesGoogleMaps.js"></script>
 	
 	    <!-- export scripts -->
         <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jspdf-1.5.3-jspdf.min.js"></script>
@@ -68,25 +59,11 @@
        
 </head>
 <style>
-.pos{
-position:relative;
-    padding: 10px;
-    text-align:center;
-    font-size:20px;
-    color: #4169E1;
-}
+
 .wid{
 width:100%;
 }
-.ui-autocomplete {
-	            	max-height: 270px;
-					overflow-y: auto; /* prevent horizontal scrollbar */
-					overflow-x: both; /* add padding to account for vertical scrollbar */
-					padding-right: 0px;
-					font-size:15px;
-					z-index:9999;
-					
-	        		}
+
 #clearButton{
 background-color:white;
 color:orange;
@@ -147,79 +124,7 @@ z-index: 3;
 margin: 70px; 
 }
 
-.dot {
-height: 15px;
-width: 15px;
-border-radius: 50%;
-display: inline-block;
-}
-.dotYellow {
-height: 15px;
-width: 15px;
-border-radius: 50%;
-display: inline-block;
-background:#FFDC00;
 
-}
-
-.dotBlue {
-height: 15px;
-width: 15px;
-border-radius: 50%;
-display: inline-block;
-background:#0080ff;
-
-}
-.dotRed {
-height: 15px;
-width: 15px;
-border-radius: 50%;
-display: inline-block;
-background:red;
-
-}
-.dotPink {
-height: 15px;
-width: 15px;
-border-radius: 50%;
-display: inline-block;
-background:#FF00FF;
-
-}
-.dotPurple {
-height: 15px;
-width: 15px;
-border-radius: 50%;
-display: inline-block;
-background:#8A2BE2;
-
-}
-.green {
-background:green;
-}
-
-.redDark {
-background:#4D0207;
-}
-.blue {
-background:#0080ff;
-}
-
-.yellow {
-background:#FFDC00;
-}
-
-
-.red{
-background:red; }
-
-.pink{
-background:#FF00FF;
-}
-
-.purple{
-background:#8A2BE2;
-}
 .cadr{
 border:0.01em solid grey;
 }
@@ -336,7 +241,7 @@ max-width: 100%;
   <c:set var="pg" value="report" scope="session"  />
   <jsp:include page="${request.contextPath}/headerController"></jsp:include>
 	
-	<div Style=" left: 0; bottom: 0;" id="Revenue Div">
+	<div Style=" left: 0; bottom: 0;" id="Financial Div">
 	<div class="container-fluid">     
 	     <div class="row"><p></p></div>
 			<div class="row second" >	
@@ -485,6 +390,7 @@ max-width: 100%;
                   </div>
 			   </div>
 	     </div>
+	     
 		</div>	
 	<div class="row" id="row_Circle" style="display: none;">	     
 			<div class="col-md-3">
@@ -582,7 +488,7 @@ max-width: 100%;
  
   
   <div class="panel panel-default" style="margin-bottom:3px;" >
-    <div class="panel-heading" role="tab" id="headingTwo">
+    <div class="panel-heading" role="tab" id="headingOne">
       <h4 class="panel-title">
        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
           Grid Table
@@ -690,25 +596,7 @@ max-width: 100%;
 														<ul class="dropdown-menu filter-dropdown-ul"></ul>
 													</li>
 												</th>
-												
-												<th>Node ID 
-													<li class="filter-dropdown dropdown">
-														<button class="almgrid-filter" data-toggle="dropdown"> 
-														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
-														</button>
-														<ul class="dropdown-menu filter-dropdown-ul"></ul>
-													</li>
-												</th>
-												
-												<th>Node Name 
-													<li class="filter-dropdown dropdown">
-														<button class="almgrid-filter" data-toggle="dropdown"> 
-														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
-														</button>
-														<ul class="dropdown-menu filter-dropdown-ul"></ul>
-													</li>
-												</th>
-												
+																								
 												<th>Site ID 
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown"> 
@@ -719,6 +607,23 @@ max-width: 100%;
 												</th>
 												
 												<th>Site Name
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> 
+														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
+														</button>
+														<ul class="dropdown-menu filter-dropdown-ul"></ul>
+													</li>
+												</th>
+												<th>Longitude
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> 
+														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
+														</button>
+														<ul class="dropdown-menu filter-dropdown-ul"></ul>
+													</li>
+												</th>
+												
+												<th>Latitude 
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown"> 
 														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
@@ -913,6 +818,8 @@ max-width: 100%;
 
       </div>
       </div>
+
+  
     </div>
   </div>
 </div>
@@ -1022,8 +929,8 @@ $(document).ready(function() {
 	     		var data = [];
 	     	    exportArrayGrid = [];
 	    		data.push('\r');
-	       		data.push(["FAR ID", "Item Code", "Item Name", "Last Modified Date","Item Serial Number","Item Name Register","PO ID","Node ID","Node Name","Site ID","Site Name","Initial Cost","Net Cost","Accumulated Depreciation"]);
-	     		
+	       		data.push(["FAR ID", "Item Code", "Item Name", "Last Modified Date","Item Serial Number","Item Name Register","PO ID","Site ID","Site Name","Longitude","Latitude","Initial Cost","Net Cost","Accumulated Depreciation"]);
+	       		
         for (var i = 0; i < dataArray.length; i++) {
          
   			data.push('\r');
@@ -1045,7 +952,7 @@ $(document).ready(function() {
            netCost = netCost.toFixed(2);
            accuDepr = accuDepr.toFixed(2);
            
-           $("#initialCostFilteredFar").val(initCost.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")); // .toLocaleString() is used to add comma to the number
+           $("#initialCostFilteredFar").val(initCost.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
            $("#netCostFilteredFar").val(netCost.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
            $("#accuDeprFilteredFar").val(accuDepr.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
     
@@ -1056,7 +963,7 @@ $(document).ready(function() {
             $("#netCostFilteredFar").val('0.0');
             $("#accuDeprFilteredFar").val('0.0');		   			  		
 	     }
-  
+  			
  	        // Method for pagination almgrid-pagecount-box
   	        $("#" + gridContainerId).find(".almgrid-pagecount-box").attr("id", tableId + "_pagecount");
   	        $("#" + gridContainerId).find(".pagination-div").attr("id", tableId + "_pagination");
@@ -1084,8 +991,7 @@ $(document).ready(function() {
   	        this.initFlag++;
   	       },
          });
-    
- 
+		 
 	$('#clearButton'). click(function(){  
         document.getElementById('startLongitude').value = '';
         document.getElementById('startLatitude').value = '';
@@ -1161,13 +1067,13 @@ $(document).ready(function() {
 					+'</ul></li></th><th> Item Serial Number<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul">'
 					+'</ul></li></th><th> Item Name Register<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul">'
 					+'</ul></li></th><th> PO ID <li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul">'
-					+'</ul></li></th><th>Node ID<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i	class="fa fa-list almgrid-filter-i"	aria-hidden="true"></i></button>'
+					+'</ul></li></th><th>Site ID<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i	class="fa fa-list almgrid-filter-i"	aria-hidden="true"></i></button>'
 					+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul">	</ul></li></th>'
-					+'<th>Node Name<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
-					+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'						
-					+'<th>Site ID<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
-					+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'	
 					+'<th>Site Name<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
+					+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'						
+					+'<th>Longitude<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
+					+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'	
+					+'<th>Latitude<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
 					+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'	
 					+'<th>Initial Cost<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
 					+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'	
@@ -1282,7 +1188,7 @@ $(document).ready(function() {
   			       		    var data = [];
   			       	       exportArrayGrid = [];
   			       		   data.push('\r');
-  			       		   data.push(["FAR ID", "Item Code", "Item Name", "Last Modified Date","Item Serial Number","Item Name Register","PO ID","Node ID","Node Name","Site ID","Site Name","Initial Cost","Net Cost","Accumulated Depreciation"]);
+  			       		   data.push(["FAR ID", "Item Code", "Item Name", "Last Modified Date","Item Serial Number","Item Name Register","PO ID","Site ID","Site Name","Longitude","Latitude","Initial Cost","Net Cost","Accumulated Depreciation"]);
   			       		
   			       		
   			           for (var i = 0; i < dataArray.length; i++) {

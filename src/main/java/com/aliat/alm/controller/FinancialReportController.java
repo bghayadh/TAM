@@ -20,8 +20,6 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.transform.Transformers;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +32,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.aliat.alm.common.ALMSessions;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.FinancialReport;
-import com.aliat.alm.models.FixedAssetRegisterListView;
-import com.aliat.alm.models.SimAgentSales;
 import com.aliat.alm.services.LoginServices;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
@@ -77,22 +72,23 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 		        		  txALM = sessionALM.beginTransaction();
 		 		       	  notifications.headerNotifications(sessionALM, model);
 		 		         try { 
-		 		        	query = sessionALM.createSQLQuery("SELECT farID, itemCode, itemName, lastModifiedDate,itemSN,itemNameRegister,poID,nodeID,nodeName,siteID,siteName,initCost,netCost,accuDepr FROM ( "
-							           + " SELECT A.FAR_ID as farID, A.ITEM_CODE as itemCode, A.ITEM_NAME as itemName,TO_CHAR(A.LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') as lastModifiedDate, A.ITEM_SN as itemSN,A.ITEM_NAME_REGISTER as itemNameRegister, A.PO_ID as poID,COALESCE(A.NODE_ID, ' ') as nodeID, COALESCE(A.NODE_NAME, ' ') as nodeName, B.SITE_ID AS siteID, B.SITE_NAME AS siteName , A.INITIALCOST as initCost, A.NETCOST as netCost , A.ACCUMULDEPRECAMNT as accuDepr , "
-							           + " ROW_NUMBER() OVER (PARTITION BY A.FAR_ID ORDER BY B.SITE_ID DESC) AS rn FROM FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID "
+		 		        	query = sessionALM.createSQLQuery("SELECT farID, itemCode, itemName, lastModifiedDate,itemSN,itemNameRegister,poID,siteID,siteName,longitude,latitude,initCost,netCost,accuDepr FROM ( "
+							           + " SELECT A.FAR_ID as farID, A.ITEM_CODE as itemCode, A.ITEM_NAME as itemName,TO_CHAR(A.LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') as lastModifiedDate, A.ITEM_SN as itemSN,A.ITEM_NAME_REGISTER as itemNameRegister, A.PO_ID as poID, B.SITE_ID AS siteID, B.SITE_NAME AS siteName , C.LONGITUDE as longitude,C.LATITUDE as latitude, A.INITIALCOST as initCost, A.NETCOST as netCost , A.ACCUMULDEPRECAMNT as accuDepr , "
+							           + " ROW_NUMBER() OVER (PARTITION BY A.FAR_ID ORDER BY B.SITE_ID DESC) AS rn FROM FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID "
 							           + " WHERE A.CREATED_DATE >=  trunc(SYSDATE - INTERVAL '1' YEAR) AND A.created_date < (trunc(sysdate) ) + 1   ) WHERE rn = 1 ORDER BY lastModifiedDate DESC ");
 		 		        	
-		 		         
-		 		         
+		 		        	 
 					         @SuppressWarnings("unchecked")
 					     	List<FinancialReport> ListFAR = (List<FinancialReport>)  ((SQLQuery) query)
 									.addScalar("farID").addScalar("itemCode").addScalar("itemName")
 					       			.addScalar("lastModifiedDate").addScalar("itemSN")
-					       			.addScalar("itemNameRegister").addScalar("poID").addScalar("nodeID").addScalar("nodeName").addScalar("siteID").addScalar("siteName").addScalar("initCost")
+					       			.addScalar("itemNameRegister").addScalar("poID").addScalar("siteID").addScalar("siteName").addScalar("longitude").addScalar("latitude").addScalar("initCost")
 					       			.addScalar("netCost").addScalar("accuDepr")
 					       			.setResultTransformer(Transformers.aliasToBean(FinancialReport.class)).list();
 		 		          model.addAttribute("financialReportList",mapper.writeValueAsString(ListFAR));	
+		 		         
 		 		          
+		 		       
 		 		         query = sessionALM.createSQLQuery("Select SUM(INITIALCOST) as initialCost, SUM(ACCUMULDEPRECAMNT) as AccumDepr, SUM(NETCOST) as netCost from FIXED_ASSET_REGISTRY "
 						           + " WHERE CREATED_DATE >=  trunc(SYSDATE - INTERVAL '1' YEAR) AND created_date < (trunc(sysdate) ) + 1    ");
 						 
@@ -178,7 +174,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 			} 
 			else {
 				selectedOption = domainOptions.concat(",");
-				// Split the string of technologies on comma to get each technology separately
+				// Split the string  on comma to get each domain separately
 				strList = selectedOption.split(",");
 				StringBuilder allDomainOption = new StringBuilder();
 
@@ -199,7 +195,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 			else {
 				
 				selectedOption = subDomainOptions.concat(",");
-				// Split the string of technologies on comma to get each technology separately
+				// Split the string on comma to get each subdomain separately
 				strList = selectedOption.split(",");
 				StringBuilder allSubDomainOption = new StringBuilder();
 
@@ -219,7 +215,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 			else {
 				
 				selectedOption = vendorOptions.concat(",");
-				// Split the string of technologies on comma to get each technology separately
+				// Split the string  on comma to get each vendor separately
 				strList = selectedOption.split(",");
 				StringBuilder allVendorOption = new StringBuilder();
 
@@ -238,7 +234,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 			else {
 				
 				selectedOption = typeOptions.concat(",");
-				// Split the string of technologies on comma to get each technology separately
+				// Split the string  on comma to get each type separately
 				strList = selectedOption.split(",");
 				StringBuilder allTypeOption = new StringBuilder();
 
@@ -275,7 +271,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 			 String radius = request.getParameter("radius");
 			 double distance = 0.0;			 
 			
-			//List<FinancialReport> listFAR = new ArrayList<FinancialReport>();
 			List<Object[]> listFARTemp = new ArrayList<Object[]>();
 			List<Object[]> listCircleRange = new ArrayList<Object[]>();
 			List<Object[]> listFAR = new ArrayList<Object[]>();
@@ -293,7 +288,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 				try {
 					 startDate = new Timestamp(formatter.parse(start_Date).getTime());
 					 endDate = new Timestamp(formatter.parse(end_Date).getTime());						
-					session = almsessions.getSession();
+					 session = almsessions.getSession();
 
 					if (session != null && session.isOpen()) {
 
@@ -301,14 +296,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 							
 							
 						
-							 str = "SELECT farID, itemCode, itemName, lastModifiedDate,itemSN,itemNameRegister,poID,nodeID,nodeName,siteID,siteName,initCost,netCost,accuDepr FROM ( "
-							           + " SELECT A.FAR_ID as farID, A.ITEM_CODE as itemCode, A.ITEM_NAME as itemName,TO_CHAR(A.LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') as lastModifiedDate, A.ITEM_SN as itemSN,A.ITEM_NAME_REGISTER as itemNameRegister, A.PO_ID as poID,COALESCE(A.NODE_ID, ' ') as nodeID, COALESCE(A.NODE_NAME, ' ') as nodeName, B.SITE_ID AS siteID, B.SITE_NAME AS siteName , A.INITIALCOST as initCost, A.NETCOST as netCost , A.ACCUMULDEPRECAMNT as accuDepr , "
-							           + " ROW_NUMBER() OVER (PARTITION BY A.FAR_ID ORDER BY B.SITE_ID DESC) AS rn FROM FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID "
-							           + " WHERE ( upper(A.ITEM_CODE) LIKE upper('%" + itemCode + "%') AND upper(A.ITEM_NAME) LIKE upper('%" + itemName + "%') AND upper(A.ITEM_MODEL) LIKE upper('%" + itemModel + "%') AND upper(A.ITEM_PART_NUMBER) LIKE upper ('%" + itemPartNo + "%') )  ";
-
-							 //This query includes the longitude and latitude to be used in calculating the harversine distance in circle range
-							 strTemp = "SELECT * FROM ( "
-							           + " SELECT A.FAR_ID as farID, A.ITEM_CODE as itemCode, A.ITEM_NAME as itemName,TO_CHAR(A.LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') as lastModifiedDate, A.ITEM_SN as itemSN,A.ITEM_NAME_REGISTER as itemNameRegister, A.PO_ID as poID,COALESCE(A.NODE_ID, ' ') as nodeID, COALESCE(A.NODE_NAME, ' ') as nodeName, B.SITE_ID AS siteID, B.SITE_NAME AS siteName , C.LONGITUDE as longitude,C.LATITUDE as latitude, "
+							 str = "SELECT farID, itemCode, itemName, lastModifiedDate,itemSN,itemNameRegister,poID,siteID,siteName,longitude,latitude,initCost,netCost,accuDepr FROM ( "
+							           + " SELECT A.FAR_ID as farID, A.ITEM_CODE as itemCode, A.ITEM_NAME as itemName,TO_CHAR(A.LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') as lastModifiedDate, A.ITEM_SN as itemSN,A.ITEM_NAME_REGISTER as itemNameRegister, A.PO_ID as poID,B.SITE_ID AS siteID, B.SITE_NAME AS siteName ,C.LONGITUDE as longitude,C.LATITUDE as latitude, A.INITIALCOST as initCost, A.NETCOST as netCost , A.ACCUMULDEPRECAMNT as accuDepr , "
 							           + " ROW_NUMBER() OVER (PARTITION BY A.FAR_ID ORDER BY B.SITE_ID DESC) AS rn FROM FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID "
 							           + " WHERE ( upper(A.ITEM_CODE) LIKE upper('%" + itemCode + "%') AND upper(A.ITEM_NAME) LIKE upper('%" + itemName + "%') AND upper(A.ITEM_MODEL) LIKE upper('%" + itemModel + "%') AND upper(A.ITEM_PART_NUMBER) LIKE upper ('%" + itemPartNo + "%') )  ";
 
@@ -320,9 +309,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 									str = str + " AND A.CREATED_DATE between TO_DATE('" + start_Date
 											+ "','MM/DD/YYYY HH:MI AM') and TO_DATE('" + end_Date + "','MM/DD/YYYY HH:MI AM')";
 									
-									strTemp = strTemp + " AND A.CREATED_DATE between TO_DATE('" + start_Date
-											+ "','MM/DD/YYYY HH:MI AM') and TO_DATE('" + end_Date + "','MM/DD/YYYY HH:MI AM')";
-									
 									totalStr = totalStr + " AND CREATED_DATE between TO_DATE('" + start_Date
 											+ "','MM/DD/YYYY HH:MI AM') and TO_DATE('" + end_Date + "','MM/DD/YYYY HH:MI AM')";
 								
@@ -331,22 +317,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 							 
 							 if (!StringUtils.equalsIgnoreCase(vendor, "")) {
 								 str = str + " AND A.VENDOR IN ( "+vendor+ " )";
-								 strTemp = strTemp + " AND A.VENDOR IN ( "+vendor+ " )";
 								 totalStr = totalStr + " AND VENDOR IN ( "+vendor+ " )";
 							 }
 							 if (!StringUtils.equalsIgnoreCase(domain, "")) {
 								 str = str + " AND A.DOMAIN IN ( "+domain+ " )";
-								 strTemp = strTemp + " AND A.DOMAIN IN ( "+domain+ " )";
 								 totalStr = totalStr + " AND DOMAIN IN ( "+domain+ " )";
 							 }
 							 if (!StringUtils.equalsIgnoreCase(subDomain, "")) {
 								 str = str + " AND A.SUB_DOMAIN IN ( "+subDomain+ " )";
-								 strTemp = strTemp + " AND A.SUB_DOMAIN IN ( "+subDomain+ " )";
 								 totalStr = totalStr + " AND SUB_DOMAIN IN ( "+subDomain+ " )";
 							 }
 							 if (!StringUtils.equalsIgnoreCase(type, "")) {
 								 str = str + " AND A.TYPE IN ( "+type+ " )";
-								 strTemp = strTemp + " AND A.TYPE IN ( "+type+ " )";
 								 totalStr = totalStr + " AND TYPE IN ( "+type+ " )";
 							 }
 							 
@@ -417,17 +399,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 				}// end of checked strt/end coordinate checkbox
 						
 						str = str + "  ) WHERE rn = 1 ORDER BY lastModifiedDate DESC  ";
-						strTemp = strTemp + "  ) WHERE rn = 1 ORDER BY lastModifiedDate DESC  ";
 
 						Query query = session.createSQLQuery(str);
+						
+						listFARTemp = query.list(); // To use it in circle range calculation
+
 						listFAR =  ((SQLQuery) query)
 								.addScalar("farID").addScalar("itemCode").addScalar("itemName")
 				       			.addScalar("lastModifiedDate").addScalar("itemSN")
-				       			.addScalar("itemNameRegister").addScalar("poID").addScalar("nodeID").addScalar("nodeName").addScalar("siteID").addScalar("siteName").addScalar("initCost")
+				       			.addScalar("itemNameRegister").addScalar("poID").addScalar("siteID").addScalar("siteName").addScalar("longitude").addScalar("latitude").addScalar("initCost")
 				       			.addScalar("netCost").addScalar("accuDepr")
 				       			.setResultTransformer(Transformers.aliasToBean(FinancialReport.class)).list();
 									
-					
+
 						//Get the total of initial,net cost and accumulated depr of fetched FAR records
 						q=session.createSQLQuery(totalStr);
 						result = (Object[]) q.uniqueResult();						
@@ -444,21 +428,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 						
 						
 						
-						q = session.createSQLQuery(strTemp);
-						listFARTemp = q.list();
-						strTemp="";
 						
 						//If circle range is checked 
 						if (( radius != null && !radius.equalsIgnoreCase("") && Double.parseDouble(radius) > 0) && (longitude != null && !longitude.equalsIgnoreCase("")) && (latitude != null
 								&& !latitude.equalsIgnoreCase(""))) {
-						
+
 							for (int i = 0; i < listFAR.size(); i++) {
 							
 								distance = haversine(Double.parseDouble(longitude), Double.parseDouble(latitude),
-										Double.valueOf(listFARTemp.get(i)[13].toString()),Double.valueOf(listFARTemp.get(i)[12].toString()));
+										Double.valueOf(listFARTemp.get(i)[10].toString()),Double.valueOf(listFARTemp.get(i)[9].toString()));
 							
 								if (distance <= Double.parseDouble(radius)) {
-									listCircleRange.add(listFAR.get(i));
+									listCircleRange.add(listFARTemp.get(i));
 								}
 							}
 					

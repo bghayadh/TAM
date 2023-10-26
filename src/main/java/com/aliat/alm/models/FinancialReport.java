@@ -33,17 +33,14 @@ public class FinancialReport {
 	@Column(name = "PO_ID")
 	private String poID;
 	
-	@Column(name = "NODE_ID")
-	private String nodeID;
-	
-	@Column(name = "NODE_NAME")
-	private String nodeName;
-	
 	@Column(name = "SITE_ID")
 	private String siteID;
 
 	@Column(name = "SITE_NAME")
 	private String siteName;
+	
+	private String longitude;
+	private String latitude;
 	
 	@Column(name = "INITIALCOST")
 	private BigDecimal initCost;
@@ -60,8 +57,8 @@ public class FinancialReport {
 
 
 	public FinancialReport(String farID, String itemCode, String itemName,
-			String lastModifiedDate, String itemSN, String itemNameRegister, String poID, String nodeID,
-			String nodeName,String siteID, String siteName,BigDecimal initCost, BigDecimal netCost,BigDecimal accuDepr) {
+			String lastModifiedDate, String itemSN, String itemNameRegister, String poID,String siteID, 
+			String longitude, String latitude,String siteName,BigDecimal initCost, BigDecimal netCost,BigDecimal accuDepr) {
 		super();
 		this.farID = farID;
 		this.itemCode = itemCode;
@@ -70,10 +67,10 @@ public class FinancialReport {
 		this.itemSN = itemSN;
 		this.itemNameRegister = itemNameRegister;
 		this.poID = poID;
-		this.nodeID = nodeID;
-		this.nodeName = nodeName;
 		this.siteID = siteID;
 		this.siteName=siteName;
+		this.longitude = longitude;
+		this.latitude = latitude;
 		this.initCost=initCost;
 		this.netCost=netCost;
 		this.accuDepr=accuDepr;
@@ -149,26 +146,6 @@ public class FinancialReport {
 	}
 
 
-	public String getNodeID() {
-		return nodeID;
-	}
-
-
-	public void setNodeID(String nodeID) {
-		this.nodeID = nodeID;
-	}
-
-
-	public String getNodeName() {
-		return nodeName;
-	}
-
-
-	public void setNodeName(String nodeName) {
-		this.nodeName = nodeName;
-	}
-
-
 	public String getSiteID() {
 		return siteID;
 	}
@@ -186,6 +163,26 @@ public class FinancialReport {
 
 	public void setSiteName(String siteName) {
 		this.siteName = siteName;
+	}
+
+
+	public String getLongitude() {
+		return longitude;
+	}
+
+
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
+	}
+
+
+	public String getLatitude() {
+		return latitude;
+	}
+
+
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
 	}
 
 
