@@ -908,11 +908,11 @@ max-height: 100%;
 <p></p>
 
 <div class="row">
-	<div class="col-md-4">
+	<!--  <div class="col-md-4">
 			<div class="input-group-prepend">
 				<span class="input-group-text">Domain</span>
 				<!--  <input type="text" id="domaine" value="${ardomain}" class="form-control text-input" /> -->
-				<select name="cars" id="domaine" class="form-control">
+			<!-- 	<select name="cars" id="domaine" class="form-control">
     				<option value="mad" <c:if test = "${ardomain =='mad'}"> selected </c:if>>Mobile Access Domain</option>
     				<option value="itd" <c:if test = "${ardomain =='itd'}"> selected </c:if>>Transport Domain</option>
     				<option value="icd" <c:if test = "${ardomain =='icd'}"> selected </c:if>>Core Domain</option>
@@ -921,7 +921,7 @@ max-height: 100%;
 			</div>
 
 				
-		</div>
+		</div>-->
 	
 	<div class="col-md-4">
 				<div class="form-group">
@@ -942,7 +942,63 @@ max-height: 100%;
 			</div>
 	</div>
 </div>
+	<div class="row">
+	<div class="col-md-3">
+			<div class="form-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">Domain</span>
+					<select id="arDomain" aria-label="Default select example" class="form-control">
+						<option value="Transmission" <c:if test = "${arDomain =='Transmission'}" > selected </c:if> >Transmission</option>
+						<option value="RAN" <c:if test = "${arDomain =='RAN'}" > selected </c:if>>RAN</option>								
+						<option value="Core" <c:if test = "${arDomain =='Core'}" > selected </c:if>>Core</option>								
+						<option value="Enterprise" <c:if test = "${arDomain =='Enterprise'}" > selected </c:if>>Enterprise</option>								
+					</select>
+					</div>
+			</div>
+	</div>
+	<div class="col-md-3">
+			<div class="form-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">Sub Domain</span>
+					<select id="arSubDomain" aria-label="Default select example" class="form-control">
+						<option value="" <c:if test = "${arSubDomain ==''}" > selected </c:if> ></option>
+						<option value="IP" <c:if test = "${arSubDomain =='IP'}" > selected </c:if>>IP</option>								
+						<option value="FiberOptic" <c:if test = "${arSubDomain =='FiberOptic'}" > selected </c:if>>Fiber Optic</option>								
+						<option value="MicrowaveLink" <c:if test = "${arSubDomain =='MicrowaveLink'}" > selected </c:if>>Microwave Link</option>								
+					</select>
+					</div>
+			</div>
+	</div>
+	<div class="col-md-3">
+			<div class="form-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">Vendor</span>
+					<select id="arVendor" aria-label="Default select example" class="form-control">
+						<option value="Nokia" <c:if test = "${arVendor =='Nokia'}" > selected </c:if> >NOKIA</option>
+						<option value="Huawei" <c:if test = "${arVendor =='Huawei'}" > selected </c:if>>Huawei</option>								
+						<option value="zte" <c:if test = "${arVendor =='zte'}" > selected </c:if>>ZTE</option>								
+						<option value="Ericsson" <c:if test = "${arVendor =='Ericsson'}" > selected </c:if>>Ericsson</option>								
+						<option value="Tejas" <c:if test = "${arVendor =='Tejas'}" > selected </c:if>>Tejas</option>								
+						<option value="Alcatel" <c:if test = "${arVendor =='Alcatel'}" > selected </c:if>>Alcatel</option>								
+						<option value="Nec" <c:if test = "${arVendor =='Nec'}" > selected </c:if>>NEC</option>								
+					</select>
+					</div>
+			</div>
+	</div>
+		<div class="col-md-3">
+			<div class="form-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">Type</span>
+					<select id="arType" aria-label="Default select example" class="form-control">
+						<option value="" <c:if test = "${arType ==''}" > selected </c:if> ></option>
+						<option value="DWDM" <c:if test = "${arType =='DWDM'}" > selected </c:if>>DWDM</option>								
+						<option value="SDH" <c:if test = "${arType =='SDH'}" > selected </c:if>>SDH</option>								
+					</select>
+					</div>
+			</div>
+	</div>
 	
+		
 	<div class="row">
 		<div class="col-md-12">
 				<div class="form-group">
@@ -2225,7 +2281,6 @@ if ('${ListArSerialNumber}' != "addNew") {
 				"aritemPosition" : $("#itemPosition").val(),
 				"arunit" : $("#unt").val(),
 				"aritemDescription" : $("#itmdescrip").val(),
-				"ardomain" : $("#domaine").val(),
 				"arStatus": $("#arstat").val(),
 				"itemCategory" : itemCat,  
 				"itemCatCode" : itemCatCode,
@@ -2250,6 +2305,10 @@ if ('${ListArSerialNumber}' != "addNew") {
 				"artech4G" : artech4,
 				"artech5G" : artech5,
 				"itemNameReg" : $("#itemNameReg").val(),
+				"arDomain": $("#arDomain").val(),
+				"arSubDomain": $("#arSubDomain").val(),
+				"arVendor": $("#arVendor").val(),
+				"arType": $("#arType").val()
 				/* "email": $("#email").val(),
 				"password":$("#password").val(),
 		  	    "emailTo": $("#emailTo").val(),

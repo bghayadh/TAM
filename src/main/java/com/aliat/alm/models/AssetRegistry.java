@@ -39,7 +39,7 @@ public class AssetRegistry {
 	private String aritemDescription;
 	
 	@Column(name = "DOMAIN")
-	private String ardomain;
+	private String arDomain;
 	
 	@Column(name = "ITEM_TYPE")
 	private String aritemType;
@@ -191,6 +191,16 @@ public class AssetRegistry {
 	@Column(name = "ITEM_CATEGORY")
 	private String itemCat;
 	
+	@Column(name = "SUB_DOMAIN")
+	private String arSubDomain;
+	
+	@Column(name = "VENDOR")
+	private String arVendor;
+	
+	@Column(name = "SUB_DOMAIN_TYPE")
+	private String arType;
+	
+	
 	public AssetRegistry() {
 		
 	}
@@ -198,7 +208,7 @@ public class AssetRegistry {
 	
 	
 	public AssetRegistry(String arID, String arStatus, String arsiteId, String aritemCode, Timestamp arcreatedDate,
-			Timestamp arlastModifiedDate, String aritemName, String arunit, String aritemDescription, String ardomain,
+			Timestamp arlastModifiedDate, String aritemName, String arunit, String aritemDescription, String arDomain,
 			String aritemType, String arcableType, String arweight, String arweightUOM, String arlength, String arwidth,
 			String arheight, String arsizeUOM, char arservice, Timestamp arendOfLife, float arvaluationRate,
 			char ardisabled, String aritemImage, String arwarrantyPeriod, char artech2g, char artech3g, char artech4g,
@@ -208,7 +218,7 @@ public class AssetRegistry {
 			String locationAddress, String lastModUser, String objectID, String itemSN, String itemModel,
 			String itemPartNumber, String supplierName, String wareID, String wareName, String position,
 			String poItemId, String prID, String grID, String itemRootCode, String itemCatCode, String itemCatID,
-			String itemCat) {
+			String itemCat,String arSubDomain, String arVendor, String arType) {
 		super();
 		this.arID = arID;
 		ArStatus = arStatus;
@@ -219,7 +229,7 @@ public class AssetRegistry {
 		this.aritemName = aritemName;
 		this.arunit = arunit;
 		this.aritemDescription = aritemDescription;
-		this.ardomain = ardomain;
+		this.arDomain = arDomain;
 		this.aritemType = aritemType;
 		this.arcableType = arcableType;
 		this.arweight = arweight;
@@ -270,6 +280,9 @@ public class AssetRegistry {
 		this.itemCatCode = itemCatCode;
 		this.itemCatID = itemCatID;
 		this.itemCat = itemCat;
+		this.arSubDomain = arSubDomain;
+		this.arVendor = arVendor;
+		this.arType = arType;
 	}
 
 	public String getArID() {
@@ -334,14 +347,6 @@ public class AssetRegistry {
 
 	public void setAritemDescription(String aritemDescription) {
 		this.aritemDescription = aritemDescription;
-	}
-
-	public String getArdomain() {
-		return ardomain;
-	}
-
-	public void setArdomain(String ardomain) {
-		this.ardomain = ardomain;
 	}
 
 	public String getAritemType() {
@@ -750,6 +755,54 @@ public class AssetRegistry {
 
 	public void setArsiteId(String arsiteId) {
 		this.arsiteId = arsiteId;
+	}
+
+
+
+	public String getArDomain() {
+		return arDomain;
+	}
+
+
+
+	public void setArDomain(String arDomain) {
+		this.arDomain = arDomain;
+	}
+
+
+
+	public String getArSubDomain() {
+		return arSubDomain;
+	}
+
+
+
+	public void setArSubDomain(String arSubDomain) {
+		this.arSubDomain = arSubDomain;
+	}
+
+
+
+	public String getArVendor() {
+		return arVendor;
+	}
+
+
+
+	public void setArVendor(String arVendor) {
+		this.arVendor = arVendor;
+	}
+
+
+
+	public String getArType() {
+		return arType;
+	}
+
+
+
+	public void setArType(String arType) {
+		this.arType = arType;
 	}
 
 	
