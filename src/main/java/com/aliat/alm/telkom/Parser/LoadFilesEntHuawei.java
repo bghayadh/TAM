@@ -402,7 +402,7 @@ public class LoadFilesEntHuawei  {
 				if(!vhmap.isEmpty()) {
 					codeid=Gyear+"_"+ "NODE_HW_ENT_BRD"+'_'+NodeBoardSeq;
 					stmtp =  con.prepareStatement("insert into NODE_BOARD (BOARD_ID,SUBRACKNO,SLOTNO,BOARDNAME,BOARDTYPE,SERIALNUMBER,HARDWAREVERSION,SOFTVER,BIOSVER,ISSUENUMBER,BOMCODE,MODEL,NODE_PK,UPDATE_DATE,FILENAME,STATUS,CREATION_DATE,DOMAIN,VENDOR,OTHERS,ACTIVE_RECORD)"
-						     + "values('"+codeid+"','"+vhmap.get("SubrackID")+"','"+vhmap.get("SlotID")+"','"+vhmap.get("BoardFullName")+"','"+vhmap.get("BoardType")+"','"+vhmap.get("SN")+"','"+vhmap.get("HardwareVersion")+"','"+vhmap.get("SoftwareVersion")+"','"+vhmap.get("BIOSVersion")+"','"+vhmap.get("IssueNumber")+"','"+vhmap.get("BOMCode")+"','"+vhmap.get("Model")+"',(Select DISTINCT NODE_PK from node_active where IP_ADDRESS='"+vhmap.get("NEIPAddress")+"' and active_record='1' and domain='"+Domain+"' and vendor='"+Gprovider+"' fetch first 1 row only) ,sysdate,'"+filename+"','"+vhmap.get("BoardStatus")+"',sysdate,'"+Domain+"','"+Gprovider+"','"+vhmap.get("others")+"','1')"); 
+						     + "values('"+codeid+"','"+vhmap.get("SubrackID")+"','"+vhmap.get("SlotID")+"','"+vhmap.get("BoardFullName")+"','"+vhmap.get("BoardType")+"','"+vhmap.get("SN")+"','"+vhmap.get("HardwareVersion")+"','"+vhmap.get("SoftwareVersion")+"','"+vhmap.get("BIOSVersion")+"','"+vhmap.get("IssueNumber")+"','"+vhmap.get("BOMCode")+"','"+vhmap.get("BoardType")+"',(Select DISTINCT NODE_PK from node_active where IP_ADDRESS='"+vhmap.get("NEIPAddress")+"' and active_record='1' and domain='"+Domain+"' and vendor='"+Gprovider+"' fetch first 1 row only) ,sysdate,'"+filename+"','"+vhmap.get("BoardStatus")+"',sysdate,'"+Domain+"','"+Gprovider+"','"+vhmap.get("others")+"','1')"); 
 					  	stmtp.executeUpdate();
 					  	stmtp.close();
 					NodeBoardSeq++;
@@ -461,7 +461,7 @@ public class LoadFilesEntHuawei  {
 					String node_attr_fk ="";
 					
 					PreparedStatement stmt = con.prepareStatement("insert into NODE_PORT(PORT_ID,SITEINDEX,SLOTNO,SUBSLOTNO,PORTNO,VENDORNAME,UNITPOSITION,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,DOMAIN,VENDOR,PORTTYPE,PORTRATE,OTHERS) "
-            		   		+ "values('" + codeid +"','0','" + vhmap.get("SlotNO") +"','" + vhmap.get("SubSlotNO") +"','" + vhmap.get("PortNO") +"','HW','" + vhmap.get("UnitPos") +"','" + node_fk +"','" + node_attr_fk +"' ,sysdate,'" + filename +"','" + vhmap.get("OperationStatus") +"','0','0','0','0','0','0','1','"+Domain+"','" + Gprovider +"','" + vhmap.get("PortType") +"','" + vhmap.get("PortRate") +"','" + vhmap.get("Others") +"') ");
+            		   		+ "values('" + codeid +"','0','" + vhmap.get("SlotNO") +"','" + vhmap.get("SubSlotNO") +"','" + vhmap.get("PortNO") +"','HW','" + vhmap.get("UnitPos") +"',(select NODE_PK from NODE_ACTIVE where NODE_NAME='"+vhmap.get("NE_Name")+"' AND ACTIVE_RECORD='1' and domain='"+Domain+"' and vendor='"+Gprovider+"' order by creation_date desc fetch first 1 row only),'" + node_attr_fk +"' ,sysdate,'" + filename +"','" + vhmap.get("OperationStatus") +"','0','0','0','0','0','0','1','"+Domain+"','" + Gprovider +"','" + vhmap.get("PortType") +"','" + vhmap.get("PortRate") +"','" + vhmap.get("Others") +"') ");
          		    stmt.setEscapeProcessing(false); 
 					stmt.executeUpdate();
 				     stmt.close();
@@ -770,7 +770,7 @@ public class LoadFilesEntHuawei  {
 			String AdminStatus = "";
 			String OperationStatus = "";
 			String Others = "";
-		
+			String NE_Name="";
 			
 			 nextRow = rowIterator.next();
 				Iterator<Cell> cellIterator=nextRow.cellIterator();
@@ -781,6 +781,11 @@ public class LoadFilesEntHuawei  {
 					Cell nextCell=cellIterator.next();
 					int columnIndex=nextCell.getColumnIndex();
 					switch (columnIndex) {
+					case 0:
+						NE_Name=nextCell.getStringCellValue();
+						if(NE_Name.contains("'")) {
+							NE_Name=NE_Name.replace("'"," ");
+						}
 					case 3:
 						SlotNO=nextCell.getStringCellValue();
 						break;
@@ -820,6 +825,7 @@ public class LoadFilesEntHuawei  {
 					}
 				}
 				 Others="{\"AdministrativeStatus\":"+"\""+AdminStatus+"\""+"}";
+				 hmap.put("NE_Name",NE_Name);
 				 hmap.put( "SlotNO", SlotNO);
 				 hmap.put( "SubSlotNO", SubSlotNO);
 				 hmap.put( "PortNO", PortNO);

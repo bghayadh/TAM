@@ -354,9 +354,12 @@ function CreateTree_Nodes(lst,map){
 	function showMarkerSingleSite(id) {
 		var Id= id.split("_SingleNode")[0];	
 		var index = id.indexOf("WARE_2");
+		var indexnull = id.indexOf("SingleNode");
 		if (index !== -1) {
 		  nodeId = id.substring(0, index).slice(0, -1);
-		} 
+		}else{
+			 nodeId = id.substring(0, indexnull-2).slice(0, -1);
+		}
 		
 		if ($("#" + id).is(":checked")) {
 			var checkboxes = $('[id$="_SingleNode"]');
@@ -385,8 +388,10 @@ function CreateTree_Nodes(lst,map){
 	function PanTreeSites(id){
 		var index = id.indexOf("WARE_2");
 		if (index !== -1) {
-		  nodeId = id.substring(0, index).slice(0, -1);
-		} 
+			nodeId = id.substring(0, index).slice(0, -1);
+		}else{
+			nodeId = id.slice(0, -2);;
+		}
 		
 		if(nodeId!=markersSite)
 		{

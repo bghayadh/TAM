@@ -136,7 +136,8 @@ public class FirstParsing {
 								
 								//insert into AUTO_DISCOVERY_LOGS
 								//logsid= localgetseqNbr(1);
-								
+								logsid= localgetseqNbr(0);
+								logsid=Gyear+"_"+ "LOGS"+'_'+logsid;
 								PreparedStatement insertLogsstmt = con.prepareStatement("insert into AUTO_DISCOVERY_LOGS (LOGS_ID,START_TIME,ACTIVITY_NAME,VENDOR,DOMAIN,STOP_TIME) "
 								 		+ "values('"+logsid+"',? ,'FirstParsing','"+ rsinit2.getString("VENDOR") +"','"+rsinit2.getString("DOMAIN")+"',?) ");
 								 		
@@ -524,9 +525,9 @@ private static void UpdatingSitefromLookUP(String vdomain,String vsubdomain, Str
 	 			vWareID = rs.getString("WARE_ID");
 	 			vWareName = rs.getString("WARE_NAME");
 	 			
-	 			if((vSiteID == null && vSiteID.equalsIgnoreCase("0") && vSiteID.equalsIgnoreCase("null"))
- 		 				&& (vWareID == null && vWareID.equalsIgnoreCase("0") && vWareID.equalsIgnoreCase("null")) 
- 		 				&& (vWareName == null && vWareName.equalsIgnoreCase("0") && vWareName.equalsIgnoreCase("null"))) {
+	 			if((vSiteID == null || vSiteID.equalsIgnoreCase("0") || vSiteID.equalsIgnoreCase("null"))
+ 		 				|| (vWareID == null || vWareID.equalsIgnoreCase("0") || vWareID.equalsIgnoreCase("null")) 
+ 		 				|| (vWareName == null || vWareName.equalsIgnoreCase("0") || vWareName.equalsIgnoreCase("null"))) {
 	 				stmt1 = con.createStatement();
 	 				query = "Select NODE_ID,NODE_NAME,SITE_ID,WARE_ID,WARE_NAME,LONGITUDE,LATITUDE FROM SITE_NODE_LOOKUP"
 	 						+ " WHERE NODE_ID='"+rs.getString("NODE_ID")+"' AND NODE_NAME='"+rs.getString("NODE_ID")+"'";

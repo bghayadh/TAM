@@ -1,423 +1,655 @@
 <!DOCTYPE html>
 <html lang="en">
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<head>
-<meta charset="utf-8">
-    <title></title>
-    <!-- <script src="${pageContext.request.contextPath}/resources/js/jquery.slim.min.js" ></script>  -->
-	<script src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>
-	<script src="${pageContext.request.contextPath}/resources/js/bootstrap.min.js"></script>
-	<link href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
-	<script src="${pageContext.request.contextPath}/resources/js/dataTables.min.js"></script>
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/dataTables.min.css">		  		
-    <script src="${pageContext.request.contextPath}/resources/js/all.min.js"></script>
-    <!-- 		
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/font-awesome.min.css">
-	 -->
-	<link href="${pageContext.request.contextPath}/resources/css/all.min.css" rel="stylesheet">	 	
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/ListView.css">	
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/header.css">
-	
-	
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-            
-</head>
-
-<body>
-  
-  <nav class="navbar navbar-expand-lg  navbar-light bg-light mynav">
-        <a href="#" class="navbar-brand">ALM</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarmenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-
-
-        <div class="collapse navbar-collapse" id="navbarmenu">
-            <ul class="navbar-nav">
-                <li class="nav-item"><a href="/Network" class="nav-link  " style="color: #fff"><i class="fas fa-wifi" style="color: gold"></i> Network</a></li>
-                <li class="nav-item"><a href="/Purchase" class="nav-link "  style="color: #fff"><span class="border-bottom active"><i class="fas fa-money-check" style="color: #20B2AA"></i> Purchasing </span></a></li>
-                <li class="nav-item"><a href="/Inventory" class="nav-link " style="color: #fff"><i class="fas fa-warehouse" style="color: gold"></i> Inventory </a></li>
-                <li class="nav-item"><a href="/Contract" class="nav-link " style="color: #fff"><i class="fas fa-book" style="color: gold"></i> Contracts</a></li>
-                <li class="nav-item"><a href="/Report" class="nav-link  " style="color: #fff"><i class="fas fa-chart-line" style="color: gold"></i> Report </a></li>
-                <li class="nav-item"><a href="/Dashboard" class="nav-link " style="color: #fff"><i class="fas fa-tv" style="color: gold"></i> Dashboard </a></li>
-                <li class="nav-item"><a href="/Setup" class="nav-link " style="color: #fff"><i class="fas fa-cog" style="color: gold"></i> Setup </a></li>
-
-
-
-            </ul>
-            <ul class="navbar-nav ml-auto ">
-                        
-                <!--  li class="nav-item"><a href="#" class="nav-link a1" style="margin-right: 30px;"><i class="fas fa-bell" style="color: gold"></i></a></li-->
-                <li class="dropdown" id="notifactionDropdown"
-				style="margin-right: 60px;"><a href="#" class="nav-link a1" data-toggle="dropdown">
-					<span class="p1" id="bellCounter" data-count=""> 
-					<i class="fa fa-bell" data-count="4b" style="font-size: 20px; color: gold;"></i>
-					</span></a>
- 	
-						<ul class="dropdown-menu dropdown-menu-right customListPadding">
-							<li><p>
-								<a href="#">Site <span class="badge badge-danger float-right"id="siteTask"></span></a></p></li>
-							<li><p>
-								<a href="#">Node <span class="badge badge-danger float-right"id="nodeTask"></span></a></p></li>
-							<li><p>
-								<a href="#">Cell <span class="badge badge-danger float-right"id="cellTask"></span></a></p></li>
-							<li><p>
-								<a href="#">Task<span class="badge badge-danger float-right"id="taskCount"></span></a></p></li>
-						</ul>
-				</li>
-               
-               
-               <!--  li class="nav-item"><a href="#" class="nav-link a1" style="color: white;"><i class="fas fa-user" style="color: gold   "></i> aya shi </a></li -->
- 
-                    <li class=" dropdown "><a href="#" class="nav-link a1" data-toggle="dropdown"
-					style="text-decoration: none;"> <span style="color: #ffbb33 ;">${userFullName}</span>&nbsp;<i
-					class="fa fa-user-circle" data-count="4b" 
-					style="font-size: 20px; color: gold;"></i></a>
-	
-					<div class="dropdown-menu dropdown-menu-right">
-					<a href="/userList" class="dropdown-item"><i
-						class="fa fa-user-edit"></i>Edit Profile</a>
-					<div class="dropdown-divider"></div>
-					<a href="${pageContext.request.contextPath}/logout"
-						class="dropdown-item"><i class="fa fa-power-off"
-						aria-hidden="true"></i> Logout</a>
-					</div></li>
-					
-					 
-                
-            </ul>
-        </div>
-
-    </nav>
-         
-
-
- <!--  end of general head page -->
-	<div class="container-fluid">     
-		<div class="row">
-		<div class="col-md-12">
-		<p></p>
-		</div>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<link rel="shortcut icon" href="">
+		<script src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/moment.min.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/tempusdominus-bootstrap-4.min.js"></script>
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/tempusdominus-bootstrap-4.min.css" />
+		<script src="${pageContext.request.contextPath}/resources/js/printThis.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+		<script src="${pageContext.request.contextPath}/resources/js/bootstrap.min.js"></script>
+		<link href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
+		<script src="${pageContext.request.contextPath}/resources/js/jquery-migrate-3.0.0.min.js"></script>
+		<script src="${pageContext.request.contextPath}/resources/js/jquery2-ui.js"></script>
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/jquery-ui.css" rel="stylesheet" />
+		<script src="${pageContext.request.contextPath}/resources/js/dataTables.min.js"></script>
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/dataTables.min.css">
+		<script src="${pageContext.request.contextPath}/resources/js/all.min.js"></script>
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/font-awesome.min.css">
+		<link href="${pageContext.request.contextPath}/resources/css/all.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/ListView.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/header.css">
+		<link rel="stylesheet" type="text/css"	href="${pageContext.request.contextPath}/resources/css/jquerysctipttop.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/bootstrap-datetimepicker.min.css">
+		<script type="text/javascript"	src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+		<script src="${pageContext.request.contextPath}/resources/js/jspdf.min.js"></script>
+		<script src="${pageContext.request.contextPath}/resources/js/jspdf.plugin.autotable.min.js"></script>
+		<script src="${pageContext.request.contextPath}/resources/js/tableHTMLExport.js"></script>
+		<link href="${pageContext.request.contextPath}/resources/cssgrid/bootstrap-datepicker.min.css" rel='stylesheet'	type='text/css'>
+		<script src="${pageContext.request.contextPath}/resources/scriptsgrid/bootstrap-datepicker.min.js" type='text/javascript'></script>
+		<!-- ALM GRID Scripts -->
+		<script type="text/javascript" src="${pageContext.request.contextPath}/resources/almgrid/pagination.class.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/resources/almgrid/gridAppendRows.js"></script>
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/almgrid/almgrid.css" />
+		<script type="text/javascript" src="${pageContext.request.contextPath}/resources/almgrid/almgrid.class.js"></script>
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/almgrid/clusterize.css" />
+		<script type="text/javascript" src="${pageContext.request.contextPath}/resources/almgrid/clusterize.js"></script>
+		 <!-- export scripts -->
+       <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jspdf-1.5.3-jspdf.min.js"></script>
+       <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/html2canvas-1.3.2-html2canvas.min.js"></script>
+			
 		
-		</div>
-	
-		<div class="row second">
-			<div class="col-md-8">
-			</div>
-			<div class="col-md-4" style="text-align: right;">
-		 		<div class="btn-group pull-right">
-		 			<div class="glyph">
-			 			<button  type="button" id="Fview"  class="btn btn-light" data-toggle="tooltip" 
-			 				data-placement="top" title="Form View"> <i class="fa fa-edit"></i>
-			        	</button>
-			        	<button type="button" id="Lview"  class="btn btn-danger" data-toggle="tooltip"
-			        			data-placement="top" title="List View" style="background: #da6815;"> 
-			        			<i class="fa fa-bars"></i>
-			        	</button>
-						<button type="button" class="btn btn-light" data-toggle="tooltip"
-							data-placement="top" title="Search">
-							<i class="fa fa-search"></i>
-						</button>						
-			        </div>  
-		        </div>
-			</div>
-		</div>
-	
-	
-	<p></p>
-        
-		<div class="row">
-		<div class="col-12 col-sm-12 col-lg-12">	
-		      <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist" style="background-color: #007b7c; margin-top:0px">
-		             <li class="nav-item"><class="nav-link inactive" id="custom-tabs-one-home-tab"style="color: gold;text-align:center;line-height:2.75em; padding-left:5px;">PURCHASE REQUEST LIST</li>
-	 
-		            <li id="Buttons" class="nav-item ml-auto">
-						  
-		                                                                                                                         
-						  </li>
-									
-		     </ul>
-		     
-		</div>
-		</div>
-        <!-- /.card-header -->
-		<div class="card-body">
-			<div class="row">
-				<div class="col-sm-12">
-					<table id="example" class="display table table-bordered nowrap" style="width:100%;">
-						<thead class="thead-light">
-    						<tr>
-								<th style="text-align:center;"><input id="multiselect" name="select_all" value="1" type="checkbox"></th>
-    							<th>Site ID</th>
-    							<th>Supplier </th>
-    							<th>Total Amount</th>
-    							<th>Total Qty </th>
-    							<th>Warehouse</th>
-    							
-    						</tr>
-  						</thead>
-  						<tbody>
-  						</tbody>
-					</table>
+		
+		
+		
+		
+
+
+
+<style>
+    #popUpDiv {
+position:fixed;
+top: 30%;
+left: 50%;
+background-color:#eeeeee;
+border:5px solid #08526d;
+width:400px;
+height:auto;
+margin-left:-150px;
+margin-top:-95px;
+
+-moz-border-radius: 16px;
+-webkit-border-radius: 16px;
+border-radius: 16px;
+box-shadow: 12px 0 15px -4px #000000, -12px 0 15px -4px#000000;
+
+z-index: 9003;
+ /*above nine thousand*/}
+
+.custom-class-assignedto-modal .modal-dialog {
+  width: 100%;
+}
+.custom-class-assignedto-modal .modal-body {
+  height: auto;
+  overflow : auto;
+}
+    
+.modal-header .btnGrp{
+      position: absolute;
+      top: 8px;
+      right: 10px;
+}
+
+
+
+.nav-link.active {
+  color: #1D3763 !important;
+}
+</style>
+	</head>
+
+	<body>
+<%-- 		<c:set var="page" value="Sales" /> --%>
+
+<%-- 		<%@ include file="header.html" %> --%>
+  <c:set var="pg" value="network" scope="session"  />
+  <jsp:include page="${request.contextPath}/headerController"></jsp:include>
+			<!--  end of general head page -->
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12">
+						<p></p>
+					</div>
+
+				</div>
+
+				<div class="row second">
+					<div class="col-md-9">
+					</div>
+					<div class="col-md-3" style="text-align: right;">
+						<div class="btn-group pull-right">
+							<div class="glyph">
+							<!--  -->
+						   <button class="btn btn-secondary" type="button" id="export">Export</button>
+	                     	
+    	                  <!--  -->
+								<button type="button" id="Fview" class="btn btn-light" data-toggle="tooltip"
+									data-placement="top" title="Form View"> <i class="fa fa-edit"></i>
+								</button>
+								<button type="button" id="Lview" class="btn btn-danger" data-toggle="tooltip"
+									data-placement="top" title="List View" style="background: #da6815;">
+									<i class="fa fa-bars"></i>
+								</button>
+								<button type="button" id="searchClient" class="btn btn-light" data-toggle="tooltip" data-placement="top"
+									title="Search">
+									<i class="fa fa-search"></i>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
+<div class="container">
+	<div id ="poModal" class="modal fade  custom-class-assignedto-modal"  tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">	
+		<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+			<div class="modal-content" >
+				<div class="modal-header" style="background-color: #2678CC;" >
+				<h5 class="modal-title" id="myModalLabel1" style="font-weight:bold; color: #E9ECEF;position:relative;top:4px;">   Filter Options </h5>
+				<button type="button" name="closePopup" id="closePopup" class ="close" data-dismiss ="modal"> <i class='fa fa-times'></i> </button>
+				<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change' ></i> </a>
+				</div>
+	<div class="modal-body">
+	 <ul class="nav nav-tabs" id="myTab" role="tablist" style="background-color: #00757C;">
+ 		 <li class="nav-item">
+   			 <a class="nav-link active" id="date-tab" style="color: gold;" data-toggle="tab" href="#date" role="tab" aria-controls="date" aria-selected="true">Date</a>
+  		</li>
+  
+  		<li class="nav-item">
+   			 <a class="nav-link " id="clientinfo-tab" style="color: gold;" data-toggle="tab" href="#clientinfo" role="tab" aria-controls="clientinfo" aria-selected="false">Client Info</a>
+  		</li>
+  		
+  		<li class="nav-item">
+   			 <a class="nav-link " id="agentinfo-tab" style="color: gold;" data-toggle="tab" href="#agentinfo" role="tab" aria-controls="agentinfo" aria-selected="false">Agent Info</a>
+  		</li>
+  		
+  		<li class="nav-item">
+   			 <a class="nav-link " id="status-tab" style="color: gold;" data-toggle="tab" href="#status" role="tab" aria-controls="status" aria-selected="false">Status</a>
+  		</li>
+       <li class="nav-item">
+   			 <a class="nav-link " id="region-tab" style="color: gold;" data-toggle="tab" href="#regioninfo" role="tab" aria-controls="region" aria-selected="false">Region</a>
+  		</li>
+	</ul>
+            
+
+<div class="tab-content">
+  <div class="tab-pane active" id="date" role="tabpanel" aria-labelledby="date-tab">
+  <p></p>
+<div class="container-fluid">
+												<div class="row">
+													<div class="col-sm-6">
+														<div class="form-group">
+															<div class="input-group-prepend">
+																<span class="input-group-text">Start Date</span> <input
+																	type="date"
+																	class="ui-widget ui-widget-content ui-corner-all form-control text-input"
+																	id="popupstartdate" value="${popupstartdate}"
+																	style="width: 675px; height: 37px;" />
+															</div>
+														</div>
+													</div>
+
+													<div class="col-sm-6">
+														<div class="form-group">
+															<div class="input-group-prepend">
+																<span class="input-group-text">End Date</span> <input
+																	type="date"
+																	class="ui-widget ui-widget-content ui-corner-all form-control text-input"
+																	id="popupenddate" value=""
+																	style="width: 675px; height: 37px;" />
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+  </div>
+  <div class="tab-pane" id="clientinfo" role="tabpanel" aria-labelledby="clientinfo-tab">
+<p></p>
+	<form>
+		<div class="container-fluid">
+	<div class="row">
+  		<div class="col-sm-6">
+  			<div class="form-group">
+  				<div class="input-group-prepend">
+  					<span class="input-group-text" >Mobile Number </span>
+   					<input type="text" id="popupMobileNumber"  style="width:675px; height:37px" class="ui-widget ui-widget-content ui-corner-all form-control text-input" />
+  				</div>
+  			</div>
+  		</div>
+  
+		
+	</div>
+</div>
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="form-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text" >First Name</span>
+					<input type="text" class="ui-widget ui-widget-content ui-corner-all form-control text-input" id="popupFname" style="width:675px; height:37px"  />					
 				</div>
 			</div>
 		</div>
+
+		<div class="col-sm-6">
+			<div class="form-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">Last Name</span>
+					<input type="text" class="ui-widget ui-widget-content ui-corner-all form-control text-input" id="popupLname" style="width:674px; height:37px"  />
+				</div>
+			</div>
+		</div>
+
+    </div>
+</div>	
+</form>
+</div> 
+
+<div class="tab-pane" id="agentinfo" role="tabpanel" aria-labelledby="agentinfo-tab">
+<p></p>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="form-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text" >Agent Number</span>
+					<input type="text" class="ui-widget ui-widget-content ui-corner-all form-control text-input" id="popupAgentNumber" style="width:675px; height:37px"  />					
+				</div>
+			</div>
+		</div>
+
+		<div class="col-sm-6">
+			<div class="form-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">Agent Name</span>
+					<input type="text" class="ui-widget ui-widget-content ui-corner-all form-control text-input" id="popupAgentName" style="width:674px; height:37px"  />
+				</div>
+			</div>
+		</div>
+
+    </div>
+</div>	
+</div>
+
+  <div class="tab-pane" id="status" role="tabpanel" aria-labelledby="status-tab">
+<p></p>
+	
+		<div class="container-fluid">
+	<div class="row">
+  		<div class="col-sm-6">
+  			<div class="form-group">
+  				<div class="input-group-prepend">
+  					<span class="input-group-text" >Status </span>
+   					<input type="text" id="popupStatus" style="width:675px; height:37px" class="ui-widget ui-widget-content ui-corner-all form-control text-input" />
+  				</div>
+  			</div>
+  		</div>
+  
 		
 	</div>
+</div>
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="form-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text" >Registration Status</span>
+					<input type="text" class="ui-widget ui-widget-content ui-corner-all form-control text-input" id="popupRegStatus" style="width:675px; height:37px"  />					
+				</div>
+			</div>
+		</div>
+
+		<div class="col-sm-6">
+			<div class="form-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">Tkash Status</span>
+					<input type="text" class="ui-widget ui-widget-content ui-corner-all form-control text-input" id="popupTkashStatus" style="width:674px; height:37px"  />
+				</div>
+			</div>
+		</div>
+
+    </div>
+</div>	
+
+</div> 
+<div class="tab-pane" id="regioninfo" role="tabpanel" aria-labelledby="region-tab">
+<p></p>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="form-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text" >Region</span>
+					<input type="text" class="ui-widget ui-widget-content ui-corner-all form-control text-input" id="popupRegion" style="width:675px; height:37px"  />					
+				</div>
+			</div>
+		</div>
+
+		<div class="col-sm-6">
+			<div class="form-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">Area</span>
+					<input type="text" class="ui-widget ui-widget-content ui-corner-all form-control text-input" id="popupArea" style="width:674px; height:37px"  />
+				</div>
+			</div>
+		</div>
+
+    </div>
+</div>	
+</div>
+
+</div>
+</div>
+					
+<div class="modal-footer">
+	<button type="button" id="popUpSubmit" class ="btn btn-default btn-primary BtnActive  " style="color:white;position:relative;">Submit</button>
+	<button type="button" id="popupClearFields" class ="btn btn-default btn-primary BtnActive" style="color:white;position:relative;">Clear Fields</button>
+	<button type="button" id="popUpCancel" class ="btn btn-default btn-primary BtnActive" style="color:white;position:relative;">Cancel</button>
+</div>							                
+</div>			
+</div> 
+</div>
+</div>
+
+</div> 
+				<p></p>
+				<div class="row">
+					<div class="col-12 col-sm-12 col-lg-12">
+					   <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist" style="background-color: #007b7c; margin-top:0px">
+		             <li class="nav-item"><class="nav-link inactive" id="custom-tabs-one-home-tab"
+		             style="color: gold;text-align:center;line-height:2.75em; padding-left:5px;">Cell LISTVIEW</li>	
+		             
+		          <li class="nav-item ml-auto">
+    <button type="button" id="deleteButton" class="btn btn-primary BtnActive" disabled>
+        <i class="fa fa-trash"></i> Delete
+    </button>
+
+    <button type="button" id="saveButton" disabled
+        onclick='window.location.href = "${pageContext.request.contextPath}/NodeFormView?type=addNew"'
+        class="btn btn-primary BtnActive">
+        <i class="fa fa-plus"></i> Add
+    </button>
+</li>
+
+		     </ul>
+
+					</div>
+				</div>
+				<!-- /.card-header -->
+				
+<div class="container-fluid">
+<div class="tab-content" id="custom-tabs-one-tabContent">
+
+<div class="tab-pane fade show active" id="custom-tabs-one-home"
+	role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+	<div class="card-body">
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="almgrid-container">
+								<div class="row">
+									<div class="col-sm-4 almgrid-pagecount-box">
+										Show
+										<select class="cmb-row-count almgrid-pagecount">
+											<option value="10" selected>10</option>
+											<option value="25">25</option>
+											<option value="50">50</option>
+											<option value="100">100</option>
+											<option value="500">500</option>
+											<option value="1000">1000</option>
+										</select>
+										Rows
+									</div>
+									<div class="col-md-4">
+											<div id="loaderDiv" style="display: none;">
+												<img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif" width="40px" /><b style="color:#800020;font-size:15px;"> Loading Data ... Please wait</b> 
+											</div>
+									</div>
+									<div class="col-sm-4 almgrid-global-search-box">
+										Search
+										<input type="text" class="form-control almgrid-global-search" />
+									</div>
+								</div>
+								<div id="alertMsgDiv" style="display: none;padding-left: 90px">
+								<br>
+									<b style="color:red;font-size:15px;white-space: nowrap;">The number of original fetched data is exceeding the number of allowed data to show. Please set a filter to reduce the fetched data from this button  </b> 
+									<i class="fa fa-search" style="color:red;border:1px solid black;fontSize:22px;background-color:white;"></i>										
+								</div>
+								<div id="nodeGridTable" class="table-responsive almgrid-table-div">
+									<table id="CellTable" class="table table-striped table-bordered almgrid-table">
+										<thead>
+											<tr class="header">
+												<th class="table-select-all">
+												</th>
+												
+
+											
+												<th>Cell PK
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> <i
+																class="fa fa-list almgrid-filter-i"
+																aria-hidden="true"></i></button>
+														<ul
+															class="dropdown-menu dropdown-menu-right filter-dropdown-ul">
+
+														</ul>
+													</li>
+												</th>
+											
+
+												<th>Cell Id
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> <i
+																class="fa fa-list almgrid-filter-i"
+																aria-hidden="true"></i></button>
+														<ul
+															class="dropdown-menu dropdown-menu-right filter-dropdown-ul">
+
+														</ul>
+													</li>
+												</th>
+													<th>Cell Name
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> <i
+																class="fa fa-list almgrid-filter-i"
+																aria-hidden="true"></i></button>
+														<ul
+															class="dropdown-menu dropdown-menu-right filter-dropdown-ul">
+
+														</ul>
+													</li>
+												</th>
+												<th>	Technology
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> <i
+																class="fa fa-list almgrid-filter-i"
+																aria-hidden="true"></i></button>
+														<ul
+															class="dropdown-menu dropdown-menu-right filter-dropdown-ul">
+
+														</ul>
+													</li>
+												</th>
+
+												<th>Unique Node Id 
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> <i
+																class="fa fa-list almgrid-filter-i"
+																aria-hidden="true"></i></button>
+														<ul
+															class="dropdown-menu dropdown-menu-right filter-dropdown-ul">
+
+														</ul>
+													</li>
+												</th>
+												<th>Node Name
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> <i
+																class="fa fa-list almgrid-filter-i"
+																aria-hidden="true"></i></button>
+														<ul
+															class="dropdown-menu dropdown-menu-right filter-dropdown-ul">
+
+														</ul>
+													</li>
+												</th>
+												<th>Site Id
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> <i
+																class="fa fa-list almgrid-filter-i"
+																aria-hidden="true"></i></button>
+														<ul
+															class="dropdown-menu dropdown-menu-right filter-dropdown-ul">
+
+														</ul>
+													</li>
+												</th>
+												<th>Site Name
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> <i
+																class="fa fa-list almgrid-filter-i"
+																aria-hidden="true"></i></button>
+														<ul
+															class="dropdown-menu dropdown-menu-right filter-dropdown-ul">
+
+														</ul>
+													</li>
+												</th>
+												
+											
+
+												<th>Created Date
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> <i
+																class="fa fa-list almgrid-filter-i"
+																aria-hidden="true"></i></button>
+														<ul
+															class="dropdown-menu dropdown-menu-right filter-dropdown-ul">
+
+														</ul>
+													</li>
+												</th>
+												<th>Last Modified Date
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> <i
+																class="fa fa-list almgrid-filter-i"
+																aria-hidden="true"></i></button>
+														<ul
+															class="dropdown-menu dropdown-menu-right filter-dropdown-ul">
+
+														</ul>
+													</li>
+												</th>
+													
+											
+											</tr>
+
+											<tr>
+												<th class="table-select-all"><input type="checkbox"
+														class="table-select-all-checkbox"></th>
+												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
+												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
+												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
+												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
+												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
+												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
+												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
+												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
+												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
+												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
+												
+											</tr>
+										</thead>
+										<tbody>
+
+										</tbody>
+
+									</table>
+								</div>
+
+								<hr>
+								<div class="pagination-div">
+									<div class="row">
+										<div class="col-sm-7">
+											<p class="pagination-label">
+												Viewing <span>0-0</span>
+												of
+												<span>0</span>
+											</p>
+										</div>
+										<div class="col-sm-5 pagination-buttons">
+											<nav aria-label="Page navigation">
+												<ul class="pagination pagination-buttons justify-content-end">
+													<li class="page-item"><button type="button"
+															class="page-link pagination-previous pagination-button shadow-none">Prev</button>
+													</li>
+													<li class="page-item dropdown-pagination-numbers">
+														<!-- <select class="form-control page-number-select shadow-none">
+														</select> -->
+														<div class="input-group page-number-group-div">
+															<input type="text"
+																class="form-control page-number-select shadow-none" />
+															<input type="text"
+																class="form-control page-number-span shadow-none" />
+														</div>
+													</li>
+													<li class="page-item"><button type="button"
+															class="page-link pagination-next pagination-button shadow-none">Next</button>
+													</li>
+												</ul>
+											</nav>
+										</div>
+									</div>
 
 
-<script> 
-$(document).ready(function() {
-	var delList = ${delList}; var writeForm = ${writeForm}; var addForm = ${addForm};
-	console.log("delList is " +delList+" writeForm is " +writeForm+" addForm is " +addForm);
-	var deleteButton = '<button type="button" id="deleteButton" class="btn btn-primary BtnActive"><i class="fa fa-trash"></i> Delete</button>';
-	var addButton = '<button type="button" id="saveButton" onclick=\'window.location.href = "${pageContext.request.contextPath}/PurchaseReqFormView?type=addNew"\'class="btn btn-primary BtnActive"><i class="fa fa-plus"></i> Add</button>';
-	
-	if(delList == 1){
-		$("#Buttons").prepend(deleteButton);
-	}
-	if(addForm == 1){
-		$("#Buttons").append(addButton);
-	}
-	var bassamData = ${ListGridTable};
-	var code='';
-	var slct = [];
-	//console.log("bassamData is " +bassamData + " first item code is " +bassamData[0]);
-	var table = $('#example').DataTable( {
-	"bProcessing": true,
-    "aaData": bassamData,// <-- your array of objects
-    "aoColumns":[
-    	{
-        	"mData": null,
-          	"bSortable": false,
-	        "mRender" : function ( bassamData, type, full ) { 
-	            	return ''}    		
-    	}, 
-        
-        {
-            "aTargets":[ 1 ],
-            "sType": "String",
-            "mRender": function(url, type, full) {
-           //console.log('chk data : '+full[3]);
-           // how to pass parameter to ItemFormView
-           		var value = "";
-           		if( writeForm == 1){
-           			value = '<a href="'+ '${pageContext.request.contextPath}/PurchaseReqFormView?ID='+full[1] +'&supplier='+full[2] +'">' + url + '</a>';
-           		}
-           		else if( writeForm == 0){
-           			value = url;
-           		}
-            	return value;
-				}
-   
-       },
-      {
-          "mData":[2],
-         },
-         {
-           "aTargets":[ 3 ]
-         , "sType": "String"
-         , "mRender": function(url, type, full) {
-            //console.log('chk data : '+full[3]);
-            if (full[3] == "Transport2") {return    '<a href="'+ '/Inventory' +'">' + url + '</a>';}
-            else {return full[3]; }
-           }
-         },
-         {
-     		"aTargets":[ 4 ]  
-        },
-        {
-    		"aTargets":[ 5 ]   
-       } 
-		],
-          'columnDefs': [
-         {
-            'targets': 0,
-            className : 'select-checkbox',
-            'checkboxes': {
-               'selectRow': true,
-               'selectCallback': function(nodes, selected){
-                  // If "Show all" is not selected
-                  if($('#ctrl-show-selected').val() !== 'all'){
-                     // Redraw table to include/exclude selected row
-                     table.draw(false);                  
-                  }            
-               }
-            },
-         }
-      ],
-		select : {
-			style : 'multi',
-			selector : 'td:first-child'
-		},  
-		'order': [[2, 'asc']],
-			select: true,
-			order : [ [ 0, 'asc' ] ],
-			'select': { style: 'multi',
-      selector : 'td:first-child'
-      },
-      'order': [[2, 'asc']],
-      	dom: 'Blfrtip',
-		"paging":true,
-		"pageLength":10, 
-		"scrollY": 310,
-		"scrollX": true,
-		"ordering":true,
-		"rowReorder": true,
-		"info":       true,
-		"filter":     true,
-		"length":     true,
-		"processing": true,
-		"deferRender": true,
-          //orderable : false,
-      
-   });
-	
-	
-	$('#example_paginate').click( function() {
-		if (table.rows( '.selected', { page: 'current' }).count() != table.rows({ page: 'current' }).count()) {
-			$('#multiselect').prop('checked', false);
-            $('#multiselect').removeClass("selected");
-            console.log(table.rows( '.selected', { page: 'current' }).count());
-      	}
-		else {
-      		$('#multiselect').prop('checked', true);
-      		$('#multiselect').addClass("selected");
-      		console.log('array is: ' +slct);
-      	}
-	});
-	
-	$('#multiselect').on('click', function() {
-	    var num = table.rows({ page: 'current' }).count();   
-	    if ($('#multiselect').hasClass("selected")) {
-	 
-	    	for(i=0; i<num; i++){
-				x=i;
-				table.row(':eq('+x+')', { page: 'current' }).deselect();
-				var pos = table.row(':eq('+x+')', { page: 'current' }).index();
-	    		var row = table.row(pos).data();
-				var str= new Array();
-	      		str=row
-	      		code=str[1];
-	      		removeItem = code;
-	      		console.log('item to remove: '+code);
-	      		slct = jQuery.grep(slct, function(value) {
-					return value != removeItem;
-	      		});
-				}
-				$('#multiselect').prop('checked', false);
-				$('#multiselect').removeClass("selected");
-				slct = slct.filter(function(elem, index, self) {
-					return index === self.indexOf(elem);
+								</div>
+
+							</div>
+
+						</div>
+					</div>
+				</div>
+	</div>
+
+	</div>
+</div>
+
+
+			<script>
+
+
+
+				var CellListData = ${ ListGridTable };
+				
+
+				var tab =0;
+				$(document).ready(function () {
+
+
+					var almgrid = new Almgrid({
+						tableId: "CellTable",
+						dataArray: CellListData,
+						columnLinkNb: [1],
+						selectCheckbox: true
+					});
+					
+
+        		
+        			$(".almgrid-table").on("click", ".almgrid-link", function (e) {
+            			
+            				var param1 = $(this).parents('tr').children('td').find('input').val();
+        					var param = "${pageContext.request.contextPath}/CellFormView?CellPk=" + param1 +"&NavAction=2";
+        					window.location.href = param;
+        					e.preventDefault();
+                	
+    					
+    				});
+        	
+
 				});
-				console.log('array is: ' +slct);
-	    	
-	    }
-	    else {
-	    	
-	    	var i;
-			var x=0;
-			for(i=0; i<num; i++){
-			x=i;
-			table.row(':eq('+x+')', { page: 'current' }).select();
-			var pos = table.row(':eq('+x+')', { page: 'current' }).index();
-			var row = table.row(pos).data();
-			var str= new Array();
-	      	str=row
-	      	code=str[1];
-	      	slct.push(code);
-	      	console.log('array is: ' +slct);
-			}
-			$('#multiselect').prop('checked', true);
-			$('#multiselect').addClass("selected");
-			slct = slct.filter(function(elem, index, self) {
-				return index === self.indexOf(elem);
-			});
-			console.log('array is: ' +slct);
-	    }
-			
-	});
-	
-	
-     $('#example tbody').on( 'click', 'tr', function () {
-     	var $checkbox = $(this).toggleClass('selected')
-		if($(this).hasClass('selected')) {
-    		var pos = table.row(this).index();
-    		var row = table.row(pos).data();
-    		var str= new Array();
-		    str=row
-		    code=str[1];
-		    slct.push(code);
-		    console.log(code);
-		    slct = slct.filter(function(elem, index, self) {
-				return index === self.indexOf(elem);
-			});
-		    console.log('array is: ' +slct);
-		}
-		
-		else { 
-		    $checkbox.removeAttr('checked');
-		    console.log( 'unselected NO' );
-		    var pos = table.row(this).index();
-    		var row = table.row(pos).data();
-    		var str= new Array();
-		    str=row
-		    code=str[1];
-		    removeItem = code;
-		    console.log('item to remove: '+code + ' array is: ' +slct);
-		    slct = jQuery.grep(slct, function(value) {
-        		return value != removeItem;
-      		});
-		    slct = slct.filter(function(elem, index, self) {
-				return index === self.indexOf(elem);
-			});
-      		console.log('array after remove is: '+slct);
-		}
 
-		if (table.rows( '.selected', { page: 'current' }).count() !== table.rows({ page: 'current' }).count()) {
-			$('#multiselect').prop('checked', false);
-            $('#multiselect').removeClass("selected");
-            console.log('array is: ' +slct+ ' array length is: ' +slct.length);
-      	}
-		else {
-      		$('#multiselect').prop('checked', true);
-      		$('#multiselect').addClass("selected");
-      		console.log('array is: ' +slct);
-      	}
-      	console.log('array is: ' +slct);
-         
-		
-    });
 				
-				
- 	$("#deleteButton").click(  function() {
-		console.log('delete now');
-		$.ajax({
-			type : "GET",
-			url : "${pageContext.request.contextPath}/PurchaseReqListViewDelete",
-			dataType : "json",
-			data : {
-				"ID" : slct
-			},
-			success : function(data) {
-				//console.log("The returned data is " +data.BassamTest);
-				location.reload();
-			},
-			error : function(error) {
-				console.log("The error is " + error);
-			}
-		});
-		console.log('slct is: ' + slct);
-	 
- 	});
-
-});
+			</script>
 
 
-</script>
 
+	</body>
 
-           
- </body>
- </html>
+</html>

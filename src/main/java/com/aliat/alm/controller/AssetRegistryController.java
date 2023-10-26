@@ -436,7 +436,6 @@ public class AssetRegistryController {
 		    	model.addAttribute("aritemPosition", assetreg.getPosition());
 		    	model.addAttribute("arunit", assetreg.getArunit());
 		    	model.addAttribute("aritemDescription", assetreg.getAritemDescription());
-		    	model.addAttribute("ardomain", assetreg.getArdomain());
 		    	model.addAttribute("aritemType", assetreg.getAritemType());
 		    	model.addAttribute("arcableType", assetreg.getArcableType());
 		    	model.addAttribute("arweight", assetreg.getArweight());
@@ -445,7 +444,11 @@ public class AssetRegistryController {
 		    	model.addAttribute("arwidth", assetreg.getArwidth());
 		    	model.addAttribute("arheight", assetreg.getArheight());
 		    	model.addAttribute("arsizeUOM", assetreg.getArsizeUOM());
-		    	
+		    	model.addAttribute("arDomain", assetreg.getArDomain());
+		    	model.addAttribute("arSubdomain", assetreg.getArSubDomain());
+		    	model.addAttribute("arVendor", assetreg.getArVendor());
+		    	model.addAttribute("arType", assetreg.getArType());
+
 		    	if (assetreg.getArendOfLife() == null) {
 					date = new Timestamp(System.currentTimeMillis());
 				}
@@ -589,7 +592,7 @@ public class AssetRegistryController {
 		//assetreg.setWareID(request.getParameter("wareID"));
 		assetreg.setArunit(request.getParameter("arunit"));
 		assetreg.setAritemDescription(request.getParameter("aritemDescription"));
-		assetreg.setArdomain(request.getParameter("ardomain"));
+		assetreg.setArDomain(request.getParameter("arDomain"));
 		assetreg.setAritemType(request.getParameter("aritemType"));
 		assetreg.setArcableType(request.getParameter("arcableType"));
 		assetreg.setArweight(request.getParameter("arweight"));
@@ -612,6 +615,9 @@ public class AssetRegistryController {
 		assetreg.setItemNameReg(request.getParameter("itemNameReg"));
 		assetreg.setNodeID(request.getParameter("nodeID"));
 		assetreg.setNodeName(request.getParameter("node_Name"));
+		assetreg.setArSubDomain(request.getParameter("arSubDomain"));
+		assetreg.setArVendor(request.getParameter("arVendor"));
+		assetreg.setArType(request.getParameter("arType"));
 		session.saveOrUpdate(assetreg);
 		
 		

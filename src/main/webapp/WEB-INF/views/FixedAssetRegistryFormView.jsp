@@ -785,7 +785,7 @@ max-height: 100%;
 <p></p>
 
 <div class="row">
-	<div class="col-md-4">
+	<!--<div class="col-md-4">
 			<div class="input-group-prepend">
 				<span class="input-group-text">Domain</span>
 				<span id="domainSpan">
@@ -796,11 +796,11 @@ max-height: 100%;
     				<option value="icd" <c:if test = "${itemDomain =='icd'}"> selected </c:if>>Core Domain</option>
     				<option value="ipd" <c:if test = "${itemDomain =='ipd'}"> selected </c:if>>Passive Domain</option>
   				</select>-->
-  				</span>
+  				<!--</span>
 			</div>
 
 				
-		</div>
+		</div> -->
 	
 	<div class="col-md-4">
 				<div class="form-group">
@@ -821,7 +821,66 @@ max-height: 100%;
 			</div>
 	</div>
 </div>
+	<div class="row">
+	<div class="col-md-3">
+			<div class="form-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">Domain</span>
+					<select id="farDomain" aria-label="Default select example" class="form-control">
+						<option value="Transmission" <c:if test = "${farDomain =='Transmission'}" > selected </c:if> >Transmission</option>
+						<option value="RAN" <c:if test = "${farDomain =='RAN'}" > selected </c:if>>RAN</option>								
+						<option value="Core" <c:if test = "${farDomain =='Core'}" > selected </c:if>>Core</option>								
+						<option value="Enterprise" <c:if test = "${farDomain =='Enterprise'}" > selected </c:if>>Enterprise</option>								
+					</select>
+					</div>
+			</div>
+	</div>
+	<div class="col-md-3">
+			<div class="form-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">Sub Domain</span>
+					<select id="farSubDomain" aria-label="Default select example" class="form-control">
+						<option value="" <c:if test = "${farSubDomain ==''}" > selected </c:if> ></option>
+						<option value="IP" <c:if test = "${farSubDomain =='IP'}" > selected </c:if>>IP</option>								
+						<option value="FiberOptic" <c:if test = "${farSubDomain =='FiberOptic'}" > selected </c:if>>Fiber Optic</option>								
+						<option value="MicrowaveLink" <c:if test = "${farSubDomain =='MicrowaveLink'}" > selected </c:if>>Microwave Link</option>								
+					</select>
+					</div>
+			</div>
+	</div>
+	<div class="col-md-3">
+			<div class="form-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">Vendor</span>
+					<select id="farVendor" aria-label="Default select example" class="form-control">
+						<option value="Nokia" <c:if test = "${farVendor =='Nokia'}" > selected </c:if> >NOKIA</option>
+						<option value="Huawei" <c:if test = "${farVendor =='Huawei'}" > selected </c:if>>Huawei</option>								
+						<option value="zte" <c:if test = "${farVendor =='zte'}" > selected </c:if>>ZTE</option>								
+						<option value="Ericsson" <c:if test = "${farVendor =='Ericsson'}" > selected </c:if>>Ericsson</option>								
+						<option value="Tejas" <c:if test = "${farVendor =='Tejas'}" > selected </c:if>>Tejas</option>								
+						<option value="Alcatel" <c:if test = "${farVendor =='Alcatel'}" > selected </c:if>>Alcatel</option>								
+						<option value="Nec" <c:if test = "${farVendor =='Nec'}" > selected </c:if>>NEC</option>								
+					</select>
+					</div>
+			</div>
+	</div>
+		<div class="col-md-3">
+			<div class="form-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">Type</span>
+					<select id="farType" aria-label="Default select example" class="form-control">
+						<option value="" <c:if test = "${farType ==''}" > selected </c:if> ></option>
+						<option value="DWDM" <c:if test = "${farType =='DWDM'}" > selected </c:if>>DWDM</option>								
+						<option value="SDH" <c:if test = "${farType =='SDH'}" > selected </c:if>>SDH</option>								
+					</select>
+					</div>
+			</div>
+	</div>
 	
+	
+	
+	
+	</div>
 	<div class="row">
 		<div class="col-md-12">
 				<div class="form-group">
@@ -2338,6 +2397,11 @@ if ('${ListSite}' != "addNew") {
 				"dictParameter" :dictModPart,
 				"dictParameternode" : dictNode,
 				"dictParametersite" : dictSite,
+				"farDomain": $("#farDomain").val(),
+				"farSubDomain": $("#farSubDomain").val(),
+				"farVendor": $("#farVendor").val(),
+				"farType": $("#farType").val()
+				
 				/* "email": $("#email").val(),
 				"password":$("#password").val(),
 		  	    "emailTo": $("#emailTo").val(),
