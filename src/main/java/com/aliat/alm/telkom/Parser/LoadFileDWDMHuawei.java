@@ -257,19 +257,7 @@ public class LoadFileDWDMHuawei {
 				// update the seq of the node active based on the size of the list filled from
 				// the csv file
 				stmtp = conalm
-						.prepareStatement("UPDATE SEQ_TABLE SET NODE_ACTIVE = NODE_ACTIVE +" + (records.size() - 4));// records.size()-4)
-																														// is
-																														// used
-																														// to
-																														// remove
-																														// the
-																														// unnecessary
-																														// header
-																														// rows
-																														// in
-																														// the
-																														// csv
-																														// file
+						.prepareStatement("UPDATE SEQ_TABLE SET NODE_ACTIVE = NODE_ACTIVE +" + (records.size() - 4));
 				stmtp.executeUpdate();
 				stmtp.close();
 			}
@@ -279,31 +267,13 @@ public class LoadFileDWDMHuawei {
 				longi = "";
 				lat = "";
 				siteID = "";
-
 				vcodeid = year + "_NODE_" + Gprovider + "_" + Domain + "_" + NodeSeq;
 				rsinit2.close();
 				stmtp1.close();
-				if (records.get(i).get(0).contains("_")) {// if the cell of the csv file contains _ then it may contain
-															// site ID
+				if (records.get(i).get(0).contains("_")) {
 					siteID = records.get(i).get(0).split("_")[0];
 					char charArray[] = siteID.toCharArray();
-					if (Character.isDigit(charArray[0]) && !Character.isDigit(charArray[siteID.length() - 1])) { // if
-																													// the
-																													// first
-																													// character
-																													// of
-																													// the
-																													// possible
-																													// site
-																													// id
-																													// is
-																													// number
-																													// then
-																													// it
-																													// is
-																													// a
-																													// site
-																													// ID.
+					if (Character.isDigit(charArray[0]) && !Character.isDigit(charArray[siteID.length() - 1])) {
 						String sqlStmtinit3 = "select WARE_ID,WARE_NAME,LONGITUDE,LATITUDE from WAREHOUSE WHERE SITE_ID='"
 								+ siteID + "'";
 						stmtp1 = conalm.createStatement();
@@ -349,15 +319,6 @@ public class LoadFileDWDMHuawei {
 				gatewayIP = records.get(i).get(21);
 				patchVersion = records.get(i).get(17);
 				unique_Node_ID = nodeId + "_HW";
-				// others = "{\"NE
-				// ID\":"+"\""+networkRecords.get(i).get(5)+"\","+"\"Fibers/Cables\":"+"\""+networkRecords.get(i).get(6)+"\","+"\"Subnet\":"+"\""+networkRecords.get(i).get(7)+"\","+"\"Subnet
-				// Path\":"+"\""+networkRecords.get(i).get(8)+"\","+"\"Subrack
-				// Type\":"+"\""+networkRecords.get(i).get(9)+"\","+"\"Physical
-				// Location\":"+"\""+networkRecords.get(i).get(13)+"\","+"\"Created
-				// On\":"+"\""+networkRecords.get(i).get(14)+"\","+"\"NE
-				// Alias\":"+"\""+networkRecords.get(i).get(15)+"\","+"\"Remarks\":"+"\""+networkRecords.get(i).get(16)+"\","+"\"LSR
-				// ID\":"+"\""+networkRecords.get(i).get(18)+"\","+"\"Optical
-				// NE\":"+"\""+networkRecords.get(i).get(22)+"\""+"}";
 				others = "{\"NE ID\":" + "\"" + records.get(i).get(5) + "\"," + "\"Fibers/Cables\":" + "\""
 						+ records.get(i).get(6) + "\"," + "\"Subnet\":" + "\"" + records.get(i).get(7) + "\","
 						+ "\"Subnet Path\":" + "\"" + records.get(i).get(8) + "\"," + "\"Subrack Type\":" + "\""

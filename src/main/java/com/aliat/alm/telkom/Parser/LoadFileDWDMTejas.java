@@ -35,14 +35,9 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.hssf.usermodel.HSSFSheet;  
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class LoadFileDWDMTejas {
 
@@ -63,7 +58,7 @@ public class LoadFileDWDMTejas {
 	static String password1;
 	static String db2path;
 	static String username2;
-	static String password2,siteID;
+	static String password2,siteID,unitPosition;
 	static String vfolderfrom,fileType,fileName;
 	
 	static String Gprovider,Domain,subDomain,subDomainType,gateway,gatewayType,gatewayIP,patchVersion,partNumber,others;
@@ -81,7 +76,7 @@ public class LoadFileDWDMTejas {
 	static String tech4 ="0";
 	static String tech5 ="0";
 	static String Gcodeattributid="0";
-	static String vline="0";
+	static String fpgaVersion;
 	static String vcodeid ="0";
 	static HashMap<String, String> vhmap = new HashMap<String, String>();
 	static HashMap<String, String> vhmap2 = new HashMap<String, String>();
@@ -89,7 +84,6 @@ public class LoadFileDWDMTejas {
 	static HashMap<String, String> vhmap12 = new HashMap<String, String>();
 	static PreparedStatement stmtp;
 	static Statement stmtp1;
-	private static ObjectMapper mapper = new ObjectMapper();
 	static ArrayList<String> FileName = new ArrayList<String>();
 	static HashMap<String, String> nodeIDhmap = new HashMap<String, String>();
 
@@ -108,9 +102,8 @@ public class LoadFileDWDMTejas {
 	public static void main(String[] args,String vendor,String domain,String sub_domain,String sub_domainType) throws Exception {
 		
 
-		//System.out.println("Start withh LOAD :" + System.getProperty("user.dir"));
-		
-	 	//objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"/"+"almconfig.dat"));
+		FileName = new ArrayList<String>();
+		allBoards = new ArrayList<HashMap<String, String>>();
 		Resource ConfigResource = new ClassPathResource("almconfig.dat");
 		File configfile = ConfigResource.getFile();
 		FileReader fr=new FileReader(configfile);  
@@ -119,7 +112,6 @@ public class LoadFileDWDMTejas {
 		 while ((strCurrentLine1 = objReader1.readLine()) != null){
 			 String data = strCurrentLine1;
 			 String[] data1 ;
-			 String[] data2 ;
 			 
 			 if (data.contains("projectpath")) {
 				 data1=data.split(";",-1);
@@ -152,7 +144,6 @@ public class LoadFileDWDMTejas {
 			 if (data.contains("readexcelTransOptDWDMTJSfrom")) {
 				 data1=data.split(";",-1);
 				 readfileAIMfrom = data1[1];
-				 data2=readfileAIMfrom.replace("\\","/").split("/",-1);
 				 vfolderfrom=readfileAIMfrom;
 				 Gprovider=vendor;
 				 Domain=domain;
@@ -168,7 +159,6 @@ public class LoadFileDWDMTejas {
 		}
 		 objReader1.close();
 		 
-		 //objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"\\"+"almcircle.dat"));
 		 Resource CircleRsource = new ClassPathResource("almcircle.dat");
 		 File circlefile = CircleRsource.getFile();
 		 fr=new FileReader(circlefile);     
@@ -195,7 +185,7 @@ public class LoadFileDWDMTejas {
 		
 		 // This block configure the logger with handler and formatter  and PATH
 			
-	        fh = new FileHandler(logpath+"\\"+lofilename);
+	        fh = new FileHandler(logpath+"/"+lofilename);
 	        logger.addHandler(fh);
 	        SimpleFormatter formatter = new SimpleFormatter();  
 	        fh.setFormatter(formatter);
@@ -258,19 +248,25 @@ public class LoadFileDWDMTejas {
 									//System.out.println("i........"+i);
 									//System.out.println("FileName.get(i)........"+FileName.get(i));
 									readfile(FileName.get(i));
-									File source = new File(readfileAIMfrom+"\\"+FileName.get(i));
-									File dest = new File(copyfileAIMto+"\\"+FileName.get(i)+".bkp");
+									File source = new File(readfileAIMfrom+"/"+FileName.get(i));
+									File dest = new File(copyfileAIMto+"/"+FileName.get(i)+".bkp");
 									copyFiles(source,dest);							     
-									deleteFiles(readfileAIMfrom+"\\"+FileName.get(i));
+									deleteFiles(readfileAIMfrom+"/"+FileName.get(i));
 								}
+								
+								 logger.info("Load DWDM Tejas Files completed");
+								 System.out.println("Load DWDM Tejas Files completed");
+								 	// update file status to completed
+										 stmtp = con.prepareStatement("update EXECUTE_DOAMIN_VENDOR_FILES set STATUS ='COMPLETED' where DOMAIN='"+Domain+"' and VENDOR='"+ Gprovider +"' and STATUS='IN PROCESS' and SUB_DOMAIN='"+subDomain+"' and TYPE='"+subDomainType+"'");
+										 stmtp.executeUpdate();
+										 stmtp.close();
+					 	  }else {
+					 		 System.out.println("A process already is running , please wait until process ending");
+					 		   logger.info("A process already is running , please wait until process ending");
 					 	  }
 		 	  
 		 	 GetduplicateFilename(Domain,Gprovider,subDomain,subDomainType);
-		 	 logger.info("Load DWDM HW Files completed");
-		 	// update file status to completed
-				 stmtp = con.prepareStatement("update EXECUTE_DOAMIN_VENDOR_FILES set STATUS ='COMPLETED' where DOMAIN='"+Domain+"' and VENDOR='"+ Gprovider +"' and STATUS='IN PROCESS' and SUB_DOMAIN='"+subDomain+"' and TYPE='"+subDomainType+"'");
-				 stmtp.executeUpdate();
-				 stmtp.close();
+	
 		 
 			  conalm.close();
 			  con.close();
@@ -282,7 +278,7 @@ public class LoadFileDWDMTejas {
 		int year = calendar.get(Calendar.YEAR);
 		  
 		//csvparser used to read csv file in order to fill the data in a list of type CSVRecord row by row
-		 CSVParser csvParser = new CSVParser(new FileReader(vfolderfrom + "\\" + fileName), CSVFormat.DEFAULT); 
+		 CSVParser csvParser = new CSVParser(new FileReader(vfolderfrom + "/" + fileName), CSVFormat.DEFAULT); 
 		 List<CSVRecord> networkRecords = new ArrayList<>();
 		 if(fileName.contains("Network")){
 			System.out.println("Tejas DWDM Network Elements.csv Files inprocess...");
@@ -295,46 +291,70 @@ public class LoadFileDWDMTejas {
 			  stmtp1 = conalm.createStatement();
 			  ResultSet rsinit2 = stmtp1.executeQuery(sqlStmtinit2);
 			  while(rsinit2.next()) {
-				  //store the returned result in a variable to be increased each loop instead of accessing the database all the time
-				  //which lead to exceed the maximum number of open cursors.
 				NodeSeq = rsinit2.getInt("NODE_ACTIVE");
-				//update the seq of the node active based on the size of the list filled from the csv file
-			  	stmtp = conalm.prepareStatement("UPDATE SEQ_TABLE SET NODE_ACTIVE = NODE_ACTIVE +"+(networkRecords.size()-1));//records.size()-1) is used to remove the unnecessary header rows in the csv file
+			  	stmtp = conalm.prepareStatement("UPDATE SEQ_TABLE SET NODE_ACTIVE = NODE_ACTIVE +"+(networkRecords.size()-1));
 			  	stmtp.executeUpdate();
 			  	stmtp.close();
 			  }
 			  rsinit2.close();
 			  stmtp1.close();
 			  for(int i=1;i<networkRecords.size();i++) {
+				  wareID = "";
+				  wareName = "";
+				  longi = "";
+				  lat = "";
+				  siteID = "";
+				  
+				  if (networkRecords.get(i).get(1).contains("_")) {
+						siteID = networkRecords.get(i).get(1).trim().split("_")[0];
+						char charArray[] = siteID.toCharArray();
+						if (Character.isDigit(charArray[0]) && !Character.isDigit(charArray[siteID.length() - 1])) {
+							String sqlStmtinit3 = "select WARE_ID,WARE_NAME,LONGITUDE,LATITUDE from WAREHOUSE WHERE SITE_ID='"
+									+ siteID + "'";
+							stmtp1 = conalm.createStatement();
+							ResultSet rsinit3 = stmtp1.executeQuery(sqlStmtinit3);
+							while (rsinit3.next()) {
+								wareID = rsinit3.getString("WARE_ID");
+								wareName = rsinit3.getString("WARE_NAME");
+								longi = rsinit3.getString("LONGITUDE");
+								lat = rsinit3.getString("LATITUDE");
+							}
+							rsinit3.close();
+							stmtp1.close();
+						} else {
+							wareID = "";
+							wareName = "";
+							longi = "";
+							lat = "";
+							siteID = "";
+						}
+
+					} else {
+						wareID = "";
+						wareName = "";
+						longi = "";
+						lat = "";
+						siteID = "";
+					}
 				  
 				  vcodeid=year+"_NODE_"+Gprovider+"_"+Domain+"_"+NodeSeq;
 				  
-				  
-				  nodeId=networkRecords.get(i).get(0);
-				  IPaddress = networkRecords.get(i).get(0);
-				  nodeName = networkRecords.get(i).get(1);
-				  commStatus= networkRecords.get(i).get(6);
-				  nodeType="WDM";
-				  softwareVersion = networkRecords.get(i).get(9);
+				  nodeId=networkRecords.get(i).get(0).trim();
+				  IPaddress = networkRecords.get(i).get(0).trim();
+				  nodeName = networkRecords.get(i).get(1).trim();
+				  commStatus= networkRecords.get(i).get(6).trim();
+				  nodeType="DWDM";
+				  softwareVersion = networkRecords.get(i).get(9).trim();
 				  adminStatus= "0";
 				  LCStatus="0";
 				  patchVersion=networkRecords.get(i).get(20);
 				  unique_Node_ID = nodeId+"_TJS";
-				  nodeModel = null;
+				  nodeModel = networkRecords.get(i).get(3).trim();
 				  MACaddress = null;
 				  partNumber = null;
-				  gateway=null;
-				  gatewayType=null;
-				  gatewayIP=null;
-				  unique_Node_ID = null;
-				  siteID=null;
-				  wareID=null;
-				  wareName=null;
-				  longi=null;
-				  lat=null;
-				 // nodeIDhmap.put(nodeId, vcodeid);
 				  
-				  others = "{\"Partition Label\":"+"\""+networkRecords.get(i).get(2)+"\","+ "\"Product Name\":"+"\""+networkRecords.get(i).get(3)+"\","+ "\"Location\":"+"\""+networkRecords.get(i).get(4)+"\","+"\"Protocol\":"+"\""+networkRecords.get(i).get(5)+"\","+"\"EMS Sync State\":"+"\""+networkRecords.get(i).get(7)+"\","+"\"NMS Sync State\":"+"\""+networkRecords.get(i).get(8)+"\","+"\"EMS Name\":"+"\""+networkRecords.get(i).get(10)+"\","+"\"Creation Time\":"+"\""+networkRecords.get(i).get(11)+"\","+"\"Constraint\":"+"\""+networkRecords.get(i).get(12)+"\","+"\"NMS Enrolled\":"+"\""+networkRecords.get(i).get(13)+"\","+"\" Ethernet IP\":"+"\""+networkRecords.get(i).get(14)+"\","+"\"Modify Time\":"+"\""+networkRecords.get(i).get(15)+"\","+"\"Is GNE\":"+"\""+networkRecords.get(i).get(21)+"\","+"\"Load\":"+"\""+networkRecords.get(i).get(22)+"\""+"}";
+				 			  
+				  others = "{\"Partition Label\":"+"\""+networkRecords.get(i).get(2)+"\","+ "\"Location\":"+"\""+networkRecords.get(i).get(4)+"\","+"\"Protocol\":"+"\""+networkRecords.get(i).get(5)+"\","+"\"EMS Sync State\":"+"\""+networkRecords.get(i).get(7)+"\","+"\"NMS Sync State\":"+"\""+networkRecords.get(i).get(8)+"\","+"\"EMS Name\":"+"\""+networkRecords.get(i).get(10)+"\","+"\"Creation Time\":"+"\""+networkRecords.get(i).get(11)+"\","+"\"Constraint\":"+"\""+networkRecords.get(i).get(12)+"\","+"\"NMS Enrolled\":"+"\""+networkRecords.get(i).get(13)+"\","+"\","+"\"Modify Time\":"+"\""+networkRecords.get(i).get(15)+"\","+"\"Is GNE\":"+"\""+networkRecords.get(i).get(21)+"\","+"\"Load\":"+"\""+networkRecords.get(i).get(22)+"\""+"}";
 					  	stmtp =  con.prepareStatement("insert into NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,WARE_ID,VENDOR,WARE_NAME,IP_ADDRESS,MAC_ADDRESS,SUB_DOMAIN,SOFTWARE_VERSION,STATUS_1,GATEWAY,GATEWAY_TYPE,GATEWAY_IP,STATUS_2,LONGITUDE,LATITUDE,PATCH_VERSION,PART_NUMBER,SUB_DOMAIN_TYPE,OTHERS,ACTIVE_RECORD)"
 						 		+ "values('"+vcodeid+"','"+unique_Node_ID+"','"+nodeId+"','"+nodeName+"','"+nodeType+"','"+Domain+"','"+nodeModel+"','"+tech2+"','"+tech3+"','"+tech4+"','"+tech5+"','"+siteID+"','"+circleid+"',sysdate,sysdate,'"+fileType+"','"+fileName+"','"+commStatus+"','"+wareID+"','"+Gprovider+"','"+wareName+"','"+IPaddress+"','"+MACaddress+"','"+subDomain+"','"+softwareVersion+"','"+adminStatus+"','"+gateway+"','"+gatewayType+"','"+gatewayIP+"','"+LCStatus+"','"+longi+"','"+lat+"','"+patchVersion+"','"+partNumber+"','"+subDomainType+"','"+others+"', '1')"); 
 					  	stmtp.executeUpdate();
@@ -349,28 +369,24 @@ public class LoadFileDWDMTejas {
 		}
 		
 		else if(StringUtils.equalsIgnoreCase(fileName,"Tejas DWDM Cards.xls")) {
-			 System.out.println("Load Tejas DWDM Cards.xls Files inprocess...");
-			// boardFileName = "Tejas DWDM Cards.xls";
-			// xss used to read xls file 
-			 String excelFilePath=vfolderfrom + "\\" + fileName;
-			// FileInputStream inputStream = new FileInputStream("readexcelTransOptDWDMTJSfrom;"+vfolderfrom + "\\" + fileName);
+			 String excelFilePath=vfolderfrom + "/" + fileName;
 			 FileInputStream inputStream = new FileInputStream(excelFilePath);
 			 Workbook workbook=new HSSFWorkbook(inputStream);
 			 Sheet firstSheet=workbook.getSheetAt(0);
 			// get the seq of node_active and update it by number of row 
-			 int rownumb=firstSheet.getLastRowNum();
 			 Iterator<Row> rowIterator=firstSheet.iterator();
 			 Row nextRow = rowIterator.next();
 			 
+			 System.out.println("Size of all boards before while loop is : "+ allBoards.size());
+			 
 			 while(rowIterator.hasNext() ){
-				 // vhmap=getexceldata(firstSheet,nextRow,rowIterator);
 				  nextRow = rowIterator.next();
 				  Iterator<Cell> cellIterator=nextRow.cellIterator();
 				  int rowIndex = nextRow.getRowNum();
 				  others = "";
 				  vhmap = new HashMap<String, String>();
 				  //System.out.println("rowIndex is "+rowIndex);
-				  if(rowIndex >3) {
+				  if(rowIndex >0) {
 						while(cellIterator.hasNext()) {
 							Cell nextCell=cellIterator.next();
 							int columnIndex=nextCell.getColumnIndex();
@@ -378,16 +394,20 @@ public class LoadFileDWDMTejas {
 							switch (columnIndex) {
 							case 0:
 								nodeName =nextCell.getStringCellValue();
-								//System.out.println("ne name "+nextCell.getStringCellValue());
 								break;
 							case 1:
-								boardName=nextCell.getStringCellValue();
+								partNumber =nextCell.getStringCellValue();
 								break;
 							case 2:
+								model=nextCell.getStringCellValue();
 								boardType=nextCell.getStringCellValue();
 								break;
 							case 3:
-								others +="{\" Shelf-Slot \":"+"\""+ nextCell.getStringCellValue();
+								unitPosition=nextCell.getStringCellValue();
+								if(unitPosition != null && unitPosition.contains("-")) {
+									slotnb=unitPosition.split("-")[1];
+									subracknb=unitPosition.split("-")[0];
+								}
 								break;
 							case 4:
 								serialnb=nextCell.getStringCellValue();
@@ -396,58 +416,32 @@ public class LoadFileDWDMTejas {
 								softwareVersion=nextCell.getStringCellValue();
 								break;
 							case 7:
-								others += "\","+ "\" FPGA Version\":"+"\""+nextCell.getStringCellValue()+"\""+"}";
+								fpgaVersion = nextCell.getStringCellValue();
 								break;
 							case 8:
 								hardwareVersion=nextCell.getStringCellValue();
 								break;
 
-							}
-							 
-							  
+							}  
 						}
-						  
+					      others = "{\"Product Code\":"+"\""+partNumber+"\","+"\"FPGA Version\":"+"\""+fpgaVersion+"}";
+
 						  vhmap.put("nodeName", nodeName);
 						  vhmap.put("boardType", boardType);
 						  vhmap.put("serialnb", serialnb);
 						  vhmap.put("softwareVersion", softwareVersion);
 						  vhmap.put("hardwareVersion", hardwareVersion);
+						  vhmap.put("unitposition", unitPosition);
+						  vhmap.put("slotnb", slotnb);
+						  vhmap.put("subracknb", subracknb);
+						  vhmap.put("model", model);
 						  vhmap.put("others", others);
-							  
-						  //System.out.println("vhmap 1 "+vhmap);
-						  
-						 
 						  allBoards.add(vhmap);
-						 // System.out.println("rowIndex before listting boards is "+rowIndex);
-						 // System.out.println("allBoards of row index" +(rowIndex-4)+" is : "+ allBoards.get(rowIndex-4));
-					 
-				 
 						}
-				  
 				   }  
-			// System.out.println("allBoards after while  is : "+ allBoards);
-			 // start of Board (cards)
-			  
-			  // get all node id 
-			  String sqlStmtinit4 = "select NODE_PK,NODE_NAME,DOMAIN,VENDOR,SUB_DOMAIN,SUB_DOMAIN_TYPE from NODE_ACTIVE ";     
-			  stmtp1 = con.createStatement();
-			  ResultSet rsinit4 = stmtp1.executeQuery(sqlStmtinit4);
-			  ArrayList<Object> listofNodes = new ArrayList<Object>();
-			  String domain = null ,vender = null ,sub_Domain = null ,sub_Domain_Type = null;
-			  while(rsinit4.next()) {
-				  vcodeid=rsinit4.getString("NODE_PK");	
-				  nodeName = rsinit4.getString("NODE_NAME");
-				  domain =rsinit4.getString("DOMAIN"); 
-				  vender=rsinit4.getString("VENDOR");
-				  sub_Domain=rsinit4.getString("SUB_DOMAIN");
-				  sub_Domain_Type=rsinit4.getString("SUB_DOMAIN_TYPE");
-				  
-				  Object[] NodeObject = {vcodeid,nodeName, domain, vender,sub_Domain,sub_Domain_Type};
-				  listofNodes.add(NodeObject);
-			  }
-			  rsinit4.close();
-			  stmtp1.close();
-			  System.out.println("listofNodes: "+ mapper.writeValueAsString(listofNodes));
+			 
+			 workbook.close();
+	
 			  
 			  //select the node active sequence from the seq table in alm.
 			  String sqlStmtinit3 = "select NODE_BOARD from SEQ_TABLE";     
@@ -465,67 +459,19 @@ public class LoadFileDWDMTejas {
 			  rsinit3.close();
 			  stmtp1.close();
 			 
-			  //System.out.println("allBoards: "+ allBoards);
-			  
+			  System.out.println("size of all boards after while loop : "+allBoards.size());
 			  for(int i=0;i<allBoards.size();i++) {
-				  //nodeName =  vhmap.get("nodeName");
-				 // HashMap<String, String> board = allBoards.get(String.valueOf(n));
 				  HashMap<String, String> board = new  HashMap<String, String>();
-				  //board = (HashMap<String, String>) listofBoards.get(n);
 				  board = allBoards.get(i);
-				  //System.out.println("board: "+ board);
-				  nodeName = board.get("nodeName");
-				  System.out.println("nodeName: "+ nodeName);
-				  
-				  for(int n=0;n<listofNodes.size();n++) {
-					  Object[] node = (Object[]) listofNodes.get(n);
-					  //System.out.println("node: "+ mapper.writeValueAsString(node));
-					  //System.out.println("node[1]: "+ node[1]);
-                     String nodeNamefrom = (String) node[1];
-                     System.out.println("nodeNamefrom: "+ nodeNamefrom);
-					 // if(StringUtils.equalsIgnoreCase(String.valueOf(node[1]), nodeName)) {
-					 // if(nodeNamefrom == nodeName) {
-					    if(nodeNamefrom.trim().equals(nodeName)) {
-
-						  System.out.println(" Node name exist");
-						  vcodeid= (String) node[0];	
-						 // nodeName = (String) node[2];
-						  domain =(String) node[2]; 
-						  vender=(String) node[3];
-						  sub_Domain=(String) node[4];
-						  sub_Domain_Type=(String) node[5];
-						  
-						  if(vcodeid == null && domain == Domain && vender == Gprovider && sub_Domain == subDomain && sub_Domain_Type == subDomainType ) { 
-							  System.out.println("No Node ID");
-						      vcodeid = "No Node ID";
-					     }
-						  
-					  }/*else {
-						  System.out.println("NO Node name exist");
-					  }*/
-				  }
-				  
-					  
 				  boardId=year+"_NODE_"+Gprovider+"_"+Domain+"_BRD_"+BoardSeq;
-				  boardType = board.get("boardType");
-				  serialnb =  board.get("serialnb");
-				  softwareVersion =  board.get("softwareVersion");
-				  hardwareVersion =  board.get("hardwareVersion");
-				  others = board.get("others");
-					stmtp =  con.prepareStatement("insert into NODE_BOARD (BOARD_ID,SUBRACKNO,SLOTNO,BOARDNAME,BOARDTYPE,SERIALNUMBER,HARDWAREVERSION,SOFTVER,BIOSVER,ISSUENUMBER,BOMCODE,MODEL,NODE_PK,UPDATE_DATE,FILENAME,STATUS,CREATION_DATE,DOMAIN,VENDOR,OTHERS,ACTIVE_RECORD)"
-					     + "values('"+boardId+"','"+subracknb+"','"+slotnb+"','"+boardName+"','"+boardType+"','"+serialnb+"','"+hardwareVersion+"','"+softwareVersion+"','"+biosVersion+"','"+issueNb+"','"+bomCode+"','"+model+"','"+vcodeid+"',sysdate,'"+fileName+"','"+status+"',sysdate,'"+Domain+"','"+Gprovider+"','"+others+"', '1')"); 
+				  stmtp =  con.prepareStatement("insert into NODE_BOARD (BOARD_ID,SUBRACKNO,SLOTNO,BOARDNAME,BOARDTYPE,SERIALNUMBER,HARDWAREVERSION,SOFTVER,BIOSVER,ISSUENUMBER,BOMCODE,MODEL,NODE_PK,UPDATE_DATE,FILENAME,STATUS,CREATION_DATE,DOMAIN,VENDOR,OTHERS,ACTIVE_RECORD,UNITPOSITION)"
+						  + "values('"+boardId+"','"+board.get("subracknb")+"','"+board.get("slotnb")+"','','"+board.get("boardType")+"','"+board.get("serialnb")+"','"+board.get("hardwareVersion")+"','"+board.get("softwareVersion")+"','"+biosVersion+"','"+issueNb+"','"+bomCode+"','"+board.get("model")+"',(select NODE_PK from NODE_ACTIVE where NODE_NAME='"+board.get("nodeName")+"' and domain='"+Domain+"' and vendor='"+Gprovider+"' order by creation_date desc fetch first 1 row only),sysdate,'"+fileName+"','"+status+"',sysdate,'"+Domain+"','"+Gprovider+"','"+board.get("others")+"', '1','"+board.get("unitPosition")+"')"); 
 				  	stmtp.executeUpdate();
 				  	stmtp.close();
-				  	
 				  	BoardSeq++;
-			  
 			  }
-			 
 		}
-		  
-		  
-		  
-		 
+
 	}
 	
 	
@@ -533,7 +479,6 @@ public class LoadFileDWDMTejas {
 		Statement stmt1 = null;
 		Statement stmt2 = null;
 		Statement stmt3 = null;
-		Statement stmt4 = null;
 		int vcount =0;
 		int i=0;
 		
@@ -555,7 +500,6 @@ public class LoadFileDWDMTejas {
 				        	    //Get old creation date of the same file and update rows with old creation date
 				        	 	String query3 = "select node_pk,creation_date from NODE_ACTIVE where NODE_ID='"+ rs2.getString("NODE_ID") +"' and (SITE_ID='"+ rs2.getString("SITE_ID") +"' OR SITE_ID IS NULL) and NODE_NAME ='"+ rs2.getString("NODE_NAME") +"' and CIRCLE_ID ='"+ rs2.getString("CIRCLE_ID") +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"' and SUB_DOMAIN='"+subDomain+"' and SUB_DOMAIN_TYPE ='"+type+"' order by creation_date asc";  
 					            stmt3 = con.createStatement();
-					            //stmt3.setMaxRows(1); 
 					            ResultSet rs3 = stmt3.executeQuery(query3);
 					            while (rs3.next()) {       
 					            	System.out.println(rs3.getString("node_pk") +":"+ rs3.getString("creation_date"));
@@ -580,10 +524,7 @@ public class LoadFileDWDMTejas {
 					       			 	vdate=vyear + "-"+ vmonth +"-"+ vday;
 			                            /// end convert date
 					       			    
-					       			// System.out.println("after formatting : "+vdate);
-					       			 	// update creation date with old creation date
-					            		//System.out.println("update NODE_ACTIVE set creation_date = DATE '"+ vdate +"' where filename ='"+ rs2.getString("filename") +"'");
-					            		PreparedStatement updtmt8 = con.prepareStatement("update NODE_ACTIVE set creation_date = TIMESTAMP '" + rs3.getString("creation_date") + "',update_date=sysdate where NODE_NAME ='"+ rs2.getString("NODE_NAME") +"' and CIRCLE_ID ='"+ rs2.getString("CIRCLE_ID") +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"' and SUB_DOMAIN='"+subDomain+"' and SUB_DOMAIN_TYPE ='"+type+"'");
+					       			 	PreparedStatement updtmt8 = con.prepareStatement("update NODE_ACTIVE set creation_date = TIMESTAMP '" + rs3.getString("creation_date") + "',update_date=sysdate where NODE_NAME ='"+ rs2.getString("NODE_NAME") +"' and CIRCLE_ID ='"+ rs2.getString("CIRCLE_ID") +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"' and SUB_DOMAIN='"+subDomain+"' and SUB_DOMAIN_TYPE ='"+type+"'");
 						    			updtmt8.executeUpdate();
 						    			updtmt8.close();
 					            		
@@ -606,13 +547,6 @@ public class LoadFileDWDMTejas {
 						}
 						rs2.close();  // end of dupliacted node_pk
 						stmt2.close();
-						
-			    //}
-				//catch(Exception e)  
-				//{  
-				//	logger.info("error at GetduplicateFilename is :"+ e.toString());
-				//	System.out.println("error at GetduplicateFilename is :"+ e.toString()); 
-				//}
 	    
 	    }
 	}
@@ -624,6 +558,9 @@ public class LoadFileDWDMTejas {
 	     stmt.executeUpdate();
 	     stmt.close();
 	     
+	     stmt= con.prepareStatement("delete from  NODE_BOARD where " + fieldname+" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor+"'");
+	     stmt.executeUpdate();
+	     stmt.close();
 			/*
 			 * PreparedStatement stmt1 =
 			 * con.prepareStatement("delete from  NODE_ACTIVE_ATTRIBUTE where " + fieldname
@@ -651,9 +588,7 @@ public class LoadFileDWDMTejas {
 			 * +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor
 			 * +"'"); stmt.executeUpdate(); stmt.close();
 			 * 
-			 * stmt1 = con.prepareStatement("delete from  NODE_BOARD where " + fieldname
-			 * +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor
-			 * +"'"); stmt1.executeUpdate(); stmt1.close();
+			
 			 * 
 			 * stmt2 = con.prepareStatement("delete from  NODE_PORT where " + fieldname
 			 * +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor
@@ -731,125 +666,7 @@ public class LoadFileDWDMTejas {
 	     
 	}
 	 
-	 private static void deleteTempNodeTables() throws SQLException  {
-		 try {
-		 // delete all rows related to node_pk from all nodes tables
-		 PreparedStatement stmt = conalm.prepareStatement("delete from TEMP_NODE_ACTIVE where  DOMAIN='Mobile Access Domain' and VENDOR='" + Gprovider +"'"); 
-	     stmt.executeUpdate();
-	     stmt.close();
-	     
-			/*
-			 * PreparedStatement stmt1 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_ACTIVE_ATTRIBUTE where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt1.executeUpdate(); stmt1.close();
-			 * 
-			 * PreparedStatement stmt2 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_RACK where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt2.executeUpdate(); stmt2.close();
-			 * 
-			 * stmt = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_CABINET where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt.executeUpdate(); stmt.close();
-			 * 
-			 * stmt1 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_HOSTVER where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt1.executeUpdate(); stmt1.close();
-			 * 
-			 * stmt2 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_FRAME where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt2.executeUpdate(); stmt2.close();
-			 * 
-			 * stmt = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_SLOT where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt.executeUpdate(); stmt.close();
-			 * 
-			 * stmt1 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_BOARD where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt1.executeUpdate(); stmt1.close();
-			 * 
-			 * stmt2 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_PORT where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt2.executeUpdate(); stmt2.close();
-			 * 
-			 * stmt = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_ACCESSORY where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt.executeUpdate(); stmt.close();
-			 * 
-			 * stmt1 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_HOST where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt1.executeUpdate(); stmt1.close();
-			 * 
-			 * stmt2 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_SUBRACK where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt2.executeUpdate(); stmt2.close();
-			 * 
-			 * stmt = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_GCELL where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt.executeUpdate(); stmt.close();
-			 * 
-			 * stmt1 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_BTS where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt1.executeUpdate(); stmt1.close();
-			 * 
-			 * stmt2 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_UCELL where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt2.executeUpdate(); stmt2.close();
-			 * 
-			 * stmt = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_ANTENNA where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt.executeUpdate(); stmt.close();
-			 * 
-			 * stmt1 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_LCELL where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt1.executeUpdate(); stmt1.close();
-			 * 
-			 * stmt2 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_RRN where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt2.executeUpdate(); stmt2.close();
-			 * 
-			 * stmt = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_ENODEBCELL where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt.executeUpdate(); stmt.close();
-			 * 
-			 * stmt1 = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_NODEBCELL where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt1.executeUpdate(); stmt1.close();
-			 * 
-			 * stmt = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_NBINTERFACES where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt.executeUpdate(); stmt.close();
-			 * 
-			 * stmt = conalm.
-			 * prepareStatement("delete from  TEMP_NODE_CHILD_PARENT where  DOMAIN='Mobile Access Domain' and VENDOR='"
-			 * + Gprovider +"'"); stmt.executeUpdate(); stmt.close();
-			 */
-		 }
-			catch(Exception e)  
-			{  
-				/*
-				 * logger.info("error at deleteTempNodeTables is :"+ e.toString());
-				 * System.out.println("error at deleteTempNodeTables is :"+ e.toString());
-				 * 
-				 * //insert into AUTO_DISCOVERY_LOGS_DETAILS String logsDEtailsid=
-				 * localgetseqNbr(22); logsDEtailsid=Gyear+"_"+
-				 * "LOGS_DETAILS"+'_'+logsDEtailsid; PreparedStatement insertLogsDEtailsstmt =
-				 * conalm.
-				 * prepareStatement("insert into AUTO_DISCOVERY_LOGS_DETAILS (LOGS_DETAILS_ID,TIME,ACTIVITY_NAME,ACTIVITY_DESCRIPTION,ATTRIBUTE_NAME,ACTIVITY_TITLE,ACTIVITY_STATUS,QUANTITY,VENDOR,DOMAIN,LOGS_ID)"
-				 * + "values('"+
-				 * logsDEtailsid+"',sysdate ,'ParserLogAIM','error at deleteTempNodeTables ','','','','','"
-				 * + Gprovider +"','Mobile Access Domain','"+logsid+"') ");
-				 * 
-				 * insertLogsDEtailsstmt.executeUpdate(); insertLogsDEtailsstmt.close();
-				 * nbOfErrors++;
-				 */
-				
-			}
-	     
-	}
-	 
-	 
-	 
-	 private static void copyFiles(File source, File dest) throws IOException {
+	private static void copyFiles(File source, File dest) throws IOException {
 		 try {
 		 Files.copy(source.toPath(), dest.toPath(),StandardCopyOption.COPY_ATTRIBUTES,StandardCopyOption.REPLACE_EXISTING);
 		 }
