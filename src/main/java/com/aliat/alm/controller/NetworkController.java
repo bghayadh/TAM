@@ -2824,22 +2824,22 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 				System.out.println("id : : : "+SuppId);
 					try {
-							String strEmpty= "SELECT COUNT(WARE_ID) FROM NODE_ACTIVE WHERE WARE_ID!='null' AND SUPPLIER_ID!='null' ";	
-							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
-							String Site_Query = SuppId == "" ? strEmpty : "Select distinct Supplier_Name From NODE_ACTIVE where Supplier_Id='" + SuppId + "' ";
-							//System.out.println(Site_Query);
-							Object Sites = session.createSQLQuery(Site_Query).uniqueResult();
-							strEmpty="";					
+						String strEmpty= "SELECT COUNT(WARE_ID) FROM NODE_ACTIVE WHERE WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null AND SUPPLIER_ID!='null' AND SUPPLIER_ID!='0' AND SUPPLIER_ID is not null  ";	
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+						String Site_Query = SuppId == "" ? strEmpty : "Select distinct Supplier_Name From NODE_ACTIVE where Supplier_Id='" + SuppId + "' ";
+						//System.out.println(Site_Query);
+						Object Sites = session.createSQLQuery(Site_Query).uniqueResult();
+						strEmpty="";					
 				////////////////////////////
-							strEmpty="SELECT COUNT(NODE_PK) FROM NODE_ACTIVE where Active_record='1' AND SUPPLIER_ID!='null' ";
-							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
-							String strExist= "SELECT COUNT(NODE_PK) FROM NODE_ACTIVE where Active_record='1' and Supplier_Id='" + SuppId + "' ";	
-							strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
-							String Node_Active_Query = SuppId == "" ? strEmpty : strExist;
-							//System.out.println(Node_Active_Query);
-							Object CountNodes_Active = session.createSQLQuery(Node_Active_Query).uniqueResult();
-							strEmpty="";
-							strExist="";
+						strEmpty="SELECT COUNT(NODE_PK) FROM NODE_ACTIVE where Active_record='1' AND SUPPLIER_ID!='null' AND SUPPLIER_ID!='0' AND SUPPLIER_ID is not null ";	
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+						String strExist= "SELECT COUNT(NODE_PK) FROM NODE_ACTIVE where Active_record='1' and Supplier_Id='" + SuppId + "' ";	
+						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+						String Node_Active_Query = SuppId == "" ? strEmpty : strExist;
+						//System.out.println(Node_Active_Query);
+						Object CountNodes_Active = session.createSQLQuery(Node_Active_Query).uniqueResult();
+						strEmpty="";
+						strExist="";					
 				////////////////////////////			
 							strEmpty="SELECT COUNT(GCELL_ID) FROM NODE_GCELL ";
 							if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
