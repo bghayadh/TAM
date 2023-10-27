@@ -268,9 +268,6 @@ map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
 /* Start of NodeType Node Cell Tree Method */ 
 //////////////////////////////////////////////
 function CreateTree_NdTpNdCell(lstNodeType,map){
-	//console.log("CreateTree_NdTpNdCell");
-	//console.log("lst ndty .....",lstNodeType);
-	//console.log("lst nd .....",lst);
 	//Site_Boq("");
 	var str="<ul><li id='initial_ul' class='Initial'><input type='checkbox' id='NodesType' class='AllNodesType' style='margin-left: 15px' unchecked onclick='AllSitesCheckFilter()'></input><span class='folder'><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Node Type</span></li></ul>";
 	$("#network_tree").append(str);
@@ -306,22 +303,20 @@ function CreateTree_NdTpNdCell(lstNodeType,map){
         var SiteId;
     	$(".Node > .TreeSpan").contextmenu(function(){				
     		selectedNodeIdContext=$(this).parent().attr('id');
-    		//console.log("selectedNodeIdContext", selectedNodeIdContext); //nodeId_wareId
-    		
     		var index = selectedNodeIdContext.indexOf("WARE_2");
-			console.log(" index : "+index);
 			if (index !== -1) {
 			  nodeId = selectedNodeIdContext.substring(0, index).slice(0, -1);
-			 // console.log(" nodeId : "+nodeId);
+			  //console.log(" nodeId : "+nodeId);
 			  SiteId = selectedNodeIdContext.substring(index);
-			 // console.log("SiteId : " + SiteId);
-			} 
-			
-			if(selectedNodeIdContext.substring(index, index + "WARE".length) !="null"){  //if "WARE" is not null
-   				SiteId = selectedNodeIdContext.substring(index); // WARE_2021_13730
-    		}else{
-    			SiteId = selectedNodeIdContext.substring(index, index + "WARE".length); // WARE_2021_13730
-    		}
+			  //console.log("SiteId : " + SiteId);
+			} else{
+				  var lastIndex = selectedNodeIdContext.lastIndexOf("_");
+				  nodeId = selectedNodeIdContext.substring(0, lastIndex);
+				 // console.log(" nodeId null: "+nodeId);
+				  SiteId =null;
+				 // console.log("SiteId null: " + SiteId);	
+			}
+		
     		menuName=singleNode;			
     		openContext(selectedNodeIdContext,"",singleNode,event);
     	});
@@ -405,15 +400,15 @@ function showMarkersAllSitesOneNt(id) {
 
   for (var i = 0; i < liElements.length; i++) {
     liElements[i].checked = isChecked;
-   // console.log(" liElements[i].id:  ", liElements[i].id);
+    //console.log(" liElements[i].id:  ", liElements[i].id);
   
     var nodeSiteId = liElements[i].id.split("_" + nodeType)[0]; //nodeId_wareId
-    
     var index = nodeSiteId.indexOf("WARE_2");
 	if (index !== -1) {
 	  var nodeId = nodeSiteId.substring(0, index).slice(0, -1);
 	}else{
-		nodeId = nodeSiteId.slice(0, -2);
+		var lastIndex = nodeSiteId.lastIndexOf("_");
+		var nodeId = nodeSiteId.substring(0, lastIndex);
 	}
 	/*
     if(nodeSiteId.split("_")[3]!= "null"){
@@ -549,8 +544,8 @@ function showMarkerSingleSite(id) {
 	if (index !== -1) {
 		  var nodeId = id.substring(0, index).slice(0, -1);
 	}else{
-		  var splittedNodeId = id.split(nodeType)[0];
-		  var nodeId= splittedNodeId.split("_0_")[0];
+		var secondLastIndex = id.lastIndexOf("_", id.lastIndexOf("_") - 1); // Find the second last index of '_'
+		var nodeId = id.substring(0, secondLastIndex); // Get the substring from 0 to the second last index
 	}
 	
 	if ($("#" + id).is(":checked")) {
@@ -583,13 +578,9 @@ function showMarkerSingleSite(id) {
 
 
 function PanTreeSites(id){
-	console.log("PanTreeSites/id");
-	console.log(" id : "+id);
 	var index = id.indexOf("WARE_2");
-	console.log(" index : "+index);
 	if (index !== -1) {
 	  var nodeId = id.substring(0, index).slice(0, -1);
-	  console.log(" nodeId : "+nodeId);
 	}else{
 		var secondLastIndex = id.lastIndexOf("_", id.lastIndexOf("_") - 1); // Find the second last index of '_'
 		var nodeId = id.substring(0, secondLastIndex); // Get the substring from 0 to the second last index
