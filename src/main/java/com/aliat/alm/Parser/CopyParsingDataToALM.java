@@ -406,9 +406,8 @@ public class CopyParsingDataToALM {
 			 System.out.println("count : "+rsp.getRow());
 			 System.out.println("Node_PK : "+rsp.getString("NODE_PK") );
 			 System.out.println("UNIQUE_NODE_ID : "+rsp.getString("UNIQUE_NODE_ID") );
-			 stmt0 = conalm.prepareStatement("insert into TEMP_NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_SOURCE,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,FROM_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,ACTIVE_RECORD,LINE,WARE_ID,VENDOR,SUPPLIER_ID,WARE_NAME,SUPPLIER_NAME,TO_TRANS_SOURCE,IP_ADDRESS,MAC_ADDRESS,SUB_DOMAIN,SOFTWARE_VERSION,LONGITUDE,LATITUDE,PATCH_VERSION,PART_NUMBER,SUB_DOMAIN_TYPE,OTHERS) "
-				 		+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-			 
+			 stmt0 = conalm.prepareStatement("insert into TEMP_NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_SOURCE,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,FROM_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,ACTIVE_RECORD,LINE,WARE_ID,VENDOR,SUPPLIER_ID,WARE_NAME,SUPPLIER_NAME,TO_TRANS_SOURCE,IP_ADDRESS,MAC_ADDRESS,SUB_DOMAIN,SOFTWARE_VERSION,LONGITUDE,LATITUDE,PATCH_VERSION,PART_NUMBER,SUB_DOMAIN_TYPE,OTHERS,SERIAL_NUMBER) "
+				 		+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 			 stmt0.setString(1, rsp.getString("NODE_PK"));  			stmt0.setString(25, rsp.getString("LINE")); 			
 			 stmt0.setString(2, rsp.getString("UNIQUE_NODE_ID"));    	stmt0.setString(26,rsp.getString("WARE_ID"));			
 			 stmt0.setString(3, rsp.getString("NODE_ID")); 			 	stmt0.setString(27, rsp.getString("VENDOR") ); 			
@@ -426,18 +425,18 @@ public class CopyParsingDataToALM {
 			 stmt0.setTimestamp(15, rsp.getTimestamp("CREATION_DATE"));	stmt0.setString(39, rsp.getString("PART_NUMBER"));
 			 stmt0.setTimestamp(16, rsp.getTimestamp("UPDATE_DATE"));	stmt0.setString(40, rsp.getString("SUB_DOMAIN_TYPE"));
 			 stmt0.setString(17, rsp.getString("FILE_TYPE"));			stmt0.setString(41, rsp.getString("OTHERS"));
-			 stmt0.setString(18, rsp.getString("FILENAME"));			
+			 stmt0.setString(18, rsp.getString("FILENAME"));			stmt0.setString(42, rsp.getString("SERIAL_NUMBER"));		
 			 stmt0.setString(19, rsp.getString("STATUS"));				
 			 stmt0.setString(20,  rsp.getString("FROM_TRANS_SOURCE"));	
 			 stmt0.setString(21,rsp.getString("FROM_TRANS_ID"));		
 			 stmt0.setString(22, rsp.getString("TO_TRANS_ID"));
 			 stmt0.setString(23, rsp.getString("TRANS_TYPE"));
 			 stmt0.setString(24, "1");
-			 
 			 stmt0.executeUpdate();      
 		     stmt0.close();
 		     nbOfNodeActive++;
 	     }
+		  
 		 rsp.close();
 		 stmtp.close();
 		 //totalNbCopied = totalNbCopied + nbOfNodeActive;
