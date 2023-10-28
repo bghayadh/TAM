@@ -101,7 +101,16 @@ overflow: hidden;
 background-color: #08526d;
 padding: 10px 0px;
 }
+.blue {
+background:blue;
+}
 
+.dot {
+height: 15px;
+width: 15px;
+border-radius: 50%;
+display: inline-block;
+}
 .btn-color {
 background-image: linear-gradient(to right top, #b3b3b3, #b6b6b7, #b8b9ba, #bbbdbd, #bdc0c0, #b1b5b5, #a5abaa, #9aa09f, #7f8685, #656e6c, #4c5655, #343f3e);
 }
@@ -390,7 +399,15 @@ max-width: 100%;
                   </div>
 			   </div>
 	     </div>
-	     
+	        <div class="col-md-3">
+            	<div class="form-group">
+				   <div class="input-group-prepend" data-target-input="nearest">
+						
+		 			<button type="button"  id ="drawOnMap"class="btn btn-light" style=" margin-top:-10px; margin-right:-15px; "  >Draw on map</button>
+				   
+                  </div>
+			   </div>
+	     </div>
 		</div>	
 	<div class="row" id="row_Circle" style="display: none;">	     
 			<div class="col-md-3">
@@ -490,12 +507,12 @@ max-width: 100%;
   <div class="panel panel-default" style="margin-bottom:3px;" >
     <div class="panel-heading" role="tab" id="headingOne">
       <h4 class="panel-title">
-       <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+       <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
           Grid Table
         </a>
       </h4>
     </div>
-    <div id="collapseTwo" class="panel-collapse collapse show" role="tabpanel" aria-labelledby="headingTwo">
+    <div id="collapseOne" class="panel-collapse collapse show" role="tabpanel" aria-labelledby="headingOne">
       <div class="panel-body" >
           <!-- /.card-header -->
 <div class="card-body " >
@@ -816,6 +833,56 @@ max-width: 100%;
     </div>
   </div>
 
+
+  <div class="panel panel-default" style="margin-bottom:3px;" >
+  <div class="panel-heading " role="tab" id="headingTwo" >
+      <h4 class="panel-title">
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="#collapseTwo">
+         GIS
+        </a>
+      </h4>
+    </div>
+    <div id="collapseTwo" class="panel-collapse collapse show" role="tabpanel" aria-labelledby="headingTwo">
+      <div class="panel-body">
+      <div class="legendContainer">
+      <div class="card-body">      
+         <div class="box stack-top" id="legendDiv" style="position: relative;top:235px;width: 280px; float:left; height:170px;  background:white; margin:37px;display: none">
+         <div class="legendHeader"  id="legendHeader">
+ 			<h6 style="color:white;font-weight:bold; font-size:3ex;display:inline-block;position: relative;top:5px;left:10px;">MAP Legend</h6>
+  		</div>
+  
+   <div id="tableDiv">
+  	<table id="farFinancialReport">
+   		<caption style="color:#08526d ;font-weight:bold; font-size:2.5ex;position: relative; top:-50px;left:20px;">FAR Sites</caption>  
+ <br>
+  <tr>
+    <th style="position: relative;top: 5px;left:10px;"></th>
+    <th style="position: relative;top: 5px;left:10px;"></th>  
+  </tr>
+  
+  <tr></tr>
+    <tr>
+     <td style="position: relative;top:17px;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideSitesCheckbox" onclick="showHideAllSites();" value="blue"/></td>
+     <td style="position: relative;top:30px;left:58px;"><div class="dot blue"></div></td>
+     <td style="position: relative;top: 28px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; " >All Sites</label></td>
+    </tr>
+   
+  </table>
+  
+</div>
+        </div>
+        </div>
+         
+    <div class="card-body">
+        <div class="box" id="mapContainer"></div>
+        </div>
+       </div>
+      </div>
+    </div>
+
+
+ </div>
+
       </div>
       </div>
 
@@ -827,6 +894,108 @@ max-width: 100%;
 </body>
 
 <script>
+
+var map ;
+markersFarSites=[];		
+var distinctSites =[];
+
+function initMap() {
+	
+	
+	 map = new google.maps.Map(document.getElementById("mapContainer"), {
+			center: { lat: 1, lng: 38 },
+			 zoom: 6,
+	 		mapTypeControl: true,
+	 		mapTypeId: google.maps.MapTypeId.ROADMAP,
+	 		mapTypeControlOptions: {
+	 				style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+	 				position: google.maps.ControlPosition.TOP_CENTER,
+	 			},						          				 			
+	 			zoomControl: true,
+	 			zoomControlOptions: {
+	 				position: google.maps.ControlPosition.LEFT_CENTER,
+	 			},
+	 			scaleControl: true,
+	 			streetViewControl: true,
+	 			streetViewControlOptions: {
+	 				position: google.maps.ControlPosition.LEFT_TOP,
+	 			},
+
+	 			fullscreenControl: true,
+	 });
+
+	
+		//Add legend button under zoom control on map
+		const mapLegendControlDiv = document.createElement("div");
+		ShowHideMapLegend(mapLegendControlDiv, map);
+	    map.controls[google.maps.ControlPosition.LEFT_CENTER].push(mapLegendControlDiv);
+
+	    const DefaultZoomDiv = document.createElement("div");
+	    DefaultZoomControl(DefaultZoomDiv, map);
+	    map.controls[google.maps.ControlPosition.LEFT_CENTER].push(DefaultZoomDiv);
+
+	   
+	    $("#legendDiv").toggle();
+
+	 markerClusterFarSites = new MarkerClusterer();
+	 markerClusterFarSites.setMap(map);
+
+	 markerClusterFarSites.setOptions( {					  					
+	 	minimumClusterSize: 2,
+	 	styles: [
+	 	         {
+	 	        	 url:'${pageContext.request.contextPath}/resources/clusterIcons/blueCluster.png',
+	 		         height: 60,
+	 		         width:60,
+	 		         anchorText:[-3,-3]
+	 		      },
+	 	],
+	 	calculator: function(markers, numStyles) {
+	 	if (markers.length >= 1) return {text: markers.length, index: 3}; 
+	 	}                   
+	 });
+
+}//end initMap
+
+//Add legend button under zoom control on map
+function ShowHideMapLegend(controlDiv, map) {
+	
+    const controlUI = document.createElement("dv");
+    controlUI.style.backgroundColor = "white";
+    controlUI.style.border = "8px solid white";
+    controlUI.style.cursor = "pointer";
+    controlUI.style.marginLeft = "10px";
+    controlUI.innerHTML = '<button style="border:none;outline:none; background:white;"><i class="fas fa-arrow-right fa-lg "></i></button>';
+    controlUI.title = "Open Legend";
+    controlDiv.appendChild(controlUI);
+
+    controlUI.addEventListener("click", () => {
+    	$("#legendDiv").toggle();        
+     });
+
+  }
+ 
+//Add defaultZoom button under zoom control on map
+function DefaultZoomControl(controlDiv, map) {
+	
+    const controlUI = document.createElement("div");
+    controlUI.style.backgroundColor = "white";
+    controlUI.style.border = "8px solid white";
+    controlUI.style.cursor = "pointer";
+    controlUI.style.marginLeft = "10px";
+    controlUI.style.marginTop = "10px";
+    controlUI.innerHTML = '<button style="border:none;outline:none; background:white;" ><i class="fa fa-undo fa-lg "></i></button>';
+    controlUI.title = "Reset Default Zoom";
+    controlDiv.appendChild(controlUI);
+
+    controlUI.addEventListener("click", () => {
+    	var Nairobi=new google.maps.LatLng(-1.286389,36.817223);
+        map.setCenter(Nairobi);
+        map.setZoom(6);        
+     });
+
+  }
+  
 var domainOptions = [
 	  { label: 'Transmission', value: 'Transmission' },
 	  { label: "RAN", value: 'RAN'},
@@ -907,6 +1076,8 @@ $(document).ready(function() {
 
     var ReportArrayGlobal = ${financialReportList};
     var exportArrayGrid = []; // for export 
+    var filteredSitesGrid=[]; // used in draw on map 
+    
 
     var almgrid = new AlmgridTable({
         tableId: "gridTable",
@@ -930,6 +1101,8 @@ $(document).ready(function() {
 	     	    exportArrayGrid = [];
 	    		data.push('\r');
 	       		data.push(["FAR ID", "Item Code", "Item Name", "Last Modified Date","Item Serial Number","Item Name Register","PO ID","Site ID","Site Name","Longitude","Latitude","Initial Cost","Net Cost","Accumulated Depreciation"]);
+
+	       		filteredSitesGrid = dataArray; // used in draw on map 
 	       		
         for (var i = 0; i < dataArray.length; i++) {
          
@@ -961,7 +1134,8 @@ $(document).ready(function() {
   		else{
   		    $("#initialCostFilteredFar").val('0.0');
             $("#netCostFilteredFar").val('0.0');
-            $("#accuDeprFilteredFar").val('0.0');		   			  		
+            $("#accuDeprFilteredFar").val('0.0');		 
+            filteredSitesGrid=[];			  		
 	     }
   			
  	        // Method for pagination almgrid-pagecount-box
@@ -991,7 +1165,34 @@ $(document).ready(function() {
   	        this.initFlag++;
   	       },
          });
-		 
+    
+    $('#drawOnMap'). click(function(){  
+		 distinctSites =[];
+		 markerClusterFarSites.clearMarkers();
+		
+		for (var i = 0; i < filteredSitesGrid.length; i++) {			
+			if(distinctSites.includes(filteredSitesGrid[i]["siteID"])==false) {
+				distinctSites.push(filteredSitesGrid[i]["siteID"]);
+				if(!markersFarSites[filteredSitesGrid[i]["siteID"]]){
+					createSiteMarker(filteredSitesGrid[i]["siteID"],filteredSitesGrid[i]["longitude"],filteredSitesGrid[i]["latitude"])
+				}
+				else {					
+					markersFarSites[filteredSitesGrid[i]["siteID"]].setMap(map);
+					markerClusterFarSites.addMarker(markersFarSites[""+filteredSitesGrid[i]["siteID"]]);
+
+				}
+			}
+        } 
+        if(distinctSites.length >0) {
+			$('.showHideSitesCheckbox').prop('checked', true);
+			$(".showHideSitesCheckbox").attr('disabled', false);
+        }   
+        else {
+        	$('.showHideSitesCheckbox').prop('checked', false);
+			$(".showHideSitesCheckbox").attr('disabled', true);
+         }    	
+	});
+			 
 	$('#clearButton'). click(function(){  
         document.getElementById('startLongitude').value = '';
         document.getElementById('startLatitude').value = '';
@@ -1056,6 +1257,11 @@ $(document).ready(function() {
 		  var ignoreDateCheckbox = document.getElementById("ignoreDate").checked;
 		  var strtEndCheckbox = document.getElementById("strtEndCoordinate").checked;
 
+		 $('.showHideSitesCheckbox').prop('checked', false);
+		 $(".showHideSitesCheckbox").attr('disabled', true);
+		 markerClusterFarSites.clearMarkers();	
+		 markersFarSites=[];
+			 
 		  
 		$("#gridTable").remove();
 		$("#tableGrid").append('<table id="gridTable" class="table table-striped table-bordered almgrid-table">'
@@ -1189,7 +1395,9 @@ $(document).ready(function() {
   			       	       exportArrayGrid = [];
   			       		   data.push('\r');
   			       		   data.push(["FAR ID", "Item Code", "Item Name", "Last Modified Date","Item Serial Number","Item Name Register","PO ID","Site ID","Site Name","Longitude","Latitude","Initial Cost","Net Cost","Accumulated Depreciation"]);
-  			       		
+
+  	  				       filteredSitesGrid = dataArray; // used in draw on map 
+  	  			       		
   			       		
   			           for (var i = 0; i < dataArray.length; i++) {
   							 // for export 
@@ -1226,7 +1434,9 @@ $(document).ready(function() {
 
   		          			      $("#initialCostFilteredFar").val('0.0');
   		                          $("#netCostFilteredFar").val('0.0');
-  		                          $("#accuDeprFilteredFar").val('0.0');		 
+  		                          $("#accuDeprFilteredFar").val('0.0');	
+  		        	       		filteredSitesGrid = []; // used in draw on map 
+		                          	 
 
   	      					  }
   				  
@@ -1328,10 +1538,65 @@ $(document).ready(function() {
     	document.body.appendChild(download_link);
     	download_link.click();
     }
+    
+	function createSiteMarker(siteID,longitude,latitude) {
+
+		markerId=siteID;		
+		const pos = new google.maps.LatLng(latitude,longitude);
+		 iconSite ={
+				path: google.maps.SymbolPath.CIRCLE,
+		        fillOpacity: 0.9,
+		        strokeColor: 'transparent',
+		        strokeOpacity: 0.9,
+		        strokeWeight: 1,
+		        scale: 9,
+		        fillColor:'blue'
+		   };
+		
+		if(!markersFarSites[markerId]){
+			siteMarker = new google.maps.Marker({
+				position: pos,
+				ID:markerId,
+				icon:iconSite,
+		});
+			siteMarker.metadata = { id: markerId };
+			markersFarSites[markerId] = siteMarker;
+			markersFarSites.push(siteMarker);
+			markerClusterFarSites.addMarker(markersFarSites[""+markerId]);
+			markersFarSites[markerId].setMap(map);
+				
+	   }
+		else{
+			if(markersFarSites[markerId].map!=map){
+				markersFarSites[markerId].setMap(map);
+			}				
+			markersFarSites[markerId].setPosition(pos);
+		}
+	}     		
     		
-    	 
+	
 });
+function showHideAllSites(){
+	$('.showHideSitesCheckbox').bind("change",function() {
+		markerClusterFarSites.clearMarkers();	
+					
+			if ($(this).is(':checked')){
+				for(var x=0;x<distinctSites.length;x++) {
+					siteID = distinctSites[x];
+					if(markersFarSites[siteID].getMap()==null){
+						markersFarSites[siteID].setMap(map);			
+						markerClusterFarSites.addMarker(markersFarSites[siteID]);
+					}
+				}
+			}
+			
+		});	
+}
+
 
 </script>
-
+<script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJXAds-Gt4I39hRFHhYHMEg3XcBqihYoo&callback=initMap&libraries=drawing&v=weekly"
+      async defer
+    ></script>
 </html>
