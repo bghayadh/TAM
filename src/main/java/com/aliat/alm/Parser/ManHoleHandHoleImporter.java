@@ -27,7 +27,7 @@ import com.google.maps.model.LatLng;
 
 public class ManHoleHandHoleImporter {
 	
-	public List<ManHole> excelImport() throws ApiException, InterruptedException, IOException{
+	public List<ManHole> excelImport(int count) throws ApiException, InterruptedException, IOException{
 //		public List<HandHole> excelImport() throws ApiException, InterruptedException, IOException{
 			List<ManHole> listManH=new ArrayList<>();
 			//List<HandHole> listManH=new ArrayList<>();
@@ -41,7 +41,7 @@ public class ManHoleHandHoleImporter {
 			Double latitude = null;
 			String city = null;
 			int nb = 0;
-			int ManholeCount =0;
+			int ManholeCount =count;
 			
 			Date date = new Date();
 			Calendar calendar = new GregorianCalendar();
@@ -49,8 +49,8 @@ public class ManHoleHandHoleImporter {
 			int year = calendar.get(Calendar.YEAR);
 			//String excelFilePath="D:\\Work\\Backbone & Metro & Access-TKL Fiber 2021_Coordinates.xlsx";
 			//String excelFilePath="C:\\Users\\Lillian\\Desktop\\KENYA FILES\\Backbone & Metro & Access-TKL Fiber 2021_Coordinates.xlsx";
-			String excelFilePath="C:\\Users\\User\\Desktop\\Data\\Backbone & Metro & Access-TKL Fiber 2021_Coordinates.xlsx";
-
+			String excelFilePath="C:\\ManhHandhData\\ManholeHandholeData.xlsx";
+			
 			
 			long start = System.currentTimeMillis();
 
@@ -72,15 +72,19 @@ public class ManHoleHandHoleImporter {
 					String subStr = Str.getStringCellValue();
 				
 				if(!subStr.contains("HH") == true) {
-
+					
+					ID = (String) ("MH_" + year + "_" +ManholeCount);
+					
+					
 					while(cellIterator.hasNext()) {
 						Cell nextCell=cellIterator.next();
 						int columnIndex=nextCell.getColumnIndex();
 						switch (columnIndex) {
 						case 0:
-							ManholeCount++;
-							ID = (String) ("MH_" + year + "_" +ManholeCount);
-							nb = (int) nextCell.getNumericCellValue();
+							
+							//ID = (String) ("MH_" + year + "_" +ManholeCount);
+							//ManholeCount++;
+							//nb = (int) nextCell.getNumericCellValue();
 							break;
 						case 1:
 							ManholeDmName=nextCell.getStringCellValue();
@@ -106,6 +110,7 @@ public class ManHoleHandHoleImporter {
 					else {
 						manholeName = "MH_"+city+"_"+year+"_"+ManholeCount;				
 					}
+					ManholeCount++;
 					listManH.add(new ManHole(ID, manholeName, MHModel, longitude, latitude,city,"CurrentPhysicalLayer",ManholeDmName));				
 					
 					//HH_J_CityName_2022_1
@@ -123,7 +128,7 @@ public class ManHoleHandHoleImporter {
 			
 			return listManH;
 		}
-		public List<HandHole> excelHImport() throws ApiException, InterruptedException, IOException{
+		public List<HandHole> excelHImport(int count) throws ApiException, InterruptedException, IOException{
 			List<HandHole> listManH=new ArrayList<>();
 					
 					String ID = null;
@@ -135,7 +140,7 @@ public class ManHoleHandHoleImporter {
 					Double latitude = null;
 					String city = null;
 					int nb = 0;
-					int HandholeCount=0;
+					int HandholeCount=count;
 					
 					Date date = new Date();
 					Calendar calendar = new GregorianCalendar();
@@ -143,7 +148,7 @@ public class ManHoleHandHoleImporter {
 					int year = calendar.get(Calendar.YEAR);
 					//String excelFilePath="D:\\Work\\Backbone & Metro & Access-TKL Fiber 2021_Coordinates.xlsx";
 					//String excelFilePath="C:\\Users\\Lillian\\Desktop\\KENYA FILES\\Backbone & Metro & Access-TKL Fiber 2021_Coordinates.xlsx";
-					String excelFilePath="C:\\Users\\User\\Desktop\\Data\\Backbone & Metro & Access-TKL Fiber 2021_Coordinates.xlsx";
+					String excelFilePath="C:\\ManhHandhData\\ManholeHandholeData.xlsx";
 
 					
 					long start = System.currentTimeMillis();
@@ -166,15 +171,17 @@ public class ManHoleHandHoleImporter {
 							String subStr = Str.getStringCellValue();
 							
 							if(subStr.contains("HH") == true) {	
+								
+								ID = (String) ("HH_" + year + "_" +HandholeCount);
 
 							while(cellIterator.hasNext()) {
 								Cell nextCell=cellIterator.next();
 								int columnIndex=nextCell.getColumnIndex();
 								switch (columnIndex) {
 								case 0:
-									HandholeCount++;
-									ID = (String) ("HH_" + year + "_" +HandholeCount);
-									nb = (int) nextCell.getNumericCellValue();
+									//HandholeCount++;
+									//ID = (String) ("HH_" + year + "_" +HandholeCount);
+									//nb = (int) nextCell.getNumericCellValue();
 									break;
 								case 1:
 									HandoleDmName=nextCell.getStringCellValue();
@@ -199,6 +206,8 @@ public class ManHoleHandHoleImporter {
 							else {
 								HandholeName = "HH_"+city+"_"+year+"_"+HandholeCount;				
 							}
+							
+							HandholeCount++;
 							//HandholeName = "HH_"+city+"_"+HandholeCount;
 							listManH.add(new HandHole(ID, HandholeName, MHModel, longitude, latitude,city,"CurrentPhysicalLayer",HandoleDmName)); 
 							

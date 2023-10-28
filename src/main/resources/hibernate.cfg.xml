@@ -144,5 +144,8 @@
 <mapping class="com.aliat.alm.models.Customer"/> 
 <mapping class="com.aliat.alm.models.NodeListView"/> 
 <mapping class="com.aliat.alm.models.NodePassive"/>
+<mapping class="com.aliat.alm.models.GCellPassive"/>
+<mapping class="com.aliat.alm.models.LCellPassive"/>
+<mapping class="com.aliat.alm.models.UCellPassive"/>
    </session-factory>
 </hibernate-configuration>

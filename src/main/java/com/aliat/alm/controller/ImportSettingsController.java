@@ -289,8 +289,8 @@ public class ImportSettingsController {
 		tx = session.beginTransaction();
 		
 		ManHoleHandHoleImporter MHandHH = new ManHoleHandHoleImporter();
-		int manholesLastSeqNum=0, jctLastSeqNum=0, handholeLastSeqNum=0;		
-		int JctSeq=0;
+		int manholesLastSeqNum=0, jctLastSeqNum=0, handholeLastSeqNum=0,manholeseq=0,handholeseq=0;		
+		int JctSeq=0,JctCount=0;
 		Date date = new Date();
 		Calendar calendar = new GregorianCalendar();
 		calendar.setTime(date);
@@ -298,37 +298,49 @@ public class ImportSettingsController {
 		
 		try {
 			//Get the max jct ID 
-			String maxSeq =session.createSQLQuery("SELECT COALESCE(MAX(NUMV),0) FROM (SELECT TO_NUMBER(COALESCE((regexp_replace (JUNCTION_ID, '[^0-9]','')),'0')) AS NUMV FROM JUNCTION ORDER BY TO_NUMBER(COALESCE((regexp_replace (JUNCTION_ID, '[^0-9]','')),'0')) DESC) ").uniqueResult().toString();
+			/*String maxSeq =session.createSQLQuery("SELECT COALESCE(MAX(NUMV),0) FROM (SELECT TO_NUMBER(COALESCE((regexp_replace (JUNCTION_ID, '[^0-9]','')),'0')) AS NUMV FROM JUNCTION ORDER BY TO_NUMBER(COALESCE((regexp_replace (JUNCTION_ID, '[^0-9]','')),'0')) DESC) ").uniqueResult().toString();
 		   	if(StringUtils.equalsIgnoreCase(maxSeq,"0")) {
 		   		JctSeq=0;
 		   	}
 		   	else {
-				String[] MaxSeq = maxSeq.split("2022"); 
+				String[] MaxSeq = maxSeq.split("2023"); 
 				JctSeq=Integer.parseInt(MaxSeq[1]);
-		   	}
+		   	}*/
+		   	//added
+		   	manholeseq= Integer.parseInt(
+					session.createNativeQuery("SELECT MANHOLE FROM SEQ_TABLE").uniqueResult().toString());
 		   	
+		   	JctSeq= Integer.parseInt(
+					session.createNativeQuery("SELECT JUNCTION FROM SEQ_TABLE").uniqueResult().toString());
+			
+		   	handholeseq= Integer.parseInt(
+					session.createNativeQuery("SELECT HANDHOLE FROM SEQ_TABLE").uniqueResult().toString());
+		   	//
 			if(StringUtils.equalsIgnoreCase(selectedValue,"Manhole")) {
 
 				List<ManHole> listManH = null;
-				listManH = MHandHH.excelImport();
+				listManH = MHandHH.excelImport(manholeseq);
 				System.out.println("listManH is: "+mapper.writeValueAsString(listManH));
-				
+				System.out.println("start inserting manhole");
 				for(ManHole manH : listManH) {					
 
-						queryStatement = "insert into MANHOLE(MANHOLE_ID, MANHOLE_NAME, MANHOLE_MODEL, LONGITUDE, LATITUDE, CITY, PROJECT_ID,DM_NAME) VALUES('"+manH.getID().toString()+"','"+manH.getMHName().toString()+"','"+manH.getMHModel()+"','"+manH.getLongitude()+"','"+manH.getLatitude()+"','"+manH.getCity().toString()+"','"+manH.getProjectID().toString()+"','"+manH.getDmName().toString()+"')";
+					
+					queryStatement = "insert into MANHOLE(MANHOLE_ID, MANHOLE_NAME, MANHOLE_MODEL, LONGITUDE, LATITUDE, CITY, PROJECT_ID,CREATION_DATE,LAST_MODIFIED_DATE,DM_NAME) VALUES('"+manH.getID().toString()+"','"+manH.getMHName().toString()+"','"+manH.getMHModel()+"','"+manH.getLongitude()+"','"+manH.getLatitude()+"','"+manH.getCity().toString()+"','"+manH.getProjectID().toString()+"',sysdate,sysdate,'"+manH.getDmName().toString()+"')";
 						query = session.createSQLQuery(queryStatement);
 						query.executeUpdate();
 						
 						//Get the sequence from Manhole ID
-						String manID = manH.getID();
-						String[] manSeq = manID.split("_"); 
-						manholesLastSeqNum=Integer.parseInt(manSeq[2]);
+						//String manID = manH.getID();
+						//String[] manSeq = manID.split("_"); 
+						//manholesLastSeqNum=Integer.parseInt(manSeq[2]);
 								
 						
 						if(manH.getDmName().contains("J") == true){
+							//System.out.println("inserting JUNCTION "+JctCount);
 								
-								JctSeq++;
 								String jctID = "JCT_"+year +"_" +JctSeq;
+								
+								JctCount++;
 								
 								String nameJct = manH.getDmName();
 
@@ -348,19 +360,37 @@ public class ImportSettingsController {
 								 arrJctName = nameJct.split("\\-"); 
 								 jctName = arrJctName[1];
 							}
+							else if(manH.getDmName().contains("&") == true){
+								 jctName = "JCT_"+manH.getCity()+"_"+year+"_"+JctSeq;
+							}
 							else {
 								jctName=nameJct;
 							}
 
-								queryStatement = "insert into JUNCTION(JUNCTION_ID, JUNCTION_NAME,PHYSICAL_LAYER_ID,PHYSICAL_LAYER_NAME, LONGITUDE, LATITUDE,CAPACITY,JUNCTION_NUMBER, CITY, PROJECT_ID) VALUES('"+jctID+"','"+jctName+"','"+manH.getID()+"','"+manH.getMHName().toString()+"','"+manH.getLongitude()+"','"+manH.getLatitude()+"','24','24','"+manH.getCity().toString()+"','"+manH.getProjectID().toString()+"')";
+								queryStatement = "insert into JUNCTION(JUNCTION_ID, JUNCTION_NAME,PHYSICAL_LAYER_ID,PHYSICAL_LAYER_NAME, LONGITUDE, LATITUDE,CAPACITY,JUNCTION_NUMBER, CITY,CREATION_DATE,LAST_MODIFIED_DATE, PROJECT_ID) VALUES('"+jctID+"','"+jctName+"','"+manH.getID()+"','"+manH.getMHName().toString()+"','"+manH.getLongitude()+"','"+manH.getLatitude()+"','24','24','"+manH.getCity().toString()+"',sysdate,sysdate,'"+manH.getProjectID().toString()+"')";
 								query = session.createSQLQuery(queryStatement);
 								query.executeUpdate();
 								
-							
+								JctSeq++;
 							}
 						
 						}
 				
+				//added
+				//updating manhole sequence
+				int manhcount=listManH.size();
+			
+
+				query = session.createNativeQuery("UPDATE SEQ_TABLE SET MANHOLE = MANHOLE+"+manhcount);
+				query.executeUpdate();
+				session.createNativeQuery("commit").executeUpdate();
+				
+				//updating manhole sequence
+				query = session.createNativeQuery("UPDATE SEQ_TABLE SET JUNCTION = JUNCTION+"+JctCount);
+				query.executeUpdate();
+				session.createNativeQuery("commit").executeUpdate();
+				//
+				/*
 				//Update the start value of manhole seq after import
 				query=session.createSQLQuery("alter sequence MANHOLE_SEQ restart start with "+manholesLastSeqNum+" ");
 			   	query.executeUpdate();
@@ -368,35 +398,60 @@ public class ImportSettingsController {
 			   	//Update the start value of junction seq after import
 			   	query=session.createSQLQuery("alter sequence JUNCTION_SEQ restart start with "+JctSeq+" ");
 			   	query.executeUpdate();
-			
+			*/
 
 			}
 			else {
 
 				List<HandHole> listManH = null;
-				listManH = MHandHH.excelHImport();
+				listManH = MHandHH.excelHImport(handholeseq);
 					for(HandHole manH : listManH) {
 
-						queryStatement = "insert into HANDHOLE(HANDHOLE_ID, HANDHOLE_NAME,HANDHOLE_MODEL, LONGITUDE, LATITUDE, CITY, PROJECT_ID,DM_NAME) VALUES('"+manH.getID().toString()+"','"+manH.getHName().toString()+"','"+manH.getHModel()+"','"+manH.getLongitude()+"','"+manH.getLatitude()+"','"+manH.getCity().toString()+"','"+manH.getProjectID().toString()+"','"+manH.getDmName().toString()+"')";
+						queryStatement = "insert into HANDHOLE(HANDHOLE_ID, HANDHOLE_NAME,HANDHOLE_MODEL, LONGITUDE, LATITUDE, CITY, PROJECT_ID,CREATION_DATE,LAST_MODIFIED_DATE,DM_NAME) VALUES('"+manH.getID().toString()+"','"+manH.getHName().toString()+"','"+manH.getHModel()+"','"+manH.getLongitude()+"','"+manH.getLatitude()+"','"+manH.getCity().toString()+"','"+manH.getProjectID().toString()+"',sysdate,sysdate,'"+manH.getDmName().toString()+"')";
 						query = session.createSQLQuery(queryStatement);
 						query.executeUpdate();
 						
-						//Get the sequence from Handhole ID
+						/*//Get the sequence from Handhole ID
 						String handID = manH.getID();
 						String[] handSeq = handID.split("_"); 
 						handholeLastSeqNum=Integer.parseInt(handSeq[2]);
-						
+						*/
 						
 						if(manH.getDmName().contains("J") == true){
 							
-							JctSeq++;
+							
 							String jctID = "JCT_"+year +"_" +JctSeq;
+							
+							JctCount++;
 							
 								String nameJct = manH.getDmName();
 
 								String[] arrJctName=null ;
 								String jctName = null ;
 								
+								
+								
+								if(manH.getDmName().contains("(") == true){
+									 arrJctName = nameJct.split("\\("); 
+									 if(manH.getDmName().charAt(0) =='J' ){
+										 jctName=nameJct;
+									 }
+									 else {
+									 jctName = arrJctName[1].replaceAll("[)]", "");
+									}
+								}
+								else if(manH.getDmName().contains("-") == true){
+									 arrJctName = nameJct.split("\\-"); 
+									 jctName = arrJctName[1];
+								}
+								else if(manH.getDmName().contains("&") == true){
+									 jctName = "JCT_"+manH.getCity()+"_"+year+"_"+JctSeq;
+								}
+								else {
+									jctName=nameJct;
+								}
+								
+								/*
 								if(manH.getDmName().charAt(0) =='H' ){
 									if(manH.getDmName().contains("(") == true){
 										 arrJctName = nameJct.split("\\("); 
@@ -412,15 +467,34 @@ public class ImportSettingsController {
 									
 									
 								}
-								
+								else if(manH.getDmName().contains("&") == true){
+									 jctName = "JCT_"+manH.getCity()+"_"+year+"_"+JctSeq;
+								}
+								else {
+									jctName=nameJct;
+								}
+								*/
 
-								queryStatement = "insert into JUNCTION(JUNCTION_ID, JUNCTION_NAME,PHYSICAL_LAYER_ID,PHYSICAL_LAYER_NAME,LONGITUDE,LATITUDE,CAPACITY,JUNCTION_NUMBER,CITY, PROJECT_ID) VALUES('"+jctID+"','"+jctName+"','"+manH.getID()+"','"+manH.getHName().toString()+"','"+manH.getLongitude()+"','"+manH.getLatitude()+"','24','24','"+manH.getCity().toString()+"','"+manH.getProjectID().toString()+"')";
+								queryStatement = "insert into JUNCTION(JUNCTION_ID, JUNCTION_NAME,PHYSICAL_LAYER_ID,PHYSICAL_LAYER_NAME,LONGITUDE,LATITUDE,CAPACITY,JUNCTION_NUMBER,CITY, CREATION_DATE,LAST_MODIFIED_DATE,PROJECT_ID) VALUES('"+jctID+"','"+jctName+"','"+manH.getID()+"','"+manH.getHName().toString()+"','"+manH.getLongitude()+"','"+manH.getLatitude()+"','24','24','"+manH.getCity().toString()+"',sysdate,sysdate,'"+manH.getProjectID().toString()+"')";
 								query = session.createSQLQuery(queryStatement);
 								query.executeUpdate();
+								
+								JctSeq++;
 								
 							}
 						
 						}
+					int handhcount=listManH.size();
+					
+					query = session.createNativeQuery("UPDATE SEQ_TABLE SET HANDHOLE = HANDHOLE+"+handhcount);
+					query.executeUpdate();
+					session.createNativeQuery("commit").executeUpdate();
+					
+					//updating manhole sequence
+					query = session.createNativeQuery("UPDATE SEQ_TABLE SET JUNCTION = JUNCTION+"+JctCount);
+					query.executeUpdate();
+					session.createNativeQuery("commit").executeUpdate();
+					/*
 					
 					//Update the start value of manhole seq after import
 					query=session.createSQLQuery("alter sequence HANDHOLE_SEQ restart start with "+handholeLastSeqNum+" ");
@@ -429,7 +503,7 @@ public class ImportSettingsController {
 					//Update the start value of junction seq after import
 					  query=session.createSQLQuery("alter sequence JUNCTION_SEQ restart start with "+JctSeq+" ");
 					  query.executeUpdate();
-				
+				*/
 			}
 			
 
