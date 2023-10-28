@@ -736,7 +736,7 @@ public String Network_SupStNdCell(Locale locale, Model model, HttpServletRequest
 					strSites=  AppendQuery("o",arrayParam, strSites);	
 					strSites = strSites + " ) ";			
 					strSites=  AppendQuery("e",arrayParam, strSites);
-					strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.ACTIVE_RECORD = '1' AND b.SUPPLIER_ID!='null' ";			
+					strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.ACTIVE_RECORD = '1' AND b.SUPPLIER_ID!='null' and b.SUPPLIER_ID!='0' and b.SUPPLIER_ID is not null  ";			
 					strSites=  AppendQuery("b",arrayParam, strSites);	
 						
 					//System.out.println("final query sites"+mapper.writeValueAsString(strSites));
@@ -843,7 +843,7 @@ public String Network_SupStNdTypNdCell(Locale locale, Model model, HttpServletRe
 					strSites=  AppendQuery("o",arrayParam, strSites);	
 					strSites = strSites + " ) ";			
 					strSites=  AppendQuery("e",arrayParam, strSites);
-					strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.ACTIVE_RECORD = '1' AND b.SUPPLIER_ID!='null' ";			
+					strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.ACTIVE_RECORD = '1' AND b.SUPPLIER_ID!='null' and b.SUPPLIER_ID!='0' and b.SUPPLIER_ID is not null  ";			
 					strSites=  AppendQuery("b",arrayParam, strSites);	
 						
 					//System.out.println("final query sites"+mapper.writeValueAsString(strSites));
@@ -952,7 +952,7 @@ public String Network_SupNdTypStCell(Locale locale, Model model, HttpServletRequ
 				strSites=  AppendQuery("o",arrayParam, strSites);	
 				strSites = strSites + " ) ";			
 				strSites=  AppendQuery("e",arrayParam, strSites);
-				strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.ACTIVE_RECORD = '1' AND b.SUPPLIER_ID!='null' ";			
+				strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.ACTIVE_RECORD = '1' AND b.SUPPLIER_ID!='null' and b.SUPPLIER_ID!='0' and b.SUPPLIER_ID is not null  ";			
 				strSites=  AppendQuery("b",arrayParam, strSites);	
 					
 				//System.out.println("final query sites"+mapper.writeValueAsString(strSites));
