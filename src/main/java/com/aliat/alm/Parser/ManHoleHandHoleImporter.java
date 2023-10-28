@@ -236,7 +236,9 @@ public class ManHoleHandHoleImporter {
 				GeocodingResult[] results = null;
 				try {
 					results =  GeocodingApi.newRequest(context).latlng(new LatLng(latitude, longitude)).language("en").resultType(AddressType.COUNTRY, AddressType.ADMINISTRATIVE_AREA_LEVEL_4).await();
-					city = (results[0].formattedAddress.split(","))[0];
+					if(results.length>0) {
+						city = (results[0].formattedAddress.split(","))[0];
+					}
 					if(city.contains("'")) city = (city.split("'"))[0];
 				} catch (ApiException e) {
 					e.printStackTrace();
