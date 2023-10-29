@@ -17631,12 +17631,6 @@ function tree_prop_general(ManholeId){
 }
 
 function treeCollapseFolder(selector,type,clss){
-	//console.log("the id is " + id);
-	//console.log("the length of the selector is " + $("#" + id + " .folder").length);
-	//console.log("the length of the selector > is " + $("#" + id + " > .folder").length);
-	//console.log("the html of the first element of the selector is " + $("#" + id + " .folder").eq(0).html());
-	//console.log("the html of the second element of the selector is " + $("#" + id + " .folder").eq(1).html());
-	//$(".folder").unbind('click');
 	if(selector == null) {
 		selector= " .folder";
 	}				
