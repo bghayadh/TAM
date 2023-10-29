@@ -3558,6 +3558,8 @@ function junctionCheckFilter(physicalLayer,manholeId){
 	
 }
 
+
+
 function pathCheckFilter(Target,type,Id,drawingTypeIndex,pathArray,allPathArray,drivingPathArray,pathRouteDisplay,chldrnClass,chldrnPathArray,chldrnDrivPathArray,chldrnAllPathArray) {
 
 	if(Target.Trgt=="Tube") {
@@ -3574,326 +3576,7 @@ if(type=="parentFolderCheck" || type == "parentFolderCheck__showPath") {
 	
 	if(Target=="initial_ul") { // Case of main Trench Folder, Fiber Path Folder , Backbone / Metro / Access Folder
 		
-	$("#"+Id).children('input').bind("change",function() {
-		if ($(this).is(':checked')){				
-				
-			$(this).parent().find('input:checkbox').each(function(){
-				$(this).prop('checked', true);
-				if($(this).parent().hasClass('FIBER')){
-					var fiberId=$(this).parent().attr('id');
-					if(fiberId.includes("__showPath") == true ){
-						fiberId = fiberId.split("__showPath")[0];
-					}
-					if(directionHashmap.get(fiberId) != undefined) {
-						for(ii = 0; ii < directionHashmap.get(fiberId).length; ii++) {
-							directionHashmap.get(fiberId)[ii].setMap(null); 
-		                    directionHashmap.get(fiberId).mapLabel.setMap(null);
-						}
-					}
-					if(fiberArray[fiberId]){						
-						fiberArray[fiberId].setMap(map);	 
-					}
-					else{   														
-						var path=window["mapPoints_"+fiberId];							 
-						buildPath(fiberId,path,fiberArray,allFiberCables,"FiberPath_f_",window['FiberColor_'+window[''+fiberId][22]],0.7,4.5,'blue',13);
-						fiberArray[fiberId].setMap(map);
-					}
-					
-					// Show and Hide the label of each cable depending on the checkLabel dropdown
-					if($("#fiberMapCheck_Labels").prop("checked")==true){
-						var fiberId=$(this).parent().attr('id');
-						if(fiberId.includes("__showPath") == true ){
-							fiberId = fiberId.split("__showPath")[0];
-						}
-						fiberArray[fiberId].mapLabel.setMap(map);
-					}
-					else {
-						fiberArray[fiberId].mapLabel.setMap(null);
-					}
-					$("#fiberCheckAllBoq").prop("checked",true);
-				}
-				else if($(this).parent().hasClass('TUBE')){
-					var tubeId=$(this).parent().attr('id');
-					if(tubeId.includes("__showPath") == true ){
-						tubeId = tubeId.split("__showPath")[0];
-					}
-					if(directionHashmapTube.get(tubeId) != undefined) {
-						for(ii = 0; ii < directionHashmapTube.get(tubeId).length; ii++) {
-							directionHashmapTube.get(tubeId)[ii].setMap(null); 
-							directionHashmapTube.get(tubeId).mapLabel.setMap(null);
-						}
-					}
-					if(tubeArray[tubeId]){						
-						tubeArray[tubeId].setMap(map);	
-					}
-					else{	 
-						buildPath(tubeId,window["mapPoints_"+tubeId],tubeArray,allTubes,"Tube",'green',0.7,3.3,'green',0);
-						tubeArray[tubeId].setMap(map);
-					}
-					
-					// Show and Hide the label of each tube depending on the checkLabel dropdown
-					if($("#tubeMapCheck_Labels").prop("checked")==true){
-						var tubeId=$(this).parent().attr('id');
-						if(tubeId.includes("__showPath") == true ){
-						tubeId = tubeId.split("__showPath")[0];
-						}
-						tubeArray[tubeId].mapLabel.setMap(map);
-					}
-					else {
-						tubeArray[tubeId].mapLabel.setMap(null);
-					}	
-					$('#tubeCheckAllBoq').prop('checked', true);						
-			}
-			else if($(this).parent().hasClass('STRAND')){
-					var strandId=$(this).parent().attr('id');
-					if(strandId.includes("__showPath") == true ){
-						strandId = strandId.split("__showPath")[0];
-					}
-					if(directionHashmapStrand.get(strandId) != undefined) {
-						for(ii = 0; ii < directionHashmapStrand.get(strandId).length; ii++) {
-							directionHashmapStrand.get(strandId)[ii].setMap(null); 
-							directionHashmapStrand.get(strandId).mapLabel.setMap(null);
-						}
-					}
-					if(strandArray[strandId]){						
-						strandArray[strandId].setMap(map);	
-					}
-					else{
-						buildPath(strandId,window["mapPoints_"+strandId],strandArray,allStrands,"Strand",'purple',0.7,2.8,'purple',0);
-						strandArray[strandId].setMap(map);
-					}	
-					// Show and Hide the label of each strand depending on the checkLabel dropdown
-					if($("#strandMapCheck_Labels").prop("checked")==true){
-					    var strandId=$(this).parent().attr('id');
-						if(strandId.includes("__showPath") == true){
-						strandId = strandId.split("__showPath")[0];
-						}
-						strandArray[strandId].mapLabel.setMap(map);
-					}
-					else {
-						strandArray[strandId].mapLabel.setMap(null);
-					}	
-					$('#strandCheckAllBoq').prop('checked', true);
-			}					
-				else if($(this).parent().hasClass('Trench')){
-					trenchId=$(this).parent().attr('id');
-					if(directionHashmapTrench.get(trenchId) != undefined) {
-						for(ii = 0; ii < directionHashmapTrench.get(trenchId).length; ii++) {
-							directionHashmapTrench.get(trenchId)[ii].setMap(null); 
-							directionHashmapTrench.get(trenchId).mapLabel.setMap(null);
-						}
-					}
-					if(trenchArray[trenchId]){						
-						trenchArray[trenchId].setMap(map);	
-					}
-					else{
-						buildPath(trenchId,window["mapPoints_"+trenchId],trenchArray,allTrenches,"Trench_f_",'brown',0.4,20,'brown',1);
-						trenchArray[trenchId].setMap(map);
-					}	
-					// Show and Hide the label of each trench depending on the checkLabel dropdown
-					if($("#trenchMapCheck_Labels").prop("checked")==true){
-							trenchArray[trenchId].mapLabel.setMap(map);
-					}
-					else {
-							trenchArray[trenchId].mapLabel.setMap(null);
-					}	
-				 }	
-				else if($(this).parent().hasClass('Duct')){
-					ductId=$(this).parent().attr('id');
-					if(directionHashmapDuct.get(ductId) != undefined) {
-						for(ii = 0; ii < directionHashmapDuct.get(ductId).length; ii++) {
-							directionHashmapDuct.get(ductId)[ii].setMap(null); 
-							directionHashmapDuct.get(ductId).mapLabel.setMap(null);
-						}
-					}
-					if(ductArray[ductId]){						
-						ductArray[ductId].setMap(map);	
-					}
-					else{
-						buildPath(ductId,window["mapPoints_"+ductId],ductArray,allDucts,"Duct",'#8e8080',0.6,10,'#8e8080',1);
-						ductArray[ductId].setMap(map);
-					}	
-					// Show and Hide the label of each duct depending on the checkLabel dropdown
-					if($("#ductMapCheck_Labels").prop("checked")==true){
-						ductArray[ductId].mapLabel.setMap(map);
-					}
-					else {
-						ductArray[ductId].mapLabel.setMap(null);
-					}							
-				}		
-					
-				});
-		}// end check  case 
-			
-		// uncheck case 
-			else{		
-			
-				$(this).parent().find('input:checkbox').each(function(){
-					$(this).prop('checked', false);
-					if($(this).parent().hasClass('FIBER')){
-						var fiberId=$(this).parent().attr('id');
-						if(fiberId.includes("__showPath") == true ){
-							fiberId = fiberId.split("__showPath")[0];
-						}
-						if(fiberArray[fiberId]){
-							if(directionHashmap.get(fiberId) != undefined) {
-								for(ii = 0; ii < directionHashmap.get(fiberId).length; ii++) {
-									directionHashmap.get(fiberId)[ii].setMap(null); 
-				                    directionHashmap.get(fiberId).mapLabel.setMap(null);
-								}
-							}
-							fiberArray[fiberId].setMap(null);	
-							fiberArray[fiberId].mapLabel.setMap(null);
-						}
-						$("#fiberCheckAllBoq").prop("checked",false);	
-					}
-					else if($(this).parent().hasClass('TUBE')){	
-						var tubeId = $(this).parent().attr('id');
-						if(tubeId.includes("__showPath") == true ){
-							tubeId = tubeId.split("__showPath")[0];
-						}	
-						if(directionHashmapTube.get(tubeId) != undefined) {
-							for(ii = 0; ii < directionHashmapTube.get(tubeId).length; ii++) {
-								directionHashmapTube.get(tubeId)[ii].setMap(null); 
-								directionHashmapTube.get(tubeId).mapLabel.setMap(null);
-							}
-						}
-						tubeArray[tubeId].setMap(null);
-						tubeArray[tubeId].mapLabel.setMap(null);
-						$("#tubeCheckAllBoq").prop("checked",false);
-					}
-					else if($(this).parent().hasClass('STRAND')){	
-						var strandId = $(this).parent().attr('id');
-						if(strandId.includes("__showPath") == true ){
-							strandId = strandId.split("__showPath")[0];
-						}
-						if(directionHashmapStrand.get(strandId) != undefined) {
-							for(ii = 0; ii < directionHashmapStrand.get(strandId).length; ii++) {
-								directionHashmapStrand.get(strandId)[ii].setMap(null); 
-								directionHashmapStrand.get(strandId).mapLabel.setMap(null);
-							}
-						}
-						strandArray[strandId].setMap(null);
-						strandArray[strandId].mapLabel.setMap(null);
-						$("#strandCheckAllBoq").prop("checked",false);				
-					}
-					else if($(this).parent().hasClass('Trench')){
-						trenchId=$(this).parent().attr('id');
-						if(directionHashmapTrench.get(trenchId) != undefined) {
-							for(ii = 0; ii < directionHashmapTrench.get(trenchId).length; ii++) {
-								directionHashmapTrench.get(trenchId)[ii].setMap(null); 
-								directionHashmapTrench.get(trenchId).mapLabel.setMap(null);
-							}
-						}
-						trenchArray[trenchId].setMap(null);	
-						trenchArray[trenchId].mapLabel.setMap(null);	
-						$("#trenchCheckAllBoq").prop("checked",false);				
-					 }	
-					else if($(this).parent().hasClass('Duct')){
-						ductId=$(this).parent().attr('id');
-						if(directionHashmapDuct.get(ductId) != undefined) {
-							for(ii = 0; ii < directionHashmapDuct.get(ductId).length; ii++) {
-								directionHashmapDuct.get(ductId)[ii].setMap(null); 
-								directionHashmapDuct.get(ductId).mapLabel.setMap(null);
-							}
-						}
-						ductArray[ductId].setMap(null);	
-						ductArray[ductId].mapLabel.setMap(null);
-						$("#ductCheckAllBoq").prop("checked",false);				
-					}		
-				});
-				
-				if($("#FiberPath_f_CurrentPhysicalLayer").find(".FiberTubes:checked" ).length ==0) {
-					$("#tubeCheckAllBoq").prop('checked', false);				
-				}
-				else {
-					$("#tubeCheckAllBoq").prop('checked', true);				
-				}
-				if( $("#FiberPath_f_CurrentPhysicalLayer").find(".TubeStrands:checked" ).length ==0) {
-					$("#strandCheckAllBoq").prop('checked', false);				
-				}
-				else {
-					$("#strandCheckAllBoq").prop('checked', true);				
-				}
-			
-				/*
-				$("#network_tree").find(".FiberCable:checked" ).each(function(){
-
-						id=$(this).parent().attr('id');
-						if(fiberArray[id]){						
-							fiberArray[id].setMap(map);	
-						}
-						else{														
-							var path=window["mapPoints_"+id];
-							//buildFiberPath(id,path);
-							buildPath(id,path,fiberArray,allFiberCables,"FiberPath_f_",'#4986E7',0.7,3.5,'blue',13);
-							fiberArray[id].setMap(map);
-						}	
-					});
-					$("#network_tree").find(".FiberTube:checked" ).each(function(){
-
-						id=$(this).parent().attr('id');
-						if(tubeArray[id]){						
-							tubeArray[id].setMap(map);	
-						}
-						else{						
-							var path=window["mapPoints_"+id];
-							//buildTubePath(id,path);
-							buildPath(id,path,tubeArray,allTubes,"Tube",'green',0.7,2.3,'green',0);
-							tubeArray[id].setMap(map);
-						}	
-					});
-						$("#network_tree").find(".FiberStrand:checked" ).each(function(){
-
-						id=$(this).parent().attr('id');
-						if(strandArray[id]){						
-							strandArray[id].setMap(map);	
-						}
-						else{						
-							var path=window["mapPoints_"+id];
-							//buildStrandPath(id,path);
-							buildPath(id,path,strandArray,allStrands,"Strand",'purple',0.7,1.8,'purple',0);
-							strandArray[id].setMap(map);									
-						}		
-					});
-						
-						$("#network_tree").find(".TRENCH:checked" ).each(function(){
-							trenchId=$(this).parent().attr('id');
-							if(trenchArray[trenchId]){						
-								trenchArray[trenchId].setMap(map);	
-							}
-									else{
-										//buildTrench(trenchId,window["mapPoints_"+trenchId]);
-										buildPath(trenchId,window["mapPoints_"+trenchId],trenchArray,allTrenches,"Trench_f_",'brown',0.4,15,'brown',1);
-										trenchArray[trenchId].setMap(map);
-									}
-						});
-						
-				*/
-						
-			}
-			
-			if(type == "parentFolderCheck__showPath") {
-				if($(".MetroFiber").is(":checked") || $(".BackboneFiber").is(":checked") || $('.AccessFiber').is(':checked') ) {	
-					$('.AllFiberCables__showPath').prop('checked', true);
-				}
-				else {
-					$('.AllFiberCables__showPath').prop('checked', false);
-				}
-			}
-			
-			else {
-				if ($('.BackboneFiber').is(':checked') && $('.MetroFiber').is(':checked') && $('.AccessFiber').is(':checked')){			
-					$('.AllFiberCables').prop('checked', true);
-				}
-				else {
-					$('.AllFiberCables').prop('checked', false);
-				}
-				if($(".MetroFiber").is(":checked") || $(".BackboneFiber").is(":checked") || $('.AccessFiber').is(':checked') ) {	
-					$("#fiberCheckAllBoq").prop("checked",true);
-				}	
-			}
-		});	
+		fiberCheckFilterEvent(Id, type);
 	}
 	//Folders case (Strands,Ducts,Tubes,Cables,Trenchs folders)
 	else {		
@@ -4408,565 +4091,292 @@ else {
 	} // end children case
 }
 
-/* TO BE DELETED
-function trenchCheckFilter(){
-	//$(".TRENCH").unbind('change');
-	
-	$(".TRENCH").bind('change',function(){
-		var folderID = $(this).parents().eq(4).attr('id');
-		trenchId=$(this).parent().attr('id');			
-		
-		if($(this).prop("checked")){			
-			//Hide the duct in case of driving
-			$(this).parent().find('input:checkbox').each(function(){
-				if($(this).parent().hasClass('Duct')){
-					if(directionHashmapDuct.get($(this).parent().attr('id')) != undefined) {
-						for(ii = 0; ii < directionHashmapDuct.get($(this).parent().attr('id')).length; ii++) {
-							directionHashmapDuct.get($(this).parent().attr('id'))[ii].setMap(null); 
-							directionHashmapDuct.get($(this).parent().attr('id')).mapLabel.setMap(null);
-						}
-					}
-				}
-			});
+
+function fiberCheckFilterEvent(Id, type){	
+	$("#"+Id).children('input').bind("change",function() {		
+		console.log("the Id is " + Id);		
+		if ($(this).is(':checked')){			
+			fiberCheckFilter($(this));
+		}// end check  case 			
+		// uncheck case 
+		else{				
+			fiberUnCheckFilter($(this));						
+		}
 			
-			
-			if (window[""+trenchId][18] == "DRIVING") {
-				buildDrivingPath(trenchId,window["mapPoints_"+trenchId],"trench","brown",directionHashmapTrench);
+		if(type == "parentFolderCheck__showPath") {
+			if($(".MetroFiber").is(":checked") || $(".BackboneFiber").is(":checked") || $('.AccessFiber').is(':checked') ) {	
+				$('.AllFiberCables__showPath').prop('checked', true);
 			}
-			else if(trenchArray[trenchId]){
-				trenchArray[trenchId].setMap(map);	
+			else {
+				$('.AllFiberCables__showPath').prop('checked', false);
+			}
+		}
+			
+		else {
+			if ($('.BackboneFiber').is(':checked') && $('.MetroFiber').is(':checked') && $('.AccessFiber').is(':checked')){			
+					$('.AllFiberCables').prop('checked', true);
+			}
+			else {
+				$('.AllFiberCables').prop('checked', false);
+			}
+			if($(".MetroFiber").is(":checked") || $(".BackboneFiber").is(":checked") || $('.AccessFiber').is(':checked') ) {	
+				$("#fiberCheckAllBoq").prop("checked",true);
+			}	
+		}
+	});
+}
+
+
+
+function fiberCheckFilter (selector) {
+
+	$(selector).parent().find('input:checkbox').each(function(){
+		$(this).prop('checked', true);
+		if($(this).parent().hasClass('FIBER')){
+			var fiberId=$(this).parent().attr('id');
+			if(fiberId.includes("__showPath") == true ){
+				fiberId = fiberId.split("__showPath")[0];
+			}
+			if(directionHashmap.get(fiberId) != undefined) {
+				for(ii = 0; ii < directionHashmap.get(fiberId).length; ii++) {
+					directionHashmap.get(fiberId)[ii].setMap(null); 
+                    directionHashmap.get(fiberId).mapLabel.setMap(null);
+				}
+			}
+			if(fiberArray[fiberId]){						
+				fiberArray[fiberId].setMap(map);	 
+			}
+			else{   														
+				var path=window["mapPoints_"+fiberId];							 
+				buildPath(fiberId,path,fiberArray,allFiberCables,"FiberPath_f_",window['FiberColor_'+window[''+fiberId][22]],0.7,4.5,'blue',13);
+				fiberArray[fiberId].setMap(map);
+			}
+			
+			// Show and Hide the label of each cable depending on the checkLabel dropdown
+			if($("#fiberMapCheck_Labels").prop("checked")==true){
+				var fiberId=$(this).parent().attr('id');
+				if(fiberId.includes("__showPath") == true ){
+					fiberId = fiberId.split("__showPath")[0];
+				}
+				fiberArray[fiberId].mapLabel.setMap(map);
+			}
+			else {
+				fiberArray[fiberId].mapLabel.setMap(null);
+			}
+			$("#fiberCheckAllBoq").prop("checked",true);
+		}
+		else if($(this).parent().hasClass('TUBE')){
+			var tubeId=$(this).parent().attr('id');
+			if(tubeId.includes("__showPath") == true ){
+				tubeId = tubeId.split("__showPath")[0];
+			}
+			if(directionHashmapTube.get(tubeId) != undefined) {
+				for(ii = 0; ii < directionHashmapTube.get(tubeId).length; ii++) {
+					directionHashmapTube.get(tubeId)[ii].setMap(null); 
+					directionHashmapTube.get(tubeId).mapLabel.setMap(null);
+				}
+			}
+			if(tubeArray[tubeId]){						
+				tubeArray[tubeId].setMap(map);	
+			}
+			else{	 
+				buildPath(tubeId,window["mapPoints_"+tubeId],tubeArray,allTubes,"Tube",'green',0.7,3.3,'green',0);
+				tubeArray[tubeId].setMap(map);
+			}
+			
+			// Show and Hide the label of each tube depending on the checkLabel dropdown
+			if($("#tubeMapCheck_Labels").prop("checked")==true){
+				var tubeId=$(this).parent().attr('id');
+				if(tubeId.includes("__showPath") == true ){
+				tubeId = tubeId.split("__showPath")[0];
+				}
+				tubeArray[tubeId].mapLabel.setMap(map);
+			}
+			else {
+				tubeArray[tubeId].mapLabel.setMap(null);
+			}	
+			$('#tubeCheckAllBoq').prop('checked', true);						
+	}
+	else if($(this).parent().hasClass('STRAND')){
+			var strandId=$(this).parent().attr('id');
+			if(strandId.includes("__showPath") == true ){
+				strandId = strandId.split("__showPath")[0];
+			}
+			if(directionHashmapStrand.get(strandId) != undefined) {
+				for(ii = 0; ii < directionHashmapStrand.get(strandId).length; ii++) {
+					directionHashmapStrand.get(strandId)[ii].setMap(null); 
+					directionHashmapStrand.get(strandId).mapLabel.setMap(null);
+				}
+			}
+			if(strandArray[strandId]){						
+				strandArray[strandId].setMap(map);	
 			}
 			else{
-				if (window[""+trenchId][14] == "DRIVING") {
-					buildDrivingPath(trenchId,window["mapPoints_"+trenchId],"trench","brown",directionHashmapTrench);
+				buildPath(strandId,window["mapPoints_"+strandId],strandArray,allStrands,"Strand",'purple',0.7,2.8,'purple',0);
+				strandArray[strandId].setMap(map);
+			}	
+			// Show and Hide the label of each strand depending on the checkLabel dropdown
+			if($("#strandMapCheck_Labels").prop("checked")==true){
+			    var strandId=$(this).parent().attr('id');
+				if(strandId.includes("__showPath") == true){
+				strandId = strandId.split("__showPath")[0];
 				}
-				else {
-					var path=window["mapPoints_"+trenchId];
-					buildPath(trenchId,window["mapPoints_"+trenchId],trenchArray,allTrenches,"Trench_f_",'brown',0.4,15,'brown',1);
-					trenchArray[trenchId].setMap(map);
-				}
-			}
-			
-			// Show and Hide the label of each trench depending on the checkLabel dropdown
-			if($("#trenchMapCheck_Labels").prop("checked")==true){
-				if(directionHashmapTrench.get(trenchId)) {
-					directionHashmapTrench.get(trenchId).mapLabel.setMap(map);
-                }
-				if(trenchArray[trenchId]){
-					trenchArray[trenchId].mapLabel.setMap(map);
-				}
+				strandArray[strandId].mapLabel.setMap(map);
 			}
 			else {
-				if(directionHashmapTrench.get(trenchId)) {
-					directionHashmapTrench.get(trenchId).mapLabel.setMap(null);
-                }
-				if(trenchArray[trenchId]){
-					trenchArray[trenchId].mapLabel.setMap(null);
-				}
-			}
-			
-
-			$(this).parent().find('input:checkbox').each(function(){
-				$(this).prop('checked', true);				
-				if($(this).parent().hasClass('Duct')){
-					var ductId=$(this).parent().attr('id');
-					if(ductArray[ductId]){						
-						ductArray[ductId].setMap(map);	
-					}
-					else{
-						//buildDuct(ductId,window["mapPoints_"+ductId]);
-						buildPath(ductId,window["mapPoints_"+ductId],ductArray,allDucts,"Duct",'#8e8080',0.6,7,'#8e8080',1);
-						ductArray[ductId].setMap(map);
-					}
-				
-					// Show and Hide the label of each duct depending on the checkLabel dropdown
-					if($("#ductMapCheck_Labels").prop("checked")==true){
-						ductArray[ductId].mapLabel.setMap(map);
-					}
-					else {
-						ductArray[ductId].mapLabel.setMap(null);
-					}					
-				}
-			});
-		}
-		else{
-			$(this).parent().parent().parent().children('input:checkbox').prop('checked', false);
-
-			//Hide the duct in case of driving
-			$(this).parent().find('input:checkbox').each(function(){
-				if($(this).parent().hasClass('Duct')){
-					if(directionHashmapDuct.get($(this).parent().attr('id')) != undefined) {
-						for(ii = 0; ii < directionHashmapDuct.get($(this).parent().attr('id')).length; ii++) {
-							directionHashmapDuct.get($(this).parent().attr('id'))[ii].setMap(null); 
-							directionHashmapDuct.get($(this).parent().attr('id')).mapLabel.setMap(null);
-						}
-					}
-				}
-			});
-			
-			if(trenchArray[trenchId] && directionHashmapTrench.get(trenchId) != undefined){
-				trenchArray[trenchId].setMap(null);	
-				trenchArray[trenchId].mapLabel.setMap(null);
-				
-				for(i = 0 ; i < directionHashmapTrench.get(trenchId).length; i++) {
-					if(trenchId == directionHashmapTrench.get(trenchId)[i].ID ) {
-						directionHashmapTrench.get(trenchId)[i].setMap(null);
-						directionHashmapTrench.get(trenchId).mapLabel.setMap(null);
-					    routeDisplayTrench = [];
-						if(trenchArray[trenchId]){			
-							trenchArray[trenchId].mapLabel.setMap(null);
-						}
-				}
-			}
-				directionHashmapTrench.delete(trenchId);
-			}
-			else if(trenchArray[trenchId] && directionHashmapTrench.get(trenchId) == undefined){
-				trenchArray[trenchId].setMap(null);	
-				trenchArray[trenchId].mapLabel.setMap(null);
-			}
-			else  if (window[""+trenchId][18] == "DRIVING" ) {	// no line of site case		 
-				if(directionHashmapTrench.get(trenchId) != undefined) {
-					for(i = 0 ; i < directionHashmapTrench.get(trenchId).length; i++) {
-						if(trenchId == directionHashmapTrench.get(trenchId)[i].ID ) {
-							directionHashmapTrench.get(trenchId)[i].setMap(null);
-							directionHashmapTrench.get(trenchId).mapLabel.setMap(null);
-						    routeDisplayTrench = [];
-							if(trenchArray[trenchId]){			
-								trenchArray[trenchId].mapLabel.setMap(null);
-							}
-						}
-					}
-				}
-				directionHashmapTrench.delete(trenchId);
-			}
-			else {
-				trenchArray[trenchId].setMap(null);
-				trenchArray[trenchId].mapLabel.setMap(null);
-			}
-			$("#trenchCheckAllBoq").prop('checked', false);	
-			
-			$(this).parent().find('input:checkbox').each(function(){
-				$(this).prop('checked', false);
-				if($(this).parent().hasClass('Duct')){										
-					ductArray[$(this).parent().attr('id')].setMap(null);
-					ductArray[$(this).parent().attr('id')].mapLabel.setMap(null);
-
-				}
-			});
-			
-			
-		}
-	
-		var folderTrenchId =$(this).parent().parent().parent().attr('id');	
-		var trenchChildrenLength =$("#"+folderTrenchId+" > ul").children().length;
-		var trenchCheckedLength = $(this).parent().parent().parent().find(".TRENCH:checked").length;
-		
-		//To check the trench folder when all trenches children are checked
-		if (trenchChildrenLength == trenchCheckedLength) {
-			$(this).parent().parent().parent().children('input:checkbox').prop('checked', true);
-		}
-		
-		if( $("#Trench_f_CurrentPhysicalLayer").find(".TRENCH:checked" ).length ==0) {
-			$("#trenchCheckAllBoq").prop('checked', false);				
-		}
-		else {
-			$("#trenchCheckAllBoq").prop('checked', true);				
-		
-		}
-		
-		if( $("#Trench_f_CurrentPhysicalLayer").find(".DUCT:checked" ).length ==0) {
-			$("#ductCheckAllBoq").prop('checked', false);				
-		}
-		else {
-			$("#ductCheckAllBoq").prop('checked', true);				
-		}
-		
-
-	});
-
-	$(".AllTrenches").on('change',function(){
-	if($(this).prop("checked")){
-		
-		$("#Trench_f_CurrentPhysicalLayer").find(' > ul > li ').each(function(){	
-			if(directionHashmapTrench.get($(this).attr('id')) != undefined) {
-				for(ii = 0; ii < directionHashmapTrench.get($(this).attr('id')).length; ii++) {
-					directionHashmapTrench.get($(this).attr('id'))[ii].setMap(null); 
-					directionHashmapTrench.get($(this).attr('id')).mapLabel.setMap(null);
-				}
-			}
-		});
-		
-		//Hide the duct in case of driving
-		$(this).parent().find(' > ul > li >ul >li >ul >li').each(function(){
-			if(directionHashmapDuct.get($(this).attr('id')) != undefined) {
-				for(ii = 0; ii < directionHashmapDuct.get($(this).attr('id')).length; ii++) {
-					directionHashmapDuct.get($(this).attr('id'))[ii].setMap(null); 
-					directionHashmapDuct.get($(this).attr('id')).mapLabel.setMap(null);
-				}
-			}
-		});
-		
-		$("#trenchCheckAllBoq").prop("checked",true);
-
-			$(this).parent().find('input:checkbox').each(function(){
-
-				$(this).prop('checked', true);
-				
-				if($(this).parent().hasClass('Trench')){
-					trenchId=$(this).parent().attr('id');
-
-					if(trenchArray[trenchId]){						
-						trenchArray[trenchId].setMap(map);	
-					}
-					else{
-						buildPath(trenchId,window["mapPoints_"+trenchId],trenchArray,allTrenches,"Trench_f_",'brown',0.4,15,'brown',1);
-						trenchArray[trenchId].setMap(map);
-					}
-					
-					// Show and Hide the label of each trench depending on the checkLabel dropdown
-					if($("#trenchMapCheck_Labels").prop("checked")==true){
-						if(directionHashmapTrench.get(trenchId)) {
-							directionHashmapTrench.get(trenchId).mapLabel.setMap(map);
-		                }
-						if(trenchArray[trenchId]){
-							trenchArray[trenchId].mapLabel.setMap(map);
-						}
-					}
-					else {
-						if(directionHashmapTrench.get(trenchId)) {
-							directionHashmapTrench.get(trenchId).mapLabel.setMap(null);
-		                }
-						if(trenchArray[trenchId]){
-							trenchArray[trenchId].mapLabel.setMap(null);
-						}
-					}
-			 }	
-			else if($(this).parent().hasClass('Duct')){
-					ductId=$(this).parent().attr('id');
-					if(ductArray[ductId]){						
-						ductArray[ductId].setMap(map);	
-					}
-					else{
-						//buildDuct(ductId,window["mapPoints_"+ductId]);
-						buildPath(ductId,window["mapPoints_"+ductId],ductArray,allDucts,"Duct",'#8e8080',0.6,7,'#8e8080',1);
-						ductArray[ductId].setMap(map);
-					}
-					
-					// Show and Hide the label of each duct depending on the checkLabel dropdown
-					if($("#ductMapCheck_Labels").prop("checked")==true){
-						ductArray[ductId].mapLabel.setMap(map);
-					}
-					else {
-						ductArray[ductId].mapLabel.setMap(null);
-					}
-					
-					//$('#ductCheckAllBoq').prop('checked', true);
-
-				}		
-			});			
-				
-			
-		}
-		else{
-			$("#trenchCheckAllBoq").prop("checked",false);
-			$("#ductCheckAllBoq").prop("checked",false);
-			
-			//Hide the duct in case of driving
-			$(this).parent().find(' > ul > li >ul >li >ul >li').each(function(){
-				if(directionHashmapDuct.get($(this).attr('id')) != undefined) {
-					for(ii = 0; ii < directionHashmapDuct.get($(this).attr('id')).length; ii++) {
-						directionHashmapDuct.get($(this).attr('id'))[ii].setMap(null); 
-						directionHashmapDuct.get($(this).attr('id')).mapLabel.setMap(null);
-					}
-				}
-			});
-			
-			$(this).parent().find('input:checkbox').each(function(){
-				$(this).prop('checked', false);
-				
-				if($(this).parent().hasClass('Trench')){
-					trenchId=$(this).parent().attr('id');	
-					if(trenchArray[trenchId]) {
-						trenchArray[trenchId].setMap(null);
-						trenchArray[trenchId].mapLabel.setMap(null);
-						
-						$("#Trench_f_CurrentPhysicalLayer").find(' > ul > li ').each(function(){	
-							if(directionHashmapTrench.get($(this).attr('id')) != undefined) {
-								for(ii = 0; ii < directionHashmapTrench.get($(this).attr('id')).length; ii++) {
-									directionHashmapTrench.get($(this).attr('id'))[ii].setMap(null); 
-									directionHashmapTrench.get($(this).attr('id')).mapLabel.setMap(null);
-								}
-							}
-						});
-
-					}
-				}						
-				else if($(this).parent().hasClass('Duct')){
-					ductId=$(this).parent().attr('id');						
-					ductArray[ductId].setMap(null);						
-				}	
-				
-			});	
-		
-
-	/*	var nbDuctFolderChecked = $("#Trench_f_CurrentPhysicalLayer").find(".AllTrenches:checked" ).length;
-		var nbDuctFolder = $("#Trench_f_CurrentPhysicalLayer").find(".AllTrenches" ).length;
-		
-		if(nbDuctFolderChecked==nbDuctFolder) {	
-				$("#trenchCheckAllBoq").prop("checked",true);
-				$("#ductCheckAllBoq").prop("checked",true);
-		}	*/
-		
-	/*	$("#network_tree").find(".TRENCH:checked" ).each(function(){
+				strandArray[strandId].mapLabel.setMap(null);
+			}	
+			$('#strandCheckAllBoq').prop('checked', true);
+	}					
+		else if($(this).parent().hasClass('Trench')){
 			trenchId=$(this).parent().attr('id');
+			if(directionHashmapTrench.get(trenchId) != undefined) {
+				for(ii = 0; ii < directionHashmapTrench.get(trenchId).length; ii++) {
+					directionHashmapTrench.get(trenchId)[ii].setMap(null); 
+					directionHashmapTrench.get(trenchId).mapLabel.setMap(null);
+				}
+			}
 			if(trenchArray[trenchId]){						
 				trenchArray[trenchId].setMap(map);	
 			}
-					else{
-						//buildTrench(trenchId,window["mapPoints_"+trenchId]);
-						buildPath(trenchId,window["mapPoints_"+trenchId],trenchArray,allTrenches,"Trench_f_",'brown',0.4,15,'brown',1);
-						trenchArray[trenchId].setMap(map);
-					}
-		});
-			
-		}
-	
-/*	if( $("#Trench_f_CurrentPhysicalLayer").find(".TRENCH:checked" ).length ==0) {
-		$("#trenchCheckAllBoq").prop('checked', false);				
-	}
-	else {
-		$("#trenchCheckAllBoq").prop('checked', true);				
-		
-	}
-	if( $("#Trench_f_CurrentPhysicalLayer").find(".DUCT:checked" ).length ==0) {
-		$("#ductCheckAllBoq").prop('checked', false);				
-	}
-	else {
-		$("#ductCheckAllBoq").prop('checked', true);				
-			
-	}
-*/
-	/*});
-}  
-*/
-
-/* TO BE DELETED
-function ductCheckFilter(){
-
-	//$(".trenchDucts").unbind('change');
-	//$(".DUCT").unbind('change');
-	
-	$(".trenchDucts").bind('change',function(){
-		
-		if($(this).prop("checked")){	
-			
-			//Hide the duct in case of driving
-			$(this).parent().find(' > ul > li').each(function(){
-				if(directionHashmapDuct.get($(this).attr('id')) != undefined) {
-					for(ii = 0; ii < directionHashmapDuct.get($(this).attr('id')).length; ii++) {
-						directionHashmapDuct.get($(this).attr('id'))[ii].setMap(null); 
-						directionHashmapDuct.get($(this).attr('id')).mapLabel.setMap(null);
-					}
-				}
-			});
-			$(this).parent().find(' > ul > li').each(function(){
-				$(this).children('input:checkbox').prop('checked', true);
-				var ductId=$(this).attr('id');
-
-				if(ductArray[ductId]){
-					ductArray[ductId].setMap(map);
-				}
-				else{
-					buildPath(ductId,window["mapPoints_"+ductId],ductArray,allDucts,"Duct",'#8e8080',0.6,7,'#8e8080',1);
-					ductArray[ductId].setMap(map);
-				}
-				// Show and Hide the label of each duct depending on the checkLabel dropdown
-				if($("#ductMapCheck_Labels").prop("checked")==true){
-					ductArray[ductId].mapLabel.setMap(map);
-				}
-				else {
-					ductArray[ductId].mapLabel.setMap(null);
-				}
-			});
-		}
-		else{
-			$('#ductCheckAllBoq').prop('checked', false);
-
-			$(this).parent().find(' > ul > li').each(function(){
-				$(this).children('input:checkbox').prop('checked', false);
-				var ductId = $(this).attr('id');
-				
-				if(ductArray[ductId] && directionHashmapDuct.get(ductId) != undefined){
-					ductArray[ductId].setMap(null);	
-					ductArray[ductId].mapLabel.setMap(null);
-					
-					for(i = 0 ; i < directionHashmapDuct.get(ductId).length; i++) {
-						if(ductId == directionHashmapDuct.get(ductId)[i].ID ) {
-							directionHashmapDuct.get(ductId)[i].setMap(null);
-							directionHashmapDuct.get(ductId).mapLabel.setMap(null);
-						    routeDisplayDuct = [];
-							if(ductArray[ductId]){			
-								ductArray[ductId].mapLabel.setMap(null);
-							}
-					}
-				}
-					directionHashmapDuct.delete(ductId);
-				}	
-				else if(ductArray[ductId] && directionHashmapDuct.get(ductId) == undefined){
-					ductArray[ductId].setMap(null);	
-					ductArray[ductId].mapLabel.setMap(null);
-				}
-				else  if (window[""+ductId][19] == "DRIVING" ) {	// no line of site case		 
-					if(directionHashmapDuct.get(ductId) != undefined) {
-						for(i = 0 ; i < directionHashmapDuct.get(ductId).length; i++) {
-							if(ductId == directionHashmapDuct.get(ductId)[i].ID ) {
-								directionHashmapDuct.get(ductId)[i].setMap(null);
-								directionHashmapDuct.get(ductId).mapLabel.setMap(null);
-							    routeDisplayDuct = [];
-								if(ductArray[ductId]){			
-									ductArray[ductId].mapLabel.setMap(null);
-								}
-							}
-						}
-					}
-					directionHashmapDuct.delete(ductId);
+			else{
+				buildPath(trenchId,window["mapPoints_"+trenchId],trenchArray,allTrenches,"Trench_f_",'brown',0.4,20,'brown',1);
+				trenchArray[trenchId].setMap(map);
+			}	
+			// Show and Hide the label of each trench depending on the checkLabel dropdown
+			if($("#trenchMapCheck_Labels").prop("checked")==true){
+					trenchArray[trenchId].mapLabel.setMap(map);
 			}
 			else {
-				ductArray[ductId].setMap(null);
-				ductArray[ductId].mapLabel.setMap(null);
+					trenchArray[trenchId].mapLabel.setMap(null);
 			}	
-				
-		});
-	}
-		
-		if( $("#Trench_f_CurrentPhysicalLayer").find(".DUCT:checked" ).length ==0) {
-			$("#ductCheckAllBoq").prop('checked', false);				
-		}
-		else {
-			$("#ductCheckAllBoq").prop('checked', true);				
-				
-		}
-		
-
-	});
-	
-	
-
-	$('.DUCT').bind('change',function(){
-
-		if($(this).prop("checked")){					
-			
-			var ductID = $(this).parent().attr('id');
-
-			if (window[""+ductID][19] == "DRIVING") {
-				buildDrivingPath(ductID,window["mapPoints_"+ductID],"duct","#8e8080",directionHashmapDuct);
+		 }	
+		else if($(this).parent().hasClass('Duct')){
+			ductId=$(this).parent().attr('id');
+			if(directionHashmapDuct.get(ductId) != undefined) {
+				for(ii = 0; ii < directionHashmapDuct.get(ductId).length; ii++) {
+					directionHashmapDuct.get(ductId)[ii].setMap(null); 
+					directionHashmapDuct.get(ductId).mapLabel.setMap(null);
+				}
 			}
-			else if(ductArray[ductID]){
-				ductArray[ductID].setMap(map);
+			if(ductArray[ductId]){						
+				ductArray[ductId].setMap(map);	
 			}
 			else{
-				if (window[""+ductID][19] == "DRIVING") {
-					buildDrivingPath(ductID,window["mapPoints_"+ductID],"duct","#8e8080",directionHashmapDuct);
-				}
-				else {
-					var path=window["mapPoints_"+ductID];
-					buildPath(ductID,window["mapPoints_"+ductID],ductArray,allDucts,"Duct",'#8e8080',0.6,7,'#8e8080',1);
-					ductArray[ductID].setMap(map);
-				}
-		  }
-			
+				buildPath(ductId,window["mapPoints_"+ductId],ductArray,allDucts,"Duct",'#8e8080',0.6,10,'#8e8080',1);
+				ductArray[ductId].setMap(map);
+			}	
 			// Show and Hide the label of each duct depending on the checkLabel dropdown
 			if($("#ductMapCheck_Labels").prop("checked")==true){
-				if(directionHashmapDuct.get(ductID)) {
-					directionHashmapDuct.get(ductID).mapLabel.setMap(map);
-			    }
-				if(ductArray[ductID]){
-					ductArray[ductID].mapLabel.setMap(map);
-				}
+				ductArray[ductId].mapLabel.setMap(map);
 			}
 			else {
-				if(directionHashmapDuct.get(ductID)) {
-					directionHashmapDuct.get(ductID).mapLabel.setMap(null);
-			     }
-				if(ductArray[ductID]){
-					ductArray[ductID].mapLabel.setMap(null);
-				}
-			}
+				ductArray[ductId].mapLabel.setMap(null);
+			}							
+		}		
 			
-		}
-		else{		
-		
-			var ductID = $(this).parent().attr('id');
-			
-			if(ductArray[ductID] && directionHashmapDuct.get(ductID) != undefined){
-				ductArray[ductID].setMap(null);	
-				ductArray[ductID].mapLabel.setMap(null);
-					
-				for(i = 0 ; i < directionHashmapDuct.get(ductID).length; i++) {
-						if(ductID == directionHashmapDuct.get(ductID)[i].ID ) {
-							directionHashmapDuct.get(ductID)[i].setMap(null);
-							directionHashmapDuct.get(ductID).mapLabel.setMap(null);
-						    routeDisplayDuct = [];
-							if(ductArray[ductID]){			
-								ductArray[ductID].mapLabel.setMap(null);
-							}
-					}
-				}
-				directionHashmapDuct.delete(ductID);
-			}
-			else if(ductArray[ductID] && directionHashmapDuct.get(ductID) == undefined){
-				ductArray[ductID].setMap(null);	
-				ductArray[ductID].mapLabel.setMap(null);
-			}
-			else if (window[""+ductID][19] == "DRIVING" ) {	// no line of site case		 
-				if(directionHashmapDuct.get(ductID) != undefined) {
-					for(i = 0 ; i < directionHashmapDuct.get(ductID).length; i++) {
-						if(ductID == directionHashmapDuct.get(ductID)[i].ID ) {
-							directionHashmapDuct.get(ductID)[i].setMap(null);
-							directionHashmapDuct.get(ductID).mapLabel.setMap(null);
-						    routeDisplayDuct = [];
-							if(ductArray[ductID]){			
-								ductArray[ductID].mapLabel.setMap(null);
-							}
-						}
-					}
-				}
-				directionHashmapDuct.delete(ductID);
-			}	
-			else {
-				ductArray[ductID].setMap(null);
-				ductArray[ductID].mapLabel.setMap(null);
-			}				
-		
-			$("#ductCheckAllBoq").prop('checked', false);		
-
-		
-		}
-		var folderDuctId =$(this).parent().parent().parent().attr('id');			
-		var ductChildrenLength =$("#"+folderDuctId+" > ul").children().length;
-		var ductCheckedLength = $(this).parent().parent().parent().find("li > input[type='checkbox']:checked").length;
-
-		//To check the ducts folder when all ducts children are checked
-		if (ductChildrenLength == ductCheckedLength) {
-			$(this).parent().parent().parent().children('input:checkbox').prop('checked', true);
-		}
-		else {
-			$(this).parent().parent().parent().children('input:checkbox').prop('checked', false);
-
-		}
-		
-		if( $("#Trench_f_CurrentPhysicalLayer").find(".DUCT:checked").length ==0) {
-			$("#ductCheckAllBoq").prop('checked', false);				
-		}
-		else {
-			$("#ductCheckAllBoq").prop('checked', true);				
-		
-		}
-		
-	});
+		});
 	
 }
-*/
+
+
+
+
+function fiberUnCheckFilter(selector) {
+	
+	console.log("fiberUnCheckFilter and selector is " +selector);
+	
+	$(selector).parent().find('input:checkbox').each(function(){
+		$(this).prop('checked', false);
+		if($(this).parent().hasClass('FIBER')){
+			var fiberId=$(this).parent().attr('id');
+			if(fiberId.includes("__showPath") == true ){
+				fiberId = fiberId.split("__showPath")[0];
+			}
+			if(fiberArray[fiberId]){
+				if(directionHashmap.get(fiberId) != undefined) {
+					for(ii = 0; ii < directionHashmap.get(fiberId).length; ii++) {
+						directionHashmap.get(fiberId)[ii].setMap(null); 
+	                    directionHashmap.get(fiberId).mapLabel.setMap(null);
+					}
+				}
+				fiberArray[fiberId].setMap(null);	
+				fiberArray[fiberId].mapLabel.setMap(null);
+			}
+			$("#fiberCheckAllBoq").prop("checked",false);	
+		}
+		else if($(this).parent().hasClass('TUBE')){	
+			var tubeId = $(this).parent().attr('id');
+			if(tubeId.includes("__showPath") == true ){
+				tubeId = tubeId.split("__showPath")[0];
+			}	
+			if(directionHashmapTube.get(tubeId) != undefined) {
+				for(ii = 0; ii < directionHashmapTube.get(tubeId).length; ii++) {
+					directionHashmapTube.get(tubeId)[ii].setMap(null); 
+					directionHashmapTube.get(tubeId).mapLabel.setMap(null);
+				}
+			}
+			tubeArray[tubeId].setMap(null);
+			tubeArray[tubeId].mapLabel.setMap(null);
+			$("#tubeCheckAllBoq").prop("checked",false);
+		}
+		else if($(this).parent().hasClass('STRAND')){	
+			var strandId = $(this).parent().attr('id');
+			if(strandId.includes("__showPath") == true ){
+				strandId = strandId.split("__showPath")[0];
+			}
+			if(directionHashmapStrand.get(strandId) != undefined) {
+				for(ii = 0; ii < directionHashmapStrand.get(strandId).length; ii++) {
+					directionHashmapStrand.get(strandId)[ii].setMap(null); 
+					directionHashmapStrand.get(strandId).mapLabel.setMap(null);
+				}
+			}
+			strandArray[strandId].setMap(null);
+			strandArray[strandId].mapLabel.setMap(null);
+			$("#strandCheckAllBoq").prop("checked",false);				
+		}
+		else if($(this).parent().hasClass('Trench')){
+			trenchId=$(this).parent().attr('id');
+			if(directionHashmapTrench.get(trenchId) != undefined) {
+				for(ii = 0; ii < directionHashmapTrench.get(trenchId).length; ii++) {
+					directionHashmapTrench.get(trenchId)[ii].setMap(null); 
+					directionHashmapTrench.get(trenchId).mapLabel.setMap(null);
+				}
+			}
+			trenchArray[trenchId].setMap(null);	
+			trenchArray[trenchId].mapLabel.setMap(null);	
+			$("#trenchCheckAllBoq").prop("checked",false);				
+		 }	
+		else if($(this).parent().hasClass('Duct')){
+			ductId=$(this).parent().attr('id');
+			if(directionHashmapDuct.get(ductId) != undefined) {
+				for(ii = 0; ii < directionHashmapDuct.get(ductId).length; ii++) {
+					directionHashmapDuct.get(ductId)[ii].setMap(null); 
+					directionHashmapDuct.get(ductId).mapLabel.setMap(null);
+				}
+			}
+			ductArray[ductId].setMap(null);	
+			ductArray[ductId].mapLabel.setMap(null);
+			$("#ductCheckAllBoq").prop("checked",false);				
+		}		
+	});
+	
+	if($("#FiberPath_f_CurrentPhysicalLayer").find(".FiberTubes:checked" ).length ==0) {
+		$("#tubeCheckAllBoq").prop('checked', false);				
+	}
+	else {
+		$("#tubeCheckAllBoq").prop('checked', true);				
+	}
+	if( $("#FiberPath_f_CurrentPhysicalLayer").find(".TubeStrands:checked" ).length ==0) {
+		$("#strandCheckAllBoq").prop('checked', false);				
+	}
+	else {
+		$("#strandCheckAllBoq").prop('checked', true);				
+	}
+	
+}
+
+
 //function checkbox events for filtering of items in Boq Div
 function boqCheckFilter(){
 	$("#manholeCheckAllBoq").change(function(){
