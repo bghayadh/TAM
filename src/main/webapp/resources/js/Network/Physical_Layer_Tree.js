@@ -17553,26 +17553,6 @@ ManHandHoleAutoCompleteJunction("handholeNameJct","Handhole");
 }
 	/////// >>>>>>>>>>>>>  End of CreateTree_PhysicalLayer	/////////////////////////////
 
-function fiberCableTreeFolder()
-{
-	//$(".folder").unbind('click');
-	$('.tree li#FiberPath_f_'+IdNodeSelectedTemp+' .folder').unbind('click');
-							
-	$('.tree li#FiberPath_f_'+IdNodeSelectedTemp+' .folder').bind('click',function (e) {
-		console.log(">>>>>>>>>> "+$(this).parent().attr('id'));
-		var children = $(this).parent().find(' > ul > li');
-		if (children.is(":visible")) {
-			children.hide('fast');
-			$(this).parent('').children('.folder').find('> svg').addClass('fa-folder').removeClass('fa-folder-open');
-
-		} else {
-			children.show('fast');
-			$(this).parent('').children('.folder').find('> svg').addClass('fa-folder-open').removeClass('fa-folder');
-		}
-		e.stopPropagation(i);
-	});
-}
-
 function treeFoldermanhole(id){
 	console.log("the id is " + id);
 	console.log("the length of the selector is " + $("#" + id + " .folder").length);
@@ -17651,12 +17631,6 @@ function tree_prop_general(ManholeId){
 }
 
 function treeCollapseFolder(selector,type,clss){
-	//console.log("the id is " + id);
-	//console.log("the length of the selector is " + $("#" + id + " .folder").length);
-	//console.log("the length of the selector > is " + $("#" + id + " > .folder").length);
-	//console.log("the html of the first element of the selector is " + $("#" + id + " .folder").eq(0).html());
-	//console.log("the html of the second element of the selector is " + $("#" + id + " .folder").eq(1).html());
-	//$(".folder").unbind('click');
 	if(selector == null) {
 		selector= " .folder";
 	}				
