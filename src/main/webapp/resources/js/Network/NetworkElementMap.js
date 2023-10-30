@@ -162,15 +162,41 @@ function create_Marker_Click(Id,Name,Long,Lat,markers,marker_Cluster,data) {
 	        var spanElement = liElement.find('.TreeSpan')[0];
 	       // console.log("spanElement-------",spanElement);
 	        
-	        var Initialparent = $("#initial_ul").find(' > ul > li');
-	        //console.log("Initialparent-------",Initialparent);
-	    	$("#initial_ul > .folder > svg").addClass('fa-folder-open').removeClass('fa-folder'); 
-	        Initialparent.show();
+	        $("#initial_ul > .folder > svg").addClass('fa-folder-open').removeClass('fa-folder'); 
+	    	$("#initial_ul").find(' > ul > li').show();
+	        
+	        liElement.closest('.NodeType').find('> .folder > svg').removeClass('fa fa-folder').addClass('fa-folder-open');
+	        liElement.closest('.NodeType').find(' > ul > li').show();
+		    
 	        liElement.closest('.NodeType').find('.NodeTypeFolder').find('> .folder > svg').removeClass('fa fa-folder').addClass('fa-folder-open');	
-	        var parentFolder = liElement.closest('.NodeType').find('.NodeTypeFolder').find(' > ul > li');
-		    parentFolder.show();
+	        liElement.closest('.NodeType').find('.NodeTypeFolder').find(' > ul > li').show();
+		    
+	     //Supplier pages
+		    liElement.closest('.Supplier').find('> .folder > svg').removeClass('fa fa-folder').addClass('fa-folder-open');
+	        liElement.closest('.Supplier').find(' > ul > li').show();
+		   
+	        liElement.closest('.Supplier').find('.SiteFolder').find('> .folder > svg').removeClass('fa fa-folder').addClass('fa-folder-open');	
+	        liElement.closest('.Supplier').find('.SiteFolder').find(' > ul > li').show();
 	     
-	       
+	        liElement.closest('.Supplier').find('.NodeTypeFolder').find('> .folder > svg').removeClass('fa fa-folder').addClass('fa-folder-open');	
+	        liElement.closest('.Supplier').find('.NodeTypeFolder').find(' > ul > li').show();
+	        
+	        liElement.closest('.Supplier').find('.NodeFolder').find('> .folder > svg').removeClass('fa fa-folder').addClass('fa-folder-open');	
+	        liElement.closest('.Supplier').find('.NodeFolder').find(' > ul > li').show();
+	        
+	       // PO pages 
+	        liElement.closest('.PO').find('> .folder > svg').removeClass('fa fa-folder').addClass('fa-folder-open');	
+	        liElement.closest('.PO').find(' > ul > li').show();
+	        
+	        liElement.closest('.PO').find('.SiteFolder').find('> .folder > svg').removeClass('fa fa-folder').addClass('fa-folder-open');	
+	        liElement.closest('.PO').find('.SiteFolder').find(' > ul > li').show();
+	        
+	        liElement.closest('.PO').find('.Item').find('> .folder > svg').removeClass('fa fa-folder').addClass('fa-folder-open');	
+	        liElement.closest('.PO').find('.Item').find(' > ul > li').show();
+	        
+	        liElement.closest('.PO').find('.Items').find('> .folder > svg').removeClass('fa fa-folder').addClass('fa-folder-open');	
+	        liElement.closest('.PO').find('.Items').find(' > ul > li').show();
+	        
     		$(".TreeSpan").removeClass("selected-span").css("background", "");
     		// $("#" + IdSelected + " > .TreeSpan").addClass("selected-span").css("background-color", "#97b9cc");	
     		$(spanElement).addClass("selected-span").css("background-color", "#97b9cc");	

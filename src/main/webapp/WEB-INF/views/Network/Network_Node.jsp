@@ -291,21 +291,19 @@ function CreateTree_Nodes(lst,map){
     	$(".Node > .TreeSpan").contextmenu(function(){				
     		selectedNodeIdContext=$(this).parent().attr('id');
     		//console.log("selectedNodeIdContext", selectedNodeIdContext); //nodeId_wareId: 2023_NODE_Huawei_Transmission_618845_WARE_2021_13763
- 		
     		var index = selectedNodeIdContext.indexOf("WARE_2");
-			//console.log(" index : "+index);
 			if (index !== -1) {
-			  nodeId = selectedNodeIdContext.substring(0, index).slice(0, -1);
-			 // console.log(" nodeId : "+nodeId);
-			  SiteId = selectedNodeIdContext.substring(index);
-			 // console.log("SiteId : " + SiteId);
-			} 
-			
-			if(selectedNodeIdContext.substring(index, index + "WARE".length) !="null"){  //if "WARE" is not null
-   				SiteId = selectedNodeIdContext.substring(index); // WARE_2021_13730
-    		}else{
-    			SiteId = selectedNodeIdContext.substring(index, index + "WARE".length); // WARE_2021_13730
-    		}
+				  nodeId = selectedNodeIdContext.substring(0, index).slice(0, -1);
+				  //console.log(" nodeId : "+nodeId);
+				  SiteId = selectedNodeIdContext.substring(index);
+				  //console.log("SiteId : " + SiteId);
+				} else{
+					  var lastIndex = selectedNodeIdContext.lastIndexOf("_");
+					  nodeId = selectedNodeIdContext.substring(0, lastIndex);
+					  //console.log(" nodeId null: "+nodeId);
+					  SiteId =null;
+					  //console.log("SiteId null: " + SiteId);	
+				}
     		menuName=singleNode;			
     		openContext(selectedNodeIdContext,"",singleNode,event);
     	});   	
@@ -352,13 +350,14 @@ function CreateTree_Nodes(lst,map){
 
 	
 	function showMarkerSingleSite(id) {
-		var Id= id.split("_SingleNode")[0];	
+		var Id= id.split("_SingleNode")[0];
 		var index = id.indexOf("WARE_2");
 		var indexnull = id.indexOf("SingleNode");
 		if (index !== -1) {
-		  nodeId = id.substring(0, index).slice(0, -1);
+			nodeId = id.substring(0, index).slice(0, -1);
 		}else{
-			 nodeId = id.substring(0, indexnull-2).slice(0, -1);
+			var secondLastIndex = id.lastIndexOf("_", id.lastIndexOf("_") - 1); // Find the second last index of '_'
+			var nodeId = id.substring(0, secondLastIndex); // Get the substring from 0 to the second last index
 		}
 		
 		if ($("#" + id).is(":checked")) {
@@ -390,7 +389,8 @@ function CreateTree_Nodes(lst,map){
 		if (index !== -1) {
 			nodeId = id.substring(0, index).slice(0, -1);
 		}else{
-			nodeId = id.slice(0, -2);;
+			var lastIndex = id.lastIndexOf("_");
+			var nodeId = id.substring(0, lastIndex);
 		}
 		
 		if(nodeId!=markersSite)

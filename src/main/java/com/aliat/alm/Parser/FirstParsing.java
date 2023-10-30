@@ -151,6 +151,10 @@ public class FirstParsing {
 						 		UpdatingSitefromLookUP(rsinit2.getString("DOMAIN"),rsinit2.getString("SUB_DOMAIN"),rsinit2.getString("SUB_DOMAIN_TYPE"),rsinit2.getString("VENDOR"));
 					 		
 				 		  }
+				 			System.out.println("Calling truncating temp tables method");
+						 	//All temporary tables to be truncated here.
+						 	TruncateTempTables();
+						 	System.out.println("After Truncating temp tables.");
 			 	   } else {
 			 		  System.out.println("No data in Temp  to check or run First Parsing");
 			 		 logger.info("No data in Temp  to check or run First Parsing");
@@ -167,9 +171,7 @@ public class FirstParsing {
 			 	   }
 			 	  rsinit2.close();
 			 	  stmtinit2.close();
-					
-
-			 	 
+				
 					
 					System.out.println("COMPLETED");
 					logger.info("COMPLETED");
@@ -274,8 +276,8 @@ public class FirstParsing {
 		PreparedStatement stmtinsert3=null;
 		try {
 		//stmtinsert1 = con.prepareStatement("insert into NODE_ACTIVE (select * from TEMP_NODE_ACTIVE where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"')"); 
-		stmtinsert1 = con.prepareStatement("insert into NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_SOURCE,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,ACTIVE_RECORD,LINE,WARE_ID,VENDOR,SUPPLIER_ID,WARE_NAME,SUPPLIER_NAME,IP_ADDRESS,MAC_ADDRESS,SOFTWARE_VERSION,PATCH_VERSION,LONGITUDE,LATITUDE,PART_NUMBER,OTHERS,SUB_DOMAIN_TYPE,SUB_DOMAIN,PARSING_DATE)"
-				+ "(select NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_SOURCE,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,'"+TransTyp+"' as TRANS_TYPE,'1' as ACTIVE_RECORD,LINE,WARE_ID,VENDOR,SUPPLIER_ID,WARE_NAME,SUPPLIER_NAME,IP_ADDRESS,MAC_ADDRESS,SOFTWARE_VERSION,PATCH_VERSION,LONGITUDE,LATITUDE,PART_NUMBER,OTHERS,SUB_DOMAIN_TYPE,SUB_DOMAIN,sysdate from TEMP_NODE_ACTIVE where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"')");
+		stmtinsert1 = con.prepareStatement("insert into NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_SOURCE,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,ACTIVE_RECORD,LINE,WARE_ID,VENDOR,SUPPLIER_ID,WARE_NAME,SUPPLIER_NAME,IP_ADDRESS,MAC_ADDRESS,SOFTWARE_VERSION,PATCH_VERSION,LONGITUDE,LATITUDE,PART_NUMBER,OTHERS,SUB_DOMAIN_TYPE,SUB_DOMAIN,PARSING_DATE,SERIAL_NUMBER)"
+				+ "(select NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_SOURCE,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,'"+TransTyp+"' as TRANS_TYPE,'1' as ACTIVE_RECORD,LINE,WARE_ID,VENDOR,SUPPLIER_ID,WARE_NAME,SUPPLIER_NAME,IP_ADDRESS,MAC_ADDRESS,SOFTWARE_VERSION,PATCH_VERSION,LONGITUDE,LATITUDE,PART_NUMBER,OTHERS,SUB_DOMAIN_TYPE,SUB_DOMAIN,sysdate,SERIAL_NUMBER from TEMP_NODE_ACTIVE where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"')");
 		stmtinsert1.executeUpdate();
  		stmtinsert1.close();
  		System.out.println("insert into NODE_ACTIVE COMPLETED");
@@ -557,5 +559,38 @@ private static String CheckSubDomain_Type(String subdomain,String type,String up
 	}
 	return updateStatement;
 }
-	
+
+private static void TruncateTempTables() throws SQLException {
+	Statement stmt = con.createStatement();
+	System.out.println("********Truncating Temp Table****************");
+	stmt.execute("TRUNCATE TABLE TEMP_NODE_ACTIVE");
+	stmt.execute("TRUNCATE TABLE TEMP_NODE_ACTIVE_ATTRIBUTE");
+	stmt.execute("TRUNCATE TABLE TEMP_NODE_RACK");
+	stmt.execute("TRUNCATE TABLE TEMP_NODE_CABINET");
+	stmt.execute("TRUNCATE TABLE TEMP_NODE_HOSTVER");
+	stmt.execute("TRUNCATE TABLE TEMP_NODE_FRAME");
+	stmt.execute("TRUNCATE TABLE TEMP_NODE_SLOT");
+	stmt.execute("TRUNCATE TABLE TEMP_NODE_BOARD");
+	stmt.execute("TRUNCATE TABLE TEMP_NODE_PORT");
+	stmt.execute("TRUNCATE TABLE TEMP_NODE_ACCESSORY");
+	stmt.execute("TRUNCATE TABLE TEMP_NODE_HOST");
+	stmt.execute("TRUNCATE TABLE TEMP_NODE_SUBRACK");
+	stmt.execute("TRUNCATE TABLE TEMP_NODE_GCELL");
+	stmt.execute("TRUNCATE TABLE TEMP_NODE_BTS");
+	stmt.execute("TRUNCATE TABLE TEMP_NODE_UCELL");
+	stmt.execute("TRUNCATE TABLE TEMP_NODE_ANTENNA");
+	stmt.execute("TRUNCATE TABLE TEMP_NODE_LCELL");
+	stmt.execute("TRUNCATE TABLE TEMP_NODE_RRN");
+	stmt.execute("TRUNCATE TABLE TEMP_NODE_ENODEBCELL");
+	stmt.execute("TRUNCATE TABLE TEMP_NODE_NODEBCELL");
+	stmt.execute("TRUNCATE TABLE TEMP_NODE_NBINTERFACES");
+	stmt.execute("TRUNCATE TABLE TEMP_NODE_CHILD_PARENT");
+	stmt.execute("TRUNCATE TABLE TEMP_NODE_SUBMODULE");
+	stmt.execute("TRUNCATE TABLE TEMP_NODE_MODULE");
+	stmt.execute("TRUNCATE TABLE TEMP_NODE_FUUNIT");
+	stmt.execute("TRUNCATE TABLE TEMP_NODE_SHELF");
+	stmt.execute("COMMIT");
+	stmt.close();
+	System.out.println("********Truncating Executed****************");
+}
 }
