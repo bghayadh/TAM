@@ -50,7 +50,8 @@ public class FinancialReportController {
 
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	@RequestMapping(value = "/FinancialReport", method = RequestMethod.GET)
-	public String AssetFinancialReport(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
+	public String AssetFinancialReport(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) {
 		ObjectMapper mapper = new ObjectMapper();
 
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
@@ -74,12 +75,11 @@ public class FinancialReportController {
 									+ " ROW_NUMBER() OVER (PARTITION BY A.FAR_ID ORDER BY B.SITE_ID DESC) AS rn FROM FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID "
 									+ " WHERE A.CREATED_DATE >=  trunc(SYSDATE - INTERVAL '1' YEAR) AND A.created_date < (trunc(sysdate) ) + 1   ) WHERE rn = 1 ORDER BY lastModifiedDate DESC ");
 
-					
-					List<FinancialReport> ListFAR = (List<FinancialReport>) ((NativeQuery<FinancialReport>) query).addScalar("farID")
-							.addScalar("itemCode").addScalar("itemName").addScalar("lastModifiedDate")
-							.addScalar("itemSN").addScalar("itemNameRegister").addScalar("poID").addScalar("siteID")
-							.addScalar("siteName").addScalar("longitude").addScalar("latitude").addScalar("initCost")
-							.addScalar("netCost").addScalar("accuDepr")
+					List<FinancialReport> ListFAR = (List<FinancialReport>) ((NativeQuery<FinancialReport>) query)
+							.addScalar("farID").addScalar("itemCode").addScalar("itemName")
+							.addScalar("lastModifiedDate").addScalar("itemSN").addScalar("itemNameRegister")
+							.addScalar("poID").addScalar("siteID").addScalar("siteName").addScalar("longitude")
+							.addScalar("latitude").addScalar("initCost").addScalar("netCost").addScalar("accuDepr")
 							.setResultTransformer(Transformers.aliasToBean(FinancialReport.class)).list();
 					model.addAttribute("financialReportList", mapper.writeValueAsString(ListFAR));
 
@@ -113,11 +113,9 @@ public class FinancialReportController {
 					model.addAttribute("totalInitialCost", totalInitialCost);
 					model.addAttribute("totalAccumdepr", totalAccumdepr);
 					model.addAttribute("totalNetCost", totalNetCost);
-				}
-				catch (Exception e) {
+				} catch (Exception e) {
 					logger.info("Error in creating session with the DataBase " + e.getMessage());
-				}
-				finally {
+				} finally {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
@@ -231,7 +229,6 @@ public class FinancialReportController {
 
 		String start_Date = request.getParameter("startDate");
 		String end_Date = request.getParameter("endDate");
-
 
 		DecimalFormat df = new DecimalFormat("#,###.00");
 		String totalInitialCost = "0.0";
@@ -373,18 +370,20 @@ public class FinancialReportController {
 
 					} // end of checked strt/end coordinate checkbox
 
-					str = str + "  ) WHERE (longitude is not null and longitude != '0' and latitude is not null and latitude != '0') ORDER BY lastModifiedDate DESC  ";
-					System.out.println("the str is " +str);
+					str = str
+							+ "  ) WHERE (longitude is not null and longitude != '0' and latitude is not null and latitude != '0') ORDER BY lastModifiedDate DESC  ";
+					System.out.println("the str is " + str);
 					query = session.createNativeQuery(str);
 					listFARTemp = query.list(); // To use it in circle range calculation
 
-					listFAR = ((NativeQuery<Object[]>) query).addScalar("farID").addScalar("itemCode").addScalar("itemName")
-							.addScalar("lastModifiedDate").addScalar("itemSN").addScalar("itemNameRegister")
-							.addScalar("poID").addScalar("siteID").addScalar("siteName").addScalar("longitude")
-							.addScalar("latitude").addScalar("initCost").addScalar("netCost").addScalar("accuDepr")
-							.setResultTransformer(Transformers.aliasToBean(FinancialReport.class)).list();
-					
-					System.out.println("The length of listFar is " +listFAR.size());
+					listFAR = ((NativeQuery<Object[]>) query).addScalar("farID").addScalar("itemCode")
+							.addScalar("itemName").addScalar("lastModifiedDate").addScalar("itemSN")
+							.addScalar("itemNameRegister").addScalar("poID").addScalar("siteID").addScalar("siteName")
+							.addScalar("longitude").addScalar("latitude").addScalar("initCost").addScalar("netCost")
+							.addScalar("accuDepr").setResultTransformer(Transformers.aliasToBean(FinancialReport.class))
+							.list();
+
+					System.out.println("The length of listFar is " + listFAR.size());
 
 					// Get the total of initial,net cost and accumulated depr of fetched FAR records
 					query = session.createNativeQuery(totalStr);
@@ -404,16 +403,14 @@ public class FinancialReportController {
 					if ((radius != null && !radius.equalsIgnoreCase("") && Double.parseDouble(radius) > 0)
 							&& (longitude != null && !longitude.equalsIgnoreCase(""))
 							&& (latitude != null && !latitude.equalsIgnoreCase(""))) {
-						
-						System.out.println("Starting in calculating distances for circle range");
 
 						for (int i = 0; i < listFAR.size(); i++) {
 							distance = haversine(Double.parseDouble(latitude), Double.parseDouble(longitude),
 									Double.valueOf(listFARTemp.get(i)[10].toString()),
 									Double.valueOf(listFARTemp.get(i)[9].toString()));
-							
+
 							if (distance <= Double.parseDouble(radius)) {
-								//System.out.println("Within Range");
+								// System.out.println("Within Range");
 								listCircleRange.add(listFARTemp.get(i));
 							}
 						}
