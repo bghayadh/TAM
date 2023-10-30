@@ -91,7 +91,7 @@
 
 							<div class=" top-btn-filter">
 								<button id="supplierBtn" name="Supplier" class="buttonTog">
-									<i class="far fa-copyright" style="font-size: 15px"></i>
+									<i class="far fa-registered" style="font-size: 15px"></i>
 									Supplier
 								</button>
 							</div>
