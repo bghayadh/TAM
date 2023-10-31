@@ -252,7 +252,7 @@ map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
 		var Nairobi=new google.maps.LatLng(0.796530,37.959529);			
 		map.setCenter(Nairobi);
 		map.setZoom(6);
-		var str="<ul><li id='initial_ul' class='Initial'><input type='checkbox' id='Suppliers' class='AllSuppliers' style='margin-left: 15px' unchecked onclick='AllSitesCheckFilter()'></input> <span class='folder'><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Suppliers</span></li></ul>";
+		var str="<ul><li id='initial_ul' class='Initial'><input type='checkbox' id='Vendors' class='AllVendors' style='margin-left: 15px' unchecked onclick='AllSitesCheckFilter()'></input> <span class='folder'><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Vendors</span></li></ul>";
 		$("#network_tree").append(str);
 		tree_prop_selection();
 		folder();
