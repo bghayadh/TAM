@@ -64,13 +64,13 @@
 width:100%;
 }
 
-#clearButton{
+.clearShowButton{
 background-color:white;
 color:orange;
 
 }
 
-#clearButton:hover{
+.clearShowButton:hover{
 background-color:orange;
 color:white;
 
@@ -363,7 +363,8 @@ max-width: 100%;
 
 		<div class="col-md-3" style="float: right; padding-top:-100px;" >
 			<div class="btn-group pull-right"  >
-		 			<button type="button"  id ="clearButton"class="btn btn-light" style=" margin-top:-10px; margin-right:-15px; "  >Clear</button>
+				<button type="button"  id ="showOnMap"class="btn btn-light clearShowButton" style=" margin-top:-10px;  margin-right: 15px;"  >Show on Map</button>
+		 		<button type="button"  id ="clearButton"class="btn btn-light clearShowButton" style=" margin-top:-10px; margin-right:-15px; "  >Clear</button>		 	
 		 	</div>
 		</div>
 	</div>
@@ -396,15 +397,6 @@ max-width: 100%;
       					<input type="checkbox" value="0" id="circleRange" name="circleRange">
       					<span style="margin-left: 10px;">Circle Range</span>
 				   </div>
-                  </div>
-			   </div>
-	     </div>
-	        <div class="col-md-3">
-            	<div class="form-group">
-				   <div class="input-group-prepend" data-target-input="nearest">
-						
-		 			<button type="button"  id ="drawOnMap"class="btn btn-light" style=" margin-top:-10px; margin-right:-15px; "  >Draw on map</button>
-				   
                   </div>
 			   </div>
 	     </div>
@@ -1166,7 +1158,7 @@ $(document).ready(function() {
   	       },
          });
     
-    $('#drawOnMap'). click(function(){  
+    $('#showOnMap'). click(function(){  
 		 distinctSites =[];
 		 markerClusterFarSites.clearMarkers();
 		
