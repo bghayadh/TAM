@@ -400,6 +400,11 @@ max-width: 100%;
                   </div>
 			   </div>
 	     </div>
+	     <div class="col-md-3">
+			<div id="generateLoaderDiv" style="display: none;">
+				<img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif" width="40px" /><b style="color:#800020;font-size:15px;"> Loading Data ... Please wait</b> 
+			</div>
+		</div>
 		</div>	
 	<div class="row" id="row_Circle" style="display: none;">	     
 			<div class="col-md-3">
@@ -1254,7 +1259,10 @@ $(document).ready(function() {
 		 $(".showHideSitesCheckbox").attr('disabled', true);
 		 markerClusterFarSites.clearMarkers();	
 		 markersFarSites=[];
-			 
+
+		 
+		$("#generateLoaderDiv").show();
+		  
 		  
 		$("#gridTable").remove();
 		$("#tableGrid").append('<table id="gridTable" class="table table-striped table-bordered almgrid-table">'
@@ -1473,10 +1481,14 @@ $(document).ready(function() {
                      $("#accuDeprFetchedFar").val(data.totalAccumdeprFetched);
                          
 			}
+				$("#generateLoaderDiv").hide();
+				
   },
   
   error : function(error) {
 		console.log("The error is " + error);
+		$("#generateLoaderDiv").hide();
+		
 	}
 });
 			  
