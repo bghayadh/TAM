@@ -841,6 +841,9 @@ max-width: 100%;
     </div>
     <div id="collapseTwo" class="panel-collapse collapse show" role="tabpanel" aria-labelledby="headingTwo">
       <div class="panel-body">
+			<div style="text-align: center; margin-top: 10px;">
+		<div><input id="mapLongLat" type='text' disabled style="width:300px;height:35px; text-align: center; margin-left:52px;position:relative;top:-1px;" /></div>
+		</div>
       <div class="legendContainer">
       <div class="card-body">      
          <div class="box stack-top" id="legendDiv" style="position: relative;top:235px;width: 280px; float:left; height:170px;  background:white; margin:37px;display: none">
@@ -871,6 +874,7 @@ max-width: 100%;
         </div>
          
     <div class="card-body">
+   			
         <div class="box" id="mapContainer"></div>
         </div>
        </div>
@@ -951,7 +955,7 @@ function initMap() {
 	 	if (markers.length >= 1) return {text: markers.length, index: 3}; 
 	 	}                   
 	 });
-
+	 getLongLatMouseMove(map);
 }//end initMap
 
 //Add legend button under zoom control on map
@@ -1601,7 +1605,13 @@ function showHideAllSites(){
 		});	
 }
 
-
+function getLongLatMouseMove(map){		  
+	map.addListener("mousemove", (mapsMouseEvent) => {
+		
+	   $("#mapLongLat").val(JSON.stringify(mapsMouseEvent.latLng.toJSON().lat.toFixed(13) +" || "
+	    	    +mapsMouseEvent.latLng.toJSON().lng.toFixed(13), null, 2));	    
+	});					 
+}
 </script>
 <script
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJXAds-Gt4I39hRFHhYHMEg3XcBqihYoo&callback=initMap&libraries=drawing&v=weekly"
