@@ -1256,6 +1256,7 @@ $(document).ready(function() {
 		  var endDate = document.getElementById("endDate").value;
 		  var ignoreDateCheckbox = document.getElementById("ignoreDate").checked;
 		  var strtEndCheckbox = document.getElementById("strtEndCoordinate").checked;
+		  var circleRangeCheckbox = document.getElementById("circleRange").checked;
 
 		 $('.showHideSitesCheckbox').prop('checked', false);
 		 $(".showHideSitesCheckbox").attr('disabled', true);
@@ -1363,7 +1364,8 @@ $(document).ready(function() {
 				"longitude":$("#circleRangeLongitude").val(),
 				"latitude":$("#circleRangeLatitude").val(),
 				"radius":$("#circleRangeRadius").val(),
-				"strtEndCheckbox":strtEndCheckbox		
+				"strtEndCheckbox":strtEndCheckbox,
+				"circleRangeCheckbox":circleRangeCheckbox	
 				
 			},
 			success : function(data) {

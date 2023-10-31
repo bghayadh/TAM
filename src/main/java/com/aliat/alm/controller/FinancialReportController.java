@@ -144,6 +144,8 @@ public class FinancialReportController {
 		String vendorOptions = request.getParameter("Vendor");
 		String typeOptions = request.getParameter("Type");
 		String strtEndCheckbox = request.getParameter("strtEndCheckbox");
+		String circleRangeCheckbox = request.getParameter("circleRangeCheckbox");
+
 
 		String domain = "";
 		String subDomain = "";
@@ -247,8 +249,8 @@ public class FinancialReportController {
 		double distance = 0.0;
 
 		List<Object[]> listFARTemp = new ArrayList<Object[]>();
-		List<Object[]> listCircleRange = new ArrayList<Object[]>();
-		List<Object[]> listFAR = new ArrayList<Object[]>();
+		List<FinancialReport> listCircleRange = new ArrayList<FinancialReport>();
+		List<FinancialReport> listFAR = new ArrayList<FinancialReport>();
 
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
@@ -376,14 +378,13 @@ public class FinancialReportController {
 					query = session.createNativeQuery(str);
 					listFARTemp = query.list(); // To use it in circle range calculation
 
-					listFAR = ((NativeQuery<Object[]>) query).addScalar("farID").addScalar("itemCode")
+					listFAR = ((NativeQuery<FinancialReport>) query).addScalar("farID").addScalar("itemCode")
 							.addScalar("itemName").addScalar("lastModifiedDate").addScalar("itemSN")
 							.addScalar("itemNameRegister").addScalar("poID").addScalar("siteID").addScalar("siteName")
 							.addScalar("longitude").addScalar("latitude").addScalar("initCost").addScalar("netCost")
 							.addScalar("accuDepr").setResultTransformer(Transformers.aliasToBean(FinancialReport.class))
 							.list();
 
-					System.out.println("The length of listFar is " + listFAR.size());
 
 					// Get the total of initial,net cost and accumulated depr of fetched FAR records
 					query = session.createNativeQuery(totalStr);
@@ -400,24 +401,26 @@ public class FinancialReportController {
 					rtn.put("totalNetCostFetched", totalNetCost);
 
 					// If circle range is checked
-					if ((radius != null && !radius.equalsIgnoreCase("") && Double.parseDouble(radius) > 0)
-							&& (longitude != null && !longitude.equalsIgnoreCase(""))
-							&& (latitude != null && !latitude.equalsIgnoreCase(""))) {
+					if (StringUtils.equalsIgnoreCase(circleRangeCheckbox, "true")) {
 
-						for (int i = 0; i < listFAR.size(); i++) {
-							distance = haversine(Double.parseDouble(latitude), Double.parseDouble(longitude),
-									Double.valueOf(listFARTemp.get(i)[10].toString()),
-									Double.valueOf(listFARTemp.get(i)[9].toString()));
-
-							if (distance <= Double.parseDouble(radius)) {
-								// System.out.println("Within Range");
-								listCircleRange.add(listFARTemp.get(i));
+						if ((radius != null && !radius.equalsIgnoreCase("") && Double.parseDouble(radius) > 0)
+								&& (longitude != null && !longitude.equalsIgnoreCase(""))
+								&& (latitude != null && !latitude.equalsIgnoreCase(""))) {
+	
+							for (int i = 0; i < listFAR.size(); i++) {
+								distance = haversine(Double.parseDouble(latitude), Double.parseDouble(longitude),
+										Double.valueOf(listFARTemp.get(i)[10].toString()),
+										Double.valueOf(listFARTemp.get(i)[9].toString()));
+	
+								if (distance <= Double.parseDouble(radius)) {
+									listCircleRange.add(listFAR.get(i));
+								}
 							}
+	
+							rtn.put("financialReportList", listCircleRange);
 						}
 
-						rtn.put("financialReportList", listCircleRange);
 					}
-
 					else {
 						rtn.put("financialReportList", listFAR);
 					}
