@@ -1187,7 +1187,9 @@ $(document).ready(function() {
         else {
         	$('.showHideSitesCheckbox').prop('checked', false);
 			$(".showHideSitesCheckbox").attr('disabled', true);
-         }    	
+         }   
+		 map.setZoom(6);  
+	         	
 	});
 			 
 	$('#clearButton'). click(function(){  
