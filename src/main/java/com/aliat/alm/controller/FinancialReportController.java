@@ -153,6 +153,7 @@ public class FinancialReportController {
 		String type = "";
 		String[] strList = null;
 		String selectedOption;
+		double initCost=0,netCost=0,accuDepr=0;
 
 		// Get domain options in a String format
 		if (StringUtils.equalsIgnoreCase(domainOptions, "") || StringUtils.equalsIgnoreCase(domainOptions, null)) {
@@ -272,36 +273,36 @@ public class FinancialReportController {
 							+ "%') AND upper(A.ITEM_MODEL) LIKE upper('%" + itemModel
 							+ "%') AND upper(A.ITEM_PART_NUMBER) LIKE upper ('%" + itemPartNo + "%'))  ";
 
-					totalStr = "Select SUM(INITIALCOST) as initialCost, SUM(ACCUMULDEPRECAMNT) as AccumDepr, SUM(NETCOST) as netCost from FIXED_ASSET_REGISTRY "
-							+ " WHERE ( upper(ITEM_CODE) LIKE upper('%" + itemCode
-							+ "%') AND upper(ITEM_NAME) LIKE upper('%" + itemName
-							+ "%') AND upper(ITEM_MODEL) LIKE upper('%" + itemModel
-							+ "%') AND upper(ITEM_PART_NUMBER) LIKE upper ('%" + itemPartNo + "%') )  ";
+					totalStr = "Select SUM(A.INITIALCOST) as initialCost, SUM(A.ACCUMULDEPRECAMNT) as AccumDepr, SUM(A.NETCOST) as netCost from FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID  "
+							+ " WHERE ( upper(A.ITEM_CODE) LIKE upper('%" + itemCode
+							+ "%') AND upper(A.ITEM_NAME) LIKE upper('%" + itemName
+							+ "%') AND upper(A.ITEM_MODEL) LIKE upper('%" + itemModel
+							+ "%') AND upper(A.ITEM_PART_NUMBER) LIKE upper ('%" + itemPartNo + "%') )  ";
 
 					if (StringUtils.equalsIgnoreCase(ignoreDate, "false")) {
 						str = str + " AND A.CREATED_DATE between TO_DATE('" + start_Date
 								+ "','MM/DD/YYYY HH:MI AM') and TO_DATE('" + end_Date + "','MM/DD/YYYY HH:MI AM')";
 
-						totalStr = totalStr + " AND CREATED_DATE between TO_DATE('" + start_Date
+						totalStr = totalStr + " AND A.CREATED_DATE between TO_DATE('" + start_Date
 								+ "','MM/DD/YYYY HH:MI AM') and TO_DATE('" + end_Date + "','MM/DD/YYYY HH:MI AM')";
 
 					}
 
 					if (!StringUtils.equalsIgnoreCase(vendor, "")) {
 						str = str + " AND A.VENDOR IN ( " + vendor + " )";
-						totalStr = totalStr + " AND VENDOR IN ( " + vendor + " )";
+						totalStr = totalStr + " AND A.VENDOR IN ( " + vendor + " )";
 					}
 					if (!StringUtils.equalsIgnoreCase(domain, "")) {
 						str = str + " AND A.DOMAIN IN ( " + domain + " )";
-						totalStr = totalStr + " AND DOMAIN IN ( " + domain + " )";
+						totalStr = totalStr + " AND A.DOMAIN IN ( " + domain + " )";
 					}
 					if (!StringUtils.equalsIgnoreCase(subDomain, "")) {
 						str = str + " AND A.SUB_DOMAIN IN ( " + subDomain + " )";
-						totalStr = totalStr + " AND SUB_DOMAIN IN ( " + subDomain + " )";
+						totalStr = totalStr + " AND A.SUB_DOMAIN IN ( " + subDomain + " )";
 					}
 					if (!StringUtils.equalsIgnoreCase(type, "")) {
 						str = str + " AND A.TYPE IN ( " + type + " )";
-						totalStr = totalStr + " AND TYPE IN ( " + type + " )";
+						totalStr = totalStr + " AND A.TYPE IN ( " + type + " )";
 					}
 
 					// Include the start/end long and lat in where condition in case of strt/end
@@ -312,12 +313,16 @@ public class FinancialReportController {
 						if (startLong != null && !startLong.equalsIgnoreCase("")
 								&& (endLong == null || endLong.equalsIgnoreCase(""))) {
 							str = str + " and to_number(SUBSTR(C.LONGITUDE,1,6)) > " + startLong;
+							totalStr = totalStr + " and to_number(SUBSTR(C.LONGITUDE,1,6)) > " + startLong;
+
 						}
 
 						// End longitude is entered && start longitude is empty
 						else if (endLong != null && !endLong.equalsIgnoreCase("")
 								&& (startLong == null || startLong.equalsIgnoreCase(""))) {
 							str = str + " and to_number(SUBSTR(C.LONGITUDE,1,6)) < " + endLong;
+							totalStr = totalStr + " and to_number(SUBSTR(C.LONGITUDE,1,6)) < " + endLong;
+
 						}
 
 						// Start and end longitude are both entered
@@ -336,6 +341,10 @@ public class FinancialReportController {
 								}
 								str = str + " and to_number(SUBSTR(C.LONGITUDE,1,6)) > " + startLng;
 								str = str + " and to_number(SUBSTR(C.LONGITUDE,1,6)) < " + endLng;
+								
+								totalStr = totalStr +" and to_number(SUBSTR(C.LONGITUDE,1,6)) > " + startLng;
+								totalStr = totalStr +" and to_number(SUBSTR(C.LONGITUDE,1,6)) < " + endLng;
+
 							}
 						}
 
@@ -343,12 +352,16 @@ public class FinancialReportController {
 						if (startLat != null && !startLat.equalsIgnoreCase("")
 								&& (endLat == null || endLat.equalsIgnoreCase(""))) {
 							str = str + " and to_number(SUBSTR(C.LATITUDE,1,6)) > " + startLat;
+							totalStr = totalStr +" and to_number(SUBSTR(C.LATITUDE,1,6)) > " + startLat;
+
 						}
 
 						// start latitude is empty && end latitude is entered
 						else if (endLat != null && !endLat.equalsIgnoreCase("")
 								&& (startLat == null || startLat.equalsIgnoreCase(""))) {
 							str = str + " and to_number(SUBSTR(C.LATITUDE,1,6)) < " + endLat;
+							totalStr = totalStr +" and to_number(SUBSTR(C.LATITUDE,1,6)) < " + endLat;
+
 						}
 						// start && end latitude are both entered
 						else if (startLat != null && endLat != null) {
@@ -367,14 +380,19 @@ public class FinancialReportController {
 								}
 								str = str + " and to_number(SUBSTR(C.LATITUDE,1,6)) > " + startlatitude;
 								str = str + " and to_number(SUBSTR(C.LATITUDE,1,6)) < " + endLatitude;
+								
+								totalStr = totalStr + " and to_number(SUBSTR(C.LATITUDE,1,6)) > " + startlatitude;
+								totalStr = totalStr +" and to_number(SUBSTR(C.LATITUDE,1,6)) < " + endLatitude;
+
 							}
 						}
 
 					} // end of checked strt/end coordinate checkbox
 
-					str = str
-							+ "  ) WHERE (longitude is not null and longitude != '0' and latitude is not null and latitude != '0') ORDER BY lastModifiedDate DESC  ";
+					str = str + "  ) WHERE (longitude is not null and longitude != '0' and latitude is not null and latitude != '0') ORDER BY lastModifiedDate DESC  ";
+					
 					System.out.println("the str is " + str);
+
 					query = session.createNativeQuery(str);
 					listFARTemp = query.list(); // To use it in circle range calculation
 
@@ -386,19 +404,7 @@ public class FinancialReportController {
 							.list();
 
 
-					// Get the total of initial,net cost and accumulated depr of fetched FAR records
-					query = session.createNativeQuery(totalStr);
-					result = (Object[]) query.uniqueResult();
-					if (result[0] != null)
-						totalInitialCost = df.format(new BigDecimal(result[0].toString()));
-					if (result[1] != null)
-						totalAccumdepr = df.format(new BigDecimal(result[1].toString()));
-					if (result[2] != null)
-						totalNetCost = df.format(new BigDecimal(result[2].toString()));
-
-					rtn.put("totalInitialCostFetched", totalInitialCost);
-					rtn.put("totalAccumdeprFetched", totalAccumdepr);
-					rtn.put("totalNetCostFetched", totalNetCost);
+					
 
 					// If circle range is checked
 					if (StringUtils.equalsIgnoreCase(circleRangeCheckbox, "true")) {
@@ -411,17 +417,40 @@ public class FinancialReportController {
 								distance = haversine(Double.parseDouble(latitude), Double.parseDouble(longitude),
 										Double.valueOf(listFARTemp.get(i)[10].toString()),
 										Double.valueOf(listFARTemp.get(i)[9].toString()));
-	
+								
 								if (distance <= Double.parseDouble(radius)) {
+									initCost += Double.valueOf(listFARTemp.get(i)[11].toString());
+									netCost += Double.valueOf(listFARTemp.get(i)[12].toString());
+									accuDepr += Double.valueOf(listFARTemp.get(i)[13].toString());
+									
 									listCircleRange.add(listFAR.get(i));
 								}
 							}
-	
+							
+							
+							rtn.put("totalInitialCostFetched", df.format(initCost));
+							rtn.put("totalAccumdeprFetched", df.format(accuDepr));
+							rtn.put("totalNetCostFetched", df.format(netCost));
+
 							rtn.put("financialReportList", listCircleRange);
 						}
 
 					}
 					else {
+						// Get the total of initial,net cost and accumulated depr of fetched FAR records
+						query = session.createNativeQuery(totalStr);
+						result = (Object[]) query.uniqueResult();
+						if (result[0] != null)
+							totalInitialCost = df.format(new BigDecimal(result[0].toString()));
+						if (result[1] != null)
+							totalAccumdepr = df.format(new BigDecimal(result[1].toString()));
+						if (result[2] != null)
+							totalNetCost = df.format(new BigDecimal(result[2].toString()));
+
+						rtn.put("totalInitialCostFetched", totalInitialCost);
+						rtn.put("totalAccumdeprFetched", totalAccumdepr);
+						rtn.put("totalNetCostFetched", totalNetCost);
+						
 						rtn.put("financialReportList", listFAR);
 					}
 
