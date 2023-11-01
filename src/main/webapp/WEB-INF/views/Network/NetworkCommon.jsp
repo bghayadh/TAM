@@ -1213,7 +1213,9 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 	   $('#li_nodeBtn').addClass('unsortable');
 	   $('#li_nodeBtn').css("color","black").css("opacity",".65");
 	   $('#li_supplierBtn').addClass('unsortable_sup');
-	   $('#li_supplierBtn').css("color","black").css("opacity",".65");
+	   $('#li_supplierBtn').css("color","black").css("opacity",".65");	    
+	   $('#li_vendorBtn').addClass('unsortable');
+	   $('#li_vendorBtn').css("color","black").css("opacity",".65");
 	   var poSel=["PO","Item","Site","Node Type","Node"];
 	   var suppSel=['Supplier', 'Site', 'Node', 'Cell'];
 	   
@@ -1343,7 +1345,7 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 		 		
 		 		//Supplier-NodeType-Site-Node-Cell
 				 case "li_vendorBtn,li_nodeTypeeBtn,li_siteBtn,li_nodeBtn,li_cellBtn":
-				 case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,vendorBtn":
+				// case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,vendorBtn":
 				  {
 					 var url = getContext()+"/Network_VnNdTypStNdCell"; 	
 					 if(params !=null){

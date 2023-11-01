@@ -1021,10 +1021,7 @@ function  NodeT_Boq(SiteId,NodeTId){
 
 /*     Node type supp BOQ Fcts */
 function  NodeTSup_Boq(SiteId,NodeTId,SuppId){
-	console.log("SiteId: ",SiteId);
-	console.log("NodeTId: ",NodeTId);
-	console.log("SuppId: ",SuppId);
-	
+
 	var Boq = $('#Boq');
 	var Layers= $('#Layers');
 	var Options= $('#Options');
