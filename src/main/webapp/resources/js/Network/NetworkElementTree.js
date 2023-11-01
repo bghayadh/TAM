@@ -1021,6 +1021,9 @@ function  NodeT_Boq(SiteId,NodeTId){
 
 /*     Node type supp BOQ Fcts */
 function  NodeTSup_Boq(SiteId,NodeTId,SuppId){
+	console.log("SiteId: ",SiteId);
+	console.log("NodeTId: ",NodeTId);
+	console.log("SuppId: ",SuppId);
 	
 	var Boq = $('#Boq');
 	var Layers= $('#Layers');
@@ -1093,7 +1096,6 @@ function  NodeTSup_Boq(SiteId,NodeTId,SuppId){
 
 /*     Node type vendor BOQ Fcts */
 function NodeTVen_Boq(SiteId,NodeTId,VendorId){
-	
 	var Boq = $('#Boq');
 	var Layers= $('#Layers');
 	var Options= $('#Options');
