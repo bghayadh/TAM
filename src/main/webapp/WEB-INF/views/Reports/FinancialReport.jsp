@@ -731,8 +731,13 @@ max-width: 100%;
 		
 		
  <div style="display: Block;" id="totalAllFAR">
-	<div class="row second"  style="padding-left: 15px;">								
-			<div class="col-md-5">
+	<div class="row second">	
+					<div class="col-md-1">
+						<div class="form-group">
+            <span style=" display: inline-block;width:98px;color: white; font-size: 13px; white-space: nowrap; padding: 7px 8px; background-color: #008991; border-radius: 5px;"><b>All FAR : </b></span>
+						</div>
+					</div>								
+			<div class="col-md-3">
 						<div class="form-group">
 							<div class="input-group-prepend">
 								<span class="input-group-text">Total Initial Cost</span>
@@ -740,18 +745,15 @@ max-width: 100%;
 							</div>
 						</div>
 					</div>
-					<div class="col-md-5">
+					<div class="col-md-3">
 						<div class="form-group">
 							<div class="input-group-prepend">
 								<span class="input-group-text">Total Net Cost</span>
 								<input type="text" id="netCostAllFar" readonly value="${totalNetCost}" class="form-control text-input" />
 							</div>
 						</div>
-					</div>
-	</div>
-	
-	<div class="row"  style="padding-left: 15px;">
-					<div class="col-md-6">
+					</div>	
+					<div class="col-md-5">
 						<div class="form-group">
 							<div class="input-group-prepend">
 								<span class="input-group-text">Total Accumulated Depreciation</span>
@@ -762,30 +764,34 @@ max-width: 100%;
 					
 	</div>
 		<br>
-		<div class="row second"  style="padding-left: 15px;">								
-			<div class="col-md-5">
+		
+		<div class="row second">
+
+					<div class="col-md-1">
+						<div class="form-group">
+          					  <span style="display: inline-block;width:98px;color: white; font-size: 13px; white-space: nowrap; padding: 7px 8px; background-color: #008991; border-radius: 5px;"><b>Fetched FAR :</b></span>
+						</div>
+					</div>								
+			<div class="col-md-3">
 						<div class="form-group">
 							<div class="input-group-prepend">
-								<span class="input-group-text">Total Initial Cost of Fetched FAR</span>
+								<span class="input-group-text">Total Initial Cost</span>
 								<input type="text" readonly id="initialCostFetchedFar" value="${totalInitialCostFetched}" class="form-control text-input" />
 							</div>
 						</div>
 					</div>
-					<div class="col-md-5">
+					<div class="col-md-3">
 						<div class="form-group">
 							<div class="input-group-prepend">
-								<span class="input-group-text">Total Net Cost of Fetched FAR</span>
+								<span class="input-group-text">Total Net Cost</span>
 								<input type="text" readonly id="netCostFetchedFar"  value="${totalNetCostFetched}" class="form-control text-input" />
 							</div>
 						</div>
-					</div>
-	</div>
-	
-	<div class="row"  style="padding-left: 15px;">
-					<div class="col-md-6">
+					</div>	
+					<div class="col-md-5">
 						<div class="form-group">
 							<div class="input-group-prepend">
-								<span class="input-group-text">Total Accumulated Depreciation of Fetched FAR </span>
+								<span class="input-group-text">Total Accumulated Depreciation</span>
 								<input type="text" readonly id="accuDeprFetchedFar" value="${totalAccumdeprFetched}" class="form-control text-input" />
 							</div>
 						</div>
@@ -793,30 +799,32 @@ max-width: 100%;
 					
 	</div>
 	<br>
-		<div class="row second"  style="padding-left: 15px;">								
-			<div class="col-md-5">
+		<div class="row second">
+					<div class="col-md-1">
+						<div class="form-group">
+            				<span style="display: inline-block;width:98px;color: white; font-size: 13px; white-space: nowrap; padding: 7px 8px; background-color: #008991; border-radius: 5px;"><b>Filtered FAR :</b></span>
+						</div>
+					</div>									
+			<div class="col-md-3">
 						<div class="form-group">
 							<div class="input-group-prepend">
-								<span class="input-group-text">Total Initial Cost of Filtered FAR</span>
+								<span class="input-group-text">Total Initial Cost</span>
 								<input type="text" readonly id="initialCostFilteredFar" class="form-control text-input" />
 							</div>
 						</div>
 					</div>
-					<div class="col-md-5">
+					<div class="col-md-3">
 						<div class="form-group">
 							<div class="input-group-prepend">
-								<span class="input-group-text">Total Net Cost of Filtered FAR</span>
+								<span class="input-group-text">Total Net Cost</span>
 								<input type="text" readonly id="netCostFilteredFar" class="form-control text-input" />
 							</div>
 						</div>
-					</div>
-	</div>
-	
-	<div class="row"  style="padding-left: 15px;">
-					<div class="col-md-6">
+					</div>	
+					<div class="col-md-5">
 						<div class="form-group">
 							<div class="input-group-prepend">
-								<span class="input-group-text">Total Accumulated Depreciation of Filtered FAR </span>
+								<span class="input-group-text">Total Accumulated Depreciation</span>
 								<input type="text" readonly  id="accuDeprFilteredFar" class="form-control text-input" />
 							</div>
 						</div>
@@ -864,7 +872,7 @@ max-width: 100%;
     <tr>
      <td style="position: relative;top:17px;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideSitesCheckbox" onclick="showHideAllSites();" value="blue"/></td>
      <td style="position: relative;top:30px;left:58px;"><div class="dot blue"></div></td>
-     <td style="position: relative;top: 28px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; " >All Sites</label></td>
+     <td style="position: relative;top: 28px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; " >All Sites</label></td>   
     </tr>
    
   </table>
@@ -1191,7 +1199,7 @@ $(document).ready(function() {
         else {
         	$('.showHideSitesCheckbox').prop('checked', false);
 			$(".showHideSitesCheckbox").attr('disabled', true);
-         }   
+         }           
 		 map.setZoom(6);  
 	         	
 	});
@@ -1264,8 +1272,7 @@ $(document).ready(function() {
 		 $('.showHideSitesCheckbox').prop('checked', false);
 		 $(".showHideSitesCheckbox").attr('disabled', true);
 		 markerClusterFarSites.clearMarkers();	
-		 markersFarSites=[];
-
+		 markersFarSites=[];	        
 		 
 		$("#generateLoaderDiv").show();
 		  
