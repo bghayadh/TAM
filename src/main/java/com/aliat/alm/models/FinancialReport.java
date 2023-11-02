@@ -11,10 +11,13 @@ import javax.persistence.Table;
 @Table(name = "FIXED_ASSET_REGISTRY")
 public class FinancialReport {
 	
+	private String site;
+
 	@Id
 	@Column(name = "FAR_ID", nullable = false)
 	private String farID;
-		
+	
+
 	@Column(name = "ITEM_CODE", nullable = false)
 	private String itemCode;
 	
@@ -56,10 +59,11 @@ public class FinancialReport {
 	}
 
 
-	public FinancialReport(String farID, String itemCode, String itemName,
+	public FinancialReport(String site,String farID, String itemCode, String itemName,
 			String lastModifiedDate, String itemSN, String itemNameRegister, String poID,String siteID, 
 			String longitude, String latitude,String siteName,BigDecimal initCost, BigDecimal netCost,BigDecimal accuDepr) {
 		super();
+		this.site=site;
 		this.farID = farID;
 		this.itemCode = itemCode;
 		this.itemName = itemName;
@@ -213,6 +217,16 @@ public class FinancialReport {
 
 	public void setAccuDepr(BigDecimal accuDepr) {
 		this.accuDepr = accuDepr;
+	}
+
+
+	public String getSite() {
+		return site;
+	}
+
+
+	public void setSite(String site) {
+		this.site = site;
 	}
 
 

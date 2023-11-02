@@ -9,7 +9,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title></title>
      <link rel="shortcut icon" href="">
-        <!-- <script src="${pageContext.request.contextPath}/resources/js/jquery.slim.min.js" ></script>  -->
         <script src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/moment.min.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/tempusdominus-bootstrap-4.min.js"></script>
@@ -40,14 +39,12 @@
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/almgrid/clusterize.css" />
 		<script type="text/javascript" src="${pageContext.request.contextPath}/resources/almgrid/clusterize.js"></script>
 	    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/almgrid/Collapse.css" />
-		<script type="text/javascript" src="${pageContext.request.contextPath}/resources/almgrid/gridAppendRows.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/resources/almgrid/gridAppendRowsFinancialReport.js"></script>
 		
 	    
 	    <!--  MultiSelect Script -->
         <link href="${pageContext.request.contextPath}/resources/css/virtual-select.min.css" rel="stylesheet"    >
         <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/virtual-select.min.js"></script>	
-		<!-- Tags InputScript -->
-        <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/tagsInputAutocomplete.js"></script>
 			
 			
 		<!-- Google Maps Script -->
@@ -59,11 +56,6 @@
        
 </head>
 <style>
-
-.wid{
-width:100%;
-}
-
 .clearShowButton{
 background-color:white;
 color:orange;
@@ -76,22 +68,6 @@ color:white;
 
 
 }
-
-.BTN{
-width:90px !important;
-
-
-}
-.flex {
-  display: flex;
-  justify-content: center;
-}
-
-.flex-item + .flex-item {
-  margin-left: 10px;
-  margin-bottom:5px;
-}
-
 #mapContainer {
 height: 700px;
 }
@@ -101,6 +77,7 @@ overflow: hidden;
 background-color: #08526d;
 padding: 10px 0px;
 }
+
 .blue {
 background:blue;
 }
@@ -111,10 +88,7 @@ width: 15px;
 border-radius: 50%;
 display: inline-block;
 }
-.btn-color {
-background-image: linear-gradient(to right top, #b3b3b3, #b6b6b7, #b8b9ba, #bbbdbd, #bdc0c0, #b1b5b5, #a5abaa, #9aa09f, #7f8685, #656e6c, #4c5655, #343f3e);
-}
-  
+
 .legendContainer{
 height: 800px;
 position: relative;
@@ -133,48 +107,12 @@ z-index: 3;
 margin: 70px; 
 }
 
-
-.cadr{
-border:0.01em solid grey;
-}
-
-
-.cadr2{
-border:0.1em solid #808080;
-padding:40px;
-}
-
 .title {
   margin:5px 0px;
   font-size: 25px;
   font-weight:600;
   font-family: 'Times New Roman', Times, serif;
 }
-.canvas-style{
-height: 650px; 
-}
-.canvas-style2{
-height: 400px !important; 
-
-}
-.canvas-style3{
-height: 650px !important; 
-
-}
-
-/*This will style the icon button for chart*/
-.buttonStyle{
-    font-size: 20px;
-    color:#444444;
-	margin-top:10px;
-	background: none;
-	border: none;
-}
-    /*This should make them change their color when they are hovered*/
-    .buttonStyle:hover {
-         color:#08526d;
-    }
-
 
 .custom-class-assignedto-modal .modal-dialog {
   width: 100%;
@@ -239,12 +177,6 @@ max-width: 100%;
  max-width: 100%;
 }
 }
-
-
-
-
-
-
 </style>
 <body>
   <c:set var="pg" value="report" scope="session"  />
@@ -548,7 +480,7 @@ max-width: 100%;
 									<table id="gridTable" class="table table-striped table-bordered almgrid-table">
 										<thead>
 											<tr class="header">
-												
+												<th></th>											
 												<th>FAR ID 
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown">
@@ -670,6 +602,7 @@ max-width: 100%;
 													</li>
 												</th>											
 											<tr>
+												<th><input type="text" disabled class="almgrid-search" style="display:none"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
@@ -873,6 +806,7 @@ max-width: 100%;
      <td style="position: relative;top:17px;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideSitesCheckbox" onclick="showHideAllSites();" value="blue"/></td>
      <td style="position: relative;top:30px;left:58px;"><div class="dot blue"></div></td>
      <td style="position: relative;top: 28px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; " >All Sites</label></td>   
+     <td style="position: relative;top: 28px;left:65px;"><div style="position: relative;left:-5px;color: black;" id="sitesCount" ></div></td>
     </tr>
    
   </table>
@@ -906,7 +840,11 @@ max-width: 100%;
 
 var map ;
 markersFarSites=[];		
-var distinctSites =[];
+var distinctSites =[]; // used in check/uncheck all sites from legend
+var mapFlag="0"; // used to check if the markers are set on map
+var filteredSitesGrid=[]; // used in draw on map 
+var markerClusterFarSites ;
+var infoWindow;
 
 function initMap() {
 	
@@ -963,7 +901,10 @@ function initMap() {
 	 	if (markers.length >= 1) return {text: markers.length, index: 3}; 
 	 	}                   
 	 });
-	 getLongLatMouseMove(map);
+
+	 infoWindow = new google.maps.InfoWindow();
+	 getLongLatMouseMove(map); 
+	 
 }//end initMap
 
 //Add legend button under zoom control on map
@@ -998,8 +939,8 @@ function DefaultZoomControl(controlDiv, map) {
     controlDiv.appendChild(controlUI);
 
     controlUI.addEventListener("click", () => {
-    	var Nairobi=new google.maps.LatLng(-1.286389,36.817223);
-        map.setCenter(Nairobi);
+    	var center=new google.maps.LatLng(1,38);
+        map.setCenter(center);
         map.setZoom(6);        
      });
 
@@ -1085,7 +1026,6 @@ $(document).ready(function() {
 
     var ReportArrayGlobal = ${financialReportList};
     var exportArrayGrid = []; // for export 
-    var filteredSitesGrid=[]; // used in draw on map 
     
 
     var almgrid = new AlmgridTable({
@@ -1100,6 +1040,23 @@ $(document).ready(function() {
 	        var gridContainerId = tableId + "_container";
 	        $(gridContainer).attr('id', gridContainerId);
 	        $(tableBody).empty();
+
+	        if (typeof markerClusterFarSites !== 'undefined' && markerClusterFarSites !== null) {
+	       		markerClusterFarSites.clearMarkers(); // to clear the map when the data in grid is filtered
+				var center=new google.maps.LatLng(1,38);
+		        map.setCenter(center);
+				map.setZoom(6);  
+			}
+	       
+	       
+   		 	distinctSites =[];
+   			markersFarSites=[];
+		 	mapFlag="0";
+   		 	$('.showHideSitesCheckbox').prop('checked', false);
+			$(".showHideSitesCheckbox").attr('disabled', true);
+	         document.getElementById("sitesCount").textContent = "";      
+				
+	        
 	        if (dataArray.length > 0) {
 		        var initCost=0,netCost=0,accuDepr=0;
         		var ArrayKeys = Object.keys(dataArray[0]);
@@ -1109,7 +1066,7 @@ $(document).ready(function() {
 	     		var data = [];
 	     	    exportArrayGrid = [];
 	    		data.push('\r');
-	       		data.push(["FAR ID", "Item Code", "Item Name", "Last Modified Date","Item Serial Number","Item Name Register","PO ID","Site ID","Site Name","Longitude","Latitude","Initial Cost","Net Cost","Accumulated Depreciation"]);
+	       		data.push(["","FAR ID", "Item Code", "Item Name", "Last Modified Date","Item Serial Number","Item Name Register","PO ID","Site ID","Site Name","Longitude","Latitude","Initial Cost","Net Cost","Accumulated Depreciation"]);
 
 	       		filteredSitesGrid = dataArray; // used in draw on map 
 	       		
@@ -1178,12 +1135,13 @@ $(document).ready(function() {
     $('#showOnMap'). click(function(){  
 		 distinctSites =[];
 		 markerClusterFarSites.clearMarkers();
+		 mapFlag="1";
 		
 		for (var i = 0; i < filteredSitesGrid.length; i++) {			
 			if(distinctSites.includes(filteredSitesGrid[i]["siteID"])==false) {
 				distinctSites.push(filteredSitesGrid[i]["siteID"]);
 				if(!markersFarSites[filteredSitesGrid[i]["siteID"]]){
-					createSiteMarker(filteredSitesGrid[i]["siteID"],filteredSitesGrid[i]["longitude"],filteredSitesGrid[i]["latitude"])
+					createSiteMarker(filteredSitesGrid[i]["siteID"],filteredSitesGrid[i]["longitude"],filteredSitesGrid[i]["latitude"],filteredSitesGrid[i]["siteName"]);
 				}
 				else {					
 					markersFarSites[filteredSitesGrid[i]["siteID"]].setMap(map);
@@ -1199,7 +1157,9 @@ $(document).ready(function() {
         else {
         	$('.showHideSitesCheckbox').prop('checked', false);
 			$(".showHideSitesCheckbox").attr('disabled', true);
-         }           
+         } 
+            
+         document.getElementById("sitesCount").textContent = "("+distinctSites.length+")";      
 		 map.setZoom(6);  
 	         	
 	});
@@ -1272,14 +1232,20 @@ $(document).ready(function() {
 		 $('.showHideSitesCheckbox').prop('checked', false);
 		 $(".showHideSitesCheckbox").attr('disabled', true);
 		 markerClusterFarSites.clearMarkers();	
-		 markersFarSites=[];	        
+		 markersFarSites=[];	  
+		 mapFlag="0";
 		 
+		 var center=new google.maps.LatLng(1,38);
+	     map.setCenter(center);
+		 map.setZoom(6);  
+		       
+		 document.getElementById("sitesCount").textContent = "";
 		$("#generateLoaderDiv").show();
 		  
 		  
 		$("#gridTable").remove();
 		$("#tableGrid").append('<table id="gridTable" class="table table-striped table-bordered almgrid-table">'
-				+'<thead><tr class="header"><th>FAR ID<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> '
+				+'<thead><tr class="header"><th></th><th>FAR ID<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> '
 				+'<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
 					+'<th>Item Code<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
 					+'</ul></li></th><th>Item Name<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
@@ -1303,6 +1269,7 @@ $(document).ready(function() {
 					+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'	
 					
 					+'<tr>'
+					+'<th><input type="text" disabled class="almgrid-search" style="display:none"></th>'
 					+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
 					+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
 					+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
@@ -1399,6 +1366,23 @@ $(document).ready(function() {
          			        var gridContainerId = tableId + "_container";
          			        $(gridContainer).attr('id', gridContainerId);
          			        $(tableBody).empty();
+
+         			       if (typeof markerClusterFarSites !== 'undefined' && markerClusterFarSites !== null) {
+         			       		markerClusterFarSites.clearMarkers(); // to clear the map when the data in grid is filtered
+         						var center=new google.maps.LatLng(1,38);
+         				        map.setCenter(center);
+         						map.setZoom(6);  
+         					}
+         			       
+         			       
+         		   		 	distinctSites =[];
+         		   			markersFarSites=[];
+         				 	mapFlag="0";
+         		   		 	$('.showHideSitesCheckbox').prop('checked', false);
+         					$(".showHideSitesCheckbox").attr('disabled', true);
+         			         document.getElementById("sitesCount").textContent = "";      
+
+         			        
          			        if (dataArray.length > 0) {
   					 
   	                       var initCost=0,netCost=0,accuDepr=0;
@@ -1409,7 +1393,7 @@ $(document).ready(function() {
   			       		    var data = [];
   			       	       exportArrayGrid = [];
   			       		   data.push('\r');
-  			       		   data.push(["FAR ID", "Item Code", "Item Name", "Last Modified Date","Item Serial Number","Item Name Register","PO ID","Site ID","Site Name","Longitude","Latitude","Initial Cost","Net Cost","Accumulated Depreciation"]);
+  			       		   data.push(["","FAR ID", "Item Code", "Item Name", "Last Modified Date","Item Serial Number","Item Name Register","PO ID","Site ID","Site Name","Longitude","Latitude","Initial Cost","Net Cost","Accumulated Depreciation"]);
 
   	  				       filteredSitesGrid = dataArray; // used in draw on map 
   	  			       		
@@ -1531,7 +1515,6 @@ $(document).ready(function() {
 		// clicking outsie menu div close ul     
 		var specifiedElement = document.getElementById('notifactionDropdown');
 
-		//I'm using "click" but it works with any event
 		document.addEventListener('click', function(event) {
 		   var isClickInside = specifiedElement.contains(event.target);
 
@@ -1557,44 +1540,60 @@ $(document).ready(function() {
     	document.body.appendChild(download_link);
     	download_link.click();
     }
-    
-	function createSiteMarker(siteID,longitude,latitude) {
-
-		markerId=siteID;		
-		const pos = new google.maps.LatLng(latitude,longitude);
-		 iconSite ={
-				path: google.maps.SymbolPath.CIRCLE,
-		        fillOpacity: 0.9,
-		        strokeColor: 'transparent',
-		        strokeOpacity: 0.9,
-		        strokeWeight: 1,
-		        scale: 9,
-		        fillColor:'blue'
-		   };
-		
-		if(!markersFarSites[markerId]){
-			siteMarker = new google.maps.Marker({
-				position: pos,
-				ID:markerId,
-				icon:iconSite,
-		});
-			siteMarker.metadata = { id: markerId };
-			markersFarSites[markerId] = siteMarker;
-			markersFarSites.push(siteMarker);
-			markerClusterFarSites.addMarker(markersFarSites[""+markerId]);
-			markersFarSites[markerId].setMap(map);
-				
-	   }
-		else{
-			if(markersFarSites[markerId].map!=map){
-				markersFarSites[markerId].setMap(map);
-			}				
-			markersFarSites[markerId].setPosition(pos);
-		}
-	}     		
-    		
-	
 });
+function createSiteMarker(siteID,longitude,latitude,siteName) {
+
+	markerId=siteID;		
+	const pos = new google.maps.LatLng(latitude,longitude);
+	 iconSite ={
+			path: google.maps.SymbolPath.CIRCLE,
+	        fillOpacity: 0.9,
+	        strokeColor: 'transparent',
+	        strokeOpacity: 0.9,
+	        strokeWeight: 1,
+	        scale: 9,
+	        fillColor:'blue'
+	   };
+
+		var siteIdInfo ="<b style='font-size:13px;'><u>Site ID: </u></b>"+siteID;
+		var siteNameInfo ="<b style='font-size:13px;'><u>Site Name: </u></b>"+siteName;
+		var data="<div></br>"+siteIdInfo+"</br>"+siteNameInfo+"</div>";			
+		   
+	
+	if(!markersFarSites[markerId]){
+		siteMarker = new google.maps.Marker({
+			position: pos,
+			ID:markerId,
+			icon:iconSite,
+	        data:data,
+	});
+		siteMarker.metadata = { id: markerId };
+		markersFarSites[markerId] = siteMarker;
+		markersFarSites.push(siteMarker);
+		markerClusterFarSites.addMarker(markersFarSites[""+markerId]);
+		markersFarSites[markerId].setMap(map);
+
+		google.maps.event.addListener(siteMarker, "click", function (e) {
+            infoWindow.close();
+	     	infoWindow.setContent(this.data); 
+        	infoWindow.open(map,this);				
+	 	});
+			
+   }
+	else{
+		if(markersFarSites[markerId].map!=map){
+			markersFarSites[markerId].setMap(map);
+			markerClusterFarSites.addMarker(markersFarSites[""+markerId]);
+		}				
+		markersFarSites[markerId].setPosition(pos);
+	}
+	 if(mapFlag=="1"){
+		infoWindow.close();
+	}
+		
+}     		
+		
+
 function showHideAllSites(){
 	$('.showHideSitesCheckbox').bind("change",function() {
 		markerClusterFarSites.clearMarkers();	
@@ -1611,7 +1610,31 @@ function showHideAllSites(){
 			
 		});	
 }
+function panToSite(ID,rowIndex){
 
+	var longitude = filteredSitesGrid[rowIndex]["longitude"];
+	var latitude = filteredSitesGrid[rowIndex]["latitude"];
+	var siteName = filteredSitesGrid[rowIndex]["siteName"];
+
+	 var latLng = new google.maps.LatLng(latitude,longitude);
+	 map.setZoom(15);
+	 map.panTo(latLng);
+	 
+		
+		if(mapFlag=="0") { // Draw on map is not clicked before (markers are not set on map)
+			$('.showHideSitesCheckbox').prop('checked', true);
+			$(".showHideSitesCheckbox").attr('disabled', false);
+	         document.getElementById("sitesCount").textContent = "";      
+
+			if(!markersFarSites[ID]){
+				distinctSites.push(ID); //  this array is used when checking all sites from legend
+				createSiteMarker(ID,longitude,latitude,siteName);
+			}
+
+		}// end mapFlag condition
+		 document.getElementById("sitesCount").textContent = "("+distinctSites.length+")";      
+			
+}
 function getLongLatMouseMove(map){		  
 	map.addListener("mousemove", (mapsMouseEvent) => {
 		
