@@ -11421,32 +11421,56 @@ if (subLayer==""){
     	
     	// Delete from main Manhole/Handhole OR DB 
     	else{
-    	
-    		//Main physical layer checkbox is checked(ALL Single physical layer INSIDE IT ARE CHECKED)
-	    	if($("."+layer+":checked").length>0){				
-	    		//Get all checked single manholes/handoles or DB
-				$("#"+subLayer+"_f_"+selectedIdContext+"").find(' > ul > li ').each(function(){			
-		    		console.log("yessssssss ");	//all is selected from check box		
-					allSelectedLayer.push($(this).attr('id'));
-							
-				}); 
-	    		
-	    	}
-	    	
-	    	//Main physical layer checkbox is unchecked (SOME checked/unchecked manholes/handholes/DB inside it )
-	    	else {
-	    		//Delete CHECKED single physical layer from main physical Layer right click context menu
-	    			console.log(" 123456789");
-	    			//Get all checked single manholes/handoles or DB
-	    			$("#"+subLayer+"_f_"+selectedIdContext+"").find(' > ul > li ').each(function(){	
-						if($(this).find('input:checkbox').is(':checked')) {		
-							allSelectedLayer.push($(this).attr('id'));
-							console.log("main folder");//when delete from  main folder a group of selected 
-						}
-		    		});
-	    		 
-	    	
-	    	}// end unchecked main checkbox
+    	if(subLayer!="DistributionBoard"){
+	    		//Main physical layer checkbox is checked(ALL Single physical layer INSIDE IT ARE CHECKED)
+		    	if($("."+layer+":checked").length>0){				
+		    		//Get all checked single manholes/handoles or DB
+					$("#"+subLayer+"_f_"+selectedIdContext+"").find(' > ul > li ').each(function(){			
+						allSelectedLayer.push($(this).attr('id'));
+								
+					}); 
+		    		
+		    	}
+		    	
+		    	//Main physical layer checkbox is unchecked (SOME checked/unchecked manholes/handholes/DB inside it )
+		    	else {
+		    		//Delete CHECKED single physical layer from main physical Layer right click context menu
+		    			//Get all checked single manholes/handoles or DB
+		    			$("#"+subLayer+"_f_"+selectedIdContext+"").find(' > ul > li ').each(function(){	
+							if($(this).find('input:checkbox').is(':checked')) {		
+								allSelectedLayer.push($(this).attr('id'));
+								console.log("main folder");//when delete from  main folder a group of selected 
+							}
+			    		});
+		    		 
+		    	
+		    	}// end unchecked main checkbox
+			}//end of not DB
+			else{//DB CASE 
+	    		//Main physical layer checkbox is checked(ALL Single physical layer INSIDE IT ARE CHECKED)
+		    	if($("."+layer+":checked").length>0){				
+		    		//Get all checked single manholes/handoles or DB
+					$("#"+subLayer+"_f_"+selectedIdContext+"").find(' > ul > li > ul > li ').each(function(){			
+						allSelectedLayer.push($(this).attr('id'));
+								
+					}); 
+		    		
+		    	}
+		    	
+		    	//Main physical layer checkbox is unchecked (SOME checked/unchecked manholes/handholes/DB inside it )
+		    	else {
+		    		//Delete CHECKED single physical layer from main physical Layer right click context menu
+		    			console.log(" 123456789");
+		    			//Get all checked single manholes/handoles or DB
+		    			$("#"+subLayer+"_f_"+selectedIdContext+"").find(' > ul > li > ul > li ').each(function(){	
+							if($(this).find('input:checkbox').is(':checked')) {		
+								allSelectedLayer.push($(this).attr('id'));
+							}
+			    		});
+		    		 
+		    	
+		    	}// end unchecked main checkbox
+			}//end of DB sublayer
     	}// end else delete from main physical layer
 	
 	// project physicall layer all delete manhole/handhole/DB
@@ -16938,10 +16962,9 @@ allSelectedLayer=[];
     	}
     	
     	else{
-    	
+    	if (subLayer!="DistributionBoard"){
 	    	if($("."+layer+":checked").length>0){
 				$("#"+subLayer+"_f_"+selectedIdContext+"").find(' > ul > li ').each(function(){			
-		    		console.log("yessssssss ");			
 					allSelectedLayer.push($(this).attr('id'));
 							
 				}); 
@@ -16959,7 +16982,33 @@ allSelectedLayer=[];
 	    		
 	    		 
 	    	
+	    	}
+			}//end of not DB
+			
+			else{//db case 
+				if($("."+layer+":checked").length>0){
+				$("#"+subLayer+"_f_"+selectedIdContext+"").find(' > ul > li > ul > li  ').each(function(){			
+		    		console.log("yessssssss ");			
+					allSelectedLayer.push($(this).attr('id'));
+							
+				}); 
+	    		
+	    	}
+	    	
+	    	else {
+	    		//if($("."+subLayer+":checked").length >0){	
+	    			$("#"+subLayer+"_f_"+selectedIdContext+"").find(' > ul > li > ul > li  ').each(function(){	
+						if($(this).find('input:checkbox').is(':checked')) {		
+							allSelectedLayer.push($(this).attr('id'));
+						}
+		    		});
+	    		//}
+	    		
+	    		 
+	    	
 	    	}// end unchecked main checkbox
+				
+			}
     	}// end else delete from main physical layer
     	
 	 }
