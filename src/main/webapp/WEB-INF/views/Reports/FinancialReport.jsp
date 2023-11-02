@@ -1160,7 +1160,10 @@ $(document).ready(function() {
          } 
             
          document.getElementById("sitesCount").textContent = "("+distinctSites.length+")";      
-		 map.setZoom(6);  
+		 map.setZoom(6); 
+		//Scroll to the map div
+		 document.getElementById("headingTwo").scrollIntoView({ behavior: "smooth" });
+		 
 	         	
 	});
 			 
@@ -1633,6 +1636,10 @@ function panToSite(ID,rowIndex){
 
 		}// end mapFlag condition
 		 document.getElementById("sitesCount").textContent = "("+distinctSites.length+")";      
+
+		//Scroll to the map div
+		 document.getElementById("headingTwo").scrollIntoView({ behavior: "smooth" });
+			 
 			
 }
 function getLongLatMouseMove(map){		  
