@@ -289,13 +289,14 @@ public class FinancialReportController {
 								+ "%') AND upper(A.ITEM_MODEL) LIKE upper('%" + itemModel
 								+ "%') AND upper(A.ITEM_PART_NUMBER) LIKE upper ('%" + itemPartNo + "%'))  ";
 						
-					
+					 
+					 totalStr = "Select SUM(initialCost), SUM( AccumDepr), SUM(netCost) FROM ( "
+					 			+ " SELECT DISTINCT A.FAR_ID AS FAR_ID, A.INITIALCOST as initialCost,A.ACCUMULDEPRECAMNT as AccumDepr, A.NETCOST as netCost from FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID  "
+								+ " WHERE ( upper(A.ITEM_CODE) LIKE upper('%" + itemCode
+								+ "%') AND upper(A.ITEM_NAME) LIKE upper('%" + itemName
+								+ "%') AND upper(A.ITEM_MODEL) LIKE upper('%" + itemModel
+								+ "%') AND upper(A.ITEM_PART_NUMBER) LIKE upper ('%" + itemPartNo + "%') )  ";
 
-					totalStr = "Select SUM(A.INITIALCOST) as initialCost, SUM(A.ACCUMULDEPRECAMNT) as AccumDepr, SUM(A.NETCOST) as netCost from FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID  "
-							+ " WHERE ( upper(A.ITEM_CODE) LIKE upper('%" + itemCode
-							+ "%') AND upper(A.ITEM_NAME) LIKE upper('%" + itemName
-							+ "%') AND upper(A.ITEM_MODEL) LIKE upper('%" + itemModel
-							+ "%') AND upper(A.ITEM_PART_NUMBER) LIKE upper ('%" + itemPartNo + "%') )  ";
 
 					if (StringUtils.equalsIgnoreCase(ignoreDate, "false")) {
 						str = str + " AND A.CREATED_DATE between TO_DATE('" + start_Date
@@ -408,8 +409,9 @@ public class FinancialReportController {
 					} // end of checked strt/end coordinate checkbox
 
 					str = str + "  ) WHERE rn = 1 and (longitude is not null and longitude != '0' and latitude is not null and latitude != '0') ORDER BY lastModifiedDate DESC  ";
-					
-					System.out.println("the str is " + str);
+					totalStr = totalStr +" )";
+
+					//System.out.println("the totalStr is " + totalStr);
 
 					query = session.createNativeQuery(str);
 					listFARTemp = query.list(); // To use it in circle range calculation
