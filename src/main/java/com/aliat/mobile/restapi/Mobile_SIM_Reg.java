@@ -23,9 +23,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.BasicConfigurator;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.NativeQuery;
 import org.jsmpp.InvalidResponseException;
 import org.jsmpp.PDUException;
 import org.jsmpp.bean.Alphabet;
@@ -93,10 +93,11 @@ public class Mobile_SIM_Reg {
 	private static ObjectMapper mapper = new ObjectMapper();
 	@Autowired
 	ALMSessions almsessions;
-	
+
 	private static Session session = null;
 	private static Transaction tx = null;
-	private static Query query = null;
+	@SuppressWarnings("rawtypes")
+	private static NativeQuery query = null;
 	private static String data = null, msisdn = null;
 
 	// Method to get Regions from Regions Table
@@ -111,7 +112,7 @@ public class Mobile_SIM_Reg {
 	 * 
 	 * if (session != null && session.isOpen()) { tx = session.beginTransaction();
 	 * try { regions = "bisoy"; //
-	 * session.createSQLQuery("SELECT REGION_NAME FROM REGION").list().toString();
+	 * session.createNativeQuery("SELECT REGION_NAME FROM REGION").list().toString();
 	 * 
 	 * }
 	 * 
@@ -122,7 +123,7 @@ public class Mobile_SIM_Reg {
 	 * e.getMessage());
 	 * 
 	 * } finally { if (session != null && session.isOpen()) { tx.commit();
-	 * session.close(); } } } else {
+	 * session.close(); session.getSessionFactory().close(); } } } else {
 	 * System.out.println("could not connect to DB in  getRegions method");
 	 * logger.info("could not connect to DB getRegions: "); }
 	 * 
@@ -146,8 +147,8 @@ public class Mobile_SIM_Reg {
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
-				regions = session.createSQLQuery("SELECT REGION_NAME FROM REGION ORDER BY REGION_ID ASC").list();
-				query = session.createSQLQuery("SELECT REGION_ID FROM REGION ");
+				regions = session.createNativeQuery("SELECT REGION_NAME FROM REGION ORDER BY REGION_ID ASC").list();
+				query = session.createNativeQuery("SELECT REGION_ID FROM REGION ");
 				data = mapper.writeValueAsString(query.list() + ":" + regions);
 				System.out.println(data);
 			}
@@ -162,6 +163,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -191,8 +193,8 @@ public class Mobile_SIM_Reg {
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
-				regions = session.createSQLQuery("SELECT REGION_NAME FROM REGION ORDER BY REGION_ID ASC").list();
-				query = session.createSQLQuery("SELECT REGION_ID FROM REGION ");
+				regions = session.createNativeQuery("SELECT REGION_NAME FROM REGION ORDER BY REGION_ID ASC").list();
+				query = session.createNativeQuery("SELECT REGION_ID FROM REGION ");
 				data = mapper.writeValueAsString(query.list() + ":" + regions);
 				rtn.put("Regions", data);
 
@@ -200,10 +202,10 @@ public class Mobile_SIM_Reg {
 					for (int i = 0; i < regions.size(); i++) {
 
 						areaID = session
-								.createSQLQuery("SELECT AREA_ID FROM AREA where REGION_NAME ='" + regions.get(i) + "'")
+								.createNativeQuery("SELECT AREA_ID FROM AREA where REGION_NAME ='" + regions.get(i) + "'")
 								.list();
 						areaName = session
-								.createSQLQuery(
+								.createNativeQuery(
 										"SELECT AREA_NAME FROM  AREA where REGION_NAME ='" + regions.get(i) + "'")
 								.list();
 
@@ -226,6 +228,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -261,7 +264,7 @@ public class Mobile_SIM_Reg {
 				logger.info("MSISDN in agentNumberValidation " + msisdn);
 				if (msisdn != null && !msisdn.equalsIgnoreCase("")) {
 
-					query = session.createSQLQuery(
+					query = session.createNativeQuery(
 							"select MSISDN from Agent where MSISDN='" + msisdn + "' and STATUS ='Activated'");
 
 					System.out.println(query.uniqueResult());
@@ -287,6 +290,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -322,7 +326,7 @@ public class Mobile_SIM_Reg {
 			try {
 				msisdn = agentRegistration.getMsisdn();
 				if (msisdn != null && !msisdn.equalsIgnoreCase("")) {
-					query = session.createSQLQuery("select MSISDN from Agent where MSISDN='" + msisdn + "'");
+					query = session.createNativeQuery("select MSISDN from Agent where MSISDN='" + msisdn + "'");
 
 					if (query.uniqueResult() != null) {
 						data = "Existed";
@@ -334,14 +338,15 @@ public class Mobile_SIM_Reg {
 						Calendar calendar = new GregorianCalendar();
 						calendar.setTime(date);
 						int year = calendar.get(Calendar.YEAR);
-						String agentId=null;
-						synchronized (this) {						
-							//agentId = "AG_" + year + "_" + appConfig.getSequenceNbr(42);
-							agentId = "AG_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT AGENT FROM SEQ_TABLE").uniqueResult().toString());	
-							query = session.createSQLQuery("UPDATE SEQ_TABLE SET AGENT = AGENT + 1 ");
+						String agentId = null;
+						synchronized (this) {
+							// agentId = "AG_" + year + "_" + appConfig.getSequenceNbr(42);
+							agentId = "AG_" + year + "_" + Integer.parseInt(
+									session.createNativeQuery("SELECT AGENT FROM SEQ_TABLE").uniqueResult().toString());
+							query = session.createNativeQuery("UPDATE SEQ_TABLE SET AGENT = AGENT + 1 ");
 							query.executeUpdate();
-							session.createSQLQuery("commit").executeUpdate();
-							}
+							session.createNativeQuery("commit").executeUpdate();
+						}
 						Timestamp CreationDate, LastModified;
 						CreationDate = new Timestamp(new Timestamp(System.currentTimeMillis()).getTime());
 						LastModified = new Timestamp(new Timestamp(System.currentTimeMillis()).getTime());
@@ -397,6 +402,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 
@@ -449,7 +455,7 @@ public class Mobile_SIM_Reg {
 			tx = session.beginTransaction();
 
 			try {
-				query = session.createSQLQuery("update AGENT set " + vcolname + "=" + val1
+				query = session.createNativeQuery("update AGENT set " + vcolname + "=" + val1
 						+ ",LAST_MODIFIED_DATE=SYSDATE  where MSISDN ='" + vsimregid + "'");
 				query.executeUpdate();
 				data = "Updated";
@@ -468,6 +474,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -501,12 +508,12 @@ public class Mobile_SIM_Reg {
 				if (agentRegistration.getMsisdn() != null && agentRegistration.getPinCode() != null) {
 					msisdn = agentRegistration.getMsisdn().toString();
 
-					query = session.createSQLQuery(
+					query = session.createNativeQuery(
 							"SELECT MSISDN,PIN_CODE FROM AGENT WHERE MSISDN = '" + agentRegistration.getMsisdn() + "'"
 									+ " AND PIN_CODE='" + agentRegistration.getPinCode() + "'");
 
 					if (query.list().size() > 0) {
-						query = session.createSQLQuery(
+						query = session.createNativeQuery(
 								"SELECT Status FROM AGENT WHERE MSISDN = '" + agentRegistration.getMsisdn() + "'"
 										+ " AND PIN_CODE='" + agentRegistration.getPinCode() + "'");
 
@@ -539,6 +546,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -570,7 +578,7 @@ public class Mobile_SIM_Reg {
 			tx = session.beginTransaction();
 			try {
 
-				query = session.createSQLQuery("SELECT "
+				query = session.createNativeQuery("SELECT "
 						+ "nvl(sum(case when CREATED_DATE  >= SysDate-30 AND AGENT_NUMBER='" + agentNumber
 						+ "' then 1 else 0 end ),0),"
 						+ "nvl(sum(case when STATUS = 'Success' AND CREATED_DATE  >= SysDate-30 AND AGENT_NUMBER='"
@@ -613,6 +621,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -647,14 +656,14 @@ public class Mobile_SIM_Reg {
 						&& !testingspeedcoverage.getAgentNumber().equalsIgnoreCase("")) {
 					String agentNumber = testingspeedcoverage.getAgentNumber();
 
-					data = session.createSQLQuery(
+					data = session.createNativeQuery(
 							"SELECT COUNT(*) from CLIENTS where (CLIENT_PHOTO_STATUS='0' or front_side_id_status='0' or  back_side_id_status='0' or signature_status='0') and AGENT_NUMBER='"
 									+ agentNumber + "' ")
 							.uniqueResult().toString();
 
 					rtn.put("PendingPics", data);
 
-					query = session.createSQLQuery(
+					query = session.createNativeQuery(
 							"SELECT SUPERAGENT,CAPTURE_SPEED,SITE_ENGINEER,RUNNING_INTERVAL,CAPTURE_COVERAGE,COVERAGE_RUNNING_INTERVAL from AGENT where MSISDN='"
 									+ agentNumber + "'");
 					List<Object[]> result = query.list();
@@ -697,15 +706,16 @@ public class Mobile_SIM_Reg {
 						}
 
 						String speedCoverageId = null;
-						synchronized (this) {						
-							//agentId = "AG_" + year + "_" + appConfig.getSequenceNbr(42);
-							speedCoverageId = "TEST_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT SPEED_COVERAGE FROM SEQ_TABLE").uniqueResult().toString());	
-							query = session.createSQLQuery("UPDATE SEQ_TABLE SET SPEED_COVERAGE = SPEED_COVERAGE + 1 ");
+						synchronized (this) {
+							// agentId = "AG_" + year + "_" + appConfig.getSequenceNbr(42);
+							speedCoverageId = "TEST_" + year + "_" + Integer.parseInt(session
+									.createNativeQuery("SELECT SPEED_COVERAGE FROM SEQ_TABLE").uniqueResult().toString());
+							query = session.createNativeQuery("UPDATE SEQ_TABLE SET SPEED_COVERAGE = SPEED_COVERAGE + 1 ");
 							query.executeUpdate();
-							session.createSQLQuery("commit").executeUpdate();
-							}
+							session.createNativeQuery("commit").executeUpdate();
+						}
 						if (session.isOpen() && session != null) {
-							query = session.createSQLQuery(
+							query = session.createNativeQuery(
 									"insert into speed_coverage_test (SPEEDCOVERAGEID,SPEEDCOVERAGE_DATE,SPEEDCOVERAGE_LAT,SPEEDCOVERAGE_LNG,COVERAGE_SIGNAL,SPEED_DOWNLOAD,"
 											+ "SPEED_UPLOAD,AGENT_NUMBER,AGENT_NAME,CID,LAC,TECHNOLOGY,MMC,MNC,APP_VERSION) "
 											+ "VALUES ('" + speedCoverageId + "',sysdate,'"
@@ -734,7 +744,7 @@ public class Mobile_SIM_Reg {
 
 							rtn.put("speedResult", data1);
 							if (session.isOpen() && session != null) {
-								query = session.createSQLQuery("update agent set capture_speed ='0' where msisdn = "
+								query = session.createNativeQuery("update agent set capture_speed ='0' where msisdn = "
 										+ "(select msisdn from agent where capture_speed='1' and msisdn ='"
 										+ testingspeedcoverage.getAgentNumber() + "')");
 								query.executeUpdate();
@@ -759,6 +769,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -790,7 +801,7 @@ public class Mobile_SIM_Reg {
 			try {
 				if (agentRegistration.getMsisdn() != null) {
 					msisdn = agentRegistration.getMsisdn().toString();
-					listItem = session.createSQLQuery("select STATUS from Agent where MSISDN='" + msisdn + "'")
+					listItem = session.createNativeQuery("select STATUS from Agent where MSISDN='" + msisdn + "'")
 							.uniqueResult().toString();
 
 					if (listItem.equalsIgnoreCase("Activated")) {
@@ -811,6 +822,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -845,7 +857,7 @@ public class Mobile_SIM_Reg {
 				int vfrom = client.getVfrom();
 				int vto = client.getVto();
 
-				clientAPI = session.createSQLQuery(
+				clientAPI = session.createNativeQuery(
 						"SELECT * FROM (select ROW_NUMBER() OVER (ORDER BY CREATED_DATE DESC) row_num,CLIENT_ID,AGENT_NUMBER,MOBILE_NUMBER,FRONT_SIDE_ID_STATUS, BACK_SIDE_ID_STATUS,SIGNATURE_STATUS,CLIENT_PHOTO_STATUS"
 								+ " from CLIENTS where ( FRONT_SIDE_ID_STATUS='0' or BACK_SIDE_ID_STATUS='0' or SIGNATURE_STATUS='0' or CLIENT_PHOTO_STATUS='0')"
 								+ " AND AGENT_NUMBER='" + agentNumber + "'  ) T WHERE  row_num >='" + vfrom
@@ -857,7 +869,7 @@ public class Mobile_SIM_Reg {
 				session.flush();
 				if (clientAPI.size() > 0) {
 
-					data = session.createSQLQuery(
+					data = session.createNativeQuery(
 							"SELECT COUNT(*) FROM CLIENTS where ( FRONT_SIDE_ID_STATUS='0' or BACK_SIDE_ID_STATUS='0' or SIGNATURE_STATUS='0' or CLIENT_PHOTO_STATUS='0')AND AGENT_NUMBER='"
 									+ agentNumber + "' ")
 							.uniqueResult().toString();
@@ -877,6 +889,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -903,7 +916,7 @@ public class Mobile_SIM_Reg {
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
-				clientAPI = session.createSQLQuery(
+				clientAPI = session.createNativeQuery(
 						"select MOBILE_NUMBER,ID_FRONT_SIDE_PHOTO,ID_BACK_SIDE_PHOTO,SIGNATURE,SIGNATURE_STATUS,BACK_SIDE_ID_STATUS,FRONT_SIDE_ID_STATUS,CLIENT_PHOTO,CLIENT_PHOTO_STATUS FROM CLIENTS where CLIENT_ID = '"
 								+ client.getClientid() + "'")
 						.list();
@@ -919,6 +932,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -948,7 +962,7 @@ public class Mobile_SIM_Reg {
 			try {
 				String vcolname = client.getVcolname().toString();
 				String vsimregid = client.getVsimregid().toString();
-				query = session.createSQLQuery("update CLIENTS set " + vcolname
+				query = session.createNativeQuery("update CLIENTS set " + vcolname
 						+ "='1', LAST_MODIFIED_DATE=SYSDATE  where CLIENT_ID ='" + vsimregid + "'");
 				query.executeUpdate();
 				data = "updated";
@@ -965,6 +979,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -999,7 +1014,7 @@ public class Mobile_SIM_Reg {
 				int vfrom = client.getVfrom();
 				int vto = client.getVto();
 
-				clientAPI = session.createSQLQuery(
+				clientAPI = session.createNativeQuery(
 						"SELECT row_num,AGENT_NUMBER,CLIENT_ID,FIRST_NAME,LAST_NAME,MOBILE_NUMBER,STATUS,nvl(REGISTRATION_STATUS,'0') FROM (select ROW_NUMBER() OVER (ORDER BY CREATED_DATE DESC) row_num,AGENT_NUMBER,CLIENT_ID,FIRST_NAME,LAST_NAME,MOBILE_NUMBER,STATUS,REGISTRATION_STATUS,CREATED_DATE"
 								+ " from CLIENTS where AGENT_NUMBER = '" + agentNumber
 								+ "' and  TO_DATE(TO_CHAR(CREATED_DATE,'DD-MM-YYYY'),'DD-MM-YYYY') =TO_DATE('" + date
@@ -1010,7 +1025,7 @@ public class Mobile_SIM_Reg {
 
 				if (clientAPI.size() > 0) {
 					rtn.put("SimListView", clientAPI);
-					data = session.createSQLQuery(
+					data = session.createNativeQuery(
 							"SELECT COUNT(*) FROM CLIENTS where TO_DATE(TO_CHAR(CREATED_DATE,'DD-MM-YYYY'),'DD-MM-YYYY') =TO_DATE('"
 									+ date + "','DD-MM-YYYY') AND AGENT_NUMBER='" + agentNumber + "'")
 							.uniqueResult().toString();
@@ -1030,6 +1045,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -1058,7 +1074,7 @@ public class Mobile_SIM_Reg {
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
-				clientAPI = session.createSQLQuery(
+				clientAPI = session.createNativeQuery(
 						"select FIRST_NAME,nvl(MIDDLE_NAME,'-'),LAST_NAME,STATUS,MOBILE_NUMBER,TO_CHAR(DATE_OF_BIRTH,'DD-MM-YYYY'),NATIONALITY,nvl(ALTERNATIVE_NUMBER,'-'),EMAIL_ADDRESS,PHYSICAL_LOCATION,POSTAL_ADDRESS,GENDER,CLIENT_ID_NUMBER,SIGNATURE,ID_FRONT_SIDE_PHOTO,ID_BACK_SIDE_PHOTO,SIGNATURE_STATUS,FRONT_SIDE_ID_STATUS,BACK_SIDE_ID_STATUS,nvl(CLIENT_PHOTO,'No Image'),CLIENT_PHOTO_STATUS,USSD_STATUS,LONGITUDE,LATITUDE,SELLING_LONGITUDE,SELLING_LATITUDE,TO_CHAR(CREATED_DATE,'DD-MM-YYYY'),nvl(REGISTRATION_STATUS,'0'),nvl(TKASH_REGISTRATION_STATUS,'0'),ID_TYPE,nvl(PASSPORT_NUMBER,'0'),nvl(REGION_ID,'0'),nvl(REGION_NAME,'None'),nvl(AREA_ID,'0'),nvl(AREA_NAME,'None')  FROM CLIENTS where CLIENT_ID = '"
 								+ client.getClientid() + "'")
 						.list();
@@ -1074,6 +1090,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -1102,7 +1119,7 @@ public class Mobile_SIM_Reg {
 			tx = session.beginTransaction();
 			try {
 				String clientid = client.getClientid();
-				query = session.createSQLQuery("Delete CLIENTS where CLIENT_ID='" + clientid + "'");
+				query = session.createNativeQuery("Delete CLIENTS where CLIENT_ID='" + clientid + "'");
 				query.executeUpdate();
 
 				data = "deleted";
@@ -1119,6 +1136,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -1154,14 +1172,15 @@ public class Mobile_SIM_Reg {
 
 				if (clientid.equalsIgnoreCase("0")) {
 
-					//clientid = "CLT_" + year + "_" + appConfig.getSequenceNbr(34);
-					synchronized (this) {						
-						//agentId = "AG_" + year + "_" + appConfig.getSequenceNbr(42);
-						clientid = "CLT_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT CLIENTS FROM SEQ_TABLE").uniqueResult().toString());	
-						query = session.createSQLQuery("UPDATE SEQ_TABLE SET CLIENTS = CLIENTS + 1 ");
+					// clientid = "CLT_" + year + "_" + appConfig.getSequenceNbr(34);
+					synchronized (this) {
+						// agentId = "AG_" + year + "_" + appConfig.getSequenceNbr(42);
+						clientid = "CLT_" + year + "_" + Integer.parseInt(
+								session.createNativeQuery("SELECT CLIENTS FROM SEQ_TABLE").uniqueResult().toString());
+						query = session.createNativeQuery("UPDATE SEQ_TABLE SET CLIENTS = CLIENTS + 1 ");
 						query.executeUpdate();
-						session.createSQLQuery("commit").executeUpdate();
-						}
+						session.createNativeQuery("commit").executeUpdate();
+					}
 					CreationDate = new Timestamp(new Timestamp(System.currentTimeMillis()).getTime());
 				} else {
 					if (client.getCreatedDate() == null) {
@@ -1208,9 +1227,14 @@ public class Mobile_SIM_Reg {
 				clienttable.setSellingLatitude(client.getSellingLatitude());
 				clienttable.setIdType(client.getIdType());
 				clienttable.setPassNumber(client.getPassNumber());
-				clienttable.setRegionID(session.createSQLQuery("SELECT REGION_ID FROM REGION WHERE REGION_NAME ='"+client.getRegionName()+"'").uniqueResult().toString());
+				clienttable.setRegionID(session
+						.createNativeQuery(
+								"SELECT REGION_ID FROM REGION WHERE REGION_NAME ='" + client.getRegionName() + "'")
+						.uniqueResult().toString());
 				clienttable.setRegionName(client.getRegionName());
-				clienttable.setAreaID(session.createSQLQuery("SELECT AREA_ID FROM AREA WHERE AREA_NAME ='"+client.getAreaName()+"'").uniqueResult().toString());
+				clienttable.setAreaID(session
+						.createNativeQuery("SELECT AREA_ID FROM AREA WHERE AREA_NAME ='" + client.getAreaName() + "'")
+						.uniqueResult().toString());
 				clienttable.setAreaName(client.getAreaName());
 				clienttable.setCid(client.getCid());
 				clienttable.setLac(client.getLac());
@@ -1233,6 +1257,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -1266,7 +1291,7 @@ public class Mobile_SIM_Reg {
 				String vcolname1 = client.getVcolname1();
 				String val2 = client.getVal2();
 				if (vcolname1 != null) {
-					query = session.createSQLQuery(
+					query = session.createNativeQuery(
 							"update CLIENTS set " + vcolname + "=" + val1 + ",LAST_MODIFIED_DATE=SYSDATE," + vcolname1
 									+ "='" + val2 + "'  where CLIENT_ID ='" + vsimregid + "'");
 					query.executeUpdate();
@@ -1286,6 +1311,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -1314,7 +1340,7 @@ public class Mobile_SIM_Reg {
 			try {
 				String vcolname = client.getVcolname();
 				String vsimregid = client.getVsimregid();
-				query = session.createSQLQuery("update CLIENTS set " + vcolname
+				query = session.createNativeQuery("update CLIENTS set " + vcolname
 						+ "=-1,LAST_MODIFIED_DATE=SYSDATE   where CLIENT_ID ='" + vsimregid + "'");
 				query.executeUpdate();
 				data = "updated";
@@ -1331,6 +1357,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -1359,7 +1386,7 @@ public class Mobile_SIM_Reg {
 			try {
 				String clientid = client.getClientid();
 				String ussdStatus = client.getUssdStatus();
-				query = session.createSQLQuery(
+				query = session.createNativeQuery(
 						"UPDATE CLIENTS SET LAST_MODIFIED_DATE=SYSDATE,STATUS='SENT_USSD', USSD_STATUS='"
 								+ ussdStatus.toString() + "' WHERE CLIENT_ID ='" + clientid + "'");
 				query.executeUpdate();
@@ -1377,6 +1404,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -1449,7 +1477,7 @@ public class Mobile_SIM_Reg {
 					status = status1[1];
 				}
 
-				query = session.createSQLQuery(
+				query = session.createNativeQuery(
 						"UPDATE CLIENTS" + " SET " + "LAST_MODIFIED_DATE=SYSDATE, RESPONSE_CODE='" + response_code
 								+ "'," + "RESPONSE_MESSAGE='" + response_message + "'," + "REGISTRATION_STATUS='"
 								+ status + "'," + "STATUS='" + status + "'" + "WHERE CLIENT_ID='" + clientid + "'");
@@ -1467,6 +1495,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -1500,7 +1529,7 @@ public class Mobile_SIM_Reg {
 			try {
 
 				if (agentNumber != null) {
-					agentAPI = session.createSQLQuery(
+					agentAPI = session.createNativeQuery(
 							"select FIRST_NAME,LAST_NAME,DISPLAY_NAME,ADDRESS,EMAIL,STATUS,nvl(REGION_NAME,'None'),nvl(AGENT_IMAGE,'0'),nvl(AGENT_FRONT_ID,'0'),nvl(AGENT_BACK_ID,'0'),nvl(AGENT_IMAGE_STATUS,0),nvl(FRONT_SIDE_ID_STATUS,0),nvl(BACK_SIDE_ID_STATUS,0),LONGITUDE,LATITUDE,FULL_NAME,AGENT_ID,REGION_ID FROM AGENT where MSISDN='"
 									+ agentNumber + "' AND PIN_CODE='" + agent.getPinCode() + "'")
 							.list();
@@ -1517,6 +1546,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -1542,7 +1572,7 @@ public class Mobile_SIM_Reg {
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
-				query = session.createSQLQuery("update AGENT set LAST_MODIFIED_DATE=SYSDATE ,FIRST_NAME='"
+				query = session.createNativeQuery("update AGENT set LAST_MODIFIED_DATE=SYSDATE ,FIRST_NAME='"
 						+ agentRegistration.getFirstName() + "',DISPLAY_NAME='" + agentRegistration.getDisplayName()
 						+ "',LAST_NAME='" + agentRegistration.getLastName() + "',FULL_NAME='"
 						+ agentRegistration.getFirstName() + " " + agentRegistration.getLastName() + "',ADDRESS='"
@@ -1568,6 +1598,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -1595,8 +1626,9 @@ public class Mobile_SIM_Reg {
 			tx = session.beginTransaction();
 
 			try {
-				query = session.createSQLQuery("Select COUNT(*) FROM CLIENTS WHERE CLIENT_ID_NUMBER = '"
-						+ sim.getIdNumber() + "' " + " AND CREATED_DATE  >= SysDate-7 AND REGISTRATION_STATUS ='Success'");
+				query = session
+						.createNativeQuery("Select COUNT(*) FROM CLIENTS WHERE CLIENT_ID_NUMBER = '" + sim.getIdNumber()
+								+ "' " + " AND CREATED_DATE  >= SysDate-7 AND REGISTRATION_STATUS ='Success'");
 
 				System.out.println(query.uniqueResult());
 				count = query.uniqueResult().toString();
@@ -1617,6 +1649,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 
@@ -1909,7 +1942,7 @@ public class Mobile_SIM_Reg {
 				str = str + " order by a.REGISTRATIONDATE DESC";
 
 				System.out.println(str);
-				simReport = session.createSQLQuery(str).list();
+				simReport = session.createNativeQuery(str).list();
 
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -1923,6 +1956,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -1992,7 +2026,7 @@ public class Mobile_SIM_Reg {
 				}
 
 				str = str + " order by a.REGISTRATIONDATE DESC";
-				simReport = session.createSQLQuery(str).list();
+				simReport = session.createNativeQuery(str).list();
 
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -2006,6 +2040,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -2119,7 +2154,7 @@ public class Mobile_SIM_Reg {
 
 			try {
 				String ussdstatus = session
-						.createSQLQuery("SELECT STATUS FROM CLIENTS where CLIENT_ID='" + clientid + "'").uniqueResult()
+						.createNativeQuery("SELECT STATUS FROM CLIENTS where CLIENT_ID='" + clientid + "'").uniqueResult()
 						.toString();
 				if (ussdstatus.equalsIgnoreCase("SENT_USSD")) {
 					clientstatus = "SENT_USSD";
@@ -2129,7 +2164,7 @@ public class Mobile_SIM_Reg {
 
 				if (session.isOpen() && session != null) {
 
-					query = session.createSQLQuery("UPDATE CLIENTS SET LAST_MODIFIED_DATE=SYSDATE, REGISTRATION_ID ='"
+					query = session.createNativeQuery("UPDATE CLIENTS SET LAST_MODIFIED_DATE=SYSDATE, REGISTRATION_ID ='"
 							+ registartionid + "' ,RESPONSE_CODE='" + response_code + "',RESPONSE_MESSAGE='"
 							+ response_message + "',REGISTRATION_STATUS='" + status + "',STATUS='" + clientstatus
 							+ "' where CLIENT_ID='" + clientid + "'");
@@ -2138,12 +2173,12 @@ public class Mobile_SIM_Reg {
 					session.flush();
 
 					String agentname = session
-							.createSQLQuery(
+							.createNativeQuery(
 									"SELECT FIRST_NAME ||' '|| LAST_NAME FROM AGENT where MSISDN='" + agentmsisdn + "'")
 							.uniqueResult().toString();
 
 					// Add SIMREG_LOG_DATA
-					query = session.createSQLQuery(
+					query = session.createNativeQuery(
 							"insert into SIMREG_LOG (REGISTRATIONDATE,CLIENT_ID,SIM_REG_STATUS,RESPONSE_CODE,RESPONSE_MESSAGE,AGENT_NUMBER,AGENT_NAME,MOBILE_NUMBER )values (sysdate,'"
 									+ clientid + "','" + status + "','" + response_code + "','" + response_message
 									+ "','" + agentmsisdn + "','" + agentname + "','" + msisdn + "')");
@@ -2165,6 +2200,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -2175,8 +2211,8 @@ public class Mobile_SIM_Reg {
 
 	}
 
-
 	/////// TKASH REGISTRATION
+	@SuppressWarnings({ "unused", "resource" })
 	@RequestMapping(value = "/TKASHRegistrationAPIWeb", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<String> TKASHRegistrationAPIWeb(@RequestBody SimRegistrationAPI sim) {
@@ -2186,7 +2222,7 @@ public class Mobile_SIM_Reg {
 
 		logger.finest("Entering TKash Registration.");
 		logger.info("Entering TKash Registration.");
-		data="Service is not available";
+		data = "Service is not available";
 		String result, api_response_code = null, response_message = null, registration_status, clientpkid = "0", fname,
 				mname, lname, msisdn = "0", idType, idNumber, dob, gender, email, altnumber, address1, state,
 				agentmsisdn = "0", getid = "0";
@@ -2213,23 +2249,23 @@ public class Mobile_SIM_Reg {
 			agentmsisdn = sim.getAgentmsisdn();
 			gender = sim.getGender();
 			getid = getrequestid();
-			
-			if(gender.equalsIgnoreCase("Male")) {
-				gender="M";
+
+			if (gender.equalsIgnoreCase("Male")) {
+				gender = "M";
 			}
-			
-			if(gender.equalsIgnoreCase("Female")) {
-				gender="F";
+
+			if (gender.equalsIgnoreCase("Female")) {
+				gender = "F";
 			}
-			
-			logger.info("gender is :"+gender);
-			logger.finest("gender is : "+gender);
-			logger.finest("Date of birth is : "+dob);
-			logger.info("Date of birth is : "+dob);
-			
-			logger.finest("Client ID is "+clientpkid);
-			logger.info("Client ID is "+clientpkid);
-			
+
+			logger.info("gender is :" + gender);
+			logger.finest("gender is : " + gender);
+			logger.finest("Date of birth is : " + dob);
+			logger.info("Date of birth is : " + dob);
+
+			logger.finest("Client ID is " + clientpkid);
+			logger.info("Client ID is " + clientpkid);
+
 			logger.finest("Sending parameters.");
 			logger.info("Sending parameters.");
 			JsonObject postData = new JsonObject();
@@ -2257,23 +2293,22 @@ public class Mobile_SIM_Reg {
 			postData.addProperty("clientPassword", "iPacsUssd@123");
 			postData.addProperty("agentMsisdn", agentmsisdn);
 
-			
 			logger.finest("before Opening Connection.");
 			logger.info("before Opening Connection.");
 			URL url = new URL("http://10.22.25.10:8995/ipacs/ussd/api/");
-			
+
 			boolean portAvailable = false;
-			
+
 			try {
-			    Socket socket = new Socket("10.22.25.10", 8995);
-			    portAvailable=true;
-			    //socket.close();
+				Socket socket = new Socket("10.22.25.10", 8995);
+				portAvailable = true;
+				// socket.close();
 			} catch (IOException e) {
 				logger.finest("port is closed.");
 				logger.info("port is closed.");
 			}
-			
-			if(portAvailable == true) {
+
+			if (portAvailable == true) {
 				urlConnection = (HttpURLConnection) url.openConnection();
 				logger.finest("after Opening Connection.");
 				logger.info("after Opening Connection.");
@@ -2284,19 +2319,19 @@ public class Mobile_SIM_Reg {
 				urlConnection.setChunkedStreamingMode(0);
 
 				/// validate if we have access to URL
-				HttpURLConnection httpUrlConnection=  (HttpURLConnection) url.openConnection();
+				HttpURLConnection httpUrlConnection = (HttpURLConnection) url.openConnection();
 				httpUrlConnection.setDoOutput(true);
 				httpUrlConnection.setDoInput(true);
 				httpUrlConnection.setConnectTimeout(5000);
 				int responseCode = httpUrlConnection.getResponseCode();
-				logger.finest("Http Connection Response Code : "+responseCode);
-				logger.info("Http Connection Response Code : "+responseCode);
+				logger.finest("Http Connection Response Code : " + responseCode);
+				logger.info("Http Connection Response Code : " + responseCode);
 				if (responseCode != 200) {
 					urlConnection.connect();
 					logger.finest("Connection success.");
 					logger.info("Connection success.");
 					connectionFailed = true;
-					
+
 					OutputStream out = new BufferedOutputStream(urlConnection.getOutputStream());
 					BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
 					writer.write(postData.toString());
@@ -2304,20 +2339,20 @@ public class Mobile_SIM_Reg {
 					flag = 1;
 
 					int code = urlConnection.getResponseCode();
-					logger.finest("URL Connection Response Code : "+code);
-					logger.info("URL Connection Response Code : "+code);
+					logger.finest("URL Connection Response Code : " + code);
+					logger.info("URL Connection Response Code : " + code);
 					BufferedReader rd = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 					String line = null;
 					while ((line = rd.readLine()) != null) {
-						logger.finest("line is : "+line);
-						logger.info("line is : "+line);
+						logger.finest("line is : " + line);
+						logger.info("line is : " + line);
 						if (line.contains("responseCode")) {
 
 							int m = 0;
 							m = line.indexOf(";");
 							String response_code = line.substring(m + 1, line.length());
 							String[] test1 = response_code.split("[:,]");
-							
+
 							String[] splitterString = test1[1].split("\"");
 
 							for (String s : splitterString) {
@@ -2340,25 +2375,24 @@ public class Mobile_SIM_Reg {
 							}
 
 						}
-						
+
 					}
 
-					logger.finest("API response Code : "+api_response_code);
-					logger.info("API response Code : "+api_response_code);
-					
-					logger.finest("API response Message : "+response_message);
-					logger.info("API response Message : "+response_message);
+					logger.finest("API response Code : " + api_response_code);
+					logger.info("API response Code : " + api_response_code);
 
+					logger.finest("API response Message : " + response_message);
+					logger.info("API response Message : " + response_message);
 
 				}
 
-			}else {
-				
+			} else {
+
 				data = "Service is not available at this moment, please try again later.";
 				return ResponseEntity.ok().headers(responseHeaders).body(data);
 
 			}
-						/////////////////////////////////////////////
+			/////////////////////////////////////////////
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2367,8 +2401,8 @@ public class Mobile_SIM_Reg {
 			sw = new StringWriter();
 			e.printStackTrace(new PrintWriter(sw));
 			exceptionAsString = sw.toString();
-			logger.finest("Error in TKASHRegistrationAPIWeb due to \n "+ exceptionAsString);
-			logger.info("Error in TKASHRegistrationAPIWeb due to \n "+ exceptionAsString);
+			logger.finest("Error in TKASHRegistrationAPIWeb due to \n " + exceptionAsString);
+			logger.info("Error in TKASHRegistrationAPIWeb due to \n " + exceptionAsString);
 		} finally {
 			if (urlConnection != null) {
 				urlConnection.disconnect();
@@ -2377,8 +2411,7 @@ public class Mobile_SIM_Reg {
 				data = "0";
 			}
 		}
-		
-		
+
 		if (connectionFailed == true) {
 			if (response_message.contains("Success") || response_message.contains("success")
 					|| response_message.contains("SUCCESS")) {
@@ -2387,10 +2420,9 @@ public class Mobile_SIM_Reg {
 			} else {
 				registration_status = "Failed";
 			}
-			
-			
-			if(response_message.contains("'")) {
-				response_message=response_message.replace("'"," ");
+
+			if (response_message.contains("'")) {
+				response_message = response_message.replace("'", " ");
 			}
 			// update in DB based on TKASH_REGISTRATION_STATUS status
 			String tkashresposne = UpdatetkashStatusfromALM(getid, clientpkid, registration_status, api_response_code,
@@ -2428,11 +2460,11 @@ public class Mobile_SIM_Reg {
 
 			try {
 				tkashststus = session
-						.createSQLQuery(
+						.createNativeQuery(
 								"SELECT TKASH_REGISTRATION_STATUS FROM CLIENTS where CLIENT_ID='" + clientid + "'")
 						.uniqueResult().toString();
 				if (!tkashststus.equalsIgnoreCase("Success")) {
-					query = session.createSQLQuery("UPDATE CLIENTS SET LAST_MODIFIED_DATE=SYSDATE, TKASHREGISTER_ID ='"
+					query = session.createNativeQuery("UPDATE CLIENTS SET LAST_MODIFIED_DATE=SYSDATE, TKASHREGISTER_ID ='"
 							+ tkashregistartionid + "',TKASH_RESPONSE_CODE='" + response_code
 							+ "',TKASH_RESPONSE_MESSAGE='" + response_message + "',TKASH_REGISTRATION_STATUS='" + status
 							+ "' where CLIENT_ID='" + clientid + "'");
@@ -2441,7 +2473,7 @@ public class Mobile_SIM_Reg {
 					session.flush();
 
 					// Add SIMREG_LOG_DATA
-					query = session.createSQLQuery(
+					query = session.createNativeQuery(
 							"insert into TKASHREG_LOG (REGISTRATIONDATE,CLIENT_ID,SIM_REG_STATUS,RESPONSE_CODE,RESPONSE_MESSAGE,AGENT_NUMBER,AGENT_NAME,MOBILE_NUMBER )values (sysdate,'"
 									+ clientid + "','" + status + "','" + response_code + "','" + response_message
 									+ "','" + agentmsisdn + "',(SELECT AGENT.FULL_NAME FROM AGENT where MSISDN='"
@@ -2462,6 +2494,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -2489,7 +2522,7 @@ public class Mobile_SIM_Reg {
 			tx = session.beginTransaction();
 			try {
 
-				query = session.createSQLQuery("SELECT "
+				query = session.createNativeQuery("SELECT "
 						+ "nvl(sum(case when CREATED_DATE  >= SysDate-30 AND AGENT_NUMBER='" + agentNumber
 						+ "' then 1 else 0 end ),0),"
 						+ "nvl(sum(case when TKASH_REGISTRATION_STATUS = 'Success' AND CREATED_DATE  >= SysDate-30 AND AGENT_NUMBER='"
@@ -2531,6 +2564,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -2718,7 +2752,7 @@ public class Mobile_SIM_Reg {
 			try {
 
 				String agentname = session
-						.createSQLQuery("SELECT FULL_NAME FROM AGENT where MSISDN='" + agentNumber + "'").uniqueResult()
+						.createNativeQuery("SELECT FULL_NAME FROM AGENT where MSISDN='" + agentNumber + "'").uniqueResult()
 						.toString();
 
 				session.flush();
@@ -2738,7 +2772,7 @@ public class Mobile_SIM_Reg {
 				}
 
 				if (session.isOpen() && session != null) {
-					query = session.createSQLQuery(
+					query = session.createNativeQuery(
 							"insert into MOBILE_CHARGE (RECHARGEDATE,RECHARGE_STATUS,RESPONSE_CODE,RESPONSE_MESSAGE,AGENT_NUMBER,AGENT_NAME,MOBILE_NUMBER,AMOUNT,TOTAL_BALANCE)values (sysdate,'"
 									+ respstatus + "','" + apicode + "','" + apimessage + "','" + agentNumber + "','"
 									+ agentname + "','" + clientNumber + "','" + clientAmount + "','" + clientbalance
@@ -2754,6 +2788,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -2793,7 +2828,7 @@ public class Mobile_SIM_Reg {
 			try {
 				// if (agentnumber != null && rechargeDate != null) {
 
-				chargeList = session.createSQLQuery("SELECT row_num,MOBILE_NUMBER,AMOUNT,RESPONSE_MESSAGE FROM "
+				chargeList = session.createNativeQuery("SELECT row_num,MOBILE_NUMBER,AMOUNT,RESPONSE_MESSAGE FROM "
 						+ "(select ROW_NUMBER() OVER (ORDER BY RECHARGEDATE DESC) row_num,MOBILE_NUMBER,AMOUNT,RESPONSE_MESSAGE"
 						+ "    from MOBILE_CHARGE where AGENT_NUMBER = '" + agentNumber + "'"
 						+ "and  TO_DATE(TO_CHAR(RECHARGEDATE,'DD-MM-YYYY'),'DD-MM-YYYY') =TO_DATE('" + date
@@ -2803,7 +2838,7 @@ public class Mobile_SIM_Reg {
 				session.flush();
 				// get pagination
 				if (chargeList.size() > 0) {
-					data = session.createSQLQuery(
+					data = session.createNativeQuery(
 							"SELECT COUNT(*) FROM MOBILE_CHARGE where TO_DATE(TO_CHAR(RECHARGEDATE,'DD-MM-YYYY'),'DD-MM-YYYY') =TO_DATE('"
 									+ date + "','DD-MM-YYYY') AND AGENT_NUMBER='" + agentNumber + "'")
 							.uniqueResult().toString();
@@ -2824,6 +2859,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -2860,12 +2896,12 @@ public class Mobile_SIM_Reg {
 				String shopname = shopslist.getShopName();
 				String owner = shopslist.getOwner();
 
-				agentID = session.createSQLQuery("SELECT AGENT_ID FROM AGENT WHERE MSISDN='" + agentNumber + "'")
+				agentID = session.createNativeQuery("SELECT AGENT_ID FROM AGENT WHERE MSISDN='" + agentNumber + "'")
 						.uniqueResult().toString();
 
 				session.flush();
 
-				query = session.createSQLQuery(
+				query = session.createNativeQuery(
 						"SELECT * FROM (select ROW_NUMBER() OVER (ORDER BY LAST_MODIFIED_DATE DESC) row_num,SHOPS_ID as shopID,SHOP_NAME as shopName,OWNER as owner,ADDRESS as address,AGENT_ID as agentID FROM SHOPS "
 								+ " where AGENT_ID = '" + agentID + "' and UPPER(SHOP_NAME) LIKE UPPER('%" + shopname
 								+ "%') AND UPPER(OWNER) LIKE UPPER('%" + owner + "%')"
@@ -2878,7 +2914,7 @@ public class Mobile_SIM_Reg {
 
 				if (shopsdata.size() > 0) {
 					data = session
-							.createSQLQuery("SELECT COUNT(*) FROM SHOPS where AGENT_ID='" + agentID
+							.createNativeQuery("SELECT COUNT(*) FROM SHOPS where AGENT_ID='" + agentID
 									+ "' and SHOP_NAME LIKE '%" + shopname + "' and OWNER LIKE '%" + owner + "'")
 							.uniqueResult().toString();
 
@@ -2896,6 +2932,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -2934,7 +2971,7 @@ public class Mobile_SIM_Reg {
 			tx = session.beginTransaction();
 			try {
 
-				data = session.createSQLQuery(
+				data = session.createNativeQuery(
 						"select SHOPS_ID, OWNER, LONGTITUDE, LATITUDE, ADDRESS, SHOP_NAME,REGION_ID,REGION_NAME,REGION_CODE,"
 								+ "nvl(SITE_ID,'0'),nvl(WARE_ID,'0'),nvl(SITE_NAME,'0'),"
 								+ " SALES_OUTLET_TYPE,TOUCH_POINT_TYPE,TELKOM_CONTACT,ALTERNATIVE_CONTACT,"
@@ -2956,6 +2993,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -2984,7 +3022,7 @@ public class Mobile_SIM_Reg {
 			tx = session.beginTransaction();
 			try {
 
-				query = session.createSQLQuery(
+				query = session.createNativeQuery(
 						"SELECT WARE_ID,SITE_ID,WARE_NAME,LATITUDE,LONGITUDE FROM WAREHOUSE WHERE SITE='1'");
 				sites = query.list();
 			}
@@ -3000,6 +3038,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -3028,7 +3067,7 @@ public class Mobile_SIM_Reg {
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
-				query = session.createSQLQuery("SELECT REGION_ID,REGION_NAME,REGION_CODE FROM REGION ");
+				query = session.createNativeQuery("SELECT REGION_ID,REGION_NAME,REGION_CODE FROM REGION ");
 
 				regions = query.list();
 			}
@@ -3044,6 +3083,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -3075,12 +3115,12 @@ public class Mobile_SIM_Reg {
 			try {
 
 				agentID = session
-						.createSQLQuery("SELECT AGENT_ID FROM AGENT WHERE MSISDN='" + shops.getAgentNumber() + "'")
+						.createNativeQuery("SELECT AGENT_ID FROM AGENT WHERE MSISDN='" + shops.getAgentNumber() + "'")
 						.uniqueResult().toString();
 
 				session.flush();
 				agentName = session
-						.createSQLQuery("SELECT FULL_NAME FROM AGENT where MSISDN='" + shops.getAgentNumber() + "'")
+						.createNativeQuery("SELECT FULL_NAME FROM AGENT where MSISDN='" + shops.getAgentNumber() + "'")
 						.uniqueResult().toString();
 				session.flush();
 
@@ -3094,14 +3134,15 @@ public class Mobile_SIM_Reg {
 				LastModified = new Timestamp(new Timestamp(System.currentTimeMillis()).getTime());
 
 				if (shopId.equalsIgnoreCase("0")) {
-					//shopId = "SHOP_" + year + "_" + appConfig.getSequenceNbr(40);
-					synchronized (this) {						
-						//agentId = "AG_" + year + "_" + appConfig.getSequenceNbr(42);
-						shopId = "AG_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT SHOPS FROM SEQ_TABLE").uniqueResult().toString());	
-						query = session.createSQLQuery("UPDATE SEQ_TABLE SET SHOPS = SHOPS + 1 ");
+					// shopId = "SHOP_" + year + "_" + appConfig.getSequenceNbr(40);
+					synchronized (this) {
+						// agentId = "AG_" + year + "_" + appConfig.getSequenceNbr(42);
+						shopId = "AG_" + year + "_" + Integer.parseInt(
+								session.createNativeQuery("SELECT SHOPS FROM SEQ_TABLE").uniqueResult().toString());
+						query = session.createNativeQuery("UPDATE SEQ_TABLE SET SHOPS = SHOPS + 1 ");
 						query.executeUpdate();
-						session.createSQLQuery("commit").executeUpdate();
-						}
+						session.createNativeQuery("commit").executeUpdate();
+					}
 				}
 
 				ShopsAPI shop = new ShopsAPI();
@@ -3134,18 +3175,19 @@ public class Mobile_SIM_Reg {
 				session.flush();
 
 				query = session
-						.createSQLQuery("SELECT AGENT_SHOPS_ID from AGENT_SHOPS where SHOPS_ID='" + shopId + "'");
+						.createNativeQuery("SELECT AGENT_SHOPS_ID from AGENT_SHOPS where SHOPS_ID='" + shopId + "'");
 				if (query.uniqueResult() != null) {
 					agentShopID = query.uniqueResult().toString();
 				} else {
-					synchronized (this) {						
-						//agentId = "AG_" + year + "_" + appConfig.getSequenceNbr(42);
-						agentShopID = "AG_SHOPS_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT AGENT_SHOPS FROM SEQ_TABLE").uniqueResult().toString());	
-						query = session.createSQLQuery("UPDATE SEQ_TABLE SET AGENT_SHOPS = AGENT_SHOPS + 1 ");
+					synchronized (this) {
+						// agentId = "AG_" + year + "_" + appConfig.getSequenceNbr(42);
+						agentShopID = "AG_SHOPS_" + year + "_" + Integer.parseInt(
+								session.createNativeQuery("SELECT AGENT_SHOPS FROM SEQ_TABLE").uniqueResult().toString());
+						query = session.createNativeQuery("UPDATE SEQ_TABLE SET AGENT_SHOPS = AGENT_SHOPS + 1 ");
 						query.executeUpdate();
-						session.createSQLQuery("commit").executeUpdate();
-						}
-					//agentShopID = "AG_SHOPS_" + year + "_" + appConfig.getSequenceNbr(43);
+						session.createNativeQuery("commit").executeUpdate();
+					}
+					// agentShopID = "AG_SHOPS_" + year + "_" + appConfig.getSequenceNbr(43);
 				}
 				session.flush();
 
@@ -3175,6 +3217,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -3205,15 +3248,16 @@ public class Mobile_SIM_Reg {
 				calendar.setTime(date);
 				int year = calendar.get(Calendar.YEAR);
 
-				//shopimgID = "SHOP_IMG_" + year + "_" + appConfig.getSequenceNbr(73);
+				// shopimgID = "SHOP_IMG_" + year + "_" + appConfig.getSequenceNbr(73);
 
-				synchronized (this) {						
-					//agentId = "AG_" + year + "_" + appConfig.getSequenceNbr(42);
-					shopimgID = "SHOP_IMG_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT SHOP_IMAGE FROM SEQ_TABLE").uniqueResult().toString());	
-					query = session.createSQLQuery("UPDATE SEQ_TABLE SET SHOP_IMAGE = SHOP_IMAGE + 1 ");
+				synchronized (this) {
+					// agentId = "AG_" + year + "_" + appConfig.getSequenceNbr(42);
+					shopimgID = "SHOP_IMG_" + year + "_" + Integer.parseInt(
+							session.createNativeQuery("SELECT SHOP_IMAGE FROM SEQ_TABLE").uniqueResult().toString());
+					query = session.createNativeQuery("UPDATE SEQ_TABLE SET SHOP_IMAGE = SHOP_IMAGE + 1 ");
 					query.executeUpdate();
-					session.createSQLQuery("commit").executeUpdate();
-					}
+					session.createNativeQuery("commit").executeUpdate();
+				}
 				ShopImageAPI shopimage = new ShopImageAPI();
 				shopimage.setShopid(image.getShopid());
 				shopimage.setShopimgID(shopimgID);
@@ -3233,6 +3277,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -3259,7 +3304,7 @@ public class Mobile_SIM_Reg {
 			tx = session.beginTransaction();
 			try {
 
-				query = session.createSQLQuery("Select IMAGE_NAME FROM SHOPS_IMAGE WHERE SHOP_ID='" + shopid + "' ");
+				query = session.createNativeQuery("Select IMAGE_NAME FROM SHOPS_IMAGE WHERE SHOP_ID='" + shopid + "' ");
 				shopimagelist = query.list();
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -3272,6 +3317,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -3297,7 +3343,7 @@ public class Mobile_SIM_Reg {
 			tx = session.beginTransaction();
 			try {
 				String path = image.getImageName();
-				query = session.createSQLQuery("delete  SHOPS_IMAGE  where IMAGE_NAME ='" + path + "'");
+				query = session.createNativeQuery("delete  SHOPS_IMAGE  where IMAGE_NAME ='" + path + "'");
 				query.executeUpdate();
 				data = "deleted";
 			} catch (Exception e) {
@@ -3313,6 +3359,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -3341,14 +3388,14 @@ public class Mobile_SIM_Reg {
 			tx = session.beginTransaction();
 			try {
 
-				ImageCounter = session.createSQLQuery("SELECT COUNT(*) from SHOPS_IMAGE where SHOP_ID='" + ShopId + "'")
+				ImageCounter = session.createNativeQuery("SELECT COUNT(*) from SHOPS_IMAGE where SHOP_ID='" + ShopId + "'")
 						.uniqueResult().toString();
 				if (ImageCounter.equalsIgnoreCase("0")) {
 
-					query = session.createSQLQuery("delete AGENT_SHOPS where SHOPS_ID='" + ShopId + "'");
+					query = session.createNativeQuery("delete AGENT_SHOPS where SHOPS_ID='" + ShopId + "'");
 					query.executeUpdate();
 
-					query = session.createSQLQuery("delete SHOPS where SHOPS_ID='" + ShopId + "'");
+					query = session.createNativeQuery("delete SHOPS where SHOPS_ID='" + ShopId + "'");
 					query.executeUpdate();
 
 					data = "deleted";
@@ -3369,6 +3416,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -3425,17 +3473,18 @@ public class Mobile_SIM_Reg {
 					} else {
 						technology = "Tech";
 					}
-					String speedCoverageId=null;
-					synchronized (this) {						
-						//agentId = "AG_" + year + "_" + appConfig.getSequenceNbr(42);
-						speedCoverageId = "TEST_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT SPEED_COVERAGE FROM SEQ_TABLE").uniqueResult().toString());	
-						query = session.createSQLQuery("UPDATE SEQ_TABLE SET SPEED_COVERAGE = SPEED_COVERAGE + 1 ");
+					String speedCoverageId = null;
+					synchronized (this) {
+						// agentId = "AG_" + year + "_" + appConfig.getSequenceNbr(42);
+						speedCoverageId = "TEST_" + year + "_" + Integer.parseInt(session
+								.createNativeQuery("SELECT SPEED_COVERAGE FROM SEQ_TABLE").uniqueResult().toString());
+						query = session.createNativeQuery("UPDATE SEQ_TABLE SET SPEED_COVERAGE = SPEED_COVERAGE + 1 ");
 						query.executeUpdate();
-						session.createSQLQuery("commit").executeUpdate();
-						}
-					//String speedCoverageId = "TEST_" + year + "_" + appConfig.getSequenceNbr(42);
+						session.createNativeQuery("commit").executeUpdate();
+					}
+					// String speedCoverageId = "TEST_" + year + "_" + appConfig.getSequenceNbr(42);
 					if (session.isOpen() && session != null) {
-						query = session.createSQLQuery(
+						query = session.createNativeQuery(
 								"insert into speed_coverage_test (SPEEDCOVERAGEID,SPEEDCOVERAGE_DATE,SPEEDCOVERAGE_LAT,SPEEDCOVERAGE_LNG,COVERAGE_SIGNAL,SPEED_DOWNLOAD,"
 										+ "SPEED_UPLOAD,AGENT_NUMBER,AGENT_NAME,CID,LAC,TECHNOLOGY,MMC,MNC,APP_VERSION) "
 										+ "VALUES ('" + speedCoverageId + "',sysdate,'"
@@ -3462,7 +3511,7 @@ public class Mobile_SIM_Reg {
 								+ testingspeedcoverage.getSpeedCoverageLong() + ":"
 								+ testingspeedcoverage.getCoverageSignal();
 						if (session.isOpen() && session != null) {
-							query = session.createSQLQuery("update agent set capture_speed ='0' where msisdn = "
+							query = session.createNativeQuery("update agent set capture_speed ='0' where msisdn = "
 									+ "(select msisdn from agent where capture_speed='1' and msisdn ='"
 									+ testingspeedcoverage.getAgentNumber() + "')");
 							query.executeUpdate();
@@ -3486,6 +3535,7 @@ public class Mobile_SIM_Reg {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			} else {
@@ -3520,7 +3570,7 @@ public class Mobile_SIM_Reg {
 
 				if (regionName.getAgentNumber() != null || regionName.getAgentNumber().equalsIgnoreCase("")) {
 
-					query = session.createSQLQuery(
+					query = session.createNativeQuery(
 							"Update AGENT set SITE_ENGINEER='0' where MSISDN='" + regionName.getAgentNumber() + "'");
 					query.executeUpdate();
 					data = "Updated";
@@ -3540,6 +3590,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -3570,7 +3621,7 @@ public class Mobile_SIM_Reg {
 			tx = session.beginTransaction();
 			try {
 
-				query = session.createSQLQuery(
+				query = session.createNativeQuery(
 						"SELECT WARE_ID,SITE_ID,WARE_NAME,LATITUDE,LONGITUDE FROM WAREHOUSE WHERE SITE='1'");
 				List<?> sitesList = query.list();
 
@@ -3598,6 +3649,7 @@ public class Mobile_SIM_Reg {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
