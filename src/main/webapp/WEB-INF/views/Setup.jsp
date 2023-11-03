@@ -85,7 +85,7 @@ a{
 
   <c:set var="pg" value="setup" scope="session"  />
 <%-- 	<%@ include file="header.html" %> --%>
-<jsp:include page="${request.contextPath}/headerController"></jsp:include>
+<jsp:include page="header.jsp"></jsp:include>
 		 
 <div style="margin-top:40px;margin-right:150px;margin-left:150px;" >
 		<div class="container" style="margin-right:20px;margin-left:20px;">
