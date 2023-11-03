@@ -15,7 +15,7 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.slf4j.Logger;
@@ -31,30 +31,29 @@ import com.aliat.alm.common.ALMSessions;
 import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.Item;
-import com.aliat.alm.models.PurchaseRequest;
 import com.aliat.alm.models.Supplier;
 import com.aliat.alm.services.LoginServices;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 public class SupplierController {
-	
+
 	private static Session session = null;
 	private static Transaction tx = null;
 	private static ObjectMapper mapper = new ObjectMapper();
 	private static final Logger logger = LoggerFactory.getLogger(SupplierController.class);
+	@SuppressWarnings("rawtypes")
 	private static Query query = null;
-	
-	
+
 	@Autowired
 	ALMSessions almsessions;
-	
+
 	@Autowired
 	Notify notifications;
-	
+
 	@Autowired
 	Form form;
-	
+
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/SupplierListView", method = RequestMethod.GET)
 	public String SupplierListView(Model model, HttpServletRequest request, HttpServletResponse response) {
@@ -64,8 +63,8 @@ public class SupplierController {
 
 			List<Item> listItem = new ArrayList<Item>();
 
-			session =almsessions.getSession();
-			notifications.headerNotifications(session, model);			
+			session = almsessions.getSession();
+			notifications.headerNotifications(session, model);
 
 			if (session != null && session.isOpen()) {
 				tx = session.beginTransaction();
@@ -84,6 +83,7 @@ public class SupplierController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -91,7 +91,6 @@ public class SupplierController {
 		}
 	}
 
-	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/FilteredSupplierListView", method = RequestMethod.GET)
 	@ResponseBody
@@ -100,7 +99,7 @@ public class SupplierController {
 		Map<String, Object> rtn = new LinkedHashMap<>();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
-			return rtn;	
+			return rtn;
 		}
 		session = almsessions.getSession();
 		if (session != null && session.isOpen()) {
@@ -115,17 +114,19 @@ public class SupplierController {
 				endDate = request.getParameter("endDate");
 				Supplierid = request.getParameter("Supplierid");
 				Suppliername = request.getParameter("Suppliername");
-				
-				System.out.println(
-						startDate + " " + endDate + " " + Supplierid + " " + Suppliername );
+
+				System.out.println(startDate + " " + endDate + " " + Supplierid + " " + Suppliername);
 				List<String> listsupplier = new ArrayList<String>();
-/*				String str = "select 1 as chkBox, PRQ_ID as ID, SUPPLIER as supplier, TOTAL_AMOUNT as TotalAmount,"
-						+ " TOTAL_QTY as TotalQty, WAREHOUSE as WareHouse from PURCHASE_REQUEST"; */
+				/*
+				 * String str =
+				 * "select 1 as chkBox, PRQ_ID as ID, SUPPLIER as supplier, TOTAL_AMOUNT as TotalAmount,"
+				 * + " TOTAL_QTY as TotalQty, WAREHOUSE as WareHouse from PURCHASE_REQUEST";
+				 */
 				String str = "select 1 as chkBox, SUPPLIER_ID as supplierID, SUPPLIER_NAME as supplierName, SUPPLIER_CATEGORY as supplierCategory,"
 						+ " COUNTRY as sCountry, ADDRESS_1 as supplierAddress1 from SUPPLIER  ";
 				if (startDate != null && endDate != null) {
-					str = str + " where CREATION_DATE between TO_DATE('" + startDate
-							+ "','YYYY-MM-DD') and TO_DATE('" + endDate + "','YYYY-MM-DD')";
+					str = str + " where CREATION_DATE between TO_DATE('" + startDate + "','YYYY-MM-DD') and TO_DATE('"
+							+ endDate + "','YYYY-MM-DD')";
 				}
 				if (Suppliername != null && !Suppliername.equalsIgnoreCase("")) {
 
@@ -135,19 +136,25 @@ public class SupplierController {
 
 					str = str + " and SUPPLIER_ID LIKE '%" + Supplierid + "%'";
 				}
-				
-				//String str="select 1,t.ID, t.supplier, t.TotalAmount,t.TotalQty,t.WareHouse from PurchaseRequest t";
-				
-				Query query = session.createSQLQuery(str);
-				
-/*				listPReq = ((SQLQuery) query).addScalar("chkBox",new IntegerType()).addScalar("ID").addScalar("supplier").addScalar("TotalAmount", new FloatType())
-						.addScalar("TotalQty", new FloatType()).addScalar("WareHouse")
-						.setResultTransformer(Transformers.aliasToBean(PurchaseRequestListView.class)).list(); */
-				
+
+				// String str="select 1,t.ID, t.supplier, t.TotalAmount,t.TotalQty,t.WareHouse
+				// from PurchaseRequest t";
+
+				query = session.createNativeQuery(str);
+
+				/*
+				 * listPReq = ((SQLQuery) query).addScalar("chkBox",new
+				 * IntegerType()).addScalar("ID").addScalar("supplier").addScalar("TotalAmount",
+				 * new FloatType()) .addScalar("TotalQty", new
+				 * FloatType()).addScalar("WareHouse")
+				 * .setResultTransformer(Transformers.aliasToBean(PurchaseRequestListView.class)
+				 * ).list();
+				 */
+
 				listsupplier = query.list();
-				
+
 				// rtn.put("listPReq", listPReq);
-				rtn.put("listsupplier",listsupplier);
+				rtn.put("listsupplier", listsupplier);
 				System.out.println("Filtered Array: " + mapper.writeValueAsString(listsupplier));
 			} catch (Exception e) {
 				logger.info("Error in showing the filtered supplier request list view with a message :" + e);
@@ -155,34 +162,34 @@ public class SupplierController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
 
 		return rtn;
 	}
+
 	@RequestMapping(value = "/SupplierFormView", method = RequestMethod.GET)
-	public String SupplierFormView( Model model, HttpServletRequest request, HttpServletResponse response)
-	{
+	public String SupplierFormView(Model model, HttpServletRequest request, HttpServletResponse response) {
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			return "redirect:/";
 		} else {
 
 			SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
-			String SupplierID = request.getParameter("supplierID"),navAction = "2";			
+			String SupplierID = request.getParameter("supplierID"), navAction = "2";
 			Supplier supp;
 			session = almsessions.getSession();
-			notifications.headerNotifications(session, model);			
-	        String result [] =new String[4];
-	        int SelectedIndex = 0;
+			notifications.headerNotifications(session, model);
+			String result[] = new String[4];
+			int SelectedIndex = 0;
 
 			if (session != null && session.isOpen()) {
 
 				tx = session.beginTransaction();
 				try {
-					
-					navAction= request.getParameter("NavAction");
 
+					navAction = request.getParameter("NavAction");
 
 					// to open supplier when click on ADD from supplier List
 					if (SupplierID == null) {
@@ -198,10 +205,11 @@ public class SupplierController {
 						return "SupplierFormView";
 					} else {
 
-						result = form.NavigationNP(session,"SUPPLIER","SUPPLIER_ID",SupplierID,"LAST_MODIFIED_DATE",navAction);		
+						result = form.NavigationNP(session, "SUPPLIER", "SUPPLIER_ID", SupplierID, "LAST_MODIFIED_DATE",
+								navAction);
 
-						SelectedIndex= Integer.parseInt(result[1]);
-						SupplierID=result[2];
+						SelectedIndex = Integer.parseInt(result[1]);
+						SupplierID = result[2];
 
 						model.addAttribute("SelectedIndex", SelectedIndex);
 						model.addAttribute("supplierCount", Integer.parseInt(result[0]));
@@ -236,12 +244,12 @@ public class SupplierController {
 				} catch (Exception e) {
 					model.addAttribute("supplierID", "");
 					model.addAttribute("screationDate", "");
-					model.addAttribute("slastModifieddate","");
+					model.addAttribute("slastModifieddate", "");
 					model.addAttribute("supplierName", "");
 					model.addAttribute("supplierDescription", "");
 					model.addAttribute("supplierCategory", "");
 					model.addAttribute("svendorNb", "");
-					model.addAttribute("sWebsite","");
+					model.addAttribute("sWebsite", "");
 					model.addAttribute("sCountry", "");
 					model.addAttribute("supplierTaxid", "");
 					model.addAttribute("supplierCreditlimit", "");
@@ -256,6 +264,7 @@ public class SupplierController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 
 				}
@@ -263,8 +272,7 @@ public class SupplierController {
 			return "SupplierFormView";
 		}
 	}
-	
-	
+
 	@RequestMapping(value = "/SupplierFormSave", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> SupplierFormSave(Model model, HttpServletRequest request, HttpServletResponse response) {
@@ -324,13 +332,14 @@ public class SupplierController {
 					// }
 
 					if (StringUtils.equalsIgnoreCase(SupplierID, "")) {
-						synchronized (this) {						
-							SupplierID = "SUP_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT SUPPLIER FROM SEQ_TABLE").uniqueResult().toString());	
-							query = session.createSQLQuery("UPDATE SEQ_TABLE SET SUPPLIER = SUPPLIER + 1 ");
+						synchronized (this) {
+							SupplierID = "SUP_" + year + "_" + Integer.parseInt(session
+									.createNativeQuery("SELECT SUPPLIER FROM SEQ_TABLE").uniqueResult().toString());
+							query = session.createNativeQuery("UPDATE SEQ_TABLE SET SUPPLIER = SUPPLIER + 1 ");
 							query.executeUpdate();
-							session.createSQLQuery("commit").executeUpdate();
-							}
-						//SupplierID = "SUP_" + year + "_" + appConfig.getSequenceNbr(11);
+							session.createNativeQuery("commit").executeUpdate();
+						}
+						// SupplierID = "SUP_" + year + "_" + appConfig.getSequenceNbr(11);
 					}
 
 					supp.setSupplierID(SupplierID);
@@ -351,9 +360,7 @@ public class SupplierController {
 					supp.setsEmail(request.getParameter("sEmail"));
 					supp.setsContactperson(request.getParameter("sContactperson"));
 					supp.setsDisabled(request.getParameter("sDisabled").charAt(0));
-
 					session.saveOrUpdate(supp);
-
 					rtn.put("supplierID", SupplierID);
 					rtn.put("slastModifieddate", formatter.format(lastModifiedDate).toString());
 
@@ -365,18 +372,17 @@ public class SupplierController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
 			return rtn;
 		}
 	}
-	
-	
+
 	@RequestMapping(value = "/SupplierDelete", method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, Object> SupplierDelete( Model model, HttpServletRequest request,
-			HttpServletResponse response) {
+	public Map<String, Object> SupplierDelete(Model model, HttpServletRequest request, HttpServletResponse response) {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
@@ -384,8 +390,6 @@ public class SupplierController {
 			return rtn;
 		} else {
 
-			
-	
 			session = almsessions.getSession();
 			if (session != null && session.isOpen()) {
 				tx = session.beginTransaction();
@@ -393,7 +397,7 @@ public class SupplierController {
 					String[] idList = request.getParameterValues("ID[]");
 					query = session.createQuery("delete Supplier t  where t.supplierID IN (:param1)");
 					query.setParameterList("param1", idList);
-					query.executeUpdate();					
+					query.executeUpdate();
 				} catch (Exception e) {
 					logger.info("Error in deleting data for Supplier with a message :" + e);
 					e.printStackTrace();
@@ -401,6 +405,7 @@ public class SupplierController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -408,90 +413,82 @@ public class SupplierController {
 		}
 
 	}
-	
+
 	// Used in the supplier formview to get the supplier Category
 	@RequestMapping(value = "/GetAllSuppliers", method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, Object> GetAllSuppliers( Model model, HttpServletRequest request, HttpServletResponse response)  {
+	public Map<String, Object> GetAllSuppliers(Model model, HttpServletRequest request, HttpServletResponse response) {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
 			return rtn;
-		}
-		else {
-		String SuppCategory = "%" + request.getParameter("supplierCategory") + "%";
+		} else {
+			String SuppCategory = "%" + request.getParameter("supplierCategory") + "%";
+			session = almsessions.getSession();
+			if (session != null && session.isOpen()) {
 
-		session = almsessions.getSession();
-		if (session != null && session.isOpen()) {
+				tx = session.beginTransaction();
+				try {
+					query = session.createQuery(
+							"select supplierID, supplierName, supplierCreditlimit from Supplier where supplierID like :param1 or supplierName like :param1");
+					query.setParameter("param1", SuppCategory);
 
-			tx = session.beginTransaction();
-			try {
-			query = session.createQuery(
-					"select supplierID, supplierName, supplierCreditlimit from Supplier where supplierID like :param1 or supplierName like :param1");
-			query.setString("param1", SuppCategory);
-
-			
-			rtn.put("ListItemSupplier", query.list());
-			}catch (Exception e) {
-				rtn.put("ListItemSupplier", "");
-				logger.info("Error in getting all Suppliers with a message :" + e);
-			}
-			finally {
-				if (session != null && session.isOpen()) {
-					tx.commit();
-					session.close();
+					rtn.put("ListItemSupplier", query.list());
+				} catch (Exception e) {
+					rtn.put("ListItemSupplier", "");
+					logger.info("Error in getting all Suppliers with a message :" + e);
+				} finally {
+					if (session != null && session.isOpen()) {
+						tx.commit();
+						session.close();
+						session.getSessionFactory().close();
+					}
 				}
 			}
-		}
-		return rtn;
+			return rtn;
 		}
 	}
-	
-	
+
 	// to get all the supplier based on therir supplier Names
 	@RequestMapping(value = "/GetAllSupplier", method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, Object> GetAllSupplier( Model model, HttpServletRequest request,HttpServletResponse response)
-			 {
+	public Map<String, Object> GetAllSupplier(Model model, HttpServletRequest request, HttpServletResponse response) {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
 			return rtn;
-		}
-		else {
-		String SuppCategory = "%" + request.getParameter("supplierId") + "%";
-		session = almsessions.getSession();
-		if (session != null && session.isOpen()) {
+		} else {
+			String SuppCategory = "%" + request.getParameter("supplierId") + "%";
+			session = almsessions.getSession();
+			if (session != null && session.isOpen()) {
 
-			tx = session.beginTransaction();
-			try {
+				tx = session.beginTransaction();
+				try {
+					query = session.createQuery(
+							"select supplierID, supplierName,supplierAddress1 from Supplier where supplierID like :param1 or supplierName like:param1 ");
+					query.setParameter("param1", SuppCategory);
+					query.setFirstResult(0);
+					query.setMaxResults(40);
+					rtn.put("ListGetSupplier", query.list());
 
-				query = session.createQuery("select supplierID, supplierName,supplierAddress1 from Supplier where supplierID like :param1 or supplierName like:param1 ");
-				query.setString("param1", SuppCategory);
-				query.setFirstResult(0);
-				query.setMaxResults(40);
-
-				rtn.put("ListGetSupplier", query.list());
-
-			} catch (Exception e) {
-				rtn.put("ListGetSupplier", "");
-				logger.info("Error in getting all Suppliers with a message :" + e);
-			} finally {
-				if (session != null && session.isOpen()) {
-					tx.commit();
-					session.close();
+				} catch (Exception e) {
+					rtn.put("ListGetSupplier", "");
+					logger.info("Error in getting all Suppliers with a message :" + e);
+				} finally {
+					if (session != null && session.isOpen()) {
+						tx.commit();
+						session.close();
+						session.getSessionFactory().close();
+					}
 				}
 			}
-
-		}
-
-		return rtn;
+			return rtn;
 		}
 	}
-	
-	//Get ALL Supplier Names
+
+	// Get ALL Supplier Names
 	@RequestMapping(value = "/GetAllSupplierName", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> GetAllSupplierName(Model model, HttpServletRequest request,
@@ -501,78 +498,69 @@ public class SupplierController {
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
 			return rtn;
-		}
-		else {
-		String SuppName = "%" + request.getParameter("supplierName") + "%";
+		} else {
+			String SuppName = "%" + request.getParameter("supplierName") + "%";
 
-		session = almsessions.getSession();
-		if (session != null && session.isOpen()) {
+			session = almsessions.getSession();
+			if (session != null && session.isOpen()) {
 
-			tx = session.beginTransaction();
-			try {
+				tx = session.beginTransaction();
+				try {
 
-				query = session.createQuery(
-						"select distinct (supplierName), supplierAddress1,supplierID from Supplier where supplierName like :param1 ORDER BY slastModifieddate DESC");
-				query.setString("param1", SuppName);
-				query.setFirstResult(0);
-				query.setMaxResults(40);
+					query = session.createQuery(
+							"select distinct (supplierName), supplierAddress1,supplierID from Supplier where supplierName like :param1 ORDER BY slastModifieddate DESC");
+					query.setParameter("param1", SuppName);
+					query.setFirstResult(0);
+					query.setMaxResults(40);
 
-				rtn.put("ListSupplierName", query.list());
-			} catch (Exception e) {
-				rtn.put("ListSupplierName", "");
-				logger.info("Error in getting all Supplier Names with a message :" + e);
-			} finally {
-				if (session != null && session.isOpen()) {
-					tx.commit();
-					session.close();
+					rtn.put("ListSupplierName", query.list());
+				} catch (Exception e) {
+					rtn.put("ListSupplierName", "");
+					logger.info("Error in getting all Supplier Names with a message :" + e);
+				} finally {
+					if (session != null && session.isOpen()) {
+						tx.commit();
+						session.close();
+						session.getSessionFactory().close();
+					}
 				}
 			}
-
-		}
-		return rtn;
+			return rtn;
 		}
 	}
-	
-	//Get The supp id to Get the info
+
+	// Get The supp id to Get the info
 	@RequestMapping(value = "/GetSuppID", method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, Object> GetSuppID( Model model, HttpServletRequest request, HttpServletResponse response)
-	{
+	public Map<String, Object> GetSuppID(Model model, HttpServletRequest request, HttpServletResponse response) {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
 			return rtn;
-		}
-		else {
-		String SuppName = request.getParameter("SuppName");
-
-		session = almsessions.getSession();
-		if (session != null && session.isOpen()) {
-
-			tx = session.beginTransaction();
-			try {
-
-				query = session.createQuery("select  supplierID   from Supplier where supplierName =:param1 ");
-
-				query.setString("param1", SuppName);
-				query.setFirstResult(0);
-				query.setMaxResults(40);
-				rtn.put("ListSuppIds", query.list());
-			} catch (Exception e) {
-				rtn.put("ListSuppIds", "");
-				logger.info("Error in getting all Supplier IDs with a message :" + e);
-			} finally {
-				if (session != null && session.isOpen()) {
-
-					tx.commit();
-					session.close();
+		} else {
+			String SuppName = request.getParameter("SuppName");
+			session = almsessions.getSession();
+			if (session != null && session.isOpen()) {
+				tx = session.beginTransaction();
+				try {
+					query = session.createQuery("select  supplierID   from Supplier where supplierName =:param1 ");
+					query.setParameter("param1", SuppName);
+					query.setFirstResult(0);
+					query.setMaxResults(40);
+					rtn.put("ListSuppIds", query.list());
+				} catch (Exception e) {
+					rtn.put("ListSuppIds", "");
+					logger.info("Error in getting all Supplier IDs with a message :" + e);
+				} finally {
+					if (session != null && session.isOpen()) {
+						tx.commit();
+						session.close();
+						session.getSessionFactory().close();
+					}
 				}
 			}
-		}
-		return rtn;
+			return rtn;
 		}
 	}
-	
-
 }

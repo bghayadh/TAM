@@ -110,7 +110,7 @@ public class PurchaseController {
 	private static Transaction tx = null;
 	private static ObjectMapper mapper = new ObjectMapper();
 	private String str = null;
-	
+
 	@SuppressWarnings("rawtypes")
 	private static Query query = null;
 
@@ -554,8 +554,9 @@ public class PurchaseController {
 //								+ ",t.ITEM_CAT4 as \"prCat4\",t.ITEM_SEQ as \"prSequ\""
 						query = session.createNativeQuery(str);
 						query.setParameter("param1", pRqID);
-						List<PurchaseRequestBoq> listPRqBoq = ((NativeQuery<PurchaseRequestBoq>) query).addScalar("prItemCode")
-								.addScalar("prItemName").addScalar("prItemModel").addScalar("prItemPartNumber")// addScalar("prCat1").addScalar("prCat2").addScalar("prCat3")
+						List<PurchaseRequestBoq> listPRqBoq = ((NativeQuery<PurchaseRequestBoq>) query)
+								.addScalar("prItemCode").addScalar("prItemName").addScalar("prItemModel")
+								.addScalar("prItemPartNumber")// addScalar("prCat1").addScalar("prCat2").addScalar("prCat3")
 
 								// .addScalar("prCat4").addScalar("prSequ").
 								.addScalar("prBarCode").addScalar("prQty", new FloatType())
@@ -781,7 +782,7 @@ public class PurchaseController {
 						List<Object[]> purchaseOrderItems = query.list();
 						List<Object[]> discrepancy = new ArrayList<Object[]>();
 
-						for (Object[] items : purchaseOrderItems) {							
+						for (Object[] items : purchaseOrderItems) {
 							BigDecimal qty = (BigDecimal) items[4]; // Use BigDecimal for quantity
 							// Use the item_code and pOrdrID to query the asset_registry table
 							query = session.createNativeQuery(
@@ -791,7 +792,7 @@ public class PurchaseController {
 							BigDecimal assetCount = (BigDecimal) query.uniqueResult(); // Retrieve the count as a
 																						// BigDecimal
 							if (assetCount.compareTo(BigDecimal.ZERO) > 0) {
-								if (qty.compareTo(assetCount) > 0) {									
+								if (qty.compareTo(assetCount) > 0) {
 									items[4] = qty.subtract(assetCount);
 									discrepancy.add(items);
 								}
@@ -929,9 +930,11 @@ public class PurchaseController {
 
 						synchronized (this) {
 							pRqID = "PRQ_" + year + "_"
-									+ Integer.parseInt(session.createNativeQuery("SELECT PURCHASE_REQUEST FROM SEQ_TABLE")
-											.uniqueResult().toString());
-							query = session.createNativeQuery("UPDATE SEQ_TABLE SET PURCHASE_REQUEST = PURCHASE_REQUEST + 1 ");
+									+ Integer.parseInt(
+											session.createNativeQuery("SELECT PURCHASE_REQUEST FROM SEQ_TABLE")
+													.uniqueResult().toString());
+							query = session
+									.createNativeQuery("UPDATE SEQ_TABLE SET PURCHASE_REQUEST = PURCHASE_REQUEST + 1 ");
 							query.executeUpdate();
 							session.createNativeQuery("commit").executeUpdate();
 						}
@@ -1009,7 +1012,10 @@ public class PurchaseController {
 
 								// pRqItmID = "PRQI_" + year + "_" + appConfig.getSequenceNbr(1);
 								synchronized (this) {
-									pRqItmID = "PRQI_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT PR_ITEM FROM SEQ_TABLE").uniqueResult().toString());
+									pRqItmID = "PRQI_" + year + "_"
+											+ Integer
+													.parseInt(session.createNativeQuery("SELECT PR_ITEM FROM SEQ_TABLE")
+															.uniqueResult().toString());
 									query = session.createNativeQuery("UPDATE SEQ_TABLE SET PR_ITEM = PR_ITEM + 1 ");
 									query.executeUpdate();
 									session.createNativeQuery("commit").executeUpdate();
@@ -1219,9 +1225,11 @@ public class PurchaseController {
 					if (StringUtils.equalsIgnoreCase(request.getParameter("type"), "addNew")
 							|| StringUtils.equalsIgnoreCase(request.getParameter("type"), "addNewFromPRQ")) {
 						synchronized (this) {
-							poID = "PO_" + year + "_" + Integer.parseInt(session
-									.createNativeQuery("SELECT PURCHASE_ORDER FROM SEQ_TABLE").uniqueResult().toString());
-							query = session.createNativeQuery("UPDATE SEQ_TABLE SET PURCHASE_ORDER = PURCHASE_ORDER + 1 ");
+							poID = "PO_" + year + "_"
+									+ Integer.parseInt(session.createNativeQuery("SELECT PURCHASE_ORDER FROM SEQ_TABLE")
+											.uniqueResult().toString());
+							query = session
+									.createNativeQuery("UPDATE SEQ_TABLE SET PURCHASE_ORDER = PURCHASE_ORDER + 1 ");
 							query.executeUpdate();
 							session.createNativeQuery("commit").executeUpdate();
 						}
@@ -1311,8 +1319,10 @@ public class PurchaseController {
 							if (StringUtils.equalsIgnoreCase(itemParameters.getDictParameter().get(i).get(POR_ITEM_ID),
 									"0")) {
 								synchronized (this) {
-									poiID = "POI_" + year + "_" + Integer.parseInt(session
-											.createNativeQuery("SELECT PO_ITEM FROM SEQ_TABLE").uniqueResult().toString());
+									poiID = "POI_" + year + "_"
+											+ Integer
+													.parseInt(session.createNativeQuery("SELECT PO_ITEM FROM SEQ_TABLE")
+															.uniqueResult().toString());
 									query = session.createNativeQuery("UPDATE SEQ_TABLE SET PO_ITEM = PO_ITEM + 1 ");
 									query.executeUpdate();
 									session.createNativeQuery("commit").executeUpdate();
@@ -1461,9 +1471,9 @@ public class PurchaseController {
 											|| StringUtils.equalsIgnoreCase(serialNumID, "")) {
 										synchronized (this) {
 											serialNumID = "SER_" + year + "_"
-													+ Integer.parseInt(
-															session.createNativeQuery("SELECT SERIAL_NUM FROM SEQ_TABLE")
-																	.uniqueResult().toString());
+													+ Integer.parseInt(session
+															.createNativeQuery("SELECT SERIAL_NUM FROM SEQ_TABLE")
+															.uniqueResult().toString());
 											query = session.createNativeQuery(
 													"UPDATE SEQ_TABLE SET SERIAL_NUM = SERIAL_NUM + 1 ");
 											query.executeUpdate();
@@ -1629,7 +1639,7 @@ public class PurchaseController {
 		session = almsessions.getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
-			try {				
+			try {
 				query = session.createQuery("delete PurchaseOrder where ID IN (:param1)");
 				query.setParameterList("param1", idList);
 				query.executeUpdate();
@@ -1843,8 +1853,7 @@ public class PurchaseController {
 			} catch (Exception e) {
 				logger.info("Error in getting POItem details with a message :" + e);
 				rtn.put("PoDetails", "");
-			}
-			finally {
+			} finally {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
