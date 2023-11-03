@@ -180,7 +180,7 @@ max-width: 100%;
 </style>
 <body>
   <c:set var="pg" value="report" scope="session"  />
-  <jsp:include page="${request.contextPath}/headerController"></jsp:include>
+  <jsp:include page="../header.jsp"></jsp:include>
 	
 	<div Style=" left: 0; bottom: 0;" id="Financial Div">
 	<div class="container-fluid">     
@@ -845,6 +845,8 @@ var mapFlag="0"; // used to check if the markers are set on map
 var filteredSitesGrid=[]; // used in draw on map 
 var markerClusterFarSites ;
 var infoWindow;
+var prevSelectedRowColor="";
+var prevSelectedRowIndex="";
 
 function initMap() {
 	
@@ -1103,7 +1105,7 @@ $(document).ready(function() {
             $("#accuDeprFilteredFar").val('0.0');		 
             filteredSitesGrid=[];			  		
 	     }
-  			
+	    	
  	        // Method for pagination almgrid-pagecount-box
   	        $("#" + gridContainerId).find(".almgrid-pagecount-box").attr("id", tableId + "_pagecount");
   	        $("#" + gridContainerId).find(".pagination-div").attr("id", tableId + "_pagination");
@@ -1190,6 +1192,9 @@ $(document).ready(function() {
 	}); // end clear fct
 
 
+
+
+	
 	 // Get the form fields and hidden div
     var circleRangeCheckbox = $("#circleRange");
     var rectangleRangeCheckbox = $("#strtEndCoordinate");
@@ -1613,7 +1618,7 @@ function showHideAllSites(){
 			
 		});	
 }
-function panToSite(ID,rowIndex){
+function panToSite(ID,rowIndex,rowCount){
 
 	var longitude = filteredSitesGrid[rowIndex]["longitude"];
 	var latitude = filteredSitesGrid[rowIndex]["latitude"];
@@ -1638,9 +1643,9 @@ function panToSite(ID,rowIndex){
 		 document.getElementById("sitesCount").textContent = "("+distinctSites.length+")";      
 
 		//Scroll to the map div
-		 document.getElementById("headingTwo").scrollIntoView({ behavior: "smooth" });
-			 
-			
+		document.getElementById("headingTwo").scrollIntoView({ behavior: "smooth" });
+		
+		changeRowColor(rowCount);			
 }
 function getLongLatMouseMove(map){		  
 	map.addListener("mousemove", (mapsMouseEvent) => {
@@ -1649,6 +1654,27 @@ function getLongLatMouseMove(map){
 	    	    +mapsMouseEvent.latLng.toJSON().lng.toFixed(13), null, 2));	    
 	});					 
 }
+
+function changeRowColor(rowIndex){
+
+	var selectedRow = $('#gridTable >tbody >tr').eq(rowIndex);
+	var color =  $('#gridTable >tbody >tr').eq(rowIndex).css("background-color");
+
+	if(prevSelectedRowIndex=="") {  // first time clicking (no previous row is selected)
+		$('#gridTable >tbody >tr').eq(rowIndex).css('background-color','yellow');
+		prevSelectedRowIndex = rowIndex;
+		prevSelectedRowColor= color;		
+	}
+	else if(rowIndex != prevSelectedRowIndex) {
+		$('#gridTable >tbody >tr').eq(rowIndex).css('background-color','yellow');
+		$('#gridTable >tbody >tr').eq(prevSelectedRowIndex).css('background-color',prevSelectedRowColor);
+		prevSelectedRowIndex = rowIndex;
+		prevSelectedRowColor= color;
+	}
+}
+
+
+	
 </script>
 <script
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJXAds-Gt4I39hRFHhYHMEg3XcBqihYoo&callback=initMap&libraries=drawing&v=weekly"
