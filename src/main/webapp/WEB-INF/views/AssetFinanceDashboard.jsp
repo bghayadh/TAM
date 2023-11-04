@@ -186,7 +186,7 @@ height: 600px !important;
 <body >
 
   <c:set var="pg" value="dashboard" scope="session"  />
-  <jsp:include page="${request.contextPath}/headerController"></jsp:include>
+ <jsp:include page="header.jsp"></jsp:include>
 <%-- 	<c:set var = "page" value = "dashboard"/> --%>
 <%-- 	<%@ include file="header.html" %> --%>
 	<!--end of header part-->

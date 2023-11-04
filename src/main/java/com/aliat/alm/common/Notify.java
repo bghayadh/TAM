@@ -26,26 +26,27 @@ public class Notify {
 
 	try {	
 
-			query = "select json_object('PrAll' value (select Count (*) from PURCHASE_Request),'PrUnCmp' value (select Count (*) from PURCHASE_Request where  " + 
-					"Status != 'completed' and Status != 'closed' and Status != 'deactivated' and Status != 'cancelled' and Status != 'activated' or Status is null), " + 
-					"'PoAll' value (select Count (*) from PURCHASE_ORDER),'PoUnCmp' value (select Count (*) from PURCHASE_ORDER where Status != 'completed' and  " + 
-					"Status != 'closed' and Status != 'deactivated' and Status != 'cancelled' and Status != 'activated' or Status is null),'GrAll' value (select Count (*) from GOODS_RECEIVED), " + 
-					"'GrUnCmp' value (select Count (*) from GOODS_RECEIVED where Status != 'completed' and Status != 'closed' and Status != 'deactivated' and Status != 'cancelled'  " + 
-					"and Status != 'activated' or Status is null),'WoAll' value (select Count (*) from WORK_ORDER),'WoUnCmp' value (select Count (*) from WORK_ORDER where Status != 'completed'  " + 
-					"and Status != 'closed' and Status != 'deactivated' and Status != 'cancelled' and Status != 'activated' or Status is null), 'DniAll' value (select Count (*) from DISCOVERY_NEW), " + 
-					"'DniUnCmp' value (select Count (*) from DISCOVERY_NEW where Status != 'completed' and Status != 'closed' and Status != 'deactivated' and Status != 'cancelled'  " + 
-					"and Status != 'activated' or Status is null), 'WhAll' value (select Count (*) from WAREHOUSE), 'WhUnCmp' value (select Count (*) from WAREHOUSE where Status != 'completed'  " + 
-					"and Status != 'closed' and Status != 'deactivated' and Status != 'cancelled' and Status != 'activated' or Status is null), 'TkAll' value (select Count (*) from TROUBLE_TICKETS), " + 
-					"'TkUnCmp' value (select Count (*) from TROUBLE_TICKETS where Status != 'completed' and Status != 'closed' and Status != 'deactivated' and Status != 'cancelled'  " + 
-					"and Status != 'activated' or Status is null), 'ShAll' value (select Count (*) from SHOPS), 'ShUnCmp' value (select Count (*) from SHOPS where Status != 'completed'  " + 
-					"and Status != 'closed' and Status != 'deactivated' and Status != 'cancelled' and Status != 'activated' or Status is null), 'AgnAll' value (select Count (*) from AGENT), " + 
-					"'AgnUnCmp' value (select Count (*) from AGENT where Status != 'Completed' and Status != 'Closed' and Status != 'Deactivated' and Status != 'Cancelled' and Status != 'Activated' " + 
-					"or Status is null), 'ClnAll' value (select Count (*) from CLIENTS),'ClnUnCmp' value(select Count (*) from CLIENTS where STATUS = 'Draft' or STATUS is null), 'ArAll' value (select Count (*) from AREA), 'ArUnCmp' value (select Count (*) from AREA  " + 
-					"where Status != 'completed' and Status != 'closed' and Status != 'deactivated' and Status != 'cancelled' and Status != 'activated' or Status is null), " + 
-					"'ClsAll' value (select Count (*) from CLUSTERS), 'ClsUnCmp' value (select Count (*) from CLUSTERS where Status != 'completed' and Status != 'closed' and Status != 'deactivated' " + 
-					"and Status != 'cancelled' and Status != 'activated' or Status is null), 'RgnAll' value (select Count (*) from REGION), 'RgnUnCmp' value (select Count (*) from REGION  " + 
-					"where Status != 'completed' and Status != 'closed' and Status != 'deactivated' and Status != 'cancelled' and Status != 'activated' or Status is null)"
-					+ ", 'ClnimgAll' value (select Count(*) from CLIENTS where REGISTRATION_STATUS ='Success'), 'ClnimgUnCmp' value (Select Count(*) from CLIENTS where REGISTRATION_STATUS ='Success' and PHOTOS_APPROVAL_STATUS != 'Approved')) from dual" ;
+		query = "select json_object('PrAll' value (select Count (*) from PURCHASE_Request),'PrUnCmp' value (select Count (*) from PURCHASE_Request where  " + 
+				"Status != 'completed' and Status != 'closed' and Status != 'deactivated' and Status != 'cancelled' and Status != 'activated' or Status is null), " + 
+				"'PoAll' value (select Count (*) from PURCHASE_ORDER),'PoUnCmp' value (select Count (*) from PURCHASE_ORDER where Status != 'completed' and  " + 
+				"Status != 'closed' and Status != 'deactivated' and Status != 'cancelled' and Status != 'activated' or Status is null),'GrAll' value (select Count (*) from GOODS_RECEIVED), " + 
+				"'GrUnCmp' value (select Count (*) from GOODS_RECEIVED where Status != 'completed' and Status != 'closed' and Status != 'deactivated' and Status != 'cancelled'  " + 
+				"and Status != 'activated' or Status is null),'WoAll' value (select Count (*) from WORK_ORDER),'WoUnCmp' value (select Count (*) from WORK_ORDER where Status != 'completed'  " + 
+				"and Status != 'closed' and Status != 'deactivated' and Status != 'cancelled' and Status != 'activated' or Status is null), 'DniAll' value (select Count (*) from DISCOVERY_NEW), " + 
+				"'DniUnCmp' value (select Count (*) from DISCOVERY_NEW where Status != 'completed' and Status != 'closed' and Status != 'deactivated' and Status != 'cancelled'  " + 
+				"and Status != 'activated' or Status is null), 'WhAll' value (select Count (*) from WAREHOUSE), 'WhUnCmp' value (select Count (*) from WAREHOUSE where Status != 'completed'  " + 
+				"and Status != 'closed' and Status != 'deactivated' and Status != 'cancelled' and Status != 'activated' or Status is null), 'TkAll' value (select Count (*) from TROUBLE_TICKETS), " + 
+				"'TkUnCmp' value (select Count (*) from TROUBLE_TICKETS where Status != 'completed' and Status != 'closed' and Status != 'deactivated' and Status != 'cancelled'  " + 
+				"and Status != 'activated' or Status is null), 'ShAll' value (select Count (*) from SHOPS), 'ShUnCmp' value (select Count (*) from SHOPS where Status != 'completed'  " + 
+				"and Status != 'closed' and Status != 'deactivated' and Status != 'cancelled' and Status != 'activated' or Status is null), 'AgnAll' value (select Count (*) from AGENT), " + 
+				"'AgnUnCmp' value (select Count (*) from AGENT where Status != 'Completed' and Status != 'Closed' and Status != 'Deactivated' and Status != 'Cancelled' and Status != 'Activated' " + 
+				"or Status is null), 'ClnAll' value (select Count (*) from CLIENTS),'ClnUnCmp' value(select Count (*) from CLIENTS where STATUS = 'Draft' or STATUS is null), 'ArAll' value (select Count (*) from AREA), 'ArUnCmp' value (select Count (*) from AREA  " + 
+				"where Status != 'completed' and Status != 'closed' and Status != 'deactivated' and Status != 'cancelled' and Status != 'activated' or Status is null), " + 
+				"'ClsAll' value (select Count (*) from CLUSTERS), 'ClsUnCmp' value (select Count (*) from CLUSTERS where Status != 'completed' and Status != 'closed' and Status != 'deactivated' " + 
+				"and Status != 'cancelled' and Status != 'activated' or Status is null), 'RgnAll' value (select Count (*) from REGION), 'RgnUnCmp' value (select Count (*) from REGION  " + 
+				"where Status != 'completed' and Status != 'closed' and Status != 'deactivated' and Status != 'cancelled' and Status != 'activated' or Status is null)"
+				+ ", 'ClnimgAll' value (select Count(*) from CLIENTS where REGISTRATION_STATUS ='Success'), 'ClnimgUnCmp' value (Select Count(*) from CLIENTS where REGISTRATION_STATUS ='Success' and PHOTOS_APPROVAL_STATUS != 'Approved'),"
+				+ " 'CustAll' value (Select Count(*) from CUSTOMER), 'CustUnCmp' value (Select Count(*) from CUSTOMER where STATUS !='Activated' or STATUS is null)) from dual" ;
 			
 			q = session.createSQLQuery(query);
 			noteCounts =  (JSONObject) jsonParser.parse(q.uniqueResult().toString()); //one row of JSONObject key-values.
@@ -77,9 +78,11 @@ public class Notify {
 			model.addAttribute("RgnUnCmp", noteCounts.get("RgnUnCmp").toString());
 			model.addAttribute("ClnimgAll", noteCounts.get("ClnimgAll").toString());
 			model.addAttribute("ClnimgUnCmp", noteCounts.get("ClnimgUnCmp").toString());
+			model.addAttribute("CustAll", noteCounts.get("CustAll").toString());
+			model.addAttribute("CustUnCmp", noteCounts.get("CustUnCmp").toString());
 			
 			this.totalCount = 	 (long)noteCounts.get("PrUnCmp")+(long)noteCounts.get("PoUnCmp")+(long) noteCounts.get("GrUnCmp")+(long) noteCounts.get("WoUnCmp")+
-								+(long) noteCounts.get("DniUnCmp")+(long) noteCounts.get("WhUnCmp")+ (long) noteCounts.get("TkUnCmp")+(long) noteCounts.get("ShUnCmp")+(long) noteCounts.get("AgnUnCmp")+(long) noteCounts.get("ClnUnCmp")+(long) noteCounts.get("ArUnCmp")+(long) noteCounts.get("ClsUnCmp")+(long) noteCounts.get("RgnUnCmp");
+								+(long) noteCounts.get("DniUnCmp")+(long) noteCounts.get("WhUnCmp")+ (long) noteCounts.get("TkUnCmp")+(long) noteCounts.get("ShUnCmp")+(long) noteCounts.get("AgnUnCmp")+(long) noteCounts.get("ClnUnCmp")+(long) noteCounts.get("ArUnCmp")+(long) noteCounts.get("ClsUnCmp")+(long) noteCounts.get("RgnUnCmp")+(long) noteCounts.get("CustUnCmp");
 			model.addAttribute("notnum", this.totalCount);
 
 	} catch (Exception e) {
@@ -113,6 +116,8 @@ public class Notify {
 		model.addAttribute("RgnUnCmp", "");
 		model.addAttribute("ClnimgAll", "");
 		model.addAttribute("ClnimgUnCmp", "");
+		model.addAttribute("CustAll", "");
+		model.addAttribute("CustUnCmp", "");
 		model.addAttribute("notnum", this.totalCount);
 		e.printStackTrace();
 	}

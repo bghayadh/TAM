@@ -19,7 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.hibernate.query.Query;
-import org.hibernate.SQLQuery;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.transform.Transformers;
@@ -109,8 +109,11 @@ public class PurchaseController {
 	private static Session session = null;
 	private static Transaction tx = null;
 	private static ObjectMapper mapper = new ObjectMapper();
+	private String str = null;
+
+	@SuppressWarnings("rawtypes")
 	private static Query query = null;
-	private static String queryString = null;
+
 	private static final Logger logger = LoggerFactory.getLogger(PurchaseController.class);
 
 	/**
@@ -146,12 +149,12 @@ public class PurchaseController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
 			return "Purchase";
 		}
-
 	}
 
 	@SuppressWarnings("unchecked")
@@ -162,13 +165,10 @@ public class PurchaseController {
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			return "redirect:/";
 		} else {
-
 			List<PurchaseRequest> listPurchaseRequest = new ArrayList<PurchaseRequest>();
 			Integer readList;
 			String returnValue = "";
-
 			session = almsessions.getSession();
-
 			if (session != null && session.isOpen()) {
 				tx = session.beginTransaction();
 				try {
@@ -194,10 +194,10 @@ public class PurchaseController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
-
 			return returnValue;
 		}
 	}
@@ -214,18 +214,14 @@ public class PurchaseController {
 		}
 		session = almsessions.getSession();
 		if (session != null && session.isOpen()) {
-
 			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
-
 			try {
-
 				String startdate, enddate, supplier, warehouse;
 				startdate = request.getParameter("startDate");
 				enddate = request.getParameter("endDate");
 				supplier = request.getParameter("Supplier");
 				warehouse = request.getParameter("Warehouse");
-
 				/*
 				 * System.out.println( startdate + " " + enddate + " " + supplier + " " +
 				 * warehouse );
@@ -236,7 +232,7 @@ public class PurchaseController {
 				 * "select 1 as chkBox, PRQ_ID as ID, SUPPLIER as supplier, TOTAL_AMOUNT as TotalAmount,"
 				 * + " TOTAL_QTY as TotalQty, WAREHOUSE as WareHouse from PURCHASE_REQUEST";
 				 */
-				String str = "select 1 as chkBox, PRQ_ID as ID,TO_CHAR(LAST_MODIFICATION_DATE,'YYYY-MM-DD HH24:MI:SS') as lastmodifiedDate ,  SUPPLIER_NAME as supplierName, TOTAL_AMOUNT as TotalAmount,"
+				str = "select 1 as chkBox, PRQ_ID as ID,TO_CHAR(LAST_MODIFICATION_DATE,'YYYY-MM-DD HH24:MI:SS') as lastmodifiedDate ,  SUPPLIER_NAME as supplierName, TOTAL_AMOUNT as TotalAmount,"
 						+ " TOTAL_QTY as TotalQty,WAREHOUSE as WareHouse, SITE_ID as siteID , WAREHOUSE_NAME as wareName from PURCHASE_REQUEST  ";
 
 				// String str="select 1,t.ID, t.supplier, t.TotalAmount,t.TotalQty,t.WareHouse
@@ -247,19 +243,16 @@ public class PurchaseController {
 							+ enddate + "','YYYY-MM-DD')";
 				}
 				if (supplier != null && !supplier.equalsIgnoreCase("")) {
-
 					str = str + " and (upper(SUPPLIER) LIKE upper('%" + supplier
 							+ "%') or upper(SUPPLIER_NAME) LIKE upper('%" + supplier + "%') )";
 				}
 
 				if (warehouse != null && !warehouse.equalsIgnoreCase("")) {
-
 					str = str + " and (upper(WAREHOUSE) LIKE upper('%" + warehouse
 							+ "%')or upper(WAREHOUSE_NAME) LIKE upper('%" + warehouse
 							+ "%') or upper(SITE_ID) LIKE upper('%" + warehouse + "%')  )";
 				}
-
-				Query query = session.createSQLQuery(str);
+				query = session.createNativeQuery(str);
 
 				/*
 				 * listPReq = ((SQLQuery) query).addScalar("chkBox",new
@@ -281,14 +274,13 @@ public class PurchaseController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
-
 		return rtn;
 	}
 
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/FilteredPurchaseOrderListView", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> FilteredPurchaseOrderListView(Locale locale, Model model, HttpServletRequest request,
@@ -317,7 +309,7 @@ public class PurchaseController {
 				 * "select 1 as chkBox, PRQ_ID as ID, SUPPLIER as supplier, TOTAL_AMOUNT as TotalAmount,"
 				 * + " TOTAL_QTY as TotalQty, WAREHOUSE as WareHouse from PURCHASE_REQUEST";
 				 */
-				String str = "select 1 as chkBox, PO_ID as ID, TO_CHAR(LAST_MODIFICATION_DATE,'YYYY-MM-DD HH24:MI:SS') as lastmodifiedDate ,SUPPLIER_NAME as supplierName, TOTAL_AMOUNT as TotalAmount,"
+				str = "select 1 as chkBox, PO_ID as ID, TO_CHAR(LAST_MODIFICATION_DATE,'YYYY-MM-DD HH24:MI:SS') as lastmodifiedDate ,SUPPLIER_NAME as supplierName, TOTAL_AMOUNT as TotalAmount,"
 						+ " TOTAL_QTY as TotalQty,WAREHOUSE as WareHouse, SITE_ID as siteID ,WAREHOUSE_NAME as wareName from PURCHASE_ORDER ";
 
 				// String str="select 1,t.ID, t.supplier, t.TotalAmount,t.TotalQty,t.WareHouse
@@ -344,10 +336,10 @@ public class PurchaseController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
-
 		return rtn;
 	}
 
@@ -383,9 +375,9 @@ public class PurchaseController {
 					logger.info("Error in showing the pending purchase request list view with a message :" + e);
 				} finally {
 					if (session.isOpen() && session != null) {
-
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -400,7 +392,6 @@ public class PurchaseController {
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			return "redirect:/";
 		}
-
 		List<PurchaseOrder> listPurchaseOrder = new ArrayList<PurchaseOrder>();
 		session = almsessions.getSession();
 		if (session != null && session.isOpen()) {
@@ -411,7 +402,6 @@ public class PurchaseController {
 						"select 1,t.ID,TO_CHAR(t.lastmodifiedDate, 'YYYY-MM-DD HH24:MI:SS'), t.supplierName , t.TotalAmount,t.TotalQty,t.WareHouse,t.siteID , t.wareName  from PurchaseOrder t order by t.lastmodifiedDate DESC ")
 						.list();
 				model.addAttribute("ListGridTable", mapper.writeValueAsString(listPurchaseOrder));
-
 			} catch (Exception e) {
 				logger.info(
 						"Error on the level of purchase order list view with a message : " + e + "\n" + e.getMessage());
@@ -420,6 +410,7 @@ public class PurchaseController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -434,7 +425,6 @@ public class PurchaseController {
 			return LoginServices.checkSession(request, response);
 		} else {
 			List<PurchaseOrder> listPurchaseOrder = new ArrayList<PurchaseOrder>();
-
 			session = almsessions.getSession();
 			if (session != null && session.isOpen()) {
 				tx = session.beginTransaction();
@@ -452,6 +442,7 @@ public class PurchaseController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -459,14 +450,13 @@ public class PurchaseController {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	@RequestMapping(value = "/PurchaseReqFormView", method = RequestMethod.GET)
 	public String PurchaseReqFormView(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) {
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			return "redirect:/";
 		} else {
-
 			String wareDetails = "", wareName = "", waresiteId = "", navAction = "2";
 			PurchaseRequest pRq = null;
 			SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
@@ -476,14 +466,11 @@ public class PurchaseController {
 
 			session = almsessions.getSession();
 			if (session != null && session.isOpen()) {
-
 				tx = session.beginTransaction();
 				notifications.headerNotifications(session, model);
 				model.addAttribute("DBConnStat", "successed");
-
 				try {
 					navAction = request.getParameter("NavAction");
-
 					permissions.setPerms(model, permissions.getUserPermsWithSession(session, request),
 							"Purchase Request", "Form");
 
@@ -505,12 +492,9 @@ public class PurchaseController {
 
 						SelectedIndex = Integer.parseInt(result[1]);
 						pRqID = result[2];
-
 						model.addAttribute("SelectedIndex", SelectedIndex);
 						model.addAttribute("prCount", Integer.parseInt(result[0]));
-
 						pRq = (PurchaseRequest) session.get(PurchaseRequest.class, pRqID);
-
 						if (!StringUtils.equalsIgnoreCase(pRq.getPrwarehouse(), null)) {
 							wareDetails = pRq.getPrwarehouse();
 							wareName = pRq.getWareName();
@@ -539,7 +523,7 @@ public class PurchaseController {
 						model.addAttribute("netTotalinWord", pRq.getPrnettotalinWord());
 						model.addAttribute("TotalQty", pRq.getPrtotalQty());
 
-						queryString = "SELECT t.ITEM_CODE  as \"prItemCode\", t.ITEM_NAME as \"prItemName\""
+						str = "SELECT t.ITEM_CODE  as \"prItemCode\", t.ITEM_NAME as \"prItemName\""
 								+ ",t.ITEM_MODEL as \"prItemModel\",t.ITEM_PART_NUMBER  as \"prItemPartNumber\""
 								+ ",t.ITEM_BARCODE as \"prBarCode\""
 
@@ -568,11 +552,11 @@ public class PurchaseController {
 //						,t.ITEM_CAT1 as \"prCat1\""
 //								+ ",t.ITEM_CAT2 as \"prCat2\",t.ITEM_CAT3 as \"prCat3\""
 //								+ ",t.ITEM_CAT4 as \"prCat4\",t.ITEM_SEQ as \"prSequ\""
-						query = session.createNativeQuery(queryString);
+						query = session.createNativeQuery(str);
 						query.setParameter("param1", pRqID);
-
-						List<PurchaseRequestBoq> listPRqBoq = ((SQLQuery) query).addScalar("prItemCode")
-								.addScalar("prItemName").addScalar("prItemModel").addScalar("prItemPartNumber")// addScalar("prCat1").addScalar("prCat2").addScalar("prCat3")
+						List<PurchaseRequestBoq> listPRqBoq = ((NativeQuery<PurchaseRequestBoq>) query)
+								.addScalar("prItemCode").addScalar("prItemName").addScalar("prItemModel")
+								.addScalar("prItemPartNumber")// addScalar("prCat1").addScalar("prCat2").addScalar("prCat3")
 
 								// .addScalar("prCat4").addScalar("prSequ").
 								.addScalar("prBarCode").addScalar("prQty", new FloatType())
@@ -584,15 +568,11 @@ public class PurchaseController {
 								.addScalar("farQty", new StringType()).addScalar("prqItemId")
 								.addScalar("prqPoStatus", new StringType())
 								.setResultTransformer(Transformers.aliasToBean(PurchaseRequestBoq.class)).list();
-
 						model.addAttribute("ListPRqItem", mapper.writeValueAsString(listPRqBoq));
-
 					}
 
 				} catch (Exception e) {
-
 					logger.info("Error in opening the purchase request view with a message of :", e.getMessage());
-
 					model.addAttribute("ID", null);
 					model.addAttribute("creationDate", null);
 					model.addAttribute("lastmodifiedDate", null);
@@ -620,6 +600,7 @@ public class PurchaseController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -628,7 +609,7 @@ public class PurchaseController {
 
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	@RequestMapping(value = "/PurchaseOrderFormView", method = RequestMethod.GET)
 	public String PurchaseOrderFormView(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -650,9 +631,7 @@ public class PurchaseController {
 				tx = session.beginTransaction();
 				notifications.headerNotifications(session, model);
 				try {
-
 					navAction = request.getParameter("NavAction");
-
 					if (pOrdrID == null) {
 						pRqID = request.getParameter("ordPRQid");
 						if (pRqID != null) {
@@ -687,12 +666,12 @@ public class PurchaseController {
 
 								// add data in table PurchasereqItem
 
-								queryString = "select t.ItemCode as ItemCode , t.ItemName as ItemName , t.ItemModel as ItemModel , t.ItemPartNb as ItemPartNumber ,"
+								str = "select t.ItemCode as ItemCode , t.ItemName as ItemName , t.ItemModel as ItemModel , t.ItemPartNb as ItemPartNumber ,"
 										+ " t.Qty as qty, t.Rate as rate , t.DiscAmnt as discountAmount , t.Tax1 as tax1, t.NetRate as netRate , t.Total as total ,"
 										+ " t.TotalAt as totalAt, t.PqNo as grQty , t.GrNo as prQty , t.ArNo as arQty , t.CipNo as cipQty , t.FarNo as farQty, '0' as pordItemId"
 										+ " from PurchaseRequestItem t where t.PRQId like :param1";
 
-								query = session.createQuery(queryString);
+								query = session.createQuery(str);
 								query.setParameter("param1", pRqID);
 								List<PurchaseOrderBoq> listPurchaseOrderBoq = (List<PurchaseOrderBoq>) query
 										.setResultTransformer(Transformers.aliasToBean(PurchaseOrderBoq.class)).list();
@@ -754,7 +733,7 @@ public class PurchaseController {
 						}
 
 						// add data in table PurchaseorderItem
-						queryString = "SELECT t.ITEM_CODE as itemCode , t.ITEM_NAME as itemName , t.ITEM_MODEL as itemModel , t.ITEM_PART_NUMBER as itemPartNumber ,t.QTY as qty,"
+						str = "SELECT t.ITEM_CODE as itemCode , t.ITEM_NAME as itemName , t.ITEM_MODEL as itemModel , t.ITEM_PART_NUMBER as itemPartNumber ,t.QTY as qty,"
 								+ " t.RATE as rate,t.DISCOUNT_AMOUNT as discountAmount,t.TAX1 as tax1 , t.NET_RATE as netRate, t.TOTAL as total, t.TOTAL_AT as totalAt, "
 								+ " t.ITEM_BARCODE as poBarCode, "
 								+ " (SELECT coalesce(sum(a.QTY),0) FROM GOODS_RECEIVED_ITEM a   "
@@ -778,9 +757,9 @@ public class PurchaseController {
 								+ " FROM PURCHASE_ORDER_ITEM t LEFT JOIN (select distinct poitem_id,json_object('serialArray' value json_arrayagg(json_object('serial_no' value serial_number,'itm_model'  value item_model,'itm_partno' value item_partno))) as serial_obj "
 								+ "from serial_number group by poitem_id) x on x.POITEM_ID = t.PO_ITEM_ID where t.PO_ID like :param1 ";
 
-						query = session.createNativeQuery(queryString);
+						query = session.createNativeQuery(str);
 						query.setParameter("param1", pOrdrID);
-						List<PurchaseOrderBoq> listPurchaseOrderBoq = (List<PurchaseOrderBoq>) ((SQLQuery) query)
+						List<PurchaseOrderBoq> listPurchaseOrderBoq = (List<PurchaseOrderBoq>) ((NativeQuery<PurchaseOrderBoq>) query)
 								.addScalar("itemCode").addScalar("itemName").addScalar("itemModel")
 								.addScalar("itemPartNumber").addScalar("poBarCode", new StringType())
 								.addScalar("qty", new FloatType()).addScalar("rate", new FloatType())
@@ -803,7 +782,7 @@ public class PurchaseController {
 						List<Object[]> purchaseOrderItems = query.list();
 						List<Object[]> discrepancy = new ArrayList<Object[]>();
 
-						for (Object[] items : purchaseOrderItems) {							
+						for (Object[] items : purchaseOrderItems) {
 							BigDecimal qty = (BigDecimal) items[4]; // Use BigDecimal for quantity
 							// Use the item_code and pOrdrID to query the asset_registry table
 							query = session.createNativeQuery(
@@ -813,7 +792,7 @@ public class PurchaseController {
 							BigDecimal assetCount = (BigDecimal) query.uniqueResult(); // Retrieve the count as a
 																						// BigDecimal
 							if (assetCount.compareTo(BigDecimal.ZERO) > 0) {
-								if (qty.compareTo(assetCount) > 0) {									
+								if (qty.compareTo(assetCount) > 0) {
 									items[4] = qty.subtract(assetCount);
 									discrepancy.add(items);
 								}
@@ -852,6 +831,7 @@ public class PurchaseController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -950,12 +930,13 @@ public class PurchaseController {
 
 						synchronized (this) {
 							pRqID = "PRQ_" + year + "_"
-									+ Integer.parseInt(session.createSQLQuery("SELECT PURCHASE_REQUEST FROM SEQ_TABLE")
-											.uniqueResult().toString());
+									+ Integer.parseInt(
+											session.createNativeQuery("SELECT PURCHASE_REQUEST FROM SEQ_TABLE")
+													.uniqueResult().toString());
 							query = session
-									.createSQLQuery("UPDATE SEQ_TABLE SET PURCHASE_REQUEST = PURCHASE_REQUEST + 1 ");
+									.createNativeQuery("UPDATE SEQ_TABLE SET PURCHASE_REQUEST = PURCHASE_REQUEST + 1 ");
 							query.executeUpdate();
-							session.createSQLQuery("commit").executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
 						}
 						// pRqID = "PRQ_" + year + "_";
 						model.addAttribute("ID", pRqID);
@@ -1006,8 +987,8 @@ public class PurchaseController {
 
 					///////////////////////////////////////////////////////////////////////////////////////////////
 					if (slctDel != null) {
-						queryString = "delete PurchaseRequestItem t where t.prqItemId IN (:param1) ";
-						query = session.createQuery(queryString);
+						str = "delete PurchaseRequestItem t where t.prqItemId IN (:param1) ";
+						query = session.createQuery(str);
 						query.setParameterList("param1", slctDel);
 						query.executeUpdate();
 
@@ -1031,11 +1012,13 @@ public class PurchaseController {
 
 								// pRqItmID = "PRQI_" + year + "_" + appConfig.getSequenceNbr(1);
 								synchronized (this) {
-									pRqItmID = "PRQI_" + year + "_" + Integer.parseInt(session
-											.createSQLQuery("SELECT PR_ITEM FROM SEQ_TABLE").uniqueResult().toString());
-									query = session.createSQLQuery("UPDATE SEQ_TABLE SET PR_ITEM = PR_ITEM + 1 ");
+									pRqItmID = "PRQI_" + year + "_"
+											+ Integer
+													.parseInt(session.createNativeQuery("SELECT PR_ITEM FROM SEQ_TABLE")
+															.uniqueResult().toString());
+									query = session.createNativeQuery("UPDATE SEQ_TABLE SET PR_ITEM = PR_ITEM + 1 ");
 									query.executeUpdate();
-									session.createSQLQuery("commit").executeUpdate();
+									session.createNativeQuery("commit").executeUpdate();
 								}
 								pRqItem.setPrqItemId(pRqItmID);
 
@@ -1082,12 +1065,12 @@ public class PurchaseController {
 							if (StringUtils.equalsIgnoreCase(pRqStat, "inprog")) {
 								query = session.createQuery(
 										"update PurchaseRequest set prStatus = 'cancelled' WHERE ID = :param1");
-								query.setString("param1", pRqID);
+								query.setParameter("param1", pRqID);
 								query.executeUpdate();
 							} else {
 								query = session
 										.createQuery("select ordStatus,ID FROM PurchaseOrder WHERE ordPRQid = :param1");
-								query.setString("param1", pRqID);
+								query.setParameter("param1", pRqID);
 								prcsData = query.list();
 								if (!prcsData.isEmpty() && prcsData != null) {
 									String processStat = (String) prcsData.get(0)[0];
@@ -1101,7 +1084,7 @@ public class PurchaseController {
 										rtn.put("RevPrcStatCancel", "accepted");
 										query = session.createQuery(
 												"update PurchaseRequest set prStatus = 'cancelled' WHERE ID = :param1");
-										query.setString("param1", pRqID);
+										query.setParameter("param1", pRqID);
 										query.executeUpdate();
 										/// thread
 										AssetLifeCycleCanceling ALCCancel = new AssetLifeCycleCanceling("PR", pRqID, "",
@@ -1111,7 +1094,7 @@ public class PurchaseController {
 								} else {
 									query = session.createQuery(
 											"select grStatus,ID FROM GoodsReceived WHERE grPRQid = :param1");
-									query.setString("param1", pRqID);
+									query.setParameter("param1", pRqID);
 									prcsData = query.list();
 									if (!prcsData.isEmpty() && prcsData != null) {
 
@@ -1125,7 +1108,7 @@ public class PurchaseController {
 											/// thread
 											query = session.createQuery(
 													"update PurchaseRequest set prStatus = 'cancelled' WHERE ID = :param1");
-											query.setString("param1", pRqID);
+											query.setParameter("param1", pRqID);
 											query.executeUpdate();
 											AssetLifeCycleCanceling ALCCancel = new AssetLifeCycleCanceling("PR", pRqID,
 													"", "");
@@ -1137,7 +1120,7 @@ public class PurchaseController {
 										/// thread
 										query = session.createQuery(
 												"update PurchaseRequest set prStatus = 'cancelled' WHERE ID = :param1");
-										query.setString("param1", pRqID);
+										query.setParameter("param1", pRqID);
 										query.executeUpdate();
 										AssetLifeCycleCanceling ALCCancel = new AssetLifeCycleCanceling("PR", pRqID, "",
 												"");
@@ -1156,6 +1139,7 @@ public class PurchaseController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -1241,11 +1225,13 @@ public class PurchaseController {
 					if (StringUtils.equalsIgnoreCase(request.getParameter("type"), "addNew")
 							|| StringUtils.equalsIgnoreCase(request.getParameter("type"), "addNewFromPRQ")) {
 						synchronized (this) {
-							poID = "PO_" + year + "_" + Integer.parseInt(session
-									.createSQLQuery("SELECT PURCHASE_ORDER FROM SEQ_TABLE").uniqueResult().toString());
-							query = session.createSQLQuery("UPDATE SEQ_TABLE SET PURCHASE_ORDER = PURCHASE_ORDER + 1 ");
+							poID = "PO_" + year + "_"
+									+ Integer.parseInt(session.createNativeQuery("SELECT PURCHASE_ORDER FROM SEQ_TABLE")
+											.uniqueResult().toString());
+							query = session
+									.createNativeQuery("UPDATE SEQ_TABLE SET PURCHASE_ORDER = PURCHASE_ORDER + 1 ");
 							query.executeUpdate();
-							session.createSQLQuery("commit").executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
 						}
 						// poID = "PO_" + year + "_" + appConfig.getSequenceNbr(2);
 						model.addAttribute("ID", poID);
@@ -1314,8 +1300,8 @@ public class PurchaseController {
 					}
 					slctDelOrd = request.getParameterValues("slctDelOrd[]");
 					if (slctDelOrd != null) {
-						queryString = "delete PurchaseOrderItem t where t.pordItemId IN (:param1) ";
-						query = session.createQuery(queryString);
+						str = "delete PurchaseOrderItem t where t.pordItemId IN (:param1) ";
+						query = session.createQuery(str);
 						query.setParameterList("param1", slctDelOrd);
 						query.executeUpdate();
 
@@ -1333,11 +1319,13 @@ public class PurchaseController {
 							if (StringUtils.equalsIgnoreCase(itemParameters.getDictParameter().get(i).get(POR_ITEM_ID),
 									"0")) {
 								synchronized (this) {
-									poiID = "POI_" + year + "_" + Integer.parseInt(session
-											.createSQLQuery("SELECT PO_ITEM FROM SEQ_TABLE").uniqueResult().toString());
-									query = session.createSQLQuery("UPDATE SEQ_TABLE SET PO_ITEM = PO_ITEM + 1 ");
+									poiID = "POI_" + year + "_"
+											+ Integer
+													.parseInt(session.createNativeQuery("SELECT PO_ITEM FROM SEQ_TABLE")
+															.uniqueResult().toString());
+									query = session.createNativeQuery("UPDATE SEQ_TABLE SET PO_ITEM = PO_ITEM + 1 ");
 									query.executeUpdate();
-									session.createSQLQuery("commit").executeUpdate();
+									session.createNativeQuery("commit").executeUpdate();
 								}
 								PoitemId = poiID;
 								pOrdItem.setPordItemId(poiID);
@@ -1347,13 +1335,12 @@ public class PurchaseController {
 								pOrdItem.setPordItemId(PoitemId);
 							}
 							query = session.createQuery("select ordStatus FROM PurchaseOrder WHERE ID = :param1");
-							query.setString("param1", poID);
+							query.setParameter("param1", poID);
 							String result = query.uniqueResult().toString();
-							System.out.println(result);
 							if (StringUtils.equalsIgnoreCase(result, "approved")) {
 								query = session
 										.createQuery("select cipID FROM CapitalInProgress WHERE PoItemId = :param1");
-								query.setString("param1", PoitemId);
+								query.setParameter("param1", PoitemId);
 								ArrayList result2 = (ArrayList) query.list();
 
 								System.out.println(result2);
@@ -1362,16 +1349,14 @@ public class PurchaseController {
 									synchronized (this) {
 										CipId = "CIP_" + year + "_"
 												+ Integer.parseInt(session
-														.createSQLQuery("SELECT CAPITAL_IN_PROGRESS FROM SEQ_TABLE")
+														.createNativeQuery("SELECT CAPITAL_IN_PROGRESS FROM SEQ_TABLE")
 														.uniqueResult().toString());
-										query = session.createSQLQuery(
+										query = session.createNativeQuery(
 												"UPDATE SEQ_TABLE SET CAPITAL_IN_PROGRESS = CAPITAL_IN_PROGRESS + 1 ");
 										query.executeUpdate();
-										session.createSQLQuery("commit").executeUpdate();
+										session.createNativeQuery("commit").executeUpdate();
 									}
-
 									assetCip = new CapitalInProgress();
-
 									assetCip.setCipitemCode(itmcode);
 									assetCip.setCipitemName(itmname);
 									assetCip.setPoItemId(PoitemId);
@@ -1486,13 +1471,13 @@ public class PurchaseController {
 											|| StringUtils.equalsIgnoreCase(serialNumID, "")) {
 										synchronized (this) {
 											serialNumID = "SER_" + year + "_"
-													+ Integer.parseInt(
-															session.createSQLQuery("SELECT SERIAL_NUM FROM SEQ_TABLE")
-																	.uniqueResult().toString());
-											query = session.createSQLQuery(
+													+ Integer.parseInt(session
+															.createNativeQuery("SELECT SERIAL_NUM FROM SEQ_TABLE")
+															.uniqueResult().toString());
+											query = session.createNativeQuery(
 													"UPDATE SEQ_TABLE SET SERIAL_NUM = SERIAL_NUM + 1 ");
 											query.executeUpdate();
-											session.createSQLQuery("commit").executeUpdate();
+											session.createNativeQuery("commit").executeUpdate();
 										}
 									}
 									serialnum = new SerialNumber();
@@ -1541,7 +1526,7 @@ public class PurchaseController {
 							if (!pRqID.isEmpty()) {
 
 								query = session.createQuery("SELECT prStatus FROM PurchaseRequest WHERE ID = :param1");
-								query.setString("param1", pRqID);
+								query.setParameter("param1", pRqID);
 								String processStat = query.uniqueResult().toString();
 
 								if (!StringUtils.equalsIgnoreCase(processStat, "approved")
@@ -1556,20 +1541,17 @@ public class PurchaseController {
 									InsertionALCThread.start(); // will occur parallel with the execution of saving PO.
 									query = session.createQuery(
 											"update PurchaseOrder set ordStatus = 'approved' WHERE ID = :param1");
-									query.setString("param1", poID);
+									query.setParameter("param1", poID);
 									query.executeUpdate();
-
 								}
-
 							} else {
 								rtn.put("RevPrcStatAprv", "accepted");
 								InsertionALCThread = new AssetLifeCycleThread("PO", pRqID, poID, "", itemParameters);
 								InsertionALCThread.start(); // will occur parallel with the execution of saving PO.
 								query = session.createQuery(
 										"update PurchaseOrder set ordStatus = 'approved' WHERE ID = :param1");
-								query.setString("param1", poID);
+								query.setParameter("param1", poID);
 								query.executeUpdate();
-
 							}
 						} else if (StringUtils.equalsIgnoreCase(pOrdAppFlag, "0")
 								&& StringUtils.equalsIgnoreCase(pOrdCnclFlg, "1")) {
@@ -1578,7 +1560,7 @@ public class PurchaseController {
 							Object[] grStat = null;
 							query = session
 									.createQuery("SELECT ID, grStatus FROM GoodsReceived WHERE grPOid = :param1");
-							query.setString("param1", poID);
+							query.setParameter("param1", poID);
 							grStatus = (ArrayList) query.list();
 							if (grStatus.size() != 0) {
 								grStat = (Object[]) grStatus.get(0);
@@ -1590,25 +1572,21 @@ public class PurchaseController {
 									rtn.put("RevGrStatCncl", "accepted");
 									query = session.createQuery(
 											"update PurchaseOrder set ordStatus = 'cancelled' WHERE ID = :param1");
-									query.setString("param1", poID);
+									query.setParameter("param1", poID);
 									query.executeUpdate();
 									ALCDelete = new AssetLifeCycleCanceling("PO", pRqID, poID, "");
 									ALCDelete.start();
 
 								}
 							} else {
-								System.out.print("yes");
-
 								rtn.put("RevGrStatCncl", "accepted");
 								query = session.createQuery(
 										"update PurchaseOrder set ordStatus = 'cancelled' WHERE ID = :param1");
-								query.setString("param1", poID);
+								query.setParameter("param1", poID);
 								query.executeUpdate();
 								ALCDelete = new AssetLifeCycleCanceling("PO", pRqID, poID, "");
 								ALCDelete.start();
-
 							}
-
 						}
 					}
 
@@ -1620,10 +1598,8 @@ public class PurchaseController {
 					if (itemsList2 != null && itemsList2.equals("poList")) {
 						query = session.createQuery("SELECT ID,supplier FROM PurchaseOrder");
 						if (query.list() != null) {
-							System.out.println("have list");
 							rtn.put("listItemsNav", query.list());
 						}
-
 					} else {
 						model.addAttribute("listItemsNav", "noList");
 					}
@@ -1636,6 +1612,7 @@ public class PurchaseController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -1663,18 +1640,15 @@ public class PurchaseController {
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
-				queryString = "delete PurchaseOrder where ID IN (:param1)";
-				query = session.createQuery(queryString);
+				query = session.createQuery("delete PurchaseOrder where ID IN (:param1)");
 				query.setParameterList("param1", idList);
 				query.executeUpdate();
 
-				queryString = "delete PurchaseOrderItem where POId IN (:param1)";
-				query = session.createQuery(queryString);
+				query = session.createQuery("delete PurchaseOrderItem where POId IN (:param1)");
 				query.setParameterList("param1", idList);
 				query.executeUpdate();
 
-				queryString = "delete AssetLifeCycle   where voucherNB IN (:param1)";
-				query = session.createQuery(queryString);
+				query = session.createQuery("delete AssetLifeCycle   where voucherNB IN (:param1)");
 				query.setParameterList("param1", idList);
 				query.executeUpdate();
 
@@ -1685,6 +1659,7 @@ public class PurchaseController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -1710,18 +1685,15 @@ public class PurchaseController {
 				if (session != null && session.isOpen()) {
 					tx = session.beginTransaction();
 					try {
-						queryString = "delete PurchaseRequest t  where t.ID IN (:param1)";
-						query = session.createQuery(queryString);
+						query = session.createQuery("delete PurchaseRequest t  where t.ID IN (:param1)");
 						query.setParameterList("param1", idList);
 						query.executeUpdate();
 
-						queryString = "delete PurchaseRequestItem   where PRQId IN (:param1)";
-						query = session.createQuery(queryString);
+						query = session.createQuery("delete PurchaseRequestItem   where PRQId IN (:param1)");
 						query.setParameterList("param1", idList);
 						query.executeUpdate();
 
-						queryString = "delete AssetLifeCycle   where voucherNB IN (:param1)";
-						query = session.createQuery(queryString);
+						query = session.createQuery("delete AssetLifeCycle   where voucherNB IN (:param1)");
 						query.setParameterList("param1", idList);
 						query.executeUpdate();
 
@@ -1732,6 +1704,7 @@ public class PurchaseController {
 						if (session != null && session.isOpen()) {
 							tx.commit();
 							session.close();
+							session.getSessionFactory().close();
 						}
 					}
 				}
@@ -1768,8 +1741,8 @@ public class PurchaseController {
 				query = session.createQuery(
 						"select ID, ordPRQid from PurchaseOrder where ID like :param1 or (supplierName like :param1 or supplier like :param1) and ordPRQid like :param2");
 
-				query.setString("param1", pOID);
-				query.setString("param2", pRqID);
+				query.setParameter("param1", pOID);
+				query.setParameter("param2", pRqID);
 				query.setFirstResult(0);
 				query.setMaxResults(40);
 				rtn.put("Listreq", query.list());
@@ -1791,9 +1764,9 @@ public class PurchaseController {
 				logger.info("Error in getting all purchase orders with a message :" + e);
 			} finally {
 				if (session != null && session.isOpen()) {
-
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -1812,7 +1785,6 @@ public class PurchaseController {
 			return rtn;
 		}
 		String ID = "%" + request.getParameter("ID") + "%"; // Getting the typed PO ID to search based on it
-		String pRqID = "%" + request.getParameter("PreqId") + "%";
 		session = almsessions.getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
@@ -1823,7 +1795,7 @@ public class PurchaseController {
 				query = session.createQuery(
 						"select ID, supplierName from PurchaseOrder where ID like :param1 or (supplierName like :param1 or supplier like :param1) ORDER BY lastmodifiedDate DESC ");
 
-				query.setString("param1", ID);
+				query.setParameter("param1", ID);
 				query.setFirstResult(0);
 				query.setMaxResults(40);
 				rtn.put("Listreq", query.list());
@@ -1845,9 +1817,9 @@ public class PurchaseController {
 				logger.info("Error in getting all purchase orders with a message :" + e);
 			} finally {
 				if (session != null && session.isOpen()) {
-
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -1875,19 +1847,17 @@ public class PurchaseController {
 			try {
 				query = session.createQuery(
 						"select pordItemId, Rate, DiscAmnt, Tax1 from PurchaseOrderItem where POId =:param1 and ItemCode =:param2");
-
-				query.setString("param1", PoID);
-				query.setString("param2", ItemCode);
+				query.setParameter("param1", PoID);
+				query.setParameter("param2", ItemCode);
 				rtn.put("PoDetails", query.list());
 			} catch (Exception e) {
 				logger.info("Error in getting POItem details with a message :" + e);
 				rtn.put("PoDetails", "");
-			}
-
-			finally {
+			} finally {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -1913,13 +1883,11 @@ public class PurchaseController {
 
 		session = almsessions.getSession();
 		if (session != null && session.isOpen()) {
-
 			tx = session.beginTransaction();
-
 			try {
 				if (poId.equalsIgnoreCase("empty") == true) {
 					query = session.createQuery("select ID from PurchaseRequest where ID like :param1");
-					query.setString("param1", requestName);
+					query.setParameter("param1", requestName);
 					query.setFirstResult(0);
 					query.setMaxResults(40);
 					rtn.put("Listreq", query.list());
@@ -1929,8 +1897,8 @@ public class PurchaseController {
 
 					query = session.createQuery(
 							"select distinct ordPRQid from  PurchaseOrder where ordPRQid like :param1 or ID =:param2");
-					query.setString("param1", requestName);
-					query.setString("param2", poId);
+					query.setParameter("param1", requestName);
+					query.setParameter("param2", poId);
 					query.setFirstResult(0);
 					query.setMaxResults(40);
 					rtn.put("Listreq", query.list());
@@ -1942,6 +1910,7 @@ public class PurchaseController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -1967,19 +1936,18 @@ public class PurchaseController {
 			try {
 				query = session.createQuery(
 						"select ID,' ',supplier,supplierName from PurchaseRequest where ID like :param1 ORDER BY lastmodifiedDate DESC");
-				query.setString("param1", requestName);
+				query.setParameter("param1", requestName);
 				query.setFirstResult(0);
 				query.setMaxResults(40);
-
 				rtn.put("Listreq", query.list());
 			} catch (Exception e) {
 				logger.info("Error in getting the purchase requests related to the PO with a message : " + e);
-
 				rtn.put("Listreq", "");
 			} finally {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 
@@ -1999,15 +1967,12 @@ public class PurchaseController {
 			return rtn;
 		}
 		String PreqId = request.getParameter("preqID");
-
 		session = almsessions.getSession();
 		if (session != null && session.isOpen()) {
-
 			tx = session.beginTransaction();
 			try {
-
 				query = session.createQuery("select  ID   from PurchaseOrder  where ordPRQid =:param1 ");
-				query.setString("param1", PreqId);
+				query.setParameter("param1", PreqId);
 				query.setFirstResult(0);
 				query.setMaxResults(40);
 				rtn.put("ListOrdIds", query.list());
@@ -2019,6 +1984,7 @@ public class PurchaseController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -2043,7 +2009,7 @@ public class PurchaseController {
 
 			try {
 
-				List<Object[]> prList = (List<Object[]>) session.createSQLQuery(
+				List<Object[]> prList = (List<Object[]>) session.createNativeQuery(
 
 						"select count(t.PO_ID), SUM(t.TOTAL_QTY), SUM(t.NET_TOTAL_AMOUNT), " +
 
@@ -2253,6 +2219,7 @@ public class PurchaseController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 
@@ -2280,7 +2247,7 @@ public class PurchaseController {
 
 			try {
 
-				poList = (List<Object[]>) session.createSQLQuery(
+				poList = (List<Object[]>) session.createNativeQuery(
 
 						"select t.PO_ID, " +
 
@@ -2430,11 +2397,10 @@ public class PurchaseController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
 		return rtn;
-
 	}
-
 }

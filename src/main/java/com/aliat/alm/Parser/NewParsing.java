@@ -472,7 +472,13 @@ public class NewParsing {
  		stmtinsert3.close();
  		System.out.println("insert into NODE_SUBRACK COMPLETED");
  		logger.info("insert into NODE_SUBRACK COMPLETED");
- 		
+ 		//insert new row in execute table in order to detect the new records added to manipulated in the cabinet movement.
+ 		insertStatement = "INSERT INTO EXECUTE_DOMAIN_VENDOR_ELEMENTS (DOMAIN,VENDOR,CREATION_DATE,STATUS,SUB_DOMAIN,TYPE,ELEMENT)"
+ 				+ " values ('"+vdomain+"','"+vvendor+"',sysdate,'IN PROCESS','"+subdomain+"','"+type+"','NODE_SUBRACK')";
+ 		stmtinsert1 = con.prepareStatement(insertStatement);
+		stmtinsert1.executeUpdate();
+ 		stmtinsert1.close();
+ 		///////////
  		stmtinsert1 = con.prepareStatement("insert into NODE_GCELL (GCELL_ID,CELLID,CELLNAME,MCC,MNC,LAC,CI,NCC,BCC,TYPE,BCCHNO,BASEBANDPOLICY,BASEBANDEQMID,GBTSFUNCTIONNAME,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,GLOCELLID,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,ACTIVE_RECORD,LINE,CREATION_DATE,DOMAIN,VENDOR) "
  				+ "(select GCELL_ID,CELLID,CELLNAME,MCC,MNC,LAC,CI,NCC,BCC,TYPE,BCCHNO,BASEBANDPOLICY,BASEBANDEQMID,GBTSFUNCTIONNAME,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,GLOCELLID,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,'"+ TransTyp +"' as TRANS_TYPE,ACTIVE_RECORD,LINE,CREATION_DATE,DOMAIN,VENDOR from TEMP_NODE_GCELL where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"')"); 
  		stmtinsert1.executeUpdate();

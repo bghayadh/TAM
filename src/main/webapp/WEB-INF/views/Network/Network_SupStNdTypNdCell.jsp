@@ -434,7 +434,7 @@ function SuppStNdTypNdCellCore(id){
 			        	  'theme': 'default',
 			        	  'items': [
 			        		  {'icon': 'braille', 'name': 'Show BoQ', action: () => {				
-			        				Site_Boq(idSite);
+			        			  SiteSupp_Boq(idSite,selectedSupp);
 			        			}	
 			        		}
 			        	]
@@ -595,9 +595,9 @@ function StNdTpNdCellCore(id)
 			            $(".NodeType > .TreeSpan").contextmenu(function(){				
 			        		//selectedSingleNtIdContext=$(this).parent().attr('id').split("_")[0];
 			        		selectedSingleNtIdContext=$(this).parent().attr('id');
-			        		console.log("selectedSingleNtIdContext......",selectedSingleNtIdContext);			        				        		
+			        		//console.log("selectedSingleNtIdContext......",selectedSingleNtIdContext);			        				        		
 			        		var index = selectedSingleNtIdContext.indexOf("WARE_2");
-			    			console.log(" index : "+index);
+			    			//console.log(" index : "+index);
 			    			if (index !== -1) {
 			    				selectedSingleNt = selectedSingleNtIdContext.substring(0, index).slice(0, -1);
 			    				selectedSite = selectedSingleNtIdContext.substring(index);
@@ -610,7 +610,7 @@ function StNdTpNdCellCore(id)
 			        	  'items': [
 			        		  {'icon': 'braille', 'name': 'Show BoQ', action: () => {
 			        			  //console.log("selectedItem......",selectedItem);
-			        			  NodeT_Boq(selectedSite,selectedSingleNt);
+			        			  NodeTSup_Boq(selectedSite,selectedSingleNt,selectedSupp);
 			        			  selectedItem="";
 			        			}	
 			        		}

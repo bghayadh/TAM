@@ -5,18 +5,13 @@ import com.aliat.alm.models.ArNode;
 import com.aliat.alm.models.ArPartNumber;
 import com.aliat.alm.models.ArSerialNumber;
 import com.aliat.alm.models.ArSite;
-import com.aliat.alm.models.AssetLifeCycle;
 import com.aliat.alm.models.AssetRegistry;
 import com.aliat.alm.models.FixedAssetRegistry;
-import com.aliat.alm.models.GoodsReceived;
-import com.aliat.alm.models.PurchaseOrder;
-import com.aliat.alm.models.PurchaseOrderItem;
 import com.aliat.alm.models.DiscoveryNewListView;
 import com.aliat.alm.models.FarNode;
 import com.aliat.alm.models.FarPartNumber;
 import com.aliat.alm.models.FarSerialNumber;
 import com.aliat.alm.models.FarSite;
-
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -37,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.transform.Transformers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +43,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.aliat.alm.common.ALMSessions;
 import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
@@ -1511,7 +1506,7 @@ query.executeUpdate();
 	
 //These scripts to get the discovered items by the Auto Parser	
 	
-	@SuppressWarnings({ "unused", "unchecked" })
+	@SuppressWarnings({ "unused", "unchecked", "rawtypes" })
 	@RequestMapping(value = "/runDiscoveryNewScript", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> runDiscoveryNewScript(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response)
@@ -1522,529 +1517,544 @@ query.executeUpdate();
 			map.put("Login", LoginServices.checkSession(request, response));
 			return map;
 		}
-		try {
+		
 
 			Date date = new Date();
 			Calendar calendar = new GregorianCalendar();
 			calendar.setTime(date);
 			int year = calendar.get(Calendar.YEAR);
 			
-			ObjectMapper mapper = new ObjectMapper();
-			Session session = almsessions.getSession();
-			Transaction tx = session.beginTransaction();
-			
-			String getBoardsquery, getNewBoardOnExistedNodequery, getCabinetsquery, getNewCabinetOnExistedNode, getAntennasquery, getNewAntennaOnExistedNodequery,getNewNode ; 
-			Query q, q1, q2, q3, q4, q5, q6;
-			List<Object[]> NewNodeBoardsList; List<Object[]> NewNodeCabinetsList; List<Object[]> NewNodeAntennasList; List<Object[]> NewNodeList;
-			List<Object[]> ExistedNodeBoardsList; List<Object[]> ExistedNodeCabinetsList; List<Object[]> ExistedNodeAntennasList;
-			
-			getBoardsquery = "Select nodeBoard.FROM_TRANS_ID, nodeActive.node_pk, nodeBoard.from_trans_source, nodeBoard.serialnumber, nodeboard.boardtype, " 
-			 				+"nodeBoard.alm_position, nodeBoard.TRANS_TYPE, nodeActive.NODE_ID, nodeActive.NODE_NAME from NODE_BOARD nodeBoard " 
-							+"inner join NODE_ACTIVE nodeActive on nodeBoard.NODE_PK = nodeActive.NODE_PK where nodeBoard.FROM_TRANS_ID IN (" 
-							+"select node_active_trans.trans_id from NODE_ACTIVE node_active inner join " 
-							+"NODE_ACTIVE_TRANSACTIONS node_active_trans on node_active.FROM_TRANS_ID = node_active_trans.trans_id " 
-							+"where node_active.active_record = 1 and node_active.trans_type = 'New Node' and sent_to_alm = 0) and nodeBoard.active_record = 1"
-							+"and (nodeBoard.TRANS_TYPE = 'New Hardware' OR nodeBoard.TRANS_TYPE = 'Existed Hardware' OR nodeBoard.TRANS_TYPE = 'New Node')";
-			
-			getNewBoardOnExistedNodequery = "Select nodeBoard.FROM_TRANS_ID, nodeActive.node_pk, nodeBoard.from_trans_source, nodeBoard.serialnumber, nodeboard.boardtype, nodeBoard.alm_position, nodeBoard.TRANS_TYPE, "
-											+"nodeActive.NODE_ID, nodeActive.NODE_NAME from NODE_BOARD nodeBoard  " 
-											+"inner join NODE_ACTIVE nodeActive on nodeBoard.NODE_PK = nodeActive.NODE_PK where nodeBoard.FROM_TRANS_ID IN ( "
-											+"select node_board_trans.trans_id from NODE_BOARD node_board inner join " 
-											+"NODE_BOARD_TRANSACTIONS node_board_trans on node_board.FROM_TRANS_ID = node_board_trans.trans_id " 
-											+"where node_board.active_record = 1 and node_board.trans_type = 'New Board' and sent_to_alm = 0) and nodeBoard.active_record = 1";
-			
-			getCabinetsquery = "Select nodeCabinet.FROM_TRANS_ID, nodeActive.node_pk, nodeCabinet.from_trans_source, nodeCabinet.serialnumber, nodeCabinet.model, nodeCabinet.alm_position, nodeCabinet.TRANS_TYPE, nodeActive.NODE_ID, nodeActive.NODE_NAME from NODE_CABINET nodeCabinet " 
-								+"inner join NODE_ACTIVE nodeActive on nodeCabinet.NODE_PK = nodeActive.NODE_PK where nodeCabinet.FROM_TRANS_ID IN (" 
-								+"select node_active_trans.trans_id from NODE_ACTIVE node_active inner join " 
-								+"NODE_ACTIVE_TRANSACTIONS node_active_trans on node_active.FROM_TRANS_ID = node_active_trans.trans_id " 
-								+"where node_active.active_record = 1 and node_active.trans_type = 'New Node' and sent_to_alm = 0) and nodeCabinet.active_record = 1"
-								+ " and (nodeCabinet.TRANS_TYPE = 'New Hardware' OR nodeCabinet.TRANS_TYPE = 'Existed Hardware' OR nodeCabinet.TRANS_TYPE = 'New Node')"; 
-			
-			getNewCabinetOnExistedNode = "Select nodeCabinet.FROM_TRANS_ID, nodeActive.node_pk, nodeCabinet.from_trans_source, nodeCabinet.serialnumber, nodeCabinet.model, nodeCabinet.alm_position, " 
-									     +"nodeCabinet.TRANS_TYPE, nodeActive.NODE_ID, nodeActive.NODE_NAME from NODE_CABINET nodeCabinet " 
-									     +"inner join NODE_ACTIVE nodeActive on nodeCabinet.NODE_PK = nodeActive.NODE_PK where nodeCabinet.FROM_TRANS_ID IN( "  
-									     +"select node_cabinet_trans.trans_id from NODE_CABINET node_cabinet inner join " 
-									     +"NODE_CABINET_TRANSACTIONS node_cabinet_trans on node_cabinet.FROM_TRANS_ID = node_cabinet_trans.trans_id " 
-									     +"where node_cabinet.active_record = 1 and node_cabinet.trans_type = 'NEW CABINET' and sent_to_alm = 0) and nodeCabinet.active_record = 1";
-			
-			getAntennasquery = "Select nodeAntenna.FROM_TRANS_ID, nodeActive.node_pk, nodeAntenna.from_trans_source, nodeAntenna.serialnumber, nodeAntenna.model, nodeAntenna.TRANS_TYPE, nodeActive.NODE_ID, " 
-								+"nodeActive.NODE_NAME from NODE_ANTENNA nodeAntenna "
-								+"inner join NODE_ACTIVE nodeActive on nodeAntenna.NODE_PK = nodeActive.NODE_PK where nodeAntenna.FROM_TRANS_ID IN ( " 
-								+"select node_active_trans.trans_id from NODE_ACTIVE node_active inner join " 
-								+"NODE_ACTIVE_TRANSACTIONS node_active_trans on node_active.FROM_TRANS_ID = node_active_trans.trans_id  "
-								+"where node_active.active_record = 1 and node_active.trans_type = 'New Node' and sent_to_alm = 0) and nodeAntenna.active_record = 1 "  
-								+"and (nodeAntenna.TRANS_TYPE = 'New Hardware' OR nodeAntenna.TRANS_TYPE = 'Existed Hardware' OR nodeAntenna.TRANS_TYPE = 'New Node') ";
-			
-			getNewAntennaOnExistedNodequery = "Select nodeAntenna.FROM_TRANS_ID, nodeActive.node_pk, nodeAntenna.from_trans_source, nodeAntenna.serialnumber, nodeAntenna.model, nodeAntenna.TRANS_TYPE, nodeActive.NODE_ID, " 
-											  +"nodeActive.NODE_NAME from NODE_ANTENNA nodeAntenna " 
-											  +"inner join NODE_ACTIVE nodeActive on nodeAntenna.NODE_PK = nodeActive.NODE_PK where nodeAntenna.FROM_TRANS_ID IN ( "
-											  +"select node_antenna_trans.trans_id from NODE_ANTENNA node_antenna inner join "
-											  +"NODE_ANTENNA_TRANSACTIONS node_antenna_trans on node_antenna.FROM_TRANS_ID = node_antenna_trans.trans_id  "  
-											  +"where node_antenna.active_record = 1 and node_antenna.trans_type = 'Antenna Change' and sent_to_alm = 0) and nodeAntenna.active_record = 1";
-			
-			getNewNode = " Select nodeCabinet.FROM_TRANS_ID, nodeActive.node_pk, nodeCabinet.from_trans_source,nodeCabinet.serialnumber, nodeCabinet.model, "
-					+ "nodeCabinet.alm_position, nodeCabinet.TRANS_TYPE,nodeActive.NODE_ID, nodeActive.NODE_NAME from NODE_CABINET nodeCabinet"
-					+ " inner join NODE_ACTIVE nodeActive on nodeCabinet.NODE_PK = nodeActive.NODE_PK where nodeCabinet.FROM_TRANS_ID "
-					+ "IN (select node_active_trans.trans_id from NODE_ACTIVE node_active"
-					+ " inner join NODE_ACTIVE_TRANSACTIONS node_active_trans on node_active.FROM_TRANS_ID = node_active_trans.trans_id "
-					+ "where node_active.active_record = 1 and node_active.trans_type = 'New Node' and sent_to_alm = 0) "
-					+ "and nodeCabinet.active_record = 1 and nodeCabinet.CABINETNO ='0' "
-					+ "and (nodeCabinet.TRANS_TYPE = 'New Hardware' OR nodeCabinet.TRANS_TYPE = 'Existed Hardware')";
-			
-			q = session.createSQLQuery(getBoardsquery);
-			q1 = session.createSQLQuery(getCabinetsquery);
-			q2 = session.createSQLQuery(getAntennasquery);
-			q3 = session.createSQLQuery(getNewBoardOnExistedNodequery);
-			q4 = session.createSQLQuery(getNewCabinetOnExistedNode);
-			q5 = session.createSQLQuery(getNewAntennaOnExistedNodequery);
-			q6 = session.createSQLQuery(getNewNode);
-			
-			NewNodeBoardsList = q.list();
-			NewNodeCabinetsList = q1.list();
-			NewNodeAntennasList = q2.list();
-			ExistedNodeBoardsList = q3.list();
-			ExistedNodeCabinetsList = q4.list();
-			ExistedNodeAntennasList = q5.list();
-			NewNodeList = q6.list();
-			
-			
-			String dnid; DiscoveryNew discoverynew = new DiscoveryNew();
-			synchronized (this) {						
-				dnid = "DND_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT DISCOVERY_NEW FROM SEQ_TABLE").uniqueResult().toString());	
-					query = session.createSQLQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW = DISCOVERY_NEW + 1 ");
-					query.executeUpdate();
-					session.createSQLQuery("commit").executeUpdate();
-					}
-			//dnid = "DND_" + year + "_" + appConfig.getSequenceNbr(6);
-			
-			Date date1;
-			
-			date1 = new Timestamp(System.currentTimeMillis());
-			Timestamp CreationDate = new Timestamp(date1.getTime());
+			 session = almsessions.getSession();
+			 tx = session.beginTransaction();
+			if(session != null && session.isOpen()) {
+				try {
+				String getBoardsquery,getCabinetsquery, getSubRackquery, getAntennasquery, getAntennaquery,getNodesQuery ; 
+				String getDisBoardsquery,getDisCabinetsquery, getDisSubRackquery, getDisAntennasquery, getDisAntennaquery,getDisNodesQuery ;
+				NativeQuery q;
+				List<Object[]> boardList, cabinetList,antennaList,nodeList,subrackList;
+				List<Object[]> boardDisList, cabinetDisList,antennaDisList,nodeDisList,subrackDisList;
+				List<Object[]> ExistedNodeBoardsList; List<Object[]> ExistedNodeCabinetsList; List<Object[]> ExistedNodeAntennasList;
 				
-			List<String> transBoardIDlist = new ArrayList<>();
-			List<String> nodeIDlist = new ArrayList<>();
-			List<String> transCabinetIDlist = new ArrayList<>();
-			List<String> transAntennaIDlist = new ArrayList<>();
-			
-			if(NewNodeCabinetsList.size() >0 || NewNodeBoardsList.size() >0 || ExistedNodeBoardsList.size()>0 || ExistedNodeCabinetsList.size()>0 || ExistedNodeAntennasList.size()>0 || NewNodeAntennasList.size() > 0 || NewNodeList.size() > 0)
-			{
-				discoverynew.setDnID(dnid);
-				discoverynew.setDncreationDate(CreationDate);
-				discoverynew.setdnlastmodifDate(CreationDate);
-				session.saveOrUpdate(discoverynew);
-				//appConfig.persist(discoverynew, DiscoveryNew.class);
+				//getting queries for new and transferred site for nodes,cabinets,antennas,boards and subracks
+				getNodesQuery="select t.trans_id as transID,t.element_id as elementID,t.element as elementName,a.node_model as nodeModel," + 
+						"t.discovered_trans_type as transType,t.from_site as fromSite,t.to_site as toSite,a.node_pk," + 
+						"(select ware_id from node_active a where a.site_id=t.from_site and a.node_pk=t.element_id) as fromWareID,(select ware_id from node_active a where a.site_id=t.to_site and a.node_pk=t.element_id) as toWareID," + 
+						"(select ware_name from node_active a where a.site_id=t.from_site and a.node_pk=t.element_id) as fromWareName,(select ware_name from node_active a where a.site_id=t.to_site and a.node_pk=t.element_id) as toWareName" + 
+						" from network_transaction t  inner join node_active a on t.element_id=a.node_pk" + 
+						" where t.sent_to_alm='0' and active_record='1'";
+				q = session.createNativeQuery(getNodesQuery);
+				nodeList = q.list();
 				
-				String DniID;
-				//NewItem discoverynewitem = new DsicoveryNewItem();
 				
-				String trans_id = "", node_pk = "";
-				for(int i=0; i<NewNodeCabinetsList.size(); i++)
-				{
-					DiscoveryNewItem discoverynewitem = new DiscoveryNewItem();
-					Object [] arrayList=  NewNodeCabinetsList.get(i);
-					//DniID = "DNI_" + year + "_" + appConfig.getSequenceNbr(7);
-					synchronized (this) {						
-						DniID = "DNI_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
-							query = session.createSQLQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
-							query.executeUpdate();
-							session.createSQLQuery("commit").executeUpdate();
-							}
-					trans_id = arrayList[0].toString();
-					node_pk = arrayList[1].toString();
+				getCabinetsquery="select t.trans_id as transID,t.element_id as elementID,t.element as elementName,c.model as nodeModel," + 
+						"t.discovered_trans_type as transType,t.from_site as fromSite,t.to_site as toSite,c.node_pk," + 
+						"(select ware_id from node_active a where a.site_id=t.from_site and a.node_pk=c.node_pk) as fromWareID,(select ware_id from node_active a where a.site_id=t.to_site and a.node_pk=c.node_pk) as toWareID," + 
+						"(select ware_name from node_active a where a.site_id=t.from_site and a.node_pk=c.node_pk) as fromWareName,(select ware_name from node_active a where a.site_id=t.to_site and a.node_pk=c.node_pk) as toWareName" + 
+						" from network_transaction t  inner join node_cabinet c on t.element_id=c.cabinet_id" + 
+						" where t.sent_to_alm='0' and c.active_record='1'";
+				
+				q = session.createNativeQuery(getCabinetsquery);
+				cabinetList=q.list();
 
-					
-					if(nodeIDlist.indexOf(node_pk) < 0)
-						nodeIDlist.add(node_pk);
-					
-					discoverynewitem.setDniID(DniID);
-					discoverynewitem.setTransID(arrayList[0].toString());
-					discoverynewitem.setTransSrc(arrayList[2].toString());
-					discoverynewitem.setToSerialNumber(arrayList[3].toString());
-					discoverynewitem.setItemModel(arrayList[4].toString());
-					discoverynewitem.setPosition(arrayList[5].toString());
-					
-					if (StringUtils.equalsIgnoreCase(arrayList[6].toString(), "New Hardware"))
-						//discoverynewitem.setTransType("New Node on New Hardware");
-						discoverynewitem.setTransType("New Hardware on New Node");
-					if (StringUtils.equalsIgnoreCase(arrayList[6].toString(), "Existed Hardware"))
-						//discoverynewitem.setTransType("New Node on Existed Hardware");
-						discoverynewitem.setTransType("Existed Hardware on New Node");
-					/*if (StringUtils.equalsIgnoreCase(arrayList[6].toString(), "New Node"))
-						discoverynewitem.setTransType("New Node");*/
-					
-					discoverynewitem.setToNodeId(arrayList[7].toString());
-					discoverynewitem.setToNodeName(arrayList[8].toString());
-					discoverynewitem.setDniDNID(dnid);
-					discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
-					discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
-					discoverynewitem.setNodePK(node_pk);
-					if (StringUtils.equalsIgnoreCase(arrayList[6].toString(), "New Hardware"))
-						discoverynewitem.setDniAPPROVAL("Project Manager");
-					
-					if (StringUtils.equalsIgnoreCase(arrayList[6].toString(), "Existed Hardware"))
-						discoverynewitem.setDniAPPROVAL("Operation Manager");
-					
-					if (StringUtils.equalsIgnoreCase(arrayList[6].toString(), "New Node"))
-						discoverynewitem.setDniAPPROVAL("");
-					
-					discoverynewitem.setElementName("Cabinet");
-					
-					//appConfig.persist(discoverynewitem, DsicoveryNewItem.class);
-					session.saveOrUpdate(discoverynewitem);
+				getBoardsquery="select t.trans_id as transID,t.element_id as elementID,t.element as elementName,b.model as nodeModel," + 
+						"t.discovered_trans_type as transType,t.from_site as fromSite,t.to_site as toSite,b.node_pk," + 
+						"(select ware_id from node_active a where a.site_id=t.from_site and a.node_pk=b.node_pk) as fromWareID,(select ware_id from node_active a where a.site_id=t.to_site and a.node_pk=b.node_pk) as toWareID," + 
+						"(select ware_name from node_active a where a.site_id=t.from_site and a.node_pk=b.node_pk) as fromWareName,(select ware_name from node_active a where a.site_id=t.to_site and a.node_pk=b.node_pk) as toWareName" + 
+						" from network_transaction t  inner join node_board b on t.element_id=b.board_id" + 
+						" where t.sent_to_alm='0' and b.active_record='1'";
+				q = session.createNativeQuery(getBoardsquery);
+				boardList=q.list();
+
+				getAntennaquery="select t.trans_id as transID,t.element_id as elementID,t.element as elementName,n.model as nodeModel," + 
+						"t.discovered_trans_type as transType,t.from_site as fromSite,t.to_site as toSite,n.node_pk," + 
+						"(select ware_id from node_active a where a.site_id=t.from_site and a.node_pk=n.node_pk) as fromWareID,(select ware_id from node_active a where a.site_id=t.to_site and a.node_pk=n.node_pk) as toWareID," + 
+						"(select ware_name from node_active a where a.site_id=t.from_site and a.node_pk=n.node_pk) as fromWareName,(select ware_name from node_active a where a.site_id=t.to_site and a.node_pk=n.node_pk) as toWareName" + 
+						" from network_transaction t  inner join node_antenna n on t.element_id=n.antenna_id" + 
+						" where t.sent_to_alm='0' and n.active_record='1'";
+				q = session.createNativeQuery(getAntennaquery);
+				antennaList=q.list();
+				
+				getSubRackquery="select t.trans_id as transID,t.element_id as elementID,t.element as elementName,s.model as nodeModel," + 
+						"t.discovered_trans_type as transType,t.from_site as fromSite,t.to_site as toSite,s.node_pk," + 
+						"(select ware_id from node_active a where a.site_id=t.from_site and a.node_pk=s.node_pk) as fromWareID,(select ware_id from node_active a where a.site_id=t.to_site and a.node_pk=s.node_pk) as toWareID," + 
+						"(select ware_name from node_active a where a.site_id=t.from_site and a.node_pk=s.node_pk) as fromWareName,(select ware_name from node_active a where a.site_id=t.to_site and a.node_pk=s.node_pk) as toWareName" + 
+						" from network_transaction t  inner join node_subrack s on t.element_id=s.subrack_id" + 
+						" where t.sent_to_alm='0' and s.active_record='1'";
+				q=session.createNativeQuery(getSubRackquery);
+				subrackList=q.list();
+				
+				//getting queries for disappeared nodes,cabinets,antennas,boards and subracks
+				getDisNodesQuery="select t.trans_id as transID,t.element_id as elementID,t.element as elementName,a.node_model as nodeModel," + 
+						"t.discovered_trans_type as transType,t.from_site as fromSite,t.to_site as toSite,a.node_pk," + 
+						"(select ware_id from node_active a where a.site_id=t.from_site and a.node_pk=t.element_id) as fromWareID,(select ware_id from node_active a where a.site_id=t.to_site and a.node_pk=t.element_id) as toWareID," + 
+						"(select ware_name from node_active a where a.site_id=t.from_site and a.node_pk=t.element_id) as fromWareName,(select ware_name from node_active a where a.site_id=t.to_site and a.node_pk=t.element_id) as toWareName" + 
+						" from network_transaction t  inner join node_active a on t.element_id=a.node_pk" + 
+						" where t.sent_to_alm='0' and active_record='2'";
+				q = session.createNativeQuery(getDisNodesQuery);
+				nodeDisList = q.list();
+				
+				
+				getDisCabinetsquery="select t.trans_id as transID,t.element_id as elementID,t.element as elementName,c.model as nodeModel," + 
+						"t.discovered_trans_type as transType,t.from_site as fromSite,t.to_site as toSite,c.node_pk," + 
+						"(select ware_id from node_active a where a.site_id=t.from_site and a.node_pk=c.node_pk) as fromWareID,(select ware_id from node_active a where a.site_id=t.to_site and a.node_pk=c.node_pk) as toWareID," + 
+						"(select ware_name from node_active a where a.site_id=t.from_site and a.node_pk=c.node_pk) as fromWareName,(select ware_name from node_active a where a.site_id=t.to_site and a.node_pk=c.node_pk) as toWareName" + 
+						" from network_transaction t  inner join node_cabinet c on t.element_id=c.cabinet_id" + 
+						" where t.sent_to_alm='0' and c.active_record='2'";
+				
+				q = session.createNativeQuery(getDisCabinetsquery);
+				cabinetDisList=q.list();
+
+				getDisBoardsquery="select t.trans_id as transID,t.element_id as elementID,t.element as elementName,b.model as nodeModel," + 
+						"t.discovered_trans_type as transType,t.from_site as fromSite,t.to_site as toSite,b.node_pk," + 
+						"(select ware_id from node_active a where a.site_id=t.from_site and a.node_pk=b.node_pk) as fromWareID,(select ware_id from node_active a where a.site_id=t.to_site and a.node_pk=b.node_pk) as toWareID," + 
+						"(select ware_name from node_active a where a.site_id=t.from_site and a.node_pk=b.node_pk) as fromWareName,(select ware_name from node_active a where a.site_id=t.to_site and a.node_pk=b.node_pk) as toWareName" + 
+						" from network_transaction t  inner join node_board b on t.element_id=b.board_id" + 
+						" where t.sent_to_alm='0' and b.active_record='2'";
+				q = session.createNativeQuery(getDisBoardsquery);
+				boardDisList=q.list();
+
+				getDisAntennaquery="select t.trans_id as transID,t.element_id as elementID,t.element as elementName,n.model as nodeModel," + 
+						"t.discovered_trans_type as transType,t.from_site as fromSite,t.to_site as toSite,n.node_pk," + 
+						"(select ware_id from node_active a where a.site_id=t.from_site and a.node_pk=n.node_pk) as fromWareID,(select ware_id from node_active a where a.site_id=t.to_site and a.node_pk=n.node_pk) as toWareID," + 
+						"(select ware_name from node_active a where a.site_id=t.from_site and a.node_pk=n.node_pk) as fromWareName,(select ware_name from node_active a where a.site_id=t.to_site and a.node_pk=n.node_pk) as toWareName" + 
+						" from network_transaction t  inner join node_antenna n on t.element_id=n.antenna_id" + 
+						" where t.sent_to_alm='0' and n.active_record='2'";
+				q = session.createNativeQuery(getDisAntennaquery);
+				antennaDisList=q.list();
+				
+				getDisSubRackquery="select t.trans_id as transID,t.element_id as elementID,t.element as elementName,s.model as nodeModel," + 
+						"t.discovered_trans_type as transType,t.from_site as fromSite,t.to_site as toSite,s.node_pk," + 
+						"(select ware_id from node_active a where a.site_id=t.from_site and a.node_pk=s.node_pk) as fromWareID,(select ware_id from node_active a where a.site_id=t.to_site and a.node_pk=s.node_pk) as toWareID," + 
+						"(select ware_name from node_active a where a.site_id=t.from_site and a.node_pk=s.node_pk) as fromWareName,(select ware_name from node_active a where a.site_id=t.to_site and a.node_pk=s.node_pk) as toWareName" + 
+						" from network_transaction t  inner join node_subrack s on t.element_id=s.subrack_id" + 
+						" where t.sent_to_alm='0' and s.active_record='2'";
+				q=session.createNativeQuery(getDisSubRackquery);
+				subrackDisList=q.list();
+				
+				String dnid; DiscoveryNew discoverynew = new DiscoveryNew();
+				synchronized (this) {
+					dnid = "DND_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DISCOVERY_NEW FROM SEQ_TABLE").uniqueResult().toString());	
+						query = session.createNativeQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW = DISCOVERY_NEW + 1 ");
+						query.executeUpdate();
+						session.createNativeQuery("commit").executeUpdate();
 				}
 				
-				for(int i=0; i<ExistedNodeCabinetsList.size(); i++)
-				{
-					DiscoveryNewItem discoverynewitem = new DiscoveryNewItem();
-					
-					Object [] arrayList=  ExistedNodeCabinetsList.get(i);
-					//DniID = "DNI_" + year + "_" +appConfig.getSequenceNbr(7);
-					synchronized (this) {						
-						DniID = "DNI_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
-							query = session.createSQLQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
-							query.executeUpdate();
-							session.createSQLQuery("commit").executeUpdate();
-							}
-					trans_id = arrayList[0].toString();
-					node_pk = arrayList[1].toString();
-
-					 
-					if(transCabinetIDlist.indexOf(trans_id) < 0)
-						transCabinetIDlist.add(trans_id);
+				Date date1;
 				
+				date1 = new Timestamp(System.currentTimeMillis());
+				Timestamp CreationDate = new Timestamp(date1.getTime());
 					
-					discoverynewitem.setDniID(DniID);
-					discoverynewitem.setTransID(arrayList[0].toString());
-					discoverynewitem.setTransSrc(arrayList[2].toString());
-					discoverynewitem.setToSerialNumber(arrayList[3].toString());
-					discoverynewitem.setItemModel(arrayList[4].toString());
-					discoverynewitem.setPosition(arrayList[5].toString());
-					
-					if (StringUtils.equalsIgnoreCase(arrayList[6].toString(), "NEW CABINET"))
-						discoverynewitem.setTransType("New Hardware on Existed Node");
-					
-					discoverynewitem.setToNodeId(arrayList[7].toString());
-					discoverynewitem.setToNodeName(arrayList[8].toString());
-					discoverynewitem.setDniDNID(dnid);
-					discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
-					discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
-					discoverynewitem.setDniAPPROVAL("Project Manager");
-					discoverynewitem.setElementName("Cabinet");
-					discoverynewitem.setNodePK(node_pk);
-					
-					//appConfig.persist(discoverynewitem, DsicoveryNewItem.class);
-					session.saveOrUpdate(discoverynewitem);
-				}
+				List<String> transBoardIDlist = new ArrayList<>();
+				List<String> transnodeIDlist = new ArrayList<>();
+				List<String> transCabinetIDlist = new ArrayList<>();
+				List<String> transAntennaIDlist = new ArrayList<>();
+				List<String> transSubRackIDlist = new ArrayList<>();
 				
-				for(int i=0; i<NewNodeBoardsList.size(); i++)
-				{
-					DiscoveryNewItem discoverynewitem = new DiscoveryNewItem();
-					Object [] arrayList=  NewNodeBoardsList.get(i);
-					//DniID = "DNI_" + year + "_" +appConfig.getSequenceNbr(7);
-					synchronized (this) {						
-						DniID = "DNI_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
-							query = session.createSQLQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
-							query.executeUpdate();
-							session.createSQLQuery("commit").executeUpdate();
-							}
-
-					trans_id = arrayList[0].toString();
-					node_pk = arrayList[1].toString();
-
-					if(transBoardIDlist.indexOf(trans_id) < 0)
-						transBoardIDlist.add(trans_id);
+				Object [] arrayList=null;
+				if(nodeList.size() > 0 || cabinetList.size() > 0 || boardList.size() > 0 || antennaList.size() > 0 || subrackList.size() > 0
+				   || nodeDisList.size() > 0 || cabinetDisList.size() > 0 || boardDisList.size() > 0 || antennaDisList.size() > 0 || subrackDisList.size() > 0) {
+					System.out.println("inside if condition");
+					discoverynew.setDnID(dnid);
+					discoverynew.setDncreationDate(CreationDate);
+					discoverynew.setdnlastmodifDate(CreationDate);
+					session.saveOrUpdate(discoverynew);
 					
-					if(nodeIDlist.indexOf(node_pk) < 0)
-						nodeIDlist.add(node_pk);
-					
-					discoverynewitem.setDniID(DniID);
-					discoverynewitem.setTransID(arrayList[0].toString());
-					discoverynewitem.setTransSrc(arrayList[2].toString());
-					discoverynewitem.setToSerialNumber(arrayList[3].toString());
-					discoverynewitem.setItemModel(arrayList[4].toString());
-					discoverynewitem.setPosition(arrayList[5].toString());
-					
-					if (StringUtils.equalsIgnoreCase(arrayList[6].toString(), "New Hardware"))
-						//discoverynewitem.setTransType("New Node on New Hardware");
-						discoverynewitem.setTransType("New Hardware on New Node");
-					
-					if (StringUtils.equalsIgnoreCase(arrayList[6].toString(), "Existed Hardware"))
-						//discoverynewitem.setTransType("New Node on Existed Hardware");
-							discoverynewitem.setTransType("Existed Hardware on New Node");
-					
-					if (StringUtils.equalsIgnoreCase(arrayList[6].toString(), "New Node"))
-						discoverynewitem.setTransType("New Node");
-					
-					discoverynewitem.setToNodeId(arrayList[7].toString());
-					discoverynewitem.setToNodeName(arrayList[8].toString());
-					discoverynewitem.setDniDNID(dnid);
-					discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
-					discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
-					
-					if (StringUtils.equalsIgnoreCase(arrayList[6].toString(), "New Hardware"))
-						discoverynewitem.setDniAPPROVAL("Project Manager");
-					
-					if (StringUtils.equalsIgnoreCase(arrayList[6].toString(), "Existed Hardware"))
-						discoverynewitem.setDniAPPROVAL("Operation Manager");
-					
-					if (StringUtils.equalsIgnoreCase(arrayList[6].toString(), "New Node"))
-						discoverynewitem.setDniAPPROVAL("");
-					
-					discoverynewitem.setElementName("Board");
-					discoverynewitem.setNodePK(node_pk);
-					
-					//appConfig.persist(discoverynewitem, DsicoveryNewItem.class);
-					session.saveOrUpdate(discoverynewitem);
-					
-				}
-				
-				for(int i=0; i<ExistedNodeBoardsList.size(); i++)
-				{
-					DiscoveryNewItem discoverynewitem = new DiscoveryNewItem();
-					Object [] arrayList=  ExistedNodeBoardsList.get(i);
-					//DniID = "DNI_" + year + "_" +appConfig.getSequenceNbr(7);
-					synchronized (this) {						
-						DniID = "DNI_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
-							query = session.createSQLQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
-							query.executeUpdate();
-							session.createSQLQuery("commit").executeUpdate();
-							}
-
-					trans_id = arrayList[0].toString();
-					node_pk = arrayList[1].toString();
-
-					 
-					if(transBoardIDlist.indexOf(trans_id) < 0)
-						transBoardIDlist.add(trans_id);
-				
-					
-					discoverynewitem.setDniID(DniID);
-					discoverynewitem.setTransID(arrayList[0].toString());
-					discoverynewitem.setTransSrc(arrayList[2].toString());
-					discoverynewitem.setToSerialNumber(arrayList[3].toString());
-					discoverynewitem.setItemModel(arrayList[4].toString());
-					discoverynewitem.setPosition(arrayList[5].toString());
-					
-					if (StringUtils.equalsIgnoreCase(arrayList[6].toString(), "New Board"))
-						discoverynewitem.setTransType("New Hardware on Existed Node");
-					
-					discoverynewitem.setToNodeId(arrayList[7].toString());
-					discoverynewitem.setToNodeName(arrayList[8].toString());
-					discoverynewitem.setDniDNID(dnid);
-					discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
-					discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
-					discoverynewitem.setDniAPPROVAL("Project Manager");
-					discoverynewitem.setElementName("Board");
-					discoverynewitem.setNodePK(node_pk);
-					
-					//appConfig.persist(discoverynewitem, DsicoveryNewItem.class);
-					session.saveOrUpdate(discoverynewitem);
-				}
-				
-				for(int i=0; i<NewNodeAntennasList.size(); i++)
-				{
-					DiscoveryNewItem discoverynewitem = new DiscoveryNewItem();
-					Object [] arrayList=  NewNodeAntennasList.get(i);
-					//DniID = "DNI_" + year + "_" +appConfig.getSequenceNbr(7);
-					synchronized (this) {						
-						DniID = "DNI_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
-							query = session.createSQLQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
-							query.executeUpdate();
-							session.createSQLQuery("commit").executeUpdate();
-							}
-
-					trans_id = arrayList[0].toString();
-					node_pk = arrayList[1].toString();
-
-					if(transBoardIDlist.indexOf(trans_id) < 0)
-						transBoardIDlist.add(trans_id);
-					
-					
-					discoverynewitem.setDniID(DniID);
-					discoverynewitem.setTransID(arrayList[0].toString());
-					discoverynewitem.setTransSrc(arrayList[2].toString());
-					discoverynewitem.setToSerialNumber(arrayList[3].toString());
-					discoverynewitem.setItemModel(arrayList[4].toString());
-					
-					if (StringUtils.equalsIgnoreCase(arrayList[5].toString(), "New Hardware"))
-						//discoverynewitem.setTransType("New Node on New Hardware");
-							discoverynewitem.setTransType("New Hardware on New Node");
-					if (StringUtils.equalsIgnoreCase(arrayList[5].toString(), "Existed Hardware"))
-						//discoverynewitem.setTransType("New Node on Existed Hardware");
-							discoverynewitem.setTransType("Existed Hardware on New Node");
-					if (StringUtils.equalsIgnoreCase(arrayList[5].toString(), "New Node"))
-						discoverynewitem.setTransType("New Node");
-					
-					discoverynewitem.setToNodeId(arrayList[6].toString());
-					discoverynewitem.setToNodeName(arrayList[7].toString());
-					discoverynewitem.setDniDNID(dnid);
-					discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
-					discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
-					
-					if (StringUtils.equalsIgnoreCase(arrayList[5].toString(), "New Hardware"))
-						discoverynewitem.setDniAPPROVAL("Project Manager");
-					
-					if (StringUtils.equalsIgnoreCase(arrayList[5].toString(), "Existed Hardware"))
-						discoverynewitem.setDniAPPROVAL("Operation Manager");
-					
-					if (StringUtils.equalsIgnoreCase(arrayList[5].toString(), "New Node"))
-						{discoverynewitem.setDniAPPROVAL("");
-						}
-					
-					discoverynewitem.setElementName("Antenna");
-					discoverynewitem.setNodePK(node_pk);
-					
-					//appConfig.persist(discoverynewitem, DsicoveryNewItem.class);
-					session.saveOrUpdate(discoverynewitem);
-				}
-				
-				for(int i=0; i<ExistedNodeAntennasList.size(); i++)
-				{
-					DiscoveryNewItem discoverynewitem = new DiscoveryNewItem();
-					Object [] arrayList=  ExistedNodeAntennasList.get(i);
-					//DniID = "DNI_" + year + "_" +appConfig.getSequenceNbr(7);
-					synchronized (this) {						
-						DniID = "DNI_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
-							query = session.createSQLQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
-							query.executeUpdate();
-							session.createSQLQuery("commit").executeUpdate();
-							}
-
-					trans_id = arrayList[0].toString();
-					node_pk = arrayList[1].toString();
-
-					 
-					if(transAntennaIDlist.indexOf(trans_id) < 0)
-						transAntennaIDlist.add(trans_id);
-				
-					
-					discoverynewitem.setDniID(DniID);
-					discoverynewitem.setTransID(arrayList[0].toString());
-					discoverynewitem.setTransSrc(arrayList[2].toString());
-					discoverynewitem.setToSerialNumber(arrayList[3].toString());
-					discoverynewitem.setItemModel(arrayList[4].toString());
-					
-					if (StringUtils.equalsIgnoreCase(arrayList[5].toString(), "Antenna Change"))
-						discoverynewitem.setTransType("New Hardware on Existed Node");
-					
-					discoverynewitem.setToNodeId(arrayList[6].toString());
-					discoverynewitem.setToNodeName(arrayList[7].toString());
-					discoverynewitem.setDniDNID(dnid);
-					discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
-					discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
-					discoverynewitem.setDniAPPROVAL("Project Manager");
-					discoverynewitem.setElementName("Antenna");
-					discoverynewitem.setNodePK(node_pk);
-					
-					//appConfig.persist(discoverynewitem, DsicoveryNewItem.class);
-					session.saveOrUpdate(discoverynewitem);
-				}
-				
-					for(int i=0; i<NewNodeList.size(); i++)
-				{
+					String DniID,node_pk = "",trans_id="",element_id="";
+					for(int i=0;i< nodeList.size();i++) {
+						System.out.println(mapper.writeValueAsString(nodeList));
 						DiscoveryNewItem discoverynewitem = new DiscoveryNewItem();
-					Object [] arrayList=  NewNodeList.get(i);
-					//DniID = "DNI_" + year + "_" +appConfig.getSequenceNbr(7);
-					synchronized (this) {						
-						DniID = "DNI_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
-							query = session.createSQLQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
-							query.executeUpdate();
-							session.createSQLQuery("commit").executeUpdate();
-							}
-
-					trans_id = arrayList[0].toString();
-					node_pk = arrayList[1].toString();
-
-					
-					/*if(nodeIDlist.indexOf(node_pk) < 0)
-						nodeIDlist.add(node_pk);*/
-					
-					discoverynewitem.setDniID(DniID);
-					discoverynewitem.setTransID(arrayList[0].toString());
-					discoverynewitem.setTransSrc(arrayList[2].toString());
-					discoverynewitem.setToSerialNumber(arrayList[3].toString());
-					discoverynewitem.setItemModel(arrayList[4].toString());
-					discoverynewitem.setPosition(arrayList[5].toString());
-					
-					if (StringUtils.equalsIgnoreCase(arrayList[6].toString(), "New Hardware"))
-						discoverynewitem.setTransType("New Node on New Hardware");
-						//discoverynewitem.setTransType("New Hardware on New Node");
-					if (StringUtils.equalsIgnoreCase(arrayList[6].toString(), "Existed Hardware"))
-						discoverynewitem.setTransType("New Node on Existed Hardware");
-						//discoverynewitem.setTransType("Existed Hardware on New Node");
-					/*if (StringUtils.equalsIgnoreCase(arrayList[6].toString(), "New Node"))
-						discoverynewitem.setTransType("New Node");*/
-					
-					discoverynewitem.setToNodeId(arrayList[7].toString());
-					discoverynewitem.setToNodeName(arrayList[8].toString());
-					discoverynewitem.setDniDNID(dnid);
-					discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
-					discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
-					discoverynewitem.setNodePK(node_pk);
-					if (StringUtils.equalsIgnoreCase(arrayList[6].toString(), "New Hardware"))
-						discoverynewitem.setDniAPPROVAL("Project Manager");
-					
-					if (StringUtils.equalsIgnoreCase(arrayList[6].toString(), "Existed Hardware"))
-						discoverynewitem.setDniAPPROVAL("Operation Manager");
-					
-					if (StringUtils.equalsIgnoreCase(arrayList[6].toString(), "New Node"))
+						arrayList=  nodeList.get(i);
+						trans_id = arrayList[0].toString();
+						node_pk = arrayList[7].toString();
+						System.out.println(node_pk);
+						synchronized (this) {
+							DniID = "DNI_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
+								query = session.createNativeQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
+								query.executeUpdate();
+								session.createNativeQuery("commit").executeUpdate();
+						}
+						
+						if(transnodeIDlist.indexOf(node_pk) < 0){transnodeIDlist.add(node_pk);}
+						discoverynewitem.setDniID(DniID);
+						discoverynewitem.setTransID(arrayList[0].toString());
+						discoverynewitem.setElementName(arrayList[2].toString());
+						discoverynewitem.setItemModel(arrayList[3].toString());
+						discoverynewitem.setTransType(arrayList[4].toString());
+						discoverynewitem.setDniSIte(arrayList[5].toString());
+						discoverynewitem.setToSite(arrayList[6].toString());
+						discoverynewitem.setWareID(arrayList[8].toString());
+						discoverynewitem.setToWareId(arrayList[9].toString());
+						discoverynewitem.setWareName(arrayList[10].toString());
+						discoverynewitem.setToWareName(arrayList[11].toString());
+						discoverynewitem.setDniDNID(dnid);
+						discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
+						discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
+						discoverynewitem.setNodePK(node_pk);
 						discoverynewitem.setDniAPPROVAL("");
+						
+						session.saveOrUpdate(discoverynewitem);
+					}
 					
-					discoverynewitem.setElementName("Cabinet");
+					for(int i=0;i< cabinetList.size();i++) {
+						System.out.println(mapper.writeValueAsString(nodeList));
+						DiscoveryNewItem discoverynewitem = new DiscoveryNewItem();
+						arrayList=  cabinetList.get(i);
+						trans_id = arrayList[0].toString();
+						element_id=arrayList[1].toString();
+						node_pk = arrayList[7].toString();
+						System.out.println(node_pk);
+						synchronized (this) {
+							DniID = "DNI_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
+								query = session.createNativeQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
+								query.executeUpdate();
+								session.createNativeQuery("commit").executeUpdate();
+						}
+						
+						if(transCabinetIDlist.indexOf(element_id) < 0){transCabinetIDlist.add(element_id);}
+						discoverynewitem.setDniID(DniID);
+						discoverynewitem.setTransID(arrayList[0].toString());
+						discoverynewitem.setElementName(arrayList[2].toString());
+						discoverynewitem.setItemModel(arrayList[3].toString());
+						discoverynewitem.setTransType(arrayList[4].toString());
+						discoverynewitem.setDniSIte(arrayList[5].toString());
+						discoverynewitem.setToSite(arrayList[6].toString());
+						discoverynewitem.setWareID(arrayList[8].toString());
+						discoverynewitem.setToWareId(arrayList[9].toString());
+						discoverynewitem.setWareName(arrayList[10].toString());
+						discoverynewitem.setToWareName(arrayList[11].toString());
+						discoverynewitem.setDniDNID(dnid);
+						discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
+						discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
+						discoverynewitem.setNodePK(node_pk);
+						discoverynewitem.setDniAPPROVAL("");
+						
+						session.saveOrUpdate(discoverynewitem);
+					}
 					
-					//appConfig.persist(discoverynewitem, DsicoveryNewItem.class);
-					session.saveOrUpdate(discoverynewitem);
+					for(int i=0;i< boardList.size();i++) {
+						System.out.println(mapper.writeValueAsString(nodeList));
+						DiscoveryNewItem discoverynewitem = new DiscoveryNewItem();
+						arrayList=  boardList.get(i);
+						trans_id = arrayList[0].toString();
+						element_id=arrayList[1].toString();
+						node_pk = arrayList[7].toString();
+						System.out.println(node_pk);
+						synchronized (this) {
+							DniID = "DNI_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
+								query = session.createNativeQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
+								query.executeUpdate();
+								session.createNativeQuery("commit").executeUpdate();
+						}
+						
+						if(transBoardIDlist.indexOf(element_id) < 0){transBoardIDlist.add(element_id);}
+						discoverynewitem.setDniID(DniID);
+						discoverynewitem.setTransID(arrayList[0].toString());
+						discoverynewitem.setElementName(arrayList[2].toString());
+						discoverynewitem.setItemModel(arrayList[3].toString());
+						discoverynewitem.setTransType(arrayList[4].toString());
+						discoverynewitem.setDniSIte(arrayList[5].toString());
+						discoverynewitem.setToSite(arrayList[6].toString());
+						discoverynewitem.setWareID(arrayList[8].toString());
+						discoverynewitem.setToWareId(arrayList[9].toString());
+						discoverynewitem.setWareName(arrayList[10].toString());
+						discoverynewitem.setToWareName(arrayList[11].toString());
+						discoverynewitem.setDniDNID(dnid);
+						discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
+						discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
+						discoverynewitem.setNodePK(node_pk);
+						discoverynewitem.setDniAPPROVAL("");
+						
+						session.saveOrUpdate(discoverynewitem);
+					}
+					
+					for(int i=0;i< antennaList.size();i++) {
+						System.out.println(mapper.writeValueAsString(nodeList));
+						DiscoveryNewItem discoverynewitem = new DiscoveryNewItem();
+						arrayList=  antennaList.get(i);
+						trans_id = arrayList[0].toString();
+						element_id=arrayList[1].toString();
+						node_pk = arrayList[7].toString();
+						System.out.println(node_pk);
+						synchronized (this) {
+							DniID = "DNI_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
+								query = session.createNativeQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
+								query.executeUpdate();
+								session.createNativeQuery("commit").executeUpdate();
+						}
+						
+						if(transAntennaIDlist.indexOf(element_id) < 0){transAntennaIDlist.add(element_id);}
+						discoverynewitem.setDniID(DniID);
+						discoverynewitem.setTransID(arrayList[0].toString());
+						discoverynewitem.setElementName(arrayList[2].toString());
+						discoverynewitem.setItemModel(arrayList[3].toString());
+						discoverynewitem.setTransType(arrayList[4].toString());
+						discoverynewitem.setDniSIte(arrayList[5].toString());
+						discoverynewitem.setToSite(arrayList[6].toString());
+						discoverynewitem.setWareID(arrayList[8].toString());
+						discoverynewitem.setToWareId(arrayList[9].toString());
+						discoverynewitem.setWareName(arrayList[10].toString());
+						discoverynewitem.setToWareName(arrayList[11].toString());
+						discoverynewitem.setDniDNID(dnid);
+						discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
+						discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
+						discoverynewitem.setNodePK(node_pk);
+						discoverynewitem.setDniAPPROVAL("");
+						
+						session.saveOrUpdate(discoverynewitem);
+					}
+					
+					for(int i=0;i< subrackList.size();i++) {
+						System.out.println(mapper.writeValueAsString(nodeList));
+						DiscoveryNewItem discoverynewitem = new DiscoveryNewItem();
+						arrayList=  subrackList.get(i);
+						trans_id = arrayList[0].toString();
+						element_id=arrayList[1].toString();
+						node_pk = arrayList[7].toString();
+						System.out.println(node_pk);
+						synchronized (this) {
+							DniID = "DNI_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
+								query = session.createNativeQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
+								query.executeUpdate();
+								session.createNativeQuery("commit").executeUpdate();
+						}
+						
+						if(transSubRackIDlist.indexOf(element_id) < 0){transSubRackIDlist.add(element_id);}
+						discoverynewitem.setDniID(DniID);
+						discoverynewitem.setTransID(arrayList[0].toString());
+						discoverynewitem.setElementName(arrayList[2].toString());
+						discoverynewitem.setItemModel(arrayList[3].toString());
+						discoverynewitem.setTransType(arrayList[4].toString());
+						discoverynewitem.setDniSIte(arrayList[5].toString());
+						discoverynewitem.setToSite(arrayList[6].toString());
+						discoverynewitem.setWareID(arrayList[8].toString());
+						discoverynewitem.setToWareId(arrayList[9].toString());
+						discoverynewitem.setWareName(arrayList[10].toString());
+						discoverynewitem.setToWareName(arrayList[11].toString());
+						discoverynewitem.setDniDNID(dnid);
+						discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
+						discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
+						discoverynewitem.setNodePK(node_pk);
+						discoverynewitem.setDniAPPROVAL("");
+						
+						session.saveOrUpdate(discoverynewitem);
+					}
+					
+					for(int i=0;i< nodeDisList.size();i++) {
+						System.out.println(mapper.writeValueAsString(nodeList));
+						DiscoveryNewItem discoverynewitem = new DiscoveryNewItem();
+						arrayList=  nodeDisList.get(i);
+						trans_id = arrayList[0].toString();
+						node_pk = arrayList[7].toString();
+						System.out.println(node_pk);
+						synchronized (this) {
+							DniID = "DNI_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
+								query = session.createNativeQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
+								query.executeUpdate();
+								session.createNativeQuery("commit").executeUpdate();
+						}
+						
+						if(transnodeIDlist.indexOf(node_pk) < 0){transnodeIDlist.add(node_pk);}
+						discoverynewitem.setDniID(DniID);
+						discoverynewitem.setTransID(arrayList[0].toString());
+						discoverynewitem.setElementName(arrayList[2].toString());
+						discoverynewitem.setItemModel(arrayList[3].toString());
+						discoverynewitem.setTransType(arrayList[4].toString());
+						discoverynewitem.setDniSIte(arrayList[5].toString());
+						discoverynewitem.setToSite(arrayList[6].toString());
+						discoverynewitem.setWareID(arrayList[8].toString());
+						discoverynewitem.setToWareId(arrayList[9].toString());
+						discoverynewitem.setWareName(arrayList[10].toString());
+						discoverynewitem.setToWareName(arrayList[11].toString());
+						discoverynewitem.setDniDNID(dnid);
+						discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
+						discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
+						discoverynewitem.setNodePK(node_pk);
+						discoverynewitem.setDniAPPROVAL("");
+						
+						session.saveOrUpdate(discoverynewitem);
+					}
+					
+					for(int i=0;i< cabinetDisList.size();i++) {
+						System.out.println(mapper.writeValueAsString(nodeList));
+						DiscoveryNewItem discoverynewitem = new DiscoveryNewItem();
+						arrayList=  cabinetDisList.get(i);
+						trans_id = arrayList[0].toString();
+						element_id=arrayList[1].toString();
+						node_pk = arrayList[7].toString();
+						System.out.println(node_pk);
+						synchronized (this) {
+							DniID = "DNI_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
+								query = session.createNativeQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
+								query.executeUpdate();
+								session.createNativeQuery("commit").executeUpdate();
+						}
+						
+						if(transCabinetIDlist.indexOf(element_id) < 0){transCabinetIDlist.add(element_id);}
+						discoverynewitem.setDniID(DniID);
+						discoverynewitem.setTransID(arrayList[0].toString());
+						discoverynewitem.setElementName(arrayList[2].toString());
+						discoverynewitem.setItemModel(arrayList[3].toString());
+						discoverynewitem.setTransType(arrayList[4].toString());
+						discoverynewitem.setDniSIte(arrayList[5].toString());
+						discoverynewitem.setToSite(arrayList[6].toString());
+						discoverynewitem.setWareID(arrayList[8].toString());
+						discoverynewitem.setToWareId(arrayList[9].toString());
+						discoverynewitem.setWareName(arrayList[10].toString());
+						discoverynewitem.setToWareName(arrayList[11].toString());
+						discoverynewitem.setDniDNID(dnid);
+						discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
+						discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
+						discoverynewitem.setNodePK(node_pk);
+						discoverynewitem.setDniAPPROVAL("");
+						
+						session.saveOrUpdate(discoverynewitem);
+					}
+					
+					for(int i=0;i< boardDisList.size();i++) {
+						System.out.println(mapper.writeValueAsString(nodeList));
+						DiscoveryNewItem discoverynewitem = new DiscoveryNewItem();
+						arrayList=  boardDisList.get(i);
+						trans_id = arrayList[0].toString();
+						element_id=arrayList[1].toString();
+						node_pk = arrayList[7].toString();
+						System.out.println(node_pk);
+						synchronized (this) {
+							DniID = "DNI_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
+								query = session.createNativeQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
+								query.executeUpdate();
+								session.createNativeQuery("commit").executeUpdate();
+						}
+						
+						if(transBoardIDlist.indexOf(element_id) < 0){transBoardIDlist.add(element_id);}
+						discoverynewitem.setDniID(DniID);
+						discoverynewitem.setTransID(arrayList[0].toString());
+						discoverynewitem.setElementName(arrayList[2].toString());
+						discoverynewitem.setItemModel(arrayList[3].toString());
+						discoverynewitem.setTransType(arrayList[4].toString());
+						discoverynewitem.setDniSIte(arrayList[5].toString());
+						discoverynewitem.setToSite(arrayList[6].toString());
+						discoverynewitem.setWareID(arrayList[8].toString());
+						discoverynewitem.setToWareId(arrayList[9].toString());
+						discoverynewitem.setWareName(arrayList[10].toString());
+						discoverynewitem.setToWareName(arrayList[11].toString());
+						discoverynewitem.setDniDNID(dnid);
+						discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
+						discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
+						discoverynewitem.setNodePK(node_pk);
+						discoverynewitem.setDniAPPROVAL("");
+						
+						session.saveOrUpdate(discoverynewitem);
+					}
+					
+					for(int i=0;i< antennaDisList.size();i++) {
+						System.out.println(mapper.writeValueAsString(nodeList));
+						DiscoveryNewItem discoverynewitem = new DiscoveryNewItem();
+						arrayList=  antennaDisList.get(i);
+						trans_id = arrayList[0].toString();
+						element_id=arrayList[1].toString();
+						node_pk = arrayList[7].toString();
+						System.out.println(node_pk);
+						synchronized (this) {
+							DniID = "DNI_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
+								query = session.createNativeQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
+								query.executeUpdate();
+								session.createNativeQuery("commit").executeUpdate();
+						}
+						
+						if(transAntennaIDlist.indexOf(element_id) < 0){transAntennaIDlist.add(element_id);}
+						discoverynewitem.setDniID(DniID);
+						discoverynewitem.setTransID(arrayList[0].toString());
+						discoverynewitem.setElementName(arrayList[2].toString());
+						discoverynewitem.setItemModel(arrayList[3].toString());
+						discoverynewitem.setTransType(arrayList[4].toString());
+						discoverynewitem.setDniSIte(arrayList[5].toString());
+						discoverynewitem.setToSite(arrayList[6].toString());
+						discoverynewitem.setWareID(arrayList[8].toString());
+						discoverynewitem.setToWareId(arrayList[9].toString());
+						discoverynewitem.setWareName(arrayList[10].toString());
+						discoverynewitem.setToWareName(arrayList[11].toString());
+						discoverynewitem.setDniDNID(dnid);
+						discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
+						discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
+						discoverynewitem.setNodePK(node_pk);
+						discoverynewitem.setDniAPPROVAL("");
+						
+						session.saveOrUpdate(discoverynewitem);
+					}
+					
+					for(int i=0;i< subrackDisList.size();i++) {
+						System.out.println(mapper.writeValueAsString(nodeList));
+						DiscoveryNewItem discoverynewitem = new DiscoveryNewItem();
+						arrayList=  subrackDisList.get(i);
+						trans_id = arrayList[0].toString();
+						element_id=arrayList[1].toString();
+						node_pk = arrayList[7].toString();
+						System.out.println(node_pk);
+						synchronized (this) {
+							DniID = "DNI_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
+								query = session.createNativeQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
+								query.executeUpdate();
+								session.createNativeQuery("commit").executeUpdate();
+						}
+						
+						if(transSubRackIDlist.indexOf(element_id) < 0){transSubRackIDlist.add(element_id);}
+						discoverynewitem.setDniID(DniID);
+						discoverynewitem.setTransID(arrayList[0].toString());
+						discoverynewitem.setElementName(arrayList[2].toString());
+						discoverynewitem.setItemModel(arrayList[3].toString());
+						discoverynewitem.setTransType(arrayList[4].toString());
+						discoverynewitem.setDniSIte(arrayList[5].toString());
+						discoverynewitem.setToSite(arrayList[6].toString());
+						discoverynewitem.setWareID(arrayList[8].toString());
+						discoverynewitem.setToWareId(arrayList[9].toString());
+						discoverynewitem.setWareName(arrayList[10].toString());
+						discoverynewitem.setToWareName(arrayList[11].toString());
+						discoverynewitem.setDniDNID(dnid);
+						discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
+						discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
+						discoverynewitem.setNodePK(node_pk);
+						discoverynewitem.setDniAPPROVAL("");
+						
+						session.saveOrUpdate(discoverynewitem);
+					}
+					for(int i=0;i<transnodeIDlist.size();i++) {
+						String nodeID = transnodeIDlist.get(i);
+						query = session.createNativeQuery("update network_transaction set sent_to_alm = '1' where element_id ='"+transnodeIDlist.get(i)+"'");
+						query.executeUpdate();
+					}
+					
+					for(int i=0;i<transCabinetIDlist.size();i++) {
+						query = session.createNativeQuery("update network_transaction set sent_to_alm = '1' where element_id ='"+transCabinetIDlist.get(i)+"'");
+						query.executeUpdate();
+					}
+					
+					for(int i=0;i<transBoardIDlist.size();i++) {
+						query = session.createNativeQuery("update network_transaction set sent_to_alm = '1' where element_id ='"+transBoardIDlist.get(i)+"'");
+						query.executeUpdate();
+					}
+					
+					for(int i=0;i<transAntennaIDlist.size();i++) {
+						query = session.createNativeQuery("update network_transaction set sent_to_alm = '1' where element_id ='"+transAntennaIDlist.get(i)+"'");
+						query.executeUpdate();
+					}
+					
+					for(int i=0;i<transSubRackIDlist.size();i++) {
+						query = session.createNativeQuery("update network_transaction set sent_to_alm = '1' where element_id ='"+transSubRackIDlist.get(i)+"'");
+						query.executeUpdate();
+					}
+				}
+				}catch(Exception e) {
+					System.out.println(e.getMessage());
+					e.printStackTrace();
 				}
 				
-	
-				for(int i=0; i<nodeIDlist.size(); i++)
-				{
-					String nodeID = nodeIDlist.get(i);
-					Query updateNodetrans = session.createSQLQuery("update node_active_transactions set sent_to_alm = '1' where node_pk = :param1");
-					updateNodetrans.setParameter("param1", nodeID);
-					updateNodetrans.executeUpdate();
+				finally {
+					tx.commit();
+					session.close();
+					session.getSessionFactory().close();
 				}
-				
-				for(int i=0; i<transCabinetIDlist.size(); i++)
-				{
-					String CabinettransID = transCabinetIDlist.get(i);
-					Query updateCabinettrans = session.createSQLQuery("update node_cabinet_transactions set sent_to_alm = '1' where trans_id = :param1");
-					updateCabinettrans.setParameter("param1", CabinettransID);
-					updateCabinettrans.executeUpdate();
-				}
-				
-				for(int i=0; i<transBoardIDlist.size(); i++)
-				{
-					String boardtransID = transBoardIDlist.get(i);
-					Query updateBoardtrans = session.createSQLQuery("update node_board_transactions set sent_to_alm = '1' where trans_id = :param1");
-					updateBoardtrans.setParameter("param1", boardtransID);
-					updateBoardtrans.executeUpdate();
-				}
-				
-				for(int i=0; i<transAntennaIDlist.size(); i++)
-				{
-					String AntennatransID = transAntennaIDlist.get(i);
-					Query updateAntennatrans = session.createSQLQuery("update node_antenna_transactions set sent_to_alm = '1' where trans_id = :param1");
-					updateAntennatrans.setParameter("param1", AntennatransID);
-					updateAntennatrans.executeUpdate();
-				}
-				
-				
-				
 			}
-			
-			tx.commit();
-			session.close();			
-			
-			
-			
 		map.put("DeleteTest", "DeleteDone");
-		
-		}catch(Exception e) {
-			System.out.println(e.getMessage());
-		}
-		
 		return map;
 	}
 	

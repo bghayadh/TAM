@@ -145,7 +145,7 @@
 
 <%-- 	<%@ include file="../header.html" %> --%>
   <c:set var="pg" value="report" scope="session"  />
-  <jsp:include page="${request.contextPath}/headerController"></jsp:include>
+ <jsp:include page="../header.jsp"></jsp:include>
 
   
 	 <div Style=" left: 0; bottom: 0;" id="plPerSiteDiv">

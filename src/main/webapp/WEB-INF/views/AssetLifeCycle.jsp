@@ -306,7 +306,7 @@ max-height: 100%;
 
 <%-- 	<%@ include file="header.html" %> --%>
   <c:set var="pg" value="inventory" scope="session"  />
-  <jsp:include page="${request.contextPath}/headerController"></jsp:include>
+ <jsp:include page="header.jsp"></jsp:include>
     
    
   

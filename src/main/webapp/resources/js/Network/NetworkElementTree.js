@@ -367,6 +367,88 @@ if(arrayParam[3]==1){
 	Boq.tab('show');	 
 	   	 	      
 }
+/////////////////////////////////////////////////////////////////////////////////
+function SiteVen_Boq(SiteId,VenId){
+	var Boq = $('#Boq');
+	var Layers= $('#Layers');
+	var Options= $('#Options');
+	
+if(arrayParam[0]==1){
+	var paramEnterprise = true;
+}else{
+	var paramEnterprise = false;
+}
+
+if(arrayParam[1]==1){
+	var paramTransmission = true;
+}else{
+	var paramTransmission = false;
+}
+	
+if(arrayParam[2]==1){
+	var paramAccess = true;
+}else{
+	var paramAccess = false;
+}
+
+if(arrayParam[3]==1){
+	var paramCore = true;
+}else{
+	var paramCore = false;
+}
+	if(!siteList.includes(SiteId))
+	{
+		 $.ajax({
+			type: "GET",
+			contentType: "application/json; charset=utf-8",
+			url: getContext()+'/GetSiteVenBoqList',
+			data: {
+			    "SiteId" : SiteId,
+			    "VenId" : VenId,
+			    "paramEnterprise" : paramEnterprise,
+			    "paramTransmission" : paramTransmission,
+			    "paramAccess" : paramAccess,
+			    "paramCore" : paramCore,
+			    "arrayParam" : arrayParam
+			    },
+			success : function(data)
+			    {
+				 $('#boq_table').empty();				 
+				 siteList.push(SiteId);	          	 
+				 $.each(data , function( key, value ) {	
+					boqList.push({ SiteId,key,value });    
+					var tr = "<tr>"+
+					"<td class='title'> "+key+"</td>"+
+					"<td> "+value+" </td>"+
+					"</tr>";
+					$("#boq_table").append(tr);     		    			   			
+				});  	
+			},	
+			error: function(result) {
+				alert("Error");
+									}			
+		});
+	}else{
+		$('#boq_table').empty();
+		for(var i=0; i< boqList.length; i++) {
+		    if(SiteId==boqList[i].SiteId){	        		 
+			var tr = "<tr>"+
+			"<td class='title'> "+boqList[i].key+"</td>"+
+			"<td> "+boqList[i].value+" </td>"+
+			"</tr>";
+			$("#boq_table").append(tr);     		    			   			
+						 }		
+								}
+		}
+	 $("#boqBtn").removeClass().addClass("tablinks active");
+	 $("#Defaultbutton").removeClass().addClass("tablinks");
+	 $("#optionBtn").removeClass().addClass("tablinks");
+	 Boq.css({ display:'block'});
+	 Layers.css({ display:'none'});
+	 Options.css({ display:'none'});
+	Boq.tab('show');	 
+	   	 	      
+}
 //////////////////////////////////////////////////////////////////////////////////
 function Supp_Boq(SuppId){
 	var Boq = $('#Boq');
@@ -427,11 +509,81 @@ if(arrayParam[3]==1){
 				alert("Error");
 									}			
 		});
-		 /*
+	
+	 $("#boqBtn").removeClass().addClass("tablinks active");
+	 $("#Defaultbutton").removeClass().addClass("tablinks");
+	 $("#optionBtn").removeClass().addClass("tablinks");
+	 Boq.css({ display:'block'});
+	 Layers.css({ display:'none'});
+	 Options.css({ display:'none'});
+	Boq.tab('show');	 	   	 	      
+}
+
+
+function SiteSupp_Boq(SiteId,SuppId){
+	var Boq = $('#Boq');
+	var Layers= $('#Layers');
+	var Options= $('#Options');
+	
+if(arrayParam[0]==1){
+	var paramEnterprise = true;
+}else{
+	var paramEnterprise = false;
+}
+
+if(arrayParam[1]==1){
+	var paramTransmission = true;
+}else{
+	var paramTransmission = false;
+}
+	
+if(arrayParam[2]==1){
+	var paramAccess = true;
+}else{
+	var paramAccess = false;
+}
+
+if(arrayParam[3]==1){
+	var paramCore = true;
+}else{
+	var paramCore = false;
+}
+	if(!siteList.includes(SiteId))
+	{
+		 $.ajax({
+			type: "GET",
+			contentType: "application/json; charset=utf-8",
+			url: getContext()+'/GetSiteSupBoqList',
+			data: {
+			    "SiteId" : SiteId,
+			    "SuppId" : SuppId,
+			    "paramEnterprise" : paramEnterprise,
+			    "paramTransmission" : paramTransmission,
+			    "paramAccess" : paramAccess,
+			    "paramCore" : paramCore,
+			    "arrayParam" : arrayParam
+			    },
+			success : function(data)
+			    {
+				 $('#boq_table').empty();				 
+				 siteList.push(SiteId);	          	 
+				 $.each(data , function( key, value ) {	
+					boqList.push({ SiteId,key,value });    
+					var tr = "<tr>"+
+					"<td class='title'> "+key+"</td>"+
+					"<td> "+value+" </td>"+
+					"</tr>";
+					$("#boq_table").append(tr);     		    			   			
+				});  	
+			},	
+			error: function(result) {
+				alert("Error");
+									}			
+		});
 	}else{
 		$('#boq_table').empty();
 		for(var i=0; i< boqList.length; i++) {
-		    if(SuppId==boqList[i].SuppId){	        		 
+		    if(SiteId==boqList[i].SiteId){	        		 
 			var tr = "<tr>"+
 			"<td class='title'> "+boqList[i].key+"</td>"+
 			"<td> "+boqList[i].value+" </td>"+
@@ -440,7 +592,76 @@ if(arrayParam[3]==1){
 						 }		
 								}
 		}
-		*/
+	 $("#boqBtn").removeClass().addClass("tablinks active");
+	 $("#Defaultbutton").removeClass().addClass("tablinks");
+	 $("#optionBtn").removeClass().addClass("tablinks");
+	 Boq.css({ display:'block'});
+	 Layers.css({ display:'none'});
+	 Options.css({ display:'none'});
+	Boq.tab('show');	 
+	   	 	      
+}
+//////////////////////////////////////////////////////////////////////////////////
+function Ven_Boq(VenId){
+	var Boq = $('#Boq');
+	var Layers= $('#Layers');
+	var Options= $('#Options');
+	
+if(arrayParam[0]==1){
+	var paramEnterprise = true;
+}else{
+	var paramEnterprise = false;
+}
+
+if(arrayParam[1]==1){
+	var paramTransmission = true;
+}else{
+	var paramTransmission = false;
+}
+	
+if(arrayParam[2]==1){
+	var paramAccess = true;
+}else{
+	var paramAccess = false;
+}
+
+if(arrayParam[3]==1){
+	var paramCore = true;
+}else{
+	var paramCore = false;
+}
+	//if(!siteList.includes(SiteId))
+	//{
+		 $.ajax({
+			type: "GET",
+			contentType: "application/json; charset=utf-8",
+			url: getContext()+'/GetVenBoqList',
+			data: {
+			    "VenId" : VenId,
+			    "paramEnterprise" : paramEnterprise,
+			    "paramTransmission" : paramTransmission,
+			    "paramAccess" : paramAccess,
+			    "paramCore" : paramCore,
+			    "arrayParam" : arrayParam
+			    },
+			success : function(data)
+			    {
+				 $('#boq_table').empty();				 
+				 siteList.push(VenId);	          	 
+				 $.each(data , function( key, value ) {	
+					boqList.push({ VenId,key,value });    
+					var tr = "<tr>"+
+					"<td class='title'> "+key+"</td>"+
+					"<td> "+value+" </td>"+
+					"</tr>";
+					$("#boq_table").append(tr);     		    			   			
+				});  	
+			},	
+			error: function(result) {
+				alert("Error");
+									}			
+		});
+
 	 $("#boqBtn").removeClass().addClass("tablinks active");
 	 $("#Defaultbutton").removeClass().addClass("tablinks");
 	 $("#optionBtn").removeClass().addClass("tablinks");
@@ -798,6 +1019,148 @@ function  NodeT_Boq(SiteId,NodeTId){
 }
 
 
+/*     Node type supp BOQ Fcts */
+function  NodeTSup_Boq(SiteId,NodeTId,SuppId){
+
+	var Boq = $('#Boq');
+	var Layers= $('#Layers');
+	var Options= $('#Options');
+
+	if(arrayParam[0]==1){
+		var paramEnterprise = true;
+	}else{
+		var paramEnterprise = false;
+	}
+
+	if(arrayParam[1]==1){
+		var paramTransmission = true;
+	}else{
+		var paramTransmission = false;
+	}
+		
+	if(arrayParam[2]==1){
+		var paramAccess = true;
+	}else{
+		var paramAccess = false;
+	}
+
+	if(arrayParam[3]==1){
+		var paramCore = true;
+	}else{
+		var paramCore = false;
+	}
+	//if(!siteNTList.includes(NodeTId))
+	//{
+		 $.ajax({
+			type: "GET",
+			contentType: "application/json; charset=utf-8",
+			url: getContext()+'/GetNtypeSupBoqList',
+			data: {
+			    "SiteId":SiteId,
+			    "NodeTId":NodeTId,
+			    "SuppId":SuppId,
+			    "paramEnterprise": paramEnterprise,
+			    "paramTransmission":paramTransmission,
+			    "paramAccess":paramAccess,
+			    "paramCore":paramCore,
+			    },
+			success : function(data)
+			  {
+				$('#boq_table').empty();
+				siteNTList.push(NodeTId); 
+				$.each(data , function( key, value ) {	
+					boqNTList.push({ NodeTId,key,value });
+					var tr = "<tr>"+
+					"<td class='title'> "+key+"</td>"+
+					"<td>"+value+"</td>"+
+					"</tr>";
+					$("#boq_table").append(tr);
+				});
+			},
+			error: function(result) {
+				alert("Error");
+									}
+				});
+		
+	 $("#boqBtn").removeClass().addClass("tablinks active");
+	 $("#Defaultbutton").removeClass().addClass("tablinks");
+	 $("#optionBtn").removeClass().addClass("tablinks");
+	 Boq.css({ display:'block'});
+	 Layers.css({ display:'none'});
+	 Options.css({ display:'none'});
+	 Boq.tab('show');	      	 	      
+}
+
+/*     Node type vendor BOQ Fcts */
+function NodeTVen_Boq(SiteId,NodeTId,VendorId){
+	var Boq = $('#Boq');
+	var Layers= $('#Layers');
+	var Options= $('#Options');
+
+	if(arrayParam[0]==1){
+		var paramEnterprise = true;
+	}else{
+		var paramEnterprise = false;
+	}
+
+	if(arrayParam[1]==1){
+		var paramTransmission = true;
+	}else{
+		var paramTransmission = false;
+	}
+		
+	if(arrayParam[2]==1){
+		var paramAccess = true;
+	}else{
+		var paramAccess = false;
+	}
+
+	if(arrayParam[3]==1){
+		var paramCore = true;
+	}else{
+		var paramCore = false;
+	}
+	//if(!siteNTList.includes(NodeTId))
+	//{
+		 $.ajax({
+			type: "GET",
+			contentType: "application/json; charset=utf-8",
+			url: getContext()+'/GetNtypeVenBoqList',
+			data: {
+			    "SiteId":SiteId,
+			    "NodeTId":NodeTId,
+			    "VendorId":VendorId,
+			    "paramEnterprise": paramEnterprise,
+			    "paramTransmission":paramTransmission,
+			    "paramAccess":paramAccess,
+			    "paramCore":paramCore,
+			    },
+			success : function(data)
+			  {
+				$('#boq_table').empty();
+				siteNTList.push(NodeTId); 
+				$.each(data , function( key, value ) {	
+					boqNTList.push({ NodeTId,key,value });
+					var tr = "<tr>"+
+					"<td class='title'> "+key+"</td>"+
+					"<td>"+value+"</td>"+
+					"</tr>";
+					$("#boq_table").append(tr);
+				});
+			},
+			error: function(result) {
+				alert("Error");
+									}
+				});
+			
+	 $("#boqBtn").removeClass().addClass("tablinks active");
+	 $("#Defaultbutton").removeClass().addClass("tablinks");
+	 $("#optionBtn").removeClass().addClass("tablinks");
+	 Boq.css({ display:'block'});
+	 Layers.css({ display:'none'});
+	 Options.css({ display:'none'});
+	 Boq.tab('show');	      	 	      
+}
 ///////////////////////////////////////////////
 /*     PO BOQ Fcts */ 
 //////////////////////////////////////////////

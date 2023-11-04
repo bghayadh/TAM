@@ -157,7 +157,7 @@
 
 <%-- 	<%@ include file="header.html" %> --%>
   <c:set var="pg" value="setup" scope="session"  />
-  <jsp:include page="${request.contextPath}/headerController"></jsp:include>
+ <jsp:include page="header.jsp"></jsp:include>
      <!--  end of general head page -->
    <p></p>
      

@@ -5,7 +5,7 @@ $('#filterr').hide();
 $('#removeFilter').hide();
 
 var lst = ${listSites};
-var listSupp=${listSupp};
+var listVen=${listVen};
 var arrayParam=${arrayParam};
 
 var button ;
@@ -14,12 +14,14 @@ if(!(lst==null || lst=="")){
 var wareCount=lst.length;
 }
 
+
 function initMap() {
 
 	$('#nodeBtn').toggleClass('activee');
     $('#siteBtn').addClass('activee');
     $('#cellBtn').toggleClass('activee');
-    $('#supplierBtn').toggleClass('activee');
+    $('#vendorBtn').toggleClass('activee');
+    $('#nodeTypeeBtn').toggleClass('activee');
     
     $("#default").prop('checked', true);
     $("#landscape").prop('checked', true);
@@ -242,65 +244,65 @@ map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
 			map.setOptions({ minZoom: 3, maxZoom: 28});	
 	//CreateMap_StNdCell(lst,map);
 	CreateMap(lst,map);	
-	CreateTree_SuppStNdCell(listSupp,map);
+	CreateTree_VnStNdTypNdCell(listVen,map);
 	
 	}
 	else{
 		var Nairobi=new google.maps.LatLng(0.796530,37.959529);			
 		map.setCenter(Nairobi);
 		map.setZoom(6);
-		var str="<ul><li id='initial_ul' class='Initial'><input type='checkbox' id='Suppliers' class='AllSuppliers' style='margin-left: 15px' unchecked onclick='AllSitesCheckFilter()'></input> <span class='folder'><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Suppliers</span></li></ul>";
+		var str="<ul><li id='initial_ul' class='Initial'><input type='checkbox' id='Vendors' class='AllVendors' style='margin-left: 15px' unchecked onclick='AllSitesCheckFilter()'></input> <span class='folder'><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Vendors</span></li></ul>";
 		$("#network_tree").append(str);
 		tree_prop_selection();
 		folder();
 	}
 } /// End of init Map
 
-/* Start of Supp Site Node Cell Tree Method */ 
+/* Start of Supp Site NodeType Node Cell Tree Method */ 
 //////////////////////////////////////////////
 //var SupSCreated=[];
-function CreateTree_SuppStNdCell(listSupp,map){
-	//console.log("SuppStNdCell");
+function CreateTree_VnStNdTypNdCell(listVen,map){
 	//Site_Boq("");
-	var str="<ul><li id='initial_ul' class='Initial'><input type='checkbox' id='Suppliers' class='AllSuppliers' style='margin-left: 15px' unchecked onclick='AllSitesCheckFilter()'></input> <span class='folder'><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Suppliers</span></li></ul>";
+	var str="<ul><li id='initial_ul' class='Initial'><input type='checkbox' id='Vendors' class='AllVendors' style='margin-left: 15px' unchecked onclick='AllSitesCheckFilter()'></input> <span class='folder'><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Vendors</span></li></ul>";
 	$("#network_tree").append(str);
 	var dFrag = document.createDocumentFragment();
-	for (n=0; n < listSupp.length; n++) {
-		var str = "<li class='Supplier' id='"+listSupp[n][0]+"' style='display:none; width:100px;'> <span class='folder' onclick='SuppStNdCellCore("+listSupp[n][0]+")'><i class='fa fa-folder' style='color: #08526D'></i></span> <span class='TreeSpan' style='width:395px'><i class='fa fa-copyright fa-2x'></i>  "+listSupp[n][1]+"</span>";		
-		str+= "<ul><li id='" +listSupp[n][0]+"_f' class='SiteFolder parent_li' style='display:none; margin-left:-40px'><input type='checkbox' id='"+listSupp[n][0]+"_Site' class='AllSites' style='margin-left: 15px' onclick='showMarkersAllSitesOneNt("+listSupp[n][0]+"_Site)'></input><span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Sites </span></li></ul></li></ul>";
+	for (n=0; n < listVen.length; n++) {
+		var str = "<li class='Vendor' id='"+listVen[n]+"' style='display:none; width:100px;'> <span class='folder' onclick='VenStNdTypNdCellCore("+listVen[n]+")'><i class='fa fa-folder' style='color: #08526D'></i></span> <span class='TreeSpan' style='width:395px'><i class='fa fa-copyright fa-2x'></i>  "+listVen[n]+"</span>";				
+		str+= "<ul><li id='" +listVen[n]+"_f' class='SiteFolder parent_li' style='display:none; margin-left:-40px'><input type='checkbox' id='"+listVen[n]+"_Site' class='AllSites' style='margin-left: 15px' onclick='showMarkersAllSitesOneNt("+listVen[n]+"_Site)'></input><span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Sites </span></li></ul></li></ul>";
 		const div = document.createElement('ul');
 		div.innerHTML = str;
-		dFrag.appendChild(div);		
+		dFrag.appendChild(div);		  		
 	}	
-	document.getElementById('initial_ul').appendChild(dFrag);	
+	document.getElementById('initial_ul').appendChild(dFrag);
 	tree_prop_selection();
 	folder();
+	
 	$(".Initial > .TreeSpan").contextmenu(function(){				
-		selectedfolderSuppIdContext=$(this).parent().attr('id');
-		menuName=folderSupp;			
-		openContext(selectedfolderSuppIdContext,"",folderSupp,event);
+		selectedfolderVenIdContext=$(this).parent().attr('id');
+		menuName=folderVen;			
+		openContext(selectedfolderVenIdContext,"",folderVen,event);
 	});
-	$(".Supplier > .TreeSpan").contextmenu(function(){				
-		selectedSuppIdContext=$(this).parent().attr('id');
-		//console.log("selectedSuppIdContext: ",selectedSuppIdContext);
-		menuName=folderSupp;			
-		openContext(selectedSuppIdContext,"",singleSupp,event);
+	$(".Vendor > .TreeSpan").contextmenu(function(){				
+		selectedVenIdContext=$(this).parent().attr('id');
+		//console.log("selectedVenIdContext: ",selectedVenIdContext);
+		menuName=folderVen;			
+		openContext(selectedVenIdContext,"",singleVen,event);
 	});
 }
-folderSupp = new ContextMenu({
+folderVen = new ContextMenu({
 	  'theme': 'default',
 	  'items': [
 		  {'icon': 'braille', 'name': 'Show BoQ', action: () => {				
-				Supp_Boq("");
+				Ven_Boq("");
 			}	
 		}
 	]
 });
-singleSupp = new ContextMenu({
+singleVen = new ContextMenu({
 	  'theme': 'default',
 	  'items': [
 		  {'icon': 'braille', 'name': 'Show BoQ', action: () => {				
-				Supp_Boq(selectedSuppIdContext);
+				Ven_Boq(selectedVenIdContext);
 			}	
 		}
 	]
@@ -310,10 +312,9 @@ function AllSitesCheckFilter(){
 	markerClusterSites.clearMarkers();
 	CreateMap(lst,map);
 
-	$('.AllSuppliers').bind("change",function() {	
-		//console.log("markersSites.length: "+markersSites.length);
+	$('.AllVendors').bind("change",function() {	
 			if ($(this).is(':checked')){
-				 $('#network_tree input[type="checkbox"][class="SingleSiteSupp"]').prop('checked', false);
+				 $('#network_tree input[type="checkbox"][class="SingleSiteVen"]').prop('checked', false);
 				 $('#network_tree input[type="checkbox"][class="AllSites"]').prop('checked', false);
 				for(var x=0; x< markersSites.length; x++){	
 						markersSites[markersSites[x].ID].setMap(map);			
@@ -331,27 +332,25 @@ function AllSitesCheckFilter(){
 
 
 function showMarkersAllSitesOneNt(id) {
-  var id = id.id;  
- // var suppId = id.split("_")[0];
-  var suppId = id.split("_Site")[0];
- 
+  var id = id.id;
+  var venId = id.split("_Site")[0];
+  
   markerClusterSites.clearMarkers();
   var isChecked = $("#" + id).is(":checked");
   //var ulElement = document.getElementById(suppId);
-  var liElements = document.getElementById(suppId).querySelectorAll('.SingleSiteSupp > input'); // Retrieve only <li> elements with <input> children
+  var liElements = document.getElementById(venId).querySelectorAll('.SingleSiteVen > input'); // Retrieve only <li> elements with <input> children
   var markersToAdd = []; // Array to store markers that need to be added
 
   for (var i = 0; i < liElements.length; i++) {
     liElements[i].checked = isChecked;
-    if (isChecked && !markersSites[liElements[i].id.split("_" + suppId)[0]].getMap()) {
-      markersToAdd.push(markersSites[liElements[i].id.split("_" + suppId)[0]]);
+    if (isChecked && !markersSites[liElements[i].id.split("_" + venId)[0]].getMap()) {
+      markersToAdd.push(markersSites[liElements[i].id.split("_" + venId)[0]]);
     }
   }
   if (isChecked) {
-	$('#network_tree input[type="checkbox"][class="AllSuppliers"]').prop('checked', false);
+	$('#network_tree input[type="checkbox"][class="AllVendors"]').prop('checked', false);
     markerClusterSites.addMarkers(markersToAdd); // Add all markers at once
     markerClusterSites.repaint();
-    console.log("markers checked");
   } else {
     markerClusterSites.clearMarkers();
     $('#network_tree input[type="checkbox"]').prop('checked', false);
@@ -359,23 +358,302 @@ function showMarkersAllSitesOneNt(id) {
 }
 
 
-function SuppStNdCellCore(id){ 
-	//console.log("SuppStNdCellCore");
-	//var selectedItem=id.id;
-	//tree_prop_general();
-	//tree_Prop("#"+selectedItem+ "> span");
+function VenStNdTypNdCellCore(id){ 
+	//console.log("id: ",id);
+	var selectedVen = id.id;
+	///tree_Prop("#"+selectedItem+ "> span");
 	//tree_Prop("#"+selectedItem+ "_f > span");
-	
-	//$("#"+selectedItem+ "> span").on('click',function () {
-	//	var selectedSupp=$(this).parent().attr('id');
-	var selectedSupp=id.id;
-		//Create_TreeParent(selectedSupp,"Supp");		
-		//if(!SupSCreated.includes(selectedSupp))
-		//{
-			//.push(selectedSupp);
-		var SuppChildrenLength=$("#" +selectedSupp+"_f").find(' > ul > li').length;	
-		if(SuppChildrenLength==0){
+		//$("#"+selectedItem+ "> span").on('click',function () {
+		//var selectedSupp=$(this).parent().attr('id');
+		//Create_TreeParent(selectedSupp,"Supp");
+	//	if(!SupSCreated.includes(selectedSupp))
+	//	{
+	//		SupSCreated.push(selectedSupp);
+	var VenChildrenLength=$("#" +selectedVen+"_f").find(' > ul > li').length;	
+	if(VenChildrenLength==0){
+		
+		if(arrayParam[0]==1){
+			var paramEnterprise = true;
+		}else{
+			var paramEnterprise = false;
+		}
+
+		if(arrayParam[1]==1){
+			var paramTransmission = true;
+		}else{
+			var paramTransmission = false;
+		}
 			
+		if(arrayParam[2]==1){
+			var paramAccess = true;
+		}else{
+			var paramAccess = false;
+		}
+
+		if(arrayParam[3]==1){
+			var paramCore = true;
+		}else{
+			var paramCore = false;
+		}
+		$.ajax({
+				type: "GET",
+				contentType: "application/json; charset=utf-8",
+				//url: getContext()+'/FindOnClick_SuppSiteNodeCell',
+				url: getContext()+'/FindOnClick_VenSiteNodeCell',
+				data: {
+					"selectedVen":selectedVen,
+					"paramEnterprise": paramEnterprise,
+					"paramTransmission":paramTransmission,
+			   		"paramAccess":paramAccess,
+				    "paramCore":paramCore,
+				},
+				dataType: "json",
+				success: function (data) {							        	
+					if (data != null) {
+						var listVenSites=data.listVenSites;
+						//console.log("listVenSites   ",listVenSites);
+						if(VenChildrenLength<listVenSites.length){
+							var dFrag = document.createDocumentFragment();
+							for (n = 0; n < listVenSites.length; n++) {		
+								var str = "<li class='SingleSiteVen' id='"+listVenSites[n][1]+"_"+listVenSites[n][4]+"' style='display:none; margin-left:-20px'><input type='checkbox' id='" + listVenSites[n][1]+"_"+listVenSites[n][4] +"_SingleSite' class='SingleSiteVen' style='margin-left: 15px' onclick='showMarkerSingleSite("+ listVenSites[n][1]+"_"+listVenSites[n][4] + "_SingleSite)'></input><span class='folder' onclick='StNdTpNdCellCore("+listVenSites[n][1]+"_"+listVenSites[n][4]+")'><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px' onclick='PanTreeSites("+listVenSites[n][1]+"_"+listVenSites[n][4]+")'><i class='fas fa-crosshairs fa-2x'></i>"+listVenSites[n][0]+"</span>";
+								str+= "<ul><li id='" +listVenSites[n][1]+"_"+listVenSites[n][4]+"_f' class='NodeTypeFolder' style='display:none; margin-left:10px'><span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> NodeType </span></span></li></ul></li></ul>";						   						    	
+								const div = document.createElement('ul');
+								div.innerHTML = str;
+								dFrag.appendChild(div);   
+							}  
+						}
+						document.getElementById(selectedVen+"_f").appendChild(dFrag);	
+						tree_prop_selection("#" +selectedVen+"_f .SingleSiteVen .TreeSpan");
+			            Tree_PropagationAppendedNodes(selectedVen+"_f .SingleSiteVen");
+			            
+			            $(".SingleSiteVen > .TreeSpan").contextmenu(function(){				
+			        		selectedSingleSiteIdContext=$(this).parent().attr('id');
+			        		var splitArray= selectedSingleSiteIdContext.split("_");
+			         		idSite=splitArray[0] + "_" + splitArray[1] + "_" + splitArray[2];
+			        		idVen = splitArray[3];
+			        		menuName=SingleSite;			
+			        		openContext(selectedSingleSiteIdContext,"",SingleSite,event);
+			        	});
+			            SingleSite = new ContextMenu({
+			        	  'theme': 'default',
+			        	  'items': [
+			        		  {'icon': 'braille', 'name': 'Show BoQ', action: () => {				
+			        				SiteVen_Boq(idSite,idVen);
+			        			}	
+			        		}
+			        	]
+			        });
+				}
+					 data=null;
+				},
+				error: function(result) {
+					alert("Error");
+				}
+			});	
+	}
+	//	}
+	//}); 
+}
+
+
+
+function showMarkerSingleSite(id) {
+	var id=id.id;
+	var selectedSiteId = id.split('_').slice(0, 3).join('_');
+	var vendorId= id.split('_').slice(3).join('_').split("_SingleSite")[0];
+	
+	    if ($("#" + id).is(":checked")) {
+	     	//console.log("checked");
+	     	var checkboxes = $('[id$="'+vendorId+'_SingleSite"]');
+	      	var allChecked = true;
+	      	for (var i = 0; i < checkboxes.length; i++) {
+	        if (!checkboxes[i].checked) {
+	         	allChecked = false;
+	          	break;
+	        }
+	      }
+	      if (allChecked) {
+	    	document.getElementById(vendorId+'_Site').checked = true;
+			 }
+	      markersSites[selectedSiteId].setMap(map);
+	      markerClusterSites.addMarker(markersSites[selectedSiteId]);
+	      markerClusterSites.repaint();
+	    }else{
+		      document.getElementById(vendorId+'_Site').checked = false;		
+		      markersSites[selectedSiteId].setMap(null);
+		      markerClusterSites.removeMarker(markersSites[selectedSiteId]);
+		      markerClusterSites.repaint();
+	    }
+	}
+
+
+function PanTreeSites(id){
+	var selectedItem = id.id.split('_').slice(0, 3).join('_');
+		//Site_Boq(selectedItem);
+		if(selectedItem!=markersSite)
+			{
+			var selMarker="";		
+			markerId=selectedItem;				
+			selMarker=markersSites[markerId];
+			var latSitee = selMarker.getPosition().lat();
+			var lngSitee = selMarker.getPosition().lng();
+			position=selMarker.getPosition();							
+			panTo(latSitee, lngSitee);
+			//infowindow.setContent(selMarker.data);
+			//infowindow.open(map,selMarker);					
+			if(markersSite!="")
+				{	
+				var otherMarkers=markersSites[markersSite];			
+				}		
+			markersSite="";	
+			markersSite=selectedItem;		
+			map.setZoom(15);
+		}	
+}
+
+function StNdTpNdCellCore(id)
+{
+	//var sitesNtCreated=[];
+	//var NdNCreated=[];
+	var selectedItem = id.id.split('_').slice(0, 3).join('_');
+	var selectedVen = id.id.split('_').slice(3).join('_');
+	
+	/*
+	tree_prop_general();
+	tree_Prop("#"+selectedId+ "> span");
+	tree_Prop("#"+selectedId+ "_f > span");                     
+	$("#"+selectedId+ "> span").on('click',function () {	
+	var res=$(this ).parents().map(function() {
+		return this.id;
+	})
+	.get()
+	.join( "," );	
+	parents=res.split(",,");
+	var selectedSupp=parents[2];
+	parents2=parents[0].split("_"+selectedSupp);
+	var selectedItem=parents2[0];
+	Site_Boq(selectedItem);
+	*/
+	var SiteChildrenLength=$("#" +selectedItem	+"_" + selectedVen + "_f").find(' > ul > li').length;	
+	if(SiteChildrenLength==0)
+	{
+		//if(!sitesNtCreated.includes(selectedItem))
+		//{
+			//sitesNtCreated.push(selectedItem);
+		if(arrayParam[0]==1){
+			var paramEnterprise = true;
+		}else{
+			var paramEnterprise = false;
+		}
+
+		if(arrayParam[1]==1){
+			var paramTransmission = true;
+		}else{
+			var paramTransmission = false;
+		}
+			
+		if(arrayParam[2]==1){
+			var paramAccess = true;
+		}else{
+			var paramAccess = false;
+		}
+
+		if(arrayParam[3]==1){
+			var paramCore = true;
+		}else{
+			var paramCore = false;
+		}
+	
+			$.ajax({
+				type: "GET",
+				contentType: "application/json; charset=utf-8",
+				//url: getContext()+'/FindOnClick_SuppStNdTypNdCell',
+				url: getContext()+'/FindOnClick_VenStNdTypNdCell',
+				data: {
+					"selectedItem":selectedItem,
+					"selectedVen":selectedVen	,
+					"paramEnterprise": paramEnterprise,
+					"paramTransmission":paramTransmission,
+			   		"paramAccess":paramAccess,
+				    "paramCore":paramCore,
+				},
+				dataType: "json",
+				success: function (data) {					        	
+				if (data != null) {					            		
+					var listNodesType=data.listNodesType;
+					//console.log("listNodesType : ", listNodesType);
+					for(j=0;j<listNodesType.length;j++)	
+						{												
+						var str= "<ul><li class='NodeType' id='" + listNodesType[j][0] +"_"+listNodesType[j][1]+"' style='display:none;margin-left:-20px;' class='folder'>";								  															
+						str+="<span class='folder' onclick='VenNdCellCore(" + listNodesType[j][0] +"_"+listNodesType[j][1]+")'> <i class='fa fa-folder' style='color: #08526D'></i></span>";
+						str+= "<span class='TreeSpan' style='width:395px'><span class='tree-span' style='margin-left:-15px;'><i class='fa fa-cogs'></i>"+listNodesType[j][0]+"</span></span></li></ul>";						
+						$("#"+selectedItem+"_"+selectedVen+"_f").append(str);
+						str="<ul><li id='" +listNodesType[j][0] +"_"+listNodesType[j][1]+"_f' class='NodeFolder' style='display:none; margin-left:-20px'><span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Node </span></span></li></ul>";				
+						$("#" + listNodesType[j][0] +"_"+listNodesType[j][1]).append(str);								
+						//tree_prop_general();	
+						//tree_Prop("#" + listNodesType[j][0] +"_"+listNodesType[j][1]+"> span");
+						//tree_Prop("#" + listNodesType[j][0] +"_"+listNodesType[j][1]+"_f > span");
+						tree_prop_selection("#" +selectedItem+ "_" +selectedVen +"_f .NodeType .TreeSpan");
+				        Tree_PropagationAppendedNodes(selectedItem+ "_" +selectedVen +"_f .NodeType");
+				        
+				        var selectedSingleNt;
+				        var selectedSite;
+			            $(".NodeType > .TreeSpan").contextmenu(function(){				
+			        		selectedSingleNtIdContext=$(this).parent().attr('id');
+			        		var index = selectedSingleNtIdContext.indexOf("WARE_2");
+			    			if (index !== -1) {
+			    				selectedSingleNt = selectedSingleNtIdContext.substring(0, index).slice(0, -1);
+			    			  	selectedSite = selectedSingleNtIdContext.substring(index);
+			    			}
+			    			menuName=SingleNt;	
+			        		openContext(selectedSingleNtIdContext,"",SingleNt,event);
+			        	});
+			            SingleNt = new ContextMenu({
+			        	  'theme': 'default',
+			        	  'items': [
+			        		  {'icon': 'braille', 'name': 'Show BoQ', action: () => {
+			        			  //console.log("selectedItem......",selectedItem);
+			        			  NodeTVen_Boq(selectedSite,selectedSingleNt,selectedVen);
+			        			  selectedItem="";
+			        			}	
+			        		}
+			        	]
+			        });
+					}
+				}
+				data= null;
+			},
+			error: function(result) {
+				alert("Error");
+									}
+			});
+		//}    	
+	}
+//	});
+}
+
+function VenNdCellCore(id){
+	//var id= id.id;
+	//$("#" + listNodesType[j][0] +"_"+listNodesType[j][1]+" > span").on('click',function () {																														
+	//	var res=$(this).parents().map(function() {
+	//		return this.id;
+	//	})
+	//	.get()
+	//	.join( "_" );
+	//	parents=res.split("_");
+	//	var selectedNodetType=parents[0];
+	
+	var selectedNodetType = id.id.split("_")[0];
+	var selectedItem = id.id.substring(selectedNodetType.length + 1);
+	// var parentLi = $(id).closest("li");
+	var selectedVen = $(id).closest("li").closest(".Vendor").attr("id");
+	   
+	 //NodeT_Boq(selectedItem,selectedNodetType);
+		var NdTypeChildrenLength=$("#" + selectedNodetType+"_"+selectedItem+"_f").find(' > ul > li').length;
+		if(NdTypeChildrenLength==0){
+		//if(!NdNCreated.includes(selectedNodetType))
+		//{
+			//NdNCreated.push(selectedNodetType);		
 			if(arrayParam[0]==1){
 				var paramEnterprise = true;
 			}else{
@@ -403,192 +681,39 @@ function SuppStNdCellCore(id){
 			$.ajax({
 				type: "GET",
 				contentType: "application/json; charset=utf-8",
-				url: getContext()+'/FindOnClick_SuppSiteNodeCell',
+				//url:getContext()+'/FindOnClick_SuppStNdTypNdCell',
+				url:getContext()+'/FindOnClick_VenStNdTypNdCell',
 				data: {
-					"selectedSupp":selectedSupp,	
+					"selectedItem":selectedItem,
+					"selectedNodetType":selectedNodetType,
+					"selectedVen":selectedVen	,
 					"paramEnterprise": paramEnterprise,
 					"paramTransmission":paramTransmission,
 			   		"paramAccess":paramAccess,
 				    "paramCore":paramCore,
 				},
 				dataType: "json",
-				success: function (data) {							        	
+				success: function (data) {														        	
 					if (data != null) {
-						//var SuppChildrenLength=$("#" +selectedSupp+"_f").find(' > ul > li').length;	
-						var listSuppSites=data.listSuppSites;
-						//console.log("listSuppSites......",listSuppSites);
-						if(SuppChildrenLength<listSuppSites.length){
-							var dFrag = document.createDocumentFragment();
-							for (n = 0; n < listSuppSites.length; n++) {								 
-								var str = "<li class='SingleSiteSupp' id='"+listSuppSites[n][1]+"_"+listSuppSites[n][4]+"' style='display:none; margin-left:-30px'><input type='checkbox' id='" + listSuppSites[n][1]+"_"+listSuppSites[n][4] +"_SingleSite' class='SingleSiteSupp' style='margin-left: 15px' onclick='showMarkerSingleSite("+ listSuppSites[n][1]+"_"+listSuppSites[n][4] + "_SingleSite)'></input><span class='folder' onclick='Create_TreeSites("+listSuppSites[n][1]+"_"+listSuppSites[n][4]+")'><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px' onclick='PanTreeSites("+listSuppSites[n][1]+"_"+listSuppSites[n][4]+")'><i class='fas fa-crosshairs fa-2x'></i>"+listSuppSites[n][0]+"</span>";
-								str+= "<ul><li id='" +listSuppSites[n][1]+"_"+listSuppSites[n][4]+"_f' class='NodeFolder' style='display:none; margin-left:15px'><span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Nodes </span></span></li></ul></li>";											   						    	
-								const div = document.createElement('ul');
-								div.innerHTML = str;
-								dFrag.appendChild(div);   
-							}  
-						}
-						document.getElementById(selectedSupp+"_f").appendChild(dFrag);
-						tree_prop_selection("#" +selectedSupp+"_f .SingleSiteSupp .TreeSpan");
-			            Tree_PropagationAppendedNodes(selectedSupp+"_f .SingleSiteSupp");
-			            
-			            $(".SingleSiteSupp > .TreeSpan").contextmenu(function(){				
-			        		selectedSingleSiteIdContext=$(this).parent().attr('id');
-			        		//console.log("selectedSingleSiteIdContext: ",selectedSingleSiteIdContext);
-			        		var splitArray= selectedSingleSiteIdContext.split("_");
-			        		idSite=splitArray[0] + "_" + splitArray[1] + "_" + splitArray[2];
-			        		menuName=SingleSite;			
-			        		openContext(selectedSingleSiteIdContext,"",SingleSite,event);
-			        	});
-			            SingleSite = new ContextMenu({
-			        	  'theme': 'default',
-			        	  'items': [
-			        		  {'icon': 'braille', 'name': 'Show BoQ', action: () => {				
-			        			  SiteSupp_Boq(idSite,selectedSupp);
-			        			}	
-			        		}
-			        	]
-			        });
-					}
-					 data=null;
+						var listNodes=data.listNodes;
+						var listCells=data.listCells;
+						//Create_TreeNode_Cell(listNodes,"FindOnClick_SuppStNdTypNdCell",NdTypeChildrenLength,true,true,4,"Sup",6,"Sup",selectedItem);
+						Create_TreeNode_CellGeneral(listNodes,listCells,NdTypeChildrenLength, true,selectedItem);
+			            Tree_PropagationAppendedNodes(selectedNodetType+ "_" +selectedItem+"_f  .Node");
+			            tree_prop_selection("#" + selectedNodetType+ "_" +selectedItem+"_f .Node .TreeSpan");
+				}
+					data= null;
 				},
 				error: function(result) {
 					alert("Error");
 				}
-			});	
+			});
 		}
 		//}
-	//}); 
-}
-
-
-function showMarkerSingleSite(id) {
-	 var id=id.id;
-	 //console.log("ID-->" + id);
-	 var selectedSiteId = id.split('_').slice(0, 3).join('_');
-	 var supplierId= id.split('_').slice(3).join('_').split("_SingleSite")[0];
-	 
-	    if ($("#" + id).is(":checked")) {
-	     	console.log("checked");
-	     	var checkboxes = $('[id$="'+supplierId+'_SingleSite"]');
-	  		var allChecked = true;
-	      	for (var i = 0; i < checkboxes.length; i++) {
-	        if (!checkboxes[i].checked) {
-	         	allChecked = false;
-	          	break;
-	        }
-	      }
-	     if (allChecked) {
-	    	document.getElementById(supplierId+'_Site').checked = true;
-		 }
-	      markersSites[selectedSiteId].setMap(map);
-	      markerClusterSites.addMarker(markersSites[selectedSiteId]);
-	      markerClusterSites.repaint();
-	    }else{
-		      document.getElementById(supplierId+'_Site').checked = false;		
-		      markersSites[selectedSiteId].setMap(null);
-		      markerClusterSites.removeMarker(markersSites[selectedSiteId]);
-		      markerClusterSites.repaint();
-	    }
-	}
-
-
-function PanTreeSites(id){
-	var selectedItem = id.id.split('_').slice(0, 3).join('_');
-	//Site_Boq(selectedItem);
-		if(selectedItem!=markersSite)
-			{
-			var selMarker="";		
-			markerId=selectedItem;				
-			selMarker=markersSites[markerId];
-			var latSitee = selMarker.getPosition().lat();
-			var lngSitee = selMarker.getPosition().lng();
-			position=selMarker.getPosition();							
-			panTo(latSitee, lngSitee);
-			//infowindow.setContent(selMarker.data);
-			//infowindow.open(map,selMarker);					
-			if(markersSite!="")
-				{	
-				var otherMarkers=markersSites[markersSite];			
-				}		
-			markersSite="";	
-			markersSite=selectedItem;		
-			map.setZoom(15);
-			//console.log("PANNED");
-		}	
-}
-
-
-function Create_TreeSites(id){
-	var id=id.id	
-	var selectedItem = id.split('_').slice(0, 3).join('_');
-	var supplier = id.split('_').slice(3).join('_');
-	//Site_Boq(selectedItem);
-	//if(!sitesNCreated.includes(selectedItem))
-	//	{
-	//	sitesNCreated.push(selectedItem);	
-	var siteChildren=$("#"+selectedItem+"_f") .find(' > ul > li').length;
-	if (siteChildren == 0) {
-		if(arrayParam[0]==1){
-			var paramEnterprise = true;
-		}else{
-			var paramEnterprise = false;
-		}
-
-		if(arrayParam[1]==1){
-			var paramTransmission = true;
-		}else{
-			var paramTransmission = false;
-		}
-			
-		if(arrayParam[2]==1){
-			var paramAccess = true;
-		}else{
-			var paramAccess = false;
-		}
-
-		if(arrayParam[3]==1){
-			var paramCore = true;
-		}else{
-			var paramCore = false;
-		}
-		
-	$.ajax({		
-		type: "GET",
-		contentType: "application/json; charset=utf-8",
-		url: getContext()+'/FindOnClick_SuppSiteNodeCell',
-		data: {
-			"selectedItem":selectedItem,
-			"selectedSupp":supplier,
-			"paramEnterprise": paramEnterprise,
-			"paramTransmission":paramTransmission,
-	   		"paramAccess":paramAccess,
-		    "paramCore":paramCore,
-		},
-		dataType: "json",
-		success: function (data) {	
-			if (data != null) {
-				var listSuppNodes=data.listSuppNodes;
-				var listCells=data.listCells;
-				if(siteChildren<listSuppNodes.length){
-					//Create_TreeNode(listSuppNodes,1,3);	
-					//Create_TreeNode_Cell(listSuppNodes,"FindOnClick_SuppSiteNodeCell",siteChildren,true,true,2,"Sup",4,"Sup",selectedItem);		
-					Create_TreeNode_CellGeneral(listSuppNodes,listCells,siteChildren, true,selectedItem);
-		            Tree_PropagationAppendedNodes(selectedItem + "_" +supplier+"_f  .Node");
-		            tree_prop_selection("#" +selectedItem + "_" +supplier+"_f .Node .TreeSpan");
-					}
-			}
-			 data=null;
-		},
-		error: function(result) {
-			alert("Error");
-			}
-	});		         
-	}
 	//});
-}	   		   
-
+}
 ///////////////////////////////////////////////
-/* End of Supp Site Node Cell Tree Method */ 
+/* End of Supp Site NodeType Node Cell Tree Method */ 
 
 </script>
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJXAds-Gt4I39hRFHhYHMEg3XcBqihYoo&libraries=places&callback=initMap&amp;v=3.43&amp"></script>

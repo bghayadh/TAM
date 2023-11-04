@@ -154,7 +154,7 @@ th, td{text-align:center;
 <%-- 	<%@ include file="header.html" %> --%>
 
   <c:set var="pg" value="home" scope="session"  />
-  <jsp:include page="${request.contextPath}/headerController"></jsp:include>
+ <jsp:include page="header.jsp"></jsp:include>
     
   <svg xmlns="http://www.w3.org/2000/svg" 
             width="100%" 

@@ -218,7 +218,7 @@ select {
 
 	<%-- 	<%@ include file="header.html" %> --%>
 	<c:set var="pg" value="troubleTickets" scope="session" />
-	<jsp:include page="${request.contextPath}/headerController"></jsp:include>
+	<jsp:include page="header.jsp"></jsp:include>
 
 
 	<p></p>
