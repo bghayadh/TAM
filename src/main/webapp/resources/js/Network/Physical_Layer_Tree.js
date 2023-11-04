@@ -482,7 +482,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 		junctionCheckFilter("Handhole");
 		
 	/////////////*********************	FiberCables Creation In tree	***********************///////////////
-	if(filterFlag==2 ){// connected and circle range
+	if(filterFlag==2 || filterFlag==1){// connected and circle range
 		
 		if(fiberList!=null){
 			for(i=0;i<fiberList.length;i++){
