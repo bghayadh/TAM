@@ -482,6 +482,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 		
 	/////////////*********************	FiberCables Creation In tree	***********************///////////////
 	if(filterFlag==2 && flag == 0){// connected and circle range
+		flag = 1;
 		if(fiberList!=null){
 			for(i=0;i<fiberList.length;i++){
 				allFiberCables.push(fiberList[i][4]);
@@ -16943,7 +16944,7 @@ function treeCollapseFolder(selector,type,clss){
 	}				
 	$(selector).bind('click',function (e) {
 		var id = $(this).parent().attr('id');
-		if(id == "FiberPath_f_CurrentPhysicalLayer" && flag == 0 && (filterFlag==1 || filterFlag== 0)){
+		if(id == "FiberPath_f_CurrentPhysicalLayer" && flag == 0 ){
 			console.log("passed treeCollapseFolder");
 			getFiberPath();
 		}

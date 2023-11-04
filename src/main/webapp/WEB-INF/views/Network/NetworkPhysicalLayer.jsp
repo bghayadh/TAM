@@ -33,6 +33,7 @@
 <script src="${pageContext.request.contextPath}/resources/js/Network/Physical_Layer_Map.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/Physical_Layer_Common.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/FiberSearch.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/FiberPathCreation.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/context-menu.js"></script>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/context-menu.css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/xlsx.full.min.js"></script>
@@ -6375,7 +6376,7 @@ directionsDisplay.setMap(map);
 		$(document).ready(function () { 
 			$(function(){			 
 			 $(document).trigger("triggerListenersEvent");
-				
+
 			});
 
 		  });

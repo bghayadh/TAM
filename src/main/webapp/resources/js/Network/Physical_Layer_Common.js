@@ -5565,8 +5565,8 @@ function allElementsCheckFilter(){
 				
 				$(this).children('input:checkbox').prop('checked', true);
 				//console.log(" //////////AllFiberCables in allElements before");
-				if($(this).children('input:checkbox').hasClass('AllFiberCables') && flag == 0 && (filterFlag==1 || filterFlag== 0)){
-					console.log(" //////////AllFiberCables in allElements after");	
+				if($(this).children('input:checkbox').hasClass('AllFiberCables') && flag == 0 ){
+					//console.log(" //////////AllFiberCables in allElements after");	
 					getFiberPath();
 				}else{
 					if($(this).hasClass('FIBER')){
