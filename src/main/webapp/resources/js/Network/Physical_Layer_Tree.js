@@ -261,8 +261,9 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 		
 		var str_CurrentPhysicalLayer="<ul style='margin-left:15px;'><li id='initial_ul_CurrentPhysicalLayer' class='Initial_CurrentPhysicalLayer'><input type='checkbox' class='allElements' unchecked name='filter'></input> <span id='initial_Span_CurrentPhysicalLayer' class='Parentfolder' > <i class='fa fa-folder' style='color: #08526D;'></i></span><span class='TreeSpan' style='color:black;width:436px'>Current Physical Layer </span></li></ul>";
 		//console.log("filterFlag !!!!!!!!!!! "+filterFlag);
-		if((filterFlag==1 && $('#currentChecked').is(':checked')) || filterFlag==2){ // filterFlag = 1 ---> Filter, filterFlag = 2 -----> Other than Filter (Nearest or Connected)
+		if(filterFlag==1 || filterFlag==2){ // filterFlag = 1 ---> Filter, filterFlag = 2 -----> Other than Filter (Nearest or Connected)
 			//console.log("CurrentPhysicalLayer heree!!!!!!!!!!!");
+			console.log("Entered Filter");
 			flag = 1;
 			$('#removeS').show();
 		
@@ -483,6 +484,8 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 		
 	/////////////*********************	FiberCables Creation In tree	***********************///////////////
 	if(filterFlag==2 || filterFlag==1){// connected and circle range
+		
+		console.log("loading flag value, flag =" +flag);
 		
 		if(fiberList!=null){
 			for(i=0;i<fiberList.length;i++){

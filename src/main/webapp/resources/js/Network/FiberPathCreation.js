@@ -20,7 +20,7 @@ function getFiberPath(type,url,id,tr){
 						showPath(url,id,tr);
 					}else{
 					    if ($('.AllFiberCables').is(':checked') || $('.allElements').is(':checked')){// in order to check all the folders and cables under main fiber folder
-							fiberCheckFilter($("#"+"FiberPath_f_CurrentPhysicalLayer").children('input'));
+							mainPathCheckFilter($("#"+"FiberPath_f_CurrentPhysicalLayer").children('input'));
 						}
 						if ($('#fiberCheckAllBoq').is(':checked')){// in order to check all the folder of the boq and cables under main fiber folder
 							fiberLayerCheckAll();
@@ -461,29 +461,5 @@ function CreateFiberPath(fiberList,fiberTubes,fiberStrands,fiberAuxiliary_Data,t
 			});							
 	   }
    }
-
-	/*if (getFiberPathType == "showPath"){
-		
-	}else{
-		//if ($("#FiberPath_f_CurrentPhysicalLayer").is(':checked')){	
-	    if ($('.AllFiberCables').is(':checked') || $('.allElements').is(':checked')){// in order to check all the folders and cables under main fiber folder
-			//console.log(" //////////AllFiberCables clicked");	
-			fiberCheckFilter($("#"+"FiberPath_f_CurrentPhysicalLayer").children('input'));
-		}
-		if ($('#fiberCheckAllBoq').is(':checked')){// in order to check all the folder of the boq and cables under main fiber folder
-			fiberLayerCheckAll();
-		}
-		if ($('#tubeCheckAllBoq').is(':checked')){// in order to check all the folder of the boq and cables under main fiber folder
-			tubeLayerCheckAll();
-		}
-		if ($('#strandCheckAllBoq').is(':checked')){// in order to check all the folder of the boq and cables under main fiber folder
-			strandLayerCheckAll();
-		}
-	
-	}
-	treeCollapseFolder("#FiberPath_f_CurrentPhysicalLayer .folder","fast",".folder");
-	tree_prop_selection("#FiberPath_f_CurrentPhysicalLayer .TreeSpan");
-	MouseHoveringSpans("#FiberPath_f_CurrentPhysicalLayer .TreeSpan");		//>>>>>>>>>>>> Hover event in tree elements
-	*/
 	fiberList = [],fiberTubes = [] ,fiberStrands = [],fiberAuxiliary_Data = [] ,tubesAuxiliaries = [] ,strandsAuxiliaries = [];
 }
