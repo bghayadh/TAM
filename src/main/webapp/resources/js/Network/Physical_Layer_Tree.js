@@ -260,9 +260,10 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 	allNodes = [];		 
 		
 		var str_CurrentPhysicalLayer="<ul style='margin-left:15px;'><li id='initial_ul_CurrentPhysicalLayer' class='Initial_CurrentPhysicalLayer'><input type='checkbox' class='allElements' unchecked name='filter'></input> <span id='initial_Span_CurrentPhysicalLayer' class='Parentfolder' > <i class='fa fa-folder' style='color: #08526D;'></i></span><span class='TreeSpan' style='color:black;width:436px'>Current Physical Layer </span></li></ul>";
-		console.log("filterFlag !!!!!!!!!!! "+filterFlag);
+		//console.log("filterFlag !!!!!!!!!!! "+filterFlag);
 		if((filterFlag==1 && $('#currentChecked').is(':checked')) || filterFlag==2){ // filterFlag = 1 ---> Filter, filterFlag = 2 -----> Other than Filter (Nearest or Connected)
-			console.log("CurrentPhysicalLayer heree!!!!!!!!!!!");
+			//console.log("CurrentPhysicalLayer heree!!!!!!!!!!!");
+			flag = 1;
 			$('#removeS').show();
 		
 			var str_CurrentPhysicalLayer="<ul style='margin-left:15px'><li id='initial_ul_CurrentPhysicalLayer' class='Initial_CurrentPhysicalLayer'><input type='checkbox' class='allElements' unchecked name='filter'></input> <span id='initial_Span_CurrentPhysicalLayer' class='Parentfolder' > <i class='fa fa-folder' style='color: #08526D;'></i></span><span class='TreeSpan' style='color:black;width:436px'>Current Physical Layer </span></li></ul>";
@@ -481,8 +482,8 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 		junctionCheckFilter("Handhole");
 		
 	/////////////*********************	FiberCables Creation In tree	***********************///////////////
-	if(filterFlag==2 && flag == 0){// connected and circle range
-		flag = 1;
+	if(filterFlag==2 ){// connected and circle range
+		
 		if(fiberList!=null){
 			for(i=0;i<fiberList.length;i++){
 				allFiberCables.push(fiberList[i][4]);
