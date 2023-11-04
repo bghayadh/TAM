@@ -481,7 +481,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 		junctionCheckFilter("Handhole");
 		
 	/////////////*********************	FiberCables Creation In tree	***********************///////////////
-	
+	if(filterFlag==2 && flag == 0){// connected and circle range
 		if(fiberList!=null){
 			for(i=0;i<fiberList.length;i++){
 				allFiberCables.push(fiberList[i][4]);
@@ -596,6 +596,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 			pathCheckFilter("initial_ul","parentFolderCheck","FiberPath_access__CurrentPhysicalLayer","","","","","","","","","");
 			pathCheckFilter("initial_ul","parentFolderCheck","FiberPath_f_CurrentPhysicalLayer","","","","","","","","","");
 		}
+		
 
 		
 		// fiber auxiliary points
@@ -882,7 +883,14 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 	   }
 
 	
+}	else{
+	console.log(" //////////passed else");	
+	$("#FiberPath_f_CurrentPhysicalLayer").bind("change",function() {
+		getFiberPath();
+	});
 	
+	//$("#FiberPath_f_CurrentPhysicalLayer").unbind();
+}
 	
 	/////////////*********************	Distribution Boards creation in tree	***********************///////////////
 	
@@ -4788,252 +4796,18 @@ singleProject = new ContextMenu({
 						}	
 						   },
 			{'icon': 'paste', 'name': 'Show Path', action: () => {
-				      $.ajax({
-								type: "GET",
-								contentType: "application/json; charset=utf-8",
-								async:false,
-								url: getContext()+'/manHandHolePath',
-								data: {	
-								"dataSel":selectedManIdContext,
-								"ProjectId": IdNodeSelectedTemp
-								
-							},
-								success : function(data)
-									{
-								 showPath();
-								 var tr = "<tr><td><b>Manhole ID:</b>"+selectedManIdContext+"</td></tr>"
-								 $("#path_table").append(tr);
-								 
-								 var str="<ul style='list-style-type:none;padding:0px;cursor: pointer;'><li id='FiberPath_f_showPath' class='FiberPath_f_Cable'><input type='checkbox' checked class='AllFiberCables__showPath checkFilter' class='filter'></input> <span id='FiberPath_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='FiberPath_span' class='TreeSpan' style='color:black;margin-left:5px;'>Fiber Path </span></li></ul>";
-						         $("#path_table").append(str); 
-						         pathCheckFilter("initial_ul","parentFolderCheck__showPath","FiberPath_f_showPath","","","","","","","","","");
-						         
-						         
-						     /* **** Backbone ***** */
-						     if(data.BackboneCableData.length > 0 || data.BackboneTubeData.length > 0 || data.BackboneStrandData.length > 0 ){
-							      var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_backbone__showPath' style='display:none;margin-left:-20px;' class='backboneFolder'> <input type='checkbox' class='BackboneFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Backbone </span></li></ul></li></ul>";
-								  $("#FiberPath_f_showPath").append(str);
-								  pathCheckFilter("initial_ul","parentFolderCheck__showPath","FiberPath_backbone__showPath","","","","","","","","","");
-						     }
-									
-						         if(data.BackboneCableData.length > 0 ){     
-								       var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_backbone_cable__showPath_f' style='display:none;margin-left:-20px;' class='backboneFolder'> <input type='checkbox' class='BackboneFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Cables </span></li></ul></li></ul>";
-									   $("#FiberPath_backbone__showPath").append(str);
-									   pathCheckFilter(TargetFiber,"parentFolderCheck__showPath","FiberPath_backbone_cable__showPath","20",fiberArray,allFiberCables,directionHashmap,routeDisplay,"","","","");
-									   	        
-								 for(i=0;i<data.BackboneCableData.length;i++){
-								       var str="<ul style='list-style-type:none;cursor: pointer;'><li id='"+data.BackboneCableData[i][0]+"__showPath' class='FIBER' style='display:none; width:1000px;'><input type='checkbox' class='FiberCable checkFilter' checked class='filter'></input> <span class='TreeSpan' style='display: inline-block;color:black; margin-inline:10px;'><img src='"+getContext()+"/resources/NetworkImages/fiber.png'>  "+data.BackboneCableData[i][1]+"/"+data.BackboneCableData[i][0]+"  </span></li></ul>";
-								       $("#FiberPath_backbone_cable__showPath_f").append(str);
-								       
-								  if(fiberArray[data.BackboneCableData[i][0]]){
-						               fiberArray[data.BackboneCableData[i][0]].setMap(map); 
-								  }
-								  else {	  
-									  buildPath(data.BackboneCableData[i][0],window["mapPoints_"+data.BackboneCableData[i][0]],fiberArray,allFiberCables,"FiberPath_f_",window['FiberColor_'+data.BackboneCableData[i][3]],0.7,4.5,'blue',13);
-						              fiberArray[data.BackboneCableData[i][0]].setMap(map);
-								  }
-								 Create_FiberPath(data.BackboneCableData[i][0]+"__showPath");
-				                 pathCheckFilter(TargetFiber,"showPath",data.BackboneCableData[i][0]+"__showPath","20",fiberArray,allFiberCables,directionHashmap,routeDisplay,"","","",""); 
-								 }
-								 }
-						
-								 if(data.BackboneTubeData.length > 0){
-									  var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_backbone_tube__showPath_f' style='display:none;margin-left:-20px;' class='backboneFolder'> <input type='checkbox' class='BackboneFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Tubes </span></li></ul></li></ul>";
-								      $("#FiberPath_backbone__showPath").append(str);
-								      pathCheckFilter(TargetTube,"parentFolderCheck__showPath","FiberPath_backbone_tube__showPath","14",tubeArray,allTubes,directionHashmapTube,routeDisplayTube,"","","","");
-								        
-								 for(i=0;i<data.BackboneTubeData.length;i++){
-								      var str="<ul style='list-style-type:none;cursor: pointer;'><li id='"+data.BackboneTubeData[i][0]+"__showPath' class='TUBE' style='display:none; width:1000px;'><input type='checkbox' class='FiberTube checkFilter' checked class='filter'></input> <span class='TreeSpan' style='display: inline-block; color:black; margin-inline:10px;'> <div style='margin-bottom:-17px;margin-left:6px;font-size:12px; font-weight:bold; color:"+data.BackboneTubeData[i][5]+"'>"+data.BackboneTubeData[i][6]+"</div> <img src='"+getContext()+"/resources/NetworkImages/core.png' style='margin-bottom:-10px;'> "+data.BackboneTubeData[i][1]+"/"+data.BackboneTubeData[i][0]+ "<b> : </b>"  +data.BackboneTubeData[i][3]+"/"+data.BackboneTubeData[i][2]+"  </span></li></ul>";
-								      $("#FiberPath_backbone_tube__showPath_f").append(str); 
-								 
-								      if(tubeArray[data.BackboneTubeData[i][0]]) {
-									      tubeArray[data.BackboneTubeData[i][0]].setMap(map); 
-								      }
-								      else {
-									     buildPath(data.BackboneTubeData[i][0],window["mapPoints_"+data.BackboneTubeData[i][0]],tubeArray,allTubes,"Tube",'green',0.7,3.3,'green',0);  
-									     tubeArray[data.BackboneTubeData[i][0]].setMap(map); 
-								      }
-							         Create_FiberTubeClick_Event(data.BackboneTubeData[i][0]+"__showPath");
-	   						    	 pathCheckFilter(TargetTube,"showPath",data.BackboneTubeData[i][0]+"__showPath","14",tubeArray,allTubes,directionHashmapTube,routeDisplayTube,"","","","");		         
-								} 
-								}
-										
-								if(data.BackboneStrandData.length > 0){
-									  var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_backbone_strand__showPath_f' style='display:none;margin-left:-20px;' class='backboneFolder'> <input type='checkbox' class='BackboneFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Strands </span></li></ul></li></ul>";
-								      $("#FiberPath_backbone__showPath").append(str);
-								      pathCheckFilter(TargetStrand,"parentFolderCheck__showPath","FiberPath_backbone_strand__showPath","14",strandArray,allStrands,directionHashmapStrand,routeDisplayStrand,"","","","");
-
-							    for(i=0;i<data.BackboneStrandData.length;i++){ 
-									  var str="<ul style='list-style-type:none;cursor: pointer;'><li id='"+data.BackboneStrandData[i][0]+"__showPath' class='STRAND' style='display:none; width:1000px;'><input type='checkbox' class='FiberStrand checkFilter' checked class='filter'></input> <span class='TreeSpan' style='display: inline-block;color:black; margin-inline:10px;'> <div style='margin-bottom:-17px;margin-left:6px; font-size:12px; font-weight:bold; color:"+data.BackboneStrandData[i][5]+"'>"+data.BackboneStrandData[i][6]+"</div> <img src='"+getContext()+"/resources/NetworkImages/strand.png' style='margin-bottom:-10px;'> "+data.BackboneStrandData[i][1]+"/"+data.BackboneStrandData[i][0]+  "<b> : </b>" +data.BackboneStrandData[i][3]+"/"+data.BackboneStrandData[i][2]+ "<b> : </b>" +data.BackboneStrandData[i][7]+"/"+data.BackboneStrandData[i][8]+" </span></li></ul>";
-									  $("#FiberPath_backbone_strand__showPath_f").append(str);
-									
-								      if(strandArray[data.BackboneStrandData[i][0]]) {
-					                      strandArray[data.BackboneStrandData[i][0]].setMap(map); 
-								      }
-								      else {
-								          buildPath(data.BackboneStrandData[i][0],window["mapPoints_"+data.BackboneStrandData[i][0]],strandArray,allStrands,"Strand",'purple',0.7,2.8,'purple',0);
-					                      strandArray[data.BackboneStrandData[i][0]].setMap(map); 
-								      }
-				                      Create_FiberStrandClick_Event(data.BackboneStrandData[i][0]+"__showPath"); 
-				                      pathCheckFilter(TargetStrand,"showPath",data.BackboneStrandData[i][0]+"__showPath","14",strandArray,allStrands,directionHashmapStrand,routeDisplayStrand,"","","","");  
-							    } 
-								}		
-						         
-						         
-						    /* **** Metro ***** */
-							  if(data.MetroCableData.length > 0 || data.MetroTubeData.length > 0 || data.MetroStrandData.length > 0 ){
-							          var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_metro__showPath' style='display:none;margin-left:-20px;' class='metroFolder'> <input type='checkbox' class='MetroFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Metro </span></li></ul></li></ul>";
-								      $("#FiberPath_f_showPath").append(str);
-								      pathCheckFilter("initial_ul","parentFolderCheck__showPath","FiberPath_metro__showPath","","","","","","","","","");      
-								}
-								  
-						        if(data.MetroCableData.length > 0){																							
-									  var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_metro_cable__showPath_f' style='display:none;margin-left:-20px;' class='metroFolder'> <input type='checkbox' class='MetroFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Cables </span></li></ul></li></ul>";
-									  $("#FiberPath_metro__showPath").append(str);
-								      pathCheckFilter(TargetFiber,"parentFolderCheck__showPath","FiberPath_metro_cable__showPath","20",fiberArray,allFiberCables,directionHashmap,routeDisplay,"","","","");
-																				      
-								for(i=0;i<data.MetroCableData.length;i++){
-									  var str="<ul style='list-style-type:none;cursor: pointer;'><li id='"+data.MetroCableData[i][0]+"__showPath' class='FIBER' style='display:none; width:1000px;'><input type='checkbox' class='FiberCable checkFilter' checked class='filter'></input> <span class='TreeSpan' style='display: inline-block;color:black; margin-inline:10px;'> <img class='image' src='"+getContext()+"/resources/NetworkImages/fiber.png'>"+data.MetroCableData[i][1]+"/"+data.MetroCableData[i][0]+" </span></li></ul>";
-									  $("#FiberPath_metro_cable__showPath_f").append(str);
-							    
-							    if(fiberArray[data.MetroCableData[i][0]]){
-						               fiberArray[data.MetroCableData[i][0]].setMap(map); 
-								  }
-								  else {
-									  buildPath(data.MetroCableData[i][0],window["mapPoints_"+data.MetroCableData[i][0]],fiberArray,allFiberCables,"FiberPath_f_",window['FiberColor_'+data.MetroCableData[i][3]],0.7,4.5,'blue',13);
-						              fiberArray[data.MetroCableData[i][0]].setMap(map);
-								  }
-								 Create_FiberPath(data.MetroCableData[i][0]+"__showPath");
-				                 pathCheckFilter(TargetFiber,"showPath",data.MetroCableData[i][0]+"__showPath","20",fiberArray,allFiberCables,directionHashmap,routeDisplay,"","","",""); 		 
-								}
-								}
-											
-								if(data.MetroTubeData.length > 0){
-									  var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_metro_tube__showPath_f' style='display:none;margin-left:-20px;' class='metroFolder'> <input type='checkbox' class='MetroFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Tubes </span></li></ul></li></ul>";
-									  $("#FiberPath_metro__showPath").append(str);
-							          pathCheckFilter(TargetTube,"parentFolderCheck__showPath","FiberPath_metro_tube__showPath","14",tubeArray,allTubes,directionHashmapTube,routeDisplayTube,"","","","");		  
-																				      
-								for(i=0;i<data.MetroTubeData.length;i++){
-									  var str="<ul style='list-style-type:none;cursor: pointer;'><li id='"+data.MetroTubeData[i][0]+"__showPath'  class='TUBE' style='display:none; width:1000px;'><input type='checkbox' class='FiberTube checkFilter' checked class='filter'></input> <span class='TreeSpan' style='display: inline-block;color:black; margin-inline:10px;'> <div style='margin-bottom:-17px;margin-left:6px; font-size:12px; font-weight:bold; color:"+data.MetroTubeData[i][5]+"'>"+data.MetroTubeData[i][6]+"</div> <img src='"+getContext()+"/resources/NetworkImages/core.png' style='margin-bottom:-10px;'> "+data.MetroTubeData[i][1]+"/"+data.MetroTubeData[i][0]+ "<b> : </b>"  +data.MetroTubeData[i][3]+"/"+data.MetroTubeData[i][2]+"  </span></li></ul>";
-								      $("#FiberPath_metro_tube__showPath_f").append(str);
-								      
-								       if(tubeArray[data.MetroTubeData[i][0]]) {
-									      tubeArray[data.MetroTubeData[i][0]].setMap(map); 
-								      }
-								      else {
-									     buildPath(data.MetroTubeData[i][0],window["mapPoints_"+data.MetroTubeData[i][0]],tubeArray,allTubes,"Tube",'green',0.7,3.3,'green',0);  
-									     tubeArray[data.MetroTubeData[i][0]].setMap(map); 
-								      }
-							         Create_FiberTubeClick_Event(data.MetroTubeData[i][0]+"__showPath");
-	   						    	 pathCheckFilter(TargetTube,"showPath",data.MetroTubeData[i][0]+"__showPath","14",tubeArray,allTubes,directionHashmapTube,routeDisplayTube,"","","","");      
-								}
-								}
-											
-								if(data.MetroStrandData.length > 0){
-									  var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_metro_strand__showPath_f' style='display:none;margin-left:-20px;' class='metroFolder'> <input type='checkbox' class='MetroFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Strands </span></li></ul></li></ul>";
-									  $("#FiberPath_metro__showPath").append(str);
-							         pathCheckFilter(TargetStrand,"parentFolderCheck__showPath","FiberPath_metro_strand__showPath","14",strandArray,allStrands,directionHashmapStrand,routeDisplayStrand,"","","","");
-									  
-																				      
-					     		for(i=0;i<data.MetroStrandData.length;i++){
-	                                  var str="<ul style='list-style-type:none;cursor: pointer;'><li id='"+data.MetroStrandData[i][0]+"__showPath' class='STRAND' style='display:none; width:1000px;'><input type='checkbox' class='FiberStrand checkFilter' checked class='filter'></input> <span class='TreeSpan' style='display: inline-block; color:black; margin-inline:10px;'> <div style='margin-bottom:-17px;margin-left:6px; font-size:12px; font-weight:bold; color:"+data.MetroStrandData[i][5]+"'>"+data.MetroStrandData[i][6]+"</div> <img src='"+getContext()+"/resources/NetworkImages/strand.png' style='margin-bottom:-10px;'> "+data.MetroStrandData[i][1]+"/"+data.MetroStrandData[i][0]+  "<b>:</b>" +data.MetroStrandData[i][3]+"/"+data.MetroStrandData[i][2]+ "<b>:</b>" +data.MetroStrandData[i][7]+"/"+data.MetroStrandData[i][8]+" </span></li></ul>";
-							          $("#FiberPath_metro_strand__showPath_f").append(str);    
-							             
-							           if(strandArray[data.MetroStrandData[i][0]]) {
-					                      strandArray[data.MetroStrandData[i][0]].setMap(map); 
-								      }
-								      else {
-								          buildPath(data.MetroStrandData[i][0],window["mapPoints_"+data.MetroStrandData[i][0]],strandArray,allStrands,"Strand",'purple',0.7,2.8,'purple',0);
-					                      strandArray[data.MetroStrandData[i][0]].setMap(map); 
-								      }
-				                      Create_FiberStrandClick_Event(data.MetroStrandData[i][0]+"__showPath"); 
-				                      pathCheckFilter(TargetStrand,"showPath",data.MetroStrandData[i][0]+"__showPath","14",strandArray,allStrands,directionHashmapStrand,routeDisplayStrand,"","","","");           	
-								}
-								}	
-											
-							/* **** Distribution **** */
-							    if(data.DistributionCableData.length > 0 || data.DistributionTubeData.length > 0 || data.DistributionStrandData.length > 0){
-							         var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_distribution__showPath' style='display:none;margin-left:-20px;' class='distributionFolder'> <input type='checkbox' class='DistributionFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Access </span></li></ul></li></ul>";
-							         $("#FiberPath_f_showPath").append(str);
-								     pathCheckFilter("initial_ul","parentFolderCheck__showPath","FiberPath_distribution__showPath","","","","","","","","","");      						         
-							    }		   
-								if(data.DistributionCableData.length > 0){
-								      var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_distribution_cable__showPath_f' style='display:none;margin-left:-20px;' class='distributionFolder'> <input type='checkbox' class='DistributionFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Cables </span></li></ul></li></ul>";
-									  $("#FiberPath_distribution__showPath").append(str);
-							          pathCheckFilter(TargetFiber,"parentFolderCheck__showPath","FiberPath_distribution_cable__showPath","20",fiberArray,allFiberCables,directionHashmap,routeDisplay,"","","","");
-																		      
-								for(i=0;i<data.DistributionCableData.length;i++){
-									  var str="<ul style='list-style-type:none;cursor: pointer;'><li id='"+data.DistributionCableData[i][0]+"__showPath' class='FIBER' style='display:none; width:1000px;'><input type='checkbox' class='FiberCable checkFilter' checked class='filter'></input> <span class='TreeSpan' style='display: inline-block;color:black; margin-inline:10px;'><img class='image' src='"+getContext()+"/resources/NetworkImages/fiber.png'>"+data.DistributionCableData[i][1]+"/"+data.DistributionCableData[i][0]+" </span></li></ul>";
-									  $("#FiberPath_distribution_cable__showPath_f").append(str);	
-									   
-									   if(fiberArray[data.DistributionCableData[i][0]]){
-						               fiberArray[data.DistributionCableData[i][0]].setMap(map); 
-								  }
-								  else {
-									  buildPath(data.DistributionCableData[i][0],window["mapPoints_"+data.DistributionCableData[i][0]],fiberArray,allFiberCables,"FiberPath_f_",window['FiberColor_'+data.DistributionCableData[i][3]],0.7,4.5,'blue',13);
-						              fiberArray[data.DistributionCableData[i][0]].setMap(map);
-								  }
-								 Create_FiberPath(data.DistributionCableData[i][0]+"__showPath");
-				                 pathCheckFilter(TargetFiber,"showPath",data.DistributionCableData[i][0]+"__showPath","20",fiberArray,allFiberCables,directionHashmap,routeDisplay,"","","",""); 		 		
-								}
-								}
-											
-								if(data.DistributionTubeData.length > 0){
-									  var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_distribution_tube__showPath_f' style='display:none;margin-left:-20px;' class='distributionFolder'> <input type='checkbox' class='DistributionFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Tubes </span></li></ul></li></ul>";
-									  $("#FiberPath_distribution__showPath").append(str);
-			                          pathCheckFilter(TargetTube,"parentFolderCheck__showPath","FiberPath_distribution_tube__showPath","14",tubeArray,allTubes,directionHashmapTube,routeDisplayTube,"","","","");		  
-																				      
-								for(i=0;i<data.DistributionTubeData.length;i++){
-								      var str="<ul style='list-style-type:none;cursor: pointer;'><li id='"+data.DistributionTubeData[i][0]+"__showPath'  class='TUBE' style='display:none; width:1000px;'><input type='checkbox' class='FiberTube checkFilter' checked class='filter'></input> <span class='TreeSpan' style='display: inline-block;color:black; margin-inline:10px;'> <div style='margin-bottom:-17px;margin-left:6px; font-size:12px; font-weight:bold; color:"+data.DistributionTubeData[i][5]+"'>"+data.DistributionTubeData[i][6]+"</div> <img src='"+getContext()+"/resources/NetworkImages/core.png' style='margin-bottom:-10px;'> "+data.DistributionTubeData[i][1]+"/"+data.DistributionTubeData[i][0]+ "<b> : </b>"  +data.DistributionTubeData[i][3]+"/"+data.DistributionTubeData[i][2]+"  </span></li></ul>";
-								      $("#FiberPath_distribution_tube__showPath_f").append(str);
-								      
-								       if(tubeArray[data.DistributionTubeData[i][0]]) {
-									      tubeArray[data.DistributionTubeData[i][0]].setMap(map); 
-								      }
-								      else {
-									     buildPath(data.DistributionTubeData[i][0],window["mapPoints_"+data.DistributionTubeData[i][0]],tubeArray,allTubes,"Tube",'green',0.7,3.3,'green',0);  
-									     tubeArray[data.DistributionTubeData[i][0]].setMap(map); 
-								      }
-							         Create_FiberTubeClick_Event(data.DistributionTubeData[i][0]+"__showPath");
-	   						    	 pathCheckFilter(TargetTube,"showPath",data.DistributionTubeData[i][0]+"__showPath","14",tubeArray,allTubes,directionHashmapTube,routeDisplayTube,"","","","");      
-								}
-								}
-											
-								if(data.DistributionStrandData.length > 0){
-									  var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_distribution_strand__showPath_f' style='display:none;margin-left:-20px;' class='distributionFolder'> <input type='checkbox' class='DistributionFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Strands </span></li></ul></li></ul>";
-									  $("#FiberPath_distribution__showPath").append(str);
-  							          pathCheckFilter(TargetStrand,"parentFolderCheck__showPath","FiberPath_distribution_strand__showPath","14",strandArray,allStrands,directionHashmapStrand,routeDisplayStrand,"","","",""); 
-																				      
-								for(i=0;i<data.DistributionStrandData.length;i++){
-                             	      var str="<ul style='list-style-type:none;cursor: pointer;'><li id='"+data.DistributionStrandData[i][0]+"__showPath' class='STRAND' style='display:none; width:1000px;'><input type='checkbox' class='FiberStrand checkFilter' checked class='filter'></input> <span class='TreeSpan' style='display: inline-block; color:black; margin-inline:10px;'> <div style='margin-bottom:-17px;margin-left:6px; font-size:12px; font-weight:bold; color:"+data.DistributionStrandData[i][5]+"'>"+data.DistributionStrandData[i][6]+"</div> <img src='"+getContext()+"/resources/NetworkImages/strand.png' style='margin-bottom:-10px;'> "+data.DistributionStrandData[i][1]+"/"+data.DistributionStrandData[i][0]+  "<b>:</b>" +data.DistributionStrandData[i][3]+"/"+data.DistributionStrandData[i][2]+ "<b>:</b>" +data.DistributionStrandData[i][7]+"/"+data.DistributionStrandData[i][8]+" </span></li></ul>";
-							          $("#FiberPath_distribution_strand__showPath_f").append(str);
-							          
-							           if(strandArray[data.DistributionStrandData[i][0]]) {
-					                      strandArray[data.DistributionStrandData[i][0]].setMap(map); 
-								      }
-								      else {
-								          buildPath(data.DistributionStrandData[i][0],window["mapPoints_"+data.DistributionStrandData[i][0]],strandArray,allStrands,"Strand",'purple',0.7,2.8,'purple',0);
-					                      strandArray[data.DistributionStrandData[i][0]].setMap(map); 
-								      }
-				                      Create_FiberStrandClick_Event(data.DistributionStrandData[i][0]+"__showPath");      
-				  				      pathCheckFilter(TargetStrand,"showPath",data.DistributionStrandData[i][0]+"__showPath","14",strandArray,allStrands,directionHashmapStrand,routeDisplayStrand,"","","","");           	
-								}
-								}
-			
-							 MouseHoveringSpans("#FiberPath_f_showPath .TreeSpan");
-						     tree_prop_selection("#FiberPath_f_showPath .TreeSpan");
-					         treeCollapseFolder("#FiberPath_f_showPath .Parentfolder",".Parentfolder"); 
-							 data=null;
-								},
-								error: function (result) {
-								alert("Error");
-									}
-								});
+				if (flag == 0 ){// in order to build for the first time the main fiber
+					getFiberPath("showPath",'/manHandHolePath',selectedManIdContext, "<tr><td><b>Manhole ID:</b>"+selectedManIdContext+"</td></tr>");
+				}else{
+					showPath('/manHandHolePath',selectedManIdContext, "<tr><td><b>Manhole ID:</b>"+selectedManIdContext+"</td></tr>");
 				}
-				}
+				
+				
+			}
+		}
 					 
-				  ]
-			});
+	 ]
+});
 	
 			
 	
@@ -5210,252 +4984,17 @@ singleProject = new ContextMenu({
 					   }
 					  },
 			{'icon': 'paste', 'name': 'Show Path', action: () => {
-				         $.ajax({
-								type: "GET",
-								contentType: "application/json; charset=utf-8",
-								async:false,
-								url: getContext()+'/manHandHolePath',
-								data: {
-								"dataSel":selectedHandIdContext,
-								"ProjectId": IdNodeSelectedTemp
-								
-							},
-								success : function(data)
-									{
-											showPath();
-								 var tr =   "<tr><td><b>Handhole ID:</b>"+selectedHandIdContext+"</td></tr>"
-								 $("#path_table").append(tr);
-								 
-								 var str="<ul style='list-style-type:none;padding:0px;cursor: pointer;'><li id='FiberPath_f_showPath' class='FiberPath_f_Cable'><input type='checkbox' checked class='AllFiberCables__showPath checkFilter' class='filter'></input> <span id='FiberPath_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='FiberPath_span' class='TreeSpan' style='color:black;margin-left:5px;'>Fiber Path </span></li></ul>";
-						         $("#path_table").append(str); 
-						         pathCheckFilter("initial_ul","parentFolderCheck__showPath","FiberPath_f_showPath","","","","","","","","","");
-						         
-						         
-						     /* **** Backbone ***** */
-						     if(data.BackboneCableData.length > 0 || data.BackboneTubeData.length > 0 || data.BackboneStrandData.length > 0 ){
-							      var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_backbone__showPath' style='display:none;margin-left:-20px;' class='backboneFolder'> <input type='checkbox' class='BackboneFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Backbone </span></li></ul></li></ul>";
-								  $("#FiberPath_f_showPath").append(str);
-								  pathCheckFilter("initial_ul","parentFolderCheck__showPath","FiberPath_backbone__showPath","","","","","","","","","");
-						     }
-									
-						         if(data.BackboneCableData.length > 0 ){     
-								       var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_backbone_cable__showPath_f' style='display:none;margin-left:-20px;' class='backboneFolder'> <input type='checkbox' class='BackboneFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Cables </span></li></ul></li></ul>";
-									   $("#FiberPath_backbone__showPath").append(str);
-									   pathCheckFilter(TargetFiber,"parentFolderCheck__showPath","FiberPath_backbone_cable__showPath","20",fiberArray,allFiberCables,directionHashmap,routeDisplay,"","","","");
-									   	        
-								 for(i=0;i<data.BackboneCableData.length;i++){
-								       var str="<ul style='list-style-type:none;cursor: pointer;'><li id='"+data.BackboneCableData[i][0]+"__showPath' class='FIBER' style='display:none; width:1000px;'><input type='checkbox' class='FiberCable checkFilter' checked class='filter'></input> <span class='TreeSpan' style='display: inline-block;color:black; margin-inline:10px;'><img src='"+getContext()+"/resources/NetworkImages/fiber.png'>  "+data.BackboneCableData[i][1]+"/"+data.BackboneCableData[i][0]+"  </span></li></ul>";
-								       $("#FiberPath_backbone_cable__showPath_f").append(str);
-								       
-								  if(fiberArray[data.BackboneCableData[i][0]]){
-						               fiberArray[data.BackboneCableData[i][0]].setMap(map); 
-								  }
-								  else {
-									  buildPath(data.BackboneCableData[i][0],window["mapPoints_"+data.BackboneCableData[i][0]],fiberArray,allFiberCables,"FiberPath_f_", window['FiberColor_'+data.BackboneCableData[i][3]],0.7,4.5,'blue',13);
-						              fiberArray[data.BackboneCableData[i][0]].setMap(map);
-								  }
-								 Create_FiberPath(data.BackboneCableData[i][0]+"__showPath");
-				                 pathCheckFilter(TargetFiber,"showPath",data.BackboneCableData[i][0]+"__showPath","20",fiberArray,allFiberCables,directionHashmap,routeDisplay,"","","",""); 
-								 }
-								 }
-						
-								 if(data.BackboneTubeData.length > 0){
-									  var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_backbone_tube__showPath_f' style='display:none;margin-left:-20px;' class='backboneFolder'> <input type='checkbox' class='BackboneFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Tubes </span></li></ul></li></ul>";
-								      $("#FiberPath_backbone__showPath").append(str);
-								      pathCheckFilter(TargetTube,"parentFolderCheck__showPath","FiberPath_backbone_tube__showPath","14",tubeArray,allTubes,directionHashmapTube,routeDisplayTube,"","","","");
-								        
-								 for(i=0;i<data.BackboneTubeData.length;i++){
-								      var str="<ul style='list-style-type:none;cursor: pointer;'><li id='"+data.BackboneTubeData[i][0]+"__showPath' class='TUBE' style='display:none; width:1000px;'><input type='checkbox' class='FiberTube checkFilter' checked class='filter'></input> <span class='TreeSpan' style='display: inline-block; color:black; margin-inline:10px;'> <div style='margin-bottom:-17px;margin-left:6px;font-size:12px; font-weight:bold; color:"+data.BackboneTubeData[i][5]+"'>"+data.BackboneTubeData[i][6]+"</div> <img src='"+getContext()+"/resources/NetworkImages/core.png' style='margin-bottom:-10px;'> "+data.BackboneTubeData[i][1]+"/"+data.BackboneTubeData[i][0]+ "<b> : </b>"  +data.BackboneTubeData[i][3]+"/"+data.BackboneTubeData[i][2]+"  </span></li></ul>";
-								      $("#FiberPath_backbone_tube__showPath_f").append(str); 
-								 
-								      if(tubeArray[data.BackboneTubeData[i][0]]) {
-									      tubeArray[data.BackboneTubeData[i][0]].setMap(map); 
-								      }
-								      else {
-									     buildPath(data.BackboneTubeData[i][0],window["mapPoints_"+data.BackboneTubeData[i][0]],tubeArray,allTubes,"Tube",'green',0.7,3.3,'green',0);  
-									     tubeArray[data.BackboneTubeData[i][0]].setMap(map); 
-								      }
-							         Create_FiberTubeClick_Event(data.BackboneTubeData[i][0]+"__showPath");
-	   						    	 pathCheckFilter(TargetTube,"showPath",data.BackboneTubeData[i][0]+"__showPath","14",tubeArray,allTubes,directionHashmapTube,routeDisplayTube,"","","","");		         
-								} 
-								}
-										
-								if(data.BackboneStrandData.length > 0){
-									  var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_backbone_strand__showPath_f' style='display:none;margin-left:-20px;' class='backboneFolder'> <input type='checkbox' class='BackboneFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Strands </span></li></ul></li></ul>";
-								      $("#FiberPath_backbone__showPath").append(str);
-								      pathCheckFilter(TargetStrand,"parentFolderCheck__showPath","FiberPath_backbone_strand__showPath","14",strandArray,allStrands,directionHashmapStrand,routeDisplayStrand,"","","","");
-
-							    for(i=0;i<data.BackboneStrandData.length;i++){ 
-									  var str="<ul style='list-style-type:none;cursor: pointer;'><li id='"+data.BackboneStrandData[i][0]+"__showPath' class='STRAND' style='display:none; width:1000px;'><input type='checkbox' class='FiberStrand checkFilter' checked class='filter'></input> <span class='TreeSpan' style='display: inline-block;color:black; margin-inline:10px;'> <div style='margin-bottom:-17px;margin-left:6px; font-size:12px; font-weight:bold; color:"+data.BackboneStrandData[i][5]+"'>"+data.BackboneStrandData[i][6]+"</div> <img src='"+getContext()+"/resources/NetworkImages/strand.png' style='margin-bottom:-10px;'> "+data.BackboneStrandData[i][1]+"/"+data.BackboneStrandData[i][0]+  "<b> : </b>" +data.BackboneStrandData[i][3]+"/"+data.BackboneStrandData[i][2]+ "<b> : </b>" +data.BackboneStrandData[i][7]+"/"+data.BackboneStrandData[i][8]+" </span></li></ul>";
-									  $("#FiberPath_backbone_strand__showPath_f").append(str);
-									
-								      if(strandArray[data.BackboneStrandData[i][0]]) {
-					                      strandArray[data.BackboneStrandData[i][0]].setMap(map); 
-								      }
-								      else {
-								          buildPath(data.BackboneStrandData[i][0],window["mapPoints_"+data.BackboneStrandData[i][0]],strandArray,allStrands,"Strand",'purple',0.7,2.8,'purple',0);
-					                      strandArray[data.BackboneStrandData[i][0]].setMap(map); 
-								      }
-				                      Create_FiberStrandClick_Event(data.BackboneStrandData[i][0]+"__showPath"); 
-				                      pathCheckFilter(TargetStrand,"showPath",data.BackboneStrandData[i][0]+"__showPath","14",strandArray,allStrands,directionHashmapStrand,routeDisplayStrand,"","","","");  
-							    } 
-								}		
-						         
-						         
-						    /* **** Metro ***** */
-							  if(data.MetroCableData.length > 0 || data.MetroTubeData.length > 0 || data.MetroStrandData.length > 0 ){
-							          var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_metro__showPath' style='display:none;margin-left:-20px;' class='metroFolder'> <input type='checkbox' class='MetroFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Metro </span></li></ul></li></ul>";
-								      $("#FiberPath_f_showPath").append(str);
-								      pathCheckFilter("initial_ul","parentFolderCheck__showPath","FiberPath_metro__showPath","","","","","","","","","");      
-								}
-								  
-						        if(data.MetroCableData.length > 0){																							
-									  var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_metro_cable__showPath_f' style='display:none;margin-left:-20px;' class='metroFolder'> <input type='checkbox' class='MetroFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:15px;' class='TreeSpan'>Cables </span></li></ul></li></ul>";
-									  $("#FiberPath_metro__showPath").append(str);
-								      pathCheckFilter(TargetFiber,"parentFolderCheck__showPath","FiberPath_metro_cable__showPath","20",fiberArray,allFiberCables,directionHashmap,routeDisplay,"","","","");
-																				      
-								for(i=0;i<data.MetroCableData.length;i++){
-									  var str="<ul style='list-style-type:none;cursor: pointer;'><li id='"+data.MetroCableData[i][0]+"__showPath' class='FIBER' style='display:none; width:1000px;'><input type='checkbox' class='FiberCable checkFilter' checked class='filter'></input> <span class='TreeSpan' style='display: inline-block;color:black; margin-inline:10px;'> <img class='image' src='"+getContext()+"/resources/NetworkImages/fiber.png'>"+data.MetroCableData[i][1]+"/"+data.MetroCableData[i][0]+" </span></li></ul>";
-									  $("#FiberPath_metro_cable__showPath_f").append(str);
-							    
-							    if(fiberArray[data.MetroCableData[i][0]]){
-						               fiberArray[data.MetroCableData[i][0]].setMap(map); 
-								  }
-								  else {
-									  buildPath(data.MetroCableData[i][0],window["mapPoints_"+data.MetroCableData[i][0]],fiberArray,allFiberCables,"FiberPath_f_", window['FiberColor_'+data.MetroCableData[i][3]],0.7,4.5,'blue',13);
-						              fiberArray[data.MetroCableData[i][0]].setMap(map);
-								  }
-								 Create_FiberPath(data.MetroCableData[i][0]+"__showPath");
-				                 pathCheckFilter(TargetFiber,"showPath",data.MetroCableData[i][0]+"__showPath","20",fiberArray,allFiberCables,directionHashmap,routeDisplay,"","","",""); 		 
-								}
-								}
-											
-								if(data.MetroTubeData.length > 0){
-									  var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_metro_tube__showPath_f' style='display:none;margin-left:-20px;' class='metroFolder'> <input type='checkbox' class='MetroFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:15px;' class='TreeSpan'>Tubes </span></li></ul></li></ul>";
-									  $("#FiberPath_metro__showPath").append(str);
-							          pathCheckFilter(TargetTube,"parentFolderCheck__showPath","FiberPath_metro_tube__showPath","14",tubeArray,allTubes,directionHashmapTube,routeDisplayTube,"","","","");		  
-																				      
-								for(i=0;i<data.MetroTubeData.length;i++){
-									  var str="<ul style='list-style-type:none;cursor: pointer;'><li id='"+data.MetroTubeData[i][0]+"__showPath'  class='TUBE' style='display:none; width:1000px;'><input type='checkbox' class='FiberTube checkFilter' checked class='filter'></input> <span class='TreeSpan' style='display: inline-block;color:black; margin-inline:10px;'> <div style='margin-bottom:-17px;margin-left:6px; font-size:12px; font-weight:bold; color:"+data.MetroTubeData[i][5]+"'>"+data.MetroTubeData[i][6]+"</div> <img src='"+getContext()+"/resources/NetworkImages/core.png' style='margin-bottom:-10px;'> "+data.MetroTubeData[i][1]+"/"+data.MetroTubeData[i][0]+ "<b> : </b>"  +data.MetroTubeData[i][3]+"/"+data.MetroTubeData[i][2]+"  </span></li></ul>";
-								      $("#FiberPath_metro_tube__showPath_f").append(str);
-								      
-								       if(tubeArray[data.MetroTubeData[i][0]]) {
-									      tubeArray[data.MetroTubeData[i][0]].setMap(map); 
-								      }
-								      else {
-									     buildPath(data.MetroTubeData[i][0],window["mapPoints_"+data.MetroTubeData[i][0]],tubeArray,allTubes,"Tube",'green',0.7,3.3,'green',0);  
-									     tubeArray[data.MetroTubeData[i][0]].setMap(map); 
-								      }
-							         Create_FiberTubeClick_Event(data.MetroTubeData[i][0]+"__showPath");
-	   						    	 pathCheckFilter(TargetTube,"showPath",data.MetroTubeData[i][0]+"__showPath","14",tubeArray,allTubes,directionHashmapTube,routeDisplayTube,"","","","");      
-								}
-								}
-											
-								if(data.MetroStrandData.length > 0){
-									  var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_metro_strand__showPath_f' style='display:none;margin-left:-20px;' class='metroFolder'> <input type='checkbox' class='MetroFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:15px;' class='TreeSpan'>Strands </span></li></ul></li></ul>";
-									  $("#FiberPath_metro__showPath").append(str);
-							         pathCheckFilter(TargetStrand,"parentFolderCheck__showPath","FiberPath_metro_strand__showPath","14",strandArray,allStrands,directionHashmapStrand,routeDisplayStrand,"","","","");
-									  
-																				      
-					     		for(i=0;i<data.MetroStrandData.length;i++){
-	                                  var str="<ul style='list-style-type:none;cursor: pointer;'><li id='"+data.MetroStrandData[i][0]+"__showPath' class='STRAND' style='display:none; width:1000px;'><input type='checkbox' class='FiberStrand checkFilter' checked class='filter'></input> <span class='TreeSpan' style='display: inline-block; color:black; margin-inline:10px;'> <div style='margin-bottom:-17px;margin-left:6px; font-size:12px; font-weight:bold; color:"+data.MetroStrandData[i][5]+"'>"+data.MetroStrandData[i][6]+"</div> <img src='"+getContext()+"/resources/NetworkImages/strand.png' style='margin-bottom:-10px;'> "+data.MetroStrandData[i][1]+"/"+data.MetroStrandData[i][0]+  "<b>:</b>" +data.MetroStrandData[i][3]+"/"+data.MetroStrandData[i][2]+ "<b>:</b>" +data.MetroStrandData[i][7]+"/"+data.MetroStrandData[i][8]+" </span></li></ul>";
-							          $("#FiberPath_metro_strand__showPath_f").append(str);    
-							             
-							           if(strandArray[data.MetroStrandData[i][0]]) {
-					                      strandArray[data.MetroStrandData[i][0]].setMap(map); 
-								      }
-								      else {
-								          buildPath(data.MetroStrandData[i][0],window["mapPoints_"+data.MetroStrandData[i][0]],strandArray,allStrands,"Strand",'purple',0.7,2.8,'purple',0);
-					                      strandArray[data.MetroStrandData[i][0]].setMap(map); 
-								      }
-				                      Create_FiberStrandClick_Event(data.MetroStrandData[i][0]+"__showPath"); 
-				                      pathCheckFilter(TargetStrand,"showPath",data.MetroStrandData[i][0]+"__showPath","14",strandArray,allStrands,directionHashmapStrand,routeDisplayStrand,"","","","");           	
-								}
-								}	
-											
-							/* **** Distribution **** */
-							    if(data.DistributionCableData.length > 0 || data.DistributionTubeData.length > 0 || data.DistributionStrandData.length > 0){
-							         var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_distribution__showPath' style='display:none;margin-left:-20px' class='distributionFolder'> <input type='checkbox' class='DistributionFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Access </span></li></ul></li></ul>";
-							         $("#FiberPath_f_showPath").append(str);
-								     pathCheckFilter("initial_ul","parentFolderCheck__showPath","FiberPath_distribution__showPath","","","","","","","","","");      						         
-							    }		   
-								if(data.DistributionCableData.length > 0){
-								      var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_distribution_cable__showPath_f' style='display:none;margin-left:-20px;' class='distributionFolder'> <input type='checkbox' class='DistributionFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:15px;' class='TreeSpan'>Cables </span></li></ul></li></ul>";
-									  $("#FiberPath_distribution__showPath").append(str);
-							          pathCheckFilter(TargetFiber,"parentFolderCheck__showPath","FiberPath_distribution_cable__showPath","20",fiberArray,allFiberCables,directionHashmap,routeDisplay,"","","","");
-																		      
-								for(i=0;i<data.DistributionCableData.length;i++){
-									  var str="<ul style='list-style-type:none;cursor: pointer;'><li id='"+data.DistributionCableData[i][0]+"__showPath' class='FIBER' style='display:none; width:1000px;'><input type='checkbox' class='FiberCable checkFilter' checked class='filter'></input> <span class='TreeSpan' style='display: inline-block;color:black; margin-inline:10px;'><img class='image' src='"+getContext()+"/resources/NetworkImages/fiber.png'>"+data.DistributionCableData[i][1]+"/"+data.DistributionCableData[i][0]+" </span></li></ul>";
-									  $("#FiberPath_distribution_cable__showPath_f").append(str);	
-									   
-									   if(fiberArray[data.DistributionCableData[i][0]]){
-						               fiberArray[data.DistributionCableData[i][0]].setMap(map); 
-								  }
-								  else {
-									  buildPath(data.DistributionCableData[i][0],window["mapPoints_"+data.DistributionCableData[i][0]],fiberArray,allFiberCables,"FiberPath_f_",window['FiberColor_'+data.DistributionCableData[i][3]],0.7,4.5,'blue',13);
-						              fiberArray[data.DistributionCableData[i][0]].setMap(map);
-								  }
-								 Create_FiberPath(data.DistributionCableData[i][0]+"__showPath");
-				                 pathCheckFilter(TargetFiber,"showPath",data.DistributionCableData[i][0]+"__showPath","20",fiberArray,allFiberCables,directionHashmap,routeDisplay,"","","",""); 		 		
-								}
-								}
-											
-								if(data.DistributionTubeData.length > 0){
-									  var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_distribution_tube__showPath_f' style='display:none;margin-left:-20px;' class='distributionFolder'> <input type='checkbox' class='DistributionFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:15px;' class='TreeSpan'>Tubes </span></li></ul></li></ul>";
-									  $("#FiberPath_distribution__showPath").append(str);
-			                          pathCheckFilter(TargetTube,"parentFolderCheck__showPath","FiberPath_distribution_tube__showPath","14",tubeArray,allTubes,directionHashmapTube,routeDisplayTube,"","","","");		  
-																				      
-								for(i=0;i<data.DistributionTubeData.length;i++){
-								      var str="<ul style='list-style-type:none;cursor: pointer;'><li id='"+data.DistributionTubeData[i][0]+"__showPath'  class='TUBE' style='display:none; width:1000px;'><input type='checkbox' class='FiberTube checkFilter' checked class='filter'></input> <span class='TreeSpan' style='display: inline-block;color:black; margin-inline:10px;'> <div style='margin-bottom:-17px;margin-left:6px; font-size:12px; font-weight:bold; color:"+data.DistributionTubeData[i][5]+"'>"+data.DistributionTubeData[i][6]+"</div> <img src='"+getContext()+"/resources/NetworkImages/core.png' style='margin-bottom:-10px;'> "+data.DistributionTubeData[i][1]+"/"+data.DistributionTubeData[i][0]+ "<b> : </b>"  +data.DistributionTubeData[i][3]+"/"+data.DistributionTubeData[i][2]+"  </span></li></ul>";
-								      $("#FiberPath_distribution_tube__showPath_f").append(str);
-								      
-								       if(tubeArray[data.DistributionTubeData[i][0]]) {
-									      tubeArray[data.DistributionTubeData[i][0]].setMap(map); 
-								      }
-								      else {
-									     buildPath(data.DistributionTubeData[i][0],window["mapPoints_"+data.DistributionTubeData[i][0]],tubeArray,allTubes,"Tube",'green',0.7,3.3,'green',0);  
-									     tubeArray[data.DistributionTubeData[i][0]].setMap(map); 
-								      }
-							         Create_FiberTubeClick_Event(data.DistributionTubeData[i][0]+"__showPath");
-	   						    	 pathCheckFilter(TargetTube,"showPath",data.DistributionTubeData[i][0]+"__showPath","14",tubeArray,allTubes,directionHashmapTube,routeDisplayTube,"","","","");      
-								}
-								}
-											
-								if(data.DistributionStrandData.length > 0){
-									  var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_distribution_strand__showPath_f' style='display:none;margin-left:-20px;' class='distributionFolder'> <input type='checkbox' class='DistributionFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:15px;' class='TreeSpan'>Strands </span></li></ul></li></ul>";
-									  $("#FiberPath_distribution__showPath").append(str);
-  							          pathCheckFilter(TargetStrand,"parentFolderCheck__showPath","FiberPath_distribution_strand__showPath","14",strandArray,allStrands,directionHashmapStrand,routeDisplayStrand,"","","",""); 
-																				      
-								for(i=0;i<data.DistributionStrandData.length;i++){
-                             	      var str="<ul style='list-style-type:none;cursor: pointer;'><li id='"+data.DistributionStrandData[i][0]+"__showPath' class='STRAND' style='display:none; width:1000px;'><input type='checkbox' class='FiberStrand checkFilter' checked class='filter'></input> <span class='TreeSpan' style='display: inline-block; color:black; margin-inline:10px;'> <div style='margin-bottom:-17px;margin-left:6px; font-size:12px; font-weight:bold; color:"+data.DistributionStrandData[i][5]+"'>"+data.DistributionStrandData[i][6]+"</div> <img src='"+getContext()+"/resources/NetworkImages/strand.png' style='margin-bottom:-10px;'> "+data.DistributionStrandData[i][1]+"/"+data.DistributionStrandData[i][0]+ "<b>:</b>" +data.DistributionStrandData[i][7]+"/"+data.DistributionStrandData[i][8]+" </span></li></ul>";
-							          $("#FiberPath_distribution_strand__showPath_f").append(str);
-							          
-							           if(strandArray[data.DistributionStrandData[i][0]]) {
-					                      strandArray[data.DistributionStrandData[i][0]].setMap(map); 
-								      }
-								      else {
-								          buildPath(data.DistributionStrandData[i][0],window["mapPoints_"+data.DistributionStrandData[i][0]],strandArray,allStrands,"Strand",'purple',0.7,2.8,'purple',0);
-					                      strandArray[data.DistributionStrandData[i][0]].setMap(map); 
-								      }
-				                      Create_FiberStrandClick_Event(data.DistributionStrandData[i][0]+"__showPath");      
-				  				      pathCheckFilter(TargetStrand,"showPath",data.DistributionStrandData[i][0]+"__showPath","14",strandArray,allStrands,directionHashmapStrand,routeDisplayStrand,"","","","");           	
-								}
-								}
-			
-							 MouseHoveringSpans("#FiberPath_f_showPath .TreeSpan");
-						     tree_prop_selection("#FiberPath_f_showPath .TreeSpan");
-					         treeCollapseFolder("#FiberPath_f_showPath .Parentfolder",".Parentfolder"); 
-							 data=null;
-								},
-								error: function (result) {
-								alert("Error");
-									}
-								});
 				
+				if (flag == 0 ){// in order to build for the first time the main fiber
+					getFiberPath("showPath",'/manHandHolePath', selectedHandIdContext, "<tr><td><b>Handhole ID:</b>"+selectedHandIdContext+"</td></tr>");
+				}else{
+					showPath('/manHandHolePath', selectedHandIdContext, "<tr><td><b>Handhole ID:</b>"+selectedHandIdContext+"</td></tr>");
 				}
-				}	 	 
-			]
-			});
+				
+			}
+		}	 	 
+	]
+});
 	
 		/////////////*********************	single junction CONTEXTS MENU  ***********************///////////////
 	//-------------------------------------------------------------------------------------------------//	  
@@ -7203,254 +6742,20 @@ singleProject = new ContextMenu({
 			   }
 			},
 			{'icon': 'paste', 'name': 'Show Path', action: () => {
-				$("#path_table");
-				$.ajax({
-					type: "GET",
-					contentType: "application/json; charset=utf-8",
-					url: getContext()+'/pathDistBoard',
-					async:false,
-					data: {
-					"DistBoardSel":selectedDistBoardContext,
-					//"DistBoardSel":selectedDistBoardName,
-					"ProjectId": IdNodeSelectedTemp
-					},
-					success : function(data){
-					           showPath();
-								 var tr = "<tr><td><b>DB NAME:</b>"+selectedDistBoardName+"</td></tr>"
-								 $("#path_table").append(tr);
-								 
-								 var str="<ul style='list-style-type:none;padding:0px;cursor: pointer;'><li id='FiberPath_f_showPath' class='FiberPath_f_Cable'><input type='checkbox' checked class='AllFiberCables__showPath checkFilter' class='filter'></input> <span id='FiberPath_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='FiberPath_span' class='TreeSpan' style='color:black;margin-left:5px;'>Fiber Path </span></li></ul>";
-						         $("#path_table").append(str); 
-						         pathCheckFilter("initial_ul","parentFolderCheck__showPath","FiberPath_f_showPath","","","","","","","","","");
-						         
-						        
-						     /* **** Backbone ***** */
-						     if(data.CableBackboneData.length > 0 || data.TubeBackboneData.length > 0 || data.StrandBackboneData.length > 0 ){
-							      var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_backbone__showPath' style='display:none;margin-left:-20px' class='backboneFolder'> <input type='checkbox' class='BackboneFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Backbone </span></li></ul></li></ul>";
-								  $("#FiberPath_f_showPath").append(str);
-								  pathCheckFilter("initial_ul","parentFolderCheck__showPath","FiberPath_backbone__showPath","","","","","","","","","");
-						     }
-									
-						         if(data.CableBackboneData.length > 0 ){     
-								       var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_backbone_cable__showPath_f' style='display:none;margin-left:-20px;' class='backboneFolder'> <input type='checkbox' class='BackboneFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Cables </span></li></ul></li></ul>";
-									   $("#FiberPath_backbone__showPath").append(str);
-									   pathCheckFilter(TargetFiber,"parentFolderCheck__showPath","FiberPath_backbone_cable__showPath","20",fiberArray,allFiberCables,directionHashmap,routeDisplay,"","","","");
-									   	        
-								 for(i=0;i<data.CableBackboneData.length;i++){
-								       var str="<ul style='list-style-type:none;cursor: pointer;'><li id='"+data.CableBackboneData[i][0]+"__showPath' class='FIBER' style='display:none; width:1000px;'><input type='checkbox' class='FiberCable checkFilter' checked class='filter'></input> <span class='TreeSpan' style='display: inline-block;color:black; margin-inline:10px;'><img src='"+getContext()+"/resources/NetworkImages/fiber.png'>  "+data.CableBackboneData[i][1]+"/"+data.CableBackboneData[i][0]+"  </span></li></ul>";
-								       $("#FiberPath_backbone_cable__showPath_f").append(str);
-								       
-								  if(fiberArray[data.CableBackboneData[i][0]]){
-						               fiberArray[data.CableBackboneData[i][0]].setMap(map); 
-								  }
-								  else {
-									  buildPath(data.CableBackboneData[i][0],window["mapPoints_"+data.CableBackboneData[i][0]],fiberArray,allFiberCables,"FiberPath_f_",window['FiberColor_'+data.CableBackboneData[i][3]],0.7,4.5,'blue',13);
-						              fiberArray[data.CableBackboneData[i][0]].setMap(map);
-								  }
-								 Create_FiberPath(data.CableBackboneData[i][0]+"__showPath");
-				                 pathCheckFilter(TargetFiber,"showPath",data.CableBackboneData[i][0]+"__showPath","20",fiberArray,allFiberCables,directionHashmap,routeDisplay,"","","",""); 
-								 }
-								 }
-						
-								 if(data.TubeBackboneData.length > 0){
-									  var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_backbone_tube__showPath_f' style='display:none;margin-left:-20px;' class='backboneFolder'> <input type='checkbox' class='BackboneFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Tubes </span></li></ul></li></ul>";
-								      $("#FiberPath_backbone__showPath").append(str);
-								      pathCheckFilter(TargetTube,"parentFolderCheck__showPath","FiberPath_backbone_tube__showPath","14",tubeArray,allTubes,directionHashmapTube,routeDisplayTube,"","","","");
-								        
-								 for(i=0;i<data.TubeBackboneData.length;i++){
-								      var str="<ul style='list-style-type:none;cursor: pointer;'><li id='"+data.TubeBackboneData[i][0]+"__showPath' class='TUBE' style='display:none; width:1000px;'><input type='checkbox' class='FiberTube checkFilter' checked class='filter'></input> <span class='TreeSpan' style='display: inline-block; color:black; margin-inline:10px;'> <div style='margin-bottom:-17px;margin-left:6px;font-size:12px; font-weight:bold; color:"+data.TubeBackboneData[i][2]+"'>"+data.TubeBackboneData[i][3]+"</div> <img src='"+getContext()+"/resources/NetworkImages/core.png' style='margin-bottom:-10px;'> "+data.TubeBackboneData[i][1]+"/"+data.TubeBackboneData[i][0]+ "<b> : </b>"  +data.TubeBackboneData[i][5]+"/"+data.TubeBackboneData[i][4]+"  </span></li></ul>";
-								      $("#FiberPath_backbone_tube__showPath_f").append(str); 
-								 
-								      if(tubeArray[data.TubeBackboneData[i][0]]) {
-									      tubeArray[data.TubeBackboneData[i][0]].setMap(map); 
-								      }
-								      else {
-									     buildPath(data.TubeBackboneData[i][0],window["mapPoints_"+data.TubeBackboneData[i][0]],tubeArray,allTubes,"Tube",'green',0.7,3.3,'green',0);  
-									     tubeArray[data.TubeBackboneData[i][0]].setMap(map); 
-								      }
-							         Create_FiberTubeClick_Event(data.TubeBackboneData[i][0]+"__showPath");
-	   						    	 pathCheckFilter(TargetTube,"showPath",data.TubeBackboneData[i][0]+"__showPath","14",tubeArray,allTubes,directionHashmapTube,routeDisplayTube,"","","","");		         
-								} 
-								}
-										
-								if(data.StrandBackboneData.length > 0){
-									  var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_backbone_strand__showPath_f' style='display:none;margin-left:-20px;' class='backboneFolder'> <input type='checkbox' class='BackboneFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Strands </span></li></ul></li></ul>";
-								      $("#FiberPath_backbone__showPath").append(str);
-								      pathCheckFilter(TargetStrand,"parentFolderCheck__showPath","FiberPath_backbone_strand__showPath","14",strandArray,allStrands,directionHashmapStrand,routeDisplayStrand,"","","","");
-
-							    for(i=0;i<data.StrandBackboneData.length;i++){ 
-									  var str="<ul style='list-style-type:none;cursor: pointer;'><li id='"+data.StrandBackboneData[i][0]+"__showPath' class='STRAND' style='display:none; width:1000px;'><input type='checkbox' class='FiberStrand checkFilter' checked class='filter'></input> <span class='TreeSpan' style='display: inline-block;color:black; margin-inline:10px;'> <div style='margin-bottom:-17px;margin-left:6px; font-size:12px; font-weight:bold; color:"+data.StrandBackboneData[i][2]+"'>"+data.StrandBackboneData[i][3]+"</div> <img src='"+getContext()+"/resources/NetworkImages/strand.png' style='margin-bottom:-10px;'> "+data.StrandBackboneData[i][1]+"/"+data.StrandBackboneData[i][0]+  "<b> : </b>" +data.StrandBackboneData[i][7]+"/"+data.StrandBackboneData[i][6]+ "<b> : </b>" +data.StrandBackboneData[i][5]+"/"+data.StrandBackboneData[i][4]+" </span></li></ul>";
-									  $("#FiberPath_backbone_strand__showPath_f").append(str);
-									
-								      if(strandArray[data.StrandBackboneData[i][0]]) {
-					                      strandArray[data.StrandBackboneData[i][0]].setMap(map); 
-								      }
-								      else {
-								          buildPath(data.StrandBackboneData[i][0],window["mapPoints_"+data.StrandBackboneData[i][0]],strandArray,allStrands,"Strand",'purple',0.7,2.8,'purple',0);
-					                      strandArray[data.StrandBackboneData[i][0]].setMap(map); 
-								      }
-				                      Create_FiberStrandClick_Event(data.StrandBackboneData[i][0]+"__showPath"); 
-				                      pathCheckFilter(TargetStrand,"showPath",data.StrandBackboneData[i][0]+"__showPath","14",strandArray,allStrands,directionHashmapStrand,routeDisplayStrand,"","","","");  
-							    } 
-								}	
-								
-								 /* **** Metro ***** */
-							  if(data.CableMetroData.length > 0 || data.TubeMetroData.length > 0 || data.StrandMetroData.length > 0 ){
-							          var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_metro__showPath' style='display:none;margin-left:-20px' class='metroFolder'> <input type='checkbox' class='MetroFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Metro </span></li></ul></li></ul>";
-								      $("#FiberPath_f_showPath").append(str);
-								      pathCheckFilter("initial_ul","parentFolderCheck__showPath","FiberPath_metro__showPath","","","","","","","","","");      
-								}
-								  
-						        if(data.CableMetroData.length > 0){																							
-									  var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_metro_cable__showPath_f' style='display:none;margin-left:-20px;' class='metroFolder'> <input type='checkbox' class='MetroFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Cables </span></li></ul></li></ul>";
-									  $("#FiberPath_metro__showPath").append(str);
-								      pathCheckFilter(TargetFiber,"parentFolderCheck__showPath","FiberPath_metro_cable__showPath","20",fiberArray,allFiberCables,directionHashmap,routeDisplay,"","","","");
-																				      
-								for(i=0;i<data.CableMetroData.length;i++){
-									  var str="<ul style='list-style-type:none;cursor: pointer;'><li id='"+data.CableMetroData[i][0]+"__showPath' class='FIBER' style='display:none; width:1000px;'><input type='checkbox' class='FiberCable checkFilter' checked class='filter'></input> <span class='TreeSpan' style='display: inline-block;color:black; margin-inline:10px;'> <img class='image' src='"+getContext()+"/resources/NetworkImages/fiber.png'>"+data.CableMetroData[i][1]+"/"+data.CableMetroData[i][0]+" </span></li></ul>";
-									  $("#FiberPath_metro_cable__showPath_f").append(str);
-							    
-							    if(fiberArray[data.CableMetroData[i][0]]){
-						               fiberArray[data.CableMetroData[i][0]].setMap(map); 
-								  }
-								  else {
-									  buildPath(data.CableMetroData[i][0],window["mapPoints_"+data.CableMetroData[i][0]],fiberArray,allFiberCables,"FiberPath_f_",window['FiberColor_'+data.CableMetroData[i][3]],0.7,4.5,'blue',13);
-						              fiberArray[data.CableMetroData[i][0]].setMap(map);
-								  }
-								 Create_FiberPath(data.CableMetroData[i][0]+"__showPath");
-				                 pathCheckFilter(TargetFiber,"showPath",data.CableMetroData[i][0]+"__showPath","20",fiberArray,allFiberCables,directionHashmap,routeDisplay,"","","",""); 		 
-								}
-								}
-											
-								if(data.TubeMetroData.length > 0){
-									  var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_metro_tube__showPath_f' style='display:none;margin-left:-20px;' class='metroFolder'> <input type='checkbox' class='MetroFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Tubes </span></li></ul></li></ul>";
-									  $("#FiberPath_metro__showPath").append(str);
-							          pathCheckFilter(TargetTube,"parentFolderCheck__showPath","FiberPath_metro_tube__showPath","14",tubeArray,allTubes,directionHashmapTube,routeDisplayTube,"","","","");		  
-																				      
-								for(i=0;i<data.TubeMetroData.length;i++){
-									  var str="<ul style='list-style-type:none;cursor: pointer;'><li id='"+data.TubeMetroData[i][0]+"__showPath'  class='TUBE' style='display:none; width:1000px;'><input type='checkbox' class='FiberTube checkFilter' checked class='filter'></input> <span class='TreeSpan' style='display: inline-block;color:black; margin-inline:10px;'> <div style='margin-bottom:-17px;margin-left:6px; font-size:12px; font-weight:bold; color:"+data.TubeMetroData[i][2]+"'>"+data.TubeMetroData[i][3]+"</div> <img src='"+getContext()+"/resources/NetworkImages/core.png' style='margin-bottom:-10px;'> "+data.TubeMetroData[i][1]+"/"+data.TubeMetroData[i][0]+ "<b> : </b>"  +data.TubeMetroData[i][5]+"/"+data.TubeMetroData[i][4]+"  </span></li></ul>";
-								      $("#FiberPath_metro_tube__showPath_f").append(str);
-								      
-								       if(tubeArray[data.TubeMetroData[i][0]]) {
-									      tubeArray[data.TubeMetroData[i][0]].setMap(map); 
-								      }
-								      else {
-									     buildPath(data.TubeMetroData[i][0],window["mapPoints_"+data.TubeMetroData[i][0]],tubeArray,allTubes,"Tube",'green',0.7,3.3,'green',0);  
-									     tubeArray[data.TubeMetroData[i][0]].setMap(map); 
-								      }
-							         Create_FiberTubeClick_Event(data.TubeMetroData[i][0]+"__showPath");
-	   						    	 pathCheckFilter(TargetTube,"showPath",data.TubeMetroData[i][0]+"__showPath","14",tubeArray,allTubes,directionHashmapTube,routeDisplayTube,"","","","");      
-								}
-								}
-											
-								if(data.StrandMetroData.length > 0){
-									  var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_metro_strand__showPath_f' style='display:none;margin-left:-20px;' class='metroFolder'> <input type='checkbox' class='MetroFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Strands </span></li></ul></li></ul>";
-									  $("#FiberPath_metro__showPath").append(str);
-							         pathCheckFilter(TargetStrand,"parentFolderCheck__showPath","FiberPath_metro_strand__showPath","14",strandArray,allStrands,directionHashmapStrand,routeDisplayStrand,"","","","");
-									  
-																				      
-					     		for(i=0;i<data.StrandMetroData.length;i++){
-	                                  var str="<ul style='list-style-type:none;cursor: pointer;'><li id='"+data.StrandMetroData[i][0]+"__showPath' class='STRAND' style='display:none; width:1000px;'><input type='checkbox' class='FiberStrand checkFilter' checked class='filter'></input> <span class='TreeSpan' style='display: inline-block; color:black; margin-inline:10px;'> <div style='margin-bottom:-17px;margin-left:6px; font-size:12px; font-weight:bold; color:"+data.StrandMetroData[i][2]+"'>"+data.StrandMetroData[i][3]+"</div> <img src='"+getContext()+"/resources/NetworkImages/strand.png' style='margin-bottom:-10px;'> "+data.StrandMetroData[i][1]+"/"+data.StrandMetroData[i][0]+  "<b> : </b>" +data.StrandMetroData[i][7]+"/"+data.StrandMetroData[i][6]+ "<b> : </b>" +data.StrandMetroData[i][5]+"/"+data.StrandMetroData[i][4]+" </span></li></ul>";
-							          $("#FiberPath_metro_strand__showPath_f").append(str);    
-							             
-							           if(strandArray[data.StrandMetroData[i][0]]) {
-					                      strandArray[data.StrandMetroData[i][0]].setMap(map); 
-								      }
-								      else {
-								          buildPath(data.StrandMetroData[i][0],window["mapPoints_"+data.StrandMetroData[i][0]],strandArray,allStrands,"Strand",'purple',0.7,2.8,'purple',0);
-					                      strandArray[data.StrandMetroData[i][0]].setMap(map); 
-								      }
-				                      Create_FiberStrandClick_Event(data.StrandMetroData[i][0]+"__showPath"); 
-				                      pathCheckFilter(TargetStrand,"showPath",data.StrandMetroData[i][0]+"__showPath","14",strandArray,allStrands,directionHashmapStrand,routeDisplayStrand,"","","","");           	
-								}
-								}	
-											
-							/* **** Distribution **** */
-							    if(data.CableAccessData.length > 0 || data.TubeAccessData.length > 0 || data.StrandAccessData.length > 0){
-							         var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_distribution__showPath' style='display:none;margin-left:-20px' class='distributionFolder'> <input type='checkbox' class='DistributionFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Access </span></li></ul></li></ul>";
-							         $("#FiberPath_f_showPath").append(str);
-								     pathCheckFilter("initial_ul","parentFolderCheck__showPath","FiberPath_distribution__showPath","","","","","","","","","");      						         
-							    }		   
-								if(data.CableAccessData.length > 0){
-								      var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_distribution_cable__showPath_f' style='display:none;margin-left:-20px;' class='distributionFolder'> <input type='checkbox' class='DistributionFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Cables </span></li></ul></li></ul>";
-									  $("#FiberPath_distribution__showPath").append(str);
-							          pathCheckFilter(TargetFiber,"parentFolderCheck__showPath","FiberPath_distribution_cable__showPath","20",fiberArray,allFiberCables,directionHashmap,routeDisplay,"","","","");
-																		      
-								for(i=0;i<data.CableAccessData.length;i++){
-									  var str="<ul style='list-style-type:none;cursor: pointer;'><li id='"+data.CableAccessData[i][0]+"__showPath' class='FIBER' style='display:none; width:1000px;'><input type='checkbox' class='FiberCable checkFilter' checked class='filter'></input> <span class='TreeSpan' style='display: inline-block;color:black; margin-inline:10px;'><img class='image' src='"+getContext()+"/resources/NetworkImages/fiber.png'>"+data.CableAccessData[i][1]+"/"+data.CableAccessData[i][0]+" </span></li></ul>";
-									  $("#FiberPath_distribution_cable__showPath_f").append(str);	
-									   
-									   if(fiberArray[data.CableAccessData[i][0]]){
-						               fiberArray[data.CableAccessData[i][0]].setMap(map); 
-								  }
-								  else {
-									  buildPath(data.CableAccessData[i][0],window["mapPoints_"+data.CableAccessData[i][0]],fiberArray,allFiberCables,"FiberPath_f_",window['FiberColor_'+data.CableAccessData[i][3]],0.7,4.5,'blue',13);
-						              fiberArray[data.CableAccessData[i][0]].setMap(map);
-								  }
-								 Create_FiberPath(data.CableAccessData[i][0]+"__showPath");
-				                 pathCheckFilter(TargetFiber,"showPath",data.CableAccessData[i][0]+"__showPath","20",fiberArray,allFiberCables,directionHashmap,routeDisplay,"","","",""); 		 		
-								}
-								}
-											
-								if(data.TubeAccessData.length > 0){
-									  var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_distribution_tube__showPath_f' style='display:none;margin-left:-20px;' class='distributionFolder'> <input type='checkbox' class='DistributionFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Tubes </span></li></ul></li></ul>";
-									  $("#FiberPath_distribution__showPath").append(str);
-			                          pathCheckFilter(TargetTube,"parentFolderCheck__showPath","FiberPath_distribution_tube__showPath","14",tubeArray,allTubes,directionHashmapTube,routeDisplayTube,"","","","");		  
-																				      
-								for(i=0;i<data.TubeAccessData.length;i++){
-								      var str="<ul style='list-style-type:none;cursor: pointer;'><li id='"+data.TubeAccessData[i][0]+"__showPath'  class='TUBE' style='display:none; width:1000px;'><input type='checkbox' class='FiberTube checkFilter' checked class='filter'></input> <span class='TreeSpan' style='display: inline-block;color:black; margin-inline:10px;'> <div style='margin-bottom:-17px;margin-left:6px; font-size:12px; font-weight:bold; color:"+data.TubeAccessData[i][2]+"'>"+data.TubeAccessData[i][3]+"</div> <img src='"+getContext()+"/resources/NetworkImages/core.png' style='margin-bottom:-10px;'> "+data.TubeAccessData[i][1]+"/"+data.TubeAccessData[i][0]+ "<b> : </b>"  +data.TubeAccessData[i][5]+"/"+data.TubeAccessData[i][4]+"  </span></li></ul>";
-								      $("#FiberPath_distribution_tube__showPath_f").append(str);
-								      
-								       if(tubeArray[data.TubeAccessData[i][0]]) {
-									      tubeArray[data.TubeAccessData[i][0]].setMap(map); 
-								      }
-								      else {
-									     buildPath(data.TubeAccessData[i][0],window["mapPoints_"+data.TubeAccessData[i][0]],tubeArray,allTubes,"Tube",'green',0.7,3.3,'green',0);  
-									     tubeArray[data.TubeAccessData[i][0]].setMap(map); 
-								      }
-							         Create_FiberTubeClick_Event(data.TubeAccessData[i][0]+"__showPath");
-	   						    	 pathCheckFilter(TargetTube,"showPath",data.TubeAccessData[i][0]+"__showPath","14",tubeArray,allTubes,directionHashmapTube,routeDisplayTube,"","","","");      
-								}
-								}
-											
-								if(data.StrandAccessData.length > 0){
-									  var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_distribution_strand__showPath_f' style='display:none;margin-left:-20px;' class='distributionFolder'> <input type='checkbox' class='DistributionFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Strands </span></li></ul></li></ul>";
-									  $("#FiberPath_distribution__showPath").append(str);
-  							          pathCheckFilter(TargetStrand,"parentFolderCheck__showPath","FiberPath_distribution_strand__showPath","14",strandArray,allStrands,directionHashmapStrand,routeDisplayStrand,"","","",""); 
-																				      
-								for(i=0;i<data.StrandAccessData.length;i++){
-                             	      var str="<ul style='list-style-type:none;cursor: pointer;'><li id='"+data.StrandAccessData[i][0]+"__showPath' class='STRAND' style='display:none; width:1000px;'><input type='checkbox' class='FiberStrand checkFilter' checked class='filter'></input> <span class='TreeSpan' style='display: inline-block; color:black; margin-inline:10px;'> <div style='margin-bottom:-17px;margin-left:6px; font-size:12px; font-weight:bold; color:"+data.StrandAccessData[i][2]+"'>"+data.StrandAccessData[i][3]+"</div> <img src='"+getContext()+"/resources/NetworkImages/strand.png' style='margin-bottom:-10px;'> "+data.StrandAccessData[i][1]+"/"+data.StrandAccessData[i][0]+  "<b> : </b>" +data.StrandAccessData[i][7]+"/"+data.StrandAccessData[i][6]+ "<b> : </b>" +data.StrandAccessData[i][5]+"/"+data.StrandAccessData[i][4]+" </span></li></ul>";
-							          $("#FiberPath_distribution_strand__showPath_f").append(str);
-							          
-							           if(strandArray[data.StrandAccessData[i][0]]) {
-					                      strandArray[data.StrandAccessData[i][0]].setMap(map); 
-								      }
-								      else {
-								          buildPath(data.StrandAccessData[i][0],window["mapPoints_"+data.StrandAccessData[i][0]],strandArray,allStrands,"Strand",'purple',0.7,2.8,'purple',0);
-					                      strandArray[data.StrandAccessData[i][0]].setMap(map); 
-								      }
-				                      Create_FiberStrandClick_Event(data.StrandAccessData[i][0]+"__showPath");      
-				  				      pathCheckFilter(TargetStrand,"showPath",data.StrandAccessData[i][0]+"__showPath","14",strandArray,allStrands,directionHashmapStrand,routeDisplayStrand,"","","","");           	
-								}
-								}
-									
-							 MouseHoveringSpans("#FiberPath_f_showPath .TreeSpan");
-						     tree_prop_selection("#FiberPath_f_showPath .TreeSpan");
-					         treeCollapseFolder("#FiberPath_f_showPath .Parentfolder",".Parentfolder"); 	
-						     data=null;
-						      },
-						    error: function (result) {
-							alert("Error");
-						}
-				});  
 				
+				if (flag == 0 ){// in order to build for the first time the main fiber
+					getFiberPath("showPath",'/pathDistBoard',selectedDistBoardContext, "<tr><td><b>DB NAME:</b>"+selectedDistBoardName+"</td></tr>");
+				}else{
+					showPath('/pathDistBoard',selectedDistBoardContext, "<tr><td><b>DB NAME:</b>"+selectedDistBoardName+"</td></tr>");
 				}
+
 				
-			}	 
+			}
+				
+		}	 		
 			
-			
-		] // closing the item array of singleDistBoard ContextMenu
-	});
+  ] // closing the item array of singleDistBoard ContextMenu
+});
 	
 	/////////////*********************	singleFiber li ELEMENT CONTEXTS MENU  ***********************///////////////
 	//-------------------------------------------------------------------------------------------------//	  
@@ -17550,6 +16855,8 @@ $("#DBProjectId").autocomplete({
 ManHandHoleAutoCompleteJunction("manholeNameJct","Manhole");
 ManHandHoleAutoCompleteJunction("handholeNameJct","Handhole");
 
+ListProject = [] ,ListManhole = [] ,ListHandhole = [] ,fiberList = [] ,distribBoardList = [],fiberTubes = [] ,fiberStrands = [],fiberAuxiliary_Data = [],tubesAuxiliaries = [],strandsAuxiliaries = [],trenchList = [],trenchAuxiliary_Data = [],ListManholeJunction = [],ListHandholeJunction = [],filterFlag = [],ductList = [],ductAuxiliary_Data = [],NodeActiveList = [];
+
 }
 	/////// >>>>>>>>>>>>>  End of CreateTree_PhysicalLayer	/////////////////////////////
 
@@ -17635,6 +16942,11 @@ function treeCollapseFolder(selector,type,clss){
 		selector= " .folder";
 	}				
 	$(selector).bind('click',function (e) {
+		var id = $(this).parent().attr('id');
+		if(id == "FiberPath_f_CurrentPhysicalLayer" && flag == 0 && (filterFlag==1 || filterFlag== 0)){
+			console.log("passed treeCollapseFolder");
+			getFiberPath();
+		}
 		var children = $(this).parent().find(' > ul > li');
 		if (children.is(":visible")) {
 			children.hide(type);

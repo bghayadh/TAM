@@ -1583,7 +1583,7 @@ public class PhysicalLayerController {
 								"SELECT DISTINCT HANDHOLE_ID,HANDHOLE_NAME,LONGITUDE,LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=HANDHOLE_ID),CITY FROM HANDHOLE")
 								.list();
 
-						fiberList = session.createNativeQuery(
+						/*fiberList = session.createNativeQuery(
 								"SELECT SOURCE_LNG,SOURCE_LAT,DESTINATION_LNG,DESTINATION_LAT,A.FIBER_CABLE_ID,A.SOURCE_WARE_ID,A.SOURCE_ID,A.SOURCE_NAME,A.DESTINATION_WARE_ID,A.DESTINATION_ID,A.DESTINATION_NAME,(SELECT COUNT(*) FROM FIBER_TUBES B WHERE B.FIBER_CABLE_ID=A.FIBER_CABLE_ID),(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.FIBER_CABLE_ID=A.FIBER_CABLE_ID),FIBER_CABLE_NAME,PROJECT_ID,SOURCE_CITY,DESTINATION_CITY,NUMBER_OF_TUBES,NUMBER_OF_STRANDS,LENGTH,DRAWING_TYPE,FIBER_NETWORK_LEVEL,FIBER_OWNER,(select B.FIBER_COLOR_OWNER from FIBER_OWNER_COLOR B WHERE B.FIBER_OWNER=A.FIBER_OWNER) AS FIBER_CABLE_COLOR FROM FIBER_CABLES A")
 								.list();
 
@@ -1610,7 +1610,7 @@ public class PhysicalLayerController {
 						strandsAuxiliaries = session.createNativeQuery(
 								"SELECT c.STRAND_ID,c.LONGITUDE,c.LATITUDE,c.WARE_ID,c.AUXILIARY_POINT_ID,C.AUXILIARY_POINT_NAME,c.DISTANCE_FROM_SOURCE,c.SEQ_SORTING,c.AUXILIARY_ID,c.DRIVING_DISTANCE, c.GEO_DISTANCE FROM STRAND_AUXILIARY_POINTS c,FIBER_STRANDS b,FIBER_CABLES a WHERE a.FIBER_CABLE_ID=b.FIBER_CABLE_ID and b.STRAND_ID=c.STRAND_ID ORDER BY c.SEQ_SORTING ASC ")
 								.list();
-
+*/
 						distribBoardList = session.createNativeQuery(
 								"SELECT DISTINCT DB_ID,DB_LONGITUDE,DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,PROJECT_ID ,CITY,DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD")
 								.list();
@@ -3503,9 +3503,9 @@ public class PhysicalLayerController {
 	public Map<String, Object> pathDistBoard(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
 
+
 		Map<String, Object> rtn = new LinkedHashMap<>();
 		session = almsessions.getSession();
-		ObjectMapper mapper = new ObjectMapper();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
@@ -3515,7 +3515,7 @@ public class PhysicalLayerController {
 
 			try {
 
-				String distBoardSel = request.getParameter("DistBoardSel");
+				String distBoardSel = request.getParameter("dataSel");
 				/* Backbone data for show Path */
 				List<Object[]> CableBackboneData = session.createNativeQuery(
 						"Select DISTINCT a.BP_FIBER_ID,a.BP_FIBER_NAME,b.FIBER_NETWORK_LEVEL,b.FIBER_OWNER FROM (DISTRIBUTION_BOARD_MAPPING a LEFT JOIN  FIBER_CABLES b on a.BP_FIBER_ID = b.FIBER_CABLE_ID) WHERE (DB_ID='"
@@ -3528,8 +3528,7 @@ public class PhysicalLayerController {
 								+ "Select DISTINCT A.FIBER_CABLE_ID,B.FIBER_CABLE_NAME,B.FIBER_NETWORK_LEVEL,B.FIBER_OWNER FROM FIBER_AUXILIARY_POINTS A LEFT JOIN  FIBER_CABLES B on A.FIBER_CABLE_ID = B.FIBER_CABLE_ID WHERE (AUXILIARY_POINT_ID='"
 								+ distBoardSel + "') and (FIBER_NETWORK_LEVEL = 'backbone')")
 						.list();
-				rtn.put("CableBackboneData", CableBackboneData);
-				System.out.println("CableBackboneData is -->/n" + mapper.writeValueAsString(CableBackboneData));
+				rtn.put("BackboneCableData", CableBackboneData);
 
 				List<Object[]> TubeBackboneData = session.createNativeQuery(
 						"Select DISTINCT a.BP_TUBE_ID,a.BP_TUBE_NAME,a.BP_TUBE_COLOR,a.BP_TUBE_NB,a.BP_FIBER_ID,a.BP_FIBER_NAME,b.TUBE_NETWORK_LEVEL FROM (DISTRIBUTION_BOARD_MAPPING a LEFT JOIN FIBER_TUBES b on a.BP_TUBE_ID = b.TUBE_ID) WHERE (DB_ID='"
@@ -3542,7 +3541,7 @@ public class PhysicalLayerController {
 								+ "Select DISTINCT A.TUBE_ID,B.TUBE_NAME,B.TUBE_COLOR,B.TUBE_NUMBER,A.FIBER_CABLE_ID,C.FIBER_CABLE_NAME,B.TUBE_NETWORK_LEVEL FROM (TUBE_AUXILIARY_POINTS A LEFT JOIN  FIBER_TUBES B on A.TUBE_ID = B.TUBE_ID) LEFT JOIN FIBER_CABLES C on A.FIBER_CABLE_ID=C.FIBER_CABLE_ID  WHERE (A.AUXILIARY_POINT_ID='"
 								+ distBoardSel + "') and (TUBE_NETWORK_LEVEL = 'backbone')")
 						.list();
-				rtn.put("TubeBackboneData", TubeBackboneData);
+				rtn.put("BackboneTubeData", TubeBackboneData);
 
 				List<Object[]> StrandBackboneData = session.createNativeQuery(
 						"Select DISTINCT a.BP_STRAND_ID,a.BP_STRAND_NAME,a.BP_STRAND_COLOR,a.BP_STRAND_NB,a.BP_FIBER_ID,a.BP_FIBER_NAME,a.BP_TUBE_ID,a.BP_TUBE_NAME,b.STRAND_NETWORK_LEVEL FROM (DISTRIBUTION_BOARD_MAPPING a left join FIBER_STRANDS b on a.BP_STRAND_ID = b.STRAND_ID) WHERE (DB_ID='"
@@ -3555,7 +3554,7 @@ public class PhysicalLayerController {
 								+ "Select DISTINCT A.STRAND_ID,B.STRAND_NAME,B.STRAND_COLOR,B.STRAND_NUMBER,C.FIBER_CABLE_ID,C.FIBER_CABLE_NAME,D.TUBE_ID,D.TUBE_NAME,B.STRAND_NETWORK_LEVEL FROM (STRAND_AUXILIARY_POINTS A LEFT JOIN  FIBER_STRANDS B on A.STRAND_ID = B.STRAND_ID) LEFT JOIN FIBER_CABLES C on A.FIBER_CABLE_ID=C.FIBER_CABLE_ID LEFT JOIN FIBER_TUBES D on B.TUBE_ID=D.TUBE_ID WHERE (A.AUXILIARY_POINT_ID='"
 								+ distBoardSel + "') and (STRAND_NETWORK_LEVEL = 'backbone')")
 						.list();
-				rtn.put("StrandBackboneData", StrandBackboneData);
+				rtn.put("BackboneStrandData", StrandBackboneData);
 
 				/* Metro data for show Path */
 				List<Object[]> CableMetroData = session.createNativeQuery(
@@ -3569,7 +3568,7 @@ public class PhysicalLayerController {
 								+ "Select DISTINCT A.FIBER_CABLE_ID,B.FIBER_CABLE_NAME,B.FIBER_NETWORK_LEVEL,B.FIBER_OWNER FROM FIBER_AUXILIARY_POINTS A LEFT JOIN  FIBER_CABLES B on A.FIBER_CABLE_ID = B.FIBER_CABLE_ID WHERE (AUXILIARY_POINT_ID='"
 								+ distBoardSel + "') and (FIBER_NETWORK_LEVEL = 'metro')")
 						.list();
-				rtn.put("CableMetroData", CableMetroData);
+				rtn.put("MetroCableData", CableMetroData);
 
 				List<Object[]> TubeMetroData = session.createNativeQuery(
 						"Select DISTINCT a.BP_TUBE_ID,a.BP_TUBE_NAME,a.BP_TUBE_COLOR,a.BP_TUBE_NB,a.BP_FIBER_ID,a.BP_FIBER_NAME,b.TUBE_NETWORK_LEVEL FROM (DISTRIBUTION_BOARD_MAPPING a LEFT JOIN FIBER_TUBES b on a.BP_TUBE_ID = b.TUBE_ID) WHERE (DB_ID='"
@@ -3582,7 +3581,7 @@ public class PhysicalLayerController {
 								+ "Select DISTINCT A.TUBE_ID,B.TUBE_NAME,B.TUBE_COLOR,B.TUBE_NUMBER,A.FIBER_CABLE_ID,C.FIBER_CABLE_NAME,B.TUBE_NETWORK_LEVEL FROM (TUBE_AUXILIARY_POINTS A LEFT JOIN  FIBER_TUBES B on A.TUBE_ID = B.TUBE_ID) LEFT JOIN FIBER_CABLES C on A.FIBER_CABLE_ID=C.FIBER_CABLE_ID  WHERE (A.AUXILIARY_POINT_ID='"
 								+ distBoardSel + "') and (TUBE_NETWORK_LEVEL = 'metro')")
 						.list();
-				rtn.put("TubeMetroData", TubeMetroData);
+				rtn.put("MetroTubeData", TubeMetroData);
 
 				List<Object[]> StrandMetroData = session.createNativeQuery(
 						"Select DISTINCT a.BP_STRAND_ID,a.BP_STRAND_NAME,a.BP_STRAND_COLOR,a.BP_STRAND_NB,a.BP_FIBER_ID,a.BP_FIBER_NAME,a.BP_TUBE_ID,a.BP_TUBE_NAME,b.STRAND_NETWORK_LEVEL FROM (DISTRIBUTION_BOARD_MAPPING a left join FIBER_STRANDS b on a.BP_STRAND_ID = b.STRAND_ID) WHERE (DB_ID='"
@@ -3595,7 +3594,7 @@ public class PhysicalLayerController {
 								+ "Select DISTINCT A.STRAND_ID,B.STRAND_NAME,B.STRAND_COLOR,B.STRAND_NUMBER,C.FIBER_CABLE_ID,C.FIBER_CABLE_NAME,D.TUBE_ID,D.TUBE_NAME,B.STRAND_NETWORK_LEVEL FROM (STRAND_AUXILIARY_POINTS A LEFT JOIN  FIBER_STRANDS B on A.STRAND_ID = B.STRAND_ID) LEFT JOIN FIBER_CABLES C on A.FIBER_CABLE_ID=C.FIBER_CABLE_ID LEFT JOIN FIBER_TUBES D on B.TUBE_ID=D.TUBE_ID WHERE (A.AUXILIARY_POINT_ID='"
 								+ distBoardSel + "') and (STRAND_NETWORK_LEVEL = 'metro')")
 						.list();
-				rtn.put("StrandMetroData", StrandMetroData);
+				rtn.put("MetroStrandData", StrandMetroData);
 
 				/* Access data for show Path */
 				List<Object[]> CableAccessData = session.createNativeQuery(
@@ -3609,7 +3608,7 @@ public class PhysicalLayerController {
 								+ "Select DISTINCT A.FIBER_CABLE_ID,B.FIBER_CABLE_NAME,B.FIBER_NETWORK_LEVEL,B.FIBER_OWNER FROM FIBER_AUXILIARY_POINTS A LEFT JOIN  FIBER_CABLES B on A.FIBER_CABLE_ID = B.FIBER_CABLE_ID WHERE (AUXILIARY_POINT_ID='"
 								+ distBoardSel + "') and (FIBER_NETWORK_LEVEL = 'access')")
 						.list();
-				rtn.put("CableAccessData", CableAccessData);
+				rtn.put("DistributionCableData", CableAccessData);
 
 				List<Object[]> TubeAccessData = session.createNativeQuery(
 						"Select DISTINCT a.BP_TUBE_ID,a.BP_TUBE_NAME,a.BP_TUBE_COLOR,a.BP_TUBE_NB,a.BP_FIBER_ID,a.BP_FIBER_NAME,b.TUBE_NETWORK_LEVEL FROM (DISTRIBUTION_BOARD_MAPPING a LEFT JOIN FIBER_TUBES b on a.BP_TUBE_ID = b.TUBE_ID) WHERE (DB_ID='"
@@ -3622,7 +3621,7 @@ public class PhysicalLayerController {
 								+ "Select DISTINCT A.TUBE_ID,B.TUBE_NAME,B.TUBE_COLOR,B.TUBE_NUMBER,A.FIBER_CABLE_ID,C.FIBER_CABLE_NAME,B.TUBE_NETWORK_LEVEL FROM (TUBE_AUXILIARY_POINTS A LEFT JOIN  FIBER_TUBES B on A.TUBE_ID = B.TUBE_ID) LEFT JOIN FIBER_CABLES C on A.FIBER_CABLE_ID=C.FIBER_CABLE_ID  WHERE (A.AUXILIARY_POINT_ID='"
 								+ distBoardSel + "') and (TUBE_NETWORK_LEVEL = 'access')")
 						.list();
-				rtn.put("TubeAccessData", TubeAccessData);
+				rtn.put("DistributionTubeData", TubeAccessData);
 
 				List<Object[]> StrandAccessData = session.createNativeQuery(
 						"Select DISTINCT a.BP_STRAND_ID,a.BP_STRAND_NAME,a.BP_STRAND_COLOR,a.BP_STRAND_NB,a.BP_FIBER_ID,a.BP_FIBER_NAME,a.BP_TUBE_ID,a.BP_TUBE_NAME,b.STRAND_NETWORK_LEVEL FROM (DISTRIBUTION_BOARD_MAPPING a left join FIBER_STRANDS b on a.BP_STRAND_ID = b.STRAND_ID) WHERE (DB_ID='"
@@ -3635,7 +3634,7 @@ public class PhysicalLayerController {
 								+ "Select DISTINCT A.STRAND_ID,B.STRAND_NAME,B.STRAND_COLOR,B.STRAND_NUMBER,C.FIBER_CABLE_ID,C.FIBER_CABLE_NAME,D.TUBE_ID,D.TUBE_NAME,B.STRAND_NETWORK_LEVEL FROM (STRAND_AUXILIARY_POINTS A LEFT JOIN  FIBER_STRANDS B on A.STRAND_ID = B.STRAND_ID) LEFT JOIN FIBER_CABLES C on A.FIBER_CABLE_ID=C.FIBER_CABLE_ID LEFT JOIN FIBER_TUBES D on B.TUBE_ID=D.TUBE_ID WHERE (A.AUXILIARY_POINT_ID='"
 								+ distBoardSel + "') and (STRAND_NETWORK_LEVEL = 'access')")
 						.list();
-				rtn.put("StrandAccessData", StrandAccessData);
+				rtn.put("DistributionStrandData", StrandAccessData);
 
 			}
 
@@ -3645,15 +3644,15 @@ public class PhysicalLayerController {
 				exceptionAsString = sw.toString();
 				logger.finest("Error in pathDistBoard due to \n " + exceptionAsString);
 				logger.info("Error in pathDistBoard due to \n " + exceptionAsString);
-				rtn.put("CableBackboneData", null);
-				rtn.put("TubeBackboneData", null);
-				rtn.put("StrandBackboneData", null);
-				rtn.put("CableMetroData", null);
-				rtn.put("TubeMetroData", null);
-				rtn.put("StrandMetroData", null);
-				rtn.put("CableAccessData", null);
-				rtn.put("TubeAccessData", null);
-				rtn.put("StrandAccessData", null);
+				rtn.put("BackboneCableData", null);
+				rtn.put("BackboneTubeData", null);
+				rtn.put("BackboneStrandData", null);
+				rtn.put("MetroCableData", null);
+				rtn.put("MetroTubeData", null);
+				rtn.put("MetroStrandData", null);
+				rtn.put("DistributionCableData", null);
+				rtn.put("DistributionTubeData", null);
+				rtn.put("DistributionStrandData", null);
 			} finally {
 				if (session != null && session.isOpen()) {
 					tx.commit();
@@ -3664,6 +3663,8 @@ public class PhysicalLayerController {
 
 		}
 		return rtn;
+	
+		
 	}
 
 	@RequestMapping(value = "/TrenchBoQ", method = RequestMethod.GET)
@@ -6523,6 +6524,85 @@ public class PhysicalLayerController {
 		return rtn;
 
 	}
+	
+	@RequestMapping(value = "/getFiberPath", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> getFiberPath(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException {
+		System.out.println("Passes here getFiberPath");
+		Map<String, Object> rtn = new LinkedHashMap<String, Object>();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+
+		Query query;
+		session = almsessions.getSession();
+
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			try {
+				List<Object[]> fiberList = new ArrayList<Object[]>();
+				List<Object[]> fiberAuxiliary_Data = new ArrayList<Object[]>();
+				List<Object[]> fiberTubes = new ArrayList<Object[]>();
+				List<Object[]> tubesAuxiliaries = new ArrayList<Object[]>();
+				List<Object[]> fiberStrands = new ArrayList<Object[]>();
+				List<Object[]> strandsAuxiliaries  = new ArrayList<Object[]>();
+			   fiberList = session.createNativeQuery(
+						"SELECT SOURCE_LNG,SOURCE_LAT,DESTINATION_LNG,DESTINATION_LAT,A.FIBER_CABLE_ID,A.SOURCE_WARE_ID,A.SOURCE_ID,A.SOURCE_NAME,A.DESTINATION_WARE_ID,A.DESTINATION_ID,A.DESTINATION_NAME,(SELECT COUNT(*) FROM FIBER_TUBES B WHERE B.FIBER_CABLE_ID=A.FIBER_CABLE_ID),(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.FIBER_CABLE_ID=A.FIBER_CABLE_ID),FIBER_CABLE_NAME,PROJECT_ID,SOURCE_CITY,DESTINATION_CITY,NUMBER_OF_TUBES,NUMBER_OF_STRANDS,LENGTH,DRAWING_TYPE,FIBER_NETWORK_LEVEL,FIBER_OWNER,(select B.FIBER_COLOR_OWNER from FIBER_OWNER_COLOR B WHERE B.FIBER_OWNER=A.FIBER_OWNER) AS FIBER_CABLE_COLOR FROM FIBER_CABLES A")
+						.list();
+
+				fiberAuxiliary_Data = session.createNativeQuery(
+						"SELECT B.LONGITUDE,B.LATITUDE,B.DISTANCE_FROM_SOURCE,B.WARE_ID,B.AUXILIARY_POINT_ID,B.AUXILIARY_POINT_NAME,B.FIBER_CABLE_ID,B.AUXILIARY_ID FROM FIBER_CABLES A,FIBER_AUXILIARY_POINTS B WHERE A.FIBER_CABLE_ID=B.FIBER_CABLE_ID ORDER BY B.SEQ_SORTING ASC")
+						.list();
+
+				fiberTubes = session.createNativeQuery(
+						"SELECT b.TUBE_ID,b.SOURCE_LONGITUDE,b.SOURCE_LATITUDE,b.DESTINATION_LONGITUDE,b.DESTINATION_LATITUDE,b.SOURCE_WARE_ID,b.SOURCE_ID,b.SOURCE_NAME,b.DESTINATION_WARE_ID,b.DESTINATION_ID,b.DESTINATION_NAME,"
+						+ "(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.TUBE_ID=b.TUBE_ID),b.FIBER_CABLE_ID,b.TUBE_NAME,b.DRAWING_TYPE,b.TUBE_NUMBER, b.TUBE_COLOR "
+						+ "FROM FIBER_TUBES b,FIBER_CABLES a WHERE a.FIBER_CABLE_ID=b.FIBER_CABLE_ID ORDER BY FIBER_CABLE_ID,TUBE_NUMBER ASC")
+						.list();
+				//System.out.println("fb >>" + mapper.writeValueAsString(fiberTubes));
+
+				tubesAuxiliaries = session.createNativeQuery(
+						"SELECT c.TUBE_ID,c.LONGITUDE,c.LATITUDE,c.WARE_ID,c.AUXILIARY_POINT_ID,c.AUXILIARY_POINT_NAME,c.DISTANCE_FROM_SOURCE,c.SEQ_SORTING,c.AUXILIARY_ID,c.DRIVING_DISTANCE, c.GEO_DISTANCE FROM TUBE_AUXILIARY_POINTS c,FIBER_TUBES b,FIBER_CABLES a WHERE a.FIBER_CABLE_ID=b.FIBER_CABLE_ID and b.TUBE_ID=c.TUBE_ID ORDER BY c.SEQ_SORTING ASC")
+						.list();
+
+				fiberStrands = session.createNativeQuery(
+						"SELECT b.STRAND_ID,b.SOURCE_LONGITUDE,b.SOURCE_LATITUDE,b.DESTINATION_LONGITUDE,b.DESTINATION_LATITUDE,b.SOURCE_WARE_ID,b.SOURCE_ID,b.SOURCE_NAME,b.DESTINATION_WARE_ID,b.DESTINATION_ID,b.DESTINATION_NAME,b.TUBE_ID,b.FIBER_CABLE_ID,b.STRAND_NAME,b.DRAWING_TYPE,b.STRAND_NUMBER,b.STRAND_COLOR FROM FIBER_STRANDS b,FIBER_CABLES a WHERE a.FIBER_CABLE_ID=b.FIBER_CABLE_ID ORDER BY STRAND_NUMBER")
+						.list();
+				//System.out.println("fs >>" + mapper.writeValueAsString(fiberStrands));
+
+				strandsAuxiliaries = session.createNativeQuery(
+						"SELECT c.STRAND_ID,c.LONGITUDE,c.LATITUDE,c.WARE_ID,c.AUXILIARY_POINT_ID,C.AUXILIARY_POINT_NAME,c.DISTANCE_FROM_SOURCE,c.SEQ_SORTING,c.AUXILIARY_ID,c.DRIVING_DISTANCE, c.GEO_DISTANCE FROM STRAND_AUXILIARY_POINTS c,FIBER_STRANDS b,FIBER_CABLES a WHERE a.FIBER_CABLE_ID=b.FIBER_CABLE_ID and b.STRAND_ID=c.STRAND_ID ORDER BY c.SEQ_SORTING ASC ")
+						.list();
+
+				rtn.put("fiber", fiberList);
+				rtn.put("strands_Auxiliaries", strandsAuxiliaries);
+				rtn.put("fiber_Strands", fiberStrands);
+				rtn.put("tubes_Auxiliaries", tubesAuxiliaries);
+				rtn.put("fiber_Tubes", fiberTubes);
+				rtn.put("fiber_Auxiliary", fiberAuxiliary_Data);
+
+			} catch (Exception e) {
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in getFiberPath due to \n " + exceptionAsString);
+				logger.info("Error in getFiberPath due to \n " + exceptionAsString);
+				rtn.put("searchResult", null);
+			} finally {
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+					session.getSessionFactory().close();
+				}
+			}
+		}
+
+		return rtn;
+
+	}
+
 
 	@RequestMapping(value = "/SearchStrand", method = RequestMethod.GET)
 	@ResponseBody
