@@ -24,6 +24,9 @@ class gridAppendRows {
      
       this.tableBody.innerHTML = ""
       var itemRow = "";
+	  var prevSelRow="empty";
+	  var prevSelColor="";
+
     
       //console.log(`rows.length is ${rows.length}`)
       if(end >= rows.length){
@@ -56,7 +59,24 @@ class gridAppendRows {
           this.updatePagination(newEnd,newStart);
       //}
       
+	var tableID = this.tableId;
 
+	$("#"+tableID+ " tr").click(function() {
+	    var rowIndex = $(this).index();
+	    var color = $('#' + tableID + ' > tbody > tr').eq(rowIndex).css("background-color");
+	
+	    if (prevSelRow == "empty") {  // first time clicking (no previous row is selected)
+	        $('#' + tableID + ' > tbody > tr').eq(rowIndex).css('background-color', 'yellow');
+	        prevSelRow = rowIndex;
+	        prevSelColor = color;
+	    } 
+		else if(prevSelRow!=rowIndex) {
+	        $('#' + tableID + ' > tbody > tr').eq(rowIndex).css('background-color', 'yellow');
+	        $('#' + tableID + ' > tbody > tr').eq(prevSelRow).css('background-color', prevSelColor);
+	        prevSelRow = rowIndex;
+	        prevSelColor = color;
+	    }
+	});
       // Method after draw for single pages
       // methodAfterDraw();
 

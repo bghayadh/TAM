@@ -1618,7 +1618,7 @@ function showHideAllSites(){
 			
 		});	
 }
-function panToSite(ID,rowIndex,rowCount){
+function panToSite(ID,rowIndex){
 
 	var longitude = filteredSitesGrid[rowIndex]["longitude"];
 	var latitude = filteredSitesGrid[rowIndex]["latitude"];
@@ -1644,8 +1644,7 @@ function panToSite(ID,rowIndex,rowCount){
 
 		//Scroll to the map div
 		document.getElementById("headingTwo").scrollIntoView({ behavior: "smooth" });
-		
-		changeRowColor(rowCount);			
+				
 }
 function getLongLatMouseMove(map){		  
 	map.addListener("mousemove", (mapsMouseEvent) => {
@@ -1653,24 +1652,6 @@ function getLongLatMouseMove(map){
 	   $("#mapLongLat").val(JSON.stringify(mapsMouseEvent.latLng.toJSON().lat.toFixed(13) +" || "
 	    	    +mapsMouseEvent.latLng.toJSON().lng.toFixed(13), null, 2));	    
 	});					 
-}
-
-function changeRowColor(rowIndex){
-
-	var selectedRow = $('#gridTable >tbody >tr').eq(rowIndex);
-	var color =  $('#gridTable >tbody >tr').eq(rowIndex).css("background-color");
-
-	if(prevSelectedRowIndex=="") {  // first time clicking (no previous row is selected)
-		$('#gridTable >tbody >tr').eq(rowIndex).css('background-color','yellow');
-		prevSelectedRowIndex = rowIndex;
-		prevSelectedRowColor= color;		
-	}
-	else if(rowIndex != prevSelectedRowIndex) {
-		$('#gridTable >tbody >tr').eq(rowIndex).css('background-color','yellow');
-		$('#gridTable >tbody >tr').eq(prevSelectedRowIndex).css('background-color',prevSelectedRowColor);
-		prevSelectedRowIndex = rowIndex;
-		prevSelectedRowColor= color;
-	}
 }
 
 

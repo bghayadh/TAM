@@ -24,7 +24,8 @@ class gridAppendRows {
       this.tableBody.innerHTML = ""
       var itemRow = "";
 
-      var rowCount=0;
+	  var prevSelRow="empty";
+	  var prevSelColor="";
 
       //console.log(`rows.length is ${rows.length}`)
       if(end >= rows.length){
@@ -38,14 +39,13 @@ class gridAppendRows {
           itemRow += "<tr class='filterRows'>";
           for (var j = 0; j < this.ArrayKeys.length; j++) {
               if (j == 0) {
-				itemRow += "<td><button type='button' class='pan' id='panTo" +rows[i][this.ArrayKeys[j]]+ "'  onClick='panToSite(\"" + rows[i][this.ArrayKeys[j]] + "\",\"" +i+ "\",\"" +rowCount+ "\")' >Pan to Site</button></td>"
+				itemRow += "<td><button type='button' class='pan' id='panTo" +rows[i][this.ArrayKeys[j]]+ "'  onClick='panToSite(\"" + rows[i][this.ArrayKeys[j]] + "\",\"" +i+ "\")' >Pan to Site</button></td>"
               } 
 			 else {
-				itemRow += "<td >" +rows[i][this.ArrayKeys[j]] + "</td>";
+				itemRow += "<td class='changeColor' >" +rows[i][this.ArrayKeys[j]] + "</td>";
               }
           }
           itemRow += "</tr>";
-		  rowCount++;             
       }										
       $(this.tableBody).append(itemRow);
       // to update the fields if possible;
@@ -53,7 +53,29 @@ class gridAppendRows {
       //if(this.totalNoOfRows > this.noOfRows){
           this.updatePagination(newEnd,newStart);
       //}
-      
+
+	
+	var tableID = this.tableId;
+
+	$("#"+tableID+ " tr").click(function() {
+	    var rowIndex = $(this).index();
+	    var color = $('#' + tableID + ' > tbody > tr').eq(rowIndex).css("background-color");
+	
+	    if (prevSelRow == "empty") {  // first time clicking (no previous row is selected)
+	        $('#' + tableID + ' > tbody > tr').eq(rowIndex).css('background-color', 'yellow');
+	        prevSelRow = rowIndex;
+	        prevSelColor = color;
+	    } 
+		else if(prevSelRow!=rowIndex) {
+	        $('#' + tableID + ' > tbody > tr').eq(rowIndex).css('background-color', 'yellow');
+	        $('#' + tableID + ' > tbody > tr').eq(prevSelRow).css('background-color', prevSelColor);
+	        prevSelRow = rowIndex;
+	        prevSelColor = color;
+	    }
+	});
+
+
+
 
       // Method after draw for single pages
       // methodAfterDraw();
@@ -102,6 +124,7 @@ class gridAppendRows {
    }
 }
 
+	
    columnLinks(columnNumber) {
        var tableId = this.tableId;
        var columnNumber = columnNumber;
@@ -119,5 +142,5 @@ class gridAppendRows {
        }
 
    } 
-  
+ 
 }
