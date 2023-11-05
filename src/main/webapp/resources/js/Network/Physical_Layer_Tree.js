@@ -486,7 +486,8 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 	if(filterFlag==2 || filterFlag==1){// connected and circle range
 		
 		console.log("loading flag value, flag =" +flag);
-		
+		CreateFiberPath(fiberList,fiberTubes,fiberStrands,fiberAuxiliary_Data,tubesAuxiliaries,strandsAuxiliaries)
+/*		
 		if(fiberList!=null){
 			for(i=0;i<fiberList.length;i++){
 				allFiberCables.push(fiberList[i][4]);
@@ -524,7 +525,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				}
 
 		
-				////////**********	Loading all FIBERS with auxiliaries data  ***********//////////
+				////////	Loading all FIBERS with auxiliaries data  //////////
 
 				var fiberId=fiberList[i][4];
 				window[""+fiberList[i][4]]=[];
@@ -768,7 +769,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 			  }
 		  }
 	
-	/////////////*********************	Strands Creation In tree	***********************///////////////
+	/////////////	Strands Creation In tree	///////////////
 	
 		if(fiberStrands!=null){  
 			for(i=0;i<fiberStrands.length;i++){
@@ -886,7 +887,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				});							
 		   }
 	   }
-
+*/
 	
 }	else{
 	console.log(" //////////passed else");	

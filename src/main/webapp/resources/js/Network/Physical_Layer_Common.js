@@ -723,523 +723,7 @@ $("#setCoordinateTubeAux").on('click',function(){
  IdSelectedTemp="";
  IdSelectedTempHandhole="";	
  
- 
 
-/*	
-function createManhole_Marker_Click(Id,Name,Long,Lat,markersManhole,markerClusterManhole,Type){
-	
-	const pos = new google.maps.LatLng(Lat,Long);
-	var data="<div>" +Name+ "</div>";
-	var iconMan;
- if(Type == "No_Junction"){
-	 iconMan = iconManhole;
- }
- else {
-	 iconMan = iconManholeJct; 
- }
- 
- if(!markersManhole[Id]){
-	markerManhole = new google.maps.Marker({
-		position: pos,
-		data: data,
-		icon: iconMan,
-		ID: Id,
-	});
-	markerManhole.metadata = { id: Id };
-	markersManhole[Id] = markerManhole;
-	markersManhole.push(markerManhole);
-			 
-	google.maps.event.addListener(markerManhole, "click", function (e) {
-		var IdSelected=this.ID;
-		nodeFileId = $("#"+IdSelected).parents().eq(3).attr("id").split("initial_ul_")[1];
-		var projectInitial=$("#initial_ul_Projects").find('>ul > #'+nodeFileId);
-		var projectRel=$("#"+nodeFileId+"").find('>ul > #initial_ul_'+nodeFileId);
-		var childrenInitial=$("#initial_ul_"+nodeFileId+"").find(' > ul > li');
-		var children = $("#Manhole_f_"+nodeFileId+"").find(' > ul > li');
-		
-		if(IdSelected!=IdSelectedTemp){	
-			if(IdSelectedTemp!=""){
-				$("#"+IdSelectedTemp+" > .TreeSpan").removeClass("selected-span");
-				$("#"+IdSelectedTemp+" > .TreeSpan").css("background","");
-			}
-			//appendManholeBoq(nodeFileId,Id,ManholeSel,text,this.position.lng(),this.position.lat(), ManholeCity,DMName);
-			IdSelectedTemp=IdSelected;							
-		}
-		childrenInitial.show('fast');
-		if(!children.is(":visible")){
-			children.show();
-		}
-		projectInitial.show('fast');
-		projectRel.show('fast');
-
-		$("#"+IdSelected+" > .TreeSpan").addClass("selected-span");
-		$("#"+IdSelected+" > .TreeSpan").css("background-color", "#97b9cc");
-
-		$("#initial_ul_"+nodeFileId+" > .folder>svg").removeClass('fa fa-folder').addClass('fa-folder-open');
-		$("#initial_ul_Projects > .folder>svg").removeClass('fa fa-folder').addClass('fa-folder-open');
-		$("#"+nodeFileId+" > .folder>svg").removeClass('fa fa-folder').addClass('fa-folder-open');	
-		$("#Manhole_f_"+nodeFileId+" > .folder>svg").removeClass('fa fa-folder').addClass('fa-folder-open');
-
-		offset=$("#"+IdSelected).offset().top;
-		projectOffset=$("#initial_ul_"+nodeFileId).offset().top;
-		offsetTotal=(offset-projectOffset);
-		$("#network_tree").animate({ scrollTop: offsetTotal}, "slow");
-		if(draw==true){
-			createPathh(e);
-		}
-
-		if(deleting == true){ 
-			deleteAuxPath(e);
-			MarkerArrayId.push(Id+":"+Name);
-		}	
-	
-	 });
-	}
-
-	else{
-		if(markersManhole[Id].map!=map){
-			markersManhole[Id].setMap(map);
-		}
-		markersManhole[Id].setPosition(pos);
-		markersManhole[Id].data=data;
-	}
-	
-$("#"+Id+" > .TreeSpan").on('click', function () {
-	
-	checkedChildrenLayer="";
-	//showBoq();
-	 if($(this).parents().eq(4).attr('id') == "initial_ul_CurrentPhysicalLayer"){
-		   nodeFileId = "CurrentPhysicalLayer";
-	  }
-	  else if($(this).parents().eq(4).attr('id').split("_", 3) == "initial,ul,PROJECT"){
-		   nodeFileParentId = $(this).parents().eq(4).attr('id').split("initial_ul_");
-		   nodeFileId = nodeFileParentId[1];
-	 }
-	//appendManholeBoq(nodeFileId,Id,ManholeSel,text,Long,Lat,ManholeCity,DMName);
-
-	if(markersTempoHandhole){
-		$("#"+markersTempoHandhole+"> span>img").attr('src', getContext() + "/resources/NetworkImages/handholeYellow.png");
-		markersHandhole[markersTempoHandhole].setIcon(iconHandhole);							
-	}
-	else if(markersTempoHandholeJct){
-		$("#"+markersTempoHandholeJct+"> span>img").attr('src', getContext() + "/resources/NetworkImages/handholeYellow.png");
-		markersHandhole[markersTempoHandholeJct].setIcon(iconHandholeJct);			
-	}
-	if(markersTempoDistBoard){
-		$("#"+markersTempoDistBoard+"> span>img").attr('src', getContext() + "/resources/NetworkImages/electrical-panel.png");
-		markersDistBoard[markersTempoDistBoard].setIcon(iconDistBoard);			
-	}
-	markersTempoHandhole="";// to clear the temp variable holding the latest clicked manhole
-	markersTempoDistBoard="";
-	markersTempoHandholeJct="";
-	var selectedManhole=$(this).parent().attr('id');
-
- if(Type=="No_Junction"){						
-	if(selectedManhole!=markersTempo){
-		markersManhole[selectedManhole].setIcon(iconManhole);
-		$("#"+selectedManhole+"> span>img").attr('src', getContext()+"/resources/NetworkImages/manholeRed.png");
-		//const pos = new google.maps.LatLng(Lat,Long);
-		if(markersTempo!=""){
-			markersManhole[markersTempo].setIcon(iconManhole);
-			$("#"+markersTempo+"> span>img").attr('src', getContext()+"/resources/NetworkImages/manholeRed.png");
-		}
-					
-		markersTempo=selectedManhole;
-		panTo(markersManhole[selectedManhole].getPosition().lat(), markersManhole[selectedManhole].getPosition().lng());
-					
-		}
-	}
- else {
-	 if(selectedManhole!=markersJctTempo){
-		
-		 markersManhole[selectedManhole].setIcon(iconManholeJct);						
-		$("#"+selectedManhole+"> span>img").attr('src', getContext()+"/resources/NetworkImages/manholeRed.png");
-		const pos = new google.maps.LatLng(Lat,Long);
-			
-		if(markersJctTempo!=""){			
-			markersManhole[markersJctTempo].setIcon(iconManholeJct);
-			$("#"+markersJctTempo+"> span>img").attr('src', getContext()+"/resources/NetworkImages/manholeRed.png");
-		}
-		markersJctTempo=selectedManhole;
-		panTo(markersManhole[selectedManhole].getPosition().lat(), markersManhole[selectedManhole].getPosition().lng());
-	}
- }
-		map.setZoom(11);
-		if(typeof infowindow!== 'undefined'){
-			//console.log("info window defined and will be closed");
-			infowindow.close();
-		}
-		else{
-			infowindow = new google.maps.InfoWindow();
-			//console.log("info window not defined");
-		}
-		//console.log("info window defined and appending data");
-
-		infowindow.setContent(markersManhole[selectedManhole].data);
-		infowindow.open(map,markersManhole[selectedManhole]);
-				
-	
-		});
-}
-
-	
-	
-////>>>>>>>>>>>> function for tree --> map clicks events of <<<handholes>>>  /////		 
-IdSelectedTempHandhole="";	
-function createHandhole_Marker_Click(Id,Name,Long,Lat,markersHandhole,markerClusterHandhole,Type){
-
-	window["Boq"+Id]=[];
-	const pos = new google.maps.LatLng(Lat,Long);
-	var data="<div>" +Name+ "</div>";
-	var iconHand;
-	
-	if(Type == "No_Junction"){
-		 iconHand = iconHandhole;
-	 }
-	 else {
-		 iconHand = iconHandholeJct; 
-	 }
-	if(!markersHandhole[Id]){
-
-		markerHandhole = new google.maps.Marker({
-			position: pos,
-			data:data,
-			icon:iconHand,
-			ID:Id,
-		});
-		markerHandhole.metadata = { id: Id };
-		markersHandhole[Id] = markerHandhole;
-		markersHandhole.push(markerHandhole);
-
-		google.maps.event.addListener(markerHandhole, "click", function (e) {
-			var IdSelected=this.ID;
-			nodeFileId=$("#"+IdSelected).parents().eq(3).attr('id').split("initial_ul_")[1];
-			var childrenInitial=$("#initial_ul_"+nodeFileId+"").find(' > ul > li');
-			var projectInitial=$("#initial_ul_Projects").find('>ul > #'+nodeFileId);
-			var projectRel=$("#"+nodeFileId+"").find('>ul > #initial_ul_'+nodeFileId);
-			var children =  $("#Handhole_f_"+nodeFileId+"").find(' > ul > li');
-
-		   	if(IdSelected!=IdSelectedTemp){				
-				if(IdSelectedTemp!=""){
-					$("#"+IdSelectedTemp+" > .TreeSpan").removeClass("selected-span");
-					$("#"+IdSelectedTemp+" > .TreeSpan").css("background","");
-				}
-				//showBoq();									  
-				//appendHandholeBoq(nodeFileId,IdSelected,HandholeSel,text,this.position.lng(),this.position.lat(), city, DMName);
-				IdSelectedTemp=IdSelected;
-		   	}
-		   	if(!children.is(":visible")){
-				children.show();
-			}
-			childrenInitial.show('fast');
-			projectInitial.show('fast');
-			projectRel.show('fast');
-			
-			$("#"+IdSelected+" > .TreeSpan").addClass("selected-span");
-			$("#"+IdSelected+" > .TreeSpan").css("background-color", "#97b9cc");
-			
-			$("#initial_ul_"+nodeFileId+" > .folder>svg").removeClass('fa fa-folder').addClass('fa-folder-open');
-			$("#initial_ul_Projects > .folder>svg").removeClass('fa fa-folder').addClass('fa-folder-open');
-			$("#"+nodeFileId+" > .folder>svg").removeClass('fa fa-folder').addClass('fa-folder-open');	
-			$("#Handhole_f_"+nodeFileId+" > .folder>svg").removeClass('fa fa-folder').addClass('fa-folder-open');
-
-			offset=$("#"+IdSelected).offset().top;
-			projectOffset=$("#initial_ul_"+nodeFileId).offset().top;
-			offsetTotal=(offset-projectOffset);
-			$("#network_tree").animate({ scrollTop: offsetTotal}, "slow");
-			
-			if(draw==true){
-					createPathh(e);
-				}
-			
-
-			if(deleting == true){ 
-				deleteAuxPath(e);
-				MarkerArrayId.push(Id+":"+Name);
-			}	
-		
-			});
-		}
-		else{
-			if(markersHandhole[Id].map!=map){
-				markersHandhole[Id].setMap(map);
-			}
-			markersHandhole[Id].setPosition(pos);
-			markersHandhole[Id].data=data;
-	}
-	
-	$("#"+Id+" > .TreeSpan").bind('click', function (e) {
-		checkedChildrenLayer="";
-		//showBoq();
-		 if($(this).parents().eq(4).attr('id') == "initial_ul_CurrentPhysicalLayer"){
-			   nodeFileId = "CurrentPhysicalLayer";
-		   }
-		   else if($(this).parents().eq(4).attr('id').split("_", 3) == "initial,ul,PROJECT"){
-			   nodeFileParentId = $(this).parents().eq(4).attr('id').split("initial_ul_");
-			   nodeFileId = nodeFileParentId[1];			   
-		   }
-		 //appendHandholeBoq(nodeFileId,Id,HanholeSel,text,Long,Lat, city, DMName);		
-		if(markersTempo){
-			$("#"+markersTempo+"> span>img").attr('src', getContext()+"/resources/NetworkImages/manholeRed.png");
-			markersManhole[markersTempo].setIcon(iconManhole);			
-		}
-		if(markersJctTempo){
-			$("#"+markersJctTempo+"> span>img").attr('src', getContext()+"/resources/NetworkImages/manholeRed.png");
-			markersManhole[markersJctTempo].setIcon(iconManholeJct);			
-		}
-		if(markersTempoDistBoard){
-			$("#"+markersTempoDistBoard+"> span>img").attr('src', getContext()+"/resources/NetworkImages/electrical-panel.png"); 
-			markersDistBoard[markersTempoDistBoard].setIcon(iconDistBoard);			
-		}
-		markersTempoDistBoard="";
-		markersTempo="";// to clear the temp variable holding the latest clicked manhole
-		markersJctTempo="";
-		var selectedHandhole=$(this).parent().attr('id');
-
-	if(Type=="No_Junction"){						
-		if(selectedHandhole!=markersTempoHandhole){
-			markersHandhole[selectedHandhole].setIcon(iconHandhole);				
-			$("#"+selectedHandhole+"> span>img").attr('src', getContext() + "/resources/NetworkImages/handholeYellow.png");
-
-		//const pos = new google.maps.LatLng(latHandhole,lngHandhole);
-		if(markersTempoHandhole!=""){
-			markersHandhole[markersTempoHandhole].setIcon(iconHandhole);					
-			$("#"+markersTempoHandhole+"> span>img").attr('src', getContext() + "/resources/NetworkImages/handholeYellow.png");
-						
-		}
-		markersTempoHandhole=selectedHandhole;
-		panTo(markersHandhole[selectedHandhole].getPosition().lat(), markersHandhole[selectedHandhole].getPosition().lng());
-				
-		}
-	}
-	else {
-		if(selectedHandhole!=markersTempoHandholeJct){
-			markersHandhole[selectedHandhole].setIcon(iconHandholeJct);
-			$("#"+selectedHandhole+"> span>img").attr('src', getContext() + "/resources/NetworkImages/handholeYellow.png");
-		
-		if(markersTempoHandholeJct!=""){
-			markersHandhole[markersTempoHandholeJct].setIcon(iconHandholeJct);
-			$("#"+markersTempoHandholeJct+"> span>img").attr('src', getContext() + "/resources/NetworkImages/handholeYellow.png");
-		}
-		markersTempoHandholeJct=selectedHandhole;
-		panTo(markersHandhole[selectedHandhole].getPosition().lat(), markersHandhole[selectedHandhole].getPosition().lng());
-		
-		}
-	}
-	
-	map.setZoom(11);
-	if(typeof infowindow!== 'undefined'){
-
-		infowindow.close();
-		
-	}
-	else{
-		infowindow = new google.maps.InfoWindow();
-	}
-
-	infowindow.setContent(markersHandhole[selectedHandhole].data);
-	infowindow.open(map,markersHandhole[selectedHandhole]);
-	});
-}
-	
-
-	////>>>>>>>>>>>> end of function tree --> map clicks events of <<<handholes>>>  /////		
-		
-	
-	
-	
-	////>>>>>>>>>>>> function for tree --> map clicks events of <<< Distribution Boards >>>  /////		 
-	function createDistBoard_Marker_Click(Id,Name,Long,Lat,markersDistBoard,markerClusterDistBoard, city){
-	
-		markerId=Id;		
-		
-		window["Boq"+Id]=[];
-		const pos = new google.maps.LatLng(Lat,Long);
-		
-		var DistBoardName=Name;				         
-		
-		var data="<div>" +DistBoardName+ "</div>";
-		if(!markersDistBoard[markerId]){
-
-			markerDistBoard = new google.maps.Marker({
-				position: pos,
-				data:data,
-				icon:iconDistBoard,
-				ID:markerId
-						 });
-		markerDistBoard.metadata = { id: markerId };
-		markersDistBoard[markerId] = markerDistBoard;
-		markersDistBoard.push(markerDistBoard);
-
-		markersDistBoardFilter[markerId] = markerDistBoard;
-		markersDistBoardFilter.push(markerDistBoard);
-
-		//markerClusterDistBoard.addMarker(markerDistBoard);
-
-		google.maps.event.addListener(markersDistBoard[markerId], "click", function (e) {
-				
-			var IdSelected=this.ID;
-			nodeFileId=$("#"+IdSelected).parents().eq(3).attr('id').split("initial_ul_")[1];
-			var childrenInitial=$("#initial_ul_"+nodeFileId+"").find(' > ul > li');
-			var projectInitial=$("#initial_ul_Projects").find('>ul > #'+nodeFileId);
-			var projectRel=$("#"+nodeFileId+"").find('>ul > #initial_ul_'+nodeFileId);
-			var children =  $("#DistributionBoard_f_"+nodeFileId+"").find(' > ul > li');
-
-			if(IdSelected!=IdSelectedTemp){
-
-				   $("ul").find("li").removeClass("selected-span");
-
-				   if(IdSelectedTemp!=""){
-							 
-							var childrenTemp = $("#initial_ul_"+nodeFileId+"").find("#"+IdSelectedTemp);
-
-							$("#"+IdSelectedTemp+" > .TreeSpan").removeClass("selected-span");
-							$("#"+IdSelectedTemp+" > .TreeSpan").css("background","");
-						
-						  }
-			  
-				var text=$("#"+IdSelected).text().trim();									
-				var DistBoardSel=IdSelected+":"+text;
-								
-				IdSelectedTemp=IdSelected;
-				}
-				if(!children.is(":visible")){
-					children.show();
-				}
-			   childrenInitial.show('fast');
-			   projectInitial.show('fast');
-			   projectRel.show('fast');
-			   $("#"+IdSelected+" > .TreeSpan").addClass("selected-span");
-			   $("#"+IdSelected+" > .TreeSpan").css("background-color", "#97b9cc");
-
-			   $("#initial_ul_"+nodeFileId+" > .folder>svg").removeClass('fa fa-folder').addClass('fa-folder-open');
-			   $("#initial_ul_Projects > .folder>svg").removeClass('fa fa-folder').addClass('fa-folder-open');
-			   $("#"+nodeFileId+" > .folder>svg").removeClass('fa fa-folder').addClass('fa-folder-open');
-			   $("#DistributionBoard_f_"+nodeFileId+" > .folder>svg").removeClass('fa fa-folder').addClass('fa-folder-open');
-
-				offset=$("#"+IdSelected).offset().top;
-							
-				offset1=$("#DistributionBoard_f_"+nodeFileId).offset().top;
-					
-				offset2=$("#initial_ul_CurrentPhysicalLayer").offset().top;
-				offsettot=(offset-offset2);
-				
-				$("#network_tree").animate({ scrollTop: offsettot}, "slow");
-
-				if(draw==true){
-
-					createPathh(e);
-				}
-
-				if(deleting == true){ 
-					deleteAuxPath(e);
-					MarkerArrayId.push(Id+":"+Name);
-				}	
-			
-			});
-
-		}
-
-		else{
-			if(markersDistBoard[markerId].map!=map){
-				markersDistBoard[markerId].setMap(map);
-			}
-			markersDistBoard[markerId].setPosition(pos);
-			markersDistBoard[markerId].data=data;
-	
-		}
-		
-		markersTempoDistBoard="";
-		
-		$("#"+Id+" > .TreeSpan").bind('click', function (e) {
-			checkedChildrenLayer="";
-			var DistBoardSel=Id+":"+$(this).text().trim();
-			var text=$(this).text();
-			console.log("inside createDistBoard_Marker_Click");
-			
-			if(markersTempo){
-				
-				$("#"+markersTempo+"> span>img").attr('src', getContext()+"/resources/NetworkImages/manholeRed.png");
-				markersManhole[markersTempo].setIcon(iconManhole);			
-				
-			}
-			if(markersJctTempo){
-				
-				$("#"+markersJctTempo+"> span>img").attr('src', getContext()+"/resources/NetworkImages/manholeRed.png");
-				markersManhole[markersJctTempo].setIcon(iconManholeJct);			
-				
-			}
-	
-			if(markersTempoHandhole){
-				
-				$("#"+markersTempoHandhole+"> span>img").attr('src', getContext()+"/resources/NetworkImages/handholeYellow.png");
-				markersHandhole[markersTempoHandhole].setIcon(iconHandhole);			
-				
-			}
-				if(markersTempoHandholeJct){
-				
-				$("#"+markersTempoHandholeJct+"> span>img").attr('src', getContext()+"/resources/NetworkImages/handholeYellow.png");
-				markersHandhole[markersTempoHandholeJct].setIcon(iconHandholeJct);			
-				
-			}
-			markersTempoHandhole="";// to clear the temp variable holding the latest clicked manhole
-			markersTempo="";
-			markersTempoHandholeJct="";
-			markersJctTempo="";
-			var selectedDistBoard=$(this).parent().attr('id');
-			//console.log("selectedDistBoard "+selectedDistBoard);
-			//console.log("markersTempoDistBoard "+markersTempoDistBoard);
-			var selMarker="";
-			markerId=selectedDistBoard;				
-			selMarker=markersDistBoard[markerId];
-			
-				if(selectedDistBoard!=markersTempoDistBoard)
-					{
-				
-					selMarker.setIcon(iconDistBoard);
-					//markersDistBoard[selectedDistBoard].setIcon(iconDistBoard);
-
-					$("#"+selectedDistBoard+"> span>img").attr('src', getContext() + "/resources/NetworkImages/electrical-panel.png"); 
-					
-					
-					if(markersTempoDistBoard!="")
-						{
-							 var otherMarkers=markersDistBoard[markersTempoDistBoard];			
-							otherMarkers.setIcon(iconDistBoard);
-							$("#"+markersTempoDistBoard+"> span>img").attr('src', getContext() + "/resources/NetworkImages/electrical-panel.png"); 
-							
-						}
-						
-					markersTempoDistBoard=selectedDistBoard;
-					panTo(selMarker.getPosition().lat(), selMarker.getPosition().lng());
-				}
-				map.setZoom(11);
-					if(typeof infowindow!== 'undefined'){
-						console.log("info window defined and will be closed");
-
-						infowindow.close();
-						
-					}
-					else{
-						infowindow = new google.maps.InfoWindow();
-						console.log("info window not defined");
-					}
-					console.log("info window defined and appending data");
-
-					infowindow.setContent(selMarker.data);
-					infowindow.open(map,selMarker);
-	
-				
-	
-		});
-	
-		
-	}
-
-////>>>>>>>>>>>> end of function tree --> map clicks events of <<< Distribution Boards >>>  /////
-	
-*/	
-	
 //funtion to show DB for fiber,tube and strands from conectx menu	
 	function showDB(selectedContext,target,name){
 		 $("#DB").empty();// clear div
@@ -4499,114 +3983,35 @@ function fiberLayerCheckAll(){
 	
 	$("#FiberPath_f_CurrentPhysicalLayer").find(' > ul > li >ul >li ').each(function(){
 		var fiberId=$(this).attr('id');
-		
-		//Hide the cable in case of driving 
-		if(directionHashmap.get(fiberId) != undefined) {
-			for(ii = 0; ii < directionHashmap.get(fiberId).length; ii++) {
-				directionHashmap.get(fiberId)[ii].setMap(null); 
-                directionHashmap.get(fiberId).mapLabel.setMap(null);
-			}
-		}
-		
-		if(fiberArray[fiberId]){
-			fiberArray[fiberId].setMap(map);	
-		}
-		else{
-			var path=window["mapPoints_"+fiberId];
-			//buildFiberPath(fiberId,path);
-			buildPath(fiberId,path,fiberArray,allFiberCables,"FiberPath_f_",window['FiberColor_'+window[''+fiberId][22]],0.7,4.5,'blue',13);
-			fiberArray[fiberId].setMap(map);
-		}
 		$("#"+fiberId).children(':checkbox').prop( "checked", true );
-		
-		// Show and Hide the label of each cable depending on the checkLabel dropdown
-		if($("#fiberMapCheck_Labels").prop("checked")==true){
-			fiberArray[fiberId].mapLabel.setMap(map);
-		}
-		else {
-			fiberArray[fiberId].mapLabel.setMap(null);
-		}
+		singleFiberCheckFilter($(this).children(':checkbox'));		
 		$("#"+fiberId).find(' > ul > li ').each(function(){
 				var tubeFolderId =$(this).attr('id');						
 				$("#"+tubeFolderId).children(':checkbox').prop( "checked", true );
-	  	});
-			
+	  	});			
 		$("#"+fiberId).find(' > ul > li >ul >li').each(function(){
-			var tubeId =$(this).attr('id');		
-			//Hide the tube in case of driving 
-			if(directionHashmapTube.get(tubeId) != undefined) {
-				for(ii = 0; ii < directionHashmapTube.get(tubeId).length; ii++) {
-					directionHashmapTube.get(tubeId)[ii].setMap(null); 
-					directionHashmapTube.get(tubeId).mapLabel.setMap(null);
-				}
-			}
-			
-			if(tubeArray[tubeId]){						
-				tubeArray[tubeId].setMap(map);	
-			}
-			else{
-				var path=window["mapPoints_"+tubeId];
-				//buildTubePath(tubeId,path);
-				buildPath(tubeId,path,tubeArray,allTubes,"Tube",'green',0.7,3.3,'green',0);
-				tubeArray[tubeId].setMap(map);
-			}			
+			var tubeId =$(this).attr('id');
 			$("#"+tubeId).children(':checkbox').prop( "checked", true );
-			
-			// Show and Hide the label of each tube depending on the checkLabel dropdown
-			if($("#tubeMapCheck_Labels").prop("checked")==true){
-				tubeArray[tubeId].mapLabel.setMap(map);
-			}
-			else {
-				tubeArray[tubeId].mapLabel.setMap(null);
-			}
+			singleTubeCheckFilter($(this).children(':checkbox'));
 			$('#tubeCheckAllBoq').prop('checked', true);
+	  	});		  		
+	  	$("#"+fiberId).find(' > ul > li >ul >li >ul >li').each(function(){
+	  		var strandFolderId =$(this).attr('id');						
+			$("#"+strandFolderId).children(':checkbox').prop( "checked", true );
 	  	});	
-	  		
-	  		$("#"+fiberId).find(' > ul > li >ul >li >ul >li').each(function(){
-				var strandFolderId =$(this).attr('id');						
-				$("#"+strandFolderId).children(':checkbox').prop( "checked", true );
-	  		});	
-	  		$("#"+fiberId).find(' > ul > li >ul >li >ul >li >ul >li').each(function(){
-				var strandId =$(this).attr('id');	
-				
-				//Hide the strand in case of driving 
-				if(directionHashmapStrand.get(strandId) != undefined) {
-					for(ii = 0; ii < directionHashmapStrand.get(strandId).length; ii++) {
-						directionHashmapStrand.get(strandId)[ii].setMap(null); 
-						directionHashmapStrand.get(strandId).mapLabel.setMap(null);
-					}
-				}
-				
-				if(strandArray[strandId]){						
-					strandArray[strandId].setMap(map);	
-				}
-				else{						
-					var path=window["mapPoints_"+strandId];
-					//buildStrandPath(strandId,path);
-					buildPath(strandId,path,strandArray,allStrands,"Strand",'purple',0.7,2.8,'purple',0);
-					strandArray[strandId].setMap(map);									
-				}					
-				$("#"+strandId).children(':checkbox').prop( "checked", true );
-				
-				// Show and Hide the label of each tube depending on the checkLabel dropdown
-				if($("#strandMapCheck_Labels").prop("checked")==true){
-					strandArray[strandId].mapLabel.setMap(map);
-				}
-				else {
-					strandArray[strandId].mapLabel.setMap(null);
-				}
-				$('#strandCheckAllBoq').prop('checked', true);
-	  		});	
-			
-			});
-		
+	  	$("#"+fiberId).find(' > ul > li >ul >li >ul >li >ul >li').each(function(){
+			var strandId =$(this).attr('id');
+			$("#"+strandId).children(':checkbox').prop( "checked", true );
+			singleStrandCheckFilter($(this).children(':checkbox'));
+			$('#strandCheckAllBoq').prop('checked', true);
+  		});	
+	});	
 }
 function fiberLayerUnCheckAll(){
-
-	$("#FiberPath_f_CurrentPhysicalLayer > .AllFiberCables").prop("checked",false);	
-	$("#Backbone__CurrentPhysicalLayer").prop("checked",false);	
-	$("#Metro__CurrentPhysicalLayer").prop("checked",false);	
-	$("#Access__CurrentPhysicalLayer").prop("checked",false);	
+	$("#FiberPath_f_CurrentPhysicalLayer > .AllFiberCables").prop("checked",false);
+	$("#Backbone__CurrentPhysicalLayer").prop("checked",false);
+	$("#Metro__CurrentPhysicalLayer").prop("checked",false);
+	$("#Access__CurrentPhysicalLayer").prop("checked",false);
 	
 	$("#FiberPath_f_CurrentPhysicalLayer").find(' > ul > li >ul >li ').each(function(){			
 		
@@ -4614,62 +4019,57 @@ function fiberLayerUnCheckAll(){
 		if(directionHashmap.get(fiberId) != undefined) {
 			for(ii = 0; ii < directionHashmap.get(fiberId).length; ii++) {
 				directionHashmap.get(fiberId)[ii].setMap(null); 
-                directionHashmap.get(fiberId).mapLabel.setMap(null);
+	            directionHashmap.get(fiberId).mapLabel.setMap(null);
 			}
 		}
-		
 		if(fiberArray[fiberId]) {
 			fiberArray[fiberId].setMap(null);
 			fiberArray[fiberId].mapLabel.setMap(null);
 		}
 		$("#"+fiberId).children(':checkbox').prop( "checked", false );
-		
-	$("#"+fiberId).find(' > ul > li ').each(function(){
-		var tubeFolderId =$(this).attr('id');						
-		$("#"+tubeFolderId).children(':checkbox').prop( "checked", false );
+		$("#"+fiberId).find(' > ul > li ').each(function(){
+			var tubeFolderId =$(this).attr('id');						
+			$("#"+tubeFolderId).children(':checkbox').prop( "checked", false );
 		});
-	
-	$("#"+fiberId).find(' > ul > li >ul >li').each(function(){
-		var tubeId =$(this).attr('id');		
-		if(directionHashmapTube.get(tubeId) != undefined) {
-			for(ii = 0; ii < directionHashmapTube.get(tubeId).length; ii++) {
-				directionHashmapTube.get(tubeId)[ii].setMap(null); 
-				directionHashmapTube.get(tubeId).mapLabel.setMap(null);
-			}
-		}
-		if(tubeArray[tubeId]) {
-			tubeArray[tubeId].setMap(null);
-			tubeArray[tubeId].mapLabel.setMap(null);
-		}
-		$("#"+tubeId).children(':checkbox').prop( "checked", false );
-		$('#tubeCheckAllBoq').prop('checked', false);
-		});	
 		
-	$("#"+fiberId).find(' > ul > li >ul >li >ul >li').each(function(){
-		var strandFolderId =$(this).attr('id');						
-		$("#"+strandFolderId).children(':checkbox').prop( "checked", false );
+		$("#"+fiberId).find(' > ul > li >ul >li').each(function(){
+			var tubeId =$(this).attr('id');		
+			if(directionHashmapTube.get(tubeId) != undefined) {
+				for(ii = 0; ii < directionHashmapTube.get(tubeId).length; ii++) {
+					directionHashmapTube.get(tubeId)[ii].setMap(null); 
+					directionHashmapTube.get(tubeId).mapLabel.setMap(null);
+				}
+			}
+			if(tubeArray[tubeId]) {
+				tubeArray[tubeId].setMap(null);
+				tubeArray[tubeId].mapLabel.setMap(null);
+			}
+			$("#"+tubeId).children(':checkbox').prop( "checked", false );
+			$('#tubeCheckAllBoq').prop('checked', false);
+			});	
+			
+		$("#"+fiberId).find(' > ul > li >ul >li >ul >li').each(function(){
+			var strandFolderId =$(this).attr('id');						
+			$("#"+strandFolderId).children(':checkbox').prop( "checked", false );
 		});	
 		$("#"+fiberId).find(' > ul > li >ul >li >ul >li >ul >li').each(function(){
-		var strandId =$(this).attr('id');	
-		if(directionHashmapStrand.get(strandId) != undefined) {
-			for(ii = 0; ii < directionHashmapStrand.get(strandId).length; ii++) {
-				directionHashmapStrand.get(strandId)[ii].setMap(null); 
-				directionHashmapStrand.get(strandId).mapLabel.setMap(null);
+			var strandId =$(this).attr('id');	
+			if(directionHashmapStrand.get(strandId) != undefined) {
+				for(ii = 0; ii < directionHashmapStrand.get(strandId).length; ii++) {
+					directionHashmapStrand.get(strandId)[ii].setMap(null); 
+					directionHashmapStrand.get(strandId).mapLabel.setMap(null);
+				}
 			}
-		}
-		if(strandArray[strandId]) {
-			strandArray[strandId].setMap(null);
-			strandArray[strandId].mapLabel.setMap(null);
-
-		}
-					
-		$("#"+strandId).children(':checkbox').prop( "checked", false );
-		$('#strandCheckAllBoq').prop('checked', false);
+			if(strandArray[strandId]) {
+				strandArray[strandId].setMap(null);
+				strandArray[strandId].mapLabel.setMap(null);
+			}
+			$("#"+strandId).children(':checkbox').prop( "checked", false );
+			$('#strandCheckAllBoq').prop('checked', false);
 		});	
 	});
 		
-		$("#network_tree").find(".FiberCable:checked" ).each(function(){
-
+	$("#network_tree").find(".FiberCable:checked" ).each(function(){
 		id=$(this).parent().attr('id');
 		if(fiberArray[id]){						
 			fiberArray[id].setMap(map);	
@@ -4679,36 +4079,32 @@ function fiberLayerUnCheckAll(){
 			//buildFiberPath(id,path);
 			buildPath(id,path,fiberArray,allFiberCables,"FiberPath_f_",window['FiberColor_'+window[''+id][22]],0.7,4.5,'blue',13);
 			fiberArray[id].setMap(map);
-		}	
+		}
 	});
 	$("#network_tree").find(".FiberTube:checked" ).each(function(){
-
 		id=$(this).parent().attr('id');
 		if(tubeArray[id]){						
-			tubeArray[id].setMap(map);	
+			tubeArray[id].setMap(map);
 		}
 		else{						
 			var path=window["mapPoints_"+id];
 			//buildTubePath(id,path);
 			buildPath(id,path,tubeArray,allTubes,"Tube",'green',0.7,3.3,'green',0);
 			tubeArray[id].setMap(map);
-		}	
-	});
-		$("#network_tree").find(".FiberStrand:checked" ).each(function(){
-
-		id=$(this).parent().attr('id');
-		if(strandArray[id]){						
-			strandArray[id].setMap(map);	
 		}
-		else{						
+	});
+	$("#network_tree").find(".FiberStrand:checked" ).each(function(){
+		id=$(this).parent().attr('id');
+		if(strandArray[id]){
+			strandArray[id].setMap(map);
+		}
+		else{
 			var path=window["mapPoints_"+id];
 			//buildStrandPath(id,path);
 			buildPath(id,path,strandArray,allStrands,"Strand",'purple',0.7,2.8,'purple',0);
-			strandArray[id].setMap(map);									
-		}		
+			strandArray[id].setMap(map);
+		}
 	});
-
-	
 }
 
 function tubeLayerCheckAll(){
@@ -4906,7 +4302,7 @@ function strandLayerCheckAll(){
  });				
 }
 
-function strandUnLayerCheckAll(){
+function strandLayerUnCheckAll(){
 	$("#FiberPath_f_CurrentPhysicalLayer").find(' > ul > li >ul >li').each(function(){	
 			var fiberId=$(this).attr('id');		
 		
