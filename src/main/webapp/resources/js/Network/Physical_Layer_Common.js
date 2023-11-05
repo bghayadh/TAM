@@ -2820,7 +2820,7 @@ function mainPathCheckFilterEvent(Id, type){
 		}// end check  case 			
 		// uncheck case 
 		else{				
-			fiberUnCheckFilter($(this));						
+			mainPathUnCheckFilter($(this));						
 		}
 			
 		if(type == "parentFolderCheck__showPath") {
@@ -2867,82 +2867,26 @@ function mainPathCheckFilter (selector) {
 	});
 }
 
-function fiberUnCheckFilter(selector) {
+function mainPathUnCheckFilter(selector) {
 	
-	console.log("fiberUnCheckFilter and selector is " +selector);
+	console.log("mainPathUnCheckFilter and selector is " +selector);
 	
 	$(selector).parent().find('input:checkbox').each(function(){
 		$(this).prop('checked', false);
 		if($(this).parent().hasClass('FIBER')){
-			var fiberId=$(this).parent().attr('id');
-			if(fiberId.includes("__showPath") == true ){
-				fiberId = fiberId.split("__showPath")[0];
-			}
-			if(fiberArray[fiberId]){
-				if(directionHashmap.get(fiberId) != undefined) {
-					for(ii = 0; ii < directionHashmap.get(fiberId).length; ii++) {
-						directionHashmap.get(fiberId)[ii].setMap(null); 
-	                    directionHashmap.get(fiberId).mapLabel.setMap(null);
-					}
-				}
-				fiberArray[fiberId].setMap(null);	
-				fiberArray[fiberId].mapLabel.setMap(null);
-			}
-			$("#fiberCheckAllBoq").prop("checked",false);	
+			singleFiberUnCheckFilter($(this));
 		}
-		else if($(this).parent().hasClass('TUBE')){	
-			var tubeId = $(this).parent().attr('id');
-			if(tubeId.includes("__showPath") == true ){
-				tubeId = tubeId.split("__showPath")[0];
-			}	
-			if(directionHashmapTube.get(tubeId) != undefined) {
-				for(ii = 0; ii < directionHashmapTube.get(tubeId).length; ii++) {
-					directionHashmapTube.get(tubeId)[ii].setMap(null); 
-					directionHashmapTube.get(tubeId).mapLabel.setMap(null);
-				}
-			}
-			tubeArray[tubeId].setMap(null);
-			tubeArray[tubeId].mapLabel.setMap(null);
-			$("#tubeCheckAllBoq").prop("checked",false);
+		else if($(this).parent().hasClass('TUBE')){
+			singleTubeUnCheckFilter($(this));
 		}
-		else if($(this).parent().hasClass('STRAND')){	
-			var strandId = $(this).parent().attr('id');
-			if(strandId.includes("__showPath") == true ){
-				strandId = strandId.split("__showPath")[0];
-			}
-			if(directionHashmapStrand.get(strandId) != undefined) {
-				for(ii = 0; ii < directionHashmapStrand.get(strandId).length; ii++) {
-					directionHashmapStrand.get(strandId)[ii].setMap(null); 
-					directionHashmapStrand.get(strandId).mapLabel.setMap(null);
-				}
-			}
-			strandArray[strandId].setMap(null);
-			strandArray[strandId].mapLabel.setMap(null);
-			$("#strandCheckAllBoq").prop("checked",false);				
+		else if($(this).parent().hasClass('STRAND')){
+			singleStrandUnCheckFilter($(this));
 		}
 		else if($(this).parent().hasClass('Trench')){
-			trenchId=$(this).parent().attr('id');
-			if(directionHashmapTrench.get(trenchId) != undefined) {
-				for(ii = 0; ii < directionHashmapTrench.get(trenchId).length; ii++) {
-					directionHashmapTrench.get(trenchId)[ii].setMap(null); 
-					directionHashmapTrench.get(trenchId).mapLabel.setMap(null);
-				}
-			}
-			trenchArray[trenchId].setMap(null);	
-			trenchArray[trenchId].mapLabel.setMap(null);	
-			$("#trenchCheckAllBoq").prop("checked",false);				
-		 }	
+			singleTrenchUnCheckFilter($(this));
+		}	
 		else if($(this).parent().hasClass('Duct')){
-			ductId=$(this).parent().attr('id');
-			if(directionHashmapDuct.get(ductId) != undefined) {
-				for(ii = 0; ii < directionHashmapDuct.get(ductId).length; ii++) {
-					directionHashmapDuct.get(ductId)[ii].setMap(null); 
-					directionHashmapDuct.get(ductId).mapLabel.setMap(null);
-				}
-			}
-			ductArray[ductId].setMap(null);	
-			ductArray[ductId].mapLabel.setMap(null);
-			$("#ductCheckAllBoq").prop("checked",false);				
+			singleDuctUnCheckFilter($(this));
 		}		
 	});
 	
@@ -3123,6 +3067,94 @@ function singleDuctCheckFilter(selector) {
 		ductArray[ductId].mapLabel.setMap(null);
 	}	
 }
+
+function singleFiberUnCheckFilter(selector) {
+
+	var fiberId=$(selector).parent().attr('id');
+	if(fiberId.includes("__showPath") == true ){
+		fiberId = fiberId.split("__showPath")[0];
+	}
+	if(fiberArray[fiberId]){
+		if(directionHashmap.get(fiberId) != undefined) {
+			for(ii = 0; ii < directionHashmap.get(fiberId).length; ii++) {
+				directionHashmap.get(fiberId)[ii].setMap(null); 
+                directionHashmap.get(fiberId).mapLabel.setMap(null);
+			}
+		}
+		fiberArray[fiberId].setMap(null);	
+		fiberArray[fiberId].mapLabel.setMap(null);
+	}
+	$("#fiberCheckAllBoq").prop("checked",false);	
+
+}
+
+function singleTubeUnCheckFilter(selector){
+	
+	var tubeId = $(selector).parent().attr('id');
+	if(tubeId.includes("__showPath") == true ){
+		tubeId = tubeId.split("__showPath")[0];
+	}	
+	if(directionHashmapTube.get(tubeId) != undefined) {
+		for(ii = 0; ii < directionHashmapTube.get(tubeId).length; ii++) {
+			directionHashmapTube.get(tubeId)[ii].setMap(null); 
+			directionHashmapTube.get(tubeId).mapLabel.setMap(null);
+		}
+	}
+	tubeArray[tubeId].setMap(null);
+	tubeArray[tubeId].mapLabel.setMap(null);
+	$("#tubeCheckAllBoq").prop("checked",false);
+
+}
+
+function singleStrandUnCheckFilter(selector){
+	
+	var strandId = $(selector).parent().attr('id');
+	if(strandId.includes("__showPath") == true ){
+		strandId = strandId.split("__showPath")[0];
+	}
+	if(directionHashmapStrand.get(strandId) != undefined) {
+		for(ii = 0; ii < directionHashmapStrand.get(strandId).length; ii++) {
+			directionHashmapStrand.get(strandId)[ii].setMap(null); 
+			directionHashmapStrand.get(strandId).mapLabel.setMap(null);
+		}
+	}
+	strandArray[strandId].setMap(null);
+	strandArray[strandId].mapLabel.setMap(null);
+	$("#strandCheckAllBoq").prop("checked",false);				
+
+}
+
+function singleTrenchUnCheckFilter(selector){
+
+	trenchId=$(selector).parent().attr('id');
+	if(directionHashmapTrench.get(trenchId) != undefined) {
+		for(ii = 0; ii < directionHashmapTrench.get(trenchId).length; ii++) {
+			directionHashmapTrench.get(trenchId)[ii].setMap(null); 
+			directionHashmapTrench.get(trenchId).mapLabel.setMap(null);
+		}
+	}
+	trenchArray[trenchId].setMap(null);	
+	trenchArray[trenchId].mapLabel.setMap(null);	
+	$("#trenchCheckAllBoq").prop("checked",false);				
+ 
+}
+
+function singleDuctUnCheckFilter(selector){
+
+	ductId=$(selector).parent().attr('id');
+	if(directionHashmapDuct.get(ductId) != undefined) {
+		for(ii = 0; ii < directionHashmapDuct.get(ductId).length; ii++) {
+			directionHashmapDuct.get(ductId)[ii].setMap(null); 
+			directionHashmapDuct.get(ductId).mapLabel.setMap(null);
+		}
+	}
+	ductArray[ductId].setMap(null);	
+	ductArray[ductId].mapLabel.setMap(null);
+	$("#ductCheckAllBoq").prop("checked",false);				
+
+
+}
+
 
 //function checkbox events for filtering of items in Boq Div
 function boqCheckFilter(){
@@ -4321,89 +4353,23 @@ function allElementsCheckFilter(){
 				
 				$(this).children('input:checkbox').prop('checked', false);
 
-			
+
 				if($(this).hasClass('FIBER')){
-					var fiberId=$(this).attr('id');
-					//console.log("has fiber")
-					if(directionHashmap.get(fiberId) != undefined) {
-						for(ii = 0; ii < directionHashmap.get(fiberId).length; ii++) {
-							directionHashmap.get(fiberId)[ii].setMap(null); 
-		                    directionHashmap.get(fiberId).mapLabel.setMap(null);
-						}
-					}
-					$("#fiberCheckAllBoq").prop("checked",false);
-					
-					if(fiberArray[fiberId]){
-						fiberArray[fiberId].setMap(null);	
-						fiberArray[fiberId].mapLabel.setMap(null);
-					}
+					singleFiberUnCheckFilter($(this).children('input:checkbox'));
 				}
-
 				else if($(this).hasClass('TUBE')){
-					var tubeId=$(this).attr('id');
-					if(directionHashmapTube.get(tubeId) != undefined) {
-						for(ii = 0; ii < directionHashmapTube.get(tubeId).length; ii++) {
-							directionHashmapTube.get(tubeId)[ii].setMap(null); 
-							directionHashmapTube.get(tubeId).mapLabel.setMap(null);
-						}
-					}
-					
-					$("#tubeCheckAllBoq").prop("checked",false);
-					
-					if(tubeArray[tubeId]){
-						tubeArray[tubeId].setMap(null);
-						tubeArray[tubeId].mapLabel.setMap(null);
-					}
-					
-					
+					singleTubeUnCheckFilter($(this).children('input:checkbox'));
 				}
-
 				else if($(this).hasClass('STRAND')){
-					var strandId=$(this).attr('id');
-					if(directionHashmapStrand.get(strandId) != undefined) {
-						for(ii = 0; ii < directionHashmapStrand.get(strandId).length; ii++) {
-							directionHashmapStrand.get(strandId)[ii].setMap(null); 
-							directionHashmapStrand.get(strandId).mapLabel.setMap(null);
-						}
-					}
-					if(strandArray[strandId]){
-						strandArray[strandId].setMap(null);
-						strandArray[strandId].mapLabel.setMap(null);
-					}
-					$("#strandCheckAllBoq").prop("checked",false);
-					
+					singleStrandUnCheckFilter($(this).children('input:checkbox'));
 				}
 				else if($(this).hasClass('Trench')){
-					var trenchId=$(this).attr('id');
-					if(directionHashmapTrench.get(trenchId) != undefined) {
-						for(ii = 0; ii < directionHashmapTrench.get(trenchId).length; ii++) {
-							directionHashmapTrench.get(trenchId)[ii].setMap(null); 
-							directionHashmapTrench.get(trenchId).mapLabel.setMap(null);
-						}
-					}
-					$("#trenchCheckAllBoq").prop("checked",false);
-					
-					if(trenchArray[trenchId]){
-						trenchArray[trenchId].setMap(null);
-						trenchArray[trenchId].mapLabel.setMap(null);
-					}
-					
-				}
+					singleTrenchUnCheckFilter($(this).children('input:checkbox'));
+				}	
 				else if($(this).hasClass('Duct')){
-					var ductId=$(this).attr('id');
-					if(directionHashmapDuct.get(ductId) != undefined) {
-						for(ii = 0; ii < directionHashmapDuct.get(ductId).length; ii++) {
-							directionHashmapDuct.get(ductId)[ii].setMap(null); 
-							directionHashmapDuct.get(ductId).mapLabel.setMap(null);
-						}
-					}
-					if(ductArray[ductId]){
-						ductArray[ductId].setMap(null);
-						ductArray[ductId].mapLabel.setMap(null);
-					}
-					$("#ductCheckAllBoq").prop("checked",false);
-					
-				}							  
+					singleDuctUnCheckFilter($(this).children('input:checkbox'));
+				}	
+					  
 			});
 			
 			$("#network_tree").find("input:checked").each(function(){
