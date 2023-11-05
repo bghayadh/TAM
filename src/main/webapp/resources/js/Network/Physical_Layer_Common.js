@@ -16,7 +16,6 @@ searchConnectedButtonEvents();
 
 //    $(".menu-item").on('click',function(){
     $(".mapMenuItem").on('click',function(){
-    	console.log("*****menu Id "+$(this).parent().attr('id'));
     	document.getElementById("mapMenu").classList.remove('show-menu');
 /*    	
     	console.log("*****menu Id "+$(this).parent().attr('id'));
@@ -27,7 +26,6 @@ searchConnectedButtonEvents();
     });
     
     $(".mapSubMenuItem").on('click',function(){
-    	console.log("*****menu Id "+$(this).parent().parent().parent().attr('id'));
     	document.getElementById("mapMenu").classList.remove('show-menu');
 /*    	console.log("*****menu Id "+$(this).parent().attr('id'));
     	menu = $(this).parent().attr('id');
@@ -555,23 +553,7 @@ $("#selectConnectedSearch").on('change',function(){
 		
 		$("#setEndPointBtn").on('click',function(){
 			$("#endLongPoint").val(window["getCoorPointLong"]);
-			$("#endLatPoint").val(window["getCoorPointLat"]);
-			
-			/*var temp = "";
-			if($("#endLatPoint").val() != "" &&  $("#startLatPoint").val() != ""){
-				if(Number(parseFloat($("#endLatPoint").val())) > Number(parseFloat($("#startLatPoint").val()))){
-					console.log("grreater ");
-					temp = $("#startLatPoint").val();
-					$("#startLatPoint").val($("#endLatPoint").val());
-					$("#endLatPoint").val(temp);
-				}
-                if(Number(parseFloat($("#endLongPoint").val())) > Number(parseFloat($("#startLongPoint").val()))){
-                	temp = $("#startLongPoint").val();
-					$("#startLongPoint").val($("#endLongPoint").val());
-					$("#endLongPoint").val(temp);
-				}
-			
-			}*/
+			$("#endLatPoint").val(window["getCoorPointLat"]);			
 		});
 		
 $("#setCoordinateFiberAux").on('click',function(){
@@ -637,83 +619,18 @@ $("#setCoordinateDuctAux").on('click',function(){
 });
 });
 $("#setCoordinateTubeAux").on('click',function(){
-	
 	  $('.rowAboveBelowTube').each(function() {
 	        if (this.checked) {
 		        var rowIndex = $(this).closest('tr');
-				var currentIndex = rowIndex.index();
-				
+				var currentIndex = rowIndex.index();				
 				$(this).parents("tr").find('input[name ="auxTube_Lat"]').val(window["getCoorPointLat"]); 
-				$(this).parents("tr").find('input[name ="auxTube_Long"]').val(window["getCoorPointLong"]); 
-				
+				$(this).parents("tr").find('input[name ="auxTube_Long"]').val(window["getCoorPointLong"]); 				
 	        }
 		calculateDistanceSourceDestination($("#sourcelat").val(),$("#sourcelong").val(),$("#destinationlat").val(),$("#destinationlong").val(),"auxiliaryTableTubes");
-	
 });
 });
-
 			autoCompleteSearchHeader('autoCompleteHeaderSearch','selectHeaderSearch','headerSearchLong','headerSearchLat');
 			autoCompleteSearchHeader('autoCompleteConnectedSearch','selectConnectedSearch','connectedSearchLong','connectedSearchLat');
-
-		/*	$("#getCity").on('click',function(){
-				console.log("getCity ");
-				//var Long = $("#DistributionBoardLong").val();
-				//var Lat =  $("#DistributionBoardLat").val();
-				
-				geocoder = new google.maps.Geocoder();
-				var latlng = new google.maps.LatLng(getCoords().split(" ")[0], getCoords().split(" ")[1]);
-				geocoder.geocode({'latLng': latlng}, function(results, status) {
-				 if (status == google.maps.GeocoderStatus.OK) {
-			   
-					if (results[2]) {
-					city = results[2].formatted_address;
-					}
-					else if (results[3]) {
-					city = results[3].formatted_address;
-					}
-					else if (results[4]) {
-					city = results[4].formatted_address;
-					}
-					else if (results[5]) {
-					city = results[5].formatted_address;
-					}
-					else {
-					  alert("No results found");
-					}
-					
-				
-				  } else {
-					alert("getting the latitude, longitude and the city failed due to a connection problem, please try again");
-				  }
-				 
-				$("#DistributionBoardLat").val(""+getCoords().split(" ")[0]);		
-				$("#DistributionBoardLong").val(""+getCoords().split(" ")[1]);		
-				$("#boardCity").val(city.split(", ")[0]);
-				});
-					
-			/*	$.ajax({
-					type: "GET",
-					async: false,
-					contentType: "application/json; charset=utf-8",
-					url: getContext()+'/getCity',
-					data: {
-						"Long":Long,
-						"Lat": Lat
-					},									
-					dataType: "json",
-					success: function (data) {	
-						console.log("entered "+ data.City);
-						 
-						//if(City !=null){}
-						
-					},
-					error: function (result) {
-						alert("Error");
-					}
-				});*/
-				
-			//});
-
 });
 }); // End of Trigger Event: triggerListenersEvent
  
@@ -792,9 +709,6 @@ $("#setCoordinateTubeAux").on('click',function(){
 				}
 			});
 	}
-	
-	
-	
 
 
 // Function to create markers oon manhole, handhole and distribution board
@@ -896,8 +810,6 @@ $("#setCoordinateTubeAux").on('click',function(){
 						children.show();
 					}
 					networkLevelFolder.show(); 
-
-
 					
 					$("#"+IdSelected+" > .TreeSpan").addClass("selected-span");
 					$("#"+IdSelected+" > .TreeSpan").css("background-color", "#97b9cc");
@@ -907,11 +819,8 @@ $("#setCoordinateTubeAux").on('click',function(){
 					$("#"+nodeFileId+" > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');	
 					$("#"+markerType+"_f_"+nodeFileId+" > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
 
-
-
 					$("#"+markerType+"_f_"+nodeFileId+" > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
 					$("#"+markerType+"_f_"+nodeFileId+"").find(' > ul > li > .Parentfolder >svg ').removeClass('fa fa-folder').addClass('fa-folder-open');
-				
 				
 					offset=$("#"+IdSelected).offset().top;
 					projectOffset=$("#initial_ul_"+nodeFileId).offset().top;
@@ -985,8 +894,6 @@ $("#setCoordinateTubeAux").on('click',function(){
 					markers[Id].data=data;
 				}
 			 
-
-			 
 			$("#"+Id+" .TreeSpan").not($("#"+Id+"_f"+" .TreeSpan")).on('click', function () {
 
 			panTo(markers[Id].getPosition().lat(), markers[Id].getPosition().lng());
@@ -1002,8 +909,6 @@ $("#setCoordinateTubeAux").on('click',function(){
 			infowindow.open(map,markers[Id]);
 						
 			});
-
-		     
 	 }
 
 
@@ -1610,9 +1515,7 @@ $("#"+Id).children('input').on("change",function() {
 
 }
 function AllHandholeCheckFilter(){
-
-	$('.AllHandholes').bind("change",function() {
-		
+	$('.AllHandholes').bind("change",function() {		
 		markerClusterHandhole.clearMarkers();
 		if ($(this).is(':checked')){
 			$(this).parent().find('.Handhole').each(function(){
@@ -1634,8 +1537,7 @@ function AllHandholeCheckFilter(){
 			if($("#Handhole_f_CurrentPhysicalLayer > .AllHandholes").is(":checked") ) {	
 					$("#handholeCheckAllBoq").prop("checked",true);
 				}	
-		}
-		
+		}		
 		else{
 
 			$(this).parent().find('.Handhole').each(function(){				
@@ -1665,8 +1567,7 @@ function AllHandholeCheckFilter(){
 
 function AllNodesCheckFilter(){
 $('.AllEntreprise').bind("change",function() {
-		markerClusterNodes.clearMarkers();	
-				
+		markerClusterNodes.clearMarkers();
 		if ($(this).is(':checked')){
 			$(this).parent().find('.Nodes').each(function(){		
 				$(this).prop('checked', true);
@@ -1688,9 +1589,7 @@ $('.AllEntreprise').bind("change",function() {
 				$("#entrepriseCheckAllBoq").prop("checked",true);
 			}																
 		}
-		
 		else{
-			
 			$(this).parent().find('.Nodes').each(function(){
 				$(this).prop('checked', false);
 			});
@@ -2136,20 +2035,14 @@ function DistributionBoardCheckFilter(Id,folder,clusterName){
 				$("#DistributionBoard_f_CurrentPhysicalLayer > .AllDistBoards").prop("checked",false);	
 		
 			}
-			
-			
-			
 		});
 	}	
 	
 function NodeActiveCheckFilter(Id,clusterName){
 	   markersNodeActive[Id].setMap(null);
-		$("#"+Id).children('input').bind("change",function() {
-			
+		$("#"+Id).children('input').bind("change",function() {			
 			var folderID = $(this).parents().eq(4).attr('id');
 			markersNodeActive[Id].setMap(null);
-			
-			
 			if ($(this).is(':checked')){
 				markersNodeActive[Id].setMap(map);					
 				clusterName.addMarker(markersNodeActive[Id]);
@@ -2160,8 +2053,7 @@ function NodeActiveCheckFilter(Id,clusterName){
 				}
 				 else {
                     $("#NodeActive_f_"+folderID+ " > .AllNodeActive").prop("checked",false);				
-            }
-				
+            }				
 				markersNodeActive[Id].setMap(null);							
 				clusterName.removeMarker(markersNodeActive[Id]);			
 			}
@@ -2170,8 +2062,6 @@ function NodeActiveCheckFilter(Id,clusterName){
 				$(this).parents().eq(2).children('input').prop('checked', true);
 			 }
 			 else{
-									console.log("Here 2 ")
-
 				$(this).parents().eq(2).children('input').prop('checked', false);
 			 }	
 		 
@@ -2181,26 +2071,20 @@ function NodeActiveCheckFilter(Id,clusterName){
 			else{
 				$("#nodesActiveCheckAllBoq").prop("checked",true);			
 			}
-		 
-	
 			if( $("#NodeActive_f_CurrentPhysicalLayer").find(".Nodes:checked" ).length ==  $("#NodeActive_f_CurrentPhysicalLayer").find(".Nodes" ).length ){
 				$("#NodeActive_f_CurrentPhysicalLayer > .AllNodeActive").prop("checked",true);	
 			}
 			else{
-				$("#NodeActive_f_CurrentPhysicalLayer > .AllNodeActive").prop("checked",false);	
-		
+				$("#NodeActive_f_CurrentPhysicalLayer > .AllNodeActive").prop("checked",false);		
 			}
 			
 		});
 	}
-function AllDistributionBoardCheckFilter(Id,clssName) {
 
-		
+function AllDistributionBoardCheckFilter(Id,clssName) {
 		
 	$("#"+Id).children('input').bind("change",function() {
-		
-		if(clssName=="") {
-			
+		if(clssName=="") {			
 			markerClusterAccessDistBoard.clearMarkers();
 			markerClusterMetroDistBoard.clearMarkers();
 			markerClusterBackboneDistBoard.clearMarkers();
@@ -2235,20 +2119,14 @@ function AllDistributionBoardCheckFilter(Id,clssName) {
 					 // }
 					}
 					 $("#distBoardCheckAllBoq").prop("checked",true);					
-				 }	
-									
-					
+				 }
 			});
-			
 		}// end check  case 
-				
+		
 		// uncheck case 
-			else{		
-			
+			else{					
 				$(this).parent().find('input:checkbox').each(function(){
 				$(this).prop('checked', false);
-							
-					
 			 if($(this).parent().hasClass('DistributionBoard')){
 					dbID=$(this).parent().attr('id');
 					if(markersDistBoard[dbID]){						
@@ -2269,8 +2147,8 @@ function AllDistributionBoardCheckFilter(Id,clssName) {
         	}	
 		});	
 	}
-	function AllNodesTreeCheckFilter(Id,clssName) {
 
+	function AllNodesTreeCheckFilter(Id,clssName) {
 	$("#"+Id).children('input').bind("change",function() {
 		if(clssName=="") {
 			
@@ -2284,11 +2162,8 @@ function AllDistributionBoardCheckFilter(Id,clssName) {
 		}
 		
 		if ($(this).is(':checked')){				
-				
 			$(this).parent().find('input:checkbox').each(function(){
 				$(this).prop('checked', true);
-							
-					
 			 if($(this).parent().hasClass('NodeActive')){
 					NodeID=$(this).parent().attr('id');
 					if(markersNodeActive[NodeID]){	
@@ -2315,22 +2190,16 @@ function AllDistributionBoardCheckFilter(Id,clssName) {
 		}// end check  case 				
 			
 		// uncheck case 
-			else{		
-			
+			else{
 				$(this).parent().find('input:checkbox').each(function(){
 				$(this).prop('checked', false);
-							
-					
 			 if($(this).parent().hasClass('NodeActive')){
 					NodeID=$(this).parent().attr('id');
 					if(markersNodeActive[NodeID]){						
 						markersNodeActive[NodeID].setMap(null);	
 					}
-				 }						
-					
+				 }					
 			});
-			
-	   			
 	}
 			if ($('.EntrepriseMSAN').is(':checked') && $('.TransmissionDWDM').is(':checked') && $('.TransmissionSDH').is(':checked') && $('.TransmissionGPON').is(':checked') ){			
             	$('.AllNodeActive').prop('checked', true);  
@@ -2348,8 +2217,6 @@ function AllDistributionBoardCheckFilter(Id,clssName) {
      
 		});	
 	}
-	
-
 
 
 //function checkbox events for filtering of junctions  ////
@@ -2404,40 +2271,26 @@ function junctionCheckFilter(physicalLayer,manholeId){
 		}
 });
 
-
 		
-	$(".HandholeJct").bind("change",function(){
-	
-				if ($(this).is(':checked')){
-		
+	$(".HandholeJct").bind("change",function(){	
+				if ($(this).is(':checked')){		
 					$(this).parent().find(' > ul > li').each(function(){
-						
 						$(this).children('input:checkbox').prop('checked', true);		
 						//var junctionId=$(this).attr('id');
-	
 					});
 				}
 				else{
-				
 					$(this).parent().find(' > ul > li').each(function(){
-						$(this).children('input:checkbox').prop('checked', false);
-						//var junctionId=$(this).attr('id');
-						//console.log(" //////////junctionId"+junctionId);
-						
+						$(this).children('input:checkbox').prop('checked', false);						
 					});
-					
 				}
-
-				
 	});
-	}
-	
+	}	
 }
 
 
 
 function pathCheckFilter(Target,type,Id,drawingTypeIndex,pathArray,allPathArray,drivingPathArray,pathRouteDisplay,chldrnClass,chldrnPathArray,chldrnDrivPathArray,chldrnAllPathArray) {
-
 	if(Target.Trgt=="Tube") {
 		var chldrnTarget = TargetStrand;
 	}
@@ -2485,12 +2338,9 @@ if(type=="parentFolderCheck" || type == "parentFolderCheck__showPath") {
 					}
 					else {
 						pathArray[pathId].mapLabel.setMap(null);
-					}
-								
-				});	
-				
-				if(Target.Trgt !="Duct" && Target.Trgt !="Strand" && type != "parentFolderCheck__showPath" ) {
-					
+					}								
+				});					
+				if(Target.Trgt !="Duct" && Target.Trgt !="Strand" && type != "parentFolderCheck__showPath" ) {					
 					//Check the strand folder
 					$(this).parent().find(' > ul > li >ul >li').each(function(){
 						$(this).children('input:checkbox').prop('checked', true);		
@@ -2621,12 +2471,6 @@ if(type=="parentFolderCheck" || type == "parentFolderCheck__showPath") {
 			else {
 				$("#tubeCheckAllBoq").prop('checked', true);
 			}
-			/*if( $("#FiberPath_f__showPath").find(".FiberTube:checked" ).length ==0) {
-			    $("#tubeCheckAllBoq").prop('checked', false);				
-			}
-			else {
-				$("#tubeCheckAllBoq").prop('checked', true);
-			}*/
 			if( $("#Trench_f_CurrentPhysicalLayer").find(".TRENCH:checked" ).length ==0) {
 				$("#trenchCheckAllBoq").prop('checked', false);				
 			}
@@ -12358,8 +12202,7 @@ function getSelectedFiberCableRows(sourceLat,sourceLng,fiberId){
 			var totalGeoDist=$(this).parent().parent().children('td[name="fiberStrandTotalGeoDistance"]').children('input').val();
 			var totalDrivDist=$(this).parent().parent().children('td[name="fiberStrandTotalDrivDistance"]').children('input').val();
 			var distanceLstAuxToDest =$(this).parent().parent().children('td[name="fiberStrandDistLstAuxToDest"]').children('input').val();
-			var drivDistanceLstAuxToDest =$(this).parent().parent().children('td[name="fiberStrandDrivDistLstAuxToDest"]').children('input').val();
-			
+			var drivDistanceLstAuxToDest =$(this).parent().parent().children('td[name="fiberStrandDrivDistLstAuxToDest"]').children('input').val();			
 			
 			dictStrands.push({
 			"tubeId":tubeId,
