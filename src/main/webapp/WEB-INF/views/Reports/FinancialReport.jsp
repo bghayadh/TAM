@@ -56,18 +56,48 @@
        
 </head>
 <style>
-.clearShowButton{
+
+#showOnMap {
+  color: orange;
+  background-color: white;
+  border-color: #939191f5;
+  transition: border 0.3s; /* Add a smooth transition effect for the border */
+}
+
+#showOnMap:hover{
+    color: white;
+	background-color: orange;
+}
+
+.panToSite:hover{
+    color: white;
+	background-color: #007bff;
+}
+
+
+.panToSite {
+background-color:white;
+color: #007bff;
+  border-color: #939191f5;
+
+}
+
+.clearButton{
 background-color:white;
 color:orange;
-
 }
 
-.clearShowButton:hover{
+.clearButton:hover{
 background-color:orange;
 color:white;
-
-
 }
+
+
+.clearButton:not(:hover){
+background-color:white;
+color:orange;
+}
+
 #mapContainer {
 height: 700px;
 }
@@ -295,8 +325,8 @@ max-width: 100%;
 
 		<div class="col-md-3" style="float: right; padding-top:-100px;" >
 			<div class="btn-group pull-right"  >
-				<button type="button"  id ="showOnMap"class="btn btn-light clearShowButton" style=" margin-top:-10px;  margin-right: 15px;"  >Show on Map</button>
-		 		<button type="button"  id ="clearButton"class="btn btn-light clearShowButton" style=" margin-top:-10px; margin-right:-15px; "  >Clear</button>		 	
+				<button type="button"  id ="showOnMap"class="btn"  style=" margin-top:-10px;  margin-right: 15px;"  >Show on Map</button>
+		 		<button type="button"  id ="clearButton" class="btn btn-light clearButton" style=" margin-top:-10px; margin-right:-15px; "  >Clear</button>		 	
 		 	</div>
 		</div>
 	</div>

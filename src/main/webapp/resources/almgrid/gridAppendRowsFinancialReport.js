@@ -39,7 +39,7 @@ class gridAppendRows {
           itemRow += "<tr class='filterRows'>";
           for (var j = 0; j < this.ArrayKeys.length; j++) {
               if (j == 0) {
-				itemRow += "<td><button type='button' class='pan' id='panTo" +rows[i][this.ArrayKeys[j]]+ "'  onClick='panToSite(\"" + rows[i][this.ArrayKeys[j]] + "\",\"" +i+ "\")' >Pan to Site</button></td>"
+				itemRow += "<td><button type='button' class='btn panToSite' id='panTo" +rows[i][this.ArrayKeys[j]]+ "'  onClick='panToSite(\"" + rows[i][this.ArrayKeys[j]] + "\",\"" +i+ "\")' >Pan to Site</button></td>"
               } 
 			 else {
 				itemRow += "<td class='changeColor' >" +rows[i][this.ArrayKeys[j]] + "</td>";
