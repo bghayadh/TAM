@@ -1009,11 +1009,11 @@ VirtualSelect.init({
 var vendorOptions = [
 	  { label: "Nokia", value: 'Nokia' },
 	  { label: "Huawei", value: 'Huawei'},
-	  { label: "ZTE", value: 'zte'},	
+	  { label: "ZTE", value: 'ZTE'},	
 	  { label: "Ericsson", value: 'Ericsson'},	  
 	  { label: "Tejas", value: 'Tejas'},	  
 	  { label: "Alcatel", value: 'Alcatel'},	  
-	  { label: "NEC", value: 'Nec'},	  	 
+	  { label: "NEC", value: 'NEC'},	  	 
 ];
 VirtualSelect.init({
 	  ele: '#Vendor',
@@ -1098,7 +1098,7 @@ $(document).ready(function() {
 	     		var data = [];
 	     	    exportArrayGrid = [];
 	    		data.push('\r');
-	       		data.push(["","FAR ID", "Item Code", "Item Name", "Last Modified Date","Item Serial Number","Item Name Register","PO ID","Site ID","Site Name","Longitude","Latitude","Initial Cost","Net Cost","Accumulated Depreciation"]);
+	       		data.push(["FAR ID", "Item Code", "Item Name", "Last Modified Date","Item Serial Number","Item Name Register","PO ID","Site ID","Site Name","Longitude","Latitude","Initial Cost","Net Cost","Accumulated Depreciation"]);
 
 	       		filteredSitesGrid = dataArray; // used in draw on map 
 	       		
@@ -1109,7 +1109,11 @@ $(document).ready(function() {
            for (var j = 0; j < ArrayKeys.length; j++) {
            	
         	   columnVal = ArrayKeys[j];
-          	   data.push(dataArray[i][ArrayKeys[j]]);// for export 
+        	   
+        	   if(columnVal !="site") {
+              	   data.push(dataArray[i][ArrayKeys[j]]);// for export 
+            	}
+           		
             
           	  if(columnVal =="initCost")  initCost+= parseFloat(dataArray[i][ArrayKeys[j]]);			                     
               if(columnVal =="netCost")   netCost+= parseFloat(dataArray[i][ArrayKeys[j]]);				                     
@@ -1431,7 +1435,7 @@ $(document).ready(function() {
   			       		    var data = [];
   			       	       exportArrayGrid = [];
   			       		   data.push('\r');
-  			       		   data.push(["","FAR ID", "Item Code", "Item Name", "Last Modified Date","Item Serial Number","Item Name Register","PO ID","Site ID","Site Name","Longitude","Latitude","Initial Cost","Net Cost","Accumulated Depreciation"]);
+  			       		   data.push(["FAR ID", "Item Code", "Item Name", "Last Modified Date","Item Serial Number","Item Name Register","PO ID","Site ID","Site Name","Longitude","Latitude","Initial Cost","Net Cost","Accumulated Depreciation"]);
 
   	  				       filteredSitesGrid = dataArray; // used in draw on map 
   	  			       		
@@ -1444,11 +1448,10 @@ $(document).ready(function() {
   			               	
   			            	 columnVal = ArrayKeys[j];
 
-  			            	 
-  			                 // for export 
-  			            	 data.push(dataArray[i][ArrayKeys[j]]);
+	  			            	if(columnVal !="site") { 
+	  	  			            	data.push(dataArray[i][ArrayKeys[j]]);
+	  			            	}
 
-			            	 	//console.log("columnVal is "+columnVal)
   			                       if(columnVal =="initCost")  initCost+= parseFloat(dataArray[i][ArrayKeys[j]]);			                     
   			                       if(columnVal =="netCost")   netCost+= parseFloat(dataArray[i][ArrayKeys[j]]);				                     
   			                       if(columnVal =="accuDepr")  accuDepr+= parseFloat(dataArray[i][ArrayKeys[j]]);			                     
@@ -1456,7 +1459,7 @@ $(document).ready(function() {
   		          			   }
   		          		   }
 
-  			                /// for export
+  			                // for export
 		                   exportArrayGrid.push(data);
   			          					
 		                   initCost = initCost.toFixed(2);
@@ -1545,10 +1548,10 @@ $(document).ready(function() {
           return false;
 		 });
 
-	// close ul for export after selecting export option
-		$('#gridExport, #mapExport, #chartsExport, #allExport').click(function(){
-				$(this).parents('#dropLeft').removeClass("show");
-      });
+		$('#gridExport').click(function(){
+			$(this).parents('#dropLeft').removeClass("show");
+			downloadCSVFile(exportArrayGrid, "FinancialReportGrid");
+      	});
 
 		// clicking outsie menu div close ul     
 		var specifiedElement = document.getElementById('notifactionDropdown');
@@ -1560,14 +1563,19 @@ $(document).ready(function() {
 			   $('#dropLeft').removeClass("show");
 		    }
 		});	
-				
-		
-		$('#gridExport').click(function(){      
-  		  downloadCSVFile(exportArrayGrid, "grid");
-		});
-			      
-		
-    function downloadCSVFile(csv, filename) {
+
+		function downloadCSVFile(csv, filename) {
+			  const csvContent = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+			  const downloadLink = document.createElement('a');
+			  downloadLink.setAttribute('href', csvContent);
+			  downloadLink.setAttribute('download', filename);
+
+			  document.body.appendChild(downloadLink);
+			  downloadLink.click();
+			  document.body.removeChild(downloadLink);
+	 }
+								
+ /*   function downloadCSVFile(csv, filename) {
     	var csv_file, download_link;
 
     	csv_file = new Blob([csv], {type: "text/csv"});
@@ -1577,7 +1585,9 @@ $(document).ready(function() {
     	download_link.style.display = "none";
     	document.body.appendChild(download_link);
     	download_link.click();
-    }
+    }*/
+ 
+				    
 });
 function createSiteMarker(siteID,longitude,latitude,siteName) {
 
