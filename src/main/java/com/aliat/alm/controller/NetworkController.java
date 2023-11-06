@@ -3123,7 +3123,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 	return str;
 }
 
-	// Sites BOQ data retrieving
+//Sites BOQ data retrieving
 		@SuppressWarnings("unchecked")
 		@RequestMapping(value = "/GetBoqList", method = RequestMethod.GET, produces = "application/json")
 		@ResponseBody
@@ -3137,110 +3137,102 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 		
 			try {
-					String strEmpty= "SELECT COUNT(DISTINCT WARE_ID) FROM NODE_ACTIVE WHERE WARE_ID!='null' AND WARE_ID!='0' and WARE_ID is not null ";	
-					strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
-					String Site_Query = SiteId == "" ? strEmpty : "Select distinct Ware_Name From NODE_ACTIVE where Ware_Id='" + SiteId + "' ";
-					//System.out.println(Site_Query);
-					Object Sites = session.createSQLQuery(Site_Query).uniqueResult();
-					strEmpty="";					
+				String strEmpty= "SELECT COUNT(DISTINCT WARE_ID) FROM NODE_ACTIVE WHERE WARE_ID!='null' AND WARE_ID!='0' and WARE_ID is not null ";	
+				String strExist="Select distinct Ware_Name From NODE_ACTIVE where Ware_Id='" + SiteId + "' ";								
+				strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+				String Site_Query = SiteId == "" ? strEmpty : strExist;
+				//System.out.println(Site_Query);
+				Object Sites = session.createSQLQuery(Site_Query).uniqueResult();
+				strEmpty="";
+				strExist="";				
 		////////////////////////////
-					strEmpty="SELECT COUNT(DISTINCT NODE_PK) FROM NODE_ACTIVE where Active_record='1' ";
-					strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
-					String strExist= "SELECT COUNT(NODE_PK) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='" + SiteId + "' ";	
-					strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
-					String Node_Active_Query = SiteId == "" ? strEmpty : strExist;
-					//System.out.println(Node_Active_Query);
-					Object CountNodes_Active = session.createSQLQuery(Node_Active_Query).uniqueResult();
-					strEmpty="";
-					strExist="";
+				strEmpty="SELECT COUNT(NODE_PK) FROM NODE_ACTIVE where Active_record='1' ";
+				strExist= "SELECT COUNT(NODE_PK) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='" + SiteId + "' ";	
+				strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+				strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+				String Node_Active_Query = SiteId == "" ? strEmpty : strExist;
+				//System.out.println(Node_Active_Query);
+				Object CountNodes_Active = session.createSQLQuery(Node_Active_Query).uniqueResult();
+				strEmpty="";
+				strExist="";
 		////////////////////////////			
-					strEmpty="SELECT COUNT(DISTINCT GCELL_ID) FROM NODE_GCELL ";
-					if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
-						strEmpty= strEmpty + "WHERE ";
-					}				
-					strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
-					strExist= "select count(distinct ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"+ SiteId +"' ";	
-					strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
-					String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
-					//System.out.println(Node_GCell_Query);
-					Object CountNodes_G_CELL = session.createSQLQuery(Node_GCell_Query).uniqueResult();
-					strEmpty="";
-					strExist="";
+				strEmpty="SELECT COUNT(g.GCELL_ID) FROM NODE_GCELL g, NODE_ACTIVE a  where g.node_pk = a.node_pk ";
+				strExist= "select count(ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"+ SiteId +"' ";	
+				strEmpty= boqDomainVar ("g",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+				strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+				String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
+				//System.out.println(Node_GCell_Query);
+				Object CountNodes_G_CELL = session.createSQLQuery(Node_GCell_Query).uniqueResult();
+				strEmpty="";
+				strExist="";
 		/////////////////////////////
-					strEmpty="SELECT COUNT(DISTINCT LCELL_ID) FROM NODE_LCELL ";
-					if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
-						strEmpty= strEmpty + "WHERE ";
-					}
-					strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
-					strExist= "select count(distinct nlc.lcell_id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"+ SiteId +"' ";	
-					strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
-					String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
-					//System.out.println(Node_LCell_Query);
-					Object CountNodes_L_CELL = session.createSQLQuery(Node_LCell_Query).uniqueResult();
-					strEmpty="";
-					strExist="";
-		/////////////////////////////
-					strEmpty="SELECT COUNT(DISTINCT UCELL_ID) FROM NODE_UCELL ";
-					if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
-						strEmpty= strEmpty + "WHERE ";
-					}
-					strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
-					strExist= "select count(distinct nuc.ucell_id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.Ware_Id = '"+ SiteId +"' ";	
-					strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
-					String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
-					//System.out.println(Node_UCell_Query);
-					Object CountNodes_U_CELL = session.createSQLQuery(Node_UCell_Query).uniqueResult();
-					strEmpty="";
-					strExist="";			
-		/////////////////////////////
-					BoqHM.put(SiteId == "" ? "Sites" : "Site Name", String.valueOf(Sites));
-					BoqHM.put("Nodes", String.valueOf(CountNodes_Active));
+				strEmpty="SELECT COUNT(l.LCELL_ID) FROM NODE_LCELL l, NODE_ACTIVE a  where l.node_pk = a.node_pk ";
+				strExist= "select count(nlc.lcell_id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"+ SiteId +"' ";	
+				strEmpty= boqDomainVar ("l",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+				strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+				String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
+				//System.out.println(Node_LCell_Query);
+				Object CountNodes_L_CELL = session.createSQLQuery(Node_LCell_Query).uniqueResult();
+				strEmpty="";
+				strExist="";
+	/////////////////////////////
+				strEmpty="SELECT COUNT(u.UCELL_ID) FROM NODE_UCELL u, NODE_ACTIVE a  where u.node_pk = a.node_pk ";
+				strExist= "select count(nuc.ucell_id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.Ware_Id = '"+ SiteId +"' ";	
+				strEmpty= boqDomainVar ("u",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+				strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+				String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
+				//System.out.println(Node_UCell_Query);
+				Object CountNodes_U_CELL = session.createSQLQuery(Node_UCell_Query).uniqueResult();
+				strEmpty="";
+				strExist="";			
+	/////////////////////////////
+				BoqHM.put(SiteId == "" ? "Sites" : "Site Name", String.valueOf(Sites));
+				BoqHM.put("Nodes", String.valueOf(CountNodes_Active));
 
-					if (SiteId == "") {
-						strEmpty="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' ";
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
-						String Node_Type_Count = strEmpty;
-						//System.out.println(Node_Type_Count);
-						Object CountNodesType = session.createSQLQuery(Node_Type_Count).uniqueResult();
-						BoqHM.put("Node Type", String.valueOf(CountNodesType));
-					}else {
-						strExist="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"+ SiteId + "' ";
-						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
-						String Node_Type_Count = strExist;
-						//System.out.println(Node_Type_Count);
-						Object CountNodesType = session.createSQLQuery(Node_Type_Count).uniqueResult();
-						BoqHM.put("Node Type", String.valueOf(CountNodesType));
-						strExist="";
-					////////////////////////////////
-						strExist="SELECT distinct NODE_TYPE,COUNT(DISTINCT NODE_TYPE) from node_active where Active_record='1' and Ware_Id = '"+SiteId+"' ";
-						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
-						strExist = strExist +" GROUP BY NODE_TYPE";
-						//System.out.println(strExist);
-						List<Object[]> CountNodesteach_Active = (List<Object[]>) session.createSQLQuery(strExist).list();
-						List<Object[]> result = new ArrayList<>();
-						for (Object[] obj : CountNodesteach_Active) {
-							result.add(obj);
-						}
-						for (Object[] object : result) {
-							BoqHM.put(object[0].toString(), object[1].toString());
-						}
+				if (SiteId == "") {
+					strEmpty="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' ";
+					strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+					String Node_Type_Count = strEmpty;
+					//System.out.println(Node_Type_Count);
+					Object CountNodesType = session.createSQLQuery(Node_Type_Count).uniqueResult();
+					BoqHM.put("Node Type", String.valueOf(CountNodesType));
+				}else {
+					strExist="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"+ SiteId + "' ";
+					strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+					String Node_Type_Count = strExist;
+					//System.out.println(Node_Type_Count);
+					Object CountNodesType = session.createSQLQuery(Node_Type_Count).uniqueResult();
+					BoqHM.put("Node Type", String.valueOf(CountNodesType));
+					strExist="";
+				////////////////////////////////
+					strExist="SELECT distinct NODE_TYPE,COUNT(NODE_TYPE) from node_active where Active_record='1' and Ware_Id = '"+SiteId+"' ";
+					strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+					strExist = strExist +" GROUP BY NODE_TYPE";
+					//System.out.println(strExist);
+					List<Object[]> CountNodesteach_Active = (List<Object[]>) session.createSQLQuery(strExist).list();
+					List<Object[]> result = new ArrayList<>();
+					for (Object[] obj : CountNodesteach_Active) {
+						result.add(obj);
 					}
-					BoqHM.put("G-cells", String.valueOf(CountNodes_G_CELL));
-					BoqHM.put("L-cells", String.valueOf(CountNodes_L_CELL));
-					BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
-					return BoqHM;
-			} catch (Exception e) {
-				logger.info("Error in retreiving Site BOQ data Data from database", e);
-				return null;
-			} finally {
-				if (session != null && session.isOpen()) {
-					tx.commit();
-					session.close();
+					for (Object[] object : result) {
+						BoqHM.put(object[0].toString(), object[1].toString());
+					}
 				}
+				BoqHM.put("G-cells", String.valueOf(CountNodes_G_CELL));
+				BoqHM.put("L-cells", String.valueOf(CountNodes_L_CELL));
+				BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
+				return BoqHM;
+		} catch (Exception e) {
+			logger.info("Error in retreiving Site BOQ data Data from database", e);
+			return null;
+		} finally {
+			if (session != null && session.isOpen()) {
+				tx.commit();
+				session.close();
 			}
-			//return BoqHM;
 		}
-		
+		//return BoqHM;
+	}
 
 		// Sites BOQ data retrieving
 			@SuppressWarnings("unchecked")
