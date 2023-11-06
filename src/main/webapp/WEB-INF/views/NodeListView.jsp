@@ -604,7 +604,7 @@ z-index: 9003;
 
 
 				var NodeListData = ${ ListGridTable };
-				
+				var exportArrayGrid=[];				
 
 				var tab =0;
 				$(document).ready(function () {
@@ -628,8 +628,45 @@ z-index: 9003;
                 	
     					
     				});
-        	
+    				
+        		$("#export").click(function() {
+              		if(almgrid.filteredArray.length == 0 ){
+              			fillGrid(NodeListData);	
+              		}
+           			else{
+              			fillGrid(almgrid.filteredArray);
+              		}
+              		exportGrid();
+              	});   
+              	   		
+        		function fillGrid(filledGrid){
+        			exportArrayGrid=[];
+        			exportArrayGrid.push('\r');
+        			exportArrayGrid.push(["Node PK", "Node Id", "Node Name","Node Type","Node Model", "Site Id", "Created Date","Last Modified Date","Site Name"]);
+        			var value = Object.keys(filledGrid[0]);
+        			for(i=0;i<filledGrid.length;i++){
+        				exportArrayGrid.push('\r');
+        				for(j=1;j<value.length;j++){
+        					exportArrayGrid.push(filledGrid[i][value[j]]);
+        				}
+        			}
+        		}	
+        			function exportGrid() {
+	        		  const csvContent = 'data:text/csv;charset=utf-8,' + encodeURIComponent(exportArrayGrid);
+	      			  const downloadLink = document.createElement('a');
+	      			  downloadLink.setAttribute('href', csvContent);
+	      			  downloadLink.setAttribute('download', "Node_List_Export");
 
+	      			  document.body.appendChild(downloadLink);
+	      			  downloadLink.click();
+	      			  document.body.removeChild(downloadLink);  	        
+        			
+        			}
+        			
+        			
+        			
+
+        			
 				});
 
 				
