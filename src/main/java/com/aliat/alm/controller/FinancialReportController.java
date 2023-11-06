@@ -69,18 +69,12 @@ public class FinancialReportController {
 				tx = session.beginTransaction();
 				notifications.headerNotifications(session, model);
 				try {
-				String	str =
-							"SELECT site,farID, itemCode, itemName, lastModifiedDate,itemSN,itemNameRegister,poID,siteID,siteName,longitude,latitude,initCost,netCost,accuDepr FROM ( "
-									+ " SELECT B.SITE_ID AS site,A.FAR_ID as farID, A.ITEM_CODE as itemCode, A.ITEM_NAME as itemName,TO_CHAR(A.LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') as lastModifiedDate, A.ITEM_SN as itemSN,A.ITEM_NAME_REGISTER as itemNameRegister, A.PO_ID as poID, B.SITE_ID AS siteID, B.SITE_NAME AS siteName , C.LONGITUDE as longitude,C.LATITUDE as latitude, A.INITIALCOST as initCost, A.NETCOST as netCost , A.ACCUMULDEPRECAMNT as accuDepr , "
-									+ " ROW_NUMBER() OVER (PARTITION BY A.FAR_ID ORDER BY B.SITE_ID DESC) AS rn FROM FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID "
-									+ " WHERE A.CREATED_DATE >=  trunc(SYSDATE - INTERVAL '1' YEAR) AND A.created_date < (trunc(sysdate) ) + 1   ) WHERE rn = 1 ORDER BY lastModifiedDate DESC ";
 				
-
 					query = session.createNativeQuery(
 							"SELECT site,farID, itemCode, itemName, lastModifiedDate,itemSN,itemNameRegister,poID,siteID,siteName,longitude,latitude,initCost,netCost,accuDepr FROM ( "
 									+ " SELECT B.SITE_ID AS site,A.FAR_ID as farID, A.ITEM_CODE as itemCode, A.ITEM_NAME as itemName,TO_CHAR(A.LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') as lastModifiedDate, A.ITEM_SN as itemSN,A.ITEM_NAME_REGISTER as itemNameRegister, A.PO_ID as poID, B.SITE_ID AS siteID, B.SITE_NAME AS siteName , C.LONGITUDE as longitude,C.LATITUDE as latitude, A.INITIALCOST as initCost, A.NETCOST as netCost , A.ACCUMULDEPRECAMNT as accuDepr , "
 									+ " ROW_NUMBER() OVER (PARTITION BY A.FAR_ID ORDER BY B.SITE_ID DESC) AS rn FROM FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID "
-									+ " WHERE A.CREATED_DATE >=  trunc(SYSDATE - INTERVAL '1' YEAR) AND A.created_date < (trunc(sysdate) ) + 1   ) WHERE rn = 1 ORDER BY lastModifiedDate DESC ");
+									+ " WHERE A.CREATED_DATE >=  trunc(SYSDATE - INTERVAL '1' YEAR) AND A.created_date < (trunc(sysdate) ) + 1   ) WHERE rn = 1 and (longitude is not null and longitude != '0' and longitude != 'null' and latitude is not null and latitude != '0' and latitude != 'null') ORDER BY lastModifiedDate DESC ");
 
 					List<FinancialReport> ListFAR = (List<FinancialReport>) ((NativeQuery<FinancialReport>) query)
 							.addScalar("site").addScalar("farID").addScalar("itemCode").addScalar("itemName")
@@ -90,9 +84,8 @@ public class FinancialReportController {
 							.setResultTransformer(Transformers.aliasToBean(FinancialReport.class)).list();
 					model.addAttribute("financialReportList", mapper.writeValueAsString(ListFAR));
 
-					query = session.createNativeQuery(
-							"Select SUM(INITIALCOST) as initialCost, SUM(ACCUMULDEPRECAMNT) as AccumDepr, SUM(NETCOST) as netCost from FIXED_ASSET_REGISTRY "
-									+ " WHERE CREATED_DATE >=  trunc(SYSDATE - INTERVAL '1' YEAR) AND created_date < (trunc(sysdate) ) + 1    ");
+					query = session.createNativeQuery("Select SUM(initialCost), SUM( AccumDepr), SUM(netCost) FROM ( SELECT DISTINCT A.FAR_ID AS FAR_ID, A.INITIALCOST as initialCost,A.ACCUMULDEPRECAMNT as AccumDepr, A.NETCOST as netCost from FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID "
+							+ " LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID WHERE A.CREATED_DATE >=  trunc(SYSDATE - INTERVAL '1' YEAR) AND A.created_date < (trunc(sysdate) ) + 1  AND (C.longitude is not null and C.longitude != '0' AND C.longitude != 'null' and C.latitude is not null and C.latitude != '0' and C.latitude != 'null') ) ");
 
 					result = (Object[]) query.uniqueResult();
 					if (result[0] != null)
@@ -107,8 +100,9 @@ public class FinancialReportController {
 					model.addAttribute("totalNetCostFetched", totalNetCost);
 
 					// Get the total of initial,net cost and accumulated depr of all FAR records
-					query = session.createSQLQuery(
-							"Select SUM(INITIALCOST) as initialCost, SUM(ACCUMULDEPRECAMNT) as AccumDepr, SUM(NETCOST) as netCost from fixed_asset_registry t");
+					query = session.createNativeQuery("Select SUM(initialCost), SUM( AccumDepr), SUM(netCost) FROM ( SELECT DISTINCT A.FAR_ID AS FAR_ID, A.INITIALCOST as initialCost,A.ACCUMULDEPRECAMNT as AccumDepr, A.NETCOST as netCost from FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID "
+							+ " LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID WHERE (C.longitude is not null and C.longitude != '0' and C.longitude != 'null' and C.latitude is not null and C.latitude != '0' and C.latitude != 'null') ) ");
+
 					result = (Object[]) query.uniqueResult();
 					if (result[0] != null)
 						totalInitialCost = df.format(new BigDecimal(result[0].toString()));
@@ -408,8 +402,8 @@ public class FinancialReportController {
 
 					} // end of checked strt/end coordinate checkbox
 
-					str = str + "  ) WHERE rn = 1 and (longitude is not null and longitude != '0' and latitude is not null and latitude != '0') ORDER BY lastModifiedDate DESC  ";
-					totalStr = totalStr +" )";
+					str = str + "  ) WHERE rn = 1 and (longitude is not null and longitude != '0' and longitude != 'null' and latitude is not null and latitude != '0' and latitude != 'null') ORDER BY lastModifiedDate DESC  ";
+					totalStr = totalStr +" AND (C.longitude is not null and C.longitude != '0' and C.longitude != 'null' and C.latitude is not null and C.latitude != '0' and C.latitude != 'null'))";
 
 					//System.out.println("the totalStr is " + totalStr);
 
@@ -475,8 +469,8 @@ public class FinancialReportController {
 					}
 
 					// Get the total of initial,net cost and accumulated depr of all FAR records
-					query = session.createNativeQuery(
-							"Select SUM(INITIALCOST) as initialCost, SUM(ACCUMULDEPRECAMNT) as AccumDepr, SUM(NETCOST) as netCost from fixed_asset_registry t");
+					query = session.createNativeQuery("Select SUM(initialCost), SUM( AccumDepr), SUM(netCost) FROM ( SELECT DISTINCT A.FAR_ID AS FAR_ID, A.INITIALCOST as initialCost,A.ACCUMULDEPRECAMNT as AccumDepr, A.NETCOST as netCost from FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID "
+							+ " LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID WHERE (C.longitude is not null and C.longitude != '0' and C.longitude != 'null' and C.latitude is not null and C.latitude != '0' and C.latitude != 'null') ) ");
 					result = (Object[]) query.uniqueResult();
 					if (result[0] != null)
 						totalInitialCost = df.format(new BigDecimal(result[0].toString()));
