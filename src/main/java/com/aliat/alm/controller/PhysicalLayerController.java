@@ -6277,7 +6277,6 @@ public class PhysicalLayerController {
 			rtn.put("Login", "redirect:/");
 			return rtn;
 		}
-
 		else {
 
 			if (session != null && session.isOpen()) {
