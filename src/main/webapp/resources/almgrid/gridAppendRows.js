@@ -37,7 +37,7 @@ class gridAppendRows {
       //console.log(`end is ${end}, ${start}, ${rows.length}`)
 
       for (let i = start; i <= end; i++) {
-          itemRow += "<tr class='filterRows'>";
+          itemRow += "<tr class='filterRows changeTrColor'>";
           for (var j = 0; j < this.ArrayKeys.length; j++) {
               if (j == 0) {
                   if (this.selectCheckbox == true) {
@@ -61,7 +61,7 @@ class gridAppendRows {
       
 	var tableID = this.tableId;
 
-	$("#"+tableID+ " tr").click(function() {
+	$("#"+tableID+ " tr.changeTrColor").click(function() {
 	    var rowIndex = $(this).index();
 	    var color = $('#' + tableID + ' > tbody > tr').eq(rowIndex).css("background-color");
 	
