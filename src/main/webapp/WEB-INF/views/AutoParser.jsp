@@ -228,13 +228,13 @@
 				<div class="input-group-prepend" style="margin-left: 20px;">
 				<span class="input-group-text">Vendor</span>
 					<select id="loaderVendor" class="form-control">
-									<option value="Nokia" >NOKIA</option>
+									<option value="Nokia" >Nokia</option>
 									<option value="Huawei" >Huawei</option>
-									<option value="zte">ZTE</option>
+									<option value="ZTE">ZTE</option>
 									<option value="Ericsson">Ericsson</option>
 									<option value="Tejas">Tejas</option>
 									<option value="Alcatel">Alcatel</option>
-									<option value="Nec">NEC</option>
+									<option value="NEC">NEC</option>
 									
 									
 					</select>
