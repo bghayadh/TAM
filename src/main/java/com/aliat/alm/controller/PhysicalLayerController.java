@@ -6070,8 +6070,9 @@ public class PhysicalLayerController {
 				// System.out.println("countConnections " +
 				// mapper.writeValueAsString(countConnections));
 				rtn.put("countConnections", countConnections);
-
+				tx.commit();
 			} catch (Exception e) {
+				tx.rollback();
 				sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
 				exceptionAsString = sw.toString();
@@ -6079,10 +6080,8 @@ public class PhysicalLayerController {
 				logger.info("Error in saveDistributionBoard due to \n " + exceptionAsString);
 				rtn.put("distributionBoardId", null);
 			}
-
 			finally {
-				if (session != null && session.isOpen()) {
-					tx.commit();
+				if (session != null && session.isOpen()) {					
 					session.close();
 					session.getSessionFactory().close();
 				}
@@ -6242,12 +6241,12 @@ public class PhysicalLayerController {
 							IgnoredDB.add(i + 2);
 						}
 					}
-
 				}
-
 				rtn.put("distributionBoardDetails", DBDetails);
 				rtn.put("IgnoredDB", IgnoredDB);
+				tx.commit();
 			} catch (Exception e) {
+				tx.rollback();
 				sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
 				exceptionAsString = sw.toString();
@@ -6256,7 +6255,6 @@ public class PhysicalLayerController {
 				rtn.put("distributionBoardId", null);
 				rtn.put("IgnoredDB", null);
 			}
-
 			finally {
 				if (session != null && session.isOpen()) {
 					tx.commit();
@@ -6589,7 +6587,7 @@ public class PhysicalLayerController {
 				exceptionAsString = sw.toString();
 				logger.finest("Error in getFiberPath due to \n " + exceptionAsString);
 				logger.info("Error in getFiberPath due to \n " + exceptionAsString);
-				rtn.put("searchResult", null);
+				rtn.put("searchResult", "Loading Fiber Data Error");
 			} finally {
 				if (session != null && session.isOpen()) {
 					tx.commit();
