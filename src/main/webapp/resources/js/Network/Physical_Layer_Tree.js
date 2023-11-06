@@ -891,8 +891,10 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 	
 }	else{
 	console.log(" //////////passed else");	
-	$("#FiberPath_f_CurrentPhysicalLayer").bind("change",function() {
-		getFiberPath();
+	$("#FiberPath_f_CurrentPhysicalLayer input[type=checkbox]").bind("change",function() {
+		if ($(this).is(':checked')){
+			getFiberPath();
+		}
 	});
 	
 	//$("#FiberPath_f_CurrentPhysicalLayer").unbind();
@@ -16949,7 +16951,7 @@ function treeCollapseFolder(selector,type,clss){
 	}				
 	$(selector).bind('click',function (e) {
 		var id = $(this).parent().attr('id');
-		if(id == "FiberPath_f_CurrentPhysicalLayer" && flag == 0 ){
+		if(id == "FiberPath_f_CurrentPhysicalLayer" && flag == 0 && $(this).parent().find(' > ul > li').is(":hidden")){
 			console.log("passed treeCollapseFolder");
 			getFiberPath();
 		}
