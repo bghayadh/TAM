@@ -92,7 +92,11 @@ public class NetworkController {
 
 					model.addAttribute("listCells", mapper.writeValueAsString(cellResult));
 				} catch (Exception e) {
-					logger.info("Error in retreiving Cells Data from database" + exceptionAsString);
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving Cells Data from database in method Network_Index due to \n " + exceptionAsString);
+					logger.info("Error in retreiving Cells Data from database in method Network_Index due to \n " + exceptionAsString);															
 					model.addAttribute("listCells", "null");
 				}
 				// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>//
@@ -103,7 +107,11 @@ public class NetworkController {
 							.list()));
 
 				} catch (Exception e) {
-					logger.info("Error in retreiving Nodes Data from database" + exceptionAsString);
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving Nodes Data from database in method Network_Index due to \n " + exceptionAsString);
+					logger.info("Error in retreiving Nodes Data from database in method Network_Index due to \n " + exceptionAsString);															
 					model.addAttribute("listNodes", "null");
 				}
 
@@ -121,7 +129,11 @@ public class NetworkController {
 									+ " FROM WAREHOUSE b where b.WARE_ID!='0' and b.WARE_ID!='null'").list()));
 
 				} catch (Exception e) {
-					logger.info("Error in retreiving Sites Data from database" + exceptionAsString);
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving Sites Data from database in method Network_Index due to \n " + exceptionAsString);
+					logger.info("Error in retreiving Sites Data from database in method Network_Index due to \n " + exceptionAsString);															
 					model.addAttribute("listSites", "null");
 
 				}
@@ -139,7 +151,11 @@ public class NetworkController {
 					model.addAttribute("Lat", latitude);
 
 				} catch (Exception e) {
-					logger.info("Error in retreiving BOQ Data from database" + exceptionAsString);
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving BOQ Data from database in method Network_Index due to \n " + exceptionAsString);
+					logger.info("Error in retreiving BOQ Data from database in method Network_Index due to \n " + exceptionAsString);															
 					model.addAttribute("Long", null);
 					model.addAttribute("Lat", null);
 				}
@@ -271,7 +287,11 @@ public class NetworkController {
 				model.addAttribute("listSites", mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 				}catch (Exception e) {
-					logger.info("Error in retreiving Sites Data from database" + exceptionAsString);
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving Sites Data from database in method Network_StNdCell due to \n " + exceptionAsString);
+					logger.info("Error in retreiving Sites Data from database in method Network_StNdCell due to \n " + exceptionAsString);															
 					model.addAttribute("listSites", "null");
 				}
 				
@@ -291,8 +311,12 @@ public class NetworkController {
 				model.addAttribute("listNodes", mapper.writeValueAsString(session.createNativeQuery(strNodes).list()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 				} catch (Exception e) {
-				logger.info("Error in retreiving Nodes Data from database" + exceptionAsString);
-				model.addAttribute("listNodes", "null");
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving Nodes Data from database in method Network_StNdCell due to \n " + exceptionAsString);
+					logger.info("Error in retreiving Nodes Data from database in method Network_StNdCell due to \n " + exceptionAsString);															
+					model.addAttribute("listNodes", "null");
 			}	
 			// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>//
 			try {			
@@ -307,7 +331,11 @@ public class NetworkController {
 				model.addAttribute("listCells", mapper.writeValueAsString(cellResult));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));				
 			} catch (Exception e) {
-				logger.info("Error in retreiving Cells Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Cells Data from database in method Network_StNdCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Cells Data from database in method Network_StNdCell due to \n " + exceptionAsString);															
 				model.addAttribute("listCells", "null");
 			}
 				try {
@@ -419,7 +447,11 @@ public class NetworkController {
 					model.addAttribute("listSites", mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 			} catch (Exception e) {
-				logger.info("Error in retreiving Sites Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Sites Data from database in method Network_StNdTypNdCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Sites Data from database in method Network_StNdTypNdCell due to \n " + exceptionAsString);																			
 				model.addAttribute("listSites", "null");
 			}
 			// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>//			
@@ -435,7 +467,11 @@ public class NetworkController {
 				model.addAttribute("listNodes", mapper.writeValueAsString(session.createNativeQuery(strNodes).list()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 			} catch (Exception e) {
-				logger.info("Error in retreiving Nodes Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Nodes Data from database in method Network_StNdTypNdCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Nodes Data from database in method Network_StNdTypNdCell due to \n " + exceptionAsString);															
 				model.addAttribute("listNodes", "null");
 			}
 
@@ -452,7 +488,11 @@ public class NetworkController {
 				model.addAttribute("listCells", mapper.writeValueAsString(cellResult));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 				} catch (Exception e) {
-					logger.info("Error in retreiving Cells Data from database" + exceptionAsString);
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving Cells Data from database in method Network_StNdTypNdCell due to \n " + exceptionAsString);
+					logger.info("Error in retreiving Cells Data from database in method Network_StNdTypNdCell due to \n " + exceptionAsString);															
 					model.addAttribute("listCells", "null");
 				}			
 				try {
@@ -461,7 +501,11 @@ public class NetworkController {
 					model.addAttribute("listNodesType", mapper.writeValueAsString(session.createNativeQuery(strNodesType).list()));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 				} catch (Exception e) {
-					logger.info("Error in retreiving node type array Data from database" + exceptionAsString);
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving Node Tyoe Data from database in method Network_StNdTypNdCell due to \n " + exceptionAsString);
+					logger.info("Error in retreiving Node Type Data from database in method Network_StNdTypNdCell due to \n " + exceptionAsString);															
 					model.addAttribute("listNodesType", null);
 				}
 	
@@ -479,7 +523,11 @@ public class NetworkController {
 					model.addAttribute("Lat", latitude);
 
 				} catch (Exception e) {
-					logger.info("Error in retreiving BOQ Data from database" + exceptionAsString);
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving BOQ Data from database in method Network_StNdTypNdCell due to \n " + exceptionAsString);
+					logger.info("Error in retreiving BOQ Data from database in method Network_StNdTypNdCell due to \n " + exceptionAsString);															
 					model.addAttribute("Long", null);
 					model.addAttribute("Lat", null);
 				}
@@ -562,7 +610,11 @@ public String Network_NdTypStNdCell(Locale locale, Model model, HttpServletReque
 				model.addAttribute("listSites", mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));					
 			} catch (Exception e) {
-				logger.info("Error in retreiving Sites Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Sites Data from database in method Network_NdTypStNdCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Sites Data from database in method Network_NdTypStNdCell due to \n " + exceptionAsString);															
 				model.addAttribute("listSites", "null");
 			}	
 			
@@ -574,7 +626,11 @@ public String Network_NdTypStNdCell(Locale locale, Model model, HttpServletReque
 				model.addAttribute("listNodesType", mapper.writeValueAsString(session.createNativeQuery(strNodesType).list()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));	
 			} catch (Exception e) {
-				logger.info("Error in retreiving node type array Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Node Type Data from database in method Network_NdTypStNdCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Node Type Data from database in method Network_NdTypStNdCell due to \n " + exceptionAsString);															
 				model.addAttribute("listNodesType", null);
 			}		
 			try {
@@ -590,7 +646,11 @@ public String Network_NdTypStNdCell(Locale locale, Model model, HttpServletReque
 				model.addAttribute("Long", longitude);
 				model.addAttribute("Lat", latitude);
 			} catch (Exception e) {
-				logger.info("Error in retreiving BOQ Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving BOQ Data from database in method Network_NdTypStNdCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving BOQ Data from database in method Network_NdTypStNdCell due to \n " + exceptionAsString);															
 				model.addAttribute("Long", null);
 				model.addAttribute("Lat", null);
 			}
@@ -670,7 +730,11 @@ public String Network_SupStNdCell(Locale locale, Model model, HttpServletRequest
 					model.addAttribute("listSites", mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 			} catch (Exception e) {
-				logger.info("Error in retreiving Sites Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Sites Data from database in method Network_SupStNdCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Sites Data from database in method Network_SupStNdCell due to \n " + exceptionAsString);															
 				model.addAttribute("listSites", "null");
 			}			
 			try {
@@ -678,7 +742,11 @@ public String Network_SupStNdCell(Locale locale, Model model, HttpServletRequest
 				model.addAttribute("listSupp", mapper.writeValueAsString(session.createNativeQuery(strSup).list()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));				
 			} catch (Exception e) {
-				logger.info("Error in retreiving Suppliers Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Suppliers Data from database in method Network_SupStNdCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Suppliers Data from database in method Network_SupStNdCell due to \n " + exceptionAsString);															
 				model.addAttribute("listSupp", "null");
 			}	
 			finally {
@@ -756,7 +824,11 @@ public String Network_VnStNdCell(Locale locale, Model model, HttpServletRequest 
 					model.addAttribute("listSites", mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 			} catch (Exception e) {
-				logger.info("Error in retreiving Sites Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Sites Data from database in method Network_VnStNdCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Sites Data from database in method Network_VnStNdCell due to \n " + exceptionAsString);															
 				model.addAttribute("listSites", "null");
 			}
 			
@@ -765,7 +837,11 @@ public String Network_VnStNdCell(Locale locale, Model model, HttpServletRequest 
 				model.addAttribute("listVen", mapper.writeValueAsString(session.createNativeQuery(strVen).list()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));				
 			} catch (Exception e) {
-				logger.info("Error in retreiving Vendors Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Vendors Data from database in method Network_VnStNdCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Vendors Data from database in method Network_VnStNdCell due to \n " + exceptionAsString);															
 				model.addAttribute("listVen", "null");
 			}	
 			finally {
@@ -845,7 +921,11 @@ public String Network_VnStNdTypNdCell(Locale locale, Model model, HttpServletReq
 					model.addAttribute("listSites", mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 			} catch (Exception e) {
-				logger.info("Error in retreiving Sites Data from database in method Network_VnStNdTypNdCell" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Sites Data from database in method Network_VnStNdTypNdCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Sites Data from database in method Network_VnStNdTypNdCell due to \n " + exceptionAsString);															
 				model.addAttribute("listSites", "null");
 			}			
 			try {
@@ -853,7 +933,11 @@ public String Network_VnStNdTypNdCell(Locale locale, Model model, HttpServletReq
 				model.addAttribute("listVen", mapper.writeValueAsString(session.createNativeQuery(strVen).list()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));				
 			} catch (Exception e) {
-				logger.info("Error in retreiving Vendors Data from database in method Network_VnStNdTypNdCell" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Vendors Data from database in method Network_VnStNdTypNdCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Vendors Data from database in method Network_VnStNdTypNdCell due to \n " + exceptionAsString);															
 				model.addAttribute("listVen", "null");
 			}
 			finally {
@@ -933,7 +1017,11 @@ public String Network_SupStNdTypNdCell(Locale locale, Model model, HttpServletRe
 					model.addAttribute("listSites", mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 				} catch (Exception e) {
-					logger.info("Error in retreiving Sites Data from database" + exceptionAsString);
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving Sites Data from database in method Network_SupStNdTypNdCell due to \n " + exceptionAsString);
+					logger.info("Error in retreiving Sites Data from database in method Network_SupStNdTypNdCell due to \n " + exceptionAsString);															
 					model.addAttribute("listSites", "null");
 				}					
 				try {
@@ -941,7 +1029,11 @@ public String Network_SupStNdTypNdCell(Locale locale, Model model, HttpServletRe
 					model.addAttribute("listSupp", mapper.writeValueAsString(session.createNativeQuery(strSup).list()));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 				} catch (Exception e) {
-					logger.info("Error in retreiving Suppliers Data from database" + exceptionAsString);
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving Suppliers Data from database in method Network_SupStNdTypNdCell due to \n " + exceptionAsString);
+					logger.info("Error in retreiving Suppliers Data from database in method Network_SupStNdTypNdCell due to \n " + exceptionAsString);															
 					model.addAttribute("listSupp", "null");
 				}
 			finally {
@@ -1021,7 +1113,11 @@ public String Network_SupNdTypStCell(Locale locale, Model model, HttpServletRequ
 				model.addAttribute("listSites", mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 			} catch (Exception e) {
-				logger.info("Error in retreiving Sites Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Sites Data from database in method Network_SupNdTypStNdCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Sites Data from database in method Network_SupNdTypStNdCell due to \n " + exceptionAsString);															
 				model.addAttribute("listSites", "null");
 			}			
 		 try {
@@ -1029,7 +1125,11 @@ public String Network_SupNdTypStCell(Locale locale, Model model, HttpServletRequ
 				model.addAttribute("listSupp", mapper.writeValueAsString(session.createNativeQuery(strSup).list()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 				} catch (Exception e) {
-					logger.info("Error in retreiving Suppliers Data from database" + exceptionAsString);
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving Suppliers Data from database in method Network_SupNdTypStNdCell due to \n " + exceptionAsString);
+					logger.info("Error in retreiving Suppliers Data from database in method Network_SupNdTypStNdCell due to \n " + exceptionAsString);															
 					model.addAttribute("listSupp", "null");
 				}
 		 
@@ -1110,7 +1210,11 @@ public String Network_VnNdTypStCell(Locale locale, Model model, HttpServletReque
 				model.addAttribute("listSites", mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 			} catch (Exception e) {
-				logger.info("Error in retreiving Sites Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Sites Data from database in method Network_VnNdTypStNdCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Sites Data from database in method Network_VnNdTypStNdCell due to \n " + exceptionAsString);															
 				model.addAttribute("listSites", "null");
 			}			
 		 try {
@@ -1118,7 +1222,11 @@ public String Network_VnNdTypStCell(Locale locale, Model model, HttpServletReque
 				model.addAttribute("listVen", mapper.writeValueAsString(session.createNativeQuery(strVen).list()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));				
 				} catch (Exception e) {
-					logger.info("Error in retreiving Vendors Data from database" + exceptionAsString);
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving Vendors Data from database in method Network_VnNdTypStNdCell due to \n " + exceptionAsString);
+					logger.info("Error in retreiving Vendors Data from database in method Network_VnNdTypStNdCell due to \n " + exceptionAsString);															
 					model.addAttribute("listVen", "null");
 				}
 			finally {
@@ -1200,7 +1308,11 @@ public String Network_PoSiteItem(Locale locale, Model model, HttpServletRequest 
 				model.addAttribute("listSites", mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 			} catch (Exception e) {
-				logger.info("Error in retreiving Sites Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Sites Data from database in method Network_PoSiteItem due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Sites Data from database in method Network_PoSiteItem due to \n " + exceptionAsString);															
 				model.addAttribute("listSites", "null");
 			}
 			try {
@@ -1208,7 +1320,11 @@ public String Network_PoSiteItem(Locale locale, Model model, HttpServletRequest 
 				model.addAttribute("listPO", mapper.writeValueAsString(session.createNativeQuery(strPO).list()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 			} catch (Exception e) {
-				logger.info("Error in retreiving PO Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving PO Data from database in method Network_PoSiteItem due to \n " + exceptionAsString);
+				logger.info("Error in retreiving PO Data from database in method Network_PoSiteItem due to \n " + exceptionAsString);															
 				model.addAttribute("listPO", "null");
 				}
 			finally {
@@ -1290,7 +1406,11 @@ public String Network_PoItemSite(Locale locale, Model model, HttpServletRequest 
 					model.addAttribute("listSites", mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 				} catch (Exception e) {
-					logger.info("Error in retreiving Sites Data from database" + exceptionAsString);
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving Sites Data from database in method Network_PoItemSite due to \n " + exceptionAsString);
+					logger.info("Error in retreiving Sites Data from database in method Network_PoItemSite due to \n " + exceptionAsString);															
 					model.addAttribute("listSites", "null");
 				}
 				try {
@@ -1298,7 +1418,11 @@ public String Network_PoItemSite(Locale locale, Model model, HttpServletRequest 
 					model.addAttribute("listPO", mapper.writeValueAsString(session.createNativeQuery(strPO).list()));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 			} catch (Exception e) {
-				logger.info("Error in retreiving PO Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving PO Data from database in method Network_PoItemSite due to \n " + exceptionAsString);
+				logger.info("Error in retreiving PO Data from database in method Network_PoItemSite due to \n " + exceptionAsString);															
 				model.addAttribute("listPO", "null");
 				}
 			finally {
@@ -1379,7 +1503,11 @@ public String Network_SitePoItem(Locale locale, Model model, HttpServletRequest 
 				model.addAttribute("listSites", mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 			} catch (Exception e) {
-				logger.info("Error in retreiving Sites Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Sites Data from database in method Network_SitePoItem due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Sites Data from database in method Network_SitePoItem due to \n " + exceptionAsString);															
 				model.addAttribute("listSites", "null");
 			}
 			finally {
@@ -1453,7 +1581,11 @@ public String Network_NdTypNdCell(Locale locale, Model model, HttpServletRequest
 				model.addAttribute("listNodes", mapper.writeValueAsString(session.createNativeQuery(strNodes).list()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 			}catch (Exception e) {
-				logger.info("Error in retreiving nodes Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Nodes Data from database in method Network_NdTypNdCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Nodes Data from database in method Network_NdTypNdCell due to \n " + exceptionAsString);															
 				model.addAttribute("listNodes", "null");
 			}
 						
@@ -1465,7 +1597,11 @@ public String Network_NdTypNdCell(Locale locale, Model model, HttpServletRequest
 				model.addAttribute("listNodesType", mapper.writeValueAsString(session.createNativeQuery(strNodesType).list()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 			} catch (Exception e) {
-				logger.info("Error in retreiving sites Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Node Type Data from database in method Network_NdTypNdCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Node Type Data from database in method Network_NdTypNdCell due to \n " + exceptionAsString);															
 				model.addAttribute("listNodesType", "null");	
 			}
 		
@@ -1538,7 +1674,11 @@ public String Network_Node(Locale locale, Model model, HttpServletRequest reques
 				model.addAttribute("listNodes", mapper.writeValueAsString(session.createNativeQuery(strNodes).list()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 				} catch (Exception e) {
-					logger.info("Error in retreiving Sites Data from database" + exceptionAsString);
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving Nodes Data from database in method Network_Node due to \n " + exceptionAsString);
+					logger.info("Error in retreiving Nodes Data from database in method Network_Node due to \n " + exceptionAsString);															
 					model.addAttribute("listNodes", "null");
 				}
 			finally {
@@ -1643,8 +1783,12 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 					model.addAttribute("listCells", mapper.writeValueAsString(cellResult));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 				} catch (Exception e) {
-				logger.info("Error in retreiving cells array Data from database" + exceptionAsString);
-				model.addAttribute("listCells", "null");
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving Cells Data from database in method Network_Cell due to \n " + exceptionAsString);
+					logger.info("Error in retreiving Cells Data from database in method Network_Cell due to \n " + exceptionAsString);															
+					model.addAttribute("listCells", "null");
 			}
 			finally {
 				if (session != null && session.isOpen()) {
@@ -1699,7 +1843,11 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 					rtn.put("listVenSites",session.createNativeQuery(strSites).list());
 				}
 			} catch (Exception e) {
-				logger.info("Error in retreiving sites array Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Sites Data from database in method FindOnClick_VenSiteNodeCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Sites Data from database in method FindOnClick_VenSiteNodeCell due to \n " + exceptionAsString);															
 				rtn.put("listVenSites", null);
 			}
 				try {
@@ -1715,7 +1863,11 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 						rtn.put("listCells",cellResult);
 					}
 				} catch (Exception e) {
-					logger.info("Error in retreiving cells array Data from database" + exceptionAsString);
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving Cells Data from database in method FindOnClick_VenSiteNodeCell due to \n " + exceptionAsString);
+					logger.info("Error in retreiving Cells Data from database in method FindOnClick_VenSiteNodeCell due to \n " + exceptionAsString);															
 					rtn.put("listCells", null);
 				}			 
 				try {
@@ -1732,7 +1884,11 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 						rtn.put("listVenNodes", session.createNativeQuery(strNodes).list());
 					}
 				} catch (Exception e) {
-					logger.info("Error in retreiving nodes array Data from database" + exceptionAsString);
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving Nodes Data from database in method FindOnClick_VenSiteNodeCell due to \n " + exceptionAsString);
+					logger.info("Error in retreiving Nodes Data from database in method FindOnClick_VenSiteNodeCell due to \n " + exceptionAsString);															
 					rtn.put("listVenNodes", null);
 				}
 		 finally {
@@ -1785,7 +1941,11 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 					rtn.put("listSuppSites",session.createNativeQuery(strSites).list());
 				}
 			} catch (Exception e) {
-				logger.info("Error in retreiving sites array Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Sites Data from database in method FindOnClick_SuppSiteNodeCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Sites Data from database in method FindOnClick_SuppSiteNodeCell due to \n " + exceptionAsString);															
 				rtn.put("listSuppSites", null);
 			}
 				try {
@@ -1801,7 +1961,11 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 						rtn.put("listCells",cellResult);
 					}
 				} catch (Exception e) {
-					logger.info("Error in retreiving cells array Data from database" + exceptionAsString);
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving Cells Data from database in method FindOnClick_SuppSiteNodeCell due to \n " + exceptionAsString);
+					logger.info("Error in retreiving Cells Data from database in method FindOnClick_SuppSiteNodeCell due to \n " + exceptionAsString);															
 					rtn.put("listCells", null);
 				}
 			 
@@ -1820,7 +1984,11 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 						rtn.put("listSuppNodes", session.createNativeQuery(strNodes).list());
 					}
 				} catch (Exception e) {
-					logger.info("Error in retreiving nodes array Data from database" + exceptionAsString);
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving Nodes Data from database in method FindOnClick_SuppSiteNodeCell due to \n " + exceptionAsString);
+					logger.info("Error in retreiving Nodes Data from database in method FindOnClick_SuppSiteNodeCell due to \n " + exceptionAsString);															
 					rtn.put("listSuppNodes", null);
 				}
 				
@@ -1869,11 +2037,15 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 				cellResult.addAll(result2);
 				rtn.put("listCells", cellResult);
 			} catch (Exception e) {
-				logger.info("Error in retreiving cells array Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Cells Data from database in method StSupNdCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Cells Data from database in method StSupNdCell due to \n " + exceptionAsString);															
 				rtn.put("listCells", null);
 			}
 			try {
-				List<Object[]> site_SuppList = (List<Object[]>) session.createNativeQuery(
+				rtn.put("listSuppSites", (List<Object[]>) session.createNativeQuery(
 						"SELECT distinct b.SITE_ID,b.WARE_NAME,b.WARE_ID,"
 								+ "(SELECT a.LATITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LATITUDE,"
 								+ "(SELECT a.LONGITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LONGITUDE,"
@@ -1881,34 +2053,40 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 								+ "(select COUNT(*) FROM NODE_GCELL c where c.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1')) as countGcells,"
 								+ "(select COUNT(*) FROM NODE_LCELL d where d.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1')) as countLcells,"
 								+ "(select COUNT(*) FROM NODE_UCELL e where e.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1')) as countUcells"
-								+ " FROM WAREHOUSE b where b.WARE_ID!='0' and b.WARE_ID!='null'")
-						.list();
-
-				rtn.put("listSuppSites", site_SuppList);
+								+ " FROM WAREHOUSE b where b.WARE_ID!='0' and b.WARE_ID!='null'").list());
 			} catch (Exception e) {
-				logger.info("Error in retreiving sites array Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Sites Data from database in method StSupNdCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Sites Data from database in method StSupNdCell due to \n " + exceptionAsString);															
 				rtn.put("listSuppSites", null);
 			}
 
 			try {
-				List<Object[]> nodeList = (List<Object[]>) session.createNativeQuery(
+				rtn.put("listNodes", (List<Object[]>) session.createNativeQuery(
 						"SELECT NODE_PK,SITE_ID,NODE_NAME,NODE_TYPE,WARE_ID,(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and ACTIVE_RECORD = '1') as countGCells,"
 								+ "(select count(*) from NODE_LCELL c  where a.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1') as countLCells,"
 								+ "(select count(*) from NODE_UCELL d  where a.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1') as countUCells,SUPPLIER_ID FROM NODE_ACTIVE a WHERE ACTIVE_RECORD = '1'")
-						.list();
-
-				rtn.put("listNodes", nodeList);
+						.list());
 			} catch (Exception e) {
-				logger.info("Error in retreiving nodes array Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Nodes Data from database in method StSupNdCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Nodes Data from database in method StSupNdCell due to \n " + exceptionAsString);															
+				
 			}
 			try {
-				List<?> SiteSupplist = session.createNativeQuery(
+				rtn.put("SiteSuppList", session.createNativeQuery(
 						"SELECT DISTINCT a.WARE_ID,a.SUPPLIER_ID,(select b.SUPPLIER_NAME from SUPPLIER b where a.SUPPLIER_ID=b.SUPPLIER_ID) FROM NODE_ACTIVE a WHERE a.ACTIVE_RECORD = '1' and a.WARE_ID!='0'")
-						.list();
-
-				rtn.put("SiteSuppList", SiteSupplist);
+						.list());
 			} catch (Exception e) {
-				logger.info("Error in retreiving supplier array Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Sites Data from database in method StSupNdCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Sites Data from database in method StSupNdCell due to \n " + exceptionAsString);															
 				rtn.put("SiteSuppList", null);
 			} finally {
 				if (session != null && session.isOpen()) {
@@ -1928,12 +2106,7 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 		@ResponseBody
 		public Map<String, Object> findSiteNdTyNodesCells(Locale locale, Model model, HttpServletRequest request,
 				HttpServletResponse response) throws JsonProcessingException {
-			// logger.info("Welcome home! The client locale is {}.", locale);
-
 			Map<String, Object> rtn = new LinkedHashMap<>();
-			// ObjectMapper mapper = new ObjectMapper();
-			Session session = null;
-			Transaction tx = null;
 			session = almsessions.getSession();
 			if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				rtn.put("Login", LoginServices.checkSession(request, response));
@@ -1945,59 +2118,59 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 				String selectedItem = request.getParameter("selectedItem");
 
 				try {
-
-					List<?> nodeTypeList = session.createSQLQuery(
+					rtn.put("listNodesType", session.createNativeQuery(
 							"SELECT DISTINCT NODE_TYPE,WARE_ID FROM NODE_ACTIVE WHERE ACTIVE_RECORD = '1' and WARE_ID='"
-									+ selectedItem + "'")
-							.list();
-
-					rtn.put("listNodesType", nodeTypeList);
+									+ selectedItem + "'").list());
 				} catch (Exception e) {
-					logger.info("Error in retreiving node type array Data from database" + exceptionAsString);
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving Node Type Data from database in method findSiteNdTypeNodes_Cells due to \n " + exceptionAsString);
+					logger.info("Error in retreiving Node Type Data from database in method findSiteNdTypeNodes_Cells due to \n " + exceptionAsString);															
 					rtn.put("listNodesType", null);
 				}
 				try {
 					String selectedNodetType = request.getParameter("selectedNodetType");
 					if (selectedNodetType != null) {
-
-						List<Object[]> nodeList = (List<Object[]>) session.createSQLQuery(
-								"SELECT NODE_PK,SITE_ID,NODE_NAME,NODE_TYPE,WARE_ID,(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and ACTIVE_RECORD = '1') as countGCells,(select count(*) from NODE_LCELL c  where a.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1') as countLCells,(select count(*) from NODE_UCELL d  where a.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1') as countUCells FROM NODE_ACTIVE a WHERE ACTIVE_RECORD = '1' and WARE_ID='"
-										+ selectedItem + "' and NODE_TYPE='" + selectedNodetType + "'")
-								.list();
-
-						rtn.put("listNodes", nodeList);
+						rtn.put("listNodes",  (List<Object[]>) session.createNativeQuery(
+							"SELECT NODE_PK,SITE_ID,NODE_NAME,NODE_TYPE,WARE_ID,(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and ACTIVE_RECORD = '1') as countGCells,(select count(*) from NODE_LCELL c  where a.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1') as countLCells,(select count(*) from NODE_UCELL d  where a.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1') as countUCells FROM NODE_ACTIVE a WHERE ACTIVE_RECORD = '1' and WARE_ID='"
+								+ selectedItem + "' and NODE_TYPE='" + selectedNodetType + "'").list());
 					}
 				} catch (Exception e) {
-					logger.info("Error in retreiving nodes array Data from database" + exceptionAsString);
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving Nodes Data from database in method findSiteNdTypeNodes_Cells due to \n " + exceptionAsString);
+					logger.info("Error in retreiving Nodes Data from database in method findSiteNdTypeNodes_Cells due to \n " + exceptionAsString);															
 					rtn.put("listNodes", null);
 				}
 				try {
 					String selectedNode = request.getParameter("selectedNode");
 
-					List<Object[]> result = session.createSQLQuery(
+					List<Object[]> result = session.createNativeQuery(
 							"SELECT a.GCELL_ID,a.CELLNAME,a.NODE_PK FROM NODE_GCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.NODE_PK='"
 									+ selectedNode + "'")
 							.list();
-					List<Object[]> result1 = session.createSQLQuery(
+					List<Object[]> result1 = session.createNativeQuery(
 							"SELECT a.LCELL_ID,a.CELLNAME,a.NODE_PK FROM NODE_LCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.NODE_PK='"
 									+ selectedNode + "'")
 							.list();
-					List<Object[]> result2 = session.createSQLQuery(
+					List<Object[]> result2 = session.createNativeQuery(
 							"SELECT a.UCELL_ID,a.CELLNAME,a.NODE_PK FROM NODE_UCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.NODE_PK='"
 									+ selectedNode + "'")
 							.list();
 
 					List<Object[]> cellResult = new ArrayList<Object[]>();
-
 					cellResult.addAll(result);
-
 					cellResult.addAll(result1);
-
 					cellResult.addAll(result2);
-
 					rtn.put("listCells", cellResult);
 				} catch (Exception e) {
-					logger.info("Error in retreiving cells array Data from database" + exceptionAsString);
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving Cells Data from database in method findSiteNdTypeNodes_Cells due to \n " + exceptionAsString);
+					logger.info("Error in retreiving Cells Data from database in method findSiteNdTypeNodes_Cells due to \n " + exceptionAsString);															
 					rtn.put("listCells", null);
 				} finally {
 					if (session != null && session.isOpen()) {
@@ -2018,12 +2191,7 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 		@ResponseBody
 		public Map<String, Object> findSiteNodes(Locale locale, Model model, HttpServletRequest request,
 				HttpServletResponse response) throws JsonProcessingException {
-			// logger.info("Welcome home! The client locale is {}.", locale);
-
 			Map<String, Object> rtn = new LinkedHashMap<>();
-			// ObjectMapper mapper = new ObjectMapper();
-			Session session = null;
-			Transaction tx = null;
 			session = almsessions.getSession();
 			if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				rtn.put("Login", LoginServices.checkSession(request, response));
@@ -2035,31 +2203,32 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 
 					String selectedItem = request.getParameter("selectedItem");
 					if (selectedItem != null) {
-						List<Object[]> nodeList = (List<Object[]>) session.createSQLQuery(
+						rtn.put("listNodes", (List<Object[]>) session.createNativeQuery(
 								"SELECT Distinct NODE_PK,SITE_ID,NODE_NAME,NODE_TYPE,WARE_ID,(select count(*) from NODE_GCELL b where a.NODE_PK = b.NODE_PK and ACTIVE_RECORD ='1') as countGCells,(select count(*) from NODE_LCELL c where a.NODE_PK= c.NODE_PK and ACTIVE_RECORD ='1') as countLCells,(select count(*) from NODE_UCELL d where a.NODE_PK = d.NODE_PK and ACTIVE_RECORD ='1') as countUCells FROM NODE_ACTIVE a WHERE ACTIVE_RECORD = '1' and WARE_ID='"
-										+ selectedItem + "'")
-								.list();
-
-						rtn.put("listNodes", nodeList);
+										+ selectedItem + "'").list());
 					}
 
 				} catch (Exception e) {
-					logger.info("Error in retreiving nodes Data from database" + exceptionAsString);
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving Nodes Data from database in method findSiteNodes_Cells due to \n " + exceptionAsString);
+					logger.info("Error in retreiving Nodes Data from database in method findSiteNodes_Cells due to \n " + exceptionAsString);															
 					rtn.put("listNodes", null);
 				}
 				try {
 					String selectedNode = request.getParameter("selectedNode");
 					if (selectedNode != null) {
 
-						List<Object[]> result = session.createSQLQuery(
+						List<Object[]> result = session.createNativeQuery(
 								"SELECT a.GCELL_ID,a.CELLNAME,a.NODE_PK FROM NODE_GCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.NODE_PK='"
 										+ selectedNode + "'")
 								.list();
-						List<Object[]> result1 = session.createSQLQuery(
+						List<Object[]> result1 = session.createNativeQuery(
 								"SELECT a.LCELL_ID,a.CELLNAME,a.NODE_PK FROM NODE_LCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.NODE_PK='"
 										+ selectedNode + "'")
 								.list();
-						List<Object[]> result2 = session.createSQLQuery(
+						List<Object[]> result2 = session.createNativeQuery(
 								"SELECT a.UCELL_ID,a.CELLNAME,a.NODE_PK FROM NODE_UCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.NODE_PK='"
 										+ selectedNode + "'")
 								.list();
@@ -2067,16 +2236,16 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 						List<Object[]> cellResult = new ArrayList<Object[]>();
 
 						cellResult.addAll(result);
-
 						cellResult.addAll(result1);
-
 						cellResult.addAll(result2);
-
 						rtn.put("listCells", cellResult);
-						//System.out.println("list cells ========> "+ mapper.writeValueAsString(cellResult));
 					}
 				} catch (Exception e) {
-					logger.info("Error in retreiving cells Data from database" + exceptionAsString);
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving Cells Data from database in method findSiteNodes_Cells due to \n " + exceptionAsString);
+					logger.info("Error in retreiving Cells Data from database in method findSiteNodes_Cells due to \n " + exceptionAsString);															
 					rtn.put("listCells", null);
 				} finally {
 					if (session != null && session.isOpen()) {
@@ -2096,12 +2265,7 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 	@ResponseBody
 	public Map<String, Object> StSupNdTyNdCell(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
-		// logger.info("Welcome home! The client locale is {}.", locale);
-
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		// ObjectMapper mapper = new ObjectMapper();
-		Session session = null;
-		Transaction tx = null;
 		session = almsessions.getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
@@ -2111,41 +2275,38 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 			tx = session.beginTransaction();
 			try {
 
-				List<Object[]> result = session.createSQLQuery(
+				List<Object[]> result = session.createNativeQuery(
 						"SELECT a.GCELL_ID,a.CELLNAME,a.NODE_PK FROM NODE_GCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0'")
 						.list();
-				List<Object[]> result1 = session.createSQLQuery(
+				List<Object[]> result1 = session.createNativeQuery(
 						"SELECT a.LCELL_ID,a.CELLNAME,a.NODE_PK FROM NODE_LCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0'")
 						.list();
-				List<Object[]> result2 = session.createSQLQuery(
+				List<Object[]> result2 = session.createNativeQuery(
 						"SELECT a.UCELL_ID,a.CELLNAME,a.NODE_PK FROM NODE_UCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0'")
 						.list();
 
 				List<Object[]> cellResult = new ArrayList<Object[]>();
 
 				if (!result.isEmpty()) {
-
 					cellResult.addAll(result);
-
 				}
 				if (!result1.isEmpty()) {
 					cellResult.addAll(result1);
-
 				}
 				if (!result2.isEmpty()) {
-
 					cellResult.addAll(result2);
-
 				}
-
 				rtn.put("listCells", cellResult);
 			} catch (Exception e) {
-				logger.info("Error in retreiving cells Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Cells Data from database in method StSupNdTyNdCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Cells Data from database in method StSupNdTyNdCell due to \n " + exceptionAsString);															
 				rtn.put("listCells", null);
 			}
 			try {
-				List<Object[]> site_SuppList = (List<Object[]>) session.createSQLQuery(
-
+				rtn.put("listSuppSites", (List<Object[]>) session.createNativeQuery(
 						"SELECT distinct b.SITE_ID,b.WARE_NAME,b.WARE_ID,"
 								+ "(SELECT a.LATITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LATITUDE,"
 								+ "(SELECT a.LONGITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LONGITUDE,"
@@ -2153,47 +2314,52 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 								+ "(select COUNT(*) FROM NODE_GCELL c where c.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1')) as countGcells,"
 								+ "(select COUNT(*) FROM NODE_LCELL d where d.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1')) as countLcells,"
 								+ "(select COUNT(*) FROM NODE_UCELL e where e.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1')) as countUcells"
-								+ " FROM WAREHOUSE b where b.WARE_ID!='0' and b.WARE_ID!='null'")
-						.list();
-
-				rtn.put("listSuppSites", site_SuppList);
+								+ " FROM WAREHOUSE b where b.WARE_ID!='0' and b.WARE_ID!='null'").list());
 			} catch (Exception e) {
-				logger.info("Error in retreiving sites Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Sites Data from database in method StSupNdTyNdCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Sites Data from database in method StSupNdTyNdCell due to \n " + exceptionAsString);															
 				rtn.put("listSuppSites", null);
 			}
 
 			try {
-				List<Object[]> nodeList = (List<Object[]>) session.createSQLQuery(
-						"SELECT NODE_PK,SITE_ID,NODE_NAME,NODE_TYPE,WARE_ID,(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and ACTIVE_RECORD = '1') as countGCells,(select count(*) from NODE_LCELL c  where a.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1') as countLCells,(select count(*) from NODE_UCELL d  where a.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1') as countUCells,SUPPLIER_ID FROM NODE_ACTIVE a WHERE ACTIVE_RECORD = '1'")
-						.list();
-
-				rtn.put("listNodes", nodeList);
+				rtn.put("listNodes", (List<Object[]>) session.createNativeQuery(
+						"SELECT NODE_PK,SITE_ID,NODE_NAME,NODE_TYPE,WARE_ID,(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and ACTIVE_RECORD = '1') as countGCells,"
+						+ "(select count(*) from NODE_LCELL c  where a.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1') as countLCells,"
+						+ "(select count(*) from NODE_UCELL d  where a.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1') as countUCells,SUPPLIER_ID FROM NODE_ACTIVE a WHERE ACTIVE_RECORD = '1'").list());
 			} catch (Exception e) {
-				logger.info("Error in retreiving Nodes Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Nodes Data from database in method StSupNdTyNdCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Nodes Data from database in method StSupNdTyNdCell due to \n " + exceptionAsString);															
 				rtn.put("listNodes", null);
-
 			}
-
+			
 			try {
-				List<?> SiteSupplist = session.createSQLQuery(
+				rtn.put("SiteSuppList", session.createNativeQuery(
 						"SELECT DISTINCT a.WARE_ID,a.SUPPLIER_ID,(select b.SUPPLIER_NAME from SUPPLIER b where a.SUPPLIER_ID=b.SUPPLIER_ID) FROM NODE_ACTIVE a WHERE a.ACTIVE_RECORD = '1' and a.WARE_ID!='0'")
-						.list();
-
-				rtn.put("SiteSuppList", SiteSupplist);
+						.list());
 			} catch (Exception e) {
-				logger.info("Error in retreiving Supplier Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Suppliers Data from database in method StSupNdTyNdCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Suppliers Data from database in method StSupNdTyNdCell due to \n " + exceptionAsString);															
 				rtn.put("SiteSuppList", null);
-
 			}
 
 			try {
-				List<?> nodeTypeStSuppList = session.createSQLQuery(
-						"SELECT DISTINCT NODE_TYPE,WARE_ID,SUPPLIER_ID FROM NODE_ACTIVE WHERE ACTIVE_RECORD = '1' and WARE_ID!='0'")
-						.list();
-
-				rtn.put("nodeTypeStSuppResult", nodeTypeStSuppList);
+				rtn.put("nodeTypeStSuppResult", session.createNativeQuery(
+						"SELECT DISTINCT NODE_TYPE,WARE_ID,SUPPLIER_ID FROM NODE_ACTIVE WHERE ACTIVE_RECORD = '1' and WARE_ID!='0'").list());
 			} catch (Exception e) {
-				logger.info("Error in retreiving nodes Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Nodes Data from database in method StSupNdTyNdCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Nodes Data from database in method StSupNdTyNdCell due to \n " + exceptionAsString);															
 				rtn.put("nodeTypeStSuppResult", null);
 			}
 
@@ -2215,11 +2381,7 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 	@ResponseBody
 	public Map<String, Object> SiteNdTySuppNodeCell(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
-		// logger.info("Welcome home! The client locale is {}.", locale);
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		// ObjectMapper mapper = new ObjectMapper();
-		Session session = null;
-		Transaction tx = null;
 		session = almsessions.getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
@@ -2229,73 +2391,78 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 			tx = session.beginTransaction();
 			try {
 
-				List<Object[]> result = session.createSQLQuery(
+				List<Object[]> result = session.createNativeQuery(
 						"SELECT a.GCELL_ID,a.CELLNAME,a.NODE_PK FROM NODE_GCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0'")
 						.list();
-				List<Object[]> result1 = session.createSQLQuery(
+				List<Object[]> result1 = session.createNativeQuery(
 						"SELECT a.LCELL_ID,a.CELLNAME,a.NODE_PK FROM NODE_LCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0'")
 						.list();
-				List<Object[]> result2 = session.createSQLQuery(
+				List<Object[]> result2 = session.createNativeQuery(
 						"SELECT a.UCELL_ID,a.CELLNAME,a.NODE_PK FROM NODE_UCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0'")
 						.list();
 
 				List<Object[]> cellResult = new ArrayList<Object[]>();
 
 				if (!result.isEmpty()) {
-
 					cellResult.addAll(result);
-
 				}
 				if (!result1.isEmpty()) {
 					cellResult.addAll(result1);
-
 				}
 				if (!result2.isEmpty()) {
-
 					cellResult.addAll(result2);
-
 				}
-
 				rtn.put("listCells", cellResult);
 			} catch (Exception e) {
-				logger.info("Error in retreiving cells Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Cells Data from database in method SiteNdTySuppNodeCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Cells Data from database in method SiteNdTySuppNodeCell due to \n " + exceptionAsString);															
 				rtn.put("listCells", null);
 			}
 			try {
-				rtn.put("listNodes", ((List<Object[]>) session.createSQLQuery(
+				rtn.put("listNodes", ((List<Object[]>) session.createNativeQuery(
 						"SELECT distinct NODE_PK,SITE_ID,NODE_NAME,NODE_TYPE,WARE_ID,(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and ACTIVE_RECORD = '1') as countGCells,(select count(*) from NODE_LCELL c  where a.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1') as countLCells,(select count(*) from NODE_UCELL d  where a.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1') as countUCells,SUPPLIER_ID FROM NODE_ACTIVE a WHERE ACTIVE_RECORD = '1'")
 						.list()));
 
 			} catch (Exception e) {
-				logger.info("Error in retreiving nodes Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Nodes Data from database in method SiteNdTySuppNodeCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Nodes Data from database in method SiteNdTySuppNodeCell due to \n " + exceptionAsString);															
 				rtn.put("listNodes", null);
 			}
 
 			try {
-				List<?> sup_ListSupp = session.createSQLQuery(
+				rtn.put("sup_ListSupp",  session.createNativeQuery(
 						"SELECT distinct a.SUPPLIER_ID,a.SUPPLIER_NAME,b.NODE_TYPE,b.WARE_ID FROM SUPPLIER a,NODE_ACTIVE b WHERE a.SUPPLIER_ID=b.SUPPLIER_ID and b.ACTIVE_RECORD = '1' and b.WARE_ID!='null'")
-						.list();
-
-				rtn.put("sup_ListSupp", sup_ListSupp);
+						.list());
 			} catch (Exception e) {
-				logger.info("Error in retreiving supplier Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Suppliers Data from database in method SiteNdTySuppNodeCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Suppliers Data from database in method SiteNdTySuppNodeCell due to \n " + exceptionAsString);															
 				rtn.put("sup_ListSupp", null);
 			}
 
 			try {
-				List<?> sup_NodeTypeList = session.createSQLQuery(
+				rtn.put("sup_NodeTypeResult", session.createNativeQuery(
 						"SELECT DISTINCT NODE_TYPE,WARE_ID FROM NODE_ACTIVE WHERE ACTIVE_RECORD = '1' and WARE_ID!='null' and WARE_ID!='0' and SUPPLIER_ID!='null' and SUPPLIER_ID!='0' ")
-						.list();
-
-				rtn.put("sup_NodeTypeResult", sup_NodeTypeList);
+						.list());
 			} catch (Exception e) {
-				logger.info("Error in retreiving Node type Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Node Type Data from database in method SiteNdTySuppNodeCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Node Type Data from database in method SiteNdTySuppNodeCell due to \n " + exceptionAsString);															
 				rtn.put("sup_NodeTypeResult", null);
 			}
 
 			try {
-				List<Object[]> siteList_Sup = (List<Object[]>) session.createSQLQuery(
-
+				rtn.put("suplistSites", (List<Object[]>) session.createNativeQuery(
 						"SELECT distinct b.SITE_ID,b.WARE_NAME,b.WARE_ID,"
 								+ "(SELECT a.LATITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LATITUDE,"
 								+ "(SELECT a.LONGITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LONGITUDE,"
@@ -2303,12 +2470,13 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 								+ "(select COUNT(*) FROM NODE_GCELL c where c.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1')) as countGcells,"
 								+ "(select COUNT(*) FROM NODE_LCELL d where d.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1')) as countLcells,"
 								+ "(select COUNT(*) FROM NODE_UCELL e where e.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1')) as countUcells"
-								+ " FROM WAREHOUSE b where b.WARE_ID!='0' and b.WARE_ID!='null'")
-						.list();
-
-				rtn.put("suplistSites", siteList_Sup);
+								+ " FROM WAREHOUSE b where b.WARE_ID!='0' and b.WARE_ID!='null'").list());
 			} catch (Exception e) {
-				logger.info("Error in retreiving Sites Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Sites Data from database in method SiteNdTySuppNodeCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Sites Data from database in method SiteNdTySuppNodeCell due to \n " + exceptionAsString);															
 				rtn.put("suplistSites", null);
 			} finally {
 				if (session != null && session.isOpen()) {
@@ -2323,16 +2491,11 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 
 	// Retrieve supplier/site/Node type/node/cell data in Supplier-Site-Node
 	// type-Node - Cell method
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/Suppliers", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> Suppliers(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
-		// logger.info("Welcome home! The client locale is {}.", locale);
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		// ObjectMapper mapper = new ObjectMapper();
-		Session session = null;
-		Transaction tx = null;
 		session = almsessions.getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
@@ -2343,11 +2506,11 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 			/*
 			 * try {
 			 * 
-			 * List<Object[]> result = session.createSQLQuery(
+			 * List<Object[]> result = session.createNativeQuery(
 			 * "SELECT a.GCELL_ID,a.CELLNAME,a.NODE_PK FROM NODE_GCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0'"
-			 * ) .list(); List<Object[]> result1 = session.createSQLQuery(
+			 * ) .list(); List<Object[]> result1 = session.createNativeQuery(
 			 * "SELECT a.LCELL_ID,a.CELLNAME,a.NODE_PK FROM NODE_LCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0'"
-			 * ) .list(); List<Object[]> result2 = session.createSQLQuery(
+			 * ) .list(); List<Object[]> result2 = session.createNativeQuery(
 			 * "SELECT a.UCELL_ID,a.CELLNAME,a.NODE_PK FROM NODE_UCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0'"
 			 * ) .list();
 			 * 
@@ -2370,18 +2533,20 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 			 * rtn.put("listCells", null); }
 			 */
 			try {
-				List<?> suppList = session.createSQLQuery(
+				rtn.put("listSupp", session.createNativeQuery(
 						"SELECT distinct SUPPLIER_ID,SUPPLIER_NAME FROM NODE_ACTIVE where ACTIVE_RECORD = '1' and WARE_ID!='0' and WARE_ID!='null'")
-						.list();
-
-				rtn.put("listSupp", suppList);
+						.list());
 			} catch (Exception e) {
-				logger.info("Error in retreiving supplier Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Suppliers Data from database in method Suppliers due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Suppliers Data from database in method Suppliers due to \n " + exceptionAsString);															
 				rtn.put("listSupp", null);
 			}
 			/*
 			 * try { List<?> site_SuppList = session
-			 * .createSQLQuery("SELECT a.WARE_NAME,a.WARE_ID,a.LATITUDE,a.LONGITUDE,b.SUPPLIER_ID,"
+			 * .createNativeQuery("SELECT a.WARE_NAME,a.WARE_ID,a.LATITUDE,a.LONGITUDE,b.SUPPLIER_ID,"
 			 * +
 			 * "(select COUNT(*) from NODE_ACTIVE b where a.WARE_ID=b.WARE_ID and b.ACTIVE_RECORD='1') as countnodes,"
 			 * +
@@ -2398,14 +2563,14 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 			 * logger.info("Error in retreiving sites Data from database",e);
 			 * rtn.put("listSuppSites", null);
 			 * 
-			 * } try { List<?> nodeTypeSuppList = session.createSQLQuery(
+			 * } try { List<?> nodeTypeSuppList = session.createNativeQuery(
 			 * "SELECT DISTINCT NODE_TYPE,WARE_ID,SUPPLIER_ID FROM NODE_ACTIVE WHERE ACTIVE_RECORD = '1' and WARE_ID!='0'"
 			 * ) .list();
 			 * 
 			 * rtn.put("nodeTypeSuppResult", nodeTypeSuppList); } catch (Exception e) {
 			 * logger.info("Error in retreiving node type Data from database",e);
 			 * rtn.put("nodeTypeSuppResult", null); } try { List<Object[]> nodeSuppList =
-			 * (List<Object[]>) session.createSQLQuery(
+			 * (List<Object[]>) session.createNativeQuery(
 			 * "SELECT NODE_PK,SITE_ID,NODE_NAME,NODE_TYPE,WARE_ID,(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and ACTIVE_RECORD = '1') as countGCells,(select count(*) from NODE_LCELL c  where a.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1') as countLCells,(select count(*) from NODE_UCELL d  where a.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1') as countUCells,SUPPLIER_ID FROM NODE_ACTIVE a WHERE ACTIVE_RECORD = '1'"
 			 * ) .list();
 			 * 
@@ -2424,12 +2589,7 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 		@ResponseBody
 		public Map<String, Object> SiteNdTypNdCell(Locale locale, Model model, HttpServletRequest request,
 				HttpServletResponse response) throws JsonProcessingException {
-			// logger.info("Welcome home! The client locale is {}.", locale);
-
 			Map<String, Object> rtn = new LinkedHashMap<>();
-			// ObjectMapper mapper = new ObjectMapper();
-			Session session = null;
-			Transaction tx = null;
 			session = almsessions.getSession();
 			if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				rtn.put("Login", LoginServices.checkSession(request, response));
@@ -2440,51 +2600,55 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 				try {
 
 					List<Object[]> result = session
-							.createSQLQuery("SELECT GCELL_ID,CELLNAME,NODE_PK FROM NODE_GCELL a WHERE ACTIVE_RECORD = '1'")
+							.createNativeQuery("SELECT GCELL_ID,CELLNAME,NODE_PK FROM NODE_GCELL a WHERE ACTIVE_RECORD = '1'")
 							.list();
 					List<Object[]> result1 = session
-							.createSQLQuery("SELECT LCELL_ID,CELLNAME,NODE_PK FROM NODE_LCELL a WHERE ACTIVE_RECORD = '1'")
+							.createNativeQuery("SELECT LCELL_ID,CELLNAME,NODE_PK FROM NODE_LCELL a WHERE ACTIVE_RECORD = '1'")
 							.list();
 					List<Object[]> result2 = session
-							.createSQLQuery("SELECT UCELL_ID,CELLNAME,NODE_PK FROM NODE_UCELL a WHERE ACTIVE_RECORD = '1'")
+							.createNativeQuery("SELECT UCELL_ID,CELLNAME,NODE_PK FROM NODE_UCELL a WHERE ACTIVE_RECORD = '1'")
 							.list();
 
 					List<Object[]> cellResult = new ArrayList<Object[]>();
-
 					cellResult.addAll(result);
-
 					cellResult.addAll(result1);
-
 					cellResult.addAll(result2);
-
 					rtn.put("listCells", cellResult);
 				} catch (Exception e) {
-					logger.info("Error in retreiving Cells Data from database" + exceptionAsString);
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving Cells Data from database in method SiteNdTypNdCell due to \n " + exceptionAsString);
+					logger.info("Error in retreiving Cells Data from database in method SiteNdTypNdCell due to \n " + exceptionAsString);															
 					rtn.put("listCells", null);
 				}
 				try {
-					List<?> nodeTypeList = session
-							.createSQLQuery("SELECT DISTINCT NODE_TYPE,WARE_ID FROM NODE_ACTIVE WHERE ACTIVE_RECORD = '1'")
-							.list();
-					rtn.put("listNodesType", nodeTypeList);
+					rtn.put("listNodesType", session
+							.createNativeQuery("SELECT DISTINCT NODE_TYPE,WARE_ID FROM NODE_ACTIVE WHERE ACTIVE_RECORD = '1'")
+							.list());
 				} catch (Exception e) {
-					logger.info("Error in retreiving Node Type Data from database" + exceptionAsString);
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving Node Type Data from database in method SiteNdTypNdCell due to \n " + exceptionAsString);
+					logger.info("Error in retreiving Node Type Data from database in method SiteNdTypNdCell due to \n " + exceptionAsString);															
 					rtn.put("listNodesType", null);
 				}
 				try {
-					List<Object[]> nodeList = (List<Object[]>) session.createSQLQuery(
+					rtn.put("listNodes", (List<Object[]>) session.createNativeQuery(
 							"SELECT NODE_PK,SITE_ID,NODE_NAME,NODE_TYPE,WARE_ID,(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and ACTIVE_RECORD = '1') as countGCells,(select count(*) from NODE_LCELL c  where a.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1') as countLCells,(select count(*) from NODE_UCELL d  where a.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1') as countUCells FROM NODE_ACTIVE a WHERE ACTIVE_RECORD = '1'")
-							.list();
-
-					rtn.put("listNodes", nodeList);
+							.list());
 				} catch (Exception e) {
-					logger.info("Error in retreiving Nodes Data from database" + exceptionAsString);
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving Nodes Data from database in method SiteNdTypNdCell due to \n " + exceptionAsString);
+					logger.info("Error in retreiving Nodes Data from database in method SiteNdTypNdCell due to \n " + exceptionAsString);															
 					rtn.put("listNodes", null);
 				}
 
 				try {
-					List<Object[]> siteList = (List<Object[]>) session.createSQLQuery(
-
+					rtn.put("listSites", (List<Object[]>) session.createNativeQuery(
 							"SELECT distinct b.SITE_ID,b.WARE_NAME,b.WARE_ID,"
 									+ "(SELECT a.LATITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LATITUDE,"
 									+ "(SELECT a.LONGITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LONGITUDE,"
@@ -2492,12 +2656,13 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 									+ "(select COUNT(*) FROM NODE_GCELL c where c.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1')) as countGcells,"
 									+ "(select COUNT(*) FROM NODE_LCELL d where d.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1')) as countLcells,"
 									+ "(select COUNT(*) FROM NODE_UCELL e where e.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1')) as countUcells"
-									+ " FROM WAREHOUSE b where b.WARE_ID!='0' and b.WARE_ID!='null'")
-							.list();
-
-					rtn.put("listSites", siteList);
+									+ " FROM WAREHOUSE b where b.WARE_ID!='0' and b.WARE_ID!='null'").list());
 				} catch (Exception e) {
-					logger.info("Error in retreiving sites Data from database" + exceptionAsString);
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving Sites Data from database in method SiteNdTypNdCell due to \n " + exceptionAsString);
+					logger.info("Error in retreiving Sites Data from database in method SiteNdTypNdCell due to \n " + exceptionAsString);															
 					rtn.put("listSites", null);
 				} finally {
 					if (session != null && session.isOpen()) {
@@ -2511,16 +2676,11 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 		}
 
 	// Area controller
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/area", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> area(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
-		// logger.info("Welcome home! The client locale is {}.", locale);
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		// ObjectMapper mapper = new ObjectMapper();
-		Session session = null;
-		Transaction tx = null;
 		session = almsessions.getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
@@ -2530,7 +2690,7 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 			tx = session.beginTransaction();
 			try {
 
-				List<?> areaList = session.createSQLQuery(
+				List<?> areaList = session.createNativeQuery(
 						"SELECT  distinct B.AREA_ID,B.AREA_NAME,A.LONGITUDE,A.LATITUDE FROM WAREHOUSE B,AREA A,NODE_ACTIVE C WHERE A.AREA_ID=B.AREA_ID AND B.WARE_ID=C.WARE_ID AND C.ACTIVE_RECORD='1'")
 						.list();
 				// (select count(*) from NODE_ACTIVE b where b.WARE_ID = a.WARE_ID and
@@ -2539,36 +2699,39 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 				List<Object> area_Result = new ArrayList<>();
 
 				if (areaList != null) {
-
 					for (Object obj : areaList) {
 						area_Result.add(obj);
 					}
 					rtn.put("areaList", area_Result);
 				}
 			} catch (Exception e) {
-				logger.info("Error in retreiving arealist data Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving AreaList Data from database in method area due to \n " + exceptionAsString);
+				logger.info("Error in retreiving AreaList Data from database in method area due to \n " + exceptionAsString);															
 				rtn.put("areaList", null);
 			}
 			try {
-				List<?> site_AreaList = session.createSQLQuery(
+				List<?> site_AreaList = session.createNativeQuery(
 						"SELECT  distinct b.WARE_NAME,b.WARE_ID,a.LATITUDE,a.LONGITUDE,a.AREA_ID,(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID  and w.ACTIVE_RECORD = '1') as countnodes"
-
 								+ " FROM WAREHOUSE a,NODE_ACTIVE b where a.WARE_ID=b.WARE_ID and b.ACTIVE_RECORD = '1' and b.WARE_ID!='0' and b.WARE_ID!='null' and a.AREA_ID!='null'")
 						.list();
 
 				List<Object> site_AreaResult = new ArrayList<>();
 
 				if (site_AreaList != null) {
-
 					for (Object obj : site_AreaList) {
-
 						site_AreaResult.add(obj);
 					}
-
 					rtn.put("listAreaSites", site_AreaResult);
 				}
 			} catch (Exception e) {
-				logger.info("Error in retreiving area sites data Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Area Sites Data from database in method area due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Area Sites Data from database in method area due to \n " + exceptionAsString);															
 				rtn.put("listAreaSites", null);
 			}
 
@@ -2584,25 +2747,19 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 	}
 	
 private static String boqDomain (String paramEnterprise,String paramTransmission,String paramAccess,String paramCore, String str) {
-//	System.out.println("boqDomain");
 	if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
         String[] words = str.split(" ");    
         // Check if the last word is "WHERE" (case-insensitive)
         if (words.length > 0 && "WHERE".equalsIgnoreCase(words[words.length - 1])) {
-            //System.out.println("The last word is 'WHERE'");
         } else {
-            //System.out.println("The last word is not 'WHERE'");
-            str = str +" and ( ";
+           str = str +" and ( ";
         }
 		
 		if (paramEnterprise.equals("true")) {
-			//System.out.println("ent ");
 			str= str +"DOMAIN ='Enterprise' ";
-			//System.out.println("str >>>> "+str);
 		}
 		if (paramTransmission.equals("true")) {
 			if(paramEnterprise.equals("false")) {
-				//System.out.println("trans");
 				str= str +"DOMAIN ='Transmission' ";
 			}else {
 				str= str + " or DOMAIN ='Transmission' ";
@@ -2610,7 +2767,6 @@ private static String boqDomain (String paramEnterprise,String paramTransmission
 		}
 		if (paramAccess.equals("true")) {
 			if(paramEnterprise.equals("false") && paramTransmission.equals("false")) {
-				//System.out.println("acc ");
 				str= str+ "DOMAIN ='Access' ";
 			}else {
 				str= str+ " or DOMAIN ='Access' ";
@@ -2618,7 +2774,6 @@ private static String boqDomain (String paramEnterprise,String paramTransmission
 		}
 		if (paramCore.equals("true")) {
 			if(paramEnterprise.equals("false") && paramTransmission.equals("false") && paramAccess.equals("false")) {
-				//System.out.println("core");
 				str= str +"DOMAIN ='Core' ";
 			}else {
 				str= str+ "or DOMAIN ='Core' ";
@@ -2636,25 +2791,19 @@ private static String boqDomain (String paramEnterprise,String paramTransmission
 }
 
 private static String boqDomainVar (String a,String paramEnterprise,String paramTransmission,String paramAccess,String paramCore, String str) {
-	//System.out.println("boqDomainVar");
 	if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
         String[] words = str.split(" ");    
         // Check if the last word is "WHERE" (case-insensitive)
         if (words.length > 0 && "WHERE".equalsIgnoreCase(words[words.length - 1])) {
-            //System.out.println("The last word is 'WHERE'");
         } else {
-            //System.out.println("The last word is not 'WHERE'");
             str = str +" and ( ";
         }
 			
 		if (paramEnterprise.equals("true")) {
-			//System.out.println("ent ");
 			str= str +a+ ".DOMAIN ='Enterprise' ";
-			//System.out.println("str >> "+str);
 		}
 		if (paramTransmission.equals("true")) {
 			if(paramEnterprise.equals("false")) {
-				//System.out.println("trans");
 				str= str +a+ ".DOMAIN ='Transmission' ";
 			}else {
 				str= str + " or " +a+ ".DOMAIN ='Transmission' ";
@@ -2662,7 +2811,6 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 		}
 		if (paramAccess.equals("true")) {
 			if(paramEnterprise.equals("false") && paramTransmission.equals("false")) {
-				//System.out.println("acc ");
 				str= str+ a+ ".DOMAIN ='Access' ";
 			}else {
 				str= str+ " or " +a+ ".DOMAIN ='Access' ";
@@ -2670,7 +2818,6 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 		}
 		if (paramCore.equals("true")) {
 			if(paramEnterprise.equals("false") && paramTransmission.equals("false") && paramAccess.equals("false")) {
-				//System.out.println("core");
 				str= str +a+ ".DOMAIN ='Core' ";
 			}else {
 				str= str+ " or " +a+ ".DOMAIN ='Core' ";
@@ -2683,7 +2830,6 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 	    		str = str + " ) ";
 	        }
 	}
-	//System.out.println("str >> "+str);
 	return str;
 }
 
@@ -2696,8 +2842,6 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 			Session session = almsessions.getSession();
 			Transaction tx = session.beginTransaction();
-
-			// if Site_id !=null --> an ajax request received
 			LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 		
 			try {
@@ -2706,7 +2850,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
 				String Site_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(Site_Query);
-				Object Sites = session.createSQLQuery(Site_Query).uniqueResult();
+				Object Sites = session.createNativeQuery(Site_Query).uniqueResult();
 				strEmpty="";
 				strExist="";				
 		////////////////////////////
@@ -2716,7 +2860,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 				String Node_Active_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(Node_Active_Query);
-				Object CountNodes_Active = session.createSQLQuery(Node_Active_Query).uniqueResult();
+				Object CountNodes_Active = session.createNativeQuery(Node_Active_Query).uniqueResult();
 				strEmpty="";
 				strExist="";
 		////////////////////////////			
@@ -2726,7 +2870,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 				String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(Node_GCell_Query);
-				Object CountNodes_G_CELL = session.createSQLQuery(Node_GCell_Query).uniqueResult();
+				Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
 				strEmpty="";
 				strExist="";
 		/////////////////////////////
@@ -2736,7 +2880,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 				String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(Node_LCell_Query);
-				Object CountNodes_L_CELL = session.createSQLQuery(Node_LCell_Query).uniqueResult();
+				Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
 				strEmpty="";
 				strExist="";
 	/////////////////////////////
@@ -2746,7 +2890,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 				String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(Node_UCell_Query);
-				Object CountNodes_U_CELL = session.createSQLQuery(Node_UCell_Query).uniqueResult();
+				Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
 				strEmpty="";
 				strExist="";			
 	/////////////////////////////
@@ -2758,14 +2902,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
 					String Node_Type_Count = strEmpty;
 					//System.out.println(Node_Type_Count);
-					Object CountNodesType = session.createSQLQuery(Node_Type_Count).uniqueResult();
+					Object CountNodesType = session.createNativeQuery(Node_Type_Count).uniqueResult();
 					BoqHM.put("Node Type", String.valueOf(CountNodesType));
 				}else {
 					strExist="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"+ SiteId + "' ";
 					strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 					String Node_Type_Count = strExist;
 					//System.out.println(Node_Type_Count);
-					Object CountNodesType = session.createSQLQuery(Node_Type_Count).uniqueResult();
+					Object CountNodesType = session.createNativeQuery(Node_Type_Count).uniqueResult();
 					BoqHM.put("Node Type", String.valueOf(CountNodesType));
 					strExist="";
 				////////////////////////////////
@@ -2773,7 +2917,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 					strExist = strExist +" GROUP BY NODE_TYPE";
 					//System.out.println(strExist);
-					List<Object[]> CountNodesteach_Active = (List<Object[]>) session.createSQLQuery(strExist).list();
+					List<Object[]> CountNodesteach_Active = (List<Object[]>) session.createNativeQuery(strExist).list();
 					List<Object[]> result = new ArrayList<>();
 					for (Object[] obj : CountNodesteach_Active) {
 						result.add(obj);
@@ -2787,7 +2931,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
 				return BoqHM;
 		} catch (Exception e) {
-			logger.info("Error in retreiving Site BOQ data Data from database" + exceptionAsString);
+			sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			exceptionAsString = sw.toString();
+			logger.finest("Error in retreiving Sites BOQ from database in method GetBoqList due to \n " + exceptionAsString);
+			logger.info("Error in retreiving Sites BOQ from database in method GetBoqList due to \n " + exceptionAsString);															
 			return null;
 		} finally {
 			if (session != null && session.isOpen()) {
@@ -2808,8 +2956,6 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 				Session session = almsessions.getSession();
 				Transaction tx = session.beginTransaction();
-
-				// if Site_id !=null --> an ajax request received
 				LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 			
 				try {
@@ -2817,7 +2963,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
 						String Site_Query = SiteId == "" ? strEmpty : "Select distinct Ware_Name From NODE_ACTIVE where Ware_Id='" + SiteId + "' and vendor='"+VenId+"' ";
 						//System.out.println(Site_Query);
-						Object Sites = session.createSQLQuery(Site_Query).uniqueResult();
+						Object Sites = session.createNativeQuery(Site_Query).uniqueResult();
 						strEmpty="";					
 			////////////////////////////
 						strEmpty="SELECT COUNT(DISTINCT NODE_PK) FROM NODE_ACTIVE where Active_record='1' AND VENDOR!='null' AND VENDOR!='0' AND VENDOR is not null ";
@@ -2826,7 +2972,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 						String Node_Active_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_Active_Query);
-						Object CountNodes_Active = session.createSQLQuery(Node_Active_Query).uniqueResult();
+						Object CountNodes_Active = session.createNativeQuery(Node_Active_Query).uniqueResult();
 						strEmpty="";
 						strExist="";
 			////////////////////////////			
@@ -2839,7 +2985,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 						String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_GCell_Query);
-						Object CountNodes_G_CELL = session.createSQLQuery(Node_GCell_Query).uniqueResult();
+						Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
 						strEmpty="";
 						strExist="";
 			/////////////////////////////
@@ -2852,7 +2998,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 						String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_LCell_Query);
-						Object CountNodes_L_CELL = session.createSQLQuery(Node_LCell_Query).uniqueResult();
+						Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
 						strEmpty="";
 						strExist="";
 			/////////////////////////////
@@ -2865,7 +3011,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 						String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_UCell_Query);
-						Object CountNodes_U_CELL = session.createSQLQuery(Node_UCell_Query).uniqueResult();
+						Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
 						strEmpty="";
 						strExist="";			
 			/////////////////////////////
@@ -2877,14 +3023,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
 							String Node_Type_Count = strEmpty;
 							//System.out.println(Node_Type_Count);
-							Object CountNodesType = session.createSQLQuery(Node_Type_Count).uniqueResult();
+							Object CountNodesType = session.createNativeQuery(Node_Type_Count).uniqueResult();
 							BoqHM.put("Node Type", String.valueOf(CountNodesType));
 						}else {
 							strExist="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"+ SiteId + "' and vendor='"+VenId+"' ";
 							strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 							String Node_Type_Count = strExist;
 							//System.out.println(Node_Type_Count);
-							Object CountNodesType = session.createSQLQuery(Node_Type_Count).uniqueResult();
+							Object CountNodesType = session.createNativeQuery(Node_Type_Count).uniqueResult();
 							BoqHM.put("Node Type", String.valueOf(CountNodesType));
 							strExist="";
 						////////////////////////////////
@@ -2892,7 +3038,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 							strExist = strExist +" GROUP BY NODE_TYPE";
 							//System.out.println(strExist);
-							List<Object[]> CountNodesteach_Active = (List<Object[]>) session.createSQLQuery(strExist).list();
+							List<Object[]> CountNodesteach_Active = (List<Object[]>) session.createNativeQuery(strExist).list();
 							List<Object[]> result = new ArrayList<>();
 							for (Object[] obj : CountNodesteach_Active) {
 								result.add(obj);
@@ -2906,7 +3052,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
 						return BoqHM;
 				} catch (Exception e) {
-					logger.info("Error in retreiving Site BOQ data Data from database" + exceptionAsString);
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving Sites BOQ from database in method GetSiteVenBoqList due to \n " + exceptionAsString);
+					logger.info("Error in retreiving Sites BOQ from database in method GetSiteVenBoqList due to \n " + exceptionAsString);															
 					return null;
 				} finally {
 					if (session != null && session.isOpen()) {
@@ -2935,7 +3085,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
 						String Site_Query = SiteId == "" ? strEmpty : "Select distinct Ware_Name From NODE_ACTIVE where Ware_Id='" + SiteId + "' and SUPPLIER_ID='"+SuppId+"' ";
 						//System.out.println(Site_Query);
-						Object Sites = session.createSQLQuery(Site_Query).uniqueResult();
+						Object Sites = session.createNativeQuery(Site_Query).uniqueResult();
 						strEmpty="";					
 			////////////////////////////
 						strEmpty="SELECT COUNT(DISTINCT NODE_PK) FROM NODE_ACTIVE where Active_record='1' AND SUPPLIER_ID!='null' AND SUPPLIER_ID!='0' AND SUPPLIER_ID is not null ";
@@ -2944,7 +3094,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 						String Node_Active_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_Active_Query);
-						Object CountNodes_Active = session.createSQLQuery(Node_Active_Query).uniqueResult();
+						Object CountNodes_Active = session.createNativeQuery(Node_Active_Query).uniqueResult();
 						strEmpty="";
 						strExist="";
 			////////////////////////////			
@@ -2957,7 +3107,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 						String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_GCell_Query);
-						Object CountNodes_G_CELL = session.createSQLQuery(Node_GCell_Query).uniqueResult();
+						Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
 						strEmpty="";
 						strExist="";
 			/////////////////////////////
@@ -2970,7 +3120,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 						String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_LCell_Query);
-						Object CountNodes_L_CELL = session.createSQLQuery(Node_LCell_Query).uniqueResult();
+						Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
 						strEmpty="";
 						strExist="";
 			/////////////////////////////
@@ -2983,7 +3133,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 						String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_UCell_Query);
-						Object CountNodes_U_CELL = session.createSQLQuery(Node_UCell_Query).uniqueResult();
+						Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
 						strEmpty="";
 						strExist="";			
 			/////////////////////////////
@@ -2995,14 +3145,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
 							String Node_Type_Count = strEmpty;
 							//System.out.println(Node_Type_Count);
-							Object CountNodesType = session.createSQLQuery(Node_Type_Count).uniqueResult();
+							Object CountNodesType = session.createNativeQuery(Node_Type_Count).uniqueResult();
 							BoqHM.put("Node Type", String.valueOf(CountNodesType));
 						}else {
 							strExist="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"+ SiteId + "' and SUPPLIER_ID='"+SuppId+"' ";
 							strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 							String Node_Type_Count = strExist;
 							//System.out.println(Node_Type_Count);
-							Object CountNodesType = session.createSQLQuery(Node_Type_Count).uniqueResult();
+							Object CountNodesType = session.createNativeQuery(Node_Type_Count).uniqueResult();
 							BoqHM.put("Node Type", String.valueOf(CountNodesType));
 							strExist="";
 						////////////////////////////////
@@ -3010,7 +3160,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 							strExist = strExist +" GROUP BY NODE_TYPE";
 							//System.out.println(strExist);
-							List<Object[]> CountNodesteach_Active = (List<Object[]>) session.createSQLQuery(strExist).list();
+							List<Object[]> CountNodesteach_Active = (List<Object[]>) session.createNativeQuery(strExist).list();
 							List<Object[]> result = new ArrayList<>();
 							for (Object[] obj : CountNodesteach_Active) {
 								result.add(obj);
@@ -3024,7 +3174,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
 						return BoqHM;
 				} catch (Exception e) {
-					logger.info("Error in retreiving Site BOQ data Data from database" + exceptionAsString);
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving Sites BOQ from database in method GetSiteSupBoqList due to \n " + exceptionAsString);
+					logger.info("Error in retreiving Sites BOQ from database in method GetSiteSupBoqList due to \n " + exceptionAsString);															
 					return null;
 				} finally {
 					if (session != null && session.isOpen()) {
@@ -3044,17 +3198,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 			Session session = almsessions.getSession();
 			Transaction tx = session.beginTransaction();
-
-			// if Site_id !=null --> an ajax request received
 			LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
-		//System.out.println("id : : : "+VenId);
 			try {
 					
 				String strEmpty= "SELECT COUNT(DISTINCT VENDOR) FROM NODE_ACTIVE WHERE WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null AND VENDOR!='null' AND VENDOR!='0' AND VENDOR is not null  ";	
 				strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
 				String Vendor_Query = VenId == "" ? strEmpty : "Select distinct VENDOR From NODE_ACTIVE where VENDOR='" + VenId + "' ";
 				//System.out.println(Vendor_Query);
-				Object Vendors = session.createSQLQuery(Vendor_Query).uniqueResult();
+				Object Vendors = session.createNativeQuery(Vendor_Query).uniqueResult();
 				strEmpty="";
 		////////////////////////////
 				strEmpty= "SELECT COUNT(DISTINCT WARE_ID) FROM NODE_ACTIVE WHERE WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null AND VENDOR!='null' AND VENDOR!='0' AND VENDOR is not null  ";	
@@ -3063,7 +3214,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);					
 				String Site_Query = VenId == "" ? strEmpty : strExist;
 				//System.out.println(Site_Query);
-				Object Sites = session.createSQLQuery(Site_Query).uniqueResult();
+				Object Sites = session.createNativeQuery(Site_Query).uniqueResult();
 				strEmpty="";
 				strExist="";
 		////////////////////////////
@@ -3073,7 +3224,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 				String Node_Active_Query = VenId == "" ? strEmpty : strExist;
 				//System.out.println(Node_Active_Query);
-				Object CountNodes_Active = session.createSQLQuery(Node_Active_Query).uniqueResult();
+				Object CountNodes_Active = session.createNativeQuery(Node_Active_Query).uniqueResult();
 				strEmpty="";
 				strExist="";					
 		////////////////////////////			
@@ -3087,7 +3238,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 				String Node_GCell_Query = VenId == "" ? strEmpty : strExist;
 				//System.out.println(Node_GCell_Query);
-				Object CountNodes_G_CELL = session.createSQLQuery(Node_GCell_Query).uniqueResult();
+				Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
 				strEmpty="";
 				strExist="";
 		/////////////////////////////
@@ -3100,7 +3251,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 				String Node_LCell_Query = VenId == "" ? strEmpty : strExist;
 				//System.out.println(Node_LCell_Query);
-				Object CountNodes_L_CELL = session.createSQLQuery(Node_LCell_Query).uniqueResult();
+				Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
 				strEmpty="";
 				strExist="";
 		/////////////////////////////
@@ -3113,7 +3264,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 				String Node_UCell_Query = VenId == "" ? strEmpty : strExist;
 				//System.out.println(Node_UCell_Query);
-				Object CountNodes_U_CELL = session.createSQLQuery(Node_UCell_Query).uniqueResult();
+				Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
 				strEmpty="";
 				strExist="";			
 		/////////////////////////////
@@ -3126,14 +3277,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
 					String Node_Type_Count = strEmpty;
 					//System.out.println(Node_Type_Count);
-					Object CountNodesType = session.createSQLQuery(Node_Type_Count).uniqueResult();
+					Object CountNodesType = session.createNativeQuery(Node_Type_Count).uniqueResult();
 					BoqHM.put("Node Type", String.valueOf(CountNodesType));
 				}else {
 					strExist="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and VENDOR='"+ VenId + "' ";
 					strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 					String Node_Type_Count = strExist;
 					//System.out.println(Node_Type_Count);
-					Object CountNodesType = session.createSQLQuery(Node_Type_Count).uniqueResult();
+					Object CountNodesType = session.createNativeQuery(Node_Type_Count).uniqueResult();
 					BoqHM.put("Node Type", String.valueOf(CountNodesType));
 					strExist="";
 				////////////////////////////////
@@ -3141,7 +3292,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 					strExist = strExist +" GROUP BY NODE_TYPE";
 					//System.out.println(strExist);
-					List<Object[]> CountNodesteach_Active = (List<Object[]>) session.createSQLQuery(strExist).list();
+					List<Object[]> CountNodesteach_Active = (List<Object[]>) session.createNativeQuery(strExist).list();
 					List<Object[]> result = new ArrayList<>();
 					for (Object[] obj : CountNodesteach_Active) {
 						result.add(obj);
@@ -3155,7 +3306,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
 				return BoqHM;
 			} catch (Exception e) {
-				logger.info("Error in retreiving Site BOQ data Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Sites BOQ from database in method GetVenBoqList due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Sites BOQ from database in method GetVenBoqList due to \n " + exceptionAsString);															
 				return null;
 			} finally {
 				if (session != null && session.isOpen()) {
@@ -3176,16 +3331,13 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 					Session session = almsessions.getSession();
 					Transaction tx = session.beginTransaction();
-
-					// if Site_id !=null --> an ajax request received
 					LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
-				//System.out.println("id : : : "+SuppId);
-					try {
+				try {
 						String strEmpty= "SELECT COUNT(DISTINCT Supplier_Id) FROM NODE_ACTIVE WHERE WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null AND SUPPLIER_ID!='null' AND SUPPLIER_ID!='0' AND SUPPLIER_ID is not null  ";	
 						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
 						String Supplier_Query = SuppId == "" ? strEmpty : "Select distinct Supplier_Name From NODE_ACTIVE where Supplier_Id='" + SuppId + "' ";
 						//System.out.println(Site_Query);
-						Object Suppliers = session.createSQLQuery(Supplier_Query).uniqueResult();
+						Object Suppliers = session.createNativeQuery(Supplier_Query).uniqueResult();
 						strEmpty="";	
 				////////////////////////////
 						strEmpty= "SELECT COUNT(DISTINCT WARE_ID) FROM NODE_ACTIVE WHERE WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null AND SUPPLIER_ID!='null' AND SUPPLIER_ID!='0' AND SUPPLIER_ID is not null  ";	
@@ -3193,7 +3345,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						String strExist= "Select distinct COUNT(DISTINCT WARE_ID) From NODE_ACTIVE where Supplier_Id='" + SuppId + "' AND WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null ";							
 						String Site_Query = SuppId == "" ? strEmpty : strExist;
 						//System.out.println(Site_Query);
-						Object Sites = session.createSQLQuery(Site_Query).uniqueResult();
+						Object Sites = session.createNativeQuery(Site_Query).uniqueResult();
 						strEmpty="";	
 						strExist="";
 				////////////////////////////
@@ -3203,7 +3355,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 						String Node_Active_Query = SuppId == "" ? strEmpty : strExist;
 						//System.out.println(Node_Active_Query);
-						Object CountNodes_Active = session.createSQLQuery(Node_Active_Query).uniqueResult();
+						Object CountNodes_Active = session.createNativeQuery(Node_Active_Query).uniqueResult();
 						strEmpty="";
 						strExist="";					
 				////////////////////////////			
@@ -3216,7 +3368,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 							String Node_GCell_Query = SuppId == "" ? strEmpty : strExist;
 							//System.out.println(Node_GCell_Query);
-							Object CountNodes_G_CELL = session.createSQLQuery(Node_GCell_Query).uniqueResult();
+							Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
 							strEmpty="";
 							strExist="";
 				/////////////////////////////
@@ -3229,7 +3381,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 							String Node_LCell_Query = SuppId == "" ? strEmpty : strExist;
 							//System.out.println(Node_LCell_Query);
-							Object CountNodes_L_CELL = session.createSQLQuery(Node_LCell_Query).uniqueResult();
+							Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
 							strEmpty="";
 							strExist="";
 				/////////////////////////////
@@ -3242,7 +3394,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 							String Node_UCell_Query = SuppId == "" ? strEmpty : strExist;
 							//System.out.println(Node_UCell_Query);
-							Object CountNodes_U_CELL = session.createSQLQuery(Node_UCell_Query).uniqueResult();
+							Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
 							strEmpty="";
 							strExist="";			
 				/////////////////////////////
@@ -3255,14 +3407,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 								strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
 								String Node_Type_Count = strEmpty;
 								//System.out.println(Node_Type_Count);
-								Object CountNodesType = session.createSQLQuery(Node_Type_Count).uniqueResult();
+								Object CountNodesType = session.createNativeQuery(Node_Type_Count).uniqueResult();
 								BoqHM.put("Node Type", String.valueOf(CountNodesType));
 							}else {
 								strExist="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and Supplier_Id='"+ SuppId + "' ";
 								strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 								String Node_Type_Count = strExist;
 								//System.out.println(Node_Type_Count);
-								Object CountNodesType = session.createSQLQuery(Node_Type_Count).uniqueResult();
+								Object CountNodesType = session.createNativeQuery(Node_Type_Count).uniqueResult();
 								BoqHM.put("Node Type", String.valueOf(CountNodesType));
 								strExist="";
 							////////////////////////////////
@@ -3270,7 +3422,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 								strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 								strExist = strExist +" GROUP BY NODE_TYPE";
 								//System.out.println(strExist);
-								List<Object[]> CountNodesteach_Active = (List<Object[]>) session.createSQLQuery(strExist).list();
+								List<Object[]> CountNodesteach_Active = (List<Object[]>) session.createNativeQuery(strExist).list();
 								List<Object[]> result = new ArrayList<>();
 								for (Object[] obj : CountNodesteach_Active) {
 									result.add(obj);
@@ -3284,7 +3436,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
 							return BoqHM;
 					} catch (Exception e) {
-						logger.info("Error in retreiving Site BOQ data Data from database" + exceptionAsString);
+						sw = new StringWriter();
+						e.printStackTrace(new PrintWriter(sw));
+						exceptionAsString = sw.toString();
+						logger.finest("Error in retreiving Sites Boq from database in method GetSupBoqList due to \n " + exceptionAsString);
+						logger.info("Error in retreiving Sites Boq from database in method GetSupBoqList due to \n " + exceptionAsString);															
 						return null;
 					} finally {
 						if (session != null && session.isOpen()) {
@@ -3293,11 +3449,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							session.getSessionFactory().close();
 						}
 					}
-					//return BoqHM;
 				}
 		
 		// Sites BOQ data retrieving
-		@SuppressWarnings("unchecked")
 		@RequestMapping(value = "/GetBoqSitePoList", method = RequestMethod.GET, produces = "application/json")
 		@ResponseBody
 
@@ -3306,8 +3460,6 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			Session session = almsessions.getSession();
 			Transaction tx = session.beginTransaction();
 			LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
-
-			// if Site_id !=null --> an ajax request received
 			try {
 				String strEmpty="SELECT COUNT(distinct a.WARE_ID) FROM AR_SITE a, ASSET_REGISTRY b WHERE a.AR_ID=b.AR_ID ";
 				strEmpty= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
@@ -3315,7 +3467,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				//strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 				String Site_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(Site_Query);
-				Object Sites = session.createSQLQuery(Site_Query).uniqueResult();
+				Object Sites = session.createNativeQuery(Site_Query).uniqueResult();
 				strEmpty="";
 				strExist="";	
 				
@@ -3325,7 +3477,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 				String Po_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(Po_Query);
-				Object CountPo = session.createSQLQuery(Po_Query).uniqueResult();
+				Object CountPo = session.createNativeQuery(Po_Query).uniqueResult();
 				strEmpty="";
 				strExist="";
 			
@@ -3341,7 +3493,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 				String PO_Amount_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(PO_Amount_Query);
-				Object PO_Amount = session.createSQLQuery(PO_Amount_Query).uniqueResult();
+				Object PO_Amount = session.createNativeQuery(PO_Amount_Query).uniqueResult();
 				BoqHM.put(SiteId == "" ? "PO Cost" : "PO Total Cost", String.valueOf(PO_Amount));
 				strEmpty="";
 				strExist="";
@@ -3355,7 +3507,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 				String PO_NET_Amount_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(PO_NET_Amount_Query);
-				Object PO_NET_Amount = session.createSQLQuery(PO_NET_Amount_Query).uniqueResult();
+				Object PO_NET_Amount = session.createNativeQuery(PO_NET_Amount_Query).uniqueResult();
 				BoqHM.put(SiteId == "" ? "PO Net Cost" : "PO Total Net Cost", String.valueOf(PO_NET_Amount));
 				strEmpty="";
 				strExist="";
@@ -3364,14 +3516,18 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					String Item_Query= "Select COUNT(DISTINCT a.ITEM_CODE) from ASSET_REGISTRY a, AR_SITE b where a.AR_ID = b.AR_ID and b.WARE_ID='" + SiteId + "' ";	
 					Item_Query= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,Item_Query);
 					//System.out.println(Item_Query);
-					Object Item = session.createSQLQuery(Item_Query).uniqueResult();
+					Object Item = session.createNativeQuery(Item_Query).uniqueResult();
 					BoqHM.put("Items", String.valueOf(Item));
 				}
 			
 				return BoqHM;
 			 
 			} catch (Exception e) {
-				logger.info("Error in retreiving Site BOQ data Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Sites BOQ from database in method GetBoqSitePoList due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Sites BOQ from database in method GetBoqSitePoList due to \n " + exceptionAsString);															
 				return null;
 			} finally {
 				if (session != null && session.isOpen()) {
@@ -3383,7 +3539,6 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 		}
 
 		// Nodes BOQ data retrieving
-				@SuppressWarnings("unchecked")
 				@RequestMapping(value = "/GetNodeBoqList", method = RequestMethod.GET, produces = "application/json")
 				@ResponseBody
 				public LinkedHashMap<String, String> GetNodeBoqList(@RequestParam String WareId,@RequestParam String NodeId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
@@ -3396,43 +3551,43 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						String Site_Query= "Select DISTINCT Ware_Name From NODE_ACTIVE where Ware_Id='" + WareId + "' ";	
 						Site_Query= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,Site_Query);		
 						//System.out.println(Site_Query);
-						Object Sites = session.createSQLQuery(Site_Query).uniqueResult();
+						Object Sites = session.createNativeQuery(Site_Query).uniqueResult();
 						
 						if (WareId.equals("null") || WareId == null || WareId.equals("0") || WareId.equals("")) {	
 							//System.out.println("IF WARE ID NULL");
 							String Node_GCell_Query="select count(ngc.gcell_id) from node_gcell ngc , node_active na where na.Active_record='1' and na.node_pk = ngc.node_pk and na.NODE_PK = '" + NodeId +"' and (na.Ware_Id is null or na.Ware_Id='0') ";
 							Node_GCell_Query= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_GCell_Query);
 							//System.out.println(Node_GCell_Query);
-				 			Object CountNodes_G_CELL = session.createSQLQuery(Node_GCell_Query).uniqueResult();			
+				 			Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();			
 				    ///////////////////////////
 							String Node_LCell_Query = "select count(nlc.LCell_Id) from node_lcell nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and (na.Ware_Id is null or na.Ware_Id='0') "
 									+ " and na.NODE_PK = '" + NodeId + "' ";
 							Node_LCell_Query= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_LCell_Query);
 							//System.out.println(Node_LCell_Query);
-							Object CountNodes_L_CELL = session.createSQLQuery(Node_LCell_Query).uniqueResult();
+							Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
 					///////////////////////////
 							String Node_UCell_Query = "select count(nuc.UCell_Id) from node_ucell nuc , node_active na where na.Active_record='1' and na.node_pk = nuc.node_pk and (na.Ware_Id is null or na.Ware_Id='0') "
 									+ " and na.NODE_PK = '" + NodeId + "' ";
 							Node_UCell_Query= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_UCell_Query);
 							//System.out.println(Node_UCell_Query);
-							Object CountNodes_U_CELL = session.createSQLQuery(Node_UCell_Query).uniqueResult();
+							Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
 					///////////////////////////
 							String Node_Board_Query = "select count(nlc.BOARD_ID) from NODE_BOARD nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and (na.Ware_Id is null or na.Ware_Id='0') "
 									+ " and na.NODE_PK = '" + NodeId + "' ";
 							Node_Board_Query= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_Board_Query);
 							//System.out.println(Node_Board_Query);
-							Object CountNodesBoard = session.createSQLQuery(Node_Board_Query).uniqueResult();
+							Object CountNodesBoard = session.createNativeQuery(Node_Board_Query).uniqueResult();
 					///////////////////////////
 							String Node_Cabinet_Query = "select count(nlc.CABINET_ID) from NODE_CABINET nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and (na.Ware_Id is null or na.Ware_Id='0') "
 									+ " and na.NODE_PK = '" + NodeId + "' ";
 							Node_Cabinet_Query= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_Cabinet_Query);
 							//System.out.println(Node_Cabinet_Query);
-							Object CountNodesCabinet = session.createSQLQuery(Node_Cabinet_Query).uniqueResult();
+							Object CountNodesCabinet = session.createNativeQuery(Node_Cabinet_Query).uniqueResult();
 					///////////////////////////		
 							String NodesType_Query = "Select NODE_TYPE From NODE_ACTIVE where Active_record='1' and NODE_PK = '" + NodeId + "' and (Ware_Id is null or Ware_Id='0') ";
 							NodesType_Query= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,NodesType_Query);	
 							//System.out.println(NodesType_Query);
-							Object CountNodes_NodeType = session.createSQLQuery(NodesType_Query).uniqueResult();
+							Object CountNodes_NodeType = session.createNativeQuery(NodesType_Query).uniqueResult();
 							
 							BoqHM.put("Site Name", String.valueOf(Sites));
 							BoqHM.put("Node Type", String.valueOf(CountNodes_NodeType));
@@ -3447,36 +3602,36 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 									+ WareId + "' and na.NODE_PK = '" + NodeId + "' ";
 							Node_GCell_Query= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_GCell_Query);
 							//System.out.println(Node_GCell_Query);
-							Object CountNodes_G_CELL = session.createSQLQuery(Node_GCell_Query).uniqueResult();
+							Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
 					///////////////////////////	
 							String Node_LCell_Query = "select count(nlc.LCell_Id) from node_lcell nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and na.Ware_Id = '"
 									+ WareId + "' and na.NODE_PK = '" + NodeId + "' ";
 							Node_LCell_Query= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_LCell_Query);
 							//System.out.println(Node_LCell_Query);
-							Object CountNodes_L_CELL = session.createSQLQuery(Node_LCell_Query).uniqueResult();
+							Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
 					///////////////////////////	
 							String Node_UCell_Query = "select count(nuc.UCell_Id) from node_ucell nuc , node_active na where na.Active_record='1' and na.node_pk = nuc.node_pk and na.Ware_Id = '"
 									+ WareId + "' and na.NODE_PK = '" + NodeId + "' ";
 							Node_UCell_Query= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_UCell_Query);
 							//System.out.println(Node_UCell_Query);
-							Object CountNodes_U_CELL = session.createSQLQuery(Node_UCell_Query).uniqueResult();
+							Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
 					///////////////////////////	
 							String Node_Board_Query = "select count(nlc.BOARD_ID) from NODE_BOARD nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and na.Ware_Id = '"
 									+ WareId + "' and na.NODE_PK = '" + NodeId + "' ";
 							Node_Board_Query= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_Board_Query);
 							//System.out.println(Node_Board_Query);
-							Object CountNodesBoard = session.createSQLQuery(Node_Board_Query).uniqueResult();
+							Object CountNodesBoard = session.createNativeQuery(Node_Board_Query).uniqueResult();
 					///////////////////////////	
 							String Node_Cabinet_Query = "select count(nlc.CABINET_ID) from NODE_CABINET nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and na.Ware_Id = '"
 									+ WareId + "' and na.NODE_PK = '" + NodeId + "' ";
 							Node_Cabinet_Query= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_Cabinet_Query);
 							//System.out.println(Node_Cabinet_Query);
-							Object CountNodesCabinet = session.createSQLQuery(Node_Cabinet_Query).uniqueResult();
+							Object CountNodesCabinet = session.createNativeQuery(Node_Cabinet_Query).uniqueResult();
 					///////////////////////////		
 							String NodesType_Query = "Select DISTINCT NODE_TYPE From NODE_ACTIVE where Active_record='1' and Ware_Id = '"+ WareId +"' and NODE_PK = '" + NodeId + "' ";
 							NodesType_Query= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,NodesType_Query);
 							//System.out.println(NodesType_Query);
-							Object CountNodes_NodeType = session.createSQLQuery(NodesType_Query).uniqueResult();					
+							Object CountNodes_NodeType = session.createNativeQuery(NodesType_Query).uniqueResult();					
 							
 							BoqHM.put("Site Name", String.valueOf(Sites));
 							BoqHM.put("Node Type", String.valueOf(CountNodes_NodeType));
@@ -3488,7 +3643,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						}						
 						return BoqHM;				
 					} catch (Exception e) {
-						logger.info("Error in retreiving Node BOQ data Data from database" + exceptionAsString);
+						sw = new StringWriter();
+						e.printStackTrace(new PrintWriter(sw));
+						exceptionAsString = sw.toString();
+						logger.finest("Error in retreiving Nodes BOQ from database in method GetNodeBoqList due to \n " + exceptionAsString);
+						logger.info("Error in retreiving Nodes BOQ Data from database in method GetNodeBoqList due to \n " + exceptionAsString);															
 						return null;
 					} finally {
 						if (session != null && session.isOpen()) {
@@ -3500,7 +3659,6 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				}
 
 		// Node Type BOQ data retrieving
-		@SuppressWarnings("unchecked")
 		@RequestMapping(value = "/GetNtypeBoqList", method = RequestMethod.GET, produces = "application/json")
 		@ResponseBody
 
@@ -3508,7 +3666,6 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 			Session session = almsessions.getSession();
 			Transaction tx = session.beginTransaction();
-			// if Site_id !=null --> an ajax request received
 			LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 
 			try {
@@ -3518,7 +3675,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
 				String Site_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(Site_Query);
-				Object Sites = session.createSQLQuery(Site_Query).uniqueResult();
+				Object Sites = session.createNativeQuery(Site_Query).uniqueResult();
 				strEmpty="";
 				strExist="";
 		////////////////////////////
@@ -3527,8 +3684,8 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= "SELECT COUNT(distinct NODE_PK) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"+ SiteId + "' and NODE_TYPE='" + NodeTId + "' ";	
 				strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
 				String Node_Active_Query = SiteId == "" ? strEmpty : strExist;
-				System.out.println(Node_Active_Query);
-				Object CountNodes_Active = session.createSQLQuery(Node_Active_Query).uniqueResult();
+				//System.out.println(Node_Active_Query);
+				Object CountNodes_Active = session.createNativeQuery(Node_Active_Query).uniqueResult();
 				strEmpty="";
 				strExist="";
 		////////////////////////////
@@ -3538,7 +3695,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
 				String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(Node_GCell_Query);
-				Object CountNodes_G_CELL = session.createSQLQuery(Node_GCell_Query).uniqueResult();
+				Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
 				strEmpty="";
 				strExist="";
 		////////////////////////////
@@ -3548,7 +3705,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
 				String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(Node_LCell_Query);
-				Object CountNodes_L_CELL = session.createSQLQuery(Node_LCell_Query).uniqueResult();
+				Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
 				strEmpty="";
 				strExist="";
 		////////////////////////////
@@ -3558,7 +3715,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
 				String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(Node_UCell_Query);
-				Object CountNodes_U_CELL = session.createSQLQuery(Node_UCell_Query).uniqueResult();
+				Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
 				strEmpty="";
 				strExist="";
 
@@ -3569,7 +3726,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
 				return BoqHM;				
 			} catch (Exception e) {
-				logger.info("Error in retreiving Node type BOQ data Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Node Type BOQ from database in method GetNtypeBoqList due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Node Type BOQ from database in method GetNtypeBoqList due to \n " + exceptionAsString);															
 				return null;
 			} finally {
 				if (session != null && session.isOpen()) {
@@ -3582,15 +3743,12 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 		
 		////node type boq for supplier
 		// Node Type BOQ data retrieving
-				@SuppressWarnings("unchecked")
 				@RequestMapping(value = "/GetNtypeSupBoqList", method = RequestMethod.GET, produces = "application/json")
 				@ResponseBody
-
 				public LinkedHashMap<String, String> GetNtypeSupBoqList(@RequestParam String SiteId, @RequestParam String NodeTId, @RequestParam String SuppId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
 
 					Session session = almsessions.getSession();
 					Transaction tx = session.beginTransaction();
-					// if Site_id !=null --> an ajax request received
 					LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 
 					try {
@@ -3600,7 +3758,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
 						String Site_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Site_Query);
-						Object Sites = session.createSQLQuery(Site_Query).uniqueResult();
+						Object Sites = session.createNativeQuery(Site_Query).uniqueResult();
 						strEmpty="";
 						strExist="";
 				////////////////////////////
@@ -3609,8 +3767,8 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= "SELECT COUNT(distinct NODE_PK) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"+ SiteId + "' and NODE_TYPE='" + NodeTId + "' AND SUPPLIER_ID = '"+SuppId+"' ";	
 						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
 						String Node_Active_Query = SiteId == "" ? strEmpty : strExist;
-						System.out.println(Node_Active_Query);
-						Object CountNodes_Active = session.createSQLQuery(Node_Active_Query).uniqueResult();
+						//System.out.println(Node_Active_Query);
+						Object CountNodes_Active = session.createNativeQuery(Node_Active_Query).uniqueResult();
 						strEmpty="";
 						strExist="";
 				////////////////////////////
@@ -3620,7 +3778,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
 						String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_GCell_Query);
-						Object CountNodes_G_CELL = session.createSQLQuery(Node_GCell_Query).uniqueResult();
+						Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
 						strEmpty="";
 						strExist="";
 				////////////////////////////
@@ -3630,7 +3788,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
 						String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_LCell_Query);
-						Object CountNodes_L_CELL = session.createSQLQuery(Node_LCell_Query).uniqueResult();
+						Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
 						strEmpty="";
 						strExist="";
 				////////////////////////////
@@ -3640,7 +3798,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
 						String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_UCell_Query);
-						Object CountNodes_U_CELL = session.createSQLQuery(Node_UCell_Query).uniqueResult();
+						Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
 						strEmpty="";
 						strExist="";
 
@@ -3651,7 +3809,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
 						return BoqHM;				
 					} catch (Exception e) {
-						logger.info("Error in retreiving Node type BOQ data Data from database" + exceptionAsString);
+						sw = new StringWriter();
+						e.printStackTrace(new PrintWriter(sw));
+						exceptionAsString = sw.toString();
+						logger.finest("Error in retreiving Node Type BOQ from database in method GetNtypeSupBoqList due to \n " + exceptionAsString);
+						logger.info("Error in retreiving Node Type BOQ from database in method GetNtypeSupBoqList due to \n " + exceptionAsString);															
 						return null;
 					} finally {
 						if (session != null && session.isOpen()) {
@@ -3664,7 +3826,6 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				
 		///node type boq for vendor 
 		// Node Type BOQ data retrieving
-				@SuppressWarnings("unchecked")
 				@RequestMapping(value = "/GetNtypeVenBoqList", method = RequestMethod.GET, produces = "application/json")
 				@ResponseBody
 
@@ -3672,7 +3833,6 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 					Session session = almsessions.getSession();
 					Transaction tx = session.beginTransaction();
-					// if Site_id !=null --> an ajax request received
 					LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 
 					try {
@@ -3682,7 +3842,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
 						String Site_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Site_Query);
-						Object Sites = session.createSQLQuery(Site_Query).uniqueResult();
+						Object Sites = session.createNativeQuery(Site_Query).uniqueResult();
 						strEmpty="";
 						strExist="";
 				////////////////////////////
@@ -3692,7 +3852,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
 						String Node_Active_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_Active_Query);
-						Object CountNodes_Active = session.createSQLQuery(Node_Active_Query).uniqueResult();
+						Object CountNodes_Active = session.createNativeQuery(Node_Active_Query).uniqueResult();
 						strEmpty="";
 						strExist="";
 				////////////////////////////
@@ -3702,7 +3862,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
 						String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_GCell_Query);
-						Object CountNodes_G_CELL = session.createSQLQuery(Node_GCell_Query).uniqueResult();
+						Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
 						strEmpty="";
 						strExist="";
 				////////////////////////////
@@ -3712,7 +3872,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
 						String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_LCell_Query);
-						Object CountNodes_L_CELL = session.createSQLQuery(Node_LCell_Query).uniqueResult();
+						Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
 						strEmpty="";
 						strExist="";
 				////////////////////////////
@@ -3722,7 +3882,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
 						String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_UCell_Query);
-						Object CountNodes_U_CELL = session.createSQLQuery(Node_UCell_Query).uniqueResult();
+						Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
 						strEmpty="";
 						strExist="";
 
@@ -3733,7 +3893,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
 						return BoqHM;				
 					} catch (Exception e) {
-						logger.info("Error in retreiving Node type BOQ data Data from database" + exceptionAsString);
+						sw = new StringWriter();
+						e.printStackTrace(new PrintWriter(sw));
+						exceptionAsString = sw.toString();
+						logger.finest("Error in retreiving Node Type BOQ from database in method GetNtypeVenBoqList due to \n " + exceptionAsString);
+						logger.info("Error in retreiving Node Type BOQ from database in method GetNtypeVenBoqList due to \n " + exceptionAsString);															
 						return null;
 					} finally {
 						if (session != null && session.isOpen()) {
@@ -3751,9 +3915,6 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		ObjectMapper mapper = new ObjectMapper();
-		Session session = null;
-		Transaction tx = null;
 		session = almsessions.getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
@@ -3765,74 +3926,74 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			String[] selArray = request.getParameterValues("selArray[]");
 			try {
 				List<Object[]> result = session
-						.createSQLQuery("SELECT GCELL_ID,CELLNAME,NODE_PK FROM NODE_GCELL WHERE ACTIVE_RECORD = '1'")
+						.createNativeQuery("SELECT GCELL_ID,CELLNAME,NODE_PK FROM NODE_GCELL WHERE ACTIVE_RECORD = '1'")
 						.list();
 				List<Object[]> result1 = session
-						.createSQLQuery("SELECT LCELL_ID,CELLNAME,NODE_PK FROM NODE_LCELL WHERE ACTIVE_RECORD = '1'")
+						.createNativeQuery("SELECT LCELL_ID,CELLNAME,NODE_PK FROM NODE_LCELL WHERE ACTIVE_RECORD = '1'")
 						.list();
 				List<Object[]> result2 = session
-						.createSQLQuery("SELECT UCELL_ID,CELLNAME,NODE_PK FROM NODE_UCELL WHERE ACTIVE_RECORD = '1'")
+						.createNativeQuery("SELECT UCELL_ID,CELLNAME,NODE_PK FROM NODE_UCELL WHERE ACTIVE_RECORD = '1'")
 						.list();
 
 				List<Object[]> cellResult = new ArrayList<Object[]>();
 
 				if (!result.isEmpty()) {
-
 					for (Object[] obj : result) {
-
 						cellResult.add(obj);
-
 					}
-
 				}
 				if (!result1.isEmpty()) {
 					for (Object[] obj : result1) {
-
 						cellResult.add(obj);
-
 					}
-
 				}
 				if (!result2.isEmpty()) {
 					for (Object[] obj : result2) {
-
 						cellResult.add(obj);
-
 					}
-
 				}
-
 				model.addAttribute("listCells", mapper.writeValueAsString(cellResult));
 			} catch (Exception e) {
-				logger.info("Error in retreiving cells data Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Cells Data from database in method NetworkTree due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Cells Data from database in method NetworkTree due to \n " + exceptionAsString);															
 				model.addAttribute("listCells", mapper.writeValueAsString(null));
 			}
 			try {
-				model.addAttribute("listNodes", ((List<Object[]>) session.createSQLQuery(
+				model.addAttribute("listNodes", ((List<Object[]>) session.createNativeQuery(
 						"SELECT NODE_PK,SITE_ID,NODE_NAME,NODE_TYPE,WARE_ID FROM NODE_ACTIVE WHERE ACTIVE_RECORD = '1'")
 						.list()));
 
 			} catch (Exception e) {
-				logger.info("Error in retreiving nodes data Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Nodes Data from database in method NetworkTree due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Nodes Data from database in method NetworkTree due to \n " + exceptionAsString);															
 				model.addAttribute("listNodes", mapper.writeValueAsString(null));
 			}
 			try {
 				model.addAttribute("listSites", ((List<Object[]>) session
-						.createSQLQuery("SELECT SITE_ID,WARE_NAME,WARE_ID,LATITUDE,LONGITUDE FROM WAREHOUSE").list()));
+						.createNativeQuery("SELECT SITE_ID,WARE_NAME,WARE_ID,LATITUDE,LONGITUDE FROM WAREHOUSE").list()));
 
 			} catch (Exception e) {
-				logger.info("Error in retreiving sites data Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Sites Data from database in method NetworkTree due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Sites Data from database in method NetworkTree due to \n " + exceptionAsString);															
 				model.addAttribute("listSites", mapper.writeValueAsString(null));
 			}
 			try {
-				model.addAttribute("listNodesType",
-						((List<Object[]>) session
-								.createSQLQuery(
-										"SELECT DISTINCT NODE_TYPE,WARE_ID FROM NODE_ACTIVE WHERE ACTIVE_RECORD = '1'")
-								.list()));
-
+				model.addAttribute("listNodesType",((List<Object[]>) session.createNativeQuery("SELECT DISTINCT NODE_TYPE,WARE_ID FROM NODE_ACTIVE WHERE ACTIVE_RECORD = '1'").list()));
 			} catch (Exception e) {
-				logger.info("Error in retreiving node type  data Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Node Type Data from database in method NetworkTree due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Node Type Data from database in method NetworkTree due to \n " + exceptionAsString);															
 				model.addAttribute("listNodesType", mapper.writeValueAsString(null));
 			} finally {
 				if (session != null && session.isOpen()) {
@@ -3851,12 +4012,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 	@ResponseBody
 	public Map<String, Object> NodeType(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
-		// logger.info("Welcome home! The client locale is {}.", locale);
-
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		// ObjectMapper mapper = new ObjectMapper();
-		Session session = null;
-		Transaction tx = null;
 		session = almsessions.getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
@@ -3865,15 +4021,16 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
-				// List<?> nodeTypeList = session.createSQLQuery(
-				rtn.put("listNodesType", ((List<Object[]>) session.createSQLQuery(
+				rtn.put("listNodesType", ((List<Object[]>) session.createNativeQuery(
 						"SELECT DISTINCT NODE_TYPE,(select COUNT(*) from NODE_ACTIVE a  where a.NODE_TYPE=b.NODE_TYPE and a.ACTIVE_RECORD = '1') as countnodes FROM NODE_ACTIVE b WHERE b.ACTIVE_RECORD = '1'")
 						.list()));
-
 			} catch (Exception e) {
-				logger.info("Error in retreiving sites Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Node Type Data from database in method NodeType due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Node Type Data from database in method NodeType due to \n " + exceptionAsString);															
 				rtn.put("listNodesType", null);
-				// rtn.put("listSites", null);
 			} finally {
 				if (session != null && session.isOpen()) {
 					tx.commit();
@@ -3891,12 +4048,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 	@ResponseBody
 	public Map<String, Object> POStItem(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
-		// logger.info("Welcome home! The client locale is {}.", locale);
-
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		// ObjectMapper mapper = new ObjectMapper();
-		Session session = null;
-		Transaction tx = null;
 		session = almsessions.getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
@@ -3907,22 +4059,26 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			try {
 
 				rtn.put("listPO",
-						//((List<Object[]>) session.createSQLQuery("SELECT distinct a.PO_ID,"
+						//((List<Object[]>) session.createNativeQuery("SELECT distinct a.PO_ID,"
 								//+ "(select count(*) from WAREHOUSE b where b.WARE_ID = a.WARE_ID) as countSite"
 							//	+ "(select count(*) from WAREHOUSE b where b.NODE_ID = a.NODE_ID) as countSite"
 							//	+ " FROM ASSET_REGISTRY a").list()));
-								((List<Object[]>) session.createSQLQuery("SELECT distinct PO_ID FROM ASSET_REGISTRY").list()));
-				rtn.put("listSites", ((List<Object[]>) session.createSQLQuery(
+								((List<Object[]>) session.createNativeQuery("SELECT distinct PO_ID FROM ASSET_REGISTRY").list()));
+				rtn.put("listSites", ((List<Object[]>) session.createNativeQuery(
 						//"SELECT distinct WARE_ID FROM ASSET_REGISTRY where WARE_ID!='0' and WARE_ID!='null' and PO_ID!='null'")
 						"SELECT distinct WARE_ID FROM NODE_ACTIVE a, ASSET_REGISTRY b WHERE a.NODE_ID= b.NODE_ID and b.PO_ID!='null'")
 						.list()));
 
 			} catch (Exception e) {
-				logger.info("Error in retreiving PO Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving PO Data from database in method POStItem due to \n " + exceptionAsString);
+				logger.info("Error in retreiving PO Data from database in method POStItem due to \n " + exceptionAsString);															
 				rtn.put("listPO", null);
 			}
 			/*
-			 * try { rtn.put("listsite", ((List<Object[]>) session.createSQLQuery(
+			 * try { rtn.put("listsite", ((List<Object[]>) session.createNativeQuery(
 			 * "SELECT distinct b.SITE_ID,b.WARE_NAME,b.WARE_ID,j.PO_ID," +
 			 * "(SELECT a.LATITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LATITUDE,"
 			 * +
@@ -3946,7 +4102,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			 * } catch (Exception e) {
 			 * logger.info("Error in retreiving sites Data from database",e);
 			 * rtn.put("listsite", null); } try { rtn.put("itemList", ((List<Object[]>)
-			 * session.createSQLQuery(
+			 * session.createNativeQuery(
 			 * "SELECT distinct ITEM_CODE, ITEM_NAME, WARE_ID,PO_ID, ITEM_MODEL  FROM ASSET_REGISTRY where PO_ID is not null and WARE_ID is not null and ITEM_CODE!='null'"
 			 * ) .list()));
 			 * 
@@ -3965,17 +4121,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 	}
 
 //retrieve sites and items data on PO click
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/findPOSt_Items", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> findPOSt_Items(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
-// logger.info("Welcome home! The client locale is {}.", locale);
-
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		ObjectMapper mapper = new ObjectMapper();
-		Session session = null;
-		Transaction tx = null;
 		session = almsessions.getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
@@ -3993,35 +4143,25 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				String paramAccess = request.getParameter("paramAccess");
 				String paramCore = request.getParameter("paramCore");
 				
-				List<String> listSites = new ArrayList<String>();
 				String strSites ="SELECT DISTINCT b.SITE_ID,b.SITE_NAME,b.WARE_ID,j.PO_ID FROM AR_SITE b,ASSET_REGISTRY j WHERE j.AR_ID=b.AR_ID AND b.WARE_ID!='0' AND b.WARE_ID!='null' AND b.WARE_ID is not null AND j.PO_ID='"+selectedItem+"' ";
 				
-				List<String> itemList = new ArrayList<String>();
-				String strItems ="SELECT distinct a.ITEM_CODE, a.ITEM_NAME, a.PO_ID, b.WARE_ID, a.ITEM_MODEL FROM ASSET_REGISTRY a, AR_SITE b WHERE a.AR_ID=b.AR_ID AND b.WARE_ID='"+selectedSite+"' AND a.PO_ID='"+selectedItem+"' ";			
-				
+				String strItems ="SELECT distinct a.ITEM_CODE, a.ITEM_NAME, a.PO_ID, b.WARE_ID, a.ITEM_MODEL FROM ASSET_REGISTRY a, AR_SITE b WHERE a.AR_ID=b.AR_ID AND b.WARE_ID='"+selectedSite+"' AND a.PO_ID='"+selectedItem+"' ";						
 				
 			try {
 				if (POAlreadyCreated.equals("false")) {
 					strSites= boqDomainVar ("j",paramEnterprise,paramTransmission,paramAccess,paramCore,strSites);
-					
-					//System.out.println("final query sites"+mapper.writeValueAsString(strSites));
-					Query query = session.createSQLQuery(strSites);
-					listSites = query.list();
-					rtn.put("listSites",listSites);
-					//System.out.println("list sites ==> "+ mapper.writeValueAsString(listSites));											
+					rtn.put("listSites",session.createNativeQuery(strSites).list());
 					
 				}else {
 					strItems= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strItems);
-					
-					//System.out.println("final query items"+mapper.writeValueAsString(strItems));
-					Query query = session.createSQLQuery(strItems);
-					itemList = query.list();
-					rtn.put("itemList", itemList);
-					//System.out.println("list items ==> "+ mapper.writeValueAsString(itemList));											
-
+					rtn.put("itemList", session.createNativeQuery(strItems).list());				
 				}
 			} catch (Exception e) {
-				logger.info("Error in retreiving items and sites Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Items and Sites Data from database in method findPOSt_Items due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Items and Sites Data from database in method findPOSt_Items due to \n " + exceptionAsString);															
 				rtn.put("itemList", null);
 				rtn.put("listSites", null);
 			} 
@@ -4042,12 +4182,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 	@ResponseBody
 	public Map<String, Object> StPOItem(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
-		// logger.info("Welcome home! The client locale is {}.", locale);
-
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		ObjectMapper mapper = new ObjectMapper();
-		Session session = null;
-		Transaction tx = null;
 		session = almsessions.getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
@@ -4057,7 +4192,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			tx = session.beginTransaction();
 			try {
 				/*
-				 * List<Object[]> siteList = (List<Object[]>) session.createSQLQuery(
+				 * List<Object[]> siteList = (List<Object[]>) session.createNativeQuery(
 				 * 
 				 * "SELECT distinct b.SITE_ID,b.WARE_NAME,b.WARE_ID," +
 				 * "(SELECT a.LATITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LATITUDE,"
@@ -4084,29 +4219,41 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				 * rtn.put("listsite", siteList);
 				 */
 
-				rtn.put("listSites", ((List<Object[]>) session.createSQLQuery(
+				rtn.put("listSites", ((List<Object[]>) session.createNativeQuery(
 						"SELECT distinct WARE_ID FROM ASSET_REGISTRY where WARE_ID!='0' and WARE_ID!='null' and PO_ID!='null'")
 						.list()));
 
 			} catch (Exception e) {
-				logger.info("Error in retreiving sites Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Sites Data from database in method StPOItem due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Sites Data from database in method StPOItem due to \n " + exceptionAsString);															
 				rtn.put("listSites", null);
 			}
 			try {
-				rtn.put("listPO", ((List<Object[]>) session.createSQLQuery(
+				rtn.put("listPO", ((List<Object[]>) session.createNativeQuery(
 						"SELECT distinct a.PO_ID ,a.WARE_ID,a.WARE_NAME,a.SITE_ID FROM ASSET_REGISTRY a,NODE_ACTIVE b where b.ACTIVE_RECORD = '1' and b.WARE_ID = a.WARE_ID ")
 						.list()));
 			} catch (Exception e) {
-				logger.info("Error in retreiving PO Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving PO Data from database in method StPOItem due to \n " + exceptionAsString);
+				logger.info("Error in retreiving PO Data from database in method StPOItem due to \n " + exceptionAsString);															
 				rtn.put("listPO", null);
 			}
 			try {
-				rtn.put("itemList", ((List<Object[]>) session.createSQLQuery(
+				rtn.put("itemList", ((List<Object[]>) session.createNativeQuery(
 						"SELECT distinct ITEM_CODE, ITEM_NAME, PO_ID, WARE_ID, ITEM_MODEL FROM ASSET_REGISTRY where PO_ID is not null and WARE_ID is not null")
 						.list()));
 
 			} catch (Exception e) {
-				logger.info("Error in retreiving items Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Items Data from database in method StPOItem due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Items Data from database in method StPOItem due to \n " + exceptionAsString);															
 				rtn.put("itemList", null);
 			} finally {
 				if (session != null && session.isOpen()) {
@@ -4120,17 +4267,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 	}
 
 	// retrieve items on sites click
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/findSitePO_Items", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> findSitePO_Items(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
-// logger.info("Welcome home! The client locale is {}.", locale);
-
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		// ObjectMapper mapper = new ObjectMapper();
-		Session session = null;
-		Transaction tx = null;
 		session = almsessions.getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
@@ -4148,35 +4289,27 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				String paramAccess = request.getParameter("paramAccess");
 				String paramCore = request.getParameter("paramCore");	
 				
-				List<String> listPO = new ArrayList<String>();
 				String strPO ="SELECT distinct a.PO_ID ,b.WARE_ID,b.SITE_NAME,b.SITE_ID,"
 						+ "(select count(*) from ASSET_REGISTRY a where a.PO_ID is not null and b.WARE_ID is not null) as countItems "
 						+ "FROM ASSET_REGISTRY a, AR_SITE b where a.AR_ID=b.AR_ID and b.WARE_ID='"+ selectedSite + "' ";
 				
-				List<String> itemList = new ArrayList<String>();
 				String strItems ="SELECT distinct a.ITEM_CODE, a.ITEM_NAME, a.PO_ID, b.WARE_ID, a.ITEM_MODEL FROM ASSET_REGISTRY a, AR_SITE b WHERE a.AR_ID=b.AR_ID AND b.WARE_ID='"+selectedSite+"' AND a.PO_ID='"+selectedPO+"' ";			
 			
 			try {				
 				if (POAlreadyCreated.equals("false")) {
 					strPO=  boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strPO);
-					
-					//System.out.println("final query PO "+mapper.writeValueAsString(strPO));
-					Query query = session.createSQLQuery(strPO);
-					listPO = query.list();
-					rtn.put("listPO", listPO);
-					//System.out.println("list PO ==> "+ mapper.writeValueAsString(listPO));
+					rtn.put("listPO", session.createNativeQuery(strPO).list());
 				}
 				else {
 					strItems= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strItems);
-					
-					//System.out.println("final query items"+mapper.writeValueAsString(strItems));
-					Query query = session.createSQLQuery(strItems);
-					itemList = query.list();
-					rtn.put("itemList", itemList);
-					//System.out.println("list items ==> "+ mapper.writeValueAsString(itemList));											
+					rtn.put("itemList", session.createNativeQuery(strItems).list());
 				}
 			} catch (Exception e) {
-				logger.info("Error in retreiving PO and items Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving PO and Items Data from database in method findSitePO_Items due to \n " + exceptionAsString);
+				logger.info("Error in retreiving PO and Items Data from database in method findSitePO_Items due to \n " + exceptionAsString);															
 				rtn.put("listPO", null);
 				rtn.put("itemList", null);
 			} finally {
@@ -4196,12 +4329,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 	@ResponseBody
 	public Map<String, Object> POItemSt(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
-		// logger.info("Welcome home! The client locale is {}.", locale);
-
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		// ObjectMapper mapper = new ObjectMapper();
-		Session session = null;
-		Transaction tx = null;
 		session = almsessions.getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
@@ -4212,16 +4340,16 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			try {
 
 				rtn.put("listPO",
-						((List<Object[]>) session.createSQLQuery("SELECT distinct a.PO_ID,"
+						((List<Object[]>) session.createNativeQuery("SELECT distinct a.PO_ID,"
 								+ "(select count(*) from ASSET_REGISTRY b where b.PO_ID = a.PO_ID) as countItem"
 								+ " FROM ASSET_REGISTRY a").list()));
 
-				rtn.put("itemList", ((List<Object[]>) session.createSQLQuery(
+				rtn.put("itemList", ((List<Object[]>) session.createNativeQuery(
 						"SELECT distinct ITEM_CODE, ITEM_NAME, PO_ID,ITEM_MODEL FROM ASSET_REGISTRY where PO_ID is not null and ITEM_CODE is not null")
 						.list()));
 
 				rtn.put("listsite", ((List<Object[]>) session
-						.createSQLQuery("SELECT distinct b.SITE_ID,b.WARE_NAME,b.WARE_ID,j.ITEM_CODE,j.PO_ID,"
+						.createNativeQuery("SELECT distinct b.SITE_ID,b.WARE_NAME,b.WARE_ID,j.ITEM_CODE,j.PO_ID,"
 								+ "(SELECT a.LATITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LATITUDE,"
 								+ "(SELECT a.LONGITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LONGITUDE,"
 								+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID  and w.ACTIVE_RECORD = '1') as countnodes,"
@@ -4232,7 +4360,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 								+ " from WAREHOUSE b,ASSET_REGISTRY j where j.WARE_ID=b.WARE_ID and j.PO_ID is not null and ITEM_CODE is not null ")
 						.list()));
 			} catch (Exception e) {
-				logger.info("Error in retreiving PO and items Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving PO and Items Data from database in method POItemSt due to \n " + exceptionAsString);
+				logger.info("Error in retreiving PO and Items Data from database in method POItemSt due to \n " + exceptionAsString);															
 				rtn.put("listPO", null);
 				rtn.put("itemList", null);
 				rtn.put("listsite", null);
@@ -4252,11 +4384,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 	@ResponseBody
 	public Map<String, Object> Cell(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
-		// logger.info("Welcome home! The client locale is {}.", locale);
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		// ObjectMapper mapper = new ObjectMapper();
-		Session session = null;
-		Transaction tx = null;
 		session = almsessions.getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
@@ -4266,36 +4394,35 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			tx = session.beginTransaction();
 			try {
 
-				List<Object[]> result = session.createSQLQuery(
+				List<Object[]> result = session.createNativeQuery(
 						"SELECT a.GCELL_ID,a.CELLNAME,a.NODE_PK FROM NODE_GCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0'")
 						.list();
-				List<Object[]> result1 = session.createSQLQuery(
+				List<Object[]> result1 = session.createNativeQuery(
 						"SELECT a.LCELL_ID,a.CELLNAME,a.NODE_PK FROM NODE_LCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0'")
 						.list();
-				List<Object[]> result2 = session.createSQLQuery(
+				List<Object[]> result2 = session.createNativeQuery(
 						"SELECT a.UCELL_ID,a.CELLNAME,a.NODE_PK FROM NODE_UCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0'")
 						.list();
 
 				List<Object[]> cellResult = new ArrayList<Object[]>();
 
 				if (!result.isEmpty()) {
-
 					cellResult.addAll(result);
-
 				}
 				if (!result1.isEmpty()) {
 					cellResult.addAll(result1);
-
 				}
 				if (!result2.isEmpty()) {
-
 					cellResult.addAll(result2);
-
 				}
 
 				rtn.put("listCells", cellResult);
 			} catch (Exception e) {
-				logger.info("Error in retreiving Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Cells Data from database in method Cell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Cells Data from database in method Cell due to \n " + exceptionAsString);															
 				rtn.put("listCells", null);
 			} finally {
 				if (session != null && session.isOpen()) {
@@ -4313,12 +4440,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 	@ResponseBody
 	public Map<String, Object> POItStNdtpNd(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
-		// logger.info("Welcome home! The client locale is {}.", locale);
-
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		// ObjectMapper mapper = new ObjectMapper();
-		Session session = null;
-		Transaction tx = null;
 		session = almsessions.getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
@@ -4329,25 +4451,33 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			try {
 
 				rtn.put("listPO",
-						((List<Object[]>) session.createSQLQuery("SELECT distinct a.PO_ID,"
+						((List<Object[]>) session.createNativeQuery("SELECT distinct a.PO_ID,"
 								+ "(select count(*) from ASSET_REGISTRY b where b.PO_ID = a.PO_ID) as countItem"
 								+ " FROM ASSET_REGISTRY a").list()));
 
 			} catch (Exception e) {
-				logger.info("Error in retreiving Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving PO Data from database in method POItStNdtpNd due to \n " + exceptionAsString);
+				logger.info("Error in retreiving PO Data from database in method POItStNdtpNd due to \n " + exceptionAsString);															
 				rtn.put("listPO", null);
 			}
 			try {
-				rtn.put("itemList", ((List<Object[]>) session.createSQLQuery(
+				rtn.put("itemList", ((List<Object[]>) session.createNativeQuery(
 						"SELECT distinct ITEM_CODE, ITEM_NAME, PO_ID,ITEM_MODEL FROM ASSET_REGISTRY where PO_ID is not null and ITEM_CODE is not null")
 						.list()));
 			} catch (Exception e) {
-				logger.info("Error in retreiving items Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Items Data from database in method POItStNdtpNd due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Items Data from database in method POItStNdtpNd due to \n " + exceptionAsString);															
 				rtn.put("itemList", null);
 			}
 			try {
 				rtn.put("listsite", ((List<Object[]>) session
-						.createSQLQuery("SELECT distinct b.SITE_ID,b.WARE_NAME,b.WARE_ID,j.ITEM_CODE,j.PO_ID,"
+						.createNativeQuery("SELECT distinct b.SITE_ID,b.WARE_NAME,b.WARE_ID,j.ITEM_CODE,j.PO_ID,"
 								+ "(SELECT a.LATITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LATITUDE,"
 								+ "(SELECT a.LONGITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LONGITUDE,"
 								+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID  and w.ACTIVE_RECORD = '1') as countnodes,"
@@ -4358,24 +4488,36 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						.list()));
 
 			} catch (Exception e) {
-				logger.info("Error in retreiving sites Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Sites Data from database in method POItStNdtpNd due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Sites Data from database in method POItStNdtpNd due to \n " + exceptionAsString);															
 				rtn.put("listsite", null);
 			}
 			try {
-				rtn.put("listNodesType", ((List<Object[]>) session.createSQLQuery(
+				rtn.put("listNodesType", ((List<Object[]>) session.createNativeQuery(
 						"SELECT DISTINCT a.NODE_TYPE,a.WARE_ID,b.ITEM_CODE FROM NODE_ACTIVE a,ASSET_REGISTRY b WHERE a.ACTIVE_RECORD = '1' and a.WARE_ID=b.WARE_ID")
 						.list()));
 
 			} catch (Exception e) {
-				logger.info("Error in retreiving node type Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Node Type Data from database in method POItStNdtpNd due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Node Type Data from database in method POItStNdtpNd due to \n " + exceptionAsString);															
 				rtn.put("listNodesType", null);
 			}
 			try {
-				rtn.put("listNodes", ((List<Object[]>) session.createSQLQuery(
+				rtn.put("listNodes", ((List<Object[]>) session.createNativeQuery(
 						"SELECT NODE_NAME,NODE_TYPE,NODE_PK,WARE_ID,SITE_ID FROM NODE_ACTIVE a WHERE ACTIVE_RECORD = '1' and NODE_PK!='0'")
 						.list()));
 			} catch (Exception e) {
-				logger.info("Error in retreiving nodes Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Nodes Data from database in method POItStNdtpNd due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Nodes Data from database in method POItStNdtpNd due to \n " + exceptionAsString);															
 				rtn.put("listNodes", null);
 			} finally {
 				if (session != null && session.isOpen()) {
@@ -4393,11 +4535,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 	@ResponseBody
 	public Map<String, Object> Node(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
-		// logger.info("Welcome home! The client locale is {}.", locale);
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		ObjectMapper mapper = new ObjectMapper();
-		Session session = null;
-		Transaction tx = null;
 		session = almsessions.getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
@@ -4406,13 +4544,15 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
-
-				List<Object[]> listNodes = (List<Object[]>) session.createSQLQuery(
+					rtn.put("listNodes", (List<Object[]>) session.createNativeQuery(
 						"SELECT a.NODE_PK,a.NODE_NAME,a.NODE_TYPE,(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and ACTIVE_RECORD = '1') as countGCells,(select count(*) from NODE_LCELL c  where a.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1') as countLCells,(select count(*) from NODE_UCELL d  where a.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1') as countUCells FROM NODE_ACTIVE a WHERE a.ACTIVE_RECORD = '1'")
-						.list();
-				rtn.put("listNodes", listNodes);
+						.list());
 			} catch (Exception e) {
-				logger.info("Error in retreiving nodes Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Nodes Data from database in method Node due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Nodes Data from database in method Node due to \n " + exceptionAsString);															
 				rtn.put("listNodes", null);
 			} finally {
 				if (session != null && session.isOpen()) {
@@ -4430,12 +4570,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 	@ResponseBody
 	public Map<String, Object> findNodeType_Nodes(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
-		// logger.info("Welcome home! The client locale is {}.", locale);
-
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		// ObjectMapper mapper = new ObjectMapper();
-		Session session = null;
-		Transaction tx = null;
 		session = almsessions.getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
@@ -4445,39 +4580,38 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			tx = session.beginTransaction();
 			String paramEnterprise = request.getParameter("paramEnterprise");
 			if (paramEnterprise.equals("true")) {
-			//System.out.println("parm true...node type..."+ paramEnterprise);
-			
-			try {
-				String selectedItem = request.getParameter("selectedItem");	
-			
+		try {
+				String selectedItem = request.getParameter("selectedItem");			
 				if (selectedItem != null) {
 					try {
-						List<Object[]> nodeList = (List<Object[]>) session.createSQLQuery(
+						rtn.put("listNodes",  (List<Object[]>) session.createNativeQuery(
 								"SELECT a.NODE_PK,a.SITE_ID,a.NODE_NAME,a.NODE_TYPE,a.WARE_ID,"
 								+ "(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and ACTIVE_RECORD = '1' and b.DOMAIN='Enterprise') as countGCells,"
 								+ "(select count(*) from NODE_LCELL c  where a.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1' and c.DOMAIN='Enterprise') as countLCells,"
 								+ "(select count(*) from NODE_UCELL d  where a.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1' and d.DOMAIN='Enterprise') as countUCells "
 								+ "FROM NODE_ACTIVE a WHERE a.ACTIVE_RECORD = '1' and a.NODE_TYPE='"
 										+ selectedItem + "' AND a.DOMAIN='Enterprise'")
-								.list();
-						//System.out.println("===>nodeList	" + nodeList);
-						rtn.put("listNodes", nodeList);
+								.list());
 					} catch (Exception e) {
-						logger.info("Error in retreiving nodes Data from database" + exceptionAsString);
+						sw = new StringWriter();
+						e.printStackTrace(new PrintWriter(sw));
+						exceptionAsString = sw.toString();
+						logger.finest("Error in retreiving Nodes Data from database in method findNodeType_Nodes due to \n " + exceptionAsString);
+						logger.info("Error in retreiving Nodes Data from database in method findNodeType_Nodes due to \n " + exceptionAsString);															
 						rtn.put("listNodes", null);
 					}
 				}else {
 					String selectedNode = request.getParameter("selectedNode");
 					try {
-						List<Object[]> result = session.createSQLQuery(
+						List<Object[]> result = session.createNativeQuery(
 								"SELECT GCELL_ID,CELLNAME,NODE_PK FROM NODE_GCELL WHERE ACTIVE_RECORD = '1' and NODE_PK='"
 										+ selectedNode + "' AND DOMAIN='Enterprise'")
 								.list();
-						List<Object[]> result1 = session.createSQLQuery(
+						List<Object[]> result1 = session.createNativeQuery(
 								"SELECT LCELL_ID,CELLNAME,NODE_PK FROM NODE_LCELL WHERE ACTIVE_RECORD = '1'  and NODE_PK='"
 										+ selectedNode + "' AND DOMAIN='Enterprise'")
 								.list();
-						List<Object[]> result2 = session.createSQLQuery(
+						List<Object[]> result2 = session.createNativeQuery(
 								"SELECT UCELL_ID,CELLNAME,NODE_PK FROM NODE_UCELL WHERE ACTIVE_RECORD = '1' and NODE_PK='"
 										+ selectedNode + "' AND DOMAIN='Enterprise'")
 								.list();
@@ -4493,38 +4627,41 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						if (!result2.isEmpty()) {
 							cellResult.addAll(result2);
 						}
-						
-						//System.out.println("selected node : " + selectedNode);
 						rtn.put("listCells", cellResult);
 					} catch (Exception e) {
-						logger.info("Error in retreiving cells Data from database" + exceptionAsString);
+						sw = new StringWriter();
+						e.printStackTrace(new PrintWriter(sw));
+						exceptionAsString = sw.toString();
+						logger.finest("Error in retreiving Cells Data from database in method findNodeType_Nodes due to \n " + exceptionAsString);
+						logger.info("Error in retreiving Cells Data from database in method findNodeType_Nodes due to \n " + exceptionAsString);															
 						rtn.put("listCells", null);
 					}
 				}
 			} catch (Exception e) {
-				logger.info("Error in retreiving cells Data from database" + exceptionAsString);
-			} 
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Cells Data from database in method findNodeType_Nodes due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Cells Data from database in method findNodeType_Nodes due to \n " + exceptionAsString);															
+				} 
 		}else{
-			//System.out.println("parm false...node type..."+ paramEnterprise);
-			
 			try {
-				String selectedItem = request.getParameter("selectedItem");	
-			
+				String selectedItem = request.getParameter("selectedItem");				
 				if (selectedItem != null) {
 					try {
-						List<Object[]> nodeList = (List<Object[]>) session.createSQLQuery(
+						rtn.put("listNodes", (List<Object[]>) session.createNativeQuery(
 								"SELECT a.NODE_PK,a.SITE_ID,a.NODE_NAME,a.NODE_TYPE,a.WARE_ID,"
 								+ "(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and ACTIVE_RECORD = '1') as countGCells,"
 								+ "(select count(*) from NODE_LCELL c  where a.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1') as countLCells,"
 								+ "(select count(*) from NODE_UCELL d  where a.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1') as countUCells "
 								+ "FROM NODE_ACTIVE a WHERE a.ACTIVE_RECORD = '1' and a.NODE_TYPE='"
-										+ selectedItem + "'")
-								
-								.list();
-						//System.out.println("===>nodeList	" + mapper.writeValueAsString(nodeList));
-						rtn.put("listNodes", nodeList);
+										+ selectedItem + "'").list());
 					} catch (Exception e) {
-						logger.info("Error in retreiving nodes Data from database" + exceptionAsString);
+						sw = new StringWriter();
+						e.printStackTrace(new PrintWriter(sw));
+						exceptionAsString = sw.toString();
+						logger.finest("Error in retreiving Nodes Data from database in method findNodeType_Nodes due to \n " + exceptionAsString);
+						logger.info("Error in retreiving Nodes Data from database in method findNodeType_Nodes due to \n " + exceptionAsString);															
 						rtn.put("listNodes", null);
 					}
 				}
@@ -4532,15 +4669,15 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				else {
 					String selectedNode = request.getParameter("selectedNode");
 					try {
-						List<Object[]> result = session.createSQLQuery(
+						List<Object[]> result = session.createNativeQuery(
 								"SELECT GCELL_ID,CELLNAME,NODE_PK FROM NODE_GCELL WHERE ACTIVE_RECORD = '1' and NODE_PK='"
 										+ selectedNode + "'")
 								.list();
-						List<Object[]> result1 = session.createSQLQuery(
+						List<Object[]> result1 = session.createNativeQuery(
 								"SELECT LCELL_ID,CELLNAME,NODE_PK FROM NODE_LCELL WHERE ACTIVE_RECORD = '1'  and NODE_PK='"
 										+ selectedNode + "'")
 								.list();
-						List<Object[]> result2 = session.createSQLQuery(
+						List<Object[]> result2 = session.createNativeQuery(
 								"SELECT UCELL_ID,CELLNAME,NODE_PK FROM NODE_UCELL WHERE ACTIVE_RECORD = '1' and NODE_PK='"
 										+ selectedNode + "'")
 								.list();
@@ -4556,16 +4693,22 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						if (!result2.isEmpty()) {
 							cellResult.addAll(result2);
 						}
-						
-						//System.out.println("selected node : " + selectedNode);
 						rtn.put("listCells", cellResult);
 					} catch (Exception e) {
-						logger.info("Error in retreiving cells Data from database" + exceptionAsString);
+						sw = new StringWriter();
+						e.printStackTrace(new PrintWriter(sw));
+						exceptionAsString = sw.toString();
+						logger.finest("Error in retreiving Cells Data from database in method findNodeType_Nodes due to \n " + exceptionAsString);
+						logger.info("Error in retreiving Cells Data from database in method findNodeType_Nodes due to \n " + exceptionAsString);															
 						rtn.put("listCells", null);
 					}
 				}
 			} catch (Exception e) {
-				logger.info("Error in retreiving cells Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Cells Data from database in method findNodeType_Nodes due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Cells Data from database in method findNodeType_Nodes due to \n " + exceptionAsString);															
 			} 
 		}
 		//finally {
@@ -4584,12 +4727,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 		@ResponseBody
 		public Map<String, Object> findNode_Cells(Locale locale, Model model, HttpServletRequest request,
 				HttpServletResponse response) throws JsonProcessingException {
-			// logger.info("Welcome home! The client locale is {}.", locale);
-
 			Map<String, Object> rtn = new LinkedHashMap<>();
-			// ObjectMapper mapper = new ObjectMapper();
-			Session session = null;
-			Transaction tx = null;
 			session = almsessions.getSession();
 			if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				rtn.put("Login", LoginServices.checkSession(request, response));
@@ -4609,8 +4747,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			try {
 				
 				if (selectedNdTyp == null) {
-					//System.out.println("selectedNdTyp NULL");
-			        List<Object[]> cellResult = new ArrayList<Object[]>();
+					List<Object[]> cellResult = new ArrayList<Object[]>();
 					String strCells1 ="SELECT g.GCELL_ID,g.CELLNAME,g.NODE_PK FROM NODE_GCELL g WHERE g.ACTIVE_RECORD = '1' and g.NODE_PK='"+ selectedNode + "' "; 
 					String strCells2 ="SELECT l.LCELL_ID,l.CELLNAME,l.NODE_PK FROM NODE_LCELL l WHERE l.ACTIVE_RECORD = '1' and l.NODE_PK='"+ selectedNode + "' "; 
 					String strCells3 ="SELECT u.UCELL_ID,u.CELLNAME,u.NODE_PK FROM NODE_UCELL u WHERE u.ACTIVE_RECORD = '1' and u.NODE_PK='"+ selectedNode + "' ";		
@@ -4619,20 +4756,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					strCells2= boqDomainVar ("l",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);						
 					strCells3= boqDomainVar ("u",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);	
 				
-					//System.out.println("final query cells 1 "+mapper.writeValueAsString(strCells1));
-					//System.out.println("final query cells 2 "+mapper.writeValueAsString(strCells2));
-					//System.out.println("final query cells 3 "+mapper.writeValueAsString(strCells3));
-					
-					Query query1 = session.createSQLQuery(strCells1);
-					Query query2 = session.createSQLQuery(strCells2);
-					Query query3 = session.createSQLQuery(strCells3);
+					Query query1 = session.createNativeQuery(strCells1);
+					Query query2 = session.createNativeQuery(strCells2);
+					Query query3 = session.createNativeQuery(strCells3);
 					cellResult.addAll(query1.list());
 					cellResult.addAll(query2.list());
 					cellResult.addAll(query3.list());
 					
 					rtn.put("listCells", cellResult);
-					//System.out.println("list cells ==> "+ mapper.writeValueAsString(cellResult));
-					
 					} else {
 						System.out.println("selectedNdTyp !NULL");
 				        List<Object[]> cellResult = new ArrayList<Object[]>();
@@ -4645,24 +4776,23 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						
 						strCells1= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells1);	
 						strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);						
-						strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);	
-					
-						//System.out.println("final query cells 1 "+mapper.writeValueAsString(strCells1));
-						//System.out.println("final query cells 2 "+mapper.writeValueAsString(strCells2));
-						//System.out.println("final query cells 3 "+mapper.writeValueAsString(strCells3));
+						strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);
 						
-						Query query1 = session.createSQLQuery(strCells1);
-						Query query2 = session.createSQLQuery(strCells2);
-						Query query3 = session.createSQLQuery(strCells3);
+						Query query1 = session.createNativeQuery(strCells1);
+						Query query2 = session.createNativeQuery(strCells2);
+						Query query3 = session.createNativeQuery(strCells3);
 						cellResult.addAll(query1.list());
 						cellResult.addAll(query2.list());
 						cellResult.addAll(query3.list());
 						
 						rtn.put("listCells",cellResult);
-						//System.out.println("list cells ==> "+ mapper.writeValueAsString(cellResult));
 					}	
 				} catch (Exception e) {
-					logger.info("Error in retreiving cells Data from database" + exceptionAsString);
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving Cells Data from database in method findNode_Cells due to \n " + exceptionAsString);
+					logger.info("Error in retreiving Cells Data from database in method findNode_Cells due to \n " + exceptionAsString);															
 					rtn.put("listCells", null);
 				} finally {
 					if (session != null && session.isOpen()) {
@@ -4682,12 +4812,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 		@ResponseBody
 		public Map<String, Object> findNodeTypeSiteNode_Cells(Locale locale, Model model, HttpServletRequest request,
 				HttpServletResponse response) throws JsonProcessingException {
-			// logger.info("Welcome home! The client locale is {}.", locale);
-
 			Map<String, Object> rtn = new LinkedHashMap<>();
-			ObjectMapper mapper = new ObjectMapper();
-			Session session = null;
-			Transaction tx = null;
 			session = almsessions.getSession();
 			if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				rtn.put("Login", LoginServices.checkSession(request, response));
@@ -4695,8 +4820,6 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			}
 			if (session != null && session.isOpen()) {
 				tx = session.beginTransaction();
-				//System.out.println("HEY HEY");
-				//String selectedNode = request.getParameter("selectedNode");
 				String selectedNdTyp = request.getParameter("selectedNodetType");
 				String selectedItem = request.getParameter("selectedItem");
 				
@@ -4705,11 +4828,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				String paramAccess = request.getParameter("paramAccess");
 				String paramCore = request.getParameter("paramCore");
 					
-				List<Object[]> listSites = new ArrayList<Object[]>();
 				String strSites ="SELECT distinct SITE_ID,WARE_NAME,WARE_ID,NODE_TYPE,LONGITUDE,LATITUDE FROM NODE_ACTIVE "
 						+ "where ACTIVE_RECORD = '1' and WARE_ID!= 'null' and WARE_ID is not null and WARE_ID!= '0' and NODE_TYPE='"+ selectedNdTyp + "' ";
 				
-				List<Object[]> listNodes = new ArrayList<Object[]>();
 				String strNodes ="SELECT a.NODE_PK,a.SITE_ID,a.NODE_NAME,a.WARE_ID,a.NODE_TYPE,"
 						+"(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and b.ACTIVE_RECORD = '1' ";
 			
@@ -4722,13 +4843,13 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					  if (selectedNdTyp != null) {
 						try {
 							strSites= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strSites);	
-							//System.out.println("final query sites"+mapper.writeValueAsString(strSites));
-							Query query = session.createSQLQuery(strSites);
-							listSites = query.list();
-							rtn.put("listSites",listSites);
-							//System.out.println("list sites ==> "+ mapper.writeValueAsString(listSites));
+							rtn.put("listSites",session.createNativeQuery(strSites).list());
 						} catch (Exception e) {
-							logger.info("Error in retreiving sites Data from database" + exceptionAsString);
+							sw = new StringWriter();
+							e.printStackTrace(new PrintWriter(sw));
+							exceptionAsString = sw.toString();
+							logger.finest("Error in retreiving Sites Data from database in method findNodeTypeSiteNode_Cells due to \n " + exceptionAsString);
+							logger.info("Error in retreiving Sites Data from database in method findNodeTypeSiteNode_Cells due to \n " + exceptionAsString);															
 							rtn.put("listSites", null);
 						}
 					}
@@ -4742,14 +4863,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strNodes= boqDomainVar ("d",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);	
 							strNodes= strNodes + ") as countUcells FROM NODE_ACTIVE a WHERE a.ACTIVE_RECORD = '1' and a.WARE_ID='"+ selectedItem + "' and a.NODE_TYPE='" + selectedNdTyp + "' ";
 							strNodes= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);	
-								
-							//System.out.println("final query nodes"+mapper.writeValueAsString(strNodes));
-							Query query = session.createSQLQuery(strNodes);
-							listNodes = query.list();
-							rtn.put("listNodes", listNodes);
-							//System.out.println("list nodes ==> "+ mapper.writeValueAsString(listNodes));
+							
+							rtn.put("listNodes", session.createNativeQuery(strNodes).list());
 						} catch (Exception e) {
-							logger.info("Error in retreiving nodes Data from database" + exceptionAsString);
+							sw = new StringWriter();
+							e.printStackTrace(new PrintWriter(sw));
+							exceptionAsString = sw.toString();
+							logger.finest("Error in retreiving Nodes Data from database in method Network_StNdCell due to \n " + exceptionAsString);
+							logger.info("Error in retreiving Nodes Data from database in method Network_StNdCell due to \n " + exceptionAsString);															
 							rtn.put("listNodes", null);
 						}
 					}		
@@ -4760,28 +4881,31 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);		
 							strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);		
 						
-							//System.out.println("final query cells 1 "+mapper.writeValueAsString(strCells1));
-							//System.out.println("final query cells 2 "+mapper.writeValueAsString(strCells2));
-							//System.out.println("final query cells 3 "+mapper.writeValueAsString(strCells3));
-							
-							Query query1 = session.createSQLQuery(strCells1);
-							Query query2 = session.createSQLQuery(strCells2);
-							Query query3 = session.createSQLQuery(strCells3);
+							Query query1 = session.createNativeQuery(strCells1);
+							Query query2 = session.createNativeQuery(strCells2);
+							Query query3 = session.createNativeQuery(strCells3);
 							cellResult.addAll(query1.list());
 							cellResult.addAll(query2.list());
 							cellResult.addAll(query3.list());
 							
 							rtn.put("listCells", cellResult);
-							//System.out.println("list cells ==> "+ mapper.writeValueAsString(cellResult));
-							
 						} catch (Exception e) {
-							logger.info("Error in retreiving nodes Data from database" + exceptionAsString);
+							sw = new StringWriter();
+							e.printStackTrace(new PrintWriter(sw));
+							exceptionAsString = sw.toString();
+							logger.finest("Error in retreiving Cells Data from database in method findNodeTypeSiteNode_Cells due to \n " + exceptionAsString);
+							logger.info("Error in retreiving Cells Data from database in method findNodeTypeSiteNode_Cells due to \n " + exceptionAsString);															
 							rtn.put("listCells", null);
 						}
 					}
 				} 
 				catch (Exception e) {
-					logger.info("Error in retreiving Data from database" + exceptionAsString);
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving Data from database in method findNodeTypeSiteNode_Cells due to \n " + exceptionAsString);
+					logger.info("Error in retreiving Data from database in method findNodeTypeSiteNode_Cells due to \n " + exceptionAsString);															
+					
 				} finally {
 					if (session != null && session.isOpen()) {
 						tx.commit();
@@ -4795,17 +4919,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 
 	// retrieve po/items/sites data in PO-Items-Sites method
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/findPOItems_sites", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> findPOItems_sites(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
-// logger.info("Welcome home! The client locale is {}.", locale);
-
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		// ObjectMapper mapper = new ObjectMapper();
-		Session session = null;
-		Transaction tx = null;
 		session = almsessions.getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
@@ -4824,46 +4942,40 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			String paramAccess = request.getParameter("paramAccess");
 			String paramCore = request.getParameter("paramCore");
 			
-			List<String> itemList = new ArrayList<String>();
 			String strItems ="SELECT distinct a.ITEM_CODE, a.ITEM_NAME, a.PO_ID, a.ITEM_MODEL FROM ASSET_REGISTRY a WHERE a.PO_ID='"+selectedPo+"' ";			
 		
-			List<String> listSites = new ArrayList<String>();
 			String strSites ="SELECT DISTINCT b.SITE_ID,b.SITE_NAME,b.WARE_ID,j.ITEM_CODE,j.PO_ID FROM AR_SITE b,ASSET_REGISTRY j where j.AR_ID=b.AR_ID AND b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and j.PO_ID='" + selectedPo + "' and j.ITEM_CODE='" + selectedItem + "' ";		
 			
 			
 			if (POAlreadyCreated.equals("false")) {
 				try {
 					strItems= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strItems);
-					
-					//System.out.println("final query items"+mapper.writeValueAsString(strItems));
-					Query query = session.createSQLQuery(strItems);
-					itemList = query.list();
-					rtn.put("listItem", itemList);
-					//System.out.println("list items ==> "+ mapper.writeValueAsString(itemList));											
-
+					rtn.put("listItem", session.createNativeQuery(strItems).list());
 				} catch (Exception e) {
-					logger.info("Error in retreiving items Data from database" + exceptionAsString);
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving Items Data from database in method findPOItems_sites due to \n " + exceptionAsString);
+					logger.info("Error in retreiving Items Data from database in method findPOItems_sites due to \n " + exceptionAsString);															
 					rtn.put("listItem", null);
 				}
 			}
 			else {
 				try {
 					strSites= boqDomainVar ("j",paramEnterprise,paramTransmission,paramAccess,paramCore,strSites);
-					
-					//System.out.println("final query sites"+mapper.writeValueAsString(strSites));
-					Query query = session.createSQLQuery(strSites);
-					listSites = query.list();
-					rtn.put("listSites", listSites);
-					//System.out.println("list sites ==> "+ mapper.writeValueAsString(listSites));											
-
+					rtn.put("listSites", session.createNativeQuery(strSites).list());
 				} catch (Exception e) {
-					logger.info("Error in retreiving sites Data from database" + exceptionAsString);
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving Sites Data from database in method findPOItems_sites due to \n " + exceptionAsString);
+					logger.info("Error in retreiving Sites Data from database in method findPOItems_sites due to \n " + exceptionAsString);															
 					rtn.put("listSites", null);
 				}
 /*
 					if (SelectedSite != null) {
 						try {
-							List<Object[]> listNodesType = (List<Object[]>) session.createSQLQuery(
+							List<Object[]> listNodesType = (List<Object[]>) session.createNativeQuery(
 									"SELECT DISTINCT a.NODE_TYPE,a.WARE_ID,b.ITEM_CODE FROM NODE_ACTIVE a,ASSET_REGISTRY b "
 									+ "WHERE a.ACTIVE_RECORD = '1' and b.DOMAIN='Enterprise' and a.WARE_ID=b.WARE_ID and b.PO_ID='" + selectedPo + "' and b.ITEM_CODE='" + selectedItem + "' and b.WARE_ID='"
 											+ SelectedSite + "'")
@@ -4878,7 +4990,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					String selectedNodetType = request.getParameter("selectedNodetType");
 					if (selectedNodetType != null) {
 						try {
-							List<Object[]> listNodes = (List<Object[]>) session.createSQLQuery(
+							List<Object[]> listNodes = (List<Object[]>) session.createNativeQuery(
 									"SELECT DISTINCT a.NODE_NAME,a.NODE_TYPE,a.NODE_PK,a.WARE_ID FROM NODE_ACTIVE a,ASSET_REGISTRY b WHERE b.DOMAIN='Enterprise' AND a.ACTIVE_RECORD = '1' and a.WARE_ID=b.WARE_ID and b.PO_ID='"
 										+ selectedPo + "' and b.ITEM_CODE='" + selectedItem + "' and b.WARE_ID='"
 										+ SelectedSite + "' and NODE_TYPE='" + selectedNodetType + "'")
@@ -4893,7 +5005,12 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 */					
 				}
 			} catch (Exception e) {
-				logger.info("Error in retreiving Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Data from database in method findPOItems_sites due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Data from database in method findPOItems_sites due to \n " + exceptionAsString);															
+				
 			} finally {
 				if (session != null && session.isOpen()) {
 					tx.commit();
@@ -4912,11 +5029,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 	@ResponseBody
 	public Map<String, Object> FindOnClick_SuppStNdTypNdCell(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
-		// logger.info("Welcome home! The client locale is {}.", locale);
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		// ObjectMapper mapper = new ObjectMapper();
-		Session session = null;
-		Transaction tx = null;
 		session = almsessions.getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
@@ -4935,13 +5048,10 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			String paramAccess = request.getParameter("paramAccess");
 			String paramCore = request.getParameter("paramCore");
 			
-			List<String> site_SuppList = new ArrayList<String>();
 			String strSites ="SELECT distinct b.WARE_NAME,b.WARE_ID,b.LATITUDE,b.LONGITUDE,b.SUPPLIER_ID FROM NODE_ACTIVE b where b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.SUPPLIER_ID='"+ selectedSupp + "' ";
 			
-			List<String> nodeTypeList = new ArrayList<String>();
 			String strNodesType ="SELECT DISTINCT b.NODE_TYPE,b.WARE_ID,b.SUPPLIER_ID FROM NODE_ACTIVE b WHERE b.ACTIVE_RECORD = '1' and b.WARE_ID='"+ selectedItem + "' and b.SUPPLIER_ID='" + selectedSupp + "' ";			
 			
-			List<String> nodeSuppList = new ArrayList<String>();
 			String strNodes ="SELECT NODE_PK,SITE_ID,NODE_NAME,NODE_TYPE,WARE_ID,"
 					+"(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and b.ACTIVE_RECORD = '1' ";			
 			
@@ -4954,31 +5064,27 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				if (selectedSupp != null && selectedItem == null) {
 					try {
 						strSites= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strSites);
-						
-						//System.out.println("final query sites"+mapper.writeValueAsString(strSites));
-						Query query = session.createSQLQuery(strSites);
-						site_SuppList = query.list();
-						rtn.put("listSuppSites",site_SuppList);
-						//System.out.println("list sites ==> "+ mapper.writeValueAsString(site_SuppList));										
-						rtn.put("listSuppSites", site_SuppList);		
+						rtn.put("listSuppSites",session.createNativeQuery(strSites).list());
 						
 					} catch (Exception e) {
-						logger.info("Error in retreiving sites Data from database" + exceptionAsString);
+						sw = new StringWriter();
+						e.printStackTrace(new PrintWriter(sw));
+						exceptionAsString = sw.toString();
+						logger.finest("Error in retreiving Sites Data from database in method FindOnClick_SuppStNdTypNdCell due to \n " + exceptionAsString);
+						logger.info("Error in retreiving Sites Data from database in method FindOnClick_SuppStNdTypNdCell due to \n " + exceptionAsString);															
 						rtn.put("listSuppSites", null);
 					}
 				}
 				if (selectedItem != null) {
 					try {
 						strNodesType= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodesType);
-
-						//System.out.println("final query nodes type"+mapper.writeValueAsString(strNodesType));
-						Query query = session.createSQLQuery(strNodesType);
-						nodeTypeList = query.list();
-						rtn.put("listNodesType", nodeTypeList);	
-						//System.out.println("list nodes type ==> "+ mapper.writeValueAsString(nodeTypeList));												
-							
+						rtn.put("listNodesType", session.createNativeQuery(strNodesType).list());	
 					} catch (Exception e) {
-						logger.info("Error in retreiving node type Data from database" + exceptionAsString);
+						sw = new StringWriter();
+						e.printStackTrace(new PrintWriter(sw));
+						exceptionAsString = sw.toString();
+						logger.finest("Error in retreiving Node Type Data from database in method FindOnClick_SuppStNdTypNdCell due to \n " + exceptionAsString);
+						logger.info("Error in retreiving Node Type Data from database in method FindOnClick_SuppStNdTypNdCell due to \n " + exceptionAsString);															
 						rtn.put("listNodesType", null);
 					}
 				}
@@ -4994,15 +5100,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strNodes = strNodes + ") as countUcells FROM NODE_ACTIVE a WHERE a.ACTIVE_RECORD = '1' and a.WARE_ID='"+ selectedItem + "' and a.NODE_TYPE='" + selectedNodetType + "' and a.SUPPLIER_ID='"+ selectedSupp +"' ";			
 						strNodes= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);		
 						
-						//System.out.println("final query nodes"+mapper.writeValueAsString(strNodes));
-						Query query = session.createSQLQuery(strNodes);
-						nodeSuppList = query.list();
-						rtn.put("listNodes", nodeSuppList);
-						//System.out.println("list nodes ==> "+ mapper.writeValueAsString(nodeSuppList));
-						
+						rtn.put("listNodes", session.createNativeQuery(strNodes).list());
 						} catch (Exception e) {
-						logger.info("Error in retreiving nodes Data from database" + exceptionAsString);
-						rtn.put("listNodes", null);
+							sw = new StringWriter();
+							e.printStackTrace(new PrintWriter(sw));
+							exceptionAsString = sw.toString();
+							logger.finest("Error in retreiving Nodes Data from database in method FindOnClick_SuppStNdTypNdCell due to \n " + exceptionAsString);
+							logger.info("Error in retreiving Nodes Data from database in method FindOnClick_SuppStNdTypNdCell due to \n " + exceptionAsString);															
+							rtn.put("listNodes", null);
 					}
 				}
 				if (selectedNodetType != null) {
@@ -5011,27 +5116,30 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);						
 						strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);	
 					
-						//System.out.println("final query cells 1 "+mapper.writeValueAsString(strCells1));
-						//System.out.println("final query cells 2 "+mapper.writeValueAsString(strCells2));
-						//System.out.println("final query cells 3 "+mapper.writeValueAsString(strCells3));
-						
-						Query query1 = session.createSQLQuery(strCells1);
-						Query query2 = session.createSQLQuery(strCells2);
-						Query query3 = session.createSQLQuery(strCells3);
+						Query query1 = session.createNativeQuery(strCells1);
+						Query query2 = session.createNativeQuery(strCells2);
+						Query query3 = session.createNativeQuery(strCells3);
 						cellResult.addAll(query1.list());
 						cellResult.addAll(query2.list());
 						cellResult.addAll(query3.list());
 						
 						rtn.put("listCells",cellResult);
-						//System.out.println("list cells ==> "+ mapper.writeValueAsString(cellResult));
-
 						} catch (Exception e) {
-						logger.info("Error in retreiving nodes Data from database" + exceptionAsString);
-						rtn.put("listCells", null);
+							sw = new StringWriter();
+							e.printStackTrace(new PrintWriter(sw));
+							exceptionAsString = sw.toString();
+							logger.finest("Error in retreiving Cells Data from database in method FindOnClick_SuppStNdTypNdCell due to \n " + exceptionAsString);
+							logger.info("Error in retreiving Cells Data from database in method FindOnClick_SuppStNdTypNdCell due to \n " + exceptionAsString);															
+							rtn.put("listCells", null);
 					}
 				}
 			} catch (Exception e) {
-				logger.info("Error in retreiving Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Data from database in method FindOnClick_SuppStNdTypNdCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Data from database in method FindOnClick_SuppStNdTypNdCell due to \n " + exceptionAsString);															
+				
 			} finally {
 				if (session != null && session.isOpen()) {
 					tx.commit();
@@ -5048,11 +5156,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 	@ResponseBody
 	public Map<String, Object> FindOnClick_VenStNdTypNdCell(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
-		// logger.info("Welcome home! The client locale is {}.", locale);
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		// ObjectMapper mapper = new ObjectMapper();
-		Session session = null;
-		Transaction tx = null;
 		session = almsessions.getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
@@ -5071,13 +5175,10 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			String paramAccess = request.getParameter("paramAccess");
 			String paramCore = request.getParameter("paramCore");
 			
-			List<String> site_VenList = new ArrayList<String>();
 			String strSites ="SELECT distinct b.WARE_NAME,b.WARE_ID,b.LATITUDE,b.LONGITUDE,b.VENDOR FROM NODE_ACTIVE b where b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.VENDOR='"+ selectedVen + "' ";
 			
-			List<String> nodeTypeList = new ArrayList<String>();
 			String strNodesType ="SELECT DISTINCT b.NODE_TYPE,b.WARE_ID,b.VENDOR FROM NODE_ACTIVE b WHERE b.ACTIVE_RECORD = '1' and b.WARE_ID='"+ selectedItem + "' and b.VENDOR='" + selectedVen + "' ";			
 			
-			List<String> nodeVenList = new ArrayList<String>();
 			String strNodes ="SELECT NODE_PK,SITE_ID,NODE_NAME,NODE_TYPE,WARE_ID,"
 					+"(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and b.ACTIVE_RECORD = '1' ";			
 			
@@ -5090,31 +5191,27 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				if (selectedVen != null && selectedItem == null) {
 					try {
 						strSites= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strSites);
-						
-						//System.out.println("final query sites"+mapper.writeValueAsString(strSites));
-						Query query = session.createSQLQuery(strSites);
-						site_VenList = query.list();
-						rtn.put("listVenSites",site_VenList);
-						//System.out.println("list sites ==> "+ mapper.writeValueAsString(site_SuppList));										
-						rtn.put("listVenSites", site_VenList);		
+						rtn.put("listVenSites",session.createNativeQuery(strSites).list());
 						
 					} catch (Exception e) {
-						logger.info("Error in retreiving sites Data from database" + exceptionAsString);
+						sw = new StringWriter();
+						e.printStackTrace(new PrintWriter(sw));
+						exceptionAsString = sw.toString();
+						logger.finest("Error in retreiving Sites Data from database in method FindOnClick_VenStNdTypNdCell due to \n " + exceptionAsString);
+						logger.info("Error in retreiving Sites Data from database in method FindOnClick_VenStNdTypNdCell due to \n " + exceptionAsString);															
 						rtn.put("listVenSites", null);
 					}
 				}
 				if (selectedItem != null) {
 					try {
 						strNodesType= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodesType);
-
-						//System.out.println("final query nodes type"+mapper.writeValueAsString(strNodesType));
-						Query query = session.createSQLQuery(strNodesType);
-						nodeTypeList = query.list();
-						rtn.put("listNodesType", nodeTypeList);	
-						//System.out.println("list nodes type ==> "+ mapper.writeValueAsString(nodeTypeList));												
-							
+						rtn.put("listNodesType", session.createNativeQuery(strNodesType).list());	
 					} catch (Exception e) {
-						logger.info("Error in retreiving node type Data from database" + exceptionAsString);
+						sw = new StringWriter();
+						e.printStackTrace(new PrintWriter(sw));
+						exceptionAsString = sw.toString();
+						logger.finest("Error in retreiving Node Type Data from database in method FindOnClick_VenStNdTypNdCell due to \n " + exceptionAsString);
+						logger.info("Error in retreiving Node Type Data from database in method FindOnClick_VenStNdTypNdCell due to \n " + exceptionAsString);															
 						rtn.put("listNodesType", null);
 					}
 				}
@@ -5130,15 +5227,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strNodes = strNodes + ") as countUcells FROM NODE_ACTIVE a WHERE a.ACTIVE_RECORD = '1' and a.WARE_ID='"+ selectedItem + "' and a.NODE_TYPE='" + selectedNodetType + "' and a.VENDOR='"+ selectedVen +"' ";			
 						strNodes= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);		
 						
-						//System.out.println("final query nodes"+mapper.writeValueAsString(strNodes));
-						Query query = session.createSQLQuery(strNodes);
-						nodeVenList = query.list();
-						rtn.put("listNodes", nodeVenList);
-						//System.out.println("list nodes ==> "+ mapper.writeValueAsString(nodeSuppList));
-						
+						rtn.put("listNodes", session.createNativeQuery(strNodes).list());
 						} catch (Exception e) {
-						logger.info("Error in retreiving nodes Data from database" + exceptionAsString);
-						rtn.put("listNodes", null);
+							sw = new StringWriter();
+							e.printStackTrace(new PrintWriter(sw));
+							exceptionAsString = sw.toString();
+							logger.finest("Error in retreiving Nodes Data from database in method Network_StNdCell due to \n " + exceptionAsString);
+							logger.info("Error in retreiving Nodes Data from database in method Network_StNdCell due to \n " + exceptionAsString);															
+							rtn.put("listNodes", null);
 					}
 				}
 				if (selectedNodetType != null) {
@@ -5147,27 +5243,30 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);						
 						strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);	
 					
-						//System.out.println("final query cells 1 "+mapper.writeValueAsString(strCells1));
-						//System.out.println("final query cells 2 "+mapper.writeValueAsString(strCells2));
-						//System.out.println("final query cells 3 "+mapper.writeValueAsString(strCells3));
-						
-						Query query1 = session.createSQLQuery(strCells1);
-						Query query2 = session.createSQLQuery(strCells2);
-						Query query3 = session.createSQLQuery(strCells3);
+						Query query1 = session.createNativeQuery(strCells1);
+						Query query2 = session.createNativeQuery(strCells2);
+						Query query3 = session.createNativeQuery(strCells3);
 						cellResult.addAll(query1.list());
 						cellResult.addAll(query2.list());
 						cellResult.addAll(query3.list());
 						
 						rtn.put("listCells",cellResult);
-						//System.out.println("list cells ==> "+ mapper.writeValueAsString(cellResult));
-
-						} catch (Exception e) {
-						logger.info("Error in retreiving nodes Data from database" + exceptionAsString);
-						rtn.put("listCells", null);
+					} catch (Exception e) {
+							sw = new StringWriter();
+							e.printStackTrace(new PrintWriter(sw));
+							exceptionAsString = sw.toString();
+							logger.finest("Error in retreiving Nodes Data from database in method FindOnClick_VenStNdTypNdCell due to \n " + exceptionAsString);
+							logger.info("Error in retreiving Nodes Data from database in method FindOnClick_VenStNdTypNdCell due to \n " + exceptionAsString);															
+							rtn.put("listCells", null);
 					}
 				}
 			} catch (Exception e) {
-				logger.info("Error in retreiving Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Data from database in method FindOnClick_VenStNdTypNdCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Data from database in method FindOnClick_VenStNdTypNdCell due to \n " + exceptionAsString);															
+				
 			} finally {
 				if (session != null && session.isOpen()) {
 					tx.commit();
@@ -5181,17 +5280,12 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 	
 	// retrieve supp/sites/nodetype/node/cells data in
 	// Supp-nodetype-site-nodes-cells method
-
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/FindOnClick_SuppNdTSiteNodeCell", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> FindOnClick_SuppNdTSiteNodeCell(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
-		// logger.info("Welcome home! The client locale is {}.", locale);
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		ObjectMapper mapper = new ObjectMapper();
-		Session session = null;
-		Transaction tx = null;
 		session = almsessions.getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
@@ -5209,13 +5303,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				String paramAccess = request.getParameter("paramAccess");
 				String paramCore = request.getParameter("paramCore");
 				
-				List<String> site_SuppList = new ArrayList<String>();
 				String strSites ="SELECT distinct b.WARE_NAME,b.WARE_ID,b.LATITUDE,b.LONGITUDE,b.SUPPLIER_ID,b.NODE_TYPE FROM NODE_ACTIVE b where b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.SUPPLIER_ID='"+ selectedSupp + "' AND b.NODE_TYPE='" + SelectedNodeType + "' ";
 				
 				List<String> listNodeType = new ArrayList<String>();
 				String strNodesType ="SELECT DISTINCT b.NODE_TYPE,b.SUPPLIER_ID FROM NODE_ACTIVE b WHERE b.ACTIVE_RECORD = '1' and b.SUPPLIER_ID='" + selectedSupp + "' ";			
 				
-				List<String> nodeSuppList = new ArrayList<String>();
 				String strNodes ="SELECT NODE_PK,SITE_ID,NODE_NAME,WARE_ID,NODE_TYPE,"
 						+"(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and b.ACTIVE_RECORD = '1' ";			
 				
@@ -5229,18 +5321,18 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					if (selectedSupp != null) {
 						try {						
 							strNodesType= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodesType);
-
-							//System.out.println("final query nodes type"+mapper.writeValueAsString(strNodesType));
-							Query query = session.createSQLQuery(strNodesType);
+							Query query = session.createNativeQuery(strNodesType);
 							listNodeType = query.list();
 					
 							if (listNodeType != null) {
-								rtn.put("listNodeType", listNodeType);	
-								//System.out.println("list nodes type ==> "+ mapper.writeValueAsString(listNodeType));												
-									
+								rtn.put("listNodeType", listNodeType);			
 							}
 						} catch (Exception e) {
-							logger.info("Error in retreiving nodes type Data from database" + exceptionAsString);
+							sw = new StringWriter();
+							e.printStackTrace(new PrintWriter(sw));
+							exceptionAsString = sw.toString();
+							logger.finest("Error in retreiving Node Type Data from database in method FindOnClick_SuppNdTSiteNodeCell due to \n " + exceptionAsString);
+							logger.info("Error in retreiving Node Type Data from database in method FindOnClick_SuppNdTSiteNodeCell due to \n " + exceptionAsString);															
 							rtn.put("listNodeType", null);
 						}
 					}
@@ -5248,16 +5340,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					if (selectedSupp != null && SelectedNodeType != null) {					
 						try {
 							strSites= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strSites);
+							rtn.put("listSuppSites",session.createNativeQuery(strSites).list());
 							
-							//System.out.println("final query sites"+mapper.writeValueAsString(strSites));
-							Query query = session.createSQLQuery(strSites);
-							site_SuppList = query.list();
-							rtn.put("listSuppSites",site_SuppList);
-							//System.out.println("list sites ==> "+ mapper.writeValueAsString(site_SuppList));										
-							rtn.put("listSuppSites", site_SuppList);		
-		
 						} catch (Exception e) {
-							logger.info("Error in retreiving sites Data from database" + exceptionAsString);
+							sw = new StringWriter();
+							e.printStackTrace(new PrintWriter(sw));
+							exceptionAsString = sw.toString();
+							logger.finest("Error in retreiving Sites Data from database in method Network_StNdCell due to \n " + exceptionAsString);
+							logger.info("Error in retreiving Sites Data from database in method Network_StNdCell due to \n " + exceptionAsString);															
 							rtn.put("listSuppSites", null);
 						}
 					}
@@ -5274,14 +5364,15 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strNodes = strNodes + ") as countUcells FROM NODE_ACTIVE a WHERE a.ACTIVE_RECORD = '1' and a.WARE_ID='"+ selectedItem + "' and a.NODE_TYPE='" + SelectedNodeType + "' and a.SUPPLIER_ID='"+ selectedSupp +"' ";			
 							strNodes= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);		
 							
-							//System.out.println("final query nodes"+mapper.writeValueAsString(strNodes));
-							Query query = session.createSQLQuery(strNodes);
-							nodeSuppList = query.list();
-							rtn.put("listSuppNodes", nodeSuppList);
+							rtn.put("listSuppNodes", session.createNativeQuery(strNodes).list());
 							//System.out.println("list nodes ==> "+ mapper.writeValueAsString(nodeSuppList));
 				
 						} catch (Exception e) {
-							logger.info("Error in retreiving nodes Data from database" + exceptionAsString);
+							sw = new StringWriter();
+							e.printStackTrace(new PrintWriter(sw));
+							exceptionAsString = sw.toString();
+							logger.finest("Error in retreiving Nodes Data from database in method FindOnClick_SuppNdTSiteNodeCell due to \n " + exceptionAsString);
+							logger.info("Error in retreiving Nodes Data from database in method FindOnClick_SuppNdTSiteNodeCell due to \n " + exceptionAsString);															
 							rtn.put("listSuppNodes", null);
 						}
 					}
@@ -5292,22 +5383,20 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);						
 							strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);	
 						
-							//System.out.println("final query cells 1 "+mapper.writeValueAsString(strCells1));
-							//System.out.println("final query cells 2 "+mapper.writeValueAsString(strCells2));
-							//System.out.println("final query cells 3 "+mapper.writeValueAsString(strCells3));
-							
-							Query query1 = session.createSQLQuery(strCells1);
-							Query query2 = session.createSQLQuery(strCells2);
-							Query query3 = session.createSQLQuery(strCells3);
+							Query query1 = session.createNativeQuery(strCells1);
+							Query query2 = session.createNativeQuery(strCells2);
+							Query query3 = session.createNativeQuery(strCells3);
 							cellResult.addAll(query1.list());
 							cellResult.addAll(query2.list());
 							cellResult.addAll(query3.list());
 							
 							rtn.put("listCells",cellResult);
-							//System.out.println("list cells ==> "+ mapper.writeValueAsString(cellResult));
-
 						} catch (Exception e) {
-							logger.info("Error in retreiving cells Data from database" + exceptionAsString);
+							sw = new StringWriter();
+							e.printStackTrace(new PrintWriter(sw));
+							exceptionAsString = sw.toString();
+							logger.finest("Error in retreiving Cells Data from database in method FindOnClick_SuppNdTSiteNodeCell due to \n " + exceptionAsString);
+							logger.info("Error in retreiving Cells Data from database in method FindOnClick_SuppNdTSiteNodeCell due to \n " + exceptionAsString);															
 							rtn.put("listCells", null);
 						}
 					}
@@ -5317,22 +5406,27 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 /*
 				if (selectedNode != null) {
 					try {
-						List<Object[]> result = session.createSQLQuery(
+						List<Object[]> result = session.createNativeQuery(
 								"SELECT a.GCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_GCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0' and b.NODE_PK='"
 										+ selectedNode + "'")
 								.list();
-						List<Object[]> result1 = session.createSQLQuery(
+						List<Object[]> result1 = session.createNativeQuery(
 								"SELECT a.LCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_LCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0' and b.NODE_PK='"
 										+ selectedNode + "'")
 								.list();
-						List<Object[]> result2 = session.createSQLQuery(
+						List<Object[]> result2 = session.createNativeQuery(
 								"SELECT a.UCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_UCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0' and b.NODE_PK='"
 										+ selectedNode + "'")
 								.list();
 */
 
 			} catch (Exception e) {
-				logger.info("Error in retreiving Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Data from database in method FindOnClick_SuppNdTSiteNodeCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Data from database in method FindOnClick_SuppNdTSiteNodeCell due to \n " + exceptionAsString);															
+				
 			} finally {
 				if (session != null && session.isOpen()) {
 					tx.commit();
@@ -5346,17 +5440,12 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 	// retrieve vendor/sites/nodetype/node/cells data in
 		// Vendor-nodetype-site-nodes-cells method
-
 		@SuppressWarnings("unchecked")
 		@RequestMapping(value = "/FindOnClick_VenNdTSiteNodeCell", method = RequestMethod.GET)
 		@ResponseBody
 		public Map<String, Object> FindOnClick_VenNdTSiteNodeCell(Locale locale, Model model, HttpServletRequest request,
 				HttpServletResponse response) throws JsonProcessingException {
-			// logger.info("Welcome home! The client locale is {}.", locale);
 			Map<String, Object> rtn = new LinkedHashMap<>();
-			ObjectMapper mapper = new ObjectMapper();
-			Session session = null;
-			Transaction tx = null;
 			session = almsessions.getSession();
 			if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				rtn.put("Login", LoginServices.checkSession(request, response));
@@ -5374,13 +5463,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					String paramAccess = request.getParameter("paramAccess");
 					String paramCore = request.getParameter("paramCore");
 					
-					List<String> site_VenList = new ArrayList<String>();
 					String strSites ="SELECT distinct b.WARE_NAME,b.WARE_ID,b.LATITUDE,b.LONGITUDE,b.VENDOR,b.NODE_TYPE FROM NODE_ACTIVE b where b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.VENDOR='"+ selectedVen + "' AND b.NODE_TYPE='" + SelectedNodeType + "' ";
 					
 					List<String> listNodeType = new ArrayList<String>();
 					String strNodesType ="SELECT DISTINCT b.NODE_TYPE,b.VENDOR FROM NODE_ACTIVE b WHERE b.ACTIVE_RECORD = '1' and b.VENDOR='" + selectedVen + "' ";			
 					
-					List<String> nodeVenList = new ArrayList<String>();
 					String strNodes ="SELECT NODE_PK,SITE_ID,NODE_NAME,WARE_ID,NODE_TYPE,"
 							+"(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and b.ACTIVE_RECORD = '1' ";			
 					
@@ -5394,18 +5481,18 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						if (selectedVen != null) {
 							try {						
 								strNodesType= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodesType);
-
-								//System.out.println("final query nodes type"+mapper.writeValueAsString(strNodesType));
-								Query query = session.createSQLQuery(strNodesType);
+								Query query = session.createNativeQuery(strNodesType);
 								listNodeType = query.list();
 						
 								if (listNodeType != null) {
-									rtn.put("listNodeType", listNodeType);	
-									//System.out.println("list nodes type ==> "+ mapper.writeValueAsString(listNodeType));												
-										
+									rtn.put("listNodeType", listNodeType);		
 								}
 							} catch (Exception e) {
-								logger.info("Error in retreiving nodes type Data from database" + exceptionAsString);
+								sw = new StringWriter();
+								e.printStackTrace(new PrintWriter(sw));
+								exceptionAsString = sw.toString();
+								logger.finest("Error in retreiving Node Type Data from database in method FindOnClick_VenNdTSiteNodeCell due to \n " + exceptionAsString);
+								logger.info("Error in retreiving Node Type Data from database in method FindOnClick_VenNdTSiteNodeCell due to \n " + exceptionAsString);															
 								rtn.put("listNodeType", null);
 							}
 						}
@@ -5413,16 +5500,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						if (selectedVen != null && SelectedNodeType != null) {					
 							try {
 								strSites= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strSites);
-								
-								//System.out.println("final query sites"+mapper.writeValueAsString(strSites));
-								Query query = session.createSQLQuery(strSites);
-								site_VenList = query.list();
-								rtn.put("listVenSites",site_VenList);
-								//System.out.println("list sites ==> "+ mapper.writeValueAsString(site_SuppList));										
-								rtn.put("listVenSites", site_VenList);		
-			
+								rtn.put("listVenSites",session.createNativeQuery(strSites).list());
+							
 							} catch (Exception e) {
-								logger.info("Error in retreiving sites Data from database" + exceptionAsString);
+								sw = new StringWriter();
+								e.printStackTrace(new PrintWriter(sw));
+								exceptionAsString = sw.toString();
+								logger.finest("Error in retreiving Sites Data from database in method FindOnClick_VenNdTSiteNodeCell due to \n " + exceptionAsString);
+								logger.info("Error in retreiving Sites Data from database in method FindOnClick_VenNdTSiteNodeCell due to \n " + exceptionAsString);															
 								rtn.put("listVenSites", null);
 							}
 						}
@@ -5439,14 +5524,13 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 								strNodes = strNodes + ") as countUcells FROM NODE_ACTIVE a WHERE a.ACTIVE_RECORD = '1' and a.WARE_ID='"+ selectedItem + "' and a.NODE_TYPE='" + SelectedNodeType + "' and a.VENDOR='"+ selectedVen +"' ";			
 								strNodes= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);		
 								
-								//System.out.println("final query nodes"+mapper.writeValueAsString(strNodes));
-								Query query = session.createSQLQuery(strNodes);
-								nodeVenList = query.list();
-								rtn.put("listVenNodes", nodeVenList);
-								//System.out.println("list nodes ==> "+ mapper.writeValueAsString(nodeSuppList));
-					
+								rtn.put("listVenNodes", session.createNativeQuery(strNodes).list());
 							} catch (Exception e) {
-								logger.info("Error in retreiving nodes Data from database" + exceptionAsString);
+								sw = new StringWriter();
+								e.printStackTrace(new PrintWriter(sw));
+								exceptionAsString = sw.toString();
+								logger.finest("Error in retreiving Node Data from database in method FindOnClick_VenNdTSiteNodeCell due to \n " + exceptionAsString);
+								logger.info("Error in retreiving Node Data from database in method FindOnClick_VenNdTSiteNodeCell due to \n " + exceptionAsString);															
 								rtn.put("listVenNodes", null);
 							}
 						}
@@ -5457,22 +5541,20 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 								strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);						
 								strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);	
 							
-								//System.out.println("final query cells 1 "+mapper.writeValueAsString(strCells1));
-								//System.out.println("final query cells 2 "+mapper.writeValueAsString(strCells2));
-								//System.out.println("final query cells 3 "+mapper.writeValueAsString(strCells3));
-								
-								Query query1 = session.createSQLQuery(strCells1);
-								Query query2 = session.createSQLQuery(strCells2);
-								Query query3 = session.createSQLQuery(strCells3);
+								Query query1 = session.createNativeQuery(strCells1);
+								Query query2 = session.createNativeQuery(strCells2);
+								Query query3 = session.createNativeQuery(strCells3);
 								cellResult.addAll(query1.list());
 								cellResult.addAll(query2.list());
 								cellResult.addAll(query3.list());
 								
 								rtn.put("listCells",cellResult);
-								//System.out.println("list cells ==> "+ mapper.writeValueAsString(cellResult));
-
 							} catch (Exception e) {
-								logger.info("Error in retreiving cells Data from database" + exceptionAsString);
+								sw = new StringWriter();
+								e.printStackTrace(new PrintWriter(sw));
+								exceptionAsString = sw.toString();
+								logger.finest("Error in retreiving Cells Data from database in method FindOnClick_VenNdTSiteNodeCell due to \n " + exceptionAsString);
+								logger.info("Error in retreiving Cells Data from database in method FindOnClick_VenNdTSiteNodeCell due to \n " + exceptionAsString);															
 								rtn.put("listCells", null);
 							}
 						}
@@ -5482,22 +5564,27 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 	/*
 					if (selectedNode != null) {
 						try {
-							List<Object[]> result = session.createSQLQuery(
+							List<Object[]> result = session.createNativeQuery(
 									"SELECT a.GCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_GCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0' and b.NODE_PK='"
 											+ selectedNode + "'")
 									.list();
-							List<Object[]> result1 = session.createSQLQuery(
+							List<Object[]> result1 = session.createNativeQuery(
 									"SELECT a.LCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_LCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0' and b.NODE_PK='"
 											+ selectedNode + "'")
 									.list();
-							List<Object[]> result2 = session.createSQLQuery(
+							List<Object[]> result2 = session.createNativeQuery(
 									"SELECT a.UCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_UCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0' and b.NODE_PK='"
 											+ selectedNode + "'")
 									.list();
 	*/
 
 				} catch (Exception e) {
-					logger.info("Error in retreiving Data from database" + exceptionAsString);
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving Data from database in method FindOnClick_VenNdTSiteNodeCell due to \n " + exceptionAsString);
+					logger.info("Error in retreiving Data from database in method FindOnClick_VenNdTSiteNodeCell due to \n " + exceptionAsString);															
+					
 				} finally {
 					if (session != null && session.isOpen()) {
 						tx.commit();
@@ -5510,23 +5597,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 		}
 
 
-
-
-
 	
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
 		dataBinder.setAutoGrowCollectionLimit(1024);
 	}
-	
-	
-
-
-	
-	
-
-	
-
 	
 
 	
@@ -5534,7 +5609,6 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 	@ResponseBody
 	public Map<String, Object> getSearch(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) {
-		// logger.info("Welcome home! The client locale is {}.", locale);
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
@@ -5648,7 +5722,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			map.put("listSearch", globalList);
 
 		} catch (Exception e) {
-			logger.info("Error in retreiving  Data from database" + exceptionAsString);
+			sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			exceptionAsString = sw.toString();
+			logger.finest("Error in retreiving Data from database in method GetSearchEngine due to \n " + exceptionAsString);
+			logger.info("Error in retreiving Data from database in method GetSearchEngine due to \n " + exceptionAsString);															
 			map.put("listSearch", null);
 		}
 
@@ -5670,12 +5748,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 	@ResponseBody
 	public Map<String, Object> SearchTree(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
-		// logger.info("Welcome home! The client locale is {}.", locale);
-
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		// ObjectMapper mapper = new ObjectMapper();
-		Session session = null;
-		Transaction tx = null;
 		session = almsessions.getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
@@ -5689,29 +5762,24 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				System.out.println("===>searchTerm	" + searchTerm);
 
 				if (searchTerm != null) {
-
-					Query AllSites = session.createSQLQuery("SELECT distinct b.SITE_ID,b.WARE_NAME,b.WARE_ID,"
+					rtn.put("listAllSites", session.createNativeQuery("SELECT distinct b.SITE_ID,b.WARE_NAME,b.WARE_ID,"
 							+ "(SELECT a.LATITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LATITUDE,"
 							+ "(SELECT a.LONGITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LONGITUDE,"
 							+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID  and w.ACTIVE_RECORD = '1') as countnodes,"
 							+ "(select COUNT(*) FROM NODE_GCELL c where c.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1')) as countGcells,"
 							+ "(select COUNT(*) FROM NODE_LCELL d where d.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1')) as countLcells, "
 							+ "(select COUNT(*) FROM NODE_UCELL e where e.NODE_PK IN(select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1')) as countUcells"
-							+ " FROM WAREHOUSE b where b.WARE_ID!='0' and b.WARE_ID!='null'");
-					List<Object[]> allsiteList = AllSites.list();
-					System.out.println("SSSSSSSSSSSSSSSSSSSSSSSS/n" + allsiteList);
-					rtn.put("listAllSites", allsiteList);
+							+ " FROM WAREHOUSE b where b.WARE_ID!='0' and b.WARE_ID!='null'").list());
 					//////
-					Query Sites = session.createSQLQuery(
+					Query Sites = session.createNativeQuery(
 							"SELECT distinct SITE_ID,WARE_NAME,WARE_ID,LATITUDE,LONGITUDE FROM WAREHOUSE where LOWER(WARE_NAME) LIKE :searchTerm OR UPPER(WARE_NAME) LIKE :searchTerm");
-
 					Sites.setParameter("searchTerm", searchTerm + "%");
 					Sites.setMaxResults(20);
 					List<Object[]> siteList = Sites.list();
 					System.out.println("SSSSSSSSSSSSSSSSSSSSSSSS/n" + siteList);
 					rtn.put("listSites", siteList);
 					/////////
-					Query Nodes = session.createSQLQuery(
+					Query Nodes = session.createNativeQuery(
 							"SELECT Distinct NODE_PK,NODE_NAME,WARE_ID FROM NODE_ACTIVE WHERE ACTIVE_RECORD = '1' and LOWER(NODE_NAME) LIKE :searchTerm OR UPPER(NODE_NAME) LIKE :searchTerm ");
 					Nodes.setParameter("searchTerm", searchTerm + "%");
 					Nodes.setMaxResults(20);
@@ -5719,11 +5787,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					System.out.println("NNNNNNNNNNNNNNN/n" + nodeList);
 					rtn.put("listNodes", nodeList);
 //////////////////
-					Query query1 = session.createSQLQuery(
+					Query query1 = session.createNativeQuery(
 							"SELECT a.GCELL_ID,a.CELLNAME,a.NODE_PK FROM NODE_GCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and LOWER(a.CELLNAME) LIKE :searchTerm OR UPPER(a.CELLNAME) LIKE :searchTerm");
-					Query query2 = session.createSQLQuery(
+					Query query2 = session.createNativeQuery(
 							"SELECT a.LCELL_ID,a.CELLNAME,a.NODE_PK FROM NODE_LCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and LOWER(a.CELLNAME) LIKE :searchTerm OR UPPER(a.CELLNAME) LIKE :searchTerm");
-					Query query3 = session.createSQLQuery(
+					Query query3 = session.createNativeQuery(
 							"SELECT a.UCELL_ID,a.CELLNAME,a.NODE_PK FROM NODE_UCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and LOWER(a.CELLNAME) LIKE :searchTerm OR UPPER(a.CELLNAME) LIKE :searchTerm");
 					List<Object[]> result = query1.setParameter("searchTerm", searchTerm + "%").list();
 					List<Object[]> result1 = query2.setParameter("searchTerm", searchTerm + "%").list();
@@ -5735,9 +5803,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					List<Object[]> cellResult = new ArrayList<Object[]>();
 
 					cellResult.addAll(result);
-
 					cellResult.addAll(result1);
-
 					cellResult.addAll(result2);
 					System.out.println("CCCCCCCCCCCCCCCCCCCCCCC/n" + cellResult);
 					rtn.put("listCells", cellResult);
@@ -5746,7 +5812,12 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				}
 
 			} catch (Exception e) {
-				logger.info("Error in retreiving Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Data from database in method SearchTree due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Data from database in method SearchTree due to \n " + exceptionAsString);															
+				
 			} finally {
 				if (session != null && session.isOpen()) {
 					tx.commit();
@@ -5764,7 +5835,6 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 	
 	// PO BOQ data retrieving
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/GetPOBoqList", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public LinkedHashMap<String, String> GetPOBoqList(@RequestParam String POID,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
@@ -5780,7 +5850,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 			String PO_Query = POID == "" ? strEmpty : strExist;
 			//System.out.println(PO_Query);
-			Object PoC = session.createSQLQuery(PO_Query).uniqueResult();
+			Object PoC = session.createNativeQuery(PO_Query).uniqueResult();
 			//System.out.println("po :::"+PoC);
 			BoqHM.put("PO", String.valueOf(PoC));
 			strEmpty="";
@@ -5795,7 +5865,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			//strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 			String PO_Amount_Query = POID == "" ? strEmpty : strExist;
 			//System.out.println(PO_Amount_Query);
-			Object PO_Amount = session.createSQLQuery(PO_Amount_Query).uniqueResult();
+			Object PO_Amount = session.createNativeQuery(PO_Amount_Query).uniqueResult();
 			BoqHM.put(POID == "" ? "PO Cost" : "PO Amount", String.valueOf(PO_Amount));		
 			strEmpty="";
 			strExist="";
@@ -5809,7 +5879,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			//strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 			String PO_NET_Amount_Query = POID == "" ? strEmpty : strExist;
 			//System.out.println(PO_NET_Amount_Query);
-			Object PO_NET_Amount = session.createSQLQuery(PO_NET_Amount_Query).uniqueResult();
+			Object PO_NET_Amount = session.createNativeQuery(PO_NET_Amount_Query).uniqueResult();
 			BoqHM.put(POID == "" ? "PO Net Cost" : "PO Net Amount", String.valueOf(PO_NET_Amount));
 			strEmpty="";
 			strExist="";
@@ -5820,7 +5890,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			strExist= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 			String Site_Query = POID == "" ? strEmpty : strExist;
 			//System.out.println(Site_Query);
-			Object SiteC = session.createSQLQuery(Site_Query).uniqueResult();
+			Object SiteC = session.createNativeQuery(Site_Query).uniqueResult();
 			//System.out.println("SiteC :::"+SiteC);
 			strEmpty="";
 			strExist="";
@@ -5831,7 +5901,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			strExist= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 			String Item_Query = POID == "" ? strEmpty : strExist;
 			//System.out.println(Item_Query);
-			Object ItemC = session.createSQLQuery(Item_Query).uniqueResult();
+			Object ItemC = session.createNativeQuery(Item_Query).uniqueResult();
 			//System.out.println("ItemC :::"+ItemC);	
 			strEmpty="";
 			strExist="";
@@ -5841,7 +5911,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 			return BoqHM;
 		} catch (Exception e) {
-			logger.info("Error in retreiving PO BOQ data Data from database" + exceptionAsString);
+			sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			exceptionAsString = sw.toString();
+			logger.finest("Error in retreiving PO BOQ from database in method GetPOBoqList due to \n " + exceptionAsString);
+			logger.info("Error in retreiving PO BOQ from database in method GetPOBoqList due to \n " + exceptionAsString);															
 			return null;
 		} finally {
 			if (session != null && session.isOpen()) {
@@ -5854,7 +5928,6 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 	
 	
 	// PO BOQ data retrieving
-		@SuppressWarnings("unchecked")
 		@RequestMapping(value = "/GetPOSiteBoqList", method = RequestMethod.GET, produces = "application/json")
 		@ResponseBody
 		public LinkedHashMap<String, String> GetPOSiteBoqList(@RequestParam String POID,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
@@ -5873,7 +5946,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 				String PO_Query = POID == "" ? strEmpty : strExist;
 				//System.out.println(PO_Query);
-				Object Po = session.createSQLQuery(PO_Query).uniqueResult();
+				Object Po = session.createNativeQuery(PO_Query).uniqueResult();
 				strEmpty="";
 				strExist="";	
 			
@@ -5883,7 +5956,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 				String Site_Query = POID == "" ? strEmpty : strExist;
 				//System.out.println(Site_Query);
-				Object Site = session.createSQLQuery(Site_Query).uniqueResult();
+				Object Site = session.createNativeQuery(Site_Query).uniqueResult();
 				strEmpty="";
 				strExist="";
 				
@@ -5893,7 +5966,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 				String Item_Query = POID == "" ? strEmpty : strExist;
 				//System.out.println(Item_Query);
-				Object Item = session.createSQLQuery(Item_Query).uniqueResult();
+				Object Item = session.createNativeQuery(Item_Query).uniqueResult();
 				strEmpty="";
 				strExist="";
 
@@ -5902,13 +5975,13 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				if(POID!="") {
 					String PO_Amount_Query= "Select TOTAL_AMOUNT from PURCHASE_ORDER where PO_ID='" + POID  + "' ";
 					//System.out.println(PO_Amount_Query);
-					Object PO_Amount = session.createSQLQuery(PO_Amount_Query).uniqueResult();
+					Object PO_Amount = session.createNativeQuery(PO_Amount_Query).uniqueResult();
 					BoqHM.put("PO Amount", String.valueOf(PO_Amount));
 	
 	
 					String PO_Net_Amount_Query= "Select NET_TOTAL_AMOUNT from PURCHASE_ORDER where PO_ID='" + POID  + "' ";
 					//System.out.println(PO_Net_Amount_Query);
-					Object PO_Net_Amount = session.createSQLQuery(PO_Net_Amount_Query).uniqueResult();
+					Object PO_Net_Amount = session.createNativeQuery(PO_Net_Amount_Query).uniqueResult();
 					BoqHM.put("PO Net Amount", String.valueOf(PO_Net_Amount));
 				}						
 				
@@ -5917,7 +5990,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				return BoqHM;
 
 			} catch (Exception e) {
-				logger.info("Error in retreiving PO BOQ data Data from database" + exceptionAsString);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving PO BOQ from database in method GetPOSiteBoqList due to \n " + exceptionAsString);
+				logger.info("Error in retreiving PO BOQ from database in method GetPOSiteBoqList due to \n " + exceptionAsString);															
 				return null;
 			} finally {
 				if (session != null && session.isOpen()) {
