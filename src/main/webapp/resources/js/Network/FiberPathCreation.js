@@ -14,7 +14,7 @@ function getFiberPath(type,url,id,tr){
 		success: function (data) {
 			if (data != null) {
 					if (data.searchResult != "Failed") {
-					    $("#FiberPath_f_CurrentPhysicalLayer").unbind();// removed 
+					    $("#FiberPath_f_CurrentPhysicalLayer input[type=checkbox]").unbind();// removed 
 						CreateFiberPath(data.fiber,data.fiber_Tubes,data.fiber_Strands,data.fiber_Auxiliary,data.tubes_Auxiliaries,data.strands_Auxiliaries);
 						
 						if (type == "showPath"){
