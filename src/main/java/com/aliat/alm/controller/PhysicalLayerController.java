@@ -6533,7 +6533,6 @@ public class PhysicalLayerController {
 			return rtn;
 		}
 
-		Query query;
 		session = almsessions.getSession();
 
 		if (session != null && session.isOpen()) {
@@ -6573,7 +6572,7 @@ public class PhysicalLayerController {
 						"SELECT c.STRAND_ID,c.LONGITUDE,c.LATITUDE,c.WARE_ID,c.AUXILIARY_POINT_ID,C.AUXILIARY_POINT_NAME,c.DISTANCE_FROM_SOURCE,c.SEQ_SORTING,c.AUXILIARY_ID,c.DRIVING_DISTANCE, c.GEO_DISTANCE FROM STRAND_AUXILIARY_POINTS c,FIBER_STRANDS b,FIBER_CABLES a WHERE a.FIBER_CABLE_ID=b.FIBER_CABLE_ID and b.STRAND_ID=c.STRAND_ID ORDER BY c.SEQ_SORTING ASC ")
 						.list();
 
-				rtn.put("fiber", fiberList);
+				rtn.put("fiber", fiberList);				
 				rtn.put("strands_Auxiliaries", strandsAuxiliaries);
 				rtn.put("fiber_Strands", fiberStrands);
 				rtn.put("tubes_Auxiliaries", tubesAuxiliaries);
@@ -6586,7 +6585,7 @@ public class PhysicalLayerController {
 				exceptionAsString = sw.toString();
 				logger.finest("Error in getFiberPath due to \n " + exceptionAsString);
 				logger.info("Error in getFiberPath due to \n " + exceptionAsString);
-				rtn.put("searchResult", "Loading Fiber Data Error");
+				rtn.put("searchResult", "Failed");
 			} finally {
 				if (session != null && session.isOpen()) {
 					tx.commit();
