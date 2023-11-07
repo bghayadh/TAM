@@ -2474,14 +2474,14 @@ if(type=="parentFolderCheck" || type == "parentFolderCheck__showPath") {
 			if( $("#Trench_f_CurrentPhysicalLayer").find(".TRENCH:checked" ).length ==0) {
 				$("#trenchCheckAllBoq").prop('checked', false);				
 			}
-			else {
+			else {				
 				$("#trenchCheckAllBoq").prop('checked', true);				
 			}
 			if( $("#Trench_f_CurrentPhysicalLayer").find(".DUCT:checked" ).length ==0) {
 				$("#ductCheckAllBoq").prop('checked', false);				
 			}
 			else {
-				$("#ductCheckAllBoq").prop('checked', true);				
+				$("#ductCheckAllBoq").prop('checked', true);
 			}
 		}
 		 });				
@@ -2938,8 +2938,6 @@ function singleFiberCheckFilter(selector) {
 	else {
 		fiberArray[fiberId].mapLabel.setMap(null);
 	}
-	$("#fiberCheckAllBoq").prop("checked",true);
-	
 	// Show and Hide the label of each cable depending on the checkLabel dropdown
 	if($("#fiberMapCheck_Labels").prop("checked")==true){
 		fiberArray[fiberId].mapLabel.setMap(map);
@@ -2947,6 +2945,7 @@ function singleFiberCheckFilter(selector) {
 	else {
 		fiberArray[fiberId].mapLabel.setMap(null);
 	}
+	$("#fiberCheckAllBoq").prop("checked",true);
 }
 
 
@@ -3041,6 +3040,7 @@ function singleTrenchCheckFilter(selector) {
 	else {
 		trenchArray[trenchId].mapLabel.setMap(null);
 	}
+	$("#trenchCheckAllBoq").prop('checked', true);
 }
 			
 function singleDuctCheckFilter(selector) {			
@@ -3065,7 +3065,8 @@ function singleDuctCheckFilter(selector) {
 	}
 	else {
 		ductArray[ductId].mapLabel.setMap(null);
-	}	
+	}
+	$("#ductCheckAllBoq").prop('checked', true);
 }
 
 function singleFiberUnCheckFilter(selector) {
@@ -3125,7 +3126,6 @@ function singleStrandUnCheckFilter(selector){
 }
 
 function singleTrenchUnCheckFilter(selector){
-
 	trenchId=$(selector).parent().attr('id');
 	if(directionHashmapTrench.get(trenchId) != undefined) {
 		for(ii = 0; ii < directionHashmapTrench.get(trenchId).length; ii++) {
@@ -3135,12 +3135,10 @@ function singleTrenchUnCheckFilter(selector){
 	}
 	trenchArray[trenchId].setMap(null);	
 	trenchArray[trenchId].mapLabel.setMap(null);	
-	$("#trenchCheckAllBoq").prop("checked",false);				
- 
+	$("#trenchCheckAllBoq").prop("checked",false);
 }
 
 function singleDuctUnCheckFilter(selector){
-
 	ductId=$(selector).parent().attr('id');
 	if(directionHashmapDuct.get(ductId) != undefined) {
 		for(ii = 0; ii < directionHashmapDuct.get(ductId).length; ii++) {
@@ -3150,9 +3148,7 @@ function singleDuctUnCheckFilter(selector){
 	}
 	ductArray[ductId].setMap(null);	
 	ductArray[ductId].mapLabel.setMap(null);
-	$("#ductCheckAllBoq").prop("checked",false);				
-
-
+	$("#ductCheckAllBoq").prop("checked",false);			
 }
 
 
