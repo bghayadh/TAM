@@ -875,8 +875,6 @@ var mapFlag="0"; // used to check if the markers are set on map
 var filteredSitesGrid=[]; // used in draw on map 
 var markerClusterFarSites ;
 var infoWindow;
-var prevSelectedRowColor="";
-var prevSelectedRowIndex="";
 
 function initMap() {
 	
@@ -936,6 +934,7 @@ function initMap() {
 
 	 infoWindow = new google.maps.InfoWindow();
 	 getLongLatMouseMove(map); 
+	 
 	 
 }//end initMap
 
