@@ -695,8 +695,6 @@ public String Network_SupStNdCell(Locale locale, Model model, HttpServletRequest
 }
 
 
-
-@SuppressWarnings("unchecked")
 @RequestMapping(value = "/Network_VnStNdCell", method = RequestMethod.GET)
 public String Network_VnStNdCell(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
 	if (LoginServices.checkSession(request, response).equals("redirect:/")) {
@@ -784,7 +782,6 @@ public String Network_VnStNdCell(Locale locale, Model model, HttpServletRequest 
 }
 
 
-@SuppressWarnings("unchecked")
 @RequestMapping(value = "/Network_VnStNdTypNdCell", method = RequestMethod.GET)
 public String Network_VnStNdTypNdCell(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
 	if (LoginServices.checkSession(request, response).equals("redirect:/")) {
@@ -873,20 +870,12 @@ public String Network_VnStNdTypNdCell(Locale locale, Model model, HttpServletReq
 }	
 	
 
-
-@SuppressWarnings("unchecked")
 @RequestMapping(value = "/Network_SupStNdTypNdCell", method = RequestMethod.GET)
 public String Network_SupStNdTypNdCell(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
-//		throws JsonProcessingException {
-	// logger.info("Welcome home! The client locale is {}.", locale);
 	if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 		return "redirect:/";
 	} else {
-		ObjectMapper mapper = new ObjectMapper();
-		Session session = null;
-		Transaction tx = null;
 		session = almsessions.getSession();
-
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
@@ -902,11 +891,9 @@ public String Network_SupStNdTypNdCell(Locale locale, Model model, HttpServletRe
 	        arrayParam[2] = 0; // access
 	        arrayParam[3] = 0; // core
 	        
-	    	List<String> listSites = new ArrayList<String>();
 			String strSites ="SELECT DISTINCT b.SITE_ID,b.WARE_NAME,b.WARE_ID,LATITUDE,LONGITUDE,"
 					+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID and w.ACTIVE_RECORD = '1' ";
 			
-			List<String> listSupp = new ArrayList<String>();
 			String strSup ="SELECT distinct a.SUPPLIER_ID,a.SUPPLIER_NAME FROM NODE_ACTIVE a where a.ACTIVE_RECORD = '1' and "
 					+ "a.WARE_ID!='0' and a.WARE_ID!='null' and a.WARE_ID is not null and a.SUPPLIER_ID!='null' and a.SUPPLIER_ID is not null and a.SUPPLIER_ID!='0' ";
 
@@ -943,29 +930,16 @@ public String Network_SupStNdTypNdCell(Locale locale, Model model, HttpServletRe
 					strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.ACTIVE_RECORD = '1' AND b.SUPPLIER_ID!='null' and b.SUPPLIER_ID!='0' and b.SUPPLIER_ID is not null  ";			
 					strSites=  AppendQuery("b",arrayParam, strSites);	
 						
-					//System.out.println("final query sites"+mapper.writeValueAsString(strSites));
-					Query query = session.createSQLQuery(strSites);
-					listSites = query.list();
-					model.addAttribute("listSites", mapper.writeValueAsString(listSites));
+					model.addAttribute("listSites", mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
-					//System.out.println("list sites ==> "+ mapper.writeValueAsString(listSites));
-					//System.out.println("arrayParam sites ==> "+mapper.writeValueAsString(arrayParam));
-
 				} catch (Exception e) {
 					logger.info("Error in retreiving Sites Data from database" + exceptionAsString);
 					model.addAttribute("listSites", "null");
-				}	
-				
+				}					
 				try {
-					strSup=  AppendQuery("a",arrayParam, strSup);	
-					
-					//System.out.println("final query supp "+mapper.writeValueAsString(strSup));
-					Query query = session.createSQLQuery(strSup);
-					listSupp = query.list();
-					model.addAttribute("listSupp", mapper.writeValueAsString(listSupp));
+					strSup=  AppendQuery("a",arrayParam, strSup);											
+					model.addAttribute("listSupp", mapper.writeValueAsString(session.createNativeQuery(strSup).list()));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
-					//System.out.println("list supp ==> "+ mapper.writeValueAsString(listSupp));
-					//System.out.println("arrayParam supp ==> "+mapper.writeValueAsString(arrayParam));
 				} catch (Exception e) {
 					logger.info("Error in retreiving Suppliers Data from database" + exceptionAsString);
 					model.addAttribute("listSupp", "null");
@@ -975,6 +949,7 @@ public String Network_SupStNdTypNdCell(Locale locale, Model model, HttpServletRe
 					logger.info("Session Closseeed");
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -983,19 +958,12 @@ public String Network_SupStNdTypNdCell(Locale locale, Model model, HttpServletRe
 }	
 	
 
-@SuppressWarnings("unchecked")
 @RequestMapping(value = "/Network_SupNdTypStNdCell", method = RequestMethod.GET)
 public String Network_SupNdTypStCell(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
-//		throws JsonProcessingException {
-	// logger.info("Welcome home! The client locale is {}.", locale);
 	if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 		return "redirect:/";
 	} else {
-		ObjectMapper mapper = new ObjectMapper();
-		Session session = null;
-		Transaction tx = null;
 		session = almsessions.getSession();
-
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
@@ -1011,11 +979,9 @@ public String Network_SupNdTypStCell(Locale locale, Model model, HttpServletRequ
 	        arrayParam[2] = 0; // access
 	        arrayParam[3] = 0; // core
 	        
-	    	List<String> listSites = new ArrayList<String>();
 			String strSites ="SELECT DISTINCT b.SITE_ID,b.WARE_NAME,b.WARE_ID,LATITUDE,LONGITUDE,"
 					+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID and w.ACTIVE_RECORD = '1' ";
 			
-			List<String> listSupp = new ArrayList<String>();
 			String strSup ="SELECT distinct a.SUPPLIER_ID,a.SUPPLIER_NAME FROM NODE_ACTIVE a where a.ACTIVE_RECORD = '1' and "
 					+ "a.WARE_ID!='0' and a.WARE_ID!='null' and a.WARE_ID is not null and a.SUPPLIER_ID!='0' and a.SUPPLIER_ID is not null and a.SUPPLIER_ID!='null' ";
 			
@@ -1052,30 +1018,16 @@ public String Network_SupNdTypStCell(Locale locale, Model model, HttpServletRequ
 				strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.ACTIVE_RECORD = '1' AND b.SUPPLIER_ID!='null' and b.SUPPLIER_ID!='0' and b.SUPPLIER_ID is not null  ";			
 				strSites=  AppendQuery("b",arrayParam, strSites);	
 					
-				//System.out.println("final query sites"+mapper.writeValueAsString(strSites));
-				Query query = session.createSQLQuery(strSites);
-				listSites = query.list();
-				model.addAttribute("listSites", mapper.writeValueAsString(listSites));
+				model.addAttribute("listSites", mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
-				//System.out.println("list sites ==> "+ mapper.writeValueAsString(listSites));
-				//System.out.println("arrayParam sites ==> "+mapper.writeValueAsString(arrayParam));
-
 			} catch (Exception e) {
 				logger.info("Error in retreiving Sites Data from database" + exceptionAsString);
 				model.addAttribute("listSites", "null");
-			}
-			
+			}			
 		 try {
 				strSup=  AppendQuery("a",arrayParam, strSup);	
-				
-				//System.out.println("final query supp "+mapper.writeValueAsString(strSup));
-				Query query = session.createSQLQuery(strSup);
-				listSupp = query.list();
-				model.addAttribute("listSupp", mapper.writeValueAsString(listSupp));
+				model.addAttribute("listSupp", mapper.writeValueAsString(session.createNativeQuery(strSup).list()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
-				//System.out.println("list supp ==> "+ mapper.writeValueAsString(listSupp));
-				//System.out.println("arrayParam supp ==> "+mapper.writeValueAsString(arrayParam));
-				
 				} catch (Exception e) {
 					logger.info("Error in retreiving Suppliers Data from database" + exceptionAsString);
 					model.addAttribute("listSupp", "null");
@@ -1086,6 +1038,7 @@ public String Network_SupNdTypStCell(Locale locale, Model model, HttpServletRequ
 					logger.info("Session Closseeed");
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -1094,19 +1047,12 @@ public String Network_SupNdTypStCell(Locale locale, Model model, HttpServletRequ
 }
 
 
-@SuppressWarnings("unchecked")
 @RequestMapping(value = "/Network_VnNdTypStNdCell", method = RequestMethod.GET)
 public String Network_VnNdTypStCell(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
-//		throws JsonProcessingException {
-	// logger.info("Welcome home! The client locale is {}.", locale);
 	if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 		return "redirect:/";
 	} else {
-		ObjectMapper mapper = new ObjectMapper();
-		Session session = null;
-		Transaction tx = null;
 		session = almsessions.getSession();
-
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
@@ -1122,11 +1068,9 @@ public String Network_VnNdTypStCell(Locale locale, Model model, HttpServletReque
 	        arrayParam[2] = 0; // access
 	        arrayParam[3] = 0; // core
 	        
-	    	List<String> listSites = new ArrayList<String>();
 			String strSites ="SELECT DISTINCT b.SITE_ID,b.WARE_NAME,b.WARE_ID,LATITUDE,LONGITUDE,"
 					+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID and w.ACTIVE_RECORD = '1' ";
 			
-			List<String> listVen = new ArrayList<String>();
 			String strVen ="SELECT distinct a.VENDOR FROM NODE_ACTIVE a where a.ACTIVE_RECORD = '1' and "
 					+ "a.WARE_ID!='0' and a.WARE_ID!='null' and a.WARE_ID is not null and a.VENDOR!='0' and a.VENDOR is not null and a.VENDOR!='null' ";
 			
@@ -1163,38 +1107,26 @@ public String Network_VnNdTypStCell(Locale locale, Model model, HttpServletReque
 				strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.ACTIVE_RECORD = '1' AND b.VENDOR!='null' and b.VENDOR!='0' and b.VENDOR is not null  ";			
 				strSites=  AppendQuery("b",arrayParam, strSites);	
 					
-				//System.out.println("final query sites"+mapper.writeValueAsString(strSites));
-				Query query = session.createSQLQuery(strSites);
-				listSites = query.list();
-				model.addAttribute("listSites", mapper.writeValueAsString(listSites));
+				model.addAttribute("listSites", mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
-				//System.out.println("list sites ==> "+ mapper.writeValueAsString(listSites));
-				//System.out.println("arrayParam sites ==> "+mapper.writeValueAsString(arrayParam));
-
 			} catch (Exception e) {
 				logger.info("Error in retreiving Sites Data from database" + exceptionAsString);
 				model.addAttribute("listSites", "null");
-			}
-			
+			}			
 		 try {
 				strVen=  AppendQuery("a",arrayParam, strVen);	
-				
-				//System.out.println("final query supp "+mapper.writeValueAsString(strSup));
-				Query query = session.createSQLQuery(strVen);
-				listVen = query.list();
-				model.addAttribute("listVen", mapper.writeValueAsString(listVen));
-				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
-				
+				model.addAttribute("listVen", mapper.writeValueAsString(session.createNativeQuery(strVen).list()));
+				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));				
 				} catch (Exception e) {
 					logger.info("Error in retreiving Vendors Data from database" + exceptionAsString);
 					model.addAttribute("listVen", "null");
 				}
-		 
 			finally {
 				if (session != null && session.isOpen()) {
 					logger.info("Session Closseeed");
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -1202,19 +1134,12 @@ public String Network_VnNdTypStCell(Locale locale, Model model, HttpServletReque
 	}
 }
 
-@SuppressWarnings("unchecked")
 @RequestMapping(value = "/Network_PoSiteItem", method = RequestMethod.GET)
 public String Network_PoSiteItem(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
-//		throws JsonProcessingException {
-	// logger.info("Welcome home! The client locale is {}.", locale);
 	if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 		return "redirect:/";
 	} else {
-		ObjectMapper mapper = new ObjectMapper();
-		Session session = null;
-		Transaction tx = null;
 		session = almsessions.getSession();
-
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
@@ -1230,13 +1155,11 @@ public String Network_PoSiteItem(Locale locale, Model model, HttpServletRequest 
 	        arrayParam[2] = 0; // access
 	        arrayParam[3] = 0; // core
 	        
-	    	List<String> listSites = new ArrayList<String>();
 			String strSites ="SELECT DISTINCT b.SITE_ID,b.SITE_NAME,b.WARE_ID,"
 					+ "(SELECT a.LATITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LATITUDE,"
 					+ "(SELECT a.LONGITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LONGITUDE,"
 					+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID and w.ACTIVE_RECORD = '1' ";
 			
-			List<String> listPO = new ArrayList<String>();
 			String strPO ="SELECT distinct a.PO_ID FROM ASSET_REGISTRY a WHERE a.PO_ID!='0' and a.PO_ID is not null and a.PO_ID!='null' ";
 			
 		 try {	
@@ -1274,31 +1197,16 @@ public String Network_PoSiteItem(Locale locale, Model model, HttpServletRequest 
 				strSites = strSites + ") as countUcells FROM AR_SITE b,ASSET_REGISTRY j where j.AR_ID=b.AR_ID and b.WARE_ID!='0' and b.WARE_ID is not null and b.WARE_ID!='null' ";			
 				strSites=  AppendQuery("j",arrayParam, strSites);	
 					
-				//System.out.println("final query sites"+mapper.writeValueAsString(strSites));
-				Query query = session.createSQLQuery(strSites);
-				listSites = query.list();
-				model.addAttribute("listSites", mapper.writeValueAsString(listSites));
+				model.addAttribute("listSites", mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
-				//System.out.println("list sites ==> "+ mapper.writeValueAsString(listSites));
-				//System.out.println("arrayParam sites ==> "+mapper.writeValueAsString(arrayParam));
-
 			} catch (Exception e) {
 				logger.info("Error in retreiving Sites Data from database" + exceptionAsString);
 				model.addAttribute("listSites", "null");
-
 			}
-
 			try {
 				strPO=  AppendQuery("a",arrayParam, strPO);	
-				
-				//System.out.println("final query PO "+mapper.writeValueAsString(strPO));
-				Query query = session.createSQLQuery(strPO);
-				listPO = query.list();
-				model.addAttribute("listPO", mapper.writeValueAsString(listPO));
+				model.addAttribute("listPO", mapper.writeValueAsString(session.createNativeQuery(strPO).list()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
-				//System.out.println("list PO ==> "+ mapper.writeValueAsString(listPO));
-				//System.out.println("arrayParam PO ==> "+mapper.writeValueAsString(arrayParam));
-							
 			} catch (Exception e) {
 				logger.info("Error in retreiving PO Data from database" + exceptionAsString);
 				model.addAttribute("listPO", "null");
@@ -1308,6 +1216,7 @@ public String Network_PoSiteItem(Locale locale, Model model, HttpServletRequest 
 					logger.info("Session Closseeed");
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -1315,19 +1224,12 @@ public String Network_PoSiteItem(Locale locale, Model model, HttpServletRequest 
 	}
 }
 
-@SuppressWarnings("unchecked")
 @RequestMapping(value = "/Network_PoItemSite", method = RequestMethod.GET)
 public String Network_PoItemSite(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
-//		throws JsonProcessingException {
-	// logger.info("Welcome home! The client locale is {}.", locale);
 	if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 		return "redirect:/";
 	} else {
-		ObjectMapper mapper = new ObjectMapper();
-		Session session = null;
-		Transaction tx = null;
 		session = almsessions.getSession();
-
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
@@ -1343,13 +1245,11 @@ public String Network_PoItemSite(Locale locale, Model model, HttpServletRequest 
 	        arrayParam[2] = 0; // access
 	        arrayParam[3] = 0; // core
 	        
-	    	List<String> listSites = new ArrayList<String>();
 			String strSites ="SELECT DISTINCT b.SITE_ID,b.SITE_NAME,b.WARE_ID,"
 					+ "(SELECT a.LATITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LATITUDE,"
 					+ "(SELECT a.LONGITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LONGITUDE,"
 					+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID and w.ACTIVE_RECORD = '1' ";
 			
-			List<String> listPO = new ArrayList<String>();
 			String strPO ="SELECT distinct a.PO_ID FROM ASSET_REGISTRY a WHERE a.PO_ID!='0' and a.PO_ID is not null and a.PO_ID!='null' ";
 			
 			try {	
@@ -1387,30 +1287,16 @@ public String Network_PoItemSite(Locale locale, Model model, HttpServletRequest 
 					strSites = strSites + ") as countUcells FROM AR_SITE b,ASSET_REGISTRY j where j.AR_ID=b.AR_ID AND b.WARE_ID!='0' and b.WARE_ID is not null and b.WARE_ID!='null' ";			
 					strSites=  AppendQuery("j",arrayParam, strSites);	
 						
-					//System.out.println("final query sites"+mapper.writeValueAsString(strSites));
-					Query query = session.createSQLQuery(strSites);
-					listSites = query.list();
-					model.addAttribute("listSites", mapper.writeValueAsString(listSites));
+					model.addAttribute("listSites", mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
-					//System.out.println("list sites ==> "+ mapper.writeValueAsString(listSites));
-					//System.out.println("arrayParam sites ==> "+mapper.writeValueAsString(arrayParam));
-
 				} catch (Exception e) {
 					logger.info("Error in retreiving Sites Data from database" + exceptionAsString);
 					model.addAttribute("listSites", "null");
 				}
-
 				try {
 					strPO=  AppendQuery("a",arrayParam, strPO);	
-					
-					//System.out.println("final query PO "+mapper.writeValueAsString(strPO));
-					Query query = session.createSQLQuery(strPO);
-					listPO = query.list();
-					model.addAttribute("listPO", mapper.writeValueAsString(listPO));
+					model.addAttribute("listPO", mapper.writeValueAsString(session.createNativeQuery(strPO).list()));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
-					//System.out.println("list PO ==> "+ mapper.writeValueAsString(listPO));
-					//System.out.println("arrayParam PO ==> "+mapper.writeValueAsString(arrayParam));
-					
 			} catch (Exception e) {
 				logger.info("Error in retreiving PO Data from database" + exceptionAsString);
 				model.addAttribute("listPO", "null");
@@ -1420,6 +1306,7 @@ public String Network_PoItemSite(Locale locale, Model model, HttpServletRequest 
 					logger.info("Session Closseeed");
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -1428,19 +1315,12 @@ public String Network_PoItemSite(Locale locale, Model model, HttpServletRequest 
 }
 
 
-@SuppressWarnings("unchecked")
 @RequestMapping(value = "/Network_SitePoItem", method = RequestMethod.GET)
 public String Network_SitePoItem(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
-//		throws JsonProcessingException {
-	// logger.info("Welcome home! The client locale is {}.", locale);
 	if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 		return "redirect:/";
 	} else {
-		ObjectMapper mapper = new ObjectMapper();
-		Session session = null;
-		Transaction tx = null;
 		session = almsessions.getSession();
-
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
@@ -1456,7 +1336,6 @@ public String Network_SitePoItem(Locale locale, Model model, HttpServletRequest 
 	        arrayParam[2] = 0; // access
 	        arrayParam[3] = 0; // core
 	        
-	    	List<String> listSites = new ArrayList<String>();
 			String strSites ="SELECT DISTINCT b.SITE_ID,b.SITE_NAME,b.WARE_ID,"
 					+ "(SELECT a.LATITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LATITUDE,"
 					+ "(SELECT a.LONGITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LONGITUDE,"
@@ -1496,25 +1375,19 @@ public String Network_SitePoItem(Locale locale, Model model, HttpServletRequest 
 				strSites=  AppendQuery("e",arrayParam, strSites);
 				strSites = strSites + ") as countUcells FROM AR_SITE b,ASSET_REGISTRY j where j.AR_ID=b.AR_ID AND b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null ";			
 				strSites=  AppendQuery("j",arrayParam, strSites);	
-					
-				//System.out.println("final query sites"+mapper.writeValueAsString(strSites));
-				Query query = session.createSQLQuery(strSites);
-				listSites = query.list();
-				model.addAttribute("listSites", mapper.writeValueAsString(listSites));
-				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
-				//System.out.println("list sites ==> "+ mapper.writeValueAsString(listSites));
-				//System.out.println("arrayParam sites ==> "+mapper.writeValueAsString(arrayParam));
 
+				model.addAttribute("listSites", mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
+				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 			} catch (Exception e) {
 				logger.info("Error in retreiving Sites Data from database" + exceptionAsString);
 				model.addAttribute("listSites", "null");
 			}
-
 			finally {
 				if (session != null && session.isOpen()) {
 					logger.info("Session Closseeed");
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -1523,19 +1396,12 @@ public String Network_SitePoItem(Locale locale, Model model, HttpServletRequest 
 }
 
 
-@SuppressWarnings("unchecked")
 @RequestMapping(value = "/Network_NdTypNdCell", method = RequestMethod.GET)
 public String Network_NdTypNdCell(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
-//		throws JsonProcessingException {
-	// logger.info("Welcome home! The client locale is {}.", locale);
 	if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 		return "redirect:/";
 	} else {
-		ObjectMapper mapper = new ObjectMapper();
-		Session session = null;
-		Transaction tx = null;
 		session = almsessions.getSession();
-
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
@@ -1551,11 +1417,9 @@ public String Network_NdTypNdCell(Locale locale, Model model, HttpServletRequest
 	        arrayParam[2] = 0; // access
 	        arrayParam[3] = 0; // core
 	        
-	    	List<String> listNodes = new ArrayList<String>();
 			String strNodes ="SELECT b.SITE_ID,b.WARE_NAME,b.NODE_PK,b.LATITUDE,b.LONGITUDE,"
 					+ "(select COUNT(*) from NODE_ACTIVE w where w.ACTIVE_RECORD = '1' ";
 			
-			List<String> listNodesType = new ArrayList<String>();
 			String strNodesType ="SELECT DISTINCT NODE_TYPE,(select COUNT(*) from NODE_ACTIVE a  where a.NODE_TYPE=b.NODE_TYPE and a.ACTIVE_RECORD = '1' ";
 			
 			try {
@@ -1584,16 +1448,10 @@ public String Network_NdTypNdCell(Locale locale, Model model, HttpServletRequest
 				strNodes = strNodes + ") as countLcells,(select count(*) from NODE_UCELL d  where b.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1' ";
 				strNodes=  AppendQuery("d",arrayParam, strNodes);	
 				strNodes = strNodes + ") as countUcells,b.WARE_ID,b.NODE_NAME,b.NODE_TYPE FROM NODE_ACTIVE b WHERE b.ACTIVE_RECORD = '1' ";			
-				strNodes=  AppendQuery("b",arrayParam, strNodes);	
-			
-				//System.out.println("final query nodes"+mapper.writeValueAsString(strNodes));
-				Query query = session.createSQLQuery(strNodes);
-				listNodes = query.list();
-				model.addAttribute("listNodes", mapper.writeValueAsString(listNodes));
+				strNodes=  AppendQuery("b",arrayParam, strNodes);
+				
+				model.addAttribute("listNodes", mapper.writeValueAsString(session.createNativeQuery(strNodes).list()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
-				//System.out.println("list nodes ==> "+ mapper.writeValueAsString(listNodes));
-				//System.out.println("arrayParam nodes ==> "+mapper.writeValueAsString(arrayParam));
-			
 			}catch (Exception e) {
 				logger.info("Error in retreiving nodes Data from database" + exceptionAsString);
 				model.addAttribute("listNodes", "null");
@@ -1604,14 +1462,8 @@ public String Network_NdTypNdCell(Locale locale, Model model, HttpServletRequest
 				strNodesType = strNodesType + ") as countNodes FROM NODE_ACTIVE b WHERE b.ACTIVE_RECORD = '1' ";
 				strNodesType=  AppendQuery("b",arrayParam, strNodesType);
 				
-				//System.out.println("final query nodes type "+mapper.writeValueAsString(strNodesType));
-				Query query = session.createSQLQuery(strNodesType);
-				listNodesType = query.list();
-				model.addAttribute("listNodesType", mapper.writeValueAsString(listNodesType));
+				model.addAttribute("listNodesType", mapper.writeValueAsString(session.createNativeQuery(strNodesType).list()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
-				//System.out.println("list nodes type ==> "+ mapper.writeValueAsString(listNodesType));
-				//System.out.println("arrayParam nodes type ==> "+mapper.writeValueAsString(arrayParam));		
-				
 			} catch (Exception e) {
 				logger.info("Error in retreiving sites Data from database" + exceptionAsString);
 				model.addAttribute("listNodesType", "null");	
@@ -1622,6 +1474,7 @@ public String Network_NdTypNdCell(Locale locale, Model model, HttpServletRequest
 					logger.info("Session Closseeed");
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -1629,23 +1482,16 @@ public String Network_NdTypNdCell(Locale locale, Model model, HttpServletRequest
 	}
 }
 
-@SuppressWarnings("unchecked")
 @RequestMapping(value = "/Network_Node", method = RequestMethod.GET)
 public String Network_Node(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
-//		throws JsonProcessingException {
-	// logger.info("Welcome home! The client locale is {}.", locale);
 	if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 		return "redirect:/";
 	} else {
-		ObjectMapper mapper = new ObjectMapper();
-		Session session = null;
-		Transaction tx = null;
 		session = almsessions.getSession();
 
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
-			//System.out.println("NODE SERVER");
 
 			String enterprise = request.getParameter("enterprise");
 			String transmission = request.getParameter("transmission");
@@ -1658,7 +1504,6 @@ public String Network_Node(Locale locale, Model model, HttpServletRequest reques
 	        arrayParam[2] = 0; // access
 	        arrayParam[3] = 0; // core
 	        
-	        List<String> listNodes = new ArrayList<String>();
 			String strNodes ="SELECT b.SITE_ID,b.WARE_NAME,b.NODE_PK,b.LATITUDE,b.LONGITUDE,"
 					+"(select COUNT(*) from NODE_ACTIVE w where ACTIVE_RECORD = '1' ";
 	
@@ -1690,14 +1535,8 @@ public String Network_Node(Locale locale, Model model, HttpServletRequest reques
 				strNodes = strNodes + ") as countUCells,b.WARE_ID,b.NODE_NAME,b.NODE_TYPE,b.SUPPLIER_ID FROM NODE_ACTIVE b WHERE b.ACTIVE_RECORD = '1' ";
 				strNodes = AppendQuery("b",arrayParam, strNodes);
 					
-				//System.out.println("final query nodes"+mapper.writeValueAsString(strNodes));
-				Query query = session.createSQLQuery(strNodes);
-				listNodes = query.list();
-				model.addAttribute("listNodes", mapper.writeValueAsString(listNodes));
+				model.addAttribute("listNodes", mapper.writeValueAsString(session.createNativeQuery(strNodes).list()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
-				//System.out.println("list nodes ==> "+ mapper.writeValueAsString(listNodes));
-				//System.out.println("arrayParam nodes ==> "+mapper.writeValueAsString(arrayParam));
-				
 				} catch (Exception e) {
 					logger.info("Error in retreiving Sites Data from database" + exceptionAsString);
 					model.addAttribute("listNodes", "null");
@@ -1707,6 +1546,7 @@ public String Network_Node(Locale locale, Model model, HttpServletRequest reques
 					logger.info("Session Closseeed");
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -1719,20 +1559,14 @@ public String Network_Node(Locale locale, Model model, HttpServletRequest reques
 @SuppressWarnings("unchecked")
 @RequestMapping(value = "/Network_Cell", method = RequestMethod.GET)
 public String Network_Cell(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
-//		throws JsonProcessingException {
-	// logger.info("Welcome home! The client locale is {}.", locale);
 	if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 		return "redirect:/";
 	} else {
-		ObjectMapper mapper = new ObjectMapper();
-		Session session = null;
-		Transaction tx = null;
 		session = almsessions.getSession();
 
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
-			//System.out.println("CELL SERVER");
 			String enterprise = request.getParameter("enterprise");
 			String transmission = request.getParameter("transmission");
 			String access = request.getParameter("access");
@@ -1802,22 +1636,12 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 							+ "LEFT JOIN NODE_UCELL k ON b.NODE_PK = k.NODE_PK WHERE b.NODE_PK = k.NODE_PK AND k.ACTIVE_RECORD = '1' ";
 					strCells3 = AppendQuery("k",arrayParam, strCells3);
 
-					//System.out.println("final query cells 1"+mapper.writeValueAsString(strCells1));
-					//System.out.println("final query cells 2"+mapper.writeValueAsString(strCells2));
-					//System.out.println("final query cells 3"+mapper.writeValueAsString(strCells3));
-					
-					Query query1 = session.createSQLQuery(strCells1);
-					Query query2 = session.createSQLQuery(strCells2);
-					Query query3 = session.createSQLQuery(strCells3);
-					cellResult.addAll(query1.list());
-					cellResult.addAll(query2.list());
-					cellResult.addAll(query3.list());
+					cellResult.addAll(session.createNativeQuery(strCells1).list());
+					cellResult.addAll(session.createNativeQuery(strCells2).list());
+					cellResult.addAll(session.createNativeQuery(strCells3).list());
 					
 					model.addAttribute("listCells", mapper.writeValueAsString(cellResult));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
-					//System.out.println("list cells ==> "+ mapper.writeValueAsString(cellResult));
-					//System.out.println("arrayParam cells ==> "+mapper.writeValueAsString(arrayParam));
-					
 				} catch (Exception e) {
 				logger.info("Error in retreiving cells array Data from database" + exceptionAsString);
 				model.addAttribute("listCells", "null");
@@ -1827,112 +1651,13 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 					logger.info("Session Closseeed");
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
 		return "Network/Network_Cell";
 	}
 }
-	/*
-	// retrieve sites/nodes/cells data when supplier is clicked in
-	// Supplier-site-node-cell method
-	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "resources/js/Network/NetworkTree.js/FindOnClick_SuppSiteNodeCell", method = RequestMethod.GET)
-	@ResponseBody
-	public Map<String, Object> Find_SuppSiteNodeCell(Locale locale, Model model, HttpServletRequest request,
-			HttpServletResponse response) throws JsonProcessingException {
-		// logger.info("Welcome home! The client locale is {}.", locale);
-		Map<String, Object> rtn = new LinkedHashMap<>();
-		// ObjectMapper mapper = new ObjectMapper();
-		Session session = null;
-		Transaction tx = null;
-		session = almsessions.getSession();
-		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
-			rtn.put("Login", LoginServices.checkSession(request, response));
-			return rtn;
-		}
-		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
-			String selectedNode = request.getParameter("selectedNode");
-			try {
-				if (selectedNode != null) {
-					List<Object[]> result = session.createSQLQuery(
-							"SELECT a.GCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_GCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0' and b.NODE_PK='"
-									+ selectedNode + "'")
-							.list();
-					List<Object[]> result1 = session.createSQLQuery(
-							"SELECT a.LCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_LCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0' and b.NODE_PK='"
-									+ selectedNode + "'")
-							.list();
-					List<Object[]> result2 = session.createSQLQuery(
-							"SELECT a.UCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_UCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0' and b.NODE_PK='"
-									+ selectedNode + "'")
-							.list();
-
-					List<Object[]> cellResult = new ArrayList<Object[]>();
-
-					if (!result.isEmpty()) {
-
-						cellResult.addAll(result);
-
-					}
-					if (!result1.isEmpty()) {
-						cellResult.addAll(result1);
-
-					}
-					if (!result2.isEmpty()) {
-
-						cellResult.addAll(result2);
-
-					}
-					rtn.put("listCells", cellResult);
-				}
-			} catch (Exception e) {
-				logger.info("Error in retreiving cells array Data from database" + exceptionAsString);
-				rtn.put("listCells", null);
-			}
-			String selectedSupp = request.getParameter("selectedSupp");
-			try {
-				if (selectedSupp != null) {
-					List<?> site_SuppList = session.createSQLQuery(
-							"SELECT distinct a.WARE_NAME,a.WARE_ID,a.LATITUDE,a.LONGITUDE,b.SUPPLIER_ID,"
-									+ "(select COUNT(*) from NODE_ACTIVE b where a.WARE_ID=b.WARE_ID) as countnodes,"
-									+ "(select COUNT(*) FROM NODE_GCELL c where b.NODE_PK=c.NODE_PK and a.WARE_ID=b.WARE_ID and b.ACTIVE_RECORD='1') as countGcells,"
-									+ "(select COUNT(*) FROM NODE_LCELL c where b.NODE_PK=c.NODE_PK and a.WARE_ID=b.WARE_ID and b.ACTIVE_RECORD='1') as countLcells,"
-									+ "(select COUNT(*) FROM NODE_UCELL c where b.NODE_PK=c.NODE_PK and a.WARE_ID=b.WARE_ID and b.ACTIVE_RECORD='1') as countUcells"
-									+ " FROM WAREHOUSE a,NODE_ACTIVE b where a.WARE_ID=b.WARE_ID and b.WARE_ID!='0' and b.WARE_ID!='null' and b.SUPPLIER_ID='"
-									+ selectedSupp + "'")
-							.list();
-
-					rtn.put("listSuppSites", site_SuppList);
-				}
-			} catch (Exception e) {
-				logger.info("Error in retreiving sites array Data from database" + exceptionAsString);
-				rtn.put("listSuppSites", null);
-			}
-			String selectedItem = request.getParameter("selectedItem");
-			try {
-				if (selectedItem != null) {
-					List<Object[]> nodeSuppList = (List<Object[]>) session.createSQLQuery(
-							"SELECT NODE_PK,NODE_TYPE,NODE_NAME,WARE_ID,SUPPLIER_ID,(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and ACTIVE_RECORD = '1') as countGCells,(select count(*) from NODE_LCELL c  where a.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1') as countLCells,(select count(*) from NODE_UCELL d  where a.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1') as countUCells FROM NODE_ACTIVE a WHERE ACTIVE_RECORD = '1' and WARE_ID='"
-									+ selectedItem + "'")
-							.list();
-
-					rtn.put("listSuppNodes", nodeSuppList);
-				}
-			} catch (Exception e) {
-				logger.info("Error in retreiving nodes array Data from database" + exceptionAsString);
-				rtn.put("listSuppNodes", null);
-			} finally {
-				if (session != null && session.isOpen()) {
-					tx.commit();
-					session.close();
-				}
-			}
-		}
-		return rtn;
-	}
-*/
 
 //retrieve sites/nodes/cells data when supplier is clicked in
 	// Supplier-site-node-cell method
@@ -1942,8 +1667,6 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 	public Map<String, Object> Find_VenSiteNodeCell(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		Session session = null;
-		Transaction tx = null;
 		session = almsessions.getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
@@ -1959,10 +1682,8 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 			String paramAccess = request.getParameter("paramAccess");
 			String paramCore = request.getParameter("paramCore");
 				
-			List<String> site_VenList = new ArrayList<String>();
 			String strSites ="SELECT distinct b.WARE_NAME,b.WARE_ID,b.LATITUDE,b.LONGITUDE,b.VENDOR FROM NODE_ACTIVE b where b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.VENDOR='"+ selectedVen + "' ";
 			
-			List<String> nodeVenList = new ArrayList<String>();
 			String strNodes ="SELECT NODE_PK,NODE_TYPE,NODE_NAME,WARE_ID,VENDOR,"
 					+"(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and b.ACTIVE_RECORD = '1' ";
 			
@@ -1973,13 +1694,9 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 
 			 try {
 				if (selectedVen != null) {
-					strSites= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strSites);
+					strSites= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strSites);					
 					
-					//System.out.println("final query sites"+mapper.writeValueAsString(strSites));
-					Query query = session.createSQLQuery(strSites);
-					site_VenList = query.list();
-					rtn.put("listVenSites",site_VenList);
-					//System.out.println("list sites ==> "+ mapper.writeValueAsString(site_VenList));
+					rtn.put("listVenSites",session.createNativeQuery(strSites).list());
 				}
 			} catch (Exception e) {
 				logger.info("Error in retreiving sites array Data from database" + exceptionAsString);
@@ -1991,25 +1708,16 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 						strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);						
 						strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);	
 					
-						//System.out.println("final query cells 1 "+mapper.writeValueAsString(strCells1));
-						//System.out.println("final query cells 2 "+mapper.writeValueAsString(strCells2));
-						//System.out.println("final query cells 3 "+mapper.writeValueAsString(strCells3));
-						
-						Query query1 = session.createSQLQuery(strCells1);
-						Query query2 = session.createSQLQuery(strCells2);
-						Query query3 = session.createSQLQuery(strCells3);
-						cellResult.addAll(query1.list());
-						cellResult.addAll(query2.list());
-						cellResult.addAll(query3.list());
+						cellResult.addAll(session.createNativeQuery(strCells1).list());
+						cellResult.addAll(session.createNativeQuery(strCells2).list());
+						cellResult.addAll(session.createNativeQuery(strCells3).list());
 						
 						rtn.put("listCells",cellResult);
-						//System.out.println("list cells ==> "+ mapper.writeValueAsString(cellResult));
 					}
 				} catch (Exception e) {
 					logger.info("Error in retreiving cells array Data from database" + exceptionAsString);
 					rtn.put("listCells", null);
-				}
-			 
+				}			 
 				try {
 					if (selectedItem != null) {
 						strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);		
@@ -2020,24 +1728,18 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 						strNodes = strNodes + ") as countLcells,(select count(*) from NODE_UCELL d  where a.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1' ";				
 						strNodes= boqDomainVar ("d",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);	
 						strNodes = strNodes + ") as countUcells FROM NODE_ACTIVE a WHERE a.ACTIVE_RECORD = '1' and a.WARE_ID='"+ selectedItem + "' ";			
-						strNodes= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);		
-						
-						//System.out.println("final query nodes"+mapper.writeValueAsString(strNodes));
-						Query query = session.createSQLQuery(strNodes);
-						nodeVenList = query.list();
-						rtn.put("listVenNodes", nodeVenList);
-						//System.out.println("list nodes ==> "+ mapper.writeValueAsString(nodeVenList));
+						strNodes= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);								
+						rtn.put("listVenNodes", session.createNativeQuery(strNodes).list());
 					}
 				} catch (Exception e) {
 					logger.info("Error in retreiving nodes array Data from database" + exceptionAsString);
 					rtn.put("listVenNodes", null);
 				}
-				
-	
 		 finally {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -2052,8 +1754,6 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 	public Map<String, Object> Find_SuppSiteNodeCell(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		Session session = null;
-		Transaction tx = null;
 		session = almsessions.getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
@@ -2069,10 +1769,8 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 			String paramAccess = request.getParameter("paramAccess");
 			String paramCore = request.getParameter("paramCore");
 				
-			List<String> site_SuppList = new ArrayList<String>();
 			String strSites ="SELECT distinct b.WARE_NAME,b.WARE_ID,b.LATITUDE,b.LONGITUDE,b.SUPPLIER_ID FROM NODE_ACTIVE b where b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.SUPPLIER_ID='"+ selectedSupp + "' ";
 			
-			List<String> nodeSuppList = new ArrayList<String>();
 			String strNodes ="SELECT NODE_PK,NODE_TYPE,NODE_NAME,WARE_ID,SUPPLIER_ID,"
 					+"(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and b.ACTIVE_RECORD = '1' ";
 			
@@ -2083,13 +1781,8 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 
 			 try {
 				if (selectedSupp != null) {
-					strSites= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strSites);
-					
-					//System.out.println("final query sites"+mapper.writeValueAsString(strSites));
-					Query query = session.createSQLQuery(strSites);
-					site_SuppList = query.list();
-					rtn.put("listSuppSites",site_SuppList);
-					//System.out.println("list sites ==> "+ mapper.writeValueAsString(site_SuppList));
+					strSites= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strSites);					
+					rtn.put("listSuppSites",session.createNativeQuery(strSites).list());
 				}
 			} catch (Exception e) {
 				logger.info("Error in retreiving sites array Data from database" + exceptionAsString);
@@ -2101,19 +1794,11 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 						strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);						
 						strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);	
 					
-						//System.out.println("final query cells 1 "+mapper.writeValueAsString(strCells1));
-						//System.out.println("final query cells 2 "+mapper.writeValueAsString(strCells2));
-						//System.out.println("final query cells 3 "+mapper.writeValueAsString(strCells3));
-						
-						Query query1 = session.createSQLQuery(strCells1);
-						Query query2 = session.createSQLQuery(strCells2);
-						Query query3 = session.createSQLQuery(strCells3);
-						cellResult.addAll(query1.list());
-						cellResult.addAll(query2.list());
-						cellResult.addAll(query3.list());
+						cellResult.addAll(session.createNativeQuery(strCells1).list());
+						cellResult.addAll(session.createNativeQuery(strCells2).list());
+						cellResult.addAll(session.createNativeQuery(strCells3).list());
 						
 						rtn.put("listCells",cellResult);
-						//System.out.println("list cells ==> "+ mapper.writeValueAsString(cellResult));
 					}
 				} catch (Exception e) {
 					logger.info("Error in retreiving cells array Data from database" + exceptionAsString);
@@ -2132,11 +1817,7 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 						strNodes = strNodes + ") as countUcells FROM NODE_ACTIVE a WHERE a.ACTIVE_RECORD = '1' and a.WARE_ID='"+ selectedItem + "' ";			
 						strNodes= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);		
 						
-						//System.out.println("final query nodes"+mapper.writeValueAsString(strNodes));
-						Query query = session.createSQLQuery(strNodes);
-						nodeSuppList = query.list();
-						rtn.put("listSuppNodes", nodeSuppList);
-						//System.out.println("list nodes ==> "+ mapper.writeValueAsString(nodeSuppList));
+						rtn.put("listSuppNodes", session.createNativeQuery(strNodes).list());
 					}
 				} catch (Exception e) {
 					logger.info("Error in retreiving nodes array Data from database" + exceptionAsString);
@@ -2148,6 +1829,7 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -2161,12 +1843,8 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 	@ResponseBody
 	public Map<String, Object> StSupNdCell(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
-		// logger.info("Welcome home! The client locale is {}.", locale);
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		// ObjectMapper mapper = new ObjectMapper();
-		Session session = null;
-		Transaction tx = null;
 		session = almsessions.getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
@@ -2175,32 +1853,27 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
-				List<Object[]> result = session.createSQLQuery(
+				List<Object[]> result = session.createNativeQuery(
 						"SELECT a.GCELL_ID,a.CELLNAME,a.NODE_PK FROM NODE_GCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0'")
 						.list();
-				List<Object[]> result1 = session.createSQLQuery(
+				List<Object[]> result1 = session.createNativeQuery(
 						"SELECT a.LCELL_ID,a.CELLNAME,a.NODE_PK FROM NODE_LCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0'")
 						.list();
-				List<Object[]> result2 = session.createSQLQuery(
+				List<Object[]> result2 = session.createNativeQuery(
 						"SELECT a.UCELL_ID,a.CELLNAME,a.NODE_PK FROM NODE_UCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0'")
 						.list();
 
 				List<Object[]> cellResult = new ArrayList<Object[]>();
-
 				cellResult.addAll(result);
-
 				cellResult.addAll(result1);
-
 				cellResult.addAll(result2);
-
 				rtn.put("listCells", cellResult);
 			} catch (Exception e) {
 				logger.info("Error in retreiving cells array Data from database" + exceptionAsString);
 				rtn.put("listCells", null);
 			}
 			try {
-				List<Object[]> site_SuppList = (List<Object[]>) session.createSQLQuery(
-
+				List<Object[]> site_SuppList = (List<Object[]>) session.createNativeQuery(
 						"SELECT distinct b.SITE_ID,b.WARE_NAME,b.WARE_ID,"
 								+ "(SELECT a.LATITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LATITUDE,"
 								+ "(SELECT a.LONGITUDE from WAREHOUSE a where a.WARE_ID=b.WARE_ID) as LONGITUDE,"
@@ -2212,14 +1885,13 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 						.list();
 
 				rtn.put("listSuppSites", site_SuppList);
-
 			} catch (Exception e) {
 				logger.info("Error in retreiving sites array Data from database" + exceptionAsString);
 				rtn.put("listSuppSites", null);
 			}
 
 			try {
-				List<Object[]> nodeList = (List<Object[]>) session.createSQLQuery(
+				List<Object[]> nodeList = (List<Object[]>) session.createNativeQuery(
 						"SELECT NODE_PK,SITE_ID,NODE_NAME,NODE_TYPE,WARE_ID,(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and ACTIVE_RECORD = '1') as countGCells,"
 								+ "(select count(*) from NODE_LCELL c  where a.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1') as countLCells,"
 								+ "(select count(*) from NODE_UCELL d  where a.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1') as countUCells,SUPPLIER_ID FROM NODE_ACTIVE a WHERE ACTIVE_RECORD = '1'")
@@ -2230,7 +1902,7 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 				logger.info("Error in retreiving nodes array Data from database" + exceptionAsString);
 			}
 			try {
-				List<?> SiteSupplist = session.createSQLQuery(
+				List<?> SiteSupplist = session.createNativeQuery(
 						"SELECT DISTINCT a.WARE_ID,a.SUPPLIER_ID,(select b.SUPPLIER_NAME from SUPPLIER b where a.SUPPLIER_ID=b.SUPPLIER_ID) FROM NODE_ACTIVE a WHERE a.ACTIVE_RECORD = '1' and a.WARE_ID!='0'")
 						.list();
 
@@ -2242,6 +1914,7 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -2330,6 +2003,7 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -2408,6 +2082,7 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -2526,6 +2201,7 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -2638,6 +2314,7 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -2826,6 +2503,7 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -2898,6 +2576,7 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -3114,6 +2793,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			if (session != null && session.isOpen()) {
 				tx.commit();
 				session.close();
+				session.getSessionFactory().close();
 			}
 		}
 		//return BoqHM;
@@ -3232,6 +2912,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -3349,6 +3030,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -3479,6 +3161,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 			//return BoqHM;
@@ -3607,6 +3290,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						if (session != null && session.isOpen()) {
 							tx.commit();
 							session.close();
+							session.getSessionFactory().close();
 						}
 					}
 					//return BoqHM;
@@ -3693,6 +3377,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -3809,6 +3494,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						if (session != null && session.isOpen()) {
 							tx.commit();
 							session.close();
+							session.getSessionFactory().close();
 						}
 					}
 				}
@@ -3889,6 +3575,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -3970,6 +3657,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						if (session != null && session.isOpen()) {
 							tx.commit();
 							session.close();
+							session.getSessionFactory().close();
 						}
 					}
 				}
@@ -4051,6 +3739,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						if (session != null && session.isOpen()) {
 							tx.commit();
 							session.close();
+							session.getSessionFactory().close();
 						}
 					}
 				}
@@ -4149,6 +3838,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -4188,6 +3878,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -4266,6 +3957,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -4337,6 +4029,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -4419,6 +4112,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -4489,6 +4183,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -4545,6 +4240,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -4605,6 +4301,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -4684,6 +4381,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -4720,6 +4418,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -4873,6 +4572,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		//}
@@ -4968,6 +4668,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -5085,6 +4786,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -5196,6 +4898,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -5333,6 +5036,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -5468,6 +5172,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -5632,6 +5337,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -5796,6 +5502,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -5949,6 +5656,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			if (session != null && session.isOpen()) {
 				tx.commit();
 				session.close();
+				session.getSessionFactory().close();
 			}
 		}
 
@@ -6043,6 +5751,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -6138,6 +5847,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			if (session != null && session.isOpen()) {
 				tx.commit();
 				session.close();
+				session.getSessionFactory().close();
 			}
 		}
 	}
@@ -6213,105 +5923,8 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
-	
-	
-/*
-	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/FindNearestPoints", method = RequestMethod.GET)
-	@ResponseBody
-	public Map<String, Object> FindNearestPoints(Locale locale, Model model, HttpServletRequest request,
-			HttpServletResponse response) throws JsonProcessingException {
-		// logger.info("Welcome home! The client locale is {}.", locale);
-
-		Map<String, Object> rtn = new LinkedHashMap<>();
-	    ObjectMapper mapper = new ObjectMapper();
-		Session session = null;
-		Transaction tx = null;
-		session = almsessions.getALMSession();
-		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
-			rtn.put("Login", LoginServices.checkSession(request, response));
-			return rtn;
-		}
-		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
-			try {
-				//System.out.println("Inside FindNearestPoints");
-				String noOfPoints = request.getParameter("noOfPoints");
-				String closestDisRange = request.getParameter("closestDisRange");
-				String closestLatPoint = request.getParameter("closestLatPoint");
-				String closestLongPoint = request.getParameter("closestLongPoint");
-				List<?>  manholeList= session.createSQLQuery("SELECT DISTINCT MANHOLE_ID,MANHOLE_NAME,LONGITUDE,LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=MANHOLE_ID),DM_NAME FROM MANHOLE  ").list();
-				List<Object[]> nearstPointsManhole = new ArrayList<Object[]>();
-				//System.out.println("manholeList "+mapper.writeValueAsString(manholeList));
-				nearstPointsManhole = findNearestArray(manholeList,Double.valueOf(closestLatPoint),Double.valueOf(closestLongPoint),Double.valueOf(closestDisRange),"Manhole",noOfPoints);
-				
-				List<?> handholeList = session.createSQLQuery("SELECT DISTINCT HANDHOLE_ID,HANDHOLE_NAME,LONGITUDE,LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=HANDHOLE_ID),DM_NAME FROM HANDHOLE").list();
-				List<Object[]> nearstPointsHandhole = new ArrayList<Object[]>();
-				nearstPointsHandhole = findNearestArray(handholeList,Double.valueOf(closestLatPoint),Double.valueOf(closestLongPoint),Double.valueOf(closestDisRange),"Handhole",noOfPoints);
-				
-				List<?> distribBoardList = session.createSQLQuery("SELECT DISTINCT DB_ID,DB_LONGITUDE,DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,PROJECT_ID ,CITY FROM DISTRIBUTION_BOARD")
-							.list();
-				List<Object[]> nearstPointsDistribBoard= new ArrayList<Object[]>();
-				nearstPointsDistribBoard = findNearestArray(distribBoardList,Double.valueOf(closestLatPoint),Double.valueOf(closestLongPoint),Double.valueOf(closestDisRange),"DistribBoard",noOfPoints);
-				
-				List<Object[]> nearstPoints=new ArrayList<Object[]>();
-				nearstPoints.addAll(nearstPointsManhole);
-				nearstPoints.addAll(nearstPointsHandhole);
-				nearstPoints.addAll(nearstPointsDistribBoard);
-                
-                String[] idsArray = findListId(nearstPoints,"all");
-               // System.out.println("listIds "+mapper.writeValueAsString(idsArray));
-				//Query fiberQuery=  session.createSQLQuery("SELECT SOURCE_LNG,SOURCE_LAT,DESTINATION_LNG,DESTINATION_LAT,FIBER_CABLE_ID,SOURCE_WARE_ID,SOURCE_ID,SOURCE_NAME,DESTINATION_WARE_ID,DESTINATION_ID,DESTINATION_NAME,(SELECT COUNT(*) FROM FIBER_TUBES B WHERE B.FIBER_CABLE_ID=A.FIBER_CABLE_ID) AS Tube_Count,(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.FIBER_CABLE_ID=A.FIBER_CABLE_ID) AS Strand_Count,FIBER_CABLE_NAME,PROJECT_ID,SOURCE_CITY,DESTINATION_CITY,NUMBER_OF_TUBES,NUMBER_OF_STRANDS,LENGTH,DRAWING_TYPE,FIBER_NETWORK_LEVEL FROM FIBER_CABLES A WHERE SOURCE_ID IN (:param1) OR DESTINATION_ID IN (:param1)");
-				Query fiberQuery=  session.createSQLQuery("SELECT distinct A.SOURCE_LNG,A.SOURCE_LAT,A.DESTINATION_LNG,A.DESTINATION_LAT, A.FIBER_CABLE_ID,A.SOURCE_WARE_ID,A.SOURCE_ID,A.SOURCE_NAME,A.DESTINATION_WARE_ID,A.DESTINATION_ID,A.DESTINATION_NAME,(SELECT COUNT(*) FROM FIBER_TUBES B WHERE B.FIBER_CABLE_ID=A.FIBER_CABLE_ID) AS Tube_Count,(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.FIBER_CABLE_ID=A.FIBER_CABLE_ID) AS Strand_Count,A.FIBER_CABLE_NAME,A.PROJECT_ID,A.SOURCE_CITY,A.DESTINATION_CITY,A.NUMBER_OF_TUBES,A.NUMBER_OF_STRANDS,A.LENGTH,A.DRAWING_TYPE,A.FIBER_NETWORK_LEVEL FROM FIBER_CABLES A LEFT  JOIN FIBER_AUXILIARY_POINTS D ON A.FIBER_CABLE_ID=D.FIBER_CABLE_ID WHERE A.SOURCE_ID IN (:param1) OR A.DESTINATION_ID IN (:param1) OR D.AUXILIARY_POINT_ID IN (:param1)");
-                fiberQuery.setParameterList("param1",idsArray);
-				List<Object> fiberList = fiberQuery.list();
-				//System.out.println("fiberList "+mapper.writeValueAsString(fiberList));
-				
-				
-				Query fiberAuxiliaryQuery = session.createSQLQuery("SELECT B.LONGITUDE,B.LATITUDE,B.DISTANCE_FROM_SOURCE,B.WARE_ID,B.AUXILIARY_POINT_ID,B.AUXILIARY_POINT_NAME,B.FIBER_CABLE_ID,B.AUXILIARY_ID FROM FIBER_CABLES A,FIBER_AUXILIARY_POINTS B WHERE A.FIBER_CABLE_ID=B.FIBER_CABLE_ID AND B.FIBER_CABLE_ID IN (:param1) ORDER BY B.SEQ_SORTING ASC");
-				fiberAuxiliaryQuery.setParameterList("param1",findListId(fiberList,"FiberCable"));
-				List<Object> fiberAuxiliary_Data = fiberAuxiliaryQuery.list();
-				//System.out.println("fiberAuxiliary_Data "+mapper.writeValueAsString(fiberAuxiliary_Data));
-				
-				Query fiberTubesQuery = session.createSQLQuery("SELECT b.TUBE_ID,b.SOURCE_LONGITUDE,b.SOURCE_LATITUDE,b.DESTINATION_LONGITUDE,b.DESTINATION_LATITUDE,b.SOURCE_WARE_ID,b.SOURCE_ID,b.SOURCE_NAME,b.DESTINATION_WARE_ID,b.DESTINATION_ID,b.DESTINATION_NAME,(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.TUBE_ID=b.TUBE_ID),b.FIBER_CABLE_ID,b.TUBE_NAME FROM FIBER_TUBES b,FIBER_CABLES a WHERE a.FIBER_CABLE_ID=b.FIBER_CABLE_ID AND b.SOURCE_ID IN (:param1) OR b.DESTINATION_ID IN (:param1)");
-				fiberTubesQuery.setParameterList("param1",idsArray);
-				List<Object> fiberTubes = fiberTubesQuery.list();
-
-
-				Query tubesAuxiliariesQuery = session.createSQLQuery("SELECT c.TUBE_ID,c.LONGITUDE,c.LATITUDE,c.WARE_ID,c.AUXILIARY_POINT_ID,c.AUXILIARY_POINT_NAME,c.DISTANCE_FROM_SOURCE,c.SEQ_SORTING,c.AUXILIARY_ID FROM TUBE_AUXILIARY_POINTS c,FIBER_TUBES b,FIBER_CABLES a WHERE a.FIBER_CABLE_ID=b.FIBER_CABLE_ID and b.TUBE_ID=c.TUBE_ID AND AUXILIARY_POINT_ID IN (:param1) ORDER BY c.SEQ_SORTING ASC");
-				tubesAuxiliariesQuery.setParameterList("param1",idsArray);
-				List<Object> tubesAuxiliaries = tubesAuxiliariesQuery.list();
-		
-				Query fiberStrandsQuery = session.createSQLQuery("SELECT b.STRAND_ID,b.SOURCE_LONGITUDE,b.SOURCE_LATITUDE,b.DESTINATION_LONGITUDE,b.DESTINATION_LATITUDE,b.SOURCE,b.DESTINATION,b.TUBE_ID,b.FIBER_CABLE_ID,b.STRAND_NAME FROM FIBER_STRANDS b,FIBER_CABLES a WHERE a.FIBER_CABLE_ID=b.FIBER_CABLE_ID AND b.SOURCE IN (:param1) OR b.DESTINATION IN (:param1)");
-				fiberStrandsQuery.setParameterList("param1",idsArray);
-				List<Object> fiberStrands = fiberStrandsQuery.list();
-				
-				//Query strandsAuxiliariesQuery = session.createSQLQuery("SELECT c.STRAND_ID,c.LONGITUDE,c.LATITUDE,c.AUXILIARY_NAME,c.DISTANCE_FROM_SOURCE,c.SEQ_SORTING FROM STRAND_AUXILIARY_POINTS c,FIBER_STRANDS b,FIBER_CABLES a WHERE a.FIBER_CABLE_ID=b.FIBER_CABLE_ID and b.STRAND_ID=c.STRAND_ID AND AUXILIARY_POINT_ID IN (:param1) ORDER BY c.SEQ_SORTING ASC ");
-				//strandsAuxiliariesQuery.setParameterList("param1",idsArray);
-				//List<Object> strandsAuxiliaries = strandsAuxiliariesQuery.list();
-				
-				rtn.put("nearstPointsManhole",nearstPointsManhole);	
-				rtn.put("nearstPointsHandhole",nearstPointsHandhole);
-				rtn.put("nearstPointsDistribBoard",nearstPointsDistribBoard);
-				rtn.put("nearstPointsfiberCable",fiberList);
-				rtn.put("nearstPointsfiberCableAuxiliaries",fiberAuxiliary_Data);
-			} catch (Exception e) {
-				logger.info("Error in retreiving  Data from database" + exceptionAsString);
-			}
-
-			finally {
-				if (session != null && session.isOpen()) {
-					tx.commit();
-					session.close();
-				}
-			}
-		}
-		return rtn;
-	}
-*/	
-
-
 }
