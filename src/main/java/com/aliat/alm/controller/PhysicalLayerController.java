@@ -3415,6 +3415,14 @@ public class PhysicalLayerController {
 						.list();
 				System.out.println("countConnections " + map.writeValueAsString(countConnections));
 				rtn.put("countConnections", countConnections);
+				
+				
+				
+				Object DbMappingCount = session
+						.createNativeQuery("Select count(*) FROM DISTRIBUTION_BOARD_MAPPING where DB_ID='"
+								+ distBoardSel + "' ").uniqueResult();
+
+				rtn.put("DbMappingCount", DbMappingCount);
 
 			} catch (Exception e) {
 
@@ -7353,13 +7361,19 @@ public class PhysicalLayerController {
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
-				Object BackboneCount = session
+				Object totalDBCount = session
 						.createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD WHERE PROJECT_ID='"
-								+ request.getParameter("ProjectId") + "' AND DB_NETWORK_LEVEL = 'backbone'")
+								+ request.getParameter("ProjectId") + "' AND DB_NETWORK_LEVEL = '"+request.getParameter("networkLevel")+"'   ")
 						.uniqueResult();
-				rtn.put("BackboneCount", BackboneCount);
+				rtn.put("totalDBCount", totalDBCount);
+				
+				Object totalDBMappingCount = session
+						.createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING A LEFT JOIN distribution_board B ON A.DB_ID = B.DB_ID WHERE "
+								+ " B.DB_NETWORK_LEVEL = '"+request.getParameter("networkLevel")+"'   ")
+						.uniqueResult();
+				rtn.put("totalDBMappingCount", totalDBMappingCount);
 
-				Object MetroCount = session
+				/*Object MetroCount = session
 						.createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD WHERE PROJECT_ID='"
 								+ request.getParameter("ProjectId") + "' AND DB_NETWORK_LEVEL = 'metro'")
 						.uniqueResult();
@@ -7369,7 +7383,7 @@ public class PhysicalLayerController {
 						.createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD WHERE PROJECT_ID='"
 								+ request.getParameter("ProjectId") + "' AND DB_NETWORK_LEVEL = 'access'")
 						.uniqueResult();
-				rtn.put("AccessCount", AccessCount);
+				rtn.put("AccessCount", AccessCount);*/
 
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -7455,6 +7469,12 @@ public class PhysicalLayerController {
 						.uniqueResult();
 
 				rtn.put("CountDistBoard", CountDistBoard);
+				
+				Object CountDistBoardMapping = session
+						.createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING ")
+						.uniqueResult();
+
+				rtn.put("CountDistBoardMapping", CountDistBoardMapping);
 
 			} catch (Exception e) {
 				sw = new StringWriter();
