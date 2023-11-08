@@ -3621,226 +3621,23 @@ $("#nodesActiveCheckAllBoq").bind("change",function(){
 		}
 	 });
 			
-			
-
-
 	$('#trenchCheckAllBoq').bind("change",function() {
 		if ($(this).is(':checked')){
-
-			$("#Trench_f_CurrentPhysicalLayer > .AllTrenches").prop("checked",true);	
-			
-			$("#Trench_f_CurrentPhysicalLayer").find(' > ul > li ').each(function(){			
-				
-				trenchId=$(this).attr('id');
-				$(this).children('input:checkbox').prop('checked', true);
-				
-				if(directionHashmapTrench.get(trenchId) != undefined) {
-					for(ii = 0; ii < directionHashmapTrench.get(trenchId).length; ii++) {
-						directionHashmapTrench.get(trenchId)[ii].setMap(null); 
-						directionHashmapTrench.get(trenchId).mapLabel.setMap(null);
-					}
-				}
-
-				if(trenchArray[trenchId]){
-			
-					if(trenchArray[trenchId].getMap()==null){
-						trenchArray[trenchId].setMap(map);
-					}
-				$("#"+trenchId+" .Duct").each(function(){
-								
-					$(this).children('input:checkbox').prop('checked', true);
-								
-					var ductId=$(this).attr('id');
-					
-					if(directionHashmapDuct.get(ductId) != undefined) {
-						for(ii = 0; ii < directionHashmapDuct.get(ductId).length; ii++) {
-							directionHashmapDuct.get(ductId)[ii].setMap(null); 
-							directionHashmapDuct.get(ductId).mapLabel.setMap(null);
-						}
-					}
-				
-					if(!ductArray[ductId]){
-						var path=window["mapPoints_"+ductId];
-						buildPath(ductId,path,ductArray,allDucts,"Duct",'#8e8080',0.6,10,'#8e8080',1);
-					}
-					if(ductArray[ductId].getMap()==null){
-						ductArray[ductId].setMap(map);
-					}
-					
-					// Show and Hide the label of each duct depending on the checkLabel dropdown
-					if($("#ductMapCheck_Labels").prop("checked")==true){
-						ductArray[ductId].mapLabel.setMap(map);
-					}
-					else {
-						ductArray[ductId].mapLabel.setMap(null);
-					}
-				
-				$('#ductCheckAllBoq').prop('checked', true);
-				
-				$("#"+trenchId).find(' > ul > li ').each(function(){
-					var ductFolderId =$(this).attr('id');						
-					$("#"+ductFolderId).children(':checkbox').prop( "checked", true );
-				});	
-								
-				});
-
-				}
-				else{
-					var path=window["mapPoints_"+trenchId];
-					buildPath(trenchId,path,trenchArray,allTrenches,"Trench_f_",'brown',0.4,20,'brown',1);
-					trenchArray[trenchId].setMap(map);
-					
-					$("#"+trenchId).find(' > ul > li >ul >li').each(function(){ 
-
-						var ductId=$(this).attr('id');
-						$(this).find('input:checkbox:first').prop('checked', true);
-								
-						var path=window["mapPoints_"+ductId];
-						buildPath(ductId,path,ductArray,allDucts,"Duct",'#8e8080',0.6,10,'#8e8080',1);
-						ductArray[ductId].setMap(map);		
-						
-					});
-					$("#"+trenchId).find(' > ul > li ').each(function(){
-						var ductFolderId =$(this).attr('id');						
-						$("#"+ductFolderId).children(':checkbox').prop( "checked", true );
-						$('#ductCheckAllBoq').prop('checked', true);
-					});		
-				}			
-			});		
-			$('#trenchCheckAllBoq').prop('checked', true);
-
+			trenchLayerCheckAll();
 		}
 		else{
-			
-			$("#Trench_f_CurrentPhysicalLayer > .AllTrenches").prop("checked",false);	
-			
-			$("#Trench_f_CurrentPhysicalLayer").find(' > ul > li ').each(function(){	
-				var trenchId=$(this).attr('id');
-				$(this).children('input:checkbox').prop('checked', false);
-				
-				if(directionHashmapTrench.get(trenchId) != undefined) {
-					for(ii = 0; ii < directionHashmapTrench.get(trenchId).length; ii++) {
-						directionHashmapTrench.get(trenchId)[ii].setMap(null); 
-						directionHashmapTrench.get(trenchId).mapLabel.setMap(null);
-					}
-				}
-				
-				if(trenchArray[trenchId]) {
-					trenchArray[trenchId].setMap(null);
-					trenchArray[trenchId].mapLabel.setMap(null);
-				}
-
-				$("#"+trenchId+" .Duct").each(function(){
-					$(this).children('input:checkbox').prop('checked', false);
-					var ductId=$(this).attr('id');	
-					
-					if(directionHashmapDuct.get(ductId) != undefined) {
-						for(ii = 0; ii < directionHashmapDuct.get(ductId).length; ii++) {
-							directionHashmapDuct.get(ductId)[ii].setMap(null); 
-							directionHashmapDuct.get(ductId).mapLabel.setMap(null);
-						}
-					}
-					
-					if(ductArray[ductId]) {
-						ductArray[ductId].setMap(null);
-						ductArray[ductId].mapLabel.setMap(null);
-					}
-					$('#ductCheckAllBoq').prop('checked', false);
-					
-				});		
-				$("#"+trenchId).find(' > ul > li ').each(function(){
-					var ductFolderId =$(this).attr('id');						
-					$("#"+ductFolderId).children(':checkbox').prop( "checked", false );
-				});				
-	   
-			});
-				}
+			trenchLayerUnCheckAll();
+		}
 	});
 	
 	$('#ductCheckAllBoq').bind("change",function() {
 		if ($(this).is(':checked')){
-			$("#Trench_f_CurrentPhysicalLayer").find(' > ul > li ').each(function(){			
-				
-				var trenchId=$(this).attr('id');	
-				$("#"+trenchId+" .Duct").each(function(){
-						$(this).children('input:checkbox').prop('checked', true);
-						ductId=$(this).attr('id');
-						
-					if(directionHashmapDuct.get(ductId) != undefined) {
-							for(ii = 0; ii < directionHashmapDuct.get(ductId).length; ii++) {
-								directionHashmapDuct.get(ductId)[ii].setMap(null); 
-								directionHashmapDuct.get(ductId).mapLabel.setMap(null);
-							}
-					}
-					if(ductArray[ductId]){						
-						ductArray[ductId].setMap(map);	
-					}
-					else{						
-						var path=window["mapPoints_"+ductId];
-						buildPath(ductId,path,ductArray,allDucts,"Duct",'#8e8080',0.6,10,'#8e8080',1);
-						ductArray[ductId].setMap(map);									
-					}		
-					// Show and Hide the label of each duct depending on the checkLabel dropdown
-					if($("#ductMapCheck_Labels").prop("checked")==true){
-						if(ductArray[ductId]){
-							ductArray[ductId].mapLabel.setMap(map);
-						}
-					}
-					else {
-						if(ductArray[ductId]){
-							ductArray[ductId].mapLabel.setMap(null);
-						}
-					}	
-						
-						
-					/*	if(!ductArray[ductId]){
-					
-							var path=window["mapPoints_"+ductId];
-							//buildDuct(ductId,path);
-							buildPath(ductId,path,ductArray,allDucts,"Duct",'#8e8080',0.6,7,'#8e8080',1);
-						}
-						if(ductArray[ductId].getMap()==null){
-							ductArray[ductId].setMap(map);
-						}
-						
-						*/
-						$("#"+trenchId).find(' > ul > li ').each(function(){
-							var ductFolderId =$(this).attr('id');						
-							$("#"+ductFolderId).children(':checkbox').prop( "checked", true );
-						});		
-
-				  });
-				});
-					$('#ductCheckAllBoq').prop('checked', true);
-			}
-			else{
-					$("#Trench_f_CurrentPhysicalLayer").find(' > ul > li ').each(function(){	
-						var trenchId=$(this).attr('id');	
-						$("#"+trenchId+" .Duct").each(function(){
-							var ductId=$(this).attr('id');
-							$(this).children('input:checkbox').prop('checked', false);
-							
-							if(directionHashmapDuct.get(ductId) != undefined) {
-								for(ii = 0; ii < directionHashmapDuct.get(ductId).length; ii++) {
-									directionHashmapDuct.get(ductId)[ii].setMap(null); 
-									directionHashmapDuct.get(ductId).mapLabel.setMap(null);
-								}
-							}
-							if(ductArray[ductId]) {
-								ductArray[ductId].setMap(null);
-								ductArray[ductId].mapLabel.setMap(null);
-							}
-					 });
-						
-						
-					$("#"+trenchId).find(' > ul > li ').each(function(){
-							var ductFolderId =$(this).attr('id');						
-							$("#"+ductFolderId).children(':checkbox').prop( "checked", false );
-					});	
-				});
-					$('#ductCheckAllBoq').prop('checked', false);
-				}
-			});
+			ductLayerCheckAll();
+		}
+		else{
+			ductLayerUnCheckAll();
+		}
+	});
 
 											   
 	}
@@ -4218,7 +4015,225 @@ function strandLayerUnCheckAll(){
 	});			
 }
 
+function trenchLayerCheckAll(){
 
+	$("#Trench_f_CurrentPhysicalLayer > .AllTrenches").prop("checked",true);	
+	
+	$("#Trench_f_CurrentPhysicalLayer").find(' > ul > li ').each(function(){			
+		
+		trenchId=$(this).attr('id');
+		$(this).children('input:checkbox').prop('checked', true);
+		
+		if(directionHashmapTrench.get(trenchId) != undefined) {
+			for(ii = 0; ii < directionHashmapTrench.get(trenchId).length; ii++) {
+				directionHashmapTrench.get(trenchId)[ii].setMap(null); 
+				directionHashmapTrench.get(trenchId).mapLabel.setMap(null);
+			}
+		}
+
+		if(trenchArray[trenchId]){
+	
+			if(trenchArray[trenchId].getMap()==null){
+				trenchArray[trenchId].setMap(map);
+			}
+		$("#"+trenchId+" .Duct").each(function(){
+						
+			$(this).children('input:checkbox').prop('checked', true);
+						
+			var ductId=$(this).attr('id');
+			
+			if(directionHashmapDuct.get(ductId) != undefined) {
+				for(ii = 0; ii < directionHashmapDuct.get(ductId).length; ii++) {
+					directionHashmapDuct.get(ductId)[ii].setMap(null); 
+					directionHashmapDuct.get(ductId).mapLabel.setMap(null);
+				}
+			}
+		
+			if(!ductArray[ductId]){
+				var path=window["mapPoints_"+ductId];
+				buildPath(ductId,path,ductArray,allDucts,"Duct",'#8e8080',0.6,10,'#8e8080',1);
+			}
+			if(ductArray[ductId].getMap()==null){
+				ductArray[ductId].setMap(map);
+			}
+			
+			// Show and Hide the label of each duct depending on the checkLabel dropdown
+			if($("#ductMapCheck_Labels").prop("checked")==true){
+				ductArray[ductId].mapLabel.setMap(map);
+			}
+			else {
+				ductArray[ductId].mapLabel.setMap(null);
+			}
+		
+		$('#ductCheckAllBoq').prop('checked', true);
+		
+		$("#"+trenchId).find(' > ul > li ').each(function(){
+			var ductFolderId =$(this).attr('id');						
+			$("#"+ductFolderId).children(':checkbox').prop( "checked", true );
+		});	
+						
+		});
+
+		}
+		else{
+			var path=window["mapPoints_"+trenchId];
+			buildPath(trenchId,path,trenchArray,allTrenches,"Trench_f_",'brown',0.4,20,'brown',1);
+			trenchArray[trenchId].setMap(map);
+			
+			$("#"+trenchId).find(' > ul > li >ul >li').each(function(){ 
+
+				var ductId=$(this).attr('id');
+				$(this).find('input:checkbox:first').prop('checked', true);
+						
+				var path=window["mapPoints_"+ductId];
+				buildPath(ductId,path,ductArray,allDucts,"Duct",'#8e8080',0.6,10,'#8e8080',1);
+				ductArray[ductId].setMap(map);		
+				
+			});
+			$("#"+trenchId).find(' > ul > li ').each(function(){
+				var ductFolderId =$(this).attr('id');						
+				$("#"+ductFolderId).children(':checkbox').prop( "checked", true );
+				$('#ductCheckAllBoq').prop('checked', true);
+			});		
+		}			
+	});		
+	$('#trenchCheckAllBoq').prop('checked', true);
+
+}
+
+function trenchLayerUnCheckAll(){
+	
+	$("#Trench_f_CurrentPhysicalLayer > .AllTrenches").prop("checked",false);	
+	
+	$("#Trench_f_CurrentPhysicalLayer").find(' > ul > li ').each(function(){	
+		var trenchId=$(this).attr('id');
+		$(this).children('input:checkbox').prop('checked', false);
+		
+		if(directionHashmapTrench.get(trenchId) != undefined) {
+			for(ii = 0; ii < directionHashmapTrench.get(trenchId).length; ii++) {
+				directionHashmapTrench.get(trenchId)[ii].setMap(null); 
+				directionHashmapTrench.get(trenchId).mapLabel.setMap(null);
+			}
+		}
+		
+		if(trenchArray[trenchId]) {
+			trenchArray[trenchId].setMap(null);
+			trenchArray[trenchId].mapLabel.setMap(null);
+		}
+
+		$("#"+trenchId+" .Duct").each(function(){
+			$(this).children('input:checkbox').prop('checked', false);
+			var ductId=$(this).attr('id');	
+			
+			if(directionHashmapDuct.get(ductId) != undefined) {
+				for(ii = 0; ii < directionHashmapDuct.get(ductId).length; ii++) {
+					directionHashmapDuct.get(ductId)[ii].setMap(null); 
+					directionHashmapDuct.get(ductId).mapLabel.setMap(null);
+				}
+			}
+			
+			if(ductArray[ductId]) {
+				ductArray[ductId].setMap(null);
+				ductArray[ductId].mapLabel.setMap(null);
+			}
+			$('#ductCheckAllBoq').prop('checked', false);
+			
+		});		
+		$("#"+trenchId).find(' > ul > li ').each(function(){
+			var ductFolderId =$(this).attr('id');						
+			$("#"+ductFolderId).children(':checkbox').prop( "checked", false );
+		});				
+
+	});
+		
+}
+
+function ductLayerCheckAll(){
+
+	$("#Trench_f_CurrentPhysicalLayer").find(' > ul > li ').each(function(){			
+		
+		var trenchId=$(this).attr('id');	
+		$("#"+trenchId+" .Duct").each(function(){
+				$(this).children('input:checkbox').prop('checked', true);
+				ductId=$(this).attr('id');
+				
+			if(directionHashmapDuct.get(ductId) != undefined) {
+					for(ii = 0; ii < directionHashmapDuct.get(ductId).length; ii++) {
+						directionHashmapDuct.get(ductId)[ii].setMap(null); 
+						directionHashmapDuct.get(ductId).mapLabel.setMap(null);
+					}
+			}
+			if(ductArray[ductId]){						
+				ductArray[ductId].setMap(map);	
+			}
+			else{						
+				var path=window["mapPoints_"+ductId];
+				buildPath(ductId,path,ductArray,allDucts,"Duct",'#8e8080',0.6,10,'#8e8080',1);
+				ductArray[ductId].setMap(map);									
+			}		
+			// Show and Hide the label of each duct depending on the checkLabel dropdown
+			if($("#ductMapCheck_Labels").prop("checked")==true){
+				if(ductArray[ductId]){
+					ductArray[ductId].mapLabel.setMap(map);
+				}
+			}
+			else {
+				if(ductArray[ductId]){
+					ductArray[ductId].mapLabel.setMap(null);
+				}
+			}	
+				
+				
+			/*	if(!ductArray[ductId]){
+			
+					var path=window["mapPoints_"+ductId];
+					//buildDuct(ductId,path);
+					buildPath(ductId,path,ductArray,allDucts,"Duct",'#8e8080',0.6,7,'#8e8080',1);
+				}
+				if(ductArray[ductId].getMap()==null){
+					ductArray[ductId].setMap(map);
+				}
+				
+				*/
+				$("#"+trenchId).find(' > ul > li ').each(function(){
+					var ductFolderId =$(this).attr('id');						
+					$("#"+ductFolderId).children(':checkbox').prop( "checked", true );
+				});		
+
+		  });
+		});
+			$('#ductCheckAllBoq').prop('checked', true);
+	
+}
+function ductLayerUnCheckAll(){
+
+	$("#Trench_f_CurrentPhysicalLayer").find(' > ul > li ').each(function(){	
+		var trenchId=$(this).attr('id');	
+		$("#"+trenchId+" .Duct").each(function(){
+			var ductId=$(this).attr('id');
+			$(this).children('input:checkbox').prop('checked', false);
+			
+			if(directionHashmapDuct.get(ductId) != undefined) {
+				for(ii = 0; ii < directionHashmapDuct.get(ductId).length; ii++) {
+					directionHashmapDuct.get(ductId)[ii].setMap(null); 
+					directionHashmapDuct.get(ductId).mapLabel.setMap(null);
+				}
+			}
+			if(ductArray[ductId]) {
+				ductArray[ductId].setMap(null);
+				ductArray[ductId].mapLabel.setMap(null);
+			}
+	 });
+		
+		
+	$("#"+trenchId).find(' > ul > li ').each(function(){
+			var ductFolderId =$(this).attr('id');						
+			$("#"+ductFolderId).children(':checkbox').prop( "checked", false );
+	});	
+});
+	$('#ductCheckAllBoq').prop('checked', false);
+
+}
 //Event for tree-Map view/hide from Map for all elements 	
 function allElementsCheckFilter(){
 
