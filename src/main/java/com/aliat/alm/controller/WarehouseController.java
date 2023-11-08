@@ -124,6 +124,8 @@ public class WarehouseController {
 							.setResultTransformer(Transformers.aliasToBean(WareHouseListView.class)).list();
 
 					model.addAttribute("ListGridTable", mapper.writeValueAsString(listAR));
+					session.flush();
+					session.clear();
 
 				} catch (Exception e) {
 					logger.info("Error on WarehouseListView with a message : " + e);
@@ -296,6 +298,8 @@ public class WarehouseController {
 					rtn.put("listwarehouse", listwarehouse);
 					System.out.println("Filtered Array: " + mapper.writeValueAsString(listwarehouse));
 				}
+				session.flush();
+				session.clear();
 
 			} catch (Exception e) {
 				logger.info("Error in showing the filtered warehouse list view with a message :" + e);
@@ -631,7 +635,8 @@ public class WarehouseController {
 					} else {
 						model.addAttribute("listSiteImage", "addNew");
 					}
-
+					session.flush();
+					session.clear();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -858,6 +863,8 @@ public class WarehouseController {
 								session.createNativeQuery("SELECT WAREHOUSE FROM SEQ_TABLE").uniqueResult().toString());
 						session.createNativeQuery("UPDATE SEQ_TABLE SET WAREHOUSE = WAREHOUSE + 1 ").executeUpdate();						
 						session.createNativeQuery("commit").executeUpdate();
+						session.flush();
+						session.clear();
 					}
 					// wareID = "WARE_" + calendar.get(Calendar.YEAR) + "_" +
 					// appConfig.getSequenceNbr(12);
@@ -905,6 +912,8 @@ public class WarehouseController {
 				Wareh.setWhStatus(request.getParameter("status"));
 
 				session.saveOrUpdate(Wareh);
+				session.flush();
+				session.clear();
 
 				warePassive.setWareID(wareID);
 				warePassive.setWareName(request.getParameter("warehouseName"));
@@ -931,12 +940,16 @@ public class WarehouseController {
 				warePassive.setClusterID(clusterID);
 				warePassive.setClusterName(clusterName);
 				session.saveOrUpdate(warePassive);
+				session.flush();
+				session.clear();
 
 				if (request.getParameterValues("slctdelWareFinance[]") != null) {
 
 					query = session.createQuery("delete WarehouseProfitloss t where t.id IN (:param1) ");
 					query.setParameterList("param1", request.getParameterValues("slctdelWareFinance[]"));
 					query.executeUpdate();
+					session.flush();
+					session.clear();
 				}
 
 				if (itemParameters.getDictParameter() != null) {
@@ -1040,7 +1053,8 @@ public class WarehouseController {
 						wareProfitLoss.setClusterName(clusterName);
 
 						session.saveOrUpdate(wareProfitLoss);
-
+						session.flush();
+						session.clear();
 					}
 				}
 
@@ -1185,17 +1199,27 @@ public class WarehouseController {
 					query.setFirstResult(0);
 					query.setMaxResults(40);
 					rtn.put("globalList", query.list());
+					session.flush();
+					session.clear();
 				} else {
 					query = session
 							.createQuery("SELECT warehouseName, wareSiteID from Warehouse where wareSite = '1' ");
 					query.setFirstResult(0);
 					query.setMaxResults(40);
 					rtn.put("listSite", query.list());
+					session.flush();
+					session.clear();
 				}
 			} catch (Exception e) {
 				logger.info("Error in GetAllWarehouse  Data from database", e);
 			}
-			session.getSessionFactory().close();
+			 finally {
+					if (session != null && session.isOpen()) {
+						tx.commit();
+						session.close();
+						session.getSessionFactory().close();
+					}
+				}
 		}
 		return rtn;
 	}

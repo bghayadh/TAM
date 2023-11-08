@@ -718,6 +718,21 @@ function panTo(newLat, newLng) {
 		  setTimeout(doPan, 20);
 		}
 	  }
+	  
+function doPan() {
+ 	  var next = panPath.shift();
+ 	  if (next != null) {
+ 	    // Continue our current pan action
+  map.panTo( new google.maps.LatLng(next[0], next[1]));
+  setTimeout(doPan, 20 );
+} else {
+  // We are finished with this pan - check if there are any queue'd up locations to pan to 
+  var queued = panQueue.shift();
+  if (queued != null) {
+    panTo(queued[0], queued[1]);
+  }
+}
+}  		   
 
 function tree_prop_selection(selector){
 	if(selector==null) {
@@ -737,34 +752,8 @@ function tree_prop_selection(selector){
 	    $("li > .TreeSpan").css("background", "").removeClass("selected-span");
 	    $(this).css("background-color", "#97b9cc").addClass("selected-span");
 		});
-		//$("#" + selector + " li > .TreeSpan").on('click', function (e) {
 }
-	/*
-function tree_selection(selectedSpanId){
-	console.log(" TREE SELECTION");
-	$("#" + selectedSpanId + " li > .TreeSpan").on('click', function (e) {
-		$("li > .TreeSpan").css("background", "").removeClass("selected-span");
-		$(this).css("background-color", "#97b9cc").addClass("selected-span");
-		e.stopPropagation();
-	});
-}
-function initialSelection(){
-	$(".tree li > .TreeSpan").on('click', function (e) {          	
-		console.log("INITIAL");	
-		Site_Boq("");	
-		
-		if ($(this).parent('li').attr('id') == "initial_ul") {
-			markersSite="";
-			map.setZoom(6);
-			var Nairobi=new google.maps.LatLng(0.796530,37.959529);
-			map.setCenter(Nairobi);
-		}
-	    $(".tree li > .TreeSpan").css("background", "").removeClass("selected-span");
-	    $(this).css("background-color", "#97b9cc").addClass("selected-span");
-	    e.stopPropagation();
-	});
-}
-*/
+
 function folder(){
 $(".folder").on('click', function (e) { 
 	console.log(">>> folder <<<");
@@ -778,8 +767,6 @@ $(".folder").on('click', function (e) {
      }	        
 });		
 }
-
-
 
 function handleLocationError(browserHasGeolocation, infowindow, pos) {
 		infowindow.setPosition(pos);
@@ -1990,7 +1977,7 @@ function DefaultSort(arr,domain) {
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 //TO BE DELETED
-		function tree_prop_general(){
+function tree_prop_general(){
 	console.log(" tree porp general in network tree");
 	$('.tree li > .TreeSpan').on('click', function (e) {		
 		$("#initial_ul").find(' > ul > li').css("background", "").removeClass("selected-span");

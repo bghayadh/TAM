@@ -18,12 +18,10 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Query;
-import org.hibernate.SQLQuery;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.transform.AliasToBeanResultTransformer;
-import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,7 +37,6 @@ import com.aliat.alm.models.AgentBorder;
 import com.aliat.alm.models.AreaBorder;
 import com.aliat.alm.models.RegionBorder;
 import com.aliat.alm.models.Shops;
-import com.aliat.alm.models.ShopsListView;
 import com.aliat.alm.services.ItemParameters;
 import com.aliat.alm.services.LoginServices;
 import com.fasterxml.jackson.core.JsonGenerationException;
@@ -51,6 +48,7 @@ public class ShopsController {
 	private static Session session = null;
 	private static Transaction tx = null;
 	private static ObjectMapper mapper = new ObjectMapper();
+	@SuppressWarnings("rawtypes")
 	private static Query query = null;
 	private static StringWriter sw;
 	private static String exceptionAsString;
@@ -58,13 +56,13 @@ public class ShopsController {
 
 	@Autowired
 	Form form;
-	
+
 	@Autowired
 	ALMSessions almsessions;
-	
+
 	@Autowired
 	Notify notification;
-	
+
 	@RequestMapping(value = "/ShopsListView", method = RequestMethod.GET)
 	public String ShopsListView(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
 
@@ -79,26 +77,22 @@ public class ShopsController {
 			notification.headerNotifications(session, model);
 
 			try {
-				List<ShopsListView> listShops = new ArrayList<ShopsListView>();
 				String str = "select SHOPS_ID as shopId,Owner as owner,SHOP_NAME as shopName,ADDRESS as address,REGION_NAME as regionName,TO_CHAR(LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') as lastModifiedDate from SHOPS ORDER BY LAST_MODIFIED_DATE DESC ";
-				query = session.createSQLQuery(str);
+				query = session.createNativeQuery(str);
 
-				listShops = ((SQLQuery) query).addScalar("shopId").addScalar("owner").addScalar("shopName")
-						.addScalar("address").addScalar("regionName").addScalar("lastModifieddate")
-						.setResultTransformer(Transformers.aliasToBean(ShopsListView.class)).list();
-
-				model.addAttribute("ListGridTable", mapper.writeValueAsString(listShops));
+				model.addAttribute("ListGridTable", mapper.writeValueAsString(session.createNativeQuery(str).list()));
 
 			} catch (Exception e) {
 				sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
 				exceptionAsString = sw.toString();
-				logger.finest("Error in ShopsListView due to \n "+ exceptionAsString);
-				logger.info("Error in ShopsListView due to \n "+ exceptionAsString);
+				logger.finest("Error in ShopsListView due to \n " + exceptionAsString);
+				logger.info("Error in ShopsListView due to \n " + exceptionAsString);
 			} finally {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 
@@ -115,7 +109,7 @@ public class ShopsController {
 		Map<String, Object> rtn = new LinkedHashMap<>();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
-			return rtn;	
+			return rtn;
 		}
 		session = almsessions.getSession();
 		if (session != null && session.isOpen()) {
@@ -123,14 +117,13 @@ public class ShopsController {
 			tx = session.beginTransaction();
 			notification.headerNotifications(session, model);
 
-			
 			try {
-				String startdate, enddate,  regionid, regionname;
+				String startdate, enddate, regionid, regionname;
 				startdate = request.getParameter("startDate");
 				enddate = request.getParameter("endDate");
 				regionid = request.getParameter("regionid");
 				regionname = request.getParameter("regionname");
-			
+
 				List<String> listShop = new ArrayList<String>();
 				String str = " select SHOPS_ID as shopId,Owner as owner,SHOP_NAME as shopName,ADDRESS as address,REGION_NAME as regionName , TO_CHAR(LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') as lastModifiedDate from SHOPS";
 
@@ -149,25 +142,24 @@ public class ShopsController {
 					str = str + " and upper(REGION_NAME) LIKE upper('%" + regionname + "%')";
 				}
 
-				
 				str = str + " ORDER BY LAST_MODIFIED_DATE DESC ";
 
-				
-				Query query = session.createSQLQuery(str);
+				query = session.createNativeQuery(str);
 
 				listShop = query.list();
-				rtn.put("listShop",listShop);
+				rtn.put("listShop", listShop);
 			} catch (Exception e) {
 				sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
 				exceptionAsString = sw.toString();
-			    logger.finest("Error in Filtered Shops List View due to \n "+ exceptionAsString);
-				logger.info("Error in  Filtered Shops List View due to \n "+ exceptionAsString);
+				logger.finest("Error in Filtered Shops List View due to \n " + exceptionAsString);
+				logger.info("Error in  Filtered Shops List View due to \n " + exceptionAsString);
 
 			} finally {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -195,31 +187,33 @@ public class ShopsController {
 			try {
 				String[] idList;
 				idList = request.getParameterValues("shopsID[]");
-				for (int i = 0; i < idList.length; i++) {
-					// Get AGENT_ID from the listview form
-					String idForm = idList[i];
+				if(idList != null) {
+					for (int i = 0; i < idList.length; i++) {
+						String idForm = idList[i];
 
-					query = session.createSQLQuery("delete SHOPS  where SHOPS_ID ='" + idForm + "'");
-					query.executeUpdate();
+						query = session.createNativeQuery("delete SHOPS  where SHOPS_ID ='" + idForm + "'");
+						query.executeUpdate();
 
+					}
+					tx.commit();
 				}
+				
 
 			} catch (Exception e) {
-
+				tx.rollback();
 				sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
 				exceptionAsString = sw.toString();
-				logger.finest("Error in ShopsDelete due to \n "+ exceptionAsString);
-				logger.info("Error in ShopsDelete due to \n "+ exceptionAsString);
+				logger.finest("Error in ShopsDelete due to \n " + exceptionAsString);
+				logger.info("Error in ShopsDelete due to \n " + exceptionAsString);
 
 			}
 
 			finally {
 
 				if (session != null && session.isOpen()) {
-
-					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 
 				}
 			}
@@ -229,8 +223,7 @@ public class ShopsController {
 
 	}
 
-
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	@RequestMapping(value = "/ShopsFormView", method = RequestMethod.GET)
 	public String ShopsFormView(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
 
@@ -254,69 +247,71 @@ public class ShopsController {
 		session = almsessions.getSession();
 		if (session != null && session.isOpen()) {
 
-			
-			
-			
 			tx = session.beginTransaction();
 			notification.headerNotifications(session, model);
 			try {
-				
-			//////////////////////////////////////Area and Area Borders//////////////////////////////////////////////////
-			List<Object[]> areaIDs = new ArrayList<>();
-			List<Object> areas = new ArrayList<>();
-			List<Object> Area_Borders = new ArrayList<>();
-			String LatLong = null;
-			query = session.createSQLQuery("SELECT AREA_ID FROM AREA");
-			if(query.list().size() > 0) {
-				areaIDs = query.list();
-				for(int i = 0;i<areaIDs.size();i++) {
-					areas = new ArrayList<>();
-					query = session.createSQLQuery("SELECT AREA_NAME from AREA where AREA_ID='"+areaIDs.get(i)+"'");
-					String areaName = query.uniqueResult().toString();
-					
-					query = session.createSQLQuery("SELECT LISTAGG(a.LATITUDE || ',' || a.LONGTITUDE, ':') WITHIN GROUP (ORDER BY a.SEQ_SORTING + 0 ASC) AS borders " + 
-					" from area_border a" + 
-					" where area_id = '"+areaIDs.get(i)+"'");
-					
-					if(query.uniqueResult() != null) {
-					LatLong = query.uniqueResult().toString();
-					}else {
-					LatLong = "N/A";
+
+				////////////////////////////////////// Area and Area
+				////////////////////////////////////// Borders//////////////////////////////////////////////////
+				List<Object[]> areaIDs = new ArrayList<>();
+				List<Object> areas = new ArrayList<>();
+				List<Object> Area_Borders = new ArrayList<>();
+				String LatLong = null;
+				query = session.createNativeQuery("SELECT AREA_ID FROM AREA");
+				if (query.list().size() > 0) {
+					areaIDs = query.list();
+					for (int i = 0; i < areaIDs.size(); i++) {
+						areas = new ArrayList<>();
+						query = session
+								.createNativeQuery("SELECT AREA_NAME from AREA where AREA_ID='" + areaIDs.get(i) + "'");
+						String areaName = query.uniqueResult().toString();
+
+						query = session.createNativeQuery(
+								"SELECT LISTAGG(a.LATITUDE || ',' || a.LONGTITUDE, ':') WITHIN GROUP (ORDER BY a.SEQ_SORTING + 0 ASC) AS borders "
+										+ " from area_border a" + " where area_id = '" + areaIDs.get(i) + "'");
+
+						if (query.uniqueResult() != null) {
+							LatLong = query.uniqueResult().toString();
+						} else {
+							LatLong = "N/A";
+						}
+
+						areas.add(areaIDs.get(i));
+						areas.add(areaName);
+						areas.add(LatLong);
+						Area_Borders.add(areas);
 					}
-					
-					areas.add(areaIDs.get(i));
-					areas.add(areaName);
-					areas.add(LatLong);
-					Area_Borders.add(areas);
 				}
-			}
-								
-			//////////////////////////////////////Region and Region Borders//////////////////////////////////////////////////
+
+				////////////////////////////////////// Region and Region
+				////////////////////////////////////// Borders//////////////////////////////////////////////////
 				List<Object[]> regionIDs = new ArrayList<>();
 				List<Object> regions = new ArrayList<>();
 				List<Object> Region_Borders = new ArrayList<>();
-				
-				query = session.createSQLQuery("SELECT REGION_ID FROM REGION");
-				if(query.list().size() > 0) {
+
+				query = session.createNativeQuery("SELECT REGION_ID FROM REGION");
+				if (query.list().size() > 0) {
 					regionIDs = query.list();
-					for(int i = 0;i<regionIDs.size();i++) {
+					for (int i = 0; i < regionIDs.size(); i++) {
 						regions = new ArrayList<>();
-						query = session.createSQLQuery("SELECT REGION_NAME from REGION where REGION_ID='"+regionIDs.get(i)+"'");
+						query = session.createNativeQuery(
+								"SELECT REGION_NAME from REGION where REGION_ID='" + regionIDs.get(i) + "'");
 						String regionName = query.uniqueResult().toString();
-						
-						query = session.createSQLQuery("SELECT REGION_CODE from REGION where REGION_ID='"+regionIDs.get(i)+"'");
+
+						query = session.createNativeQuery(
+								"SELECT REGION_CODE from REGION where REGION_ID='" + regionIDs.get(i) + "'");
 						String regionCode = query.uniqueResult().toString();
-						
-						query = session.createSQLQuery("SELECT LISTAGG(a.LATITUDE || ',' || a.LONGTITUDE, ':') WITHIN GROUP (ORDER BY a.SEQ_SORTING + 0 ASC) AS borders " + 
-						" from REGION_BORDER a" + 
-						" where REGION_ID = '"+regionIDs.get(i)+"'");
-						
-						if(query.uniqueResult() != null) {
-						LatLong = query.uniqueResult().toString();
-						}else {
-						LatLong = "N/A";
+
+						query = session.createNativeQuery(
+								"SELECT LISTAGG(a.LATITUDE || ',' || a.LONGTITUDE, ':') WITHIN GROUP (ORDER BY a.SEQ_SORTING + 0 ASC) AS borders "
+										+ " from REGION_BORDER a" + " where REGION_ID = '" + regionIDs.get(i) + "'");
+
+						if (query.uniqueResult() != null) {
+							LatLong = query.uniqueResult().toString();
+						} else {
+							LatLong = "N/A";
 						}
-						
+
 						regions.add(regionIDs.get(i));
 						regions.add(regionName);
 						regions.add(regionCode);
@@ -345,72 +340,28 @@ public class ShopsController {
 					model.addAttribute("docStatus", "addNew");
 					model.addAttribute("listShopImage", "addNew");
 
-					//return the area and area_borders on load
-					if(Area_Borders.size() > 0) {
-					model.addAttribute("areasData", mapper.writeValueAsString(Area_Borders));
-					}else {
+					// return the area and area_borders on load
+					if (Area_Borders.size() > 0) {
+						model.addAttribute("areasData", mapper.writeValueAsString(Area_Borders));
+					} else {
 						model.addAttribute("areasData", "addNew");
 					}
-					
-					//return the region and region_borders on load
-					if(Region_Borders.size() > 0) {
-					model.addAttribute("regionsData", mapper.writeValueAsString(Region_Borders));
-					}else {
+
+					// return the region and region_borders on load
+					if (Region_Borders.size() > 0) {
+						model.addAttribute("regionsData", mapper.writeValueAsString(Region_Borders));
+					} else {
 						model.addAttribute("regionsData", "addNew");
 					}
 
 				} else {
 
 					System.out.println("navAction " + navAction);
-					result = form.NavigationNP(session, "Shops", "SHOPS_ID", shopId, "LAST_MODIFIED_DATE",
-							navAction);
+					result = form.NavigationNP(session, "Shops", "SHOPS_ID", shopId, "LAST_MODIFIED_DATE", navAction);
 
 					SelectedIndex = Integer.parseInt(result[1]);
 					shopId = result[2];
 					Shop = (Shops) session.get(Shops.class, shopId);
-
-					// to be deleted
-					/*
-					 * if (listAgentShops != null) {
-					 * 
-					 * query = session.createQuery("from AgentShops where shopsId like :param1");
-					 * query.setParameter("param1", shopId); listAgentShops = query.list();
-					 * model.addAttribute("listAgentShops",
-					 * mapper.writeValueAsString(listAgentShops));
-					 * 
-					 * System.out.println("agent shops list **** "+mapper.writeValueAsString(
-					 * listAgentShops)); EmptyList = listAgentShops.isEmpty(); if (EmptyList ==
-					 * true) { model.addAttribute("listAgentShops", "addNew");
-					 * 
-					 * model.addAttribute("listAgentDisplayName", "addNew");
-					 * 
-					 * } else {
-					 * 
-					 * valueOfAgent = listAgentShops.get(0).getAgentId() + "";
-					 * 
-					 * if (valueOfAgent != null) {
-					 * 
-					 * query = session.createQuery("from Agent where agentId like :param1");
-					 * query.setParameter("param1", valueOfAgent); listAgent = query.list();
-					 * System.out.println("list agent ******* "+mapper.writeValueAsString(listAgent)
-					 * ); EmptyList = listAgent.isEmpty(); if (EmptyList == true) {
-					 * 
-					 * } else {
-					 * 
-					 * valueOfAgent = listAgent.get(0).getDisplayName();
-					 * model.addAttribute("listAgentDisplayName",
-					 * mapper.writeValueAsString(listAgent));
-					 * 
-					 * } } }
-					 * 
-					 * } else {
-					 * 
-					 * model.addAttribute("listAgentShops", "addNew");
-					 * model.addAttribute("listAgentDisplayName", "addNew");
-					 * 
-					 * }
-					 */
-
 					regionId = Shop.getRegion();
 
 					if (regionId != null) {
@@ -473,23 +424,22 @@ public class ShopsController {
 					model.addAttribute("ShopsCount", Integer.parseInt(result[0]));
 
 					// get SHOP_IMAGE_NAME
-					query = session.createSQLQuery("select IMAGE_NAME from SHOPS_IMAGE where SHOP_ID like :param1");
+					query = session.createNativeQuery("select IMAGE_NAME from SHOPS_IMAGE where SHOP_ID like :param1");
 					query.setParameter("param1", shopId);
 
 					model.addAttribute("listShopImage", mapper.writeValueAsString(query.list()));
 
-					
-					//return the area and area_borders on load
-					if(Area_Borders.size() > 0) {
-					model.addAttribute("areasData", mapper.writeValueAsString(Area_Borders));
-					}else {
+					// return the area and area_borders on load
+					if (Area_Borders.size() > 0) {
+						model.addAttribute("areasData", mapper.writeValueAsString(Area_Borders));
+					} else {
 						model.addAttribute("areasData", "addNew");
 					}
-					
-					//return the region and region_borders on load
-					if(Region_Borders.size() > 0) {
-					model.addAttribute("regionsData", mapper.writeValueAsString(Region_Borders));
-					}else {
+
+					// return the region and region_borders on load
+					if (Region_Borders.size() > 0) {
+						model.addAttribute("regionsData", mapper.writeValueAsString(Region_Borders));
+					} else {
 						model.addAttribute("regionsData", "addNew");
 					}
 				}
@@ -498,13 +448,14 @@ public class ShopsController {
 				sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
 				exceptionAsString = sw.toString();
-				logger.finest("Error in ShopsFormView due to \n "+ exceptionAsString);
-				logger.info("Error in ShopsFormView due to \n "+ exceptionAsString);
+				logger.finest("Error in ShopsFormView due to \n " + exceptionAsString);
+				logger.info("Error in ShopsFormView due to \n " + exceptionAsString);
 			} finally {
 
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 
 			}
@@ -525,8 +476,6 @@ public class ShopsController {
 			return rtn;
 		}
 
-///////////////////////////////////////////////////////// SEND EMAIL BUTTON  //////////////////////////////////////////////////////////
-
 		DateFormat formatter;
 		Shops Shops = new Shops();
 		Calendar calendar = new GregorianCalendar();
@@ -540,42 +489,17 @@ public class ShopsController {
 			tx = session.beginTransaction();
 
 			try {
-				/*
-				 * String email = request.getParameter("email"); String emailTo =
-				 * request.getParameter("emailTo"); String password =
-				 * request.getParameter("password"); String message =
-				 * request.getParameter("message"); String subject =
-				 * request.getParameter("subject"); String ccmail =
-				 * request.getParameter("ccmail");
-				 * 
-				 * if (StringUtils.equalsIgnoreCase(request.getParameter("email"), "") &&
-				 * StringUtils.equalsIgnoreCase(request.getParameter("password"), "") &&
-				 * StringUtils.equalsIgnoreCase(request.getParameter("emailTo"), "") &&
-				 * StringUtils.equalsIgnoreCase(request.getParameter("message"), "") &&
-				 * StringUtils.equalsIgnoreCase(request.getParameter("subject"), "") &&
-				 * StringUtils.equalsIgnoreCase(request.getParameter("ccmail"), "")) {
-				 * System.out.println("NO EMAIL TO SEND!");
-				 * 
-				 * } else if (StringUtils.equalsIgnoreCase(request.getParameter("ccmail"), ""))
-				 * {
-				 * 
-				 * JavaMailUtil.SendEmails(email, password, emailTo, subject, message);
-				 * 
-				 * } else { JavaMailUtil.SendccEmails(email, password, emailTo, ccmail, subject,
-				 * message); }
-				 */
-
-///////////////////////////////////////////// END OF SEND EMAIL BUTTON  //////////////////////////////////////////////////////////
 				formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
 
 				if (StringUtils.equalsIgnoreCase(shopsId, "")) {
-					synchronized (this) {						
+					synchronized (this) {
 						//
-						shopsId = "SHOP_" + calendar.get(Calendar.YEAR) + "_" + Integer.parseInt(session.createSQLQuery("SELECT SHOPS FROM SEQ_TABLE").uniqueResult().toString());	
-						query = session.createSQLQuery("UPDATE SEQ_TABLE SET SHOPS = SHOPS + 1 ");
+						shopsId = "SHOP_" + calendar.get(Calendar.YEAR) + "_" + Integer.parseInt(
+								session.createNativeQuery("SELECT SHOPS FROM SEQ_TABLE").uniqueResult().toString());
+						query = session.createNativeQuery("UPDATE SEQ_TABLE SET SHOPS = SHOPS + 1 ");
 						query.executeUpdate();
-						session.createSQLQuery("commit").executeUpdate();
-						}
+						session.createNativeQuery("commit").executeUpdate();
+					}
 					Shops.setCreateDate(new Timestamp((new Timestamp(System.currentTimeMillis())).getTime()));
 
 				} else {
@@ -638,18 +562,21 @@ public class ShopsController {
 				}
 				Shops.setLastModifiedDate(new Timestamp((new Timestamp(System.currentTimeMillis())).getTime()));
 				session.saveOrUpdate(Shops);
+				tx.commit();
 				rtn.put("shopsID", shopsId);
+				
 			} catch (Exception e) {
+				tx.rollback();
 				sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
 				exceptionAsString = sw.toString();
-				logger.finest("Error in ShopsFormSave due to \n "+ exceptionAsString);
-				logger.info("Error in ShopsFormSave due to \n "+ exceptionAsString);
-			}			
-			finally {
+				logger.finest("Error in ShopsFormSave due to \n " + exceptionAsString);
+				logger.info("Error in ShopsFormSave due to \n " + exceptionAsString);
+			} finally {
 				if (session != null && session.isOpen()) {
-					tx.commit();
+					
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 
@@ -659,7 +586,6 @@ public class ShopsController {
 	}
 
 ///////////////
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/GetAvailableShops", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> GetAvailableShops(Locale locale, Model model, HttpServletRequest request,
@@ -693,8 +619,8 @@ public class ShopsController {
 
 						query = session.createQuery(
 								"SELECT shopId, shopName, longtitude, latitude, areaName, regionName from Shops where (shopId like UPPER(:param1) OR UPPER(shopName)like UPPER(:param1)) and shopId not in (select shopsId from AgentShops where agentId not in (:param2) ) ");
-						query.setString("param2", agentID);
-						query.setString("param1", shops);
+						query.setParameter("param2", agentID);
+						query.setParameter("param1", shops);
 						query.setFirstResult(0);
 						query.setMaxResults(40);
 						rtn.put("ListShops", query.list());
@@ -706,7 +632,7 @@ public class ShopsController {
 
 						query = session.createQuery(
 								"SELECT shopId, shopName from Shops where (shopId like UPPER(:param1) OR UPPER(shopName)like UPPER(:param1)) ORDER BY lastModifiedDate DESC");
-						query.setString("param1", shops);
+						query.setParameter("param1", shops);
 						query.setFirstResult(0);
 						query.setMaxResults(40);
 						rtn.put("ListShops", query.list());
@@ -723,8 +649,8 @@ public class ShopsController {
 				sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
 				exceptionAsString = sw.toString();
-				logger.finest("Error in GetAvailableShops due to \n "+ exceptionAsString);
-				logger.info("Error in GetAvailableShops due to \n "+ exceptionAsString);
+				logger.finest("Error in GetAvailableShops due to \n " + exceptionAsString);
+				logger.info("Error in GetAvailableShops due to \n " + exceptionAsString);
 
 			} finally {
 
@@ -732,6 +658,7 @@ public class ShopsController {
 
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 
 				}
 			}
@@ -740,7 +667,7 @@ public class ShopsController {
 
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	@RequestMapping(value = "/GetHashmapRegionShop", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> GetHashmapRegion(Locale locale, Model model, HttpServletRequest request,
@@ -786,8 +713,8 @@ public class ShopsController {
 				sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
 				exceptionAsString = sw.toString();
-				logger.finest("Error in GetHashmapRegionShop due to \n "+ exceptionAsString);
-				logger.info("Error in GetHashmapRegionShop due to \n "+ exceptionAsString);
+				logger.finest("Error in GetHashmapRegionShop due to \n " + exceptionAsString);
+				logger.info("Error in GetHashmapRegionShop due to \n " + exceptionAsString);
 
 			} finally {
 
@@ -795,12 +722,12 @@ public class ShopsController {
 
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 
 				}
 			}
 		}
 		return rtn;
 	}
-
 
 }

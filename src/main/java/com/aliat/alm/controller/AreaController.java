@@ -18,8 +18,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Query;
-import org.hibernate.SQLQuery;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.transform.AliasToBeanResultTransformer;
@@ -64,6 +63,7 @@ public class AreaController {
 	private static Session session = null;
 	private static Transaction tx = null;
 	private static ObjectMapper mapper = new ObjectMapper();
+	@SuppressWarnings("rawtypes")
 	private static Query query = null;
 	private static StringWriter sw;
 	private static String exceptionAsString;
@@ -91,7 +91,7 @@ public class AreaController {
 			notification.headerNotifications(session, model);
 
 			try {
-				query = session.createSQLQuery(
+				query = session.createNativeQuery(
 						"SELECT AREA_ID as id,AREA_ID as areaID, AREA_NAME as name,REGION_NAME as regionName,TO_CHAR(CREATION_DATE, 'YYYY-MM-DD HH24:MI:SS') as creationDate,TO_CHAR(LAST_MODIFICATION_DATE, 'YYYY-MM-DD HH24:MI:SS') as lastModifieddate from Area  ORDER BY LAST_MODIFICATION_DATE DESC");
 				model.addAttribute("ListGridTable", mapper.writeValueAsString(query.list()));
 			} catch (Exception e) {
@@ -104,13 +104,13 @@ public class AreaController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
 		return "AreaListView";
 	}
 
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/FilteredAreaListView", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> FilteredAreaListView(Locale locale, Model model, HttpServletRequest request,
@@ -135,7 +135,6 @@ public class AreaController {
 				areaid = request.getParameter("areaid");
 				areaname = request.getParameter("areaname");
 
-				List<String> listArea = new ArrayList<String>();
 				String str = " select 1 as chkBox,AREA_ID as id,AREA_NAME as name,REGION_NAME as regionName,TO_CHAR(CREATION_DATE,'YYYY-MM-DD HH24:MI:SS') as creationDate,TO_CHAR(LAST_MODIFICATION_DATE,'YYYY-MM-DD HH24:MI:SS') as lastModifieddate from AREA";
 
 				if (startdate != null && enddate != null) {
@@ -164,11 +163,7 @@ public class AreaController {
 
 				str = str + " ORDER BY LAST_MODIFICATION_DATE DESC ";
 
-				Query query = session.createSQLQuery(str);
-
-				listArea = query.list();
-
-				rtn.put("listArea", listArea);
+				rtn.put("listArea", session.createNativeQuery(str).list());
 
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -180,6 +175,7 @@ public class AreaController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -187,7 +183,7 @@ public class AreaController {
 		return rtn;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	@RequestMapping(value = "/AreaFormView", method = RequestMethod.GET)
 	public String AreaFormView(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
 
@@ -215,22 +211,22 @@ public class AreaController {
 				List<Object> regions = new ArrayList<>();
 				List<Object> Region_Borders = new ArrayList<>();
 				String LatLong = null;
-				query = session.createSQLQuery("SELECT REGION_ID FROM REGION");
+				query = session.createNativeQuery("SELECT REGION_ID FROM REGION");
 				if (query.list().size() > 0) {
 					regionIDs = query.list();
 					for (int i = 0; i < regionIDs.size(); i++) {
 						regions = new ArrayList<>();
-						query = session.createSQLQuery(
+						query = session.createNativeQuery(
 								"SELECT REGION_NAME from REGION where REGION_ID='" + regionIDs.get(i) + "'");
 						String regionName = query.uniqueResult().toString();
 
-						query = session.createSQLQuery(
+						query = session.createNativeQuery(
 								"SELECT REGION_CODE from REGION where REGION_ID='" + regionIDs.get(i) + "'");
 						String regionCode = "";
 						if (query.getSingleResult() != null)
 							regionCode = query.getSingleResult().toString();
 
-						query = session.createSQLQuery(
+						query = session.createNativeQuery(
 								"SELECT LISTAGG(a.LATITUDE || ',' || a.LONGTITUDE, ':') WITHIN GROUP (ORDER BY a.SEQ_SORTING + 0 ASC) AS borders "
 										+ " from REGION_BORDER a" + " where REGION_ID = '" + regionIDs.get(i) + "'");
 
@@ -354,6 +350,7 @@ public class AreaController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 
 			}
@@ -385,19 +382,20 @@ public class AreaController {
 				if (idList != null) {
 					for (int j = 0; j < idList.length; j++) {
 						query = session
-								.createSQLQuery("delete Area_Border where AREA_ID ='" + idList[j].toString() + "'");
+								.createNativeQuery("delete Area_Border where AREA_ID ='" + idList[j].toString() + "'");
 						query.executeUpdate();
 						/*
 						 * query =
-						 * session.createSQLQuery("delete Area_FINANCE where AREA_ID ='"+idList[j]+"'");
-						 * query.executeUpdate();
+						 * session.createNativeQuery("delete Area_FINANCE where AREA_ID ='"+idList[j]+
+						 * "'"); query.executeUpdate();
 						 */
-						query = session.createSQLQuery("delete Area where AREA_ID ='" + idList[j].toString() + "'");
+						query = session.createNativeQuery("delete Area where AREA_ID ='" + idList[j].toString() + "'");
 						query.executeUpdate();
 					}
+					tx.commit();
 				}
 			} catch (Exception e) {
-
+				tx.rollback();
 				sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
 				exceptionAsString = sw.toString();
@@ -405,8 +403,9 @@ public class AreaController {
 				logger.info("Error in AreaDelete due to \n " + exceptionAsString);
 			} finally {
 				if (session != null && session.isOpen()) {
-					tx.commit();
+
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -440,47 +439,15 @@ public class AreaController {
 
 			try {
 
-				/*
-				 * ///////////////////////////////////////////////////////// SEND EMAIL BUTTON
-				 * ////////////////////////////////////////////////////////// String
-				 * email=request.getParameter("email"); String
-				 * emailTo=request.getParameter("emailTo"); String
-				 * password=request.getParameter("password"); String
-				 * message=request.getParameter("message"); String
-				 * subject=request.getParameter("subject"); String
-				 * ccmail=request.getParameter("ccmail");
-				 * 
-				 * 
-				 * 
-				 * if(StringUtils.equalsIgnoreCase(request.getParameter("email"), "") &&
-				 * StringUtils.equalsIgnoreCase(request.getParameter("password"), "") &&
-				 * StringUtils.equalsIgnoreCase(request.getParameter("emailTo"), "") &&
-				 * StringUtils.equalsIgnoreCase(request.getParameter("message"), "") &&
-				 * StringUtils.equalsIgnoreCase(request.getParameter("subject"), "") &&
-				 * StringUtils.equalsIgnoreCase(request.getParameter("ccmail"), "") ) {
-				 * 
-				 * } else if(StringUtils.equalsIgnoreCase(request.getParameter("ccmail"), "")) {
-				 * 
-				 * JavaMailUtil.SendEmails(email,password,emailTo,subject,message);
-				 * 
-				 * } else {
-				 * JavaMailUtil.SendccEmails(email,password,emailTo,ccmail,subject,message); }
-				 * 
-				 * 
-				 * ///////////////////////////////////////////// END OF SEND EMAIL BUTTON
-				 * //////////////////////////////////////////////////////////
-				 * 
-				 */
-
 				if (StringUtils.equalsIgnoreCase(request.getParameter("type"), "addNew")) {
 					synchronized (this) {
 						// areaid= "AREA_"+calendar.get(Calendar.YEAR)+"_"
 						// +appConfig.getSequenceNbr(20);
 						areaid = "AREA_" + calendar.get(Calendar.YEAR) + "_" + Integer.parseInt(
-								session.createSQLQuery("SELECT AREA FROM SEQ_TABLE").uniqueResult().toString());
-						query = session.createSQLQuery("UPDATE SEQ_TABLE SET AREA = AREA + 1 ");
+								session.createNativeQuery("SELECT AREA FROM SEQ_TABLE").uniqueResult().toString());
+						query = session.createNativeQuery("UPDATE SEQ_TABLE SET AREA = AREA + 1 ");
 						query.executeUpdate();
-						session.createSQLQuery("commit").executeUpdate();
+						session.createNativeQuery("commit").executeUpdate();
 					}
 					model.addAttribute("AreaId", areaid);
 
@@ -553,11 +520,11 @@ public class AreaController {
 							// areaBorderID= "AREA_BORDER_ID_"+calendar.get(Calendar.YEAR)+"_"
 							// +appConfig.getSequenceNbr(67);
 							areaBorderID = "AREA_BORDER_ID_" + calendar.get(Calendar.YEAR) + "_"
-									+ Integer.parseInt(session.createSQLQuery("SELECT AREA_BORDER FROM SEQ_TABLE")
+									+ Integer.parseInt(session.createNativeQuery("SELECT AREA_BORDER FROM SEQ_TABLE")
 											.uniqueResult().toString());
-							query = session.createSQLQuery("UPDATE SEQ_TABLE SET AREA_BORDER = AREA_BORDER + 1 ");
+							query = session.createNativeQuery("UPDATE SEQ_TABLE SET AREA_BORDER = AREA_BORDER + 1 ");
 							query.executeUpdate();
-							session.createSQLQuery("commit").executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
 						}
 					} else {
 						areaBorderID = itemParameters.getDictParameterArea().get(i).get("areaBorderID");
@@ -580,10 +547,10 @@ public class AreaController {
 							// areaIdFinance= "AREA_FIN_"+calendar.get(Calendar.YEAR)+"_"
 							// +appConfig.getSequenceNbr(18);
 							areaIdFinance = "AREA_FIN_" + calendar.get(Calendar.YEAR) + "_" + Integer.parseInt(session
-									.createSQLQuery("SELECT AREA_FINANCE FROM SEQ_TABLE").uniqueResult().toString());
-							query = session.createSQLQuery("UPDATE SEQ_TABLE SET AREA_FINANCE = AREA_FINANCE + 1 ");
+									.createNativeQuery("SELECT AREA_FINANCE FROM SEQ_TABLE").uniqueResult().toString());
+							query = session.createNativeQuery("UPDATE SEQ_TABLE SET AREA_FINANCE = AREA_FINANCE + 1 ");
 							query.executeUpdate();
-							session.createSQLQuery("commit").executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
 						}
 						areaFinance.setId(areaIdFinance);
 
@@ -631,9 +598,11 @@ public class AreaController {
 				area.setRegionName(regionName);
 				area.setStatus(request.getParameter("status"));
 				session.saveOrUpdate(area);
+				tx.commit();
 				rtn.put("AREAID", areaid);
 
 			} catch (Exception e) {
+				tx.rollback();
 				sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
 				exceptionAsString = sw.toString();
@@ -642,8 +611,8 @@ public class AreaController {
 			} finally {
 
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 
 			}
@@ -671,7 +640,7 @@ public class AreaController {
 
 				query = session.createQuery(
 						"SELECT id, name from Area where id like UPPER(:param1) OR UPPER(name)like UPPER(:param1) ORDER BY lastModifieddate DESC");
-				query.setString("param1", Area);
+				query.setParameter("param1", Area);
 				query.setFirstResult(0);
 				query.setMaxResults(40);
 				rtn.put("listAreas", query.list());
@@ -686,6 +655,7 @@ public class AreaController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 
 			}
@@ -713,7 +683,7 @@ public class AreaController {
 			try {
 
 				AreaId = request.getParameter("areaId");
-				query = session.createSQLQuery(
+				query = session.createNativeQuery(
 						"SELECT a.AREA_ID,b.AREA_NAME, LISTAGG(a.LATITUDE || ',' || a.LONGTITUDE, ':') WITHIN GROUP (ORDER BY a.SEQ_SORTING) AS borders"
 								+ " FROM AREA_BORDER a Inner Join Area b on  a.AREA_ID=b.AREA_ID"
 								+ " WHERE (a.AREA_ID LIKE UPPER('%" + AreaId + "%') OR b.AREA_NAME LIKE UPPER('%"
@@ -734,6 +704,7 @@ public class AreaController {
 
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 
 				}
 
