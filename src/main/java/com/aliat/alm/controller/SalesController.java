@@ -60,6 +60,7 @@ else {
 			if (session != null && session.isOpen()) {
 				tx.commit();
 				session.close();
+				session.getSessionFactory().close();
 			}
 		}
 		
