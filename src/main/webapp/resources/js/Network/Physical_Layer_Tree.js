@@ -2384,15 +2384,18 @@ menuBackboneDB = new ContextMenu({
       async:false,
       data: {
         "ProjectId": IdNodeSelectedTemp,
+		"networkLevel":"backbone"
       },
       dataType: "json",
       success: function (data) {
 
-          if(data.BackboneCount!=null){
-             var tr ="<tr>"+"<th>Backbone Count: </th><td> "+data.BackboneCount+"</td></tr>"	
-                     showBoq();
-                     $("#boq_table").append(tr);
-                     data=null;     
+          if(data !=null){
+             var tr ="<tr>"+"<td><b>Backbone Count: </b>"+data.totalDBCount+"</td></tr>"	
+                 	+"<tr>"+"<td><b>Total DB Mapping: </b>"+data.totalDBMappingCount+"</td></tr>"						
+    
+			 showBoq();
+             $("#boq_table").append(tr);
+              data=null;     
         }
       },
       error: function (result) {
@@ -2417,16 +2420,19 @@ menuBackboneDB = new ContextMenu({
       async:false,
       data: {
         "ProjectId": IdNodeSelectedTemp,
+		"networkLevel":"metro"
+
       },
       dataType: "json",
       success: function (data) {
 
-          if(data.MetroCount!=null){
-             var tr ="<tr>"+"<th>Metro Count: </th><td> "+data.MetroCount+"</td></tr>"	
-
-                     showBoq();
-                     $("#boq_table").append(tr);
-                     data=null;
+          if(data!=null){
+				var tr ="<tr>"+"<td><b>Metro Count: </b>"+data.totalDBCount+"</td></tr>"	
+                 	+"<tr>"+"<td><b>Total DB Mapping: </b>"+data.totalDBMappingCount+"</td></tr>"						
+    
+                 showBoq();
+                 $("#boq_table").append(tr);
+                 data=null;
         }
       },
       
@@ -2453,15 +2459,18 @@ menuAccessDB = new ContextMenu({
       async:false,
       data: {
         "ProjectId": IdNodeSelectedTemp,
+		"networkLevel":"access"
+
       },
       dataType: "json",
       success: function (data) {
-          if(data.AccessCount!=null){
+          if(data!=null){
 
-             var tr ="<tr>"+"<th>Access Count: </th><td> "+data.AccessCount+"</td></tr>"	   
-                     showBoq();
-                     $("#boq_table").append(tr);
-                     data=null;
+ 				var tr ="<tr>"+"<td><b>Access Count: </b>"+data.totalDBCount+"</td></tr>"	
+                 	+"<tr>"+"<td><b>Total DB Mapping: </b>"+data.totalDBMappingCount+"</td></tr>"						
+                showBoq();
+                $("#boq_table").append(tr);
+                data=null;
                 
         }
       },
@@ -2719,10 +2728,12 @@ menuNodeesActive = new ContextMenu({
 						   },
 						   dataType: "json",
 						   success: function (data) {
-							   if(data.CountDistBoard!=null){
+							   if(data!=null){
 								   CountDistBoard= window["distributionBoardCount_"+nodeFileId] = data.CountDistBoard;
 								   
-							   var tr ="<tr>"+"<th>Distribution Boards Count	   : </th> <td> "+CountDistBoard+"</td></tr>";
+								 var tr ="<tr>"+"<td><b>Distribution Boards Count: </b>"+data.CountDistBoard+"</td></tr>"	
+			                 		+"<tr>"+"<td><b>Total DB Mapping: </b>"+data.CountDistBoardMapping+"</td></tr>"						
+			    
 							   showBoq();
 							   $("#boq_table").append(tr);
 							   data=null;
@@ -6731,12 +6742,15 @@ singleProject = new ContextMenu({
 									+"<tr>"+"<td><b>Name: </b>"+data.DBData[0][0]+"</td></tr>"
 									+"<tr>"+"<td><b>Longitude: </b>"+data.DBData[0][1]+"</td></tr>"
 									+"<tr>"+"<td><b>Latitude: </b>"+data.DBData[0][2]+"</td></tr>"
-									+"<tr>"+"<td><b>City: </b>"+data.DBData[0][3]+"</td></tr>"				
+									+"<tr>"+"<td><b>City: </b>"+data.DBData[0][3]+"</td></tr>"	
 									+"<tr>"+"<td><b>Num of Front Connected: </b>"+data.countConnections[0][2]+"</td></tr>"						
-									+"<tr>"+"<td><b>Num of Back Connected: </b>"+data.countConnections[0][3]+"</td></tr>"						   
+									+"<tr>"+"<td><b>Num of Back Connected: </b>"+data.countConnections[0][3]+"</td></tr>"
+									+"<tr>"+"<td><b>Total DB Mapping: </b>"+data.DbMappingCount+"</td></tr>"															   
 									+"<tr>"+"<td><b>Num of Rows: </b>"+data.countConnections[0][0]+"</td></tr>"						   
 									+"<tr>"+"<td><b>Num of Columnns: </b>"+data.countConnections[0][1]+"</td></tr>"	
 									+"<tr>"+"<td><b>Num of Total Ports: </b>"+data.countConnections[0][0]*data.countConnections[0][1]+"</td></tr>"
+									+"<tr>"+"<td><b>Total DB Mapping: </b>"+data.DbMappingCount+"</td></tr>"						
+
 									$("#boq_table").append(tr);
 									
 						data=null;
