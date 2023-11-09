@@ -45,6 +45,9 @@ public class FinancialReport {
 	private String longitude;
 	private String latitude;
 	
+	@Column(name = "VENDOR")
+	private String vendor;
+	
 	@Column(name = "INITIALCOST")
 	private BigDecimal initCost;
 	
@@ -61,7 +64,7 @@ public class FinancialReport {
 
 	public FinancialReport(String site,String farID, String itemCode, String itemName,
 			String lastModifiedDate, String itemSN, String itemNameRegister, String poID,String siteID, 
-			String longitude, String latitude,String siteName,BigDecimal initCost, BigDecimal netCost,BigDecimal accuDepr) {
+			String longitude, String latitude,String vendor,String siteName,BigDecimal initCost, BigDecimal netCost,BigDecimal accuDepr) {
 		super();
 		this.site=site;
 		this.farID = farID;
@@ -75,6 +78,7 @@ public class FinancialReport {
 		this.siteName=siteName;
 		this.longitude = longitude;
 		this.latitude = latitude;
+		this.vendor = vendor;
 		this.initCost=initCost;
 		this.netCost=netCost;
 		this.accuDepr=accuDepr;
@@ -187,6 +191,16 @@ public class FinancialReport {
 
 	public void setLatitude(String latitude) {
 		this.latitude = latitude;
+	}
+
+
+	public String getVendor() {
+		return vendor;
+	}
+
+
+	public void setVendor(String vendor) {
+		this.vendor = vendor;
 	}
 
 

@@ -501,7 +501,14 @@ max-width: 100%;
 									<table id="gridTable" class="table table-striped table-bordered almgrid-table">
 										<thead>
 											<tr class="header">
-												<th></th>											
+												<th>
+												<li class="filter-dropdown dropdown">
+														<button disabled class="almgrid-filter" data-toggle="dropdown" style="display: none;">
+														 <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
+														</button>
+														<ul class="dropdown-menu filter-dropdown-ul"></ul>
+													</li>
+												</th>											
 												<th>FAR ID 
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown">
@@ -598,6 +605,14 @@ max-width: 100%;
 														<ul class="dropdown-menu filter-dropdown-ul"></ul>
 													</li>
 												</th>
+												<th>Vendor 
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> 
+														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
+														</button>
+														<ul class="dropdown-menu filter-dropdown-ul"></ul>
+													</li>
+												</th>
 												<th>Initial Cost
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown"> 
@@ -624,6 +639,7 @@ max-width: 100%;
 												</th>											
 											<tr>
 												<th><input type="text" disabled class="almgrid-search" style="display:none"></th>
+												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
@@ -688,7 +704,7 @@ max-width: 100%;
 	<div class="row second">	
 					<div class="col-md-1">
 						<div class="form-group">
-            <span style=" display: inline-block;width:98px;color: white; font-size: 13px; white-space: nowrap; padding: 7px 8px; background-color: #008991; border-radius: 5px;"><b>All FAR : </b></span>
+            <span style=" display: inline-block;width:98px;color: white; font-size: 13px; white-space: nowrap; padding: 7px 8px; background-color: #008991; border-radius: 5px;"><b>All FAR  </b></span>
 						</div>
 					</div>								
 			<div class="col-md-3">
@@ -723,7 +739,7 @@ max-width: 100%;
 
 					<div class="col-md-1">
 						<div class="form-group">
-          					  <span style="display: inline-block;width:98px;color: white; font-size: 13px; white-space: nowrap; padding: 7px 8px; background-color: #008991; border-radius: 5px;"><b>Fetched FAR :</b></span>
+          					  <span style="display: inline-block;width:98px;color: white; font-size: 13px; white-space: nowrap; padding: 7px 8px; background-color: #008991; border-radius: 5px;"><b>Fetched FAR </b></span>
 						</div>
 					</div>								
 			<div class="col-md-3">
@@ -756,7 +772,7 @@ max-width: 100%;
 		<div class="row second">
 					<div class="col-md-1">
 						<div class="form-group">
-            				<span style="display: inline-block;width:98px;color: white; font-size: 13px; white-space: nowrap; padding: 7px 8px; background-color: #008991; border-radius: 5px;"><b>Filtered FAR :</b></span>
+            				<span style="display: inline-block;width:98px;color: white; font-size: 13px; white-space: nowrap; padding: 7px 8px; background-color: #008991; border-radius: 5px;"><b>Filtered FAR </b></span>
 						</div>
 					</div>									
 			<div class="col-md-3">
@@ -1246,7 +1262,7 @@ $(document).ready(function() {
 	     		var data = [];
 	     	    exportArrayGrid = [];
 	    		data.push('\r');
-	       		data.push(["FAR ID", "Item Code", "Item Name", "Last Modified Date","Item Serial Number","Item Name Register","PO ID","Site ID","Site Name","Longitude","Latitude","Initial Cost","Net Cost","Accumulated Depreciation"]);
+	       		data.push(["FAR ID", "Item Code", "Item Name", "Last Modified Date","Item Serial Number","Item Name Register","PO ID","Site ID","Site Name","Longitude","Latitude","Vendor","Initial Cost","Net Cost","Accumulated Depreciation"]);
 
 	       		filteredSitesGrid = dataArray; // used in draw on map 
 	       		
@@ -1446,7 +1462,7 @@ $(document).ready(function() {
 		  
 		$("#gridTable").remove();
 		$("#tableGrid").append('<table id="gridTable" class="table table-striped table-bordered almgrid-table">'
-				+'<thead><tr class="header"><th></th><th>FAR ID<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> '
+				+'<thead><tr class="header"><th><li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown" disabled style="display:none;"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th><th>FAR ID<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> '
 				+'<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
 					+'<th>Item Code<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
 					+'</ul></li></th><th>Item Name<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
@@ -1462,6 +1478,8 @@ $(document).ready(function() {
 					+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'	
 					+'<th>Latitude<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
 					+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'	
+					+'<th>Vendor<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
+					+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'	
 					+'<th>Initial Cost<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
 					+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'	
 					+'<th>Net Cost<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
@@ -1471,6 +1489,7 @@ $(document).ready(function() {
 					
 					+'<tr>'
 					+'<th><input type="text" disabled class="almgrid-search" style="display:none"></th>'
+					+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
 					+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
 					+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
 					+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
@@ -1604,7 +1623,7 @@ $(document).ready(function() {
   			       		    var data = [];
   			       	       exportArrayGrid = [];
   			       		   data.push('\r');
-  			       		   data.push(["FAR ID", "Item Code", "Item Name", "Last Modified Date","Item Serial Number","Item Name Register","PO ID","Site ID","Site Name","Longitude","Latitude","Initial Cost","Net Cost","Accumulated Depreciation"]);
+  			       		   data.push(["FAR ID", "Item Code", "Item Name", "Last Modified Date","Item Serial Number","Item Name Register","PO ID","Site ID","Site Name","Longitude","Latitude","Vendor","Initial Cost","Net Cost","Accumulated Depreciation"]);
 
   	  				       filteredSitesGrid = dataArray; // used in draw on map 
   	  			       		
