@@ -296,8 +296,7 @@ display:none;
         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink" style="margin-right:-80px;">
           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NetworkPhysicalLayer">Physical Layer</a></li>
           <div class="dropdown-divider"></div>
-          <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Network_Index">Elements</a></li>
-           <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Network_StNdCell">Elements (New)</a></li>
+          <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Network_StNdCell">Elements</a></li>
             <div class="dropdown-divider"></div>
          
             <li><a class="dropdown-item" href="${pageContext.request.contextPath}/WarehouseListView">Sites</a></li>

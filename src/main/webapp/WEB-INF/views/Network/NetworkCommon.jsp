@@ -1199,8 +1199,8 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 	   $('#li_cellBtn').css("color","black").css("opacity",".65");
 	   $('#li_nodeBtn').addClass('unsortable');
 	   $('#li_nodeBtn').css("color","black").css("opacity",".65");
-	   $('#li_supplierBtn').addClass('unsortable_sup');
-	   $('#li_supplierBtn').css("color","black").css("opacity",".65");	    
+	  // $('#li_supplierBtn').addClass('unsortable_sup');
+	  // $('#li_supplierBtn').css("color","black").css("opacity",".65");	    
 	   $('#li_vendorBtn').addClass('unsortable');
 	   $('#li_vendorBtn').css("color","black").css("opacity",".65");
 	   var poSel=["PO","Item","Site","Node Type","Node"];
@@ -1377,7 +1377,17 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 			 		window.location.href = url;
 			    }
 			break;
-			
+			//NodeType-Supplier-Site-Node-Cell
+			 case "li_nodeTypeeBtn,li_supplierBtn,li_siteBtn,li_nodeBtn,li_cellBtn":
+			 case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,supplierBtn":
+			  {
+				 var url = getContext()+"/Network_NdTypSupStNdCell"; 	
+				 if(params !=null){
+					 url += params;
+			 		}
+			 		window.location.href = url;
+			    }
+			break;
 			//PO-Site-Items
 	 		 case "li_poBtn,li_siteBtn,li_itemBtn":
 	 		 case "siteBtn,itemBtn,poBtn":

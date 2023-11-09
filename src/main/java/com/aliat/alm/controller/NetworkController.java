@@ -1868,10 +1868,8 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 					exceptionAsString = sw.toString();
 					logger.finest("Error in retreiving Nodes Data from database in method FindOnClick_SuppSiteNodeCell due to \n " + exceptionAsString);
 					logger.info("Error in retreiving Nodes Data from database in method FindOnClick_SuppSiteNodeCell due to \n " + exceptionAsString);															
-					rtn.put("listSuppNodes", null);
+					rtn.put("listSuppNodes", null);				
 				}
-				
-	
 		 finally {
 				if (session != null && session.isOpen()) {
 					tx.commit();
@@ -1882,6 +1880,293 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 		}
 		return rtn;
 	}
+	
+
+@RequestMapping(value = "/Network_NdTypSupStNdCell", method = RequestMethod.GET)
+public String Network_NdTypSupStNdCell(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
+if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+		return "redirect:/";
+	} else {
+		session = almsessions.getSession();
+
+	if (session != null && session.isOpen()) {
+		tx = session.beginTransaction();
+		notifications.headerNotifications(session, model);
+
+		String enterprise = request.getParameter("enterprise");
+		String transmission = request.getParameter("transmission");
+		String access = request.getParameter("access");
+		String core = request.getParameter("core");
+
+		int[] arrayParam = new int[4]; 
+        arrayParam[0] = 0; // enterprise
+        arrayParam[1] = 0; // transmission
+        arrayParam[2] = 0; // access
+        arrayParam[3] = 0; // core
+        
+    	String strSites ="SELECT DISTINCT b.SITE_ID,b.WARE_NAME,b.WARE_ID,LATITUDE,LONGITUDE,"
+				+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID and w.ACTIVE_RECORD = '1' ";	
+		
+		String strNodesType ="SELECT DISTINCT NODE_TYPE,(select COUNT(*) from NODE_ACTIVE a  where a.NODE_TYPE=b.NODE_TYPE and a.ACTIVE_RECORD = '1' ";			
+		
+			try {
+				if (enterprise != null && !enterprise.equals("null")) {
+					arrayParam[0] = 1;	
+					model.addAttribute("EnterpriseBtn", arrayParam[0]);
+				}
+				if (transmission != null && !transmission.equals("null")) {
+					arrayParam[1] = 1;
+					model.addAttribute("transmBtn", arrayParam[1]);
+				}
+				if (access != null && !access.equals("null")) {
+					arrayParam[2] = 1;	
+					model.addAttribute("accessDBtn", arrayParam[2]);
+				}
+				if (core != null && !core.equals("null")) {
+					arrayParam[3] = 1;	
+					model.addAttribute("CoreBtn", arrayParam[3]);
+				}
+				strSites = AppendQuery("w",arrayParam, strSites);			
+				strSites = strSites + ") as countNodes,(select COUNT(*) FROM NODE_GCELL c where c.NODE_PK IN (select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1' ";
+				strSites=  AppendQuery("o",arrayParam, strSites);	
+				strSites = strSites + " ) ";			
+				strSites=  AppendQuery("c",arrayParam, strSites);
+				strSites = strSites + ") as countGcells,(select COUNT(*) FROM NODE_LCELL d where d.NODE_PK IN (select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1' ";
+				strSites=  AppendQuery("o",arrayParam, strSites);	
+				strSites = strSites + " ) ";			
+				strSites=  AppendQuery("d",arrayParam, strSites);	
+				strSites = strSites + ") as countLcells,(select COUNT(*) FROM NODE_UCELL e where e.NODE_PK IN (select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID and o.ACTIVE_RECORD = '1' ";
+				strSites=  AppendQuery("o",arrayParam, strSites);	
+				strSites = strSites + " ) ";			
+				strSites=  AppendQuery("e",arrayParam, strSites);
+				strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.ACTIVE_RECORD = '1' ";			
+				strSites=  AppendQuery("b",arrayParam, strSites);	
+				
+				model.addAttribute("listSites", mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
+				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
+			} catch (Exception e) {
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Sites Data from database in method Network_NdTypSupStNdCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Sites Data from database in method Network_NdTypSupStNdCell due to \n " + exceptionAsString);															
+				model.addAttribute("listSites", "null");
+		}
+		// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>//			
+			try {
+				strNodesType = AppendQuery("a",arrayParam, strNodesType);			
+				strNodesType = strNodesType + ") as countNodes FROM NODE_ACTIVE b WHERE b.ACTIVE_RECORD = '1' ";
+				strNodesType=  AppendQuery("b",arrayParam, strNodesType);
+				
+				model.addAttribute("listNodesType", mapper.writeValueAsString(session.createNativeQuery(strNodesType).list()));
+				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));	
+			} catch (Exception e) {
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Node Type Data from database in method Network_NdTypSupStNdCell due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Node Type Data from database in method Network_NdTypSupStNdCell due to \n " + exceptionAsString);															
+				model.addAttribute("listNodesType", null);
+			}
+			finally {
+				if (session != null && session.isOpen()) {
+					logger.info("Session Closseeed");
+					tx.commit();
+					session.close();
+					session.getSessionFactory().close();
+				}
+			}
+		}
+		return "Network/Network_NdTypSupStNdCell";
+	}
+}
+
+
+//retrieve suupliers data when supplier is clicked in
+	// Node type -Supplier-site-node-cell method
+	@RequestMapping(value = "/findNodeTypeSupSiteNodeCell_Sup", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> findNodeTypeSupSiteNodeCell_Sup(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) throws JsonProcessingException {
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		session = almsessions.getSession();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			String selectedNodetType = request.getParameter("selectedNodetType");
+			
+			String paramEnterprise = request.getParameter("paramEnterprise");
+			String paramTransmission = request.getParameter("paramTransmission");
+			String paramAccess = request.getParameter("paramAccess");
+			String paramCore = request.getParameter("paramCore");
+				
+			String strSupp ="SELECT distinct a.SUPPLIER_ID,a.SUPPLIER_NAME,a.NODE_TYPE FROM NODE_ACTIVE a where a.NODE_TYPE='"+ selectedNodetType +"' AND a.ACTIVE_RECORD = '1' and "
+					+ "a.WARE_ID!='0' and a.WARE_ID!='null' and a.WARE_ID is not null and a.SUPPLIER_ID!='null' and a.SUPPLIER_ID is not null and a.SUPPLIER_ID!='0' ";
+ 	
+			try {
+				if (selectedNodetType != null) {
+					strSupp= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strSupp);			
+					rtn.put("listSuppliers",session.createNativeQuery(strSupp).list());
+				}
+			} catch (Exception e) {
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in retreiving Sites Data from database in method findNodeTypeSupSiteNodeCell_Sup due to \n " + exceptionAsString);
+				logger.info("Error in retreiving Sites Data from database in method findNodeTypeSupSiteNodeCell_Sup due to \n " + exceptionAsString);															
+				rtn.put("listSuppSites", null);
+			}			
+		 finally {
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+					session.getSessionFactory().close();
+				}
+			}
+		}
+		return rtn;
+	}
+	
+	//retrieve suupliers data when supplier is clicked in
+		// Node type -Supplier-site-node-cell method
+		@RequestMapping(value = "/findNodeTypeSupSiteNodeCell_Site", method = RequestMethod.GET)
+		@ResponseBody
+		public Map<String, Object> findNodeTypeSupSiteNodeCell_Site(Locale locale, Model model, HttpServletRequest request,
+				HttpServletResponse response) throws JsonProcessingException {
+			Map<String, Object> rtn = new LinkedHashMap<>();
+			Session session = null;
+			Transaction tx = null;
+			session = almsessions.getSession();
+			if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+				rtn.put("Login", LoginServices.checkSession(request, response));
+				return rtn;
+			}
+			if (session != null && session.isOpen()) {
+				tx = session.beginTransaction();
+				String SelectedNodeType = request.getParameter("SelectedNodeType");
+				String selectedSupp = request.getParameter("selectedSupp");				
+				
+				String paramEnterprise = request.getParameter("paramEnterprise");
+				String paramTransmission = request.getParameter("paramTransmission");
+				String paramAccess = request.getParameter("paramAccess");
+				String paramCore = request.getParameter("paramCore");
+					
+				String strSites ="SELECT distinct b.WARE_NAME,b.WARE_ID,b.SUPPLIER_ID,b.NODE_TYPE FROM NODE_ACTIVE b "
+						+ "where b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.SUPPLIER_ID='"+ selectedSupp + "' AND b.NODE_TYPE='"+SelectedNodeType+"' ";
+				
+				 try {
+					 	strSites= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strSites);
+						rtn.put("listSuppSites",session.createNativeQuery(strSites).list());
+					} catch (Exception e) {
+						sw = new StringWriter();
+						e.printStackTrace(new PrintWriter(sw));
+						exceptionAsString = sw.toString();
+						logger.finest("Error in retreiving Sites Data from database in method findNodeTypeSupSiteNodeCell_Site due to \n " + exceptionAsString);
+						logger.info("Error in retreiving Sites Data from database in method findNodeTypeSupSiteNodeCell_Site due to \n " + exceptionAsString);															
+						rtn.put("listSuppSites", null);
+					}		
+			 finally {
+					if (session != null && session.isOpen()) {
+						tx.commit();
+						session.close();
+						session.getSessionFactory().close();
+					}
+				}
+			}
+			return rtn;
+		}	
+	
+		//retrieve sites/nodes/cells data when supplier is clicked in
+		@SuppressWarnings("unchecked")
+		// Supplier-site-node-cell method
+		@RequestMapping(value = "/FindOnClick_NdTSupSiteNodeCell_NodeCell", method = RequestMethod.GET)
+		@ResponseBody
+		public Map<String, Object> Find_NdTSupSiteNodeCell_NodeCell(Locale locale, Model model, HttpServletRequest request,
+				HttpServletResponse response) throws JsonProcessingException {
+			Map<String, Object> rtn = new LinkedHashMap<>();
+			session = almsessions.getSession();
+			if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+				rtn.put("Login", LoginServices.checkSession(request, response));
+				return rtn;
+			}
+			if (session != null && session.isOpen()) {
+				tx = session.beginTransaction();
+				String selectedSupp = request.getParameter("selectedSupp");
+				String selectedItem = request.getParameter("selectedItem");
+				String SelectedNodeType = request.getParameter("SelectedNodeType");
+				
+				String paramEnterprise = request.getParameter("paramEnterprise");
+				String paramTransmission = request.getParameter("paramTransmission");
+				String paramAccess = request.getParameter("paramAccess");
+				String paramCore = request.getParameter("paramCore");
+					
+				String strNodes ="SELECT NODE_PK,NODE_TYPE,NODE_NAME,WARE_ID,SUPPLIER_ID,"
+						+"(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and b.ACTIVE_RECORD = '1' ";
+				
+				List<Object[]> cellResult = new ArrayList<Object[]>();
+				String strCells1 ="SELECT a.GCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_GCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID= '"+selectedItem+"' and b.SUPPLIER_ID='"+ selectedSupp + "' and b.NODE_TYPE='"+ SelectedNodeType + "' "; 
+				String strCells2 ="SELECT a.LCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_LCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID= '"+selectedItem+"' and b.SUPPLIER_ID='"+ selectedSupp + "' and b.NODE_TYPE='"+ SelectedNodeType + "' "; 
+				String strCells3 ="SELECT a.UCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_UCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID= '"+selectedItem+"' and b.SUPPLIER_ID='"+ selectedSupp + "' and b.NODE_TYPE='"+ SelectedNodeType + "' ";		
+
+				try {
+					if (selectedItem != null) {
+						strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);		
+						strNodes = strNodes + ") as countNodes,(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and ACTIVE_RECORD = '1' ";
+						strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);
+						strNodes = strNodes + ") as countGcells,(select count(*) from NODE_LCELL c  where a.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1' ";
+						strNodes= boqDomainVar ("c",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);			
+						strNodes = strNodes + ") as countLcells,(select count(*) from NODE_UCELL d  where a.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1' ";				
+						strNodes= boqDomainVar ("d",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);	
+						strNodes = strNodes + ") as countUcells FROM NODE_ACTIVE a WHERE a.ACTIVE_RECORD = '1' and a.WARE_ID='"+ selectedItem + "' and a.SUPPLIER_ID='"+ selectedSupp + "' and a.NODE_TYPE='"+ SelectedNodeType + "' ";			
+						strNodes= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);		
+						
+						rtn.put("listSuppNodes", session.createNativeQuery(strNodes).list());
+					}
+				} catch (Exception e) {
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in retreiving Nodes Data from database in method FindOnClick_NdTSupSiteNodeCell_NodeCell due to \n " + exceptionAsString);
+					logger.info("Error in retreiving Nodes Data from database in method FindOnClick_NdTSupSiteNodeCell_NodeCell due to \n " + exceptionAsString);															
+					rtn.put("listSuppNodes", null);
+				}	
+				
+				try {
+						if (selectedItem != null) {
+							strCells1= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells1);	
+							strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);						
+							strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);	
+												
+							cellResult.addAll(session.createNativeQuery(strCells1).list());
+							cellResult.addAll(session.createNativeQuery(strCells2).list());
+							cellResult.addAll(session.createNativeQuery(strCells3).list());
+							
+							rtn.put("listCells",cellResult);
+						}
+					} catch (Exception e) {
+						sw = new StringWriter();
+						e.printStackTrace(new PrintWriter(sw));
+						exceptionAsString = sw.toString();
+						logger.finest("Error in retreiving Sites Data from database in method FindOnClick_NdTSupSiteNodeCell_NodeCell due to \n " + exceptionAsString);
+						logger.info("Error in retreiving Sites Data from database in method FindOnClick_NdTSupSiteNodeCell_NodeCell due to \n " + exceptionAsString);															
+						rtn.put("listCells", null);
+					}
+		
+			 finally {
+					if (session != null && session.isOpen()) {
+						tx.commit();
+						session.close();
+						session.getSessionFactory().close();
+					}
+				}
+			}
+			return rtn;
+		}
+		
+
 	// Area controller
 	@RequestMapping(value = "/area", method = RequestMethod.GET)
 	@ResponseBody
@@ -2948,88 +3233,6 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			}
 		}
 		
-		////node type boq for supplier
-		// Node Type BOQ data retrieving
-				@RequestMapping(value = "/GetNtypeSupBoqList", method = RequestMethod.GET, produces = "application/json")
-				@ResponseBody
-				public LinkedHashMap<String, String> GetNtypeSupBoqList(@RequestParam String SiteId, @RequestParam String NodeTId, @RequestParam String SuppId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
-
-					Session session = almsessions.getSession();
-					Transaction tx = session.beginTransaction();
-					LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
-
-					try {
-						String strEmpty= "SELECT COUNT(distinct WARE_ID) FROM NODE_ACTIVE WHERE NODE_TYPE='" + NodeTId + "' AND SUPPLIER_ID = '"+SuppId+"' AND WARE_ID!='null' AND WARE_ID!='0' and WARE_ID is not null ";	
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
-						String strExist= "Select distinct Ware_Name From NODE_ACTIVE where Ware_Id='" + SiteId + "' and NODE_TYPE='"+ NodeTId + "' AND SUPPLIER_ID = '"+SuppId+"' ";	
-						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
-						String Site_Query = SiteId == "" ? strEmpty : strExist;
-						//System.out.println(Site_Query);
-						Object Sites = session.createNativeQuery(Site_Query).uniqueResult();
-						strEmpty="";
-						strExist="";
-				////////////////////////////
-						strEmpty= "SELECT COUNT(distinct NODE_PK) FROM NODE_ACTIVE where Active_record='1' and NODE_TYPE='"+ NodeTId + "' AND SUPPLIER_ID = '"+SuppId+"' AND WARE_ID!='null' AND WARE_ID!='0' and WARE_ID is not null ";	
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
-						strExist= "SELECT COUNT(distinct NODE_PK) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"+ SiteId + "' and NODE_TYPE='" + NodeTId + "' AND SUPPLIER_ID = '"+SuppId+"' ";	
-						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
-						String Node_Active_Query = SiteId == "" ? strEmpty : strExist;
-						//System.out.println(Node_Active_Query);
-						Object CountNodes_Active = session.createNativeQuery(Node_Active_Query).uniqueResult();
-						strEmpty="";
-						strExist="";
-				////////////////////////////
-						strEmpty= "select count(distinct ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.NODE_TYPE = '"+ NodeTId + "' AND na.SUPPLIER_ID = '"+SuppId+"' ";
-						strEmpty= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
-						strExist= "select count(distinct ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"+ SiteId + "' and na.NODE_TYPE = '" + NodeTId + "' AND na.SUPPLIER_ID = '"+SuppId+"' ";	
-						strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
-						String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
-						//System.out.println(Node_GCell_Query);
-						Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
-						strEmpty="";
-						strExist="";
-				////////////////////////////
-						strEmpty= "select count(distinct nlc.LCell_Id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.NODE_TYPE = '"+ NodeTId + "' AND na.SUPPLIER_ID = '"+SuppId+"' ";
-						strEmpty= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
-						strExist= "select count(distinct nlc.LCell_Id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"+ SiteId + "' and na.NODE_TYPE = '" + NodeTId + "' AND na.SUPPLIER_ID = '"+SuppId+"' ";	
-						strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
-						String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
-						//System.out.println(Node_LCell_Query);
-						Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
-						strEmpty="";
-						strExist="";
-				////////////////////////////
-						strEmpty= "select count(distinct nuc.UCell_Id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.NODE_TYPE = '"+ NodeTId + "' AND na.SUPPLIER_ID = '"+SuppId+"' ";
-						strEmpty= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
-						strExist= "select count(distinct nuc.UCell_Id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.Ware_Id = '"+ SiteId + "' and na.NODE_TYPE = '" + NodeTId + "' AND na.SUPPLIER_ID = '"+SuppId+"' ";	
-						strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
-						String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
-						//System.out.println(Node_UCell_Query);
-						Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
-						strEmpty="";
-						strExist="";
-
-						BoqHM.put(SiteId == "" ? "Sites" : "Site Name", String.valueOf(Sites));
-						BoqHM.put("Nodes", String.valueOf(CountNodes_Active));
-						BoqHM.put("G-cells", String.valueOf(CountNodes_G_CELL));
-						BoqHM.put("L-cells", String.valueOf(CountNodes_L_CELL));
-						BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
-						return BoqHM;				
-					} catch (Exception e) {
-						sw = new StringWriter();
-						e.printStackTrace(new PrintWriter(sw));
-						exceptionAsString = sw.toString();
-						logger.finest("Error in retreiving Node Type BOQ from database in method GetNtypeSupBoqList due to \n " + exceptionAsString);
-						logger.info("Error in retreiving Node Type BOQ from database in method GetNtypeSupBoqList due to \n " + exceptionAsString);															
-						return null;
-					} finally {
-						if (session != null && session.isOpen()) {
-							tx.commit();
-							session.close();
-							session.getSessionFactory().close();
-						}
-					}
-				}
 				
 		///node type boq for vendor 
 		// Node Type BOQ data retrieving
@@ -3288,12 +3491,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);						
 						strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);
 						
-						Query query1 = session.createNativeQuery(strCells1);
-						Query query2 = session.createNativeQuery(strCells2);
-						Query query3 = session.createNativeQuery(strCells3);
-						cellResult.addAll(query1.list());
-						cellResult.addAll(query2.list());
-						cellResult.addAll(query3.list());
+						cellResult.addAll(session.createNativeQuery(strCells1).list());
+						cellResult.addAll(session.createNativeQuery(strCells2).list());
+						cellResult.addAll(session.createNativeQuery(strCells3).list());
 						
 						rtn.put("listCells",cellResult);
 					}	
@@ -3391,12 +3591,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);		
 							strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);		
 						
-							Query query1 = session.createNativeQuery(strCells1);
-							Query query2 = session.createNativeQuery(strCells2);
-							Query query3 = session.createNativeQuery(strCells3);
-							cellResult.addAll(query1.list());
-							cellResult.addAll(query2.list());
-							cellResult.addAll(query3.list());
+							cellResult.addAll(session.createNativeQuery(strCells1).list());
+							cellResult.addAll(session.createNativeQuery(strCells2).list());
+							cellResult.addAll(session.createNativeQuery(strCells3).list());
 							
 							rtn.put("listCells", cellResult);
 						} catch (Exception e) {
@@ -3626,13 +3823,10 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);						
 						strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);	
 					
-						Query query1 = session.createNativeQuery(strCells1);
-						Query query2 = session.createNativeQuery(strCells2);
-						Query query3 = session.createNativeQuery(strCells3);
-						cellResult.addAll(query1.list());
-						cellResult.addAll(query2.list());
-						cellResult.addAll(query3.list());
-						
+						cellResult.addAll(session.createNativeQuery(strCells1).list());
+						cellResult.addAll(session.createNativeQuery(strCells2).list());
+						cellResult.addAll(session.createNativeQuery(strCells3).list());
+							
 						rtn.put("listCells",cellResult);
 						} catch (Exception e) {
 							sw = new StringWriter();
@@ -3753,12 +3947,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);						
 						strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);	
 					
-						Query query1 = session.createNativeQuery(strCells1);
-						Query query2 = session.createNativeQuery(strCells2);
-						Query query3 = session.createNativeQuery(strCells3);
-						cellResult.addAll(query1.list());
-						cellResult.addAll(query2.list());
-						cellResult.addAll(query3.list());
+						cellResult.addAll(session.createNativeQuery(strCells1).list());
+						cellResult.addAll(session.createNativeQuery(strCells2).list());
+						cellResult.addAll(session.createNativeQuery(strCells3).list());
 						
 						rtn.put("listCells",cellResult);
 					} catch (Exception e) {
@@ -3893,13 +4084,10 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);						
 							strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);	
 						
-							Query query1 = session.createNativeQuery(strCells1);
-							Query query2 = session.createNativeQuery(strCells2);
-							Query query3 = session.createNativeQuery(strCells3);
-							cellResult.addAll(query1.list());
-							cellResult.addAll(query2.list());
-							cellResult.addAll(query3.list());
-							
+							cellResult.addAll(session.createNativeQuery(strCells1).list());
+							cellResult.addAll(session.createNativeQuery(strCells2).list());
+							cellResult.addAll(session.createNativeQuery(strCells3).list());
+								
 							rtn.put("listCells",cellResult);
 						} catch (Exception e) {
 							sw = new StringWriter();
@@ -4051,13 +4239,10 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 								strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);						
 								strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);	
 							
-								Query query1 = session.createNativeQuery(strCells1);
-								Query query2 = session.createNativeQuery(strCells2);
-								Query query3 = session.createNativeQuery(strCells3);
-								cellResult.addAll(query1.list());
-								cellResult.addAll(query2.list());
-								cellResult.addAll(query3.list());
-								
+								cellResult.addAll(session.createNativeQuery(strCells1).list());
+								cellResult.addAll(session.createNativeQuery(strCells2).list());
+								cellResult.addAll(session.createNativeQuery(strCells3).list());
+										
 								rtn.put("listCells",cellResult);
 							} catch (Exception e) {
 								sw = new StringWriter();
