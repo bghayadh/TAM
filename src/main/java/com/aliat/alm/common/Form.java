@@ -1,6 +1,6 @@
 package com.aliat.alm.common;
 
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class Form {
 
 	//@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	@RequestMapping(value = "/NavigationNP", method = RequestMethod.GET)
 	public <t> String[]  NavigationNP(Session session, String moduleName, String moduleIDName,String moduleIDValue,String moduleLMD,String navAction) throws ParseException {
 	String result [] =new String[3];
@@ -23,8 +24,8 @@ public class Form {
 
 				query =( "select json_object('CountAll' value (select Count (*) from "+moduleName+"),"
 				+ " 'CurrentRowNum' value (select row_num from (select "+moduleIDName+", ROW_NUMBER() OVER( ORDER BY "+moduleLMD+" DESC ) AS row_num from "+moduleName+") where "+moduleIDName+" = :param1) )  from dual");
-				q = session.createSQLQuery(query);
-				q.setString("param1", moduleIDValue);
+				q = session.createNativeQuery(query);
+				q.setParameter("param1", moduleIDValue);
 
 				rowNav =  (JSONObject) jsonParser.parse(q.uniqueResult().toString());
 				result[0]=	rowNav.get("CountAll").toString() ;
@@ -35,8 +36,8 @@ public class Form {
 
 					query =( "select json_object('NextAreaId' value (select "+moduleIDName+" from (select "+moduleIDName+", ROW_NUMBER() OVER( ORDER BY "+moduleLMD+" DESC ) AS row_num from "+moduleName+") where row_num ="
 							+ " (select row_num from (select "+moduleIDName+", ROW_NUMBER() OVER( ORDER BY "+moduleLMD+" DESC ) AS row_num from "+moduleName+") where "+moduleIDName+" = :param1) + 1) )  from dual");
-							q = session.createSQLQuery(query);
-							q.setString("param1", moduleIDValue);
+							q = session.createNativeQuery(query);
+							q.setParameter("param1", moduleIDValue);
 							rowNav =  (JSONObject) jsonParser.parse(q.uniqueResult().toString());
 							SelectedIndex= Integer.parseInt(result[1])+1;
 							result[1]= 	SelectedIndex+"" ;
@@ -46,8 +47,8 @@ public class Form {
 
 					query =( "select json_object('PrevAreaId' value (select "+moduleIDName+" from (select "+moduleIDName+", ROW_NUMBER() OVER( ORDER BY "+moduleLMD+" DESC ) AS row_num from "+moduleName+") where row_num = "
 							+ "(select row_num from (select "+moduleIDName+", ROW_NUMBER() OVER( ORDER BY "+moduleLMD+" DESC ) AS row_num from "+moduleName+") where "+moduleIDName+" = :param1) - 1) )  from dual");
-							q = session.createSQLQuery(query);
-							q.setString("param1", moduleIDValue);
+							q = session.createNativeQuery(query);
+							q.setParameter("param1", moduleIDValue);
 
 							rowNav =  (JSONObject) jsonParser.parse(q.uniqueResult().toString());
 							SelectedIndex= Integer.parseInt(result[1])-1;
@@ -57,14 +58,14 @@ public class Form {
 				}
 	else if(navAction.equals("3")){
 		query =( "select json_object('LasttID' value (select "+moduleIDName+" from (select "+moduleIDName+", ROW_NUMBER() OVER( ORDER BY "+moduleLMD+" DESC ) AS row_num from "+moduleName+") where row_num = "+1+" ) )  from dual");
-		q = session.createSQLQuery(query);
+		q = session.createNativeQuery(query);
 		rowNav =  (JSONObject) jsonParser.parse(q.uniqueResult().toString());
 	    result[1]= 	1+"" ;
 	    result[2]= 	rowNav.get("LasttID").toString() ;
 
 	}else if(navAction.equals("4")){
 		query =( "select json_object('LasttID' value (select "+moduleIDName+" from (select "+moduleIDName+", ROW_NUMBER() OVER( ORDER BY "+moduleLMD+" DESC ) AS row_num from "+moduleName+") where row_num = "+LastIndex+" ) )  from dual");
-		q = session.createSQLQuery(query);
+		q = session.createNativeQuery(query);
 		rowNav =  (JSONObject) jsonParser.parse(q.uniqueResult().toString());
 	    result[1]= 	LastIndex+"" ;
 	    result[2]= 	rowNav.get("LasttID").toString() ;

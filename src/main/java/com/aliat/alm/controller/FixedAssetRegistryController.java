@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -70,12 +70,13 @@ public class FixedAssetRegistryController {
 	private static Session session = null;
 	private static Transaction tx = null;
 	private static ObjectMapper mapper = new ObjectMapper();
+	@SuppressWarnings("rawtypes")
 	private static Query query = null;
 	private static final Logger logger = LoggerFactory.getLogger(FixedAssetRegistryController.class);
 	
 	
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
 	@RequestMapping(value = "/FixedAssetRegistryListView", method = RequestMethod.GET)
 	public String FixedAssetRegistryListView(Locale locale, Model model, HttpServletRequest request,HttpServletResponse response) {
 		if(LoginServices.checkSession(request, response).equals("redirect:/")) {
@@ -101,7 +102,7 @@ public class FixedAssetRegistryController {
 				           + " SELECT A.FAR_ID as farID, A.FAR_ID as fixedassetID, A.ITEM_CODE as itemCode, A.ITEM_NAME as itemName,TO_CHAR(A.LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') as lastModifiedDate, A.ITEM_SN as itemSN,A.ITEM_NAME_REGISTER as itemNameRegister, A.PO_ID as poID,COALESCE(A.NODE_ID, ' ') as nodeID, COALESCE(A.NODE_NAME, ' ') as nodeName, B.SITE_ID AS siteID, B.SITE_NAME AS siteName , "
 				           + " ROW_NUMBER() OVER (PARTITION BY A.FAR_ID ORDER BY B.SITE_ID DESC) AS rn FROM FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID ) WHERE rn = 1 ORDER BY lastModifiedDate DESC";
 				
-				Query query = session.createSQLQuery(str);
+				Query query = session.createNativeQuery(str);
 				
 				listFAR =  ((SQLQuery) query)
 						.addScalar("farID").addScalar("fixedassetID").addScalar("itemCode").addScalar("itemName")
@@ -110,7 +111,7 @@ public class FixedAssetRegistryController {
 		       			.setResultTransformer(Transformers.aliasToBean(FixedAssetRegisterListView.class)).list();
 		
 	
-							Query q = session.createSQLQuery("Select SUM(INITIALCOST) as initialCost, SUM(ACCUMULDEPRECAMNT) as AccumDepr, SUM(NETCOST) as netCost from fixed_asset_registry t");
+							Query q = session.createNativeQuery("Select SUM(INITIALCOST) as initialCost, SUM(ACCUMULDEPRECAMNT) as AccumDepr, SUM(NETCOST) as netCost from fixed_asset_registry t");
 							Object[] result = (Object[]) q.uniqueResult();
 							
 							
@@ -296,12 +297,10 @@ public class FixedAssetRegistryController {
 					}
 				}
 				str = str + " ) WHERE rn = 1 ORDER BY lastModifiedDate DESC  ";
-				Query query = session.createSQLQuery(str);
-				listFixed = query.list();
+				listFixed = session.createNativeQuery(str).list();
 				
 				strTemp = strTemp + " ) WHERE rn = 1 ORDER BY lastModifiedDate DESC ";
-				Query queryTemp = session.createSQLQuery(strTemp);
-				listFixedAssetTemp = queryTemp.list();
+				listFixedAssetTemp = session.createNativeQuery(strTemp).list();
 			
 				if (( radius != null && !radius.equalsIgnoreCase("") && Double.parseDouble(radius) > 0) && (longitude != null && !longitude.equalsIgnoreCase("")) && (latitude != null
 						&& !latitude.equalsIgnoreCase(""))) {
@@ -617,10 +616,10 @@ public class FixedAssetRegistryController {
 		if (StringUtils.equalsIgnoreCase(farcode, "")) 
 		{
 			synchronized (this) {						
-				farcode = "FAR_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT FIXED_ASSET_REGISTRY FROM SEQ_TABLE").uniqueResult().toString());	
-				query = session.createSQLQuery("UPDATE SEQ_TABLE SET FIXED_ASSET_REGISTRY = FIXED_ASSET_REGISTRY + 1 ");
+				farcode = "FAR_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT FIXED_ASSET_REGISTRY FROM SEQ_TABLE").uniqueResult().toString());	
+				query = session.createNativeQuery("UPDATE SEQ_TABLE SET FIXED_ASSET_REGISTRY = FIXED_ASSET_REGISTRY + 1 ");
 				query.executeUpdate();
-				session.createSQLQuery("commit").executeUpdate();
+				session.createNativeQuery("commit").executeUpdate();
 				}
 		}
 			//farcode= "FAR_"+year+"_" +appConfig.getSequenceNbr(10);
@@ -719,10 +718,10 @@ public class FixedAssetRegistryController {
 				
 				if(StringUtils.equalsIgnoreCase(itemParameters.getDictParameter().get(i).get("farItemID"), "0")) {
 					synchronized (this) {						
-						itmId = "FARMP_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT FAR_MODEL_PARTNO FROM SEQ_TABLE").uniqueResult().toString());	
-						query = session.createSQLQuery("UPDATE SEQ_TABLE SET FAR_MODEL_PARTNO = FAR_MODEL_PARTNO + 1 ");
+						itmId = "FARMP_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT FAR_MODEL_PARTNO FROM SEQ_TABLE").uniqueResult().toString());	
+						query = session.createNativeQuery("UPDATE SEQ_TABLE SET FAR_MODEL_PARTNO = FAR_MODEL_PARTNO + 1 ");
 						query.executeUpdate();
-						session.createSQLQuery("commit").executeUpdate();
+						session.createNativeQuery("commit").executeUpdate();
 						}
 				//itmId = "FARMP_" + year + "_" + appConfig.getSequenceNbr(25);
 				farPartNumber.setItmId(itmId);
@@ -769,10 +768,10 @@ public class FixedAssetRegistryController {
 
 			if(StringUtils.equalsIgnoreCase(itemParameters.getDictParameternode().get(i).get("farNodeID"), "0")) {	
 				synchronized (this) {						
-					nodefarId = "FARNODE_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT FAR_NODE FROM SEQ_TABLE").uniqueResult().toString());	
-					query = session.createSQLQuery("UPDATE SEQ_TABLE SET FAR_NODE = FAR_NODE + 1 ");
+					nodefarId = "FARNODE_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT FAR_NODE FROM SEQ_TABLE").uniqueResult().toString());	
+					query = session.createNativeQuery("UPDATE SEQ_TABLE SET FAR_NODE = FAR_NODE + 1 ");
 					query.executeUpdate();
-					session.createSQLQuery("commit").executeUpdate();
+					session.createNativeQuery("commit").executeUpdate();
 					}
 			//nodefarId = "FARNODE_" + year + "_" + appConfig.getSequenceNbr(27);
 			farNode.setNodefarId(nodefarId);
@@ -819,10 +818,10 @@ public class FixedAssetRegistryController {
 			if(StringUtils.equalsIgnoreCase(itemParameters.getDictParametersite().get(i).get("farSiteID"), "0"))
 				{	
 				synchronized (this) {						
-					farsiteId = "FARSITE_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT FAR_SITE FROM SEQ_TABLE").uniqueResult().toString());	
-					query = session.createSQLQuery("UPDATE SEQ_TABLE SET FAR_SITE = FAR_SITE + 1 ");
+					farsiteId = "FARSITE_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT FAR_SITE FROM SEQ_TABLE").uniqueResult().toString());	
+					query = session.createNativeQuery("UPDATE SEQ_TABLE SET FAR_SITE = FAR_SITE + 1 ");
 					query.executeUpdate();
-					session.createSQLQuery("commit").executeUpdate();
+					session.createNativeQuery("commit").executeUpdate();
 					}
 			//farsiteId = "FARSITE_" + year + "_" + appConfig.getSequenceNbr(29);
             farSite.setFarsiteId(farsiteId);
@@ -881,10 +880,10 @@ public class FixedAssetRegistryController {
 					if(StringUtils.equalsIgnoreCase(itemParameters.getDictParameterFixedAssetRegistrySerialNumber().get(i).get("farSerialID"), "0"))
 					{
 						synchronized (this) {						
-							serialId = "FARSNUM_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT FAR_SERIALNO FROM SEQ_TABLE").uniqueResult().toString());	
-							query = session.createSQLQuery("UPDATE SEQ_TABLE SET FAR_SERIALNO = FAR_SERIALNO + 1 ");
+							serialId = "FARSNUM_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT FAR_SERIALNO FROM SEQ_TABLE").uniqueResult().toString());	
+							query = session.createNativeQuery("UPDATE SEQ_TABLE SET FAR_SERIALNO = FAR_SERIALNO + 1 ");
 							query.executeUpdate();
-							session.createSQLQuery("commit").executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
 							}
 				//serialId = "FARSNUM_" + year + "_" + appConfig.getSequenceNbr(32);
                 farSerialNumber.setSerialId(serialId);
@@ -951,19 +950,19 @@ public class FixedAssetRegistryController {
 					if (session != null && session.isOpen()) {
 			            tx = session.beginTransaction();
 			            try {
-			                            query = session.createSQLQuery("Delete FIXED_ASSET_REGISTRY where FAR_ID = '"+ idForm +"'");
+			                            query = session.createNativeQuery("Delete FIXED_ASSET_REGISTRY where FAR_ID = '"+ idForm +"'");
 			                            query.executeUpdate();
 
-			                            query = session.createSQLQuery("delete FAR_MODEL_PARTNUMBER  where FAR_ID = '"+ idForm +"'");
+			                            query = session.createNativeQuery("delete FAR_MODEL_PARTNUMBER  where FAR_ID = '"+ idForm +"'");
 			                            query.executeUpdate();
 
-			                            query = session.createSQLQuery("delete FAR_NODE  where FAR_ID = '"+ idForm +"'");
+			                            query = session.createNativeQuery("delete FAR_NODE  where FAR_ID = '"+ idForm +"'");
 			                            query.executeUpdate();
 
-			                            query = session.createSQLQuery("delete FAR_SERIAL_NUMBER  where FAR_ID = '"+ idForm +"'");
+			                            query = session.createNativeQuery("delete FAR_SERIAL_NUMBER  where FAR_ID = '"+ idForm +"'");
 			                            query.executeUpdate();
 
-			                            query = session.createSQLQuery("delete FAR_SITE  where FAR_ID = '"+ idForm +"'");
+			                            query = session.createNativeQuery("delete FAR_SITE  where FAR_ID = '"+ idForm +"'");
 			                            query.executeUpdate();
 
 
@@ -1010,19 +1009,19 @@ public class FixedAssetRegistryController {
 					//Get FAR_ID from the listview form
 					idForm=idList[i];
 					
-			            	 query = session.createSQLQuery("Delete FIXED_ASSET_REGISTRY where FAR_ID = '"+ idForm +"'");
+			            	 query = session.createNativeQuery("Delete FIXED_ASSET_REGISTRY where FAR_ID = '"+ idForm +"'");
 		                     query.executeUpdate();
 
-		                     query = session.createSQLQuery("delete FAR_MODEL_PARTNUMBER  where FAR_ID = '"+ idForm +"'");
+		                     query = session.createNativeQuery("delete FAR_MODEL_PARTNUMBER  where FAR_ID = '"+ idForm +"'");
 		                     query.executeUpdate();
 
-		                     query = session.createSQLQuery("delete FAR_NODE  where FAR_ID = '"+ idForm +"'");
+		                     query = session.createNativeQuery("delete FAR_NODE  where FAR_ID = '"+ idForm +"'");
 		                     query.executeUpdate();
 
-		                     query = session.createSQLQuery("delete FAR_SERIAL_NUMBER  where FAR_ID = '"+ idForm +"'");
+		                     query = session.createNativeQuery("delete FAR_SERIAL_NUMBER  where FAR_ID = '"+ idForm +"'");
 		                     query.executeUpdate();
 
-		                     query = session.createSQLQuery("delete FAR_SITE  where FAR_ID = '"+ idForm +"'");
+		                     query = session.createNativeQuery("delete FAR_SITE  where FAR_ID = '"+ idForm +"'");
 		                     query.executeUpdate();
 
 					}
@@ -1075,7 +1074,7 @@ public class FixedAssetRegistryController {
 
 	                String requestName = "%" + request.getParameter("nodeID") + "%";
 					query = session.createQuery("select distinct nvl(t.nodeID,' '),nvl(t.nodeName,' ') from FarNode t where t.nodeID like :param1");
-					query.setString("param1", requestName);
+					query.setParameter("param1", requestName);
 			
 					query.setFirstResult(0);
 					query.setMaxResults(40);
@@ -1124,7 +1123,7 @@ try {
 
         String requestName = "%" + request.getParameter("node_Name") + "%";
 		query = session.createQuery("select distinct nvl(t.nodeName,' '),nvl(t.nodeID,' ') from FarNode t where t.nodeName like :param1");
-        query.setString("param1", requestName);
+        query.setParameter("param1", requestName);
 
 		query.setFirstResult(0);
 		query.setMaxResults(40);
@@ -1168,9 +1167,9 @@ return rtn;
 			
 		try {
 				String requestValue = request.getParameter("requestValue");
-				query = session.createSQLQuery("select FAR_ID, FAR_STATUS, ITEM_CODE, ITEM_NAME from FIXED_ASSET_REGISTRY where LOWER(FAR_ID) like LOWER(:param1) "
+				query = session.createNativeQuery("select FAR_ID, FAR_STATUS, ITEM_CODE, ITEM_NAME from FIXED_ASSET_REGISTRY where LOWER(FAR_ID) like LOWER(:param1) "
 						+ "or LOWER(FAR_STATUS) like LOWER(:param1) ORDER BY LAST_MODIFIED_DATE DESC");
-				query.setString("param1", "%"+requestValue+"%");
+				query.setParameter("param1", "%"+requestValue+"%");
 		
 				query.setFirstResult(0);
 				query.setMaxResults(40);
