@@ -6315,8 +6315,8 @@ public class PhysicalLayerController {
 				}
 				rtn.put("distributionBoardDetails", DBDetails);
 				rtn.put("IgnoredDB", IgnoredDB);
-				session.clear();
 				session.flush();
+				session.clear();
 				tx.commit();
 			} catch (Exception e) {
 				tx.rollback();
