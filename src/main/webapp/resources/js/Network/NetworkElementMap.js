@@ -205,6 +205,14 @@ function create_Marker_Click(Id,Name,Long,Lat,markers,marker_Cluster,data) {
 	        liElement.closest('.Vendor').find('.NodeFolder').find('> .folder > svg').removeClass('fa fa-folder').addClass('fa-folder-open');	
 	        liElement.closest('.Vendor').find('.NodeFolder').find(' > ul > li').show();
 	        
+	        /////////////////////
+	        
+	        liElement.closest('.NodeType').find('.SingleVendor').find('> .folder > svg').removeClass('fa fa-folder').addClass('fa-folder-open');	
+	        liElement.closest('.NodeType').find('.SingleVendor').find(' > ul > li').show();
+	             
+	        liElement.closest('.NodeType').find('.SiteFolder').find('> .folder > svg').removeClass('fa fa-folder').addClass('fa-folder-open');	
+	        liElement.closest('.NodeType').find('.SiteFolder').find(' > ul > li').show();
+	  
 	       // PO pages 
 	        liElement.closest('.PO').find('> .folder > svg').removeClass('fa fa-folder').addClass('fa-folder-open');	
 	        liElement.closest('.PO').find(' > ul > li').show();

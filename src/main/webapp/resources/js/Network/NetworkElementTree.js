@@ -212,8 +212,76 @@ if(arrayParam[3]==1){
 	 Boq.css({ display:'block'});
 	 Layers.css({ display:'none'});
 	 Options.css({ display:'none'});
+	Boq.tab('show');	 	   	 	      
+}
+
+function SiteVenNT_Boq(SiteId,VenId,SelectedNodeType){
+	var Boq = $('#Boq');
+	var Layers= $('#Layers');
+	var Options= $('#Options');
+	
+if(arrayParam[0]==1){
+	var paramEnterprise = true;
+}else{
+	var paramEnterprise = false;
+}
+
+if(arrayParam[1]==1){
+	var paramTransmission = true;
+}else{
+	var paramTransmission = false;
+}
+	
+if(arrayParam[2]==1){
+	var paramAccess = true;
+}else{
+	var paramAccess = false;
+}
+
+if(arrayParam[3]==1){
+	var paramCore = true;
+}else{
+	var paramCore = false;
+}
+
+		 $.ajax({
+			type: "GET",
+			contentType: "application/json; charset=utf-8",
+			url: getContext()+'/GetSiteVenNTBoqList',
+			data: {
+			    "SiteId" : SiteId,
+			    "VenId" : VenId,
+			    "SelectedNodeType": SelectedNodeType,
+			    "paramEnterprise" : paramEnterprise,
+			    "paramTransmission" : paramTransmission,
+			    "paramAccess" : paramAccess,
+			    "paramCore" : paramCore,
+			    "arrayParam" : arrayParam
+			    },
+			success : function(data)
+			    {
+				 $('#boq_table').empty();				 
+				 siteList.push(SiteId);	          	 
+				 $.each(data , function( key, value ) {	
+					boqList.push({ SiteId,key,value });    
+					var tr = "<tr>"+
+					"<td class='title'> "+key+"</td>"+
+					"<td> "+value+" </td>"+
+					"</tr>";
+					$("#boq_table").append(tr);     		    			   			
+				});  	
+			},	
+			error: function(result) {
+				alert("Error");
+									}			
+		});
+	 $("#boqBtn").removeClass().addClass("tablinks active");
+	 $("#Defaultbutton").removeClass().addClass("tablinks");
+	 $("#optionBtn").removeClass().addClass("tablinks");
+	 Boq.css({ display:'block'});
+	 Layers.css({ display:'none'});
+	 Options.css({ display:'none'});
 	Boq.tab('show');	 
-	   	 	      
 }
 //////////////////////////////////////////////////////////////////////////////////
 function Supp_Boq(SuppId){
@@ -352,6 +420,76 @@ if(arrayParam[3]==1){
 	 Options.css({ display:'none'});
 	Boq.tab('show');	 	   	 	      
 }
+
+function SiteSuppNT_Boq(SiteId,SuppId,SelectedNodeType){
+	var Boq = $('#Boq');
+	var Layers= $('#Layers');
+	var Options= $('#Options');
+	
+if(arrayParam[0]==1){
+	var paramEnterprise = true;
+}else{
+	var paramEnterprise = false;
+}
+
+if(arrayParam[1]==1){
+	var paramTransmission = true;
+}else{
+	var paramTransmission = false;
+}
+	
+if(arrayParam[2]==1){
+	var paramAccess = true;
+}else{
+	var paramAccess = false;
+}
+
+if(arrayParam[3]==1){
+	var paramCore = true;
+}else{
+	var paramCore = false;
+}
+
+		 $.ajax({
+			type: "GET",
+			contentType: "application/json; charset=utf-8",
+			url: getContext()+'/GetSiteSupNTBoqList',
+			data: {
+			    "SiteId" : SiteId,
+			    "SuppId" : SuppId,
+			    "SelectedNodeType" : SelectedNodeType,
+			    "paramEnterprise" : paramEnterprise,
+			    "paramTransmission" : paramTransmission,
+			    "paramAccess" : paramAccess,
+			    "paramCore" : paramCore,
+			    "arrayParam" : arrayParam
+			    },
+			success : function(data)
+			    {
+				 $('#boq_table').empty();				 
+				 siteList.push(SiteId);	          	 
+				 $.each(data , function( key, value ) {	
+					boqList.push({ SiteId,key,value });    
+					var tr = "<tr>"+
+					"<td class='title'> "+key+"</td>"+
+					"<td> "+value+" </td>"+
+					"</tr>";
+					$("#boq_table").append(tr);     		    			   			
+				});  	
+			},	
+			error: function(result) {
+				alert("Error");
+									}			
+		});
+	 $("#boqBtn").removeClass().addClass("tablinks active");
+	 $("#Defaultbutton").removeClass().addClass("tablinks");
+	 $("#optionBtn").removeClass().addClass("tablinks");
+	 Boq.css({ display:'block'});
+	 Layers.css({ display:'none'});
+	 Options.css({ display:'none'});
+	Boq.tab('show');	 	   	 	      
+}
+
 //////////////////////////////////////////////////////////////////////////////////
 function Ven_Boq(VenId){
 	var Boq = $('#Boq');
@@ -684,6 +822,142 @@ function  NodeT_Boq(SiteId,NodeTId){
 				siteNTList.push(NodeTId); 
 				$.each(data , function( key, value ) {	
 					boqNTList.push({ NodeTId,key,value });
+					var tr = "<tr>"+
+					"<td class='title'> "+key+"</td>"+
+					"<td>"+value+"</td>"+
+					"</tr>";
+					$("#boq_table").append(tr);
+				});
+			},
+			error: function(result) {
+				alert("Error");
+									}
+				});
+	 $("#boqBtn").removeClass().addClass("tablinks active");
+	 $("#Defaultbutton").removeClass().addClass("tablinks");
+	 $("#optionBtn").removeClass().addClass("tablinks");
+	 Boq.css({ display:'block'});
+	 Layers.css({ display:'none'});
+	 Options.css({ display:'none'});
+	 Boq.tab('show');	      	 	      
+}
+
+function  SuppNdTyp_Boq(SuppId,NodeTId){
+	
+	var Boq = $('#Boq');
+	var Layers= $('#Layers');
+	var Options= $('#Options');
+
+	if(arrayParam[0]==1){
+		var paramEnterprise = true;
+	}else{
+		var paramEnterprise = false;
+	}
+
+	if(arrayParam[1]==1){
+		var paramTransmission = true;
+	}else{
+		var paramTransmission = false;
+	}
+		
+	if(arrayParam[2]==1){
+		var paramAccess = true;
+	}else{
+		var paramAccess = false;
+	}
+
+	if(arrayParam[3]==1){
+		var paramCore = true;
+	}else{
+		var paramCore = false;
+	}
+
+		 $.ajax({
+			type: "GET",
+			contentType: "application/json; charset=utf-8",
+			url: getContext()+'/GetSuppNtypeBoqList',
+			data: {
+			    "SuppId":SuppId,
+			    "NodeTId":NodeTId,
+			    "paramEnterprise": paramEnterprise,
+			    "paramTransmission":paramTransmission,
+			    "paramAccess":paramAccess,
+			    "paramCore":paramCore,
+			    },
+			success : function(data)
+			  {
+				$('#boq_table').empty();
+				siteList.push(SuppId); 
+				$.each(data , function( key, value ) {	
+					boqList.push({ SuppId,key,value });
+					var tr = "<tr>"+
+					"<td class='title'> "+key+"</td>"+
+					"<td>"+value+"</td>"+
+					"</tr>";
+					$("#boq_table").append(tr);
+				});
+			},
+			error: function(result) {
+				alert("Error");
+									}
+				});
+	 $("#boqBtn").removeClass().addClass("tablinks active");
+	 $("#Defaultbutton").removeClass().addClass("tablinks");
+	 $("#optionBtn").removeClass().addClass("tablinks");
+	 Boq.css({ display:'block'});
+	 Layers.css({ display:'none'});
+	 Options.css({ display:'none'});
+	 Boq.tab('show');	      	 	      
+}
+
+function  VenNdTyp_Boq(VenId,NodeTId){
+	
+	var Boq = $('#Boq');
+	var Layers= $('#Layers');
+	var Options= $('#Options');
+
+	if(arrayParam[0]==1){
+		var paramEnterprise = true;
+	}else{
+		var paramEnterprise = false;
+	}
+
+	if(arrayParam[1]==1){
+		var paramTransmission = true;
+	}else{
+		var paramTransmission = false;
+	}
+		
+	if(arrayParam[2]==1){
+		var paramAccess = true;
+	}else{
+		var paramAccess = false;
+	}
+
+	if(arrayParam[3]==1){
+		var paramCore = true;
+	}else{
+		var paramCore = false;
+	}
+
+		 $.ajax({
+			type: "GET",
+			contentType: "application/json; charset=utf-8",
+			url: getContext()+'/GetVenNtypeBoqList',
+			data: {
+			    "VenId":VenId,
+			    "NodeTId":NodeTId,
+			    "paramEnterprise": paramEnterprise,
+			    "paramTransmission":paramTransmission,
+			    "paramAccess":paramAccess,
+			    "paramCore":paramCore,
+			    },
+			success : function(data)
+			  {
+				$('#boq_table').empty();
+				siteList.push(VenId); 
+				$.each(data , function( key, value ) {	
+					boqList.push({ VenId,key,value });
 					var tr = "<tr>"+
 					"<td class='title'> "+key+"</td>"+
 					"<td>"+value+"</td>"+

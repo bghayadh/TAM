@@ -1201,8 +1201,8 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 	   $('#li_nodeBtn').css("color","black").css("opacity",".65");
 	  // $('#li_supplierBtn').addClass('unsortable_sup');
 	  // $('#li_supplierBtn').css("color","black").css("opacity",".65");	    
-	   $('#li_vendorBtn').addClass('unsortable');
-	   $('#li_vendorBtn').css("color","black").css("opacity",".65");
+	  // $('#li_vendorBtn').addClass('unsortable');
+	  // $('#li_vendorBtn').css("color","black").css("opacity",".65");
 	   var poSel=["PO","Item","Site","Node Type","Node"];
 	   var suppSel=['Supplier', 'Site', 'Node', 'Cell'];
 	   
@@ -1318,7 +1318,7 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 			 }
 			 break;	
 			 
-			//Supplier-Site-Node type-Node-Cell
+			//Venodr-Site-Node type-Node-Cell
 				case "li_vendorBtn,li_siteBtn,li_nodeTypeeBtn,li_nodeBtn,li_cellBtn":
 		 		case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,vendorBtn":
 		 		 {
@@ -1329,8 +1329,19 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 			 		window.location.href = url;
 		     	}		
 		 		break;	
-		 		
-		 		//Supplier-NodeType-Site-Node-Cell
+		 		//NodeType-Vendor-Site-Node-Cell
+				 case "li_nodeTypeeBtn,li_vendorBtn,li_siteBtn,li_nodeBtn,li_cellBtn":
+				 case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,vendorBtn":
+				  {
+					 var url = getContext()+"/Network_NdTypVenStNdCell"; 	
+					 if(params !=null){
+						 url += params;
+				 		}
+				 		window.location.href = url;
+				    }
+				break;
+				
+		 		//Vendor-NodeType-Site-Node-Cell
 				 case "li_vendorBtn,li_nodeTypeeBtn,li_siteBtn,li_nodeBtn,li_cellBtn":
 				// case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,vendorBtn":
 				  {
@@ -1388,6 +1399,7 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 			 		window.location.href = url;
 			    }
 			break;
+			
 			//PO-Site-Items
 	 		 case "li_poBtn,li_siteBtn,li_itemBtn":
 	 		 case "siteBtn,itemBtn,poBtn":

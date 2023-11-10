@@ -6,14 +6,13 @@ $('#removeFilter').hide();
 
 
 var lst = ${listSites};
-//console.log("lst...", lst);
+console.log("lst...", lst);
 var listNodesType = ${listNodesType};
-//console.log("listNodesType: ",listNodesType);
+console.log("listNodesType: ",listNodesType);
 var arrayParam=${arrayParam};
-//console.log("arrayParam...", arrayParam);
+console.log("arrayParam...", arrayParam);
 //var date=$("#ParsingDate").val();
 //console.log("date...", date);
-
 
 var button ;
 var data;
@@ -27,7 +26,7 @@ function initMap() {
 	$('#nodeBtn').toggleClass('activee');
     $('#siteBtn').addClass('activee');
     $('#cellBtn').toggleClass('activee');
-    $('#supplierBtn').toggleClass('activee');
+    $('#vendorBtn').toggleClass('activee');
     $('#nodeTypeeBtn').toggleClass('activee');
     
     $("#default").prop('checked', true);
@@ -249,9 +248,8 @@ map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
 				});
 */
 			map.setOptions({ minZoom: 3, maxZoom: 28});	
-	//CreateMap_StNdCell(lst,map);
 	CreateMap(lst,map);	
-	CreateTree_NdTpSupStNdCell(listNodesType,map);
+	CreateTree_NdTpVenStNdCell(listNodesType,map);
 	
 	}
 	else{
@@ -265,13 +263,13 @@ map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
 	}
 } /// End of init Map
 
-function CreateTree_NdTpSupStNdCell(listNodesType,map){ 
+function CreateTree_NdTpVenStNdCell(listNodesType,map){ 
 	var str="<ul><li id='initial_ul' class='Initial'><input type='checkbox' id='NodesType' class='AllNodesType' style='margin-left: 15px' unchecked onclick='AllSitesCheckFilter()'></input> <span class='folder'><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Node Type</span></li></ul>";
 	$("#network_tree").append(str);
 	for (n = 0; n < listNodesType.length; n++) {
 		if(listNodesType[n][1]>0){
-			var str = "<ul><li class='NodeType' id='"+listNodesType[n][0]+"' style='display:none; margin-left:10px'><span class='folder' onclick='NdTypSupStNdCellCore("+listNodesType[n][0] +")'><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'><span class='tree-span' style='margin-left:-15px;'> <i class='fa fa-cogs fa-2x'></i> "+listNodesType[n][0]+"</span></span>";
-			str+= "<ul><li id='" +listNodesType[n][0]+"_f' class='NodeTypeFolder parent_li' style='display:none; margin-left:-20px'><span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Suppliers </span></span></li></ul></li></ul>";
+			var str = "<ul><li class='NodeType' id='"+listNodesType[n][0]+"' style='display:none; margin-left:10px'><span class='folder' onclick='NdTypVenStNdCellCore("+listNodesType[n][0] +")'><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'><span class='tree-span' style='margin-left:-15px;'> <i class='fa fa-cogs fa-2x'></i> "+listNodesType[n][0]+"</span></span>";
+			str+= "<ul><li id='" +listNodesType[n][0]+"_f' class='NodeTypeFolder parent_li' style='display:none; margin-left:-20px'><span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Vendors </span></span></li></ul></li></ul>";
 			$("#initial_ul").append(str);
 		}
 	}
@@ -317,7 +315,7 @@ function AllSitesCheckFilter(){
 	$('.AllNodesType').bind("change",function() {	
 		//console.log("markersSites.length: "+markersSites.length);
 			if ($(this).is(':checked')){
-				 $('#network_tree input[type="checkbox"][class="SingleSiteSupp"]').prop('checked', false);
+				 $('#network_tree input[type="checkbox"][class="SingleSiteVen"]').prop('checked', false);
 				 $('#network_tree input[type="checkbox"][class="SiteFolder"]').prop('checked', false);
 				for(var x=0; x< markersSites.length; x++){	
 						markersSites[markersSites[x].ID].setMap(map);			
@@ -336,22 +334,22 @@ function AllSitesCheckFilter(){
 
 function showMarkersAllSitesOneNt(id) {
 	  var id = id.id;
-	  var suppId_nodeType = id.split("_Site")[0].split("_");
-	  var suppId = suppId_nodeType[0] + "_" + suppId_nodeType[1] + "_" + suppId_nodeType[2];
-	  var nodeType =suppId_nodeType[3];
-	 
+	  var venId_nodeType = id.split("_Site")[0].split("_");
+	  var venId = venId_nodeType[0];
+	  var nodeType =venId_nodeType[1];
+	  
 	  markerClusterSites.clearMarkers();
 	  var isChecked = $("#" + id).is(":checked");
 	  var ulElement = document.getElementById(id.split("_Site")[0]);
-	  var liElements = ulElement.querySelectorAll('.SingleSiteSupp > input'); // Retrieve only <li> elements with <input> children
+	  var liElements = ulElement.querySelectorAll('.SingleSiteVen > input'); // Retrieve only <li> elements with <input> children
 	  //var count = liElements.length;
 	  //console.log("Number of <li> elements:", count);
 	  var markersToAdd = []; // Array to store markers that need to be added
 
 	  for (var i = 0; i < liElements.length; i++) {
 	    liElements[i].checked = isChecked;
-	    if (isChecked && !markersSites[liElements[i].id.split("_" + suppId)[0]].getMap()) {
-	        markersToAdd.push(markersSites[liElements[i].id.split("_" + suppId)[0]]);
+	    if (isChecked && !markersSites[liElements[i].id.split("_" + venId)[0]].getMap()) {
+	        markersToAdd.push(markersSites[liElements[i].id.split("_" + venId)[0]]);
 	    }  
 	  }
 	  if (isChecked) {
@@ -367,7 +365,7 @@ function showMarkersAllSitesOneNt(id) {
 	}
 
 
-function NdTypSupStNdCellCore(id){
+function NdTypVenStNdCellCore(id){
 	var selectedNodetType= id.id;
 	var NodeTypeChildrenLength=$("#" +selectedNodetType+"_f").find(' > ul > li').length;
 	
@@ -400,7 +398,7 @@ function NdTypSupStNdCellCore(id){
 		$.ajax({
 			  type: "GET",
 			  contentType: "application/json; charset=utf-8",
-			  url: getContext()+'/findNodeTypeSupSiteNodeCell_Sup',
+			  url: getContext()+'/findNodeTypeVenSiteNodeCell_Ven',
 			  data: {
 			          "selectedNodetType":selectedNodetType,
 			          "paramEnterprise": paramEnterprise,
@@ -411,34 +409,35 @@ function NdTypSupStNdCellCore(id){
 			 dataType: "json",
 			 success: function (data) {	
 				 if (data != null) {	
-					var listSuppliers=data.listSuppliers;		
-					
-					if(NodeTypeChildrenLength<listSuppliers.length){
+					var listVendors=data.listVendors;		
+					console.log("listVendors: ",listVendors);
+					if(NodeTypeChildrenLength<listVendors.length){
 						var dFrag = document.createDocumentFragment(); 
-						for (j = 0; j < listSuppliers.length; j++){								
-						     str="<li id='"+ listSuppliers[j][0] +"_"+listSuppliers[j][2]+"' class='SingleSupplier' style='display:none; margin-left:-30px'><span class='folder' onclick='RequestingSites("+ listSuppliers[j][0] +"_"+listSuppliers[j][2]+")'><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'><img src='"+getContext()+"/resources/NetworkImages/site.png'> "+listSuppliers[j][1]+"</span>";
-						     str+= "<ul><li id='" + listSuppliers[j][0] +"_"+listSuppliers[j][2]+"_f' class='SiteFolder parent_li' style='display:none; margin-left:-40px'><input type='checkbox' id='" + listSuppliers[j][0] + "_" + listSuppliers[j][2] +"_Site' class='Sites' style='margin-left: 15px' onclick='showMarkersAllSitesOneNt("+ listSuppliers[j][0] + "_" + listSuppliers[j][2]+ "_Site)'></input><span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Sites </span></span></li></ul></li>";						
+						for (j = 0; j < listVendors.length; j++){								
+						     str="<li id='"+ listVendors[j][0] +"_"+listVendors[j][1]+"' class='SingleVendor' style='display:none; margin-left:-30px'><span class='folder' onclick='RequestingSites("+ listVendors[j][0] +"_"+listVendors[j][1]+")'><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'><img src='"+getContext()+"/resources/NetworkImages/site.png'> "+listVendors[j][0]+"</span>";
+						     str+= "<ul><li id='" + listVendors[j][0] +"_"+listVendors[j][1]+"_f' class='SiteFolder parent_li' style='display:none; margin-left:-40px'><input type='checkbox' id='" + listVendors[j][0] + "_" + listVendors[j][1] +"_Site' class='Sites' style='margin-left: 15px' onclick='showMarkersAllSitesOneNt("+ listVendors[j][0] + "_" + listVendors[j][1]+ "_Site)'></input><span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Sites </span></span></li></ul></li>";						
 						     const div = document.createElement('ul');
 							div.innerHTML = str;
 							dFrag.appendChild(div);          
 						}
 						document.getElementById(selectedNodetType+"_f").appendChild(dFrag);	
-						tree_prop_selection("#" +selectedNodetType+"_f .SingleSupplier .TreeSpan");
-			            Tree_PropagationAppendedNodes(selectedNodetType+"_f .SingleSupplier");
+						tree_prop_selection("#" +selectedNodetType+"_f .SingleVendor .TreeSpan");
+			            Tree_PropagationAppendedNodes(selectedNodetType+"_f .SingleVendor");
 			            
 			            var idSite;
-			            $(".SingleSupplier > .TreeSpan").contextmenu(function(){				
-			        		selectedSingleSupplierIdContext=$(this).parent().attr('id'); //suppId_nodetypeId
-			        		var splitArray= selectedSingleSupplierIdContext.split("_");
-			        		idSup=splitArray[0] + "_" + splitArray[1] + "_" + splitArray[2];
-			        		menuName=SingleSupplier;			
-			        		openContext(selectedSingleSupplierIdContext,"",SingleSupplier,event);
+			            $(".SingleVendor > .TreeSpan").contextmenu(function(){				
+			        		selectedSingleVendorIdContext=$(this).parent().attr('id'); //venId_nodetypeId
+			        		var splitArray= selectedSingleVendorIdContext.split("_");
+			        		idVen=splitArray[0];
+			        		console.log("idVen: ",idVen);
+			        		menuName=SingleVendor;			
+			        		openContext(selectedSingleVendorIdContext,"",SingleVendor,event);
 			        	});
-			            SingleSupplier = new ContextMenu({
+			            SingleVendor = new ContextMenu({
 			        	  'theme': 'default',
 			        	  'items': [
 			        		  {'icon': 'braille', 'name': 'Show BoQ', action: () => {				
-			        			  SuppNdTyp_Boq(idSup,selectedNodetType);
+			        			  VenNdTyp_Boq(idVen,selectedNodetType);
 			        			}	
 			        		}
 			        	]
@@ -458,11 +457,11 @@ function NdTypSupStNdCellCore(id){
 function RequestingSites(id) {
 	var lastIndex = id.id.lastIndexOf('_');
 	if (lastIndex !== -1) {
-		var selectedSupp = id.id.substring(0, lastIndex);
+		var selectedVen = id.id.substring(0, lastIndex);
 	}
 	var SelectedNodeType = id.id.substring(lastIndex + 1);
 	
-		var NdTypeChildrenLength=$("#" +selectedSupp +"_" + SelectedNodeType+"_f").find(' > ul > li').length;		
+		var NdTypeChildrenLength=$("#" +selectedVen +"_" + SelectedNodeType+"_f").find(' > ul > li').length;		
 		
 		if(NdTypeChildrenLength==0){
 			
@@ -493,9 +492,9 @@ function RequestingSites(id) {
 			$.ajax({
 				type: "GET",
 				contentType: "application/json; charset=utf-8",
-				url: getContext()+'/findNodeTypeSupSiteNodeCell_Site',
+				url: getContext()+'/findNodeTypeVenSiteNodeCell_Site',
 				data: {
-					"selectedSupp":selectedSupp,
+					"selectedVen":selectedVen,
 					"SelectedNodeType":SelectedNodeType,
 		            "paramEnterprise": paramEnterprise,
 					"paramTransmission":paramTransmission,
@@ -505,27 +504,29 @@ function RequestingSites(id) {
 				dataType: "json",
 				success: function (data) {	    
 					if (data != null) {
-						var listSuppSites = data.listSuppSites;
-						if(NdTypeChildrenLength<listSuppSites.length){
+						var listVenSites = data.listVenSites;
+						console.log("listVenSites: ",listVenSites);
+						if(NdTypeChildrenLength<listVenSites.length){
 							var dFrag = document.createDocumentFragment();
-							for (n = 0; n < listSuppSites.length; n++) {	
-								str="<li id='"+listSuppSites[n][1]+"_"+listSuppSites[n][2]+"' class='SingleSiteSupp' style='width:100px;display:none; margin-left:-30px'><input type='checkbox' id='" + listSuppSites[n][1]+"_"+listSuppSites[n][2] +"_SingleSite' class='SingleSiteSupp' style='margin-left: 15px' onclick='showMarkerSingleSite("+ listSuppSites[n][1]+"_"+listSuppSites[n][2] + "_SingleSite)'></input><span class='folder' onclick='Create_Sites("+listSuppSites[n][1]+"_"+listSuppSites[n][2]+")' ><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'onclick='PanTreeSites("+listSuppSites[n][1]+"_"+listSuppSites[n][2]+")'><i class='fas fa-crosshairs fa-2x'></i><img src='"+getContext()+"/resources/NetworkImages/site.png'> "+listSuppSites[n][0]+"</span>";
-								str+= "<ul><li id='" +listSuppSites[n][1]+"_"+listSuppSites[n][2]+"_f' class='NodeFolder' style='display:none'><span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Nodes </span></span></li></ul></li></ul>"; 
+							for (n = 0; n < listVenSites.length; n++) {	
+								str="<li id='"+listVenSites[n][1]+"_"+listVenSites[n][2]+"' class='SingleSiteVen' style='width:100px;display:none; margin-left:-30px'><input type='checkbox' id='" + listVenSites[n][1]+"_"+listVenSites[n][2] +"_SingleSite' class='SingleSiteVen' style='margin-left: 15px' onclick='showMarkerSingleSite("+ listVenSites[n][1]+"_"+listVenSites[n][2] + "_SingleSite)'></input><span class='folder' onclick='Create_Sites("+listVenSites[n][1]+"_"+listVenSites[n][2]+")' ><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'onclick='PanTreeSites("+listVenSites[n][1]+"_"+listVenSites[n][2]+")'><i class='fas fa-crosshairs fa-2x'></i><img src='"+getContext()+"/resources/NetworkImages/site.png'> "+listVenSites[n][0]+"</span>";
+								str+= "<ul><li id='" +listVenSites[n][1]+"_"+listVenSites[n][2]+"_f' class='NodeFolder' style='display:none'><span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Nodes </span></span></li></ul></li></ul>"; 
 								const div = document.createElement('ul');
 								div.innerHTML = str;
 								dFrag.appendChild(div);										  
 							  }
-							document.getElementById(selectedSupp+"_" + SelectedNodeType+"_f").appendChild(dFrag);
-							tree_prop_selection("#" +selectedSupp+"_" +SelectedNodeType+"_f .SingleSiteSupp .TreeSpan");
-				            Tree_PropagationAppendedNodes(selectedSupp+"_" +SelectedNodeType+"_f .SingleSiteSupp");
+							document.getElementById(selectedVen+"_" + SelectedNodeType+"_f").appendChild(dFrag);
+							tree_prop_selection("#" +selectedVen+"_" +SelectedNodeType+"_f .SingleSiteVen .TreeSpan");
+				            Tree_PropagationAppendedNodes(selectedVen+"_" +SelectedNodeType+"_f .SingleSiteVen");
 				            
-				            $(".SingleSiteSupp > .TreeSpan").contextmenu(function(){				
+				            $(".SingleSiteVen > .TreeSpan").contextmenu(function(){				
 				        		selectedSingleSiteIdContext=$(this).parent().attr('id');
-				        		var index = selectedSingleSiteIdContext.indexOf("SUPP_2");
+				        		var index = selectedSingleSiteIdContext.lastIndexOf('_');
 				    			if (index !== -1) {
-				    				idSite = selectedSingleSiteIdContext.substring(0, index).slice(0, -1);
-				    				selectedSupp = selectedSingleSiteIdContext.substring(index);
+				    				idSite = selectedSingleSiteIdContext.substring(0, index);
 				    			}
+				    			console.log("idSite: ",idSite);
+				    			console.log("selectedVen: ",selectedVen);
 				        		menuName=SingleSite;			
 				        		openContext(selectedSingleSiteIdContext,"",SingleSite,event);
 				        	});
@@ -533,7 +534,7 @@ function RequestingSites(id) {
 				        	  'theme': 'default',
 				        	  'items': [
 				        		  {'icon': 'braille', 'name': 'Show BoQ', action: () => {				
-				        			  SiteSupp_Boq(idSite,selectedSupp,SelectedNodeType);
+				        			  SiteVenNT_Boq(idSite,selectedVen,SelectedNodeType);
 				        			}	
 				        		}
 				        	]
@@ -554,16 +555,14 @@ function RequestingSites(id) {
 function showMarkerSingleSite(id) {
 	 var id=id.id;
 	 var split= id.split("_SingleSite")[0];
-	 
-	 var index = split.indexOf("SUPP_2");
+	 var index = split.lastIndexOf('_');
 		if (index !== -1) {
-			  var selectedSiteId = split.substring(0, index).slice(0, -1);
-			  var supplierId = split.substring(index);
-			}
+			var selectedSiteId = split.substring(0, index);
+			var vendorId = split.substring(index+ 1);
+		}
 	 var selectedNodeType = $("#" + split).closest("li.NodeType").attr("id");
-		
-	    if ($("#" + id).is(":checked")) {
-	     	var checkboxes = $('[id$="'+supplierId+'_SingleSite"]');
+     if ($("#" + id).is(":checked")) {
+	     	var checkboxes = $('[id$="'+vendorId+'_SingleSite"]');
 	  		var allChecked = true;
 	      	for (var i = 0; i < checkboxes.length; i++) {
 	        if (!checkboxes[i].checked) {
@@ -572,13 +571,13 @@ function showMarkerSingleSite(id) {
 	        }
 	      }
 	     if (allChecked) {
-	    	document.getElementById(supplierId+'_'+selectedNodeType+'_Site').checked = true;
+	    	document.getElementById(vendorId+'_'+selectedNodeType+'_Site').checked = true;
 		 }
 	      markersSites[selectedSiteId].setMap(map);
 	      markerClusterSites.addMarker(markersSites[selectedSiteId]);
 	      markerClusterSites.repaint();
 	    }else{
-		      document.getElementById(supplierId+'_'+selectedNodeType+'_Site').checked = false;		
+		      document.getElementById(vendorId+'_'+selectedNodeType+'_Site').checked = false;		
 		      markersSites[selectedSiteId].setMap(null);
 		      markerClusterSites.removeMarker(markersSites[selectedSiteId]);
 		      markerClusterSites.repaint();
@@ -613,15 +612,14 @@ function PanTreeSites(id){
 	}
 
 function Create_Sites(id){
-	var index = id.id.indexOf("SUPP_2");
+	var index = id.id.lastIndexOf('_');
 	if (index !== -1) {
-		var selectedItem = id.id.substring(0, index).slice(0, -1);
-		var selectedSupp = id.id.substring(index);
-		}
+		var selectedItem = id.id.substring(0, index);
+		var selectedVen = id.id.substring(index+ 1);
+		}	
+	var selectedNodeType = $("#" + id.id).closest("li.NodeType").attr("id"); 
 	
-	var selectedNodeType = $("#" + id.id).closest("li.NodeType").attr("id");
-	
-		var siteChildren=$("#"+selectedItem+"_"+selectedSupp+"_f") .find(' > ul > li').length;
+		var siteChildren=$("#"+selectedItem+"_"+selectedVen+"_f") .find(' > ul > li').length;
 		if(siteChildren == 0){	
 			
 			  if(arrayParam[0]==1){
@@ -651,10 +649,10 @@ function Create_Sites(id){
 			 $.ajax({
 				  type: "GET",
 				  contentType: "application/json; charset=utf-8",
-				  url: getContext()+'/FindOnClick_NdTSupSiteNodeCell_NodeCell',
+				  url: getContext()+'/FindOnClick_NdTVenSiteNodeCell_NodeCell',
 				  data: {
 			                "selectedItem":selectedItem,
-							"selectedSupp":selectedSupp,
+							"selectedVen":selectedVen,
 							"SelectedNodeType":selectedNodeType,
 							"paramEnterprise": paramEnterprise,
 							"paramTransmission":paramTransmission,
@@ -664,12 +662,12 @@ function Create_Sites(id){
 				 dataType: "json",
 				 success: function (data) {			        	
 				     if (data != null) {
-						var listSuppNodes=data.listSuppNodes;
+						var listVenNodes=data.listVenNodes;					
 						var listCells=data.listCells;
-						if(siteChildren<listSuppNodes.length){	
-							Create_TreeNode_CellGeneral(listSuppNodes,listCells,siteChildren, true,selectedItem);
-							Tree_PropagationAppendedNodes(selectedItem+"_"+selectedSupp+"_f  .Node");
-			            	tree_prop_selection("#" + selectedItem+"_"+selectedSupp+"_f .Node .TreeSpan");
+						if(siteChildren<listVenNodes.length){	
+							Create_TreeNode_CellGeneral(listVenNodes,listCells,siteChildren, true,selectedItem);
+							Tree_PropagationAppendedNodes(selectedItem+"_"+selectedVen+"_f  .Node");
+			            	tree_prop_selection("#" + selectedItem+"_"+selectedVen+"_f .Node .TreeSpan");
 							}
 				        }
 				     data = null;
