@@ -6,11 +6,9 @@ $('#removeFilter').hide();
 
 
 var lst = ${listSites};
-console.log("lst...", lst);
 var listNodesType = ${listNodesType};
-console.log("listNodesType: ",listNodesType);
 var arrayParam=${arrayParam};
-console.log("arrayParam...", arrayParam);
+
 //var date=$("#ParsingDate").val();
 //console.log("date...", date);
 
@@ -282,7 +280,6 @@ function CreateTree_NdTpVenStNdCell(listNodesType,map){
 	});
 	$(".NodeType > .TreeSpan").contextmenu(function(){				
 		selectedNodeTypeIdContext=$(this).parent().attr('id');
-		console.log("selectedNodeTypeIdContext: ",selectedNodeTypeIdContext);
 		menuName=NodeType;			
 		openContext(selectedNodeTypeIdContext,"",NodeType,event);
 	});
@@ -410,7 +407,6 @@ function NdTypVenStNdCellCore(id){
 			 success: function (data) {	
 				 if (data != null) {	
 					var listVendors=data.listVendors;		
-					console.log("listVendors: ",listVendors);
 					if(NodeTypeChildrenLength<listVendors.length){
 						var dFrag = document.createDocumentFragment(); 
 						for (j = 0; j < listVendors.length; j++){								
@@ -429,7 +425,6 @@ function NdTypVenStNdCellCore(id){
 			        		selectedSingleVendorIdContext=$(this).parent().attr('id'); //venId_nodetypeId
 			        		var splitArray= selectedSingleVendorIdContext.split("_");
 			        		idVen=splitArray[0];
-			        		console.log("idVen: ",idVen);
 			        		menuName=SingleVendor;			
 			        		openContext(selectedSingleVendorIdContext,"",SingleVendor,event);
 			        	});
@@ -505,7 +500,6 @@ function RequestingSites(id) {
 				success: function (data) {	    
 					if (data != null) {
 						var listVenSites = data.listVenSites;
-						console.log("listVenSites: ",listVenSites);
 						if(NdTypeChildrenLength<listVenSites.length){
 							var dFrag = document.createDocumentFragment();
 							for (n = 0; n < listVenSites.length; n++) {	
@@ -525,9 +519,7 @@ function RequestingSites(id) {
 				    			if (index !== -1) {
 				    				idSite = selectedSingleSiteIdContext.substring(0, index);
 				    			}
-				    			console.log("idSite: ",idSite);
-				    			console.log("selectedVen: ",selectedVen);
-				        		menuName=SingleSite;			
+				    			menuName=SingleSite;			
 				        		openContext(selectedSingleSiteIdContext,"",SingleSite,event);
 				        	});
 				            SingleSite = new ContextMenu({
