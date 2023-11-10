@@ -24,6 +24,9 @@ public class FinancialReport {
 	@Column(name = "ITEM_NAME")
 	private String itemName;
 	
+	private String itemModel;
+	private String itemPartNo;
+
 	@Column(name = "LAST_MODIFIED_DATE")
 	private String lastModifiedDate;
 	
@@ -62,7 +65,7 @@ public class FinancialReport {
 	}
 
 
-	public FinancialReport(String site,String farID, String itemCode, String itemName,
+	public FinancialReport(String site,String farID, String itemCode, String itemName,String itemModel,String itemPartNo,
 			String lastModifiedDate, String itemSN, String itemNameRegister, String poID,String siteID, 
 			String longitude, String latitude,String vendor,String siteName,BigDecimal initCost, BigDecimal netCost,BigDecimal accuDepr) {
 		super();
@@ -70,6 +73,8 @@ public class FinancialReport {
 		this.farID = farID;
 		this.itemCode = itemCode;
 		this.itemName = itemName;
+		this.itemModel=itemModel;
+		this.itemPartNo=itemPartNo;
 		this.lastModifiedDate = lastModifiedDate;
 		this.itemSN = itemSN;
 		this.itemNameRegister = itemNameRegister;
@@ -111,6 +116,25 @@ public class FinancialReport {
 
 	public void setItemName(String itemName) {
 		this.itemName = itemName;
+	}
+
+	public String getItemModel() {
+		return itemModel;
+	}
+
+
+	public void setItemModel(String itemModel) {
+		this.itemModel = itemModel;
+	}
+
+
+	public String getItemPartNo() {
+		return itemPartNo;
+	}
+
+
+	public void setItemPartNo(String itemPartNo) {
+		this.itemPartNo = itemPartNo;
 	}
 
 
