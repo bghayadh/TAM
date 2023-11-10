@@ -1,12 +1,5 @@
 package com.aliat.alm.controller;
 
-import java.io.File;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -15,25 +8,14 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -47,94 +29,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.aliat.alm.DM.Appliance2Item;
-import com.aliat.alm.DM.AuxiliaryInstallation2Item;
-import com.aliat.alm.DM.CivilElements2Item;
-import com.aliat.alm.DM.Cloudservices2Item;
-import com.aliat.alm.DM.DMAppliance;
-import com.aliat.alm.DM.DMAuxiliaryInstallationMaterials;
-import com.aliat.alm.DM.DMCivilElements;
-import com.aliat.alm.DM.DMCloudservices;
-import com.aliat.alm.DM.DMCumulIt;
-import com.aliat.alm.DM.DMCumulPassive;
-import com.aliat.alm.DM.DMDeviceinStack;
-import com.aliat.alm.DM.DMEsim;
-import com.aliat.alm.DM.DMFROEquipment;
-import com.aliat.alm.DM.DMFireFightingSystem;
-import com.aliat.alm.DM.DMFirewall;
-import com.aliat.alm.DM.DMFixedFiberNetworkDARKFIBER;
-import com.aliat.alm.DM.DMFurniture;
-import com.aliat.alm.DM.DMHayat;
-import com.aliat.alm.DM.DMHypervisor;
-import com.aliat.alm.DM.DMITEquipment;
-import com.aliat.alm.DM.DMLayer3Switch;
-import com.aliat.alm.DM.DMMonitors;
-import com.aliat.alm.DM.DMNOPO;
-import com.aliat.alm.DM.DMNetworkInfrastructure;
-import com.aliat.alm.DM.DMNotClassified;
-import com.aliat.alm.DM.DMOfficeEquipment;
-import com.aliat.alm.DM.DMPowerElements;
-import com.aliat.alm.DM.DMRealEstate;
-import com.aliat.alm.DM.DMSANSwitchSwitch;
-import com.aliat.alm.DM.DMSecuritySystem;
-import com.aliat.alm.DM.DMStorage;
-import com.aliat.alm.DM.DMSwitch;
-import com.aliat.alm.DM.DMSwitchSANSwitch;
-import com.aliat.alm.DM.DMTransmission;
-import com.aliat.alm.DM.DMVASservices;
-import com.aliat.alm.DM.DMWindowsDesktop;
-import com.aliat.alm.DM.DMWindowsServer;
-import com.aliat.alm.DM.DM_AR_FROM_DM_INVENTORY;
-import com.aliat.alm.DM.DM_AR_FROM_DM_IT;
-import com.aliat.alm.DM.DM_AR_FROM_DM_PASSIVE;
-import com.aliat.alm.DM.DM_FAR_FROM_FINACIAL;
-import com.aliat.alm.DM.DM_POITEM_FROM_DM_FINANCIAL;
-import com.aliat.alm.DM.DM_POITEM_TO_PO_ITEM;
-import com.aliat.alm.DM.DM_PO_FROM_PURCHASE_ORDER_ITEM;
-import com.aliat.alm.DM.DeviceinStack2Item;
-import com.aliat.alm.DM.FROEquipment2Item;
-import com.aliat.alm.DM.FinancialDM;
-import com.aliat.alm.DM.FireFightingSystem2Item;
-import com.aliat.alm.DM.Firewall2Item;
-import com.aliat.alm.DM.FixedFiberNetworkDARKFIBER2Item;
-import com.aliat.alm.DM.Furniture2Item;
-import com.aliat.alm.DM.Hayat2Item;
-import com.aliat.alm.DM.Hypervisor2ITEM;
-import com.aliat.alm.DM.ITEquipment2Item;
-import com.aliat.alm.DM.Inventory2ITEM;
-import com.aliat.alm.DM.Inventory_DM;
-import com.aliat.alm.DM.Layer3Switch2Item;
-import com.aliat.alm.DM.Monitors2ITEM;
-import com.aliat.alm.DM.Move2ITemNodeType;
-import com.aliat.alm.DM.Move2Supplier;
-import com.aliat.alm.DM.Move2WareHouse;
-import com.aliat.alm.DM.MoveFin2Itemexclude_IT_PSV_INV;
-import com.aliat.alm.DM.NOPO2ITEM;
-import com.aliat.alm.DM.NetworkInfrastructure2Item;
-import com.aliat.alm.DM.NotClassified2Item;
-import com.aliat.alm.DM.OfficeEquipment2Item;
-import com.aliat.alm.DM.PowerElements2Item;
-import com.aliat.alm.DM.RealEstate2Item;
-import com.aliat.alm.DM.SANSwitchSwitch2Item;
-import com.aliat.alm.DM.SecuritySystem2Item;
-import com.aliat.alm.DM.Storage2Item;
-import com.aliat.alm.DM.SupplierDM;
-import com.aliat.alm.DM.Switch2Item;
-import com.aliat.alm.DM.SwitchSANSwitch2Item;
-import com.aliat.alm.DM.Transmission2Item;
-import com.aliat.alm.DM.UpdItemManufacturer_nodeType;
-import com.aliat.alm.DM.UpdateItemCodeName;
-import com.aliat.alm.DM.VASservices2Item;
-import com.aliat.alm.DM.WarehouseDM;
-import com.aliat.alm.DM.WindowsDesktop2Item;
-import com.aliat.alm.DM.WindowsServer2Item;
 import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.FixedAssetRegistry;
 import com.aliat.alm.services.LoginServices;
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
@@ -142,8 +40,11 @@ public class ManualMethodController {
 
 	@Autowired
 	ALMSessions almsessions;
+	@Autowired
+	Notify notifications;
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
-
+	private static Session session = null;
+	private static Transaction tx = null;
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
@@ -154,11 +55,22 @@ public class ManualMethodController {
 			return LoginServices.checkSession(request, response);
 		} else {
 			System.out.println("Mr. Bassam Eid.");
+			session = almsessions.getSession(); 
+			if (session != null && session.isOpen()) {
+				tx = session.beginTransaction();
+				notifications.headerNotifications(session, model);
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+					session.getSessionFactory().close();
+				}
+			}
 			return "ManualMethod";
 		}
 	}
 	
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@RequestMapping(value = "/CalculateDepreciation", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> CalculateDepreciation(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {

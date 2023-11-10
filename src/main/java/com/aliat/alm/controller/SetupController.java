@@ -21,6 +21,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.ReadXlsUsingPOI;
 import com.aliat.alm.models.User;
 import com.aliat.alm.services.LoginServices;
@@ -33,13 +36,29 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 public class SetupController {
 
 private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
-	
+private static Session session = null;
+private static Transaction tx = null;
+@Autowired
+ALMSessions almsessions;
+@Autowired
+Notify notifications;
+
 	@RequestMapping(value = "/Setup", method = RequestMethod.GET)
 	public String Setup(Locale locale, Model model, HttpServletRequest request,HttpServletResponse response) {
 		//logger.info("Welcome home! The client locale is {}.", locale);
 		if(LoginServices.checkSession(request, response).equals("redirect:/")) {
 			return LoginServices.checkSession(request, response);
 		}else {
+			session = almsessions.getSession(); 
+			if (session != null && session.isOpen()) {
+				tx = session.beginTransaction();
+				notifications.headerNotifications(session, model);
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+					session.getSessionFactory().close();
+				}
+			}
 		return "Setup";
 		}
 	}

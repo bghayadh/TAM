@@ -10,8 +10,11 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +38,8 @@ import com.aliat.alm.Parser.NewAttribute_WIN;
 import com.aliat.alm.Parser.NewBoardMovement;
 import com.aliat.alm.Parser.NewCabinetMovement;
 import com.aliat.alm.Parser.VirtualNodeMovement;
+import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.Notify;
 import com.aliat.alm.Parser.NewParsing;
 import com.aliat.alm.Parser.NewSubRackMovement;
 import com.aliat.alm.Parser.PhysicalNodeMovement_MAC;
@@ -65,7 +70,12 @@ import com.aliat.alm.telkom.Parser.LoadFilesRanNec;
 public class AutoParserController {
 
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
-
+	@Autowired
+	ALMSessions almsessions;
+	@Autowired
+	Notify notifications;
+	private static Session session = null;
+	private static Transaction tx = null;
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
@@ -76,6 +86,16 @@ public class AutoParserController {
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			return LoginServices.checkSession(request, response);
 		} else {
+			session = almsessions.getSession(); 
+			if (session != null && session.isOpen()) {
+				tx = session.beginTransaction();
+				notifications.headerNotifications(session, model);
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+					session.getSessionFactory().close();
+				}
+			}
 			return "AutoParser";
 		}
 	}
