@@ -429,13 +429,13 @@ public class FinancialReportController {
 	
 							for (int i = 0; i < listFAR.size(); i++) {
 								distance = haversine(Double.parseDouble(latitude), Double.parseDouble(longitude),
-										Double.valueOf(listFARTemp.get(i)[11].toString()),
-										Double.valueOf(listFARTemp.get(i)[10].toString()));
+										Double.valueOf(listFARTemp.get(i)[13].toString()),
+										Double.valueOf(listFARTemp.get(i)[12].toString()));
 								
 								if (distance <= Double.parseDouble(radius)) {
-									initCost += Double.valueOf(listFARTemp.get(i)[12].toString());
-									netCost += Double.valueOf(listFARTemp.get(i)[13].toString());
-									accuDepr += Double.valueOf(listFARTemp.get(i)[14].toString());
+									initCost += Double.valueOf(listFARTemp.get(i)[15].toString());
+									netCost += Double.valueOf(listFARTemp.get(i)[16].toString());
+									accuDepr += Double.valueOf(listFARTemp.get(i)[17].toString());
 									
 									listCircleRange.add(listFAR.get(i));
 								}
