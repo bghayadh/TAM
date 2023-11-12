@@ -391,6 +391,10 @@ display:none;
           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/Dashboard" >Inventory</a></li>-->
           <div class="dropdown-divider"></div>
           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/MobileDashboard" >Mobile Dashboard</a></li>
+          
+           <div class="dropdown-divider"></div>
+          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/FinanceDashboard" >Finance Dashboard</a></li>
+          
            <!-- <div class="dropdown-divider" href="#"></div>
           <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Dashboard">Tasks</a></li>
            <div class="dropdown-divider" href="#"></div>
@@ -570,7 +574,11 @@ display:none;
           <div class="dropdown-divider" ></div>
           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/Dashboard" >Inventory</a></li>
           <div class="dropdown-divider"></div> -->
+          
           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/Dashboard" >Mobile Dashboard</a></li>
+          
+          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/FinanceDashboard" >Finance Dashboard</a></li>
+          
           <!--  <div class="dropdown-divider" href="#"></div>
           <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Dashboard">Tasks</a></li>
            <div class="dropdown-divider" href="#"></div>
@@ -803,6 +811,10 @@ display:none;
           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/Dashboard" >Inventory</a></li>
           <div class="dropdown-divider"></div>-->
           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/MobileDashboard" >Mobile Dashboard</a></li>
+          
+          <div class="dropdown-divider"></div>
+          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/FinanceDashboard" >Finance Dashboard</a></li>
+          
             <!--<div class="dropdown-divider" href="#"></div>
           <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Dashboard">Tasks</a></li>
            <div class="dropdown-divider" href="#"></div>
@@ -1051,6 +1063,10 @@ display:none;
           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/Dashboard" >Inventory</a></li>
           <div class="dropdown-divider"></div>-->
           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/MobileDashboard" >Mobile Dashboard</a></li>
+          
+          <div class="dropdown-divider"></div>
+          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/FinanceDashboard" >Finance Dashboard</a></li>
+          
             <div class="dropdown-divider" href="#"></div>
          <!-- <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Dashboard">Tasks</a></li>
            <div class="dropdown-divider" href="#"></div>
