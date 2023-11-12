@@ -128,8 +128,8 @@ public class AutoParserController {
 		Map<String, Object> rtn = new LinkedHashMap<>();
 		LoadFilesRanHuawei myClass = new LoadFilesRanHuawei();
 		try {
-			var vendor = request.getParameter("vendor").toUpperCase();
-			var domain = request.getParameter("domain").toUpperCase();
+			var vendor = request.getParameter("vendor");
+			var domain = request.getParameter("domain");
 			
 			myClass.main(null,vendor,domain,request.getParameter("sub_domain"),request.getParameter("type"));
 		} catch (Exception e) {
