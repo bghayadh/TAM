@@ -46,7 +46,7 @@ public class FinancialReportController {
 	Query query;
 	Object[] result;
 
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static final Logger logger = LoggerFactory.getLogger(FinancialReportController.class);
 
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	@RequestMapping(value = "/FinancialReport", method = RequestMethod.GET)
