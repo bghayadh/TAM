@@ -55,31 +55,31 @@ public class FinanceDashboardController {
 				notifications.headerNotifications(session, model);
 			
 				try {
-					query = session.createNativeQuery("SELECT SUM(A.INITIALCOST),B.SITE_ID, B.SITE_NAME "
+					query = session.createNativeQuery("SELECT SUM(A.INITIALCOST),B.SITE_ID, B.SITE_NAME,C.longitude,C.latitude "
 							+ " FROM fixed_asset_registry A  LEFT JOIN far_site B ON A.FAR_ID = B.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID "
-							+ " where (C.longitude is not null and C.longitude != '0' and C.longitude != 'null' and C.latitude is not null and C.latitude != '0' and C.latitude != 'null') GROUP BY B.SITE_ID,B.SITE_NAME  "
+							+ " where (C.longitude is not null and C.longitude != '0' and C.longitude != 'null' and C.latitude is not null and C.latitude != '0' and C.latitude != 'null') GROUP BY B.SITE_ID,B.SITE_NAME,C.longitude,C.latitude  "
 							+ " ORDER BY SUM(A.INITIALCOST) DESC FETCH NEXT 10 ROWS ONLY  ");
 	                 
 					model.addAttribute("sitesMaxInitCostAsset",mapper.writeValueAsString(query.list()));
 					
-					query = session.createNativeQuery("SELECT SUM(A.INITIALCOST),B.SITE_ID, B.SITE_NAME "
+					query = session.createNativeQuery("SELECT SUM(A.INITIALCOST),B.SITE_ID, B.SITE_NAME,C.longitude,C.latitude "
 							+ " FROM fixed_asset_registry A  LEFT JOIN far_site B ON A.FAR_ID = B.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID "
-							+ " where (C.longitude is not null and C.longitude != '0' and C.longitude != 'null' and C.latitude is not null and C.latitude != '0' and C.latitude != 'null') GROUP BY B.SITE_ID,B.SITE_NAME  "
+							+ " where (C.longitude is not null and C.longitude != '0' and C.longitude != 'null' and C.latitude is not null and C.latitude != '0' and C.latitude != 'null') GROUP BY B.SITE_ID,B.SITE_NAME,C.longitude,C.latitude  "
 							+ " ORDER BY SUM(A.INITIALCOST) ASC FETCH NEXT 10 ROWS ONLY  ");
 	                 
 					model.addAttribute("sitesMinInitCostAsset",mapper.writeValueAsString(query.list()));
 								
 			
-					query = session.createNativeQuery("SELECT SUM(A.NETCOST),B.SITE_ID, B.SITE_NAME "
+					query = session.createNativeQuery("SELECT SUM(A.NETCOST),B.SITE_ID, B.SITE_NAME,C.longitude,C.latitude "
 							+ " FROM fixed_asset_registry A  LEFT JOIN far_site B ON A.FAR_ID = B.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID "
-							+ " where (C.longitude is not null and C.longitude != '0' and C.longitude != 'null' and C.latitude is not null and C.latitude != '0' and C.latitude != 'null') GROUP BY B.SITE_ID,B.SITE_NAME  "
+							+ " where (C.longitude is not null and C.longitude != '0' and C.longitude != 'null' and C.latitude is not null and C.latitude != '0' and C.latitude != 'null') GROUP BY B.SITE_ID,B.SITE_NAME,C.longitude,C.latitude  "
 							+ " ORDER BY SUM(A.NETCOST) DESC FETCH NEXT 10 ROWS ONLY  ");
 	                 
 					model.addAttribute("sitesMaxNetCostAsset",mapper.writeValueAsString(query.list()));
 					
-					query = session.createNativeQuery("SELECT SUM(A.NETCOST),B.SITE_ID, B.SITE_NAME "
+					query = session.createNativeQuery("SELECT SUM(A.NETCOST),B.SITE_ID, B.SITE_NAME,C.longitude,C.latitude "
 							+ " FROM fixed_asset_registry A  LEFT JOIN far_site B ON A.FAR_ID = B.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID "
-							+ " where (C.longitude is not null and C.longitude != '0' and C.longitude != 'null' and C.latitude is not null and C.latitude != '0' and C.latitude != 'null') GROUP BY B.SITE_ID,B.SITE_NAME  "
+							+ " where (C.longitude is not null and C.longitude != '0' and C.longitude != 'null' and C.latitude is not null and C.latitude != '0' and C.latitude != 'null') GROUP BY B.SITE_ID,B.SITE_NAME,C.longitude,C.latitude  "
 							+ " ORDER BY SUM(A.NETCOST) ASC FETCH NEXT 10 ROWS ONLY  ");
 	                 
 					model.addAttribute("sitesMinNetCostAsset",mapper.writeValueAsString(query.list()));
