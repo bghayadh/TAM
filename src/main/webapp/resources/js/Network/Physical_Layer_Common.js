@@ -744,7 +744,7 @@ $("#setCoordinateTubeAux").on('click',function(){
 				 markerType="DistributionBoard";
 			 }
 			 
-			 else if (markers == markersNodeActive && marker_Cluster == markerClusterMSANNodes) {
+			/* else if (markers == markersNodeActive && marker_Cluster == markerClusterMSANNodes) {
 				 mapIcon = iconMSANNode; 
 				 markerType="NodeActive";
 		    }
@@ -759,7 +759,7 @@ $("#setCoordinateTubeAux").on('click',function(){
 			else if (markers == markersNodeActive && marker_Cluster == markerClusterGPONNodes) {
 				 mapIcon = iconGPONNode; 
 				 markerType="NodeActive";
-		    }
+		    }*/
 			 
 			 
 			 
@@ -786,7 +786,7 @@ $("#setCoordinateTubeAux").on('click',function(){
 				markers.push(Mapmarker);
 				
 				
-				if(markerType=="DistributionBoard" || markerType=="NodeActive") {
+				if(markerType=="DistributionBoard" ) {
 					
 				   google.maps.event.addListener(Mapmarker, "click", function (e) {
 					
@@ -2039,8 +2039,10 @@ function DistributionBoardCheckFilter(Id,folder,clusterName){
 	}	
 	
 function NodeActiveCheckFilter(Id,clusterName){
+	   console.log(" //////////NodeActiveCheckFilter "+Id +" and clusterName "+ clusterName);	
 	   markersNodeActive[Id].setMap(null);
-		$("#"+Id).children('input').bind("change",function() {			
+		$("#"+Id).children('input').bind("change",function() {
+			console.log(" //////////NodeActiveCheckFilter clicked");	
 			var folderID = $(this).parents().eq(4).attr('id');
 			markersNodeActive[Id].setMap(null);
 			if ($(this).is(':checked')){
@@ -2163,6 +2165,8 @@ function AllDistributionBoardCheckFilter(Id,clssName) {
 		
 		if ($(this).is(':checked')){				
 			$(this).parent().find('input:checkbox').each(function(){
+				 console.log(" //////////AllNodesTreeCheckFilter ");	
+					
 				$(this).prop('checked', true);
 			 if($(this).parent().hasClass('NodeActive')){
 					NodeID=$(this).parent().attr('id');
@@ -3509,77 +3513,16 @@ function boqCheckFilter(){
 	
 $("#nodesActiveCheckAllBoq").bind("change",function(){
 		if ($(this).is(':checked')){
-			$("#NodeActive_f_CurrentPhysicalLayer > .AllNodeActive").prop("checked",true);	
-			$("#Entreprise__CurrentPhysicalLayer").prop("checked",true);	
-			$("#TransmissionDWDM__CurrentPhysicalLayer").prop("checked",true);	
-			$("#TransmissionSDH__CurrentPhysicalLayer").prop("checked",true);
-			$("#TransmissionGPON__CurrentPhysicalLayer").prop("checked",true);	
 			
-			$("#NodeActive_f_CurrentPhysicalLayer").find(' > ul > li > ul >li ').each(function(){		
-			
-				var nodeID=$(this).attr('id');
-				$("#"+nodeID).children(':checkbox').prop( "checked", true );
-				
-				if(markersNodeActive[nodeID].getMap()==null){					
-					markersNodeActive[nodeID].setMap(map);
-						
-					if(window[""+nodeID][8]=="MSAN") {
-						markerClusterMSANNodes.addMarker(markersNodeActive[nodeID]);
-					}
-					else if(window[""+nodeID][8]=="SDH") {
-						markerClusterSDHNodes.addMarker(markersNodeActive[nodeID]);
-					}
-					else if(window[""+nodeID][8]=="DWDM") {
-						markerClusterDWDMNodes.addMarker(markersNodeActive[nodeID]);
-					}	
-					else if(window[""+nodeID][8]=="GPON") {
-						markerClusterGPONNodes.addMarker(markersNodeActive[nodeID]);
-					}	
-							
-					$("#"+nodeID).children(':checkbox').prop( "checked", true );
-				}
-					
-				});
+			if(nodeFlag == 0 ){
+				getNode();
+			}else{
+				nodeLayerCheckAll();
 			}
-			else{
-				$("#NodeActive_f_CurrentPhysicalLayer > .AllNodeActive").prop("checked",false);	
-				$("#Entreprise__CurrentPhysicalLayer").prop("checked",false);	
-				$("#TransmissionDWDM__CurrentPhysicalLayer").prop("checked",false);	
-				$("#TransmissionSDH__CurrentPhysicalLayer").prop("checked",false);	
-				$("#TransmissionGPON__CurrentPhysicalLayer").prop("checked",false);	
-						
-					markerClusterMSANNodes.clearMarkers();
-					markerClusterDWDMNodes.clearMarkers();
-					markerClusterSDHNodes.clearMarkers();
-					markerClusterGPONNodes.clearMarkers();
-
-
-				$("#NodeActive_f_CurrentPhysicalLayer").find(' > ul > li >ul >li ').each(function(){			
-					var nodeID=$(this).attr('id');					
-					markersNodeActive[nodeID].setMap(null);	
-					$("#"+nodeID).children(':checkbox').prop( "checked", false );
-				});
-		  		
-		  		$("#network_tree").find(".Nodes:checked" ).each(function(){
-
-					id=$(this).parent().attr('id');
-					if(markersNodeActive[id].getMap()==null){
-						markersNodeActive[id].setMap(map);
-						if(window[""+id][8]=="MSAN") {
-							markerClusterMSANNodes.addMarker(markersNodeActive[id]);
-						}
-						else if(window[""+id][8]=="SDH") {
-							markerClusterSDHNodes.addMarker(markersNodeActive[id]);
-						}
-						else if(window[""+id][8]=="DWDM") {
-							markerClusterDWDMNodes.addMarker(markersNodeActive[id]);
-						}	
-						else if(window[""+id][8]=="GPON") {
-							markerClusterGPONNodes.addMarker(markersNodeActive[id]);
-						}				
-					}		
-				});							
-			}
+		}
+		else{
+			nodeLayerUnCheckAll();
+		}
 	});
 	
 	$('#fiberCheckAllBoq').bind("change",function() {	
@@ -4234,6 +4177,90 @@ function ductLayerUnCheckAll(){
 	$('#ductCheckAllBoq').prop('checked', false);
 
 }
+
+function nodeLayerCheckAll(){
+	$("#NodeActive_f_CurrentPhysicalLayer > .AllNodeActive").prop("checked",true);	
+	$("#Entreprise__CurrentPhysicalLayer").prop("checked",true);	
+	$("#TransmissionDWDM__CurrentPhysicalLayer").prop("checked",true);	
+	$("#TransmissionSDH__CurrentPhysicalLayer").prop("checked",true);
+	$("#TransmissionGPON__CurrentPhysicalLayer").prop("checked",true);	
+	
+	$("#NodeActive_f_CurrentPhysicalLayer").find(' > ul > li > ul >li ').each(function(){		
+	
+		var nodeID=$(this).attr('id');
+		$("#"+nodeID).children(':checkbox').prop( "checked", true );
+		//console.log(" //////////nodeLayerCheckAll " + markersNodeActive[nodeID].getMap());	
+		//if(markersNodeActive[nodeID].getMap() == null || markersNodeActive[nodeID].getMap() == undefined){
+		if(markersNodeActive[nodeID].getMap() == null ){
+			markersNodeActive[nodeID].setMap(map);
+				
+			if(window[""+nodeID][8]=="MSAN") {
+				markerClusterMSANNodes.addMarker(markersNodeActive[nodeID]);
+			}
+			else if(window[""+nodeID][8]=="SDH") {
+				markerClusterSDHNodes.addMarker(markersNodeActive[nodeID]);
+			}
+			else if(window[""+nodeID][8]=="DWDM") {
+				markerClusterDWDMNodes.addMarker(markersNodeActive[nodeID]);
+			}	
+			else if(window[""+nodeID][8]=="GPON") {
+				markerClusterGPONNodes.addMarker(markersNodeActive[nodeID]);
+			}	
+					
+			$("#"+nodeID).children(':checkbox').prop( "checked", true );
+		}
+			
+		});
+	
+	if( $("#NodeActive_f_CurrentPhysicalLayer").find(".Nodes:checked" ).length == 0 ){
+		$("#nodesActiveCheckAllBoq").prop("checked",false);			
+	}
+	else{
+		$("#nodesActiveCheckAllBoq").prop("checked",true);			
+	}
+	
+}
+function nodeLayerUnCheckAll(){
+
+	$("#NodeActive_f_CurrentPhysicalLayer > .AllNodeActive").prop("checked",false);	
+	$("#Entreprise__CurrentPhysicalLayer").prop("checked",false);	
+	$("#TransmissionDWDM__CurrentPhysicalLayer").prop("checked",false);	
+	$("#TransmissionSDH__CurrentPhysicalLayer").prop("checked",false);	
+	$("#TransmissionGPON__CurrentPhysicalLayer").prop("checked",false);	
+			
+		markerClusterMSANNodes.clearMarkers();
+		markerClusterDWDMNodes.clearMarkers();
+		markerClusterSDHNodes.clearMarkers();
+		markerClusterGPONNodes.clearMarkers();
+
+
+	$("#NodeActive_f_CurrentPhysicalLayer").find(' > ul > li >ul >li ').each(function(){			
+		var nodeID=$(this).attr('id');					
+		markersNodeActive[nodeID].setMap(null);	
+		$("#"+nodeID).children(':checkbox').prop( "checked", false );
+	});
+		
+		$("#network_tree").find(".Nodes:checked" ).each(function(){
+
+		id=$(this).parent().attr('id');
+		if(markersNodeActive[id].getMap()==null){
+			markersNodeActive[id].setMap(map);
+			if(window[""+id][8]=="MSAN") {
+				markerClusterMSANNodes.addMarker(markersNodeActive[id]);
+			}
+			else if(window[""+id][8]=="SDH") {
+				markerClusterSDHNodes.addMarker(markersNodeActive[id]);
+			}
+			else if(window[""+id][8]=="DWDM") {
+				markerClusterDWDMNodes.addMarker(markersNodeActive[id]);
+			}	
+			else if(window[""+id][8]=="GPON") {
+				markerClusterGPONNodes.addMarker(markersNodeActive[id]);
+			}				
+		}		
+	});							
+
+}
 //Event for tree-Map view/hide from Map for all elements 	
 function allElementsCheckFilter(){
 
@@ -4247,10 +4274,10 @@ function allElementsCheckFilter(){
 		markerClusterAccessDistBoard.clearMarkers();
 		markerClusterMetroDistBoard.clearMarkers();
 		markerClusterBackboneDistBoard.clearMarkers();
-		markerClusterMSANNodes.clearMarkers();
+		/*markerClusterMSANNodes.clearMarkers();
 		markerClusterDWDMNodes.clearMarkers();
 		markerClusterSDHNodes.clearMarkers();
-		markerClusterGPONNodes.clearMarkers();
+		markerClusterGPONNodes.clearMarkers();*/
 				
 		$("#distBoardCheckAllBoq").prop("checked",false);
 		$("#manholeCheckAllBoq").prop("checked",false);
@@ -4265,12 +4292,20 @@ function allElementsCheckFilter(){
 			
 			$(this).parent().find('ul > li').each(function(){
 				
-				$(this).children('input:checkbox').prop('checked', true);
+				//$(this).children('input:checkbox').prop('checked', true);
+				if($(this).children('input:checkbox').hasClass('AllNodeActive') && nodeFlag == 0 ){
+			    	//console.log("passed AllNodeActive");
+			    	$(this).children('input:checkbox').prop('checked', false);
+					//getNode();
+				}else{
+					$(this).children('input:checkbox').prop('checked', true);
+				}
 				//console.log(" //////////AllFiberCables in allElements before");
-				if($(this).children('input:checkbox').hasClass('AllFiberCables') && flag == 0 ){
+				if($(this).children('input:checkbox').hasClass('AllFiberCables')  && flag == 0 ){
 					//console.log(" //////////AllFiberCables in allElements after");
 					getFiberPath();
-				}else{
+				}
+				else{
 					if($(this).hasClass('FIBER')){						
 						singleFiberCheckFilter($(this).children('input:checkbox'))				
 				}
@@ -4291,6 +4326,8 @@ function allElementsCheckFilter(){
 			});
 		 
 			$("#network_tree").find("input:checked" ).each(function(){
+				
+			    
 				
 				if($(this).hasClass('Manhole')){
 					id=$(this).parent().attr('id');
@@ -4332,6 +4369,7 @@ function allElementsCheckFilter(){
 					}
 				}
 				else if($(this).hasClass('Nodes')){
+					console.log("passed Nodes");
 					id=$(this).parent().attr('id');
 					if(markersNodeActive[id].getMap()==null){
 
@@ -4347,8 +4385,9 @@ function allElementsCheckFilter(){
 						}
 						else if(window[""+id][8]=="GPON") {
 							markerClusterGPONNodes.addMarker(markersNodeActive[id]);
-						}		
-						$("#nodesActiveCheckAllBoq").prop("checked",true);
+						}
+						
+					    $("#nodesActiveCheckAllBoq").prop("checked",true);
 						
 					}
 				}

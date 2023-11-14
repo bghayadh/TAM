@@ -16,7 +16,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 	
 			markersManhole=[];		
 			markersHandhole=[];
-			markersNodeActive=[];
+			//markersNodeActive=[];
 			markersDistBoard=[];
 			markersDistBoardFilter=[];
 			markersTempoDistBoard="";						
@@ -43,7 +43,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			markerClusterAccessDistBoard = new MarkerClusterer();
 			markerClusterAccessDistBoard.setMap(map);
 			
-			markerClusterMSANNodes = new MarkerClusterer();
+			/*markerClusterMSANNodes = new MarkerClusterer();
 			markerClusterMSANNodes.setMap(map);
 			
 			markerClusterDWDMNodes = new MarkerClusterer();
@@ -53,7 +53,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			markerClusterSDHNodes.setMap(map);
 			
 			markerClusterGPONNodes = new MarkerClusterer();
-			markerClusterGPONNodes.setMap(map);
+			markerClusterGPONNodes.setMap(map);*/
 			
 	
 			kenya=new google.maps.LatLng(1,38);					
@@ -116,7 +116,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 					scaledSize: new google.maps.Size(40, 40), // scaled size
 			};
 			
-			iconMSANNode = {
+			/*iconMSANNode = {
 				url:getContext()+"/resources/NetworkImages/MSANNodeIcon.png", // url
 				scaledSize: new google.maps.Size(20, 20), // scaled size
 				
@@ -135,7 +135,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 				url:getContext()+"/resources/NetworkImages/GPONNodeIcon.png", // url
 				scaledSize: new google.maps.Size(20, 20), // scaled size
 				
-			};
+			};*/
 			
 			
 			// Manholes cluster Calculator
@@ -224,7 +224,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 				}                   
 			});
 			
-		markerClusterMSANNodes.setOptions({								
+	/*	markerClusterMSANNodes.setOptions({								
 				minimumClusterSize: 2,
 				styles: [
 				         {
@@ -239,7 +239,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 				}                   
 			});
 			
-			markerClusterSDHNodes.setOptions({								
+		markerClusterSDHNodes.setOptions({								
 				minimumClusterSize: 2,
 				styles: [
 				         {
@@ -282,7 +282,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 				calculator: function(markers, numStyles) {
 					if (markers.length >= 1) return {text: markers.length,index:1}; 
 				}                   
-			});
+			});*/
 			
 		
 	
@@ -370,7 +370,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			
 		
 			
-			if(NodeList != null){
+		/*	if(NodeList != null){
 			   for(i=0;i<NodeList.length;i++){
 			     if(NodeList[i][8]=='MSAN'){
 			            create_Marker_Click(NodeList[i][0],NodeList[i][1],NodeList[i][5],NodeList[i][6],markersNodeActive,markerClusterMSANNodes,"","");				
@@ -398,7 +398,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 		    AllNodesTreeCheckFilter("Transmission_SDH__CurrentPhysicalLayer",markerClusterSDHNodes);
 		    AllNodesTreeCheckFilter("Transmission_GPON__CurrentPhysicalLayer",markerClusterGPONNodes);
 		    AllNodesTreeCheckFilter("NodeActive_f_CurrentPhysicalLayer","");
-		}
+		}*/
 			
 	var end2 = performance.now();
 			allElementsCheckFilter();	

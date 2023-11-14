@@ -6675,6 +6675,52 @@ public class PhysicalLayerController {
 		return rtn;
 
 	}
+	
+	@RequestMapping(value = "/getNode", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> getNode(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException {
+		System.out.println("Passes here getNode");
+		Map<String, Object> rtn = new LinkedHashMap<String, Object>();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+
+		Query query;
+		session = almsessions.getSession();
+
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			try {
+				List<Object[]> NodeList = new ArrayList<Object[]>();
+				NodeList = session.createNativeQuery(
+						   "SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' )    ")
+						   .list();
+
+				rtn.put("nodeList", NodeList);
+				
+
+			} catch (Exception e) {
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in getNodeActive due to \n " + exceptionAsString);
+				logger.info("Error in getNodeActive due to \n " + exceptionAsString);
+				rtn.put("searchResult", "Failed");
+			} finally {
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+					session.getSessionFactory().close();
+				}
+			}
+		}
+
+		return rtn;
+
+	}
+
 
 	@RequestMapping(value = "/SearchStrand", method = RequestMethod.GET)
 	@ResponseBody

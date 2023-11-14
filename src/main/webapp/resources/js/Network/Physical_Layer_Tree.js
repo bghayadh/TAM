@@ -65,7 +65,6 @@ var allManholesID =[]; // It is used in show close points to access the manholes
 var allHandholesID=[];
 var closePointsData=[];// It is used in show close points
 var closePointPopupFlag="notOpened"; // It is used to set the coordinates only in the first time opening the popup
-
 ////
 var TargetFiber= {
 		Action :"",
@@ -265,6 +264,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 			//console.log("CurrentPhysicalLayer heree!!!!!!!!!!!");
 			console.log("Entered Filter");
 			flag = 1;
+			nodeFlag = 1;
 			$('#removeS').show();
 		
 			var str_CurrentPhysicalLayer="<ul style='margin-left:15px'><li id='initial_ul_CurrentPhysicalLayer' class='Initial_CurrentPhysicalLayer'><input type='checkbox' class='allElements' unchecked name='filter'></input> <span id='initial_Span_CurrentPhysicalLayer' class='Parentfolder' > <i class='fa fa-folder' style='color: #08526D;'></i></span><span class='TreeSpan' style='color:black;width:436px'>Current Physical Layer </span></li></ul>";
@@ -934,8 +934,18 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 		}
 		
 			/////////////*********************	NodeActive creation in tree	***********************///////////////
-			
-		if(NodeActiveList!=null){
+		if(filterFlag==1 || filterFlag==2){ // filterFlag = 1 ---> Filter 
+			 createNode(NodeActiveList);
+		}
+		else{
+			console.log(" //////////passed else");	
+			$("#NodeActive_f_CurrentPhysicalLayer input[type=checkbox]").bind("change",function() {
+				if ($(this).is(':checked')){
+					getNode();
+				}
+			});
+		}
+		/*if(NodeActiveList!=null){
 			for(i=0;i<NodeActiveList.length;i++){
 			    allNodes.push(NodeActiveList[i][0]);
 				window[""+NodeActiveList[i][0]]=[];
@@ -969,7 +979,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 										
 				});	
 			}
-		}
+		}*/
 	/////////////*********************	trenchList creation in tree	***********************///////////////
 		if(trenchList!=null){
 			for(i=0;i<trenchList.length;i++){
@@ -16968,6 +16978,9 @@ function treeCollapseFolder(selector,type,clss){
 		if(id == "FiberPath_f_CurrentPhysicalLayer" && flag == 0 && $(this).parent().find(' > ul > li').is(":hidden")){
 			console.log("passed treeCollapseFolder");
 			getFiberPath();
+		}else if(id == "NodeActive_f_CurrentPhysicalLayer" && nodeFlag == 0 && $(this).parent().find(' > ul > li').is(":hidden")){
+			console.log("passed treeCollapseFolder");
+			getNode();
 		}
 		var children = $(this).parent().find(' > ul > li');
 		if (children.is(":visible")) {
