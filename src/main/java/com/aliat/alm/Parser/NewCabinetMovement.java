@@ -191,30 +191,30 @@ public class NewCabinetMovement {
 			System.out.println("New Serials Found, New Cabinets");
 			for(int i=0;i<newSerial.size();i++) {
 				stmt1 = con.createStatement();
-				query = "select a.node_pk,a.node_id,a.node_name,a.parsing_date,a.site_id,a.ware_id,a.ware_name,a.node_type,b.serialnumber,a.circle_id,b.cabinet_id FROM NODE_ACTIVE a,NODE_CABINET b WHERE b.serialnumber = '"+newSerial.get(i)+"' and b.ACTIVE_RECORD = '1' and a.node_pk=b.node_pk";
+				query = "select a.node_pk,a.node_id,a.node_name,a.parsing_date,a.site_id,a.ware_id,a.ware_name,a.node_type,b.serialnumber,a.circle_id,b.cabinet_idb.model FROM NODE_ACTIVE a,NODE_CABINET b WHERE b.serialnumber = '"+newSerial.get(i)+"' and b.ACTIVE_RECORD = '1' and a.node_pk=b.node_pk";
 				System.out.println(query);
 				ResultSet rs11 = stmt1.executeQuery(query);
 				while(rs11.next()) {
 					transID=Gyear+"_TRANS_"+transvalue;
 					
 					insertstatement = con.prepareStatement(
-							"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,FROM_SITE,TO_SITE,FROM_NODE,TO_NODE,FROM_CIRCLE,TO_CIRCLE,FROM_NODE_NAME,TO_NODE_NAME,FROM_WARE_ID,TO_WARE_ID,FROM_WARE_NAME,TO_WARE_NAME,FROM_NODE_TYPE,TO_NODE_TYPE,FROM_SERIAL_NUMBER,TO_SERIAL_NUMBER) "
+							"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,FROM_SITE,TO_SITE,FROM_NODE,TO_NODE,FROM_CIRCLE,TO_CIRCLE,FROM_NODE_NAME,TO_NODE_NAME,FROM_WARE_ID,TO_WARE_ID,FROM_WARE_NAME,TO_WARE_NAME,FROM_NODE_TYPE,TO_NODE_TYPE,FROM_SERIAL_NUMBER,TO_SERIAL_NUMBER,MODEL) "
 							+ "values ('"+transID+"','"+rs11.getString("CABINET_ID")+"','NODE_CABINET','0','NEW CABINET',TIMESTAMP '"+rs11.getString("PARSING_DATE")+"',sysdate,sysdate,'0','0','0','"+rs11.getString("SITE_ID")+"','0','"+rs11.getString("NODE_ID")+"','0','"+rs11.getString("CIRCLE_ID")+"','0','"
-									+rs11.getString("NODE_NAME")+"','0','"+rs11.getString("WARE_ID")+"','0','"+rs11.getString("WARE_NAME")+"','0','"+rs11.getString("NODE_TYPE")+"','0','"+rs11.getString("SERIALNUMBER")+"')");
+									+rs11.getString("NODE_NAME")+"','0','"+rs11.getString("WARE_ID")+"','0','"+rs11.getString("WARE_NAME")+"','0','"+rs11.getString("NODE_TYPE")+"','0','"+rs11.getString("SERIALNUMBER")+"','"+rs11.getString("MODEL")+"')");
 							insertstatement.executeUpdate();
 							insertstatement.close();
 									
 					transvalue++;
 					stmt2 = con.createStatement();
-					query = "select a.node_pk,a.node_id,a.node_name,a.parsing_date,a.site_id,a.ware_id,a.ware_name,a.node_type,b.serialnumber,a.circle_id,b.cabinet_id FROM NODE_ACTIVE a,NODE_CABINET b where b.serialnumber = '0' and a.node_id='"+rs11.getString("NODE_ID")+"' and a.node_name='"+rs11.getString("NODE_NAME")+"' and b.active_record='1' and a.NODE_PK=b.NODE_PK";
+					query = "select a.node_pk,a.node_id,a.node_name,a.parsing_date,a.site_id,a.ware_id,a.ware_name,a.node_type,b.serialnumber,a.circle_id,b.cabinet_id,b.model FROM NODE_ACTIVE a,NODE_CABINET b where b.serialnumber = '0' and a.node_id='"+rs11.getString("NODE_ID")+"' and a.node_name='"+rs11.getString("NODE_NAME")+"' and b.active_record='1' and a.NODE_PK=b.NODE_PK";
 					System.out.println(query);
 					ResultSet rs2 = stmt2.executeQuery(query);
 					while(rs2.next()) {
 						transID=Gyear+"_TRANS_"+transvalue;
 						insertstatement = con.prepareStatement(
-								"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,FROM_SITE,TO_SITE,FROM_NODE,TO_NODE,FROM_CIRCLE,TO_CIRCLE,FROM_NODE_NAME,TO_NODE_NAME,FROM_WARE_ID,TO_WARE_ID,FROM_WARE_NAME,TO_WARE_NAME,FROM_NODE_TYPE,TO_NODE_TYPE,FROM_SERIAL_NUMBER,TO_SERIAL_NUMBER) "
+								"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,FROM_SITE,TO_SITE,FROM_NODE,TO_NODE,FROM_CIRCLE,TO_CIRCLE,FROM_NODE_NAME,TO_NODE_NAME,FROM_WARE_ID,TO_WARE_ID,FROM_WARE_NAME,TO_WARE_NAME,FROM_NODE_TYPE,TO_NODE_TYPE,FROM_SERIAL_NUMBER,TO_SERIAL_NUMBER,MODEL) "
 								+ "values ('"+transID+"','"+rs2.getString("CABINET_ID")+"','NODE_CABINET','0','NEW CABINET',TIMESTAMP '"+rs2.getString("PARSING_DATE")+"',sysdate,sysdate,'0','0','0','"+rs2.getString("SITE_ID")+"','0','"+rs2.getString("NODE_ID")+"','0','"+rs2.getString("CIRCLE_ID")+"','0','"
-										+rs2.getString("NODE_NAME")+"','0','"+rs2.getString("WARE_ID")+"','0','"+rs2.getString("WARE_NAME")+"','0','"+rs2.getString("NODE_TYPE")+"','0','"+rs2.getString("SERIALNUMBER")+"')");
+										+rs2.getString("NODE_NAME")+"','0','"+rs2.getString("WARE_ID")+"','0','"+rs2.getString("WARE_NAME")+"','0','"+rs2.getString("NODE_TYPE")+"','0','"+rs2.getString("SERIALNUMBER")+"','"+rs2.getString("MODEL")+"')");
 								insertstatement.executeUpdate();
 								insertstatement.close();
 						transvalue++;
@@ -256,15 +256,15 @@ public class NewCabinetMovement {
 			for(int i=0;i<oldSerial1.size();i++) {
 				System.out.println(oldSerial1.get(i));
 				stmt1 = con.createStatement();
-				query="select a.node_pk,a.node_id,a.node_name,a.parsing_date,a.site_id,a.ware_id,a.ware_name,a.node_type,b.serialnumber,a.circle_id,b.cabinet_id FROM NODE_ACTIVE a,NODE_CABINET b WHERE b.serialnumber = '"+oldSerial1.get(i)+"' and b.ACTIVE_RECORD = '2' and a.node_pk=b.node_pk";
+				query="select a.node_pk,a.node_id,a.node_name,a.parsing_date,a.site_id,a.ware_id,a.ware_name,a.node_type,b.serialnumber,a.circle_id,b.cabinet_id,b.model FROM NODE_ACTIVE a,NODE_CABINET b WHERE b.serialnumber = '"+oldSerial1.get(i)+"' and b.ACTIVE_RECORD = '2' and a.node_pk=b.node_pk";
 				ResultSet rs11 = stmt1.executeQuery(query);
 				while(rs11.next()) {
 					transID=Gyear+"_TRANS_"+transvalue;
 					
 					insertstatement = con.prepareStatement(
-							"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,TO_SITE,FROM_SITE,TO_NODE,FROM_NODE,TO_CIRCLE,FROM_CIRCLE,TO_NODE_NAME,FROM_NODE_NAME,TO_WARE_ID,FROM_WARE_ID,TO_WARE_NAME,FROM_WARE_NAME,TO_NODE_TYPE,FROM_NODE_TYPE,TO_SERIAL_NUMBER,FROM_SERIAL_NUMBER) "
+							"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,TO_SITE,FROM_SITE,TO_NODE,FROM_NODE,TO_CIRCLE,FROM_CIRCLE,TO_NODE_NAME,FROM_NODE_NAME,TO_WARE_ID,FROM_WARE_ID,TO_WARE_NAME,FROM_WARE_NAME,TO_NODE_TYPE,FROM_NODE_TYPE,TO_SERIAL_NUMBER,FROM_SERIAL_NUMBER,MODEL) "
 							+ "values ('"+transID+"','"+rs11.getString("CABINET_ID")+"','NODE_CABINET','0','CABINET DISAPPEARED',TIMESTAMP '"+rs11.getString("PARSING_DATE")+"',sysdate,sysdate,'0','0','0','"+rs11.getString("SITE_ID")+"','0','"+rs11.getString("NODE_ID")+"','0','"+rs11.getString("CIRCLE_ID")+"','0','"
-									+rs11.getString("NODE_NAME")+"','0','"+rs11.getString("WARE_ID")+"','0','"+rs11.getString("WARE_NAME")+"','0','"+rs11.getString("NODE_TYPE")+"','0','"+rs11.getString("SERIALNUMBER")+"')");
+									+rs11.getString("NODE_NAME")+"','0','"+rs11.getString("WARE_ID")+"','0','"+rs11.getString("WARE_NAME")+"','0','"+rs11.getString("NODE_TYPE")+"','0','"+rs11.getString("SERIALNUMBER")+"','"+rs11.getString("MODEL")+"')");
 							insertstatement.executeUpdate();
 							insertstatement.close();
 					
@@ -275,9 +275,9 @@ public class NewCabinetMovement {
 					while(rs2.next()) {
 						transID=Gyear+"_TRANS_"+transvalue;
 						insertstatement = con.prepareStatement(
-								"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,TO_SITE,FROM_SITE,TO_NODE,FROM_NODE,TO_CIRCLE,FROM_CIRCLE,TO_NODE_NAME,FROM_NODE_NAME,TO_WARE_ID,FROM_WARE_ID,TO_WARE_NAME,FROM_WARE_NAME,TO_NODE_TYPE,FROM_NODE_TYPE,TO_SERIAL_NUMBER,FROM_SERIAL_NUMBER) "
+								"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,TO_SITE,FROM_SITE,TO_NODE,FROM_NODE,TO_CIRCLE,FROM_CIRCLE,TO_NODE_NAME,FROM_NODE_NAME,TO_WARE_ID,FROM_WARE_ID,TO_WARE_NAME,FROM_WARE_NAME,TO_NODE_TYPE,FROM_NODE_TYPE,TO_SERIAL_NUMBER,FROM_SERIAL_NUMBER,MODEL) "
 								+ "values ('"+transID+"','"+rs2.getString("CABINET_ID")+"','NODE_CABINET','0','CABINET DISAPPEARED',TIMESTAMP '"+rs2.getString("PARSING_DATE")+"',sysdate,sysdate,'0','0','0','"+rs2.getString("SITE_ID")+"','0','"+rs2.getString("NODE_ID")+"','0','"+rs2.getString("CIRCLE_ID")+"','0','"
-										+rs2.getString("NODE_NAME")+"','0','"+rs2.getString("WARE_ID")+"','0','"+rs2.getString("WARE_NAME")+"','0','"+rs2.getString("NODE_TYPE")+"','0','"+rs2.getString("SERIALNUMBER")+"')");
+										+rs2.getString("NODE_NAME")+"','0','"+rs2.getString("WARE_ID")+"','0','"+rs2.getString("WARE_NAME")+"','0','"+rs2.getString("NODE_TYPE")+"','0','"+rs2.getString("SERIALNUMBER")+"','"+rs2.getString("MODEL")+"')");
 								insertstatement.executeUpdate();
 						transvalue++;
 					}
@@ -298,7 +298,7 @@ public class NewCabinetMovement {
 	
 	private static void CheckTransferredCabinet(List<String> newSerial1,List<String> oldSerial1) throws SQLException{
 		Statement stmt = null,stmt1=null,stmt2=null,stmt3=null;
-		String query = null,transID =null,oldNodeID,oldNodeName,oldSiteID,oldCircleID,oldSN,oldnodeType,oldwareId,oldWareName,newNodeID,newNodeName,newSiteID,newCircleID,newSN,newnodeType,newwareID,newWareName,varstatus = null;
+		String query = null,transID =null,oldNodeID,oldNodeName,oldSiteID,oldCircleID,oldSN,oldnodeType,oldwareId,oldWareName,newNodeID,newNodeName,newSiteID,newCircleID,newSN,newnodeType,newwareID,newWareName,model,varstatus = null;
 		int transvalue=0;
 		PreparedStatement insertstatement = null,updatestatement=null;
 
@@ -332,7 +332,7 @@ public class NewCabinetMovement {
 					oldnodeType=rs.getString("NODE_TYPE");
 					
 					stmt1 = con.createStatement();
-					query = "select a.node_pk,a.node_id,a.node_name,a.parsing_date,a.site_id,a.ware_id,a.ware_name,a.node_type,b.serialnumber,a.circle_id,b.cabinet_id FROM NODE_ACTIVE a,NODE_CABINET b WHERE b.serialnumber = '"+newSerial1.get(i)+"' and b.ACTIVE_RECORD = '1' and a.node_pk=b.node_pk";
+					query = "select a.node_pk,a.node_id,a.node_name,a.parsing_date,a.site_id,a.ware_id,a.ware_name,a.node_type,b.serialnumber,a.circle_id,b.cabinet_id,b.model FROM NODE_ACTIVE a,NODE_CABINET b WHERE b.serialnumber = '"+newSerial1.get(i)+"' and b.ACTIVE_RECORD = '1' and a.node_pk=b.node_pk";
 					ResultSet rs1 = stmt1.executeQuery(query);
 					while(rs1.next()) {
 						newNodeID=rs1.getString("NODE_ID");
@@ -343,7 +343,7 @@ public class NewCabinetMovement {
 						newWareName=rs1.getString("WARE_NAME");
 						newSN=rs1.getString("SERIALNUMBER");
 						newnodeType=rs1.getString("NODE_TYPE");
-						
+						model=rs1.getString("MODEL");
 						
 					    	// validate site and circle
 					    	if (!StringUtils.equalsIgnoreCase (oldSiteID,newSiteID)) {
@@ -351,22 +351,32 @@ public class NewCabinetMovement {
 				    			varstatus="Reappear SN  After Site Transfer";	
 						    		transID=Gyear+"_TRANS_"+transvalue;
 						    		insertstatement = con.prepareStatement(
-					    					"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,FROM_SITE,TO_SITE,FROM_NODE,TO_NODE,FROM_CIRCLE,TO_CIRCLE,FROM_NODE_NAME,TO_NODE_NAME,FROM_WARE_ID,TO_WARE_ID,FROM_WARE_NAME,TO_WARE_NAME,FROM_NODE_TYPE,TO_NODE_TYPE,FROM_SERIAL_NUMBER,TO_SERIAL_NUMBER) "
+					    					"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,FROM_SITE,TO_SITE,FROM_NODE,TO_NODE,FROM_CIRCLE,TO_CIRCLE,FROM_NODE_NAME,TO_NODE_NAME,FROM_WARE_ID,TO_WARE_ID,FROM_WARE_NAME,TO_WARE_NAME,FROM_NODE_TYPE,TO_NODE_TYPE,FROM_SERIAL_NUMBER,TO_SERIAL_NUMBER,MODEL) "
 					    					+ "values ('"+transID+"','"+rs1.getString("CABINET_ID")+"','NODE_CABINET','0','"+varstatus+"',TIMESTAMP '"+rs1.getString("PARSING_DATE")+"',sysdate,sysdate,'0','0','"+oldSiteID+"','"+newSiteID+"','"+oldNodeID+"','"+newNodeID+"','"+oldCircleID+"','"+newCircleID+"','"
-					    							+oldNodeName+"','"+newNodeName+"','"+oldwareId+"','"+newwareID+"','"+oldWareName+"','"+newWareName+"','"+oldnodeType+"','"+newnodeType+"','"+oldSN+"','"+newSN+"')");
+					    							+oldNodeName+"','"+newNodeName+"','"+oldwareId+"','"+newwareID+"','"+oldWareName+"','"+newWareName+"','"+oldnodeType+"','"+newnodeType+"','"+oldSN+"','"+newSN+"','"+model+"')");
 					    			insertstatement.executeUpdate();
 					    					insertstatement.close();
 											
 									transvalue++;
 									stmt3 = con.createStatement();
-									query = "select a.node_pk,a.node_id,a.node_name,a.parsing_date,a.site_id,a.ware_id,a.ware_name,a.node_type,b.serialnumber,a.circle_id,b.cabinet_id from node_cabinet b,node_active a where  b.serialnumber = '0' and a.node_id='"+rs1.getString("NODE_ID")+"' and a.node_name='"+rs1.getString("NODE_NAME")+"' and b.active_record='1' and a.NODE_PK=b.NODE_PK";
+									query = "select a.node_pk,a.node_id,a.node_name,a.parsing_date,a.site_id,a.ware_id,a.ware_name,a.node_type,b.serialnumber,a.circle_id,b.cabinet_id,b.model from node_cabinet b,node_active a where  b.serialnumber = '0' and a.node_id='"+rs1.getString("NODE_ID")+"' and a.node_name='"+rs1.getString("NODE_NAME")+"' and b.active_record='1' and a.NODE_PK=b.NODE_PK";
 									ResultSet rs3 = stmt3.executeQuery(query);
 									while(rs3.next()) {
+										newNodeID=rs3.getString("NODE_ID");
+										newNodeName=rs3.getString("NODE_NAME");
+										newSiteID=rs3.getString("SITE_ID");
+										newCircleID=rs3.getString("CIRCLE_ID");
+										newwareID=rs3.getString("WARE_ID");
+										newWareName=rs3.getString("WARE_NAME");
+										newSN=rs3.getString("SERIALNUMBER");
+										newnodeType=rs3.getString("NODE_TYPE");
+										model=rs3.getString("MODEL");
+										
 										transID=Gyear+"_TRANS_"+transvalue;
 										insertstatement = con.prepareStatement(
-						    					"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,FROM_SITE,TO_SITE,FROM_NODE,TO_NODE,FROM_CIRCLE,TO_CIRCLE,FROM_NODE_NAME,TO_NODE_NAME,FROM_WARE_ID,TO_WARE_ID,FROM_WARE_NAME,TO_WARE_NAME,FROM_NODE_TYPE,TO_NODE_TYPE,FROM_SERIAL_NUMBER,TO_SERIAL_NUMBER) "
-						    					+ "values ('"+transID+"','"+rs1.getString("CABINET_ID")+"','NODE_CABINET','0','"+varstatus+"',TIMESTAMP '"+rs1.getString("PARSING_DATE")+"',sysdate,sysdate,'0','0','"+oldSiteID+"','"+newSiteID+"','"+oldNodeID+"','"+newNodeID+"','"+oldCircleID+"','"+newCircleID+"','"
-						    							+oldNodeName+"','"+newNodeName+"','"+oldwareId+"','"+newwareID+"','"+oldWareName+"','"+newWareName+"','"+oldnodeType+"','"+newnodeType+"','"+oldSN+"','"+newSN+"')");
+						    					"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,FROM_SITE,TO_SITE,FROM_NODE,TO_NODE,FROM_CIRCLE,TO_CIRCLE,FROM_NODE_NAME,TO_NODE_NAME,FROM_WARE_ID,TO_WARE_ID,FROM_WARE_NAME,TO_WARE_NAME,FROM_NODE_TYPE,TO_NODE_TYPE,FROM_SERIAL_NUMBER,TO_SERIAL_NUMBER,MODEL) "
+						    					+ "values ('"+transID+"','"+rs3.getString("CABINET_ID")+"','NODE_CABINET','0','"+varstatus+"',TIMESTAMP '"+rs1.getString("PARSING_DATE")+"',sysdate,sysdate,'0','0','"+oldSiteID+"','"+newSiteID+"','"+oldNodeID+"','"+newNodeID+"','"+oldCircleID+"','"+newCircleID+"','"
+						    							+oldNodeName+"','"+newNodeName+"','"+oldwareId+"','"+newwareID+"','"+oldWareName+"','"+newWareName+"','"+oldnodeType+"','"+newnodeType+"','"+newSN+"','"+newSN+"','"+model+"')");
 						    			insertstatement.executeUpdate();
 						    					insertstatement.close();
 										transvalue++;

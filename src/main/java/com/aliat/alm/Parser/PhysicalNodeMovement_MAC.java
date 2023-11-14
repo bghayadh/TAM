@@ -165,7 +165,7 @@ public class PhysicalNodeMovement_MAC {
 	}
 	
 	private static void CheckNewNodes(List<String> newNodes,List<String> oldNodes) throws SQLException {
-		Statement stmt = null,stmt1=null,stmt2=null;
+		Statement stmt = null,stmt1=null;
 		String query = null,transID =null;
 		int transvalue = 0;
 		PreparedStatement insertstatement = null,updatestatement=null;
@@ -183,16 +183,17 @@ public class PhysicalNodeMovement_MAC {
 			System.out.println("New Nodes Found");
 			for(int i=0;i<newNodes.size();i++) {
 				stmt1 = con.createStatement();
-				query = "select node_pk,node_id,node_name,parsing_date,mac_address,site_id,ware_id,ware_name,node_type,serial_number,circle_id from NODE_ACTIVE  where active_record='1' and mac_address='"+newNodes.get(i)+"'";
+				query = "select node_pk,node_id,node_name,parsing_date,mac_address,site_id,ware_id,ware_name,node_type,serial_number,circle_id,node_model from NODE_ACTIVE  where active_record='1' and mac_address='"+newNodes.get(i)+"'";
 				System.out.println(query);
 				ResultSet rs11 = stmt1.executeQuery(query);
 				while(rs11.next()) {
 					transID=Gyear+"_TRANS_"+transvalue;
 					
 					insertstatement = con.prepareStatement(
-					"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,FROM_SITE,TO_SITE,FROM_NODE,TO_NODE,FROM_CIRCLE,TO_CIRCLE,FROM_NODE_NAME,TO_NODE_NAME,FROM_WARE_ID,TO_WARE_ID,FROM_WARE_NAME,TO_WARE_NAME,FROM_NODE_TYPE,TO_NODE_TYPE,FROM_SERIAL_NUMBER,TO_SERIAL_NUMBER) "
+					"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,FROM_SITE,TO_SITE,FROM_NODE,TO_NODE,FROM_CIRCLE,TO_CIRCLE,FROM_NODE_NAME,TO_NODE_NAME,FROM_WARE_ID,TO_WARE_ID,FROM_WARE_NAME,TO_WARE_NAME,FROM_NODE_TYPE,TO_NODE_TYPE,FROM_SERIAL_NUMBER,TO_SERIAL_NUMBER,MODEL,FROM_MAC,TO_MAC) "
 					+ "values ('"+transID+"','"+rs11.getString("NODE_PK")+"','NODE_ACTIVE','0','NEW NODE',TIMESTAMP '"+rs11.getString("PARSING_DATE")+"',sysdate,sysdate,'0','0','0','"+rs11.getString("SITE_ID")+"','0','"+rs11.getString("NODE_ID")+"','0','"+rs11.getString("CIRCLE_ID")+"','0','"
-							+rs11.getString("NODE_NAME")+"','0','"+rs11.getString("WARE_ID")+"','0','"+rs11.getString("WARE_NAME")+"','0','"+rs11.getString("NODE_TYPE")+"','0','"+rs11.getString("SERIAL_NUMBER")+"')");
+							+rs11.getString("NODE_NAME")+"','0','"+rs11.getString("WARE_ID")+"','0','"+rs11.getString("WARE_NAME")+"','0','"+rs11.getString("NODE_TYPE")+"','0','"+rs11.getString("SERIAL_NUMBER")+"'"
+									+ ",'"+rs11.getString("NODE_MODEL")+"','0','"+rs11.getString("MAC_ADDRESS")+"')");
 					insertstatement.executeUpdate();
 					insertstatement.close();
 					transvalue++;
@@ -211,7 +212,7 @@ public class PhysicalNodeMovement_MAC {
 	}
 	
 	private static void CheckDisappearedNodes(List<String> newNodes,List<String> oldNodes) throws SQLException {
-		Statement stmt = null,stmt1=null,stmt2=null;
+		Statement stmt = null,stmt1=null;
 		String query = null,transID =null;
 		int transvalue = 0;
 		PreparedStatement insertstatement = null,updatestatement=null;
@@ -231,16 +232,17 @@ public class PhysicalNodeMovement_MAC {
 			rs1.close();
 			for(int i=0;i<oldNodes.size();i++) {
 				stmt1 = con.createStatement();
-				query = "select node_pk,node_id,node_name,parsing_date,mac_address,site_id,ware_id,ware_name,node_type,serial_number,circle_id from NODE_ACTIVE  where active_record='2' and mac_address='"+oldNodes.get(i)+"'";
+				query = "select node_pk,node_id,node_name,parsing_date,mac_address,site_id,ware_id,ware_name,node_type,serial_number,circle_id,node_model from NODE_ACTIVE  where active_record='2' and mac_address='"+oldNodes.get(i)+"'";
 				System.out.println(query);
 				ResultSet rs11 = stmt1.executeQuery(query);
 				while(rs11.next()) {
 					transID=Gyear+"_TRANS_"+transvalue;
 					
 					insertstatement = con.prepareStatement(
-							"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,TO_SITE,FROM_SITE,TO_NODE,FROM_NODE,TO_CIRCLE,FROM_CIRCLE,TO_NODE_NAME,FROM_NODE_NAME,TO_WARE_ID,FROM_WARE_ID,TO_WARE_NAME,FROM_WARE_NAME,TO_NODE_TYPE,FROM_NODE_TYPE,TO_SERIAL_NUMBER,FROM_SERIAL_NUMBER) "
+							"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,TO_SITE,FROM_SITE,TO_NODE,FROM_NODE,TO_CIRCLE,FROM_CIRCLE,TO_NODE_NAME,FROM_NODE_NAME,TO_WARE_ID,FROM_WARE_ID,TO_WARE_NAME,FROM_WARE_NAME,TO_NODE_TYPE,FROM_NODE_TYPE,TO_SERIAL_NUMBER,FROM_SERIAL_NUMBER,MODEL,TO_MAC,FROM_MAC) "
 							+ "values ('"+transID+"','"+rs11.getString("NODE_PK")+"','NODE_ACTIVE','0','NODE DISAPPEARED',TIMESTAMP '"+rs11.getString("PARSING_DATE")+"',sysdate,sysdate,'0','0','0','"+rs11.getString("SITE_ID")+"','0','"+rs11.getString("NODE_ID")+"','0','"+rs11.getString("CIRCLE_ID")+"','0','"
-									+rs11.getString("NODE_NAME")+"','0','"+rs11.getString("WARE_ID")+"','0','"+rs11.getString("WARE_NAME")+"','0','"+rs11.getString("NODE_TYPE")+"','0','"+rs11.getString("SERIAL_NUMBER")+"')");
+									+rs11.getString("NODE_NAME")+"','0','"+rs11.getString("WARE_ID")+"','0','"+rs11.getString("WARE_NAME")+"','0','"+rs11.getString("NODE_TYPE")+"','0','"+rs11.getString("SERIAL_NUMBER")+"'"
+											+ ",'"+rs11.getString("NODE_MODEL")+"','0','"+rs11.getString("MAC_ADDRESS")+"')");
 							insertstatement.executeUpdate();
 							insertstatement.close();
 					transvalue++;
@@ -260,7 +262,7 @@ public class PhysicalNodeMovement_MAC {
 	
 	private static void CheckTransferredNodes(List<String> newNodes,List<String> oldNodes) throws SQLException{
 		Statement stmt = null,stmt1=null,stmt2=null;
-		String query = null,transID =null,oldNodeID,oldNodeName,oldSiteID,oldCircleID,oldSN,oldnodeType,oldwareId,oldWareName,newNodeID,newNodeName,newSiteID,newCircleID,newSN,newnodeType,newwareID,newWareName,varstatus = null;
+		String query = null,transID =null,oldNodeID,oldNodeName,oldSiteID,oldCircleID,oldSN,oldnodeType,oldwareId,oldWareName,oldMac,newNodeID,newNodeName,newSiteID,newCircleID,newSN,newnodeType,newwareID,newWareName,newMac,model,varstatus = null;
 		int transvalue=0;
 		PreparedStatement insertstatement = null,updatestatement=null;
 
@@ -289,8 +291,9 @@ public class PhysicalNodeMovement_MAC {
 					oldWareName=rs.getString("WARE_NAME");
 					oldSN=rs.getString("SERIAL_NUMBER");
 					oldnodeType=rs.getString("NODE_TYPE");
+					oldMac=rs.getString("MAC_ADDRESS");
 					stmt1 = con.createStatement();
-					query ="select node_pk,node_id,node_name,parsing_date,mac_address,site_id,ware_id,ware_name,node_type,serial_number,circle_id FROM NODE_ACTIVE WHERE ACTIVE_RECORD = '1' and MAC_ADDRESS='"+newNodes.get(i)+"'";
+					query ="select node_pk,node_id,node_name,parsing_date,mac_address,site_id,ware_id,ware_name,node_type,serial_number,circle_id,node_model FROM NODE_ACTIVE WHERE ACTIVE_RECORD = '1' and MAC_ADDRESS='"+newNodes.get(i)+"'";
 					ResultSet rs1 = stmt1.executeQuery(query);
 					while(rs1.next()) {
 						newNodeID=rs1.getString("NODE_ID");
@@ -301,16 +304,18 @@ public class PhysicalNodeMovement_MAC {
 						newWareName=rs1.getString("WARE_NAME");
 						newSN=rs1.getString("SERIAL_NUMBER");
 						newnodeType=rs1.getString("NODE_TYPE");
-						
+						newMac=rs1.getString("MAC_ADDRESS");
+						model=rs1.getString("NODE_MODEL");
 					    	// validate site and circle
 					    	if (!StringUtils.equalsIgnoreCase (oldSiteID,newSiteID)) {
 					    		System.out.println("Reappear After Site Transfer");
 				    			varstatus="Reappear After Site Transfer";
 				    			transID=Gyear+"_TRANS_"+transvalue;
 				    			insertstatement = con.prepareStatement(
-				    					"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,FROM_SITE,TO_SITE,FROM_NODE,TO_NODE,FROM_CIRCLE,TO_CIRCLE,FROM_NODE_NAME,TO_NODE_NAME,FROM_WARE_ID,TO_WARE_ID,FROM_WARE_NAME,TO_WARE_NAME,FROM_NODE_TYPE,TO_NODE_TYPE,FROM_SERIAL_NUMBER,TO_SERIAL_NUMBER) "
+				    					"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,FROM_SITE,TO_SITE,FROM_NODE,TO_NODE,FROM_CIRCLE,TO_CIRCLE,FROM_NODE_NAME,TO_NODE_NAME,FROM_WARE_ID,TO_WARE_ID,FROM_WARE_NAME,TO_WARE_NAME,FROM_NODE_TYPE,TO_NODE_TYPE,FROM_SERIAL_NUMBER,TO_SERIAL_NUMBER,MODEL,FROM_MAC,TO_MAC) "
 				    					+ "values ('"+transID+"','"+rs1.getString("NODE_PK")+"','NODE_ACTIVE','0','"+varstatus+"',TIMESTAMP '"+rs1.getString("PARSING_DATE")+"',sysdate,sysdate,'0','0','"+oldSiteID+"','"+newSiteID+"','"+oldNodeID+"','"+newNodeID+"','"+oldCircleID+"','"+newCircleID+"','"
-				    							+oldNodeName+"','"+newNodeName+"','"+oldwareId+"','"+newwareID+"','"+oldWareName+"','"+newWareName+"','"+oldnodeType+"','"+newnodeType+"','"+oldSN+"','"+newSN+"')");
+				    							+oldNodeName+"','"+newNodeName+"','"+oldwareId+"','"+newwareID+"','"+oldWareName+"','"+newWareName+"','"+oldnodeType+"','"+newnodeType+"','"+oldSN+"','"+newSN+"',"
+				    									+ "'"+model+"','"+oldMac+"','"+newMac+"')");
 				    			insertstatement.executeUpdate();
 				    					insertstatement.close();
 										
