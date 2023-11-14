@@ -14,11 +14,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Query;
-import org.hibernate.SQLQuery;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.transform.Transformers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +26,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.aliat.alm.common.ALMSessions;
 import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.ArNode;
 import com.aliat.alm.models.ArPartNumber;
 import com.aliat.alm.models.ArSite;
-import com.aliat.alm.models.AssetRegisterListView;
 import com.aliat.alm.models.ArSerialNumber;
 import com.aliat.alm.models.AssetRegistry;
 import com.aliat.alm.models.PurchaseOrderItem;
@@ -58,10 +54,10 @@ public class AssetRegistryController {
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	private static Session session = null;
 	private static Transaction tx = null;
+	@SuppressWarnings("rawtypes")
 	private static Query query = null;
 	private static ObjectMapper mapper = new ObjectMapper();
 	
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/AssetRegistryListView", method = RequestMethod.GET)
 	public String AssetRegistryListView(Locale locale, Model model,HttpServletRequest request,HttpServletResponse response ) {
 		if(LoginServices.checkSession(request, response).equals("redirect:/")) {
@@ -74,32 +70,12 @@ public class AssetRegistryController {
 				tx = session.beginTransaction();
 				notifications.headerNotifications(session, model);
 				try {
-		
-					List<AssetRegisterListView> listAR = new ArrayList<AssetRegisterListView>();
-
-				/*	String str = "select AR_ID as arID, AR_ID as assetID, ITEM_CODE as aritemCode, ITEM_NAME as aritemName, ITEM_MODEL as itemModel, ITEM_PART_NUMBER as itemPartNumber, "
-							+ "TO_CHAR(LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') as arlastModifiedDate, ITEM_SN as itemSN, ITEM_NAME_REGISTER as itemNameReg, PO_ID as poID, "
-							+ "COALESCE(NODE_ID, ' ') as nodeID, COALESCE(NODE_NAME, ' ') as nodeName "
-							+ "from ASSET_REGISTRY order by LAST_MODIFIED_DATE DESC";
 					
-					
-					*/
-				
 					String str = "SELECT arID, assetID, aritemCode, aritemName, itemModel, itemPartNumber, arlastModifiedDate, itemSN, itemNameReg, poID, nodeID, nodeName, siteID, siteName FROM ( "
 					           + " SELECT A.AR_ID AS arID, A.AR_ID AS assetID, A.ITEM_CODE AS aritemCode, A.ITEM_NAME AS aritemName, A.ITEM_MODEL AS itemModel, A.ITEM_PART_NUMBER AS itemPartNumber, TO_CHAR(A.LAST_MODIFIED_DATE, 'YYYY-MM-DD HH24:MI:SS') AS arlastModifiedDate, A.ITEM_SN AS itemSN, A.ITEM_NAME_REGISTER AS itemNameReg, A.PO_ID AS poID, COALESCE(A.NODE_ID, ' ') AS nodeID, COALESCE(A.NODE_NAME, ' ') AS nodeName, B.SITE_ID AS siteID, B.SITE_NAME AS siteName , "
 					           + " ROW_NUMBER() OVER (PARTITION BY A.AR_ID ORDER BY B.SITE_ID DESC) AS rn FROM ASSET_REGISTRY A LEFT JOIN AR_SITE B ON B.AR_ID = A.AR_ID ) WHERE rn = 1 ORDER BY arlastModifiedDate DESC";
-
-					Query query = session.createSQLQuery(str);
-								
 					
-					listAR =  ((SQLQuery) query)
-							.addScalar("arID").addScalar("assetID").addScalar("aritemCode").addScalar("aritemName").addScalar("itemModel").addScalar("itemPartNumber")
-			       			.addScalar("arlastModifiedDate").addScalar("itemSN")
-			       			.addScalar("itemNameReg").addScalar("poID").addScalar("nodeID").addScalar("nodeName").addScalar("siteID").addScalar("siteName")
-			       			.setResultTransformer(Transformers.aliasToBean(AssetRegisterListView.class)).list();
-	
-		
-					model.addAttribute("ListGridTable", mapper.writeValueAsString(listAR));
+					model.addAttribute("ListGridTable", mapper.writeValueAsString( session.createNativeQuery(str).list()));
 					
 				} catch (Exception e) {
 					logger.info("Error on Asset Register ListView with a message : " + e);
@@ -109,6 +85,7 @@ public class AssetRegistryController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -268,12 +245,10 @@ public class AssetRegistryController {
 					}
 				}
 				str = str + ") WHERE rn = 1 ORDER BY arlastModifiedDate DESC ";
-				Query query = session.createSQLQuery(str);
-				listAsset = query.list();
+				listAsset = session.createNativeQuery(str).list();
 				
 				strTemp = strTemp + ") WHERE rn = 1 ORDER BY arlastModifiedDate DESC ";
-				Query queryTemp = session.createSQLQuery(strTemp);
-				listAssetTemp = queryTemp.list();
+				listAssetTemp = session.createNativeQuery(strTemp).list();
 				
 				if (( radius != null && !radius.equalsIgnoreCase("") && Double.parseDouble(radius) > 0) && (longitude != null && !longitude.equalsIgnoreCase("")) && (latitude != null
 						&& !latitude.equalsIgnoreCase(""))) {
@@ -303,6 +278,7 @@ public class AssetRegistryController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
+					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -363,10 +339,11 @@ public class AssetRegistryController {
 					}
 		
 					
-				
+				System.out.println(arID);
 				result = form.NavigationNP(session,"ASSET_REGISTRY","AR_ID",arID,"LAST_MODIFIED_DATE",navAction);		
 		
 				SelectedIndex= Integer.parseInt(result[1]);
+				System.out.println(SelectedIndex);
 				arID=result[2];
 
 				model.addAttribute("SelectedIndex", SelectedIndex);
@@ -489,9 +466,9 @@ public class AssetRegistryController {
 				listPurchaseOrderItem = new ArrayList<PurchaseOrderItem>();
 				
 				if(assetreg.getPoItemId() != null) {
-					
+					System.out.println(assetreg.getAritemCode());
 				 query = session.createQuery("select t.ItemCode || ':'|| t.ItemName ,t.ItemModel,t.ItemPartNb,t.Qty, t.Rate,t.DiscAmnt ,t.Tax1, t.NetRate, t.Total, "
-							+ "t.TotalAt,t.GrNo, t.iPrNo, t.ArNo, t.iCIPNo,t.FarNo, t.pordItemId  from PurchaseOrderItem t where ItemCode IN (:param1))");
+							+ "t.TotalAt,t.GrNo, t.iPrNo, t.ArNo, t.iCIPNo,t.FarNo, t.pordItemId  from PurchaseOrderItem t where ItemCode IN (:param1)");
 				query.setParameter("param1", assetreg.getAritemCode());
 				System.out.println(assetreg.getAritemCode());
 				 listPurchaseOrderItem = query.list();
@@ -569,10 +546,10 @@ public class AssetRegistryController {
 
 		if (StringUtils.equalsIgnoreCase(AssetRegID, "")) {
 			synchronized (this) {						
-				AssetRegID = "AR_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT ASSET_REGISTRY FROM SEQ_TABLE").uniqueResult().toString());	
-				query = session.createSQLQuery("UPDATE SEQ_TABLE SET ASSET_REGISTRY = ASSET_REGISTRY + 1 ");
+				AssetRegID = "AR_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT ASSET_REGISTRY FROM SEQ_TABLE").uniqueResult().toString());	
+				query = session.createNativeQuery("UPDATE SEQ_TABLE SET ASSET_REGISTRY = ASSET_REGISTRY + 1 ");
 				query.executeUpdate();
-				session.createSQLQuery("commit").executeUpdate();
+				session.createNativeQuery("commit").executeUpdate();
 				}
 		}
 			//AssetRegID= "AR_"+year+"_" +appConfig.getSequenceNbr(9);
@@ -660,10 +637,10 @@ public class AssetRegistryController {
 				
 				if(StringUtils.equalsIgnoreCase(itemParameters.getDictParameteritemPartnum().get(i).get("arItemID"), "0")) {
 					synchronized (this) {						
-						itmId = "ARMP_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT AR_MODEL_PARTNO FROM SEQ_TABLE").uniqueResult().toString());	
-						query = session.createSQLQuery("UPDATE SEQ_TABLE SET AR_MODEL_PARTNO = AR_MODEL_PARTNO + 1 ");
+						itmId = "ARMP_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT AR_MODEL_PARTNO FROM SEQ_TABLE").uniqueResult().toString());	
+						query = session.createNativeQuery("UPDATE SEQ_TABLE SET AR_MODEL_PARTNO = AR_MODEL_PARTNO + 1 ");
 						query.executeUpdate();
-						session.createSQLQuery("commit").executeUpdate();
+						session.createNativeQuery("commit").executeUpdate();
 						}
 					//itmId = "ARMP_" + year + "_" + appConfig.getSequenceNbr(26);
 					arPartNumber.setItmId(itmId);
@@ -697,10 +674,10 @@ public class AssetRegistryController {
 		
 					if(StringUtils.equalsIgnoreCase(itemParameters.getDictParameternode().get(i).get("arNodeID"), "0")) {
 						synchronized (this) {						
-							nodearId = "ARNODE_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT AR_NODE FROM SEQ_TABLE").uniqueResult().toString());	
-							query = session.createSQLQuery("UPDATE SEQ_TABLE SET AR_NODE = AR_NODE + 1 ");
+							nodearId = "ARNODE_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT AR_NODE FROM SEQ_TABLE").uniqueResult().toString());	
+							query = session.createNativeQuery("UPDATE SEQ_TABLE SET AR_NODE = AR_NODE + 1 ");
 							query.executeUpdate();
-							session.createSQLQuery("commit").executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
 							}
 						     //nodearId = "ARNODE_" + year + "_" + appConfig.getSequenceNbr(28);
 						     arNode.setNodearId(nodearId);
@@ -729,10 +706,10 @@ public class AssetRegistryController {
 					
 					if(StringUtils.equalsIgnoreCase(itemParameters.getDictParametersite().get(i).get("arSiteID"), "0")) {
 						synchronized (this) {						
-							arsiteId = "ARSITE_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT AR_SITE FROM SEQ_TABLE").uniqueResult().toString());	
-							query = session.createSQLQuery("UPDATE SEQ_TABLE SET AR_SITE = AR_SITE + 1 ");
+							arsiteId = "ARSITE_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT AR_SITE FROM SEQ_TABLE").uniqueResult().toString());	
+							query = session.createNativeQuery("UPDATE SEQ_TABLE SET AR_SITE = AR_SITE + 1 ");
 							query.executeUpdate();
-							session.createSQLQuery("commit").executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
 							}
 						//arsiteId = "ARSITE_" + year + "_" + appConfig.getSequenceNbr(30);
 						arSite.setArsiteId(arsiteId);
@@ -761,10 +738,10 @@ public class AssetRegistryController {
 				
 				if(StringUtils.equalsIgnoreCase(itemParameters.getDictParameterserialNumber().get(i).get("arSerialID"), "0")) {
 					synchronized (this) {						
-						serialId = "ARSNUM_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT AR_SERIALNO FROM SEQ_TABLE").uniqueResult().toString());	
-						query = session.createSQLQuery("UPDATE SEQ_TABLE SET AR_SERIALNO = AR_SERIALNO + 1 ");
+						serialId = "ARSNUM_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT AR_SERIALNO FROM SEQ_TABLE").uniqueResult().toString());	
+						query = session.createNativeQuery("UPDATE SEQ_TABLE SET AR_SERIALNO = AR_SERIALNO + 1 ");
 						query.executeUpdate();
-						session.createSQLQuery("commit").executeUpdate();
+						session.createNativeQuery("commit").executeUpdate();
 						}
 					//serialId = "ARSNUM_" + year + "_" + appConfig.getSequenceNbr(31);
 					arSerialNumber.setSerialId(serialId);
@@ -827,19 +804,19 @@ public class AssetRegistryController {
 					if (session != null && session.isOpen()) {
 			            tx = session.beginTransaction();
 			            try {
-			                            query = session.createSQLQuery("Delete ASSET_REGISTRY where AR_ID = '"+ idForm +"'");
+			                            query = session.createNativeQuery("Delete ASSET_REGISTRY where AR_ID = '"+ idForm +"'");
 			                            query.executeUpdate();
 
-			                            query = session.createSQLQuery("delete AR_MODEL_PARTNUMBER  where AR_ID = '"+ idForm +"'");
+			                            query = session.createNativeQuery("delete AR_MODEL_PARTNUMBER  where AR_ID = '"+ idForm +"'");
 			                            query.executeUpdate();
 
-			                            query = session.createSQLQuery("delete AR_NODE  where AR_ID = '"+ idForm +"'");
+			                            query = session.createNativeQuery("delete AR_NODE  where AR_ID = '"+ idForm +"'");
 			                            query.executeUpdate();
 
-			                            query = session.createSQLQuery("delete AR_SERIAL_NUMBER  where AR_ID = '"+ idForm +"'");
+			                            query = session.createNativeQuery("delete AR_SERIAL_NUMBER  where AR_ID = '"+ idForm +"'");
 			                            query.executeUpdate();
 
-			                            query = session.createSQLQuery("delete AR_SITE  where AR_ID = '"+ idForm +"'");
+			                            query = session.createNativeQuery("delete AR_SITE  where AR_ID = '"+ idForm +"'");
 			                            query.executeUpdate();
 
 
@@ -884,19 +861,19 @@ public class AssetRegistryController {
 					//Get AR_ID from the listview form
 					idForm=idList[i];
 					
-			            	 query = session.createSQLQuery("Delete ASSET_REGISTRY where AR_ID = '"+ idForm +"'");
+			            	 query = session.createNativeQuery("Delete ASSET_REGISTRY where AR_ID = '"+ idForm +"'");
 		                     query.executeUpdate();
 
-		                     query = session.createSQLQuery("delete AR_MODEL_PARTNUMBER  where AR_ID = '"+ idForm +"'");
+		                     query = session.createNativeQuery("delete AR_MODEL_PARTNUMBER  where AR_ID = '"+ idForm +"'");
 		                     query.executeUpdate();
 
-		                     query = session.createSQLQuery("delete AR_NODE  where AR_ID = '"+ idForm +"'");
+		                     query = session.createNativeQuery("delete AR_NODE  where AR_ID = '"+ idForm +"'");
 		                     query.executeUpdate();
 
-		                     query = session.createSQLQuery("delete AR_SERIAL_NUMBER  where AR_ID = '"+ idForm +"'");
+		                     query = session.createNativeQuery("delete AR_SERIAL_NUMBER  where AR_ID = '"+ idForm +"'");
 		                     query.executeUpdate();
 
-		                     query = session.createSQLQuery("delete AR_SITE  where AR_ID = '"+ idForm +"'");
+		                     query = session.createNativeQuery("delete AR_SITE  where AR_ID = '"+ idForm +"'");
 		                     query.executeUpdate();
 
 					}
@@ -939,7 +916,7 @@ public class AssetRegistryController {
 			
 		try {
 				String requestValue = request.getParameter("requestValue");
-				query = session.createSQLQuery("select AR_ID, AR_STATUS, ITEM_CODE, ITEM_NAME from ASSET_REGISTRY where LOWER(AR_ID) like LOWER(:param1) "
+				query = session.createNativeQuery("select AR_ID, AR_STATUS, ITEM_CODE, ITEM_NAME from ASSET_REGISTRY where LOWER(AR_ID) like LOWER(:param1) "
 						+ "or LOWER(AR_STATUS) like LOWER(:param1) ORDER BY LAST_MODIFIED_DATE DESC");
 				query.setString("param1", "%"+requestValue+"%");
 		

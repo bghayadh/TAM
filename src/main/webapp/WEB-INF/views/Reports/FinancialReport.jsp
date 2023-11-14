@@ -41,6 +41,10 @@
 	    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/almgrid/Collapse.css" />
 		<script type="text/javascript" src="${pageContext.request.contextPath}/resources/almgrid/gridAppendRowsFinancialReport.js"></script>
 		
+		
+		 <!--Network_Index.css is included here in order to use the css of right click menu  -->
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/Network_Index.css">
+		
 	    
 	    <!--  MultiSelect Script -->
         <link href="${pageContext.request.contextPath}/resources/css/virtual-select.min.css" rel="stylesheet"    >
@@ -61,7 +65,7 @@
   color: orange;
   background-color: white;
   border-color: #939191f5;
-  transition: border 0.3s; /* Add a smooth transition effect for the border */
+  transition: border 0.3s; 
 }
 
 #showOnMap:hover{
@@ -212,7 +216,7 @@ max-width: 100%;
   <c:set var="pg" value="report" scope="session"  />
   <jsp:include page="../header.jsp"></jsp:include>
 	
-	<div Style=" left: 0; bottom: 0;" id="Financial Div">
+	<div Style=" left: 0; bottom: 0;" id="FinancialDiv">
 	<div class="container-fluid">     
 	     <div class="row"><p></p></div>
 			<div class="row second" >	
@@ -267,31 +271,18 @@ max-width: 100%;
 	                       <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton" Style="width:10px;">
     	                   <li class="dropdown-submenu"><a class="dropdown-item" id="edit" href="#">Edit</a> </li>
     	                   <li class="dropdown-submenu"><a class="dropdown-item" id="print" href="#">Print</a> </li>
-    	                   <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" id="export" href="#" >Export<span class="caret" Style="padding-left:30px;" ></span></a>
-                             
-                              <ul class="dropdown-menu dropdown-menu-left" id="dropLeft" Style="left:-12.5rem !important;  max-height: max-content !important; max-width: max-content !important;">
-                                 <li><a class="dropdown-item" id="gridExport" href="#" >Grid</a></li>                             
-                             </ul>
-                           </li>
-    	                  
+    	                   <li class="dropdown-submenu"><a class="dropdown-item" id="gridExport" href="#" >Export</a></li>
     	                   <li class="dropdown-submenu"><a class="dropdown-item" id="pdf" href="#">PDF</span></a> </li>
     	                   <li class="dropdown-submenu"><a class="dropdown-item" id="setup" href="#">Setup Auto Email</a> </li>
     	                   <li class="dropdown-submenu"><a class="dropdown-item" id="addCol" href="#">Add Column</a> </li>
     	                  </div>
 			           </div>  
-			            
 		        </div>
 		       
 		 			<div class="glyph" Style="white-space: nowrap;overflow: hidden;">
-			 			
-		                  <button type="button" id="generate" class="btn btn-primary BtnActive" > Generate Report </button> 
-			
-			
-			</div>
-			</div>
-		</div>
-			
-</div>
+		                  <button type="button" id="generate" class="btn btn-primary BtnActive" > Generate Report </button> 			
+					</div>
+			</div></div></div>
 
 <div class="container-fluid" >     
 	  
@@ -510,7 +501,14 @@ max-width: 100%;
 									<table id="gridTable" class="table table-striped table-bordered almgrid-table">
 										<thead>
 											<tr class="header">
-												<th></th>											
+												<th>
+												<li class="filter-dropdown dropdown">
+														<button disabled class="almgrid-filter" data-toggle="dropdown" style="display: none;">
+														 <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
+														</button>
+														<ul class="dropdown-menu filter-dropdown-ul"></ul>
+													</li>
+												</th>											
 												<th>FAR ID 
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown">
@@ -530,6 +528,22 @@ max-width: 100%;
 												</th>
 												
 												<th>Item Name
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown">
+														 <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
+														</button>
+														<ul class="dropdown-menu filter-dropdown-ul"></ul>
+													</li>
+												</th>
+												<th>Item Model
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown">
+														 <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
+														</button>
+														<ul class="dropdown-menu filter-dropdown-ul"></ul>
+													</li>
+												</th>
+												<th>Item Part Number
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown">
 														 <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
@@ -607,6 +621,14 @@ max-width: 100%;
 														<ul class="dropdown-menu filter-dropdown-ul"></ul>
 													</li>
 												</th>
+												<th>Vendor 
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> 
+														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
+														</button>
+														<ul class="dropdown-menu filter-dropdown-ul"></ul>
+													</li>
+												</th>
 												<th>Initial Cost
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown"> 
@@ -633,6 +655,9 @@ max-width: 100%;
 												</th>											
 											<tr>
 												<th><input type="text" disabled class="almgrid-search" style="display:none"></th>
+												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
+												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
+												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
@@ -697,7 +722,7 @@ max-width: 100%;
 	<div class="row second">	
 					<div class="col-md-1">
 						<div class="form-group">
-            <span style=" display: inline-block;width:98px;color: white; font-size: 13px; white-space: nowrap; padding: 7px 8px; background-color: #008991; border-radius: 5px;"><b>All FAR : </b></span>
+            <span style=" display: inline-block;width:98px;color: white; font-size: 13px; white-space: nowrap; padding: 7px 8px; background-color: #008991; border-radius: 5px;"><b>All FAR  </b></span>
 						</div>
 					</div>								
 			<div class="col-md-3">
@@ -732,7 +757,7 @@ max-width: 100%;
 
 					<div class="col-md-1">
 						<div class="form-group">
-          					  <span style="display: inline-block;width:98px;color: white; font-size: 13px; white-space: nowrap; padding: 7px 8px; background-color: #008991; border-radius: 5px;"><b>Fetched FAR :</b></span>
+          					  <span style="display: inline-block;width:98px;color: white; font-size: 13px; white-space: nowrap; padding: 7px 8px; background-color: #008991; border-radius: 5px;"><b>Fetched FAR </b></span>
 						</div>
 					</div>								
 			<div class="col-md-3">
@@ -765,7 +790,7 @@ max-width: 100%;
 		<div class="row second">
 					<div class="col-md-1">
 						<div class="form-group">
-            				<span style="display: inline-block;width:98px;color: white; font-size: 13px; white-space: nowrap; padding: 7px 8px; background-color: #008991; border-radius: 5px;"><b>Filtered FAR :</b></span>
+            				<span style="display: inline-block;width:98px;color: white; font-size: 13px; white-space: nowrap; padding: 7px 8px; background-color: #008991; border-radius: 5px;"><b>Filtered FAR </b></span>
 						</div>
 					</div>									
 			<div class="col-md-3">
@@ -862,8 +887,102 @@ max-width: 100%;
   
     </div>
   </div>
+  	<div class="container">
+		<div id="showClosePointsPopup" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  data-keyboard="false" data-backdrop="static">
+			<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+				<div class="modal-content" style="width: 900px">
+					<div class="modal-header" style="background-color: #2678CC ; height: 55px;">
+						<h5 class="modal-title" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px;">Close Points Search</h5>
+						<div style="float:right;">
+							<button type="button" name="closePopup" class="close" data-dismiss="modal">
+							<i class='fa fa-times'></i></button>
+							<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change'></i></a>
+						</div>
+					</div>
+					<div class="modal-body">
+						<div class="tab-content">
+							<p></p>
+							<div class="container-fluid" style="min-width: 50%;">
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<div class="input-group-prepend">
+												<span style="width: 50%;" class="input-group-text"><b>Longitude</b>
+												</span>
+												 <input type="text" id="closePtsLong" style="width: 50%;" class="form-control text-input" />
+											</div>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<div class="input-group-prepend">
+												<span style="width: 50%;" class="input-group-text"><b>Latitude</b>
+												</span>
+												 <input type="text" id="closePtsLat" style="width: 50%;" class="form-control text-input" />
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<div class="input-group-prepend">
+												<span style="width: 50%;" class="input-group-text"><b>Distance Range</b>
+												</span> <input type="text" id="closePtsDistanceRange" style="width: 50%;"  class="form-control text-input" />
+											</div>
+										</div>
+									</div> 
+									<div class="col-md-3">
+										<div class="form-group">
+											<div class="input-group-prepend">
+												<button id="searchClosePoints" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px;width:100%">Show Close Points</button>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-3">
+										<div class="form-group">
+											<div class="input-group-prepend">
+												<button id="captureNewCoordinate" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px;width:100%">Capture New Coordinate</button>
+											</div></div></div></div>					
+						<div class="tab-content" style="min-height: 200px">
+						<div class="tab-pane active" id="closePtsSites" role="tabpanel" >
+							<p></p>
+								<div class="container-fluid">
+									<div id="findCloseSitePts"></div>
+												<div class="row" style="height: 100px;">
+													<fieldset class="field_set">
+														<legend style="width: auto;" class="fieldset_legend"></legend>
+														<table id="findCloseSite" style="display: block; height: 150px; overflow-y: auto;" class="searchable sortable">
+														 <thead>
+															<tr>
+																<th style="min-width: 150px;" >Site ID</th>
+																<th style="min-width: 150px;">Site Name</th>
+																<th style="min-width: 100px;">Longitude</th>
+																<th style="min-width: 150px;">Latitude</th>
+																<th style="min-width: 100px;">Distance(km)</th>
+																<th style="min-width: 80px;"colspan="2">Driving Distance(km)</th>
+															</tr>
+															 </thead>
+															<tbody id="searchCloseSiteTBody"></tbody>
+														</table>
+													</fieldset></div></div>
+									        <div id="closeSiteTotal" Style="Padding-top: 90px;"><b>Total Sites:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="totalCloseSite" name="totalCloseSite" readonly>	 </div>
+										</div></div></div></div>
+						<div class="modal-footer"></div>
+					</div></div></div></div></div> 	
+
+
+
+<menu class="menu" id="mapMenu">
+		<li class="menu-item mapMenuItem">
+			<button type="button" id="showClosePoints" class="menu-btn"> <i class="fa fa-paste"></i> <span class="menu-text">Show Close Points</span></button>
+		</li>
+	</menu>
 </div>
 
+	
+
+ 
 </body>
 
 <script>
@@ -875,6 +994,8 @@ var mapFlag="0"; // used to check if the markers are set on map
 var filteredSitesGrid=[]; // used in draw on map 
 var markerClusterFarSites ;
 var infoWindow;
+var MapMenu;
+var showCloseDistinctSites =[]; // used in show close point to remove duplicate sites
 
 function initMap() {
 	
@@ -912,8 +1033,9 @@ function initMap() {
 	    map.controls[google.maps.ControlPosition.LEFT_CENTER].push(DefaultZoomDiv);
 
 	   
-	    $("#legendDiv").toggle();
+	    $("#legendDiv").toggle(); // to open the legend 
 
+	 // Define the cluster
 	 markerClusterFarSites = new MarkerClusterer();
 	 markerClusterFarSites.setMap(map);
 
@@ -932,11 +1054,61 @@ function initMap() {
 	 	}                   
 	 });
 
-	 infoWindow = new google.maps.InfoWindow();
-	 getLongLatMouseMove(map); 
+	 infoWindow = new google.maps.InfoWindow(); // Define the info window to use it when clicking on marker
+
+	 getLongLatMouseMove(map); // Add long/lat above the map
+
+	
+	   
+	   //This is the map menu that will open when right click on the google map
+	    MenuMap = document.getElementById("mapMenu");
+	    google.maps.event.addListener(map, 'rightclick', function (e) {
+	    	for (prop in e) {
+	    		if (e[prop] instanceof MouseEvent) {
+				       ShowContextMenuGoolge(MenuMap, e[prop].clientX,e[prop].clientY); 
+			           break;
+			        }
+			    }   
+	    e.stop();
+	    });
 	 
-	 
+	    google.maps.event.addListener(map, 'click', function () {	
+	       HideContextMenuGoolge(MenuMap);
+	    });	
+	     
 }//end initMap
+
+function ShowContextMenuGoolge(ContextMenu, eventX, eventY) {
+
+    // Calculate the actual position for the context menu
+    let x = eventX + window.scrollX;
+    let y = eventY + window.scrollY;
+
+    // Adjust the position if it goes outside the window bounds
+    const mw = ContextMenu.offsetWidth;
+    const mh = ContextMenu.offsetHeight;
+
+    const windowWidth = window.innerWidth + window.scrollX;
+    const windowHeight = window.innerHeight + window.scrollY;
+
+    if (x + mw > windowWidth) {
+        x = windowWidth - mw;
+    }
+
+    if (y + mh > windowHeight) {
+        y = windowHeight - mh;
+    }
+
+    ContextMenu.style.top = y + "px";
+    ContextMenu.style.left = x + "px";
+    ContextMenu.classList.add('show-menu');
+}
+
+function HideContextMenuGoolge(ContextMenu) {
+    ContextMenu.classList.remove('show-menu');
+
+}
+
 
 //Add legend button under zoom control on map
 function ShowHideMapLegend(controlDiv, map) {
@@ -1035,7 +1207,7 @@ VirtualSelect.init({
 
 var date = new Date();
 date.setDate(date.getDate() );
-date.setFullYear(date.getFullYear() - 1); // Set the year one year before
+date.setFullYear(date.getFullYear() - 1); // Set the date one year before
 date.setHours( 0,0,0,0 );
 
 var dateEnd = new Date();
@@ -1058,7 +1230,8 @@ $(document).ready(function() {
     var ReportArrayGlobal = ${financialReportList};
     var exportArrayGrid = []; // for export 
     
-
+   
+    
     var almgrid = new AlmgridTable({
         tableId: "gridTable",
         dataArray: ReportArrayGlobal,
@@ -1072,21 +1245,31 @@ $(document).ready(function() {
 	        $(gridContainer).attr('id', gridContainerId);
 	        $(tableBody).empty();
 
+
+	        // Clear the map when the data in grid is filtered
 	        if (typeof markerClusterFarSites !== 'undefined' && markerClusterFarSites !== null) {
-	       		markerClusterFarSites.clearMarkers(); // to clear the map when the data in grid is filtered
+	       		markerClusterFarSites.clearMarkers();
 				var center=new google.maps.LatLng(1,38);
 		        map.setCenter(center);
 				map.setZoom(6);  
 			}
 	       
 	       
-   		 	distinctSites =[];
-   			markersFarSites=[];
-		 	mapFlag="0";
-   		 	$('.showHideSitesCheckbox').prop('checked', false);
-			$(".showHideSitesCheckbox").attr('disabled', true);
-	         document.getElementById("sitesCount").textContent = "";      
-				
+	         //Clear all arrays and inputs related to map when the data in grid is filtered
+	   		 	distinctSites =[];
+	   			markersFarSites=[];
+			 	mapFlag="0";
+	   		 	$('.showHideSitesCheckbox').prop('checked', false);
+				$(".showHideSitesCheckbox").attr('disabled', true);
+		         document.getElementById("sitesCount").textContent = "";      
+
+		        //Clear the table and all inputs in show close points popup when the data in grid is filtered
+				 $("#searchCloseSiteTBody").empty();
+				 $("#searchCloseSiteTBody").html("");
+				 $("#closePtsDistanceRange").val("");
+				 $("#totalCloseSite").val("");
+				 document.getElementById("findCloseSitePts").innerHTML = "";
+	    
 	        
 	        if (dataArray.length > 0) {
 		        var initCost=0,netCost=0,accuDepr=0;
@@ -1097,7 +1280,7 @@ $(document).ready(function() {
 	     		var data = [];
 	     	    exportArrayGrid = [];
 	    		data.push('\r');
-	       		data.push(["FAR ID", "Item Code", "Item Name", "Last Modified Date","Item Serial Number","Item Name Register","PO ID","Site ID","Site Name","Longitude","Latitude","Initial Cost","Net Cost","Accumulated Depreciation"]);
+	       		data.push(["FAR ID", "Item Code", "Item Name", "Item Model","Item Part Number","Last Modified Date","Item Serial Number","Item Name Register","PO ID","Site ID","Site Name","Longitude","Latitude","Vendor","Initial Cost","Net Cost","Accumulated Depreciation"]);
 
 	       		filteredSitesGrid = dataArray; // used in draw on map 
 	       		
@@ -1196,6 +1379,7 @@ $(document).ready(function() {
             
          document.getElementById("sitesCount").textContent = "("+distinctSites.length+")";      
 		 map.setZoom(6); 
+		 
 		//Scroll to the map div
 		 document.getElementById("headingTwo").scrollIntoView({ behavior: "smooth" });
 		 
@@ -1225,9 +1409,6 @@ $(document).ready(function() {
 	}); // end clear fct
 
 
-
-
-	
 	 // Get the form fields and hidden div
     var circleRangeCheckbox = $("#circleRange");
     var rectangleRangeCheckbox = $("#strtEndCoordinate");
@@ -1270,26 +1451,41 @@ $(document).ready(function() {
 		  var strtEndCheckbox = document.getElementById("strtEndCoordinate").checked;
 		  var circleRangeCheckbox = document.getElementById("circleRange").checked;
 
+		 //Disable and uncheck the checkbox in legend
 		 $('.showHideSitesCheckbox').prop('checked', false);
 		 $(".showHideSitesCheckbox").attr('disabled', true);
+
+		 // Clear the map and array related to map
 		 markerClusterFarSites.clearMarkers();	
 		 markersFarSites=[];	  
 		 mapFlag="0";
+		 document.getElementById("sitesCount").textContent = "";
 		 
+
+		 //Clear the table and all inputs in show close points popup
+		 $("#searchCloseSiteTBody").empty();
+		 $("#searchCloseSiteTBody").html("");
+		 $("#closePtsDistanceRange").val("");
+		 $("#totalCloseSite").val("");
+		 document.getElementById("findCloseSitePts").innerHTML = "";
+		 
+
+		 //Recenter the map
 		 var center=new google.maps.LatLng(1,38);
 	     map.setCenter(center);
 		 map.setZoom(6);  
 		       
-		 document.getElementById("sitesCount").textContent = "";
-		$("#generateLoaderDiv").show();
+		$("#generateLoaderDiv").show(); // Show the loading data div
 		  
 		  
 		$("#gridTable").remove();
 		$("#tableGrid").append('<table id="gridTable" class="table table-striped table-bordered almgrid-table">'
-				+'<thead><tr class="header"><th></th><th>FAR ID<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> '
+				+'<thead><tr class="header"><th><li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown" disabled style="display:none;"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th><th>FAR ID<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> '
 				+'<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
 					+'<th>Item Code<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
 					+'</ul></li></th><th>Item Name<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
+					+'</ul></li></th><th>Item Model<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
+					+'</ul></li></th><th>Item Part Number<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
 					+'</ul></li></th><th>Last Modified Date<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i	class="fa fa-list almgrid-filter-i"	aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
 					+'</ul></li></th><th> Item Serial Number<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul">'
 					+'</ul></li></th><th> Item Name Register<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul">'
@@ -1302,6 +1498,8 @@ $(document).ready(function() {
 					+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'	
 					+'<th>Latitude<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
 					+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'	
+					+'<th>Vendor<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
+					+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'	
 					+'<th>Initial Cost<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
 					+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'	
 					+'<th>Net Cost<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
@@ -1311,6 +1509,9 @@ $(document).ready(function() {
 					
 					+'<tr>'
 					+'<th><input type="text" disabled class="almgrid-search" style="display:none"></th>'
+					+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
+					+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
+					+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
 					+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
 					+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
 					+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
@@ -1408,14 +1609,16 @@ $(document).ready(function() {
          			        $(gridContainer).attr('id', gridContainerId);
          			        $(tableBody).empty();
 
+         			     // Clear the map when the data in grid is filtered
          			       if (typeof markerClusterFarSites !== 'undefined' && markerClusterFarSites !== null) {
-         			       		markerClusterFarSites.clearMarkers(); // to clear the map when the data in grid is filtered
+         			       		markerClusterFarSites.clearMarkers(); 
          						var center=new google.maps.LatLng(1,38);
          				        map.setCenter(center);
          						map.setZoom(6);  
          					}
          			       
-         			       
+
+         			       //Clear all arrays and inputs related to map when the data in grid is filtered
          		   		 	distinctSites =[];
          		   			markersFarSites=[];
          				 	mapFlag="0";
@@ -1423,8 +1626,16 @@ $(document).ready(function() {
          					$(".showHideSitesCheckbox").attr('disabled', true);
          			         document.getElementById("sitesCount").textContent = "";      
 
-         			        
-         			        if (dataArray.length > 0) {
+         			        //Clear the table and all inputs in show close points popup when the data in grid is filtered
+         					 $("#searchCloseSiteTBody").empty();
+         					 $("#searchCloseSiteTBody").html("");
+         					 $("#closePtsDistanceRange").val("");
+         					 $("#totalCloseSite").val("");
+         					 document.getElementById("findCloseSitePts").innerHTML = "";
+
+
+         					 
+         			     if (dataArray.length > 0) {
   					 
   	                       var initCost=0,netCost=0,accuDepr=0;
   			               var ArrayKeys = Object.keys(dataArray[0]);
@@ -1434,13 +1645,12 @@ $(document).ready(function() {
   			       		    var data = [];
   			       	       exportArrayGrid = [];
   			       		   data.push('\r');
-  			       		   data.push(["FAR ID", "Item Code", "Item Name", "Last Modified Date","Item Serial Number","Item Name Register","PO ID","Site ID","Site Name","Longitude","Latitude","Initial Cost","Net Cost","Accumulated Depreciation"]);
+  			       		   data.push(["FAR ID", "Item Code", "Item Name","Item Model","Item Part Number", "Last Modified Date","Item Serial Number","Item Name Register","PO ID","Site ID","Site Name","Longitude","Latitude","Vendor","Initial Cost","Net Cost","Accumulated Depreciation"]);
 
   	  				       filteredSitesGrid = dataArray; // used in draw on map 
   	  			       		
   			       		
   			           for (var i = 0; i < dataArray.length; i++) {
-  							 // for export 
 		          				data.push('\r');
 
   			               for (var j = 0; j < ArrayKeys.length; j++) {
@@ -1533,61 +1743,100 @@ $(document).ready(function() {
 	  });	  
 
 
-
-	  $('#export').on('click', function(e) {		
-		if (!$(this).next().hasClass('show')) {
-              $(this).parents('.dropdown-menu').first().find('.show').removeClass("show");
-          }
-
-		  var $subMenu = $(this).next(".dropdown-menu");
-          $subMenu.toggleClass('show');
-          $(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function(e) {
-              $('.dropdown-submenu .show').removeClass("show");
-          });
-          return false;
-		 });
-
 		$('#gridExport').click(function(){
-			$(this).parents('#dropLeft').removeClass("show");
-			downloadCSVFile(exportArrayGrid, "FinancialReportGrid");
-      	});
-
-		// clicking outsie menu div close ul     
-		var specifiedElement = document.getElementById('notifactionDropdown');
-
-		document.addEventListener('click', function(event) {
-		   var isClickInside = specifiedElement.contains(event.target);
-
-			if (!isClickInside) {
-			   $('#dropLeft').removeClass("show");
-		    }
-		});	
-
-		function downloadCSVFile(csv, filename) {
-			  const csvContent = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+			  const csvContent = 'data:text/csv;charset=utf-8,' + encodeURIComponent(exportArrayGrid);
 			  const downloadLink = document.createElement('a');
 			  downloadLink.setAttribute('href', csvContent);
-			  downloadLink.setAttribute('download', filename);
+			  downloadLink.setAttribute('download', "FinancialReportGrid");
 
 			  document.body.appendChild(downloadLink);
 			  downloadLink.click();
 			  document.body.removeChild(downloadLink);
-	 }
-								
- /*   function downloadCSVFile(csv, filename) {
-    	var csv_file, download_link;
+      	});
 
-    	csv_file = new Blob([csv], {type: "text/csv"});
-    	download_link = document.createElement("a");
-    	download_link.download = filename;
-    	download_link.href = window.URL.createObjectURL(csv_file);
-    	download_link.style.display = "none";
-    	document.body.appendChild(download_link);
-    	download_link.click();
-    }*/
+		//To hide the right click menu when clicking on the page
+		$("#FinancialDiv").on('click', function(){
+			HideContextMenuGoolge(MenuMap);
+		});
+		
  
+		$("#showClosePoints").on('click',function(){
+			
+			//Get long and lat
+			window["showClosePointsLong"]=getCoords().split(" ")[1];
+			window["showClosePointsLat"]=getCoords().split(" ")[0];	
+
+			// Check if tbody is empty to set the new coordinates
+			var tbody = document.getElementById("searchCloseSiteTBody");
+			if (tbody.childElementCount == 0) {
+				$("#closePtsLong").val(window["showClosePointsLong"]);
+				$("#closePtsLat").val(window["showClosePointsLat"]);
+			} 
+			
+			$("#showClosePointsPopup").modal('show');
+		 });	
+
+		$("#captureNewCoordinate").on('click',function(){
+			$("#searchCloseSiteTBody").empty();
+			$("#searchCloseSiteTBody").html("");
+			$("#closePtsDistanceRange").val("");
+			$("#totalCloseSite").val("");
+			document.getElementById("findCloseSitePts").innerHTML = "";			
+			$("#closePtsLong").val(window["showClosePointsLong"]);
+			$("#closePtsLat").val(window["showClosePointsLat"]);
+
+	   });	
+
+		 $("#searchClosePoints").on('click',function(){
+				
+			var closePtLong = $("#closePtsLong").val();
+			var closePtLat = $("#closePtsLat").val();
+			var closePtDistRange = $("#closePtsDistanceRange").val();
+				
+			if(closePtDistRange =="" || closePtLong =="" || closePtLat == "" ) {
+				alert ("Some input fields are missing!")
+			}
+			else if (isNaN(closePtLong) ==true || isNaN(closePtLat) ==true || isNaN(closePtDistRange) ==true ) {
+				alert ("Incorrect Format ! Longitude, Latitude and Distance Range should be numbers.")
+			}
+			else {
+				
+				var pointDist=0;
+				var closePointsDataTemp =[];
+				showCloseDistinctSites =[];
+				closePointsData=[];
+				
+				//Loop through all sites to get the distance and filter the closest sites
+				for(var x=0;x<filteredSitesGrid.length;x++) {
+					
+					// Check if site already appended to avoid the duplication ( because filteredSitesGrid contains repeated sites)
+					if(showCloseDistinctSites.includes(filteredSitesGrid[x]["siteID"])==false) {
+					
+						showCloseDistinctSites.push(filteredSitesGrid[x]["siteID"]);
+						pointDist =Number(haversineDistance(closePtLat,closePtLong,filteredSitesGrid[x]["latitude"],filteredSitesGrid[x]["longitude"]));
+
+					
+					if (pointDist < closePtDistRange) {
+						
+					    closePointsDataTemp = filteredSitesGrid[x];//Add all site details to the temp array
+						closePointsDataTemp.distance = (pointDist);// Append the calculated distance to the array 
+						closePointsData.push(closePointsDataTemp);// Add the temp array to the main array that will contains all closest sites to append after
+						closePointsDataTemp =[];//Clear the temp array to use it on next iteration
+					}
+				  }
+				}
+						appendSitesClosePoints(closePointsData);
+						$("#totalCloseSite").val(closePointsData.length);
+						closePointsData=[]; // clear the array used to append the rows in popup
+						closePointsDataTemp =[];				
+					}
+
+			});	
 				    
 });
+
+
+
 function createSiteMarker(siteID,longitude,latitude,siteName) {
 
 	markerId=siteID;		
@@ -1685,16 +1934,104 @@ function panToSite(ID,rowIndex){
 		document.getElementById("headingTwo").scrollIntoView({ behavior: "smooth" });
 				
 }
+
 function getLongLatMouseMove(map){		  
 	map.addListener("mousemove", (mapsMouseEvent) => {
-		
 	   $("#mapLongLat").val(JSON.stringify(mapsMouseEvent.latLng.toJSON().lat.toFixed(13) +" || "
 	    	    +mapsMouseEvent.latLng.toJSON().lng.toFixed(13), null, 2));	    
 	});					 
 }
 
+function getCoords(){
+	var coords=document.getElementById('mapLongLat');
+	coords=coords.value.slice(1,-1).split(" || ", 2); //This to remove the first and last double quote characters and create array of size 2 based on the separator.
+	coordsPrime=coords[0] + " " +coords[1];	
+	return coordsPrime;
+}
 
+function haversineDistance(latitude,longitude,pointLat,pointLong) {
+	var R = 3958.8;
+	var latitude = latitude * (Math.PI/180); 
+	var pointLat = pointLat * (Math.PI/180); 
+	var difflat = pointLat-latitude; 
+	var difflon = (pointLong-longitude) * (Math.PI/180);
 	
+	var d = 2 * R * Math.asin(Math.sqrt(Math.sin(difflat/2)*Math.sin(difflat/2)+Math.cos(latitude)*Math.cos(pointLat)*Math.sin(difflon/2)*Math.sin(difflon/2)));
+	return Math.round(1000*d)/1000;
+}
+
+function appendSitesClosePoints(sitesClosePtArray) {
+
+	var markupSite="";
+	document.getElementById("findCloseSitePts").innerHTML = "";
+							
+	if (sitesClosePtArray.length==0){
+		document.getElementById("findCloseSitePts").innerHTML = '<p style=" color:#ff0000;font-size: 1.4em;">There is no result</p>';
+	}
+	else {
+		for(var i =0 ; i<sitesClosePtArray.length;i++){
+			markupSite +="<tr style='height: 30px;'><td>"+sitesClosePtArray[i]["siteID"]+"</td><td  style='min-width:250px;'>"+sitesClosePtArray[i]["siteName"]+"</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+sitesClosePtArray[i]["longitude"]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+sitesClosePtArray[i]["latitude"]+"' readonly></input ></td><td style='width:100px;'>"+(sitesClosePtArray[i]["distance"])+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistanceClosePoint(this)'>Get Distance</button> </td></tr>"
+		}
+	}						  
+	$("#searchCloseSiteTBody").append(markupSite);
+    drivingDistance("findCloseSite");
+	makeAllSortable();		
+}
+function makeAllSortable(parent) {
+	parent = parent || document.body;
+	var t = parent.getElementsByTagName('table'), i = t.length;
+	while (--i >= 0) makeSortable(t[i]);
+}
+function drivingDistance(tableId) {
+	for (indxRow = 0; indxRow < 5 ; indxRow++){
+		 $("#"+tableId+" >tbody").find("tr").eq(indxRow).find('td[name="DDistanceB"]').children('button').click();
+    }
+}
+function makeSortable(table) {
+	var th = table.tHead, i;
+	th && (th = th.rows[0]) && (th = th.cells);
+	if (th) i = th.length;
+	else return; // if no `<thead>` then do nothing
+	while (--i >= 0) (function (i) {
+		var dir = 1;
+		th[i].addEventListener('click', function () {sortTable(table, i, (dir = 1 - dir))});
+	}(i));
+}
+function getDrivingDistanceClosePoint(e) {
+	if (typeof(e) == "object") {
+		var directionsService = new google.maps.DirectionsService();
+		
+		var lat = $(e).parent().parent().children('td[name="LATT"]').children('input').val();
+		var lng = $(e).parent().parent().children('td[name="LONGG"]').children('input').val();
+		
+		const originept = {lat: parseFloat(parseFloat($("#closePtsLat").val())), lng: parseFloat(parseFloat($("#closePtsLong").val()))};
+		const nextpt = {lat: parseFloat(lat), lng: parseFloat(lng)};
+		var request  = {
+			origin: originept,
+			destination: nextpt,
+			travelMode  : google.maps.DirectionsTravelMode.DRIVING
+		}
+		directionsService.route(request, function(response, status) {
+			if ( status == google.maps.DirectionsStatus.OK ) {
+				var resultt= ( response.routes[0].legs[0].distance.value) /1000 ;
+
+			   }
+			else {
+				resultt= "no Root";
+			}
+			$(e).parent().parent().children('td[name="DDistanceB"]').children('button').hide();
+			$(e).parent().parent().children('td[name="DDistance"]').children('input').show();
+			$(e).parent().parent().children('td[name="DDistance"]').children('label').empty();
+			$(e).parent().parent().children('td[name="DDistance"]').children('label').append(resultt);
+			makeAllSortable();
+		  });
+		  
+	} else {
+		return false;
+	}
+
+}
+
 </script>
 <script
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJXAds-Gt4I39hRFHhYHMEg3XcBqihYoo&callback=initMap&libraries=drawing&v=weekly"

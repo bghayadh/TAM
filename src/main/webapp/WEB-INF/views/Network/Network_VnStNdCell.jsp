@@ -532,7 +532,7 @@ function Create_TreeSites(id){
 	//if(!sitesNCreated.includes(selectedItem))
 	//	{
 	//	sitesNCreated.push(selectedItem);	
-	var siteChildren=$("#"+selectedItem+"_f") .find(' > ul > li').length;
+	var siteChildren=$("#" + selectedItem+"_"+vendor+"_f").find(' > ul > li').length;
 	if (siteChildren == 0) {
 		if(arrayParam[0]==1){
 			var paramEnterprise = true;

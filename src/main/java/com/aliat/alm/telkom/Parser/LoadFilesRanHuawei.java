@@ -99,6 +99,8 @@ public class LoadFilesRanHuawei {
 			nodePortSeq = 0, nodeHostVerSeq = 0, nodeCabinetSeq = 0, nodeAccessorySeq = 0, nodeHostSeq = 0,
 			nodeSubRackSeq = 0, nodeGCellSeq = 0, nodeBTSSeq = 0, nodeUCellSeq = 0, nodeAntennaSeq = 0,
 			nodeLCellSeq = 0, nodeRRNSeq = 0, nodeENodeBSeq = 0, nodeNodeBSeq = 0, nodeNBInterfaceSeq = 0;
+	
+	static ArrayList<String> NodeIDArr = new ArrayList<String>();
 
 	public static void main(String[] args, String vendor, String domain, String sub_domain, String sub_domainType)
 			throws Exception {
@@ -107,6 +109,9 @@ public class LoadFilesRanHuawei {
 		// from almconfig.dat
 		// objReader = new BufferedReader(new
 		// FileReader(System.getProperty("user.dir")+"\\"+"almconfig.dat"));
+		provider = vendor;
+		Domain = domain;
+		
 		Resource ConfigResource = new ClassPathResource("almconfig.dat");
 		File configfile = ConfigResource.getFile();
 		FileReader fr = new FileReader(configfile);
@@ -138,7 +143,7 @@ public class LoadFilesRanHuawei {
 				parserDbUsername = splittedStr[2];
 				parserDbPassword = splittedStr[3];
 			}
-
+			
 			if (currentLine.contains("readExcelFileRanHWFrom")) {
 				splittedStr = currentLine.split(";", -1);
 				readExcelFileFrom = splittedStr[1];
@@ -146,9 +151,9 @@ public class LoadFilesRanHuawei {
 				data = readExcelFileFrom.split("/", -1);
 				folderFrom = data[data.length - 1];
 				System.out.println(" folderFrom : " + folderFrom);
-				provider = vendor;
-				Domain = domain;
+				
 			}
+			
 
 			if (currentLine.contains("readBscGSMFileRanHWFrom")) {
 
@@ -230,10 +235,12 @@ public class LoadFilesRanHuawei {
 		String logsFileName = "ParserLogHuawei-" + dateTimeFormatter.format(now) + ".log";
 		currentYear = dateTimeFormatter.format(now).substring(0, 4); // Get the year to use it when creating PK
 
+		
 		// Add excel sheets in an array of file objects to iterate over it and read it
 		File excelFolder = new File(readExcelFileFrom);
 		File[] listOfExcelFiles = excelFolder.listFiles();
 		String fullFileName = null;
+	
 
 		// Add BSC GSM xml documents in an array of file objects to iterate over it and
 		// read it
@@ -293,32 +300,12 @@ public class LoadFilesRanHuawei {
 			insertStmt.close();
 			logger.info("Load RAN HUAWEI Files in process...");
 
-			// Start reading each excel sheet from the array
-			for (File file : listOfExcelFiles) {
-				if (file.isFile()) {
-					fullFileName = file.getName().toString();
-
-					String[] data = fullFileName.replace(".", "_").split("_");
-					fileName = data[0];
-					fileType = data[1];
-
-					readExcelSheetFiles(fullFileName);
-
-					File excelFileSource = new File(readExcelFileFrom + "/" + file.getName());
-					File excelFileDest = new File(copyExcelFileTo + "/" + file.getName() + ".bkp");
-
-					copyFiles(excelFileSource, excelFileDest);
-					deleteFiles(readExcelFileFrom + "/" + file.getName());
-
-				}
-			}
-
 			// Start reading each BSC GSM xml document from the array
 			for (File file : listOfBscGSMFiles) {
 				if (file.isFile()) {
 					fullFileName = file.getName().toString();
 
-					String[] data = fullFileName.replace(".", "_").split("_");
+					String[] data = fullFileName.split("\\.", -1);;
 					fileName = data[0];
 					fileType = data[1];
 
@@ -338,7 +325,7 @@ public class LoadFilesRanHuawei {
 				if (file.isFile()) {
 					fullFileName = file.getName().toString();
 
-					String[] data = fullFileName.replace(".", "_").split("_");
+					String[] data = fullFileName.split("\\.", -1);;
 					fileName = data[0];
 					fileType = data[1];
 
@@ -358,7 +345,7 @@ public class LoadFilesRanHuawei {
 				if (file.isFile()) {
 					fullFileName = file.getName().toString();
 
-					String[] data = fullFileName.replace(".", "_").split("_");
+					String[] data = fullFileName.split("\\.", -1);;
 					fileName = data[0];
 					fileType = data[1];
 
@@ -378,7 +365,7 @@ public class LoadFilesRanHuawei {
 				if (file.isFile()) {
 					fullFileName = file.getName().toString();
 
-					String[] data = fullFileName.replace(".", "_").split("_");
+					String[] data = fullFileName.split("\\.", -1);;
 					fileName = data[0];
 					fileType = data[1];
 
@@ -392,7 +379,28 @@ public class LoadFilesRanHuawei {
 
 				}
 			}
+			
+			// Start reading each excel sheet from the array
+				for (File file : listOfExcelFiles) {
+					if (file.isFile()) {
+						fullFileName = file.getName().toString();
 
+						String[] data = fullFileName.replace(".", "_").split("_");
+						fileName = data[0];
+						fileType = data[1];
+
+						readExcelSheetFiles(fullFileName);
+
+						File excelFileSource = new File(readExcelFileFrom + "/" + file.getName());
+						File excelFileDest = new File(copyExcelFileTo + "/" + file.getName() + ".bkp");
+
+						copyFiles(excelFileSource, excelFileDest);
+						deleteFiles(readExcelFileFrom + "/" + file.getName());
+
+					}
+				}
+						
+			System.out.println("number of total nodes "+NodeIDArr.size());
 			GetDuplicateFileName("RAN", provider);
 			System.out.println("Clean Dupliate Data from Tables Completed  ");
 			logger.info("Clean Dupliate Data from Tables Completed  ");
@@ -429,42 +437,63 @@ public class LoadFilesRanHuawei {
 		ResultSet rsinit2 = stmnt.executeQuery(sqlStmtinit2);
 
 		while (rsinit2.next()) {
-
 			NodeSeq = rsinit2.getInt("NODE_ACTIVE");
-			// records.size()-10) is used to remove the unnecessary header rows in the csv file
-			stmtp = almCon.prepareStatement("UPDATE SEQ_TABLE SET NODE_ACTIVE = NODE_ACTIVE +" + (records.size() - 10));
-			stmtp.executeUpdate();
-			stmtp.close();
 		}
 
-		for (int i = 10; i < records.size(); i++) {
-			nodePK = year + "_NODE_HW_" + Domain + "_" + NodeSeq;
-			rsinit2.close();
-			stmnt.close();
-			wareID = "";
-			wareName = "";
-			longitude = "";
-			latitude = "";
-			siteID = "";
-			// if the cell of the csv file contains _ then it may contain site ID
-			if (records.get(i).get(0).contains("_")) {
-				siteID = records.get(i).get(0).split("_")[0];
-				char charArray[] = siteID.toCharArray();
-				// check if the first character is digit and last character is char then it is a
-				// site id.
-				if (Character.isDigit(charArray[0]) && !Character.isDigit(charArray[siteID.length() - 1])) {
-					String siteDetailsStatement = "select WARE_ID,WARE_NAME,LONGITUDE,LATITUDE from WAREHOUSE WHERE SITE_ID='"
-							+ siteID + "'";
-					stmnt = almCon.createStatement();
-					ResultSet siteDetailsResultSet = stmnt.executeQuery(siteDetailsStatement);
-					while (siteDetailsResultSet.next()) {
-						wareID = siteDetailsResultSet.getString("WARE_ID");
-						wareName = siteDetailsResultSet.getString("WARE_NAME");
-						longitude = siteDetailsResultSet.getString("LONGITUDE");
-						latitude = siteDetailsResultSet.getString("LATITUDE");
+		for (int i = 7; i < records.size(); i++) {
+			
+			if(NodeIDArr.contains( records.get(i).get(0))) {
+				System.out.println("in update "+ i +" NODE NAME "+ records.get(i).get(0));
+				
+				stmtp = parserCon.prepareStatement("UPDATE NODE_ACTIVE  SET IP_ADDRESS ='" +  records.get(i).get(2)
+						+ "',SOFTWARE_VERSION = '" +  records.get(i).get(4) + "',STATUS ='"+  records.get(i).get(16) + "',PART_NUMBER='"+ records.get(i).get(21)+"' where"
+								+ " NODE_NAME='"+records.get(i).get(0)+"'");
+				
+				stmtp.executeUpdate();
+				stmtp.close();
+				
+			}
+			
+			else {
+				nodePK = year + "_NODE_HW_" + Domain + "_" + NodeSeq;
+				
+				stmtp = almCon.prepareStatement("UPDATE SEQ_TABLE SET NODE_ACTIVE = NODE_ACTIVE + 1");
+				stmtp.executeUpdate();
+				stmtp.close();
+				
+				rsinit2.close();
+				stmnt.close();
+				wareID = "";
+				wareName = "";
+				longitude = "";
+				latitude = "";
+				siteID = "";
+				// if the cell of the csv file contains _ then it may contain site ID
+				if (records.get(i).get(0).contains("_")) {
+					siteID = records.get(i).get(0).split("_")[0];
+					char charArray[] = siteID.toCharArray();
+					// check if the first character is digit and last character is char then it is a
+					// site id.
+					if (Character.isDigit(charArray[0]) && !Character.isDigit(charArray[siteID.length() - 1])) {
+						String siteDetailsStatement = "select WARE_ID,WARE_NAME,LONGITUDE,LATITUDE from WAREHOUSE WHERE SITE_ID='"
+								+ siteID + "'";
+						stmnt = almCon.createStatement();
+						ResultSet siteDetailsResultSet = stmnt.executeQuery(siteDetailsStatement);
+						while (siteDetailsResultSet.next()) {
+							wareID = siteDetailsResultSet.getString("WARE_ID");
+							wareName = siteDetailsResultSet.getString("WARE_NAME");
+							longitude = siteDetailsResultSet.getString("LONGITUDE");
+							latitude = siteDetailsResultSet.getString("LATITUDE");
+						}
+						siteDetailsResultSet.close();
+						stmnt.close();
+					} else {
+						wareID = "";
+						wareName = "";
+						longitude = "";
+						latitude = "";
+						siteID = "";
 					}
-					siteDetailsResultSet.close();
-					stmnt.close();
 				} else {
 					wareID = "";
 					wareName = "";
@@ -472,54 +501,67 @@ public class LoadFilesRanHuawei {
 					latitude = "";
 					siteID = "";
 				}
-			} else {
-				wareID = "";
-				wareName = "";
-				longitude = "";
-				latitude = "";
-				siteID = "";
+	
+				nodeName = records.get(i).get(0);
+				nodeModel = records.get(i).get(1);
+	
+				if ((nodeModel.contains("RNC")) && (nodeModel.contains("BSC"))) {
+					nodeType = "RNC";
+					tech2 = "0";
+				    tech3 = "1";
+					tech4 = "0";
+					tech5 = "0";
+				} else if ((nodeModel.contains("BSC")) && (nodeModel.contains("BSC"))) {
+					nodeType = "BSC";
+					tech2 = "1";
+				    tech3 = "0";
+					tech4 = "0";
+					tech5 = "0";
+				} else if (nodeModel.contains("OSS")) {
+					nodeType = "OSS";
+					tech2 = "0";
+				    tech3 = "0";
+					tech4 = "0";
+					tech5 = "0";
+				} else if (nodeModel.contains("BTS")) {
+					nodeType = "SRAN";
+					tech2 = "1";
+				    tech3 = "1";
+					tech4 = "0";
+					tech5 = "0";
+				} else {
+					nodeType = null;
+					tech2 = "0";
+				    tech3 = "0";
+					tech4 = "0";
+					tech5 = "0";
+				}
+	
+				// nodeModel = records.get(i).get(1);
+				IPaddress = records.get(i).get(2);
+				softwareVersion = records.get(i).get(4);
+				MACaddress = null;
+				partNumber = records.get(i).get(21);
+				commStatus = records.get(i).get(16);
+				adminStatus = records.get(i).get(22);
+				nodeId = records.get(i).get(2);
+				gateway = null;
+				unique_Node_ID = nodeId + "_HW";
+	
+				stmtp = parserCon.prepareStatement(
+						"insert into NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,ACTIVE_RECORD,LINE,WARE_ID,VENDOR,WARE_NAME,IP_ADDRESS,MAC_ADDRESS,SUB_DOMAIN,SOFTWARE_VERSION,STATUS_1,GATEWAY,LONGITUDE,LATITUDE,PART_NUMBER,SUB_DOMAIN_TYPE)"
+								+ "values('" + nodePK + "','" + unique_Node_ID + "','" + nodeId + "','" + nodeName + "','"
+								+ nodeType + "','" + Domain + "','" + nodeModel + "','" + tech2 + "','" + tech3 + "','"
+								+ tech4 + "','" + tech5 + "','" + siteID + "','" + circleId + "',sysdate,sysdate,'"
+								+ fileType + "','" + fileName + "','" + commStatus + "','1','1','" + wareID + "','"
+								+ provider + "','" + wareName + "','" + IPaddress + "','" + MACaddress + "','" + subDomain
+								+ "','" + softwareVersion + "','" + adminStatus + "','" + gateway + "','" + longitude
+								+ "','" + latitude + "','" + partNumber + "','" + subDomainType + "')");
+				stmtp.executeUpdate();
+				stmtp.close();
+	
+				NodeSeq++;
 			}
-
-			nodeName = records.get(i).get(0);
-			nodeModel = records.get(i).get(1);
-
-			if ((nodeModel.contains("RNC")) && (nodeModel.contains("BSC"))) {
-				nodeType = "RNC";
-			} else if ((nodeModel.contains("BSC")) && (nodeModel.contains("BSC"))) {
-				nodeType = "BSC";
-			} else if (nodeModel.contains("OSS")) {
-				nodeType = "OSS";
-			} else if (nodeModel.contains("BTS")) {
-				nodeType = "BTS";
-			} else {
-				nodeType = null;
-			}
-
-			// nodeModel = records.get(i).get(1);
-			IPaddress = records.get(i).get(2);
-			softwareVersion = records.get(i).get(4);
-			MACaddress = null;
-			partNumber = records.get(i).get(21);
-			commStatus = records.get(i).get(16);
-			adminStatus = records.get(i).get(22);
-			nodeId = records.get(i).get(2);
-			gateway = null;
-			unique_Node_ID = nodeId + "_HW";
-
-			stmtp = parserCon.prepareStatement(
-					"insert into NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,ACTIVE_RECORD,LINE,WARE_ID,VENDOR,WARE_NAME,IP_ADDRESS,MAC_ADDRESS,SUB_DOMAIN,SOFTWARE_VERSION,STATUS_1,GATEWAY,LONGITUDE,LATITUDE,PART_NUMBER,SUB_DOMAIN_TYPE)"
-							+ "values('" + nodePK + "','" + unique_Node_ID + "','" + nodeId + "','" + nodeName + "','"
-							+ nodeType + "','" + Domain + "','" + nodeModel + "','" + tech2 + "','" + tech3 + "','"
-							+ tech4 + "','" + tech5 + "','" + siteID + "','" + circleId + "',sysdate,sysdate,'"
-							+ fileType + "','" + fileName + "','" + commStatus + "','1','1','" + wareID + "','"
-							+ provider + "','" + wareName + "','" + IPaddress + "','" + MACaddress + "','" + subDomain
-							+ "','" + softwareVersion + "','" + adminStatus + "','" + gateway + "','" + longitude
-							+ "','" + latitude + "','" + partNumber + "','" + subDomainType + "')");
-			stmtp.executeUpdate();
-			stmtp.close();
-
-			NodeSeq++;
-
 		}
 
 	}
@@ -591,8 +633,124 @@ public class LoadFilesRanHuawei {
 						}
 					}
 				}
-			}
+			}///added
+			
+			String sqlStmtinit2 = "select NODE_ACTIVE from SEQ_TABLE";
+			stmnt = almCon.createStatement();
+			ResultSet rsinit2 = stmnt.executeQuery(sqlStmtinit2);
+			
+			while (rsinit2.next()) {
 
+				NodeSeq = rsinit2.getInt("NODE_ACTIVE");
+				// records.size()-10) is used to remove the unnecessary header rows in the csv file
+				stmtp = almCon.prepareStatement("UPDATE SEQ_TABLE SET NODE_ACTIVE = NODE_ACTIVE + 1");
+				stmtp.executeUpdate();
+				stmtp.close();
+			}
+			
+			rsinit2.close();
+			stmnt.close();
+			
+			nodePK = currentYear + "_NODE_HW_" + Domain + "_" + NodeSeq;
+			rsinit2.close();
+			stmnt.close();
+			wareID = "";
+			wareName = "";
+			longitude = "";
+			latitude = "";
+			siteID = "";
+			tech2 = "0";
+		    tech3 = "0";
+			tech4 = "0";
+			tech5 = "0";
+			if (tempNodeName.contains("_")) {
+				siteID = tempNodeName.split("_")[0];
+				char charArray[] = siteID.toCharArray();
+				// check if the first character is digit and last character is char then it is a
+				// site id.
+				if (Character.isDigit(charArray[0]) && !Character.isDigit(charArray[siteID.length() - 1])) {
+					String siteDetailsStatement = "select WARE_ID,WARE_NAME,LONGITUDE,LATITUDE from WAREHOUSE WHERE SITE_ID='"
+							+ siteID + "'";
+					stmnt = almCon.createStatement();
+					ResultSet siteDetailsResultSet = stmnt.executeQuery(siteDetailsStatement);
+					while (siteDetailsResultSet.next()) {
+						wareID = siteDetailsResultSet.getString("WARE_ID");
+						wareName = siteDetailsResultSet.getString("WARE_NAME");
+						longitude = siteDetailsResultSet.getString("LONGITUDE");
+						latitude = siteDetailsResultSet.getString("LATITUDE");
+					}
+					siteDetailsResultSet.close();
+					stmnt.close();
+				} else {
+					wareID = "";
+					wareName = "";
+					longitude = "";
+					latitude = "";
+					siteID = "";
+				}
+			} else {
+				wareID = "";
+				wareName = "";
+				longitude = "";
+				latitude = "";
+				siteID = "";
+			}
+			if(tempNodeType.contains("BTS")) {
+				nodeType="SRAN";
+				tech2 = "1";
+			    tech3 = "1";
+				tech4 = "0";
+				tech5 = "0";
+			}
+			else if(tempNodeType.contains("BSC") && tempNodeType.contains("GSM")) {
+				nodeType="BSC";
+				tech2 = "1";
+			    tech3 = "0";
+				tech4 = "0";
+				tech5 = "0";
+			}
+			else if(tempNodeType.contains("BSC") && tempNodeType.contains("UMTS")) {
+				nodeType="RNC";
+				tech2 = "0";
+			    tech3 = "1";
+				tech4 = "0";
+				tech5 = "0";
+			}
+			else if(tempNodeType.contains("OSS")) {
+				nodeType="OSS";
+			}
+			
+			
+			
+			
+			unique_Node_ID=ResultNode[0] + "_HW";
+			nodeId=ResultNode[0];
+			nodeName=tempNodeName;
+			nodeModel=tempNodeType;
+			commStatus="";
+			IPaddress="";
+			MACaddress="";
+			softwareVersion="";
+			adminStatus="";
+			gateway="";
+			partNumber="";
+			
+			NodeIDArr.add(nodeName);
+			stmtp = parserCon.prepareStatement(
+					"insert into NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,ACTIVE_RECORD,LINE,WARE_ID,VENDOR,WARE_NAME,IP_ADDRESS,MAC_ADDRESS,SUB_DOMAIN,SOFTWARE_VERSION,STATUS_1,GATEWAY,LONGITUDE,LATITUDE,PART_NUMBER,SUB_DOMAIN_TYPE)"
+							+ "values('" + nodePK + "','" + unique_Node_ID + "','" + nodeId + "','" + nodeName + "','"
+							+ nodeType + "','" + Domain + "','" + nodeModel + "','" + tech2 + "','" + tech3 + "','"
+							+ tech4 + "','" + tech5 + "','" + siteID + "','" + circleId + "',sysdate,sysdate,'"
+							+ fileType + "','" + fileName + "','" + commStatus + "','1','1','" + wareID + "','"
+							+ provider + "','" + wareName + "','" + IPaddress + "','" + MACaddress + "','" + subDomain
+							+ "','" + softwareVersion + "','" + adminStatus + "','" + gateway + "','" + longitude
+							+ "','" + latitude + "','" + partNumber + "','" + subDomainType + "')");
+			stmtp.executeUpdate();
+			stmtp.close();
+
+			
+			
+			////added end 
 			File fXmlFile = new File(folderName + "/" + filename);
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();

@@ -33,7 +33,7 @@ public class LoadFilesRanNec {
 
 	static String readFileNecFrom;
 	static String copyFileNecTo;
-	static int NodeSeq;
+	static int NodeSeq,CellSeq;
 	static int NodeBoardSeq, NodeBoardSeqTemp;
 
 	static BufferedReader objReader = null;
@@ -61,7 +61,7 @@ public class LoadFilesRanNec {
 	static String tech5 = "0";
 	static String vcodeid = "0";
 	static String boardID = "0";
-	static PreparedStatement stmtp, stmtp2;
+	static PreparedStatement stmtp, stmtp2,cellStm;
 	static Statement stmtp1;
 
 	static String nodeId = null;
@@ -80,6 +80,7 @@ public class LoadFilesRanNec {
 	static String MISSING = null, ApdevInfo = null, workMode = null, boardStatus = null, fromTransSrc = null,
 			fromTransID = null, toTransID = null, transType = null;
 	static String activeRecord = "1", line = null, almPosition = null, toTransType = null;
+	static String cellID,cellName,CellPK;
 
 	public static void main(String[] args, String vendor, String domain) throws Exception {
 
@@ -238,11 +239,12 @@ public class LoadFilesRanNec {
 		Calendar calendar = new GregorianCalendar();
 		int year = calendar.get(Calendar.YEAR);
 
-		String sqlStmtinit = "select NODE_ACTIVE from SEQ_TABLE";
+		String sqlStmtinit = "select NODE_ACTIVE,NODE_LCELL from SEQ_TABLE";
 		stmtp1 = conalm.createStatement();
 		ResultSet rsinit = stmtp1.executeQuery(sqlStmtinit);
 		while (rsinit.next()) {
 			NodeSeq = rsinit.getInt("NODE_ACTIVE");
+			CellSeq=rsinit.getInt("NODE_LCELL");
 		}
 		stmtp1.close();
 		rsinit.close();
@@ -282,7 +284,9 @@ public class LoadFilesRanNec {
 					rsinit3.close();
 					stmtp1.close();
 				}
-				nodeName = records.get(i).get(0);
+				nodeName = records.get(i).get(0).replace("(eNodeB)", " ").trim();
+				nodeId = nodeName.split("_", -1)[0];
+				unique_Node_ID = nodeId+"_NEC";
 				nodeType = "eNodeB";
 
 				IPaddress = null;
@@ -290,25 +294,38 @@ public class LoadFilesRanNec {
 				partNumber = null;
 				commStatus = "0";
 				adminStatus = "0";
-				nodeId = null;
 				LCStatus = "0";
-				unique_Node_ID = null;
 				serialNumber = records.get(i).get(6);
 				vcodeid = year + "_NODE_NEC_"+ Domain + "_" + NodeSeq;
 
 				stmtp = con.prepareStatement(
-						"insert into NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,ACTIVE_RECORD,WARE_ID,VENDOR,WARE_NAME,IP_ADDRESS,MAC_ADDRESS,SUB_DOMAIN,STATUS_1,STATUS_2,LONGITUDE,LATITUDE,PART_NUMBER,SUB_DOMAIN_TYPE,SERIAL_NUMBER)"
+						"insert into NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,ACTIVE_RECORD,WARE_ID,VENDOR,WARE_NAME,IP_ADDRESS,MAC_ADDRESS,SUB_DOMAIN,LONGITUDE,LATITUDE,PART_NUMBER,SUB_DOMAIN_TYPE,SERIAL_NUMBER)"
 								+ "values('" + vcodeid + "','" + unique_Node_ID + "','" + nodeId + "','" + nodeName
 								+ "','" + nodeType + "','" + Domain + "','" + nodeModel + "','" + tech2 + "','" + tech3
 								+ "','" + tech4 + "','" + tech5 + "','" + siteID + "','" + circleId
 								+ "',sysdate,sysdate,'" + fileType + "','" + fileName + "','" + commStatus + "','1','"
 								+ wareID + "','" + provider + "','" + wareName + "','" + IPaddress + "','" + MACaddress
-								+ "','" + subDomain + "','" + adminStatus + "','" + LCStatus + "','" + longi + "','"
+								+ "','" + subDomain + "','" + longi + "','"
 								+ lat + "','" + partNumber + "','" + subDomainType + "','" + serialNumber + "')");
 				stmtp.executeUpdate();
 				stmtp.close();
-
+				
 				NodeSeq++;
+				//added
+				
+				CellPK = year + "_NEC_RAN_CELL" + "_" + CellSeq;
+				cellID=nodeId;
+				cellName=nodeName;
+				cellStm = con.prepareStatement("insert into NODE_LCELL (LCELL_ID,LOCALCELLID,CELLID,CELLNAME,CELLRADIUS,FREQBAND,ULEARFCNCFGIND,ULEARFCN,DLEARFCN,ULBANDWIDTH,DLBANDWIDTH,PHYCELLID,FDDTDDIND,ENODEBFUNCTIONNAME,NBCELLFLAG,NODE_PK,NODE_ATTR_PK,CREATION_DATE,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,ACTIVE_RECORD,LINE,DOMAIN,VENDOR)"
+						+ "values('"+CellPK+"','','"+cellID+"','"+cellName+"','','','','','','','','','','','','"+vcodeid+"','',sysdate,sysdate,"
+								+ "'"+fileName+"','"+commStatus+"','0','0','0','0','0','1','0','"+Domain+"','"+provider+"')");
+				cellStm.executeUpdate();
+				cellStm.close();
+				
+				CellSeq++;
+				
+
+				
 
 			}
 
@@ -351,7 +368,7 @@ public class LoadFilesRanNec {
 		
 
 		stmtp = conalm.prepareStatement(
-				"UPDATE SEQ_TABLE SET NODE_ACTIVE = '" + NodeSeq + "' , NODE_BOARD = '" + NodeBoardSeq + "' ");
+				"UPDATE SEQ_TABLE SET NODE_ACTIVE = '" + NodeSeq + "' , NODE_BOARD = '" + NodeBoardSeq + "', NODE_LCELL = '" + CellSeq + "' ");
 		stmtp.executeUpdate();
 		stmtp.close();
 

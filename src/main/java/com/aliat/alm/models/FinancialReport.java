@@ -24,6 +24,9 @@ public class FinancialReport {
 	@Column(name = "ITEM_NAME")
 	private String itemName;
 	
+	private String itemModel;
+	private String itemPartNo;
+
 	@Column(name = "LAST_MODIFIED_DATE")
 	private String lastModifiedDate;
 	
@@ -45,6 +48,9 @@ public class FinancialReport {
 	private String longitude;
 	private String latitude;
 	
+	@Column(name = "VENDOR")
+	private String vendor;
+	
 	@Column(name = "INITIALCOST")
 	private BigDecimal initCost;
 	
@@ -59,14 +65,16 @@ public class FinancialReport {
 	}
 
 
-	public FinancialReport(String site,String farID, String itemCode, String itemName,
+	public FinancialReport(String site,String farID, String itemCode, String itemName,String itemModel,String itemPartNo,
 			String lastModifiedDate, String itemSN, String itemNameRegister, String poID,String siteID, 
-			String longitude, String latitude,String siteName,BigDecimal initCost, BigDecimal netCost,BigDecimal accuDepr) {
+			String longitude, String latitude,String vendor,String siteName,BigDecimal initCost, BigDecimal netCost,BigDecimal accuDepr) {
 		super();
 		this.site=site;
 		this.farID = farID;
 		this.itemCode = itemCode;
 		this.itemName = itemName;
+		this.itemModel=itemModel;
+		this.itemPartNo=itemPartNo;
 		this.lastModifiedDate = lastModifiedDate;
 		this.itemSN = itemSN;
 		this.itemNameRegister = itemNameRegister;
@@ -75,6 +83,7 @@ public class FinancialReport {
 		this.siteName=siteName;
 		this.longitude = longitude;
 		this.latitude = latitude;
+		this.vendor = vendor;
 		this.initCost=initCost;
 		this.netCost=netCost;
 		this.accuDepr=accuDepr;
@@ -107,6 +116,25 @@ public class FinancialReport {
 
 	public void setItemName(String itemName) {
 		this.itemName = itemName;
+	}
+
+	public String getItemModel() {
+		return itemModel;
+	}
+
+
+	public void setItemModel(String itemModel) {
+		this.itemModel = itemModel;
+	}
+
+
+	public String getItemPartNo() {
+		return itemPartNo;
+	}
+
+
+	public void setItemPartNo(String itemPartNo) {
+		this.itemPartNo = itemPartNo;
 	}
 
 
@@ -187,6 +215,16 @@ public class FinancialReport {
 
 	public void setLatitude(String latitude) {
 		this.latitude = latitude;
+	}
+
+
+	public String getVendor() {
+		return vendor;
+	}
+
+
+	public void setVendor(String vendor) {
+		this.vendor = vendor;
 	}
 
 

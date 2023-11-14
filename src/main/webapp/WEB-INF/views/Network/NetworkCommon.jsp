@@ -189,7 +189,7 @@
 	<div class="container-fluid" style="margin-top: -20px;">
 
 		<div class="row second" style="margin-top: -40px; margin-bottom: -3px;">
-			<div class="col-md-4" style="margin-top: 9px;">
+			<div class="col-md-4" style="margin-top: 9px;display: none">
 				<div class="search" id="headSearch">
 					<input type="text" class="searchTerm" id=autocompliteSearch style="height: 32px;" placeholder="Search within the Network ..">
 					<button type="submit" class="searchButton" style="height: 32px;">
@@ -268,7 +268,7 @@
 	<div id="mainDiv">
 		<div id="left" style="width: 500px">
 			<input name="csrfToken" value="5965f0d244b7d32b334eff840" type="hidden" />
-			<div class="searchcontainer" style="margin-left: 55px; margin-bottom: 5px; margin-top: 5px;">
+			<div class="searchcontainer" style="margin-left: 55px; margin-bottom: 5px; margin-top: 5px;display: none">
 				<div class="search" style="width:95%">
 					<input type="text" class="searchTerm" style="border-right: 3px solid #08526D; font-size: 15px;" placeholder="Search within the tree ..">
 				</div>
@@ -827,7 +827,7 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 	///////////////////////////////////////////////
 
 	function Tree_PropagationAppendedNodes(selector) {
-    $("#" + selector + " .folder").on('click', function (e) {
+		$("#" + selector + " .folder").on('click', function (e) {
         //console.log("clicked folder Nodes and Cells");
         var parentLi = $(this).closest('li');
         var children = parentLi.find(' > ul > li');
@@ -1199,10 +1199,10 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 	   $('#li_cellBtn').css("color","black").css("opacity",".65");
 	   $('#li_nodeBtn').addClass('unsortable');
 	   $('#li_nodeBtn').css("color","black").css("opacity",".65");
-	   $('#li_supplierBtn').addClass('unsortable_sup');
-	   $('#li_supplierBtn').css("color","black").css("opacity",".65");	    
-	   $('#li_vendorBtn').addClass('unsortable');
-	   $('#li_vendorBtn').css("color","black").css("opacity",".65");
+	  // $('#li_supplierBtn').addClass('unsortable_sup');
+	  // $('#li_supplierBtn').css("color","black").css("opacity",".65");	    
+	  // $('#li_vendorBtn').addClass('unsortable');
+	  // $('#li_vendorBtn').css("color","black").css("opacity",".65");
 	   var poSel=["PO","Item","Site","Node Type","Node"];
 	   var suppSel=['Supplier', 'Site', 'Node', 'Cell'];
 	   
@@ -1318,7 +1318,7 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 			 }
 			 break;	
 			 
-			//Supplier-Site-Node type-Node-Cell
+			//Venodr-Site-Node type-Node-Cell
 				case "li_vendorBtn,li_siteBtn,li_nodeTypeeBtn,li_nodeBtn,li_cellBtn":
 		 		case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,vendorBtn":
 		 		 {
@@ -1329,8 +1329,41 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 			 		window.location.href = url;
 		     	}		
 		 		break;	
-		 		
-		 		//Supplier-NodeType-Site-Node-Cell
+		 		//NodeType-Vendor-Site-Node-Cell
+				 case "li_nodeTypeeBtn,li_vendorBtn,li_siteBtn,li_nodeBtn,li_cellBtn":
+				 case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,vendorBtn":
+				  {
+					 var url = getContext()+"/Network_NdTypVenStNdCell"; 	
+					 if(params !=null){
+						 url += params;
+				 		}
+				 		window.location.href = url;
+				    }
+				break;
+				
+				//Site-Vendor-NodeType-Node-Cell
+				 case "li_siteBtn,li_vendorBtn,li_nodeTypeeBtn,li_nodeBtn,li_cellBtn":
+				 case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,vendorBtn":
+				  {
+					 var url = getContext()+"/Network_StVenNdTypNdCell"; 	
+					 if(params !=null){
+						 url += params;
+				 		}
+				 		window.location.href = url;
+				    }
+				break;
+				//Site-Supplier-NodeType-Node-Cell
+				 case "li_siteBtn,li_supplierBtn,li_nodeTypeeBtn,li_nodeBtn,li_cellBtn":
+				 case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,supplierBtn":
+				  {
+					 var url = getContext()+"/Network_StSupNdTypNdCell"; 	
+					 if(params !=null){
+						 url += params;
+				 		}
+				 		window.location.href = url;
+				    }
+				break;
+		 		//Vendor-NodeType-Site-Node-Cell
 				 case "li_vendorBtn,li_nodeTypeeBtn,li_siteBtn,li_nodeBtn,li_cellBtn":
 				// case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,vendorBtn":
 				  {
@@ -1373,6 +1406,17 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 				 var url = getContext()+"/Network_SupNdTypStNdCell"; 	
 				 if(params !=null){
 			 			url += params;
+			 		}
+			 		window.location.href = url;
+			    }
+			break;
+			//NodeType-Supplier-Site-Node-Cell
+			 case "li_nodeTypeeBtn,li_supplierBtn,li_siteBtn,li_nodeBtn,li_cellBtn":
+			 case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,supplierBtn":
+			  {
+				 var url = getContext()+"/Network_NdTypSupStNdCell"; 	
+				 if(params !=null){
+					 url += params;
 			 		}
 			 		window.location.href = url;
 			    }

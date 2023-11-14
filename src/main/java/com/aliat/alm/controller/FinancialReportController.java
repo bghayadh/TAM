@@ -46,7 +46,7 @@ public class FinancialReportController {
 	Query query;
 	Object[] result;
 
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static final Logger logger = LoggerFactory.getLogger(FinancialReportController.class);
 
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	@RequestMapping(value = "/FinancialReport", method = RequestMethod.GET)
@@ -71,16 +71,16 @@ public class FinancialReportController {
 				try {
 				
 					query = session.createNativeQuery(
-							"SELECT site,farID, itemCode, itemName, lastModifiedDate,itemSN,itemNameRegister,poID,siteID,siteName,longitude,latitude,initCost,netCost,accuDepr FROM ( "
-									+ " SELECT B.SITE_ID AS site,A.FAR_ID as farID, A.ITEM_CODE as itemCode, A.ITEM_NAME as itemName,TO_CHAR(A.LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') as lastModifiedDate, A.ITEM_SN as itemSN,A.ITEM_NAME_REGISTER as itemNameRegister, A.PO_ID as poID, B.SITE_ID AS siteID, B.SITE_NAME AS siteName , C.LONGITUDE as longitude,C.LATITUDE as latitude, A.INITIALCOST as initCost, A.NETCOST as netCost , A.ACCUMULDEPRECAMNT as accuDepr , "
-									+ " ROW_NUMBER() OVER (PARTITION BY A.FAR_ID ORDER BY B.SITE_ID DESC) AS rn FROM FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID "
-									+ " WHERE A.CREATED_DATE >=  trunc(SYSDATE - INTERVAL '1' YEAR) AND A.created_date < (trunc(sysdate) ) + 1   ) WHERE rn = 1 and (longitude is not null and longitude != '0' and longitude != 'null' and latitude is not null and latitude != '0' and latitude != 'null') ORDER BY lastModifiedDate DESC ");
+							"SELECT site,farID, itemCode, itemName,itemModel,itemPartNo, lastModifiedDate,itemSN,itemNameRegister,poID,siteID,siteName,longitude,latitude,vendor,initCost,netCost,accuDepr FROM ( "
+									+ " SELECT B.SITE_ID AS site,A.FAR_ID as farID, A.ITEM_CODE as itemCode, A.ITEM_NAME as itemName,D.ITEM_MODEL as itemModel,D.ITEM_PART_NUMBER as itemPartNo,TO_CHAR(A.LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') as lastModifiedDate, A.ITEM_SN as itemSN,A.ITEM_NAME_REGISTER as itemNameRegister, A.PO_ID as poID, B.SITE_ID AS siteID, B.SITE_NAME AS siteName , C.LONGITUDE as longitude,C.LATITUDE as latitude,A.VENDOR as vendor, A.INITIALCOST as initCost, A.NETCOST as netCost , A.ACCUMULDEPRECAMNT as accuDepr , "
+									+ " ROW_NUMBER() OVER (PARTITION BY A.FAR_ID ORDER BY B.SITE_ID DESC) AS rn FROM FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID LEFT JOIN far_model_partnumber D ON A.FAR_ID = D.FAR_ID "
+									+ " WHERE D.PRIMARY='1' AND A.CREATED_DATE >=  trunc(SYSDATE - INTERVAL '1' YEAR) AND A.created_date < (trunc(sysdate) ) + 1   ) WHERE rn = 1 and (longitude is not null and longitude != '0' and longitude != 'null' and latitude is not null and latitude != '0' and latitude != 'null') ORDER BY lastModifiedDate DESC ");
 
 					List<FinancialReport> ListFAR = (List<FinancialReport>) ((NativeQuery<FinancialReport>) query)
-							.addScalar("site").addScalar("farID").addScalar("itemCode").addScalar("itemName")
+							.addScalar("site").addScalar("farID").addScalar("itemCode").addScalar("itemName").addScalar("itemModel").addScalar("itemPartNo")
 							.addScalar("lastModifiedDate").addScalar("itemSN").addScalar("itemNameRegister")
 							.addScalar("poID").addScalar("siteID").addScalar("siteName").addScalar("longitude")
-							.addScalar("latitude").addScalar("initCost").addScalar("netCost").addScalar("accuDepr")
+							.addScalar("latitude").addScalar("vendor").addScalar("initCost").addScalar("netCost").addScalar("accuDepr")
 							.setResultTransformer(Transformers.aliasToBean(FinancialReport.class)).list();
 					model.addAttribute("financialReportList", mapper.writeValueAsString(ListFAR));
 
@@ -275,13 +275,13 @@ public class FinancialReportController {
 							+ "%') AND upper(A.ITEM_PART_NUMBER) LIKE upper ('%" + itemPartNo + "%'))  ";*/
 					
 					
-					 str = "SELECT site,farID, itemCode, itemName, lastModifiedDate,itemSN,itemNameRegister,poID,siteID,siteName,longitude,latitude,initCost,netCost,accuDepr FROM ( "
-					           + " SELECT B.SITE_ID AS site,A.FAR_ID as farID, A.ITEM_CODE as itemCode, A.ITEM_NAME as itemName,TO_CHAR(A.LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') as lastModifiedDate, A.ITEM_SN as itemSN,A.ITEM_NAME_REGISTER as itemNameRegister, A.PO_ID as poID,B.SITE_ID AS siteID, B.SITE_NAME AS siteName ,C.LONGITUDE as longitude,C.LATITUDE as latitude, A.INITIALCOST as initCost, A.NETCOST as netCost , A.ACCUMULDEPRECAMNT as accuDepr , "
-					           + " ROW_NUMBER() OVER (PARTITION BY A.FAR_ID ORDER BY B.SITE_ID DESC) AS rn FROM FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID "
-					           + " WHERE ( upper(A.ITEM_CODE) LIKE upper('%" + itemCode
+					 str = "SELECT site,farID, itemCode, itemName,itemModel,itemPartNo, lastModifiedDate,itemSN,itemNameRegister,poID,siteID,siteName,longitude,latitude,vendor,initCost,netCost,accuDepr FROM ( "
+					           + " SELECT B.SITE_ID AS site,A.FAR_ID as farID, A.ITEM_CODE as itemCode, A.ITEM_NAME as itemName,D.ITEM_MODEL as itemModel,D.ITEM_PART_NUMBER as itemPartNo,TO_CHAR(A.LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') as lastModifiedDate, A.ITEM_SN as itemSN,A.ITEM_NAME_REGISTER as itemNameRegister, A.PO_ID as poID,B.SITE_ID AS siteID, B.SITE_NAME AS siteName ,C.LONGITUDE as longitude,C.LATITUDE as latitude,A.VENDOR as vendor, A.INITIALCOST as initCost, A.NETCOST as netCost , A.ACCUMULDEPRECAMNT as accuDepr , "
+					           + " ROW_NUMBER() OVER (PARTITION BY A.FAR_ID ORDER BY B.SITE_ID DESC) AS rn FROM FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID LEFT JOIN far_model_partnumber D ON A.FAR_ID = D.FAR_ID "
+					           + " WHERE  D.PRIMARY='1' AND ( upper(A.ITEM_CODE) LIKE upper('%" + itemCode
 								+ "%') AND upper(A.ITEM_NAME) LIKE upper('%" + itemName
-								+ "%') AND upper(A.ITEM_MODEL) LIKE upper('%" + itemModel
-								+ "%') AND upper(A.ITEM_PART_NUMBER) LIKE upper ('%" + itemPartNo + "%'))  ";
+								+ "%') AND upper(D.ITEM_MODEL) LIKE upper('%" + itemModel
+								+ "%') AND upper(D.ITEM_PART_NUMBER) LIKE upper ('%" + itemPartNo + "%'))  ";
 						
 					 
 					 totalStr = "Select SUM(initialCost), SUM( AccumDepr), SUM(netCost) FROM ( "
@@ -411,9 +411,9 @@ public class FinancialReportController {
 					listFARTemp = query.list(); // To use it in circle range calculation
 
 					listFAR = ((NativeQuery<FinancialReport>) query).addScalar("site").addScalar("farID").addScalar("itemCode")
-							.addScalar("itemName").addScalar("lastModifiedDate").addScalar("itemSN")
+							.addScalar("itemName").addScalar("itemModel").addScalar("itemPartNo").addScalar("lastModifiedDate").addScalar("itemSN")
 							.addScalar("itemNameRegister").addScalar("poID").addScalar("siteID").addScalar("siteName")
-							.addScalar("longitude").addScalar("latitude").addScalar("initCost").addScalar("netCost")
+							.addScalar("longitude").addScalar("latitude").addScalar("vendor").addScalar("initCost").addScalar("netCost")
 							.addScalar("accuDepr").setResultTransformer(Transformers.aliasToBean(FinancialReport.class))
 							.list();
 
@@ -429,13 +429,13 @@ public class FinancialReportController {
 	
 							for (int i = 0; i < listFAR.size(); i++) {
 								distance = haversine(Double.parseDouble(latitude), Double.parseDouble(longitude),
-										Double.valueOf(listFARTemp.get(i)[11].toString()),
-										Double.valueOf(listFARTemp.get(i)[10].toString()));
+										Double.valueOf(listFARTemp.get(i)[13].toString()),
+										Double.valueOf(listFARTemp.get(i)[12].toString()));
 								
 								if (distance <= Double.parseDouble(radius)) {
-									initCost += Double.valueOf(listFARTemp.get(i)[12].toString());
-									netCost += Double.valueOf(listFARTemp.get(i)[13].toString());
-									accuDepr += Double.valueOf(listFARTemp.get(i)[14].toString());
+									initCost += Double.valueOf(listFARTemp.get(i)[15].toString());
+									netCost += Double.valueOf(listFARTemp.get(i)[16].toString());
+									accuDepr += Double.valueOf(listFARTemp.get(i)[17].toString());
 									
 									listCircleRange.add(listFAR.get(i));
 								}

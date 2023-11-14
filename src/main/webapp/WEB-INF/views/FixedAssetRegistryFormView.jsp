@@ -2082,9 +2082,9 @@ dictSite = [];
 
 	  boqArrayPNum = [];
 	  boqArrayPNum = ${listFarPartNumber};
-
+	  console.log(boqArrayPNum);
 	  for (i = 0;i<boqArrayPNum.length;i++){
-	  	
+	  			console.log(i);
 		   		var itemPartNum = boqArrayPNum[i].itemPartNb;
 		   		var primary = boqArrayPNum[i].primary;
 		   		var itemModel = boqArrayPNum[i].itemModel;
@@ -2444,21 +2444,29 @@ var slctDelNode = [];
 
 
 		// MODEL & PARTNUMBER TAB AUTOCOMPLETE
+		console.log($("#bisotab >tbody tr").length);
+		if($("#bisotab >tbody tr").length > 0){
 		newRowCount =  $("#bisotab >tbody tr").length-1;
+		console.log("newRowCount : "+newRowCount);
   		PNboqAutocomplete(newRowCount,"bisotab");
-
+		}
   	    // SERIAL NUMBER TAB AUTOCOMPLETE
+  	    if($("#SerialNumberTab >tbody tr").length > 0){
   		SNnewRowCount =  $("#SerialNumberTab >tbody tr").length-1;
   		SeialNBboqAutocomplete(SNnewRowCount,"SerialNumberTab");
-
+  	    }
+  	    
    	    // SITE TAB AUTOCOMPLETE
+   	    if($("#sitetab >tbody tr").length > 0){
   		SitenewRowCount =  $("#sitetab >tbody tr").length-1;
   		SiteboqAutocomplete(SitenewRowCount,"sitetab");
-
+   	    }
+   	    
    	    // NODE TAB AUTOCOMPLETE
+   	    if($("#ahmadtab >tbody tr").length){
   		NodenewRowCount =  $("#ahmadtab >tbody tr").length-1;
   		NodeboqAutocomplete(NodenewRowCount,"ahmadtab");
-
+   	    }	
 
 
 
