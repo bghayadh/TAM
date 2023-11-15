@@ -197,7 +197,7 @@ public class NewSubRackMovement {
 					transID=Gyear+"_TRANS_"+transvalue;
 					
 					insertstatement = con.prepareStatement(
-							"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,FROM_SITE,TO_SITE,FROM_NODE,TO_NODE,FROM_CIRCLE,TO_CIRCLE,FROM_NODE_NAME,TO_NODE_NAME,FROM_WARE_ID,TO_WARE_ID,FROM_WARE_NAME,TO_WARE_NAME,FROM_NODE_TYPE,TO_NODE_TYPE,FROM_SERIAL_NUMBER,TO_SERIAL_NUMBER,MODEL) "
+							"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,FROM_SITE,TO_SITE,FROM_NODE,TO_NODE,FROM_CIRCLE,TO_CIRCLE,FROM_NODE_NAME,TO_NODE_NAME,FROM_WARE_ID,TO_WARE_ID,FROM_WARE_NAME,TO_WARE_NAME,FROM_NODE_TYPE,TO_NODE_TYPE,OLD_SERIAL_NUMBER,SERIAL_NUMBER,MODEL) "
 							+ "values ('"+transID+"','"+rs11.getString("SUBRACK_ID")+"','NODE_SUBRACK','0','NEW SUBRACK',TIMESTAMP '"+rs11.getString("PARSING_DATE")+"',sysdate,sysdate,'0','0','0','"+rs11.getString("SITE_ID")+"','0','"+rs11.getString("NODE_ID")+"','0','"+rs11.getString("CIRCLE_ID")+"','0','"
 									+rs11.getString("NODE_NAME")+"','0','"+rs11.getString("WARE_ID")+"','0','"+rs11.getString("WARE_NAME")+"','0','"+rs11.getString("NODE_TYPE")+"','0','"+rs11.getString("SERIALNUMBER")+"','"+rs11.getString("MODEL")+"')");
 							insertstatement.executeUpdate();
@@ -210,7 +210,7 @@ public class NewSubRackMovement {
 					while(rs2.next()) {
 						transID=Gyear+"_TRANS_"+transvalue;
 						insertstatement = con.prepareStatement(
-								"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,FROM_SITE,TO_SITE,FROM_NODE,TO_NODE,FROM_CIRCLE,TO_CIRCLE,FROM_NODE_NAME,TO_NODE_NAME,FROM_WARE_ID,TO_WARE_ID,FROM_WARE_NAME,TO_WARE_NAME,FROM_NODE_TYPE,TO_NODE_TYPE,FROM_SERIAL_NUMBER,TO_SERIAL_NUMBER,MODEL) "
+								"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,FROM_SITE,TO_SITE,FROM_NODE,TO_NODE,FROM_CIRCLE,TO_CIRCLE,FROM_NODE_NAME,TO_NODE_NAME,FROM_WARE_ID,TO_WARE_ID,FROM_WARE_NAME,TO_WARE_NAME,FROM_NODE_TYPE,TO_NODE_TYPE,OLD_SERIAL_NUMBER,SERIAL_NUMBER,MODEL) "
 								+ "values ('"+transID+"','"+rs2.getString("SUBRACK_ID")+"','NODE_SUBRACK','0','NEW SUBRACK',TIMESTAMP '"+rs2.getString("PARSING_DATE")+"',sysdate,sysdate,'0','0','0','"+rs2.getString("SITE_ID")+"','0','"+rs2.getString("NODE_ID")+"','0','"+rs2.getString("CIRCLE_ID")+"','0','"
 										+rs2.getString("NODE_NAME")+"','0','"+rs2.getString("WARE_ID")+"','0','"+rs2.getString("WARE_NAME")+"','0','"+rs2.getString("NODE_TYPE")+"','0','"+rs2.getString("SERIALNUMBER")+"','"+rs2.getString("MODEL")+"')");
 								insertstatement.executeUpdate();
@@ -247,12 +247,10 @@ public class NewSubRackMovement {
 			ResultSet rs1 = stmt.executeQuery(query);
 			while(rs1.next()) {
 				transvalue = rs1.getInt("TRANS_ID");
-				System.out.println(transvalue);
 			}
 			stmt.close();
 			rs1.close();
 			for(int i=0;i<oldSerial1.size();i++) {
-				System.out.println(oldSerial1.get(i));
 				stmt1 = con.createStatement();
 				query="select a.node_pk,a.node_id,a.node_name,a.parsing_date,a.site_id,a.ware_id,a.ware_name,a.node_type,b.serialnumber,a.circle_id,b.subrack_id,b.model FROM NODE_ACTIVE a,NODE_SUBRACK b WHERE b.serialnumber = '"+oldSerial1.get(i)+"' and b.ACTIVE_RECORD = '2' and a.node_pk=b.node_pk";
 				ResultSet rs11 = stmt1.executeQuery(query);
@@ -260,7 +258,7 @@ public class NewSubRackMovement {
 					transID=Gyear+"_TRANS_"+transvalue;
 					
 					insertstatement = con.prepareStatement(
-							"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,TO_SITE,FROM_SITE,TO_NODE,FROM_NODE,TO_CIRCLE,FROM_CIRCLE,TO_NODE_NAME,FROM_NODE_NAME,TO_WARE_ID,FROM_WARE_ID,TO_WARE_NAME,FROM_WARE_NAME,TO_NODE_TYPE,FROM_NODE_TYPE,TO_SERIAL_NUMBER,FROM_SERIAL_NUMBER,MODEL) "
+							"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,TO_SITE,FROM_SITE,TO_NODE,FROM_NODE,TO_CIRCLE,FROM_CIRCLE,TO_NODE_NAME,FROM_NODE_NAME,TO_WARE_ID,FROM_WARE_ID,TO_WARE_NAME,FROM_WARE_NAME,TO_NODE_TYPE,FROM_NODE_TYPE,OLD_SERIAL_NUMBER,SERIAL_NUMBER,MODEL) "
 							+ "values ('"+transID+"','"+rs11.getString("SUBRACK_ID")+"','NODE_SUBRACK','0','SUBRACK DISAPPEARED',TIMESTAMP '"+rs11.getString("PARSING_DATE")+"',sysdate,sysdate,'0','0','0','"+rs11.getString("SITE_ID")+"','0','"+rs11.getString("NODE_ID")+"','0','"+rs11.getString("CIRCLE_ID")+"','0','"
 									+rs11.getString("NODE_NAME")+"','0','"+rs11.getString("WARE_ID")+"','0','"+rs11.getString("WARE_NAME")+"','0','"+rs11.getString("NODE_TYPE")+"','0','"+rs11.getString("SERIALNUMBER")+"','"+rs11.getString("MODEL")+"')");
 							insertstatement.executeUpdate();
@@ -273,7 +271,7 @@ public class NewSubRackMovement {
 					while(rs2.next()) {
 						transID=Gyear+"_TRANS_"+transvalue;
 						insertstatement = con.prepareStatement(
-								"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,TO_SITE,FROM_SITE,TO_NODE,FROM_NODE,TO_CIRCLE,FROM_CIRCLE,TO_NODE_NAME,FROM_NODE_NAME,TO_WARE_ID,FROM_WARE_ID,TO_WARE_NAME,FROM_WARE_NAME,TO_NODE_TYPE,FROM_NODE_TYPE,TO_SERIAL_NUMBER,FROM_SERIAL_NUMBER,MODEL) "
+								"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,TO_SITE,FROM_SITE,TO_NODE,FROM_NODE,TO_CIRCLE,FROM_CIRCLE,TO_NODE_NAME,FROM_NODE_NAME,TO_WARE_ID,FROM_WARE_ID,TO_WARE_NAME,FROM_WARE_NAME,TO_NODE_TYPE,FROM_NODE_TYPE,OLD_SERIAL_NUMBER,SERIAL_NUMBER,MODEL) "
 								+ "values ('"+transID+"','"+rs2.getString("SUBRACK_ID")+"','NODE_SUBRACK','0','SUBRACK DISAPPEARED',TIMESTAMP '"+rs2.getString("PARSING_DATE")+"',sysdate,sysdate,'0','0','0','"+rs2.getString("SITE_ID")+"','0','"+rs2.getString("NODE_ID")+"','0','"+rs2.getString("CIRCLE_ID")+"','0','"
 										+rs2.getString("NODE_NAME")+"','0','"+rs2.getString("WARE_ID")+"','0','"+rs2.getString("WARE_NAME")+"','0','"+rs2.getString("NODE_TYPE")+"','0','"+rs2.getString("SERIALNUMBER")+"','"+rs2.getString("MODEL")+"')");
 								insertstatement.executeUpdate();
@@ -296,7 +294,7 @@ public class NewSubRackMovement {
 	
 	private static void CheckTransferredSubRack(List<String> newSerial1,List<String> oldSerial1) throws SQLException{
 		Statement stmt = null,stmt1=null,stmt2=null,stmt3=null;
-		String query = null,transID =null,oldNodeID,oldNodeName,oldSiteID,oldCircleID,oldSN,oldnodeType,oldwareId,oldWareName,newNodeID,newNodeName,newSiteID,newCircleID,newSN,newnodeType,newwareID,newWareName,varstatus = null;
+		String query = null,transID =null,oldNodeID,oldNodeName,oldSiteID,oldCircleID,oldnodeType,oldwareId,oldWareName,newNodeID,newNodeName,newSiteID,newCircleID,newSN,newnodeType,newwareID,newWareName,varstatus = null;
 		int transvalue=0;
 		PreparedStatement insertstatement = null,updatestatement=null;
 
@@ -307,7 +305,6 @@ public class NewSubRackMovement {
 			ResultSet rs2 = stmt2.executeQuery(query);
 			while(rs2.next()) {
 				transvalue = rs2.getInt("TRANS_ID");
-				System.out.println(transvalue);
 			}
 			stmt2.close();
 			rs2.close();
@@ -325,7 +322,6 @@ public class NewSubRackMovement {
 					oldCircleID=rs.getString("CIRCLE_ID");
 					oldwareId=rs.getString("WARE_ID");
 					oldWareName=rs.getString("WARE_NAME");
-					oldSN=rs.getString("SERIALNUMBER");
 					oldnodeType=rs.getString("NODE_TYPE");
 					
 					stmt1 = con.createStatement();
@@ -349,9 +345,9 @@ public class NewSubRackMovement {
 				    			varstatus="Reappear SN  After Site Transfer";	
 						    		transID=Gyear+"_TRANS_"+transvalue;
 						    		insertstatement = con.prepareStatement(
-					    					"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,FROM_SITE,TO_SITE,FROM_NODE,TO_NODE,FROM_CIRCLE,TO_CIRCLE,FROM_NODE_NAME,TO_NODE_NAME,FROM_WARE_ID,TO_WARE_ID,FROM_WARE_NAME,TO_WARE_NAME,FROM_NODE_TYPE,TO_NODE_TYPE,FROM_SERIAL_NUMBER,TO_SERIAL_NUMBER,MODEL) "
+					    					"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,FROM_SITE,TO_SITE,FROM_NODE,TO_NODE,FROM_CIRCLE,TO_CIRCLE,FROM_NODE_NAME,TO_NODE_NAME,FROM_WARE_ID,TO_WARE_ID,FROM_WARE_NAME,TO_WARE_NAME,FROM_NODE_TYPE,TO_NODE_TYPE,OLD_SERIAL_NUMBER,SERIAL_NUMBER,MODEL) "
 					    					+ "values ('"+transID+"','"+rs1.getString("SUBRACK_ID")+"','NODE_SUBRACK','0','"+varstatus+"',TIMESTAMP '"+rs1.getString("PARSING_DATE")+"',sysdate,sysdate,'0','0','"+oldSiteID+"','"+newSiteID+"','"+oldNodeID+"','"+newNodeID+"','"+oldCircleID+"','"+newCircleID+"','"
-					    							+oldNodeName+"','"+newNodeName+"','"+oldwareId+"','"+newwareID+"','"+oldWareName+"','"+newWareName+"','"+oldnodeType+"','"+newnodeType+"','"+oldSN+"','"+newSN+"','"+rs1.getString("MODEL")+"')");
+					    							+oldNodeName+"','"+newNodeName+"','"+oldwareId+"','"+newwareID+"','"+oldWareName+"','"+newWareName+"','"+oldnodeType+"','"+newnodeType+"','0','"+newSN+"','"+rs1.getString("MODEL")+"')");
 					    			insertstatement.executeUpdate();
 					    					insertstatement.close();
 											
@@ -370,9 +366,9 @@ public class NewSubRackMovement {
 										newnodeType=rs1.getString("NODE_TYPE");
 										transID=Gyear+"_TRANS_"+transvalue;
 										insertstatement = con.prepareStatement(
-						    					"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,FROM_SITE,TO_SITE,FROM_NODE,TO_NODE,FROM_CIRCLE,TO_CIRCLE,FROM_NODE_NAME,TO_NODE_NAME,FROM_WARE_ID,TO_WARE_ID,FROM_WARE_NAME,TO_WARE_NAME,FROM_NODE_TYPE,TO_NODE_TYPE,FROM_SERIAL_NUMBER,TO_SERIAL_NUMBER,MODEL) "
+						    					"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,FROM_SITE,TO_SITE,FROM_NODE,TO_NODE,FROM_CIRCLE,TO_CIRCLE,FROM_NODE_NAME,TO_NODE_NAME,FROM_WARE_ID,TO_WARE_ID,FROM_WARE_NAME,TO_WARE_NAME,FROM_NODE_TYPE,TO_NODE_TYPE,OLD_SERIAL_NUMBER,SERIAL_NUMBER,MODEL) "
 						    					+ "values ('"+transID+"','"+rs3.getString("SUBRACK_ID")+"','NODE_SUBRACK','0','"+varstatus+"',TIMESTAMP '"+rs1.getString("PARSING_DATE")+"',sysdate,sysdate,'0','0','"+oldSiteID+"','"+newSiteID+"','"+oldNodeID+"','"+newNodeID+"','"+oldCircleID+"','"+newCircleID+"','"
-						    							+oldNodeName+"','"+newNodeName+"','"+oldwareId+"','"+newwareID+"','"+oldWareName+"','"+newWareName+"','"+oldnodeType+"','"+newnodeType+"','"+oldSN+"','"+newSN+"','"+rs3.getString("MODEL")+"')");
+						    							+oldNodeName+"','"+newNodeName+"','"+oldwareId+"','"+newwareID+"','"+oldWareName+"','"+newWareName+"','"+oldnodeType+"','"+newnodeType+"','0','"+newSN+"','"+rs3.getString("MODEL")+"')");
 						    			insertstatement.executeUpdate();
 						    					insertstatement.close();
 										transvalue++;
