@@ -2165,7 +2165,6 @@ function AllDistributionBoardCheckFilter(Id,clssName) {
 		
 		if ($(this).is(':checked')){				
 			$(this).parent().find('input:checkbox').each(function(){
-				 console.log(" //////////AllNodesTreeCheckFilter ");	
 					
 				$(this).prop('checked', true);
 			 if($(this).parent().hasClass('NodeActive')){
@@ -3512,8 +3511,7 @@ function boqCheckFilter(){
 	
 	
 $("#nodesActiveCheckAllBoq").bind("change",function(){
-		if ($(this).is(':checked')){
-			
+		if ($(this).is(':checked')){	
 			if(nodeFlag == 0 ){
 				getNode();
 			}else{
@@ -4267,7 +4265,7 @@ function allElementsCheckFilter(){
 
 	$(".allElements").bind("change",function() {
 		var start=Date.now();
-		console.log("changed checkbox of :"+$(this).parent().attr('id'));
+		//console.log("changed checkbox of :"+$(this).parent().attr('id'));
 
 		markerClusterManhole.clearMarkers();
 		markerClusterHandhole.clearMarkers();
@@ -4291,9 +4289,10 @@ function allElementsCheckFilter(){
 		if ($(this).is(':checked')){
 			
 			$(this).parent().find('ul > li').each(function(){
+				//console.log(" checkbox of :"+	$(this).parent().find('ul > li').attr('id'));
 				
 				//$(this).children('input:checkbox').prop('checked', true);
-				if($(this).children('input:checkbox').hasClass('AllNodeActive') && nodeFlag == 0 ){
+				if(($(this).children('input:checkbox').hasClass('AllNodeActive') || $(this).children('input:checkbox').hasClass('EntrepriseMSAN') || $(this).children('input:checkbox').hasClass('TransmissionDWDM') || $(this).children('input:checkbox').hasClass('TransmissionSDH') || $(this).children('input:checkbox').hasClass('TransmissionGPON')) && nodeFlag == 0 ){
 			    	//console.log("passed AllNodeActive");
 			    	$(this).children('input:checkbox').prop('checked', false);
 					//getNode();
