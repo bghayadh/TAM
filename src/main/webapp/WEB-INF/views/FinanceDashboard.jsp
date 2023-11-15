@@ -93,6 +93,14 @@ background:green;
 background:red;
 
 }
+.blue {
+background:blue;
+
+}
+.orange {
+background:orange;
+
+}
 
 
 </style>
@@ -167,27 +175,39 @@ background:red;
 								<div class="card card-primary card-tabs cards-margin">
 								<div class="legendContainer">
       							<div class="card-body">
-							         <div class="box stack-top" id="initCostLegendDiv" style="overflow-y:scroll;position: relative;top:230px;width: 300px; float:left; height:200px;  background:white; margin:50px;display: none">
+							         <div class="box stack-top" id="initCostLegendDiv" style="overflow-y:scroll;position: relative;top:230px;width: 300px; float:left; height:250px;  background:white; margin:50px;display: none">
 							         <div class="legendHeader"  id="legendHeader">
  									 <h6 style="color:white;font-weight:bold; font-size:3ex;display:inline-block;position: relative;top:5px;left:10px;">Legends</h6>
  									 </div>
   								<div id="tableDiv">
   								<table id="maxMinInitCostSites">   
-        							<caption style="text-align: center; font-weight: bold; font-size: 2.1ex; margin-top: -75px;margin-left:4px;">Sites Initial Cost</caption>
+        							<caption style="text-align: center; font-weight: bold; font-size: 2.1ex; margin-top: -145px;margin-left:4px;">Sites Initial Cost</caption>
   								<br>
 								 <tr>
 								    <th style="position: relative;top: 5px;left:10px;"></th>
-								    <th style="position: relative;top: 5px;left:10px;"></th>  
+								    <th style="position: relative;top: 5px;left:10px;"></th> 
+								    <th style="position: relative;top: 5px;left:10px;"></th>
+								    <th style="position: relative;top: 5px;left:10px;"></th>
 								 </tr>
  								 <tr>
-								     <td style="position: relative;top:17px;left:40px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="initCostMaxSites" onclick="showHideAllSites('initCostMaxSites');" value="green"/></td>
-								     <td style="position: relative;top:27px;left:50px;"><div class="dot green"></div></td>
-								     <td style="position: relative;top:30px;left:60px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Top 10 Sites</label></td>   
+								     <td style="position: relative;top:17px;left:40px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="initCostTopSites" onclick="showHideAllSites('initCostTopSites');" value="blue"/></td>
+								     <td style="position: relative;top:27px;left:50px;"><div class="dot blue"></div></td>
+								     <td style="position: relative;top:30px;left:60px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Top Sites</label></td>   
 								 </tr>
     							 <tr>
+								     <td style="position: relative;top:17px;left:40px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="initCostLeastSites" onclick="showHideAllSites('initCostLeastSites');" value="orange"/></td>
+								     <td style="position: relative;top:27px;left:50px;"><div class="dot orange"></div></td>
+								     <td style="position: relative;top:30px;left:60px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Least Sites</label></td>   
+								 </tr>
+								 <tr>
+								     <td style="position: relative;top:17px;left:40px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="initCostMaxSites" onclick="showHideAllSites('initCostMaxSites');" value="green"/></td>
+								     <td style="position: relative;top:27px;left:50px;"><div class="dot green"></div></td>
+								     <td style="position: relative;top:30px;left:60px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Maximum Site</label></td>   
+								 </tr>
+								 <tr>
 								     <td style="position: relative;top:17px;left:40px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="initCostMinSites" onclick="showHideAllSites('initCostMinSites');" value="red"/></td>
 								     <td style="position: relative;top:27px;left:50px;"><div class="dot red"></div></td>
-								     <td style="position: relative;top:30px;left:60px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Least 10 Sites</label></td>   
+								     <td style="position: relative;top:30px;left:60px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Minimum Site</label></td>   
 								 </tr>
   						</table> 
 		</div></div></div>
@@ -266,27 +286,39 @@ background:red;
 								<div class="card card-primary card-tabs cards-margin">
 								<div class="legendContainer">
       							<div class="card-body">
-							         <div class="box stack-top" id="netCostLegendDiv" style="overflow-y:scroll;position: relative;top:230px;width: 300px; float:left; height:200px;  background:white; margin:50px;display: none">
+							         <div class="box stack-top" id="netCostLegendDiv" style="overflow-y:scroll;position: relative;top:230px;width: 300px; float:left; height:250px;  background:white; margin:50px;display: none">
 							         <div class="legendHeader"  id="legendHeader">
  									 <h6 style="color:white;font-weight:bold; font-size:3ex;display:inline-block;position: relative;top:5px;left:10px;">Legends</h6>
  									 </div>
   								<div id="tableDiv">
-  								<table id="maxMinInitCostSites">   
-        							<caption style="text-align: center; font-weight: bold; font-size: 2.1ex; margin-top: -75px;margin-left:4px;">Sites Net Cost</caption>
+  								<table id="maxMinNetCostSites">   
+        							<caption style="text-align: center; font-weight: bold; font-size: 2.1ex; margin-top: -145px;margin-left:4px;">Sites Net Cost</caption>
   								<br>
 								 <tr>
 								    <th style="position: relative;top: 5px;left:10px;"></th>
 								    <th style="position: relative;top: 5px;left:10px;"></th>  
+								    <th style="position: relative;top: 5px;left:10px;"></th>  
+								    <th style="position: relative;top: 5px;left:10px;"></th>  
 								 </tr>
  								 <tr>
-								     <td style="position: relative;top:17px;left:40px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="netCostMaxSites" onclick="showHideAllSites('netCostMaxSites');" value="green"/></td>
-								     <td style="position: relative;top:27px;left:50px;"><div class="dot green"></div></td>
-								     <td style="position: relative;top:30px;left:60px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Top 10 Sites</label></td>   
+								     <td style="position: relative;top:17px;left:40px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="netCostTopSites" onclick="showHideAllSites('netCostTopSites');" value="blue"/></td>
+								     <td style="position: relative;top:27px;left:50px;"><div class="dot blue"></div></td>
+								     <td style="position: relative;top:30px;left:60px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Top Sites</label></td>   
 								 </tr>
     							 <tr>
+								     <td style="position: relative;top:17px;left:40px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="netCostLeastSites" onclick="showHideAllSites('netCostLeastSites');" value="orange"/></td>
+								     <td style="position: relative;top:27px;left:50px;"><div class="dot orange"></div></td>
+								     <td style="position: relative;top:30px;left:60px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Least Sites</label></td>   
+								 </tr>
+								  <tr>
+								     <td style="position: relative;top:17px;left:40px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="netCostMaxSites" onclick="showHideAllSites('netCostMaxSites');" value="green"/></td>
+								     <td style="position: relative;top:27px;left:50px;"><div class="dot green"></div></td>
+								     <td style="position: relative;top:30px;left:60px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Maximum Site</label></td>   
+								 </tr>
+								 <tr>
 								     <td style="position: relative;top:17px;left:40px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="netCostMinSites" onclick="showHideAllSites('netCostMinSites');" value="red"/></td>
 								     <td style="position: relative;top:27px;left:50px;"><div class="dot red"></div></td>
-								     <td style="position: relative;top:30px;left:60px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Least 10 Sites</label></td>   
+								     <td style="position: relative;top:30px;left:60px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Minimum Site</label></td>   
 								 </tr>
   						</table> 
 		</div></div></div>
@@ -305,31 +337,48 @@ background:red;
 
 <script type="text/javascript">
 
-var initCostMap;
-var netCostMap;
+var initCostMap;// Define the map of init cost sites
+var netCostMap;// Define the map of net cost sites
 
-var maxInitCostAssetList;
-var minInitCostAssetList;
-var maxNetCostAssetList;
-var minNetCostAssetList;
+var topSitesInitCostList; // used to store all init cost top 10 sites details 
+var leastSitesInitCostList;  // used to store all init cost least 10 sites details 
+var topSitesNetCostList;  // used to store all net cost top 10 sites details  
+var leastSitesNetCostList; // used to store all net cost least 10 sites details  
+
 var siteName=[];
 var netCost=[];
 var initCost=[];
-var markersMaxInitCostSites=[];
-var markersMinInitCostSites=[];
-var markersMaxNetCostSites=[];
-var markersMinNetCostSites=[];
+
 var infoWindowInitCost;
 var infoWindowNetCost;
 
+var initCostTopSitesMarkers=[]; // used to store the markers of init cost top sites
+var initCostLeastSitesMarkers=[];  // used to store the markers of init cost least sites
+var initCostMaxSitesMarkers=[]; // used to store the markers of max sites init cost
+var initCostMinSitesMarkers=[];// used to store the markers of min sites init cost 
+
+var netCostTopSitesMarkers=[];  // used to store the markers of net cost top sites
+var netCostLeastSitesMarkers=[];  // used to store the markers of net cost least sites
+var netCostMaxSitesMarkers=[]; // used to store the markers of max sites net cost 
+var netCostMinSitesMarkers=[];// used to store the markers of min sites net cost
+
+var initCostTopSitesList=[]; // used to check/uncheck the top sites from map 
+var initCostLeastSitesList=[]; // used to check/uncheck the least sites from map 
+var initCostMaxSitesList=[]; // used to check/uncheck the max sites from map 
+var initCostMinSitesList=[]; // used to check/uncheck the min sites from map 
+
+var netCostTopSitesList=[]; // used to check/uncheck the top sites from map 
+var netCostLeastSitesList=[]; // used to check/uncheck the least sites from map 
+var netCostMaxSitesList=[]; // used to check/uncheck the max sites from map 
+var netCostMinSitesList=[]; // used to check/uncheck the min sites from map 
 
 
 function initMap() {
 
-	 maxInitCostAssetList=${sitesMaxInitCostAsset};
-	 minInitCostAssetList=${sitesMinInitCostAsset};
-	 maxNetCostAssetList=${sitesMaxNetCostAsset};
-	 minNetCostAssetList=${sitesMinNetCostAsset};
+	 topSitesInitCostList=${sitesMaxInitCostAsset};
+	 leastSitesInitCostList=${sitesMinInitCostAsset};
+	 topSitesNetCostList=${sitesMaxNetCostAsset};
+	 leastSitesNetCostList=${sitesMinNetCostAsset};
 
 	 initCostMap = new google.maps.Map(document.getElementById("initCostMapContainer"), {
 			center: { lat: 1, lng: 38 },
@@ -400,14 +449,15 @@ function initMap() {
 	 $("#netCostLegendDiv").toggle(); // to open the legend 
 	 
 
-	 fetchTopSitesMaxInitCost();
-	 fetchLeastSitesMinInitCost();
-	 fetchTopSitesMaxNetCost();
-	 fetchLeastSitesMinNetCost();
-	 createSiteMarker(maxInitCostAssetList,"green",initCostMap,markersMaxInitCostSites,"initCostMaxSites",infoWindowInitCost);
-	 createSiteMarker(minInitCostAssetList,"red",initCostMap,markersMinInitCostSites,"initCostMinSites",infoWindowInitCost);
-	 createSiteMarker(maxNetCostAssetList,"green",netCostMap,markersMaxNetCostSites,"netCostMaxSites",infoWindowNetCost);
-	 createSiteMarker(minNetCostAssetList,"red",netCostMap,markersMinNetCostSites,"netCostMinSites",infoWindowNetCost);
+	 plotTopInitialCostChart();
+	 plotLeastInitialCostChart();
+	 plotTopNetCostChart();
+	 plotLeastNetCostChart();
+	 
+	 createSiteMarker(topSitesInitCostList,initCostMap,"TopSitesInitCost","initCostTopSites",infoWindowInitCost);
+	 createSiteMarker(leastSitesInitCostList,initCostMap,"LeastSitesInitCost","initCostLeastSites",infoWindowInitCost);
+	 createSiteMarker(topSitesNetCostList,netCostMap,"TopSitesNetCost","netCostTopSites",infoWindowNetCost);
+	 createSiteMarker(leastSitesNetCostList,netCostMap,"LeastSitesNetCost","netCostLeastSites",infoWindowNetCost);
 
 }
 
@@ -449,13 +499,13 @@ function DefaultZoomControl(controlDiv, map) {
      });
 
   }
-function fetchTopSitesMaxInitCost(){
+function plotTopInitialCostChart(){
 	 siteName=[];
 	 initCost=[];
 	
-for (var i = 0; i < maxInitCostAssetList.length; i++) {
-	 siteName.push(maxInitCostAssetList[i][1]+" : "+maxInitCostAssetList[i][2]);
-	 initCost.push(maxInitCostAssetList[i][0]);
+for (var i = 0; i < topSitesInitCostList.length; i++) {
+	 siteName.push(topSitesInitCostList[i][1]+" : "+topSitesInitCostList[i][2]);
+	 initCost.push(topSitesInitCostList[i][0]);
 }
 		
 		var ctxLine = document.getElementById('sitesMaxInitCost').getContext('2d');
@@ -502,13 +552,13 @@ for (var i = 0; i < maxInitCostAssetList.length; i++) {
 		});
 }	
 
-function fetchLeastSitesMinInitCost(){
+function plotLeastInitialCostChart(){
 	
     siteName=[];
     initCost=[];
-	for (var i = 0; i < minInitCostAssetList.length; i++) {
-	 siteName.push(minInitCostAssetList[i][1]+" : "+minInitCostAssetList[i][2]);
-	 initCost.push(minInitCostAssetList[i][0]);
+	for (var i = 0; i < leastSitesInitCostList.length; i++) {
+	 siteName.push(leastSitesInitCostList[i][1]+" : "+leastSitesInitCostList[i][2]);
+	 initCost.push(leastSitesInitCostList[i][0]);
 	}
 	var ctxLine = document.getElementById('sitesMinInitCost').getContext('2d');
 
@@ -555,13 +605,13 @@ function fetchLeastSitesMinInitCost(){
 	});	
 }	
 
-function fetchTopSitesMaxNetCost(){
+function plotTopNetCostChart(){
 	siteName=[];
 	netCost=[];
 	
-	 for (var i = 0; i < maxNetCostAssetList.length; i++) {
-		 siteName.push(maxNetCostAssetList[i][1]+" : "+maxNetCostAssetList[i][2]);
-		 netCost.push(maxNetCostAssetList[i][0]);
+	 for (var i = 0; i < topSitesNetCostList.length; i++) {
+		 siteName.push(topSitesNetCostList[i][1]+" : "+topSitesNetCostList[i][2]);
+		 netCost.push(topSitesNetCostList[i][0]);
 	 }
 		
 		var ctxLine = document.getElementById('sitesMaxNetCost').getContext('2d');
@@ -608,14 +658,14 @@ function fetchTopSitesMaxNetCost(){
 		});
 }	
 
-function fetchLeastSitesMinNetCost(){
+function plotLeastNetCostChart(){
 	
     siteName=[];
     netCost=[];
     
-	for (var i = 0; i < minNetCostAssetList.length; i++) {
-		 siteName.push(minNetCostAssetList[i][1]+" : "+minNetCostAssetList[i][2]);
-		 netCost.push(minNetCostAssetList[i][0]);
+	for (var i = 0; i < leastSitesNetCostList.length; i++) {
+		 siteName.push(leastSitesNetCostList[i][1]+" : "+leastSitesNetCostList[i][2]);
+		 netCost.push(leastSitesNetCostList[i][0]);
 	}
 	
 	var ctxLine = document.getElementById('sitesMinNetCost').getContext('2d');
@@ -663,27 +713,79 @@ function fetchLeastSitesMinNetCost(){
 	});	
 }
 
-function createSiteMarker(list,iconColor,map,markersArray,legendCheckboxClass,infoWindow) {
+function createSiteMarker(list,map,target,legendCheckboxClass,infoWindow) {
 
 	
 	var siteID;	
 	var cost;
+	var costTemp=list[0][0].toFixed(2);
+	var markersArray;
+	var iconColor;
 		
 	if(list.length!=0){
 
 		$('.'+legendCheckboxClass).prop('checked', true);
 		$('.'+legendCheckboxClass).attr('disabled', false);
+
 		
 		for(i=0;i<list.length;i++){
-			siteID=list[i][1];	
-
-			//Format the value with commas for thousands
+			siteID=list[i][1];				
 			cost=list[i][0].toFixed(2);
-			cost = cost.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-				
-			
 			const pos = new google.maps.LatLng(list[i][4],list[i][3]);
 
+
+			// the costTemp is compared to cost in case there is more than one site having a max cost (same for min)
+			if(target == "TopSitesInitCost" && i !=0 && costTemp!=cost ) {
+				iconColor = "blue";	
+				markersArray =initCostTopSitesMarkers;
+				initCostTopSitesList.push(list[i]);
+			}
+			else if(target == "TopSitesInitCost" && costTemp==cost )  {
+				iconColor = "green";
+				markersArray =initCostMaxSitesMarkers;
+				$('.initCostMaxSites').prop('checked', true);
+				$('.initCostMaxSites').attr('disabled', false);
+				initCostMaxSitesList.push(list[i]);
+			}
+			else if(target == "LeastSitesInitCost" && i !=0 && costTemp!=cost ) {
+				iconColor = "orange";	
+				markersArray =initCostLeastSitesMarkers;
+				initCostLeastSitesList.push(list[i]);				
+			}
+			else if(target == "LeastSitesInitCost" && costTemp==cost) {
+				iconColor = "red";	
+				markersArray =initCostMinSitesMarkers;
+				$('.initCostMinSites').prop('checked', true);
+				$('.initCostMinSites').attr('disabled', false);
+				initCostMinSitesList.push(list[i]);
+			}
+			
+			else if(target == "TopSitesNetCost" && i !=0 && costTemp!=cost ) {
+				iconColor = "blue";	
+				markersArray =netCostTopSitesMarkers;
+				netCostTopSitesList.push(list[i]);
+			}
+			else if(target == "TopSitesNetCost" && costTemp==cost )  {
+				iconColor = "green";
+				markersArray =netCostMaxSitesMarkers;
+				$('.netCostMaxSites').prop('checked', true);
+				$('.netCostMaxSites').attr('disabled', false);
+				netCostMaxSitesList.push(list[i]);
+			}
+			else if(target == "LeastSitesNetCost" && i !=0 && costTemp!=cost ) {
+				iconColor = "orange";	
+				markersArray =netCostLeastSitesMarkers;
+				netCostLeastSitesList.push(list[i]);				
+			}
+			else if(target == "LeastSitesNetCost" && costTemp==cost) {
+				iconColor = "red";	
+				markersArray =netCostMinSitesMarkers;
+				$('.netCostMinSites').prop('checked', true);
+				$('.netCostMinSites').attr('disabled', false);
+				netCostMinSitesList.push(list[i]);
+			}
+			
+			
 			 iconSite ={
 					path: google.maps.SymbolPath.CIRCLE,
 			        fillOpacity: 0.9,
@@ -696,6 +798,9 @@ function createSiteMarker(list,iconColor,map,markersArray,legendCheckboxClass,in
 			var siteIdInfo ="<b style='font-size:13px;'><u>Site ID: </u></b>"+siteID;
 			var siteNameInfo ="<b style='font-size:13px;'><u>Site Name: </u></b>"+list[i][2];
 
+			//Format the value with commas for thousands
+			cost = cost.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+			
 			if(infoWindow==infoWindowInitCost) {
 				var siteCost ="<b style='font-size:13px;'><u>Initial Cost: </u></b>"+cost;
 			}
@@ -716,11 +821,8 @@ function createSiteMarker(list,iconColor,map,markersArray,legendCheckboxClass,in
 			siteMarker.metadata = { id: siteID };
 			markersArray[siteID] = siteMarker;
 			markersArray.push(siteMarker);
-			//markerClusterFarSites.addMarker(markersFarSites[""+markerId]);
 			markersArray[siteID].setMap(map);
-						
-
-			
+									
 			google.maps.event.addListener(siteMarker, "click", function (e) {
 				infoWindow.close();
 	            infoWindow.setContent(this.data); 
@@ -731,8 +833,9 @@ function createSiteMarker(list,iconColor,map,markersArray,legendCheckboxClass,in
 		}
 
 	}
-	
+
 	}
+	
 
 }	   
 function showHideAllSites(checkboxClass){
@@ -740,41 +843,57 @@ function showHideAllSites(checkboxClass){
 	var allMarkersArray;
 	var map;
 
-	if(checkboxClass=="initCostMaxSites") {
-
-		allMarkersArray=markersMaxInitCostSites;
-		lst=maxInitCostAssetList;
+	if(checkboxClass=="initCostTopSites") {
+		allMarkersArray=initCostTopSitesMarkers;
+		lst=initCostTopSitesList;
+		map=initCostMap;
+		
+	}
+	else if(checkboxClass=="initCostLeastSites") {
+		allMarkersArray=initCostLeastSitesMarkers;
+		lst=initCostLeastSitesList;
+		map=initCostMap;
+		
+	}
+	else if(checkboxClass=="initCostMaxSites") {
+		allMarkersArray=initCostMaxSitesMarkers;
+		lst=initCostMaxSitesList;
 		map=initCostMap;
 		
 	}
 	else if(checkboxClass=="initCostMinSites") {
-		allMarkersArray=markersMinInitCostSites;
-		lst=minInitCostAssetList;
+		allMarkersArray=initCostMinSitesMarkers;
+		lst=initCostMinSitesList;
 		map=initCostMap;
-		
+	}
+	else if(checkboxClass=="netCostTopSites") {
+		allMarkersArray=netCostTopSitesMarkers;
+		lst=netCostTopSitesList;
+		map=netCostMap;
+	}
+	else if(checkboxClass=="netCostLeastSites") {
+		allMarkersArray=netCostLeastSitesMarkers;
+		lst=netCostLeastSitesList;
+		map=netCostMap;
 	}
 	else if(checkboxClass=="netCostMaxSites") {
-
-		allMarkersArray=markersMaxNetCostSites;
-		lst=maxNetCostAssetList;
+		allMarkersArray=netCostMaxSitesMarkers;
+		lst=netCostMaxSitesList;
+		map=netCostMap;
+		
+	}
+	else if(checkboxClass=="netCostMinSites") {
+		allMarkersArray=netCostMinSitesMarkers;
+		lst=netCostMinSitesList;
 		map=netCostMap;
 	}
-	else {
-		allMarkersArray=markersMinNetCostSites;
-		lst=minNetCostAssetList;
-		map=netCostMap;
-
-	}
-	
 	$('.'+checkboxClass).bind("change",function() {
-		//markerClusterFarSites.clearMarkers();	
 					
 			if ($(this).is(':checked')){
 				for(var x=0;x<lst.length;x++) {
 					siteID = lst[x][1];
 					if(allMarkersArray[siteID].getMap()==null){
 						allMarkersArray[siteID].setMap(map);			
-						//markerClusterFarSites.addMarker(markersFarSites[siteID]);
 					}
 				}
 			}
