@@ -2037,14 +2037,11 @@ function DistributionBoardCheckFilter(Id,folder,clusterName){
 			}
 		});
 	}	
-	
+
+// This function to build check and uncheck event for nodes.
 function NodeActiveCheckFilter(Id,clusterName){
-	   console.log(" //////////NodeActiveCheckFilter "+Id +" and clusterName "+ clusterName);	
-	   markersNodeActive[Id].setMap(null);
-		$("#"+Id).children('input').bind("change",function() {
-			console.log(" //////////NodeActiveCheckFilter clicked");	
+		$("#"+Id).children('input').bind("change",function() {				
 			var folderID = $(this).parents().eq(4).attr('id');
-			markersNodeActive[Id].setMap(null);
 			if ($(this).is(':checked')){
 				markersNodeActive[Id].setMap(map);					
 				clusterName.addMarker(markersNodeActive[Id]);
@@ -2059,8 +2056,7 @@ function NodeActiveCheckFilter(Id,clusterName){
 				markersNodeActive[Id].setMap(null);							
 				clusterName.removeMarker(markersNodeActive[Id]);			
 			}
-		 	if ($(this).parents().eq(2).find('.Nodes:checked').length == $(this).parents().eq(2).find('.Nodes').length) {
-					console.log("Here 1 ")
+		 	if ($(this).parents().eq(2).find('.Nodes:checked').length == $(this).parents().eq(2).find('.Nodes').length) {					
 				$(this).parents().eq(2).children('input').prop('checked', true);
 			 }
 			 else{
@@ -2079,7 +2075,6 @@ function NodeActiveCheckFilter(Id,clusterName){
 			else{
 				$("#NodeActive_f_CurrentPhysicalLayer > .AllNodeActive").prop("checked",false);		
 			}
-			
 		});
 	}
 
@@ -4261,12 +4256,8 @@ function nodeLayerUnCheckAll(){
 }
 //Event for tree-Map view/hide from Map for all elements 	
 function allElementsCheckFilter(){
-
-
 	$(".allElements").bind("change",function() {
 		var start=Date.now();
-		//console.log("changed checkbox of :"+$(this).parent().attr('id'));
-
 		markerClusterManhole.clearMarkers();
 		markerClusterHandhole.clearMarkers();
 		markerClusterAccessDistBoard.clearMarkers();
@@ -4290,121 +4281,90 @@ function allElementsCheckFilter(){
 			
 		if ($(this).is(':checked')){
 			
-			$(this).parent().find('ul > li').each(function(){
-				//console.log(" checkbox of :"+	$(this).parent().find('ul > li').attr('id'));
-				
-				//$(this).children('input:checkbox').prop('checked', true);
+			$(this).parent().find('ul > li').each(function(){				
 				if(($(this).children('input:checkbox').hasClass('AllNodeActive') || $(this).children('input:checkbox').hasClass('EntrepriseMSAN') || $(this).children('input:checkbox').hasClass('TransmissionDWDM') || $(this).children('input:checkbox').hasClass('TransmissionSDH') || $(this).children('input:checkbox').hasClass('TransmissionGPON')) && nodeFlag == 0 ){
-			    	//console.log("passed AllNodeActive");
 			    	$(this).children('input:checkbox').prop('checked', false);
-					//getNode();
-				}else{
-					$(this).children('input:checkbox').prop('checked', true);
 				}
-				//console.log(" //////////AllFiberCables in allElements before");
-				if($(this).children('input:checkbox').hasClass('AllFiberCables')  && flag == 0 ){
-					//console.log(" //////////AllFiberCables in allElements after");
-					getFiberPath();
-				}
-				else{
-					if($(this).hasClass('FIBER')){						
-						singleFiberCheckFilter($(this).children('input:checkbox'))				
-				}
-				else if($(this).hasClass('TUBE')){
-					singleTubeCheckFilter($(this).children('input:checkbox'));
-				}
-
-				else if($(this).hasClass('STRAND')){
-					singleStrandCheckFilter($(this).children('input:checkbox'));
-				}
-			}
-			if($(this).hasClass('Trench')){
-				singleTrenchCheckFilter($(this).children('input:checkbox'));
-				}
-				else if($(this).hasClass('Duct')){
-					singleDuctCheckFilter($(this).children('input:checkbox'));
-				}				
-			});
-		 
-			$("#network_tree").find("input:checked" ).each(function(){
-				
-			    
-				
-				if($(this).hasClass('Manhole')){
-					id=$(this).parent().attr('id');
-					if(markersManhole[id].getMap()==null){
-						markersManhole[id].setMap(map);			
-						markerClusterManhole.addMarker(markersManhole[id]);
-						
-						$("#manholeCheckAllBoq").prop("checked",true);
-						
+				else {
+					$(this).children('input:checkbox').prop('checked', true);					
+					if($(this).children('input:checkbox').hasClass('AllFiberCables')  && flag == 0 ){
+						getFiberPath();
 					}
-				}
-				
-				else if($(this).hasClass('Handhole')){
-					id=$(this).parent().attr('id');
-					if(markersHandhole[id].getMap()==null){
-						markersHandhole[id].setMap(map);			
-						markerClusterHandhole.addMarker(markersHandhole[id]);
-						$("#handholeCheckAllBoq").prop("checked",true);
-						
+					else{
+						if($(this).hasClass('FIBER')){						
+							singleFiberCheckFilter($(this).children('input:checkbox'))				
 					}
-				}
-
-				else if($(this).hasClass('DistBoard')){
-					id=$(this).parent().attr('id');
-					if(markersDistBoard[id].getMap()==null){
- 
-						markersDistBoard[id].setMap(map);
-						if(window[""+id][8]=="backbone") {
-							markerClusterBackboneDistBoard.addMarker(markersDistBoard[id]);
+						else if($(this).hasClass('TUBE')){
+							singleTubeCheckFilter($(this).children('input:checkbox'));
 						}
-						else if(window[""+id][8]=="metro") {
-							markerClusterMetroDistBoard.addMarker(markersDistBoard[id]);
+						else if($(this).hasClass('STRAND')){
+							singleStrandCheckFilter($(this).children('input:checkbox'));
 						}
-						else if(window[""+id][8]=="access") {
-							markerClusterAccessDistBoard.addMarker(markersDistBoard[id]);
-						}			
-						$("#distBoardCheckAllBoq").prop("checked",true);
-						
+					}															
+					if($(this).children('input:checkbox').hasClass('Manhole')){
+						id=$(this).attr('id');
+						if(markersManhole[id].getMap()==null){
+							markersManhole[id].setMap(map);			
+							markerClusterManhole.addMarker(markersManhole[id]);						
+							$("#manholeCheckAllBoq").prop("checked",true);
+						}
+					}					
+					if($(this).children('input:checkbox').hasClass('Handhole')){
+						id=$(this).attr('id');
+						if(markersHandhole[id].getMap()==null){
+							markersHandhole[id].setMap(map);			
+							markerClusterHandhole.addMarker(markersHandhole[id]);
+							$("#handholeCheckAllBoq").prop("checked",true);
+						}
 					}
-				}
-				else if($(this).hasClass('Nodes')){
-					console.log("passed Nodes");
-					id=$(this).parent().attr('id');
-					if(markersNodeActive[id].getMap()==null){
-
-						markersNodeActive[id].setMap(map);	
-						if(window[""+id][8]=="MSAN") {
-							markerClusterMSANNodes.addMarker(markersNodeActive[id]);
+					if($(this).children('input:checkbox').hasClass('DistBoard')){
+						id=$(this).attr('id');
+						if(markersDistBoard[id].getMap()==null){
+							markersDistBoard[id].setMap(map);
+							if(window[""+id][8]=="backbone") {
+								markerClusterBackboneDistBoard.addMarker(markersDistBoard[id]);
+							}
+							else if(window[""+id][8]=="metro") {
+								markerClusterMetroDistBoard.addMarker(markersDistBoard[id]);
+							}
+							else if(window[""+id][8]=="access") {
+								markerClusterAccessDistBoard.addMarker(markersDistBoard[id]);
+							}			
+							$("#distBoardCheckAllBoq").prop("checked",true);
 						}
-						else if(window[""+id][8]=="DWDM") {
-							markerClusterDWDMNodes.addMarker(markersNodeActive[id]);
-						}
-						else if(window[""+id][8]=="SDH") {
-							markerClusterSDHNodes.addMarker(markersNodeActive[id]);
-						}
-						else if(window[""+id][8]=="GPON") {
-							markerClusterGPONNodes.addMarker(markersNodeActive[id]);
-						}
-						
-					    $("#nodesActiveCheckAllBoq").prop("checked",true);
-						
 					}
-				}
+					if($(this).children('input:checkbox').hasClass('Nodes')){
+						id=$(this).attr('id');
+						if(markersNodeActive[id].getMap()==null){
+							markersNodeActive[id].setMap(map);	
+							if(window[""+id][8]=="MSAN") {
+								markerClusterMSANNodes.addMarker(markersNodeActive[id]);
+							}
+							else if(window[""+id][8]=="DWDM") {
+								markerClusterDWDMNodes.addMarker(markersNodeActive[id]);
+							}
+							else if(window[""+id][8]=="SDH") {
+								markerClusterSDHNodes.addMarker(markersNodeActive[id]);
+							}
+							else if(window[""+id][8]=="GPON") {
+								markerClusterGPONNodes.addMarker(markersNodeActive[id]);
+							}				
+							$("#nodesActiveCheckAllBoq").prop("checked",true);
+						}
+					}
+					if($(this).hasClass('Trench')){
+						singleTrenchCheckFilter($(this).children('input:checkbox'));
+					}
+					if($(this).hasClass('Duct')){
+						singleDuctCheckFilter($(this).children('input:checkbox'));
+					}
+				} // End of else in case node is not loaded
+		});
+	}
+		else{ // In case Current Physical Layer ('.allElements') is unchecked.
 				
-
-			});
-			
-		}
-	
-		else{
-				
-			$(this).parent().find('ul > li').each(function(){
-				
+			$(this).parent().find('ul > li').each(function(){				
 				$(this).children('input:checkbox').prop('checked', false);
-
-
 				if($(this).hasClass('FIBER')){
 					singleFiberUnCheckFilter($(this).children('input:checkbox'));
 				}
@@ -4419,65 +4379,9 @@ function allElementsCheckFilter(){
 				}	
 				else if($(this).hasClass('Duct')){
 					singleDuctUnCheckFilter($(this).children('input:checkbox'));
-				}	
-					  
-			});
+				}					  
+			});			
 			
-			$("#network_tree").find("input:checked").each(function(){
-				if($(this).hasClass('Manhole')){
-					id=$(this).parent().attr('id');
-				   if(markersManhole[id].getMap()==null){
-					   markersManhole[id].setMap(map);			
-					   markerClusterManhole.addMarker(markersManhole[id]);
-				   }
-				}
-				
-				else if($(this).hasClass('Handhole')){
-					id=$(this).parent().attr('id');
-				   if(markersHandhole[id].getMap()==null){
-					   markersHandhole[id].setMap(map);			
-					   markerClusterHandhole.addMarker(markersHandhole[id]);
-					}
-				}
-
-				else if($(this).hasClass('DistributionBoard')){
-					id =$(this).attr('id');
-				   if(markersDistBoard[id].getMap()==null){
-					   markersDistBoard[id].setMap(map);	
-						if(window[""+id][8]=="backbone") {
-							markerClusterBackboneDistBoard.addMarker(markersDistBoard[id]);
-						}
-						else if(window[""+id][8]=="metro") {
-							markerClusterMetroDistBoard.addMarker(markersDistBoard[id]);
-						}
-						else if(window[""+id][8]=="access") {
-							markerClusterAccessDistBoard.addMarker(markersDistBoard[id]);
-						}			
-					}
-			   }
-			    else if($(this).hasClass('NodeActive')){
-				   if(markersNodeActive[$(this).attr('id')].getMap()==null){
-					
-					    markersNodeActive[$(this).attr('id')].setMap(map);
-						id=$(this).attr('id');
-						if(window[""+id][8]=="MSAN") {
-							markerClusterMSANNodes.addMarker(markersNodeActive[id]);
-						}
-						else if(window[""+id][8]=="DWDM") {
-							markerClusterDWDMNodes.addMarker(markersNodeActive[id]);
-						}
-						else if(window[""+id][8]=="SDH") {
-							markerClusterSDHNodes.addMarker(markersNodeActive[id]);
-						}
-						else if(window[""+id][8]=="GPON") {
-							markerClusterGPONNodes.addMarker(markersNodeActive[id]);
-						}				
-					}
-			   }
-			   
-			   
-
-			});		 
 			for(var t=0;t<siteCltSrcMarkers.length;t++) {
 				siteCltSrcMarkers[siteCltSrcMarkers[t].ID].setMap(null);
 			}
@@ -4525,15 +4429,10 @@ function allElementsCheckFilter(){
 			}
 			for (var a =0;a<allTrenchsShowSeq.length;a++) {
 				window['trenchCheckSequence_'+allTrenchsShowSeq[a]] = "unchecked";
-			}	
-			
+			}			
 		}
-		console.log("it took "+(Date.now()-start)+" millisecs");
-	
-	});	
-
+	});
 }
-
 
 
 
