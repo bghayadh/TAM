@@ -4272,10 +4272,12 @@ function allElementsCheckFilter(){
 		markerClusterAccessDistBoard.clearMarkers();
 		markerClusterMetroDistBoard.clearMarkers();
 		markerClusterBackboneDistBoard.clearMarkers();
-		/*markerClusterMSANNodes.clearMarkers();
-		markerClusterDWDMNodes.clearMarkers();
-		markerClusterSDHNodes.clearMarkers();
-		markerClusterGPONNodes.clearMarkers();*/
+		if(nodeFlag == 1){
+			markerClusterMSANNodes.clearMarkers();
+		    markerClusterDWDMNodes.clearMarkers();
+		    markerClusterSDHNodes.clearMarkers();
+		    markerClusterGPONNodes.clearMarkers();
+		}
 				
 		$("#distBoardCheckAllBoq").prop("checked",false);
 		$("#manholeCheckAllBoq").prop("checked",false);
