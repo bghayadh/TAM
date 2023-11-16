@@ -100,8 +100,7 @@ public class FinancialReportController {
 					model.addAttribute("totalNetCostFetched", totalNetCost);
 
 					// Get the total of initial,net cost and accumulated depr of all FAR records
-					query = session.createNativeQuery("Select SUM(initialCost), SUM( AccumDepr), SUM(netCost) FROM ( SELECT DISTINCT A.FAR_ID AS FAR_ID, A.INITIALCOST as initialCost,A.ACCUMULDEPRECAMNT as AccumDepr, A.NETCOST as netCost from FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID "
-							+ " LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID WHERE (C.longitude is not null and C.longitude != '0' and C.longitude != 'null' and C.latitude is not null and C.latitude != '0' and C.latitude != 'null') ) ");
+					query = session.createNativeQuery("Select SUM(INITIALCOST), SUM(ACCUMULDEPRECAMNT), SUM(NETCOST) FROM FIXED_ASSET_REGISTRY  ");
 
 					result = (Object[]) query.uniqueResult();
 					if (result[0] != null)
@@ -469,8 +468,8 @@ public class FinancialReportController {
 					}
 
 					// Get the total of initial,net cost and accumulated depr of all FAR records
-					query = session.createNativeQuery("Select SUM(initialCost), SUM( AccumDepr), SUM(netCost) FROM ( SELECT DISTINCT A.FAR_ID AS FAR_ID, A.INITIALCOST as initialCost,A.ACCUMULDEPRECAMNT as AccumDepr, A.NETCOST as netCost from FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID "
-							+ " LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID WHERE (C.longitude is not null and C.longitude != '0' and C.longitude != 'null' and C.latitude is not null and C.latitude != '0' and C.latitude != 'null') ) ");
+					query = session.createNativeQuery("Select SUM(INITIALCOST), SUM(ACCUMULDEPRECAMNT), SUM(NETCOST) FROM FIXED_ASSET_REGISTRY  ");
+					
 					result = (Object[]) query.uniqueResult();
 					if (result[0] != null)
 						totalInitialCost = df.format(new BigDecimal(result[0].toString()));
