@@ -1,20 +1,15 @@
 package com.aliat.alm.controller;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.query.NativeQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,16 +31,17 @@ public class NetworkTransactionsReportController {
 	private static Transaction tx = null;
 	private static final Logger logger = LoggerFactory.getLogger(SpeedCoverageReportController.class);
 	private static ObjectMapper mapper = new ObjectMapper();
-	private static NativeQuery query = null;
+	@SuppressWarnings("rawtypes")
+	private static Query query = null;
 	@Autowired
 	ALMSessions almsessions;
-	
+
 	@Autowired
 	Notify notifications;
-	
-	@SuppressWarnings("unchecked")
+
 	@RequestMapping(value = "/NetworkTransactionsReport", method = RequestMethod.GET)
-	public String NetworkTransactionsReport(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
+	public String NetworkTransactionsReport(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) {
 		// logger.info("Welcome home! The client locale is {}.", locale);
 
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
@@ -58,10 +54,11 @@ public class NetworkTransactionsReportController {
 				tx = session.beginTransaction();
 				notifications.headerNotifications(session, model);
 				try {
-					query = session.createNativeQuery("SELECT ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,TO_CHAR(PARSING_DATE,'DD-MM-YYYY HH:mm:ss') as startdate,TO_CHAR(PARSING_DATE,'DD-MM-YYYY HH:mm:ss') as enddate,FROM_SITE,TO_SITE"
-							+ ",FROM_NODE,TO_NODE,FROM_CIRCLE,TO_CIRCLE,APPROVED_BY,MODIFIED_BY,SENT_TO_ALM,ALM_APPROVAL_STATUS"
-							+ " FROM NETWORK_TRANSACTION WHERE PARSING_DATE between systimestamp - INTERVAL '7' DAY and systimestamp "
-							+ "ORDER BY PARSING_DATE DESC");
+					query = session.createNativeQuery(
+							"SELECT ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,TO_CHAR(PARSING_DATE,'DD-MM-YYYY HH:mm:ss') as startdate,FROM_SITE,TO_SITE"
+									+ ",FROM_NODE,TO_NODE,FROM_NODE_TYPE,TO_NODE_TYPE,MODEL,MAC_ADDRESS,SERIAL_NUMBER,FROM_CIRCLE,TO_CIRCLE,APPROVED_BY,MODIFIED_BY,SENT_TO_ALM,ALM_APPROVAL_STATUS"
+									+ " FROM NETWORK_TRANSACTION WHERE PARSING_DATE between systimestamp - INTERVAL '7' DAY and systimestamp "
+									+ "ORDER BY PARSING_DATE DESC");
 
 					model.addAttribute("TransactionsGrid", mapper.writeValueAsString(query.list()));
 				} catch (Exception e) {
@@ -72,6 +69,7 @@ public class NetworkTransactionsReportController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -82,7 +80,8 @@ public class NetworkTransactionsReportController {
 
 	@RequestMapping(value = "/GenerateNetworkTransactionsReport", method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, Object> GenerateNetworkTransactionsReport(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
+	public Map<String, Object> GenerateNetworkTransactionsReport(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) {
 		// logger.info("Welcome home! The client locale is {}.", locale);
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
@@ -106,7 +105,7 @@ public class NetworkTransactionsReportController {
 			} else {
 				EndDate = EndDate.replace(" AM", "").trim();
 			}
-			
+
 			session = almsessions.getSession();
 
 			if (session != null && session.isOpen()) {
@@ -114,14 +113,14 @@ public class NetworkTransactionsReportController {
 				tx = session.beginTransaction();
 				notifications.headerNotifications(session, model);
 				try {
-					query = session.createNativeQuery("SELECT ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,TO_CHAR(PARSING_DATE,'DD-MM-YYYY HH:mm:ss') as startdate,TO_CHAR(PARSING_DATE,'DD-MM-YYYY HH:mm:ss') as enddate,FROM_SITE,TO_SITE"
-							+ ",FROM_NODE,TO_NODE,FROM_CIRCLE,TO_CIRCLE,APPROVED_BY,MODIFIED_BY,SENT_TO_ALM,ALM_APPROVAL_STATUS"
-							+ " FROM NETWORK_TRANSACTION WHERE PARSING_DATE between TO_DATE('" + StartDate +"','MM/DD/YYYY HH24:MI:SS')"
-							+ " and TO_DATE('" + EndDate +"','MM/DD/YYYY HH24:MI:SS')"
-							+ " ORDER BY PARSING_DATE DESC");
-
+					query = session.createNativeQuery(
+							"SELECT ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,TO_CHAR(PARSING_DATE,'DD-MM-YYYY HH:mm:ss') as startdate,FROM_SITE,TO_SITE"
+									+ ",FROM_NODE,TO_NODE,FROM_NODE_TYPE,TO_NODE_TYPE,MODEL,MAC_ADDRESS,SERIAL_NUMBER,FROM_CIRCLE,TO_CIRCLE,APPROVED_BY,MODIFIED_BY,SENT_TO_ALM,ALM_APPROVAL_STATUS"
+									+ " FROM NETWORK_TRANSACTION WHERE PARSING_DATE between TO_DATE('" + StartDate
+									+ "','MM/DD/YYYY HH24:MI:SS')" + " and TO_DATE('" + EndDate
+									+ "','MM/DD/YYYY HH24:MI:SS')" + " ORDER BY PARSING_DATE DESC");
 					System.out.println(mapper.writeValueAsString(query.list()));
-					rtn.put("TransactionsGrid",query.list());
+					rtn.put("TransactionsGrid", query.list());
 				} catch (Exception e) {
 					logger.info("Error on NetworkTransactionsReport with a message : " + e);
 					e.printStackTrace();
@@ -130,6 +129,7 @@ public class NetworkTransactionsReportController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
+						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -137,5 +137,5 @@ public class NetworkTransactionsReportController {
 		return rtn;
 
 	}
-	
+
 }
