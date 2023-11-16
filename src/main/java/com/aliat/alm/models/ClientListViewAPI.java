@@ -18,7 +18,7 @@ public class ClientListViewAPI {
                private int vfrom;
                private int vto;
                private int val1;
-               public String date;
+               private String date;
                private String vsimregid;
                private String vcolname;
                private String vcolname1;

@@ -16,7 +16,7 @@ public class SpeedCoverageTestListViewAPI {
    
     private int vfrom;
     private int vto;
-    public String date;
+    private String date;
     
     
 	public SpeedCoverageTestListViewAPI() {

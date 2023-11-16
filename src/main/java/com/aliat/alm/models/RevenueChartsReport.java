@@ -3,10 +3,12 @@ package com.aliat.alm.models;
 import java.math.BigDecimal;
 
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-@Entity
+
+@Embeddable
 @Table(name = "PREPAID_PAYG_REVENUE" , schema="almrpt")
 public class RevenueChartsReport {
 	

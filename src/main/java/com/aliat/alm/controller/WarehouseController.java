@@ -13,6 +13,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.aliat.alm.models.WareHouseListView;
@@ -87,6 +91,9 @@ public class WarehouseController {
 	private static Query query = null;
 	private String str = null;
 	private String siteimgID, siteimgName;
+	
+	private EntityManagerFactory emf =null;
+	private EntityManager entityManager=null;
 
 	@Autowired
 	ALMSessions almsessions;
@@ -97,7 +104,6 @@ public class WarehouseController {
 	@Autowired
 	Notify notifications;
 
-	@SuppressWarnings({ "unchecked", "deprecation" })
 	@RequestMapping(value = "/WarehouseListView", method = RequestMethod.GET)
 	public String WarehouseListView(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -105,40 +111,37 @@ public class WarehouseController {
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			return LoginServices.checkSession(request, response);
 		} else {
-			session = almsessions.getSession();
-			if (session != null && session.isOpen()) {
+			//session = almsessions.getSession();
+			try {
+			 emf = Persistence.createEntityManagerFactory("persistence");
+			 entityManager = emf.createEntityManager();
 
-				tx = session.beginTransaction();
-				notifications.headerNotifications(session, model);
-				try {
+				notifications.headerNotification(entityManager, model);
+				
 
-					List<WareHouseListView> listAR = new ArrayList<WareHouseListView>();
+					//List<WareHouseListView> listAR = new ArrayList<WareHouseListView>();
 
 					str = "select WARE_ID as wareID,WARE_ID as warehouseID,WARE_NAME as warehouseName,SITE_ID as wareSiteID, TO_CHAR ( LAST_MODIFY_DATE , 'YYYY-MM-DD HH24:MI:SS') as wlastModifieddate,"
 							+ " AREA_NAME as areaName,LONGITUDE as wareLong,LATITUDE as wareLat,"
 							+ "CITY as wareCity,REGION_NAME as regionName from WAREHOUSE order by LAST_MODIFY_DATE DESC";
 
-					listAR = (session.createNativeQuery(str)).addScalar("wareID").addScalar("warehouseID").addScalar("warehouseName")
-							.addScalar("wareSiteID").addScalar("wlastModifieddate").addScalar("areaName")
-							.addScalar("wareLong").addScalar("wareLat").addScalar("wareCity").addScalar("regionName")
-							.setResultTransformer(Transformers.aliasToBean(WareHouseListView.class)).list();
+					//listAR = entityManager.createNativeQuery(str).getResultList(); //  setResultTransformer(Transformers.aliasToBean(WareHouseListView.class)).list();
 
-					model.addAttribute("ListGridTable", mapper.writeValueAsString(listAR));
-					session.flush();
-					session.clear();
+					model.addAttribute("ListGridTable", mapper.writeValueAsString(entityManager.createNativeQuery(str).getResultList()));
 
 				} catch (Exception e) {
 					logger.info("Error on WarehouseListView with a message : " + e);
 					e.printStackTrace();
 					model.addAttribute("ListGridTable", "");
 				} finally {
-					if (session != null && session.isOpen()) {
-						tx.commit();
-						session.close();
-						session.getSessionFactory().close();
+					if (entityManager != null && entityManager.isOpen()) {
+						entityManager.close();
+					}
+					if(emf != null && emf.isOpen()) {
+						emf.close();	
 					}
 				}
-			}
+			
 			return "WarehouseListView";
 		}
 	}

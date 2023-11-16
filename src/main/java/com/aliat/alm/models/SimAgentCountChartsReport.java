@@ -2,10 +2,11 @@ package com.aliat.alm.models;
 
 import java.math.BigDecimal;
 
+import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-@Entity
+@Embeddable
 @Table(name = "AGENT" , schema="alm")
 public class SimAgentCountChartsReport {
 	
