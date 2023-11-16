@@ -402,7 +402,7 @@ public class SerialNumberController {
 
 @RequestMapping(value = "/SerialNumberListViewDelete", method = RequestMethod.GET)
 @ResponseBody
-public Map<String, Object> WarehouseListViewDelete(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {	
+public Map<String, Object> SerialNumberListViewDelete(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {	
 
 	Map<String, Object> rtn = new LinkedHashMap<>();
 	
