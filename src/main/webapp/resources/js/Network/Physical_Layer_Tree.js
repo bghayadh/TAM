@@ -2400,9 +2400,14 @@ menuBackboneDB = new ContextMenu({
       success: function (data) {
 
           if(data !=null){
-             var tr ="<tr>"+"<td><b>Backbone Count: </b>"+data.totalDBCount+"</td></tr>"	
+              var tr ="<tr>"+"<td><b>Backbone Count: </b>"+data.totalDBCount+"</td></tr>"	
                  	+"<tr>"+"<td><b>Total DB Mapping: </b>"+data.totalDBMappingCount+"</td></tr>"						
-    
+                    +"<tr>"+"<td><b>Total Ports: </b>"+data.countAllPorts+"</td></tr>"	
+                    +"<tr>"+"<td><b>Total Active Front Ports: </b>"+data.countDbActiveFP+"</td></tr>"						
+					+"<tr>"+"<td><b>Total Inactive Front Ports: </b>"+data.countDbInactiveFP+"</td></tr>"						
+                    +"<tr>"+"<td><b>Total Active Back Ports: </b>"+data.countDbActiveBP+"</td></tr>"						
+                    +"<tr>"+"<td><b>Total Inactive Back Ports: </b>"+data.countDbInactiveBP+"</td></tr>"						
+
 			 showBoq();
              $("#boq_table").append(tr);
               data=null;     
@@ -2439,7 +2444,12 @@ menuBackboneDB = new ContextMenu({
           if(data!=null){
 				var tr ="<tr>"+"<td><b>Metro Count: </b>"+data.totalDBCount+"</td></tr>"	
                  	+"<tr>"+"<td><b>Total DB Mapping: </b>"+data.totalDBMappingCount+"</td></tr>"						
-    
+        			+"<tr>"+"<td><b>Total Ports: </b>"+data.countAllPorts+"</td></tr>"	
+                    +"<tr>"+"<td><b>Total Active Front Ports: </b>"+data.countDbActiveFP+"</td></tr>"						
+					+"<tr>"+"<td><b>Total Inactive Front Ports: </b>"+data.countDbInactiveFP+"</td></tr>"						
+                    +"<tr>"+"<td><b>Total Active Back Ports: </b>"+data.countDbActiveBP+"</td></tr>"						
+                    +"<tr>"+"<td><b>Total Inactive Back Ports: </b>"+data.countDbInactiveBP+"</td></tr>"						
+
                  showBoq();
                  $("#boq_table").append(tr);
                  data=null;
@@ -2478,6 +2488,12 @@ menuAccessDB = new ContextMenu({
 
  				var tr ="<tr>"+"<td><b>Access Count: </b>"+data.totalDBCount+"</td></tr>"	
                  	+"<tr>"+"<td><b>Total DB Mapping: </b>"+data.totalDBMappingCount+"</td></tr>"						
+        			+"<tr>"+"<td><b>Total Ports: </b>"+data.countAllPorts+"</td></tr>"	
+                    +"<tr>"+"<td><b>Total Active Front Ports: </b>"+data.countDbActiveFP+"</td></tr>"						
+					+"<tr>"+"<td><b>Total Inactive Front Ports: </b>"+data.countDbInactiveFP+"</td></tr>"						
+                    +"<tr>"+"<td><b>Total Active Back Ports: </b>"+data.countDbActiveBP+"</td></tr>"						
+                    +"<tr>"+"<td><b>Total Inactive Back Ports: </b>"+data.countDbInactiveBP+"</td></tr>"						
+						
                 showBoq();
                 $("#boq_table").append(tr);
                 data=null;
@@ -2741,9 +2757,15 @@ menuNodeesActive = new ContextMenu({
 							   if(data!=null){
 								   CountDistBoard= window["distributionBoardCount_"+nodeFileId] = data.CountDistBoard;
 								   
+								   
 								 var tr ="<tr>"+"<td><b>Distribution Boards Count: </b>"+data.CountDistBoard+"</td></tr>"	
-			                 		+"<tr>"+"<td><b>Total DB Mapping: </b>"+data.CountDistBoardMapping+"</td></tr>"						
-			    
+			                 		+"<tr>"+"<td><b>Total DB Mapping: </b>"+data.CountDistBoardMapping+"</td></tr>"	
+			    			        +"<tr>"+"<td><b>Total Ports: </b>"+data.countAllPorts+"</td></tr>"											
+			    			        +"<tr>"+"<td><b>Total Active Front Ports: </b>"+data.countDbActiveFP+"</td></tr>"						
+			                 		+"<tr>"+"<td><b>Total Inactive Front Ports: </b>"+data.countDbInactiveFP+"</td></tr>"						
+									+"<tr>"+"<td><b>Total Active Back Ports: </b>"+data.countDbActiveBP+"</td></tr>"						
+			                 		+"<tr>"+"<td><b>Total Inactive Back Ports: </b>"+data.countDbInactiveBP+"</td></tr>"						
+
 							   showBoq();
 							   $("#boq_table").append(tr);
 							   data=null;
@@ -6758,8 +6780,12 @@ singleProject = new ContextMenu({
 									+"<tr>"+"<td><b>Total DB Mapping: </b>"+data.DbMappingCount+"</td></tr>"															   
 									+"<tr>"+"<td><b>Num of Rows: </b>"+data.countConnections[0][0]+"</td></tr>"						   
 									+"<tr>"+"<td><b>Num of Columnns: </b>"+data.countConnections[0][1]+"</td></tr>"	
-									+"<tr>"+"<td><b>Num of Total Ports: </b>"+data.countConnections[0][0]*data.countConnections[0][1]+"</td></tr>"
-									+"<tr>"+"<td><b>Total DB Mapping: </b>"+data.DbMappingCount+"</td></tr>"						
+									+"<tr>"+"<td><b>Total DB Mapping: </b>"+data.DbMappingCount+"</td></tr>"
+									+"<tr>"+"<td><b>Total Ports: </b>"+data.countConnections[0][0]*data.countConnections[0][1]+"</td></tr>"						
+			    			        +"<tr>"+"<td><b>Total Active Front Ports: </b>"+data.countDbActiveFP+"</td></tr>"						
+			                 		+"<tr>"+"<td><b>Total Inactive Front Ports: </b>"+data.countDbInactiveFP+"</td></tr>"						
+									+"<tr>"+"<td><b>Total Active Back Ports: </b>"+data.countDbActiveBP+"</td></tr>"						
+			                 		+"<tr>"+"<td><b>Total Inactive Back Ports: </b>"+data.countDbInactiveBP+"</td></tr>"						
 
 									$("#boq_table").append(tr);
 									

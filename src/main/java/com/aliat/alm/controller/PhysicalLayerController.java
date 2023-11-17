@@ -3448,8 +3448,25 @@ public class PhysicalLayerController {
 						.createNativeQuery(
 								"Select count(*) FROM DISTRIBUTION_BOARD_MAPPING where DB_ID='" + distBoardSel + "' ")
 						.uniqueResult();
-
 				rtn.put("DbMappingCount", DbMappingCount);
+				
+				Object countDbActiveFP = session
+						.createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING WHERE FP_STATUS='Active' AND DB_ID='" + distBoardSel + "' ").uniqueResult();
+				rtn.put("countDbActiveFP", countDbActiveFP);
+				
+				Object countDbInactiveFP = session
+						.createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING WHERE FP_STATUS='InActive' AND DB_ID='" + distBoardSel + "' ").uniqueResult();
+				rtn.put("countDbInactiveFP", countDbInactiveFP);
+				
+				Object countDbActiveBP = session
+						.createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING WHERE BP_STATUS='Active' AND DB_ID='" + distBoardSel + "' ").uniqueResult();
+				rtn.put("countDbActiveBP", countDbActiveBP);
+				
+				Object countDbInactiveBP = session
+						.createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING WHERE BP_STATUS='InActive' AND DB_ID='" + distBoardSel + "' ").uniqueResult();
+				rtn.put("countDbInactiveBP", countDbInactiveBP);
+				
+
 				session.clear();
 				tx.commit();
 
@@ -7513,6 +7530,34 @@ public class PhysicalLayerController {
 								+ " B.DB_NETWORK_LEVEL = '" + request.getParameter("networkLevel") + "'   ")
 						.uniqueResult();
 				rtn.put("totalDBMappingCount", totalDBMappingCount);
+				
+				Object countAllPorts = session
+						.createNativeQuery("SELECT SUM (dbSum) FROM ( SELECT DB_ID,SUM(NUM_ROWS*NUM_COLUMNS) as dbSum FROM distribution_board WHERE "
+								+ " DB_NETWORK_LEVEL = '"+request.getParameter("networkLevel")+"' GROUP BY DB_ID ) ").uniqueResult();
+
+				rtn.put("countAllPorts", countAllPorts);
+				
+				Object countDbActiveFP = session
+						.createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING A LEFT JOIN distribution_board B ON A.DB_ID = B.DB_ID WHERE "
+								+ " B.DB_NETWORK_LEVEL = '" + request.getParameter("networkLevel") + "' AND A.FP_STATUS='Active' ").uniqueResult();
+				rtn.put("countDbActiveFP", countDbActiveFP);
+				
+				Object countDbInactiveFP = session
+						.createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING A LEFT JOIN distribution_board B ON A.DB_ID = B.DB_ID WHERE "
+								+ " B.DB_NETWORK_LEVEL = '" + request.getParameter("networkLevel") + "' AND A.FP_STATUS='InActive' ").uniqueResult();
+				rtn.put("countDbInactiveFP", countDbInactiveFP);
+				
+				
+				Object countDbActiveBP = session
+						.createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING A LEFT JOIN distribution_board B ON A.DB_ID = B.DB_ID WHERE "
+								+ " B.DB_NETWORK_LEVEL = '" + request.getParameter("networkLevel") + "' AND A.BP_STATUS='Active' ").uniqueResult();
+				rtn.put("countDbActiveBP", countDbActiveBP);
+				
+				Object countDbInactiveBP = session
+						.createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING A LEFT JOIN distribution_board B ON A.DB_ID = B.DB_ID WHERE "
+								+ " B.DB_NETWORK_LEVEL = '" + request.getParameter("networkLevel") + "' AND A.BP_STATUS='InActive' ").uniqueResult();
+				rtn.put("countDbInactiveBP", countDbInactiveBP);
+
 
 				/*
 				 * Object MetroCount = session
@@ -7615,6 +7660,29 @@ public class PhysicalLayerController {
 						.createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING ").uniqueResult();
 
 				rtn.put("CountDistBoardMapping", CountDistBoardMapping);
+				
+				Object countAllPorts = session
+						.createNativeQuery("SELECT SUM (dbSum) FROM ( SELECT DB_ID,SUM(NUM_ROWS*NUM_COLUMNS) as dbSum FROM distribution_board GROUP BY DB_ID ) ").uniqueResult();
+				rtn.put("countAllPorts", countAllPorts);
+				
+				Object countDbActiveFP = session
+						.createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING WHERE FP_STATUS='Active' ").uniqueResult();
+				rtn.put("countDbActiveFP", countDbActiveFP);
+				
+				Object countDbInactiveFP = session
+						.createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING WHERE FP_STATUS='InActive' ").uniqueResult();
+				rtn.put("countDbInactiveFP", countDbInactiveFP);
+				
+				Object countDbActiveBP = session
+						.createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING WHERE BP_STATUS='Active' ").uniqueResult();
+				rtn.put("countDbActiveBP", countDbActiveBP);
+				
+				Object countDbInactiveBP = session
+						.createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING WHERE BP_STATUS='InActive' ").uniqueResult();
+				rtn.put("countDbInactiveBP", countDbInactiveBP);
+				
+				
+
 
 			} catch (Exception e) {
 				sw = new StringWriter();
