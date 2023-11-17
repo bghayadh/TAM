@@ -665,10 +665,7 @@
 											.addClass('active');
 								});
 
-						NetworkTranscationsArray = $
-						{
-							TransactionsGrid
-						}
+						NetworkTranscationsArray = ${TransactionsGrid}
 						var almgrid = new AlmgridTable(
 								{
 									tableId : "gridTable",
