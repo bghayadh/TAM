@@ -2,7 +2,6 @@ var flag = 0;
 function getFiberPath(type,url,id,tr){
 	$('body').append('<div id="loading"><img id="loading-image" src="'+getContext()+'/resources/images/ajax-loader.gif" alt="Loading..." /><span>Loading, please wait.</span></div>')
     if(flag == 0){
-	 // console.log(" //////////AllFiberCables 1");	
 	
 	$.ajax({
 		type: "GET",
