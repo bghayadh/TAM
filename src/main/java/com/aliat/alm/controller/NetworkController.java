@@ -7,6 +7,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.hibernate.query.Query;
@@ -39,6 +43,9 @@ public class NetworkController {
 	private static Query query = null;
 	private static StringWriter sw;
 	private static String exceptionAsString;
+	
+	private EntityManagerFactory emf =null;
+	private EntityManager entityManager=null;
 
 	/**
 	 * Simply selects the home view to render by returning its name.
@@ -98,11 +105,13 @@ public class NetworkController {
 		} else {
 			double longitude = 0;
 			double latitude = 0;
-			session = almsessions.getSession();
-
-			if (session != null && session.isOpen()) {
-				tx = session.beginTransaction();
-				notifications.headerNotifications(session, model);
+			//session = almsessions.getSession();
+			 emf = Persistence.createEntityManagerFactory("persistence");
+			 entityManager = emf.createEntityManager();
+			 notifications.headerNotification(entityManager, model);
+			//if (session != null && session.isOpen()) {
+				//tx = session.beginTransaction();
+				//notifications.headerNotifications(session, model);
 
 				String enterprise = request.getParameter("enterprise");
 				String transmission = request.getParameter("transmission");
@@ -127,6 +136,7 @@ public class NetworkController {
 				String strCells3 ="SELECT a.UCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_UCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0' ";		
 				
 			try {
+				
 				if (enterprise != null && !enterprise.equals("null")) {
 					arrayParam[0] = 1;	
 					model.addAttribute("EnterpriseBtn", arrayParam[0]);
@@ -163,7 +173,7 @@ public class NetworkController {
 				strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.ACTIVE_RECORD = '1' ";			
 				strSites=  AppendQuery("b",arrayParam, strSites);
 				
-				model.addAttribute("listSites", mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
+				model.addAttribute("listSites", mapper.writeValueAsString(entityManager.createNativeQuery(strSites).getResultList()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 				}catch (Exception e) {
 					sw = new StringWriter();
@@ -187,7 +197,7 @@ public class NetworkController {
 				strNodes= strNodes + ") as countUcells,SUPPLIER_ID FROM NODE_ACTIVE a WHERE a.ACTIVE_RECORD = '1' ";
 				strNodes= AppendQuery("a",arrayParam, strNodes);
 					
-				model.addAttribute("listNodes", mapper.writeValueAsString(session.createNativeQuery(strNodes).list()));
+				model.addAttribute("listNodes", mapper.writeValueAsString(entityManager.createNativeQuery(strNodes).getResultList()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 				} catch (Exception e) {
 					sw = new StringWriter();
@@ -203,9 +213,9 @@ public class NetworkController {
 				strCells2= AppendQuery("a",arrayParam, strCells2);
 				strCells3= AppendQuery("a",arrayParam, strCells3);
 							
-				cellResult.addAll(session.createNativeQuery(strCells1).list());
-				cellResult.addAll(session.createNativeQuery(strCells2).list());
-				cellResult.addAll(session.createNativeQuery(strCells3).list());
+				cellResult.addAll(entityManager.createNativeQuery(strCells1).getResultList());
+				cellResult.addAll(entityManager.createNativeQuery(strCells2).getResultList());
+				cellResult.addAll(entityManager.createNativeQuery(strCells3).getResultList());
 				
 				model.addAttribute("listCells", mapper.writeValueAsString(cellResult));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));				
@@ -220,10 +230,10 @@ public class NetworkController {
 				try {
 					List<Object[]> coordinates = new ArrayList<Object[]>();
 					Object[] blankGisLocation = null;
-					coordinates = session.createNativeQuery(
+					coordinates = entityManager.createNativeQuery(
 							"SELECT COALESCE((MAX(CAST(LONGITUDE as number))+MIN(CAST(LONGITUDE as number)))/2,0) ,"
 									+ "COALESCE( (MAX(CAST(LATITUDE as number))+MIN(CAST(LATITUDE as number)))/2,0)FROM WAREHOUSE")
-							.list();
+							.getResultList();
 					blankGisLocation = (Object[]) coordinates.toArray()[0];
 					longitude = Double.valueOf(blankGisLocation[0].toString()).doubleValue();
 					latitude = Double.valueOf(blankGisLocation[1].toString()).doubleValue();
@@ -240,14 +250,14 @@ public class NetworkController {
 				}
 				
 				finally {
-					if (session != null && session.isOpen()) {
-						logger.info("Session Closseeed");
-						tx.commit();
-						session.close();
-						session.getSessionFactory().close();
+					if (entityManager != null && entityManager.isOpen()) {
+						entityManager.close();
+					}
+					if(emf != null && emf.isOpen()) {
+						emf.close();	
 					}
 				}
-			}
+			//}
 			return "Network/Network_StNdCell";
 		}
 	}
@@ -260,11 +270,13 @@ public class NetworkController {
 		} else {
 			double longitude = 0;
 			double latitude = 0;
-			session = almsessions.getSession();
-
-		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
-			notifications.headerNotifications(session, model);
+			//session = almsessions.getSession();
+			 emf = Persistence.createEntityManagerFactory("persistence");
+			 entityManager = emf.createEntityManager();
+			 notifications.headerNotification(entityManager, model);
+		//if (session != null && session.isOpen()) {
+			//tx = session.beginTransaction();
+			//notifications.headerNotifications(session, model);
 
 			String enterprise = request.getParameter("enterprise");
 			String transmission = request.getParameter("transmission");
@@ -323,7 +335,7 @@ public class NetworkController {
 					strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.ACTIVE_RECORD = '1' ";			
 					strSites=  AppendQuery("b",arrayParam, strSites);	
 						
-					model.addAttribute("listSites", mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
+					model.addAttribute("listSites", mapper.writeValueAsString(entityManager.createNativeQuery(strSites).getResultList()));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -343,7 +355,7 @@ public class NetworkController {
 				strNodes= strNodes + ") as countUcells,SUPPLIER_ID FROM NODE_ACTIVE a WHERE a.ACTIVE_RECORD = '1' ";
 				strNodes= AppendQuery("a",arrayParam, strNodes);
 					
-				model.addAttribute("listNodes", mapper.writeValueAsString(session.createNativeQuery(strNodes).list()));
+				model.addAttribute("listNodes", mapper.writeValueAsString(entityManager.createNativeQuery(strNodes).getResultList()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -360,9 +372,9 @@ public class NetworkController {
 				strCells2= AppendQuery("a",arrayParam, strCells2);
 				strCells3= AppendQuery("a",arrayParam, strCells3);
 							
-				cellResult.addAll(session.createNativeQuery(strCells1).list());
-				cellResult.addAll(session.createNativeQuery(strCells2).list());
-				cellResult.addAll(session.createNativeQuery(strCells3).list());
+				cellResult.addAll(entityManager.createNativeQuery(strCells1).getResultList());
+				cellResult.addAll(entityManager.createNativeQuery(strCells2).getResultList());
+				cellResult.addAll(entityManager.createNativeQuery(strCells3).getResultList());
 				
 				model.addAttribute("listCells", mapper.writeValueAsString(cellResult));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
@@ -377,7 +389,7 @@ public class NetworkController {
 				try {
 					strNodesType =AppendQuery("a",arrayParam, strNodesType);
 					
-					model.addAttribute("listNodesType", mapper.writeValueAsString(session.createNativeQuery(strNodesType).list()));
+					model.addAttribute("listNodesType", mapper.writeValueAsString(entityManager.createNativeQuery(strNodesType).getResultList()));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 				} catch (Exception e) {
 					sw = new StringWriter();
@@ -391,10 +403,10 @@ public class NetworkController {
 				try {
 					List<Object[]> coordinates = new ArrayList<Object[]>();
 					Object[] blankGisLocation = null;
-					coordinates = session.createNativeQuery(
+					coordinates = entityManager.createNativeQuery(
 							"SELECT COALESCE((MAX(CAST(LONGITUDE as number))+MIN(CAST(LONGITUDE as number)))/2,0) ,"
 									+ "COALESCE( (MAX(CAST(LATITUDE as number))+MIN(CAST(LATITUDE as number)))/2,0)FROM WAREHOUSE")
-							.list();
+							.getResultList();
 					blankGisLocation = (Object[]) coordinates.toArray()[0];
 					longitude = Double.valueOf(blankGisLocation[0].toString()).doubleValue();
 					latitude = Double.valueOf(blankGisLocation[1].toString()).doubleValue();
@@ -412,14 +424,14 @@ public class NetworkController {
 				}
 
 				finally {
-					if (session != null && session.isOpen()) {
-						logger.info("Session Closseeed");
-						tx.commit();
-						session.close();
-						session.getSessionFactory().close();
+					if (entityManager != null && entityManager.isOpen()) {
+						entityManager.close();
+					}
+					if(emf != null && emf.isOpen()) {
+						emf.close();	
 					}
 				}
-			}
+			//}
 			return "Network/Network_StNdTypNdCell";
 		}
 	}
@@ -434,10 +446,14 @@ public String Network_NdTypStNdCell(Locale locale, Model model, HttpServletReque
 	} else {
 		double longitude = 0;
 		double latitude = 0;
-		session = almsessions.getSession();
-		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
-			notifications.headerNotifications(session, model);
+		//session = almsessions.getSession();
+		//if (session != null && session.isOpen()) {
+			//tx = session.beginTransaction();
+			//notifications.headerNotifications(session, model);
+		 emf = Persistence.createEntityManagerFactory("persistence");
+		 entityManager = emf.createEntityManager();
+		 notifications.headerNotification(entityManager, model);
+		 
 			String enterprise = request.getParameter("enterprise");
 			String transmission = request.getParameter("transmission");
 			String access = request.getParameter("access");
@@ -486,7 +502,7 @@ public String Network_NdTypStNdCell(Locale locale, Model model, HttpServletReque
 				strSites=  AppendQuery("e",arrayParam, strSites);
 				strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.ACTIVE_RECORD = '1' ";			
 				strSites=  AppendQuery("b",arrayParam, strSites);	
-				model.addAttribute("listSites", mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
+				model.addAttribute("listSites", mapper.writeValueAsString(entityManager.createNativeQuery(strSites).getResultList()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));					
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -502,7 +518,7 @@ public String Network_NdTypStNdCell(Locale locale, Model model, HttpServletReque
 				strNodesType = strNodesType + ") as countNodes FROM NODE_ACTIVE b WHERE b.ACTIVE_RECORD = '1' ";
 				strNodesType=  AppendQuery("b",arrayParam, strNodesType);
 				
-				model.addAttribute("listNodesType", mapper.writeValueAsString(session.createNativeQuery(strNodesType).list()));
+				model.addAttribute("listNodesType", mapper.writeValueAsString(entityManager.createNativeQuery(strNodesType).getResultList()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));	
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -515,10 +531,10 @@ public String Network_NdTypStNdCell(Locale locale, Model model, HttpServletReque
 			try {
 				List<Object[]> coordinates = new ArrayList<Object[]>();
 				Object[] blankGisLocation = null;
-				coordinates = session.createNativeQuery(
+				coordinates = entityManager.createNativeQuery(
 						"SELECT COALESCE((MAX(CAST(LONGITUDE as number))+MIN(CAST(LONGITUDE as number)))/2,0) ,"
 								+ "COALESCE( (MAX(CAST(LATITUDE as number))+MIN(CAST(LATITUDE as number)))/2,0)FROM WAREHOUSE")
-						.list();
+						.getResultList();
 				blankGisLocation = (Object[]) coordinates.toArray()[0];
 				longitude = Double.valueOf(blankGisLocation[0].toString()).doubleValue();
 				latitude = Double.valueOf(blankGisLocation[1].toString()).doubleValue();
@@ -534,14 +550,14 @@ public String Network_NdTypStNdCell(Locale locale, Model model, HttpServletReque
 				model.addAttribute("Lat", null);
 			}
 			finally {
-				if (session != null && session.isOpen()) {
-					logger.info("Session Closseeed");
-					tx.commit();
-					session.close();
-					session.getSessionFactory().close();
+				if (entityManager != null && entityManager.isOpen()) {
+					entityManager.close();
+				}
+				if(emf != null && emf.isOpen()) {
+					emf.close();	
 				}
 			}
-		}
+		//}
 		return "Network/Network_NdTypStNdCell";
 	}
 }
@@ -552,10 +568,14 @@ public String Network_SupStNdCell(Locale locale, Model model, HttpServletRequest
 	if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 		return "redirect:/";
 	} else {
-		session = almsessions.getSession();
-		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
-			notifications.headerNotifications(session, model);
+		//session = almsessions.getSession();
+		//if (session != null && session.isOpen()) {
+			//tx = session.beginTransaction();
+			//notifications.headerNotifications(session, model);
+		 emf = Persistence.createEntityManagerFactory("persistence");
+		 entityManager = emf.createEntityManager();
+		 notifications.headerNotification(entityManager, model);
+		 
 			String enterprise = request.getParameter("enterprise");
 			String transmission = request.getParameter("transmission");
 			String access = request.getParameter("access");
@@ -606,7 +626,7 @@ public String Network_SupStNdCell(Locale locale, Model model, HttpServletRequest
 					strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.ACTIVE_RECORD = '1' AND b.SUPPLIER_ID!='null' and b.SUPPLIER_ID!='0' and b.SUPPLIER_ID is not null  ";			
 					strSites=  AppendQuery("b",arrayParam, strSites);	
 						
-					model.addAttribute("listSites", mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
+					model.addAttribute("listSites", mapper.writeValueAsString(entityManager.createNativeQuery(strSites).getResultList()));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -618,7 +638,7 @@ public String Network_SupStNdCell(Locale locale, Model model, HttpServletRequest
 			}			
 			try {
 				strSup=  AppendQuery("a",arrayParam, strSup);	
-				model.addAttribute("listSupp", mapper.writeValueAsString(session.createNativeQuery(strSup).list()));
+				model.addAttribute("listSupp", mapper.writeValueAsString(entityManager.createNativeQuery(strSup).getResultList()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));				
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -629,14 +649,14 @@ public String Network_SupStNdCell(Locale locale, Model model, HttpServletRequest
 				model.addAttribute("listSupp", "null");
 			}	
 			finally {
-				if (session != null && session.isOpen()) {
-					logger.info("Session Closseeed");
-					tx.commit();
-					session.close();
-					session.getSessionFactory().close();
+				if (entityManager != null && entityManager.isOpen()) {
+					entityManager.close();
+				}
+				if(emf != null && emf.isOpen()) {
+					emf.close();	
 				}
 			}
-		}
+		//}
 		return "Network/Network_SupStNdCell";
 	}
 }
@@ -647,10 +667,14 @@ public String Network_VnStNdCell(Locale locale, Model model, HttpServletRequest 
 	if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 		return "redirect:/";
 	} else {
-		session = almsessions.getSession();
-		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
-			notifications.headerNotifications(session, model);
+		//session = almsessions.getSession();
+		//if (session != null && session.isOpen()) {
+			//tx = session.beginTransaction();
+			//notifications.headerNotifications(session, model);
+		 emf = Persistence.createEntityManagerFactory("persistence");
+		 entityManager = emf.createEntityManager();
+		 notifications.headerNotification(entityManager, model);
+		 
 			String enterprise = request.getParameter("enterprise");
 			String transmission = request.getParameter("transmission");
 			String access = request.getParameter("access");
@@ -700,7 +724,7 @@ public String Network_VnStNdCell(Locale locale, Model model, HttpServletRequest 
 					strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.ACTIVE_RECORD = '1' AND b.VENDOR!='null' and b.VENDOR!='0' and b.VENDOR is not null  ";			
 					strSites=  AppendQuery("b",arrayParam, strSites);	
 						
-					model.addAttribute("listSites", mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
+					model.addAttribute("listSites", mapper.writeValueAsString(entityManager.createNativeQuery(strSites).getResultList()));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -713,7 +737,7 @@ public String Network_VnStNdCell(Locale locale, Model model, HttpServletRequest 
 			
 			try {
 				strVen=  AppendQuery("a",arrayParam, strVen);					
-				model.addAttribute("listVen", mapper.writeValueAsString(session.createNativeQuery(strVen).list()));
+				model.addAttribute("listVen", mapper.writeValueAsString(entityManager.createNativeQuery(strVen).getResultList()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));				
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -724,14 +748,14 @@ public String Network_VnStNdCell(Locale locale, Model model, HttpServletRequest 
 				model.addAttribute("listVen", "null");
 			}	
 			finally {
-				if (session != null && session.isOpen()) {
-					logger.info("Session Closseeed");
-					tx.commit();
-					session.close();
-					session.getSessionFactory().close();
+				if (entityManager != null && entityManager.isOpen()) {
+					entityManager.close();
+				}
+				if(emf != null && emf.isOpen()) {
+					emf.close();	
 				}
 			}
-		}
+		//}
 		return "Network/Network_VnStNdCell";
 	}
 }
@@ -742,11 +766,14 @@ public String Network_VnStNdTypNdCell(Locale locale, Model model, HttpServletReq
 	if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 		return "redirect:/";
 	} else {
-		session = almsessions.getSession();
-		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
-			notifications.headerNotifications(session, model);
-			
+		//session = almsessions.getSession();
+		//if (session != null && session.isOpen()) {
+			//tx = session.beginTransaction();
+			//notifications.headerNotifications(session, model);
+		 emf = Persistence.createEntityManagerFactory("persistence");
+		 entityManager = emf.createEntityManager();
+		 notifications.headerNotification(entityManager, model);
+		 
 			String enterprise = request.getParameter("enterprise");
 			String transmission = request.getParameter("transmission");
 			String access = request.getParameter("access");
@@ -797,7 +824,7 @@ public String Network_VnStNdTypNdCell(Locale locale, Model model, HttpServletReq
 					strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.ACTIVE_RECORD = '1' AND b.VENDOR!='null' and b.VENDOR!='0' and b.VENDOR is not null  ";			
 					strSites=  AppendQuery("b",arrayParam, strSites);	
 						
-					model.addAttribute("listSites", mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
+					model.addAttribute("listSites", mapper.writeValueAsString(entityManager.createNativeQuery(strSites).getResultList()));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -809,7 +836,7 @@ public String Network_VnStNdTypNdCell(Locale locale, Model model, HttpServletReq
 			}			
 			try {
 				strVen=  AppendQuery("a",arrayParam, strVen);
-				model.addAttribute("listVen", mapper.writeValueAsString(session.createNativeQuery(strVen).list()));
+				model.addAttribute("listVen", mapper.writeValueAsString(entityManager.createNativeQuery(strVen).getResultList()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));				
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -820,14 +847,14 @@ public String Network_VnStNdTypNdCell(Locale locale, Model model, HttpServletReq
 				model.addAttribute("listVen", "null");
 			}
 			finally {
-				if (session != null && session.isOpen()) {
-					logger.info("Session Closseeed");
-					tx.commit();
-					session.close();
-					session.getSessionFactory().close();
+				if (entityManager != null && entityManager.isOpen()) {
+					entityManager.close();
+				}
+				if(emf != null && emf.isOpen()) {
+					emf.close();	
 				}
 			}
-		}
+		//}
 		return "Network/Network_VnStNdTypNdCell";
 	}
 }	
@@ -838,11 +865,14 @@ public String Network_SupStNdTypNdCell(Locale locale, Model model, HttpServletRe
 	if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 		return "redirect:/";
 	} else {
-		session = almsessions.getSession();
-		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
-			notifications.headerNotifications(session, model);
-			
+		//session = almsessions.getSession();
+		//if (session != null && session.isOpen()) {
+			//tx = session.beginTransaction();
+			//notifications.headerNotifications(session, model);
+		 emf = Persistence.createEntityManagerFactory("persistence");
+		 entityManager = emf.createEntityManager();
+		 notifications.headerNotification(entityManager, model);
+		 
 			String enterprise = request.getParameter("enterprise");
 			String transmission = request.getParameter("transmission");
 			String access = request.getParameter("access");
@@ -893,7 +923,7 @@ public String Network_SupStNdTypNdCell(Locale locale, Model model, HttpServletRe
 					strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.ACTIVE_RECORD = '1' AND b.SUPPLIER_ID!='null' and b.SUPPLIER_ID!='0' and b.SUPPLIER_ID is not null  ";			
 					strSites=  AppendQuery("b",arrayParam, strSites);	
 						
-					model.addAttribute("listSites", mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
+					model.addAttribute("listSites", mapper.writeValueAsString(entityManager.createNativeQuery(strSites).getResultList()));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 				} catch (Exception e) {
 					sw = new StringWriter();
@@ -905,7 +935,7 @@ public String Network_SupStNdTypNdCell(Locale locale, Model model, HttpServletRe
 				}					
 				try {
 					strSup=  AppendQuery("a",arrayParam, strSup);											
-					model.addAttribute("listSupp", mapper.writeValueAsString(session.createNativeQuery(strSup).list()));
+					model.addAttribute("listSupp", mapper.writeValueAsString(entityManager.createNativeQuery(strSup).getResultList()));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 				} catch (Exception e) {
 					sw = new StringWriter();
@@ -916,14 +946,14 @@ public String Network_SupStNdTypNdCell(Locale locale, Model model, HttpServletRe
 					model.addAttribute("listSupp", "null");
 				}
 			finally {
-				if (session != null && session.isOpen()) {
-					logger.info("Session Closseeed");
-					tx.commit();
-					session.close();
-					session.getSessionFactory().close();
+				if (entityManager != null && entityManager.isOpen()) {
+					entityManager.close();
+				}
+				if(emf != null && emf.isOpen()) {
+					emf.close();	
 				}
 			}
-		}
+		//}
 		return "Network/Network_SupStNdTypNdCell";
 	}
 }	
@@ -934,11 +964,14 @@ public String Network_SupNdTypStCell(Locale locale, Model model, HttpServletRequ
 	if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 		return "redirect:/";
 	} else {
-		session = almsessions.getSession();
-		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
-			notifications.headerNotifications(session, model);
-
+		//session = almsessions.getSession();
+		//if (session != null && session.isOpen()) {
+			//tx = session.beginTransaction();
+			//notifications.headerNotifications(session, model);
+		 emf = Persistence.createEntityManagerFactory("persistence");
+		 entityManager = emf.createEntityManager();
+		 notifications.headerNotification(entityManager, model);
+		 
 			String enterprise = request.getParameter("enterprise");
 			String transmission = request.getParameter("transmission");
 			String access = request.getParameter("access");
@@ -989,7 +1022,7 @@ public String Network_SupNdTypStCell(Locale locale, Model model, HttpServletRequ
 				strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.ACTIVE_RECORD = '1' AND b.SUPPLIER_ID!='null' and b.SUPPLIER_ID!='0' and b.SUPPLIER_ID is not null  ";			
 				strSites=  AppendQuery("b",arrayParam, strSites);	
 					
-				model.addAttribute("listSites", mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
+				model.addAttribute("listSites", mapper.writeValueAsString(entityManager.createNativeQuery(strSites).getResultList()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -1001,7 +1034,7 @@ public String Network_SupNdTypStCell(Locale locale, Model model, HttpServletRequ
 			}			
 		 try {
 				strSup=  AppendQuery("a",arrayParam, strSup);	
-				model.addAttribute("listSupp", mapper.writeValueAsString(session.createNativeQuery(strSup).list()));
+				model.addAttribute("listSupp", mapper.writeValueAsString(entityManager.createNativeQuery(strSup).getResultList()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 				} catch (Exception e) {
 					sw = new StringWriter();
@@ -1013,14 +1046,14 @@ public String Network_SupNdTypStCell(Locale locale, Model model, HttpServletRequ
 				}
 		 
 			finally {
-				if (session != null && session.isOpen()) {
-					logger.info("Session Closseeed");
-					tx.commit();
-					session.close();
-					session.getSessionFactory().close();
+				if (entityManager != null && entityManager.isOpen()) {
+					entityManager.close();
+				}
+				if(emf != null && emf.isOpen()) {
+					emf.close();	
 				}
 			}
-		}
+		//}
 		return "Network/Network_SupNdTypStNdCell";
 	}
 }
@@ -1031,11 +1064,14 @@ public String Network_VnNdTypStCell(Locale locale, Model model, HttpServletReque
 	if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 		return "redirect:/";
 	} else {
-		session = almsessions.getSession();
-		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
-			notifications.headerNotifications(session, model);
-
+		//session = almsessions.getSession();
+		//if (session != null && session.isOpen()) {
+			//tx = session.beginTransaction();
+			//notifications.headerNotifications(session, model);
+		 emf = Persistence.createEntityManagerFactory("persistence");
+		 entityManager = emf.createEntityManager();
+		 notifications.headerNotification(entityManager, model);
+		 
 			String enterprise = request.getParameter("enterprise");
 			String transmission = request.getParameter("transmission");
 			String access = request.getParameter("access");
@@ -1086,7 +1122,7 @@ public String Network_VnNdTypStCell(Locale locale, Model model, HttpServletReque
 				strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.ACTIVE_RECORD = '1' AND b.VENDOR!='null' and b.VENDOR!='0' and b.VENDOR is not null  ";			
 				strSites=  AppendQuery("b",arrayParam, strSites);	
 					
-				model.addAttribute("listSites", mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
+				model.addAttribute("listSites", mapper.writeValueAsString(entityManager.createNativeQuery(strSites).getResultList()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -1098,7 +1134,7 @@ public String Network_VnNdTypStCell(Locale locale, Model model, HttpServletReque
 			}			
 		 try {
 				strVen=  AppendQuery("a",arrayParam, strVen);	
-				model.addAttribute("listVen", mapper.writeValueAsString(session.createNativeQuery(strVen).list()));
+				model.addAttribute("listVen", mapper.writeValueAsString(entityManager.createNativeQuery(strVen).getResultList()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));				
 				} catch (Exception e) {
 					sw = new StringWriter();
@@ -1109,14 +1145,14 @@ public String Network_VnNdTypStCell(Locale locale, Model model, HttpServletReque
 					model.addAttribute("listVen", "null");
 				}
 			finally {
-				if (session != null && session.isOpen()) {
-					logger.info("Session Closseeed");
-					tx.commit();
-					session.close();
-					session.getSessionFactory().close();
+				if (entityManager != null && entityManager.isOpen()) {
+					entityManager.close();
+				}
+				if(emf != null && emf.isOpen()) {
+					emf.close();	
 				}
 			}
-		}
+		//}
 		return "Network/Network_VnNdTypStNdCell";
 	}
 }
@@ -1126,11 +1162,14 @@ public String Network_PoSiteItem(Locale locale, Model model, HttpServletRequest 
 	if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 		return "redirect:/";
 	} else {
-		session = almsessions.getSession();
-		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
-			notifications.headerNotifications(session, model);
-
+		//session = almsessions.getSession();
+		//if (session != null && session.isOpen()) {
+			//tx = session.beginTransaction();
+			//notifications.headerNotifications(session, model);
+		 emf = Persistence.createEntityManagerFactory("persistence");
+		 entityManager = emf.createEntityManager();
+		 notifications.headerNotification(entityManager, model);
+		 
 			String enterprise = request.getParameter("enterprise");
 			String transmission = request.getParameter("transmission");
 			String access = request.getParameter("access");
@@ -1184,7 +1223,7 @@ public String Network_PoSiteItem(Locale locale, Model model, HttpServletRequest 
 				strSites = strSites + ") as countUcells FROM AR_SITE b,ASSET_REGISTRY j where j.AR_ID=b.AR_ID and b.WARE_ID!='0' and b.WARE_ID is not null and b.WARE_ID!='null' ";			
 				strSites=  AppendQuery("j",arrayParam, strSites);	
 					
-				model.addAttribute("listSites", mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
+				model.addAttribute("listSites", mapper.writeValueAsString(entityManager.createNativeQuery(strSites).getResultList()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -1196,7 +1235,7 @@ public String Network_PoSiteItem(Locale locale, Model model, HttpServletRequest 
 			}
 			try {
 				strPO=  AppendQuery("a",arrayParam, strPO);	
-				model.addAttribute("listPO", mapper.writeValueAsString(session.createNativeQuery(strPO).list()));
+				model.addAttribute("listPO", mapper.writeValueAsString(entityManager.createNativeQuery(strPO).getResultList()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -1207,14 +1246,14 @@ public String Network_PoSiteItem(Locale locale, Model model, HttpServletRequest 
 				model.addAttribute("listPO", "null");
 				}
 			finally {
-				if (session != null && session.isOpen()) {
-					logger.info("Session Closseeed");
-					tx.commit();
-					session.close();
-					session.getSessionFactory().close();
+				if (entityManager != null && entityManager.isOpen()) {
+					entityManager.close();
+				}
+				if(emf != null && emf.isOpen()) {
+					emf.close();	
 				}
 			}
-		}
+		//}
 		return "Network/Network_PoSiteItem";
 	}
 }
@@ -1224,11 +1263,14 @@ public String Network_PoItemSite(Locale locale, Model model, HttpServletRequest 
 	if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 		return "redirect:/";
 	} else {
-		session = almsessions.getSession();
-		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
-			notifications.headerNotifications(session, model);
-
+		//session = almsessions.getSession();
+		//if (session != null && session.isOpen()) {
+			//tx = session.beginTransaction();
+			//notifications.headerNotifications(session, model);
+		 emf = Persistence.createEntityManagerFactory("persistence");
+		 entityManager = emf.createEntityManager();
+		 notifications.headerNotification(entityManager, model);
+		 
 			String enterprise = request.getParameter("enterprise");
 			String transmission = request.getParameter("transmission");
 			String access = request.getParameter("access");
@@ -1282,7 +1324,7 @@ public String Network_PoItemSite(Locale locale, Model model, HttpServletRequest 
 					strSites = strSites + ") as countUcells FROM AR_SITE b,ASSET_REGISTRY j where j.AR_ID=b.AR_ID AND b.WARE_ID!='0' and b.WARE_ID is not null and b.WARE_ID!='null' ";			
 					strSites=  AppendQuery("j",arrayParam, strSites);	
 						
-					model.addAttribute("listSites", mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
+					model.addAttribute("listSites", mapper.writeValueAsString(entityManager.createNativeQuery(strSites).getResultList()));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 				} catch (Exception e) {
 					sw = new StringWriter();
@@ -1294,7 +1336,7 @@ public String Network_PoItemSite(Locale locale, Model model, HttpServletRequest 
 				}
 				try {
 					strPO=  AppendQuery("a",arrayParam, strPO);	
-					model.addAttribute("listPO", mapper.writeValueAsString(session.createNativeQuery(strPO).list()));
+					model.addAttribute("listPO", mapper.writeValueAsString(entityManager.createNativeQuery(strPO).getResultList()));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -1305,14 +1347,14 @@ public String Network_PoItemSite(Locale locale, Model model, HttpServletRequest 
 				model.addAttribute("listPO", "null");
 				}
 			finally {
-				if (session != null && session.isOpen()) {
-					logger.info("Session Closseeed");
-					tx.commit();
-					session.close();
-					session.getSessionFactory().close();
+				if (entityManager != null && entityManager.isOpen()) {
+					entityManager.close();
+				}
+				if(emf != null && emf.isOpen()) {
+					emf.close();	
 				}
 			}
-		}
+		//}
 		return "Network/Network_PoItemSite";
 	}
 }
@@ -1323,11 +1365,14 @@ public String Network_SitePoItem(Locale locale, Model model, HttpServletRequest 
 	if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 		return "redirect:/";
 	} else {
-		session = almsessions.getSession();
-		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
-			notifications.headerNotifications(session, model);
-		
+		//session = almsessions.getSession();
+		//if (session != null && session.isOpen()) {
+			//tx = session.beginTransaction();
+			//notifications.headerNotifications(session, model);
+		 emf = Persistence.createEntityManagerFactory("persistence");
+		 entityManager = emf.createEntityManager();
+		 notifications.headerNotification(entityManager, model);
+		 
 			String enterprise = request.getParameter("enterprise");
 			String transmission = request.getParameter("transmission");
 			String access = request.getParameter("access");
@@ -1379,7 +1424,7 @@ public String Network_SitePoItem(Locale locale, Model model, HttpServletRequest 
 				strSites = strSites + ") as countUcells FROM AR_SITE b,ASSET_REGISTRY j where j.AR_ID=b.AR_ID AND b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null ";			
 				strSites=  AppendQuery("j",arrayParam, strSites);	
 
-				model.addAttribute("listSites", mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
+				model.addAttribute("listSites", mapper.writeValueAsString(entityManager.createNativeQuery(strSites).getResultList()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -1390,14 +1435,14 @@ public String Network_SitePoItem(Locale locale, Model model, HttpServletRequest 
 				model.addAttribute("listSites", "null");
 			}
 			finally {
-				if (session != null && session.isOpen()) {
-					logger.info("Session Closseeed");
-					tx.commit();
-					session.close();
-					session.getSessionFactory().close();
+				if (entityManager != null && entityManager.isOpen()) {
+					entityManager.close();
+				}
+				if(emf != null && emf.isOpen()) {
+					emf.close();	
 				}
 			}
-		}
+		//}
 		return "Network/Network_SitePoItem";
 	}
 }
@@ -1408,11 +1453,14 @@ public String Network_NdTypNdCell(Locale locale, Model model, HttpServletRequest
 	if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 		return "redirect:/";
 	} else {
-		session = almsessions.getSession();
-		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
-			notifications.headerNotifications(session, model);
-
+		//session = almsessions.getSession();
+		//if (session != null && session.isOpen()) {
+			//tx = session.beginTransaction();
+			//notifications.headerNotifications(session, model);
+		 emf = Persistence.createEntityManagerFactory("persistence");
+		 entityManager = emf.createEntityManager();
+		 notifications.headerNotification(entityManager, model);
+		 
 			String enterprise = request.getParameter("enterprise");
 			String transmission = request.getParameter("transmission");
 			String access = request.getParameter("access");
@@ -1457,7 +1505,7 @@ public String Network_NdTypNdCell(Locale locale, Model model, HttpServletRequest
 				strNodes = strNodes + ") as countUcells,b.WARE_ID,b.NODE_NAME,b.NODE_TYPE FROM NODE_ACTIVE b WHERE b.ACTIVE_RECORD = '1' ";			
 				strNodes=  AppendQuery("b",arrayParam, strNodes);
 				
-				model.addAttribute("listNodes", mapper.writeValueAsString(session.createNativeQuery(strNodes).list()));
+				model.addAttribute("listNodes", mapper.writeValueAsString(entityManager.createNativeQuery(strNodes).getResultList()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 			}catch (Exception e) {
 				sw = new StringWriter();
@@ -1473,7 +1521,7 @@ public String Network_NdTypNdCell(Locale locale, Model model, HttpServletRequest
 				strNodesType = strNodesType + ") as countNodes FROM NODE_ACTIVE b WHERE b.ACTIVE_RECORD = '1' ";
 				strNodesType=  AppendQuery("b",arrayParam, strNodesType);
 				
-				model.addAttribute("listNodesType", mapper.writeValueAsString(session.createNativeQuery(strNodesType).list()));
+				model.addAttribute("listNodesType", mapper.writeValueAsString(entityManager.createNativeQuery(strNodesType).getResultList()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -1485,14 +1533,14 @@ public String Network_NdTypNdCell(Locale locale, Model model, HttpServletRequest
 			}
 		
 			finally {
-				if (session != null && session.isOpen()) {
-					logger.info("Session Closseeed");
-					tx.commit();
-					session.close();
-					session.getSessionFactory().close();
+				if (entityManager != null && entityManager.isOpen()) {
+					entityManager.close();
+				}
+				if(emf != null && emf.isOpen()) {
+					emf.close();	
 				}
 			}
-		}
+		//}
 		return "Network/Network_NdTypNdCell";
 	}
 }
@@ -1502,12 +1550,15 @@ public String Network_Node(Locale locale, Model model, HttpServletRequest reques
 	if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 		return "redirect:/";
 	} else {
-		session = almsessions.getSession();
+		//session = almsessions.getSession();
 
-		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
-			notifications.headerNotifications(session, model);
-
+		//if (session != null && session.isOpen()) {
+			//tx = session.beginTransaction();
+			//notifications.headerNotifications(session, model);
+		 emf = Persistence.createEntityManagerFactory("persistence");
+		 entityManager = emf.createEntityManager();
+		 notifications.headerNotification(entityManager, model);
+		 
 			String enterprise = request.getParameter("enterprise");
 			String transmission = request.getParameter("transmission");
 			String access = request.getParameter("access");
@@ -1550,7 +1601,7 @@ public String Network_Node(Locale locale, Model model, HttpServletRequest reques
 				strNodes = strNodes + ") as countUCells,b.WARE_ID,b.NODE_NAME,b.NODE_TYPE,b.SUPPLIER_ID FROM NODE_ACTIVE b WHERE b.ACTIVE_RECORD = '1' ";
 				strNodes = AppendQuery("b",arrayParam, strNodes);
 					
-				model.addAttribute("listNodes", mapper.writeValueAsString(session.createNativeQuery(strNodes).list()));
+				model.addAttribute("listNodes", mapper.writeValueAsString(entityManager.createNativeQuery(strNodes).getResultList()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 				} catch (Exception e) {
 					sw = new StringWriter();
@@ -1561,14 +1612,14 @@ public String Network_Node(Locale locale, Model model, HttpServletRequest reques
 					model.addAttribute("listNodes", "null");
 				}
 			finally {
-				if (session != null && session.isOpen()) {
-					logger.info("Session Closseeed");
-					tx.commit();
-					session.close();
-					session.getSessionFactory().close();
+				if (entityManager != null && entityManager.isOpen()) {
+					entityManager.close();
+				}
+				if(emf != null && emf.isOpen()) {
+					emf.close();	
 				}
 			}
-		}
+		//}
 		return "Network/Network_Node";
 	}
 }
@@ -1581,11 +1632,15 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 	if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 		return "redirect:/";
 	} else {
-		session = almsessions.getSession();
+		//session = almsessions.getSession();
 
-		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
-			notifications.headerNotifications(session, model);
+		//if (session != null && session.isOpen()) {
+			//tx = session.beginTransaction();
+			//notifications.headerNotifications(session, model);
+		 emf = Persistence.createEntityManagerFactory("persistence");
+		 entityManager = emf.createEntityManager();
+		 notifications.headerNotification(entityManager, model);
+		 
 			String enterprise = request.getParameter("enterprise");
 			String transmission = request.getParameter("transmission");
 			String access = request.getParameter("access");
@@ -1655,9 +1710,9 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 							+ "LEFT JOIN NODE_UCELL k ON b.NODE_PK = k.NODE_PK WHERE b.NODE_PK = k.NODE_PK AND k.ACTIVE_RECORD = '1' ";
 					strCells3 = AppendQuery("k",arrayParam, strCells3);
 
-					cellResult.addAll(session.createNativeQuery(strCells1).list());
-					cellResult.addAll(session.createNativeQuery(strCells2).list());
-					cellResult.addAll(session.createNativeQuery(strCells3).list());
+					cellResult.addAll(entityManager.createNativeQuery(strCells1).getResultList());
+					cellResult.addAll(entityManager.createNativeQuery(strCells2).getResultList());
+					cellResult.addAll(entityManager.createNativeQuery(strCells3).getResultList());
 					
 					model.addAttribute("listCells", mapper.writeValueAsString(cellResult));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
@@ -1670,14 +1725,14 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 					model.addAttribute("listCells", "null");
 			}
 			finally {
-				if (session != null && session.isOpen()) {
-					logger.info("Session Closseeed");
-					tx.commit();
-					session.close();
-					session.getSessionFactory().close();
+				if (entityManager != null && entityManager.isOpen()) {
+					entityManager.close();
+				}
+				if(emf != null && emf.isOpen()) {
+					emf.close();	
 				}
 			}
-		}
+		//}
 		return "Network/Network_Cell";
 	}
 }
@@ -1690,13 +1745,17 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 	public Map<String, Object> Find_VenSiteNodeCell(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		session = almsessions.getSession();
+		//session = almsessions.getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
 		}
-		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
+		//if (session != null && session.isOpen()) {
+			//tx = session.beginTransaction();
+		 emf = Persistence.createEntityManagerFactory("persistence");
+		 entityManager = emf.createEntityManager();
+		 notifications.headerNotification(entityManager, model);
+		 
 			String selectedVen = request.getParameter("selectedVen");
 			String selectedItem = request.getParameter("selectedItem");
 
@@ -1719,7 +1778,7 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 				if (selectedVen != null) {
 					strSites= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strSites);					
 					
-					rtn.put("listVenSites",session.createNativeQuery(strSites).list());
+					rtn.put("listVenSites",entityManager.createNativeQuery(strSites).getResultList());
 				}
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -1735,9 +1794,9 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 						strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);						
 						strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);	
 					
-						cellResult.addAll(session.createNativeQuery(strCells1).list());
-						cellResult.addAll(session.createNativeQuery(strCells2).list());
-						cellResult.addAll(session.createNativeQuery(strCells3).list());
+						cellResult.addAll(entityManager.createNativeQuery(strCells1).getResultList());
+						cellResult.addAll(entityManager.createNativeQuery(strCells2).getResultList());
+						cellResult.addAll(entityManager.createNativeQuery(strCells3).getResultList());
 						
 						rtn.put("listCells",cellResult);
 					}
@@ -1760,7 +1819,7 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 						strNodes= boqDomainVar ("d",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);	
 						strNodes = strNodes + ") as countUcells FROM NODE_ACTIVE a WHERE a.ACTIVE_RECORD = '1' and a.WARE_ID='"+ selectedItem + "' ";			
 						strNodes= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);								
-						rtn.put("listVenNodes", session.createNativeQuery(strNodes).list());
+						rtn.put("listVenNodes", entityManager.createNativeQuery(strNodes).getResultList());
 					}
 				} catch (Exception e) {
 					sw = new StringWriter();
@@ -1771,13 +1830,14 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 					rtn.put("listVenNodes", null);
 				}
 		 finally {
-				if (session != null && session.isOpen()) {
-					tx.commit();
-					session.close();
-					session.getSessionFactory().close();
+			 if (entityManager != null && entityManager.isOpen()) {
+					entityManager.close();
+				}
+				if(emf != null && emf.isOpen()) {
+					emf.close();	
 				}
 			}
-		}
+		//}
 		return rtn;
 	}
 
@@ -1789,13 +1849,17 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 	public Map<String, Object> Find_SuppSiteNodeCell(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		session = almsessions.getSession();
+		//session = almsessions.getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
 		}
-		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
+		//if (session != null && session.isOpen()) {
+			//tx = session.beginTransaction();
+		 emf = Persistence.createEntityManagerFactory("persistence");
+		 entityManager = emf.createEntityManager();
+		 notifications.headerNotification(entityManager, model);
+		 
 			String selectedSupp = request.getParameter("selectedSupp");
 			String selectedItem = request.getParameter("selectedItem");
 
@@ -1817,7 +1881,7 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 			 try {
 				if (selectedSupp != null) {
 					strSites= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strSites);					
-					rtn.put("listSuppSites",session.createNativeQuery(strSites).list());
+					rtn.put("listSuppSites",entityManager.createNativeQuery(strSites).getResultList());
 				}
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -1833,9 +1897,9 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 						strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);						
 						strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);	
 					
-						cellResult.addAll(session.createNativeQuery(strCells1).list());
-						cellResult.addAll(session.createNativeQuery(strCells2).list());
-						cellResult.addAll(session.createNativeQuery(strCells3).list());
+						cellResult.addAll(entityManager.createNativeQuery(strCells1).getResultList());
+						cellResult.addAll(entityManager.createNativeQuery(strCells2).getResultList());
+						cellResult.addAll(entityManager.createNativeQuery(strCells3).getResultList());
 						
 						rtn.put("listCells",cellResult);
 					}
@@ -1860,7 +1924,7 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 						strNodes = strNodes + ") as countUcells FROM NODE_ACTIVE a WHERE a.ACTIVE_RECORD = '1' and a.WARE_ID='"+ selectedItem + "' ";			
 						strNodes= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);		
 						
-						rtn.put("listSuppNodes", session.createNativeQuery(strNodes).list());
+						rtn.put("listSuppNodes", entityManager.createNativeQuery(strNodes).getResultList());
 					}
 				} catch (Exception e) {
 					sw = new StringWriter();
@@ -1871,13 +1935,14 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 					rtn.put("listSuppNodes", null);				
 				}
 		 finally {
-				if (session != null && session.isOpen()) {
-					tx.commit();
-					session.close();
-					session.getSessionFactory().close();
+			 if (entityManager != null && entityManager.isOpen()) {
+					entityManager.close();
+				}
+				if(emf != null && emf.isOpen()) {
+					emf.close();	
 				}
 			}
-		}
+		//}
 		return rtn;
 	}
 	
@@ -1887,12 +1952,15 @@ public String Network_NdTypSupStNdCell(Locale locale, Model model, HttpServletRe
 if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 		return "redirect:/";
 	} else {
-		session = almsessions.getSession();
+		//session = almsessions.getSession();
 
-	if (session != null && session.isOpen()) {
-		tx = session.beginTransaction();
-		notifications.headerNotifications(session, model);
-
+	//if (session != null && session.isOpen()) {
+		//tx = session.beginTransaction();
+		//notifications.headerNotifications(session, model);
+		 emf = Persistence.createEntityManagerFactory("persistence");
+		 entityManager = emf.createEntityManager();
+		 notifications.headerNotification(entityManager, model);
+		 
 		String enterprise = request.getParameter("enterprise");
 		String transmission = request.getParameter("transmission");
 		String access = request.getParameter("access");
@@ -1942,7 +2010,7 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.ACTIVE_RECORD = '1' AND b.SUPPLIER_ID!='null' and b.SUPPLIER_ID!='0' and b.SUPPLIER_ID is not null ";			
 				strSites=  AppendQuery("b",arrayParam, strSites);	
 				
-				model.addAttribute("listSites", mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
+				model.addAttribute("listSites", mapper.writeValueAsString(entityManager.createNativeQuery(strSites).getResultList()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -1958,7 +2026,7 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				strNodesType = strNodesType + ") as countNodes FROM NODE_ACTIVE b WHERE b.ACTIVE_RECORD = '1' ";
 				strNodesType=  AppendQuery("b",arrayParam, strNodesType);
 				
-				model.addAttribute("listNodesType", mapper.writeValueAsString(session.createNativeQuery(strNodesType).list()));
+				model.addAttribute("listNodesType", mapper.writeValueAsString(entityManager.createNativeQuery(strNodesType).getResultList()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));	
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -1969,14 +2037,14 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				model.addAttribute("listNodesType", null);
 			}
 			finally {
-				if (session != null && session.isOpen()) {
-					logger.info("Session Closseeed");
-					tx.commit();
-					session.close();
-					session.getSessionFactory().close();
+				if (entityManager != null && entityManager.isOpen()) {
+					entityManager.close();
+				}
+				if(emf != null && emf.isOpen()) {
+					emf.close();	
 				}
 			}
-		}
+		//}
 		return "Network/Network_NdTypSupStNdCell";
 	}
 }
@@ -1987,12 +2055,15 @@ public String Network_NdTypVenStNdCell(Locale locale, Model model, HttpServletRe
 if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 		return "redirect:/";
 	} else {
-		session = almsessions.getSession();
+		//session = almsessions.getSession();
 
-	if (session != null && session.isOpen()) {
-		tx = session.beginTransaction();
-		notifications.headerNotifications(session, model);
-
+	//if (session != null && session.isOpen()) {
+		//tx = session.beginTransaction();
+		//notifications.headerNotifications(session, model);
+		 emf = Persistence.createEntityManagerFactory("persistence");
+		 entityManager = emf.createEntityManager();
+		 notifications.headerNotification(entityManager, model);
+		 
 		String enterprise = request.getParameter("enterprise");
 		String transmission = request.getParameter("transmission");
 		String access = request.getParameter("access");
@@ -2042,7 +2113,7 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.ACTIVE_RECORD = '1'AND b.VENDOR!='null' and b.VENDOR!='0' and b.VENDOR is not null ";			
 				strSites=  AppendQuery("b",arrayParam, strSites);	
 				
-				model.addAttribute("listSites", mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
+				model.addAttribute("listSites", mapper.writeValueAsString(entityManager.createNativeQuery(strSites).getResultList()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -2058,7 +2129,7 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				strNodesType = strNodesType + ") as countNodes FROM NODE_ACTIVE b WHERE b.ACTIVE_RECORD = '1' ";
 				strNodesType=  AppendQuery("b",arrayParam, strNodesType);
 				
-				model.addAttribute("listNodesType", mapper.writeValueAsString(session.createNativeQuery(strNodesType).list()));
+				model.addAttribute("listNodesType", mapper.writeValueAsString(entityManager.createNativeQuery(strNodesType).getResultList()));
 				model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));	
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -2069,14 +2140,14 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				model.addAttribute("listNodesType", null);
 			}
 			finally {
-				if (session != null && session.isOpen()) {
-					logger.info("Session Closseeed");
-					tx.commit();
-					session.close();
-					session.getSessionFactory().close();
+				if (entityManager != null && entityManager.isOpen()) {
+					entityManager.close();
+				}
+				if(emf != null && emf.isOpen()) {
+					emf.close();	
 				}
 			}
-		}
+		//}
 		return "Network/Network_NdTypVenStNdCell";
 	}
 }
@@ -2090,13 +2161,17 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 		public Map<String, Object> findNodeTypeSupSiteNodeCell_Sup(Locale locale, Model model, HttpServletRequest request,
 				HttpServletResponse response) throws JsonProcessingException {
 			Map<String, Object> rtn = new LinkedHashMap<>();
-			session = almsessions.getSession();
+			//session = almsessions.getSession();
 			if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				rtn.put("Login", LoginServices.checkSession(request, response));
 				return rtn;
 			}
-			if (session != null && session.isOpen()) {
-				tx = session.beginTransaction();
+			//if (session != null && session.isOpen()) {
+				//tx = session.beginTransaction();
+			 emf = Persistence.createEntityManagerFactory("persistence");
+			 entityManager = emf.createEntityManager();
+			 notifications.headerNotification(entityManager, model);
+			 
 				String selectedNodetType = request.getParameter("selectedNodetType");
 				
 				String paramEnterprise = request.getParameter("paramEnterprise");
@@ -2110,7 +2185,7 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				try {
 					if (selectedNodetType != null) {
 						strSupp= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strSupp);			
-						rtn.put("listSuppliers",session.createNativeQuery(strSupp).list());
+						rtn.put("listSuppliers",entityManager.createNativeQuery(strSupp).getResultList());
 					}
 				} catch (Exception e) {
 					sw = new StringWriter();
@@ -2121,13 +2196,14 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 					rtn.put("listSuppSites", null);
 				}			
 			 finally {
-					if (session != null && session.isOpen()) {
-						tx.commit();
-						session.close();
-						session.getSessionFactory().close();
+				 if (entityManager != null && entityManager.isOpen()) {
+						entityManager.close();
+					}
+					if(emf != null && emf.isOpen()) {
+						emf.close();	
 					}
 				}
-			}
+			//}
 			return rtn;
 		}
 
@@ -2138,15 +2214,17 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 		public Map<String, Object> findNodeTypeSupSiteNodeCell_Site(Locale locale, Model model, HttpServletRequest request,
 				HttpServletResponse response) throws JsonProcessingException {
 			Map<String, Object> rtn = new LinkedHashMap<>();
-			Session session = null;
-			Transaction tx = null;
-			session = almsessions.getSession();
+			//session = almsessions.getSession();
 			if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				rtn.put("Login", LoginServices.checkSession(request, response));
 				return rtn;
 			}
-			if (session != null && session.isOpen()) {
-				tx = session.beginTransaction();
+			//if (session != null && session.isOpen()) {
+				//tx = session.beginTransaction();
+			 emf = Persistence.createEntityManagerFactory("persistence");
+			 entityManager = emf.createEntityManager();
+			 notifications.headerNotification(entityManager, model);
+			 
 				String SelectedNodeType = request.getParameter("SelectedNodeType");
 				String selectedSupp = request.getParameter("selectedSupp");				
 				
@@ -2160,7 +2238,7 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				
 				 try {
 					 	strSites= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strSites);
-						rtn.put("listSuppSites",session.createNativeQuery(strSites).list());
+						rtn.put("listSuppSites",entityManager.createNativeQuery(strSites).getResultList());
 					} catch (Exception e) {
 						sw = new StringWriter();
 						e.printStackTrace(new PrintWriter(sw));
@@ -2170,13 +2248,14 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 						rtn.put("listSuppSites", null);
 					}		
 			 finally {
-					if (session != null && session.isOpen()) {
-						tx.commit();
-						session.close();
-						session.getSessionFactory().close();
+				 if (entityManager != null && entityManager.isOpen()) {
+						entityManager.close();
+					}
+					if(emf != null && emf.isOpen()) {
+						emf.close();	
 					}
 				}
-			}
+			//}
 			return rtn;
 		}	
 		
@@ -2188,15 +2267,17 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			public Map<String, Object> findNodeTypeVenSiteNodeCell_Site(Locale locale, Model model, HttpServletRequest request,
 					HttpServletResponse response) throws JsonProcessingException {
 				Map<String, Object> rtn = new LinkedHashMap<>();
-				Session session = null;
-				Transaction tx = null;
-				session = almsessions.getSession();
+				//session = almsessions.getSession();
 				if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 					rtn.put("Login", LoginServices.checkSession(request, response));
 					return rtn;
 				}
-				if (session != null && session.isOpen()) {
-					tx = session.beginTransaction();
+				//if (session != null && session.isOpen()) {
+					//tx = session.beginTransaction();
+				 emf = Persistence.createEntityManagerFactory("persistence");
+				 entityManager = emf.createEntityManager();
+				 notifications.headerNotification(entityManager, model);
+				 
 					String SelectedNodeType = request.getParameter("SelectedNodeType");
 					String selectedVen = request.getParameter("selectedVen");				
 					
@@ -2210,7 +2291,7 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 					
 					 try {
 						 	strSites= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strSites);
-							rtn.put("listVenSites",session.createNativeQuery(strSites).list());
+							rtn.put("listVenSites",entityManager.createNativeQuery(strSites).getResultList());
 						} catch (Exception e) {
 							sw = new StringWriter();
 							e.printStackTrace(new PrintWriter(sw));
@@ -2220,13 +2301,14 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 							rtn.put("listVenSites", null);
 						}		
 				 finally {
-						if (session != null && session.isOpen()) {
-							tx.commit();
-							session.close();
-							session.getSessionFactory().close();
+					 if (entityManager != null && entityManager.isOpen()) {
+							entityManager.close();
+						}
+						if(emf != null && emf.isOpen()) {
+							emf.close();	
 						}
 					}
-				}
+				//}
 				return rtn;
 			}
 		
@@ -2238,13 +2320,17 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 		public Map<String, Object> findNodeTypeVenSiteNodeCell_Ven(Locale locale, Model model, HttpServletRequest request,
 				HttpServletResponse response) throws JsonProcessingException {
 			Map<String, Object> rtn = new LinkedHashMap<>();
-			session = almsessions.getSession();
+			//session = almsessions.getSession();
 			if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				rtn.put("Login", LoginServices.checkSession(request, response));
 				return rtn;
 			}
-			if (session != null && session.isOpen()) {
-				tx = session.beginTransaction();
+			//if (session != null && session.isOpen()) {
+				//tx = session.beginTransaction();
+			 emf = Persistence.createEntityManagerFactory("persistence");
+			 entityManager = emf.createEntityManager();
+			 notifications.headerNotification(entityManager, model);
+			 
 				String selectedNodetType = request.getParameter("selectedNodetType");
 				
 				String paramEnterprise = request.getParameter("paramEnterprise");
@@ -2258,7 +2344,7 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				try {
 					if (selectedNodetType != null) {
 						strVen= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strVen);			
-						rtn.put("listVendors",session.createNativeQuery(strVen).list());
+						rtn.put("listVendors",entityManager.createNativeQuery(strVen).getResultList());
 					}
 				} catch (Exception e) {
 					sw = new StringWriter();
@@ -2269,30 +2355,35 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 					rtn.put("listVenSites", null);
 				}			
 			 finally {
-					if (session != null && session.isOpen()) {
-						tx.commit();
-						session.close();
-						session.getSessionFactory().close();
+				 if (entityManager != null && entityManager.isOpen()) {
+						entityManager.close();
+					}
+					if(emf != null && emf.isOpen()) {
+						emf.close();	
 					}
 				}
-			}
+			//}
 			return rtn;
 		}
 		
 		//retrieve vendors data when vendor is clicked in
 		// Node type -vendors-site-node-cell method
-		@RequestMapping(value = "/findStSupNdTypNdCell_Ven", method = RequestMethod.GET)
+		@RequestMapping(value = "/findStSupNdTypNdCell_Sup", method = RequestMethod.GET)
 		@ResponseBody
 		public Map<String, Object> findStSupNdTypNdCell_Ven(Locale locale, Model model, HttpServletRequest request,
 				HttpServletResponse response) throws JsonProcessingException {
 			Map<String, Object> rtn = new LinkedHashMap<>();
-			session = almsessions.getSession();
+			//session = almsessions.getSession();
 			if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				rtn.put("Login", LoginServices.checkSession(request, response));
 				return rtn;
 			}
-			if (session != null && session.isOpen()) {
-				tx = session.beginTransaction();
+			//if (session != null && session.isOpen()) {
+				//tx = session.beginTransaction();
+			 emf = Persistence.createEntityManagerFactory("persistence");
+			 entityManager = emf.createEntityManager();
+			 notifications.headerNotification(entityManager, model);
+			 
 				String siteId = request.getParameter("siteId");
 				
 				String paramEnterprise = request.getParameter("paramEnterprise");
@@ -2306,26 +2397,29 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				try {
 					if (siteId != null) {
 						strSup= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strSup);			
-						rtn.put("listSuppliers",session.createNativeQuery(strSup).list());
+						rtn.put("listSuppliers",entityManager.createNativeQuery(strSup).getResultList());
 					}
 				} catch (Exception e) {
 					sw = new StringWriter();
 					e.printStackTrace(new PrintWriter(sw));
 					exceptionAsString = sw.toString();
-					logger.finest("Error in retreiving Suppliers Data from database in method findStSupNdTypNdCell_Ven due to \n " + exceptionAsString);
-					logger.info("Error in retreiving Suppliers Data from database in method findStSupNdTypNdCell_Ven due to \n " + exceptionAsString);															
-					rtn.put("listVenSites", null);
+					logger.finest("Error in retreiving Suppliers Data from database in method findStSupNdTypNdCell_Sup due to \n " + exceptionAsString);
+					logger.info("Error in retreiving Suppliers Data from database in method findStSupNdTypNdCell_Sup due to \n " + exceptionAsString);															
+					rtn.put("listSuppliers", null);
 				}			
 			 finally {
-					if (session != null && session.isOpen()) {
-						tx.commit();
-						session.close();
-						session.getSessionFactory().close();
+				 if (entityManager != null && entityManager.isOpen()) {
+						entityManager.close();
+					}
+					if(emf != null && emf.isOpen()) {
+						emf.close();	
 					}
 				}
-			}
+			//}
 			return rtn;
 		}	
+		
+		
 		//retrieve vendors data when vendor is clicked in
 				// Node type -vendors-site-node-cell method
 				@RequestMapping(value = "/findStVenNdTypNdCell_Ven", method = RequestMethod.GET)
@@ -2333,13 +2427,17 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				public Map<String, Object> findStVenNdTypNdCell_Ven(Locale locale, Model model, HttpServletRequest request,
 						HttpServletResponse response) throws JsonProcessingException {
 					Map<String, Object> rtn = new LinkedHashMap<>();
-					session = almsessions.getSession();
+					//session = almsessions.getSession();
 					if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 						rtn.put("Login", LoginServices.checkSession(request, response));
 						return rtn;
 					}
-					if (session != null && session.isOpen()) {
-						tx = session.beginTransaction();
+					//if (session != null && session.isOpen()) {
+						//tx = session.beginTransaction();					
+					 emf = Persistence.createEntityManagerFactory("persistence");
+					 entityManager = emf.createEntityManager();
+					 notifications.headerNotification(entityManager, model);
+					 
 						String siteId = request.getParameter("siteId");
 						
 						String paramEnterprise = request.getParameter("paramEnterprise");
@@ -2353,7 +2451,7 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 						try {
 							if (siteId != null) {
 								strVen= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strVen);			
-								rtn.put("listVendors",session.createNativeQuery(strVen).list());
+								rtn.put("listVendors",entityManager.createNativeQuery(strVen).getResultList());
 							}
 						} catch (Exception e) {
 							sw = new StringWriter();
@@ -2364,13 +2462,14 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 							rtn.put("listVenSites", null);
 						}			
 					 finally {
-							if (session != null && session.isOpen()) {
-								tx.commit();
-								session.close();
-								session.getSessionFactory().close();
+						 if (entityManager != null && entityManager.isOpen()) {
+								entityManager.close();
+							}
+							if(emf != null && emf.isOpen()) {
+								emf.close();	
 							}
 						}
-					}
+					//}
 					return rtn;
 				}
 			
@@ -2382,13 +2481,17 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 		public Map<String, Object> Find_NdTSupSiteNodeCell_NodeCell(Locale locale, Model model, HttpServletRequest request,
 				HttpServletResponse response) throws JsonProcessingException {
 			Map<String, Object> rtn = new LinkedHashMap<>();
-			session = almsessions.getSession();
+			//session = almsessions.getSession();
 			if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				rtn.put("Login", LoginServices.checkSession(request, response));
 				return rtn;
 			}
-			if (session != null && session.isOpen()) {
-				tx = session.beginTransaction();
+			//if (session != null && session.isOpen()) {
+				//tx = session.beginTransaction();
+			 emf = Persistence.createEntityManagerFactory("persistence");
+			 entityManager = emf.createEntityManager();
+			 notifications.headerNotification(entityManager, model);
+			 
 				String selectedSupp = request.getParameter("selectedSupp");
 				String selectedItem = request.getParameter("selectedItem");
 				String SelectedNodeType = request.getParameter("SelectedNodeType");
@@ -2418,7 +2521,7 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 						strNodes = strNodes + ") as countUcells FROM NODE_ACTIVE a WHERE a.ACTIVE_RECORD = '1' and a.WARE_ID='"+ selectedItem + "' and a.SUPPLIER_ID='"+ selectedSupp + "' and a.NODE_TYPE='"+ SelectedNodeType + "' ";			
 						strNodes= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);		
 						
-						rtn.put("listSuppNodes", session.createNativeQuery(strNodes).list());
+						rtn.put("listSuppNodes", entityManager.createNativeQuery(strNodes).getResultList());
 					}
 				} catch (Exception e) {
 					sw = new StringWriter();
@@ -2435,9 +2538,9 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 							strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);						
 							strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);	
 												
-							cellResult.addAll(session.createNativeQuery(strCells1).list());
-							cellResult.addAll(session.createNativeQuery(strCells2).list());
-							cellResult.addAll(session.createNativeQuery(strCells3).list());
+							cellResult.addAll(entityManager.createNativeQuery(strCells1).getResultList());
+							cellResult.addAll(entityManager.createNativeQuery(strCells2).getResultList());
+							cellResult.addAll(entityManager.createNativeQuery(strCells3).getResultList());
 							
 							rtn.put("listCells",cellResult);
 						}
@@ -2451,13 +2554,14 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 					}
 		
 			 finally {
-					if (session != null && session.isOpen()) {
-						tx.commit();
-						session.close();
-						session.getSessionFactory().close();
+				 	if (entityManager != null && entityManager.isOpen()) {
+						entityManager.close();
+					}
+					if(emf != null && emf.isOpen()) {
+						emf.close();	
 					}
 				}
-			}
+			//}
 			return rtn;
 		}
 		
@@ -2469,13 +2573,17 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 		public Map<String, Object> Find_NdTVenSiteNodeCell_NodeCell(Locale locale, Model model, HttpServletRequest request,
 				HttpServletResponse response) throws JsonProcessingException {
 			Map<String, Object> rtn = new LinkedHashMap<>();
-			session = almsessions.getSession();
+			//session = almsessions.getSession();
 			if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				rtn.put("Login", LoginServices.checkSession(request, response));
 				return rtn;
 			}
-			if (session != null && session.isOpen()) {
-				tx = session.beginTransaction();
+			//if (session != null && session.isOpen()) {
+				//tx = session.beginTransaction();
+			 emf = Persistence.createEntityManagerFactory("persistence");
+			 entityManager = emf.createEntityManager();
+			 notifications.headerNotification(entityManager, model);
+			 
 				String selectedVen = request.getParameter("selectedVen");
 				String selectedItem = request.getParameter("selectedItem");
 				String SelectedNodeType = request.getParameter("SelectedNodeType");
@@ -2505,7 +2613,7 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 						strNodes = strNodes + ") as countUcells FROM NODE_ACTIVE a WHERE a.ACTIVE_RECORD = '1' and a.WARE_ID='"+ selectedItem + "' and a.VENDOR='"+ selectedVen + "' and a.NODE_TYPE='"+ SelectedNodeType + "' ";			
 						strNodes= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);		
 						
-						rtn.put("listVenNodes", session.createNativeQuery(strNodes).list());
+						rtn.put("listVenNodes", entityManager.createNativeQuery(strNodes).getResultList());
 					}
 				} catch (Exception e) {
 					sw = new StringWriter();
@@ -2522,9 +2630,9 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 							strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);						
 							strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);	
 												
-							cellResult.addAll(session.createNativeQuery(strCells1).list());
-							cellResult.addAll(session.createNativeQuery(strCells2).list());
-							cellResult.addAll(session.createNativeQuery(strCells3).list());
+							cellResult.addAll(entityManager.createNativeQuery(strCells1).getResultList());
+							cellResult.addAll(entityManager.createNativeQuery(strCells2).getResultList());
+							cellResult.addAll(entityManager.createNativeQuery(strCells3).getResultList());
 							
 							rtn.put("listCells",cellResult);
 						}
@@ -2538,13 +2646,14 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 					}
 		
 			 finally {
-					if (session != null && session.isOpen()) {
-						tx.commit();
-						session.close();
-						session.getSessionFactory().close();
+				 	if (entityManager != null && entityManager.isOpen()) {
+						entityManager.close();
+					}
+					if(emf != null && emf.isOpen()) {
+						emf.close();	
 					}
 				}
-			}
+			//}
 			return rtn;
 		}		
 		
@@ -2554,10 +2663,14 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				return "redirect:/";
 			} else {
-				session = almsessions.getSession();
-				if (session != null && session.isOpen()) {
-					tx = session.beginTransaction();
-					notifications.headerNotifications(session, model);
+				//session = almsessions.getSession();
+				//if (session != null && session.isOpen()) {
+					//tx = session.beginTransaction();
+					//notifications.headerNotifications(session, model);
+				 emf = Persistence.createEntityManagerFactory("persistence");
+				 entityManager = emf.createEntityManager();
+				 notifications.headerNotification(entityManager, model);
+				 
 					String enterprise = request.getParameter("enterprise");
 					String transmission = request.getParameter("transmission");
 					String access = request.getParameter("access");
@@ -2605,7 +2718,7 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 							strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.ACTIVE_RECORD = '1' AND b.VENDOR!='null' and b.VENDOR!='0' and b.VENDOR is not null  ";			
 							strSites=  AppendQuery("b",arrayParam, strSites);	
 								
-							model.addAttribute("listSites", mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
+							model.addAttribute("listSites", mapper.writeValueAsString(entityManager.createNativeQuery(strSites).getResultList()));
 							model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 					} catch (Exception e) {
 						sw = new StringWriter();
@@ -2617,14 +2730,14 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 					}
 					
 					finally {
-						if (session != null && session.isOpen()) {
-							logger.info("Session Closseeed");
-							tx.commit();
-							session.close();
-							session.getSessionFactory().close();
+						if (entityManager != null && entityManager.isOpen()) {
+							entityManager.close();
+						}
+						if(emf != null && emf.isOpen()) {
+							emf.close();	
 						}
 					}
-				}
+				//}
 				return "Network/Network_StVenNdTypNdCell";
 			}
 		}
@@ -2634,10 +2747,14 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				return "redirect:/";
 			} else {
-				session = almsessions.getSession();
-				if (session != null && session.isOpen()) {
-					tx = session.beginTransaction();
-					notifications.headerNotifications(session, model);
+				//session = almsessions.getSession();
+				//if (session != null && session.isOpen()) {
+					//tx = session.beginTransaction();
+					//notifications.headerNotifications(session, model);
+				 emf = Persistence.createEntityManagerFactory("persistence");
+				 entityManager = emf.createEntityManager();
+				 notifications.headerNotification(entityManager, model);
+				 
 					String enterprise = request.getParameter("enterprise");
 					String transmission = request.getParameter("transmission");
 					String access = request.getParameter("access");
@@ -2685,7 +2802,7 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 							strSites = strSites + ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.ACTIVE_RECORD = '1' AND b.VENDOR!='null' and b.VENDOR!='0' and b.VENDOR is not null  ";			
 							strSites=  AppendQuery("b",arrayParam, strSites);	
 								
-							model.addAttribute("listSites", mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
+							model.addAttribute("listSites", mapper.writeValueAsString(entityManager.createNativeQuery(strSites).getResultList()));
 							model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 					} catch (Exception e) {
 						sw = new StringWriter();
@@ -2697,14 +2814,14 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 					}
 					
 					finally {
-						if (session != null && session.isOpen()) {
-							logger.info("Session Closseeed");
-							tx.commit();
-							session.close();
-							session.getSessionFactory().close();
+						if (entityManager != null && entityManager.isOpen()) {
+							entityManager.close();
+						}
+						if(emf != null && emf.isOpen()) {
+							emf.close();	
 						}
 					}
-				}
+				//}
 				return "Network/Network_StSupNdTypNdCell";
 			}
 		}
@@ -2715,18 +2832,22 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 	public Map<String, Object> area(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		session = almsessions.getSession();
+		//session = almsessions.getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
 		}
-		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
+		//if (session != null && session.isOpen()) {
+			//tx = session.beginTransaction();
+		 emf = Persistence.createEntityManagerFactory("persistence");
+		 entityManager = emf.createEntityManager();
+		 notifications.headerNotification(entityManager, model);
+		 
 			try {
 
-				List<?> areaList = session.createNativeQuery(
+				List<?> areaList = entityManager.createNativeQuery(
 						"SELECT  distinct B.AREA_ID,B.AREA_NAME,A.LONGITUDE,A.LATITUDE FROM WAREHOUSE B,AREA A,NODE_ACTIVE C WHERE A.AREA_ID=B.AREA_ID AND B.WARE_ID=C.WARE_ID AND C.ACTIVE_RECORD='1'")
-						.list();
+						.getResultList();
 				// (select count(*) from NODE_ACTIVE b where b.WARE_ID = a.WARE_ID and
 				// b.ACTIVE_RECORD = '1') as countNode
 
@@ -2747,10 +2868,10 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				rtn.put("areaList", null);
 			}
 			try {
-				List<?> site_AreaList = session.createNativeQuery(
+				List<?> site_AreaList = entityManager.createNativeQuery(
 						"SELECT  distinct b.WARE_NAME,b.WARE_ID,a.LATITUDE,a.LONGITUDE,a.AREA_ID,(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID  and w.ACTIVE_RECORD = '1') as countnodes"
 								+ " FROM WAREHOUSE a,NODE_ACTIVE b where a.WARE_ID=b.WARE_ID and b.ACTIVE_RECORD = '1' and b.WARE_ID!='0' and b.WARE_ID!='null' and a.AREA_ID!='null'")
-						.list();
+						.getResultList();
 
 				List<Object> site_AreaResult = new ArrayList<>();
 
@@ -2770,13 +2891,14 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			}
 
 			finally {
-				if (session != null && session.isOpen()) {
-					tx.commit();
-					session.close();
-					session.getSessionFactory().close();
+				if (entityManager != null && entityManager.isOpen()) {
+					entityManager.close();
+				}
+				if(emf != null && emf.isOpen()) {
+					emf.close();	
 				}
 			}
-		}
+		//}
 		return rtn;
 	}
 	
@@ -2874,8 +2996,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 		public LinkedHashMap<String, String> GetBoqList(@RequestParam String SiteId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
 
-			Session session = almsessions.getSession();
-			Transaction tx = session.beginTransaction();
+			//Session session = almsessions.getSession();
+			//Transaction tx = session.beginTransaction();
+			 emf = Persistence.createEntityManagerFactory("persistence");
+			 entityManager = emf.createEntityManager();
+
 			LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 		
 			try {
@@ -2884,7 +3009,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
 				String Site_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(Site_Query);
-				Object Sites = session.createNativeQuery(Site_Query).uniqueResult();
+				Object Sites = entityManager.createNativeQuery(Site_Query).getSingleResult();
 				strEmpty="";
 				strExist="";				
 		////////////////////////////
@@ -2894,7 +3019,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 				String Node_Active_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(Node_Active_Query);
-				Object CountNodes_Active = session.createNativeQuery(Node_Active_Query).uniqueResult();
+				Object CountNodes_Active = entityManager.createNativeQuery(Node_Active_Query).getSingleResult();
 				strEmpty="";
 				strExist="";
 		////////////////////////////			
@@ -2904,7 +3029,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 				String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(Node_GCell_Query);
-				Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
+				Object CountNodes_G_CELL = entityManager.createNativeQuery(Node_GCell_Query).getSingleResult();
 				strEmpty="";
 				strExist="";
 		/////////////////////////////
@@ -2914,7 +3039,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 				String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(Node_LCell_Query);
-				Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
+				Object CountNodes_L_CELL = entityManager.createNativeQuery(Node_LCell_Query).getSingleResult();
 				strEmpty="";
 				strExist="";
 	/////////////////////////////
@@ -2924,7 +3049,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 				String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(Node_UCell_Query);
-				Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
+				Object CountNodes_U_CELL = entityManager.createNativeQuery(Node_UCell_Query).getSingleResult();
 				strEmpty="";
 				strExist="";			
 	/////////////////////////////
@@ -2936,14 +3061,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
 					String Node_Type_Count = strEmpty;
 					//System.out.println(Node_Type_Count);
-					Object CountNodesType = session.createNativeQuery(Node_Type_Count).uniqueResult();
+					Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
 					BoqHM.put("Node Type", String.valueOf(CountNodesType));
 				}else {
 					strExist="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"+ SiteId + "' ";
 					strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 					String Node_Type_Count = strExist;
 					//System.out.println(Node_Type_Count);
-					Object CountNodesType = session.createNativeQuery(Node_Type_Count).uniqueResult();
+					Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
 					BoqHM.put("Node Type", String.valueOf(CountNodesType));
 					strExist="";
 				////////////////////////////////
@@ -2951,7 +3076,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 					strExist = strExist +" GROUP BY NODE_TYPE";
 					//System.out.println(strExist);
-					List<Object[]> CountNodesteach_Active = (List<Object[]>) session.createNativeQuery(strExist).list();
+					List<Object[]> CountNodesteach_Active = (List<Object[]>) entityManager.createNativeQuery(strExist).getResultList();
 					List<Object[]> result = new ArrayList<>();
 					for (Object[] obj : CountNodesteach_Active) {
 						result.add(obj);
@@ -2972,10 +3097,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			logger.info("Error in retreiving Sites BOQ from database in method GetBoqList due to \n " + exceptionAsString);															
 			return null;
 		} finally {
-			if (session != null && session.isOpen()) {
-				tx.commit();
-				session.close();
-				session.getSessionFactory().close();
+			if (entityManager != null && entityManager.isOpen()) {
+				entityManager.close();
+			}
+			if(emf != null && emf.isOpen()) {
+				emf.close();	
 			}
 		}
 		//return BoqHM;
@@ -2988,15 +3114,18 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 			public LinkedHashMap<String, String> GetSiteVenBoqList(@RequestParam String SiteId,@RequestParam String VenId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
 
-				Session session = almsessions.getSession();
-				Transaction tx = session.beginTransaction();
+				//Session session = almsessions.getSession();
+				//Transaction tx = session.beginTransaction();
+				 emf = Persistence.createEntityManagerFactory("persistence");
+				 entityManager = emf.createEntityManager();
+				 
 				LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 				try {
 						String strEmpty= "SELECT COUNT(DISTINCT WARE_ID) FROM NODE_ACTIVE WHERE WARE_ID!='null' AND WARE_ID!='0' and WARE_ID is not null AND VENDOR!='null' AND VENDOR!='0' AND VENDOR is not null ";
 						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
 						String Site_Query = SiteId == "" ? strEmpty : "Select distinct Ware_Name From NODE_ACTIVE where Ware_Id='" + SiteId + "' and vendor='"+VenId+"' ";
 						//System.out.println(Site_Query);
-						Object Sites = session.createNativeQuery(Site_Query).uniqueResult();
+						Object Sites = entityManager.createNativeQuery(Site_Query).getSingleResult();
 						strEmpty="";					
 			////////////////////////////
 						strEmpty="SELECT COUNT(DISTINCT NODE_PK) FROM NODE_ACTIVE where Active_record='1' AND VENDOR!='null' AND VENDOR!='0' AND VENDOR is not null ";
@@ -3005,7 +3134,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 						String Node_Active_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_Active_Query);
-						Object CountNodes_Active = session.createNativeQuery(Node_Active_Query).uniqueResult();
+						Object CountNodes_Active = entityManager.createNativeQuery(Node_Active_Query).getSingleResult();
 						strEmpty="";
 						strExist="";
 			////////////////////////////			
@@ -3018,7 +3147,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 						String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_GCell_Query);
-						Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
+						Object CountNodes_G_CELL = entityManager.createNativeQuery(Node_GCell_Query).getSingleResult();
 						strEmpty="";
 						strExist="";
 			/////////////////////////////
@@ -3031,7 +3160,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 						String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_LCell_Query);
-						Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
+						Object CountNodes_L_CELL = entityManager.createNativeQuery(Node_LCell_Query).getSingleResult();
 						strEmpty="";
 						strExist="";
 			/////////////////////////////
@@ -3044,7 +3173,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 						String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_UCell_Query);
-						Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
+						Object CountNodes_U_CELL = entityManager.createNativeQuery(Node_UCell_Query).getSingleResult();
 						strEmpty="";
 						strExist="";			
 			/////////////////////////////
@@ -3056,14 +3185,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
 							String Node_Type_Count = strEmpty;
 							//System.out.println(Node_Type_Count);
-							Object CountNodesType = session.createNativeQuery(Node_Type_Count).uniqueResult();
+							Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
 							BoqHM.put("Node Type", String.valueOf(CountNodesType));
 						}else {
 							strExist="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"+ SiteId + "' and vendor='"+VenId+"' ";
 							strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 							String Node_Type_Count = strExist;
 							//System.out.println(Node_Type_Count);
-							Object CountNodesType = session.createNativeQuery(Node_Type_Count).uniqueResult();
+							Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
 							BoqHM.put("Node Type", String.valueOf(CountNodesType));
 							strExist="";
 						////////////////////////////////
@@ -3071,7 +3200,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 							strExist = strExist +" GROUP BY NODE_TYPE";
 							//System.out.println(strExist);
-							List<Object[]> CountNodesteach_Active = (List<Object[]>) session.createNativeQuery(strExist).list();
+							List<Object[]> CountNodesteach_Active = (List<Object[]>) entityManager.createNativeQuery(strExist).getResultList();
 							List<Object[]> result = new ArrayList<>();
 							for (Object[] obj : CountNodesteach_Active) {
 								result.add(obj);
@@ -3092,10 +3221,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					logger.info("Error in retreiving Sites BOQ from database in method GetSiteVenBoqList due to \n " + exceptionAsString);															
 					return null;
 				} finally {
-					if (session != null && session.isOpen()) {
-						tx.commit();
-						session.close();
-						session.getSessionFactory().close();
+					if (entityManager != null && entityManager.isOpen()) {
+						entityManager.close();
+					}
+					if(emf != null && emf.isOpen()) {
+						emf.close();	
 					}
 				}
 			}
@@ -3107,15 +3237,18 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 				public LinkedHashMap<String, String> GetSiteVenNTBoqList(@RequestParam String SiteId,@RequestParam String VenId,@RequestParam String SelectedNodeType,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
 
-					Session session = almsessions.getSession();
-					Transaction tx = session.beginTransaction();
+					//Session session = almsessions.getSession();
+					//Transaction tx = session.beginTransaction();
+					 emf = Persistence.createEntityManagerFactory("persistence");
+					 entityManager = emf.createEntityManager();
+				
 					LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 					try {
 							String strEmpty= "SELECT COUNT(DISTINCT WARE_ID) FROM NODE_ACTIVE WHERE WARE_ID!='null' AND WARE_ID!='0' and WARE_ID is not null AND VENDOR!='null' AND VENDOR!='0' AND VENDOR is not null ";
 							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
 							String Site_Query = SiteId == "" ? strEmpty : "Select distinct Ware_Name From NODE_ACTIVE where Ware_Id='" + SiteId + "' and vendor='"+VenId+"' and NODE_TYPE='"+SelectedNodeType+"' ";
 							//System.out.println(Site_Query);
-							Object Sites = session.createNativeQuery(Site_Query).uniqueResult();
+							Object Sites = entityManager.createNativeQuery(Site_Query).getSingleResult();
 							strEmpty="";					
 				////////////////////////////
 							strEmpty="SELECT COUNT(DISTINCT NODE_PK) FROM NODE_ACTIVE where Active_record='1' AND VENDOR!='null' AND VENDOR!='0' AND VENDOR is not null ";
@@ -3124,7 +3257,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 							String Node_Active_Query = SiteId == "" ? strEmpty : strExist;
 							//System.out.println(Node_Active_Query);
-							Object CountNodes_Active = session.createNativeQuery(Node_Active_Query).uniqueResult();
+							Object CountNodes_Active = entityManager.createNativeQuery(Node_Active_Query).getSingleResult();
 							strEmpty="";
 							strExist="";
 				////////////////////////////			
@@ -3137,7 +3270,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 							String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
 							//System.out.println(Node_GCell_Query);
-							Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
+							Object CountNodes_G_CELL = entityManager.createNativeQuery(Node_GCell_Query).getSingleResult();
 							strEmpty="";
 							strExist="";
 				/////////////////////////////
@@ -3150,7 +3283,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 							String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
 							//System.out.println(Node_LCell_Query);
-							Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
+							Object CountNodes_L_CELL = entityManager.createNativeQuery(Node_LCell_Query).getSingleResult();
 							strEmpty="";
 							strExist="";
 				/////////////////////////////
@@ -3163,7 +3296,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 							String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
 							//System.out.println(Node_UCell_Query);
-							Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
+							Object CountNodes_U_CELL = entityManager.createNativeQuery(Node_UCell_Query).getSingleResult();
 							strEmpty="";
 							strExist="";			
 				/////////////////////////////
@@ -3175,14 +3308,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 								strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
 								String Node_Type_Count = strEmpty;
 								//System.out.println(Node_Type_Count);
-								Object CountNodesType = session.createNativeQuery(Node_Type_Count).uniqueResult();
+								Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
 								BoqHM.put("Node Type", String.valueOf(CountNodesType));
 							}else {
 								strExist="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"+ SiteId + "' and vendor='"+VenId+"' and NODE_TYPE='"+SelectedNodeType+"' ";
 								strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 								String Node_Type_Count = strExist;
 								//System.out.println(Node_Type_Count);
-								Object CountNodesType = session.createNativeQuery(Node_Type_Count).uniqueResult();
+								Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
 								BoqHM.put("Node Type", String.valueOf(CountNodesType));
 								strExist="";
 							////////////////////////////////
@@ -3190,7 +3323,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 								strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 								strExist = strExist +" GROUP BY NODE_TYPE";
 								//System.out.println(strExist);
-								List<Object[]> CountNodesteach_Active = (List<Object[]>) session.createNativeQuery(strExist).list();
+								List<Object[]> CountNodesteach_Active = (List<Object[]>) entityManager.createNativeQuery(strExist).getResultList();
 								List<Object[]> result = new ArrayList<>();
 								for (Object[] obj : CountNodesteach_Active) {
 									result.add(obj);
@@ -3211,10 +3344,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						logger.info("Error in retreiving Sites BOQ from database in method GetSiteVenNTBoqList due to \n " + exceptionAsString);															
 						return null;
 					} finally {
-						if (session != null && session.isOpen()) {
-							tx.commit();
-							session.close();
-							session.getSessionFactory().close();
+						if (entityManager != null && entityManager.isOpen()) {
+							entityManager.close();
+						}
+						if(emf != null && emf.isOpen()) {
+							emf.close();	
 						}
 					}
 				}
@@ -3227,9 +3361,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 			public LinkedHashMap<String, String> GetSiteSupBoqList(@RequestParam String SiteId,@RequestParam String SuppId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
 
-				Session session = almsessions.getSession();
-				Transaction tx = session.beginTransaction();
-
+				//Session session = almsessions.getSession();
+				//Transaction tx = session.beginTransaction();
+				 emf = Persistence.createEntityManagerFactory("persistence");
+				 entityManager = emf.createEntityManager();
+	
 				// if Site_id !=null --> an ajax request received
 				LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 			
@@ -3238,7 +3374,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
 						String Site_Query = SiteId == "" ? strEmpty : "Select distinct Ware_Name From NODE_ACTIVE where Ware_Id='" + SiteId + "' and SUPPLIER_ID='"+SuppId+"' ";
 						//System.out.println(Site_Query);
-						Object Sites = session.createNativeQuery(Site_Query).uniqueResult();
+						Object Sites = entityManager.createNativeQuery(Site_Query).getSingleResult();
 						strEmpty="";					
 			////////////////////////////
 						strEmpty="SELECT COUNT(DISTINCT NODE_PK) FROM NODE_ACTIVE where Active_record='1' AND SUPPLIER_ID!='null' AND SUPPLIER_ID!='0' AND SUPPLIER_ID is not null ";
@@ -3247,7 +3383,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 						String Node_Active_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_Active_Query);
-						Object CountNodes_Active = session.createNativeQuery(Node_Active_Query).uniqueResult();
+						Object CountNodes_Active = entityManager.createNativeQuery(Node_Active_Query).getSingleResult();
 						strEmpty="";
 						strExist="";
 			////////////////////////////			
@@ -3260,7 +3396,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 						String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_GCell_Query);
-						Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
+						Object CountNodes_G_CELL = entityManager.createNativeQuery(Node_GCell_Query).getSingleResult();
 						strEmpty="";
 						strExist="";
 			/////////////////////////////
@@ -3273,7 +3409,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 						String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_LCell_Query);
-						Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
+						Object CountNodes_L_CELL = entityManager.createNativeQuery(Node_LCell_Query).getSingleResult();
 						strEmpty="";
 						strExist="";
 			/////////////////////////////
@@ -3286,7 +3422,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 						String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_UCell_Query);
-						Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
+						Object CountNodes_U_CELL = entityManager.createNativeQuery(Node_UCell_Query).getSingleResult();
 						strEmpty="";
 						strExist="";			
 			/////////////////////////////
@@ -3298,14 +3434,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
 							String Node_Type_Count = strEmpty;
 							//System.out.println(Node_Type_Count);
-							Object CountNodesType = session.createNativeQuery(Node_Type_Count).uniqueResult();
+							Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
 							BoqHM.put("Node Type", String.valueOf(CountNodesType));
 						}else {
 							strExist="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"+ SiteId + "' and SUPPLIER_ID='"+SuppId+"' ";
 							strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 							String Node_Type_Count = strExist;
 							//System.out.println(Node_Type_Count);
-							Object CountNodesType = session.createNativeQuery(Node_Type_Count).uniqueResult();
+							Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
 							BoqHM.put("Node Type", String.valueOf(CountNodesType));
 							strExist="";
 						////////////////////////////////
@@ -3313,7 +3449,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 							strExist = strExist +" GROUP BY NODE_TYPE";
 							//System.out.println(strExist);
-							List<Object[]> CountNodesteach_Active = (List<Object[]>) session.createNativeQuery(strExist).list();
+							List<Object[]> CountNodesteach_Active = (List<Object[]>) entityManager.createNativeQuery(strExist).getResultList();
 							List<Object[]> result = new ArrayList<>();
 							for (Object[] obj : CountNodesteach_Active) {
 								result.add(obj);
@@ -3334,10 +3470,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					logger.info("Error in retreiving Sites BOQ from database in method GetSiteSupBoqList due to \n " + exceptionAsString);															
 					return null;
 				} finally {
-					if (session != null && session.isOpen()) {
-						tx.commit();
-						session.close();
-						session.getSessionFactory().close();
+					if (entityManager != null && entityManager.isOpen()) {
+						entityManager.close();
+					}
+					if(emf != null && emf.isOpen()) {
+						emf.close();	
 					}
 				}
 			}
@@ -3348,8 +3485,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			@ResponseBody
 			public LinkedHashMap<String, String> GetSiteSupNTBoqList(@RequestParam String SiteId,@RequestParam String SuppId,@RequestParam String SelectedNodeType,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
 
-				Session session = almsessions.getSession();
-				Transaction tx = session.beginTransaction();
+				//Session session = almsessions.getSession();
+				//Transaction tx = session.beginTransaction();
+				 emf = Persistence.createEntityManagerFactory("persistence");
+				 entityManager = emf.createEntityManager();
+
 				LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 			
 				try {
@@ -3357,7 +3497,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
 						String Site_Query = SiteId == "" ? strEmpty : "Select distinct Ware_Name From NODE_ACTIVE where Ware_Id='" + SiteId + "' and SUPPLIER_ID='"+SuppId+"' AND NODE_TYPE='"+SelectedNodeType+"' ";
 						//System.out.println(Site_Query);
-						Object Sites = session.createNativeQuery(Site_Query).uniqueResult();
+						Object Sites = entityManager.createNativeQuery(Site_Query).getSingleResult();
 						strEmpty="";					
 			////////////////////////////
 						strEmpty="SELECT COUNT(DISTINCT NODE_PK) FROM NODE_ACTIVE where Active_record='1' AND SUPPLIER_ID!='null' AND SUPPLIER_ID!='0' AND SUPPLIER_ID is not null ";
@@ -3366,7 +3506,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 						String Node_Active_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_Active_Query);
-						Object CountNodes_Active = session.createNativeQuery(Node_Active_Query).uniqueResult();
+						Object CountNodes_Active = entityManager.createNativeQuery(Node_Active_Query).getSingleResult();
 						strEmpty="";
 						strExist="";
 			////////////////////////////			
@@ -3379,7 +3519,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 						String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_GCell_Query);
-						Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
+						Object CountNodes_G_CELL = entityManager.createNativeQuery(Node_GCell_Query).getSingleResult();
 						strEmpty="";
 						strExist="";
 			/////////////////////////////
@@ -3392,7 +3532,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 						String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_LCell_Query);
-						Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
+						Object CountNodes_L_CELL = entityManager.createNativeQuery(Node_LCell_Query).getSingleResult();
 						strEmpty="";
 						strExist="";
 			/////////////////////////////
@@ -3405,7 +3545,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 						String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_UCell_Query);
-						Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
+						Object CountNodes_U_CELL = entityManager.createNativeQuery(Node_UCell_Query).getSingleResult();
 						strEmpty="";
 						strExist="";			
 			/////////////////////////////
@@ -3417,14 +3557,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
 							String Node_Type_Count = strEmpty;
 							//System.out.println(Node_Type_Count);
-							Object CountNodesType = session.createNativeQuery(Node_Type_Count).uniqueResult();
+							Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
 							BoqHM.put("Node Type", String.valueOf(CountNodesType));
 						}else {
 							strExist="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"+ SiteId + "' and SUPPLIER_ID='"+SuppId+"' AND NODE_TYPE='"+SelectedNodeType+"' ";
 							strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 							String Node_Type_Count = strExist;
 							//System.out.println(Node_Type_Count);
-							Object CountNodesType = session.createNativeQuery(Node_Type_Count).uniqueResult();
+							Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
 							BoqHM.put("Node Type", String.valueOf(CountNodesType));
 							strExist="";
 						////////////////////////////////
@@ -3432,7 +3572,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 							strExist = strExist +" GROUP BY NODE_TYPE";
 							//System.out.println(strExist);
-							List<Object[]> CountNodesteach_Active = (List<Object[]>) session.createNativeQuery(strExist).list();
+							List<Object[]> CountNodesteach_Active = (List<Object[]>) entityManager.createNativeQuery(strExist).getResultList();
 							List<Object[]> result = new ArrayList<>();
 							for (Object[] obj : CountNodesteach_Active) {
 								result.add(obj);
@@ -3453,10 +3593,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					logger.info("Error in retreiving Sites BOQ from database in method GetSiteSupNTBoqList due to \n " + exceptionAsString);															
 					return null;
 				} finally {
-					if (session != null && session.isOpen()) {
-						tx.commit();
-						session.close();
-						session.getSessionFactory().close();
+					if (entityManager != null && entityManager.isOpen()) {
+						entityManager.close();
+					}
+					if(emf != null && emf.isOpen()) {
+						emf.close();	
 					}
 				}
 			}
@@ -3469,8 +3610,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 		public LinkedHashMap<String, String> GetVenBoqList(@RequestParam String VenId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
 
-			Session session = almsessions.getSession();
-			Transaction tx = session.beginTransaction();
+			//Session session = almsessions.getSession();
+			//Transaction tx = session.beginTransaction();
+			 emf = Persistence.createEntityManagerFactory("persistence");
+			 entityManager = emf.createEntityManager();
+		
 			LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 			try {
 					
@@ -3478,7 +3622,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
 				String Vendor_Query = VenId == "" ? strEmpty : "Select distinct VENDOR From NODE_ACTIVE where VENDOR='" + VenId + "' ";
 				//System.out.println(Vendor_Query);
-				Object Vendors = session.createNativeQuery(Vendor_Query).uniqueResult();
+				Object Vendors = entityManager.createNativeQuery(Vendor_Query).getSingleResult();
 				strEmpty="";
 		////////////////////////////
 				strEmpty= "SELECT COUNT(DISTINCT WARE_ID) FROM NODE_ACTIVE WHERE WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null AND VENDOR!='null' AND VENDOR!='0' AND VENDOR is not null  ";	
@@ -3487,7 +3631,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);					
 				String Site_Query = VenId == "" ? strEmpty : strExist;
 				//System.out.println(Site_Query);
-				Object Sites = session.createNativeQuery(Site_Query).uniqueResult();
+				Object Sites = entityManager.createNativeQuery(Site_Query).getSingleResult();
 				strEmpty="";
 				strExist="";
 		////////////////////////////
@@ -3497,7 +3641,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 				String Node_Active_Query = VenId == "" ? strEmpty : strExist;
 				//System.out.println(Node_Active_Query);
-				Object CountNodes_Active = session.createNativeQuery(Node_Active_Query).uniqueResult();
+				Object CountNodes_Active = entityManager.createNativeQuery(Node_Active_Query).getSingleResult();
 				strEmpty="";
 				strExist="";					
 		////////////////////////////			
@@ -3511,7 +3655,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 				String Node_GCell_Query = VenId == "" ? strEmpty : strExist;
 				//System.out.println(Node_GCell_Query);
-				Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
+				Object CountNodes_G_CELL = entityManager.createNativeQuery(Node_GCell_Query).getSingleResult();
 				strEmpty="";
 				strExist="";
 		/////////////////////////////
@@ -3524,7 +3668,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 				String Node_LCell_Query = VenId == "" ? strEmpty : strExist;
 				//System.out.println(Node_LCell_Query);
-				Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
+				Object CountNodes_L_CELL = entityManager.createNativeQuery(Node_LCell_Query).getSingleResult();
 				strEmpty="";
 				strExist="";
 		/////////////////////////////
@@ -3537,7 +3681,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 				String Node_UCell_Query = VenId == "" ? strEmpty : strExist;
 				//System.out.println(Node_UCell_Query);
-				Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
+				Object CountNodes_U_CELL = entityManager.createNativeQuery(Node_UCell_Query).getSingleResult();
 				strEmpty="";
 				strExist="";			
 		/////////////////////////////
@@ -3550,14 +3694,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
 					String Node_Type_Count = strEmpty;
 					//System.out.println(Node_Type_Count);
-					Object CountNodesType = session.createNativeQuery(Node_Type_Count).uniqueResult();
+					Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
 					BoqHM.put("Node Type", String.valueOf(CountNodesType));
 				}else {
 					strExist="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and VENDOR='"+ VenId + "' ";
 					strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 					String Node_Type_Count = strExist;
 					//System.out.println(Node_Type_Count);
-					Object CountNodesType = session.createNativeQuery(Node_Type_Count).uniqueResult();
+					Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
 					BoqHM.put("Node Type", String.valueOf(CountNodesType));
 					strExist="";
 				////////////////////////////////
@@ -3565,7 +3709,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 					strExist = strExist +" GROUP BY NODE_TYPE";
 					//System.out.println(strExist);
-					List<Object[]> CountNodesteach_Active = (List<Object[]>) session.createNativeQuery(strExist).list();
+					List<Object[]> CountNodesteach_Active = (List<Object[]>) entityManager.createNativeQuery(strExist).getResultList();
 					List<Object[]> result = new ArrayList<>();
 					for (Object[] obj : CountNodesteach_Active) {
 						result.add(obj);
@@ -3586,10 +3730,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				logger.info("Error in retreiving Sites BOQ from database in method GetVenBoqList due to \n " + exceptionAsString);															
 				return null;
 			} finally {
-				if (session != null && session.isOpen()) {
-					tx.commit();
-					session.close();
-					session.getSessionFactory().close();
+				if (entityManager != null && entityManager.isOpen()) {
+					entityManager.close();
+				}
+				if(emf != null && emf.isOpen()) {
+					emf.close();	
 				}
 			}
 			//return BoqHM;
@@ -3602,8 +3747,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 				public LinkedHashMap<String, String> GetVenSiteBoqList(@RequestParam String VenId,@RequestParam String siteId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
 
-					Session session = almsessions.getSession();
-					Transaction tx = session.beginTransaction();
+					//Session session = almsessions.getSession();
+					//Transaction tx = session.beginTransaction();
+					 emf = Persistence.createEntityManagerFactory("persistence");
+					 entityManager = emf.createEntityManager();
+			
 					LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 					try {
 							
@@ -3611,7 +3759,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
 						String Vendor_Query = VenId == "" ? strEmpty : "Select distinct VENDOR From NODE_ACTIVE where VENDOR='" + VenId + "' and ware_id='"+siteId+"' ";
 						//System.out.println(Vendor_Query);
-						Object Vendors = session.createNativeQuery(Vendor_Query).uniqueResult();
+						Object Vendors = entityManager.createNativeQuery(Vendor_Query).getSingleResult();
 						strEmpty="";
 				////////////////////////////
 						strEmpty= "SELECT COUNT(DISTINCT WARE_ID) FROM NODE_ACTIVE WHERE WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null AND VENDOR!='null' AND VENDOR!='0' AND VENDOR is not null  ";	
@@ -3620,7 +3768,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);					
 						String Site_Query = VenId == "" ? strEmpty : strExist;
 						//System.out.println(Site_Query);
-						Object Sites = session.createNativeQuery(Site_Query).uniqueResult();
+						Object Sites = entityManager.createNativeQuery(Site_Query).getSingleResult();
 						strEmpty="";
 						strExist="";
 				////////////////////////////
@@ -3630,7 +3778,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 						String Node_Active_Query = VenId == "" ? strEmpty : strExist;
 						//System.out.println(Node_Active_Query);
-						Object CountNodes_Active = session.createNativeQuery(Node_Active_Query).uniqueResult();
+						Object CountNodes_Active = entityManager.createNativeQuery(Node_Active_Query).getSingleResult();
 						strEmpty="";
 						strExist="";					
 				////////////////////////////			
@@ -3644,7 +3792,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 						String Node_GCell_Query = VenId == "" ? strEmpty : strExist;
 						//System.out.println(Node_GCell_Query);
-						Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
+						Object CountNodes_G_CELL = entityManager.createNativeQuery(Node_GCell_Query).getSingleResult();
 						strEmpty="";
 						strExist="";
 				/////////////////////////////
@@ -3657,7 +3805,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 						String Node_LCell_Query = VenId == "" ? strEmpty : strExist;
 						//System.out.println(Node_LCell_Query);
-						Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
+						Object CountNodes_L_CELL = entityManager.createNativeQuery(Node_LCell_Query).getSingleResult();
 						strEmpty="";
 						strExist="";
 				/////////////////////////////
@@ -3670,7 +3818,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 						String Node_UCell_Query = VenId == "" ? strEmpty : strExist;
 						//System.out.println(Node_UCell_Query);
-						Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
+						Object CountNodes_U_CELL = entityManager.createNativeQuery(Node_UCell_Query).getSingleResult();
 						strEmpty="";
 						strExist="";			
 				/////////////////////////////
@@ -3683,14 +3831,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
 							String Node_Type_Count = strEmpty;
 							//System.out.println(Node_Type_Count);
-							Object CountNodesType = session.createNativeQuery(Node_Type_Count).uniqueResult();
+							Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
 							BoqHM.put("Node Type", String.valueOf(CountNodesType));
 						}else {
 							strExist="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and VENDOR='"+ VenId + "' and ware_id='"+siteId+"' ";
 							strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 							String Node_Type_Count = strExist;
 							//System.out.println(Node_Type_Count);
-							Object CountNodesType = session.createNativeQuery(Node_Type_Count).uniqueResult();
+							Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
 							BoqHM.put("Node Type", String.valueOf(CountNodesType));
 							strExist="";
 						////////////////////////////////
@@ -3698,7 +3846,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 							strExist = strExist +" GROUP BY NODE_TYPE";
 							//System.out.println(strExist);
-							List<Object[]> CountNodesteach_Active = (List<Object[]>) session.createNativeQuery(strExist).list();
+							List<Object[]> CountNodesteach_Active = (List<Object[]>) entityManager.createNativeQuery(strExist).getResultList();
 							List<Object[]> result = new ArrayList<>();
 							for (Object[] obj : CountNodesteach_Active) {
 								result.add(obj);
@@ -3719,10 +3867,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						logger.info("Error in retreiving Sites BOQ from database in method GetVenSiteBoqList due to \n " + exceptionAsString);															
 						return null;
 					} finally {
-						if (session != null && session.isOpen()) {
-							tx.commit();
-							session.close();
-							session.getSessionFactory().close();
+						if (entityManager != null && entityManager.isOpen()) {
+							entityManager.close();
+						}
+						if(emf != null && emf.isOpen()) {
+							emf.close();	
 						}
 					}
 					//return BoqHM;
@@ -3736,8 +3885,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 				public LinkedHashMap<String, String> GetSupSiteBoqList(@RequestParam String SupId,@RequestParam String siteId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
 
-					Session session = almsessions.getSession();
-					Transaction tx = session.beginTransaction();
+					//Session session = almsessions.getSession();
+					//Transaction tx = session.beginTransaction();
+					 emf = Persistence.createEntityManagerFactory("persistence");
+					 entityManager = emf.createEntityManager();
+
 					LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 					try {
 							
@@ -3745,7 +3897,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
 						String Supplier_Query = SupId == "" ? strEmpty : "Select distinct SUPPLIER_NAME From NODE_ACTIVE where SUPPLIER_ID='" + SupId + "' and ware_id='"+siteId+"' ";
 						//System.out.println(Vendor_Query);
-						Object Suppliers = session.createNativeQuery(Supplier_Query).uniqueResult();
+						Object Suppliers = entityManager.createNativeQuery(Supplier_Query).getSingleResult();
 						strEmpty="";
 				////////////////////////////
 						strEmpty= "SELECT COUNT(DISTINCT WARE_ID) FROM NODE_ACTIVE WHERE WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null AND SUPPLIER_ID!='null' AND SUPPLIER_ID!='0' AND SUPPLIER_ID is not null  ";	
@@ -3754,7 +3906,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);					
 						String Site_Query = SupId == "" ? strEmpty : strExist;
 						//System.out.println(Site_Query);
-						Object Sites = session.createNativeQuery(Site_Query).uniqueResult();
+						Object Sites = entityManager.createNativeQuery(Site_Query).getSingleResult();
 						strEmpty="";
 						strExist="";
 				////////////////////////////
@@ -3764,7 +3916,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 						String Node_Active_Query = SupId == "" ? strEmpty : strExist;
 						//System.out.println(Node_Active_Query);
-						Object CountNodes_Active = session.createNativeQuery(Node_Active_Query).uniqueResult();
+						Object CountNodes_Active = entityManager.createNativeQuery(Node_Active_Query).getSingleResult();
 						strEmpty="";
 						strExist="";					
 				////////////////////////////			
@@ -3778,7 +3930,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 						String Node_GCell_Query = SupId == "" ? strEmpty : strExist;
 						//System.out.println(Node_GCell_Query);
-						Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
+						Object CountNodes_G_CELL = entityManager.createNativeQuery(Node_GCell_Query).getSingleResult();
 						strEmpty="";
 						strExist="";
 				/////////////////////////////
@@ -3791,7 +3943,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 						String Node_LCell_Query = SupId == "" ? strEmpty : strExist;
 						//System.out.println(Node_LCell_Query);
-						Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
+						Object CountNodes_L_CELL = entityManager.createNativeQuery(Node_LCell_Query).getSingleResult();
 						strEmpty="";
 						strExist="";
 				/////////////////////////////
@@ -3804,7 +3956,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 						String Node_UCell_Query = SupId == "" ? strEmpty : strExist;
 						//System.out.println(Node_UCell_Query);
-						Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
+						Object CountNodes_U_CELL = entityManager.createNativeQuery(Node_UCell_Query).getSingleResult();
 						strEmpty="";
 						strExist="";			
 				/////////////////////////////
@@ -3817,14 +3969,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
 							String Node_Type_Count = strEmpty;
 							//System.out.println(Node_Type_Count);
-							Object CountNodesType = session.createNativeQuery(Node_Type_Count).uniqueResult();
+							Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
 							BoqHM.put("Node Type", String.valueOf(CountNodesType));
 						}else {
 							strExist="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and SUPPLIER_ID='"+ SupId + "' and ware_id='"+siteId+"' ";
 							strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 							String Node_Type_Count = strExist;
 							//System.out.println(Node_Type_Count);
-							Object CountNodesType = session.createNativeQuery(Node_Type_Count).uniqueResult();
+							Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
 							BoqHM.put("Node Type", String.valueOf(CountNodesType));
 							strExist="";
 						////////////////////////////////
@@ -3832,7 +3984,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 							strExist = strExist +" GROUP BY NODE_TYPE";
 							//System.out.println(strExist);
-							List<Object[]> CountNodesteach_Active = (List<Object[]>) session.createNativeQuery(strExist).list();
+							List<Object[]> CountNodesteach_Active = (List<Object[]>) entityManager.createNativeQuery(strExist).getResultList();
 							List<Object[]> result = new ArrayList<>();
 							for (Object[] obj : CountNodesteach_Active) {
 								result.add(obj);
@@ -3853,10 +4005,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						logger.info("Error in retreiving Sites BOQ from database in method GetSupSiteBoqList due to \n " + exceptionAsString);															
 						return null;
 					} finally {
-						if (session != null && session.isOpen()) {
-							tx.commit();
-							session.close();
-							session.getSessionFactory().close();
+						if (entityManager != null && entityManager.isOpen()) {
+							entityManager.close();
+						}
+						if(emf != null && emf.isOpen()) {
+							emf.close();	
 						}
 					}
 				}
@@ -3868,15 +4021,18 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 				public LinkedHashMap<String, String> GetSupBoqList(@RequestParam String SuppId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
 
-					Session session = almsessions.getSession();
-					Transaction tx = session.beginTransaction();
+					//Session session = almsessions.getSession();
+					//Transaction tx = session.beginTransaction();
+					 emf = Persistence.createEntityManagerFactory("persistence");
+					 entityManager = emf.createEntityManager();
+					
 					LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 				try {
 						String strEmpty= "SELECT COUNT(DISTINCT Supplier_Id) FROM NODE_ACTIVE WHERE WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null AND SUPPLIER_ID!='null' AND SUPPLIER_ID!='0' AND SUPPLIER_ID is not null  ";	
 						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
 						String Supplier_Query = SuppId == "" ? strEmpty : "Select distinct Supplier_Name From NODE_ACTIVE where Supplier_Id='" + SuppId + "' ";
 						//System.out.println(Site_Query);
-						Object Suppliers = session.createNativeQuery(Supplier_Query).uniqueResult();
+						Object Suppliers = entityManager.createNativeQuery(Supplier_Query).getSingleResult();
 						strEmpty="";	
 				////////////////////////////
 						strEmpty= "SELECT COUNT(DISTINCT WARE_ID) FROM NODE_ACTIVE WHERE WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null AND SUPPLIER_ID!='null' AND SUPPLIER_ID!='0' AND SUPPLIER_ID is not null  ";	
@@ -3884,7 +4040,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						String strExist= "Select distinct COUNT(DISTINCT WARE_ID) From NODE_ACTIVE where Supplier_Id='" + SuppId + "' AND WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null ";							
 						String Site_Query = SuppId == "" ? strEmpty : strExist;
 						//System.out.println(Site_Query);
-						Object Sites = session.createNativeQuery(Site_Query).uniqueResult();
+						Object Sites = entityManager.createNativeQuery(Site_Query).getSingleResult();
 						strEmpty="";	
 						strExist="";
 				////////////////////////////
@@ -3894,7 +4050,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 						String Node_Active_Query = SuppId == "" ? strEmpty : strExist;
 						//System.out.println(Node_Active_Query);
-						Object CountNodes_Active = session.createNativeQuery(Node_Active_Query).uniqueResult();
+						Object CountNodes_Active = entityManager.createNativeQuery(Node_Active_Query).getSingleResult();
 						strEmpty="";
 						strExist="";					
 				////////////////////////////			
@@ -3907,7 +4063,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 							String Node_GCell_Query = SuppId == "" ? strEmpty : strExist;
 							//System.out.println(Node_GCell_Query);
-							Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
+							Object CountNodes_G_CELL = entityManager.createNativeQuery(Node_GCell_Query).getSingleResult();
 							strEmpty="";
 							strExist="";
 				/////////////////////////////
@@ -3920,7 +4076,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 							String Node_LCell_Query = SuppId == "" ? strEmpty : strExist;
 							//System.out.println(Node_LCell_Query);
-							Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
+							Object CountNodes_L_CELL = entityManager.createNativeQuery(Node_LCell_Query).getSingleResult();
 							strEmpty="";
 							strExist="";
 				/////////////////////////////
@@ -3933,7 +4089,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 							String Node_UCell_Query = SuppId == "" ? strEmpty : strExist;
 							//System.out.println(Node_UCell_Query);
-							Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
+							Object CountNodes_U_CELL = entityManager.createNativeQuery(Node_UCell_Query).getSingleResult();
 							strEmpty="";
 							strExist="";			
 				/////////////////////////////
@@ -3946,14 +4102,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 								strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
 								String Node_Type_Count = strEmpty;
 								//System.out.println(Node_Type_Count);
-								Object CountNodesType = session.createNativeQuery(Node_Type_Count).uniqueResult();
+								Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
 								BoqHM.put("Node Type", String.valueOf(CountNodesType));
 							}else {
 								strExist="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and Supplier_Id='"+ SuppId + "' ";
 								strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 								String Node_Type_Count = strExist;
 								//System.out.println(Node_Type_Count);
-								Object CountNodesType = session.createNativeQuery(Node_Type_Count).uniqueResult();
+								Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
 								BoqHM.put("Node Type", String.valueOf(CountNodesType));
 								strExist="";
 							////////////////////////////////
@@ -3961,7 +4117,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 								strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 								strExist = strExist +" GROUP BY NODE_TYPE";
 								//System.out.println(strExist);
-								List<Object[]> CountNodesteach_Active = (List<Object[]>) session.createNativeQuery(strExist).list();
+								List<Object[]> CountNodesteach_Active = (List<Object[]>) entityManager.createNativeQuery(strExist).getResultList();
 								List<Object[]> result = new ArrayList<>();
 								for (Object[] obj : CountNodesteach_Active) {
 									result.add(obj);
@@ -3982,10 +4138,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						logger.info("Error in retreiving Sites Boq from database in method GetSupBoqList due to \n " + exceptionAsString);															
 						return null;
 					} finally {
-						if (session != null && session.isOpen()) {
-							tx.commit();
-							session.close();
-							session.getSessionFactory().close();
+						if (entityManager != null && entityManager.isOpen()) {
+							entityManager.close();
+						}
+						if(emf != null && emf.isOpen()) {
+							emf.close();	
 						}
 					}
 				}
@@ -3998,15 +4155,18 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 				public LinkedHashMap<String, String> GetVenNtypeBoqList(@RequestParam String VenId,@RequestParam String NodeTId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
 
-					Session session = almsessions.getSession();
-					Transaction tx = session.beginTransaction();
+					//Session session = almsessions.getSession();
+					//Transaction tx = session.beginTransaction();
+					 emf = Persistence.createEntityManagerFactory("persistence");
+					 entityManager = emf.createEntityManager();
+			
 					LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 				try {
 						String strEmpty= "SELECT COUNT(DISTINCT VENDOR) FROM NODE_ACTIVE WHERE NODE_TYPE='"+NodeTId+"' AND WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null AND VENDOR!='null' AND VENDOR!='0' AND VENDOR is not null  ";	
 						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
 						String Vendor_Query = VenId == "" ? strEmpty : "Select distinct VENDOR From NODE_ACTIVE where VENDOR='" + VenId + "' AND NODE_TYPE='"+NodeTId+"' ";
 						//System.out.println(Vendor_Query);
-						Object Vendors = session.createNativeQuery(Vendor_Query).uniqueResult();
+						Object Vendors = entityManager.createNativeQuery(Vendor_Query).getSingleResult();
 						strEmpty="";	
 				////////////////////////////
 						strEmpty= "SELECT COUNT(DISTINCT WARE_ID) FROM NODE_ACTIVE WHERE NODE_TYPE='"+NodeTId+"' AND WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null AND VENDOR!='null' AND VENDOR!='0' AND VENDOR is not null  ";	
@@ -4014,7 +4174,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						String strExist= "Select distinct COUNT(DISTINCT WARE_ID) From NODE_ACTIVE where VENDOR='" + VenId + "' AND NODE_TYPE='"+NodeTId+"' AND WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null ";							
 						String Site_Query = VenId == "" ? strEmpty : strExist;
 						//System.out.println(Site_Query);
-						Object Sites = session.createNativeQuery(Site_Query).uniqueResult();
+						Object Sites = entityManager.createNativeQuery(Site_Query).getSingleResult();
 						strEmpty="";	
 						strExist="";
 				////////////////////////////
@@ -4024,7 +4184,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 						String Node_Active_Query = VenId == "" ? strEmpty : strExist;
 						//System.out.println(Node_Active_Query);
-						Object CountNodes_Active = session.createNativeQuery(Node_Active_Query).uniqueResult();
+						Object CountNodes_Active = entityManager.createNativeQuery(Node_Active_Query).getSingleResult();
 						strEmpty="";
 						strExist="";					
 				////////////////////////////			
@@ -4034,7 +4194,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 						String Node_GCell_Query = VenId == "" ? strEmpty : strExist;
 						//System.out.println(Node_GCell_Query);
-						Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
+						Object CountNodes_G_CELL = entityManager.createNativeQuery(Node_GCell_Query).getSingleResult();
 						strEmpty="";
 						strExist="";
 				/////////////////////////////
@@ -4044,7 +4204,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 						String Node_LCell_Query = VenId == "" ? strEmpty : strExist;
 						//System.out.println(Node_LCell_Query);
-						Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
+						Object CountNodes_L_CELL = entityManager.createNativeQuery(Node_LCell_Query).getSingleResult();
 						strEmpty="";
 						strExist="";
 				/////////////////////////////
@@ -4054,7 +4214,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 						String Node_UCell_Query = VenId == "" ? strEmpty : strExist;
 						//System.out.println(Node_UCell_Query);
-						Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
+						Object CountNodes_U_CELL = entityManager.createNativeQuery(Node_UCell_Query).getSingleResult();
 						strEmpty="";
 						strExist="";			
 				/////////////////////////////
@@ -4067,14 +4227,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 								strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
 								String Node_Type_Count = strEmpty;
 								//System.out.println(Node_Type_Count);
-								Object CountNodesType = session.createNativeQuery(Node_Type_Count).uniqueResult();
+								Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
 								BoqHM.put("Node Type", String.valueOf(CountNodesType));
 							}else {
 								strExist="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and VENDOR='"+ VenId + "' and NODE_TYPE='"+NodeTId+"' ";
 								strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 								String Node_Type_Count = strExist;
 								//System.out.println(Node_Type_Count);
-								Object CountNodesType = session.createNativeQuery(Node_Type_Count).uniqueResult();
+								Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
 								BoqHM.put("Node Type", String.valueOf(CountNodesType));
 								strExist="";
 							////////////////////////////////
@@ -4082,7 +4242,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 								strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 								strExist = strExist +" GROUP BY NODE_TYPE";
 								//System.out.println(strExist);
-								List<Object[]> CountNodesteach_Active = (List<Object[]>) session.createNativeQuery(strExist).list();
+								List<Object[]> CountNodesteach_Active = (List<Object[]>) entityManager.createNativeQuery(strExist).getResultList();
 								List<Object[]> result = new ArrayList<>();
 								for (Object[] obj : CountNodesteach_Active) {
 									result.add(obj);
@@ -4103,10 +4263,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						logger.info("Error in retreiving Vendors Boq from database in method GetVenNtypeBoqList due to \n " + exceptionAsString);															
 						return null;
 					} finally {
-						if (session != null && session.isOpen()) {
-							tx.commit();
-							session.close();
-							session.getSessionFactory().close();
+						if (entityManager != null && entityManager.isOpen()) {
+							entityManager.close();
+						}
+						if(emf != null && emf.isOpen()) {
+							emf.close();	
 						}
 					}
 				}
@@ -4118,15 +4279,18 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 				public LinkedHashMap<String, String> GetSuppNtypeBoqList(@RequestParam String SuppId,@RequestParam String NodeTId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
 
-					Session session = almsessions.getSession();
-					Transaction tx = session.beginTransaction();
+					//Session session = almsessions.getSession();
+					//Transaction tx = session.beginTransaction();
+					 emf = Persistence.createEntityManagerFactory("persistence");
+					 entityManager = emf.createEntityManager();
+					 
 					LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 				try {
 						String strEmpty= "SELECT COUNT(DISTINCT Supplier_Id) FROM NODE_ACTIVE WHERE NODE_TYPE='"+NodeTId+"' AND WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null AND SUPPLIER_ID!='null' AND SUPPLIER_ID!='0' AND SUPPLIER_ID is not null  ";	
 						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
 						String Supplier_Query = SuppId == "" ? strEmpty : "Select distinct Supplier_Name From NODE_ACTIVE where Supplier_Id='" + SuppId + "' AND NODE_TYPE='"+NodeTId+"' ";
 						//System.out.println(Site_Query);
-						Object Suppliers = session.createNativeQuery(Supplier_Query).uniqueResult();
+						Object Suppliers = entityManager.createNativeQuery(Supplier_Query).getSingleResult();
 						strEmpty="";	
 				////////////////////////////
 						strEmpty= "SELECT COUNT(DISTINCT WARE_ID) FROM NODE_ACTIVE WHERE NODE_TYPE='"+NodeTId+"' AND WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null AND SUPPLIER_ID!='null' AND SUPPLIER_ID!='0' AND SUPPLIER_ID is not null  ";	
@@ -4134,7 +4298,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						String strExist= "Select distinct COUNT(DISTINCT WARE_ID) From NODE_ACTIVE where Supplier_Id='" + SuppId + "' AND NODE_TYPE='"+NodeTId+"' AND WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null ";							
 						String Site_Query = SuppId == "" ? strEmpty : strExist;
 						//System.out.println(Site_Query);
-						Object Sites = session.createNativeQuery(Site_Query).uniqueResult();
+						Object Sites = entityManager.createNativeQuery(Site_Query).getSingleResult();
 						strEmpty="";	
 						strExist="";
 				////////////////////////////
@@ -4144,7 +4308,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 						String Node_Active_Query = SuppId == "" ? strEmpty : strExist;
 						//System.out.println(Node_Active_Query);
-						Object CountNodes_Active = session.createNativeQuery(Node_Active_Query).uniqueResult();
+						Object CountNodes_Active = entityManager.createNativeQuery(Node_Active_Query).getSingleResult();
 						strEmpty="";
 						strExist="";					
 				////////////////////////////			
@@ -4154,7 +4318,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 							String Node_GCell_Query = SuppId == "" ? strEmpty : strExist;
 							//System.out.println(Node_GCell_Query);
-							Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
+							Object CountNodes_G_CELL = entityManager.createNativeQuery(Node_GCell_Query).getSingleResult();
 							strEmpty="";
 							strExist="";
 				/////////////////////////////
@@ -4164,7 +4328,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 							String Node_LCell_Query = SuppId == "" ? strEmpty : strExist;
 							//System.out.println(Node_LCell_Query);
-							Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
+							Object CountNodes_L_CELL = entityManager.createNativeQuery(Node_LCell_Query).getSingleResult();
 							strEmpty="";
 							strExist="";
 				/////////////////////////////
@@ -4174,7 +4338,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 							String Node_UCell_Query = SuppId == "" ? strEmpty : strExist;
 							//System.out.println(Node_UCell_Query);
-							Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
+							Object CountNodes_U_CELL = entityManager.createNativeQuery(Node_UCell_Query).getSingleResult();
 							strEmpty="";
 							strExist="";			
 				/////////////////////////////
@@ -4187,14 +4351,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 								strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
 								String Node_Type_Count = strEmpty;
 								//System.out.println(Node_Type_Count);
-								Object CountNodesType = session.createNativeQuery(Node_Type_Count).uniqueResult();
+								Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
 								BoqHM.put("Node Type", String.valueOf(CountNodesType));
 							}else {
 								strExist="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and Supplier_Id='"+ SuppId + "' and NODE_TYPE='"+NodeTId+"' ";
 								strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 								String Node_Type_Count = strExist;
 								//System.out.println(Node_Type_Count);
-								Object CountNodesType = session.createNativeQuery(Node_Type_Count).uniqueResult();
+								Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
 								BoqHM.put("Node Type", String.valueOf(CountNodesType));
 								strExist="";
 							////////////////////////////////
@@ -4202,7 +4366,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 								strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 								strExist = strExist +" GROUP BY NODE_TYPE";
 								//System.out.println(strExist);
-								List<Object[]> CountNodesteach_Active = (List<Object[]>) session.createNativeQuery(strExist).list();
+								List<Object[]> CountNodesteach_Active = (List<Object[]>) entityManager.createNativeQuery(strExist).getResultList();
 								List<Object[]> result = new ArrayList<>();
 								for (Object[] obj : CountNodesteach_Active) {
 									result.add(obj);
@@ -4223,10 +4387,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						logger.info("Error in retreiving Suppliers Boq from database in method GetSuppNtypeBoqList due to \n " + exceptionAsString);															
 						return null;
 					} finally {
-						if (session != null && session.isOpen()) {
-							tx.commit();
-							session.close();
-							session.getSessionFactory().close();
+						if (entityManager != null && entityManager.isOpen()) {
+							entityManager.close();
+						}
+						if(emf != null && emf.isOpen()) {
+							emf.close();	
 						}
 					}
 				}
@@ -4237,8 +4402,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 		public LinkedHashMap<String, String> GetBoqSitePoList(@RequestParam String SiteId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
 			
-			Session session = almsessions.getSession();
-			Transaction tx = session.beginTransaction();
+			//Session session = almsessions.getSession();
+			//Transaction tx = session.beginTransaction();
+			 emf = Persistence.createEntityManagerFactory("persistence");
+			 entityManager = emf.createEntityManager();
+			
 			LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 			try {
 				String strEmpty="SELECT COUNT(distinct a.WARE_ID) FROM AR_SITE a, ASSET_REGISTRY b WHERE a.AR_ID=b.AR_ID ";
@@ -4247,7 +4415,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				//strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 				String Site_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(Site_Query);
-				Object Sites = session.createNativeQuery(Site_Query).uniqueResult();
+				Object Sites = entityManager.createNativeQuery(Site_Query).getSingleResult();
 				strEmpty="";
 				strExist="";	
 				
@@ -4257,7 +4425,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 				String Po_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(Po_Query);
-				Object CountPo = session.createNativeQuery(Po_Query).uniqueResult();
+				Object CountPo = entityManager.createNativeQuery(Po_Query).getSingleResult();
 				strEmpty="";
 				strExist="";
 			
@@ -4273,7 +4441,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 				String PO_Amount_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(PO_Amount_Query);
-				Object PO_Amount = session.createNativeQuery(PO_Amount_Query).uniqueResult();
+				Object PO_Amount = entityManager.createNativeQuery(PO_Amount_Query).getSingleResult();
 				BoqHM.put(SiteId == "" ? "PO Cost" : "PO Total Cost", String.valueOf(PO_Amount));
 				strEmpty="";
 				strExist="";
@@ -4287,7 +4455,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 				String PO_NET_Amount_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(PO_NET_Amount_Query);
-				Object PO_NET_Amount = session.createNativeQuery(PO_NET_Amount_Query).uniqueResult();
+				Object PO_NET_Amount = entityManager.createNativeQuery(PO_NET_Amount_Query).getSingleResult();
 				BoqHM.put(SiteId == "" ? "PO Net Cost" : "PO Total Net Cost", String.valueOf(PO_NET_Amount));
 				strEmpty="";
 				strExist="";
@@ -4296,7 +4464,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					String Item_Query= "Select COUNT(DISTINCT a.ITEM_CODE) from ASSET_REGISTRY a, AR_SITE b where a.AR_ID = b.AR_ID and b.WARE_ID='" + SiteId + "' ";	
 					Item_Query= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,Item_Query);
 					//System.out.println(Item_Query);
-					Object Item = session.createNativeQuery(Item_Query).uniqueResult();
+					Object Item = entityManager.createNativeQuery(Item_Query).getSingleResult();
 					BoqHM.put("Items", String.valueOf(Item));
 				}
 			
@@ -4310,10 +4478,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				logger.info("Error in retreiving Sites BOQ from database in method GetBoqSitePoList due to \n " + exceptionAsString);															
 				return null;
 			} finally {
-				if (session != null && session.isOpen()) {
-					tx.commit();
-					session.close();
-					session.getSessionFactory().close();
+				if (entityManager != null && entityManager.isOpen()) {
+					entityManager.close();
+				}
+				if(emf != null && emf.isOpen()) {
+					emf.close();	
 				}
 			}
 		}
@@ -4323,51 +4492,52 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				@ResponseBody
 				public LinkedHashMap<String, String> GetNodeBoqList(@RequestParam String WareId,@RequestParam String NodeId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
 
-					Session session = almsessions.getSession();
-					Transaction tx = session.beginTransaction();
+					//Session session = almsessions.getSession();
+					//Transaction tx = session.beginTransaction();
+					 emf = Persistence.createEntityManagerFactory("persistence");
+					 entityManager = emf.createEntityManager();
+					 
 					LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 					//System.out.println("WareId: "+WareId);
-					try {			
-						String Site_Query= "Select DISTINCT Ware_Name From NODE_ACTIVE where Ware_Id='" + WareId + "' ";	
-						Site_Query= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,Site_Query);		
-						//System.out.println(Site_Query);
-						Object Sites = session.createNativeQuery(Site_Query).uniqueResult();
-						
-						if (WareId.equals("null") || WareId == null || WareId.equals("0") || WareId.equals("")) {	
+					try {									
+						if (WareId.equals("null") || WareId == null || WareId.equals("0") || WareId.equals("")) {
+		
+							Object Sites = null;
+					/////////////////////////////
 							//System.out.println("IF WARE ID NULL");
 							String Node_GCell_Query="select count(ngc.gcell_id) from node_gcell ngc , node_active na where na.Active_record='1' and na.node_pk = ngc.node_pk and na.NODE_PK = '" + NodeId +"' and (na.Ware_Id is null or na.Ware_Id='0') ";
 							Node_GCell_Query= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_GCell_Query);
 							//System.out.println(Node_GCell_Query);
-				 			Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();			
+				 			Object CountNodes_G_CELL = entityManager.createNativeQuery(Node_GCell_Query).getSingleResult();			
 				    ///////////////////////////
 							String Node_LCell_Query = "select count(nlc.LCell_Id) from node_lcell nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and (na.Ware_Id is null or na.Ware_Id='0') "
 									+ " and na.NODE_PK = '" + NodeId + "' ";
 							Node_LCell_Query= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_LCell_Query);
 							//System.out.println(Node_LCell_Query);
-							Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
+							Object CountNodes_L_CELL = entityManager.createNativeQuery(Node_LCell_Query).getSingleResult();
 					///////////////////////////
 							String Node_UCell_Query = "select count(nuc.UCell_Id) from node_ucell nuc , node_active na where na.Active_record='1' and na.node_pk = nuc.node_pk and (na.Ware_Id is null or na.Ware_Id='0') "
 									+ " and na.NODE_PK = '" + NodeId + "' ";
 							Node_UCell_Query= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_UCell_Query);
 							//System.out.println(Node_UCell_Query);
-							Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
+							Object CountNodes_U_CELL = entityManager.createNativeQuery(Node_UCell_Query).getSingleResult();
 					///////////////////////////
 							String Node_Board_Query = "select count(nlc.BOARD_ID) from NODE_BOARD nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and (na.Ware_Id is null or na.Ware_Id='0') "
 									+ " and na.NODE_PK = '" + NodeId + "' ";
 							Node_Board_Query= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_Board_Query);
 							//System.out.println(Node_Board_Query);
-							Object CountNodesBoard = session.createNativeQuery(Node_Board_Query).uniqueResult();
+							Object CountNodesBoard = entityManager.createNativeQuery(Node_Board_Query).getSingleResult();
 					///////////////////////////
 							String Node_Cabinet_Query = "select count(nlc.CABINET_ID) from NODE_CABINET nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and (na.Ware_Id is null or na.Ware_Id='0') "
 									+ " and na.NODE_PK = '" + NodeId + "' ";
 							Node_Cabinet_Query= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_Cabinet_Query);
 							//System.out.println(Node_Cabinet_Query);
-							Object CountNodesCabinet = session.createNativeQuery(Node_Cabinet_Query).uniqueResult();
+							Object CountNodesCabinet = entityManager.createNativeQuery(Node_Cabinet_Query).getSingleResult();
 					///////////////////////////		
 							String NodesType_Query = "Select NODE_TYPE From NODE_ACTIVE where Active_record='1' and NODE_PK = '" + NodeId + "' and (Ware_Id is null or Ware_Id='0') ";
 							NodesType_Query= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,NodesType_Query);	
 							//System.out.println(NodesType_Query);
-							Object CountNodes_NodeType = session.createNativeQuery(NodesType_Query).uniqueResult();
+							Object CountNodes_NodeType = entityManager.createNativeQuery(NodesType_Query).getSingleResult();
 							
 							BoqHM.put("Site Name", String.valueOf(Sites));
 							BoqHM.put("Node Type", String.valueOf(CountNodes_NodeType));
@@ -4378,40 +4548,45 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							BoqHM.put("Cabinets", String.valueOf(CountNodesCabinet));
 
 						}else {
+							String Site_Query= "Select DISTINCT Ware_Name From NODE_ACTIVE where Ware_Id='" + WareId + "' ";	
+							Site_Query= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,Site_Query);		
+							//System.out.println(Site_Query);
+							Object Sites = entityManager.createNativeQuery(Site_Query).getSingleResult();
+					/////////////////////////////		
 							String Node_GCell_Query = "select count(ngc.gcell_id) from node_gcell ngc , node_active na where na.Active_record='1' and na.node_pk = ngc.node_pk and na.Ware_Id = '"
 									+ WareId + "' and na.NODE_PK = '" + NodeId + "' ";
 							Node_GCell_Query= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_GCell_Query);
 							//System.out.println(Node_GCell_Query);
-							Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
+							Object CountNodes_G_CELL = entityManager.createNativeQuery(Node_GCell_Query).getSingleResult();
 					///////////////////////////	
 							String Node_LCell_Query = "select count(nlc.LCell_Id) from node_lcell nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and na.Ware_Id = '"
 									+ WareId + "' and na.NODE_PK = '" + NodeId + "' ";
 							Node_LCell_Query= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_LCell_Query);
 							//System.out.println(Node_LCell_Query);
-							Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
+							Object CountNodes_L_CELL = entityManager.createNativeQuery(Node_LCell_Query).getSingleResult();
 					///////////////////////////	
 							String Node_UCell_Query = "select count(nuc.UCell_Id) from node_ucell nuc , node_active na where na.Active_record='1' and na.node_pk = nuc.node_pk and na.Ware_Id = '"
 									+ WareId + "' and na.NODE_PK = '" + NodeId + "' ";
 							Node_UCell_Query= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_UCell_Query);
 							//System.out.println(Node_UCell_Query);
-							Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
+							Object CountNodes_U_CELL = entityManager.createNativeQuery(Node_UCell_Query).getSingleResult();
 					///////////////////////////	
 							String Node_Board_Query = "select count(nlc.BOARD_ID) from NODE_BOARD nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and na.Ware_Id = '"
 									+ WareId + "' and na.NODE_PK = '" + NodeId + "' ";
 							Node_Board_Query= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_Board_Query);
 							//System.out.println(Node_Board_Query);
-							Object CountNodesBoard = session.createNativeQuery(Node_Board_Query).uniqueResult();
+							Object CountNodesBoard = entityManager.createNativeQuery(Node_Board_Query).getSingleResult();
 					///////////////////////////	
 							String Node_Cabinet_Query = "select count(nlc.CABINET_ID) from NODE_CABINET nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and na.Ware_Id = '"
 									+ WareId + "' and na.NODE_PK = '" + NodeId + "' ";
 							Node_Cabinet_Query= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_Cabinet_Query);
 							//System.out.println(Node_Cabinet_Query);
-							Object CountNodesCabinet = session.createNativeQuery(Node_Cabinet_Query).uniqueResult();
+							Object CountNodesCabinet = entityManager.createNativeQuery(Node_Cabinet_Query).getSingleResult();
 					///////////////////////////		
 							String NodesType_Query = "Select DISTINCT NODE_TYPE From NODE_ACTIVE where Active_record='1' and Ware_Id = '"+ WareId +"' and NODE_PK = '" + NodeId + "' ";
 							NodesType_Query= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,NodesType_Query);
 							//System.out.println(NodesType_Query);
-							Object CountNodes_NodeType = session.createNativeQuery(NodesType_Query).uniqueResult();					
+							Object CountNodes_NodeType = entityManager.createNativeQuery(NodesType_Query).getSingleResult();					
 							
 							BoqHM.put("Site Name", String.valueOf(Sites));
 							BoqHM.put("Node Type", String.valueOf(CountNodes_NodeType));
@@ -4430,10 +4605,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						logger.info("Error in retreiving Nodes BOQ Data from database in method GetNodeBoqList due to \n " + exceptionAsString);															
 						return null;
 					} finally {
-						if (session != null && session.isOpen()) {
-							tx.commit();
-							session.close();
-							session.getSessionFactory().close();
+						if (entityManager != null && entityManager.isOpen()) {
+							entityManager.close();
+						}
+						if(emf != null && emf.isOpen()) {
+							emf.close();	
 						}
 					}
 				}
@@ -4444,8 +4620,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 		public LinkedHashMap<String, String> GetNtypeBoqList(@RequestParam String SiteId, @RequestParam String NodeTId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
 
-			Session session = almsessions.getSession();
-			Transaction tx = session.beginTransaction();
+			//Session session = almsessions.getSession();
+			//Transaction tx = session.beginTransaction();
+			 emf = Persistence.createEntityManagerFactory("persistence");
+			 entityManager = emf.createEntityManager();
+		
 			LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 
 			try {
@@ -4455,7 +4634,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
 				String Site_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(Site_Query);
-				Object Sites = session.createNativeQuery(Site_Query).uniqueResult();
+				Object Sites = entityManager.createNativeQuery(Site_Query).getSingleResult();
 				strEmpty="";
 				strExist="";
 		////////////////////////////
@@ -4465,7 +4644,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
 				String Node_Active_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(Node_Active_Query);
-				Object CountNodes_Active = session.createNativeQuery(Node_Active_Query).uniqueResult();
+				Object CountNodes_Active = entityManager.createNativeQuery(Node_Active_Query).getSingleResult();
 				strEmpty="";
 				strExist="";
 		////////////////////////////
@@ -4475,7 +4654,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
 				String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(Node_GCell_Query);
-				Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
+				Object CountNodes_G_CELL = entityManager.createNativeQuery(Node_GCell_Query).getSingleResult();
 				strEmpty="";
 				strExist="";
 		////////////////////////////
@@ -4485,7 +4664,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
 				String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(Node_LCell_Query);
-				Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
+				Object CountNodes_L_CELL = entityManager.createNativeQuery(Node_LCell_Query).getSingleResult();
 				strEmpty="";
 				strExist="";
 		////////////////////////////
@@ -4495,7 +4674,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
 				String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(Node_UCell_Query);
-				Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
+				Object CountNodes_U_CELL = entityManager.createNativeQuery(Node_UCell_Query).getSingleResult();
 				strEmpty="";
 				strExist="";
 
@@ -4513,10 +4692,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				logger.info("Error in retreiving Node Type BOQ from database in method GetNtypeBoqList due to \n " + exceptionAsString);															
 				return null;
 			} finally {
-				if (session != null && session.isOpen()) {
-					tx.commit();
-					session.close();
-					session.getSessionFactory().close();
+				if (entityManager != null && entityManager.isOpen()) {
+					entityManager.close();
+				}
+				if(emf != null && emf.isOpen()) {
+					emf.close();	
 				}
 			}
 		}
@@ -4529,8 +4709,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 				public LinkedHashMap<String, String> GetNtypeVenBoqList(@RequestParam String SiteId, @RequestParam String NodeTId, @RequestParam String VendorId, @RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
 
-					Session session = almsessions.getSession();
-					Transaction tx = session.beginTransaction();
+					//Session session = almsessions.getSession();
+					//Transaction tx = session.beginTransaction();
+					 emf = Persistence.createEntityManagerFactory("persistence");
+					 entityManager = emf.createEntityManager();
+					
 					LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 
 					try {
@@ -4540,7 +4723,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
 						String Site_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Site_Query);
-						Object Sites = session.createNativeQuery(Site_Query).uniqueResult();
+						Object Sites = entityManager.createNativeQuery(Site_Query).getSingleResult();
 						strEmpty="";
 						strExist="";
 				////////////////////////////
@@ -4550,7 +4733,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
 						String Node_Active_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_Active_Query);
-						Object CountNodes_Active = session.createNativeQuery(Node_Active_Query).uniqueResult();
+						Object CountNodes_Active = entityManager.createNativeQuery(Node_Active_Query).getSingleResult();
 						strEmpty="";
 						strExist="";
 				////////////////////////////
@@ -4560,7 +4743,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
 						String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_GCell_Query);
-						Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
+						Object CountNodes_G_CELL = entityManager.createNativeQuery(Node_GCell_Query).getSingleResult();
 						strEmpty="";
 						strExist="";
 				////////////////////////////
@@ -4570,7 +4753,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
 						String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_LCell_Query);
-						Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
+						Object CountNodes_L_CELL = entityManager.createNativeQuery(Node_LCell_Query).getSingleResult();
 						strEmpty="";
 						strExist="";
 				////////////////////////////
@@ -4580,7 +4763,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
 						String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_UCell_Query);
-						Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
+						Object CountNodes_U_CELL = entityManager.createNativeQuery(Node_UCell_Query).getSingleResult();
 						strEmpty="";
 						strExist="";
 
@@ -4598,10 +4781,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						logger.info("Error in retreiving Node Type BOQ from database in method GetNtypeVenBoqList due to \n " + exceptionAsString);															
 						return null;
 					} finally {
-						if (session != null && session.isOpen()) {
-							tx.commit();
-							session.close();
-							session.getSessionFactory().close();
+						if (entityManager != null && entityManager.isOpen()) {
+							entityManager.close();
+						}
+						if(emf != null && emf.isOpen()) {
+							emf.close();	
 						}
 					}
 				}
@@ -4613,8 +4797,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 				public LinkedHashMap<String, String> GetNtypeSupBoqList(@RequestParam String SiteId, @RequestParam String NodeTId, @RequestParam String SuppId, @RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
 
-					Session session = almsessions.getSession();
-					Transaction tx = session.beginTransaction();
+					//Session session = almsessions.getSession();
+					//Transaction tx = session.beginTransaction();
+					 emf = Persistence.createEntityManagerFactory("persistence");
+					 entityManager = emf.createEntityManager();
+				
 					LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 
 					try {
@@ -4624,7 +4811,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
 						String Site_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Site_Query);
-						Object Sites = session.createNativeQuery(Site_Query).uniqueResult();
+						Object Sites = entityManager.createNativeQuery(Site_Query).getSingleResult();
 						strEmpty="";
 						strExist="";
 				////////////////////////////
@@ -4634,7 +4821,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
 						String Node_Active_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_Active_Query);
-						Object CountNodes_Active = session.createNativeQuery(Node_Active_Query).uniqueResult();
+						Object CountNodes_Active = entityManager.createNativeQuery(Node_Active_Query).getSingleResult();
 						strEmpty="";
 						strExist="";
 				////////////////////////////
@@ -4644,7 +4831,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
 						String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_GCell_Query);
-						Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
+						Object CountNodes_G_CELL = entityManager.createNativeQuery(Node_GCell_Query).getSingleResult();
 						strEmpty="";
 						strExist="";
 				////////////////////////////
@@ -4654,7 +4841,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
 						String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_LCell_Query);
-						Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
+						Object CountNodes_L_CELL = entityManager.createNativeQuery(Node_LCell_Query).getSingleResult();
 						strEmpty="";
 						strExist="";
 				////////////////////////////
@@ -4664,7 +4851,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
 						String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_UCell_Query);
-						Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
+						Object CountNodes_U_CELL = entityManager.createNativeQuery(Node_UCell_Query).getSingleResult();
 						strEmpty="";
 						strExist="";
 
@@ -4682,10 +4869,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						logger.info("Error in retreiving Node Type BOQ from database in method GetNtypeSupBoqList due to \n " + exceptionAsString);															
 						return null;
 					} finally {
-						if (session != null && session.isOpen()) {
-							tx.commit();
-							session.close();
-							session.getSessionFactory().close();
+						if (entityManager != null && entityManager.isOpen()) {
+							entityManager.close();
+						}
+						if(emf != null && emf.isOpen()) {
+							emf.close();	
 						}
 					}
 				}
@@ -4696,14 +4884,17 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 	public Map<String, Object> findPOSt_Items(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		session = almsessions.getSession();
+		//session = almsessions.getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
 		}
-		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
-			
+		//if (session != null && session.isOpen()) {
+			//tx = session.beginTransaction();
+		 emf = Persistence.createEntityManagerFactory("persistence");
+		 entityManager = emf.createEntityManager();
+		 notifications.headerNotification(entityManager, model);
+		 
 				String selectedItem = request.getParameter("selectedItem");
 				String POAlreadyCreated = request.getParameter("POAlreadyCreated");
 				String selectedSite = request.getParameter("selectedSite");
@@ -4720,11 +4911,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			try {
 				if (POAlreadyCreated.equals("false")) {
 					strSites= boqDomainVar ("j",paramEnterprise,paramTransmission,paramAccess,paramCore,strSites);
-					rtn.put("listSites",session.createNativeQuery(strSites).list());
+					rtn.put("listSites",entityManager.createNativeQuery(strSites).getResultList());
 					
 				}else {
 					strItems= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strItems);
-					rtn.put("itemList", session.createNativeQuery(strItems).list());				
+					rtn.put("itemList", entityManager.createNativeQuery(strItems).getResultList());				
 				}
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -4736,13 +4927,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				rtn.put("listSites", null);
 			} 
 			finally {
-				if (session != null && session.isOpen()) {
-					tx.commit();
-					session.close();
-					session.getSessionFactory().close();
+				if (entityManager != null && entityManager.isOpen()) {
+					entityManager.close();
+				}
+				if(emf != null && emf.isOpen()) {
+					emf.close();	
 				}
 			}
-		}
+		//}
 		return rtn;
 	}
 
@@ -4752,13 +4944,16 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 	public Map<String, Object> findSitePO_Items(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		session = almsessions.getSession();
+		//session = almsessions.getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
 		}
-		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
+		//if (session != null && session.isOpen()) {
+			//tx = session.beginTransaction();
+		 emf = Persistence.createEntityManagerFactory("persistence");
+		 entityManager = emf.createEntityManager();
+		 notifications.headerNotification(entityManager, model);
 			
 				String selectedSite = request.getParameter("selectedSite");
 				String POAlreadyCreated = request.getParameter("POAlreadyCreated");
@@ -4778,11 +4973,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			try {				
 				if (POAlreadyCreated.equals("false")) {
 					strPO=  boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strPO);
-					rtn.put("listPO", session.createNativeQuery(strPO).list());
+					rtn.put("listPO", entityManager.createNativeQuery(strPO).getResultList());
 				}
 				else {
 					strItems= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strItems);
-					rtn.put("itemList", session.createNativeQuery(strItems).list());
+					rtn.put("itemList", entityManager.createNativeQuery(strItems).getResultList());
 				}
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -4793,13 +4988,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				rtn.put("listPO", null);
 				rtn.put("itemList", null);
 			} finally {
-				if (session != null && session.isOpen()) {
-					tx.commit();
-					session.close();
-					session.getSessionFactory().close();
+				if (entityManager != null && entityManager.isOpen()) {
+					entityManager.close();
+				}
+				if(emf != null && emf.isOpen()) {
+					emf.close();	
 				}
 			}
-		}
+		//}
 		return rtn;
 	}
 
@@ -4813,14 +5009,17 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 		public Map<String, Object> findNode_Cells(Locale locale, Model model, HttpServletRequest request,
 				HttpServletResponse response) throws JsonProcessingException {
 			Map<String, Object> rtn = new LinkedHashMap<>();
-			session = almsessions.getSession();
+			//session = almsessions.getSession();
 			if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				rtn.put("Login", LoginServices.checkSession(request, response));
 				return rtn;
 			}
-			if (session != null && session.isOpen()) {
-				tx = session.beginTransaction();
-				
+			//if (session != null && session.isOpen()) {
+				//tx = session.beginTransaction();
+			 emf = Persistence.createEntityManagerFactory("persistence");
+			 entityManager = emf.createEntityManager();
+			 notifications.headerNotification(entityManager, model);
+			 
 				String paramEnterprise = request.getParameter("paramEnterprise");
 				String paramTransmission = request.getParameter("paramTransmission");
 				String paramAccess = request.getParameter("paramAccess");
@@ -4841,12 +5040,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					strCells2= boqDomainVar ("l",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);						
 					strCells3= boqDomainVar ("u",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);	
 				
-					Query query1 = session.createNativeQuery(strCells1);
-					Query query2 = session.createNativeQuery(strCells2);
-					Query query3 = session.createNativeQuery(strCells3);
-					cellResult.addAll(query1.list());
-					cellResult.addAll(query2.list());
-					cellResult.addAll(query3.list());
+					cellResult.addAll(entityManager.createNativeQuery(strCells1).getResultList());
+					cellResult.addAll(entityManager.createNativeQuery(strCells2).getResultList());
+					cellResult.addAll(entityManager.createNativeQuery(strCells3).getResultList());
 					
 					rtn.put("listCells", cellResult);
 					} else {
@@ -4863,9 +5059,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);						
 						strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);
 						
-						cellResult.addAll(session.createNativeQuery(strCells1).list());
-						cellResult.addAll(session.createNativeQuery(strCells2).list());
-						cellResult.addAll(session.createNativeQuery(strCells3).list());
+						cellResult.addAll(entityManager.createNativeQuery(strCells1).getResultList());
+						cellResult.addAll(entityManager.createNativeQuery(strCells2).getResultList());
+						cellResult.addAll(entityManager.createNativeQuery(strCells3).getResultList());
 						
 						rtn.put("listCells",cellResult);
 					}	
@@ -4877,13 +5073,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					logger.info("Error in retreiving Cells Data from database in method findNode_Cells due to \n " + exceptionAsString);															
 					rtn.put("listCells", null);
 				} finally {
-					if (session != null && session.isOpen()) {
-						tx.commit();
-						session.close();
-						session.getSessionFactory().close();
+					if (entityManager != null && entityManager.isOpen()) {
+						entityManager.close();
+					}
+					if(emf != null && emf.isOpen()) {
+						emf.close();	
 					}
 				}
-			}
+			//}
 			return rtn;
 		}
 
@@ -4895,13 +5092,17 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 		public Map<String, Object> findNodeTypeSiteNode_Cells(Locale locale, Model model, HttpServletRequest request,
 				HttpServletResponse response) throws JsonProcessingException {
 			Map<String, Object> rtn = new LinkedHashMap<>();
-			session = almsessions.getSession();
+			//session = almsessions.getSession();
 			if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				rtn.put("Login", LoginServices.checkSession(request, response));
 				return rtn;
 			}
-			if (session != null && session.isOpen()) {
-				tx = session.beginTransaction();
+			//if (session != null && session.isOpen()) {
+				//tx = session.beginTransaction();
+			 emf = Persistence.createEntityManagerFactory("persistence");
+			 entityManager = emf.createEntityManager();
+			 notifications.headerNotification(entityManager, model);
+			 
 				String selectedNdTyp = request.getParameter("selectedNodetType");
 				String selectedItem = request.getParameter("selectedItem");
 				
@@ -4925,7 +5126,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					  if (selectedNdTyp != null) {
 						try {
 							strSites= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strSites);	
-							rtn.put("listSites",session.createNativeQuery(strSites).list());
+							rtn.put("listSites",entityManager.createNativeQuery(strSites).getResultList());
 						} catch (Exception e) {
 							sw = new StringWriter();
 							e.printStackTrace(new PrintWriter(sw));
@@ -4946,7 +5147,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strNodes= strNodes + ") as countUcells FROM NODE_ACTIVE a WHERE a.ACTIVE_RECORD = '1' and a.WARE_ID='"+ selectedItem + "' and a.NODE_TYPE='" + selectedNdTyp + "' ";
 							strNodes= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);	
 							
-							rtn.put("listNodes", session.createNativeQuery(strNodes).list());
+							rtn.put("listNodes", entityManager.createNativeQuery(strNodes).getResultList());
 						} catch (Exception e) {
 							sw = new StringWriter();
 							e.printStackTrace(new PrintWriter(sw));
@@ -4963,9 +5164,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);		
 							strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);		
 						
-							cellResult.addAll(session.createNativeQuery(strCells1).list());
-							cellResult.addAll(session.createNativeQuery(strCells2).list());
-							cellResult.addAll(session.createNativeQuery(strCells3).list());
+							cellResult.addAll(entityManager.createNativeQuery(strCells1).getResultList());
+							cellResult.addAll(entityManager.createNativeQuery(strCells2).getResultList());
+							cellResult.addAll(entityManager.createNativeQuery(strCells3).getResultList());
 							
 							rtn.put("listCells", cellResult);
 						} catch (Exception e) {
@@ -4986,13 +5187,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					logger.info("Error in retreiving Data from database in method findNodeTypeSiteNode_Cells due to \n " + exceptionAsString);															
 					
 				} finally {
-					if (session != null && session.isOpen()) {
-						tx.commit();
-						session.close();
-						session.getSessionFactory().close();
+					if (entityManager != null && entityManager.isOpen()) {
+						entityManager.close();
+					}
+					if(emf != null && emf.isOpen()) {
+						emf.close();	
 					}
 				}
-			}
+			//}
 			return rtn;
 		}
 
@@ -5003,13 +5205,17 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 	public Map<String, Object> findPOItems_sites(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		session = almsessions.getSession();
+		//session = almsessions.getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
 		}
-		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
+		//if (session != null && session.isOpen()) {
+			//tx = session.beginTransaction();
+		 emf = Persistence.createEntityManagerFactory("persistence");
+		 entityManager = emf.createEntityManager();
+		 notifications.headerNotification(entityManager, model);
+		 
 		  try {
 
 			String selectedPo = request.getParameter("selectedPo");
@@ -5029,7 +5235,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			if (POAlreadyCreated.equals("false")) {
 				try {
 					strItems= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strItems);
-					rtn.put("listItem", session.createNativeQuery(strItems).list());
+					rtn.put("listItem", entityManager.createNativeQuery(strItems).getResultList());
 				} catch (Exception e) {
 					sw = new StringWriter();
 					e.printStackTrace(new PrintWriter(sw));
@@ -5042,7 +5248,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			else {
 				try {
 					strSites= boqDomainVar ("j",paramEnterprise,paramTransmission,paramAccess,paramCore,strSites);
-					rtn.put("listSites", session.createNativeQuery(strSites).list());
+					rtn.put("listSites", entityManager.createNativeQuery(strSites).getResultList());
 				} catch (Exception e) {
 					sw = new StringWriter();
 					e.printStackTrace(new PrintWriter(sw));
@@ -5091,13 +5297,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				logger.info("Error in retreiving Data from database in method findPOItems_sites due to \n " + exceptionAsString);															
 				
 			} finally {
-				if (session != null && session.isOpen()) {
-					tx.commit();
-					session.close();
-					session.getSessionFactory().close();
+				if (entityManager != null && entityManager.isOpen()) {
+					entityManager.close();
+				}
+				if(emf != null && emf.isOpen()) {
+					emf.close();	
 				}
 			}
-		}
+		//}
 		return rtn;
 	}
 
@@ -5109,14 +5316,17 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 	public Map<String, Object> FindOnClick_SuppStNdTypNdCell(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		session = almsessions.getSession();
+		//session = almsessions.getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
 		}
-		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
-			
+		//if (session != null && session.isOpen()) {
+			//tx = session.beginTransaction();
+		 emf = Persistence.createEntityManagerFactory("persistence");
+		 entityManager = emf.createEntityManager();
+		 notifications.headerNotification(entityManager, model);
+		 
 			String selectedSupp = request.getParameter("selectedSupp");
 			String selectedNodetType = request.getParameter("selectedNodetType");
 			String selectedItem = request.getParameter("selectedItem");
@@ -5143,7 +5353,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				if (selectedSupp != null && selectedItem == null) {
 					try {
 						strSites= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strSites);
-						rtn.put("listSuppSites",session.createNativeQuery(strSites).list());
+						rtn.put("listSuppSites",entityManager.createNativeQuery(strSites).getResultList());
 						
 					} catch (Exception e) {
 						sw = new StringWriter();
@@ -5157,7 +5367,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				if (selectedItem != null) {
 					try {
 						strNodesType= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodesType);
-						rtn.put("listNodesType", session.createNativeQuery(strNodesType).list());	
+						rtn.put("listNodesType", entityManager.createNativeQuery(strNodesType).getResultList());	
 					} catch (Exception e) {
 						sw = new StringWriter();
 						e.printStackTrace(new PrintWriter(sw));
@@ -5179,7 +5389,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strNodes = strNodes + ") as countUcells FROM NODE_ACTIVE a WHERE a.ACTIVE_RECORD = '1' and a.WARE_ID='"+ selectedItem + "' and a.NODE_TYPE='" + selectedNodetType + "' and a.SUPPLIER_ID='"+ selectedSupp +"' ";			
 						strNodes= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);		
 						
-						rtn.put("listNodes", session.createNativeQuery(strNodes).list());
+						rtn.put("listNodes", entityManager.createNativeQuery(strNodes).getResultList());
 						} catch (Exception e) {
 							sw = new StringWriter();
 							e.printStackTrace(new PrintWriter(sw));
@@ -5195,9 +5405,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);						
 						strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);	
 					
-						cellResult.addAll(session.createNativeQuery(strCells1).list());
-						cellResult.addAll(session.createNativeQuery(strCells2).list());
-						cellResult.addAll(session.createNativeQuery(strCells3).list());
+						cellResult.addAll(entityManager.createNativeQuery(strCells1).getResultList());
+						cellResult.addAll(entityManager.createNativeQuery(strCells2).getResultList());
+						cellResult.addAll(entityManager.createNativeQuery(strCells3).getResultList());
 							
 						rtn.put("listCells",cellResult);
 						} catch (Exception e) {
@@ -5217,13 +5427,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				logger.info("Error in retreiving Data from database in method FindOnClick_SuppStNdTypNdCell due to \n " + exceptionAsString);															
 				
 			} finally {
-				if (session != null && session.isOpen()) {
-					tx.commit();
-					session.close();
-					session.getSessionFactory().close();
+				if (entityManager != null && entityManager.isOpen()) {
+					entityManager.close();
+				}
+				if(emf != null && emf.isOpen()) {
+					emf.close();	
 				}
 			}
-		}
+		//}
 		return rtn;
 	}
 	
@@ -5233,14 +5444,17 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 	public Map<String, Object> FindOnClick_VenStNdTypNdCell(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		session = almsessions.getSession();
+		//session = almsessions.getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
 		}
-		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
-			
+		//if (session != null && session.isOpen()) {
+			//tx = session.beginTransaction();
+		 emf = Persistence.createEntityManagerFactory("persistence");
+		 entityManager = emf.createEntityManager();
+		 notifications.headerNotification(entityManager, model);
+		 
 			String selectedVen = request.getParameter("selectedVen");
 			String selectedNodetType = request.getParameter("selectedNodetType");
 			String selectedItem = request.getParameter("selectedItem");
@@ -5267,7 +5481,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				if (selectedVen != null && selectedItem == null) {
 					try {
 						strSites= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strSites);
-						rtn.put("listVenSites",session.createNativeQuery(strSites).list());
+						rtn.put("listVenSites",entityManager.createNativeQuery(strSites).getResultList());
 						
 					} catch (Exception e) {
 						sw = new StringWriter();
@@ -5281,7 +5495,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				if (selectedItem != null) {
 					try {
 						strNodesType= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodesType);
-						rtn.put("listNodesType", session.createNativeQuery(strNodesType).list());	
+						rtn.put("listNodesType",entityManager.createNativeQuery(strNodesType).getResultList());	
 					} catch (Exception e) {
 						sw = new StringWriter();
 						e.printStackTrace(new PrintWriter(sw));
@@ -5303,7 +5517,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strNodes = strNodes + ") as countUcells FROM NODE_ACTIVE a WHERE a.ACTIVE_RECORD = '1' and a.WARE_ID='"+ selectedItem + "' and a.NODE_TYPE='" + selectedNodetType + "' and a.VENDOR='"+ selectedVen +"' ";			
 						strNodes= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);		
 						
-						rtn.put("listNodes", session.createNativeQuery(strNodes).list());
+						rtn.put("listNodes", entityManager.createNativeQuery(strNodes).getResultList());
 						} catch (Exception e) {
 							sw = new StringWriter();
 							e.printStackTrace(new PrintWriter(sw));
@@ -5319,9 +5533,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);						
 						strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);	
 					
-						cellResult.addAll(session.createNativeQuery(strCells1).list());
-						cellResult.addAll(session.createNativeQuery(strCells2).list());
-						cellResult.addAll(session.createNativeQuery(strCells3).list());
+						cellResult.addAll(entityManager.createNativeQuery(strCells1).getResultList());
+						cellResult.addAll(entityManager.createNativeQuery(strCells2).getResultList());
+						cellResult.addAll(entityManager.createNativeQuery(strCells3).getResultList());
 						
 						rtn.put("listCells",cellResult);
 					} catch (Exception e) {
@@ -5341,13 +5555,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				logger.info("Error in retreiving Data from database in method FindOnClick_VenStNdTypNdCell due to \n " + exceptionAsString);															
 				
 			} finally {
-				if (session != null && session.isOpen()) {
-					tx.commit();
-					session.close();
-					session.getSessionFactory().close();
+				if (entityManager != null && entityManager.isOpen()) {
+					entityManager.close();
+				}
+				if(emf != null && emf.isOpen()) {
+					emf.close();	
 				}
 			}
-		}
+		//}
 		return rtn;
 	}
 	
@@ -5359,14 +5574,17 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 	public Map<String, Object> FindOnClick_SuppNdTSiteNodeCell(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		session = almsessions.getSession();
+		//session = almsessions.getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
 		}
-		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
-					
+		//if (session != null && session.isOpen()) {
+			//tx = session.beginTransaction();
+		 emf = Persistence.createEntityManagerFactory("persistence");
+		 entityManager = emf.createEntityManager();
+		 notifications.headerNotification(entityManager, model);
+		 
 				String selectedItem = request.getParameter("selectedItem");
 				String selectedSupp = request.getParameter("selectedSupp");
 				String SelectedNodeType = request.getParameter("SelectedNodeType");
@@ -5394,8 +5612,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					if (selectedSupp != null) {
 						try {						
 							strNodesType= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodesType);
-							Query query = session.createNativeQuery(strNodesType);
-							listNodeType = query.list();
+							listNodeType =  entityManager.createNativeQuery(strNodesType).getResultList();
 					
 							if (listNodeType != null) {
 								rtn.put("listNodeType", listNodeType);			
@@ -5413,7 +5630,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					if (selectedSupp != null && SelectedNodeType != null) {					
 						try {
 							strSites= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strSites);
-							rtn.put("listSuppSites",session.createNativeQuery(strSites).list());
+							rtn.put("listSuppSites",entityManager.createNativeQuery(strSites).getResultList());
 							
 						} catch (Exception e) {
 							sw = new StringWriter();
@@ -5437,7 +5654,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strNodes = strNodes + ") as countUcells FROM NODE_ACTIVE a WHERE a.ACTIVE_RECORD = '1' and a.WARE_ID='"+ selectedItem + "' and a.NODE_TYPE='" + SelectedNodeType + "' and a.SUPPLIER_ID='"+ selectedSupp +"' ";			
 							strNodes= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);		
 							
-							rtn.put("listSuppNodes", session.createNativeQuery(strNodes).list());
+							rtn.put("listSuppNodes", entityManager.createNativeQuery(strNodes).getResultList());
 							//System.out.println("list nodes ==> "+ mapper.writeValueAsString(nodeSuppList));
 				
 						} catch (Exception e) {
@@ -5456,9 +5673,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);						
 							strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);	
 						
-							cellResult.addAll(session.createNativeQuery(strCells1).list());
-							cellResult.addAll(session.createNativeQuery(strCells2).list());
-							cellResult.addAll(session.createNativeQuery(strCells3).list());
+							cellResult.addAll(entityManager.createNativeQuery(strCells1).getResultList());
+							cellResult.addAll(entityManager.createNativeQuery(strCells2).getResultList());
+							cellResult.addAll(entityManager.createNativeQuery(strCells3).getResultList());
 								
 							rtn.put("listCells",cellResult);
 						} catch (Exception e) {
@@ -5498,13 +5715,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				logger.info("Error in retreiving Data from database in method FindOnClick_SuppNdTSiteNodeCell due to \n " + exceptionAsString);															
 				
 			} finally {
-				if (session != null && session.isOpen()) {
-					tx.commit();
-					session.close();
-					session.getSessionFactory().close();
+				if (entityManager != null && entityManager.isOpen()) {
+					entityManager.close();
+				}
+				if(emf != null && emf.isOpen()) {
+					emf.close();	
 				}
 			}
-		}
+		//}
 		return rtn;
 	}
 
@@ -5516,14 +5734,17 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 		public Map<String, Object> FindOnClick_VenNdTSiteNodeCell(Locale locale, Model model, HttpServletRequest request,
 				HttpServletResponse response) throws JsonProcessingException {
 			Map<String, Object> rtn = new LinkedHashMap<>();
-			session = almsessions.getSession();
+			//session = almsessions.getSession();
 			if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				rtn.put("Login", LoginServices.checkSession(request, response));
 				return rtn;
 			}
-			if (session != null && session.isOpen()) {
-				tx = session.beginTransaction();
-						
+			//if (session != null && session.isOpen()) {
+				//tx = session.beginTransaction();
+			 emf = Persistence.createEntityManagerFactory("persistence");
+			 entityManager = emf.createEntityManager();
+			 notifications.headerNotification(entityManager, model);
+			 
 					String selectedItem = request.getParameter("selectedItem");
 					String selectedVen = request.getParameter("selectedVen");
 					String SelectedNodeType = request.getParameter("SelectedNodeType");
@@ -5551,8 +5772,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						if (selectedVen != null) {
 							try {						
 								strNodesType= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodesType);
-								Query query = session.createNativeQuery(strNodesType);
-								listNodeType = query.list();
+								listNodeType = entityManager.createNativeQuery(strNodesType).getResultList();
 						
 								if (listNodeType != null) {
 									rtn.put("listNodeType", listNodeType);		
@@ -5570,7 +5790,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						if (selectedVen != null && SelectedNodeType != null) {					
 							try {
 								strSites= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strSites);
-								rtn.put("listVenSites",session.createNativeQuery(strSites).list());
+								rtn.put("listVenSites",entityManager.createNativeQuery(strSites).getResultList());
 							
 							} catch (Exception e) {
 								sw = new StringWriter();
@@ -5594,7 +5814,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 								strNodes = strNodes + ") as countUcells FROM NODE_ACTIVE a WHERE a.ACTIVE_RECORD = '1' and a.WARE_ID='"+ selectedItem + "' and a.NODE_TYPE='" + SelectedNodeType + "' and a.VENDOR='"+ selectedVen +"' ";			
 								strNodes= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);		
 								
-								rtn.put("listVenNodes", session.createNativeQuery(strNodes).list());
+								rtn.put("listVenNodes", entityManager.createNativeQuery(strNodes).getResultList());
 							} catch (Exception e) {
 								sw = new StringWriter();
 								e.printStackTrace(new PrintWriter(sw));
@@ -5611,9 +5831,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 								strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);						
 								strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);	
 							
-								cellResult.addAll(session.createNativeQuery(strCells1).list());
-								cellResult.addAll(session.createNativeQuery(strCells2).list());
-								cellResult.addAll(session.createNativeQuery(strCells3).list());
+								cellResult.addAll(entityManager.createNativeQuery(strCells1).getResultList());
+								cellResult.addAll(entityManager.createNativeQuery(strCells2).getResultList());
+								cellResult.addAll(entityManager.createNativeQuery(strCells3).getResultList());
 										
 								rtn.put("listCells",cellResult);
 							} catch (Exception e) {
@@ -5653,13 +5873,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					logger.info("Error in retreiving Data from database in method FindOnClick_VenNdTSiteNodeCell due to \n " + exceptionAsString);															
 					
 				} finally {
-					if (session != null && session.isOpen()) {
-						tx.commit();
-						session.close();
-						session.getSessionFactory().close();
+					if (entityManager != null && entityManager.isOpen()) {
+						entityManager.close();
+					}
+					if(emf != null && emf.isOpen()) {
+						emf.close();	
 					}
 				}
-			}
+			//}
 			return rtn;
 		}
 
@@ -5675,8 +5896,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 	@ResponseBody
 	public LinkedHashMap<String, String> GetPOBoqList(@RequestParam String POID,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
 
-		Session session = almsessions.getSession();
-		Transaction tx = session.beginTransaction();
+		//Session session = almsessions.getSession();
+		//Transaction tx = session.beginTransaction();
+		 emf = Persistence.createEntityManagerFactory("persistence");
+		 entityManager = emf.createEntityManager();
+
 		LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 		
 		try {	
@@ -5686,7 +5910,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 			String PO_Query = POID == "" ? strEmpty : strExist;
 			//System.out.println(PO_Query);
-			Object PoC = session.createNativeQuery(PO_Query).uniqueResult();
+			Object PoC = entityManager.createNativeQuery(PO_Query).getSingleResult();
 			//System.out.println("po :::"+PoC);
 			BoqHM.put("PO", String.valueOf(PoC));
 			strEmpty="";
@@ -5701,7 +5925,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			//strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 			String PO_Amount_Query = POID == "" ? strEmpty : strExist;
 			//System.out.println(PO_Amount_Query);
-			Object PO_Amount = session.createNativeQuery(PO_Amount_Query).uniqueResult();
+			Object PO_Amount = entityManager.createNativeQuery(PO_Amount_Query).getSingleResult();
 			BoqHM.put(POID == "" ? "PO Cost" : "PO Amount", String.valueOf(PO_Amount));		
 			strEmpty="";
 			strExist="";
@@ -5715,7 +5939,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			//strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 			String PO_NET_Amount_Query = POID == "" ? strEmpty : strExist;
 			//System.out.println(PO_NET_Amount_Query);
-			Object PO_NET_Amount = session.createNativeQuery(PO_NET_Amount_Query).uniqueResult();
+			Object PO_NET_Amount = entityManager.createNativeQuery(PO_NET_Amount_Query).getSingleResult();
 			BoqHM.put(POID == "" ? "PO Net Cost" : "PO Net Amount", String.valueOf(PO_NET_Amount));
 			strEmpty="";
 			strExist="";
@@ -5726,7 +5950,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			strExist= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 			String Site_Query = POID == "" ? strEmpty : strExist;
 			//System.out.println(Site_Query);
-			Object SiteC = session.createNativeQuery(Site_Query).uniqueResult();
+			Object SiteC = entityManager.createNativeQuery(Site_Query).getSingleResult();
 			//System.out.println("SiteC :::"+SiteC);
 			strEmpty="";
 			strExist="";
@@ -5737,7 +5961,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			strExist= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 			String Item_Query = POID == "" ? strEmpty : strExist;
 			//System.out.println(Item_Query);
-			Object ItemC = session.createNativeQuery(Item_Query).uniqueResult();
+			Object ItemC = entityManager.createNativeQuery(Item_Query).getSingleResult();
 			//System.out.println("ItemC :::"+ItemC);	
 			strEmpty="";
 			strExist="";
@@ -5754,10 +5978,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			logger.info("Error in retreiving PO BOQ from database in method GetPOBoqList due to \n " + exceptionAsString);															
 			return null;
 		} finally {
-			if (session != null && session.isOpen()) {
-				tx.commit();
-				session.close();
-				session.getSessionFactory().close();
+			if (entityManager != null && entityManager.isOpen()) {
+				entityManager.close();
+			}
+			if(emf != null && emf.isOpen()) {
+				emf.close();	
 			}
 		}
 	}
@@ -5768,8 +5993,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 		@ResponseBody
 		public LinkedHashMap<String, String> GetPOSiteBoqList(@RequestParam String POID,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
 
-			Session session = almsessions.getSession();
-			Transaction tx = session.beginTransaction();
+			//Session session = almsessions.getSession();
+			//Transaction tx = session.beginTransaction();
+			 emf = Persistence.createEntityManagerFactory("persistence");
+			 entityManager = emf.createEntityManager();
+			 
 			LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 			
 			try {				
@@ -5782,17 +6010,17 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 				String PO_Query = POID == "" ? strEmpty : strExist;
 				//System.out.println(PO_Query);
-				Object Po = session.createNativeQuery(PO_Query).uniqueResult();
+				Object Po = entityManager.createNativeQuery(PO_Query).getSingleResult();
 				strEmpty="";
 				strExist="";	
 			
 				strEmpty="SELECT COUNT(DISTINCT a.WARE_ID) FROM AR_SITE a, ASSET_REGISTRY b where a.AR_ID = b.AR_ID ";
 				strEmpty= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
-				strExist= "Select SITE_NAME FROM AR_SITE a, ASSET_REGISTRY b where a.AR_ID = b.AR_ID and b.PO_ID='" + POID +"' ";	
+				strExist= "Select a.SITE_NAME FROM AR_SITE a, ASSET_REGISTRY b where a.AR_ID = b.AR_ID and b.PO_ID='" + POID +"' ";	
 				strExist= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 				String Site_Query = POID == "" ? strEmpty : strExist;
 				//System.out.println(Site_Query);
-				Object Site = session.createNativeQuery(Site_Query).uniqueResult();
+				Object Site = entityManager.createNativeQuery(Site_Query).getSingleResult();
 				strEmpty="";
 				strExist="";
 				
@@ -5802,7 +6030,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
 				String Item_Query = POID == "" ? strEmpty : strExist;
 				//System.out.println(Item_Query);
-				Object Item = session.createNativeQuery(Item_Query).uniqueResult();
+				Object Item = entityManager.createNativeQuery(Item_Query).getSingleResult();
 				strEmpty="";
 				strExist="";
 
@@ -5811,13 +6039,13 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				if(POID!="") {
 					String PO_Amount_Query= "Select TOTAL_AMOUNT from PURCHASE_ORDER where PO_ID='" + POID  + "' ";
 					//System.out.println(PO_Amount_Query);
-					Object PO_Amount = session.createNativeQuery(PO_Amount_Query).uniqueResult();
+					Object PO_Amount = entityManager.createNativeQuery(PO_Amount_Query).getSingleResult();
 					BoqHM.put("PO Amount", String.valueOf(PO_Amount));
 	
 	
 					String PO_Net_Amount_Query= "Select NET_TOTAL_AMOUNT from PURCHASE_ORDER where PO_ID='" + POID  + "' ";
 					//System.out.println(PO_Net_Amount_Query);
-					Object PO_Net_Amount = session.createNativeQuery(PO_Net_Amount_Query).uniqueResult();
+					Object PO_Net_Amount = entityManager.createNativeQuery(PO_Net_Amount_Query).getSingleResult();
 					BoqHM.put("PO Net Amount", String.valueOf(PO_Net_Amount));
 				}						
 				
@@ -5833,10 +6061,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				logger.info("Error in retreiving PO BOQ from database in method GetPOSiteBoqList due to \n " + exceptionAsString);															
 				return null;
 			} finally {
-				if (session != null && session.isOpen()) {
-					tx.commit();
-					session.close();
-					session.getSessionFactory().close();
+				if (entityManager != null && entityManager.isOpen()) {
+					entityManager.close();
+				}
+				if(emf != null && emf.isOpen()) {
+					emf.close();	
 				}
 			}
 		}

@@ -386,7 +386,7 @@ function StVenNdTypNdCell(id){
 		$.ajax({
 			  type: "GET",
 			  contentType: "application/json; charset=utf-8",
-			  url: getContext()+'/findStSupNdTypNdCell_Ven',
+			  url: getContext()+'/findStSupNdTypNdCell_Sup',
 			  data: {
 			          "siteId":siteId,
 			          "paramEnterprise": paramEnterprise,
