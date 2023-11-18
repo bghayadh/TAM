@@ -6205,7 +6205,7 @@ public class PhysicalLayerController {
 		System.out.println("save loaded db entitymanager");
 		 emf = Persistence.createEntityManagerFactory("persistence");
 		 entityManager = emf.createEntityManager();
-			entityManager.getTransaction().begin();;
+			entityManager.getTransaction().begin();
 			// String boardCity = request.getParameter("boardCity");
 			
 				Date date = new Date();

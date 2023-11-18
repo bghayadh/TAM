@@ -3,6 +3,7 @@ package com.aliat.alm.common;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -63,6 +64,28 @@ public class Permissions {
 		String permQuery = "select screen, viewType, roleLevel, readPerm, writePerm, addPerm, delPerm,"+ 
 							" savePerm, statusPerm, actionPerm, downloadPerm,exportPerm,secondLevelPerm,firstLevelPerm from RolePermission where role IN (:param2)";
 		Query permResult = session.createQuery(permQuery);
+		permResult.setParameterList("param2", roles);
+		 permList = permResult.list();
+		
+	return permList;
+
+	}
+	
+	public  <T> List<Object[]> getUserPrem(EntityManager entityManager,HttpServletRequest request) {
+		
+		HttpSession httpSession = request.getSession(false);
+		Object username = httpSession.getAttribute("userName");
+		List <Object[]> permList = null;
+		String roleQuery = "select rolename from UserRole where username =:param1";
+		Query roleResult = (Query) entityManager.createQuery(roleQuery);
+		roleResult.setParameter("param1", username);			
+		//Object role = roleResult.uniqueResult();
+		@SuppressWarnings("unchecked")
+		List <String> roles = roleResult.list();
+		
+		String permQuery = "select screen, viewType, roleLevel, readPerm, writePerm, addPerm, delPerm,"+ 
+							" savePerm, statusPerm, actionPerm, downloadPerm,exportPerm,secondLevelPerm,firstLevelPerm from RolePermission where role IN (:param2)";
+		Query permResult = (Query) entityManager.createQuery(permQuery);
 		permResult.setParameterList("param2", roles);
 		 permList = permResult.list();
 		
