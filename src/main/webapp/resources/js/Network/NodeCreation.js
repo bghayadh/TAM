@@ -61,30 +61,31 @@ function createNode(nodeList){
 	    allNodes.push(nodeList[i][0]);
 		window[""+nodeList[i][0]]=[];
 		window[""+nodeList[i][0]]=nodeList[i];
-		
+	    console.log(" //////////nodeList "+nodeList[i]);	
+
 		if(nodeList[i][8]=='MSAN') {
-			str="<ul><li id='"+nodeList[i][0]+"'  class='NodeActive' style='display:none;width:100px;'><input type='checkbox' class='Nodes checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' style='width:16px; height:16px;' src='"+getContext()+"/resources/NetworkImages/MSANNodeIcon.png'> "+ nodeList[i][2] +" </span></li></ul>";
+			str="<ul><li id='"+nodeList[i][0]+"'  class='NodeActive' style='display:none;width:100px;'><input type='checkbox' class='Nodes checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' style='width:16px; height:16px;' src='"+getContext()+"/resources/NetworkImages/MSANNodeIcon.png'> "+ nodeList[i][1]+"/"+nodeList[i][7] +" </span></li></ul>";
 			$("#Entreprise_MSAN__CurrentPhysicalLayer").append(str);
 			create_Node_Marker_Click(nodeList[i][0],nodeList[i][1],nodeList[i][5],nodeList[i][6],markersNodeActive,markerClusterMSANNodes,"","");				
 			 NodeActiveCheckFilter(nodeList[i][0],markerClusterMSANNodes);
 		}
 		
 		else if(nodeList[i][8]=='DWDM') {
-			str="<ul><li id='"+nodeList[i][0]+"'  class='NodeActive' style='display:none;width:100px;'><input type='checkbox' class='Nodes checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' style='width:16px; height:16px;' src='"+getContext()+"/resources/NetworkImages/DWDMNodeIcon.png'>"+ nodeList[i][2] +" </span></li></ul>";
+			str="<ul><li id='"+nodeList[i][0]+"'  class='NodeActive' style='display:none;width:100px;'><input type='checkbox' class='Nodes checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' style='width:16px; height:16px;' src='"+getContext()+"/resources/NetworkImages/DWDMNodeIcon.png'>"+ nodeList[i][1]+"/"+nodeList[i][7] +" </span></li></ul>";
 			$("#Transmission_DWDM__CurrentPhysicalLayer").append(str);
 			create_Node_Marker_Click(nodeList[i][0],nodeList[i][1],nodeList[i][5],nodeList[i][6],markersNodeActive,markerClusterDWDMNodes,"","");				
 			NodeActiveCheckFilter(nodeList[i][0],markerClusterDWDMNodes);
 		}
 		
 		else if(nodeList[i][8]=='SDH') {
-			str="<ul><li id='"+nodeList[i][0]+"'  class='NodeActive' style='display:none;width:100px;'><input type='checkbox' class='Nodes checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' style='width:16px; height:16px;' src='"+getContext()+"/resources/NetworkImages/SDHNodeIcon.png'>"+ nodeList[i][2] +" </span></li></ul>";
+			str="<ul><li id='"+nodeList[i][0]+"'  class='NodeActive' style='display:none;width:100px;'><input type='checkbox' class='Nodes checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' style='width:16px; height:16px;' src='"+getContext()+"/resources/NetworkImages/SDHNodeIcon.png'>"+ nodeList[i][1]+"/"+nodeList[i][7] +" </span></li></ul>";
 			$("#Transmission_SDH__CurrentPhysicalLayer").append(str);
 			create_Node_Marker_Click(nodeList[i][0],nodeList[i][1],nodeList[i][5],nodeList[i][6],markersNodeActive,markerClusterSDHNodes,"","");				
 			NodeActiveCheckFilter(nodeList[i][0],markerClusterSDHNodes);
 		}
 		
 		else if(nodeList[i][8]=='GPON') {
-			str="<ul><li id='"+nodeList[i][0]+"'  class='NodeActive' style='display:none;width:100px;'><input type='checkbox' class='Nodes checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' style='width:16px; height:16px;' src='"+getContext()+"/resources/NetworkImages/GPONNodeIcon.png'>"+ nodeList[i][2] +" </span></li></ul>";
+			str="<ul><li id='"+nodeList[i][0]+"'  class='NodeActive' style='display:none;width:100px;'><input type='checkbox' class='Nodes checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' style='width:16px; height:16px;' src='"+getContext()+"/resources/NetworkImages/GPONNodeIcon.png'>"+ nodeList[i][1]+"/"+nodeList[i][7] +" </span></li></ul>";
 			$("#Transmission_GPON__CurrentPhysicalLayer").append(str);
 			create_Node_Marker_Click(nodeList[i][0],nodeList[i][1],nodeList[i][5],nodeList[i][6],markersNodeActive,markerClusterGPONNodes,"","");				
 			NodeActiveCheckFilter(nodeList[i][0],markerClusterGPONNodes);
