@@ -370,10 +370,15 @@ display:none;
           <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/NetworkTransactionsReport">Network Transactions</a>
           </li>
           
-           <div class="dropdown-divider"></div>
-          <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/FinancialReport">Financial Report</a>
+       <div class="dropdown-divider"></div>
+          <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Financial Report
+           <span class="caret2" ></span></a>
+            <ul class="dropdown-menu dropdown-menu-left">
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/FinancialReport">Item Asset Report</a></li>
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NodeAssetReport">Node Asset Report</a></li>
+            </ul>
           </li>
-          
+         
         </ul>
       </li>
        
@@ -554,8 +559,13 @@ display:none;
           <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/NetworkTransactionsReport">Network Transactions</a>
           </li>
           
-           <div class="dropdown-divider"></div>
-          <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/FinancialReport">Financial Report</a>
+            <div class="dropdown-divider"></div>
+          <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Financial Report
+           <span class="caret2" ></span></a>
+            <ul class="dropdown-menu dropdown-menu-left">
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/FinancialReport">Item Asset Report</a></li>
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NodeAssetReport">Node Asset Report</a></li>
+            </ul>
           </li>
           
         </ul>
@@ -790,10 +800,14 @@ display:none;
           <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/NetworkTransactionsReport">Network Transactions</a>
           </li>
           
-           <div class="dropdown-divider"></div>
-          <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/FinancialReport">Financial Report</a>
+        <div class="dropdown-divider"></div>
+          <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Financial Report
+           <span class="caret2" ></span></a>
+            <ul class="dropdown-menu dropdown-menu-left">
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/FinancialReport">Item Asset Report</a></li>
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NodeAssetReport">Node Asset Report</a></li>
+            </ul>
           </li>
-          
           
         </ul>
       </li>
@@ -1042,10 +1056,14 @@ display:none;
           <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/NetworkTransactionsReport">Network Transactions</a>
           </li>
           
-           <div class="dropdown-divider"></div>
-          <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/FinancialReport">Financial Report</a>
+        <div class="dropdown-divider"></div>
+          <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Financial Report
+           <span class="caret2" ></span></a>
+            <ul class="dropdown-menu dropdown-menu-left">
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/FinancialReport">Item Asset Report</a></li>
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NodeAssetReport">Node Asset Report</a></li>
+            </ul>
           </li>
-          
           
         </ul>
       </li>

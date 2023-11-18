@@ -26,12 +26,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.aliat.alm.common.ALMSessions;
 import com.aliat.alm.common.Notify;
-import com.aliat.alm.models.FinancialReport;
+import com.aliat.alm.models.NodeAssetReport;
 import com.aliat.alm.services.LoginServices;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
-public class FinancialReportController {
+public class NodeAssetReportController {
 
 	@Autowired
 	ALMSessions almsessions;
@@ -46,10 +46,10 @@ public class FinancialReportController {
 	Query query;
 	Object[] result;
 
-	private static final Logger logger = LoggerFactory.getLogger(FinancialReportController.class);
+	private static final Logger logger = LoggerFactory.getLogger(NodeAssetReportController.class);
 
 	@SuppressWarnings({ "unchecked", "deprecation" })
-	@RequestMapping(value = "/FinancialReport", method = RequestMethod.GET)
+	@RequestMapping(value = "/NodeAssetReport", method = RequestMethod.GET)
 	public String AssetFinancialReport(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) {
 		ObjectMapper mapper = new ObjectMapper();
@@ -71,21 +71,23 @@ public class FinancialReportController {
 				try {
 				
 					query = session.createNativeQuery(
-							"SELECT site,farID, itemCode, itemName,itemModel,itemPartNo, lastModifiedDate,itemSN,itemNameRegister,poID,siteID,siteName,longitude,latitude,vendor,initCost,netCost,accuDepr FROM ( "
-									+ " SELECT B.SITE_ID AS site,A.FAR_ID as farID, A.ITEM_CODE as itemCode, A.ITEM_NAME as itemName,D.ITEM_MODEL as itemModel,D.ITEM_PART_NUMBER as itemPartNo,TO_CHAR(A.LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') as lastModifiedDate, A.ITEM_SN as itemSN,A.ITEM_NAME_REGISTER as itemNameRegister, A.PO_ID as poID, B.SITE_ID AS siteID, B.SITE_NAME AS siteName , C.LONGITUDE as longitude,C.LATITUDE as latitude,A.VENDOR as vendor, A.INITIALCOST as initCost, A.NETCOST as netCost , A.ACCUMULDEPRECAMNT as accuDepr , "
-									+ " ROW_NUMBER() OVER (PARTITION BY A.FAR_ID ORDER BY B.SITE_ID DESC) AS rn FROM FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID LEFT JOIN far_model_partnumber D ON A.FAR_ID = D.FAR_ID "
-									+ " WHERE D.PRIMARY='1' AND A.CREATED_DATE >=  trunc(SYSDATE - INTERVAL '1' YEAR) AND A.created_date < (trunc(sysdate) ) + 1   ) WHERE rn = 1 and (longitude is not null and longitude != '0' and longitude != 'null' and latitude is not null and latitude != '0' and latitude != 'null') ORDER BY lastModifiedDate DESC ");
+							"SELECT site,farID, itemCode, itemName,itemModel,itemPartNo, lastModifiedDate,itemSN,itemNameRegister,poID,nodeID,nodeName,nodeType,siteID,siteName,longitude,latitude,vendor,initCost,netCost,accuDepr FROM ( "
+									+ " SELECT DISTINCT B.SITE_ID AS site,A.FAR_ID as farID, A.ITEM_CODE as itemCode, A.ITEM_NAME as itemName,D.ITEM_MODEL as itemModel,D.ITEM_PART_NUMBER as itemPartNo,TO_CHAR(A.LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') as lastModifiedDate, A.ITEM_SN as itemSN,A.ITEM_NAME_REGISTER as itemNameRegister, A.PO_ID as poID,E.NODE_ID as nodeID,E.NODE_NAME as nodeName,E.NODE_TYPE as nodeType, B.SITE_ID AS siteID, B.SITE_NAME AS siteName , C.LONGITUDE as longitude,C.LATITUDE as latitude,A.VENDOR as vendor, A.INITIALCOST as initCost, A.NETCOST as netCost , A.ACCUMULDEPRECAMNT as accuDepr  "
+									+ " FROM FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID LEFT JOIN far_model_partnumber D ON A.FAR_ID = D.FAR_ID LEFT JOIN FAR_NODE E ON E.FAR_ID = A.FAR_ID "
+									+ " WHERE D.PRIMARY='1' AND A.CREATED_DATE >=  trunc(SYSDATE - INTERVAL '1' YEAR) AND A.created_date < (trunc(sysdate) ) + 1   ) WHERE (longitude is not null and longitude != '0' and longitude != 'null' and latitude is not null and latitude != '0' and latitude != 'null') "
+									+ " AND (nodeID is not null and nodeID != 'null') ORDER BY lastModifiedDate DESC ");
 
-					List<FinancialReport> ListFAR = (List<FinancialReport>) ((NativeQuery<FinancialReport>) query)
+					List<NodeAssetReport> ListFAR = (List<NodeAssetReport>) ((NativeQuery<NodeAssetReport>) query)
 							.addScalar("site").addScalar("farID").addScalar("itemCode").addScalar("itemName").addScalar("itemModel").addScalar("itemPartNo")
 							.addScalar("lastModifiedDate").addScalar("itemSN").addScalar("itemNameRegister")
-							.addScalar("poID").addScalar("siteID").addScalar("siteName").addScalar("longitude")
+							.addScalar("poID").addScalar("nodeID").addScalar("nodeName").addScalar("nodeType").addScalar("siteID").addScalar("siteName").addScalar("longitude")
 							.addScalar("latitude").addScalar("vendor").addScalar("initCost").addScalar("netCost").addScalar("accuDepr")
-							.setResultTransformer(Transformers.aliasToBean(FinancialReport.class)).list();
-					model.addAttribute("financialReportList", mapper.writeValueAsString(ListFAR));
+							.setResultTransformer(Transformers.aliasToBean(NodeAssetReport.class)).list();
+					model.addAttribute("nodeAssetReportList", mapper.writeValueAsString(ListFAR));
 
-					query = session.createNativeQuery("Select COALESCE(SUM(initialCost),0) , COALESCE(SUM(AccumDepr),0) , COALESCE(SUM(netCost),0) FROM ( SELECT DISTINCT A.FAR_ID AS FAR_ID, A.INITIALCOST as initialCost,A.ACCUMULDEPRECAMNT as AccumDepr, A.NETCOST as netCost from FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID "
-							+ " LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID WHERE A.CREATED_DATE >=  trunc(SYSDATE - INTERVAL '1' YEAR) AND A.created_date < (trunc(sysdate) ) + 1  AND (C.longitude is not null and C.longitude != '0' AND C.longitude != 'null' and C.latitude is not null and C.latitude != '0' and C.latitude != 'null') ) ");
+					query = session.createNativeQuery("Select  COALESCE(SUM(initialCost),0) , COALESCE(SUM(AccumDepr),0) , COALESCE(SUM(netCost),0) FROM ( SELECT DISTINCT A.FAR_ID AS FAR_ID, A.INITIALCOST as initialCost,A.ACCUMULDEPRECAMNT as AccumDepr, A.NETCOST as netCost from FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID "
+							+ " LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID LEFT JOIN FAR_NODE E ON E.FAR_ID = A.FAR_ID WHERE A.CREATED_DATE >=  trunc(SYSDATE - INTERVAL '1' YEAR) AND A.created_date < (trunc(sysdate) ) + 1  "
+							+ " AND (C.longitude is not null and C.longitude != '0' AND C.longitude != 'null' and C.latitude is not null and C.latitude != '0' and C.latitude != 'null') AND (E.NODE_ID is not null and E.NODE_ID != 'null')  ) ");
 
 					result = (Object[]) query.uniqueResult();
 					if (result[0] != null) {
@@ -96,7 +98,6 @@ public class FinancialReportController {
 					        totalInitialCost = df.format(value); // Format with decimal places otherwise
 					    }
 					}
-					
 					if (result[1] != null) {
 					    BigDecimal value = new BigDecimal(result[1].toString());
 					    if (value.compareTo(BigDecimal.ZERO) == 0) {
@@ -115,12 +116,13 @@ public class FinancialReportController {
 					    }
 					}
 					
+					
 					model.addAttribute("totalInitialCostFetched", totalInitialCost);
 					model.addAttribute("totalAccumdeprFetched", totalAccumdepr);
 					model.addAttribute("totalNetCostFetched", totalNetCost);
 
 					// Get the total of initial,net cost and accumulated depr of all FAR records
-					query = session.createNativeQuery("Select COALESCE(SUM(INITIALCOST),0) , COALESCE(SUM(ACCUMULDEPRECAMNT),0) , COALESCE(SUM(NETCOST),0) FROM FIXED_ASSET_REGISTRY ");
+					query = session.createNativeQuery("Select COALESCE(SUM(INITIALCOST),0) , COALESCE(SUM(ACCUMULDEPRECAMNT),0) , COALESCE(SUM(NETCOST),0) FROM FIXED_ASSET_REGISTRY  ");
 
 					result = (Object[]) query.uniqueResult();
 					if (result[0] != null) {
@@ -165,13 +167,13 @@ public class FinancialReportController {
 				}
 			}
 		}
-		return "Reports/FinancialReport";
+		return "Reports/NodeAssetReport";
 	}
 
 	@SuppressWarnings({ "unchecked", "deprecation" })
-	@RequestMapping(value = "/GenerateGridItemAssetReport", method = RequestMethod.GET)
+	@RequestMapping(value = "/GenerateGridNodeAssetReport", method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, Object> GenerateGridItemAssetReport(Locale locale, Model model, HttpServletRequest request,
+	public Map<String, Object> GenerateGridNodeAssetReport(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
@@ -291,8 +293,8 @@ public class FinancialReportController {
 		double distance = 0.0;
 
 		List<Object[]> listFARTemp = new ArrayList<Object[]>();
-		List<FinancialReport> listCircleRange = new ArrayList<FinancialReport>();
-		List<FinancialReport> listFAR = new ArrayList<FinancialReport>();
+		List<NodeAssetReport> listCircleRange = new ArrayList<NodeAssetReport>();
+		List<NodeAssetReport> listFAR = new ArrayList<NodeAssetReport>();
 
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
@@ -305,27 +307,18 @@ public class FinancialReportController {
 				if (session != null && session.isOpen()) {
 
 					tx = session.beginTransaction();
-
-				/*	str = "SELECT site,farID, itemCode, itemName, lastModifiedDate,itemSN,itemNameRegister,poID,siteID,siteName,longitude,latitude,initCost,netCost,accuDepr FROM ( "
-							+ " SELECT B.SITE_ID AS site,A.FAR_ID as farID, A.ITEM_CODE as itemCode, A.ITEM_NAME as itemName,TO_CHAR(A.LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') as lastModifiedDate, A.ITEM_SN as itemSN,A.ITEM_NAME_REGISTER as itemNameRegister, A.PO_ID as poID,B.SITE_ID AS siteID, B.SITE_NAME AS siteName ,C.LONGITUDE as longitude,C.LATITUDE as latitude, A.INITIALCOST as initCost, A.NETCOST as netCost , A.ACCUMULDEPRECAMNT as accuDepr "
-							+ " FROM FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID "
-							+ " WHERE ( upper(A.ITEM_CODE) LIKE upper('%" + itemCode
-							+ "%') AND upper(A.ITEM_NAME) LIKE upper('%" + itemName
-							+ "%') AND upper(A.ITEM_MODEL) LIKE upper('%" + itemModel
-							+ "%') AND upper(A.ITEM_PART_NUMBER) LIKE upper ('%" + itemPartNo + "%'))  ";*/
 					
-					
-					 str = "SELECT site,farID, itemCode, itemName,itemModel,itemPartNo, lastModifiedDate,itemSN,itemNameRegister,poID,siteID,siteName,longitude,latitude,vendor,initCost,netCost,accuDepr FROM ( "
-					           + " SELECT B.SITE_ID AS site,A.FAR_ID as farID, A.ITEM_CODE as itemCode, A.ITEM_NAME as itemName,D.ITEM_MODEL as itemModel,D.ITEM_PART_NUMBER as itemPartNo,TO_CHAR(A.LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') as lastModifiedDate, A.ITEM_SN as itemSN,A.ITEM_NAME_REGISTER as itemNameRegister, A.PO_ID as poID,B.SITE_ID AS siteID, B.SITE_NAME AS siteName ,C.LONGITUDE as longitude,C.LATITUDE as latitude,A.VENDOR as vendor, A.INITIALCOST as initCost, A.NETCOST as netCost , A.ACCUMULDEPRECAMNT as accuDepr , "
-					           + " ROW_NUMBER() OVER (PARTITION BY A.FAR_ID ORDER BY B.SITE_ID DESC) AS rn FROM FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID LEFT JOIN far_model_partnumber D ON A.FAR_ID = D.FAR_ID "
+					 str = "SELECT site,farID, itemCode, itemName,itemModel,itemPartNo, lastModifiedDate,itemSN,itemNameRegister,poID,nodeID,nodeName,nodeType,siteID,siteName,longitude,latitude,vendor,initCost,netCost,accuDepr FROM ( "
+					           + " SELECT DISTINCT B.SITE_ID AS site,A.FAR_ID as farID, A.ITEM_CODE as itemCode, A.ITEM_NAME as itemName,D.ITEM_MODEL as itemModel,D.ITEM_PART_NUMBER as itemPartNo,TO_CHAR(A.LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') as lastModifiedDate, A.ITEM_SN as itemSN,A.ITEM_NAME_REGISTER as itemNameRegister, A.PO_ID as poID,E.NODE_ID as nodeID,E.NODE_NAME as nodeName,E.NODE_TYPE as nodeType,B.SITE_ID AS siteID, B.SITE_NAME AS siteName ,C.LONGITUDE as longitude,C.LATITUDE as latitude,A.VENDOR as vendor, A.INITIALCOST as initCost, A.NETCOST as netCost , A.ACCUMULDEPRECAMNT as accuDepr  "
+					           + " FROM FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID LEFT JOIN far_model_partnumber D ON A.FAR_ID = D.FAR_ID LEFT JOIN FAR_NODE E ON E.FAR_ID = A.FAR_ID "
 					           + " WHERE  D.PRIMARY='1' AND ( upper(A.ITEM_CODE) LIKE upper('%" + itemCode
 								+ "%') AND upper(A.ITEM_NAME) LIKE upper('%" + itemName
 								+ "%') AND upper(D.ITEM_MODEL) LIKE upper('%" + itemModel
 								+ "%') AND upper(D.ITEM_PART_NUMBER) LIKE upper ('%" + itemPartNo + "%'))  ";
 						
 					 
-					 totalStr = "Select SUM(initialCost), SUM( AccumDepr), SUM(netCost) FROM ( "
-					 			+ " SELECT DISTINCT A.FAR_ID AS FAR_ID, A.INITIALCOST as initialCost,A.ACCUMULDEPRECAMNT as AccumDepr, A.NETCOST as netCost from FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID  "
+					 totalStr = "Select COALESCE(SUM(initialCost),0) , COALESCE(SUM( AccumDepr),0) , COALESCE(SUM(netCost),0) FROM ( "
+					 			+ " SELECT DISTINCT A.FAR_ID AS FAR_ID, A.INITIALCOST as initialCost,A.ACCUMULDEPRECAMNT as AccumDepr, A.NETCOST as netCost from FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID LEFT JOIN FAR_NODE E ON E.FAR_ID = A.FAR_ID "
 								+ " WHERE ( upper(A.ITEM_CODE) LIKE upper('%" + itemCode
 								+ "%') AND upper(A.ITEM_NAME) LIKE upper('%" + itemName
 								+ "%') AND upper(A.ITEM_MODEL) LIKE upper('%" + itemModel
@@ -442,23 +435,20 @@ public class FinancialReportController {
 
 					} // end of checked strt/end coordinate checkbox
 
-					str = str + "  ) WHERE rn = 1 and (longitude is not null and longitude != '0' and longitude != 'null' and latitude is not null and latitude != '0' and latitude != 'null') ORDER BY lastModifiedDate DESC  ";
-					totalStr = totalStr +" AND (C.longitude is not null and C.longitude != '0' and C.longitude != 'null' and C.latitude is not null and C.latitude != '0' and C.latitude != 'null'))";
+					str = str + "  ) WHERE (nodeID is not null and nodeID != 'null') AND (longitude is not null and longitude != '0' and longitude != 'null' and latitude is not null and latitude != '0' and latitude != 'null') ORDER BY lastModifiedDate DESC  ";
+					totalStr = totalStr +" AND (E.NODE_ID is not null and E.NODE_ID != 'null') AND (C.longitude is not null and C.longitude != '0' and C.longitude != 'null' and C.latitude is not null and C.latitude != '0' and C.latitude != 'null'))";
 
 					//System.out.println("the totalStr is " + totalStr);
 
 					query = session.createNativeQuery(str);
 					listFARTemp = query.list(); // To use it in circle range calculation
 
-					listFAR = ((NativeQuery<FinancialReport>) query).addScalar("site").addScalar("farID").addScalar("itemCode")
+					listFAR = ((NativeQuery<NodeAssetReport>) query).addScalar("site").addScalar("farID").addScalar("itemCode")
 							.addScalar("itemName").addScalar("itemModel").addScalar("itemPartNo").addScalar("lastModifiedDate").addScalar("itemSN")
-							.addScalar("itemNameRegister").addScalar("poID").addScalar("siteID").addScalar("siteName")
+							.addScalar("itemNameRegister").addScalar("poID").addScalar("nodeID").addScalar("nodeName").addScalar("nodeType").addScalar("siteID").addScalar("siteName")
 							.addScalar("longitude").addScalar("latitude").addScalar("vendor").addScalar("initCost").addScalar("netCost")
-							.addScalar("accuDepr").setResultTransformer(Transformers.aliasToBean(FinancialReport.class))
-							.list();
-
-
-					
+							.addScalar("accuDepr").setResultTransformer(Transformers.aliasToBean(NodeAssetReport.class))
+							.list();					
 
 					// If circle range is checked
 					if (StringUtils.equalsIgnoreCase(circleRangeCheckbox, "true")) {
@@ -468,14 +458,14 @@ public class FinancialReportController {
 								&& (latitude != null && !latitude.equalsIgnoreCase(""))) {
 	
 							for (int i = 0; i < listFAR.size(); i++) {
-								distance = haversine(Double.parseDouble(latitude), Double.parseDouble(longitude),
-										Double.valueOf(listFARTemp.get(i)[13].toString()),
-										Double.valueOf(listFARTemp.get(i)[12].toString()));
+								distance = haversineMethod(Double.parseDouble(latitude), Double.parseDouble(longitude),
+										Double.valueOf(listFARTemp.get(i)[16].toString()),
+										Double.valueOf(listFARTemp.get(i)[15].toString()));
 								
 								if (distance <= Double.parseDouble(radius)) {
-									initCost += Double.valueOf(listFARTemp.get(i)[15].toString());
-									netCost += Double.valueOf(listFARTemp.get(i)[16].toString());
-									accuDepr += Double.valueOf(listFARTemp.get(i)[17].toString());
+									initCost += Double.valueOf(listFARTemp.get(i)[18].toString());
+									netCost += Double.valueOf(listFARTemp.get(i)[19].toString());
+									accuDepr += Double.valueOf(listFARTemp.get(i)[20].toString());
 									
 									listCircleRange.add(listFAR.get(i));
 								}
@@ -486,7 +476,7 @@ public class FinancialReportController {
 							rtn.put("totalAccumdeprFetched", df.format(accuDepr));
 							rtn.put("totalNetCostFetched", df.format(netCost));
 
-							rtn.put("financialReportList", listCircleRange);
+							rtn.put("nodeAssetReportList", listCircleRange);
 						}
 
 					}
@@ -494,22 +484,43 @@ public class FinancialReportController {
 						// Get the total of initial,net cost and accumulated depr of fetched FAR records
 						query = session.createNativeQuery(totalStr);
 						result = (Object[]) query.uniqueResult();
-						if (result[0] != null)
-							totalInitialCost = df.format(new BigDecimal(result[0].toString()));
-						if (result[1] != null)
-							totalAccumdepr = df.format(new BigDecimal(result[1].toString()));
-						if (result[2] != null)
-							totalNetCost = df.format(new BigDecimal(result[2].toString()));
-
+						
+						
+						if (result[0] != null) {
+						    BigDecimal value = new BigDecimal(result[0].toString());
+						    if (value.compareTo(BigDecimal.ZERO) == 0) {
+						        totalInitialCost = "0"; // Set as '0' if value is zero
+						    } else {
+						        totalInitialCost = df.format(value); // Format with decimal places otherwise
+						    }
+						}
+						if (result[1] != null) {
+						    BigDecimal value = new BigDecimal(result[1].toString());
+						    if (value.compareTo(BigDecimal.ZERO) == 0) {
+						    	totalAccumdepr = "0"; // Set as '0' if value is zero
+						    } else {
+						    	totalAccumdepr = df.format(value); // Format with decimal places otherwise
+						    }
+						}
+						
+						if (result[2] != null) {
+							BigDecimal value = new BigDecimal(result[2].toString());
+						    if (value.compareTo(BigDecimal.ZERO) == 0) {
+						    	totalNetCost = "0"; // Set as '0' if value is zero
+						    } else {
+						    	totalNetCost = df.format(value); // Format with decimal places otherwise
+						    }
+						}
 						rtn.put("totalInitialCostFetched", totalInitialCost);
 						rtn.put("totalAccumdeprFetched", totalAccumdepr);
 						rtn.put("totalNetCostFetched", totalNetCost);
 						
-						rtn.put("financialReportList", listFAR);
+						rtn.put("nodeAssetReportList", listFAR);
 					}
 
+					
 					// Get the total of initial,net cost and accumulated depr of all FAR records
-					query = session.createNativeQuery("Select COALESCE(SUM(INITIALCOST),0) , COALESCE(SUM(ACCUMULDEPRECAMNT),0) , COALESCE(SUM(NETCOST),0) FROM FIXED_ASSET_REGISTRY ");
+					query = session.createNativeQuery("Select COALESCE(SUM(INITIALCOST),0) , COALESCE(SUM(ACCUMULDEPRECAMNT),0) , COALESCE(SUM(NETCOST),0) FROM FIXED_ASSET_REGISTRY  ");
 
 					result = (Object[]) query.uniqueResult();
 					if (result[0] != null) {
@@ -558,7 +569,7 @@ public class FinancialReportController {
 		return rtn;
 	}
 
-	static double haversine(double latitude, double longitude, double pointLat, double pointLong) {
+	static double haversineMethod(double latitude, double longitude, double pointLat, double pointLong) {
 
 		// distance between latitudes and longitudes
 		double dLat = Math.toRadians(pointLat - latitude);
