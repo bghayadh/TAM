@@ -188,7 +188,7 @@ public class LoadFilesRANZTE {
 		// validate if the same process is running now if yes we cannot run it twice
 		// until finish
 		Statement stmtinit2 = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-		String sqlStmtinit2 = "select * from EXECUTE_DOAMIN_VENDOR_FILES where DOMAIN='RAN' and VENDOR='" + Gprovider
+		String sqlStmtinit2 = "select * from EXECUTE_DOAMIN_VENDOR_FILES where DOMAIN='"+Domain+"' and VENDOR='" + Gprovider
 				+ "' and STATUS='IN PROCESS'";
 		ResultSet rsinit2 = stmtinit2.executeQuery(sqlStmtinit2);
 		rsinit2.last();
@@ -196,7 +196,7 @@ public class LoadFilesRANZTE {
 		rsinit2.beforeFirst();
 		if (totalrecinit2 == 0) {
 			PreparedStatement stmtinit = con.prepareStatement(
-					"insert into EXECUTE_DOAMIN_VENDOR_FILES (DOMAIN,VENDOR,CREATION_DATE,STATUS) values ('RAN', '"
+					"insert into EXECUTE_DOAMIN_VENDOR_FILES (DOMAIN,VENDOR,CREATION_DATE,STATUS) values ('"+Domain+"', '"
 							+ Gprovider + "',sysdate,'IN PROCESS')");
 			stmtinit.executeUpdate();
 			stmtinit.close();
@@ -229,7 +229,7 @@ public class LoadFilesRANZTE {
 			GetduplicateFilename("Ran", Gprovider);
 			// update file status to completed
 			stmtinit = con.prepareStatement(
-					"update EXECUTE_DOAMIN_VENDOR_FILES set STATUS ='COMPLETED' where DOMAIN='RAN' and VENDOR='"
+					"update EXECUTE_DOAMIN_VENDOR_FILES set STATUS ='COMPLETED' where DOMAIN='"+Domain+"' and VENDOR='"
 							+ Gprovider + "' and STATUS='IN PROCESS'");
 			stmtinit.executeUpdate();
 			stmtinit.close();

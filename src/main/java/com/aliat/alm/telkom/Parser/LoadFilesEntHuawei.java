@@ -86,9 +86,8 @@ public class LoadFilesEntHuawei  {
 		System.out.println("vendor "+vendor);
 		System.out.println("vendor "+domain);
 		System.out.println("vendor "+sub_domain);
-		if(vendor.equalsIgnoreCase("Huawei")) {
-			Gprovider="HW";
-		}
+		
+		Gprovider=vendor;
 		sub_domain="";
 		Domain=domain;
 
@@ -188,13 +187,13 @@ public class LoadFilesEntHuawei  {
 					
 					//validate if the same process is running now if yes we cannot run it twice until finish
 					Statement stmtinit2 = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-			    	 String sqlStmtinit2 = "select * from EXECUTE_DOAMIN_VENDOR_FILES where DOMAIN='Enterprise' and VENDOR='"+ Gprovider +"' and STATUS='IN PROCESS'";
+			    	 String sqlStmtinit2 = "select * from EXECUTE_DOAMIN_VENDOR_FILES where DOMAIN='"+Domain+"' and VENDOR='"+ Gprovider +"' and STATUS='IN PROCESS'";
 					    ResultSet rsinit2 = stmtinit2.executeQuery(sqlStmtinit2);
 					    rsinit2.last();
 				 	    int totalrecinit2 = rsinit2.getRow();
 				 	   rsinit2.beforeFirst();
 				 	   if (totalrecinit2 == 0 ) {
-				 		  PreparedStatement stmtinit = con.prepareStatement("insert into EXECUTE_DOAMIN_VENDOR_FILES (DOMAIN,VENDOR,CREATION_DATE,STATUS) values ('Enterprise', '"+ Gprovider +"',sysdate,'IN PROCESS')");
+				 		  PreparedStatement stmtinit = con.prepareStatement("insert into EXECUTE_DOAMIN_VENDOR_FILES (DOMAIN,VENDOR,CREATION_DATE,STATUS) values ('"+Domain+"', '"+ Gprovider +"',sysdate,'IN PROCESS')");
 							 stmtinit.executeUpdate();
 							 stmtinit.close();
 
@@ -231,9 +230,9 @@ public class LoadFilesEntHuawei  {
 								}
 								
                                 // remove dupliacte node 
-								GetduplicateFilename("Enterprise",Gprovider);
+								GetduplicateFilename(Domain,Gprovider);
 								// update file status to completed
-								 stmtinit = con.prepareStatement("update EXECUTE_DOAMIN_VENDOR_FILES set STATUS ='COMPLETED' where DOMAIN='Enterprise' and VENDOR='"+ Gprovider +"' and STATUS='IN PROCESS'");
+								 stmtinit = con.prepareStatement("update EXECUTE_DOAMIN_VENDOR_FILES set STATUS ='COMPLETED' where DOMAIN='"+Domain+"' and VENDOR='"+ Gprovider +"' and STATUS='IN PROCESS'");
 								 stmtinit.executeUpdate();
 								 stmtinit.close();
 								 
@@ -461,7 +460,7 @@ public class LoadFilesEntHuawei  {
 					String node_attr_fk ="";
 					
 					PreparedStatement stmt = con.prepareStatement("insert into NODE_PORT(PORT_ID,SITEINDEX,SLOTNO,SUBSLOTNO,PORTNO,VENDORNAME,UNITPOSITION,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,DOMAIN,VENDOR,PORTTYPE,PORTRATE,OTHERS) "
-            		   		+ "values('" + codeid +"','0','" + vhmap.get("SlotNO") +"','" + vhmap.get("SubSlotNO") +"','" + vhmap.get("PortNO") +"','HW','" + vhmap.get("UnitPos") +"',(select NODE_PK from NODE_ACTIVE where NODE_NAME='"+vhmap.get("NE_Name")+"' AND ACTIVE_RECORD='1' and domain='"+Domain+"' and vendor='"+Gprovider+"' order by creation_date desc fetch first 1 row only),'" + node_attr_fk +"' ,sysdate,'" + filename +"','" + vhmap.get("OperationStatus") +"','0','0','0','0','0','0','1','"+Domain+"','" + Gprovider +"','" + vhmap.get("PortType") +"','" + vhmap.get("PortRate") +"','" + vhmap.get("Others") +"') ");
+            		   		+ "values('" + codeid +"','0','" + vhmap.get("SlotNO") +"','" + vhmap.get("SubSlotNO") +"','" + vhmap.get("PortNO") +"','"+Gprovider+"','" + vhmap.get("UnitPos") +"',(select NODE_PK from NODE_ACTIVE where NODE_NAME='"+vhmap.get("NE_Name")+"' AND ACTIVE_RECORD='1' and domain='"+Domain+"' and vendor='"+Gprovider+"' order by creation_date desc fetch first 1 row only),'" + node_attr_fk +"' ,sysdate,'" + filename +"','" + vhmap.get("OperationStatus") +"','0','0','0','0','0','0','1','"+Domain+"','" + Gprovider +"','" + vhmap.get("PortType") +"','" + vhmap.get("PortRate") +"','" + vhmap.get("Others") +"') ");
          		    stmt.setEscapeProcessing(false); 
 					stmt.executeUpdate();
 				     stmt.close();

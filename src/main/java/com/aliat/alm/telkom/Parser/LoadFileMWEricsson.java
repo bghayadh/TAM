@@ -547,7 +547,7 @@ public class LoadFileMWEricsson {
 	 private static void deleteTempNodeTables() throws SQLException  {
 		 try {
 		 // delete all rows related to node_pk from all nodes tables
-		 PreparedStatement stmt = conalm.prepareStatement("delete from TEMP_NODE_ACTIVE where  DOMAIN='Mobile Access Domain' and VENDOR='" + Gprovider +"'"); 
+		 PreparedStatement stmt = conalm.prepareStatement("delete from TEMP_NODE_ACTIVE where  DOMAIN='"+Domain+"' and VENDOR='" + Gprovider +"'"); 
 	     stmt.executeUpdate();
 	     stmt.close();
 	     

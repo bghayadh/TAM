@@ -401,7 +401,7 @@ public class LoadFilesRanHuawei {
 				}
 						
 			System.out.println("number of total nodes "+NodeIDArr.size());
-			GetDuplicateFileName("RAN", provider);
+			GetDuplicateFileName(Domain, provider);
 			System.out.println("Clean Dupliate Data from Tables Completed  ");
 			logger.info("Clean Dupliate Data from Tables Completed  ");
 
@@ -811,7 +811,7 @@ public class LoadFilesRanHuawei {
 									+ attributeTable + "',(select NODE_PK from NODE_ACTIVE where NODE_NAME='"
 									+ tempNodeName + "' order by creation_date desc fetch first 1 row only), '"
 									+ nodeAttrType + "',sysdate,'" + filename + "','0','0','0','0','0','0','1','" + temp
-									+ "', 'RAN','" + provider + "') ");
+									+ "', '"+Domain+"','" + provider + "') ");
 					stmta.executeUpdate();
 					stmta.close();
 
@@ -919,7 +919,7 @@ public class LoadFilesRanHuawei {
 											+ "' order by creation_date desc fetch first 1 row only),'" + codeidattr
 											+ "',sysdate,'" + filename + "','" + vhmap.get("STATUS") + "','0','0','0','"
 											+ vhmap.get("TRANS_ID") + "','" + vhmap.get("TRANS_TYPE") + "' ,'" + j
-											+ "','1','RAN','" + provider + "' ) ";
+											+ "','1','"+Domain+"','" + provider + "' ) ";
 									NodeRackSeq++;
 								}
 								if (attributeTable == "NODE_FRAME") {
@@ -953,7 +953,7 @@ public class LoadFilesRanHuawei {
 											+ "' order by creation_date desc fetch first 1 row only),'" + codeidattr
 											+ "',sysdate,'" + filename + "','" + vhmap.get("STATUS")
 											+ "' ,'0','0','0','" + vhmap.get("TRANS_ID") + "','"
-											+ vhmap.get("TRANS_TYPE") + "','" + j + "','1','RAN','" + provider + "') ";
+											+ vhmap.get("TRANS_TYPE") + "','" + j + "','1','"+Domain+"','" + provider + "') ";
 									NodeFrameSeq++;
 								}
 								if (attributeTable == "NODE_SLOT") {
@@ -992,7 +992,7 @@ public class LoadFilesRanHuawei {
 											+ "',sysdate,'" + filename + "' ,'" + vhmap.get("STATUS")
 											+ "','0','0','0','" + vhmap.get("TRANS_ID") + "','"
 											+ vhmap.get("TRANS_TYPE") + "','" + j + "','1','" + almPosition
-											+ "','RAN','" + provider + "') ";
+											+ "','"+Domain+"','" + provider + "') ";
 									nodeSlotSeq++;
 								}
 								if (attributeTable == "NODE_BOARD") {
@@ -1039,7 +1039,7 @@ public class LoadFilesRanHuawei {
 											+ "' ,sysdate,'" + filename + "','" + vhmap.get("STATUS")
 											+ "','0','0','0','" + vhmap.get("TRANS_ID") + "','"
 											+ vhmap.get("TRANS_TYPE") + "','" + j + "','1','" + almPosition
-											+ "',sysdate,'RAN','" + provider + "') ";
+											+ "',sysdate,'"+Domain+"','" + provider + "') ";
 									nodeBoardSeq++;
 								}
 								if (attributeTable == "NODE_PORT") {
@@ -1074,7 +1074,7 @@ public class LoadFilesRanHuawei {
 											+ "' order by creation_date desc fetch first 1 row only),'" + codeidattr
 											+ "' ,sysdate,'" + filename + "','" + vhmap.get("STATUS")
 											+ "','0','0','0','" + vhmap.get("TRANS_ID") + "','"
-											+ vhmap.get("TRANS_TYPE") + "','" + j + "','1','RAN','" + provider + "') ";
+											+ vhmap.get("TRANS_TYPE") + "','" + j + "','1','"+Domain+"','" + provider + "') ";
 									nodePortSeq++;
 								}
 								if (attributeTable == "NODE_CABINET") {
@@ -1113,7 +1113,7 @@ public class LoadFilesRanHuawei {
 											+ "',sysdate ,'" + filename + "','" + vhmap.get("STATUS")
 											+ "','0','0','0','" + vhmap.get("TRANS_ID") + "','"
 											+ vhmap.get("TRANS_TYPE") + "','" + j + "','1','" + almPosition
-											+ "',sysdate,'RAN','" + provider + "') ";
+											+ "',sysdate,'"+Domain+"','" + provider + "') ";
 									nodeCabinetSeq++;
 
 									System.out.println("@ insert into cabinet tempNodeName : " + tempNodeName);
@@ -1128,7 +1128,7 @@ public class LoadFilesRanHuawei {
 											+ "' order by creation_date desc fetch first 1 row only),'" + codeidattr
 											+ "',sysdate,'" + filename + "','" + vhmap.get("STATUS")
 											+ "' ,'0','0','0','" + vhmap.get("TRANS_ID") + "','"
-											+ vhmap.get("TRANS_TYPE") + "','" + j + "','1',sysdate,'RAN','" + provider
+											+ vhmap.get("TRANS_TYPE") + "','" + j + "','1',sysdate,'"+Domain+"','" + provider
 											+ "') ";
 									nodeHostVerSeq++;
 								}
@@ -1161,7 +1161,7 @@ public class LoadFilesRanHuawei {
 											+ "' order by creation_date desc fetch first 1 row only),'" + codeidattr
 											+ "',sysdate,'" + filename + "' ,'" + vhmap.get("STATUS")
 											+ "','0','0','0','" + vhmap.get("TRANS_ID") + "','"
-											+ vhmap.get("TRANS_TYPE") + "','" + j + "','1','RAN','" + provider + "') ";
+											+ vhmap.get("TRANS_TYPE") + "','" + j + "','1','"+Domain+"','" + provider + "') ";
 									nodeAccessorySeq++;
 								}
 								if (attributeTable == "NODE_HOST") {
@@ -1193,7 +1193,7 @@ public class LoadFilesRanHuawei {
 											+ "' order by creation_date desc fetch first 1 row only),'" + codeidattr
 											+ "',sysdate,'" + filename + "','" + vhmap.get("STATUS")
 											+ "' ,'0','0','0','" + vhmap.get("TRANS_ID") + "','"
-											+ vhmap.get("TRANS_TYPE") + "','" + j + "','1','RAN','" + provider + "') ";
+											+ vhmap.get("TRANS_TYPE") + "','" + j + "','1','"+Domain+"','" + provider + "') ";
 									nodeHostSeq++;
 								}
 								if (attributeTable == "NODE_SUBRACK") {
@@ -1232,7 +1232,7 @@ public class LoadFilesRanHuawei {
 											+ "' order by creation_date desc fetch first 1 row only),'" + codeidattr
 											+ "',sysdate,'" + filename + "','" + vhmap.get("STATUS") + "','0','0','0','"
 											+ vhmap.get("TRANS_ID") + "','" + vhmap.get("TRANS_TYPE") + "' ,'" + j
-											+ "','1','RAN','" + provider + "') ";
+											+ "','1','"+Domain+"','" + provider + "') ";
 									nodeSubRackSeq++;
 
 								}
@@ -1251,7 +1251,7 @@ public class LoadFilesRanHuawei {
 											+ "' order by creation_date desc fetch first 1 row only),'" + codeidattr
 											+ "',sysdate,'" + filename + "','" + vhmap.get("STATUS") + "','0','0','0','"
 											+ vhmap.get("TRANS_ID") + "','" + vhmap.get("TRANS_TYPE") + "','" + j
-											+ "','1',sysdate,'RAN','" + provider + "') ";
+											+ "','1',sysdate,'"+Domain+"','" + provider + "') ";
 									// System.out.println(filename + " "+ InsertQuery);
 									nodeGCellSeq++;
 								}
@@ -1265,7 +1265,7 @@ public class LoadFilesRanHuawei {
 											+ "' order by creation_date desc fetch first 1 row only),'" + codeidattr
 											+ "',sysdate,'" + filename + "','" + vhmap.get("STATUS") + "','0','0','0','"
 											+ vhmap.get("TRANS_ID") + "','" + vhmap.get("TRANS_TYPE") + "' ,'" + j
-											+ "','1','RAN','" + provider + "') ";
+											+ "','1','"+Domain+"','" + provider + "') ";
 									// System.out.println(filename + " "+ InsertQuery);
 									nodeBTSSeq++;
 								}
@@ -1287,7 +1287,7 @@ public class LoadFilesRanHuawei {
 											+ "' order by creation_date desc fetch first 1 row only),'" + codeidattr
 											+ "',sysdate,'" + filename + "','" + vhmap.get("STATUS")
 											+ "' ,'0','0','0','" + vhmap.get("TRANS_ID") + "','"
-											+ vhmap.get("TRANS_TYPE") + "','" + j + "','1',sysdate,'RAN','" + provider
+											+ vhmap.get("TRANS_TYPE") + "','" + j + "','1',sysdate,'"+Domain+"','" + provider
 											+ "') ";
 									nodeUCellSeq++;
 								}
@@ -1322,7 +1322,7 @@ public class LoadFilesRanHuawei {
 											+ "' order by creation_date desc fetch first 1 row only),'" + codeidattr
 											+ "',sysdate,'" + filename + "','" + vhmap.get("STATUS")
 											+ "' ,'0','0','0','" + vhmap.get("TRANS_ID") + "','"
-											+ vhmap.get("TRANS_TYPE") + "','" + j + "','1',sysdate,'RAN','" + provider
+											+ vhmap.get("TRANS_TYPE") + "','" + j + "','1',sysdate,'"+Domain+"','" + provider
 											+ "') ";
 									nodeAntennaSeq++;
 								}
@@ -1342,7 +1342,7 @@ public class LoadFilesRanHuawei {
 											+ "' order by creation_date desc fetch first 1 row only),'" + codeidattr
 											+ "',sysdate,'" + filename + "','" + vhmap.get("STATUS") + "','0','0','0','"
 											+ vhmap.get("TRANS_ID") + "','" + vhmap.get("TRANS_TYPE") + "','" + j
-											+ "','1',sysdate,'RAN','" + provider + "' ) ";
+											+ "','1',sysdate,'"+Domain+"','" + provider + "' ) ";
 									nodeLCellSeq++;
 								}
 								if (attributeTable == "NODE_RRN") {
@@ -1355,7 +1355,7 @@ public class LoadFilesRanHuawei {
 											+ "' order by creation_date desc fetch first 1 row only),'" + codeidattr
 											+ "',sysdate,'" + filename + "' ,'" + vhmap.get("STATUS")
 											+ "','0','0','0','" + vhmap.get("TRANS_ID") + "','"
-											+ vhmap.get("TRANS_TYPE") + "','" + j + "','1','RAN','" + provider + "') ";
+											+ vhmap.get("TRANS_TYPE") + "','" + j + "','1','"+Domain+"','" + provider + "') ";
 									nodeRRNSeq++;
 								}
 								if (attributeTable == "NODE_ENODEBCELL") {
@@ -1376,7 +1376,7 @@ public class LoadFilesRanHuawei {
 											+ "' order by creation_date desc fetch first 1 row only),'" + codeidattr
 											+ "',sysdate,'" + filename + "','" + vhmap.get("STATUS") + "','0','0','0','"
 											+ vhmap.get("TRANS_ID") + "','" + vhmap.get("TRANS_TYPE") + "','" + j
-											+ "','1','RAN','" + provider + "') ";
+											+ "','1','"+Domain+"','" + provider + "') ";
 									// System.out.println(filename + " "+ InsertQuery);
 									nodeENodeBSeq++;
 								}
@@ -1400,7 +1400,7 @@ public class LoadFilesRanHuawei {
 											+ "' order by creation_date desc fetch first 1 row only),'" + codeidattr
 											+ "',sysdate,'" + filename + "','" + vhmap.get("STATUS")
 											+ "' ,'0','0','0','" + vhmap.get("TRANS_ID") + "','"
-											+ vhmap.get("TRANS_TYPE") + "','" + j + "','1','RAN','" + provider + "') ";
+											+ vhmap.get("TRANS_TYPE") + "','" + j + "','1','"+Domain+"','" + provider + "') ";
 									nodeNodeBSeq++;
 								}
 								if (attributeTable == "NODE_NBInterfaces") {
@@ -1415,7 +1415,7 @@ public class LoadFilesRanHuawei {
 											+ "' order by creation_date desc fetch first 1 row only),'" + codeidattr
 											+ "',sysdate,'" + filename + "','" + vhmap.get("STATUS") + "','0','0','0','"
 											+ vhmap.get("TRANS_ID") + "','" + vhmap.get("TRANS_TYPE") + "','" + j
-											+ "','1','RAN','" + provider + "' ) ";
+											+ "','1','"+Domain+"','" + provider + "' ) ";
 									nodeNBInterfaceSeq++;
 								}
 

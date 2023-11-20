@@ -625,7 +625,7 @@ $("#loadFiles").click(function() {
 	if(loader_vendor=="Huawei"&& loader_domain=="RAN"){
 		url='loadFilesRanHuawei';
 	}
-	else if(loader_vendor=="zte" && loader_domain=="RAN"){
+	else if(loader_vendor=="ZTE" && loader_domain=="RAN"){
 		url='loadFilesRANZTE';
 	}else if(loader_vendor=="Nokia" && loader_domain=="RAN"){
 		url='loadFilenokia';
