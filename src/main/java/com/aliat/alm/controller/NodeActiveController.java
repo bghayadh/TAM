@@ -424,29 +424,28 @@ public class NodeActiveController {
 
 	    Map<String, Object> rtn = new LinkedHashMap<>();
 
-	    String itemCategory = "%" + request.getParameter("itemCategory") + "%"; // Get the itemCategory from the request.
-	System.out.println(itemCategory+" zeinaaa");
+	    String Node = "%" + request.getParameter("Node") + "%"; 
 	    session = almsessions.getSession();
 	    if (session != null && session.isOpen()) {
 	        tx = session.beginTransaction();
 	        try {
 	        	query = session.createQuery("SELECT t1.nodeName, t1.nodePK, t1.uniNodeID FROM NodeActive t1"
-	        	        + " WHERE LOWER(t1.nodeName) LIKE LOWER(:itemCategory) OR LOWER(t1.nodePK) "
-	        	        + "LIKE LOWER(:itemCategory) OR LOWER(t1.uniNodeID) LIKE LOWER(:itemCategory)");
-	        query.setParameter("itemCategory", itemCategory); // Set the itemCategory parameter in the query.
+	        	        + " WHERE LOWER(t1.nodeName) LIKE LOWER(:Node) OR LOWER(t1.nodePK) "
+	        	        + "LIKE LOWER(:Node) OR LOWER(t1.uniNodeID) LIKE LOWER(:Node)");
+	        query.setParameter("Node", Node); 
 	        	query.setFirstResult(0);
 				query.setMaxResults(40);
 				
 	        	List<Object[]> results = query.list();
 
 	        	
-	        	rtn.put("ListItemCategory", results);
+	        	rtn.put("ListNode", results);
 	   } catch (Exception e) {
 	            sw = new StringWriter();
 	            e.printStackTrace(new PrintWriter(sw));
 	            exceptionAsString = sw.toString();
-	            logger.finest("Error in GetAllCategory due to \n " + exceptionAsString);
-	            logger.info("Error in GetAllCategory due to \n " + exceptionAsString);
+	            logger.finest("Error in GetAllNode due to \n " + exceptionAsString);
+	            logger.info("Error in GetAllNode due to \n " + exceptionAsString);
 	        } finally {
 	            if (session != null && session.isOpen()) {
 	                tx.commit();
