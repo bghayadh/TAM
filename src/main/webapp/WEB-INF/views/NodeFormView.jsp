@@ -345,7 +345,7 @@
           
  <div class="row">
   <div class="col-12 col-sm-12 col-lg-12">
-    <div class="scrollable-list" style="width: 70%; background-color: #00757c; float: left; overflow: auto;">
+    <div class="scrollable-list" style="width: 70%; background-color: #00757c; float: left; ">
       <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist" style="background-color: #00757c; margin-top: 0px; display: flex; flex-wrap: nowrap;">
        <li class="tab" class="nav-item"><a class="nav-link active" id="custom-tabs-one-home-tab"
                                     data-toggle="tab" href="#custom-tabs-one-home" role="tab"
@@ -1821,12 +1821,12 @@
         	      contentType: "application/json; charset=utf-8",
         	      url: '${pageContext.request.contextPath}/GetAllNode',
         	      data: {
-        	        "itemCategory": $("#selectnav").val(),
+        	        "Node": $("#selectnav").val(),
         	      },
         	      dataType: "json",
         	      success: function(data) {
         	        if (data != null) {
-        	          response(data.ListItemCategory);
+        	          response(data.ListNode);
         	        }
         	      },
         	      error: function(result) {
