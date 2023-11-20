@@ -541,5 +541,60 @@ public  Map<String, Object> CellFormViewSave(Locale locale, Model model, HttpSer
    
 
 }
+@RequestMapping(value = "/GetAllCell", method = RequestMethod.GET)
+@ResponseBody
+public Map<String, Object> GetAllCell(Locale locale, Model model, HttpServletRequest request,
+        HttpServletResponse response) {
+
+    Map<String, Object> rtn = new LinkedHashMap<>();
+    
+    
+    
+    String Cell = "%" + request.getParameter("Cell") + "%"; 
+    session = almsessions.getSession();
+    if (session != null && session.isOpen()) {
+        tx = session.beginTransaction();
+        try {
+        	
+        	
+        	query = session.createNativeQuery(
+        		    "SELECT t1.CELLNAME, t1.GCELL_ID, t1.CELLID FROM NODE_GCELL t1 " +
+        		    "WHERE LOWER(t1.CELLNAME) LIKE LOWER(:Cell) OR LOWER(t1.CELLID) " +
+        		    "LIKE LOWER(:Cell) OR LOWER(t1.GCELL_ID) LIKE LOWER(:Cell) " +
+        		    " UNION ALL " +
+        		    "SELECT t2.CELLNAME, t2.LCELL_ID, t2.CELLID FROM NODE_LCELL t2 " +
+        		    "WHERE LOWER(t2.CELLNAME) LIKE LOWER(:Cell) OR LOWER(t2.CELLID) " +
+        		    "LIKE LOWER(:Cell) OR LOWER(t2.LCELL_ID) LIKE LOWER(:Cell) " +
+        		    " UNION ALL " +
+        		    "SELECT t3.CELLNAME, t3.UCELL_ID, t3.CELLID FROM NODE_UCELL t3 " +
+        		    "WHERE LOWER(t3.CELLNAME) LIKE LOWER(:Cell) OR LOWER(t3.CELLID) " +
+        		    "LIKE LOWER(:Cell) OR LOWER(t3.UCELL_ID) LIKE LOWER(:Cell)"
+        		);
+        		query.setParameter("Cell", Cell);
+        		query.setFirstResult(0); 
+        		query.setMaxResults(40); 
+
+			
+        	List<Object[]> results = query.list();
+        	
+        	rtn.put("ListCell", results);
+        	}
+        	
+        	
+   catch (Exception e) {
+            sw = new StringWriter();
+            e.printStackTrace(new PrintWriter(sw));
+            exceptionAsString = sw.toString();
+            logger.finest("Error in GetAllNode due to \n " + exceptionAsString);
+            logger.info("Error in GetAllNode due to \n " + exceptionAsString);
+        } finally {
+            if (session != null && session.isOpen()) {
+                tx.commit();
+                session.close();
+            }
+        }
+    }
+    return rtn;
+}
 
 }
