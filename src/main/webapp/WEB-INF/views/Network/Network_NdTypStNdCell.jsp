@@ -469,8 +469,7 @@ function NdTypStNdCellCore(id){
 				        	  'theme': 'default',
 				        	  'items': [
 				        		  {'icon': 'braille', 'name': 'Show BoQ', action: () => {				
-				        				Site_Boq(idSite);
-				        			}	
+				        				SiteNodeType_Boq(idSite,selectedNodetType);				        			}	
 				        		}
 				        	]
 				        });

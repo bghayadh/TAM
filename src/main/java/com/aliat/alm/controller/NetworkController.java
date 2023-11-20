@@ -5987,6 +5987,122 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 		}
 	}
 	
+	//Sites BOQ data retrieving
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/GetSiteNdtypeBoqList", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+
+	public LinkedHashMap<String, String> GetSiteNdtypeBoqList(@RequestParam String SiteId,@RequestParam String NodeTId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
+
+		//Session session = almsessions.getSession();
+		//Transaction tx = session.beginTransaction();
+		 emf = Persistence.createEntityManagerFactory("persistence");
+		 entityManager = emf.createEntityManager();
+		 
+		LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
+	
+		try {
+			String strEmpty= "SELECT COUNT(DISTINCT WARE_ID) FROM NODE_ACTIVE WHERE WARE_ID!='null' AND WARE_ID!='0' and WARE_ID is not null and NODE_TYPE='" + NodeTId + "' ";	
+			String strExist="Select distinct Ware_Name From NODE_ACTIVE where Ware_Id='" + SiteId + "' and NODE_TYPE='" + NodeTId + "' ";								
+			strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+			String Site_Query = SiteId == "" ? strEmpty : strExist;
+			//System.out.println(Site_Query);
+			Object Sites = entityManager.createNativeQuery(Site_Query).getSingleResult();
+			strEmpty="";
+			strExist="";				
+	////////////////////////////
+			strEmpty="SELECT COUNT(NODE_PK) FROM NODE_ACTIVE where Active_record='1' and NODE_TYPE='" + NodeTId + "' ";
+			strExist= "SELECT COUNT(NODE_PK) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='" + SiteId + "' and NODE_TYPE='" + NodeTId + "' ";	
+			strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+			strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+			String Node_Active_Query = SiteId == "" ? strEmpty : strExist;
+			//System.out.println(Node_Active_Query);
+			Object CountNodes_Active = entityManager.createNativeQuery(Node_Active_Query).getSingleResult();
+			strEmpty="";
+			strExist="";
+	////////////////////////////			
+			strEmpty="SELECT COUNT(g.GCELL_ID) FROM NODE_GCELL g, NODE_ACTIVE a  where g.node_pk = a.node_pk and a.NODE_TYPE='" + NodeTId + "' ";
+			strExist= "select count(ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"+ SiteId +"' and na.NODE_TYPE='" + NodeTId + "' ";	
+			strEmpty= boqDomainVar ("g",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+			strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+			String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
+			//System.out.println(Node_GCell_Query);
+			Object CountNodes_G_CELL = entityManager.createNativeQuery(Node_GCell_Query).getSingleResult();
+			strEmpty="";
+			strExist="";
+	/////////////////////////////
+			strEmpty="SELECT COUNT(l.LCELL_ID) FROM NODE_LCELL l, NODE_ACTIVE a  where l.node_pk = a.node_pk and a.NODE_TYPE='" + NodeTId + "' ";
+			strExist= "select count(nlc.lcell_id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"+ SiteId +"' and na.NODE_TYPE='" + NodeTId + "' ";	
+			strEmpty= boqDomainVar ("l",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+			strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+			String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
+			//System.out.println(Node_LCell_Query);
+			Object CountNodes_L_CELL = entityManager.createNativeQuery(Node_LCell_Query).getSingleResult();
+			strEmpty="";
+			strExist="";
+/////////////////////////////
+			strEmpty="SELECT COUNT(u.UCELL_ID) FROM NODE_UCELL u, NODE_ACTIVE a  where u.node_pk = a.node_pk and a.NODE_TYPE='" + NodeTId + "' ";
+			strExist= "select count(nuc.ucell_id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.Ware_Id = '"+ SiteId +"' and na.NODE_TYPE='" + NodeTId + "' ";	
+			strEmpty= boqDomainVar ("u",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+			strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+			String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
+			//System.out.println(Node_UCell_Query);
+			Object CountNodes_U_CELL = entityManager.createNativeQuery(Node_UCell_Query).getSingleResult();
+			strEmpty="";
+			strExist="";			
+/////////////////////////////
+			BoqHM.put(SiteId == "" ? "Sites" : "Site Name", String.valueOf(Sites));
+			BoqHM.put("Nodes", String.valueOf(CountNodes_Active));
+
+			if (SiteId == "") {
+				strEmpty="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and NODE_TYPE='" + NodeTId + "' ";
+				strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+				String Node_Type_Count = strEmpty;
+				//System.out.println(Node_Type_Count);
+				Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
+				BoqHM.put("Node Type", String.valueOf(CountNodesType));
+			}else {
+				strExist="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"+ SiteId + "' and NODE_TYPE='" + NodeTId + "' ";
+				strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+				String Node_Type_Count = strExist;
+				//System.out.println(Node_Type_Count);
+				Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
+				BoqHM.put("Node Type", String.valueOf(CountNodesType));
+				strExist="";
+			////////////////////////////////
+				strExist="SELECT distinct NODE_TYPE,COUNT(NODE_TYPE) from node_active where Active_record='1' and Ware_Id = '"+SiteId+"' and NODE_TYPE='" + NodeTId + "'";
+				strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+				strExist = strExist +" GROUP BY NODE_TYPE";
+				//System.out.println(strExist);
+				List<Object[]> CountNodesteach_Active = (List<Object[]>) entityManager.createNativeQuery(strExist).getResultList();
+				List<Object[]> result = new ArrayList<>();
+				for (Object[] obj : CountNodesteach_Active) {
+					result.add(obj);
+				}
+				for (Object[] object : result) {
+					BoqHM.put(object[0].toString(), object[1].toString());
+				}
+			}
+			BoqHM.put("G-cells", String.valueOf(CountNodes_G_CELL));
+			BoqHM.put("L-cells", String.valueOf(CountNodes_L_CELL));
+			BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
+			return BoqHM;
+	} catch (Exception e) {
+		sw = new StringWriter();
+		e.printStackTrace(new PrintWriter(sw));
+		exceptionAsString = sw.toString();
+		logger.finest("Error in retreiving Sites BOQ from database in method GetSiteNdtypeBoqList due to \n " + exceptionAsString);
+		logger.info("Error in retreiving Sites BOQ from database in method GetSiteNdtypeBoqList due to \n " + exceptionAsString);															
+		return null;
+	} finally {
+		if (entityManager != null && entityManager.isOpen()) {
+			entityManager.close();
+		}
+		if(emf != null && emf.isOpen()) {
+			emf.close();	
+		}
+	}
+}
 	
 	// PO BOQ data retrieving
 		@RequestMapping(value = "/GetPOSiteBoqList", method = RequestMethod.GET, produces = "application/json")

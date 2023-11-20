@@ -189,8 +189,8 @@
 	<div class="container-fluid" style="margin-top: -20px;">
 
 		<div class="row second" style="margin-top: -40px; margin-bottom: -3px;">
-			<div class="col-md-4" style="margin-top: 9px;display: none">
-				<div class="search" id="headSearch">
+			<div class="col-md-4" style="margin-top: 9px">
+				<div class="search" id="headSearch" style="display: none">
 					<input type="text" class="searchTerm" id=autocompliteSearch style="height: 32px;" placeholder="Search within the Network ..">
 					<button type="submit" class="searchButton" style="height: 32px;">
 						<i class="fa fa-search"></i>
