@@ -229,6 +229,14 @@
                         </div>
                     </div>
                     
+                       <div class="col-md-3 nextprvItems">
+                        <div class="form-group">
+                            <div class="input-group-prepend">
+                    <span class="input-group-text">Cell Id</span>
+                    <input type="text" id="cellId" value="${cell_id}" class="form-control text-input" readonly />
+                </div>
+                        </div>
+                    </div>
 
                     <div class="pad col-md-3 hide-row"></div>
                     <div class="col-md-3 nextprvItems">
@@ -943,6 +951,67 @@
                 }
             });
         });
+
+        $("#selectnav").autocomplete({
+      	  source: debounce(function(request, response, event, ui) {
+      	    $.ajax({
+      	      type: "GET",
+      	      contentType: "application/json; charset=utf-8",
+      	      url: '${pageContext.request.contextPath}/GetAllCell',
+      	      data: {
+      	        "Cell": $("#selectnav").val(),
+      	         },
+      	      dataType: "json",
+      	      success: function(data) {
+      	        if (data != null) {
+      	          response(data.ListCell);
+      	        }
+      	      },
+      	      error: function(result) {
+      	        alert("Error");
+      	      }
+      	    });
+      	  }, 900),
+      	  minLength: 0,
+      	  maxShowItems: 40,
+      	  scroll: true,
+      	  select: function(event, ui) {
+      	    this.value = ui.item ? ui.item[0] + ":" + ui.item[2] : '';
+
+      	    var param = '${pageContext.request.contextPath}/CellFormView?CellPk=' + ui.item[1]+"&NavAction=2";
+      	    window.location.href = param;
+      	    return false;
+      	  }
+      	}).autocomplete("instance")._renderItem = function(ul, item) {
+      	  return $("<li class='each'>")
+      	    .append("<div class='acItem'><span class='desc'>" +
+      	      item[0] + ', ' + item[2] + "</span><br><span class='name' style='font-weight:bold'>" +
+      	      item[1] + "</span>")
+      	    .appendTo(ul);
+      	};
+
+
+
+  $("#selectnav").focus(function () {
+      
+      if (this.value == "") {
+          $(this).autocomplete("search");
+      }
+  });
+    		
+    		function debounce(fn, delay) {
+    		    var timer;
+    		    return function() {
+    		      var args = [].slice.call(arguments);
+    		      var context = this;
+    		      if (timer) {
+    		        window.clearTimeout(timer);
+    		      }
+    		      timer = window.setTimeout(function() {
+    		        fn.apply(context, args);
+    		      }, delay);
+    		    };
+    		  };
 
 
 
