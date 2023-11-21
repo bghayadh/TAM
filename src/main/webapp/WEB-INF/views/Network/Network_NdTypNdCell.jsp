@@ -636,9 +636,9 @@ function NdCellCore(id)
 		}
 			
 		if(arrayParam[2]==1){
-			var paramAccess = true;
+			var paramRAN = true;
 		}else{
-			var paramAccess = false;
+			var paramRAN = false;
 		}
 
 		if(arrayParam[3]==1){
@@ -656,7 +656,7 @@ function NdCellCore(id)
 		      "selectedNode":selectedNode,
 		      "paramEnterprise": paramEnterprise,
 			  "paramTransmission":paramTransmission,
-	   		  "paramAccess":paramAccess,
+	   		  "paramRAN":paramRAN,
 		      "paramCore":paramCore,
 		},
 		dataType: "json",

@@ -367,9 +367,9 @@ function PoItemStCore(id)
 			}
 				
 			if(arrayParam[2]==1){
-				var paramAccess = true;
+				var paramRAN = true;
 			}else{
-				var paramAccess = false;
+				var paramRAN = false;
 			}
 
 			if(arrayParam[3]==1){
@@ -387,7 +387,7 @@ function PoItemStCore(id)
 				"POAlreadyCreated":"false",
 				"paramEnterprise": paramEnterprise,
 				"paramTransmission":paramTransmission,
-		     	"paramAccess":paramAccess,
+		     	"paramRAN":paramRAN,
 			    "paramCore":paramCore,
 			},
 			dataType: "json",
@@ -454,9 +454,9 @@ function SitesRequest(id){
 			}
 				
 			if(arrayParam[2]==1){
-				var paramAccess = true;
+				var paramRAN = true;
 			}else{
-				var paramAccess = false;
+				var paramRAN = false;
 			}
 
 			if(arrayParam[3]==1){
@@ -475,7 +475,7 @@ function SitesRequest(id){
 				"selectedItem":selectedItem,
 				"paramEnterprise": paramEnterprise,
 				"paramTransmission":paramTransmission,
-		     	"paramAccess":paramAccess,
+		     	"paramRAN":paramRAN,
 			    "paramCore":paramCore,
 			},
 			dataType: "json",

@@ -415,9 +415,9 @@ function NdTypStNdCellCore(id){
 				}
 					
 				if(arrayParam[2]==1){
-					var paramAccess = true;
+					var paramRAN = true;
 				}else{
-					var paramAccess = false;
+					var paramRAN = false;
 				}
 
 				if(arrayParam[3]==1){
@@ -434,7 +434,7 @@ function NdTypStNdCellCore(id){
 				          "selectedNodetType":selectedNodetType,
 				          "paramEnterprise": paramEnterprise,
 						  "paramTransmission":paramTransmission,
-				   		  "paramAccess":paramAccess,
+				   		  "paramRAN":paramRAN,
 					      "paramCore":paramCore,
 				 		},
 				 dataType: "json",
@@ -573,9 +573,9 @@ var selectedItem = id.slice(0, id.indexOf("_" +selectedNodetType)); // Output: "
 				}
 					
 				if(arrayParam[2]==1){
-					var paramAccess = true;
+					var paramRAN = true;
 				}else{
-					var paramAccess = false;
+					var paramRAN = false;
 				}
 
 				if(arrayParam[3]==1){
@@ -593,7 +593,7 @@ var selectedItem = id.slice(0, id.indexOf("_" +selectedNodetType)); // Output: "
 	            "selectedNodetType": selectedNodetType,
 	            "paramEnterprise": paramEnterprise,
 				"paramTransmission":paramTransmission,
-		     	"paramAccess":paramAccess,
+		     	"paramRAN":paramRAN,
 			    "paramCore":paramCore,
 	          },
 	          dataType: "json",

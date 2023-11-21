@@ -392,9 +392,9 @@ function VenStNdCellCore(id){
 			}
 				
 			if(arrayParam[2]==1){
-				var paramAccess = true;
+				var paramRAN = true;
 			}else{
-				var paramAccess = false;
+				var paramRAN = false;
 			}
 
 			if(arrayParam[3]==1){
@@ -411,7 +411,7 @@ function VenStNdCellCore(id){
 					"selectedVen":selectedVen,	
 					"paramEnterprise": paramEnterprise,
 					"paramTransmission":paramTransmission,
-			   		"paramAccess":paramAccess,
+			   		"paramRAN":paramRAN,
 				    "paramCore":paramCore,
 				},
 				dataType: "json",
@@ -547,9 +547,9 @@ function Create_TreeSites(id){
 		}
 			
 		if(arrayParam[2]==1){
-			var paramAccess = true;
+			var paramRAN = true;
 		}else{
-			var paramAccess = false;
+			var paramRAN = false;
 		}
 
 		if(arrayParam[3]==1){
@@ -567,7 +567,7 @@ function Create_TreeSites(id){
 			"selectedVen":vendor,
 			"paramEnterprise": paramEnterprise,
 			"paramTransmission":paramTransmission,
-	   		"paramAccess":paramAccess,
+	   		"paramRAN":paramRAN,
 		    "paramCore":paramCore,
 		},
 		dataType: "json",

@@ -114,13 +114,13 @@
 							</div>
 
 							<div class=" top-btn-filter">
-						<button id="accessDBtn" name="Access" class="buttonTog domain
+						<button id="RANDBtn" name="RAN" class="buttonTog domain
 						    <c:choose>
-						        <c:when test="${accessDBtn == 1}">
+						        <c:when test="${RANDBtn == 1}">
 						            activee
 						        </c:when>
 						    </c:choose>">
-						    <i class='fa fa-podcast' style='font-size: 12px'></i> Access
+						    <i class='fa fa-podcast' style='font-size: 12px'></i> RAN
 						</button>
 
 							</div>
@@ -1232,7 +1232,7 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 	
 	var enterprise = null;
 	var transmission = null;
-	var access = null;
+	var RAN = null;
 	var core = null;
 	
 	//Submit selection to draw Tree and Map w.r.to active button
@@ -1242,9 +1242,9 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 
 	    if(domain.length !=0){
 		    for (var i = 0; i < domain.length; i++) {
-		    	if(domain[i]=="accessDBtn"){
-		    		access="Access";
-		    		queryParams.push('access=' + encodeURIComponent(access));
+		    	if(domain[i]=="RANDBtn"){
+		    		RAN="RAN";
+		    		queryParams.push('RAN=' + encodeURIComponent(RAN));
 		    	}
 		    	if(domain[i]=="transmBtn"){
 		    		transmission="Transmission";
@@ -1505,8 +1505,8 @@ function DefaultSort(arr,domain) {
 	var params=[];
 	if(domain.length !=0){		
 		for (var i = 0; i < domain.length; i++) {
-	    	if(domain[i]=="accessDBtn"){
-	    		params.push('"Access"');	    		
+	    	if(domain[i]=="RANDBtn"){
+	    		params.push('"RAN"');	    		
 	    	}
 	    	if(domain[i]=="transmBtn"){
 	    		params.push('"Transmission"');

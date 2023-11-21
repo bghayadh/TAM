@@ -354,9 +354,9 @@ function VenNdTypStNdCellCore(id){
 				}
 					
 				if(arrayParam[2]==1){
-					var paramAccess = true;
+					var paramRAN = true;
 				}else{
-					var paramAccess = false;
+					var paramRAN = false;
 				}
 
 				if(arrayParam[3]==1){
@@ -373,7 +373,7 @@ function VenNdTypStNdCellCore(id){
 			        "selectedVen":selectedVen,	
 		            "paramEnterprise": paramEnterprise,
 					"paramTransmission":paramTransmission,
-			     	"paramAccess":paramAccess,
+			     	"paramRAN":paramRAN,
 				    "paramCore":paramCore,
 			},
 			dataType: "json",
@@ -486,9 +486,9 @@ function RequestingSites(id) {
 				}
 					
 				if(arrayParam[2]==1){
-					var paramAccess = true;
+					var paramRAN = true;
 				}else{
-					var paramAccess = false;
+					var paramRAN = false;
 				}
 
 				if(arrayParam[3]==1){
@@ -506,7 +506,7 @@ function RequestingSites(id) {
 					"SelectedNodeType":SelectedNodeType,
 		            "paramEnterprise": paramEnterprise,
 					"paramTransmission":paramTransmission,
-			     	"paramAccess":paramAccess,
+			     	"paramRAN":paramRAN,
 				    "paramCore":paramCore,
 				},
 				dataType: "json",
@@ -666,9 +666,9 @@ function Create_Sites(id){
 				}
 					
 				if(arrayParam[2]==1){
-					var paramAccess = true;
+					var paramRAN = true;
 				}else{
-					var paramAccess = false;
+					var paramRAN = false;
 				}
 
 				if(arrayParam[3]==1){
@@ -687,7 +687,7 @@ function Create_Sites(id){
 							"SelectedNodeType":selectedNodeType,
 							"paramEnterprise": paramEnterprise,
 							"paramTransmission":paramTransmission,
-						    "paramAccess":paramAccess,
+						    "paramRAN":paramRAN,
 							"paramCore":paramCore,
 				 },
 				 dataType: "json",

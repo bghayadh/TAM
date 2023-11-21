@@ -419,9 +419,9 @@ function StPoItemCore(id){
 					}
 						
 					if(arrayParam[2]==1){
-						var paramAccess = true;
+						var paramRAN = true;
 					}else{
-						var paramAccess = false;
+						var paramRAN = false;
 					}
 
 					if(arrayParam[3]==1){
@@ -439,7 +439,7 @@ function StPoItemCore(id){
 						"POAlreadyCreated":"false",
 						"paramEnterprise": paramEnterprise,
 						"paramTransmission":paramTransmission,
-				     	"paramAccess":paramAccess,
+				     	"paramRAN":paramRAN,
 					    "paramCore":paramCore,
 					 },
 					dataType: "json",
@@ -536,9 +536,9 @@ function requestItem(id){
 			}
 				
 			if(arrayParam[2]==1){
-				var paramAccess = true;
+				var paramRAN = true;
 			}else{
-				var paramAccess = false;
+				var paramRAN = false;
 			}
 
 			if(arrayParam[3]==1){
@@ -557,7 +557,7 @@ function requestItem(id){
 					"selectedSite":selectedSite,
 					"paramEnterprise": paramEnterprise,
 					"paramTransmission":paramTransmission,
-			     	"paramAccess":paramAccess,
+			     	"paramRAN":paramRAN,
 				    "paramCore":paramCore,
 				 },
 				dataType: "json",

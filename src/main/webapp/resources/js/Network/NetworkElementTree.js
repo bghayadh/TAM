@@ -98,9 +98,9 @@ if(arrayParam[1]==1){
 }
 	
 if(arrayParam[2]==1){
-	var paramAccess = true;
+	var paramRAN = true;
 }else{
-	var paramAccess = false;
+	var paramRAN = false;
 }
 
 if(arrayParam[3]==1){
@@ -117,7 +117,7 @@ if(arrayParam[3]==1){
 			    "SiteId" : SiteId,
 			    "paramEnterprise" : paramEnterprise,
 			    "paramTransmission" : paramTransmission,
-			    "paramAccess" : paramAccess,
+			    "paramRAN" : paramRAN,
 			    "paramCore" : paramCore,
 			    "arrayParam" : arrayParam
 			    },
@@ -165,9 +165,9 @@ if(arrayParam[1]==1){
 }
 	
 if(arrayParam[2]==1){
-	var paramAccess = true;
+	var paramRAN = true;
 }else{
-	var paramAccess = false;
+	var paramRAN = false;
 }
 
 if(arrayParam[3]==1){
@@ -185,7 +185,7 @@ if(arrayParam[3]==1){
 			    "VenId" : VenId,
 			    "paramEnterprise" : paramEnterprise,
 			    "paramTransmission" : paramTransmission,
-			    "paramAccess" : paramAccess,
+			    "paramRAN" : paramRAN,
 			    "paramCore" : paramCore,
 			    "arrayParam" : arrayParam
 			    },
@@ -233,9 +233,9 @@ if(arrayParam[1]==1){
 }
 	
 if(arrayParam[2]==1){
-	var paramAccess = true;
+	var paramRAN = true;
 }else{
-	var paramAccess = false;
+	var paramRAN = false;
 }
 
 if(arrayParam[3]==1){
@@ -254,7 +254,7 @@ if(arrayParam[3]==1){
 			    "SelectedNodeType": SelectedNodeType,
 			    "paramEnterprise" : paramEnterprise,
 			    "paramTransmission" : paramTransmission,
-			    "paramAccess" : paramAccess,
+			    "paramRAN" : paramRAN,
 			    "paramCore" : paramCore,
 			    "arrayParam" : arrayParam
 			    },
@@ -302,9 +302,9 @@ if(arrayParam[1]==1){
 }
 	
 if(arrayParam[2]==1){
-	var paramAccess = true;
+	var paramRAN = true;
 }else{
-	var paramAccess = false;
+	var paramRAN = false;
 }
 
 if(arrayParam[3]==1){
@@ -321,7 +321,7 @@ if(arrayParam[3]==1){
 			    "SuppId" : SuppId,
 			    "paramEnterprise" : paramEnterprise,
 			    "paramTransmission" : paramTransmission,
-			    "paramAccess" : paramAccess,
+			    "paramRAN" : paramRAN,
 			    "paramCore" : paramCore,
 			    "arrayParam" : arrayParam
 			    },
@@ -372,9 +372,9 @@ function  SiteNodeType_Boq(SiteId,NodeTId){
 	}
 		
 	if(arrayParam[2]==1){
-		var paramAccess = true;
+		var paramRAN = true;
 	}else{
-		var paramAccess = false;
+		var paramRAN = false;
 	}
 
 	if(arrayParam[3]==1){
@@ -392,7 +392,7 @@ function  SiteNodeType_Boq(SiteId,NodeTId){
 			    "NodeTId":NodeTId,
 			    "paramEnterprise": paramEnterprise,
 			    "paramTransmission":paramTransmission,
-			    "paramAccess":paramAccess,
+			    "paramRAN":paramRAN,
 			    "paramCore":paramCore,
 			    },
 			success : function(data)
@@ -439,9 +439,9 @@ if(arrayParam[1]==1){
 }
 	
 if(arrayParam[2]==1){
-	var paramAccess = true;
+	var paramRAN = true;
 }else{
-	var paramAccess = false;
+	var paramRAN = false;
 }
 
 if(arrayParam[3]==1){
@@ -459,7 +459,7 @@ if(arrayParam[3]==1){
 			    "SuppId" : SuppId,
 			    "paramEnterprise" : paramEnterprise,
 			    "paramTransmission" : paramTransmission,
-			    "paramAccess" : paramAccess,
+			    "paramRAN" : paramRAN,
 			    "paramCore" : paramCore,
 			    "arrayParam" : arrayParam
 			    },
@@ -507,9 +507,9 @@ if(arrayParam[1]==1){
 }
 	
 if(arrayParam[2]==1){
-	var paramAccess = true;
+	var paramRAN = true;
 }else{
-	var paramAccess = false;
+	var paramRAN = false;
 }
 
 if(arrayParam[3]==1){
@@ -528,7 +528,7 @@ if(arrayParam[3]==1){
 			    "SelectedNodeType" : SelectedNodeType,
 			    "paramEnterprise" : paramEnterprise,
 			    "paramTransmission" : paramTransmission,
-			    "paramAccess" : paramAccess,
+			    "paramRAN" : paramRAN,
 			    "paramCore" : paramCore,
 			    "arrayParam" : arrayParam
 			    },
@@ -577,9 +577,9 @@ if(arrayParam[1]==1){
 }
 	
 if(arrayParam[2]==1){
-	var paramAccess = true;
+	var paramRAN = true;
 }else{
-	var paramAccess = false;
+	var paramRAN = false;
 }
 
 if(arrayParam[3]==1){
@@ -596,7 +596,7 @@ if(arrayParam[3]==1){
 			    "VenId" : VenId,
 			    "paramEnterprise" : paramEnterprise,
 			    "paramTransmission" : paramTransmission,
-			    "paramAccess" : paramAccess,
+			    "paramRAN" : paramRAN,
 			    "paramCore" : paramCore,
 			    "arrayParam" : arrayParam
 			    },
@@ -645,9 +645,9 @@ if(arrayParam[1]==1){
 }
 	
 if(arrayParam[2]==1){
-	var paramAccess = true;
+	var paramRAN = true;
 }else{
-	var paramAccess = false;
+	var paramRAN = false;
 }
 
 if(arrayParam[3]==1){
@@ -665,7 +665,7 @@ if(arrayParam[3]==1){
 			    "siteId" : siteId,
 			    "paramEnterprise" : paramEnterprise,
 			    "paramTransmission" : paramTransmission,
-			    "paramAccess" : paramAccess,
+			    "paramRAN" : paramRAN,
 			    "paramCore" : paramCore,
 			    "arrayParam" : arrayParam
 			    },
@@ -714,9 +714,9 @@ if(arrayParam[1]==1){
 }
 	
 if(arrayParam[2]==1){
-	var paramAccess = true;
+	var paramRAN = true;
 }else{
-	var paramAccess = false;
+	var paramRAN = false;
 }
 
 if(arrayParam[3]==1){
@@ -734,7 +734,7 @@ if(arrayParam[3]==1){
 			    "siteId" : siteId,
 			    "paramEnterprise" : paramEnterprise,
 			    "paramTransmission" : paramTransmission,
-			    "paramAccess" : paramAccess,
+			    "paramRAN" : paramRAN,
 			    "paramCore" : paramCore,
 			    "arrayParam" : arrayParam
 			    },
@@ -783,9 +783,9 @@ function SitePO_Boq(SiteId){
 	}
 		
 	if(arrayParam[2]==1){
-		var paramAccess = true;
+		var paramRAN = true;
 	}else{
-		var paramAccess = false;
+		var paramRAN = false;
 	}
 
 	if(arrayParam[3]==1){
@@ -802,7 +802,7 @@ function SitePO_Boq(SiteId){
 			    "SiteId" : SiteId,
 			    "paramEnterprise": paramEnterprise,
 			    "paramTransmission":paramTransmission,
-			    "paramAccess":paramAccess,
+			    "paramRAN":paramRAN,
 			    "paramCore":paramCore,
 			    },
 			success : function(data)
@@ -852,9 +852,9 @@ function POSite_Boq(SiteId){
 	}
 		
 	if(arrayParam[2]==1){
-		var paramAccess = true;
+		var paramRAN = true;
 	}else{
-		var paramAccess = false;
+		var paramRAN = false;
 	}
 
 	if(arrayParam[3]==1){
@@ -871,7 +871,7 @@ function POSite_Boq(SiteId){
 				"POID" : SiteId,
 				"paramEnterprise": paramEnterprise,
 				"paramTransmission":paramTransmission,
-				"paramAccess":paramAccess,
+				"paramRAN":paramRAN,
 				"paramCore":paramCore,
 				},
 			success : function(data)
@@ -925,9 +925,9 @@ function  Node_Boq(WareId,NodeId){
 	}
 		
 	if(arrayParam[2]==1){
-		var paramAccess = true;
+		var paramRAN = true;
 	}else{
-		var paramAccess = false;
+		var paramRAN = false;
 	}
 
 	if(arrayParam[3]==1){
@@ -945,7 +945,7 @@ function  Node_Boq(WareId,NodeId){
 			    "NodeId":NodeId,
 			    "paramEnterprise": paramEnterprise,
 			    "paramTransmission":paramTransmission,
-			    "paramAccess":paramAccess,
+			    "paramRAN":paramRAN,
 			    "paramCore":paramCore,
 			    },
 			success : function(data)
@@ -999,9 +999,9 @@ function  NodeT_Boq(SiteId,NodeTId){
 	}
 		
 	if(arrayParam[2]==1){
-		var paramAccess = true;
+		var paramRAN = true;
 	}else{
-		var paramAccess = false;
+		var paramRAN = false;
 	}
 
 	if(arrayParam[3]==1){
@@ -1019,7 +1019,7 @@ function  NodeT_Boq(SiteId,NodeTId){
 			    "NodeTId":NodeTId,
 			    "paramEnterprise": paramEnterprise,
 			    "paramTransmission":paramTransmission,
-			    "paramAccess":paramAccess,
+			    "paramRAN":paramRAN,
 			    "paramCore":paramCore,
 			    },
 			success : function(data)
@@ -1067,9 +1067,9 @@ function  SuppNdTyp_Boq(SuppId,NodeTId){
 	}
 		
 	if(arrayParam[2]==1){
-		var paramAccess = true;
+		var paramRAN = true;
 	}else{
-		var paramAccess = false;
+		var paramRAN = false;
 	}
 
 	if(arrayParam[3]==1){
@@ -1087,7 +1087,7 @@ function  SuppNdTyp_Boq(SuppId,NodeTId){
 			    "NodeTId":NodeTId,
 			    "paramEnterprise": paramEnterprise,
 			    "paramTransmission":paramTransmission,
-			    "paramAccess":paramAccess,
+			    "paramRAN":paramRAN,
 			    "paramCore":paramCore,
 			    },
 			success : function(data)
@@ -1135,9 +1135,9 @@ function  VenNdTyp_Boq(VenId,NodeTId){
 	}
 		
 	if(arrayParam[2]==1){
-		var paramAccess = true;
+		var paramRAN = true;
 	}else{
-		var paramAccess = false;
+		var paramRAN = false;
 	}
 
 	if(arrayParam[3]==1){
@@ -1155,7 +1155,7 @@ function  VenNdTyp_Boq(VenId,NodeTId){
 			    "NodeTId":NodeTId,
 			    "paramEnterprise": paramEnterprise,
 			    "paramTransmission":paramTransmission,
-			    "paramAccess":paramAccess,
+			    "paramRAN":paramRAN,
 			    "paramCore":paramCore,
 			    },
 			success : function(data)
@@ -1205,9 +1205,9 @@ function  NodeTSup_Boq(SiteId,NodeTId,SuppId){
 	}
 		
 	if(arrayParam[2]==1){
-		var paramAccess = true;
+		var paramRAN = true;
 	}else{
-		var paramAccess = false;
+		var paramRAN = false;
 	}
 
 	if(arrayParam[3]==1){
@@ -1226,7 +1226,7 @@ function  NodeTSup_Boq(SiteId,NodeTId,SuppId){
 			    "SuppId":SuppId,
 			    "paramEnterprise": paramEnterprise,
 			    "paramTransmission":paramTransmission,
-			    "paramAccess":paramAccess,
+			    "paramRAN":paramRAN,
 			    "paramCore":paramCore,
 			    },
 			success : function(data)
@@ -1275,9 +1275,9 @@ function NodeTVen_Boq(SiteId,NodeTId,VendorId){
 	}
 		
 	if(arrayParam[2]==1){
-		var paramAccess = true;
+		var paramRAN = true;
 	}else{
-		var paramAccess = false;
+		var paramRAN = false;
 	}
 
 	if(arrayParam[3]==1){
@@ -1296,7 +1296,7 @@ function NodeTVen_Boq(SiteId,NodeTId,VendorId){
 			    "VendorId":VendorId,
 			    "paramEnterprise": paramEnterprise,
 			    "paramTransmission":paramTransmission,
-			    "paramAccess":paramAccess,
+			    "paramRAN":paramRAN,
 			    "paramCore":paramCore,
 			    },
 			success : function(data)
@@ -1350,9 +1350,9 @@ function PO_Boq(SiteId){
 	}
 		
 	if(arrayParam[2]==1){
-		var paramAccess = true;
+		var paramRAN = true;
 	}else{
-		var paramAccess = false;
+		var paramRAN = false;
 	}
 
 	if(arrayParam[3]==1){
@@ -1369,7 +1369,7 @@ function PO_Boq(SiteId){
 				"POID" : SiteId,
 			    "paramEnterprise": paramEnterprise,
 			    "paramTransmission":paramTransmission,
-			    "paramAccess":paramAccess,
+			    "paramRAN":paramRAN,
 			    "paramCore":paramCore,
 			},
 			success : function(data)

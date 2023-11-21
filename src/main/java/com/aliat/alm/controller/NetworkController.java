@@ -13,9 +13,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.hibernate.query.Query;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,13 +32,8 @@ import java.util.logging.Logger;
 @Controller
 public class NetworkController {
 	private static final Logger logger =  Logger.getLogger(NetworkController.class.getName());
-	private static Session session = null;
-	private static Transaction tx = null;
 	private static ObjectMapper mapper = new ObjectMapper();
-//	private static final Logger logger = LoggerFactory.getLogger(NetworkController.class);
-	@SuppressWarnings("rawtypes")
-	private static Query query = null;
-	private static StringWriter sw;
+private static StringWriter sw;
 	private static String exceptionAsString;
 	
 	private EntityManagerFactory emf =null;
@@ -79,9 +71,9 @@ public class NetworkController {
 		if (arrayParam[2] == 1) {
 			if(arrayParam[0] == 0 && arrayParam[1] == 0) {
 				//System.out.println("acc ");
-				str= str+ a+".DOMAIN ='Access' ";
+				str= str+ a+".DOMAIN ='RAN' ";
 			}else {
-				str= str+ " or " +a+".DOMAIN ='Access' ";
+				str= str+ " or " +a+".DOMAIN ='RAN' ";
 			}
 		}
 		if (arrayParam[3] == 1) {
@@ -115,13 +107,13 @@ public class NetworkController {
 
 				String enterprise = request.getParameter("enterprise");
 				String transmission = request.getParameter("transmission");
-				String access = request.getParameter("access");
+				String RAN = request.getParameter("RAN");
 				String core = request.getParameter("core");
 
 				int[] arrayParam = new int[4]; // Assuming you want to store 4 parameters
 		        arrayParam[0] = 0; // enterprise
 		        arrayParam[1] = 0; // transmission
-		        arrayParam[2] = 0; // access
+		        arrayParam[2] = 0; // RAN
 		        arrayParam[3] = 0; // core
 
 				String strSites ="SELECT DISTINCT b.SITE_ID,b.WARE_NAME,b.WARE_ID,LATITUDE,LONGITUDE,"
@@ -145,9 +137,9 @@ public class NetworkController {
 					arrayParam[1] = 1;	
 					model.addAttribute("transmBtn", arrayParam[1]);
 				}
-				if (access != null && !access.equals("null")) {
+				if (RAN != null && !RAN.equals("null")) {
 					arrayParam[2] = 1;	
-					model.addAttribute("accessDBtn", arrayParam[2]);
+					model.addAttribute("RANDBtn", arrayParam[2]);
 				}
 				if (core != null && !core.equals("null")) {
 					arrayParam[3] = 1;	
@@ -280,13 +272,13 @@ public class NetworkController {
 
 			String enterprise = request.getParameter("enterprise");
 			String transmission = request.getParameter("transmission");
-			String access = request.getParameter("access");
+			String RAN = request.getParameter("RAN");
 			String core = request.getParameter("core");
 
 			int[] arrayParam = new int[4]; 
 	        arrayParam[0] = 0; // enterprise
 	        arrayParam[1] = 0; // transmission
-	        arrayParam[2] = 0; // access
+	        arrayParam[2] = 0; // RAN
 	        arrayParam[3] = 0; // core
 	        
 			String strSites ="SELECT DISTINCT b.SITE_ID,b.WARE_NAME,b.WARE_ID,LATITUDE,LONGITUDE,"
@@ -311,9 +303,9 @@ public class NetworkController {
 						arrayParam[1] = 1;
 						model.addAttribute("transmBtn", arrayParam[1]);
 					}
-					if (access != null && !access.equals("null")) {
+					if (RAN != null && !RAN.equals("null")) {
 						arrayParam[2] = 1;	
-						model.addAttribute("accessDBtn", arrayParam[2]);
+						model.addAttribute("RANDBtn", arrayParam[2]);
 					}
 					if (core != null && !core.equals("null")) {
 						arrayParam[3] = 1;	
@@ -456,13 +448,13 @@ public String Network_NdTypStNdCell(Locale locale, Model model, HttpServletReque
 		 
 			String enterprise = request.getParameter("enterprise");
 			String transmission = request.getParameter("transmission");
-			String access = request.getParameter("access");
+			String RAN = request.getParameter("RAN");
 			String core = request.getParameter("core");
 
 			int[] arrayParam = new int[4]; 
 	        arrayParam[0] = 0; // enterprise
 	        arrayParam[1] = 0; // transmission
-	        arrayParam[2] = 0; // access
+	        arrayParam[2] = 0; // RAN
 	        arrayParam[3] = 0; // core
 	        
 			String strSites ="SELECT DISTINCT b.SITE_ID,b.WARE_NAME,b.WARE_ID,LATITUDE,LONGITUDE,"
@@ -479,9 +471,9 @@ public String Network_NdTypStNdCell(Locale locale, Model model, HttpServletReque
 					arrayParam[1] = 1;	
 					model.addAttribute("transmBtn", arrayParam[1]);
 				}
-				if (access != null && !access.equals("null")) {
+				if (RAN != null && !RAN.equals("null")) {
 					arrayParam[2] = 1;
-					model.addAttribute("accessDBtn", arrayParam[2]);
+					model.addAttribute("RANDBtn", arrayParam[2]);
 				}
 				if (core != null && !core.equals("null")) {
 					arrayParam[3] = 1;	
@@ -578,13 +570,13 @@ public String Network_SupStNdCell(Locale locale, Model model, HttpServletRequest
 		 
 			String enterprise = request.getParameter("enterprise");
 			String transmission = request.getParameter("transmission");
-			String access = request.getParameter("access");
+			String RAN = request.getParameter("RAN");
 			String core = request.getParameter("core");
 
 			int[] arrayParam = new int[4]; 
 	        arrayParam[0] = 0; // enterprise
 	        arrayParam[1] = 0; // transmission
-	        arrayParam[2] = 0; // access
+	        arrayParam[2] = 0; // RAN
 	        arrayParam[3] = 0; // core
 	        
 			String strSites ="SELECT DISTINCT b.SITE_ID,b.WARE_NAME,b.WARE_ID,LATITUDE,LONGITUDE,"
@@ -602,9 +594,9 @@ public String Network_SupStNdCell(Locale locale, Model model, HttpServletRequest
 						arrayParam[1] = 1;	
 						model.addAttribute("transmBtn", arrayParam[1]);
 					}
-					if (access != null && !access.equals("null")) {
+					if (RAN != null && !RAN.equals("null")) {
 						arrayParam[2] = 1;	
-						model.addAttribute("accessDBtn", arrayParam[2]);
+						model.addAttribute("RANDBtn", arrayParam[2]);
 					}
 					if (core != null && !core.equals("null")) {
 						arrayParam[3] = 1;	
@@ -677,13 +669,13 @@ public String Network_VnStNdCell(Locale locale, Model model, HttpServletRequest 
 		 
 			String enterprise = request.getParameter("enterprise");
 			String transmission = request.getParameter("transmission");
-			String access = request.getParameter("access");
+			String RAN = request.getParameter("RAN");
 			String core = request.getParameter("core");
 
 			int[] arrayParam = new int[4]; 
 	        arrayParam[0] = 0; // enterprise
 	        arrayParam[1] = 0; // transmission
-	        arrayParam[2] = 0; // access
+	        arrayParam[2] = 0; // RAN
 	        arrayParam[3] = 0; // core
 	        
 			String strSites ="SELECT DISTINCT b.SITE_ID,b.WARE_NAME,b.WARE_ID,LATITUDE,LONGITUDE,"
@@ -700,9 +692,9 @@ public String Network_VnStNdCell(Locale locale, Model model, HttpServletRequest 
 						arrayParam[1] = 1;	
 						model.addAttribute("transmBtn", arrayParam[1]);
 					}
-					if (access != null && !access.equals("null")) {
+					if (RAN != null && !RAN.equals("null")) {
 						arrayParam[2] = 1;	
-						model.addAttribute("accessDBtn", arrayParam[2]);
+						model.addAttribute("RANDBtn", arrayParam[2]);
 					}
 					if (core != null && !core.equals("null")) {
 						arrayParam[3] = 1;	
@@ -776,13 +768,13 @@ public String Network_VnStNdTypNdCell(Locale locale, Model model, HttpServletReq
 		 
 			String enterprise = request.getParameter("enterprise");
 			String transmission = request.getParameter("transmission");
-			String access = request.getParameter("access");
+			String RAN = request.getParameter("RAN");
 			String core = request.getParameter("core");
 
 			int[] arrayParam = new int[4]; 
 	        arrayParam[0] = 0; // enterprise
 	        arrayParam[1] = 0; // transmission
-	        arrayParam[2] = 0; // access
+	        arrayParam[2] = 0; // RAN
 	        arrayParam[3] = 0; // core
 	        
 			String strSites ="SELECT DISTINCT b.SITE_ID,b.WARE_NAME,b.WARE_ID,LATITUDE,LONGITUDE,"
@@ -800,9 +792,9 @@ public String Network_VnStNdTypNdCell(Locale locale, Model model, HttpServletReq
 						arrayParam[1] = 1;	
 						model.addAttribute("transmBtn", arrayParam[1]);
 					}
-					if (access != null && !access.equals("null")) {
+					if (RAN != null && !RAN.equals("null")) {
 						arrayParam[2] = 1;	
-						model.addAttribute("accessDBtn", arrayParam[2]);
+						model.addAttribute("RANDBtn", arrayParam[2]);
 					}
 					if (core != null && !core.equals("null")) {
 						arrayParam[3] = 1;	
@@ -875,13 +867,13 @@ public String Network_SupStNdTypNdCell(Locale locale, Model model, HttpServletRe
 		 
 			String enterprise = request.getParameter("enterprise");
 			String transmission = request.getParameter("transmission");
-			String access = request.getParameter("access");
+			String RAN = request.getParameter("RAN");
 			String core = request.getParameter("core");
 
 			int[] arrayParam = new int[4]; 
 	        arrayParam[0] = 0; // enterprise
 	        arrayParam[1] = 0; // transmission
-	        arrayParam[2] = 0; // access
+	        arrayParam[2] = 0; // RAN
 	        arrayParam[3] = 0; // core
 	        
 			String strSites ="SELECT DISTINCT b.SITE_ID,b.WARE_NAME,b.WARE_ID,LATITUDE,LONGITUDE,"
@@ -899,9 +891,9 @@ public String Network_SupStNdTypNdCell(Locale locale, Model model, HttpServletRe
 						arrayParam[1] = 1;	
 						model.addAttribute("transmBtn", arrayParam[1]);
 					}
-					if (access != null && !access.equals("null")) {
+					if (RAN != null && !RAN.equals("null")) {
 						arrayParam[2] = 1;	
-						model.addAttribute("accessDBtn", arrayParam[2]);
+						model.addAttribute("RANDBtn", arrayParam[2]);
 					}
 					if (core != null && !core.equals("null")) {
 						arrayParam[3] = 1;	
@@ -974,13 +966,13 @@ public String Network_SupNdTypStCell(Locale locale, Model model, HttpServletRequ
 		 
 			String enterprise = request.getParameter("enterprise");
 			String transmission = request.getParameter("transmission");
-			String access = request.getParameter("access");
+			String RAN = request.getParameter("RAN");
 			String core = request.getParameter("core");
 
 			int[] arrayParam = new int[4]; 
 	        arrayParam[0] = 0; // enterprise
 	        arrayParam[1] = 0; // transmission
-	        arrayParam[2] = 0; // access
+	        arrayParam[2] = 0; // RAN
 	        arrayParam[3] = 0; // core
 	        
 			String strSites ="SELECT DISTINCT b.SITE_ID,b.WARE_NAME,b.WARE_ID,LATITUDE,LONGITUDE,"
@@ -998,9 +990,9 @@ public String Network_SupNdTypStCell(Locale locale, Model model, HttpServletRequ
 					arrayParam[1] = 1;	
 					model.addAttribute("transmBtn", arrayParam[1]);
 				}
-				if (access != null && !access.equals("null")) {
+				if (RAN != null && !RAN.equals("null")) {
 					arrayParam[2] = 1;
-					model.addAttribute("accessDBtn", arrayParam[2]);
+					model.addAttribute("RANDBtn", arrayParam[2]);
 				}
 				if (core != null && !core.equals("null")) {
 					arrayParam[3] = 1;	
@@ -1074,13 +1066,13 @@ public String Network_VnNdTypStCell(Locale locale, Model model, HttpServletReque
 		 
 			String enterprise = request.getParameter("enterprise");
 			String transmission = request.getParameter("transmission");
-			String access = request.getParameter("access");
+			String RAN = request.getParameter("RAN");
 			String core = request.getParameter("core");
 
 			int[] arrayParam = new int[4]; 
 	        arrayParam[0] = 0; // enterprise
 	        arrayParam[1] = 0; // transmission
-	        arrayParam[2] = 0; // access
+	        arrayParam[2] = 0; // RAN
 	        arrayParam[3] = 0; // core
 	        
 			String strSites ="SELECT DISTINCT b.SITE_ID,b.WARE_NAME,b.WARE_ID,LATITUDE,LONGITUDE,"
@@ -1098,9 +1090,9 @@ public String Network_VnNdTypStCell(Locale locale, Model model, HttpServletReque
 					arrayParam[1] = 1;	
 					model.addAttribute("transmBtn", arrayParam[1]);
 				}
-				if (access != null && !access.equals("null")) {
+				if (RAN != null && !RAN.equals("null")) {
 					arrayParam[2] = 1;
-					model.addAttribute("accessDBtn", arrayParam[2]);
+					model.addAttribute("RANDBtn", arrayParam[2]);
 				}
 				if (core != null && !core.equals("null")) {
 					arrayParam[3] = 1;	
@@ -1172,13 +1164,13 @@ public String Network_PoSiteItem(Locale locale, Model model, HttpServletRequest 
 		 
 			String enterprise = request.getParameter("enterprise");
 			String transmission = request.getParameter("transmission");
-			String access = request.getParameter("access");
+			String RAN = request.getParameter("RAN");
 			String core = request.getParameter("core");
 
 			int[] arrayParam = new int[4]; 
 	        arrayParam[0] = 0; // enterprise
 	        arrayParam[1] = 0; // transmission
-	        arrayParam[2] = 0; // access
+	        arrayParam[2] = 0; // RAN
 	        arrayParam[3] = 0; // core
 	        
 			String strSites ="SELECT DISTINCT b.SITE_ID,b.SITE_NAME,b.WARE_ID,"
@@ -1197,9 +1189,9 @@ public String Network_PoSiteItem(Locale locale, Model model, HttpServletRequest 
 					arrayParam[1] = 1;	
 					model.addAttribute("transmBtn", arrayParam[1]);
 				}
-				if (access != null && !access.equals("null")) {
+				if (RAN != null && !RAN.equals("null")) {
 					arrayParam[2] = 1;	
-					model.addAttribute("accessDBtn", arrayParam[2]);
+					model.addAttribute("RANDBtn", arrayParam[2]);
 				}
 				if (core != null && !core.equals("null")) {
 					arrayParam[3] = 1;	
@@ -1273,13 +1265,13 @@ public String Network_PoItemSite(Locale locale, Model model, HttpServletRequest 
 		 
 			String enterprise = request.getParameter("enterprise");
 			String transmission = request.getParameter("transmission");
-			String access = request.getParameter("access");
+			String RAN = request.getParameter("RAN");
 			String core = request.getParameter("core");
 
 			int[] arrayParam = new int[4]; 
 	        arrayParam[0] = 0; // enterprise
 	        arrayParam[1] = 0; // transmission
-	        arrayParam[2] = 0; // access
+	        arrayParam[2] = 0; // RAN
 	        arrayParam[3] = 0; // core
 	        
 			String strSites ="SELECT DISTINCT b.SITE_ID,b.SITE_NAME,b.WARE_ID,"
@@ -1298,9 +1290,9 @@ public String Network_PoItemSite(Locale locale, Model model, HttpServletRequest 
 						arrayParam[1] = 1;	
 						model.addAttribute("transmBtn", arrayParam[1]);
 					}
-					if (access != null && !access.equals("null")) {
+					if (RAN != null && !RAN.equals("null")) {
 						arrayParam[2] = 1;	
-						model.addAttribute("accessDBtn", arrayParam[2]);
+						model.addAttribute("RANDBtn", arrayParam[2]);
 					}
 					if (core != null && !core.equals("null")) {
 						arrayParam[3] = 1;	
@@ -1375,13 +1367,13 @@ public String Network_SitePoItem(Locale locale, Model model, HttpServletRequest 
 		 
 			String enterprise = request.getParameter("enterprise");
 			String transmission = request.getParameter("transmission");
-			String access = request.getParameter("access");
+			String RAN = request.getParameter("RAN");
 			String core = request.getParameter("core");
 
 			int[] arrayParam = new int[4]; 
 	        arrayParam[0] = 0; // enterprise
 	        arrayParam[1] = 0; // transmission
-	        arrayParam[2] = 0; // access
+	        arrayParam[2] = 0; // RAN
 	        arrayParam[3] = 0; // core
 	        
 			String strSites ="SELECT DISTINCT b.SITE_ID,b.SITE_NAME,b.WARE_ID,"
@@ -1398,9 +1390,9 @@ public String Network_SitePoItem(Locale locale, Model model, HttpServletRequest 
 					arrayParam[1] = 1;	
 					model.addAttribute("transmBtn", arrayParam[1]);
 				}
-				if (access != null && !access.equals("null")) {
+				if (RAN != null && !RAN.equals("null")) {
 					arrayParam[2] = 1;	
-					model.addAttribute("accessDBtn", arrayParam[2]);
+					model.addAttribute("RANDBtn", arrayParam[2]);
 				}
 				if (core != null && !core.equals("null")) {
 					arrayParam[3] = 1;	
@@ -1463,13 +1455,13 @@ public String Network_NdTypNdCell(Locale locale, Model model, HttpServletRequest
 		 
 			String enterprise = request.getParameter("enterprise");
 			String transmission = request.getParameter("transmission");
-			String access = request.getParameter("access");
+			String RAN = request.getParameter("RAN");
 			String core = request.getParameter("core");
 
 			int[] arrayParam = new int[4]; 
 	        arrayParam[0] = 0; // enterprise
 	        arrayParam[1] = 0; // transmission
-	        arrayParam[2] = 0; // access
+	        arrayParam[2] = 0; // RAN
 	        arrayParam[3] = 0; // core
 	        
 			String strNodes ="SELECT b.SITE_ID,b.WARE_NAME,b.NODE_PK,b.LATITUDE,b.LONGITUDE,"
@@ -1486,9 +1478,9 @@ public String Network_NdTypNdCell(Locale locale, Model model, HttpServletRequest
 					arrayParam[1] = 1;
 					model.addAttribute("transmBtn", arrayParam[1]);
 				}
-				if (access != null && !access.equals("null")) {
+				if (RAN != null && !RAN.equals("null")) {
 					arrayParam[2] = 1;
-					model.addAttribute("accessDBtn", arrayParam[2]);
+					model.addAttribute("RANDBtn", arrayParam[2]);
 				}
 				if (core != null && !core.equals("null")) {
 					arrayParam[3] = 1;	
@@ -1561,13 +1553,13 @@ public String Network_Node(Locale locale, Model model, HttpServletRequest reques
 		 
 			String enterprise = request.getParameter("enterprise");
 			String transmission = request.getParameter("transmission");
-			String access = request.getParameter("access");
+			String RAN = request.getParameter("RAN");
 			String core = request.getParameter("core");
 
 			int[] arrayParam = new int[4]; 
 	        arrayParam[0] = 0; // enterprise
 	        arrayParam[1] = 0; // transmission
-	        arrayParam[2] = 0; // access
+	        arrayParam[2] = 0; // RAN
 	        arrayParam[3] = 0; // core
 	        
 			String strNodes ="SELECT b.SITE_ID,b.WARE_NAME,b.NODE_PK,b.LATITUDE,b.LONGITUDE,"
@@ -1582,9 +1574,9 @@ public String Network_Node(Locale locale, Model model, HttpServletRequest reques
 					arrayParam[1] = 1;
 					model.addAttribute("transmBtn", arrayParam[1]);
 				}
-				if (access != null && !access.equals("null")) {
+				if (RAN != null && !RAN.equals("null")) {
 					arrayParam[2] = 1;	
-					model.addAttribute("accessDBtn", arrayParam[2]);
+					model.addAttribute("RANDBtn", arrayParam[2]);
 				}
 				if (core != null && !core.equals("null")) {
 					arrayParam[3] = 1;	
@@ -1643,13 +1635,13 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 		 
 			String enterprise = request.getParameter("enterprise");
 			String transmission = request.getParameter("transmission");
-			String access = request.getParameter("access");
+			String RAN = request.getParameter("RAN");
 			String core = request.getParameter("core");
 
 			int[] arrayParam = new int[4]; 
 	        arrayParam[0] = 0; // enterprise
 	        arrayParam[1] = 0; // transmission
-	        arrayParam[2] = 0; // access
+	        arrayParam[2] = 0; // RAN
 	        arrayParam[3] = 0; // core
 	        		
 			List<Object[]> cellResult = new ArrayList<Object[]>();
@@ -1668,9 +1660,9 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 				arrayParam[1] = 1;	
 				model.addAttribute("transmBtn", arrayParam[1]);
 			}
-			if (access != null && !access.equals("null")) {
+			if (RAN != null && !RAN.equals("null")) {
 				arrayParam[2] = 1;	
-				model.addAttribute("accessDBtn", arrayParam[2]);
+				model.addAttribute("RANDBtn", arrayParam[2]);
 			}
 			if (core != null && !core.equals("null")) {
 				arrayParam[3] = 1;	
@@ -1761,7 +1753,7 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 
 			String paramEnterprise = request.getParameter("paramEnterprise");
 			String paramTransmission = request.getParameter("paramTransmission");
-			String paramAccess = request.getParameter("paramAccess");
+			String paramRAN = request.getParameter("paramRAN");
 			String paramCore = request.getParameter("paramCore");
 				
 			String strSites ="SELECT distinct b.WARE_NAME,b.WARE_ID,b.LATITUDE,b.LONGITUDE,b.VENDOR FROM NODE_ACTIVE b where b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.VENDOR='"+ selectedVen + "' ";
@@ -1776,7 +1768,7 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 
 			 try {
 				if (selectedVen != null) {
-					strSites= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strSites);					
+					strSites= boqDomainVar ("b",paramEnterprise,paramTransmission,paramRAN,paramCore,strSites);					
 					
 					rtn.put("listVenSites",entityManager.createNativeQuery(strSites).getResultList());
 				}
@@ -1790,9 +1782,9 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 			}
 				try {
 					if (selectedItem != null) {
-						strCells1= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells1);	
-						strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);						
-						strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);	
+						strCells1= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strCells1);	
+						strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strCells2);						
+						strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strCells3);	
 					
 						cellResult.addAll(entityManager.createNativeQuery(strCells1).getResultList());
 						cellResult.addAll(entityManager.createNativeQuery(strCells2).getResultList());
@@ -1810,15 +1802,15 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 				}			 
 				try {
 					if (selectedItem != null) {
-						strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);		
+						strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);		
 						strNodes = strNodes + ") as countNodes,(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and ACTIVE_RECORD = '1' ";
-						strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);
+						strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);
 						strNodes = strNodes + ") as countGcells,(select count(*) from NODE_LCELL c  where a.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1' ";
-						strNodes= boqDomainVar ("c",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);			
+						strNodes= boqDomainVar ("c",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);			
 						strNodes = strNodes + ") as countLcells,(select count(*) from NODE_UCELL d  where a.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1' ";				
-						strNodes= boqDomainVar ("d",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);	
+						strNodes= boqDomainVar ("d",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);	
 						strNodes = strNodes + ") as countUcells FROM NODE_ACTIVE a WHERE a.ACTIVE_RECORD = '1' and a.WARE_ID='"+ selectedItem + "' ";			
-						strNodes= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);								
+						strNodes= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);								
 						rtn.put("listVenNodes", entityManager.createNativeQuery(strNodes).getResultList());
 					}
 				} catch (Exception e) {
@@ -1865,7 +1857,7 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 
 			String paramEnterprise = request.getParameter("paramEnterprise");
 			String paramTransmission = request.getParameter("paramTransmission");
-			String paramAccess = request.getParameter("paramAccess");
+			String paramRAN = request.getParameter("paramRAN");
 			String paramCore = request.getParameter("paramCore");
 				
 			String strSites ="SELECT distinct b.WARE_NAME,b.WARE_ID,b.LATITUDE,b.LONGITUDE,b.SUPPLIER_ID FROM NODE_ACTIVE b where b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.SUPPLIER_ID='"+ selectedSupp + "' ";
@@ -1880,7 +1872,7 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 
 			 try {
 				if (selectedSupp != null) {
-					strSites= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strSites);					
+					strSites= boqDomainVar ("b",paramEnterprise,paramTransmission,paramRAN,paramCore,strSites);					
 					rtn.put("listSuppSites",entityManager.createNativeQuery(strSites).getResultList());
 				}
 			} catch (Exception e) {
@@ -1893,9 +1885,9 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 			}
 				try {
 					if (selectedItem != null) {
-						strCells1= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells1);	
-						strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);						
-						strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);	
+						strCells1= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strCells1);	
+						strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strCells2);						
+						strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strCells3);	
 					
 						cellResult.addAll(entityManager.createNativeQuery(strCells1).getResultList());
 						cellResult.addAll(entityManager.createNativeQuery(strCells2).getResultList());
@@ -1914,15 +1906,15 @@ public String Network_Cell(Locale locale, Model model, HttpServletRequest reques
 			 
 				try {
 					if (selectedItem != null) {
-						strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);		
+						strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);		
 						strNodes = strNodes + ") as countNodes,(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and ACTIVE_RECORD = '1' ";
-						strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);
+						strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);
 						strNodes = strNodes + ") as countGcells,(select count(*) from NODE_LCELL c  where a.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1' ";
-						strNodes= boqDomainVar ("c",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);			
+						strNodes= boqDomainVar ("c",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);			
 						strNodes = strNodes + ") as countLcells,(select count(*) from NODE_UCELL d  where a.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1' ";				
-						strNodes= boqDomainVar ("d",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);	
+						strNodes= boqDomainVar ("d",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);	
 						strNodes = strNodes + ") as countUcells FROM NODE_ACTIVE a WHERE a.ACTIVE_RECORD = '1' and a.WARE_ID='"+ selectedItem + "' ";			
-						strNodes= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);		
+						strNodes= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);		
 						
 						rtn.put("listSuppNodes", entityManager.createNativeQuery(strNodes).getResultList());
 					}
@@ -1963,13 +1955,13 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 		 
 		String enterprise = request.getParameter("enterprise");
 		String transmission = request.getParameter("transmission");
-		String access = request.getParameter("access");
+		String RAN = request.getParameter("RAN");
 		String core = request.getParameter("core");
 
 		int[] arrayParam = new int[4]; 
         arrayParam[0] = 0; // enterprise
         arrayParam[1] = 0; // transmission
-        arrayParam[2] = 0; // access
+        arrayParam[2] = 0; // RAN
         arrayParam[3] = 0; // core
         
     	String strSites ="SELECT DISTINCT b.SITE_ID,b.WARE_NAME,b.WARE_ID,LATITUDE,LONGITUDE,"
@@ -1986,9 +1978,9 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 					arrayParam[1] = 1;
 					model.addAttribute("transmBtn", arrayParam[1]);
 				}
-				if (access != null && !access.equals("null")) {
+				if (RAN != null && !RAN.equals("null")) {
 					arrayParam[2] = 1;	
-					model.addAttribute("accessDBtn", arrayParam[2]);
+					model.addAttribute("RANDBtn", arrayParam[2]);
 				}
 				if (core != null && !core.equals("null")) {
 					arrayParam[3] = 1;	
@@ -2066,13 +2058,13 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 		 
 		String enterprise = request.getParameter("enterprise");
 		String transmission = request.getParameter("transmission");
-		String access = request.getParameter("access");
+		String RAN = request.getParameter("RAN");
 		String core = request.getParameter("core");
 
 		int[] arrayParam = new int[4]; 
         arrayParam[0] = 0; // enterprise
         arrayParam[1] = 0; // transmission
-        arrayParam[2] = 0; // access
+        arrayParam[2] = 0; // RAN
         arrayParam[3] = 0; // core
         
     	String strSites ="SELECT DISTINCT b.SITE_ID,b.WARE_NAME,b.WARE_ID,LATITUDE,LONGITUDE,"
@@ -2089,9 +2081,9 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 					arrayParam[1] = 1;
 					model.addAttribute("transmBtn", arrayParam[1]);
 				}
-				if (access != null && !access.equals("null")) {
+				if (RAN != null && !RAN.equals("null")) {
 					arrayParam[2] = 1;	
-					model.addAttribute("accessDBtn", arrayParam[2]);
+					model.addAttribute("RANDBtn", arrayParam[2]);
 				}
 				if (core != null && !core.equals("null")) {
 					arrayParam[3] = 1;	
@@ -2176,7 +2168,7 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				
 				String paramEnterprise = request.getParameter("paramEnterprise");
 				String paramTransmission = request.getParameter("paramTransmission");
-				String paramAccess = request.getParameter("paramAccess");
+				String paramRAN = request.getParameter("paramRAN");
 				String paramCore = request.getParameter("paramCore");
 					
 				String strSupp ="SELECT distinct a.SUPPLIER_ID,a.SUPPLIER_NAME,a.NODE_TYPE FROM NODE_ACTIVE a where a.NODE_TYPE='"+ selectedNodetType +"' AND a.ACTIVE_RECORD = '1' and "
@@ -2184,7 +2176,7 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 	 	
 				try {
 					if (selectedNodetType != null) {
-						strSupp= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strSupp);			
+						strSupp= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strSupp);			
 						rtn.put("listSuppliers",entityManager.createNativeQuery(strSupp).getResultList());
 					}
 				} catch (Exception e) {
@@ -2230,14 +2222,14 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				
 				String paramEnterprise = request.getParameter("paramEnterprise");
 				String paramTransmission = request.getParameter("paramTransmission");
-				String paramAccess = request.getParameter("paramAccess");
+				String paramRAN = request.getParameter("paramRAN");
 				String paramCore = request.getParameter("paramCore");
 					
 				String strSites ="SELECT distinct b.WARE_NAME,b.WARE_ID,b.SUPPLIER_ID,b.NODE_TYPE FROM NODE_ACTIVE b "
 						+ "where b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.SUPPLIER_ID='"+ selectedSupp + "' AND b.NODE_TYPE='"+SelectedNodeType+"' ";
 				
 				 try {
-					 	strSites= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strSites);
+					 	strSites= boqDomainVar ("b",paramEnterprise,paramTransmission,paramRAN,paramCore,strSites);
 						rtn.put("listSuppSites",entityManager.createNativeQuery(strSites).getResultList());
 					} catch (Exception e) {
 						sw = new StringWriter();
@@ -2283,14 +2275,14 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 					
 					String paramEnterprise = request.getParameter("paramEnterprise");
 					String paramTransmission = request.getParameter("paramTransmission");
-					String paramAccess = request.getParameter("paramAccess");
+					String paramRAN = request.getParameter("paramRAN");
 					String paramCore = request.getParameter("paramCore");
 						
 					String strSites ="SELECT distinct b.WARE_NAME,b.WARE_ID,b.VENDOR,b.NODE_TYPE FROM NODE_ACTIVE b "
 							+ "where b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.VENDOR='"+ selectedVen + "' AND b.NODE_TYPE='"+SelectedNodeType+"' ";
 					
 					 try {
-						 	strSites= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strSites);
+						 	strSites= boqDomainVar ("b",paramEnterprise,paramTransmission,paramRAN,paramCore,strSites);
 							rtn.put("listVenSites",entityManager.createNativeQuery(strSites).getResultList());
 						} catch (Exception e) {
 							sw = new StringWriter();
@@ -2335,7 +2327,7 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				
 				String paramEnterprise = request.getParameter("paramEnterprise");
 				String paramTransmission = request.getParameter("paramTransmission");
-				String paramAccess = request.getParameter("paramAccess");
+				String paramRAN = request.getParameter("paramRAN");
 				String paramCore = request.getParameter("paramCore");
 					
 				String strVen ="SELECT distinct a.VENDOR,a.NODE_TYPE FROM NODE_ACTIVE a where a.NODE_TYPE='"+ selectedNodetType +"' AND a.ACTIVE_RECORD = '1' and "
@@ -2343,7 +2335,7 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 	 	
 				try {
 					if (selectedNodetType != null) {
-						strVen= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strVen);			
+						strVen= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strVen);			
 						rtn.put("listVendors",entityManager.createNativeQuery(strVen).getResultList());
 					}
 				} catch (Exception e) {
@@ -2388,7 +2380,7 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				
 				String paramEnterprise = request.getParameter("paramEnterprise");
 				String paramTransmission = request.getParameter("paramTransmission");
-				String paramAccess = request.getParameter("paramAccess");
+				String paramRAN = request.getParameter("paramRAN");
 				String paramCore = request.getParameter("paramCore");
 					
 				String strSup ="SELECT distinct a.SUPPLIER_ID,a.SUPPLIER_NAME,a.WARE_ID FROM NODE_ACTIVE a where a.WARE_ID='"+ siteId +"' AND a.ACTIVE_RECORD = '1' and "
@@ -2396,7 +2388,7 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 	 	
 				try {
 					if (siteId != null) {
-						strSup= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strSup);			
+						strSup= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strSup);			
 						rtn.put("listSuppliers",entityManager.createNativeQuery(strSup).getResultList());
 					}
 				} catch (Exception e) {
@@ -2442,7 +2434,7 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 						
 						String paramEnterprise = request.getParameter("paramEnterprise");
 						String paramTransmission = request.getParameter("paramTransmission");
-						String paramAccess = request.getParameter("paramAccess");
+						String paramRAN = request.getParameter("paramRAN");
 						String paramCore = request.getParameter("paramCore");
 							
 						String strVen ="SELECT distinct a.VENDOR,a.WARE_ID FROM NODE_ACTIVE a where a.WARE_ID='"+ siteId +"' AND a.ACTIVE_RECORD = '1' and "
@@ -2450,7 +2442,7 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			 	
 						try {
 							if (siteId != null) {
-								strVen= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strVen);			
+								strVen= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strVen);			
 								rtn.put("listVendors",entityManager.createNativeQuery(strVen).getResultList());
 							}
 						} catch (Exception e) {
@@ -2498,7 +2490,7 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				
 				String paramEnterprise = request.getParameter("paramEnterprise");
 				String paramTransmission = request.getParameter("paramTransmission");
-				String paramAccess = request.getParameter("paramAccess");
+				String paramRAN = request.getParameter("paramRAN");
 				String paramCore = request.getParameter("paramCore");
 					
 				String strNodes ="SELECT NODE_PK,NODE_TYPE,NODE_NAME,WARE_ID,SUPPLIER_ID,"
@@ -2511,15 +2503,15 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 
 				try {
 					if (selectedItem != null) {
-						strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);		
+						strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);		
 						strNodes = strNodes + ") as countNodes,(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and ACTIVE_RECORD = '1' ";
-						strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);
+						strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);
 						strNodes = strNodes + ") as countGcells,(select count(*) from NODE_LCELL c  where a.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1' ";
-						strNodes= boqDomainVar ("c",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);			
+						strNodes= boqDomainVar ("c",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);			
 						strNodes = strNodes + ") as countLcells,(select count(*) from NODE_UCELL d  where a.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1' ";				
-						strNodes= boqDomainVar ("d",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);	
+						strNodes= boqDomainVar ("d",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);	
 						strNodes = strNodes + ") as countUcells FROM NODE_ACTIVE a WHERE a.ACTIVE_RECORD = '1' and a.WARE_ID='"+ selectedItem + "' and a.SUPPLIER_ID='"+ selectedSupp + "' and a.NODE_TYPE='"+ SelectedNodeType + "' ";			
-						strNodes= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);		
+						strNodes= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);		
 						
 						rtn.put("listSuppNodes", entityManager.createNativeQuery(strNodes).getResultList());
 					}
@@ -2534,9 +2526,9 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				
 				try {
 						if (selectedItem != null) {
-							strCells1= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells1);	
-							strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);						
-							strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);	
+							strCells1= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strCells1);	
+							strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strCells2);						
+							strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strCells3);	
 												
 							cellResult.addAll(entityManager.createNativeQuery(strCells1).getResultList());
 							cellResult.addAll(entityManager.createNativeQuery(strCells2).getResultList());
@@ -2590,7 +2582,7 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				
 				String paramEnterprise = request.getParameter("paramEnterprise");
 				String paramTransmission = request.getParameter("paramTransmission");
-				String paramAccess = request.getParameter("paramAccess");
+				String paramRAN = request.getParameter("paramRAN");
 				String paramCore = request.getParameter("paramCore");
 					
 				String strNodes ="SELECT NODE_PK,NODE_TYPE,NODE_NAME,WARE_ID,VENDOR,"
@@ -2603,15 +2595,15 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 
 				try {
 					if (selectedItem != null) {
-						strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);		
+						strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);		
 						strNodes = strNodes + ") as countNodes,(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and ACTIVE_RECORD = '1' ";
-						strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);
+						strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);
 						strNodes = strNodes + ") as countGcells,(select count(*) from NODE_LCELL c  where a.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1' ";
-						strNodes= boqDomainVar ("c",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);			
+						strNodes= boqDomainVar ("c",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);			
 						strNodes = strNodes + ") as countLcells,(select count(*) from NODE_UCELL d  where a.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1' ";				
-						strNodes= boqDomainVar ("d",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);	
+						strNodes= boqDomainVar ("d",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);	
 						strNodes = strNodes + ") as countUcells FROM NODE_ACTIVE a WHERE a.ACTIVE_RECORD = '1' and a.WARE_ID='"+ selectedItem + "' and a.VENDOR='"+ selectedVen + "' and a.NODE_TYPE='"+ SelectedNodeType + "' ";			
-						strNodes= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);		
+						strNodes= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);		
 						
 						rtn.put("listVenNodes", entityManager.createNativeQuery(strNodes).getResultList());
 					}
@@ -2626,9 +2618,9 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				
 				try {
 						if (selectedItem != null) {
-							strCells1= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells1);	
-							strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);						
-							strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);	
+							strCells1= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strCells1);	
+							strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strCells2);						
+							strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strCells3);	
 												
 							cellResult.addAll(entityManager.createNativeQuery(strCells1).getResultList());
 							cellResult.addAll(entityManager.createNativeQuery(strCells2).getResultList());
@@ -2673,13 +2665,13 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				 
 					String enterprise = request.getParameter("enterprise");
 					String transmission = request.getParameter("transmission");
-					String access = request.getParameter("access");
+					String RAN = request.getParameter("RAN");
 					String core = request.getParameter("core");
 
 					int[] arrayParam = new int[4]; 
 			        arrayParam[0] = 0; // enterprise
 			        arrayParam[1] = 0; // transmission
-			        arrayParam[2] = 0; // access
+			        arrayParam[2] = 0; // RAN
 			        arrayParam[3] = 0; // core
 			        
 					String strSites ="SELECT DISTINCT b.SITE_ID,b.WARE_NAME,b.WARE_ID,LATITUDE,LONGITUDE,"
@@ -2694,9 +2686,9 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 								arrayParam[1] = 1;	
 								model.addAttribute("transmBtn", arrayParam[1]);
 							}
-							if (access != null && !access.equals("null")) {
+							if (RAN != null && !RAN.equals("null")) {
 								arrayParam[2] = 1;	
-								model.addAttribute("accessDBtn", arrayParam[2]);
+								model.addAttribute("RANDBtn", arrayParam[2]);
 							}
 							if (core != null && !core.equals("null")) {
 								arrayParam[3] = 1;	
@@ -2757,13 +2749,13 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 				 
 					String enterprise = request.getParameter("enterprise");
 					String transmission = request.getParameter("transmission");
-					String access = request.getParameter("access");
+					String RAN = request.getParameter("RAN");
 					String core = request.getParameter("core");
 
 					int[] arrayParam = new int[4]; 
 			        arrayParam[0] = 0; // enterprise
 			        arrayParam[1] = 0; // transmission
-			        arrayParam[2] = 0; // access
+			        arrayParam[2] = 0; // RAN
 			        arrayParam[3] = 0; // core
 			        
 					String strSites ="SELECT DISTINCT b.SITE_ID,b.WARE_NAME,b.WARE_ID,LATITUDE,LONGITUDE,"
@@ -2778,9 +2770,9 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 								arrayParam[1] = 1;	
 								model.addAttribute("transmBtn", arrayParam[1]);
 							}
-							if (access != null && !access.equals("null")) {
+							if (RAN != null && !RAN.equals("null")) {
 								arrayParam[2] = 1;	
-								model.addAttribute("accessDBtn", arrayParam[2]);
+								model.addAttribute("RANDBtn", arrayParam[2]);
 							}
 							if (core != null && !core.equals("null")) {
 								arrayParam[3] = 1;	
@@ -2902,8 +2894,8 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 		return rtn;
 	}
 	
-private static String boqDomain (String paramEnterprise,String paramTransmission,String paramAccess,String paramCore, String str) {
-	if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
+private static String boqDomain (String paramEnterprise,String paramTransmission,String paramRAN,String paramCore, String str) {
+	if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramRAN.equals("true") || paramCore.equals("true")) {
         String[] words = str.split(" ");    
         // Check if the last word is "WHERE" (case-insensitive)
         if (words.length > 0 && "WHERE".equalsIgnoreCase(words[words.length - 1])) {
@@ -2921,15 +2913,15 @@ private static String boqDomain (String paramEnterprise,String paramTransmission
 				str= str + " or DOMAIN ='Transmission' ";
 			}
 		}
-		if (paramAccess.equals("true")) {
+		if (paramRAN.equals("true")) {
 			if(paramEnterprise.equals("false") && paramTransmission.equals("false")) {
-				str= str+ "DOMAIN ='Access' ";
+				str= str+ "DOMAIN ='RAN' ";
 			}else {
-				str= str+ " or DOMAIN ='Access' ";
+				str= str+ " or DOMAIN ='RAN' ";
 			}
 		}
 		if (paramCore.equals("true")) {
-			if(paramEnterprise.equals("false") && paramTransmission.equals("false") && paramAccess.equals("false")) {
+			if(paramEnterprise.equals("false") && paramTransmission.equals("false") && paramRAN.equals("false")) {
 				str= str +"DOMAIN ='Core' ";
 			}else {
 				str= str+ "or DOMAIN ='Core' ";
@@ -2946,8 +2938,8 @@ private static String boqDomain (String paramEnterprise,String paramTransmission
 	return str;
 }
 
-private static String boqDomainVar (String a,String paramEnterprise,String paramTransmission,String paramAccess,String paramCore, String str) {
-	if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
+private static String boqDomainVar (String a,String paramEnterprise,String paramTransmission,String paramRAN,String paramCore, String str) {
+	if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramRAN.equals("true") || paramCore.equals("true")) {
         String[] words = str.split(" ");    
         // Check if the last word is "WHERE" (case-insensitive)
         if (words.length > 0 && "WHERE".equalsIgnoreCase(words[words.length - 1])) {
@@ -2965,15 +2957,15 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				str= str + " or " +a+ ".DOMAIN ='Transmission' ";
 			}
 		}
-		if (paramAccess.equals("true")) {
+		if (paramRAN.equals("true")) {
 			if(paramEnterprise.equals("false") && paramTransmission.equals("false")) {
-				str= str+ a+ ".DOMAIN ='Access' ";
+				str= str+ a+ ".DOMAIN ='RAN' ";
 			}else {
-				str= str+ " or " +a+ ".DOMAIN ='Access' ";
+				str= str+ " or " +a+ ".DOMAIN ='RAN' ";
 			}
 		}
 		if (paramCore.equals("true")) {
-			if(paramEnterprise.equals("false") && paramTransmission.equals("false") && paramAccess.equals("false")) {
+			if(paramEnterprise.equals("false") && paramTransmission.equals("false") && paramRAN.equals("false")) {
 				str= str +a+ ".DOMAIN ='Core' ";
 			}else {
 				str= str+ " or " +a+ ".DOMAIN ='Core' ";
@@ -2994,7 +2986,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 		@RequestMapping(value = "/GetBoqList", method = RequestMethod.GET, produces = "application/json")
 		@ResponseBody
 
-		public LinkedHashMap<String, String> GetBoqList(@RequestParam String SiteId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
+		public LinkedHashMap<String, String> GetBoqList(@RequestParam String SiteId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramRAN,@RequestParam String paramCore) {
 
 			//Session session = almsessions.getSession();
 			//Transaction tx = session.beginTransaction();
@@ -3006,7 +2998,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			try {
 				String strEmpty= "SELECT COUNT(DISTINCT WARE_ID) FROM NODE_ACTIVE WHERE WARE_ID!='null' AND WARE_ID!='0' and WARE_ID is not null ";	
 				String strExist="Select distinct Ware_Name From NODE_ACTIVE where Ware_Id='" + SiteId + "' ";								
-				strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+				strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);	
 				String Site_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(Site_Query);
 				Object Sites = entityManager.createNativeQuery(Site_Query).getSingleResult();
@@ -3015,8 +3007,8 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 		////////////////////////////
 				strEmpty="SELECT COUNT(NODE_PK) FROM NODE_ACTIVE where Active_record='1' ";
 				strExist= "SELECT COUNT(NODE_PK) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='" + SiteId + "' ";	
-				strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
-				strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+				strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
+				strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 				String Node_Active_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(Node_Active_Query);
 				Object CountNodes_Active = entityManager.createNativeQuery(Node_Active_Query).getSingleResult();
@@ -3025,8 +3017,8 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 		////////////////////////////			
 				strEmpty="SELECT COUNT(g.GCELL_ID) FROM NODE_GCELL g, NODE_ACTIVE a  where g.node_pk = a.node_pk ";
 				strExist= "select count(ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"+ SiteId +"' ";	
-				strEmpty= boqDomainVar ("g",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
-				strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+				strEmpty= boqDomainVar ("g",paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
+				strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 				String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(Node_GCell_Query);
 				Object CountNodes_G_CELL = entityManager.createNativeQuery(Node_GCell_Query).getSingleResult();
@@ -3035,8 +3027,8 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 		/////////////////////////////
 				strEmpty="SELECT COUNT(l.LCELL_ID) FROM NODE_LCELL l, NODE_ACTIVE a  where l.node_pk = a.node_pk ";
 				strExist= "select count(nlc.lcell_id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"+ SiteId +"' ";	
-				strEmpty= boqDomainVar ("l",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
-				strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+				strEmpty= boqDomainVar ("l",paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
+				strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 				String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(Node_LCell_Query);
 				Object CountNodes_L_CELL = entityManager.createNativeQuery(Node_LCell_Query).getSingleResult();
@@ -3045,8 +3037,8 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 	/////////////////////////////
 				strEmpty="SELECT COUNT(u.UCELL_ID) FROM NODE_UCELL u, NODE_ACTIVE a  where u.node_pk = a.node_pk ";
 				strExist= "select count(nuc.ucell_id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.Ware_Id = '"+ SiteId +"' ";	
-				strEmpty= boqDomainVar ("u",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
-				strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+				strEmpty= boqDomainVar ("u",paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
+				strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 				String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(Node_UCell_Query);
 				Object CountNodes_U_CELL = entityManager.createNativeQuery(Node_UCell_Query).getSingleResult();
@@ -3058,14 +3050,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 				if (SiteId == "") {
 					strEmpty="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' ";
-					strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+					strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 					String Node_Type_Count = strEmpty;
 					//System.out.println(Node_Type_Count);
 					Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
 					BoqHM.put("Node Type", String.valueOf(CountNodesType));
 				}else {
 					strExist="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"+ SiteId + "' ";
-					strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+					strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 					String Node_Type_Count = strExist;
 					//System.out.println(Node_Type_Count);
 					Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
@@ -3073,7 +3065,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					strExist="";
 				////////////////////////////////
 					strExist="SELECT distinct NODE_TYPE,COUNT(NODE_TYPE) from node_active where Active_record='1' and Ware_Id = '"+SiteId+"' ";
-					strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+					strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 					strExist = strExist +" GROUP BY NODE_TYPE";
 					//System.out.println(strExist);
 					List<Object[]> CountNodesteach_Active = (List<Object[]>) entityManager.createNativeQuery(strExist).getResultList();
@@ -3112,7 +3104,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			@RequestMapping(value = "/GetSiteVenBoqList", method = RequestMethod.GET, produces = "application/json")
 			@ResponseBody
 
-			public LinkedHashMap<String, String> GetSiteVenBoqList(@RequestParam String SiteId,@RequestParam String VenId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
+			public LinkedHashMap<String, String> GetSiteVenBoqList(@RequestParam String SiteId,@RequestParam String VenId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramRAN,@RequestParam String paramCore) {
 
 				//Session session = almsessions.getSession();
 				//Transaction tx = session.beginTransaction();
@@ -3122,16 +3114,16 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 				try {
 						String strEmpty= "SELECT COUNT(DISTINCT WARE_ID) FROM NODE_ACTIVE WHERE WARE_ID!='null' AND WARE_ID!='0' and WARE_ID is not null AND VENDOR!='null' AND VENDOR!='0' AND VENDOR is not null ";
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);	
 						String Site_Query = SiteId == "" ? strEmpty : "Select distinct Ware_Name From NODE_ACTIVE where Ware_Id='" + SiteId + "' and vendor='"+VenId+"' ";
 						//System.out.println(Site_Query);
 						Object Sites = entityManager.createNativeQuery(Site_Query).getSingleResult();
 						strEmpty="";					
 			////////////////////////////
 						strEmpty="SELECT COUNT(DISTINCT NODE_PK) FROM NODE_ACTIVE where Active_record='1' AND VENDOR!='null' AND VENDOR!='0' AND VENDOR is not null ";
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 						String strExist= "SELECT COUNT(DISTINCT NODE_PK) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='" + SiteId + "' and vendor='"+VenId+"'  AND WARE_ID!='null' AND WARE_ID!='0' and WARE_ID is not null ";	
-						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+						strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 						String Node_Active_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_Active_Query);
 						Object CountNodes_Active = entityManager.createNativeQuery(Node_Active_Query).getSingleResult();
@@ -3139,12 +3131,12 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist="";
 			////////////////////////////			
 						strEmpty="SELECT COUNT(DISTINCT GCELL_ID) FROM NODE_GCELL ";
-						if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
+						if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramRAN.equals("true") || paramCore.equals("true")) {
 							strEmpty= strEmpty + "WHERE ";
 						}				
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 						strExist= "select count(DISTINCT ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"+ SiteId +"' and na.vendor='"+VenId+"' ";	
-						strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+						strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 						String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_GCell_Query);
 						Object CountNodes_G_CELL = entityManager.createNativeQuery(Node_GCell_Query).getSingleResult();
@@ -3152,12 +3144,12 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist="";
 			/////////////////////////////
 						strEmpty="SELECT COUNT(DISTINCT LCELL_ID) FROM NODE_LCELL ";
-						if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
+						if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramRAN.equals("true") || paramCore.equals("true")) {
 							strEmpty= strEmpty + "WHERE ";
 						}
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 						strExist= "select count(DISTINCT nlc.lcell_id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"+ SiteId +"' and na.vendor='"+VenId+"' ";	
-						strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+						strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 						String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_LCell_Query);
 						Object CountNodes_L_CELL = entityManager.createNativeQuery(Node_LCell_Query).getSingleResult();
@@ -3165,12 +3157,12 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist="";
 			/////////////////////////////
 						strEmpty="SELECT COUNT(DISTINCT UCELL_ID) FROM NODE_UCELL ";
-						if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
+						if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramRAN.equals("true") || paramCore.equals("true")) {
 							strEmpty= strEmpty + "WHERE ";
 						}
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 						strExist= "select count(DISTINCT nuc.ucell_id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.Ware_Id = '"+ SiteId +"' and na.vendor='"+VenId+"' ";
-						strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+						strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 						String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_UCell_Query);
 						Object CountNodes_U_CELL = entityManager.createNativeQuery(Node_UCell_Query).getSingleResult();
@@ -3182,14 +3174,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 						if (SiteId == "") {
 							strEmpty="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' ";
-							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 							String Node_Type_Count = strEmpty;
 							//System.out.println(Node_Type_Count);
 							Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
 							BoqHM.put("Node Type", String.valueOf(CountNodesType));
 						}else {
 							strExist="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"+ SiteId + "' and vendor='"+VenId+"' ";
-							strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+							strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 							String Node_Type_Count = strExist;
 							//System.out.println(Node_Type_Count);
 							Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
@@ -3197,7 +3189,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strExist="";
 						////////////////////////////////
 							strExist="SELECT distinct NODE_TYPE,COUNT(DISTINCT NODE_TYPE) from node_active where Active_record='1' and Ware_Id = '"+SiteId+"' and vendor='"+VenId+"' ";
-							strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+							strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 							strExist = strExist +" GROUP BY NODE_TYPE";
 							//System.out.println(strExist);
 							List<Object[]> CountNodesteach_Active = (List<Object[]>) entityManager.createNativeQuery(strExist).getResultList();
@@ -3235,7 +3227,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				@RequestMapping(value = "/GetSiteVenNTBoqList", method = RequestMethod.GET, produces = "application/json")
 				@ResponseBody
 
-				public LinkedHashMap<String, String> GetSiteVenNTBoqList(@RequestParam String SiteId,@RequestParam String VenId,@RequestParam String SelectedNodeType,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
+				public LinkedHashMap<String, String> GetSiteVenNTBoqList(@RequestParam String SiteId,@RequestParam String VenId,@RequestParam String SelectedNodeType,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramRAN,@RequestParam String paramCore) {
 
 					//Session session = almsessions.getSession();
 					//Transaction tx = session.beginTransaction();
@@ -3245,16 +3237,16 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 					try {
 							String strEmpty= "SELECT COUNT(DISTINCT WARE_ID) FROM NODE_ACTIVE WHERE WARE_ID!='null' AND WARE_ID!='0' and WARE_ID is not null AND VENDOR!='null' AND VENDOR!='0' AND VENDOR is not null ";
-							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);	
 							String Site_Query = SiteId == "" ? strEmpty : "Select distinct Ware_Name From NODE_ACTIVE where Ware_Id='" + SiteId + "' and vendor='"+VenId+"' and NODE_TYPE='"+SelectedNodeType+"' ";
 							//System.out.println(Site_Query);
 							Object Sites = entityManager.createNativeQuery(Site_Query).getSingleResult();
 							strEmpty="";					
 				////////////////////////////
 							strEmpty="SELECT COUNT(DISTINCT NODE_PK) FROM NODE_ACTIVE where Active_record='1' AND VENDOR!='null' AND VENDOR!='0' AND VENDOR is not null ";
-							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 							String strExist= "SELECT COUNT(DISTINCT NODE_PK) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='" + SiteId + "' and vendor='"+VenId+"' and NODE_TYPE='"+SelectedNodeType+"' AND WARE_ID!='null' AND WARE_ID!='0' and WARE_ID is not null ";	
-							strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+							strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 							String Node_Active_Query = SiteId == "" ? strEmpty : strExist;
 							//System.out.println(Node_Active_Query);
 							Object CountNodes_Active = entityManager.createNativeQuery(Node_Active_Query).getSingleResult();
@@ -3262,12 +3254,12 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strExist="";
 				////////////////////////////			
 							strEmpty="SELECT COUNT(DISTINCT GCELL_ID) FROM NODE_GCELL ";
-							if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
+							if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramRAN.equals("true") || paramCore.equals("true")) {
 								strEmpty= strEmpty + "WHERE ";
 							}				
-							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 							strExist= "select count(DISTINCT ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"+ SiteId +"' and na.vendor='"+VenId+"' and na.NODE_TYPE='"+SelectedNodeType+"' ";	
-							strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+							strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 							String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
 							//System.out.println(Node_GCell_Query);
 							Object CountNodes_G_CELL = entityManager.createNativeQuery(Node_GCell_Query).getSingleResult();
@@ -3275,12 +3267,12 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strExist="";
 				/////////////////////////////
 							strEmpty="SELECT COUNT(DISTINCT LCELL_ID) FROM NODE_LCELL ";
-							if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
+							if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramRAN.equals("true") || paramCore.equals("true")) {
 								strEmpty= strEmpty + "WHERE ";
 							}
-							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 							strExist= "select count(DISTINCT nlc.lcell_id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"+ SiteId +"' and na.vendor='"+VenId+"' and na.NODE_TYPE='"+SelectedNodeType+"' ";	
-							strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+							strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 							String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
 							//System.out.println(Node_LCell_Query);
 							Object CountNodes_L_CELL = entityManager.createNativeQuery(Node_LCell_Query).getSingleResult();
@@ -3288,12 +3280,12 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strExist="";
 				/////////////////////////////
 							strEmpty="SELECT COUNT(DISTINCT UCELL_ID) FROM NODE_UCELL ";
-							if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
+							if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramRAN.equals("true") || paramCore.equals("true")) {
 								strEmpty= strEmpty + "WHERE ";
 							}
-							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 							strExist= "select count(DISTINCT nuc.ucell_id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.Ware_Id = '"+ SiteId +"' and na.vendor='"+VenId+"' and na.NODE_TYPE='"+SelectedNodeType+"' ";
-							strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+							strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 							String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
 							//System.out.println(Node_UCell_Query);
 							Object CountNodes_U_CELL = entityManager.createNativeQuery(Node_UCell_Query).getSingleResult();
@@ -3305,14 +3297,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 							if (SiteId == "") {
 								strEmpty="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' ";
-								strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+								strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 								String Node_Type_Count = strEmpty;
 								//System.out.println(Node_Type_Count);
 								Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
 								BoqHM.put("Node Type", String.valueOf(CountNodesType));
 							}else {
 								strExist="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"+ SiteId + "' and vendor='"+VenId+"' and NODE_TYPE='"+SelectedNodeType+"' ";
-								strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+								strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 								String Node_Type_Count = strExist;
 								//System.out.println(Node_Type_Count);
 								Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
@@ -3320,7 +3312,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 								strExist="";
 							////////////////////////////////
 								strExist="SELECT distinct NODE_TYPE,COUNT(DISTINCT NODE_TYPE) from node_active where Active_record='1' and Ware_Id = '"+SiteId+"' and vendor='"+VenId+"' and NODE_TYPE='"+SelectedNodeType+"' ";
-								strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+								strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 								strExist = strExist +" GROUP BY NODE_TYPE";
 								//System.out.println(strExist);
 								List<Object[]> CountNodesteach_Active = (List<Object[]>) entityManager.createNativeQuery(strExist).getResultList();
@@ -3359,7 +3351,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			@RequestMapping(value = "/GetSiteSupBoqList", method = RequestMethod.GET, produces = "application/json")
 			@ResponseBody
 
-			public LinkedHashMap<String, String> GetSiteSupBoqList(@RequestParam String SiteId,@RequestParam String SuppId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
+			public LinkedHashMap<String, String> GetSiteSupBoqList(@RequestParam String SiteId,@RequestParam String SuppId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramRAN,@RequestParam String paramCore) {
 
 				//Session session = almsessions.getSession();
 				//Transaction tx = session.beginTransaction();
@@ -3371,16 +3363,16 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			
 				try {
 						String strEmpty= "SELECT COUNT(DISTINCT WARE_ID) FROM NODE_ACTIVE WHERE WARE_ID!='null' AND WARE_ID!='0' and WARE_ID is not null AND SUPPLIER_ID!='null' AND SUPPLIER_ID!='0' AND SUPPLIER_ID is not null ";
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);	
 						String Site_Query = SiteId == "" ? strEmpty : "Select distinct Ware_Name From NODE_ACTIVE where Ware_Id='" + SiteId + "' and SUPPLIER_ID='"+SuppId+"' ";
 						//System.out.println(Site_Query);
 						Object Sites = entityManager.createNativeQuery(Site_Query).getSingleResult();
 						strEmpty="";					
 			////////////////////////////
 						strEmpty="SELECT COUNT(DISTINCT NODE_PK) FROM NODE_ACTIVE where Active_record='1' AND SUPPLIER_ID!='null' AND SUPPLIER_ID!='0' AND SUPPLIER_ID is not null ";
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 						String strExist= "SELECT COUNT(DISTINCT NODE_PK) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='" + SiteId + "' and SUPPLIER_ID='"+SuppId+"' AND WARE_ID!='null' AND WARE_ID!='0' and WARE_ID is not null ";	
-						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+						strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 						String Node_Active_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_Active_Query);
 						Object CountNodes_Active = entityManager.createNativeQuery(Node_Active_Query).getSingleResult();
@@ -3388,12 +3380,12 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist="";
 			////////////////////////////			
 						strEmpty="SELECT COUNT(DISTINCT GCELL_ID) FROM NODE_GCELL ";
-						if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
+						if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramRAN.equals("true") || paramCore.equals("true")) {
 							strEmpty= strEmpty + "WHERE ";
 						}				
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 						strExist= "select count(DISTINCT ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"+ SiteId +"' and na.SUPPLIER_ID='"+SuppId+"' ";	
-						strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+						strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 						String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_GCell_Query);
 						Object CountNodes_G_CELL = entityManager.createNativeQuery(Node_GCell_Query).getSingleResult();
@@ -3401,12 +3393,12 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist="";
 			/////////////////////////////
 						strEmpty="SELECT COUNT(DISTINCT LCELL_ID) FROM NODE_LCELL ";
-						if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
+						if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramRAN.equals("true") || paramCore.equals("true")) {
 							strEmpty= strEmpty + "WHERE ";
 						}
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 						strExist= "select count(DISTINCT nlc.lcell_id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"+ SiteId +"' and na.SUPPLIER_ID='"+SuppId+"' ";	
-						strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+						strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 						String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_LCell_Query);
 						Object CountNodes_L_CELL = entityManager.createNativeQuery(Node_LCell_Query).getSingleResult();
@@ -3414,12 +3406,12 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist="";
 			/////////////////////////////
 						strEmpty="SELECT COUNT(DISTINCT UCELL_ID) FROM NODE_UCELL ";
-						if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
+						if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramRAN.equals("true") || paramCore.equals("true")) {
 							strEmpty= strEmpty + "WHERE ";
 						}
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 						strExist= "select count(DISTINCT nuc.ucell_id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.Ware_Id = '"+ SiteId +"' and na.SUPPLIER_ID='"+SuppId+"' ";
-						strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+						strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 						String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_UCell_Query);
 						Object CountNodes_U_CELL = entityManager.createNativeQuery(Node_UCell_Query).getSingleResult();
@@ -3431,14 +3423,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 						if (SiteId == "") {
 							strEmpty="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' ";
-							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 							String Node_Type_Count = strEmpty;
 							//System.out.println(Node_Type_Count);
 							Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
 							BoqHM.put("Node Type", String.valueOf(CountNodesType));
 						}else {
 							strExist="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"+ SiteId + "' and SUPPLIER_ID='"+SuppId+"' ";
-							strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+							strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 							String Node_Type_Count = strExist;
 							//System.out.println(Node_Type_Count);
 							Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
@@ -3446,7 +3438,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strExist="";
 						////////////////////////////////
 							strExist="SELECT distinct NODE_TYPE,COUNT(DISTINCT NODE_TYPE) from node_active where Active_record='1' and Ware_Id = '"+SiteId+"' and SUPPLIER_ID='"+SuppId+"' ";
-							strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+							strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 							strExist = strExist +" GROUP BY NODE_TYPE";
 							//System.out.println(strExist);
 							List<Object[]> CountNodesteach_Active = (List<Object[]>) entityManager.createNativeQuery(strExist).getResultList();
@@ -3483,7 +3475,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			@SuppressWarnings("unchecked")
 			@RequestMapping(value = "/GetSiteSupNTBoqList", method = RequestMethod.GET, produces = "application/json")
 			@ResponseBody
-			public LinkedHashMap<String, String> GetSiteSupNTBoqList(@RequestParam String SiteId,@RequestParam String SuppId,@RequestParam String SelectedNodeType,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
+			public LinkedHashMap<String, String> GetSiteSupNTBoqList(@RequestParam String SiteId,@RequestParam String SuppId,@RequestParam String SelectedNodeType,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramRAN,@RequestParam String paramCore) {
 
 				//Session session = almsessions.getSession();
 				//Transaction tx = session.beginTransaction();
@@ -3494,16 +3486,16 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			
 				try {
 						String strEmpty= "SELECT COUNT(DISTINCT WARE_ID) FROM NODE_ACTIVE WHERE WARE_ID!='null' AND WARE_ID!='0' and WARE_ID is not null AND SUPPLIER_ID!='null' AND SUPPLIER_ID!='0' AND SUPPLIER_ID is not null ";
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);	
 						String Site_Query = SiteId == "" ? strEmpty : "Select distinct Ware_Name From NODE_ACTIVE where Ware_Id='" + SiteId + "' and SUPPLIER_ID='"+SuppId+"' AND NODE_TYPE='"+SelectedNodeType+"' ";
 						//System.out.println(Site_Query);
 						Object Sites = entityManager.createNativeQuery(Site_Query).getSingleResult();
 						strEmpty="";					
 			////////////////////////////
 						strEmpty="SELECT COUNT(DISTINCT NODE_PK) FROM NODE_ACTIVE where Active_record='1' AND SUPPLIER_ID!='null' AND SUPPLIER_ID!='0' AND SUPPLIER_ID is not null ";
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 						String strExist= "SELECT COUNT(DISTINCT NODE_PK) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='" + SiteId + "' and SUPPLIER_ID='"+SuppId+"' AND NODE_TYPE='"+SelectedNodeType+"' AND WARE_ID!='null' AND WARE_ID!='0' and WARE_ID is not null ";	
-						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+						strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 						String Node_Active_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_Active_Query);
 						Object CountNodes_Active = entityManager.createNativeQuery(Node_Active_Query).getSingleResult();
@@ -3511,12 +3503,12 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist="";
 			////////////////////////////			
 						strEmpty="SELECT COUNT(DISTINCT GCELL_ID) FROM NODE_GCELL ";
-						if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
+						if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramRAN.equals("true") || paramCore.equals("true")) {
 							strEmpty= strEmpty + "WHERE ";
 						}				
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 						strExist= "select count(DISTINCT ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"+ SiteId +"' and na.SUPPLIER_ID='"+SuppId+"' AND na.NODE_TYPE='"+SelectedNodeType+"' ";	
-						strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+						strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 						String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_GCell_Query);
 						Object CountNodes_G_CELL = entityManager.createNativeQuery(Node_GCell_Query).getSingleResult();
@@ -3524,12 +3516,12 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist="";
 			/////////////////////////////
 						strEmpty="SELECT COUNT(DISTINCT LCELL_ID) FROM NODE_LCELL ";
-						if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
+						if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramRAN.equals("true") || paramCore.equals("true")) {
 							strEmpty= strEmpty + "WHERE ";
 						}
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 						strExist= "select count(DISTINCT nlc.lcell_id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"+ SiteId +"' and na.SUPPLIER_ID='"+SuppId+"' AND na.NODE_TYPE='"+SelectedNodeType+"' ";	
-						strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+						strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 						String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_LCell_Query);
 						Object CountNodes_L_CELL = entityManager.createNativeQuery(Node_LCell_Query).getSingleResult();
@@ -3537,12 +3529,12 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist="";
 			/////////////////////////////
 						strEmpty="SELECT COUNT(DISTINCT UCELL_ID) FROM NODE_UCELL ";
-						if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
+						if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramRAN.equals("true") || paramCore.equals("true")) {
 							strEmpty= strEmpty + "WHERE ";
 						}
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 						strExist= "select count(DISTINCT nuc.ucell_id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.Ware_Id = '"+ SiteId +"' and na.SUPPLIER_ID='"+SuppId+"' AND na.NODE_TYPE='"+SelectedNodeType+"' ";
-						strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+						strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 						String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_UCell_Query);
 						Object CountNodes_U_CELL = entityManager.createNativeQuery(Node_UCell_Query).getSingleResult();
@@ -3554,14 +3546,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 						if (SiteId == "") {
 							strEmpty="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' ";
-							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 							String Node_Type_Count = strEmpty;
 							//System.out.println(Node_Type_Count);
 							Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
 							BoqHM.put("Node Type", String.valueOf(CountNodesType));
 						}else {
 							strExist="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"+ SiteId + "' and SUPPLIER_ID='"+SuppId+"' AND NODE_TYPE='"+SelectedNodeType+"' ";
-							strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+							strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 							String Node_Type_Count = strExist;
 							//System.out.println(Node_Type_Count);
 							Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
@@ -3569,7 +3561,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strExist="";
 						////////////////////////////////
 							strExist="SELECT distinct NODE_TYPE,COUNT(DISTINCT NODE_TYPE) from node_active where Active_record='1' and Ware_Id = '"+SiteId+"' and SUPPLIER_ID='"+SuppId+"' AND NODE_TYPE='"+SelectedNodeType+"' ";
-							strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+							strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 							strExist = strExist +" GROUP BY NODE_TYPE";
 							//System.out.println(strExist);
 							List<Object[]> CountNodesteach_Active = (List<Object[]>) entityManager.createNativeQuery(strExist).getResultList();
@@ -3608,7 +3600,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 		@RequestMapping(value = "/GetVenBoqList", method = RequestMethod.GET, produces = "application/json")
 		@ResponseBody
 
-		public LinkedHashMap<String, String> GetVenBoqList(@RequestParam String VenId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
+		public LinkedHashMap<String, String> GetVenBoqList(@RequestParam String VenId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramRAN,@RequestParam String paramCore) {
 
 			//Session session = almsessions.getSession();
 			//Transaction tx = session.beginTransaction();
@@ -3619,16 +3611,16 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			try {
 					
 				String strEmpty= "SELECT COUNT(DISTINCT VENDOR) FROM NODE_ACTIVE WHERE WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null AND VENDOR!='null' AND VENDOR!='0' AND VENDOR is not null  ";	
-				strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+				strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);	
 				String Vendor_Query = VenId == "" ? strEmpty : "Select distinct VENDOR From NODE_ACTIVE where VENDOR='" + VenId + "' ";
 				//System.out.println(Vendor_Query);
 				Object Vendors = entityManager.createNativeQuery(Vendor_Query).getSingleResult();
 				strEmpty="";
 		////////////////////////////
 				strEmpty= "SELECT COUNT(DISTINCT WARE_ID) FROM NODE_ACTIVE WHERE WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null AND VENDOR!='null' AND VENDOR!='0' AND VENDOR is not null  ";	
-				strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+				strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);	
 				String strExist ="Select distinct COUNT(DISTINCT WARE_ID) From NODE_ACTIVE where VENDOR='" + VenId + "' AND WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null ";
-				strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);					
+				strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);					
 				String Site_Query = VenId == "" ? strEmpty : strExist;
 				//System.out.println(Site_Query);
 				Object Sites = entityManager.createNativeQuery(Site_Query).getSingleResult();
@@ -3636,9 +3628,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist="";
 		////////////////////////////
 				strEmpty="SELECT COUNT(DISTINCT NODE_PK) FROM NODE_ACTIVE where Active_record='1' AND VENDOR!='null' AND VENDOR!='0' AND VENDOR is not null ";	
-				strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+				strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 				strExist= "SELECT COUNT(DISTINCT NODE_PK) FROM NODE_ACTIVE where Active_record='1' and VENDOR='" + VenId + "' AND WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null ";	
-				strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+				strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 				String Node_Active_Query = VenId == "" ? strEmpty : strExist;
 				//System.out.println(Node_Active_Query);
 				Object CountNodes_Active = entityManager.createNativeQuery(Node_Active_Query).getSingleResult();
@@ -3646,13 +3638,13 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist="";					
 		////////////////////////////			
 				strEmpty="SELECT COUNT(DISTINCT GCELL_ID) FROM NODE_GCELL ";
-				if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
+				if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramRAN.equals("true") || paramCore.equals("true")) {
 					strEmpty= strEmpty + "WHERE ";
 				}				
-				strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+				strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 				strExist= "select co"
 						+ "unt(DISTINCT ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.VENDOR = '"+ VenId +"' ";	
-				strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+				strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 				String Node_GCell_Query = VenId == "" ? strEmpty : strExist;
 				//System.out.println(Node_GCell_Query);
 				Object CountNodes_G_CELL = entityManager.createNativeQuery(Node_GCell_Query).getSingleResult();
@@ -3660,12 +3652,12 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist="";
 		/////////////////////////////
 				strEmpty="SELECT COUNT(DISTINCT LCELL_ID) FROM NODE_LCELL ";
-				if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
+				if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramRAN.equals("true") || paramCore.equals("true")) {
 					strEmpty= strEmpty + "WHERE ";
 				}
-				strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+				strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 				strExist= "select count(DISTINCT nlc.lcell_id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.VENDOR = '"+ VenId +"' ";	
-				strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+				strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 				String Node_LCell_Query = VenId == "" ? strEmpty : strExist;
 				//System.out.println(Node_LCell_Query);
 				Object CountNodes_L_CELL = entityManager.createNativeQuery(Node_LCell_Query).getSingleResult();
@@ -3673,12 +3665,12 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist="";
 		/////////////////////////////
 				strEmpty="SELECT COUNT(DISTINCT UCELL_ID) FROM NODE_UCELL ";
-				if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
+				if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramRAN.equals("true") || paramCore.equals("true")) {
 					strEmpty= strEmpty + "WHERE ";
 				}
-				strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+				strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 				strExist= "select count(DISTINCT nuc.ucell_id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.VENDOR = '"+ VenId +"' ";	
-				strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+				strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 				String Node_UCell_Query = VenId == "" ? strEmpty : strExist;
 				//System.out.println(Node_UCell_Query);
 				Object CountNodes_U_CELL = entityManager.createNativeQuery(Node_UCell_Query).getSingleResult();
@@ -3691,14 +3683,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 				if (VenId == "") {
 					strEmpty="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' ";
-					strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+					strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 					String Node_Type_Count = strEmpty;
 					//System.out.println(Node_Type_Count);
 					Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
 					BoqHM.put("Node Type", String.valueOf(CountNodesType));
 				}else {
 					strExist="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and VENDOR='"+ VenId + "' ";
-					strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+					strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 					String Node_Type_Count = strExist;
 					//System.out.println(Node_Type_Count);
 					Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
@@ -3706,7 +3698,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					strExist="";
 				////////////////////////////////
 					strExist="SELECT distinct NODE_TYPE,COUNT(DISTINCT NODE_TYPE) from node_active where Active_record='1' and VENDOR = '"+VenId+"' ";
-					strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+					strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 					strExist = strExist +" GROUP BY NODE_TYPE";
 					//System.out.println(strExist);
 					List<Object[]> CountNodesteach_Active = (List<Object[]>) entityManager.createNativeQuery(strExist).getResultList();
@@ -3745,7 +3737,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				@RequestMapping(value = "/GetVenSiteBoqList", method = RequestMethod.GET, produces = "application/json")
 				@ResponseBody
 
-				public LinkedHashMap<String, String> GetVenSiteBoqList(@RequestParam String VenId,@RequestParam String siteId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
+				public LinkedHashMap<String, String> GetVenSiteBoqList(@RequestParam String VenId,@RequestParam String siteId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramRAN,@RequestParam String paramCore) {
 
 					//Session session = almsessions.getSession();
 					//Transaction tx = session.beginTransaction();
@@ -3756,16 +3748,16 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					try {
 							
 						String strEmpty= "SELECT COUNT(DISTINCT VENDOR) FROM NODE_ACTIVE WHERE WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null AND VENDOR!='null' AND VENDOR!='0' AND VENDOR is not null  ";	
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);	
 						String Vendor_Query = VenId == "" ? strEmpty : "Select distinct VENDOR From NODE_ACTIVE where VENDOR='" + VenId + "' and ware_id='"+siteId+"' ";
 						//System.out.println(Vendor_Query);
 						Object Vendors = entityManager.createNativeQuery(Vendor_Query).getSingleResult();
 						strEmpty="";
 				////////////////////////////
 						strEmpty= "SELECT COUNT(DISTINCT WARE_ID) FROM NODE_ACTIVE WHERE WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null AND VENDOR!='null' AND VENDOR!='0' AND VENDOR is not null  ";	
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);	
 						String strExist ="Select distinct COUNT(DISTINCT WARE_ID) From NODE_ACTIVE where VENDOR='" + VenId + "' and ware_id='"+siteId+"' AND WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null ";
-						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);					
+						strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);					
 						String Site_Query = VenId == "" ? strEmpty : strExist;
 						//System.out.println(Site_Query);
 						Object Sites = entityManager.createNativeQuery(Site_Query).getSingleResult();
@@ -3773,9 +3765,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist="";
 				////////////////////////////
 						strEmpty="SELECT COUNT(DISTINCT NODE_PK) FROM NODE_ACTIVE where Active_record='1' AND VENDOR!='null' AND VENDOR!='0' AND VENDOR is not null ";	
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 						strExist= "SELECT COUNT(DISTINCT NODE_PK) FROM NODE_ACTIVE where Active_record='1' and VENDOR='" + VenId + "' and ware_id='"+siteId+"' AND WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null ";	
-						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+						strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 						String Node_Active_Query = VenId == "" ? strEmpty : strExist;
 						//System.out.println(Node_Active_Query);
 						Object CountNodes_Active = entityManager.createNativeQuery(Node_Active_Query).getSingleResult();
@@ -3783,13 +3775,13 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist="";					
 				////////////////////////////			
 						strEmpty="SELECT COUNT(DISTINCT GCELL_ID) FROM NODE_GCELL ";
-						if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
+						if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramRAN.equals("true") || paramCore.equals("true")) {
 							strEmpty= strEmpty + "WHERE ";
 						}				
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 						strExist= "select co"
 								+ "unt(DISTINCT ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.VENDOR = '"+ VenId +"' and ware_id='"+siteId+"' ";	
-						strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+						strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 						String Node_GCell_Query = VenId == "" ? strEmpty : strExist;
 						//System.out.println(Node_GCell_Query);
 						Object CountNodes_G_CELL = entityManager.createNativeQuery(Node_GCell_Query).getSingleResult();
@@ -3797,12 +3789,12 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist="";
 				/////////////////////////////
 						strEmpty="SELECT COUNT(DISTINCT LCELL_ID) FROM NODE_LCELL ";
-						if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
+						if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramRAN.equals("true") || paramCore.equals("true")) {
 							strEmpty= strEmpty + "WHERE ";
 						}
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 						strExist= "select count(DISTINCT nlc.lcell_id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.VENDOR = '"+ VenId +"' and ware_id='"+siteId+"' ";	
-						strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+						strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 						String Node_LCell_Query = VenId == "" ? strEmpty : strExist;
 						//System.out.println(Node_LCell_Query);
 						Object CountNodes_L_CELL = entityManager.createNativeQuery(Node_LCell_Query).getSingleResult();
@@ -3810,12 +3802,12 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist="";
 				/////////////////////////////
 						strEmpty="SELECT COUNT(DISTINCT UCELL_ID) FROM NODE_UCELL ";
-						if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
+						if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramRAN.equals("true") || paramCore.equals("true")) {
 							strEmpty= strEmpty + "WHERE ";
 						}
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 						strExist= "select count(DISTINCT nuc.ucell_id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.VENDOR = '"+ VenId +"' and ware_id='"+siteId+"' ";	
-						strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+						strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 						String Node_UCell_Query = VenId == "" ? strEmpty : strExist;
 						//System.out.println(Node_UCell_Query);
 						Object CountNodes_U_CELL = entityManager.createNativeQuery(Node_UCell_Query).getSingleResult();
@@ -3828,14 +3820,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 						if (VenId == "") {
 							strEmpty="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' ";
-							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 							String Node_Type_Count = strEmpty;
 							//System.out.println(Node_Type_Count);
 							Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
 							BoqHM.put("Node Type", String.valueOf(CountNodesType));
 						}else {
 							strExist="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and VENDOR='"+ VenId + "' and ware_id='"+siteId+"' ";
-							strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+							strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 							String Node_Type_Count = strExist;
 							//System.out.println(Node_Type_Count);
 							Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
@@ -3843,7 +3835,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strExist="";
 						////////////////////////////////
 							strExist="SELECT distinct NODE_TYPE,COUNT(DISTINCT NODE_TYPE) from node_active where Active_record='1' and VENDOR = '"+VenId+"' and ware_id='"+siteId+"' ";
-							strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+							strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 							strExist = strExist +" GROUP BY NODE_TYPE";
 							//System.out.println(strExist);
 							List<Object[]> CountNodesteach_Active = (List<Object[]>) entityManager.createNativeQuery(strExist).getResultList();
@@ -3883,7 +3875,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				@RequestMapping(value = "/GetSupSiteBoqList", method = RequestMethod.GET, produces = "application/json")
 				@ResponseBody
 
-				public LinkedHashMap<String, String> GetSupSiteBoqList(@RequestParam String SupId,@RequestParam String siteId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
+				public LinkedHashMap<String, String> GetSupSiteBoqList(@RequestParam String SupId,@RequestParam String siteId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramRAN,@RequestParam String paramCore) {
 
 					//Session session = almsessions.getSession();
 					//Transaction tx = session.beginTransaction();
@@ -3894,16 +3886,16 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					try {
 							
 						String strEmpty= "SELECT COUNT(DISTINCT SUPPLIER_ID) FROM NODE_ACTIVE WHERE WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null AND SUPPLIER_ID!='null' AND SUPPLIER_ID!='0' AND SUPPLIER_ID is not null  ";	
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);	
 						String Supplier_Query = SupId == "" ? strEmpty : "Select distinct SUPPLIER_NAME From NODE_ACTIVE where SUPPLIER_ID='" + SupId + "' and ware_id='"+siteId+"' ";
 						//System.out.println(Vendor_Query);
 						Object Suppliers = entityManager.createNativeQuery(Supplier_Query).getSingleResult();
 						strEmpty="";
 				////////////////////////////
 						strEmpty= "SELECT COUNT(DISTINCT WARE_ID) FROM NODE_ACTIVE WHERE WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null AND SUPPLIER_ID!='null' AND SUPPLIER_ID!='0' AND SUPPLIER_ID is not null  ";	
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);	
 						String strExist ="Select distinct COUNT(DISTINCT WARE_ID) From NODE_ACTIVE where SUPPLIER_ID='" + SupId + "' and ware_id='"+siteId+"' AND WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null ";
-						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);					
+						strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);					
 						String Site_Query = SupId == "" ? strEmpty : strExist;
 						//System.out.println(Site_Query);
 						Object Sites = entityManager.createNativeQuery(Site_Query).getSingleResult();
@@ -3911,9 +3903,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist="";
 				////////////////////////////
 						strEmpty="SELECT COUNT(DISTINCT NODE_PK) FROM NODE_ACTIVE where Active_record='1' AND SUPPLIER_ID!='null' AND SUPPLIER_ID!='0' AND SUPPLIER_ID is not null ";	
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 						strExist= "SELECT COUNT(DISTINCT NODE_PK) FROM NODE_ACTIVE where Active_record='1' and SUPPLIER_ID='" + SupId + "' and ware_id='"+siteId+"' AND WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null ";	
-						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+						strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 						String Node_Active_Query = SupId == "" ? strEmpty : strExist;
 						//System.out.println(Node_Active_Query);
 						Object CountNodes_Active = entityManager.createNativeQuery(Node_Active_Query).getSingleResult();
@@ -3921,13 +3913,13 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist="";					
 				////////////////////////////			
 						strEmpty="SELECT COUNT(DISTINCT GCELL_ID) FROM NODE_GCELL ";
-						if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
+						if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramRAN.equals("true") || paramCore.equals("true")) {
 							strEmpty= strEmpty + "WHERE ";
 						}				
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 						strExist= "select co"
 								+ "unt(DISTINCT ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.SUPPLIER_ID = '"+ SupId +"' and ware_id='"+siteId+"' ";	
-						strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+						strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 						String Node_GCell_Query = SupId == "" ? strEmpty : strExist;
 						//System.out.println(Node_GCell_Query);
 						Object CountNodes_G_CELL = entityManager.createNativeQuery(Node_GCell_Query).getSingleResult();
@@ -3935,12 +3927,12 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist="";
 				/////////////////////////////
 						strEmpty="SELECT COUNT(DISTINCT LCELL_ID) FROM NODE_LCELL ";
-						if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
+						if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramRAN.equals("true") || paramCore.equals("true")) {
 							strEmpty= strEmpty + "WHERE ";
 						}
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 						strExist= "select count(DISTINCT nlc.lcell_id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.SUPPLIER_ID = '"+ SupId +"' and ware_id='"+siteId+"' ";	
-						strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+						strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 						String Node_LCell_Query = SupId == "" ? strEmpty : strExist;
 						//System.out.println(Node_LCell_Query);
 						Object CountNodes_L_CELL = entityManager.createNativeQuery(Node_LCell_Query).getSingleResult();
@@ -3948,12 +3940,12 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist="";
 				/////////////////////////////
 						strEmpty="SELECT COUNT(DISTINCT UCELL_ID) FROM NODE_UCELL ";
-						if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
+						if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramRAN.equals("true") || paramCore.equals("true")) {
 							strEmpty= strEmpty + "WHERE ";
 						}
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 						strExist= "select count(DISTINCT nuc.ucell_id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.SUPPLIER_ID = '"+ SupId +"' and ware_id='"+siteId+"' ";	
-						strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+						strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 						String Node_UCell_Query = SupId == "" ? strEmpty : strExist;
 						//System.out.println(Node_UCell_Query);
 						Object CountNodes_U_CELL = entityManager.createNativeQuery(Node_UCell_Query).getSingleResult();
@@ -3966,14 +3958,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 						if (SupId == "") {
 							strEmpty="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' ";
-							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 							String Node_Type_Count = strEmpty;
 							//System.out.println(Node_Type_Count);
 							Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
 							BoqHM.put("Node Type", String.valueOf(CountNodesType));
 						}else {
 							strExist="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and SUPPLIER_ID='"+ SupId + "' and ware_id='"+siteId+"' ";
-							strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+							strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 							String Node_Type_Count = strExist;
 							//System.out.println(Node_Type_Count);
 							Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
@@ -3981,7 +3973,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strExist="";
 						////////////////////////////////
 							strExist="SELECT distinct NODE_TYPE,COUNT(DISTINCT NODE_TYPE) from node_active where Active_record='1' and SUPPLIER_ID = '"+SupId+"' and ware_id='"+siteId+"' ";
-							strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+							strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 							strExist = strExist +" GROUP BY NODE_TYPE";
 							//System.out.println(strExist);
 							List<Object[]> CountNodesteach_Active = (List<Object[]>) entityManager.createNativeQuery(strExist).getResultList();
@@ -4019,7 +4011,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				@RequestMapping(value = "/GetSupBoqList", method = RequestMethod.GET, produces = "application/json")
 				@ResponseBody
 
-				public LinkedHashMap<String, String> GetSupBoqList(@RequestParam String SuppId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
+				public LinkedHashMap<String, String> GetSupBoqList(@RequestParam String SuppId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramRAN,@RequestParam String paramCore) {
 
 					//Session session = almsessions.getSession();
 					//Transaction tx = session.beginTransaction();
@@ -4029,14 +4021,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 				try {
 						String strEmpty= "SELECT COUNT(DISTINCT Supplier_Id) FROM NODE_ACTIVE WHERE WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null AND SUPPLIER_ID!='null' AND SUPPLIER_ID!='0' AND SUPPLIER_ID is not null  ";	
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);	
 						String Supplier_Query = SuppId == "" ? strEmpty : "Select distinct Supplier_Name From NODE_ACTIVE where Supplier_Id='" + SuppId + "' ";
 						//System.out.println(Site_Query);
 						Object Suppliers = entityManager.createNativeQuery(Supplier_Query).getSingleResult();
 						strEmpty="";	
 				////////////////////////////
 						strEmpty= "SELECT COUNT(DISTINCT WARE_ID) FROM NODE_ACTIVE WHERE WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null AND SUPPLIER_ID!='null' AND SUPPLIER_ID!='0' AND SUPPLIER_ID is not null  ";	
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);	
 						String strExist= "Select distinct COUNT(DISTINCT WARE_ID) From NODE_ACTIVE where Supplier_Id='" + SuppId + "' AND WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null ";							
 						String Site_Query = SuppId == "" ? strEmpty : strExist;
 						//System.out.println(Site_Query);
@@ -4045,9 +4037,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist="";
 				////////////////////////////
 						strEmpty="SELECT COUNT(DISTINCT NODE_PK) FROM NODE_ACTIVE where Active_record='1' AND SUPPLIER_ID!='null' AND SUPPLIER_ID!='0' AND SUPPLIER_ID is not null ";	
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 						strExist= "SELECT COUNT(DISTINCT NODE_PK) FROM NODE_ACTIVE where Active_record='1' and Supplier_Id='" + SuppId + "' and WARE_ID!='null' and WARE_ID!='0' and WARE_ID is not null ";	
-						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+						strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 						String Node_Active_Query = SuppId == "" ? strEmpty : strExist;
 						//System.out.println(Node_Active_Query);
 						Object CountNodes_Active = entityManager.createNativeQuery(Node_Active_Query).getSingleResult();
@@ -4055,12 +4047,12 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist="";					
 				////////////////////////////			
 							strEmpty="SELECT COUNT(DISTINCT GCELL_ID) FROM NODE_GCELL ";
-							if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
+							if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramRAN.equals("true") || paramCore.equals("true")) {
 								strEmpty= strEmpty + "WHERE ";
 							}				
-							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 							strExist= "select count(DISTINCT ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Supplier_Id = '"+ SuppId +"' ";	
-							strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+							strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 							String Node_GCell_Query = SuppId == "" ? strEmpty : strExist;
 							//System.out.println(Node_GCell_Query);
 							Object CountNodes_G_CELL = entityManager.createNativeQuery(Node_GCell_Query).getSingleResult();
@@ -4068,12 +4060,12 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strExist="";
 				/////////////////////////////
 							strEmpty="SELECT COUNT(DISTINCT LCELL_ID) FROM NODE_LCELL ";
-							if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
+							if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramRAN.equals("true") || paramCore.equals("true")) {
 								strEmpty= strEmpty + "WHERE ";
 							}
-							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 							strExist= "select count(DISTINCT nlc.lcell_id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Supplier_Id = '"+ SuppId +"' ";	
-							strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+							strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 							String Node_LCell_Query = SuppId == "" ? strEmpty : strExist;
 							//System.out.println(Node_LCell_Query);
 							Object CountNodes_L_CELL = entityManager.createNativeQuery(Node_LCell_Query).getSingleResult();
@@ -4081,12 +4073,12 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strExist="";
 				/////////////////////////////
 							strEmpty="SELECT COUNT(DISTINCT UCELL_ID) FROM NODE_UCELL ";
-							if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
+							if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramRAN.equals("true") || paramCore.equals("true")) {
 								strEmpty= strEmpty + "WHERE ";
 							}
-							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+							strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 							strExist= "select count(DISTINCT nuc.ucell_id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.Supplier_Id = '"+ SuppId +"' ";	
-							strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+							strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 							String Node_UCell_Query = SuppId == "" ? strEmpty : strExist;
 							//System.out.println(Node_UCell_Query);
 							Object CountNodes_U_CELL = entityManager.createNativeQuery(Node_UCell_Query).getSingleResult();
@@ -4099,14 +4091,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 							if (SuppId == "") {
 								strEmpty="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' ";
-								strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+								strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 								String Node_Type_Count = strEmpty;
 								//System.out.println(Node_Type_Count);
 								Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
 								BoqHM.put("Node Type", String.valueOf(CountNodesType));
 							}else {
 								strExist="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and Supplier_Id='"+ SuppId + "' ";
-								strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+								strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 								String Node_Type_Count = strExist;
 								//System.out.println(Node_Type_Count);
 								Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
@@ -4114,7 +4106,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 								strExist="";
 							////////////////////////////////
 								strExist="SELECT distinct NODE_TYPE,COUNT(DISTINCT NODE_TYPE) from node_active where Active_record='1' and Supplier_Id = '"+SuppId+"' ";
-								strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+								strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 								strExist = strExist +" GROUP BY NODE_TYPE";
 								//System.out.println(strExist);
 								List<Object[]> CountNodesteach_Active = (List<Object[]>) entityManager.createNativeQuery(strExist).getResultList();
@@ -4153,7 +4145,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				@RequestMapping(value = "/GetVenNtypeBoqList", method = RequestMethod.GET, produces = "application/json")
 				@ResponseBody
 
-				public LinkedHashMap<String, String> GetVenNtypeBoqList(@RequestParam String VenId,@RequestParam String NodeTId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
+				public LinkedHashMap<String, String> GetVenNtypeBoqList(@RequestParam String VenId,@RequestParam String NodeTId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramRAN,@RequestParam String paramCore) {
 
 					//Session session = almsessions.getSession();
 					//Transaction tx = session.beginTransaction();
@@ -4163,14 +4155,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 				try {
 						String strEmpty= "SELECT COUNT(DISTINCT VENDOR) FROM NODE_ACTIVE WHERE NODE_TYPE='"+NodeTId+"' AND WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null AND VENDOR!='null' AND VENDOR!='0' AND VENDOR is not null  ";	
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);	
 						String Vendor_Query = VenId == "" ? strEmpty : "Select distinct VENDOR From NODE_ACTIVE where VENDOR='" + VenId + "' AND NODE_TYPE='"+NodeTId+"' ";
 						//System.out.println(Vendor_Query);
 						Object Vendors = entityManager.createNativeQuery(Vendor_Query).getSingleResult();
 						strEmpty="";	
 				////////////////////////////
 						strEmpty= "SELECT COUNT(DISTINCT WARE_ID) FROM NODE_ACTIVE WHERE NODE_TYPE='"+NodeTId+"' AND WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null AND VENDOR!='null' AND VENDOR!='0' AND VENDOR is not null  ";	
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);	
 						String strExist= "Select distinct COUNT(DISTINCT WARE_ID) From NODE_ACTIVE where VENDOR='" + VenId + "' AND NODE_TYPE='"+NodeTId+"' AND WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null ";							
 						String Site_Query = VenId == "" ? strEmpty : strExist;
 						//System.out.println(Site_Query);
@@ -4179,9 +4171,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist="";
 				////////////////////////////
 						strEmpty="SELECT COUNT(DISTINCT NODE_PK) FROM NODE_ACTIVE where Active_record='1' AND VENDOR!='null' AND VENDOR!='0' AND VENDOR is not null AND NODE_TYPE='"+NodeTId+"' ";	
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 						strExist= "SELECT COUNT(DISTINCT NODE_PK) FROM NODE_ACTIVE where Active_record='1' and VENDOR='" + VenId + "' AND NODE_TYPE='"+NodeTId+"' and WARE_ID!='null' and WARE_ID!='0' and WARE_ID is not null ";	
-						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+						strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 						String Node_Active_Query = VenId == "" ? strEmpty : strExist;
 						//System.out.println(Node_Active_Query);
 						Object CountNodes_Active = entityManager.createNativeQuery(Node_Active_Query).getSingleResult();
@@ -4189,9 +4181,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist="";					
 				////////////////////////////			
 						strEmpty="SELECT COUNT(DISTINCT ngc.GCELL_ID) FROM NODE_GCELL ngc , node_active na where na.node_pk = ngc.node_pk and na.NODE_TYPE='"+NodeTId+"' ";
-						strEmpty= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+						strEmpty= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 						strExist= "select count(DISTINCT ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.VENDOR = '"+ VenId +"' and na.NODE_TYPE='"+NodeTId+"' ";	
-						strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+						strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 						String Node_GCell_Query = VenId == "" ? strEmpty : strExist;
 						//System.out.println(Node_GCell_Query);
 						Object CountNodes_G_CELL = entityManager.createNativeQuery(Node_GCell_Query).getSingleResult();
@@ -4199,9 +4191,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist="";
 				/////////////////////////////
 						strEmpty="SELECT COUNT(DISTINCT nlc.LCELL_ID) FROM NODE_LCELL nlc , node_active na where na.node_pk = nlc.node_pk and na.NODE_TYPE='"+NodeTId+"' ";
-						strEmpty= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+						strEmpty= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 						strExist= "select count(DISTINCT nlc.lcell_id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.VENDOR = '"+ VenId +"' and na.NODE_TYPE='"+NodeTId+"' ";	
-						strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+						strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 						String Node_LCell_Query = VenId == "" ? strEmpty : strExist;
 						//System.out.println(Node_LCell_Query);
 						Object CountNodes_L_CELL = entityManager.createNativeQuery(Node_LCell_Query).getSingleResult();
@@ -4209,9 +4201,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist="";
 				/////////////////////////////
 						strEmpty="SELECT COUNT(DISTINCT nuc.UCELL_ID) FROM NODE_UCELL nuc , node_active na where na.node_pk = nuc.node_pk and na.NODE_TYPE='"+NodeTId+"'";
-						strEmpty= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+						strEmpty= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 						strExist= "select count(DISTINCT nuc.ucell_id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.VENDOR = '"+ VenId +"' and na.NODE_TYPE='"+NodeTId+"' ";	
-						strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+						strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 						String Node_UCell_Query = VenId == "" ? strEmpty : strExist;
 						//System.out.println(Node_UCell_Query);
 						Object CountNodes_U_CELL = entityManager.createNativeQuery(Node_UCell_Query).getSingleResult();
@@ -4224,14 +4216,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 							if (VenId == "") {
 								strEmpty="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and NODE_TYPE='"+NodeTId+"' ";
-								strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+								strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 								String Node_Type_Count = strEmpty;
 								//System.out.println(Node_Type_Count);
 								Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
 								BoqHM.put("Node Type", String.valueOf(CountNodesType));
 							}else {
 								strExist="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and VENDOR='"+ VenId + "' and NODE_TYPE='"+NodeTId+"' ";
-								strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+								strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 								String Node_Type_Count = strExist;
 								//System.out.println(Node_Type_Count);
 								Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
@@ -4239,7 +4231,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 								strExist="";
 							////////////////////////////////
 								strExist="SELECT distinct NODE_TYPE,COUNT(DISTINCT NODE_TYPE) from node_active where Active_record='1' and VENDOR = '"+VenId+"' and NODE_TYPE='"+NodeTId+"' ";
-								strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+								strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 								strExist = strExist +" GROUP BY NODE_TYPE";
 								//System.out.println(strExist);
 								List<Object[]> CountNodesteach_Active = (List<Object[]>) entityManager.createNativeQuery(strExist).getResultList();
@@ -4277,7 +4269,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				@RequestMapping(value = "/GetSuppNtypeBoqList", method = RequestMethod.GET, produces = "application/json")
 				@ResponseBody
 
-				public LinkedHashMap<String, String> GetSuppNtypeBoqList(@RequestParam String SuppId,@RequestParam String NodeTId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
+				public LinkedHashMap<String, String> GetSuppNtypeBoqList(@RequestParam String SuppId,@RequestParam String NodeTId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramRAN,@RequestParam String paramCore) {
 
 					//Session session = almsessions.getSession();
 					//Transaction tx = session.beginTransaction();
@@ -4287,14 +4279,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 				try {
 						String strEmpty= "SELECT COUNT(DISTINCT Supplier_Id) FROM NODE_ACTIVE WHERE NODE_TYPE='"+NodeTId+"' AND WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null AND SUPPLIER_ID!='null' AND SUPPLIER_ID!='0' AND SUPPLIER_ID is not null  ";	
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);	
 						String Supplier_Query = SuppId == "" ? strEmpty : "Select distinct Supplier_Name From NODE_ACTIVE where Supplier_Id='" + SuppId + "' AND NODE_TYPE='"+NodeTId+"' ";
 						//System.out.println(Site_Query);
 						Object Suppliers = entityManager.createNativeQuery(Supplier_Query).getSingleResult();
 						strEmpty="";	
 				////////////////////////////
 						strEmpty= "SELECT COUNT(DISTINCT WARE_ID) FROM NODE_ACTIVE WHERE NODE_TYPE='"+NodeTId+"' AND WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null AND SUPPLIER_ID!='null' AND SUPPLIER_ID!='0' AND SUPPLIER_ID is not null  ";	
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);	
 						String strExist= "Select distinct COUNT(DISTINCT WARE_ID) From NODE_ACTIVE where Supplier_Id='" + SuppId + "' AND NODE_TYPE='"+NodeTId+"' AND WARE_ID!='null' AND WARE_ID!='0' AND WARE_ID is not null ";							
 						String Site_Query = SuppId == "" ? strEmpty : strExist;
 						//System.out.println(Site_Query);
@@ -4303,9 +4295,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist="";
 				////////////////////////////
 						strEmpty="SELECT COUNT(DISTINCT NODE_PK) FROM NODE_ACTIVE where Active_record='1' AND SUPPLIER_ID!='null' AND SUPPLIER_ID!='0' AND SUPPLIER_ID is not null AND NODE_TYPE='"+NodeTId+"' ";	
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 						strExist= "SELECT COUNT(DISTINCT NODE_PK) FROM NODE_ACTIVE where Active_record='1' and Supplier_Id='" + SuppId + "' AND NODE_TYPE='"+NodeTId+"' and WARE_ID!='null' and WARE_ID!='0' and WARE_ID is not null ";	
-						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+						strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 						String Node_Active_Query = SuppId == "" ? strEmpty : strExist;
 						//System.out.println(Node_Active_Query);
 						Object CountNodes_Active = entityManager.createNativeQuery(Node_Active_Query).getSingleResult();
@@ -4313,9 +4305,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist="";					
 				////////////////////////////			
 							strEmpty="SELECT COUNT(DISTINCT ngc.GCELL_ID) FROM NODE_GCELL ngc , node_active na where na.node_pk = ngc.node_pk and na.NODE_TYPE='"+NodeTId+"' ";
-							strEmpty= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+							strEmpty= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 							strExist= "select count(DISTINCT ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Supplier_Id = '"+ SuppId +"' and na.NODE_TYPE='"+NodeTId+"' ";	
-							strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+							strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 							String Node_GCell_Query = SuppId == "" ? strEmpty : strExist;
 							//System.out.println(Node_GCell_Query);
 							Object CountNodes_G_CELL = entityManager.createNativeQuery(Node_GCell_Query).getSingleResult();
@@ -4323,9 +4315,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strExist="";
 				/////////////////////////////
 							strEmpty="SELECT COUNT(DISTINCT nlc.LCELL_ID) FROM NODE_LCELL nlc , node_active na where na.node_pk = nlc.node_pk and na.NODE_TYPE='"+NodeTId+"' ";
-							strEmpty= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+							strEmpty= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 							strExist= "select count(DISTINCT nlc.lcell_id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Supplier_Id = '"+ SuppId +"' and na.NODE_TYPE='"+NodeTId+"' ";	
-							strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+							strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 							String Node_LCell_Query = SuppId == "" ? strEmpty : strExist;
 							//System.out.println(Node_LCell_Query);
 							Object CountNodes_L_CELL = entityManager.createNativeQuery(Node_LCell_Query).getSingleResult();
@@ -4333,9 +4325,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 							strExist="";
 				/////////////////////////////
 							strEmpty="SELECT COUNT(DISTINCT nuc.UCELL_ID) FROM NODE_UCELL nuc , node_active na where na.node_pk = nuc.node_pk and na.NODE_TYPE='"+NodeTId+"'";
-							strEmpty= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+							strEmpty= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 							strExist= "select count(DISTINCT nuc.ucell_id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.Supplier_Id = '"+ SuppId +"' and na.NODE_TYPE='"+NodeTId+"' ";	
-							strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+							strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 							String Node_UCell_Query = SuppId == "" ? strEmpty : strExist;
 							//System.out.println(Node_UCell_Query);
 							Object CountNodes_U_CELL = entityManager.createNativeQuery(Node_UCell_Query).getSingleResult();
@@ -4348,14 +4340,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 							if (SuppId == "") {
 								strEmpty="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and NODE_TYPE='"+NodeTId+"' ";
-								strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+								strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 								String Node_Type_Count = strEmpty;
 								//System.out.println(Node_Type_Count);
 								Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
 								BoqHM.put("Node Type", String.valueOf(CountNodesType));
 							}else {
 								strExist="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and Supplier_Id='"+ SuppId + "' and NODE_TYPE='"+NodeTId+"' ";
-								strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+								strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 								String Node_Type_Count = strExist;
 								//System.out.println(Node_Type_Count);
 								Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
@@ -4363,7 +4355,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 								strExist="";
 							////////////////////////////////
 								strExist="SELECT distinct NODE_TYPE,COUNT(DISTINCT NODE_TYPE) from node_active where Active_record='1' and Supplier_Id = '"+SuppId+"' and NODE_TYPE='"+NodeTId+"' ";
-								strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+								strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 								strExist = strExist +" GROUP BY NODE_TYPE";
 								//System.out.println(strExist);
 								List<Object[]> CountNodesteach_Active = (List<Object[]>) entityManager.createNativeQuery(strExist).getResultList();
@@ -4400,7 +4392,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 		@RequestMapping(value = "/GetBoqSitePoList", method = RequestMethod.GET, produces = "application/json")
 		@ResponseBody
 
-		public LinkedHashMap<String, String> GetBoqSitePoList(@RequestParam String SiteId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
+		public LinkedHashMap<String, String> GetBoqSitePoList(@RequestParam String SiteId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramRAN,@RequestParam String paramCore) {
 			
 			//Session session = almsessions.getSession();
 			//Transaction tx = session.beginTransaction();
@@ -4410,9 +4402,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 			try {
 				String strEmpty="SELECT COUNT(distinct a.WARE_ID) FROM AR_SITE a, ASSET_REGISTRY b WHERE a.AR_ID=b.AR_ID ";
-				strEmpty= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+				strEmpty= boqDomainVar ("b",paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 				String strExist= "Select DISTINCT SITE_NAME From AR_SITE where  WARE_ID='"+ SiteId +"' ";	
-				//strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+				//strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 				String Site_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(Site_Query);
 				Object Sites = entityManager.createNativeQuery(Site_Query).getSingleResult();
@@ -4420,9 +4412,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist="";	
 				
 				strEmpty="SELECT COUNT(distinct a.PO_ID) FROM ASSET_REGISTRY a, AR_SITE b where b.AR_ID=a.AR_ID ";
-				strEmpty= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+				strEmpty= boqDomainVar ("b",paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 				strExist= "SELECT COUNT(DISTINCT a.PO_ID) FROM ASSET_REGISTRY a, AR_SITE b where b.AR_ID=a.AR_ID and b.WARE_ID='" + SiteId+ "' ";	
-				strExist= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+				strExist= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 				String Po_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(Po_Query);
 				Object CountPo = entityManager.createNativeQuery(Po_Query).getSingleResult();
@@ -4433,12 +4425,12 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				BoqHM.put("PO", String.valueOf(CountPo));
 					
 				strEmpty="SELECT ROUND(SUM(INITIALCOST), 2) FROM FIXED_ASSET_REGISTRY ";
-				if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
+				if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramRAN.equals("true") || paramCore.equals("true")) {
 					strEmpty= strEmpty + "WHERE ";
 				}
-				strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+				strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 				strExist= "SELECT ROUND(SUM(INITIALCOST), 2) FROM FIXED_ASSET_REGISTRY WHERE WARE_ID='" + SiteId + "' ";	
-				strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+				strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 				String PO_Amount_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(PO_Amount_Query);
 				Object PO_Amount = entityManager.createNativeQuery(PO_Amount_Query).getSingleResult();
@@ -4447,12 +4439,12 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist="";
 				
 				strEmpty="SELECT ROUND(SUM(NETCOST), 2) FROM FIXED_ASSET_REGISTRY ";
-				if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
+				if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramRAN.equals("true") || paramCore.equals("true")) {
 					strEmpty= strEmpty + "WHERE ";
 				}
-				strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+				strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 				strExist= "SELECT ROUND(SUM(NETCOST), 2) FROM FIXED_ASSET_REGISTRY WHERE WARE_ID='" + SiteId + "' ";	
-				strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+				strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 				String PO_NET_Amount_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(PO_NET_Amount_Query);
 				Object PO_NET_Amount = entityManager.createNativeQuery(PO_NET_Amount_Query).getSingleResult();
@@ -4462,7 +4454,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 														
 				if(SiteId!= "") {
 					String Item_Query= "Select COUNT(DISTINCT a.ITEM_CODE) from ASSET_REGISTRY a, AR_SITE b where a.AR_ID = b.AR_ID and b.WARE_ID='" + SiteId + "' ";	
-					Item_Query= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,Item_Query);
+					Item_Query= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,Item_Query);
 					//System.out.println(Item_Query);
 					Object Item = entityManager.createNativeQuery(Item_Query).getSingleResult();
 					BoqHM.put("Items", String.valueOf(Item));
@@ -4490,7 +4482,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 		// Nodes BOQ data retrieving
 				@RequestMapping(value = "/GetNodeBoqList", method = RequestMethod.GET, produces = "application/json")
 				@ResponseBody
-				public LinkedHashMap<String, String> GetNodeBoqList(@RequestParam String WareId,@RequestParam String NodeId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
+				public LinkedHashMap<String, String> GetNodeBoqList(@RequestParam String WareId,@RequestParam String NodeId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramRAN,@RequestParam String paramCore) {
 
 					//Session session = almsessions.getSession();
 					//Transaction tx = session.beginTransaction();
@@ -4506,36 +4498,36 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					/////////////////////////////
 							//System.out.println("IF WARE ID NULL");
 							String Node_GCell_Query="select count(ngc.gcell_id) from node_gcell ngc , node_active na where na.Active_record='1' and na.node_pk = ngc.node_pk and na.NODE_PK = '" + NodeId +"' and (na.Ware_Id is null or na.Ware_Id='0') ";
-							Node_GCell_Query= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_GCell_Query);
+							Node_GCell_Query= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramRAN,paramCore,Node_GCell_Query);
 							//System.out.println(Node_GCell_Query);
 				 			Object CountNodes_G_CELL = entityManager.createNativeQuery(Node_GCell_Query).getSingleResult();			
 				    ///////////////////////////
 							String Node_LCell_Query = "select count(nlc.LCell_Id) from node_lcell nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and (na.Ware_Id is null or na.Ware_Id='0') "
 									+ " and na.NODE_PK = '" + NodeId + "' ";
-							Node_LCell_Query= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_LCell_Query);
+							Node_LCell_Query= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramRAN,paramCore,Node_LCell_Query);
 							//System.out.println(Node_LCell_Query);
 							Object CountNodes_L_CELL = entityManager.createNativeQuery(Node_LCell_Query).getSingleResult();
 					///////////////////////////
 							String Node_UCell_Query = "select count(nuc.UCell_Id) from node_ucell nuc , node_active na where na.Active_record='1' and na.node_pk = nuc.node_pk and (na.Ware_Id is null or na.Ware_Id='0') "
 									+ " and na.NODE_PK = '" + NodeId + "' ";
-							Node_UCell_Query= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_UCell_Query);
+							Node_UCell_Query= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramRAN,paramCore,Node_UCell_Query);
 							//System.out.println(Node_UCell_Query);
 							Object CountNodes_U_CELL = entityManager.createNativeQuery(Node_UCell_Query).getSingleResult();
 					///////////////////////////
 							String Node_Board_Query = "select count(nlc.BOARD_ID) from NODE_BOARD nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and (na.Ware_Id is null or na.Ware_Id='0') "
 									+ " and na.NODE_PK = '" + NodeId + "' ";
-							Node_Board_Query= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_Board_Query);
+							Node_Board_Query= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramRAN,paramCore,Node_Board_Query);
 							//System.out.println(Node_Board_Query);
 							Object CountNodesBoard = entityManager.createNativeQuery(Node_Board_Query).getSingleResult();
 					///////////////////////////
 							String Node_Cabinet_Query = "select count(nlc.CABINET_ID) from NODE_CABINET nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and (na.Ware_Id is null or na.Ware_Id='0') "
 									+ " and na.NODE_PK = '" + NodeId + "' ";
-							Node_Cabinet_Query= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_Cabinet_Query);
+							Node_Cabinet_Query= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramRAN,paramCore,Node_Cabinet_Query);
 							//System.out.println(Node_Cabinet_Query);
 							Object CountNodesCabinet = entityManager.createNativeQuery(Node_Cabinet_Query).getSingleResult();
 					///////////////////////////		
 							String NodesType_Query = "Select NODE_TYPE From NODE_ACTIVE where Active_record='1' and NODE_PK = '" + NodeId + "' and (Ware_Id is null or Ware_Id='0') ";
-							NodesType_Query= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,NodesType_Query);	
+							NodesType_Query= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,NodesType_Query);	
 							//System.out.println(NodesType_Query);
 							Object CountNodes_NodeType = entityManager.createNativeQuery(NodesType_Query).getSingleResult();
 							
@@ -4549,42 +4541,42 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 						}else {
 							String Site_Query= "Select DISTINCT Ware_Name From NODE_ACTIVE where Ware_Id='" + WareId + "' ";	
-							Site_Query= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,Site_Query);		
+							Site_Query= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,Site_Query);		
 							//System.out.println(Site_Query);
 							Object Sites = entityManager.createNativeQuery(Site_Query).getSingleResult();
 					/////////////////////////////		
 							String Node_GCell_Query = "select count(ngc.gcell_id) from node_gcell ngc , node_active na where na.Active_record='1' and na.node_pk = ngc.node_pk and na.Ware_Id = '"
 									+ WareId + "' and na.NODE_PK = '" + NodeId + "' ";
-							Node_GCell_Query= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_GCell_Query);
+							Node_GCell_Query= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramRAN,paramCore,Node_GCell_Query);
 							//System.out.println(Node_GCell_Query);
 							Object CountNodes_G_CELL = entityManager.createNativeQuery(Node_GCell_Query).getSingleResult();
 					///////////////////////////	
 							String Node_LCell_Query = "select count(nlc.LCell_Id) from node_lcell nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and na.Ware_Id = '"
 									+ WareId + "' and na.NODE_PK = '" + NodeId + "' ";
-							Node_LCell_Query= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_LCell_Query);
+							Node_LCell_Query= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramRAN,paramCore,Node_LCell_Query);
 							//System.out.println(Node_LCell_Query);
 							Object CountNodes_L_CELL = entityManager.createNativeQuery(Node_LCell_Query).getSingleResult();
 					///////////////////////////	
 							String Node_UCell_Query = "select count(nuc.UCell_Id) from node_ucell nuc , node_active na where na.Active_record='1' and na.node_pk = nuc.node_pk and na.Ware_Id = '"
 									+ WareId + "' and na.NODE_PK = '" + NodeId + "' ";
-							Node_UCell_Query= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_UCell_Query);
+							Node_UCell_Query= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramRAN,paramCore,Node_UCell_Query);
 							//System.out.println(Node_UCell_Query);
 							Object CountNodes_U_CELL = entityManager.createNativeQuery(Node_UCell_Query).getSingleResult();
 					///////////////////////////	
 							String Node_Board_Query = "select count(nlc.BOARD_ID) from NODE_BOARD nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and na.Ware_Id = '"
 									+ WareId + "' and na.NODE_PK = '" + NodeId + "' ";
-							Node_Board_Query= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_Board_Query);
+							Node_Board_Query= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramRAN,paramCore,Node_Board_Query);
 							//System.out.println(Node_Board_Query);
 							Object CountNodesBoard = entityManager.createNativeQuery(Node_Board_Query).getSingleResult();
 					///////////////////////////	
 							String Node_Cabinet_Query = "select count(nlc.CABINET_ID) from NODE_CABINET nlc , node_active na where na.Active_record='1' and na.node_pk = nlc.node_pk and na.Ware_Id = '"
 									+ WareId + "' and na.NODE_PK = '" + NodeId + "' ";
-							Node_Cabinet_Query= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,Node_Cabinet_Query);
+							Node_Cabinet_Query= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramRAN,paramCore,Node_Cabinet_Query);
 							//System.out.println(Node_Cabinet_Query);
 							Object CountNodesCabinet = entityManager.createNativeQuery(Node_Cabinet_Query).getSingleResult();
 					///////////////////////////		
 							String NodesType_Query = "Select DISTINCT NODE_TYPE From NODE_ACTIVE where Active_record='1' and Ware_Id = '"+ WareId +"' and NODE_PK = '" + NodeId + "' ";
-							NodesType_Query= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,NodesType_Query);
+							NodesType_Query= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,NodesType_Query);
 							//System.out.println(NodesType_Query);
 							Object CountNodes_NodeType = entityManager.createNativeQuery(NodesType_Query).getSingleResult();					
 							
@@ -4618,7 +4610,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 		@RequestMapping(value = "/GetNtypeBoqList", method = RequestMethod.GET, produces = "application/json")
 		@ResponseBody
 
-		public LinkedHashMap<String, String> GetNtypeBoqList(@RequestParam String SiteId, @RequestParam String NodeTId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
+		public LinkedHashMap<String, String> GetNtypeBoqList(@RequestParam String SiteId, @RequestParam String NodeTId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramRAN,@RequestParam String paramCore) {
 
 			//Session session = almsessions.getSession();
 			//Transaction tx = session.beginTransaction();
@@ -4629,9 +4621,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 			try {
 				String strEmpty= "SELECT COUNT(distinct WARE_ID) FROM NODE_ACTIVE WHERE NODE_TYPE='" + NodeTId + "' AND WARE_ID!='null' AND WARE_ID!='0' and WARE_ID is not null ";	
-				strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+				strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);	
 				String strExist= "Select distinct Ware_Name From NODE_ACTIVE where Ware_Id='" + SiteId + "' and NODE_TYPE='"+ NodeTId + "' ";	
-				strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
+				strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);			
 				String Site_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(Site_Query);
 				Object Sites = entityManager.createNativeQuery(Site_Query).getSingleResult();
@@ -4639,9 +4631,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist="";
 		////////////////////////////
 				strEmpty= "SELECT COUNT(distinct NODE_PK) FROM NODE_ACTIVE where Active_record='1' and NODE_TYPE='"+ NodeTId + "' ";
-				strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+				strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);	
 				strExist= "SELECT COUNT(distinct NODE_PK) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"+ SiteId + "' and NODE_TYPE='" + NodeTId + "' ";	
-				strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
+				strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);			
 				String Node_Active_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(Node_Active_Query);
 				Object CountNodes_Active = entityManager.createNativeQuery(Node_Active_Query).getSingleResult();
@@ -4649,9 +4641,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist="";
 		////////////////////////////
 				strEmpty= "select count(distinct ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.NODE_TYPE = '"+ NodeTId + "' ";
-				strEmpty= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+				strEmpty= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);	
 				strExist= "select count(distinct ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"+ SiteId + "' and na.NODE_TYPE = '" + NodeTId + "' ";	
-				strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
+				strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);			
 				String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(Node_GCell_Query);
 				Object CountNodes_G_CELL = entityManager.createNativeQuery(Node_GCell_Query).getSingleResult();
@@ -4659,9 +4651,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist="";
 		////////////////////////////
 				strEmpty= "select count(distinct nlc.LCell_Id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.NODE_TYPE = '"+ NodeTId + "' ";
-				strEmpty= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+				strEmpty= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);	
 				strExist= "select count(distinct nlc.LCell_Id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"+ SiteId + "' and na.NODE_TYPE = '" + NodeTId + "' ";	
-				strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
+				strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);			
 				String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(Node_LCell_Query);
 				Object CountNodes_L_CELL = entityManager.createNativeQuery(Node_LCell_Query).getSingleResult();
@@ -4669,9 +4661,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist="";
 		////////////////////////////
 				strEmpty= "select count(distinct nuc.UCell_Id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.NODE_TYPE = '"+ NodeTId + "' ";
-				strEmpty= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+				strEmpty= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);	
 				strExist= "select count(distinct nuc.UCell_Id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.Ware_Id = '"+ SiteId + "' and na.NODE_TYPE = '" + NodeTId + "' ";	
-				strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
+				strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);			
 				String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
 				//System.out.println(Node_UCell_Query);
 				Object CountNodes_U_CELL = entityManager.createNativeQuery(Node_UCell_Query).getSingleResult();
@@ -4707,7 +4699,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				@RequestMapping(value = "/GetNtypeVenBoqList", method = RequestMethod.GET, produces = "application/json")
 				@ResponseBody
 
-				public LinkedHashMap<String, String> GetNtypeVenBoqList(@RequestParam String SiteId, @RequestParam String NodeTId, @RequestParam String VendorId, @RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
+				public LinkedHashMap<String, String> GetNtypeVenBoqList(@RequestParam String SiteId, @RequestParam String NodeTId, @RequestParam String VendorId, @RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramRAN,@RequestParam String paramCore) {
 
 					//Session session = almsessions.getSession();
 					//Transaction tx = session.beginTransaction();
@@ -4718,9 +4710,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 					try {
 						String strEmpty= "SELECT COUNT(distinct WARE_ID) FROM NODE_ACTIVE WHERE NODE_TYPE='" + NodeTId + "' AND VENDOR = '"+VendorId+"' AND WARE_ID!='null' AND WARE_ID!='0' and WARE_ID is not null ";	
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);	
 						String strExist= "Select distinct Ware_Name From NODE_ACTIVE where Ware_Id='" + SiteId + "' and NODE_TYPE='"+ NodeTId + "' AND VENDOR = '"+VendorId+"' ";	
-						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
+						strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);			
 						String Site_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Site_Query);
 						Object Sites = entityManager.createNativeQuery(Site_Query).getSingleResult();
@@ -4728,9 +4720,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist="";
 				////////////////////////////
 						strEmpty= "SELECT COUNT(distinct NODE_PK) FROM NODE_ACTIVE where Active_record='1' and NODE_TYPE='"+ NodeTId + "' AND VENDOR = '"+VendorId+"' AND WARE_ID!='null' AND WARE_ID!='0' and WARE_ID is not null ";
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);	
 						strExist= "SELECT COUNT(distinct NODE_PK) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"+ SiteId + "' and NODE_TYPE='" + NodeTId + "' AND VENDOR = '"+VendorId+"' ";	
-						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
+						strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);			
 						String Node_Active_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_Active_Query);
 						Object CountNodes_Active = entityManager.createNativeQuery(Node_Active_Query).getSingleResult();
@@ -4738,9 +4730,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist="";
 				////////////////////////////
 						strEmpty= "select count(distinct ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.NODE_TYPE = '"+ NodeTId + "' AND na.VENDOR = '"+VendorId+"' ";
-						strEmpty= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+						strEmpty= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);	
 						strExist= "select count(distinct ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"+ SiteId + "' and na.NODE_TYPE = '" + NodeTId + "' AND na.VENDOR = '"+VendorId+"' ";	
-						strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
+						strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);			
 						String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_GCell_Query);
 						Object CountNodes_G_CELL = entityManager.createNativeQuery(Node_GCell_Query).getSingleResult();
@@ -4748,9 +4740,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist="";
 				////////////////////////////
 						strEmpty= "select count(distinct nlc.LCell_Id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.NODE_TYPE = '"+ NodeTId + "' AND na.VENDOR = '"+VendorId+"' ";
-						strEmpty= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+						strEmpty= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);	
 						strExist= "select count(distinct nlc.LCell_Id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"+ SiteId + "' and na.NODE_TYPE = '" + NodeTId + "' AND na.VENDOR = '"+VendorId+"' ";	
-						strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
+						strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);			
 						String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_LCell_Query);
 						Object CountNodes_L_CELL = entityManager.createNativeQuery(Node_LCell_Query).getSingleResult();
@@ -4758,9 +4750,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist="";
 				////////////////////////////
 						strEmpty= "select count(distinct nuc.UCell_Id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.NODE_TYPE = '"+ NodeTId + "' AND na.VENDOR = '"+VendorId+"' ";
-						strEmpty= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+						strEmpty= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);	
 						strExist= "select count(distinct nuc.UCell_Id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.Ware_Id = '"+ SiteId + "' and na.NODE_TYPE = '" + NodeTId + "' AND na.VENDOR = '"+VendorId+"' ";	
-						strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
+						strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);			
 						String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_UCell_Query);
 						Object CountNodes_U_CELL = entityManager.createNativeQuery(Node_UCell_Query).getSingleResult();
@@ -4795,7 +4787,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				@RequestMapping(value = "/GetNtypeSupBoqList", method = RequestMethod.GET, produces = "application/json")
 				@ResponseBody
 
-				public LinkedHashMap<String, String> GetNtypeSupBoqList(@RequestParam String SiteId, @RequestParam String NodeTId, @RequestParam String SuppId, @RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
+				public LinkedHashMap<String, String> GetNtypeSupBoqList(@RequestParam String SiteId, @RequestParam String NodeTId, @RequestParam String SuppId, @RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramRAN,@RequestParam String paramCore) {
 
 					//Session session = almsessions.getSession();
 					//Transaction tx = session.beginTransaction();
@@ -4806,9 +4798,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 					try {
 						String strEmpty= "SELECT COUNT(distinct WARE_ID) FROM NODE_ACTIVE WHERE NODE_TYPE='" + NodeTId + "' AND SUPPLIER_ID = '"+SuppId+"' AND WARE_ID!='null' AND WARE_ID!='0' and WARE_ID is not null ";	
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);	
 						String strExist= "Select distinct Ware_Name From NODE_ACTIVE where Ware_Id='" + SiteId + "' and NODE_TYPE='"+ NodeTId + "' AND SUPPLIER_ID = '"+SuppId+"' ";	
-						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
+						strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);			
 						String Site_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Site_Query);
 						Object Sites = entityManager.createNativeQuery(Site_Query).getSingleResult();
@@ -4816,9 +4808,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist="";
 				////////////////////////////
 						strEmpty= "SELECT COUNT(distinct NODE_PK) FROM NODE_ACTIVE where Active_record='1' and NODE_TYPE='"+ NodeTId + "' AND SUPPLIER_ID = '"+SuppId+"' AND WARE_ID!='null' AND WARE_ID!='0' and WARE_ID is not null ";
-						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+						strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);	
 						strExist= "SELECT COUNT(distinct NODE_PK) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"+ SiteId + "' and NODE_TYPE='" + NodeTId + "' AND SUPPLIER_ID = '"+SuppId+"' ";	
-						strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
+						strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);			
 						String Node_Active_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_Active_Query);
 						Object CountNodes_Active = entityManager.createNativeQuery(Node_Active_Query).getSingleResult();
@@ -4826,9 +4818,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist="";
 				////////////////////////////
 						strEmpty= "select count(distinct ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.NODE_TYPE = '"+ NodeTId + "' AND na.SUPPLIER_ID = '"+SuppId+"' ";
-						strEmpty= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+						strEmpty= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);	
 						strExist= "select count(distinct ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"+ SiteId + "' and na.NODE_TYPE = '" + NodeTId + "' AND na.SUPPLIER_ID = '"+SuppId+"' ";	
-						strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
+						strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);			
 						String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_GCell_Query);
 						Object CountNodes_G_CELL = entityManager.createNativeQuery(Node_GCell_Query).getSingleResult();
@@ -4836,9 +4828,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist="";
 				////////////////////////////
 						strEmpty= "select count(distinct nlc.LCell_Id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.NODE_TYPE = '"+ NodeTId + "' AND na.SUPPLIER_ID = '"+SuppId+"' ";
-						strEmpty= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+						strEmpty= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);	
 						strExist= "select count(distinct nlc.LCell_Id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"+ SiteId + "' and na.NODE_TYPE = '" + NodeTId + "' AND na.SUPPLIER_ID = '"+SuppId+"' ";	
-						strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
+						strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);			
 						String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_LCell_Query);
 						Object CountNodes_L_CELL = entityManager.createNativeQuery(Node_LCell_Query).getSingleResult();
@@ -4846,9 +4838,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						strExist="";
 				////////////////////////////
 						strEmpty= "select count(distinct nuc.UCell_Id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.NODE_TYPE = '"+ NodeTId + "' AND na.SUPPLIER_ID = '"+SuppId+"' ";
-						strEmpty= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+						strEmpty= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);	
 						strExist= "select count(distinct nuc.UCell_Id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.Ware_Id = '"+ SiteId + "' and na.NODE_TYPE = '" + NodeTId + "' AND na.SUPPLIER_ID = '"+SuppId+"' ";	
-						strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);			
+						strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);			
 						String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
 						//System.out.println(Node_UCell_Query);
 						Object CountNodes_U_CELL = entityManager.createNativeQuery(Node_UCell_Query).getSingleResult();
@@ -4901,7 +4893,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				
 				String paramEnterprise = request.getParameter("paramEnterprise");
 				String paramTransmission = request.getParameter("paramTransmission");
-				String paramAccess = request.getParameter("paramAccess");
+				String paramRAN = request.getParameter("paramRAN");
 				String paramCore = request.getParameter("paramCore");
 				
 				String strSites ="SELECT DISTINCT b.SITE_ID,b.SITE_NAME,b.WARE_ID,j.PO_ID FROM AR_SITE b,ASSET_REGISTRY j WHERE j.AR_ID=b.AR_ID AND b.WARE_ID!='0' AND b.WARE_ID!='null' AND b.WARE_ID is not null AND j.PO_ID='"+selectedItem+"' ";
@@ -4910,11 +4902,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				
 			try {
 				if (POAlreadyCreated.equals("false")) {
-					strSites= boqDomainVar ("j",paramEnterprise,paramTransmission,paramAccess,paramCore,strSites);
+					strSites= boqDomainVar ("j",paramEnterprise,paramTransmission,paramRAN,paramCore,strSites);
 					rtn.put("listSites",entityManager.createNativeQuery(strSites).getResultList());
 					
 				}else {
-					strItems= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strItems);
+					strItems= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strItems);
 					rtn.put("itemList", entityManager.createNativeQuery(strItems).getResultList());				
 				}
 			} catch (Exception e) {
@@ -4961,7 +4953,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				
 				String paramEnterprise = request.getParameter("paramEnterprise");
 				String paramTransmission = request.getParameter("paramTransmission");
-				String paramAccess = request.getParameter("paramAccess");
+				String paramRAN = request.getParameter("paramRAN");
 				String paramCore = request.getParameter("paramCore");	
 				
 				String strPO ="SELECT distinct a.PO_ID ,b.WARE_ID,b.SITE_NAME,b.SITE_ID,"
@@ -4972,11 +4964,11 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			
 			try {				
 				if (POAlreadyCreated.equals("false")) {
-					strPO=  boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strPO);
+					strPO=  boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strPO);
 					rtn.put("listPO", entityManager.createNativeQuery(strPO).getResultList());
 				}
 				else {
-					strItems= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strItems);
+					strItems= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strItems);
 					rtn.put("itemList", entityManager.createNativeQuery(strItems).getResultList());
 				}
 			} catch (Exception e) {
@@ -5022,7 +5014,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			 
 				String paramEnterprise = request.getParameter("paramEnterprise");
 				String paramTransmission = request.getParameter("paramTransmission");
-				String paramAccess = request.getParameter("paramAccess");
+				String paramRAN = request.getParameter("paramRAN");
 				String paramCore = request.getParameter("paramCore");
 				
 				String selectedNode = request.getParameter("selectedNode");
@@ -5036,9 +5028,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					String strCells2 ="SELECT l.LCELL_ID,l.CELLNAME,l.NODE_PK FROM NODE_LCELL l WHERE l.ACTIVE_RECORD = '1' and l.NODE_PK='"+ selectedNode + "' "; 
 					String strCells3 ="SELECT u.UCELL_ID,u.CELLNAME,u.NODE_PK FROM NODE_UCELL u WHERE u.ACTIVE_RECORD = '1' and u.NODE_PK='"+ selectedNode + "' ";		
 				
-					strCells1= boqDomainVar ("g",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells1);	
-					strCells2= boqDomainVar ("l",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);						
-					strCells3= boqDomainVar ("u",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);	
+					strCells1= boqDomainVar ("g",paramEnterprise,paramTransmission,paramRAN,paramCore,strCells1);	
+					strCells2= boqDomainVar ("l",paramEnterprise,paramTransmission,paramRAN,paramCore,strCells2);						
+					strCells3= boqDomainVar ("u",paramEnterprise,paramTransmission,paramRAN,paramCore,strCells3);	
 				
 					cellResult.addAll(entityManager.createNativeQuery(strCells1).getResultList());
 					cellResult.addAll(entityManager.createNativeQuery(strCells2).getResultList());
@@ -5055,9 +5047,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 						String strCells3 ="SELECT a.UCELL_ID,a.CELLNAME,a.NODE_PK FROM NODE_UCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and a.NODE_PK=b.NODE_PK and a.NODE_PK='"
 								+ selectedNode + "' and b.NODE_TYPE='" + selectedNdTyp + "' ";		
 						
-						strCells1= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells1);	
-						strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);						
-						strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);
+						strCells1= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strCells1);	
+						strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strCells2);						
+						strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strCells3);
 						
 						cellResult.addAll(entityManager.createNativeQuery(strCells1).getResultList());
 						cellResult.addAll(entityManager.createNativeQuery(strCells2).getResultList());
@@ -5108,7 +5100,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				
 				String paramEnterprise = request.getParameter("paramEnterprise");
 				String paramTransmission = request.getParameter("paramTransmission");
-				String paramAccess = request.getParameter("paramAccess");
+				String paramRAN = request.getParameter("paramRAN");
 				String paramCore = request.getParameter("paramCore");
 					
 				String strSites ="SELECT distinct SITE_ID,WARE_NAME,WARE_ID,NODE_TYPE,LONGITUDE,LATITUDE FROM NODE_ACTIVE "
@@ -5125,7 +5117,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				try {
 					  if (selectedNdTyp != null) {
 						try {
-							strSites= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strSites);	
+							strSites= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strSites);	
 							rtn.put("listSites",entityManager.createNativeQuery(strSites).getResultList());
 						} catch (Exception e) {
 							sw = new StringWriter();
@@ -5139,13 +5131,13 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 					if (selectedNdTyp != null && selectedItem != null) {
 						try {
-							strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);					
+							strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);					
 							strNodes= strNodes + ") as countGcells,(select count(*) from NODE_LCELL c  where a.NODE_PK = c.NODE_PK and c.ACTIVE_RECORD = '1' ";
-							strNodes= boqDomainVar ("c",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);	
+							strNodes= boqDomainVar ("c",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);	
 							strNodes= strNodes + ") as countLcells,(select count(*) from NODE_UCELL d  where a.NODE_PK = d.NODE_PK and d.ACTIVE_RECORD = '1' ";
-							strNodes= boqDomainVar ("d",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);	
+							strNodes= boqDomainVar ("d",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);	
 							strNodes= strNodes + ") as countUcells FROM NODE_ACTIVE a WHERE a.ACTIVE_RECORD = '1' and a.WARE_ID='"+ selectedItem + "' and a.NODE_TYPE='" + selectedNdTyp + "' ";
-							strNodes= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);	
+							strNodes= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);	
 							
 							rtn.put("listNodes", entityManager.createNativeQuery(strNodes).getResultList());
 						} catch (Exception e) {
@@ -5160,9 +5152,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					
 					if (selectedItem != null) {
 						try {
-							strCells1= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells1);		
-							strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);		
-							strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);		
+							strCells1= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strCells1);		
+							strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strCells2);		
+							strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strCells3);		
 						
 							cellResult.addAll(entityManager.createNativeQuery(strCells1).getResultList());
 							cellResult.addAll(entityManager.createNativeQuery(strCells2).getResultList());
@@ -5224,7 +5216,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			
 			String paramEnterprise = request.getParameter("paramEnterprise");
 			String paramTransmission = request.getParameter("paramTransmission");
-			String paramAccess = request.getParameter("paramAccess");
+			String paramRAN = request.getParameter("paramRAN");
 			String paramCore = request.getParameter("paramCore");
 			
 			String strItems ="SELECT distinct a.ITEM_CODE, a.ITEM_NAME, a.PO_ID, a.ITEM_MODEL FROM ASSET_REGISTRY a WHERE a.PO_ID='"+selectedPo+"' ";			
@@ -5234,7 +5226,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			
 			if (POAlreadyCreated.equals("false")) {
 				try {
-					strItems= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strItems);
+					strItems= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strItems);
 					rtn.put("listItem", entityManager.createNativeQuery(strItems).getResultList());
 				} catch (Exception e) {
 					sw = new StringWriter();
@@ -5247,7 +5239,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			}
 			else {
 				try {
-					strSites= boqDomainVar ("j",paramEnterprise,paramTransmission,paramAccess,paramCore,strSites);
+					strSites= boqDomainVar ("j",paramEnterprise,paramTransmission,paramRAN,paramCore,strSites);
 					rtn.put("listSites", entityManager.createNativeQuery(strSites).getResultList());
 				} catch (Exception e) {
 					sw = new StringWriter();
@@ -5334,7 +5326,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 			String paramEnterprise = request.getParameter("paramEnterprise");
 			String paramTransmission = request.getParameter("paramTransmission");
-			String paramAccess = request.getParameter("paramAccess");
+			String paramRAN = request.getParameter("paramRAN");
 			String paramCore = request.getParameter("paramCore");
 			
 			String strSites ="SELECT distinct b.WARE_NAME,b.WARE_ID,b.LATITUDE,b.LONGITUDE,b.SUPPLIER_ID FROM NODE_ACTIVE b where b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.SUPPLIER_ID='"+ selectedSupp + "' ";
@@ -5352,7 +5344,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			try {
 				if (selectedSupp != null && selectedItem == null) {
 					try {
-						strSites= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strSites);
+						strSites= boqDomainVar ("b",paramEnterprise,paramTransmission,paramRAN,paramCore,strSites);
 						rtn.put("listSuppSites",entityManager.createNativeQuery(strSites).getResultList());
 						
 					} catch (Exception e) {
@@ -5366,7 +5358,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				}
 				if (selectedItem != null) {
 					try {
-						strNodesType= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodesType);
+						strNodesType= boqDomainVar ("b",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodesType);
 						rtn.put("listNodesType", entityManager.createNativeQuery(strNodesType).getResultList());	
 					} catch (Exception e) {
 						sw = new StringWriter();
@@ -5379,15 +5371,15 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				}
 				if (selectedNodetType != null) {
 					try {
-						strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);		
+						strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);		
 						strNodes = strNodes + ") as countNodes,(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and ACTIVE_RECORD = '1' ";
-						strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);
+						strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);
 						strNodes = strNodes + ") as countGcells,(select count(*) from NODE_LCELL c  where a.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1' ";
-						strNodes= boqDomainVar ("c",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);			
+						strNodes= boqDomainVar ("c",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);			
 						strNodes = strNodes + ") as countLcells,(select count(*) from NODE_UCELL d  where a.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1' ";				
-						strNodes= boqDomainVar ("d",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);	
+						strNodes= boqDomainVar ("d",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);	
 						strNodes = strNodes + ") as countUcells FROM NODE_ACTIVE a WHERE a.ACTIVE_RECORD = '1' and a.WARE_ID='"+ selectedItem + "' and a.NODE_TYPE='" + selectedNodetType + "' and a.SUPPLIER_ID='"+ selectedSupp +"' ";			
-						strNodes= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);		
+						strNodes= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);		
 						
 						rtn.put("listNodes", entityManager.createNativeQuery(strNodes).getResultList());
 						} catch (Exception e) {
@@ -5401,9 +5393,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				}
 				if (selectedNodetType != null) {
 					try {
-						strCells1= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells1);	
-						strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);						
-						strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);	
+						strCells1= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strCells1);	
+						strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strCells2);						
+						strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strCells3);	
 					
 						cellResult.addAll(entityManager.createNativeQuery(strCells1).getResultList());
 						cellResult.addAll(entityManager.createNativeQuery(strCells2).getResultList());
@@ -5462,7 +5454,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 			String paramEnterprise = request.getParameter("paramEnterprise");
 			String paramTransmission = request.getParameter("paramTransmission");
-			String paramAccess = request.getParameter("paramAccess");
+			String paramRAN = request.getParameter("paramRAN");
 			String paramCore = request.getParameter("paramCore");
 			
 			String strSites ="SELECT distinct b.WARE_NAME,b.WARE_ID,b.LATITUDE,b.LONGITUDE,b.VENDOR FROM NODE_ACTIVE b where b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.VENDOR='"+ selectedVen + "' ";
@@ -5480,7 +5472,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			try {
 				if (selectedVen != null && selectedItem == null) {
 					try {
-						strSites= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strSites);
+						strSites= boqDomainVar ("b",paramEnterprise,paramTransmission,paramRAN,paramCore,strSites);
 						rtn.put("listVenSites",entityManager.createNativeQuery(strSites).getResultList());
 						
 					} catch (Exception e) {
@@ -5494,7 +5486,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				}
 				if (selectedItem != null) {
 					try {
-						strNodesType= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodesType);
+						strNodesType= boqDomainVar ("b",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodesType);
 						rtn.put("listNodesType",entityManager.createNativeQuery(strNodesType).getResultList());	
 					} catch (Exception e) {
 						sw = new StringWriter();
@@ -5507,15 +5499,15 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				}
 				if (selectedNodetType != null) {
 					try {
-						strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);		
+						strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);		
 						strNodes = strNodes + ") as countNodes,(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and ACTIVE_RECORD = '1' ";
-						strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);
+						strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);
 						strNodes = strNodes + ") as countGcells,(select count(*) from NODE_LCELL c  where a.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1' ";
-						strNodes= boqDomainVar ("c",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);			
+						strNodes= boqDomainVar ("c",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);			
 						strNodes = strNodes + ") as countLcells,(select count(*) from NODE_UCELL d  where a.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1' ";				
-						strNodes= boqDomainVar ("d",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);	
+						strNodes= boqDomainVar ("d",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);	
 						strNodes = strNodes + ") as countUcells FROM NODE_ACTIVE a WHERE a.ACTIVE_RECORD = '1' and a.WARE_ID='"+ selectedItem + "' and a.NODE_TYPE='" + selectedNodetType + "' and a.VENDOR='"+ selectedVen +"' ";			
-						strNodes= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);		
+						strNodes= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);		
 						
 						rtn.put("listNodes", entityManager.createNativeQuery(strNodes).getResultList());
 						} catch (Exception e) {
@@ -5529,9 +5521,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				}
 				if (selectedNodetType != null) {
 					try {
-						strCells1= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells1);	
-						strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);						
-						strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);	
+						strCells1= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strCells1);	
+						strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strCells2);						
+						strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strCells3);	
 					
 						cellResult.addAll(entityManager.createNativeQuery(strCells1).getResultList());
 						cellResult.addAll(entityManager.createNativeQuery(strCells2).getResultList());
@@ -5591,7 +5583,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				
 				String paramEnterprise = request.getParameter("paramEnterprise");
 				String paramTransmission = request.getParameter("paramTransmission");
-				String paramAccess = request.getParameter("paramAccess");
+				String paramRAN = request.getParameter("paramRAN");
 				String paramCore = request.getParameter("paramCore");
 				
 				String strSites ="SELECT distinct b.WARE_NAME,b.WARE_ID,b.LATITUDE,b.LONGITUDE,b.SUPPLIER_ID,b.NODE_TYPE FROM NODE_ACTIVE b where b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.SUPPLIER_ID='"+ selectedSupp + "' AND b.NODE_TYPE='" + SelectedNodeType + "' ";
@@ -5611,7 +5603,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				try {
 					if (selectedSupp != null) {
 						try {						
-							strNodesType= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodesType);
+							strNodesType= boqDomainVar ("b",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodesType);
 							listNodeType =  entityManager.createNativeQuery(strNodesType).getResultList();
 					
 							if (listNodeType != null) {
@@ -5629,7 +5621,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 	////////////////////////////////	
 					if (selectedSupp != null && SelectedNodeType != null) {					
 						try {
-							strSites= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strSites);
+							strSites= boqDomainVar ("b",paramEnterprise,paramTransmission,paramRAN,paramCore,strSites);
 							rtn.put("listSuppSites",entityManager.createNativeQuery(strSites).getResultList());
 							
 						} catch (Exception e) {
@@ -5644,15 +5636,15 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 	/////////////////////////////////
 					if (selectedItem != null) {
 						try {
-							strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);		
+							strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);		
 							strNodes = strNodes + ") as countNodes,(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and ACTIVE_RECORD = '1' ";
-							strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);
+							strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);
 							strNodes = strNodes + ") as countGcells,(select count(*) from NODE_LCELL c  where a.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1' ";
-							strNodes= boqDomainVar ("c",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);			
+							strNodes= boqDomainVar ("c",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);			
 							strNodes = strNodes + ") as countLcells,(select count(*) from NODE_UCELL d  where a.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1' ";				
-							strNodes= boqDomainVar ("d",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);	
+							strNodes= boqDomainVar ("d",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);	
 							strNodes = strNodes + ") as countUcells FROM NODE_ACTIVE a WHERE a.ACTIVE_RECORD = '1' and a.WARE_ID='"+ selectedItem + "' and a.NODE_TYPE='" + SelectedNodeType + "' and a.SUPPLIER_ID='"+ selectedSupp +"' ";			
-							strNodes= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);		
+							strNodes= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);		
 							
 							rtn.put("listSuppNodes", entityManager.createNativeQuery(strNodes).getResultList());
 							//System.out.println("list nodes ==> "+ mapper.writeValueAsString(nodeSuppList));
@@ -5669,9 +5661,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 	/////////////////////////////////
 					if (selectedItem != null) {
 						try {
-							strCells1= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells1);	
-							strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);						
-							strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);	
+							strCells1= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strCells1);	
+							strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strCells2);						
+							strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strCells3);	
 						
 							cellResult.addAll(entityManager.createNativeQuery(strCells1).getResultList());
 							cellResult.addAll(entityManager.createNativeQuery(strCells2).getResultList());
@@ -5751,7 +5743,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					
 					String paramEnterprise = request.getParameter("paramEnterprise");
 					String paramTransmission = request.getParameter("paramTransmission");
-					String paramAccess = request.getParameter("paramAccess");
+					String paramRAN = request.getParameter("paramRAN");
 					String paramCore = request.getParameter("paramCore");
 					
 					String strSites ="SELECT distinct b.WARE_NAME,b.WARE_ID,b.LATITUDE,b.LONGITUDE,b.VENDOR,b.NODE_TYPE FROM NODE_ACTIVE b where b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.VENDOR='"+ selectedVen + "' AND b.NODE_TYPE='" + SelectedNodeType + "' ";
@@ -5771,7 +5763,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 					try {
 						if (selectedVen != null) {
 							try {						
-								strNodesType= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodesType);
+								strNodesType= boqDomainVar ("b",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodesType);
 								listNodeType = entityManager.createNativeQuery(strNodesType).getResultList();
 						
 								if (listNodeType != null) {
@@ -5789,7 +5781,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 		////////////////////////////////	
 						if (selectedVen != null && SelectedNodeType != null) {					
 							try {
-								strSites= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strSites);
+								strSites= boqDomainVar ("b",paramEnterprise,paramTransmission,paramRAN,paramCore,strSites);
 								rtn.put("listVenSites",entityManager.createNativeQuery(strSites).getResultList());
 							
 							} catch (Exception e) {
@@ -5804,15 +5796,15 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 		/////////////////////////////////
 						if (selectedItem != null) {
 							try {
-								strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);		
+								strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);		
 								strNodes = strNodes + ") as countNodes,(select count(*) from NODE_GCELL b  where a.NODE_PK = b.NODE_PK and ACTIVE_RECORD = '1' ";
-								strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);
+								strNodes= boqDomainVar ("b",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);
 								strNodes = strNodes + ") as countGcells,(select count(*) from NODE_LCELL c  where a.NODE_PK = c.NODE_PK and ACTIVE_RECORD = '1' ";
-								strNodes= boqDomainVar ("c",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);			
+								strNodes= boqDomainVar ("c",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);			
 								strNodes = strNodes + ") as countLcells,(select count(*) from NODE_UCELL d  where a.NODE_PK = d.NODE_PK and ACTIVE_RECORD = '1' ";				
-								strNodes= boqDomainVar ("d",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);	
+								strNodes= boqDomainVar ("d",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);	
 								strNodes = strNodes + ") as countUcells FROM NODE_ACTIVE a WHERE a.ACTIVE_RECORD = '1' and a.WARE_ID='"+ selectedItem + "' and a.NODE_TYPE='" + SelectedNodeType + "' and a.VENDOR='"+ selectedVen +"' ";			
-								strNodes= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strNodes);		
+								strNodes= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strNodes);		
 								
 								rtn.put("listVenNodes", entityManager.createNativeQuery(strNodes).getResultList());
 							} catch (Exception e) {
@@ -5827,9 +5819,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 		/////////////////////////////////
 						if (selectedItem != null) {
 							try {
-								strCells1= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells1);	
-								strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells2);						
-								strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strCells3);	
+								strCells1= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strCells1);	
+								strCells2= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strCells2);						
+								strCells3= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strCells3);	
 							
 								cellResult.addAll(entityManager.createNativeQuery(strCells1).getResultList());
 								cellResult.addAll(entityManager.createNativeQuery(strCells2).getResultList());
@@ -5894,7 +5886,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 	// PO BOQ data retrieving
 	@RequestMapping(value = "/GetPOBoqList", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public LinkedHashMap<String, String> GetPOBoqList(@RequestParam String POID,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
+	public LinkedHashMap<String, String> GetPOBoqList(@RequestParam String POID,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramRAN,@RequestParam String paramCore) {
 
 		//Session session = almsessions.getSession();
 		//Transaction tx = session.beginTransaction();
@@ -5905,9 +5897,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 		
 		try {	
 			String strEmpty="SELECT COUNT(DISTINCT PO_ID) FROM ASSET_REGISTRY WHERE PO_ID!='null' ";
-			strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+			strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 			String strExist= "Select DISTINCT PO_ID From ASSET_REGISTRY where PO_ID='" + POID + "' ";	
-			strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+			strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 			String PO_Query = POID == "" ? strEmpty : strExist;
 			//System.out.println(PO_Query);
 			Object PoC = entityManager.createNativeQuery(PO_Query).getSingleResult();
@@ -5917,12 +5909,12 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			strExist="";	
 			
 			strEmpty="SELECT ROUND(SUM(INITIALCOST), 2) FROM FIXED_ASSET_REGISTRY ";
-			if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
+			if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramRAN.equals("true") || paramCore.equals("true")) {
 				strEmpty= strEmpty + "WHERE ";
 			}
-			strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+			strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 			strExist= "Select TOTAL_AMOUNT from PURCHASE_ORDER where PO_ID='" + POID +"' ";	
-			//strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+			//strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 			String PO_Amount_Query = POID == "" ? strEmpty : strExist;
 			//System.out.println(PO_Amount_Query);
 			Object PO_Amount = entityManager.createNativeQuery(PO_Amount_Query).getSingleResult();
@@ -5931,12 +5923,12 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			strExist="";
 			
 			strEmpty="SELECT ROUND(SUM(NETCOST), 2) FROM FIXED_ASSET_REGISTRY ";
-			if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
+			if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramRAN.equals("true") || paramCore.equals("true")) {
 				strEmpty= strEmpty + "WHERE ";
 			}
-			strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+			strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 			strExist= "Select NET_TOTAL_AMOUNT from PURCHASE_ORDER where PO_ID='" + POID  +"' ";	
-			//strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+			//strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 			String PO_NET_Amount_Query = POID == "" ? strEmpty : strExist;
 			//System.out.println(PO_NET_Amount_Query);
 			Object PO_NET_Amount = entityManager.createNativeQuery(PO_NET_Amount_Query).getSingleResult();
@@ -5945,9 +5937,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			strExist="";
 			
 			strEmpty="SELECT COUNT(DISTINCT a.WARE_ID) FROM AR_SITE a, ASSET_REGISTRY b where a.AR_ID = b.AR_ID ";
-			strEmpty= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+			strEmpty= boqDomainVar ("b",paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 			strExist= "Select COUNT(DISTINCT WARE_ID) FROM AR_SITE a, ASSET_REGISTRY b where a.AR_ID = b.AR_ID and b.PO_ID='" + POID + "' ";	
-			strExist= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+			strExist= boqDomainVar ("b",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 			String Site_Query = POID == "" ? strEmpty : strExist;
 			//System.out.println(Site_Query);
 			Object SiteC = entityManager.createNativeQuery(Site_Query).getSingleResult();
@@ -5956,9 +5948,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			strExist="";
 			
 			strEmpty="SELECT COUNT(DISTINCT a.ITEM_CODE) FROM ASSET_REGISTRY a, AR_SITE b where a.AR_ID = b.AR_ID ";
-			strEmpty= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+			strEmpty= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 			strExist= "Select COUNT(DISTINCT a.ITEM_CODE) from ASSET_REGISTRY a, AR_SITE b where a.AR_ID = b.AR_ID and PO_ID='" + POID + "' ";	
-			strExist= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+			strExist= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 			String Item_Query = POID == "" ? strEmpty : strExist;
 			//System.out.println(Item_Query);
 			Object ItemC = entityManager.createNativeQuery(Item_Query).getSingleResult();
@@ -5992,7 +5984,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 	@RequestMapping(value = "/GetSiteNdtypeBoqList", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 
-	public LinkedHashMap<String, String> GetSiteNdtypeBoqList(@RequestParam String SiteId,@RequestParam String NodeTId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
+	public LinkedHashMap<String, String> GetSiteNdtypeBoqList(@RequestParam String SiteId,@RequestParam String NodeTId,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramRAN,@RequestParam String paramCore) {
 
 		//Session session = almsessions.getSession();
 		//Transaction tx = session.beginTransaction();
@@ -6004,7 +5996,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 		try {
 			String strEmpty= "SELECT COUNT(DISTINCT WARE_ID) FROM NODE_ACTIVE WHERE WARE_ID!='null' AND WARE_ID!='0' and WARE_ID is not null and NODE_TYPE='" + NodeTId + "' ";	
 			String strExist="Select distinct Ware_Name From NODE_ACTIVE where Ware_Id='" + SiteId + "' and NODE_TYPE='" + NodeTId + "' ";								
-			strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);	
+			strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);	
 			String Site_Query = SiteId == "" ? strEmpty : strExist;
 			//System.out.println(Site_Query);
 			Object Sites = entityManager.createNativeQuery(Site_Query).getSingleResult();
@@ -6013,8 +6005,8 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 	////////////////////////////
 			strEmpty="SELECT COUNT(NODE_PK) FROM NODE_ACTIVE where Active_record='1' and NODE_TYPE='" + NodeTId + "' ";
 			strExist= "SELECT COUNT(NODE_PK) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='" + SiteId + "' and NODE_TYPE='" + NodeTId + "' ";	
-			strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
-			strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+			strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
+			strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 			String Node_Active_Query = SiteId == "" ? strEmpty : strExist;
 			//System.out.println(Node_Active_Query);
 			Object CountNodes_Active = entityManager.createNativeQuery(Node_Active_Query).getSingleResult();
@@ -6023,8 +6015,8 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 	////////////////////////////			
 			strEmpty="SELECT COUNT(g.GCELL_ID) FROM NODE_GCELL g, NODE_ACTIVE a  where g.node_pk = a.node_pk and a.NODE_TYPE='" + NodeTId + "' ";
 			strExist= "select count(ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"+ SiteId +"' and na.NODE_TYPE='" + NodeTId + "' ";	
-			strEmpty= boqDomainVar ("g",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
-			strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+			strEmpty= boqDomainVar ("g",paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
+			strExist= boqDomainVar ("ngc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 			String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
 			//System.out.println(Node_GCell_Query);
 			Object CountNodes_G_CELL = entityManager.createNativeQuery(Node_GCell_Query).getSingleResult();
@@ -6033,8 +6025,8 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 	/////////////////////////////
 			strEmpty="SELECT COUNT(l.LCELL_ID) FROM NODE_LCELL l, NODE_ACTIVE a  where l.node_pk = a.node_pk and a.NODE_TYPE='" + NodeTId + "' ";
 			strExist= "select count(nlc.lcell_id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"+ SiteId +"' and na.NODE_TYPE='" + NodeTId + "' ";	
-			strEmpty= boqDomainVar ("l",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
-			strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+			strEmpty= boqDomainVar ("l",paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
+			strExist= boqDomainVar ("nlc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 			String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
 			//System.out.println(Node_LCell_Query);
 			Object CountNodes_L_CELL = entityManager.createNativeQuery(Node_LCell_Query).getSingleResult();
@@ -6043,8 +6035,8 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 /////////////////////////////
 			strEmpty="SELECT COUNT(u.UCELL_ID) FROM NODE_UCELL u, NODE_ACTIVE a  where u.node_pk = a.node_pk and a.NODE_TYPE='" + NodeTId + "' ";
 			strExist= "select count(nuc.ucell_id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.Ware_Id = '"+ SiteId +"' and na.NODE_TYPE='" + NodeTId + "' ";	
-			strEmpty= boqDomainVar ("u",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
-			strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+			strEmpty= boqDomainVar ("u",paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
+			strExist= boqDomainVar ("nuc",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 			String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
 			//System.out.println(Node_UCell_Query);
 			Object CountNodes_U_CELL = entityManager.createNativeQuery(Node_UCell_Query).getSingleResult();
@@ -6056,14 +6048,14 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 
 			if (SiteId == "") {
 				strEmpty="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and NODE_TYPE='" + NodeTId + "' ";
-				strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+				strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 				String Node_Type_Count = strEmpty;
 				//System.out.println(Node_Type_Count);
 				Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
 				BoqHM.put("Node Type", String.valueOf(CountNodesType));
 			}else {
 				strExist="SELECT COUNT(distinct NODE_TYPE) FROM NODE_ACTIVE where Active_record='1' and Ware_Id='"+ SiteId + "' and NODE_TYPE='" + NodeTId + "' ";
-				strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+				strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 				String Node_Type_Count = strExist;
 				//System.out.println(Node_Type_Count);
 				Object CountNodesType = entityManager.createNativeQuery(Node_Type_Count).getSingleResult();
@@ -6071,7 +6063,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist="";
 			////////////////////////////////
 				strExist="SELECT distinct NODE_TYPE,COUNT(NODE_TYPE) from node_active where Active_record='1' and Ware_Id = '"+SiteId+"' and NODE_TYPE='" + NodeTId + "'";
-				strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+				strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 				strExist = strExist +" GROUP BY NODE_TYPE";
 				//System.out.println(strExist);
 				List<Object[]> CountNodesteach_Active = (List<Object[]>) entityManager.createNativeQuery(strExist).getResultList();
@@ -6107,7 +6099,7 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 	// PO BOQ data retrieving
 		@RequestMapping(value = "/GetPOSiteBoqList", method = RequestMethod.GET, produces = "application/json")
 		@ResponseBody
-		public LinkedHashMap<String, String> GetPOSiteBoqList(@RequestParam String POID,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramAccess,@RequestParam String paramCore) {
+		public LinkedHashMap<String, String> GetPOSiteBoqList(@RequestParam String POID,@RequestParam String paramEnterprise,@RequestParam String paramTransmission,@RequestParam String paramRAN,@RequestParam String paramCore) {
 
 			//Session session = almsessions.getSession();
 			//Transaction tx = session.beginTransaction();
@@ -6118,12 +6110,12 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 			
 			try {				
 				String strEmpty="SELECT COUNT(DISTINCT PO_ID) FROM ASSET_REGISTRY ";
-				if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramAccess.equals("true") || paramCore.equals("true")) {
+				if(paramEnterprise.equals("true") || paramTransmission.equals("true") || paramRAN.equals("true") || paramCore.equals("true")) {
 					strEmpty= strEmpty + "WHERE ";
 				}
-				strEmpty= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+				strEmpty= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 				String strExist= "Select DISTINCT PO_ID From ASSET_REGISTRY where PO_ID='" + POID + "' ";	
-				strExist= boqDomain (paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+				strExist= boqDomain (paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 				String PO_Query = POID == "" ? strEmpty : strExist;
 				//System.out.println(PO_Query);
 				Object Po = entityManager.createNativeQuery(PO_Query).getSingleResult();
@@ -6131,9 +6123,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist="";	
 			
 				strEmpty="SELECT COUNT(DISTINCT a.WARE_ID) FROM AR_SITE a, ASSET_REGISTRY b where a.AR_ID = b.AR_ID ";
-				strEmpty= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+				strEmpty= boqDomainVar ("b",paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 				strExist= "Select a.SITE_NAME FROM AR_SITE a, ASSET_REGISTRY b where a.AR_ID = b.AR_ID and b.PO_ID='" + POID +"' ";	
-				strExist= boqDomainVar ("b",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+				strExist= boqDomainVar ("b",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 				String Site_Query = POID == "" ? strEmpty : strExist;
 				//System.out.println(Site_Query);
 				Object Site = entityManager.createNativeQuery(Site_Query).getSingleResult();
@@ -6141,9 +6133,9 @@ private static String boqDomainVar (String a,String paramEnterprise,String param
 				strExist="";
 				
 				strEmpty="SELECT COUNT(DISTINCT a.ITEM_CODE) FROM ASSET_REGISTRY a, AR_SITE b where a.AR_ID = b.AR_ID ";
-				strEmpty= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strEmpty);
+				strEmpty= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strEmpty);
 				strExist= "Select COUNT(DISTINCT a.ITEM_CODE) from ASSET_REGISTRY a, AR_SITE b where a.AR_ID = b.AR_ID and a.PO_ID='" + POID + "' ";	
-				strExist= boqDomainVar ("a",paramEnterprise,paramTransmission,paramAccess,paramCore,strExist);
+				strExist= boqDomainVar ("a",paramEnterprise,paramTransmission,paramRAN,paramCore,strExist);
 				String Item_Query = POID == "" ? strEmpty : strExist;
 				//System.out.println(Item_Query);
 				Object Item = entityManager.createNativeQuery(Item_Query).getSingleResult();

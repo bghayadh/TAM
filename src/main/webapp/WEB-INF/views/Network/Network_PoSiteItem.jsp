@@ -430,9 +430,9 @@ function PoStItemCore(id)
 		}
 			
 		if(arrayParam[2]==1){
-			var paramAccess = true;
+			var paramRAN = true;
 		}else{
-			var paramAccess = false;
+			var paramRAN = false;
 		}
 
 		if(arrayParam[3]==1){
@@ -450,7 +450,7 @@ function PoStItemCore(id)
 				"POAlreadyCreated":"false",
 	            "paramEnterprise": paramEnterprise,
 				"paramTransmission":paramTransmission,
-		     	"paramAccess":paramAccess,
+		     	"paramRAN":paramRAN,
 			    "paramCore":paramCore,
 			},
 			dataType: "json",
@@ -607,9 +607,9 @@ function PoStItemCore2(id)
 						}
 							
 						if(arrayParam[2]==1){
-							var paramAccess = true;
+							var paramRAN = true;
 						}else{
-							var paramAccess = false;
+							var paramRAN = false;
 						}
 
 						if(arrayParam[3]==1){
@@ -628,7 +628,7 @@ function PoStItemCore2(id)
 							"selectedSite":selectedItem,
 							"paramEnterprise": paramEnterprise,
 							"paramTransmission":paramTransmission,
-					     	"paramAccess":paramAccess,
+					     	"paramRAN":paramRAN,
 						    "paramCore":paramCore,
 						},
 						dataType: "json",

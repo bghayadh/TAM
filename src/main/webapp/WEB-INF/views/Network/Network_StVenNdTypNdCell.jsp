@@ -374,9 +374,9 @@ function StVenNdTypNdCell(id){
 			}
 				
 			if(arrayParam[2]==1){
-				var paramAccess = true;
+				var paramRAN = true;
 			}else{
-				var paramAccess = false;
+				var paramRAN = false;
 			}
 
 			if(arrayParam[3]==1){
@@ -393,7 +393,7 @@ function StVenNdTypNdCell(id){
 			          "siteId":siteId,
 			          "paramEnterprise": paramEnterprise,
 					  "paramTransmission":paramTransmission,
-			   		  "paramAccess":paramAccess,
+			   		  "paramRAN":paramRAN,
 				      "paramCore":paramCore,
 			 		},
 			 dataType: "json",
@@ -468,9 +468,9 @@ function RequestingNodeType(id) {
 		}
 			
 		if(arrayParam[2]==1){
-			var paramAccess = true;
+			var paramRAN = true;
 		}else{
-			var paramAccess = false;
+			var paramRAN = false;
 		}
 
 		if(arrayParam[3]==1){
@@ -488,7 +488,7 @@ function RequestingNodeType(id) {
 					"selectedVen":selectedVen	,
 					"paramEnterprise": paramEnterprise,
 					"paramTransmission":paramTransmission,
-			   		"paramAccess":paramAccess,
+			   		"paramRAN":paramRAN,
 				    "paramCore":paramCore,
 				},
 				dataType: "json",
@@ -586,9 +586,9 @@ function VenNdCellCore(id){
 			}
 				
 			if(arrayParam[2]==1){
-				var paramAccess = true;
+				var paramRAN = true;
 			}else{
-				var paramAccess = false;
+				var paramRAN = false;
 			}
 
 			if(arrayParam[3]==1){
@@ -607,7 +607,7 @@ function VenNdCellCore(id){
 					"selectedVen":selectedVen,
 					"paramEnterprise": paramEnterprise,
 					"paramTransmission":paramTransmission,
-			   		"paramAccess":paramAccess,
+			   		"paramRAN":paramRAN,
 				    "paramCore":paramCore,
 				},
 				dataType: "json",
