@@ -23,7 +23,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.AlmDbSession;
+import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.AssetRegistry;
 import com.aliat.alm.models.FixedAssetRegistry;
 import com.aliat.alm.models.GoodsReceived;
@@ -48,9 +49,9 @@ public class HomeController {
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
-
+	
 	@Autowired
-	ALMSessions almsessions;
+	Notify notifications;
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/home", method = RequestMethod.GET)
@@ -67,10 +68,11 @@ public class HomeController {
 
 			System.out.println(VType2);
 			System.out.println(Vnb2);
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
+			System.out.println("HashCode Home: "+AlmDbSession.getInstance().hashCode());
 			if (session != null && session.isOpen()) {
 				tx = session.beginTransaction();
-
+				notifications.headerNotifications(session, model);
 				try {
 					if (VType2 != null && Vnb2 != null) {
 						System.out.println("VType2 is : " + VType2);
@@ -631,7 +633,6 @@ public class HomeController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
-						session.getSessionFactory().close();
 					}
 				}
 
@@ -656,9 +657,9 @@ public class HomeController {
 		String VType = request.getParameter("voucherType");
 		System.out.println("the Vtype is " + VType);
 
-		Session session = almsessions.getSession();
+		Session session = AlmDbSession.getInstance().getSession();
 		Transaction tx = session.beginTransaction();
-
+		notifications.headerNotifications(session, model);
 		if (StringUtils.equalsIgnoreCase(VType, "pr")) {
 			List<PurchaseRequest> listrequest = new ArrayList<PurchaseRequest>();
 			requestName = "%" + request.getParameter("VoucherNb") + "%";
@@ -670,7 +671,7 @@ public class HomeController {
 			listrequest = query.list();
 			tx.commit();
 			session.close();
-			session.getSessionFactory().close();
+			
 			System.out.println("the list is " + mapper.writeValueAsString(listrequest));
 			model.addAttribute("Listreq", mapper.writeValueAsString(listrequest));
 			rtn.put("Listreq", listrequest);
@@ -687,7 +688,7 @@ public class HomeController {
 			listrequest = query.list();
 			tx.commit();
 			session.close();
-			session.getSessionFactory().close();
+			
 			System.out.println("the list is " + mapper.writeValueAsString(listrequest));
 			model.addAttribute("Listreq", mapper.writeValueAsString(listrequest));
 			rtn.put("Listreq", listrequest);
@@ -703,7 +704,7 @@ public class HomeController {
 			listrequest = query.list();
 			tx.commit();
 			session.close();
-			session.getSessionFactory().close();
+			
 			System.out.println("the list is " + mapper.writeValueAsString(listrequest));
 			model.addAttribute("Listreq", mapper.writeValueAsString(listrequest));
 			rtn.put("Listreq", listrequest);
@@ -719,7 +720,7 @@ public class HomeController {
 			listrequest = query.list();
 			tx.commit();
 			session.close();
-			session.getSessionFactory().close();
+			
 			System.out.println("the list is " + mapper.writeValueAsString(listrequest));
 			model.addAttribute("Listreq", mapper.writeValueAsString(listrequest));
 			rtn.put("Listreq", listrequest);
@@ -735,7 +736,7 @@ public class HomeController {
 			listrequest = query.list();
 			tx.commit();
 			session.close();
-			session.getSessionFactory().close();
+			
 			System.out.println("the list is " + mapper.writeValueAsString(listrequest));
 			model.addAttribute("Listreq", mapper.writeValueAsString(listrequest));
 			rtn.put("Listreq", listrequest);

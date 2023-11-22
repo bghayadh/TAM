@@ -44,6 +44,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.common.Permissions;
@@ -142,26 +143,22 @@ public class PurchaseController {
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			return "redirect:/";
 		} else {
-			//session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
+			System.out.println("HashCode Purchase: "+AlmDbSession.getInstance().hashCode());
 				//tx = session.beginTransaction();
 			try {
 				System.out.println("purchasessssss");
-				emf = Persistence.createEntityManagerFactory("persistence");
-				entityManager = emf.createEntityManager();
-				notifications.headerNotification(entityManager, model);
+				notifications.headerNotifications(session, model);
 				
-					permissions.setPerms(model, permissions.getUserPrem(entityManager, request),
+					permissions.setPerms(model, permissions.getUserPermsWithSession(session, request),
 							"Purchase Request", "List");
 				} catch (Exception e) {
 					logger.info(
 							"Error at Purchase Class and Purchase method while getting notifications and permissions with error message: "
 									+ e.getMessage());
 				} finally {
-					if (entityManager != null && entityManager.isOpen()) {
-						entityManager.close();
-					}
-					if(emf != null && emf.isOpen()) {
-						emf.close();	
+					if(session != null && session.isOpen()) {
+						session.close();
 					}
 				}
 			
