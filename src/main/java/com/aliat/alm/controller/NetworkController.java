@@ -104,7 +104,7 @@ public class NetworkController {
 			session = AlmDbSession.getInstance().getSession();
 			if (session != null && session.isOpen()) {
 				System.out.println("Site Node CEll Network***************");
-				notifications.headerNotifications(session, model);
+
 				String enterprise = request.getParameter("enterprise");
 				String transmission = request.getParameter("transmission");
 				String RAN = request.getParameter("RAN");
@@ -128,7 +128,7 @@ public class NetworkController {
 				String strCells3 = "SELECT a.UCELL_ID,a.CELLNAME,a.NODE_PK,b.WARE_ID FROM NODE_UCELL a,NODE_ACTIVE b WHERE a.ACTIVE_RECORD = '1' and b.NODE_PK=a.NODE_PK and b.WARE_ID!= '0' ";
 
 				try {
-
+					notifications.headerNotifications(session, model);
 					if (enterprise != null && !enterprise.equals("null")) {
 						arrayParam[0] = 1;
 						model.addAttribute("EnterpriseBtn", arrayParam[0]);

@@ -45,6 +45,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.AccessCableJunction;
 import com.aliat.alm.models.DistributionBoard;
@@ -78,15 +79,14 @@ public class PhysicalLayerController {
 	private static Query query = null;
 	private static StringWriter sw;
 	private static String exceptionAsString;
-	
 
-	private EntityManagerFactory emf =null;
-	
-	
-	private EntityManager entityManager=null;
+//	private EntityManagerFactory emf =null;
 
-	@Autowired
-	ALMSessions almsessions;
+//	private EntityManager entityManager=null;
+
+	/*
+	 * @Autowired ALMSessions almsessions;
+	 */
 
 	@Autowired
 	Notify notifications;
@@ -101,7 +101,7 @@ public class PhysicalLayerController {
 			return "redirect:/";
 		} else {
 
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 
 			if (session != null && session.isOpen()) {
 				tx = session.beginTransaction();
@@ -809,9 +809,9 @@ public class PhysicalLayerController {
 											"ManHandhole_OutOfZone", noOfPoints);
 									manholeList.addAll(newList);
 								} else {
-									manholeList = findNearestArray(query.getResultList(), Double.valueOf(closestLatPoint),
-											Double.valueOf(closestLongPoint), Double.valueOf(closestDisRange),
-											"ManHandhole_OutOfZone", noOfPoints);
+									manholeList = findNearestArray(query.getResultList(),
+											Double.valueOf(closestLatPoint), Double.valueOf(closestLongPoint),
+											Double.valueOf(closestDisRange), "ManHandhole_OutOfZone", noOfPoints);
 								}
 
 								query = session.createNativeQuery(
@@ -831,9 +831,9 @@ public class PhysicalLayerController {
 											"ManHandhole_OutOfZone", noOfPoints);
 									handholeList.addAll(newList);
 								} else {
-									handholeList = findNearestArray(query.getResultList(), Double.valueOf(closestLatPoint),
-											Double.valueOf(closestLongPoint), Double.valueOf(closestDisRange),
-											"ManHandhole_OutOfZone", noOfPoints);
+									handholeList = findNearestArray(query.getResultList(),
+											Double.valueOf(closestLatPoint), Double.valueOf(closestLongPoint),
+											Double.valueOf(closestDisRange), "ManHandhole_OutOfZone", noOfPoints);
 								}
 
 								Query dbData = session.createNativeQuery(
@@ -853,9 +853,9 @@ public class PhysicalLayerController {
 											"DB_OutOfZone", noOfPoints);
 									distribBoardList.addAll(newList);
 								} else {
-									distribBoardList = findNearestArray(dbData.getResultList(), Double.valueOf(closestLatPoint),
-											Double.valueOf(closestLongPoint), Double.valueOf(closestDisRange),
-											"DB_OutOfZone", noOfPoints);
+									distribBoardList = findNearestArray(dbData.getResultList(),
+											Double.valueOf(closestLatPoint), Double.valueOf(closestLongPoint),
+											Double.valueOf(closestDisRange), "DB_OutOfZone", noOfPoints);
 								}
 							}
 							junctionManholeList = session.createNativeQuery(
@@ -888,7 +888,8 @@ public class PhysicalLayerController {
 							 * createNativeQuery("SELECT DISTINCT MANHOLE_ID,MANHOLE_NAME,LONGITUDE,LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=MANHOLE_ID),DM_NAME FROM MANHOLE  where to_number(LONGITUDE) >= '"
 							 * +endLongPoint+"'  and  to_number(LATITUDE) >= '"
 							 * +endLatPoint+"'  and to_number(LONGITUDE) <=  '"
-							 * +startLongPoint+"' and  to_number(LATITUDE) <= '"+startLatPoint+"' ").getResultList();
+							 * +startLongPoint+"' and  to_number(LATITUDE) <= '"+startLatPoint+"' ").
+							 * getResultList();
 							 * System.out.println("manholeListQuery "+mapper.writeValueAsString(
 							 * manholeListQuery)); manholeList =
 							 * findMarkerPointsArrayBetween(manholeListQuery,Double.valueOf(startLongPoint),
@@ -899,8 +900,8 @@ public class PhysicalLayerController {
 							 * createNativeQuery("SELECT DISTINCT HANDHOLE_ID,HANDHOLE_NAME,LONGITUDE,LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=HANDHOLE_ID),DM_NAME FROM HANDHOLE  where to_number(LONGITUDE) >= '"
 							 * +endLongPoint+"'  and  to_number(LATITUDE) >= '"
 							 * +endLatPoint+"'  and to_number(LONGITUDE) <=  '"
-							 * +startLongPoint+"' and  to_number(LATITUDE) <= '"+startLatPoint+"' ").getResultList();
-							 * handholeList =
+							 * +startLongPoint+"' and  to_number(LATITUDE) <= '"+startLatPoint+"' ").
+							 * getResultList(); handholeList =
 							 * findMarkerPointsArrayBetween(handholeListQuery,Double.valueOf(startLongPoint)
 							 * ,Double.valueOf(startLatPoint),Double.valueOf(endLongPoint),Double.valueOf(
 							 * endLatPoint),"Handhole");
@@ -909,8 +910,8 @@ public class PhysicalLayerController {
 							 * createNativeQuery("SELECT DISTINCT DB_ID,DB_LONGITUDE,DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,PROJECT_ID ,CITY FROM DISTRIBUTION_BOARD  where to_number(LONGITUDE) >= '"
 							 * +endLongPoint+"'  and  to_number(LATITUDE) >= '"
 							 * +endLatPoint+"'  and to_number(LONGITUDE) <=  '"
-							 * +startLongPoint+"' and  to_number(LATITUDE) <= '"+startLatPoint+"' ").getResultList();
-							 * distribBoardList =
+							 * +startLongPoint+"' and  to_number(LATITUDE) <= '"+startLatPoint+"' ").
+							 * getResultList(); distribBoardList =
 							 * findMarkerPointsArrayBetween(distribBoardListQuery,Double.valueOf(
 							 * startLongPoint),Double.valueOf(startLatPoint),Double.valueOf(endLongPoint),
 							 * Double.valueOf(endLatPoint),"DistribBoard");
@@ -1241,14 +1242,14 @@ public class PhysicalLayerController {
 									manholeData.setParameter("param2", idsArray);
 
 									if (manholeListPt.size() > 0) {
-										newListPt = findNearestArray(manholeData.getResultList(), Double.valueOf(lats[i]),
-												Double.valueOf(lngs[i]), Double.valueOf(closestDisRange),
-												"ManHandhole_OutOfZone", noOfPoints);
+										newListPt = findNearestArray(manholeData.getResultList(),
+												Double.valueOf(lats[i]), Double.valueOf(lngs[i]),
+												Double.valueOf(closestDisRange), "ManHandhole_OutOfZone", noOfPoints);
 										manholeListPt.addAll(newListPt);
 									} else {
-										manholeListPt = findNearestArray(manholeData.getResultList(), Double.valueOf(lats[i]),
-												Double.valueOf(lngs[i]), Double.valueOf(closestDisRange),
-												"ManHandhole_OutOfZone", noOfPoints);
+										manholeListPt = findNearestArray(manholeData.getResultList(),
+												Double.valueOf(lats[i]), Double.valueOf(lngs[i]),
+												Double.valueOf(closestDisRange), "ManHandhole_OutOfZone", noOfPoints);
 									}
 									query = session.createNativeQuery(
 											" SELECT * FROM (SELECT DISTINCT A.handhole_id as handhole_id ,A.handhole_name as handhole_name,A.LONGITUDE as LONGITUDE ,A.LATITUDE as LATITUDE,A.PROJECT_ID as PROJECT_ID ,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID) as totalCount,A.DM_NAME as DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.HANDHOLE_ID LEFT JOIN FIBER_CABLES C ON C.FIBER_CABLE_ID = B.FIBER_CABLE_ID where B.AUXILIARY_POINT_ID LIKE '%HH%' AND C.FIBER_CABLE_ID IN (:param1) "
@@ -1291,9 +1292,9 @@ public class PhysicalLayerController {
 												"DB_OutOfZone", noOfPoints);
 										distribBoardListPt.addAll(newListPt);
 									} else {
-										distribBoardListPt = findNearestArray(query.getResultList(), Double.valueOf(lats[i]),
-												Double.valueOf(lngs[i]), Double.valueOf(closestDisRange),
-												"DB_OutOfZone", noOfPoints);
+										distribBoardListPt = findNearestArray(query.getResultList(),
+												Double.valueOf(lats[i]), Double.valueOf(lngs[i]),
+												Double.valueOf(closestDisRange), "DB_OutOfZone", noOfPoints);
 									}
 								}
 								junctionManholeListPt = session.createNativeQuery(
@@ -1415,7 +1416,8 @@ public class PhysicalLayerController {
 						// COUNT(*) FROM FIBER_STRANDS C WHERE
 						// C.TUBE_ID=b.TUBE_ID),b.FIBER_CABLE_ID,b.TUBE_NAME FROM FIBER_TUBES
 						// b,FIBER_CABLES a WHERE a.FIBER_CABLE_ID=b.FIBER_CABLE_ID AND b.SOURCE_WARE_ID
-						// LIKE '%"+siteId+"%' OR b.DESTINATION_WARE_ID LIKE '%"+siteId+"%' ").getResultList();
+						// LIKE '%"+siteId+"%' OR b.DESTINATION_WARE_ID LIKE '%"+siteId+"%'
+						// ").getResultList();
 						fiberTubes = session.createNativeQuery(
 								"SELECT DISTINCT b.TUBE_ID,b.SOURCE_LONGITUDE,b.SOURCE_LATITUDE,b.DESTINATION_LONGITUDE,b.DESTINATION_LATITUDE,b.SOURCE_WARE_ID,b.SOURCE_ID,b.SOURCE_NAME,b.DESTINATION_WARE_ID,b.DESTINATION_ID,b.DESTINATION_NAME,(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.TUBE_ID=b.TUBE_ID),b.FIBER_CABLE_ID,b.DRAWING_TYPE,b.TUBE_NAME,TUBE_NUMBER,TUBE_COLOR FROM FIBER_TUBES b "
 										+ "LEFT  JOIN TUBE_AUXILIARY_POINTS a ON a.TUBE_ID=b.TUBE_ID "
@@ -1797,7 +1799,6 @@ public class PhysicalLayerController {
 				} finally {
 					if (session != null && session.isOpen()) {
 						session.close();
-						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -1817,7 +1818,7 @@ public class PhysicalLayerController {
 		// ObjectMapper mapper = new ObjectMapper();
 		Session session = null;
 		Transaction tx = null;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
@@ -1845,7 +1846,6 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -1859,7 +1859,7 @@ public class PhysicalLayerController {
 			HttpServletResponse response) throws JsonProcessingException {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
@@ -1886,7 +1886,6 @@ public class PhysicalLayerController {
 			} finally {
 				if (session != null && session.isOpen()) {
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -1899,7 +1898,7 @@ public class PhysicalLayerController {
 			HttpServletResponse response) throws JsonProcessingException {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
@@ -1928,7 +1927,6 @@ public class PhysicalLayerController {
 			} finally {
 				if (session != null && session.isOpen()) {
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -1942,7 +1940,7 @@ public class PhysicalLayerController {
 			HttpServletResponse response) throws JsonProcessingException {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
@@ -1986,7 +1984,6 @@ public class PhysicalLayerController {
 			} finally {
 				if (session != null && session.isOpen()) {
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -2001,7 +1998,7 @@ public class PhysicalLayerController {
 		// logger.info("Welcome home! The client locale is {}.", locale);
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
@@ -2031,7 +2028,6 @@ public class PhysicalLayerController {
 			} finally {
 				if (session != null && session.isOpen()) {
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -2049,7 +2045,7 @@ public class PhysicalLayerController {
 		// ObjectMapper mapper = new ObjectMapper();
 		Session session = null;
 		Transaction tx = null;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
@@ -2085,7 +2081,6 @@ public class PhysicalLayerController {
 			} finally {
 				if (session != null && session.isOpen()) {
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -2106,7 +2101,7 @@ public class PhysicalLayerController {
 		} else {
 			String selectedTrench = request.getParameter("ID");
 			List<Object[]> listTrench;
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 
 			if (session != null && session.isOpen()) {
 				tx = session.beginTransaction();
@@ -2158,7 +2153,6 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
-						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -2180,7 +2174,7 @@ public class PhysicalLayerController {
 		} else {
 			String selectedDuct = request.getParameter("ID");
 			List<Object[]> listDuct;
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 
 			if (session != null && session.isOpen()) {
 				tx = session.beginTransaction();
@@ -2231,7 +2225,6 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
-						session.getSessionFactory().close();
 					}
 				}
 			}
@@ -2246,7 +2239,7 @@ public class PhysicalLayerController {
 			@ModelAttribute ItemParameters itemParameters, HttpServletResponse response) {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
@@ -2296,7 +2289,6 @@ public class PhysicalLayerController {
 			} finally {
 				if (session != null && session.isOpen()) {
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -2311,7 +2303,7 @@ public class PhysicalLayerController {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
 		String fiberID = request.getParameter("selectedFiberContext").toString();
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
@@ -2338,8 +2330,9 @@ public class PhysicalLayerController {
 						+ " (select source_id from fiber_cables where fiber_cable_id ='" + fiberID
 						+ "' and source_id LIKE 'DB%') " + " union"
 						+ " (select destination_id from fiber_cables where fiber_cable_id = '" + fiberID
-						+ "' and destination_id LIKE 'DB%'))) where site_id !='null' and site_id is not null").getResultList();
-				
+						+ "' and destination_id LIKE 'DB%'))) where site_id !='null' and site_id is not null")
+						.getResultList();
+
 				session.flush();
 				session.clear();
 
@@ -2367,7 +2360,7 @@ public class PhysicalLayerController {
 						+ "' and source_id LIKE 'DB%') " + " union"
 						+ " (select destination_id from fiber_cables where fiber_cable_id = '" + fiberID
 						+ "' and destination_id LIKE 'DB%')))").getResultList();
-				
+
 				session.flush();
 				session.clear();
 
@@ -2375,7 +2368,7 @@ public class PhysicalLayerController {
 						"SELECT DISTINCT WARE_ID,SITE_ID,WARE_NAME,LONGITUDE,LATITUDE FROM WAREHOUSE WHERE WARE_ID IN (:param1)");
 				query.setParameter("param1", siteIds);
 				rtn.put("SiteData", query.getResultList());
-				
+
 				session.flush();
 				session.clear();
 
@@ -2383,7 +2376,7 @@ public class PhysicalLayerController {
 						"SELECT DISTINCT CUSTOMER_ID,CUSTOMER_NAME,MOBILE_NUMBER,LONGITUDE,LATITUDE FROM CUSTOMER WHERE CUSTOMER_ID IN (:param1)");
 				query.setParameter("param1", clientIds);
 				rtn.put("ClientData", query.getResultList());
-				
+
 				session.flush();
 				session.clear();
 				tx.commit();
@@ -2399,7 +2392,6 @@ public class PhysicalLayerController {
 			} finally {
 				if (session != null && session.isOpen()) {
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -2420,7 +2412,7 @@ public class PhysicalLayerController {
 		} else {
 			String selectedFiberContext = request.getParameter("selectedFiberContext");
 			List<Object[]> fiberDetails, fiberTubes, fiberStrands, accessJunctions;
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 
 			if (session != null && session.isOpen()) {
 				tx = session.beginTransaction();
@@ -2476,7 +2468,7 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
-						session.getSessionFactory().close();
+
 					}
 				}
 			}
@@ -2493,7 +2485,7 @@ public class PhysicalLayerController {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
@@ -2521,7 +2513,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -2536,7 +2528,7 @@ public class PhysicalLayerController {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
@@ -2565,7 +2557,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -2580,7 +2572,7 @@ public class PhysicalLayerController {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
@@ -2609,7 +2601,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -2625,7 +2617,7 @@ public class PhysicalLayerController {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
@@ -2654,7 +2646,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -2667,7 +2659,7 @@ public class PhysicalLayerController {
 			HttpServletRequest request, HttpServletResponse response) {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
 			return rtn;
@@ -2703,7 +2695,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -2716,7 +2708,7 @@ public class PhysicalLayerController {
 			HttpServletRequest request, HttpServletResponse response) {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
 			return rtn;
@@ -2752,7 +2744,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -2765,7 +2757,7 @@ public class PhysicalLayerController {
 			HttpServletRequest request, HttpServletResponse response) {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
 			return rtn;
@@ -2801,7 +2793,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -2815,7 +2807,7 @@ public class PhysicalLayerController {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
@@ -2847,7 +2839,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -2865,7 +2857,7 @@ public class PhysicalLayerController {
 		String target = request.getParameter("target").toString();
 		// System.out.println("entered target is "+target);
 		List<Object[]> DBData = null;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
@@ -2959,7 +2951,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -2975,7 +2967,7 @@ public class PhysicalLayerController {
 		Map<String, Object> rtn = new LinkedHashMap<>();
 		Session session = null;
 		Transaction tx = null;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
@@ -3072,7 +3064,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 
@@ -3091,7 +3083,7 @@ public class PhysicalLayerController {
 		String countFiberCables, countFiberCablesAux, countFiberCablesSrcDest, countTubes, countTubesSrcDest,
 				countTubesAux, countStrands, countStrandsSrcDest, countStrandsAux, countJunctions;
 		List<Object[]> manholeData = null;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
@@ -3166,7 +3158,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -3186,7 +3178,7 @@ public class PhysicalLayerController {
 				countTubesAux, countStrands, countStrandsSrcDest, countStrandsAux, countJunctions;
 		List<Object[]> handholeData = null;
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
@@ -3261,7 +3253,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -3279,7 +3271,7 @@ public class PhysicalLayerController {
 		String projectID = request.getParameter("projectID").toString();
 
 		List<Object[]> FiberData = null;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
@@ -3301,7 +3293,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -3322,7 +3314,7 @@ public class PhysicalLayerController {
 		List<Object[]> cable_geo = null;
 		List<Object[]> cable_LineOfSite = null;
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
@@ -3360,7 +3352,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -3375,7 +3367,7 @@ public class PhysicalLayerController {
 		Map<String, Object> rtn = new LinkedHashMap<>();
 		String ductID = request.getParameter("ductID").toString();
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
@@ -3401,7 +3393,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -3417,7 +3409,7 @@ public class PhysicalLayerController {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		ObjectMapper map = new ObjectMapper();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
@@ -3449,23 +3441,30 @@ public class PhysicalLayerController {
 								"Select count(*) FROM DISTRIBUTION_BOARD_MAPPING where DB_ID='" + distBoardSel + "' ")
 						.uniqueResult();
 				rtn.put("DbMappingCount", DbMappingCount);
-				
-				Object countDbActiveFP = session
-						.createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING WHERE FP_STATUS='Active' AND DB_ID='" + distBoardSel + "' ").uniqueResult();
+
+				Object countDbActiveFP = session.createNativeQuery(
+						"SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING WHERE FP_STATUS='Active' AND DB_ID='"
+								+ distBoardSel + "' ")
+						.uniqueResult();
 				rtn.put("countDbActiveFP", countDbActiveFP);
-				
-				Object countDbInactiveFP = session
-						.createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING WHERE FP_STATUS='InActive' AND DB_ID='" + distBoardSel + "' ").uniqueResult();
+
+				Object countDbInactiveFP = session.createNativeQuery(
+						"SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING WHERE FP_STATUS='InActive' AND DB_ID='"
+								+ distBoardSel + "' ")
+						.uniqueResult();
 				rtn.put("countDbInactiveFP", countDbInactiveFP);
-				
-				Object countDbActiveBP = session
-						.createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING WHERE BP_STATUS='Active' AND DB_ID='" + distBoardSel + "' ").uniqueResult();
+
+				Object countDbActiveBP = session.createNativeQuery(
+						"SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING WHERE BP_STATUS='Active' AND DB_ID='"
+								+ distBoardSel + "' ")
+						.uniqueResult();
 				rtn.put("countDbActiveBP", countDbActiveBP);
-				
-				Object countDbInactiveBP = session
-						.createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING WHERE BP_STATUS='InActive' AND DB_ID='" + distBoardSel + "' ").uniqueResult();
+
+				Object countDbInactiveBP = session.createNativeQuery(
+						"SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING WHERE BP_STATUS='InActive' AND DB_ID='"
+								+ distBoardSel + "' ")
+						.uniqueResult();
 				rtn.put("countDbInactiveBP", countDbInactiveBP);
-				
 
 				session.clear();
 				tx.commit();
@@ -3483,7 +3482,7 @@ public class PhysicalLayerController {
 			} finally {
 				if (session != null && session.isOpen()) {
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -3499,7 +3498,7 @@ public class PhysicalLayerController {
 		// ObjectMapper mapper = new ObjectMapper();
 		Session session = null;
 		Transaction tx = null;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
@@ -3508,7 +3507,8 @@ public class PhysicalLayerController {
 			tx = session.beginTransaction();
 			try {
 				Object MSANCount = session
-						.createNativeQuery("select count (*) from node_active where domain = 'Enterprise'").getResultList();
+						.createNativeQuery("select count (*) from node_active where domain = 'Enterprise'")
+						.getResultList();
 				rtn.put("MSANCount", MSANCount);
 
 				Object DWDMCount = session.createNativeQuery(
@@ -3544,7 +3544,7 @@ public class PhysicalLayerController {
 			} finally {
 				if (session != null && session.isOpen()) {
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -3558,7 +3558,7 @@ public class PhysicalLayerController {
 			HttpServletResponse response) throws JsonProcessingException {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
@@ -3711,7 +3711,7 @@ public class PhysicalLayerController {
 			} finally {
 				if (session != null && session.isOpen()) {
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 
@@ -3730,7 +3730,7 @@ public class PhysicalLayerController {
 		String projectID = request.getParameter("projectID").toString();
 		String trenchID = request.getParameter("trenchID").toString();
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
@@ -3753,7 +3753,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -3765,7 +3765,7 @@ public class PhysicalLayerController {
 	public Map<String, Object> saveProject(HttpServletRequest request, HttpServletResponse response) {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
 			return rtn;
@@ -3826,7 +3826,7 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
-						session.getSessionFactory().close();
+
 					}
 				}
 
@@ -3842,7 +3842,7 @@ public class PhysicalLayerController {
 	public Map<String, Object> saveManhole(HttpServletRequest request, HttpServletResponse response) {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
 			return rtn;
@@ -4013,7 +4013,7 @@ public class PhysicalLayerController {
 				} finally {
 					if (session != null && session.isOpen()) {
 						session.close();
-						session.getSessionFactory().close();
+
 					}
 				}
 			}
@@ -4028,7 +4028,7 @@ public class PhysicalLayerController {
 		// logger.info("Welcome home! The client locale is {}.", locale);
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
@@ -4189,7 +4189,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -4205,7 +4205,7 @@ public class PhysicalLayerController {
 		// ObjectMapper mapper = new ObjectMapper();
 		Session session = null;
 		Transaction tx = null;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
@@ -4243,7 +4243,7 @@ public class PhysicalLayerController {
 
 			tx.commit();
 			session.close();
-			session.getSessionFactory().close();
+
 		}
 		return rtn;
 	}
@@ -4254,7 +4254,7 @@ public class PhysicalLayerController {
 	public TreeMap<Object, Object> SearchForAuxName(@ModelAttribute ItemParameters itemParameters) {
 
 		TreeMap<Object, Object> sortedMap = new TreeMap<>();
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
@@ -4342,7 +4342,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -4356,7 +4356,7 @@ public class PhysicalLayerController {
 			@ModelAttribute ItemParameters itemParameters) {
 
 		TreeMap<Object, Object> sortedMap = new TreeMap<>();
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			String selectedFiberContext = request.getParameter("ID");
@@ -4452,7 +4452,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -4468,7 +4468,7 @@ public class PhysicalLayerController {
 		TreeMap<Object, Object> resultManhole = new TreeMap<>();
 		TreeMap<Object, Object> resultMapHand = new TreeMap<>();
 		TreeMap<Object, Object> sortedMap = new TreeMap<>();
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
@@ -4557,11 +4557,11 @@ public class PhysicalLayerController {
 				logger.finest("Error in UpdateAuxPoints due to \n " + exceptionAsString);
 				logger.info("Error in UpdateAuxPoints due to \n " + exceptionAsString);
 				e.printStackTrace();
-				
+
 			} finally {
 				if (session != null && session.isOpen()) {
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -4575,7 +4575,8 @@ public class PhysicalLayerController {
 		double minDistance = maxDistance + 1;
 
 		List<Object[]> manholeList = session
-				.createNativeQuery("SELECT DISTINCT MANHOLE_ID,MANHOLE_NAME,LONGITUDE,LATITUDE FROM MANHOLE").getResultList();
+				.createNativeQuery("SELECT DISTINCT MANHOLE_ID,MANHOLE_NAME,LONGITUDE,LATITUDE FROM MANHOLE")
+				.getResultList();
 
 		for (Object[] manholeData : manholeList) {
 			String manholeId = (String) manholeData[0];
@@ -4612,7 +4613,8 @@ public class PhysicalLayerController {
 		double minDistance = maxDistance + 1;
 
 		List<Object[]> handholeList = session
-				.createNativeQuery("SELECT DISTINCT HANDHOLE_ID,HANDHOLE_NAME,LONGITUDE,LATITUDE FROM HANDHOLE").getResultList();
+				.createNativeQuery("SELECT DISTINCT HANDHOLE_ID,HANDHOLE_NAME,LONGITUDE,LATITUDE FROM HANDHOLE")
+				.getResultList();
 
 		for (Object[] handholeData : handholeList) {
 			String handholeId = (String) handholeData[0];
@@ -4670,7 +4672,7 @@ public class PhysicalLayerController {
 			HttpServletRequest request, HttpServletResponse response) {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
 			return rtn;
@@ -5659,7 +5661,7 @@ public class PhysicalLayerController {
 			finally {
 				if (session != null && session.isOpen()) {
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -5676,7 +5678,7 @@ public class PhysicalLayerController {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
@@ -5712,7 +5714,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -5727,7 +5729,7 @@ public class PhysicalLayerController {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
@@ -5763,7 +5765,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -5780,7 +5782,7 @@ public class PhysicalLayerController {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
@@ -5811,7 +5813,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -5827,7 +5829,7 @@ public class PhysicalLayerController {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
@@ -6162,7 +6164,8 @@ public class PhysicalLayerController {
 				// where a.DB_ID='"+distributionBoardId+"' and a.FP_EQUIPMENT!='null') AS
 				// front,(select count (*) from DISTRIBUTION_BOARD_MAPPING a where
 				// a.DB_ID='"+distributionBoardId+"' and a.BP_STRAND_NAME!='null') AS back from
-				// DISTRIBUTION_BOARD b where b.DB_ID='"+distributionBoardId+"'").getResultList();
+				// DISTRIBUTION_BOARD b where
+				// b.DB_ID='"+distributionBoardId+"'").getResultList();
 				// System.out.println("countConnections " +
 				// mapper.writeValueAsString(countConnections));
 				rtn.put("countConnections", countConnections);
@@ -6178,14 +6181,13 @@ public class PhysicalLayerController {
 			} finally {
 				if (session != null && session.isOpen()) {
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
 		return rtn;
 	}
 
-	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/saveLoadedDistributionBoard", method = RequestMethod.POST)
 	@ResponseBody
@@ -6201,13 +6203,11 @@ public class PhysicalLayerController {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
 		}
-		try {
-		System.out.println("save loaded db entitymanager");
-		 emf = Persistence.createEntityManagerFactory("persistence");
-		 entityManager = emf.createEntityManager();
-			entityManager.getTransaction().begin();
-			// String boardCity = request.getParameter("boardCity");
-			
+		session = AlmDbSession.getInstance().getSession();
+		if (session != null && session.isOpen()) {
+			try {
+				tx = session.beginTransaction();
+
 				Date date = new Date();
 				Calendar calendar = new GregorianCalendar();
 				calendar.setTime(date);
@@ -6226,12 +6226,12 @@ public class PhysicalLayerController {
 						if (StringUtils.equalsIgnoreCase(city, "") || StringUtils.equalsIgnoreCase(city, null)) {
 							// synchronized (this) {
 
-							query = entityManager
+							query = session
 									.createNativeQuery("SELECT city FROM WAREHOUSE WHERE SITE_ID ='" + siteID + "'");
 							// query.setParameter("param", "%" + siteID + "%");
 							// rtn.put("city", query.toString());
 							query.executeUpdate();
-							entityManager.createNativeQuery("commit").executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
 
 							if (query.getResultList().size() == 1) {
 								city = query.getSingleResult().toString();
@@ -6247,17 +6247,19 @@ public class PhysicalLayerController {
 							ArrayList<String> DBDetail = new ArrayList<String>();
 							synchronized (this) {
 
-								distributionBoardId = "DB_" + year + "_" + Integer.parseInt(((Query) entityManager
-										.createNativeQuery("SELECT DB FROM SEQ_TABLE")).getSingleResult().toString());
-								query = (Query) entityManager.createNativeQuery("UPDATE SEQ_TABLE SET DB = DB + 1 ");
+								distributionBoardId = "DB_" + year + "_"
+										+ Integer.parseInt(
+												((Query) session.createNativeQuery("SELECT DB FROM SEQ_TABLE"))
+														.getSingleResult().toString());
+								query = (Query) session.createNativeQuery("UPDATE SEQ_TABLE SET DB = DB + 1 ");
 								query.executeUpdate();
-								entityManager.createNativeQuery("commit").executeUpdate();
+								session.createNativeQuery("commit").executeUpdate();
 							}
 
-							query = entityManager
+							query = session
 									.createNativeQuery("SELECT WARE_ID FROM WAREHOUSE WHERE SITE_ID ='" + siteID + "'");
 							query.executeUpdate();
-							entityManager.createNativeQuery("commit").executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
 							WareID = query.getSingleResult().toString();
 
 							Timestamp boardLastModifiedDate = new Timestamp(
@@ -6329,10 +6331,8 @@ public class PhysicalLayerController {
 							DBDetail.add(itemParameters.getDictParameterLoadedDB().get(i).get("siteID"));
 							DBDetail.add(city);
 							DBDetail.add(NetworkLevel);
-
 							DBDetails.add(DBDetail);
-
-							entityManager.persist(distributionBoard);
+							session.saveOrUpdate(distributionBoard);
 
 						} else {
 
@@ -6344,7 +6344,9 @@ public class PhysicalLayerController {
 
 				rtn.put("distributionBoardDetails", DBDetails);
 				rtn.put("IgnoredDB", IgnoredDB);
+				tx.commit();
 			} catch (Exception e) {
+				tx.rollback();
 				sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
 				exceptionAsString = sw.toString();
@@ -6355,16 +6357,12 @@ public class PhysicalLayerController {
 			}
 
 			finally {
-				if (entityManager != null && entityManager.isOpen()) {
-					
-					entityManager.getTransaction().commit();
-					entityManager.close();
-				}
-				if(emf != null && emf.isOpen()) {
-					emf.close();	
+				if (session != null && session.isOpen()) {
+					session.close();
 				}
 			}
-	
+		}
+
 		return rtn;
 	}
 
@@ -6374,7 +6372,7 @@ public class PhysicalLayerController {
 			HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException {
 		System.out.println("Passes here");
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
 			return rtn;
@@ -6405,7 +6403,7 @@ public class PhysicalLayerController {
 				finally {
 					if (session != null && session.isOpen()) {
 						session.close();
-						session.getSessionFactory().close();
+
 					}
 				}
 
@@ -6427,7 +6425,7 @@ public class PhysicalLayerController {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
 		}
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 
@@ -6438,7 +6436,7 @@ public class PhysicalLayerController {
 				query = session.createNativeQuery(
 						"SELECT STRAND_ID FROM FIBER_STRANDS WHERE LOWER(STRAND_ID) LIKE :param OR UPPER(STRAND_ID) LIKE :param");
 				query.setParameter("param", "%" + search + "%");
-				query.setMaxResults(20);				
+				query.setMaxResults(20);
 				List<Object[]> strands = query.getResultList();
 				if (search != null) {
 					if (strands != null && strands.size() != 0) {
@@ -6452,7 +6450,7 @@ public class PhysicalLayerController {
 				tx.commit();
 
 			} catch (Exception e) {
-				tx.rollback();				
+				tx.rollback();
 				sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
 				exceptionAsString = sw.toString();
@@ -6464,7 +6462,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -6483,7 +6481,7 @@ public class PhysicalLayerController {
 			return rtn;
 		}
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		tx = session.beginTransaction();
 		List<Object[]> globalList = new ArrayList<Object[]>();
 		List<String> searchResult = new ArrayList<String>();
@@ -6569,7 +6567,6 @@ public class PhysicalLayerController {
 		}
 		tx.commit();
 		session.close();
-		session.getSessionFactory().close();
 
 		return rtn;
 
@@ -6587,7 +6584,7 @@ public class PhysicalLayerController {
 		}
 
 		Query query;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		String search = request.getParameter("searchs");
 		System.out.println("search " + search);
 		if (session != null && session.isOpen()) {
@@ -6621,7 +6618,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -6641,7 +6638,7 @@ public class PhysicalLayerController {
 			return rtn;
 		}
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
@@ -6698,7 +6695,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -6706,7 +6703,7 @@ public class PhysicalLayerController {
 		return rtn;
 
 	}
-	
+
 	@RequestMapping(value = "/getNode", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> getNode(Locale locale, Model model, HttpServletRequest request,
@@ -6719,18 +6716,17 @@ public class PhysicalLayerController {
 		}
 
 		Query query;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
 				List<Object[]> NodeList = new ArrayList<Object[]>();
 				NodeList = session.createNativeQuery(
-						   "SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' )    ")
-						   .getResultList();
+						"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' )    ")
+						.getResultList();
 
 				rtn.put("nodeList", NodeList);
-				
 
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -6743,7 +6739,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -6751,7 +6747,6 @@ public class PhysicalLayerController {
 		return rtn;
 
 	}
-
 
 	@RequestMapping(value = "/SearchStrand", method = RequestMethod.GET)
 	@ResponseBody
@@ -6764,7 +6759,7 @@ public class PhysicalLayerController {
 			return rtn;
 		}
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		tx = session.beginTransaction();
 
 		// String sId = request.getParameter("sId");
@@ -6781,7 +6776,6 @@ public class PhysicalLayerController {
 		rtn.put("glist", query.getResultList());
 		tx.commit();
 		session.close();
-		session.getSessionFactory().close();
 
 		return rtn;
 
@@ -6793,7 +6787,7 @@ public class PhysicalLayerController {
 			HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException {
 		System.out.println("Passes here strand");
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
 			return rtn;
@@ -6830,7 +6824,7 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
-						session.getSessionFactory().close();
+
 					}
 				}
 
@@ -6847,7 +6841,7 @@ public class PhysicalLayerController {
 			HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException {
 		System.out.println("Passes here tube");
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
 			return rtn;
@@ -6899,7 +6893,7 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
-						session.getSessionFactory().close();
+
 					}
 				}
 
@@ -6916,7 +6910,7 @@ public class PhysicalLayerController {
 			HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException {
 		System.out.println("Passes here fiber");
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
 			return rtn;
@@ -6965,7 +6959,7 @@ public class PhysicalLayerController {
 				} finally {
 					if (session != null && session.isOpen()) {
 						session.close();
-						session.getSessionFactory().close();
+
 					}
 				}
 
@@ -6981,7 +6975,7 @@ public class PhysicalLayerController {
 	public Map<String, Object> SearchLastMile(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException {
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
 			return rtn;
@@ -7017,7 +7011,7 @@ public class PhysicalLayerController {
 				finally {
 					if (session != null && session.isOpen()) {
 						session.close();
-						session.getSessionFactory().close();
+
 					}
 				}
 
@@ -7033,7 +7027,7 @@ public class PhysicalLayerController {
 	public Map<String, Object> SearchJunction(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException {
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
 			return rtn;
@@ -7067,7 +7061,7 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
-						session.getSessionFactory().close();
+
 					}
 				}
 
@@ -7206,7 +7200,7 @@ public class PhysicalLayerController {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
 		}
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
@@ -7238,7 +7232,7 @@ public class PhysicalLayerController {
 			} finally {
 				if (session != null && session.isOpen()) {
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -7330,7 +7324,7 @@ public class PhysicalLayerController {
 		System.out.println("Passes here");
 		Map<String, Object> rtn = new LinkedHashMap<>();
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
@@ -7366,7 +7360,7 @@ public class PhysicalLayerController {
 			} finally {
 				if (session != null && session.isOpen()) {
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -7380,7 +7374,7 @@ public class PhysicalLayerController {
 		System.out.println("Passes here");
 		Map<String, Object> rtn = new LinkedHashMap<>();
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
@@ -7452,7 +7446,7 @@ public class PhysicalLayerController {
 			} finally {
 				if (session != null && session.isOpen()) {
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -7468,7 +7462,7 @@ public class PhysicalLayerController {
 		// ObjectMapper mapper = new ObjectMapper();
 		Session session = null;
 		Transaction tx = null;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
@@ -7495,7 +7489,7 @@ public class PhysicalLayerController {
 			} finally {
 				if (session != null && session.isOpen()) {
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -7511,7 +7505,7 @@ public class PhysicalLayerController {
 		// ObjectMapper mapper = new ObjectMapper();
 		Session session = null;
 		Transaction tx = null;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
@@ -7530,34 +7524,42 @@ public class PhysicalLayerController {
 								+ " B.DB_NETWORK_LEVEL = '" + request.getParameter("networkLevel") + "'   ")
 						.uniqueResult();
 				rtn.put("totalDBMappingCount", totalDBMappingCount);
-				
-				Object countAllPorts = session
-						.createNativeQuery("SELECT SUM (dbSum) FROM ( SELECT DB_ID,SUM(NUM_ROWS*NUM_COLUMNS) as dbSum FROM distribution_board WHERE "
-								+ " DB_NETWORK_LEVEL = '"+request.getParameter("networkLevel")+"' GROUP BY DB_ID ) ").uniqueResult();
+
+				Object countAllPorts = session.createNativeQuery(
+						"SELECT SUM (dbSum) FROM ( SELECT DB_ID,SUM(NUM_ROWS*NUM_COLUMNS) as dbSum FROM distribution_board WHERE "
+								+ " DB_NETWORK_LEVEL = '" + request.getParameter("networkLevel")
+								+ "' GROUP BY DB_ID ) ")
+						.uniqueResult();
 
 				rtn.put("countAllPorts", countAllPorts);
-				
-				Object countDbActiveFP = session
-						.createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING A LEFT JOIN distribution_board B ON A.DB_ID = B.DB_ID WHERE "
-								+ " B.DB_NETWORK_LEVEL = '" + request.getParameter("networkLevel") + "' AND A.FP_STATUS='Active' ").uniqueResult();
-				rtn.put("countDbActiveFP", countDbActiveFP);
-				
-				Object countDbInactiveFP = session
-						.createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING A LEFT JOIN distribution_board B ON A.DB_ID = B.DB_ID WHERE "
-								+ " B.DB_NETWORK_LEVEL = '" + request.getParameter("networkLevel") + "' AND A.FP_STATUS='InActive' ").uniqueResult();
-				rtn.put("countDbInactiveFP", countDbInactiveFP);
-				
-				
-				Object countDbActiveBP = session
-						.createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING A LEFT JOIN distribution_board B ON A.DB_ID = B.DB_ID WHERE "
-								+ " B.DB_NETWORK_LEVEL = '" + request.getParameter("networkLevel") + "' AND A.BP_STATUS='Active' ").uniqueResult();
-				rtn.put("countDbActiveBP", countDbActiveBP);
-				
-				Object countDbInactiveBP = session
-						.createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING A LEFT JOIN distribution_board B ON A.DB_ID = B.DB_ID WHERE "
-								+ " B.DB_NETWORK_LEVEL = '" + request.getParameter("networkLevel") + "' AND A.BP_STATUS='InActive' ").uniqueResult();
-				rtn.put("countDbInactiveBP", countDbInactiveBP);
 
+				Object countDbActiveFP = session.createNativeQuery(
+						"SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING A LEFT JOIN distribution_board B ON A.DB_ID = B.DB_ID WHERE "
+								+ " B.DB_NETWORK_LEVEL = '" + request.getParameter("networkLevel")
+								+ "' AND A.FP_STATUS='Active' ")
+						.uniqueResult();
+				rtn.put("countDbActiveFP", countDbActiveFP);
+
+				Object countDbInactiveFP = session.createNativeQuery(
+						"SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING A LEFT JOIN distribution_board B ON A.DB_ID = B.DB_ID WHERE "
+								+ " B.DB_NETWORK_LEVEL = '" + request.getParameter("networkLevel")
+								+ "' AND A.FP_STATUS='InActive' ")
+						.uniqueResult();
+				rtn.put("countDbInactiveFP", countDbInactiveFP);
+
+				Object countDbActiveBP = session.createNativeQuery(
+						"SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING A LEFT JOIN distribution_board B ON A.DB_ID = B.DB_ID WHERE "
+								+ " B.DB_NETWORK_LEVEL = '" + request.getParameter("networkLevel")
+								+ "' AND A.BP_STATUS='Active' ")
+						.uniqueResult();
+				rtn.put("countDbActiveBP", countDbActiveBP);
+
+				Object countDbInactiveBP = session.createNativeQuery(
+						"SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING A LEFT JOIN distribution_board B ON A.DB_ID = B.DB_ID WHERE "
+								+ " B.DB_NETWORK_LEVEL = '" + request.getParameter("networkLevel")
+								+ "' AND A.BP_STATUS='InActive' ")
+						.uniqueResult();
+				rtn.put("countDbInactiveBP", countDbInactiveBP);
 
 				/*
 				 * Object MetroCount = session
@@ -7582,7 +7584,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -7598,7 +7600,7 @@ public class PhysicalLayerController {
 		// ObjectMapper mapper = new ObjectMapper();
 		Session session = null;
 		Transaction tx = null;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
@@ -7624,7 +7626,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -7640,7 +7642,7 @@ public class PhysicalLayerController {
 		// ObjectMapper mapper = new ObjectMapper();
 		Session session = null;
 		Transaction tx = null;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
@@ -7660,29 +7662,33 @@ public class PhysicalLayerController {
 						.createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING ").uniqueResult();
 
 				rtn.put("CountDistBoardMapping", CountDistBoardMapping);
-				
-				Object countAllPorts = session
-						.createNativeQuery("SELECT SUM (dbSum) FROM ( SELECT DB_ID,SUM(NUM_ROWS*NUM_COLUMNS) as dbSum FROM distribution_board GROUP BY DB_ID ) ").uniqueResult();
-				rtn.put("countAllPorts", countAllPorts);
-				
-				Object countDbActiveFP = session
-						.createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING WHERE FP_STATUS='Active' ").uniqueResult();
-				rtn.put("countDbActiveFP", countDbActiveFP);
-				
-				Object countDbInactiveFP = session
-						.createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING WHERE FP_STATUS='InActive' ").uniqueResult();
-				rtn.put("countDbInactiveFP", countDbInactiveFP);
-				
-				Object countDbActiveBP = session
-						.createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING WHERE BP_STATUS='Active' ").uniqueResult();
-				rtn.put("countDbActiveBP", countDbActiveBP);
-				
-				Object countDbInactiveBP = session
-						.createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING WHERE BP_STATUS='InActive' ").uniqueResult();
-				rtn.put("countDbInactiveBP", countDbInactiveBP);
-				
-				
 
+				Object countAllPorts = session.createNativeQuery(
+						"SELECT SUM (dbSum) FROM ( SELECT DB_ID,SUM(NUM_ROWS*NUM_COLUMNS) as dbSum FROM distribution_board GROUP BY DB_ID ) ")
+						.uniqueResult();
+				rtn.put("countAllPorts", countAllPorts);
+
+				Object countDbActiveFP = session
+						.createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING WHERE FP_STATUS='Active' ")
+						.uniqueResult();
+				rtn.put("countDbActiveFP", countDbActiveFP);
+
+				Object countDbInactiveFP = session
+						.createNativeQuery(
+								"SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING WHERE FP_STATUS='InActive' ")
+						.uniqueResult();
+				rtn.put("countDbInactiveFP", countDbInactiveFP);
+
+				Object countDbActiveBP = session
+						.createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING WHERE BP_STATUS='Active' ")
+						.uniqueResult();
+				rtn.put("countDbActiveBP", countDbActiveBP);
+
+				Object countDbInactiveBP = session
+						.createNativeQuery(
+								"SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING WHERE BP_STATUS='InActive' ")
+						.uniqueResult();
+				rtn.put("countDbInactiveBP", countDbInactiveBP);
 
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -7695,7 +7701,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -7711,7 +7717,7 @@ public class PhysicalLayerController {
 		// ObjectMapper mapper = new ObjectMapper();
 		Session session = null;
 		Transaction tx = null;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
@@ -7945,7 +7951,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -7961,7 +7967,7 @@ public class PhysicalLayerController {
 		// ObjectMapper mapper = new ObjectMapper();
 		Session session = null;
 		Transaction tx = null;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
@@ -7987,7 +7993,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -8005,7 +8011,7 @@ public class PhysicalLayerController {
 		// ObjectMapper mapper = new ObjectMapper();
 		Session session = null;
 		Transaction tx = null;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
@@ -8069,7 +8075,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -8083,7 +8089,7 @@ public class PhysicalLayerController {
 		// logger.info("Welcome home! The client locale is {}.", locale);
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		Session session = almsessions.getSession();
+		Session session = AlmDbSession.getInstance().getSession();
 		Transaction tx = session.beginTransaction();
 		Object lat = request.getParameter("lat");
 		Object lng = request.getParameter("lng");
@@ -8135,7 +8141,7 @@ public class PhysicalLayerController {
 			if (session != null && session.isOpen()) {
 				tx.commit();
 				session.close();
-				session.getSessionFactory().close();
+
 			}
 		}
 
@@ -8150,7 +8156,7 @@ public class PhysicalLayerController {
 			HttpServletRequest request, HttpServletResponse response) {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
 			return rtn;
@@ -8258,7 +8264,7 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
-						session.getSessionFactory().close();
+
 					}
 				}
 
@@ -8275,7 +8281,7 @@ public class PhysicalLayerController {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
@@ -8298,7 +8304,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -8313,7 +8319,7 @@ public class PhysicalLayerController {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
@@ -8426,7 +8432,7 @@ public class PhysicalLayerController {
 
 			tx.commit();
 			session.close();
-			session.getSessionFactory().close();
+
 		}
 		return rtn;
 	}
@@ -8439,7 +8445,7 @@ public class PhysicalLayerController {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 
 		Query physicalLayerDeleteQuery = null, fiberCableDeleteQuery = null, tubeDeleteQuery = null,
 				strandDeleteQuery = null, trenchPathDeleteQuery = null, tubePathDeleteQuery = null;
@@ -8801,7 +8807,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -8814,7 +8820,7 @@ public class PhysicalLayerController {
 			HttpServletResponse response) {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
 			return rtn;
@@ -8840,7 +8846,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -8857,7 +8863,7 @@ public class PhysicalLayerController {
 		Map<String, Object> rtn = new LinkedHashMap<>();
 		// ObjectMapper mapper = new ObjectMapper();
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
 			return rtn;
@@ -9155,7 +9161,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -9170,7 +9176,7 @@ public class PhysicalLayerController {
 		// logger.info("Welcome home! The client locale is {}.", locale);
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
 			return rtn;
@@ -9463,7 +9469,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -9484,7 +9490,7 @@ public class PhysicalLayerController {
 		} else {
 			String selectedTube = request.getParameter("ID");
 			List<Object[]> fiberTubes;
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 
 			if (session != null && session.isOpen()) {
 				tx = session.beginTransaction();
@@ -9538,7 +9544,7 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
-						session.getSessionFactory().close();
+
 					}
 				}
 			}
@@ -9560,7 +9566,7 @@ public class PhysicalLayerController {
 		} else {
 			String selectedStrand = request.getParameter("ID");
 			List<Object[]> fiberStrands;
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 
 			if (session != null && session.isOpen()) {
 				tx = session.beginTransaction();
@@ -9615,7 +9621,7 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
-						session.getSessionFactory().close();
+
 					}
 				}
 			}
@@ -9630,7 +9636,7 @@ public class PhysicalLayerController {
 			HttpServletRequest request, HttpServletResponse response) throws ParseException {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
 			return rtn;
@@ -9910,7 +9916,7 @@ public class PhysicalLayerController {
 			if (session != null && session.isOpen()) {
 				tx.commit();
 				session.close();
-				session.getSessionFactory().close();
+
 				// }
 			}
 		}
@@ -9933,7 +9939,7 @@ public class PhysicalLayerController {
 			String searchkey = request.getParameter("searchkey");
 			System.out.println("Search key :" + searchkey);
 			System.out.println("target :" + target);
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 			List<Object[]> resultList;
 			if (session != null && session.isOpen()) {
 				tx = session.beginTransaction();
@@ -9973,7 +9979,7 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
-						session.getSessionFactory().close();
+
 					}
 				}
 			}
@@ -9989,7 +9995,7 @@ public class PhysicalLayerController {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
@@ -10311,7 +10317,7 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
-						session.getSessionFactory().close();
+
 					}
 				}
 			}
@@ -10332,7 +10338,7 @@ public class PhysicalLayerController {
 		} else {
 
 			Query physicalLayerDetailsQuery;
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 
 			String physLayerSearch = request.getParameter("physLayerSearch");
 			String physicalLayer = request.getParameter("physicalLayer");
@@ -10366,7 +10372,8 @@ public class PhysicalLayerController {
 
 					}
 
-					if (physicalLayerDetailsQuery.getResultList() != null && physicalLayerDetailsQuery.getResultList().size() != 0) {
+					if (physicalLayerDetailsQuery.getResultList() != null
+							&& physicalLayerDetailsQuery.getResultList().size() != 0) {
 
 						System.out.println("searchPhysicalLayResult " + physicalLayerDetailsQuery.getResultList());
 						rtn.put("searchPhysicalLayerDetails", physicalLayerDetailsQuery.getResultList());
@@ -10385,7 +10392,7 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
-						session.getSessionFactory().close();
+
 					}
 				}
 			}
@@ -10401,7 +10408,7 @@ public class PhysicalLayerController {
 			HttpServletRequest request, HttpServletResponse response) {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
@@ -10678,7 +10685,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -10693,7 +10700,7 @@ public class PhysicalLayerController {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
@@ -10724,7 +10731,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -10740,7 +10747,7 @@ public class PhysicalLayerController {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
@@ -10779,7 +10786,7 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
-						session.getSessionFactory().close();
+
 					}
 				}
 			}
@@ -10795,7 +10802,7 @@ public class PhysicalLayerController {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
@@ -10831,7 +10838,7 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
-						session.getSessionFactory().close();
+
 					}
 				}
 			}
@@ -10847,7 +10854,7 @@ public class PhysicalLayerController {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
@@ -11009,7 +11016,7 @@ public class PhysicalLayerController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
-						session.getSessionFactory().close();
+
 					}
 				}
 			}
@@ -11029,7 +11036,7 @@ public class PhysicalLayerController {
 			return rtn;
 		}
 		Query query;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		String search = request.getParameter("search");
 
 		if (session != null && session.isOpen()) {
@@ -11054,7 +11061,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -11073,7 +11080,7 @@ public class PhysicalLayerController {
 			rtn.put("Login", "redirect:/");
 			return rtn;
 		}
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		String search = request.getParameter("search");
 
 		if (session != null && session.isOpen()) {
@@ -11099,7 +11106,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -11107,34 +11114,29 @@ public class PhysicalLayerController {
 
 	}
 
-	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/getDbData", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> getDbData(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) {
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		
+
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
 			return rtn;
 		}
-		try {
-		Query query;
-		 emf = Persistence.createEntityManagerFactory("persistence");
-		 entityManager = emf.createEntityManager();		
-		String search = request.getParameter("search");
-			//entityManager.getTransaction().begin();
-			
-				//query = (Query) entityManager.createNativeQuery(
-					//	"SELECT DB_ID,DB_NAME,CITY,DB_LONGITUDE,DB_LATITUDE FROM DISTRIBUTION_BOARD c WHERE UPPER(DB_ID) LIKE UPPER(:param) OR UPPER(DB_NAME) LIKE UPPER(:param) ");
-				query=entityManager.createQuery("select DistributionBoardId,distributionBoardName,distributionBoardCity,distributionBoardLong,distributionBoardLat from DistributionBoard where DistributionBoardId LIKE UPPER(:param)");
+		session = AlmDbSession.getInstance().getSession();
+		if (session != null & session.isOpen()) {
+			try {
+				String search = request.getParameter("search");
+				query = session.createQuery(
+						"select DistributionBoardId,distributionBoardName,distributionBoardCity,distributionBoardLong,distributionBoardLat from DistributionBoard where DistributionBoardId LIKE UPPER(:param)");
 				query.setParameter("param", "%" + search + "%");
 				query.setFirstResult(0);
 				query.setMaxResults(40);
 
 				rtn.put("globalList", query.getResultList());
-					
+
 			} catch (Exception e) {
 				sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
@@ -11143,16 +11145,12 @@ public class PhysicalLayerController {
 				logger.info("Error in getDbData due to \n " + exceptionAsString);
 				rtn.put("searchResult", null);
 			} finally {
-				if (entityManager != null && entityManager.isOpen()) {
-					//entityManager.getTransaction().commit();
-					entityManager.close();
-					
-				}
-				if(emf !=null && emf.isOpen()) {
-					emf.close();
+				if (session != null && session.isOpen()) {
+					session.close();
 				}
 			}
-		
+		}
+
 		return rtn;
 
 	}
@@ -11168,7 +11166,7 @@ public class PhysicalLayerController {
 		String target = request.getParameter("target");
 		List<Object[]> networkLevel = null;
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
@@ -11197,7 +11195,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -11212,7 +11210,7 @@ public class PhysicalLayerController {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
@@ -11235,8 +11233,10 @@ public class PhysicalLayerController {
 						color = itemParameters.getDictParameter().get(i).get("color");
 						System.out.println(itemParameters.getDictParameter().get(i).get("owner") + " color "
 								+ itemParameters.getDictParameter().get(i).get("color"));
-						List Query = session.createNativeQuery(
-								"select * from FIBER_OWNER_COLOR WHERE FIBER_OWNER = '" + owner + "' ").getResultList();
+						List Query = session
+								.createNativeQuery(
+										"select * from FIBER_OWNER_COLOR WHERE FIBER_OWNER = '" + owner + "' ")
+								.getResultList();
 						System.out.println("yes size " + Query.size());
 						// if(update == String.valueOf("0") ) {
 						// if(StringUtils.equalsIgnoreCase(update, "0")) {
@@ -11273,7 +11273,7 @@ public class PhysicalLayerController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
@@ -11349,8 +11349,8 @@ public class PhysicalLayerController {
 	 * 
 	 * /* Query fiberTubesQuery = session.
 	 * createNativeQuery("SELECT b.TUBE_ID,b.SOURCE_LONGITUDE,b.SOURCE_LATITUDE,b.DESTINATION_LONGITUDE,b.DESTINATION_LATITUDE,b.SOURCE_WARE_ID,b.SOURCE_ID,b.SOURCE_NAME,b.DESTINATION_WARE_ID,b.DESTINATION_ID,b.DESTINATION_NAME,(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.TUBE_ID=b.TUBE_ID),b.FIBER_CABLE_ID,b.TUBE_NAME FROM FIBER_TUBES b,FIBER_CABLES a WHERE a.FIBER_CABLE_ID=b.FIBER_CABLE_ID AND b.SOURCE_ID IN (:param1) OR b.DESTINATION_ID IN (:param1)"
-	 * ); fiberTubesQuery.setParameter("param1",idsArray); List<Object>
-	 * fiberTubes = fiberTubesQuery.getResultList();
+	 * ); fiberTubesQuery.setParameter("param1",idsArray); List<Object> fiberTubes =
+	 * fiberTubesQuery.getResultList();
 	 * 
 	 * 
 	 * Query tubesAuxiliariesQuery = session.
@@ -11365,8 +11365,8 @@ public class PhysicalLayerController {
 	 * 
 	 * //Query strandsAuxiliariesQuery = session.
 	 * createNativeQuery("SELECT c.STRAND_ID,c.LONGITUDE,c.LATITUDE,c.AUXILIARY_NAME,c.DISTANCE_FROM_SOURCE,c.SEQ_SORTING FROM STRAND_AUXILIARY_POINTS c,FIBER_STRANDS b,FIBER_CABLES a WHERE a.FIBER_CABLE_ID=b.FIBER_CABLE_ID and b.STRAND_ID=c.STRAND_ID AND AUXILIARY_POINT_ID IN (:param1) ORDER BY c.SEQ_SORTING ASC "
-	 * ); //strandsAuxiliariesQuery.setParameter("param1",idsArray);
-	 * //List<Object> strandsAuxiliaries = strandsAuxiliariesQuery.getResultList();
+	 * ); //strandsAuxiliariesQuery.setParameter("param1",idsArray); //List<Object>
+	 * strandsAuxiliaries = strandsAuxiliariesQuery.getResultList();
 	 */
 
 	// System.out.println("ManholeMarkerPointsBetween
@@ -11552,7 +11552,7 @@ public class PhysicalLayerController {
 			return rtn;
 		}
 		String search;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		List<Object[]> globalList = new ArrayList<Object[]>();
 		List<String> searchResult = new ArrayList<String>();
 		search = request.getParameter("search");
@@ -11616,7 +11616,7 @@ public class PhysicalLayerController {
 				} else {
 					rtn.put("searchResult", "");
 					rtn.put("globalList", "");
-				}			
+				}
 				session.flush();
 				session.clear();
 				tx.commit();
@@ -11631,7 +11631,7 @@ public class PhysicalLayerController {
 			} finally {
 				if (session != null && session.isOpen()) {
 					session.close();
-					session.getSessionFactory().close();
+
 				}
 			}
 		}
