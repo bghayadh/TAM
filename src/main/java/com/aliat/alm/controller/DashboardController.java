@@ -225,16 +225,8 @@ public class DashboardController {
 			dbDateFrom = dateSelect[0];
 			dbDateTo = dateSelectto[0];
 
-		
-		/*System.out.println("//////from "+dbDateFrom+" to "+dbDateTo);*/
-		
-	 sessionRPT =null;
-	   // Transaction tx=null ;
-		
-		//String view = request.getParameter("view");
 	  
 	 sessionRPT = RptDbSession.getInstance().getSession();
-		//List<Object[]> totalRevenue = new ArrayList<Object[]>();
 		
 		
 		if(sessionRPT!=null) {
@@ -243,7 +235,6 @@ public class DashboardController {
 				query = sessionRPT.createNativeQuery("select a.combination_technology, SUM( b.VOICE_REVENUE ),SUM( b.SMS_REVENUE ),SUM( b.DATA_REVENUE ),SUM( b.VAS_REVENUE ) FROM  alm_warehouse a INNER JOIN PREPAID_PAYG_REVENUE b ON a.SITE_ID = b.SITE_ID WHERE  a.combination_technology In ('2G_3G_4G' ,'2G_3G' ,'2G')and trunc(b.REVENUE_DATE) >= to_timestamp('"+dbDateFrom+"', 'MM-DD-YYYY') and trunc(b.REVENUE_DATE) <= to_timestamp('"+dbDateTo+"', 'MM-DD-YYYY')" + 
 						"group by a.combination_technology order by a.combination_technology asc ");
 				
-				//System.out.println("Yara is "+mapper.writeValueAsString(totalRevenue));
 				map.put("totalRevenueSubmit", mapper.writeValueAsString(query.list()));
 			}
 			catch (Exception e) {
@@ -266,7 +257,6 @@ public class DashboardController {
 				 }
 							
 		}
-		// ************************************************************************************
 		
 			return map;
 
