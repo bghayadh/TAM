@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.hibernate.query.Query;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.services.LoginServices;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,16 +22,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 public class FinanceDashboardController {
-	
-	@Autowired
-	ALMSessions almsessions;
+
 	
 	@Autowired
 	Notify notifications;
 	
 	private Session session = null;
-	private Transaction tx = null;
-
 	@SuppressWarnings("rawtypes")
 	Query query;
 	
@@ -48,10 +43,9 @@ public class FinanceDashboardController {
 			return "redirect:/";
 		}
 		else {
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 
 			if (session != null && session.isOpen()) {
-				tx = session.beginTransaction();
 				notifications.headerNotifications(session, model);
 			
 				try {
@@ -83,17 +77,12 @@ public class FinanceDashboardController {
 							+ " ORDER BY SUM(A.NETCOST) ASC FETCH NEXT 10 ROWS ONLY  ");
 	                 
 					model.addAttribute("sitesMinNetCostAsset",mapper.writeValueAsString(query.list()));
-								
-			
-							
-				
+
 				} catch (Exception e) {
 					logger.info("Error in creating session with the DataBase " + e.getMessage());
 				} finally {
 					if (session != null && session.isOpen()) {
-						tx.commit();
 						session.close();
-						session.getSessionFactory().close();
 					}
 				}			
 			
