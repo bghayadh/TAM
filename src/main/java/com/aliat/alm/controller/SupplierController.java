@@ -5,7 +5,6 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -13,15 +12,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Locale;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.Query;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
-//import org.hibernate.query.Query;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.slf4j.Logger;
@@ -34,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.Item;
@@ -45,8 +40,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class SupplierController {
 
 	private static Session session = null;
-	private EntityManagerFactory emf =null;
-	private EntityManager entityManager=null;
 	private static Transaction tx = null;
 	private static ObjectMapper mapper = new ObjectMapper();
 	private static final Logger logger = LoggerFactory.getLogger(SupplierController.class);
@@ -70,16 +63,16 @@ public class SupplierController {
 		} else {
 
 			List<Item> listItem = new ArrayList<Item>();
+			System.out.println("suplliers ");
+			session = AlmDbSession.getInstance().getSession();
+			notifications.headerNotifications(session, model);
 
-		
+			if (session != null && session.isOpen()) {
 				try {
-					
-					emf = Persistence.createEntityManagerFactory("persistence");
-					entityManager = emf.createEntityManager();
-					notifications.headerNotification(entityManager, model);
-					listItem = entityManager.createQuery(
+
+					listItem = session.createQuery(
 							"select 1,t.supplierID, t.supplierName, t.supplierCategory,t.sCountry,t.supplierAddress1 from Supplier t order by t.slastModifieddate DESC")
-							.getResultList();
+							.list();
 
 					model.addAttribute("ListGridTable", mapper.writeValueAsString(listItem));
 				} catch (Exception e) {
@@ -87,14 +80,12 @@ public class SupplierController {
 
 					logger.info("Error in retreiving the data for Supplier list view with a message of :" + e);
 				} finally {
-					if (entityManager != null && entityManager.isOpen()) {
-						entityManager.close();
-					}
-					if(emf != null && emf.isOpen()) {
-						emf.close();	
+					if (session != null && session.isOpen()) {
+						session.close();
+						
 					}
 				}
-			
+			}
 			return "SupplierListView";
 		}
 	}
@@ -109,14 +100,12 @@ public class SupplierController {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
 		}
-	
-		try {
-			emf = Persistence.createEntityManagerFactory("persistence");
-			entityManager = emf.createEntityManager();
+		session = AlmDbSession.getInstance().getSession();
+		if (session != null && session.isOpen()) {
 
-			notifications.headerNotification(entityManager, model);
+			notifications.headerNotifications(session, model);
 
-			
+			try {
 
 				String startDate, endDate, Supplierid, Suppliername;
 				startDate = request.getParameter("startDate");
@@ -149,7 +138,7 @@ public class SupplierController {
 				// String str="select 1,t.ID, t.supplier, t.TotalAmount,t.TotalQty,t.WareHouse
 				// from PurchaseRequest t";
 
-				query = entityManager.createNativeQuery(str);
+				query = session.createNativeQuery(str);
 
 				/*
 				 * listPReq = ((SQLQuery) query).addScalar("chkBox",new
@@ -160,7 +149,7 @@ public class SupplierController {
 				 * ).list();
 				 */
 
-				listsupplier = query.getResultList();
+				listsupplier = query.list();
 
 				// rtn.put("listPReq", listPReq);
 				rtn.put("listsupplier", listsupplier);
@@ -168,14 +157,12 @@ public class SupplierController {
 			} catch (Exception e) {
 				logger.info("Error in showing the filtered supplier request list view with a message :" + e);
 			} finally {
-				if (entityManager != null && entityManager.isOpen()) {
-					entityManager.close();
-				}
-				if(emf != null && emf.isOpen()) {
-					emf.close();	
+				if (session != null && session.isOpen()) {
+					session.close();
+					
 				}
 			}
-		
+		}
 
 		return rtn;
 	}
@@ -188,19 +175,17 @@ public class SupplierController {
 
 			SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
 			String SupplierID = request.getParameter("supplierID"), navAction = "2";
-			System.out.println("SupplierID "+SupplierID);
 			Supplier supp;
-			
-			
+			session = AlmDbSession.getInstance().getSession();
+			notifications.headerNotifications(session, model);
 			String result[] = new String[4];
 			int SelectedIndex = 0;
 
+			if (session != null && session.isOpen()) {
 
+				tx = session.beginTransaction();
 				try {
-					emf = Persistence.createEntityManagerFactory("persistence");
-					entityManager = emf.createEntityManager();
-					notifications.headerNotification(entityManager, model);
-					
+
 					navAction = request.getParameter("NavAction");
 
 					// to open supplier when click on ADD from supplier List
@@ -217,7 +202,7 @@ public class SupplierController {
 						return "SupplierFormView";
 					} else {
 
-						result = form.NavNextPrev(entityManager, "SUPPLIER", "SUPPLIER_ID", SupplierID, "LAST_MODIFIED_DATE",
+						result = form.NavigationNP(session, "SUPPLIER", "SUPPLIER_ID", SupplierID, "LAST_MODIFIED_DATE",
 								navAction);
 
 						SelectedIndex = Integer.parseInt(result[1]);
@@ -225,7 +210,7 @@ public class SupplierController {
 
 						model.addAttribute("SelectedIndex", SelectedIndex);
 						model.addAttribute("supplierCount", Integer.parseInt(result[0]));
-						supp = (Supplier) entityManager.find(Supplier.class, SupplierID);
+						supp = (Supplier) session.get(Supplier.class, SupplierID);
 
 						model.addAttribute("supplierID", supp.getSupplierID());
 						model.addAttribute("screationDate", formatter.format(supp.getScreationDate()).toString());
@@ -273,15 +258,14 @@ public class SupplierController {
 					model.addAttribute("sContactperson", "");
 					logger.info("Error in retreiving the data for Supplier form view with a message :" + e);
 				} finally {
-					if (entityManager != null && entityManager.isOpen()) {
-						entityManager.close();
-					}
-					if(emf != null && emf.isOpen()) {
-						emf.close();	
+					if (session != null && session.isOpen()) {
+						tx.commit();
+						session.close();
+						
 					}
 
 				}
-			
+			}
 			return "SupplierFormView";
 		}
 	}
@@ -303,12 +287,12 @@ public class SupplierController {
 			DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
 			String createdDate = request.getParameter("screationDate");
 
-			
+			session = AlmDbSession.getInstance().getSession();
+			if (session != null && session.isOpen()) {
+
+				tx = session.beginTransaction();
 				try {
-					emf = Persistence.createEntityManagerFactory("persistence");
-					entityManager = emf.createEntityManager();
-					entityManager.getTransaction().begin();
-					
+
 					Supplier supp = new Supplier();
 					Timestamp CreationDate = new Timestamp(formatter.parse(createdDate).getTime());
 
@@ -346,16 +330,13 @@ public class SupplierController {
 
 					if (StringUtils.equalsIgnoreCase(SupplierID, "")) {
 						synchronized (this) {
-							SupplierID = "SUP_" + year + "_" + Integer.parseInt(entityManager
-									.createNativeQuery("SELECT SUPPLIER FROM SEQ_TABLE").getSingleResult().toString());
-							query = entityManager.createNativeQuery("UPDATE SEQ_TABLE SET SUPPLIER = SUPPLIER + 1 ");
+							SupplierID = "SUP_" + year + "_" + Integer.parseInt(session
+									.createNativeQuery("SELECT SUPPLIER FROM SEQ_TABLE").uniqueResult().toString());
+							query = session.createNativeQuery("UPDATE SEQ_TABLE SET SUPPLIER = SUPPLIER + 1 ");
 							query.executeUpdate();
-							entityManager.createNativeQuery("commit").executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
 						}
 						// SupplierID = "SUP_" + year + "_" + appConfig.getSequenceNbr(11);
-					}
-					else {
-						supp=(Supplier)entityManager.find(supp.getClass(), SupplierID);
 					}
 
 					supp.setSupplierID(SupplierID);
@@ -376,25 +357,22 @@ public class SupplierController {
 					supp.setsEmail(request.getParameter("sEmail"));
 					supp.setsContactperson(request.getParameter("sContactperson"));
 					supp.setsDisabled(request.getParameter("sDisabled").charAt(0));
-					entityManager.persist(supp);
-					
+					session.saveOrUpdate(supp);
 					rtn.put("supplierID", SupplierID);
 					rtn.put("slastModifieddate", formatter.format(lastModifiedDate).toString());
-					
-					entityManager.getTransaction().commit();
+
 				} catch (Exception e) {
 					rtn.put("supplierID", "");
 					rtn.put("slastModifieddate", "");
 					logger.info("Error in saving data for Supplier form view with a message :" + e);
 				} finally {
-					if (entityManager != null && entityManager.isOpen()) {
-						entityManager.close();
-					}
-					if(emf != null && emf.isOpen()) {
-						emf.close();	
+					if (session != null && session.isOpen()) {
+						tx.commit();
+						session.close();
+						
 					}
 				}
-			
+			}
 			return rtn;
 		}
 	}
@@ -409,31 +387,25 @@ public class SupplierController {
 			return rtn;
 		} else {
 
-				
+			session = AlmDbSession.getInstance().getSession();
+			if (session != null && session.isOpen()) {
+				tx = session.beginTransaction();
 				try {
-					emf = Persistence.createEntityManagerFactory("persistence");
-					entityManager = emf.createEntityManager();
-					entityManager.getTransaction().begin();
-					
 					String[] idList = request.getParameterValues("ID[]");
-					List<String> idsList = Arrays.asList(idList);
-					query = entityManager.createQuery("delete Supplier t  where t.supplierID IN (:param1)");
-					query.setParameter("param1", idsList);
+					query = session.createQuery("delete Supplier t  where t.supplierID IN (:param1)");
+					query.setParameterList("param1", idList);
 					query.executeUpdate();
-					
-					entityManager.getTransaction().commit();
 				} catch (Exception e) {
 					logger.info("Error in deleting data for Supplier with a message :" + e);
 					e.printStackTrace();
 				} finally {
-					if (entityManager != null && entityManager.isOpen()) {
-						entityManager.close();
-					}
-					if(emf != null && emf.isOpen()) {
-						emf.close();	
+					if (session != null && session.isOpen()) {
+						tx.commit();
+						session.close();
+						
 					}
 				}
-			
+			}
 			return rtn;
 		}
 
@@ -450,28 +422,25 @@ public class SupplierController {
 			return rtn;
 		} else {
 			String SuppCategory = "%" + request.getParameter("supplierCategory") + "%";
-			
+			session = AlmDbSession.getInstance().getSession();
+			if (session != null && session.isOpen()) {
+
 				try {
-					emf = Persistence.createEntityManagerFactory("persistence");
-					entityManager = emf.createEntityManager();
-					
-					query = entityManager.createQuery(
+					query = session.createQuery(
 							"select supplierID, supplierName, supplierCreditlimit from Supplier where supplierID like :param1 or supplierName like :param1");
 					query.setParameter("param1", SuppCategory);
 
-					rtn.put("ListItemSupplier", query.getResultList());
+					rtn.put("ListItemSupplier", query.list());
 				} catch (Exception e) {
 					rtn.put("ListItemSupplier", "");
 					logger.info("Error in getting all Suppliers with a message :" + e);
 				} finally {
-					if (entityManager != null && entityManager.isOpen()) {
-						entityManager.close();
-					}
-					if(emf != null && emf.isOpen()) {
-						emf.close();	
+					if (session != null && session.isOpen()) {
+						session.close();
+						
 					}
 				}
-			
+			}
 			return rtn;
 		}
 	}
@@ -487,30 +456,27 @@ public class SupplierController {
 			return rtn;
 		} else {
 			String SuppCategory = "%" + request.getParameter("supplierId") + "%";
+			session = AlmDbSession.getInstance().getSession();
+			if (session != null && session.isOpen()) {
 
 				try {
-					emf = Persistence.createEntityManagerFactory("persistence");
-					entityManager = emf.createEntityManager();
-					
-					query = entityManager.createQuery(
+					query = session.createQuery(
 							"select supplierID, supplierName,supplierAddress1 from Supplier where supplierID like :param1 or supplierName like:param1 ");
 					query.setParameter("param1", SuppCategory);
 					query.setFirstResult(0);
 					query.setMaxResults(40);
-					rtn.put("ListGetSupplier", query.getResultList());
+					rtn.put("ListGetSupplier", query.list());
 
 				} catch (Exception e) {
 					rtn.put("ListGetSupplier", "");
 					logger.info("Error in getting all Suppliers with a message :" + e);
 				} finally {
-					if (entityManager != null && entityManager.isOpen()) {
-						entityManager.close();
-					}
-					if(emf != null && emf.isOpen()) {
-						emf.close();	
+					if (session != null && session.isOpen()) {
+						session.close();
+						
 					}
 				}
-			
+			}
 			return rtn;
 		}
 	}
@@ -528,30 +494,28 @@ public class SupplierController {
 		} else {
 			String SuppName = "%" + request.getParameter("supplierName") + "%";
 
-			
-				try {
-					emf = Persistence.createEntityManagerFactory("persistence");
-					entityManager = emf.createEntityManager();
+			session = AlmDbSession.getInstance().getSession();
+			if (session != null && session.isOpen()) {
 
-					query = entityManager.createQuery(
+				try {
+
+					query = session.createQuery(
 							"select distinct (supplierName), supplierAddress1,supplierID from Supplier where supplierName like :param1 ORDER BY slastModifieddate DESC");
 					query.setParameter("param1", SuppName);
 					query.setFirstResult(0);
 					query.setMaxResults(40);
 
-					rtn.put("ListSupplierName", query.getResultList());
+					rtn.put("ListSupplierName", query.list());
 				} catch (Exception e) {
 					rtn.put("ListSupplierName", "");
 					logger.info("Error in getting all Supplier Names with a message :" + e);
 				} finally {
-					if (entityManager != null && entityManager.isOpen()) {
-						entityManager.close();
-					}
-					if(emf != null && emf.isOpen()) {
-						emf.close();	
+					if (session != null && session.isOpen()) {
+						session.close();
+						
 					}
 				}
-			
+			}
 			return rtn;
 		}
 	}
@@ -567,27 +531,24 @@ public class SupplierController {
 			return rtn;
 		} else {
 			String SuppName = request.getParameter("SuppName");
-			
+			session = AlmDbSession.getInstance().getSession();
+			if (session != null && session.isOpen()) {
 				try {
-					emf = Persistence.createEntityManagerFactory("persistence");
-					entityManager = emf.createEntityManager();
-					query = entityManager.createQuery("select  supplierID   from Supplier where supplierName =:param1 ");
+					query = session.createQuery("select  supplierID   from Supplier where supplierName =:param1 ");
 					query.setParameter("param1", SuppName);
 					query.setFirstResult(0);
 					query.setMaxResults(40);
-					rtn.put("ListSuppIds", query.getResultList());
+					rtn.put("ListSuppIds", query.list());
 				} catch (Exception e) {
 					rtn.put("ListSuppIds", "");
 					logger.info("Error in getting all Supplier IDs with a message :" + e);
 				} finally {
-					if (entityManager != null && entityManager.isOpen()) {
-						entityManager.close();
-					}
-					if(emf != null && emf.isOpen()) {
-						emf.close();	
+					if (session != null && session.isOpen()) {
+						session.close();
+						
 					}
 				}
-			
+			}
 			return rtn;
 		}
 	}
