@@ -14,9 +14,7 @@ import java.util.Map;
 import java.util.Properties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -37,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.Warehouse;
@@ -91,8 +90,7 @@ public class WarehouseController {
 	private String str = null;
 	private String siteimgID, siteimgName;
 	
-	private EntityManagerFactory emf =null;
-	private EntityManager entityManager=null;
+	
 
 	@Autowired
 	ALMSessions almsessions;
@@ -110,34 +108,30 @@ public class WarehouseController {
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			return LoginServices.checkSession(request, response);
 		} else {
-			//session = almsessions.getSession();
-			try {
-			 emf = Persistence.createEntityManagerFactory("persistence");
-			 entityManager = emf.createEntityManager();
-
-				notifications.headerNotification(entityManager, model);
+			session = AlmDbSession.getInstance().getSession();
+			if (session != null && session.isOpen()) {
 				
-
+				try {
+					notifications.headerNotifications(session, model);
 					//List<WareHouseListView> listAR = new ArrayList<WareHouseListView>();
-
-					str = "select WARE_ID as wareID,WARE_ID as warehouseID,WARE_NAME as warehouseName,SITE_ID as wareSiteID, TO_CHAR ( LAST_MODIFY_DATE , 'YYYY-MM-DD HH24:MI:SS') as wlastModifieddate,"
-							+ " AREA_NAME as areaName,LONGITUDE as wareLong,LATITUDE as wareLat,"
-							+ "CITY as wareCity,REGION_NAME as regionName from WAREHOUSE order by LAST_MODIFY_DATE DESC";
-
-					//listAR = entityManager.createNativeQuery(str).getResultList(); //  setResultTransformer(Transformers.aliasToBean(WareHouseListView.class)).list();
-
-					model.addAttribute("ListGridTable", mapper.writeValueAsString(entityManager.createNativeQuery(str).getResultList()));
-
-				} catch (Exception e) {
-					logger.info("Error on WarehouseListView with a message : " + e);
-					e.printStackTrace();
-					model.addAttribute("ListGridTable", "");
-				} finally {
-					if (entityManager != null && entityManager.isOpen()) {
-						entityManager.close();
-					}
-					if(emf != null && emf.isOpen()) {
-						emf.close();	
+	
+						str = "select WARE_ID as wareID,WARE_ID as warehouseID,WARE_NAME as warehouseName,SITE_ID as wareSiteID, TO_CHAR ( LAST_MODIFY_DATE , 'YYYY-MM-DD HH24:MI:SS') as wlastModifieddate,"
+								+ " AREA_NAME as areaName,LONGITUDE as wareLong,LATITUDE as wareLat,"
+								+ "CITY as wareCity,REGION_NAME as regionName from WAREHOUSE order by LAST_MODIFY_DATE DESC";
+	
+						//listAR = entityManager.createNativeQuery(str).getResultList(); //  setResultTransformer(Transformers.aliasToBean(WareHouseListView.class)).list();
+	
+						model.addAttribute("ListGridTable", mapper.writeValueAsString(session.createNativeQuery(str).getResultList()));
+	
+					} catch (Exception e) {
+						logger.info("Error on WarehouseListView with a message : " + e);
+						e.printStackTrace();
+						model.addAttribute("ListGridTable", "");
+					} finally {
+						if (session != null && session.isOpen()) {
+							session.close();
+						}
+						
 					}
 				}
 			
@@ -155,10 +149,9 @@ public class WarehouseController {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
 		}
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 
-			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
 
 			try {
@@ -300,7 +293,6 @@ public class WarehouseController {
 					rtn.put("listwarehouse", listwarehouse);
 					System.out.println("Filtered Array: " + mapper.writeValueAsString(listwarehouse));
 				}
-				session.flush();
 				session.clear();
 
 			} catch (Exception e) {
@@ -308,9 +300,8 @@ public class WarehouseController {
 				e.printStackTrace();
 			} finally {
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+					
 				}
 			}
 		}
@@ -365,12 +356,13 @@ public class WarehouseController {
 		String result[] = new String[4];
 		int SelectedIndex = 0;
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
 
 			try {
+				tx=session.beginTransaction();
+				
 				wareID = request.getParameter("wareID");
 				navAction = request.getParameter("NavAction");
 
@@ -649,7 +641,8 @@ public class WarehouseController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+					
+					
 				}
 			}
 		}
@@ -671,7 +664,7 @@ public class WarehouseController {
 		String result[] = new String[4];
 		int SelectedIndex = 0;
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
@@ -819,7 +812,7 @@ public class WarehouseController {
 		DateFormat formatter1 = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
 		DateFormat formatter2 = new SimpleDateFormat("yyyy-MM-dd");
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 
@@ -1069,7 +1062,7 @@ public class WarehouseController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+					
 				}
 			}
 		}
@@ -1090,7 +1083,7 @@ public class WarehouseController {
 		}
 
 		String idForm = null;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		String[] idList = request.getParameterValues("wareID[]");
 
 		if (session != null && session.isOpen()) {
@@ -1113,7 +1106,7 @@ public class WarehouseController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+					
 				}
 			}
 
@@ -1137,9 +1130,8 @@ public class WarehouseController {
 		
 		System.out.println("getWarehouseDetails");
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
 
 			try {
 				String requestValue = request.getParameter("requestValue");
@@ -1162,9 +1154,8 @@ public class WarehouseController {
 
 			} finally {
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+					
 				}
 			}
 		}
@@ -1190,9 +1181,8 @@ public class WarehouseController {
 		System.out.println("Site is " + Site);
 		System.out.println("WarehouseName is " + WarehouseName);
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
 			try {
 				if (Site == null || Site == "empty") {
 					query = session.createQuery(
@@ -1201,7 +1191,6 @@ public class WarehouseController {
 					query.setFirstResult(0);
 					query.setMaxResults(40);
 					rtn.put("globalList", query.list());
-					session.flush();
 					session.clear();
 				} else {
 					query = session
@@ -1209,7 +1198,6 @@ public class WarehouseController {
 					query.setFirstResult(0);
 					query.setMaxResults(40);
 					rtn.put("listSite", query.list());
-					session.flush();
 					session.clear();
 				}
 			} catch (Exception e) {
@@ -1217,9 +1205,8 @@ public class WarehouseController {
 			}
 			 finally {
 					if (session != null && session.isOpen()) {
-						tx.commit();
 						session.close();
-						session.getSessionFactory().close();
+						
 					}
 				}
 		}
@@ -1237,9 +1224,8 @@ public class WarehouseController {
 		 * rtn.put("Login", "redirect:/"); return rtn; }
 		 */
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
 
 			try {
 				String requestValue = request.getParameter("requestValue");
@@ -1258,9 +1244,8 @@ public class WarehouseController {
 
 			} finally {
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+					
 				}
 			}
 		}
@@ -1278,9 +1263,8 @@ public class WarehouseController {
 		 * rtn.put("Login", "redirect:/"); return rtn; }
 		 */
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
 
 			try {
 				String requestValue = request.getParameter("requestValue");
@@ -1298,9 +1282,8 @@ public class WarehouseController {
 
 			} finally {
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+					
 				}
 			}
 		}
