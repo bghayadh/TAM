@@ -24,7 +24,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.aliat.alm.common.ALMSessions;
+
+import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.Cluster;
@@ -59,9 +60,6 @@ public class ClusterController {
 	Form form;
 
 	@Autowired
-	ALMSessions almsessions;
-
-	@Autowired
 	Notify notification;
 
 	@RequestMapping(value = "/ClusterListView", method = RequestMethod.GET)
@@ -73,16 +71,12 @@ public class ClusterController {
 			return "redirect:/";
 		}
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
 			notification.headerNotifications(session, model);
-
 			try {
-
 				query = session.createQuery(
 						"select 1,t.id, t.name,TO_CHAR(t.creationDate, 'YYYY-MM-DD HH24:MI:SS'),TO_CHAR(t.lastModifieddate, 'YYYY-MM-DD HH24:MI:SS') from Cluster t");
-
 				model.addAttribute("ListGridTable", mapper.writeValueAsString(query.list()));
 			} catch (Exception e) {
 
@@ -91,9 +85,7 @@ public class ClusterController {
 			} finally {
 
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
 				}
 
 			}
@@ -117,7 +109,7 @@ public class ClusterController {
 		int SelectedIndex = 0;
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 
 			tx = session.beginTransaction();
@@ -205,11 +197,7 @@ public class ClusterController {
 			} finally {
 
 				if (session != null && session.isOpen()) {
-
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
-
 				}
 
 			}
@@ -229,7 +217,7 @@ public class ClusterController {
 			return "redirect:/";
 		}
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 
@@ -256,9 +244,7 @@ public class ClusterController {
 			} finally {
 
 				if (session != null && session.isOpen()) {
-					
 					session.close();
-					session.getSessionFactory().close();
 				}
 
 			}
@@ -291,41 +277,11 @@ public class ClusterController {
 		String clusterIdFinance = "";
 		DateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd");
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 
 			try {
-
-///////////////////////////////////////////////////////// SEND EMAIL BUTTON  //////////////////////////////////////////////////////////
-				String email = request.getParameter("email");
-				String emailTo = request.getParameter("emailTo");
-				String password = request.getParameter("password");
-				String message = request.getParameter("message");
-				String subject = request.getParameter("subject");
-				String ccmail = request.getParameter("ccmail");
-
-				System.out.println("all email parameters  = " + email + " " + emailTo + " " + password + " " + message
-						+ " " + subject + " " + ccmail);
-
-				if (StringUtils.equalsIgnoreCase(request.getParameter("email"), "")
-						&& StringUtils.equalsIgnoreCase(request.getParameter("password"), "")
-						&& StringUtils.equalsIgnoreCase(request.getParameter("emailTo"), "")
-						&& StringUtils.equalsIgnoreCase(request.getParameter("message"), "")
-						&& StringUtils.equalsIgnoreCase(request.getParameter("subject"), "")
-						&& StringUtils.equalsIgnoreCase(request.getParameter("ccmail"), "")) {
-					System.out.println("NO EMAIL TO SEND!");
-
-				} else if (StringUtils.equalsIgnoreCase(request.getParameter("ccmail"), "")) {
-
-					JavaMailUtil.SendEmails(email, password, emailTo, subject, message);
-
-				} else {
-					JavaMailUtil.SendccEmails(email, password, emailTo, ccmail, subject, message);
-				}
-
-///////////////////////////////////////////// END OF SEND EMAIL BUTTON  //////////////////////////////////////////////////////////
-
 				if (StringUtils.equalsIgnoreCase(request.getParameter("type"), "addNew")) {
 					synchronized (this) {
 						clusterID = "CLUSTER_" + calendar.get(Calendar.YEAR) + "_" + Integer.parseInt(
@@ -400,8 +356,9 @@ public class ClusterController {
 							// clusterIdFinance= "CLUSTER_FIN_"+calendar.get(Calendar.YEAR)+"_"
 							// +appConfig.getSequenceNbr(22);
 							clusterIdFinance = "CLUSTER_FIN_" + calendar.get(Calendar.YEAR) + "_"
-									+ Integer.parseInt(session.createNativeQuery("SELECT CLUSTER_FINANCE FROM SEQ_TABLE")
-											.uniqueResult().toString());
+									+ Integer
+											.parseInt(session.createNativeQuery("SELECT CLUSTER_FINANCE FROM SEQ_TABLE")
+													.uniqueResult().toString());
 							query = session
 									.createNativeQuery("UPDATE SEQ_TABLE SET CLUSTER_FINANCE = CLUSTER_FINANCE + 1 ");
 							query.executeUpdate();
@@ -449,11 +406,8 @@ public class ClusterController {
 
 					session.saveOrUpdate(clusterFin);
 					tx.commit();
-
 				}
-
 				rtn.put("clusterID", clusterID);
-
 			} catch (Exception e) {
 				tx.rollback();
 				System.out.println("catch messsage is " + e.getMessage());
@@ -461,17 +415,11 @@ public class ClusterController {
 			} finally {
 
 				if (session != null && session.isOpen()) {
-
 					session.close();
-					session.getSessionFactory().close();
-
 				}
-
 			}
 		}
-
 		return rtn;
-
 	}
 
 	@RequestMapping(value = "/GetAllClusters", method = RequestMethod.GET)
@@ -481,12 +429,9 @@ public class ClusterController {
 		Map<String, Object> rtn = new LinkedHashMap<>();
 		String cluster = "%" + request.getParameter("clusterID") + "%";
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
-
 			try {
-
 				query = session.createQuery(
 						"select t.id, t.name from Cluster t where t.id like :param1 or t.name like :param1 ORDER BY lastModifieddate DESC");
 				query.setParameter("param1", cluster);
@@ -499,16 +444,10 @@ public class ClusterController {
 			} finally {
 
 				if (session != null && session.isOpen()) {
-
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
-
 				}
-
 			}
 		}
-
 		return rtn;
 	}
 

@@ -1450,8 +1450,8 @@ $("#region").autocomplete({
 	minLength:0, maxShowItems: 4, scroll:true,
 
 			select: function(event, ui) {
-				
-				this.value = (ui.item ? ui.item[0] + ":"+ ui.item[2]:'');
+				console.log(ui.item[0] + ":"+ ui.item[1] + ":" + ui.item[2] + ":"+ ui.item[3]);
+				this.value = (ui.item ? ui.item[0] + ":"+ ui.item[1]:'');
 				console.log("previousRegionId : "+previousRegionId);
 				if(previousRegionId != ui.item[0]) {
 	            	if(previousRegionId != ""){
@@ -1581,8 +1581,8 @@ $("#region").autocomplete({
 				}).autocomplete("instance")._renderItem = function(ul, item) {
 		            return $("<li class='each'>")
 	                .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-	                    item[1] + "</span><br><span class='desc'>" +
-	                    item[0] +"</span></div>")
+	                    item[0] + "</span><br><span class='desc'>" +
+	                    item[1] +"</span></div>")
 	                .appendTo(ul);
 	        	};
 	        	$("#area").focus(function(){
