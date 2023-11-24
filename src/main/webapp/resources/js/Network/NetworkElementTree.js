@@ -84,6 +84,8 @@ function Site_Boq(SiteId){
 	var Boq = $('#Boq');
 	var Layers= $('#Layers');
 	var Options= $('#Options');
+	var date=$("#ParsingDate").val();
+	console.log("date << ",date);
 	
 if(arrayParam[0]==1){
 	var paramEnterprise = true;
@@ -119,7 +121,8 @@ if(arrayParam[3]==1){
 			    "paramTransmission" : paramTransmission,
 			    "paramRAN" : paramRAN,
 			    "paramCore" : paramCore,
-			    "arrayParam" : arrayParam
+			    "arrayParam" : arrayParam,
+			    "date" : date,
 			    },
 			success : function(data)
 			    {
@@ -151,6 +154,8 @@ function SiteVen_Boq(SiteId,VenId){
 	var Boq = $('#Boq');
 	var Layers= $('#Layers');
 	var Options= $('#Options');
+	var date=$("#ParsingDate").val();
+	console.log("date << ",date);
 	
 if(arrayParam[0]==1){
 	var paramEnterprise = true;
@@ -187,7 +192,8 @@ if(arrayParam[3]==1){
 			    "paramTransmission" : paramTransmission,
 			    "paramRAN" : paramRAN,
 			    "paramCore" : paramCore,
-			    "arrayParam" : arrayParam
+			    "arrayParam" : arrayParam,
+			    "date" : date,
 			    },
 			success : function(data)
 			    {
@@ -219,6 +225,8 @@ function SiteVenNT_Boq(SiteId,VenId,SelectedNodeType){
 	var Boq = $('#Boq');
 	var Layers= $('#Layers');
 	var Options= $('#Options');
+	var date=$("#ParsingDate").val();
+	console.log("date << ",date);
 	
 if(arrayParam[0]==1){
 	var paramEnterprise = true;
@@ -256,7 +264,8 @@ if(arrayParam[3]==1){
 			    "paramTransmission" : paramTransmission,
 			    "paramRAN" : paramRAN,
 			    "paramCore" : paramCore,
-			    "arrayParam" : arrayParam
+			    "arrayParam" : arrayParam,
+			    "date" : date,
 			    },
 			success : function(data)
 			    {
@@ -288,6 +297,8 @@ function Supp_Boq(SuppId){
 	var Boq = $('#Boq');
 	var Layers= $('#Layers');
 	var Options= $('#Options');
+	var date=$("#ParsingDate").val();
+	console.log("date << ",date);
 	
 if(arrayParam[0]==1){
 	var paramEnterprise = true;
@@ -323,7 +334,8 @@ if(arrayParam[3]==1){
 			    "paramTransmission" : paramTransmission,
 			    "paramRAN" : paramRAN,
 			    "paramCore" : paramCore,
-			    "arrayParam" : arrayParam
+			    "arrayParam" : arrayParam,
+			    "date" : date,
 			    },
 			success : function(data)
 			    {
@@ -353,78 +365,12 @@ if(arrayParam[3]==1){
 }
 
 
-function  SiteNodeType_Boq(SiteId,NodeTId){
-	
-	var Boq = $('#Boq');
-	var Layers= $('#Layers');
-	var Options= $('#Options');
-	
-	if(arrayParam[0]==1){
-		var paramEnterprise = true;
-	}else{
-		var paramEnterprise = false;
-	}
-
-	if(arrayParam[1]==1){
-		var paramTransmission = true;
-	}else{
-		var paramTransmission = false;
-	}
-		
-	if(arrayParam[2]==1){
-		var paramRAN = true;
-	}else{
-		var paramRAN = false;
-	}
-
-	if(arrayParam[3]==1){
-		var paramCore = true;
-	}else{
-		var paramCore = false;
-	}
-
-		 $.ajax({
-			type: "GET",
-			contentType: "application/json; charset=utf-8",
-			url: getContext()+'/GetSiteNdtypeBoqList',
-			data: {
-			    "SiteId":SiteId,
-			    "NodeTId":NodeTId,
-			    "paramEnterprise": paramEnterprise,
-			    "paramTransmission":paramTransmission,
-			    "paramRAN":paramRAN,
-			    "paramCore":paramCore,
-			    },
-			success : function(data)
-			  {
-				$('#boq_table').empty();
-				siteList.push(SiteId); 
-				$.each(data , function( key, value ) {	
-					boqList.push({ SiteId,key,value });
-					var tr = "<tr>"+
-					"<td class='title'> "+key+"</td>"+
-					"<td>"+value+"</td>"+
-					"</tr>";
-					$("#boq_table").append(tr);
-				});
-			},
-			error: function(result) {
-				alert("Error");
-									}
-				});
-	 $("#boqBtn").removeClass().addClass("tablinks active");
-	 $("#Defaultbutton").removeClass().addClass("tablinks");
-	 $("#optionBtn").removeClass().addClass("tablinks");
-	 Boq.css({ display:'block'});
-	 Layers.css({ display:'none'});
-	 Options.css({ display:'none'});
-	 Boq.tab('show');	      	 	      
-}
-
 function SiteSupp_Boq(SiteId,SuppId){
 	var Boq = $('#Boq');
 	var Layers= $('#Layers');
 	var Options= $('#Options');
+	var date=$("#ParsingDate").val();
+	console.log("date << ",date);
 	
 if(arrayParam[0]==1){
 	var paramEnterprise = true;
@@ -461,7 +407,8 @@ if(arrayParam[3]==1){
 			    "paramTransmission" : paramTransmission,
 			    "paramRAN" : paramRAN,
 			    "paramCore" : paramCore,
-			    "arrayParam" : arrayParam
+			    "arrayParam" : arrayParam,
+			    "date" : date,
 			    },
 			success : function(data)
 			    {
@@ -563,7 +510,9 @@ function Ven_Boq(VenId){
 	var Boq = $('#Boq');
 	var Layers= $('#Layers');
 	var Options= $('#Options');
-	
+	var date=$("#ParsingDate").val();
+	console.log("date << ",date);
+		
 if(arrayParam[0]==1){
 	var paramEnterprise = true;
 }else{
@@ -598,7 +547,8 @@ if(arrayParam[3]==1){
 			    "paramTransmission" : paramTransmission,
 			    "paramRAN" : paramRAN,
 			    "paramCore" : paramCore,
-			    "arrayParam" : arrayParam
+			    "arrayParam" : arrayParam,
+			    "date" : date,
 			    },
 			success : function(data)
 			    {
@@ -631,6 +581,8 @@ function VenSite_Boq(VenId,siteId){
 	var Boq = $('#Boq');
 	var Layers= $('#Layers');
 	var Options= $('#Options');
+	var date=$("#ParsingDate").val();
+	console.log("date << ",date);
 	
 if(arrayParam[0]==1){
 	var paramEnterprise = true;
@@ -667,7 +619,8 @@ if(arrayParam[3]==1){
 			    "paramTransmission" : paramTransmission,
 			    "paramRAN" : paramRAN,
 			    "paramCore" : paramCore,
-			    "arrayParam" : arrayParam
+			    "arrayParam" : arrayParam,
+			    "date" : date,
 			    },
 			success : function(data)
 			    {
@@ -700,6 +653,8 @@ function SupSite_Boq(SupId,siteId){
 	var Boq = $('#Boq');
 	var Layers= $('#Layers');
 	var Options= $('#Options');
+	var date=$("#ParsingDate").val();
+	console.log("date << ",date);
 	
 if(arrayParam[0]==1){
 	var paramEnterprise = true;
@@ -736,7 +691,8 @@ if(arrayParam[3]==1){
 			    "paramTransmission" : paramTransmission,
 			    "paramRAN" : paramRAN,
 			    "paramCore" : paramCore,
-			    "arrayParam" : arrayParam
+			    "arrayParam" : arrayParam,
+			    "date" : date,
 			    },
 			success : function(data)
 			    {
@@ -769,6 +725,8 @@ function SitePO_Boq(SiteId){
 	var Boq = $('#Boq');
 	var Layers= $('#Layers');
 	var Options= $('#Options');
+	var date=$("#ParsingDate").val();
+	console.log("date << ",date);
 	
 	if(arrayParam[0]==1){
 		var paramEnterprise = true;
@@ -804,6 +762,7 @@ function SitePO_Boq(SiteId){
 			    "paramTransmission":paramTransmission,
 			    "paramRAN":paramRAN,
 			    "paramCore":paramCore,
+			    "date" : date,
 			    },
 			success : function(data)
 			    {
@@ -838,6 +797,9 @@ function POSite_Boq(SiteId){
 	var Boq = $('#Boq');
 	var Layers= $('#Layers');
 	var Options= $('#Options');
+	var date=$("#ParsingDate").val();
+	console.log("date << ",date);
+	
 
 	if(arrayParam[0]==1){
 		var paramEnterprise = true;
@@ -873,6 +835,7 @@ function POSite_Boq(SiteId){
 				"paramTransmission":paramTransmission,
 				"paramRAN":paramRAN,
 				"paramCore":paramCore,
+				"date":date,
 				},
 			success : function(data)
 			{
@@ -911,7 +874,9 @@ function  Node_Boq(WareId,NodeId){
 	var Boq = $('#Boq');
 	var Layers= $('#Layers');
 	var Options= $('#Options');
-
+	var date=$("#ParsingDate").val();
+	console.log("date << ",date);
+	
 	if(arrayParam[0]==1){
 		var paramEnterprise = true;
 	}else{
@@ -947,6 +912,7 @@ function  Node_Boq(WareId,NodeId){
 			    "paramTransmission":paramTransmission,
 			    "paramRAN":paramRAN,
 			    "paramCore":paramCore,
+			    "date": date,
 			    },
 			success : function(data)
 			    {
@@ -985,7 +951,9 @@ function  NodeT_Boq(SiteId,NodeTId){
 	var Boq = $('#Boq');
 	var Layers= $('#Layers');
 	var Options= $('#Options');
-
+	var date=$("#ParsingDate").val();
+	console.log("date << ",date);
+	
 	if(arrayParam[0]==1){
 		var paramEnterprise = true;
 	}else{
@@ -1021,6 +989,7 @@ function  NodeT_Boq(SiteId,NodeTId){
 			    "paramTransmission":paramTransmission,
 			    "paramRAN":paramRAN,
 			    "paramCore":paramCore,
+			    "date": date,
 			    },
 			success : function(data)
 			  {
@@ -1049,11 +1018,12 @@ function  NodeT_Boq(SiteId,NodeTId){
 }
 
 function  SuppNdTyp_Boq(SuppId,NodeTId){
-	
 	var Boq = $('#Boq');
 	var Layers= $('#Layers');
 	var Options= $('#Options');
-
+	var date=$("#ParsingDate").val();
+	console.log("date << ",date);
+	
 	if(arrayParam[0]==1){
 		var paramEnterprise = true;
 	}else{
@@ -1089,6 +1059,7 @@ function  SuppNdTyp_Boq(SuppId,NodeTId){
 			    "paramTransmission":paramTransmission,
 			    "paramRAN":paramRAN,
 			    "paramCore":paramCore,
+			    "date": date,
 			    },
 			success : function(data)
 			  {
@@ -1116,12 +1087,86 @@ function  SuppNdTyp_Boq(SuppId,NodeTId){
 	 Boq.tab('show');	      	 	      
 }
 
+function  SiteNodeType_Boq(SiteId,NodeTId){
+	
+	var Boq = $('#Boq');
+	var Layers= $('#Layers');
+	var Options= $('#Options');
+	var date=$("#ParsingDate").val();
+	console.log("date << ",date);
+
+	if(arrayParam[0]==1){
+		var paramEnterprise = true;
+	}else{
+		var paramEnterprise = false;
+	}
+
+	if(arrayParam[1]==1){
+		var paramTransmission = true;
+	}else{
+		var paramTransmission = false;
+	}
+		
+	if(arrayParam[2]==1){
+		var paramRAN = true;
+	}else{
+		var paramRAN = false;
+	}
+
+	if(arrayParam[3]==1){
+		var paramCore = true;
+	}else{
+		var paramCore = false;
+	}
+
+		 $.ajax({
+			type: "GET",
+			contentType: "application/json; charset=utf-8",
+			url: getContext()+'/GetSiteNdtypeBoqList',
+			data: {
+			    "SiteId":SiteId,
+			    "NodeTId":NodeTId,
+			    "paramEnterprise": paramEnterprise,
+			    "paramTransmission":paramTransmission,
+			    "paramRAN":paramRAN,
+			    "paramCore":paramCore,
+			    "date":date,
+			    },
+			success : function(data)
+			  {
+				$('#boq_table').empty();
+				siteList.push(SiteId); 
+				$.each(data , function( key, value ) {	
+					boqList.push({ SiteId,key,value });
+					var tr = "<tr>"+
+					"<td class='title'> "+key+"</td>"+
+					"<td>"+value+"</td>"+
+					"</tr>";
+					$("#boq_table").append(tr);
+				});
+			},
+			error: function(result) {
+				alert("Error");
+									}
+				});
+	 $("#boqBtn").removeClass().addClass("tablinks active");
+	 $("#Defaultbutton").removeClass().addClass("tablinks");
+	 $("#optionBtn").removeClass().addClass("tablinks");
+	 Boq.css({ display:'block'});
+	 Layers.css({ display:'none'});
+	 Options.css({ display:'none'});
+	 Boq.tab('show');	      	 	      
+}
+
+
 function  VenNdTyp_Boq(VenId,NodeTId){
 	
 	var Boq = $('#Boq');
 	var Layers= $('#Layers');
 	var Options= $('#Options');
-
+	var date=$("#ParsingDate").val();
+	console.log("date << ",date);
+	
 	if(arrayParam[0]==1){
 		var paramEnterprise = true;
 	}else{
@@ -1157,6 +1202,7 @@ function  VenNdTyp_Boq(VenId,NodeTId){
 			    "paramTransmission":paramTransmission,
 			    "paramRAN":paramRAN,
 			    "paramCore":paramCore,
+			    "date":date,
 			    },
 			success : function(data)
 			  {
@@ -1187,11 +1233,12 @@ function  VenNdTyp_Boq(VenId,NodeTId){
 
 /*     Node type supp BOQ Fcts */
 function  NodeTSup_Boq(SiteId,NodeTId,SuppId){
-
 	var Boq = $('#Boq');
 	var Layers= $('#Layers');
 	var Options= $('#Options');
-
+	var date=$("#ParsingDate").val();
+	console.log("date << ",date);
+	
 	if(arrayParam[0]==1){
 		var paramEnterprise = true;
 	}else{
@@ -1228,6 +1275,7 @@ function  NodeTSup_Boq(SiteId,NodeTId,SuppId){
 			    "paramTransmission":paramTransmission,
 			    "paramRAN":paramRAN,
 			    "paramCore":paramCore,
+			    "date":date,
 			    },
 			success : function(data)
 			  {
@@ -1261,6 +1309,8 @@ function NodeTVen_Boq(SiteId,NodeTId,VendorId){
 	var Boq = $('#Boq');
 	var Layers= $('#Layers');
 	var Options= $('#Options');
+	var date=$("#ParsingDate").val();
+	console.log("date << ",date);
 
 	if(arrayParam[0]==1){
 		var paramEnterprise = true;
@@ -1298,6 +1348,7 @@ function NodeTVen_Boq(SiteId,NodeTId,VendorId){
 			    "paramTransmission":paramTransmission,
 			    "paramRAN":paramRAN,
 			    "paramCore":paramCore,
+			    "date":date,
 			    },
 			success : function(data)
 			  {
@@ -1336,6 +1387,8 @@ function PO_Boq(SiteId){
 	var Boq = $('#Boq');
 	var Layers= $('#Layers');
 	var Options= $('#Options');
+	var date=$("#ParsingDate").val();
+	console.log("date << ",date);
 	
 	if(arrayParam[0]==1){
 		var paramEnterprise = true;
@@ -1371,6 +1424,7 @@ function PO_Boq(SiteId){
 			    "paramTransmission":paramTransmission,
 			    "paramRAN":paramRAN,
 			    "paramCore":paramCore,
+			    "date":date,
 			},
 			success : function(data)
 			{

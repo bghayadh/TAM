@@ -8,7 +8,8 @@ $('#removeFilter').hide();
 var lst = ${listSites};
 var listVen=${listVen};
 var arrayParam=${arrayParam};
-
+var date=$("#ParsingDate").val();
+console.log("date...", date);
 
 var button ;
 var data;
@@ -375,6 +376,7 @@ function VenNdTypStNdCellCore(id){
 					"paramTransmission":paramTransmission,
 			     	"paramRAN":paramRAN,
 				    "paramCore":paramCore,
+				    "date":date,
 			},
 			dataType: "json",
 			success: function (data) {							        	
@@ -508,6 +510,7 @@ function RequestingSites(id) {
 					"paramTransmission":paramTransmission,
 			     	"paramRAN":paramRAN,
 				    "paramCore":paramCore,
+				    "date":date,
 				},
 				dataType: "json",
 				success: function (data) {	    
@@ -689,6 +692,7 @@ function Create_Sites(id){
 							"paramTransmission":paramTransmission,
 						    "paramRAN":paramRAN,
 							"paramCore":paramCore,
+							"date":date,
 				 },
 				 dataType: "json",
 				 success: function (data) {			        	

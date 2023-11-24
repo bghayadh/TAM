@@ -5,15 +5,11 @@ $('#filterr').hide();
 $('#removeFilter').hide();
 
 var lst = ${listSites};
-//console.log("LST...", lst);
 var Long=${Long};
 var Lat=${Lat};
 var listNodes=${listNodes};
-//console.log("listNodes...", listNodes);
 var listCells=${listCells};
-//console.log("listCells...", listCells);
 var arrayParam=${arrayParam};
-//console.log("arrayParam...", arrayParam);
 
 
 var button ;
