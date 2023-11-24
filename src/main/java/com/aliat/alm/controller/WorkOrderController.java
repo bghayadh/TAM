@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.GoodsReceived;
@@ -97,7 +98,7 @@ public class WorkOrderController {
 			return "redirect:/";
 		} else {
 			
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 			if (session!=null && session.isOpen()) {
 				tx = session.beginTransaction();
 				notifications.headerNotifications(session, model);
@@ -143,7 +144,7 @@ public class WorkOrderController {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;	
 		}
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 
 			tx = session.beginTransaction();
@@ -241,7 +242,7 @@ public class WorkOrderController {
 			return "redirect:/";
 		}
 		else {
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 			if (session != null && session.isOpen()) {
 				tx = session.beginTransaction();
 				
@@ -517,7 +518,7 @@ if(LoginServices.checkSession(request, response).equals("redirect:/")) {
 	String[] DelSrcItem = request.getParameterValues("slctDelSrcItem[]");
 	String[] DelDesItem = request.getParameterValues("slctDelDesItem[]");
 
-	session = almsessions.getSession();
+	session = AlmDbSession.getInstance().getSession();
 	if(session != null && session.isOpen()) {
 	tx = session.beginTransaction();
 	
@@ -828,7 +829,7 @@ if(LoginServices.checkSession(request, response).equals("redirect:/")) {
 	rtn.put("Login", "redirect:/");
 	return rtn;
 }else {
-	session = almsessions.getSession();
+	session = AlmDbSession.getInstance().getSession();
 	if(session != null && session.isOpen()) {
 		tx = session.beginTransaction();
 		try {
@@ -1195,7 +1196,7 @@ public Map<String, Object> GetAllWorkOrders(Locale locale, Model model, HttpServ
 		return rtn;
 	} else {
 		String workOrder=request.getParameter("workOrder");
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if(session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			
