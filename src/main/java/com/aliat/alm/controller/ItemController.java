@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.aliat.alm.common.ALMSessions;
 import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
@@ -53,8 +52,7 @@ public class ItemController {
 	// private String ID;
 	private String itemCode;
 	
-	@Autowired
-	ALMSessions almsessions;
+	
 	
 	@Autowired
 	Notify notifications;

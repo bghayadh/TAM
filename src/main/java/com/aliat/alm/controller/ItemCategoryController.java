@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.aliat.alm.common.ALMSessions;
 import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.ItemCategoryTree;
@@ -53,8 +52,7 @@ public class ItemCategoryController {
 	private static String exceptionAsString;
 
 	
-	@Autowired
-	ALMSessions almsessions;
+	
 	
 	@Autowired
 	Notify notifications;
