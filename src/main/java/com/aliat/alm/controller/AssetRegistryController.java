@@ -26,7 +26,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.aliat.alm.common.ALMSessions;
+
+import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.ArNode;
@@ -42,8 +43,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Controller
 public class AssetRegistryController {
 
-	@Autowired
-	ALMSessions almsessions;
+	
 	
 	@Autowired
 	Notify notifications;
@@ -64,11 +64,12 @@ public class AssetRegistryController {
 			return LoginServices.checkSession(request, response);
 		}
 		else {
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 			if (session != null && session.isOpen()) {
 				
 				tx = session.beginTransaction();
 				notifications.headerNotifications(session, model);
+				System.out.println("asset");
 				try {
 					
 					String str = "SELECT arID, assetID, aritemCode, aritemName, itemModel, itemPartNumber, arlastModifiedDate, itemSN, itemNameReg, poID, nodeID, nodeName, siteID, siteName FROM ( "
@@ -85,7 +86,7 @@ public class AssetRegistryController {
 					if (session != null && session.isOpen()) {
 						tx.commit();
 						session.close();
-						session.getSessionFactory().close();
+						
 					}
 				}
 			}
@@ -102,7 +103,7 @@ public class AssetRegistryController {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;	
 		}
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 
 			tx = session.beginTransaction();
@@ -278,7 +279,7 @@ public class AssetRegistryController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+					
 				}
 			}
 		}
@@ -307,7 +308,7 @@ public class AssetRegistryController {
 		AssetRegistry assetreg; 
 		List<PurchaseOrderItem> listPurchaseOrderItem;
 		
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 
 			tx = session.beginTransaction();
@@ -525,7 +526,7 @@ public class AssetRegistryController {
 			
 			AssetRegistry assetreg; ArPartNumber arPartNumber; ArNode arNode; ArSite arSite; ArSerialNumber arSerialNumber;
 			
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 			if (session != null && session.isOpen()) {
 				tx = session.beginTransaction();
 
@@ -799,7 +800,7 @@ public class AssetRegistryController {
 		}
 				
 		String idForm = request.getParameter("arID");
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		
 					if (session != null && session.isOpen()) {
 			            tx = session.beginTransaction();
@@ -851,7 +852,7 @@ public class AssetRegistryController {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
 		}
-		session = almsessions.getSession();		
+		session = AlmDbSession.getInstance().getSession();		
 		String[] idList = request.getParameterValues("arID[]");
 
 		if (session != null && session.isOpen()) {
@@ -910,7 +911,7 @@ public class AssetRegistryController {
 			rtn.put("Login", "redirect:/");
 			return rtn;
 		}
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			

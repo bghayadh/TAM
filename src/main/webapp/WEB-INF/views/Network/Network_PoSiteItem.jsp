@@ -10,6 +10,8 @@ var listPO=${listPO};
 //console.log("listPO...", listPO);
 var arrayParam=${arrayParam};
 //console.log("arrayParam...", arrayParam);
+var date=$("#ParsingDate").val();
+console.log("date...", date);
 
 var button ;
 var data;
@@ -452,6 +454,7 @@ function PoStItemCore(id)
 				"paramTransmission":paramTransmission,
 		     	"paramRAN":paramRAN,
 			    "paramCore":paramCore,
+			    "date":date,
 			},
 			dataType: "json",
 			success: function (data) {		        	
@@ -630,6 +633,7 @@ function PoStItemCore2(id)
 							"paramTransmission":paramTransmission,
 					     	"paramRAN":paramRAN,
 						    "paramCore":paramCore,
+						    "date":date,
 						},
 						dataType: "json",
 						success: function (data) {					        	

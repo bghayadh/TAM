@@ -490,23 +490,14 @@
 							</div>
 							<div class="row">
 								<div class="col-sm-6"><div class="form-group"><div class="input-group-prepend">
-									<span style="width: 120px; font-size: 12px;" class="input-group-text"><b>Creation Date</b></span>
+									<span style="width: 120px;" class="input-group-text"><b>Creation Date</b></span>
 									<input type="text" id="manholeCreateDate" class="form-control text-input" value="" readonly />
 									</div></div></div>
 								<div class="col-sm-6"><div class="form-group"><div class="input-group-prepend">
-									<span class="input-group-text"  style="width: 123px; font-size: 12px;"><b>Last Modified Date</b></span>
+									<span class="input-group-text"  style="width: 123px;"><b>Last Modified Date</b></span>
 									<input type="text" id="manholeLastModifiedDate" class="form-control text-input" value="" readonly />
 								</div></div></div></div>
-							<div class="row">
-								<div class="col-md-6" id="ManholeDMDiv">
-									<div class="form-group">
-										<div class="input-group-prepend">
-											<span style="width: 140px;" class="input-group-text"><b>DM_Name</b></span>
-											<input type="text" id="manholeDMName" class="form-control text-input" readonly />
-										</div>
-									</div>
-								</div>
-							</div>
+						
 							<div class="row">
 								<div class="col-md-6" id="projectIdManhole">
 									<div class="form-group">
@@ -522,6 +513,29 @@
 											<span style="width: 140px;" class="input-group-text"><b>Project Name</b></span>
 											 <input type="text" id="ManholeProjectName" class="form-control text-input" />
 										</div></div></div></div>
+							<div class="row">
+								<div class="col-md-6" id="ManholeDMDiv">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>DM_Name</b></span>
+											<input type="text" id="manholeDMName" class="form-control text-input" readonly />
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-6">
+												<div class="form-group">
+													<div class="input-group-prepend">
+														<span style="width: 100px;" class="input-group-text"><b>Owner </b></span> <select id="manholeOwner" class="form-control">
+															<option value="" selected></option>
+															<option value="tkl">TKL</option>
+															<option value="nofbi">NOFBI</option>
+															<option value="others">Others</option>
+														</select>
+													</div>
+												</div>
+											</div>
+
+							</div>
 						</div>
 					</div>
 					<div class="modal-footer"></div>

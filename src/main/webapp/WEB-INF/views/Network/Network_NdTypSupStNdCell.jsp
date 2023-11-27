@@ -11,8 +11,8 @@ var listNodesType = ${listNodesType};
 //console.log("listNodesType: ",listNodesType);
 var arrayParam=${arrayParam};
 //console.log("arrayParam...", arrayParam);
-//var date=$("#ParsingDate").val();
-//console.log("date...", date);
+var date=$("#ParsingDate").val();
+console.log("date...", date);
 
 
 var button ;
@@ -407,6 +407,7 @@ function NdTypSupStNdCellCore(id){
 					  "paramTransmission":paramTransmission,
 			   		  "paramRAN":paramRAN,
 				      "paramCore":paramCore,
+				      "date":date,
 			 		},
 			 dataType: "json",
 			 success: function (data) {	
@@ -501,6 +502,7 @@ function RequestingSites(id) {
 					"paramTransmission":paramTransmission,
 			     	"paramRAN":paramRAN,
 				    "paramCore":paramCore,
+				    "date":date,
 				},
 				dataType: "json",
 				success: function (data) {	    
@@ -660,6 +662,7 @@ function Create_Sites(id){
 							"paramTransmission":paramTransmission,
 						    "paramRAN":paramRAN,
 							"paramCore":paramCore,
+							"date":date,
 				 },
 				 dataType: "json",
 				 success: function (data) {			        	

@@ -8,8 +8,8 @@ $('#removeFilter').hide();
 var lst = ${listSites};
 var arrayParam=${arrayParam};
 
-//var date=$("#ParsingDate").val();
-//console.log("date...", date);
+var date=$("#ParsingDate").val();
+console.log("date...", date);
 
 var button ;
 var data;
@@ -395,6 +395,7 @@ function StVenNdTypNdCell(id){
 					  "paramTransmission":paramTransmission,
 			   		  "paramRAN":paramRAN,
 				      "paramCore":paramCore,
+				      "date":date,
 			 		},
 			 dataType: "json",
 			 success: function (data) {	
@@ -490,6 +491,7 @@ function RequestingNodeType(id) {
 					"paramTransmission":paramTransmission,
 			   		"paramRAN":paramRAN,
 				    "paramCore":paramCore,
+				    "date":date,
 				},
 				dataType: "json",
 				success: function (data) {					        	
@@ -609,6 +611,7 @@ function VenNdCellCore(id){
 					"paramTransmission":paramTransmission,
 			   		"paramRAN":paramRAN,
 				    "paramCore":paramCore,
+				    "date":date,
 				},
 				dataType: "json",
 				success: function (data) {														        	

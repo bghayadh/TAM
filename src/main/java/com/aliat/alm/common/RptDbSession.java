@@ -1,5 +1,9 @@
 package com.aliat.alm.common;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.logging.Logger;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
@@ -12,6 +16,9 @@ public class RptDbSession {
 	private static RptDbSession instance = null;
     private static SessionFactory sessionFactory;
     private static StandardServiceRegistry builder = null;
+    private static StringWriter sw;
+   	private static String exceptionAsString;
+   	private static final Logger logger = Logger.getLogger(RptDbSession.class.getName());
     private RptDbSession() {
         try {
         	builder = new StandardServiceRegistryBuilder().configure("/almrpt.cfg.xml").build();
@@ -19,8 +26,11 @@ public class RptDbSession {
              
             
         } catch (Exception e) {
-        	e.printStackTrace();
-            System.out.println("Error in creating session with Database");
+        	sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			exceptionAsString = sw.toString();
+			logger.finest("Error in RptDbSession due to \n " + exceptionAsString);
+			logger.info("Error in RptDbSession due to \n " + exceptionAsString);
         }
     }
 
@@ -35,8 +45,11 @@ public class RptDbSession {
         try {
             return sessionFactory.openSession();
         } catch (Exception e) {
-        	e.printStackTrace();
-            System.out.println("Error in opening session with Database");
+        	sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			exceptionAsString = sw.toString();
+			logger.finest("Error in RPT getSession due to \n " + exceptionAsString);
+			logger.info("Error in RPT getSession due to \n " + exceptionAsString);
         }
         return null;
     }

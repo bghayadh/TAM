@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.services.ItemParameters;
@@ -52,8 +52,7 @@ public class ItemController {
 	// private String ID;
 	private String itemCode;
 	
-	@Autowired
-	ALMSessions almsessions;
+	
 	
 	@Autowired
 	Notify notifications;
@@ -68,7 +67,7 @@ public class ItemController {
 			return "redirect:/";
 		}
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
@@ -101,7 +100,7 @@ public class ItemController {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
 		}
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 
 			tx = session.beginTransaction();
@@ -175,7 +174,7 @@ public class ItemController {
 		Item item;
 		String ItemCode, navAction = "2";
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 
 			tx = session.beginTransaction();
@@ -354,7 +353,7 @@ public class ItemController {
 		int year = calendar.get(Calendar.YEAR);
 
 		float qtyPartNum = 0;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 
@@ -554,7 +553,7 @@ public class ItemController {
 
 			return "redirect:/";
 		}
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
@@ -602,7 +601,7 @@ public class ItemController {
 			return rtn;
 		} else {
 			String c1, c2, c3, c4, seq;
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 			if (session != null && session.isOpen()) {
 				tx = session.beginTransaction();
 
@@ -696,7 +695,7 @@ public class ItemController {
 		 * rtn.put("Login", "redirect:/"); return rtn; }
 		 */
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 
@@ -750,7 +749,7 @@ public class ItemController {
 		 * rtn.put("Login", "redirect:/"); return rtn; }
 		 */
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 
@@ -803,7 +802,7 @@ public class ItemController {
 			return rtn;
 		}
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 
@@ -848,7 +847,7 @@ public class ItemController {
 		 * rtn.put("Login", "redirect:/"); return rtn; }
 		 */
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 
@@ -1049,7 +1048,7 @@ public class ItemController {
 
 		String itemCategory;
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
@@ -1099,7 +1098,7 @@ public class ItemController {
 		Map<String, Object> rtn = new LinkedHashMap<>();
 		String itemdtl = "%" + request.getParameter("ItemCode") + "%";
 		System.out.println("liliane");
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);

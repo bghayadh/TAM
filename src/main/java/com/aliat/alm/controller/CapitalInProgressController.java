@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.CapitalInProgress;
@@ -48,8 +48,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class CapitalInProgressController {
 
 	
-	@Autowired
-	ALMSessions almsessions;
+	
 	
 	@Autowired
 	Notify notifications;
@@ -74,7 +73,7 @@ public class CapitalInProgressController {
 		if(LoginServices.checkSession(request, response).equals("redirect:/")) {
 			return LoginServices.checkSession(request, response);
 		}else {
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 			if (session != null && session.isOpen()) {
 				
 				tx = session.beginTransaction();
@@ -124,7 +123,7 @@ public class CapitalInProgressController {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;	
 		}
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 
 			tx = session.beginTransaction();
@@ -205,7 +204,7 @@ public class CapitalInProgressController {
 		if(LoginServices.checkSession(request, response).equals("redirect:/")) {
 			return LoginServices.checkSession(request, response);
 		}else {
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 			String itemsList,navAction,cipCode,ItemName,queryStmt;
 			if (session != null && session.isOpen()) {
 				
@@ -382,7 +381,7 @@ public class CapitalInProgressController {
 			
 
 
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 			if (session != null && session.isOpen()) {
 				tx = session.beginTransaction();
 
@@ -492,7 +491,7 @@ public class CapitalInProgressController {
 			return rtn;
 		}else {
 			
-			session = almsessions.getSession();		
+			session = AlmDbSession.getInstance().getSession();		
 			String idForm = request.getParameter("cipID");
 			if (session != null && session.isOpen()) {
 	            tx = session.beginTransaction();
@@ -537,7 +536,7 @@ public class CapitalInProgressController {
 			
 		}else {
 			
-			session = almsessions.getSession();		
+			session = AlmDbSession.getInstance().getSession();		
 			String[] idList = request.getParameterValues("cipID[]");
 			if (session != null && session.isOpen()) {
 	            tx = session.beginTransaction();
@@ -583,7 +582,7 @@ public Map<String, Object> GetAllClusters(Locale locale, Model model, HttpServle
 
 	Map<String, Object> rtn = new LinkedHashMap<>();
 	String CIP = "%" + request.getParameter("CIP") + "%";
-	session = almsessions.getSession();
+	session = AlmDbSession.getInstance().getSession();
 	
 	if (session != null && session.isOpen()) {
 		tx = session.beginTransaction();

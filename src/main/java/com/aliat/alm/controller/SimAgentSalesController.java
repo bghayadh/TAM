@@ -19,7 +19,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.query.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.hibernate.transform.Transformers;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -30,7 +29,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.logging.Logger;
-import com.aliat.alm.common.ALMSessions;
+
+import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.SimAgentSales;
 import com.aliat.alm.models.SimAgentCountChartsReport;
@@ -42,8 +42,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Controller
 public class SimAgentSalesController {
 
-	@Autowired
-	ALMSessions almsessions;
 	private static StringWriter sw;
 	private static String exceptionAsString;
 	@Autowired
@@ -73,12 +71,9 @@ public class SimAgentSalesController {
 
 		else {
 			Session sessionALM = null;
-			Transaction txALM = null;
-			sessionALM = almsessions.getSession();
+			sessionALM = AlmDbSession.getInstance().getSession();
 
 			if (sessionALM != null && sessionALM.isOpen()) {
-
-				txALM = sessionALM.beginTransaction();
 				notifications.headerNotifications(sessionALM, model);
 				try {
 
@@ -143,10 +138,7 @@ public class SimAgentSalesController {
 
 				finally {
 					if (sessionALM != null && sessionALM.isOpen()) {
-
-						txALM.commit();
 						sessionALM.close();
-						sessionALM.getSessionFactory().close();
 					}
 				}
 			}
@@ -170,7 +162,6 @@ public class SimAgentSalesController {
 		String agentsName = request.getParameter("allAgentsName");
 
 		Session session = null;
-		Transaction tx = null;
 		Query agentSalesCountQuery = null;
 		List<Object[]> finalAgentsList = new ArrayList<Object[]>();
 		String finalAgentsNameList = "";
@@ -204,10 +195,9 @@ public class SimAgentSalesController {
 			try {
 				startDate = new Timestamp(formatter.parse(start_Date).getTime());
 				endDate = new Timestamp(formatter.parse(end_Date).getTime());
-				session = almsessions.getSession();
+				session = AlmDbSession.getInstance().getSession();
 
 				if (session != null && session.isOpen()) {
-					tx = session.beginTransaction();
 
 					// if agent is selected
 					if (finalAgentsNameList != "") {
@@ -262,9 +252,7 @@ public class SimAgentSalesController {
 
 			} finally {
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -290,7 +278,6 @@ public class SimAgentSalesController {
 		String[] agentsNameList = null;
 
 		Session session = null;
-		Transaction tx = null;
 		String start_Date = request.getParameter("startDate");
 		String end_Date = request.getParameter("endDate");
 		DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
@@ -329,11 +316,9 @@ public class SimAgentSalesController {
 				System.out.println("startDate is  " + startDate);
 				System.out.println("endDate is  " + endDate);
 
-				session = almsessions.getSession();
+				session = AlmDbSession.getInstance().getSession();
 
 				if (session != null && session.isOpen()) {
-
-					tx = session.beginTransaction();
 
 					// if agent is not selected
 					if (finalAgentsNameList == "") {
@@ -1707,9 +1692,7 @@ public class SimAgentSalesController {
 
 			} finally {
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -1784,18 +1767,15 @@ public class SimAgentSalesController {
 
 		} else {
 			Session session = null;
-			Transaction tx = null;
-
 			try {
 				startdate = formatter.parse(start_Date);
 				startDate = new Timestamp(startdate.getTime());
 				enddate = formatter.parse(end_Date);
 				endDate = new Timestamp(enddate.getTime());
 
-				session = almsessions.getSession();
+				session = AlmDbSession.getInstance().getSession();
 
 				if (session != null && session.isOpen()) {
-					tx = session.beginTransaction();
 
 					// if agent is not selected
 					if (finalAgentsNameList == "") {
@@ -3259,9 +3239,7 @@ public class SimAgentSalesController {
 
 			} finally {
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -3289,13 +3267,10 @@ public class SimAgentSalesController {
 		} else {
 
 			Session session = null;
-			Transaction tx = null;
-
 			try {
-				session = almsessions.getSession();
+				session = AlmDbSession.getInstance().getSession();
 
 				if (session != null && session.isOpen()) {
-					tx = session.beginTransaction();
 
 					if (areaID == "" && regionID == "") {
 
@@ -3333,9 +3308,7 @@ public class SimAgentSalesController {
 
 			finally {
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -3480,7 +3453,6 @@ public class SimAgentSalesController {
 			return rtn;
 		} else {
 			Session session = null;
-			Transaction tx = null;
 
 			try {
 				createdDate = formatter.parse(start_Date);
@@ -3488,10 +3460,9 @@ public class SimAgentSalesController {
 				enddate = formatter.parse(end_Date);
 				endDate = new Timestamp(enddate.getTime());
 
-				session = almsessions.getSession();
+				session = AlmDbSession.getInstance().getSession();
 
 				if (session != null && session.isOpen()) {
-					tx = session.beginTransaction();
 
 					if (finalAgentsNameList == "") {
 
@@ -5116,9 +5087,7 @@ public class SimAgentSalesController {
 				logger.info("Error in GetAllAgentIDAutocomplete due to \n " + exceptionAsString);
 			} finally {
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -5156,7 +5125,6 @@ public class SimAgentSalesController {
 			return rtn;
 		} else {
 			Session session = null;
-			Transaction tx = null;
 
 			try {
 				createdDate = formatter.parse(start_Date);
@@ -5164,10 +5132,9 @@ public class SimAgentSalesController {
 				enddate = formatter.parse(end_Date);
 				endDate = new Timestamp(enddate.getTime());
 
-				session = almsessions.getSession();
+				session = AlmDbSession.getInstance().getSession();
 
 				if (session != null && session.isOpen()) {
-					tx = session.beginTransaction();
 
 					if (StringUtils.equalsIgnoreCase(period, "Daily")) {
 
@@ -5553,9 +5520,7 @@ public class SimAgentSalesController {
 				logger.info("Error in FilteringMaxMinChart due to \n " + exceptionAsString);
 			} finally {
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -5580,13 +5545,11 @@ public class SimAgentSalesController {
 			return rtn;
 		} else {
 			Session session = null;
-			Transaction tx = null;
 
 			try {
-				session = almsessions.getSession();
+				session = AlmDbSession.getInstance().getSession();
 
 				if (session != null && session.isOpen()) {
-					tx = session.beginTransaction();
 
 					if (agentID == "" && regionID == "") {
 						areaListQuery = session.createNativeQuery(
@@ -5627,9 +5590,7 @@ public class SimAgentSalesController {
 
 			finally {
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -5656,14 +5617,11 @@ public class SimAgentSalesController {
 			return rtn;
 		} else {
 			Session session = null;
-			Transaction tx = null;
 
 			try {
-				session = almsessions.getSession();
+				session = AlmDbSession.getInstance().getSession();
 
 				if (session != null && session.isOpen()) {
-
-					tx = session.beginTransaction();
 
 					if (agentID == "" && areaID == "") {
 						regionListQuery = session.createNativeQuery(
@@ -5704,9 +5662,7 @@ public class SimAgentSalesController {
 
 			finally {
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -5750,7 +5706,7 @@ public class SimAgentSalesController {
 
 	}
 
-	@SuppressWarnings({ "unchecked"})
+	@SuppressWarnings({ "unchecked" })
 	private JSONArray chartSales(List<Object> defaultChartAgentSalesReport) {
 		JSONArray simSalesCount = new JSONArray(), agentsID = new JSONArray();
 		JSONArray objSalesCount = new JSONArray();

@@ -7,7 +7,8 @@ $('#removeFilter').hide();
 var lst = ${listSites};
 var listSupp=${listSupp};
 var arrayParam=${arrayParam};
-
+var date=$("#ParsingDate").val();
+console.log("date...", date);
 
 var button ;
 var data;
@@ -403,6 +404,7 @@ function SuppStNdTypNdCellCore(id){
 					"paramTransmission":paramTransmission,
 			   		"paramRAN":paramRAN,
 				    "paramCore":paramCore,
+				    "date":date,
 				},
 				dataType: "json",
 				success: function (data) {							        	
@@ -571,6 +573,7 @@ function StNdTpNdCellCore(id)
 					"paramTransmission":paramTransmission,
 			   		"paramRAN":paramRAN,
 				    "paramCore":paramCore,
+				    "date":date,
 				},
 				dataType: "json",
 				success: function (data) {					        	
@@ -688,6 +691,7 @@ function SupNdCellCore(id){
 					"paramTransmission":paramTransmission,
 			   		"paramRAN":paramRAN,
 				    "paramCore":paramCore,
+				    "date":date,
 				},
 				dataType: "json",
 				success: function (data) {														        	

@@ -17,7 +17,7 @@ class Almgrid {
         this.pagination;
         this.view = options.view;
         this.init();
-        this.ArrayKeys
+        this.ArrayKeys;
 
     }
     //init function where custom filter and data is drawn
@@ -25,13 +25,21 @@ class Almgrid {
         this.initializeFunction();
         this.addEvents();
         this.drawTableGrid(this.tableId, this.dataArray);
+
+	 var count = 1;
+    // Define a window to each column
+    $("#" + this.tableId).find(".filter-dropdown-ul").each(function () {
+		window["submit_" +count] = "unchecked";
+        count++;
+    });
+
     }
     initializeFunction() {
         drawDropDownCustomFilter(this.tableId);
     }
 
 
-    drawCustomFilters(columnNumber, currentForm, uniqueArray, uniqueFilteredArray,checkboxArray,uncheckboxArray,startIndex,endIndex,finalCount,nextPageNum) {
+    drawCustomFilters(submitButtonFlag,columnNumber, currentForm, uniqueArray, uniqueFilteredArray,checkboxArray,uncheckboxArray,startIndex,endIndex,finalCount,nextPageNum) {
 
         var tableId = this.tableId;
         var FilteredArrayLength = uniqueFilteredArray.length
@@ -44,6 +52,7 @@ class Almgrid {
             $("#" + tableId).find("#" + currentForm + " .selectall-filter-checkbox").addClass("prev-true")
         }
         
+		
         $("#" +currentForm).find(".nextPrevPage").val(nextPageNum);	
     	$('#'+currentForm).find('.nextData').prop('disabled', false);
    	 	$('#'+currentForm).find('.previousData').prop('disabled', true);
@@ -91,10 +100,12 @@ class Almgrid {
         let showSelectedStatus = document.querySelector("#" + currentForm + " .showselected-filter-checkbox");
         let showAllStatus = document.querySelector("#" + currentForm + " .showall-filter-checkbox");
 
-        if(submitStatus =="unchecked") {
+
+        if(submitButtonFlag =="unchecked") {
             $("#" + currentForm).find('.selectall-filter-checkbox').prop('checked', true);
         }
-        else if(submitStatus =="checked" && uncheckedArrayTemp.length >0) {
+
+	    else if(submitButtonFlag =="checked" && uncheckedArrayTemp.length >0) {
             $("#" + currentForm).find('.selectall-filter-checkbox').prop('checked', false);
         }
         
@@ -102,12 +113,10 @@ class Almgrid {
         for (var i = 0; i < arrayLength; i++) {
 
             //console.log(uniqueArray[i])
-            existinfilteredArray = uniqueFilteredArray.includes(uniqueArray[i]);
+            existinfilteredArray = uniqueFilteredArray.includes(uniqueArray[i]);            
 
-            
-            
+	         if(submitButtonFlag =="unchecked") {
 
-            if(submitStatus =="unchecked") {
 	            if(uncheckboxArray[columnNumber].length >0) {
 	            	if(checkboxArray[columnNumber].includes(uniqueArray[i]) == false){	
 	            		checkboxArray[columnNumber].push(uniqueArray[i]);
@@ -120,7 +129,8 @@ class Almgrid {
 	                checked = true;
 	            }
             }
-            else if(submitStatus =="checked" && uncheckedArrayTemp.length >0) {
+	            else if(submitButtonFlag =="checked" && uncheckedArrayTemp.length >0) {
+
             	if(uncheckedArrayTemp.includes(uniqueArray[i]) == true){	
 					
             		var indx = checkboxArray[columnNumber].indexOf(uniqueArray[i]);
@@ -614,7 +624,7 @@ var filterRowsPrevious = function (prevResult,prevPageNo,maxNoOfPages) {
         	
             if (selectAll.checked) {
             	uncheckedArrayTemp=[];
-            	if(submitStatus =="checked") {
+            	if(window["submit_" + columnNumber] == "checked") {
             		uncheckedArrayTemp=uncheckboxArray[columnNumber];
             	}
             	
@@ -1016,7 +1026,7 @@ var filterRowsPrevious = function (prevResult,prevPageNo,maxNoOfPages) {
                     let endIndex="30000";
                     let finalCount = "30000";
                     let nextPageNum="1";
-                    almgrid.drawCustomFilters(columnNumberPressed, clickedForm, uniqueArray, availablenewArray,checkboxArray,uncheckboxArray,"0","30000","30000","1");
+                    almgrid.drawCustomFilters(window["submit_" + columnNumberPressed],columnNumberPressed, clickedForm, uniqueArray, availablenewArray,checkboxArray,uncheckboxArray,"0","30000","30000","1");
                     document.getElementById("loaderDiv").style.display = "none";
 
                 })
@@ -1163,8 +1173,8 @@ var filterRowsPrevious = function (prevResult,prevPageNo,maxNoOfPages) {
                     let endIndex="30000";
                     let finalCount = "30000";
                     let nextPageNum="1";
-
-                    almgrid.drawCustomFilters(columnNumberPressed, clickedForm, uniqueArray, availablenewArray,checkboxArray,uncheckboxArray,"0","30000","30000","1");
+					
+                    almgrid.drawCustomFilters(window["submit_" + columnNumberPressed] ,columnNumberPressed, clickedForm, uniqueArray, availablenewArray,checkboxArray,uncheckboxArray,"0","30000","30000","1");
 					document.getElementById("loaderDiv").style.display = "none";
 
                 })
@@ -1566,12 +1576,20 @@ var filterRowsPrevious = function (prevResult,prevPageNo,maxNoOfPages) {
                 if(selectall_currentform.is(":checked") && advancedFilter_currentform == "none"){
                     $(gridButton).removeClass("clicked");
                     $(gridButton).css("color", "#000");
-                    submitStatus="unchecked";
+					var clickedForm =  $(this).parents("form").attr("id");                    
+			 		var clickedIndex = clickedForm.split(almgrid.tableId + "_filterform");
+                    var columnNumberPressed = clickedIndex[1];
+					window["submit_" + columnNumberPressed] = "unchecked";
+
                 }
                 else{
                     $(gridButton).addClass("clicked");
                     $(gridButton).css("color", "#FFFF00");
-                    submitStatus="checked";
+					var clickedForm =  $(this).parents("form").attr("id");                   
+			 		var clickedIndex = clickedForm.split(almgrid.tableId + "_filterform");
+                    var columnNumberPressed = clickedIndex[1];
+					window["submit_" + columnNumberPressed] = "checked";
+
                 }
 
 
@@ -2065,6 +2083,5 @@ function throttle(f, delay) {
     };
 }
 
-var submitStatus="unchecked";
 var uncheckedArrayTemp=[];
 var clusterize;

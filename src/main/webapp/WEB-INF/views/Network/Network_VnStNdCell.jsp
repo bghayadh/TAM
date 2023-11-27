@@ -5,11 +5,10 @@ $('#filterr').hide();
 $('#removeFilter').hide();
 
 var lst = ${listSites};
-//console.log("lst: ",lst);
 var listVen=${listVen};
-//console.log("listVen: ",listVen);
 var arrayParam=${arrayParam};
-//console.log("arrayParam: ",arrayParam);
+var date=$("#ParsingDate").val();
+console.log("date...", date);
 
 var button ;
 var data;
@@ -413,6 +412,7 @@ function VenStNdCellCore(id){
 					"paramTransmission":paramTransmission,
 			   		"paramRAN":paramRAN,
 				    "paramCore":paramCore,
+				    "date":date,
 				},
 				dataType: "json",
 				success: function (data) {							        	
@@ -569,6 +569,7 @@ function Create_TreeSites(id){
 			"paramTransmission":paramTransmission,
 	   		"paramRAN":paramRAN,
 		    "paramCore":paramCore,
+		    "date":date,
 		},
 		dataType: "json",
 		success: function (data) {	

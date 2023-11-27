@@ -4785,6 +4785,7 @@ singleProject = new ContextMenu({
 						$("#ManholeLat").val(data.ManholeDetails[3]);
 						$("#manholeCreateDate").val(data.ManholeDetails[7]);
 						$("#manholeLastModifiedDate").val(data.ManholeDetails[8]);
+						$("#manholeOwner").val(data.ManholeDetails[9]);
 						
 						data = null;
 					},
@@ -9344,6 +9345,7 @@ $("#saveManhole").click(function () {
 		ManholeModel = document.getElementById("ManholeModel").value;
 		ManholeCity = document.getElementById("ManholeCity").value;
 		manholeCreatedDate=document.getElementById("manholeCreateDate").value;
+		manholeowner =  document.getElementById("manholeOwner").value;
 
 				
 		if($("#projectIdManhole").is(":visible") && $("#projectNameManhole").is(":visible")){
@@ -9375,6 +9377,7 @@ $("#saveManhole").click(function () {
 				"ManholeCity" :ManholeCity,
 				"actionManholeContext":actionManholeContext,
 				"ProjectId": IdNodeSelectedTemp,
+				"manholeowner":manholeowner,
 				"manholeCreatedDate":manholeCreatedDate
 			},
 			dataType: "json",

@@ -5,11 +5,9 @@ import java.io.StringWriter;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -17,11 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.query.Query;
-import org.hibernate.query.NativeQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.transform.Transformers;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,12 +27,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.aliat.alm.services.ItemParameters;
 import com.aliat.alm.services.LoginServices;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.common.Permissions;
-import com.aliat.alm.models.CustomerListView;
-
 import com.aliat.alm.models.Customer;
 
 @Controller
@@ -58,12 +51,8 @@ public class CustomerController {
 	Form form;
 
 	@Autowired
-	ALMSessions almsessions;
-
-	@Autowired
 	Notify notification;
 
-	@SuppressWarnings({ "unchecked", "deprecation" })
 	@RequestMapping(value = "/CustomerListView", method = RequestMethod.GET)
 
 	public String CustomerListView(Locale locale, Model model, HttpServletRequest request,
@@ -72,28 +61,17 @@ public class CustomerController {
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			return "redirect:/";
 		}
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
-			notification.headerNotifications(session, model);
+			
 			try {
-				List<CustomerListView> listCustomer = new ArrayList<CustomerListView>();
-
+				notification.headerNotifications(session, model);
 				String str = "select CUSTOMER_ID as customerId,CUSTOMER_ID as customerIdd, CUSTOMER_NAME as customerName, MOBILE_NUMBER as mobile, CUSTOMER_ACRONYMS as customerAcronyms,TO_CHAR(CREATED_DATE,'YYYY-MM-DD HH24:MI:SS') as createdDate,"
 						+ "TO_CHAR(LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') as lastModifiedDate,"
 						+ "STATUS as status" + " from CUSTOMER" + " order by LAST_MODIFIED_DATE DESC";
-
-				query = session.createNativeQuery(str);
-				listCustomer = ((NativeQuery<CustomerListView>) query).addScalar("customerId").addScalar("customerIdd")
-						.addScalar("customerName").addScalar("mobile").addScalar("customerAcronyms")
-						.addScalar("createdDate").addScalar("lastModifiedDate").addScalar("status")
-						.setResultTransformer(Transformers.aliasToBean(CustomerListView.class)).list();
-				System.out.println("listCustomer " + listCustomer.get(0).getCustomerId());
-				model.addAttribute("ListGridTable", mapper.writeValueAsString(listCustomer));
+				model.addAttribute("ListGridTable", mapper.writeValueAsString(session.createNativeQuery(str).list()));
 				session.clear();
-				tx.commit();
 			} catch (Exception e) {
-				tx.rollback();
 				sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
 				exceptionAsString = sw.toString();
@@ -102,7 +80,6 @@ public class CustomerController {
 			} finally {
 				if (session != null && session.isOpen()) {
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -120,7 +97,7 @@ public class CustomerController {
 	 * if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 	 * 
 	 * return "redirect:/"; } String result = null; session =
-	 * almsessions.getSession(); if (session != null && session.isOpen()) {
+	 * AlmDbSession.getInstance().getSession(); if (session != null && session.isOpen()) {
 	 * 
 	 * tx = session.beginTransaction(); notification.headerNotifications(session,
 	 * model);
@@ -210,7 +187,7 @@ public class CustomerController {
 	 * exceptionAsString);
 	 * logger.info("Error in FilteredClientsListView due to \n "+
 	 * exceptionAsString); } finally { if (session != null && session.isOpen()) {
-	 * tx.commit(); session.close(); session.getSessionFactory().close(); } } }
+	 * tx.commit(); session.close();  } } }
 	 * 
 	 * return result; }
 	 */
@@ -227,11 +204,10 @@ public class CustomerController {
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
 		String result[] = new String[4];
 		int SelectedIndex = 0;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
-			notification.headerNotifications(session, model);
 			try {
+				notification.headerNotifications(session, model);
 				navAction = request.getParameter("NavAction");
 				if (StringUtils.equalsIgnoreCase(customerId, null)) {
 					model.addAttribute("ListCustomer", "addNew");
@@ -276,10 +252,8 @@ public class CustomerController {
 					model.addAttribute("email", customer.getEmail());
 					model.addAttribute("website", customer.getWebsite());
 					session.clear();
-					tx.commit();
 				}
 			} catch (Exception e) {
-				tx.rollback();
 				sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
 				exceptionAsString = sw.toString();
@@ -288,7 +262,6 @@ public class CustomerController {
 			} finally {
 				if (session != null && session.isOpen()) {
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -309,7 +282,7 @@ public class CustomerController {
 		DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
 		Calendar calendar = new GregorianCalendar();
 		String customerID;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
@@ -392,7 +365,6 @@ public class CustomerController {
 			} finally {
 				if (session != null && session.isOpen()) {
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -412,7 +384,7 @@ public class CustomerController {
 			return rtn;
 		}
 		String idList;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
@@ -434,7 +406,6 @@ public class CustomerController {
 			} finally {
 				if (session != null && session.isOpen()) {
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -453,20 +424,23 @@ public class CustomerController {
 			return rtn;
 		}
 		String[] idList;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
 
 				idList = request.getParameterValues("customerID[]");
-				for (int i = 0; i < idList.length; i++) {
-					// Get Customer_ID from the listview form
-					String idForm = idList[i];
-
-					query = session.createNativeQuery("delete CUSTOMER  where CUSTOMER_ID ='" + idForm + "'");
-					query.executeUpdate();
+				if(idList != null) {
+					for (int i = 0; i < idList.length; i++) {
+						// Get Customer_ID from the listview form
+						String idForm = idList[i];
+						query = session.createNativeQuery("delete CUSTOMER  where CUSTOMER_ID ='" + idForm + "'");
+						query.executeUpdate();
+					}
 				}
+				tx.commit();
 			} catch (Exception e) {
+				tx.rollback();
 				sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
 				exceptionAsString = sw.toString();
@@ -475,9 +449,7 @@ public class CustomerController {
 			} finally {
 
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -504,9 +476,8 @@ public class CustomerController {
 		// String itemdtl = "%" + request.getParameter("client") + "%";
 		System.out.println("Passing from GetAllCustomer where client is ");
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
 			try {
 				query = session.createQuery(
 						"SELECT customerId,customerName,mobile from Customer where customerId like UPPER(:param1) OR UPPER(customerName)like UPPER(:param1) or mobile like UPPER(:param1) ORDER BY lastModifiedDate DESC");
@@ -515,12 +486,9 @@ public class CustomerController {
 				query.setMaxResults(40);
 				rtn.put("ListCustomer", query.list());
 				System.out.println("ListCustomer is " + mapper.writeValueAsString(query.list()));
-
 				session.clear();
-				tx.commit();
 
 			} catch (Exception e) {
-				tx.rollback();
 				sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
 				exceptionAsString = sw.toString();
@@ -528,8 +496,7 @@ public class CustomerController {
 				logger.info("Error in GetAllCustomer due to \n " + exceptionAsString);
 			} finally {
 				if (session != null && session.isOpen()) {
-					session.close();
-					session.getSessionFactory().close();
+					session.close();					
 				}
 			}
 		}
@@ -546,10 +513,9 @@ public class CustomerController {
 			rtn.put("Login", "redirect:/");
 			return rtn;
 		}
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		String search = request.getParameter("search");
 		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
 			try {
 				query = session.createNativeQuery(
 						"SELECT CUSTOMER_ID,CUSTOMER_NAME,MOBILE_NUMBER,CITY,LONGITUDE,LATITUDE,LOCATION_ID FROM CUSTOMER WHERE UPPER(CUSTOMER_ID) LIKE UPPER(:param) OR UPPER(CUSTOMER_NAME) LIKE UPPER(:param) OR UPPER(MOBILE_NUMBER) LIKE UPPER(:param) OR UPPER(LOCATION_ID) LIKE UPPER(:param) ");
@@ -558,9 +524,7 @@ public class CustomerController {
 				query.setMaxResults(40);
 				rtn.put("globalList", query.list());
 				session.clear();
-				tx.commit();
 			} catch (Exception e) {
-				tx.rollback();
 				sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
 				exceptionAsString = sw.toString();
@@ -570,7 +534,7 @@ public class CustomerController {
 			} finally {
 				if (session != null && session.isOpen()) {
 					session.close();
-					session.getSessionFactory().close();
+					
 				}
 			}
 		}
