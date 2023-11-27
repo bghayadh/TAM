@@ -44,14 +44,13 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Notify;
 
 @Controller
 public class AssetLifeCycleController {
 	
-	@Autowired
-	ALMSessions almsessions;
+	
 	
 	@Autowired
 	Notify notifications;
@@ -74,7 +73,7 @@ public class AssetLifeCycleController {
 			return "redirect:/";
 		}
 		
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
@@ -834,7 +833,7 @@ return rtn;
 
 	List<String> listrequest = new ArrayList<String>();
 
-	session = almsessions.getSession();
+	session = AlmDbSession.getInstance().getSession();
 	tx = session.beginTransaction();
 	String requestName = "%" + request.getParameter("node") + "%";
 	Query q = session.createSQLQuery("select distinct NODE_NAME, NODE_ID, NODE_TYPE, NODE_MODEL  from NODE_ACTIVE where NODE_ID like :param1");
@@ -865,7 +864,7 @@ return rtn;
 
 	List<String> listrequest = new ArrayList<String>();
 
-	session = almsessions.getSession();
+	session = AlmDbSession.getInstance().getSession();
 	tx = session.beginTransaction();
 	String requestName = "%" + request.getParameter("nodeName") + "%";
 	Query q = session.createSQLQuery("select distinct NODE_NAME, NODE_ID, NODE_TYPE, NODE_MODEL  from NODE_ACTIVE where NODE_ID like :param1");
@@ -896,7 +895,7 @@ return rtn;
 
 	List<String> listrequest = new ArrayList<String>();
 
-	session = almsessions.getSession();
+	session = AlmDbSession.getInstance().getSession();
 	tx = session.beginTransaction();
 	String requestName = "%" + request.getParameter("cell") + "%";
 	Query q = session.createSQLQuery("SELECT CELL_ID, CELL_NAME FROM (SELECT GCELL_ID AS CELL_ID, CELLNAME AS CELL_NAME FROM NODE_GCELL  UNION (SELECT LCELL_ID AS CELL_ID, CELLNAME AS CELL_NAME FROM NODE_LCELL) UNION (SELECT UCELL_ID AS CELL_ID, CELLNAME AS CELL_NAME FROM NODE_UCELL)) WHERE CELL_ID like :param1");
@@ -927,7 +926,7 @@ return rtn;
 
 	List<String> listrequest = new ArrayList<String>();
 
-	session = almsessions.getSession();
+	session = AlmDbSession.getInstance().getSession();
 	tx = session.beginTransaction();
 	String requestName = "%" + request.getParameter("cellName") + "%";
 	Query q = session.createSQLQuery("SELECT CELL_ID, CELL_NAME FROM (SELECT GCELL_ID AS CELL_ID, CELLNAME AS CELL_NAME FROM NODE_GCELL  UNION (SELECT LCELL_ID AS CELL_ID, CELLNAME AS CELL_NAME FROM NODE_LCELL) UNION (SELECT UCELL_ID AS CELL_ID, CELLNAME AS CELL_NAME FROM NODE_UCELL)) WHERE CELL_ID like :param1");
@@ -961,7 +960,7 @@ return rtn;
 	String VType = request.getParameter("voucherType");
 	System.out.println("the Vtype is "+ VType);
 	
-	session = almsessions.getSession();
+	session = AlmDbSession.getInstance().getSession();
 	tx = session.beginTransaction();
 	Query q, q1;
 	
@@ -1078,7 +1077,7 @@ return rtn;
 			return rtn;
 		}*/
 		
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 		
@@ -1700,7 +1699,7 @@ return rtn;
  
 		List<Object> params = new ArrayList<Object>();
 		
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		tx = session.beginTransaction();
 		
 		/* if (!itemCode.isEmpty()){
@@ -1967,7 +1966,7 @@ return rtn;
 
 		AssetLifeCycle_Balance assetLifeWareItemBalance = new AssetLifeCycle_Balance();
 		
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		tx = session.beginTransaction();
 		
 		 System.out.println("******The initialized assetLifeWareItemBalance is " + mapper.writeValueAsString(assetLifeWareItemBalance));
@@ -2011,7 +2010,7 @@ return rtn;
 		AssetLifeCycle_Balance assetLifeSuppItemBalance = new AssetLifeCycle_Balance();
 		System.out.println("******The initialized assetLifeSuppItemBalance is " + mapper.writeValueAsString(assetLifeSuppItemBalance));
 		
-		session =almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		tx = session.beginTransaction();
 
 		List<AssetLifeCycle_Balance> assetLifeSuppItemsBalance = new ArrayList<AssetLifeCycle_Balance>();
@@ -2070,7 +2069,7 @@ return rtn;
 		AssetLifeCycle_Balance assetLifeWareSuppItemBalance = new AssetLifeCycle_Balance();
 		System.out.println("******The initialized assetLifeWareSuppItemBalance is " + assetLifeWareSuppItemBalance);
 		
-		session =almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		tx = session.beginTransaction();
 
 		List<AssetLifeCycle_Balance> assetLifeWareSuppItemsBalance = new ArrayList<AssetLifeCycle_Balance>();
@@ -2118,7 +2117,7 @@ return rtn;
 		List<AssetLifeCycle_Balance> assetLifeVouchersItemBalance = new ArrayList<AssetLifeCycle_Balance>();
 		List<Object> params = new ArrayList<Object>();
 		
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		tx = session.beginTransaction();
 		
 		System.out.println("########### The voucherType and voucher# are checked");
@@ -3499,7 +3498,7 @@ return rtn;
 				   
 				   Object[] listItemWare;
 
-					session = almsessions.getSession();
+					session = AlmDbSession.getInstance().getSession();
 					tx = session.beginTransaction();
 					Query q = session.createQuery("Select distinct itemCode, warehouse from AssetLifeCycle where creationDate >= :param1 and creationDate <= :param2");
 					q.setParameter("param1", StartDate);
