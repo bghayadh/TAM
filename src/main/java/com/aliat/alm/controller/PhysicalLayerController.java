@@ -1869,7 +1869,7 @@ public class PhysicalLayerController {
 			String selectedManIdContext = request.getParameter("selectedManIdContext");
 			try {
 				Object[] ManholeDetails = (Object[]) session.createNativeQuery(
-						"SELECT DISTINCT MANHOLE_ID,MANHOLE_NAME,LONGITUDE,LATITUDE,MANHOLE_MODEL,CITY,DM_NAME,TO_CHAR(CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(LAST_MODIFIED_DATE, 'MM/dd/YYYY HH:MI AM') FROM MANHOLE WHERE MANHOLE_ID='"
+						"SELECT DISTINCT MANHOLE_ID,MANHOLE_NAME,LONGITUDE,LATITUDE,MANHOLE_MODEL,CITY,DM_NAME,TO_CHAR(CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(LAST_MODIFIED_DATE, 'MM/dd/YYYY HH:MI AM'),OWNER FROM MANHOLE WHERE MANHOLE_ID='"
 								+ selectedManIdContext + "' ")
 						.uniqueResult();
 				rtn.put("ManholeDetails", ManholeDetails);
@@ -3909,12 +3909,12 @@ public class PhysicalLayerController {
 						city = request.getParameter("ManholeCity").replace("'", "");
 
 						query = session.createNativeQuery(
-								"INSERT INTO MANHOLE(MANHOLE_ID, MANHOLE_NAME, MANHOLE_MODEL, LONGITUDE, LATITUDE, CITY, PROJECT_ID, DM_NAME,CREATION_DATE,LAST_MODIFIED_DATE) VALUES ('"
+								"INSERT INTO MANHOLE(MANHOLE_ID, MANHOLE_NAME, MANHOLE_MODEL, LONGITUDE, LATITUDE, CITY, PROJECT_ID, DM_NAME,CREATION_DATE,LAST_MODIFIED_DATE,OWNER) VALUES ('"
 										+ manholeId + "','" + manholeName + "','" + request.getParameter("ManholeModel")
 										+ "','" + request.getParameter("ManholeLong") + "','"
 										+ request.getParameter("ManholeLat") + "','" + city + "','"
 										+ request.getParameter("ProjectId") + "','" + null + "',TIMESTAMP '"
-										+ manholeCreationDate + "',TIMESTAMP '" + lastModifiedDate + "')");
+										+ manholeCreationDate + "',TIMESTAMP '" + lastModifiedDate+"','"+request.getParameter("manholeowner")+ "')");
 						query.executeUpdate();
 						rtn.put("ManholeId", manholeId);
 						rtn.put("ManholeName", manholeName);
@@ -3949,7 +3949,8 @@ public class PhysicalLayerController {
 								+ "',MANHOLE_MODEL= '" + request.getParameter("ManholeModel") + "',LONGITUDE= '"
 								+ request.getParameter("ManholeLong") + "',LATITUDE= '"
 								+ request.getParameter("ManholeLat") + "',CITY= '" + city + "',PROJECT_ID='"
-								+ request.getParameter("ProjectId") + "',LAST_MODIFIED_DATE= TIMESTAMP '"
+								+ request.getParameter("ProjectId") + "',OWNER ='"
+										+ request.getParameter("manholeowner") + "',LAST_MODIFIED_DATE= TIMESTAMP '"
 								+ lastModifiedDate + "' where MANHOLE_ID='" + request.getParameter("ManholeId") + "'");
 						query.executeUpdate();
 						rtn.put("ManholeId", request.getParameter("ManholeId"));
