@@ -468,7 +468,7 @@ max-width: 100%;
   <div class="panel panel-default" style="margin-bottom:3px;" >
     <div class="panel-heading" role="tab" id="headingOne">
       <h4 class="panel-title">
-       <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+       <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="margin-top:-8px;">
           Grid Table
         </a>
       </h4>
@@ -841,7 +841,7 @@ max-width: 100%;
   <div class="panel panel-default" style="margin-bottom:3px;" >
   <div class="panel-heading " role="tab" id="headingTwo" >
       <h4 class="panel-title">
-        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="#collapseTwo">
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="#collapseTwo" style="margin-top:-8px;">
          GIS
         </a>
       </h4>
@@ -1360,7 +1360,16 @@ $(document).ready(function() {
   	        this.initFlag++;
   	       },
          });
-    
+
+	//collapse active class	
+	$('.panel-collapse').on('show.bs.collapse',function() {
+		$(this).siblings('.panel-heading').removeClass('active');
+	});
+
+	$('.panel-collapse').on('hide.bs.collapse',function() {
+		$(this).siblings('.panel-heading').addClass('active');
+	});
+	  
     $('#showOnMap'). click(function(){  
 		 distinctSites =[];
 		 markerClusterFarSites.clearMarkers();
