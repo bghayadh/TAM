@@ -1,5 +1,5 @@
 <%@ include file="NetworkCommon.jsp" %>
-
+<title>Network Cell</title>
 <script>	
 $('#filterr').hide();
 $('#removeFilter').hide();

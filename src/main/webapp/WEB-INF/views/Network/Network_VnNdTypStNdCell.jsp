@@ -1,5 +1,5 @@
 <%@ include file="NetworkCommon.jsp" %>
-
+<title>Vendor Node Type Site Node Cell</title>
 <script>	
 $('#filterr').hide();
 $('#removeFilter').hide();

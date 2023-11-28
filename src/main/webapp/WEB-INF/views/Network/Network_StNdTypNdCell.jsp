@@ -1,4 +1,5 @@
 <%@ include file="NetworkCommon.jsp" %>
+<title>Site Node Type Node Cell</title>
 
 <script>	
 $('#filterr').hide();
