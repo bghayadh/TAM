@@ -2233,7 +2233,7 @@ public class PurchaseController {
 	// Getting the related information for the PO, this method will be used in the
 	// OVERVIEW tab in the Purchase Order Form View
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/GetPoData", method = RequestMethod.GET)
+	@RequestMapping(value = "/GetPODATA", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> GetPODATA(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) {
