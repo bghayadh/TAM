@@ -61,6 +61,15 @@
 </head>
 <style>
 
+.fixed-header{
+	opacity: 1;
+	filter: alpha(opacity=100);
+	background: #ebf2ef;
+	position: sticky;
+	top: 0;
+	z-index: 15;
+}
+
 #showOnMap {
   color: orange;
   background-color: white;
@@ -500,7 +509,7 @@ max-width: 100%;
 								<div id= "tableGrid" class="table-responsive almgrid-table-div">
 									<table id="gridTable" class="table table-striped table-bordered almgrid-table">
 										<thead>
-											<tr class="header">
+											<tr class="header fixed-header">
 												<th>
 												<li class="filter-dropdown dropdown">
 														<button disabled class="almgrid-filter" data-toggle="dropdown" style="display: none;">
