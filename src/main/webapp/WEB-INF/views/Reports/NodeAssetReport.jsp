@@ -1442,6 +1442,7 @@ $(document).ready(function() {
         document.getElementById('itemCode').value = '';
         document.getElementById('itemName').value = '';
         document.getElementById('itemModel').value = '';
+        document.getElementById('itemPartNo').value = '';
         $("#strtEndCoordinate").prop("checked", false); 
 		$("#circleRange").prop("checked", false);
 		$("#row_setStartEnd").hide();
