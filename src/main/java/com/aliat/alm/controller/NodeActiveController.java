@@ -86,7 +86,7 @@ public class NodeActiveController {
 				query = session.createNativeQuery(str);
 				listNodes = ((NativeQuery<NodeListView>) query).addScalar("nodePk").addScalar("nodePK")
 						.addScalar("nodeID").addScalar("nodeName").addScalar("nodeType").addScalar("nodeModel")
-						.addScalar("siteID").addScalar("createdDate").addScalar("updateDate").addScalar("wareName")
+						.addScalar("siteID").addScalar("wareName").addScalar("createdDate").addScalar("updateDate")
 						.setResultTransformer(Transformers.aliasToBean(NodeListView.class)).list();
 
 				model.addAttribute("ListGridTable", mapper.writeValueAsString(listNodes));
