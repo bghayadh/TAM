@@ -1501,7 +1501,7 @@ $(document).ready(function() {
 		  
 		$("#gridTable").remove();
 		$("#tableGrid").append('<table id="gridTable" class="table table-striped table-bordered almgrid-table">'
-				+'<thead><tr class="header"><th><li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown" disabled style="display:none;"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th><th>FAR ID<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> '
+				+'<thead><tr class="header fixed-header"><th><li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown" disabled style="display:none;"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th><th>FAR ID<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> '
 				+'<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
 					+'<th>Item Code<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
 					+'</ul></li></th><th>Item Name<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'

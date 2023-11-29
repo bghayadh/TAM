@@ -17,6 +17,13 @@ public class NodeAssetReport {
 	@Column(name = "FAR_ID", nullable = false)
 	private String farID;
 	
+	@Column(name = "NODE_ID")
+	private String nodeID;
+
+	@Column(name = "NODE_NAME")
+	private String nodeName;
+	
+	private String nodeType;
 
 	@Column(name = "ITEM_CODE", nullable = false)
 	private String itemCode;
@@ -39,14 +46,6 @@ public class NodeAssetReport {
 	@Column(name = "PO_ID")
 	private String poID;
 	
-	@Column(name = "NODE_ID")
-	private String nodeID;
-
-	@Column(name = "NODE_NAME")
-	private String nodeName;
-	
-	private String nodeType;
-
 	
 	@Column(name = "SITE_ID")
 	private String siteID;
@@ -74,12 +73,15 @@ public class NodeAssetReport {
 	}
 
 
-	public NodeAssetReport(String site,String farID, String itemCode, String itemName,String itemModel,String itemPartNo,
-			String lastModifiedDate, String itemSN, String itemNameRegister, String poID,String nodeID,String nodeName,String nodeType,String siteID, 
+	public NodeAssetReport(String site,String farID,String nodeID,String nodeName,String nodeType,String itemCode, String itemName,String itemModel,String itemPartNo,
+			String lastModifiedDate, String itemSN, String itemNameRegister, String poID,String siteID, 
 			String longitude, String latitude,String vendor,String siteName,BigDecimal initCost, BigDecimal netCost,BigDecimal accuDepr) {
 		super();
 		this.site=site;
 		this.farID = farID;
+		this.nodeID=nodeID;
+		this.nodeName = nodeName;
+		this.nodeType=nodeType;
 		this.itemCode = itemCode;
 		this.itemName = itemName;
 		this.itemModel=itemModel;
@@ -88,9 +90,6 @@ public class NodeAssetReport {
 		this.itemSN = itemSN;
 		this.itemNameRegister = itemNameRegister;
 		this.poID = poID;
-		this.nodeID=nodeID;
-		this.nodeName = nodeName;
-		this.nodeType=nodeType;
 		this.siteID = siteID;
 		this.siteName=siteName;
 		this.longitude = longitude;

@@ -1575,23 +1575,19 @@ var filterRowsPrevious = function (prevResult,prevPageNo,maxNoOfPages) {
                         return e != checkedValue;
 
                     });
-
-					
-                    if(checkboxArray[columnNumber].length === almgrid.availableArrayLength || almgrid.arrayLength === checkboxArray[columnNumber].length){
+                   /* if(checkboxArray[columnNumber].length === almgrid.availableArrayLength || almgrid.arrayLength === checkboxArray[columnNumber].length){
                         $("#" + currentForm).find('.selectall-filter-checkbox').prop('checked', true);
-                    }
+                    }*/
 				}
 					
-				else {
 					 var uncheckedRows = currentAppendedRows.filter(function(row) {
 				   		 return row.checked === false; // Checking for the 'checked' key to be false
 					});
 				
-				    var numberOfUnnheckedRows = (uncheckedRows.length)-1;
-					if(numberOfUnnheckedRows==0) {
+				    var numberOfUncheckedRows = (uncheckedRows.length)-1;
+					if(numberOfUncheckedRows==0) {
 						$("#" + currentForm).find('.selectall-filter-checkbox').prop('checked', true);
 					}
-				}
             }
                 
                
