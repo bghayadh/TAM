@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.aliat.alm.services.ItemParameters;
 import com.aliat.alm.services.LoginServices;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.common.Permissions;
@@ -58,9 +58,6 @@ public class NodeActiveController {
 	Form form;
 
 	@Autowired
-	ALMSessions almsessions;
-
-	@Autowired
 	Notify notification;
 
 	@SuppressWarnings({ "unchecked", "deprecation" })
@@ -73,7 +70,7 @@ public class NodeActiveController {
 			return "redirect:/";
 		}
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 
 			tx = session.beginTransaction();
@@ -82,8 +79,8 @@ public class NodeActiveController {
 			try {
 				List<NodeListView> listNodes = new ArrayList<NodeListView>();
 
-				str = "select n.NODE_PK as nodePk, n.NODE_PK as nodePK, n.NODE_ID as nodeID, n.NODE_NAME as nodeName, n.NODE_TYPE as nodeType, n.NODE_MODEL as nodeModel, n.SITE_ID as siteID, TO_CHAR(n.CREATION_DATE,'YYYY-MM-DD HH24:MI:SS') as createdDate,"
-						+ "TO_CHAR(n.UPDATE_DATE,'YYYY-MM-DD HH24:MI:SS') as updateDate," + "n.WARE_NAME as wareName "
+				str = "select n.NODE_PK as nodePk, n.NODE_PK as nodePK, nvl(n.NODE_ID,'null') as nodeID, nvl(n.NODE_NAME,'null') as nodeName, n.NODE_TYPE as nodeType, n.NODE_MODEL as nodeModel, nvl(n.SITE_ID, 'null') as siteID, nvl(n.WARE_NAME,'null') as wareName, "
+						+ "TO_CHAR(n.CREATION_DATE,'YYYY-MM-DD HH24:MI:SS') as createdDate, TO_CHAR(n.UPDATE_DATE,'YYYY-MM-DD HH24:MI:SS') as updateDate "
 						+ "from NODE_ACTIVE n" + " order by n.UPDATE_DATE DESC";
 
 				query = session.createNativeQuery(str);
@@ -103,7 +100,6 @@ public class NodeActiveController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -118,11 +114,11 @@ public class NodeActiveController {
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			return "redirect:/";
 		}
-		String NodePK, navAction="2",nodecount;
+		String NodePK, navAction="2";
 		int SelectedIndex;
 
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 
 			tx = session.beginTransaction();
@@ -338,7 +334,6 @@ public class NodeActiveController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -354,7 +349,7 @@ public class NodeActiveController {
 		Map<String, Object> rtn = new LinkedHashMap<>();
 		String nodePk = null;
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			notification.headerNotifications(session, model);
@@ -408,7 +403,6 @@ public class NodeActiveController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 			rtn.put("nodePK", nodePk);
@@ -425,7 +419,7 @@ public class NodeActiveController {
 	    Map<String, Object> rtn = new LinkedHashMap<>();
 
 	    String Node = "%" + request.getParameter("Node") + "%"; 
-	    session = almsessions.getSession();
+	    session = AlmDbSession.getInstance().getSession();
 	    if (session != null && session.isOpen()) {
 	        tx = session.beginTransaction();
 	        try {
@@ -435,11 +429,8 @@ public class NodeActiveController {
 	        query.setParameter("Node", Node); 
 	        	query.setFirstResult(0);
 				query.setMaxResults(40);
-				
-	        	List<Object[]> results = query.list();
-
 	        	
-	        	rtn.put("ListNode", results);
+	        	rtn.put("ListNode", query.list());
 	   } catch (Exception e) {
 	            sw = new StringWriter();
 	            e.printStackTrace(new PrintWriter(sw));
