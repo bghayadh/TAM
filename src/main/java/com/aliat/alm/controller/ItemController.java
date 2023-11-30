@@ -1045,6 +1045,8 @@ public class ItemController {
 						+ " WHERE LOWER(t1.itemName) LIKE LOWER(:paramTitle) OR t1.itemCode LIKE :paramTitle");
 
 				query.setParameter("paramTitle", itemCategory);
+				query.setFirstResult(0);
+				query.setMaxResults(40);
 				rtn.put("ListItemCategory", query.list());
 
 			} catch (Exception e) {
