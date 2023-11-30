@@ -1572,19 +1572,14 @@ groutstand.value=parseFloat(grtotword.value) - parseFloat(grpaidamnt.value);
 // Send input values from popup to boq table and close the popup using ESC 
 	document.addEventListener('keydown', function(event){
 	  if(event.key === "Escape"){
-	
-	
-  // Send input values from popup to BoQ table
-	    sendValPopupToBoq(rowindx);
-	    
-	
-         $("#grModal").modal("hide");
-         
-         getTotalAT_SumQty();
-	     amountsUpdate();
-	
-	}
-
+		if($("#grModal").hasClass("show")){
+			// Send input values from popup to boq table and close the popup using ESC 
+			sendValPopupToBoq(rowindx);
+			$("#grModal").modal("hide");
+			getTotalAT_SumQty();
+			amountsUpdate();
+		}
+	  }
  });// end close fct using esc
  
 // Prev fct in popup

@@ -543,7 +543,7 @@ public class PurchaseController {
 								+ " (select count(a.AR_ID) FROM ASSET_REGISTRY a "
 								+ " INNER JOIN PURCHASE_REQUEST b ON b.PRQ_ID=a.PRQ_ID "
 								+ " WHERE b.PRQ_ID =t.PRQ_ID AND a.ITEM_CODE = t.ITEM_CODE) as \"arQty\","
-								+ " (select count(a.CIP_ID) FROM CAPITAL_IN_PROGRESS a "
+								+ " (select a.TOTALQTY FROM CAPITAL_IN_PROGRESS a "
 								+ " INNER JOIN PURCHASE_REQUEST b ON b.PRQ_ID=a.PRQ_ID "
 								+ " WHERE b.PRQ_ID =t.PRQ_ID AND a.ITEM_CODE = t.ITEM_CODE) as \"cipQty\","
 								+ " (select count(a.FAR_ID) FROM FIXED_ASSET_REGISTRY a "
@@ -554,6 +554,7 @@ public class PurchaseController {
 //						,t.ITEM_CAT1 as \"prCat1\""
 //								+ ",t.ITEM_CAT2 as \"prCat2\",t.ITEM_CAT3 as \"prCat3\""
 //								+ ",t.ITEM_CAT4 as \"prCat4\",t.ITEM_SEQ as \"prSequ\""
+						System.out.println(str);
 						query = session.createNativeQuery(str);
 						query.setParameter("param1", pRqID);
 						List<PurchaseRequestBoq> listPRqBoq = ((NativeQuery<PurchaseRequestBoq>) query)
@@ -753,7 +754,7 @@ public class PurchaseController {
 								+ " (select count(a.AR_ID) FROM ASSET_REGISTRY a "
 								+ " INNER JOIN PURCHASE_ORDER_ITEM b ON b.PO_ID=a.PO_ID "
 								+ " WHERE b.PO_ID =t.PO_ID AND a.ITEM_CODE = t.ITEM_CODE) as arQty,"
-								+ " (select count(a.CIP_ID) FROM CAPITAL_IN_PROGRESS a "
+								+ " (select a.TOTALQTY FROM CAPITAL_IN_PROGRESS a "
 								+ " INNER JOIN PURCHASE_ORDER_ITEM b ON b.PO_ID=a.PO_ID "
 								+ " WHERE b.PO_ID =t.PO_ID AND a.ITEM_CODE = t.ITEM_CODE) as cipQty,"
 								+ " (select count(a.FAR_ID) FROM FIXED_ASSET_REGISTRY a "

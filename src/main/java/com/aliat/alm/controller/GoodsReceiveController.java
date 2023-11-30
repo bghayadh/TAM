@@ -442,7 +442,7 @@ public class GoodsReceiveController {
 							+ "(select count(a.AR_ID) FROM ASSET_REGISTRY a  "
 							+ "INNER JOIN GOODS_RECEIVED b ON b.GR_ID=a.GR_ID  "
 							+ "WHERE b.GR_ID =t.GR_ID AND a.ITEM_CODE = t.ITEM_CODE) as arQty,  "
-							+ "(select count(a.CIP_ID) FROM CAPITAL_IN_PROGRESS a  "
+							+ "(select a.TOTALQTY FROM CAPITAL_IN_PROGRESS a  "
 							+ "INNER JOIN GOODS_RECEIVED b ON b.GR_ID=a.GR_ID  "
 							+ "WHERE b.GR_ID =t.GR_ID AND a.ITEM_CODE = t.ITEM_CODE) as cipQty,  "
 							+ "(select count(a.FAR_ID) FROM FIXED_ASSET_REGISTRY a  "

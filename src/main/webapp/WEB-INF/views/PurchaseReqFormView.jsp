@@ -1870,6 +1870,7 @@ max-width: 100%;
 										    	 $('#cat2').val("");
 								            	 $('#cat').val("");
 								            	 $('#seq').val("");
+								            	 $("#barcode").val("");
 												 getSumQty_totalAT();
 										}
 		 
@@ -1891,6 +1892,7 @@ max-width: 100%;
 											    	 $('#cat2').val("");
 									            	 $('#cat').val("");
 									            	 $('#seq').val("");
+									            	 $("#barcode").val("");
 												     $('table#bisotab tr:last td:nth-child(2) input').focus();
 												     calcFooterDataOnChangeListener();
 													 getSumQty_totalAT();
