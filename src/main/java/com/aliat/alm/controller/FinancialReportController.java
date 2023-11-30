@@ -345,8 +345,8 @@ public class FinancialReportController {
 						totalStr = totalStr + " AND A.SUB_DOMAIN IN ( " + subDomain + " )";
 					}
 					if (!StringUtils.equalsIgnoreCase(type, "")) {
-						str = str + " AND A.TYPE IN ( " + type + " )";
-						totalStr = totalStr + " AND A.TYPE IN ( " + type + " )";
+						str = str + " AND A.SUB_DOMAIN_TYPE IN ( " + type + " )";
+						totalStr = totalStr + " AND A.SUB_DOMAIN_TYPE IN ( " + type + " )";
 					}
 
 					// Include the start/end long and lat in where condition in case of strt/end
