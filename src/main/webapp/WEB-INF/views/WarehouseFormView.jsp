@@ -2238,6 +2238,7 @@ if('${SelectedIndex}' != "addNew"){
 	           	 		    	return $('<li class="each">').data( "item.autocomplete", item )
 	           		    			.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
 	           	                 item[1] + '</span><br><span class="desc">' +
+	           	              	 item[2] + '</span><span class="desc"> , ' +
 	           	                 item[0] + '</span></div></li>').appendTo(ul);
 	           			};
 	           					$("#selectnav").focus(function(){
