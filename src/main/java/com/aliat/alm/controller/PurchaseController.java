@@ -638,6 +638,7 @@ public class PurchaseController {
 						pRqID = request.getParameter("ordPRQid");
 						if (pRqID != null) {
 							if (StringUtils.equalsAnyIgnoreCase(type, "addNewFromPRQ")) {
+								System.out.println("type is " +type);
 								pRq = (PurchaseRequest) session.get(PurchaseRequest.class, pRqID);
 								model.addAttribute("ordPRQid", pRqID);
 								model.addAttribute("supplier", pRq.getPrsupplierName());
@@ -665,6 +666,7 @@ public class PurchaseController {
 								model.addAttribute("docStatus", "addNewFromPRQ");
 								model.addAttribute("SelectedIndex", "addNewFromPRQ");
 								model.addAttribute("poCount", "addNewFromPRQ");
+								model.addAttribute("discrepancy", "addNewFromPRQ");								
 
 								// add data in table PurchasereqItem
 
@@ -675,10 +677,11 @@ public class PurchaseController {
 
 								query = session.createQuery(str);
 								query.setParameter("param1", pRqID);
+								
 								List<PurchaseOrderBoq> listPurchaseOrderBoq = (List<PurchaseOrderBoq>) query
 										.setResultTransformer(Transformers.aliasToBean(PurchaseOrderBoq.class)).list();
+								System.out.println("BoQ is " +mapper.writeValueAsString(listPurchaseOrderBoq));
 								model.addAttribute("ListPoItem", mapper.writeValueAsString(listPurchaseOrderBoq));
-
 							}
 						} else {
 
@@ -692,6 +695,7 @@ public class PurchaseController {
 							model.addAttribute("docStatus", "addNew");
 							model.addAttribute("SelectedIndex", "addNew");
 							model.addAttribute("poCount", "addNew");
+							model.addAttribute("discrepancy", "addNew");
 
 						}
 

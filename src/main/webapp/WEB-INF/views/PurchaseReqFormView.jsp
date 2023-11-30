@@ -3,7 +3,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <head>
 <meta charset="utf-8">
-    <title></title>
+    <title>PR Form View</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- <script src="${pageContext.request.contextPath}/resources/js/jquery.slim.min.js" ></script>  -->
 	<script src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>
@@ -434,7 +434,7 @@ max-width: 100%;
 			<a class="dropdown-item"  type="button" id="approvePRq">Approve</a>
 	             <a class="dropdown-item"  type="button" id="closePRq" >Close</a>
 	             <a class="dropdown-item" type="button" id="cancelPRq" >Cancel</a>
-    	          <a class="dropdown-item" id="Newpo" href="${pageContext.request.contextPath}/PurchaseOrderFormView?ordPRQid=${ID}&type=addNewFromPRQ">Create Purchase order</a>
+    	          <a class="dropdown-item" id="Newpo" href="${pageContext.request.contextPath}/PurchaseOrderFormView?ordPRQid=${ID}&type=addNewFromPRQ">Create Purchase Order</a>
     	          <a class="dropdown-item" id="Newgr" href="${pageContext.request.contextPath}/GoodsRcvFormView?grPRQid=${ID}&type=addNewFromPRQ">Create Goods Received </a>
     	        
     	        </div>
@@ -1417,7 +1417,9 @@ max-width: 100%;
 		else 
 			itemPartNumber = boqArray[i].prItemPartNumber;
 
-		  if(dotStatus == "1")
+		if (boqArray[i].prQty == boqArray[i].poQty || boqArray[i].prQty == boqArray[i].grQty || boqArray[i].prQty == boqArray[i].arQty || boqArray[i].prQty == boqArray[i].farQty) 
+
+//		  if(dotStatus == "1")
 		 {
 		   span = "<span class='dotStatus' name='dotStatus' value='"+dotStatus+"' style='background-color: chartreuse;'></span>";
 								  
