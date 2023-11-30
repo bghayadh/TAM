@@ -40,15 +40,15 @@ public class NetworkController {
 	private static Session session = null;
 
 	/**
-	 * Simply selects the home view to render by returning its name.	
-	 * 	
+	 * Simply selects the home view to render by returning its name.
+	 * 
 	 * @throws JsonProcessingException
 	 */
 
 	@Autowired
 	ALMSessions almsessions;
 
-	@Autowired  
+	@Autowired
 	Notify notifications;
 
 	private static String AppendQuery(String a, int[] arrayParam, String str) {
@@ -3504,34 +3504,37 @@ public class NetworkController {
 			////////////////////////////
 			strEmpty = "SELECT COUNT(g.GCELL_ID) FROM NODE_GCELL g, NODE_ACTIVE a  where g.node_pk = a.node_pk "
 					+ generateDateConditionBoq(date, "a");
-			strExist = "select count(ngc.gcell_id) from NODE_GCELL ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"
+			strExist = "select count(ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"
 					+ SiteId + "' " + generateDateConditionBoq(date, "na");
 			strEmpty = boqDomainVar("g", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
 			strExist = boqDomainVar("ngc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_GCELL_Query = SiteId == "" ? strEmpty : strExist;
-			Object CountNodes_G_CELL = session.createNativeQuery(NODE_GCELL_Query).uniqueResult();
+			String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Node_GCell_Query);
+			Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			/////////////////////////////
 			strEmpty = "SELECT COUNT(l.LCELL_ID) FROM NODE_LCELL l, NODE_ACTIVE a  where l.node_pk = a.node_pk "
 					+ generateDateConditionBoq(date, "a");
-			strExist = "select count(nlc.lcell_id) from NODE_LCELL nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
+			strExist = "select count(nlc.lcell_id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
 					+ SiteId + "' " + generateDateConditionBoq(date, "na");
 			strEmpty = boqDomainVar("l", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
 			strExist = boqDomainVar("nlc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_LCELL_Query = SiteId == "" ? strEmpty : strExist;
-			Object CountNodes_L_CELL = session.createNativeQuery(NODE_LCELL_Query).uniqueResult();
+			String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Node_LCell_Query);
+			Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			/////////////////////////////
 			strEmpty = "SELECT COUNT(u.UCELL_ID) FROM NODE_UCELL u, NODE_ACTIVE a  where u.node_pk = a.node_pk "
 					+ generateDateConditionBoq(date, "a");
-			strExist = "select count(nuc.ucell_id) from NODE_UCELL nuc , node_active na where na.node_pk = nuc.node_pk and na.Ware_Id = '"
+			strExist = "select count(nuc.ucell_id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.Ware_Id = '"
 					+ SiteId + "' " + generateDateConditionBoq(date, "na");
 			strEmpty = boqDomainVar("u", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
 			strExist = boqDomainVar("nuc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_UCELL_Query = SiteId == "" ? strEmpty : strExist;
-			Object CountNodes_U_CELL = session.createNativeQuery(NODE_UCELL_Query).uniqueResult();
+			String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Node_UCell_Query);
+			Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			/////////////////////////////
@@ -3576,9 +3579,9 @@ public class NetworkController {
 					BoqHM.put(object[0].toString(), object[1].toString());
 				}
 			}
-			BoqHM.put("2G", String.valueOf(CountNodes_G_CELL));
-			BoqHM.put("3G", String.valueOf(CountNodes_L_CELL));
-			BoqHM.put("4G", String.valueOf(CountNodes_U_CELL));
+			BoqHM.put("G-cells", String.valueOf(CountNodes_G_CELL));
+			BoqHM.put("L-cells", String.valueOf(CountNodes_L_CELL));
+			BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
 			return BoqHM;
 		} catch (Exception e) {
 			sw = new StringWriter();
@@ -3594,8 +3597,10 @@ public class NetworkController {
 				session.close();
 			}
 		}
+		// return BoqHM;
 	}
 
+	// Sites BOQ data retrieving
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/GetSiteNdtypeBoqList", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
@@ -3633,34 +3638,37 @@ public class NetworkController {
 			////////////////////////////
 			strEmpty = "SELECT COUNT(g.GCELL_ID) FROM NODE_GCELL g, NODE_ACTIVE a  where g.node_pk = a.node_pk and a.NODE_TYPE="
 					+ NodeTId + "' " + generateDateConditionBoq(date, "a");
-			strExist = "select count(ngc.gcell_id) from NODE_GCELL ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"
+			strExist = "select count(ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"
 					+ SiteId + "' and na.NODE_TYPE='" + NodeTId + "' " + generateDateConditionBoq(date, "na");
 			strEmpty = boqDomainVar("g", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
 			strExist = boqDomainVar("ngc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_GCELL_Query = SiteId == "" ? strEmpty : strExist;
-			Object CountNodes_G_CELL = session.createNativeQuery(NODE_GCELL_Query).uniqueResult();
+			String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Node_GCell_Query);
+			Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			/////////////////////////////
 			strEmpty = "SELECT COUNT(l.LCELL_ID) FROM NODE_LCELL l, NODE_ACTIVE a  where l.node_pk = a.node_pk and a.NODE_TYPE='"
 					+ NodeTId + "' " + generateDateConditionBoq(date, "a");
-			strExist = "select count(nlc.lcell_id) from NODE_LCELL nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
+			strExist = "select count(nlc.lcell_id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
 					+ SiteId + "' and na.NODE_TYPE='" + NodeTId + "' " + generateDateConditionBoq(date, "na");
 			strEmpty = boqDomainVar("l", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
 			strExist = boqDomainVar("nlc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_LCELL_Query = SiteId == "" ? strEmpty : strExist;
-			Object CountNodes_L_CELL = session.createNativeQuery(NODE_LCELL_Query).uniqueResult();
+			String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Node_LCell_Query);
+			Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			/////////////////////////////
 			strEmpty = "SELECT COUNT(u.UCELL_ID) FROM NODE_UCELL u, NODE_ACTIVE a  where u.node_pk = a.node_pk and a.NODE_TYPE='"
 					+ NodeTId + "' " + generateDateConditionBoq(date, "a");
-			strExist = "select count(nuc.ucell_id) from NODE_UCELL nuc , node_active na where na.node_pk = nuc.node_pk and na.Ware_Id = '"
+			strExist = "select count(nuc.ucell_id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.Ware_Id = '"
 					+ SiteId + "' and na.NODE_TYPE='" + NodeTId + "' " + generateDateConditionBoq(date, "na");
 			strEmpty = boqDomainVar("u", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
 			strExist = boqDomainVar("nuc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_UCELL_Query = SiteId == "" ? strEmpty : strExist;
-			Object CountNodes_U_CELL = session.createNativeQuery(NODE_UCELL_Query).uniqueResult();
+			String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Node_UCell_Query);
+			Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			/////////////////////////////
@@ -3699,9 +3707,9 @@ public class NetworkController {
 					BoqHM.put(object[0].toString(), object[1].toString());
 				}
 			}
-			BoqHM.put("2G", String.valueOf(CountNodes_G_CELL));
-			BoqHM.put("3G", String.valueOf(CountNodes_L_CELL));
-			BoqHM.put("4G", String.valueOf(CountNodes_U_CELL));
+			BoqHM.put("G-cells", String.valueOf(CountNodes_G_CELL));
+			BoqHM.put("L-cells", String.valueOf(CountNodes_L_CELL));
+			BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
 			return BoqHM;
 		} catch (Exception e) {
 			sw = new StringWriter();
@@ -3760,33 +3768,36 @@ public class NetworkController {
 			strEmpty = "SELECT COUNT(DISTINCT g.GCELL_ID) FROM NODE_GCELL g, NODE_ACTIVE a  where g.node_pk = a.node_pk "
 					+ generateDateConditionBoq(date, "a");
 			strEmpty = boqDomainVar("g", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "select count(DISTINCT ngc.gcell_id) from NODE_GCELL ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"
+			strExist = "select count(DISTINCT ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"
 					+ SiteId + "' and na.vendor='" + VenId + "' " + generateDateConditionBoq(date, "na");
 			strExist = boqDomainVar("ngc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_GCELL_Query = SiteId == "" ? strEmpty : strExist;
-			Object CountNodes_G_CELL = session.createNativeQuery(NODE_GCELL_Query).uniqueResult();
+			String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Node_GCell_Query);
+			Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			/////////////////////////////
 			strEmpty = "SELECT COUNT(DISTINCT l.LCELL_ID) FROM NODE_LCELL l, NODE_ACTIVE a  where l.node_pk = a.node_pk "
 					+ generateDateConditionBoq(date, "a");
 			strEmpty = boqDomainVar("l", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "select count(DISTINCT nlc.lcell_id) from NODE_LCELL nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
+			strExist = "select count(DISTINCT nlc.lcell_id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
 					+ SiteId + "' and na.vendor='" + VenId + "' " + generateDateConditionBoq(date, "na");
 			strExist = boqDomainVar("nlc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_LCELL_Query = SiteId == "" ? strEmpty : strExist;
-			Object CountNodes_L_CELL = session.createNativeQuery(NODE_LCELL_Query).uniqueResult();
+			String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Node_LCell_Query);
+			Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			/////////////////////////////
 			strEmpty = "SELECT COUNT(DISTINCT u.UCELL_ID) FROM NODE_UCELL u, NODE_ACTIVE a  where u.node_pk = a.node_pk "
 					+ generateDateConditionBoq(date, "a");
 			strEmpty = boqDomainVar("u", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "select count(DISTINCT nuc.ucell_id) from NODE_UCELL nuc , node_active na where na.node_pk = nuc.node_pk and na.Ware_Id = '"
+			strExist = "select count(DISTINCT nuc.ucell_id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.Ware_Id = '"
 					+ SiteId + "' and na.vendor='" + VenId + "' " + generateDateConditionBoq(date, "na");
 			strExist = boqDomainVar("nuc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_UCELL_Query = SiteId == "" ? strEmpty : strExist;
-			Object CountNodes_U_CELL = session.createNativeQuery(NODE_UCELL_Query).uniqueResult();
+			String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Node_UCell_Query);
+			Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			/////////////////////////////
@@ -3831,9 +3842,9 @@ public class NetworkController {
 					BoqHM.put(object[0].toString(), object[1].toString());
 				}
 			}
-			BoqHM.put("2G", String.valueOf(CountNodes_G_CELL));
-			BoqHM.put("3G", String.valueOf(CountNodes_L_CELL));
-			BoqHM.put("4G", String.valueOf(CountNodes_U_CELL));
+			BoqHM.put("G-cells", String.valueOf(CountNodes_G_CELL));
+			BoqHM.put("L-cells", String.valueOf(CountNodes_L_CELL));
+			BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
 			return BoqHM;
 		} catch (Exception e) {
 			sw = new StringWriter();
@@ -3893,36 +3904,39 @@ public class NetworkController {
 					+ generateDateConditionBoq(date, "a");
 			strEmpty = boqDomainVar("g", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
 			strEmpty = boqDomain(paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "select count(DISTINCT ngc.gcell_id) from NODE_GCELL ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"
+			strExist = "select count(DISTINCT ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"
 					+ SiteId + "' and na.vendor='" + VenId + "' and na.NODE_TYPE='" + SelectedNodeType + "' "
 					+ generateDateConditionBoq(date, "na");
 			strExist = boqDomainVar("ngc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_GCELL_Query = SiteId == "" ? strEmpty : strExist;
-			Object CountNodes_G_CELL = session.createNativeQuery(NODE_GCELL_Query).uniqueResult();
+			String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Node_GCell_Query);
+			Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			/////////////////////////////
 			strEmpty = "SELECT COUNT(DISTINCT l.LCELL_ID) FROM NODE_LCELL l, NODE_ACTIVE a  where l.node_pk = a.node_pk "
 					+ generateDateConditionBoq(date, "a");
 			strEmpty = boqDomainVar("g", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "select count(DISTINCT nlc.lcell_id) from NODE_LCELL nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
+			strExist = "select count(DISTINCT nlc.lcell_id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
 					+ SiteId + "' and na.vendor='" + VenId + "' and na.NODE_TYPE='" + SelectedNodeType + "' "
 					+ generateDateConditionBoq(date, "na");
 			strExist = boqDomainVar("nlc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_LCELL_Query = SiteId == "" ? strEmpty : strExist;
-			Object CountNodes_L_CELL = session.createNativeQuery(NODE_LCELL_Query).uniqueResult();
+			String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Node_LCell_Query);
+			Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			/////////////////////////////
 			strEmpty = "SELECT COUNT(DISTINCT u.UCELL_ID) FROM NODE_UCELL u, NODE_ACTIVE a  where u.node_pk = a.node_pk "
 					+ generateDateConditionBoq(date, "a");
 			strEmpty = boqDomainVar("g", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "select count(DISTINCT nuc.ucell_id) from NODE_UCELL nuc , node_active na where na.node_pk = nuc.node_pk and na.Ware_Id = '"
+			strExist = "select count(DISTINCT nuc.ucell_id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.Ware_Id = '"
 					+ SiteId + "' and na.vendor='" + VenId + "' and na.NODE_TYPE='" + SelectedNodeType + "' "
 					+ generateDateConditionBoq(date, "na");
 			strExist = boqDomainVar("nuc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_UCELL_Query = SiteId == "" ? strEmpty : strExist;
-			Object CountNodes_U_CELL = session.createNativeQuery(NODE_UCELL_Query).uniqueResult();
+			String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Node_UCell_Query);
+			Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			/////////////////////////////
@@ -3969,9 +3983,9 @@ public class NetworkController {
 					BoqHM.put(object[0].toString(), object[1].toString());
 				}
 			}
-			BoqHM.put("2G", String.valueOf(CountNodes_G_CELL));
-			BoqHM.put("3G", String.valueOf(CountNodes_L_CELL));
-			BoqHM.put("4G", String.valueOf(CountNodes_U_CELL));
+			BoqHM.put("G-cells", String.valueOf(CountNodes_G_CELL));
+			BoqHM.put("L-cells", String.valueOf(CountNodes_L_CELL));
+			BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
 			return BoqHM;
 		} catch (Exception e) {
 			sw = new StringWriter();
@@ -4028,36 +4042,39 @@ public class NetworkController {
 			strEmpty = "";
 			strExist = "";
 			////////////////////////////
-			strEmpty = "select count(distinct ngc.gcell_id) from NODE_GCELL ngc , node_active na where na.node_pk = ngc.node_pk "
+			strEmpty = "select count(distinct ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk "
 					+ generateDateConditionBoq(date, "na");
-			strExist = "select count(distinct ngc.gcell_id) from NODE_GCELL ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"
+			strExist = "select count(distinct ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"
 					+ SiteId + "' and na.SUPPLIER_ID = '" + SuppId + "' " + generateDateConditionBoq(date, "na");
 			strEmpty = boqDomainVar("ngc", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
 			strExist = boqDomainVar("ngc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_GCELL_Query = SiteId == "" ? strEmpty : strExist;
-			Object CountNodes_G_CELL = session.createNativeQuery(NODE_GCELL_Query).uniqueResult();
+			String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Node_GCell_Query);
+			Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			/////////////////////////////
-			strEmpty = "select count(distinct nlc.lcell_id) from NODE_LCELL nlc , node_active na where na.node_pk = nlc.node_pk "
+			strEmpty = "select count(distinct nlc.lcell_id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk "
 					+ generateDateConditionBoq(date, "na");
-			strExist = "select count(distinct nlc.lcell_id) from NODE_LCELL nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
+			strExist = "select count(distinct nlc.lcell_id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
 					+ SiteId + "' and na.SUPPLIER_ID = '" + SuppId + "' " + generateDateConditionBoq(date, "na");
 			strEmpty = boqDomainVar("nlc", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
 			strExist = boqDomainVar("nlc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_LCELL_Query = SiteId == "" ? strEmpty : strExist;
-			Object CountNodes_L_CELL = session.createNativeQuery(NODE_LCELL_Query).uniqueResult();
+			String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Node_LCell_Query);
+			Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			/////////////////////////////
-			strEmpty = "select count(distinct nuc.ucell_id) from NODE_UCELL nuc , node_active na where na.node_pk = nuc.node_pk "
+			strEmpty = "select count(distinct nuc.ucell_id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk "
 					+ generateDateConditionBoq(date, "na");
-			strExist = "select count(distinct nuc.ucell_id) from NODE_UCELL nuc , node_active na where na.node_pk = nuc.node_pk and na.Ware_Id = '"
+			strExist = "select count(distinct nuc.ucell_id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.Ware_Id = '"
 					+ SiteId + "' and na.SUPPLIER_ID = '" + SuppId + "' " + generateDateConditionBoq(date, "na");
 			strEmpty = boqDomainVar("nuc", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
 			strExist = boqDomainVar("nuc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_UCELL_Query = SiteId == "" ? strEmpty : strExist;
-			Object CountNodes_U_CELL = session.createNativeQuery(NODE_UCELL_Query).uniqueResult();
+			String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Node_UCell_Query);
+			Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			/////////////////////////////
@@ -4102,9 +4119,9 @@ public class NetworkController {
 					BoqHM.put(object[0].toString(), object[1].toString());
 				}
 			}
-			BoqHM.put("2G", String.valueOf(CountNodes_G_CELL));
-			BoqHM.put("3G", String.valueOf(CountNodes_L_CELL));
-			BoqHM.put("4G", String.valueOf(CountNodes_U_CELL));
+			BoqHM.put("G-cells", String.valueOf(CountNodes_G_CELL));
+			BoqHM.put("L-cells", String.valueOf(CountNodes_L_CELL));
+			BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
 			return BoqHM;
 		} catch (Exception e) {
 			sw = new StringWriter();
@@ -4160,11 +4177,12 @@ public class NetworkController {
 				strEmpty = strEmpty + "WHERE ";
 			}
 			strEmpty = boqDomain(paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "select count(DISTINCT ngc.gcell_id) from NODE_GCELL ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"
+			strExist = "select count(DISTINCT ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"
 					+ SiteId + "' and na.SUPPLIER_ID='" + SuppId + "' AND na.NODE_TYPE='" + SelectedNodeType + "' ";
 			strExist = boqDomainVar("ngc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_GCELL_Query = SiteId == "" ? strEmpty : strExist;
-			Object CountNodes_G_CELL = session.createNativeQuery(NODE_GCELL_Query).uniqueResult();
+			String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Node_GCell_Query);
+			Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			/////////////////////////////
@@ -4174,11 +4192,12 @@ public class NetworkController {
 				strEmpty = strEmpty + "WHERE ";
 			}
 			strEmpty = boqDomain(paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "select count(DISTINCT nlc.lcell_id) from NODE_LCELL nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
+			strExist = "select count(DISTINCT nlc.lcell_id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
 					+ SiteId + "' and na.SUPPLIER_ID='" + SuppId + "' AND na.NODE_TYPE='" + SelectedNodeType + "' ";
 			strExist = boqDomainVar("nlc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_LCELL_Query = SiteId == "" ? strEmpty : strExist;
-			Object CountNodes_L_CELL = session.createNativeQuery(NODE_LCELL_Query).uniqueResult();
+			String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Node_LCell_Query);
+			Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			/////////////////////////////
@@ -4188,11 +4207,12 @@ public class NetworkController {
 				strEmpty = strEmpty + "WHERE ";
 			}
 			strEmpty = boqDomain(paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "select count(DISTINCT nuc.ucell_id) from NODE_UCELL nuc , node_active na where na.node_pk = nuc.node_pk and na.Ware_Id = '"
+			strExist = "select count(DISTINCT nuc.ucell_id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.Ware_Id = '"
 					+ SiteId + "' and na.SUPPLIER_ID='" + SuppId + "' AND na.NODE_TYPE='" + SelectedNodeType + "' ";
 			strExist = boqDomainVar("nuc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_UCELL_Query = SiteId == "" ? strEmpty : strExist;
-			Object CountNodes_U_CELL = session.createNativeQuery(NODE_UCELL_Query).uniqueResult();
+			String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Node_UCell_Query);
+			Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			/////////////////////////////
@@ -4230,9 +4250,9 @@ public class NetworkController {
 					BoqHM.put(object[0].toString(), object[1].toString());
 				}
 			}
-			BoqHM.put("2G", String.valueOf(CountNodes_G_CELL));
-			BoqHM.put("3G", String.valueOf(CountNodes_L_CELL));
-			BoqHM.put("4G", String.valueOf(CountNodes_U_CELL));
+			BoqHM.put("G-cells", String.valueOf(CountNodes_G_CELL));
+			BoqHM.put("L-cells", String.valueOf(CountNodes_L_CELL));
+			BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
 			return BoqHM;
 		} catch (Exception e) {
 			sw = new StringWriter();
@@ -4304,33 +4324,36 @@ public class NetworkController {
 			strEmpty = "SELECT COUNT(DISTINCT g.GCELL_ID) FROM NODE_GCELL g, NODE_ACTIVE a  where g.node_pk = a.node_pk "
 					+ generateDateCondition(date, "a");
 			strEmpty = boqDomainVar("g", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "select count(DISTINCT ngc.gcell_id) from NODE_GCELL ngc , node_active na where na.node_pk = ngc.node_pk and na.VENDOR = '"
+			strExist = "select count(DISTINCT ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.VENDOR = '"
 					+ VenId + "' " + generateDateCondition(date, "na");
 			strExist = boqDomainVar("ngc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_GCELL_Query = VenId == "" ? strEmpty : strExist;
-			Object CountNodes_G_CELL = session.createNativeQuery(NODE_GCELL_Query).uniqueResult();
+			String Node_GCell_Query = VenId == "" ? strEmpty : strExist;
+			// System.out.println(Node_GCell_Query);
+			Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			/////////////////////////////
 			strEmpty = "SELECT COUNT(DISTINCT l.LCELL_ID) FROM NODE_LCELL l, NODE_ACTIVE a  where l.node_pk = a.node_pk "
 					+ generateDateCondition(date, "a");
 			strEmpty = boqDomainVar("l", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "select count(DISTINCT nlc.lcell_id) from NODE_LCELL nlc , node_active na where na.node_pk = nlc.node_pk and na.VENDOR = '"
+			strExist = "select count(DISTINCT nlc.lcell_id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.VENDOR = '"
 					+ VenId + "' " + generateDateCondition(date, "na");
 			strExist = boqDomainVar("nlc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_LCELL_Query = VenId == "" ? strEmpty : strExist;
-			Object CountNodes_L_CELL = session.createNativeQuery(NODE_LCELL_Query).uniqueResult();
+			String Node_LCell_Query = VenId == "" ? strEmpty : strExist;
+			// System.out.println(Node_LCell_Query);
+			Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			/////////////////////////////
 			strEmpty = "SELECT COUNT(DISTINCT u.UCELL_ID) FROM NODE_UCELL u, NODE_ACTIVE a  where u.node_pk = a.node_pk "
 					+ generateDateCondition(date, "a");
 			strEmpty = boqDomainVar("u", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "select count(DISTINCT nuc.ucell_id) from NODE_UCELL nuc , node_active na where na.node_pk = nuc.node_pk and na.VENDOR = '"
+			strExist = "select count(DISTINCT nuc.ucell_id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.VENDOR = '"
 					+ VenId + "' " + generateDateCondition(date, "na");
 			strExist = boqDomainVar("nuc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_UCELL_Query = VenId == "" ? strEmpty : strExist;
-			Object CountNodes_U_CELL = session.createNativeQuery(NODE_UCELL_Query).uniqueResult();
+			String Node_UCell_Query = VenId == "" ? strEmpty : strExist;
+			// System.out.println(Node_UCell_Query);
+			Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			/////////////////////////////
@@ -4376,9 +4399,9 @@ public class NetworkController {
 					BoqHM.put(object[0].toString(), object[1].toString());
 				}
 			}
-			BoqHM.put("2G", String.valueOf(CountNodes_G_CELL));
-			BoqHM.put("3G", String.valueOf(CountNodes_L_CELL));
-			BoqHM.put("4G", String.valueOf(CountNodes_U_CELL));
+			BoqHM.put("G-cells", String.valueOf(CountNodes_G_CELL));
+			BoqHM.put("L-cells", String.valueOf(CountNodes_L_CELL));
+			BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
 			return BoqHM;
 		} catch (Exception e) {
 			sw = new StringWriter();
@@ -4451,33 +4474,36 @@ public class NetworkController {
 			strEmpty = "SELECT COUNT(DISTINCT g.GCELL_ID) FROM NODE_GCELL g, NODE_ACTIVE a  where g.node_pk = a.node_pk "
 					+ generateDateCondition(date, "a");
 			strEmpty = boqDomainVar("a", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "select count(DISTINCT ngc.gcell_id) from NODE_GCELL ngc , node_active na where na.node_pk = ngc.node_pk and na.VENDOR = '"
+			strExist = "select count(DISTINCT ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.VENDOR = '"
 					+ VenId + "' and ware_id='" + siteId + "' " + generateDateCondition(date, "na");
 			strExist = boqDomainVar("ngc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_GCELL_Query = VenId == "" ? strEmpty : strExist;
-			Object CountNodes_G_CELL = session.createNativeQuery(NODE_GCELL_Query).uniqueResult();
+			String Node_GCell_Query = VenId == "" ? strEmpty : strExist;
+			// System.out.println(Node_GCell_Query);
+			Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			/////////////////////////////
 			strEmpty = "SELECT COUNT(DISTINCT l.LCELL_ID) FROM NODE_LCELL l, NODE_ACTIVE a  where l.node_pk = a.node_pk "
 					+ generateDateCondition(date, "a");
 			strEmpty = boqDomainVar("a", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "select count(DISTINCT nlc.lcell_id) from NODE_LCELL nlc , node_active na where na.node_pk = nlc.node_pk and na.VENDOR = '"
+			strExist = "select count(DISTINCT nlc.lcell_id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.VENDOR = '"
 					+ VenId + "' and ware_id='" + siteId + "' " + generateDateCondition(date, "na");
 			strExist = boqDomainVar("nlc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_LCELL_Query = VenId == "" ? strEmpty : strExist;
-			Object CountNodes_L_CELL = session.createNativeQuery(NODE_LCELL_Query).uniqueResult();
+			String Node_LCell_Query = VenId == "" ? strEmpty : strExist;
+			// System.out.println(Node_LCell_Query);
+			Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			/////////////////////////////
 			strEmpty = "SELECT COUNT(DISTINCT u.UCELL_ID) FROM NODE_UCELL u, NODE_ACTIVE a  where u.node_pk = a.node_pk "
 					+ generateDateCondition(date, "a");
 			strEmpty = boqDomainVar("a", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "select count(DISTINCT nuc.ucell_id) from NODE_UCELL nuc , node_active na where na.node_pk = nuc.node_pk and na.VENDOR = '"
+			strExist = "select count(DISTINCT nuc.ucell_id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.VENDOR = '"
 					+ VenId + "' and ware_id='" + siteId + "' " + generateDateCondition(date, "na");
 			strExist = boqDomainVar("nuc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_UCELL_Query = VenId == "" ? strEmpty : strExist;
-			Object CountNodes_U_CELL = session.createNativeQuery(NODE_UCELL_Query).uniqueResult();
+			String Node_UCell_Query = VenId == "" ? strEmpty : strExist;
+			// System.out.println(Node_UCell_Query);
+			Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			/////////////////////////////
@@ -4523,9 +4549,9 @@ public class NetworkController {
 					BoqHM.put(object[0].toString(), object[1].toString());
 				}
 			}
-			BoqHM.put("2G", String.valueOf(CountNodes_G_CELL));
-			BoqHM.put("3G", String.valueOf(CountNodes_L_CELL));
-			BoqHM.put("4G", String.valueOf(CountNodes_U_CELL));
+			BoqHM.put("G-cells", String.valueOf(CountNodes_G_CELL));
+			BoqHM.put("L-cells", String.valueOf(CountNodes_L_CELL));
+			BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
 			return BoqHM;
 		} catch (Exception e) {
 			sw = new StringWriter();
@@ -4599,33 +4625,36 @@ public class NetworkController {
 			strEmpty = "SELECT COUNT(g.GCELL_ID) FROM NODE_GCELL g, NODE_ACTIVE a  where g.node_pk = a.node_pk "
 					+ generateDateConditionBoq(date, "a");
 			strEmpty = boqDomainVar("g", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "select count(DISTINCT ngc.gcell_id) from NODE_GCELL ngc , node_active na where na.node_pk = ngc.node_pk and na.SUPPLIER_ID = '"
+			strExist = "select count(DISTINCT ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.SUPPLIER_ID = '"
 					+ SupId + "' and na.ware_id='" + siteId + "' " + generateDateConditionBoq(date, "na");
 			strExist = boqDomainVar("ngc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_GCELL_Query = SupId == "" ? strEmpty : strExist;
-			Object CountNodes_G_CELL = session.createNativeQuery(NODE_GCELL_Query).uniqueResult();
+			String Node_GCell_Query = SupId == "" ? strEmpty : strExist;
+			// System.out.println(Node_GCell_Query);
+			Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			/////////////////////////////
 			strEmpty = "SELECT COUNT(l.LCELL_ID) FROM NODE_LCELL l, NODE_ACTIVE a  where l.node_pk = a.node_pk "
 					+ generateDateConditionBoq(date, "a");
 			strEmpty = boqDomainVar("l", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "select count(DISTINCT nlc.lcell_id) from NODE_LCELL nlc , node_active na where na.node_pk = nlc.node_pk and na.SUPPLIER_ID = '"
+			strExist = "select count(DISTINCT nlc.lcell_id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.SUPPLIER_ID = '"
 					+ SupId + "' and na.ware_id='" + siteId + "' " + generateDateConditionBoq(date, "na");
 			strExist = boqDomainVar("nlc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_LCELL_Query = SupId == "" ? strEmpty : strExist;
-			Object CountNodes_L_CELL = session.createNativeQuery(NODE_LCELL_Query).uniqueResult();
+			String Node_LCell_Query = SupId == "" ? strEmpty : strExist;
+			// System.out.println(Node_LCell_Query);
+			Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			/////////////////////////////
 			strEmpty = "SELECT COUNT(u.UCELL_ID) FROM NODE_UCELL l, NODE_ACTIVE a  where l.node_pk = a.node_pk "
 					+ generateDateConditionBoq(date, "a");
 			strEmpty = boqDomainVar("l", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "select count(DISTINCT nuc.ucell_id) from NODE_UCELL nuc , node_active na where na.node_pk = nuc.node_pk and na.SUPPLIER_ID = '"
+			strExist = "select count(DISTINCT nuc.ucell_id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.SUPPLIER_ID = '"
 					+ SupId + "' and na.ware_id='" + siteId + "' " + generateDateConditionBoq(date, "na");
 			strExist = boqDomainVar("nuc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_UCELL_Query = SupId == "" ? strEmpty : strExist;
-			Object CountNodes_U_CELL = session.createNativeQuery(NODE_UCELL_Query).uniqueResult();
+			String Node_UCell_Query = SupId == "" ? strEmpty : strExist;
+			// System.out.println(Node_UCell_Query);
+			Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			/////////////////////////////
@@ -4671,9 +4700,9 @@ public class NetworkController {
 					BoqHM.put(object[0].toString(), object[1].toString());
 				}
 			}
-			BoqHM.put("2G", String.valueOf(CountNodes_G_CELL));
-			BoqHM.put("3G", String.valueOf(CountNodes_L_CELL));
-			BoqHM.put("4G", String.valueOf(CountNodes_U_CELL));
+			BoqHM.put("G-cells", String.valueOf(CountNodes_G_CELL));
+			BoqHM.put("L-cells", String.valueOf(CountNodes_L_CELL));
+			BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
 			return BoqHM;
 		} catch (Exception e) {
 			sw = new StringWriter();
@@ -4741,33 +4770,36 @@ public class NetworkController {
 			strEmpty = "SELECT COUNT(DISTINCT g.GCELL_ID) FROM NODE_GCELL g, NODE_ACTIVE a WHERE g.NODE_PK=a.NODE_PK "
 					+ generateDateConditionBoq(date, "a");
 			strEmpty = boqDomainVar("g", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "select count(DISTINCT ngc.gcell_id) from NODE_GCELL ngc , node_active na where na.node_pk = ngc.node_pk and na.Supplier_Id = '"
+			strExist = "select count(DISTINCT ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Supplier_Id = '"
 					+ SuppId + "' " + generateDateConditionBoq(date, "na");
 			strExist = boqDomainVar("ngc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_GCELL_Query = SuppId == "" ? strEmpty : strExist;
-			Object CountNodes_G_CELL = session.createNativeQuery(NODE_GCELL_Query).uniqueResult();
+			String Node_GCell_Query = SuppId == "" ? strEmpty : strExist;
+			// System.out.println(Node_GCell_Query);
+			Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			/////////////////////////////
 			strEmpty = "SELECT COUNT(DISTINCT l.LCELL_ID) FROM NODE_LCELL l, NODE_ACTIVE a WHERE l.NODE_PK=a.NODE_PK "
 					+ generateDateConditionBoq(date, "a");
 			strEmpty = boqDomainVar("l", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "select count(DISTINCT nlc.lcell_id) from NODE_LCELL nlc , node_active na where na.node_pk = nlc.node_pk and na.Supplier_Id = '"
+			strExist = "select count(DISTINCT nlc.lcell_id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Supplier_Id = '"
 					+ SuppId + "' " + generateDateConditionBoq(date, "na");
 			strExist = boqDomainVar("nlc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_LCELL_Query = SuppId == "" ? strEmpty : strExist;
-			Object CountNodes_L_CELL = session.createNativeQuery(NODE_LCELL_Query).uniqueResult();
+			String Node_LCell_Query = SuppId == "" ? strEmpty : strExist;
+			// System.out.println(Node_LCell_Query);
+			Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			/////////////////////////////
 			strEmpty = "SELECT COUNT(DISTINCT u.UCELL_ID) FROM NODE_UCELL u, NODE_ACTIVE a WHERE u.NODE_PK=a.NODE_PK "
 					+ generateDateConditionBoq(date, "a");
 			strEmpty = boqDomainVar("u", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "select count(DISTINCT nuc.ucell_id) from NODE_UCELL nuc , node_active na where na.node_pk = nuc.node_pk and na.Supplier_Id = '"
+			strExist = "select count(DISTINCT nuc.ucell_id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.Supplier_Id = '"
 					+ SuppId + "' " + generateDateConditionBoq(date, "na");
 			strExist = boqDomainVar("nuc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_UCELL_Query = SuppId == "" ? strEmpty : strExist;
-			Object CountNodes_U_CELL = session.createNativeQuery(NODE_UCELL_Query).uniqueResult();
+			String Node_UCell_Query = SuppId == "" ? strEmpty : strExist;
+			// System.out.println(Node_UCell_Query);
+			Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			/////////////////////////////
@@ -4813,9 +4845,9 @@ public class NetworkController {
 					BoqHM.put(object[0].toString(), object[1].toString());
 				}
 			}
-			BoqHM.put("2G", String.valueOf(CountNodes_G_CELL));
-			BoqHM.put("3G", String.valueOf(CountNodes_L_CELL));
-			BoqHM.put("4G", String.valueOf(CountNodes_U_CELL));
+			BoqHM.put("G-cells", String.valueOf(CountNodes_G_CELL));
+			BoqHM.put("L-cells", String.valueOf(CountNodes_L_CELL));
+			BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
 			return BoqHM;
 		} catch (Exception e) {
 			sw = new StringWriter();
@@ -4887,33 +4919,36 @@ public class NetworkController {
 			strEmpty = "SELECT COUNT(DISTINCT ngc.GCELL_ID) FROM NODE_GCELL ngc , node_active na where na.node_pk = ngc.node_pk and na.NODE_TYPE='"
 					+ NodeTId + "' " + generateDateConditionBoq(date, "na");
 			strEmpty = boqDomainVar("ngc", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "select count(DISTINCT ngc.gcell_id) from NODE_GCELL ngc , node_active na where na.node_pk = ngc.node_pk and na.VENDOR = '"
+			strExist = "select count(DISTINCT ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.VENDOR = '"
 					+ VenId + "' and na.NODE_TYPE='" + NodeTId + "' " + generateDateConditionBoq(date, "na");
 			strExist = boqDomainVar("ngc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_GCELL_Query = VenId == "" ? strEmpty : strExist;
-			Object CountNodes_G_CELL = session.createNativeQuery(NODE_GCELL_Query).uniqueResult();
+			String Node_GCell_Query = VenId == "" ? strEmpty : strExist;
+			// System.out.println(Node_GCell_Query);
+			Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			/////////////////////////////
 			strEmpty = "SELECT COUNT(DISTINCT nlc.LCELL_ID) FROM NODE_LCELL nlc , node_active na where na.node_pk = nlc.node_pk and na.NODE_TYPE='"
 					+ NodeTId + "' " + generateDateConditionBoq(date, "na");
 			strEmpty = boqDomainVar("nlc", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "select count(DISTINCT nlc.lcell_id) from NODE_LCELL nlc , node_active na where na.node_pk = nlc.node_pk and na.VENDOR = '"
+			strExist = "select count(DISTINCT nlc.lcell_id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.VENDOR = '"
 					+ VenId + "' and na.NODE_TYPE='" + NodeTId + "' " + generateDateConditionBoq(date, "na");
 			strExist = boqDomainVar("nlc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_LCELL_Query = VenId == "" ? strEmpty : strExist;
-			Object CountNodes_L_CELL = session.createNativeQuery(NODE_LCELL_Query).uniqueResult();
+			String Node_LCell_Query = VenId == "" ? strEmpty : strExist;
+			// System.out.println(Node_LCell_Query);
+			Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			/////////////////////////////
 			strEmpty = "SELECT COUNT(DISTINCT nuc.UCELL_ID) FROM NODE_UCELL nuc , node_active na where na.node_pk = nuc.node_pk and na.NODE_TYPE='"
 					+ NodeTId + "'" + generateDateConditionBoq(date, "na");
 			strEmpty = boqDomainVar("nuc", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "select count(DISTINCT nuc.ucell_id) from NODE_UCELL nuc , node_active na where na.node_pk = nuc.node_pk and na.VENDOR = '"
+			strExist = "select count(DISTINCT nuc.ucell_id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.VENDOR = '"
 					+ VenId + "' and na.NODE_TYPE='" + NodeTId + "' " + generateDateConditionBoq(date, "na");
 			strExist = boqDomainVar("nuc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_UCELL_Query = VenId == "" ? strEmpty : strExist;
-			Object CountNodes_U_CELL = session.createNativeQuery(NODE_UCELL_Query).uniqueResult();
+			String Node_UCell_Query = VenId == "" ? strEmpty : strExist;
+			// System.out.println(Node_UCell_Query);
+			Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			/////////////////////////////
@@ -4953,9 +4988,9 @@ public class NetworkController {
 					BoqHM.put(object[0].toString(), object[1].toString());
 				}
 			}
-			BoqHM.put("2G", String.valueOf(CountNodes_G_CELL));
-			BoqHM.put("3G", String.valueOf(CountNodes_L_CELL));
-			BoqHM.put("4G", String.valueOf(CountNodes_U_CELL));
+			BoqHM.put("G-cells", String.valueOf(CountNodes_G_CELL));
+			BoqHM.put("L-cells", String.valueOf(CountNodes_L_CELL));
+			BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
 			return BoqHM;
 		} catch (Exception e) {
 			sw = new StringWriter();
@@ -5027,33 +5062,36 @@ public class NetworkController {
 			strEmpty = "SELECT COUNT(DISTINCT ngc.GCELL_ID) FROM NODE_GCELL ngc , node_active na where na.node_pk = ngc.node_pk and na.NODE_TYPE='"
 					+ NodeTId + "' " + generateDateConditionBoq(date, "na");
 			strEmpty = boqDomainVar("ngc", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "select count(DISTINCT ngc.gcell_id) from NODE_GCELL ngc , node_active na where na.node_pk = ngc.node_pk and na.Supplier_Id = '"
+			strExist = "select count(DISTINCT ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Supplier_Id = '"
 					+ SuppId + "' and na.NODE_TYPE='" + NodeTId + "' " + generateDateConditionBoq(date, "na");
 			strExist = boqDomainVar("ngc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_GCELL_Query = SuppId == "" ? strEmpty : strExist;
-			Object CountNodes_G_CELL = session.createNativeQuery(NODE_GCELL_Query).uniqueResult();
+			String Node_GCell_Query = SuppId == "" ? strEmpty : strExist;
+			// System.out.println(Node_GCell_Query);
+			Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			/////////////////////////////
 			strEmpty = "SELECT COUNT(DISTINCT nlc.LCELL_ID) FROM NODE_LCELL nlc , node_active na where na.node_pk = nlc.node_pk and na.NODE_TYPE='"
 					+ NodeTId + "' " + generateDateConditionBoq(date, "na");
 			strEmpty = boqDomainVar("nlc", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "select count(DISTINCT nlc.lcell_id) from NODE_LCELL nlc , node_active na where na.node_pk = nlc.node_pk and na.Supplier_Id = '"
+			strExist = "select count(DISTINCT nlc.lcell_id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Supplier_Id = '"
 					+ SuppId + "' and na.NODE_TYPE='" + NodeTId + "' " + generateDateConditionBoq(date, "na");
 			strExist = boqDomainVar("nlc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_LCELL_Query = SuppId == "" ? strEmpty : strExist;
-			Object CountNodes_L_CELL = session.createNativeQuery(NODE_LCELL_Query).uniqueResult();
+			String Node_LCell_Query = SuppId == "" ? strEmpty : strExist;
+			// System.out.println(Node_LCell_Query);
+			Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			/////////////////////////////
 			strEmpty = "SELECT COUNT(DISTINCT nuc.UCELL_ID) FROM NODE_UCELL nuc , node_active na where na.node_pk = nuc.node_pk and na.NODE_TYPE='"
 					+ NodeTId + "'" + generateDateConditionBoq(date, "na");
 			strEmpty = boqDomainVar("nuc", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "select count(DISTINCT nuc.ucell_id) from NODE_UCELL nuc , node_active na where na.node_pk = nuc.node_pk and na.Supplier_Id = '"
+			strExist = "select count(DISTINCT nuc.ucell_id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.Supplier_Id = '"
 					+ SuppId + "' and na.NODE_TYPE='" + NodeTId + "' " + generateDateConditionBoq(date, "na");
 			strExist = boqDomainVar("nuc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_UCELL_Query = SuppId == "" ? strEmpty : strExist;
-			Object CountNodes_U_CELL = session.createNativeQuery(NODE_UCELL_Query).uniqueResult();
+			String Node_UCell_Query = SuppId == "" ? strEmpty : strExist;
+			// System.out.println(Node_UCell_Query);
+			Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			/////////////////////////////
@@ -5093,9 +5131,9 @@ public class NetworkController {
 					BoqHM.put(object[0].toString(), object[1].toString());
 				}
 			}
-			BoqHM.put("2G", String.valueOf(CountNodes_G_CELL));
-			BoqHM.put("3G", String.valueOf(CountNodes_L_CELL));
-			BoqHM.put("4G", String.valueOf(CountNodes_U_CELL));
+			BoqHM.put("G-cells", String.valueOf(CountNodes_G_CELL));
+			BoqHM.put("L-cells", String.valueOf(CountNodes_L_CELL));
+			BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
 			return BoqHM;
 		} catch (Exception e) {
 			sw = new StringWriter();
@@ -5221,23 +5259,26 @@ public class NetworkController {
 
 			if (WareId.equals("null") || WareId == null || WareId.equals("0") || WareId.equals("")) {
 				// System.out.println("IF WARE ID NULL");
-				String NODE_GCELL_Query = "select count(ngc.gcell_id) from NODE_GCELL ngc , node_active na where na.node_pk = ngc.node_pk and na.NODE_PK = '"
+				String Node_GCell_Query = "select count(ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.NODE_PK = '"
 						+ NodeId + "' and (na.Ware_Id is null or na.Ware_Id='0') " + generateDateCondition(date, "na");
-				NODE_GCELL_Query = boqDomainVar("ngc", paramEnterprise, paramTransmission, paramRAN, paramCore,
-						NODE_GCELL_Query);
-				Object CountNodes_G_CELL = session.createNativeQuery(NODE_GCELL_Query).uniqueResult();
+				Node_GCell_Query = boqDomainVar("ngc", paramEnterprise, paramTransmission, paramRAN, paramCore,
+						Node_GCell_Query);
+				// System.out.println(Node_GCell_Query);
+				Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
 				///////////////////////////
-				String NODE_LCELL_Query = "select count(nlc.LCell_Id) from NODE_LCELL nlc , node_active na where na.node_pk = nlc.node_pk and (na.Ware_Id is null or na.Ware_Id='0') "
+				String Node_LCell_Query = "select count(nlc.LCell_Id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and (na.Ware_Id is null or na.Ware_Id='0') "
 						+ " and na.NODE_PK = '" + NodeId + "' " + generateDateCondition(date, "na");
-				NODE_LCELL_Query = boqDomainVar("nlc", paramEnterprise, paramTransmission, paramRAN, paramCore,
-						NODE_LCELL_Query);
-				Object CountNodes_L_CELL = session.createNativeQuery(NODE_LCELL_Query).uniqueResult();
+				Node_LCell_Query = boqDomainVar("nlc", paramEnterprise, paramTransmission, paramRAN, paramCore,
+						Node_LCell_Query);
+				// System.out.println(Node_LCell_Query);
+				Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
 				///////////////////////////
-				String NODE_UCELL_Query = "select count(nuc.UCell_Id) from NODE_UCELL nuc , node_active na where na.node_pk = nuc.node_pk and (na.Ware_Id is null or na.Ware_Id='0') "
+				String Node_UCell_Query = "select count(nuc.UCell_Id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and (na.Ware_Id is null or na.Ware_Id='0') "
 						+ " and na.NODE_PK = '" + NodeId + "' " + generateDateCondition(date, "na");
-				NODE_UCELL_Query = boqDomainVar("nuc", paramEnterprise, paramTransmission, paramRAN, paramCore,
-						NODE_UCELL_Query);
-				Object CountNodes_U_CELL = session.createNativeQuery(NODE_UCELL_Query).uniqueResult();
+				Node_UCell_Query = boqDomainVar("nuc", paramEnterprise, paramTransmission, paramRAN, paramCore,
+						Node_UCell_Query);
+				// System.out.println(Node_UCell_Query);
+				Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
 				///////////////////////////
 				String Node_Board_Query = "select count(nlc.BOARD_ID) from NODE_BOARD nlc , node_active na where na.node_pk = nlc.node_pk and (na.Ware_Id is null or na.Ware_Id='0') "
 						+ " and na.NODE_PK = '" + NodeId + "' " + generateDateCondition(date, "na");
@@ -5261,30 +5302,33 @@ public class NetworkController {
 
 				BoqHM.put("Site Name", String.valueOf(Sites));
 				BoqHM.put("Node Type", String.valueOf(CountNodes_NodeType));
-				BoqHM.put("2G", String.valueOf(CountNodes_G_CELL));
-				BoqHM.put("3G", String.valueOf(CountNodes_L_CELL));
-				BoqHM.put("4G", String.valueOf(CountNodes_U_CELL));
+				BoqHM.put("G-cells", String.valueOf(CountNodes_G_CELL));
+				BoqHM.put("L-cells", String.valueOf(CountNodes_L_CELL));
+				BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
 				BoqHM.put("Boards", String.valueOf(CountNodesBoard));
 				BoqHM.put("Cabinets", String.valueOf(CountNodesCabinet));
 
 			} else {
-				String NODE_GCELL_Query = "select count(ngc.gcell_id) from NODE_GCELL ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"
+				String Node_GCell_Query = "select count(ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"
 						+ WareId + "' and na.NODE_PK = '" + NodeId + "' " + generateDateCondition(date, "na");
-				NODE_GCELL_Query = boqDomainVar("ngc", paramEnterprise, paramTransmission, paramRAN, paramCore,
-						NODE_GCELL_Query);
-				Object CountNodes_G_CELL = session.createNativeQuery(NODE_GCELL_Query).uniqueResult();
+				Node_GCell_Query = boqDomainVar("ngc", paramEnterprise, paramTransmission, paramRAN, paramCore,
+						Node_GCell_Query);
+				// System.out.println(Node_GCell_Query);
+				Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
 				///////////////////////////
-				String NODE_LCELL_Query = "select count(nlc.LCell_Id) from NODE_LCELL nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
+				String Node_LCell_Query = "select count(nlc.LCell_Id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
 						+ WareId + "' and na.NODE_PK = '" + NodeId + "' " + generateDateCondition(date, "na");
-				NODE_LCELL_Query = boqDomainVar("nlc", paramEnterprise, paramTransmission, paramRAN, paramCore,
-						NODE_LCELL_Query);
-				Object CountNodes_L_CELL = session.createNativeQuery(NODE_LCELL_Query).uniqueResult();
+				Node_LCell_Query = boqDomainVar("nlc", paramEnterprise, paramTransmission, paramRAN, paramCore,
+						Node_LCell_Query);
+				// System.out.println(Node_LCell_Query);
+				Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
 				///////////////////////////
-				String NODE_UCELL_Query = "select count(nuc.UCell_Id) from NODE_UCELL nuc , node_active na where na.node_pk = nuc.node_pk and na.Ware_Id = '"
+				String Node_UCell_Query = "select count(nuc.UCell_Id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.Ware_Id = '"
 						+ WareId + "' and na.NODE_PK = '" + NodeId + "' " + generateDateCondition(date, "na");
-				NODE_UCELL_Query = boqDomainVar("nuc", paramEnterprise, paramTransmission, paramRAN, paramCore,
-						NODE_UCELL_Query);
-				Object CountNodes_U_CELL = session.createNativeQuery(NODE_UCELL_Query).uniqueResult();
+				Node_UCell_Query = boqDomainVar("nuc", paramEnterprise, paramTransmission, paramRAN, paramCore,
+						Node_UCell_Query);
+				// System.out.println(Node_UCell_Query);
+				Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
 				///////////////////////////
 				String Node_Board_Query = "select count(nlc.BOARD_ID) from NODE_BOARD nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
 						+ WareId + "' and na.NODE_PK = '" + NodeId + "' " + generateDateCondition(date, "na");
@@ -5308,9 +5352,9 @@ public class NetworkController {
 
 				BoqHM.put("Site Name", String.valueOf(Sites));
 				BoqHM.put("Node Type", String.valueOf(CountNodes_NodeType));
-				BoqHM.put("2G", String.valueOf(CountNodes_G_CELL));
-				BoqHM.put("3G", String.valueOf(CountNodes_L_CELL));
-				BoqHM.put("4G", String.valueOf(CountNodes_U_CELL));
+				BoqHM.put("G-cells", String.valueOf(CountNodes_G_CELL));
+				BoqHM.put("L-cells", String.valueOf(CountNodes_L_CELL));
+				BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
 				BoqHM.put("Boards", String.valueOf(CountNodesBoard));
 				BoqHM.put("Cabinets", String.valueOf(CountNodesCabinet));
 			}
@@ -5368,44 +5412,47 @@ public class NetworkController {
 			strEmpty = "";
 			strExist = "";
 			////////////////////////////
-			strEmpty = "select count(distinct ngc.gcell_id) from NODE_GCELL ngc , node_active na where na.node_pk = ngc.node_pk and na.NODE_TYPE = '"
+			strEmpty = "select count(distinct ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.NODE_TYPE = '"
 					+ NodeTId + "' " + generateDateConditionBoq(date, "na");
-			strExist = "select count(distinct ngc.gcell_id) from NODE_GCELL ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"
+			strExist = "select count(distinct ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"
 					+ SiteId + "' and na.NODE_TYPE = '" + NodeTId + "' " + generateDateConditionBoq(date, "na");
 			strEmpty = boqDomainVar("ngc", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
 			strExist = boqDomainVar("ngc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_GCELL_Query = SiteId == "" ? strEmpty : strExist;
-			Object CountNodes_G_CELL = session.createNativeQuery(NODE_GCELL_Query).uniqueResult();
+			String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Node_GCell_Query);
+			Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			////////////////////////////
-			strEmpty = "select count(distinct nlc.LCell_Id) from NODE_LCELL nlc , node_active na where na.node_pk = nlc.node_pk and na.NODE_TYPE = '"
+			strEmpty = "select count(distinct nlc.LCell_Id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.NODE_TYPE = '"
 					+ NodeTId + "' " + generateDateConditionBoq(date, "na");
-			strExist = "select count(distinct nlc.LCell_Id) from NODE_LCELL nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
+			strExist = "select count(distinct nlc.LCell_Id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
 					+ SiteId + "' and na.NODE_TYPE = '" + NodeTId + "' " + generateDateConditionBoq(date, "na");
 			strEmpty = boqDomainVar("nlc", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
 			strExist = boqDomainVar("nlc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_LCELL_Query = SiteId == "" ? strEmpty : strExist;
-			Object CountNodes_L_CELL = session.createNativeQuery(NODE_LCELL_Query).uniqueResult();
+			String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Node_LCell_Query);
+			Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			////////////////////////////
-			strEmpty = "select count(distinct nuc.UCell_Id) from NODE_UCELL nuc , node_active na where na.node_pk = nuc.node_pk and na.NODE_TYPE = '"
+			strEmpty = "select count(distinct nuc.UCell_Id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.NODE_TYPE = '"
 					+ NodeTId + "' " + generateDateConditionBoq(date, "na");
-			strExist = "select count(distinct nuc.UCell_Id) from NODE_UCELL nuc , node_active na where na.node_pk = nuc.node_pk and na.Ware_Id = '"
+			strExist = "select count(distinct nuc.UCell_Id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.Ware_Id = '"
 					+ SiteId + "' and na.NODE_TYPE = '" + NodeTId + "' " + generateDateConditionBoq(date, "na");
 			strEmpty = boqDomainVar("nuc", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
 			strExist = boqDomainVar("nuc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_UCELL_Query = SiteId == "" ? strEmpty : strExist;
-			Object CountNodes_U_CELL = session.createNativeQuery(NODE_UCELL_Query).uniqueResult();
+			String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Node_UCell_Query);
+			Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 
 			BoqHM.put(SiteId == "" ? "Sites" : "Site Name", String.valueOf(Sites));
 			BoqHM.put("Nodes", String.valueOf(CountNodes_Active));
-			BoqHM.put("2G", String.valueOf(CountNodes_G_CELL));
-			BoqHM.put("3G", String.valueOf(CountNodes_L_CELL));
-			BoqHM.put("4G", String.valueOf(CountNodes_U_CELL));
+			BoqHM.put("G-cells", String.valueOf(CountNodes_G_CELL));
+			BoqHM.put("L-cells", String.valueOf(CountNodes_L_CELL));
+			BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
 			return BoqHM;
 		} catch (Exception e) {
 			sw = new StringWriter();
@@ -5466,47 +5513,50 @@ public class NetworkController {
 			strEmpty = "";
 			strExist = "";
 			////////////////////////////
-			strEmpty = "select count(distinct ngc.gcell_id) from NODE_GCELL ngc , node_active na where na.node_pk = ngc.node_pk and na.NODE_TYPE = '"
+			strEmpty = "select count(distinct ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.NODE_TYPE = '"
 					+ NodeTId + "' AND na.VENDOR = '" + VendorId + "' " + generateDateCondition(date, "na");
 			strEmpty = boqDomainVar("ngc", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "select count(distinct ngc.gcell_id) from NODE_GCELL ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"
+			strExist = "select count(distinct ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"
 					+ SiteId + "' and na.NODE_TYPE = '" + NodeTId + "' AND na.VENDOR = '" + VendorId + "' "
 					+ generateDateCondition(date, "na");
 			strExist = boqDomainVar("ngc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_GCELL_Query = SiteId == "" ? strEmpty : strExist;
-			Object CountNodes_G_CELL = session.createNativeQuery(NODE_GCELL_Query).uniqueResult();
+			String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Node_GCell_Query);
+			Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			////////////////////////////
-			strEmpty = "select count(distinct nlc.LCell_Id) from NODE_LCELL nlc , node_active na where na.node_pk = nlc.node_pk and na.NODE_TYPE = '"
+			strEmpty = "select count(distinct nlc.LCell_Id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.NODE_TYPE = '"
 					+ NodeTId + "' AND na.VENDOR = '" + VendorId + "' " + generateDateCondition(date, "na");
 			strEmpty = boqDomainVar("nlc", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "select count(distinct nlc.LCell_Id) from NODE_LCELL nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
+			strExist = "select count(distinct nlc.LCell_Id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
 					+ SiteId + "' and na.NODE_TYPE = '" + NodeTId + "' AND na.VENDOR = '" + VendorId + "' "
 					+ generateDateCondition(date, "na");
 			strExist = boqDomainVar("nlc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_LCELL_Query = SiteId == "" ? strEmpty : strExist;
-			Object CountNodes_L_CELL = session.createNativeQuery(NODE_LCELL_Query).uniqueResult();
+			String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Node_LCell_Query);
+			Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			////////////////////////////
-			strEmpty = "select count(distinct nuc.UCell_Id) from NODE_UCELL nuc , node_active na where na.node_pk = nuc.node_pk and na.NODE_TYPE = '"
+			strEmpty = "select count(distinct nuc.UCell_Id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.NODE_TYPE = '"
 					+ NodeTId + "' AND na.VENDOR = '" + VendorId + "' " + generateDateCondition(date, "na");
 			strEmpty = boqDomainVar("nuc", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "select count(distinct nuc.UCell_Id) from NODE_UCELL nuc , node_active na where na.node_pk = nuc.node_pk and na.Ware_Id = '"
+			strExist = "select count(distinct nuc.UCell_Id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.Ware_Id = '"
 					+ SiteId + "' and na.NODE_TYPE = '" + NodeTId + "' AND na.VENDOR = '" + VendorId + "' "
 					+ generateDateCondition(date, "na");
 			strExist = boqDomainVar("nuc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_UCELL_Query = SiteId == "" ? strEmpty : strExist;
-			Object CountNodes_U_CELL = session.createNativeQuery(NODE_UCELL_Query).uniqueResult();
+			String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Node_UCell_Query);
+			Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 
 			BoqHM.put(SiteId == "" ? "Sites" : "Site Name", String.valueOf(Sites));
 			BoqHM.put("Nodes", String.valueOf(CountNodes_Active));
-			BoqHM.put("2G", String.valueOf(CountNodes_G_CELL));
-			BoqHM.put("3G", String.valueOf(CountNodes_L_CELL));
-			BoqHM.put("4G", String.valueOf(CountNodes_U_CELL));
+			BoqHM.put("G-cells", String.valueOf(CountNodes_G_CELL));
+			BoqHM.put("L-cells", String.valueOf(CountNodes_L_CELL));
+			BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
 			return BoqHM;
 		} catch (Exception e) {
 			sw = new StringWriter();
@@ -5567,47 +5617,50 @@ public class NetworkController {
 			strEmpty = "";
 			strExist = "";
 			////////////////////////////
-			strEmpty = "select count(distinct ngc.gcell_id) from NODE_GCELL ngc , node_active na where na.node_pk = ngc.node_pk and na.NODE_TYPE = '"
+			strEmpty = "select count(distinct ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.NODE_TYPE = '"
 					+ NodeTId + "' AND na.SUPPLIER_ID = '" + SuppId + "' " + generateDateConditionBoq(date, "na");
 			strEmpty = boqDomainVar("ngc", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "select count(distinct ngc.gcell_id) from NODE_GCELL ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"
+			strExist = "select count(distinct ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"
 					+ SiteId + "' and na.NODE_TYPE = '" + NodeTId + "' AND na.SUPPLIER_ID = '" + SuppId + "' "
 					+ generateDateConditionBoq(date, "na");
 			strExist = boqDomainVar("ngc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_GCELL_Query = SiteId == "" ? strEmpty : strExist;
-			Object CountNodes_G_CELL = session.createNativeQuery(NODE_GCELL_Query).uniqueResult();
+			String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Node_GCell_Query);
+			Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			////////////////////////////
-			strEmpty = "select count(distinct nlc.LCell_Id) from NODE_LCELL nlc , node_active na where na.node_pk = nlc.node_pk and na.NODE_TYPE = '"
+			strEmpty = "select count(distinct nlc.LCell_Id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.NODE_TYPE = '"
 					+ NodeTId + "' AND na.SUPPLIER_ID = '" + SuppId + "' " + generateDateConditionBoq(date, "na");
 			strEmpty = boqDomainVar("nlc", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "select count(distinct nlc.LCell_Id) from NODE_LCELL nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
+			strExist = "select count(distinct nlc.LCell_Id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
 					+ SiteId + "' and na.NODE_TYPE = '" + NodeTId + "' AND na.SUPPLIER_ID = '" + SuppId + "' "
 					+ generateDateConditionBoq(date, "na");
 			strExist = boqDomainVar("nlc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_LCELL_Query = SiteId == "" ? strEmpty : strExist;
-			Object CountNodes_L_CELL = session.createNativeQuery(NODE_LCELL_Query).uniqueResult();
+			String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Node_LCell_Query);
+			Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 			////////////////////////////
-			strEmpty = "select count(distinct nuc.UCell_Id) from NODE_UCELL nuc , node_active na where na.node_pk = nuc.node_pk and na.NODE_TYPE = '"
+			strEmpty = "select count(distinct nuc.UCell_Id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.NODE_TYPE = '"
 					+ NodeTId + "' AND na.SUPPLIER_ID = '" + SuppId + "' " + generateDateConditionBoq(date, "na");
 			strEmpty = boqDomainVar("nuc", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "select count(distinct nuc.UCell_Id) from NODE_UCELL nuc , node_active na where na.node_pk = nuc.node_pk and na.Ware_Id = '"
+			strExist = "select count(distinct nuc.UCell_Id) from node_ucell nuc , node_active na where na.node_pk = nuc.node_pk and na.Ware_Id = '"
 					+ SiteId + "' and na.NODE_TYPE = '" + NodeTId + "' AND na.SUPPLIER_ID = '" + SuppId + "' "
 					+ generateDateConditionBoq(date, "na");
 			strExist = boqDomainVar("nuc", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
-			String NODE_UCELL_Query = SiteId == "" ? strEmpty : strExist;
-			Object CountNodes_U_CELL = session.createNativeQuery(NODE_UCELL_Query).uniqueResult();
+			String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Node_UCell_Query);
+			Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 
 			BoqHM.put(SiteId == "" ? "Sites" : "Site Name", String.valueOf(Sites));
 			BoqHM.put("Nodes", String.valueOf(CountNodes_Active));
-			BoqHM.put("2G", String.valueOf(CountNodes_G_CELL));
-			BoqHM.put("3G", String.valueOf(CountNodes_L_CELL));
-			BoqHM.put("4G", String.valueOf(CountNodes_U_CELL));
+			BoqHM.put("G-cells", String.valueOf(CountNodes_G_CELL));
+			BoqHM.put("L-cells", String.valueOf(CountNodes_L_CELL));
+			BoqHM.put("U-cells", String.valueOf(CountNodes_U_CELL));
 			return BoqHM;
 		} catch (Exception e) {
 			sw = new StringWriter();
@@ -6760,6 +6813,7 @@ public class NetworkController {
 		dataBinder.setAutoGrowCollectionLimit(1024);
 	}
 
+	@SuppressWarnings("rawtypes")
 	@RequestMapping(value = "/GetAllParsingDate", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> GetAllParsingDate(Locale locale, Model model, HttpServletRequest request,
@@ -6774,14 +6828,12 @@ public class NetworkController {
 		if (session != null && session.isOpen()) {
 			try {
 				notifications.headerNotifications(session, model);
-				System.out.println("pd: " + request.getParameter("parsingDate"));
 				NativeQuery query = session.createNativeQuery(
 						"SELECT DISTINCT TO_CHAR(PARSING_DATE,'YYYY-MM-DD HH:MI:SS AM') FROM NODE_ACTIVE WHERE TO_CHAR(PARSING_DATE,'YYYY-MM-DD HH:MI:SS AM') like UPPER(:param1) ORDER BY TO_CHAR(PARSING_DATE,'YYYY-MM-DD HH:MI:SS AM') DESC");
-				query.setString("param1", "%" + request.getParameter("parsingDate") + "%");
+				query.setParameter("param1", "%" + request.getParameter("parsingDate") + "%");
 				query.setFirstResult(0);
 				query.setMaxResults(40);
 				rtn.put("datesList", query.list());
-				System.out.println("datesList: " + mapper.writeValueAsString(query.list()));
 			} catch (Exception e) {
 				sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
