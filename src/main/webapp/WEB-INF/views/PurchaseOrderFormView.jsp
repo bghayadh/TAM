@@ -705,7 +705,8 @@ max-width: 100%;
 						        <thead>
 						            <tr class="fixed-headerr">
 						               
-						                <th>Item</th>
+						                <th>Item Code</th>
+						                <th>Item Name</th>
 						                <th>Item Model</th>
 						                <th>Item Part Number</th>
 						                <th>Discrepancy Qty</th>
@@ -1406,7 +1407,8 @@ for (j = 0; j < boqArray.length; j++){
     var discrepancyRow="";
 
 discrepancyRow += "<tr>"
-    + "<td name='itemCode'><input type='text' name='itmCode' value='" + ItemCode +":"+ ItemName + "' style='width:300px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input' /></td>"
+    + "<td name='itemCode'><input type='text' name='itmCode' value='" + ItemCode + "' style='width:300px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input' /></td>"
+    + "<td name='itemName'><input type='text' name='itmName' value='" + ItemName + "' style='width:300px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input' /></td>"
 	 + "<td name='itemModel'><input name='itmModel' type='text' value='" + ItemModel + "' style='width:230px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input'/></td>"
 	 + "<td name='itemPartNo'><input name='itmPartNo' type='text' value='" + ItemPNum + "' style='width:230px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input' /></td>"		 			
 	 + "<td  name='poBarCode'><input type='text' style='width:230px;'  value='" + DiscQty +"' class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>"
