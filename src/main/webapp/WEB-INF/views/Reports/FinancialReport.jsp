@@ -71,7 +71,14 @@
 	z-index: 15;
 }
 				
-				
+#Domain,#subDomain,#Vendor {
+    z-index: 100; 
+}
+
+
+#Domain * ,#subDomain * ,#Vendor *{
+    z-index: 100;     
+}				
 #showOnMap {
   color: orange;
   background-color: white;
