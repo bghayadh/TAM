@@ -519,7 +519,7 @@ public class WarehouseController {
 
 					model.addAttribute("listNearWares", mapper.writeValueAsString(query.list()));
 					// get inventory info
-
+/*
 					str = "SELECT ar.Item_code, ar.Item_Name, ar.Item_Model, ar.Item_part_number, COUNT(*) AS quantity, "
 							+ "SUM(COALESCE(ar.Initial_Cost, " + "(SELECT AVG(Net_Rate) "
 							+ "FROM purchase_order_item poi " + "WHERE poi.Item_code = ar.Item_code)"
@@ -530,7 +530,33 @@ public class WarehouseController {
 							+ "WHERE poi.Item_code = ar.Item_code)))) AS Total_Net_Cost " + "FROM asset_registry ar "
 							+ "LEFT JOIN fixed_asset_registry far ON ar.Ar_ID = far.Ar_ID "
 							+ "WHERE ar.Ar_ID IN (SELECT Ar_ID FROM AR_SITE WHERE WARE_ID = :param1) "
-							+ "GROUP BY ar.Item_code, ar.Item_Name, ar.Item_Model, ar.Item_part_number";
+							+ "GROUP BY ar.Item_code, ar.Item_Name, ar.Item_Model, ar.Item_part_number"; 
+					
+					
+					str = "SELECT fmp.Item_code, i.Item_Name, fmp.Item_Model, fmp.Item_part_number, COUNT(*) AS quantity, "
+							+ "SUM(COALESCE(far.Initial_Cost, " + "(SELECT AVG(Net_Rate) "
+							+ "FROM purchase_order_item poi " + "WHERE poi.Item_code = fmp.Item_code)"
+							+ ")) AS Total_Initial_Cost, "
+							+ "SUM(COALESCE(far.ACCUMULDEPRECAMNT, 0)) AS Total_Depreciation, "
+							+ "SUM(COALESCE(far.NetCost, SELECT AVG(Net_Rate) "
+							+ "FROM purchase_order_item poi WHERE poi.Item_code = fmp.Item_code "
+							+ ")) AS Total_Net_Cost " 
+							+ "FROM fixed_asset_registry far, far_model_partnumber fmp, item i "
+							+ "WHERE far.FAR_ID IN (SELECT FAR_ID FROM FAR_SITE WHERE WARE_ID = :param1) "
+							+ "AND fmp.item_code = i.item_code "
+							+ "GROUP BY fmp.Item_code, i.Item_Name, fmp.Item_Model, fmp.Item_part_number"; */
+					
+					str = "SELECT fmp.Item_code, i.Item_Name, fmp.Item_Model, fmp.Item_part_number, COUNT(*) AS quantity, "
+							+ "SUM(COALESCE(far.InitialCost, (SELECT AVG(Net_Rate) "
+							+ "FROM purchase_order_item poi WHERE poi.Item_code = fmp.Item_code))) AS Total_Initial_Cost, "					
+							+ "SUM(COALESCE(far.ACCUMULDEPRECAMNT, 0)) AS Total_Depreciation, "
+							+ "SUM(COALESCE(far.NetCost, (SELECT AVG(Net_Rate) "
+							+ "FROM purchase_order_item poi WHERE poi.Item_code = fmp.Item_code))) AS Total_Net_Cost "
+							+ "FROM fixed_asset_registry far, far_model_partnumber fmp, item i "
+							+ "WHERE far.FAR_ID IN (SELECT FAR_ID FROM FAR_SITE WHERE WARE_ID = :param1) "
+							+ "AND fmp.item_code = i.item_code "
+							+ "AND far.far_id = fmp.far_id "
+							+ "GROUP BY fmp.Item_code, i.Item_Name, fmp.Item_Model, fmp.Item_part_number";					
 
 					query = session.createNativeQuery(str);
 					query.setParameter("param1", wareID);

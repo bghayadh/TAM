@@ -6880,10 +6880,9 @@ public class NetworkController {
 			strEmpty = "SELECT ROUND(SUM(a.INITIALCOST), 2) FROM FIXED_ASSET_REGISTRY a, NODE_ACTIVE c WHERE a.WARE_ID=c.WARE_ID "
 					+ generateDateConditionBoq(date, "c");
 			strEmpty = boqDomainVar("a", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "Select a.TOTAL_AMOUNT from PURCHASE_ORDER a, NODE_ACTIVE c where a.PO_ID='" + POID
-					+ "' AND a.WAREHOUSE=c.WARE_ID " + generateDateConditionBoq(date, "c");
+			strExist = "Select a.TOTAL_AMOUNT from PURCHASE_ORDER a where a.PO_ID='" + POID+"'";					
 			String PO_Amount_Query = POID == "" ? strEmpty : strExist;
-			// System.out.println(PO_Amount_Query);
+			//System.out.println(PO_Amount_Query);
 			Object PO_Amount = session.createNativeQuery(PO_Amount_Query).uniqueResult();
 			BoqHM.put(POID == "" ? "PO Cost" : "PO Amount", String.valueOf(PO_Amount));
 			strEmpty = "";
@@ -6892,8 +6891,7 @@ public class NetworkController {
 			strEmpty = "SELECT ROUND(SUM(a.NETCOST), 2) FROM FIXED_ASSET_REGISTRY a, NODE_ACTIVE c WHERE a.WARE_ID=c.WARE_ID "
 					+ generateDateConditionBoq(date, "c");
 			strEmpty = boqDomainVar("a", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "Select a.NET_TOTAL_AMOUNT from PURCHASE_ORDER a, NODE_ACTIVE c where a.PO_ID='" + POID
-					+ "' AND a.WAREHOUSE=c.WARE_ID " + generateDateConditionBoq(date, "c");
+			strExist = "Select a.NET_TOTAL_AMOUNT from PURCHASE_ORDER a where a.PO_ID='" + POID +"'";
 			String PO_NET_Amount_Query = POID == "" ? strEmpty : strExist;
 			// System.out.println(PO_NET_Amount_Query);
 			Object PO_NET_Amount = session.createNativeQuery(PO_NET_Amount_Query).uniqueResult();
@@ -6929,8 +6927,6 @@ public class NetworkController {
 
 			BoqHM.put("Sites", String.valueOf(SiteC));
 			BoqHM.put("Items", String.valueOf(ItemC));
-
-			return BoqHM;
 		} catch (Exception e) {
 			sw = new StringWriter();
 			e.printStackTrace(new PrintWriter(sw));
@@ -6945,6 +6941,7 @@ public class NetworkController {
 				session.close();
 			}
 		}
+		return BoqHM;
 	}
 
 	// PO BOQ data retrieving
