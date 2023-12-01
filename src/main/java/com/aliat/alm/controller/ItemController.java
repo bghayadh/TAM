@@ -61,7 +61,8 @@ public class ItemController {
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			return "redirect:/";
 		}
-
+		
+		System.out.println("Welcome to Item List View");
 		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
@@ -74,6 +75,7 @@ public class ItemController {
 				model.addAttribute("ListGridTable", mapper.writeValueAsString(query.list()));
 			} catch (Exception e) {
 				System.out.println("catch messsage is " + e.getMessage());
+				e.printStackTrace();
 			} finally {
 				if (session != null && session.isOpen()) {
 					tx.commit();
@@ -536,19 +538,20 @@ public class ItemController {
 
 	@RequestMapping(value = "/ItemDelete", method = RequestMethod.GET)
 	@ResponseBody
-	public String ItemDelete(Locale locale, Model model, HttpServletRequest request,
+	public Map<String, Object> ItemDelete(Locale locale, Model model, HttpServletRequest request,
 			@ModelAttribute ItemParameters itemParameters, HttpServletResponse response) {
-
-		String rtn = "Succeeded";
+		System.out.println("Welcome to ItemDelete");
+		Map<String, Object> rtn = new LinkedHashMap<>();		
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
-
-			return "redirect:/";
+			rtn.put("result", "redirect:/");
+			return rtn;
 		}
 		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
 				String[] idList = request.getParameterValues("itemCode[]");
+				System.out.println("idList is " +mapper.writeValueAsString(idList));
 				if (idList != null) {
 //					query = session.createQuery("delete ItemPartNumber where itemCode IN :param1");
 					query = session.createNativeQuery("delete ITEM_MODEL_PARTNUMBER where ITEM_CODE IN :param1");
@@ -564,11 +567,12 @@ public class ItemController {
 					query = session.createNativeQuery("delete ITEM where ITEM_CODE IN :param1");
 					query.setParameterList("param1", idList);
 					query.executeUpdate();
+					rtn.put("result", "Success");
 				}
 			} catch (Exception e) {
-				System.out.println("catch messsage is " + e.getMessage());
+				System.out.println("catch messsage is " + e.getCause());
 				e.printStackTrace();
-				rtn = "Failed";
+				rtn.put("result", "Failed");				
 			} finally {
 				if (session != null && session.isOpen()) {
 					tx.commit();

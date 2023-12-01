@@ -442,13 +442,15 @@
 							},
 							success: function (data) {
 								console.log("ListView deleted");
+								location.reload();
+								//location.replace("${pageContext.request.contextPath}/ItemListView");
 							},
 							error: function (error) {
 								console.log("The error is " + error);
 							}
 						});
-//						location.reload();
-						location.replace("${pageContext.request.contextPath}/ItemListView");
+						//location.reload();
+						//location.replace("${pageContext.request.contextPath}/ItemListView");
 
 					});
 
