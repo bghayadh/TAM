@@ -755,8 +755,8 @@ public class PurchaseController {
 								+ " INNER JOIN PURCHASE_ORDER_ITEM b ON b.PO_ID=a.PO_ID "
 								+ " WHERE b.PO_ID =t.PO_ID AND a.ITEM_CODE = t.ITEM_CODE) as arQty,"
 								+ " (select a.TOTALQTY FROM CAPITAL_IN_PROGRESS a "
-								+ " INNER JOIN PURCHASE_ORDER_ITEM b ON b.PO_ID=a.PO_ID "
-								+ " WHERE b.PO_ID =t.PO_ID AND a.ITEM_CODE = t.ITEM_CODE) as cipQty,"
+								//+ " INNER JOIN PURCHASE_ORDER_ITEM b ON b.PO_ID=a.PO_ID "
+								+ " WHERE a.PO_ID =t.PO_ID AND a.ITEM_CODE = t.ITEM_CODE) as cipQty,"
 								+ " (select count(a.FAR_ID) FROM FIXED_ASSET_REGISTRY a "
 								+ " INNER JOIN PURCHASE_ORDER_ITEM b ON b.PO_ID=a.PO_ID "
 								+ " WHERE b.PO_ID =t.PO_ID AND a.ITEM_CODE = t.ITEM_CODE) as farQty,"
@@ -792,8 +792,14 @@ public class PurchaseController {
 						for (Object[] items : purchaseOrderItems) {
 							BigDecimal qty = (BigDecimal) items[4]; // Use BigDecimal for quantity
 							// Use the item_code and pOrdrID to query the asset_registry table
+/*							
 							query = session.createNativeQuery(
-									"select count(*) from asset_registry where item_code=:param1 and po_id=:param2");
+									"select count(*) from asset_registry where item_code=:param1 and po_id=:param2"); */
+							
+							query = session.createNativeQuery(
+									"select count(*) from far_model_partnumber a, fixed_asset_registry b where a.item_code=:param1 and b.po_id=:param2 and a.far_id = b.far_id");
+							
+							
 							query.setParameter("param1", (String) items[0]);
 							query.setParameter("param2", pOrdrID);
 							BigDecimal assetCount = (BigDecimal) query.uniqueResult(); // Retrieve the count as a
