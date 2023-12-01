@@ -62,7 +62,6 @@ public class ItemController {
 			return "redirect:/";
 		}
 		
-		System.out.println("Welcome to Item List View");
 		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
@@ -540,7 +539,7 @@ public class ItemController {
 	@ResponseBody
 	public Map<String, Object> ItemDelete(Locale locale, Model model, HttpServletRequest request,
 			@ModelAttribute ItemParameters itemParameters, HttpServletResponse response) {
-		System.out.println("Welcome to ItemDelete");
+
 		Map<String, Object> rtn = new LinkedHashMap<>();		
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("result", "redirect:/");
@@ -551,7 +550,6 @@ public class ItemController {
 			tx = session.beginTransaction();
 			try {
 				String[] idList = request.getParameterValues("itemCode[]");
-				System.out.println("idList is " +mapper.writeValueAsString(idList));
 				if (idList != null) {
 //					query = session.createQuery("delete ItemPartNumber where itemCode IN :param1");
 					query = session.createNativeQuery("delete ITEM_MODEL_PARTNUMBER where ITEM_CODE IN :param1");
