@@ -66,7 +66,7 @@ function sendValBoqToPopup(indxRow){
 		});
 		}
 		var element = document.getElementById("popupNb");
-    			  element.innerHTML = "Item # " +indxRow;
+    	element.innerHTML = "Item # " +(indxRow+1);
   		  
     		
 } //end sendValBoqToPopup fct
