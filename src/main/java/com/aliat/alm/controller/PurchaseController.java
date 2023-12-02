@@ -740,30 +740,32 @@ public class PurchaseController {
 						}
 
 						// add data in table PurchaseorderItem
+						
 						str = "SELECT t.ITEM_CODE as itemCode , t.ITEM_NAME as itemName , t.ITEM_MODEL as itemModel , t.ITEM_PART_NUMBER as itemPartNumber ,t.QTY as qty,"
 								+ " t.RATE as rate,t.DISCOUNT_AMOUNT as discountAmount,t.TAX1 as tax1 , t.NET_RATE as netRate, t.TOTAL as total, t.TOTAL_AT as totalAt, "
 								+ " t.ITEM_BARCODE as poBarCode, "
-								+ " (SELECT coalesce(sum(a.QTY),0) FROM GOODS_RECEIVED_ITEM a   "
+								+ " (SELECT coalesce(sum(distinct(a.QTY)),0) FROM GOODS_RECEIVED_ITEM a   "
 								+ " INNER JOIN GOODS_RECEIVED b ON b.GR_ID=a.GR_ID "
 								+ " INNER JOIN PURCHASE_ORDER c ON c.PO_ID= b.PO_ID "
 								+ " WHERE c.PO_ID = t.PO_ID AND a.ITEM_CODE = t.ITEM_CODE) as grQty,  "
-								+ " (SELECT coalesce(sum(a.QTY),0) FROM PURCHASE_REQUEST_ITEM a "
+								+ " (SELECT coalesce(sum(distinct(a.QTY)),0) FROM PURCHASE_REQUEST_ITEM a "
 								+ " INNER JOIN PURCHASE_REQUEST b ON b.PRQ_ID= a.PRQ_ID "
 								+ " INNER JOIN PURCHASE_ORDER  c ON c.PRQ_ID = b.PRQ_ID "
 								+ " WHERE c.PO_ID =t.PO_ID AND a.ITEM_CODE = t.ITEM_CODE) as prQty,      "
-								+ " (select count(a.AR_ID) FROM ASSET_REGISTRY a "
+								+ " (select count(distinct(a.AR_ID)) FROM ASSET_REGISTRY a "
 								+ " INNER JOIN PURCHASE_ORDER_ITEM b ON b.PO_ID=a.PO_ID "
 								+ " WHERE b.PO_ID =t.PO_ID AND a.ITEM_CODE = t.ITEM_CODE) as arQty,"
-								+ " (select a.TOTALQTY FROM CAPITAL_IN_PROGRESS a "
-								//+ " INNER JOIN PURCHASE_ORDER_ITEM b ON b.PO_ID=a.PO_ID "
-								+ " WHERE a.PO_ID =t.PO_ID AND a.ITEM_CODE = t.ITEM_CODE) as cipQty,"
-								+ " (select count(a.FAR_ID) FROM FIXED_ASSET_REGISTRY a "
+								+ " (select coalesce(sum(distinct(a.TOTALQTY)),0) FROM CAPITAL_IN_PROGRESS a "
+								+ " INNER JOIN PURCHASE_ORDER_ITEM b ON b.PO_ID=a.PO_ID "
+								+ " WHERE b.PO_ID =t.PO_ID AND a.ITEM_CODE = t.ITEM_CODE) as cipQty,"
+								+ " (select count(distinct(a.FAR_ID)) FROM FIXED_ASSET_REGISTRY a "
 								+ " INNER JOIN PURCHASE_ORDER_ITEM b ON b.PO_ID=a.PO_ID "
 								+ " WHERE b.PO_ID =t.PO_ID AND a.ITEM_CODE = t.ITEM_CODE) as farQty,"
 								+ " t.PO_ITEM_ID as pordItemId, t.PO_ITEM_STATUS as poItemStatus , x.serial_obj"
 								+ " FROM PURCHASE_ORDER_ITEM t LEFT JOIN (select distinct poitem_id,json_object('serialArray' value json_arrayagg(json_object('serial_no' value serial_number,'itm_model'  value item_model,'itm_partno' value item_partno))) as serial_obj "
-								+ "from serial_number group by poitem_id) x on x.POITEM_ID = t.PO_ITEM_ID where t.PO_ID like :param1 ";
-
+								+ "from serial_number group by poitem_id) x on x.POITEM_ID = t.PO_ITEM_ID where t.PO_ID like :param1 order by t.ITEM_CODE";
+																
+						
 						query = session.createNativeQuery(str);
 						query.setParameter("param1", pOrdrID);
 						List<PurchaseOrderBoq> listPurchaseOrderBoq = (List<PurchaseOrderBoq>) ((NativeQuery<PurchaseOrderBoq>) query)
@@ -1356,7 +1358,6 @@ public class PurchaseController {
 								query.setParameter("param1", PoitemId);
 								ArrayList result2 = (ArrayList) query.list();
 
-								System.out.println(result2);
 								if (result2.isEmpty()) {
 									// CipId = "CIP_" + year + "_" + appConfig.getSequenceNbr(8);
 									synchronized (this) {
@@ -1534,7 +1535,7 @@ public class PurchaseController {
 						pRqID = request.getParameter("ordPRQid");
 						if (StringUtils.equalsIgnoreCase(pOrdAppFlag, "1")) {
 
-							AssetLifeCycleThread InsertionALCThread;
+							//AssetLifeCycleThread InsertionALCThread;
 
 							if (!pRqID.isEmpty()) {
 
@@ -1549,9 +1550,9 @@ public class PurchaseController {
 									rtn.put("PRtobeAprvd", pRqID);
 								} else {
 									rtn.put("RevPrcStatAprv", "accepted");
-									InsertionALCThread = new AssetLifeCycleThread("PO", pRqID, poID, "",
-											itemParameters);
-									InsertionALCThread.start(); // will occur parallel with the execution of saving PO.
+									/* InsertionALCThread = new AssetLifeCycleThread("PO", pRqID, poID, "",
+											itemParameters); 
+									InsertionALCThread.start(); */ // will occur parallel with the execution of saving PO.
 									query = session.createQuery(
 											"update PurchaseOrder set ordStatus = 'approved' WHERE ID = :param1");
 									query.setParameter("param1", poID);
@@ -1559,8 +1560,8 @@ public class PurchaseController {
 								}
 							} else {
 								rtn.put("RevPrcStatAprv", "accepted");
-								InsertionALCThread = new AssetLifeCycleThread("PO", pRqID, poID, "", itemParameters);
-								InsertionALCThread.start(); // will occur parallel with the execution of saving PO.
+								/* InsertionALCThread = new AssetLifeCycleThread("PO", pRqID, poID, "", itemParameters);
+								InsertionALCThread.start(); // will occur parallel with the execution of saving PO. */
 								query = session.createQuery(
 										"update PurchaseOrder set ordStatus = 'approved' WHERE ID = :param1");
 								query.setParameter("param1", poID);
@@ -1568,7 +1569,7 @@ public class PurchaseController {
 							}
 						} else if (StringUtils.equalsIgnoreCase(pOrdAppFlag, "0")
 								&& StringUtils.equalsIgnoreCase(pOrdCnclFlg, "1")) {
-							AssetLifeCycleCanceling ALCDelete;
+							//AssetLifeCycleCanceling ALCDelete;
 							ArrayList grStatus;
 							Object[] grStat = null;
 							query = session
@@ -1587,8 +1588,9 @@ public class PurchaseController {
 											"update PurchaseOrder set ordStatus = 'cancelled' WHERE ID = :param1");
 									query.setParameter("param1", poID);
 									query.executeUpdate();
+									/*
 									ALCDelete = new AssetLifeCycleCanceling("PO", pRqID, poID, "");
-									ALCDelete.start();
+									ALCDelete.start();*/
 
 								}
 							} else {
@@ -1597,8 +1599,9 @@ public class PurchaseController {
 										"update PurchaseOrder set ordStatus = 'cancelled' WHERE ID = :param1");
 								query.setParameter("param1", poID);
 								query.executeUpdate();
+								/*
 								ALCDelete = new AssetLifeCycleCanceling("PO", pRqID, poID, "");
-								ALCDelete.start();
+								ALCDelete.start(); */
 							}
 						}
 					}
@@ -1619,6 +1622,7 @@ public class PurchaseController {
 
 				} catch (Exception e) {
 					logger.info("Error in saving purchase order with a message : " + e + "" + e.getMessage());
+					e.printStackTrace();
 				}
 
 				finally {
