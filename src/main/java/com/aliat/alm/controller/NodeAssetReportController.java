@@ -13,7 +13,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.query.Query;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.hibernate.transform.Transformers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.NodeAssetReport;
 import com.aliat.alm.services.LoginServices;
@@ -34,13 +33,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class NodeAssetReportController {
 
 	@Autowired
-	ALMSessions almsessions;
-
-	@Autowired
 	Notify notifications;
 
 	private Session session = null;
-	private Transaction tx = null;
 
 	@SuppressWarnings("rawtypes")
 	Query query;
@@ -58,7 +53,7 @@ public class NodeAssetReportController {
 			return "redirect:/";
 		} else {
 
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 			DecimalFormat df = new DecimalFormat("#,###.00");
 			String totalInitialCost = "0.0";
 			String totalAccumdepr = "0.0";
@@ -66,21 +61,20 @@ public class NodeAssetReportController {
 
 			if (session != null && session.isOpen()) {
 
-				tx = session.beginTransaction();
 				notifications.headerNotifications(session, model);
 				try {
 				
 					query = session.createNativeQuery(
-							"SELECT site,farID, itemCode, itemName,itemModel,itemPartNo, lastModifiedDate,itemSN,itemNameRegister,poID,nodeID,nodeName,nodeType,siteID,siteName,longitude,latitude,vendor,initCost,netCost,accuDepr FROM ( "
-									+ " SELECT DISTINCT B.SITE_ID AS site,A.FAR_ID as farID, A.ITEM_CODE as itemCode, A.ITEM_NAME as itemName,D.ITEM_MODEL as itemModel,D.ITEM_PART_NUMBER as itemPartNo,TO_CHAR(A.LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') as lastModifiedDate, A.ITEM_SN as itemSN,A.ITEM_NAME_REGISTER as itemNameRegister, A.PO_ID as poID,E.NODE_ID as nodeID,E.NODE_NAME as nodeName,E.NODE_TYPE as nodeType, B.SITE_ID AS siteID, B.SITE_NAME AS siteName , C.LONGITUDE as longitude,C.LATITUDE as latitude,A.VENDOR as vendor, A.INITIALCOST as initCost, A.NETCOST as netCost , A.ACCUMULDEPRECAMNT as accuDepr  "
+							"SELECT site,farID,nodeID,nodeName,nodeType,itemCode, itemName,itemModel,itemPartNo, lastModifiedDate,itemSN,itemNameRegister,poID,siteID,siteName,longitude,latitude,vendor,initCost,netCost,accuDepr FROM ( "
+									+ " SELECT DISTINCT B.SITE_ID AS site,A.FAR_ID as farID,E.NODE_ID as nodeID,E.NODE_NAME as nodeName,E.NODE_TYPE as nodeType, A.ITEM_CODE as itemCode, A.ITEM_NAME as itemName,D.ITEM_MODEL as itemModel,D.ITEM_PART_NUMBER as itemPartNo,TO_CHAR(A.LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') as lastModifiedDate, A.ITEM_SN as itemSN,A.ITEM_NAME_REGISTER as itemNameRegister, A.PO_ID as poID, B.SITE_ID AS siteID, B.SITE_NAME AS siteName , C.LONGITUDE as longitude,C.LATITUDE as latitude,A.VENDOR as vendor, A.INITIALCOST as initCost, A.NETCOST as netCost , A.ACCUMULDEPRECAMNT as accuDepr  "
 									+ " FROM FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID LEFT JOIN far_model_partnumber D ON A.FAR_ID = D.FAR_ID LEFT JOIN FAR_NODE E ON E.FAR_ID = A.FAR_ID "
 									+ " WHERE D.PRIMARY='1' AND A.CREATED_DATE >=  trunc(SYSDATE - INTERVAL '1' YEAR) AND A.created_date < (trunc(sysdate) ) + 1   ) WHERE (longitude is not null and longitude != '0' and longitude != 'null' and latitude is not null and latitude != '0' and latitude != 'null') "
 									+ " AND (nodeID is not null and nodeID != 'null') ORDER BY lastModifiedDate DESC ");
 
 					List<NodeAssetReport> ListFAR = (List<NodeAssetReport>) ((NativeQuery<NodeAssetReport>) query)
-							.addScalar("site").addScalar("farID").addScalar("itemCode").addScalar("itemName").addScalar("itemModel").addScalar("itemPartNo")
+							.addScalar("site").addScalar("farID").addScalar("nodeID").addScalar("nodeName").addScalar("nodeType").addScalar("itemCode").addScalar("itemName").addScalar("itemModel").addScalar("itemPartNo")
 							.addScalar("lastModifiedDate").addScalar("itemSN").addScalar("itemNameRegister")
-							.addScalar("poID").addScalar("nodeID").addScalar("nodeName").addScalar("nodeType").addScalar("siteID").addScalar("siteName").addScalar("longitude")
+							.addScalar("poID").addScalar("siteID").addScalar("siteName").addScalar("longitude")
 							.addScalar("latitude").addScalar("vendor").addScalar("initCost").addScalar("netCost").addScalar("accuDepr")
 							.setResultTransformer(Transformers.aliasToBean(NodeAssetReport.class)).list();
 					model.addAttribute("nodeAssetReportList", mapper.writeValueAsString(ListFAR));
@@ -160,9 +154,9 @@ public class NodeAssetReportController {
 					logger.info("Error in creating session with the DataBase " + e.getMessage());
 				} finally {
 					if (session != null && session.isOpen()) {
-						tx.commit();
+						
 						session.close();
-						session.getSessionFactory().close();
+						
 					}
 				}
 			}
@@ -302,13 +296,10 @@ public class NodeAssetReportController {
 		} else {
 
 			try {
-				session = almsessions.getSession();
+				session = AlmDbSession.getInstance().getSession();
 
 				if (session != null && session.isOpen()) {
-
-					tx = session.beginTransaction();
-					
-					 str = "SELECT site,farID, itemCode, itemName,itemModel,itemPartNo, lastModifiedDate,itemSN,itemNameRegister,poID,nodeID,nodeName,nodeType,siteID,siteName,longitude,latitude,vendor,initCost,netCost,accuDepr FROM ( "
+					 str = "SELECT site,farID,nodeID,nodeName,nodeType,itemCode, itemName,itemModel,itemPartNo, lastModifiedDate,itemSN,itemNameRegister,poID,siteID,siteName,longitude,latitude,vendor,initCost,netCost,accuDepr FROM ( "
 					           + " SELECT DISTINCT B.SITE_ID AS site,A.FAR_ID as farID, A.ITEM_CODE as itemCode, A.ITEM_NAME as itemName,D.ITEM_MODEL as itemModel,D.ITEM_PART_NUMBER as itemPartNo,TO_CHAR(A.LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') as lastModifiedDate, A.ITEM_SN as itemSN,A.ITEM_NAME_REGISTER as itemNameRegister, A.PO_ID as poID,E.NODE_ID as nodeID,E.NODE_NAME as nodeName,E.NODE_TYPE as nodeType,B.SITE_ID AS siteID, B.SITE_NAME AS siteName ,C.LONGITUDE as longitude,C.LATITUDE as latitude,A.VENDOR as vendor, A.INITIALCOST as initCost, A.NETCOST as netCost , A.ACCUMULDEPRECAMNT as accuDepr  "
 					           + " FROM FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID LEFT JOIN far_model_partnumber D ON A.FAR_ID = D.FAR_ID LEFT JOIN FAR_NODE E ON E.FAR_ID = A.FAR_ID "
 					           + " WHERE  D.PRIMARY='1' AND ( upper(A.ITEM_CODE) LIKE upper('%" + itemCode
@@ -347,8 +338,8 @@ public class NodeAssetReportController {
 						totalStr = totalStr + " AND A.SUB_DOMAIN IN ( " + subDomain + " )";
 					}
 					if (!StringUtils.equalsIgnoreCase(type, "")) {
-						str = str + " AND A.TYPE IN ( " + type + " )";
-						totalStr = totalStr + " AND A.TYPE IN ( " + type + " )";
+						str = str + " AND A.SUB_DOMAIN_TYPE IN ( " + type + " )";
+						totalStr = totalStr + " AND A.SUB_DOMAIN_TYPE IN ( " + type + " )";
 					}
 
 					// Include the start/end long and lat in where condition in case of strt/end
@@ -443,9 +434,9 @@ public class NodeAssetReportController {
 					query = session.createNativeQuery(str);
 					listFARTemp = query.list(); // To use it in circle range calculation
 
-					listFAR = ((NativeQuery<NodeAssetReport>) query).addScalar("site").addScalar("farID").addScalar("itemCode")
+					listFAR = ((NativeQuery<NodeAssetReport>) query).addScalar("site").addScalar("farID").addScalar("nodeID").addScalar("nodeName").addScalar("nodeType").addScalar("itemCode")
 							.addScalar("itemName").addScalar("itemModel").addScalar("itemPartNo").addScalar("lastModifiedDate").addScalar("itemSN")
-							.addScalar("itemNameRegister").addScalar("poID").addScalar("nodeID").addScalar("nodeName").addScalar("nodeType").addScalar("siteID").addScalar("siteName")
+							.addScalar("itemNameRegister").addScalar("poID").addScalar("siteID").addScalar("siteName")
 							.addScalar("longitude").addScalar("latitude").addScalar("vendor").addScalar("initCost").addScalar("netCost")
 							.addScalar("accuDepr").setResultTransformer(Transformers.aliasToBean(NodeAssetReport.class))
 							.list();					
@@ -560,9 +551,7 @@ public class NodeAssetReportController {
 			} finally {
 
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}

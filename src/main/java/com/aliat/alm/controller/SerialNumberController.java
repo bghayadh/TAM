@@ -27,7 +27,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.aliat.alm.common.ALMSessions;
+//import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.SerialNumber;
@@ -45,8 +46,8 @@ public class SerialNumberController {
 	private static ObjectMapper mapper = new ObjectMapper();
 	private static final Logger logger = LoggerFactory.getLogger(SerialNumberController.class);
 	
-	@Autowired
-	ALMSessions almsessions;
+	//@Autowired
+	//ALMSessions almsessions;
 	
 	@Autowired
 	Notify notifications;
@@ -63,7 +64,7 @@ public class SerialNumberController {
 		}
 		else {
 		    List<SerialNumber> serialNumberList = new ArrayList<SerialNumber>();
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 			
 			if (session != null && session.isOpen()) {
 				tx = session.beginTransaction();
@@ -97,7 +98,7 @@ public class SerialNumberController {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;	
 		}
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 
 			tx = session.beginTransaction();
@@ -178,7 +179,7 @@ public class SerialNumberController {
 			  int selectedIndex = 0;
 			  String result[] = new String[4];
 			  String serialNo="",navAction = "2";
-			  session = almsessions.getSession();
+			  session = AlmDbSession.getInstance().getSession();
 			  
 			  if (session.isOpen() && session != null) {
 				  tx = session.beginTransaction();
@@ -272,7 +273,7 @@ public class SerialNumberController {
 	  public Map<String, Object> SerialNumberFormSave(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
 	 	
 	 	 Map<String, Object> rtn = new LinkedHashMap<>();
-		 session = almsessions.getSession();
+		 session = AlmDbSession.getInstance().getSession();
 
 	 	 if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 	 			rtn.put("Login", "redirect:/");
@@ -346,6 +347,7 @@ public class SerialNumberController {
 	 					
 	 					
 	 				} catch (Exception e) {
+	 					e.printStackTrace();
 	 					logger.info("Error in saving serial number with a message : " + e
 	 							+ "////////////////////////////////////////// \n" + e.getMessage());
 	 				}
@@ -375,7 +377,7 @@ public class SerialNumberController {
 			return rtn;
 		}
 	    else {
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 			String serialNum = request.getParameter("serialNumber");				
 			if (session != null && session.isOpen()) {
 				tx = session.beginTransaction();
@@ -411,7 +413,7 @@ public Map<String, Object> SerialNumberListViewDelete(Locale locale, Model model
 			return rtn;
 		}
 	    else {
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 			if (session != null && session.isOpen()) {
 				
 				String[] idList = request.getParameterValues("serialNumber[]");
@@ -449,7 +451,7 @@ public Map<String, Object> GetAllItemSerial(Locale locale, Model model, HttpServ
 			rtn.put("Login", "redirect:/");
 			return rtn;
 	}
-	 session = almsessions.getSession();
+	 session = AlmDbSession.getInstance().getSession();
 	 if (session != null && session.isOpen()) {
 		 String itemCode = "%" + request.getParameter("itemCode") + "%";
 	     String purchaseOrderID = request.getParameter("poId");
@@ -508,7 +510,7 @@ public Map<String, Object> GetAllItemNameFormSerial(Locale locale, Model model, 
 		 rtn.put("Login", "redirect:/");
 		 return rtn;
 	}
-	session = almsessions.getSession();
+	session = AlmDbSession.getInstance().getSession();
 	if (session != null && session.isOpen()) {
 		String itemName = "%" + request.getParameter("itemName") + "%";
 		String itemCode =  request.getParameter("itemCode") ;
@@ -557,7 +559,7 @@ public Map<String, Object> GetAllItemModelFormSerial(Locale locale, Model model,
 			rtn.put("Login", "redirect:/");
 			return rtn;
 	}
-	 session = almsessions.getSession();
+	 session = AlmDbSession.getInstance().getSession();
 	 if (session != null && session.isOpen()) {
 		 String itemModel = "%" + request.getParameter("itemModel") + "%";
 		 String itemCode =  request.getParameter("itemCode") ;
@@ -611,7 +613,7 @@ public Map<String, Object> getSupplierIdName(Locale locale, Model model, HttpSer
 		return rtn;
 	} 
 	String searchKey = request.getParameter("searchKey");
-	session = almsessions.getSession();
+	session = AlmDbSession.getInstance().getSession();
 	
 	if (session != null && session.isOpen()) {
 		tx = session.beginTransaction();
@@ -648,7 +650,7 @@ public Map<String, Object> GetAllItemPartnoFormSerial(Locale locale, Model model
 		 rtn.put("Login", "redirect:/");
 		 return rtn;
 	}
-	 session = almsessions.getSession();
+	 session = AlmDbSession.getInstance().getSession();
 	 if (session != null && session.isOpen()) {
 		 String itemPartNumber = "%" + request.getParameter("itemPartNumber") + "%";
 		 String itemCode =  request.getParameter("itemCode") ;				    
@@ -701,7 +703,7 @@ public Map<String, Object> GetAllItemPoidFormSerial(Locale locale, Model model, 
 			rtn.put("Login", "redirect:/");
 			return rtn;
 	}
-	 session = almsessions.getSession();
+	 session = AlmDbSession.getInstance().getSession();
 	 if (session != null && session.isOpen()) {
 		 String poId = "%" + request.getParameter("poId") + "%";
 		 String itemCode =  request.getParameter("itemCode") ;
@@ -759,7 +761,7 @@ public String SerialValidation(Locale locale, Model model, HttpServletRequest re
     if(LoginServices.checkSession(request, response).equals("redirect:/")) {
    	 	return "redirect:/";
    	 }
-    session = almsessions.getSession();
+    session = AlmDbSession.getInstance().getSession();
     if (session != null && session.isOpen()) {
     	String serialNumber =  request.getParameter("serialNumber") ;
     	tx = session.beginTransaction();
@@ -798,7 +800,7 @@ public Map<String, Object> GetAllSerialNumber(Locale locale, Model model, HttpSe
 			rtn.put("Login", "redirect:/");
 			return rtn;
 		}
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 			if (session != null && session.isOpen()) {
 				
 				String requestValue = request.getParameter("requestValue");
@@ -848,7 +850,7 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 		rtn.put("Login", "redirect:/");
 		return rtn;
 }
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			
 			String inputModel= request.getParameter("inputModel") ;			 
@@ -890,7 +892,7 @@ public Map<String, Object> GetAllPartNumber(Locale locale, Model model, HttpServ
 			rtn.put("Login", "redirect:/");
 			return rtn;
 	}
-	session = almsessions.getSession();
+	session = AlmDbSession.getInstance().getSession();
 	if (session != null && session.isOpen()) {
 		String inputpartNumber =  request.getParameter("inputpartNumber") ;
 		tx = session.beginTransaction();
@@ -926,7 +928,7 @@ public Map<String, Object> GetAllItemGridFormSerial(Locale locale, Model model, 
 			rtn.put("Login", "redirect:/");
 			return rtn;
 	}
-	session = almsessions.getSession();
+	session = AlmDbSession.getInstance().getSession();
 	if (session != null && session.isOpen()) {
 		String grId = "%" + request.getParameter("grId") + "%";
 		String itemCode =  request.getParameter("itemCode") ;
@@ -982,7 +984,7 @@ public Map<String, Object> GetAllOtherSerialNum(Locale locale, Model model, Http
 		rtn.put("Login", "redirect:/");
 		return rtn;
 	}
-	session = almsessions.getSession();
+	session = AlmDbSession.getInstance().getSession();
 	if (session != null && session.isOpen()) {
 		String serialSearch = request.getParameter("serialSearch") ;			 
 		tx = session.beginTransaction();

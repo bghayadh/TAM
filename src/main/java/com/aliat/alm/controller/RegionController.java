@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.Region;
@@ -57,9 +57,6 @@ public class RegionController {
 	@Autowired
 	Notify notification;
 
-	@Autowired
-	ALMSessions almsessions;
-
 	@RequestMapping(value = "/RegionListView", method = RequestMethod.GET)
 	public String RegionListView(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
 
@@ -67,14 +64,10 @@ public class RegionController {
 			return "redirect:/";
 		}
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
-
-			tx = session.beginTransaction();
-			notification.headerNotifications(session, model);
-
 			try {
-
+				notification.headerNotifications(session, model);
 				query = session.createQuery(
 						"SELECT t.regionId AS ID, t.regionId, t.regionName, t.regionCode,TO_CHAR(t.creationDate, 'YYYY-MM-DD HH24:MI:SS'),TO_CHAR(t.lastModifieddate, 'YYYY-MM-DD HH24:MI:SS') from Region t ORDER BY lastModifieddate DESC");
 				model.addAttribute("ListGridTable", mapper.writeValueAsString(query.list()));
@@ -87,9 +80,7 @@ public class RegionController {
 				logger.info("Error in RegionListView due to \n " + exceptionAsString);
 			} finally {
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -106,13 +97,10 @@ public class RegionController {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
 		}
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
-
-			tx = session.beginTransaction();
-			notification.headerNotifications(session, model);
-
 			try {
+				notification.headerNotifications(session, model);
 				String startdate, enddate, regionid, regionname, regioncode;
 				startdate = request.getParameter("startDate");
 				enddate = request.getParameter("endDate");
@@ -158,9 +146,7 @@ public class RegionController {
 				logger.info("Error in showing the filtered Region list view due to \n " + exceptionAsString);
 			} finally {
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -181,14 +167,13 @@ public class RegionController {
 		int SelectedIndex = 0;
 
 		Region region = new Region();
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 
 		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
-			notification.headerNotifications(session, model);
+			
 
 			try {
-
+				notification.headerNotifications(session, model);
 				regionID = request.getParameter("RegionID");
 				navAction = request.getParameter("NavAction");
 
@@ -222,7 +207,14 @@ public class RegionController {
 					query.setParameter("param1", regionID); // edited (remove appConfig)
 					model.addAttribute("listRegionBorder", mapper.writeValueAsString(query.list()));
 				}
-
+				model.addAttribute("creationDate", formatter.format(region.getCreationDate()).toString());
+				model.addAttribute("lastModifiedDate", formatter.format(region.getLastModifieddate()).toString());
+				model.addAttribute("RegionId", region.getRegionId());
+				model.addAttribute("regionName", region.getRegionName());
+				model.addAttribute("regionCode", region.getRegionCode());
+				model.addAttribute("ordStatus", region.getStatus());
+				model.addAttribute("AreasCount", Integer.parseInt(result[0]));
+				model.addAttribute("SelectedIndex", SelectedIndex);
 			} catch (Exception e) {
 				sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
@@ -232,22 +224,12 @@ public class RegionController {
 			} finally {
 
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
-
 				}
 
 			}
 		}
-		model.addAttribute("creationDate", formatter.format(region.getCreationDate()).toString());
-		model.addAttribute("lastModifiedDate", formatter.format(region.getLastModifieddate()).toString());
-		model.addAttribute("RegionId", region.getRegionId());
-		model.addAttribute("regionName", region.getRegionName());
-		model.addAttribute("regionCode", region.getRegionCode());
-		model.addAttribute("ordStatus", region.getStatus());
-		model.addAttribute("AreasCount", Integer.parseInt(result[0]));
-		model.addAttribute("SelectedIndex", SelectedIndex);
+		
 
 		return "RegionFormView";
 	}
@@ -266,7 +248,7 @@ public class RegionController {
 
 		String[] idList = null;
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
@@ -293,9 +275,7 @@ public class RegionController {
 				logger.info("Error in RegionDelete due to \n " + exceptionAsString);
 			} finally {
 				if (session != null && session.isOpen()) {
-					
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -319,7 +299,7 @@ public class RegionController {
 		Region region = new Region();
 		DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
 		Timestamp CreationDate;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
@@ -434,7 +414,6 @@ public class RegionController {
 			} finally {
 				if (session != null && session.isOpen()) {
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -451,10 +430,8 @@ public class RegionController {
 
 		String Region = "%" + request.getParameter("regionID") + "%";
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
-
 			try {
 				query = session.createNativeQuery(
 						"SELECT REGION_ID,REGION_NAME,REGION_CODE FROM REGION where UPPER(REGION_NAME)like UPPER(:param1) OR UPPER(REGION_CODE)like UPPER(:param1) OR UPPER(REGION_ID)like UPPER(:param1) ORDER BY LAST_MODIFICATION_DATE DESC");
@@ -472,11 +449,7 @@ public class RegionController {
 
 			finally {
 				if (session != null && session.isOpen()) {
-
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
-
 				}
 			}
 		}
@@ -499,10 +472,9 @@ public class RegionController {
 		}
 		List<RegionBorder> listRegionBorder = null;
 		String RegionId;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 
 		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
 			try {
 
 				RegionId = request.getParameter("regionID");
@@ -522,19 +494,12 @@ public class RegionController {
 				logger.finest("Error in getSelectedRegion due to \n " + exceptionAsString);
 				logger.info("Error in getSelectedRegion due to \n " + exceptionAsString);
 			}
-
 			finally {
-
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
 				}
-
 			}
-
 		}
-
 		return rtn;
 	}
 

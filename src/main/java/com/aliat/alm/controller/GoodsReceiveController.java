@@ -37,7 +37,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.Cluster;
@@ -88,8 +88,6 @@ public class GoodsReceiveController {
 	 */
 
 
-	@Autowired
-	ALMSessions almsessions;
 	
 	@Autowired
 	Notify notifications;
@@ -105,9 +103,8 @@ public class GoodsReceiveController {
 		} else {
 			List<GoodsReceived> listGoodsReceived = new ArrayList<GoodsReceived>();
 
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 			if (session != null && session.isOpen()) {
-				tx = session.beginTransaction();
 				notifications.headerNotifications(session, model);
 				try {
 
@@ -121,7 +118,6 @@ public class GoodsReceiveController {
 					model.addAttribute("ListGridTable", "");
 				} finally {
 					if (session != null && session.isOpen()) {
-						tx.commit();
 						session.close();
 					}
 				}
@@ -139,10 +135,9 @@ public class GoodsReceiveController {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;	
 		}
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 
-			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
 
 			try {
@@ -175,7 +170,7 @@ public class GoodsReceiveController {
 				}
 				str = str + " ORDER BY LAST_MODIFICATION_DATE DESC ";
 
-				Query query = session.createSQLQuery(str);
+				Query query = session.createNativeQuery(str);
 				
 
 				listGoods = query.list();
@@ -187,7 +182,6 @@ public class GoodsReceiveController {
 				logger.info("Error in showing the filtered GoodsRcv  list view with a message :" + e);
 			} finally {
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
 				}
 			}
@@ -205,9 +199,8 @@ public class GoodsReceiveController {
 		} else {
 			List<GoodsReceived> listGoodsReceived = new ArrayList<GoodsReceived>();
 
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 			if (session != null && session.isOpen()) {
-				tx = session.beginTransaction();
 				try {
 
 					listGoodsReceived = session.createQuery(
@@ -220,7 +213,6 @@ public class GoodsReceiveController {
 					model.addAttribute("ListGridTable", "");
 				} finally {
 					if (session != null && session.isOpen()) {
-						tx.commit();
 						session.close();
 					}
 				}
@@ -247,7 +239,7 @@ public class GoodsReceiveController {
 	        String result [] =new String[4];
 	        int SelectedIndex = 0;
 
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 			if (session != null && session.isOpen()) {
 				tx = session.beginTransaction();
 				notifications.headerNotifications(session, model);
@@ -450,7 +442,7 @@ public class GoodsReceiveController {
 							+ "(select count(a.AR_ID) FROM ASSET_REGISTRY a  "
 							+ "INNER JOIN GOODS_RECEIVED b ON b.GR_ID=a.GR_ID  "
 							+ "WHERE b.GR_ID =t.GR_ID AND a.ITEM_CODE = t.ITEM_CODE) as arQty,  "
-							+ "(select count(a.CIP_ID) FROM CAPITAL_IN_PROGRESS a  "
+							+ "(select a.TOTALQTY FROM CAPITAL_IN_PROGRESS a  "
 							+ "INNER JOIN GOODS_RECEIVED b ON b.GR_ID=a.GR_ID  "
 							+ "WHERE b.GR_ID =t.GR_ID AND a.ITEM_CODE = t.ITEM_CODE) as cipQty,  "
 							+ "(select count(a.FAR_ID) FROM FIXED_ASSET_REGISTRY a  "
@@ -531,7 +523,7 @@ public class GoodsReceiveController {
 			return rtn;
 		} else {
 
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 			if (session != null && session.isOpen()) {
 
 				String grCancelFlag, grApproveFlag, supplierID, supplierName, supaddress, warehouse, warehouseName,
@@ -950,6 +942,7 @@ public class GoodsReceiveController {
 					rtn.put("GRID", grid);
 
 				} catch (Exception e) {
+					e.printStackTrace();
 					logger.info("Error in saving the goods received with a message : " + e);
 				} finally {
 					if (session != null && session.isOpen()) {
@@ -978,7 +971,7 @@ public class GoodsReceiveController {
 		} else {
 			String[] idList = request.getParameterValues("ID[]");
 			if (idList != null && idList.length != 0) {
-				session = almsessions.getSession();
+				session = AlmDbSession.getInstance().getSession();
 				if (session != null && session.isOpen()) {
 					tx = session.beginTransaction();
 
@@ -1027,9 +1020,8 @@ public class GoodsReceiveController {
 		String GrId = request.getParameter("ID");
 		List<Object[]> grList;
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
 			try {
 				grList = (List<Object[]>) session.createSQLQuery(
 
@@ -1176,7 +1168,6 @@ public class GoodsReceiveController {
 				logger.info("Error in viewing the data in the over view form with a message of : " + e);
 			} finally {
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
 				}
 			}
@@ -1195,9 +1186,8 @@ public class GoodsReceiveController {
 		Map<String, Object> rtn = new LinkedHashMap<>();
 		String gdrcv = "%" + request.getParameter("gdrcv") + "%";
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
 			
 	try {
 
@@ -1216,8 +1206,6 @@ public class GoodsReceiveController {
 	finally {
 
 	      if (session != null && session.isOpen()) {
-	    	  
-	    	  tx.commit();
 		      session.close();
 		      
 	      }

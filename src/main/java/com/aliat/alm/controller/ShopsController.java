@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
@@ -30,11 +32,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.AgentBorder;
-import com.aliat.alm.models.AreaBorder;
 import com.aliat.alm.models.RegionBorder;
 import com.aliat.alm.models.Shops;
 import com.aliat.alm.services.ItemParameters;
@@ -58,9 +59,6 @@ public class ShopsController {
 	Form form;
 
 	@Autowired
-	ALMSessions almsessions;
-
-	@Autowired
 	Notify notification;
 
 	@RequestMapping(value = "/ShopsListView", method = RequestMethod.GET)
@@ -70,18 +68,13 @@ public class ShopsController {
 			return "redirect:/";
 		}
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
-
-			tx = session.beginTransaction();
-			notification.headerNotifications(session, model);
-
 			try {
+				notification.headerNotifications(session, model);
 				String str = "select SHOPS_ID as shopId,Owner as owner,SHOP_NAME as shopName,ADDRESS as address,REGION_NAME as regionName,TO_CHAR(LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') as lastModifiedDate from SHOPS ORDER BY LAST_MODIFIED_DATE DESC ";
 				query = session.createNativeQuery(str);
-
 				model.addAttribute("ListGridTable", mapper.writeValueAsString(session.createNativeQuery(str).list()));
-
 			} catch (Exception e) {
 				sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
@@ -90,14 +83,10 @@ public class ShopsController {
 				logger.info("Error in ShopsListView due to \n " + exceptionAsString);
 			} finally {
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
-
 		}
-
 		return "ShopsListView";
 	}
 
@@ -111,13 +100,10 @@ public class ShopsController {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
 		}
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
-
-			tx = session.beginTransaction();
-			notification.headerNotifications(session, model);
-
 			try {
+				notification.headerNotifications(session, model);
 				String startdate, enddate, regionid, regionname;
 				startdate = request.getParameter("startDate");
 				enddate = request.getParameter("endDate");
@@ -157,9 +143,7 @@ public class ShopsController {
 
 			} finally {
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -179,7 +163,7 @@ public class ShopsController {
 			return rtn;
 		}
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 
 			tx = session.beginTransaction();
@@ -213,8 +197,6 @@ public class ShopsController {
 
 				if (session != null && session.isOpen()) {
 					session.close();
-					session.getSessionFactory().close();
-
 				}
 			}
 		}
@@ -223,7 +205,7 @@ public class ShopsController {
 
 	}
 
-	@SuppressWarnings({ "unchecked", "deprecation" })
+	@SuppressWarnings({ "unchecked"})
 	@RequestMapping(value = "/ShopsFormView", method = RequestMethod.GET)
 	public String ShopsFormView(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
 
@@ -234,52 +216,47 @@ public class ShopsController {
 		ObjectMapper mapper = new ObjectMapper();
 		String shopId, regionId, area, navAction = "2";
 		Shops Shop;
-		List<AreaBorder> listAreaBorder = new ArrayList<AreaBorder>();
-		List<RegionBorder> listRegionBorder = null;
-		HashMap<String, List<RegionBorder>> hashRegionBorder = new HashMap<String, List<RegionBorder>>();
-		HashMap<String, List<AreaBorder>> hashAreaBorder = new HashMap<String, List<AreaBorder>>();
+		HashMap<String, List<Map<String, String>>> hashRegionBorder = new HashMap<String, List<Map<String, String>>>();
+		HashMap<String,List<Map<String, String>>> hashAreaBorder = new HashMap<String, List<Map<String, String>>>();
 
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
 		Calendar calendar = new GregorianCalendar();
 		String result[] = new String[4];
 		int SelectedIndex = 0;
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
-
-			tx = session.beginTransaction();
-			notification.headerNotifications(session, model);
 			try {
-
+				notification.headerNotifications(session, model);
 				////////////////////////////////////// Area and Area
 				////////////////////////////////////// Borders//////////////////////////////////////////////////
 				List<Object[]> areaIDs = new ArrayList<>();
 				List<Object> areas = new ArrayList<>();
-				List<Object> Area_Borders = new ArrayList<>();
-				String LatLong = null;
+				List<Object> areaData = new ArrayList<>();
+				String[] areaArray = null;
 				query = session.createNativeQuery("SELECT AREA_ID FROM AREA");
 				if (query.list().size() > 0) {
 					areaIDs = query.list();
 					for (int i = 0; i < areaIDs.size(); i++) {
 						areas = new ArrayList<>();
-						query = session
-								.createNativeQuery("SELECT AREA_NAME from AREA where AREA_ID='" + areaIDs.get(i) + "'");
-						String areaName = query.uniqueResult().toString();
-
 						query = session.createNativeQuery(
-								"SELECT LISTAGG(a.LATITUDE || ',' || a.LONGTITUDE, ':') WITHIN GROUP (ORDER BY a.SEQ_SORTING + 0 ASC) AS borders "
-										+ " from area_border a" + " where area_id = '" + areaIDs.get(i) + "'");
-
-						if (query.uniqueResult() != null) {
-							LatLong = query.uniqueResult().toString();
-						} else {
-							LatLong = "N/A";
+								"SELECT a.AREA_ID,b.AREA_NAME, LISTAGG(a.LATITUDE || ',' || a.LONGTITUDE, ':') WITHIN GROUP (ORDER BY a.SEQ_SORTING) AS borders"
+										+ " FROM AREA_BORDER a ,Area b where  a.AREA_ID=b.AREA_ID"
+										+ " and a.AREA_ID='" + areaIDs.get(i) + "'"
+										+ " GROUP BY a.AREA_ID,b.AREA_NAME");
+						
+						areaArray= ((List<Object[]>) query.list()).stream()
+						        .flatMap(array -> Arrays.stream(array)
+						                .map(Object::toString))
+						        .toArray(String[]::new);
+						
+						if (areaArray[2] == null) {
+							areaArray[2] ="N/A";
 						}
-
-						areas.add(areaIDs.get(i));
-						areas.add(areaName);
-						areas.add(LatLong);
-						Area_Borders.add(areas);
+						areas.add(areaArray[0]);
+						areas.add(areaArray[1]);
+						areas.add(areaArray[2]);
+						areaData.add(areas);
 					}
 				}
 
@@ -287,36 +264,41 @@ public class ShopsController {
 				////////////////////////////////////// Borders//////////////////////////////////////////////////
 				List<Object[]> regionIDs = new ArrayList<>();
 				List<Object> regions = new ArrayList<>();
-				List<Object> Region_Borders = new ArrayList<>();
+				List<Object> regionData = new ArrayList<>();
 
 				query = session.createNativeQuery("SELECT REGION_ID FROM REGION");
 				if (query.list().size() > 0) {
 					regionIDs = query.list();
 					for (int i = 0; i < regionIDs.size(); i++) {
 						regions = new ArrayList<>();
+						
 						query = session.createNativeQuery(
-								"SELECT REGION_NAME from REGION where REGION_ID='" + regionIDs.get(i) + "'");
-						String regionName = query.uniqueResult().toString();
-
-						query = session.createNativeQuery(
-								"SELECT REGION_CODE from REGION where REGION_ID='" + regionIDs.get(i) + "'");
-						String regionCode = query.uniqueResult().toString();
-
-						query = session.createNativeQuery(
-								"SELECT LISTAGG(a.LATITUDE || ',' || a.LONGTITUDE, ':') WITHIN GROUP (ORDER BY a.SEQ_SORTING + 0 ASC) AS borders "
-										+ " from REGION_BORDER a" + " where REGION_ID = '" + regionIDs.get(i) + "'");
-
-						if (query.uniqueResult() != null) {
-							LatLong = query.uniqueResult().toString();
-						} else {
-							LatLong = "N/A";
+								"SELECT a.REGION_ID,b.REGION_NAME,b.REGION_CODE, LISTAGG(a.LATITUDE || ',' || a.LONGTITUDE, ':') WITHIN GROUP (ORDER BY a.SEQ_SORTING + 0 ASC) AS borders"
+										+ " FROM REGION_BORDER a,REGION b WHERE  a.REGION_ID=b.REGION_ID"
+										+ " AND a.REGION_ID ='" + regionIDs.get(i) + "'"
+										+ " GROUP BY a.REGION_ID,b.REGION_NAME,b.REGION_CODE");
+						
+						List<Object[]> listOfArrays = query.list();
+						// Convert list of arrays to a single array
+						String[] resultArray = listOfArrays.stream()
+						        .flatMap(array -> Arrays.stream(array)
+						                .map(Object::toString))
+						        .toArray(String[]::new);
+						
+						if (resultArray[3] == null) {
+							resultArray[3] ="N/A";
 						}
-
-						regions.add(regionIDs.get(i));
-						regions.add(regionName);
-						regions.add(regionCode);
-						regions.add(LatLong);
-						Region_Borders.add(regions);
+						
+						System.out.println(resultArray[0]);
+						System.out.println(resultArray[1]);
+						System.out.println(resultArray[2]);
+						System.out.println(resultArray[3]);
+						
+						regions.add(resultArray[0]);
+						regions.add(resultArray[1]);
+						regions.add(resultArray[2]);
+						regions.add(resultArray[3]);
+						regionData.add(regions);
 					}
 				}
 				navAction = request.getParameter("NavAction");
@@ -341,15 +323,15 @@ public class ShopsController {
 					model.addAttribute("listShopImage", "addNew");
 
 					// return the area and area_borders on load
-					if (Area_Borders.size() > 0) {
-						model.addAttribute("areasData", mapper.writeValueAsString(Area_Borders));
+					if (areaData.size() > 0) {
+						model.addAttribute("areasData", mapper.writeValueAsString(areaData));
 					} else {
 						model.addAttribute("areasData", "addNew");
 					}
 
 					// return the region and region_borders on load
-					if (Region_Borders.size() > 0) {
-						model.addAttribute("regionsData", mapper.writeValueAsString(Region_Borders));
+					if (regionData.size() > 0) {
+						model.addAttribute("regionsData", mapper.writeValueAsString(regionData));
 					} else {
 						model.addAttribute("regionsData", "addNew");
 					}
@@ -365,11 +347,19 @@ public class ShopsController {
 					regionId = Shop.getRegion();
 
 					if (regionId != null) {
-						query = session
-								.createQuery("select t.lng as lng, t.lat as lat from RegionBorder t where regionId ='"
-										+ regionId + "' ORDER BY sequence + 0 ASC");
-						listRegionBorder = query
-								.setResultTransformer(new AliasToBeanResultTransformer(AgentBorder.class)).list();
+						query = session.createQuery(
+								"SELECT t.lng AS lng, t.lat AS lat FROM RegionBorder t WHERE regionId = :regionId ORDER BY sequence + 0 ASC");
+						query.setParameter("regionId", regionId);
+
+						//List<Object[]> result1 = query.getResultList();
+						
+						List<Map<String, String>> listRegionBorder =	((List<Object[]>) query.getResultList()).stream().map(arr -> {
+							Map<String, String> newMap = new HashMap<>();
+							newMap.put("lng", String.valueOf(arr[0])); // Convert to String
+							newMap.put("lat", String.valueOf(arr[1])); // Convert to String
+							return newMap;
+						}).collect(Collectors.toList());
+						
 						hashRegionBorder.put(regionId, listRegionBorder);
 						model.addAttribute("listRegionBorder", mapper.writeValueAsString(hashRegionBorder));
 
@@ -385,24 +375,22 @@ public class ShopsController {
 						query = session
 								.createQuery("select t.lng as lng, t.lat as lat from AreaBorder t where areaId ='"
 										+ area + "' ORDER BY Id ");
-						listAreaBorder = query.setResultTransformer(new AliasToBeanResultTransformer(AgentBorder.class))
-								.list();
+						
+						List<Map<String, String>> listAreaBorder =	((List<Object[]>) query.getResultList()).stream().map(arr -> {
+							Map<String, String> newMap = new HashMap<>();
+							newMap.put("lng", String.valueOf(arr[0])); // Convert to String
+							newMap.put("lat", String.valueOf(arr[1])); // Convert to String
+							return newMap;
+						}).collect(Collectors.toList());
 						hashAreaBorder.put(area, listAreaBorder);
 
 						if (listAreaBorder != null) {
-
 							model.addAttribute("listAreaBorder", mapper.writeValueAsString(hashAreaBorder));
-
 						} else {
-
 							model.addAttribute("listAreaBorder", "addNew");
-
 						}
-
 					} else {
-
 						model.addAttribute("listAreaBorder", "addNew");
-
 					}
 
 					model.addAttribute("shopsID", Shop.getShopId());
@@ -430,15 +418,15 @@ public class ShopsController {
 					model.addAttribute("listShopImage", mapper.writeValueAsString(query.list()));
 
 					// return the area and area_borders on load
-					if (Area_Borders.size() > 0) {
-						model.addAttribute("areasData", mapper.writeValueAsString(Area_Borders));
+					if (areaData.size() > 0) {
+						model.addAttribute("areasData", mapper.writeValueAsString(areaData));
 					} else {
 						model.addAttribute("areasData", "addNew");
 					}
 
 					// return the region and region_borders on load
-					if (Region_Borders.size() > 0) {
-						model.addAttribute("regionsData", mapper.writeValueAsString(Region_Borders));
+					if (regionData.size() > 0) {
+						model.addAttribute("regionsData", mapper.writeValueAsString(regionData));
 					} else {
 						model.addAttribute("regionsData", "addNew");
 					}
@@ -453,9 +441,7 @@ public class ShopsController {
 			} finally {
 
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
 				}
 
 			}
@@ -483,15 +469,16 @@ public class ShopsController {
 		String shopsId, createdDate, owner, latitude, longtitude, address, shopName, salesman, regionManager, agent,
 				region, status, area;
 		shopsId = request.getParameter("shopsID");
+		
 		String[] agentIdName, areaparts, regionIdName;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 
 			try {
 				formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
 
-				if (StringUtils.equalsIgnoreCase(shopsId, "")) {
+				if (shopsId == null || StringUtils.equalsIgnoreCase(shopsId, "")) {
 					synchronized (this) {
 						//
 						shopsId = "SHOP_" + calendar.get(Calendar.YEAR) + "_" + Integer.parseInt(
@@ -502,9 +489,9 @@ public class ShopsController {
 					}
 					Shops.setCreateDate(new Timestamp((new Timestamp(System.currentTimeMillis())).getTime()));
 
-				} else {
-
 				}
+				
+				System.out.println("shopsId is : "+shopsId);
 				owner = request.getParameter("owner");
 				latitude = request.getParameter("latitude");
 				longtitude = request.getParameter("longtitude");
@@ -574,9 +561,7 @@ public class ShopsController {
 				logger.info("Error in ShopsFormSave due to \n " + exceptionAsString);
 			} finally {
 				if (session != null && session.isOpen()) {
-					
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 
@@ -591,12 +576,12 @@ public class ShopsController {
 	public Map<String, Object> GetAvailableShops(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) {
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		String shops = "%" + request.getParameter("Shops") + "%";
 		String agentID = request.getParameter("agentID");
 		String getAllShops = request.getParameter("getAllShops");
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 
@@ -640,10 +625,6 @@ public class ShopsController {
 					}
 				}
 
-				// query = session.createQuery("SELECT id, name from Area where id like
-				// UPPER(:param1) OR UPPER(name)like UPPER(:param1) ORDER BY lastModifieddate
-				// DESC");
-
 			} catch (Exception e) {
 
 				sw = new StringWriter();
@@ -655,11 +636,7 @@ public class ShopsController {
 			} finally {
 
 				if (session != null && session.isOpen()) {
-
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
-
 				}
 			}
 		}
@@ -682,7 +659,7 @@ public class ShopsController {
 
 		List<RegionBorder> listRegionBorder = null;
 		HashMap<String, List<RegionBorder>> hashRegionBorder = new HashMap<String, List<RegionBorder>>();
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 
@@ -719,11 +696,7 @@ public class ShopsController {
 			} finally {
 
 				if (session != null && session.isOpen()) {
-
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
-
 				}
 			}
 		}

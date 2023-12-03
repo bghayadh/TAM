@@ -1,5 +1,5 @@
 <%@ include file="NetworkCommon.jsp" %>
-
+<title>Site PO Item</title>
 <script>	
 $('#filterr').hide();
 $('#removeFilter').hide();
@@ -10,7 +10,8 @@ var lst = ${listSites};
 //console.log("listPO...", listPO);
 var arrayParam=${arrayParam};
 //console.log("arrayParam...", arrayParam);
-
+var date=$("#ParsingDate").val();
+console.log("date...", date);
 
 var button ;
 var data;
@@ -441,6 +442,7 @@ function StPoItemCore(id){
 						"paramTransmission":paramTransmission,
 				     	"paramRAN":paramRAN,
 					    "paramCore":paramCore,
+					    "date":date,
 					 },
 					dataType: "json",
 					success: function (data) {   									        	
@@ -494,7 +496,7 @@ function StPoItemCore(id){
 	}
 	
 function requestItem(id){
-	console.log("iddddddd  ",id);
+	//console.log("iddddddd  ",id);
 		var index = id.indexOf("WARE_2");
 		if (index !== -1) {
 			var selectedPo = id.substring(0, index).slice(0, -1);
@@ -559,6 +561,7 @@ function requestItem(id){
 					"paramTransmission":paramTransmission,
 			     	"paramRAN":paramRAN,
 				    "paramCore":paramCore,
+				    "date":date,
 				 },
 				dataType: "json",
 				success: function (data) {        	

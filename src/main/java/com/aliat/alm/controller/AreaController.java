@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -21,8 +21,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.transform.AliasToBeanResultTransformer;
-import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,16 +29,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
-import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
-import com.aliat.alm.models.AgentBorder;
 import com.aliat.alm.models.Area;
 import com.aliat.alm.models.AreaBorder;
 import com.aliat.alm.models.AreaFinance;
-import com.aliat.alm.models.AreaFinanceBOQ;
-import com.aliat.alm.models.RegionBorder;
 import com.aliat.alm.services.ItemParameters;
 import com.aliat.alm.services.LoginServices;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -70,9 +66,6 @@ public class AreaController {
 	private static final Logger logger = Logger.getLogger(AreaController.class.getName());
 
 	@Autowired
-	ALMSessions almsessions;
-
-	@Autowired
 	Form form;
 
 	@Autowired
@@ -85,12 +78,10 @@ public class AreaController {
 			return "redirect:/";
 		}
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
-			notification.headerNotifications(session, model);
-
 			try {
+				notification.headerNotifications(session, model);
 				query = session.createNativeQuery(
 						"SELECT AREA_ID as id,AREA_ID as areaID, AREA_NAME as name,REGION_NAME as regionName,TO_CHAR(CREATION_DATE, 'YYYY-MM-DD HH24:MI:SS') as creationDate,TO_CHAR(LAST_MODIFICATION_DATE, 'YYYY-MM-DD HH24:MI:SS') as lastModifieddate from Area  ORDER BY LAST_MODIFICATION_DATE DESC");
 				model.addAttribute("ListGridTable", mapper.writeValueAsString(query.list()));
@@ -102,9 +93,7 @@ public class AreaController {
 				logger.info("Error in AreaListView due to \n " + exceptionAsString);
 			} finally {
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -120,7 +109,7 @@ public class AreaController {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
 		}
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 
 			tx = session.beginTransaction();
@@ -173,9 +162,7 @@ public class AreaController {
 				logger.info("Error in showing the filtered Area list view due to \n " + exceptionAsString);
 			} finally {
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -183,7 +170,7 @@ public class AreaController {
 		return rtn;
 	}
 
-	@SuppressWarnings({ "unchecked", "deprecation" })
+	@SuppressWarnings({ "unchecked"})
 	@RequestMapping(value = "/AreaFormView", method = RequestMethod.GET)
 	public String AreaFormView(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
 
@@ -195,52 +182,46 @@ public class AreaController {
 		Area area;
 		String regionId, navAction = "2", areaID;
 		List<AreaBorder> areaBorderList = new ArrayList<>();
-		List<RegionBorder> regionBorderList = new ArrayList<>();
-		HashMap<String, List<RegionBorder>> hash_map1 = new HashMap<String, List<RegionBorder>>();
+		HashMap<String, List<Map<String, String>>> hash_map1 = new HashMap<String, List<Map<String, String>>>();
 		boolean EmptyList;
 		String result[] = new String[4];
 		int SelectedIndex = 0;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
 			notification.headerNotifications(session, model);
 			try {
 
 //////////////////////////////////////Region and Region Borders//////////////////////////////////////////////////
 				List<Object[]> regionIDs = new ArrayList<>();
 				List<Object> regions = new ArrayList<>();
-				List<Object> Region_Borders = new ArrayList<>();
-				String LatLong = null;
+				List<Object> regionData = new ArrayList<>();
+
 				query = session.createNativeQuery("SELECT REGION_ID FROM REGION");
 				if (query.list().size() > 0) {
 					regionIDs = query.list();
 					for (int i = 0; i < regionIDs.size(); i++) {
 						regions = new ArrayList<>();
-						query = session.createNativeQuery(
-								"SELECT REGION_NAME from REGION where REGION_ID='" + regionIDs.get(i) + "'");
-						String regionName = query.uniqueResult().toString();
 
 						query = session.createNativeQuery(
-								"SELECT REGION_CODE from REGION where REGION_ID='" + regionIDs.get(i) + "'");
-						String regionCode = "";
-						if (query.getSingleResult() != null)
-							regionCode = query.getSingleResult().toString();
+								"SELECT a.REGION_ID,b.REGION_NAME,b.REGION_CODE, LISTAGG(a.LATITUDE || ',' || a.LONGTITUDE, ':') WITHIN GROUP (ORDER BY a.SEQ_SORTING + 0 ASC) AS borders"
+										+ " FROM REGION_BORDER a,REGION b WHERE  a.REGION_ID=b.REGION_ID"
+										+ " AND a.REGION_ID ='" + regionIDs.get(i) + "'"
+										+ " GROUP BY a.REGION_ID,b.REGION_NAME,b.REGION_CODE");
 
-						query = session.createNativeQuery(
-								"SELECT LISTAGG(a.LATITUDE || ',' || a.LONGTITUDE, ':') WITHIN GROUP (ORDER BY a.SEQ_SORTING + 0 ASC) AS borders "
-										+ " from REGION_BORDER a" + " where REGION_ID = '" + regionIDs.get(i) + "'");
+						List<Object[]> listOfArrays = query.list();
+						// Convert list of arrays to a single array
+						String[] resultArray = listOfArrays.stream()
+								.flatMap(array -> Arrays.stream(array).map(Object::toString)).toArray(String[]::new);
 
-						if (query.uniqueResult() != null) {
-							LatLong = query.uniqueResult().toString();
-						} else {
-							LatLong = "N/A";
+						if (resultArray[3] == null) {
+							resultArray[3] = "N/A";
 						}
-
-						regions.add(regionIDs.get(i));
-						regions.add(regionName);
-						regions.add(regionCode);
-						regions.add(LatLong);
-						Region_Borders.add(regions);
+						
+						regions.add(resultArray[0]);
+						regions.add(resultArray[1]);
+						regions.add(resultArray[2]);
+						regions.add(resultArray[3]);
+						regionData.add(regions);
 					}
 				}
 
@@ -263,8 +244,8 @@ public class AreaController {
 					model.addAttribute("AreasCount", "addNew");
 
 					// return the region and region_borders on load
-					if (Region_Borders.size() > 0) {
-						model.addAttribute("regionsData", mapper.writeValueAsString(Region_Borders));
+					if (regionData.size() > 0) {
+						model.addAttribute("regionsData", mapper.writeValueAsString(regionData));
 					} else {
 						model.addAttribute("regionsData", "addNew");
 					}
@@ -307,13 +288,20 @@ public class AreaController {
 					regionId = area.getRegionID();
 
 					if (regionId != null) {
+						query = session.createQuery(
+								"SELECT t.lng AS lng, t.lat AS lat FROM RegionBorder t WHERE regionId = :regionId ORDER BY sequence + 0 ASC");
+						query.setParameter("regionId", regionId);
 
-						query = session
-								.createQuery("select t.lng as lng, t.lat as lat from RegionBorder t where regionId ='"
-										+ regionId + "' ORDER BY sequence + 0 ASC");
-						regionBorderList = query
-								.setResultTransformer(new AliasToBeanResultTransformer(AgentBorder.class)).list();
-						hash_map1.put(regionId, regionBorderList);
+						// List<Object[]> result1 = query.getResultList();
+
+						List<Map<String, String>> listRegionBorder = ((List<Object[]>) query.getResultList()).stream().map(arr -> {
+							Map<String, String> newMap = new HashMap<>();
+							newMap.put("lng", String.valueOf(arr[0])); // Convert to String
+							newMap.put("lat", String.valueOf(arr[1])); // Convert to String
+							return newMap;
+						}).collect(Collectors.toList());
+
+						hash_map1.put(regionId, listRegionBorder);
 						model.addAttribute("listRegionBorder", mapper.writeValueAsString(hash_map1));
 
 					} else {
@@ -323,17 +311,31 @@ public class AreaController {
 					query = session.createQuery(
 							"select  TO_CHAR(t.startDate,'YYYY-MM-DD') as startDate , TO_CHAR(t.endDate,'YYYY-MM-DD') as endDate,t.areaId as areaId,t.number2gSites as number2gSites, t.number2g3gSites as number2g3gSites , t.number2g3g4gSites as number2g3g4gSites, t.pl2g as pl2g, t.pl2g3g as pl2g3g, t.pl2g3g4g as pl2g3g4g, t.totalSites as totalSites, t.sumProfitLoss as sumProfitLoss, t.id as id from AreaFinance t where t.areaId like :param1");
 					query.setParameter("param1", areaID);
-					List<AreaFinanceBOQ> ListAreaFin = (List<AreaFinanceBOQ>) query
-							.setResultTransformer(Transformers.aliasToBean(AreaFinanceBOQ.class)).list();
-
-					model.addAttribute("ListAreaFinance", mapper.writeValueAsString(ListAreaFin));
+									
+					List<Map<String, String>> ListAreaFinance = ((List<Object[]>) query.getResultList()).stream().map(arr -> {
+						Map<String, String> newMap = new HashMap<>();
+						newMap.put("startDate", String.valueOf(arr[0])); // Convert to String
+						newMap.put("endDate", String.valueOf(arr[1])); // Convert to String
+						newMap.put("areaId", String.valueOf(arr[2])); // Convert to String
+						newMap.put("number2gSites", String.valueOf(arr[3])); // Convert to String
+						newMap.put("number2g3gSites", String.valueOf(arr[4])); // Convert to String
+						newMap.put("number2g3g4gSites", String.valueOf(arr[5])); // Convert to String
+						newMap.put("pl2g", String.valueOf(arr[6])); // Convert to String
+						newMap.put("pl2g3g", String.valueOf(arr[7])); // Convert to String
+						newMap.put("pl2g3g4g", String.valueOf(arr[8])); // Convert to String
+						newMap.put("totalSites", String.valueOf(arr[9])); // Convert to String
+						newMap.put("sumProfitLoss", String.valueOf(arr[10])); // Convert to String
+						newMap.put("id", String.valueOf(arr[11])); // Convert to String
+						return newMap;
+					}).collect(Collectors.toList());
+					model.addAttribute("ListAreaFinance", mapper.writeValueAsString(ListAreaFinance));
 					model.addAttribute("docStatus", "Existed");
 					model.addAttribute("ordStatus", area.getStatus());
 					model.addAttribute("AreaCoordinates", "0");
 
 					// return the region and region_borders on load
-					if (Region_Borders.size() > 0) {
-						model.addAttribute("regionsData", mapper.writeValueAsString(Region_Borders));
+					if (regionData.size() > 0) {
+						model.addAttribute("regionsData", mapper.writeValueAsString(regionData));
 					} else {
 						model.addAttribute("regionsData", "addNew");
 					}
@@ -348,9 +350,7 @@ public class AreaController {
 			} finally {
 
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
 				}
 
 			}
@@ -371,7 +371,7 @@ public class AreaController {
 			return rtn;
 		}
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 
@@ -384,11 +384,6 @@ public class AreaController {
 						query = session
 								.createNativeQuery("delete Area_Border where AREA_ID ='" + idList[j].toString() + "'");
 						query.executeUpdate();
-						/*
-						 * query =
-						 * session.createNativeQuery("delete Area_FINANCE where AREA_ID ='"+idList[j]+
-						 * "'"); query.executeUpdate();
-						 */
 						query = session.createNativeQuery("delete Area where AREA_ID ='" + idList[j].toString() + "'");
 						query.executeUpdate();
 					}
@@ -403,9 +398,7 @@ public class AreaController {
 				logger.info("Error in AreaDelete due to \n " + exceptionAsString);
 			} finally {
 				if (session != null && session.isOpen()) {
-
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -433,7 +426,7 @@ public class AreaController {
 		Timestamp CreationDate;
 		Area area = new Area();
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 
@@ -612,7 +605,6 @@ public class AreaController {
 
 				if (session != null && session.isOpen()) {
 					session.close();
-					session.getSessionFactory().close();
 				}
 
 			}
@@ -631,11 +623,9 @@ public class AreaController {
 			return rtn;
 		}
 		String Area = "%" + request.getParameter("areaId") + "%";
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 
 		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
-
 			try {
 
 				query = session.createQuery(
@@ -653,11 +643,8 @@ public class AreaController {
 				logger.info("Error in GetAllAreas due to \n " + exceptionAsString);
 			} finally {
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
 				}
-
 			}
 		}
 		return rtn;
@@ -676,10 +663,8 @@ public class AreaController {
 		}
 		String AreaId;
 		List<AreaBorder> listAreas = null;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
-
 			try {
 
 				AreaId = request.getParameter("areaId");
@@ -701,11 +686,7 @@ public class AreaController {
 			} finally {
 
 				if (session != null && session.isOpen()) {
-
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
-
 				}
 
 			}

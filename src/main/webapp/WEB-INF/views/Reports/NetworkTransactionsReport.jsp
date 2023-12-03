@@ -941,9 +941,8 @@
 							data.push([ "Element ID", "Element",
 									"ALM Trans Type", "Discovered Trans Type",
 									"Date", "From Site", "To Site",
-									"From Node", "To Node", "From Node",
-									"Type", "To Node Type", "Model",
-									"Mac Address", "Serial Number",
+									"From Node", "To Node", "From Node","To Node Type",
+									"Model","Mac Address", "Serial Number",
 									"From Circle", "To Circle", "Approved By",
 									"Modified By", "Sent To ALM",
 									"ALM Approval Status" ]);

@@ -4,7 +4,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<title></title>
+		<title>Node List View</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<link rel="shortcut icon" href="">
 		<script src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>
@@ -491,7 +491,17 @@ z-index: 9003;
 													</li>
 												</th>
 												
-											
+												<th>Site Name
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> <i
+																class="fa fa-list almgrid-filter-i"
+																aria-hidden="true"></i></button>
+														<ul
+															class="dropdown-menu dropdown-menu-right filter-dropdown-ul">
+
+														</ul>
+													</li>
+												</th>											
 
 												<th>Created Date
 													<li class="filter-dropdown dropdown">
@@ -505,17 +515,6 @@ z-index: 9003;
 													</li>
 												</th>
 												<th>Last Modified Date
-													<li class="filter-dropdown dropdown">
-														<button class="almgrid-filter" data-toggle="dropdown"> <i
-																class="fa fa-list almgrid-filter-i"
-																aria-hidden="true"></i></button>
-														<ul
-															class="dropdown-menu dropdown-menu-right filter-dropdown-ul">
-
-														</ul>
-													</li>
-												</th>
-													<th>Site Name
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown"> <i
 																class="fa fa-list almgrid-filter-i"

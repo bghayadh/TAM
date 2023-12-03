@@ -39,7 +39,7 @@ import com.aliat.alm.services.ItemParameters;
 import com.aliat.alm.services.LoginServices;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonObject;
-import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.common.Permissions;
@@ -62,8 +62,6 @@ public class ClientsController {
 	@Autowired
 	Form form;
 
-	@Autowired
-	ALMSessions almsessions;
 
 	@Autowired
 	Notify notification;
@@ -77,15 +75,10 @@ public class ClientsController {
 			return "redirect:/";
 		}
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
-
-			tx = session.beginTransaction();
-			notification.headerNotifications(session, model);
-
 			try {
-				
-
+				notification.headerNotifications(session, model);
 				String str = "select c.CLIENT_ID as clientId, c.MOBILE_NUMBER as mobile, c.FIRST_NAME as firstName, c.LAST_NAME as lastName,c.CLIENT_ID_NUMBER as clientIdNumber,TO_CHAR(c.CREATED_DATE,'YYYY-MM-DD HH24:MI:SS') as createdDate,"
 						+ "TO_CHAR(c.LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') as lastModifiedDate,"
 						+ "nvl(c.AGENT_NUMBER,'-') as agentNumber,"
@@ -104,9 +97,8 @@ public class ClientsController {
 				logger.info("Error in ClientsListView due to \n " + exceptionAsString);
 			} finally {
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+					
 				}
 			}
 		}
@@ -123,14 +115,10 @@ public class ClientsController {
 			return "redirect:/";
 		}
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
-
-			tx = session.beginTransaction();
-			notification.headerNotifications(session, model);
-
 			try {
-
+				notification.headerNotifications(session, model);
 				permissions.setPerms(model, permissions.getUserPermsWithSession(session, request), "Image Approval",
 						"List");
 				query = session.createNativeQuery(
@@ -154,9 +142,7 @@ public class ClientsController {
 				logger.info("Error in ClientsListView due to \n " + exceptionAsString);
 			} finally {
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -174,14 +160,10 @@ public class ClientsController {
 			return "redirect:/";
 		}
 		String result = null;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
-
-			tx = session.beginTransaction();
-			notification.headerNotifications(session, model);
-
 			try {
-
+				notification.headerNotifications(session, model);
 				String startdate, enddate, mobileNumber, Fname, Lname, agentNumber, status, regStatus,
 						TkashStatus, region, area;
 				startdate = request.getParameter("startDate");
@@ -273,9 +255,7 @@ public class ClientsController {
 				logger.info("Error in FilteredClientsListView due to \n " + exceptionAsString);
 			} finally {
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -293,14 +273,10 @@ public class ClientsController {
 			return "redirect:/";
 		}
 		String result = null;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
-
-			tx = session.beginTransaction();
-			notification.headerNotifications(session, model);
-
 			try {
-
+				notification.headerNotifications(session, model);
 				String startdate, enddate, mobileNumber, Fname, Lname, agentNumber, status, appStatus,
 						TkashStatus, region, area;
 				startdate = request.getParameter("startDate");
@@ -380,17 +356,6 @@ public class ClientsController {
 				str = str + " order by LAST_MODIFIED_DATE DESC";
 
 				query = session.createNativeQuery(str);
-				/*
-				 * listClients = ((SQLQuery)
-				 * query).addScalar("clientId").addScalar("mobile").addScalar("firstName")
-				 * .addScalar("clientIdNumber").addScalar("createdDate").addScalar(
-				 * "lastModifiedDate")
-				 * .addScalar("agentNumber").addScalar("agentFullName").addScalar("status").
-				 * addScalar("regStatus") .addScalar("tkashregstatus")
-				 * .setResultTransformer(Transformers.aliasToBean(ClientsListView.class)).list()
-				 * ;
-				 */
-				// result = mapper.writeValueAsString(listClients);
 				result = mapper.writeValueAsString(query.list());
 				System.out.println("Filtered Array: " + result);
 			} catch (Exception e) {
@@ -401,9 +366,7 @@ public class ClientsController {
 				logger.info("Error in FilteredClientsImageListView due to \n " + exceptionAsString);
 			} finally {
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -424,11 +387,10 @@ public class ClientsController {
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
 		String result[] = new String[4];
 		int SelectedIndex = 0;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
-			notification.headerNotifications(session, model);
 			try {
+				notification.headerNotifications(session, model);
 				navAction = request.getParameter("NavAction");
 				if (StringUtils.equalsIgnoreCase(clientId, null)) {
 					model.addAttribute("ListClient", "addNew");
@@ -608,9 +570,8 @@ public class ClientsController {
 				logger.info("Error in ClientsFormView due to \n " + exceptionAsString);
 			} finally {
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+					
 				}
 			}
 		}
@@ -633,7 +594,7 @@ public class ClientsController {
 		Calendar calendar = new GregorianCalendar();
 		String clientID;
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 
 			tx = session.beginTransaction();
@@ -701,7 +662,6 @@ public class ClientsController {
 			} finally {
 				if (session != null && session.isOpen()) {
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -724,7 +684,7 @@ public class ClientsController {
 		}
 
 		String idList;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 
@@ -746,13 +706,9 @@ public class ClientsController {
 				rtn.put("result", "Failed");
 
 			} finally {
-
 				if (session != null && session.isOpen()) {
-					
 					session.close();
-					session.getSessionFactory().close();
 				}
-
 			}
 		}
 		return rtn;
@@ -770,7 +726,7 @@ public class ClientsController {
 			return rtn;
 		}
 		String[] idList;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
@@ -782,7 +738,6 @@ public class ClientsController {
 						String idForm = idList[i];
 						query = session.createNativeQuery("delete CLIENTS  where CLIENT_ID ='" + idForm + "'");
 						query.executeUpdate();
-						
 					}
 					tx.commit();
 				}
@@ -795,10 +750,8 @@ public class ClientsController {
 				logger.finest("Error in ClientListViewDelete due to \n " + exceptionAsString);
 				logger.info("Error in ClientListViewDelete due to \n " + exceptionAsString);
 			} finally {
-
 				if (session != null && session.isOpen()) {
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		} else {
@@ -825,9 +778,8 @@ public class ClientsController {
 		// String itemdtl = "%" + request.getParameter("client") + "%";
 		System.out.println("Passing from GetAllClients where client is ");
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
 			try {
 				query = session.createQuery(
 						"SELECT clientId, (FIRST_NAME || ' ' || LAST_NAME ),mobile from Clients where clientId like UPPER(:param1) OR UPPER(FIRST_NAME || ' ' || LAST_NAME)like UPPER(:param1) or mobile like UPPER(:param1) ORDER BY lastModifiedDate DESC");
@@ -835,7 +787,6 @@ public class ClientsController {
 				query.setFirstResult(0);
 				query.setMaxResults(40);
 				rtn.put("ListClient", query.list());
-				System.out.println("ListClient is " + mapper.writeValueAsString(query.list()));
 
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -845,9 +796,7 @@ public class ClientsController {
 				logger.info("Error in GetAllClients due to \n " + exceptionAsString);
 			} finally {
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -864,10 +813,9 @@ public class ClientsController {
 			rtn.put("Login", "redirect:/");
 			return rtn;
 		}
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		String search = request.getParameter("search");
 		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
 			try {
 				query = session.createNativeQuery(
 						"SELECT CLIENT_ID,FIRST_NAME,LAST_NAME,MOBILE_NUMBER,LONGITUDE,LATITUDE,PHYSICAL_LOCATION FROM CLIENTS WHERE UPPER(CLIENT_ID) LIKE UPPER(:param) OR UPPER(FIRST_NAME) LIKE UPPER(:param) OR UPPER(LAST_NAME) LIKE UPPER(:param) OR UPPER(MOBILE_NUMBER) LIKE UPPER(:param) ");
@@ -884,9 +832,7 @@ public class ClientsController {
 				rtn.put("searchResult", null);
 			} finally {
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
 				}
 			}
 		}
@@ -981,7 +927,7 @@ public class ClientsController {
 				if (response_message != null && !response_message.contains(" Data is incomplete")) {
 
 					// update clients table and insert into the log table
-					session = almsessions.getSession();
+					session = AlmDbSession.getInstance().getSession();
 					if (session != null && session.isOpen()) {
 						tx = session.beginTransaction();
 						String approve_status = null;
@@ -1043,7 +989,6 @@ public class ClientsController {
 
 			if (session != null && session.isOpen()) {
 				session.close();
-				session.getSessionFactory().close();
 			}
 		}
 

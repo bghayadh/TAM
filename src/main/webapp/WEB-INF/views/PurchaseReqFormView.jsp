@@ -3,7 +3,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <head>
 <meta charset="utf-8">
-    <title></title>
+    <title>PR Form View</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- <script src="${pageContext.request.contextPath}/resources/js/jquery.slim.min.js" ></script>  -->
 	<script src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>
@@ -64,7 +64,17 @@ box-shadow: 12px 0 15px -4px #000000, -12px 0 15px -4px#000000;
 z-index: 9003;
  /*above nine thousand*/}
     
-    
+    .btn-pop {
+	background-color: #C2CBC0 !important;
+	border-color: #C2CBC0;
+	3
+}
+
+.btn-pop:hover {
+	color: #fff;
+	background-color: #8696A0 !important;
+	border-color: #8696A0 !important;
+}
     
     .hide-row { display:none; }
     
@@ -434,7 +444,7 @@ max-width: 100%;
 			<a class="dropdown-item"  type="button" id="approvePRq">Approve</a>
 	             <a class="dropdown-item"  type="button" id="closePRq" >Close</a>
 	             <a class="dropdown-item" type="button" id="cancelPRq" >Cancel</a>
-    	          <a class="dropdown-item" id="Newpo" href="${pageContext.request.contextPath}/PurchaseOrderFormView?ordPRQid=${ID}&type=addNewFromPRQ">Create Purchase order</a>
+    	          <a class="dropdown-item" id="Newpo" href="${pageContext.request.contextPath}/PurchaseOrderFormView?ordPRQid=${ID}&type=addNewFromPRQ">Create Purchase Order</a>
     	          <a class="dropdown-item" id="Newgr" href="${pageContext.request.contextPath}/GoodsRcvFormView?grPRQid=${ID}&type=addNewFromPRQ">Create Goods Received </a>
     	        
     	        </div>
@@ -1042,17 +1052,18 @@ max-width: 100%;
 <div id ="preqModal" class="modal fade custom-class-assignedto-modal"  tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">	
 		<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
 			<div class="modal-content" >
-				<div class="modal-header" style="background-color: #FF4F4F;" >
-				<h5 id ="popupNb" class="modal-title" style="font-weight:bold; color: #3C1596;position:relative;top:4px;"></h5>
-				
-				<button  name="insertBelow"  onclick="insertRowBelow()" class ="btn btn-default btn-primary BtnActive" style="color:white;position:relative;left:50px;">Insert Below </button>
-				<button  name="insertAbove"  onclick="insertRowAbove()" class ="btn btn-default btn-primary BtnActive" style="color:white;position:relative;left:60px;">Insert Above </button>
-				<button  name="deleteBoqRow" onclick="deleteBoqRow()"   class ="btn btn-default btn-primary BtnActive" style="color:white;position:relative;left:70px;">Delete</button>
-				<button  name ="previousRow" class ="btn btn-default btn-primary BtnActive" style="color:white;position:relative;left:80px;">Previous</button>
-	            <button  name="nextRow" onclick="nextRow()" class ="btn btn-default btn-primary BtnActive" style="color:white;position:relative;left:90px;">Next</button> 
-				
-				<button type="button" name="closePopup" class ="close" data-dismiss ="modal"> <i class='fa fa-times'></i> </button>
-				<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change' ></i> </a>
+			<div class="modal-header" style="background-color: #007BFF; height: 56px">
+			<h5 id ="popupNb" class="modal-title" style="font-weight:bold; color: gold;position:relative;top:4px;"></h5>
+				<div style="float: right;">
+				<button  name="insertBelow"  onclick="insertRowBelow()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: -30px; font-weight: bold; margin-top: -7px;"">Insert Below </button>
+				<button  name="insertAbove"  onclick="insertRowAbove()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: -20px; font-weight: bold; margin-top: -7px;"">Insert Above </button>
+				<button  name="deleteBoqRow" onclick="deleteBoqRow()"   class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: -10px; font-weight: bold; margin-top: -7px;"">Delete</button>
+				<button  name ="previousRow" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: 0px; font-weight: bold; margin-top: -7px;"">Previous</button>
+	            <button  name="nextRow" onclick="nextRow()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: 10px; font-weight: bold; margin-top: -7px;"">Next</button> 
+				<button type="button" name="closeModPartPopup" class="close" data-dismiss="modal"><i class='fa fa-times'></i></button>
+									<a class="close modalMinimize ml-3"> <i
+										class='fa fa-minus icon-to-change'></i></a>
+				</div>
 				</div>
 	<div class="modal-body">
 	<ul class="nav nav-tabs" id="myTab" role="tablist" style="background-color: #00757C;">
@@ -1417,7 +1428,9 @@ max-width: 100%;
 		else 
 			itemPartNumber = boqArray[i].prItemPartNumber;
 
-		  if(dotStatus == "1")
+		if (boqArray[i].prQty == boqArray[i].poQty || boqArray[i].prQty == boqArray[i].grQty || boqArray[i].prQty == boqArray[i].arQty || boqArray[i].prQty == boqArray[i].farQty) 
+
+//		  if(dotStatus == "1")
 		 {
 		   span = "<span class='dotStatus' name='dotStatus' value='"+dotStatus+"' style='background-color: chartreuse;'></span>";
 								  
@@ -1868,6 +1881,7 @@ max-width: 100%;
 										    	 $('#cat2').val("");
 								            	 $('#cat').val("");
 								            	 $('#seq').val("");
+								            	 $("#barcode").val("");
 												 getSumQty_totalAT();
 										}
 		 
@@ -1889,6 +1903,7 @@ max-width: 100%;
 											    	 $('#cat2').val("");
 									            	 $('#cat').val("");
 									            	 $('#seq').val("");
+									            	 $("#barcode").val("");
 												     $('table#bisotab tr:last td:nth-child(2) input').focus();
 												     calcFooterDataOnChangeListener();
 													 getSumQty_totalAT();

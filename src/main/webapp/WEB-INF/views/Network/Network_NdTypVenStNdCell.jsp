@@ -1,5 +1,5 @@
 <%@ include file="NetworkCommon.jsp" %>
-
+<title>Node Type Vendor Site Node Cell</title>
 <script>	
 $('#filterr').hide();
 $('#removeFilter').hide();
@@ -8,9 +8,8 @@ $('#removeFilter').hide();
 var lst = ${listSites};
 var listNodesType = ${listNodesType};
 var arrayParam=${arrayParam};
-
-//var date=$("#ParsingDate").val();
-//console.log("date...", date);
+var date=$("#ParsingDate").val();
+console.log("date...", date);
 
 var button ;
 var data;
@@ -402,6 +401,7 @@ function NdTypVenStNdCellCore(id){
 					  "paramTransmission":paramTransmission,
 			   		  "paramRAN":paramRAN,
 				      "paramCore":paramCore,
+				      "date":date,
 			 		},
 			 dataType: "json",
 			 success: function (data) {	
@@ -495,6 +495,7 @@ function RequestingSites(id) {
 					"paramTransmission":paramTransmission,
 			     	"paramRAN":paramRAN,
 				    "paramCore":paramCore,
+				    "date":date,
 				},
 				dataType: "json",
 				success: function (data) {	    
@@ -650,6 +651,7 @@ function Create_Sites(id){
 							"paramTransmission":paramTransmission,
 						    "paramRAN":paramRAN,
 							"paramCore":paramCore,
+							"date":date,
 				 },
 				 dataType: "json",
 				 success: function (data) {			        	

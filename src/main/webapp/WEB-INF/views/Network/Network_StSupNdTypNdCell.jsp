@@ -1,5 +1,5 @@
 <%@ include file="NetworkCommon.jsp" %>
-
+<title>Site Supplier Node Type Node Cell</title>
 <script>	
 $('#filterr').hide();
 $('#removeFilter').hide();
@@ -8,8 +8,8 @@ $('#removeFilter').hide();
 var lst = ${listSites};
 var arrayParam=${arrayParam};
 
-//var date=$("#ParsingDate").val();
-//console.log("date...", date);
+var date=$("#ParsingDate").val();
+console.log("date...", date);
 
 var button ;
 var data;
@@ -386,13 +386,14 @@ function StVenNdTypNdCell(id){
 		$.ajax({
 			  type: "GET",
 			  contentType: "application/json; charset=utf-8",
-			  url: getContext()+'/findStSupNdTypNdCell_Sup',
+			  url: getContext()+'/findStSupNdTypNdCell_Ven',
 			  data: {
 			          "siteId":siteId,
 			          "paramEnterprise": paramEnterprise,
 					  "paramTransmission":paramTransmission,
 			   		  "paramRAN":paramRAN,
 				      "paramCore":paramCore,
+				      "date":date,
 			 		},
 			 dataType: "json",
 			 success: function (data) {	
@@ -488,6 +489,7 @@ function RequestingNodeType(id) {
 					"paramTransmission":paramTransmission,
 			   		"paramRAN":paramRAN,
 				    "paramCore":paramCore,
+				    "date":date,
 				},
 				dataType: "json",
 				success: function (data) {					        	
@@ -611,6 +613,7 @@ function SupNdCellCore(id){
 					"paramTransmission":paramTransmission,
 			   		"paramRAN":paramRAN,
 				    "paramCore":paramCore,
+				    "date":date,
 				},
 				dataType: "json",
 				success: function (data) {														        	

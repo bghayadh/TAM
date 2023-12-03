@@ -43,7 +43,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.aliat.alm.common.ALMSessions;
+
+import com.aliat.alm.common.AlmDbSession;
+//import com.aliat.alm.common.ALMSessions;
 import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.DiscoveryNew;
@@ -96,8 +98,7 @@ public class DiscoveryController {
 	@Autowired
 	Form form;
 
-	@Autowired
-	ALMSessions almsessions;
+	
 	
 	@Autowired
 	Notify notifications;
@@ -120,7 +121,7 @@ public class DiscoveryController {
 			return LoginServices.checkSession(request, response);
 		}
 		
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
@@ -167,7 +168,7 @@ public class DiscoveryController {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;	
 		}
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 
 			tx = session.beginTransaction();
@@ -224,7 +225,7 @@ public class DiscoveryController {
 		
 
 		
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
@@ -267,7 +268,7 @@ public class DiscoveryController {
 			return LoginServices.checkSession(request, response);
 		}
 		
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 
 		if (session != null && session.isOpen()) {
         tx = session.beginTransaction(); 
@@ -389,7 +390,7 @@ public class DiscoveryController {
 		}
 		
 
-		session = almsessions.getSession(); 
+		session = AlmDbSession.getInstance().getSession(); 
         if (session != null && session.isOpen()) { 
         tx = session.beginTransaction();
 		notifications.headerNotifications(session, model);
@@ -823,7 +824,7 @@ query.executeUpdate();
 				return rtn;
 			}
 	        
-	        session = almsessions.getSession();
+	        session = AlmDbSession.getInstance().getSession();
 	        String[] idList = request.getParameterValues("dnID[]");
 
 			if (session != null && session.isOpen()) {
@@ -882,7 +883,7 @@ query.executeUpdate();
 		}
 		
 		
-	     session = almsessions.getSession();
+	     session = AlmDbSession.getInstance().getSession();
 
 				if (session != null && session.isOpen()) {
 		            tx = session.beginTransaction();
@@ -937,7 +938,7 @@ query.executeUpdate();
 		}
 
 
-	     session = almsessions.getSession();
+	     session = AlmDbSession.getInstance().getSession();
 			
 			if (session != null && session.isOpen()) {
 				tx = session.beginTransaction();
@@ -1072,7 +1073,7 @@ query.executeUpdate();
 		}
 
 
-     session = almsessions.getSession();
+     session = AlmDbSession.getInstance().getSession();
 		
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
@@ -1221,7 +1222,7 @@ query.executeUpdate();
 		
 
 		
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
@@ -1465,7 +1466,7 @@ query.executeUpdate();
 			}  
 		
 
-		Session session = almsessions.getSession();
+		Session session = AlmDbSession.getInstance().getSession();
 		Transaction tx =null;
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
@@ -1524,7 +1525,7 @@ query.executeUpdate();
 			calendar.setTime(date);
 			int year = calendar.get(Calendar.YEAR);
 			
-			 session = almsessions.getSession();
+			 session = AlmDbSession.getInstance().getSession();
 			 tx = session.beginTransaction();
 			if(session != null && session.isOpen()) {
 				try {
@@ -2051,7 +2052,7 @@ query.executeUpdate();
 				finally {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+					
 				}
 			}
 		map.put("DeleteTest", "DeleteDone");
@@ -2077,7 +2078,7 @@ query.executeUpdate();
 			int year = calendar.get(Calendar.YEAR);
 			
 			ObjectMapper mapper = new ObjectMapper();
-			Session session = almsessions.getSession();
+			Session session = AlmDbSession.getInstance().getSession();
 			Transaction tx = session.beginTransaction();
 			
 			String getTransferFromSlotToSlotsquery,  getTransferFromSiteToSite, getAntennaTransferToAnotherNode, getCabinetTransfertoNewNode;
@@ -2363,7 +2364,7 @@ query.executeUpdate();
 			
 			ObjectMapper mapper = new ObjectMapper();
 			
-			Session session = almsessions.getSession();
+			Session session = AlmDbSession.getInstance().getSession();
 			Transaction tx = session.beginTransaction();
 			
 			String getReplaceBoards,  getReplaceCabinet, getReplaceAntenna;
@@ -2601,7 +2602,7 @@ query.executeUpdate();
 			int year = calendar.get(Calendar.YEAR);
 			
 			ObjectMapper mapper = new ObjectMapper();
-			Session session = almsessions.getSession();
+			Session session = AlmDbSession.getInstance().getSession();
 			Transaction tx = session.beginTransaction();
 			
 			String getBoardDisappear,getBoardDisappearForTransfer, getBoardDisappearForMaintenance, getCabinetDisappear,
@@ -3124,7 +3125,7 @@ query.executeUpdate();
 			
 			ObjectMapper mapper = new ObjectMapper();
 			
-			Session session = almsessions.getSession();
+			Session session = AlmDbSession.getInstance().getSession();
 			Transaction tx = session.beginTransaction();
 			
 			String getBoardMaintenance, getCabinetMaintenance, getAntennaMaintenance ; 
@@ -4554,14 +4555,14 @@ return value;
 public  <T> void persistSingleColumn(Session session ,String queryString, List<Object> params) {
 	
 	int i;
-	Transaction tx =session.beginTransaction();
+	//Transaction tx =session.beginTransaction();
 	query = session.createQuery(queryString);
 	for (Object param : params) {
 		i = params.indexOf(param) + 1;
 		query.setString("param_" + i, param.toString());
 	}
 	query.executeUpdate();
-	tx.commit();
+	//tx.commit();
  }
 
 }

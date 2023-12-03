@@ -17,7 +17,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +28,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
-import com.aliat.alm.models.Area;
 import com.aliat.alm.models.DevicesCausedProblem;
 import com.aliat.alm.models.LinkFailurePlaces;
 import com.aliat.alm.models.TroubleTickets;
@@ -48,13 +47,13 @@ public class TroubleTicketController {
 	private static Session session = null;
 	private static Transaction tx = null;
 	private static ObjectMapper mapper = new ObjectMapper();
+	@SuppressWarnings("rawtypes")
 	private static Query query = null;
 	private static final Logger logger = Logger.getLogger(NetworkController.class.getName());
 	private static StringWriter sw;
 	private static String exceptionAsString;
 
-	@Autowired
-	ALMSessions almsessions;
+	
 	
 	@Autowired
 	Notify notifications;
@@ -70,9 +69,9 @@ public class TroubleTicketController {
 			return "redirect:/";
 		}
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
+		//System.out.println("HashCode TT: "+AlmDbSession.getInstance().hashCode());
 		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
 
 			try {
@@ -82,10 +81,10 @@ public class TroubleTicketController {
 				model.addAttribute("ListGridTable", mapper.writeValueAsString(query.list()));
 
 			} catch (Exception e) {
+				e.printStackTrace();
 				System.out.println("catch messsage is " + e.getMessage());
 			} finally {
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
 				}
 			}
@@ -102,7 +101,7 @@ public class TroubleTicketController {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;	
 		}
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 
 			tx = session.beginTransaction();
@@ -181,7 +180,7 @@ public class TroubleTicketController {
 			return "redirect:/";
 		}
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 
@@ -213,7 +212,7 @@ public class TroubleTicketController {
 
 				}
 			} catch (Exception e) {
-
+				e.printStackTrace();
 				System.out.println("catch messsage is " + e.getMessage());
 				rtn = "Failed";
 
@@ -242,7 +241,7 @@ public class TroubleTicketController {
         String result [] =new String[4];
         int SelectedIndex = 0;
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
@@ -461,7 +460,7 @@ public class TroubleTicketController {
 		Calendar calendar = new GregorianCalendar();
 		int year = calendar.get(Calendar.YEAR);
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 
@@ -771,7 +770,7 @@ public class TroubleTicketController {
 		}
 		String TTvalue = "%" + request.getParameter("TTvalue") + "%";
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();

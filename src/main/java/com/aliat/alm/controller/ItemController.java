@@ -1,23 +1,18 @@
 package com.aliat.alm.controller;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.sql.Timestamp;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.slf4j.Logger;
@@ -29,8 +24,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.services.ItemParameters;
@@ -47,13 +41,13 @@ public class ItemController {
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	private static Session session = null;
 	private static Transaction tx = null;
+	@SuppressWarnings("rawtypes")
 	private static Query query = null;
 	private static ObjectMapper mapper = new ObjectMapper();
 	// private String ID;
 	private String itemCode;
 	
-	@Autowired
-	ALMSessions almsessions;
+	
 	
 	@Autowired
 	Notify notifications;
@@ -67,19 +61,20 @@ public class ItemController {
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			return "redirect:/";
 		}
-
-		session = almsessions.getSession();
+		
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
 			try {
-				query = session.createSQLQuery(
+				query = session.createNativeQuery(
 						"select itemCode, item_code, item_name, item_model, item_part_number, LAST_MODIFIED_DATE from (SELECT t.item_code AS itemCode, t.item_code, COALESCE( t.item_name, ' ') as item_name, COALESCE(s.item_model,' ') as item_model, COALESCE(s.item_part_number,' ') as item_part_number,"
 								+ "TO_CHAR(t.LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') as LAST_MODIFIED_DATE , ROW_NUMBER() over(PARTITION by t.item_code order by s.item_model ) as rownumber "
 								+ "FROM item t left join item_model_partnumber s on t.item_code = s.item_code where s.PRIMARY='1')order by LAST_MODIFIED_DATE DESC");
 				model.addAttribute("ListGridTable", mapper.writeValueAsString(query.list()));
 			} catch (Exception e) {
 				System.out.println("catch messsage is " + e.getMessage());
+				e.printStackTrace();
 			} finally {
 				if (session != null && session.isOpen()) {
 					tx.commit();
@@ -91,7 +86,6 @@ public class ItemController {
 		return "ItemListView";
 	}
 
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/FilteredItemListView", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> FilteredItemListView(Locale locale, Model model, HttpServletRequest request,
@@ -101,7 +95,7 @@ public class ItemController {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
 		}
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 
 			tx = session.beginTransaction();
@@ -116,7 +110,6 @@ public class ItemController {
 				itemname = request.getParameter("itemname");
 				itemmodel = request.getParameter("itemmodel");
 
-				List<String> listItem = new ArrayList<String>();
 
 				String str = "select 1 as chkBox , ITEM_CODE as itemCode , ITEM_NAME as itemName , ITEM_MODEL as itemModel , "
 						+ " ITEM_PART_NUMBER as itemPartNumber ,TO_CHAR(LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') as lastModifiedDate"
@@ -141,11 +134,8 @@ public class ItemController {
 				}
 				str = str + " ORDER BY LAST_MODIFIED_DATE DESC ";
 
-				Query query = session.createSQLQuery(str);
-
-				listItem = query.list();
-
-				rtn.put("listItem", listItem);
+			
+				rtn.put("listItem", session.createNativeQuery(str).list());
 
 			} catch (Exception e) {
 				logger.info("Error in showing the filtered Item list view with a message :" + e);
@@ -175,10 +165,8 @@ public class ItemController {
 		Item item;
 		String ItemCode, navAction = "2";
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
-
-			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
 
 			try {
@@ -200,22 +188,15 @@ public class ItemController {
 
 					return "ItemFormView";
 				}
-				String itemCode = request.getParameter("itemcode");
+				//String itemCode = request.getParameter("itemcode");
 
-				// add data in table discoveryNewItem
-				query = session.createQuery("from ItemBarcode where itemCode like :param1");
-				query.setParameter("param1", itemCode);
-				model.addAttribute("ListPRqItem", mapper.writeValueAsString(query.list()));
-
-				query = session.createQuery("from ItemPartNumber where itemCode like :param1");
-				query.setParameter("param1", itemCode);
-				model.addAttribute("ListPRqItemPNum", mapper.writeValueAsString(query.list()));
+				
+				
 
 				result = form.NavigationNP(session, "Item", "ITEM_CODE", ItemCode, "LAST_MODIFIED_DATE",
 						navAction);
 				SelectedIndex = Integer.parseInt(result[1]);
 				ItemCode = result[2];
-
 				model.addAttribute("ItemsCount", Integer.parseInt(result[0]));
 				model.addAttribute("SelectedIndex", SelectedIndex);
 
@@ -317,12 +298,22 @@ public class ItemController {
 					model.addAttribute("valuationRate", item.getValuationRate());
 					model.addAttribute("deprec_Code", item.getDeprec_Code());
 					model.addAttribute("accumDeprec_Code", item.getAccumDeprec_Code());
+					
+					// add data in table discoveryNewItem
+					query = session.createQuery("from ItemBarcode where itemCode like :param1");
+					query.setParameter("param1", ItemCode);
+					model.addAttribute("ListPRqItem", mapper.writeValueAsString(query.list()));
+					
+					System.out.println("barcode array is : "+mapper.writeValueAsString(query.list()));
+					query = session.createQuery("from ItemPartNumber where itemCode like :param1");
+					query.setParameter("param1", ItemCode);
+					model.addAttribute("ListPRqItemPNum", mapper.writeValueAsString(query.list()));
 				}
 			} catch (Exception e) {
 				System.out.println("catch messsage is " + e.getCause());
+				e.printStackTrace();
 			} finally {
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
 				}
 			}
@@ -354,7 +345,7 @@ public class ItemController {
 		int year = calendar.get(Calendar.YEAR);
 
 		float qtyPartNum = 0;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 
@@ -398,10 +389,10 @@ public class ItemController {
 						// this.ID = request.getParameter("itemRootCat") + "_" + year + "_" +
 						// appConfig.getSequenceNbr(78);
 						this.itemCode = request.getParameter("itemRootCat") + "-" + year + "-" + Integer.parseInt(
-								session.createSQLQuery("SELECT ITEM_CODE FROM SEQ_TABLE").uniqueResult().toString());						
-						query = session.createSQLQuery("UPDATE SEQ_TABLE SET ITEM_CODE = ITEM_CODE + 1 ");
+								session.createNativeQuery("SELECT ITEM_CODE FROM SEQ_TABLE").uniqueResult().toString());						
+						query = session.createNativeQuery("UPDATE SEQ_TABLE SET ITEM_CODE = ITEM_CODE + 1 ");
 						query.executeUpdate();
-						session.createSQLQuery("commit").executeUpdate();
+						session.createNativeQuery("commit").executeUpdate();
 					}
 				} else {
 					itemCode = request.getParameter("itemCode");
@@ -471,7 +462,7 @@ public class ItemController {
 					for (int i = 0; i < itemParameters.getDictParameterbarcode().size(); i++) {
 						barcodeNum = itemParameters.getDictParameterbarcode().get(i).get("barcodeno");
 						query = session.createQuery("from ItemBarcode where barcodeNb like :param");
-						query.setString("param", barcodeNum);
+						query.setParameter("param", barcodeNum);
 						Object result = query.uniqueResult();
 						System.out.println("result  " + mapper.writeValueAsString(result));
 						if (result == null) {
@@ -505,10 +496,10 @@ public class ItemController {
 							// itmId = "ITM" + calendar.get(Calendar.YEAR) + "_" +
 							// appConfig.getSequenceNbr(24);
 							itmId = "ITM" + calendar.get(Calendar.YEAR) + "_" + Integer.parseInt(
-									session.createSQLQuery("SELECT ITEM_ID FROM SEQ_TABLE").uniqueResult().toString());							
-							query = session.createSQLQuery("UPDATE SEQ_TABLE SET ITEM_ID = ITEM_ID + 1 ");
+									session.createNativeQuery("SELECT ITEM_ID FROM SEQ_TABLE").uniqueResult().toString());							
+							query = session.createNativeQuery("UPDATE SEQ_TABLE SET ITEM_ID = ITEM_ID + 1 ");
 							query.executeUpdate();
-							session.createSQLQuery("commit").executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
 						}
 						itemPartNum = itemParameters.getDictParameteritemPartnum().get(j).get("itemPartNum");
 						primary = itemParameters.getDictParameteritemPartnum().get(j).get("active");
@@ -546,39 +537,41 @@ public class ItemController {
 
 	@RequestMapping(value = "/ItemDelete", method = RequestMethod.GET)
 	@ResponseBody
-	public String ItemDelete(Locale locale, Model model, HttpServletRequest request,
+	public Map<String, Object> ItemDelete(Locale locale, Model model, HttpServletRequest request,
 			@ModelAttribute ItemParameters itemParameters, HttpServletResponse response) {
 
-		String rtn = "Succeeded";
+		Map<String, Object> rtn = new LinkedHashMap<>();		
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
-
-			return "redirect:/";
+			rtn.put("result", "redirect:/");
+			return rtn;
 		}
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
 				String[] idList = request.getParameterValues("itemCode[]");
+				
 				if (idList != null) {
 //					query = session.createQuery("delete ItemPartNumber where itemCode IN :param1");
-					query = session.createSQLQuery("delete ITEM_MODEL_PARTNUMBER where ITEM_CODE IN :param1");
+					query = session.createNativeQuery("delete ITEM_MODEL_PARTNUMBER where ITEM_CODE IN :param1");
 					query.setParameterList("param1", idList);
 					query.executeUpdate();
 
 //					query = session.createQuery("delete ItemBarcode where itemCode IN :param1");					
-					query = session.createSQLQuery("delete ITEM_BARCODE where ITEM_CODE IN :param1");
+					query = session.createNativeQuery("delete ITEM_BARCODE where ITEM_CODE IN :param1");
 					query.setParameterList("param1", idList);
 					query.executeUpdate();
 
 //					query = session.createQuery("delete Item t where t.itemCode IN :param1");
-					query = session.createSQLQuery("delete ITEM where ITEM_CODE IN :param1");
+					query = session.createNativeQuery("delete ITEM where ITEM_CODE IN :param1");
 					query.setParameterList("param1", idList);
 					query.executeUpdate();
+					rtn.put("result", "Success");
 				}
 			} catch (Exception e) {
-				System.out.println("catch messsage is " + e.getMessage());
+				System.out.println("catch messsage is " + e.getCause());
 				e.printStackTrace();
-				rtn = "Failed";
+				rtn.put("result", "Failed");				
 			} finally {
 				if (session != null && session.isOpen()) {
 					tx.commit();
@@ -602,10 +595,8 @@ public class ItemController {
 			return rtn;
 		} else {
 			String c1, c2, c3, c4, seq;
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 			if (session != null && session.isOpen()) {
-				tx = session.beginTransaction();
-
 				try {
 
 					c1 = request.getParameter("catInput") == null ? "" : request.getParameter("catInput");
@@ -619,13 +610,13 @@ public class ItemController {
 							&& (StringUtils.equalsIgnoreCase(c3, "") || c3 == null)
 							&& (StringUtils.equalsIgnoreCase(c4, "") || c4 == null)) {
 
-						query = session.createSQLQuery(
+						query = session.createNativeQuery(
 								"select t.item_code, t.item_name, t.item_category, nvl(a.item_model,'-'), nvl(a.item_part_number,'-')  from item t "
 										+ "left join item_model_partnumber a on t.item_code = a.item_code "
 										+ " where upper(t.item_code) like upper(:param5) ");
-						query.setString("param5", seq);
+						query.setParameter("param5", seq);
 					} else {
-						query = session.createSQLQuery(
+						query = session.createNativeQuery(
 								"select t.item_code, t.item_name, t.item_category, nvl(a.item_model,'-'), nvl(a.item_part_number,'-')  from item t "
 										+ "left join item_model_partnumber a on t.item_code = a.item_code "
 										+ "where upper(t.item_code) like upper(:code) AND upper(t.item_code) like upper(:param5) ");
@@ -634,7 +625,7 @@ public class ItemController {
 						if (StringUtils.equalsIgnoreCase(c1, ""))
 							code += "%-";
 						else
-							code += c1 + "-";
+							code += "%"+c1 + "-";
 
 						if (StringUtils.equalsIgnoreCase(c2, ""))
 							code += "%-";
@@ -649,10 +640,10 @@ public class ItemController {
 						if (StringUtils.equalsIgnoreCase(c4, ""))
 							code += "%";
 						else
-							code += c4;
+							code += c4 +"%";
 
-						query.setString("code", code);
-						query.setString("param5", seq);
+						query.setParameter("code", code);
+						query.setParameter("param5", seq);
 						/*
 						 * if (!StringUtils.equalsIgnoreCase(c4, "") && c4 != null) {
 						 * query.setString("code", "%"+c4+"%"); query.setString("param5", seq); } else
@@ -676,7 +667,6 @@ public class ItemController {
 					rtn.put("ListCategory", "");
 				} finally {
 					if (session != null && session.isOpen()) {
-						tx.commit();
 						session.close();
 					}
 				}
@@ -696,7 +686,7 @@ public class ItemController {
 		 * rtn.put("Login", "redirect:/"); return rtn; }
 		 */
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 
@@ -715,11 +705,11 @@ public class ItemController {
 					str += " and b.barcode_number =:param2";
 				}
 
-				query = session.createSQLQuery(str);
-				query.setString("param1", "%" + requestValue + "%");
+				query = session.createNativeQuery(str);
+				query.setParameter("param1", "%" + requestValue + "%");
 
 				if (!StringUtils.equalsIgnoreCase(barcode, "") && barcode != null)
-					query.setString("param2", barcode);
+					query.setParameter("param2", barcode);
 
 				query.setFirstResult(0);
 				query.setMaxResults(40);
@@ -750,7 +740,7 @@ public class ItemController {
 		 * rtn.put("Login", "redirect:/"); return rtn; }
 		 */
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 
@@ -768,11 +758,11 @@ public class ItemController {
 					str += " and b.barcode_number =:param2";
 				}
 
-				query = session.createSQLQuery(str);
-				query.setString("param1", "%" + requestValue + "%");
+				query = session.createNativeQuery(str);
+				query.setParameter("param1", "%" + requestValue + "%");
 
 				if (!StringUtils.equalsIgnoreCase(barcode, "") && barcode != null)
-					query.setString("param2", barcode);
+					query.setParameter("param2", barcode);
 
 				query.setFirstResult(0);
 				query.setMaxResults(40);
@@ -803,7 +793,7 @@ public class ItemController {
 			return rtn;
 		}
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 
@@ -811,14 +801,14 @@ public class ItemController {
 
 				String requestValue = request.getParameter("requestValue");
 
-				query = session.createSQLQuery(
-						"select distinct b.barcode_number, a.item_code, a.item_name, nvl(t.item_model,'-'), nvl(t.item_part_number,'-'),  a.ITEM_CAT_CODE "
+				query = session.createNativeQuery(
+						"select distinct b.barcode_number, a.item_code, a.item_name, nvl(t.item_model,'-'), nvl(t.item_part_number,'-'),  a.ITEM_CATCODE "
 
 								+ "from item a left join item_model_partnumber t on a.item_code = t.item_code "
 								+ "left join item_barcode b on a.item_code =  b.item_code "
 								+ "where LOWER(b.barcode_number) like LOWER(:param1)");
 
-				query.setString("param1", "%" + requestValue + "%");
+				query.setParameter("param1", "%" + requestValue + "%");
 				query.setFirstResult(0);
 				query.setMaxResults(40);
 
@@ -848,7 +838,7 @@ public class ItemController {
 		 * rtn.put("Login", "redirect:/"); return rtn; }
 		 */
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 
@@ -868,11 +858,11 @@ public class ItemController {
 					str += " and b.barcode_number =:param2";
 				}
 
-				query = session.createSQLQuery(str);
-				query.setString("param1", "%" + requestValue + "%");
+				query = session.createNativeQuery(str);
+				query.setParameter("param1", "%" + requestValue + "%");
 
 				if (!StringUtils.equalsIgnoreCase(barcode, "") && barcode != null)
-					query.setString("param2", barcode);
+					query.setParameter("param2", barcode);
 
 				query.setFirstResult(0);
 				query.setMaxResults(40);
@@ -1049,7 +1039,7 @@ public class ItemController {
 
 		String itemCategory;
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
@@ -1057,7 +1047,9 @@ public class ItemController {
 				query = session.createQuery("SELECT t1.itemName, t1.itemCode FROM Item t1"
 						+ " WHERE LOWER(t1.itemName) LIKE LOWER(:paramTitle) OR t1.itemCode LIKE :paramTitle");
 
-				query.setString("paramTitle", itemCategory);
+				query.setParameter("paramTitle", itemCategory);
+				query.setFirstResult(0);
+				query.setMaxResults(40);
 				rtn.put("ListItemCategory", query.list());
 
 			} catch (Exception e) {
@@ -1099,7 +1091,7 @@ public class ItemController {
 		Map<String, Object> rtn = new LinkedHashMap<>();
 		String itemdtl = "%" + request.getParameter("ItemCode") + "%";
 		System.out.println("liliane");
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
@@ -1107,8 +1099,9 @@ public class ItemController {
 			try {
 				query = session.createQuery(
 						"select itemName, unit, weight, weightUOM, length, width, height, sizeUOM, itemDescription, domain, cableType, itemType, usefull_LifeMonths, valuationRate, warrantyPeriod, endOfLife, itemModel, itemPartNumber, tech2G, tech3G, tech4G, tech5G, service, disabled  from Item where itemCode like :param1 or itemName like :param1 ");
-				query.setString("param1", itemdtl);
-				Object Unit = "";
+				query.setParameter("param1", itemdtl);
+				@SuppressWarnings("unused")
+				Object Unit = null;
 
 				for (Object obj : (query.list())) {
 
@@ -1119,14 +1112,14 @@ public class ItemController {
 				rtn.put("ItemDetails", query.list());
 
 				query = session.createQuery("from Item where itemCode like :param1 or itemName like :param1 ");
-				query.setString("param1", itemdtl);
+				query.setParameter("param1", itemdtl);
 				Item item1 = (Item) query.uniqueResult();
 				rtn.put("ItemRecord1", item1);
 
 				query = session.createQuery(
 						"select itemName as itemName, unit as unit, weight as weight, weightUOM as weightUOM from Item where itemCode like :param1 or itemName like :param1 ");
 
-				query.setString("param1", itemdtl);
+				query.setParameter("param1", itemdtl);
 				Object item = query.uniqueResult();
 				Object[] itemStringArray2 = (Object[]) query.list().get(0);
 				rtn.put("ItemRecord", item);

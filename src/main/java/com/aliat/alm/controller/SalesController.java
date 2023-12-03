@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.common.Permissions;
 import com.aliat.alm.services.LoginServices;
@@ -44,8 +45,9 @@ else {
 	
 	Session session = null;
 	Transaction tx = null;
-
-	session = almsessions.getSession();
+	
+	session = AlmDbSession.getInstance().getSession();
+	System.out.println("HashCode Sales: "+AlmDbSession.getInstance().hashCode());
 	if(session != null && session.isOpen()) {
 		tx = session.beginTransaction();
 		notification.headerNotifications(session, model);
@@ -60,7 +62,6 @@ else {
 			if (session != null && session.isOpen()) {
 				tx.commit();
 				session.close();
-				session.getSessionFactory().close();
 			}
 		}
 		

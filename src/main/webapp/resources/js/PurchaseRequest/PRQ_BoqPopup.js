@@ -81,7 +81,7 @@ function boqRowInsrt(newRowCount, itmName, model, partNum, barcode){
 				+"<input name='itmPartNo' type='text' id = 'itmPartNo"+newRowCount+"' value='"+ partNum +"' style='width:200px;' class='form-control text-input'/></td>"
 				+"<td hidden name='prBarCode'>"
 				+"<input name='barcode' type='text' value ='"+ barcode +"' style='width:200px;' class='form-control text-input'/></td>"
-				+"<td name='prQty'><input type='text' value= 0 style='width:200px;' class='form-control text-input'></td>"
+				+"<td name='prQty'><input type='text' value= 1 style='width:200px;' class='form-control text-input'></td>"
 				+"<td name='prRate'><input type='text' value= 0 style='width:200px;' class='form-control text-input'></td>"
 				+"<td name='prDiscountAmount'><input type='text'value= 0 style='width:200px;' class='form-control text-input'></td>"
 				+"<td name='prTax1'><input type='text' value=0 style='width:200px;' class='form-control text-input'></td>"
@@ -187,7 +187,6 @@ function getSumQty_totalAT (){
  	}
          		 
 	$("#bisotab > tbody > tr").each(function(i, row){
-				 
 		sumQntity = sumQntity + parseFloat($(this).children('td[name="prQty"]').children('input').val());
 		sumtotAT = sumtotAT + parseFloat($(this).children('td[name="prTotalAt"]').children('input').val());	
 		sumDiscount = sumDiscount + parseFloat($(this).children('td[name="prDiscountAmount"]').children('input').val());	
@@ -959,15 +958,13 @@ $("#popupItemPart").autocomplete({
 // Close popup using ESC
 	document.addEventListener('keydown', function(event){
 	  if(event.key === "Escape"){
-		
-	    
-	// Send input values from popup to boq table and close the popup using ESC 
-	sendValPopupToBoq(rowindx);
-	
-		
-		$("#preqModal").modal("hide");
-		 getTotalAT_SumQty();
-	     amountsUpdate();
+		if($("#preqModal").hasClass("show")){
+			// Send input values from popup to boq table and close the popup using ESC 
+			sendValPopupToBoq(rowindx);
+			$("#preqModal").modal("hide");
+			 getTotalAT_SumQty();
+		     amountsUpdate();
+		}
 	   }
    });// end close fct using esc
    

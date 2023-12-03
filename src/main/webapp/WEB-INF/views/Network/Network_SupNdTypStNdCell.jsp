@@ -1,5 +1,5 @@
 <%@ include file="NetworkCommon.jsp" %>
-
+<title>Supplier Node Type Site Node Cell</title>
 <script>	
 $('#filterr').hide();
 $('#removeFilter').hide();
@@ -11,6 +11,8 @@ var listSupp=${listSupp};
 //console.log("listSupp...", listSupp);
 var arrayParam=${arrayParam};
 //console.log("arrayParam...", arrayParam);
+var date=$("#ParsingDate").val();
+console.log("date...", date);
 
 
 var button ;
@@ -378,6 +380,7 @@ function SuppNdTypStNdCellCore(id){
 					"paramTransmission":paramTransmission,
 			     	"paramRAN":paramRAN,
 				    "paramCore":paramCore,
+				    "date":date,
 			},
 			dataType: "json",
 			success: function (data) {							        	
@@ -515,6 +518,7 @@ function RequestingSites(id) {
 					"paramTransmission":paramTransmission,
 			     	"paramRAN":paramRAN,
 				    "paramCore":paramCore,
+				    "date":date,
 				},
 				dataType: "json",
 				success: function (data) {	    
@@ -695,6 +699,7 @@ function Create_Sites(id){
 							"paramTransmission":paramTransmission,
 						    "paramRAN":paramRAN,
 							"paramCore":paramCore,
+							"date":date,
 				 },
 				 dataType: "json",
 				 success: function (data) {			        	

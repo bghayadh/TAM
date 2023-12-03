@@ -6,7 +6,6 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title></title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/clustererplus.js"></script>
@@ -40,6 +39,9 @@
 }
 .TreeSpan:hover {
    background: #d3d8ff;
+}
+.ui-autocomplete {
+    width: 209px !important; /* Set the desired width for the dropdown */
 }
 </style>
 </head>
@@ -197,12 +199,19 @@
 					</button>
 				</div>
 			</div>
-		<div class="col-md-2" id="dropDownCheckDiv"
-				style="text-align: right; margin-top: 6px;"></div>
+		<div class="col-md-2" id="dropDownCheckDiv" style="text-align: right; margin-top: 11px;">
+			<div class="form-group">
+				<div class="input-group-prepend" id="ParsingDateDiv">
+					<span style="width: 130px; font-size: 12px;"
+						class="input-group-text"><b>Parsing Date</b></span> 
+						<input type="text" id="ParsingDate" class="form-control text-input ui-autocomplete-input ui-autocomplete-loading" autocomplete="off" style="width: 210px" value="${parsingDate}">
+				</div>
+			</div>
+		</div>
 			<div class="col-md-2" style="text-align: right; margin-top: 12px;">
 				<div id="txtDiv">
 					<input id="mapText" type='text' disabled
-						style="height: 35px; text-align: center; margin-left: 60px;" />
+						style="height: 36px; width: 120px; text-align: center; margin-left: 60px;" />
 				</div>
 			</div>
 			<div class="col-md-4" style="text-align: right; margin-top: 4px;">
@@ -694,6 +703,53 @@
 	</div>
 </body>
 <script>
+
+
+$("#ParsingDate").autocomplete({
+    showHeader: true,
+    source: function (request, response) {
+        $.ajax({
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            url: '${pageContext.request.contextPath}/GetAllParsingDate',
+            data: {
+            	"parsingDate" : $("#ParsingDate").val(),
+            },
+            dataType: "json",
+            success: function (data) {
+                if (data != null) {
+                    response(data.datesList);
+                    console.log("data.datesList: ",data.datesList);
+                }
+            },
+            error: function (result) {
+                alert("Error");
+            }
+        });
+    },
+    minLength: 0,
+    maxShowItems: 10,
+    scroll: true,
+
+    select: function (event, ui) {
+        //var datesList = $("#ParsingDate").data('datesList');
+        //var parsingDate = datesList.indexOf(ui.item.value);
+        $("#ParsingDate").val(ui.item.value);
+        return false;
+    }
+}).autocomplete("instance")._renderItem = function (ul, item) {
+	 //ul.css("width", "10px");
+    return $("<li class='each'>")
+        .append("<div class='acItem'><span class='name' style='font-weight:bold; font-size:12px' >" +
+            item.value + "</span><br><span class='desc'>")
+        .appendTo(ul);
+};
+$("#ParsingDate").focus(function () {
+    if (this.value == "") {
+        $(this).autocomplete("search");
+    }
+});
+
 
 var select=[];	
 var domains=[];
@@ -1236,8 +1292,9 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 	var core = null;
 	
 	//Submit selection to draw Tree and Map w.r.to active button
-	function Sumbitselection(arr,domain){ 
-		//console.log("Submit Selection");
+	function Sumbitselection(arr,domain,parsingDate){ 
+		console.log("Submit Selection");
+		console.log("parsing date: "+parsingDate);
 	    var queryParams = [];
 
 	    if(domain.length !=0){
@@ -1277,7 +1334,14 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 		 		var url = getContext() + '/Network_StNdCell';
 		 		if(params !=null){
 		 			url += params;
-		 		}
+		 		if (parsingDate!="Invalid date") {
+			            url += '&parsingDate=' + encodeURIComponent(parsingDate);
+			         }
+		 		}else{
+		 			if (parsingDate!="Invalid date") {
+			            url += '?parsingDate=' + encodeURIComponent(parsingDate);
+			         }
+		 		}		 	
 		 		window.location.href = url;
 		 	} 
 		 break;
@@ -1289,7 +1353,14 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 				 var url = getContext()+"/Network_StNdTypNdCell";
 				 if(params !=null){
 			 			url += params;
-			 		}
+			 	if (parsingDate!="Invalid date") {
+			            url += '&parsingDate=' + encodeURIComponent(parsingDate);
+			         }
+		 		}else{
+		 			if (parsingDate!="Invalid date") {
+			            url += '?parsingDate=' + encodeURIComponent(parsingDate);
+			         }
+		 		}
 			 		window.location.href = url;
 			 } 
 			 break;
@@ -1301,7 +1372,14 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 				 var url = getContext()+"/Network_NdTypStNdCell";
 				 if(params !=null){
 			 			url += params;
-			 		}
+			 	if (parsingDate!="Invalid date") {
+			            url += '&parsingDate=' + encodeURIComponent(parsingDate);
+			         }
+		 		}else{
+		 			if (parsingDate!="Invalid date") {
+			            url += '?parsingDate=' + encodeURIComponent(parsingDate);
+			         }
+		 		}
 			 		window.location.href = url;
 			 }  
 			 break;
@@ -1313,19 +1391,33 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 				 var url = getContext()+"/Network_VnStNdCell";
 				 if(params !=null){
 			 			url += params;
+			 			if (parsingDate!="Invalid date") {
+				            url += '&parsingDate=' + encodeURIComponent(parsingDate);
+				         }
+			 		}else{
+			 			if (parsingDate!="Invalid date") {
+				            url += '?parsingDate=' + encodeURIComponent(parsingDate);
+				         }
 			 		}
 			 	window.location.href = url;
 			 }
 			 break;	
 			 
-			//Venodr-Site-Node type-Node-Cell
+			//Vendor-Site-Node type-Node-Cell
 				case "li_vendorBtn,li_siteBtn,li_nodeTypeeBtn,li_nodeBtn,li_cellBtn":
 		 		case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,vendorBtn":
 		 		 {
 		 			var url = getContext()+"/Network_VnStNdTypNdCell";
-		 			if(params !=null){
-			 			url += params;
-			 		}
+		 			 if(params !=null){
+				 			url += params;
+				 			if (parsingDate!="Invalid date") {
+					            url += '&parsingDate=' + encodeURIComponent(parsingDate);
+					         }
+				 		}else{
+				 			if (parsingDate!="Invalid date") {
+					            url += '?parsingDate=' + encodeURIComponent(parsingDate);
+					         }
+				 		}
 			 		window.location.href = url;
 		     	}		
 		 		break;	
@@ -1335,7 +1427,14 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 				  {
 					 var url = getContext()+"/Network_NdTypVenStNdCell"; 	
 					 if(params !=null){
-						 url += params;
+				 			url += params;
+				 			if (parsingDate!="Invalid date") {
+					            url += '&parsingDate=' + encodeURIComponent(parsingDate);
+					         }
+				 		}else{
+				 			if (parsingDate!="Invalid date") {
+					            url += '?parsingDate=' + encodeURIComponent(parsingDate);
+					         }
 				 		}
 				 		window.location.href = url;
 				    }
@@ -1347,7 +1446,14 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 				  {
 					 var url = getContext()+"/Network_StVenNdTypNdCell"; 	
 					 if(params !=null){
-						 url += params;
+				 			url += params;
+				 			if (parsingDate!="Invalid date") {
+					            url += '&parsingDate=' + encodeURIComponent(parsingDate);
+					         }
+				 		}else{
+				 			if (parsingDate!="Invalid date") {
+					            url += '?parsingDate=' + encodeURIComponent(parsingDate);
+					         }
 				 		}
 				 		window.location.href = url;
 				    }
@@ -1358,8 +1464,15 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 				  {
 					 var url = getContext()+"/Network_StSupNdTypNdCell"; 	
 					 if(params !=null){
-						 url += params;
-				 		}
+				 			url += params;
+				 			if (parsingDate!="Invalid date") {
+					            url += '&parsingDate=' + encodeURIComponent(parsingDate);
+					         }
+				 		}else{
+				 			if (parsingDate!="Invalid date") {
+					            url += '?parsingDate=' + encodeURIComponent(parsingDate);
+					         }
+				 		}	 	
 				 		window.location.href = url;
 				    }
 				break;
@@ -1370,6 +1483,13 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 					 var url = getContext()+"/Network_VnNdTypStNdCell"; 	
 					 if(params !=null){
 				 			url += params;
+				 			if (parsingDate!="Invalid date") {
+					            url += '&parsingDate=' + encodeURIComponent(parsingDate);
+					         }
+				 		}else{
+				 			if (parsingDate!="Invalid date") {
+					            url += '?parsingDate=' + encodeURIComponent(parsingDate);
+					         }
 				 		}
 				 		window.location.href = url;
 				    }
@@ -1382,6 +1502,13 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 			 var url = getContext()+"/Network_SupStNdCell";
 			 if(params !=null){
 		 			url += params;
+		 			if (parsingDate!="Invalid date") {
+			            url += '&parsingDate=' + encodeURIComponent(parsingDate);
+			         }
+		 		}else{
+		 			if (parsingDate!="Invalid date") {
+			            url += '?parsingDate=' + encodeURIComponent(parsingDate);
+			         }
 		 		}
 		 	window.location.href = url;
 		 }
@@ -1392,9 +1519,16 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 	 		case "siteBtn,nodeBtn,cellBtn,nodeTypeeBtn,supplierBtn":
 	 		 {
 	 			var url = getContext()+"/Network_SupStNdTypNdCell";
-	 			if(params !=null){
-		 			url += params;
-		 		}
+	 			 if(params !=null){
+			 			url += params;
+			 			if (parsingDate!="Invalid date") {
+				            url += '&parsingDate=' + encodeURIComponent(parsingDate);
+				         }
+			 		}else{
+			 			if (parsingDate!="Invalid date") {
+				            url += '?parsingDate=' + encodeURIComponent(parsingDate);
+				         }
+			 		}
 		 		window.location.href = url;
 	     	}		
 	 		break;	
@@ -1406,6 +1540,13 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 				 var url = getContext()+"/Network_SupNdTypStNdCell"; 	
 				 if(params !=null){
 			 			url += params;
+			 			if (parsingDate!="Invalid date") {
+				            url += '&parsingDate=' + encodeURIComponent(parsingDate);
+				         }
+			 		}else{
+			 			if (parsingDate!="Invalid date") {
+				            url += '?parsingDate=' + encodeURIComponent(parsingDate);
+				         }
 			 		}
 			 		window.location.href = url;
 			    }
@@ -1416,7 +1557,14 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 			  {
 				 var url = getContext()+"/Network_NdTypSupStNdCell"; 	
 				 if(params !=null){
-					 url += params;
+			 			url += params;
+			 			if (parsingDate!="Invalid date") {
+				            url += '&parsingDate=' + encodeURIComponent(parsingDate);
+				         }
+			 		}else{
+			 			if (parsingDate!="Invalid date") {
+				            url += '?parsingDate=' + encodeURIComponent(parsingDate);
+				         }
 			 		}
 			 		window.location.href = url;
 			    }
@@ -1427,9 +1575,16 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 	 		 case "siteBtn,itemBtn,poBtn":
 	 		 	{	
 	 			 var url = getContext()+"/Network_PoSiteItem"; 
-	 			if(params !=null){
-		 			url += params;
-		 		}
+	 			 if(params !=null){
+			 			url += params;
+			 			if (parsingDate!="Invalid date") {
+				            url += '&parsingDate=' + encodeURIComponent(parsingDate);
+				         }
+			 		}else{
+			 			if (parsingDate!="Invalid date") {
+				            url += '?parsingDate=' + encodeURIComponent(parsingDate);
+				         }
+			 		}
 		 		window.location.href = url;
 	 		 	}
 	 		 break;
@@ -1441,6 +1596,13 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 				 var url = getContext()+"/Network_PoItemSite"; 
 				 if(params !=null){
 			 			url += params;
+			 			if (parsingDate!="Invalid date") {
+				            url += '&parsingDate=' + encodeURIComponent(parsingDate);
+				         }
+			 		}else{
+			 			if (parsingDate!="Invalid date") {
+				            url += '?parsingDate=' + encodeURIComponent(parsingDate);
+				         }
 			 		}
 			 		window.location.href = url;
 			  }
@@ -1451,9 +1613,16 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 	 		 case "siteBtn,itemBtn,poBtn":
 	 		  {	
 	 			var url = getContext()+"/Network_SitePoItem"; 
-	 			if(params !=null){
-		 			url += params;
-		 		}
+	 			 if(params !=null){
+			 			url += params;
+			 			if (parsingDate!="Invalid date") {
+				            url += '&parsingDate=' + encodeURIComponent(parsingDate);
+				         }
+			 		}else{
+			 			if (parsingDate!="Invalid date") {
+				            url += '?parsingDate=' + encodeURIComponent(parsingDate);
+				         }
+			 		}
 		 		window.location.href = url;
 	 		  }
 	 		  break;
@@ -1464,6 +1633,13 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 	 			var url = getContext()+"/Network_NdTypNdCell"; 
 	 			if(params !=null){
 		 			url += params;
+		 		if (parsingDate!="Invalid date") {
+			            url += '&parsingDate=' + encodeURIComponent(parsingDate);
+			         }
+		 		}else{
+		 			if (parsingDate!="Invalid date") {
+			            url += '?parsingDate=' + encodeURIComponent(parsingDate);
+			         }
 		 		}
 		 		window.location.href = url;
 	 		 } break;
@@ -1474,19 +1650,33 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 				 var url = getContext()+"/Network_Node"; 
 				 if(params !=null){
 			 			url += params;
+			 		 	if (parsingDate!="Invalid date") {
+				            url += '&parsingDate=' + encodeURIComponent(parsingDate);
+				         }
+			 		}else{
+			 			if (parsingDate!="Invalid date") {
+				            url += '?parsingDate=' + encodeURIComponent(parsingDate);
+				         }
 			 		}
-			 	window.location.href = url;
+				 		window.location.href = url;
 			 } 
 			break;
 			
 	 		//Cell
 			 case "cellBtn":
 			{
-				var url = getContext()+"/Network_Cell"; 
-				if(params !=null){
-			 			url += params;
+				 var url = getContext()+"/Network_Cell"; 
+					if(params !=null){
+				 		url += params;
+			 		 if (parsingDate!="Invalid date") {
+				            url += '&parsingDate=' + encodeURIComponent(parsingDate);
+				         }
+			 		}else{
+			 			if (parsingDate!="Invalid date") {
+				            url += '?parsingDate=' + encodeURIComponent(parsingDate);
+				         }
 			 		}
-			 	window.location.href = url;
+				 		window.location.href = url;
 			 } 
 			break;
 			
@@ -1638,7 +1828,9 @@ function DefaultSort(arr,domain) {
 		}
 	}
 	    select=select.toString();
-		Sumbitselection(select,domains);
+	    var date= $('#ParsingDate').val();
+	    console.log("date np popup: "+date);
+		Sumbitselection(select,domains,date);
 	}  
 
 	// sumbit through button directly from popup
@@ -1661,7 +1853,9 @@ function DefaultSort(arr,domain) {
 	}
 	    select=select.toString();
 	    $('#modalOrderTree').modal('hide');
-		Sumbitselection(select,domains);
+	    var date= $('#ParsingDate').val();
+	    console.log("date popup: "+date);
+		Sumbitselection(select,domains,date);
 	}
 
 

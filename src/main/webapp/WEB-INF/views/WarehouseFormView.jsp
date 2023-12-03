@@ -3,7 +3,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <head>
 <meta charset="utf-8">
-<title></title>
+<title>Warehouse Form View</title>
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <!-- <script src="${pageContext.request.contextPath}/resources/js/jquery.slim.min.js" ></script>  -->
@@ -2238,6 +2238,7 @@ if('${SelectedIndex}' != "addNew"){
 	           	 		    	return $('<li class="each">').data( "item.autocomplete", item )
 	           		    			.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
 	           	                 item[1] + '</span><br><span class="desc">' +
+	           	              	 item[2] + '</span><span class="desc"> , ' +
 	           	                 item[0] + '</span></div></li>').appendTo(ul);
 	           			};
 	           					$("#selectnav").focus(function(){

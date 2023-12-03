@@ -4,7 +4,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<title></title>
+		<title>Item List View</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<link rel="shortcut icon" href="">
 		<script src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>
@@ -442,13 +442,15 @@
 							},
 							success: function (data) {
 								console.log("ListView deleted");
+								location.reload();
+								//location.replace("${pageContext.request.contextPath}/ItemListView");
 							},
 							error: function (error) {
 								console.log("The error is " + error);
 							}
 						});
-//						location.reload();
-						location.replace("${pageContext.request.contextPath}/ItemListView");
+						//location.reload();
+						//location.replace("${pageContext.request.contextPath}/ItemListView");
 
 					});
 

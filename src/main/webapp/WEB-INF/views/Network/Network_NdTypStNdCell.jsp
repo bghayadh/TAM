@@ -1,5 +1,5 @@
 <%@ include file="NetworkCommon.jsp" %>
-
+<title>Node Type Site Node Cell</title>
 <script>	
 $('#filterr').hide();
 $('#removeFilter').hide();
@@ -16,6 +16,8 @@ var listNodesType = ${listNodesType};
 //console.log("listNodesType: ",listNodesType);
 var arrayParam=${arrayParam};
 //console.log("arrayParam...", arrayParam);
+var date=$("#ParsingDate").val();
+console.log("date...", date);
 
 var button ;
 var data;
@@ -436,6 +438,7 @@ function NdTypStNdCellCore(id){
 						  "paramTransmission":paramTransmission,
 				   		  "paramRAN":paramRAN,
 					      "paramCore":paramCore,
+					      "date":date,
 				 		},
 				 dataType: "json",
 				 success: function (data) {	
@@ -469,7 +472,8 @@ function NdTypStNdCellCore(id){
 				        	  'theme': 'default',
 				        	  'items': [
 				        		  {'icon': 'braille', 'name': 'Show BoQ', action: () => {				
-				        				SiteNodeType_Boq(idSite,selectedNodetType);				        			}	
+				        				SiteNodeType_Boq(idSite,selectedNodetType);
+				        			}	
 				        		}
 				        	]
 				        });
@@ -595,6 +599,7 @@ var selectedItem = id.slice(0, id.indexOf("_" +selectedNodetType)); // Output: "
 				"paramTransmission":paramTransmission,
 		     	"paramRAN":paramRAN,
 			    "paramCore":paramCore,
+			    "date":date,
 	          },
 	          dataType: "json",
 	          success: function (data) {

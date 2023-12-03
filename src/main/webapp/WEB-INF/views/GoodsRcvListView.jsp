@@ -4,7 +4,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<title></title>
+		<title>GR List View</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<link rel="shortcut icon" href="">
 		<link href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">

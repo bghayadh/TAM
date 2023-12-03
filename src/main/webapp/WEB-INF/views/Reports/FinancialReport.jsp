@@ -7,7 +7,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title></title>
+<title>Item Asset Report</title>
      <link rel="shortcut icon" href="">
         <script src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/moment.min.js"></script>
@@ -61,6 +61,24 @@
 </head>
 <style>
 
+
+.fixed-header{
+	opacity: 1;
+	filter: alpha(opacity=100);
+	background: #ebf2ef;
+	position: sticky;
+	top: 0;
+	z-index: 15;
+}
+				
+#Domain,#subDomain,#Vendor {
+    z-index: 100; 
+}
+
+
+#Domain * ,#subDomain * ,#Vendor *{
+    z-index: 100;     
+}				
 #showOnMap {
   color: orange;
   background-color: white;
@@ -457,7 +475,7 @@ max-width: 100%;
   <div class="panel panel-default" style="margin-bottom:3px;" >
     <div class="panel-heading" role="tab" id="headingOne">
       <h4 class="panel-title">
-       <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+       <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="margin-top:-8px;">
           Grid Table
         </a>
       </h4>
@@ -500,7 +518,7 @@ max-width: 100%;
 								<div id= "tableGrid" class="table-responsive almgrid-table-div">
 									<table id="gridTable" class="table table-striped table-bordered almgrid-table">
 										<thead>
-											<tr class="header">
+											<tr class="header fixed-header">
 												<th>
 												<li class="filter-dropdown dropdown">
 														<button disabled class="almgrid-filter" data-toggle="dropdown" style="display: none;">
@@ -830,7 +848,7 @@ max-width: 100%;
   <div class="panel panel-default" style="margin-bottom:3px;" >
   <div class="panel-heading " role="tab" id="headingTwo" >
       <h4 class="panel-title">
-        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="#collapseTwo">
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="#collapseTwo" style="margin-top:-8px;">
          GIS
         </a>
       </h4>
@@ -1349,7 +1367,16 @@ $(document).ready(function() {
   	        this.initFlag++;
   	       },
          });
-    
+
+	//collapse active class	
+	$('.panel-collapse').on('show.bs.collapse',function() {
+		$(this).siblings('.panel-heading').removeClass('active');
+	});
+
+	$('.panel-collapse').on('hide.bs.collapse',function() {
+		$(this).siblings('.panel-heading').addClass('active');
+	});
+	  
     $('#showOnMap'). click(function(){  
 		 distinctSites =[];
 		 markerClusterFarSites.clearMarkers();
@@ -1397,6 +1424,7 @@ $(document).ready(function() {
         document.getElementById('itemCode').value = '';
         document.getElementById('itemName').value = '';
         document.getElementById('itemModel').value = '';
+        document.getElementById('itemPartNo').value = '';
         $("#strtEndCoordinate").prop("checked", false); 
 		$("#circleRange").prop("checked", false);
 		$("#row_setStartEnd").hide();
@@ -1480,7 +1508,7 @@ $(document).ready(function() {
 		  
 		$("#gridTable").remove();
 		$("#tableGrid").append('<table id="gridTable" class="table table-striped table-bordered almgrid-table">'
-				+'<thead><tr class="header"><th><li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown" disabled style="display:none;"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th><th>FAR ID<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> '
+				+'<thead><tr class="header fixed-header"><th><li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown" disabled style="display:none;"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th><th>FAR ID<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> '
 				+'<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
 					+'<th>Item Code<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
 					+'</ul></li></th><th>Item Name<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'

@@ -4,7 +4,7 @@
 
 <head>
 <meta charset="utf-8">
-<title></title>
+<title>Item Form View</title>
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <script src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>
@@ -1737,7 +1737,7 @@ $("#popUpDiv").fadeOut();
                     lineColor: "#000",
 
                 });
-
+				console.log(${ListPRqItem});
                 if('${ListPRqItem}' != "addNew")
                 {
                 	boqArray = [];
@@ -2125,9 +2125,6 @@ $("#popUpDiv").fadeOut();
         	}else{
         		$("#btnPrv").click(function(){        			
         		if(!$("#btnPrva").hasClass("disabled")){
-        			
-        				
-        				var areaId=$("#areaId").val();
         				var param ="${pageContext.request.contextPath}/ItemFormView?itemcode="+$("#itmcode").val()+"&NavAction=0";
         				location.reload();
 

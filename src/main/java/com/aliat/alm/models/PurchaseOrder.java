@@ -1,4 +1,5 @@
 package com.aliat.alm.models;
+
 import java.sql.Timestamp;
 
 import javax.persistence.Column;
@@ -6,85 +7,85 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "PURCHASE_ORDER")
 public class PurchaseOrder {
-	
+
+	private static PurchaseOrder instance = null;
+
 	@Id
 	@Column(name = "PO_ID", nullable = false)
 	private String ID;
-	
+
 	@Column(name = "CREATION_DATE")
 	private Timestamp creationDate;
-		
+
 	@Column(name = "LAST_MODIFICATION_DATE")
 	private Timestamp lastmodifiedDate;
-	
+
 	@Column(name = "SUPPLIER")
 	private String supplier;
-	
+
 	@Column(name = "SUPPLIER_NAME")
 	private String supplierName;
-	
+
 	@Column(name = "SUPPLIER_ADDRESS")
 	private String supplierAddress;
-	
+
 	@Column(name = "ORDERED_DATE")
 	private Timestamp orderedDate;
-	
+
 	@Column(name = "DELIVERY_DATE")
 	private Timestamp delivereyDate;
-	
+
 	@Column(name = "WAREHOUSE")
 	private String WareHouse;
-	
+
 	@Column(name = "TOTAL_AMOUNT")
 	private float TotalAmount;
-	
+
 	@Column(name = "DISCOUNT_AMOUNT")
 	private float discAmount;
-	
+
 	@Column(name = "DISCOUNT_PERCENT")
 	private float discountPercent;
-	
+
 	@Column(name = "PAID_AMOUNT")
 	private float paidAmount;
-	
+
 	@Column(name = "OUTSTANDING")
 	private float ordOutstanding;
-	
+
 	@Column(name = "STATUS")
 	private String ordStatus;
-	
+
 	@Column(name = "NET_TOTAL_AMOUNT")
 	private float netTotal;
-	
+
 	@Column(name = "PONUMBER")
 	private String PoNo;
-	
+
 	@Column(name = "TOTAL_QTY")
 	private float TotalQty;
-	
+
 	@Column(name = "PRQ_ID")
 	private String ordPRQid;
-	
 
 	@Column(name = "WAREHOUSE_NAME")
 	private String wareName;
-	
+
 	@Column(name = "SITE_ID")
 	private String siteID;
-	
-	public PurchaseOrder() {	
+
+	public PurchaseOrder() {
 	}
-	
-	
-	public PurchaseOrder(String ID, Timestamp creationDate, Timestamp lastmodifiedDate,
-			String supplier, String supplierName, String supplierAddress, Timestamp orderedDate,
-			Timestamp delivereyDate, String WareHouse, float TotalAmount, float discAmount,
-			float discountPercent, float paidAmount, float ordOutstanding, String ordStatus, float netTotal,
-			String PoNo, float TotalQty, String ordPRQid, String wareName, String siteID) {
+
+
+	public PurchaseOrder(String ID, Timestamp creationDate, Timestamp lastmodifiedDate, String supplier,
+			String supplierName, String supplierAddress, Timestamp orderedDate, Timestamp delivereyDate,
+			String WareHouse, float TotalAmount, float discAmount, float discountPercent, float paidAmount,
+			float ordOutstanding, String ordStatus, float netTotal, String PoNo, float TotalQty, String ordPRQid,
+			String wareName, String siteID) {
 		super();
 		this.ID = ID;
 		this.creationDate = creationDate;
@@ -108,7 +109,6 @@ public class PurchaseOrder {
 		this.wareName = wareName;
 		this.siteID = siteID;
 	}
-
 
 	public String getPurchaseOrdID() {
 		return ID;
@@ -134,17 +134,13 @@ public class PurchaseOrder {
 		this.lastmodifiedDate = lastmodifiedDate;
 	}
 
-	
-
 	public String getOrdsupplierId() {
 		return supplier;
 	}
 
-
 	public void setOrdsupplierId(String supplier) {
 		this.supplier = supplier;
 	}
-
 
 	public String getOrdSuppName() {
 		return supplierName;
@@ -257,7 +253,7 @@ public class PurchaseOrder {
 	public void setOrdtotalQty(float TotalQty) {
 		this.TotalQty = TotalQty;
 	}
-	
+
 	public String getOrdPRQid() {
 		return ordPRQid;
 	}
@@ -265,23 +261,22 @@ public class PurchaseOrder {
 	public void setOrdPRQid(String ordPRQid) {
 		this.ordPRQid = ordPRQid;
 	}
-	
 
 	public String getWareName() {
-		return wareName;	
+		return wareName;
 	}
-	
+
 	public void setWareName(String wareName) {
 		this.wareName = wareName;
-		
+
 	}
+
 	public String getSiteID() {
 		return siteID;
-		
+
 	}
-	
-	public void setSiteID(String siteID)
-	{
+
+	public void setSiteID(String siteID) {
 		this.siteID = siteID;
 	}
 }

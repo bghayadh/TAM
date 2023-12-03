@@ -41,16 +41,15 @@ public class NodeListView {
 	@Column(name = "SITE_ID")
 	private String siteID;
 	
+	@Column(name = "WARE_NAME")
+	private String wareName;
+	
 	@Column(name = "CREATION_DATE")
 	private String createdDate;
 	
 	@Column(name = "UPDATE_DATE")
 	private String updateDate;
 	
-	@Column(name = "WARE_NAME")
-	private String wareName;
-	
-
 
 	public NodeListView() {
 		super();
@@ -58,8 +57,8 @@ public class NodeListView {
 	}
 
 	public NodeListView(String nodePK,String nodePk, String nodeID, String nodeName, String nodeType, 
-			String nodeModel,  String siteID,
-			String createdDate, String updateDate,  String wareName
+			String nodeModel,  String siteID, String wareName,
+			String createdDate, String updateDate
 			) {
 		super();
 		this.nodePK = nodePK;
@@ -69,10 +68,10 @@ public class NodeListView {
 		this.nodeType = nodeType;
 		this.nodeModel = nodeModel;
 	    this.siteID = siteID;
+	    this.wareName = wareName;
 		this.createdDate = createdDate;
 		this.updateDate = updateDate;
-		this.wareName = wareName;
-			}
+	}
 
 	public String getNodePK() {
 		return nodePK;
@@ -129,7 +128,13 @@ public class NodeListView {
 		this.siteID = siteID;
 	}
 
-	
+	public String getWareName() {
+		return wareName;
+	}
+
+	public void setWareName(String wareName) {
+		this.wareName = wareName;
+	}	
 
 	public String getCreatedDate() {
 		return createdDate;
@@ -146,17 +151,4 @@ public class NodeListView {
 	public void setUpdateDate(String updateDate) {
 		this.updateDate = updateDate;
 	}
-
-	
-
-	public String getWareName() {
-		return wareName;
-	}
-
-	public void setWareName(String wareName) {
-		this.wareName = wareName;
-	}
-
-	
-
 }

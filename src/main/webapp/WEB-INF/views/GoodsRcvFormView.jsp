@@ -3,7 +3,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <head>
 <meta charset="utf-8">
-    <title></title>
+    <title>GR Form View</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<script src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/moment.min.js"></script>
@@ -62,7 +62,17 @@ z-index: 9003;
 					
 					
 	        		}
+     .btn-pop {
+	background-color: #C2CBC0 !important;
+	border-color: #C2CBC0;
+	3
+}
 
+.btn-pop:hover {
+	color: #fff;
+	background-color: #8696A0 !important;
+	border-color: #8696A0 !important;
+}
 				.dot {
 				  height: 17px;
 				  width: 17px;
@@ -909,17 +919,18 @@ max-width: 100%;
 	<div id ="grModal" class="modal fade custom-class-assignedto-modal"  tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">	
 		<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
 			<div class="modal-content" >
-				<div class="modal-header" style="background-color: #FF4F4F;" >
-				<h5 id ="popupNb" class="modal-title" style="font-weight:bold; color: #3C1596;position:relative;top:4px;"></h5>
-			    
-			    <button type="button" name="insertBelow"  onclick="insertRowBelow()" class ="btn btn-default btn-primary BtnActive" style="color:white;position:relative;left:50px;">Insert Below </button>
-			    <button type="button" name="insertAbove"  onclick="insertRowAbove()" class ="btn btn-default btn-primary BtnActive" style="color:white;position:relative;left:60px;">Insert Above </button>
-			    <button type="button" name="deleteBoqRow"  onclick="deleteBoqRow()" class ="btn btn-default btn-primary BtnActive" style="color:white;position:relative;left:70px;">Delete</button>
-				<button name ="previousRow" class ="btn btn-default btn-primary BtnActive" style="color:white;position:relative;left:80px;">Previous</button>
-	            <button name="nextRow" onclick="nextRow()" class ="btn btn-default btn-primary BtnActive" style="color:white;position:relative;left:90px;">Next</button> 
-				
-				<button type="button" name="closePopup" class ="close" data-dismiss ="modal"> <i class='fa fa-times'></i> </button>
-				<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change' ></i> </a>
+					<div class="modal-header" style="background-color: #007BFF; height: 56px">
+			<h5 id ="popupNb" class="modal-title" style="font-weight:bold; color: gold;position:relative;top:4px;"></h5>
+				<div style="float: right;">
+				<button  name="insertBelow"  onclick="insertRowBelow()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: -30px; font-weight: bold; margin-top: -7px;"">Insert Below </button>
+				<button  name="insertAbove"  onclick="insertRowAbove()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: -20px; font-weight: bold; margin-top: -7px;"">Insert Above </button>
+				<button  name="deleteBoqRow" onclick="deleteBoqRow()"   class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: -10px; font-weight: bold; margin-top: -7px;"">Delete</button>
+				<button  name ="previousRow" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: 0px; font-weight: bold; margin-top: -7px;"">Previous</button>
+	            <button  name="nextRow" onclick="nextRow()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: 10px; font-weight: bold; margin-top: -7px;"">Next</button> 
+				<button type="button" name="closeModPartPopup" class="close" data-dismiss="modal"><i class='fa fa-times'></i></button>
+									<a class="close modalMinimize ml-3"> <i
+										class='fa fa-minus icon-to-change'></i></a>
+				</div>
 				</div>
 	<div class="modal-body">
 	<ul class="nav nav-tabs" id="myTab" role="tablist" style="background-color: #00757C;">
@@ -1249,7 +1260,10 @@ max-width: 100%;
 
 		var span;
 
-		if (dotStatus == "1") {
+		if ('${grStatus}' == "completed")
+
+		//if (dotStatus == "1") 
+		{
 
 			span = "<span class='dotStatus' name='dotStatus' value='"+dotStatus+"' style='background-color: chartreuse;'></span>";
 		} else {

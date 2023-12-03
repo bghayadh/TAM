@@ -37,7 +37,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.FarPartNumber;
@@ -57,8 +57,7 @@ import com.aliat.alm.models.FarNode;
 @Controller
 public class FixedAssetRegistryController {
 
-	@Autowired
-	ALMSessions almsessions;
+	
 
 	@Autowired
 	Notify notifications;
@@ -81,7 +80,7 @@ public class FixedAssetRegistryController {
 			return LoginServices.checkSession(request, response);
 		}
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
@@ -141,7 +140,7 @@ public class FixedAssetRegistryController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+					
 				}
 			}
 		}
@@ -159,7 +158,7 @@ public class FixedAssetRegistryController {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
 		}
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 
 			tx = session.beginTransaction();
@@ -332,7 +331,7 @@ public class FixedAssetRegistryController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+					
 				}
 			}
 		}
@@ -364,7 +363,7 @@ public class FixedAssetRegistryController {
 		Item itm;
 		List<PurchaseOrderItem> listPurchaseOrderItem;
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 
 			tx = session.beginTransaction();
@@ -545,7 +544,7 @@ public class FixedAssetRegistryController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+					
 				}
 			}
 		}
@@ -579,7 +578,7 @@ public class FixedAssetRegistryController {
 
 			FixedAssetRegistry fassetreg;
 
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 			if (session != null && session.isOpen()) {
 				tx = session.beginTransaction();
 
@@ -907,7 +906,7 @@ public class FixedAssetRegistryController {
 				finally {
 					if (session != null && session.isOpen()) {
 						session.close();
-						session.getSessionFactory().close();
+						
 					}
 				}
 
@@ -930,7 +929,7 @@ public class FixedAssetRegistryController {
 		}
 
 		String idForm = request.getParameter("farID");
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
@@ -960,7 +959,7 @@ public class FixedAssetRegistryController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+					
 				}
 			}
 		} else {
@@ -984,7 +983,7 @@ public class FixedAssetRegistryController {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
 		}
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		String[] idList = request.getParameterValues("farID[]");
 
 		if (session != null && session.isOpen()) {
@@ -1021,7 +1020,7 @@ public class FixedAssetRegistryController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+					
 				}
 			}
 		} else {
@@ -1047,7 +1046,7 @@ public class FixedAssetRegistryController {
 			return rtn;
 		}
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 
@@ -1071,7 +1070,7 @@ public class FixedAssetRegistryController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+					
 				}
 			}
 		}
@@ -1091,7 +1090,7 @@ public class FixedAssetRegistryController {
 			return rtn;
 		}
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 
@@ -1115,7 +1114,7 @@ public class FixedAssetRegistryController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+					
 				}
 			}
 		}
@@ -1133,7 +1132,7 @@ public class FixedAssetRegistryController {
 			rtn.put("Login", "redirect:/");
 			return rtn;
 		}
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 
@@ -1157,7 +1156,7 @@ public class FixedAssetRegistryController {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-					session.getSessionFactory().close();
+					
 				}
 			}
 		}

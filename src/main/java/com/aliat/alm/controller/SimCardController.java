@@ -31,7 +31,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.AlmDbSession;
+//import com.aliat.alm.common.ALMSessions;
 import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.Agent;
@@ -63,8 +64,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 		@Autowired
 		Form form;
 		
-		@Autowired
-		ALMSessions almsessions;
+		
 		
 		@Autowired
 		Notify notifications;
@@ -76,7 +76,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 		}else {
 			List<SimCard> simList = new ArrayList<SimCard>();
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if(session != null && session.isOpen()) {
 			notifications.headerNotifications(session, model);
 		tx = session.beginTransaction();
@@ -114,7 +114,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 		}
 		else {
 		String[] idList = request.getParameterValues("ID[]");
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if(session != null && session.isOpen())
 		{
 		tx = session.beginTransaction();
@@ -155,7 +155,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 		List<SimCard> listQuery;
 		List<SimCard> listLFP;
 		calendar.setTime(new Timestamp(System.currentTimeMillis()));
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 
 		String navAction = "2";
         String result [] =new String[4];
@@ -259,7 +259,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 		String latitude = request.getParameter("latitude");
 		String longtitude = request.getParameter("longtitude");
 		SimCard SimCardList;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if(session != null && session.isOpen()) {
 		tx = session.beginTransaction();
 		try {
@@ -294,6 +294,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 			
 			
 		}catch (Exception e) {
+			e.printStackTrace();
 			logger.info("Error in saving the SimCard form view with a message of :"+e+"\n"+e.getMessage());		}
 		finally {
 			if(session != null && session.isOpen()) {
@@ -323,7 +324,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 			List<Agent> listAgents = new ArrayList<Agent>();
 			List<Clients> listClient = new ArrayList<Clients>();
 			String location = "%"+ request.getParameter("location")+"%";
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 			if(session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
@@ -394,7 +395,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 			return rtn;
 		}
 		else {
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 			if (session != null && session.isOpen()) {
 				tx = session.beginTransaction();
 				try {
@@ -442,7 +443,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 			return rtn;
 		}
 		
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();

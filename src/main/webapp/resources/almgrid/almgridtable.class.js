@@ -25,13 +25,22 @@ class AlmgridTable {
         this.initializeFunction();
         this.addEvents();
         this.drawTableGrid(this.tableId, this.dataArray);
+		var count = 1;
+    	// Define a window to each column
+    	$("#" + this.tableId).find(".filter-dropdown-ul").each(function () {
+			window["submit_" +count] = "unchecked"; // used to check if the submit is clicked
+			window["uncheckedCheckboxes_" +count]=[]; // used to store the unchecked checkboxes when first time checking select all
+			window["uncheckboxArray_" +count]=[]; // used to store the unchecked checkboxes on clicking on submit in popup
+			window["checkboxArray_" +count]=[];// used to store the checked checkboxes on clicking on submit in popup
+        	count++;
+    	});
     }
     initializeFunction() {
         drawDropDownCustomFilter(this.tableId);
     }
 
 
-    drawCustomFilters(columnNumber, currentForm, uniqueArray, uniqueFilteredArray,checkboxArray,uncheckboxArray,startIndex,endIndex,finalCount,nextPageNum) {
+    drawCustomFilters(filteredUncheckedArray,submitButtonFlag,columnNumber, currentForm, uniqueArray, uniqueFilteredArray,checkboxArray,uncheckboxArray,startIndex,endIndex,finalCount,nextPageNum) {
 
         var tableId = this.tableId;
         var FilteredArrayLength = uniqueFilteredArray.length
@@ -71,7 +80,12 @@ class AlmgridTable {
    			$("#" + currentForm).find('.showselected-filter-checkbox').prop('checked', false);
    			$("#" + currentForm).find('.showavailable-filter-checkbox').prop('checked', true);
    	    }
-   		
+   		if(submitButtonFlag =="checked") {
+			uncheckboxArray[columnNumber]=window["uncheckboxArray_" +columnNumber];
+			checkboxArray[columnNumber]=window["checkboxArray_" +columnNumber];
+			window["uncheckedCheckboxes_" + columnNumber]=[];
+			window["uncheckedCheckboxes_" + columnNumber]=window["uncheckboxArray_" +columnNumber];
+		}
         var rows = [];
         var existedValues = [];
         
@@ -84,10 +98,11 @@ class AlmgridTable {
         let showSelectedStatus = document.querySelector("#" + currentForm + " .showselected-filter-checkbox");
         let showAllStatus = document.querySelector("#" + currentForm + " .showall-filter-checkbox");
 
-        if(submitStatus =="unchecked") {
+        if(submitButtonFlag =="unchecked") {
             $("#" + currentForm).find('.selectall-filter-checkbox').prop('checked', true);
         }
-        else if(submitStatus =="checked" && uncheckedArrayTemp.length >0) {
+
+	    else if(submitButtonFlag =="checked" && window["uncheckedCheckboxes_" + columnNumber].length >0) {
             $("#" + currentForm).find('.selectall-filter-checkbox').prop('checked', false);
         }
         
@@ -98,8 +113,8 @@ class AlmgridTable {
             //console.log(uniqueArray[i])
             existinfilteredArray = uniqueFilteredArray.includes(uniqueArray[i]);
             
-            if(submitStatus =="unchecked") {
-	            if(uncheckboxArray[columnNumber].length >0) {
+           if(submitButtonFlag =="unchecked") {
+				if(uncheckboxArray[columnNumber].length >0) {
 	            	if(checkboxArray[columnNumber].includes(uniqueArray[i]) == false){	
 	            		checkboxArray[columnNumber].push(uniqueArray[i]);
 	            		
@@ -111,8 +126,9 @@ class AlmgridTable {
 	                checked = true;
 	            }
             }
-            else if(submitStatus =="checked" && uncheckedArrayTemp.length >0) {
-            	if(uncheckedArrayTemp.includes(uniqueArray[i]) == true){	
+ 			else if(submitButtonFlag =="checked" && filteredUncheckedArray.length >0) {
+
+            	if(window["uncheckedCheckboxes_" + columnNumber].includes(uniqueArray[i]) == true){	
 					
             		var indx = checkboxArray[columnNumber].indexOf(uniqueArray[i]);
 					if (indx > -1) {
@@ -120,13 +136,13 @@ class AlmgridTable {
 					}
             		uncheckboxArray[columnNumber].push(uniqueArray[i]);
             		
-					var indx = uncheckedArrayTemp.indexOf(uniqueArray[i]);
+					var indx = filteredUncheckedArray.indexOf(uniqueArray[i]);
 					if (indx > -1) {
-						uncheckedArrayTemp.splice(indx, 1);
+						filteredUncheckedArray.splice(indx, 1);
 					}	
 				}
                 checked = false;
-            }       
+            }         
             // in the first time clicked, the condition will be that the value exist in available array and also in the checkbox array
             // the second time after filter, the value will exist in available array but will check if exist in checkbox array or not
 
@@ -176,6 +192,7 @@ class AlmgridTable {
             if(existinfilteredArray == true) {
           	   existedValues.push(rows[i])
              }
+			currentAppendedRows=rows;
         }
 
         /*console.log(rows.length)
@@ -594,14 +611,22 @@ class AlmgridTable {
 
         var onChangeSelect = function () {
             if (selectAll.checked) {
-            	uncheckedArrayTemp=[];
-            	if(submitStatus =="checked") {
-            		uncheckedArrayTemp=uncheckboxArray[columnNumber];
-            	}
-            	
                 if(FilteredArrayLength > 0 && showavailable.checked){
-                    $.each(existedValues, function (i, value) {
-                        existedValues[i]["checked"] = true;
+					
+					//Store the unchecked checkboxes first time clicking on select all only (to use this array in case we close the popup without a submit )
+					if (window["submit_" + columnNumber] == "checked") {
+					if (window["uncheckedCheckboxes_" + columnNumber].length === 0) {
+			            existedValues.forEach(function(value) {
+			                if (!value.checked) {
+			                    window["uncheckedCheckboxes_" + columnNumber].push(value["indexval"]);
+			                }
+			            });
+			         }
+					}
+ 				  	$.each(existedValues, function (i, value) {
+	                	existedValues[i]["checked"] = true;
+
+					  if (window["uncheckedCheckboxes_" + columnNumber].includes(existedValues[i]["indexval"])== false) {
 
                         if(!checkboxArray[columnNumber].includes(existedValues[i]["indexval"]))
                             checkboxArray[columnNumber].push(existedValues[i]["indexval"]);
@@ -610,7 +635,8 @@ class AlmgridTable {
                             return e != existedValues[i]["indexval"];
     
                         });
-                    });
+				      }
+					});
 
                     checkboxArray[columnNumber] = Array.from(new Set(checkboxArray[columnNumber]));
                     var currentForm = $(this).parents("form").attr("id");
@@ -642,18 +668,19 @@ class AlmgridTable {
 
             else {
                 if(FilteredArrayLength > 0 && showavailable.checked){
-                    $.each(existedValues, function (i, value) {
+                   $.each(existedValues, function (i, value) {
                         existedValues[i]["checked"] = false;
 
+                     if (window["uncheckedCheckboxes_" + columnNumber].includes(existedValues[i]["indexval"])== true) {
                         if(!uncheckboxArray[columnNumber].includes(existedValues[i]["indexval"]))
                             uncheckboxArray[columnNumber].push(existedValues[i]["indexval"]);
 
                         checkboxArray[columnNumber] = $.grep(checkboxArray[columnNumber], function (e) {
                             return e != existedValues[i]["indexval"];
                         });
+					  }
 
                     });
-
                     uncheckboxArray[columnNumber] = Array.from(new Set(uncheckboxArray[columnNumber]));
                     var currentForm = $(this).parents("form").attr("id");
                     clusterize.update(filterRows(existedValues,"samePageAppend",currentForm));
@@ -1000,7 +1027,7 @@ class AlmgridTable {
                      let finalCount = "30000";
                      let nextPageNum="1";                 
 
-                    almgrid.drawCustomFilters(columnNumberPressed, clickedForm, uniqueArray, uniqueAvailableArray,checkboxArray,uncheckboxArray,"0","30000","30000","1");
+                    almgrid.drawCustomFilters(window["uncheckedCheckboxes_" + columnNumberPressed],window["submit_" + columnNumberPressed],columnNumberPressed, clickedForm, uniqueArray, uniqueAvailableArray,checkboxArray,uncheckboxArray,"0","30000","30000","1");
                     document.getElementById("loaderDiv").style.display = "none";
                 })
                 }, 0); // Simulating 0 second delay
@@ -1133,7 +1160,7 @@ class AlmgridTable {
                     
 
 
-                    almgrid.drawCustomFilters(columnNumberPressed, clickedForm, uniqueArray, uniqueAvailableArray,checkboxArray,uncheckboxArray,"0","30000","30000","1");
+                    almgrid.drawCustomFilters(window["uncheckedCheckboxes_" + columnNumberPressed],window["submit_" + columnNumberPressed],columnNumberPressed, clickedForm, uniqueArray, uniqueAvailableArray,checkboxArray,uncheckboxArray,"0","30000","30000","1");
                     document.getElementById("loaderDiv").style.display = "none";
                 })
 				}
@@ -1501,16 +1528,20 @@ class AlmgridTable {
                // let showavailable = document.querySelector("#" + currentForm + " .showavailable-filter-checkbox");
 
                 if(!$(this).is(":checked")){
-                    
-                    uncheckboxArray[columnNumber].push(checkedValue);
-                    uncheckboxArray[columnNumber] = Array.from(new Set(uncheckboxArray[columnNumber]));
-
-                    checkboxArray[columnNumber] = $.grep(checkboxArray[columnNumber], function (e) {
-                        return e != checkedValue;
-                    });
                     $("#" + currentForm).find('.selectall-filter-checkbox').prop('checked', false);
+					
+					if (window["submit_" + columnNumber] == "unchecked") {
+	                    uncheckboxArray[columnNumber].push(checkedValue);
+	                    uncheckboxArray[columnNumber] = Array.from(new Set(uncheckboxArray[columnNumber]));
+	
+	                    checkboxArray[columnNumber] = $.grep(checkboxArray[columnNumber], function (e) {
+	                        return e != checkedValue;
+	                    });
+					}
+				
                 }
                 else{
+                  if (window["submit_" + columnNumber] == "unchecked") {
                     checkboxArray[columnNumber].push(checkedValue);
                     checkboxArray[columnNumber] = Array.from(new Set(checkboxArray[columnNumber]));
 
@@ -1519,11 +1550,22 @@ class AlmgridTable {
 
                     });
 
-
-                    if(checkboxArray[columnNumber].length === almgrid.availableArrayLength || almgrid.arrayLength === checkboxArray[columnNumber].length){
+					
+                   /* if(checkboxArray[columnNumber].length === almgrid.availableArrayLength || almgrid.arrayLength === checkboxArray[columnNumber].length){
                         $("#" + currentForm).find('.selectall-filter-checkbox').prop('checked', true);
-                    }
-                }
+                    }*/
+				}
+					 var uncheckedRows = currentAppendedRows.filter(function(row) {
+				   		 return row.checked === false; // Checking for the 'checked' key to be false
+					});
+				
+				    var numberOfUncheckedRows = (uncheckedRows.length)-1;
+					if(numberOfUncheckedRows==0) {
+						$("#" + currentForm).find('.selectall-filter-checkbox').prop('checked', true);
+					}
+				
+					
+			}
                 
                
 
@@ -1542,12 +1584,40 @@ class AlmgridTable {
                 if(selectall_currentform.is(":checked") && advancedFilter_currentform == "none"){
                     $(gridButton).removeClass("clicked");
                     $(gridButton).css("color", "#000");
-                    submitStatus="unchecked";
+                    var clickedForm =  $(this).parents("form").attr("id");                    
+			 		var clickedIndex = clickedForm.split(almgrid.tableId + "_filterform");
+                    var columnNumberPressed = clickedIndex[1];
+					window["submit_" + columnNumberPressed] = "unchecked";
+					window["uncheckedCheckboxes_" + columnNumberPressed]=[];
                 }
                 else{
                     $(gridButton).addClass("clicked");
                     $(gridButton).css("color", "#FFFF00");
-                    submitStatus="checked";
+                    var clickedForm =  $(this).parents("form").attr("id");                   
+			 		var clickedIndex = clickedForm.split(almgrid.tableId + "_filterform");
+                    var columnNumberPressed = clickedIndex[1];
+					window["submit_" + columnNumberPressed] = "checked";
+					window["uncheckedCheckboxes_" + columnNumberPressed]=[];
+					
+					window["uncheckboxArray_" +columnNumberPressed]=[];
+					window["checkboxArray_" +columnNumberPressed]=[];
+					
+					for(var x= 0; x<currentAppendedRows.length;x++) { 
+             			if(currentAppendedRows[x]["checked"] == false) {
+       			 			window["uncheckboxArray_" +columnNumberPressed].push(currentAppendedRows[x]["indexval"]);
+                    		window["uncheckboxArray_" +columnNumberPressed]= Array.from(new Set(window["uncheckboxArray_" +columnNumberPressed]));
+
+               			}
+						else {
+							window["checkboxArray_" +columnNumberPressed].push(currentAppendedRows[x]["indexval"]);
+                    		window["checkboxArray_" +columnNumberPressed]= Array.from(new Set(window["checkboxArray_" +columnNumberPressed]));						
+						}
+					}
+					window["uncheckedCheckboxes_" + columnNumberPressed]=[];
+					window["uncheckedCheckboxes_" + columnNumberPressed]=window["uncheckboxArray_" +columnNumberPressed];
+
+					uncheckboxArray[columnNumberPressed]=window["uncheckboxArray_" +columnNumberPressed];
+					checkboxArray[columnNumberPressed]=window["checkboxArray_" +columnNumberPressed];					
                 }
 
 
@@ -2031,6 +2101,5 @@ function throttle(f, delay) {
     };
 }
 
-var submitStatus="unchecked";
-var uncheckedArrayTemp=[];
 var clusterize;
+var currentAppendedRows;

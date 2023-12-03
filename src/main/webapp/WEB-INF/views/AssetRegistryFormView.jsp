@@ -3,7 +3,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <head>
 <meta charset="utf-8">
-    <title></title>
+    <title>Asset Registry Form View</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<script src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/moment.min.js"></script>
@@ -635,7 +635,6 @@ max-height: 100%;
 </div>
 </div>
 
-</div>
 
 
 
@@ -1017,7 +1016,7 @@ max-height: 100%;
 	</div>
 
 </div>
-
+</div>
 <p></p>
 <div class="tab-pane fade" id="custom-tabs-one-site" role="tabpanel" aria-labelledby="custom-tabs-one-site-tab">
 <form>			

@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title></title>
+<title>Speed Coverage Report</title>
 <link rel="shortcut icon" href="">
 <!-- <script src="${pageContext.request.contextPath}/resources/js/jquery.slim.min.js" ></script>  -->
 <script src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>

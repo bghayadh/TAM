@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.AssetLifeCycle_Balance;
 import com.aliat.alm.services.LoginServices;
@@ -46,8 +46,7 @@ public class AssetBalanceController {
 	private static StringWriter sw;
 	private static String exceptionAsString;
 	
-	@Autowired
-	ALMSessions almsessions;
+	
 	
 	@Autowired
 	Notify notifications;
@@ -69,7 +68,7 @@ public class AssetBalanceController {
 			return "redirect:/";
 		}
 		
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
@@ -100,7 +99,7 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 	rtn.put("Login", "redirect:/");
 	return rtn;
 }	   
-session = almsessions.getSession();
+session = AlmDbSession.getInstance().getSession();
 
 if (session != null && session.isOpen()) {
 	tx = session.beginTransaction();
@@ -238,7 +237,7 @@ if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 	rtn.put("Login", "redirect:/");
 	return rtn;
 }	   
-session = almsessions.getSession();
+session = AlmDbSession.getInstance().getSession();
 
 if (session != null && session.isOpen()) {
 	tx = session.beginTransaction();

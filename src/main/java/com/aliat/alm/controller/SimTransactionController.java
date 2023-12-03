@@ -41,7 +41,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.AlmDbSession;
+//import com.aliat.alm.common.ALMSessions;
 import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.Agent;
@@ -88,8 +89,7 @@ public class SimTransactionController {
 	Query query;
 
 	
-	@Autowired
-	ALMSessions almsessions;
+	
 
 	@Autowired
 	Notify notifications;
@@ -106,7 +106,7 @@ public class SimTransactionController {
  		else {
  		List<SimTransaction> simTransaction = new ArrayList<SimTransaction>();
 
- 		session=almsessions.getSession();
+ 		session = AlmDbSession.getInstance().getSession();
  		if(session.isOpen() && session !=null) {
  			tx=session.beginTransaction();
  			notifications.headerNotifications(session, model);
@@ -150,7 +150,7 @@ public class SimTransactionController {
         String result [] =new String[4];
         int SelectedIndex = 0;
 
-		session=almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 	if(session.isOpen() && session !=null) {
 		tx=session.beginTransaction();
 		notifications.headerNotifications(session, model);
@@ -253,7 +253,7 @@ public class SimTransactionController {
 			return rtn;
 		}else {
 			
-			session=almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 			if(session.isOpen() && session !=null) {
 				tx=session.beginTransaction();
 				try {
@@ -500,6 +500,7 @@ public class SimTransactionController {
 		rtn.put("transactionId", ID);
 		
 				}catch (Exception e) {
+					e.printStackTrace();
 				logger.info("error while saving the transaction "+"\n"+e.getMessage());
 				rtn.put("jsonObjectErrors", "");
 				}finally {
@@ -529,7 +530,7 @@ public class SimTransactionController {
 
 		String[] idList = request.getParameterValues("ID[]");
 
-		session=almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if(session.isOpen() && session !=null) {
 		tx=session.beginTransaction();
 		try {
@@ -581,7 +582,7 @@ public class SimTransactionController {
 			return rtn;	
 		}
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if(session!= null && session.isOpen()) {
 			tx=session.beginTransaction();
 			try {
@@ -623,7 +624,7 @@ public class SimTransactionController {
 			String serialNumber = "%" + request.getParameter("serialNumber") + "%";
 			String location = "%" + request.getParameter("location") + "%";
 			Query simCards=null;
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 	
 		if(session!=null && session.isOpen()) {
 			tx = session.beginTransaction();
@@ -671,7 +672,7 @@ public class SimTransactionController {
 		String msisdn = "%" + request.getParameter("msisdn") + "%";
 		String location = "%" + request.getParameter("location") + "%";
 		Query simCards;
-		session=almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if(session !=null && session.isOpen()) {
 			tx=session.beginTransaction();
 		try {
@@ -715,7 +716,7 @@ public class SimTransactionController {
 		List<SimCard> listSims = new ArrayList<SimCard>();
 		String id = "%" + request.getParameter("id") + "%";	
 		String location = "%" + request.getParameter("location") + "%";
-		session=almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		Query simCards;
 		if(session !=null && session.isOpen()) {
 		tx=session.beginTransaction();
@@ -795,7 +796,7 @@ public class SimTransactionController {
 			return rtn;
 		}
 		
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();

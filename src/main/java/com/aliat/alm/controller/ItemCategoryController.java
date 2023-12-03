@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.ItemCategoryTree;
 import com.aliat.alm.services.LoginServices;
@@ -52,8 +52,7 @@ public class ItemCategoryController {
 	private static String exceptionAsString;
 
 	
-	@Autowired
-	ALMSessions almsessions;
+	
 	
 	@Autowired
 	Notify notifications;
@@ -66,7 +65,7 @@ public class ItemCategoryController {
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			return LoginServices.checkSession(request, response);
 		} else {
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 			if (session != null && session.isOpen()) {
 				tx = session.beginTransaction();
 				notifications.headerNotifications(session, model);
@@ -105,7 +104,7 @@ public class ItemCategoryController {
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			return LoginServices.checkSession(request, response);
 		} else {
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 			if (session != null && session.isOpen()) {
 				tx = session.beginTransaction();
 				notifications.headerNotifications(session, model);
@@ -141,7 +140,7 @@ public class ItemCategoryController {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
 		}
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
@@ -198,7 +197,7 @@ public class ItemCategoryController {
 		}
 
 		String itemsList = request.getParameter("itemcatList");
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
@@ -290,7 +289,7 @@ public class ItemCategoryController {
 			return rtn;
 		}
 		else {
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 			if (session != null && session.isOpen()) {
 				tx = session.beginTransaction();
 				notifications.headerNotifications(session, model);
@@ -448,7 +447,7 @@ public class ItemCategoryController {
 
 		for (int i = 0; i < categoryID.length; i++) {
 			CatID[i] = categoryID[i];
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 			if (session != null && session.isOpen()) {
 				tx = session.beginTransaction();
 				notifications.headerNotifications(session, model);
@@ -529,7 +528,7 @@ public class ItemCategoryController {
 		String categoryCode = request.getParameter("categoryCode");
 		String categoryLevel;
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
@@ -649,7 +648,7 @@ public class ItemCategoryController {
 		String categoryName = request.getParameter("categoryName");
 		String categoryCode = request.getParameter("categoryCode");
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
@@ -727,7 +726,7 @@ public class ItemCategoryController {
 		}
 
 		String categoryID = request.getParameter("categoryID");
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
@@ -807,7 +806,7 @@ public class ItemCategoryController {
 		}
 		String categoryID = request.getParameter("categoryID");
 		String categoryName = request.getParameter("categoryName");
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
@@ -854,7 +853,7 @@ public class ItemCategoryController {
 
 		String itemCategory;
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
@@ -892,7 +891,7 @@ public class ItemCategoryController {
 			return rtn;
 		}
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 
 			tx = session.beginTransaction();
@@ -943,7 +942,7 @@ public class ItemCategoryController {
 		}
 		String str, c1, c2, c3, c4;
 
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 
@@ -1023,7 +1022,7 @@ public class ItemCategoryController {
 
 			String str, c1, c2, c3, c4;
 
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 			if (session != null && session.isOpen()) {
 				tx = session.beginTransaction();
 
@@ -1094,7 +1093,7 @@ public class ItemCategoryController {
 			return rtn;
 		} else {
 			String str, c1, c2, c3, c4;
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 			if (session != null && session.isOpen()) {
 				tx = session.beginTransaction();
 
@@ -1161,7 +1160,7 @@ public class ItemCategoryController {
 		} else {
 
 			String c1, c2, c3, c4;
-			session = almsessions.getSession();
+			session = AlmDbSession.getInstance().getSession();
 			if (session != null && session.isOpen()) {
 				tx = session.beginTransaction();
 				try {
@@ -1220,7 +1219,7 @@ public class ItemCategoryController {
 		}
 
 		Object[] Result;
-		session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.common.Permissions;
 import com.aliat.alm.services.LoginServices;
@@ -43,7 +44,8 @@ public class InventoryController {
 		}
 		else {
 			
- 			session = almsessions.getSession();
+ 			session = AlmDbSession.getInstance().getSession();
+ 			System.out.println("HashCode Inventory: "+AlmDbSession.getInstance().hashCode());
 			if (session != null && session.isOpen()) {
 				tx = session.beginTransaction();
 				notifications.headerNotifications(session, model);
@@ -58,7 +60,6 @@ public class InventoryController {
 	 				if (session != null && session.isOpen()) {
 	 					tx.commit();
 	 					session.close();
-	 					session.getSessionFactory().close();
 	 				} 			
 	 			}
 			}

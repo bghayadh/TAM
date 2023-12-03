@@ -66,7 +66,7 @@ function sendValBoqToPopup(indxRow){
 		});
 		}
 		var element = document.getElementById("popupNb");
-    			  element.innerHTML = "Item # " +indxRow;
+    	element.innerHTML = "Item # " +(indxRow+1);
   		  
     		
 } //end sendValBoqToPopup fct
@@ -206,7 +206,7 @@ function htmlBOQRowInsertion(name, model, partnum, barcode){
     	     	+"<input name='itmPartNo' type='text' value='"+ partnum +"' style='width:200px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input'/></td>"
     	     	+"<td hidden name='poBarCode'>"
     			+"<input name='barcode' type='text' value='"+ barcode +"' style='width:200px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input'/></td>"
- 				+"<td name='qty'><input name='quantity' style='width:200px;' type='text' value= 0 class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>"
+ 				+"<td name='qty'><input name='quantity' style='width:200px;' type='text' value= 1 class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>"
 				+"<td name='rate'><input name='rate2' style='width:200px;' type='text' value= 0 class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>"
     			+"<td name='discountAmount'><input name='discountAmount2'style='width:200px;' type='text'value= 0 class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>"
     			+"<td name='tax1'><input name='tax2' style='width:200px;' type='text' value='0' class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>"
@@ -1542,13 +1542,14 @@ var ctx = getContextPath();
 // Send input values from popup to boq table and close the popup using ESC 
 	document.addEventListener('keydown', function(event){
     	if(event.key === "Escape"){
-    	sendValPopupToBoq(rowindx);
-	   
-	    $("#poModal").modal("hide");
-	    getTotalAT_SumQty();
-	    amountsUpdate();
-		       						
-    }
+			if($("#poModal").hasClass("show")){
+				// Send input values from popup to boq table and close the popup using ESC 
+				sendValPopupToBoq(rowindx);
+				$("#poModal").modal("hide");
+				getTotalAT_SumQty();
+				amountsUpdate();
+			}		       						
+    	}
  });// end close fct using esc
     				
 // Prev fct in popup

@@ -3,7 +3,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <head>
 <meta charset="utf-8">
-    <title></title>
+    <title>PO Form View</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- <script src="${pageContext.request.contextPath}/resources/js/jquery.slim.min.js" ></script>  -->
 	<script src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>
@@ -48,6 +48,19 @@ box-shadow: 12px 0 15px -4px #000000, -12px 0 15px -4px#000000;
 
 z-index: 9003;
  /*above nine thousand*/}
+ 
+     .btn-pop {
+	background-color: #C2CBC0 !important;
+	border-color: #C2CBC0;
+	3
+}
+
+.btn-pop:hover {
+	color: #fff;
+	background-color: #8696A0 !important;
+	border-color: #8696A0 !important;
+}
+
 				.ui-autocomplete {
 	            	max-height: 250px;
 					overflow-y: auto; /* prevent horizontal scrollbar */
@@ -196,11 +209,6 @@ max-width: 100%;
  max-width: 100%;
 }
 }
-
-.nav-link.active {
- background-color: #FFD966 !important;
-    color: #00757c !important;
-    }
 
 </style>
     
@@ -697,7 +705,8 @@ max-width: 100%;
 						        <thead>
 						            <tr class="fixed-headerr">
 						               
-						                <th>Item</th>
+						                <th>Item Code</th>
+						                <th>Item Name</th>
 						                <th>Item Model</th>
 						                <th>Item Part Number</th>
 						                <th>Discrepancy Qty</th>
@@ -980,17 +989,18 @@ max-width: 100%;
 	<div id ="poModal" class="modal fade  custom-class-assignedto-modal"  tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">	
 		<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
 			<div class="modal-content" >
-				<div class="modal-header" style="background-color: #FF4F4F;" >
-				<h5 id ="popupNb" class="modal-title" style="font-weight:bold; color: #3C1596;position:relative;top:4px;"></h5>
-				
-				<button type="button" name="insertBelow"  onclick="insertRowBelow()" class ="btn btn-default btn-primary BtnActive  " style="color:white;position:relative;left:50px;">Insert Below </button>
-				<button type="button" name="insertAbove"  onclick="insertRowAbove()" class ="btn btn-default btn-primary BtnActive" style="color:white;position:relative;left:60px;">Insert Above </button>
-			    <button type="button" name="deleteBoqRow"  onclick="deleteBoqRow()" class ="btn btn-default btn-primary BtnActive" style="color:white;position:relative;left:70px;">Delete</button>
-			    <button name ="previousRow" class ="btn btn-default btn-primary BtnActive" style="color:white;position:relative;left:80px;">Previous</button>
-	            <button name="nextRow" onclick="nextRow()" class ="btn btn-default btn-primary BtnActive" style="color:white;position:relative;left:90px;">Next</button>
-	            
-				<button type="button" name="closePopup" class ="close" data-dismiss ="modal"> <i class='fa fa-times'></i> </button>
-				<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change' ></i> </a>
+				<div class="modal-header" style="background-color: #007BFF; height: 56px">
+			<h5 id ="popupNb" class="modal-title" style="font-weight:bold; color: gold;position:relative;top:4px;"></h5>
+				<div style="float: right;">
+				<button  name="insertBelow"  onclick="insertRowBelow()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: -30px; font-weight: bold; margin-top: -7px;"">Insert Below </button>
+				<button  name="insertAbove"  onclick="insertRowAbove()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: -20px; font-weight: bold; margin-top: -7px;"">Insert Above </button>
+				<button  name="deleteBoqRow" onclick="deleteBoqRow()"   class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: -10px; font-weight: bold; margin-top: -7px;"">Delete</button>
+				<button  name ="previousRow" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: 0px; font-weight: bold; margin-top: -7px;"">Previous</button>
+	            <button  name="nextRow" onclick="nextRow()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: 10px; font-weight: bold; margin-top: -7px;"">Next</button> 
+				<button type="button" name="closeModPartPopup" class="close" data-dismiss="modal"><i class='fa fa-times'></i></button>
+									<a class="close modalMinimize ml-3"> <i
+										class='fa fa-minus icon-to-change'></i></a>
+				</div>
 				</div>
 	<div class="modal-body">
 	<ul class="nav nav-tabs" id="myTab" role="tablist" style="background-color: #00757C;">
@@ -1361,13 +1371,8 @@ max-width: 100%;
  </script>
  <script>
  $(function(){
- if ('${docStatus}' != "addNew" ){
-		if('${docStatus}' == "addNewFromPRQ" ){
-	    	$("#formStatus").text("New");
-			$('.dot').css({"background-color" : "orange"});	
-			
-			 
-		}
+ if ('${docStatus}' != 'addNew') {
+	 if('${docStatus}' != 'addNewFromPRQ') {
 //////////////////// Discrepancy Report
 boqArray=${discrepancy};
 var totalqty=0;
@@ -1402,7 +1407,8 @@ for (j = 0; j < boqArray.length; j++){
     var discrepancyRow="";
 
 discrepancyRow += "<tr>"
-    + "<td name='itemCode'><input type='text' name='itmCode' value='" + ItemCode +":"+ ItemName + "' style='width:300px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input' /></td>"
+    + "<td name='itemCode'><input type='text' name='itmCode' value='" + ItemCode + "' style='width:300px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input' /></td>"
+    + "<td name='itemName'><input type='text' name='itmName' value='" + ItemName + "' style='width:300px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input' /></td>"
 	 + "<td name='itemModel'><input name='itmModel' type='text' value='" + ItemModel + "' style='width:230px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input'/></td>"
 	 + "<td name='itemPartNo'><input name='itmPartNo' type='text' value='" + ItemPNum + "' style='width:230px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input' /></td>"		 			
 	 + "<td  name='poBarCode'><input type='text' style='width:230px;'  value='" + DiscQty +"' class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>"
@@ -1416,7 +1422,13 @@ document.getElementById("discQty").value = totalqty;
 document.getElementById("discPrice").value = parseFloat(totalprice).toFixed(3);
 document.getElementById("qty%").value = (totalqty*100/parseFloat($("#ordtotqty").val())).toFixed(3); + "%";
 document.getElementById("price%").value = (totalprice*100/parseFloat($("#ordNetTotal").val())).toFixed(3); + "%";
-
+} // end if not addNewFromPRQ
+else {
+	$("#formStatus").text("New");
+	$('.dot').css({"background-color" : "orange"});	
+	$(".nextprvItems").addClass("hide-row ");
+	$(".pad").removeClass("hide-row ");	 
+}
   
 boqArray = ${ListPoItem};
 var itemRow="";
@@ -1448,19 +1460,15 @@ for (i = 0; i < boqArray.length; i++){
 		itemPartNumber = boqArray[i].itemPartNumber;
  	dotStatus = boqArray[i].poItemStatus;
 	
-	         				 
-      if(dotStatus == "1")
+ 	if (boqArray[i].qty == boqArray[i].grQty || boqArray[i].qty == boqArray[i].arQty || boqArray[i].qty == boqArray[i].farQty)  	         				 
+      //if(dotStatus == "1")
      {
-     
-	
 	   span = "<span class='dotStatus' name='dotStatus' value='"+dotStatus+"' style='background-color: chartreuse;'></span>";
      }
 else 
      {
-	 
-   
 	 span = "<span class='dotStatus' name='dotStatus' value='"+dotStatus+"' style='background-color: orange;'></span>";
-	    }
+	 }
 
 	var serialArrays = [];
   if (boqArray[i].serial_obj != null) {
@@ -1498,18 +1506,25 @@ $("#bisotab > tbody").append(itemRow);
 //trigger
 $(document).trigger("triggerBoqListenersEvent");
   }
+ else {
+		$("#formStatus").text("New");
+		$('.dot').css({"background-color" : "orange"});	
+		$(".nextprvItems").addClass("hide-row ");
+		$(".pad").removeClass("hide-row ");	 
+	 }
  }); // End for function();
  </script>
 
  <script type='text/javascript'>
 
- 
- if ('${docStatus}' == "addNew") {
+ /*
+ if ('${docStatus}' == "addNew" || '${docStatus}' == "addNewFromPRQ") {
 		$("#formStatus").text("New");
 		$('.dot').css({"background-color" : "orange"});	
 		$(".nextprvItems").addClass("hide-row ");
 		$(".pad").removeClass("hide-row ");
 	}
+*/	
 
 /////////////////////////////////////////// SEND EMAIL  ///////////////////////////////////////////////////////////////
 //  $("#sendEmail").on("click", function () {
@@ -1600,10 +1615,8 @@ $(document).trigger("triggerBoqListenersEvent");
 		}); // End of custom-tabs-overview click event
 
 	 $("#ordstat").change(function() {
-		 console.log("zeinaaaa");
 		 var ordStatus = $("#ordstat").val();
-	 	if(ordStatus == 'approved'){
-		 	console.log("darwish");
+	 	if(ordStatus == 'approved'){		 	
 	 		 $('#custom-tabs-one-tabContent :input').attr('disabled',true);
 			 $('#ordstat').attr('disabled',true);							
 	 		$("#Approvepo").addClass('disabled');  
@@ -1871,7 +1884,6 @@ $(document).trigger("triggerBoqListenersEvent");
 			 var checkSaving = true;
 			 $('#ordstat').val("approved");
 			 
-			 console.log($("#ordstat").val());
 			 pOrdAppFlag = 1;
 			 pOrdCnclFlg = 0;
 			 FormSave.push("Approve");
@@ -2862,87 +2874,57 @@ return false;
    	   				
         } // end of saveRowsInTables    	
     			     
-            if('${SelectedIndex}' != "addNew"){
-				var SelectedIndex = ${SelectedIndex};
-				if('${poCount}' != "addNew"){
-
-					
+    if('${SelectedIndex}' != "addNew" && '${poCount}' != "addNew"){
+    	if('${SelectedIndex}' != "addNewFromPRQ" && '${poCount}' != "addNewFromPRQ"){
+			var SelectedIndex = ${SelectedIndex};
 			var poCount = ${poCount};
-			
-			if(($("#ordcode").val()) != "" && ($("#ordcode").val()) != null){
-			if(SelectedIndex === poCount){
-				
-        		document.getElementById("btnLast").style.opacity = 0.5;
-        		$("#btnLast").hasClass("disabled");
-        		document.getElementById("btnLast").style.pointerEvents = "none";
-        		
-        		document.getElementById("btnNexta").style.opacity = 0.5;
-        		document.getElementById("btnNexta").style.pointerEvents = "none";
 
-				
-				$("#btnNexta").hasClass("disabled");
-				
-				}else{
-					
-					if(!$("#btnNexta").hasClass("disabled")){
 						
+			if(($("#ordcode").val()) != "" && ($("#ordcode").val()) != null){
+				$("#label-1").text((SelectedIndex)+"/"+poCount);
+				if(SelectedIndex === poCount){
+	        		document.getElementById("btnLast").style.opacity = 0.5;
+	        		$("#btnLast").hasClass("disabled");
+	        		document.getElementById("btnLast").style.pointerEvents = "none";	        		
+	        		document.getElementById("btnNexta").style.opacity = 0.5;
+	        		document.getElementById("btnNexta").style.pointerEvents = "none";
+					$("#btnNexta").hasClass("disabled");
+				}else{
+					if(!$("#btnNexta").hasClass("disabled")){						
 						$("#btnNext").click(function(){
-							
 							var param ="${pageContext.request.contextPath}/PurchaseOrderFormView?ID="+$("#ordcode").val()+"&NavAction=1";
-
 							window.location.href =param;
-				
 						});
-			
 					}
-					if(!$("#btnLst").hasClass("disabled")){
-        				
+					if(!$("#btnLst").hasClass("disabled")){        				
         				$("#btnLst").click(function(){
-        					
 							var param ="${pageContext.request.contextPath}/PurchaseOrderFormView?ID="+$("#ordcode").val()+"&NavAction=4";
         					window.location.href =param;
-        		
         				});
-        	
         			}
-				}
-			
-			if(SelectedIndex === 1){ //first record in database
-				
-        		document.getElementById("btnFirst").style.opacity = 0.5;
-        		$("#btnFirst").hasClass("disabled");
-        		document.getElementById("btnFirst").style.pointerEvents = "none";
-        		
-        		document.getElementById("btnPrva").style.opacity = 0.5;
-        		$("#btnPrva").hasClass("disabled");
-        		document.getElementById("btnPrv").style.pointerEvents = "none";
-			
-			}else{
-				if(!$("#btnPrva").hasClass("disabled")){
-					
-					$("#btnPrv").click(function(){
-						
-						var param ="${pageContext.request.contextPath}/PurchaseOrderFormView?ID="+$("#ordcode").val()+"&NavAction=0";
-						window.location.href =param;
-						
-					 });
-				}
-				$("#btnFrst").click(function(){
-
-        			if(!$("#btnFrst").hasClass("disabled")){
-        					
-						var param ="${pageContext.request.contextPath}/PurchaseOrderFormView?ID="+$("#ordcode").val()+"&NavAction=3";
-        				window.location.href =param;
-        						
+				}			
+				if(SelectedIndex === 1){ //first record in database				
+	        		document.getElementById("btnFirst").style.opacity = 0.5;
+	        		$("#btnFirst").hasClass("disabled");
+	        		document.getElementById("btnFirst").style.pointerEvents = "none";	        		
+	        		document.getElementById("btnPrva").style.opacity = 0.5;
+	        		$("#btnPrva").hasClass("disabled");
+	        		document.getElementById("btnPrv").style.pointerEvents = "none";
+				}else{
+					if(!$("#btnPrva").hasClass("disabled")){					
+						$("#btnPrv").click(function(){						
+							var param ="${pageContext.request.contextPath}/PurchaseOrderFormView?ID="+$("#ordcode").val()+"&NavAction=0";
+							window.location.href =param;
+						 });
+					}
+					$("#btnFrst").click(function(){
+        				if(!$("#btnFrst").hasClass("disabled")){
+							var param ="${pageContext.request.contextPath}/PurchaseOrderFormView?ID="+$("#ordcode").val()+"&NavAction=3";
+	        				window.location.href =param;
         				}
-        				 });
-
-			}
-			
-			}}
-		}
-			$("#label-1").text((SelectedIndex)+"/"+poCount);
-
+        			});
+				}			
+			} //end if checking #ordcode 
 			 $("#selectnav").autocomplete({
 	    			
 	    		    source: function(request, response) {
@@ -2984,11 +2966,10 @@ return false;
 	           		   	        	if (this.value == ""){
 	           		   	            	$(this).autocomplete("search");
 	           		   	        	}						
-	           					});   //// ENd of Autocomplete for Area ID
-	    	
-
-								  
-	});		
+	           					});
+					}
+		}   //// ENd of Autocomplete for Area ID							  
+    }); //  end $(function(){ of the ready function.
 }); //end ready document
 
 </script>

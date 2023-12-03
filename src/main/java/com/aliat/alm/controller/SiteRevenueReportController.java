@@ -2,37 +2,23 @@ package com.aliat.alm.controller;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
 import org.hibernate.transform.Transformers;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -44,11 +30,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Notify;
+import com.aliat.alm.common.RptDbSession;
 import com.aliat.alm.models.RevenueChartsReport;
-import com.aliat.alm.models.SimAgentCountChartsReport;
 import com.aliat.alm.models.SiteRevenueReport;
 import com.aliat.alm.services.LoginServices;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -58,18 +43,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class SiteRevenueReportController {
 
 	@Autowired
-	ALMSessions almsessions;
-
-	@Autowired
 	Notify notifications;
 	// Audited By Yara B.Mezher
 
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static ObjectMapper mapper = new ObjectMapper();
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/SiteRevenueReport", method = RequestMethod.GET)
 	public String RevenueReport(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
-		ObjectMapper mapper = new ObjectMapper();
 		Map<String, Object> rtn = new LinkedHashMap<>();
 		// logger.info("Welcome home! The client locale is {}.", locale);
 
@@ -88,7 +70,7 @@ public class SiteRevenueReportController {
 			Session sessionALM = null;
 			Transaction txALM = null;
 			Transaction txRPT = null;
-			sessionALM = almsessions.getSession();
+			sessionALM = AlmDbSession.getInstance().getSession();
 
 			if (sessionALM != null && sessionALM.isOpen()) {
 
@@ -99,7 +81,7 @@ public class SiteRevenueReportController {
 			}
 
 			try {
-				sessionRPT = almsessions.getSessionRPT();
+				sessionRPT = RptDbSession.getInstance().getSession();
 
 				if (sessionRPT != null && sessionRPT.isOpen()) {
 
@@ -119,7 +101,7 @@ public class SiteRevenueReportController {
 							+ "and site_name LIKE '%null%' " + "GROUP BY site_name, area_id, revenue_date"
 							+ ") t order by t.site_name,t.combination_tech asc, t.revenue_date desc";
 
-					grid = sessionRPT.createSQLQuery(gridQuery);
+					grid = sessionRPT.createNativeQuery(gridQuery);
 
 					@SuppressWarnings("unchecked")
 					List<SiteRevenueReport> revenueReportResults = (List<SiteRevenueReport>) ((SQLQuery) grid)
@@ -134,21 +116,21 @@ public class SiteRevenueReportController {
 
 					// Google maps query
 					defaultSites = "SELECT a.WARE_NAME,a.LONGITUDE,a.LATITUDE,a.TECH_2G,a.TECH_3G,a.TECH_4G,a.TECH_5G,sum(b.sms_revenue+b.data_revenue+b.voice_revenue+b.vas_revenue) as Total_REVENUE,a.SITE_ID FROM alm_warehouse a INNER JOIN PREPAID_PAYG_REVENUE b ON a.SITE_ID = b.SITE_ID WHERE b.REVENUE_DATE >= trunc(sysdate) - 2 AND b.REVENUE_DATE < (trunc(sysdate) - 2) + 1 GROUP BY a.WARE_NAME,a.LONGITUDE, a.LATITUDE, a.TECH_2G,a.TECH_3G, a.TECH_4G, a.TECH_5G, a.SITE_ID";
-					mapQuery = sessionRPT.createSQLQuery(defaultSites);
+					mapQuery = sessionRPT.createNativeQuery(defaultSites);
 					model.addAttribute("listSites", mapper.writeValueAsString(mapQuery.list()));
 
 					// chartssss
 					chartQuery = "select site_name,area_id, sum(voice_revenue)as voice_revenue, sum(sms_revenue) as sms_revenue,sum(data_revenue) as data_revenue, sum(vas_revenue) as vas_revenue, (sum(voice_revenue)+sum(sms_revenue)+sum(data_revenue)+sum(vas_revenue)) as tot_revenue from prepaid_payg_revenue where REVENUE_DATE >= (trunc(sysdate) - 2) AND REVENUE_DATE < ((trunc(sysdate) - 2) + 1) group by site_name, area_id order by site_name asc";
-					firstChart = sessionRPT.createSQLQuery(chartQuery);
+					firstChart = sessionRPT.createNativeQuery(chartQuery);
 
 					periodicDataQuery = " select TO_CHAR(revenue_date, 'DD/MM/YYYY') as revenue_date, coalesce(sum(voice_revenue),0) as voice_revenue, coalesce(sum(sms_revenue),0) as sms_revenue, coalesce(sum(data_revenue),0) as data_revenue, coalesce(sum(vas_revenue),0) as vas_revenue, coalesce((sum(voice_revenue)+sum(sms_revenue)+sum(data_revenue)+sum(vas_revenue)),0) as tot_revenue from prepaid_payg_revenue where REVENUE_DATE >= trunc(sysdate) - 2 AND REVENUE_DATE < (trunc(sysdate) - 2) + 1 group by revenue_date order by REVENUE_DATE desc";
-					periodQuery = sessionRPT.createSQLQuery(periodicDataQuery);
+					periodQuery = sessionRPT.createNativeQuery(periodicDataQuery);
 
 					revPieQuery = "select coalesce(sum(voice_revenue),0) as voice_revenue, coalesce(sum(sms_revenue),0) as sms_revenue, coalesce(sum(data_revenue),0) as data_revenue, coalesce(sum(vas_revenue),0) as vas_revenue, coalesce((sum(voice_revenue)+sum(sms_revenue)+sum(data_revenue)+sum(vas_revenue)),0) as tot_revenue from prepaid_payg_revenue where REVENUE_DATE >= (trunc(sysdate) - 2) AND REVENUE_DATE < ((trunc(sysdate) - 2) + 1)";
-					pieQuery = sessionRPT.createSQLQuery(revPieQuery);
+					pieQuery = sessionRPT.createNativeQuery(revPieQuery);
 
 					defaultChartSites = "select a.combination_technology as tech, count(distinct a.ware_name) as sites ,sum(b.sms_revenue+b.data_revenue+b.voice_revenue+b.vas_revenue) as Total_REVENUE from alm_warehouse a INNER JOIN PREPAID_PAYG_REVENUE b ON a.SITE_ID = b.SITE_ID WHERE b.REVENUE_DATE >= (trunc(sysdate) - 2) AND b.REVENUE_DATE < ((trunc(sysdate) - 2) + 1) and a.combination_technology In ('2G_3G_4G' ,'2G_3G' ,'2G') group by a.combination_technology order by a.combination_technology asc";
-					technologyPieChart = sessionRPT.createSQLQuery(defaultChartSites);
+					technologyPieChart = sessionRPT.createNativeQuery(defaultChartSites);
 
 					if (firstChart.list().size() > 0) {
 						chartJSNArr = chartRevenues(firstChart.list());
@@ -198,7 +180,7 @@ public class SiteRevenueReportController {
 
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	@RequestMapping(value = "/GenerateRevenueReport", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> GenerateRevenueReport(Locale locale, Model model, HttpServletRequest request,
@@ -296,7 +278,7 @@ public class SiteRevenueReportController {
 				endDate = formatter.parse(end_Date);
 				EndDate = new Timestamp(endDate.getTime());
 
-				session = almsessions.getSessionRPT();
+				session = RptDbSession.getInstance().getSession();
 
 				if (session != null && session.isOpen()) {
 
@@ -552,7 +534,7 @@ public class SiteRevenueReportController {
 								}
 							}
 
-							gridQuery = session.createSQLQuery(gridQueryString);
+							gridQuery = session.createNativeQuery(gridQueryString);
 							gridQuery.setParameter("param1", StartDate);
 							gridQuery.setParameter("param2", EndDate);
 							@SuppressWarnings("unchecked")
@@ -900,7 +882,7 @@ public class SiteRevenueReportController {
 									}
 								}
 
-								gridQuery = session.createSQLQuery(gridQueryString);
+								gridQuery = session.createNativeQuery(gridQueryString);
 								gridQuery.setParameter("param1", StartDate);
 								gridQuery.setParameter("param2", weeklyEndDate);
 								@SuppressWarnings("unchecked")
@@ -1266,7 +1248,7 @@ public class SiteRevenueReportController {
 									}
 								}
 
-								gridQuery = session.createSQLQuery(gridQueryString);
+								gridQuery = session.createNativeQuery(gridQueryString);
 								gridQuery.setParameter("param1", monthofDate);
 								gridQuery.setParameter("param2", endOfMonth);
 								@SuppressWarnings("unchecked")
@@ -1590,7 +1572,7 @@ public class SiteRevenueReportController {
 								}
 							}
 
-							gridQuery = session.createSQLQuery(gridQueryString);
+							gridQuery = session.createNativeQuery(gridQueryString);
 							gridQuery.setParameter("param1", StartDate);
 							gridQuery.setParameter("param2", EndDate);
 							@SuppressWarnings("unchecked")
@@ -1762,7 +1744,7 @@ public class SiteRevenueReportController {
 								}
 							}
 
-							gridQuery = session.createSQLQuery(gridQueryString);
+							gridQuery = session.createNativeQuery(gridQueryString);
 							gridQuery.setParameter("param1", StartDate);
 							gridQuery.setParameter("param2", EndDate);
 							@SuppressWarnings("unchecked")
@@ -1998,10 +1980,9 @@ public class SiteRevenueReportController {
 									}
 								} // end selected tech
 
-								gridQuery = session.createSQLQuery(gridQueryString);
+								gridQuery = session.createNativeQuery(gridQueryString);
 								gridQuery.setParameter("param1", StartDate);
 								gridQuery.setParameter("param2", weeklyEndDate);
-								@SuppressWarnings("unchecked")
 								List<SiteRevenueReport> SiteRevenueReport = (List<SiteRevenueReport>) ((SQLQuery) gridQuery)
 										.addScalar("siteName").addScalar("areaId").addScalar("startDate")
 										.addScalar("endDate").addScalar("voiceRevenue").addScalar("smsRevenue")
@@ -2253,7 +2234,7 @@ public class SiteRevenueReportController {
 
 								} // end tech selected
 
-								gridQuery = session.createSQLQuery(gridQueryString);
+								gridQuery = session.createNativeQuery(gridQueryString);
 								gridQuery.setParameter("param1", monthofDate);
 								gridQuery.setParameter("param2", endOfMonth);
 								@SuppressWarnings("unchecked")
@@ -2470,7 +2451,7 @@ public class SiteRevenueReportController {
 								}
 							}
 
-							gridQuery = session.createSQLQuery(gridQueryString);
+							gridQuery = session.createNativeQuery(gridQueryString);
 							gridQuery.setParameter("param1", StartDate);
 							gridQuery.setParameter("param2", EndDate);
 							@SuppressWarnings("unchecked")
@@ -2874,7 +2855,7 @@ public class SiteRevenueReportController {
 							}
 						}
 
-						gridQuery = session.createSQLQuery(gridQueryString);
+						gridQuery = session.createNativeQuery(gridQueryString);
 						gridQuery.setParameter("param1", StartDate);
 						gridQuery.setParameter("param2", EndDate);
 						@SuppressWarnings("unchecked")
@@ -2904,7 +2885,7 @@ public class SiteRevenueReportController {
 		return rtn;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "deprecation", "rawtypes" })
 	@RequestMapping(value = "/GenerateRevenueCharts", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> GenerateRevenueCharts(Locale locale, Model model, HttpServletRequest request,
@@ -3021,7 +3002,7 @@ public class SiteRevenueReportController {
 				endDate = formatter.parse(end_Date);
 				EndDate = new Timestamp(endDate.getTime());
 
-				session = almsessions.getSessionRPT();
+				session = RptDbSession.getInstance().getSession();
 
 				if (session != null && session.isOpen()) {
 					tx = session.beginTransaction();
@@ -3289,7 +3270,7 @@ public class SiteRevenueReportController {
 
 							// if max and min null
 							if (StringUtils.equalsIgnoreCase(max, null) && StringUtils.equalsIgnoreCase(min, null)) {
-								siteRevenueChartQuery = session.createSQLQuery(siteRevenueChartQueryString);
+								siteRevenueChartQuery = session.createNativeQuery(siteRevenueChartQueryString);
 								siteRevenueChartQuery.setParameter("param1", StartDate);
 								siteRevenueChartQuery.setParameter("param2", EndDate);
 								chartJSNArr = chartRevenues(siteRevenueChartQuery.list());
@@ -3300,7 +3281,7 @@ public class SiteRevenueReportController {
 									rtn.put("msColumnChartObj", mapper.writeValueAsString(""));
 								}
 
-								pieRevenueChartQuery = session.createSQLQuery(pieRevenueChartQueryString);
+								pieRevenueChartQuery = session.createNativeQuery(pieRevenueChartQueryString);
 								pieRevenueChartQuery.setParameter("param1", StartDate);
 								pieRevenueChartQuery.setParameter("param2", EndDate);
 
@@ -3311,7 +3292,7 @@ public class SiteRevenueReportController {
 								}
 
 								timeRevenueStackandLineChartQuery = session
-										.createSQLQuery(timeRevenueStackandLineChartQueryString);
+										.createNativeQuery(timeRevenueStackandLineChartQueryString);
 								timeRevenueStackandLineChartQuery.setParameter("param1", StartDate);
 								timeRevenueStackandLineChartQuery.setParameter("param2", EndDate);
 
@@ -3345,7 +3326,7 @@ public class SiteRevenueReportController {
 									// line and stack charts
 									if (StringUtils.equalsIgnoreCase(max, "Max")) {
 										maxTimeRevenueStackandLineChartQuery = session
-												.createSQLQuery(maxTimeRevenueStackandLineChartQueryString);
+												.createNativeQuery(maxTimeRevenueStackandLineChartQueryString);
 										maxTimeRevenueStackandLineChartQuery.setParameter("param1", StartDate);
 										maxTimeRevenueStackandLineChartQuery.setParameter("param2", EndDate);
 
@@ -3361,7 +3342,7 @@ public class SiteRevenueReportController {
 									}
 									if (StringUtils.equalsIgnoreCase(min, "Min")) {
 										minTimeRevenueStackandLineChartQuery = session
-												.createSQLQuery(minTimeRevenueStackandLineChartQueryString);
+												.createNativeQuery(minTimeRevenueStackandLineChartQueryString);
 										minTimeRevenueStackandLineChartQuery.setParameter("param1", StartDate);
 										minTimeRevenueStackandLineChartQuery.setParameter("param2", EndDate);
 
@@ -3644,7 +3625,7 @@ public class SiteRevenueReportController {
 
 							// if max and min null
 							if (StringUtils.equalsIgnoreCase(max, null) && StringUtils.equalsIgnoreCase(min, null)) {
-								siteRevenueChartQuery = session.createSQLQuery(siteRevenueChartQueryString);
+								siteRevenueChartQuery = session.createNativeQuery(siteRevenueChartQueryString);
 								siteRevenueChartQuery.setParameter("param1", StartDate);
 								siteRevenueChartQuery.setParameter("param2", EndDate);
 								chartJSNArr = chartRevenues(siteRevenueChartQuery.list());
@@ -3655,7 +3636,7 @@ public class SiteRevenueReportController {
 									rtn.put("msColumnChartObj", mapper.writeValueAsString(""));
 								}
 
-								pieRevenueChartQuery = session.createSQLQuery(pieRevenueChartQueryString);
+								pieRevenueChartQuery = session.createNativeQuery(pieRevenueChartQueryString);
 								pieRevenueChartQuery.setParameter("param1", StartDate);
 								pieRevenueChartQuery.setParameter("param2", EndDate);
 
@@ -3690,7 +3671,7 @@ public class SiteRevenueReportController {
 											+ "/" + (weeklyEndDate.getMonth() + 1) + "/" + (weeklyEndDate.getDate());
 
 									timeRevenueStackandLineChartQuery = session
-											.createSQLQuery(timeRevenueStackandLineChartQueryString);
+											.createNativeQuery(timeRevenueStackandLineChartQueryString);
 									timeRevenueStackandLineChartQuery.setParameter("param1", weeklyStartDate);
 									timeRevenueStackandLineChartQuery.setParameter("param2", weeklyEndDate);
 									revenueCharts = (List<RevenueChartsReport>) ((SQLQuery) timeRevenueStackandLineChartQuery)
@@ -3753,7 +3734,7 @@ public class SiteRevenueReportController {
 
 										if (StringUtils.equalsIgnoreCase(max, "Max")) {
 											maxTimeRevenueStackandLineChartQuery = session
-													.createSQLQuery(maxTimeRevenueStackandLineChartQueryString);
+													.createNativeQuery(maxTimeRevenueStackandLineChartQueryString);
 											maxTimeRevenueStackandLineChartQuery.setParameter("param1",
 													weeklyStartDate);
 											maxTimeRevenueStackandLineChartQuery.setParameter("param2", weeklyEndDate);
@@ -3768,7 +3749,7 @@ public class SiteRevenueReportController {
 										}
 										if (StringUtils.equalsIgnoreCase(min, "Min")) {
 											minTimeRevenueStackandLineChartQuery = session
-													.createSQLQuery(minTimeRevenueStackandLineChartQueryString);
+													.createNativeQuery(minTimeRevenueStackandLineChartQueryString);
 											minTimeRevenueStackandLineChartQuery.setParameter("param1",
 													weeklyStartDate);
 											minTimeRevenueStackandLineChartQuery.setParameter("param2", weeklyEndDate);
@@ -4095,7 +4076,7 @@ public class SiteRevenueReportController {
 
 							if (StringUtils.equalsIgnoreCase(max, null) && StringUtils.equalsIgnoreCase(min, null)) {
 
-								siteRevenueChartQuery = session.createSQLQuery(siteRevenueChartQueryString);
+								siteRevenueChartQuery = session.createNativeQuery(siteRevenueChartQueryString);
 								siteRevenueChartQuery.setParameter("param1", StartDate);
 								siteRevenueChartQuery.setParameter("param2", EndDate);
 								chartJSNArr = chartRevenues(siteRevenueChartQuery.list());
@@ -4106,7 +4087,7 @@ public class SiteRevenueReportController {
 									rtn.put("msColumnChartObj", mapper.writeValueAsString(""));
 								}
 
-								pieRevenueChartQuery = session.createSQLQuery(pieRevenueChartQueryString);
+								pieRevenueChartQuery = session.createNativeQuery(pieRevenueChartQueryString);
 								pieRevenueChartQuery.setParameter("param1", StartDate);
 								pieRevenueChartQuery.setParameter("param2", EndDate);
 
@@ -4149,7 +4130,7 @@ public class SiteRevenueReportController {
 											+ (endOfMonth.getMonth() + 1) + "/" + (endOfMonth.getDate());
 
 									timeRevenueStackandLineChartQuery = session
-											.createSQLQuery(timeRevenueStackandLineChartQueryString);
+											.createNativeQuery(timeRevenueStackandLineChartQueryString);
 									timeRevenueStackandLineChartQuery.setParameter("param1", monthofDate);
 									timeRevenueStackandLineChartQuery.setParameter("param2", endOfMonth);
 									revenueCharts = (List<RevenueChartsReport>) ((SQLQuery) timeRevenueStackandLineChartQuery)
@@ -4215,7 +4196,7 @@ public class SiteRevenueReportController {
 
 										if (StringUtils.equalsIgnoreCase(max, "Max")) {
 											maxTimeRevenueStackandLineChartQuery = session
-													.createSQLQuery(maxTimeRevenueStackandLineChartQueryString);
+													.createNativeQuery(maxTimeRevenueStackandLineChartQueryString);
 											maxTimeRevenueStackandLineChartQuery.setParameter("param1", monthofDate);
 											maxTimeRevenueStackandLineChartQuery.setParameter("param2", endOfMonth);
 											maxRevenueCharts = (List<RevenueChartsReport>) ((SQLQuery) maxTimeRevenueStackandLineChartQuery)
@@ -4229,7 +4210,7 @@ public class SiteRevenueReportController {
 										}
 										if (StringUtils.equalsIgnoreCase(min, "Min")) {
 											minTimeRevenueStackandLineChartQuery = session
-													.createSQLQuery(minTimeRevenueStackandLineChartQueryString);
+													.createNativeQuery(minTimeRevenueStackandLineChartQueryString);
 											minTimeRevenueStackandLineChartQuery.setParameter("param1", monthofDate);
 											minTimeRevenueStackandLineChartQuery.setParameter("param2", endOfMonth);
 											minRevenueCharts = (List<RevenueChartsReport>) ((SQLQuery) minTimeRevenueStackandLineChartQuery)
@@ -4678,12 +4659,12 @@ public class SiteRevenueReportController {
 
 								}
 
-								siteRevenueChartQuery = session.createSQLQuery(siteRevenueChartQueryString);
+								siteRevenueChartQuery = session.createNativeQuery(siteRevenueChartQueryString);
 								siteRevenueChartQuery.setParameter("param1", StartDate);
 								siteRevenueChartQuery.setParameter("param2", EndDate);
 								chartJSNArr = chartRevenues(siteRevenueChartQuery.list());
 
-								pieRevenueChartQuery = session.createSQLQuery(pieRevenueChartQueryString);
+								pieRevenueChartQuery = session.createNativeQuery(pieRevenueChartQueryString);
 								pieRevenueChartQuery.setParameter("param1", StartDate);
 								pieRevenueChartQuery.setParameter("param2", EndDate);
 
@@ -4899,7 +4880,7 @@ public class SiteRevenueReportController {
 
 							// if max and min null
 							if (StringUtils.equalsIgnoreCase(max, null) && StringUtils.equalsIgnoreCase(min, null)) {
-								siteRevenueChartQuery = session.createSQLQuery(siteRevenueChartQueryString);
+								siteRevenueChartQuery = session.createNativeQuery(siteRevenueChartQueryString);
 								siteRevenueChartQuery.setParameter("param1", StartDate);
 								siteRevenueChartQuery.setParameter("param2", EndDate);
 								chartJSNArr = chartRevenues(siteRevenueChartQuery.list());
@@ -4910,7 +4891,7 @@ public class SiteRevenueReportController {
 									rtn.put("msColumnChartObj", mapper.writeValueAsString(""));
 								}
 
-								pieRevenueChartQuery = session.createSQLQuery(pieRevenueChartQueryString);
+								pieRevenueChartQuery = session.createNativeQuery(pieRevenueChartQueryString);
 								pieRevenueChartQuery.setParameter("param1", StartDate);
 								pieRevenueChartQuery.setParameter("param2", EndDate);
 
@@ -4921,7 +4902,7 @@ public class SiteRevenueReportController {
 								}
 
 								timeRevenueStackandLineChartQuery = session
-										.createSQLQuery(timeRevenueStackandLineChartQueryString);
+										.createNativeQuery(timeRevenueStackandLineChartQueryString);
 								timeRevenueStackandLineChartQuery.setParameter("param1", StartDate);
 								timeRevenueStackandLineChartQuery.setParameter("param2", EndDate);
 
@@ -4949,7 +4930,7 @@ public class SiteRevenueReportController {
 									// line and stack charts
 									if (StringUtils.equalsIgnoreCase(max, "Max")) {
 										maxTimeRevenueStackandLineChartQuery = session
-												.createSQLQuery(maxTimeRevenueStackandLineChartQueryString);
+												.createNativeQuery(maxTimeRevenueStackandLineChartQueryString);
 										maxTimeRevenueStackandLineChartQuery.setParameter("param1", StartDate);
 										maxTimeRevenueStackandLineChartQuery.setParameter("param2", EndDate);
 
@@ -4965,7 +4946,7 @@ public class SiteRevenueReportController {
 									}
 									if (StringUtils.equalsIgnoreCase(min, "Min")) {
 										minTimeRevenueStackandLineChartQuery = session
-												.createSQLQuery(minTimeRevenueStackandLineChartQueryString);
+												.createNativeQuery(minTimeRevenueStackandLineChartQueryString);
 										minTimeRevenueStackandLineChartQuery.setParameter("param1", StartDate);
 										minTimeRevenueStackandLineChartQuery.setParameter("param2", EndDate);
 
@@ -5061,7 +5042,7 @@ public class SiteRevenueReportController {
 
 								} // end tech selected
 
-								siteRevenueChartQuery = session.createSQLQuery(siteRevenueChartQueryString);
+								siteRevenueChartQuery = session.createNativeQuery(siteRevenueChartQueryString);
 								siteRevenueChartQuery.setParameter("param1", StartDate);
 								siteRevenueChartQuery.setParameter("param2", EndDate);
 								chartJSNArr = chartRevenues(siteRevenueChartQuery.list());
@@ -5072,7 +5053,7 @@ public class SiteRevenueReportController {
 									rtn.put("msColumnChartObj", mapper.writeValueAsString(""));
 								}
 
-								pieRevenueChartQuery = session.createSQLQuery(pieRevenueChartQueryString);
+								pieRevenueChartQuery = session.createNativeQuery(pieRevenueChartQueryString);
 								pieRevenueChartQuery.setParameter("param1", StartDate);
 								pieRevenueChartQuery.setParameter("param2", EndDate);
 
@@ -5108,7 +5089,7 @@ public class SiteRevenueReportController {
 											+ "/" + (weeklyEndDate.getMonth() + 1) + "/" + (weeklyEndDate.getDate());
 
 									timeRevenueStackandLineChartQuery = session
-											.createSQLQuery(timeRevenueStackandLineChartQueryString);
+											.createNativeQuery(timeRevenueStackandLineChartQueryString);
 									timeRevenueStackandLineChartQuery.setParameter("param1", weeklyStartDate);
 									timeRevenueStackandLineChartQuery.setParameter("param2", weeklyEndDate);
 									revenueCharts = (List<RevenueChartsReport>) ((SQLQuery) timeRevenueStackandLineChartQuery)
@@ -5316,7 +5297,7 @@ public class SiteRevenueReportController {
 									if (StringUtils.equalsIgnoreCase(max, "Max")) {
 
 										maxTimeRevenueStackandLineChartQuery = session
-												.createSQLQuery(maxTimeRevenueStackandLineChartQueryString);
+												.createNativeQuery(maxTimeRevenueStackandLineChartQueryString);
 										maxTimeRevenueStackandLineChartQuery.setParameter("param1", weeklyStartDate);
 										maxTimeRevenueStackandLineChartQuery.setParameter("param2", weeklyEndDate);
 										maxRevenueCharts = (List<RevenueChartsReport>) ((SQLQuery) maxTimeRevenueStackandLineChartQuery)
@@ -5333,7 +5314,7 @@ public class SiteRevenueReportController {
 									if (StringUtils.equalsIgnoreCase(min, "Min")) {
 
 										minTimeRevenueStackandLineChartQuery = session
-												.createSQLQuery(minTimeRevenueStackandLineChartQueryString);
+												.createNativeQuery(minTimeRevenueStackandLineChartQueryString);
 										minTimeRevenueStackandLineChartQuery.setParameter("param1", weeklyStartDate);
 										minTimeRevenueStackandLineChartQuery.setParameter("param2", weeklyEndDate);
 										minRevenueCharts = (List<RevenueChartsReport>) ((SQLQuery) minTimeRevenueStackandLineChartQuery)
@@ -5454,7 +5435,7 @@ public class SiteRevenueReportController {
 
 								} // end selected tech
 
-								siteRevenueChartQuery = session.createSQLQuery(siteRevenueChartQueryString);
+								siteRevenueChartQuery = session.createNativeQuery(siteRevenueChartQueryString);
 								siteRevenueChartQuery.setParameter("param1", StartDate);
 								siteRevenueChartQuery.setParameter("param2", EndDate);
 								chartJSNArr = chartRevenues(siteRevenueChartQuery.list());
@@ -5465,7 +5446,7 @@ public class SiteRevenueReportController {
 									rtn.put("msColumnChartObj", mapper.writeValueAsString(""));
 								}
 
-								pieRevenueChartQuery = session.createSQLQuery(pieRevenueChartQueryString);
+								pieRevenueChartQuery = session.createNativeQuery(pieRevenueChartQueryString);
 								pieRevenueChartQuery.setParameter("param1", StartDate);
 								pieRevenueChartQuery.setParameter("param2", EndDate);
 
@@ -5507,7 +5488,7 @@ public class SiteRevenueReportController {
 											+ (endOfMonth.getMonth() + 1) + "/" + (endOfMonth.getDate());
 
 									timeRevenueStackandLineChartQuery = session
-											.createSQLQuery(timeRevenueStackandLineChartQueryString);
+											.createNativeQuery(timeRevenueStackandLineChartQueryString);
 									timeRevenueStackandLineChartQuery.setParameter("param1", monthofDate);
 									timeRevenueStackandLineChartQuery.setParameter("param2", endOfMonth);
 									revenueCharts = (List<RevenueChartsReport>) ((SQLQuery) timeRevenueStackandLineChartQuery)
@@ -5719,7 +5700,7 @@ public class SiteRevenueReportController {
 
 									if (StringUtils.equalsIgnoreCase(max, "Max")) {
 										maxTimeRevenueStackandLineChartQuery = session
-												.createSQLQuery(maxTimeRevenueStackandLineChartQueryString);
+												.createNativeQuery(maxTimeRevenueStackandLineChartQueryString);
 										maxTimeRevenueStackandLineChartQuery.setParameter("param1", monthofDate);
 										maxTimeRevenueStackandLineChartQuery.setParameter("param2", endOfMonth);
 										maxRevenueCharts = (List<RevenueChartsReport>) ((SQLQuery) maxTimeRevenueStackandLineChartQuery)
@@ -5735,7 +5716,7 @@ public class SiteRevenueReportController {
 
 									if (StringUtils.equalsIgnoreCase(min, "Min")) {
 										minTimeRevenueStackandLineChartQuery = session
-												.createSQLQuery(minTimeRevenueStackandLineChartQueryString);
+												.createNativeQuery(minTimeRevenueStackandLineChartQueryString);
 										minTimeRevenueStackandLineChartQuery.setParameter("param1", monthofDate);
 										minTimeRevenueStackandLineChartQuery.setParameter("param2", endOfMonth);
 										minRevenueCharts = (List<RevenueChartsReport>) ((SQLQuery) minTimeRevenueStackandLineChartQuery)
@@ -6172,12 +6153,12 @@ public class SiteRevenueReportController {
 
 								}
 
-								siteRevenueChartQuery = session.createSQLQuery(siteRevenueChartQueryString);
+								siteRevenueChartQuery = session.createNativeQuery(siteRevenueChartQueryString);
 								siteRevenueChartQuery.setParameter("param1", StartDate);
 								siteRevenueChartQuery.setParameter("param2", EndDate);
 								chartJSNArr = chartRevenues(siteRevenueChartQuery.list());
 
-								pieRevenueChartQuery = session.createSQLQuery(pieRevenueChartQueryString);
+								pieRevenueChartQuery = session.createNativeQuery(pieRevenueChartQueryString);
 								pieRevenueChartQuery.setParameter("param1", StartDate);
 								pieRevenueChartQuery.setParameter("param2", EndDate);
 
@@ -6370,7 +6351,7 @@ public class SiteRevenueReportController {
 
 						}
 
-						pieRevenueTechChartQuery = session.createSQLQuery(pieRevenueTechChartQueryString);
+						pieRevenueTechChartQuery = session.createNativeQuery(pieRevenueTechChartQueryString);
 						pieRevenueTechChartQuery.setParameter("param1", StartDate);
 						pieRevenueTechChartQuery.setParameter("param2", EndDate);
 
@@ -6526,7 +6507,7 @@ public class SiteRevenueReportController {
 				endDate = formatter.parse(end_Date);
 				EndDate = new Timestamp(endDate.getTime());
 
-				session = almsessions.getSessionRPT();
+				session = RptDbSession.getInstance().getSession();
 
 				if (session != null && session.isOpen()) {
 					tx = session.beginTransaction();
@@ -7005,7 +6986,7 @@ public class SiteRevenueReportController {
 
 								switch (filterID) {
 								case "applyButtMSChart":
-									applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+									applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 									applyFilterQuery.setParameter("param1", StartDate);
 									applyFilterQuery.setParameter("param2", EndDate);
 									chartJSNArr = chartRevenues(applyFilterQuery.list());
@@ -7017,7 +6998,7 @@ public class SiteRevenueReportController {
 									}
 									break;
 								case "applyButtStackChart":
-									applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+									applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 									applyFilterQuery.setParameter("param1", StartDate);
 									applyFilterQuery.setParameter("param2", EndDate);
 
@@ -7032,7 +7013,7 @@ public class SiteRevenueReportController {
 									}
 									break;
 								case "applyButtLineChart":
-									applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+									applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 									applyFilterQuery.setParameter("param1", StartDate);
 									applyFilterQuery.setParameter("param2", EndDate);
 
@@ -7047,7 +7028,7 @@ public class SiteRevenueReportController {
 									}
 									break;
 								case "applyButtPieChart":
-									applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+									applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 									applyFilterQuery.setParameter("param1", StartDate);
 									applyFilterQuery.setParameter("param2", EndDate);
 
@@ -7105,7 +7086,7 @@ public class SiteRevenueReportController {
 
 									switch (filterID) {
 									case "applyButtStackChartMax":
-										applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+										applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 										applyFilterQuery.setParameter("param1", StartDate);
 										applyFilterQuery.setParameter("param2", EndDate);
 
@@ -7120,7 +7101,7 @@ public class SiteRevenueReportController {
 										break;
 
 									case "applyButtLineChartMax":
-										applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+										applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 										applyFilterQuery.setParameter("param1", StartDate);
 										applyFilterQuery.setParameter("param2", EndDate);
 
@@ -7157,7 +7138,7 @@ public class SiteRevenueReportController {
 										break;
 
 									case "applyButtStackChartMin":
-										applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+										applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 										applyFilterQuery.setParameter("param1", StartDate);
 										applyFilterQuery.setParameter("param2", EndDate);
 
@@ -7172,7 +7153,7 @@ public class SiteRevenueReportController {
 										break;
 
 									case "applyButtLineChartMin":
-										applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+										applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 										applyFilterQuery.setParameter("param1", StartDate);
 										applyFilterQuery.setParameter("param2", EndDate);
 
@@ -7192,7 +7173,7 @@ public class SiteRevenueReportController {
 										&& StringUtils.equalsIgnoreCase(max, "Max")) {
 									switch (filterID) {
 									case "applyButtStackChartMax":
-										applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+										applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 										applyFilterQuery.setParameter("param1", StartDate);
 										applyFilterQuery.setParameter("param2", EndDate);
 
@@ -7207,7 +7188,7 @@ public class SiteRevenueReportController {
 										break;
 
 									case "applyButtLineChartMax":
-										applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+										applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 										applyFilterQuery.setParameter("param1", StartDate);
 										applyFilterQuery.setParameter("param2", EndDate);
 
@@ -7223,7 +7204,7 @@ public class SiteRevenueReportController {
 										break;
 
 									case "applyButtStackChartMin":
-										applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+										applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 										applyFilterQuery.setParameter("param1", StartDate);
 										applyFilterQuery.setParameter("param2", EndDate);
 
@@ -7238,7 +7219,7 @@ public class SiteRevenueReportController {
 										break;
 
 									case "applyButtLineChartMin":
-										applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+										applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 										applyFilterQuery.setParameter("param1", StartDate);
 										applyFilterQuery.setParameter("param2", EndDate);
 
@@ -7735,7 +7716,7 @@ public class SiteRevenueReportController {
 								switch (filterID) {
 
 								case "applyButtMSChart":
-									applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+									applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 									applyFilterQuery.setParameter("param1", StartDate);
 									applyFilterQuery.setParameter("param2", EndDate);
 
@@ -7750,7 +7731,7 @@ public class SiteRevenueReportController {
 									break;
 
 								case "applyButtPieChart":
-									applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+									applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 									applyFilterQuery.setParameter("param1", StartDate);
 									applyFilterQuery.setParameter("param2", EndDate);
 
@@ -7794,7 +7775,7 @@ public class SiteRevenueReportController {
 												+ "-" + (weeklyEndDate.getYear() + 1900) + "/"
 												+ (weeklyEndDate.getMonth() + 1) + "/" + (weeklyEndDate.getDate());
 
-										applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+										applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 										applyFilterQuery.setParameter("param1", weeklyStartDate);
 										applyFilterQuery.setParameter("param2", weeklyEndDate);
 										revenueCharts = (List<RevenueChartsReport>) ((SQLQuery) applyFilterQuery)
@@ -7851,7 +7832,7 @@ public class SiteRevenueReportController {
 												+ "-" + (weeklyEndDate.getYear() + 1900) + "/"
 												+ (weeklyEndDate.getMonth() + 1) + "/" + (weeklyEndDate.getDate());
 
-										applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+										applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 										applyFilterQuery.setParameter("param1", weeklyStartDate);
 										applyFilterQuery.setParameter("param2", weeklyEndDate);
 										revenueCharts = (List<RevenueChartsReport>) ((SQLQuery) applyFilterQuery)
@@ -7949,7 +7930,7 @@ public class SiteRevenueReportController {
 													+ (weeklyEndDate.getMonth() + 1) + "/" + (weeklyEndDate.getDate());
 
 											if (StringUtils.equalsIgnoreCase(max, "Max")) {
-												applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+												applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 												applyFilterQuery.setParameter("param1", weeklyStartDate);
 												applyFilterQuery.setParameter("param2", weeklyEndDate);
 												revenueCharts = (List<RevenueChartsReport>) ((SQLQuery) applyFilterQuery)
@@ -8022,7 +8003,7 @@ public class SiteRevenueReportController {
 													+ (weeklyEndDate.getMonth() + 1) + "/" + (weeklyEndDate.getDate());
 
 											if (StringUtils.equalsIgnoreCase(max, "Max")) {
-												applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+												applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 												applyFilterQuery.setParameter("param1", weeklyStartDate);
 												applyFilterQuery.setParameter("param2", weeklyEndDate);
 												revenueCharts = (List<RevenueChartsReport>) ((SQLQuery) applyFilterQuery)
@@ -8103,7 +8084,7 @@ public class SiteRevenueReportController {
 													+ (weeklyEndDate.getMonth() + 1) + "/" + (weeklyEndDate.getDate());
 
 											if (StringUtils.equalsIgnoreCase(min, "Min")) {
-												applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+												applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 												applyFilterQuery.setParameter("param1", weeklyStartDate);
 												applyFilterQuery.setParameter("param2", weeklyEndDate);
 												revenueCharts = (List<RevenueChartsReport>) ((SQLQuery) applyFilterQuery)
@@ -8171,7 +8152,7 @@ public class SiteRevenueReportController {
 													+ (weeklyEndDate.getMonth() + 1) + "/" + (weeklyEndDate.getDate());
 
 											if (StringUtils.equalsIgnoreCase(min, "Min")) {
-												applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+												applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 												applyFilterQuery.setParameter("param1", weeklyStartDate);
 												applyFilterQuery.setParameter("param2", weeklyEndDate);
 												revenueCharts = (List<RevenueChartsReport>) ((SQLQuery) applyFilterQuery)
@@ -8255,7 +8236,7 @@ public class SiteRevenueReportController {
 													+ (weeklyEndDate.getMonth() + 1) + "/" + (weeklyEndDate.getDate());
 
 											if (StringUtils.equalsIgnoreCase(max, "Max")) {
-												applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+												applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 												applyFilterQuery.setParameter("param1", weeklyStartDate);
 												applyFilterQuery.setParameter("param2", weeklyEndDate);
 												revenueCharts = (List<RevenueChartsReport>) ((SQLQuery) applyFilterQuery)
@@ -8325,7 +8306,7 @@ public class SiteRevenueReportController {
 													+ (weeklyEndDate.getMonth() + 1) + "/" + (weeklyEndDate.getDate());
 
 											if (StringUtils.equalsIgnoreCase(max, "Max")) {
-												applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+												applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 												applyFilterQuery.setParameter("param1", weeklyStartDate);
 												applyFilterQuery.setParameter("param2", weeklyEndDate);
 												revenueCharts = (List<RevenueChartsReport>) ((SQLQuery) applyFilterQuery)
@@ -8397,7 +8378,7 @@ public class SiteRevenueReportController {
 													+ (weeklyEndDate.getMonth() + 1) + "/" + (weeklyEndDate.getDate());
 
 											if (StringUtils.equalsIgnoreCase(min, "Min")) {
-												applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+												applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 												applyFilterQuery.setParameter("param1", weeklyStartDate);
 												applyFilterQuery.setParameter("param2", weeklyEndDate);
 												revenueCharts = (List<RevenueChartsReport>) ((SQLQuery) applyFilterQuery)
@@ -8472,7 +8453,7 @@ public class SiteRevenueReportController {
 													+ (weeklyEndDate.getMonth() + 1) + "/" + (weeklyEndDate.getDate());
 
 											if (StringUtils.equalsIgnoreCase(min, "Min")) {
-												applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+												applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 												applyFilterQuery.setParameter("param1", weeklyStartDate);
 												applyFilterQuery.setParameter("param2", weeklyEndDate);
 												revenueCharts = (List<RevenueChartsReport>) ((SQLQuery) applyFilterQuery)
@@ -9012,7 +8993,7 @@ public class SiteRevenueReportController {
 								switch (filterID) {
 
 								case "applyButtMSChart":
-									applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+									applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 									applyFilterQuery.setParameter("param1", StartDate);
 									applyFilterQuery.setParameter("param2", EndDate);
 
@@ -9027,7 +9008,7 @@ public class SiteRevenueReportController {
 									break;
 
 								case "applyButtPieChart":
-									applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+									applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 									applyFilterQuery.setParameter("param1", StartDate);
 									applyFilterQuery.setParameter("param2", EndDate);
 
@@ -9076,7 +9057,7 @@ public class SiteRevenueReportController {
 										// +"/"+(monthofDate.getYear()+1900)+"-" + (endOfMonth.getDate())+"/"+
 										// (endOfMonth.getMonth() +1) +"/"+ (monthofDate.getYear()+1900);
 
-										applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+										applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 										applyFilterQuery.setParameter("param1", monthofDate);
 										applyFilterQuery.setParameter("param2", endOfMonth);
 										revenueCharts = (List<RevenueChartsReport>) ((SQLQuery) applyFilterQuery)
@@ -9138,7 +9119,7 @@ public class SiteRevenueReportController {
 												+ (monthofDate.getDate()) + "-" + (endOfMonth.getYear() + 1900) + "/"
 												+ (endOfMonth.getMonth() + 1) + "/" + (endOfMonth.getDate());
 
-										applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+										applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 										applyFilterQuery.setParameter("param1", monthofDate);
 										applyFilterQuery.setParameter("param2", endOfMonth);
 										revenueCharts = (List<RevenueChartsReport>) ((SQLQuery) applyFilterQuery)
@@ -9242,7 +9223,7 @@ public class SiteRevenueReportController {
 													+ "/" + (endOfMonth.getDate());
 
 											if (StringUtils.equalsIgnoreCase(max, "Max")) {
-												applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+												applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 												applyFilterQuery.setParameter("param1", monthofDate);
 												applyFilterQuery.setParameter("param2", endOfMonth);
 												revenueCharts = (List<RevenueChartsReport>) ((SQLQuery) applyFilterQuery)
@@ -9317,7 +9298,7 @@ public class SiteRevenueReportController {
 													+ "/" + (endOfMonth.getDate());
 
 											if (StringUtils.equalsIgnoreCase(max, "Max")) {
-												applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+												applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 												applyFilterQuery.setParameter("param1", monthofDate);
 												applyFilterQuery.setParameter("param2", endOfMonth);
 												revenueCharts = (List<RevenueChartsReport>) ((SQLQuery) applyFilterQuery)
@@ -9403,7 +9384,7 @@ public class SiteRevenueReportController {
 													+ "/" + (endOfMonth.getDate());
 
 											if (StringUtils.equalsIgnoreCase(min, "Min")) {
-												applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+												applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 												applyFilterQuery.setParameter("param1", monthofDate);
 												applyFilterQuery.setParameter("param2", endOfMonth);
 												revenueCharts = (List<RevenueChartsReport>) ((SQLQuery) applyFilterQuery)
@@ -9474,7 +9455,7 @@ public class SiteRevenueReportController {
 													+ "/" + (endOfMonth.getDate());
 
 											if (StringUtils.equalsIgnoreCase(min, "Min")) {
-												applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+												applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 												applyFilterQuery.setParameter("param1", monthofDate);
 												applyFilterQuery.setParameter("param2", endOfMonth);
 												revenueCharts = (List<RevenueChartsReport>) ((SQLQuery) applyFilterQuery)
@@ -9563,7 +9544,7 @@ public class SiteRevenueReportController {
 													+ "/" + (endOfMonth.getDate());
 
 											if (StringUtils.equalsIgnoreCase(max, "Max")) {
-												applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+												applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 												applyFilterQuery.setParameter("param1", monthofDate);
 												applyFilterQuery.setParameter("param2", endOfMonth);
 												revenueCharts = (List<RevenueChartsReport>) ((SQLQuery) applyFilterQuery)
@@ -9638,7 +9619,7 @@ public class SiteRevenueReportController {
 													+ "/" + (endOfMonth.getDate());
 
 											if (StringUtils.equalsIgnoreCase(max, "Max")) {
-												applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+												applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 												applyFilterQuery.setParameter("param1", monthofDate);
 												applyFilterQuery.setParameter("param2", endOfMonth);
 												revenueCharts = (List<RevenueChartsReport>) ((SQLQuery) applyFilterQuery)
@@ -9712,7 +9693,7 @@ public class SiteRevenueReportController {
 													+ "/" + (endOfMonth.getDate());
 
 											if (StringUtils.equalsIgnoreCase(min, "Min")) {
-												applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+												applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 												applyFilterQuery.setParameter("param1", monthofDate);
 												applyFilterQuery.setParameter("param2", endOfMonth);
 												revenueCharts = (List<RevenueChartsReport>) ((SQLQuery) applyFilterQuery)
@@ -9783,7 +9764,7 @@ public class SiteRevenueReportController {
 													+ "/" + (endOfMonth.getDate());
 
 											if (StringUtils.equalsIgnoreCase(min, "Min")) {
-												applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+												applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 												applyFilterQuery.setParameter("param1", monthofDate);
 												applyFilterQuery.setParameter("param2", endOfMonth);
 												revenueCharts = (List<RevenueChartsReport>) ((SQLQuery) applyFilterQuery)
@@ -9947,7 +9928,7 @@ public class SiteRevenueReportController {
 
 								switch (filterID) {
 								case "applyButtMSChart":
-									applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+									applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 									applyFilterQuery.setParameter("param1", StartDate);
 									applyFilterQuery.setParameter("param2", EndDate);
 
@@ -9962,7 +9943,7 @@ public class SiteRevenueReportController {
 									break;
 
 								case "applyButtPieChart":
-									applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+									applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 									applyFilterQuery.setParameter("param1", StartDate);
 									applyFilterQuery.setParameter("param2", EndDate);
 
@@ -10274,7 +10255,7 @@ public class SiteRevenueReportController {
 
 								switch (filterID) {
 								case "applyButtMSChart":
-									applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+									applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 									applyFilterQuery.setParameter("param1", StartDate);
 									applyFilterQuery.setParameter("param2", EndDate);
 									chartJSNArr = chartRevenues(applyFilterQuery.list());
@@ -10285,7 +10266,7 @@ public class SiteRevenueReportController {
 									}
 									break;
 								case "applyButtStackChart":
-									applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+									applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 									applyFilterQuery.setParameter("param1", StartDate);
 									applyFilterQuery.setParameter("param2", EndDate);
 									// perDataChrtLst = timeRevenueStackandLineChartQuery.list();
@@ -10302,7 +10283,7 @@ public class SiteRevenueReportController {
 									}
 									break;
 								case "applyButtLineChart":
-									applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+									applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 									applyFilterQuery.setParameter("param1", StartDate);
 									applyFilterQuery.setParameter("param2", EndDate);
 									// periodicData = getStackedChartData(perDataChrtLst);
@@ -10318,7 +10299,7 @@ public class SiteRevenueReportController {
 									}
 									break;
 								case "applyButtPieChart":
-									applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+									applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 									applyFilterQuery.setParameter("param1", StartDate);
 									applyFilterQuery.setParameter("param2", EndDate);
 
@@ -10387,7 +10368,7 @@ public class SiteRevenueReportController {
 
 							/*
 							 * case "applyButtStackChartMax": maxTimeRevenueStackandLineChartQuery =
-							 * session.createSQLQuery(maxTimeRevenueStackandLineChartQueryString);
+							 * session.createNativeQuery(maxTimeRevenueStackandLineChartQueryString);
 							 * maxTimeRevenueStackandLineChartQuery.setParameter("param1", StartDate);
 							 * maxTimeRevenueStackandLineChartQuery.setParameter("param2", EndDate);
 							 * maxPerDataChrtLst = maxTimeRevenueStackandLineChartQuery.list();
@@ -10401,7 +10382,7 @@ public class SiteRevenueReportController {
 							 * break;
 							 * 
 							 * case "applyButtStackChartMin": minTimeRevenueStackandLineChartQuery =
-							 * session.createSQLQuery(minTimeRevenueStackandLineChartQueryString);
+							 * session.createNativeQuery(minTimeRevenueStackandLineChartQueryString);
 							 * minTimeRevenueStackandLineChartQuery.setParameter("param1", StartDate);
 							 * minTimeRevenueStackandLineChartQuery.setParameter("param2", EndDate);
 							 * minPerDataChrtLst = minTimeRevenueStackandLineChartQuery.list();
@@ -10415,7 +10396,7 @@ public class SiteRevenueReportController {
 							 * break;
 							 * 
 							 * case "applyButtLineChartMax": maxTimeRevenueStackandLineChartQuery =
-							 * session.createSQLQuery(maxTimeRevenueStackandLineChartQueryString);
+							 * session.createNativeQuery(maxTimeRevenueStackandLineChartQueryString);
 							 * maxTimeRevenueStackandLineChartQuery.setParameter("param1", StartDate);
 							 * maxTimeRevenueStackandLineChartQuery.setParameter("param2", EndDate);
 							 * maxPerDataChrtLst = maxTimeRevenueStackandLineChartQuery.list();
@@ -10428,7 +10409,7 @@ public class SiteRevenueReportController {
 							 * break;
 							 * 
 							 * case "applyButtLineChartMin": minTimeRevenueStackandLineChartQuery =
-							 * session.createSQLQuery(minTimeRevenueStackandLineChartQueryString);
+							 * session.createNativeQuery(minTimeRevenueStackandLineChartQueryString);
 							 * minTimeRevenueStackandLineChartQuery.setParameter("param1", StartDate);
 							 * minTimeRevenueStackandLineChartQuery.setParameter("param2", EndDate);
 							 * minPerDataChrtLst = minTimeRevenueStackandLineChartQuery.list();
@@ -10556,7 +10537,7 @@ public class SiteRevenueReportController {
 
 								switch (filterID) {
 								case "applyButtMSChart":
-									applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+									applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 									applyFilterQuery.setParameter("param1", StartDate);
 									applyFilterQuery.setParameter("param2", EndDate);
 
@@ -10571,7 +10552,7 @@ public class SiteRevenueReportController {
 									break;
 
 								case "applyButtPieChart":
-									applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+									applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 									applyFilterQuery.setParameter("param1", StartDate);
 									applyFilterQuery.setParameter("param2", EndDate);
 
@@ -10614,7 +10595,7 @@ public class SiteRevenueReportController {
 												+ "-" + (weeklyEndDate.getYear() + 1900) + "/"
 												+ (weeklyEndDate.getMonth() + 1) + "/" + (weeklyEndDate.getDate());
 
-										applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+										applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 										applyFilterQuery.setParameter("param1", weeklyStartDate);
 										applyFilterQuery.setParameter("param2", weeklyEndDate);
 										revenueCharts = (List<RevenueChartsReport>) ((SQLQuery) applyFilterQuery)
@@ -10673,7 +10654,7 @@ public class SiteRevenueReportController {
 												+ "-" + (weeklyEndDate.getYear() + 1900) + "/"
 												+ (weeklyEndDate.getMonth() + 1) + "/" + (weeklyEndDate.getDate());
 
-										applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+										applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 										applyFilterQuery.setParameter("param1", weeklyStartDate);
 										applyFilterQuery.setParameter("param2", weeklyEndDate);
 										revenueCharts = (List<RevenueChartsReport>) ((SQLQuery) applyFilterQuery)
@@ -10869,7 +10850,7 @@ public class SiteRevenueReportController {
 
 								switch (filterID) {
 								case "applyButtMSChart":
-									applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+									applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 									applyFilterQuery.setParameter("param1", StartDate);
 									applyFilterQuery.setParameter("param2", EndDate);
 
@@ -10884,7 +10865,7 @@ public class SiteRevenueReportController {
 									break;
 
 								case "applyButtPieChart":
-									applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+									applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 									applyFilterQuery.setParameter("param1", StartDate);
 									applyFilterQuery.setParameter("param2", EndDate);
 
@@ -10931,7 +10912,7 @@ public class SiteRevenueReportController {
 												+ (monthofDate.getDate()) + "-" + (endOfMonth.getYear() + 1900) + "/"
 												+ (endOfMonth.getMonth() + 1) + "/" + (endOfMonth.getDate());
 
-										applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+										applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 										applyFilterQuery.setParameter("param1", monthofDate);
 										applyFilterQuery.setParameter("param2", endOfMonth);
 										revenueCharts = (List<RevenueChartsReport>) ((SQLQuery) applyFilterQuery)
@@ -10993,7 +10974,7 @@ public class SiteRevenueReportController {
 												+ (monthofDate.getDate()) + "-" + (endOfMonth.getYear() + 1900) + "/"
 												+ (endOfMonth.getMonth() + 1) + "/" + (endOfMonth.getDate());
 
-										applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+										applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 										applyFilterQuery.setParameter("param1", monthofDate);
 										applyFilterQuery.setParameter("param2", endOfMonth);
 										revenueCharts = (List<RevenueChartsReport>) ((SQLQuery) applyFilterQuery)
@@ -11106,7 +11087,7 @@ public class SiteRevenueReportController {
 							 * 
 							 * if(StringUtils.equalsIgnoreCase(max,"Max")) {
 							 * maxTimeRevenueStackandLineChartQuery =
-							 * session.createSQLQuery(maxTimeRevenueStackandLineChartQueryString);
+							 * session.createNativeQuery(maxTimeRevenueStackandLineChartQueryString);
 							 * maxTimeRevenueStackandLineChartQuery.setParameter("param1", monthofDate);
 							 * maxTimeRevenueStackandLineChartQuery.setParameter("param2", endOfMonth);
 							 * maxRevenueCharts = (List<RevenueChartsReport>) ((SQLQuery)
@@ -11188,7 +11169,7 @@ public class SiteRevenueReportController {
 							 * 
 							 * if(StringUtils.equalsIgnoreCase(min,"Min")) {
 							 * minTimeRevenueStackandLineChartQuery =
-							 * session.createSQLQuery(minTimeRevenueStackandLineChartQueryString);
+							 * session.createNativeQuery(minTimeRevenueStackandLineChartQueryString);
 							 * minTimeRevenueStackandLineChartQuery.setParameter("param1", monthofDate);
 							 * minTimeRevenueStackandLineChartQuery.setParameter("param2", endOfMonth);
 							 * minRevenueCharts = (List<RevenueChartsReport>) ((SQLQuery)
@@ -11278,7 +11259,7 @@ public class SiteRevenueReportController {
 							 * 
 							 * if(StringUtils.equalsIgnoreCase(max,"Max")) {
 							 * maxTimeRevenueStackandLineChartQuery =
-							 * session.createSQLQuery(maxTimeRevenueStackandLineChartQueryString);
+							 * session.createNativeQuery(maxTimeRevenueStackandLineChartQueryString);
 							 * maxTimeRevenueStackandLineChartQuery.setParameter("param1", monthofDate);
 							 * maxTimeRevenueStackandLineChartQuery.setParameter("param2", endOfMonth);
 							 * maxRevenueCharts = (List<RevenueChartsReport>) ((SQLQuery)
@@ -11359,7 +11340,7 @@ public class SiteRevenueReportController {
 							 * 
 							 * if(StringUtils.equalsIgnoreCase(min,"Min")) {
 							 * minTimeRevenueStackandLineChartQuery =
-							 * session.createSQLQuery(minTimeRevenueStackandLineChartQueryString);
+							 * session.createNativeQuery(minTimeRevenueStackandLineChartQueryString);
 							 * minTimeRevenueStackandLineChartQuery.setParameter("param1", monthofDate);
 							 * minTimeRevenueStackandLineChartQuery.setParameter("param2", endOfMonth);
 							 * minRevenueCharts = (List<RevenueChartsReport>) ((SQLQuery)
@@ -11527,7 +11508,7 @@ public class SiteRevenueReportController {
 
 								switch (filterID) {
 								case "applyButtMSChart":
-									applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+									applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 									applyFilterQuery.setParameter("param1", StartDate);
 									applyFilterQuery.setParameter("param2", EndDate);
 
@@ -11542,7 +11523,7 @@ public class SiteRevenueReportController {
 									break;
 
 								case "applyButtPieChart":
-									applyFilterQuery = session.createSQLQuery(applyFilterRevSum);
+									applyFilterQuery = session.createNativeQuery(applyFilterRevSum);
 									applyFilterQuery.setParameter("param1", StartDate);
 									applyFilterQuery.setParameter("param2", EndDate);
 
@@ -11726,7 +11707,7 @@ public class SiteRevenueReportController {
 				endDate = formatter.parse(end_Date);
 				EndDate = new Timestamp(endDate.getTime());
 
-				session = almsessions.getSessionRPT();
+				session = RptDbSession.getInstance().getSession();
 
 				if (session != null && session.isOpen()) {
 					tx = session.beginTransaction();
@@ -11899,7 +11880,7 @@ public class SiteRevenueReportController {
 					}
 
 					if (StringUtils.equalsIgnoreCase(max, null) && StringUtils.equalsIgnoreCase(min, null)) {
-						pieRevenueTechChartQuery = session.createSQLQuery(pieRevenueTechChartQueryString);
+						pieRevenueTechChartQuery = session.createNativeQuery(pieRevenueTechChartQueryString);
 						pieRevenueTechChartQuery.setParameter("param1", StartDate);
 						pieRevenueTechChartQuery.setParameter("param2", EndDate);
 
@@ -11990,7 +11971,7 @@ public class SiteRevenueReportController {
 	 */
 
 	/*
-	 * query=session.createSQLQuery(defaultSites); query.setParameter("param1",
+	 * query=session.createNativeQuery(defaultSites); query.setParameter("param1",
 	 * StartDate); query.setParameter("param2", EndDate);
 	 * 
 	 * List<Object[]> siteList = (List<Object[]>) (query).list(); List<Object[]>
@@ -12096,7 +12077,7 @@ public class SiteRevenueReportController {
 				endDate = formatter.parse(end_Date);
 				EndDate = new Timestamp(endDate.getTime());
 
-				session = almsessions.getSessionRPT();
+				session = RptDbSession.getInstance().getSession();
 
 				if (session != null && session.isOpen()) {
 					tx = session.beginTransaction();
@@ -12121,7 +12102,7 @@ public class SiteRevenueReportController {
 										+ siteNameEle + "  and area_name like '%" + area + "%' and  region_name like '%"
 										+ region + "%' and rownum='1' ";
 
-								mapSitesListQuery = session.createSQLQuery(mapSitesList);
+								mapSitesListQuery = session.createNativeQuery(mapSitesList);
 								mapSitesListQuery.setParameter("param1", StartDate);
 								mapSitesListQuery.setParameter("param2", EndDate);
 
@@ -12157,7 +12138,7 @@ public class SiteRevenueReportController {
 										+ " )  and area_name like '%" + area + "%' and  region_name like '%" + region
 										+ "%' and rownum='1' ";
 
-								mapSitesListQuery = session.createSQLQuery(mapSitesList);
+								mapSitesListQuery = session.createNativeQuery(mapSitesList);
 								mapSitesListQuery.setParameter("param1", StartDate);
 								mapSitesListQuery.setParameter("param2", EndDate);
 
@@ -12183,12 +12164,12 @@ public class SiteRevenueReportController {
 						if (finalSiteList != null) {
 							rtn.put("listSites", finalSiteList);
 						}
-						warehouseSitesListQuery = session.createSQLQuery(warehouseSitesList);
+						warehouseSitesListQuery = session.createNativeQuery(warehouseSitesList);
 						if (warehouseSitesListQuery.list() != null) {
 							rtn.put("listWarehouseSites", warehouseSitesListQuery.list());
 						}
 
-						warehouseAllSitesQuery = session.createSQLQuery(warehouseAllSites);
+						warehouseAllSitesQuery = session.createNativeQuery(warehouseAllSites);
 						if (warehouseAllSitesQuery.list() != null) {
 							rtn.put("listAllWarehouseSites", warehouseAllSitesQuery.list());
 						}
@@ -12258,7 +12239,7 @@ public class SiteRevenueReportController {
 
 						}
 
-						mapSitesListQuery = session.createSQLQuery(mapSitesList);
+						mapSitesListQuery = session.createNativeQuery(mapSitesList);
 						mapSitesListQuery.setParameter("param1", StartDate);
 						mapSitesListQuery.setParameter("param2", EndDate);
 
@@ -12266,12 +12247,12 @@ public class SiteRevenueReportController {
 							rtn.put("listSites", mapSitesListQuery.list());
 						}
 
-						warehouseSitesListQuery = session.createSQLQuery(warehouseSitesList);
+						warehouseSitesListQuery = session.createNativeQuery(warehouseSitesList);
 						if (warehouseSitesListQuery.list() != null) {
 							rtn.put("listWarehouseSites", warehouseSitesListQuery.list());
 						}
 
-						warehouseAllSitesQuery = session.createSQLQuery(warehouseAllSites);
+						warehouseAllSitesQuery = session.createNativeQuery(warehouseAllSites);
 						if (warehouseAllSitesQuery.list() != null) {
 							rtn.put("listAllWarehouseSites", warehouseAllSitesQuery.list());
 						}
@@ -12316,7 +12297,7 @@ public class SiteRevenueReportController {
 			Transaction tx = null;
 
 			try {
-				session = almsessions.getSession();
+				session = AlmDbSession.getInstance().getSession();
 
 				if (session != null && session.isOpen()) {
 
@@ -12332,11 +12313,11 @@ public class SiteRevenueReportController {
 
 					/*
 					 * Query q = session.
-					 * createSQLQuery("SELECT  distinct site_name,longitude,latitude FROM prepaid_payg_revenue "
+					 * createNativeQuery("SELECT  distinct site_name,longitude,latitude FROM prepaid_payg_revenue "
 					 * );
 					 */
 
-					Query q = session.createSQLQuery(
+					Query q = session.createNativeQuery(
 							"SELECT  distinct (ware_name),site_id,longitude,latitude FROM warehouse where UPPER(ware_name) like UPPER(:param1) or UPPER(site_id) like UPPER(:param1)  ");
 
 					q.setParameter("param1", siteId);
@@ -12387,12 +12368,12 @@ public class SiteRevenueReportController {
 			Transaction tx = null;
 
 			try {
-				session = almsessions.getSession();
+				session = AlmDbSession.getInstance().getSession();
 
 				if (session != null && session.isOpen()) {
 					tx = session.beginTransaction();
 
-					Query q = session.createSQLQuery(
+					Query q = session.createNativeQuery(
 							"SELECT  distinct REGION_ID,REGION_NAME,REGION_CODE FROM REGION where UPPER(REGION_NAME)like UPPER(:param1) OR UPPER(REGION_CODE)like UPPER(:param1) OR UPPER(REGION_ID)like UPPER(:param1)");
 					q.setParameter("param1", region);
 					q.setFirstResult(0);
@@ -12438,12 +12419,12 @@ public class SiteRevenueReportController {
 			Transaction tx = null;
 
 			try {
-				session = almsessions.getSession();
+				session = AlmDbSession.getInstance().getSession();
 
 				if (session != null && session.isOpen()) {
 					tx = session.beginTransaction();
 
-					Query q = session.createSQLQuery(
+					Query q = session.createNativeQuery(
 							"SELECT  distinct AREA_ID,AREA_NAME FROM area where UPPER(AREA_NAME)like UPPER(:param1)");
 					q.setParameter("param1", areaid);
 					q.setFirstResult(0);

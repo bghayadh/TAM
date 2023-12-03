@@ -20,23 +20,22 @@ import com.aliat.alm.securepassword.EncryptDecryptPassword;
 
 public class LoginServices {
 	private static final String DECRYPT_KEY = "alm";
-
+    private static SessionFactory sessionFactory;
+    private static StandardServiceRegistry builder = null;
+    
 	public String validate(String userName, String password, HttpServletResponse response, HttpServletRequest request,
 			Model model) {
 
-		/*
-		 * When using hibernate 5 , the code of opening a session is different
-		 * 
-		 * Configuration cfg = new Configuration().configure();
-		 * StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
-		 * .applySettings(cfg.getProperties()); SessionFactory sf =
-		 * cfg.buildSessionFactory(builder.build()); Session session = sf.openSession();
-		 * Transaction tx = session.beginTransaction();
-		 */
-
-		StandardServiceRegistry builder = new StandardServiceRegistryBuilder().configure().build();
-		SessionFactory sf = new MetadataSources(builder).buildMetadata().buildSessionFactory();
-		Session session = sf.openSession();
+		if(builder == null) {
+			System.out.println("builder is null");
+			builder = new StandardServiceRegistryBuilder().configure().build();
+			sessionFactory = new MetadataSources(builder).buildMetadata().buildSessionFactory();
+		}else {
+			System.out.println("builder is not null");
+		}
+		
+		System.out.println("HashCode LoginServices: "+sessionFactory.hashCode());
+		Session session = sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();
 
 		try {
@@ -55,7 +54,7 @@ public class LoginServices {
 					String userFullName = user.getUserName();
 
 					HttpSession httpSession = request.getSession();
-
+					System.out.println(httpSession.hashCode());
 					String id = httpSession.getId();
 					System.out.println(id);
 					httpSession.setAttribute("userFullName", userFullName);
@@ -64,7 +63,7 @@ public class LoginServices {
 					response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 					response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
 					response.setDateHeader("Expires", 0); // Proxies.
-
+					
 					return "redirect:/Dashboard";
 
 				} else {
@@ -83,7 +82,6 @@ public class LoginServices {
 		} finally {
 			tx.commit();
 			session.close();
-			session.getSessionFactory().close();
 		}
 	}
 
