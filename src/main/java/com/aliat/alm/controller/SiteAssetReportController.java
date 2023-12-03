@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Notify;
-import com.aliat.alm.models.NodeAssetReport;
 import com.aliat.alm.models.SiteAssetReport;
 import com.aliat.alm.services.LoginServices;
 import com.fasterxml.jackson.databind.ObjectMapper;
