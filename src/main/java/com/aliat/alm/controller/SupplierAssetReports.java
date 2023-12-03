@@ -51,16 +51,38 @@ public class SupplierAssetReports {
 				
 				try {
 					notifications.headerNotifications(session, model);
-					String str = "SELECT supplierID,supplierName,COALESCE(SUM(initialCost),0),COALESCE(SUM(netCost),0),COALESCE(SUM(depreciationCost),0) FROM (" + 
+					//SELECT (CASE WHEN COALESCE(SUM(netCost,0)) = 0 THEN COALESCE(SUM(initialCost),0) ELSE 0 END)
+					/*
+					String str = "SELECT supplierID,supplierName,COALESCE(SUM(initialCost),0),COALESCE(SUM(netCost),COALESCE(SUM(initialCost),0)),COALESCE(SUM(depreciationCost),0) FROM (" + 
 							" SELECT DISTINCT (A.SUPPLIER_ID) as supplierID, A.SUPPLIER_NAME as supplierName,b.INITIALCOST as initialCost,b.NETCOST as netCost,b.ACCUMULDEPRECAMNT as depreciationCost" + 
 							" FROM SUPPLIER A LEFT JOIN FIXED_ASSET_REGISTRY B ON A.SUPPLIER_ID = B.SUPPLIER_ID " + 
 							" WHERE B.CREATED_DATE >=  trunc(SYSDATE - INTERVAL '1' YEAR) AND B.created_date < (trunc(sysdate))+ 1)" + 
-							" Group BY supplierID,supplierName";
+							" Group BY supplierID,supplierName"; */
+					
+					
+/*					String str = "SELECT supplierID,supplierName,COALESCE(SUM(initialCost),0),"
+							+ "(CASE WHEN COALESCE(SUM(netCost,0)) = 0 THEN COALESCE(SUM(initialCost),0) ELSE 0 END),"
+							+ "COALESCE(SUM(depreciationCost),0) FROM (" + 
+							" SELECT DISTINCT (A.SUPPLIER_ID) as supplierID, A.SUPPLIER_NAME as supplierName,b.INITIALCOST as initialCost,b.NETCOST as netCost,b.ACCUMULDEPRECAMNT as depreciationCost" + 
+							" FROM SUPPLIER A LEFT JOIN FIXED_ASSET_REGISTRY B ON A.SUPPLIER_ID = B.SUPPLIER_ID " + 
+							" WHERE B.CREATED_DATE >=  trunc(SYSDATE - INTERVAL '1' YEAR) AND B.created_date < (trunc(sysdate))+ 1)" + 
+							" Group BY supplierID,supplierName"; */
+					
+					String str = "SELECT supplierID,supplierName,COALESCE(SUM(initialCost),0),"
+					+ "(CASE WHEN COALESCE(SUM(netCost),0) = 0 THEN COALESCE(SUM(initialCost),0) ELSE COALESCE(SUM(netCost),0) END),"
+					+ "COALESCE(SUM(depreciationCost),0) FROM (" + 
+					" SELECT DISTINCT (A.SUPPLIER_ID) as supplierID, A.SUPPLIER_NAME as supplierName,b.INITIALCOST as initialCost,b.NETCOST as netCost,b.ACCUMULDEPRECAMNT as depreciationCost" + 
+					" FROM SUPPLIER A LEFT JOIN FIXED_ASSET_REGISTRY B ON A.SUPPLIER_ID = B.SUPPLIER_ID " + 
+					" WHERE B.CREATED_DATE >=  trunc(SYSDATE - INTERVAL '1' YEAR) AND B.created_date < (trunc(sysdate))+ 1)" + 
+					" Group BY supplierID,supplierName";					
+					
+					
 					
 					model.addAttribute("supplierAssetList", mapper.writeValueAsString(session.createNativeQuery(str).list()));
 					
 				} catch (Exception e) {
 					logger.info("Error in creating session with the DataBase " + e.getMessage());
+					e.printStackTrace();
 				} finally {
 					if (session != null && session.isOpen()) {
 						session.close();
