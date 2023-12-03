@@ -256,7 +256,8 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 	allTubes=[];
 	allStrands=[];
 	allDB = [];
-	allNodes = [];		 
+	allNodes = [];
+	allJunctionsID = [];	
 		
 		var str_CurrentPhysicalLayer="<ul style='margin-left:15px;'><li id='initial_ul_CurrentPhysicalLayer' class='Initial_CurrentPhysicalLayer'><input type='checkbox' class='allElements' unchecked name='filter'></input> <span id='initial_Span_CurrentPhysicalLayer' class='Parentfolder' > <i class='fa fa-folder' style='color: #08526D;'></i></span><span class='TreeSpan' style='color:black;width:436px'>Current Physical Layer </span></li></ul>";
 		//console.log("filterFlag !!!!!!!!!!! "+filterFlag);
@@ -265,6 +266,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 			console.log("Entered Filter");
 			flag = 1;
 			nodeFlag = 1;
+			junctionFlag = 1;
 			$('#removeS').show();
 		
 			var str_CurrentPhysicalLayer="<ul style='margin-left:15px'><li id='initial_ul_CurrentPhysicalLayer' class='Initial_CurrentPhysicalLayer'><input type='checkbox' class='allElements' unchecked name='filter'></input> <span id='initial_Span_CurrentPhysicalLayer' class='Parentfolder' > <i class='fa fa-folder' style='color: #08526D;'></i></span><span class='TreeSpan' style='color:black;width:436px'>Current Physical Layer </span></li></ul>";
@@ -279,6 +281,9 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 		$("#initial_ul_CurrentPhysicalLayer").append(str);
 
 		str="<ul><li id='Handhole_f_CurrentPhysicalLayer' style='display:none;' class='Handhole_f_CurrentPhysicalLayer'><input type='checkbox' unchecked class='AllHandholes checkFilter'></input> <span id='Handhole_spanFolder' class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Handhole_span' style='color:black;width:395px' class='TreeSpan' >Handhole </span></li></ul>";
+		$("#initial_ul_CurrentPhysicalLayer").append(str);
+
+		str="<ul><li id='Junction_f_CurrentPhysicalLayer' style='display:none;' class='Junction_f_CurrentPhysicalLayer'><input type='checkbox' unchecked class='AllJunctions checkFilter'></input> <span id='Junction_spanFolder' class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Junction_span' style='color:black;width:395px' class='TreeSpan' >Junction </span></li></ul>";
 		$("#initial_ul_CurrentPhysicalLayer").append(str);
 
 		str="<ul><li id='FiberPath_f_CurrentPhysicalLayer' style='display:none;' class='FiberPath_f_CurrentPhysicalLayer'><input type='checkbox' class='AllFiberCables' class='filter checkFilter'></input> <span id='FiberPath_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='FiberPath_span' style='color:black;width:395px' class='TreeSpan'>Fiber Path <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' id='pushPointsCurrentPhysicalLayer' class='pushPoints'> <img src='"+getContext()+"/resources/NetworkImages/remove.png' hidden style='margin-left:10px' id='cancelPointsCurrentPhysicalLayer' class='clearPoints'></span></li></ul>";
@@ -482,10 +487,24 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 		}
 		junctionCheckFilter("Handhole");
 		
+     /////////////*********************	junction Creation In tree	***********************///////////////
+		if(filterFlag==2 || filterFlag==1){// connected and circle range
+			//console.log("loading flag value, flag =" +flag);
+			// createJunction(data.JunctionList);
+		}
+		else{
+			//console.log(" //////////passed else");	
+			$("#Junction_f_CurrentPhysicalLayer input[type=checkbox]").bind("change",function() {
+				if ($(this).is(':checked')){
+					getJunction();
+				}
+			});
+		}
+		
 	/////////////*********************	FiberCables Creation In tree	***********************///////////////
 	if(filterFlag==2 || filterFlag==1){// connected and circle range
 		
-		console.log("loading flag value, flag =" +flag);
+		//console.log("loading flag value, flag =" +flag);
 		CreateFiberPath(fiberList,fiberTubes,fiberStrands,fiberAuxiliary_Data,tubesAuxiliaries,strandsAuxiliaries)
 /*		
 		if(fiberList!=null){
@@ -890,7 +909,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 */
 	
 }	else{
-	console.log(" //////////passed else");	
+	//console.log(" //////////passed else");	
 	$("#FiberPath_f_CurrentPhysicalLayer input[type=checkbox]").bind("change",function() {
 		if ($(this).is(':checked')){
 			getFiberPath();
@@ -938,7 +957,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 			 createNode(NodeActiveList);
 		}
 		else{
-			console.log(" //////////passed else");	
+			//console.log(" //////////passed else");	
 			$("#NodeActive_f_CurrentPhysicalLayer input[type=checkbox]").bind("change",function() {
 				if ($(this).is(':checked')){
 					getNode();
@@ -5047,8 +5066,559 @@ singleProject = new ContextMenu({
 		}	 	 
 	]
 });
+/////////////*********************	single junction CONTEXTS MENU  ***********************///////////////
+			//-------------------------------------------------------------------------------------------------//	  
+							
+
+			JunctionMenu =new ContextMenu({
+
+				'theme': 'default',
+				
+				'items': [
+
+				{'icon': 'edit','name': 'Edit or View Details',action: () => {
+					
+					document.getElementById("manholeNameJct").readOnly = true;
+							$.ajax({
+									type: "GET",
+									contentType: "application/json; charset=utf-8",
+									url: getContext()+'/findJunctionDetails',
+									data: {										 
+										  "JunctionID":selectedManholeJct 
+									},
+									dataType: "json",
+									success: function (data) {
+									
+								if(data.junctionDetails.length >0) {
+									$("#manholeJctMappingTable > tbody").empty();
+									actionManholeJct="Update"; 
+									$("#manholeJunctionModal").find("input").val('').end();
+									
+									$("#manholeJunctionHeader").text("Junction: "+data.junctionDetails[0][0]);
+									$("#manholeJunctionModal").modal('show');
+									
+									
+									if(data.junctionDetails[0][0]!=null){
+											$("#manholeJctName").val(""+data.junctionDetails[0][0]);
+									}
+									if(data.junctionDetails[0][1]!=null){
+											$("#junctionId").val(""+data.junctionDetails[0][1]);
+									}
+									if(data.junctionDetails[0][2]!=null){
+											$("#manholeIdJct").val(""+data.junctionDetails[0][2]);
+									}
+									if(data.junctionDetails[0][3]!=null){
+											$("#manholeNameJct").val(""+data.junctionDetails[0][3]);
+									}
+									if(data.junctionDetails[0][4]!=null){
+											$("#manholeJctLong").val(""+data.junctionDetails[0][4]);
+									}
+									if(data.junctionDetails[0][5]!=null){
+											$("#manholeJctLat").val(""+data.junctionDetails[0][5]);
+									}
+									if(data.junctionDetails[0][6]!=null){
+											$("#manholeNumberJct").val(""+data.junctionDetails[0][6]);
+									}
+									
+									if(data.junctionDetails[0][7]!=null){
+											$("#manholeJctCapacity").val(""+data.junctionDetails[0][7]);
+									}
+									
+									if(data.junctionDetails[0][8]!=null){
+										$("#manholeJctCity").val(""+data.junctionDetails[0][8]);
+									}		
+									
+									if(data.junctionDetails[0][11]!=null){
+										$("#manJunctionCreateDate").val(""+data.junctionDetails[0][11]);
+									}
+									else {
+										$("#manJunctionCreateDate").val("");
+									}
+									
+									if(data.junctionDetails[0][12]!=null){
+										$("#manJunctionLastModifiedDate").val(""+data.junctionDetails[0][12]);
+									}
+									else {
+										$("#manJunctionLastModifiedDate").val("");
+									}
+																	
+								$("#manholeJctName").on("input",function(){
+
+									$("#manholeJunctionHeader").text("Junction: "+$(this).val());
+
+								});
+								
+								// MAPPING DATA APPENDING
+								if(data.junctionMappingPts){
+								
+								 	window["JCT_Mapper"+selectedManholeJct]=[];
+									window["JCT_Mapper"+selectedManholeJct]=data.junctionMappingPts;
+									
+									for(i=0;i<data.junctionMappingPts.length;i++){
+									
+									var locationTypeOption =data.junctionMappingPts[i][14];
+									locationOptions = "<select class='form-control' name='mJctLocationTypeSideA' id='mJctLocationTypeSideA"+MJctBoqIndex+"'>";
+									locationOptionValue = "Select an Option";
+									var locationArray = ["Select an Option","Customer","Site","Manhole","Handhole","DB"];
+									
+									for(j=0; j<locationArray.length; j++)
+									{
+										if(locationTypeOption == locationArray[j]){
+											selected_option = "selected='selected'";
+										}
+										else{
+											selected_option = "";
+										}
+										if(locationArray[j] != 'Select an Option'){
+											locationOptionValue = locationArray[j];
+										}
+										locationOptions += "<option value='"+locationOptionValue+"' "+selected_option+" >"+locationArray[j]+"</option>";
+									}
+									locationOptions += "</select>";
+									
+									   var locationTypeOption_B =data.junctionMappingPts[i][24];
+									locationOptions_B = "<select class='form-control' name='mJctLocationTypeSideB' id='mJctLocationTypeSideB"+MJctBoqIndex+"'>";
+									locationOptionValue_B = "Select an Option";
+									var locationArray_B = ["Select an Option","Customer","Site","Manhole","Handhole","DB"];
+									
+									for(j=0; j<locationArray_B.length; j++)
+									{
+										if(locationTypeOption_B == locationArray[j]){
+											selected_option_B = "selected='selected'";
+										}
+										else{
+											selected_option_B = "";
+										}
+										if(locationArray_B[j] != 'Select an Option'){
+											locationOptionValue_B = locationArray[j];
+										}
+										locationOptions_B += "<option value='"+locationOptionValue_B+"' "+selected_option_B+" >"+locationArray_B[j]+"</option>";
+									}
+									locationOptions_B += "</select>";
+									
+									var addMark=
+									"<option value='backbone'>BackBone</option>"
+							+"<option value='metro'>Metro</option>"
+							+"<option value='access'>Access</option>"
+									
+									///
+									
+									   window["MAP_JCT"+data.junctionMappingPts[i][1]]=[];
+									   window["MAP_JCT"+data.junctionMappingPts[i][1]]=data.junctionMappingPts[i];			
+
+								var markup = "<tr id='"+data.junctionMappingPts[i][1]+"'><td name='Junction'><input type='checkbox' class='rowAboveBelowJun' style='position:relative;left:20px;top:10px' name='record'></td>"
+								+"<td name='mJctSeq' class='headcol'><input name='manholeJctSeq' value='"+data.junctionMappingPts[i][0]+"' class='form-control text-input' type='text' style='width:60px;position:relative;' readonly /></td>"
+								+"<td style='background-color:#00757C' width='-10px'></td>"
+								+"<td name='mJctLocationTypeSideA'>"+locationOptions+"</td>"
+								
+								+"<td name='mJctLocationIdSideA'><input name='mJctLocationIdSideA' value='"+data.junctionMappingPts[i][15]+"' id='mJctLocationIdSideA"+MJctBoqIndex+"' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
+								+"<td name='mJctLocationNameSideA'><input name='mJctLocationNameSideA' value='"+data.junctionMappingPts[i][16]+"' id='mJctLocationNameSideA"+MJctBoqIndex+"' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
+								+"<td name='mJctWarehouseIdSideA'><input name='mJctWarehouseIdSideA' value='"+data.junctionMappingPts[i][17]+"' id='mJctWarehouseIdSideA"+MJctBoqIndex+"' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
+								
+								+"<td name='mJctNetworkLevelSideA'>"
+								+"<select class='form-control' name='mJctNetworkLevelSideA' id='mJctNetworkLevelSideA"+MJctBoqIndex+"'>"+addMark+"</select>"
+								+"<td name='mJctStrandNBSideA'><input name='mJctStrandNBSideA' id='mJctStrandNBSideA"+MJctBoqIndex+"' value='"+data.junctionMappingPts[i][18]+"' class='form-control text-input' type='text' style='width:80px;position:relative;'/></td>"
+								+"<td name='mJctStrandIdSideA'><input name='mJctStrandIdSideA' id='mJctStrandIdSideA"+MJctBoqIndex+"' value='"+data.junctionMappingPts[i][2]+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+								+"<td name='mJctStrandNameSideA'><input name='mJctStrandNameSideA' id='mJctStrandNameSideA"+MJctBoqIndex+"' value='"+data.junctionMappingPts[i][3]+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+								+"<td name='mJctTubeNBSideA'><input name='mJctTubeNBSideA' id='mJctTubeNBSideA"+MJctBoqIndex+"' value='"+data.junctionMappingPts[i][19]+"' class='form-control text-input' type='text' style='width:80px;position:relative;'/></td>"
+								+"<td name='mJctTubeIdSideA'><input name='mJctTubeIdSideA' id='mJctTubeIdSideA"+MJctBoqIndex+"' value='"+data.junctionMappingPts[i][4]+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+								+"<td name='mJctTubeNameSideA'><input name='mJctTubeNameSideA' id='mJctTubeNameSideA"+MJctBoqIndex+"' value='"+data.junctionMappingPts[i][5]+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+								+"<td name='mJctFiberIdSideA'><input name='mJctFiberIdSideA' id='mJctFiberIdSideA"+MJctBoqIndex+"' value='"+data.junctionMappingPts[i][6]+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+								+"<td name='mJctFiberNameSideA'><input name='mJctFiberNameSideA' id='mJctFiberNameSideA"+MJctBoqIndex+"' value='"+data.junctionMappingPts[i][7]+"'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+								+"<td style='background-color:#00757C' width='-10px'></td>"
+								
+								+"<td name='mJctLocationTypeSideB'>"+locationOptions_B+"</td>"
+								
+								+"<td name='mJctLocationIdSideB'><input name='mJctLocationIdSideB' value='"+data.junctionMappingPts[i][25]+"' id='mJctLocationIdSideB"+MJctBoqIndex+"' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
+								+"<td name='mJctLocationNameSideB'><input name='mJctLocationNameSideB' value='"+data.junctionMappingPts[i][26]+"' id='mJctLocationNameSideB"+MJctBoqIndex+"' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
+								+"<td name='mJctWarehouseIdSideB'><input name='mJctWarehouseIdSideB' value='"+data.junctionMappingPts[i][27]+"' id='mJctWarehouseIdSideB"+MJctBoqIndex+"' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
+								
+								+"<td name='mJctNetworkLevelSideB'>"
+								+"<select class='form-control' name='mJctNetworkLevelSideB' id='mJctNetworkLevelSideB"+MJctBoqIndex+"'>"+addMark+"</select>"
+								+"<td name='mJctStrandNBSideB'><input name='mJctStrandNBSideB' id='mJctStrandNBSideB"+MJctBoqIndex+"' value='"+data.junctionMappingPts[i][21]+"' class='form-control text-input' type='text' style='width:80px;position:relative;'/></td>"
+								+"<td name='mJctStrandIdSideB'><input name='mJctStrandIdSideB' id='mJctStrandIdSideB"+MJctBoqIndex+"' value='"+data.junctionMappingPts[i][8]+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+								+"<td name='mJctStrandNameSideB'><input name='mJctStrandNameSideB' id='mJctStrandNameSideB"+MJctBoqIndex+"' value='"+data.junctionMappingPts[i][9]+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+								+"<td name='mJctTubeNBSideB'><input name='mJctTubeNBSideB' id='mJctTubeNBSideB"+MJctBoqIndex+"' value='"+data.junctionMappingPts[i][22]+"' class='form-control text-input' type='text' style='width:80px;position:relative;'/></td>"
+								+"<td name='mJctTubeIdSideB'><input name='mJctTubeIdSideB' id='mJctTubeIdSideB"+MJctBoqIndex+"' value='"+data.junctionMappingPts[i][10]+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+								+"<td name='mJctTubeNameSideB'><input name='mJctTubeNameSideB' id='mJctTubeNameSideB"+MJctBoqIndex+"' value='"+data.junctionMappingPts[i][11]+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+								+"<td name='mJctFiberIdSideB'><input name='mJctFiberIdSideB' id='mJctFiberIdSideB"+MJctBoqIndex+"' value='"+data.junctionMappingPts[i][12]+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+								+"<td name='mJctFiberNameSideB'><input name='mJctFiberNameSideB' id='mJctFiberNameSideB"+MJctBoqIndex+"' value='"+data.junctionMappingPts[i][13]+"'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+								
+								$("#manholeJctMappingTable > tbody").append(markup);
+								
+						
+								var LocType = $('#mJctLocationTypeSideA'+MJctBoqIndex).find('option:selected').text();
+								if(LocType=="Manhole" || LocType=="Handhole" || LocType=="Customer" || LocType=="DB"){
+									$('#mJctWarehouseIdSideA'+MJctBoqIndex).prop("readonly", true);
+									$('#mJctWarehouseIdSideA'+MJctBoqIndex).val('');
+								}	
+						
+								$("#mJctLocationTypeSideA"+MJctBoqIndex).change(function(){
+									var thisID = $(this).attr("id");
+									var indexFor = thisID.replace('mJctLocationTypeSideA','');
+									$('#mJctLocationNameSideA'+indexFor).val('');
+									$('#mJctWarehouseIdSideA'+indexFor).val('');
+									$('#mJctLocationIdSideA'+indexFor).val('');
+									
+									if($(this).val()=="Manhole" || $(this).val()=="Handhole" || $(this).val()=="Customer" || $(this).val()=="DB"){
+									    $('#mJctWarehouseIdSideA'+indexFor).prop("readonly", true);
+									}else if($(this).val()=="Site"){
+									    $('#mJctWarehouseIdSideA'+indexFor).prop("readonly", false);
+									} 
+								});
+								///
+								var LocTypeB = $('#mJctLocationTypeSideB'+MJctBoqIndex).find('option:selected').text();
+								if(LocTypeB=="Manhole" || LocTypeB=="Handhole" || LocTypeB=="Customer" || LocTypeB=="DB"){
+									$('#mJctWarehouseIdSideB'+MJctBoqIndex).prop("readonly", true);
+									$('#mJctWarehouseIdSideB'+MJctBoqIndex).val('');
+								}	
+						
+								$("#mJctLocationTypeSideB"+MJctBoqIndex).change(function(){
+								console.log("side b" );
+									var thisID = $(this).attr("id");
+									var indexFor = thisID.replace('mJctLocationTypeSideB','');
+									$('#mJctLocationNameSideB'+indexFor).val('');
+									$('#mJctWarehouseIdSideB'+indexFor).val('');
+									$('#mJctLocationIdSideB'+indexFor).val('');
+									
+									if($(this).val()=="Manhole" || $(this).val()=="Handhole" || $(this).val()=="Customer" || $(this).val()=="DB"){
+									    $('#mJctWarehouseIdSideB'+indexFor).prop("readonly", true);
+									}else if($(this).val()=="Site"){
+									    $('#mJctWarehouseIdSideB'+indexFor).prop("readonly", false);
+									} 
+								});
+								
+								if(data.junctionMappingPts[i][20] !=null){
+									$("#mJctNetworkLevelSideA"+MJctBoqIndex).val(data.junctionMappingPts[i][20]);
+								}
+								
+								if(data.junctionMappingPts[i][23] !=null){
+									$("#mJctNetworkLevelSideB"+MJctBoqIndex).val(data.junctionMappingPts[i][23]);
+								}
+								
+								autoCompleteForMapping(MJctBoqIndex,"manholeJctMappingTable","Row"+MJctBoqIndex,"mJctWarehouseIdSideA","mJctLocationIdSideA","mJctLocationNameSideA","mJctLocationTypeSideA","","","","","mJctStrandIdSideA","mJctStrandNameSideA","mJctTubeIdSideA","mJctTubeNameSideA","mJctFiberIdSideA","mJctFiberNameSideA","mJctStrandNBSideA","","mJctTubeNBSideA","","","","mJctNetworkLevelSideA");
+								autoCompleteForMapping(MJctBoqIndex,"manholeJctMappingTable","Row"+MJctBoqIndex,"mJctWarehouseIdSideB","mJctLocationIdSideB","mJctLocationNameSideB","mJctLocationTypeSideB","","","","","mJctStrandIdSideB","mJctStrandNameSideB","mJctTubeIdSideB","mJctTubeNameSideB","mJctFiberIdSideB","mJctFiberNameSideB","mJctStrandNBSideB","","mJctTubeNBSideB","","","","mJctNetworkLevelSideB");
+								//autoCompleteJctMapping(MJctBoqIndex,"manholeJctMappingTable","Row"+MJctBoqIndex);
+								MJctBoqIndex++;
+								
+								$("#manholeJctMappingTable tr").focusin(function () {
+								$("#manholeJctMappingTable tr").removeClass("ativeRecord")
+								  $(this).addClass("ativeRecord");
+			});
+														
+									}
+									
+								}
+							}
+							
+							},									
+							error: function (result) {
+									alert("Error");
+								}
+							}); 
+					
+					
+				}
+			 },
+			 {'icon': 'link','name': 'View Junction Mapping',action: () => {
+				 			$.ajax({
+								  type: "GET",
+								  contentType: "application/json; charset=utf-8",
+								  url: getContext()+'/findJctMappingDetails',
+								  async:false,
+								  data: {
+									  "junctionID":selectedManholeJct 
+										},
+								  dataType: "json",
+								  success : function(data) {
+								   
+								   var dpJctWidth=$("#junction_MappingModal").width();
+								   
+								   $("#junction_tabContentPortsMap").empty();	
+								   $("#junction_MappingModal").modal('show');
+								   						
+							if(data.junctionMappingPts !='noData'){
+							
+							$("#junction_TitleId").text("Internal Junction Mapping: "+data.junctionMappingPts[0][14]);
+								  
+							var jctNumCols=8;
+							var jctNumRows=3;
+							
+							if(data.junctionMappingPts){
+								  	
+								var minWidth="500";									
+								var width = 1200, height = 400;
+								var totWidth=width;
+									
+									
+								$("#contentJctMappingModal" ).width(totWidth);
+							    dpJctWidth=$("#contentJctMappingModal" ).width();
+									
+								jctSvg="<svg id='mysvgJct' width='"+width+"px' height='"+height+"px' min-width='"+minWidth+"px'></svg>";
+								$("#junction_tabContentPortsMap").append(jctSvg);
+								
+								//////*********** DRAWIN BOARDS BORDERS *************///////
+								var line= makeSVGJct('line', {x1: 50, y1: 50, x2:50,y2:100, stroke: 'red', 'stroke-width': 1, fill: 'red'});
+							    line= makeSVGJct('line', {x1: 50, y1: 50, x2:100,y2:50, stroke: 'red', 'stroke-width': 1, fill: 'red'});
+								
+								line= makeSVGJct('line', {x1: 100, y1: 100, x2:(jctNumCols+2)*100,y2:100, stroke: 'red', 'stroke-width': 1, fill: 'red'});
+								document.getElementById('mysvgJct').appendChild(line);
+								
+								line= makeSVGJct('line', {x1: 100, y1: 100, x2:100,y2:(jctNumRows+2)*100, stroke: 'red', 'stroke-width': 1, fill: 'red'});
+								document.getElementById('mysvgJct').appendChild(line);
+								
+								line= makeSVGJct('line', {x1: (jctNumCols+2)*100, y1: 100, x2:(jctNumCols+2)*100,y2:(jctNumRows+2)*100, stroke: 'red', 'stroke-width': 1, fill: 'red'});
+								document.getElementById('mysvgJct').appendChild(line);
+										
+								line= makeSVGJct('line', {x1: 100, y1: (jctNumRows+2)*100, x2:(jctNumCols+2)*100,y2:(jctNumRows+2)*100, stroke: 'red', 'stroke-width': 1, fill: 'red'});
+								document.getElementById('mysvgJct').appendChild(line);
+								
+																				
+					//////*********** DRAWING JUNCTION MAPPING RELATIVE TO EACh ROW AND COLUMN *************///////
+
+						for(i=0;i<data.junctionMappingPts.length;i++){
+												
+						window["JCT_"+data.junctionMappingPts[i][1]]=[];
+						window["JCT_"+data.junctionMappingPts[i][1]]=data.junctionMappingPts[i];	  
+						var colNum=0;
+						var rowNum=0;
+						var rowColIndex=0;
+						if(parseFloat(data.junctionMappingPts[i][0]) >=1 && parseFloat(data.junctionMappingPts[i][0]) <=8) {
+							rowNum=1;
+						}
+						else if(parseFloat(data.junctionMappingPts[i][0]) >=9 && parseFloat(data.junctionMappingPts[i][0]) <=16) {
+							rowNum=2;
+						}
+						else {
+							rowNum=3;
+						}	
+						
+						if(parseFloat(data.junctionMappingPts[i][0]) ==1 || parseFloat(data.junctionMappingPts[i][0]) ==9 || parseFloat(data.junctionMappingPts[i][0]) ==17) {
+							colNum=1;
+						}
+						else if(parseFloat(data.junctionMappingPts[i][0]) ==2 || parseFloat(data.junctionMappingPts[i][0]) ==10 || parseFloat(data.junctionMappingPts[i][0]) ==18) {
+							colNum=2;
+						}
+						else if(parseFloat(data.junctionMappingPts[i][0]) ==3 || parseFloat(data.junctionMappingPts[i][0]) ==11 || parseFloat(data.junctionMappingPts[i][0]) ==19) {
+							colNum=3;
+						}
+						else if(parseFloat(data.junctionMappingPts[i][0]) ==4 || parseFloat(data.junctionMappingPts[i][0]) ==12 || parseFloat(data.junctionMappingPts[i][0]) ==20) {
+							colNum=4;
+						}
+						else if(parseFloat(data.junctionMappingPts[i][0]) ==5 || parseFloat(data.junctionMappingPts[i][0]) ==13 || parseFloat(data.junctionMappingPts[i][0]) ==21) {
+							colNum=5;
+						}
+						else if(parseFloat(data.junctionMappingPts[i][0]) ==6 || parseFloat(data.junctionMappingPts[i][0]) ==14 || parseFloat(data.junctionMappingPts[i][0]) ==22) {
+							colNum=6;
+						}
+						else if(parseFloat(data.junctionMappingPts[i][0]) ==7 || parseFloat(data.junctionMappingPts[i][0]) ==15 || parseFloat(data.junctionMappingPts[i][0]) ==23) {
+							colNum=7;
+						}
+						else {
+							colNum=8;
+						}	
+
+						svgJctNS = "http://www.w3.org/2000/svg";
+						
+						var newText = document.createElementNS(svgJctNS,"text");
+						newText.setAttributeNS(null,"x",20);     
+						newText.setAttributeNS(null,"y",30);  
+						newText.setAttributeNS(null,"font-size","15");
+						newText.setAttributeNS(null,"stroke","#00757C");
+
+						var textNode = document.createTextNode("Number of Junctions : "+data.junctionMappingPts[0][15]);
+						newText.appendChild(textNode);
+						document.getElementById("mysvgJct").appendChild(newText);
+											
+						//Drawing green circle to represent the junction
+						
+						var circle = document.createElementNS(svgJctNS, "circle");
+						circle.setAttributeNS(null, "cx", (colNum*100)+100);
+						circle.setAttributeNS(null, "cy", (rowNum*100)+80);
+						circle.setAttributeNS(null, "r",  13);
+						circle.setAttributeNS(null, "fill", "green");
+						circle.setAttributeNS(null,"class","junctionImage");
+						circle.setAttributeNS(null,"id","U-"+data.junctionMappingPts[i][1]);
+						circle.setAttributeNS(null,"cursor","pointer");	
+						document.getElementById("mysvgJct").appendChild(circle);
+						
+					   //Drawing line inside the junction green circle 
+					   
+						var upLine = document.createElementNS(svgJctNS, "line");
+						upLine.setAttributeNS(null, "x1", (colNum*100)+100);
+						upLine.setAttributeNS(null, "y1", (rowNum*100)+100);
+						upLine.setAttributeNS(null, "x2", (colNum*100)+100);
+						upLine.setAttributeNS(null, "y2", (rowNum*100)+60);					
+						upLine.setAttributeNS(null, "stroke", "black");
+						upLine.setAttributeNS(null, "stroke-width", "2");
+						document.getElementById("mysvgJct").appendChild(upLine);
+						
+						
+							//Show the strand id of side A
+							
+						var newTextJct = document.createElementNS(svgJctNS,"text");
+						newTextJct.setAttributeNS(null,"x",(colNum*100)+55);     
+						newTextJct.setAttributeNS(null,"y",(rowNum*100)+50); 
+						newTextJct.setAttributeNS(null,"class","text");
+						newTextJct.setAttributeNS(null,"font-size","10");
+						newTextJct.setAttributeNS(null,"stroke","#00757C");	
+						newTextJct.setAttributeNS(null,"cursor","pointer");	
+						newTextJct.setAttributeNS(null,"class","sideAStrand");
+						newTextJct.setAttributeNS(null,"id","strndSideA-"+data.junctionMappingPts[i][1]);
+						
+						var textNodeJct = document.createTextNode(data.junctionMappingPts[i][2]);
+						newTextJct.appendChild(textNodeJct);
+						document.getElementById("mysvgJct").appendChild(newTextJct);
+						
+						 //Show the strand id of side B
+						 
+						var downTextJct = document.createElementNS(svgJctNS,"text");
+						downTextJct.setAttributeNS(null,"x",(colNum*100)+55);     
+						downTextJct.setAttributeNS(null,"y",(rowNum*100)+120); 
+						downTextJct.setAttributeNS(null,"class","text");
+						downTextJct.setAttributeNS(null,"font-size","10");
+						downTextJct.setAttributeNS(null,"stroke","#00757C");
+						downTextJct.setAttributeNS(null,"cursor","pointer");	
+						downTextJct.setAttributeNS(null,"class","sideBStrand");
+						downTextJct.setAttributeNS(null,"id","strndSideB-"+data.junctionMappingPts[i][1]);
+							
+						var downTextNodeJct = document.createTextNode(data.junctionMappingPts[i][8]);
+						downTextJct.appendChild(downTextNodeJct);
+						document.getElementById("mysvgJct").appendChild(downTextJct);
+						 								
+							
+						}			
+						
+					$('.sideAStrand').click(function() {
+						
+						var jctMappingId=$(this).attr('id').split("-");
+						jctMappingId=jctMappingId[1];
+					
+						
+					if(fiberArray[window['JCT_'+jctMappingId][6]]){
+						console.log("enter to null");
+						fiberArray[window['JCT_'+jctMappingId][6]].setMap(null);
+					}
+					if(tubeArray[window['JCT_'+jctMappingId][4]]){
+						console.log("enter to null");
+						tubeArray[window['JCT_'+jctMappingId][4]].setMap(null);
+					}
+					if(strandArray[window['JCT_'+jctMappingId][2]]){
+						console.log("enter to null");
+						strandArray[window['JCT_'+jctMappingId][2]].setMap(null);
+					}
+					//buildFiberPath(window['JCT_'+jctMappingId][6],window["mapPoints_"+window['JCT_'+jctMappingId][6]]);
+					buildPath(window['JCT_'+jctMappingId][6],window["mapPoints_"+window['JCT_'+jctMappingId][6]],fiberArray,allFiberCables,"FiberPath_f_",window['FiberColor_'+window[''+window['JCT_'+jctMappingId][6]][22]],0.7,4.5,'blue',13);
+					fiberArray[window['JCT_'+jctMappingId][6]].setMap(map);	 
+					
+					//buildTubePath(window['JCT_'+jctMappingId][4],window["mapPoints_"+window['JCT_'+jctMappingId][4]]);
+					buildPath(window['JCT_'+jctMappingId][4],window["mapPoints_"+window['JCT_'+jctMappingId][4]],tubeArray,allTubes,"Tube",'green',0.7,3.3,'green',0);
+					tubeArray[window['JCT_'+jctMappingId][4]].setMap(map);
+					
+					//buildStrandPath(window['JCT_'+jctMappingId][2],window["mapPoints_"+window['JCT_'+jctMappingId][2]]);
+					buildPath(window['JCT_'+jctMappingId][2],window["mapPoints_"+window['JCT_'+jctMappingId][2]],strandArray,allStrands,"Strand",'purple',0.7,2.8,'purple',0);
+					strandArray[window['JCT_'+jctMappingId][2]].setMap(map);
+					
+							
+						$("#junction_MappingModal").modal('hide');
+					});	
+					
+					$('.sideBStrand').click(function() {
+						
+						var jctMappingId=$(this).attr('id').split("-");
+						jctMappingId=jctMappingId[1];
+					
+						
+					if(fiberArray[window['JCT_'+jctMappingId][12]]){
+						console.log("enter to null");
+						fiberArray[window['JCT_'+jctMappingId][12]].setMap(null);
+					}
+					if(tubeArray[window['JCT_'+jctMappingId][10]]){
+						console.log("enter to null");
+						tubeArray[window['JCT_'+jctMappingId][10]].setMap(null);
+					}
+					if(strandArray[window['JCT_'+jctMappingId][8]]){
+						console.log("enter to null");
+						strandArray[window['JCT_'+jctMappingId][8]].setMap(null);
+					}
+					//buildFiberPath(window['JCT_'+jctMappingId][12],window["mapPoints_"+window['JCT_'+jctMappingId][12]]);
+					buildPath(window['JCT_'+jctMappingId][12],window["mapPoints_"+window['JCT_'+jctMappingId][12]],fiberArray,allFiberCables,"FiberPath_f_",window['FiberColor_'+window[''+window['JCT_'+jctMappingId][12]][22]],0.7,3.5,'blue',13);
+					fiberArray[window['JCT_'+jctMappingId][12]].setMap(map);	 
+					
+					//buildTubePath(window['JCT_'+jctMappingId][10],window["mapPoints_"+window['JCT_'+jctMappingId][10]]);
+					buildPath(window['JCT_'+jctMappingId][10],window["mapPoints_"+window['JCT_'+jctMappingId][10]],tubeArray,allTubes,"Tube",'green',0.7,3.3,'green',0);
+					tubeArray[window['JCT_'+jctMappingId][10]].setMap(map);
+					
+					//buildStrandPath(window['JCT_'+jctMappingId][8],window["mapPoints_"+window['JCT_'+jctMappingId][8]]);
+					buildPath(window['JCT_'+jctMappingId][8],window["mapPoints_"+window['JCT_'+jctMappingId][8]],strandArray,allStrands,"Strand",'purple',0.7,2.8,'purple',0);
+					strandArray[window['JCT_'+jctMappingId][8]].setMap(map);
+					
+							
+						$("#junction_MappingModal").modal('hide');
+					});	
+									
+					$('.junctionImage').click(function() {
+						
+						var jctMappingId=$(this).attr('id').split("-");
+						jctMappingId=jctMappingId[1];
+						console.log("jctMappingId" +window["JCT_"+jctMappingId]);
+						
+						port=window["JCT_"+jctMappingId][2];
+						type=window["JCT_"+jctMappingId][3];
+						
+						$("#JctKey").html("<b style='text-decoration: underline;color: #00757C'>Side A: </b>");
+						$("#JctStrandSideA").html("<b style='white-space:nowrap;'>Strand: "+window['JCT_'+jctMappingId][2]+" / "+window['JCT_'+jctMappingId][3]+" </b>");
+						$("#JctTubeSideA").html("<b style='white-space:nowrap;' >Tube: "+window['JCT_'+jctMappingId][4]+" / "+window['JCT_'+jctMappingId][5]+" </b>");
+						$("#JctFiberSideA").html("<b style='white-space:nowrap;' >Fiber:"+window['JCT_'+jctMappingId][6]+" / "+window['JCT_'+jctMappingId][7]+" </b>");
+						$("#JctKeySideB").html("<b style='text-decoration: underline;color: #00757C'>Side B: </b>");
+						$("#JctStrandSideB").html("<b style='white-space:nowrap;' >Strand: "+window['JCT_'+jctMappingId][8]+" / "+window['JCT_'+jctMappingId][9]+" </b>");
+						$("#JctTubeSideB").html("<b style='white-space:nowrap;' >Tube: "+window['JCT_'+jctMappingId][10]+" / "+window['JCT_'+jctMappingId][11]+"</b>");
+						$("#JctFiberSideB").html("<b style='white-space:nowrap;' >Fiber: "+window['JCT_'+jctMappingId][12]+" / "+window['JCT_'+jctMappingId][13]+"</b>");					
+						
+						$("#AssignedJct_TitleId").text("Junction: "+data.junctionMappingPts[0][14]);	
+											
+						$("#AssignedJctPortsModal").modal('show');
+										
+						});	
+						
+										
+								}
+								}
+								else{
+									var text="<p style='color: #00757C;font-weight:bold'> No data available concerning  "+window[""+selectedManholeJct][1]+" Junction !</br> Mapping will be filled after insertion of junction's corresponding data fields.</p>"
+									 $("#junction_tabContentPortsMap").append(text);
+									 $("#junction_TitleId").text("Internal Junction Mapping of "+window[""+selectedManholeJct][1]+" Junction ");
+									
+									totWidth=700;
+									$("#contentJctMappingModal" ).width(totWidth);
+									 
+								}
+								},
+							error : function(error) {
+							console.log("The error is " + error);
+							}
+						});
+					
+				}
+			 },
+			 {'icon': 'trash', 'name': 'Delete Junction', action: () => {
+			 
+				deleteJunction("NoManHandhole","Junction",selectedManholeJct,selectedManIdContext);
+			 	$('#DeleteModal').find('input:text').val('');
+				$("#DeleteHeader").text("Junction Delete: ");
+				$("#deletebody").text("Are you sure you want to delete 1 item?");
+				$("#DeleteModal").modal('show');
+				$("#deleteFiber").show();	
+				$("#deleteMan").hide();	
+				$("#deleteTrench").hide();	
+				}
+			},
+				 ]
+			  
+			});
+
 	
-		/////////////*********************	single junction CONTEXTS MENU  ***********************///////////////
+		/////////////*********************	single junction CONTEXTS MENU for Manhole  ***********************///////////////
 	//-------------------------------------------------------------------------------------------------//	  
 	
 
