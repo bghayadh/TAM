@@ -10095,6 +10095,7 @@ public class PhysicalLayerController {
 					}
 
 					if (StringUtils.equalsIgnoreCase(junctionID, "")) {
+						//System.out.println(" id is null" + junctionID);
 						synchronized (this) {
 							// junctionID = "JCT_" + year + "_" + appConfig.getSeqNbr(76,session);
 							junctionID = "JCT_" + year + "_" + Integer.parseInt(session
@@ -10108,6 +10109,7 @@ public class PhysicalLayerController {
 								+ physLayerIdJunction + "' ");
 						String countJunc = query.getSingleResult().toString();
 
+						if(physLayerIdJunction != null) {
 						if (StringUtils.equalsIgnoreCase(countJunc, "0")) {
 
 							physLayerNameJunction = physLayerNameJunction.concat("_J");
@@ -10118,7 +10120,7 @@ public class PhysicalLayerController {
 									+ physLayerNameJunction + "' where HANDHOLE_ID='" + physLayerIdJunction + "' ");
 							query.executeUpdate();
 						}
-
+						}
 						Query insertJctQuery = session
 								.createNativeQuery("INSERT INTO JUNCTION(JUNCTION_ID,JUNCTION_NAME,PHYSICAL_LAYER_ID"
 										+ ",PHYSICAL_LAYER_NAME,LONGITUDE,LATITUDE,CAPACITY,JUNCTION_NUMBER,CITY,PROJECT_ID,CREATION_DATE,LAST_MODIFIED_DATE)"
@@ -10132,6 +10134,7 @@ public class PhysicalLayerController {
 						rtn.put("ManHandholeName", physLayerNameJunction);
 
 					} else {
+						//System.out.println(" id is null" + junctionID);
 						Query updateJunction = session.createNativeQuery("UPDATE JUNCTION SET JUNCTION_NAME = '"
 								+ junctionName + "',CAPACITY = '" + junctionCapacity + "',JUNCTION_NUMBER ='"
 								+ junctionNumber + "', LAST_MODIFIED_DATE= TIMESTAMP '" + lastModifiedDate + "' "

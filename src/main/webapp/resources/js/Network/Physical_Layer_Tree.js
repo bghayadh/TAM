@@ -5075,76 +5075,94 @@ singleProject = new ContextMenu({
 				'theme': 'default',
 				
 				'items': [
+					
+					/*{'icon': 'folder-plus', 'name': 'Create New Junction', action: () => {
+						$.ajax({
+							type: "GET",
+							contentType: "application/json; charset=utf-8",
+							url: getContext()+'/findCountManHoles',
+							data: {
+								"ProjectId": IdNodeSelectedTemp, 
+							},
+							dataType: "json",
+							success: function (data) {
+
+									$('#JunctionModal').find('input:text').val('');
+									$("#JunctionHeader").text("Junction: ");
+									$("#JctMappingTable > tbody").empty();
+									$("#JunctionModal").modal('show');
+											
+									actionJct="Insert";							
+																			
+									$("#JctName").on("input",function(){
+										$("#JunctionHeader").text("Junction: "+$(this).val());
+									});
+								
+								data = null;
+							},
+							error: function (result) {
+								alert("Error");
+							}
+						}); 
+							}
+						},*/
 
 				{'icon': 'edit','name': 'Edit or View Details',action: () => {
 					
-					document.getElementById("manholeNameJct").readOnly = true;
 							$.ajax({
 									type: "GET",
 									contentType: "application/json; charset=utf-8",
 									url: getContext()+'/findJunctionDetails',
 									data: {										 
-										  "JunctionID":selectedManholeJct 
+										  "JunctionID":selectedJuncIdContext 
 									},
 									dataType: "json",
 									success: function (data) {
 									
 								if(data.junctionDetails.length >0) {
-									$("#manholeJctMappingTable > tbody").empty();
-									actionManholeJct="Update"; 
-									$("#manholeJunctionModal").find("input").val('').end();
+									$("#JctMappingTable > tbody").empty();
+									actionJct="Update"; 
+									$("#JunctionModal").find("input").val('').end();
 									
-									$("#manholeJunctionHeader").text("Junction: "+data.junctionDetails[0][0]);
-									$("#manholeJunctionModal").modal('show');
+									$("#JunctionHeader").text("Junction: "+data.junctionDetails[0][0]);
+									$("#JunctionModal").modal('show');
 									
 									
 									if(data.junctionDetails[0][0]!=null){
-											$("#manholeJctName").val(""+data.junctionDetails[0][0]);
+										$("#JctName").val(""+data.junctionDetails[0][0]);
 									}
 									if(data.junctionDetails[0][1]!=null){
-											$("#junctionId").val(""+data.junctionDetails[0][1]);
-									}
-									if(data.junctionDetails[0][2]!=null){
-											$("#manholeIdJct").val(""+data.junctionDetails[0][2]);
-									}
-									if(data.junctionDetails[0][3]!=null){
-											$("#manholeNameJct").val(""+data.junctionDetails[0][3]);
+										console.log(" //////////JunctionId "+data.junctionDetails[0][1]);	
+										$("#JunctionId").val(""+data.junctionDetails[0][1]);
 									}
 									if(data.junctionDetails[0][4]!=null){
-											$("#manholeJctLong").val(""+data.junctionDetails[0][4]);
+										$("#JctLong").val(""+data.junctionDetails[0][4]);
 									}
 									if(data.junctionDetails[0][5]!=null){
-											$("#manholeJctLat").val(""+data.junctionDetails[0][5]);
-									}
-									if(data.junctionDetails[0][6]!=null){
-											$("#manholeNumberJct").val(""+data.junctionDetails[0][6]);
-									}
-									
-									if(data.junctionDetails[0][7]!=null){
-											$("#manholeJctCapacity").val(""+data.junctionDetails[0][7]);
+										$("#JctLat").val(""+data.junctionDetails[0][5]);
 									}
 									
 									if(data.junctionDetails[0][8]!=null){
-										$("#manholeJctCity").val(""+data.junctionDetails[0][8]);
+										$("#JctCity").val(""+data.junctionDetails[0][8]);
 									}		
 									
 									if(data.junctionDetails[0][11]!=null){
-										$("#manJunctionCreateDate").val(""+data.junctionDetails[0][11]);
+										$("#JunctionCreateDate").val(""+data.junctionDetails[0][11]);
 									}
 									else {
-										$("#manJunctionCreateDate").val("");
+										$("#JunctionCreateDate").val("");
 									}
 									
 									if(data.junctionDetails[0][12]!=null){
-										$("#manJunctionLastModifiedDate").val(""+data.junctionDetails[0][12]);
+										$("#JunctionLastModifiedDate").val(""+data.junctionDetails[0][12]);
 									}
 									else {
-										$("#manJunctionLastModifiedDate").val("");
+										$("#JunctionLastModifiedDate").val("");
 									}
 																	
-								$("#manholeJctName").on("input",function(){
+								$("#JctName").on("input",function(){
 
-									$("#manholeJunctionHeader").text("Junction: "+$(this).val());
+									$("#JunctionHeader").text("Junction: "+$(this).val());
 
 								});
 								
@@ -5244,7 +5262,7 @@ singleProject = new ContextMenu({
 								+"<td name='mJctFiberIdSideB'><input name='mJctFiberIdSideB' id='mJctFiberIdSideB"+MJctBoqIndex+"' value='"+data.junctionMappingPts[i][12]+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
 								+"<td name='mJctFiberNameSideB'><input name='mJctFiberNameSideB' id='mJctFiberNameSideB"+MJctBoqIndex+"' value='"+data.junctionMappingPts[i][13]+"'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
 								
-								$("#manholeJctMappingTable > tbody").append(markup);
+								$("#JctMappingTable > tbody").append(markup);
 								
 						
 								var LocType = $('#mJctLocationTypeSideA'+MJctBoqIndex).find('option:selected').text();
@@ -5301,8 +5319,8 @@ singleProject = new ContextMenu({
 								//autoCompleteJctMapping(MJctBoqIndex,"manholeJctMappingTable","Row"+MJctBoqIndex);
 								MJctBoqIndex++;
 								
-								$("#manholeJctMappingTable tr").focusin(function () {
-								$("#manholeJctMappingTable tr").removeClass("ativeRecord")
+								$("#JctMappingTable tr").focusin(function () {
+								$("#JctMappingTable tr").removeClass("ativeRecord")
 								  $(this).addClass("ativeRecord");
 			});
 														
@@ -5327,7 +5345,7 @@ singleProject = new ContextMenu({
 								  url: getContext()+'/findJctMappingDetails',
 								  async:false,
 								  data: {
-									  "junctionID":selectedManholeJct 
+									  "junctionID":selectedJuncIdContext 
 										},
 								  dataType: "json",
 								  success : function(data) {
@@ -9232,6 +9250,152 @@ singleProject = new ContextMenu({
 		   }
 	   });
 	 
+	 $("#saveJunction").click(function () {
+			var alertType="";
+			$("#JctMappingTable > tbody").find('input[name="record"]').each(function(){
+					
+			var strandIdSideA=$(this).parent().parent().children('td[name="mJctStrandIdSideA"]').children('input').val();
+			var strandIdSideB =$(this).parent().parent().children('td[name="mJctStrandIdSideB"]').children('input').val();
+					
+			if(strandIdSideA =="" || strandIdSideB==""){
+				alertType="alertEmptyStrand";
+				return false; // breaks
+			}
+			});
+			markersTempo="";
+			markersJctTempo="";
+			if(isNaN(document.getElementById("JctLong").value) ==true ){
+				alert("Incorrect Format of longitude.");
+				return false;
+			}
+			else if(isNaN(document.getElementById("JctLat").value) ==true ){
+				alert("Incorrect Format of latitude.");
+				return false;
+			}	
+			else if(document.getElementById("JctName").value != "" && alertType !="alertEmptyStrand" ){
+					
+				var junctionID="";
+				junctionName = document.getElementById("JctName").value;
+				junctionLong = document.getElementById("JctLong").value;
+				junctionLat = document.getElementById("JctLat").value;
+				junctionCity = document.getElementById("JctCity").value;
+				JctCreatedDate=$("#JunctionCreateDate").val();
+					
+				if(actionJct=="Update"){
+					junctionID = document.getElementById("JunctionId").value;
+				}	  
+				
+				getSelectedRowsManholeJctMapping();
+				var token =  $('input[name="csrfToken"]').attr('value');
+			
+				$.ajax({
+					type: "POST",
+					headers: {
+					    'X-CSRFToken': token 
+					},
+					url: getContext()+'/saveJunction',
+					data: {
+						"JunctionId"   :junctionID,
+						"JunctionName":junctionName,
+						"JunctionLong":junctionLong,
+						"JunctionLat":junctionLat,
+						"LayerIdJunction": "",
+						"LayerNameJunction": "",
+						"JunctionNum": "",
+						"JunctionCapacity": "",
+						"JunctionCity" : junctionCity,
+						"ProjectId":  "CurrentPhysicalLayer",
+						"JctCreatedDate": JctCreatedDate,
+						"dictParameterTemp":updateJctDictArr,
+						"dictParameter":insertJctDictArr,
+						"dictParameterDel":slctDelMJct
+					},
+					dataType: "json",
+					success: function (data) {
+						if(data!=null){
+							window[""+data.JunctionID]=[];
+							if(actionJct=="Insert"){
+								str="<ul><li id='"+data.JunctionID+"' class='JUNCTION' style='display:none;width:100px;'><input type='checkbox' class='Junction' class='filter checkFilter' name='Element' ></input> <span class='TreeSpan' style='color:black;width:195px'><img src='"+getContext()+"/resources/NetworkImages/junction.png'> "+JunctionList[i][1]+"</span></li></ul>";
+								$("#Junction_f_CurrentPhysicalLayer").append(str); 
+								create_Junction_Marker_Click(data.JunctionID,junctionName,junctionLong,junctionLat,markersJunction,markerClusterJunction,"Junction","");	
+								JunctionCheckFilter(data.JunctionID);
+								CreateJunctionClickEvent(data.JunctionID,"");
+
+							}//end insert junction
+							
+			                else {	//update junction				
+							
+				                $("#"+data.JunctionID+" >span").unbind("click");
+				
+				                $("#"+data.JunctionID).children(':checkbox').prop( "checked", true );
+				                $("#"+data.JunctionID+"> .TreeSpan").html("<img src='"+getContext()+"/resources/NetworkImages/junction.png'>  " +junctionName+"  ");					 
+
+				                window[""+data.JunctionID]=[data.JunctionID,junctionName,"","","","",junctionCity,junctionLong,junctionLat,"",""];
+			                }// end update junction
+							
+							//EnableOrigination=false;
+							
+				
+			if(IdSelectedTemp!=""){
+				$("#"+IdSelectedTemp+" > .TreeSpan").removeClass("selected-span");
+				$("#"+IdSelectedTemp+" > .TreeSpan").css("background","");
+			}
+			$("#"+data.JunctionID+" > .TreeSpan ").addClass("selected-span");
+			$("#"+data.JunctionID+" > .TreeSpan").css("background-color", "#97b9cc");
+			IdSelectedTemp=junctionID;
+			$("#"+data.JunctionID).children(':checkbox').prop( "checked", true );
+			$("#junctionCheckAllBoq").prop("checked",true);	
+
+			//Jct right click menu			
+			$( "#"+data.JunctionID+" > .TreeSpan" ).bind("contextmenu",function(){	
+				selectedJuncIdContext=$(this).parent().attr('id');
+		        IdNodeSelectedTemp=$(this).parents().eq(2).attr('id').split("Junction_f_")[1];
+		        menuName= JunctionMenu;
+		        selectedManholeJct = selectedJuncIdContext;
+		        selectedManIdContext = "";
+		        openContext(selectedJuncIdContext,"",JunctionMenu,event);
+		
+			});	
+			
+			CreateJunctionClickEvent(data.JunctionID," ");
+			MouseHoveringSpans("#" +data.JunctionID+ " .TreeSpan");				
+			tree_prop_selection("#" +data.JunctionID+ " .TreeSpan");
+			
+			$("#JunctionModal").find("input,textarea,select").val('').end().find("input[type=checkbox], input[type=radio]").prop("checked", "").end();
+			map.setZoom(11);
+			
+			/*if(typeof infowindow!=='undefined'){
+				infowindow.close();
+			}else{
+				markersJunction[data.JunctionID].setLabel({text: junctionName, className:"marker-position-junction",color:"orange"});
+			}*/
+			//if($("#manholesMapCheck_Labels").prop("checked")==true){
+			//	markersManhole[data.ManholeId].setLabel({text: ManholeName, className:"marker-position-manhole",color:"red"});
+			//}
+			panTo(junctionLat, junctionLong);
+
+		} // End if data != null 
+			$("#JunctionModal").modal('hide');
+			data=null;
+			updateJctDictArr=[];
+			insertJctDictArr=[];
+			slctDelMJct=[];
+		},
+		 error: function (result) {
+			 alert("Error");
+		 }
+		});
+			
+		} // End of if statement that Junction name is not empty
+		else{
+			if(alertType=="alertEmptyStrand"){
+				alert("The Strand is empty! Please enter a corresponding Strand.");
+			}
+			else{
+				alert("Junction Name is empty! Please enter a junction name. ");
+			}
+		}
+	}); // End of saveJunction 
 
 	$("#saveManholeJunction").click(function () {
 		var alertType="";
@@ -9255,9 +9419,10 @@ singleProject = new ContextMenu({
 			alert("Incorrect Format of latitude.");
 			return false;
 		}	
-		else if(document.getElementById("manholeJctName").value!="" && alertType !="alertEmptyStrand" ){
-			
-			var junctionID="";			
+		else if(document.getElementById("manholeJctName").value != "" && alertType !="alertEmptyStrand" ){
+				
+			var junctionID="";
+			ManholeProjectID = "";
 			junctionName = document.getElementById("manholeJctName").value;
 			junctionLong = document.getElementById("manholeJctLong").value;
 			junctionLat = document.getElementById("manholeJctLat").value;
@@ -9266,7 +9431,10 @@ singleProject = new ContextMenu({
 			junctionNum = document.getElementById("manholeNumberJct").value;
 			ManholeJunctionCapacity = document.getElementById("manholeJctCapacity").value;
 			junctionCity = document.getElementById("manholeJctCity").value;
+			if(document.getElementById("manholeIdJct").value != ""){
 			ManholeProjectID =$("#"+manholeId).parents().eq(1).attr('id').split("Manhole_f_")[1];
+			console.log(" //////////ManholeProjectID "+document.getElementById("manholeJctName").value);
+		    }
 			manJctCreatedDate=$("#manJunctionCreateDate").val();
 				
 			if(actionManholeJct=="Update"){
@@ -9420,6 +9588,11 @@ singleProject = new ContextMenu({
 		CreateJunctionClickEvent(data.JunctionID,"Manhole");
 		MouseHoveringSpans("#" +manholeId+ " .TreeSpan");				
 		tree_prop_selection("#" +manholeId+ " .TreeSpan");
+		
+		//for junction
+		MouseHoveringSpans("#" +data.JunctionID+ " .TreeSpan");				
+		tree_prop_selection("#" +data.JunctionID+ " .TreeSpan");
+
 	} // End if data != null 
 		$("#manholeJunctionModal").modal('hide');
 		data=null;
@@ -17575,11 +17748,14 @@ function treeCollapseFolder(selector,type,clss){
 	$(selector).bind('click',function (e) {
 		var id = $(this).parent().attr('id');
 		if(id == "FiberPath_f_CurrentPhysicalLayer" && flag == 0 && $(this).parent().find(' > ul > li').is(":hidden")){
-			console.log("passed treeCollapseFolder");
+			//console.log("passed treeCollapseFolder");
 			getFiberPath();
 		}else if(id == "NodeActive_f_CurrentPhysicalLayer" && nodeFlag == 0 && $(this).parent().find(' > ul > li').is(":hidden")){
-			console.log("passed treeCollapseFolder");
+			//console.log("passed treeCollapseFolder");
 			getNode();
+		}else if(id == "Junction_f_CurrentPhysicalLayer" && junctionFlag == 0 ){
+			//console.log("passed treeCollapseFolder");
+			getJunction();
 		}
 		var children = $(this).parent().find(' > ul > li');
 		if (children.is(":visible")) {

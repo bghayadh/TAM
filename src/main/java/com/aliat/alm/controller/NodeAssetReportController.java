@@ -65,15 +65,15 @@ public class NodeAssetReportController {
 				try {
 				
 					query = session.createNativeQuery(
-							"SELECT site,farID,nodeID,nodeName,nodeType,itemCode, itemName,itemModel,itemPartNo, lastModifiedDate,itemSN,itemNameRegister,poID,siteID,siteName,longitude,latitude,vendor,initCost,netCost,accuDepr FROM ( "
-									+ " SELECT DISTINCT B.SITE_ID AS site,A.FAR_ID as farID,E.NODE_ID as nodeID,E.NODE_NAME as nodeName,E.NODE_TYPE as nodeType, A.ITEM_CODE as itemCode, A.ITEM_NAME as itemName,D.ITEM_MODEL as itemModel,D.ITEM_PART_NUMBER as itemPartNo,TO_CHAR(A.LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') as lastModifiedDate, A.ITEM_SN as itemSN,A.ITEM_NAME_REGISTER as itemNameRegister, A.PO_ID as poID, B.SITE_ID AS siteID, B.SITE_NAME AS siteName , C.LONGITUDE as longitude,C.LATITUDE as latitude,A.VENDOR as vendor, A.INITIALCOST as initCost, A.NETCOST as netCost , A.ACCUMULDEPRECAMNT as accuDepr  "
+							"SELECT site,farID,nodeID,nodeName,nodeType,itemCode, itemName,itemModel,itemPartNo, lastModifiedDate,itemSN,itemNameRegister,supplier,poID,siteID,siteName,longitude,latitude,vendor,initCost,netCost,accuDepr FROM ( "
+									+ " SELECT DISTINCT B.SITE_ID AS site,A.FAR_ID as farID,E.NODE_ID as nodeID,E.NODE_NAME as nodeName,E.NODE_TYPE as nodeType, A.ITEM_CODE as itemCode, A.ITEM_NAME as itemName,D.ITEM_MODEL as itemModel,D.ITEM_PART_NUMBER as itemPartNo,TO_CHAR(A.LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') as lastModifiedDate, A.ITEM_SN as itemSN,A.ITEM_NAME_REGISTER as itemNameRegister,A.SUPPLIER_NAME as supplier, A.PO_ID as poID, B.SITE_ID AS siteID, B.SITE_NAME AS siteName , C.LONGITUDE as longitude,C.LATITUDE as latitude,A.VENDOR as vendor, A.INITIALCOST as initCost, A.NETCOST as netCost , A.ACCUMULDEPRECAMNT as accuDepr  "
 									+ " FROM FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID LEFT JOIN far_model_partnumber D ON A.FAR_ID = D.FAR_ID LEFT JOIN FAR_NODE E ON E.FAR_ID = A.FAR_ID "
 									+ " WHERE D.PRIMARY='1' AND A.CREATED_DATE >=  trunc(SYSDATE - INTERVAL '1' YEAR) AND A.created_date < (trunc(sysdate) ) + 1   ) WHERE (longitude is not null and longitude != '0' and longitude != 'null' and latitude is not null and latitude != '0' and latitude != 'null') "
 									+ " AND (nodeID is not null and nodeID != 'null') ORDER BY lastModifiedDate DESC ");
 
 					List<NodeAssetReport> ListFAR = (List<NodeAssetReport>) ((NativeQuery<NodeAssetReport>) query)
 							.addScalar("site").addScalar("farID").addScalar("nodeID").addScalar("nodeName").addScalar("nodeType").addScalar("itemCode").addScalar("itemName").addScalar("itemModel").addScalar("itemPartNo")
-							.addScalar("lastModifiedDate").addScalar("itemSN").addScalar("itemNameRegister")
+							.addScalar("lastModifiedDate").addScalar("itemSN").addScalar("itemNameRegister").addScalar("supplier")
 							.addScalar("poID").addScalar("siteID").addScalar("siteName").addScalar("longitude")
 							.addScalar("latitude").addScalar("vendor").addScalar("initCost").addScalar("netCost").addScalar("accuDepr")
 							.setResultTransformer(Transformers.aliasToBean(NodeAssetReport.class)).list();
@@ -299,8 +299,8 @@ public class NodeAssetReportController {
 				session = AlmDbSession.getInstance().getSession();
 
 				if (session != null && session.isOpen()) {
-					 str = "SELECT site,farID,nodeID,nodeName,nodeType,itemCode, itemName,itemModel,itemPartNo, lastModifiedDate,itemSN,itemNameRegister,poID,siteID,siteName,longitude,latitude,vendor,initCost,netCost,accuDepr FROM ( "
-					           + " SELECT DISTINCT B.SITE_ID AS site,A.FAR_ID as farID, A.ITEM_CODE as itemCode, A.ITEM_NAME as itemName,D.ITEM_MODEL as itemModel,D.ITEM_PART_NUMBER as itemPartNo,TO_CHAR(A.LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') as lastModifiedDate, A.ITEM_SN as itemSN,A.ITEM_NAME_REGISTER as itemNameRegister, A.PO_ID as poID,E.NODE_ID as nodeID,E.NODE_NAME as nodeName,E.NODE_TYPE as nodeType,B.SITE_ID AS siteID, B.SITE_NAME AS siteName ,C.LONGITUDE as longitude,C.LATITUDE as latitude,A.VENDOR as vendor, A.INITIALCOST as initCost, A.NETCOST as netCost , A.ACCUMULDEPRECAMNT as accuDepr  "
+					 str = "SELECT site,farID,nodeID,nodeName,nodeType,itemCode, itemName,itemModel,itemPartNo, lastModifiedDate,itemSN,itemNameRegister,supplier,poID,siteID,siteName,longitude,latitude,vendor,initCost,netCost,accuDepr FROM ( "
+					           + " SELECT DISTINCT B.SITE_ID AS site,A.FAR_ID as farID, A.ITEM_CODE as itemCode, A.ITEM_NAME as itemName,D.ITEM_MODEL as itemModel,D.ITEM_PART_NUMBER as itemPartNo,TO_CHAR(A.LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') as lastModifiedDate, A.ITEM_SN as itemSN,A.ITEM_NAME_REGISTER as itemNameRegister,A.SUPPLIER_NAME as supplier, A.PO_ID as poID,E.NODE_ID as nodeID,E.NODE_NAME as nodeName,E.NODE_TYPE as nodeType,B.SITE_ID AS siteID, B.SITE_NAME AS siteName ,C.LONGITUDE as longitude,C.LATITUDE as latitude,A.VENDOR as vendor, A.INITIALCOST as initCost, A.NETCOST as netCost , A.ACCUMULDEPRECAMNT as accuDepr  "
 					           + " FROM FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID LEFT JOIN far_model_partnumber D ON A.FAR_ID = D.FAR_ID LEFT JOIN FAR_NODE E ON E.FAR_ID = A.FAR_ID "
 					           + " WHERE  D.PRIMARY='1' AND ( upper(A.ITEM_CODE) LIKE upper('%" + itemCode
 								+ "%') AND upper(A.ITEM_NAME) LIKE upper('%" + itemName
@@ -436,7 +436,7 @@ public class NodeAssetReportController {
 
 					listFAR = ((NativeQuery<NodeAssetReport>) query).addScalar("site").addScalar("farID").addScalar("nodeID").addScalar("nodeName").addScalar("nodeType").addScalar("itemCode")
 							.addScalar("itemName").addScalar("itemModel").addScalar("itemPartNo").addScalar("lastModifiedDate").addScalar("itemSN")
-							.addScalar("itemNameRegister").addScalar("poID").addScalar("siteID").addScalar("siteName")
+							.addScalar("itemNameRegister").addScalar("supplier").addScalar("poID").addScalar("siteID").addScalar("siteName")
 							.addScalar("longitude").addScalar("latitude").addScalar("vendor").addScalar("initCost").addScalar("netCost")
 							.addScalar("accuDepr").setResultTransformer(Transformers.aliasToBean(NodeAssetReport.class))
 							.list();					
@@ -450,13 +450,13 @@ public class NodeAssetReportController {
 	
 							for (int i = 0; i < listFAR.size(); i++) {
 								distance = haversineMethod(Double.parseDouble(latitude), Double.parseDouble(longitude),
-										Double.valueOf(listFARTemp.get(i)[16].toString()),
-										Double.valueOf(listFARTemp.get(i)[15].toString()));
+										Double.valueOf(listFARTemp.get(i)[17].toString()),
+										Double.valueOf(listFARTemp.get(i)[16].toString()));
 								
 								if (distance <= Double.parseDouble(radius)) {
-									initCost += Double.valueOf(listFARTemp.get(i)[18].toString());
-									netCost += Double.valueOf(listFARTemp.get(i)[19].toString());
-									accuDepr += Double.valueOf(listFARTemp.get(i)[20].toString());
+									initCost += Double.valueOf(listFARTemp.get(i)[19].toString());
+									netCost += Double.valueOf(listFARTemp.get(i)[20].toString());
+									accuDepr += Double.valueOf(listFARTemp.get(i)[21].toString());
 									
 									listCircleRange.add(listFAR.get(i));
 								}

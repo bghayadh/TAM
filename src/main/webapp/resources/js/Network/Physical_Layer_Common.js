@@ -13288,6 +13288,8 @@ else if($("#manholeModal").is(':visible')){
 c=$("#manholeModal");}
 else if($("#manholeJunctionModal").is(':visible')){
 c=$("#manholeJunctionModal");}
+else if($("#JunctionModal").is(':visible')){
+c=$("#JunctionModal");}
 else if($("#handholeJunctionModal").is(':visible')){
 c=$("#handholeJunctionModal");}
 else if($("#fiberPathModal").is(':visible')){

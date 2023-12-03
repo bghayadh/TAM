@@ -19,7 +19,7 @@ class AlmgridTable {
         this.init();
         this.ArrayKeys;
 
- 		// Create the exceedind data alert div element
+ 		// Create the exceeded data alert div element
         this.messageDiv = document.createElement('div');
         this.messageDiv.classList.add('message');
         this.messageDiv.style.display = 'none'; // Hide the alert by default

@@ -36,6 +36,9 @@ public class FinancialReport {
 	@Column(name = "ITEM_NAME_REGISTER")
 	private String itemNameRegister;
 	
+	@Column(name = "SUPPLIER_NAME")
+	private String supplier;
+	
 	@Column(name = "PO_ID")
 	private String poID;
 	
@@ -66,7 +69,7 @@ public class FinancialReport {
 
 
 	public FinancialReport(String site,String farID, String itemCode, String itemName,String itemModel,String itemPartNo,
-			String lastModifiedDate, String itemSN, String itemNameRegister, String poID,String siteID, 
+			String lastModifiedDate, String itemSN, String itemNameRegister,String supplier, String poID,String siteID, 
 			String longitude, String latitude,String vendor,String siteName,BigDecimal initCost, BigDecimal netCost,BigDecimal accuDepr) {
 		super();
 		this.site=site;
@@ -78,6 +81,7 @@ public class FinancialReport {
 		this.lastModifiedDate = lastModifiedDate;
 		this.itemSN = itemSN;
 		this.itemNameRegister = itemNameRegister;
+		this.supplier=supplier;
 		this.poID = poID;
 		this.siteID = siteID;
 		this.siteName=siteName;
@@ -165,6 +169,16 @@ public class FinancialReport {
 
 	public void setItemNameRegister(String itemNameRegister) {
 		this.itemNameRegister = itemNameRegister;
+	}
+
+
+	public String getSupplier() {
+		return supplier;
+	}
+
+
+	public void setSupplier(String supplier) {
+		this.supplier = supplier;
 	}
 
 
