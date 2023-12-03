@@ -4555,14 +4555,14 @@ return value;
 public  <T> void persistSingleColumn(Session session ,String queryString, List<Object> params) {
 	
 	int i;
-	Transaction tx =session.beginTransaction();
+	//Transaction tx =session.beginTransaction();
 	query = session.createQuery(queryString);
 	for (Object param : params) {
 		i = params.indexOf(param) + 1;
 		query.setString("param_" + i, param.toString());
 	}
 	query.executeUpdate();
-	tx.commit();
+	//tx.commit();
  }
 
 }

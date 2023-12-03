@@ -1491,14 +1491,14 @@ $("#popupNodeId").autocomplete({
 	$.ajax({
 		type: "GET",
 		contentType: "application/json; charset=utf-8",
-		url: ctx+'/getAllNodes',
+		url: ctx+'/GetAllNode',
 		data: {
-			"requestValue" : $("#popupNodeId").val(),
+			"Node" : $("#popupNodeId").val(),
 		},
 		dataType: "json",
 		success: function (data) {
 		if (data != null) {
-			response(data.ListNodes);
+			response(data.ListNode);
 		}
 		},
 		error: function(result) {
@@ -1518,6 +1518,7 @@ $("#popupNodeId").autocomplete({
 		item[1] + '</span></div>').appendTo(ul);
 	  };
 	  $("#popupNodeId").focus(function(){
+		  console.log("I am in the nodeID popup");
 		  if (this.value == ""){
 			  $(this).autocomplete("search");
               }						
@@ -1529,14 +1530,14 @@ $("#popupNodeName").autocomplete({
 	$.ajax({
 		type: "GET",
 		contentType: "application/json; charset=utf-8",
-		url: ctx+'/getAllNodes',
+		url: ctx+'/GetAllNode',
 		data: {
-			"requestValue": $("#popupNodeName").val(),
+			"Node": $("#popupNodeName").val(),
 			},
 		dataType: "json",
 		success: function (data) {
 			if (data != null) {
-				response(data.ListNodes);
+				response(data.ListNode);
 			}
 	},
 	error: function(result) {
