@@ -1533,6 +1533,132 @@
 										<button type="button" id="handholeJctAddRow">Add Row</button>
 										<button type="button" id="handholeJctDelRow">Delete Row</button>
 									</form></div></div></div></div></div></div></div></div>
+	<!-- Junction Modal -->
+	<div class="container">
+		<div id="JunctionModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  data-keyboard="false" data-backdrop="static">
+			<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header" style="background-color: #2678CC ; height: 55px;">
+						<h5 class="modal-title" id="JunctionHeader" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px;">Junction</h5>
+						<div style="float: right;">
+							<button id="saveJunction" class="btn btn-save" style="color: black; font-weight:bold;  margin-top:-6px">Save</button>
+							<button type="button" name="closePopup" class="close" onclick="ClosingConfirm()">
+								<i class='fa fa-times'></i>
+							</button>
+							<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change'></i>
+							</a>
+						</div>
+					</div>
+					<div class="modal-body">
+						<ul class="nav nav-tabs" id="myTabDb" role="tablist" style="background-color: #00757C;">
+							<li class="nav-item"><a class="nav-link active" id="junction-tab" style="color: gold;" data-toggle="tab" href="#JCT" role="tab" aria-controls="JCT" aria-selected="true">Junction </a></li>
+							<li class="nav-item"><a class="nav-link " id="jctMapping-tab" style="color: gold;" data-toggle="tab" href="#jctMapping" role="tab" aria-controls="jctMapping" aria-selected="false">Mapping</a></li>
+						</ul>
+						<div class="tab-content">
+							<p></p>
+							<div class="tab-pane active" id="JCT" role="tabpanel"
+								aria-labelledby="junction-tab">
+								<p></p>
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<div class="input-group-prepend">
+												<span style="width: 150px;" class="input-group-text" style="color:green;"><b> ID </b></span>
+												 <input type="text" id="JunctionId" readonly class="form-control text-input" />
+											</div>
+										</div>
+									</div>
+									<div class="col-md-6 nextprvItems">
+										<div class="form-group">
+											<div class="input-group-prepend">
+												<span style="width: 150px;" class="input-group-text"><b>Name</b></span>
+												<input type="text" id="JctName" class="form-control text-input" />
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<div class="input-group-prepend">
+												<span style="width: 140px;" class="input-group-text"><b>Longitude</b></span>
+												<input type="text" id="JctLong" class="form-control text-input" readonly />
+											</div>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<div class="input-group-prepend">
+												<span style="width: 140px;" class="input-group-text"><b>Latitude</b></span>
+												<input type="text" id="JctLat" class="form-control text-input" readonly />
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+								<div class="col-sm-6"><div class="form-group"><div class="input-group-prepend">
+									<span style="width: 120px;" class="input-group-text"><b>Creation Date</b></span>
+									<input type="text" id="JunctionCreateDate" class="form-control text-input" value="" readonly />
+									</div></div></div>
+								<div class="col-sm-6"><div class="form-group"><div class="input-group-prepend">
+									<span class="input-group-text"  style="width: 170px;"><b>Last Modified Date</b></span>
+									<input type="text" id="JunctionLastModifiedDate" class="form-control text-input" value="" readonly />
+								</div></div></div></div>
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<div class="input-group-prepend">
+												<span style="width: 175px;" class="input-group-text"><b>City
+												</b></span> <input type="text" id="JctCity" class="form-control text-input" readonly />
+											</div></div></div></div></div>
+							<div class="tab-pane" id="JctMapping" role="tabpanel" aria-labelledby="jctMapping-tab"><p></p>
+								<div class="container-fluid"><form>
+										<div class="table-responsive-sm" id="JctMappingDiv">
+											<table id="JctMappingTable" class="table table-striped table-bordered table-sm " style="display: block; height: 250px; overflow-y: auto;">
+												<thead style="background: #E9ECEF;">
+													<tr><th></th>
+														<th colspan="1"></th>
+														<th style="background-color: #00757C" width="-10px"></th>
+														<th colspan="13">Side A</th>
+														<th style="background-color: #00757C" width="-10px"></th>
+														<th colspan="13">Side B</th></tr>
+													<tr><th><button type="button" id="JctSelectAll" class="main"><span class="sub"></span>Select </button></th>
+														<th style="min-width: 80px" class="headcol">Sequence</th>
+														<th style="background-color: #00757C" width="-10px"></th>
+														<th style="min-width: 190px">Location Type</th>
+														<th style="min-width: 190px">Location ID</th>
+														<th style="min-width: 190px">Location Name</th>
+														<th style="min-width: 190px">Warehouse ID</th>
+														<th style="min-width: 190px">Network Level</th>
+														<th style="min-width: 80px">Strand #</th>
+														<th style="min-width: 190px">Strand ID</th>
+														<th style="min-width: 190px">Strand Name</th>
+														<th style="min-width: 80px">Tube #</th>
+														<th style="min-width: 190px">Tube ID</th>
+														<th style="min-width: 190px">Tube Name</th>
+														<th style="min-width: 190px">Fiber ID</th>
+														<th style="min-width: 190px">Fiber Name</th>
+														<th style="background-color: #00757C" width="-10px"></th>
+														<th style="min-width: 190px">Location Type</th>
+														<th style="min-width: 190px">Location ID</th>
+														<th style="min-width: 190px">Location Name</th>
+														<th style="min-width: 190px">Warehouse ID</th>
+														<th style="min-width: 190px">Network Level</th>
+														<th style="min-width: 80px">Strand #</th>
+														<th style="min-width: 190px">Strand ID</th>
+														<th style="min-width: 190px">Strand Name</th>
+														<th style="min-width: 80px">Tube #</th>
+														<th style="min-width: 190px">Tube ID</th>
+														<th style="min-width: 190px">Tube Name</th>
+														<th style="min-width: 190px">Fiber ID</th>
+														<th style="min-width: 190px">Fiber Name</th>
+													</tr></thead><tbody></tbody></table></div>
+										<button type="button" id="addJunMapBelow" >Insert Row Below</button>
+										<button type="button" id="addJunMapAbove" >Insert Row Above</button>
+										<!--  <button type="button" id="JctAddRow">Add Row</button>-->
+										<button type="button" id="JctDelRow">Delete Row</button>
+									</form></div></div></div></div></div></div></div></div>
 	<!--  Strand Modal -->
 		<div class="container">
 		<div id="StrandModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  data-keyboard="false" data-backdrop="static">

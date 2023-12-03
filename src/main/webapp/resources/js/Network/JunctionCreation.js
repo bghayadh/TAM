@@ -13,7 +13,7 @@ function getJunction(type,url,id,tr){
     			if (data != null) {
     				if (data.searchResult != "Failed") {
 					    $("#Junction_f_CurrentPhysicalLayer input[type=checkbox]").unbind();// removed 
-    				    console.log(" //////////JunctionList "+data.JunctionList);	
+    				    //console.log(" //////////JunctionList "+data.JunctionList);	
     				    createJunction(data.JunctionList);
     				    if ($('.AllJunctions').is(':checked') || $('#junctionCheckAllBoq').is(':checked')){
     				    	//AllJunctionCheckFilter();
