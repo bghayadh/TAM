@@ -9344,7 +9344,7 @@ singleProject = new ContextMenu({
 			$("#"+data.JunctionID+" > .TreeSpan").css("background-color", "#97b9cc");
 			IdSelectedTemp=junctionID;
 			$("#"+data.JunctionID).children(':checkbox').prop( "checked", true );
-			$("#manholeCheckAllBoq").prop("checked",true);	
+			$("#junctionCheckAllBoq").prop("checked",true);	
 
 			//Jct right click menu			
 			$( "#"+data.JunctionID+" > .TreeSpan" ).bind("contextmenu",function(){	
@@ -17748,11 +17748,14 @@ function treeCollapseFolder(selector,type,clss){
 	$(selector).bind('click',function (e) {
 		var id = $(this).parent().attr('id');
 		if(id == "FiberPath_f_CurrentPhysicalLayer" && flag == 0 && $(this).parent().find(' > ul > li').is(":hidden")){
-			console.log("passed treeCollapseFolder");
+			//console.log("passed treeCollapseFolder");
 			getFiberPath();
 		}else if(id == "NodeActive_f_CurrentPhysicalLayer" && nodeFlag == 0 && $(this).parent().find(' > ul > li').is(":hidden")){
-			console.log("passed treeCollapseFolder");
+			//console.log("passed treeCollapseFolder");
 			getNode();
+		}else if(id == "Junction_f_CurrentPhysicalLayer" && junctionFlag == 0 ){
+			//console.log("passed treeCollapseFolder");
+			getJunction();
 		}
 		var children = $(this).parent().find(' > ul > li');
 		if (children.is(":visible")) {
