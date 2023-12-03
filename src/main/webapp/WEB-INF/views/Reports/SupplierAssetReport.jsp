@@ -590,7 +590,7 @@ $("#generate").click(function() {
 
 					alert("No Data found between this two dates");
 				} else {
-					if (data.TransactionsGrid != null) {
+					if (data.SupplierAssetReportGrid.length != null) {
 						supplierAssetList = data.SupplierAssetReportGrid;
 						almgrid = new AlmgridTable(
 								{

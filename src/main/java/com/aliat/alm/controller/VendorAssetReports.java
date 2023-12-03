@@ -55,7 +55,7 @@ public class VendorAssetReports {
 				try {
 					notifications.headerNotifications(session, model);
 					String str = "SELECT vendor,COALESCE(SUM(initialCost),0),COALESCE(SUM(netCost),0),COALESCE(SUM(depreciationCost),0) FROM (" + 
-							" SELECT DISTINCT (B.VENDOR) as vendor,b.INITIALCOST as initialCost,b.NETCOST as netCost,b.ACCUMULDEPRECAMNT as depreciationCost" + 
+							" SELECT B.VENDOR as vendor,b.INITIALCOST as initialCost,b.NETCOST as netCost,b.ACCUMULDEPRECAMNT as depreciationCost" + 
 							" FROM FIXED_ASSET_REGISTRY B " + 
 							" WHERE B.CREATED_DATE >=  trunc(SYSDATE - INTERVAL '1' YEAR) AND B.created_date < (trunc(sysdate))+ 1)" + 
 							" Group BY vendor";
@@ -90,7 +90,7 @@ public class VendorAssetReports {
 		if (session != null && session.isOpen()) {
 			try {
 				String str = "SELECT vendor,COALESCE(SUM(initialCost),0),COALESCE(SUM(netCost),0),COALESCE(SUM(depreciationCost),0) FROM (" + 
-						" SELECT DISTINCT (B.VENDOR) as vendor,b.INITIALCOST as initialCost,b.NETCOST as netCost,b.ACCUMULDEPRECAMNT as depreciationCost" + 
+						" SELECT B.VENDOR as vendor,b.INITIALCOST as initialCost,b.NETCOST as netCost,b.ACCUMULDEPRECAMNT as depreciationCost" + 
 						" FROM FIXED_ASSET_REGISTRY B";
 						
 				

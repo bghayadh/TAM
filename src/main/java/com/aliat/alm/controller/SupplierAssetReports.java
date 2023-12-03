@@ -71,7 +71,7 @@ public class SupplierAssetReports {
 					String str = "SELECT supplierID,supplierName,COALESCE(SUM(initialCost),0),"
 					+ "(CASE WHEN COALESCE(SUM(netCost),0) = 0 THEN COALESCE(SUM(initialCost),0) ELSE COALESCE(SUM(netCost),0) END),"
 					+ "COALESCE(SUM(depreciationCost),0) FROM (" + 
-					" SELECT DISTINCT (A.SUPPLIER_ID) as supplierID, A.SUPPLIER_NAME as supplierName,b.INITIALCOST as initialCost,b.NETCOST as netCost,b.ACCUMULDEPRECAMNT as depreciationCost" + 
+					" SELECT A.SUPPLIER_ID as supplierID, A.SUPPLIER_NAME as supplierName,b.INITIALCOST as initialCost,b.NETCOST as netCost,b.ACCUMULDEPRECAMNT as depreciationCost" + 
 					" FROM SUPPLIER A LEFT JOIN FIXED_ASSET_REGISTRY B ON A.SUPPLIER_ID = B.SUPPLIER_ID " + 
 					" WHERE B.CREATED_DATE >=  trunc(SYSDATE - INTERVAL '1' YEAR) AND B.created_date < (trunc(sysdate))+ 1)" + 
 					" Group BY supplierID,supplierName";					
@@ -106,15 +106,19 @@ public class SupplierAssetReports {
 		if (session != null && session.isOpen()) {
 			try {
 				String str = "SELECT supplierID,supplierName,COALESCE(SUM(initialCost),0),COALESCE(SUM(netCost),0),COALESCE(SUM(depreciationCost),0) FROM (" + 
-						" SELECT DISTINCT (A.SUPPLIER_ID) as supplierID, A.SUPPLIER_NAME as supplierName,b.INITIALCOST as initialCost,b.NETCOST as netCost,b.ACCUMULDEPRECAMNT as depreciationCost" + 
+						" SELECT A.SUPPLIER_ID as supplierID, A.SUPPLIER_NAME as supplierName,b.INITIALCOST as initialCost,b.NETCOST as netCost,b.ACCUMULDEPRECAMNT as depreciationCost" + 
 						" FROM SUPPLIER A LEFT JOIN FIXED_ASSET_REGISTRY B ON A.SUPPLIER_ID = B.SUPPLIER_ID ";
 						
 				
 				if (StringUtils.equalsIgnoreCase(ignoreDate, "false")) {
+					System.out.println("ignoreDate is " +ignoreDate);
+					System.out.println("start_Date is " +start_Date);
+					System.out.println("end_Date is " +end_Date);
+					
 					str = str + " WHERE B.CREATED_DATE between TO_DATE('" + start_Date
 							+ "','MM/DD/YYYY HH:MI AM') and TO_DATE('" + end_Date + "','MM/DD/YYYY HH:MI AM')";
 				}
-				str = str + " )Group BY supplierID,supplierName";
+				str = str + " ) Group BY supplierID,supplierName";
 				rtn.put("SupplierAssetReportGrid", session.createNativeQuery(str).list());
 			} catch (Exception e) {
 				rtn.put("SupplierAssetReportGrid", "");
