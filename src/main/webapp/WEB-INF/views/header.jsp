@@ -376,6 +376,8 @@ display:none;
             <ul class="dropdown-menu dropdown-menu-left">
               <li><a class="dropdown-item" href="${pageContext.request.contextPath}/FinancialReport">Item Asset Report</a></li>
               <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NodeAssetReport">Node Asset Report</a></li>
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/SupplierAssetReport">Supplier Asset Report</a></li>
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/VendorAssetReport">Vendor Asset Report</a></li>
             </ul>
           </li>
          
@@ -565,6 +567,8 @@ display:none;
             <ul class="dropdown-menu dropdown-menu-left">
               <li><a class="dropdown-item" href="${pageContext.request.contextPath}/FinancialReport">Item Asset Report</a></li>
               <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NodeAssetReport">Node Asset Report</a></li>
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/SupplierAssetReport">Supplier Asset Report</a></li>
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/VendorAssetReport">Vendor Asset Report</a></li>
             </ul>
           </li>
           
@@ -806,6 +810,8 @@ display:none;
             <ul class="dropdown-menu dropdown-menu-left">
               <li><a class="dropdown-item" href="${pageContext.request.contextPath}/FinancialReport">Item Asset Report</a></li>
               <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NodeAssetReport">Node Asset Report</a></li>
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/SupplierAssetReport">Supplier Asset Report</a></li>
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/VendorAssetReport">Vendor Asset Report</a></li>
             </ul>
           </li>
           
@@ -1062,6 +1068,8 @@ display:none;
             <ul class="dropdown-menu dropdown-menu-left">
               <li><a class="dropdown-item" href="${pageContext.request.contextPath}/FinancialReport">Item Asset Report</a></li>
               <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NodeAssetReport">Node Asset Report</a></li>
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/SupplierAssetReport">Supplier Asset Report</a></li>
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/VendorAssetReport">Vendor Asset Report</a></li>
             </ul>
           </li>
           
