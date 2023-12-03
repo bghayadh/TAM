@@ -35,6 +35,7 @@
 <script src="${pageContext.request.contextPath}/resources/js/Network/FiberSearch.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/FiberPathCreation.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/NodeCreation.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/JunctionCreation.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/context-menu.js"></script>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/context-menu.css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/xlsx.full.min.js"></script>
@@ -234,7 +235,12 @@
 								<span id="definition">HANDHOLE</span></td>
 							<td><input type="checkbox" id="handholeCheckAllBoq" style="margin-left: 10px;"></td>
 						</tr>
-							<tr>
+						<tr>
+							<td class="Icon "><img style="width: 16px; height: 16px;" src="${pageContext.request.contextPath}/resources/NetworkImages/junctionOrange.png">
+								<span id="definition">JUNCTION</span></td>
+							<td><input type="checkbox" id="junctionCheckAllBoq" style="margin-left: 10px;"></td>
+						</tr>
+						<tr>
 							<td class="Icon "><img style="width: 16px; height: 16px;" src="${pageContext.request.contextPath}/resources/img/NodesIcon.png">
 								<span id="definition">Nodes</span></td>
 							<td><input type="checkbox" id="nodesActiveCheckAllBoq" style="margin-left: 10px;"></td>

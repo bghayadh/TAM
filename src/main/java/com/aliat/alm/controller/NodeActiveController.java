@@ -411,6 +411,7 @@ public class NodeActiveController {
 		return rtn;
 
 	}
+	
 	@RequestMapping(value = "/GetAllNode", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> GetAllNode(Locale locale, Model model, HttpServletRequest request,
@@ -418,7 +419,8 @@ public class NodeActiveController {
 
 	    Map<String, Object> rtn = new LinkedHashMap<>();
 
-	    String Node = "%" + request.getParameter("Node") + "%"; 
+	    String Node = "%" + request.getParameter("Node") + "%";
+	    System.out.println("Node is " +Node);
 	    session = AlmDbSession.getInstance().getSession();
 	    if (session != null && session.isOpen()) {
 	        tx = session.beginTransaction();
@@ -430,6 +432,7 @@ public class NodeActiveController {
 	        	query.setFirstResult(0);
 				query.setMaxResults(40);
 	        	
+				System.out.println("ListNode is " +mapper.writeValueAsString(query.list()));
 	        	rtn.put("ListNode", query.list());
 	   } catch (Exception e) {
 	            sw = new StringWriter();

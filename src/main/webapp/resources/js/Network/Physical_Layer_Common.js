@@ -2253,36 +2253,52 @@ function junctionCheckFilter(physicalLayer,manholeId){
 		}				
 	});
 	
-	}
-	else {
-	
-	$('.JctHandholes').bind("change",function() {
-	//$("#"+junctionID).bind("change",function() {				
-	
-		parentLi=$(this).parent().parent().parent();
-		if (parentLi.find("li > input[type='checkbox']:checked").length == parentLi.find('li').length) {
-			$(this).parent().parent().parent().children('input:checkbox').prop('checked', true);
-		}
-		else {
-			$(this).parent().parent().parent().children('input:checkbox').prop('checked', false);
-	
-		}
-});
+	}else if(physicalLayer == "Handhole"){
 
 		
-	$(".HandholeJct").bind("change",function(){	
-				if ($(this).is(':checked')){		
-					$(this).parent().find(' > ul > li').each(function(){
-						$(this).children('input:checkbox').prop('checked', true);		
-						//var junctionId=$(this).attr('id');
-					});
-				}
-				else{
-					$(this).parent().find(' > ul > li').each(function(){
-						$(this).children('input:checkbox').prop('checked', false);						
-					});
-				}
+		$('.JctHandholes').bind("change",function() {
+		//$("#"+junctionID).bind("change",function() {				
+		
+			parentLi=$(this).parent().parent().parent();
+			if (parentLi.find("li > input[type='checkbox']:checked").length == parentLi.find('li').length) {
+				$(this).parent().parent().parent().children('input:checkbox').prop('checked', true);
+			}
+			else {
+				$(this).parent().parent().parent().children('input:checkbox').prop('checked', false);
+		
+			}
 	});
+
+			
+		$(".HandholeJct").bind("change",function(){	
+					if ($(this).is(':checked')){		
+						$(this).parent().find(' > ul > li').each(function(){
+							$(this).children('input:checkbox').prop('checked', true);		
+							//var junctionId=$(this).attr('id');
+						});
+					}
+					else{
+						$(this).parent().find(' > ul > li').each(function(){
+							$(this).children('input:checkbox').prop('checked', false);						
+						});
+					}
+		});
+		
+		
+	}
+	else {
+		$('.Junction').bind("change",function() {
+			//$("#"+junctionID).bind("change",function() {				
+			console.log(" //////////Junction 1");
+				parentLi=$(this).parent().parent().parent();
+				if (parentLi.find("li > input[type='checkbox']:checked").length == parentLi.find('li').length) {
+					$(this).parent().parent().parent().children('input:checkbox').prop('checked', true);
+				}
+				else {
+					$(this).parent().parent().parent().children('input:checkbox').prop('checked', false);
+			
+				}
+		});
 	}	
 }
 
@@ -3436,6 +3452,20 @@ function boqCheckFilter(){
 				});
 			}
 		})
+		
+		$("#junctionCheckAllBoq").bind("change",function(){
+	if ($(this).is(':checked')){	
+		if(junctionFlag == 0 ){
+			getJunction();
+		}else{
+			junctionLayerCheckAll();
+		}
+	}
+	else{
+		junctionLayerUnCheckAll();
+	}
+});
+
 
 		$("#distBoardCheckAllBoq").bind("change",function(){
 		if ($(this).is(':checked')){
@@ -4254,6 +4284,54 @@ function nodeLayerUnCheckAll(){
 	});							
 
 }
+
+function junctionLayerCheckAll(){
+
+	$("#Junction_f_CurrentPhysicalLayer > .AllJunctions").prop("checked",true);	
+	
+	$("#Junction_f_CurrentPhysicalLayer").find('li').each(function(){		
+		
+		var junctionID=$(this).attr('id');
+		$("#"+junctionID).children(':checkbox').prop( "checked", true );
+		if(markersJunction[junctionID].getMap() == null ){
+			markersJunction[junctionID].setMap(map);
+			markerClusterJunction.addMarker(markersJunction[junctionID]);
+		}
+			
+		});
+	
+	if( $("#Junction_f_CurrentPhysicalLayer").find(".Junction:checked" ).length == 0 ){
+		$("#junctionCheckAllBoq").prop("checked",false);			
+	}
+	else{
+		$("#junctionCheckAllBoq").prop("checked",true);			
+	}
+
+
+}
+
+function junctionLayerUnCheckAll(){
+
+	$("#Junction_f_CurrentPhysicalLayer > .AllJunctions").prop("checked",false);	
+			
+	$("#Junction_f_CurrentPhysicalLayer").find('li').each(function(){			
+		var junctionID=$(this).attr('id');					
+		markersJunction[junctionID].setMap(null);	
+		$("#"+junctionID).children(':checkbox').prop( "checked", false );
+	});
+		
+		$("#network_tree").find(".Nodes:checked" ).each(function(){
+
+		id=$(this).parent().attr('id');
+		if(markersJunction[id].getMap()==null){
+			markersJunction[id].setMap(map);
+			markerClusterJunction.addMarker(markersJunction[junctionID]);			
+		}		
+	});			
+
+}
+
+
 //Event for tree-Map view/hide from Map for all elements 	
 function allElementsCheckFilter(){
 	$(".allElements").bind("change",function() {
@@ -4269,6 +4347,10 @@ function allElementsCheckFilter(){
 		    markerClusterSDHNodes.clearMarkers();
 		    markerClusterGPONNodes.clearMarkers();
 		}
+		
+		if(junctionFlag == 1){
+			markerClusterJunction.clearMarkers();
+		}
 				
 		$("#distBoardCheckAllBoq").prop("checked",false);
 		$("#manholeCheckAllBoq").prop("checked",false);
@@ -4278,12 +4360,15 @@ function allElementsCheckFilter(){
 		$("#coreCheckAllBoq").prop("checked",false);
 		$("#ranCheckAllBoq").prop("checked",false);
 		$("#nodesActiveCheckAllBoq").prop("checked",false);
+		$("#junctionCheckAllBoq").prop("checked",false);
 			
 		if ($(this).is(':checked')){
 			
 			$(this).parent().find('ul > li').each(function(){				
 				if(($(this).children('input:checkbox').hasClass('AllNodeActive') || $(this).children('input:checkbox').hasClass('EntrepriseMSAN') || $(this).children('input:checkbox').hasClass('TransmissionDWDM') || $(this).children('input:checkbox').hasClass('TransmissionSDH') || $(this).children('input:checkbox').hasClass('TransmissionGPON')) && nodeFlag == 0 ){
 			    	$(this).children('input:checkbox').prop('checked', false);
+				}else if($(this).children('input:checkbox').hasClass('AllJunctions') && junctionFlag == 0){
+					$(this).children('input:checkbox').prop('checked', false);
 				}
 				else {
 					$(this).children('input:checkbox').prop('checked', true);					
@@ -4316,6 +4401,14 @@ function allElementsCheckFilter(){
 							markerClusterHandhole.addMarker(markersHandhole[id]);
 							$("#handholeCheckAllBoq").prop("checked",true);
 						}
+					}
+					if($(this).children('input:checkbox').hasClass('Junction')){
+						id=$(this).attr('id');
+						if(markersJunction[id].getMap()==null){
+							markersJunction[id].setMap(map);			
+							markerClusterJunction.addMarker(markersJunction[id]);
+							$("#junctionCheckAllBoq").prop("checked",true);
+						}								
 					}
 					if($(this).children('input:checkbox').hasClass('DistBoard')){
 						id=$(this).attr('id');
@@ -9418,12 +9511,16 @@ function deleteJunction(physicalLayer,subLayer,physLayerID,manHandholeId){
 	physicalLayer_Id=[];
 	checkedJunctions=[];
 	junctionsAfterDel=[];
-    
-    var manHandholeID = manHandholeId ;
-	var manHandoleName = window[""+manHandholeID][1];
-	//console.log("manHandoleNameEE is " +manHandoleName);
+	var manHandholeID = "";
+	var manHandoleName = "";
 	
-	if(physicalLayer =="Manhole") {
+	if(physicalLayer =="Manhole" || physicalLayer =="Handhole") {
+		 manHandholeID = manHandholeId ;
+		 manHandoleName = window[""+manHandholeID][1];
+		//console.log("manHandoleNameEE is " +manHandoleName);
+	}
+	
+	if(physicalLayer =="Manhole" || physicalLayer =="NoManHandhole" ) {
 			$("#"+selectedManIdContext).find(' > ul > li >ul >li').each(function(){
 					var jctId =$(this).attr('id');
 					if($(this).children('input:checkbox').is(':checked')){
@@ -9431,7 +9528,7 @@ function deleteJunction(physicalLayer,subLayer,physLayerID,manHandholeId){
 					}
 		  	});
 	}
-		 else {
+	else {
 		  	$("#"+selectedHandIdContext).find(' > ul > li >ul >li').each(function(){
 					var jctId =$(this).attr('id');
 					if($(this).children('input:checkbox').is(':checked')){
@@ -9440,7 +9537,7 @@ function deleteJunction(physicalLayer,subLayer,physLayerID,manHandholeId){
 		  	});
 		  	
 		 }
-				console.log("checkedJunctions is" +checkedJunctions);
+			console.log("checkedJunctions is" +checkedJunctions);
 			if(checkedJunctions.length >0) {
 			physicalLayer_Id =checkedJunctions;
 			}
@@ -9478,10 +9575,10 @@ function deleteJunction(physicalLayer,subLayer,physLayerID,manHandholeId){
 						
 					}
 					
-			if(physicalLayer =="Manhole") {
-								console.log("DELETE DONE");
+			if(physicalLayer =="Manhole" ) {
+				console.log("DELETE DONE");
 				
-			$("#"+selectedManIdContext).find(' > ul > li >ul >li').each(function(){
+			    $("#"+selectedManIdContext).find(' > ul > li >ul >li').each(function(){
 					var jctId =$(this).attr('id');
 					junctionsAfterDel.push(jctId);
 		  		});
@@ -9535,7 +9632,7 @@ function deleteJunction(physicalLayer,subLayer,physLayerID,manHandholeId){
 				console.log("DELETE DONE");
 		  	}
 		  	}
-		  	else {
+		  	else if(physicalLayer =="Handhole" ) {
 		  	$("#"+selectedHandIdContext).find(' > ul > li >ul >li').each(function(){
 					var jctId =$(this).attr('id');
 					junctionsAfterDel.push(jctId);

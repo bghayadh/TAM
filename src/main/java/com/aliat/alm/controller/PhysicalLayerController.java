@@ -6748,6 +6748,48 @@ public class PhysicalLayerController {
 		return rtn;
 
 	}
+	
+	@RequestMapping(value = "/getJunction", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> getJunction(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException {
+		//System.out.println("Passes here getJunction");
+		Map<String, Object> rtn = new LinkedHashMap<String, Object>();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+
+		Query query;
+		session = AlmDbSession.getInstance().getSession();
+
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			try {
+				List<Object[]> JunctionList = new ArrayList<Object[]>();
+				JunctionList = session.createNativeQuery("SELECT DISTINCT A.JUNCTION_ID, A.JUNCTION_NAME,A.PHYSICAL_LAYER_ID,A.PHYSICAL_LAYER_NAME,A.JUNCTION_NUMBER,A.CAPACITY,A.CITY,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID FROM JUNCTION A where A.PHYSICAL_LAYER_ID IS NULL OR A.PHYSICAL_LAYER_ID = ' ' OR A.PHYSICAL_LAYER_ID = 'null' ").getResultList();
+				rtn.put("JunctionList", JunctionList);
+				//System.out.println("JunctionList "+JunctionList);
+
+			} catch (Exception e) {
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in getJunction due to \n " + exceptionAsString);
+				logger.info("Error in getJunction due to \n " + exceptionAsString);
+				rtn.put("searchResult", "Failed");
+			} finally {
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+					//session.getSessionFactory().close();
+				}
+			}
+		}
+
+		return rtn;
+
+	}
 
 	@RequestMapping(value = "/SearchStrand", method = RequestMethod.GET)
 	@ResponseBody

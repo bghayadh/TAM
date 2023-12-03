@@ -550,6 +550,7 @@ public class ItemController {
 			tx = session.beginTransaction();
 			try {
 				String[] idList = request.getParameterValues("itemCode[]");
+				
 				if (idList != null) {
 //					query = session.createQuery("delete ItemPartNumber where itemCode IN :param1");
 					query = session.createNativeQuery("delete ITEM_MODEL_PARTNUMBER where ITEM_CODE IN :param1");
