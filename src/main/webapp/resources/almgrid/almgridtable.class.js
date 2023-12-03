@@ -17,7 +17,41 @@ class AlmgridTable {
         this.pagination;
         this.view = options.view;
         this.init();
-        this.ArrayKeys
+        this.ArrayKeys;
+
+ 		// Create the exceedind data alert div element
+        this.messageDiv = document.createElement('div');
+        this.messageDiv.classList.add('message');
+        this.messageDiv.style.display = 'none'; // Hide the alert by default
+		this.messageDiv.style.position = 'fixed';
+        this.messageDiv.style.top = '50%';
+        this.messageDiv.style.left = '50%';
+        this.messageDiv.style.transform = 'translate(-50%, -50%) translateY(-20px)';
+        this.messageDiv.style.backgroundColor = '#F8F8FF';
+        this.messageDiv.style.padding = '20px';
+        this.messageDiv.style.borderRadius = '8px';
+        this.messageDiv.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
+        this.messageDiv.style.zIndex = '200';
+		this.messageDiv.style.width = '320px';
+        this.messageDiv.style.height = '200px'; 
+        
+        this.messageDiv.innerHTML = `
+            <div class="popup-header" style="background-color:#2678CC;height: 55px; border-top-left-radius: 8px; border-top-right-radius: 8px; display: flex; align-items: center; justify-content: center; position: relative; top: -20px; left: -20px; right: -20px; margin-right: -40px;">
+                <h5 style="color: white; margin: 0;">Exceeded Data</h5>
+            </div>
+            <span class="close-button" style="cursor: pointer; position: absolute; top: 5px; right: 10px;">&times;</span>
+            <div class="message-content" style="margin-top: 15px; font-weight: bold;"></div>
+        `;
+
+        this.closeButton = this.messageDiv.querySelector('.close-button');
+        this.messageContent = this.messageDiv.querySelector('.message-content');
+
+        document.body.appendChild(this.messageDiv);
+		
+		// Event listener for the close button
+        this.closeButton.addEventListener('click', () => {
+            this.hideMessage();
+        });
 
     }
     //init function where custom filter and data is drawn
@@ -39,6 +73,16 @@ class AlmgridTable {
         drawDropDownCustomFilter(this.tableId);
     }
 
+  // Function to show the exceeding data alert
+  showMessage(message) {
+    	this.messageContent.innerHTML = message.replace(/(?:\r\n|\r|\n)/g, '<br>');
+        this.messageDiv.style.display = 'block';
+    }
+
+    // Function to hide the exceeding data alert
+    hideMessage() {
+        this.messageDiv.style.display = 'none';
+    }
 
     drawCustomFilters(filteredUncheckedArray,submitButtonFlag,columnNumber, currentForm, uniqueArray, uniqueFilteredArray,checkboxArray,uncheckboxArray,startIndex,endIndex,finalCount,nextPageNum) {
 
@@ -1051,6 +1095,8 @@ class AlmgridTable {
                     }else{
                         indexVarColPressed = columnNumberPressed - 1;
                     }
+           			 this.hideMessage();
+
 					
 					if(checkboxArray[columnNumberPressed].length === 0){
                     	// Create a temporary set to store unique values
@@ -1079,12 +1125,12 @@ class AlmgridTable {
 					                    
                    if(checkboxArray[columnNumberPressed].length > 35000 ) {
 						
-						document.getElementById("loaderDiv").style.display = "none";
-						document.getElementById("alertMsgDiv").style.display = "block";
+						document.getElementById("loaderDiv").style.display = "none";						
+						this.showMessage('The fetched data is exceeding the number of allowed data to show.<br><br>Please set a filter to reduce it.');
+
 					}
 					else {	
 						document.getElementById("loaderDiv").style.display = "block";
-						document.getElementById("alertMsgDiv").style.display = "none";
  
                     setTimeout(function() {
                     
@@ -1793,7 +1839,6 @@ function createDiv(height) {
     div.style.height = height + 'px';
     return div;
 }
-
 
 
 
