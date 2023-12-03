@@ -510,12 +510,7 @@ max-width: 100%;
 										<input type="text" class="form-control almgrid-global-search" />
 									</div>
 								</div>
-										<div id="alertMsgDiv" style="display: none;padding-left: 40px">
-										<br>
-											<b style="color:red;font-size:15px;white-space: nowrap;">The number of original fetched data is exceeding the number of allowed data to show. Please set a filter to reduce the fetched data.</b> 
-											</div>
-
-								<div id= "tableGrid" class="table-responsive almgrid-table-div">
+							<div id= "tableGrid" class="table-responsive almgrid-table-div">
 									<table id="gridTable" class="table table-striped table-bordered almgrid-table">
 										<thead>
 											<tr class="header fixed-header">
@@ -594,7 +589,14 @@ max-width: 100%;
 														<ul class="dropdown-menu filter-dropdown-ul"></ul>
 													</li>
 												</th>
-
+												<th>Supplier
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> 
+														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
+														</button>
+														<ul class="dropdown-menu filter-dropdown-ul"></ul>
+													</li>
+												</th>
 											
 												<th>PO ID 
 													<li class="filter-dropdown dropdown">
@@ -690,7 +692,7 @@ max-width: 100%;
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
-												
+												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 											</tr>
 										</thead>
 										<tbody></tbody>
@@ -1298,7 +1300,7 @@ $(document).ready(function() {
 	     		var data = [];
 	     	    exportArrayGrid = [];
 	    		data.push('\r');
-	       		data.push(["FAR ID", "Item Code", "Item Name", "Item Model","Item Part Number","Last Modified Date","Item Serial Number","Item Name Register","PO ID","Site ID","Site Name","Longitude","Latitude","Vendor","Initial Cost","Net Cost","Accumulated Depreciation"]);
+	       		data.push(["FAR ID", "Item Code", "Item Name", "Item Model","Item Part Number","Last Modified Date","Item Serial Number","Item Name Register","Supplier","PO ID","Site ID","Site Name","Longitude","Latitude","Vendor","Initial Cost","Net Cost","Accumulated Depreciation"]);
 
 	       		filteredSitesGrid = dataArray; // used in draw on map 
 	       		
@@ -1517,6 +1519,7 @@ $(document).ready(function() {
 					+'</ul></li></th><th>Last Modified Date<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i	class="fa fa-list almgrid-filter-i"	aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
 					+'</ul></li></th><th> Item Serial Number<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul">'
 					+'</ul></li></th><th> Item Name Register<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul">'
+					+'</ul></li></th><th>Supplier<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul">'
 					+'</ul></li></th><th> PO ID <li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul">'
 					+'</ul></li></th><th>Site ID<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i	class="fa fa-list almgrid-filter-i"	aria-hidden="true"></i></button>'
 					+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul">	</ul></li></th>'
@@ -1537,6 +1540,7 @@ $(document).ready(function() {
 					
 					+'<tr>'
 					+'<th><input type="text" disabled class="almgrid-search" style="display:none"></th>'
+					+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
 					+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
 					+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
 					+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
@@ -1673,7 +1677,7 @@ $(document).ready(function() {
   			       		    var data = [];
   			       	       exportArrayGrid = [];
   			       		   data.push('\r');
-  			       		   data.push(["FAR ID", "Item Code", "Item Name","Item Model","Item Part Number", "Last Modified Date","Item Serial Number","Item Name Register","PO ID","Site ID","Site Name","Longitude","Latitude","Vendor","Initial Cost","Net Cost","Accumulated Depreciation"]);
+  			       		   data.push(["FAR ID", "Item Code", "Item Name","Item Model","Item Part Number", "Last Modified Date","Item Serial Number","Item Name Register","Supplier","PO ID","Site ID","Site Name","Longitude","Latitude","Vendor","Initial Cost","Net Cost","Accumulated Depreciation"]);
 
   	  				       filteredSitesGrid = dataArray; // used in draw on map 
   	  			       		
@@ -1775,7 +1779,7 @@ $(document).ready(function() {
 			  const csvContent = 'data:text/csv;charset=utf-8,' + encodeURIComponent(exportArrayGrid);
 			  const downloadLink = document.createElement('a');
 			  downloadLink.setAttribute('href', csvContent);
-			  downloadLink.setAttribute('download', "FinancialReportGrid");
+			  downloadLink.setAttribute('download', "NodeAssetGridReport");
 
 			  document.body.appendChild(downloadLink);
 			  downloadLink.click();
