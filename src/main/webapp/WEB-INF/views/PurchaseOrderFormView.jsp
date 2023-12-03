@@ -577,10 +577,10 @@ max-width: 100%;
 				<form>
 				
 								
-					    <div class="table-responsive-sm"> 
+					    <div class="table-responsive-sm" id="tableContainer"> 
 						    <table id ="bisotab" class="table table-striped table-bordered table-sm" style="display:block; height:200px; overflow-y: auto;">
 						        <thead>
-						            <tr class="fixed-headerr">
+						            <tr id="bisotr" class="fixed-headerr">
 						                <th>
 						                <div class="container">
 						                
@@ -1503,6 +1503,21 @@ else
 
 }   
 $("#bisotab > tbody").append(itemRow);
+updateContainerHeight();
+
+function updateContainerHeight() {
+  // Get the table and container elements
+  var table = document.getElementById("bisotab");
+  console.log(table.offsetHeight);
+  var container = document.getElementById("tableContainer");
+  console.log(container.offsetHeight);
+  var tr = document.getElementById("bisotr");
+  console.log(tr.offsetHeight);
+  console.log(boqArray.length);
+
+  table.style.height = table.offsetHeight + (tr.offsetHeight * (boqArray.length)) + "px";
+  console.log("new height : "+table.offsetHeight)
+}
 //trigger
 $(document).trigger("triggerBoqListenersEvent");
   }
