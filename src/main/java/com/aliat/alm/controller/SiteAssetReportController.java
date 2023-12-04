@@ -63,14 +63,13 @@ public class SiteAssetReportController {
 
 				notifications.headerNotifications(session, model);
 				try {
-					
+				
 					query = session.createNativeQuery(
-							"SELECT site as site,wareID as wareID,siteID as siteID,siteName as siteName,longitude as longitude,latitude as latitude,COALESCE(SUM(initCost),0) as initCost,COALESCE(SUM(netCost),0) as netCost , COALESCE(SUM(accuDepr),0) as accuDepr FROM ("
-							+ " SELECT DISTINCT C.SITE_ID AS site,C.WARE_ID as wareID, C.SITE_ID AS siteID, C.WARE_NAME AS siteName , C.LONGITUDE as longitude, C.LATITUDE as latitude, A.INITIALCOST as initCost, A.NETCOST as netCost , A.ACCUMULDEPRECAMNT as accuDepr,A.FAR_ID AS FAR_ID,"
-							+ " ROW_NUMBER() OVER (PARTITION BY C.SITE_ID ORDER BY C.SITE_ID) AS rn"									
+							"SELECT site as site,wareID as wareID,siteID as siteID,siteName as siteName,longitude as longitude,latitude as latitude,COALESCE(SUM(initCost),0) as initCost,COALESCE(SUM(netCost),0) as netCost , COALESCE(SUM(accuDepr),0) as accuDepr FROM (  "
+							+ " SELECT DISTINCT C.SITE_ID AS site,C.WARE_ID as wareID, C.SITE_ID AS siteID, C.WARE_NAME AS siteName , C.LONGITUDE as longitude, C.LATITUDE as latitude, A.INITIALCOST as initCost, A.NETCOST as netCost , A.ACCUMULDEPRECAMNT as accuDepr,A.FAR_ID AS FAR_ID "
 							+ " FROM FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID WHERE A.CREATED_DATE >=  trunc(SYSDATE - INTERVAL '1' YEAR) AND A.created_date < (trunc(sysdate) ) + 1   ) "
-							+ " WHERE (longitude is not null and longitude != '0' and longitude != 'null' and latitude is not null and latitude != '0' and latitude != 'null' and rn = 1 and wareID is not null) GROUP BY site,wareID,siteID,siteName,longitude,latitude ");
-										
+							+ " WHERE (longitude is not null and longitude != '0' and longitude != 'null' and latitude is not null and latitude != '0' and latitude != 'null') GROUP BY site,wareID,siteID,siteName,longitude,latitude ");
+
 					
 				  List<SiteAssetReport> siteAssetList = (List<SiteAssetReport>) ((NativeQuery<SiteAssetReport>) query)
 							.addScalar("site").addScalar("wareID").addScalar("siteID").addScalar("siteName").addScalar("longitude")
@@ -211,16 +210,14 @@ public class SiteAssetReportController {
 				session = AlmDbSession.getInstance().getSession();
 
 				if (session != null && session.isOpen()) {
-
 					
-					 str = "SELECT site as site,wareID as wareID,siteID as siteID,siteName as siteName,longitude as longitude,latitude as latitude,COALESCE(SUM(initCost),0) as initCost,COALESCE(SUM(netCost),0) as netCost , COALESCE(SUM(accuDepr),0) as accuDepr FROM ("
-					           + " SELECT DISTINCT C.SITE_ID AS site,C.WARE_ID as wareID, C.SITE_ID AS siteID, C.WARE_NAME AS siteName , C.LONGITUDE as longitude, C.LATITUDE as latitude, A.INITIALCOST as initCost, A.NETCOST as netCost , A.ACCUMULDEPRECAMNT as accuDepr,A.FAR_ID AS FAR_ID,"
-							   + " ROW_NUMBER() OVER (PARTITION BY C.SITE_ID ORDER BY C.SITE_ID) AS rn"
-					           + " FROM FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID"							   
-					           + " WHERE (upper(C.WARE_ID) LIKE upper('%" + wareID
-							   + "%') AND upper(C.SITE_ID) LIKE upper('%" + siteId
-							   + "%') AND upper(C.WARE_NAME) LIKE upper('%" + siteName
-							   + "%')) ";					
+					 str = "SELECT site as site,wareID as wareID,siteID as siteID,siteName as siteName,longitude as longitude,latitude as latitude,COALESCE(SUM(initCost),0) as initCost,COALESCE(SUM(netCost),0) as netCost , COALESCE(SUM(accuDepr),0) as accuDepr FROM (  "
+					           + " SELECT DISTINCT C.SITE_ID AS site,C.WARE_ID as wareID, C.SITE_ID AS siteID, C.WARE_NAME AS siteName , C.LONGITUDE as longitude, C.LATITUDE as latitude, A.INITIALCOST as initCost, A.NETCOST as netCost , A.ACCUMULDEPRECAMNT as accuDepr,A.FAR_ID AS FAR_ID   "
+					           + " FROM FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID "
+					           + " WHERE ( upper(C.WARE_ID) LIKE upper('%" + wareID
+								+ "%') AND upper(C.SITE_ID) LIKE upper('%" + siteId
+								+ "%') AND upper(C.WARE_NAME) LIKE upper('%" + siteName
+								+ "%') )  ";
 						
 					   totalStr = " Select COALESCE(SUM(initialCost),0) , COALESCE(SUM(AccumDepr),0) , COALESCE(SUM(netCost),0) FROM ( "
 					 			+ " SELECT DISTINCT A.FAR_ID AS FAR_ID,B.SITE_ID AS SITE_ID, A.INITIALCOST as initialCost,A.ACCUMULDEPRECAMNT as AccumDepr, A.NETCOST as netCost from FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID "
@@ -324,8 +321,7 @@ public class SiteAssetReportController {
 
 					} // end of checked strt/end coordinate checkbox
 
-					
-					str = str + "  ) WHERE (longitude is not null and longitude != '0' and longitude != 'null' and latitude is not null and latitude != '0' and latitude != 'null' and rn = 1 and wareID is not null) GROUP BY site,wareID,siteID,siteName,longitude,latitude ";
+					str = str + "  ) WHERE (longitude is not null and longitude != '0' and longitude != 'null' and latitude is not null and latitude != '0' and latitude != 'null') GROUP BY site,wareID,siteID,siteName,longitude,latitude ";
 					totalStr = totalStr +" AND (C.longitude is not null and C.longitude != '0' and C.longitude != 'null' and C.latitude is not null and C.latitude != '0' and C.latitude != 'null'))";
 
 					//System.out.println("the totalStr is " + totalStr);
