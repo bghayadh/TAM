@@ -54,6 +54,7 @@ import com.aliat.alm.models.DiscoveryNewItem;
 import com.aliat.alm.services.ItemParameters;
 import com.aliat.alm.services.LoginServices;
 import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -94,6 +95,9 @@ public class DiscoveryController {
 	private static final String ALC_FLG = "alcflg";
 	private static final String APPROVED_BY = "approvedby";
 	int i;
+	private static String str = null;
+	private static 	Object[] result = null;
+
 
 	@Autowired
 	Form form;
@@ -108,7 +112,7 @@ public class DiscoveryController {
 	private static ObjectMapper mapper = new ObjectMapper();
 	private static Query query = null;
 	private static final Logger logger = LoggerFactory.getLogger(DiscoveryController.class);
-
+	
     Calendar calendar = new GregorianCalendar();
 	 int year = calendar.get(Calendar.YEAR);
 	
@@ -1334,6 +1338,11 @@ query.executeUpdate();
 				
 				assetregistry.setArID(ArCode);
 				assetregistry.setAritemCode(itmcode);
+				 query = session.createSQLQuery("SELECT item_category, item_catcode FROM Item WHERE item_code = :param1")
+				                    .setParameter("param1", itmcode);
+				 result = (Object[]) query.uniqueResult();
+		        assetregistry.setItemCat(result[0].toString());
+				assetregistry.setItemCatCode(result[1].toString());
 				assetregistry.setArcreatedDate(new Timestamp(System.currentTimeMillis()));
 				assetregistry.setArlastModifiedDate(new Timestamp(System.currentTimeMillis()));
 				assetregistry.setAritemName(itmname);
@@ -1411,10 +1420,15 @@ query.executeUpdate();
 						float initialCost = Float.parseFloat(itemParameters.getDictParameter().get(i).get(DN_RATE));
 						
 						FixedAssetRegistry FixedAssetReg = new FixedAssetRegistry();
-						 FixedAssetReg.setARID(ArCode);
+						FixedAssetReg.setARID(ArCode);
 						FixedAssetReg.setFarID(FarCode);
 						FixedAssetReg.setFaritemCode(itmcode);
-						FixedAssetReg.setFarcreatedDate(new Timestamp(System.currentTimeMillis()));
+						query = session.createSQLQuery("SELECT item_category, item_catcode FROM Item WHERE item_code = :param1")
+				                    .setParameter("param1", itmcode);
+						Object[] res = (Object[]) query.uniqueResult();
+                        FixedAssetReg.setItemCat(res[0].toString());
+				        FixedAssetReg.setItemCatCode(res[1].toString());
+				     	FixedAssetReg.setFarcreatedDate(new Timestamp(System.currentTimeMillis()));
 						FixedAssetReg.setFarlastModifiedDate(new Timestamp(System.currentTimeMillis()));
 						FixedAssetReg.setFaritemName(itmname);
 						FixedAssetReg.setIniCost(initialCost);
@@ -3403,6 +3417,12 @@ public void ApprovalProjectandAsset(String trans_Type, String getApproval, Strin
     	AssetRegistry assetregistry = new AssetRegistry();
 		assetregistry.setArID(ArCode);
 		assetregistry.setAritemCode(itmcode);
+		str = "SELECT item_category, item_catcode FROM Item WHERE item_code = :param1";
+		 query = session.createSQLQuery(str)
+		                    .setParameter("param1", itmcode);
+		result = (Object[]) query.uniqueResult();
+        assetregistry.setItemCat(result[0].toString());
+		assetregistry.setItemCatCode(result[1].toString());
 		assetregistry.setArcreatedDate(new Timestamp(System.currentTimeMillis()));
 		assetregistry.setArlastModifiedDate(new Timestamp(System.currentTimeMillis()));
 		assetregistry.setAritemName(itmname);
@@ -3730,7 +3750,12 @@ public void ApprovalFinance(String trans_Type, String getApproval, String dnStat
 			FixedAssetReg.setARID(AssetRegID);
 			FixedAssetReg.setFarID(FarCode);     
 			FixedAssetReg.setFaritemCode(itmcode);
-			FixedAssetReg.setFarcreatedDate(new Timestamp(System.currentTimeMillis()));
+			query = session.createSQLQuery("SELECT item_category, item_catcode FROM Item WHERE item_code = :param1")
+                    .setParameter("param1", itmcode);
+		    Object[] res = (Object[]) query.uniqueResult();
+            FixedAssetReg.setItemCat(res[0].toString());
+            FixedAssetReg.setItemCatCode(res[1].toString());
+     		FixedAssetReg.setFarcreatedDate(new Timestamp(System.currentTimeMillis()));
 			FixedAssetReg.setFarlastModifiedDate(new Timestamp(System.currentTimeMillis()));
 			FixedAssetReg.setFaritemName(itmname);
 			FixedAssetReg.setIniCost(initialCost);
