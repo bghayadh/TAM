@@ -137,17 +137,7 @@ public class UserController {
 
 			try {
 				notification.headerNotifications(session, model);
-				navAction = request.getParameter("NavAction");
-                
-				String Result[] = new String[4];
 				
-				Result = form.NavigationNP(session, "USERS_TABLE", "USER_NAME", username, "MODIFIED_DATE", navAction);
-
-				SelectedIndex = Integer.parseInt(Result[1]);
-				username= Result[2];
-
-				model.addAttribute("SelectedIndex",SelectedIndex);
-				model.addAttribute("userCount", Integer.parseInt(Result[0]));
 
 
 		if (username == null) {
@@ -155,9 +145,22 @@ public class UserController {
 			model.addAttribute("createdDate", formatter.format(date).toString());
 			model.addAttribute("lastModifiedDate", formatter.format(date).toString());
 			model.addAttribute("listUser", "addNew");
+			model.addAttribute("SelectedIndex", "addNew");
+			model.addAttribute("userCount", "addNew");
+			
 			return "UserFormView";
 		}
+		navAction = request.getParameter("NavAction");
+        
+		String Result[] = new String[4];
+		
+		Result = form.NavigationNP(session, "USERS_TABLE", "USER_NAME", username, "MODIFIED_DATE", navAction);
 
+		SelectedIndex = Integer.parseInt(Result[1]);
+		username= Result[2];
+
+		model.addAttribute("SelectedIndex",SelectedIndex);
+		model.addAttribute("userCount", Integer.parseInt(Result[0]));
 		
 				User user = (User) session.get(User.class, username);
 				if (user != null) {
