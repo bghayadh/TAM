@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.ReportInputParams;
 import com.aliat.alm.models.ReportsList;
 import com.aliat.alm.services.ItemParameters;
@@ -55,6 +56,8 @@ public class ReportModuleController {
 	private static Query query = null;
 	private static Session session = null;
 	private static Transaction tx = null;
+	@Autowired
+	Notify notification;
 	
 	@Autowired
 	ALMSessions almsessions;
@@ -71,6 +74,8 @@ public class ReportModuleController {
 			if(session != null && session.isOpen()) {
 				tx=session.beginTransaction();
 				try {
+					notification.headerNotifications(session, model);
+					   
 					listReport = session.createSQLQuery("SELECT ID as checkbox ,ID as idName,NAME,TO_CHAR(CREATION_DATE, 'YYYY-MM-DD HH24:MI:SS'),TO_CHAR(LAST_MODIFICATION_DATE, 'YYYY-MM-DD HH24:MI:SS') FROM REPORTS_LIST").list();
 					ObjectMapper mapper = new ObjectMapper();
 					model.addAttribute("ListGridTable", mapper.writeValueAsString(listReport));		
@@ -152,6 +157,8 @@ public class ReportModuleController {
 			
 			tx = session.beginTransaction();
 			try {
+				notification.headerNotifications(session, model);
+				
 				if ( rprtId == null  ) 
 				{
 				//	System.out.println("TT*********"+TicketID);
