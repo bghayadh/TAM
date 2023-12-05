@@ -208,7 +208,8 @@ return LoginServices.checkSession(request, response);
 session = almsessions.getSession();
 if(session != null && session.isOpen()) {
 	tx = session.beginTransaction();
-
+	notification.headerNotifications(session, model);
+    
 	String itemsList = request.getParameter("notifiList");
 	ObjectMapper mapper2 = new ObjectMapper();
 	if(itemsList !=null && itemsList.equals("notifiList")) {
