@@ -83,6 +83,10 @@
 	margin-right: 10px;
 	margin-left: 10px;
 }
+.nav-link.active {
+                background-color: #FFD966 !important;
+                color: #00757c !important;
+            }
 </style>
 
 </head>
@@ -91,7 +95,7 @@
 <body>
 	<c:set var = "page" value = "setup"/>
 
-	<%@ include file="header.html" %>
+	<%@ include file="header.jsp" %>
 	<p></p>
 	<div class="container-fluid">
 		<div class="row">
@@ -192,7 +196,7 @@
 
 						<button type="button" id="deleteButton"
 							class="btn btn-primary BtnActive">
-							<i class="fa fa-delete"></i> Delete
+							<i class="fa fa-trash"></i> Delete
 						</button>
 
 						<button type="button" id="saveButton" onclick='window.location.href = "${pageContext.request.contextPath}/systemSettings?type=addNew"'
