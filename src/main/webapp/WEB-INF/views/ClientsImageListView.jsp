@@ -483,11 +483,6 @@ z-index: 9003;
 										<input type="text" class="form-control almgrid-global-search" />
 									</div>
 								</div>
-								<div id="alertMsgDiv" style="display: none;padding-left: 90px">
-								<br>
-									<b style="color:red;font-size:15px;white-space: nowrap;">The number of original fetched data is exceeding the number of allowed data to show. Please set a filter to reduce the fetched data from this button  </b> 
-									<i class="fa fa-search" style="color:red;border:1px solid black;fontSize:22px;background-color:white;"></i>										
-								</div>
 								<div id="ImgclientsGridTable" class="table-responsive almgrid-table-div">
 									<table id="ImgClientsTable" class="table table-striped table-bordered almgrid-table">
 										<thead>
@@ -883,8 +878,6 @@ z-index: 9003;
         			             	document.getElementById('Lview').className = 'btn btn-light'
         			             	$("#Lview").css('background', '#FFFFFF');	
         		             		$("#searchClient").css('background', '#da6815');
-									document.getElementById("alertMsgDiv").style.display = "none";
-
 
         		             		
 										$(".almgrid-table").on("click", ".almgrid-link", function (e) {

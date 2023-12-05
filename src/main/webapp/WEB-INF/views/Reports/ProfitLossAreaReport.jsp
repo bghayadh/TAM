@@ -305,11 +305,6 @@
 										<input type="text" class="form-control almgrid-global-search" />
 									</div>
 								</div>
-								<div id="alertMsgDiv" style="display: none;padding-left: 40px">
-								<br>
-									<b style="color:red;font-size:15px;white-space: nowrap;">The number of original fetched data is exceeding the number of allowed data to show. Please set a filter to reduce the fetched data.</b> 
-								</div>
-
 								<div class="table-responsive almgrid-table-div">
 									<table id="gridTable" class="table table-striped table-bordered almgrid-table">
 										<thead>
