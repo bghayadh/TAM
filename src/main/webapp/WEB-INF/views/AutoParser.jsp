@@ -235,6 +235,7 @@
 									<option value="Tejas">Tejas</option>
 									<option value="Alcatel">Alcatel</option>
 									<option value="NEC">NEC</option>
+									<option value="Cisco">Cisco</option>
 									
 									
 					</select>
@@ -649,6 +650,9 @@ $("#loadFiles").click(function() {
     }
     else if(loader_vendor=="Huawei" && loader_domain=="Transmission" && loader_subdomain == "IP"){
 		url='loadFileIPHuawei';
+    }
+    else if(loader_vendor=="Cisco" && loader_domain=="Transmission" && loader_subdomain == "IP"){
+		url='loadFileIPCisco';
     }
     else if(loader_vendor=="Nokia" && loader_domain=="Transmission" && loader_subdomain == "IP"){
 		url='loadFileIPNokia';

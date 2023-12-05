@@ -55,6 +55,7 @@ import com.aliat.alm.services.LoginServices;
 
 import com.aliat.alm.telkom.Parser.LoadFileDWDMHuawei;
 import com.aliat.alm.telkom.Parser.LoadFileDWDMTejas;
+import com.aliat.alm.telkom.Parser.LoadFileIPCisco;
 import com.aliat.alm.telkom.Parser.LoadFileIPHuawei;
 import com.aliat.alm.telkom.Parser.LoadFileIPNokia;
 import com.aliat.alm.telkom.Parser.LoadFileMWEricsson;
@@ -287,6 +288,23 @@ public class AutoParserController {
 		Map<String, Object> rtn = new LinkedHashMap<>();
 		System.out.println("hello ERC loader");
 		LoadFileIPHuawei myClass = new LoadFileIPHuawei();
+		try {
+			myClass.main(null,request.getParameter("vendor"),request.getParameter("domain"),request.getParameter("sub_domain"),request.getParameter("type"));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		rtn.put("Result", "Script is Done");
+		return rtn;
+	}
+	
+	@RequestMapping(value = "/loadFileIPCisco", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> loadFileIPCisco(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws SecurityException, IOException, InterruptedException, SQLException, ParseException{
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		System.out.println("hello cisco loader");
+		LoadFileIPCisco myClass = new LoadFileIPCisco();
 		try {
 			myClass.main(null,request.getParameter("vendor"),request.getParameter("domain"),request.getParameter("sub_domain"),request.getParameter("type"));
 		} catch (Exception e) {
