@@ -37,6 +37,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.AlmDbSession;
+import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.SchedulerRules;
 import com.aliat.alm.models.ReportsList;
 import com.aliat.alm.models.ReportInputParams;
@@ -49,6 +51,8 @@ public class SchedulerRulesController {
 	
 	@Autowired
 	ALMSessions almsessions;
+	@Autowired
+	Notify notification;
 	
 	private static Session session=null;
 	private static Transaction tx = null;
@@ -165,7 +169,12 @@ public class SchedulerRulesController {
 		}
 		List<SchedulerRules> listSchedulerRules = new ArrayList<SchedulerRules>();
 		
-		Session session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
+
+		if (session != null && session.isOpen()) {
+			try {
+				notification.headerNotifications(session, model);
+		           
 		Transaction tx = session.beginTransaction();
 		
 		listSchedulerRules = session.createQuery("SELECT t.RuleID AS ID, t.RuleName,t.ReportTimes,TO_CHAR(t.LastRunTime, 'DD/MM/YYYY HH24:MI') from SchedulerRules t").list();
@@ -175,8 +184,18 @@ public class SchedulerRulesController {
 		session.close();
 		
 		model.addAttribute("ListGridTable", mapper.writeValueAsString(listSchedulerRules));
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if (session != null && session.isOpen()) {
+					session.close();
+
+				}
+			}
+			}
+
 		return "SchedulerRulesListView";
-}
+	}
 	
 	
 	@SuppressWarnings({ "unchecked", "unused" })
@@ -192,7 +211,8 @@ public class SchedulerRulesController {
 		Session session = almsessions.getSession();
 		Transaction tx = session.beginTransaction();
 		boolean IsCheck = true;
-		
+		notification.headerNotifications(session, model);
+        
 		model.addAttribute("Weekdays",IsCheck);
 		model.addAttribute("Weekdays","Tue");
 		String itemsList = request.getParameter("SchedulerRulesList");
