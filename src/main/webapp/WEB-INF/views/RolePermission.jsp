@@ -20,6 +20,12 @@
 	
             
 </head>
+<style>
+.nav-link.active {
+                background-color: #FFD966 !important;
+                color: #00757c !important;
+            }
+            </style>
 <body>
   
 <%--   <c:set var = "page" value = "setup"/> --%>
