@@ -3,20 +3,47 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <head>
 <meta charset="utf-8">
-    <title>User List View</title>
-    <!-- <script src="${pageContext.request.contextPath}/resources/js/jquery.slim.min.js" ></script>  -->
-  <!-- <script src="${pageContext.request.contextPath}/resources/js/jquery.slim.min.js" ></script>  -->
-	<script src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>
-	<script src="${pageContext.request.contextPath}/resources/js/bootstrap.min.js"></script>
-	<link href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
-	<script src="${pageContext.request.contextPath}/resources/js/dataTables.min.js"></script>
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/dataTables.min.css">		  		
-    <script src="${pageContext.request.contextPath}/resources/js/all.min.js"></script>		
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/font-awesome.min.css">
-	<link href="${pageContext.request.contextPath}/resources/css/all.min.css" rel="stylesheet">	 	
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/ListView.css">
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/header.css">
-      
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<link rel="shortcut icon" href="">
+		<script src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/moment.min.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/tempusdominus-bootstrap-4.min.js"></script>
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/tempusdominus-bootstrap-4.min.css" />
+		<script src="${pageContext.request.contextPath}/resources/js/printThis.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+		<script src="${pageContext.request.contextPath}/resources/js/bootstrap.min.js"></script>
+		<link href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
+		<script src="${pageContext.request.contextPath}/resources/js/jquery-migrate-3.0.0.min.js"></script>
+		<script src="${pageContext.request.contextPath}/resources/js/jquery2-ui.js"></script>
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/jquery-ui.css" rel="stylesheet" />
+		<script src="${pageContext.request.contextPath}/resources/js/dataTables.min.js"></script>
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/dataTables.min.css">
+		<script src="${pageContext.request.contextPath}/resources/js/all.min.js"></script>
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/font-awesome.min.css">
+		<link href="${pageContext.request.contextPath}/resources/css/all.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/ListView.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/header.css">
+		<link rel="stylesheet" type="text/css"	href="${pageContext.request.contextPath}/resources/css/jquerysctipttop.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/bootstrap-datetimepicker.min.css">
+		<script type="text/javascript"	src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+		<script src="${pageContext.request.contextPath}/resources/js/jspdf.min.js"></script>
+		<script src="${pageContext.request.contextPath}/resources/js/jspdf.plugin.autotable.min.js"></script>
+		<script src="${pageContext.request.contextPath}/resources/js/tableHTMLExport.js"></script>
+		<link href="${pageContext.request.contextPath}/resources/cssgrid/bootstrap-datepicker.min.css" rel='stylesheet'	type='text/css'>
+		<script src="${pageContext.request.contextPath}/resources/scriptsgrid/bootstrap-datepicker.min.js" type='text/javascript'></script>
+		<!-- ALM GRID Scripts -->
+		<script type="text/javascript" src="${pageContext.request.contextPath}/resources/almgrid/pagination.class.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/resources/almgrid/gridAppendRows.js"></script>
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/almgrid/almgrid.css" />
+		<script type="text/javascript" src="${pageContext.request.contextPath}/resources/almgrid/almgrid.class.js"></script>
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/almgrid/clusterize.css" />
+		<script type="text/javascript" src="${pageContext.request.contextPath}/resources/almgrid/clusterize.js"></script>
+		 <!-- export scripts -->
+       <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jspdf-1.5.3-jspdf.min.js"></script>
+       <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/html2canvas-1.3.2-html2canvas.min.js"></script>
+			
 	
  </head>
  <body>
@@ -71,196 +98,201 @@
 		</div>
  <!-- /.card-header -->
  <!-- /.card-header -->
-		<div class="card-body">
-			<div class="row">
-				<div class="col-sm-12">
-					<table id="example" class="display table table-bordered nowrap" style="width:100%;">
-						<thead class="thead-light">
-    						<tr>
-								<th style="text-align:center;"><input id="multiselect" name="select_all" value="1" type="checkbox"></th>
-    							<th>User Name</th>
-    							<th>Email Address</th>				
-    						</tr>
-  						</thead>
-  						<tbody>
-  						</tbody>
-					</table>
+	<div class="container-fluid">
+<div class="tab-content" id="custom-tabs-one-tabContent">
+
+<div class="tab-pane fade show active" id="custom-tabs-one-home"
+	role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+	<div class="card-body">
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="almgrid-container">
+								<div class="row">
+									<div class="col-sm-4 almgrid-pagecount-box">
+										Show
+										<select class="cmb-row-count almgrid-pagecount">
+											<option value="10" selected>10</option>
+											<option value="25">25</option>
+											<option value="50">50</option>
+											<option value="100">100</option>
+											<option value="500">500</option>
+											<option value="1000">1000</option>
+										</select>
+										Rows
+									</div>
+									<div class="col-md-4">
+											<div id="loaderDiv" style="display: none;">
+												<img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif" width="40px" /><b style="color:#800020;font-size:15px;"> Loading Data ... Please wait</b> 
+											</div>
+									</div>
+									<div class="col-sm-4 almgrid-global-search-box">
+										Search
+										<input type="text" class="form-control almgrid-global-search" />
+									</div>
+								</div>
+							
+								<div id="alertMsgDiv" style="display: none;padding-left: 90px">
+								<br>
+									<b style="color:red;font-size:15px;white-space: nowrap;">The number of original fetched data is exceeding the number of allowed data to show. Please set a filter to reduce the fetched data from this button  </b> 
+									<i class="fa fa-search" style="color:red;border:1px solid black;fontSize:22px;background-color:white;"></i>										
+								</div>
+								<div id="UsersGridTable" class="table-responsive almgrid-table-div">
+									<table id="UsersTable" class="table table-striped table-bordered almgrid-table">
+										<thead>
+											<tr class="header">
+												<th class="table-select-all">
+												</th>
+												
+
+												<th>User Name
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> <i
+																class="fa fa-list almgrid-filter-i"
+																aria-hidden="true"></i></button>
+														<ul class="dropdown-menu filter-dropdown-ul">
+
+														</ul>
+													</li>
+												</th>
+
+												<th>Email Address
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> <i
+																class="fa fa-list almgrid-filter-i"
+																aria-hidden="true"></i></button>
+														<ul
+															class="dropdown-menu dropdown-menu-right filter-dropdown-ul">
+
+														</ul>
+													</li>
+												</th>
+
+											
+											</tr>
+
+											<tr>
+												<th class="table-select-all"><input type="checkbox"
+														class="table-select-all-checkbox"></th>
+												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
+												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
+												
+											</tr>
+										</thead>
+										<tbody>
+
+										</tbody>
+
+									</table>
+								</div>
+
+								<hr>
+								<div class="pagination-div">
+									<div class="row">
+										<div class="col-sm-7">
+											<p class="pagination-label">
+												Viewing <span>0-0</span>
+												of
+												<span>0</span>
+											</p>
+										</div>
+										<div class="col-sm-5 pagination-buttons">
+											<nav aria-label="Page navigation">
+												<ul class="pagination pagination-buttons justify-content-end">
+													<li class="page-item"><button type="button"
+															class="page-link pagination-previous pagination-button shadow-none">Prev</button>
+													</li>
+													<li class="page-item dropdown-pagination-numbers">
+														<!-- <select class="form-control page-number-select shadow-none">
+														</select> -->
+														<div class="input-group page-number-group-div">
+															<input type="text"
+																class="form-control page-number-select shadow-none" />
+															<input type="text"
+																class="form-control page-number-span shadow-none" />
+														</div>
+													</li>
+													<li class="page-item"><button type="button"
+															class="page-link pagination-next pagination-button shadow-none">Next</button>
+													</li>
+												</ul>
+											</nav>
+										</div>
+									</div>
+
+
+								</div>
+
+							</div>
+
+						</div>
+					</div>
 				</div>
-			</div>
-		</div>
-		
 	</div>
+
+	</div>
+</div>
 		
 
-<script> 
-$(document).ready(function() {
-	var bassamData = ${ListGridTable};
-	console.log(bassamData);
-	var username='';
-	var slct = [];
-	//console.log("bassamData is " +bassamData + " first item code is " +bassamData[0]);
-	var table = $('#example').DataTable( {
-	"bProcessing": true,
-    "aaData": bassamData,// <-- your array of objects
-    "aoColumns":[
-    	{
-        	"mData": null,
-          	"bSortable": false,
-	        "mRender" : function ( bassamData, type, full ) { 
-		        
-	            	return ''}    		
-    	}, 
-        
-        {
-            "aTargets":[ 1 ],
-            "sType": "String",
-            "mRender": function(url, type, full) {
-           //console.log('chk data : '+full[3]);
-           // how to pass parameter to UserFormView
-            	return    '<a href="'+ '${pageContext.request.contextPath}/UserFormView?username='+full[1] +'&emailAddress='+full[2] +'">' + url + '</a>';
-				}
-   
-       },
-      {
-          "mData":[2],
-         },
-	
-		],
-          'columnDefs': [
-         {
-            'targets': 0,
-            className : 'select-checkbox',
-            'checkboxes': {
-               'selectRow': true,
-               'selectCallback': function(nodes, selected){
-                  // If "Show all" is not selected
-                  if($('#ctrl-show-selected').val() !== 'all'){
-                     // Redraw table to include/exclude selected row
-                     table.draw(false);                  
-                  }            
-               }
-            },
-         }
-      ],
-		select : {
-			style : 'multi',
-			selector : 'td:first-child'
-		},  
-		'order': [[2, 'asc']],
-			select: true,
-			order : [ [ 0, 'asc' ] ],
-			'select': { style: 'multi',
-      selector : 'td:first-child'
-      },
-      'order': [[2, 'asc']],
-      	dom: 'Blfrtip',
-		"paging":true,
-		"pageLength":10, 
-		"scrollY": 310,
-		"scrollX": true,
-		"ordering":true,
-		"rowReorder": true,
-		"info":       true,
-		"filter":     true,
-		"length":     true,
-		"processing": true,
-		"deferRender": true,
-          //orderable : false,
-      
-   });
-// checkbox
-     $('#example tbody').on( 'click', 'tr', function () {
-            var $checkbox = $(this).toggleClass('selected')
-			if($(this).hasClass('selected')) {
-    			var pos = table.row(this).index();
-    			var row = table.row(pos).data();
-    			var str= new Array();
-		      	str=row
-		      	username=str[1];
-		      	slct.push(username);
-		      	// console.log(username);
-		      	console.log('array is: ' +slct);
-		      	} else { 
-		      	   $checkbox.removeAttr('checked');
-		      		console.log( 'unselected NO' );
-		      		var pos = table.row(this).index();
-    				var row = table.row(pos).data();
-    				var str= new Array();
-		      		str=row
-		      		username=str[1];
-		      		removeItem = username;
-		      		console.log('user to remove: '+username);
-		      		slct = jQuery.grep(slct, function(value) {
-        				return value != removeItem;
-      					});
-      					console.log('array after remove is: '+slct);
-		      	 }
-		
-    } );
+<script>
+    $(document).ready(function () {
+        var UserListData = ${ListGridTable};
 
-			$('#multiselect').on('click', function() {
-			    var count=$('[name="example_length"]').val();
-			    
-					if ($("th.select-checkbox").hasClass("selected")) {
-						table.rows().deselect();
-						$("th.select-checkbox").removeClass("selected");
-					} else {
-						var p = table.rows({ page: 'current' }).nodes();
-						var i;
-						var x=0;
-						for(i=0; i<=count; i++){
-						x=i;
-						table.row(':eq('+x+')', { page: 'current' }).select();
-						}
-						//table.row({page: 'current' }).select();
-						//table.rows().select();
-						$("th.select-checkbox").addClass("selected");
-						
-					}
-				}).on("select deselect", function() {
-					if (table.rows({
-						selected : true
-					}).count() !== table.rows().count()) {
-			          $("th.select-checkbox").removeClass("selected");
-					} else {
-						$("th.select-checkbox").addClass("selected");
-					}
-				}); 
+        var tab = 0;
 
-	 
-			 $("#deleteButton").click(  function() {
-			 		 console.log('delete now');
-			 		var usernames ='0';
-			 		var i;
-			 		for (i = 0; i < slct.length; ++i) {
-			 		    usernames =slct[i];
-			 		    console.log("the  usennames " +usernames);
-						$.ajax({
-							type : "GET",
-							url : "${pageContext.request.contextPath}/UserFormDelete",
-							dataType : "json",
-							data : {
-								"userName" : usernames
-							},
-							success : function(data) {
-								console.log("The returned data is " +data.Safatest);
-								location.reload();
-								
-							},
-							error : function(error) {
-								console.log("The error is " + error);
-							}
-						});
-						
-						
-					}
-			 
-		 })
-			   
-				
-		} );
+        $(document).ready(function () {
+            var almgrid = new Almgrid({
+                tableId: "UsersTable",
+                dataArray: UserListData,
+                columnLinkNb: [1],
+                selectCheckbox: true
+            });
+        });
 
+        $(".almgrid-table").on("click", ".almgrid-link", function (e) {
+            var param1 = $(this).parents('tr').children('td').find('input').val();
+            var param = "${pageContext.request.contextPath}/UserFormView?username=" + param1 + "&NavAction=2";
+            window.location.href = param;
+            e.preventDefault();
+        });
 
+        $("#deleteButton").click(function () {
+            var deleteArray = [];
+            $("#UsersTable").find(".table-select-checkbox").each(function () {
+                if ($(this).is(":checked")) {
+                    var checkboxVal = $(this).val();
+                    deleteArray.push(checkboxVal);
+                   }
+            });
+
+            deleteArray = deleteArray.filter(function (elem, index, self) {
+                return index === self.indexOf(elem);
+            });
+
+            $.ajax({
+                type: "GET",
+                url: "${pageContext.request.contextPath}/UserListViewDelete",
+                dataType: "json",
+                data: {
+                    "userName": deleteArray
+                },
+                success: function (data) {
+                    location.reload();
+                },
+                error: function (error) {
+                    console.log("The error is " + error);
+                }
+            });
+        });
+    });
+
+    $( "#Fview" ).click(function() {
+		var id =  $(".almgrid-link").closest('tr').find('td:first-child input').val();
+			location.href="${pageContext.request.contextPath}/UserFormView?username="+id+"&NavAction=2";
+	});
+
+	$( "#Lview" ).click(function() {
+		location.reload();
+	});
 </script>
 
 
