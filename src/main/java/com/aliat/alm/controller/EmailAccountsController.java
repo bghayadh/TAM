@@ -59,6 +59,9 @@ public class EmailAccountsController {
 	
 	@Autowired
 	Form form;
+	@Autowired
+	Notify notification;
+	
 	/////////////////////////////////  EmailAccountsListView   ///////////////////////////
 @SuppressWarnings("unchecked")
 @RequestMapping(value = "/EmailAccountsListView", method = RequestMethod.GET)
@@ -71,7 +74,8 @@ public String EmailAccountsListView(Locale locale, Model model, HttpServletReque
 
 		Session session = almsessions.getSession();
 		Transaction tx = session.beginTransaction();
-
+		notification.headerNotifications(session, model);
+		
 		listEmailAccounts = session.createQuery(
 				"select 1,t.id,t.email from EmailAccounts t")
 				.list();
@@ -150,7 +154,7 @@ public Map<String, Object> EmailAccountsFormViewDelete(Locale locale, Model mode
 		
 		try {
 			
-				
+			
 				query = session.createSQLQuery("DELETE EMAIL_ACCOUNTS WHERE ID='"+id+"'");
 				query.executeUpdate();
 			
@@ -186,6 +190,7 @@ public Map<String, Object> EmailAccountsFormViewDelete(Locale locale, Model mode
 	SessionFactory sf = cfg.buildSessionFactory(builder.build());
 	Session session = sf.openSession();
 	Transaction tx = session.beginTransaction();
+	notification.headerNotifications(session, model);
 	
 	String itemsList = request.getParameter("notifiList");
 	ObjectMapper mapper = new ObjectMapper();
