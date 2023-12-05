@@ -10,52 +10,40 @@
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <!-- <script src="${pageContext.request.contextPath}/resources/js/jquery.slim.min.js" ></script>  -->
-<script src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>
-<script type="text/javascript"
-	src="${pageContext.request.contextPath}/resources/js/moment.min.js"></script>
-<script type="text/javascript"
-	src="${pageContext.request.contextPath}/resources/js/tempusdominus-bootstrap-4.min.js"></script>
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/resources/css/tempusdominus-bootstrap-4.min.css" />
+   <meta charset="utf-8">
+        <title></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <!-- <script src="${pageContext.request.contextPath}/resources/js/jquery.slim.min.js" ></script>  -->
+        <script src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/moment.min.js"></script>
+        <script type="text/javascript"
+            src="${pageContext.request.contextPath}/resources/js/tempusdominus-bootstrap-4.min.js"></script>
+        <link rel="stylesheet"
+            href="${pageContext.request.contextPath}/resources/css/tempusdominus-bootstrap-4.min.css" />
+        <script src="${pageContext.request.contextPath}/resources/js/popper-1.12.9-min.js"></script>
+        <script src="${pageContext.request.contextPath}/resources/js/bootstrap.min.js"></script>
+        <link href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
+        <script src="${pageContext.request.contextPath}/resources/js/dataTables.min.js"></script>
+        <script src="${pageContext.request.contextPath}/resources/js/jquery-migrate-3.0.0.min.js"></script>
+        <script src="${pageContext.request.contextPath}/resources/js/platform.js"></script>
+        <script src="${pageContext.request.contextPath}/resources/js/jquery2-ui.js"></script>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/jquery-ui.css" rel="stylesheet" />
 
-<script
-	src="${pageContext.request.contextPath}/resources/js/bootstrap.min.js"></script>
-<link
-	href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css"
-	rel="stylesheet">
-<script
-	src="${pageContext.request.contextPath}/resources/js/dataTables.min.js"></script>
-<!--  <script src="${pageContext.request.contextPath}/resources/js/jquery-1.11.3.js"></script>  -->
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/dataTables.min.css">
+        <script src="${pageContext.request.contextPath}/resources/js/all.min.js"></script>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/font-awesome.min.css">
+        <link href="${pageContext.request.contextPath}/resources/css/all.min.css" rel="stylesheet">
 
-<script
-	src="${pageContext.request.contextPath}/resources/js/jquery-migrate-3.0.0.min.js"></script>
-
-<script
-	src="${pageContext.request.contextPath}/resources/js/jquery-ui.js"></script>
-
-<script
-	src="${pageContext.request.contextPath}/resources/js/jquery.mcautocomplete.js"></script>
-
-
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/resources/css/dataTables.min.css">
-<script src="${pageContext.request.contextPath}/resources/js/all.min.js"></script>
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/resources/css/font-awesome.min.css">
-<link
-	href="${pageContext.request.contextPath}/resources/css/all.min.css"
-	rel="stylesheet">
-
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/resources/css/ListView.css">
-
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/resources/css/header.css">
-<link rel="stylesheet" type="text/css"
-	href="${pageContext.request.contextPath}/resources/css/jquerysctipttop.css">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/resources/css/bootstrap-datetimepicker.min.css">
-
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/ListView.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/header.css">
+        <link rel="stylesheet" type="text/css"
+            href="${pageContext.request.contextPath}/resources/css/jquerysctipttop.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/bootstrap-datetimepicker.min.css">
+        <link href='${pageContext.request.contextPath}/resources/css/bootstrap-datepicker.min.css' rel='stylesheet'
+            type='text/css'>
+        <script src='${pageContext.request.contextPath}/resources/js/bootstrap-datepicker.min.js'
+            type='text/javascript'></script>
+       
 <style>
 .p {
 	font-size: large;
@@ -66,12 +54,16 @@
 	font-size: large;
 }
 
-.ui-autocomplete {
-	max-height: 100px;
-	overflow-y: auto; /* prevent horizontal scrollbar */
-	overflow-x: both; /* add padding to account for vertical scrollbar */
-	padding-right: 100px;
-}
+  .ui-autocomplete {
+                max-height: 250px;
+                overflow-y: auto;
+                /* prevent horizontal scrollbar */
+                overflow-x: both;
+                /* add padding to account for vertical scrollbar */
+                padding-right: 10px;
+                z-index: 9999;
+                width: 350px;
+            }
 
 .dot {
 	height: 17px;
@@ -83,6 +75,13 @@
 	margin-right: 10px;
 	margin-left: 10px;
 }
+
+ .nav-link.active {
+                background-color: #FFD966 !important;
+                color: #00757c !important;
+            }
+             .hide-row { display:none; }
+    
 </style>
 
 </head>
@@ -98,17 +97,7 @@
 	<div class="container-fluid">
 		<div class="row">
 
-			<div class="col-md-3">
-				<div class="form-group">
-					<div class="input-group-prepend">
-
-						<span class="input-group-text" style="color: green">User
-							Form</span> <i>&nbsp</i><span class="dot"></span> <i>&nbsp</i> <label
-							for="formStatus" id="formStatus">Save</label>
-					</div>
-
-				</div>
-			</div>
+		
 			<div class="col-md-3">
 				<div class="form-group">
 					<div class="input-group-prepend">
@@ -117,13 +106,75 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-md-4">
+			<div class="col-md-3">
 				<div class="input-group-prepend">
 					<span class="input-group-text">Status</span> <input type="text"
 						id="userstat" value="${userStatus}"
 						class="form-control text-input" />
 				</div>
 			</div>
+			<div class="col-md-3">
+			 <div class="nextprvItems">
+                        <div class="form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Other User</span>
+                                <input type="text" id="selectnav" value="${selectnav}" 
+                                    class="form-control text-input" />
+                            </div>
+                        </div>
+                    </div></div>
+			<div class="col-md-3 text-right">
+                        <i>&nbsp</i><span class="dot"></span> <i>&nbsp</i> <label for="formStatus" id="formStatus"
+                            style="float: right;">Saved</label>
+                    </div>
+                    
+                    </div>
+                      <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <div class="input-group-prepend" id="datetimepicker1" data-target-input="nearest">
+                                <span class="input-group-text" style="width: 170px;"">Created Date</span> <input type=" text" id="createdate" readonly value="${createdDate}"
+                                    class="form-control datetimepicker-input" data-toggle="datetimepicker"
+                                    data-target="#datetimepicker1" />
+                                <div class="input-group-append" data-target="#datetimepicker1"
+                                    data-toggle="datetimepicker"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <div class="input-group-prepend" id="datetimepicker2" data-target-input="nearest">
+                                <span class="input-group-text" style="width: 210px;">Last
+                                    Modify Date</span> <input type="text" id="lstmodifdate" readonly
+                                    value="${lastModifiedDate}" class="form-control datetimepicker-input"
+                                    data-toggle="datetimepicker" data-target="#datetimepicker2" />
+                                <div class="input-group-append" data-target="#datetimepicker2"
+                                    data-toggle="datetimepicker"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" col-md-4 ">
+               <div class="nextprvItems">
+			<label id="label-1" style="width: 80px; text-align: center;  margin-top: 5px ! important;"></label>
+				<nav aria-label="Page navigation">
+			  		<ul class="pagination">
+						<li id="btnFrst" title="Go To First"  class="page-item " style="margin-right: 2px;"><a
+							style="margin-left: 3px;width: 53px;height:40px" id="btnFirst" href="#"
+							class="btn btn-success previous">&laquo; </a></li>
+						<li id="btnPrv" title="Go To Previous"  class="page-item " style="margin-right: 2px;"><a
+							style="width: 53px;height:40px" id="btnPrva" href="#"
+							class="btn btn-success previous">&lsaquo; </a></li>
+						<li id="btnNext" title="Go To Next"  class="page-item"
+							style="padding-right: 0px ! important;"><a
+							style="width: 53px;margin-right: 2px;height:40px" id="btnNexta" style="width:100px;" href="#"
+							class="btn btn-success next"> &rsaquo; </a></li>
+						<li id="btnLst" title="Go To Last" class="page-item " style="margin-right: 2px;"><a
+							style="width: 53px;height:40px" id="btnLast" href="#"
+							class="btn btn-success next">&raquo;</a></li>			  		</ul>
+				</nav>
+		</div></div>
 			<div class="col-md-2" style="text-align: right;">
 				<div class="btn-group pull-right">
 
@@ -224,24 +275,7 @@
 						</div>
 					</div>
 
-					<div class="col-md-4">
-						<div class="form-group">
-							<div class="input-group-prepend" id="datetimepicker1"
-								data-target-input="nearest">
-								<span class="input-group-text">Created Date</span> <input
-									type="text" id="createdate" readonly value="${createdDate}"
-									class="form-control datetimepicker-input"
-									data-toggle="datetimepicker" data-target="#datetimepicker1" />
-								<div class="input-group-append" data-target="#datetimepicker1"
-									data-toggle="datetimepicker">
-									<div class="input-group-text">
-										<i class="fa fa-calendar"></i>
-									</div>
-								</div>
-							</div>
-						</div>
-
-					</div>
+					
 				</div>
 
 
@@ -264,24 +298,7 @@
 						</div>
 					</div>
 
-					<div class="col-md-4">
-						<div class="form-group">
-							<div class="input-group-prepend" id="datetimepicker2"
-								data-target-input="nearest">
-								<span class="input-group-text">Last Modify Date</span> <input
-									type="text" id="lstmodifdate" readonly
-									value="${lastModifiedDate}"
-									class="form-control datetimepicker-input"
-									data-toggle="datetimepicker" data-target="#datetimepicker2" />
-								<div class="input-group-append" data-target="#datetimepicker2"
-									data-toggle="datetimepicker">
-									<div class="input-group-text">
-										<i class="fa fa-calendar"></i>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+					
 
 				</div>
 
@@ -294,7 +311,7 @@
 								class="form-control text-input" />
 						</div>
 					</div>
-					<div class="col-md-8">
+					<div class="col-md-4">
 						<div class="form-group">
 							<div class="input-group-prepend">
 								<span class="input-group-text">Address</span> <input type="text"
@@ -460,9 +477,12 @@
 		});
 
 		if ('${listUser}' != "addNew") {
+				
 		} else {
 			// set status to new and green while new record
 			$("#formStatus").text("New");
+			 $(".nextprvItems").addClass("hide-row ");
+				
 			$('.dot').css({
 				"background-color" : "orange"
 			});
@@ -741,7 +761,7 @@
 																	}
 																roleChecked=[];
 																var param = "${pageContext.request.contextPath}/UserFormView?username="
-																		+ $("#username").val();
+																		+ $("#username").val()+"&NavAction=2";
 																location.replace(param);
 															},
 															error : function(
@@ -777,6 +797,152 @@
 										}
 									});
 						});
+
+		 $("#selectnav").autocomplete({
+       	  source: debounce(function(request, response, event, ui) {
+       	    $.ajax({
+       	      type: "GET",
+       	      contentType: "application/json; charset=utf-8",
+       	      url: '${pageContext.request.contextPath}/GetAllUser',
+       	      data: {
+       	        "User": $("#selectnav").val(),
+       	      },
+       	      dataType: "json",
+       	      success: function(data) {
+       	        if (data != null) {
+       	          response(data.ListUser);
+       	        }
+       	      },
+       	      error: function(result) {
+       	        alert("Error");
+       	      }
+       	    });
+       	  }, 900),
+       	  minLength: 0,
+       	  maxShowItems: 40,
+       	  scroll: true,
+       	  select: function(event, ui) {
+       	    this.value = ui.item ? ui.item[0] + ":" + ui.item[2] : '';
+
+       	    var param = '${pageContext.request.contextPath}/UserFormView?username=' + ui.item[1]+"&NavAction=2";
+       	    window.location.href = param;
+       	    return false;
+       	  }
+       	}).autocomplete("instance")._renderItem = function(ul, item) {
+       	  return $("<li class='each'>")
+       	    .append("<div class='acItem'><span class='desc'>" +
+       	      item[1] + ' ' + item[2]+ ' ' +item[3] + "</span><br><span class='name' style='font-weight:bold'>" +
+       	      item[0] + ', ' + item[4] + "</span>")
+       	    .appendTo(ul);
+       	};
+
+
+
+   $("#selectnav").focus(function () {
+       
+       if (this.value == "") {
+           $(this).autocomplete("search");
+       }
+   });
+     		
+     		function debounce(fn, delay) {
+     		    var timer;
+     		    return function() {
+     		      var args = [].slice.call(arguments);
+     		      var context = this;
+     		      if (timer) {
+     		        window.clearTimeout(timer);
+     		      }
+     		      timer = window.setTimeout(function() {
+     		        fn.apply(context, args);
+     		      }, delay);
+     		    };
+     		  };
+
+
+
+     	      if('${SelectedIndex}' != "addNew"){
+  				var SelectedIndex = ${SelectedIndex};
+  				if('${userCount}' != "addNew"){
+
+  					
+  			var userCount = ${userCount};
+  			
+  			if(($("#username").val()) != "" && ($("#username").val()) != null){
+
+  			if(SelectedIndex === userCount){
+  				
+          		document.getElementById("btnLast").style.opacity = 0.5;
+          		$("#btnLast").hasClass("disabled");
+          		document.getElementById("btnLast").style.pointerEvents = "none";
+          		
+          		document.getElementById("btnNexta").style.opacity = 0.5;
+          		document.getElementById("btnNexta").style.pointerEvents = "none";
+
+  				
+  				$("#btnNexta").hasClass("disabled");
+  				
+  				}else{
+  					
+  					if(!$("#btnNexta").hasClass("disabled")){
+  						
+  						$("#btnNext").click(function(){
+  							
+  							var param ="${pageContext.request.contextPath}/UserFormView?username="+$("#username").val()+"&NavAction=1";
+
+  							window.location.href =param;
+  				
+  						});
+  			
+  					}
+  					if(!$("#btnLst").hasClass("disabled")){
+          				
+          				$("#btnLst").click(function(){
+          					
+  							var param ="${pageContext.request.contextPath}/UserFormView?username="+$("#username").val()+"&NavAction=4";
+          					window.location.href =param;
+          		
+          				});
+          	
+          			}
+  				}
+  			
+  			if(SelectedIndex === 1){ //first record in database
+  				
+          		document.getElementById("btnFirst").style.opacity = 0.5;
+          		$("#btnFirst").hasClass("disabled");
+          		document.getElementById("btnFirst").style.pointerEvents = "none";
+          		
+          		document.getElementById("btnPrva").style.opacity = 0.5;
+          		$("#btnPrva").hasClass("disabled");
+          		document.getElementById("btnPrv").style.pointerEvents = "none";
+  			
+  			}else{
+  				if(!$("#btnPrva").hasClass("disabled")){
+  					
+  					$("#btnPrv").click(function(){
+  						
+  						var param ="${pageContext.request.contextPath}/UserFormView?username="+$("#username").val()+"&NavAction=0";
+  						window.location.href =param;
+  						
+  					 });
+  				}
+  				$("#btnFrst").click(function(){
+
+          			if(!$("#btnFrst").hasClass("disabled")){
+          					
+  						var param ="${pageContext.request.contextPath}/UserFormView?username="+$("#username").val()+"&NavAction=3";
+          				window.location.href =param;
+          						
+          				}
+          				 });
+
+  			}
+  			
+  			}}
+  		}
+  			$("#label-1").text((SelectedIndex)+"/"+userCount);
+		
 	</script>
 </body>
 </html>
