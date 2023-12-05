@@ -5,56 +5,41 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <head>
 <meta charset="ISO-8859-1">
-<title>Role List View</title>
+<title>User Role List View</title>
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<!-- <script src="${pageContext.request.contextPath}/resources/js/jquery.slim.min.js" ></script>  -->
-<script src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>
-<script type="text/javascript"
-	src="${pageContext.request.contextPath}/resources/js/moment.min.js"></script>
-<script type="text/javascript"
-	src="${pageContext.request.contextPath}/resources/js/tempusdominus-bootstrap-4.min.js"></script>
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/resources/css/tempusdominus-bootstrap-4.min.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <!-- <script src="${pageContext.request.contextPath}/resources/js/jquery.slim.min.js" ></script>  -->
+        <script src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/moment.min.js"></script>
+        <script type="text/javascript"
+            src="${pageContext.request.contextPath}/resources/js/tempusdominus-bootstrap-4.min.js"></script>
+        <link rel="stylesheet"
+            href="${pageContext.request.contextPath}/resources/css/tempusdominus-bootstrap-4.min.css" />
+        <script src="${pageContext.request.contextPath}/resources/js/popper-1.12.9-min.js"></script>
+        <script src="${pageContext.request.contextPath}/resources/js/bootstrap.min.js"></script>
+        <link href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
+        <script src="${pageContext.request.contextPath}/resources/js/dataTables.min.js"></script>
+        <script src="${pageContext.request.contextPath}/resources/js/jquery-migrate-3.0.0.min.js"></script>
+        <script src="${pageContext.request.contextPath}/resources/js/platform.js"></script>
+        <script src="${pageContext.request.contextPath}/resources/js/jquery2-ui.js"></script>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/jquery-ui.css" rel="stylesheet" />
 
-<script
-	src="${pageContext.request.contextPath}/resources/js/bootstrap.min.js"></script>
-<link
-	href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css"
-	rel="stylesheet">
-<script
-	src="${pageContext.request.contextPath}/resources/js/dataTables.min.js"></script>
-<!--  <script src="${pageContext.request.contextPath}/resources/js/jquery-1.11.3.js"></script>  -->
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/dataTables.min.css">
+        <script src="${pageContext.request.contextPath}/resources/js/all.min.js"></script>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/font-awesome.min.css">
+        <link href="${pageContext.request.contextPath}/resources/css/all.min.css" rel="stylesheet">
 
-<script
-	src="${pageContext.request.contextPath}/resources/js/jquery-migrate-3.0.0.min.js"></script>
-
-<script
-	src="${pageContext.request.contextPath}/resources/js/jquery-ui.js"></script>
-
-<script
-	src="${pageContext.request.contextPath}/resources/js/jquery.mcautocomplete.js"></script>
-
-
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/resources/css/dataTables.min.css">
-<script src="${pageContext.request.contextPath}/resources/js/all.min.js"></script>
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/resources/css/font-awesome.min.css">
-<link
-	href="${pageContext.request.contextPath}/resources/css/all.min.css"
-	rel="stylesheet">
-
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/resources/css/ListView.css">
-
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/resources/css/header.css">
-<link rel="stylesheet" type="text/css"
-	href="${pageContext.request.contextPath}/resources/css/jquerysctipttop.css">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/resources/css/bootstrap-datetimepicker.min.css">
-
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/ListView.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/header.css">
+        <link rel="stylesheet" type="text/css"
+            href="${pageContext.request.contextPath}/resources/css/jquerysctipttop.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/bootstrap-datetimepicker.min.css">
+        <link href='${pageContext.request.contextPath}/resources/css/bootstrap-datepicker.min.css' rel='stylesheet'
+            type='text/css'>
+        <script src='${pageContext.request.contextPath}/resources/js/bootstrap-datepicker.min.js'
+            type='text/javascript'></script>
+       
 <style>
 .p {
 	font-size: large;
@@ -66,11 +51,16 @@
 }
 
 .ui-autocomplete {
-	max-height: 100px;
-	overflow-y: auto; /* prevent horizontal scrollbar */
-	overflow-x: both; /* add padding to account for vertical scrollbar */
-	padding-right: 100px;
-}
+                max-height: 250px;
+                overflow-y: auto;
+                /* prevent horizontal scrollbar */
+                overflow-x: both;
+                /* add padding to account for vertical scrollbar */
+                padding-right: 10px;
+                z-index: 9999;
+                width: 350px;
+            }
+
 .textarea {
   width: 400px;
   height: 100px;
@@ -86,6 +76,12 @@
 	margin-right: 10px;
 	margin-left: 10px;
 }
+.nav-link.active {
+                background-color: #FFD966 !important;
+                color: #00757c !important;
+            }
+             .hide-row { display:none; }
+    
 </style>
 </head>
 <!-- top nav bar -->
@@ -97,47 +93,89 @@
 <!-- end nav bar -->
 <p></p>
 <div class="container-fluid">
-	<div class="row">
+<div class="row">
 
-		<div class="col-md-3">
-			<div class="form-group">
-				<div class="input-group-prepend">
-
-					<span class="input-group-text" style="color: green">Role
-						Users</span> <i>&nbsp</i><span class="dot"></span> <i>&nbsp</i> <label
-						for="formStatus" id="formStatus">Save</label>
+		
+			<div class="col-md-3">
+				<div class="form-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">Role</span> <input type="text"
+							 value="${roleName}" class="form-control text-input" readonly />
+					</div>
 				</div>
+			</div>
+			<div class="col-md-3"></div>
+			<div class="col-md-3">
+			 <div class="nextprvItems">
+                        <div class="form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Other Role</span>
+                                <input type="text" id="selectnav" value="${selectnav}" 
+                                    class="form-control text-input" />
+                            </div>
+                        </div>
+                    </div></div>
+			<div class="col-md-3 text-right">
+                        <i>&nbsp</i><span class="dot"></span> <i>&nbsp</i> <label for="formStatus" id="formStatus"
+                            style="float: right;">Saved</label>
+                    </div>
+                    
+                    </div>
+                     <div class="row">
+                    <div class="col-md-3">
+                       
+                    </div>
 
+                    <div class="col-md-3">
+                      
+                    </div>
+
+               <div class=" col-md-4 ">
+               <div class="nextprvItems">
+			<label id="label-1" style="width: 80px; text-align: center;  margin-top: 5px ! important;"></label>
+				<nav aria-label="Page navigation">
+			  		<ul class="pagination">
+						<li id="btnFrst" title="Go To First"  class="page-item " style="margin-right: 2px;"><a
+							style="margin-left: 3px;width: 53px;height:40px" id="btnFirst" href="#"
+							class="btn btn-success previous">&laquo; </a></li>
+						<li id="btnPrv" title="Go To Previous"  class="page-item " style="margin-right: 2px;"><a
+							style="width: 53px;height:40px" id="btnPrva" href="#"
+							class="btn btn-success previous">&lsaquo; </a></li>
+						<li id="btnNext" title="Go To Next"  class="page-item"
+							style="padding-right: 0px ! important;"><a
+							style="width: 53px;margin-right: 2px;height:40px" id="btnNexta" style="width:100px;" href="#"
+							class="btn btn-success next"> &rsaquo; </a></li>
+						<li id="btnLst" title="Go To Last" class="page-item " style="margin-right: 2px;"><a
+							style="width: 53px;height:40px" id="btnLast" href="#"
+							class="btn btn-success next">&raquo;</a></li>			  		</ul>
+				</nav>
+		</div></div>
+			<div class="col-md-2" style="text-align: right;">
+				<div class="btn-group pull-right">
+
+					<div class="glyph">
+
+						<button type="button" id="Fview" class="btn btn-danger"
+							data-toggle="tooltip" data-placement="top" title="Form View"
+							style="background: #da6815;">
+							<i class="fa fa-edit"></i>
+						</button>
+						<button type="button" id="Lview" class="btn btn-light"
+							data-toggle="tooltip"
+							onclick='window.location.href = "${pageContext.request.contextPath}/RoleListView"'
+							data-placement="top" title="List View">
+							<i class="fa fa-bars"></i>
+						</button>
+						<button type="button" class="btn btn-light" data-toggle="tooltip"
+							data-placement="top" title="Search">
+							<i class="fa fa-search"></i>
+						</button>
+
+					</div>
+
+				</div>
 			</div>
 		</div>
-		<div class="col-md-7"></div>
-
-		<div class="col-md-2" style="text-align: right;">
-			<div class="btn-group pull-right">
-
-				<div class="glyph">
-
-					<button type="button" id="Fview" class="btn btn-danger"
-						data-toggle="tooltip" data-placement="top" title="Form View"
-						style="background: #da6815;">
-						<i class="fa fa-edit"></i>
-					</button>
-					<button type="button" id="Lview" class="btn btn-light"
-						data-toggle="tooltip"
-						onclick='window.location.href = "${pageContext.request.contextPath}/UserRoleListView"'
-						data-placement="top" title="List View">
-						<i class="fa fa-bars"></i>
-					</button>
-					<button type="button" class="btn btn-light" data-toggle="tooltip"
-						data-placement="top" title="Search">
-						<i class="fa fa-search"></i>
-					</button>
-
-				</div>
-
-			</div>
-		</div>
-	</div>
 	<p></p>
 
 </div>
@@ -216,8 +254,10 @@
 
 <script type='text/javascript'>
 
-		if ('${listRoleUser}' === "addNew") {
+	if ('${listRoleUser}' === "addNew") {
 			$("#formStatus").text("New");
+			 $(".nextprvItems").addClass("hide-row ");
+				
 			$('.dot').css({
 				"background-color" : "orange"
 			});
@@ -298,5 +338,149 @@
 				});
 		
 		});
+
+		 $("#selectnav").autocomplete({
+	       	  source: debounce(function(request, response, event, ui) {
+	       	    $.ajax({
+	       	      type: "GET",
+	       	      contentType: "application/json; charset=utf-8",
+	       	      url: '${pageContext.request.contextPath}/GetAllRole',
+	       	      data: {
+	       	        "Role": $("#selectnav").val(),
+	       	      },
+	       	      dataType: "json",
+	       	      success: function(data) {
+	       	        if (data != null) {
+	       	          response(data.ListUser);
+	       	          console.log(data.ListUser);
+	       	        }
+	       	      },
+	       	      error: function(result) {
+	       	        alert("Error");
+	       	      }
+	       	    });
+	       	  }, 900),
+	       	  minLength: 0,
+	       	  maxShowItems: 40,
+	       	  scroll: true,
+	       	  select: function(event, ui) {
+	       	    this.value = ui.item ? ui.item[0] + ":" + ui.item[0] : '';
+
+	       	    var param = '${pageContext.request.contextPath}/UserRoleFormView?rolename=' + ui.item[0]+"&NavAction=2";
+	       	    window.location.href = param;
+	       	    return false;
+	       	  }
+	       	}).autocomplete("instance")._renderItem = function(ul, item) {
+	       	  return $("<li class='each'>")
+	       	    .append("<div class='acItem'><span class='desc'><b>" +
+	       	      item[0]  + "</span><br>")
+	       	    .appendTo(ul);
+	       	};
+
+
+
+	   $("#selectnav").focus(function () {
+	       
+	       if (this.value == "") {
+	           $(this).autocomplete("search");
+	       }
+	   });
+	     		
+	     		function debounce(fn, delay) {
+	     		    var timer;
+	     		    return function() {
+	     		      var args = [].slice.call(arguments);
+	     		      var context = this;
+	     		      if (timer) {
+	     		        window.clearTimeout(timer);
+	     		      }
+	     		      timer = window.setTimeout(function() {
+	     		        fn.apply(context, args);
+	     		      }, delay);
+	     		    };
+	     		  };
+	     		
+	     		 if("${SelectedIndex}" != "addNew"){
+	   				var SelectedIndex = ${SelectedIndex};
+	   				if('${roleCount}' != "addNew"){
+
+	   					
+	   			var userCount = ${roleCount};
+	   			
+	   			if(($("#rolename").val()) != "" && ($("#rolename").val()) != null){
+
+	   			if(SelectedIndex === userCount){
+	   				
+	           		document.getElementById("btnLast").style.opacity = 0.5;
+	           		$("#btnLast").hasClass("disabled");
+	           		document.getElementById("btnLast").style.pointerEvents = "none";
+	           		
+	           		document.getElementById("btnNexta").style.opacity = 0.5;
+	           		document.getElementById("btnNexta").style.pointerEvents = "none";
+
+	   				
+	   				$("#btnNexta").hasClass("disabled");
+	   				
+	   				}else{
+	   					
+	   					if(!$("#btnNexta").hasClass("disabled")){
+	   						
+	   						$("#btnNext").click(function(){
+	   							
+	   							var param ="${pageContext.request.contextPath}/UserRoleFormView?rolename="+$("#rolename").val()+"&NavAction=1";
+
+	   							window.location.href =param;
+	   				
+	   						});
+	   			
+	   					}
+	   					if(!$("#btnLst").hasClass("disabled")){
+	           				
+	           				$("#btnLst").click(function(){
+	           					
+	   							var param ="${pageContext.request.contextPath}/UserRoleFormView?rolename="+$("#rolename").val()+"&NavAction=4";
+	           					window.location.href =param;
+	           		
+	           				});
+	           	
+	           			}
+	   				}
+	   			
+	   			if(SelectedIndex === 1){ //first record in database
+	   				
+	           		document.getElementById("btnFirst").style.opacity = 0.5;
+	           		$("#btnFirst").hasClass("disabled");
+	           		document.getElementById("btnFirst").style.pointerEvents = "none";
+	           		
+	           		document.getElementById("btnPrva").style.opacity = 0.5;
+	           		$("#btnPrva").hasClass("disabled");
+	           		document.getElementById("btnPrv").style.pointerEvents = "none";
+	   			
+	   			}else{
+	   				if(!$("#btnPrva").hasClass("disabled")){
+	   					
+	   					$("#btnPrv").click(function(){
+	   						
+	   						var param ="${pageContext.request.contextPath}/UserRoleFormView?rolename="+$("#rolename").val()+"&NavAction=0";
+	   						window.location.href =param;
+	   						
+	   					 });
+	   				}
+	   				$("#btnFrst").click(function(){
+
+	           			if(!$("#btnFrst").hasClass("disabled")){
+	           					
+	   						var param ="${pageContext.request.contextPath}/UserRoleFormView?rolename="+$("#rolename").val()+"&NavAction=3";
+	           				window.location.href =param;
+	           						
+	           				}
+	           				 });
+
+	   			}
+	   			
+	   			}}
+	   		}
+	   			$("#label-1").text((SelectedIndex)+"/"+userCount);
+	 		
 </script>	
 </html>
