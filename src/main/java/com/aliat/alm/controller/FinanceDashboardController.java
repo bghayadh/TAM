@@ -49,34 +49,32 @@ public class FinanceDashboardController {
 				notifications.headerNotifications(session, model);
 			
 				try {
-					query = session.createNativeQuery("SELECT SUM(A.INITIALCOST),B.SITE_ID, B.SITE_NAME,C.longitude,C.latitude "
-							+ " FROM fixed_asset_registry A  LEFT JOIN far_site B ON A.FAR_ID = B.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID "
-							+ " where (C.longitude is not null and C.longitude != '0' and C.longitude != 'null' and C.latitude is not null and C.latitude != '0' and C.latitude != 'null') GROUP BY B.SITE_ID,B.SITE_NAME,C.longitude,C.latitude  "
-							+ " ORDER BY SUM(A.INITIALCOST) DESC FETCH NEXT 10 ROWS ONLY  ");
-	                 
-					model.addAttribute("sitesMaxInitCostAsset",mapper.writeValueAsString(query.list()));
+				
+					query = session.createNativeQuery("SELECT * FROM(SELECT COALESCE(SUM(initCost),0) as initCost,siteID,siteName,longitude,latitude FROM ( SELECT DISTINCT C.SITE_ID AS site,C.WARE_ID as wareID, C.SITE_ID AS siteID, C.WARE_NAME AS siteName , C.LONGITUDE as longitude, "
+							+ " C.LATITUDE as latitude, A.INITIALCOST as initCost,A.FAR_ID AS FAR_ID   FROM FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID ) "
+							+ " WHERE (longitude is not null and longitude != '0' and longitude != 'null' and latitude is not null and latitude != '0' and latitude != 'null') GROUP BY siteID,siteName,longitude,latitude ) "
+							+ " ORDER BY (initCost) DESC FETCH NEXT 10 ROWS ONLY ");
+					model.addAttribute("topSitesInitCostAsset",mapper.writeValueAsString(query.list()));
 					
-					query = session.createNativeQuery("SELECT SUM(A.INITIALCOST),B.SITE_ID, B.SITE_NAME,C.longitude,C.latitude "
-							+ " FROM fixed_asset_registry A  LEFT JOIN far_site B ON A.FAR_ID = B.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID "
-							+ " where (C.longitude is not null and C.longitude != '0' and C.longitude != 'null' and C.latitude is not null and C.latitude != '0' and C.latitude != 'null') GROUP BY B.SITE_ID,B.SITE_NAME,C.longitude,C.latitude  "
-							+ " ORDER BY SUM(A.INITIALCOST) ASC FETCH NEXT 10 ROWS ONLY  ");
-	                 
-					model.addAttribute("sitesMinInitCostAsset",mapper.writeValueAsString(query.list()));
+					
+					query = session.createNativeQuery("SELECT * FROM(SELECT COALESCE(SUM(initCost),0) as initCost,siteID,siteName,longitude,latitude FROM ( SELECT DISTINCT C.SITE_ID AS site,C.WARE_ID as wareID, C.SITE_ID AS siteID, C.WARE_NAME AS siteName , C.LONGITUDE as longitude, "
+							+ " C.LATITUDE as latitude, A.INITIALCOST as initCost,A.FAR_ID AS FAR_ID   FROM FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID ) "
+							+ " WHERE (longitude is not null and longitude != '0' and longitude != 'null' and latitude is not null and latitude != '0' and latitude != 'null') GROUP BY siteID,siteName,longitude,latitude ) "
+							+ " ORDER BY (initCost) ASC FETCH NEXT 10 ROWS ONLY ");					
+					model.addAttribute("leastSitesInitCostAsset",mapper.writeValueAsString(query.list()));
 								
 			
-					query = session.createNativeQuery("SELECT SUM(A.NETCOST),B.SITE_ID, B.SITE_NAME,C.longitude,C.latitude "
-							+ " FROM fixed_asset_registry A  LEFT JOIN far_site B ON A.FAR_ID = B.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID "
-							+ " where (C.longitude is not null and C.longitude != '0' and C.longitude != 'null' and C.latitude is not null and C.latitude != '0' and C.latitude != 'null') GROUP BY B.SITE_ID,B.SITE_NAME,C.longitude,C.latitude  "
-							+ " ORDER BY SUM(A.NETCOST) DESC FETCH NEXT 10 ROWS ONLY  ");
-	                 
-					model.addAttribute("sitesMaxNetCostAsset",mapper.writeValueAsString(query.list()));
+					query = session.createNativeQuery("SELECT * FROM(SELECT COALESCE(SUM(netCost),0) as netCost,siteID,siteName,longitude,latitude FROM ( SELECT DISTINCT C.SITE_ID AS site,C.WARE_ID as wareID, C.SITE_ID AS siteID, C.WARE_NAME AS siteName , C.LONGITUDE as longitude, "
+							+ " C.LATITUDE as latitude, A.NETCOST as netCost ,A.FAR_ID AS FAR_ID   FROM FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID ) "
+							+ " WHERE (longitude is not null and longitude != '0' and longitude != 'null' and latitude is not null and latitude != '0' and latitude != 'null') GROUP BY siteID,siteName,longitude,latitude ) "
+							+ " ORDER BY (netCost) DESC FETCH NEXT 10 ROWS ONLY ");
+					model.addAttribute("topSitesNetCostAsset",mapper.writeValueAsString(query.list()));
 					
-					query = session.createNativeQuery("SELECT SUM(A.NETCOST),B.SITE_ID, B.SITE_NAME,C.longitude,C.latitude "
-							+ " FROM fixed_asset_registry A  LEFT JOIN far_site B ON A.FAR_ID = B.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID "
-							+ " where (C.longitude is not null and C.longitude != '0' and C.longitude != 'null' and C.latitude is not null and C.latitude != '0' and C.latitude != 'null') GROUP BY B.SITE_ID,B.SITE_NAME,C.longitude,C.latitude  "
-							+ " ORDER BY SUM(A.NETCOST) ASC FETCH NEXT 10 ROWS ONLY  ");
-	                 
-					model.addAttribute("sitesMinNetCostAsset",mapper.writeValueAsString(query.list()));
+						query = session.createNativeQuery("SELECT * FROM(SELECT COALESCE(SUM(netCost),0) as netCost,siteID,siteName,longitude,latitude FROM ( SELECT DISTINCT C.SITE_ID AS site,C.WARE_ID as wareID, C.SITE_ID AS siteID, C.WARE_NAME AS siteName , C.LONGITUDE as longitude, "
+							+ " C.LATITUDE as latitude, A.NETCOST as netCost ,A.FAR_ID AS FAR_ID   FROM FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID ) "
+							+ " WHERE (longitude is not null and longitude != '0' and longitude != 'null' and latitude is not null and latitude != '0' and latitude != 'null') GROUP BY siteID,siteName,longitude,latitude ) "
+							+ " ORDER BY (netCost) ASC FETCH NEXT 10 ROWS ONLY ");
+					model.addAttribute("leastSitesNetCostAsset",mapper.writeValueAsString(query.list()));
 
 				} catch (Exception e) {
 					logger.info("Error in creating session with the DataBase " + e.getMessage());

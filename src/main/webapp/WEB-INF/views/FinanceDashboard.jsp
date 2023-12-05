@@ -375,10 +375,10 @@ var netCostMinSitesList=[]; // used to check/uncheck the min sites from map
 
 function initMap() {
 
-	 topSitesInitCostList=${sitesMaxInitCostAsset};
-	 leastSitesInitCostList=${sitesMinInitCostAsset};
-	 topSitesNetCostList=${sitesMaxNetCostAsset};
-	 leastSitesNetCostList=${sitesMinNetCostAsset};
+	 topSitesInitCostList=${topSitesInitCostAsset};
+	 leastSitesInitCostList=${leastSitesInitCostAsset};
+	 topSitesNetCostList=${topSitesNetCostAsset};
+	 leastSitesNetCostList=${leastSitesNetCostAsset};
 
 	 initCostMap = new google.maps.Map(document.getElementById("initCostMapContainer"), {
 			center: { lat: 1, lng: 38 },
