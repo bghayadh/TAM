@@ -1,6 +1,8 @@
 package com.aliat.alm.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -22,6 +24,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.AlmDbSession;
+import com.aliat.alm.common.Form;
+import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.Role;
 import com.aliat.alm.services.LoginServices;
 import com.fasterxml.jackson.core.JsonGenerationException;
@@ -31,10 +36,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 public class UserRoleController {
-	
+	Session session = null;
+	private static String str;
+	private static ObjectMapper mapper = new ObjectMapper();
+	private static Query query = null;
+	private static Transaction tx = null;
+	private static StringWriter sw;
+	private static String exceptionAsString;
+
 	@Autowired
-	ALMSessions almsessions;
-	
+	Notify notification;
+	@Autowired
+	Form form;
 	@RequestMapping(value = "/RoleListView", method = RequestMethod.GET)
 	public String userListView(Locale locale, Model model, HttpServletResponse httpResponse,
 			HttpServletRequest httpRequest) throws JsonGenerationException, JsonMappingException, IOException {
@@ -53,19 +66,28 @@ System.out.println("roleeeee");
 			return "redirect:/";
 		}
 
-		List<Object[]> role = new ArrayList<Object[]>();
+		
+		session = AlmDbSession.getInstance().getSession();
 
-		Session session = almsessions.getSession();
-		Transaction tx = session.beginTransaction();
+		if (session != null && session.isOpen()) {
+			try {
+				notification.headerNotifications(session, model);
+				str = "select t.role as rol,  t.role as role, t.description from Role t";
 
-		role = session.createQuery("select 1, t.role, t.description from Role t").list();
+				model.addAttribute("ListGridTable", mapper.writeValueAsString(session.createNativeQuery(str).list()));
 
-		tx.commit();
-		session.close();
-		ObjectMapper mapper = new ObjectMapper();
-		model.addAttribute("roleList", mapper.writeValueAsString(role));
-		return "UserRoleListView";
-	}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+
+			}
+		}
+		}
+
+	return "UserRoleListView";
+}
 
 	@RequestMapping(value = "/UserRoleFormView", method = RequestMethod.GET)
 	public String UserFormView(Locale locale, Model model, HttpServletRequest request, HttpServletResponse httpResponse)
@@ -88,16 +110,36 @@ System.out.println("roleeeee");
 		}
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-
+		String navAction = "2";
+		int SelectedIndex=0;
 		String rolename = request.getParameter("rolename");
+		session = AlmDbSession.getInstance().getSession();
 
+		if (session != null && session.isOpen()) {
+			try {
+				notification.headerNotifications(session, model);
+               
 		if (rolename == null) {
 			System.out.println("new");
 			model.addAttribute("listRoleUser", "addNew");
+			model.addAttribute("SelectedIndex", "addNew");
+			model.addAttribute("roleCount", "addNew");
+			
 			return "UserRoleFormView";
 		} else {
+			 navAction = request.getParameter("NavAction");
+             
+				String Result[] = new String[4];
+				
+				Result = form.NavigationNP(session, "Role", "ROLE", rolename, "ROLE", navAction);
+
+				SelectedIndex = Integer.parseInt(Result[1]);
+				rolename= Result[2];
+
+				model.addAttribute("SelectedIndex",SelectedIndex);
+				model.addAttribute("roleCount", Integer.parseInt(Result[0]));
+
 			System.out.println("role exist");
-			Session session =almsessions.getSession();
 			Transaction tx = session.beginTransaction();
 
 			Query q = session.createQuery("from Role where role =:rolename");
@@ -109,13 +151,19 @@ System.out.println("roleeeee");
 			}
 			model.addAttribute("listRoleUser", "");
 			tx.commit();
-			session.close();
+		}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
 
+			}
+		}
 		}
 
-		return "UserRoleFormView";
-
-	}
+	return "UserRoleFormView";
+}
 	
 	@RequestMapping(value = "/UserRoleFormSave", method = RequestMethod.GET)
 	@ResponseBody
@@ -140,8 +188,11 @@ System.out.println("roleeeee");
 				rtn.put("Login", "Login");
 				return rtn;				
 			}
-		Session session = almsessions.getSession();
-		Transaction tx = session.beginTransaction();
+		session = AlmDbSession.getInstance().getSession();
+
+		if (session != null && session.isOpen()) {
+			try {
+			Transaction tx = session.beginTransaction();
 
 		
 
@@ -169,9 +220,19 @@ System.out.println("roleeeee");
 			
 		}
 		tx.commit();
-		session.close();
-		return rtn;
-	}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+
+			}
+		}
+		}
+
+	return rtn;
+}
 	
 	@RequestMapping(value = "/UserRoleFormDelete", method = RequestMethod.GET)
 	@ResponseBody
@@ -184,7 +245,10 @@ System.out.println("roleeeee");
 			return rtn;
 		}
 		String[] rolenames = request.getParameterValues("rolename[]");
-		Session session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
+
+		if (session != null && session.isOpen()) {
+			try {
 		Transaction tx = session.beginTransaction();
 
 		Query q = session.createQuery("delete Role t  where t.role IN (:param1)");
@@ -198,10 +262,95 @@ System.out.println("roleeeee");
 		q2.executeUpdate();
 
 		tx.commit();
-		session.close();
 		rtn.put("saveStatus", "ok");
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if (session != null && session.isOpen()) {
+					session.close();
+
+				}
+			}
+			}
 
 		return rtn;
-
 	}
+	@RequestMapping(value = "/RoleListViewDelete", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> RoleListViewDelete(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) {
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+		String[] RoleUserList;
+		session = AlmDbSession.getInstance().getSession();
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			try {
+
+				RoleUserList = request.getParameterValues("rolename[]");
+				if (RoleUserList != null) {
+					for (int i = 0; i < RoleUserList.length; i++) {
+						String rolename = RoleUserList[i];
+						query = session.createQuery("delete Role t  where t.role='" + rolename + "'");
+						query.executeUpdate();
+					}
+					tx.commit();
+				}
+
+			} catch (Exception e) {
+				tx.rollback();
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+			} finally {
+				if (session != null && session.isOpen()) {
+					session.close();
+				}
+			}
+		} else {
+			System.out.println("could not connect to DB in RoleListViewDelete method");
+		}
+		return rtn;
+	}
+	@RequestMapping(value = "/GetAllRole", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> GetAllUser(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) {
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+
+		String Role = "%" + request.getParameter("Role") + "%";
+		session = AlmDbSession.getInstance().getSession();
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			try {
+				query = session
+						.createQuery("SELECT t1.role, t1.description  FROM Role t1"
+								+ " WHERE LOWER(t1.role) LIKE LOWER(:Role)");
+				query.setParameter("Role", Role);
+				query.setFirstResult(0);
+				query.setMaxResults(40);
+
+				List<Object[]> results = query.list();
+
+				rtn.put("ListUser", results);
+			} catch (Exception e) {
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+			} finally {
+				if (session != null && session.isOpen()) {
+					session.close();
+				}
+			}
+		} else {
+			System.out.println("could not connect to DB in getUsers method");
+		}
+		return rtn;
+	}
+
 }
