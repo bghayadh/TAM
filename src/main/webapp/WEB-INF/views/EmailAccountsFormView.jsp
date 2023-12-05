@@ -49,7 +49,10 @@
     <style>
     .hide-row { visibility: hidden; }
     
-    
+    .nav-link.active {
+                background-color: #FFD966 !important;
+                color: #00757c !important;
+            }
     .label{ 
   display: table-caption;
   text-align: center;
