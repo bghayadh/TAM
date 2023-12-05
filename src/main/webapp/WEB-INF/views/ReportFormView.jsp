@@ -8,15 +8,47 @@
     <%@ include file="scripts.html" %>	
      <!-- <script src="${pageContext.request.contextPath}/resources/js/jquery.slim.min.js" ></script>  -->
 	<script src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/moment.min.js"></script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/tempusdominus-bootstrap-4.min.js"></script>
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/tempusdominus-bootstrap-4.min.css" />	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+	
 	<script src="${pageContext.request.contextPath}/resources/js/bootstrap.min.js"></script>
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/font-awesome.min.css">
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/bootstrap-datetimepicker.min.css">	 
-<!--     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script> -->
-<script src="${pageContext.request.contextPath}/resources/js/popper-1.12.9-min.js"></script>
-    <script src="${pageContext.request.contextPath}/resources/js/platform.js"></script>
+	<link href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
+	<script src="${pageContext.request.contextPath}/resources/js/dataTables.min.js"></script>
+	<!--  <script src="${pageContext.request.contextPath}/resources/js/jquery-1.11.3.js"></script>  -->
+
+	<script src="${pageContext.request.contextPath}/resources/js/jquery-migrate-3.0.0.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resources/js/platform.js"></script>
+	<!-- 
+
+	<script src="${pageContext.request.contextPath}/resources/js/jquery-ui.js"></script>
+	 
+	<script src="${pageContext.request.contextPath}/resources/js/jquery.mcautocomplete.js"></script>
+	
+	 -->
+	
 	<script src="${pageContext.request.contextPath}/resources/js/jquery2-ui.js"></script>	 
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/jquery-ui.css" rel="stylesheet"/>
+	
+	
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/dataTables.min.css">
+    <script src="${pageContext.request.contextPath}/resources/js/all.min.js"></script>
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/font-awesome.min.css">
+	<link href="${pageContext.request.contextPath}/resources/css/all.min.css" rel="stylesheet">
+	
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/ListView.css">
+	
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/header.css">
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/jquerysctipttop.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/bootstrap-datetimepicker.min.css">
+	
+	
+		<link href="${pageContext.request.contextPath}/resources/css/virtual-select.min.css" rel="stylesheet"    >
+		<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/virtual-select.min.js"></script>
+		
+    
+	
 	<style>
 	
 		.dot {
@@ -47,10 +79,10 @@
 	td {text-align: center;vertical-align: middle!important;}
 	
 	 .hide-row { display:none; }
-	li.nav-item a span.active svg
-	{
-		color:#20B2AA !important;
-	}
+	.nav-link.active {
+                background-color: #FFD966 !important;
+                color: #00757c !important;
+            }
 	
 	li.nav-item a svg
 	{
