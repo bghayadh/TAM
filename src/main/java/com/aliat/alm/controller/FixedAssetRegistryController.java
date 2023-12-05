@@ -309,9 +309,10 @@ public class FixedAssetRegistryController {
 
 					for (int i = 0; i < listFixed.size(); i++) {
 
-						distance = haversine(Double.parseDouble(longitude), Double.parseDouble(latitude),
-								Double.valueOf(listFixedAssetTemp.get(i)[12].toString()),
-								Double.valueOf(listFixedAssetTemp.get(i)[13].toString()));
+						distance = haversine(Double.parseDouble(latitude), Double.parseDouble(longitude),
+								Double.valueOf(listFixedAssetTemp.get(i)[13].toString()),
+								Double.valueOf(listFixedAssetTemp.get(i)[12].toString()));
+						
 
 						if (distance <= Double.parseDouble(radius)) {
 							listCircleRange.add(listFixed.get(i));
@@ -1162,18 +1163,20 @@ public class FixedAssetRegistryController {
 		}
 		return rtn;
 	}
+		
+	static double haversine(double latitude, double longitude, double pointLat, double pointLong) {
 
-	static double haversine(double lat1, double lon1, double lat2, double lon2) {
 		// distance between latitudes and longitudes
-		double dLat = Math.toRadians(lat2 - lat1);
-		double dLon = Math.toRadians(lon2 - lon1);
+		double dLat = Math.toRadians(pointLat - latitude);
+		double dLon = Math.toRadians(pointLong - longitude);
 
 		// convert to radians
-		lat1 = Math.toRadians(lat1);
-		lat2 = Math.toRadians(lat2);
+		latitude = Math.toRadians(latitude);
+		pointLat = Math.toRadians(pointLat);
 
 		// apply formulae
-		double a = Math.pow(Math.sin(dLat / 2), 2) + Math.pow(Math.sin(dLon / 2), 2) * Math.cos(lat1) * Math.cos(lat2);
+		double a = Math.pow(Math.sin(dLat / 2), 2)
+						+ Math.pow(Math.sin(dLon / 2), 2) * Math.cos(latitude) * Math.cos(pointLat);
 		double rad = 6371;
 		double c = 2 * Math.asin(Math.sqrt(a));
 		return rad * c;
