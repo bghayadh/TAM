@@ -46,6 +46,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.aliat.alm.Parser.ManHoleHandHoleImporter;
 import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.AlmDbSession;
+import com.aliat.alm.common.Notify;
 import com.aliat.alm.services.ItemParameters;
 import com.aliat.alm.models.AreaFinance;
 import com.aliat.alm.models.DiscoveryNewBoq;
@@ -73,6 +75,8 @@ public class ImportSettingsController {
 	private String queryStatement = null;
 	private Query query = null;
 	
+	@Autowired
+	Notify notification;
 	
 	@Autowired
 	ALMSessions almsessions;
@@ -82,8 +86,12 @@ public class ImportSettingsController {
 				throws JsonGenerationException, JsonMappingException, IOException {
 		
 		
-		
-		Session session = almsessions.getSession();
+		session = AlmDbSession.getInstance().getSession();
+
+		if (session != null && session.isOpen()) {
+			try {
+				notification.headerNotifications(session, model);
+	            
 		Transaction tx = session.beginTransaction();
 		
 	
@@ -92,7 +100,6 @@ public class ImportSettingsController {
 	    
 	    
 	    tx.commit();
-		session.close();
 		
 		ObjectMapper mapper = new ObjectMapper();
 		
@@ -101,12 +108,20 @@ public class ImportSettingsController {
 		
 		
 		model.addAttribute("Liliane_ListTables", mapper.writeValueAsString(listTables));
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+
+			}
+		}
+		}
+
+	return "importSettings";
+}
 		
-		
-		
-		return "importSettings";
-		
-	}
 	
 	
 	
