@@ -34,6 +34,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.AlmDbSession;
+import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.FixedAssetRegistry;
 import com.aliat.alm.models.PurchaseOrder;
 import com.aliat.alm.models.PurchaseRequest;
@@ -45,11 +47,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 public class RolePermissionController {
-
+	private Session session = null;
+	
 	
 	@Autowired
 	ALMSessions almsessions;
-
+	@Autowired
+	Notify notification;
+	
 	@RequestMapping(value = "/rolePermission", method = RequestMethod.GET)
 	public String RolePermission(Locale locale, Model model, HttpServletRequest request,HttpServletResponse response) 
 		throws JsonGenerationException, JsonMappingException, IOException {
@@ -58,11 +63,14 @@ public class RolePermissionController {
 		}
 		Transaction tx =null;
 			List<PurchaseRequest> listRolePerm = new ArrayList<PurchaseRequest>();
-			Session session = almsessions.getSession();
-			if(session != null && session.isOpen()) {
+			session = AlmDbSession.getInstance().getSession();
+
+			if (session != null && session.isOpen()) {
+				try {
 				tx = session.beginTransaction();
 				
-				try {
+				notification.headerNotifications(session, model);
+		         
 					listRolePerm = session.createQuery("select t.permID, t.screen, t.viewType, t.role, t.roleLevel, t.readPerm,"
 							+ " t.writePerm, t.addPerm, t.delPerm, t.savePerm, t.statusPerm, t.actionPerm, t.downloadPerm, t.exportPerm, t.secondLevelPerm,t.firstLevelPerm"
 							+ " from RolePermission t").list();
