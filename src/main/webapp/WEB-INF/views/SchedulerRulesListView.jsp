@@ -118,7 +118,7 @@
 
 							<li class="nav-item ml-auto">
 								<button type="button" id="deleteButton" class="btn btn-primary BtnActive">
-									<i class="fa fa-delete"></i> Delete
+									<i class="fa fa-trash"></i> Delete
 								</button>
 
 								<button type="button" id="saveButton"
