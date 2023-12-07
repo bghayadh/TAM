@@ -5066,48 +5066,59 @@ singleProject = new ContextMenu({
 		}	 	 
 	]
 });
-/////////////*********************	single junction CONTEXTS MENU  ***********************///////////////
+/////////////********************* junction and single junction CONTEXTS MENU  ***********************///////////////
 			//-------------------------------------------------------------------------------------------------//	  
-							
-
 			JunctionMenu =new ContextMenu({
 
 				'theme': 'default',
 				
 				'items': [
 					
-					/*{'icon': 'folder-plus', 'name': 'Create New Junction', action: () => {
-						$.ajax({
-							type: "GET",
-							contentType: "application/json; charset=utf-8",
-							url: getContext()+'/findCountManHoles',
-							data: {
-								"ProjectId": IdNodeSelectedTemp, 
-							},
-							dataType: "json",
-							success: function (data) {
+					{'icon': 'folder-plus', 'name': 'Create New Junction', action: () => {
+						$('#JunctionModal').find('input:text').val('');
+						$("#JunctionHeader").text("Junction: ");
+						$("#JctMappingTable > tbody").empty();
+						$("#JunctionModal").modal('show');
+						//junctionLong = document.getElementById("JctLong").value;
+						//junctionLat = document.getElementById("JctLat").value;
+						$("#JctLong").prop("readonly", false);
+						$("#JctLat").prop("readonly", false);
+						actionJct="Insert";							
+																
+						$("#JctName").on("input",function(){
+							$("#JunctionHeader").text("Junction: "+$(this).val());
+						});
+					}
+				},
+			  ]
+			});
 
-									$('#JunctionModal').find('input:text').val('');
-									$("#JunctionHeader").text("Junction: ");
-									$("#JctMappingTable > tbody").empty();
-									$("#JunctionModal").modal('show');
-											
-									actionJct="Insert";							
-																			
-									$("#JctName").on("input",function(){
-										$("#JunctionHeader").text("Junction: "+$(this).val());
-									});
-								
-								data = null;
-							},
-							error: function (result) {
-								alert("Error");
-							}
-						}); 
-							}
-						},*/
+			singleJunctionMenu =new ContextMenu({
+
+				'theme': 'default',
+				
+				'items': [
+					
+					/*{'icon': 'folder-plus', 'name': 'Create New Junction', action: () => {
+						$('#JunctionModal').find('input:text').val('');
+						$("#JunctionHeader").text("Junction: ");
+						$("#JctMappingTable > tbody").empty();
+						$("#JunctionModal").modal('show');
+						//junctionLong = document.getElementById("JctLong").value;
+						//junctionLat = document.getElementById("JctLat").value;
+						$("#JctLong").prop("readonly", false);
+						$("#JctLat").prop("readonly", false);
+						actionJct="Insert";							
+																
+						$("#JctName").on("input",function(){
+							$("#JunctionHeader").text("Junction: "+$(this).val());
+						});
+					}
+				},*/
 
 				{'icon': 'edit','name': 'Edit or View Details',action: () => {
+					$("#JctLong").prop("readonly", true);
+					$("#JctLat").prop("readonly", true);
 					
 							$.ajax({
 									type: "GET",
@@ -9325,7 +9336,8 @@ singleProject = new ContextMenu({
 						if(data!=null){
 							window[""+data.JunctionID]=[];
 							if(actionJct=="Insert"){
-								str="<ul><li id='"+data.JunctionID+"' class='JUNCTION' style='display:none;width:100px;'><input type='checkbox' class='Junction' class='filter checkFilter' name='Element' ></input> <span class='TreeSpan' style='color:black;width:195px'><img src='"+getContext()+"/resources/NetworkImages/junction.png'> "+JunctionList[i][1]+"</span></li></ul>";
+								//str="<ul><li id='"+data.JunctionID+"' class='JUNCTION' style='display:none;width:100px;'><input type='checkbox' class='Junction' class='filter checkFilter' name='Element' ></input> <span class='TreeSpan' style='color:black;width:195px'><img src='"+getContext()+"/resources/NetworkImages/junction.png'> "+JunctionList[i][1]+"</span></li></ul>";
+								str="<ul><li id='"+data.JunctionID+"' class='JUNCTION' style='display:none;width:100px;'><input type='checkbox' class='Junction' class='filter checkFilter' name='Element' ></input> <span class='TreeSpan' style='color:black;width:195px'><img src='"+getContext()+"/resources/NetworkImages/junction.png'> "+junctionName+"</span></li></ul>";
 								$("#Junction_f_CurrentPhysicalLayer").append(str); 
 								create_Junction_Marker_Click(data.JunctionID,junctionName,junctionLong,junctionLat,markersJunction,markerClusterJunction,"Junction","");	
 								JunctionCheckFilter(data.JunctionID);
@@ -9361,10 +9373,10 @@ singleProject = new ContextMenu({
 			$( "#"+data.JunctionID+" > .TreeSpan" ).bind("contextmenu",function(){	
 				selectedJuncIdContext=$(this).parent().attr('id');
 		        IdNodeSelectedTemp=$(this).parents().eq(2).attr('id').split("Junction_f_")[1];
-		        menuName= JunctionMenu;
+		        menuName= singleJunctionMenu;
 		        selectedManholeJct = selectedJuncIdContext;
 		        selectedManIdContext = "";
-		        openContext(selectedJuncIdContext,"",JunctionMenu,event);
+		        openContext(selectedJuncIdContext,"",singleJunctionMenu,event);
 		
 			});	
 			

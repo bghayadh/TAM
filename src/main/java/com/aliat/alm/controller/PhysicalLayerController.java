@@ -10110,16 +10110,17 @@ public class PhysicalLayerController {
 						String countJunc = query.getSingleResult().toString();
 
 						if(physLayerIdJunction != null) {
-						if (StringUtils.equalsIgnoreCase(countJunc, "0")) {
+							if (StringUtils.equalsIgnoreCase(countJunc, "0")) {
 
-							physLayerNameJunction = physLayerNameJunction.concat("_J");
-							query = session.createNativeQuery("UPDATE MANHOLE SET MANHOLE_NAME= '"
-									+ physLayerNameJunction + "' where MANHOLE_ID='" + physLayerIdJunction + "' ");
-							query.executeUpdate();
-							query = session.createNativeQuery("UPDATE HANDHOLE SET HANDHOLE_NAME= '"
-									+ physLayerNameJunction + "' where HANDHOLE_ID='" + physLayerIdJunction + "' ");
-							query.executeUpdate();
-						}
+								physLayerNameJunction = physLayerNameJunction.concat("_J");
+								query = session.createNativeQuery("UPDATE MANHOLE SET MANHOLE_NAME= '"
+										+ physLayerNameJunction + "' where MANHOLE_ID='" + physLayerIdJunction + "' ");
+								query.executeUpdate();
+								query = session.createNativeQuery("UPDATE HANDHOLE SET HANDHOLE_NAME= '"
+										+ physLayerNameJunction + "' where HANDHOLE_ID='" + physLayerIdJunction + "' ");
+								query.executeUpdate();
+							}
+						
 						}
 						Query insertJctQuery = session
 								.createNativeQuery("INSERT INTO JUNCTION(JUNCTION_ID,JUNCTION_NAME,PHYSICAL_LAYER_ID"

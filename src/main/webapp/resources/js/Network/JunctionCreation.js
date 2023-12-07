@@ -167,15 +167,27 @@ function createJunction(JunctionList){
 		selectedJuncIdContext=$(this).parent().attr('id');
 		IdNodeSelectedTemp=$(this).parents().eq(2).attr('id').split("Junction_f_")[1];
 		//menuName=singleJunction;	
-		menuName= JunctionMenu;
+		menuName= singleJunctionMenu;
 		selectedManholeJct = selectedJuncIdContext;
 		selectedManIdContext = "";
 		selectedJct = selectedJuncIdContext;
-		openContext(selectedJuncIdContext,"",JunctionMenu,event);
+		openContext(selectedJuncIdContext,"",singleJunctionMenu,event);
 		//openContext(selectedJuncIdContext,"",singleJunction,event);
 		//openContext(selectedManholeJct,"",singleJunction,event);
 
 	});
+	
+	$("#Junction_f_CurrentPhysicalLayer > .TreeSpan").contextmenu(function(){				
+		selectedJuncIdContext=$(this).parent().attr('id');
+		IdNodeSelectedTemp=$(this).parent().attr('id').split("Junction_f_")[1];	
+		menuName= JunctionMenu;
+		selectedJct = selectedJuncIdContext;
+		openContext(selectedJuncIdContext,"",JunctionMenu,event);
+		
+
+	});
+	
+	
 	
 }
 
