@@ -511,6 +511,7 @@ public class FixedAssetRegistryController {
 					model.addAttribute("scrapDate", formatter1.format(fassetreg.getScrapDate()).toString());
 
 				model.addAttribute("initialCost", fassetreg.getIniCost());
+				model.addAttribute("netCost", fassetreg.getNetCost());
 				model.addAttribute("usefulLifemonths", fassetreg.getUsefulLifeMon());
 				model.addAttribute("faritemPosition", fassetreg.getPosition());
 				model.addAttribute("ID", fassetreg.getPoId());
