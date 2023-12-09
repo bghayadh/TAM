@@ -52,7 +52,10 @@
     <style>
      
         /*Doaa's popup Email Div'*/
-    
+    .nav-link.active {
+                background-color: #FFD966 !important;
+                color: #00757c !important;
+            }
     #popUpDiv {
 position:fixed;
 top: 30%;
