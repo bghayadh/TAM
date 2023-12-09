@@ -1001,7 +1001,7 @@ max-height: 100%;
 				<div class="form-group">
 					<div class="input-group-prepend">
 						<span class="input-group-text">Net Cost</span>
-						<input type="text" id="netCost"  value="${netCost}" class="form-control text-input" />
+						<input type="text" id="netCost" value="${netCost}" class="form-control text-input" />
 					</div>
 				</div>
 			</div>
@@ -3083,15 +3083,7 @@ $("#itmname").autocomplete({
 			         document.getElementById("depPercentage"). value = DP;
 			        
 
-			        var netCost = (document.getElementById("initialCost").value) - (document.getElementById("accumDepAmount").value);
 			        
-			        if(netCost <= 0.0){
-			        	document.getElementById("netCost"). value = 0;
-				        }
-			        else {
-				        document.getElementById("netCost"). value = netCost;
-			        }
-			      
 			        
 				}
 			}
