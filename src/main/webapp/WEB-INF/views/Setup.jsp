@@ -214,7 +214,7 @@ a{
 					
 				</div>
 					<div style="margin-right:20px;"> </div>
-					<div class="col-md-2 Notification">
+					<div class="col-md-3 Notification">
 				
 					<div class="card bg-c-blue order-card">
 					<a href="${pageContext.request.contextPath}/EmailAccountsListView" style="text-decoration: none">
@@ -226,6 +226,18 @@ a{
 					</div>
 					
 				</div>
+				
+				<div style="margin-right:20px;"> </div>
+					<div class="col-md-3">
+					<div class="card bg-c-blue order-card">
+					<a href="${pageContext.request.contextPath}/Loaders" style="text-decoration: none">
+						<div class="card-block">
+							<i class="fas fa-life-ring fa-spin glyphicon-align-center" style="color:gold; width:40px; height:40px"></i>
+								<h5 class="m-b-20" id="first" style="font-size:1.3em;">Loaders</h5>
+						</div>
+						</a>
+					</div>
+					</div>
 				</div>
 				
 				</div>
