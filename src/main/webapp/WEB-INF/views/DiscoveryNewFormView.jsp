@@ -200,6 +200,10 @@ max-width: 100%;
  max-width: 100%;
 }
 }
+.nav-link.active {
+                background-color: #FFD966 !important;
+                color: #00757c !important;
+            }
  	</style>
 </head>
 <body>

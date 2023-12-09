@@ -1432,6 +1432,7 @@ query.executeUpdate();
 						FixedAssetReg.setFarlastModifiedDate(new Timestamp(System.currentTimeMillis()));
 						FixedAssetReg.setFaritemName(itmname);
 						FixedAssetReg.setIniCost(initialCost);
+						FixedAssetReg.setNetCost(initialCost);
 						FixedAssetReg.setDniID(DNItemID);
 						//FixedAssetReg.setSideID(SiteID);
 						FixedAssetReg.setSupplierID(supplierID);
@@ -3759,6 +3760,7 @@ public void ApprovalFinance(String trans_Type, String getApproval, String dnStat
 			FixedAssetReg.setFarlastModifiedDate(new Timestamp(System.currentTimeMillis()));
 			FixedAssetReg.setFaritemName(itmname);
 			FixedAssetReg.setIniCost(initialCost);
+			FixedAssetReg.setNetCost(initialCost);
 			FixedAssetReg.setUsefulLifeMon(useful_life_month);
 			FixedAssetReg.setDniID(DniID);
 			FixedAssetReg.setSupplierID(supplierID);

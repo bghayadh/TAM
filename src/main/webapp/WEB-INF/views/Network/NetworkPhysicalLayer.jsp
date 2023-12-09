@@ -1238,12 +1238,12 @@
 					</div>
 					<div class="modal-body">
 						<ul class="nav nav-tabs" id="myTabDb" role="tablist" style="background-color: #00757C;">
-							<li class="nav-item"><a class="nav-link active" id="junction-tab" style="color: gold;" data-toggle="tab" href="#JCT" role="tab" aria-controls="JCT" aria-selected="true">Junction </a></li>
+							<li class="nav-item"><a class="nav-link active" id="junction-tab" style="color: gold;" data-toggle="tab" href="#MJCT" role="tab" aria-controls="JCT" aria-selected="true">Junction </a></li>
 							<li class="nav-item"><a class="nav-link " id="jctMapping-tab" style="color: gold;" data-toggle="tab" href="#jctMapping" role="tab" aria-controls="jctMapping" aria-selected="false">Mapping</a></li>
 						</ul>
 						<div class="tab-content">
 							<p></p>
-							<div class="tab-pane active" id="JCT" role="tabpanel"
+							<div class="tab-pane active" id="MJCT" role="tabpanel"
 								aria-labelledby="junction-tab">
 								<p></p>
 								<div class="row">
@@ -1375,8 +1375,8 @@
 														<th style="min-width: 190px">Fiber ID</th>
 														<th style="min-width: 190px">Fiber Name</th>
 													</tr></thead><tbody></tbody></table></div>
-										<button type="button" id="addJunMapBelow" >Insert Row Below</button>
-										<button type="button" id="addJunMapAbove" >Insert Row Above</button>
+										<button type="button" id="addManJunMapBelow" >Insert Row Below</button>
+										<button type="button" id="addManJunMapAbove" >Insert Row Above</button>
 										<!--  <button type="button" id="manholeJctAddRow">Add Row</button>-->
 										<button type="button" id="manholeJctDelRow">Delete Row</button>
 									</form></div></div></div></div></div></div></div></div>
@@ -1550,15 +1550,16 @@
 						</div>
 					</div>
 					<div class="modal-body">
-						<ul class="nav nav-tabs" id="myTabDb" role="tablist" style="background-color: #00757C;">
-							<li class="nav-item"><a class="nav-link active" id="junction-tab" style="color: gold;" data-toggle="tab" href="#JCT" role="tab" aria-controls="JCT" aria-selected="true">Junction </a></li>
-							<li class="nav-item"><a class="nav-link " id="jctMapping-tab" style="color: gold;" data-toggle="tab" href="#jctMapping" role="tab" aria-controls="jctMapping" aria-selected="false">Mapping</a></li>
+						<ul class="nav nav-tabs" id="myJunTabDb" role="tablist" style="background-color: #00757C;">
+							<li class="nav-item"><a class="nav-link active" id="Junction-tab" style="color: gold;" data-toggle="tab" href="#JCT" role="tab" aria-controls="JCT" aria-selected="true">Junction </a></li>
+							<li class="nav-item"><a class="nav-link " id="JctMapping-tab" style="color: gold;" data-toggle="tab" href="#JctMapping" role="tab" aria-controls="jctMapping" aria-selected="false">Mapping</a></li>
 						</ul>
 						<div class="tab-content">
 							<p></p>
 							<div class="tab-pane active" id="JCT" role="tabpanel"
 								aria-labelledby="junction-tab">
 								<p></p>
+								<div class="container-fluid">
 								<div class="row">
 									<div class="col-md-6">
 										<div class="form-group">
@@ -1597,6 +1598,23 @@
 									</div>
 								</div>
 								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<div class="input-group-prepend">
+												<span style="width: 175px;" class="input-group-text"><b>Capacity </b></span>
+												 <input type="text" id="JctCapacity" class="form-control text-input" />
+											</div></div></div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<div class="input-group-prepend">
+												<span style="width: 175px;" class="input-group-text"><b>No of junctions
+														 </b></span> <input type="text" id="NumberJct"
+													class="form-control text-input" />
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row">
 								<div class="col-sm-6"><div class="form-group"><div class="input-group-prepend">
 									<span style="width: 120px;" class="input-group-text"><b>Creation Date</b></span>
 									<input type="text" id="JunctionCreateDate" class="form-control text-input" value="" readonly />
@@ -1611,7 +1629,7 @@
 											<div class="input-group-prepend">
 												<span style="width: 175px;" class="input-group-text"><b>City
 												</b></span> <input type="text" id="JctCity" class="form-control text-input" readonly />
-											</div></div></div></div></div>
+											</div></div></div></div></div></div>
 							<div class="tab-pane" id="JctMapping" role="tabpanel" aria-labelledby="jctMapping-tab"><p></p>
 								<div class="container-fluid"><form>
 										<div class="table-responsive-sm" id="JctMappingDiv">
