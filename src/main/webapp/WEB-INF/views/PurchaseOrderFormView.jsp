@@ -209,6 +209,10 @@ max-width: 100%;
  max-width: 100%;
 }
 }
+  .nav-link.active {
+                background-color: #FFD966 !important;
+                color: #00757c !important;
+            }
 
 </style>
     
@@ -986,11 +990,11 @@ max-width: 100%;
         </div>
         
 <div class="container">
-	<div id ="poModal" class="modal fade  custom-class-assignedto-modal"  tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">	
-		<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
-			<div class="modal-content" >
-				<div class="modal-header" style="background-color: #007BFF; height: 56px">
-			<h5 id ="popupNb" class="modal-title" style="font-weight:bold; color: gold;position:relative;top:4px;"></h5>
+	<div id ="poModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+			<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header" style="background-color: #2678CC ; height: 55px; ">
+			<h5 id ="popupNb" class="modal-title" style="font-weight:bold; color: #E9ECEF ;position: relative; bottom: 12px;"></h5>
 				<div style="float: right;">
 				<button  name="insertBelow"  onclick="insertRowBelow()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: -30px; font-weight: bold; margin-top: -7px;"">Insert Below </button>
 				<button  name="insertAbove"  onclick="insertRowAbove()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: -20px; font-weight: bold; margin-top: -7px;"">Insert Above </button>
