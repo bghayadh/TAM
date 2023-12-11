@@ -2,6 +2,7 @@ package com.aliat.alm.telkom.Parser;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -20,6 +21,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
@@ -29,6 +31,12 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
@@ -44,9 +52,11 @@ public class LoadFilesRANZTE {
 	static String db2path;
 	static String username2;
 	static String password2;
-	static String readfileRANZTEfrom;
+	static String readfileInvRANZTEfrom;
+	static String readfileCellRANZTEfrom;
 	static String Gprovider;
-	static String copyfileRANZTEto;
+	static String copyfileInvRANZTEto;
+	static String copyfileCellRANZTEto;
 	static String circleid = "0";
 	static String Gyear;
 	static String Gcodeattributid;
@@ -60,22 +70,23 @@ public class LoadFilesRANZTE {
 	static String node_fk, node_atrr_fk;
 	static Statement stmtp1, stmtp2, stmtp3;
 	static PreparedStatement stmtp;
-	static int NodeSeq;
-	static int NodeCount, RackCount, AttributeCount, SubRackCount, HostCount, AccessoryCount, CabinetCount, BoardCount,
-			ShelfCount;
-	static int AttributeSeq, RackSeq, CabinetSeq, SubrackSeq, HostSeq, AccessorySeq, ShelfSeq, BoardSeq;
+	static int NodeSeq,GCellSeq,UCellSeq;
+	static int NodeCount, AttributeCount, HostCount, AccessoryCount, CabinetCount, BoardCount,
+			ShelfCount,GCellCount,UCellCount;
+	static int AttributeSeq, CabinetSeq, HostSeq, AccessorySeq, ShelfSeq, BoardSeq;
 	static String siteID, wareID, wareName, nodePartNumber, longi, lat, creationDate, IPaddress, MACaddress,
 			Status = "0", softwareVersion, patchVersion, partNumber, Others;
+	static String tempnodeID,GCellPK,gcellName, gcellId, gGsmCellId,ncc,bcc,gcellType,mcc,mnc,lac,bcchfreq,refGLocationArea;
+	static String UCellPK,ucellName, ucellId,sectorId,cid,uarfctUI,uarfctDI,pscrambcode,Ucellradius,Umaxtxpower,RAC,SAC,LAC;
 	static HashMap<String, String> vhmap = new HashMap<String, String>();
 	static HashMap<String, String> nodeID_PK = new HashMap<String, String>();
 	static ArrayList<String> NodeIDArr = new ArrayList<String>();
-	static ArrayList<String> NodeCabinetArr = new ArrayList<String>();
+
 	static String nodeId = "";
 	static String nodeType = "";
 	static String nodeModel = "";
 	static String nodeName = "";
 	static String InvUnitType;
-	static String BoardCond1, BoardCond2;
 	static String unique_Node_ID = "";
 
 	public static void main(String[] args, String vendor, String domain, String sub_domain)
@@ -122,15 +133,25 @@ public class LoadFilesRANZTE {
 				password2 = data1[3];
 				System.out.println("db2path found: " + username2);
 			}
-			if (data.contains("readfileRANZTEfrom")) {
+			if (data.contains("readfileInvRANZTEfrom")) {
 				data1 = data.split(";", -1);
-				readfileRANZTEfrom = data1[1];
-				System.out.println("readfileNokiafrom found: " + readfileRANZTEfrom);
+				readfileInvRANZTEfrom = data1[1];
+				System.out.println("readfileNokiafrom found: " + readfileInvRANZTEfrom);
 			}
-			if (data.contains("copyfileRANZTEto")) {
+			if (data.contains("copyfileInvRANZTEto")) {
 				data1 = data.split(";", -1);
-				copyfileRANZTEto = data1[1];
-				System.out.println("copyfileRANZTEto found: " + copyfileRANZTEto);
+				copyfileInvRANZTEto = data1[1];
+				System.out.println("copyfileInvRANZTEto found: " + copyfileInvRANZTEto);
+			}
+			if (data.contains("readfileCellRANZTEfrom")) {
+				data1 = data.split(";", -1);
+				readfileCellRANZTEfrom = data1[1];
+				//System.out.println("readfileNokiafrom found: " + readfileCellRANZTEfrom);
+			}
+			if (data.contains("copyfileCellRANZTEto")) {
+				data1 = data.split(";", -1);
+				copyfileCellRANZTEto = data1[1];
+				//System.out.println("copyfileInvRANZTEto found: " + copyfileCellRANZTEto);
 			}
 
 		}
@@ -159,9 +180,14 @@ public class LoadFilesRANZTE {
 		LocalDateTime now1 = LocalDateTime.now();
 		Gyear = dtf1.format(now1).substring(0, 4);
 		// System.out.println(Gyear);
-
-		File folder = new File(readfileRANZTEfrom);
+		//inventory excel file
+		File folder = new File(readfileInvRANZTEfrom);
 		File[] listOfFiles = folder.listFiles();
+		
+		//Gcell and Ucell Files
+		File cellFiles = new File(readfileCellRANZTEfrom);
+		File[] listOfCellFiles = cellFiles.listFiles();
+		
 		logger = Logger.getLogger("MyLog");
 		logger.setUseParentHandlers(false);
 
@@ -207,26 +233,50 @@ public class LoadFilesRANZTE {
 			logger.info("LoadFilesRANZTE inprocess...");
 			
 			System.out.println("size of listOfFiles is : "+listOfFiles.length);
+			//read the inventory file
 			for (File file : listOfFiles) {
 				System.out.println("Inside loop.");
-				if (file.isFile() && file.getName().toString().startsWith("OnlineHardware")) {
-					System.out.println("File name is : "+file.getName().toString());
+				if (file.isFile() ) {
 					String fichier = file.getName().toString();
-					// reading file from folder
-					readfile(fichier);
+					if(file.getName().toString().startsWith("Online Hardware")) {
+						System.out.println("File name is : "+file.getName().toString());
+						readfile(fichier);
+					}
+					File source = new File(readfileInvRANZTEfrom + "/" + file.getName());
+					File dest = new File(copyfileInvRANZTEto + "/" + file.getName() + ".bkp");
 
-					File source = new File(readfileRANZTEfrom + "/" + file.getName());
-					File dest = new File(copyfileRANZTEto + "/" + file.getName() + ".bkp");
+					//// coypy file after treating it to destination folder
+					copyFiles(source, dest);
+					// delete file from source folder
+					deleteFiles(readfileInvRANZTEfrom + "/" + file.getName());
+
+				}
+			}
+			
+			//iterate over Gcell and Ucell files and read these files
+			for (File file : listOfCellFiles) {
+				System.out.println("Inside loop.");
+				if (file.isFile() ) {
+					String fichier = file.getName().toString();
+					if(file.getName().toString().contains("GSM_RADIO")) {
+						System.out.println("File name is : "+file.getName().toString());
+						readGcellfile(fichier);
+					}
+					else if(file.getName().toString().contains("UMTS_RADIO")){
+						readUcellfile(fichier);
+					}
+					File source = new File(readfileCellRANZTEfrom + "/" + file.getName());
+					File dest = new File(copyfileCellRANZTEto + "/" + file.getName() + ".bkp");
 
 					// coypy file after treating it to destination folder
 					copyFiles(source, dest);
 					// delete file from source folder
-					deleteFiles(readfileRANZTEfrom + "/" + file.getName());
+					deleteFiles(readfileCellRANZTEfrom + "/" + file.getName());
 
 				}
 			}
 			// remove dupliacte node
-			GetduplicateFilename("Ran", Gprovider);
+			GetduplicateFilename(Domain, Gprovider);
 			// update file status to completed
 			stmtinit = con.prepareStatement(
 					"update EXECUTE_DOAMIN_VENDOR_FILES set STATUS ='COMPLETED' where DOMAIN='"+Domain+"' and VENDOR='"
@@ -258,17 +308,15 @@ public class LoadFilesRANZTE {
 	public static void readfile(String filename){
 		try {
 		System.out.println("Welcome to readfile method.");
-		CSVParser csvParser = new CSVParser(new FileReader(readfileRANZTEfrom + "/" + filename), CSVFormat.DEFAULT);
+		CSVParser csvParser = new CSVParser(new FileReader(readfileInvRANZTEfrom + "/" + filename), CSVFormat.DEFAULT);
 		List<CSVRecord> records = new ArrayList<>();
 		for (CSVRecord record : csvParser) {
 			records.add(record);
 		}
 		System.out.println("records size is : "+records.size());
-		
+		 NodeIDArr = new ArrayList<String>();
 		NodeCount = 0;
-		RackCount = 0;
 		AttributeCount = 0;
-		SubRackCount = 0;
 		HostCount = 0;
 		AccessoryCount = 0;
 		CabinetCount = 0;
@@ -293,9 +341,7 @@ public class LoadFilesRANZTE {
 			// which lead to exceed the maximum number of open cursors.
 			NodeSeq = rsinit2.getInt("NODE_ACTIVE");
 			AttributeSeq = rsinit2.getInt("NODE_ACTIVE_ATTRIBUTE");
-			RackSeq = rsinit2.getInt("NODE_RACK");
 			CabinetSeq = rsinit2.getInt("NODE_CABINET");
-			SubrackSeq = rsinit2.getInt("NODE_SUBRACK");
 			HostSeq = rsinit2.getInt("NODE_HOST");
 			AccessorySeq = rsinit2.getInt("NODE_ACCESSORY");
 			ShelfSeq = rsinit2.getInt("NODE_SHELF");
@@ -313,9 +359,9 @@ public class LoadFilesRANZTE {
 			stmtp1.close();
 
 			InvUnitType = records.get(i).get(3);
-			BoardCond1 = records.get(i).get(26);
-			BoardCond2 = records.get(i).get(27);
-			if (!NodeIDArr.contains(records.get(i).get(7))) {
+			//BoardCond1 = records.get(i).get(26);
+			//BoardCond2 = records.get(i).get(27);
+			if (!NodeIDArr.contains(records.get(i).get(7)) && !StringUtils.equalsIgnoreCase(records.get(i).get(6), "")) {
 				// SITE INFO EXTRACTION
 				if (records.get(i).get(6).contains("_")) {// if the cell of the csv file contains _ then it may contain
 															// site ID
@@ -353,11 +399,34 @@ public class LoadFilesRANZTE {
 				vcodeid = year + "_NODE_ZTE_RAN_" + NodeSeq;
 				NodeIDArr.add(records.get(i).get(7));
 				nodeID_PK.put(records.get(i).get(7), vcodeid);
-
-				nodeType = records.get(i).get(10);
-				nodeId = records.get(i).get(7);
-				unique_Node_ID = records.get(i).get(7) + "_ZTE";
 				nodeName = records.get(i).get(6);
+				//Nodetype
+				if(StringUtils.equalsIgnoreCase(records.get(i).get(10), "SDR")) {
+					nodeType = "SRAN";
+				}
+				else {
+					nodeType = records.get(i).get(10);
+				}
+				
+				
+				//NodeId and uniqueNodeId
+				if(!StringUtils.equalsIgnoreCase(siteID, "")) {
+					nodeId = siteID;
+					unique_Node_ID = siteID + "_ZTE";
+				}
+				else {
+					if(StringUtils.equalsIgnoreCase(nodeType, "BSC") || StringUtils.equalsIgnoreCase(nodeType, "RNC")) {
+						nodeId =nodeName.substring(2) ;
+						unique_Node_ID = nodeId + "_ZTE";
+					}
+					else if(StringUtils.equalsIgnoreCase(nodeType, "OMM") || StringUtils.equalsIgnoreCase(nodeType, "EMS")) {
+						nodeId = records.get(i).get(7);
+						unique_Node_ID = records.get(i).get(7) + "_ZTE";
+					}
+				}
+				//nodeId = records.get(i).get(7);
+				//unique_Node_ID = records.get(i).get(7) + "_ZTE";
+				
 				IPaddress = records.get(i).get(7);
 				nodeModel = "";
 				patchVersion = "";
@@ -383,7 +452,8 @@ public class LoadFilesRANZTE {
 			}
 
 			node_fk = nodeID_PK.get(records.get(i).get(7));// get node_pk to used as foreign key in content tables
-			//
+			
+			/*//commented since InvUnitType ="rack" is cabinet in ZTE
 			if (StringUtils.equalsIgnoreCase(InvUnitType, "rack")) {
 				vhmap = getrackcolumns(records.get(i));
 
@@ -405,10 +475,10 @@ public class LoadFilesRANZTE {
 				RackCount++;
 				RackSeq++;
 			}
-
-			if (StringUtils.equalsIgnoreCase(InvUnitType, "pack")) {
-				if (!NodeCabinetArr.contains(records.get(i).get(7))) {
-					vhmap = getpackcolumns(records.get(i));
+			 */
+			//cabinet
+			if (StringUtils.equalsIgnoreCase(InvUnitType, "rack")) {
+					vhmap = getcabinetcolumns(records.get(i));
 					addnewattribut("NODE_CABINET", "CABINET", node_fk, vhmap.get("NODETYPE"), FileName, Gprovider);
 					vcodeid = year + "_NODE_ZTE_RAN_CAB_" + CabinetSeq;
 					String cabinetnb = "0";
@@ -430,14 +500,15 @@ public class LoadFilesRANZTE {
 									+ Gprovider + "') ");
 					stmtcabinet.executeUpdate();
 					stmtcabinet.close();
-					NodeCabinetArr.add(records.get(i).get(7));
+					
 					CabinetSeq++;
 					CabinetCount++;
 
-				}
+				
 
 			}
-
+			//RRU is a board family type not subrack
+			/*
 			if (StringUtils.equalsIgnoreCase(InvUnitType, "RRU")) {
 				vhmap = getsubrackcolumns(records.get(i));
 				addnewattribut("NODE_SUBRACK", "SUBRACK", node_fk, vhmap.get("NODETYPE"), FileName, Gprovider);
@@ -466,7 +537,7 @@ public class LoadFilesRANZTE {
 				SubRackCount++;
 
 			}
-
+			*/
 			if (StringUtils.equalsIgnoreCase(InvUnitType, "shelf")) {
 				vhmap = getshelfcolumns(records.get(i));
 
@@ -541,8 +612,7 @@ public class LoadFilesRANZTE {
 			}
 			// board
 
-			if (StringUtils.containsIgnoreCase(BoardCond1, "board")
-					|| StringUtils.containsIgnoreCase(BoardCond2, "board")) {
+			if (StringUtils.equalsIgnoreCase(InvUnitType, "pack") || StringUtils.equalsIgnoreCase(InvUnitType, "RRU")) {
 				vhmap = getboardcolumns(records.get(i));
 				addnewattribut("NODE_BOARD", "BOARD", node_fk, vhmap.get("NODETYPE"), FileName, Gprovider);
 				vcodeid = year + "_NODE_ZTE_RAN_BRD_" + BoardSeq;
@@ -561,7 +631,7 @@ public class LoadFilesRANZTE {
 								+ "TO_DATE('" + vhmap.get("DATEOFMANUFACTURE") + "','YYYY-MM-DD')" + ",TO_DATE('"
 								+ vhmap.get("DATEOFLASTSERVICE") + "','YYYY-MM-DD')" + ",'" + vhmap.get("UNITPOSITION")
 								+ "'," + "'" + vhmap.get("MANUFACTURERDATA") + "','" + vhmap.get("SOFTWAREVERSION")
-								+ "','" + vhmap.get("LOGICVERSION") + "','0'," + "'0','0','0','0'," + "'0','0','"
+								+ "','" + vhmap.get("LOGICVERSION") + "','0'," + "'0','0','0','0'," + "'0','"+vhmap.get("BOARDMODEL")+"','"
 								+ vhmap.get("USERLABEL") + "','0'," + "'0','0','" + node_fk + "','" + node_atrr_fk
 								+ "' ,sysdate,'" + FileName + "'," + "'0','0','0','0','0','0',"
 								+ "'0','1','0',sysdate,'" + Domain + "','" + Gprovider + "','" + vhmap.get("OTHERS")
@@ -577,8 +647,7 @@ public class LoadFilesRANZTE {
 		}
 
 		stmtp = conalm.prepareStatement("UPDATE SEQ_TABLE SET NODE_ACTIVE = NODE_ACTIVE +" + NodeCount
-				+ ",NODE_ACTIVE_ATTRIBUTE = NODE_ACTIVE_ATTRIBUTE +" + AttributeCount + ",NODE_RACK = NODE_RACK +"
-				+ RackCount + ",NODE_SUBRACK=NODE_SUBRACK +" + SubRackCount + ",NODE_HOST=NODE_HOST +" + HostCount
+				+ ",NODE_ACTIVE_ATTRIBUTE = NODE_ACTIVE_ATTRIBUTE +" + AttributeCount + ",NODE_HOST=NODE_HOST +" + HostCount
 				+ ",NODE_ACCESSORY=NODE_ACCESSORY +" + AccessoryCount + ",NODE_CABINET=NODE_CABINET +" + CabinetCount
 				+ ",NODE_BOARD=NODE_BOARD +" + BoardCount + ",NODE_SHELF=NODE_SHELF +" + ShelfCount);
 		stmtp.executeUpdate();
@@ -588,6 +657,235 @@ public class LoadFilesRANZTE {
 		}
 	}
 
+	public static void readGcellfile(String filename) throws IOException, SQLException{
+		
+		
+		String sqlStmtinit3 = "select NODE_GCELL from SEQ_TABLE";     
+		  stmtp1 = conalm.createStatement();
+		  ResultSet rsinit3 = stmtp1.executeQuery(sqlStmtinit3);
+		  while(rsinit3.next()) {
+			  GCellSeq = rsinit3.getInt("NODE_GCELL");
+		  }
+		  rsinit3.close();
+		  stmtp1.close();
+		  
+		  Calendar calendar = new GregorianCalendar();
+		  int year = calendar.get(Calendar.YEAR);
+		  
+		  GCellCount=0;
+		  
+		FileInputStream inputStream = new FileInputStream(readfileCellRANZTEfrom + "/"+filename);
+		 Workbook workbook=new XSSFWorkbook(inputStream);
+		 Sheet firstSheet=workbook.getSheetAt(3);
+		 Iterator<Row> rowIterator=firstSheet.iterator();
+		 Row nextRow = rowIterator.next();
+		
+		while(rowIterator.hasNext() ){
+			  nextRow = rowIterator.next();
+			  Iterator<Cell> cellIterator=nextRow.cellIterator();
+			  int rowIndex = nextRow.getRowNum();
+			  if(rowIndex >4) {
+					while(cellIterator.hasNext()) {
+						Cell nextCell=cellIterator.next();
+						int columnIndex=nextCell.getColumnIndex();
+						
+						switch (columnIndex) {
+						case 4:
+							gGsmCellId =nextCell.getStringCellValue();
+							break;
+						case 5:
+							gcellName =nextCell.getStringCellValue();
+							break;
+						case 6:
+							gcellId=nextCell.getStringCellValue();
+							break;
+						case 7:
+							ncc=nextCell.getStringCellValue();
+							
+							break;
+						case 8:
+							bcc=nextCell.getStringCellValue();
+							break;
+						case 12:
+							gcellType=nextCell.getStringCellValue();
+							break;
+						case 16:
+							refGLocationArea= nextCell.getStringCellValue();
+							break;
+						case 19:
+							bcchfreq=nextCell.getStringCellValue();
+							break;
+
+						}  
+					}
+						
+					
+					if(StringUtils.equalsIgnoreCase(gcellType, "0")) {
+						gcellType="Umbrella Cell";
+					}else if(StringUtils.equalsIgnoreCase(gcellType, "1")) {
+						gcellType="Macro Cell";
+					} else if(StringUtils.equalsIgnoreCase(gcellType, "2")) {
+						gcellType="Micro Cell";
+					}else if(StringUtils.equalsIgnoreCase(gcellType, "3")) {
+						gcellType="Micro-micro Cell";
+					}else if(StringUtils.equalsIgnoreCase(gcellType, "4")) {
+						gcellType="Extended Cell";
+					}
+					
+					 mcc=refGLocationArea.split(",",-1)[0];
+					 mnc=refGLocationArea.split(",",-1)[1];
+					 lac=refGLocationArea.split(",",-1)[2];
+					 
+					 tempnodeID=gcellName.substring(0, 5);
+					 GCellPK = year + "_ZTE_RAN_CELL" + "_" + GCellSeq;
+					 
+					 PreparedStatement Gcellstmt = con.prepareStatement("insert into NODE_GCELL (GCELL_ID,CELLID,CELLNAME"
+							+ ",MCC,MNC,LAC,CI,NCC,BCC,TYPE,BCCHNO,BASEBANDPOLICY,BASEBANDEQMID,GBTSFUNCTIONNAME"
+							+ ",NODE_PK,NODE_ATTR_PK,FILENAME,GLOCELLID,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,"
+							+ "TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,CREATION_DATE,UPDATE_DATE,DOMAIN,VENDOR)"
+						 		+ "values ('" + GCellPK +"','" + gcellId+"','" + gcellName 
+						 		+"','" + mcc +"','" + mnc +"','" + lac +"','" 
+						 		+ gcellId +"','" + ncc +"','" + bcc +"','" + gcellType 
+						 		+"','" + bcchfreq +"','','','',(Select DISTINCT NODE_PK from node_active where NODE_ID='"+tempnodeID+"' and active_record='1' and domain='"+Domain+"' and vendor='"+Gprovider+"' order by creation_date desc  fetch first 1 row only),''"
+						 		+ ",'" + filename +"','" + gGsmCellId+"','','0','0' ,'0','0','0' ,'0','1',sysdate,sysdate,'" +Domain +"','" + Gprovider+"')");
+					Gcellstmt.executeUpdate();
+					Gcellstmt.close();
+					/*
+					 PreparedStatement Gcellstmt = con.prepareStatement("insert into NODE_GCELL (GCELL_ID,CELLID,CELLNAME"
+								+ ",MCC,MNC,LAC,CI,NCC,BCC,TYPE,BCCHNO,BASEBANDPOLICY,BASEBANDEQMID,GBTSFUNCTIONNAME"
+								+ ",NODE_PK,NODE_ATTR_PK,FILENAME,GLOCELLID,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,"
+								+ "TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,CREATION_DATE,UPDATE_DATE,DOMAIN,VENDOR)"
+							 		+ "values ('" + GCellPK +"','" + gcellmap.get("gcellId")+"','" + gcellmap.get("gcellName") 
+							 		+"','" + gcellmap.get("mcc") +"','" + gcellmap.get("mnc") +"','" + gcellmap.get("lac") +"','" 
+							 		+ gcellmap.get("gcellId") +"','" + gcellmap.get("ncc") +"','" + gcellmap.get("bcc") +"','" + gcellmap.get("gcellType") 
+							 		+"','" + gcellmap.get("bcchfreq") +"','','','',(Select DISTINCT NODE_PK from node_active where NODE_ID='"+tempnodeID+"' and active_record='1' and domain='"+Domain+"' and vendor='"+Gprovider+"' fetch first 1 row only),''"
+							 		+ ",'" + filename +"','" + gcellmap.get("gGsmCellId")+"','','0','0' ,'0','0','0' ,'0','1',sysdate,sysdate,'" +Domain +"','" + Gprovider+"')");
+						Gcellstmt.executeUpdate();
+						Gcellstmt.close();*/
+					
+					 GCellSeq++;
+					GCellCount++;
+					}
+			   }  
+		 
+		 workbook.close();
+		 
+		 	stmtp = conalm.prepareStatement("UPDATE SEQ_TABLE SET NODE_GCELL = NODE_GCELL +"+GCellCount);
+		  	stmtp.executeUpdate();
+		  	stmtp.close();
+		 
+			
+	}
+	
+public static void readUcellfile(String filename) throws IOException, SQLException{
+	
+	String sqlStmtinit3 = "select NODE_UCELL from SEQ_TABLE";     
+	  stmtp1 = conalm.createStatement();
+	  ResultSet rsinit3 = stmtp1.executeQuery(sqlStmtinit3);
+	  while(rsinit3.next()) {
+		  UCellSeq = rsinit3.getInt("NODE_UCELL");
+	  }
+	  rsinit3.close();
+	  stmtp1.close();
+	  
+	  Calendar calendar = new GregorianCalendar();
+	  int year = calendar.get(Calendar.YEAR);
+	  
+	  UCellCount=0;
+		
+		FileInputStream inputStream = new FileInputStream(readfileCellRANZTEfrom + "/"+filename);
+		 Workbook workbook=new XSSFWorkbook(inputStream);
+		 Sheet firstSheet=workbook.getSheetAt(2);
+		// get the seq of node_active and update it by number of row 
+		 Iterator<Row> rowIterator=firstSheet.iterator();
+		 Row nextRow = rowIterator.next();
+		
+		while(rowIterator.hasNext() ){
+			  nextRow = rowIterator.next();
+			  Iterator<Cell> cellIterator=nextRow.cellIterator();
+			  int rowIndex = nextRow.getRowNum();
+			  //System.out.println("rowIndex is "+rowIndex);
+			  if(rowIndex >4) {
+					while(cellIterator.hasNext()) {
+						Cell nextCell=cellIterator.next();
+						int columnIndex=nextCell.getColumnIndex();
+						
+						switch (columnIndex) {
+						case 3:
+							ucellName =nextCell.getStringCellValue();
+							break;
+						case 6:
+							cid=nextCell.getStringCellValue();
+							break;
+						case 7:
+							ucellId=nextCell.getStringCellValue();
+							break;
+						case 9:
+							uarfctUI=nextCell.getStringCellValue();
+							break;
+						case 10:
+							uarfctDI=nextCell.getStringCellValue();
+							break;
+						case 11:
+							pscrambcode=nextCell.getStringCellValue();
+							break;
+						case 12:
+							LAC=nextCell.getStringCellValue();
+							break;
+						case 13:
+							RAC=nextCell.getStringCellValue();
+							break;
+						case 14:
+							SAC=nextCell.getStringCellValue();
+							break;
+						case 18:
+							sectorId=nextCell.getStringCellValue();
+							break;
+						case 19:
+							Ucellradius=nextCell.getStringCellValue();
+							break;
+						case 22:
+							Umaxtxpower=nextCell.getStringCellValue();
+							break;
+
+						}  
+					}
+					String ULFREQ="",DLFREQ="",MAXPOWER="";
+					tempnodeID=ucellName.substring(0, 5);
+					UCellPK = year + "_ZTE_RAN_CELL" + "_" + UCellSeq;
+					//QUERY
+						PreparedStatement Ucellstmt =con.prepareStatement("insert into NODE_UCELL"
+							+ "(UCELL_ID,CELLID,CELLNAME,LOCELL,NODEBFUNCTIONNAME,ULFREQ,DLFREQ,MAXPOWER,USERLABEL,MAXTXPOWER,UARFCNUPLINK,UARFCNDOWNLINK,PSCRAMBCODE,"
+							+ "NODEBNAME,LAC,SAC,RAC,MANUFACTURERDATA,RADIUS,HORAD,DI,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,"
+							+ "FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,CREATION_DATE,DOMAIN,VENDOR) "
+							+ "values('" + UCellPK + "','" + cid + "','"
+							+ ucellName + "','" + sectorId + "','','" + ULFREQ + "','"
+							+ DLFREQ + "','" + MAXPOWER + "','"
+							+ ucellName + "','" + Umaxtxpower + "','"
+							+uarfctUI + "','" + uarfctDI + "','"
+							+ pscrambcode + "',(select NODE_NAME from NODE_ACTIVE where NODE_ID='" + tempnodeID+
+								"'and domain='"+Domain+"' and vendor='"+Gprovider+"' order by creation_date desc fetch first 1 row only),'"+LAC+"','"+SAC+"','"+RAC+"','','" + Ucellradius
+							+ "','','',(select NODE_PK from NODE_ACTIVE where NODE_ID='" + tempnodeID
+							+ "'and domain='"+Domain+"' and vendor='"+Gprovider+"' order by creation_date desc fetch first 1 row only),'',sysdate,'" + filename + "','' ,'0','0','0','0','0','0','1',sysdate,'"+Domain+"','" + Gprovider + "') ");
+					 
+						Ucellstmt.executeUpdate();
+						Ucellstmt.close();
+					
+						
+					UCellSeq++;
+					UCellCount++;
+					  
+					}
+			   }  
+		 
+		 workbook.close();
+		 
+		 stmtp = conalm.prepareStatement("UPDATE SEQ_TABLE SET NODE_UCELL = NODE_UCELL +"+UCellCount);
+		  	stmtp.executeUpdate();
+		  	stmtp.close();
+		 
+	}
+	
 	private static void copyFiles(File source, File dest) throws IOException {
 		try {
 			Files.copy(source.toPath(), dest.toPath(), StandardCopyOption.COPY_ATTRIBUTES,
@@ -608,7 +906,7 @@ public class LoadFilesRANZTE {
 		}
 
 	}
-
+/*
 	@SuppressWarnings("rawtypes")
 	public static HashMap getrackcolumns(CSVRecord Record) {
 		HashMap<String, String> hmap = new HashMap<String, String>();
@@ -619,15 +917,10 @@ public class LoadFilesRANZTE {
 		String racknb = data3[1];
 
 		String serialnb;
-		if (StringUtils.containsIgnoreCase(BoardCond1, "board")
-				|| StringUtils.containsIgnoreCase(BoardCond2, "board")) {
-			serialnb = "";
-		} else {
-			serialnb = Record.get(5);
-		}
+		serialnb = Record.get(5);
+		
 
-		// System.out.println("testing manfdate 6"+ Record.get(12));
-		// System.out.println("testing manfdate 6"+ Record.get(13));
+		
 		hmap.put("RACKNO", racknb);
 		hmap.put("INVENTORYUNITID", Record.get(16));
 		hmap.put("INVENTORYUNITTYPE", Record.get(3));
@@ -644,7 +937,8 @@ public class LoadFilesRANZTE {
 
 		return hmap;
 	}
-
+*/
+	/*
 	@SuppressWarnings("rawtypes")
 	public static HashMap getsubrackcolumns(CSVRecord Record) {
 		HashMap<String, String> hmap = new HashMap<String, String>();
@@ -661,12 +955,8 @@ public class LoadFilesRANZTE {
 		// System.out.println("rack nb "+racknb);
 
 		String serialnb;
-		if (StringUtils.containsIgnoreCase(BoardCond1, "board")
-				|| StringUtils.containsIgnoreCase(BoardCond2, "board")) {
-			serialnb = "";
-		} else {
-			serialnb = Record.get(5);
-		}
+		serialnb = Record.get(5);
+		
 
 		String siteindex = "";
 
@@ -693,7 +983,7 @@ public class LoadFilesRANZTE {
 
 		return hmap;
 	}
-
+	 */
 	@SuppressWarnings("rawtypes")
 	public static HashMap getshelfcolumns(CSVRecord Record) {
 		HashMap<String, String> hmap = new HashMap<String, String>();
@@ -703,12 +993,8 @@ public class LoadFilesRANZTE {
 		String shelfnb = data3[2];
 
 		String serialnb;
-		if (StringUtils.containsIgnoreCase(BoardCond1, "board")
-				|| StringUtils.containsIgnoreCase(BoardCond2, "board")) {
-			serialnb = "";
-		} else {
-			serialnb = Record.get(5);
-		}
+		serialnb = Record.get(5);
+		
 
 		hmap.put("SHELFNO", shelfnb);
 		hmap.put("INVENTORYUNITID", Record.get(16));
@@ -728,16 +1014,12 @@ public class LoadFilesRANZTE {
 	}
 
 	@SuppressWarnings("rawtypes")
-	public static HashMap getpackcolumns(CSVRecord Record) {
+	public static HashMap getcabinetcolumns(CSVRecord Record) {
 		HashMap<String, String> hmap = new HashMap<String, String>();
 
 		String serialnb;
-		if (StringUtils.containsIgnoreCase(BoardCond1, "board")
-				|| StringUtils.containsIgnoreCase(BoardCond2, "board")) {
-			serialnb = "";
-		} else {
-			serialnb = Record.get(5);
-		}
+		serialnb = Record.get(5);
+		
 
 		String siteindex = "";
 
@@ -842,6 +1124,7 @@ public class LoadFilesRANZTE {
 		hmap.put("SERIALNUMBER", Record.get(5));
 		hmap.put("UNITPOSITION", Record.get(1));
 		hmap.put("BOARDNAME", Record.get(18));
+		hmap.put("BOARDMODEL", Record.get(17));
 		hmap.put("USERLABEL", Record.get(6));
 		hmap.put("STATUS", "0");
 		hmap.put("DATEOFMANUFACTURE", manfdate);
@@ -873,13 +1156,8 @@ public class LoadFilesRANZTE {
 		data4 = data3[4].split("=", -1);
 		String harddiskSize = data4[1];
 
-		String serialnb;
-		if (StringUtils.containsIgnoreCase(BoardCond1, "board")
-				|| StringUtils.containsIgnoreCase(BoardCond2, "board")) {
-			serialnb = "";
-		} else {
-			serialnb = Record.get(5);
-		}
+		String serialnb="";
+	
 
 		hmap.put("HOSTNAME", hostname);
 		hmap.put("NUMBEROFCPU", nbfCPU);
@@ -924,12 +1202,8 @@ public class LoadFilesRANZTE {
 		String additionalinfo = data4[1];
 
 		String serialnb;
-		if (StringUtils.containsIgnoreCase(BoardCond1, "board")
-				|| StringUtils.containsIgnoreCase(BoardCond2, "board")) {
-			serialnb = "";
-		} else {
-			serialnb = Record.get(5);
-		}
+		serialnb = Record.get(5);
+		
 
 		hmap.put("ACCESSORYNAME", accessoryname);
 		hmap.put("ACCESSORYTYPE", accessorytype);
@@ -1087,6 +1361,41 @@ public class LoadFilesRANZTE {
 					+ fieldValue + "' and DOMAIN='" + vdomain + "' and VENDOR='" + vvendor + "'");
 			stmt.executeUpdate();
 			stmt.close();
+			
+			 stmt = con.prepareStatement("delete from  NODE_BOARD where " + fieldname +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor+"'"); 
+		     stmt.executeUpdate(); 
+			 stmt.close();
+			 
+			 stmt = con.prepareStatement("delete from  NODE_CABINET where " + fieldname +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor+"'"); 
+		     stmt.executeUpdate(); 
+			 stmt.close();
+			 
+			 stmt = con.prepareStatement("delete from  NODE_HOST where " + fieldname +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor+"'"); 
+		     stmt.executeUpdate(); 
+			 stmt.close();
+			
+			 stmt = con.prepareStatement("delete from  NODE_SHELF where " + fieldname +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor+"'"); 
+		     stmt.executeUpdate(); 
+			 stmt.close();
+			
+			 stmt = con.prepareStatement("delete from  NODE_ACCESSORY where " + fieldname +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor+"'"); 
+		     stmt.executeUpdate(); 
+			 stmt.close();
+			 
+			 stmt = con.prepareStatement("delete from  NODE_ACTIVE_ATTRIBUTE where " + fieldname +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor+"'"); 
+		     stmt.executeUpdate(); 
+			 stmt.close();
+			 
+			 stmt = con.prepareStatement("delete from  NODE_GCELL where " + fieldname +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor+"'"); 
+		     stmt.executeUpdate(); 
+			 stmt.close();
+			 
+			 stmt = con.prepareStatement("delete from  NODE_UCELL where " + fieldname +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor+"'"); 
+		     stmt.executeUpdate(); 
+			 stmt.close();
+			
+			
+			
 		} catch (Exception e) {
 			logger.info("error at deleterowsinALLTABLES is :" + e.toString());
 			System.out.println("error at deleterowsinALLTABLES is :" + e.toString());
