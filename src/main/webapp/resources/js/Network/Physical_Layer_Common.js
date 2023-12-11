@@ -41,6 +41,7 @@ searchConnectedButtonEvents();
    
     
     $("#deleteMan").click(function() {
+    	console.log("para "+layer_arr[0]+" par2 "+layer_arr[1] +" par3 "+layer_arr[2])
 		deletePhysicalLayers(layer_arr[0],layer_arr[1],layer_arr[2]);
 		$("#DeleteModal").modal('hide');
 	});
@@ -8821,7 +8822,7 @@ function FindDuctData(selectedDuctContext){
 
 allSelectedLayer=[];
 function deletePhysicalLayers(layer,subLayer,selectedIdContext){
-	//console.log("yessssssss selectedIdContext is "+selectedIdContext);
+	console.log("yessssssss selectedIdContext is "+selectedIdContext);
 	//console.log("yessssssss IdNodeSelectedTemp is "+IdNodeSelectedTemp);
 	allSelectedLayer=[];
 	checkIfLayerDel="";
@@ -8842,6 +8843,7 @@ if (subLayer==""){
     	// Delete from main Manhole/Handhole OR DB 
     	else{
     	if(subLayer!="DistributionBoard"){
+    		console.log(" not db");
 	    		//Main physical layer checkbox is checked(ALL Single physical layer INSIDE IT ARE CHECKED)
 		    	if($("."+layer+":checked").length>0){				
 		    		//Get all checked single manholes/handoles or DB
@@ -8854,6 +8856,7 @@ if (subLayer==""){
 		    	
 		    	//Main physical layer checkbox is unchecked (SOME checked/unchecked manholes/handholes/DB inside it )
 		    	else {
+		    		console.log("yessssssss subLayer is "+subLayer);
 		    		//Delete CHECKED single physical layer from main physical Layer right click context menu
 		    			//Get all checked single manholes/handoles or DB
 		    			$("#"+subLayer+"_f_"+selectedIdContext+"").find(' > ul > li ').each(function(){	
@@ -8997,6 +9000,22 @@ if (subLayer==""){
 						markersHandhole[allSelectedLayer[k]].setMap(null);
 						markersHandhole.splice(allSelectedLayer[k], 1);
 						markerClusterHandhole.removeMarker(markersHandhole[allSelectedLayer[k]]);
+					}
+				}
+				else if(layer == "Junction" || layer == "AllJunctions" ) {	
+					 
+					//Remove the deleted Junction from tree
+					for(var k=0;k<allSelectedLayer.length;k++){
+					
+						var node = document.getElementById(allSelectedLayer[k]);
+						if (node.parentNode) {
+						  node.parentNode.removeChild(node);
+						}
+						
+						//Remove the deleted Junction Markers from map and array
+						markersJunction[allSelectedLayer[k]].setMap(null);
+						markersJunction.splice(allSelectedLayer[k], 1);
+						markerClusterJunction.removeMarker(markersJunction[allSelectedLayer[k]]);
 					}
 				}
 					else if(layer == "DistBoard" || layer =="AllDistBoards") {

@@ -8494,14 +8494,16 @@ public class PhysicalLayerController {
 				strandDeleteQuery = null, trenchPathDeleteQuery = null, tubePathDeleteQuery = null;
 		Object newCount = null;
 
-		String[] idList = request.getParameterValues("physicalLayerID[]");
+		String[] idArray = request.getParameterValues("physicalLayerID[]");
+		System.out.println("idArray:" +idArray);
 		String physicalLayer = request.getParameter("physicalLayer");
-		// System.out.println("physicalLayer:" +physicalLayer);
+		//System.out.println("physicalLayer:" +physicalLayer);
 		String NodeID = request.getParameter("NodeId");
 		System.out.println("NodeID:" + NodeID);
 		String manHandholeID = request.getParameter("manHandholeID");
 		String manHandoleName = request.getParameter("manHandoleName");
-
+        List<String> idList = Arrays.asList(idArray);
+        System.out.println("idList:" +idList);
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
@@ -8644,7 +8646,7 @@ public class PhysicalLayerController {
 						query = session.createNativeQuery(
 								"SELECT count(*) FROM JUNCTION b WHERE PHYSICAL_LAYER_ID = '" + manHandholeID + "' ");
 						String countJunc = query.getSingleResult().toString();
-
+                        if(manHandholeID != null) {
 						if (StringUtils.equalsIgnoreCase(countJunc, "0")) {
 							manHandoleName = manHandoleName.substring(0, manHandoleName.length() - 2);
 							System.out.println("manHandoleName" + manHandoleName);
@@ -8657,6 +8659,7 @@ public class PhysicalLayerController {
 							query.executeUpdate();
 
 						}
+                        }
 						rtn.put("ManHandholeNewName", manHandoleName);
 
 						newCount = session.createNativeQuery(
@@ -8670,7 +8673,27 @@ public class PhysicalLayerController {
 						// .uniqueResult();
 						// rtn.put("HandholeCount", newCount);
 
-					} else if (StringUtils.equalsIgnoreCase(physicalLayer, "DistBoard")
+					} else if ( StringUtils.equalsIgnoreCase(physicalLayer, "AllJunctions")) {
+						System.out.println("ONLY JUNCTION" );
+
+						physicalLayerDeleteQuery = session
+								.createNativeQuery("delete from JUNCTION b where b.JUNCTION_ID IN (:param1)");
+						physicalLayerDeleteQuery.setParameter("param1", idList);
+						physicalLayerDeleteQuery.executeUpdate();
+
+						physicalLayerDeleteQuery = session
+								.createNativeQuery("delete from JUNCTION_MAPPING b where b.JCT_ID IN (:param1)");
+						physicalLayerDeleteQuery.setParameter("param1", idList);
+						physicalLayerDeleteQuery.executeUpdate();
+
+						query = session.createNativeQuery(
+								"SELECT count(*) FROM JUNCTION b WHERE PHYSICAL_LAYER_ID IS NULL ");
+						String countJunc = query.getSingleResult().toString();
+                        
+
+					
+					}
+					else if (StringUtils.equalsIgnoreCase(physicalLayer, "DistBoard")
 							|| StringUtils.equalsIgnoreCase(physicalLayer, "AllDistBoards")) {
 
 						physicalLayerDeleteQuery = session
