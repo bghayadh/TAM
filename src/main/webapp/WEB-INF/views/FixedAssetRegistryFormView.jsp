@@ -3042,7 +3042,8 @@ $("#itmname").autocomplete({
            // FINANCE TAB FUNCTION
 			function myFunction(){
 
-				var useful_life_month = $("#usefulLifemonths").val();
+
+				/* var useful_life_month = $("#usefulLifemonths").val();
 				var initialCost = $("#initialCost").val();
 
 				if(useful_life_month != "" && initialCost != "")
@@ -3076,20 +3077,30 @@ $("#itmname").autocomplete({
 					{
 				    	DP = (document.getElementById("accumDepAmount").value/document.getElementById("initialCost").value)* 100;
 				    	DP = DP.toFixed(2);
-				    	/*
+				    
 				    	// ADDED BY AHMAD
 				    	document.getElementById("dailyDepAmount").value = dailyDeprAmount;
 				        document.getElementById("accumDepAmount").value = AD;
-				        */
+				       
 					}
 			        
 			         document.getElementById("depPercentage"). value = DP;
 			        
 
+			        var netCost = (document.getElementById("initialCost").value) - (document.getElementById("accumDepAmount").value);
 			        
+			        if(netCost <= 0.0){
+			        	document.getElementById("netCost"). value = 0;
+				        }
+			        else {
+				        document.getElementById("netCost"). value = netCost;
+			        }
+			      
 			        
 				}
+				
 			}
+				*/
 
 		</script>
 
