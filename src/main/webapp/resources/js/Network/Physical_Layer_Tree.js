@@ -5639,7 +5639,8 @@ singleProject = new ContextMenu({
 				}
 			 },
 			 {'icon': 'trash', 'name': 'Delete Junction', action: () => {
-				//deleteprop("AllJunctions","JUNCTION",IdNodeSelectedTemp);
+				 deleteprop("JUNCTION","",selectedJuncIdContext);
+				//deleteprop("AllJunctions","JUNCTION",selectedJuncIdContext);
 				// deletePhysicalLayers("AllJunctions","Junction",IdNodeSelectedTemp);
 				//deleteJunction("NoManHandhole","Junction",selectedJct,selectedManIdContext);
 			 	$('#DeleteModal').find('input:text').val('');

@@ -8843,7 +8843,7 @@ if (subLayer==""){
     	// Delete from main Manhole/Handhole OR DB 
     	else{
     	if(subLayer!="DistributionBoard"){
-    		console.log(" not db");
+    		//console.log(" not db");
 	    		//Main physical layer checkbox is checked(ALL Single physical layer INSIDE IT ARE CHECKED)
 		    	if($("."+layer+":checked").length>0){				
 		    		//Get all checked single manholes/handoles or DB
@@ -8856,7 +8856,7 @@ if (subLayer==""){
 		    	
 		    	//Main physical layer checkbox is unchecked (SOME checked/unchecked manholes/handholes/DB inside it )
 		    	else {
-		    		console.log("yessssssss subLayer is "+subLayer);
+		    		//console.log("yessssssss subLayer is "+subLayer);
 		    		//Delete CHECKED single physical layer from main physical Layer right click context menu
 		    			//Get all checked single manholes/handoles or DB
 		    			$("#"+subLayer+"_f_"+selectedIdContext+"").find(' > ul > li ').each(function(){	
@@ -8883,7 +8883,7 @@ if (subLayer==""){
 		    	//Main physical layer checkbox is unchecked (SOME checked/unchecked manholes/handholes/DB inside it )
 		    	else {
 		    		//Delete CHECKED single physical layer from main physical Layer right click context menu
-		    			console.log(" 123456789");
+		    			//console.log(" 123456789");
 		    			//Get all checked single manholes/handoles or DB
 		    			$("#"+subLayer+"_f_"+selectedIdContext+"").find(' > ul > li > ul > li ').each(function(){	
 							if($(this).find('input:checkbox').is(':checked')) {		
@@ -9002,8 +9002,8 @@ if (subLayer==""){
 						markerClusterHandhole.removeMarker(markersHandhole[allSelectedLayer[k]]);
 					}
 				}
-				else if(layer == "Junction" || layer == "AllJunctions" ) {	
-					 
+				else if(layer == "JUNCTION" || layer == "AllJunctions" ) {	
+					//console.log("deleteeeeezzz junctionsss ");
 					//Remove the deleted Junction from tree
 					for(var k=0;k<allSelectedLayer.length;k++){
 					

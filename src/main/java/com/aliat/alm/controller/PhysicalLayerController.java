@@ -8497,7 +8497,7 @@ public class PhysicalLayerController {
 		String[] idArray = request.getParameterValues("physicalLayerID[]");
 		System.out.println("idArray:" +idArray);
 		String physicalLayer = request.getParameter("physicalLayer");
-		//System.out.println("physicalLayer:" +physicalLayer);
+		System.out.println("physicalLayer:" +physicalLayer);
 		String NodeID = request.getParameter("NodeId");
 		System.out.println("NodeID:" + NodeID);
 		String manHandholeID = request.getParameter("manHandholeID");
@@ -8633,6 +8633,7 @@ public class PhysicalLayerController {
 								.uniqueResult();
 						rtn.put("newCount", newCount);
 					} else if (StringUtils.equalsIgnoreCase(physicalLayer, "Junction")) {
+						System.out.println("physicalLayer:" +physicalLayer);
 						physicalLayerDeleteQuery = session
 								.createNativeQuery("delete from JUNCTION b where b.JUNCTION_ID IN (:param1)");
 						physicalLayerDeleteQuery.setParameter("param1", idList);
@@ -8673,7 +8674,7 @@ public class PhysicalLayerController {
 						// .uniqueResult();
 						// rtn.put("HandholeCount", newCount);
 
-					} else if ( StringUtils.equalsIgnoreCase(physicalLayer, "AllJunctions")) {
+					} else if ( StringUtils.equalsIgnoreCase(physicalLayer, "JUNCTION")) {
 						System.out.println("ONLY JUNCTION" );
 
 						physicalLayerDeleteQuery = session
