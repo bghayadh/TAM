@@ -1,12 +1,18 @@
 package com.aliat.alm.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TreeMap;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.hibernate.query.Query;
@@ -325,6 +331,49 @@ public class LoadersController {
 
 	}
 
+	@RequestMapping(value = "/GenerateCity", method = RequestMethod.POST)
+	@ResponseBody
+	public TreeMap<Object, Object> GenerateCity(@ModelAttribute ItemParameters itemParameters) {
+		
+		TreeMap<Object, Object> sortedMap = new TreeMap<>();
+		session = AlmDbSession.getInstance().getSession();		
+
+			if (session != null && session.isOpen()) {		
+				tx = session.beginTransaction();
+				double longitude,latitude;
+				String city="";
+				Map<Object, List<Object>> map = new HashMap<>();
+				
+				try {	
+					if (itemParameters.getDictParameter().size() > 0) {
+						for (int i = 0; i < itemParameters.getDictParameter().size(); i++) {							
+								longitude=Double.parseDouble(itemParameters.getDictParameter().get(i).get("longitude"));
+								latitude=Double.parseDouble(itemParameters.getDictParameter().get(i).get("latitude"));
+								
+								city =	getCity(latitude, longitude);
+								map.put(i, new ArrayList<>(Arrays.asList(
+										itemParameters.getDictParameter().get(i).get("longitude"),
+										itemParameters.getDictParameter().get(i).get("latitude"),city)));
+					}
+					sortedMap.putAll(map);
+					
+				}
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+					logger.info("Error in generating the city with a message : " + e);
+				} finally {
+					if (session != null && session.isOpen()) {
+						tx.commit();
+						session.close();
+
+					}
+
+				}
+			}
+			return sortedMap;
+	}
+	
 	private String getCity(Double latitude, Double longitude) {
 		
 		String city = "";
