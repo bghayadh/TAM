@@ -104,7 +104,7 @@
     text-align: center;
     display: inline-block;
 }
-.button3{
+.importButton{
 	background-color: #858d8d;
     border: 1px solid gold;
     color: white;
@@ -117,7 +117,7 @@
     border-radius: 5px;
 }
 
-.button3:hover{
+.importButton:hover{
 	background-color: #9EA3A3;
 	color: gold;
 	border: 1px solid #D3D3D3;
@@ -145,7 +145,7 @@
 			<div class="card card-primary card-tabs cards-margin block">
 				<div class="title_card d-flex justify-content-between align-items-center">
                     <span style="margin-left:10px;">Fiber</span>
-                    <button class="button3" id="downloadSample">Download Excel Sample</button>
+                    <button class="importButton" id="downloadSample">Download Excel Sample</button>
                 </div>
 				<div class="card-body cadr">
 					<div class="card-group ">
@@ -163,7 +163,7 @@
 										<label class="file"><input type="file" style="font-size:13px;margin-left:13px;" id="importManholeExcelFile" accept=".xlsx" class="btn btn-light file"></label>
 								</div>
 						<div class="input-group-prepend">
-								<button class="button3" id="runManholeScript" style="align:center; margin-left:100px;">Import</button>
+								<button class="importButton" id="runManholeScript" style="align:center; margin-left:100px;">Import</button>
 								</div>
 									<p id="manholeSuccessAlert" style=" margin-top: 0; padding-top:5px;margin-left:80px;color:black;display:none"></p>
                 					<div id="manholeLoader" class="loadingMsg">
@@ -188,7 +188,7 @@
 										<label class="file"><input type="file" style="font-size:13px;margin-left:13px;" id="importHandholeExcelFile" accept=".xlsx" class="btn btn-light file"></label>
 								</div>
 							<div class="input-group-prepend">
-								<button class="button3" id="runHandholeScript" style="align:center; margin-left:100px;">Import</button>
+								<button class="importButton" id="runHandholeScript" style="align:center; margin-left:100px;">Import</button>
 							</div>
 								<p id="handholeSuccessAlert" style=" margin-top: 0; padding-top:5px;margin-left:80px;color:black;display:none"></p>
                 					<div id="handholeLoader" class="loadingMsg">
@@ -198,6 +198,32 @@
            					 </div>
            					<p class="note">This Loader will only load the Handholes <br>and its Junctions,even if the excel sheet<br> is containing Manholes and Handholes . </p>
       					</div>
+      					
+      			<div class="mx-auto cardsClass">
+            				<div class="card bg-light mb-3 mx-auto ">
+                				<div class="card-header Cardheader">
+                					<div class="row">
+	                					<div class="col-sm-10">         
+	                						<h6 class="headerText">Generate City</h6>       				 	                					       				 	                					
+	                					</div>
+	                				</div> 
+	                			</div>
+                				<div class="card-body mycard CardBody">
+                				<div class="input-group-prepend">
+									<label class="file"><input type="file" style="font-size:13px;margin-left:13px;" id="importCityExcelFile" accept=".xlsx" class="btn btn-light file"></label>
+								</div>
+							<div class="input-group-prepend">
+								<button class="importButton" id="generateCity" style="align:center; margin-left:100px;">Generate</button>
+							</div>
+								<p id="generateCitySuccessAlert" style=" margin-top: 0; padding-top:5px;margin-left:80px;color:black;display:none"></p>
+                					<div id="generateCityLoader" class="loadingMsg">
+                						<img  src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif" style="width: 40px;height:40px;margin-right:10px;">Loading Data...
+                					</div>
+                				</div>
+           					 </div>
+      					</div>
+      					
+      					
 					</div>
 				</div>
 
@@ -208,13 +234,14 @@
 </body>
 <script type="text/javascript">
 var excelSheetSample=[];
+var cityExcelSheetData=[];
 
 $("#runManholeScript").click(function() {
-	uploadExcelData("importManholeExcelFile","runManholeScript","manholeLoader");
+	uploadExcelData("importManholeExcelFile","runManholeScript","manholeLoader",GetRecordsFromExcelSheet);
 });
 
 $("#runHandholeScript").click(function() {
-	uploadExcelData("importHandholeExcelFile","runHandholeScript","handholeLoader");
+	uploadExcelData("importHandholeExcelFile","runHandholeScript","handholeLoader",GetRecordsFromExcelSheet);
 });
 
 $('#importManholeExcelFile').click(function() {
@@ -224,8 +251,11 @@ $('#importHandholeExcelFile').click(function() {
 	$("#handholeSuccessAlert").hide();
 });
 
+$('#importCityExcelFile').click(function() {
+	$("#generateCitySuccessAlert").hide();
+});
+
 $("#downloadSample").click(function() {
-	
 	excelSheetSample = [];
 	excelSheetSample.push('\r');
 	excelSheetSample.push(["NAME","LONGITUDE","LATITUDE"]);
@@ -238,17 +268,10 @@ $("#downloadSample").click(function() {
     excelSheetSample.push('\r');
     excelSheetSample.push(["HH09 (J08#)", 39.1776830573722, 0.755546117024926]); // Add a hh with junction sample record
 
-	  const csvContent = 'data:text/csv;charset=utf-8,' + encodeURIComponent(excelSheetSample);
-	  const downloadLink = document.createElement('a');
-	  downloadLink.setAttribute('href', csvContent);
-	  downloadLink.setAttribute('download', "ExcelSheetSample");
-
-	  document.body.appendChild(downloadLink);
-	  downloadLink.click();
-	  document.body.removeChild(downloadLink);
+	DownloadExcelSheet(excelSheetSample,"ManholeHandholeExcelSheetSample");
 });
 
-function uploadExcelData(fileId,importButtonID,loaderID) {
+function uploadExcelData(fileId,importButtonID,loaderID,GetRecordsFunctionName) {
 
 	//Reference the FileUpload element.
     var fileUpload = document.getElementById(fileId);
@@ -262,7 +285,7 @@ function uploadExcelData(fileId,importButtonID,loaderID) {
             //For Browsers other than IE.
             if (reader.readAsBinaryString) {
                 reader.onload = function (e) {
-                	GetTableFromExcelSheet(e.target.result,loaderID,importButtonID)                	
+                	GetRecordsFunctionName(e.target.result,loaderID,importButtonID)                	
                 };
                 reader.readAsBinaryString(fileUpload.files[0]);
             } 
@@ -274,7 +297,7 @@ function uploadExcelData(fileId,importButtonID,loaderID) {
                     for (var i = 0; i < bytes.byteLength; i++) {
                         data += String.fromCharCode(bytes[i]);
                     }
-                    GetTableFromExcelSheet(data,loaderID,importButtonID)
+                    GetRecordsFunctionName(data,loaderID,importButtonID)
                 };
                 reader.readAsArrayBuffer(fileUpload.files[0]);
             }
@@ -287,7 +310,7 @@ function uploadExcelData(fileId,importButtonID,loaderID) {
 }
 
 
-function GetTableFromExcelSheet(data,loaderDivId,importButtonID) {
+function GetRecordsFromExcelSheet(data,loaderDivId,importButtonID) {
 
 	//Read the Excel File data in binary
     var workbook = XLSX.read(data, {
@@ -369,6 +392,94 @@ function GetTableFromExcelSheet(data,loaderDivId,importButtonID) {
 		});
 }
 
+
+$("#generateCity").click(function() {
+	uploadExcelData("importCityExcelFile","generateCity","generateCityLoader",GetCityRecordsFromExcelSheet);
+});
+
+function GetCityRecordsFromExcelSheet(data,loaderDivId,importButtonID) {
+
+	//Read the Excel File data in binary
+    var workbook = XLSX.read(data, {
+        type: 'binary'
+    });
+
+    //get the name of First Sheet.
+    var Sheet = workbook.SheetNames[0];
+
+    //Read all rows from First Sheet into an JSON array.
+    var excelRows = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[Sheet]);
+
+    let dictObj = {};
+    var dict=[];
+
+    for (var i = 0; i < excelRows.length; i++) {
+        
+        var longitude = excelRows[i].LONGITUDE ? excelRows[i].LONGITUDE : excelRows[i].LONGITUDE 
+        var latitude = excelRows[i].LATITUDE ? excelRows[i].LATITUDE : excelRows[i].LATITUDE;		
+		
+		dictObj.longitude = longitude;
+		dictObj.latitude = latitude;
+				
+		dict.push(dictObj);
+		dictObj = {}; 		
+    }
+        
+    var token =  $('input[name="csrfToken"]').attr('value');
+	
+	
+	$.ajax({
+		type: "POST",
+		url: '${pageContext.request.contextPath}/GenerateCity',
+		headers: {
+			'X-CSRFToken': token 
+		},
+		data: {
+			"dictParameter":dict,
+		},
+		beforeSend: function() {
+			$("#"+loaderDivId).show();
+		},
+		dataType: "json",
+		success: function (data) {
+			$("#"+loaderDivId).hide();
+			if (data != null) {
+
+				cityExcelSheetData = [];
+				cityExcelSheetData.push('\r');
+				cityExcelSheetData.push(["Longitude","Latitude","City"]);
+
+				$.each(data, function (i, value) {
+					cityExcelSheetData.push('\r');
+					cityExcelSheetData.push([value[0], value[1], value[2] ]);		   
+				});
+				DownloadExcelSheet(cityExcelSheetData,"GenerateCityExcelSheet");
+				
+			    document.getElementById('generateCitySuccessAlert').innerText = 'Success !';
+			    document.getElementById('generateCitySuccessAlert').style.color = 'green';
+				document.getElementById('generateCitySuccessAlert').style.display = 'block';
+				document.getElementById('generateCitySuccessAlert').style.marginLeft = '120px';
+				
+				
+				dict=[];
+			}
+			data = null
+		},
+		error: function(result) {
+			alert("Error");
+		}
+		});
+}
+
+function DownloadExcelSheet(dataArray,excelSheetName) {
+	  const csvContent = 'data:text/csv;charset=utf-8,' + encodeURIComponent(dataArray);
+	  const downloadLink = document.createElement('a');
+	  downloadLink.setAttribute('href', csvContent);
+	  downloadLink.setAttribute('download', excelSheetName);
+	  document.body.appendChild(downloadLink);
+	  downloadLink.click();
+	  document.body.removeChild(downloadLink);
+}
 
 </script>
 </html>
