@@ -13,6 +13,7 @@ import com.aliat.alm.models.FarPartNumber;
 import com.aliat.alm.models.FarSerialNumber;
 import com.aliat.alm.models.FarSite;
 import java.io.IOException;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -1408,7 +1409,16 @@ query.executeUpdate();
 							
 
 						}
-						synchronized (this) {						
+						query = session.createSQLQuery("select USEFULL_LIFE_MONTHS from ITEM where ITEM_CODE = '"+itmcode+"'");
+						query.executeUpdate();
+						String item_Usefull_LifeMonths = (String) query.uniqueResult();
+						float useful_life_month = 0;
+
+						if (!StringUtils.equalsIgnoreCase(item_Usefull_LifeMonths, "")) { 
+							
+							useful_life_month = Float.parseFloat(item_Usefull_LifeMonths);
+						}
+                          synchronized (this) {						
 							FarCode = "FAR_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT FIXED_ASSET_REGISTRY FROM SEQ_TABLE").uniqueResult().toString());	
 							query = session.createSQLQuery("UPDATE SEQ_TABLE SET FIXED_ASSET_REGISTRY = FIXED_ASSET_REGISTRY + 1 ");
 							query.executeUpdate();
@@ -1433,6 +1443,11 @@ query.executeUpdate();
 						FixedAssetReg.setFaritemName(itmname);
 						FixedAssetReg.setIniCost(initialCost);
 						FixedAssetReg.setNetCost(initialCost);
+						FixedAssetReg.setUsefulLifeMon(useful_life_month);
+						FixedAssetReg.setDailyPercent(0);
+						FixedAssetReg.setAccumPer(0);
+						FixedAssetReg.setAccumDeprCode("0");
+						FixedAssetReg.setDeprCode("0");
 						FixedAssetReg.setDniID(DNItemID);
 						//FixedAssetReg.setSideID(SiteID);
 						FixedAssetReg.setSupplierID(supplierID);
@@ -3762,6 +3777,10 @@ public void ApprovalFinance(String trans_Type, String getApproval, String dnStat
 			FixedAssetReg.setIniCost(initialCost);
 			FixedAssetReg.setNetCost(initialCost);
 			FixedAssetReg.setUsefulLifeMon(useful_life_month);
+			FixedAssetReg.setDailyPercent(0);
+			FixedAssetReg.setAccumPer(0);
+			FixedAssetReg.setAccumDeprCode("0");
+			FixedAssetReg.setDeprCode("0");
 			FixedAssetReg.setDniID(DniID);
 			FixedAssetReg.setSupplierID(supplierID);
 			FixedAssetReg.setSupplierName(supplierName);
