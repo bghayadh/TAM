@@ -421,6 +421,7 @@ public class FixedAssetRegistryController {
 					model.addAttribute("itemheight", itm.getHeight());
 					model.addAttribute("itemSizeUOM", itm.getSizeUOM());
 					model.addAttribute("itemDesc", itm.getItemDescription());
+					
 
 					// model.addAttribute("itemDomain",itm.getDomain());
 					model.addAttribute("itemCableType", itm.getCableType());
@@ -500,9 +501,15 @@ public class FixedAssetRegistryController {
 				model.addAttribute("itemCategoryDetails", itemCategoryDetails);
 				model.addAttribute("itemCatID", fassetreg.getItemCatID());
 				model.addAttribute("itemRootCat", fassetreg.getItemRootCode());
+				model.addAttribute("dailyDepAmount", fassetreg.getDailyPercent());
+				model.addAttribute("netCost", fassetreg.getNetCost());
+				model.addAttribute("accumDepAmount", fassetreg.getAccumPer());
+				model.addAttribute("accumDepCode", fassetreg.getAccumDeprCode());
+				model.addAttribute("DepCode", fassetreg.getDeprCode());
+				model.addAttribute("depPercentage", fassetreg.getDeprPer());
 				model.addAttribute("farcreatedDate", formatterTime.format(fassetreg.getFarcreatedDate()).toString());
 				model.addAttribute("farlastModifiedDate",
-						formatterTime.format(fassetreg.getFarlastModifiedDate()).toString());
+				formatterTime.format(fassetreg.getFarlastModifiedDate()).toString());
 				model.addAttribute("ownership", fassetreg.getOwnership());
 				model.addAttribute("scrapStatus", fassetreg.getScrapStatus());
 				if (fassetreg.getScrapDate() == null)
