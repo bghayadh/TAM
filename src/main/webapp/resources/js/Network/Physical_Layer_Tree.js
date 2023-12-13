@@ -19881,22 +19881,27 @@ $('#Manhole_AutocompleteCable'). click(function(){
 			$("#searchManhTBody").empty();
 			$("#searchHanhTBody").empty();
 			$("#searchDBoardTBody").empty();
+			$("#searchNodeTBody").empty();
 			$("#searchManhTBody").html("");
 			$("#searchHanhTBody").html("");
 			$("#searchDBoardTBody").html("");
+			$("#searchNodeTBody").html("");
 			$("#nearStrandId").html("");
 			$("#nearFiberId").html("");
 			$("#nearTubeId").html("");
 			$("#selectAllHandhole").prop('checked', false);
 			$("#selectAllManhole").prop('checked', false);
 			$("#selectAllDB").prop('checked', false);
+			$("#selectAllNode").prop('checked', false);
 			$("#totalManhole").val("");
 			$("#totalHandhole").val("");
 			$("#totalDB").val("");
+			$("#totalNode").val("");
 			
-			$( '#findNearstManhole thead th:eq(5),#findNearstManhole thead th:eq(6)' ).hide();
-			$( '#findNearstHandhole thead th:eq(5),#findNearstHandhole thead th:eq(6)' ).hide();
-			$( '#findNearstDB thead th:eq(5),#findNearstDB thead th:eq(6)' ).hide();
+			$( '#findNearstManhole thead th:eq(5),#findNearstManhole thead th:eq(6),#findNearstManhole thead th:eq(7)' ).hide();
+			$( '#findNearstHandhole thead th:eq(5),#findNearstHandhole thead th:eq(6),#findNearstHandhole thead th:eq(7)' ).hide();
+			$( '#findNearstDB thead th:eq(5),#findNearstDB thead th:eq(6),#findNearstDB thead th:eq(7)' ).hide();
+			$( '#findNearstNode thead th:eq(5),#findNearstNode thead th:eq(6),#findNearstNode thead th:eq(7)' ).hide();
 
 		}
 		else if($(this). is(":not(:checked)")){
@@ -19927,9 +19932,11 @@ $('#circleRange'). click(function(){
 			$("#searchManhTBody").empty();
 			$("#searchHanhTBody").empty();
 			$("#searchDBoardTBody").empty();
+			$("#searchNodeTBody").empty();
 			$("#searchManhTBody").html("");
 			$("#searchHanhTBody").html("");
 			$("#searchDBoardTBody").html("");
+			$("#searchNodeTBody").html();
 			$("#nearStrandId").html("");
 			$("#nearFiberId").html("");
 			$("#nearTubeId").html("");
@@ -19937,13 +19944,17 @@ $('#circleRange'). click(function(){
 			$("#selectAllHandhole").prop('checked', false);
 			$("#selectAllManhole").prop('checked', false);
 			$("#selectAllDB").prop('checked', false);
+			$("#selectAllNode").prop('checked', false);
 			$("#totalManhole").val("");
 			$("#totalHandhole").val("");
 			$("#totalDB").val("");
+			$("#totalNode").val("");
 			
-			$( '#findNearstManhole thead th:eq(5),#findNearstManhole thead th:eq(6)' ).show();
-			$( '#findNearstHandhole thead th:eq(5),#findNearstHandhole thead th:eq(6)' ).show();
-			$( '#findNearstDB thead th:eq(5),#findNearstDB thead th:eq(6)' ).show();
+			$( '#findNearstManhole thead th:eq(5),#findNearstManhole thead th:eq(6),#findNearstManhole thead th:eq(7)' ).show();
+			$( '#findNearstHandhole thead th:eq(5),#findNearstHandhole thead th:eq(6),#findNearstHandhole thead th:eq(7)' ).show();
+			$( '#findNearstDB thead th:eq(5),#findNearstDB thead th:eq(6),#findNearstDB thead th:eq(7)' ).show();
+			$( '#findNearstNode thead th:eq(5),#findNearstNode thead th:eq(6),#findNearstNode thead th:eq(7)' ).show();
+		
 		}
 		else if($(this). is(":not(:checked)")){
 			$(this).val('0');		
