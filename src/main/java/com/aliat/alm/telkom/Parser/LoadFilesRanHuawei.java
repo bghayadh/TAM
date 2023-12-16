@@ -3516,7 +3516,7 @@ public class LoadFilesRanHuawei {
 				i = 0;
 				// Get old creation date of the same file and update rows with old creation date
 				String query3 = "select node_pk,creation_date from NODE_ACTIVE where NODE_ID='"
-						+ rs2.getString("NODE_ID") + "' and SITE_ID='" + rs2.getString("SITE_ID") + "' and NODE_NAME ='"
+						+ rs2.getString("NODE_ID") + "' and (SITE_ID ='"+ rs1.getString("SITE_ID") +"' OR SITE_ID IS NULL) and NODE_NAME ='"
 						+ rs2.getString("NODE_NAME") + "' and CIRCLE_ID ='" + rs2.getString("CIRCLE_ID")
 						+ "' and DOMAIN='" + vdomain + "' and VENDOR='" + vvendor + "' order by node_pk asc";
 				stmt3 = parserCon.createStatement();
