@@ -37,6 +37,8 @@ readFileRanNecFrom;C:\ALM_V2_1\RAN\NEC
 copyFileRanNecTo;C:\ALM_V2_1\RAN_Processed\NEC
 readExcelFileRanHWFrom;C:\ALM_V2_1\RAN\HUAWEI
 copyExcelFileRanHWTo;C:\ALM_V2_1\RAN_Processed\HUAWEI
+readXMLFileRanHWFrom;C:\ALM_V2_1\RAN\HUAWEI\Inventory
+copyXMLFileRanHWTo;C:\ALM_V2_1\RAN_Processed\HUAWEI\Inventory
 readBscGSMFileRanHWFrom;C:\ALM_V2_1\RAN\HUAWEI\BSC6910GSM
 copyBscGSMFileRanHWTo;C:\ALM_V2_1\RAN_Processed\HUAWEI\BSC6910GSM
 readBscUMTSFileRanHWFrom;C:\ALM_V2_1\RAN\HUAWEI\BSC6910UMTS

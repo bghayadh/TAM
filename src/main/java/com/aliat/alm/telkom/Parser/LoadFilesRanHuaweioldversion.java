@@ -38,7 +38,7 @@ import org.w3c.dom.NodeList;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
-public class LoadFilesRanHuawei {
+public class LoadFilesRanHuaweioldversion {
 	static Connection parserCon;
 	static Connection almCon;
 	static String currentYear;
@@ -65,27 +65,25 @@ public class LoadFilesRanHuawei {
 	static String almDbPath;
 	static String parserDbPath;
 	static String readExcelFileFrom;
-	static String readXMLFileFrom;
-	//static String readBscGSMFileFrom;
-	//static String readBscUMTSFileFrom;
-	//static String readBTSFileFrom;
-	//static String readOSSFileFrom;
+	static String readBscGSMFileFrom;
+	static String readBscUMTSFileFrom;
+	static String readBTSFileFrom;
+	static String readOSSFileFrom;
 	static String copyExcelFileTo;
-	static String copyXMLFileTo;
-	//static String copyBscGSMFileTo;
-	//static String copyBscUMTSFileTo;
-	//static String copyBTSFileTo;
-	//static String copyOSSFileTo;
+	static String copyBscGSMFileTo;
+	static String copyBscUMTSFileTo;
+	static String copyBTSFileTo;
+	static String copyOSSFileTo;
 	static String almDbUsername;
 	static String almDbPassword;
 	static String parserDbUsername;
 	static String parserDbPassword;
 	static String provider;
 	static String folderFrom;
-	//static String bscGsmFolderFrom;
-	//static String bscUMTSFolderFrom;
-	//static String btsFolderFrom;
-	//static String ossFolderFrom;
+	static String bscGsmFolderFrom;
+	static String bscUMTSFolderFrom;
+	static String btsFolderFrom;
+	static String ossFolderFrom;
 	static String almPosition;
 	static String Domain;
 	static String fileName;
@@ -103,10 +101,6 @@ public class LoadFilesRanHuawei {
 			nodeLCellSeq = 0, nodeRRNSeq = 0, nodeENodeBSeq = 0, nodeNodeBSeq = 0, nodeNBInterfaceSeq = 0;
 	
 	static ArrayList<String> NodeIDArr = new ArrayList<String>();
-	static ArrayList<String> AccessNodeXMLFiles = new ArrayList<String>();
-	static ArrayList<String> ControllerNodeXMLFiles = new ArrayList<String>();
-	
-	
 
 	public static void main(String[] args, String vendor, String domain, String sub_domain, String sub_domainType)
 			throws Exception {
@@ -117,9 +111,6 @@ public class LoadFilesRanHuawei {
 		// FileReader(System.getProperty("user.dir")+"\\"+"almconfig.dat"));
 		provider = vendor;
 		Domain = domain;
-		
-		AccessNodeXMLFiles = new ArrayList<String>();
-		ControllerNodeXMLFiles = new ArrayList<String>();
 		
 		Resource ConfigResource = new ClassPathResource("almconfig.dat");
 		File configfile = ConfigResource.getFile();
@@ -163,25 +154,63 @@ public class LoadFilesRanHuawei {
 				
 			}
 			
-			if (currentLine.contains("readXMLFileRanHWFrom")) {
+
+			if (currentLine.contains("readBscGSMFileRanHWFrom")) {
+
 				splittedStr = currentLine.split(";", -1);
-				readXMLFileFrom = splittedStr[1];
-				System.out.println(" readXMLFileFrom : " + readXMLFileFrom);
-				data = readXMLFileFrom.split("/", -1);
-				folderFrom = data[data.length - 1];
-				System.out.println(" folderFrom : " + folderFrom);
-				
+				readBscGSMFileFrom = splittedStr[1];
+				data = readBscGSMFileFrom.replace("\\", "/").split("/", -1);
+				bscGsmFolderFrom = readBscGSMFileFrom;
 			}
-			
-			if (currentLine.contains("copyXMLFileRanHWTo")) {
+
+			if (currentLine.contains("readBscUMTSFileRanHWFrom")) {
+
 				splittedStr = currentLine.split(";", -1);
-				copyXMLFileTo = splittedStr[1];
+				readBscUMTSFileFrom = splittedStr[1];
+				data = readBscUMTSFileFrom.replace("\\", "/").split("/", -1);
+				bscUMTSFolderFrom = readBscUMTSFileFrom;
 			}
-			
+
+			if (currentLine.contains("readBTSFileRanHWFrom")) {
+
+				splittedStr = currentLine.split(";", -1);
+				readBTSFileFrom = splittedStr[1];
+				data = readBTSFileFrom.replace("\\", "/").split("/", -1);
+				btsFolderFrom = readBTSFileFrom;
+			}
+
+			if (currentLine.contains("readOSSFileRanHWFrom")) {
+
+				splittedStr = currentLine.split(";", -1);
+				readOSSFileFrom = splittedStr[1];
+				data = readOSSFileFrom.replace("\\", "/").split("/", -1);
+				ossFolderFrom = readOSSFileFrom;
+			}
+
 			if (currentLine.contains("copyExcelFileRanHWTo")) {
 				splittedStr = currentLine.split(";", -1);
 				copyExcelFileTo = splittedStr[1];
 			}
+
+			if (currentLine.contains("copyBscGSMFileRanHWTo")) {
+				splittedStr = currentLine.split(";", -1);
+				copyBscGSMFileTo = splittedStr[1];
+			}
+
+			if (currentLine.contains("copyBscUMTSFileRanHWTo")) {
+				splittedStr = currentLine.split(";", -1);
+				copyBscUMTSFileTo = splittedStr[1];
+			}
+
+			if (currentLine.contains("copyBTSFileRanHWTo")) {
+				splittedStr = currentLine.split(";", -1);
+				copyBTSFileTo = splittedStr[1];
+			}
+			if (currentLine.contains("copyOSSFileRanHWTo")) {
+				splittedStr = currentLine.split(";", -1);
+				copyOSSFileTo = splittedStr[1];
+			}
+
 		}
 		objReader.close();
 
@@ -211,12 +240,27 @@ public class LoadFilesRanHuawei {
 		File excelFolder = new File(readExcelFileFrom);
 		File[] listOfExcelFiles = excelFolder.listFiles();
 		String fullFileName = null;
-		
-		// Add xml documents in an array of file objects to iterate over it and
-		File xmlFolder = new File(readXMLFileFrom);
-		File[] listOfxmlFiles = xmlFolder.listFiles();
-		
 	
+
+		// Add BSC GSM xml documents in an array of file objects to iterate over it and
+		// read it
+		File bscGSMFolder = new File(readBscGSMFileFrom);
+		File[] listOfBscGSMFiles = bscGSMFolder.listFiles();
+
+		// Add BSC UMTS xml documents in an array of file objects to iterate over it and
+		// read it
+		File bscUMTSFolder = new File(readBscUMTSFileFrom);
+		File[] listOfBscUMTSFiles = bscUMTSFolder.listFiles();
+
+		// Add BTS xml documents in an array of file objects to iterate over it and read
+		// it
+		File btsFolder = new File(readBTSFileFrom);
+		File[] listOfBTSFiles = btsFolder.listFiles();
+
+		// Add OSS xml documents in an array of file objects to iterate over it and read
+		// it
+		File ossFolder = new File(readOSSFileFrom);
+		File[] listOfOSSFiles = ossFolder.listFiles();
 
 		logger = Logger.getLogger("MyLog");
 		logger.setUseParentHandlers(false);
@@ -256,55 +300,86 @@ public class LoadFilesRanHuawei {
 			insertStmt.close();
 			logger.info("Load RAN HUAWEI Files in process...");
 
-			// this loop split the access xml files and controller xml file
-			//the loader should start with access nodes so we can link the cell(extracted from controller nodes file ) to these nodes 
-			for (File file : listOfxmlFiles) {
-				if(file.isFile()) {	
-					 if(!file.getName().toString().contains("BSC") && !file.getName().toString().contains("RNC")) {
-						 	AccessNodeXMLFiles.add(file.getName().toString());
-				        }
-				        else {
-				        	ControllerNodeXMLFiles.add(file.getName().toString());
-				        }					 	 
-				 	}
+			// Start reading each BSC GSM xml document from the array
+			for (File file : listOfBscGSMFiles) {
+				if (file.isFile()) {
+					fullFileName = file.getName().toString();
+
+					String[] data = fullFileName.split("\\.", -1);;
+					fileName = data[0];
+					fileType = data[1];
+
+					readfile(fullFileName, bscGsmFolderFrom);
+
+					File fileSource = new File(readBscGSMFileFrom + "/" + file.getName());
+					File fileDest = new File(copyBscGSMFileTo + "/" + file.getName() + ".bkp");
+
+					copyFiles(fileSource, fileDest);
+					deleteFiles(readBscGSMFileFrom + "/" + file.getName());
+
 				}
-			//reading and inserting  access node first 
-			for(int i=0;i<AccessNodeXMLFiles.size();i++) {
-				
-				fullFileName = AccessNodeXMLFiles.get(i);
+			}
 
-				String[] data = fullFileName.split("\\.", -1);;
-				fileName = data[0];
-				fileType = data[1];
+			// Start reading each BSC UMTS xml document from the array
+			for (File file : listOfBscUMTSFiles) {
+				if (file.isFile()) {
+					fullFileName = file.getName().toString();
 
-				readfile(fullFileName, readXMLFileFrom);
-				     
-				File fileSource = new File(readXMLFileFrom + "/" + fullFileName);
-				File fileDest = new File(copyXMLFileTo + "/" + fullFileName+ ".bkp");
+					String[] data = fullFileName.split("\\.", -1);;
+					fileName = data[0];
+					fileType = data[1];
 
-				copyFiles(fileSource, fileDest);
-				deleteFiles(readXMLFileFrom + "/" + fullFileName);
+					readfile(fullFileName, bscUMTSFolderFrom);
+
+					File fileSource = new File(readBscUMTSFileFrom + "/" + file.getName());
+					File fileDest = new File(copyBscUMTSFileTo + "/" + file.getName() + ".bkp");
+
+					copyFiles(fileSource, fileDest);
+					deleteFiles(readBscUMTSFileFrom + "/" + file.getName());
+
+				}
+			}
+
+			// Start reading each BTS xml document from the array
+			for (File file : listOfBTSFiles) {
+				if (file.isFile()) {
+					fullFileName = file.getName().toString();
+
+					String[] data = fullFileName.split("\\.", -1);;
+					fileName = data[0];
+					fileType = data[1];
+
+					readfile(fullFileName, btsFolderFrom);
+
+					File fileSource = new File(readBTSFileFrom + "/" + file.getName());
+					File fileDest = new File(copyBTSFileTo + "/" + file.getName() + ".bkp");
+
+					copyFiles(fileSource, fileDest);
+					deleteFiles(readBTSFileFrom + "/" + file.getName());
+
+				}
+			}
+
+			// Start reading each OSS xml document from the array
+			for (File file : listOfOSSFiles) {
+				if (file.isFile()) {
+					fullFileName = file.getName().toString();
+
+					String[] data = fullFileName.split("\\.", -1);;
+					fileName = data[0];
+					fileType = data[1];
+
+					readfile(fullFileName, ossFolderFrom);
+
+					File fileSource = new File(readOSSFileFrom + "/" + file.getName());
+					File fileDest = new File(copyOSSFileTo + "/" + file.getName() + ".bkp");
+
+					copyFiles(fileSource, fileDest);
+					deleteFiles(readOSSFileFrom + "/" + file.getName());
+
+				}
 			}
 			
-			
-			for(int i=0;i<ControllerNodeXMLFiles.size();i++) {
-				
-				fullFileName = ControllerNodeXMLFiles.get(i);
-
-				String[] data = fullFileName.split("\\.", -1);;
-				fileName = data[0];
-				fileType = data[1];
-
-				readfile(fullFileName, readXMLFileFrom);
-				     
-				File fileSource = new File(readXMLFileFrom + "/" + fullFileName);
-				File fileDest = new File(copyXMLFileTo + "/" + fullFileName+ ".bkp");
-
-				copyFiles(fileSource, fileDest);
-				deleteFiles(readXMLFileFrom + "/" + fullFileName);
-			}
-			
-
 			// Start reading each excel sheet from the array
 				for (File file : listOfExcelFiles) {
 					if (file.isFile()) {
@@ -1161,9 +1236,8 @@ public class LoadFilesRanHuawei {
 									nodeSubRackSeq++;
 
 								}
-								if (attributeTable == "NODE_GCELL" && filename.contains("BSC")) {
+								if (attributeTable == "NODE_GCELL") {
 									vcodeid = currentYear + "_Node_HW_RAN_GCELL" + '_' + nodeGCellSeq;
-									String tempnode_name=vhmap.get("CELLNAME").substring(0, 5);
 									InsertQuery = "insert into " + attributeTable
 											+ " (GCELL_ID,CELLID,CELLNAME,MCC,MNC,LAC,CI,NCC,BCC,TYPE,BCCHNO,BASEBANDPOLICY,BASEBANDEQMID,GBTSFUNCTIONNAME,GLOCELLID,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,CREATION_DATE,DOMAIN,VENDOR) "
 											+ "values('" + vcodeid + "','" + vhmap.get("CELLID") + "','"
@@ -1173,8 +1247,8 @@ public class LoadFilesRanHuawei {
 											+ vhmap.get("TYPE") + "','" + vhmap.get("BCCHNO") + "','"
 											+ vhmap.get("BASEBANDPOLICY") + "','" + vhmap.get("BASEBANDEQMID") + "','"
 											+ vhmap.get("GBTSFUNCTIONNAME") + "','" + vhmap.get("GLOCELLID")
-											+ "',(select NODE_PK from NODE_ACTIVE where NODE_NAME like '" + tempnode_name
-											+ "%' order by creation_date desc fetch first 1 row only),'" + codeidattr
+											+ "',(select NODE_PK from NODE_ACTIVE where NODE_NAME='" + tempNodeName
+											+ "' order by creation_date desc fetch first 1 row only),'" + codeidattr
 											+ "',sysdate,'" + filename + "','" + vhmap.get("STATUS") + "','0','0','0','"
 											+ vhmap.get("TRANS_ID") + "','" + vhmap.get("TRANS_TYPE") + "','" + j
 											+ "','1',sysdate,'"+Domain+"','" + provider + "') ";
@@ -1195,9 +1269,8 @@ public class LoadFilesRanHuawei {
 									// System.out.println(filename + " "+ InsertQuery);
 									nodeBTSSeq++;
 								}
-								if (attributeTable == "NODE_UCELL" && filename.contains("RNC")) {
+								if (attributeTable == "NODE_UCELL") {
 									vcodeid = currentYear + "_Node_HW_RAN_UCELL" + '_' + nodeUCellSeq;
-									String tempnode_name=vhmap.get("CELLNAME").substring(0, 5);
 									InsertQuery = "insert into " + attributeTable
 											+ "(UCELL_ID,CELLID,CELLNAME,LOCELL,NODEBFUNCTIONNAME,ULFREQ,DLFREQ,MAXPOWER,USERLABEL,MAXTXPOWER,UARFCNUPLINK,UARFCNDOWNLINK,PSCRAMBCODE,NODEBNAME,LAC,SAC,RAC,MANUFACTURERDATA,RADIUS,HORAD,DI,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,CREATION_DATE,DOMAIN,VENDOR) "
 											+ "values('" + vcodeid + "','" + vhmap.get("CELLID") + "','"
@@ -1210,8 +1283,8 @@ public class LoadFilesRanHuawei {
 											+ vhmap.get("LAC") + "','" + vhmap.get("SAC") + "','" + vhmap.get("RAC")
 											+ "','" + vhmap.get("MANUFACTURERDATA") + "','" + vhmap.get("RADIUS")
 											+ "','" + vhmap.get("HORAD") + "','" + vhmap.get("DI")
-											+ "',(select NODE_PK from NODE_ACTIVE where NODE_NAME like'" + tempnode_name
-											+ "%' order by creation_date desc fetch first 1 row only),'" + codeidattr
+											+ "',(select NODE_PK from NODE_ACTIVE where NODE_NAME='" + tempNodeName
+											+ "' order by creation_date desc fetch first 1 row only),'" + codeidattr
 											+ "',sysdate,'" + filename + "','" + vhmap.get("STATUS")
 											+ "' ,'0','0','0','" + vhmap.get("TRANS_ID") + "','"
 											+ vhmap.get("TRANS_TYPE") + "','" + j + "','1',sysdate,'"+Domain+"','" + provider
@@ -3502,7 +3575,8 @@ public class LoadFilesRanHuawei {
 		while (rs1.next()) {
 			// try {
 			// select all rows related to a file identified by rs1 having count >=1
-			String query2 = "select NODE_ID,NODE_NAME,SITE_ID,CIRCLE_ID,DOMAIN,VENDOR,count(*) counter from (select NODE_ID,NODE_NAME,SITE_ID,CIRCLE_ID,DOMAIN,VENDOR from NODE_ACTIVE where (SITE_ID ='"+ rs1.getString("SITE_ID") +"' OR SITE_ID IS NULL) and CIRCLE_ID ='" + rs1.getString("CIRCLE_ID") + "' and NODE_ID ='"
+			String query2 = "select NODE_ID,NODE_NAME,SITE_ID,CIRCLE_ID,DOMAIN,VENDOR,count(*) counter from (select NODE_ID,NODE_NAME,SITE_ID,CIRCLE_ID,DOMAIN,VENDOR from NODE_ACTIVE where SITE_ID ='"
+					+ rs1.getString("SITE_ID") + "' and CIRCLE_ID ='" + rs1.getString("CIRCLE_ID") + "' and NODE_ID ='"
 					+ rs1.getString("NODE_ID") + "' and NODE_NAME ='" + rs1.getString("NODE_NAME") + "' and DOMAIN='"
 					+ vdomain + "' and VENDOR='" + vvendor
 					+ "' ) group by  NODE_ID,NODE_NAME,SITE_ID,CIRCLE_ID,DOMAIN,VENDOR having count(*) >=1 and DOMAIN='"
