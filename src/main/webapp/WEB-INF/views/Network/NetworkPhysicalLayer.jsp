@@ -6548,7 +6548,15 @@ directionsDisplay.setMap(map);
 
 } /// End of init Map
 
-window.onload = function () {makeAllSortable();};	
+window.onload = function () {makeAllSortable();
+if(checkedOption == "circleRange"){ 
+	calculateGeoDistanceNearestPoints("findNearstManhole");//call the calculateGeoDistance function here after creating the map
+	calculateGeoDistanceNearestPoints("findNearstHandhole");
+	calculateGeoDistanceNearestPoints("findNearstDB");
+	calculateGeoDistanceNearestPoints("findNearstNode");
+}
+
+};	
 
 </script>
 <script
