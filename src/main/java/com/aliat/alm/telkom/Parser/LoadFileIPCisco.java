@@ -508,11 +508,11 @@ public class LoadFileIPCisco {
 	     stmt.executeUpdate();
 	     stmt.close();
 	     
-	     stmt = con.prepareStatement("delete from  NODE_BOARD where " + fieldname +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor+"'"); 
+	     stmt = con.prepareStatement("delete from  NODE_BOARD where " + fieldname +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor+"' and SUB_DOMAIN='"+subDomain+"'"); 
 	     stmt.executeUpdate(); 
 		 stmt.close();
 		 
-		 stmt = con.prepareStatement("delete from  NODE_MODULE where " + fieldname +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor+"'"); 
+		 stmt = con.prepareStatement("delete from  NODE_MODULE where " + fieldname +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor+ "' and SUB_DOMAIN='"+subDomain+"'"); 
 	     stmt.executeUpdate(); 
 		 stmt.close();
 		

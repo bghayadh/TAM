@@ -1151,11 +1151,11 @@ var ctx = getContextPath();
  });
 	console.log("The selected delete after is " + slctDel);
 
-	for (i = 0; i <= slctDel.length; ++i) {
+	
  	if (slctDel.length == 0) {
     	alert(' Select Row(s) to Delete');
         return false;
-     }
+     
      }
 	$("#serialNoTable > tbody").find('input[name="record"]').each(function () {
     	if ($(this).is(":checked")) {
@@ -1165,7 +1165,27 @@ var ctx = getContextPath();
      
 
 	});
-		
+			 var Data = {};
+	 	 var serial_no="";
+	 	 var itm_model ="";
+	 	 var itm_partno = "";
+	 	 var indx;
+	 	 Data.serialArray=[];
+	 	 $("#serialNoTable > tbody >tr").find('input[name="record"]').each(function(){
+
+ 
+	        var serNum = $(this).parent().parent().children('td[name="serialNumber"]').children('input').val();
+	        var itemMod = $(this).parent().parent().children('td[name="itmModel"]').children('input').val();
+	    	var itemPartnum = $(this).parent().parent().children('td[name="itemPart"]').children('input').val();
+			    serial_no = serNum;
+			    itm_model = itemMod;
+			    itm_partno = itemPartnum;
+			    Data.serialArray.push({serial_no:serNum, itm_model:itemMod, itm_partno:itemPartnum});
+		  	}); 
+
+
+	    	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="serialNo"]').children('input')[0].value = JSON.stringify(Data);
+	    	
  }); // end delete row fct
  
  //Select all checkbox in serialNo table
@@ -1568,7 +1588,18 @@ var ctx = getContextPath();
 	  else if (rowindx == 0) {
        		    	$("#poModal").modal("hide");
        }
-   	
+       
+       del=[] 
+     for(i=0;i<allDelSerials.length;i++){
+    
+     if(allDelSerials[i]!=""){
+     del.push(allDelSerials[i]);
+     }
+    }
+     
+   
+				
+				
    	});// end prev fct  
    	
 
@@ -1662,6 +1693,9 @@ $("#orddiscpercent").on("input", function(){
              	return false;
              }	          
 			   getSumQty_totalAT();         
+       
+       
+       
         });	// end delete row
 
 

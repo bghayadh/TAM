@@ -276,7 +276,8 @@ public class LoadFilesEntHuawei  {
 		try {
 			inputStream = new FileInputStream(excelFilePath);
 			Workbook workbook=new XSSFWorkbook(inputStream);
-			Sheet firstSheet=workbook.getSheet("NE_DB");
+			//Sheet firstSheet=workbook.getSheet("NE_DB");
+			Sheet firstSheet=workbook.getSheetAt(0);
 			// get the seq of node_active and update it by number of row 
 			int rownumb=firstSheet.getLastRowNum();
 			//System.out.println("number of row "+rownumb);
@@ -366,15 +367,16 @@ public class LoadFilesEntHuawei  {
 		temp=filename.split("\\.",-1);
 		sheetname=temp[0];
 		String regex = "\\d+$";
-		String resultString = sheetname.replaceAll(regex, "");
-		System.out.println(resultString);
+		//String resultString = sheetname.replaceAll(regex, "");
+	    //System.out.println(resultString);
 		long start = System.currentTimeMillis();
 		FileInputStream inputStream;
 		
 		try {
 			inputStream = new FileInputStream(excelFilePath);
 			Workbook workbook=new XSSFWorkbook(inputStream);
-			Sheet firstSheet=workbook.getSheet(resultString);
+			//Sheet firstSheet=workbook.getSheet(resultString);
+			Sheet firstSheet=workbook.getSheetAt(0);
 			// get the seq of node_active and update it by number of row 
 			int rownumb=firstSheet.getLastRowNum();
 			//System.out.println("number of row "+rownumb);
@@ -424,13 +426,14 @@ public class LoadFilesEntHuawei  {
 		temp=filename.split("\\.",-1);
 		sheetname=temp[0];
 		String regex = "\\d+$";
-		String resultString = sheetname.replaceAll(regex, "");
+		//String resultString = sheetname.replaceAll(regex, "");
 		long start = System.currentTimeMillis();
 		FileInputStream inputStream;
 		try {
 			inputStream = new FileInputStream(excelFilePath);
 			Workbook workbook=new XSSFWorkbook(inputStream);
-			Sheet firstSheet=workbook.getSheet(resultString);
+			//Sheet firstSheet=workbook.getSheet(resultString);
+			Sheet firstSheet=workbook.getSheetAt(0);
 			// get the seq of node_active and update it by number of row 
 			int rownumb=firstSheet.getLastRowNum();
 			//System.out.println("number of row "+rownumb);

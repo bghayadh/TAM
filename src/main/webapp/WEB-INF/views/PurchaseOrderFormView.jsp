@@ -1268,7 +1268,7 @@ max-width: 100%;
 								         
 					  </th>
 					 <th width="232px">Serial Number</th>
-					 <th width="232px"></th>
+					 <th width="232px">Item Model</th>
                      <th width="232px">Item Part Number</th>
 						              
 					</tr> </thead> <tbody> </tbody> </table>
