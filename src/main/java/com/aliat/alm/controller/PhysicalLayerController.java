@@ -2419,7 +2419,7 @@ public class PhysicalLayerController {
 				try {
 
 					fiberDetails = session.createNativeQuery(
-							"Select DISTINCT SOURCE_WARE_ID,SOURCE_ID,SOURCE_NAME,DESTINATION_WARE_ID,DESTINATION_ID,DESTINATION_NAME,ITEM_CODE,NUMBER_OF_STRANDS,NUMBER_OF_TUBES,LENGTH,CONDUIT_ID,CONDUIT_NAME,SOURCE_LNG,SOURCE_LAT,DESTINATION_LNG,DESTINATION_LAT,CABLE_MODE,FIBER_CABLE_NAME,SOURCE_CITY, DESTINATION_CITY, FIBER_TYPE, FIBER_DEPLOYMENT, FIBER_NETWORK_LEVEL, FIBER_OWNER,CREATED_BY,LAST_MODIFIED_BY,TO_CHAR(CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(LAST_MODIFIED_DATE, 'MM/dd/YYYY HH:MI AM'),TOTAL_DRIVING_DISTANCE, TOTAL_GEO_DISTANCE, DRAWING_TYPE,LAST_AUXILIARY_TO_DESTINATION_DISTANCE,LAST_AUXILIARY_TO_DESTINATION_DRIVING_DISTANCE,RELATED_STRAND_NUMBER,RELATED_STRAND_COLOR,RELATED_STRAND_ID,RELATED_STRAND_NAME,RELATED_TUBE_NUMBER,RELATED_TUBE_COLOR,RELATED_TUBE_ID,RELATED_TUBE_NAME,RELATED_CABLE_ID,RELATED_CABLE_NAME,OTHERSIDE_LASTMILE_ID,OTHERSIDE_LASTMILE_NAME,OTHERSIDE_LOCATION_ID,OTHERSIDE_LOCATION_NAME,OTHERSIDE_LOCATION_CITY,OTHERSIDE_LOCATION_TYPE FROM FIBER_CABLES WHERE FIBER_CABLE_ID='"
+							"Select DISTINCT SOURCE_WARE_ID,SOURCE_ID,SOURCE_NAME,DESTINATION_WARE_ID,DESTINATION_ID,DESTINATION_NAME,ITEM_CODE,NUMBER_OF_STRANDS,NUMBER_OF_TUBES,LENGTH,CONDUIT_ID,CONDUIT_NAME,SOURCE_LNG,SOURCE_LAT,DESTINATION_LNG,DESTINATION_LAT,CABLE_MODE,FIBER_CABLE_NAME,SOURCE_CITY, DESTINATION_CITY, FIBER_TYPE, FIBER_DEPLOYMENT, FIBER_NETWORK_LEVEL, FIBER_OWNER,CREATED_BY,LAST_MODIFIED_BY,TO_CHAR(CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(LAST_MODIFIED_DATE, 'MM/dd/YYYY HH:MI AM'),TOTAL_DRIVING_DISTANCE, TOTAL_GEO_DISTANCE, DRAWING_TYPE,LAST_AUXILIARY_TO_DESTINATION_DISTANCE,LAST_AUXILIARY_TO_DESTINATION_DRIVING_DISTANCE,RELATED_STRAND_NUMBER,RELATED_STRAND_COLOR,RELATED_STRAND_ID,RELATED_STRAND_NAME,RELATED_TUBE_NUMBER,RELATED_TUBE_COLOR,RELATED_TUBE_ID,RELATED_TUBE_NAME,RELATED_CABLE_ID,RELATED_CABLE_NAME,OTHERSIDE_LASTMILE_ID,OTHERSIDE_LASTMILE_NAME,OTHERSIDE_LOCATION_ID,OTHERSIDE_LOCATION_NAME,OTHERSIDE_LOCATION_CITY,OTHERSIDE_LOCATION_TYPE,FIBER_CABLE_SIZE,FIBER_ENGINEER_NAME,FIBER_INSTALLER FROM FIBER_CABLES WHERE FIBER_CABLE_ID='"
 									+ selectedFiberContext + "' ")
 							.getResultList();
 
@@ -4772,6 +4772,9 @@ public class PhysicalLayerController {
 				String fiberCableCreatedByUser = request.getParameter("fiberCableCreatedByUser");
 				String fiberCableModifiedByUser = request.getParameter("fiberCableModifiedByUser");
 				String drawingtype = request.getParameter("drawingType");
+				String fiberCableSize = request.getParameter("fiberCableSize");
+				String fiberEngineerName = request.getParameter("fiberEngineerName");
+				String fiberInstaller = request.getParameter("fiberInstaller");
 				// related cable
 				String relatedStrandNb = request.getParameter("relatedStrandNb");
 				String relatedStrandColor = request.getParameter("relatedStrandColor");
@@ -4874,6 +4877,9 @@ public class PhysicalLayerController {
 				fibercable.setTotaldriving(totalDrivingDistance);
 				fibercable.setDrawingtype(drawingtype);
 				fibercable.setTotalGeoDist(totalGeoDistance);
+				fibercable.setFiberCableSize(fiberCableSize);
+				fibercable.setFiberEngineerName(fiberEngineerName);
+				fibercable.setFiberInstaller(fiberInstaller);
 
 				fibercable.setLastAuxToDestDistance(lastAuxToDestDistance);
 				fibercable.setLastAuxToDestDrivDistance(lastAuxToDestDrivDistance);
@@ -10132,6 +10138,8 @@ public class PhysicalLayerController {
 						query = session.createNativeQuery("SELECT count(*) FROM JUNCTION b WHERE PHYSICAL_LAYER_ID = '"
 								+ physLayerIdJunction + "' ");
 						String countJunc = query.getSingleResult().toString();
+						
+						
 
 						if(physLayerIdJunction != null) {
 							if (StringUtils.equalsIgnoreCase(countJunc, "0")) {
@@ -10145,6 +10153,12 @@ public class PhysicalLayerController {
 								query.executeUpdate();
 							}
 						
+						}
+						String[] idSplit;
+						idSplit = junctionID.split("_");
+						if (request.getParameter("JunctionName").isEmpty()) {
+							junctionName = "JUNC_" + request.getParameter("JunctionCity") + "_" + idSplit[1] + "_"
+									+ idSplit[2];
 						}
 						Query insertJctQuery = session
 								.createNativeQuery("INSERT INTO JUNCTION(JUNCTION_ID,JUNCTION_NAME,PHYSICAL_LAYER_ID"

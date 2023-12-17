@@ -9336,55 +9336,51 @@ singleProject = new ContextMenu({
 					dataType: "json",
 					success: function (data) {
 						if(data!=null){
+
 							window[""+data.JunctionID]=[];
+			                window[""+data.JunctionID]=[data.JunctionID,junctionName,"","",junctionNum,junctionCapacity,junctionCity,junctionLong,junctionLat,"",""];
+
 							if(actionJct=="Insert"){
+								console.log(" //////////Insert "+data.JunctionID+ ", "+junctionName);	
 								//str="<ul><li id='"+data.JunctionID+"' class='JUNCTION' style='display:none;width:100px;'><input type='checkbox' class='Junction' class='filter checkFilter' name='Element' ></input> <span class='TreeSpan' style='color:black;width:195px'><img src='"+getContext()+"/resources/NetworkImages/junction.png'> "+JunctionList[i][1]+"</span></li></ul>";
 								str="<ul><li id='"+data.JunctionID+"' class='JUNCTION' style='display:none;width:100px;'><input type='checkbox' class='Junction' class='filter checkFilter' name='Element' ></input> <span class='TreeSpan' style='color:black;width:195px'><img src='"+getContext()+"/resources/NetworkImages/junction.png'> "+junctionName+"</span></li></ul>";
 								$("#Junction_f_CurrentPhysicalLayer").append(str); 
 								create_Junction_Marker_Click(data.JunctionID,junctionName,junctionLong,junctionLat,markersJunction,markerClusterJunction,"Junction","");	
 								JunctionCheckFilter(data.JunctionID);
 								CreateJunctionClickEvent(data.JunctionID,"");
-
+				              
 							}//end insert junction
 							
 			                else {	//update junction				
 							
 				                $("#"+data.JunctionID+" >span").unbind("click");
 				
-				                $("#"+data.JunctionID).children(':checkbox').prop( "checked", true );
-				                markersJunction[data.JunctionID].setMap(map);//JunctionCheckFilter(data.JunctionID);
+				               // $("#"+data.JunctionID).children(':checkbox').prop( "checked", true );
+				               // markersJunction[data.JunctionID].setMap(map);//JunctionCheckFilter(data.JunctionID);
 				                $("#"+data.JunctionID+"> .TreeSpan").html("<img src='"+getContext()+"/resources/NetworkImages/junction.png'>  " +junctionName+"  ");					 
 
-				                window[""+data.JunctionID]=[data.JunctionID,junctionName,"","",junctionNum,junctionCapacity,junctionCity,junctionLong,junctionLat,"",""];
 			                }// end update junction
 							
 							//EnableOrigination=false;
 							
-				
-			if(IdSelectedTemp!=""){
-				$("#"+IdSelectedTemp+" > .TreeSpan").removeClass("selected-span");
-				$("#"+IdSelectedTemp+" > .TreeSpan").css("background","");
-			}
-			$("#"+data.JunctionID+" > .TreeSpan ").addClass("selected-span");
-			$("#"+data.JunctionID+" > .TreeSpan").css("background-color", "#97b9cc");
-			IdSelectedTemp=junctionID;
-			$("#"+data.JunctionID).children(':checkbox').prop( "checked", true );
-			$("#junctionCheckAllBoq").prop("checked",true);	
+				            $("#"+data.JunctionID).children(':checkbox').prop( "checked", true );
+				            markersJunction[data.JunctionID].setMap(map);
+	
+				          //Jct right click menu			
+							$( "#"+data.JunctionID+" > .TreeSpan" ).bind("contextmenu",function(){	
+								selectedJuncIdContext=$(this).parent().attr('id');
+						        IdNodeSelectedTemp=$(this).parents().eq(2).attr('id').split("Junction_f_")[1];
+						        menuName= singleJunctionMenu;
+						        selectedManholeJct = selectedJuncIdContext;
+						        selectedManIdContext = "";
+						        openContext(selectedJuncIdContext,"",singleJunctionMenu,event);
+						
+							});	
+							
+							CreateJunctionClickEvent(data.JunctionID," ");
+							MouseHoveringSpans("#" +data.JunctionID+ " .TreeSpan");				
+							tree_prop_selection("#" +data.JunctionID+ " .TreeSpan");
 
-			//Jct right click menu			
-			$( "#"+data.JunctionID+" > .TreeSpan" ).bind("contextmenu",function(){	
-				selectedJuncIdContext=$(this).parent().attr('id');
-		        IdNodeSelectedTemp=$(this).parents().eq(2).attr('id').split("Junction_f_")[1];
-		        menuName= singleJunctionMenu;
-		        selectedManholeJct = selectedJuncIdContext;
-		        selectedManIdContext = "";
-		        openContext(selectedJuncIdContext,"",singleJunctionMenu,event);
-		
-			});	
-			
-			CreateJunctionClickEvent(data.JunctionID," ");
-			MouseHoveringSpans("#" +data.JunctionID+ " .TreeSpan");				
-			tree_prop_selection("#" +data.JunctionID+ " .TreeSpan");
 			
 			$("#JunctionModal").find("input,textarea,select").val('').end().find("input[type=checkbox], input[type=radio]").prop("checked", "").end();
 			map.setZoom(11);
@@ -9398,8 +9394,43 @@ singleProject = new ContextMenu({
 			//	markersManhole[data.ManholeId].setLabel({text: ManholeName, className:"marker-position-manhole",color:"red"});
 			//}
 			panTo(junctionLat, junctionLong);
+			if(typeof infowindow!=='undefined'){
+				infowindow.close();
+			}
+			$("#"+data.JunctionID+" > .TreeSpan").css("display", "inline");
+				  
+			// remove the selection of previous item if exist and add it to the new one
+		
+			if(IdSelectedTemp!=""){
+				$("#"+IdSelectedTemp+" > .TreeSpan").removeClass("selected-span");
+				$("#"+IdSelectedTemp+" > .TreeSpan").css("background","");
+			}
+			$("#"+data.JunctionID+" > .TreeSpan").addClass("selected-span");
+			$("#"+data.JunctionID+" > .TreeSpan").css("background-color", "#97b9cc");
+			IdSelectedTemp=data.JunctionID;
+			$("#junctionCheckAllBoq").prop("checked",true);	
+			
+			
+            var childrenInitial=$("#initial_ul_"+IdNodeSelectedTemp+"").find(' > ul > li');
+            var children = $("#Junction_f_"+IdNodeSelectedTemp+"").find(' > ul > li');
 
-		} // End if data != null 
+            $("#initial_ul_"+IdNodeSelectedTemp+" > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
+            $("#initial_ul_Projects > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
+            $("#"+IdNodeSelectedTemp+" > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');	
+            $("#Junction_f_"+IdNodeSelectedTemp+" > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
+
+
+
+           $("#Junction_f_"+IdNodeSelectedTemp+" > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
+           $("#Junction_f_"+IdNodeSelectedTemp+"").find(' > ul > li > .Parentfolder >svg ').removeClass('fa fa-folder').addClass('fa-folder-open');
+
+
+			children.show('fast');
+			childrenInitial.show('fast');
+			var junctionScrollTo = document.getElementById(""+IdSelectedTemp);				
+			junctionScrollTo.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});	
+		
+			} // End if data != null 
 			$("#JunctionModal").modal('hide');
 			data=null;
 			updateJctDictArr=[];
@@ -20062,6 +20093,35 @@ $("#ManholeLong,#ManholeLat").on('focusout',function(){
 	});
 	 }
 });
+
+$("#JctLong,#JctLat").on('focusout',function(){
+
+	 if($("#JctLong").val() !="" && $("#JctLat").val() !="" ) {
+		
+	geocoder = new google.maps.Geocoder();
+	var latlng = new google.maps.LatLng($("#JctLat").val(),$("#JctLong").val());
+	geocoder.geocode({'latLng': latlng}, function(results, status) {
+		 if (status == google.maps.GeocoderStatus.OK) {
+			if (results[2]) {
+				$("#JctCity").val(results[2].formatted_address.split(",")[0]);
+			}
+			else if (results[3]) {
+				$("#JctCity").val(results[3].formatted_address.split(",")[0]);
+			}
+			else if (results[4]) {
+				$("#JctCity").val(results[4].formatted_address.split(",")[0]);
+			}
+			else if (results[5]) {
+				$("#JctCity").val(results[5].formatted_address.split(",")[0]);
+			}
+			else {
+				$("#JctCity").val("null");
+			}
+		  }	
+	});
+	 }
+});
+
 $("#SourceLat").change(function() {
     	calculateDistanceSourceDestination($("#sourcelatstrand").val(),$("#sourcelongstrand").val(),$("#destinationlatstrand").val(),$("#destinationlongstrand").val(),"auxiliaryTableStrands");
 	}); 
