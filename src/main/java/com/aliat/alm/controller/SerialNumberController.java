@@ -407,7 +407,7 @@ public class SerialNumberController {
 public Map<String, Object> SerialNumberListViewDelete(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {	
 
 	Map<String, Object> rtn = new LinkedHashMap<>();
-	
+	rtn.put("","");
 	 if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
 			return rtn;
