@@ -6498,6 +6498,9 @@ $("#DBProjectId").autocomplete({
 
 
 function FindFiberData(selectedFiberContext){
+
+	console.log("data fiber here");
+
 	$('#fiberPathModal').find('input:text').val('');
 	$('#fiberPathModal').find('input:file').val('');
 	$('#fiberPathModal').find('input:checkbox').prop("checked",false);
@@ -6600,6 +6603,11 @@ function FindFiberData(selectedFiberContext){
 			$("#modifiedByFiberCable").val(data.fiberDetails[0][25]);
 			$("#popupCreateDateFiber").val(data.fiberDetails[0][26]);
 			$("#popupLastModifiedDateFiber").val(data.fiberDetails[0][27]);
+			$("#fiberCableSize").val(data.fiberDetails[0][49]);
+			$("#fiberEngineerName").val(data.fiberDetails[0][50]);
+			$("#fiberInstaller").val(data.fiberDetails[0][51]);
+			//console.log("data fiberEngineerName "+data.fiberDetails[0][50]+" fiberCableSize "+data.fiberDetails[0][49]+" fiberInstaller "+data.fiberDetails[0][51]);
+
 			
 			if(data.fiberDetails[0][17]!=null){
 				$("#fiberName").val(data.fiberDetails[0][17]);
@@ -6690,9 +6698,9 @@ function FindFiberData(selectedFiberContext){
 				$("#relatedCableLocationName").val(data.fiberDetails[0][46]);
 				$("#relatedCableCity").val(data.fiberDetails[0][47]);
 				$("#relatedCableLocationType").val(data.fiberDetails[0][48]);
+				
 				strandTubeSetColor(data.fiberDetails[0][33],"relatedCableStrandColor");
 				strandTubeSetColor(data.fiberDetails[0][37],"relatedCableTubeColor");
-				//console.log("data realted "+data.fiberDetails[0][45].split("_")[0]);
 				if(data.fiberDetails[0][45]!=null){ 
 					if(data.fiberDetails[0][45].split("_")[0] =="CUST"){
 						$(".relatedLocationName").hide();
@@ -7294,6 +7302,7 @@ function FindFiberData(selectedFiberContext){
 	}); 
 	
 						
+
 }
 
 

@@ -166,57 +166,20 @@ public class FiberCable {
 	@Column(name = "OTHERSIDE_LOCATION_TYPE")
 	private String othersideLocationType;
 	
+	@Column(name = "FIBER_INSTALLER")
+	private String fiberInstaller;
 	
+	@Column(name = "FIBER_ENGINEER_NAME")
+	private String fiberEngineerName;
+	
+	@Column(name = "FIBER_CABLE_SIZE")
+	private String fiberCableSize;
 	
 	public FiberCable() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-/*	public FiberCable(String fibercableID, String sourceWareID,String sourceID,String sourceName,String destinationWareID, String destinationID,String destinationName, String itemcode, int nbofStrands,
-			int nbofTubes, double fiberlength, String conduitID, String conduitName, String srcLNG, String srcLAT,
-			String destLNG, String destLAT, String cableMode, String fibercableName, String srcCity, String destCity,
-			String projectID, String fiberType, String fiberDeployment, String fiberNetLevel, String fiberOwner,
-			Timestamp creationDate, Timestamp lastModifieddate, String createdBy, String lastmodifiedBy,
-			double totaldriving,String drawingtype, double totalGeoDist, double lastAuxToDestDistance,double lastAuxToDestDrivDistance) {
-		super();
-		this.fibercableID = fibercableID;
-		this.sourceWareID = sourceWareID;
-		this.sourceID=sourceID;
-		this.sourceName=sourceName;
-		this.destinationWareID = destinationWareID;
-		this.destinationID=destinationID;
-		this.destinationName=destinationName;
-		this.itemcode = itemcode;
-		this.nbofStrands = nbofStrands;
-		this.nbofTubes = nbofTubes;
-		this.fiberlength = fiberlength;
-		this.conduitID = conduitID;
-		this.conduitName = conduitName;
-		this.srcLNG = srcLNG;
-		this.srcLAT = srcLAT;
-		this.destLNG = destLNG;
-		this.destLAT = destLAT;
-		this.cableMode = cableMode;
-		this.fibercableName = fibercableName;
-		this.srcCity = srcCity;
-		this.destCity = destCity;
-		this.projectID = projectID;
-		this.fiberType = fiberType;
-		this.fiberDeployment = fiberDeployment;
-		this.fiberNetLevel = fiberNetLevel;
-		this.fiberOwner = fiberOwner;
-		this.creationDate = creationDate;
-		this.lastModifieddate = lastModifieddate;
-		this.createdBy = createdBy;
-		this.lastmodifiedBy = lastmodifiedBy;
-		this.totaldriving = totaldriving;
-		this.drawingtype = drawingtype;
-		this.totalGeoDist = totalGeoDist;
-		this.lastAuxToDestDistance = lastAuxToDestDistance;
-		this.lastAuxToDestDrivDistance=lastAuxToDestDrivDistance;
-	}  */
-	
 	public FiberCable(String fibercableID, String sourceWareID, String sourceID, String sourceName,
 			String destinationWareID, String destinationID, String destinationName, String itemcode, int nbofStrands,
 			int nbofTubes, double fiberlength, String conduitID, String conduitName, String srcLNG, String srcLAT,
@@ -224,11 +187,12 @@ public class FiberCable {
 			String projectID, String fiberType, String fiberDeployment, String fiberNetLevel, String fiberOwner,
 			Timestamp creationDate, Timestamp lastModifieddate, String createdBy, String lastmodifiedBy,
 			double totaldriving, String drawingtype, double totalGeoDist, double lastAuxToDestDistance,
-			double lastAuxToDestDrivDistance, String relatedstrandnumber, String relatedstrandcolor, String relatedstrandID,
-			String relatedstrandName, String relatedtubenumber, String relatedtubecolor, String relatedtubeID,
-			String relatedtubeName, String relatedcableID, String relatedcableName, String othersideLastmileID,
-			String othersideLastmileName, String othersideLocationID, String othersideLocationName,
-			String othersideLocationCity, String othersideLocationType) {
+			double lastAuxToDestDrivDistance, String relatedstrandnumber, String relatedstrandcolor,
+			String relatedstrandID, String relatedstrandName, String relatedtubenumber, String relatedtubecolor,
+			String relatedtubeID, String relatedtubeName, String relatedcableID, String relatedcableName,
+			String othersideLastmileID, String othersideLastmileName, String othersideLocationID,
+			String othersideLocationName, String othersideLocationCity, String othersideLocationType,
+			String fiberInstaller, String fiberEngineerName, String fiberCableSize) {
 		super();
 		this.fibercableID = fibercableID;
 		this.sourceWareID = sourceWareID;
@@ -281,14 +245,14 @@ public class FiberCable {
 		this.othersideLocationName = othersideLocationName;
 		this.othersideLocationCity = othersideLocationCity;
 		this.othersideLocationType = othersideLocationType;
-	}	
-	
-	
+		this.fiberInstaller = fiberInstaller;
+		this.fiberEngineerName = fiberEngineerName;
+		this.fiberCableSize = fiberCableSize;
+	}
 
 	public String getFibercableID() {
 		return fibercableID;
 	}
-
 
 	public void setFibercableID(String fibercableID) {
 		this.fibercableID = fibercableID;
@@ -389,7 +353,6 @@ public class FiberCable {
 	public void setConduitName(String conduitName) {
 		this.conduitName = conduitName;
 	}
-
 
 	public String getSrcLNG() {
 		return srcLNG;
@@ -566,8 +529,7 @@ public class FiberCable {
 	public void setLastAuxToDestDrivDistance(double lastAuxToDestDrivDistance) {
 		this.lastAuxToDestDrivDistance = lastAuxToDestDrivDistance;
 	}
-	
-	//
+
 	public String getRelatedstrandnumber() {
 		return relatedstrandnumber;
 	}
@@ -696,31 +658,73 @@ public class FiberCable {
 		this.othersideLocationType = othersideLocationType;
 	}
 
-	@Override
-	public String toString() {
-		return "FiberCable [fibercableID=" + fibercableID + ", sourceWareID=" + sourceWareID + ", sourceID=" + sourceID
-				+ ", sourceName=" + sourceName + ", destinationWareID=" + destinationWareID + ", destinationID="
-				+ destinationID + ", destinationName=" + destinationName + ", itemcode=" + itemcode + ", nbofStrands="
-				+ nbofStrands + ", nbofTubes=" + nbofTubes + ", fiberlength=" + fiberlength + ", conduitID=" + conduitID
-				+ ", conduitName=" + conduitName + ", srcLNG=" + srcLNG + ", srcLAT=" + srcLAT + ", destLNG=" + destLNG
-				+ ", destLAT=" + destLAT + ", cableMode=" + cableMode + ", fibercableName=" + fibercableName
-				+ ", srcCity=" + srcCity + ", destCity=" + destCity + ", projectID=" + projectID + ", fiberType="
-				+ fiberType + ", fiberDeployment=" + fiberDeployment + ", fiberNetLevel=" + fiberNetLevel
-				+ ", fiberOwner=" + fiberOwner + ", creationDate=" + creationDate + ", lastModifieddate="
-				+ lastModifieddate + ", createdBy=" + createdBy + ", lastmodifiedBy=" + lastmodifiedBy
-				+ ", totaldriving=" + totaldriving + ", drawingtype=" + drawingtype + ", totalGeoDist=" + totalGeoDist
-				+ ", lastAuxToDestDistance=" + lastAuxToDestDistance + ", lastAuxToDestDrivDistance="
-				+ lastAuxToDestDrivDistance + ", relatedstrandnumber=" + relatedstrandnumber + ", relatedstrandcolor="
-				+ relatedstrandcolor + ", relatedstrandID=" + relatedstrandID + ", relatedstrandName="
-				+ relatedstrandName + ", relatedtubenumber=" + relatedtubenumber + ", relatedtubecolor="
-				+ relatedtubecolor + ", relatedtubeID=" + relatedtubeID + ", relatedtubeName=" + relatedtubeName
-				+ ", relatedcableID=" + relatedcableID + ", relatedcableName=" + relatedcableName
-				+ ", othersideLastmileID=" + othersideLastmileID + ", othersideLastmileName=" + othersideLastmileName
-				+ ", othersideLocationID=" + othersideLocationID + ", othersideLocationName=" + othersideLocationName
-				+ ", othersideLocationCity=" + othersideLocationCity + ", othersideLocationType="
-				+ othersideLocationType + "]";
+	public String getFiberInstaller() {
+		return fiberInstaller;
 	}
-	
+
+	public void setFiberInstaller(String fiberInstaller) {
+		this.fiberInstaller = fiberInstaller;
+	}
+
+	public String getFiberEngineerName() {
+		return fiberEngineerName;
+	}
+
+	public void setFiberEngineerName(String fiberEngineerName) {
+		this.fiberEngineerName = fiberEngineerName;
+	}
+
+	public String getFiberCableSize() {
+		return fiberCableSize;
+	}
+
+	public void setFiberCableSize(String fiberCableSize) {
+		this.fiberCableSize = fiberCableSize;
+	}
+
+/*	public FiberCable(String fibercableID, String sourceWareID,String sourceID,String sourceName,String destinationWareID, String destinationID,String destinationName, String itemcode, int nbofStrands,
+			int nbofTubes, double fiberlength, String conduitID, String conduitName, String srcLNG, String srcLAT,
+			String destLNG, String destLAT, String cableMode, String fibercableName, String srcCity, String destCity,
+			String projectID, String fiberType, String fiberDeployment, String fiberNetLevel, String fiberOwner,
+			Timestamp creationDate, Timestamp lastModifieddate, String createdBy, String lastmodifiedBy,
+			double totaldriving,String drawingtype, double totalGeoDist, double lastAuxToDestDistance,double lastAuxToDestDrivDistance) {
+		super();
+		this.fibercableID = fibercableID;
+		this.sourceWareID = sourceWareID;
+		this.sourceID=sourceID;
+		this.sourceName=sourceName;
+		this.destinationWareID = destinationWareID;
+		this.destinationID=destinationID;
+		this.destinationName=destinationName;
+		this.itemcode = itemcode;
+		this.nbofStrands = nbofStrands;
+		this.nbofTubes = nbofTubes;
+		this.fiberlength = fiberlength;
+		this.conduitID = conduitID;
+		this.conduitName = conduitName;
+		this.srcLNG = srcLNG;
+		this.srcLAT = srcLAT;
+		this.destLNG = destLNG;
+		this.destLAT = destLAT;
+		this.cableMode = cableMode;
+		this.fibercableName = fibercableName;
+		this.srcCity = srcCity;
+		this.destCity = destCity;
+		this.projectID = projectID;
+		this.fiberType = fiberType;
+		this.fiberDeployment = fiberDeployment;
+		this.fiberNetLevel = fiberNetLevel;
+		this.fiberOwner = fiberOwner;
+		this.creationDate = creationDate;
+		this.lastModifieddate = lastModifieddate;
+		this.createdBy = createdBy;
+		this.lastmodifiedBy = lastmodifiedBy;
+		this.totaldriving = totaldriving;
+		this.drawingtype = drawingtype;
+		this.totalGeoDist = totalGeoDist;
+		this.lastAuxToDestDistance = lastAuxToDestDistance;
+		this.lastAuxToDestDrivDistance=lastAuxToDestDrivDistance;
+	}  */
 	
 	
 	

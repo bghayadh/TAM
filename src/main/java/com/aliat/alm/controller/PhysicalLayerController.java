@@ -2404,6 +2404,7 @@ public class PhysicalLayerController {
 	public Map<String, Object> findFiberDetails(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) {
 
+
 		Map<String, Object> rtn = new LinkedHashMap<>();
 
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
@@ -2474,6 +2475,7 @@ public class PhysicalLayerController {
 			}
 			return rtn;
 		}
+	
 	}
 
 	// Nodes details
@@ -4697,6 +4699,7 @@ public class PhysicalLayerController {
 
 			try {
 
+
 				fibercable = new FiberCable();
 				if (StringUtils.equalsIgnoreCase(fiberpathID, "")) {
 					synchronized (this) {
@@ -5648,6 +5651,7 @@ public class PhysicalLayerController {
 				session.clear();
 				tx.commit();
 
+			
 			} catch (Exception e) {
 				tx.rollback();
 				sw = new StringWriter();

@@ -2992,7 +2992,31 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 														class="input-group-text"><b>Driving Distance </b></span> <input
 														type="text" id="FiberDrivDist"
 														class="form-control text-input" />
-												</div></div></div></div>
+												</div></div></div>
+												<div class="col-sm-6">
+												<div class="form-group">
+													<div class="input-group-prepend">
+														<span style="width: 100px; font-size: 12px;"
+														class="input-group-text"><b>Cable Size </b></span> 
+														<select
+															id="fiberCableSize" class="form-control">
+															<option value=""></option>
+															<option value="2C">2C</option>
+															<option value="4C">4C</option>
+															<option value="8C">8C</option>
+															<option value="12C">12C</option>
+															<option value="16C">16C</option>
+															<option value="24C">24C</option>
+															<option value="48C">48C</option>
+															<option value="96C">96C</option>
+															<option value="144C">144C</option>
+															<option value="288C">288C</option>
+															<option value="576C">576C</option>
+														</select>
+													</div>
+												</div>
+											</div>		
+									</div>
 									<div class="row">
 											<div class="col-sm-6">
 												<div class="form-group">
@@ -3005,6 +3029,10 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 															<option value="g561">G.651</option>
 															<option value="g562">G.652</option>
 															<option value="g563">G.653</option>
+															<option value="g564">G.654</option>
+															<option value="g565">G.655</option>
+															<option value="g566">G.656</option>
+															<option value="g567">G.657</option>
 														</select>
 													</div>
 												</div>
@@ -3043,12 +3071,31 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 															<option value="" selected></option>
 															<option value="tkl">TKL</option>
 															<option value="nofbi">NOFBI</option>
+															<option value="ogn">OGN</option>
 															<option value="others">Others</option>
 														</select>
 													</div>
 												</div>
 											</div>
 										</div>
+										<div class="row">
+										<div class="col-sm-6">
+											<div class="form-group">
+												<div class="input-group-prepend">
+													<span style="width: 120px; font-size: 12px;"
+														class="input-group-text"><b>Engineer Name </b></span> <input type="text" id="fiberEngineerName" class="form-control text-input" />
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-6">
+											<div class="form-group">
+												<div class="input-group-prepend">
+													<span style="width: 100px; font-size: 12px;"
+														class="input-group-text"><b>Installer </b></span> <input type="text" id="fiberInstaller" class="form-control text-input" />
+												</div>
+											</div>
+										</div>
+									</div>	
 									<div class="row">
 										<div class="col-sm-6">
 											<div class="form-group">
@@ -3835,6 +3882,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 			</div>
 		</div>
 	</div>
+	
 	</div>
 	<!-- /////////////////////// -->
 	<div class="container">
