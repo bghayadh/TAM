@@ -717,6 +717,9 @@ public class PhysicalLayerController {
 							String[] idsArray = (findListId(nearstPoints, "all")).length > 0
 									? findListId(nearstPoints, "all")
 									: new String[] { "" };
+									
+							List<String> idsList = Arrays.asList(idsArray); // Convert array to a list
+
 							// Query fiberQuery= session.createNativeQuery("SELECT distinct
 							// A.SOURCE_LNG,A.SOURCE_LAT,A.DESTINATION_LNG,A.DESTINATION_LAT,
 							// A.FIBER_CABLE_ID,A.SOURCE_WARE_ID,A.SOURCE_ID,A.SOURCE_NAME,A.DESTINATION_WARE_ID,A.DESTINATION_ID,A.DESTINATION_NAME,(SELECT
@@ -736,7 +739,7 @@ public class PhysicalLayerController {
 											+ "LEFT  JOIN STRAND_AUXILIARY_POINTS F ON A.FIBER_CABLE_ID=F.FIBER_CABLE_ID "
 											+ "WHERE A.SOURCE_ID IN (:param1) OR A.DESTINATION_ID IN (:param1) OR D.AUXILIARY_POINT_ID IN (:param1) OR B.SOURCE_ID IN (:param1) OR B.DESTINATION_ID IN (:param1) OR C.SOURCE_ID IN (:param1) OR C.DESTINATION_ID IN (:param1) OR E.AUXILIARY_POINT_ID IN (:param1) OR F.AUXILIARY_POINT_ID IN (:param1) ");
 
-							fiberQuery.setParameter("param1", idsArray);
+							fiberQuery.setParameter("param1", idsList);
 							fiberList = fiberQuery.getResultList();
 							// System.out.println("fiberList "+mapper.writeValueAsString(fiberList));
 
@@ -761,7 +764,7 @@ public class PhysicalLayerController {
 											+ "LEFT JOIN STRAND_AUXILIARY_POINTS d ON b.FIBER_CABLE_ID=d.FIBER_CABLE_ID "
 											+ "WHERE b.SOURCE_ID IN (:param1) OR b.DESTINATION_ID IN (:param1) OR a.AUXILIARY_POINT_ID IN (:param1) OR c.SOURCE_ID IN (:param1) OR c.DESTINATION_ID IN (:param1) OR d.AUXILIARY_POINT_ID IN (:param1) ");
 
-							query.setParameter("param1", idsArray);
+							query.setParameter("param1", idsList);
 							fiberTubes = query.getResultList();
 							System.out.println("fiberTuuuuubes " + mapper.writeValueAsString(fiberTubes));
 
@@ -780,7 +783,7 @@ public class PhysicalLayerController {
 							// AND b.SOURCE_ID IN (:param1) OR b.DESTINATION_ID IN (:param1)");
 							query = session.createNativeQuery(
 									"SELECT DISTINCT b.STRAND_ID,b.SOURCE_LONGITUDE,b.SOURCE_LATITUDE,b.DESTINATION_LONGITUDE,b.DESTINATION_LATITUDE,b.SOURCE_WARE_ID,b.SOURCE_ID,b.SOURCE_NAME,b.DESTINATION_WARE_ID,b.DESTINATION_ID,b.DESTINATION_NAME,b.TUBE_ID,b.FIBER_CABLE_ID,b.STRAND_NAME,b.DRAWING_TYPE,b.STRAND_NUMBER,b.STRAND_COLOR FROM FIBER_STRANDS b LEFT JOIN STRAND_AUXILIARY_POINTS a ON b.STRAND_ID=a.STRAND_ID WHERE b.SOURCE_ID IN (:param1) OR b.DESTINATION_ID IN (:param1) OR a.AUXILIARY_POINT_ID IN (:param1) ");
-							query.setParameter("param1", idsArray);
+							query.setParameter("param1", idsList);
 							fiberStrands = query.getResultList();
 
 							query = session.createNativeQuery(
