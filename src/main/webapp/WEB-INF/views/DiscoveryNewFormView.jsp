@@ -229,7 +229,17 @@ max-width: 100%;
 			<div class="col-md-3">
 				<div class="input-group-prepend">
 				<span style="width:200px;" class="input-group-text">Status</span>
-				<input type="text" id="dnstat" value="${dnStatus}" class="form-control text-input" />
+				<select id="dnStatus" class="form-control" readonly>
+						<option value="In Progress"
+							<c:if test = "${dnStatus =='In Progress'}" > selected </c:if>>In
+							Progress</option>
+						<option value="Activated"
+							<c:if test = "${dnStatus =='Approved'}" > selected </c:if>>Approved</option>
+						<option value="Deactivated"
+							<c:if test = "${dnStatus =='Completed'}" > selected </c:if>>Completed</option>
+						<option value="Cancelled"
+							<c:if test = "${dnStatus =='Closed'}" > selected </c:if>>Closed</option>
+					</select>
 				</div>							
 			</div>
 			  <div class="pad col-md-3 hide-row"></div>    
@@ -1087,7 +1097,7 @@ function getAllItemPartNbs()
 }
 	
 			$("input").change(function() {
-				$("#dnstat").text("Not Saved");
+				$("#dnStatus").text("Not Saved");
 				$('.dot').css({"background-color" : "orange"});
 			});
    
@@ -1183,6 +1193,7 @@ function getAllItemPartNbs()
 			/// change Approve ( used when adding new rows)
 			function ChangeApprove(obj)
 			{
+				console.log($("#dnStatus").val())
 				tositeIDVal = $(obj).parent().parent().children('td[name="tositeID"]').children('input').val();
 				PoValue = $(obj).parent().parent().children('td[name="purchaseOrder"]').children('input').val();
 				ItemValue = $(obj).parent().parent().children('td[name="item"]').children('input').val();
@@ -1198,7 +1209,11 @@ function getAllItemPartNbs()
 				fromSlot = $(obj).parent().parent().children('td[name="fromSlot"]').children('input').val();
 				toSlot = $(obj).parent().parent().children('td[name="toSlot"]').children('input').val();
 
-				
+				if($("#dnStatus").val() == "In Progress"){
+					$(obj).blur();
+					alert('Status should be approved.');
+					return false;
+				}
 				//alert(transType);
 				if(transType == "-- Select Option --")
 				{
@@ -1309,6 +1324,13 @@ function getAllItemPartNbs()
 				toNodeName = $("#popupToNodeName").val();
 				fromSlot = $("#popupFromSlot").val();
 				toSlot = $("#popupToSlot").val();
+
+				console.log($("#dnStatus").val())
+				if($("#dnStatus").val() == "In Progress"){
+					$(obj).blur();
+					alert('Status should be approved.');
+					return false;
+				}
 				
 				//alert(transType);
 				if(transType == "" || transType == "-- Select Option --" || transType == "undefined" || !transType) // not working!!!!!   || transType == "undefined"
@@ -1728,6 +1750,10 @@ function getAllItemPartNbs()
        		
 		function getselectedrowsForApproval(actionType)
 		{
+			if($("#dnStatus").val() == "In Progress"){
+				alert("You can't approve while the status is In Progress.")
+				return;
+			}
 			var ApprovDict = [];
 			var ApprovObjects = {};
 			var NotTakingArray = [];
@@ -1929,7 +1955,7 @@ function getAllItemPartNbs()
 			 var dncreationDate = document.getElementById("dncreatedate").value;
 			 var dnlastModifieddate = document.getElementById("dnlstmodifdate").value;
 			 var dnTotalAmount = document.getElementById("dntotamnt").value;
-			 var dnStatus = document.getElementById("dnstat").value;
+			 var dnStatus = document.getElementById("dnStatus").value;
 			 var dnTotalQty = document.getElementById("dntotqty").value;
 			 var type = "";
 			 if('${ListPRqItem}' == "addNew")
@@ -1952,7 +1978,7 @@ function getAllItemPartNbs()
 							"dncreationDate" : dncreationDate,
 							"dnlastmodifDate" : dnlastModifieddate,
 							"dnTotalAmount" : dnTotalAmount,                          
-							"dnStatus" : $("#dnstat").val(),
+							"dnStatus" : $("#dnStatus").val(),
 							"dnTotalQty" : dnTotalQty,
 							"email": $("#email").val(),
 							"password":$("#password").val(),
@@ -2514,12 +2540,12 @@ function getAllItemPartNbs()
                         
 					};
 
-
-
-					  	
+					document.getElementById('dnStatus').onmousedown = function(event) {
+					      event.preventDefault();
+					};
 				    
 	                
-}) //end ready document
+}); //end ready document
 
  
 </script>

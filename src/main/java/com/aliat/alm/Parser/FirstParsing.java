@@ -3,6 +3,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.sql.Connection;
+import java.util.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -31,7 +32,7 @@ public class FirstParsing {
 	static String logsid="0";
 	static String Gyear;
 	static int nbOfErrors = 0;
-	
+	static Timestamp parsingDate;
 	public static void main(String[] args) {
 		
 	try	{
@@ -90,8 +91,10 @@ public class FirstParsing {
 				
 				//logsid = localgetseqNbr(0);
 				 //logsid=Gyear+"_"+ "LOGS"+'_'+logsid;
-				 
-				 
+				Date date = new Date();
+				parsingDate = new Timestamp(date.getTime());
+				
+				
 				/// select different domain and vendor from temp node active table
 				Statement stmtinit2 = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);  
 		    	 String sqlStmtinit2 = "select distinct DOMAIN,SUB_DOMAIN_TYPE,SUB_DOMAIN,VENDOR from TEMP_NODE_ACTIVE";          
@@ -277,7 +280,7 @@ public class FirstParsing {
 		try {
 		//stmtinsert1 = con.prepareStatement("insert into NODE_ACTIVE (select * from TEMP_NODE_ACTIVE where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"')"); 
 		stmtinsert1 = con.prepareStatement("insert into NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_SOURCE,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,ACTIVE_RECORD,LINE,WARE_ID,VENDOR,SUPPLIER_ID,WARE_NAME,SUPPLIER_NAME,IP_ADDRESS,MAC_ADDRESS,SOFTWARE_VERSION,PATCH_VERSION,LONGITUDE,LATITUDE,PART_NUMBER,OTHERS,SUB_DOMAIN_TYPE,SUB_DOMAIN,PARSING_DATE,SERIAL_NUMBER)"
-				+ "(select NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_SOURCE,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,'"+TransTyp+"' as TRANS_TYPE,'1' as ACTIVE_RECORD,LINE,WARE_ID,VENDOR,SUPPLIER_ID,WARE_NAME,SUPPLIER_NAME,IP_ADDRESS,MAC_ADDRESS,SOFTWARE_VERSION,PATCH_VERSION,LONGITUDE,LATITUDE,PART_NUMBER,OTHERS,SUB_DOMAIN_TYPE,SUB_DOMAIN,sysdate,SERIAL_NUMBER from TEMP_NODE_ACTIVE where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"')");
+				+ "(select NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_SOURCE,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,'"+TransTyp+"' as TRANS_TYPE,'1' as ACTIVE_RECORD,LINE,WARE_ID,VENDOR,SUPPLIER_ID,WARE_NAME,SUPPLIER_NAME,IP_ADDRESS,MAC_ADDRESS,SOFTWARE_VERSION,PATCH_VERSION,LONGITUDE,LATITUDE,PART_NUMBER,OTHERS,SUB_DOMAIN_TYPE,SUB_DOMAIN,TIMESTAMP '"+parsingDate+"',SERIAL_NUMBER from TEMP_NODE_ACTIVE where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"')");
 		stmtinsert1.executeUpdate();
  		stmtinsert1.close();
  		System.out.println("insert into NODE_ACTIVE COMPLETED");
@@ -463,7 +466,7 @@ public class FirstParsing {
 		{  
 			logger.info("error at addAllNodeDatafromTemptoNodes is :"+ e.toString());
 			System.out.println("error at addAllNodeDatafromTemptoNodes is :"+ e.toString()); 
-			
+			e.printStackTrace();
 			//insert into AUTO_DISCOVERY_LOGS_DETAILS
 	 		String logs_DETAIls_ID= localgetseqNbr(1);
 	 		logs_DETAIls_ID=Gyear+"_"+ "LOGS_DETAILS"+'_'+logs_DETAIls_ID;

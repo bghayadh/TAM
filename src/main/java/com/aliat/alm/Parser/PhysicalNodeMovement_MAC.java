@@ -166,20 +166,25 @@ public class PhysicalNodeMovement_MAC {
 	
 	private static void CheckNewNodes(List<String> newNodes,List<String> oldNodes) throws SQLException {
 		Statement stmt = null,stmt1=null;
-		String query = null,transID =null;
-		int transvalue = 0;
+		String query = null,transID =null,nodeTransID=null;
+		int transvalue = 0,nodetransvalue=0;
 		PreparedStatement insertstatement = null,updatestatement=null;
 		
 		newNodes.removeAll(oldNodes);
 		if(newNodes.size() > 0) {
 			stmt = con.createStatement();
-			query = "SELECT TRANS_ID FROM SEQ_TABLE";
+			query = "SELECT TRANS_ID,NODE_TRANSACTION FROM SEQ_TABLE";
 			ResultSet rs1 = stmt.executeQuery(query);
 			while(rs1.next()) {
 				transvalue = rs1.getInt("TRANS_ID");
+				nodetransvalue = rs1.getInt("NODE_TRANSACTION");
+				
+				System.out.println(transvalue);
+				System.out.println(nodetransvalue);
 			}
 			stmt.close();
 			rs1.close();
+			
 			System.out.println("New Nodes Found");
 			for(int i=0;i<newNodes.size();i++) {
 				stmt1 = con.createStatement();
@@ -189,19 +194,25 @@ public class PhysicalNodeMovement_MAC {
 					transID=Gyear+"_TRANS_"+transvalue;
 					
 					insertstatement = con.prepareStatement(
-					"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,FROM_SITE,TO_SITE,FROM_NODE,TO_NODE,FROM_CIRCLE,TO_CIRCLE,FROM_NODE_NAME,TO_NODE_NAME,FROM_WARE_ID,TO_WARE_ID,FROM_WARE_NAME,TO_WARE_NAME,FROM_NODE_TYPE,TO_NODE_TYPE,OLD_SERIAL_NUMBER,SERIAL_NUMBER,MODEL,OLD_MAC,MAC_ADDRESS) "
-					+ "values ('"+transID+"','"+rs11.getString("NODE_PK")+"','NODE_ACTIVE','0','NEW NODE',TIMESTAMP '"+rs11.getString("PARSING_DATE")+"',sysdate,sysdate,'0','0','0','"+rs11.getString("SITE_ID")+"','0','"+rs11.getString("NODE_ID")+"','0','"+rs11.getString("CIRCLE_ID")+"','0','"
-							+rs11.getString("NODE_NAME")+"','0','"+rs11.getString("WARE_ID")+"','0','"+rs11.getString("WARE_NAME")+"','0','"+rs11.getString("NODE_TYPE")+"','0','"+rs11.getString("SERIAL_NUMBER")+"'"
-									+ ",'"+rs11.getString("NODE_MODEL")+"','0','"+rs11.getString("MAC_ADDRESS")+"')");
-					insertstatement.executeUpdate();
-					insertstatement.close();
+							"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,FROM_SITE,TO_SITE,FROM_CIRCLE,TO_CIRCLE,FROM_WARE_ID,TO_WARE_ID,FROM_WARE_NAME,TO_WARE_NAME,OLD_SERIAL_NUMBER,SERIAL_NUMBER,MODEL,OLD_MAC,MAC_ADDRESS) "
+							+ "values ('"+transID+"','"+rs11.getString("NODE_PK")+"','NODE_ACTIVE','0','NEW NODE',TIMESTAMP '"+rs11.getString("PARSING_DATE")+"',sysdate,sysdate,'0','0','0','"+rs11.getString("SITE_ID")+"','0','"+rs11.getString("CIRCLE_ID")+"','0','"+rs11.getString("WARE_ID")+"','0','"+rs11.getString("WARE_NAME")+"','0','"+rs11.getString("SERIALNUMBER")+"','"+rs11.getString("MODEL")+"','0','"+rs11.getString("MAC_ADDRESS")+"'))");
+							insertstatement.executeUpdate();
+							insertstatement.close();
 					transvalue++;
+					
+					nodeTransID=Gyear+"_NODE_TRANS_"+nodetransvalue;
+					insertstatement = con.prepareStatement(
+							"INSERT INTO NODE_TRANSACTIONS (NODE_TRANS_ID ,TRANS_ID,NODE_PK,FROM_NODE_ID,TO_NODE_ID,FROM_NODE_NAME,TO_NODE_NAME,FROM_NODE_TYPE,TO_NODE_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE) "
+							+ "values ('"+nodeTransID+"','"+transID+"','"+rs11.getString("NODE_PK")+"','0','"+rs11.getString("NODE_ID")+"','0','"+rs11.getString("NODE_NAME")+"','0','"+rs11.getString("NODE_TYPE")+"',TIMESTAMP '"+rs11.getString("PARSING_DATE")+"',sysdate,sysdate)");
+							insertstatement.executeUpdate();
+							insertstatement.close();
+					nodetransvalue++;
 					
 				}
 				stmt1.close();
 				rs11.close();
 			}
-			updatestatement = con.prepareStatement("Update SEQ_TABLE SET TRANS_ID="+transvalue);
+			updatestatement = con.prepareStatement("Update SEQ_TABLE SET TRANS_ID="+transvalue+", NODE_TRANSACTION="+nodetransvalue);
 			updatestatement.executeUpdate();
 			updatestatement.close();
 			
@@ -212,8 +223,8 @@ public class PhysicalNodeMovement_MAC {
 	
 	private static void CheckDisappearedNodes(List<String> newNodes,List<String> oldNodes) throws SQLException {
 		Statement stmt = null,stmt1=null;
-		String query = null,transID =null;
-		int transvalue = 0;
+		String query = null,transID =null,nodeTransID=null;
+		int transvalue = 0,nodetransvalue=0;
 		PreparedStatement insertstatement = null,updatestatement=null;
 		
 		oldNodes.removeAll(newNodes);
@@ -236,19 +247,25 @@ public class PhysicalNodeMovement_MAC {
 					transID=Gyear+"_TRANS_"+transvalue;
 					
 					insertstatement = con.prepareStatement(
-							"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,TO_SITE,FROM_SITE,TO_NODE,FROM_NODE,TO_CIRCLE,FROM_CIRCLE,TO_NODE_NAME,FROM_NODE_NAME,TO_WARE_ID,FROM_WARE_ID,TO_WARE_NAME,FROM_WARE_NAME,TO_NODE_TYPE,FROM_NODE_TYPE,OLD_SERIAL_NUMBER,SERIAL_NUMBER,MODEL,OLD_MAC,MAC_ADDRESS) "
-							+ "values ('"+transID+"','"+rs11.getString("NODE_PK")+"','NODE_ACTIVE','0','NODE DISAPPEARED',TIMESTAMP '"+rs11.getString("PARSING_DATE")+"',sysdate,sysdate,'0','0','0','"+rs11.getString("SITE_ID")+"','0','"+rs11.getString("NODE_ID")+"','0','"+rs11.getString("CIRCLE_ID")+"','0','"
-									+rs11.getString("NODE_NAME")+"','0','"+rs11.getString("WARE_ID")+"','0','"+rs11.getString("WARE_NAME")+"','0','"+rs11.getString("NODE_TYPE")+"','0','"+rs11.getString("SERIAL_NUMBER")+"'"
-											+ ",'"+rs11.getString("NODE_MODEL")+"','0','"+rs11.getString("MAC_ADDRESS")+"')");
+							"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,TO_SITE,FROM_SITE,TO_CIRCLE,FROM_CIRCLE,TO_WARE_ID,FROM_WARE_ID,TO_WARE_NAME,FROM_WARE_NAME,SERIAL_NUMBER,OLD_SERIAL_NUMBER,MODEL,OLD_MAC,MAC_ADDRESS) "
+							+ "values ('"+transID+"','"+rs11.getString("NODE_PK")+"','NODE_ACTIVE','0','DISAPPEARED NODE',TIMESTAMP '"+rs11.getString("PARSING_DATE")+"',sysdate,sysdate,'0','0','0','"+rs11.getString("SITE_ID")+"','0','"+rs11.getString("CIRCLE_ID")+"','0','"+rs11.getString("WARE_ID")+"','0','"+rs11.getString("WARE_NAME")+"','0','"+rs11.getString("SERIALNUMBER")+"','"+rs11.getString("MODEL")+"','0','"+rs11.getString("MAC_ADDRESS")+"')");
 							insertstatement.executeUpdate();
 							insertstatement.close();
 					transvalue++;
+					
+					nodeTransID=Gyear+"_NODE_TRANS_"+nodetransvalue;
+					insertstatement = con.prepareStatement(
+							"INSERT INTO NODE_TRANSACTIONS (NODE_TRANS_ID ,TRANS_ID,NODE_PK,TO_NODE_ID,FROM_NODE_ID,TO_NODE_NAME,FROM_NODE_NAME,TO_NODE_TYPE,FROM_NODE_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE) "
+							+ "values ('"+nodeTransID+"','"+transID+"','"+rs11.getString("NODE_PK")+"','0','"+rs11.getString("NODE_ID")+"','0','"+rs11.getString("NODE_NAME")+"','0','"+rs11.getString("NODE_TYPE")+"',TIMESTAMP '"+rs11.getString("PARSING_DATE")+"',sysdate,sysdate)");
+							insertstatement.executeUpdate();
+							insertstatement.close();
+					nodetransvalue++;
 					
 				}
 				stmt1.close();
 				rs11.close();
 			}
-			updatestatement = con.prepareStatement("Update SEQ_TABLE SET TRANS_ID="+transvalue);
+			updatestatement = con.prepareStatement("Update SEQ_TABLE SET TRANS_ID="+transvalue+", NODE_TRANSACTION="+nodetransvalue);
 			updatestatement.executeUpdate();
 			updatestatement.close();
 			
@@ -260,16 +277,20 @@ public class PhysicalNodeMovement_MAC {
 	private static void CheckTransferredNodes(List<String> newNodes,List<String> oldNodes) throws SQLException{
 		Statement stmt = null,stmt1=null,stmt2=null;
 		String query = null,transID =null,oldNodeID,oldNodeName,oldSiteID,oldCircleID,oldnodeType,oldwareId,oldWareName,newNodeID,newNodeName,newSiteID,newCircleID,newSN,newnodeType,newwareID,newWareName,newMac,model,varstatus = null;
-		int transvalue=0;
+		String nodeTransID=null;
+		int transvalue = 0,nodetransvalue=0;
 		PreparedStatement insertstatement = null,updatestatement=null;
 
 		newNodes.retainAll(oldNodes);
 		if(newNodes.size() > 0) {
 			stmt2 = con.createStatement();
-			query = "SELECT TRANS_ID FROM SEQ_TABLE";
+			
+			query = "SELECT TRANS_ID,NODE_TRANSACTION FROM SEQ_TABLE";
 			ResultSet rs2 = stmt2.executeQuery(query);
 			while(rs2.next()) {
 				transvalue = rs2.getInt("TRANS_ID");
+				nodetransvalue = rs2.getInt("NODE_TRANSACTION");
+				
 			}
 			stmt2.close();
 			rs2.close();
@@ -305,15 +326,23 @@ public class PhysicalNodeMovement_MAC {
 					    		System.out.println("Reappear After Site Transfer");
 				    			varstatus="Reappear After Site Transfer";
 				    			transID=Gyear+"_TRANS_"+transvalue;
-				    			insertstatement = con.prepareStatement(
-				    					"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,FROM_SITE,TO_SITE,FROM_NODE,TO_NODE,FROM_CIRCLE,TO_CIRCLE,FROM_NODE_NAME,TO_NODE_NAME,FROM_WARE_ID,TO_WARE_ID,FROM_WARE_NAME,TO_WARE_NAME,FROM_NODE_TYPE,TO_NODE_TYPE,OLD_SERIAL_NUMBER,SERIAL_NUMBER,MODEL,OLD_MAC,MAC_ADDRESS) "
-				    					+ "values ('"+transID+"','"+rs1.getString("NODE_PK")+"','NODE_ACTIVE','0','"+varstatus+"',TIMESTAMP '"+rs1.getString("PARSING_DATE")+"',sysdate,sysdate,'0','0','"+oldSiteID+"','"+newSiteID+"','"+oldNodeID+"','"+newNodeID+"','"+oldCircleID+"','"+newCircleID+"','"
-				    							+oldNodeName+"','"+newNodeName+"','"+oldwareId+"','"+newwareID+"','"+oldWareName+"','"+newWareName+"','"+oldnodeType+"','"+newnodeType+"','0','"+newSN+"',"
-				    									+ "'"+model+"','0','"+newMac+"')");
+				 						
+								insertstatement = con.prepareStatement(
+				    					"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,FROM_SITE,TO_SITE,FROM_CIRCLE,TO_CIRCLE,FROM_WARE_ID,TO_WARE_ID,FROM_WARE_NAME,TO_WARE_NAME,OLD_SERIAL_NUMBER,SERIAL_NUMBER,MODEL,OLD_MAC,MAC_ADDRESS) "
+				    					+ "values ('"+transID+"','"+rs1.getString("NODE_PK")+"','NODE_ACTIVE','0','"+varstatus+"',TIMESTAMP '"+rs1.getString("PARSING_DATE")+"',sysdate,sysdate,'0','0','"+oldSiteID+"','"+newSiteID+"','"+oldCircleID+"','"+newCircleID+"','"
+				    							+oldwareId+"','"+newwareID+"','"+oldWareName+"','"+newWareName+"','0','"+newSN+"','"+rs1.getString("MODEL")+"''0','"+newMac+"')");
 				    			insertstatement.executeUpdate();
-				    					insertstatement.close();
+				    			insertstatement.close();
 										
 								transvalue++;
+								
+								nodeTransID=Gyear+"_NODE_TRANS_"+nodetransvalue;
+								insertstatement = con.prepareStatement(
+										"INSERT INTO NODE_TRANSACTIONS (NODE_TRANS_ID ,TRANS_ID,NODE_PK,TO_NODE_ID,FROM_NODE_ID,TO_NODE_NAME,FROM_NODE_NAME,TO_NODE_TYPE,FROM_NODE_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE) "
+										+ "values ('"+nodeTransID+"','"+transID+"','"+rs1.getString("NODE_PK")+"','"+newNodeID+"','"+oldNodeID+"','"+newNodeName+"','"+oldNodeName+"','"+newnodeType+"','"+oldnodeType+"',TIMESTAMP '"+rs1.getString("PARSING_DATE")+"',sysdate,sysdate)");
+										insertstatement.executeUpdate();
+										insertstatement.close();
+								nodetransvalue++;
 					    	}	
 					    	
 						
@@ -326,7 +355,7 @@ public class PhysicalNodeMovement_MAC {
 				rs.close();
 				
 			}
-			updatestatement = con.prepareStatement("Update SEQ_TABLE SET TRANS_ID="+transvalue);
+			updatestatement = con.prepareStatement("Update SEQ_TABLE SET TRANS_ID="+transvalue+", NODE_TRANSACTION="+nodetransvalue);
 			updatestatement.executeUpdate();
 			updatestatement.close();
 		}
