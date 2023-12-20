@@ -264,6 +264,7 @@ max-width: 100%;
 				<!--  <input type="text" id="grstat" value="${grStatus}" class="form-control text-input" style="width:500px;" />-->
 				<select id="grstat" class="form-control">
 								<option value="inprog" <c:if test = "${grStatus =='inprog'}" > selected </c:if> >In Progress</option>
+								<option value="approved" <c:if test = "${grStatus =='approved'}" > selected </c:if> >Approved</option>
 								<option value="completed" <c:if test = "${grStatus =='completed'}" > selected </c:if>>Completed</option>
 								<option value="cancelled" hidden<c:if test = "${grStatus =='cancelled'}" > selected </c:if>>Cancelled</option>
 								
