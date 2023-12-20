@@ -347,71 +347,78 @@ public class LoadFilesRanHuawei {
 	}
 
 	private static void readExcelSheetFiles(String fileName) throws FileNotFoundException, IOException, SQLException {
-
-		CSVParser csvParser = new CSVParser(new FileReader(readExcelFileFrom + "/" + fileName), CSVFormat.DEFAULT);
-		List<CSVRecord> records = new ArrayList<>();
-		for (CSVRecord record : csvParser) {
-			records.add(record);
-		}
-
-		Calendar calendar = new GregorianCalendar();
-		int year = calendar.get(Calendar.YEAR);
-
-		String sqlStmtinit2 = "select NODE_ACTIVE from SEQ_TABLE";
-		stmnt = almCon.createStatement();
-		ResultSet rsinit2 = stmnt.executeQuery(sqlStmtinit2);
-
-		while (rsinit2.next()) {
-			NodeSeq = rsinit2.getInt("NODE_ACTIVE");
-		}
-
-		for (int i = 7; i < records.size(); i++) {
-			
-			if(NodeIDArr.contains( records.get(i).get(0))) {
-				System.out.println("in update "+ i +" NODE NAME "+ records.get(i).get(0));
-				
-				stmtp = parserCon.prepareStatement("UPDATE NODE_ACTIVE  SET IP_ADDRESS ='" +  records.get(i).get(2)
-						+ "',SOFTWARE_VERSION = '" +  records.get(i).get(4) + "',STATUS ='"+  records.get(i).get(16) + "',PART_NUMBER='"+ records.get(i).get(21)+"' where"
-								+ " NODE_NAME='"+records.get(i).get(0)+"'");
-				
-				stmtp.executeUpdate();
-				stmtp.close();
-				
+		if(StringUtils.containsIgnoreCase(fileName, "ran")){
+			CSVParser csvParser = new CSVParser(new FileReader(readExcelFileFrom + "/" + fileName), CSVFormat.DEFAULT);
+			List<CSVRecord> records = new ArrayList<>();
+			for (CSVRecord record : csvParser) {
+				records.add(record);
 			}
-			
-			else {
-				nodePK = year + "_NODE_HW_" + Domain + "_" + NodeSeq;
+	
+			Calendar calendar = new GregorianCalendar();
+			int year = calendar.get(Calendar.YEAR);
+	
+			String sqlStmtinit2 = "select NODE_ACTIVE from SEQ_TABLE";
+			stmnt = almCon.createStatement();
+			ResultSet rsinit2 = stmnt.executeQuery(sqlStmtinit2);
+	
+			while (rsinit2.next()) {
+				NodeSeq = rsinit2.getInt("NODE_ACTIVE");
+			}
+	
+			for (int i = 7; i < records.size(); i++) {
 				
-				stmtp = almCon.prepareStatement("UPDATE SEQ_TABLE SET NODE_ACTIVE = NODE_ACTIVE + 1");
-				stmtp.executeUpdate();
-				stmtp.close();
+				if(NodeIDArr.contains( records.get(i).get(0))) {
+					System.out.println("in update "+ i +" NODE NAME "+ records.get(i).get(0));
+					
+					stmtp = parserCon.prepareStatement("UPDATE NODE_ACTIVE  SET IP_ADDRESS ='" +  records.get(i).get(2)
+							+ "',SOFTWARE_VERSION = '" +  records.get(i).get(4) + "',STATUS ='"+  records.get(i).get(16) + "',PART_NUMBER='"+ records.get(i).get(21)+"' where"
+									+ " NODE_NAME='"+records.get(i).get(0)+"'");
+					
+					stmtp.executeUpdate();
+					stmtp.close();
+					
+				}
 				
-				rsinit2.close();
-				stmnt.close();
-				wareID = "";
-				wareName = "";
-				longitude = "";
-				latitude = "";
-				siteID = "";
-				// if the cell of the csv file contains _ then it may contain site ID
-				if (records.get(i).get(0).contains("_")) {
-					siteID = records.get(i).get(0).split("_")[0];
-					char charArray[] = siteID.toCharArray();
-					// check if the first character is digit and last character is char then it is a
-					// site id.
-					if (Character.isDigit(charArray[0]) && !Character.isDigit(charArray[siteID.length() - 1])) {
-						String siteDetailsStatement = "select WARE_ID,WARE_NAME,LONGITUDE,LATITUDE from WAREHOUSE WHERE SITE_ID='"
-								+ siteID + "'";
-						stmnt = almCon.createStatement();
-						ResultSet siteDetailsResultSet = stmnt.executeQuery(siteDetailsStatement);
-						while (siteDetailsResultSet.next()) {
-							wareID = siteDetailsResultSet.getString("WARE_ID");
-							wareName = siteDetailsResultSet.getString("WARE_NAME");
-							longitude = siteDetailsResultSet.getString("LONGITUDE");
-							latitude = siteDetailsResultSet.getString("LATITUDE");
+				else {
+					nodePK = year + "_NODE_HW_" + Domain + "_" + NodeSeq;
+					
+					stmtp = almCon.prepareStatement("UPDATE SEQ_TABLE SET NODE_ACTIVE = NODE_ACTIVE + 1");
+					stmtp.executeUpdate();
+					stmtp.close();
+					
+					rsinit2.close();
+					stmnt.close();
+					wareID = "";
+					wareName = "";
+					longitude = "";
+					latitude = "";
+					siteID = "";
+					// if the cell of the csv file contains _ then it may contain site ID
+					if (records.get(i).get(0).contains("_")) {
+						siteID = records.get(i).get(0).split("_")[0];
+						char charArray[] = siteID.toCharArray();
+						// check if the first character is digit and last character is char then it is a
+						// site id.
+						if (Character.isDigit(charArray[0]) && !Character.isDigit(charArray[siteID.length() - 1])) {
+							String siteDetailsStatement = "select WARE_ID,WARE_NAME,LONGITUDE,LATITUDE from WAREHOUSE WHERE SITE_ID='"
+									+ siteID + "'";
+							stmnt = almCon.createStatement();
+							ResultSet siteDetailsResultSet = stmnt.executeQuery(siteDetailsStatement);
+							while (siteDetailsResultSet.next()) {
+								wareID = siteDetailsResultSet.getString("WARE_ID");
+								wareName = siteDetailsResultSet.getString("WARE_NAME");
+								longitude = siteDetailsResultSet.getString("LONGITUDE");
+								latitude = siteDetailsResultSet.getString("LATITUDE");
+							}
+							siteDetailsResultSet.close();
+							stmnt.close();
+						} else {
+							wareID = "";
+							wareName = "";
+							longitude = "";
+							latitude = "";
+							siteID = "";
 						}
-						siteDetailsResultSet.close();
-						stmnt.close();
 					} else {
 						wareID = "";
 						wareName = "";
@@ -419,76 +426,69 @@ public class LoadFilesRanHuawei {
 						latitude = "";
 						siteID = "";
 					}
-				} else {
-					wareID = "";
-					wareName = "";
-					longitude = "";
-					latitude = "";
-					siteID = "";
+		
+					nodeName = records.get(i).get(0);
+					nodeModel = records.get(i).get(1);
+		
+					if ((nodeModel.contains("RNC")) && (nodeModel.contains("BSC"))) {
+						nodeType = "RNC";
+						tech2 = "0";
+					    tech3 = "1";
+						tech4 = "0";
+						tech5 = "0";
+					} else if ((nodeModel.contains("BSC")) && (nodeModel.contains("BSC"))) {
+						nodeType = "BSC";
+						tech2 = "1";
+					    tech3 = "0";
+						tech4 = "0";
+						tech5 = "0";
+					} else if (nodeModel.contains("OSS")) {
+						nodeType = "OSS";
+						tech2 = "0";
+					    tech3 = "0";
+						tech4 = "0";
+						tech5 = "0";
+					} else if (nodeModel.contains("BTS")) {
+						nodeType = "SRAN";
+						tech2 = "1";
+					    tech3 = "1";
+						tech4 = "0";
+						tech5 = "0";
+					} else {
+						nodeType = null;
+						tech2 = "0";
+					    tech3 = "0";
+						tech4 = "0";
+						tech5 = "0";
+					}
+		
+					// nodeModel = records.get(i).get(1);
+					IPaddress = records.get(i).get(2);
+					softwareVersion = records.get(i).get(4);
+					MACaddress = null;
+					partNumber = records.get(i).get(21);
+					commStatus = records.get(i).get(16);
+					adminStatus = records.get(i).get(22);
+					nodeId = records.get(i).get(2);
+					gateway = null;
+					unique_Node_ID = nodeId + "_HW";
+		
+					stmtp = parserCon.prepareStatement(
+							"insert into NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,ACTIVE_RECORD,LINE,WARE_ID,VENDOR,WARE_NAME,IP_ADDRESS,MAC_ADDRESS,SUB_DOMAIN,SOFTWARE_VERSION,STATUS_1,GATEWAY,LONGITUDE,LATITUDE,PART_NUMBER,SUB_DOMAIN_TYPE)"
+									+ "values('" + nodePK + "','" + unique_Node_ID + "','" + nodeId + "','" + nodeName + "','"
+									+ nodeType + "','" + Domain + "','" + nodeModel + "','" + tech2 + "','" + tech3 + "','"
+									+ tech4 + "','" + tech5 + "','" + siteID + "','" + circleId + "',sysdate,sysdate,'"
+									+ fileType + "','" + fileName + "','" + commStatus + "','1','1','" + wareID + "','"
+									+ provider + "','" + wareName + "','" + IPaddress + "','" + MACaddress + "','" + subDomain
+									+ "','" + softwareVersion + "','" + adminStatus + "','" + gateway + "','" + longitude
+									+ "','" + latitude + "','" + partNumber + "','" + subDomainType + "')");
+					stmtp.executeUpdate();
+					stmtp.close();
+		
+					NodeSeq++;
 				}
-	
-				nodeName = records.get(i).get(0);
-				nodeModel = records.get(i).get(1);
-	
-				if ((nodeModel.contains("RNC")) && (nodeModel.contains("BSC"))) {
-					nodeType = "RNC";
-					tech2 = "0";
-				    tech3 = "1";
-					tech4 = "0";
-					tech5 = "0";
-				} else if ((nodeModel.contains("BSC")) && (nodeModel.contains("BSC"))) {
-					nodeType = "BSC";
-					tech2 = "1";
-				    tech3 = "0";
-					tech4 = "0";
-					tech5 = "0";
-				} else if (nodeModel.contains("OSS")) {
-					nodeType = "OSS";
-					tech2 = "0";
-				    tech3 = "0";
-					tech4 = "0";
-					tech5 = "0";
-				} else if (nodeModel.contains("BTS")) {
-					nodeType = "SRAN";
-					tech2 = "1";
-				    tech3 = "1";
-					tech4 = "0";
-					tech5 = "0";
-				} else {
-					nodeType = null;
-					tech2 = "0";
-				    tech3 = "0";
-					tech4 = "0";
-					tech5 = "0";
-				}
-	
-				// nodeModel = records.get(i).get(1);
-				IPaddress = records.get(i).get(2);
-				softwareVersion = records.get(i).get(4);
-				MACaddress = null;
-				partNumber = records.get(i).get(21);
-				commStatus = records.get(i).get(16);
-				adminStatus = records.get(i).get(22);
-				nodeId = records.get(i).get(2);
-				gateway = null;
-				unique_Node_ID = nodeId + "_HW";
-	
-				stmtp = parserCon.prepareStatement(
-						"insert into NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,ACTIVE_RECORD,LINE,WARE_ID,VENDOR,WARE_NAME,IP_ADDRESS,MAC_ADDRESS,SUB_DOMAIN,SOFTWARE_VERSION,STATUS_1,GATEWAY,LONGITUDE,LATITUDE,PART_NUMBER,SUB_DOMAIN_TYPE)"
-								+ "values('" + nodePK + "','" + unique_Node_ID + "','" + nodeId + "','" + nodeName + "','"
-								+ nodeType + "','" + Domain + "','" + nodeModel + "','" + tech2 + "','" + tech3 + "','"
-								+ tech4 + "','" + tech5 + "','" + siteID + "','" + circleId + "',sysdate,sysdate,'"
-								+ fileType + "','" + fileName + "','" + commStatus + "','1','1','" + wareID + "','"
-								+ provider + "','" + wareName + "','" + IPaddress + "','" + MACaddress + "','" + subDomain
-								+ "','" + softwareVersion + "','" + adminStatus + "','" + gateway + "','" + longitude
-								+ "','" + latitude + "','" + partNumber + "','" + subDomainType + "')");
-				stmtp.executeUpdate();
-				stmtp.close();
-	
-				NodeSeq++;
 			}
 		}
-
 	}
 
 	@SuppressWarnings("unchecked")
