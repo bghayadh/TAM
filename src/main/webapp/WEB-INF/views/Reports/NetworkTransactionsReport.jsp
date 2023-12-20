@@ -113,6 +113,22 @@
 <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>
        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>-->
 
+<style>
+fieldset {
+	border: 2px solid #333;
+	border-radius: 8px; /* Optional: adds rounded corners */
+	padding: 10px; /* Optional: adds padding inside the fieldset */
+	text-emphasis-color: #A9A9A9 !important;
+	font-size: 15px;
+	font-family: cursive;
+	border-color: #4B8C8C;
+}
+
+legend {
+	font-weight: bold;
+	color: #4B8C8C;
+}
+</style>
 </head>
 <body>
 	<c:set var="pg" value="report" scope="session" />
@@ -595,6 +611,68 @@
 
 								</div>
 							</div>
+							
+							<div class="row">
+					<!-- statistical summary to be placed here -->
+					<div class="col-md-12">
+				<fieldset>
+					<legend>Transactions Summary</legend>
+					<div class="row">
+						  <div class="col-md-3">
+						<div class="form-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text">Total Transactions</span>
+								<input type="text" id="totalbnrTrans" readonly value="${totalbnrTrans}" class="form-control text-input" />
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="form-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text">Last Scan Date</span>
+								<input type="text" id="lastscanDate" readonly value="${lastscanDate}" class="form-control text-input" />
+							</div>
+						</div>
+					</div>
+					</div>
+					<div class="row">
+					 <div class="col-md-3">
+						<div class="form-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text">New Elements</span>
+								<input type="text" id="newElements" readonly value="${newElements}" class="form-control text-input" />
+							</div>
+						</div>
+					</div>
+					 <div class="col-md-3">
+						<div class="form-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text">Disappeared Elements</span>
+								<input type="text" id="disappearedElements" readonly value="${disappearedElements}" class="form-control text-input" />
+							</div>
+						</div>
+					</div>
+					 <div class="col-md-3">
+						<div class="form-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text">Transferred Elements</span>
+								<input type="text" id="transferredElements" readonly value="${transferredElements}" class="form-control text-input" />
+							</div>
+						</div>
+					</div>
+					 <div class="col-md-3">
+						<div class="form-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text">Dismantled Elements</span>
+								<input type="text" id="dismantledElements" readonly value="${dismantledElements}" class="form-control text-input" />
+							</div>
+						</div>
+					</div>
+					</div>
+				</fieldset>
+
+			</div>
+							</div>
 						</div>
 
 					</div>
@@ -620,9 +698,9 @@
 </body>
 
 <script>
-	$(document)
-			.ready(
-					function() {
+	$(document).ready(function() {
+
+						var generalArray = [];
 						//Set the default Date
 						var date = new Date();
 						date.setDate(date.getDate() - 2);
@@ -645,8 +723,7 @@
 								'show.bs.collapse',
 								function() {
 
-									$(this).siblings('.panel-heading')
-											.removeClass('active');
+									$(this).siblings('.panel-heading').removeClass('active');
 								});
 
 						$('.panel-collapse').on(
@@ -657,6 +734,7 @@
 								});
 
 						NetworkTranscationsArray = ${TransactionsGrid}
+						
 						var almgrid = new AlmgridTable(
 								{
 									tableId : "gridTable",
@@ -696,7 +774,39 @@
 														"id",
 														tableId
 																+ "_globalsearch");
+										var disappearedCounter = 0;
+										var newCounter = 0;
+										var transferredCounter=0;
+										var dismantledCounter =0;
+										var totalCounter = 0;
+										
+									for( var i = 0; i<dataArray.length;i++){
+										for (var j = 0; j < ArrayKeys.length; j++) {
+											 columnVal = ArrayKeys[j];
+											 if(columnVal == "3"){
+												if(dataArray[i][ArrayKeys[j]].includes("DISAPPEARED")){
+													disappearedCounter++;
 
+												}
+												else if(dataArray[i][ArrayKeys[j]].includes("NEW")){
+													newCounter++;
+
+												}else if(dataArray[i][ArrayKeys[j]].includes("Transfer")){
+													transferredCounter++;
+
+												}else if(dataArray[i][ArrayKeys[j]].includes("Dismantled")){
+													dismantledCounter++;
+
+												}
+											 }
+										}
+									}
+										
+										$("#totalbnrTrans").val(dataArray.length);
+										$("#newElements").val(newCounter);
+										$("#disappearedElements").val(disappearedCounter);
+										$("#transferredElements").val(transferredCounter);
+										$("#dismantledElements").val(dismantledCounter);
 										var paginationId = tableId
 												+ "_pagination";
 
@@ -733,6 +843,7 @@
 						$("#generate")
 								.click(
 										function() {
+											
 											var startDate = document
 													.getElementById("startdate").value;
 											var endDate = document
@@ -764,7 +875,15 @@
 
 																alert("No Data found between this two dates");
 															} else {
+
+																$("#totalbnrTrans").val(data.totalbnrTrans);
+																$("#lastscanDate").val(data.lastscanDate);
+																$("#newElements").val(data.newElements);
+																$("#disappearedElements").val(data.disappearedElements);
+																$("#transferredElements").val(data.transferredElements);
+																$("#dismantledElements").val(data.dismantledElements);
 																if (data.TransactionsGrid != null) {
+																	console.log(data.TransactionsGrid);
 																	NetworkTranscationsArray = data.TransactionsGrid;
 																	almgrid = new AlmgridTable(
 																			{
@@ -797,27 +916,10 @@
 																							tableBody)
 																							.empty();
 
-																					var ArrayKeys = Object
-																							.keys(dataArray[0]);
+																					var ArrayKeys = Object.keys(dataArray[0]);
 																					// Method for pagination almgrid-pagecount-box
-																					$(
-																							"#"
-																									+ gridContainerId)
-																							.find(
-																									".almgrid-pagecount-box")
-																							.attr(
-																									"id",
-																									tableId
-																											+ "_pagecount");
-																					$(
-																							"#"
-																									+ gridContainerId)
-																							.find(
-																									".pagination-div")
-																							.attr(
-																									"id",
-																									tableId
-																											+ "_pagination");
+																					$("#"+ gridContainerId).find(".almgrid-pagecount-box").attr("id",tableId+ "_pagecount");
+																					$("#"+ gridContainerId).find(".pagination-div").attr("id",tableId+ "_pagination");
 
 																					// For global search textbox
 																					$(
@@ -841,7 +943,40 @@
 																									".almgrid-pagecount")
 																							.val();
 																					nbRows = parseInt(nbRows);
+																					var disappearedCounter = 0;
+																					var newCounter = 0;
+																					var transferredCounter=0;
+																					var dismantledCounter =0;
+																					var totalCounter = 0;
+																					
+																				for( var i = 0; i<dataArray.length;i++){
+																					for (var j = 0; j < ArrayKeys.length; j++) {
+																						 columnVal = ArrayKeys[j];
+																						 if(columnVal == "3"){
+																							if(dataArray[i][ArrayKeys[j]].includes("DISAPPEARED")){
+																								disappearedCounter++;
 
+																							}
+																							else if(dataArray[i][ArrayKeys[j]].includes("NEW")){
+																								newCounter++;
+
+																							}else if(dataArray[i][ArrayKeys[j]].includes("Transfer")){
+																								transferredCounter++;
+
+																							}else if(dataArray[i][ArrayKeys[j]].includes("Dismantled")){
+																								dismantledCounter++;
+
+																							}
+																						 }
+																					}
+																				}
+																					
+																					$("#totalbnrTrans").val(dataArray.length);
+																					$("#newElements").val(newCounter);
+																					$("#disappearedElements").val(disappearedCounter);
+																					$("#transferredElements").val(transferredCounter);
+																					$("#dismantledElements").val(dismantledCounter);
+																					
 																					this.pagination = new Pagination(
 																							{
 																								id : paginationId,
