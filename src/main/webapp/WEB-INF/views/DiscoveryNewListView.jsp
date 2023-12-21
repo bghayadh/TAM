@@ -66,6 +66,19 @@
 
 
 
+<style>
+       #tooltip {
+      position: fixed;
+      width: auto;
+      height: auto;
+      display: none;
+      margin-top:-35px;
+      background-color: #FFDC00;
+      color: #000000;
+      padding: 5px;
+      border-radius: 5px;
+    }
+    </style>
 	</head>
 
 	<body>
@@ -299,7 +312,44 @@
 														</ul>
 													</li>
 												</th>
+												<th onmouseover="displayInputName(this)" onmouseout="hideTooltip()">Pending PM Approval
+												<div id="tooltip"></div>
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> <i
+																class="fa fa-list almgrid-filter-i"
+																aria-hidden="true"></i></button>
+														<ul
+															class="dropdown-menu dropdown-menu-right filter-dropdown-ul">
 
+														</ul>
+													</li>
+												</th>
+												
+												<th onmouseover="displayInputName(this)" onmouseout="hideTooltip()">Pending AM Approval
+												<div id="tooltip"></div>
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> <i
+																class="fa fa-list almgrid-filter-i"
+																aria-hidden="true"></i></button>
+														<ul
+															class="dropdown-menu dropdown-menu-right filter-dropdown-ul">
+
+														</ul>
+													</li>
+												</th>
+												
+												<th onmouseover="displayInputName(this)" onmouseout="hideTooltip()">Pending FM Approval
+												<div id="tooltip"></div>
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> <i
+																class="fa fa-list almgrid-filter-i"
+																aria-hidden="true"></i></button>
+														<ul
+															class="dropdown-menu dropdown-menu-right filter-dropdown-ul">
+
+														</ul>
+													</li>
+												</th>
 												<th>Last Modified Date
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown"> <i
@@ -318,6 +368,9 @@
 											<tr>
 												<th class="table-select-all"><input type="checkbox"
 														class="table-select-all-checkbox"></th>
+												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
+												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
+												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
@@ -416,7 +469,8 @@ download_link.click();
 function fillGrid(filledGrid){
 exportArrayGrid=[];
 exportArrayGrid.push('\r');
-exportArrayGrid.push(["Discovery ID", "Total Amount", "Total Qty", "Status", "Last Modified Date"]);
+exportArrayGrid.push(["Discovery ID", "Total Amount", "Total Qty", "Status",
+	"Pending PM Approval","Pending AM Approval","Pending FM Approval", "Last Modified Date"]);
 var value = Object.keys(filledGrid[0]);
 for(i=0;i<filledGrid.length;i++){
 	exportArrayGrid.push('\r');
@@ -513,9 +567,18 @@ exportGrid();
 				 				+'<ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
 				 				+'<th>Status<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
 				 				+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'
+				 				+'<th onmouseover="displayInputName(this)" onmouseout="hideTooltip()">Pending PM Approval <div id="tooltip"></div><li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
+				 				+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'
+				 				+'<th onmouseover="displayInputName(this)" onmouseout="hideTooltip()">Pending AM Approval <div id="tooltip"></div><li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
+				 				+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'
+				 				+'<th onmouseover="displayInputName(this)" onmouseout="hideTooltip()">Pending FM Approval <div id="tooltip"></div><li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
+				 				+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'
 				 				+'<th>Last Modified Date<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
 				 				+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th></tr>'
 				 				+'<tr><th class="table-select-all"><input type="checkbox" class="table-select-all-checkbox"></th>'
+				 				+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
+				 				+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
+				 				+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
 				 				+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
 				 				+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
 				 				+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
@@ -639,8 +702,38 @@ exportGrid();
 
 
 				});
-				
 
+
+				function displayInputName(inputElement) {
+					  // Get the input value
+					  console.log(inputElement.innerText)
+					  var inputValue = inputElement.innerText;
+						console.log("Hello");
+					  // Get the tooltip element
+					  var tooltip = document.getElementById("tooltip");
+
+					  // Set the tooltip content
+					  if(inputValue == "Pending PM Approval") {inputValue="Project Manager";}
+					  if(inputValue == "Pending AM Approval") {inputValue="Asset Manager";}
+					  if(inputValue == "Pending FM Approval") {inputValue="Finance Manager";}
+					  
+					  tooltip.innerText = inputValue;
+
+					  var rect = inputElement.getBoundingClientRect();
+					  tooltip.style.left = rect.left + "px";
+					  tooltip.style.top = rect.top - tooltip.offsetHeight + "px";
+
+
+					  // Display the tooltip
+					  tooltip.style.display = "block";
+					}
+
+					function hideTooltip() {
+					  // Hide the tooltip when the mouse is not over the input
+					  var tooltip = document.getElementById("tooltip");
+					  tooltip.style.display = "none";
+					  console.log("Bye");
+					}
 			</script>
 
 

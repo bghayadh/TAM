@@ -43,16 +43,51 @@ public class NetworkTransactionsReportController {
 				session = AlmDbSession.getInstance().getSession();
 				notifications.headerNotifications(session, model);
 				query = session.createNativeQuery(
-						"SELECT ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,TO_CHAR(PARSING_DATE,'DD-MM-YYYY HH:mm:ss') as startdate,FROM_SITE,TO_SITE"
-								+ ",FROM_NODE,TO_NODE,FROM_NODE_TYPE,TO_NODE_TYPE,MODEL,MAC_ADDRESS,SERIAL_NUMBER,FROM_CIRCLE,TO_CIRCLE,APPROVED_BY,MODIFIED_BY,SENT_TO_ALM,ALM_APPROVAL_STATUS"
-								+ " FROM NETWORK_TRANSACTION WHERE PARSING_DATE between systimestamp - INTERVAL '7' DAY and systimestamp "
-								+ "ORDER BY PARSING_DATE DESC");
+						"SELECT a.ELEMENT_ID,a.ELEMENT,a.ALM_TRANS_TYPE,a.DISCOVERED_TRANS_TYPE,TO_CHAR(a.PARSING_DATE,'DD-MM-YYYY HH:mm:ss') as startdate,a.FROM_SITE,a.TO_SITE," + 
+						" b.FROM_NODE_ID,b.TO_NODE_ID,b.FROM_NODE_TYPE,b.TO_NODE_TYPE,MODEL,a.MAC_ADDRESS,a.SERIAL_NUMBER,a.FROM_CIRCLE,a.TO_CIRCLE,a.APPROVED_BY,a.MODIFIED_BY,a.SENT_TO_ALM,a.ALM_APPROVAL_STATUS" + 
+						" FROM NETWORK_TRANSACTION a LEFT JOIN NODE_TRANSACTIONS b on a.trans_id=b.trans_id" + 
+						" WHERE a.PARSING_DATE between systimestamp - INTERVAL '7' DAY and systimestamp" + 
+						" ORDER BY a.element_id DESC");
 
 				model.addAttribute("TransactionsGrid", mapper.writeValueAsString(query.getResultList()));
+				
+				query = session.createNativeQuery("select nvl(sum (case when DISCOVERED_TRANS_TYPE LIKE '%NEW%' then 1 else 0 end),0) as newelements," + 
+						"nvl(sum (case when (DISCOVERED_TRANS_TYPE LIKE'%DISAPPEARED%') then 1 else 0 end),0) as disappeared," + 
+						"nvl(sum (case when DISCOVERED_TRANS_TYPE LIKE '%Transfer%' then 1 else 0 end),0) as transferred," + 
+						"nvl(sum (case when DISCOVERED_TRANS_TYPE LIKE '%Dismantle%' then 1 else 0 end),0) as dismantled," + 
+						"count (DISCOVERED_TRANS_TYPE) as total" + 
+						" from NETWORK_TRANSACTION" + 
+						" WHERE PARSING_DATE between systimestamp - INTERVAL '7' DAY and systimestamp");
+				Object[] statisticalResult = (Object[]) query.getResultList().get(0);
+				System.out.println(mapper.writeValueAsString(statisticalResult));
+				model.addAttribute("totalbnrTrans", statisticalResult[4]);
+				model.addAttribute("newElements", statisticalResult[0]);
+				model.addAttribute("disappearedElements", statisticalResult[1]);
+				model.addAttribute("transferredElements", statisticalResult[2]);
+				model.addAttribute("dismantledElements", statisticalResult[3]);
+				
+				
+				query = session.createNativeQuery("Select nvl(TO_CHAR(PARSING_DATE,'DD-MM-YYYY HH:mm:ss'), 'N/A')"
+						+ " FROM NETWORK_TRANSACTION "
+						+ " WHERE PARSING_DATE between systimestamp - INTERVAL '7' DAY and systimestamp "
+						+ " order by parsing_date desc FETCH FIRST 1 ROW ONLY");
+				System.out.println(mapper.writeValueAsString(query.uniqueResult()));
+				if(query.uniqueResult() == null) {
+					model.addAttribute("lastscanDate", "N/A");
+				}else {
+					model.addAttribute("lastscanDate", query.uniqueResult());	
+				}
+				
 			} catch (Exception e) {
 				logger.info("Error on NetworkTransactionsReport with a message : " + e);
 				e.printStackTrace();
 				model.addAttribute("TransactionsGrid", "");
+				model.addAttribute("totalbnrTrans", "0");
+				model.addAttribute("newElements", "0");
+				model.addAttribute("disappearedElements", "0");
+				model.addAttribute("transferredElements", "0");
+				model.addAttribute("dismantledElements", "0");
+				model.addAttribute("lastscanDate", "N/A");
 			} finally {
 				if (session != null && session.isOpen()) {
 					session.close();
@@ -96,17 +131,51 @@ public class NetworkTransactionsReportController {
 				session = AlmDbSession.getInstance().getSession();
 				notifications.headerNotifications(session, model);
 				query = session.createNativeQuery(
-						"SELECT ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,TO_CHAR(PARSING_DATE,'DD-MM-YYYY HH:mm:ss') as startdate,FROM_SITE,TO_SITE"
-								+ ",FROM_NODE,TO_NODE,FROM_NODE_TYPE,TO_NODE_TYPE,MODEL,MAC_ADDRESS,SERIAL_NUMBER,FROM_CIRCLE,TO_CIRCLE,APPROVED_BY,MODIFIED_BY,SENT_TO_ALM,ALM_APPROVAL_STATUS"
-								+ " FROM NETWORK_TRANSACTION WHERE PARSING_DATE between TO_DATE('" + StartDate
-								+ "','MM/DD/YYYY HH24:MI:SS')" + " and TO_DATE('" + EndDate
-								+ "','MM/DD/YYYY HH24:MI:SS')" + " ORDER BY PARSING_DATE DESC");
+						"SELECT a.ELEMENT_ID,a.ELEMENT,a.ALM_TRANS_TYPE,a.DISCOVERED_TRANS_TYPE,TO_CHAR(a.PARSING_DATE,'DD-MM-YYYY HH:mm:ss') as startdate,a.FROM_SITE,a.TO_SITE," + 
+						" b.FROM_NODE_ID,b.TO_NODE_ID,b.FROM_NODE_TYPE,b.TO_NODE_TYPE,MODEL,a.MAC_ADDRESS,a.SERIAL_NUMBER,a.FROM_CIRCLE,a.TO_CIRCLE,a.APPROVED_BY,a.MODIFIED_BY,a.SENT_TO_ALM,a.ALM_APPROVAL_STATUS" + 
+						" FROM NETWORK_TRANSACTION a LEFT JOIN NODE_TRANSACTIONS b on a.trans_id=b.trans_id "
+						+ "WHERE a.PARSING_DATE between TO_DATE('" + StartDate+ "','MM/DD/YYYY HH24:MI:SS')" 
+						+ "and TO_DATE('" + EndDate + "','MM/DD/YYYY HH24:MI:SS')" + " ORDER BY a.PARSING_DATE DESC");
 				System.out.println(mapper.writeValueAsString(query.getResultList()));
 				rtn.put("TransactionsGrid", query.getResultList());
+				
+				
+				query = session.createNativeQuery("select nvl(sum (case when DISCOVERED_TRANS_TYPE LIKE '%NEW%' then 1 else 0 end),0) as newelements," + 
+						"nvl(sum (case when (DISCOVERED_TRANS_TYPE LIKE'%DISAPPEARED%') then 1 else 0 end),0) as disappeared," + 
+						"nvl(sum (case when DISCOVERED_TRANS_TYPE LIKE '%Transfer%' then 1 else 0 end),0) as transferred," + 
+						"nvl(sum (case when DISCOVERED_TRANS_TYPE LIKE '%Dismantle%' then 1 else 0 end),0) as dismantled," + 
+						"count (DISCOVERED_TRANS_TYPE) as total" + 
+						" from NETWORK_TRANSACTION" + 
+						" WHERE PARSING_DATE between TO_DATE('" + StartDate+ "','MM/DD/YYYY HH24:MI:SS')" + 
+						" and TO_DATE('" + EndDate + "','MM/DD/YYYY HH24:MI:SS')");
+				
+				Object[] statisticalResult = (Object[]) query.getResultList().get(0);
+				System.out.println(mapper.writeValueAsString(statisticalResult));
+				rtn.put("totalbnrTrans", statisticalResult[4]);
+				rtn.put("newElements", statisticalResult[0]);
+				rtn.put("disappearedElements", statisticalResult[1]);
+				rtn.put("transferredElements", statisticalResult[2]);
+				rtn.put("dismantledElements", statisticalResult[3]);
+				
+				
+				query = session.createNativeQuery("Select nvl(TO_CHAR(PARSING_DATE,'MM/DD/YYYY HH:mm:ss'), 'N/A')"
+						+ " FROM NETWORK_TRANSACTION "
+						+ " WHERE PARSING_DATE between TO_DATE('" + StartDate+ "','MM/DD/YYYY HH24:MI:SS')"  
+						+ " and TO_DATE('" + EndDate + "','MM/DD/YYYY HH24:MI:SS')"
+						+ " order by parsing_date desc FETCH FIRST 1 ROW ONLY");
+				rtn.put("lastscanDate", query.uniqueResult());
+				System.out.println(mapper.writeValueAsString(query.uniqueResult()));
+				
 			} catch (Exception e) {
 				logger.info("Error on NetworkTransactionsReport with a message : " + e);
 				e.printStackTrace();
 				rtn.put("TransactionsGrid", "");
+				rtn.put("totalbnrTrans", "0");
+				rtn.put("newElements", "0");
+				rtn.put("disappearedElements", "0");
+				rtn.put("transferredElements", "0");
+				rtn.put("dismantledElements", "0");
+				rtn.put("lastscanDate", "N/A");
 			} finally {
 				if (session != null && session.isOpen()) {
 					session.close();

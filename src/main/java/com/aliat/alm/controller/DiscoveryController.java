@@ -118,7 +118,6 @@ public class DiscoveryController {
 	 int year = calendar.get(Calendar.YEAR);
 	
 
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/DiscoveryNewListView", method = RequestMethod.GET)
 	public String DiscoveryNewListView(Locale locale, Model model, HttpServletRequest request,HttpServletResponse response) {
 		
@@ -129,23 +128,21 @@ public class DiscoveryController {
 		session = AlmDbSession.getInstance().getSession();
 		
 		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
 			
 			try {
-
-
-				List<DiscoveryNewListView> listDiscoveryNew = new ArrayList<DiscoveryNewListView>();
+				String str = "select a.DN_ID as dnID,a.DN_ID as dnewID,CAST((a.TOTAL_AMOUNT) AS VARCHAR(10)) as dnTotalAmount,"
+						+ "CAST((a.TOTAL_QTY) AS VARCHAR(10)) as dnTotalQty,a.STATUS as dnStatus,"
+						+ "(Select COUNT(*) from DISCOVERY_NEW_ITEM WHERE (APPROVAL='Project Manager' OR APPROVAL ='Operation Manager')"
+						+ " AND DN_ID=a.DN_ID) as pendingPM,"
+						+ "(Select COUNT(*) from DISCOVERY_NEW_ITEM WHERE (APPROVAL='Asset Unit') AND DN_ID=a.DN_ID) as pendingAM,"
+						+ "(Select COUNT(*) from DISCOVERY_NEW_ITEM WHERE (APPROVAL='Finance') AND DN_ID=a.DN_ID) as pendingFM,"
+						+ "TO_CHAR(LAST_MODIF_DATE,'YYYY-MM-DD HH24:MI:SS') as dnlastmodifDate "
+						+ "from DISCOVERY_NEW a order by LAST_MODIF_DATE DESC";
 				
-				String str = "select DN_ID as dnID,DN_ID as dnewID,CAST((TOTAL_AMOUNT) AS VARCHAR(10)) as dnTotalAmount,CAST((TOTAL_QTY) AS VARCHAR(10)) as dnTotalQty,STATUS as dnStatus,TO_CHAR(LAST_MODIF_DATE,'YYYY-MM-DD HH24:MI:SS') as dnlastmodifDate from DISCOVERY_NEW order by LAST_MODIF_DATE DESC";
-				query = session.createSQLQuery(str);
-				
-				listDiscoveryNew=((SQLQuery) query)
-						.addScalar("dnID").addScalar("dnewID").addScalar("dnTotalAmount").addScalar("dnTotalQty").addScalar("dnStatus").addScalar("dnlastmodifDate")
-		       			.setResultTransformer(Transformers.aliasToBean(DiscoveryNewListView.class)).list();
-		model.addAttribute("ListGridTable", mapper.writeValueAsString(listDiscoveryNew));
+		model.addAttribute("ListGridTable", mapper.writeValueAsString(session.createNativeQuery(str).list()));
 		
-		System.out.println(mapper.writeValueAsString(listDiscoveryNew));
+		System.out.println(mapper.writeValueAsString(mapper.writeValueAsString(session.createNativeQuery(str).list())));
 		
 		} catch (Exception e) {
 			logger.info("Error at DiscoveryNew ListView with a message: "+ e);
@@ -153,7 +150,6 @@ public class DiscoveryController {
 			model.addAttribute("ListGridTable","");
 		} finally {
 			if (session != null && session.isOpen()) {
-				tx.commit();
 				session.close();
 			}
 		}
@@ -163,7 +159,6 @@ public class DiscoveryController {
 		return "DiscoveryNewListView";
 	}
 	
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/FilteredDiscoveryNewListView", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> FilteredDiscoveryNewListView(Locale locale, Model model, HttpServletRequest request,
@@ -175,8 +170,6 @@ public class DiscoveryController {
 		}
 		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
-
-			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
 
 			try {
@@ -186,10 +179,14 @@ public class DiscoveryController {
 				enddate = request.getParameter("endDate");
 				status = request.getParameter("status");	
 			
-				List<String> listNew = new ArrayList<String>();
 
-				String str = "select 1 as chkBox, DN_ID as dnID,  TOTAL_AMOUNT as dnTotalAmount, TOTAL_QTY as dnTotalQty,"
-						+ " STATUS as dnStatus,TO_CHAR(LAST_MODIF_DATE,'YYYY-MM-DD HH24:MI:SS') as dnlastmodifDate from DISCOVERY_NEW  ";
+				String str = "select 1 as chkBox, a.DN_ID as dnID,  a.TOTAL_AMOUNT as dnTotalAmount, a.TOTAL_QTY as dnTotalQty,"
+						+ " a.STATUS as dnStatus,"
+						+ "(Select COUNT(*) from DISCOVERY_NEW_ITEM WHERE (APPROVAL='Project Manager' OR APPROVAL ='Operation Manager')"
+						+ " AND DN_ID=a.DN_ID) as pendingPM,"
+						+ "(Select COUNT(*) from DISCOVERY_NEW_ITEM WHERE (APPROVAL='Asset Unit') AND DN_ID=a.DN_ID) as pendingAM,"
+						+ "(Select COUNT(*) from DISCOVERY_NEW_ITEM WHERE (APPROVAL='Finance') AND DN_ID=a.DN_ID) as pendingFM,"
+						+ "TO_CHAR(LAST_MODIF_DATE,'YYYY-MM-DD HH24:MI:SS') as dnlastmodifDate from DISCOVERY_NEW a  ";
 				
 				if (startdate != null && enddate != null) {
 					str = str + " where CREATION_DATE between TO_DATE('" + startdate
@@ -200,18 +197,12 @@ public class DiscoveryController {
 					str = str + " and (upper(STATUS) LIKE upper('%" + status + "%')  )";
 				}
 				str = str + " ORDER BY LAST_MODIF_DATE DESC ";
-				Query query = session.createSQLQuery(str);
-				
-
-				listNew = query.list();
-				
-				rtn.put("listNew",listNew);
-				System.out.println("Filtered Array: " + mapper.writeValueAsString(listNew));
+				rtn.put("listNew",session.createNativeQuery(str).list());
+				System.out.println("Filtered Array: " + mapper.writeValueAsString(session.createNativeQuery(str).list()));
 			} catch (Exception e) {
 				logger.info("Error in showing the filtered Discovery New list view with a message :" + e);
 			} finally {
 				if (session != null && session.isOpen()) {
-					tx.commit();
 					session.close();
 				}
 			}

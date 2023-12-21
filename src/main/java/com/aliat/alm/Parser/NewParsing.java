@@ -9,8 +9,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
@@ -30,7 +32,7 @@ public class NewParsing {
 	static String Gyear;
 	static int nbOfErrors = 0;
 	static String TransType = null;
-	
+	static Timestamp parsingDate;
 	public static void main(String[] args) {
 		
 		try {
@@ -82,7 +84,8 @@ public class NewParsing {
 					       e.printStackTrace();
 					       logger.info("Error : "+e);
 					}
-					
+					Date date = new Date();
+					parsingDate = new Timestamp( date.getTime());
 					//Checking if there are new data in the temporary needs New Parsing
 					logger.info("Checking if there are new data in the temporary needs New Parsing");
 					System.out.println("Checking if there are new data in the temporary needs New Parsing");
@@ -366,7 +369,7 @@ public class NewParsing {
 		try {
 			
 		insertStatement = "insert into NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_SOURCE,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,ACTIVE_RECORD,LINE,WARE_ID,VENDOR,SUPPLIER_ID,WARE_NAME,SUPPLIER_NAME,IP_ADDRESS,MAC_ADDRESS,SOFTWARE_VERSION,PATCH_VERSION,LONGITUDE,LATITUDE,PART_NUMBER,OTHERS,SUB_DOMAIN_TYPE,SUB_DOMAIN,PARSING_DATE,SERIAL_NUMBER)"
-				+ "(select NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_SOURCE,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,'"+TransTyp+"' as TRANS_TYPE,'1' as ACTIVE_RECORD,LINE,WARE_ID,VENDOR,SUPPLIER_ID,WARE_NAME,SUPPLIER_NAME,IP_ADDRESS,MAC_ADDRESS,SOFTWARE_VERSION,PATCH_VERSION,LONGITUDE,LATITUDE,PART_NUMBER,OTHERS,SUB_DOMAIN_TYPE,SUB_DOMAIN,sysdate,SERIAL_NUMBER from TEMP_NODE_ACTIVE where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'";
+				+ "(select NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,NODE_SOURCE,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,'"+TransTyp+"' as TRANS_TYPE,'1' as ACTIVE_RECORD,LINE,WARE_ID,VENDOR,SUPPLIER_ID,WARE_NAME,SUPPLIER_NAME,IP_ADDRESS,MAC_ADDRESS,SOFTWARE_VERSION,PATCH_VERSION,LONGITUDE,LATITUDE,PART_NUMBER,OTHERS,SUB_DOMAIN_TYPE,SUB_DOMAIN,TIMESTAMP '"+parsingDate+"',SERIAL_NUMBER from TEMP_NODE_ACTIVE where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'";
 		insertStatement = CheckSubDomain_Type(subdomain,type,insertStatement);
 		insertStatement = insertStatement + " )";
 		System.out.println(insertStatement);
