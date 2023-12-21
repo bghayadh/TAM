@@ -229,15 +229,15 @@ max-width: 100%;
 			<div class="col-md-3">
 				<div class="input-group-prepend">
 				<span style="width:200px;" class="input-group-text">Status</span>
-				<select id="dnStatus" class="form-control" readonly>
+				<select id="dnStatus" class="form-control">
 						<option value="In Progress"
 							<c:if test = "${dnStatus =='In Progress'}" > selected </c:if>>In
 							Progress</option>
-						<option value="Activated"
+						<option value="Approved"
 							<c:if test = "${dnStatus =='Approved'}" > selected </c:if>>Approved</option>
-						<option value="Deactivated"
+						<option value="Completed"
 							<c:if test = "${dnStatus =='Completed'}" > selected </c:if>>Completed</option>
-						<option value="Cancelled"
+						<option value="Closed"
 							<c:if test = "${dnStatus =='Closed'}" > selected </c:if>>Closed</option>
 					</select>
 				</div>							
@@ -2540,9 +2540,12 @@ function getAllItemPartNbs()
                         
 					};
 
+// To be checked
+/*
 					document.getElementById('dnStatus').onmousedown = function(event) {
 					      event.preventDefault();
 					};
+*/					
 				    
 	                
 }); //end ready document
