@@ -6917,7 +6917,19 @@ singleProject = new ContextMenu({
 									if(data.DistBoardDetails[0][13]!=null){
 										$("#boardLastModifiedDate").val(data.DistBoardDetails[0][13]);
 									}
-									
+									//console.log("DB_INSTALLER "+data.DistBoardDetails[0][14]+"DB_ENGINEER_NAME "+data.DistBoardDetails[0][15]+);
+									if(data.DistBoardDetails[0][14]!=null){
+										$("#DBInstaller").val(data.DistBoardDetails[0][14]);
+									}
+									if(data.DistBoardDetails[0][15]!=null){
+										$("#DBEngineerName").val(data.DistBoardDetails[0][15]);
+									}
+									if(data.DistBoardDetails[0][16]!=null){
+										$("#DBDeploymentType").val(data.DistBoardDetails[0][16]);
+									}
+									if(data.DistBoardDetails[0][17]!=null){
+										$("#DBAdaptorPanelType").val(data.DistBoardDetails[0][17]);
+									}
 									$("#DistributionBoardName").on("input",function(){
 
 									$("#DistributionBoardheader").text("Distribution Board: "+$(this).val());
@@ -10654,6 +10666,10 @@ $("#saveHandhole").click(function () {
 					DistributionBoardColsNum = document.getElementById("DistributionBoardColsNum").value;
 					DistributionBoardFront = document.getElementById("DistributionBoardFront").value;
 					DistributionBoardBack = document.getElementById("DistributionBoardBack").value;
+					DBEngineerName = document.getElementById("DBEngineerName").value;
+					DBInstaller = document.getElementById("DBInstaller").value;
+					DBDeploymentType = document.getElementById("DBDeploymentType").value;
+					DBAdaptorPanelType = document.getElementById("DBAdaptorPanelType").value;
 					boardCity = document.getElementById("boardCity").value;
 					dbNetLevel = document.getElementById("DBnetlevel").value;
 					boardCreatedDate = document.getElementById("boardCreationDate").value;
@@ -10719,6 +10735,10 @@ $("#saveHandhole").click(function () {
 									"boardCreatedDate":boardCreatedDate,
 									"boardCity" : boardCity,
 									"dbNetLevel" : dbNetLevel,
+									"DBEngineerName": DBEngineerName,
+									"DBInstaller": DBInstaller,
+									"DBDeploymentType": DBDeploymentType,
+									"DBAdaptorPanelType": DBAdaptorPanelType,
 									"distBoardMappingFlag" : distBoardMappingFlag,
 									"dictParameter":dict,
 									 "ProjectId": IdNodeSelectedTemp
@@ -10729,7 +10749,7 @@ $("#saveHandhole").click(function () {
 								
 								if(data!=null){
 									window[""+data.distributionBoardId]=[];
-									window[""+data.distributionBoardId]=[data.distributionBoardId,DistributionBoardLong,DistributionBoardLat,DistributionBoardName,DistributionBoardCapacity,locationId, IdNodeSelectedTemp,boardCity,dbNetLevel];
+									window[""+data.distributionBoardId]=[data.distributionBoardId,DistributionBoardLong,DistributionBoardLat,DistributionBoardName,DistributionBoardCapacity,locationId, IdNodeSelectedTemp,boardCity,dbNetLevel,DBEngineerName,DBInstaller,DBDeploymentType,DBAdaptorPanelType];
 												
 									if(actiondistBoardContext=="Insert"){
 										if(dbNetLevel=="backbone") {

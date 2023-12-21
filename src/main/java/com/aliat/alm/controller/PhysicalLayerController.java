@@ -1957,7 +1957,7 @@ public class PhysicalLayerController {
 								+ selectedDistBoardContext
 								+ "'),(SELECT COUNT(B.BP_STATUS) FROM DISTRIBUTION_BOARD_MAPPING B WHERE B.BP_STATUS='Active' AND B.DB_ID='"
 								+ selectedDistBoardContext
-								+ "'),A.CITY, A.SITE_NAME,A.WAREHOUSE,TO_CHAR(A.CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(A.LAST_MODIFIED_DATE, 'MM/dd/YYYY HH:MI AM') FROM DISTRIBUTION_BOARD A WHERE A.DB_ID='"
+								+ "'),A.CITY, A.SITE_NAME,A.WAREHOUSE,TO_CHAR(A.CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(A.LAST_MODIFIED_DATE, 'MM/dd/YYYY HH:MI AM'),DB_INSTALLER ,DB_ENGINEER_NAME ,DB_DEPLOYMENT_TYPE ,DB_ADAPTOR_PANEL_TYPE  FROM DISTRIBUTION_BOARD A WHERE A.DB_ID='"
 								+ selectedDistBoardContext + "' ")
 						.getResultList();
 				/*
@@ -5896,9 +5896,13 @@ public class PhysicalLayerController {
 				distributionBoard.setDistributionBoardSiteName(request.getParameter("DistributionBoardSiteName"));
 				distributionBoard.setDistributionBoardWarehouse(request.getParameter("DistributionBoardWarehouse"));
 				distributionBoard.setDistributionBoardCity(request.getParameter("boardCity"));
-				distributionBoard.setdbNetLevel(request.getParameter("dbNetLevel"));
+				distributionBoard.setDbNetLevel(request.getParameter("dbNetLevel"));
 				distributionBoard.setDistributionBoardLat(request.getParameter("DistributionBoardLat"));
 				distributionBoard.setDistributionBoardLong(request.getParameter("DistributionBoardLong"));
+				distributionBoard.setDBInstaller(request.getParameter("DBInstaller"));
+				distributionBoard.setDBEngineerName(request.getParameter("DBEngineerName"));
+				distributionBoard.setDBDeploymentType(request.getParameter("DBDeploymentType"));
+				distributionBoard.setDBAdaptorPanelType(request.getParameter("DBAdaptorPanelType"));
 				distributionBoard.setDistributionBoardProjectId(request.getParameter("ProjectId"));
 				distributionBoard.setDistributionBoardRowsNum(
 						Float.parseFloat(request.getParameter("DistributionBoardRowsNum") != ""
@@ -6316,7 +6320,7 @@ public class PhysicalLayerController {
 
 							distributionBoard.setDistributionBoardRowsNum(boardrownum);
 							distributionBoard.setDistributionBoardCapacity(numberofcores);
-							distributionBoard.setdbNetLevel(NetworkLevel);
+							distributionBoard.setDbNetLevel(NetworkLevel);
 
 							distributionBoard.setDistributionBoardSiteName(
 									itemParameters.getDictParameterLoadedDB().get(i).get("siteName") != ""

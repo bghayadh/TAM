@@ -5925,42 +5925,54 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 									</div>
 								</div>
 								<div class="row">
+										<div class="col-sm-6">
+											<div class="form-group">
+												<div class="input-group-prepend">
+													<span style="width: 120px;"
+														class="input-group-text"><b>Engineer Name </b></span> <input type="text" id="DBEngineerName" class="form-control text-input" />
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-6">
+											<div class="form-group">
+												<div class="input-group-prepend">
+													<span style="width: 100px; " class="input-group-text"><b>Installer </b></span> <input type="text" id="DBInstaller" class="form-control text-input" />
+												</div>
+											</div>
+										</div>
+								</div>	
+								<div class="row">
 									<div class="col-md-6">
 										<div class="form-group">
 											<div class="input-group-prepend">
 												<span style="width: 175px;" class="input-group-text"><b>Creation Date </b></span>
 												 <input type="text" id="boardCreationDate" class="form-control text-input" value="" readonly />
 											</div></div></div>
-									<div class="col-md-6">
-										<div class="form-group">
-											<div class="input-group-prepend">
-												<span style="width: 175px;" class="input-group-text"><b>City </b></span>
-												 <input type="text" id="boardCity" class="form-control text-input" readonly />
-											</div></div></div></div>
-											
-								<div class="row">
-									<div class="col-md-6" id="lastModifiedDateDB">
+											<div class="col-md-6" id="lastModifiedDateDB">
 										<div class="form-group">
 											<div class="input-group-prepend">
 												<span style="width: 175px;" class="input-group-text"><b>Last Modified Date</b></span>
 													<input type="text" id="boardLastModifiedDate" class="form-control text-input" value="" readonly />
 										</div></div></div>
+								</div>			
+								<div class="row">
 										<div class="col-md-6">
 										<div class="form-group">
 											<div class="input-group-prepend">
-												<span style="font-size: 12px;" class="input-group-text"><b>DB Network Level </b></span> 
+												<span style="width: 175px;" class="input-group-text"><b>City </b></span>
+												 <input type="text" id="boardCity" class="form-control text-input" readonly />
+											</div></div></div>
+										<div class="col-md-6">
+										<div class="form-group">
+											<div class="input-group-prepend">
+												<span style=" width: 175px;" class="input-group-text"><b>DB Network Level </b></span> 
 														<select id="DBnetlevel" class="form-control">
 															<option value="backbone" selected >Backbone</option>
 															<option value="metro">Metro</option>
 															<option value="access">Access</option>
 														</select>
 											</div></div></div>
-									<div class="col-md-6" id="projectIdDB">
-										<div class="form-group">
-											<div class="input-group-prepend">
-												<span style="width: 140px;" class="input-group-text"><b>Project ID</b></span>
-													<input type="text" id="DBProjectId" class="form-control text-input" />
-										</div></div></div></div>
+									</div>
 								<div class="row">
         							<div class="col-md-6" id="projectNameDB">
 										<div class="form-group">
@@ -5971,7 +5983,38 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 											</div>
 										</div>
 									</div>
+									<div class="col-md-6" id="projectIdDB">
+										<div class="form-group">
+											<div class="input-group-prepend">
+												<span style="width: 140px;" class="input-group-text"><b>Project ID</b></span>
+													<input type="text" id="DBProjectId" class="form-control text-input" />
+										</div></div></div>
 								</div>
+								<div class="row">
+										<div class="col-md-6">
+										<div class="form-group">
+											<div class="input-group-prepend">
+												<span style="width: 175px;" class="input-group-text"><b>DB Deployment Type  </b></span>
+												 <select id="DBDeploymentType" class="form-control">
+															<option value="wallMount" selected >Wall Mount</option>
+															<option value=" floorMount"> Floor Mount</option>
+															<option value="rackMount">Rack Mount</option>
+														</select>
+											</div></div></div>
+										<div class="col-md-6">
+										<div class="form-group">
+											<div class="input-group-prepend">
+												<span style=" width: 175px;" class="input-group-text"><b>DB Adaptor Panel Type  </b></span> 
+														<select id="DBAdaptorPanelType" class="form-control"> 
+															<option value="SC" selected >SC</option>
+															<option value="LC">LC</option>
+															<option value="ST">ST</option>
+															<option value="FC">FC</option>
+															<option value="E2000">E2000</option>
+															<option value="MTRJ">MTRJ</option>
+														</select>
+											</div></div></div>
+									</div>
 							</div>
 							<div class="tab-pane" id="mapping" role="tabpanel"
 								aria-labelledby="mapping-tab">
@@ -6069,7 +6112,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 										  <option value="frontPort">Front Port</option>
 										  <option value="backPort">Back Port</option>
 										</select>
-									</form></div></div></div></div></div></div></div></div>
+									</form></div></div></div></div></div></div>
 									
 							<div class="container">
 								<div id="distributionBoardLoaderModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">

@@ -60,6 +60,18 @@ public class DistributionBoard {
 	
 	@Column(name = "DB_NETWORK_LEVEL")
 	private String dbNetLevel;
+	
+	@Column(name = "DB_ENGINEER_NAME")
+	private String DBEngineerName;
+	
+	@Column(name = "DB_INSTALLER")
+	private String DBInstaller;
+	
+	@Column(name = "DB_DEPLOYMENT_TYPE")
+	private String DBDeploymentType;
+	
+	@Column(name = "DB_ADAPTOR_PANEL_TYPE")
+	private String DBAdaptorPanelType;
 
 
 	
@@ -68,35 +80,15 @@ public class DistributionBoard {
 		// TODO Auto-generated constructor stub
 	}
 
-	/*
-	public DistributionBoard(String distributionBoardId, String distributionBoardName, String distributionBoardLong,
-			String distributionBoardLat, String distributionBoardCity, String distributionBoardSite,
-			String distributionBoardSiteName, String distributionBoardWarehouse, Float distributionBoardCapacity,
-			Float distributionBoardRowsNum, Float distributionBoardColsNum, Float distributionBoardFront,
-			Float distributionBoardBack, String distributionBoardProjectId) {
-		super();
-		DistributionBoardId = distributionBoardId;
-		this.distributionBoardName = distributionBoardName;
-		this.distributionBoardLong = distributionBoardLong;
-		this.distributionBoardLat = distributionBoardLat;
-		this.distributionBoardCity = distributionBoardCity;
-		this.distributionBoardSite = distributionBoardSite;
-		this.distributionBoardSiteName = distributionBoardSiteName;
-		this.distributionBoardWarehouse = distributionBoardWarehouse;
-		DistributionBoardCapacity = distributionBoardCapacity;
-		this.distributionBoardRowsNum = distributionBoardRowsNum;
-		this.distributionBoardColsNum = distributionBoardColsNum;
-		this.distributionBoardFront = distributionBoardFront;
-		this.distributionBoardBack = distributionBoardBack;
-		this.distributionBoardProjectId = distributionBoardProjectId;
-	}*/
-	
+
+
 	public DistributionBoard(String distributionBoardId, String distributionBoardName, String distributionBoardLong,
 			String distributionBoardLat, String distributionBoardCity, String distributionBoardSite,
 			String distributionBoardSiteName, String distributionBoardWarehouse, Float distributionBoardCapacity,
 			Float distributionBoardRowsNum, Float distributionBoardColsNum, Float distributionBoardFront,
 			Float distributionBoardBack, String distributionBoardProjectId, Timestamp boardCreationDate,
-			Timestamp boardLastModifiedDate,String dbNetLevel) {
+			Timestamp boardLastModifiedDate, String dbNetLevel, String dBEngineerName, String dBInstaller,
+			String dBDeploymentType, String dBAdaptorPanelType) {
 		super();
 		DistributionBoardId = distributionBoardId;
 		this.distributionBoardName = distributionBoardName;
@@ -114,7 +106,13 @@ public class DistributionBoard {
 		this.distributionBoardProjectId = distributionBoardProjectId;
 		BoardCreationDate = boardCreationDate;
 		BoardLastModifiedDate = boardLastModifiedDate;
+		this.dbNetLevel = dbNetLevel;
+		DBEngineerName = dBEngineerName;
+		DBInstaller = dBInstaller;
+		DBDeploymentType = dBDeploymentType;
+		DBAdaptorPanelType = dBAdaptorPanelType;
 	}
+
 
 
 	public String getDistributionBoardId() {
@@ -122,9 +120,11 @@ public class DistributionBoard {
 	}
 
 
+
 	public void setDistributionBoardId(String distributionBoardId) {
 		DistributionBoardId = distributionBoardId;
 	}
+
 
 
 	public String getDistributionBoardName() {
@@ -132,9 +132,11 @@ public class DistributionBoard {
 	}
 
 
+
 	public void setDistributionBoardName(String distributionBoardName) {
 		this.distributionBoardName = distributionBoardName;
 	}
+
 
 
 	public String getDistributionBoardLong() {
@@ -142,9 +144,11 @@ public class DistributionBoard {
 	}
 
 
+
 	public void setDistributionBoardLong(String distributionBoardLong) {
 		this.distributionBoardLong = distributionBoardLong;
 	}
+
 
 
 	public String getDistributionBoardLat() {
@@ -152,9 +156,11 @@ public class DistributionBoard {
 	}
 
 
+
 	public void setDistributionBoardLat(String distributionBoardLat) {
 		this.distributionBoardLat = distributionBoardLat;
 	}
+
 
 
 	public String getDistributionBoardCity() {
@@ -162,9 +168,11 @@ public class DistributionBoard {
 	}
 
 
+
 	public void setDistributionBoardCity(String distributionBoardCity) {
 		this.distributionBoardCity = distributionBoardCity;
 	}
+
 
 
 	public String getDistributionBoardSite() {
@@ -172,9 +180,11 @@ public class DistributionBoard {
 	}
 
 
+
 	public void setDistributionBoardSite(String distributionBoardSite) {
 		this.distributionBoardSite = distributionBoardSite;
 	}
+
 
 
 	public String getDistributionBoardSiteName() {
@@ -182,9 +192,11 @@ public class DistributionBoard {
 	}
 
 
+
 	public void setDistributionBoardSiteName(String distributionBoardSiteName) {
 		this.distributionBoardSiteName = distributionBoardSiteName;
 	}
+
 
 
 	public String getDistributionBoardWarehouse() {
@@ -192,9 +204,11 @@ public class DistributionBoard {
 	}
 
 
+
 	public void setDistributionBoardWarehouse(String distributionBoardWarehouse) {
 		this.distributionBoardWarehouse = distributionBoardWarehouse;
 	}
+
 
 
 	public Float getDistributionBoardCapacity() {
@@ -202,9 +216,11 @@ public class DistributionBoard {
 	}
 
 
+
 	public void setDistributionBoardCapacity(Float distributionBoardCapacity) {
 		DistributionBoardCapacity = distributionBoardCapacity;
 	}
+
 
 
 	public Float getDistributionBoardRowsNum() {
@@ -212,9 +228,11 @@ public class DistributionBoard {
 	}
 
 
+
 	public void setDistributionBoardRowsNum(Float distributionBoardRowsNum) {
 		this.distributionBoardRowsNum = distributionBoardRowsNum;
 	}
+
 
 
 	public Float getDistributionBoardColsNum() {
@@ -222,9 +240,11 @@ public class DistributionBoard {
 	}
 
 
+
 	public void setDistributionBoardColsNum(Float distributionBoardColsNum) {
 		this.distributionBoardColsNum = distributionBoardColsNum;
 	}
+
 
 
 	public Float getDistributionBoardFront() {
@@ -232,9 +252,11 @@ public class DistributionBoard {
 	}
 
 
+
 	public void setDistributionBoardFront(Float distributionBoardFront) {
 		this.distributionBoardFront = distributionBoardFront;
 	}
+
 
 
 	public Float getDistributionBoardBack() {
@@ -242,9 +264,11 @@ public class DistributionBoard {
 	}
 
 
+
 	public void setDistributionBoardBack(Float distributionBoardBack) {
 		this.distributionBoardBack = distributionBoardBack;
 	}
+
 
 
 	public String getDistributionBoardProjectId() {
@@ -252,18 +276,23 @@ public class DistributionBoard {
 	}
 
 
+
 	public void setDistributionBoardProjectId(String distributionBoardProjectId) {
 		this.distributionBoardProjectId = distributionBoardProjectId;
 	}
-	
+
+
+
 	public Timestamp getBoardCreationDate() {
 		return BoardCreationDate;
 	}
 
 
+
 	public void setBoardCreationDate(Timestamp boardCreationDate) {
-		this.BoardCreationDate = boardCreationDate;
+		BoardCreationDate = boardCreationDate;
 	}
+
 
 
 	public Timestamp getBoardLastModifiedDate() {
@@ -271,20 +300,74 @@ public class DistributionBoard {
 	}
 
 
+
 	public void setBoardLastModifiedDate(Timestamp boardLastModifiedDate) {
-		this.BoardLastModifiedDate = boardLastModifiedDate;
+		BoardLastModifiedDate = boardLastModifiedDate;
 	}
-	
-	public String getdbNetLevel() {
+
+
+
+	public String getDbNetLevel() {
 		return dbNetLevel;
 	}
 
-	public void setdbNetLevel(String dbNetLevel) {
+
+
+	public void setDbNetLevel(String dbNetLevel) {
 		this.dbNetLevel = dbNetLevel;
 	}
 
 
 
+	public String getDBEngineerName() {
+		return DBEngineerName;
+	}
+
+
+
+	public void setDBEngineerName(String dBEngineerName) {
+		DBEngineerName = dBEngineerName;
+	}
+
+
+
+	public String getDBInstaller() {
+		return DBInstaller;
+	}
+
+
+
+	public void setDBInstaller(String dBInstaller) {
+		DBInstaller = dBInstaller;
+	}
+
+
+
+	public String getDBDeploymentType() {
+		return DBDeploymentType;
+	}
+
+
+
+	public void setDBDeploymentType(String dBDeploymentType) {
+		DBDeploymentType = dBDeploymentType;
+	}
+
+
+
+	public String getDBAdaptorPanelType() {
+		return DBAdaptorPanelType;
+	}
+
+
+
+	public void setDBAdaptorPanelType(String dBAdaptorPanelType) {
+		DBAdaptorPanelType = dBAdaptorPanelType;
+	}
+
+
+
+	
 }
 
 
