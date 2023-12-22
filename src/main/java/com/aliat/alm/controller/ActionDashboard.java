@@ -52,12 +52,13 @@ public class ActionDashboard {
 				if(session != null && session.isOpen()) {
 					notifications.headerNotifications(session, model);
 					
-					String dnquery = "select sum (case when Approval <> 'Completely Approved' then 1 else 0 end) as needApproval," + 
-							" sum (case when (Approval ='Operation Manager' or Approval='Project Manager') then 1 else 0 end) as PM," + 
-							" sum (case when Approval='Asset Unit' then 1 else 0 end) as AUM," + 
-							" sum (case when Approval='Finance' then 1 else 0 end) as FM," + 
-							" count (Approval) as total " + 
-							" from discovery_new_item";
+					String dnquery = "select nvl(sum (case when a.status ='In Progress' then 1 else 0 end),0) as needApproval, " + 
+							"nvl(sum (case when (b.Approval ='Operation Manager' or b.Approval='Project Manager' OR b.Approval is NULL) then 1 else 0 end),0) as PM,   " + 
+							"nvl(sum (case when b.Approval='Asset Unit' then 1 else 0 end),0) as AUM,   " + 
+							"nvl(sum (case when b.Approval='Finance' then 1 else 0 end),0) as FM, " + 
+							"nvl (sum(case  when a.status ='In Progress' then 1 else 0 end +case when b.approval <> 'Completely Approved' or b.approval is null then 1 else 0 end),0) as total " + 
+							"from discovery_new_item b, discovery_new a " + 
+							"where a.dn_id = b.dn_id ";
 					
 					String prquery = "select nvl(sum(case when STATUS ='inprog' then 1 else 0 end),0) as needApproval,"
 							+ "nvl(sum(case when STATUS='approved' then 1 else 0 end),0) as approved "
