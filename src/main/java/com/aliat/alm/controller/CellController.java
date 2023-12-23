@@ -72,13 +72,13 @@ public class CellController {
 				query = session.createNativeQuery(
 						"SELECT  ng.Gcell_Id as gcellPk, ng.Gcell_Id as Pk, ng.cellid as cellid,   ng.cellname as cellname , '2G' as Technology, na.unique_node_id as uniqueid, na.site_id as siteid, "
 								+ " na.ware_name as sitename, na.Node_Name as nodename,TO_CHAR(ng.creation_date,'YYYY-MM-DD HH24:MI:SS') as creation, TO_CHAR(ng.UPDATE_DATE,'YYYY-MM-DD HH24:MI:SS') as updated "
-								+ " FROM  Node_GCELL ng LEFT JOIN "
+								+ " FROM  NODE_2G ng LEFT JOIN "
 								+ " NODE_ACTIVE na ON ng.Node_PK = na.Node_PK union SELECT  nu.Ucell_Id as ucellPk ,nu.Ucell_Id as Pk,  nu.cellid as cellid,   nu.cellname as cellname , '3G' as Technology, na.unique_node_id as uniqueid, na.site_id as siteid, "
 								+ " na.ware_name as sitename, na.Node_Name as nodename,TO_CHAR(nu.creation_date,'YYYY-MM-DD HH24:MI:SS') as creation, TO_CHAR(nu.UPDATE_DATE,'YYYY-MM-DD HH24:MI:SS') as updated "
-								+ " FROM  Node_UCELL nu LEFT JOIN "
+								+ " FROM  NODE_4G nu LEFT JOIN "
 								+ " NODE_ACTIVE na ON nu.Node_PK = na.Node_PK union SELECT  nl.Lcell_Id as lcellPk ,nl.Lcell_Id as Pk,  nl.cellid as cellid,   nl.cellname as cellname , '4G' as Technology, na.unique_node_id as uniqueid, na.site_id as siteid, "
 								+ " na.ware_name as sitename, na.Node_Name as nodename, TO_CHAR(nl.creation_date,'YYYY-MM-DD HH24:MI:SS') as creation,TO_CHAR( nl.update_date,'YYYY-MM-DD HH24:MI:SS') as updated "
-								+ " FROM  Node_LCELL nl LEFT JOIN " + " NODE_ACTIVE na ON nl.Node_PK = na.Node_PK");
+								+ " FROM  NODE_3G nl LEFT JOIN " + " NODE_ACTIVE na ON nl.Node_PK = na.Node_PK");
 
 				cells.addAll(query.getResultList());
 				model.addAttribute("ListGridTable", mapper.writeValueAsString(cells));
@@ -122,7 +122,7 @@ public class CellController {
 						query = session.createNativeQuery(
 								"SELECT  ng.Gcell_Id, ng.cellid ,   ng.cellname  , na.unique_node_id , na.site_id , "
 										+ " na.ware_name , na.Node_Name ,TO_CHAR(ng.creation_date,'YYYY-MM-DD HH24:MI:SS') , TO_CHAR(ng.UPDATE_DATE,'YYYY-MM-DD HH24:MI:SS') "
-										+ " FROM  Node_GCELL ng LEFT JOIN "
+										+ " FROM  NODE_2G ng LEFT JOIN "
 										+ " NODE_ACTIVE na ON ng.Node_PK = na.Node_PK where ng.Gcell_Id=:param1");
 						query.setParameter("param1", CellPK);
 						result = (Object[]) query.uniqueResult();
@@ -174,7 +174,7 @@ public class CellController {
 						query = session.createNativeQuery(
 								"SELECT  nu.Ucell_Id ,  nu.cellid ,   nu.cellname  , na.unique_node_id , na.site_id , "
 										+ " na.ware_name , na.Node_Name ,TO_CHAR(nu.creation_date,'YYYY-MM-DD HH24:MI:SS') , TO_CHAR(nu.UPDATE_DATE,'YYYY-MM-DD HH24:MI:SS') "
-										+ " FROM  Node_UCELL nu LEFT JOIN "
+										+ " FROM  NODE_4G nu LEFT JOIN "
 										+ " NODE_ACTIVE na ON nu.Node_PK = na.Node_PK where nu.Ucell_Id=:param1");
 						query.setParameter("param1", CellPK);
 						result = (Object[]) query.uniqueResult();
@@ -217,7 +217,7 @@ public class CellController {
 						query = session.createNativeQuery(
 								"SELECT  nl.Lcell_Id ,  nL.cellid ,   nL.cellname  , na.unique_node_id , na.site_id , "
 										+ " na.ware_name , na.Node_Name ,TO_CHAR(nl.creation_date,'YYYY-MM-DD HH24:MI:SS') , TO_CHAR(nl.UPDATE_DATE,'YYYY-MM-DD HH24:MI:SS') "
-										+ " FROM  Node_LCELL nl LEFT JOIN "
+										+ " FROM  NODE_3G nl LEFT JOIN "
 										+ " NODE_ACTIVE na ON nl.Node_PK = na.Node_PK where nl.Lcell_Id=:param1");
 						query.setParameter("param1", CellPK);
 						result = (Object[]) query.uniqueResult();
@@ -471,13 +471,13 @@ public class CellController {
 			tx = session.beginTransaction();
 			try {
 
-				query = session.createNativeQuery("SELECT t1.CELLNAME, t1.GCELL_ID, t1.CELLID FROM NODE_GCELL t1 "
+				query = session.createNativeQuery("SELECT t1.CELLNAME, t1.GCELL_ID, t1.CELLID FROM NODE_2G t1 "
 						+ "WHERE LOWER(t1.CELLNAME) LIKE LOWER(:Cell) OR LOWER(t1.CELLID) "
 						+ "LIKE LOWER(:Cell) OR LOWER(t1.GCELL_ID) LIKE LOWER(:Cell) " + " UNION ALL "
-						+ "SELECT t2.CELLNAME, t2.LCELL_ID, t2.CELLID FROM NODE_LCELL t2 "
+						+ "SELECT t2.CELLNAME, t2.LCELL_ID, t2.CELLID FROM NODE_3G t2 "
 						+ "WHERE LOWER(t2.CELLNAME) LIKE LOWER(:Cell) OR LOWER(t2.CELLID) "
 						+ "LIKE LOWER(:Cell) OR LOWER(t2.LCELL_ID) LIKE LOWER(:Cell) " + " UNION ALL "
-						+ "SELECT t3.CELLNAME, t3.UCELL_ID, t3.CELLID FROM NODE_UCELL t3 "
+						+ "SELECT t3.CELLNAME, t3.UCELL_ID, t3.CELLID FROM NODE_4G t3 "
 						+ "WHERE LOWER(t3.CELLNAME) LIKE LOWER(:Cell) OR LOWER(t3.CELLID) "
 						+ "LIKE LOWER(:Cell) OR LOWER(t3.UCELL_ID) LIKE LOWER(:Cell)");
 				query.setParameter("Cell", Cell);

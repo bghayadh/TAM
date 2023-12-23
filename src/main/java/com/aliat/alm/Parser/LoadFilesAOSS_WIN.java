@@ -602,19 +602,19 @@ public class LoadFilesAOSS_WIN {
 				                	  if (attributeTable == "NODE_SUBRACK") {
 				                		   vhmap=getmapcolumnssubrack(data);
 				                	  } 
-				                	  if (attributeTable == "NODE_GCELL") {
+				                	  if (attributeTable == "NODE_2G") {
 				                		   vhmap=getmapcolumnsgcell(data);
 				                	  } 
 				                	  if (attributeTable == "NODE_BTS") {
 				                		   vhmap=getmapcolumnsbts(data);
 				                	  } 
-				                	  if (attributeTable == "NODE_UCELL") {
+				                	  if (attributeTable == "NODE_4G") {
 				                		   vhmap=getmapcolumnsucell(data);
 				                	  } 
 				                	  if (attributeTable == "NODE_ANTENNA") {
 				                		   vhmap=getmapcolumnsantenna(data);
 				                	  } 
-				                	  if (attributeTable == "NODE_LCELL") {
+				                	  if (attributeTable == "NODE_3G") {
 				                		   vhmap=getmapcolumnslcell(data);
 				                	  } 
 				                	  if (attributeTable == "NODE_RRN") {
@@ -725,7 +725,7 @@ public class LoadFilesAOSS_WIN {
 			                			   		+ "values('" + vcodeid +"','" + vhmap.get("SITEINDEX") +"','" + vhmap.get("CABINETNO") +"','" + vhmap.get("SUBRACKNO") +"','" + vhmap.get("INVENTORYUNITID") +"','" + vhmap.get("RACKTYPE") +"','" + vhmap.get("BOMRACKTYPE") +"','" + vhmap.get("FRAMETYPE") +"','" + vhmap.get("RACKFRAMENO") +"','" + vhmap.get("MODULENO") +"','" + vhmap.get("INVENTORYUNITTYPE") +"', '" + vhmap.get("VENDORUNITFAMILYTYPE") +"', '" + vhmap.get("VENDORUNITTYPENUMBER") +"','" + vhmap.get("VENDORNAME") +"','" + vhmap.get("SERIALNUMBER") +"','" + vhmap.get("HARDWAREVERSION") +"',DATE '" + vhmap.get("DATEOFMANUFACTURE") +"',DATE '" + vhmap.get("DATEOFLASTSERVICE") +"','" + vhmap.get("UNITPOSITION") +"','" + vhmap.get("MANUFACTURERDATA") +"','" + vhmap.get("USERLABEL") +"','" + vhmap.get("BOMCODE") +"','" + vhmap.get("MODEL") +"','" + vhmap.get("ISSUENUMBER") +"','" + vhmap.get("BOMFRAMETYPE") +"','" + vhmap.get("CLEICODE") +"','" + vhmap.get("BOM") +"','" + vhmap.get("EXTINFO") +"','" + codeid +"','" + codeidattr +"',sysdate,'" + filename +"','" + vhmap.get("STATUS") +"','0','0','0','" + vhmap.get("TRANS_ID") +"','" + vhmap.get("TRANS_TYPE") +"' ,'"+ j +"','1','Mobile Access Domain','" + Gprovider +"') ";
 				                		   //System.out.println(filename + "    "+ InsertQuery);
 				                		   }
-				                	   if (attributeTable =="NODE_GCELL" ) {
+				                	   if (attributeTable =="NODE_2G" ) {
 				                		  /* vcodeid= localgetseqNbr(12);  /// 12 to select Gcell_id
 				                		   vcodeid=Gyear+"_"+ "GCELL"+'_'+vcodeid;
 				                		   InsertQuery="insert into " + attributeTable  +" (GCELL_ID,CELLID,CELLNAME,MCC,MNC,LAC,CI,NCC,BCC,TYPE,BCCHNO,BASEBANDPOLICY,BASEBANDEQMID,GBTSFUNCTIONNAME,GLOCELLID,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,CREATION_DATE,DOMAIN,VENDOR) "
@@ -749,7 +749,7 @@ public class LoadFilesAOSS_WIN {
 				                		   		+ "values('" + vcodeid +"','" + vhmap.get("SITEINDEX") +"','" + vhmap.get("SITENAME") +"','" + vhmap.get("SITETYPE") +"','" + codeid +"','" + codeidattr +"',sysdate,'" + filename +"','" + vhmap.get("STATUS") +"','0','0','0','" + vhmap.get("TRANS_ID") +"','" + vhmap.get("TRANS_TYPE") +"' ,'"+ j +"','1','Mobile Access Domain','" + Gprovider +"') ";
 				                		   //System.out.println(filename + "    "+ InsertQuery);
 				                	   }
-				                	   if (attributeTable =="NODE_UCELL" ) {
+				                	   if (attributeTable =="NODE_4G" ) {
 				                		   /*vcodeid= localgetseqNbr(14);  /// 14 to select Ucell_id
 				                		   vcodeid=Gyear+"_"+ "UCELL"+'_'+vcodeid;
 				                		   InsertQuery="insert into " + attributeTable  +"(UCELL_ID,CELLID,CELLNAME,LOCELL,NODEBFUNCTIONNAME,ULFREQ,DLFREQ,MAXPOWER,USERLABEL,MAXTXPOWER,UARFCNUPLINK,UARFCNDOWNLINK,PSCRAMBCODE,NODEBNAME,LAC,SAC,RAC,MANUFACTURERDATA,RADIUS,HORAD,DI,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,CREATION_DATE,DOMAIN,VENDOR) "
@@ -776,7 +776,7 @@ public class LoadFilesAOSS_WIN {
 				                			   		+ "values('" + vcodeid +"','" + vhmap.get("INVENTORYUNITID") +"','" + vhmap.get("INVENTORYUNITTYPE") +"','" + vhmap.get("ANTENNADEVICENO") +"','" + vhmap.get("PRODNR") +"','" + vhmap.get("VENDORUNITFAMILYTYPE") +"','" + vhmap.get("VENDORUNITTYPENUMBER") +"','" + vhmap.get("VENDORNAME") +"','" + vhmap.get("SERIALNUMBER") +"','" + vhmap.get("HARDWAREVERSION") +"',DATE '" + vhmap.get("DATEOFMANUFACTURE") +"',DATE '" + vhmap.get("DATEOFLASTSERVICE") +"','" + vhmap.get("UNITPOSITION") +"','" + vhmap.get("MANUFACTURERDATA") +"','" + vhmap.get("ANTENNADEVICETYPE") +"','" + vhmap.get("ISSUENUMBER") +"','" + vhmap.get("BOMCODE") +"','" + vhmap.get("EXTINFO") +"','" + vhmap.get("MODEL") +"','" + vhmap.get("SERIALNUMBEREX") +"','" + codeid +"','" + codeidattr +"',sysdate,'" + filename +"','" + vhmap.get("STATUS") +"' ,'0','0','0','" + vhmap.get("TRANS_ID") +"','" + vhmap.get("TRANS_TYPE") +"','"+ j +"','1',sysdate,'Mobile Access Domain','" + Gprovider +"') ";
 				                		   //System.out.println(filename + "    "+ InsertQuery);
 				                	   }
-				                	   if (attributeTable =="NODE_LCELL" ) {
+				                	   if (attributeTable =="NODE_3G" ) {
 				                		   vcodeid= localgetseqNbr(16);  /// 16 to select LCELL_id 
 				                		   vcodeid=Gyear+"_"+ "LCELL"+'_'+vcodeid;
 				                		   InsertQuery="insert into " + attributeTable  +" (LCELL_ID,LOCALCELLID,CELLNAME,CELLRADIUS,FREQBAND,ULEARFCNCFGIND,ULEARFCN,DLEARFCN,ULBANDWIDTH,DLBANDWIDTH,CELLID,PHYCELLID,FDDTDDIND,ENODEBFUNCTIONNAME,NBCELLFLAG,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,CREATION_DATE,DOMAIN,VENDOR) "
@@ -879,7 +879,7 @@ public class LoadFilesAOSS_WIN {
           				 HashMap<String, String>hashMap = new HashMap<String,String>();
           				hashMap = (HashMap<String, String>) allUCELL.get(i);
             			   //System.out.println("nodeType: "+nodeType);
-           			   String getUCELL_ID = "select UCELL_ID FROM NODE_UCELL WHERE NODEBFUNCTIONNAME like '"+ hashMap.get("NODEBNAME") +"%'";	
+           			   String getUCELL_ID = "select UCELL_ID FROM NODE_4G WHERE NODEBFUNCTIONNAME like '"+ hashMap.get("NODEBNAME") +"%'";	
            			   stmtp1 = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY); 
            			  // stmtp1 = con.createStatement(); 
 
@@ -891,7 +891,7 @@ public class LoadFilesAOSS_WIN {
            				  // System.out.println("totalrec: "+totalrec);
            				while (rsp.next()) {
           					//Update Query set cellid, cellname, userlabel, maxtxpower, UarfcnUpLink, UarfcnDownLink, PsCrambCode, NodeBName, Lac, Sac, Rac, ManufacturerData
-           					PreparedStatement stmtinsert1 = con.prepareStatement("update  NODE_UCELL set CELLID='"+hashMap.get("CELLID")+"' ,CELLNAME='"+hashMap.get("CELLNAME")+"',USERLABEL='"+hashMap.get("USERLABEL")+"',MAXTXPOWER='"+hashMap.get("MAXTXPOWER")+"',UARFCNUPLINK='"+hashMap.get("UARFCNUPLINK")+"', UARFCNDOWNLINK='"+hashMap.get("UARFCNDOWNLINK")+"', PSCRAMBCODE='"+hashMap.get("PSCRAMBCODE")+"', NODEBNAME = '"+hashMap.get("NODEBNAME")+"', LAC='"+hashMap.get("LAC")+"', SAC='"+hashMap.get("SAC")+"', RAC='"+hashMap.get("SAC")+"', MANUFACTURERDATA = '"+hashMap.get("MANUFACTURERDATA")+"', UPDATE_DATE =sysdate where NODEBFUNCTIONNAME='"+hashMap.get("NODEBNAME")+"' and LOCELL='"+ hashMap.get("LOCELL") +"' and UCELL_ID ='"+rsp.getString("UCELL_ID")+"'");
+           					PreparedStatement stmtinsert1 = con.prepareStatement("update  NODE_4G set CELLID='"+hashMap.get("CELLID")+"' ,CELLNAME='"+hashMap.get("CELLNAME")+"',USERLABEL='"+hashMap.get("USERLABEL")+"',MAXTXPOWER='"+hashMap.get("MAXTXPOWER")+"',UARFCNUPLINK='"+hashMap.get("UARFCNUPLINK")+"', UARFCNDOWNLINK='"+hashMap.get("UARFCNDOWNLINK")+"', PSCRAMBCODE='"+hashMap.get("PSCRAMBCODE")+"', NODEBNAME = '"+hashMap.get("NODEBNAME")+"', LAC='"+hashMap.get("LAC")+"', SAC='"+hashMap.get("SAC")+"', RAC='"+hashMap.get("SAC")+"', MANUFACTURERDATA = '"+hashMap.get("MANUFACTURERDATA")+"', UPDATE_DATE =sysdate where NODEBFUNCTIONNAME='"+hashMap.get("NODEBNAME")+"' and LOCELL='"+ hashMap.get("LOCELL") +"' and UCELL_ID ='"+rsp.getString("UCELL_ID")+"'");
 					    	stmtinsert1.executeUpdate();
 				    		stmtinsert1.close();
            				}
@@ -901,7 +901,7 @@ public class LoadFilesAOSS_WIN {
            				//System.out.println("hashMap: "+hashMap);
                 		   String vcodeid= localgetseqNbr(14);  /// 14 to select Ucell_id
                 		   vcodeid=Gyear+"_"+ "UCELL"+'_'+vcodeid;
-                		   String InsertQuery="insert into NODE_UCELL (UCELL_ID,CELLID,CELLNAME,LOCELL,NODEBFUNCTIONNAME,ULFREQ,DLFREQ,MAXPOWER,USERLABEL,MAXTXPOWER,UARFCNUPLINK,UARFCNDOWNLINK,PSCRAMBCODE,NODEBNAME,LAC,SAC,RAC,MANUFACTURERDATA,RADIUS,HORAD,DI,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,CREATION_DATE,DOMAIN,VENDOR) "
+                		   String InsertQuery="insert into NODE_4G (UCELL_ID,CELLID,CELLNAME,LOCELL,NODEBFUNCTIONNAME,ULFREQ,DLFREQ,MAXPOWER,USERLABEL,MAXTXPOWER,UARFCNUPLINK,UARFCNDOWNLINK,PSCRAMBCODE,NODEBNAME,LAC,SAC,RAC,MANUFACTURERDATA,RADIUS,HORAD,DI,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,CREATION_DATE,DOMAIN,VENDOR) "
                 		   		+ "values('" + vcodeid +"','" + hashMap.get("CELLID") +"','" + hashMap.get("CELLNAME") +"','" + hashMap.get("LOCELL") +"',"
                 		   				+ "'" + hashMap.get("NODEBFUNCTIONNAME") +"','" + hashMap.get("ULFREQ") +"','" + hashMap.get("DLFREQ") +"',"
                 		   				+ "'" + hashMap.get("MAXPOWER") +"','" + hashMap.get("USERLABEL") +"','" + hashMap.get("MAXTXPOWER") +"',"
@@ -963,7 +963,7 @@ public class LoadFilesAOSS_WIN {
             				 
               				 HashMap<String, String>hashMap = new HashMap<String,String>();
                				hashMap = (HashMap<String, String>) allGCELL.get(i);
-                			   String getGCELL_ID = "select GCELL_ID FROM NODE_GCELL WHERE GBTSFUNCTIONNAME like '"+ hashMap.get("CELLNAME") +"%'";	
+                			   String getGCELL_ID = "select GCELL_ID FROM NODE_2G WHERE GBTSFUNCTIONNAME like '"+ hashMap.get("CELLNAME") +"%'";	
                    			   stmtp1 = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                    			   ResultSet rsp = stmtp1.executeQuery(getGCELL_ID);
                       			rsp.last();
@@ -973,7 +973,7 @@ public class LoadFilesAOSS_WIN {
                         				  // System.out.println("totalrec: "+totalrec);
                           				while (rsp.next()) {
                          					//Update Query set cellid, cellname, userlabel, maxtxpower, UarfcnUpLink, UarfcnDownLink, PsCrambCode, NodeBName, Lac, Sac, Rac, ManufacturerData
-                          					PreparedStatement stmtinsert1 = con.prepareStatement("update  NODE_GCELL set CELLID='"+hashMap.get("CELLID")+"' ,CELLNAME='"+hashMap.get("CELLNAME")+"',MCC='"+hashMap.get("MCC")+"',MNC='"+hashMap.get("MNC")+"',LAC='"+hashMap.get("LAC")+"', CI='"+hashMap.get("CI")+"', NCC='"+hashMap.get("NCC")+"', BCC = '"+hashMap.get("BCC")+"', TYPE='"+hashMap.get("TYPE")+"', BCCHNO='"+hashMap.get("BCCHNO")+"', UPDATE_DATE =sysdate where GBTSFUNCTIONNAME like '"+hashMap.get("CELLNAME")+"%' AND GCELL_ID = '"+rsp.getString("GCELL_ID")+"'");
+                          					PreparedStatement stmtinsert1 = con.prepareStatement("update  NODE_2G set CELLID='"+hashMap.get("CELLID")+"' ,CELLNAME='"+hashMap.get("CELLNAME")+"',MCC='"+hashMap.get("MCC")+"',MNC='"+hashMap.get("MNC")+"',LAC='"+hashMap.get("LAC")+"', CI='"+hashMap.get("CI")+"', NCC='"+hashMap.get("NCC")+"', BCC = '"+hashMap.get("BCC")+"', TYPE='"+hashMap.get("TYPE")+"', BCCHNO='"+hashMap.get("BCCHNO")+"', UPDATE_DATE =sysdate where GBTSFUNCTIONNAME like '"+hashMap.get("CELLNAME")+"%' AND GCELL_ID = '"+rsp.getString("GCELL_ID")+"'");
                					    	stmtinsert1.executeUpdate();
                				    		stmtinsert1.close();
                           				}
@@ -981,7 +981,7 @@ public class LoadFilesAOSS_WIN {
                       			   else {
 				                		   String vcodeid= localgetseqNbr(12);  /// 12 to select Gcell_id
 			                		   vcodeid=Gyear+"_"+ "GCELL"+'_'+vcodeid;
-			                		   String InsertQuery="insert into NODE_GCELL (GCELL_ID,CELLID,CELLNAME,MCC,MNC,LAC,CI,NCC,BCC,TYPE,BCCHNO,BASEBANDPOLICY,"
+			                		   String InsertQuery="insert into NODE_2G (GCELL_ID,CELLID,CELLNAME,MCC,MNC,LAC,CI,NCC,BCC,TYPE,BCCHNO,BASEBANDPOLICY,"
 			                		   		+ "BASEBANDEQMID,GBTSFUNCTIONNAME,GLOCELLID,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,"
 			                		   		+ "FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,CREATION_DATE,DOMAIN,VENDOR) "
 			                		   		+ "values('" + vcodeid +"','" + hashMap.get("CELLID") +"','" + hashMap.get("CELLNAME") +"','" + hashMap.get("MCC") +"',"
@@ -1045,7 +1045,7 @@ public class LoadFilesAOSS_WIN {
           				 HashMap<String, String>hashMap = new HashMap<String,String>();
           				hashMap = (HashMap<String, String>) allUCELL.get(i);
             			  // System.out.println("hashMap.get(\"NODEBFUNCTIONNAME\"): "+hashMap.get("NODEBFUNCTIONNAME"));
-           			   String getUCELL_ID = "select UCELL_ID FROM NODE_UCELL WHERE NODEBNAME like '"+ hashMap.get("NODEBFUNCTIONNAME") +"%'";
+           			   String getUCELL_ID = "select UCELL_ID FROM NODE_4G WHERE NODEBNAME like '"+ hashMap.get("NODEBFUNCTIONNAME") +"%'";
            			   stmtp1 = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY); 
            			   ResultSet rsp = stmtp1.executeQuery(getUCELL_ID);
            			   rsp.last();
@@ -1056,7 +1056,7 @@ public class LoadFilesAOSS_WIN {
            				   //System.out.println("totalrec: "+totalrec);
            				while (rsp.next()) {
            					//Update Query set Radius, HoRad, UlFreq, DlFreq, MaxPower, DI, NODE_PK, NODE_ATTR_PK, FILENAME,LINE
-           					PreparedStatement stmtinsert1 = con.prepareStatement("update  NODE_UCELL set RADIUS='"+hashMap.get("RADIUS")+"' ,HORAD='"+hashMap.get("HORAD")+"',ULFREQ='"+hashMap.get("ULFREQ")+"',DLFREQ='"+hashMap.get("DLFREQ")+"',MAXPOWER='"+hashMap.get("MAXPOWER")+"', DI='"+hashMap.get("DI")+"', NODEBFUNCTIONNAME='"+hashMap.get("NODEBFUNCTIONNAME")+"', NODE_PK='"+hashMap.get("NODE_PK")+"', NODE_ATTR_PK='"+hashMap.get("NODE_ATTR_PK")+"', FILENAME='"+hashMap.get("FILENAME")+"', LINE='"+hashMap.get("LINE")+"',UPDATE_DATE =sysdate where NODEBNAME='"+hashMap.get("NODEBFUNCTIONNAME")+"' and LOCELL='"+ hashMap.get("LOCELL") +"' and UCELL_ID ='"+rsp.getString("UCELL_ID")+"'");
+           					PreparedStatement stmtinsert1 = con.prepareStatement("update  NODE_4G set RADIUS='"+hashMap.get("RADIUS")+"' ,HORAD='"+hashMap.get("HORAD")+"',ULFREQ='"+hashMap.get("ULFREQ")+"',DLFREQ='"+hashMap.get("DLFREQ")+"',MAXPOWER='"+hashMap.get("MAXPOWER")+"', DI='"+hashMap.get("DI")+"', NODEBFUNCTIONNAME='"+hashMap.get("NODEBFUNCTIONNAME")+"', NODE_PK='"+hashMap.get("NODE_PK")+"', NODE_ATTR_PK='"+hashMap.get("NODE_ATTR_PK")+"', FILENAME='"+hashMap.get("FILENAME")+"', LINE='"+hashMap.get("LINE")+"',UPDATE_DATE =sysdate where NODEBNAME='"+hashMap.get("NODEBFUNCTIONNAME")+"' and LOCELL='"+ hashMap.get("LOCELL") +"' and UCELL_ID ='"+rsp.getString("UCELL_ID")+"'");
 					    	stmtinsert1.executeUpdate();
 				    		stmtinsert1.close();
            				}
@@ -1066,7 +1066,7 @@ public class LoadFilesAOSS_WIN {
            				//System.out.println("else in nodeType: "+nodeType);
              		   String vcodeid= localgetseqNbr(14);  /// 14 to select Ucell_id
              		   vcodeid=Gyear+"_"+ "UCELL"+'_'+vcodeid;
-             		   String InsertQuery="insert into NODE_UCELL (UCELL_ID,CELLID,CELLNAME,LOCELL,NODEBFUNCTIONNAME,ULFREQ,DLFREQ,MAXPOWER,USERLABEL,MAXTXPOWER,UARFCNUPLINK,UARFCNDOWNLINK,PSCRAMBCODE,NODEBNAME,LAC,SAC,RAC,MANUFACTURERDATA,RADIUS,HORAD,DI,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,CREATION_DATE,DOMAIN,VENDOR) "
+             		   String InsertQuery="insert into NODE_4G (UCELL_ID,CELLID,CELLNAME,LOCELL,NODEBFUNCTIONNAME,ULFREQ,DLFREQ,MAXPOWER,USERLABEL,MAXTXPOWER,UARFCNUPLINK,UARFCNDOWNLINK,PSCRAMBCODE,NODEBNAME,LAC,SAC,RAC,MANUFACTURERDATA,RADIUS,HORAD,DI,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,CREATION_DATE,DOMAIN,VENDOR) "
              		   		+ "values('" + vcodeid +"','" + hashMap.get("CELLID") +"','" + hashMap.get("CELLNAME") +"','" + hashMap.get("LOCELL") +"',"
              		   				+ "'" + hashMap.get("NODEBFUNCTIONNAME") +"','" + hashMap.get("ULFREQ") +"','" + hashMap.get("DLFREQ") +"',"
              		   				+ "'" + hashMap.get("MAXPOWER") +"','" + hashMap.get("USERLABEL") +"','" + hashMap.get("MAXTXPOWER") +"',"
@@ -1122,7 +1122,7 @@ public class LoadFilesAOSS_WIN {
           				 HashMap<String, String>hashMap = new HashMap<String,String>();
           				hashMap = (HashMap<String, String>) allGCELL.get(i);
           				k = Integer.parseInt(hashMap.get("GLOCELLID")) + 1;
-            			   String getUCELL_ID = "select GCELL_ID FROM NODE_GCELL WHERE CELLNAME like '"+ hashMap.get("GBTSFUNCTIONNAME")+""+k+"'";
+            			   String getUCELL_ID = "select GCELL_ID FROM NODE_2G WHERE CELLNAME like '"+ hashMap.get("GBTSFUNCTIONNAME")+""+k+"'";
                			   stmtp1 = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY); 
                			   ResultSet rsp = stmtp1.executeQuery(getUCELL_ID);
                			   rsp.last();
@@ -1137,7 +1137,7 @@ public class LoadFilesAOSS_WIN {
     			 			  String streec=hashMap.get("GBTSFUNCTIONNAME")+k;
                					//System.out.println("hashMap.get(\"GLOCELLID\"): "+hashMap.get("GLOCELLID"));
                					//Update Query set GLOCELLID, BASEBANDPOLICY, BASEBANDEQMID, GBTSFUNCTIONNAME, NODE_PK, NODE_ATTR_PK, LINE
-               					PreparedStatement stmtinsert1 = con.prepareStatement("update  NODE_GCELL set GLOCELLID='"+hashMap.get("GLOCELLID")+"' ,BASEBANDPOLICY='"+hashMap.get("BASEBANDPOLICY")+"',BASEBANDEQMID='"+hashMap.get("BASEBANDEQMID")+"',GBTSFUNCTIONNAME='"+hashMap.get("GBTSFUNCTIONNAME")+"', NODE_PK='"+hashMap.get("NODE_PK")+"', NODE_ATTR_PK='"+hashMap.get("NODE_ATTR_PK")+"', FILENAME='"+hashMap.get("FILENAME")+"', LINE='"+hashMap.get("LINE")+"',UPDATE_DATE =sysdate where CELLNAME like '"+ hashMap.get("GBTSFUNCTIONNAME")+"%' and GCELL_ID = '"+rsp.getString("GCELL_ID")+"'");
+               					PreparedStatement stmtinsert1 = con.prepareStatement("update  NODE_2G set GLOCELLID='"+hashMap.get("GLOCELLID")+"' ,BASEBANDPOLICY='"+hashMap.get("BASEBANDPOLICY")+"',BASEBANDEQMID='"+hashMap.get("BASEBANDEQMID")+"',GBTSFUNCTIONNAME='"+hashMap.get("GBTSFUNCTIONNAME")+"', NODE_PK='"+hashMap.get("NODE_PK")+"', NODE_ATTR_PK='"+hashMap.get("NODE_ATTR_PK")+"', FILENAME='"+hashMap.get("FILENAME")+"', LINE='"+hashMap.get("LINE")+"',UPDATE_DATE =sysdate where CELLNAME like '"+ hashMap.get("GBTSFUNCTIONNAME")+"%' and GCELL_ID = '"+rsp.getString("GCELL_ID")+"'");
     					    	stmtinsert1.executeUpdate();
     				    		stmtinsert1.close();
                				}
@@ -1146,7 +1146,7 @@ public class LoadFilesAOSS_WIN {
             			   else {
 		                		  String vcodeid= localgetseqNbr(12);  /// 12 to select Gcell_id
 	                		   vcodeid=Gyear+"_"+ "GCELL"+'_'+vcodeid;
-	                		   String InsertQuery="insert into NODE_GCELL (GCELL_ID,CELLID,CELLNAME,MCC,MNC,LAC,CI,NCC,BCC,TYPE,BCCHNO,BASEBANDPOLICY,"
+	                		   String InsertQuery="insert into NODE_2G (GCELL_ID,CELLID,CELLNAME,MCC,MNC,LAC,CI,NCC,BCC,TYPE,BCCHNO,BASEBANDPOLICY,"
 	                		   		+ "BASEBANDEQMID,GBTSFUNCTIONNAME,GLOCELLID,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,"
 	                		   		+ "FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,CREATION_DATE,DOMAIN,VENDOR) "
 	                		   		+ "values('" + vcodeid +"','" + hashMap.get("CELLID") +"','" + hashMap.get("CELLNAME") +"','" + hashMap.get("MCC") +"',"
@@ -2627,13 +2627,13 @@ public class LoadFilesAOSS_WIN {
 			 localresult="NODE_SUBRACK";
 		 }
 		if (StringUtils.equalsIgnoreCase(str,"GCELL")) {	
-			 localresult="NODE_GCELL";
+			 localresult="NODE_2G";
 		 }
 		if (StringUtils.equalsIgnoreCase(str,"UCELL")) {	
-			 localresult="NODE_UCELL";
+			 localresult="NODE_4G";
 		 }
 		if (StringUtils.equalsIgnoreCase(str,"LCELL")) {	
-			 localresult="NODE_LCELL";
+			 localresult="NODE_3G";
 		 }
 		if (StringUtils.equalsIgnoreCase(str,"eNodeBCell")) {	
 			 localresult="NODE_ENODEBCELL";
@@ -2940,7 +2940,7 @@ public class LoadFilesAOSS_WIN {
 			 stmtp.close();
 	            
             //Insert into TEMP_NODE_GCELL
-			 queryp = "select * from NODE_GCELL"; 
+			 queryp = "select * from NODE_2G"; 
 			 stmtp = con.createStatement();
 		     rsp = stmtp.executeQuery(queryp);
 			 while (rsp.next()) {
@@ -2966,7 +2966,7 @@ public class LoadFilesAOSS_WIN {
 			 stmtp.close();
              
            //Insert into TEMP_NODE_UCELL
-			 queryp = "select * from NODE_UCELL"; 
+			 queryp = "select * from NODE_4G"; 
 			 stmtp = con.createStatement();
 		     rsp = stmtp.executeQuery(queryp);
 			 while (rsp.next()) {
@@ -2996,7 +2996,7 @@ public class LoadFilesAOSS_WIN {
 			 stmtp.close();
           
      	  	//Insert into TEMP_NODE_LCELL
-			 queryp = "select * from NODE_LCELL"; 
+			 queryp = "select * from NODE_3G"; 
 			 stmtp = con.createStatement();
 		     rsp = stmtp.executeQuery(queryp);
 			 while (rsp.next()) {
@@ -3158,7 +3158,7 @@ private static void DeletedatafromNodeTables(String vdomain, String vvendor) thr
             stmt2.close();
             
             //Delete from NODE_GCELL
-     	  	stmt0 = con.prepareStatement("delete  from NODE_GCELL where DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'");
+     	  	stmt0 = con.prepareStatement("delete  from NODE_2G where DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'");
      	  	stmt0.executeUpdate();
      	  	stmt0.close();
           
@@ -3167,8 +3167,8 @@ private static void DeletedatafromNodeTables(String vdomain, String vvendor) thr
             stmt1.executeUpdate();
             stmt1.close();
              
-           //Delete from NODE_UCELL
-        	stmt2 = con.prepareStatement("delete  from NODE_UCELL where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'");
+           //Delete from NODE_4G
+        	stmt2 = con.prepareStatement("delete  from NODE_4G where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'");
             stmt2.executeUpdate();
             stmt2.close();
             
@@ -3177,8 +3177,8 @@ private static void DeletedatafromNodeTables(String vdomain, String vvendor) thr
      	  	stmt0.executeUpdate();
      	  	stmt0.close();
           
-     	  	//Delete from NODE_LCELL
-        	stmt1 = con.prepareStatement("delete  from NODE_LCELL where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'");
+     	  	//Delete from NODE_3G
+        	stmt1 = con.prepareStatement("delete  from NODE_3G where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'");
             stmt1.executeUpdate();
             stmt1.close();
              
@@ -3462,7 +3462,7 @@ private static void GetduplicateFilename(String vdomain , String vvendor) throws
      stmt2.executeUpdate();
      stmt2.close();
      
-     stmt = con.prepareStatement("delete from  NODE_GCELL where " + fieldname +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'"); 
+     stmt = con.prepareStatement("delete from  NODE_2G where " + fieldname +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'"); 
      stmt.executeUpdate();
      stmt.close(); 
      		 
@@ -3470,7 +3470,7 @@ private static void GetduplicateFilename(String vdomain , String vvendor) throws
      stmt1.executeUpdate();
      stmt1.close();
      
-     stmt2 = con.prepareStatement("delete from  NODE_UCELL where " + fieldname +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'"); 
+     stmt2 = con.prepareStatement("delete from  NODE_4G where " + fieldname +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'"); 
      stmt2.executeUpdate();
      stmt2.close();
      
@@ -3478,7 +3478,7 @@ private static void GetduplicateFilename(String vdomain , String vvendor) throws
      stmt.executeUpdate();
      stmt.close(); 
      		 
-     stmt1 = con.prepareStatement("delete from  NODE_LCELL where " + fieldname +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'"); 
+     stmt1 = con.prepareStatement("delete from  NODE_3G where " + fieldname +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'"); 
      stmt1.executeUpdate();
      stmt1.close();
      

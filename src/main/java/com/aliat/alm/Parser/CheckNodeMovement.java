@@ -598,7 +598,7 @@ public class CheckNodeMovement {
 		stmtinsertupd.executeUpdate();
 		stmtinsertupd.close();
 		
-		stmtinsertupd = con.prepareStatement("update  NODE_GCELL set TO_TRANS_SOURCE='" + vsourc +"',TO_TRANS_ID ='"+ transid +"' , ACTIVE_RECORD='0' ,UPDATE_DATE = sysdate where NODE_PK ='"+ nodepk +"'  and ACTIVE_RECORD='1' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'  ") ;
+		stmtinsertupd = con.prepareStatement("update  NODE_2G set TO_TRANS_SOURCE='" + vsourc +"',TO_TRANS_ID ='"+ transid +"' , ACTIVE_RECORD='0' ,UPDATE_DATE = sysdate where NODE_PK ='"+ nodepk +"'  and ACTIVE_RECORD='1' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'  ") ;
 		stmtinsertupd.executeUpdate();
 		stmtinsertupd.close();
 		
@@ -606,7 +606,7 @@ public class CheckNodeMovement {
 		stmtinsertupd.executeUpdate();
 		stmtinsertupd.close();
 		
-		stmtinsertupd = con.prepareStatement("update  NODE_UCELL set TO_TRANS_SOURCE='" + vsourc +"',TO_TRANS_ID ='"+ transid +"' , ACTIVE_RECORD='0' ,UPDATE_DATE = sysdate where NODE_PK ='"+ nodepk +"'  and ACTIVE_RECORD='1' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'  ") ;
+		stmtinsertupd = con.prepareStatement("update  NODE_4G set TO_TRANS_SOURCE='" + vsourc +"',TO_TRANS_ID ='"+ transid +"' , ACTIVE_RECORD='0' ,UPDATE_DATE = sysdate where NODE_PK ='"+ nodepk +"'  and ACTIVE_RECORD='1' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'  ") ;
 		stmtinsertupd.executeUpdate();
 		stmtinsertupd.close();
 		
@@ -614,7 +614,7 @@ public class CheckNodeMovement {
 		stmtinsertupd.executeUpdate();
 		stmtinsertupd.close();
 		
-		stmtinsertupd = con.prepareStatement("update  NODE_LCELL set TO_TRANS_SOURCE='" + vsourc +"',TO_TRANS_ID ='"+ transid +"' , ACTIVE_RECORD='0' ,UPDATE_DATE = sysdate where NODE_PK ='"+ nodepk +"'  and ACTIVE_RECORD='1' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'  ") ;
+		stmtinsertupd = con.prepareStatement("update  NODE_3G set TO_TRANS_SOURCE='" + vsourc +"',TO_TRANS_ID ='"+ transid +"' , ACTIVE_RECORD='0' ,UPDATE_DATE = sysdate where NODE_PK ='"+ nodepk +"'  and ACTIVE_RECORD='1' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'  ") ;
 		stmtinsertupd.executeUpdate();
 		stmtinsertupd.close();
 		
@@ -804,7 +804,7 @@ public class CheckNodeMovement {
  		stmtinsert3.executeUpdate();
  		stmtinsert3.close();
  
- 		stmtinsert1 = con.prepareStatement("insert into NODE_GCELL (select GCELL_ID,CELLID,CELLNAME,MCC,MNC,LAC,CI,NCC,BCC,TYPE,BCCHNO,BASEBANDPOLICY,BASEBANDEQMID,GBTSFUNCTIONNAME,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,GLOCELLID,STATUS,'" + vsourc +"','"+ transid +"',TO_TRANS_ID,'"+ TransTyp +"' as TRANS_TYPE,ACTIVE_RECORD,LINE,CREATION_DATE,DOMAIN,VENDOR,TO_TRANS_SOURCE from TEMP_NODE_GCELL where NODE_PK ='" + tmpnodepk + "' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"')"); 
+ 		stmtinsert1 = con.prepareStatement("insert into NODE_2G (select GCELL_ID,CELLID,CELLNAME,MCC,MNC,LAC,CI,NCC,BCC,TYPE,BCCHNO,BASEBANDPOLICY,BASEBANDEQMID,GBTSFUNCTIONNAME,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,GLOCELLID,STATUS,'" + vsourc +"','"+ transid +"',TO_TRANS_ID,'"+ TransTyp +"' as TRANS_TYPE,ACTIVE_RECORD,LINE,CREATION_DATE,DOMAIN,VENDOR,TO_TRANS_SOURCE from TEMP_NODE_GCELL where NODE_PK ='" + tmpnodepk + "' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"')"); 
  		stmtinsert1.executeUpdate();
  		stmtinsert1.close();
  	
@@ -812,7 +812,7 @@ public class CheckNodeMovement {
  		stmtinsert2.executeUpdate();
  		stmtinsert2.close();
 
- 		stmtinsert3 = con.prepareStatement("insert into NODE_UCELL (select UCELL_ID,CELLID,CELLNAME,LOCELL,NODEBFUNCTIONNAME,ULFREQ,DLFREQ,MAXPOWER,USERLABEL,MAXTXPOWER,UARFCNUPLINK,UARFCNDOWNLINK,PSCRAMBCODE,NODEBNAME,LAC,SAC,RAC,MANUFACTURERDATA,RADIUS,HORAD,DI,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,'" + vsourc +"','"+ transid +"',TO_TRANS_ID,'"+ TransTyp +"' as TRANS_TYPE,ACTIVE_RECORD,LINE,CREATION_DATE,DOMAIN,VENDOR,TO_TRANS_SOURCE from TEMP_NODE_UCELL where NODE_PK ='" + tmpnodepk + "')"); 
+ 		stmtinsert3 = con.prepareStatement("insert into NODE_4G (select UCELL_ID,CELLID,CELLNAME,LOCELL,NODEBFUNCTIONNAME,ULFREQ,DLFREQ,MAXPOWER,USERLABEL,MAXTXPOWER,UARFCNUPLINK,UARFCNDOWNLINK,PSCRAMBCODE,NODEBNAME,LAC,SAC,RAC,MANUFACTURERDATA,RADIUS,HORAD,DI,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,'" + vsourc +"','"+ transid +"',TO_TRANS_ID,'"+ TransTyp +"' as TRANS_TYPE,ACTIVE_RECORD,LINE,CREATION_DATE,DOMAIN,VENDOR,TO_TRANS_SOURCE from TEMP_NODE_UCELL where NODE_PK ='" + tmpnodepk + "')"); 
  		stmtinsert3.executeUpdate();
  		stmtinsert3.close();
  	
@@ -820,7 +820,7 @@ public class CheckNodeMovement {
  		stmtinsert1.executeUpdate();
  		stmtinsert1.close();
 
- 		stmtinsert2 = con.prepareStatement("insert into NODE_LCELL (select LCELL_ID,LOCALCELLID,CELLNAME,CELLRADIUS,FREQBAND,ULEARFCNCFGIND,ULEARFCN,DLEARFCN,ULBANDWIDTH,DLBANDWIDTH,CELLID,PHYCELLID,FDDTDDIND,ENODEBFUNCTIONNAME,NBCELLFLAG,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,'" + vsourc +"','"+ transid +"',TO_TRANS_ID,'"+ TransTyp +"' as TRANS_TYPE,ACTIVE_RECORD,LINE,CREATION_DATE,DOMAIN,VENDOR,TO_TRANS_SOURCE from TEMP_NODE_LCELL where NODE_PK ='" + tmpnodepk + "' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"')"); 
+ 		stmtinsert2 = con.prepareStatement("insert into NODE_3G (select LCELL_ID,LOCALCELLID,CELLNAME,CELLRADIUS,FREQBAND,ULEARFCNCFGIND,ULEARFCN,DLEARFCN,ULBANDWIDTH,DLBANDWIDTH,CELLID,PHYCELLID,FDDTDDIND,ENODEBFUNCTIONNAME,NBCELLFLAG,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,'" + vsourc +"','"+ transid +"',TO_TRANS_ID,'"+ TransTyp +"' as TRANS_TYPE,ACTIVE_RECORD,LINE,CREATION_DATE,DOMAIN,VENDOR,TO_TRANS_SOURCE from TEMP_NODE_LCELL where NODE_PK ='" + tmpnodepk + "' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"')"); 
  		stmtinsert2.executeUpdate();
  		stmtinsert2.close();
 
@@ -1258,7 +1258,7 @@ public class CheckNodeMovement {
  		stmtinsert3.executeUpdate();
  		stmtinsert3.close();
  
- 		stmtinsert1 = con.prepareStatement("insert into NODE_GCELL (select GCELL_ID,CELLID,CELLNAME,MCC,MNC,LAC,CI,NCC,BCC,TYPE,BCCHNO,BASEBANDPOLICY,BASEBANDEQMID,GBTSFUNCTIONNAME,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,GLOCELLID,STATUS,'" + vsourc +"','"+ transid +"',TO_TRANS_ID,'"+ TransTyp +"' as TRANS_TYPE,ACTIVE_RECORD,LINE,CREATION_DATE,DOMAIN,VENDOR,TO_TRANS_SOURCE from TEMP_NODE_GCELL where NODE_PK ='" + nodepk + "' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"')"); 
+ 		stmtinsert1 = con.prepareStatement("insert into NODE_2G (select GCELL_ID,CELLID,CELLNAME,MCC,MNC,LAC,CI,NCC,BCC,TYPE,BCCHNO,BASEBANDPOLICY,BASEBANDEQMID,GBTSFUNCTIONNAME,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,GLOCELLID,STATUS,'" + vsourc +"','"+ transid +"',TO_TRANS_ID,'"+ TransTyp +"' as TRANS_TYPE,ACTIVE_RECORD,LINE,CREATION_DATE,DOMAIN,VENDOR,TO_TRANS_SOURCE from TEMP_NODE_GCELL where NODE_PK ='" + nodepk + "' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"')"); 
  		stmtinsert1.executeUpdate();
  		stmtinsert1.close();
  	
@@ -1266,7 +1266,7 @@ public class CheckNodeMovement {
  		stmtinsert2.executeUpdate();
  		stmtinsert2.close();
 
- 		stmtinsert3 = con.prepareStatement("insert into NODE_UCELL (select UCELL_ID,CELLID,CELLNAME,LOCELL,NODEBFUNCTIONNAME,ULFREQ,DLFREQ,MAXPOWER,USERLABEL,MAXTXPOWER,UARFCNUPLINK,UARFCNDOWNLINK,PSCRAMBCODE,NODEBNAME,LAC,SAC,RAC,MANUFACTURERDATA,RADIUS,HORAD,DI,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,'" + vsourc +"','"+ transid +"',TO_TRANS_ID,'"+ TransTyp +"' as TRANS_TYPE,ACTIVE_RECORD,LINE,CREATION_DATE,DOMAIN,VENDOR,TO_TRANS_SOURCE from TEMP_NODE_UCELL where NODE_PK ='" + nodepk + "' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"')"); 
+ 		stmtinsert3 = con.prepareStatement("insert into NODE_4G (select UCELL_ID,CELLID,CELLNAME,LOCELL,NODEBFUNCTIONNAME,ULFREQ,DLFREQ,MAXPOWER,USERLABEL,MAXTXPOWER,UARFCNUPLINK,UARFCNDOWNLINK,PSCRAMBCODE,NODEBNAME,LAC,SAC,RAC,MANUFACTURERDATA,RADIUS,HORAD,DI,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,'" + vsourc +"','"+ transid +"',TO_TRANS_ID,'"+ TransTyp +"' as TRANS_TYPE,ACTIVE_RECORD,LINE,CREATION_DATE,DOMAIN,VENDOR,TO_TRANS_SOURCE from TEMP_NODE_UCELL where NODE_PK ='" + nodepk + "' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"')"); 
  		stmtinsert3.executeUpdate();
  		stmtinsert3.close();
  	
@@ -1334,7 +1334,7 @@ public class CheckNodeMovement {
  		
  		
 
- 		stmtinsert2 = con.prepareStatement("insert into NODE_LCELL (select LCELL_ID,LOCALCELLID,CELLNAME,CELLRADIUS,FREQBAND,ULEARFCNCFGIND,ULEARFCN,DLEARFCN,ULBANDWIDTH,DLBANDWIDTH,CELLID,PHYCELLID,FDDTDDIND,ENODEBFUNCTIONNAME,NBCELLFLAG,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,'" + vsourc +"','"+ transid +"',TO_TRANS_ID,'"+ TransTyp +"' as TRANS_TYPE,ACTIVE_RECORD,LINE,CREATION_DATE,DOMAIN,VENDOR,TO_TRANS_SOURCE from TEMP_NODE_LCELL where NODE_PK ='" + nodepk + "' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"')"); 
+ 		stmtinsert2 = con.prepareStatement("insert into NODE_3G (select LCELL_ID,LOCALCELLID,CELLNAME,CELLRADIUS,FREQBAND,ULEARFCNCFGIND,ULEARFCN,DLEARFCN,ULBANDWIDTH,DLBANDWIDTH,CELLID,PHYCELLID,FDDTDDIND,ENODEBFUNCTIONNAME,NBCELLFLAG,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,'" + vsourc +"','"+ transid +"',TO_TRANS_ID,'"+ TransTyp +"' as TRANS_TYPE,ACTIVE_RECORD,LINE,CREATION_DATE,DOMAIN,VENDOR,TO_TRANS_SOURCE from TEMP_NODE_LCELL where NODE_PK ='" + nodepk + "' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"')"); 
  		stmtinsert2.executeUpdate();
  		stmtinsert2.close();
 
@@ -1485,11 +1485,11 @@ public class CheckNodeMovement {
 					stmtinsertupd.executeUpdate();
 					stmtinsertupd.close();
 				break;
-		 	case "NODE_GCELL":
-			 		stmtinsert1 = con.prepareStatement("insert into NODE_GCELL (select '" + Gyear +"' ||'_GCELL_'|| NODEGCELL_SEQ.nextval,CELLID,CELLNAME,MCC,MNC,LAC,CI,NCC,BCC,TYPE,BCCHNO,BASEBANDPOLICY,BASEBANDEQMID,GBTSFUNCTIONNAME,'" + vnodepk +"','" + rs1.getString("NODE_ATTR_PK") +"',UPDATE_DATE,FILENAME,GLOCELLID,STATUS,'" + vsourc +"','"+ transid +"','0','Node Disappeared' ,'1',LINE,CREATION_DATE,DOMAIN,VENDOR,TO_TRANS_SOURCE from NODE_GCELL where NODE_PK ='" + nodepk + "'  and ACTIVE_RECORD='1' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"')"); 
+		 	case "NODE_2G":
+			 		stmtinsert1 = con.prepareStatement("insert into NODE_2G (select '" + Gyear +"' ||'_GCELL_'|| NODEGCELL_SEQ.nextval,CELLID,CELLNAME,MCC,MNC,LAC,CI,NCC,BCC,TYPE,BCCHNO,BASEBANDPOLICY,BASEBANDEQMID,GBTSFUNCTIONNAME,'" + vnodepk +"','" + rs1.getString("NODE_ATTR_PK") +"',UPDATE_DATE,FILENAME,GLOCELLID,STATUS,'" + vsourc +"','"+ transid +"','0','Node Disappeared' ,'1',LINE,CREATION_DATE,DOMAIN,VENDOR,TO_TRANS_SOURCE from NODE_2G where NODE_PK ='" + nodepk + "'  and ACTIVE_RECORD='1' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"')"); 
 			 		stmtinsert1.executeUpdate();
 			 		stmtinsert1.close();
-			 		stmtinsertupd = con.prepareStatement("update  NODE_GCELL set TO_TRANS_SOURCE='" + vsourc +"',TO_TRANS_ID ='"+ transid +"' , ACTIVE_RECORD='0' ,UPDATE_DATE = sysdate where NODE_PK ='"+ nodepk +"' and TRANS_TYPE <> 'Node Disappeared' and ACTIVE_RECORD='1' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'  ") ;
+			 		stmtinsertupd = con.prepareStatement("update  NODE_2G set TO_TRANS_SOURCE='" + vsourc +"',TO_TRANS_ID ='"+ transid +"' , ACTIVE_RECORD='0' ,UPDATE_DATE = sysdate where NODE_PK ='"+ nodepk +"' and TRANS_TYPE <> 'Node Disappeared' and ACTIVE_RECORD='1' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'  ") ;
 					stmtinsertupd.executeUpdate();
 					stmtinsertupd.close();
 				break;
@@ -1501,11 +1501,11 @@ public class CheckNodeMovement {
 					stmtinsertupd.executeUpdate();
 					stmtinsertupd.close();
 		 		break;
-			case "NODE_UCELL":
-					stmtinsert3 = con.prepareStatement("insert into NODE_UCELL (select '" + Gyear +"' ||'_UCELL_'|| NODEUCELL_SEQ.nextval,CELLID,CELLNAME,LOCELL,NODEBFUNCTIONNAME,ULFREQ,DLFREQ,MAXPOWER,USERLABEL,MAXTXPOWER,UARFCNUPLINK,UARFCNDOWNLINK,PSCRAMBCODE,NODEBNAME,LAC,SAC,RAC,MANUFACTURERDATA,RADIUS,HORAD,DI,'" + vnodepk +"','" + rs1.getString("NODE_ATTR_PK") +"',UPDATE_DATE,FILENAME,STATUS,'" + vsourc +"','"+ transid +"','0','Node Disappeared' ,'1',LINE,CREATION_DATE,DOMAIN,VENDOR,TO_TRANS_SOURCE from NODE_UCELL where NODE_PK ='" + nodepk + "'  and ACTIVE_RECORD='1' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"')"); 
+			case "NODE_4G":
+					stmtinsert3 = con.prepareStatement("insert into NODE_4G (select '" + Gyear +"' ||'_UCELL_'|| NODEUCELL_SEQ.nextval,CELLID,CELLNAME,LOCELL,NODEBFUNCTIONNAME,ULFREQ,DLFREQ,MAXPOWER,USERLABEL,MAXTXPOWER,UARFCNUPLINK,UARFCNDOWNLINK,PSCRAMBCODE,NODEBNAME,LAC,SAC,RAC,MANUFACTURERDATA,RADIUS,HORAD,DI,'" + vnodepk +"','" + rs1.getString("NODE_ATTR_PK") +"',UPDATE_DATE,FILENAME,STATUS,'" + vsourc +"','"+ transid +"','0','Node Disappeared' ,'1',LINE,CREATION_DATE,DOMAIN,VENDOR,TO_TRANS_SOURCE from NODE_UCELL where NODE_PK ='" + nodepk + "'  and ACTIVE_RECORD='1' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"')"); 
 			 		stmtinsert3.executeUpdate();
 			 		stmtinsert3.close();
-			 		stmtinsertupd = con.prepareStatement("update  NODE_UCELL set TO_TRANS_SOURCE='" + vsourc +"',TO_TRANS_ID ='"+ transid +"' , ACTIVE_RECORD='0' ,UPDATE_DATE = sysdate where NODE_PK ='"+ nodepk +"' and TRANS_TYPE <> 'Node Disappeared' and ACTIVE_RECORD='1' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'  ") ;
+			 		stmtinsertupd = con.prepareStatement("update  NODE_4G set TO_TRANS_SOURCE='" + vsourc +"',TO_TRANS_ID ='"+ transid +"' , ACTIVE_RECORD='0' ,UPDATE_DATE = sysdate where NODE_PK ='"+ nodepk +"' and TRANS_TYPE <> 'Node Disappeared' and ACTIVE_RECORD='1' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'  ") ;
 					stmtinsertupd.executeUpdate();
 					stmtinsertupd.close();
 				break;
@@ -1517,11 +1517,11 @@ public class CheckNodeMovement {
 					stmtinsertupd.executeUpdate();
 					stmtinsertupd.close();
 				break;
-			case "NODE_LCELL":
-					stmtinsert2 = con.prepareStatement("insert into NODE_LCELL (select '" + Gyear +"' ||'_LCELL_'|| NODELCELL_SEQ.nextval,LOCALCELLID,CELLNAME,CELLRADIUS,FREQBAND,ULEARFCNCFGIND,ULEARFCN,DLEARFCN,ULBANDWIDTH,DLBANDWIDTH,CELLID,PHYCELLID,FDDTDDIND,ENODEBFUNCTIONNAME,NBCELLFLAG,'" + vnodepk +"','" + rs1.getString("NODE_ATTR_PK") +"',UPDATE_DATE,FILENAME,STATUS,'" + vsourc +"','"+ transid +"','0','Node Disappeared' ,'1',LINE,CREATION_DATE,DOMAIN,VENDOR,TO_TRANS_SOURCE from NODE_LCELL where NODE_PK ='" + nodepk + "'  and ACTIVE_RECORD='1' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"')"); 
+			case "NODE_3G":
+					stmtinsert2 = con.prepareStatement("insert into NODE_3G (select '" + Gyear +"' ||'_LCELL_'|| NODELCELL_SEQ.nextval,LOCALCELLID,CELLNAME,CELLRADIUS,FREQBAND,ULEARFCNCFGIND,ULEARFCN,DLEARFCN,ULBANDWIDTH,DLBANDWIDTH,CELLID,PHYCELLID,FDDTDDIND,ENODEBFUNCTIONNAME,NBCELLFLAG,'" + vnodepk +"','" + rs1.getString("NODE_ATTR_PK") +"',UPDATE_DATE,FILENAME,STATUS,'" + vsourc +"','"+ transid +"','0','Node Disappeared' ,'1',LINE,CREATION_DATE,DOMAIN,VENDOR,TO_TRANS_SOURCE from NODE_LCELL where NODE_PK ='" + nodepk + "'  and ACTIVE_RECORD='1' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"')"); 
 			 		stmtinsert2.executeUpdate();
 			 		stmtinsert2.close();
-			 		stmtinsertupd = con.prepareStatement("update  NODE_LCELL set TO_TRANS_SOURCE='" + vsourc +"',TO_TRANS_ID ='"+ transid +"' , ACTIVE_RECORD='0' ,UPDATE_DATE = sysdate where NODE_PK ='"+ nodepk +"' and TRANS_TYPE <> 'Node Disappeared' and ACTIVE_RECORD='1' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'  ") ;
+			 		stmtinsertupd = con.prepareStatement("update  NODE_3G set TO_TRANS_SOURCE='" + vsourc +"',TO_TRANS_ID ='"+ transid +"' , ACTIVE_RECORD='0' ,UPDATE_DATE = sysdate where NODE_PK ='"+ nodepk +"' and TRANS_TYPE <> 'Node Disappeared' and ACTIVE_RECORD='1' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'  ") ;
 					stmtinsertupd.executeUpdate();
 					stmtinsertupd.close();
 				break;

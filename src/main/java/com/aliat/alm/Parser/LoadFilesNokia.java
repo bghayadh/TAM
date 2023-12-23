@@ -1837,7 +1837,7 @@ public class LoadFilesNokia extends DefaultHandler {
 		     stmt1.executeUpdate();
 		     stmt1.close();
 		     
-		     stmt2 = con.prepareStatement("delete from  NODE_UCELL where " + fieldname +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'"); 
+		     stmt2 = con.prepareStatement("delete from  NODE_4G where " + fieldname +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'"); 
 		     stmt2.executeUpdate();
 		     stmt2.close();
 		     
@@ -1845,7 +1845,7 @@ public class LoadFilesNokia extends DefaultHandler {
 		     stmt.executeUpdate();
 		     stmt.close(); 
 		     		 
-		     stmt1 = con.prepareStatement("delete from  NODE_LCELL where " + fieldname +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'"); 
+		     stmt1 = con.prepareStatement("delete from  NODE_3G where " + fieldname +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'"); 
 		     stmt1.executeUpdate();
 		     stmt1.close();
 		     
