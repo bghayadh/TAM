@@ -968,7 +968,7 @@ public class CopyParsingDataToALM {
 				 System.out.println("Copy to TEMP_NODE_GCELL in process...");
 				 logger.info("Copy to TEMP_NODE_GCELL in process...");
 				 
-				 queryp = "select * from NODE_2G where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'"; 
+				 queryp = "select * from NODE_2GCELL where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'"; 
 				 stmtp = con.createStatement();
 			     rsp = stmtp.executeQuery(queryp);
 			     
@@ -990,7 +990,7 @@ public class CopyParsingDataToALM {
 				 String logsDETails_iD= localgetseqNbr(1);
 				 logsDETails_iD=Gyear+"_"+ "LOGS_DETAILS"+'_'+logsDETails_iD;
 					PreparedStatement insertLogsDETAils_Statemnt = conalm.prepareStatement("insert into AUTO_DISCOVERY_LOGS_DETAILS (LOGS_DETAILS_ID,TIME,ACTIVITY_NAME,ACTIVITY_DESCRIPTION,ATTRIBUTE_NAME,ACTIVITY_TITLE,ACTIVITY_STATUS,QUANTITY,VENDOR,DOMAIN,LOGS_ID)"
-					 		+ "values('"+logsDETails_iD+"',sysdate ,'CopyParsingToALM','Copy to TEMP_NODE_GCELL COMPLETED','GCELL','Number of NODE_2G','Completed','"+nbOfNodeGcell+"','" + vvendor +"','" + vdomain +"','"+logsid+"') ");
+					 		+ "values('"+logsDETails_iD+"',sysdate ,'CopyParsingToALM','Copy to TEMP_NODE_GCELL COMPLETED','GCELL','Number of NODE_2GCELL','Completed','"+nbOfNodeGcell+"','" + vvendor +"','" + vdomain +"','"+logsid+"') ");
 					 		
 					insertLogsDETAils_Statemnt.executeUpdate();
 					insertLogsDETAils_Statemnt.close();
@@ -1031,7 +1031,7 @@ public class CopyParsingDataToALM {
 				 System.out.println("Copy to TEMP_NODE_UCELL in process...");
 				 logger.info("Copy to TEMP_NODE_UCELL in process...");
 				 
-				 queryp = "select * from NODE_4G where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'"; 
+				 queryp = "select * from NODE_3GCELL where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'"; 
 				 stmtp = con.createStatement();
 			     rsp = stmtp.executeQuery(queryp);
 			     
@@ -1054,7 +1054,7 @@ public class CopyParsingDataToALM {
 				 String logsDetails_ID= localgetseqNbr(1);
 				 logsDetails_ID=Gyear+"_"+ "LOGS_DETAILS"+'_'+logsDetails_ID;
 					PreparedStatement insert_logsDetails_Statemnt = conalm.prepareStatement("insert into AUTO_DISCOVERY_LOGS_DETAILS (LOGS_DETAILS_ID,TIME,ACTIVITY_NAME,ACTIVITY_DESCRIPTION,ATTRIBUTE_NAME,ACTIVITY_TITLE,ACTIVITY_STATUS,QUANTITY,VENDOR,DOMAIN,LOGS_ID)"
-					 		+ "values('"+logsDetails_ID+"',sysdate ,'CopyParsingToALM','Copy to TEMP_NODE_UCELL COMPLETED','UCELL','Number of NODE_4G','Completed','"+nbOfNodeUCELL+"','" + vvendor +"','" + vdomain +"','"+logsid+"') ");
+					 		+ "values('"+logsDetails_ID+"',sysdate ,'CopyParsingToALM','Copy to TEMP_NODE_UCELL COMPLETED','UCELL','Number of NODE_3GCELL','Completed','"+nbOfNodeUCELL+"','" + vvendor +"','" + vdomain +"','"+logsid+"') ");
 					 		
 					insert_logsDetails_Statemnt.executeUpdate();
 					insert_logsDetails_Statemnt.close();
@@ -1110,7 +1110,7 @@ public class CopyParsingDataToALM {
 				 System.out.println("Copy to TEMP_NODE_LCELL in process...");
 				 logger.info("Copy to TEMP_NODE_LCELL in process...");
 				 
-				 queryp = "select * from NODE_3G where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'"; 
+				 queryp = "select * from NODE_4GCELL where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'"; 
 				 stmtp = con.createStatement();
 			     rsp = stmtp.executeQuery(queryp);
 			     
@@ -1132,7 +1132,7 @@ public class CopyParsingDataToALM {
 				 String logsDETAiLs_ID= localgetseqNbr(1);
 				 logsDETAiLs_ID=Gyear+"_"+ "LOGS_DETAILS"+'_'+logsDETAiLs_ID;
 					PreparedStatement insert_logsDETAiLs_Statemnt = conalm.prepareStatement("insert into AUTO_DISCOVERY_LOGS_DETAILS (LOGS_DETAILS_ID,TIME,ACTIVITY_NAME,ACTIVITY_DESCRIPTION,ATTRIBUTE_NAME,ACTIVITY_TITLE,ACTIVITY_STATUS,QUANTITY,VENDOR,DOMAIN,LOGS_ID)"
-					 		+ "values('"+logsDETAiLs_ID+"',sysdate ,'CopyParsingToALM','Copy to TEMP_NODE_LCELL COMPLETED','LCELL','Number of NODE_3G','Completed','"+nbOfNodeLCELL+"','" + vvendor +"','" + vdomain +"','"+logsid+"') ");
+					 		+ "values('"+logsDETAiLs_ID+"',sysdate ,'CopyParsingToALM','Copy to TEMP_NODE_LCELL COMPLETED','LCELL','Number of NODE_4GCELL','Completed','"+nbOfNodeLCELL+"','" + vvendor +"','" + vdomain +"','"+logsid+"') ");
 					 		
 					insert_logsDETAiLs_Statemnt.executeUpdate();
 					insert_logsDETAiLs_Statemnt.close();
@@ -1477,7 +1477,7 @@ public class CopyParsingDataToALM {
          stmt2.close();
          
          //Delete from NODE_GCELL
-  	  	stmt0 = con.prepareStatement("delete  from NODE_2G where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'");
+  	  	stmt0 = con.prepareStatement("delete  from NODE_2GCELL where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'");
   	  	stmt0.executeUpdate();
   	  	stmt0.close();
        
@@ -1487,7 +1487,7 @@ public class CopyParsingDataToALM {
          stmt1.close();
           
         //Delete from NODE_UCELL
-     	stmt2 = con.prepareStatement("delete  from NODE_4G where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'");
+     	stmt2 = con.prepareStatement("delete  from NODE_3GCELL where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'");
          stmt2.executeUpdate();
          stmt2.close();
          
@@ -1496,8 +1496,8 @@ public class CopyParsingDataToALM {
   	  	stmt0.executeUpdate();
   	  	stmt0.close();
        
-  	  	//Delete from NODE_3G
-     	stmt1 = con.prepareStatement("delete  from NODE_3G where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'");
+  	  	//Delete from NODE_4GCELL
+     	stmt1 = con.prepareStatement("delete  from NODE_4GCELL where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'");
          stmt1.executeUpdate();
          stmt1.close();
           

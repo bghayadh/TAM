@@ -157,7 +157,7 @@ public class Get_Cell_Name_ID_WIN {
 
 				 			Statement stmt0 = null;
 				 			stmt0 = con.createStatement(); 
-				 		    String sqlStmt0 = "select distinct GBTSFUNCTIONNAME from NODE_2G where DOMAIN='" + rsinit2.getString("DOMAIN") +"' and VENDOR='" + rsinit2.getString("VENDOR") +"'";          
+				 		    String sqlStmt0 = "select distinct GBTSFUNCTIONNAME from NODE_2GCELL where DOMAIN='" + rsinit2.getString("DOMAIN") +"' and VENDOR='" + rsinit2.getString("VENDOR") +"'";          
 				 		    ResultSet rs0 = stmt0.executeQuery(sqlStmt0);
 				 		    while (rs0.next()) {
 				 		    	if (StringUtils.equalsIgnoreCase (rs0.getString("GBTSFUNCTIONNAME"),"0")) {
@@ -181,7 +181,7 @@ public class Get_Cell_Name_ID_WIN {
 				 		    //// Get from UCELL
 				 		    Statement stmt = null;
 				 			stmt = con.createStatement(); 
-				 		    String sqlStmt = "select distinct NODEBFUNCTIONNAME from NODE_4G where DOMAIN='" + rsinit2.getString("DOMAIN") +"' and VENDOR='" + rsinit2.getString("VENDOR") +"'";          
+				 		    String sqlStmt = "select distinct NODEBFUNCTIONNAME from NODE_3GCELL where DOMAIN='" + rsinit2.getString("DOMAIN") +"' and VENDOR='" + rsinit2.getString("VENDOR") +"'";          
 				 		    ResultSet rs = stmt.executeQuery(sqlStmt);
 				 		    while (rs.next()) {
 				 		    	if (StringUtils.equalsIgnoreCase (rs.getString("NODEBFUNCTIONNAME"),"0")) {
@@ -227,7 +227,7 @@ public class Get_Cell_Name_ID_WIN {
 				 
 				 System.out.println(vcellname);
 				 //try {
-				 String queryp = "select CELLID,CELLNAME,LOCELL from NODE_4G where NODEBNAME like '"+ vcellname+"%' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'"; 
+				 String queryp = "select CELLID,CELLNAME,LOCELL from NODE_3GCELL where NODEBNAME like '"+ vcellname+"%' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'"; 
 				 stmtp = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY); 
 			     ResultSet rsp = stmtp.executeQuery(queryp);
 			     rsp.last();
@@ -240,12 +240,12 @@ public class Get_Cell_Name_ID_WIN {
 			 			System.out.println(rsp.getString("CELLID") +":"+ rsp.getString("CELLNAME")+":"+ rsp.getString("LOCELL"));
 			 			Statement stmtrec = null;
 			 			stmtrec = con.createStatement(); 
-					    String sqlStmtrec = "select CELLID,CELLNAME from NODE_4G where NODEBNAME = '"+ vcellname+"'  and LOCELL='" + rsp.getString("LOCELL") + "' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'";          
+					    String sqlStmtrec = "select CELLID,CELLNAME from NODE_3GCELL where NODEBNAME = '"+ vcellname+"'  and LOCELL='" + rsp.getString("LOCELL") + "' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'";          
 					    ResultSet rsrec = stmtrec.executeQuery(sqlStmtrec);
 					    while (rsrec.next()) {
 					    	System.out.println(rsrec.getString("CELLID") +":"+ rsrec.getString("CELLNAME"));
 					    	//set celname and cellid into GCELL where  GBTSFUNCTIONNAME=vcellname
-					    	stmtinsert1 = con.prepareStatement("update  NODE_4G set CELLID='"+rsp.getString("CELLID")+"' ,CELLNAME='"+rsp.getString("CELLNAME")+"',UPDATE_DATE =sysdate where NODEBFUNCTIONNAME='"+vcellname+"' and LOCELL='"+ rsp.getString("LOCELL") +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'");
+					    	stmtinsert1 = con.prepareStatement("update  NODE_3GCELL set CELLID='"+rsp.getString("CELLID")+"' ,CELLNAME='"+rsp.getString("CELLNAME")+"',UPDATE_DATE =sysdate where NODEBFUNCTIONNAME='"+vcellname+"' and LOCELL='"+ rsp.getString("LOCELL") +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'");
 					    	stmtinsert1.executeUpdate();
 				    		stmtinsert1.close();
 					    }
@@ -275,7 +275,7 @@ public class Get_Cell_Name_ID_WIN {
 				 PreparedStatement stmtinsert1=null;
 		         
 				 //try {
-				 String queryp = "select CELLID,CELLNAME from NODE_2G where CELLNAME like '"+ vcellname+"%' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'"; 
+				 String queryp = "select CELLID,CELLNAME from NODE_2GCELL where CELLNAME like '"+ vcellname+"%' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'"; 
 				 stmtp = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY); 
 			     ResultSet rsp = stmtp.executeQuery(queryp);
 			     rsp.last();
@@ -291,13 +291,13 @@ public class Get_Cell_Name_ID_WIN {
 			 			 System.out.println(streec);
 			 			Statement stmtrec = null;
 			 			stmtrec = con.createStatement(); 
-					    String sqlStmtrec = "select CELLID,CELLNAME from NODE_2G where CELLNAME = '"+ streec+"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'";          
+					    String sqlStmtrec = "select CELLID,CELLNAME from NODE_2GCELL where CELLNAME = '"+ streec+"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'";          
 					    ResultSet rsrec = stmtrec.executeQuery(sqlStmtrec);
 					    while (rsrec.next()) {
 					    	System.out.println(rsrec.getString("CELLID") +":"+ rsrec.getString("CELLNAME"));
 					    	
 					    	//set celname and cellid into GCELL where  GBTSFUNCTIONNAME=vcellname
-					    	stmtinsert1 = con.prepareStatement("update  NODE_2G set CELLID='"+rsrec.getString("CELLID")+"' ,CELLNAME='"+rsrec.getString("CELLNAME")+"',UPDATE_DATE =sysdate where GBTSFUNCTIONNAME='"+vcellname+"' and GLOCELLID='"+j+"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'");
+					    	stmtinsert1 = con.prepareStatement("update  NODE_2GCELL set CELLID='"+rsrec.getString("CELLID")+"' ,CELLNAME='"+rsrec.getString("CELLNAME")+"',UPDATE_DATE =sysdate where GBTSFUNCTIONNAME='"+vcellname+"' and GLOCELLID='"+j+"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'");
 					    	stmtinsert1.executeUpdate();
 				    		stmtinsert1.close();
 					    }
