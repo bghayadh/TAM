@@ -1409,8 +1409,8 @@ public class PhysicalLayerController {
 						Query fiberAuxiliaryQuery = session.createNativeQuery(
 								"SELECT B.LONGITUDE,B.LATITUDE,B.DISTANCE_FROM_SOURCE,B.WARE_ID,B.AUXILIARY_POINT_ID,B.AUXILIARY_POINT_NAME,B.FIBER_CABLE_ID,B.AUXILIARY_ID FROM FIBER_CABLES A,FIBER_AUXILIARY_POINTS B WHERE A.FIBER_CABLE_ID=B.FIBER_CABLE_ID AND B.FIBER_CABLE_ID IN (:param1) ORDER BY B.SEQ_SORTING ASC");
 						fiberAuxiliaryQuery.setParameter("param1",
-								(findListId(fiberList, "FiberCable")).length > 0 ? findListId(fiberList, "FiberCable")
-										: new String[] { "" });
+								Arrays.asList((findListId(fiberList, "FiberCable")).length > 0 ? findListId(fiberList, "FiberCable")
+										: new String[] { "" }));
 						fiberAuxiliary_Data = fiberAuxiliaryQuery.getResultList();
 
 						// fiberTubes = session.createNativeQuery("SELECT DISTINCT
@@ -1437,8 +1437,8 @@ public class PhysicalLayerController {
 						Query tubesAuxiliariesQuery = session.createNativeQuery(
 								"SELECT DISTINCT c.TUBE_ID,c.LONGITUDE,c.LATITUDE,c.WARE_ID,c.AUXILIARY_POINT_ID,c.AUXILIARY_POINT_NAME,c.DISTANCE_FROM_SOURCE,c.SEQ_SORTING,c.AUXILIARY_ID,c.DRIVING_DISTANCE, c.GEO_DISTANCE FROM TUBE_AUXILIARY_POINTS c LEFT JOIN FIBER_TUBES b ON  b.TUBE_ID=c.TUBE_ID LEFT JOIN FIBER_CABLES a ON a.FIBER_CABLE_ID=b.FIBER_CABLE_ID WHERE c.TUBE_ID IN (:param1) ORDER BY c.SEQ_SORTING ASC");
 						tubesAuxiliariesQuery.setParameter("param1",
-								(findListId(fiberTubes, "Tube")).length > 0 ? findListId(fiberTubes, "Tube")
-										: new String[] { "" });
+								Arrays.asList((findListId(fiberTubes, "Tube")).length > 0 ? findListId(fiberTubes, "Tube")
+										: new String[] { "" }));
 						tubesAuxiliaries = tubesAuxiliariesQuery.getResultList();
 						// System.out.println("tubesAuxiliaries
 						// "+mapper.writeValueAsString(tubesAuxiliaries));
@@ -1460,8 +1460,8 @@ public class PhysicalLayerController {
 						Query strandsAuxiliariesQuery = session.createNativeQuery(
 								"SELECT DISTINCT c.STRAND_ID,c.LONGITUDE,c.LATITUDE,c.WARE_ID,c.AUXILIARY_POINT_ID,c.AUXILIARY_POINT_NAME,c.DISTANCE_FROM_SOURCE,c.SEQ_SORTING,c.AUXILIARY_ID,c.DRIVING_DISTANCE, c.GEO_DISTANCE FROM STRAND_AUXILIARY_POINTS c,FIBER_STRANDS b,FIBER_CABLES a WHERE a.FIBER_CABLE_ID=b.FIBER_CABLE_ID and b.STRAND_ID=c.STRAND_ID AND c.STRAND_ID IN (:param1) ORDER BY c.SEQ_SORTING ASC ");
 						strandsAuxiliariesQuery.setParameter("param1",
-								(findListId(fiberStrands, "Strand")).length > 0 ? findListId(fiberStrands, "Strand")
-										: new String[] { "" });
+								Arrays.asList((findListId(fiberStrands, "Strand")).length > 0 ? findListId(fiberStrands, "Strand")
+										: new String[] { "" }));
 						strandsAuxiliaries = strandsAuxiliariesQuery.getResultList();
 
 						distribBoardList = session.createNativeQuery(
@@ -1490,10 +1490,10 @@ public class PhysicalLayerController {
 												+ "UNION "
 												+ " SELECT DISTINCT A.DB_ID,A.DB_LONGITUDE,A.DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_CABLES B  ON B.DESTINATION_ID = A.DB_ID where B.DESTINATION_ID LIKE '%DB%' AND B.FIBER_CABLE_ID IN (:param1) ) where DB_ID NOT IN (:param2)  ");
 								query.setParameter("param1",
-										(findListId(fiberList, "FiberCable")).length > 0
+										Arrays.asList((findListId(fiberList, "FiberCable")).length > 0
 												? findListId(fiberList, "FiberCable")
-												: new String[] { "" });
-								query.setParameter("param2", idsArray);
+												: new String[] { "" }));
+								query.setParameter("param2", Arrays.asList(idsArray));
 								distribBoardList.addAll(query.getResultList());
 							} else {
 								query = session.createNativeQuery(
@@ -1503,9 +1503,9 @@ public class PhysicalLayerController {
 												+ "UNION "
 												+ " SELECT DISTINCT A.DB_ID,A.DB_LONGITUDE,A.DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_CABLES B  ON B.DESTINATION_ID = A.DB_ID where B.DESTINATION_ID LIKE '%DB%' AND B.FIBER_CABLE_ID IN (:param1) ) ");
 								query.setParameter("param1",
-										(findListId(fiberList, "FiberCable")).length > 0
+										Arrays.asList((findListId(fiberList, "FiberCable")).length > 0
 												? findListId(fiberList, "FiberCable")
-												: new String[] { "" });
+												: new String[] { "" }));
 								distribBoardList = query.getResultList();
 							}
 							if (manholeList.size() > 0) {
@@ -1516,10 +1516,10 @@ public class PhysicalLayerController {
 												+ " UNION "
 												+ " SELECT DISTINCT A.manhole_id,A.manhole_name,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID),A.CITY FROM MANHOLE A LEFT JOIN FIBER_CABLES B  ON B.DESTINATION_ID = A.manhole_id where B.DESTINATION_ID LIKE '%MH%' AND B.FIBER_CABLE_ID IN (:param1)  ) where manhole_id NOT IN (:param2) ");
 								manholeData.setParameter("param1",
-										(findListId(fiberList, "FiberCable")).length > 0
+										Arrays.asList((findListId(fiberList, "FiberCable")).length > 0
 												? findListId(fiberList, "FiberCable")
-												: new String[] { "" });
-								manholeData.setParameter("param2", idsArray);
+												: new String[] { "" }));
+								manholeData.setParameter("param2", Arrays.asList(idsArray));
 								manholeList.addAll(manholeData.getResultList());
 							} else {
 
@@ -1530,9 +1530,9 @@ public class PhysicalLayerController {
 												+ " UNION "
 												+ " SELECT DISTINCT A.manhole_id,A.manhole_name,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID),A.CITY FROM MANHOLE A LEFT JOIN FIBER_CABLES B  ON B.DESTINATION_ID = A.manhole_id where B.DESTINATION_ID LIKE '%MH%' AND B.FIBER_CABLE_ID IN (:param1)  )  ");
 								manholeData.setParameter("param1",
-										(findListId(fiberList, "FiberCable")).length > 0
+										Arrays.asList((findListId(fiberList, "FiberCable")).length > 0
 												? findListId(fiberList, "FiberCable")
-												: new String[] { "" });
+												: new String[] { "" }));
 								manholeList = manholeData.getResultList();
 							}
 							if (handholeList.size() > 0) {
@@ -1543,10 +1543,10 @@ public class PhysicalLayerController {
 												+ "UNION"
 												+ " SELECT DISTINCT A.handhole_id,A.handhole_name,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID),A.DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_CABLES B  ON B.DESTINATION_ID = A.HANDHOLE_ID where B.DESTINATION_ID LIKE '%HH%' AND B.FIBER_CABLE_ID IN (:param1) ) where handhole_id NOT IN (:param2)  ");
 								handholeData.setParameter("param1",
-										(findListId(fiberList, "FiberCable")).length > 0
+										Arrays.asList((findListId(fiberList, "FiberCable")).length > 0
 												? findListId(fiberList, "FiberCable")
-												: new String[] { "" });
-								handholeData.setParameter("param2", idsArray);
+												: new String[] { "" }));
+								handholeData.setParameter("param2", Arrays.asList(idsArray));
 								handholeList.addAll(handholeData.getResultList());
 							} else {
 								query = session.createNativeQuery(
@@ -1556,9 +1556,9 @@ public class PhysicalLayerController {
 												+ "UNION"
 												+ " SELECT DISTINCT A.handhole_id,A.handhole_name,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID),A.DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_CABLES B  ON B.DESTINATION_ID = A.HANDHOLE_ID where B.DESTINATION_ID LIKE '%HH%' AND B.FIBER_CABLE_ID IN (:param1) )  ");
 								query.setParameter("param1",
-										(findListId(fiberList, "FiberCable")).length > 0
+										Arrays.asList((findListId(fiberList, "FiberCable")).length > 0
 												? findListId(fiberList, "FiberCable")
-												: new String[] { "" });
+												: new String[] { "" }));
 								handholeList = query.getResultList();
 							}
 						}
@@ -1568,7 +1568,7 @@ public class PhysicalLayerController {
 								: new String[] { "A" };
 						query = session.createNativeQuery(
 								"SELECT DISTINCT A.JUNCTION_ID, A.JUNCTION_NAME,A.PHYSICAL_LAYER_ID,A.PHYSICAL_LAYER_NAME,A.JUNCTION_NUMBER,A.CAPACITY,A.CITY,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID FROM JUNCTION A INNER JOIN manhole B ON A.PHYSICAL_LAYER_ID = B.manhole_id where B.manhole_id in (:param) ");
-						junctionManholeList = query.setParameter("param", allManIdsPointsArray).getResultList();
+						junctionManholeList = query.setParameter("param", Arrays.asList(allManIdsPointsArray)).getResultList();
 
 						String[] allHandIdsPointsArray = (findListId(handholeList, "all")).length > 0
 								? findListId(handholeList, "all")
@@ -1576,7 +1576,7 @@ public class PhysicalLayerController {
 						query = session.createNativeQuery(
 								"SELECT DISTINCT A.JUNCTION_ID, A.JUNCTION_NAME,A.PHYSICAL_LAYER_ID,A.PHYSICAL_LAYER_NAME,A.JUNCTION_NUMBER,A.CAPACITY,A.CITY,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID FROM JUNCTION A INNER JOIN handhole B ON A.PHYSICAL_LAYER_ID = b.handhole_id where b.handhole_id in(:param) ");
 
-						junctionHandholeList = query.setParameter("param", allHandIdsPointsArray).getResultList();
+						junctionHandholeList = query.setParameter("param", Arrays.asList(allHandIdsPointsArray)).getResultList();
 
 						model.addAttribute("siteId", request.getParameter("siteId"));
 						model.addAttribute("connectedSearchLong", request.getParameter("connectedSearchLong"));
@@ -1669,17 +1669,12 @@ public class PhysicalLayerController {
 
 					}
 
-					LinkedHashMap<String, List<?>> physicalLayerData = new LinkedHashMap<String, List<?>>();// linkedHashmap
-					// instead of
-					// HashMap to return
-					// values in
-					// sequential order
-					LinkedHashMap<String, List<?>> physicalLayerList = new LinkedHashMap<String, List<?>>();// linkedHashmap
-																											// instead
-																											// of
-																											// HashMap
-																											// to return
-																											// values
+					/* linkedHashmap instead of HashMap to return values in sequential order */
+					LinkedHashMap<String, List<?>> physicalLayerData = new LinkedHashMap<String, List<?>>();
+
+					/* linkedHashmap instead of HashMap to return values */					
+					LinkedHashMap<String, List<?>> physicalLayerList = new LinkedHashMap<String, List<?>>();
+					
 					for (Object[] obj : manholeListPt) {
 						if (!(manholeList.contains(obj))) {
 							manholeList.add(obj);
