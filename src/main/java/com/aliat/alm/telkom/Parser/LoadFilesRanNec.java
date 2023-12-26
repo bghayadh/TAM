@@ -239,12 +239,12 @@ public class LoadFilesRanNec {
 		Calendar calendar = new GregorianCalendar();
 		int year = calendar.get(Calendar.YEAR);
 
-		String sqlStmtinit = "select NODE_ACTIVE,NODE_LCELL from SEQ_TABLE";
+		String sqlStmtinit = "select NODE_ACTIVE,NODE_4GCELL from SEQ_TABLE";
 		stmtp1 = conalm.createStatement();
 		ResultSet rsinit = stmtp1.executeQuery(sqlStmtinit);
 		while (rsinit.next()) {
 			NodeSeq = rsinit.getInt("NODE_ACTIVE");
-			CellSeq=rsinit.getInt("NODE_LCELL");
+			CellSeq=rsinit.getInt("NODE_4GCELL");
 		}
 		stmtp1.close();
 		rsinit.close();
@@ -316,7 +316,7 @@ public class LoadFilesRanNec {
 				CellPK = year + "_NEC_RAN_CELL" + "_" + CellSeq;
 				cellID=nodeId;
 				cellName=nodeName;
-				cellStm = con.prepareStatement("insert into NODE_LCELL (LCELL_ID,LOCALCELLID,CELLID,CELLNAME,CELLRADIUS,FREQBAND,ULEARFCNCFGIND,ULEARFCN,DLEARFCN,ULBANDWIDTH,DLBANDWIDTH,PHYCELLID,FDDTDDIND,ENODEBFUNCTIONNAME,NBCELLFLAG,NODE_PK,NODE_ATTR_PK,CREATION_DATE,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,ACTIVE_RECORD,LINE,DOMAIN,VENDOR)"
+				cellStm = con.prepareStatement("insert into NODE_4GCELL (LCELL_ID,LOCALCELLID,CELLID,CELLNAME,CELLRADIUS,FREQBAND,ULEARFCNCFGIND,ULEARFCN,DLEARFCN,ULBANDWIDTH,DLBANDWIDTH,PHYCELLID,FDDTDDIND,ENODEBFUNCTIONNAME,NBCELLFLAG,NODE_PK,NODE_ATTR_PK,CREATION_DATE,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,ACTIVE_RECORD,LINE,DOMAIN,VENDOR)"
 						+ "values('"+CellPK+"','','"+cellID+"','"+cellName+"','','','','','','','','','','','','"+vcodeid+"','',sysdate,sysdate,"
 								+ "'"+fileName+"','"+commStatus+"','0','0','0','0','0','1','0','"+Domain+"','"+provider+"')");
 				cellStm.executeUpdate();
@@ -368,7 +368,7 @@ public class LoadFilesRanNec {
 		
 
 		stmtp = conalm.prepareStatement(
-				"UPDATE SEQ_TABLE SET NODE_ACTIVE = '" + NodeSeq + "' , NODE_BOARD = '" + NodeBoardSeq + "', NODE_LCELL = '" + CellSeq + "' ");
+				"UPDATE SEQ_TABLE SET NODE_ACTIVE = '" + NodeSeq + "' , NODE_BOARD = '" + NodeBoardSeq + "', NODE_4GCELL = '" + CellSeq + "' ");
 		stmtp.executeUpdate();
 		stmtp.close();
 

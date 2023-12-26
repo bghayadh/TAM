@@ -660,11 +660,11 @@ public class LoadFilesRANZTE {
 	public static void readGcellfile(String filename) throws IOException, SQLException{
 		
 		
-		String sqlStmtinit3 = "select NODE_GCELL from SEQ_TABLE";     
+		String sqlStmtinit3 = "select NODE_2GCELL from SEQ_TABLE";     
 		  stmtp1 = conalm.createStatement();
 		  ResultSet rsinit3 = stmtp1.executeQuery(sqlStmtinit3);
 		  while(rsinit3.next()) {
-			  GCellSeq = rsinit3.getInt("NODE_GCELL");
+			  GCellSeq = rsinit3.getInt("NODE_2GCELL");
 		  }
 		  rsinit3.close();
 		  stmtp1.close();
@@ -739,7 +739,7 @@ public class LoadFilesRANZTE {
 					 tempnodeID=gcellName.substring(0, 5);
 					 GCellPK = year + "_ZTE_RAN_CELL" + "_" + GCellSeq;
 					 
-					 PreparedStatement Gcellstmt = con.prepareStatement("insert into NODE_GCELL (GCELL_ID,CELLID,CELLNAME"
+					 PreparedStatement Gcellstmt = con.prepareStatement("insert into NODE_2GCELL (GCELL_ID,CELLID,CELLNAME"
 							+ ",MCC,MNC,LAC,CI,NCC,BCC,TYPE,BCCHNO,BASEBANDPOLICY,BASEBANDEQMID,GBTSFUNCTIONNAME"
 							+ ",NODE_PK,NODE_ATTR_PK,FILENAME,GLOCELLID,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,"
 							+ "TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,CREATION_DATE,UPDATE_DATE,DOMAIN,VENDOR)"
@@ -770,7 +770,7 @@ public class LoadFilesRANZTE {
 		 
 		 workbook.close();
 		 
-		 	stmtp = conalm.prepareStatement("UPDATE SEQ_TABLE SET NODE_GCELL = NODE_GCELL +"+GCellCount);
+		 	stmtp = conalm.prepareStatement("UPDATE SEQ_TABLE SET NODE_2GCELL = NODE_2GCELL +"+GCellCount);
 		  	stmtp.executeUpdate();
 		  	stmtp.close();
 		 
@@ -779,11 +779,11 @@ public class LoadFilesRANZTE {
 	
 public static void readUcellfile(String filename) throws IOException, SQLException{
 	
-	String sqlStmtinit3 = "select NODE_UCELL from SEQ_TABLE";     
+	String sqlStmtinit3 = "select NODE_3GCELL from SEQ_TABLE";     
 	  stmtp1 = conalm.createStatement();
 	  ResultSet rsinit3 = stmtp1.executeQuery(sqlStmtinit3);
 	  while(rsinit3.next()) {
-		  UCellSeq = rsinit3.getInt("NODE_UCELL");
+		  UCellSeq = rsinit3.getInt("NODE_3GCELL");
 	  }
 	  rsinit3.close();
 	  stmtp1.close();
@@ -854,7 +854,7 @@ public static void readUcellfile(String filename) throws IOException, SQLExcepti
 					tempnodeID=ucellName.substring(0, 5);
 					UCellPK = year + "_ZTE_RAN_CELL" + "_" + UCellSeq;
 					//QUERY
-						PreparedStatement Ucellstmt =con.prepareStatement("insert into NODE_UCELL"
+						PreparedStatement Ucellstmt =con.prepareStatement("insert into NODE_3GCELL"
 							+ "(UCELL_ID,CELLID,CELLNAME,LOCELL,NODEBFUNCTIONNAME,ULFREQ,DLFREQ,MAXPOWER,USERLABEL,MAXTXPOWER,UARFCNUPLINK,UARFCNDOWNLINK,PSCRAMBCODE,"
 							+ "NODEBNAME,LAC,SAC,RAC,MANUFACTURERDATA,RADIUS,HORAD,DI,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,"
 							+ "FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,CREATION_DATE,DOMAIN,VENDOR) "
@@ -880,7 +880,7 @@ public static void readUcellfile(String filename) throws IOException, SQLExcepti
 		 
 		 workbook.close();
 		 
-		 stmtp = conalm.prepareStatement("UPDATE SEQ_TABLE SET NODE_UCELL = NODE_UCELL +"+UCellCount);
+		 stmtp = conalm.prepareStatement("UPDATE SEQ_TABLE SET NODE_3GCELL = NODE_3GCELL +"+UCellCount);
 		  	stmtp.executeUpdate();
 		  	stmtp.close();
 		 
@@ -1386,11 +1386,11 @@ public static void readUcellfile(String filename) throws IOException, SQLExcepti
 		     stmt.executeUpdate(); 
 			 stmt.close();
 			 
-			 stmt = con.prepareStatement("delete from  NODE_GCELL where " + fieldname +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor+"'"); 
+			 stmt = con.prepareStatement("delete from  NODE_2GCELL where " + fieldname +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor+"'"); 
 		     stmt.executeUpdate(); 
 			 stmt.close();
 			 
-			 stmt = con.prepareStatement("delete from  NODE_UCELL where " + fieldname +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor+"'"); 
+			 stmt = con.prepareStatement("delete from  NODE_3GCELL where " + fieldname +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor+"'"); 
 		     stmt.executeUpdate(); 
 			 stmt.close();
 			

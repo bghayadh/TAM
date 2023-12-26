@@ -197,7 +197,7 @@ public class Get_Child_Parent_2G_3G_WIN {
 				 //Get distinct NODEBNAME, NODE_PK from NODE_UCELL it is  the parent of all data in UCELL having NODEBFUNCTIONNAME =NODEBNAME whcih theya are child
 				 
 				 
-		         String queryp = "select distinct a.NODEBNAME ,a.node_pk from NODE_UCELL a , NODE_ACTIVE b where a.node_pk=b.node_pk and  b.NODE_MODEL in ('BSC','RNC') and b.DOMAIN='" + vdomain +"' and b.VENDOR='" + vvendor +"'"; 
+		         String queryp = "select distinct a.NODEBNAME ,a.node_pk from NODE_3GCELL a , NODE_ACTIVE b where a.node_pk=b.node_pk and  b.NODE_MODEL in ('BSC','RNC') and b.DOMAIN='" + vdomain +"' and b.VENDOR='" + vvendor +"'"; 
 				 stmtp = con.createStatement();
 			     ResultSet rsp = stmtp.executeQuery(queryp);
 				 while (rsp.next()) {
@@ -224,7 +224,7 @@ public class Get_Child_Parent_2G_3G_WIN {
 					 stmtp1.close();
 					 
 					 
-					 String queryp2 = "select distinct a.NODE_PK,a.FILENAME,b.NODE_ID,b.NODE_NAME,b.NODE_TYPE,b.NODE_MODEL from NODE_UCELL a,NODE_ACTIVE b where a.NODEBFUNCTIONNAME ='"+ rsp.getString("NODEBNAME") + "' and a.NODE_PK=b.NODE_PK and b.DOMAIN='" + vdomain +"' and b.VENDOR='" + vvendor +"'"; 
+					 String queryp2 = "select distinct a.NODE_PK,a.FILENAME,b.NODE_ID,b.NODE_NAME,b.NODE_TYPE,b.NODE_MODEL from NODE_3GCELL a,NODE_ACTIVE b where a.NODEBFUNCTIONNAME ='"+ rsp.getString("NODEBNAME") + "' and a.NODE_PK=b.NODE_PK and b.DOMAIN='" + vdomain +"' and b.VENDOR='" + vvendor +"'"; 
 					 stmtp2 = con.createStatement();
 				     ResultSet rsp2 = stmtp2.executeQuery(queryp2);
 				     while (rsp2.next()) {
@@ -286,7 +286,7 @@ public class Get_Child_Parent_2G_3G_WIN {
 				 //try {
 				 //Get distinct NODEBNAME, NODE_PK from NODE_UCELL it is  the parent of all data in UCELL having NODEBFUNCTIONNAME =NODEBNAME whcih theya are child
 		
-		         String queryp = "select distinct  SUBSTR(a.CELLNAME, 1, LENGTH(a.CELLNAME)-1) as CELLNAME ,a.node_pk from NODE_GCELL a , NODE_ACTIVE b where a.node_pk=b.node_pk and  b.NODE_MODEL in ('BSC','RNC') and b.DOMAIN='" + vdomain +"' and b.VENDOR='" + vvendor +"'"; 
+		         String queryp = "select distinct  SUBSTR(a.CELLNAME, 1, LENGTH(a.CELLNAME)-1) as CELLNAME ,a.node_pk from NODE_2GCELL a , NODE_ACTIVE b where a.node_pk=b.node_pk and  b.NODE_MODEL in ('BSC','RNC') and b.DOMAIN='" + vdomain +"' and b.VENDOR='" + vvendor +"'"; 
 				 stmtp = con.createStatement();
 			     ResultSet rsp = stmtp.executeQuery(queryp);
 				 while (rsp.next()) {
@@ -318,7 +318,7 @@ public class Get_Child_Parent_2G_3G_WIN {
 						    //donothing
 					 } else {
 					 			 
-						 String queryp2 = "select distinct a.NODE_PK,a.FILENAME,b.NODE_ID,b.NODE_NAME,b.NODE_TYPE,b.NODE_MODEL from NODE_GCELL a,NODE_ACTIVE b where a.GBTSFUNCTIONNAME ='"+ varfile + "' and a.NODE_PK=b.NODE_PK and b.DOMAIN='" + vdomain +"' and b.VENDOR='" + vvendor +"'"; 
+						 String queryp2 = "select distinct a.NODE_PK,a.FILENAME,b.NODE_ID,b.NODE_NAME,b.NODE_TYPE,b.NODE_MODEL from NODE_2GCELL a,NODE_ACTIVE b where a.GBTSFUNCTIONNAME ='"+ varfile + "' and a.NODE_PK=b.NODE_PK and b.DOMAIN='" + vdomain +"' and b.VENDOR='" + vvendor +"'"; 
 						 //System.out.println(queryp2);
 						 stmtp2 = con.createStatement();
 					     ResultSet rsp2 = stmtp2.executeQuery(queryp2);

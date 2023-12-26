@@ -759,7 +759,7 @@ public class LoadFilesRanHuaweioldversion {
 
 			NodeList nList = doc.getElementsByTagName("TABLE");
 
-			String allSeqSelectStmnt = "select NODE_RACK,NODE_ACTIVE_ATTRIBUTE,NODE_FRAME,NODE_SLOT,NODE_BOARD,NODE_PORT,NODE_HOSTVER,NODE_CABINET,NODE_ACCESSORY,NODE_HOST,NODE_SUBRACK,NODE_GCELL,NODE_BTS,NODE_UCELL,NODE_ANTENNA,NODE_LCELL,NODE_RRN,NODE_ENODEBCELL,NODE_NODEBCELL,NODE_NBInterfaces from SEQ_TABLE";
+			String allSeqSelectStmnt = "select NODE_RACK,NODE_ACTIVE_ATTRIBUTE,NODE_FRAME,NODE_SLOT,NODE_BOARD,NODE_PORT,NODE_HOSTVER,NODE_CABINET,NODE_ACCESSORY,NODE_HOST,NODE_SUBRACK,NODE_2GCELL,NODE_BTS,NODE_3GCELL,NODE_ANTENNA,NODE_4GCELL,NODE_RRN,NODE_ENODEBCELL,NODE_NODEBCELL,NODE_NBInterfaces from SEQ_TABLE";
 			stmnt = almCon.createStatement();
 			ResultSet allSeqResultSet = stmnt.executeQuery(allSeqSelectStmnt);
 
@@ -776,11 +776,11 @@ public class LoadFilesRanHuaweioldversion {
 				nodeAccessorySeq = allSeqResultSet.getInt("NODE_ACCESSORY");
 				nodeHostSeq = allSeqResultSet.getInt("NODE_HOST");
 				nodeSubRackSeq = allSeqResultSet.getInt("NODE_SUBRACK");
-				nodeGCellSeq = allSeqResultSet.getInt("NODE_GCELL");
+				nodeGCellSeq = allSeqResultSet.getInt("NODE_2GCELL");
 				nodeBTSSeq = allSeqResultSet.getInt("NODE_BTS");
-				nodeUCellSeq = allSeqResultSet.getInt("NODE_UCELL");
+				nodeUCellSeq = allSeqResultSet.getInt("NODE_3GCELL");
 				nodeAntennaSeq = allSeqResultSet.getInt("NODE_ANTENNA");
-				nodeLCellSeq = allSeqResultSet.getInt("NODE_LCELL");
+				nodeLCellSeq = allSeqResultSet.getInt("NODE_4GCELL");
 				nodeRRNSeq = allSeqResultSet.getInt("NODE_RRN");
 				nodeENodeBSeq = allSeqResultSet.getInt("NODE_ENODEBCELL");
 				nodeNodeBSeq = allSeqResultSet.getInt("NODE_NODEBCELL");
@@ -859,19 +859,19 @@ public class LoadFilesRanHuaweioldversion {
 								if (attributeTable == "NODE_SUBRACK") {
 									vhmap = getMapColumnsSubrack(data);
 								}
-								if (attributeTable == "NODE_GCELL") {
+								if (attributeTable == "NODE_2GCELL") {
 									vhmap = getMapColumnsGcell(data);
 								}
 								if (attributeTable == "NODE_BTS") {
 									vhmap = getMapColumnsBts(data);
 								}
-								if (attributeTable == "NODE_UCELL") {
+								if (attributeTable == "NODE_3GCELL") {
 									vhmap = getMapColumnsUcell(data);
 								}
 								if (attributeTable == "NODE_ANTENNA") {
 									vhmap = getMapColumnsAntenna(data);
 								}
-								if (attributeTable == "NODE_LCELL") {
+								if (attributeTable == "NODE_4GCELL") {
 									vhmap = getMapColumnsLcell(data);
 								}
 								if (attributeTable == "NODE_RRN") {
@@ -1236,7 +1236,7 @@ public class LoadFilesRanHuaweioldversion {
 									nodeSubRackSeq++;
 
 								}
-								if (attributeTable == "NODE_GCELL") {
+								if (attributeTable == "NODE_2GCELL") {
 									vcodeid = currentYear + "_Node_HW_RAN_GCELL" + '_' + nodeGCellSeq;
 									InsertQuery = "insert into " + attributeTable
 											+ " (GCELL_ID,CELLID,CELLNAME,MCC,MNC,LAC,CI,NCC,BCC,TYPE,BCCHNO,BASEBANDPOLICY,BASEBANDEQMID,GBTSFUNCTIONNAME,GLOCELLID,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,CREATION_DATE,DOMAIN,VENDOR) "
@@ -1269,7 +1269,7 @@ public class LoadFilesRanHuaweioldversion {
 									// System.out.println(filename + " "+ InsertQuery);
 									nodeBTSSeq++;
 								}
-								if (attributeTable == "NODE_UCELL") {
+								if (attributeTable == "NODE_3GCELL") {
 									vcodeid = currentYear + "_Node_HW_RAN_UCELL" + '_' + nodeUCellSeq;
 									InsertQuery = "insert into " + attributeTable
 											+ "(UCELL_ID,CELLID,CELLNAME,LOCELL,NODEBFUNCTIONNAME,ULFREQ,DLFREQ,MAXPOWER,USERLABEL,MAXTXPOWER,UARFCNUPLINK,UARFCNDOWNLINK,PSCRAMBCODE,NODEBNAME,LAC,SAC,RAC,MANUFACTURERDATA,RADIUS,HORAD,DI,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,CREATION_DATE,DOMAIN,VENDOR) "
@@ -1326,7 +1326,7 @@ public class LoadFilesRanHuaweioldversion {
 											+ "') ";
 									nodeAntennaSeq++;
 								}
-								if (attributeTable == "NODE_LCELL") {
+								if (attributeTable == "NODE_4GCELL") {
 									vcodeid = currentYear + "_Node_HW_RAN_LCELL" + '_' + nodeLCellSeq;
 									InsertQuery = "insert into " + attributeTable
 											+ " (LCELL_ID,LOCALCELLID,CELLNAME,CELLRADIUS,FREQBAND,ULEARFCNCFGIND,ULEARFCN,DLEARFCN,ULBANDWIDTH,DLBANDWIDTH,CELLID,PHYCELLID,FDDTDDIND,ENODEBFUNCTIONNAME,NBCELLFLAG,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,CREATION_DATE,DOMAIN,VENDOR) "
@@ -1438,9 +1438,9 @@ public class LoadFilesRanHuaweioldversion {
 					+ " , NODE_SLOT = '" + nodeSlotSeq + "', NODE_BOARD = '" + nodeBoardSeq + "' , NODE_PORT ='"
 					+ nodePortSeq + "' , NODE_HOSTVER='" + nodeHostVerSeq + "' " + " , NODE_CABINET ='" + nodeCabinetSeq
 					+ "' , NODE_ACCESSORY ='" + nodeAccessorySeq + "' , NODE_HOST='" + nodeHostSeq
-					+ "' , NODE_SUBRACK ='" + nodeSubRackSeq + "' ," + " NODE_GCELL ='" + nodeGCellSeq
-					+ "' , NODE_BTS='" + nodeBTSSeq + "' ,  NODE_UCELL ='" + nodeUCellSeq + "' , NODE_ANTENNA = '"
-					+ nodeAntennaSeq + "' , NODE_LCELL ='" + nodeLCellSeq + "' , NODE_RRN = '" + nodeRRNSeq
+					+ "' , NODE_SUBRACK ='" + nodeSubRackSeq + "' ," + " NODE_2GCELL ='" + nodeGCellSeq
+					+ "' , NODE_BTS='" + nodeBTSSeq + "' ,  NODE_3GCELL ='" + nodeUCellSeq + "' , NODE_ANTENNA = '"
+					+ nodeAntennaSeq + "' , NODE_4GCELL ='" + nodeLCellSeq + "' , NODE_RRN = '" + nodeRRNSeq
 					+ "' , NODE_ENODEBCELL='" + nodeENodeBSeq + "' , NODE_NODEBCELL='" + nodeNodeBSeq
 					+ "' , NODE_NBInterfaces='" + nodeNBInterfaceSeq + "' ");
 			stmtp.executeUpdate();
@@ -3445,13 +3445,13 @@ public class LoadFilesRanHuaweioldversion {
 			localresult = "NODE_SUBRACK";
 		}
 		if (StringUtils.equalsIgnoreCase(str, "GCELL")) {
-			localresult = "NODE_GCELL";
+			localresult = "NODE_2GCELL";
 		}
 		if (StringUtils.equalsIgnoreCase(str, "UCELL")) {
-			localresult = "NODE_UCELL";
+			localresult = "NODE_3GCELL";
 		}
 		if (StringUtils.equalsIgnoreCase(str, "LCELL")) {
-			localresult = "NODE_LCELL";
+			localresult = "NODE_4GCELL";
 		}
 		if (StringUtils.equalsIgnoreCase(str, "eNodeBCell")) {
 			localresult = "NODE_ENODEBCELL";
@@ -3726,7 +3726,7 @@ public class LoadFilesRanHuaweioldversion {
 			stmt2.executeUpdate();
 			stmt2.close();
 
-			stmt = parserCon.prepareStatement("delete from  NODE_GCELL where " + fieldname + " = '" + fieldValue
+			stmt = parserCon.prepareStatement("delete from  NODE_2GCELL where " + fieldname + " = '" + fieldValue
 					+ "' and DOMAIN='" + vdomain + "' and VENDOR='" + vvendor + "'");
 			stmt.executeUpdate();
 			stmt.close();
@@ -3736,7 +3736,7 @@ public class LoadFilesRanHuaweioldversion {
 			stmt1.executeUpdate();
 			stmt1.close();
 
-			stmt2 = parserCon.prepareStatement("delete from  NODE_UCELL where " + fieldname + " = '" + fieldValue
+			stmt2 = parserCon.prepareStatement("delete from  NODE_3GCELL where " + fieldname + " = '" + fieldValue
 					+ "' and DOMAIN='" + vdomain + "' and VENDOR='" + vvendor + "'");
 			stmt2.executeUpdate();
 			stmt2.close();
@@ -3746,7 +3746,7 @@ public class LoadFilesRanHuaweioldversion {
 			stmt.executeUpdate();
 			stmt.close();
 
-			stmt1 = parserCon.prepareStatement("delete from  NODE_LCELL where " + fieldname + " = '" + fieldValue
+			stmt1 = parserCon.prepareStatement("delete from  NODE_4GCELL where " + fieldname + " = '" + fieldValue
 					+ "' and DOMAIN='" + vdomain + "' and VENDOR='" + vvendor + "'");
 			stmt1.executeUpdate();
 			stmt1.close();

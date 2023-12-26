@@ -568,17 +568,17 @@ public class WarehouseController {
 					model.addAttribute("nodes",
 							mapper.writeValueAsString(session.createNativeQuery(str).uniqueResult()));
 
-					str = "select count(ngc.gcell_id) from node_gcell ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"
+					str = "select count(ngc.gcell_id) from NODE_2GCELL ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"
 							+ wareID + "'";
 					model.addAttribute("g-cell",
 							mapper.writeValueAsString(session.createNativeQuery(str).uniqueResult()));
 
-					str = "select count(nlc.LCell_Id) from node_lcell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
+					str = "select count(nlc.LCell_Id) from NODE_4GCELL nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
 							+ wareID + "'";
 					model.addAttribute("l-cell",
 							mapper.writeValueAsString(session.createNativeQuery(str).uniqueResult()));
 
-					str = "select count(nlc.UCell_Id) from node_ucell nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
+					str = "select count(nlc.UCell_Id) from NODE_3GCELL nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
 							+ wareID + "'";
 					model.addAttribute("u-cell",
 							mapper.writeValueAsString(session.createNativeQuery(str).uniqueResult()));
@@ -598,17 +598,17 @@ public class WarehouseController {
 					query.setParameter("param1", wareID);
 					model.addAttribute("Listnode", mapper.writeValueAsString(query.list()));
 
-					str = " select GCELL_ID ,CELLNAME FROM NODE_GCELL WHERE NODE_PK IN (Select NODE_PK from node_active where WARE_ID=:param1)";
+					str = " select GCELL_ID ,CELLNAME FROM NODE_2GCELL WHERE NODE_PK IN (Select NODE_PK from node_active where WARE_ID=:param1)";
 					query = session.createNativeQuery(str);
 					query.setParameter("param1", wareID);
 					model.addAttribute("ListGCell", mapper.writeValueAsString(query.list()));
 
-					str = " select LCELL_ID ,CELLNAME FROM NODE_LCELL WHERE NODE_PK IN (Select NODE_PK from node_active where WARE_ID=:param1)";
+					str = " select LCELL_ID ,CELLNAME FROM NODE_4GCELL WHERE NODE_PK IN (Select NODE_PK from node_active where WARE_ID=:param1)";
 					query = session.createNativeQuery(str);
 					query.setParameter("param1", wareID);
 					model.addAttribute("ListLCell", mapper.writeValueAsString(query.list()));
 
-					str = " select UCELL_ID ,CELLNAME FROM NODE_UCELL WHERE NODE_PK IN (Select NODE_PK from node_active where WARE_ID=:param1)";
+					str = " select UCELL_ID ,CELLNAME FROM NODE_3GCELL WHERE NODE_PK IN (Select NODE_PK from node_active where WARE_ID=:param1)";
 					query = session.createNativeQuery(str);
 					query.setParameter("param1", wareID);
 					model.addAttribute("ListUCell", mapper.writeValueAsString(query.list()));

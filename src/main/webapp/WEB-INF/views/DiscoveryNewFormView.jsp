@@ -229,7 +229,7 @@ max-width: 100%;
 			<div class="col-md-3">
 				<div class="input-group-prepend">
 				<span style="width:200px;" class="input-group-text">Status</span>
-				<select id="dnStatus" class="form-control">
+				<select id="dnStatus" class="form-control" readonly>
 						<option value="In Progress"
 							<c:if test = "${dnStatus =='In Progress'}" > selected </c:if>>In
 							Progress</option>
@@ -372,9 +372,11 @@ max-width: 100%;
 	                 aria-haspopup="true" aria-expanded="false">Actions</button>
 	
 	            	<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+	            		<a class="dropdown-item" id="approveDN">Approve</a>
     	          		<a class="dropdown-item" id="ProjectManagerApprove">Project Manager Approval</a>
     	          		<a class="dropdown-item" id="AssetUnitApprove">Asset Unit Approval</a>
     	          		<a class="dropdown-item" id="FinanceApprove">Finance Approval</a>
+    	          		<a class="dropdown-item" id="closeDN">Close</a>
     	        	</div>         
     	        		<button type="button" id="sendEmail" class="btn btn-primary BtnActive"><i class="fa fa-envelope"></i> Send Email </button>
               
@@ -1731,6 +1733,17 @@ function getAllItemPartNbs()
 	           $("#formStatus").text("New");
 					$('.dot').css({"background-color" : "orange"});
 	       }
+
+
+	   $("#approveDN").on("click", function(){
+			$("#dnStatus").val('Approved').trigger('change');
+			ApproveCloseDN($("#dnStatus").val());
+	   });
+
+	   $("#closeDN").on("click", function(){
+			$("#dnStatus").val('Closed').trigger('change');
+			ApproveCloseDN($("#dnStatus").val());
+	   });
        
      	$("#ProjectManagerApprove").on("click", function(){
 
@@ -2541,12 +2554,35 @@ function getAllItemPartNbs()
 					};
 
 // To be checked
-/*
+
 					document.getElementById('dnStatus').onmousedown = function(event) {
 					      event.preventDefault();
 					};
-*/					
-				    
+					
+				    function ApproveCloseDN (action){
+				    	var proceed = confirm("Are you sure you want to proceed?");
+						if (proceed) {
+						//proceed
+						$.ajax({
+							type : "GET",
+							url : "${pageContext.request.contextPath}/DN_Approval",
+								dataType : "json",
+								data : {
+									"dnID" : $("#dncode").val(),
+								    "status": action
+								},
+								success : function(data) {
+									var param ="${pageContext.request.contextPath}/DiscoveryNewFormView?dnID="+$("#dncode").val()+"&NavAction=2";
+									location.replace(param);
+									
+								},
+								error : function(error) {
+									console.log("Fail");
+								}
+						});		
+						}
+
+					 }
 	                
 }); //end ready document
 

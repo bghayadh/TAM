@@ -133,7 +133,7 @@ public class DiscoveryController {
 			try {
 				String str = "select a.DN_ID as dnID,a.DN_ID as dnewID,CAST((a.TOTAL_AMOUNT) AS VARCHAR(10)) as dnTotalAmount,"
 						+ "CAST((a.TOTAL_QTY) AS VARCHAR(10)) as dnTotalQty,a.STATUS as dnStatus,"
-						+ "(Select COUNT(*) from DISCOVERY_NEW_ITEM WHERE (APPROVAL='Project Manager' OR APPROVAL ='Operation Manager')"
+						+ "(Select COUNT(*) from DISCOVERY_NEW_ITEM WHERE (APPROVAL='Project Manager' OR APPROVAL ='Operation Manager' OR APPROVAL IS NULL)"
 						+ " AND DN_ID=a.DN_ID) as pendingPM,"
 						+ "(Select COUNT(*) from DISCOVERY_NEW_ITEM WHERE (APPROVAL='Asset Unit') AND DN_ID=a.DN_ID) as pendingAM,"
 						+ "(Select COUNT(*) from DISCOVERY_NEW_ITEM WHERE (APPROVAL='Finance') AND DN_ID=a.DN_ID) as pendingFM,"
@@ -3388,7 +3388,41 @@ getAntennaMaintenance = "Select nodeAntenna.FROM_TRANS_ID, nodeAntennaTrans.FROM
 	return map;
 }
 
+@SuppressWarnings("unchecked")
+@RequestMapping(value = "/DN_Approval", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> DN_Approval(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response)
+			throws JsonGenerationException, JsonMappingException, IOException {
+		Map<String,Object> map = new HashMap<String, Object>();
+		if(LoginServices.checkSession(request, response).equals("redirect:/")) {
+			map.put("Login", LoginServices.checkSession(request, response));
+			return map;
+		}
+		session = AlmDbSession.getInstance().getSession();
+		if(session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			
+			try {
+				System.out.println(request.getParameter("dnID"));
+				System.out.println(request.getParameter("status"));
 
+				query = session.createNativeQuery("UPDATE DISCOVERY_NEW SET STATUS ='"+request.getParameter("status")+"', LAST_MODIF_DATE = SYSDATE"
+						+ " WHERE DN_ID='"+request.getParameter("dnID")+"'");
+				query.executeUpdate();
+				tx.commit();
+			}catch(Exception e) {
+				tx.rollback();
+				e.printStackTrace();
+			}finally {
+				
+				if(session != null && session.isOpen()) {
+					session.close();
+				}
+			}
+		}
+		
+		return map;
+}
 
 
 

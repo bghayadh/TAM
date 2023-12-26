@@ -196,7 +196,7 @@ public class NodeActiveController {
 							"SELECT GCELL_ID, CELLID, CELLNAME, MCC, MNC, LAC, CI, NCC, BCC, TYPE, BCCHNO, "
 									+ "BASEBANDPOLICY, BASEBANDEQMID, GBTSFUNCTIONNAME,TO_CHAR(UPDATE_DATE,'YYYY-MM-DD HH24:MI:SS'),"
 									+ " GLOCELLID, STATUS,"
-									+ " TO_CHAR(CREATION_DATE,'YYYY-MM-DD HH24:MI:SS'), DOMAIN, VENDOR, TO_TRANS_SOURCE FROM NODE_GCELL WHERE "
+									+ " TO_CHAR(CREATION_DATE,'YYYY-MM-DD HH24:MI:SS'), DOMAIN, VENDOR, TO_TRANS_SOURCE FROM NODE_2GCELL WHERE "
 									+ "NODE_PK = :param1");
 					query.setParameter("param1", NodePK);
 
@@ -207,7 +207,7 @@ public class NodeActiveController {
 									+ " USERLABEL, MAXTXPOWER, UARFCNUPLINK, UARFCNDOWNLINK, PSCRAMBCODE, NODEBNAME, LAC, SAC,"
 									+ " RAC, MANUFACTURERDATA, RADIUS, HORAD, DI,  TO_CHAR(UPDATE_DATE,'YYYY-MM-DD HH24:MI:SS'), "
 									+ "STATUS, TO_CHAR(CREATION_DATE,'YYYY-MM-DD HH24:MI:SS'),"
-									+ " DOMAIN, VENDOR FROM NODE_UCELL WHERE NODE_PK = :param1");
+									+ " DOMAIN, VENDOR FROM NODE_3GCELL WHERE NODE_PK = :param1");
 
 					query.setParameter("param1", NodePK);
 
@@ -217,7 +217,7 @@ public class NodeActiveController {
 							"SELECT LCELL_ID, LOCALCELLID, CELLNAME, CELLRADIUS, FREQBAND, ULEARFCNCFGIND, ULEARFCN, DLEARFCN,"
 									+ " ULBANDWIDTH, DLBANDWIDTH, CELLID, PHYCELLID, FDDTDDIND, ENODEBFUNCTIONNAME, NBCELLFLAG, "
 									+ "  TO_CHAR(UPDATE_DATE,'YYYY-MM-DD HH24:MI:SS'), STATUS, TO_CHAR(CREATION_DATE,'YYYY-MM-DD HH24:MI:SS'), DOMAIN, VENDOR "
-									+ " FROM NODE_LCELL WHERE NODE_PK = :param1");
+									+ " FROM NODE_4GCELL WHERE NODE_PK = :param1");
 
 					query.setParameter("param1", NodePK);
 
@@ -425,9 +425,11 @@ public class NodeActiveController {
 	    if (session != null && session.isOpen()) {
 	        tx = session.beginTransaction();
 	        try {
-	        	query = session.createQuery("SELECT t1.nodeName, t1.nodePK, t1.uniNodeID FROM NodeActive t1"
+	        	query = session.createQuery("SELECT t1.nodeName, t1.nodePK, t1.uniNodeID,t1.nodeName,t1.nodeType"
+	        			+ " FROM NodeActive t1"
 	        	        + " WHERE LOWER(t1.nodeName) LIKE LOWER(:Node) OR LOWER(t1.nodePK) "
-	        	        + "LIKE LOWER(:Node) OR LOWER(t1.uniNodeID) LIKE LOWER(:Node)");
+	        	        + "LIKE LOWER(:Node) OR LOWER(t1.uniNodeID) LIKE LOWER(:Node) "
+	        	        + "OR LOWER(t1.nodeName) LIKE LOWER(:Node) OR LOWER(t1.nodeType) LIKE LOWER(:Node)");
 	        query.setParameter("Node", Node); 
 	        	query.setFirstResult(0);
 				query.setMaxResults(40);

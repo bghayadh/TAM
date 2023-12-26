@@ -526,19 +526,19 @@ public class LoadFilesAOSS {
 				                	  if (attributeTable == "NODE_SUBRACK") {
 				                		   vhmap=getmapcolumnssubrack(data);
 				                	  } 
-				                	  if (attributeTable == "NODE_GCELL") {
+				                	  if (attributeTable == "NODE_2GCELL") {
 				                		   vhmap=getmapcolumnsgcell(data);
 				                	  } 
 				                	  if (attributeTable == "NODE_BTS") {
 				                		   vhmap=getmapcolumnsbts(data);
 				                	  } 
-				                	  if (attributeTable == "NODE_UCELL") {
+				                	  if (attributeTable == "NODE_3GCELL") {
 				                		   vhmap=getmapcolumnsucell(data);
 				                	  } 
 				                	  if (attributeTable == "NODE_ANTENNA") {
 				                		   vhmap=getmapcolumnsantenna(data);
 				                	  } 
-				                	  if (attributeTable == "NODE_LCELL") {
+				                	  if (attributeTable == "NODE_4GCELL") {
 				                		   vhmap=getmapcolumnslcell(data);
 				                	  } 
 				                	  if (attributeTable == "NODE_RRN") {
@@ -653,7 +653,7 @@ public class LoadFilesAOSS {
 			                			   		+ "values('" + vcodeid +"','" + vhmap.get("SITEINDEX") +"','" + vhmap.get("CABINETNO") +"','" + vhmap.get("SUBRACKNO") +"','" + vhmap.get("INVENTORYUNITID") +"','" + vhmap.get("RACKTYPE") +"','" + vhmap.get("BOMRACKTYPE") +"','" + vhmap.get("FRAMETYPE") +"','" + vhmap.get("RACKFRAMENO") +"','" + vhmap.get("MODULENO") +"','" + vhmap.get("INVENTORYUNITTYPE") +"', '" + vhmap.get("VENDORUNITFAMILYTYPE") +"', '" + vhmap.get("VENDORUNITTYPENUMBER") +"','" + vhmap.get("VENDORNAME") +"','" + vhmap.get("SERIALNUMBER") +"','" + vhmap.get("HARDWAREVERSION") +"',DATE '" + vhmap.get("DATEOFMANUFACTURE") +"',DATE '" + vhmap.get("DATEOFLASTSERVICE") +"','" + vhmap.get("UNITPOSITION") +"','" + vhmap.get("MANUFACTURERDATA") +"','" + vhmap.get("USERLABEL") +"','" + vhmap.get("BOMCODE") +"','" + vhmap.get("MODEL") +"','" + vhmap.get("ISSUENUMBER") +"','" + vhmap.get("BOMFRAMETYPE") +"','" + vhmap.get("CLEICODE") +"','" + vhmap.get("BOM") +"','" + vhmap.get("EXTINFO") +"','" + codeid +"','" + codeidattr +"',sysdate,'" + filename +"','" + vhmap.get("STATUS") +"','0','0','0','" + vhmap.get("TRANS_ID") +"','" + vhmap.get("TRANS_TYPE") +"' ,'"+ j +"','1','Mobile Access Domain','" + Gprovider +"') ";
 				                		   //System.out.println(filename + "    "+ InsertQuery);
 				                		   }
-				                	   if (attributeTable =="NODE_GCELL" ) {
+				                	   if (attributeTable =="NODE_2GCELL" ) {
 				                		   vcodeid= localgetseqNbr(12);  /// 12 to select Gcell_id
 				                		   vcodeid=Gyear+"_"+ "GCELL"+'_'+vcodeid;
 				                		   InsertQuery="insert into " + attributeTable  +" (GCELL_ID,CELLID,CELLNAME,MCC,MNC,LAC,CI,NCC,BCC,TYPE,BCCHNO,BASEBANDPOLICY,BASEBANDEQMID,GBTSFUNCTIONNAME,GLOCELLID,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,CREATION_DATE,DOMAIN,VENDOR) "
@@ -667,7 +667,7 @@ public class LoadFilesAOSS {
 				                		   		+ "values('" + vcodeid +"','" + vhmap.get("SITEINDEX") +"','" + vhmap.get("SITENAME") +"','" + vhmap.get("SITETYPE") +"','" + codeid +"','" + codeidattr +"',sysdate,'" + filename +"','" + vhmap.get("STATUS") +"','0','0','0','" + vhmap.get("TRANS_ID") +"','" + vhmap.get("TRANS_TYPE") +"' ,'"+ j +"','1','Mobile Access Domain','" + Gprovider +"') ";
 				                		   //System.out.println(filename + "    "+ InsertQuery);
 				                	   }
-				                	   if (attributeTable =="NODE_UCELL" ) {
+				                	   if (attributeTable =="NODE_3GCELL" ) {
 				                		   vcodeid= localgetseqNbr(14);  /// 14 to select Ucell_id
 				                		   vcodeid=Gyear+"_"+ "UCELL"+'_'+vcodeid;
 				                		   InsertQuery="insert into " + attributeTable  +"(UCELL_ID,CELLID,CELLNAME,LOCELL,NODEBFUNCTIONNAME,ULFREQ,DLFREQ,MAXPOWER,USERLABEL,MAXTXPOWER,UARFCNUPLINK,UARFCNDOWNLINK,PSCRAMBCODE,NODEBNAME,LAC,SAC,RAC,MANUFACTURERDATA,RADIUS,HORAD,DI,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,CREATION_DATE,DOMAIN,VENDOR) "
@@ -683,7 +683,7 @@ public class LoadFilesAOSS {
 				                			   		+ "values('" + vcodeid +"','" + vhmap.get("INVENTORYUNITID") +"','" + vhmap.get("INVENTORYUNITTYPE") +"','" + vhmap.get("ANTENNADEVICENO") +"','" + vhmap.get("PRODNR") +"','" + vhmap.get("VENDORUNITFAMILYTYPE") +"','" + vhmap.get("VENDORUNITTYPENUMBER") +"','" + vhmap.get("VENDORNAME") +"','" + vhmap.get("SERIALNUMBER") +"','" + vhmap.get("HARDWAREVERSION") +"',DATE '" + vhmap.get("DATEOFMANUFACTURE") +"',DATE '" + vhmap.get("DATEOFLASTSERVICE") +"','" + vhmap.get("UNITPOSITION") +"','" + vhmap.get("MANUFACTURERDATA") +"','" + vhmap.get("ANTENNADEVICETYPE") +"','" + vhmap.get("ISSUENUMBER") +"','" + vhmap.get("BOMCODE") +"','" + vhmap.get("EXTINFO") +"','" + vhmap.get("MODEL") +"','" + vhmap.get("SERIALNUMBEREX") +"','" + codeid +"','" + codeidattr +"',sysdate,'" + filename +"','" + vhmap.get("STATUS") +"' ,'0','0','0','" + vhmap.get("TRANS_ID") +"','" + vhmap.get("TRANS_TYPE") +"','"+ j +"','1',sysdate,'Mobile Access Domain','" + Gprovider +"') ";
 				                		   //System.out.println(filename + "    "+ InsertQuery);
 				                	   }
-				                	   if (attributeTable =="NODE_LCELL" ) {
+				                	   if (attributeTable =="NODE_4GCELL" ) {
 				                		   vcodeid= localgetseqNbr(16);  /// 16 to select LCELL_id 
 				                		   vcodeid=Gyear+"_"+ "LCELL"+'_'+vcodeid;
 				                		   InsertQuery="insert into " + attributeTable  +" (LCELL_ID,LOCALCELLID,CELLNAME,CELLRADIUS,FREQBAND,ULEARFCNCFGIND,ULEARFCN,DLEARFCN,ULBANDWIDTH,DLBANDWIDTH,CELLID,PHYCELLID,FDDTDDIND,ENODEBFUNCTIONNAME,NBCELLFLAG,NODE_PK,NODE_ATTR_PK,UPDATE_DATE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,LINE,ACTIVE_RECORD,CREATION_DATE,DOMAIN,VENDOR) "
@@ -2159,13 +2159,13 @@ public class LoadFilesAOSS {
 			 localresult="NODE_SUBRACK";
 		 }
 		if (StringUtils.equalsIgnoreCase(str,"GCELL")) {	
-			 localresult="NODE_GCELL";
+			 localresult="NODE_2GCELL";
 		 }
 		if (StringUtils.equalsIgnoreCase(str,"UCELL")) {	
-			 localresult="NODE_UCELL";
+			 localresult="NODE_3GCELL";
 		 }
 		if (StringUtils.equalsIgnoreCase(str,"LCELL")) {	
-			 localresult="NODE_LCELL";
+			 localresult="NODE_4GCELL";
 		 }
 		if (StringUtils.equalsIgnoreCase(str,"eNodeBCell")) {	
 			 localresult="NODE_ENODEBCELL";
@@ -2472,7 +2472,7 @@ public class LoadFilesAOSS {
 			 stmtp.close();
 	            
             //Insert into TEMP_NODE_GCELL
-			 queryp = "select * from NODE_GCELL"; 
+			 queryp = "select * from NODE_2GCELL"; 
 			 stmtp = con.createStatement();
 		     rsp = stmtp.executeQuery(queryp);
 			 while (rsp.next()) {
@@ -2498,7 +2498,7 @@ public class LoadFilesAOSS {
 			 stmtp.close();
              
            //Insert into TEMP_NODE_UCELL
-			 queryp = "select * from NODE_UCELL"; 
+			 queryp = "select * from NODE_3GCELL"; 
 			 stmtp = con.createStatement();
 		     rsp = stmtp.executeQuery(queryp);
 			 while (rsp.next()) {
@@ -2528,7 +2528,7 @@ public class LoadFilesAOSS {
 			 stmtp.close();
           
      	  	//Insert into TEMP_NODE_LCELL
-			 queryp = "select * from NODE_LCELL"; 
+			 queryp = "select * from NODE_4GCELL"; 
 			 stmtp = con.createStatement();
 		     rsp = stmtp.executeQuery(queryp);
 			 while (rsp.next()) {
@@ -2679,7 +2679,7 @@ private static void DeletedatafromNodeTables(String vdomain, String vvendor) thr
             stmt2.close();
             
             //Delete from NODE_GCELL
-     	  	stmt0 = con.prepareStatement("delete  from NODE_GCELL where DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'");
+     	  	stmt0 = con.prepareStatement("delete  from NODE_2GCELL where DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'");
      	  	stmt0.executeUpdate();
      	  	stmt0.close();
           
@@ -2688,8 +2688,8 @@ private static void DeletedatafromNodeTables(String vdomain, String vvendor) thr
             stmt1.executeUpdate();
             stmt1.close();
              
-           //Delete from NODE_UCELL
-        	stmt2 = con.prepareStatement("delete  from NODE_UCELL where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'");
+           //Delete from NODE_3GCELL
+        	stmt2 = con.prepareStatement("delete  from NODE_3GCELL where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'");
             stmt2.executeUpdate();
             stmt2.close();
             
@@ -2698,8 +2698,8 @@ private static void DeletedatafromNodeTables(String vdomain, String vvendor) thr
      	  	stmt0.executeUpdate();
      	  	stmt0.close();
           
-     	  	//Delete from NODE_LCELL
-        	stmt1 = con.prepareStatement("delete  from NODE_LCELL where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'");
+     	  	//Delete from NODE_4GCELL
+        	stmt1 = con.prepareStatement("delete  from NODE_4GCELL where  DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'");
             stmt1.executeUpdate();
             stmt1.close();
              
@@ -2964,7 +2964,7 @@ private static void GetduplicateFilename(String vdomain , String vvendor) throws
      stmt2.executeUpdate();
      stmt2.close();
      
-     stmt = con.prepareStatement("delete from  NODE_GCELL where " + fieldname +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'"); 
+     stmt = con.prepareStatement("delete from  NODE_2GCELL where " + fieldname +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'"); 
      stmt.executeUpdate();
      stmt.close(); 
      		 
@@ -2972,7 +2972,7 @@ private static void GetduplicateFilename(String vdomain , String vvendor) throws
      stmt1.executeUpdate();
      stmt1.close();
      
-     stmt2 = con.prepareStatement("delete from  NODE_UCELL where " + fieldname +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'"); 
+     stmt2 = con.prepareStatement("delete from  NODE_3GCELL where " + fieldname +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'"); 
      stmt2.executeUpdate();
      stmt2.close();
      
@@ -2980,7 +2980,7 @@ private static void GetduplicateFilename(String vdomain , String vvendor) throws
      stmt.executeUpdate();
      stmt.close(); 
      		 
-     stmt1 = con.prepareStatement("delete from  NODE_LCELL where " + fieldname +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'"); 
+     stmt1 = con.prepareStatement("delete from  NODE_4GCELL where " + fieldname +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'"); 
      stmt1.executeUpdate();
      stmt1.close();
      
