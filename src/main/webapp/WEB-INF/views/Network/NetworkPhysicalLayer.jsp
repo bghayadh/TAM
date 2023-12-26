@@ -1,10 +1,6 @@
- <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
-
-
+ <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-
 <html>
 <head>
 <meta charset="utf-8">
@@ -83,7 +79,6 @@
  	width: 16%;
 }
 </style>
-
 </head>
 <%@ include file="/WEB-INF/views/Network/FiberSearch.html" %> 
 <body>
@@ -534,6 +529,7 @@
 														<span style="width: 100px;" class="input-group-text"><b>Owner </b></span> <select id="manholeOwner" class="form-control">
 															<option value="" selected></option>
 															<option value="tkl">TKL</option>
+															<option value="ogn">OGN</option>
 															<option value="nofbi">NOFBI</option>
 															<option value="others">Others</option>
 														</select>
@@ -542,6 +538,23 @@
 											</div>
 
 							</div>
+							<div class="row">
+										<div class="col-sm-6">
+											<div class="form-group">
+												<div class="input-group-prepend">
+													<span style="width: 120px;"
+														class="input-group-text"><b>Engineer Name </b></span> <input type="text" id="manholeEngineerName" class="form-control text-input" />
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-6">
+											<div class="form-group">
+												<div class="input-group-prepend">
+													<span style="width: 100px; " class="input-group-text"><b>Installer </b></span> <input type="text" id="manholeInstaller" class="form-control text-input" />
+												</div>
+											</div>
+										</div>
+								</div>	
 						</div>
 					</div>
 					<div class="modal-footer"></div>
@@ -549,8 +562,7 @@
 			</div>
 		</div>
 	</div>
-	
-		<!-- Nodes Model -->
+<!-- Nodes Model -->
 	<div class="container">
 		<div id="nodesModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
 			<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
@@ -1326,13 +1338,36 @@
 									<span class="input-group-text"  style="width: 170px;"><b>Last Modified Date</b></span>
 									<input type="text" id="manJunctionLastModifiedDate" class="form-control text-input" value="" readonly />
 								</div></div></div></div>
-								<div class="row">
+							   <div class="row">
 									<div class="col-md-6">
 										<div class="form-group">
 											<div class="input-group-prepend">
 												<span style="width: 175px;" class="input-group-text"><b>City
 												</b></span> <input type="text" id="manholeJctCity" class="form-control text-input" readonly />
-											</div></div></div></div></div>
+									</div></div></div>
+								    <div class="col-sm-6">
+										<div class="form-group">
+											<div class="input-group-prepend">
+													<span style="width: 100px;" class="input-group-text"><b>Owner </b></span> <select id="manholeJctOwner" class="form-control">
+															<option value="" selected></option>
+															<option value="tkl">TKL</option>
+															<option value="ogn">OGN</option>
+															<option value="nofbi">NOFBI</option>
+															<option value="others">Others</option>
+														</select>
+							</div></div></div> </div>
+							     <div class="row">
+										<div class="col-sm-6">
+											<div class="form-group">
+												<div class="input-group-prepend">
+													<span style="width: 120px;"
+														class="input-group-text"><b>Engineer Name </b></span> <input type="text" id="manholeJctEngineerName" class="form-control text-input" />
+										</div></div></div>
+										<div class="col-sm-6">
+											<div class="form-group">
+												<div class="input-group-prepend">
+													<span style="width: 100px; " class="input-group-text"><b>Installer </b></span> <input type="text" id="manholeJctInstaller" class="form-control text-input" />
+						</div></div></div></div></div>
 							<div class="tab-pane" id="jctMapping" role="tabpanel" aria-labelledby="jctMapping-tab"><p></p>
 								<div class="container-fluid"><form>
 										<div class="table-responsive-sm" id="manholeJctMappingDiv">
@@ -1484,7 +1519,30 @@
 											<div class="input-group-prepend">
 												<span style="width: 175px;" class="input-group-text"><b>City
 												</b></span> <input type="text" id="handholeJctCity" class="form-control text-input" readonly />
-											</div></div></div></div>
+											</div></div></div>
+									<div class="col-sm-6">
+										<div class="form-group">
+											<div class="input-group-prepend">
+													<span style="width: 100px;" class="input-group-text"><b>Owner </b></span> <select id="handholeJctOwner" class="form-control">
+															<option value="" selected></option>
+															<option value="tkl">TKL</option>
+															<option value="ogn">OGN</option>
+															<option value="nofbi">NOFBI</option>
+															<option value="others">Others</option>
+														</select>
+								</div></div></div></div>
+								<div class="row">
+										<div class="col-sm-6">
+											<div class="form-group">
+												<div class="input-group-prepend">
+													<span style="width: 120px;"
+														class="input-group-text"><b>Engineer Name </b></span> <input type="text" id="handholeJctEngineerName" class="form-control text-input" />
+										</div></div></div>
+										<div class="col-sm-6">
+											<div class="form-group">
+												<div class="input-group-prepend">
+													<span style="width: 100px; " class="input-group-text"><b>Installer </b></span> <input type="text" id="handholeJctInstaller" class="form-control text-input" />
+						    </div></div></div></div>
 							</div>
 							<div class="tab-pane" id="handholeJctMapping" role="tabpanel" aria-labelledby="handholeJctMapping-tab">
 								<p></p>
@@ -1578,7 +1636,6 @@
 										</div>
 									</div>
 								</div>
-								
 								<div class="row">
 									<div class="col-md-6">
 										<div class="form-group">
@@ -1629,7 +1686,37 @@
 											<div class="input-group-prepend">
 												<span style="width: 175px;" class="input-group-text"><b>City
 												</b></span> <input type="text" id="JctCity" class="form-control text-input" readonly />
-											</div></div></div></div></div></div>
+											</div></div></div>
+										<div class="col-sm-6">
+										<div class="form-group">
+											<div class="input-group-prepend">
+													<span style="width: 100px;" class="input-group-text"><b>Owner </b></span> <select id="JunctionOwner" class="form-control">
+															<option value="" selected></option>
+															<option value="tkl">TKL</option>
+															<option value="ogn">OGN</option>
+															<option value="nofbi">NOFBI</option>
+															<option value="others">Others</option>
+														</select>
+													</div>
+												</div>
+											</div></div>
+								<div class="row">
+										<div class="col-sm-6">
+											<div class="form-group">
+												<div class="input-group-prepend">
+													<span style="width: 120px;"
+														class="input-group-text"><b>Engineer Name </b></span> <input type="text" id="JunctionEngineerName" class="form-control text-input" />
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-6">
+											<div class="form-group">
+												<div class="input-group-prepend">
+													<span style="width: 100px; " class="input-group-text"><b>Installer </b></span> <input type="text" id="JunctionInstaller" class="form-control text-input" />
+												</div>
+											</div>
+										</div>
+								</div></div></div>
 							<div class="tab-pane" id="JctMapping" role="tabpanel" aria-labelledby="jctMapping-tab"><p></p>
 								<div class="container-fluid"><form>
 										<div class="table-responsive-sm" id="JctMappingDiv">
@@ -2194,9 +2281,7 @@
 													<span style="width: 120px; font-size: 12px;" class="input-group-text"><b>Name </b></span> <input type="text" id="TubeName" class="form-control text-input" />
 												</div>
 											</div>
-										</div>
-								</div>
-								</div>
+								</div></div></div>
 								<div class="container-fluid">
 									<div class="row">
 										<div class="col-sm-6">
@@ -2225,8 +2310,7 @@
 										<div class="form-group">
 											<div class="input-group-prepend">
 												<span style="width: 100px; font-size: 12px;" class="input-group-text"><b>Tube Number </b></span> 
-												<input type="text" id="tubeNumber" class="form-control text-input" /></div></div>
-									</div>								
+												<input type="text" id="tubeNumber" class="form-control text-input" /></div></div></div>								
 									<div class="col-sm-6"><div class="form-group"><div class="input-group-prepend">
 										<span style="width: 120px; font-size: 12px;" class="input-group-text"><b>Tube Color </b></span>
 												<select id="tubeColor" class="form-control" style="height:38px;">
@@ -2248,7 +2332,7 @@
 									</div>
 								</div>
 							</div>
-								<div class="container-fluid">									
+							<div class="container-fluid">									
 									<div class="row">
 										<div class="col-md-6">
 											<div class="form-group">
@@ -2260,9 +2344,7 @@
 															<option value="g562">G.652</option>
 															<option value="g563">G.653</option>
 														</select>
-												</div>
-											</div>
-										</div>
+										</div></div></div>
 										<div class="col-md-6">
 											<div class="form-group">
 												<div class="input-group-prepend" id="dstDivTube">
@@ -2663,10 +2745,7 @@
 		</div>
 	</div>
 	<div class="container">
-		<div id="handholeModalDetails"
-			class="modal fade  custom-class-assignedto-modal" tabindex="-1"
-			role="dialog" aria-labelledby="exampleModalCenterTitle"
-			aria-hidden="true"  data-keyboard="false" data-backdrop="static">
+		<div id="handholeModalDetails"	class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  data-keyboard="false" data-backdrop="static">
 			<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
 				<div class="modal-content">
 					<div class="modal-header" style="background-color: #2678CC ; height: 55px; ">
@@ -5766,7 +5845,35 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 										<div class="input-group-prepend">
 											<span style="width: 140px;" class="input-group-text"><b>DM_Name</b></span>
 											<input type="text" id="HandholeDMName" class="form-control text-input" readonly />
-										</div></div></div></div>
+										</div></div></div>
+								<div class="col-sm-6">
+										<div class="form-group">
+											<div class="input-group-prepend">
+													<span style="width: 100px;" class="input-group-text"><b>Owner </b></span> <select id="handholeOwner" class="form-control">
+															<option value="" selected></option>
+															<option value="tkl">TKL</option>
+															<option value="ogn">OGN</option>
+															<option value="nofbi">NOFBI</option>
+															<option value="others">Others</option>
+														</select>
+													</div>
+												</div>
+											</div>
+										</div>
+							<div class="row">
+									<div class="col-sm-6">
+										<div class="form-group">
+											<div class="input-group-prepend">
+												<span style="width: 120px;"	class="input-group-text"><b>Engineer Name </b></span> <input type="text" id="handholeEngineerName" class="form-control text-input" />
+											</div>
+										</div>
+									</div>
+									<div class="col-sm-6">
+											<div class="form-group">
+												<div class="input-group-prepend">
+													<span style="width: 100px; " class="input-group-text"><b>Installer </b></span> <input type="text" id="handholeInstaller" class="form-control text-input" />
+												</div>
+							</div></div></div>	
 							<div class="row">
 								<div class="col-md-6" id="projectIdHandhole">
 									<div class="form-group">
@@ -6384,7 +6491,6 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 						</div>
 					</div>
 				</div>
-
 				<div class="modal-footer" style="background-color: #E9ECEF;">
 				</div>
 			</div>
@@ -6509,89 +6615,9 @@ function initMap() {
 map.setOptions({ minZoom: 3, maxZoom: 28});
 //new AutocompleteDirectionsHandler(map);
 directionsDisplay.setMap(map);
-/*
-		    const input = document.getElementById("pac-input");
-	        const searchBox = new google.maps.places.SearchBox(input);
-	        // Bias the SearchBox results towards current map's viewport.
-	        map.addListener("bounds_changed", () => {
-	          searchBox.setBounds(map.getBounds());
-	        });
-	        let markerss = [];
-	        // Listen for the event fired when the user selects a prediction and retrieve
-	        // more details for that place.
-	        searchBox.addListener("places_changed", () => {
-	          const places = searchBox.getPlaces();
 
-	          if (places.length == 0) {
-		        alert("Not found!!");
-	            return;
-	          }
-	          // Clear out the old markers.
-	          markerss.forEach((marker) => {
-	            marker.setMap(null);
-	          });
-	          markerss = [];
-	          
-	          // For each place, get the icon, name and location.
-	          const bounds = new google.maps.LatLngBounds();
-	          places.forEach((place) => {
-	            if (!place.geometry) {
-	              console.log("Returned place contains no geometry");
-	              return;
-	            }
-	            const icon = {
-	              url: place.icon,
-	              size: new google.maps.Size(71, 71),
-	              origin: new google.maps.Point(0, 0),
-	              anchor: new google.maps.Point(17, 34),
-	              scaledSize: new google.maps.Size(50, 50),
-	            };
-	            // Create a marker for each place.
-	            markerss.push(
-	              new google.maps.Marker({
-	                map,
-	                icon,
-	                title: place.name,
-	                position: place.geometry.location,
-	              })
-	            );
-
-	            if (place.geometry.viewport) {
-	              // Only geocodes have viewport.
-	              bounds.union(place.geometry.viewport);
-	            } else {
-	              bounds.extend(place.geometry.location);
-	            }
-	          });
-	          map.fitBounds(bounds);
-	        });
-
-	var markerId;
-	var icon='https://img.icons8.com/ultraviolet/48/000000/google-maps-new.png';           	
-	var icon1='https://img.icons8.com/color/48/000000/gps-device.png';	   
-	var icon2 = {
-			url:"http://maps.google.com/mapfiles/ms/icons/blue.png", // url
-			scaledSize: new google.maps.Size(50, 50), // scaled size
-
-		};
-		  const srcInput = document.getElementById('srcCitySearchNames');
-		  const dstInput = document.getElementById('dstCitySearchNames');
-		  const autoCompleteOptions = {
-		      componentRestrictions: { country: ['ke'] },
-		      fields: ['place_id', 'geometry', 'name'],
-		      
-		     types: ['(cities)']
-		    };
-
-		    srcCityAutocomplete = new google.maps.places.Autocomplete(srcInput, autoCompleteOptions);
-		    dstCityAutocomplete  = new google.maps.places.Autocomplete(dstInput, autoCompleteOptions);
-		    srcCityAutocomplete.addListener('place_changed', onSrcPlaceChanged);
-		    dstCityAutocomplete.addListener('place_changed', onDstPlaceChanged);
-*/
 		restingMap();
-
-//		$('#filterr').show();
-//		var x = document.getElementById("removeFilter");								 
+		var x = document.getElementById("removeFilter");								 
 		$("#open-popup-btn").removeAttr('disabled');
 		console.log("Inside the success of physical layer");
 		var keys =[];
@@ -6632,10 +6658,8 @@ directionsDisplay.setMap(map);
 		$(document).ready(function () { 
 			$(function(){			 
 			 $(document).trigger("triggerListenersEvent");
-
 			});
-
-		  });
+		});
 
 } /// End of init Map
 
@@ -6646,9 +6670,7 @@ if(checkedOption == "circleRange"){
 	calculateGeoDistanceNearestPoints("findNearstDB");
 	calculateGeoDistanceNearestPoints("findNearstNode");
 }
-
 };	
-
 </script>
 <script
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJXAds-Gt4I39hRFHhYHMEg3XcBqihYoo&libraries=places&callback=initMap&amp;v=3.43&amp"></script>

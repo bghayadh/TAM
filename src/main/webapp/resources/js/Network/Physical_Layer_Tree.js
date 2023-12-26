@@ -4805,6 +4805,8 @@ singleProject = new ContextMenu({
 						$("#manholeCreateDate").val(data.ManholeDetails[7]);
 						$("#manholeLastModifiedDate").val(data.ManholeDetails[8]);
 						$("#manholeOwner").val(data.ManholeDetails[9]);
+						$("#manholeInstaller").val(data.ManholeDetails[10]);
+						$("#manholeEngineerName").val(data.ManholeDetails[11]);
 						
 						data = null;
 					},
@@ -4989,6 +4991,9 @@ singleProject = new ContextMenu({
             						$("#HandholeLat").val(data.HandholeDetails[3]);
             						$("#handholeCreateDate").val(data.HandholeDetails[7]);
             						$("#handholeLastModifiedDate").val(data.HandholeDetails[8]);
+            						$("#handholeOwner").val(data.HandholeDetails[9]);
+            						$("#handholeInstaller").val(data.HandholeDetails[10]);
+            						$("#handholeEngineerName").val(data.HandholeDetails[11]);
             						
                                 },
 
@@ -5177,6 +5182,15 @@ singleProject = new ContextMenu({
 									}
 									else {
 										$("#JunctionLastModifiedDate").val("");
+									}
+									if(data.junctionDetails[0][13]!=null){
+										$("#JunctionOwner").val(""+data.junctionDetails[0][13]);
+									}
+									if(data.junctionDetails[0][14]!=null){
+										$("#JunctionInstaller").val(""+data.junctionDetails[0][14]);
+									}
+									if(data.junctionDetails[0][15]!=null){
+										$("#JunctionEngineerName").val(""+data.junctionDetails[0][15]);
 									}
 																	
 								$("#JctName").on("input",function(){
@@ -5731,6 +5745,15 @@ singleProject = new ContextMenu({
 								else {
 									$("#manJunctionLastModifiedDate").val("");
 								}
+								if(data.junctionDetails[0][13]!=null){
+									$("#manholeJctOwner").val(""+data.junctionDetails[0][13]);
+								}
+								if(data.junctionDetails[0][14]!=null){
+									$("#manholeJctInstaller").val(""+data.junctionDetails[0][14]);
+								}
+								if(data.junctionDetails[0][15]!=null){
+									$("#manholeJctEngineerName").val(""+data.junctionDetails[0][15]);
+								}
 																
 							$("#manholeJctName").on("input",function(){
 
@@ -6277,6 +6300,15 @@ singleProject = new ContextMenu({
 								}
 								else {
 									$("#handJunctionLastModifiedDate").val("");
+								}
+								if(data.junctionDetails[0][13]!=null){
+									$("#handholeJctOwner").val(""+data.junctionDetails[0][13]);
+								}
+								if(data.junctionDetails[0][14]!=null){
+									$("#handholeJctInstaller").val(""+data.junctionDetails[0][14]);
+								}
+								if(data.junctionDetails[0][15]!=null){
+									$("#handholeJctEngineerName").val(""+data.junctionDetails[0][15]);
 								}
 							$("#handholeJctName").on("input",function(){
 
@@ -9314,6 +9346,9 @@ singleProject = new ContextMenu({
 				junctionCity = document.getElementById("JctCity").value;
 				junctionNum = document.getElementById("NumberJct").value;
 				junctionCapacity = document.getElementById("JctCapacity").value;
+				JunctionOwner = document.getElementById("JunctionOwner").value;
+				JunctionEngineerName = document.getElementById("JunctionEngineerName").value;
+				JunctionInstaller = document.getElementById("JunctionInstaller").value;
 				JctCreatedDate=$("#JunctionCreateDate").val();
 					
 				if(actionJct=="Update"){
@@ -9343,14 +9378,17 @@ singleProject = new ContextMenu({
 						"JctCreatedDate": JctCreatedDate,
 						"dictParameterTemp":updateJctDictArr,
 						"dictParameter":insertJctDictArr,
-						"dictParameterDel":slctDelMJct
+						"dictParameterDel":slctDelMJct,
+						"JunctionOwner" : JunctionOwner,
+						"JunctionEngineerName" : JunctionEngineerName,
+						"JunctionInstaller" :JunctionInstaller
 					},
 					dataType: "json",
 					success: function (data) {
 						if(data!=null){
 
 							window[""+data.JunctionID]=[];
-			                window[""+data.JunctionID]=[data.JunctionID,junctionName,"","",junctionNum,junctionCapacity,junctionCity,junctionLong,junctionLat,"",""];
+			                window[""+data.JunctionID]=[data.JunctionID,junctionName,"","",junctionNum,junctionCapacity,junctionCity,junctionLong,junctionLat,"","",JunctionOwner,JunctionInstaller,JunctionEngineerName];
 
 							if(actionJct=="Insert"){
 								console.log(" //////////Insert "+data.JunctionID+ ", "+junctionName);	
@@ -9499,6 +9537,9 @@ singleProject = new ContextMenu({
 			junctionNum = document.getElementById("manholeNumberJct").value;
 			ManholeJunctionCapacity = document.getElementById("manholeJctCapacity").value;
 			junctionCity = document.getElementById("manholeJctCity").value;
+			manholeJunctionOwner = document.getElementById("manholeJctOwner").value;
+		    manholeJunctionEngineerName = document.getElementById("manholeJctEngineerName").value;
+		    manholeJunctionInstaller= document.getElementById("manholeJctInstaller").value;
 			if(document.getElementById("manholeIdJct").value != ""){
 			ManholeProjectID =$("#"+manholeId).parents().eq(1).attr('id').split("Manhole_f_")[1];
 			console.log(" //////////ManholeProjectID "+document.getElementById("manholeJctName").value);
@@ -9532,7 +9573,10 @@ singleProject = new ContextMenu({
 					"JctCreatedDate":manJctCreatedDate,
 					"dictParameterTemp":updateJctDictArr,
 					"dictParameter":insertJctDictArr,
-					"dictParameterDel":slctDelMJct
+					"dictParameterDel":slctDelMJct,
+					"JunctionOwner" : manholeJunctionOwner,
+					"JunctionEngineerName" :  manholeJunctionEngineerName,
+					"JunctionInstaller" :  manholeJunctionInstaller
 				},
 				dataType: "json",
 				success: function (data) {
@@ -9714,6 +9758,9 @@ $("#saveHandholeJunction").click(function () {
 		handholeName = document.getElementById("handholeNameJct").value;
 		junctionNum = document.getElementById("handholeNumberJct").value;
 		junctionCity = document.getElementById("handholeJctCity").value;
+		handholeJctOwner = document.getElementById("handholeJctOwner").value;
+		handholeJctInstaller = document.getElementById("handholeJctInstaller").value;
+		handholeJctEngineerName = document.getElementById("handholeJctEngineerName").value;
 		HandholeProjectID =$("#"+handholeID).parents().eq(1).attr('id').split("Handhole_f_")[1];
 		HandholeJunctionCapacity = document.getElementById("handholeJctCapacity").value;
 		handJctCreatedDate=$("#handJunctionCreateDate").val();
@@ -9746,6 +9793,9 @@ $("#saveHandholeJunction").click(function () {
 			"dictParameter":insertJctDictArr,
 			"dictParameterDel":slctDelHJct,
 			"JctCreatedDate":handJctCreatedDate,
+			"JunctionOwner" : handholeJctOwner,
+			"JunctionInstaller" :handholeJctEngineerName,
+			"JunctionEngineerName":handholeJctInstaller
 
 	},			
 	dataType: "json",
@@ -9847,7 +9897,7 @@ $("#saveHandholeJunction").click(function () {
 		$("#"+data.JunctionID+"_f").children('ul').remove();	
 		$("#"+data.JunctionID+"_f").remove();
 			
-		window[""+data.JunctionID]=[data.JunctionID,junctionName,handholeID,handholeName,junctionNum,HandholeJunctionCapacity,junctionCity,junctionLong,junctionLat,"",""];
+		window[""+data.JunctionID]=[data.JunctionID,junctionName,handholeID,handholeName,junctionNum,HandholeJunctionCapacity,junctionCity,junctionLong,junctionLat,"","",handholeJctOwner,handholeJctInstaller,handholeJctEngineerName];
 
 	}
 							
@@ -10194,6 +10244,8 @@ $("#saveManhole").click(function () {
 		ManholeCity = document.getElementById("ManholeCity").value;
 		manholeCreatedDate=document.getElementById("manholeCreateDate").value;
 		manholeowner =  document.getElementById("manholeOwner").value;
+		manholeInstaller =  document.getElementById("manholeInstaller").value;
+		manholeEngineerName =  document.getElementById("manholeEngineerName").value;
 
 				
 		if($("#projectIdManhole").is(":visible") && $("#projectNameManhole").is(":visible")){
@@ -10226,7 +10278,9 @@ $("#saveManhole").click(function () {
 				"actionManholeContext":actionManholeContext,
 				"ProjectId": IdNodeSelectedTemp,
 				"manholeowner":manholeowner,
-				"manholeCreatedDate":manholeCreatedDate
+				"manholeCreatedDate": manholeCreatedDate,
+				"manholeInstaller":manholeInstaller,
+				"manholeEngineerName": manholeEngineerName
 			},
 			dataType: "json",
 			success: function (data) {
@@ -10322,7 +10376,7 @@ $("#saveManhole").click(function () {
 		$("#manholeCheckAllBoq").prop("checked",true);
 		
 		window[""+data.ManholeId]="";
-		window[""+data.ManholeId]=[data.ManholeId,data.ManholeName,ManholeLong,ManholeLat,IdNodeSelectedTemp,data.countJct,ManholeCity];
+		window[""+data.ManholeId]=[data.ManholeId,data.ManholeName,ManholeLong,ManholeLat,IdNodeSelectedTemp,data.countJct,ManholeCity,manholeInstaller,manholeEngineerName];
 		
 		if(typeof infowindow!=='undefined'){
 			infowindow.close();
@@ -10396,6 +10450,9 @@ $("#saveHandhole").click(function () {
 	HandholeModel = document.getElementById("HandholeModel").value;
 	HandholeCity = document.getElementById("HandholeCity").value;
 	handholeCreatedDate=document.getElementById("handholeCreateDate").value;
+	handholeOwner =document.getElementById("handholeOwner").value;
+	handholeInstaller=document.getElementById("handholeInstaller").value;
+	handholeEngineerName=document.getElementById("handholeEngineerName").value;
 
 				
 	if($("#projectIdHandhole").is(":visible") && $("#projectNameHandhole").is(":visible")){
@@ -10424,7 +10481,10 @@ $("#saveHandhole").click(function () {
 			"HandholeCity" :HandholeCity,
 			"actionHandholeContext":actionHandholeContext,
 			"ProjectId": IdNodeSelectedTemp,
-			"handholeCreatedDate":handholeCreatedDate
+			"handholeCreatedDate":handholeCreatedDate,
+			"handholeOwner" : handholeOwner,
+			"handholeInstaller" : handholeInstaller,
+			"handholeEngineerName" :handholeEngineerName
 		},
 		dataType: "json",
 		success: function (data) {
@@ -10522,7 +10582,7 @@ $("#saveHandhole").click(function () {
 	$("#handholeCheckAllBoq").prop("checked",true);
 
 	window[""+data.handholeId]="";
-	window[""+data.handholeId]=[data.handholeId,data.handholeName,HandholeLong,HandholeLat,IdNodeSelectedTemp,data.countJct,HandholeCity];
+	window[""+data.handholeId]=[data.handholeId,data.handholeName,HandholeLong,HandholeLat,IdNodeSelectedTemp,data.countJct,HandholeCity,handholeOwner,handholeInstaller,handholeEngineerName];
 
 					
 	if(typeof infowindow!=='undefined'){

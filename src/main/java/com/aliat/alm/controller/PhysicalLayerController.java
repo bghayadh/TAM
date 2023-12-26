@@ -1855,6 +1855,7 @@ public class PhysicalLayerController {
 	public Map<String, Object> findManholeDetails(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
 
+
 		Map<String, Object> rtn = new LinkedHashMap<>();
 		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
@@ -1866,7 +1867,7 @@ public class PhysicalLayerController {
 			String selectedManIdContext = request.getParameter("selectedManIdContext");
 			try {
 				Object[] ManholeDetails = (Object[]) session.createNativeQuery(
-						"SELECT DISTINCT MANHOLE_ID,MANHOLE_NAME,LONGITUDE,LATITUDE,MANHOLE_MODEL,CITY,DM_NAME,TO_CHAR(CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(LAST_MODIFIED_DATE, 'MM/dd/YYYY HH:MI AM'),OWNER FROM MANHOLE WHERE MANHOLE_ID='"
+						"SELECT DISTINCT MANHOLE_ID,MANHOLE_NAME,LONGITUDE,LATITUDE,MANHOLE_MODEL,CITY,DM_NAME,TO_CHAR(CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(LAST_MODIFIED_DATE, 'MM/dd/YYYY HH:MI AM'),OWNER,MH_INSTALLER,MH_ENGINEER_NAME FROM MANHOLE WHERE MANHOLE_ID='"
 								+ selectedManIdContext + "' ")
 						.uniqueResult();
 				rtn.put("ManholeDetails", ManholeDetails);
@@ -1887,12 +1888,14 @@ public class PhysicalLayerController {
 			}
 		}
 		return rtn;
+	
 	}
 
 	@RequestMapping(value = "/findHandholeDetails", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> findHandholeDetails(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
+
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
 		session = AlmDbSession.getInstance().getSession();
@@ -1905,7 +1908,7 @@ public class PhysicalLayerController {
 			String selectedHandIdContext = request.getParameter("selectedHandIdContext");
 			try {
 				Object[] HandholeDetails = (Object[]) session.createNativeQuery(
-						"SELECT HANDHOLE_ID,HANDHOLE_NAME,LONGITUDE,LATITUDE,HANDHOLE_MODEL,CITY,DM_NAME,TO_CHAR(CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(LAST_MODIFIED_DATE, 'MM/dd/YYYY HH:MI AM') FROM HANDHOLE WHERE HANDHOLE_ID='"
+						"SELECT HANDHOLE_ID,HANDHOLE_NAME,LONGITUDE,LATITUDE,HANDHOLE_MODEL,CITY,DM_NAME,TO_CHAR(CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(LAST_MODIFIED_DATE, 'MM/dd/YYYY HH:MI AM'),OWNER,HH_INSTALLER,HH_ENGINEER_NAME  FROM HANDHOLE WHERE HANDHOLE_ID='"
 								+ selectedHandIdContext + "' ")
 						.uniqueResult();
 
@@ -1928,6 +1931,7 @@ public class PhysicalLayerController {
 			}
 		}
 		return rtn;
+	
 	}
 
 	@SuppressWarnings("unchecked")
@@ -3840,6 +3844,7 @@ public class PhysicalLayerController {
 	@ResponseBody
 	public Map<String, Object> saveManhole(HttpServletRequest request, HttpServletResponse response) {
 
+
 		Map<String, Object> rtn = new LinkedHashMap<>();
 		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
@@ -3908,12 +3913,12 @@ public class PhysicalLayerController {
 						city = request.getParameter("ManholeCity").replace("'", "");
 
 						query = session.createNativeQuery(
-								"INSERT INTO MANHOLE(MANHOLE_ID, MANHOLE_NAME, MANHOLE_MODEL, LONGITUDE, LATITUDE, CITY, PROJECT_ID, DM_NAME,CREATION_DATE,LAST_MODIFIED_DATE,OWNER) VALUES ('"
+								"INSERT INTO MANHOLE(MANHOLE_ID, MANHOLE_NAME, MANHOLE_MODEL, LONGITUDE, LATITUDE, CITY, PROJECT_ID, DM_NAME,CREATION_DATE,LAST_MODIFIED_DATE,OWNER,MH_INSTALLER,MH_ENGINEER_NAME) VALUES ('"
 										+ manholeId + "','" + manholeName + "','" + request.getParameter("ManholeModel")
 										+ "','" + request.getParameter("ManholeLong") + "','"
 										+ request.getParameter("ManholeLat") + "','" + city + "','"
 										+ request.getParameter("ProjectId") + "','" + null + "',TIMESTAMP '"
-										+ manholeCreationDate + "',TIMESTAMP '" + lastModifiedDate+"','"+request.getParameter("manholeowner")+ "')");
+										+ manholeCreationDate + "',TIMESTAMP '" + lastModifiedDate+"','"+request.getParameter("manholeowner")+"','"+request.getParameter("manholeInstaller")+"','"+request.getParameter("manholeEngineerName")+ "')");
 						query.executeUpdate();
 						rtn.put("ManholeId", manholeId);
 						rtn.put("ManholeName", manholeName);
@@ -3949,8 +3954,9 @@ public class PhysicalLayerController {
 								+ request.getParameter("ManholeLong") + "',LATITUDE= '"
 								+ request.getParameter("ManholeLat") + "',CITY= '" + city + "',PROJECT_ID='"
 								+ request.getParameter("ProjectId") + "',OWNER ='"
-										+ request.getParameter("manholeowner") + "',LAST_MODIFIED_DATE= TIMESTAMP '"
-								+ lastModifiedDate + "' where MANHOLE_ID='" + request.getParameter("ManholeId") + "'");
+								+ request.getParameter("manholeowner") + "',LAST_MODIFIED_DATE= TIMESTAMP '"
+								+ lastModifiedDate + "',MH_INSTALLER ='" + request.getParameter("manholeInstaller") + "',MH_ENGINEER_NAME ='"
+								+ request.getParameter("manholeEngineerName") + "' where MANHOLE_ID='" + request.getParameter("ManholeId") + "'");
 						query.executeUpdate();
 						rtn.put("ManholeId", request.getParameter("ManholeId"));
 						rtn.put("ManholeName", manholeName);
@@ -4019,12 +4025,14 @@ public class PhysicalLayerController {
 			}
 			return rtn;
 		}
+	
 	}
 
 	@RequestMapping(value = "/saveHandhole", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> saveHandhole(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
+
 		// logger.info("Welcome home! The client locale is {}.", locale);
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
@@ -4087,12 +4095,12 @@ public class PhysicalLayerController {
 					}
 
 					Query InsertHandhole = session.createNativeQuery(
-							"INSERT INTO HANDHOLE(HANDHOLE_ID, HANDHOLE_NAME, HANDHOLE_MODEL, LONGITUDE, LATITUDE, CITY, PROJECT_ID, DM_NAME,CREATION_DATE,LAST_MODIFIED_DATE) VALUES ('"
+							"INSERT INTO HANDHOLE(HANDHOLE_ID, HANDHOLE_NAME, HANDHOLE_MODEL, LONGITUDE, LATITUDE, CITY, PROJECT_ID, DM_NAME,CREATION_DATE,LAST_MODIFIED_DATE,OWNER,HH_INSTALLER,HH_ENGINEER_NAME ) VALUES ('"
 									+ handholeId + "','" + handholeName + "','" + request.getParameter("HandholeModel")
 									+ "','" + request.getParameter("HandholeLong") + "','"
 									+ request.getParameter("HandholeLat") + "','" + request.getParameter("HandholeCity")
 									+ "','" + request.getParameter("ProjectId") + "','" + null + "',TIMESTAMP '"
-									+ handholeCreationDate + "',TIMESTAMP '" + lastModifiedDate + "')");
+									+ handholeCreationDate + "',TIMESTAMP '" + lastModifiedDate + "','" + request.getParameter("handholeOwner") + "','" + request.getParameter("handholeInstaller") + "','"+ request.getParameter("handholeEngineerName") + "')");
 					InsertHandhole.executeUpdate();
 					rtn.put("handholeId", handholeId);
 					rtn.put("handholeName", handholeName);
@@ -4128,7 +4136,7 @@ public class PhysicalLayerController {
 							+ request.getParameter("HandholeLong") + "',LATITUDE= '"
 							+ request.getParameter("HandholeLat") + "',CITY= '" + request.getParameter("HandholeCity")
 							+ "',PROJECT_ID='" + request.getParameter("ProjectId") + "',LAST_MODIFIED_DATE= TIMESTAMP '"
-							+ lastModifiedDate + "' where HANDHOLE_ID='" + request.getParameter("handholeId") + "'");
+							+ lastModifiedDate + "',OWNER= '" + request.getParameter("handholeOwner")+ "',HH_INSTALLER= '" + request.getParameter("handholeInstaller")+ "',HH_ENGINEER_NAME= '" + request.getParameter("handholeEngineerName")+ "' where HANDHOLE_ID='" + request.getParameter("handholeId") + "'");
 					updateHandhole.executeUpdate();
 					rtn.put("handholeId", request.getParameter("handholeId"));
 					rtn.put("handholeName", handholeName);
@@ -4194,6 +4202,7 @@ public class PhysicalLayerController {
 			}
 		}
 		return rtn;
+	
 	}
 
 	@SuppressWarnings("unchecked")
@@ -10071,6 +10080,7 @@ public class PhysicalLayerController {
 	public Map<String, Object> saveJunction(Locale locale, Model model, @ModelAttribute ItemParameters itemParameters,
 			HttpServletRequest request, HttpServletResponse response) {
 
+
 		Map<String, Object> rtn = new LinkedHashMap<>();
 
 		session = AlmDbSession.getInstance().getSession();
@@ -10100,6 +10110,9 @@ public class PhysicalLayerController {
 					String physLayerNameJunction = request.getParameter("LayerNameJunction");
 					String projectId = request.getParameter("ProjectId");
 					String junctionID = request.getParameter("JunctionId");
+					String JunctionOwner = request.getParameter("JunctionOwner");
+					String JunctionInstaller = request.getParameter("JunctionInstaller");
+					String JunctionEngineerName = request.getParameter("JunctionEngineerName");
 
 					if (request.getParameter("JunctionLong") != "") {
 						junctionLong = Float.parseFloat(request.getParameter("JunctionLong"));
@@ -10167,12 +10180,12 @@ public class PhysicalLayerController {
 						}
 						Query insertJctQuery = session
 								.createNativeQuery("INSERT INTO JUNCTION(JUNCTION_ID,JUNCTION_NAME,PHYSICAL_LAYER_ID"
-										+ ",PHYSICAL_LAYER_NAME,LONGITUDE,LATITUDE,CAPACITY,JUNCTION_NUMBER,CITY,PROJECT_ID,CREATION_DATE,LAST_MODIFIED_DATE)"
+										+ ",PHYSICAL_LAYER_NAME,LONGITUDE,LATITUDE,CAPACITY,JUNCTION_NUMBER,CITY,PROJECT_ID,CREATION_DATE,LAST_MODIFIED_DATE,OWNER,JUNC_INSTALLER,JUNC_ENGINEER_NAME)"
 										+ " VALUES ('" + junctionID + "','" + junctionName + "','" + physLayerIdJunction
 										+ "','" + physLayerNameJunction + "','" + junctionLong + "','" + junctionLat
 										+ "','" + junctionCapacity + "','" + junctionNumber + "','" + junctionCity
 										+ "','" + projectId + "', TIMESTAMP '" + junctionCreationDate + "',TIMESTAMP '"
-										+ lastModifiedDate + "')");
+										+ lastModifiedDate + "','" + JunctionOwner + "','" + JunctionInstaller + "','" + JunctionEngineerName + "')");
 						insertJctQuery.executeUpdate();
 
 						rtn.put("ManHandholeName", physLayerNameJunction);
@@ -10182,7 +10195,8 @@ public class PhysicalLayerController {
 						Query updateJunction = session.createNativeQuery("UPDATE JUNCTION SET JUNCTION_NAME = '"
 								+ junctionName + "',CAPACITY = '" + junctionCapacity + "',JUNCTION_NUMBER ='"
 								+ junctionNumber + "', LAST_MODIFIED_DATE= TIMESTAMP '" + lastModifiedDate + "' "
-								+ " WHERE JUNCTION_ID = '" + junctionID + "'");
+								+ ",OWNER = '"+JunctionOwner+ "',JUNC_INSTALLER = '"+JunctionInstaller+ "',JUNC_ENGINEER_NAME = '"+JunctionEngineerName
+								+ "' WHERE JUNCTION_ID = '" + junctionID + "' ");
 						updateJunction.executeUpdate();
 					}
 
@@ -10413,6 +10427,7 @@ public class PhysicalLayerController {
 			}
 		}
 		return rtn;
+	
 	}
 
 	@SuppressWarnings("unchecked")
@@ -10835,6 +10850,7 @@ public class PhysicalLayerController {
 	public Map<String, Object> findJunctionDetails(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) {
 
+
 		Map<String, Object> rtn = new LinkedHashMap<>();
 
 		session = AlmDbSession.getInstance().getSession();
@@ -10853,7 +10869,7 @@ public class PhysicalLayerController {
 									+ JunctionID
 									+ "'),(SELECT COUNT(DISTINCT B.STRAND_ID_SIDE_B) FROM JUNCTION_MAPPING B WHERE B.STRAND_ID_SIDE_B !='null' AND B.JCT_ID='"
 									+ JunctionID
-									+ "'), TO_CHAR(A.CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(A.LAST_MODIFIED_DATE, 'MM/dd/YYYY HH:MI AM')  FROM JUNCTION A WHERE A.JUNCTION_ID='"
+									+ "'), TO_CHAR(A.CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(A.LAST_MODIFIED_DATE, 'MM/dd/YYYY HH:MI AM'),OWNER,JUNC_INSTALLER,JUNC_ENGINEER_NAME FROM JUNCTION A WHERE A.JUNCTION_ID='"
 									+ JunctionID + "' ")
 							.getResultList();
 
@@ -10882,6 +10898,7 @@ public class PhysicalLayerController {
 			}
 		}
 		return rtn;
+	
 	}
 
 	@SuppressWarnings("unchecked")
