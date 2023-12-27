@@ -301,6 +301,10 @@ public class PhysicalLayerController {
 							String[] allDbIdsPointsArray = (findListId(distribBoardList, "all")).length > 0
 									? findListId(distribBoardList, "all")
 									: new String[] { "A" };
+									
+							List<String> allManIdsPointsList = Arrays.asList(allManIdsPointsArray);
+							List<String> allHandIdsPointsList = Arrays.asList(allHandIdsPointsArray);
+							List<String> allDbIdsPointsList = Arrays.asList(allDbIdsPointsArray);
 
 							if (request.getParameter("Filteredfiber") != null) {
 
@@ -319,7 +323,7 @@ public class PhysicalLayerController {
 												+ "%' OR B.FIBER_CABLE_NAME LIKE '%"
 												+ request.getParameter("Filteredfiber")
 												+ "%') ) where manhole_id NOT IN (:param) ");
-								query.setParameter("param", allManIdsPointsArray);
+								query.setParameter("param", allManIdsPointsList);
 								manholeList.addAll(query.getResultList());
 								allManIdsPointsArray = (findListId(manholeList, "all")).length > 0
 										? findListId(manholeList, "all")
@@ -339,7 +343,7 @@ public class PhysicalLayerController {
 												+ "%' OR C.FIBER_CABLE_NAME LIKE '%"
 												+ request.getParameter("Filteredfiber")
 												+ "%') ) where manhole_id NOT IN (:param)");
-								query.setParameter("param", allManIdsPointsArray);
+								query.setParameter("param", allManIdsPointsList);
 								manholeList.addAll(query.getResultList());
 								allManIdsPointsArray = (findListId(manholeList, "all")).length > 0
 										? findListId(manholeList, "all")
@@ -359,7 +363,7 @@ public class PhysicalLayerController {
 												+ "%' OR C.FIBER_CABLE_NAME LIKE '%"
 												+ request.getParameter("Filteredfiber")
 												+ "%') ) where manhole_id NOT IN (:param)");
-								query.setParameter("param", allManIdsPointsArray);
+								query.setParameter("param", allManIdsPointsList);
 								manholeList.addAll(query.getResultList());
 								allManIdsPointsArray = (findListId(manholeList, "all")).length > 0
 										? findListId(manholeList, "all")
@@ -381,7 +385,7 @@ public class PhysicalLayerController {
 												+ "%' OR B.FIBER_CABLE_NAME LIKE '%"
 												+ request.getParameter("Filteredfiber")
 												+ "%') ) where handhole_id NOT IN (:param) ");
-								query.setParameter("param", allHandIdsPointsArray);
+								query.setParameter("param", allHandIdsPointsList);
 								handholeList.addAll(query.getResultList());
 								allHandIdsPointsArray = (findListId(handholeList, "all")).length > 0
 										? findListId(handholeList, "all")
@@ -401,7 +405,7 @@ public class PhysicalLayerController {
 												+ "%' OR C.FIBER_CABLE_NAME LIKE '%"
 												+ request.getParameter("Filteredfiber")
 												+ "%') ) where handhole_id NOT IN (:param)");
-								query.setParameter("param", allHandIdsPointsArray);
+								query.setParameter("param", allHandIdsPointsList);
 								handholeList.addAll(query.getResultList());
 								allHandIdsPointsArray = (findListId(handholeList, "all")).length > 0
 										? findListId(handholeList, "all")
@@ -421,7 +425,7 @@ public class PhysicalLayerController {
 												+ "%' OR C.FIBER_CABLE_NAME LIKE '%"
 												+ request.getParameter("Filteredfiber")
 												+ "%') ) where handhole_id NOT IN (:param)");
-								query.setParameter("param", allHandIdsPointsArray);
+								query.setParameter("param", allHandIdsPointsList);
 								handholeList.addAll(query.getResultList());
 								allHandIdsPointsArray = (findListId(handholeList, "all")).length > 0
 										? findListId(handholeList, "all")
@@ -442,7 +446,7 @@ public class PhysicalLayerController {
 												+ "%' OR B.FIBER_CABLE_NAME LIKE '%"
 												+ request.getParameter("Filteredfiber")
 												+ "%') ) where DB_ID NOT IN (:param) ");
-								query.setParameter("param", allDbIdsPointsArray);
+								query.setParameter("param", allDbIdsPointsList);
 								distribBoardList.addAll(query.getResultList());
 								allDbIdsPointsArray = (findListId(distribBoardList, "all")).length > 0
 										? findListId(distribBoardList, "all")
@@ -462,7 +466,7 @@ public class PhysicalLayerController {
 												+ "%' OR C.FIBER_CABLE_NAME LIKE '%"
 												+ request.getParameter("Filteredfiber")
 												+ "%') ) where DB_ID NOT IN (:param)");
-								query.setParameter("param", allDbIdsPointsArray);
+								query.setParameter("param", allDbIdsPointsList);
 								distribBoardList.addAll(query.getResultList());
 								allDbIdsPointsArray = (findListId(distribBoardList, "all")).length > 0
 										? findListId(distribBoardList, "all")
@@ -482,7 +486,7 @@ public class PhysicalLayerController {
 												+ "%' OR C.FIBER_CABLE_NAME LIKE '%"
 												+ request.getParameter("Filteredfiber")
 												+ "%') ) where DB_ID NOT IN (:param)");
-								query.setParameter("param", allDbIdsPointsArray);
+								query.setParameter("param", allDbIdsPointsList);
 								distribBoardList.addAll(query.getResultList());
 								allDbIdsPointsArray = (findListId(distribBoardList, "all")).length > 0
 										? findListId(distribBoardList, "all")
@@ -510,7 +514,7 @@ public class PhysicalLayerController {
 												+ request.getParameter("FilteredTrench") + "%' OR B.TRENCH_NAME LIKE '%"
 												+ request.getParameter("FilteredTrench")
 												+ "%') )  where manhole_id NOT IN (:param) ");
-								query.setParameter("param", allManIdsPointsArray);
+								query.setParameter("param", allManIdsPointsList);
 								manholeList.addAll(query.getResultList());
 								allManIdsPointsArray = (findListId(manholeList, "all")).length > 0
 										? findListId(manholeList, "all")
@@ -535,7 +539,7 @@ public class PhysicalLayerController {
 												+ request.getParameter("FilteredTrench") + "%' OR C.TRENCH_NAME LIKE '%"
 												+ request.getParameter("FilteredTrench")
 												+ "%') )  where manhole_id NOT IN (:param) ");
-								query.setParameter("param", allManIdsPointsArray);
+								query.setParameter("param", allManIdsPointsList);
 								manholeList.addAll(query.getResultList());
 								allManIdsPointsArray = (findListId(manholeList, "all")).length > 0
 										? findListId(manholeList, "all")
@@ -560,7 +564,7 @@ public class PhysicalLayerController {
 												+ request.getParameter("FilteredTrench") + "%' OR B.TRENCH_NAME LIKE '%"
 												+ request.getParameter("FilteredTrench")
 												+ "%') )  where handhole_id NOT IN (:param) ");
-								query.setParameter("param", allHandIdsPointsArray);
+								query.setParameter("param", allHandIdsPointsList);
 								handholeList.addAll(query.getResultList());
 								allHandIdsPointsArray = (findListId(handholeList, "all")).length > 0
 										? findListId(handholeList, "all")
@@ -585,7 +589,7 @@ public class PhysicalLayerController {
 												+ request.getParameter("FilteredTrench") + "%' OR C.TRENCH_NAME LIKE '%"
 												+ request.getParameter("FilteredTrench")
 												+ "%') )  where handhole_id NOT IN (:param) ");
-								query.setParameter("param", allHandIdsPointsArray);
+								query.setParameter("param", allHandIdsPointsList);
 								handholeList.addAll(query.getResultList());
 								allHandIdsPointsArray = (findListId(handholeList, "all")).length > 0
 										? findListId(handholeList, "all")
@@ -610,7 +614,7 @@ public class PhysicalLayerController {
 												+ request.getParameter("FilteredTrench") + "%' OR B.TRENCH_NAME LIKE '%"
 												+ request.getParameter("FilteredTrench")
 												+ "%') )  where DB_ID NOT IN (:param) ");
-								query.setParameter("param", allDbIdsPointsArray);
+								query.setParameter("param", allDbIdsPointsList);
 								distribBoardList.addAll(query.getResultList());
 								allDbIdsPointsArray = (findListId(distribBoardList, "all")).length > 0
 										? findListId(distribBoardList, "all")
@@ -635,7 +639,7 @@ public class PhysicalLayerController {
 												+ request.getParameter("FilteredTrench") + "%' OR C.TRENCH_NAME LIKE '%"
 												+ request.getParameter("FilteredTrench")
 												+ "%') )  where DB_ID NOT IN (:param) ");
-								query.setParameter("param", allDbIdsPointsArray);
+								query.setParameter("param", allDbIdsPointsList);
 								distribBoardList.addAll(query.getResultList());
 								allDbIdsPointsArray = (findListId(distribBoardList, "all")).length > 0
 										? findListId(distribBoardList, "all")
@@ -656,13 +660,13 @@ public class PhysicalLayerController {
 											+ filteredManJunction + "%' OR A.JUNCTION_NAME LIKE '%"
 											+ filteredManJunction + "%') and A.PROJECT_ID LIKE '%"
 											+ request.getParameter("Checked") + "%' AND B.MANHOLE_ID IN (:param)  ");
-							junctionManholeList = query.setParameter("param", allManIdsPointsArray).getResultList();
+							junctionManholeList = query.setParameter("param", allManIdsPointsList).getResultList();
 							query = session.createNativeQuery(
 									"SELECT DISTINCT A.JUNCTION_ID, A.JUNCTION_NAME,A.PHYSICAL_LAYER_ID,A.PHYSICAL_LAYER_NAME,A.JUNCTION_NUMBER,A.CAPACITY,A.CITY,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID FROM JUNCTION A LEFT JOIN handhole B ON A.PHYSICAL_LAYER_ID = B.handhole_id where (A.JUNCTION_ID LIKE '%"
 											+ filteredHandJunction + "%' OR A.JUNCTION_NAME LIKE '%"
 											+ filteredHandJunction + "%') and A.PROJECT_ID LIKE '%"
 											+ request.getParameter("Checked") + "%' AND B.HANDHOLE_ID IN (:param)  ");
-							junctionHandholeList = query.setParameter("param", allHandIdsPointsArray).getResultList();
+							junctionHandholeList = query.setParameter("param", allHandIdsPointsList).getResultList();
 						}
 					} else if (StringUtils.equalsIgnoreCase(request.getParameter("Checked"), "circleRange")
 							|| StringUtils.equalsIgnoreCase(request.getParameter("Checked"), "StartEnd")
