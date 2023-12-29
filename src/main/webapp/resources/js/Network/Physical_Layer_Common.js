@@ -8701,6 +8701,15 @@ function FindTrenchData(selectedTrenchContext){
 			else {
 				$("#trenchDrawingBy").val("LINEOFSITE");
 			}
+			if(data.listTrench[0][26]!=null){
+				$("#trenchOwner").val(data.listTrench[0][26]);
+			} 
+			if(data.listTrench[0][27]!=null){
+				$("#trenchInstaller").val(data.listTrench[0][27]);
+			} if(data.listTrench[0][28]!=null){
+				$("#trenchEngineerName").val(data.listTrench[0][28]);
+			} 
+			
 			$("#trenchHeader").text("Trench: "+data.listTrench[0][1]);
 			
 			
@@ -8832,6 +8841,15 @@ function FindDuctData(selectedDuctContext){
 			else {
 				$("#ductDrawingBy").val("LINEOFSITE");
 			}
+			if(data.listDuct[0][27]!=null){
+				$("#ductOwner").val(data.listDuct[0][27]);
+			} 
+			if(data.listDuct[0][28]!=null){
+				$("#ductInstaller").val(data.listDuct[0][28]);
+			} 
+			if(data.listDuct[0][29]!=null){
+				$("#ductEngineerName").val(data.listDuct[0][29]);
+			} 
 			if(data.listDuct[0][1]!=null){
 				$("#ductHeader").text("Duct: "+data.listDuct[0][1]);
 			}	

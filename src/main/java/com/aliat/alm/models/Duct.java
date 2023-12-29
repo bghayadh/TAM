@@ -96,15 +96,28 @@ public class Duct {
 	@Column(name = "DRAWING_TYPE")
 	private String drawingType;
 	
+	@Column(name = "OWNER")
+	private String ductOwner;
+	
+	@Column(name = "DUCT_INSTALLER")
+	private String ductInstaller;
+	
+	@Column(name = "DUCT_ENGINEER_NAME")
+	private String ductEngineerName;
+	
 	
 	public Duct() {
 		super();
 	}
-	
-	public Duct(String ductID, String ductName, String sourceWareId, String sourceId, String sourceName, String destinationWareId, String destinationId, String destinationName,
-			String srcLong, String srcLat, String destLong, String destLat, String srcCity,
-			String destCity, String trenchID, double numFiberCables, double numFiberTubes, double numFiberStrands, double length, Timestamp creationDate, Timestamp lastModifieddate, String createdBy, 
-			String lastmodifiedBy,double totaldriving, double totalGeoDist,double lastAuxToDestDistance,double lastAuxToDestDrivDistance,String drawingType) {
+
+
+	public Duct(String ductID, String ductName, String sourceWareId, String sourceId, String sourceName,
+			String destinationWareId, String destinationId, String destinationName, String srcLong, String srcLat,
+			String destLong, String destLat, String srcCity, String destCity, String trenchID, double numFiberCables,
+			double numFiberTubes, double numFiberStrands, double length, Timestamp creationDate,
+			Timestamp lastModifieddate, String createdBy, String lastmodifiedBy, double totaldriving,
+			double totalGeoDist, double lastAuxToDestDistance, double lastAuxToDestDrivDistance, String drawingType,
+			String ductOwner, String ductInstaller, String ductEngineerName) {
 		super();
 		this.ductID = ductID;
 		this.ductName = ductName;
@@ -132,233 +145,323 @@ public class Duct {
 		this.totaldriving = totaldriving;
 		this.totalGeoDist = totalGeoDist;
 		this.lastAuxToDestDistance = lastAuxToDestDistance;
-		this.lastAuxToDestDrivDistance=lastAuxToDestDrivDistance;
-		this.drawingType=drawingType;
+		this.lastAuxToDestDrivDistance = lastAuxToDestDrivDistance;
+		this.drawingType = drawingType;
+		this.ductOwner = ductOwner;
+		this.ductInstaller = ductInstaller;
+		this.ductEngineerName = ductEngineerName;
 	}
+
 
 	public String getDuctID() {
 		return ductID;
 	}
 
+
 	public void setDuctID(String ductID) {
 		this.ductID = ductID;
 	}
+
 
 	public String getDuctName() {
 		return ductName;
 	}
 
+
 	public void setDuctName(String ductName) {
 		this.ductName = ductName;
 	}
+
 
 	public String getSourceWareId() {
 		return sourceWareId;
 	}
 
+
 	public void setSourceWareId(String sourceWareId) {
 		this.sourceWareId = sourceWareId;
 	}
+
 
 	public String getSourceId() {
 		return sourceId;
 	}
 
+
 	public void setSourceId(String sourceId) {
 		this.sourceId = sourceId;
 	}
+
 
 	public String getSourceName() {
 		return sourceName;
 	}
 
+
 	public void setSourceName(String sourceName) {
 		this.sourceName = sourceName;
 	}
+
 
 	public String getDestinationWareId() {
 		return destinationWareId;
 	}
 
+
 	public void setDestinationWareId(String destinationWareId) {
 		this.destinationWareId = destinationWareId;
 	}
+
 
 	public String getDestinationId() {
 		return destinationId;
 	}
 
+
 	public void setDestinationId(String destinationId) {
 		this.destinationId = destinationId;
 	}
+
 
 	public String getDestinationName() {
 		return destinationName;
 	}
 
+
 	public void setDestinationName(String destinationName) {
 		this.destinationName = destinationName;
 	}
+
 
 	public String getSrcLong() {
 		return srcLong;
 	}
 
+
 	public void setSrcLong(String srcLong) {
 		this.srcLong = srcLong;
 	}
+
 
 	public String getSrcLat() {
 		return srcLat;
 	}
 
+
 	public void setSrcLat(String srcLat) {
 		this.srcLat = srcLat;
 	}
+
 
 	public String getDestLong() {
 		return destLong;
 	}
 
+
 	public void setDestLong(String destLong) {
 		this.destLong = destLong;
 	}
+
 
 	public String getDestLat() {
 		return destLat;
 	}
 
+
 	public void setDestLat(String destLat) {
 		this.destLat = destLat;
 	}
+
 
 	public String getSrcCity() {
 		return srcCity;
 	}
 
+
 	public void setSrcCity(String srcCity) {
 		this.srcCity = srcCity;
 	}
+
 
 	public String getDestCity() {
 		return destCity;
 	}
 
+
 	public void setDestCity(String destCity) {
 		this.destCity = destCity;
 	}
+
 
 	public String getTrenchID() {
 		return trenchID;
 	}
 
+
 	public void setTrenchID(String trenchID) {
 		this.trenchID = trenchID;
 	}
+
 
 	public double getNumFiberCables() {
 		return numFiberCables;
 	}
 
+
 	public void setNumFiberCables(double numFiberCables) {
 		this.numFiberCables = numFiberCables;
 	}
+
 
 	public double getNumFiberTubes() {
 		return numFiberTubes;
 	}
 
+
 	public void setNumFiberTubes(double numFiberTubes) {
 		this.numFiberTubes = numFiberTubes;
 	}
+
 
 	public double getNumFiberStrands() {
 		return numFiberStrands;
 	}
 
+
 	public void setNumFiberStrands(double numFiberStrands) {
 		this.numFiberStrands = numFiberStrands;
 	}
+
 
 	public double getLength() {
 		return length;
 	}
 
+
 	public void setLength(double length) {
 		this.length = length;
 	}
+
 
 	public Timestamp getCreationDate() {
 		return creationDate;
 	}
 
+
 	public void setCreationDate(Timestamp creationDate) {
 		this.creationDate = creationDate;
 	}
+
 
 	public Timestamp getLastModifieddate() {
 		return lastModifieddate;
 	}
 
+
 	public void setLastModifieddate(Timestamp lastModifieddate) {
 		this.lastModifieddate = lastModifieddate;
 	}
+
 
 	public String getCreatedBy() {
 		return createdBy;
 	}
 
+
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
+
 
 	public String getLastmodifiedBy() {
 		return lastmodifiedBy;
 	}
 
+
 	public void setLastmodifiedBy(String lastmodifiedBy) {
 		this.lastmodifiedBy = lastmodifiedBy;
 	}
+
 
 	public double getTotaldriving() {
 		return totaldriving;
 	}
 
+
 	public void setTotaldriving(double totaldriving) {
 		this.totaldriving = totaldriving;
 	}
+
 
 	public double getTotalGeoDist() {
 		return totalGeoDist;
 	}
 
+
 	public void setTotalGeoDist(double totalGeoDist) {
 		this.totalGeoDist = totalGeoDist;
 	}
+
 
 	public double getLastAuxToDestDistance() {
 		return lastAuxToDestDistance;
 	}
 
+
 	public void setLastAuxToDestDistance(double lastAuxToDestDistance) {
 		this.lastAuxToDestDistance = lastAuxToDestDistance;
 	}
+
 
 	public double getLastAuxToDestDrivDistance() {
 		return lastAuxToDestDrivDistance;
 	}
 
+
 	public void setLastAuxToDestDrivDistance(double lastAuxToDestDrivDistance) {
 		this.lastAuxToDestDrivDistance = lastAuxToDestDrivDistance;
 	}
+
 
 	public String getDrawingType() {
 		return drawingType;
 	}
 
+
 	public void setDrawingType(String drawingType) {
 		this.drawingType = drawingType;
 	}
+
+
+	public String getDuctOwner() {
+		return ductOwner;
+	}
+
+
+	public void setDuctOwner(String ductOwner) {
+		this.ductOwner = ductOwner;
+	}
+
+
+	public String getDuctInstaller() {
+		return ductInstaller;
+	}
+
+
+	public void setDuctInstaller(String ductInstaller) {
+		this.ductInstaller = ductInstaller;
+	}
+
+
+	public String getDuctEngineerName() {
+		return ductEngineerName;
+	}
+
+
+	public void setDuctEngineerName(String ductEngineerName) {
+		this.ductEngineerName = ductEngineerName;
+	}
+	
 	
 	
 }

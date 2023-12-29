@@ -721,7 +721,6 @@
 			</div>
 		</div>
 	</div> 
-	
 		<!-- Transmission Model -->
 	<div class="container">
 		<div id="TransmissionModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
@@ -881,8 +880,7 @@
 			</div>
 		</div>
 	</div> 
-	
-			<!-- Core Model -->
+	<!-- Core Model -->
 	<div class="container">
 		<div id="CoreModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
 			<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
@@ -1041,8 +1039,7 @@
 			</div>
 		</div>
 	</div> 
-	
-		<!-- Ran(Access) Model -->
+	<!-- Ran(Access) Model -->
 	<div class="container">
 		<div id="RanModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
 			<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
@@ -1088,7 +1085,6 @@
 										</div>
 									</div>
 								</div>
-
 								<div class="col-md-6">
 									<div class="form-group">
 										<div class="input-group-prepend">
@@ -1116,7 +1112,6 @@
 									</div>
 								</div>
 							</div>
-							
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group">
@@ -1135,7 +1130,6 @@
 									</div>
 								</div>
 							</div>
-							
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group">
@@ -1153,8 +1147,7 @@
 										</div>
 									</div>
 								</div>
-							</div>
-							
+							</div>		
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group">
@@ -1173,7 +1166,6 @@
 									</div>
 								</div>
 							</div>
-							
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group">
@@ -1191,9 +1183,7 @@
 										</div>
 									</div>
 								</div>
-							</div>
-						
-			
+							</div>	
 						</div>
 					</div>
 					<div class="modal-footer"></div>
@@ -1201,8 +1191,6 @@
 			</div>
 		</div>
 	</div> 
-	
-	
 	<div class="container">
 		<div id="DeleteModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
 			<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
@@ -3961,14 +3949,285 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 			</div>
 		</div>
 	</div>
-	
 	</div>
 	<!-- /////////////////////// -->
 	<div class="container">
-		<div id="trenchModal"
-			class="modal fade  custom-class-assignedto-modal" tabindex="-1"
-			role="dialog" aria-labelledby="exampleModalCenterTitle"
-			aria-hidden="true"  data-keyboard="false" data-backdrop="static">
+		<div id="tubeModalAuxiliary" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  data-keyboard="false" data-backdrop="static">
+			<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+				<div class="modal-content">
+				<div class="modal-header" style="background-color: #2678CC ; height: 55px;">
+						<h5 id="tubeIdHeader" class="modal-title" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px;"></h5>
+						<button id=saveTubeAux class="btn btn-save" style="color: black; font-weight:bold; margin-top:-6px; margin-left: 60%;">Save</button>
+						<button type="button" name="closePopup" class="close" data-dismiss="modal"><i class='fa fa-times'></i></button>
+						<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change'></i></a>
+					</div>
+					<div class="modal-body">
+						<ul class="nav nav-tabs" id="myTab" role="tablist" style="background-color: #00757C;">
+							<li class="nav-item"><a class="nav-link active" id="TubeAux-tab" style="color: gold;" data-toggle="tab" href="#TubeAux" role="tab" aria-controls="TubeAux" aria-selected="true">Tube Auxiliary Points</a></li>
+						</ul>
+						<div class="tab-pane " id="TubeAux" role="tabpanel" aria-labelledby="TubeAux-tab">
+							<p></p>
+							<div class="container-fluid">
+							<div class="row">
+										<div class="col-sm-2">
+											<div class="form-group">
+												<div class="input-group-prepend">
+													<span style="min-width: 100px; font-size: 12px;" class="input-group-text"><b>By Site </b> 
+													<input type='checkbox' id="Site_FiberTubeAuxAutoComplete" style='position: relative; margin-left: 25px' class="FiberTubeAuxAutoComplete" ></span>
+												</div></div></div>
+										<div class="col-sm-2">
+											<div class="form-group">
+												<div class="input-group-prepend">
+													<span style="min-width: 110px; font-size: 12px;" class="input-group-text"><b>By Manhole </b> 
+													<input type='checkbox' id="Manhole_FiberTubeAuxAutoComplete" style='position: relative; margin-left:10px' class="FiberTubeAuxAutoComplete" ></span>
+												</div></div></div>
+										<div class="col-sm-2">
+											<div class="form-group">
+												<div class="input-group-prepend">
+													<span style="min-width: 115px; font-size: 12px;position: relative; margin-left:8px" class="input-group-text"><b>By Handhole </b> 
+													<input type='checkbox' id="Handhole_FiberTubeAuxAutoComplete" style='position: relative; margin-left:8px' class="FiberTubeAuxAutoComplete" ></span>
+												</div></div></div>
+										<div class="col-sm-2">
+											<div class="form-group">
+												<div class="input-group-prepend">
+													<span style="min-width: 100px; font-size: 12px;position: relative; margin-left:30px" class="input-group-text"><b>By DB </b> 
+													<input type='checkbox' id="DB_FiberTubeAuxAutoComplete" style='position: relative; margin-left:25px' class="FiberTubeAuxAutoComplete" ></span>
+												</div></div></div>
+										<div class="col-sm-2">
+											<div class="form-group">
+												<div class="input-group-prepend">
+													<span style="min-width: 150px; font-size: 12px;margin-left:25px" class="input-group-text"><b>By Auxiliary Point </b> 
+													<input type='checkbox' id="AuxPt_FiberTubeAuxAutoComplete" style='position: relative; margin-left:15px' class="FiberTubeAuxAutoComplete"></span>
+												</div></div></div></div>
+						<div class="col-sm-1">
+								<div class="form-group">
+									<div class="input-group-prepend"><div id="loaderDivFiberTube" style="display: none; margin-top:11px;"><img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif" width="40px" /></div>
+									</div></div></div>	
+								<div class="row">	
+								<div class="col-sm-5">
+								<div class="form-group">
+									<div class="input-group-prepend">
+						<label class="file"><input type="file" style="font-size:13px" id="importAuxfileFiberTube" accept=".xlsx" class="btn btn-light file"></label>
+								</div></div></div>	
+						<div class="col-sm-4">
+								<div class="form-group">
+									<div class="input-group-prepend">
+										<span style="min-width: 150px; font-size: 12px; margin-top:10px" class="input-group-text"><b>Append to the existed points</b>
+												 <input type='checkbox' id="AuxPt_AppendTo_FiberTube" value='0' style='position: relative; margin-left: 15px'></span>
+							</div></div></div>
+							<div class="col-sm-2">
+									<div class="form-group">
+										<div class="input-group-prepend"><button id="uploadFiberTube" class="btn btn-primary" style=" margin-top:10px;">Import</button></div>
+								</div></div>
+								<div class="col-sm-1">
+								<div class="form-group">
+									<div class="input-group-prepend"><div id="loaderDivFiberTube" style="display: none; margin-top:11px;"><img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif" width="40px" /></div>
+											</div></div></div>	
+								<form>
+									<div class="table-responsive-sm" id="auxiliaryTubeDiv">
+										<table id="TubeAuxTable" class="table table-striped table-bordered table-sm " style="display: block; height: 200px; overflow-y: auto;">
+											<thead style="background: #E9ECEF;">
+												<tr>
+													<th> <button type="button" id="selectAll_TubesAux" class="main"> <span class="sub"></span>Select</button> </th>
+													<th style="min-width: 80px">Sequence</th>
+													<th width="250px">Auxiliary Name</th>
+													<th width="150px">Longitude</th>
+													<th width="150px">Latitude</th>
+													<th width="150px">Length</th>
+													<th width="200px">Driving<br> Distance (km)</th>
+													<th>Geo <br>Distance(km)</th>
+												</tr></thead><tbody></tbody></table></div>
+								<button type="button" id="addTubeRowBelow">Insert Row Below</button>
+									<button type="button" id="addTubeRowAbove">Insert Row Above</button>
+									<button type="button" id="delete_TubeAux">Delete Row</button> 									
+									<button type="button" id="sortByDistanceFiberTube">Sort by distance</button>
+									<button type="button"><b>Draw By </b><select id ="fiberTubeDrawingBy"> 
+                                            <option value = "DEFAULT"></option>
+                                            <option value = "DRIVING">Driving</option> 
+                                            <option value = "LINEOFSITE">Line of Site</option></select> 
+                                    </button>
+                                    <button type="button" id="calculateDrivingDistanceFiberTube"> Calculate Driving Distance</button>
+									<button type="button" id="calculateGeoDistanceFiberTube"> Calculate Geo Distance</button>
+								<div><br><b>Distance from last auxiliary to destination:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="distanceLstAuxToDestFiberTube" name="distanceLstAuxToDestTube" readonly>
+								<br><b>Total Distance:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="totalDistanceFiberTube" name="totalDistanceFiberTube" readonly>									
+								<br><b>Driving Distance from last auxiliary to destination:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="fiberTubeDistanceLstAuxToDestDrivg" name="fiberTubeDistanceLstAuxToDestDrivg" readonly>
+								<br><b>Total Driving Distance:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="fiberTubeTotalDistanceDrivg" name="fiberTubeTotalDistanceDrivg" readonly>
+								<br><b>Total Geo Distance: </b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" id="totalGeoDistanceFiberTube" readonly></input><br><br>					
+						</div></form></div></div></div></div>
+					<div class="modal-footer"></div></div></div></div></div>
+<div class="container">
+		<div id="strandModalAuxiliary" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  data-keyboard="false" data-backdrop="static">
+			<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header" style="background-color: #2678CC ; height: 55px;">
+						<h5 id="strandIdHeader" class="modal-title" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px;"></h5>
+
+						<button id="saveStrandAux" class="btn btn-save" style="color: black; font-weight:bold;margin-top:-6px; margin-left: 60%;">Save</button>
+						<button type="button" name="closePopup" class="close" data-dismiss="modal">
+							<i class='fa fa-times'></i></button>
+						<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change'></i> </a>
+					</div>
+					<div class="modal-body">
+						<ul class="nav nav-tabs" id="myTab" role="tablist" style="background-color: #00757C;">
+							<li class="nav-item"><a class="nav-link active" id="StrandAux-tab" style="color: gold;" data-toggle="tab" href="#StrandAux" role="tab" aria-controls="#StrandAux" aria-selected="true">Strand Auxiliary Points</a></li>
+						</ul>
+						<div class="tab-pane " id="StrandAux" role="tabpanel" aria-labelledby="StrandAux-tab">
+							<p></p>
+							<div class="container-fluid">
+							<div class="row">
+										<div class="col-sm-2">
+											<div class="form-group">
+												<div class="input-group-prepend">
+													<span style="min-width: 100px; font-size: 12px;" class="input-group-text"><b>By Site </b> 
+													<input type='checkbox' id="Site_FiberStrandAuxAutoComplete" style='position: relative; margin-left: 25px' class="FiberStrandAuxAutoComplete" ></span>
+												</div></div></div>
+										<div class="col-sm-2">
+											<div class="form-group">
+												<div class="input-group-prepend">
+													<span style="min-width: 110px; font-size: 12px;" class="input-group-text"><b>By Manhole </b> 
+													<input type='checkbox' id="Manhole_FiberStrandAuxAutoComplete" style='position: relative; margin-left:10px' class="FiberStrandAuxAutoComplete" ></span>
+												</div></div></div>
+										<div class="col-sm-2">
+											<div class="form-group">
+												<div class="input-group-prepend">
+													<span style="min-width: 115px; font-size: 12px;position: relative; margin-left:8px" class="input-group-text"><b>By Handhole </b> 
+													<input type='checkbox' id="Handhole_FiberStrandAuxAutoComplete" style='position: relative; margin-left:8px' class="FiberStrandAuxAutoComplete" ></span>
+												</div></div></div>
+										<div class="col-sm-2">
+											<div class="form-group">
+												<div class="input-group-prepend">
+													<span style="min-width: 100px; font-size: 12px;position: relative; margin-left:30px" class="input-group-text"><b>By DB </b> 
+													<input type='checkbox' id="DB_FiberStrandAuxAutoComplete" style='position: relative; margin-left:25px' class="FiberStrandAuxAutoComplete" ></span>
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-2">
+											<div class="form-group">
+												<div class="input-group-prepend">
+													<span style="min-width: 150px; font-size: 12px;margin-left:25px" class="input-group-text"><b>By Auxiliary Point </b> 
+													<input type='checkbox' id="AuxPt_FiberStrandAuxAutoComplete" style='position: relative; margin-left:15px' class="FiberStrandAuxAutoComplete"></span>
+												</div></div></div></div>
+								<div class="col-sm-1"><div class="form-group">
+									<div class="input-group-prepend"><div id="loaderDivFiberStrand" style="display: none; margin-top:11px;"><img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif" width="40px" /></div>
+									</div></div></div>	
+								<div class="row"><div class="col-sm-5"><div class="form-group">
+								<div class="input-group-prepend">
+						<label class="file"><input type="file" style="font-size:13px" id="importAuxfileFiberStrand" accept=".xlsx" class="btn btn-light file"></label></div></div></div>									
+						<div class="col-sm-4"><div class="form-group"><div class="input-group-prepend">
+							<span style="min-width: 150px; font-size: 12px; margin-top:10px" class="input-group-text"><b>Append to the existed points</b>
+							<input type='checkbox' id="AuxPt_AppendTo_FiberStrand" value='0' style='position: relative; margin-left: 15px'></span></div></div></div>		
+						<div class="col-sm-2"><div class="form-group">
+							<div class="input-group-prepend"><button id="uploadFiberStrand" class="btn btn-primary" style=" margin-top:10px;">Import</button></div></div></div>		
+							<div class="col-sm-1"><div class="form-group">
+							<div class="input-group-prepend"><div id="loaderDivFiberStrand" style="display: none; margin-top:11px;"><img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif" width="40px" /></div></div></div></div>	
+								<form>
+									<div class="table-responsive-sm" id="auxiliaryStrandDiv">
+										<table id="StrandAuxTable" class="table table-striped table-bordered table-sm " style="display: block; height: 200px; overflow-y: auto;">
+											<thead style="background: #E9ECEF;">
+												<tr><th><button type="button" id="selectAll_StrandsAux" class="main"><span class="sub"></span>Select</button></th>
+													<th style="min-width: 80px">Sequence</th>
+													<th width="250px">Auxiliary Name</th>
+													<th width="150px">Longitude</th>
+													<th width="150px">Latitude</th>
+													<th width="150px">Length</th>
+													<th width="200px">Driving<br> Distance (km)</th>
+													<th>Geo <br>Distance(km)</th>
+												</tr></thead><tbody></tbody></table></div>
+									<button type="button" id="addStrandRowBelow">Insert Row Below</button>
+									<button type="button" id="addStrandRowAbove">Insert Row Above</button>
+									<button type="button" id="delete_StrandAux">Delete Row</button>
+									<button type="button" id="sortByDistanceFiberStrand">Sort by distance</button>
+									<button type="button"><b>Draw By </b><select id ="fiberStrandDrawingBy"> 
+                                            <option value = "DEFAULT"></option>
+                                            <option value = "DRIVING">Driving</option> 
+                                            <option value = "LINEOFSITE">Line of Site</option></select> </button>
+                                    <button type="button" id="calculateDrivingDistanceFiberStrand"> Calculate Driving Distance</button>
+									<button type="button" id="calculateGeoDistanceFiberStrand"> Calculate Geo Distance</button>
+                                    <div><br><b>Distance from last auxiliary to destination:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="distanceLstAuxToDestFiberStrand" name="distanceLstAuxToDestFiberStrand" readonly>
+									<br><b>Total Distance:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="totalDistanceFiberStrand" name="totalDistanceFiberStrand" readonly>									
+									<br><b>Driving Distance from last auxiliary to destination:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="fiberStrandDistanceLstAuxToDestDrivg" name="fiberStrandDistanceLstAuxToDestDrivg" readonly>
+									<br><b>Total Driving Distance:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="fiberStrandTotalDistanceDrivg" name="fiberStrandTotalDistanceDrivg" readonly>
+									<br><b>Total Geo Distance: </b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" id="totalGeoDistanceFiberStrand" readonly></input><br><br>					
+						</div></form></div></div></div></div>
+					<div class="modal-footer"></div></div></div></div></div>
+<div class="container"><div id="strandOriginationModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  data-keyboard="false" data-backdrop="static">
+			<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered"><div class="modal-content" style="width: 830px">
+					<div class="modal-header" style="background-color: #2678CC ; height: 55px;">
+						<h5 id="strandOriginationHeader" class="modal-title" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px;">Strand Origination:</h5>
+						<div style="float: right;">
+							<button id="saveStrandOriginSource" class="btn btn-save" style="color: black; font-weight:bold;margin-top:-6px;">Save</button>
+							<button type="button" name="closePopup" class="close" data-dismiss="modal"> <i class='fa fa-times'></i>
+							</button>
+							<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change'></i> </a>
+						</div></div>
+					<div class="modal-body"><div class="tab-content"><div class="container-fluid"><div class="row"><p></p>
+							<div class="col-sm-2">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="min-width: 110px; font-size: 12px;" class="input-group-text"><b>By Site </b> 
+											<input type='checkbox' id="site_StrandOriginationAutoComplete" style='position: relative; margin-left: 30px'  class="strandOriginationAutoComplete"></span>
+										</div></div></div>
+								<div class="col-sm-2">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="min-width: 110px; font-size: 12px;" class="input-group-text"><b>By Client </b> 
+											<input type='checkbox' id="customer_StrandOriginationAutoComplete" style='position: relative; margin-left: 25px' class="strandOriginationAutoComplete"></span>
+										</div></div></div>
+								<div class="col-sm-2">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="min-width: 110px; font-size: 12px;" class="input-group-text"><b>By Manhole </b> 
+											<input type='checkbox' id="manhole_StrandOriginationAutoComplete" style='position: relative; margin-left: 10px' class="strandOriginationAutoComplete" ></span>
+										</div></div></div>
+									<div class="col-sm-2">
+											<div class="form-group">
+												<div class="input-group-prepend">
+													<span style="min-width: 120px; font-size: 12px;" class="input-group-text"><b>By Handhole </b> 
+													<input type='checkbox' id="handhole_StrandOriginationAutoComplete" style='position: relative; margin-left:15px' class="strandOriginationAutoComplete" ></span>
+												</div></div></div>
+										<div class="col-sm-2">
+											<div class="form-group">
+												<div class="input-group-prepend">
+													<span style="min-width: 100px; font-size: 12px;position: relative; margin-left:25px" class="input-group-text"><b>By DB </b> 
+													<input type='checkbox' id="db_StrandOriginationAutoComplete" style='position: relative; margin-left:25px' class="strandOriginationAutoComplete" ></span>
+												</div></div></div></div></div>
+								<div class="row">
+								<div class="col-sm-6">
+									<div class="form-group">
+										<div class="input-group-prepend" id="strandOriginationSourceDiv">
+											<span style="width: 140px; font-size: 12px;" class="input-group-text"><b>Source</b></span> 
+											<input type="text" id="strandOriginationSource" class="form-control text-input" />
+										</div></div></div></div>
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px; font-size: 12px;" class="input-group-text"><b>Source Type</b></span> 
+											<input type="text" id="strandOriginationSourceType" class="form-control text-input" />
+										</div></div></div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px; font-size: 12px;" class="input-group-text"><b>Source City </b></span> 
+											<input type="text" id="strandOriginationSrcCity" class="form-control text-input" readonly />
+										</div></div></div></div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px; font-size: 12px;" class="input-group-text"><b>Source Lng </b></span> 
+											<input type="text" id="strandOriginationSourceLng" class="form-control text-input" readonly />
+										</div></div></div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px; font-size: 12px;" class="input-group-text"><b>Source Lat </b></span> 
+											<input type="text" id="strandOriginationSourceLat" class="form-control text-input" readonly />
+										</div></div></div></div>
+							<div class="row"></div></div></div>
+					<div class="modal-footer"></div></div></div></div></div>
+<div class="container">
+		<div id="trenchModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  data-keyboard="false" data-backdrop="static">
 			<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
 				<div class="modal-content">
 					<div class="modal-header"
@@ -4081,6 +4340,33 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 											</div>
 										</div>
 									</div></div>
+									<div class="container-fluid">
+									<div class="row">
+									<div class="col-sm-6">
+										<div class="form-group">
+											<div class="input-group-prepend">
+													<span style="width: 100px;" class="input-group-text"><b>Owner </b></span> <select id="trenchOwner" class="form-control">
+															<option value="" selected></option><option value="tkl">TKL</option><option value="ogn">OGN</option><option value="nofbi">NOFBI</option><option value="others">Others</option></select>
+							        </div></div></div></div></div>
+							        <div class="container-fluid">
+							        <div class="row">
+										<div class="col-sm-6">
+											<div class="form-group">
+												<div class="input-group-prepend">
+													<span style="width: 120px;"
+														class="input-group-text"><b>Engineer Name </b></span> <input type="text" id="trenchEngineerName" class="form-control text-input" />
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-6">
+											<div class="form-group">
+												<div class="input-group-prepend">
+													<span style="width: 100px; " class="input-group-text"><b>Installer </b></span> <input type="text" id="trenchInstaller" class="form-control text-input" />
+												</div>
+											</div>
+										</div>
+								</div>	
+							  </div>
 							</div>
 							<div class="tab-pane" id="source_dest_trench" role="tabpanel"
 								aria-labelledby="source_dest_trench-tab">
@@ -4476,6 +4762,33 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 											</div>
 										</div>
 									</div></div>
+									<div class="container-fluid">
+									<div class="row">
+									<div class="col-sm-6">
+										<div class="form-group">
+											<div class="input-group-prepend">
+													<span style="width: 100px;" class="input-group-text"><b>Owner </b></span> <select id="ductOwner" class="form-control">
+															<option value="" selected></option><option value="tkl">TKL</option><option value="ogn">OGN</option><option value="nofbi">NOFBI</option><option value="others">Others</option></select>
+							        </div></div></div></div></div>
+							        <div class="container-fluid">
+							        <div class="row">
+										<div class="col-sm-6">
+											<div class="form-group">
+												<div class="input-group-prepend">
+													<span style="width: 120px;"
+														class="input-group-text"><b>Engineer Name </b></span> <input type="text" id="ductEngineerName" class="form-control text-input" />
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-6">
+											<div class="form-group">
+												<div class="input-group-prepend">
+													<span style="width: 100px; " class="input-group-text"><b>Installer </b></span> <input type="text" id="ductInstaller" class="form-control text-input" />
+												</div>
+											</div>
+										</div>
+								</div>	
+							  </div>
 							</div>
 							<div class="tab-pane" id="source_dest_duct" role="tabpanel" aria-labelledby="source_dest_duct-tab">
 								<p></p>
@@ -4732,282 +5045,6 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 										</div>	
 									</form></div></div></div></div></div></div>
 				<div class="modal-footer"></div></div></div></div>
-	<div class="container">
-		<div id="tubeModalAuxiliary" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  data-keyboard="false" data-backdrop="static">
-			<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
-				<div class="modal-content">
-				<div class="modal-header" style="background-color: #2678CC ; height: 55px;">
-						<h5 id="tubeIdHeader" class="modal-title" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px;"></h5>
-						<button id=saveTubeAux class="btn btn-save" style="color: black; font-weight:bold; margin-top:-6px; margin-left: 60%;">Save</button>
-						<button type="button" name="closePopup" class="close" data-dismiss="modal"><i class='fa fa-times'></i></button>
-						<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change'></i></a>
-					</div>
-					<div class="modal-body">
-						<ul class="nav nav-tabs" id="myTab" role="tablist" style="background-color: #00757C;">
-							<li class="nav-item"><a class="nav-link active" id="TubeAux-tab" style="color: gold;" data-toggle="tab" href="#TubeAux" role="tab" aria-controls="TubeAux" aria-selected="true">Tube Auxiliary Points</a></li>
-						</ul>
-						<div class="tab-pane " id="TubeAux" role="tabpanel" aria-labelledby="TubeAux-tab">
-							<p></p>
-							<div class="container-fluid">
-							<div class="row">
-										<div class="col-sm-2">
-											<div class="form-group">
-												<div class="input-group-prepend">
-													<span style="min-width: 100px; font-size: 12px;" class="input-group-text"><b>By Site </b> 
-													<input type='checkbox' id="Site_FiberTubeAuxAutoComplete" style='position: relative; margin-left: 25px' class="FiberTubeAuxAutoComplete" ></span>
-												</div></div></div>
-										<div class="col-sm-2">
-											<div class="form-group">
-												<div class="input-group-prepend">
-													<span style="min-width: 110px; font-size: 12px;" class="input-group-text"><b>By Manhole </b> 
-													<input type='checkbox' id="Manhole_FiberTubeAuxAutoComplete" style='position: relative; margin-left:10px' class="FiberTubeAuxAutoComplete" ></span>
-												</div></div></div>
-										<div class="col-sm-2">
-											<div class="form-group">
-												<div class="input-group-prepend">
-													<span style="min-width: 115px; font-size: 12px;position: relative; margin-left:8px" class="input-group-text"><b>By Handhole </b> 
-													<input type='checkbox' id="Handhole_FiberTubeAuxAutoComplete" style='position: relative; margin-left:8px' class="FiberTubeAuxAutoComplete" ></span>
-												</div></div></div>
-										<div class="col-sm-2">
-											<div class="form-group">
-												<div class="input-group-prepend">
-													<span style="min-width: 100px; font-size: 12px;position: relative; margin-left:30px" class="input-group-text"><b>By DB </b> 
-													<input type='checkbox' id="DB_FiberTubeAuxAutoComplete" style='position: relative; margin-left:25px' class="FiberTubeAuxAutoComplete" ></span>
-												</div></div></div>
-										<div class="col-sm-2">
-											<div class="form-group">
-												<div class="input-group-prepend">
-													<span style="min-width: 150px; font-size: 12px;margin-left:25px" class="input-group-text"><b>By Auxiliary Point </b> 
-													<input type='checkbox' id="AuxPt_FiberTubeAuxAutoComplete" style='position: relative; margin-left:15px' class="FiberTubeAuxAutoComplete"></span>
-												</div></div></div></div>
-						<div class="col-sm-1">
-								<div class="form-group">
-									<div class="input-group-prepend"><div id="loaderDivFiberTube" style="display: none; margin-top:11px;"><img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif" width="40px" /></div>
-									</div></div></div>	
-								<div class="row">	
-								<div class="col-sm-5">
-								<div class="form-group">
-									<div class="input-group-prepend">
-						<label class="file"><input type="file" style="font-size:13px" id="importAuxfileFiberTube" accept=".xlsx" class="btn btn-light file"></label>
-								</div></div></div>	
-						<div class="col-sm-4">
-								<div class="form-group">
-									<div class="input-group-prepend">
-										<span style="min-width: 150px; font-size: 12px; margin-top:10px" class="input-group-text"><b>Append to the existed points</b>
-												 <input type='checkbox' id="AuxPt_AppendTo_FiberTube" value='0' style='position: relative; margin-left: 15px'></span>
-							</div></div></div>
-							<div class="col-sm-2">
-									<div class="form-group">
-										<div class="input-group-prepend"><button id="uploadFiberTube" class="btn btn-primary" style=" margin-top:10px;">Import</button></div>
-								</div></div>
-								<div class="col-sm-1">
-								<div class="form-group">
-									<div class="input-group-prepend"><div id="loaderDivFiberTube" style="display: none; margin-top:11px;"><img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif" width="40px" /></div>
-											</div></div></div>	
-								<form>
-									<div class="table-responsive-sm" id="auxiliaryTubeDiv">
-										<table id="TubeAuxTable" class="table table-striped table-bordered table-sm " style="display: block; height: 200px; overflow-y: auto;">
-											<thead style="background: #E9ECEF;">
-												<tr>
-													<th> <button type="button" id="selectAll_TubesAux" class="main"> <span class="sub"></span>Select</button> </th>
-													<th style="min-width: 80px">Sequence</th>
-													<th width="250px">Auxiliary Name</th>
-													<th width="150px">Longitude</th>
-													<th width="150px">Latitude</th>
-													<th width="150px">Length</th>
-													<th width="200px">Driving<br> Distance (km)</th>
-													<th>Geo <br>Distance(km)</th>
-												</tr></thead><tbody></tbody></table></div>
-								<button type="button" id="addTubeRowBelow">Insert Row Below</button>
-									<button type="button" id="addTubeRowAbove">Insert Row Above</button>
-									<button type="button" id="delete_TubeAux">Delete Row</button> 									
-									<button type="button" id="sortByDistanceFiberTube">Sort by distance</button>
-									<button type="button"><b>Draw By </b><select id ="fiberTubeDrawingBy"> 
-                                            <option value = "DEFAULT"></option>
-                                            <option value = "DRIVING">Driving</option> 
-                                            <option value = "LINEOFSITE">Line of Site</option></select> 
-                                    </button>
-                                    <button type="button" id="calculateDrivingDistanceFiberTube"> Calculate Driving Distance</button>
-									<button type="button" id="calculateGeoDistanceFiberTube"> Calculate Geo Distance</button>
-								<div><br><b>Distance from last auxiliary to destination:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="distanceLstAuxToDestFiberTube" name="distanceLstAuxToDestTube" readonly>
-								<br><b>Total Distance:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="totalDistanceFiberTube" name="totalDistanceFiberTube" readonly>									
-								<br><b>Driving Distance from last auxiliary to destination:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="fiberTubeDistanceLstAuxToDestDrivg" name="fiberTubeDistanceLstAuxToDestDrivg" readonly>
-								<br><b>Total Driving Distance:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="fiberTubeTotalDistanceDrivg" name="fiberTubeTotalDistanceDrivg" readonly>
-								<br><b>Total Geo Distance: </b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" id="totalGeoDistanceFiberTube" readonly></input><br><br>					
-						</div></form></div></div></div></div>
-					<div class="modal-footer"></div></div></div></div></div>
-<div class="container">
-		<div id="strandModalAuxiliary" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  data-keyboard="false" data-backdrop="static">
-			<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
-				<div class="modal-content">
-					<div class="modal-header" style="background-color: #2678CC ; height: 55px;">
-						<h5 id="strandIdHeader" class="modal-title" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px;"></h5>
-
-						<button id="saveStrandAux" class="btn btn-save" style="color: black; font-weight:bold;margin-top:-6px; margin-left: 60%;">Save</button>
-						<button type="button" name="closePopup" class="close" data-dismiss="modal">
-							<i class='fa fa-times'></i></button>
-						<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change'></i> </a>
-					</div>
-					<div class="modal-body">
-						<ul class="nav nav-tabs" id="myTab" role="tablist" style="background-color: #00757C;">
-							<li class="nav-item"><a class="nav-link active" id="StrandAux-tab" style="color: gold;" data-toggle="tab" href="#StrandAux" role="tab" aria-controls="#StrandAux" aria-selected="true">Strand Auxiliary Points</a></li>
-						</ul>
-						<div class="tab-pane " id="StrandAux" role="tabpanel" aria-labelledby="StrandAux-tab">
-							<p></p>
-							<div class="container-fluid">
-							<div class="row">
-										<div class="col-sm-2">
-											<div class="form-group">
-												<div class="input-group-prepend">
-													<span style="min-width: 100px; font-size: 12px;" class="input-group-text"><b>By Site </b> 
-													<input type='checkbox' id="Site_FiberStrandAuxAutoComplete" style='position: relative; margin-left: 25px' class="FiberStrandAuxAutoComplete" ></span>
-												</div></div></div>
-										<div class="col-sm-2">
-											<div class="form-group">
-												<div class="input-group-prepend">
-													<span style="min-width: 110px; font-size: 12px;" class="input-group-text"><b>By Manhole </b> 
-													<input type='checkbox' id="Manhole_FiberStrandAuxAutoComplete" style='position: relative; margin-left:10px' class="FiberStrandAuxAutoComplete" ></span>
-												</div></div></div>
-										<div class="col-sm-2">
-											<div class="form-group">
-												<div class="input-group-prepend">
-													<span style="min-width: 115px; font-size: 12px;position: relative; margin-left:8px" class="input-group-text"><b>By Handhole </b> 
-													<input type='checkbox' id="Handhole_FiberStrandAuxAutoComplete" style='position: relative; margin-left:8px' class="FiberStrandAuxAutoComplete" ></span>
-												</div></div></div>
-										<div class="col-sm-2">
-											<div class="form-group">
-												<div class="input-group-prepend">
-													<span style="min-width: 100px; font-size: 12px;position: relative; margin-left:30px" class="input-group-text"><b>By DB </b> 
-													<input type='checkbox' id="DB_FiberStrandAuxAutoComplete" style='position: relative; margin-left:25px' class="FiberStrandAuxAutoComplete" ></span>
-												</div>
-											</div>
-										</div>
-										<div class="col-sm-2">
-											<div class="form-group">
-												<div class="input-group-prepend">
-													<span style="min-width: 150px; font-size: 12px;margin-left:25px" class="input-group-text"><b>By Auxiliary Point </b> 
-													<input type='checkbox' id="AuxPt_FiberStrandAuxAutoComplete" style='position: relative; margin-left:15px' class="FiberStrandAuxAutoComplete"></span>
-												</div></div></div></div>
-								<div class="col-sm-1"><div class="form-group">
-									<div class="input-group-prepend"><div id="loaderDivFiberStrand" style="display: none; margin-top:11px;"><img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif" width="40px" /></div>
-									</div></div></div>	
-								<div class="row"><div class="col-sm-5"><div class="form-group">
-								<div class="input-group-prepend">
-						<label class="file"><input type="file" style="font-size:13px" id="importAuxfileFiberStrand" accept=".xlsx" class="btn btn-light file"></label></div></div></div>									
-						<div class="col-sm-4"><div class="form-group"><div class="input-group-prepend">
-							<span style="min-width: 150px; font-size: 12px; margin-top:10px" class="input-group-text"><b>Append to the existed points</b>
-							<input type='checkbox' id="AuxPt_AppendTo_FiberStrand" value='0' style='position: relative; margin-left: 15px'></span></div></div></div>		
-						<div class="col-sm-2"><div class="form-group">
-							<div class="input-group-prepend"><button id="uploadFiberStrand" class="btn btn-primary" style=" margin-top:10px;">Import</button></div></div></div>		
-							<div class="col-sm-1"><div class="form-group">
-							<div class="input-group-prepend"><div id="loaderDivFiberStrand" style="display: none; margin-top:11px;"><img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif" width="40px" /></div></div></div></div>	
-								<form>
-									<div class="table-responsive-sm" id="auxiliaryStrandDiv">
-										<table id="StrandAuxTable" class="table table-striped table-bordered table-sm " style="display: block; height: 200px; overflow-y: auto;">
-											<thead style="background: #E9ECEF;">
-												<tr><th><button type="button" id="selectAll_StrandsAux" class="main"><span class="sub"></span>Select</button></th>
-													<th style="min-width: 80px">Sequence</th>
-													<th width="250px">Auxiliary Name</th>
-													<th width="150px">Longitude</th>
-													<th width="150px">Latitude</th>
-													<th width="150px">Length</th>
-													<th width="200px">Driving<br> Distance (km)</th>
-													<th>Geo <br>Distance(km)</th>
-												</tr></thead><tbody></tbody></table></div>
-									<button type="button" id="addStrandRowBelow">Insert Row Below</button>
-									<button type="button" id="addStrandRowAbove">Insert Row Above</button>
-									<button type="button" id="delete_StrandAux">Delete Row</button>
-									<button type="button" id="sortByDistanceFiberStrand">Sort by distance</button>
-									<button type="button"><b>Draw By </b><select id ="fiberStrandDrawingBy"> 
-                                            <option value = "DEFAULT"></option>
-                                            <option value = "DRIVING">Driving</option> 
-                                            <option value = "LINEOFSITE">Line of Site</option></select> </button>
-                                    <button type="button" id="calculateDrivingDistanceFiberStrand"> Calculate Driving Distance</button>
-									<button type="button" id="calculateGeoDistanceFiberStrand"> Calculate Geo Distance</button>
-                                    <div><br><b>Distance from last auxiliary to destination:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="distanceLstAuxToDestFiberStrand" name="distanceLstAuxToDestFiberStrand" readonly>
-									<br><b>Total Distance:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="totalDistanceFiberStrand" name="totalDistanceFiberStrand" readonly>									
-									<br><b>Driving Distance from last auxiliary to destination:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="fiberStrandDistanceLstAuxToDestDrivg" name="fiberStrandDistanceLstAuxToDestDrivg" readonly>
-									<br><b>Total Driving Distance:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="fiberStrandTotalDistanceDrivg" name="fiberStrandTotalDistanceDrivg" readonly>
-									<br><b>Total Geo Distance: </b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" id="totalGeoDistanceFiberStrand" readonly></input><br><br>					
-						</div></form></div></div></div></div>
-					<div class="modal-footer"></div></div></div></div></div>
-<div class="container"><div id="strandOriginationModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  data-keyboard="false" data-backdrop="static">
-			<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered"><div class="modal-content" style="width: 830px">
-					<div class="modal-header" style="background-color: #2678CC ; height: 55px;">
-						<h5 id="strandOriginationHeader" class="modal-title" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px;">Strand Origination:</h5>
-						<div style="float: right;">
-							<button id="saveStrandOriginSource" class="btn btn-save" style="color: black; font-weight:bold;margin-top:-6px;">Save</button>
-							<button type="button" name="closePopup" class="close" data-dismiss="modal"> <i class='fa fa-times'></i>
-							</button>
-							<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change'></i> </a>
-						</div></div>
-					<div class="modal-body"><div class="tab-content"><div class="container-fluid"><div class="row"><p></p>
-							<div class="col-sm-2">
-									<div class="form-group">
-										<div class="input-group-prepend">
-											<span style="min-width: 110px; font-size: 12px;" class="input-group-text"><b>By Site </b> 
-											<input type='checkbox' id="site_StrandOriginationAutoComplete" style='position: relative; margin-left: 30px'  class="strandOriginationAutoComplete"></span>
-										</div></div></div>
-								<div class="col-sm-2">
-									<div class="form-group">
-										<div class="input-group-prepend">
-											<span style="min-width: 110px; font-size: 12px;" class="input-group-text"><b>By Client </b> 
-											<input type='checkbox' id="customer_StrandOriginationAutoComplete" style='position: relative; margin-left: 25px' class="strandOriginationAutoComplete"></span>
-										</div></div></div>
-								<div class="col-sm-2">
-									<div class="form-group">
-										<div class="input-group-prepend">
-											<span style="min-width: 110px; font-size: 12px;" class="input-group-text"><b>By Manhole </b> 
-											<input type='checkbox' id="manhole_StrandOriginationAutoComplete" style='position: relative; margin-left: 10px' class="strandOriginationAutoComplete" ></span>
-										</div></div></div>
-									<div class="col-sm-2">
-											<div class="form-group">
-												<div class="input-group-prepend">
-													<span style="min-width: 120px; font-size: 12px;" class="input-group-text"><b>By Handhole </b> 
-													<input type='checkbox' id="handhole_StrandOriginationAutoComplete" style='position: relative; margin-left:15px' class="strandOriginationAutoComplete" ></span>
-												</div></div></div>
-										<div class="col-sm-2">
-											<div class="form-group">
-												<div class="input-group-prepend">
-													<span style="min-width: 100px; font-size: 12px;position: relative; margin-left:25px" class="input-group-text"><b>By DB </b> 
-													<input type='checkbox' id="db_StrandOriginationAutoComplete" style='position: relative; margin-left:25px' class="strandOriginationAutoComplete" ></span>
-												</div></div></div></div></div>
-								<div class="row">
-								<div class="col-sm-6">
-									<div class="form-group">
-										<div class="input-group-prepend" id="strandOriginationSourceDiv">
-											<span style="width: 140px; font-size: 12px;" class="input-group-text"><b>Source</b></span> 
-											<input type="text" id="strandOriginationSource" class="form-control text-input" />
-										</div></div></div></div>
-							<div class="row">
-								<div class="col-sm-6">
-									<div class="form-group">
-										<div class="input-group-prepend">
-											<span style="width: 140px; font-size: 12px;" class="input-group-text"><b>Source Type</b></span> 
-											<input type="text" id="strandOriginationSourceType" class="form-control text-input" />
-										</div></div></div>
-								<div class="col-md-6">
-									<div class="form-group">
-										<div class="input-group-prepend">
-											<span style="width: 140px; font-size: 12px;" class="input-group-text"><b>Source City </b></span> 
-											<input type="text" id="strandOriginationSrcCity" class="form-control text-input" readonly />
-										</div></div></div></div>
-							<div class="row">
-								<div class="col-md-6">
-									<div class="form-group">
-										<div class="input-group-prepend">
-											<span style="width: 140px; font-size: 12px;" class="input-group-text"><b>Source Lng </b></span> 
-											<input type="text" id="strandOriginationSourceLng" class="form-control text-input" readonly />
-										</div></div></div>
-								<div class="col-md-6">
-									<div class="form-group">
-										<div class="input-group-prepend">
-											<span style="width: 140px; font-size: 12px;" class="input-group-text"><b>Source Lat </b></span> 
-											<input type="text" id="strandOriginationSourceLat" class="form-control text-input" readonly />
-										</div></div></div></div>
-							<div class="row"></div></div></div>
-					<div class="modal-footer"></div></div></div></div></div>
-
 <div class="container">
 	<div id="trenchOriginationModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  data-keyboard="false" data-backdrop="static">
 			<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
@@ -6027,9 +6064,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 											<div class="input-group-prepend">
 												<span style="width: 175px;" class="input-group-text"><b>Connected Back Ports </b></span> 
 													<input type="text" id="DistributionBoardBack" class="form-control text-input" readonly/>
-											</div>
-										</div>
-									</div>
+									</div></div></div>
 								</div>
 								<div class="row">
 										<div class="col-sm-6">
@@ -6037,16 +6072,12 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 												<div class="input-group-prepend">
 													<span style="width: 120px;"
 														class="input-group-text"><b>Engineer Name </b></span> <input type="text" id="DBEngineerName" class="form-control text-input" />
-												</div>
-											</div>
-										</div>
+											</div></div></div>
 										<div class="col-sm-6">
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="width: 100px; " class="input-group-text"><b>Installer </b></span> <input type="text" id="DBInstaller" class="form-control text-input" />
-												</div>
-											</div>
-										</div>
+									    </div></div></div>
 								</div>	
 								<div class="row">
 									<div class="col-md-6">
@@ -6078,8 +6109,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 															<option value="metro">Metro</option>
 															<option value="access">Access</option>
 														</select>
-											</div></div></div>
-									</div>
+								</div></div></div></div>
 								<div class="row">
         							<div class="col-md-6" id="projectNameDB">
 										<div class="form-group">
@@ -6219,8 +6249,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 										  <option value="frontPort">Front Port</option>
 										  <option value="backPort">Back Port</option>
 										</select>
-									</form></div></div></div></div></div></div></div></div>
-									
+									</form></div></div></div></div></div></div></div></div>				
 							<div class="container">
 								<div id="distributionBoardLoaderModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
 									<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
@@ -6256,8 +6285,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 											<div class="modal-footer"></div>
 										</div>
 									</div>
-								</div>
-								
+								</div>					
 				<div class="container">
 					<div id="LoaderConfirmationModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
 						<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
@@ -6429,7 +6457,6 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 						</div>
 					</div>
 				</div>
-
 				<div class="modal-footer" style="background-color: #E9ECEF;">
 				</div>
 			</div>

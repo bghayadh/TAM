@@ -4047,6 +4047,9 @@ singleNodeActive = new ContextMenu({
 			srcCityTrench = document.getElementById("srcCityTrench").value;
 			dstCityTrench = document.getElementById("dstCityTrench").value;
 			trenchCreatedByUser=document.getElementById("crtdByTrench").value;
+			trenchOwner =document.getElementById("trenchOwner").value;
+			trenchEngineerName =document.getElementById("trenchEngineerName").value;
+			trenchInstaller =document.getElementById("trenchInstaller").value;
 			trenchModifiedByUser=lstModfUser;
 			savedTrenchId= document.getElementById("trenchId").value;
 			trenchAuxFlag = document.querySelector("#trenchAuxFlag").value
@@ -4100,7 +4103,10 @@ singleNodeActive = new ContextMenu({
 					"totalGeoDistance":totalGeoDistance,
 					"lastAuxToDestDistance":lastAuxToDestDistance,
 					"lastAuxToDestDrivDistance":lastAuxToDestDrivDistance,
-					"drawingType":drawingType
+					"drawingType":drawingType,
+					"trenchOwner": trenchOwner,
+					"trenchEngineerName" : trenchEngineerName,
+					"trenchInstaller" : trenchInstaller
 				},
 				dataType: "json",
 				success: function (data) {
@@ -4239,7 +4245,7 @@ singleNodeActive = new ContextMenu({
 							 var dstName = DestinationTrench;
 						 } 
 						 
-						window[""+data.trenchId]=[data.trenchId,trenchName,srcWareId,srcId,srcName,dstWareId,dstId,dstName,SourceTrenchLat,SourceTrenchLng,DestinationTrenchLng,DestinationTrenchLat,srcCityTrench,dstCityTrench,NumDucts,trenchCapacity,trenchLength,IdNodeSelectedTemp,drawingType];					
+						window[""+data.trenchId]=[data.trenchId,trenchName,srcWareId,srcId,srcName,dstWareId,dstId,dstName,SourceTrenchLat,SourceTrenchLng,DestinationTrenchLng,DestinationTrenchLat,srcCityTrench,dstCityTrench,NumDucts,trenchCapacity,trenchLength,IdNodeSelectedTemp,drawingType,trenchOwner,trenchInstaller,trenchEngineerName];					
 						window["mapPoints_"+data.trenchId].push(new google.maps.LatLng(SourceTrenchLat,SourceTrenchLng));
 						window["bounds_"+data.trenchId].extend(new google.maps.LatLng(SourceTrenchLat,SourceTrenchLng));
 						window["mapPointsNames_"+data.trenchId].push(SourceTrench);
@@ -4382,6 +4388,9 @@ singleNodeActive = new ContextMenu({
 			lastAuxToDestDistance = document.getElementById("distanceLstAuxToDestDuct").value;
 			lastAuxToDestDrivDistance = document.getElementById("ductDistanceLstAuxToDestDrivg").value;
 			drawingType = document.getElementById("ductDrawingBy").value;
+			ductOwner = document.getElementById("ductOwner").value;
+			ductInstaller = document.getElementById("ductInstaller").value;
+			ductEngineerName = document.getElementById("ductEngineerName").value;
 
 			getSelectedDuctAux(SourceDuctLat,SourceDuctLng);
 			var token =  $('input[name="csrfToken"]').attr('value');
@@ -4421,7 +4430,10 @@ singleNodeActive = new ContextMenu({
 					"totalGeoDistance":totalGeoDistance,
 					"lastAuxToDestDistance":lastAuxToDestDistance,
 					"lastAuxToDestDrivDistance":lastAuxToDestDrivDistance,
-					"drawingType":drawingType
+					"drawingType":drawingType,
+					"ductOwner" : ductOwner,
+					"ductEngineerName" : ductEngineerName,
+					"ductInstaller" : ductInstaller
 				}, 
 				dataType: "json",
 				success: function (data) {
@@ -4531,7 +4543,7 @@ singleNodeActive = new ContextMenu({
 							 var dstName = DestinationDuct;
 						 } 
 						 
-						window[""+data.ductId]=[data.ductId,ductName,srcWareId,srcId,srcName,dstWareId,dstId,dstName,SourceDuctLat,SourceDuctLng,DestinationDuctLng,DestinationDuctLat,srcCityDuct,dstCityDuct,ductsFiberCables,ductsTubes,ductsStrands,ductsLength,trenchId,drawingType];					
+						window[""+data.ductId]=[data.ductId,ductName,srcWareId,srcId,srcName,dstWareId,dstId,dstName,SourceDuctLat,SourceDuctLng,DestinationDuctLng,DestinationDuctLat,srcCityDuct,dstCityDuct,ductsFiberCables,ductsTubes,ductsStrands,ductsLength,trenchId,drawingType,ductOwner,ductInstaller,ductEngineerName];					
 						window["mapPoints_"+data.ductId].push(new google.maps.LatLng(SourceDuctLat,SourceDuctLng));
 						window["bounds_"+data.ductId].extend(new google.maps.LatLng(SourceDuctLat,SourceDuctLng));
 						window["mapPointsNames_"+data.ductId].push(SourceDuct);

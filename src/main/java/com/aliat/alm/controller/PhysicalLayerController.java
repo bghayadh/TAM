@@ -2100,6 +2100,7 @@ public class PhysicalLayerController {
 	public Map<String, Object> findTrenchDetails(Locale locale, Model model, HttpServletRequest request,
 			@ModelAttribute ItemParameters itemParameters, HttpServletResponse response) {
 
+
 		Map<String, Object> rtn = new LinkedHashMap<>();
 
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
@@ -2115,7 +2116,7 @@ public class PhysicalLayerController {
 				try {
 
 					listTrench = session.createNativeQuery(
-							"SELECT TRENCH_ID,TRENCH_NAME,SOURCE_WARE_ID,SOURCE_ID,SOURCE_NAME,DESTINATION_WARE_ID,DESTINATION_ID,DESTINATION_NAME,SOURCE_LONGITUDE,SOURCE_LATITUDE,DESTINATION_LONGITUDE,DESTINATION_LATITUDE,SOURCE_CITY,DESTINATION_CITY, MAX_CAPACITY,NUM_DUCTS,LENGTH,TO_CHAR(CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(LAST_MODIFIED_DATE, 'MM/dd/YYYY HH:MI AM'),CREATED_BY,LAST_MODIFIED_BY,TOTAL_DRIVING_DISTANCE, TOTAL_GEO_DISTANCE,LAST_AUXILIARY_TO_DESTINATION_DISTANCE,LAST_AUXILIARY_TO_DESTINATION_DRIVING_DISTANCE,DRAWING_TYPE FROM TRENCH WHERE TRENCH_ID='"
+							"SELECT TRENCH_ID,TRENCH_NAME,SOURCE_WARE_ID,SOURCE_ID,SOURCE_NAME,DESTINATION_WARE_ID,DESTINATION_ID,DESTINATION_NAME,SOURCE_LONGITUDE,SOURCE_LATITUDE,DESTINATION_LONGITUDE,DESTINATION_LATITUDE,SOURCE_CITY,DESTINATION_CITY, MAX_CAPACITY,NUM_DUCTS,LENGTH,TO_CHAR(CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(LAST_MODIFIED_DATE, 'MM/dd/YYYY HH:MI AM'),CREATED_BY,LAST_MODIFIED_BY,TOTAL_DRIVING_DISTANCE, TOTAL_GEO_DISTANCE,LAST_AUXILIARY_TO_DESTINATION_DISTANCE,LAST_AUXILIARY_TO_DESTINATION_DRIVING_DISTANCE,DRAWING_TYPE,OWNER,TRENCH_INSTALLER,TRENCH_ENGINEER_NAME FROM TRENCH WHERE TRENCH_ID='"
 									+ selectedTrench + "' ")
 							.getResultList();
 
@@ -2165,6 +2166,7 @@ public class PhysicalLayerController {
 			}
 			return rtn;
 		}
+	
 	}
 
 	@SuppressWarnings("unchecked")
@@ -2172,6 +2174,7 @@ public class PhysicalLayerController {
 	@ResponseBody
 	public Map<String, Object> findDuctDetails(Locale locale, Model model, HttpServletRequest request,
 			@ModelAttribute ItemParameters itemParameters, HttpServletResponse response) {
+
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
 
@@ -2188,7 +2191,7 @@ public class PhysicalLayerController {
 				try {
 
 					listDuct = session.createNativeQuery(
-							"SELECT DUCT_ID,DUCT_NAME,SOURCE_WARE_ID,SOURCE_ID,SOURCE_NAME,DESTINATION_WARE_ID,DESTINATION_ID,DESTINATION_NAME,SOURCE_LONGITUDE,SOURCE_LATITUDE,DESTINATION_LONGITUDE,DESTINATION_LATITUDE,SOURCE_CITY,DESTINATION_CITY, NUM_FIBERCABLES,NUM_FIBERTUBES,NUM_FIBERSTRANDS,LENGTH,TO_CHAR(CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(LAST_MODIFIED_DATE, 'MM/dd/YYYY HH:MI AM'),CREATED_BY,LAST_MODIFIED_BY,TOTAL_DRIVING_DISTANCE, TOTAL_GEO_DISTANCE,LAST_AUXILIARY_TO_DESTINATION_DISTANCE,LAST_AUXILIARY_TO_DESTINATION_DRIVING_DISTANCE,DRAWING_TYPE FROM DUCTS WHERE DUCT_ID='"
+							"SELECT DUCT_ID,DUCT_NAME,SOURCE_WARE_ID,SOURCE_ID,SOURCE_NAME,DESTINATION_WARE_ID,DESTINATION_ID,DESTINATION_NAME,SOURCE_LONGITUDE,SOURCE_LATITUDE,DESTINATION_LONGITUDE,DESTINATION_LATITUDE,SOURCE_CITY,DESTINATION_CITY, NUM_FIBERCABLES,NUM_FIBERTUBES,NUM_FIBERSTRANDS,LENGTH,TO_CHAR(CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(LAST_MODIFIED_DATE, 'MM/dd/YYYY HH:MI AM'),CREATED_BY,LAST_MODIFIED_BY,TOTAL_DRIVING_DISTANCE, TOTAL_GEO_DISTANCE,LAST_AUXILIARY_TO_DESTINATION_DISTANCE,LAST_AUXILIARY_TO_DESTINATION_DRIVING_DISTANCE,DRAWING_TYPE,OWNER,DUCT_INSTALLER,DUCT_ENGINEER_NAME FROM DUCTS WHERE DUCT_ID='"
 									+ selectedDuct + "' ")
 							.getResultList();
 
@@ -2237,6 +2240,7 @@ public class PhysicalLayerController {
 			}
 			return rtn;
 		}
+	
 	}
 
 	@SuppressWarnings("unchecked")
@@ -9728,6 +9732,7 @@ public class PhysicalLayerController {
 	public Map<String, Object> saveTrench(Locale locale, Model model, @ModelAttribute ItemParameters itemParameters,
 			HttpServletRequest request, HttpServletResponse response) throws ParseException {
 
+
 		Map<String, Object> rtn = new LinkedHashMap<>();
 		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
@@ -9880,7 +9885,10 @@ public class PhysicalLayerController {
 			trench.setLastAuxToDestDistance(lastAuxToDestDistance);
 			trench.setLastAuxToDestDrivDistance(lastAuxToDestDrivDistance);
 			trench.setDrawingtype(drawingtype);
-
+			trench.setTrenchOwner(request.getParameter("trenchOwner"));
+			trench.setTrenchInstaller(request.getParameter("trenchInstaller"));
+			trench.setTrenchEngineerName(request.getParameter("trenchEngineerName"));
+			
 			session.saveOrUpdate(trench);
 			session.flush();
 			session.clear();
@@ -9987,7 +9995,7 @@ public class PhysicalLayerController {
 			}
 
 			List<Object[]> ductList = session.createNativeQuery(
-					"SELECT B.DUCT_ID,B.DUCT_NAME,B.SOURCE_WARE_ID,B.SOURCE_ID,B.SOURCE_NAME,B.DESTINATION_WARE_ID,B.DESTINATION_ID,B.DESTINATION_NAME,B.SOURCE_LATITUDE,B.SOURCE_LONGITUDE,B.DESTINATION_LONGITUDE,B.DESTINATION_LATITUDE,B.SOURCE_CITY,B.DESTINATION_CITY,B.NUM_FIBERCABLES,B.NUM_FIBERTUBES,B.NUM_FIBERSTRANDS,B.LENGTH,B.TRENCH_ID FROM DUCTS B WHERE B.TRENCH_ID='"
+					"SELECT B.DUCT_ID,B.DUCT_NAME,B.SOURCE_WARE_ID,B.SOURCE_ID,B.SOURCE_NAME,B.DESTINATION_WARE_ID,B.DESTINATION_ID,B.DESTINATION_NAME,B.SOURCE_LATITUDE,B.SOURCE_LONGITUDE,B.DESTINATION_LONGITUDE,B.DESTINATION_LATITUDE,B.SOURCE_CITY,B.DESTINATION_CITY,B.NUM_FIBERCABLES,B.NUM_FIBERTUBES,B.NUM_FIBERSTRANDS,B.LENGTH,B.TRENCH_ID,B.OWNER,B.DUCT_INSTALLER,B.DUCT_ENGINEER_NAME  FROM DUCTS B WHERE B.TRENCH_ID='"
 							+ trenchId + "'")
 					.getResultList();
 
@@ -10014,6 +10022,7 @@ public class PhysicalLayerController {
 			}
 		}
 		return rtn;
+	
 	}
 
 	@RequestMapping(value = "/getSearchHeader", method = RequestMethod.GET)
@@ -10518,6 +10527,7 @@ public class PhysicalLayerController {
 	public Map<String, Object> saveDuct(Locale locale, Model model, @ModelAttribute ItemParameters itemParameters,
 			HttpServletRequest request, HttpServletResponse response) {
 
+
 		Map<String, Object> rtn = new LinkedHashMap<>();
 		session = AlmDbSession.getInstance().getSession();
 
@@ -10665,6 +10675,9 @@ public class PhysicalLayerController {
 				duct.setLastAuxToDestDistance(lastAuxToDestDistance);
 				duct.setLastAuxToDestDrivDistance(lastAuxToDestDrivDistance);
 				duct.setDrawingType(drawingtype);
+				duct.setDuctOwner(request.getParameter("ductOwner"));
+				duct.setDuctInstaller(request.getParameter("ductInstaller"));
+				duct.setDuctEngineerName(request.getParameter("ductEngineerName"));
 
 				session.saveOrUpdate(duct);
 				session.flush();
@@ -10802,6 +10815,7 @@ public class PhysicalLayerController {
 		}
 
 		return rtn;
+	
 	}
 
 	@RequestMapping(value = "/findCountDucts", method = RequestMethod.GET)
