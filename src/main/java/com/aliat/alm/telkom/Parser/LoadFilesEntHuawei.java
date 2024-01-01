@@ -23,6 +23,7 @@ import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
@@ -256,7 +257,7 @@ public class LoadFilesEntHuawei  {
 	public static String readfile (String filename) {
 	   	System.out.println("filename "+filename);
 	   	
-	  if(filename.contains("MSAN")) {
+	  if(StringUtils.containsIgnoreCase(filename, "msan")) {
 	   	String codeid="";
 	   	String Node_Type="";
 	   	String Site_ID="";
@@ -280,6 +281,7 @@ public class LoadFilesEntHuawei  {
 			Sheet firstSheet=workbook.getSheetAt(0);
 			// get the seq of node_active and update it by number of row 
 			int rownumb=firstSheet.getLastRowNum();
+			System.out.println("node rownum "+rownumb);
 			//System.out.println("number of row "+rownumb);
 			
 			String sqlStmtinit3 = "select NODE_ACTIVE from SEQ_TABLE";     
@@ -288,7 +290,7 @@ public class LoadFilesEntHuawei  {
 			  while(rsinit3.next()) {
 				  NodeSeq = rsinit3.getInt("NODE_ACTIVE");
 			  	//vcodeid=year+"_NODE_"+rsinit2.getInt("NODE_ACTIVE");
-			  	stmtp = conalm.prepareStatement("UPDATE SEQ_TABLE SET NODE_ACTIVE = NODE_ACTIVE +"+(rownumb-1));//-1 to ignore non-data row of the excel sheet
+			  	stmtp = conalm.prepareStatement("UPDATE SEQ_TABLE SET NODE_ACTIVE = NODE_ACTIVE +"+(rownumb));//-1 to ignore non-data row of the excel sheet
 			  	stmtp.executeUpdate();
 			  	stmtp.close();
 			  }
@@ -357,7 +359,7 @@ public class LoadFilesEntHuawei  {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}else if(filename.contains("Boards")){
+	}else if(StringUtils.containsIgnoreCase(filename, "board")){
 		System.out.println(filename);
 		String codeid="";
 		String excelFilePath=readfileEntHuaweifrom+"/"+filename;
@@ -386,7 +388,7 @@ public class LoadFilesEntHuawei  {
 			  ResultSet rsinit3 = stmtp1.executeQuery(sqlStmtinit3);
 			  while(rsinit3.next()) {
 				  NodeBoardSeq = rsinit3.getInt("NODE_BOARD");
-			  	stmtp = conalm.prepareStatement("UPDATE SEQ_TABLE SET NODE_BOARD = NODE_BOARD +"+(rownumb-2));//-2 to ignore non-data row of the excel sheet
+			  	stmtp = conalm.prepareStatement("UPDATE SEQ_TABLE SET NODE_BOARD = NODE_BOARD +"+(rownumb));//-2 to ignore non-data row of the excel sheet
 			  	stmtp.executeUpdate();
 			  	stmtp.close();
 			  }
@@ -403,7 +405,7 @@ public class LoadFilesEntHuawei  {
 				if(!vhmap.isEmpty()) {
 					codeid=Gyear+"_"+ "NODE_HW_ENT_BRD"+'_'+NodeBoardSeq;
 					stmtp =  con.prepareStatement("insert into NODE_BOARD (BOARD_ID,SUBRACKNO,SLOTNO,BOARDNAME,BOARDTYPE,SERIALNUMBER,HARDWAREVERSION,SOFTVER,BIOSVER,ISSUENUMBER,BOMCODE,MODEL,NODE_PK,UPDATE_DATE,FILENAME,STATUS,CREATION_DATE,DOMAIN,VENDOR,OTHERS,ACTIVE_RECORD)"
-						     + "values('"+codeid+"','"+vhmap.get("SubrackID")+"','"+vhmap.get("SlotID")+"','"+vhmap.get("BoardFullName")+"','"+vhmap.get("BoardType")+"','"+vhmap.get("SN")+"','"+vhmap.get("HardwareVersion")+"','"+vhmap.get("SoftwareVersion")+"','"+vhmap.get("BIOSVersion")+"','"+vhmap.get("IssueNumber")+"','"+vhmap.get("BOMCode")+"','"+vhmap.get("BoardType")+"',(Select DISTINCT NODE_PK from node_active where IP_ADDRESS='"+vhmap.get("NEIPAddress")+"' and active_record='1' and domain='"+Domain+"' and vendor='"+Gprovider+"' fetch first 1 row only) ,sysdate,'"+filename+"','"+vhmap.get("BoardStatus")+"',sysdate,'"+Domain+"','"+Gprovider+"','"+vhmap.get("others")+"','1')"); 
+						     + "values('"+codeid+"','"+vhmap.get("SubrackID")+"','"+vhmap.get("SlotID")+"','"+vhmap.get("BoardFullName")+"','"+vhmap.get("BoardType")+"','"+vhmap.get("SN")+"','"+vhmap.get("HardwareVersion")+"','"+vhmap.get("SoftwareVersion")+"','"+vhmap.get("BIOSVersion")+"','"+vhmap.get("IssueNumber")+"','"+vhmap.get("BOMCode")+"','"+vhmap.get("BoardType")+"',(Select DISTINCT NODE_PK from node_active where IP_ADDRESS='"+vhmap.get("NEIPAddress")+"' and active_record='1' and domain='"+Domain+"' and vendor='"+Gprovider+"' order by creation_date desc fetch first 1 row only) ,sysdate,'"+filename+"','"+vhmap.get("BoardStatus")+"',sysdate,'"+Domain+"','"+Gprovider+"','"+vhmap.get("others")+"','1')"); 
 					  	stmtp.executeUpdate();
 					  	stmtp.close();
 					NodeBoardSeq++;
@@ -491,7 +493,7 @@ public class LoadFilesEntHuawei  {
 			Iterator<Cell> cellIterator=nextRow.cellIterator();
 			int rowIndex = nextRow.getRowNum();
 		
-			if(rowIndex >1) {
+			if(rowIndex >0) {
 			while(cellIterator.hasNext()) {
 				
 				Cell nextCell=cellIterator.next();
@@ -635,22 +637,22 @@ public class LoadFilesEntHuawei  {
 					Cell nextCell=cellIterator.next();
 					int columnIndex=nextCell.getColumnIndex();
 					switch (columnIndex) {
-					case 0:
-				        if (nextCell.getCellTypeEnum() == CellType.STRING) {
-			        	NEIP = nextCell.getStringCellValue();
-			        
-			       }
-					break;
-				case 1:
+				case 0:
 				        if (nextCell.getCellTypeEnum() == CellType.STRING) {
 					NEName=nextCell.getStringCellValue();
 					}
 					break;
-				case 2:
+				case 1:
 				        if (nextCell.getCellTypeEnum() == CellType.STRING) {
 			        	NEModel=nextCell.getStringCellValue();
 						}
 					break;
+				case 2:
+			        if (nextCell.getCellTypeEnum() == CellType.STRING) {
+		        	NEIP = nextCell.getStringCellValue();
+		        
+		       }
+				break;
 				case 3:
 				        if (nextCell.getCellTypeEnum() == CellType.STRING) {
 
@@ -977,6 +979,13 @@ public class LoadFilesEntHuawei  {
 		     stmt.executeUpdate();
 		     stmt.close();
 		    
+		      stmt = con.prepareStatement("delete from NODE_BOARD where " + fieldname +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'"); 
+		     stmt.executeUpdate();
+		     stmt.close();
+		     
+		      stmt = con.prepareStatement("delete from NODE_PORT where " + fieldname +" = '" + fieldValue +"' and DOMAIN='" + vdomain +"' and VENDOR='" + vvendor +"'"); 
+		     stmt.executeUpdate();
+		     stmt.close();
 		      
 			 }
 			catch(Exception e)  
