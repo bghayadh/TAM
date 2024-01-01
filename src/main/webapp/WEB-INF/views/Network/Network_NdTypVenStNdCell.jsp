@@ -610,8 +610,7 @@ function Create_Sites(id){
 		var selectedItem = id.id.substring(0, index);
 		var selectedVen = id.id.substring(index+ 1);
 		}	
-	var selectedNodeType = $("#" + id.id).closest("li.NodeType").attr("id"); 
-	
+	var selectedNodeType = $("#" + id.id).closest("li.NodeType").attr("id"); 	
 		var siteChildren=$("#"+selectedItem+"_"+selectedVen+"_f") .find(' > ul > li').length;
 		if(siteChildren == 0){	
 			
@@ -665,14 +664,12 @@ function Create_Sites(id){
 							}
 				        }
 				     data = null;
-				     },
+				  },
 				  error: function(result) {
 				     alert("Error");
-							         }
-						     });
-				//}   
+				   }
+			});   
 		}
-		//});
 } 
 ///////////////////////////////////////////////
 /* End of Supp NodeType Site NodeType Node Cell Tree Method */ 
