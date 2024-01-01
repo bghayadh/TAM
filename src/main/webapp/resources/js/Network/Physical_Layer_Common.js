@@ -5207,8 +5207,8 @@ function openFindNearMultySite(rowData) {
     });
 }
 
-function  openFindNearest(checkedOption,closestLatPoint,closestLongPoint,closestDisRange,noP,arrayManhole,arrayHandhole,arrayDB,arrayFibers,arrayStrands,arrayTubes,arrayNodes,getRelatedPoints){
-	 
+function  openFindNearest(checkedOption,closestLatPoint,closestLongPoint,closestDisRange,noP,arrayManhole,arrayHandhole,arrayDB,arrayFibers,arrayStrands,arrayTubes,arrayNodes,getRelatedPoints,strtLng,endLng,strtLat,endLat){
+ 
 	$("#StartEnd").prop("checked",false);
 	 document.getElementById("closestLongDiv").style.display = "block";
 	 document.getElementById("closestLatDiv").style.display = "block";
@@ -5283,6 +5283,17 @@ function  openFindNearest(checkedOption,closestLatPoint,closestLongPoint,closest
 						displayZoneMap(circ);
 				        map.setCenter(myLatLng);
 					    map.fitBounds(circ.getBounds());
+	
+				startlangPath =[new google.maps.LatLng(strtLat,strtLng), new google.maps.LatLng(endLat,strtLng)];
+				drawLine("#FF0000",startlangPath);
+				startlatgPath =[new google.maps.LatLng(strtLat,strtLng), new google.maps.LatLng(strtLat,endLng)];
+				drawLine("#FF0000",startlatgPath);
+				endlangPath =[new google.maps.LatLng(endLat,endLng), new google.maps.LatLng(strtLat,endLng)];
+				drawLine("#006400",endlangPath);
+				endlatgPath =[new google.maps.LatLng(endLat,endLng), new google.maps.LatLng(endLat, strtLng)];
+				drawLine("#006400",endlatgPath);
+				
+				
 		     		
 		      
 
