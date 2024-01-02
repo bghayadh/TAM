@@ -889,10 +889,10 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
         var children = parentLi.find(' > ul > li');
 
         if (children.is(":visible")) {
-            children.hide('fast');
+            children.hide();
             $(this).find('svg').addClass('fa-folder').removeClass('fa-folder-open');
         } else {
-            children.show('fast');
+            children.show();
             $(this).find('svg').addClass('fa-folder-open').removeClass('fa-folder');
         }
 
