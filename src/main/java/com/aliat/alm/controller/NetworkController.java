@@ -3471,6 +3471,7 @@ public class NetworkController {
 
 		session = AlmDbSession.getInstance().getSession();
 		LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
+		List<Object[]> countEachNodeTybe= new ArrayList<Object[]>();
 
 		try {
 			String strEmpty = "SELECT COUNT(DISTINCT a.WARE_ID) FROM NODE_ACTIVE a WHERE a.WARE_ID!='null' AND a.WARE_ID!='0' and a.WARE_ID is not null "
@@ -3484,14 +3485,9 @@ public class NetworkController {
 			strEmpty = "";
 			strExist = "";
 			////////////////////////////
-			strEmpty = "SELECT COUNT(a.NODE_PK) FROM NODE_ACTIVE a where ";
-			if (date != "" && !date.equals("")) {
-				strEmpty = strEmpty
-						+ " TO_DATE(TO_CHAR(a.PARSING_DATE,'YYYY-MM-DD HH:MI:SS AM'),'YYYY-MM-DD HH:MI:SS AM') =TO_DATE('"
-						+ date + "','YYYY-MM-DD HH:MI:SS AM') ";
-			} else {
-				strEmpty = strEmpty + "a.Active_record='1' ";
-			}
+			strEmpty = "SELECT COUNT(a.NODE_PK) FROM NODE_ACTIVE a where";
+			strEmpty = strEmpty + generateDateConditionBoq(date, "a").substring(4);
+			
 			strExist = "SELECT COUNT(a.NODE_PK) FROM NODE_ACTIVE a where a.Ware_Id='" + SiteId + "' "
 					+ generateDateConditionBoq(date, "a");
 			strEmpty = boqDomainVar("a", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
@@ -3542,19 +3538,22 @@ public class NetworkController {
 			BoqHM.put("Nodes", String.valueOf(CountNodes_Active));
 
 			if (SiteId == "") {
-				strEmpty = "SELECT COUNT(distinct a.NODE_TYPE) FROM NODE_ACTIVE a where ";
-				if (date != "" && !date.equals("")) {
-					strEmpty = strEmpty
-							+ " TO_DATE(TO_CHAR(a.PARSING_DATE,'YYYY-MM-DD HH:MI:SS AM'),'YYYY-MM-DD HH:MI:SS AM') =TO_DATE('"
-							+ date + "','YYYY-MM-DD HH:MI:SS AM') ";
-				} else {
-					strEmpty = strEmpty + "a.Active_record='1' ";
-				}
+				strEmpty = "SELECT COUNT(distinct a.NODE_TYPE) FROM NODE_ACTIVE a where";
+				strEmpty = strEmpty + generateDateConditionBoq(date, "a").substring(4);
 				strEmpty = boqDomainVar("a", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
 				String Node_Type_Count = strEmpty;
-				// System.out.println(Node_Type_Count);
 				Object CountNodesType = session.createNativeQuery(Node_Type_Count).uniqueResult();
 				BoqHM.put("Node Type", String.valueOf(CountNodesType));
+				
+				strEmpty = "SELECT distinct a.NODE_TYPE,COUNT(a.NODE_TYPE) from node_active a where";
+				strEmpty = strEmpty + generateDateConditionBoq(date, "a").substring(4);
+				strEmpty = boqDomainVar("a", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
+				strEmpty = strEmpty + " GROUP BY NODE_TYPE";
+
+				countEachNodeTybe = (List<Object[]>) session.createNativeQuery(strEmpty).list();
+				for (Object[] obj : countEachNodeTybe) {
+					BoqHM.put(obj[0].toString(), obj[1].toString());
+				}				
 			} else {
 				strExist = "SELECT COUNT(distinct a.NODE_TYPE) FROM NODE_ACTIVE a where a.Ware_Id='" + SiteId + "' "
 						+ generateDateConditionBoq(date, "a");
@@ -3569,14 +3568,9 @@ public class NetworkController {
 						+ SiteId + "' " + generateDateConditionBoq(date, "a");
 				strExist = boqDomainVar("a", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
 				strExist = strExist + " GROUP BY NODE_TYPE";
-				// System.out.println(strExist);
-				List<Object[]> CountNodesteach_Active = (List<Object[]>) session.createNativeQuery(strExist).list();
-				List<Object[]> result = new ArrayList<>();
-				for (Object[] obj : CountNodesteach_Active) {
-					result.add(obj);
-				}
-				for (Object[] object : result) {
-					BoqHM.put(object[0].toString(), object[1].toString());
+				countEachNodeTybe = (List<Object[]>) session.createNativeQuery(strExist).list();
+				for (Object[] obj : countEachNodeTybe) {
+					BoqHM.put(obj[0].toString(), obj[1].toString());
 				}
 			}
 			BoqHM.put("2G Cell", String.valueOf(CountNodes_G_CELL));			
