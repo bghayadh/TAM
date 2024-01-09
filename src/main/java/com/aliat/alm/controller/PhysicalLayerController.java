@@ -987,303 +987,654 @@ public class PhysicalLayerController {
 			else if (StringUtils.equalsIgnoreCase(request.getParameter("Checked"), "StartEnd")) {
 				
 				String startLongPoint = request.getParameter("startLongPoint");
-				String newStartLngPt = startLongPoint;
 				String startLatPoint = request.getParameter("startLatPoint");
-				String newStartLatPt = startLatPoint;
 				String endLongPoint = request.getParameter("endLongPoint");
-				String newEndLngPt = endLongPoint;
 				String endLatPoint = request.getParameter("endLatPoint");
-				String newEndLatPt = endLatPoint;
 				String getRelatedPoints = request.getParameter("getRelatedPoints");
-				
-				if (Double.parseDouble(startLongPoint) > Double.parseDouble(endLongPoint)) {
-					newStartLngPt = endLongPoint;
-					newEndLngPt = startLongPoint;
-				}
-				if (Double.parseDouble(startLatPoint) > Double.parseDouble(endLatPoint)) {
-					newStartLatPt = endLatPoint;
-					newEndLatPt = startLatPoint;
-				}
-				
-				//Select the cables within the range
-				fiberList = session.createNativeQuery(
-						"SELECT distinct A.SOURCE_LNG,A.SOURCE_LAT,A.DESTINATION_LNG,A.DESTINATION_LAT, A.FIBER_CABLE_ID,A.SOURCE_WARE_ID,A.SOURCE_ID,A.SOURCE_NAME,A.DESTINATION_WARE_ID,A.DESTINATION_ID,A.DESTINATION_NAME,(SELECT COUNT(*) FROM FIBER_TUBES B WHERE B.FIBER_CABLE_ID=A.FIBER_CABLE_ID) AS Tube_Count,(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.FIBER_CABLE_ID=A.FIBER_CABLE_ID) AS Strand_Count,A.FIBER_CABLE_NAME,A.PROJECT_ID,A.SOURCE_CITY,A.DESTINATION_CITY,A.NUMBER_OF_TUBES,A.NUMBER_OF_STRANDS,A.LENGTH,A.DRAWING_TYPE,A.FIBER_NETWORK_LEVEL,A.FIBER_OWNER,(select B.FIBER_COLOR_OWNER from FIBER_OWNER_COLOR B WHERE B.FIBER_OWNER=A.FIBER_OWNER) AS FIBER_CABLE_COLOR "
-						+ "FROM FIBER_CABLES A LEFT JOIN FIBER_AUXILIARY_POINTS D ON A.FIBER_CABLE_ID=D.FIBER_CABLE_ID "
-						+ "WHERE ( to_number(SUBSTR(A.SOURCE_LNG,1,6)) > "+newStartLngPt  +"and  to_number(SUBSTR(A.SOURCE_LAT,1,6)) >  "+newStartLatPt +" and to_number (SUBSTR(A.SOURCE_LNG,1,6)) < "+newEndLngPt +" AND to_number (SUBSTR(A.SOURCE_LAT,1,6)) < " + newEndLatPt +") "
-						+ "OR ( to_number(SUBSTR(A.DESTINATION_LNG,1,6)) > "+newStartLngPt  +"and  to_number(SUBSTR(A.DESTINATION_LAT,1,6)) >  "+newStartLatPt +" and to_number (SUBSTR(A.DESTINATION_LNG,1,6)) < "+newEndLngPt +" AND to_number (SUBSTR(A.DESTINATION_LAT,1,6)) < " +newEndLatPt +") "
-						+ "OR ( to_number(SUBSTR(D.LONGITUDE,1,6)) > "+newStartLngPt +"and  to_number(SUBSTR(D.LATITUDE,1,6)) >  "+newStartLatPt +" and to_number (SUBSTR(D.LONGITUDE,1,6)) < "+newEndLngPt +" AND to_number (SUBSTR(D.LATITUDE,1,6)) < " +newEndLatPt +") ").getResultList();
+				String startLng, endLng,startlatitude,endLatitude;
 
+				String cableStr = "SELECT distinct A.SOURCE_LNG,A.SOURCE_LAT,A.DESTINATION_LNG,A.DESTINATION_LAT, A.FIBER_CABLE_ID,A.SOURCE_WARE_ID,A.SOURCE_ID,A.SOURCE_NAME,A.DESTINATION_WARE_ID,A.DESTINATION_ID,A.DESTINATION_NAME,(SELECT COUNT(*) FROM FIBER_TUBES B WHERE B.FIBER_CABLE_ID=A.FIBER_CABLE_ID) AS Tube_Count,(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.FIBER_CABLE_ID=A.FIBER_CABLE_ID) AS Strand_Count,A.FIBER_CABLE_NAME,A.PROJECT_ID,A.SOURCE_CITY,A.DESTINATION_CITY,A.NUMBER_OF_TUBES,A.NUMBER_OF_STRANDS,A.LENGTH,A.DRAWING_TYPE,A.FIBER_NETWORK_LEVEL,A.FIBER_OWNER,(select B.FIBER_COLOR_OWNER from FIBER_OWNER_COLOR B WHERE B.FIBER_OWNER=A.FIBER_OWNER) AS FIBER_CABLE_COLOR "
+				+ "FROM FIBER_CABLES A LEFT JOIN FIBER_AUXILIARY_POINTS D ON A.FIBER_CABLE_ID=D.FIBER_CABLE_ID ";
+		
+				String tubeStr = "SELECT DISTINCT b.TUBE_ID,b.SOURCE_LONGITUDE,b.SOURCE_LATITUDE,b.DESTINATION_LONGITUDE,b.DESTINATION_LATITUDE,b.SOURCE_WARE_ID,b.SOURCE_ID,b.SOURCE_NAME,b.DESTINATION_WARE_ID,b.DESTINATION_ID,b.DESTINATION_NAME,(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.TUBE_ID=b.TUBE_ID),b.FIBER_CABLE_ID,b.TUBE_NAME,b.DRAWING_TYPE,b.TUBE_NUMBER,b.TUBE_COLOR FROM FIBER_TUBES b "
+				+ "LEFT JOIN TUBE_AUXILIARY_POINTS a ON a.TUBE_ID=b.TUBE_ID LEFT JOIN FIBER_STRANDS E ON E.TUBE_ID=b.TUBE_ID ";
+		
+				String strandStr = "SELECT DISTINCT b.STRAND_ID,b.SOURCE_LONGITUDE,b.SOURCE_LATITUDE,b.DESTINATION_LONGITUDE,b.DESTINATION_LATITUDE,b.SOURCE_WARE_ID,b.SOURCE_ID,b.SOURCE_NAME,b.DESTINATION_WARE_ID,b.DESTINATION_ID,b.DESTINATION_NAME,b.TUBE_ID,b.FIBER_CABLE_ID,b.STRAND_NAME,b.DRAWING_TYPE,b.STRAND_NUMBER,b.STRAND_COLOR FROM FIBER_STRANDS b "
+				+ "LEFT JOIN STRAND_AUXILIARY_POINTS a ON b.STRAND_ID=a.STRAND_ID ";
+			
+				String manholeStr =	"SELECT DISTINCT MANHOLE_ID,MANHOLE_NAME,substr(trim(replace(LONGITUDE,'°','')),1,6) as LONGITUDE,substr(trim(replace(LATITUDE,'°','')),1,6) as LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=MANHOLE_ID),DM_NAME FROM MANHOLE ";
+				String handholeStr = "SELECT DISTINCT HANDHOLE_ID,HANDHOLE_NAME,substr(trim(replace(LONGITUDE,'°','')),1,6) as LONGITUDE,substr(trim(replace(LATITUDE,'°','')),1,6) as LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=HANDHOLE_ID),DM_NAME FROM HANDHOLE ";
+				String dbStr = 	"SELECT DISTINCT DB_ID,substr(trim(replace(DB_LONGITUDE,'°','')),1,6) as DB_LONGITUDE,substr(trim(replace(DB_LATITUDE,'°','')),1,6) as DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,PROJECT_ID ,CITY,DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD ";
+				
+				String nodeStr ="SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,substr(trim(replace(LONGITUDE,'°','')),1,6) as LONGITUDE,substr(trim(replace(LATITUDE,'°','')),1,6) as LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' ) "
+				+ " AND (LONGITUDE !='null' or LONGITUDE !=null ) AND (LATITUDE !='null' or LATITUDE !=null ) ";
+		
+				if (startLongPoint != null && !startLongPoint.equalsIgnoreCase("")  && endLongPoint != null && !endLongPoint.equalsIgnoreCase("")
+						&&	startLatPoint != null && !startLatPoint.equalsIgnoreCase("") &&	endLatPoint != null && !endLatPoint.equalsIgnoreCase("") ) {
+				
+					if (Double.parseDouble(startLongPoint) < Double.parseDouble(endLongPoint)) {
+						startLng = startLongPoint;
+						endLng = endLongPoint;
+					} 
+					else {
+						startLng = endLongPoint;
+						endLng = startLongPoint;
+					}
+					
+					if (Double.parseDouble(startLatPoint) < Double.parseDouble(endLatPoint)) {
+						startlatitude = startLatPoint;
+						endLatitude = endLatPoint;
+					} 
+					else {
+						startlatitude = endLatPoint;
+						endLatitude = startLatPoint;
+					}
+					
+					cableStr = cableStr +" WHERE ( to_number(SUBSTR(A.SOURCE_LNG,1,6)) >"+startLng +"and  to_number(SUBSTR(A.SOURCE_LAT,1,6)) >"+startlatitude +" and to_number (SUBSTR(A.SOURCE_LNG,1,6)) <"+endLng +" AND to_number (SUBSTR(A.SOURCE_LAT,1,6)) < " +endLatitude +" )"
+							+ " OR ( to_number(SUBSTR(A.DESTINATION_LNG,1,6)) > "+startLng +"and  to_number(SUBSTR(A.DESTINATION_LAT,1,6)) >"+startlatitude +" and to_number (SUBSTR(A.DESTINATION_LNG,1,6)) < "+endLng+" AND to_number (SUBSTR(A.DESTINATION_LAT,1,6)) <" +endLatitude+") "
+							+ " OR ( to_number(SUBSTR(D.LONGITUDE,1,6)) > "+startLng +"and  to_number(SUBSTR(D.LATITUDE,1,6)) >"+startlatitude +" and to_number (SUBSTR(D.LONGITUDE,1,6)) < "+endLng+" AND to_number (SUBSTR(D.LATITUDE,1,6)) <" +endLatitude+") "; 
+				
+					tubeStr = tubeStr +" WHERE ( to_number(SUBSTR(b.SOURCE_LONGITUDE,1,6)) >"+startLng +"and  to_number(SUBSTR(b.SOURCE_LATITUDE,1,6)) >"+startlatitude +" and to_number (SUBSTR(b.SOURCE_LONGITUDE,1,6)) <"+endLng +" AND to_number (SUBSTR(b.SOURCE_LATITUDE,1,6)) < " +endLatitude +" )"
+							+ " OR ( to_number(SUBSTR(b.DESTINATION_LONGITUDE,1,6)) > "+startLng +"and  to_number(SUBSTR(b.DESTINATION_LATITUDE,1,6)) >"+startlatitude +" and to_number (SUBSTR(b.DESTINATION_LONGITUDE,1,6)) < "+endLng+" AND to_number (SUBSTR(b.DESTINATION_LATITUDE,1,6)) <" +endLatitude+") "
+							+ " OR ( to_number(SUBSTR(a.LONGITUDE,1,6)) > "+startLng +"and  to_number(SUBSTR(a.LATITUDE,1,6)) >"+startlatitude +" and to_number (SUBSTR(a.LONGITUDE,1,6)) < "+endLng+" AND to_number (SUBSTR(a.LATITUDE,1,6)) <" +endLatitude+") "; 
+			
+					strandStr = strandStr +" WHERE ( to_number(SUBSTR(b.SOURCE_LONGITUDE,1,6)) >"+startLng +"and  to_number(SUBSTR(b.SOURCE_LATITUDE,1,6)) >"+startlatitude +" and to_number (SUBSTR(b.SOURCE_LONGITUDE,1,6)) <"+endLng +" AND to_number (SUBSTR(b.SOURCE_LATITUDE,1,6)) < " +endLatitude +" )"
+							+ " OR ( to_number(SUBSTR(b.DESTINATION_LONGITUDE,1,6)) > "+startLng +"and  to_number(SUBSTR(b.DESTINATION_LATITUDE,1,6)) >"+startlatitude +" and to_number (SUBSTR(b.DESTINATION_LONGITUDE,1,6)) < "+endLng+" AND to_number (SUBSTR(b.DESTINATION_LATITUDE,1,6)) <" +endLatitude+") "
+							+ " OR ( to_number(SUBSTR(a.LONGITUDE,1,6)) > "+startLng +"and  to_number(SUBSTR(a.LATITUDE,1,6)) >"+startlatitude +" and to_number (SUBSTR(a.LONGITUDE,1,6)) < "+endLng+" AND to_number (SUBSTR(a.LATITUDE,1,6)) <" +endLatitude+") "; 
+			
+					manholeStr = manholeStr+" WHERE ( to_number(SUBSTR(LONGITUDE,1,6)) > "+startLng +" and to_number (SUBSTR(LONGITUDE,1,6)) <"+endLng +" and  to_number(SUBSTR(LATITUDE,1,6)) > "+startlatitude  +" and to_number (SUBSTR(LATITUDE,1,6)) < "+endLatitude +"  ) ";
+					handholeStr = handholeStr+" WHERE ( to_number(SUBSTR(LONGITUDE,1,6)) > "+startLng +" and to_number (SUBSTR(LONGITUDE,1,6)) <"+endLng +" and to_number(SUBSTR(LATITUDE,1,6)) > "+startlatitude  +" and to_number (SUBSTR(LATITUDE,1,6)) < "+endLatitude +" ) ";
+					dbStr = dbStr+" WHERE ( to_number(SUBSTR(DB_LONGITUDE,1,6)) > "+startLng +" and to_number (SUBSTR(DB_LONGITUDE,1,6)) <"+endLng +"and  to_number(SUBSTR(DB_LATITUDE,1,6)) >"+startlatitude  +" and to_number (SUBSTR(DB_LATITUDE,1,6)) < "+endLatitude +" ) ";
+					nodeStr = nodeStr+" AND ( to_number(SUBSTR(LONGITUDE,1,6)) > "+startLng +" and to_number (SUBSTR(LONGITUDE,1,6)) <"+endLng +" and to_number(SUBSTR(LATITUDE,1,6)) > "+startlatitude  +" and to_number (SUBSTR(LATITUDE,1,6)) < "+endLatitude +" ) ";
+
+					//To return the correct start/end long lat after comparison above
+					startLongPoint=startLng;
+					endLongPoint= endLng;
+					startLatPoint= startlatitude;
+					endLatPoint=endLatitude;				
+				}
+				
+				else {// At least one point is entered
+					
+					
+					if (startLongPoint != null && !startLongPoint.equalsIgnoreCase("") && (endLongPoint == null || endLongPoint.equalsIgnoreCase(""))) {
+						
+						//Start Longitude with start latitude
+						if (startLatPoint != null && !startLatPoint.equalsIgnoreCase("") && (endLatPoint == null || endLatPoint.equalsIgnoreCase(""))) {
+							cableStr = cableStr +" WHERE ( to_number(SUBSTR(A.SOURCE_LNG,1,6)) >"+startLongPoint +"and  to_number(SUBSTR(A.SOURCE_LAT,1,6)) >"+startLatPoint +" )"
+									+ " OR ( to_number(SUBSTR(A.DESTINATION_LNG,1,6)) > "+startLongPoint +"and  to_number(SUBSTR(A.DESTINATION_LAT,1,6)) >"+startLatPoint +" ) "
+									+ " OR ( to_number(SUBSTR(D.LONGITUDE,1,6)) > "+startLongPoint +"and  to_number(SUBSTR(D.LATITUDE,1,6)) >"+startLatPoint +" ) "; 
+						
+							tubeStr = tubeStr +" WHERE ( to_number(SUBSTR(b.SOURCE_LONGITUDE,1,6)) >"+startLongPoint +"and  to_number(SUBSTR(b.SOURCE_LATITUDE,1,6)) >"+startLatPoint +" )"
+									+ " OR ( to_number(SUBSTR(b.DESTINATION_LONGITUDE,1,6)) > "+startLongPoint +"and  to_number(SUBSTR(b.DESTINATION_LATITUDE,1,6)) >"+startLatPoint +") "
+									+ " OR ( to_number(SUBSTR(a.LONGITUDE,1,6)) > "+startLongPoint +"and  to_number(SUBSTR(a.LATITUDE,1,6)) >"+startLatPoint +") "; 
+							
+							strandStr = strandStr +" WHERE ( to_number(SUBSTR(b.SOURCE_LONGITUDE,1,6)) >"+startLongPoint +"and  to_number(SUBSTR(b.SOURCE_LATITUDE,1,6)) >"+startLatPoint +" )"
+									+ " OR ( to_number(SUBSTR(b.DESTINATION_LONGITUDE,1,6)) > "+startLongPoint +"and  to_number(SUBSTR(b.DESTINATION_LATITUDE,1,6)) >"+startLatPoint +") "
+									+ " OR ( to_number(SUBSTR(a.LONGITUDE,1,6)) > "+startLongPoint +"and  to_number(SUBSTR(a.LATITUDE,1,6)) >"+startLatPoint +") "; 
+							
+							manholeStr = manholeStr+" WHERE ( to_number(SUBSTR(LONGITUDE,1,6)) > "+startLongPoint +" and  to_number(SUBSTR(LATITUDE,1,6)) > "+startLatPoint +"  ) ";
+							handholeStr = handholeStr+" WHERE ( to_number(SUBSTR(LONGITUDE,1,6)) > "+startLongPoint +" and to_number(SUBSTR(LATITUDE,1,6)) > "+startLatPoint  +" ) ";
+							dbStr = dbStr+" WHERE ( to_number(SUBSTR(DB_LONGITUDE,1,6)) > "+startLongPoint +"and  to_number(SUBSTR(DB_LATITUDE,1,6)) >"+startLatPoint +" ) ";
+							nodeStr = nodeStr+" AND ( to_number(SUBSTR(LONGITUDE,1,6)) > "+startLongPoint +" and to_number(SUBSTR(LATITUDE,1,6)) > "+startLatPoint  +" ) ";
+						}
+						//Start Longitude with end latitude
+						else if (endLatPoint != null && !endLatPoint.equalsIgnoreCase("") && (startLatPoint == null || startLatPoint.equalsIgnoreCase(""))) {
+							cableStr = cableStr +" WHERE ( to_number(SUBSTR(A.SOURCE_LNG,1,6)) >"+startLongPoint +" AND to_number (SUBSTR(A.SOURCE_LAT,1,6)) < " +endLatPoint +" )"
+									+ " OR ( to_number(SUBSTR(A.DESTINATION_LNG,1,6)) > "+startLongPoint +" AND to_number (SUBSTR(A.DESTINATION_LAT,1,6)) <" +endLatPoint+" ) "
+									+ " OR ( to_number(SUBSTR(D.LONGITUDE,1,6)) > "+startLongPoint +" AND to_number (SUBSTR(D.LATITUDE,1,6)) <" +endLatPoint+" ) "; 
+						
+							tubeStr = tubeStr +" WHERE ( to_number(SUBSTR(b.SOURCE_LONGITUDE,1,6)) >"+startLongPoint +"and  to_number(SUBSTR(b.SOURCE_LATITUDE,1,6)) <"+endLatPoint +" )"
+									+ " OR ( to_number(SUBSTR(b.DESTINATION_LONGITUDE,1,6)) > "+startLongPoint +"and  to_number(SUBSTR(b.DESTINATION_LATITUDE,1,6)) <"+endLatPoint +") "
+									+ " OR ( to_number(SUBSTR(a.LONGITUDE,1,6)) > "+startLongPoint +"and  to_number(SUBSTR(a.LATITUDE,1,6)) <"+endLatPoint +") "; 
+							
+							strandStr = strandStr +" WHERE ( to_number(SUBSTR(b.SOURCE_LONGITUDE,1,6)) >"+startLongPoint +"and  to_number(SUBSTR(b.SOURCE_LATITUDE,1,6)) <"+endLatPoint +" )"
+									+ " OR ( to_number(SUBSTR(b.DESTINATION_LONGITUDE,1,6)) > "+startLongPoint +"and  to_number(SUBSTR(b.DESTINATION_LATITUDE,1,6)) <"+endLatPoint +") "
+									+ " OR ( to_number(SUBSTR(a.LONGITUDE,1,6)) > "+startLongPoint +"and  to_number(SUBSTR(a.LATITUDE,1,6)) <"+endLatPoint +") "; 
+						
+							manholeStr = manholeStr+" WHERE ( to_number(SUBSTR(LONGITUDE,1,6)) > "+startLongPoint +" and  to_number(SUBSTR(LATITUDE,1,6)) < "+endLatPoint +"  ) ";
+							handholeStr = handholeStr+" WHERE ( to_number(SUBSTR(LONGITUDE,1,6)) > "+startLongPoint +" and to_number(SUBSTR(LATITUDE,1,6)) < "+endLatPoint  +" ) ";
+							dbStr = dbStr+" WHERE ( to_number(SUBSTR(DB_LONGITUDE,1,6)) > "+startLongPoint +"and  to_number(SUBSTR(DB_LATITUDE,1,6)) <"+endLatPoint +" ) ";
+							nodeStr = nodeStr+" AND ( to_number(SUBSTR(LONGITUDE,1,6)) > "+startLongPoint +" and to_number(SUBSTR(LATITUDE,1,6)) < "+endLatPoint  +" ) ";
+						}
+						//Start Longitude with start & end latitude
+						else if (startLatPoint != null && startLatPoint.length() > 0 && (endLatPoint != null && endLatPoint.length() > 0)) {
+							
+							if (Double.parseDouble(startLatPoint) < Double.parseDouble(endLatPoint)) {
+								startlatitude = startLatPoint;
+								endLatitude = endLatPoint;
+
+							} else {
+								startlatitude = endLatPoint;
+								endLatitude = startLatPoint;
+							}
+							
+							cableStr = cableStr +" WHERE ( to_number(SUBSTR(A.SOURCE_LNG,1,6)) >"+startLongPoint +"and  to_number(SUBSTR(A.SOURCE_LAT,1,6)) >"+startlatitude +" AND to_number (SUBSTR(A.SOURCE_LAT,1,6)) < " +endLatitude +" )"
+									+ " OR ( to_number(SUBSTR(A.DESTINATION_LNG,1,6)) > "+startLongPoint +"and  to_number(SUBSTR(A.DESTINATION_LAT,1,6)) >"+startlatitude +" AND to_number (SUBSTR(A.DESTINATION_LAT,1,6)) <" +endLatitude+") "
+									+ " OR ( to_number(SUBSTR(D.LONGITUDE,1,6)) > "+startLongPoint +"and  to_number(SUBSTR(D.LATITUDE,1,6)) >"+startlatitude +" AND to_number (SUBSTR(D.LATITUDE,1,6)) <" +endLatitude+") "; 
+						
+							tubeStr = tubeStr +" WHERE ( to_number(SUBSTR(b.SOURCE_LONGITUDE,1,6)) >"+startLongPoint +"and  to_number(SUBSTR(b.SOURCE_LATITUDE,1,6)) >"+startlatitude +" AND to_number (SUBSTR(b.SOURCE_LATITUDE,1,6)) < " +endLatitude +" )"
+									+ " OR ( to_number(SUBSTR(b.DESTINATION_LONGITUDE,1,6)) > "+startLongPoint +"and  to_number(SUBSTR(b.DESTINATION_LATITUDE,1,6)) >"+startlatitude +" AND to_number (SUBSTR(b.DESTINATION_LATITUDE,1,6)) <" +endLatitude+") "
+									+ " OR ( to_number(SUBSTR(a.LONGITUDE,1,6)) > "+startLongPoint +"and  to_number(SUBSTR(a.LATITUDE,1,6)) >"+startlatitude +" AND to_number (SUBSTR(a.LATITUDE,1,6)) <" +endLatitude+") "; 
+							
+							strandStr = strandStr +" WHERE ( to_number(SUBSTR(b.SOURCE_LONGITUDE,1,6)) >"+startLongPoint +"and  to_number(SUBSTR(b.SOURCE_LATITUDE,1,6)) >"+startlatitude +" AND to_number (SUBSTR(b.SOURCE_LATITUDE,1,6)) < " +endLatitude +" )"
+									+ " OR ( to_number(SUBSTR(b.DESTINATION_LONGITUDE,1,6)) > "+startLongPoint +"and  to_number(SUBSTR(b.DESTINATION_LATITUDE,1,6)) >"+startlatitude +" AND to_number (SUBSTR(b.DESTINATION_LATITUDE,1,6)) <" +endLatitude+") "
+									+ " OR ( to_number(SUBSTR(a.LONGITUDE,1,6)) > "+startLongPoint +"and  to_number(SUBSTR(a.LATITUDE,1,6)) >"+startlatitude +" AND to_number (SUBSTR(a.LATITUDE,1,6)) <" +endLatitude+") "; 
+					
+							manholeStr = manholeStr+" WHERE ( to_number(SUBSTR(LONGITUDE,1,6)) > "+startLongPoint +" and  to_number(SUBSTR(LATITUDE,1,6)) > "+startlatitude  +" and to_number (SUBSTR(LATITUDE,1,6)) < "+endLatitude +"  ) ";
+							handholeStr = handholeStr+" WHERE ( to_number(SUBSTR(LONGITUDE,1,6)) > "+startLongPoint +" and to_number(SUBSTR(LATITUDE,1,6)) > "+startlatitude  +" and to_number (SUBSTR(LATITUDE,1,6)) < "+endLatitude +" ) ";
+							dbStr = dbStr+" WHERE ( to_number(SUBSTR(DB_LONGITUDE,1,6)) > "+startLongPoint +"and  to_number(SUBSTR(DB_LATITUDE,1,6)) >"+startlatitude  +" and to_number (SUBSTR(DB_LATITUDE,1,6)) < "+endLatitude +" ) ";
+							nodeStr = nodeStr+" AND ( to_number(SUBSTR(LONGITUDE,1,6)) > "+startLongPoint +" and to_number(SUBSTR(LATITUDE,1,6)) > "+startlatitude  +" and to_number (SUBSTR(LATITUDE,1,6)) < "+endLatitude +" ) ";
+
+							//To return the correct start/end lat after the comparison above
+							startLatPoint= startlatitude;
+							endLatPoint=endLatitude;
+						}
+						//Only start longitude
+						else {
+							cableStr = cableStr +" WHERE ( to_number(SUBSTR(A.SOURCE_LNG,1,6)) >"+startLongPoint +" ) "
+									+ " OR ( to_number(SUBSTR(A.DESTINATION_LNG,1,6)) > "+startLongPoint +" ) "
+									+ " OR ( to_number(SUBSTR(D.LONGITUDE,1,6)) > "+startLongPoint +" ) "; 
+							
+							tubeStr = tubeStr +" WHERE ( to_number(SUBSTR(b.SOURCE_LONGITUDE,1,6)) >"+startLongPoint+" )"
+									+ " OR ( to_number(SUBSTR(b.DESTINATION_LONGITUDE,1,6)) > "+startLongPoint +") "
+									+ " OR ( to_number(SUBSTR(a.LONGITUDE,1,6)) > "+startLongPoint +") "; 
+					
+							strandStr = strandStr +" WHERE ( to_number(SUBSTR(b.SOURCE_LONGITUDE,1,6)) >"+startLongPoint+" )"
+									+ " OR ( to_number(SUBSTR(b.DESTINATION_LONGITUDE,1,6)) > "+startLongPoint +") "
+									+ " OR ( to_number(SUBSTR(a.LONGITUDE,1,6)) > "+startLongPoint +") "; 
+					
+							manholeStr = manholeStr+" WHERE ( to_number(SUBSTR(LONGITUDE,1,6)) > "+startLongPoint +"  ) ";
+							handholeStr = handholeStr+" WHERE ( to_number(SUBSTR(LONGITUDE,1,6)) > "+startLongPoint +" ) ";
+							dbStr = dbStr+" WHERE ( to_number(SUBSTR(DB_LONGITUDE,1,6)) > "+startLongPoint +" ) ";
+							nodeStr = nodeStr+" AND ( to_number(SUBSTR(LONGITUDE,1,6)) > "+startLongPoint +" ) ";
+					}								
+				}//end the start long condition
+				
+				else if (endLongPoint != null && !endLongPoint.equalsIgnoreCase("") && (startLongPoint == null || startLongPoint.equalsIgnoreCase(""))) {
+					
+					//End Longitude with start latitude
+					if (startLatPoint != null && !startLatPoint.equalsIgnoreCase("") && (endLatPoint == null || endLatPoint.equalsIgnoreCase(""))) {
+						
+						cableStr = cableStr +" WHERE ( to_number(SUBSTR(A.SOURCE_LNG,1,6)) <"+endLongPoint +"and  to_number(SUBSTR(A.SOURCE_LAT,1,6)) >"+startLatPoint +" )"
+								+ " OR ( to_number(SUBSTR(A.DESTINATION_LNG,1,6)) < "+endLongPoint +"and  to_number(SUBSTR(A.DESTINATION_LAT,1,6)) >"+startLatPoint +" ) "
+								+ " OR ( to_number(SUBSTR(D.LONGITUDE,1,6)) < "+endLongPoint +"and  to_number(SUBSTR(D.LATITUDE,1,6)) >"+startLatPoint +" ) "; 
+					
+						tubeStr = tubeStr +" WHERE ( to_number(SUBSTR(b.SOURCE_LONGITUDE,1,6)) <"+endLongPoint +"and  to_number(SUBSTR(b.SOURCE_LATITUDE,1,6)) >"+startLatPoint +" )"
+								+ " OR ( to_number(SUBSTR(b.DESTINATION_LONGITUDE,1,6)) < "+endLongPoint +"and  to_number(SUBSTR(b.DESTINATION_LATITUDE,1,6)) >"+startLatPoint +") "
+								+ " OR ( to_number(SUBSTR(a.LONGITUDE,1,6)) < "+endLongPoint +"and  to_number(SUBSTR(a.LATITUDE,1,6)) >"+startLatPoint +") "; 
+				
+						strandStr = strandStr +" WHERE ( to_number(SUBSTR(b.SOURCE_LONGITUDE,1,6)) <"+endLongPoint +"and  to_number(SUBSTR(b.SOURCE_LATITUDE,1,6)) >"+startLatPoint +" )"
+							+ " OR ( to_number(SUBSTR(b.DESTINATION_LONGITUDE,1,6)) < "+endLongPoint +"and  to_number(SUBSTR(b.DESTINATION_LATITUDE,1,6)) >"+startLatPoint +") "
+							+ " OR ( to_number(SUBSTR(a.LONGITUDE,1,6)) < "+endLongPoint +"and  to_number(SUBSTR(a.LATITUDE,1,6)) >"+startLatPoint +") "; 
+			
+						manholeStr = manholeStr+" WHERE ( to_number(SUBSTR(LONGITUDE,1,6)) < "+endLongPoint +" and  to_number(SUBSTR(LATITUDE,1,6)) > "+startLatPoint +"  ) ";
+						handholeStr = handholeStr+" WHERE ( to_number(SUBSTR(LONGITUDE,1,6)) < "+endLongPoint +" and to_number(SUBSTR(LATITUDE,1,6)) > "+startLatPoint  +" ) ";
+						dbStr = dbStr+" WHERE ( to_number(SUBSTR(DB_LONGITUDE,1,6)) < "+endLongPoint +"and  to_number(SUBSTR(DB_LATITUDE,1,6)) >"+startLatPoint +" ) ";
+						nodeStr = nodeStr+" AND ( to_number(SUBSTR(LONGITUDE,1,6)) < "+endLongPoint +" and to_number(SUBSTR(LATITUDE,1,6)) > "+startLatPoint  +" ) ";
+					}
+					//End Longitude with end latitude
+					else if (endLatPoint != null && !endLatPoint.equalsIgnoreCase("") && (startLatPoint == null || startLatPoint.equalsIgnoreCase(""))) {
+						cableStr = cableStr +" WHERE ( to_number(SUBSTR(A.SOURCE_LNG,1,6)) <"+endLongPoint +" AND to_number (SUBSTR(A.SOURCE_LAT,1,6)) < " +endLatPoint +" )"
+								+ " OR ( to_number(SUBSTR(A.DESTINATION_LNG,1,6)) < "+endLongPoint +" AND to_number (SUBSTR(A.DESTINATION_LAT,1,6)) <" +endLatPoint+" ) "
+								+ " OR ( to_number(SUBSTR(D.LONGITUDE,1,6)) < "+endLongPoint +" AND to_number (SUBSTR(D.LATITUDE,1,6)) <" +endLatPoint+" ) "; 
+					
+						tubeStr = tubeStr +" WHERE ( to_number(SUBSTR(b.SOURCE_LONGITUDE,1,6)) <"+endLongPoint +"and  to_number(SUBSTR(b.SOURCE_LATITUDE,1,6)) <"+endLatPoint +" )"
+								+ " OR ( to_number(SUBSTR(b.DESTINATION_LONGITUDE,1,6)) < "+endLongPoint +"and  to_number(SUBSTR(b.DESTINATION_LATITUDE,1,6)) <"+endLatPoint +") "
+								+ " OR ( to_number(SUBSTR(a.LONGITUDE,1,6)) < "+endLongPoint +"and  to_number(SUBSTR(a.LATITUDE,1,6)) <"+endLatPoint +") "; 
+				
+						strandStr = strandStr +" WHERE ( to_number(SUBSTR(b.SOURCE_LONGITUDE,1,6)) <"+endLongPoint +"and  to_number(SUBSTR(b.SOURCE_LATITUDE,1,6)) <"+endLatPoint +" )"
+								+ " OR ( to_number(SUBSTR(b.DESTINATION_LONGITUDE,1,6)) < "+endLongPoint +"and  to_number(SUBSTR(b.DESTINATION_LATITUDE,1,6)) <"+endLatPoint +") "
+								+ " OR ( to_number(SUBSTR(a.LONGITUDE,1,6)) < "+endLongPoint +"and  to_number(SUBSTR(a.LATITUDE,1,6)) <"+endLatPoint +") "; 
+				
+						manholeStr = manholeStr+" WHERE ( to_number(SUBSTR(LONGITUDE,1,6)) < "+endLongPoint +" and  to_number(SUBSTR(LATITUDE,1,6)) < "+endLatPoint +"  ) ";
+						handholeStr = handholeStr+" WHERE ( to_number(SUBSTR(LONGITUDE,1,6)) < "+endLongPoint +" and to_number(SUBSTR(LATITUDE,1,6)) < "+endLatPoint  +" ) ";
+						dbStr = dbStr+" WHERE ( to_number(SUBSTR(DB_LONGITUDE,1,6)) < "+endLongPoint +"and  to_number(SUBSTR(DB_LATITUDE,1,6)) < "+endLatPoint +" ) ";
+						nodeStr = nodeStr+" AND ( to_number(SUBSTR(LONGITUDE,1,6)) < "+endLongPoint +" and to_number(SUBSTR(LATITUDE,1,6)) < "+endLatPoint  +" ) ";
+					}							
+					//End Longitude with start & end latitude
+					else if (startLatPoint != null && startLatPoint.length() > 0 && (endLatPoint != null && endLatPoint.length() > 0)) {
+						
+						if (Double.parseDouble(startLatPoint) < Double.parseDouble(endLatPoint)) {
+							startlatitude = startLatPoint;
+							endLatitude = endLatPoint;
+						} 
+						else {
+							startlatitude = endLatPoint;
+							endLatitude = startLatPoint;
+						}							
+						cableStr = cableStr +" WHERE ( to_number(SUBSTR(A.SOURCE_LNG,1,6)) <"+endLongPoint +"and  to_number(SUBSTR(A.SOURCE_LAT,1,6)) >"+startlatitude +" AND to_number (SUBSTR(A.SOURCE_LAT,1,6)) < " +endLatitude +" )"
+								+ " OR ( to_number(SUBSTR(A.DESTINATION_LNG,1,6)) < "+endLongPoint +"and  to_number(SUBSTR(A.DESTINATION_LAT,1,6)) >"+startlatitude +" AND to_number (SUBSTR(A.DESTINATION_LAT,1,6)) <" +endLatitude+") "
+								+ " OR ( to_number(SUBSTR(D.LONGITUDE,1,6)) < "+endLongPoint +"and  to_number(SUBSTR(D.LATITUDE,1,6)) >"+startlatitude +" AND to_number (SUBSTR(D.LATITUDE,1,6)) <" +endLatitude+") "; 
+					
+						tubeStr = tubeStr +" WHERE ( to_number(SUBSTR(b.SOURCE_LONGITUDE,1,6)) <"+endLongPoint +"and  to_number(SUBSTR(b.SOURCE_LATITUDE,1,6)) >"+startlatitude +" AND to_number (SUBSTR(b.SOURCE_LATITUDE,1,6)) < " +endLatitude +" )"
+								+ " OR ( to_number(SUBSTR(b.DESTINATION_LONGITUDE,1,6)) < "+endLongPoint +"and  to_number(SUBSTR(b.DESTINATION_LATITUDE,1,6)) >"+startlatitude +" AND to_number (SUBSTR(b.DESTINATION_LATITUDE,1,6)) <" +endLatitude+") "
+								+ " OR ( to_number(SUBSTR(a.LONGITUDE,1,6)) < "+endLongPoint +"and  to_number(SUBSTR(a.LATITUDE,1,6)) >"+startlatitude +" AND to_number (SUBSTR(a.LATITUDE,1,6)) <" +endLatitude+") "; 
+				
+						strandStr = strandStr +" WHERE ( to_number(SUBSTR(b.SOURCE_LONGITUDE,1,6)) <"+endLongPoint +"and  to_number(SUBSTR(b.SOURCE_LATITUDE,1,6)) >"+startlatitude +" AND to_number (SUBSTR(b.SOURCE_LATITUDE,1,6)) < " +endLatitude +" )"
+								+ " OR ( to_number(SUBSTR(b.DESTINATION_LONGITUDE,1,6)) < "+endLongPoint +"and  to_number(SUBSTR(b.DESTINATION_LATITUDE,1,6)) >"+startlatitude +" AND to_number (SUBSTR(b.DESTINATION_LATITUDE,1,6)) <" +endLatitude+") "
+								+ " OR ( to_number(SUBSTR(a.LONGITUDE,1,6)) < "+endLongPoint +"and  to_number(SUBSTR(a.LATITUDE,1,6)) >"+startlatitude +" AND to_number (SUBSTR(a.LATITUDE,1,6)) <" +endLatitude+") "; 
+				
+						manholeStr = manholeStr+" WHERE ( to_number(SUBSTR(LONGITUDE,1,6)) < "+endLongPoint +" and  to_number(SUBSTR(LATITUDE,1,6)) > "+startlatitude  +" and to_number (SUBSTR(LATITUDE,1,6)) < "+endLatitude +"  ) ";
+						handholeStr = handholeStr+" WHERE ( to_number(SUBSTR(LONGITUDE,1,6)) < "+endLongPoint +" and to_number(SUBSTR(LATITUDE,1,6)) > "+startlatitude  +" and to_number (SUBSTR(LATITUDE,1,6)) < "+endLatitude +" ) ";
+						dbStr = dbStr+" WHERE ( to_number(SUBSTR(DB_LONGITUDE,1,6)) < "+endLongPoint +"and  to_number(SUBSTR(DB_LATITUDE,1,6)) >"+startlatitude  +" and to_number (SUBSTR(DB_LATITUDE,1,6)) < "+endLatitude +" ) ";
+						nodeStr = nodeStr+" AND ( to_number(SUBSTR(LONGITUDE,1,6)) < "+endLongPoint +" and to_number(SUBSTR(LATITUDE,1,6)) > "+startlatitude  +" and to_number (SUBSTR(LATITUDE,1,6)) < "+endLatitude +" ) ";
+						
+						//To return the correct start/end lat after the comparison above
+						startLatPoint= startlatitude;
+						endLatPoint=endLatitude;
+					}
+					//Only end longitude
+					else {
+						cableStr = cableStr +" WHERE ( to_number(SUBSTR(A.SOURCE_LNG,1,6)) <"+endLongPoint +" ) "
+								+ " OR ( to_number(SUBSTR(A.DESTINATION_LNG,1,6)) < "+endLongPoint +" ) "
+								+ " OR ( to_number(SUBSTR(D.LONGITUDE,1,6)) < "+endLongPoint +" ) "; 
+						
+						tubeStr = tubeStr +" WHERE ( to_number(SUBSTR(b.SOURCE_LONGITUDE,1,6)) <"+endLongPoint+" )"
+								+ " OR ( to_number(SUBSTR(b.DESTINATION_LONGITUDE,1,6)) < "+endLongPoint +") "
+								+ " OR ( to_number(SUBSTR(a.LONGITUDE,1,6)) < "+endLongPoint +") "; 
+						
+						strandStr = strandStr +" WHERE ( to_number(SUBSTR(b.SOURCE_LONGITUDE,1,6)) <"+endLongPoint+" )"
+								+ " OR ( to_number(SUBSTR(b.DESTINATION_LONGITUDE,1,6)) < "+endLongPoint +") "
+								+ " OR ( to_number(SUBSTR(a.LONGITUDE,1,6)) < "+endLongPoint +") "; 
+						
+						manholeStr = manholeStr+" WHERE ( to_number(SUBSTR(LONGITUDE,1,6)) < "+endLongPoint +"  ) ";
+						handholeStr = handholeStr+" WHERE ( to_number(SUBSTR(LONGITUDE,1,6)) < "+endLongPoint +" ) ";
+						dbStr = dbStr+" WHERE ( to_number(SUBSTR(DB_LONGITUDE,1,6)) < "+endLongPoint +" ) ";
+						nodeStr = nodeStr+" AND ( to_number(SUBSTR(LONGITUDE,1,6)) < "+endLongPoint +" ) ";
+				}				
+			 }// end the End long condition
+					
+				else if ((startLongPoint != null && !startLongPoint.equalsIgnoreCase("") ) && (endLongPoint != null && !endLongPoint.equalsIgnoreCase(""))) {
+					
+					if (Double.parseDouble(startLongPoint) < Double.parseDouble(endLongPoint)) {
+						startLng = startLongPoint;
+						endLng = endLongPoint;
+					} 
+					else {
+						startLng = endLongPoint;
+						endLng = startLongPoint;
+					}
+					//Start & end longitude with start latitude
+					if (startLatPoint != null && !startLatPoint.equalsIgnoreCase("") && (endLatPoint == null || endLatPoint.equalsIgnoreCase(""))) {
+						cableStr = cableStr +" WHERE ( to_number(SUBSTR(A.SOURCE_LNG,1,6)) >"+startLng +"and  to_number(SUBSTR(A.SOURCE_LAT,1,6)) >"+startLatPoint +" and to_number (SUBSTR(A.SOURCE_LNG,1,6)) <"+endLng +" )"
+								+ " OR ( to_number(SUBSTR(A.DESTINATION_LNG,1,6)) > "+startLng +"and  to_number(SUBSTR(A.DESTINATION_LAT,1,6)) >"+startLatPoint +" and to_number (SUBSTR(A.DESTINATION_LNG,1,6)) < "+endLng+") "
+								+ " OR ( to_number(SUBSTR(D.LONGITUDE,1,6)) > "+startLng +"and  to_number(SUBSTR(D.LATITUDE,1,6)) >"+startLatPoint +" and to_number (SUBSTR(D.LONGITUDE,1,6)) < "+endLng+") "; 
+					
+					
+						tubeStr = tubeStr +" WHERE (to_number(SUBSTR(b.SOURCE_LONGITUDE,1,6)) >"+startLng +" and to_number(SUBSTR(b.SOURCE_LONGITUDE,1,6)) <"+endLng +"and  to_number(SUBSTR(b.SOURCE_LATITUDE,1,6)) >"+startLatPoint +" )"
+								+ " OR ( to_number(SUBSTR(b.DESTINATION_LONGITUDE,1,6)) >"+startLng +"and to_number(SUBSTR(b.DESTINATION_LONGITUDE,1,6)) < "+endLng +"and  to_number(SUBSTR(b.DESTINATION_LATITUDE,1,6)) >"+startLatPoint +") "
+								+ " OR ( to_number(SUBSTR(a.LONGITUDE,1,6)) >"+startLng +"and to_number(SUBSTR(a.LONGITUDE,1,6)) < "+endLng +"and  to_number(SUBSTR(a.LATITUDE,1,6)) >"+startLatPoint +") "; 
+				
+						strandStr = strandStr +" WHERE (to_number(SUBSTR(b.SOURCE_LONGITUDE,1,6)) >"+startLng +" and to_number(SUBSTR(b.SOURCE_LONGITUDE,1,6)) <"+endLng +"and  to_number(SUBSTR(b.SOURCE_LATITUDE,1,6)) >"+startLatPoint +" )"
+								+ " OR ( to_number(SUBSTR(b.DESTINATION_LONGITUDE,1,6)) >"+startLng +"and to_number(SUBSTR(b.DESTINATION_LONGITUDE,1,6)) < "+endLng +"and  to_number(SUBSTR(b.DESTINATION_LATITUDE,1,6)) >"+startLatPoint +") "
+								+ " OR ( to_number(SUBSTR(a.LONGITUDE,1,6)) >"+startLng +"and to_number(SUBSTR(a.LONGITUDE,1,6)) < "+endLng +"and  to_number(SUBSTR(a.LATITUDE,1,6)) >"+startLatPoint +") "; 
+				
+
+						manholeStr = manholeStr+" WHERE ( to_number(SUBSTR(LONGITUDE,1,6)) > "+startLng +" and to_number (SUBSTR(LONGITUDE,1,6)) <"+endLng +" and  to_number(SUBSTR(LATITUDE,1,6)) > "+startLatPoint +"  ) ";
+						handholeStr = handholeStr+" WHERE ( to_number(SUBSTR(LONGITUDE,1,6)) > "+startLng +" and to_number (SUBSTR(LONGITUDE,1,6)) <"+endLng +" and to_number(SUBSTR(LATITUDE,1,6)) > "+startLatPoint +" ) ";
+						dbStr = dbStr+" WHERE ( to_number(SUBSTR(DB_LONGITUDE,1,6)) > "+startLng +" and to_number (SUBSTR(DB_LONGITUDE,1,6)) <"+endLng +"and  to_number(SUBSTR(DB_LATITUDE,1,6)) >"+startLatPoint +" ) ";
+						nodeStr = nodeStr+" AND ( to_number(SUBSTR(LONGITUDE,1,6)) > "+startLng +" and to_number (SUBSTR(LONGITUDE,1,6)) <"+endLng +" and to_number(SUBSTR(LATITUDE,1,6)) > "+startLatPoint +" ) ";
+					}
+					//Start & end longitude with end latitude
+					else if (endLatPoint != null && !endLatPoint.equalsIgnoreCase("") && (startLatPoint == null || startLatPoint.equalsIgnoreCase(""))) {
+						cableStr = cableStr +" WHERE ( to_number(SUBSTR(A.SOURCE_LNG,1,6)) >"+startLng +"and  to_number(SUBSTR(A.SOURCE_LAT,1,6)) <"+endLatPoint +" and to_number (SUBSTR(A.SOURCE_LNG,1,6)) <"+endLng +" )"
+								+ " OR ( to_number(SUBSTR(A.DESTINATION_LNG,1,6)) > "+startLng +"and  to_number(SUBSTR(A.DESTINATION_LAT,1,6)) <"+endLatPoint +" and to_number (SUBSTR(A.DESTINATION_LNG,1,6)) < "+endLng+") "
+								+ " OR ( to_number(SUBSTR(D.LONGITUDE,1,6)) > "+startLng +"and  to_number(SUBSTR(D.LATITUDE,1,6)) <"+endLatPoint +" and to_number (SUBSTR(D.LONGITUDE,1,6)) < "+endLng+") "; 
+					
+
+						tubeStr = tubeStr +" WHERE (to_number(SUBSTR(b.SOURCE_LONGITUDE,1,6)) >"+startLng +" and to_number(SUBSTR(b.SOURCE_LONGITUDE,1,6)) <"+endLng +"and  to_number(SUBSTR(b.SOURCE_LATITUDE,1,6)) <"+endLatPoint +" )"
+								+ " OR ( to_number(SUBSTR(b.DESTINATION_LONGITUDE,1,6)) >"+startLng +"and to_number(SUBSTR(b.DESTINATION_LONGITUDE,1,6)) < "+endLng +"and  to_number(SUBSTR(b.DESTINATION_LATITUDE,1,6)) <"+endLatPoint +") "
+								+ " OR ( to_number(SUBSTR(a.LONGITUDE,1,6)) >"+startLng +"and to_number(SUBSTR(a.LONGITUDE,1,6)) < "+endLng +"and  to_number(SUBSTR(a.LATITUDE,1,6)) <"+endLatPoint +") "; 
+				
+						strandStr = strandStr +" WHERE (to_number(SUBSTR(b.SOURCE_LONGITUDE,1,6)) >"+startLng +" and to_number(SUBSTR(b.SOURCE_LONGITUDE,1,6)) <"+endLng +"and  to_number(SUBSTR(b.SOURCE_LATITUDE,1,6)) <"+endLatPoint +" )"
+								+ " OR ( to_number(SUBSTR(b.DESTINATION_LONGITUDE,1,6)) >"+startLng +"and to_number(SUBSTR(b.DESTINATION_LONGITUDE,1,6)) < "+endLng +"and  to_number(SUBSTR(b.DESTINATION_LATITUDE,1,6)) <"+endLatPoint +") "
+								+ " OR ( to_number(SUBSTR(a.LONGITUDE,1,6)) >"+startLng +"and to_number(SUBSTR(a.LONGITUDE,1,6)) < "+endLng +"and  to_number(SUBSTR(a.LATITUDE,1,6)) <"+endLatPoint +") "; 
+				
+						manholeStr = manholeStr+" WHERE ( to_number(SUBSTR(LONGITUDE,1,6)) > "+startLng +" and to_number (SUBSTR(LONGITUDE,1,6)) <"+endLng +" and  to_number(SUBSTR(LATITUDE,1,6)) < "+endLatPoint +"  ) ";
+						handholeStr = handholeStr+" WHERE ( to_number(SUBSTR(LONGITUDE,1,6)) > "+startLng +" and to_number (SUBSTR(LONGITUDE,1,6)) <"+endLng +" and to_number(SUBSTR(LATITUDE,1,6)) < "+endLatPoint +" ) ";
+						dbStr = dbStr+" WHERE ( to_number(SUBSTR(DB_LONGITUDE,1,6)) > "+startLng +" and to_number (SUBSTR(DB_LONGITUDE,1,6)) <"+endLng +"and  to_number(SUBSTR(DB_LATITUDE,1,6)) < "+endLatPoint +" ) ";
+						nodeStr = nodeStr+" AND ( to_number(SUBSTR(LONGITUDE,1,6)) > "+startLng +" and to_number (SUBSTR(LONGITUDE,1,6)) <"+endLng +" and to_number(SUBSTR(LATITUDE,1,6)) < "+endLatPoint +" ) ";
+				 }
+				//Only Start & end longitude
+				else {
+					cableStr = cableStr +" WHERE ( to_number(SUBSTR(A.SOURCE_LNG,1,6)) >"+startLng +" and to_number (SUBSTR(A.SOURCE_LNG,1,6)) <"+endLng +" )"
+								+ " OR ( to_number(SUBSTR(A.DESTINATION_LNG,1,6)) > "+startLng +" and to_number (SUBSTR(A.DESTINATION_LNG,1,6)) < "+endLng+") "
+								+ " OR ( to_number(SUBSTR(D.LONGITUDE,1,6)) > "+startLng +" and to_number (SUBSTR(D.LONGITUDE,1,6)) < "+endLng+") "; 							
+
+					tubeStr = tubeStr +" WHERE (to_number(SUBSTR(b.SOURCE_LONGITUDE,1,6)) >"+startLng +" and to_number(SUBSTR(b.SOURCE_LONGITUDE,1,6)) <"+endLng +" )"
+								+ " OR ( to_number(SUBSTR(b.DESTINATION_LONGITUDE,1,6)) >"+startLng +"and to_number(SUBSTR(b.DESTINATION_LONGITUDE,1,6)) < "+endLng +" ) "
+								+ " OR ( to_number(SUBSTR(a.LONGITUDE,1,6)) >"+startLng +"and to_number(SUBSTR(a.LONGITUDE,1,6)) < "+endLng +" ) "; 
+				
+					strandStr = strandStr +" WHERE (to_number(SUBSTR(b.SOURCE_LONGITUDE,1,6)) >"+startLng +" and to_number(SUBSTR(b.SOURCE_LONGITUDE,1,6)) <"+endLng +" )"
+								+ " OR ( to_number(SUBSTR(b.DESTINATION_LONGITUDE,1,6)) >"+startLng +"and to_number(SUBSTR(b.DESTINATION_LONGITUDE,1,6)) < "+endLng +" ) "
+								+ " OR ( to_number(SUBSTR(a.LONGITUDE,1,6)) >"+startLng +"and to_number(SUBSTR(a.LONGITUDE,1,6)) < "+endLng +" ) "; 
+				
+					manholeStr = manholeStr+" WHERE ( to_number(SUBSTR(LONGITUDE,1,6)) > "+startLng +" and to_number (SUBSTR(LONGITUDE,1,6)) <"+endLng +"  ) ";
+					handholeStr = handholeStr+" WHERE ( to_number(SUBSTR(LONGITUDE,1,6)) > "+startLng +" and to_number (SUBSTR(LONGITUDE,1,6)) <"+endLng +" ) ";
+					dbStr = dbStr+" WHERE ( to_number(SUBSTR(DB_LONGITUDE,1,6)) > "+startLng +" and to_number (SUBSTR(DB_LONGITUDE,1,6)) <"+endLng +" ) ";
+					nodeStr = nodeStr+" AND ( to_number(SUBSTR(LONGITUDE,1,6)) > "+startLng +" and to_number (SUBSTR(LONGITUDE,1,6)) <"+endLng +" ) ";
+				}	
+				//To return the correct start/end long after the comparison above	
+				startLongPoint=startLng;
+				endLongPoint= endLng;
+					
+				}// end the start / end long condition
+				
+				else { //No longitude , only latitude
+					
+					if (startLatPoint != null && !startLatPoint.equalsIgnoreCase("") && (endLatPoint == null || endLatPoint.equalsIgnoreCase(""))) {
+						cableStr = cableStr +" WHERE ( to_number(SUBSTR(A.SOURCE_LAT,1,6)) >"+startLatPoint +" )"
+								+ " OR ( to_number(SUBSTR(A.DESTINATION_LAT,1,6)) >"+startLatPoint +" ) "
+								+ " OR ( to_number(SUBSTR(D.LATITUDE,1,6)) >"+startLatPoint +" ) "; 
+						
+						tubeStr = tubeStr +" WHERE ( to_number(SUBSTR(b.SOURCE_LATITUDE,1,6)) >"+startLatPoint +" )"
+								+ " OR ( to_number(SUBSTR(b.DESTINATION_LATITUDE,1,6)) >"+startLatPoint +") "
+								+ " OR ( to_number(SUBSTR(a.LATITUDE,1,6)) >"+startLatPoint +") "; 
+				
+						strandStr = strandStr +" WHERE ( to_number(SUBSTR(b.SOURCE_LATITUDE,1,6)) >"+startLatPoint +" )"
+								+ " OR ( to_number(SUBSTR(b.DESTINATION_LATITUDE,1,6)) >"+startLatPoint +") "
+								+ " OR ( to_number(SUBSTR(a.LATITUDE,1,6)) >"+startLatPoint +") "; 
+				
+						manholeStr = manholeStr+" WHERE (to_number(SUBSTR(LATITUDE,1,6)) > "+startLatPoint +"  ) ";
+						handholeStr = handholeStr+" WHERE (to_number(SUBSTR(LATITUDE,1,6)) > "+startLatPoint +" ) ";
+						dbStr = dbStr+" WHERE ( to_number(SUBSTR(DB_LATITUDE,1,6)) > "+startLatPoint +" ) ";
+						nodeStr = nodeStr+" AND (to_number(SUBSTR(LATITUDE,1,6)) > "+startLatPoint +" ) ";
+					}
+					else if (endLatPoint != null && !endLatPoint.equalsIgnoreCase("") && (startLatPoint == null || startLatPoint.equalsIgnoreCase(""))) {
+						cableStr = cableStr +" WHERE (  to_number (SUBSTR(A.SOURCE_LAT,1,6)) < " +endLatPoint +" )"
+								+ " OR ( to_number (SUBSTR(A.DESTINATION_LAT,1,6)) <" +endLatPoint+" ) "
+								+ " OR ( to_number (SUBSTR(D.LATITUDE,1,6)) <" +endLatPoint+" ) "; 
+						
+						tubeStr = tubeStr +" WHERE ( to_number(SUBSTR(b.SOURCE_LATITUDE,1,6)) < "+endLatPoint +" )"
+								+ " OR ( to_number(SUBSTR(b.DESTINATION_LATITUDE,1,6)) < "+endLatPoint +") "
+								+ " OR ( to_number(SUBSTR(a.LATITUDE,1,6)) < "+endLatPoint +") "; 
+						
+						strandStr = strandStr +" WHERE ( to_number(SUBSTR(b.SOURCE_LATITUDE,1,6)) < "+endLatPoint +" )"
+								+ " OR ( to_number(SUBSTR(b.DESTINATION_LATITUDE,1,6)) < "+endLatPoint +") "
+								+ " OR ( to_number(SUBSTR(a.LATITUDE,1,6)) < "+endLatPoint +") "; 
+
+						manholeStr = manholeStr+" WHERE (to_number(SUBSTR(LATITUDE,1,6)) < "+endLatPoint +"  ) ";
+						handholeStr = handholeStr+" WHERE (to_number(SUBSTR(LATITUDE,1,6)) < "+endLatPoint +" ) ";
+						dbStr = dbStr+" WHERE ( to_number(SUBSTR(DB_LATITUDE,1,6)) < "+endLatPoint +" ) ";
+						nodeStr = nodeStr+" AND (to_number(SUBSTR(LATITUDE,1,6)) < "+endLatPoint +" ) ";
+					}
+					else if (startLatPoint != null && startLatPoint.length() > 0 && (endLatPoint != null && endLatPoint.length() > 0)) {
+						if (Double.parseDouble(startLatPoint) < Double.parseDouble(endLatPoint)) {
+							startlatitude = startLatPoint;
+							endLatitude = endLatPoint;
+						} 
+						else {
+							startlatitude = endLatPoint;
+							endLatitude = startLatPoint;
+						}						
+						cableStr = cableStr +" WHERE (  to_number(SUBSTR(A.SOURCE_LAT,1,6)) >"+startlatitude +" AND to_number (SUBSTR(A.SOURCE_LAT,1,6)) < " +endLatitude +" )"
+								+ " OR ( to_number(SUBSTR(A.DESTINATION_LAT,1,6)) >"+startlatitude +" AND to_number (SUBSTR(A.DESTINATION_LAT,1,6)) <" +endLatitude+") "
+								+ " OR ( to_number(SUBSTR(D.LATITUDE,1,6)) >"+startlatitude +" AND to_number (SUBSTR(D.LATITUDE,1,6)) <" +endLatitude+") "; 
+					
+						tubeStr = tubeStr +" WHERE ( to_number(SUBSTR(b.SOURCE_LATITUDE,1,6)) >"+startlatitude +" AND to_number (SUBSTR(b.SOURCE_LATITUDE,1,6)) < " +endLatitude +" )"
+								+ " OR ( to_number(SUBSTR(b.DESTINATION_LATITUDE,1,6)) >"+startlatitude +" AND to_number (SUBSTR(b.DESTINATION_LATITUDE,1,6)) <" +endLatitude+") "
+								+ " OR ( to_number(SUBSTR(a.LATITUDE,1,6)) >"+startlatitude +" AND to_number (SUBSTR(a.LATITUDE,1,6)) <" +endLatitude+") "; 
+				
+						strandStr = strandStr +" WHERE ( to_number(SUBSTR(b.SOURCE_LATITUDE,1,6)) >"+startlatitude +" AND to_number (SUBSTR(b.SOURCE_LATITUDE,1,6)) < " +endLatitude +" )"
+								+ " OR ( to_number(SUBSTR(b.DESTINATION_LATITUDE,1,6)) >"+startlatitude +" AND to_number (SUBSTR(b.DESTINATION_LATITUDE,1,6)) <" +endLatitude+") "
+								+ " OR ( to_number(SUBSTR(a.LATITUDE,1,6)) >"+startlatitude +" AND to_number (SUBSTR(a.LATITUDE,1,6)) <" +endLatitude+") "; 
+				
+						manholeStr = manholeStr+" WHERE ( to_number(SUBSTR(LATITUDE,1,6)) > "+startlatitude  +" and to_number (SUBSTR(LATITUDE,1,6)) < "+endLatitude +"  ) ";
+						handholeStr = handholeStr+" WHERE ( to_number(SUBSTR(LATITUDE,1,6)) > "+startlatitude  +" and to_number (SUBSTR(LATITUDE,1,6)) < "+endLatitude +" ) ";
+						dbStr = dbStr+" WHERE ( to_number(SUBSTR(DB_LATITUDE,1,6)) >"+startlatitude  +" and to_number (SUBSTR(DB_LATITUDE,1,6)) < "+endLatitude +" ) ";
+						nodeStr = nodeStr+" AND ( to_number(SUBSTR(LATITUDE,1,6)) > "+startlatitude  +" and to_number (SUBSTR(LATITUDE,1,6)) < "+endLatitude +" ) ";
+						
+						//To return the correct start/end lat after the comparison above	
+						startLatPoint= startlatitude;
+						endLatPoint=endLatitude;
+					}
+				}// end no longitude (only latitude) condition
+					
+			}//end else
+				
+				fiberList = session.createNativeQuery(cableStr).getResultList();
 				List<String> cablesIDs = Arrays.asList((findListId(fiberList, "FiberCable")).length > 0 ? findListId(fiberList, "FiberCable") : new String[] { "" });
 			    combinedCablesList.addAll(cablesIDs);// used in get related points
-			    
-				// Add the cables src/dst points that are within the range & are MH,HH,DB to array		
-				findIDsSrcDest(fiberList,"Cables", mhFilteredIDs, hhFilteredIDs, dbFilteredIDs, Double.parseDouble(newStartLngPt),  Double.parseDouble(newStartLatPt), Double.parseDouble(newEndLngPt),  Double.parseDouble(newEndLatPt));
+			    findIDsSrcDestStrtEndCoord(fiberList,"Cables", mhFilteredIDs, hhFilteredIDs, dbFilteredIDs,startLongPoint,startLatPoint,endLongPoint,endLatPoint);
 
-
-				//This query to get all auxiliaries of each cable
-				fiberAuxiliary_Data = session.createNativeQuery(
-							"SELECT B.LONGITUDE,B.LATITUDE,B.DISTANCE_FROM_SOURCE,B.WARE_ID,B.AUXILIARY_POINT_ID,B.AUXILIARY_POINT_NAME,B.FIBER_CABLE_ID,B.AUXILIARY_ID FROM FIBER_CABLES A,FIBER_AUXILIARY_POINTS B WHERE A.FIBER_CABLE_ID=B.FIBER_CABLE_ID "
-						  + " AND B.FIBER_CABLE_ID IN (:param) ORDER BY B.SEQ_SORTING ASC").setParameter("param",cablesIDs).getResultList();
-				// Add the cables Aux points that are within the range & are MH,HH,DB to array		
-				findIDsForAux(fiberAuxiliary_Data, "Cables",mhFilteredIDs, hhFilteredIDs, dbFilteredIDs, Double.parseDouble(newStartLngPt),  Double.parseDouble(newStartLatPt), Double.parseDouble(newEndLngPt),  Double.parseDouble(newEndLatPt));
-		
-				//Select the tubes within the range
-				fiberTubes = session.createNativeQuery(
-						"SELECT DISTINCT b.TUBE_ID,b.SOURCE_LONGITUDE,b.SOURCE_LATITUDE,b.DESTINATION_LONGITUDE,b.DESTINATION_LATITUDE,b.SOURCE_WARE_ID,b.SOURCE_ID,b.SOURCE_NAME,b.DESTINATION_WARE_ID,b.DESTINATION_ID,b.DESTINATION_NAME,(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.TUBE_ID=b.TUBE_ID),b.FIBER_CABLE_ID,b.TUBE_NAME,b.DRAWING_TYPE,b.TUBE_NUMBER,b.TUBE_COLOR FROM FIBER_TUBES b "
-						+ "LEFT JOIN TUBE_AUXILIARY_POINTS a ON a.TUBE_ID=b.TUBE_ID LEFT JOIN FIBER_STRANDS E ON E.TUBE_ID=b.TUBE_ID "
-						+ "WHERE ( to_number(SUBSTR(b.SOURCE_LONGITUDE,1,6)) > "+newStartLngPt  +"and  to_number(SUBSTR(b.SOURCE_LATITUDE,1,6)) >  "+newStartLatPt +" and to_number (SUBSTR(b.SOURCE_LONGITUDE,1,6)) < "+newEndLngPt +" AND to_number (SUBSTR(b.SOURCE_LATITUDE,1,6)) < " +newEndLatPt +") "
-						+ "OR ( to_number(SUBSTR(b.DESTINATION_LONGITUDE,1,6)) > "+newStartLngPt  +"and  to_number(SUBSTR(b.DESTINATION_LATITUDE,1,6)) >  "+newStartLatPt +" and to_number (SUBSTR(b.DESTINATION_LONGITUDE,1,6)) < "+newEndLngPt +" AND to_number (SUBSTR(b.DESTINATION_LATITUDE,1,6)) < " +newEndLatPt +") "
-						+ "OR ( to_number(SUBSTR(a.LONGITUDE,1,6)) > "+newStartLngPt  +"and  to_number(SUBSTR(a.LATITUDE,1,6)) >  "+newStartLatPt +" and to_number (SUBSTR(a.LONGITUDE,1,6)) < "+newEndLngPt +" AND to_number (SUBSTR(a.LATITUDE,1,6)) < " +newEndLatPt +") ").getResultList();
-			
+			    fiberTubes = session.createNativeQuery(tubeStr).getResultList();
 			    List<String> tubesIDs = Arrays.asList((findListId(fiberTubes, "Tube")).length > 0 ? findListId(fiberTubes, "Tube") : new String[] { "" });
 				combinedTubeList.addAll(tubesIDs);// used in get related points
-				
-				// Add the tubes src/dst points that are within the range & are MH,HH,DB to array		
-				findIDsSrcDest(fiberTubes,"Tubes", mhFilteredIDs, hhFilteredIDs, dbFilteredIDs, Double.parseDouble(newStartLngPt),  Double.parseDouble(newStartLatPt), Double.parseDouble(newEndLngPt),  Double.parseDouble(newEndLatPt));
-				
-				//This query to get all auxiliaries of each tube
-				tubesAuxiliaries = session.createNativeQuery(
+			    findIDsSrcDestStrtEndCoord(fiberTubes,"Tubes", mhFilteredIDs, hhFilteredIDs, dbFilteredIDs,startLongPoint,startLatPoint,endLongPoint,endLatPoint);
+
+			    fiberStrands = session.createNativeQuery(strandStr).getResultList();
+			    List<String> strandsIDs = Arrays.asList((findListId(fiberStrands, "Strand")).length > 0 ? findListId(fiberStrands, "Strand") : new String[] { "" });
+			    findIDsSrcDestStrtEndCoord(fiberStrands,"Strands", mhFilteredIDs, hhFilteredIDs, dbFilteredIDs,startLongPoint,startLatPoint,endLongPoint,endLatPoint);
+			 
+			    //Get all auxiliaries of each cable
+				query = session.createNativeQuery(
+							"SELECT B.LONGITUDE,B.LATITUDE,B.DISTANCE_FROM_SOURCE,B.WARE_ID,B.AUXILIARY_POINT_ID,B.AUXILIARY_POINT_NAME,B.FIBER_CABLE_ID,B.AUXILIARY_ID FROM FIBER_CABLES A,FIBER_AUXILIARY_POINTS B WHERE A.FIBER_CABLE_ID=B.FIBER_CABLE_ID "
+						  + " AND B.FIBER_CABLE_ID IN (:param) ORDER BY B.SEQ_SORTING ASC").setParameter("param",cablesIDs);
+				fiberAuxiliary_Data = query.getResultList();
+				findIDsForAuxStrtEndCoord(fiberAuxiliary_Data, "Cables",mhFilteredIDs, hhFilteredIDs, dbFilteredIDs, startLongPoint, startLatPoint, endLongPoint,endLatPoint);
+
+				//Get all auxiliaries of each tube
+				query = session.createNativeQuery(
 						"SELECT DISTINCT c.TUBE_ID,c.LONGITUDE,c.LATITUDE,c.WARE_ID,c.AUXILIARY_POINT_ID,c.AUXILIARY_POINT_NAME,c.DISTANCE_FROM_SOURCE,c.SEQ_SORTING,c.AUXILIARY_ID,c.DRIVING_DISTANCE, c.GEO_DISTANCE FROM TUBE_AUXILIARY_POINTS c LEFT JOIN FIBER_TUBES b ON  b.TUBE_ID=c.TUBE_ID "
-						+ " WHERE c.TUBE_ID IN (:param) ORDER BY c.SEQ_SORTING ASC").setParameter("param",tubesIDs).getResultList();				
-				// Add the tubes Aux points that are within the range & are MH,HH,DB to array		
-				findIDsForAux(tubesAuxiliaries,"Tubes", mhFilteredIDs, hhFilteredIDs, dbFilteredIDs, Double.parseDouble(newStartLngPt),  Double.parseDouble(newStartLatPt), Double.parseDouble(newEndLngPt),  Double.parseDouble(newEndLatPt));
-			
-				//Select the strands within the range
-				fiberStrands = session.createNativeQuery(
-						"SELECT DISTINCT b.STRAND_ID,b.SOURCE_LONGITUDE,b.SOURCE_LATITUDE,b.DESTINATION_LONGITUDE,b.DESTINATION_LATITUDE,b.SOURCE_WARE_ID,b.SOURCE_ID,b.SOURCE_NAME,b.DESTINATION_WARE_ID,b.DESTINATION_ID,b.DESTINATION_NAME,b.TUBE_ID,b.FIBER_CABLE_ID,b.STRAND_NAME,b.DRAWING_TYPE,b.STRAND_NUMBER,b.STRAND_COLOR FROM FIBER_STRANDS b LEFT JOIN STRAND_AUXILIARY_POINTS a ON b.STRAND_ID=a.STRAND_ID "
-						+ "WHERE ( to_number(SUBSTR(b.SOURCE_LONGITUDE,1,6)) > "+newStartLngPt  +"and  to_number(SUBSTR(b.SOURCE_LATITUDE,1,6)) >  "+newStartLatPt +" and to_number (SUBSTR(b.SOURCE_LONGITUDE,1,6)) < "+newEndLngPt +" AND to_number (SUBSTR(b.SOURCE_LATITUDE,1,6)) < " +newEndLatPt +" ) "	
-						+ "OR ( to_number(SUBSTR(b.DESTINATION_LONGITUDE,1,6)) > "+newStartLngPt  +"and  to_number(SUBSTR(b.DESTINATION_LATITUDE,1,6)) >  "+newStartLatPt +" and to_number (SUBSTR(b.DESTINATION_LONGITUDE,1,6)) < "+newEndLngPt +" AND to_number (SUBSTR(b.DESTINATION_LATITUDE,1,6)) < " +  newEndLatPt +") "
-						+ "OR ( to_number(SUBSTR(a.LONGITUDE,1,6)) > "+newStartLngPt  +"and  to_number(SUBSTR(a.LATITUDE,1,6)) >  "+newStartLatPt +" and to_number (SUBSTR(a.LONGITUDE,1,6)) < "+newEndLngPt +" AND to_number (SUBSTR(a.LATITUDE,1,6)) < " +newEndLatPt +") ").getResultList();
-			
-				  List<String> strandsIDs = Arrays.asList((findListId(fiberStrands, "Strand")).length > 0 ? findListId(fiberStrands, "Strand") : new String[] { "" });
-				  findIDsSrcDest(fiberStrands,"Strands", mhFilteredIDs, hhFilteredIDs, dbFilteredIDs, Double.parseDouble(newStartLngPt),  Double.parseDouble(newStartLatPt), Double.parseDouble(newEndLngPt),  Double.parseDouble(newEndLatPt));
-					
-				//This query to get all auxiliaries of each strand	
+						+ " WHERE c.TUBE_ID IN (:param) ORDER BY c.SEQ_SORTING ASC").setParameter("param",tubesIDs);
+				tubesAuxiliaries = query.getResultList();
+				findIDsForAuxStrtEndCoord(tubesAuxiliaries, "Tubes",mhFilteredIDs, hhFilteredIDs, dbFilteredIDs, startLongPoint, startLatPoint, endLongPoint,endLatPoint);
+
+				//Get all auxiliaries of each strand	
 				strandsAuxiliaries = session.createNativeQuery(
-							"SELECT DISTINCT c.STRAND_ID,c.LONGITUDE,c.LATITUDE,c.WARE_ID,c.AUXILIARY_POINT_ID,c.AUXILIARY_POINT_NAME,c.DISTANCE_FROM_SOURCE,c.SEQ_SORTING,c.AUXILIARY_ID,c.DRIVING_DISTANCE, c.GEO_DISTANCE FROM STRAND_AUXILIARY_POINTS c,FIBER_STRANDS b WHERE b.STRAND_ID=c.STRAND_ID "
-							+ " AND c.STRAND_ID IN (:param) ORDER BY c.SEQ_SORTING ASC ").setParameter("param",strandsIDs).getResultList();
-				// Add the strands Aux points that are within the range & are MH,HH,DB to array
-				findIDsForAux(strandsAuxiliaries,"Strands", mhFilteredIDs, hhFilteredIDs, dbFilteredIDs, Double.parseDouble(newStartLngPt),  Double.parseDouble(newStartLatPt), Double.parseDouble(newEndLngPt),  Double.parseDouble(newEndLatPt));
-					
-					
+						"SELECT DISTINCT c.STRAND_ID,c.LONGITUDE,c.LATITUDE,c.WARE_ID,c.AUXILIARY_POINT_ID,c.AUXILIARY_POINT_NAME,c.DISTANCE_FROM_SOURCE,c.SEQ_SORTING,c.AUXILIARY_ID,c.DRIVING_DISTANCE, c.GEO_DISTANCE FROM STRAND_AUXILIARY_POINTS c,FIBER_STRANDS b WHERE b.STRAND_ID=c.STRAND_ID "
+						+ " AND c.STRAND_ID IN (:param) ORDER BY c.SEQ_SORTING ASC ").setParameter("param",strandsIDs).getResultList();
+				findIDsForAuxStrtEndCoord(strandsAuxiliaries, "Strands",mhFilteredIDs, hhFilteredIDs, dbFilteredIDs, startLongPoint, startLatPoint, endLongPoint,endLatPoint);
+
 				//Check and Select if there is tubes that are outside the range but have strands in range and not selected before
 				if(fiberStrands.size()>0) {
-
-						query = session.createNativeQuery(
-							"SELECT DISTINCT b.TUBE_ID,b.SOURCE_LONGITUDE,b.SOURCE_LATITUDE,b.DESTINATION_LONGITUDE,b.DESTINATION_LATITUDE,b.SOURCE_WARE_ID,b.SOURCE_ID,b.SOURCE_NAME,b.DESTINATION_WARE_ID,b.DESTINATION_ID,b.DESTINATION_NAME,(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.TUBE_ID=b.TUBE_ID),b.FIBER_CABLE_ID,b.TUBE_NAME,b.DRAWING_TYPE,b.TUBE_NUMBER,b.TUBE_COLOR "
-							+ "FROM FIBER_TUBES b LEFT JOIN FIBER_STRANDS E ON E.TUBE_ID=b.TUBE_ID "
-							+ "WHERE E.STRAND_ID in (:param) and b.TUBE_ID NOT IN (:param1) ").setParameter("param",strandsIDs).setParameter("param1",tubesIDs);
-
-						List<String> outOfRangeTubeIDs = Arrays.asList((findListId(query.getResultList(), "Tube")).length > 0 ? findListId(query.getResultList(), "Tube") : new String[] { "" });
-						combinedTubeList.addAll(outOfRangeTubeIDs);// used in get related points
-
-						if (fiberTubes.size() > 0) {
-							fiberTubes.addAll(query.getResultList());
-						} 
-						else {
-							fiberTubes = query.getResultList();
-						}
-
-						query = session.createNativeQuery(
-								"SELECT DISTINCT c.TUBE_ID,c.LONGITUDE,c.LATITUDE,c.WARE_ID,c.AUXILIARY_POINT_ID,c.AUXILIARY_POINT_NAME,c.DISTANCE_FROM_SOURCE,c.SEQ_SORTING,c.AUXILIARY_ID,c.DRIVING_DISTANCE, c.GEO_DISTANCE FROM TUBE_AUXILIARY_POINTS c LEFT JOIN FIBER_TUBES b ON  b.TUBE_ID=c.TUBE_ID  "
-								+ " WHERE c.TUBE_ID IN (:param) ORDER BY c.SEQ_SORTING ASC").setParameter("param",outOfRangeTubeIDs);
-
-						if (tubesAuxiliaries.size() > 0) {
-							tubesAuxiliaries.addAll(query.getResultList());
-						} 
-						else {
-							tubesAuxiliaries = query.getResultList();
-						}
-
-					}
-				
-				//Check and Select if there is cables that are outside the range but have tubes in range and not selected before
-				if(fiberTubes.size()>0) {
-
-					query = session.createNativeQuery(
-						"SELECT distinct A.SOURCE_LNG,A.SOURCE_LAT,A.DESTINATION_LNG,A.DESTINATION_LAT, A.FIBER_CABLE_ID,A.SOURCE_WARE_ID,A.SOURCE_ID,A.SOURCE_NAME,A.DESTINATION_WARE_ID,A.DESTINATION_ID,A.DESTINATION_NAME,(SELECT COUNT(*) FROM FIBER_TUBES B WHERE B.FIBER_CABLE_ID=A.FIBER_CABLE_ID) AS Tube_Count,(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.FIBER_CABLE_ID=A.FIBER_CABLE_ID) AS Strand_Count,A.FIBER_CABLE_NAME,A.PROJECT_ID,A.SOURCE_CITY,A.DESTINATION_CITY,A.NUMBER_OF_TUBES,A.NUMBER_OF_STRANDS,A.LENGTH,A.DRAWING_TYPE,A.FIBER_NETWORK_LEVEL,A.FIBER_OWNER,(select B.FIBER_COLOR_OWNER from FIBER_OWNER_COLOR B WHERE B.FIBER_OWNER=A.FIBER_OWNER) AS FIBER_CABLE_COLOR "
-						+ "FROM FIBER_CABLES A LEFT JOIN FIBER_TUBES E ON E.FIBER_CABLE_ID=A.FIBER_CABLE_ID "
-						+ "WHERE E.TUBE_ID in (:param) and A.FIBER_CABLE_ID NOT IN (:param1) ").setParameter("param",combinedTubeList).setParameter("param1",cablesIDs);
-
-					List<String> outOfRangeCableIDs = Arrays.asList((findListId(query.getResultList(), "FiberCable")).length > 0 ? findListId(query.getResultList(), "FiberCable") : new String[] { "" });
-					combinedCablesList.addAll(outOfRangeCableIDs);// used in get related points
-
-					if (fiberList.size() > 0) {
-						fiberList.addAll(query.getResultList());
-					} 
-					else {
-						fiberList = query.getResultList();
-					}
-
-					query = session.createNativeQuery(
-							"SELECT B.LONGITUDE,B.LATITUDE,B.DISTANCE_FROM_SOURCE,B.WARE_ID,B.AUXILIARY_POINT_ID,B.AUXILIARY_POINT_NAME,B.FIBER_CABLE_ID,B.AUXILIARY_ID FROM FIBER_CABLES A LEFT JOIN FIBER_AUXILIARY_POINTS B ON A.FIBER_CABLE_ID=B.FIBER_CABLE_ID "
-						  + " WHERE B.FIBER_CABLE_ID IN (:param) ORDER BY B.SEQ_SORTING ASC").setParameter("param",outOfRangeCableIDs);
-
-					if (fiberAuxiliary_Data.size() > 0) {
-					 fiberAuxiliary_Data.addAll(query.getResultList());
-					} 
-					else {
-						fiberAuxiliary_Data = query.getResultList();
-					}
-				 }	
-				
-				//Select all MH details that are within the range or exist in mhFilteredIDs (mhFilteredIDs contains all MH src/dest/aux points of selected cables , tubes and strands)
-				manholeList = session.createNativeQuery(
-						"SELECT DISTINCT MANHOLE_ID,MANHOLE_NAME,substr(trim(replace(LONGITUDE,'°','')),1,6) as LONGITUDE,substr(trim(replace(LATITUDE,'°','')),1,6) as LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=MANHOLE_ID),DM_NAME FROM MANHOLE"
-					   + " WHERE ( to_number(SUBSTR(LONGITUDE,1,6)) > "+newStartLngPt  +"and  to_number(SUBSTR(LATITUDE,1,6)) >  "+newStartLatPt +" and to_number (SUBSTR(LONGITUDE,1,6)) < "+newEndLngPt +" AND to_number (SUBSTR(LATITUDE,1,6)) < " +newEndLatPt +") OR MANHOLE_ID IN (:param) ").setParameter("param",mhFilteredIDs).getResultList();
 		
-				//Select all HH details that are within the range or exist in hhFilteredIDs (hhFilteredIDs contains all HH src/dest/aux points of selected cables , tubes and strands)
-				handholeList = session.createNativeQuery(
-						"SELECT DISTINCT HANDHOLE_ID,HANDHOLE_NAME,substr(trim(replace(LONGITUDE,'°','')),1,6) as LONGITUDE,substr(trim(replace(LATITUDE,'°','')),1,6) as LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=HANDHOLE_ID),DM_NAME FROM HANDHOLE"
-						+ " WHERE ( to_number(SUBSTR(LONGITUDE,1,6)) > "+newStartLngPt  +"and  to_number(SUBSTR(LATITUDE,1,6)) >  "+newStartLatPt +" and to_number (SUBSTR(LONGITUDE,1,6)) < "+newEndLngPt +" AND to_number (SUBSTR(LATITUDE,1,6)) < " +newEndLatPt +") OR HANDHOLE_ID IN (:param) ").setParameter("param",hhFilteredIDs).getResultList();
-					
-				//Select all DB details that are within the range or exist in dbFilteredIDs (dbFilteredIDs contains all DB src/dest/aux points of selected cables , tubes and strands)
-				distribBoardList = session.createNativeQuery(
-						"SELECT DISTINCT DB_ID,substr(trim(replace(DB_LONGITUDE,'°','')),1,6) as DB_LONGITUDE,substr(trim(replace(DB_LATITUDE,'°','')),1,6) as DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,PROJECT_ID ,CITY,DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD "
-						+ " WHERE ( to_number(SUBSTR(DB_LONGITUDE,1,6)) > "+newStartLngPt +"and  to_number(SUBSTR(DB_LATITUDE,1,6)) >  "+newStartLatPt +" and to_number (SUBSTR(DB_LONGITUDE,1,6)) < "+newEndLngPt +" AND to_number (SUBSTR(DB_LATITUDE,1,6)) < " +newEndLatPt +" ) OR DB_ID IN (:param) ").setParameter("param",dbFilteredIDs).getResultList();
-						
-								
-				// To select the data needed in show points/real points & are outside the range
-				if (getRelatedPoints.equals("1")) {
-					
-					String[] manholesId = (findListId(manholeList, "all")).length > 0 ? findListId(manholeList, "all") : new String[] { "A" };										
-					String[] handholesId = (findListId(handholeList, "all")).length > 0 ? findListId(handholeList, "all") : new String[] { "A" };										
-					String[] dbsId = (findListId(distribBoardList, "all")).length > 0 ? findListId(distribBoardList, "all") : new String[] { "A" };										
-
-					//MH that are outside the range
 					query = session.createNativeQuery(
-							" SELECT * FROM (SELECT DISTINCT A.manhole_id as manhole_id ,A.manhole_name as manhole_name, substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE, A.PROJECT_ID as PROJECT_ID ,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID) as totalCount,A.CITY as city FROM MANHOLE A LEFT JOIN FIBER_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.manhole_id LEFT JOIN FIBER_CABLES C ON C.FIBER_CABLE_ID = B.FIBER_CABLE_ID where B.AUXILIARY_POINT_ID LIKE '%MH%' AND C.FIBER_CABLE_ID IN (:param1) "
-							+ " UNION "
-							+ " SELECT DISTINCT A.manhole_id,A.manhole_name,substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID),A.CITY FROM MANHOLE A LEFT JOIN FIBER_CABLES B  ON B.SOURCE_ID = A.manhole_id where B.SOURCE_ID LIKE '%MH%' AND B.FIBER_CABLE_ID IN (:param1) "
-							+ " UNION "
-							+ " SELECT DISTINCT A.manhole_id,A.manhole_name,substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID),A.CITY FROM MANHOLE A LEFT JOIN FIBER_CABLES B  ON B.DESTINATION_ID = A.manhole_id where B.DESTINATION_ID LIKE '%MH%' AND B.FIBER_CABLE_ID IN (:param1)  ) ");
-								
-					query.setParameter("param1",combinedCablesList);
-					tempList.addAll(query.getResultList());
-					
-					query = session.createNativeQuery("SELECT * FROM (SELECT DISTINCT A.manhole_id as manhole_id ,A.manhole_name as manhole_name, substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE, A.PROJECT_ID as PROJECT_ID ,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID) as totalCount,A.CITY as city FROM MANHOLE A LEFT JOIN TUBE_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.manhole_id LEFT JOIN FIBER_TUBES C ON C.TUBE_ID = B.TUBE_ID where B.AUXILIARY_POINT_ID LIKE '%MH%' AND C.TUBE_ID IN (:param1) " + 
-							" UNION "
-							+ " SELECT DISTINCT A.manhole_id,A.manhole_name,substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID),A.CITY FROM MANHOLE A LEFT JOIN FIBER_TUBES B  ON B.SOURCE_ID = A.manhole_id where B.SOURCE_ID LIKE '%MH%' AND B.TUBE_ID IN (:param1) " + 
-							" UNION "
-							+ " SELECT DISTINCT A.manhole_id,A.manhole_name,substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID),A.CITY FROM MANHOLE A LEFT JOIN FIBER_TUBES B  ON B.DESTINATION_ID = A.manhole_id where B.DESTINATION_ID LIKE '%MH%' AND B.TUBE_ID IN (:param1) ) ");
-					
-					query.setParameter("param1",combinedTubeList);
-					tempList.addAll(query.getResultList());
-					
-				
-				query = session.createNativeQuery("SELECT * FROM (SELECT DISTINCT A.manhole_id as manhole_id ,A.manhole_name as manhole_name, substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE, A.PROJECT_ID as PROJECT_ID ,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID) as totalCount,A.CITY as city FROM MANHOLE A LEFT JOIN STRAND_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.manhole_id LEFT JOIN FIBER_STRANDS C ON C.STRAND_ID = B.STRAND_ID where B.AUXILIARY_POINT_ID LIKE '%MH%' AND C.STRAND_ID IN (:param1) " + 
-						" UNION "
-						+ " SELECT DISTINCT A.manhole_id,A.manhole_name,substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID),A.CITY FROM MANHOLE A LEFT JOIN FIBER_STRANDS B  ON B.SOURCE_ID = A.manhole_id where B.SOURCE_ID LIKE '%MH%' AND B.STRAND_ID IN (:param1) " + 
-						" UNION "
-						+ " SELECT DISTINCT A.manhole_id,A.manhole_name,substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID),A.CITY FROM MANHOLE A LEFT JOIN FIBER_STRANDS B  ON B.DESTINATION_ID = A.manhole_id where B.DESTINATION_ID LIKE '%MH%' AND B.STRAND_ID IN (:param1) ) ");
-				
-				query.setParameter("param1",strandsIDs);
-				tempList.addAll(query.getResultList());		
-
-				if (manholeList.size() > 0) {
-					newList = filterTempList(tempList,manholesId);
-					manholeList.addAll(newList);
-				}								 
-				else {
-					manholeList = filterTempList(tempList,manholesId);
-				}								
-
-				tempList.clear();
-
-				// HH that are outside the range
-				query = session.createNativeQuery(
-					" SELECT * FROM (SELECT DISTINCT A.handhole_id as handhole_id ,A.handhole_name as handhole_name, substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE, A.PROJECT_ID as PROJECT_ID ,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID) as totalCount,A.DM_NAME as DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.HANDHOLE_ID LEFT JOIN FIBER_CABLES C ON C.FIBER_CABLE_ID = B.FIBER_CABLE_ID where B.AUXILIARY_POINT_ID LIKE '%HH%' AND C.FIBER_CABLE_ID IN (:param1) "
-					+ " UNION "
-					+ " SELECT DISTINCT A.handhole_id,A.handhole_name, substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID),A.DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_CABLES B  ON B.SOURCE_ID = A.HANDHOLE_ID where B.SOURCE_ID LIKE '%HH%' AND B.FIBER_CABLE_ID IN (:param1) "
-					+ "UNION"
-					+ " SELECT DISTINCT A.handhole_id,A.handhole_name, substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID),A.DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_CABLES B  ON B.DESTINATION_ID = A.HANDHOLE_ID where B.DESTINATION_ID LIKE '%HH%' AND B.FIBER_CABLE_ID IN (:param1) )  ");
-				query.setParameter("param1",combinedCablesList);
-				tempList.addAll(query.getResultList());		
-					
-				query = session.createNativeQuery(
-						" SELECT * FROM (SELECT DISTINCT A.handhole_id as handhole_id ,A.handhole_name as handhole_name, substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE, A.PROJECT_ID as PROJECT_ID ,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID) as totalCount,A.DM_NAME as DM_NAME FROM HANDHOLE A LEFT JOIN TUBE_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.HANDHOLE_ID LEFT JOIN FIBER_TUBES C ON C.TUBE_ID = B.TUBE_ID where B.AUXILIARY_POINT_ID LIKE '%HH%' AND C.TUBE_ID IN (:param1) "
-						+ " UNION "
-						+ " SELECT DISTINCT A.handhole_id,A.handhole_name, substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID),A.DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_TUBES B  ON B.SOURCE_ID = A.HANDHOLE_ID where B.SOURCE_ID LIKE '%HH%' AND B.TUBE_ID IN (:param1) "
-						+ "UNION"
-						+ " SELECT DISTINCT A.handhole_id,A.handhole_name, substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID),A.DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_TUBES B  ON B.DESTINATION_ID = A.HANDHOLE_ID where B.DESTINATION_ID LIKE '%HH%' AND B.TUBE_ID IN (:param1) ) ");
-				query.setParameter("param1",combinedTubeList);
-				tempList.addAll(query.getResultList());		
-
-				query = session.createNativeQuery(
-						" SELECT * FROM (SELECT DISTINCT A.handhole_id as handhole_id ,A.handhole_name as handhole_name, substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE, A.PROJECT_ID as PROJECT_ID ,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID) as totalCount,A.DM_NAME as DM_NAME FROM HANDHOLE A LEFT JOIN STRAND_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.HANDHOLE_ID LEFT JOIN FIBER_STRANDS C ON C.STRAND_ID = B.STRAND_ID where B.AUXILIARY_POINT_ID LIKE '%HH%' AND C.STRAND_ID IN (:param1) "
-						+ " UNION "
-						+ " SELECT DISTINCT A.handhole_id,A.handhole_name, substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID),A.DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_STRANDS B  ON B.SOURCE_ID = A.HANDHOLE_ID where B.SOURCE_ID LIKE '%HH%' AND B.STRAND_ID IN (:param1) "
-						+ "UNION"
-						+ " SELECT DISTINCT A.handhole_id,A.handhole_name, substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID),A.DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_STRANDS B  ON B.DESTINATION_ID = A.HANDHOLE_ID where B.DESTINATION_ID LIKE '%HH%' AND B.STRAND_ID IN (:param1) )  ");
-				query.setParameter("param1",strandsIDs);
-				tempList.addAll(query.getResultList());		
-
-				
-				if (handholeList.size() > 0) {
-					newList = filterTempList(tempList,handholesId);
-					handholeList.addAll(newList);
-				} 						
-				else {
-					handholeList = filterTempList(tempList,handholesId);
+						"SELECT DISTINCT b.TUBE_ID,b.SOURCE_LONGITUDE,b.SOURCE_LATITUDE,b.DESTINATION_LONGITUDE,b.DESTINATION_LATITUDE,b.SOURCE_WARE_ID,b.SOURCE_ID,b.SOURCE_NAME,b.DESTINATION_WARE_ID,b.DESTINATION_ID,b.DESTINATION_NAME,(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.TUBE_ID=b.TUBE_ID),b.FIBER_CABLE_ID,b.TUBE_NAME,b.DRAWING_TYPE,b.TUBE_NUMBER,b.TUBE_COLOR "
+						+ "FROM FIBER_TUBES b LEFT JOIN FIBER_STRANDS E ON E.TUBE_ID=b.TUBE_ID "
+						+ "WHERE E.STRAND_ID in (:param) and b.TUBE_ID NOT IN (:param1) ").setParameter("param",strandsIDs).setParameter("param1",tubesIDs);
+		
+					List<String> outOfRangeTubeIDs = Arrays.asList((findListId(query.getResultList(), "Tube")).length > 0 ? findListId(query.getResultList(), "Tube") : new String[] { "" });
+					combinedTubeList.addAll(outOfRangeTubeIDs);// used in get related points
+		
+					if (fiberTubes.size() > 0) {
+						fiberTubes.addAll(query.getResultList());
+					} 
+					else {
+						fiberTubes = query.getResultList();
+					}
+		
+					query = session.createNativeQuery(
+							"SELECT DISTINCT c.TUBE_ID,c.LONGITUDE,c.LATITUDE,c.WARE_ID,c.AUXILIARY_POINT_ID,c.AUXILIARY_POINT_NAME,c.DISTANCE_FROM_SOURCE,c.SEQ_SORTING,c.AUXILIARY_ID,c.DRIVING_DISTANCE, c.GEO_DISTANCE FROM TUBE_AUXILIARY_POINTS c LEFT JOIN FIBER_TUBES b ON  b.TUBE_ID=c.TUBE_ID  "
+							+ " WHERE c.TUBE_ID IN (:param) ORDER BY c.SEQ_SORTING ASC").setParameter("param",outOfRangeTubeIDs);
+		
+					if (tubesAuxiliaries.size() > 0) {
+						tubesAuxiliaries.addAll(query.getResultList());
+					} 
+					else {
+						tubesAuxiliaries = query.getResultList();
+					}
 				}
-				
-				tempList.clear();
-				
-				//DB that are outside the range
+			//Check and Select if there is cables that are outside the range but have tubes in range and not selected before
+			if(fiberTubes.size()>0) {
+		
 				query = session.createNativeQuery(
-						" SELECT * FROM ( SELECT DISTINCT A.DB_ID as DB_ID, substr(trim(replace(A.DB_LONGITUDE,'°','')),1,6) as DB_LONGITUDE, substr(trim(replace(A.DB_LATITUDE,'°','')),1,6) as DB_LATITUDE, A.DB_NAME as DB_NAME,A.MAX_CAPACITY as MAX_CAPACITY,A.SITE as SITE,A.PROJECT_ID as PROJECT_ID ,A.CITY as CITY,A.DB_NETWORK_LEVEL AS DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.DB_ID LEFT JOIN FIBER_CABLES C ON C.FIBER_CABLE_ID = B.FIBER_CABLE_ID where B.AUXILIARY_POINT_ID LIKE '%DB%' AND C.FIBER_CABLE_ID IN (:param1)   "
-								+ " UNION "
-								+ " SELECT DISTINCT A.DB_ID,substr(trim(replace(A.DB_LONGITUDE,'°','')),1,6) as DB_LONGITUDE, substr(trim(replace(A.DB_LATITUDE,'°','')),1,6) as DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_CABLES B  ON B.SOURCE_ID = A.DB_ID where B.SOURCE_ID LIKE '%DB%' AND B.FIBER_CABLE_ID IN (:param1) "
-								+ "UNION "
-								+ " SELECT DISTINCT A.DB_ID,substr(trim(replace(A.DB_LONGITUDE,'°','')),1,6) as DB_LONGITUDE, substr(trim(replace(A.DB_LATITUDE,'°','')),1,6) as DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_CABLES B  ON B.DESTINATION_ID = A.DB_ID where B.DESTINATION_ID LIKE '%DB%' AND B.FIBER_CABLE_ID IN (:param1) )   ");
-				query.setParameter("param1",combinedCablesList);
-				tempList.addAll(query.getResultList());		
-				
-				query = session.createNativeQuery(
-						" SELECT * FROM ( SELECT DISTINCT A.DB_ID as DB_ID, substr(trim(replace(A.DB_LONGITUDE,'°','')),1,6) as DB_LONGITUDE, substr(trim(replace(A.DB_LATITUDE,'°','')),1,6) as DB_LATITUDE, A.DB_NAME as DB_NAME,A.MAX_CAPACITY as MAX_CAPACITY,A.SITE as SITE,A.PROJECT_ID as PROJECT_ID ,A.CITY as CITY,A.DB_NETWORK_LEVEL AS DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN TUBE_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.DB_ID LEFT JOIN FIBER_TUBES C ON C.TUBE_ID = B.TUBE_ID where B.AUXILIARY_POINT_ID LIKE '%DB%' AND C.TUBE_ID IN (:param1)   "
-								+ " UNION "
-								+ " SELECT DISTINCT A.DB_ID,substr(trim(replace(A.DB_LONGITUDE,'°','')),1,6) as DB_LONGITUDE, substr(trim(replace(A.DB_LATITUDE,'°','')),1,6) as DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_TUBES B  ON B.SOURCE_ID = A.DB_ID where B.SOURCE_ID LIKE '%DB%' AND B.TUBE_ID IN (:param1) "
-								+ "UNION "
-								+ " SELECT DISTINCT A.DB_ID,substr(trim(replace(A.DB_LONGITUDE,'°','')),1,6) as DB_LONGITUDE, substr(trim(replace(A.DB_LATITUDE,'°','')),1,6) as DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_TUBES B  ON B.DESTINATION_ID = A.DB_ID where B.DESTINATION_ID LIKE '%DB%' AND B.TUBE_ID IN (:param1) )  ");
-				query.setParameter("param1",combinedTubeList);
-				tempList.addAll(query.getResultList());
-				
-				query = session.createNativeQuery(
-						" SELECT * FROM ( SELECT DISTINCT A.DB_ID as DB_ID, substr(trim(replace(A.DB_LONGITUDE,'°','')),1,6) as DB_LONGITUDE, substr(trim(replace(A.DB_LATITUDE,'°','')),1,6) as DB_LATITUDE, A.DB_NAME as DB_NAME,A.MAX_CAPACITY as MAX_CAPACITY,A.SITE as SITE,A.PROJECT_ID as PROJECT_ID ,A.CITY as CITY,A.DB_NETWORK_LEVEL AS DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN STRAND_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.DB_ID LEFT JOIN FIBER_STRANDS C ON C.STRAND_ID = B.STRAND_ID where B.AUXILIARY_POINT_ID LIKE '%DB%' AND C.STRAND_ID IN (:param1)   "
-								+ " UNION "
-								+ " SELECT DISTINCT A.DB_ID,substr(trim(replace(A.DB_LONGITUDE,'°','')),1,6) as DB_LONGITUDE, substr(trim(replace(A.DB_LATITUDE,'°','')),1,6) as DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_STRANDS B  ON B.SOURCE_ID = A.DB_ID where B.SOURCE_ID LIKE '%DB%' AND B.STRAND_ID IN (:param1) "
-								+ "UNION "
-								+ " SELECT DISTINCT A.DB_ID,substr(trim(replace(A.DB_LONGITUDE,'°','')),1,6) as DB_LONGITUDE, substr(trim(replace(A.DB_LATITUDE,'°','')),1,6) as DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_STRANDS B  ON B.DESTINATION_ID = A.DB_ID where B.DESTINATION_ID LIKE '%DB%' AND B.STRAND_ID IN (:param1) ) ");
-				query.setParameter("param1",strandsIDs);
-				tempList.addAll(query.getResultList());
-				
-				if (distribBoardList.size() > 0) {
-					newList = filterTempList(tempList,dbsId);
-					distribBoardList.addAll(newList);
+					"SELECT distinct A.SOURCE_LNG,A.SOURCE_LAT,A.DESTINATION_LNG,A.DESTINATION_LAT, A.FIBER_CABLE_ID,A.SOURCE_WARE_ID,A.SOURCE_ID,A.SOURCE_NAME,A.DESTINATION_WARE_ID,A.DESTINATION_ID,A.DESTINATION_NAME,(SELECT COUNT(*) FROM FIBER_TUBES B WHERE B.FIBER_CABLE_ID=A.FIBER_CABLE_ID) AS Tube_Count,(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.FIBER_CABLE_ID=A.FIBER_CABLE_ID) AS Strand_Count,A.FIBER_CABLE_NAME,A.PROJECT_ID,A.SOURCE_CITY,A.DESTINATION_CITY,A.NUMBER_OF_TUBES,A.NUMBER_OF_STRANDS,A.LENGTH,A.DRAWING_TYPE,A.FIBER_NETWORK_LEVEL,A.FIBER_OWNER,(select B.FIBER_COLOR_OWNER from FIBER_OWNER_COLOR B WHERE B.FIBER_OWNER=A.FIBER_OWNER) AS FIBER_CABLE_COLOR "
+					+ "FROM FIBER_CABLES A LEFT JOIN FIBER_TUBES E ON E.FIBER_CABLE_ID=A.FIBER_CABLE_ID "
+					+ "WHERE E.TUBE_ID in (:param) and A.FIBER_CABLE_ID NOT IN (:param1) ").setParameter("param",combinedTubeList).setParameter("param1",cablesIDs);
+		
+				List<String> outOfRangeCableIDs = Arrays.asList((findListId(query.getResultList(), "FiberCable")).length > 0 ? findListId(query.getResultList(), "FiberCable") : new String[] { "" });
+				combinedCablesList.addAll(outOfRangeCableIDs);// used in get related points
+		
+				if (fiberList.size() > 0) {
+					fiberList.addAll(query.getResultList());
 				} 
 				else {
-					distribBoardList = filterTempList(tempList,dbsId);
+					fiberList = query.getResultList();
 				}
+		
+				query = session.createNativeQuery(
+						"SELECT B.LONGITUDE,B.LATITUDE,B.DISTANCE_FROM_SOURCE,B.WARE_ID,B.AUXILIARY_POINT_ID,B.AUXILIARY_POINT_NAME,B.FIBER_CABLE_ID,B.AUXILIARY_ID FROM FIBER_CABLES A LEFT JOIN FIBER_AUXILIARY_POINTS B ON A.FIBER_CABLE_ID=B.FIBER_CABLE_ID "
+					  + " WHERE B.FIBER_CABLE_ID IN (:param) ORDER BY B.SEQ_SORTING ASC").setParameter("param",outOfRangeCableIDs);
+		
+				if (fiberAuxiliary_Data.size() > 0) {
+				 fiberAuxiliary_Data.addAll(query.getResultList());
+				} 
+				else {
+					fiberAuxiliary_Data = query.getResultList();
+				}
+			 }		
+			
+			manholeStr = manholeStr + " OR MANHOLE_ID IN (:param) ";
+			manholeList = session.createNativeQuery(manholeStr).setParameter("param",mhFilteredIDs).getResultList();
+			
+			handholeStr = handholeStr + " OR HANDHOLE_ID IN (:param) ";
+			handholeList = session.createNativeQuery(handholeStr).setParameter("param",hhFilteredIDs).getResultList();
+
+			dbStr = dbStr + " OR DB_ID IN (:param) ";
+			distribBoardList = session.createNativeQuery(dbStr).setParameter("param",dbFilteredIDs).getResultList();
+			
+			// To select the data needed in show points/real points & are outside the range
+			if (getRelatedPoints.equals("1")) {
 				
+				String[] manholesId = (findListId(manholeList, "all")).length > 0 ? findListId(manholeList, "all") : new String[] { "A" };										
+				String[] handholesId = (findListId(handholeList, "all")).length > 0 ? findListId(handholeList, "all") : new String[] { "A" };										
+				String[] dbsId = (findListId(distribBoardList, "all")).length > 0 ? findListId(distribBoardList, "all") : new String[] { "A" };										
+
+				//MH that are outside the range
+				query = session.createNativeQuery(
+						" SELECT * FROM (SELECT DISTINCT A.manhole_id as manhole_id ,A.manhole_name as manhole_name, substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE, A.PROJECT_ID as PROJECT_ID ,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID) as totalCount,A.CITY as city FROM MANHOLE A LEFT JOIN FIBER_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.manhole_id LEFT JOIN FIBER_CABLES C ON C.FIBER_CABLE_ID = B.FIBER_CABLE_ID where B.AUXILIARY_POINT_ID LIKE '%MH%' AND C.FIBER_CABLE_ID IN (:param1) "
+						+ " UNION "
+						+ " SELECT DISTINCT A.manhole_id,A.manhole_name,substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID),A.CITY FROM MANHOLE A LEFT JOIN FIBER_CABLES B  ON B.SOURCE_ID = A.manhole_id where B.SOURCE_ID LIKE '%MH%' AND B.FIBER_CABLE_ID IN (:param1) "
+						+ " UNION "
+						+ " SELECT DISTINCT A.manhole_id,A.manhole_name,substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID),A.CITY FROM MANHOLE A LEFT JOIN FIBER_CABLES B  ON B.DESTINATION_ID = A.manhole_id where B.DESTINATION_ID LIKE '%MH%' AND B.FIBER_CABLE_ID IN (:param1)  ) ");
+							
+				query.setParameter("param1",combinedCablesList);
+				tempList.addAll(query.getResultList());
+				
+				query = session.createNativeQuery("SELECT * FROM (SELECT DISTINCT A.manhole_id as manhole_id ,A.manhole_name as manhole_name, substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE, A.PROJECT_ID as PROJECT_ID ,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID) as totalCount,A.CITY as city FROM MANHOLE A LEFT JOIN TUBE_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.manhole_id LEFT JOIN FIBER_TUBES C ON C.TUBE_ID = B.TUBE_ID where B.AUXILIARY_POINT_ID LIKE '%MH%' AND C.TUBE_ID IN (:param1) " + 
+						" UNION "
+						+ " SELECT DISTINCT A.manhole_id,A.manhole_name,substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID),A.CITY FROM MANHOLE A LEFT JOIN FIBER_TUBES B  ON B.SOURCE_ID = A.manhole_id where B.SOURCE_ID LIKE '%MH%' AND B.TUBE_ID IN (:param1) " + 
+						" UNION "
+						+ " SELECT DISTINCT A.manhole_id,A.manhole_name,substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID),A.CITY FROM MANHOLE A LEFT JOIN FIBER_TUBES B  ON B.DESTINATION_ID = A.manhole_id where B.DESTINATION_ID LIKE '%MH%' AND B.TUBE_ID IN (:param1) ) ");
+				
+				query.setParameter("param1",combinedTubeList);
+				tempList.addAll(query.getResultList());
+				
+			
+			query = session.createNativeQuery("SELECT * FROM (SELECT DISTINCT A.manhole_id as manhole_id ,A.manhole_name as manhole_name, substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE, A.PROJECT_ID as PROJECT_ID ,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID) as totalCount,A.CITY as city FROM MANHOLE A LEFT JOIN STRAND_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.manhole_id LEFT JOIN FIBER_STRANDS C ON C.STRAND_ID = B.STRAND_ID where B.AUXILIARY_POINT_ID LIKE '%MH%' AND C.STRAND_ID IN (:param1) " + 
+					" UNION "
+					+ " SELECT DISTINCT A.manhole_id,A.manhole_name,substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID),A.CITY FROM MANHOLE A LEFT JOIN FIBER_STRANDS B  ON B.SOURCE_ID = A.manhole_id where B.SOURCE_ID LIKE '%MH%' AND B.STRAND_ID IN (:param1) " + 
+					" UNION "
+					+ " SELECT DISTINCT A.manhole_id,A.manhole_name,substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID),A.CITY FROM MANHOLE A LEFT JOIN FIBER_STRANDS B  ON B.DESTINATION_ID = A.manhole_id where B.DESTINATION_ID LIKE '%MH%' AND B.STRAND_ID IN (:param1) ) ");
+			
+			query.setParameter("param1",strandsIDs);
+			tempList.addAll(query.getResultList());		
+
+			if (manholeList.size() > 0) {
+				System.out.println("manholesId "+mapper.writeValueAsString(manholesId));
+				System.out.println("tempList "+mapper.writeValueAsString(tempList));
+
+				newList = filterTempList(tempList,manholesId);
+				manholeList.addAll(newList);
+			}								 
+			else {
+				manholeList = filterTempList(tempList,manholesId);
+			}								
+
+			tempList.clear();
+
+			// HH that are outside the range
+			query = session.createNativeQuery(
+				" SELECT * FROM (SELECT DISTINCT A.handhole_id as handhole_id ,A.handhole_name as handhole_name, substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE, A.PROJECT_ID as PROJECT_ID ,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID) as totalCount,A.DM_NAME as DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.HANDHOLE_ID LEFT JOIN FIBER_CABLES C ON C.FIBER_CABLE_ID = B.FIBER_CABLE_ID where B.AUXILIARY_POINT_ID LIKE '%HH%' AND C.FIBER_CABLE_ID IN (:param1) "
+				+ " UNION "
+				+ " SELECT DISTINCT A.handhole_id,A.handhole_name, substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID),A.DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_CABLES B  ON B.SOURCE_ID = A.HANDHOLE_ID where B.SOURCE_ID LIKE '%HH%' AND B.FIBER_CABLE_ID IN (:param1) "
+				+ "UNION"
+				+ " SELECT DISTINCT A.handhole_id,A.handhole_name, substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID),A.DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_CABLES B  ON B.DESTINATION_ID = A.HANDHOLE_ID where B.DESTINATION_ID LIKE '%HH%' AND B.FIBER_CABLE_ID IN (:param1) )  ");
+			query.setParameter("param1",combinedCablesList);
+			tempList.addAll(query.getResultList());		
+				
+			query = session.createNativeQuery(
+					" SELECT * FROM (SELECT DISTINCT A.handhole_id as handhole_id ,A.handhole_name as handhole_name, substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE, A.PROJECT_ID as PROJECT_ID ,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID) as totalCount,A.DM_NAME as DM_NAME FROM HANDHOLE A LEFT JOIN TUBE_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.HANDHOLE_ID LEFT JOIN FIBER_TUBES C ON C.TUBE_ID = B.TUBE_ID where B.AUXILIARY_POINT_ID LIKE '%HH%' AND C.TUBE_ID IN (:param1) "
+					+ " UNION "
+					+ " SELECT DISTINCT A.handhole_id,A.handhole_name, substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID),A.DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_TUBES B  ON B.SOURCE_ID = A.HANDHOLE_ID where B.SOURCE_ID LIKE '%HH%' AND B.TUBE_ID IN (:param1) "
+					+ "UNION"
+					+ " SELECT DISTINCT A.handhole_id,A.handhole_name, substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID),A.DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_TUBES B  ON B.DESTINATION_ID = A.HANDHOLE_ID where B.DESTINATION_ID LIKE '%HH%' AND B.TUBE_ID IN (:param1) ) ");
+			query.setParameter("param1",combinedTubeList);
+			tempList.addAll(query.getResultList());		
+
+			query = session.createNativeQuery(
+					" SELECT * FROM (SELECT DISTINCT A.handhole_id as handhole_id ,A.handhole_name as handhole_name, substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE, A.PROJECT_ID as PROJECT_ID ,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID) as totalCount,A.DM_NAME as DM_NAME FROM HANDHOLE A LEFT JOIN STRAND_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.HANDHOLE_ID LEFT JOIN FIBER_STRANDS C ON C.STRAND_ID = B.STRAND_ID where B.AUXILIARY_POINT_ID LIKE '%HH%' AND C.STRAND_ID IN (:param1) "
+					+ " UNION "
+					+ " SELECT DISTINCT A.handhole_id,A.handhole_name, substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID),A.DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_STRANDS B  ON B.SOURCE_ID = A.HANDHOLE_ID where B.SOURCE_ID LIKE '%HH%' AND B.STRAND_ID IN (:param1) "
+					+ "UNION"
+					+ " SELECT DISTINCT A.handhole_id,A.handhole_name, substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID),A.DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_STRANDS B  ON B.DESTINATION_ID = A.HANDHOLE_ID where B.DESTINATION_ID LIKE '%HH%' AND B.STRAND_ID IN (:param1) )  ");
+			query.setParameter("param1",strandsIDs);
+			tempList.addAll(query.getResultList());		
+
+			
+			if (handholeList.size() > 0) {
+				newList = filterTempList(tempList,handholesId);
+				handholeList.addAll(newList);
+			} 						
+			else {
+				handholeList = filterTempList(tempList,handholesId);
 			}
-				junctionManholeList = session.createNativeQuery(
-						"SELECT DISTINCT A.JUNCTION_ID, A.JUNCTION_NAME,A.PHYSICAL_LAYER_ID,A.PHYSICAL_LAYER_NAME,A.JUNCTION_NUMBER,A.CAPACITY,A.CITY,substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE,substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE,A.PROJECT_ID FROM JUNCTION A INNER JOIN manhole B ON A.PHYSICAL_LAYER_ID = B.manhole_id ").getResultList();
-				
-				junctionHandholeList = session.createNativeQuery(
-						"SELECT DISTINCT A.JUNCTION_ID, A.JUNCTION_NAME,A.PHYSICAL_LAYER_ID,A.PHYSICAL_LAYER_NAME,A.JUNCTION_NUMBER,A.CAPACITY,A.CITY,substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE,substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE,A.PROJECT_ID FROM JUNCTION A INNER JOIN handhole B ON A.PHYSICAL_LAYER_ID = b.handhole_id ").getResultList();
-
-				NodeList = session.createNativeQuery(
-						"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,substr(trim(replace(LONGITUDE,'°','')),1,6) as LONGITUDE,substr(trim(replace(LATITUDE,'°','')),1,6) as LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' ) "
-								+ " AND (LONGITUDE !='null' or LONGITUDE !=null ) AND (LATITUDE !='null' or LATITUDE !=null )"
-								+ " AND ( to_number(SUBSTR(LONGITUDE,1,6)) > "+newStartLngPt  +"and  to_number(SUBSTR(LATITUDE,1,6)) >  "+newStartLatPt +" and to_number (SUBSTR(LONGITUDE,1,6)) < "+newEndLngPt +" AND to_number (SUBSTR(LATITUDE,1,6)) < " +newEndLatPt +") ").getResultList();
-										
-				model.addAttribute("startLongPoint", startLongPoint);
-				model.addAttribute("startLatPoint", startLatPoint);
-				model.addAttribute("endLongPoint", endLongPoint);
-				model.addAttribute("endLatPoint", endLatPoint);
-				model.addAttribute("getRelatedPoints", getRelatedPoints);
-
+			
+			tempList.clear();
+			
+			//DB that are outside the range
+			query = session.createNativeQuery(
+					" SELECT * FROM ( SELECT DISTINCT A.DB_ID as DB_ID, substr(trim(replace(A.DB_LONGITUDE,'°','')),1,6) as DB_LONGITUDE, substr(trim(replace(A.DB_LATITUDE,'°','')),1,6) as DB_LATITUDE, A.DB_NAME as DB_NAME,A.MAX_CAPACITY as MAX_CAPACITY,A.SITE as SITE,A.PROJECT_ID as PROJECT_ID ,A.CITY as CITY,A.DB_NETWORK_LEVEL AS DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.DB_ID LEFT JOIN FIBER_CABLES C ON C.FIBER_CABLE_ID = B.FIBER_CABLE_ID where B.AUXILIARY_POINT_ID LIKE '%DB%' AND C.FIBER_CABLE_ID IN (:param1)   "
+							+ " UNION "
+							+ " SELECT DISTINCT A.DB_ID,substr(trim(replace(A.DB_LONGITUDE,'°','')),1,6) as DB_LONGITUDE, substr(trim(replace(A.DB_LATITUDE,'°','')),1,6) as DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_CABLES B  ON B.SOURCE_ID = A.DB_ID where B.SOURCE_ID LIKE '%DB%' AND B.FIBER_CABLE_ID IN (:param1) "
+							+ "UNION "
+							+ " SELECT DISTINCT A.DB_ID,substr(trim(replace(A.DB_LONGITUDE,'°','')),1,6) as DB_LONGITUDE, substr(trim(replace(A.DB_LATITUDE,'°','')),1,6) as DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_CABLES B  ON B.DESTINATION_ID = A.DB_ID where B.DESTINATION_ID LIKE '%DB%' AND B.FIBER_CABLE_ID IN (:param1) )   ");
+			query.setParameter("param1",combinedCablesList);
+			tempList.addAll(query.getResultList());		
+			
+			query = session.createNativeQuery(
+					" SELECT * FROM ( SELECT DISTINCT A.DB_ID as DB_ID, substr(trim(replace(A.DB_LONGITUDE,'°','')),1,6) as DB_LONGITUDE, substr(trim(replace(A.DB_LATITUDE,'°','')),1,6) as DB_LATITUDE, A.DB_NAME as DB_NAME,A.MAX_CAPACITY as MAX_CAPACITY,A.SITE as SITE,A.PROJECT_ID as PROJECT_ID ,A.CITY as CITY,A.DB_NETWORK_LEVEL AS DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN TUBE_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.DB_ID LEFT JOIN FIBER_TUBES C ON C.TUBE_ID = B.TUBE_ID where B.AUXILIARY_POINT_ID LIKE '%DB%' AND C.TUBE_ID IN (:param1)   "
+							+ " UNION "
+							+ " SELECT DISTINCT A.DB_ID,substr(trim(replace(A.DB_LONGITUDE,'°','')),1,6) as DB_LONGITUDE, substr(trim(replace(A.DB_LATITUDE,'°','')),1,6) as DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_TUBES B  ON B.SOURCE_ID = A.DB_ID where B.SOURCE_ID LIKE '%DB%' AND B.TUBE_ID IN (:param1) "
+							+ "UNION "
+							+ " SELECT DISTINCT A.DB_ID,substr(trim(replace(A.DB_LONGITUDE,'°','')),1,6) as DB_LONGITUDE, substr(trim(replace(A.DB_LATITUDE,'°','')),1,6) as DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_TUBES B  ON B.DESTINATION_ID = A.DB_ID where B.DESTINATION_ID LIKE '%DB%' AND B.TUBE_ID IN (:param1) )  ");
+			query.setParameter("param1",combinedTubeList);
+			tempList.addAll(query.getResultList());
+			
+			query = session.createNativeQuery(
+					" SELECT * FROM ( SELECT DISTINCT A.DB_ID as DB_ID, substr(trim(replace(A.DB_LONGITUDE,'°','')),1,6) as DB_LONGITUDE, substr(trim(replace(A.DB_LATITUDE,'°','')),1,6) as DB_LATITUDE, A.DB_NAME as DB_NAME,A.MAX_CAPACITY as MAX_CAPACITY,A.SITE as SITE,A.PROJECT_ID as PROJECT_ID ,A.CITY as CITY,A.DB_NETWORK_LEVEL AS DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN STRAND_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.DB_ID LEFT JOIN FIBER_STRANDS C ON C.STRAND_ID = B.STRAND_ID where B.AUXILIARY_POINT_ID LIKE '%DB%' AND C.STRAND_ID IN (:param1)   "
+							+ " UNION "
+							+ " SELECT DISTINCT A.DB_ID,substr(trim(replace(A.DB_LONGITUDE,'°','')),1,6) as DB_LONGITUDE, substr(trim(replace(A.DB_LATITUDE,'°','')),1,6) as DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_STRANDS B  ON B.SOURCE_ID = A.DB_ID where B.SOURCE_ID LIKE '%DB%' AND B.STRAND_ID IN (:param1) "
+							+ "UNION "
+							+ " SELECT DISTINCT A.DB_ID,substr(trim(replace(A.DB_LONGITUDE,'°','')),1,6) as DB_LONGITUDE, substr(trim(replace(A.DB_LATITUDE,'°','')),1,6) as DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_STRANDS B  ON B.DESTINATION_ID = A.DB_ID where B.DESTINATION_ID LIKE '%DB%' AND B.STRAND_ID IN (:param1) ) ");
+			query.setParameter("param1",strandsIDs);
+			tempList.addAll(query.getResultList());
+			
+			if (distribBoardList.size() > 0) {
+				newList = filterTempList(tempList,dbsId);
+				distribBoardList.addAll(newList);
 			} 
+			else {
+				distribBoardList = filterTempList(tempList,dbsId);
+			}
+			
+		}
+			junctionManholeList = session.createNativeQuery(
+					"SELECT DISTINCT A.JUNCTION_ID, A.JUNCTION_NAME,A.PHYSICAL_LAYER_ID,A.PHYSICAL_LAYER_NAME,A.JUNCTION_NUMBER,A.CAPACITY,A.CITY,substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE,substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE,A.PROJECT_ID FROM JUNCTION A INNER JOIN manhole B ON A.PHYSICAL_LAYER_ID = B.manhole_id ").getResultList();
+			
+			junctionHandholeList = session.createNativeQuery(
+					"SELECT DISTINCT A.JUNCTION_ID, A.JUNCTION_NAME,A.PHYSICAL_LAYER_ID,A.PHYSICAL_LAYER_NAME,A.JUNCTION_NUMBER,A.CAPACITY,A.CITY,substr(trim(replace(A.LONGITUDE,'°','')),1,6) as LONGITUDE,substr(trim(replace(A.LATITUDE,'°','')),1,6) as LATITUDE,A.PROJECT_ID FROM JUNCTION A INNER JOIN handhole B ON A.PHYSICAL_LAYER_ID = b.handhole_id ").getResultList();
+						
+			model.addAttribute("startLongPoint", startLongPoint);
+			model.addAttribute("startLatPoint", startLatPoint);
+			model.addAttribute("endLongPoint", endLongPoint);
+			model.addAttribute("endLatPoint", endLatPoint);
+			model.addAttribute("getRelatedPoints", getRelatedPoints);
+				
+		}										
+
 			else if (StringUtils.equalsIgnoreCase(request.getParameter("Checked"), "circleRange_multy")) {
 							String[] seqs = request.getParameterValues("seq");
 							String[] siteIds = request.getParameterValues("name");
@@ -4956,7 +5307,103 @@ public class PhysicalLayerController {
 
 	}
 
+	 public void findIDsSrcDestStrtEndCoord(List<Object[]> listOfObjects, String target, List<String> mhIDs, List<String> hhIDs, List<String> dbIDs, String newStartLngPt, String newStartLatPt, String newEndLngPt, String newEndLatPt) {
+		    double sourceLng, sourceLat, destLng, destLat,strtLong=0,strtLat=0,endLong=0,endLat=0;
 
+		    boolean checkStartLng = newStartLngPt != "";
+		    boolean checkStartLat = newStartLatPt != "";
+		    boolean checkEndLng = newEndLngPt != "";
+		    boolean checkEndLat = newEndLatPt != "";
+		    
+		    if(checkStartLng) {
+		    	strtLong = Double.parseDouble(newStartLngPt);
+		    }
+		    if(checkEndLng) {
+		    	endLong = Double.parseDouble(newEndLngPt);
+		    }
+		    if(checkStartLat) {
+		    	strtLat = Double.parseDouble(newStartLatPt);
+		    }
+		    if(checkEndLat) {
+		    	endLat = Double.parseDouble(newEndLatPt);
+		    }
+		    
+		    if(checkStartLng && checkEndLng) {		    
+			    if (Double.parseDouble(newStartLngPt) < Double.parseDouble(newEndLngPt)) {
+			    	strtLong = Double.parseDouble(newStartLngPt);
+			    	endLong = Double.parseDouble(newEndLngPt);
+				} 
+				else {
+			    	strtLong = Double.parseDouble(newEndLngPt);
+			    	endLong = Double.parseDouble(newStartLngPt);
+				}
+		    }
+		    
+		    if(checkStartLat && checkEndLat) {		    
+			    if (Double.parseDouble(newStartLatPt) < Double.parseDouble(newEndLatPt)) {
+			    	strtLat = Double.parseDouble(newStartLatPt);
+			    	endLat = Double.parseDouble(newEndLatPt);
+				} 
+				else {
+			    	strtLat = Double.parseDouble(newEndLatPt);
+			    	endLat = Double.parseDouble(newStartLatPt);
+				}
+		    }
+		    
+		    
+		    
+		    for (Object[] row : listOfObjects) {
+		        if (target.equals("Cables")) {
+		            sourceLng = Double.parseDouble(row[0].toString());
+		            sourceLat = Double.parseDouble(row[1].toString());
+		            destLng = Double.parseDouble(row[2].toString());
+		            destLat = Double.parseDouble(row[3].toString());
+		        } else {
+		            sourceLng = Double.parseDouble(row[1].toString());
+		            sourceLat = Double.parseDouble(row[2].toString());
+		            destLng = Double.parseDouble(row[3].toString());
+		            destLat = Double.parseDouble(row[4].toString());
+		        }
+		        
+		        String sourceId = row[6].toString();
+		        String destinationId = row[9].toString();
+
+		        boolean sourceCheck = (!checkStartLng || (checkStartLng && sourceLng > strtLong)) &&
+		                                  (!checkStartLat || (checkStartLat && sourceLat > strtLat)) &&
+		                                  (!checkEndLng || (checkEndLng && sourceLng < endLong)) &&
+		                                  (!checkEndLat || (checkEndLat && sourceLat < endLat));
+		        
+		        boolean destinationCheck = (!checkStartLng || (checkStartLng && destLng > strtLong)) &&
+                     (!checkStartLat || (checkStartLat && destLat > strtLat)) &&
+                     (!checkEndLng || (checkEndLng && destLng < endLong)) &&
+                     (!checkEndLat || (checkEndLat && destLat < endLat));
+
+		        
+		        if (sourceCheck) {
+		            if (sourceId.contains("MH") && !mhIDs.contains(sourceId)) {
+		                mhIDs.add(sourceId);
+		            } else if (sourceId.contains("HH") && !hhIDs.contains(sourceId)) {
+		                hhIDs.add(sourceId);
+		            } else if (sourceId.contains("DB") && !dbIDs.contains(sourceId)) {
+		                dbIDs.add(sourceId);
+		            }
+		        }
+		        
+		        if (destinationCheck) {
+		            if (destinationId.contains("MH") && !mhIDs.contains(destinationId)) {
+		                mhIDs.add(destinationId);
+		            } else if (destinationId.contains("HH") && !hhIDs.contains(destinationId)) {
+		                hhIDs.add(destinationId);
+		            } else if (destinationId.contains("DB") && !dbIDs.contains(destinationId)) {
+		                dbIDs.add(destinationId);
+		            }
+		        }
+		        
+		        
+		        
+		    }
+		}
+	 
     public void findIDsSrcDest(List<Object[]> listOfObjects, String target, List<String> mhIDs, List<String> hhIDs, List<String> dbIDs, double newStartLngPt, double newStartLatPt, double newEndLngPt, double newEndLatPt) {
 	 	double sourceLng,sourceLat,destLng,destLat;
 
@@ -5009,6 +5456,84 @@ public class PhysicalLayerController {
 	        
 	    }
 	}
+    
+    public void findIDsForAuxStrtEndCoord(List<Object[]> listOfObjects, String target, List<String> mhIDs, List<String> hhIDs, List<String> dbIDs, String newStartLngPt, String newStartLatPt, String newEndLngPt, String newEndLatPt) {
+	    double strtLong=0,strtLat=0,endLong=0,endLat=0;
+		 double Lng,Lat;  
+
+	    boolean checkStartLng = newStartLngPt != "";
+	    boolean checkStartLat = newStartLatPt != "";
+	    boolean checkEndLng = newEndLngPt != "";
+	    boolean checkEndLat = newEndLatPt != "";
+	    
+	    if(checkStartLng) {
+	    	strtLong = Double.parseDouble(newStartLngPt);
+	    }
+	    if(checkEndLng) {
+	    	endLong = Double.parseDouble(newEndLngPt);
+	    }
+	    if(checkStartLat) {
+	    	strtLat = Double.parseDouble(newStartLatPt);
+	    }
+	    if(checkEndLat) {
+	    	endLat = Double.parseDouble(newEndLatPt);
+	    }
+	    
+	    if(checkStartLng && checkEndLng) {		    
+		    if (Double.parseDouble(newStartLngPt) < Double.parseDouble(newEndLngPt)) {
+		    	strtLong = Double.parseDouble(newStartLngPt);
+		    	endLong = Double.parseDouble(newEndLngPt);
+			} 
+			else {
+		    	strtLong = Double.parseDouble(newEndLngPt);
+		    	endLong = Double.parseDouble(newStartLngPt);
+			}
+	    }
+	    
+	    if(checkStartLat && checkEndLat) {		    
+		    if (Double.parseDouble(newStartLatPt) < Double.parseDouble(newEndLatPt)) {
+		    	strtLat = Double.parseDouble(newStartLatPt);
+		    	endLat = Double.parseDouble(newEndLatPt);
+			} 
+			else {
+		    	strtLat = Double.parseDouble(newEndLatPt);
+		    	endLat = Double.parseDouble(newStartLatPt);
+			}
+	    }
+	    
+	    
+	    
+	    for (Object[] row : listOfObjects) {
+	    	if(target=="Cables") {
+	    		 Lng = Double.parseDouble(row[0].toString());
+		    	 Lat = Double.parseDouble(row[1].toString());
+		    
+	    	}
+	    	else {
+	    		 Lng = Double.parseDouble(row[1].toString());
+		    	 Lat = Double.parseDouble(row[2].toString());
+	    	}
+	    	
+	        String auxId = row[4].toString();
+	        
+	        boolean auxiliaryCheck = (!checkStartLng || (checkStartLng && Lng > strtLong)) &&
+	                                  (!checkStartLat || (checkStartLat && Lat > strtLat)) &&
+	                                  (!checkEndLng || (checkEndLng && Lng < endLong)) &&
+	                                  (!checkEndLat || (checkEndLat && Lat < endLat));
+	        
+	       
+	        if (auxiliaryCheck) {
+	            if (auxId.contains("MH") && !mhIDs.contains(auxId)) {
+	                mhIDs.add(auxId);
+	            } else if (auxId.contains("HH") && !hhIDs.contains(auxId)) {
+	                hhIDs.add(auxId);
+	            } else if (auxId.contains("DB") && !dbIDs.contains(auxId)) {
+	                dbIDs.add(auxId);
+	            }
+	        }		        
+	    }
+	}
+    
  public void findIDsForAux(List<Object[]> listOfObjects, String target, List<String> mhIDs, List<String> hhIDs, List<String> dbIDs, double newStartLngPt, double newStartLatPt, double newEndLngPt, double newEndLatPt) {
 	 double Lng,Lat;  
 	 for (Object[] row : listOfObjects) {
@@ -5045,13 +5570,15 @@ public class PhysicalLayerController {
 	
 	 List<Object[]> filteredList = new ArrayList<>();  
 	 List<String> idsList = Arrays.asList(IDsArray); // Convert array to List
-    	   
+	 List<String> tempList = new ArrayList<>();  // to check if the point is repeated in listOfObjects
+	   
 	 for (Object[] row : listOfObjects) {
 	    	
 	        String Id = row[0].toString();
 	      
-	       if (!idsList.contains(Id)) {
+	       if (!idsList.contains(Id) && !tempList.contains(Id)) {
 	    	   filteredList.add(row);
+	    	   tempList.add(Id);
 		   } 			           
 	     }
 	 	return filteredList;

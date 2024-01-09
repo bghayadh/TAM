@@ -5175,18 +5175,32 @@ function viewNearestPointEvent(){
 			    	
 		 }else{
 			 checkedOption = "StartEnd";
-			 
-			 if (startLongPoint === "" || startLatPoint === "" || endLongPoint === "" || endLatPoint === "" || isNaN(startLongPoint) || isNaN(startLatPoint) || isNaN(endLongPoint) || isNaN(endLatPoint)) {
-			    alert("Please enter a number in the input field.");
-			    
-			 }else{
-			 urlString += "&startLongPoint="+$("#startLongPoint").val()+"";
-			 urlString += "&startLatPoint="+$("#startLatPoint").val()+"";
-			 urlString += "&endLongPoint="+$("#endLongPoint").val()+"";
-			 urlString += "&endLatPoint="+$("#endLatPoint").val()+"";
-			 urlString += "&getRelatedPoints="+$("#getRelatedPoints").val()+"";	
-			 window.location.href = getContext()+"/NetworkPhysicalLayer?Checked="+checkedOption+urlString;
+			var countValidInput = 0;
+			if (startLongPoint !== "" && !isNaN(startLongPoint)) {
+			    countValidInput++;
+			}
+			if (startLatPoint !== "" && !isNaN(startLatPoint)) {
+			    countValidInput++;
+			}
+			if (endLongPoint !== "" && !isNaN(endLongPoint)) {
+			    countValidInput++;
+			}
+			if (endLatPoint !== "" && !isNaN(endLatPoint)) {
+			    countValidInput++;
+			}
+			
+			if (countValidInput > 0) {
+				 urlString += "&startLongPoint="+$("#startLongPoint").val()+"";
+				 urlString += "&startLatPoint="+$("#startLatPoint").val()+"";
+				 urlString += "&endLongPoint="+$("#endLongPoint").val()+"";
+				 urlString += "&endLatPoint="+$("#endLatPoint").val()+"";
+				 urlString += "&getRelatedPoints="+$("#getRelatedPoints").val()+"";	
+				 window.location.href = getContext()+"/NetworkPhysicalLayer?Checked="+checkedOption+urlString;
             }
+			else {
+			    alert("Please enter at least one valid input.");
+			}
+
 		 }	    
 		});		
 }
@@ -5322,72 +5336,83 @@ function openFindBetweenMarkers(checkedOption,startLongPoint,startLatPoint,endLo
 	 $('a[href="#closest"]').click();
 	 $("#fiberCitySearch").modal("show");
 	 $("#StartEnd").prop("checked",true);
-	 if(startLongPoint != '' &&  startLatPoint != '' && endLongPoint != '' && endLatPoint != ''){
-		$("#startLongPoint").val(startLongPoint);
-		$("#startLatPoint").val(startLatPoint);
-		$("#endLongPoint").val(endLongPoint);
-		$("#endLatPoint").val(endLatPoint);	
-		
-		showPointsType =getRelatedPoints;
-	     if(getRelatedPoints == '1') {
-			$("#getRelatedPoints").prop('checked', true);
-		 }
-		else {
-			$("#getRelatedPoints").prop('checked', false);
-		}
-	     
-		var finalArrayFibers = [];
-			 appendNearestManholesTable(arrayManhole);
-			 appendNearestHandholesTable(arrayHandhole);					        			
-			 appendNearestDBoardTable(arrayDB);
-			 finalArrayFibers.push(arrayStrands);
-			 finalArrayFibers.push(arrayTubes);
-			 finalArrayFibers.push(arrayFibers);
-			 appendNearestFiberPathsTable(finalArrayFibers);
-			 appendNearestNodesTable(arrayNodes);					        			
 
-				$("#totalManhole").val(arrayManhole.length);
-				$("#totalHandhole").val(arrayHandhole.length);
-				$("#totalDB").val(arrayDB.length);
-				$("#totalNode").val(arrayNodes.length);
-					
-					
-				startlangPath =[new google.maps.LatLng(startLatPoint,startLongPoint), new google.maps.LatLng(endLatPoint,startLongPoint)];
-				drawLine("#FF0000",startlangPath);
-				startlatgPath =[new google.maps.LatLng(startLatPoint,startLongPoint), new google.maps.LatLng(startLatPoint,endLongPoint)];
-				drawLine("#FF0000",startlatgPath);
-				endlangPath =[new google.maps.LatLng(endLatPoint,endLongPoint), new google.maps.LatLng(startLatPoint,endLongPoint)];
-				drawLine("#006400",endlangPath);
-				endlatgPath =[new google.maps.LatLng(endLatPoint,endLongPoint), new google.maps.LatLng(endLatPoint, startLongPoint)];
-				drawLine("#006400",endlatgPath);
-				const myLatLng = { lat: parseFloat((parseFloat(startLatPoint) + parseFloat(endLatPoint)) / 2.0), lng: parseFloat((parseFloat(startLongPoint) + parseFloat(endLongPoint)) / 2.0) };
-				map.setCenter(myLatLng);
-				var btmLeftLat, btmLeftLng, topRgtLat, topRgtLng;
-				if (parseFloat(startLatPoint) <= parseFloat(endLatPoint)) {
-					btmLeftLat = startLatPoint;
-					topRgtLat = endLatPoint;
-				}
-				else {
-					btmLeftLat = endLatPoint;
-					topRgtLat = startLatPoint;
-				}
-				if (parseFloat(startLongPoint) <= parseFloat(endLongPoint)) {
-					btmLeftLng = startLongPoint;
-					topRgtLng = endLongPoint;
-				}
-				else {
-					btmLeftLng = endLongPoint;
-					topRgtLng = startLongPoint;
-				}
-				map.fitBounds(new google.maps.LatLngBounds(
-							  //bottom left
-							  new google.maps.LatLng(parseFloat(btmLeftLat), parseFloat(btmLeftLng)),
-							  //top right
-							  new google.maps.LatLng(parseFloat(topRgtLat), parseFloat(topRgtLng))
-				));
-	        	
-   } else {
-	alert("Please Fill All Fields");
+	 $("#startLongPoint").val(startLongPoint);
+	 $("#startLatPoint").val(startLatPoint);
+	 $("#endLongPoint").val(endLongPoint);
+	 $("#endLatPoint").val(endLatPoint);
+	
+	  showPointsType =getRelatedPoints;
+	  if(getRelatedPoints == '1') {
+		$("#getRelatedPoints").prop('checked', true);
+	  }
+	  else {
+		$("#getRelatedPoints").prop('checked', false);
+	   }	
+		
+		var finalArrayFibers = [];
+		appendNearestManholesTable(arrayManhole);
+		appendNearestHandholesTable(arrayHandhole);					        			
+		appendNearestDBoardTable(arrayDB);
+		finalArrayFibers.push(arrayStrands);
+		finalArrayFibers.push(arrayTubes);
+		finalArrayFibers.push(arrayFibers);
+		appendNearestFiberPathsTable(finalArrayFibers);
+		appendNearestNodesTable(arrayNodes);					        			
+
+		$("#totalManhole").val(arrayManhole.length);
+		$("#totalHandhole").val(arrayHandhole.length);
+		$("#totalDB").val(arrayDB.length);
+		$("#totalNode").val(arrayNodes.length);
+				
+
+	 if(startLongPoint != '' &&  startLatPoint != '' && endLongPoint != '' && endLatPoint != ''){
+		
+		startlangPath =[new google.maps.LatLng(startLatPoint,startLongPoint), new google.maps.LatLng(endLatPoint,startLongPoint)];
+		drawLine("#FF0000",startlangPath);
+				
+		startlatgPath =[new google.maps.LatLng(startLatPoint,startLongPoint), new google.maps.LatLng(startLatPoint,endLongPoint)];
+		drawLine("#FF0000",startlatgPath);
+				
+		endlangPath =[new google.maps.LatLng(endLatPoint,endLongPoint), new google.maps.LatLng(startLatPoint,endLongPoint)];
+		drawLine("#006400",endlangPath);
+				
+		endlatgPath =[new google.maps.LatLng(endLatPoint,endLongPoint), new google.maps.LatLng(endLatPoint, startLongPoint)];
+		drawLine("#006400",endlatgPath);
+		
+		const myLatLng = { lat: parseFloat((parseFloat(startLatPoint) + parseFloat(endLatPoint)) / 2.0), lng: parseFloat((parseFloat(startLongPoint) + parseFloat(endLongPoint)) / 2.0) };
+		map.setCenter(myLatLng);
+		var btmLeftLat, btmLeftLng, topRgtLat, topRgtLng;
+		
+		if (parseFloat(startLatPoint) <= parseFloat(endLatPoint)) {
+			btmLeftLat = startLatPoint;
+			topRgtLat = endLatPoint;
+		}
+		else {
+			btmLeftLat = endLatPoint;
+			topRgtLat = startLatPoint;
+		}
+		if (parseFloat(startLongPoint) <= parseFloat(endLongPoint)) {
+			btmLeftLng = startLongPoint;
+			topRgtLng = endLongPoint;
+		}
+		else {
+			btmLeftLng = endLongPoint;
+			topRgtLng = startLongPoint;
+		}
+		map.fitBounds(new google.maps.LatLngBounds(
+			//bottom left
+			new google.maps.LatLng(parseFloat(btmLeftLat), parseFloat(btmLeftLng)),
+			//top right
+			new google.maps.LatLng(parseFloat(topRgtLat), parseFloat(topRgtLng))
+		));
+   } 
+
+	else if(startLongPoint != '' ||  startLatPoint != '' || endLongPoint != '' || endLatPoint != ''){		
+		bordersFindNearest(startLongPoint,startLatPoint,endLongPoint,endLatPoint);
+	}
+	else {
+		alert("Please Fill All Fields");
    }
 	
 	startLongPoint = '';

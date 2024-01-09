@@ -36,6 +36,7 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/context-menu.css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/xlsx.full.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jszip.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/BordersFindNearest.js"></script>
 
 <style>
 .close {
