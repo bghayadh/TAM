@@ -17,6 +17,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			markersManhole=[];		
 			markersHandhole=[];
 			//markersNodeActive=[];
+			markerClusterJunction = [];
 			markersDistBoard=[];
 			markersDistBoardFilter=[];
 			markersTempoDistBoard="";						
