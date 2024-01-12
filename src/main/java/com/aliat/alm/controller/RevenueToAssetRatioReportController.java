@@ -1,5 +1,7 @@
 package com.aliat.alm.controller;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -13,18 +15,17 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 import org.hibernate.transform.Transformers;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
+import java.util.logging.Logger;
 import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.RevenueToAssetRatioReport;
@@ -34,16 +35,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Controller
 public class RevenueToAssetRatioReportController {
 	
+	private static final Logger logger = Logger.getLogger(RevenueToAssetRatioReportController.class.getName());
+	private static Session session = null;
+	private static Transaction tx = null;
+	private static ObjectMapper mapper = new ObjectMapper();
+	@SuppressWarnings("rawtypes")
+	private static Query query = null;
+	private static StringWriter sw;
+	private static String exceptionAsString;
+	
 	@Autowired
 	Notify notifications;
-
-	private Session session = null;
-
-	@SuppressWarnings("rawtypes")
-	Query query;
-	Object[] result;
-
-	private static final Logger logger = LoggerFactory.getLogger(SiteAssetReportController.class);
 
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	@RequestMapping(value = "/RevenueToAssetRatioReport", method = RequestMethod.GET)
@@ -56,11 +58,7 @@ public class RevenueToAssetRatioReportController {
 		} else {
 
 			session = AlmDbSession.getInstance().getSession();
-			DecimalFormat df = new DecimalFormat("#,###.00");
-			String totalInitialCost = "0.0";
-			String totalAccumdepr = "0.0";
-			String totalNetCost = "0.0";
-
+			
 			if (session != null && session.isOpen()) {
 
 				notifications.headerNotifications(session, model);
@@ -103,12 +101,18 @@ public class RevenueToAssetRatioReportController {
 				   
 				  
 				} catch (Exception e) {
-					logger.info("Error in creating session with the DataBase " + e.getMessage());
-				} finally {
+					tx.rollback();
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in RevenueToAssetRatioReport due to \n " + exceptionAsString);
+					logger.info("Error in RevenueToAssetRatioReport due to \n " + exceptionAsString);
+					e.printStackTrace();
+				}
+				finally {
 					if (session != null && session.isOpen()) {
-						
 						session.close();
-						
+
 					}
 				}
 			}
@@ -129,17 +133,10 @@ public class RevenueToAssetRatioReportController {
 		String ignoreDate = request.getParameter("ignoreDate");
 		String strtEndCheckbox = request.getParameter("strtEndCheckbox");
 		String circleRangeCheckbox = request.getParameter("circleRangeCheckbox");		
-		double initCost=0,netCost=0,accuDepr=0;
 
 		String start_Date = request.getParameter("startDate");
 		String end_Date = request.getParameter("endDate");
-
-		DecimalFormat df = new DecimalFormat("#,###.00");
-		String totalInitialCost = "0.0";
-		String totalAccumdepr = "0.0";
-		String totalNetCost = "0.0";
-		Object[] result;
-		String str = "", totalStr = "", strRPT = "",strALM = "";
+		String str = "", strRPT = "",strALM = "";
 
 		String startLong = request.getParameter("startLong");
 		String startLat = request.getParameter("startLat");
@@ -158,12 +155,10 @@ public class RevenueToAssetRatioReportController {
 			rtn.put("Login", "redirect:/");
 			return rtn;
 		} else {
-
-			try {
 				session = AlmDbSession.getInstance().getSession();
-
 				if (session != null && session.isOpen()) {
-					
+					tx = session.beginTransaction();
+					try {	
 					strALM = "SELECT DISTINCT C.SITE_ID AS site,C.WARE_ID as wareID, C.SITE_ID AS siteID, C.WARE_NAME AS siteName , C.LONGITUDE as longitude, " + 
 							"C.LATITUDE as latitude, A.INITIALCOST as initCost, A.NETCOST as netCost , A.ACCUMULDEPRECAMNT as accuDepr,A.FAR_ID AS FAR_ID, " + 
 							"0 as voiceRevenue, 0 as smsRevenue, 0 as dataRevneue, 0 as vasRevenue " + 
@@ -305,10 +300,6 @@ public class RevenueToAssetRatioReportController {
 										Double.valueOf(siteTempList.get(i)[5].toString()));
 								
 								if (distance <= Double.parseDouble(radius)) {
-									initCost += Double.valueOf(siteTempList.get(i)[7].toString());
-									netCost += Double.valueOf(siteTempList.get(i)[8].toString());
-									accuDepr += Double.valueOf(siteTempList.get(i)[9].toString());
-									
 									listCircleRange.add(RevenueToAssetRatioList.get(i));
 								}
 							}
@@ -321,18 +312,28 @@ public class RevenueToAssetRatioReportController {
 						rtn.put("RevenueToAssetRatioList", RevenueToAssetRatioList);
 					}
 
-				}
+				
+				session.flush();
+				session.clear();
+				tx.commit();
 
 			} catch (Exception e) {
-				logger.info("Error in creating session with Database", e);
-			} finally {
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in GenerateGridRevenueToAssetRatioReport due to \n " + exceptionAsString);
+				logger.info("Error in GenerateGridRevenueToAssetRatioReport due to \n " + exceptionAsString);
+				rtn.put("RevenueToAssetRatioList", null);
+			}
 
+			finally {
 				if (session != null && session.isOpen()) {
 					session.close();
 				}
 			}
 		}
 		return rtn;
+		}
 	}
 
 	static double haversineMethod(double latitude, double longitude, double pointLat, double pointLong) {

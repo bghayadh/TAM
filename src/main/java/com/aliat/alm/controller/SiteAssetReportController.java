@@ -1,5 +1,7 @@
 package com.aliat.alm.controller;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -13,9 +15,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.query.Query;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.transform.Transformers;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,16 +34,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Controller
 public class SiteAssetReportController {
 
+	private static final Logger logger = Logger.getLogger(SiteAssetReportController.class.getName());
+	private static Session session = null;
+	private static Transaction tx = null;
+	private static ObjectMapper mapper = new ObjectMapper();
+	@SuppressWarnings("rawtypes")
+	private static Query query = null;
+	Object[] result;
+	private static StringWriter sw;
+	private static String exceptionAsString;
+	
 	@Autowired
 	Notify notifications;
-
-	private Session session = null;
-
-	@SuppressWarnings("rawtypes")
-	Query query;
-	Object[] result;
-
-	private static final Logger logger = LoggerFactory.getLogger(SiteAssetReportController.class);
 
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	@RequestMapping(value = "/SiteAssetReport", method = RequestMethod.GET)
@@ -150,12 +154,17 @@ public class SiteAssetReportController {
 					model.addAttribute("totalNetCost", totalNetCost);
 					
 				} catch (Exception e) {
-					logger.info("Error in creating session with the DataBase " + e.getMessage());
-				} finally {
+					tx.rollback();
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in SiteAssetReport due to \n " + exceptionAsString);
+					logger.info("Error in SiteAssetReport due to \n " + exceptionAsString);
+					e.printStackTrace();
+				}finally {
 					if (session != null && session.isOpen()) {
-						
 						session.close();
-						
+
 					}
 				}
 			}
@@ -205,12 +214,11 @@ public class SiteAssetReportController {
 			rtn.put("Login", "redirect:/");
 			return rtn;
 		} else {
-
-			try {
 				session = AlmDbSession.getInstance().getSession();
 
 				if (session != null && session.isOpen()) {
-					
+					tx = session.beginTransaction();
+					try {	
 					 str = "SELECT site as site,wareID as wareID,siteID as siteID,siteName as siteName,longitude as longitude,latitude as latitude,COALESCE(SUM(initCost),0) as initCost,COALESCE(SUM(netCost),0) as netCost , COALESCE(SUM(accuDepr),0) as accuDepr FROM (  "
 					           + " SELECT DISTINCT C.SITE_ID AS site,C.WARE_ID as wareID, C.SITE_ID AS siteID, C.WARE_NAME AS siteName , C.LONGITUDE as longitude, C.LATITUDE as latitude, A.INITIALCOST as initCost, A.NETCOST as netCost , A.ACCUMULDEPRECAMNT as accuDepr,A.FAR_ID AS FAR_ID   "
 					           + " FROM FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID "
@@ -437,18 +445,28 @@ public class SiteAssetReportController {
 					rtn.put("totalInitialCost", totalInitialCost);
 					rtn.put("totalAccumdepr", totalAccumdepr);
 					rtn.put("totalNetCost", totalNetCost);
-				}
+				
+				session.flush();
+				session.clear();
+				tx.commit();
 
 			} catch (Exception e) {
-				logger.info("Error in creating session with Database", e);
-			} finally {
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in GenerateGridSiteAssetReport due to \n " + exceptionAsString);
+				logger.info("Error in GenerateGridSiteAssetReport due to \n " + exceptionAsString);
+			}
 
+			finally {
 				if (session != null && session.isOpen()) {
 					session.close();
+
 				}
 			}
 		}
 		return rtn;
+		}
 	}
 
 	static double haversineMethod(double latitude, double longitude, double pointLat, double pointLong) {
