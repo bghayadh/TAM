@@ -1,5 +1,7 @@
 package com.aliat.alm.controller;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -14,23 +16,23 @@ import org.hibernate.query.Query;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.FinancialReport;
 import com.aliat.alm.services.LoginServices;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.logging.Logger;
 
 @Controller
 public class FinancialReportController {
+	private static final Logger logger = Logger.getLogger(FinancialReportController.class.getName());
+
 
 	@Autowired
 	Notify notifications;
@@ -38,8 +40,10 @@ public class FinancialReportController {
 	@SuppressWarnings("rawtypes")
 	Query query;
 	Object[] result;
+	private static StringWriter sw;
+	private static String exceptionAsString;
 
-	private static final Logger logger = LoggerFactory.getLogger(FinancialReportController.class);
+
 
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	@RequestMapping(value = "/FinancialReport", method = RequestMethod.GET)
@@ -149,7 +153,11 @@ public class FinancialReportController {
 					model.addAttribute("totalNetCost", totalNetCost);
 
 				} catch (Exception e) {
-					logger.info("Error in creating session with the DataBase " + e.getMessage());
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in FinancialReport due to \n " + exceptionAsString);
+					logger.info("Error in FinancialReport due to \n " + exceptionAsString);
 				} finally {
 					if (session != null && session.isOpen()) {
 						session.close();
@@ -535,7 +543,11 @@ public class FinancialReportController {
 				}
 
 			} catch (Exception e) {
-				logger.info("Error in creating session with Database", e);
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in GenerateGridItemAssetReport due to \n " + exceptionAsString);
+				logger.info("Error in GenerateGridItemAssetReport due to \n " + exceptionAsString);
 			} finally {
 
 				if (session != null && session.isOpen()) {

@@ -37,7 +37,6 @@ public class SiteAssetReportController {
 	private static final Logger logger = Logger.getLogger(SiteAssetReportController.class.getName());
 	private static Session session = null;
 	private static Transaction tx = null;
-	private static ObjectMapper mapper = new ObjectMapper();
 	@SuppressWarnings("rawtypes")
 	private static Query query = null;
 	Object[] result;
@@ -154,12 +153,12 @@ public class SiteAssetReportController {
 					model.addAttribute("totalNetCost", totalNetCost);
 					
 				} catch (Exception e) {
-					tx.rollback();
 					sw = new StringWriter();
 					e.printStackTrace(new PrintWriter(sw));
 					exceptionAsString = sw.toString();
 					logger.finest("Error in SiteAssetReport due to \n " + exceptionAsString);
 					logger.info("Error in SiteAssetReport due to \n " + exceptionAsString);
+					
 					e.printStackTrace();
 				}finally {
 					if (session != null && session.isOpen()) {
@@ -456,6 +455,7 @@ public class SiteAssetReportController {
 				exceptionAsString = sw.toString();
 				logger.finest("Error in GenerateGridSiteAssetReport due to \n " + exceptionAsString);
 				logger.info("Error in GenerateGridSiteAssetReport due to \n " + exceptionAsString);
+				
 			}
 
 			finally {
