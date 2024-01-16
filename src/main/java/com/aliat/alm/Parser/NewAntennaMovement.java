@@ -96,7 +96,7 @@ public class NewAntennaMovement {
 					
 					//Check if there is a new data entered and needed to be manipulated in the NODE_ANTENNA
 					Statement chckstmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-					String chckquery = "SELECT DOMAIN,VENDOR,STATUS FROM EXECUTE_DOMAIN_VENDOR_ELEMENTS WHERE ELEMENT='NODE_ANTENNA'"
+					String chckquery = "select DOMAIN,VENDOR,STATUS FROM EXECUTE_DOMAIN_VENDOR_ELEMENTS WHERE ELEMENT='NODE_ANTENNA'"
 							+ " ORDER BY CREATION_DATE DESC fetch  first 1 rows only";
 			 		ResultSet chckrs = chckstmt.executeQuery(chckquery);
 			 		while(chckrs.next()) {
@@ -152,7 +152,7 @@ public class NewAntennaMovement {
 		String query=null;
 		List<String> serials = new ArrayList<String>();
 		stmt=con.createStatement();
-		query = "SELECT SERIALNUMBER FROM NODE_ANTENNA WHERE ACTIVE_RECORD='"+recordValue+"' AND DOMAIN='"+domain+"' AND VENDOR='"+vendor+"'";
+		query = "select DISTINCT SERIALNUMBER FROM NODE_ANTENNA WHERE ACTIVE_RECORD='"+recordValue+"' AND DOMAIN='"+domain+"' AND VENDOR='"+vendor+"' ORDER BY SERIALNUMBER";
 		ResultSet rs = stmt.executeQuery(query);
 		while(rs.next()) {
 			serials.add(rs.getString("SERIALNUMBER"));
@@ -171,8 +171,13 @@ public class NewAntennaMovement {
 		
 		newSerial.removeAll(oldSerial);
 		if(newSerial.size() > 0) {
+			String str = newSerial.stream()
+	                .map(value -> "'" + value + "'")
+	                .reduce((value1, value2) -> value1 + "," + value2)
+	                .orElse("");
+			
 			stmt = con.createStatement();
-			query = "SELECT TRANS_ID,NODE_TRANSACTION FROM SEQ_TABLE";
+			query = "select TRANS_ID,NODE_TRANSACTION FROM SEQ_TABLE";
 			ResultSet rs1 = stmt.executeQuery(query);
 			while(rs1.next()) {
 				transvalue = rs1.getInt("TRANS_ID");
@@ -183,33 +188,46 @@ public class NewAntennaMovement {
 			}
 			stmt.close();
 			rs1.close();
+			
+			List<String> nodePkList = new ArrayList<>();
+			String prevNode = null;
+			
 			System.out.println("New Serials Found, New Antenna");
-			for(int i=0;i<newSerial.size();i++) {
+			//for(int i=0;i<newSerial.size();i++) {
 				stmt1 = con.createStatement();
-				query = "select a.node_pk,a.node_id,a.node_name,a.parsing_date,a.site_id,a.ware_id,a.ware_name,a.node_type,b.serialnumber,a.circle_id,b.antenna_id,b.model FROM NODE_ACTIVE a,NODE_ANTENNA b WHERE b.serialnumber = '"+newSerial.get(i)+"' and b.ACTIVE_RECORD = '1' and a.node_pk=b.node_pk";
-				ResultSet rs11 = stmt1.executeQuery(query);
-				while(rs11.next()) {
+				query = "select distinct a.node_pk,a.unique_node_id,a.node_name,a.parsing_date,a.site_id,a.ware_id,a.ware_name,a.node_type,b.serialnumber,a.circle_id,b.antenna_id,b.model"
+						+ " FROM NODE_ACTIVE a INNER JOIN NODE_ANTENNA b on a.node_pk=b.node_pk"
+						+ "WHERE b.serialnumber IN ("+str+") and b.ACTIVE_RECORD = '1' "
+						+ " ORDER BY a.NODE_PK DESC";
+				ResultSet rsNode = stmt1.executeQuery(query);
+				while(rsNode.next()) {
+					prevNode=rsNode.getString("NODE_PK").toString();
+					System.out.println("Node_PK = "+prevNode);
+					if(nodePkList.size() == 0 || !nodePkList.contains(prevNode)) {
+						nodePkList.add(prevNode);
+						nodeTransID=Gyear+"_NODE_TRANS_"+nodetransvalue;
+						insertstatement = con.prepareStatement(
+								"INSERT INTO NODE_TRANSACTIONS (NODE_TRANS_ID ,NODE_PK,FROM_NODE_ID,TO_NODE_ID,FROM_NODE_NAME,TO_NODE_NAME,FROM_NODE_TYPE,TO_NODE_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE) "
+								+ "values ('"+nodeTransID+"','"+rsNode.getString("NODE_PK")+"','0','"+rsNode.getString("unique_node_id")+"','0','"+rsNode.getString("NODE_NAME")+"','0','"+rsNode.getString("NODE_TYPE")+"',TIMESTAMP '"+rsNode.getString("PARSING_DATE")+"',sysdate,sysdate)");
+								insertstatement.executeUpdate();
+								insertstatement.close();
+						nodetransvalue++;	
+					}
+					
 					transID=Gyear+"_TRANS_"+transvalue;
 									
 					insertstatement = con.prepareStatement(
-							"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,FROM_SITE,TO_SITE,FROM_CIRCLE,TO_CIRCLE,FROM_WARE_ID,TO_WARE_ID,FROM_WARE_NAME,TO_WARE_NAME,OLD_SERIAL_NUMBER,SERIAL_NUMBER,MODEL) "
-							+ "values ('"+transID+"','"+rs11.getString("ANTENNA_ID")+"','NODE_ANTENNA','0','NEW ANTENNA',TIMESTAMP '"+rs11.getString("PARSING_DATE")+"',sysdate,sysdate,'0','0','0','"+rs11.getString("SITE_ID")+"','0','"+rs11.getString("CIRCLE_ID")+"','0','"+rs11.getString("WARE_ID")+"','0','"+rs11.getString("WARE_NAME")+"','0','"+rs11.getString("SERIALNUMBER")+"','"+rs11.getString("MODEL")+"')");
+							"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,FROM_SITE,TO_SITE,FROM_CIRCLE,TO_CIRCLE,FROM_WARE_ID,TO_WARE_ID,FROM_WARE_NAME,TO_WARE_NAME,OLD_SERIAL_NUMBER,SERIAL_NUMBER,MODEL,NODE_TRANS_ID) "
+							+ "values ('"+transID+"','"+rsNode.getString("ANTENNA_ID")+"','NODE_ANTENNA','0','NEW ANTENNA',TIMESTAMP '"+rsNode.getString("PARSING_DATE")+"',sysdate,sysdate,'0','0','0','"+rsNode.getString("SITE_ID")+"','0','"+rsNode.getString("CIRCLE_ID")+"','0','"+rsNode.getString("WARE_ID")+"','0','"+rsNode.getString("WARE_NAME")+"','0','"+rsNode.getString("SERIALNUMBER")+"','"+rsNode.getString("MODEL")+"','"+nodeTransID+"')");
 							insertstatement.executeUpdate();
 							insertstatement.close();
 					transvalue++;
 					
-					nodeTransID=Gyear+"_NODE_TRANS_"+nodetransvalue;
-					insertstatement = con.prepareStatement(
-							"INSERT INTO NODE_TRANSACTIONS (NODE_TRANS_ID ,TRANS_ID,NODE_PK,FROM_NODE_ID,TO_NODE_ID,FROM_NODE_NAME,TO_NODE_NAME,FROM_NODE_TYPE,TO_NODE_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE) "
-							+ "values ('"+nodeTransID+"','"+transID+"','"+rs11.getString("NODE_PK")+"','0','"+rs11.getString("NODE_ID")+"','0','"+rs11.getString("NODE_NAME")+"','0','"+rs11.getString("NODE_TYPE")+"',TIMESTAMP '"+rs11.getString("PARSING_DATE")+"',sysdate,sysdate)");
-							insertstatement.executeUpdate();
-							insertstatement.close();
-					nodetransvalue++;
 					
 				}
 				stmt1.close();
-				rs11.close();
-			}
+				rsNode.close();
+			//}
 			updatestatement = con.prepareStatement("Update SEQ_TABLE SET TRANS_ID="+transvalue+", NODE_TRANSACTION="+nodetransvalue);
 			updatestatement.executeUpdate();
 			updatestatement.close();
@@ -228,9 +246,14 @@ public class NewAntennaMovement {
 		oldSerial1.removeAll(newSerial1);
 		
 		if(oldSerial1.size()>0) {
+			String str = oldSerial1.stream()
+	                .map(value -> "'" + value + "'")
+	                .reduce((value1, value2) -> value1 + "," + value2)
+	                .orElse("");
+			
 			System.out.println("Disappeared Serials, Disappeared Antennas.");
 			stmt = con.createStatement();
-			query = "SELECT TRANS_ID,NODE_TRANSACTION FROM SEQ_TABLE";
+			query = "select TRANS_ID,NODE_TRANSACTION FROM SEQ_TABLE";
 			ResultSet rs1 = stmt.executeQuery(query);
 			while(rs1.next()) {
 				transvalue = rs1.getInt("TRANS_ID");
@@ -241,33 +264,44 @@ public class NewAntennaMovement {
 			}
 			stmt.close();
 			rs1.close();
-			for(int i=0;i<oldSerial1.size();i++) {
-				System.out.println(oldSerial1.get(i));
+			
+			List<String> nodePkList = new ArrayList<>();
+			String prevNode = null;
+			//for(int i=0;i<oldSerial1.size();i++) {
 				stmt1 = con.createStatement();
-				query="select a.node_pk,a.node_id,a.node_name,a.parsing_date,a.site_id,a.ware_id,a.ware_name,a.node_type,b.serialnumber,a.circle_id,b.antenna_id,b.model FROM NODE_ACTIVE a,NODE_ANTENNA b WHERE b.serialnumber = '"+oldSerial1.get(i)+"' and b.ACTIVE_RECORD = '2' and a.node_pk=b.node_pk";
-				ResultSet rs11 = stmt1.executeQuery(query);
-				while(rs11.next()) {
+				query="select distinct a.node_pk,a.unique_node_id,a.node_name,a.parsing_date,a.site_id,a.ware_id,a.ware_name,a.node_type,b.serialnumber,a.circle_id,b.antenna_id,b.model "
+						+ " FROM NODE_ACTIVE a INNER JOIN NODE_ANTENNA b on a.node_pk=b.node_pk "
+						+ " WHERE b.serialnumber IN ("+str+") and b.ACTIVE_RECORD = '2' "
+						+ " ORDER BY a.NODE_PK DESC";
+				ResultSet rsNode = stmt1.executeQuery(query);
+				while(rsNode.next()) {
+					prevNode=rsNode.getString("NODE_PK").toString();
+					System.out.println("Node_PK = "+prevNode);
+					if(nodePkList.size() == 0 || !nodePkList.contains(prevNode)) {
+						nodePkList.add(prevNode);
+						nodeTransID=Gyear+"_NODE_TRANS_"+nodetransvalue;
+						insertstatement = con.prepareStatement(
+								"INSERT INTO NODE_TRANSACTIONS (NODE_TRANS_ID ,NODE_PK,TO_NODE_ID,FROM_NODE_ID,TO_NODE_NAME,FROM_NODE_NAME,TO_NODE_TYPE,FROM_NODE_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE) "
+								+ "values ('"+nodeTransID+"','"+rsNode.getString("NODE_PK")+"','0','"+rsNode.getString("unique_node_id")+"','0','"+rsNode.getString("NODE_NAME")+"','0','"+rsNode.getString("NODE_TYPE")+"',TIMESTAMP '"+rsNode.getString("PARSING_DATE")+"',sysdate,sysdate)");
+								insertstatement.executeUpdate();
+								insertstatement.close();
+						nodetransvalue++;	
+					}
+					
 					transID=Gyear+"_TRANS_"+transvalue;
 					
 					insertstatement = con.prepareStatement(
-							"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,TO_SITE,FROM_SITE,TO_CIRCLE,FROM_CIRCLE,TO_WARE_ID,FROM_WARE_ID,TO_WARE_NAME,FROM_WARE_NAME,SERIAL_NUMBER,OLD_SERIAL_NUMBER,MODEL) "
-							+ "values ('"+transID+"','"+rs11.getString("ANTENNA_ID")+"','NODE_ANTENNA','0','DISAPPEARED ANTENNA',TIMESTAMP '"+rs11.getString("PARSING_DATE")+"',sysdate,sysdate,'0','0','0','"+rs11.getString("SITE_ID")+"','0','"+rs11.getString("CIRCLE_ID")+"','0','"+rs11.getString("WARE_ID")+"','0','"+rs11.getString("WARE_NAME")+"','0','"+rs11.getString("SERIALNUMBER")+"','"+rs11.getString("MODEL")+"')");
+							"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,TO_SITE,FROM_SITE,TO_CIRCLE,FROM_CIRCLE,TO_WARE_ID,FROM_WARE_ID,TO_WARE_NAME,FROM_WARE_NAME,SERIAL_NUMBER,OLD_SERIAL_NUMBER,MODEL,NODE_TRANS_ID) "
+							+ "values ('"+transID+"','"+rsNode.getString("ANTENNA_ID")+"','NODE_ANTENNA','0','DISAPPEARED ANTENNA',TIMESTAMP '"+rsNode.getString("PARSING_DATE")+"',sysdate,sysdate,'0','0','0','"+rsNode.getString("SITE_ID")+"','0','"+rsNode.getString("CIRCLE_ID")+"','0','"+rsNode.getString("WARE_ID")+"','0','"+rsNode.getString("WARE_NAME")+"','"+rsNode.getString("SERIALNUMBER")+"','0','"+rsNode.getString("MODEL")+"','"+nodeTransID+"')");
 							insertstatement.executeUpdate();
 							insertstatement.close();
 					transvalue++;
 					
-					nodeTransID=Gyear+"_NODE_TRANS_"+nodetransvalue;
-					insertstatement = con.prepareStatement(
-							"INSERT INTO NODE_TRANSACTIONS (NODE_TRANS_ID ,TRANS_ID,NODE_PK,TO_NODE_ID,FROM_NODE_ID,TO_NODE_NAME,FROM_NODE_NAME,TO_NODE_TYPE,FROM_NODE_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE) "
-							+ "values ('"+nodeTransID+"','"+transID+"','"+rs11.getString("NODE_PK")+"','0','"+rs11.getString("NODE_ID")+"','0','"+rs11.getString("NODE_NAME")+"','0','"+rs11.getString("NODE_TYPE")+"',TIMESTAMP '"+rs11.getString("PARSING_DATE")+"',sysdate,sysdate)");
-							insertstatement.executeUpdate();
-							insertstatement.close();
-					nodetransvalue++;
 					
 				}
 				stmt1.close();
-				rs11.close();
-			}
+				rsNode.close();
+			//}
 			updatestatement = con.prepareStatement("Update SEQ_TABLE SET TRANS_ID="+transvalue+", NODE_TRANSACTION="+nodetransvalue);
 			updatestatement.executeUpdate();
 			updatestatement.close();
@@ -288,24 +322,27 @@ public class NewAntennaMovement {
 		if(newSerial1.size() > 0) {
 			stmt2 = con.createStatement();
 			
-			query = "SELECT TRANS_ID,NODE_TRANSACTION FROM SEQ_TABLE";
+			query = "select TRANS_ID,NODE_TRANSACTION FROM SEQ_TABLE";
 			ResultSet rs2 = stmt2.executeQuery(query);
 			while(rs2.next()) {
 				transvalue = rs2.getInt("TRANS_ID");
 				nodetransvalue = rs2.getInt("NODE_TRANSACTION");
 				
 			}
+			List<String> nodePkList = new ArrayList<>();
+			String prevNode = null;
 			stmt2.close();
 			rs2.close();
 			for(int i=0;i<newSerial1.size();i++) {
 				
 				stmt = con.createStatement();
-				query = "select a.node_pk,a.node_id,a.node_name,a.parsing_date,a.site_id,a.ware_id,a.ware_name,a.node_type,b.serialnumber,a.circle_id,b.antenna_id"
-						+ " FROM NODE_ACTIVE a,NODE_ANTENNA b WHERE b.serialnumber = '"+newSerial1.get(i)+"' and b.ACTIVE_RECORD = '2' and a.node_pk=b.node_pk";
+				query = "select distinct a.node_pk,a.unique_node_id,a.node_name,a.parsing_date,a.site_id,a.ware_id,a.ware_name,a.node_type,b.serialnumber,a.circle_id,b.antenna_id"
+						+ " FROM NODE_ACTIVE a,NODE_ANTENNA b WHERE b.serialnumber = '"+newSerial1.get(i)+"' and b.ACTIVE_RECORD = '2' and a.node_pk=b.node_pk "
+						+ " ORDER BY a.NODE_PK DESC";
 
 				ResultSet rs = stmt.executeQuery(query);
 				while(rs.next()) {
-					oldNodeID=rs.getString("NODE_ID");
+					oldNodeID=rs.getString("unique_node_id");
 					oldNodeName=rs.getString("NODE_NAME");
 					oldSiteID=rs.getString("SITE_ID");
 					oldCircleID=rs.getString("CIRCLE_ID");
@@ -314,10 +351,12 @@ public class NewAntennaMovement {
 					oldnodeType=rs.getString("NODE_TYPE");
 					
 					stmt1 = con.createStatement();
-					query = "select a.node_pk,a.node_id,a.node_name,a.parsing_date,a.site_id,a.ware_id,a.ware_name,a.node_type,b.serialnumber,a.circle_id,b.antenna_id,b.model FROM NODE_ACTIVE a,NODE_ANTENNA b WHERE b.serialnumber = '"+newSerial1.get(i)+"' and b.ACTIVE_RECORD = '1' and a.node_pk=b.node_pk";
+					query = "select distinct a.node_pk,a.unique_node_id,a.node_name,a.parsing_date,a.site_id,a.ware_id,a.ware_name,a.node_type,b.serialnumber,a.circle_id,b.antenna_id,b.model "
+							+ "FROM NODE_ACTIVE a,NODE_ANTENNA b WHERE b.serialnumber = '"+newSerial1.get(i)+"' and b.ACTIVE_RECORD = '1' and a.node_pk=b.node_pk "
+							+ " ORDER BY a.NODE_PK DESC";
 					ResultSet rs1 = stmt1.executeQuery(query);
 					while(rs1.next()) {
-						newNodeID=rs1.getString("NODE_ID");
+						newNodeID=rs1.getString("unique_node_id");
 						newNodeName=rs1.getString("NODE_NAME");
 						newSiteID=rs1.getString("SITE_ID");
 						newCircleID=rs1.getString("CIRCLE_ID");
@@ -330,25 +369,30 @@ public class NewAntennaMovement {
 					    	// validate site and circle
 					    	if (!StringUtils.equalsIgnoreCase (oldSiteID,newSiteID)) {
 				    			System.out.println("Reappear SN  After Site Transfer");
-				    			varstatus="Reappear SN  After Site Transfer";	
+				    			varstatus="Reappear SN  After Site Transfer";
+				    			prevNode=rs1.getString("NODE_PK").toString();
+								System.out.println("Node_PK = "+prevNode);
+								if(nodePkList.size() == 0 || !nodePkList.contains(prevNode)) {
+									nodePkList.add(prevNode);
+									nodeTransID=Gyear+"_NODE_TRANS_"+nodetransvalue;
+									insertstatement = con.prepareStatement(
+											"INSERT INTO NODE_TRANSACTIONS (NODE_TRANS_ID ,NODE_PK,TO_NODE_ID,FROM_NODE_ID,TO_NODE_NAME,FROM_NODE_NAME,TO_NODE_TYPE,FROM_NODE_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE) "
+											+ "values ('"+nodeTransID+"','"+rs1.getString("NODE_PK")+"','"+newNodeID+"','"+oldNodeID+"','"+newNodeName+"','"+oldNodeName+"','"+newnodeType+"','"+oldnodeType+"',TIMESTAMP '"+rs1.getString("PARSING_DATE")+"',sysdate,sysdate)");
+											insertstatement.executeUpdate();
+											insertstatement.close();
+									nodetransvalue++;	
+								}
 						    		transID=Gyear+"_TRANS_"+transvalue;
 						    		
 									insertstatement = con.prepareStatement(
-					    					"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,FROM_SITE,TO_SITE,FROM_CIRCLE,TO_CIRCLE,FROM_WARE_ID,TO_WARE_ID,FROM_WARE_NAME,TO_WARE_NAME,OLD_SERIAL_NUMBER,SERIAL_NUMBER,MODEL) "
+					    					"INSERT INTO NETWORK_TRANSACTION (TRANS_ID,ELEMENT_ID,ELEMENT,ALM_TRANS_TYPE,DISCOVERED_TRANS_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE,APPROVED_BY,MODIFIED_BY,FROM_SITE,TO_SITE,FROM_CIRCLE,TO_CIRCLE,FROM_WARE_ID,TO_WARE_ID,FROM_WARE_NAME,TO_WARE_NAME,OLD_SERIAL_NUMBER,SERIAL_NUMBER,MODEL,NODE_TRANS_ID) "
 					    					+ "values ('"+transID+"','"+rs1.getString("ANTENNA_ID")+"','NODE_ANTENNA','0','"+varstatus+"',TIMESTAMP '"+rs1.getString("PARSING_DATE")+"',sysdate,sysdate,'0','0','"+oldSiteID+"','"+newSiteID+"','"+oldCircleID+"','"+newCircleID+"','"
-					    							+oldwareId+"','"+newwareID+"','"+oldWareName+"','"+newWareName+"','0','"+newSN+"','"+rs1.getString("MODEL")+"')");
+					    							+oldwareId+"','"+newwareID+"','"+oldWareName+"','"+newWareName+"','0','"+newSN+"','"+rs1.getString("MODEL")+"','"+nodeTransID+"')");
 					    			insertstatement.executeUpdate();
 					    			insertstatement.close();
 											
 									transvalue++;
 									
-									nodeTransID=Gyear+"_NODE_TRANS_"+nodetransvalue;
-									insertstatement = con.prepareStatement(
-											"INSERT INTO NODE_TRANSACTIONS (NODE_TRANS_ID ,TRANS_ID,NODE_PK,TO_NODE_ID,FROM_NODE_ID,TO_NODE_NAME,FROM_NODE_NAME,TO_NODE_TYPE,FROM_NODE_TYPE,PARSING_DATE,CREATION_DATE,LAST_MODIFIED_DATE) "
-											+ "values ('"+nodeTransID+"','"+transID+"','"+rs1.getString("NODE_PK")+"','"+newNodeID+"','"+oldNodeID+"','"+newNodeName+"','"+oldNodeName+"','"+newnodeType+"','"+oldnodeType+"',TIMESTAMP '"+rs1.getString("PARSING_DATE")+"',sysdate,sysdate)");
-											insertstatement.executeUpdate();
-											insertstatement.close();
-									nodetransvalue++;
 					    	}
 						
 					}

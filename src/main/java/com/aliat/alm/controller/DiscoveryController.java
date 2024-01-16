@@ -6,6 +6,7 @@ import com.aliat.alm.models.ArPartNumber;
 import com.aliat.alm.models.ArSerialNumber;
 import com.aliat.alm.models.ArSite;
 import com.aliat.alm.models.AssetRegistry;
+import com.aliat.alm.models.DiscoverNewItemNode;
 import com.aliat.alm.models.FixedAssetRegistry;
 import com.aliat.alm.models.DiscoveryNewListView;
 import com.aliat.alm.models.FarNode;
@@ -1524,7 +1525,117 @@ query.executeUpdate();
 
 	
 	
-	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/runDNScript", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> runDNScript(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response)
+			throws JsonGenerationException, JsonMappingException, IOException {
+		
+		Map<String,Object> map = new HashMap<String, Object>();
+		if(LoginServices.checkSession(request, response).equals("redirect:/")) {
+			map.put("Login", LoginServices.checkSession(request, response));
+			return map;
+		}
+		
+
+			Date date = new Date();
+			Calendar calendar = new GregorianCalendar();
+			calendar.setTime(date);
+			int year = calendar.get(Calendar.YEAR);
+			
+			 session = AlmDbSession.getInstance().getSession();
+			 tx = session.beginTransaction();
+			if(session != null && session.isOpen()) {
+				try {
+				List<Object[]> boardList = new ArrayList<Object[]>(), cabinetList =  new ArrayList<Object[]>(),antennaList =  new ArrayList<Object[]>(),nodeList =  new ArrayList<Object[]>(),subrackList =  new ArrayList<Object[]>();
+				List<Object[]> boardDisList =  new ArrayList<Object[]>(), cabinetDisList =  new ArrayList<Object[]>(),antennaDisList =  new ArrayList<Object[]>(),nodeDisList =  new ArrayList<Object[]>(),subrackDisList =  new ArrayList<Object[]>();
+				
+				//getting the  new or transferred elements
+				String getBoardsquery,getCabinetsquery, getSubRackquery, getAntennasquery,getNodesQuery ; 
+				String getDisBoardsquery,getDisCabinetsquery, getDisSubRackquery, getDisAntennasquery,getDisNodesQuery ;
+				
+				getBoardsquery = getMigrationQuery(session,"NODE_BOARD","BOARD_ID","1");
+				if(getBoardsquery != null) {boardList = session.createNativeQuery(getBoardsquery).list();}
+				
+				getCabinetsquery = getMigrationQuery(session,"NODE_CABINET","CABINET_ID","1");
+				if(getCabinetsquery != null) {cabinetList = session.createNativeQuery(getCabinetsquery).list();}
+				
+				getNodesQuery = getMigrationQuery(session,"NODE_ACTIVE","NODE_PK","1");
+				if(getNodesQuery != null) {nodeList = session.createNativeQuery(getNodesQuery).list();}
+				
+				getAntennasquery = getMigrationQuery(session,"NODE_ANTENNA","ANTENNA_ID","1");
+				if(getAntennasquery != null) {antennaList = session.createNativeQuery(getAntennasquery).list();}
+
+				getSubRackquery = getMigrationQuery(session,"NODE_SUBRACK","SUBRACK_ID","1");
+				if(getSubRackquery != null) {subrackList = session.createNativeQuery(getSubRackquery).list();}
+				
+				/////////////////////////////////////////////////////////////////////////////////////////////////
+				
+				getDisBoardsquery = getMigrationQuery(session,"NODE_BOARD","BOARD_ID","2");
+				if(getDisBoardsquery != null) {boardDisList = session.createNativeQuery(getDisBoardsquery).list();}
+				
+				getDisCabinetsquery = getMigrationQuery(session,"NODE_CABINET","CABINET_ID","2");
+				if(getDisCabinetsquery != null) {cabinetDisList = session.createNativeQuery(getDisCabinetsquery).list();}
+				
+				getDisNodesQuery = getMigrationQuery(session,"NODE_ACTIVE","NODE_PK","2");
+				if(getDisNodesQuery != null) {nodeDisList = session.createNativeQuery(getDisNodesQuery).list();}
+				
+				getDisAntennasquery = getMigrationQuery(session,"NODE_ANTENNA","ANTENNA_ID","2");
+				if(getDisAntennasquery != null) {antennaDisList = session.createNativeQuery(getDisAntennasquery).list();}
+
+				getDisSubRackquery = getMigrationQuery(session,"NODE_SUBRACK","SUBRACK_ID","2");
+				if(getDisSubRackquery != null) {subrackDisList = session.createNativeQuery(getDisSubRackquery).list();}
+				
+				
+				if(nodeList.size() > 0 || cabinetList.size() > 0 || boardList.size() > 0 || antennaList.size() > 0 || subrackList.size() > 0
+					|| nodeDisList.size() > 0 || cabinetDisList.size() > 0 || boardDisList.size() > 0 || antennaDisList.size() > 0  || subrackDisList.size() > 0) {
+					
+					String status = "Approved";
+					String dnid; DiscoveryNew discoverynew = new DiscoveryNew();
+					synchronized (this) {
+						dnid = "DN_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DISCOVERY_NEW FROM SEQ_TABLE").uniqueResult().toString());	
+							query = session.createNativeQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW = DISCOVERY_NEW + 1 ");
+							query.executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
+												}
+					discoverynew.setDnID(dnid);
+					discoverynew.setDncreationDate(new Timestamp(System.currentTimeMillis()));
+					discoverynew.setdnlastmodifDate(new Timestamp(System.currentTimeMillis()));
+					discoverynew.setDnStatus(status.toString());
+					session.saveOrUpdate(discoverynew);
+					
+					insertDiscoveredElements(session,nodeList,dnid,"Node","New_Trans");
+					insertDiscoveredElements(session,cabinetList,dnid,"Cabinet","New_Trans");
+					insertDiscoveredElements(session,antennaList,dnid,"Antenna","New_Trans");
+					insertDiscoveredElements(session,subrackList,dnid,"Subrack","New_Trans");
+					insertDiscoveredElements(session,boardList,dnid,"Board","New_Trans");
+					
+					insertDiscoveredElements(session,nodeDisList,dnid,"Node","Disappear");
+					insertDiscoveredElements(session,cabinetDisList,dnid,"Cabinet","Disappear");
+					insertDiscoveredElements(session,antennaDisList,dnid,"Antenna","Disappear");
+					insertDiscoveredElements(session,subrackDisList,dnid,"Subrack","Disappear");
+					insertDiscoveredElements(session,boardDisList,dnid,"Board","Disappear");
+					map.put("Result", "Done Successfully");
+						
+				}else {
+					map.put("Result", "No Data to be Discovered");
+					
+				}
+				
+				}catch(Exception e) {
+					System.out.println(e.getMessage());
+					e.printStackTrace();
+					map.put("Result", "Error Occured");
+				}
+				
+				finally {
+					tx.commit();
+					session.close();
+					
+				}
+			}
+		return map;
+	}
 	
 //These scripts to get the discovered items by the Auto Parser	
 	
@@ -1712,13 +1823,12 @@ query.executeUpdate();
 						discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
 						discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
 						discoverynewitem.setNodePK(node_pk);
-						discoverynewitem.setDniAPPROVAL("");
+						discoverynewitem.setDniAPPROVAL("Project Manager");
 						
 						session.saveOrUpdate(discoverynewitem);
 					}
 					
 					for(int i=0;i< cabinetList.size();i++) {
-						System.out.println(mapper.writeValueAsString(nodeList));
 						DiscoveryNewItem discoverynewitem = new DiscoveryNewItem();
 						arrayList=  cabinetList.get(i);
 						trans_id = arrayList[0].toString();
@@ -1748,7 +1858,7 @@ query.executeUpdate();
 						discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
 						discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
 						discoverynewitem.setNodePK(node_pk);
-						discoverynewitem.setDniAPPROVAL("");
+						discoverynewitem.setDniAPPROVAL("Project Manager");
 						
 						session.saveOrUpdate(discoverynewitem);
 					}
@@ -1784,7 +1894,7 @@ query.executeUpdate();
 						discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
 						discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
 						discoverynewitem.setNodePK(node_pk);
-						discoverynewitem.setDniAPPROVAL("");
+						discoverynewitem.setDniAPPROVAL("Project Manager");
 						
 						session.saveOrUpdate(discoverynewitem);
 					}
@@ -1820,7 +1930,7 @@ query.executeUpdate();
 						discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
 						discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
 						discoverynewitem.setNodePK(node_pk);
-						discoverynewitem.setDniAPPROVAL("");
+						discoverynewitem.setDniAPPROVAL("Project Manager");
 						
 						session.saveOrUpdate(discoverynewitem);
 					}
@@ -1856,7 +1966,7 @@ query.executeUpdate();
 						discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
 						discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
 						discoverynewitem.setNodePK(node_pk);
-						discoverynewitem.setDniAPPROVAL("");
+						discoverynewitem.setDniAPPROVAL("Project Manager");
 						
 						session.saveOrUpdate(discoverynewitem);
 					}
@@ -1891,7 +2001,7 @@ query.executeUpdate();
 						discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
 						discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
 						discoverynewitem.setNodePK(node_pk);
-						discoverynewitem.setDniAPPROVAL("");
+						discoverynewitem.setDniAPPROVAL("Project Manager");
 						
 						session.saveOrUpdate(discoverynewitem);
 					}
@@ -1927,7 +2037,7 @@ query.executeUpdate();
 						discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
 						discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
 						discoverynewitem.setNodePK(node_pk);
-						discoverynewitem.setDniAPPROVAL("");
+						discoverynewitem.setDniAPPROVAL("Project Manager");
 						
 						session.saveOrUpdate(discoverynewitem);
 					}
@@ -1963,7 +2073,7 @@ query.executeUpdate();
 						discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
 						discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
 						discoverynewitem.setNodePK(node_pk);
-						discoverynewitem.setDniAPPROVAL("");
+						discoverynewitem.setDniAPPROVAL("Project Manager");
 						
 						session.saveOrUpdate(discoverynewitem);
 					}
@@ -1999,7 +2109,7 @@ query.executeUpdate();
 						discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
 						discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
 						discoverynewitem.setNodePK(node_pk);
-						discoverynewitem.setDniAPPROVAL("");
+						discoverynewitem.setDniAPPROVAL("Project Manager");
 						
 						session.saveOrUpdate(discoverynewitem);
 					}
@@ -2035,7 +2145,7 @@ query.executeUpdate();
 						discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
 						discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
 						discoverynewitem.setNodePK(node_pk);
-						discoverynewitem.setDniAPPROVAL("");
+						discoverynewitem.setDniAPPROVAL("Project Manager");
 						
 						session.saveOrUpdate(discoverynewitem);
 					}
@@ -2804,7 +2914,7 @@ query.executeUpdate();
 					discoverynewitem.setDniDNID(dnid);
 					discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
 					discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
-					discoverynewitem.setDniAPPROVAL("");
+					discoverynewitem.setDniAPPROVAL("Project Manager");
 					discoverynewitem.setTransType("Disappear");
 					
 					//appConfig.persist(discoverynewitem, DsicoveryNewItem.class);
@@ -2851,7 +2961,7 @@ query.executeUpdate();
 					discoverynewitem.setDniDNID(dnid);
 					discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
 					discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
-					discoverynewitem.setDniAPPROVAL("");
+					discoverynewitem.setDniAPPROVAL("Project Manager");
 					discoverynewitem.setTransType("Disappear");
 					
 					//appConfig.persist(discoverynewitem, DsicoveryNewItem.class);
@@ -2898,7 +3008,7 @@ query.executeUpdate();
 					discoverynewitem.setDniDNID(dnid);
 					discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
 					discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
-					discoverynewitem.setDniAPPROVAL("");
+					discoverynewitem.setDniAPPROVAL("Project Manager");
 					discoverynewitem.setTransType("Disappear");
 					
 					//appConfig.persist(discoverynewitem, DsicoveryNewItem.class);
@@ -4636,4 +4746,155 @@ public  <T> void persistSingleColumn(Session session ,String queryString, List<O
 	//tx.commit();
  }
 
+
+
+public String getMigrationQuery(Session session,String tableName,String primaryKey,String activeRecord) {
+	String migQuery = null;
+	if(tableName.equalsIgnoreCase("NODE_ACTIVE")) {
+		migQuery ="select t.trans_id as transID,t.model as nodeModel,t.discovered_trans_type as transType,t.from_site as fromSite,t.to_site as toSite,"+
+				  "t.from_ware_id as fromWareID,t.to_ware_id as toWareID,t.from_ware_name as fromWareName,t.to_ware_name as toWareName, "+
+				  " t.old_serial_number as oldsn , t.serial_number as sn ,t.old_mac,t.mac_address " + 
+				  " from network_transaction t  inner join "+tableName+" a on t.element_id=a."+primaryKey+ 
+				  " where t.sent_to_alm='0' and active_record='"+activeRecord+"'";
+	}else {
+	String query = "select distinct t.trans_id,b.serialnumber " + 
+			" from network_transaction t inner join "+tableName+" b" + 
+			" on t.element_id = b."+primaryKey+ 
+			" where t.sent_to_alm='0' and b.active_record='"+activeRecord+"'" + 
+			" order by b.serialnumber";
+	
+	
+	String prevSN =null;
+	List<String> transID = new ArrayList<>();
+	List<Object[] >transIDList = session.createNativeQuery(query).list();
+	for(int i=0;i<transIDList.size();i++) {
+		if(transID.size() ==0 || !prevSN.equalsIgnoreCase(transIDList.get(i)[1].toString())) {
+			prevSN = transIDList.get(i)[1].toString();
+			transID.add(transIDList.get(i)[0].toString());
+		}
+	}
+	if(transID.size() > 0) {
+		/*convert list of string from format ["data1","data2","data3"], into string of format 'data1','data2','data3'
+		 * to be used in the IN of the where condition in the query
+		 * */
+		
+		String str1 = transID.stream()
+	            .map(value -> "'" + value + "'")
+	            .reduce((value1, value2) -> value1 + "," + value2)
+	            .orElse("");
+		
+		migQuery ="select t.trans_id as transID,t.model as Model,t.discovered_trans_type as transType,t.from_site as fromSite,t.to_site as toSite," + 
+				" t.from_ware_id as fromWareID,t.to_ware_id as toWareID,t.from_ware_name as fromWareName,t.to_ware_name as toWareName,"+
+				" t.old_serial_number as oldsn , t.serial_number as sn " + 
+				" from network_transaction t  inner join " +tableName+" b on t.element_id=b."+primaryKey+ 
+				" where t.sent_to_alm='0' and b.active_record='"+activeRecord+"' and t.trans_id IN ("+str1+") and t.serial_number<>'0' " + 
+				" order by t.serial_number";
+	}
+	}
+	return migQuery;
+}
+
+	public void insertDiscoveredElements(Session session,List<Object[]> element,String dnid,String elementName,String type) {
+		List<String> transElementID = new ArrayList<>();
+		List<String> transSerial = new ArrayList<>();
+		Object [] arrayList=null;
+		String trans_id = null,DniID =null,node_pk=null;
+		
+		for(int i=0;i< element.size();i++) {
+			DiscoveryNewItem discoverynewitem = new DiscoveryNewItem();
+			arrayList=  element.get(i);
+			trans_id = arrayList[0].toString();
+			synchronized (this) {
+				DniID = "DNI_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
+					query = session.createNativeQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
+					query.executeUpdate();
+					session.createNativeQuery("commit").executeUpdate();
+			}
+			
+			if(transElementID.indexOf(trans_id) < 0){transElementID.add(trans_id);}
+			if(transSerial.indexOf(arrayList[10].toString()) < 0){transSerial.add(arrayList[10].toString());}
+			
+			discoverynewitem.setDniID(DniID);
+			discoverynewitem.setTransID(arrayList[0].toString());
+			discoverynewitem.setElementName(elementName);
+			discoverynewitem.setItemModel(arrayList[1].toString());
+			if(type.equalsIgnoreCase("Disappear")) {
+				discoverynewitem.setTransType("Disappear");
+			}else {
+				if(arrayList[2].toString().contains("Transfer")) {
+					discoverynewitem.setTransType("Transfer from Site to Site");
+				}else {
+					if(elementName.equalsIgnoreCase("Node")) {
+					discoverynewitem.setTransType("New Node");
+					}else {
+						discoverynewitem.setTransType("New Hardware");
+					}
+				}
+			}
+			discoverynewitem.setDniSIte(arrayList[3].toString());
+			discoverynewitem.setToSite(arrayList[4].toString());
+			discoverynewitem.setWareID(arrayList[5].toString());
+			discoverynewitem.setToWareId(arrayList[6].toString());
+			discoverynewitem.setWareName(arrayList[7].toString());
+			discoverynewitem.setToWareName(arrayList[8].toString());
+			discoverynewitem.setDniSN(arrayList[9].toString());
+			discoverynewitem.setToSerialNumber(arrayList[10].toString());
+			
+			if(elementName.equalsIgnoreCase("Node")) {
+				discoverynewitem.setOldMacAddress(arrayList[11].toString());
+				discoverynewitem.setMacAddress(arrayList[12].toString());
+			}
+			discoverynewitem.setDniDNID(dnid);
+			discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
+			discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
+			discoverynewitem.setDniAPPROVAL("Project Manager");
+			session.saveOrUpdate(discoverynewitem);
+			
+			String transNodequery = "Select NODE_TRANS_ID,FROM_NODE_ID,TO_NODE_ID,FROM_NODE_NAME,TO_NODE_NAME,FROM_NODE_TYPE,TO_NODE_TYPE " + 
+				"FROM NODE_TRANSACTIONS WHERE NODE_TRANS_ID=(select node_trans_id from network_transaction where trans_id='"+trans_id+"') and SENT_TO_ALM='0'";
+			List<Object> nodeTransList = session.createNativeQuery(transNodequery).list();
+			String dnNodeID ="";
+			Object [] nodeArrayList=null;
+			if(nodeTransList.size() > 0) {
+				nodeArrayList =(Object[]) nodeTransList.get(0); 
+				DiscoverNewItemNode dniNode = new DiscoverNewItemNode();
+				synchronized (this) {
+					dnNodeID = "DNI_NODE_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DNI_NODE FROM SEQ_TABLE").uniqueResult().toString());	
+						query = session.createNativeQuery("UPDATE SEQ_TABLE SET DNI_NODE = DNI_NODE + 1 ");
+						query.executeUpdate();
+						session.createNativeQuery("commit").executeUpdate();
+				}
+				
+				dniNode.setDniNode(dnNodeID);
+				dniNode.setCreationDate(new Timestamp(System.currentTimeMillis()));
+				dniNode.setLastModifiedDate(new Timestamp(System.currentTimeMillis()));
+				dniNode.setFromNodeId(nodeArrayList[1].toString());
+				dniNode.setToNodeId(nodeArrayList[2].toString());
+				dniNode.setFromNodeName(nodeArrayList[3].toString());
+				dniNode.setToNodeName(nodeArrayList[4].toString());
+				dniNode.setFromNodeType(nodeArrayList[5].toString());
+				dniNode.setToNodeType(nodeArrayList[6].toString());
+				dniNode.setDniId(DniID);
+				session.saveOrUpdate(dniNode);
+			}
+			
+		}
+		
+		updateNodeNetworkTranscations(session,transElementID,transSerial);
+	}
+	
+	public void updateNodeNetworkTranscations(Session session,List<String> transElementID,List<String> transSerial) {
+		if(transElementID.size() > 0) {
+			String str1 = transElementID.stream()
+		            .map(value -> "'" + value + "'")
+		            .reduce((value1, value2) -> value1 + "," + value2)
+		            .orElse("");
+			
+			query = session.createNativeQuery("update network_transaction set sent_to_alm ='1' where trans_id IN ("+str1+")");
+			query.executeUpdate();
+			query = session.createNativeQuery("update node_transactions set sent_to_alm ='1' where node_trans_id in (select node_trans_id from network_transaction where trans_id in ("+str1+"))");
+			query.executeUpdate();
+		}
+		
+	}
 }

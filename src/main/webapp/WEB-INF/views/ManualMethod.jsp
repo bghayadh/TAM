@@ -227,6 +227,35 @@ font-size: 14px;
 	<div class="row" >
 		<div class="col-xl-12">
 			<div class="card card-primary card-tabs cards-margin block">
+				<div class="title_card">From Network Transaction To Discovery New</div>
+					<div class="card-body cadr">
+						<div class="card-group ">
+						<div class="mx-auto cardsClass">
+            				<div class="card bg-light mb-3 mx-auto ">
+                				<div class="card-header Cardheader">
+                					<div class="row">
+	                					
+	                					<div class="col-sm-10">                				 
+	                						<button class="button3" id="runDNScript" style="align:center; margin-left: 20px;">Auto Discovery</button>
+	                					</div>
+	                				</div> 
+	                			</div>
+                				<div class="card-body mycard CardBody">
+                					<div id="loadingmessage00" class="loadingmsg">
+                						<img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif">
+                					</div>
+                					<div id="loadingResult00" class="loadingRes"></div>
+                				</div>
+           					 </div>
+      					</div>
+						</div>
+					</div>
+			</div>
+		</div>			
+	</div>
+	<div class="row" >
+		<div class="col-xl-12">
+			<div class="card card-primary card-tabs cards-margin block">
 				<div class="title_card">Discovery New</div>
 				<div class="card-body cadr">
 					<div class="card-group ">
@@ -594,6 +623,31 @@ $("#runDiscoveryNewScript").click(function() {
       success : function(data) {
    	   $('#loadingmessage3').hide();
             $("#loadingResult3").html(data.Result);
+			console.log("Success Result");
+         },
+        error : function(error) {
+        	console.log("Failure in returning data ");
+         }
+	 });
+
+});
+
+$("#runDNScript").click(function() {
+	$('#loadingResult00').hide();
+	$('#loadingmessage00').show();
+	$.ajax({
+         type: "GET",
+         url : '${pageContext.request.contextPath}/runDNScript',
+         contentType: "application/json",
+         dataType: "json",
+         data: {
+         	//"Test" : "1234"            	
+         },
+      success : function(data) {
+          console.log(data)
+          $('#loadingResult00').show();
+   	   $('#loadingmessage00').hide();
+            $("#loadingResult00").html(data.Result);
 			console.log("Success Result");
          },
         error : function(error) {

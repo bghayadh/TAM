@@ -45,7 +45,7 @@ public class NetworkTransactionsReportController {
 				query = session.createNativeQuery(
 						"SELECT a.ELEMENT_ID,a.ELEMENT,a.ALM_TRANS_TYPE,a.DISCOVERED_TRANS_TYPE,TO_CHAR(a.PARSING_DATE,'DD-MM-YYYY HH:mm:ss') as startdate,a.FROM_SITE,a.TO_SITE," + 
 						" b.FROM_NODE_ID,b.TO_NODE_ID,b.FROM_NODE_TYPE,b.TO_NODE_TYPE,MODEL,a.MAC_ADDRESS,a.SERIAL_NUMBER,a.FROM_CIRCLE,a.TO_CIRCLE,a.APPROVED_BY,a.MODIFIED_BY,a.SENT_TO_ALM,a.ALM_APPROVAL_STATUS" + 
-						" FROM NETWORK_TRANSACTION a LEFT JOIN NODE_TRANSACTIONS b on a.trans_id=b.trans_id" + 
+						" FROM NETWORK_TRANSACTION a INNER JOIN NODE_TRANSACTIONS b on a.NODE_TRANS_ID=b.NODE_TRANS_ID" + 
 						" WHERE a.PARSING_DATE between systimestamp - INTERVAL '7' DAY and systimestamp" + 
 						" ORDER BY a.element_id DESC");
 
@@ -133,7 +133,7 @@ public class NetworkTransactionsReportController {
 				query = session.createNativeQuery(
 						"SELECT a.ELEMENT_ID,a.ELEMENT,a.ALM_TRANS_TYPE,a.DISCOVERED_TRANS_TYPE,TO_CHAR(a.PARSING_DATE,'DD-MM-YYYY HH:mm:ss') as startdate,a.FROM_SITE,a.TO_SITE," + 
 						" b.FROM_NODE_ID,b.TO_NODE_ID,b.FROM_NODE_TYPE,b.TO_NODE_TYPE,MODEL,a.MAC_ADDRESS,a.SERIAL_NUMBER,a.FROM_CIRCLE,a.TO_CIRCLE,a.APPROVED_BY,a.MODIFIED_BY,a.SENT_TO_ALM,a.ALM_APPROVAL_STATUS" + 
-						" FROM NETWORK_TRANSACTION a LEFT JOIN NODE_TRANSACTIONS b on a.trans_id=b.trans_id "
+						" FROM NETWORK_TRANSACTION a LEFT JOIN NODE_TRANSACTIONS b on a.node_trans_id_id=b.node_trans_id_id "
 						+ "WHERE a.PARSING_DATE between TO_DATE('" + StartDate+ "','MM/DD/YYYY HH24:MI:SS')" 
 						+ "and TO_DATE('" + EndDate + "','MM/DD/YYYY HH24:MI:SS')" + " ORDER BY a.PARSING_DATE DESC");
 				System.out.println(mapper.writeValueAsString(query.getResultList()));
