@@ -1400,12 +1400,12 @@ public class NetworkController {
 						model.addAttribute("CoreBtn", arrayParam[3]);
 					}
 					strSites = AppendQuery("w", arrayParam, strSites);
-					strSites = strSites
+					/*strSites = strSites
 							+ ") as countNodes,(select COUNT(*) from ASSET_REGISTRY j,NODE_ACTIVE a where j.AR_ID=b.AR_ID and j.PO_ID!='null' and j.PO_ID!='0' and j.PO_ID is not null AND j.NODE_ID=a.NODE_ID "
-							+ generateDateCondition(parsingDate, "a");
-					strSites = AppendQuery("j", arrayParam, strSites);
+							+ generateDateCondition(parsingDate, "a");*/
+					//strSites = AppendQuery("j", arrayParam, strSites);
 					strSites = strSites
-							+ ") as countItems,(select COUNT(*) FROM NODE_2GCELL c where c.NODE_PK IN (select NODE_PK from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID "
+							+ ") as countNodes,(select COUNT(*) FROM NODE_2GCELL c where c.NODE_PK IN (select NODE_PK from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID "
 							+ generateDateCondition(parsingDate, "o");
 					strSites = AppendQuery("o", arrayParam, strSites);
 					strSites = strSites + " ) ";
@@ -1423,11 +1423,10 @@ public class NetworkController {
 					strSites = strSites + " ) ";
 					strSites = AppendQuery("e", arrayParam, strSites);
 					strSites = strSites
-							+ ") as countUcells FROM AR_SITE b,ASSET_REGISTRY j,NODE_ACTIVE a where j.AR_ID=b.AR_ID and b.WARE_ID!='0' and b.WARE_ID is not null and b.WARE_ID!='null' "
-							+ "and j.PO_ID!='0' and j.PO_ID is not null and j.PO_ID!='null' AND a.WARE_ID=b.WARE_ID "
+							+ ") as countUcells FROM AR_SITE b,NODE_ACTIVE a where b.WARE_ID!='0' and b.WARE_ID is not null and b.WARE_ID!='null' "
+							+ "AND a.WARE_ID=b.WARE_ID "
 							+ generateDateCondition(parsingDate, "a");
 					strSites = AppendQuery("j", arrayParam, strSites);
-
 					model.addAttribute("listSites",
 							mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
@@ -1514,12 +1513,12 @@ public class NetworkController {
 						model.addAttribute("CoreBtn", arrayParam[3]);
 					}
 					strSites = AppendQuery("w", arrayParam, strSites);
-					strSites = strSites
+					/*strSites = strSites
 							+ ") as countNodes,(select COUNT(*) from ASSET_REGISTRY j,NODE_ACTIVE a where j.AR_ID=b.AR_ID and j.PO_ID!='null' and j.PO_ID!='0' and j.PO_ID is not null AND j.NODE_ID=a.NODE_ID "
 							+ generateDateCondition(parsingDate, "a");
-					strSites = AppendQuery("j", arrayParam, strSites);
+					strSites = AppendQuery("j", arrayParam, strSites);*/
 					strSites = strSites
-							+ ") as countItems,(select COUNT(*) FROM NODE_2GCELL c where c.NODE_PK IN (select NODE_PK from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID "
+							+ ") as countNodes,(select COUNT(*) FROM NODE_2GCELL c where c.NODE_PK IN (select NODE_PK from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID "
 							+ generateDateCondition(parsingDate, "o");
 					strSites = AppendQuery("o", arrayParam, strSites);
 					strSites = strSites + " ) ";
@@ -1537,11 +1536,11 @@ public class NetworkController {
 					strSites = strSites + " ) ";
 					strSites = AppendQuery("e", arrayParam, strSites);
 					strSites = strSites
-							+ ") as countUcells FROM AR_SITE b,ASSET_REGISTRY j,NODE_ACTIVE a where j.AR_ID=b.AR_ID and b.WARE_ID!='0' and b.WARE_ID is not null and b.WARE_ID!='null' "
-							+ "and j.PO_ID!='0' and j.PO_ID is not null and j.PO_ID!='null' AND a.WARE_ID=b.WARE_ID "
+							+ ") as countUcells FROM AR_SITE b,NODE_ACTIVE a where b.WARE_ID!='0' and b.WARE_ID is not null and b.WARE_ID!='null' "
+							+ "AND a.WARE_ID=b.WARE_ID "
 							+ generateDateCondition(parsingDate, "a");
 					strSites = AppendQuery("j", arrayParam, strSites);
-
+					
 					model.addAttribute("listSites",
 							mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
@@ -1578,7 +1577,6 @@ public class NetworkController {
 			return "Network/Network_PoItemSite";
 		}
 	}
-
 	@RequestMapping(value = "/Network_SitePoItem", method = RequestMethod.GET)
 	public String Network_SitePoItem(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -1625,12 +1623,12 @@ public class NetworkController {
 						model.addAttribute("CoreBtn", arrayParam[3]);
 					}
 					strSites = AppendQuery("w", arrayParam, strSites);
-					strSites = strSites
+					/*strSites = strSites
 							+ ") as countNodes,(select COUNT(*) from ASSET_REGISTRY j,NODE_ACTIVE a where j.AR_ID=b.AR_ID and j.PO_ID!='null' and j.PO_ID!='0' and j.PO_ID is not null AND j.NODE_ID=a.NODE_ID "
 							+ generateDateCondition(parsingDate, "a");
-					strSites = AppendQuery("j", arrayParam, strSites);
+					strSites = AppendQuery("j", arrayParam, strSites);*/
 					strSites = strSites
-							+ ") as countItems,(select COUNT(*) FROM NODE_2GCELL c where c.NODE_PK IN (select NODE_PK from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID "
+							+ ") as countNodes,(select COUNT(*) FROM NODE_2GCELL c where c.NODE_PK IN (select NODE_PK from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID "
 							+ generateDateCondition(parsingDate, "o");
 					strSites = AppendQuery("o", arrayParam, strSites);
 					strSites = strSites + " ) ";
@@ -1648,11 +1646,10 @@ public class NetworkController {
 					strSites = strSites + " ) ";
 					strSites = AppendQuery("e", arrayParam, strSites);
 					strSites = strSites
-							+ ") as countUcells FROM AR_SITE b,ASSET_REGISTRY j,NODE_ACTIVE a where j.AR_ID=b.AR_ID and b.WARE_ID!='0' and b.WARE_ID is not null and b.WARE_ID!='null' "
-							+ "and j.PO_ID!='0' and j.PO_ID is not null and j.PO_ID!='null' AND a.WARE_ID=b.WARE_ID "
+							+ ") as countUcells FROM AR_SITE b,NODE_ACTIVE a where b.WARE_ID!='0' and b.WARE_ID is not null and b.WARE_ID!='null' "
+							+ "AND a.WARE_ID=b.WARE_ID "
 							+ generateDateCondition(parsingDate, "a");
 					strSites = AppendQuery("j", arrayParam, strSites);
-
 					model.addAttribute("listSites",
 							mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
