@@ -1426,7 +1426,7 @@ public class NetworkController {
 							+ ") as countUcells FROM AR_SITE b,NODE_ACTIVE a where b.WARE_ID!='0' and b.WARE_ID is not null and b.WARE_ID!='null' "
 							+ "AND a.WARE_ID=b.WARE_ID "
 							+ generateDateCondition(parsingDate, "a");
-					strSites = AppendQuery("j", arrayParam, strSites);
+					strSites = AppendQuery("a", arrayParam, strSites);
 					model.addAttribute("listSites",
 							mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
@@ -1539,8 +1539,7 @@ public class NetworkController {
 							+ ") as countUcells FROM AR_SITE b,NODE_ACTIVE a where b.WARE_ID!='0' and b.WARE_ID is not null and b.WARE_ID!='null' "
 							+ "AND a.WARE_ID=b.WARE_ID "
 							+ generateDateCondition(parsingDate, "a");
-					strSites = AppendQuery("j", arrayParam, strSites);
-					
+					strSites = AppendQuery("a", arrayParam, strSites);
 					model.addAttribute("listSites",
 							mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
@@ -1649,7 +1648,7 @@ public class NetworkController {
 							+ ") as countUcells FROM AR_SITE b,NODE_ACTIVE a where b.WARE_ID!='0' and b.WARE_ID is not null and b.WARE_ID!='null' "
 							+ "AND a.WARE_ID=b.WARE_ID "
 							+ generateDateCondition(parsingDate, "a");
-					strSites = AppendQuery("j", arrayParam, strSites);
+					strSites = AppendQuery("a", arrayParam, strSites);
 					model.addAttribute("listSites",
 							mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
