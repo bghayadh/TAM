@@ -50,14 +50,22 @@ import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.AccessCableJunction;
 import com.aliat.alm.models.DistributionBoard;
 import com.aliat.alm.models.DistributionBoardMapping;
+import com.aliat.alm.models.DistributionBoardSurvey;
 import com.aliat.alm.models.Duct;
 import com.aliat.alm.models.DuctAuxPoints;
 import com.aliat.alm.models.FiberAuxPoints;
 import com.aliat.alm.models.FiberCable;
+import com.aliat.alm.models.FiberCableSurvey;
 import com.aliat.alm.models.FiberStrands;
+import com.aliat.alm.models.FiberStrandsSurvey;
 import com.aliat.alm.models.FiberTubes;
+import com.aliat.alm.models.FiberTubesSurvey;
+import com.aliat.alm.models.HandholeSurvey;
+import com.aliat.alm.models.ManholeSurvey;
 import com.aliat.alm.models.NodeActive;
+import com.aliat.alm.models.NodeSurvey;
 import com.aliat.alm.models.StrandAuxPoints;
+import com.aliat.alm.models.Survey;
 import com.aliat.alm.models.Trench;
 import com.aliat.alm.models.TrenchAuxPoints;
 import com.aliat.alm.models.TubeAuxPoints;
@@ -693,7 +701,10 @@ public class PhysicalLayerController {
 							String closestLatPoint = request.getParameter("closestLatPoint");
 							String closestLongPoint = request.getParameter("closestLongPoint");
 							String getRelatedPoints = request.getParameter("getRelatedPoints");
-							
+							String customerID = request.getParameter("CustomerID");
+							String serviceReq = request.getParameter("serviceReq");
+							String serviceRef = request.getParameter("serviceRef");
+
 							//Calculate 2 long & 2 lat on circle's borders
 							double[] bordeCircleLatitudes = calculateBorderCircleLatitudes(Double.valueOf(closestLatPoint), Double.valueOf(closestLongPoint),  Double.valueOf(closestDisRange));							
 							double[] borderCircleLongitudes = calculateBorderCircleLongitudes(Double.valueOf(closestLatPoint), Double.valueOf(closestLongPoint),  Double.valueOf(closestDisRange));
@@ -1074,7 +1085,10 @@ public class PhysicalLayerController {
 				model.addAttribute("startLng", borderCircleLongitudes[0]);
 				model.addAttribute("endLng", borderCircleLongitudes[1]);
 				model.addAttribute("startLat", bordeCircleLatitudes[0]);
-				model.addAttribute("endLat", bordeCircleLatitudes[1]);			
+				model.addAttribute("endLat", bordeCircleLatitudes[1]);	
+				model.addAttribute("CustomerID", customerID);	
+				model.addAttribute("serviceReq", serviceReq);	
+				model.addAttribute("serviceRef", serviceRef);	
 
 			}
 			else if (StringUtils.equalsIgnoreCase(request.getParameter("Checked"), "StartEnd")) {
@@ -4643,7 +4657,7 @@ public class PhysicalLayerController {
 		}
 	
 	}
-
+	
 	@RequestMapping(value = "/saveHandhole", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> saveHandhole(Locale locale, Model model, HttpServletRequest request,
@@ -12681,7 +12695,409 @@ public class PhysicalLayerController {
 		}
 		return null;
 	}
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/saveSurvey", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> saveSurvey(Locale locale, Model model,
+			@ModelAttribute ItemParameters itemParameters, HttpServletRequest request, HttpServletResponse response)
+			 {
 
+	Map<String, Object> rtn = new LinkedHashMap<>();
+	session = AlmDbSession.getInstance().getSession();
+	if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+		rtn.put("Login", "redirect:/");
+		return rtn;
+	}
+	if (session != null && session.isOpen()) {
+
+		tx = session.beginTransaction();
+		try {
+
+			Date date = new Date();
+			Calendar calendar = new GregorianCalendar();
+			calendar.setTime(date);
+			int year = calendar.get(Calendar.YEAR);
+			Survey survey;
+			ManholeSurvey manholeSurvey;
+			HandholeSurvey handholeSurvey;
+			DistributionBoardSurvey dbSurvey;
+			NodeSurvey nodeSurvey;
+			FiberCableSurvey cableSurvey;
+			FiberTubesSurvey tubeSurvey;
+			FiberStrandsSurvey strandSurvey;
+
+
+			String surveyID="";
+
+			System.out.println("Enter save survey");
+
+			synchronized (this) {
+				surveyID = "SURV_" + year + "_" + Integer.parseInt(session
+							.createNativeQuery("SELECT SURVEY FROM SEQ_TABLE").uniqueResult().toString());
+				query = session.createNativeQuery("UPDATE SEQ_TABLE SET SURVEY = SURVEY + 1 ");
+				query.executeUpdate();
+				session.createNativeQuery("commit").executeUpdate();
+			}
+			System.out.println("Enter after save survey");
+
+			String customerID = request.getParameter("customerID");
+			String serviceReference = request.getParameter("serviceReference");
+			String serviceRequest = request.getParameter("serviceRequest");
+			String longitude = request.getParameter("longitude");
+			String latitude = request.getParameter("latitude");
+			String manholeSurvID="",handholeSurvID="",dbSurvID="",nodeSurvID="",cableSurvID="",tubeSurvID="",strandSurvID="";				
+			Timestamp creationDate = new Timestamp(new Timestamp(System.currentTimeMillis()).getTime());				
+
+			survey = new Survey();
+			survey.setSurveyID(surveyID);
+			survey.setCustomerID(customerID);
+			survey.setLongitude(longitude);
+			survey.setLatitude(latitude);
+			survey.setCreationDate(creationDate);
+			survey.setServiceReference(serviceReference);
+			survey.setServiceRequest(serviceRequest);
+			session.saveOrUpdate(survey);
+			session.flush();
+			session.clear();
+			
+			if (itemParameters.getDictParameter().size() > 0) {
+				for (int i = 0; i < itemParameters.getDictParameter().size(); i++) {
+
+				manholeSurvey = new ManholeSurvey();
+						synchronized (this) {
+
+							manholeSurvID = "MH_SURV_" + year + "_"
+									+ Integer.parseInt(
+											session.createNativeQuery("SELECT MANHOLE_SURVEY FROM SEQ_TABLE")
+													.uniqueResult().toString());
+							query = session
+									.createNativeQuery("UPDATE SEQ_TABLE SET MANHOLE_SURVEY = MANHOLE_SURVEY + 1 ");
+							query.executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
+						}
+						Double drivingDistance, geoDistance,linearDistance;
+
+						drivingDistance = itemParameters.getDictParameter().get(i).get("drivingDistance") == ""
+								? 0
+								: itemParameters.getDictParameter().get(i).get("drivingDistance") == null ? 0
+										: StringUtils.equalsIgnoreCase(
+												itemParameters.getDictParameter().get(i).get("drivingDistance"),
+												"null") ? 0
+														: Double.parseDouble(itemParameters.getDictParameter()
+																.get(i).get("drivingDistance"));
+						
+						
+						geoDistance = itemParameters.getDictParameter().get(i).get("geoDistance") == "" ? 0
+								: itemParameters.getDictParameter().get(i).get("geoDistance") == null ? 0
+										: StringUtils.equalsIgnoreCase(
+												itemParameters.getDictParameter().get(i).get("geoDistance"),
+												"null") ? 0
+														: Double.parseDouble(itemParameters.getDictParameter()
+																.get(i).get("geoDistance"));
+						
+						linearDistance = itemParameters.getDictParameter().get(i).get("linearDistance") == "" ? 0
+								: itemParameters.getDictParameter().get(i).get("linearDistance") == null ? 0
+										: StringUtils.equalsIgnoreCase(
+												itemParameters.getDictParameter().get(i).get("linearDistance"),
+												"null") ? 0
+														: Double.parseDouble(itemParameters.getDictParameter()
+																.get(i).get("linearDistance"));
+						
+						manholeSurvey.setManholeSurvID(manholeSurvID);
+						manholeSurvey.setManholeID(itemParameters.getDictParameter().get(i).get("ID"));
+						manholeSurvey.setManholeName(itemParameters.getDictParameter().get(i).get("Name"));
+						manholeSurvey.setLongitude(itemParameters.getDictParameter().get(i).get("longitude"));
+						manholeSurvey.setLatitude(itemParameters.getDictParameter().get(i).get("latitude"));
+						manholeSurvey.setLinearDistance(linearDistance);
+						manholeSurvey.setDrivingDistance(drivingDistance);
+						manholeSurvey.setGeoDistance(geoDistance);
+						manholeSurvey.setSurveyID(surveyID);
+						session.saveOrUpdate(manholeSurvey);
+						session.flush();
+						session.clear();
+					}
+				}
+
+
+			if (itemParameters.getDictParameterHandholeSurv().size() > 0) {
+				for (int i = 0; i < itemParameters.getDictParameterHandholeSurv().size(); i++) {
+
+				handholeSurvey = new HandholeSurvey();
+						synchronized (this) {
+
+							handholeSurvID = "HH_SURV_" + year + "_"
+									+ Integer.parseInt(
+											session.createNativeQuery("SELECT HANDHOLE_SURVEY FROM SEQ_TABLE")
+													.uniqueResult().toString());
+							query = session
+									.createNativeQuery("UPDATE SEQ_TABLE SET HANDHOLE_SURVEY = HANDHOLE_SURVEY + 1 ");
+							query.executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
+						}
+						Double drivingDistance, geoDistance,linearDistance;
+
+						drivingDistance = itemParameters.getDictParameterHandholeSurv().get(i).get("drivingDistance") == ""
+								? 0
+								: itemParameters.getDictParameterHandholeSurv().get(i).get("drivingDistance") == null ? 0
+										: StringUtils.equalsIgnoreCase(
+												itemParameters.getDictParameterHandholeSurv().get(i).get("drivingDistance"),
+												"null") ? 0
+														: Double.parseDouble(itemParameters.getDictParameterHandholeSurv()
+																.get(i).get("drivingDistance"));
+						
+						
+						geoDistance = itemParameters.getDictParameterHandholeSurv().get(i).get("geoDistance") == "" ? 0
+								: itemParameters.getDictParameterHandholeSurv().get(i).get("geoDistance") == null ? 0
+										: StringUtils.equalsIgnoreCase(
+												itemParameters.getDictParameterHandholeSurv().get(i).get("geoDistance"),
+												"null") ? 0
+														: Double.parseDouble(itemParameters.getDictParameterHandholeSurv()
+																.get(i).get("geoDistance"));
+						
+						linearDistance = itemParameters.getDictParameterHandholeSurv().get(i).get("linearDistance") == "" ? 0
+								: itemParameters.getDictParameterHandholeSurv().get(i).get("linearDistance") == null ? 0
+										: StringUtils.equalsIgnoreCase(
+												itemParameters.getDictParameterHandholeSurv().get(i).get("linearDistance"),
+												"null") ? 0
+														: Double.parseDouble(itemParameters.getDictParameterHandholeSurv()
+																.get(i).get("linearDistance"));
+						
+						handholeSurvey.setHandholeSurvID(handholeSurvID);
+						handholeSurvey.setHandholeID(itemParameters.getDictParameterHandholeSurv().get(i).get("ID"));
+						handholeSurvey.setHandholeName(itemParameters.getDictParameterHandholeSurv().get(i).get("Name"));
+						handholeSurvey.setLongitude(itemParameters.getDictParameterHandholeSurv().get(i).get("longitude"));
+						handholeSurvey.setLatitude(itemParameters.getDictParameterHandholeSurv().get(i).get("latitude"));
+						handholeSurvey.setLinearDistance(linearDistance);
+						handholeSurvey.setDrivingDistance(drivingDistance);
+						handholeSurvey.setGeoDistance(geoDistance);
+						handholeSurvey.setSurveyID(surveyID);
+						session.saveOrUpdate(handholeSurvey);
+						session.flush();
+						session.clear();
+					}
+				}
+			if (itemParameters.getDictParameterDbSurv().size() > 0) {
+				for (int i = 0; i < itemParameters.getDictParameterDbSurv().size(); i++) {
+
+				dbSurvey = new DistributionBoardSurvey();
+						synchronized (this) {
+
+							dbSurvID = "DB_SURV_" + year + "_"
+									+ Integer.parseInt(
+											session.createNativeQuery("SELECT DISTRIBUTION_BOARD_SURVEY FROM SEQ_TABLE")
+													.uniqueResult().toString());
+							query = session
+									.createNativeQuery("UPDATE SEQ_TABLE SET DISTRIBUTION_BOARD_SURVEY = DISTRIBUTION_BOARD_SURVEY + 1 ");
+							query.executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
+						}
+						Double drivingDistance, geoDistance,linearDistance;
+
+						drivingDistance = itemParameters.getDictParameterDbSurv().get(i).get("drivingDistance") == ""
+								? 0
+								: itemParameters.getDictParameterDbSurv().get(i).get("drivingDistance") == null ? 0
+										: StringUtils.equalsIgnoreCase(
+												itemParameters.getDictParameterDbSurv().get(i).get("drivingDistance"),
+												"null") ? 0
+														: Double.parseDouble(itemParameters.getDictParameterDbSurv()
+																.get(i).get("drivingDistance"));
+						
+						
+						geoDistance = itemParameters.getDictParameterDbSurv().get(i).get("geoDistance") == "" ? 0
+								: itemParameters.getDictParameterDbSurv().get(i).get("geoDistance") == null ? 0
+										: StringUtils.equalsIgnoreCase(
+												itemParameters.getDictParameterDbSurv().get(i).get("geoDistance"),
+												"null") ? 0
+														: Double.parseDouble(itemParameters.getDictParameterDbSurv()
+																.get(i).get("geoDistance"));
+						
+						linearDistance = itemParameters.getDictParameterDbSurv().get(i).get("linearDistance") == "" ? 0
+								: itemParameters.getDictParameterDbSurv().get(i).get("linearDistance") == null ? 0
+										: StringUtils.equalsIgnoreCase(
+												itemParameters.getDictParameterDbSurv().get(i).get("linearDistance"),
+												"null") ? 0
+														: Double.parseDouble(itemParameters.getDictParameterDbSurv()
+																.get(i).get("linearDistance"));
+						
+						dbSurvey.setDbSurvID(dbSurvID);
+						dbSurvey.setDbID(itemParameters.getDictParameterDbSurv().get(i).get("ID"));
+						dbSurvey.setDbName(itemParameters.getDictParameterDbSurv().get(i).get("Name"));
+						dbSurvey.setLongitude(itemParameters.getDictParameterDbSurv().get(i).get("longitude"));
+						dbSurvey.setLatitude(itemParameters.getDictParameterDbSurv().get(i).get("latitude"));
+						dbSurvey.setLinearDistance(linearDistance);
+						dbSurvey.setDrivingDistance(drivingDistance);
+						dbSurvey.setGeoDistance(geoDistance);
+						dbSurvey.setSurveyID(surveyID);
+						session.saveOrUpdate(dbSurvey);
+						session.flush();
+						session.clear();
+					}
+				}
+			
+			if (itemParameters.getDictParameterNodeSurv().size() > 0) {
+				for (int i = 0; i < itemParameters.getDictParameterNodeSurv().size(); i++) {
+
+				nodeSurvey = new NodeSurvey();
+						synchronized (this) {
+
+							nodeSurvID = "NODE_SURV_" + year + "_"
+									+ Integer.parseInt(
+											session.createNativeQuery("SELECT NODE_SURVEY FROM SEQ_TABLE")
+													.uniqueResult().toString());
+							query = session
+									.createNativeQuery("UPDATE SEQ_TABLE SET NODE_SURVEY = NODE_SURVEY + 1 ");
+							query.executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
+						}
+						Double drivingDistance, geoDistance,linearDistance;
+
+						drivingDistance = itemParameters.getDictParameterNodeSurv().get(i).get("drivingDistance") == ""
+								? 0
+								: itemParameters.getDictParameterNodeSurv().get(i).get("drivingDistance") == null ? 0
+										: StringUtils.equalsIgnoreCase(
+												itemParameters.getDictParameterNodeSurv().get(i).get("drivingDistance"),
+												"null") ? 0
+														: Double.parseDouble(itemParameters.getDictParameterNodeSurv()
+																.get(i).get("drivingDistance"));
+						
+						
+						geoDistance = itemParameters.getDictParameterNodeSurv().get(i).get("geoDistance") == "" ? 0
+								: itemParameters.getDictParameterNodeSurv().get(i).get("geoDistance") == null ? 0
+										: StringUtils.equalsIgnoreCase(
+												itemParameters.getDictParameterNodeSurv().get(i).get("geoDistance"),
+												"null") ? 0
+														: Double.parseDouble(itemParameters.getDictParameterNodeSurv()
+																.get(i).get("geoDistance"));
+						
+						linearDistance = itemParameters.getDictParameterNodeSurv().get(i).get("linearDistance") == "" ? 0
+								: itemParameters.getDictParameterNodeSurv().get(i).get("linearDistance") == null ? 0
+										: StringUtils.equalsIgnoreCase(
+												itemParameters.getDictParameterNodeSurv().get(i).get("linearDistance"),
+												"null") ? 0
+														: Double.parseDouble(itemParameters.getDictParameterNodeSurv()
+																.get(i).get("linearDistance"));
+						
+						nodeSurvey.setNodeSurvID(nodeSurvID);
+						nodeSurvey.setNodeID(itemParameters.getDictParameterNodeSurv().get(i).get("ID"));
+						nodeSurvey.setNodeName(itemParameters.getDictParameterNodeSurv().get(i).get("Name"));
+						nodeSurvey.setLongitude(itemParameters.getDictParameterNodeSurv().get(i).get("longitude"));
+						nodeSurvey.setLatitude(itemParameters.getDictParameterNodeSurv().get(i).get("latitude"));
+						nodeSurvey.setLinearDistance(linearDistance);
+						nodeSurvey.setDrivingDistance(drivingDistance);
+						nodeSurvey.setGeoDistance(geoDistance);
+						nodeSurvey.setSurveyID(surveyID);
+						session.saveOrUpdate(nodeSurvey);
+						session.flush();
+						session.clear();
+					}
+				}
+			if (itemParameters.getDictParameterCableSurv().size() > 0) {
+				for (int i = 0; i < itemParameters.getDictParameterCableSurv().size(); i++) {
+
+				cableSurvey = new FiberCableSurvey();
+						synchronized (this) {
+
+							cableSurvID = "CABLE_SURV_" + year + "_"
+									+ Integer.parseInt(
+											session.createNativeQuery("SELECT FIBER_CABLES_SURVEY FROM SEQ_TABLE")
+													.uniqueResult().toString());
+							query = session
+									.createNativeQuery("UPDATE SEQ_TABLE SET FIBER_CABLES_SURVEY = FIBER_CABLES_SURVEY + 1 ");
+							query.executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
+						}
+
+						
+						cableSurvey.setFiberCableSurvID(cableSurvID);
+						cableSurvey.setFiberCableID(itemParameters.getDictParameterCableSurv().get(i).get("ID"));
+						cableSurvey.setFiberCableName(itemParameters.getDictParameterCableSurv().get(i).get("Name"));
+						cableSurvey.setSource(itemParameters.getDictParameterCableSurv().get(i).get("source"));
+						cableSurvey.setDestination(itemParameters.getDictParameterCableSurv().get(i).get("destination"));
+						cableSurvey.setSurveyID(surveyID);
+						session.saveOrUpdate(cableSurvey);
+						session.flush();
+						session.clear();
+					}
+				}
+			if (itemParameters.getDictParameterTubeSurv().size() > 0) {
+				for (int i = 0; i < itemParameters.getDictParameterTubeSurv().size(); i++) {
+
+				tubeSurvey = new FiberTubesSurvey();
+						synchronized (this) {
+
+							tubeSurvID = "TUBE_SURV_" + year + "_"
+									+ Integer.parseInt(
+											session.createNativeQuery("SELECT FIBER_TUBES_SURVEY FROM SEQ_TABLE")
+													.uniqueResult().toString());
+							query = session
+									.createNativeQuery("UPDATE SEQ_TABLE SET FIBER_TUBES_SURVEY = FIBER_TUBES_SURVEY + 1 ");
+							query.executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
+						}
+
+						
+						tubeSurvey.setTubeSurvID(tubeSurvID);
+						tubeSurvey.setTubeID(itemParameters.getDictParameterTubeSurv().get(i).get("ID"));
+						tubeSurvey.setTubeName(itemParameters.getDictParameterTubeSurv().get(i).get("Name"));
+						tubeSurvey.setSource(itemParameters.getDictParameterTubeSurv().get(i).get("source"));
+						tubeSurvey.setDestination(itemParameters.getDictParameterTubeSurv().get(i).get("destination"));
+						tubeSurvey.setSurveyID(surveyID);
+						session.saveOrUpdate(tubeSurvey);
+						session.flush();
+						session.clear();
+					}
+				}
+						
+			if (itemParameters.getDictParameterStrandSurv().size() > 0) {
+				for (int i = 0; i < itemParameters.getDictParameterStrandSurv().size(); i++) {
+
+				strandSurvey = new FiberStrandsSurvey();
+						synchronized (this) {
+
+							strandSurvID = "STRAND_SURV_" + year + "_"
+									+ Integer.parseInt(
+											session.createNativeQuery("SELECT FIBER_STRANDS_SURVEY FROM SEQ_TABLE")
+													.uniqueResult().toString());
+							query = session
+									.createNativeQuery("UPDATE SEQ_TABLE SET FIBER_STRANDS_SURVEY = FIBER_STRANDS_SURVEY + 1 ");
+							query.executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
+						}
+
+						
+						strandSurvey.setStrandSurvID(strandSurvID);
+						strandSurvey.setStrandID(itemParameters.getDictParameterStrandSurv().get(i).get("ID"));
+						strandSurvey.setStrandName(itemParameters.getDictParameterStrandSurv().get(i).get("Name"));
+						strandSurvey.setSource(itemParameters.getDictParameterStrandSurv().get(i).get("source"));
+						strandSurvey.setDestination(itemParameters.getDictParameterStrandSurv().get(i).get("destination"));
+						strandSurvey.setSurveyID(surveyID);
+						session.saveOrUpdate(strandSurvey);
+						session.flush();
+						session.clear();
+					}
+				}
+			
+			
+						
+									
+		} catch (Exception e) {
+			sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			exceptionAsString = sw.toString();
+			logger.finest("Error in save Survey due to \n " + exceptionAsString);
+			logger.info("Error in save Survey due to \n " + exceptionAsString);
+		}
+
+		finally {
+			if (session != null && session.isOpen()) {
+				tx.commit();
+				session.close();
+
+			}
+		}
+	}
+	return rtn;
+}
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/SearchForSource", method = RequestMethod.GET)
 	@ResponseBody
@@ -12779,6 +13195,61 @@ public class PhysicalLayerController {
 		return rtn;
 
 	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/ServiceReferenceAutocomplete", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> ServiceReferenceAutocomplete(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) {
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", "redirect:/");
+			return rtn;
+		} else {
+
+			session = AlmDbSession.getInstance().getSession();
+			String search = request.getParameter("search");
+
+			if (session != null && session.isOpen()) {
+				tx = session.beginTransaction();
+				try {
+						query = session.createNativeQuery(
+								"SELECT CUST_SERV_ID,REF_ID FROM CUSTOMER_SERVICE a WHERE "
+								+ " (( UPPER(CUST_SERV_ID) LIKE UPPER(:param)  OR UPPER(REF_ID) LIKE UPPER(:param) ))  ");
+
+						query.setParameter("param", "%" +search+ "%");
+						query.setFirstResult(0);
+						query.setMaxResults(40);
+
+					if (query.getResultList() != null && query.getResultList().size() != 0) {
+
+						rtn.put("serviceList", query.getResultList());
+					} 
+					else {
+						rtn.put("serviceList", "");
+					}
+
+				} catch (Exception e) {
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in ServiceReferenceAutocomplete due to \n " + exceptionAsString);
+					logger.info("Error in ServiceReferenceAutocomplete due to \n " + exceptionAsString);
+					rtn.put("serviceList", null);
+				} finally {
+					if (session != null && session.isOpen()) {
+						tx.commit();
+						session.close();
+
+					}
+				}
+			}
+		}
+		return rtn;
+
+	}
+
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {

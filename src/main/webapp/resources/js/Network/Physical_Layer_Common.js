@@ -370,7 +370,86 @@ $("#open-popup-btn").click(function() {
    	$("#fiberCitySearch").modal('show');	 	
 	   
 });
-	  	  
+//Customer ID in find nearest popup
+$("#customerDetails").autocomplete({
+	
+	source: function(request, response) {
+	$.ajax({
+		type: "GET",
+		contentType: "application/json; charset=utf-8",
+		url: getContext()+'/GetAllNetworkCustomer',
+ 		data: {
+			"search":$("#customerDetails").val(),							
+		},	              
+		dataType: "json",
+		success: function (data) {
+			if (data != null) {
+		      response(data.globalList);	                     
+		   }
+		},
+		error: function(result) {
+		  alert("Error");
+		}
+	  });
+	}, minLength:0, maxShowItems: 40, scroll:true,
+		select: function(event, ui) {
+			this.value = (ui.item ? ui.item[0]  : '');
+			
+			if($("#closestLongPoint").val() =="" || $("#closestLatPoint").val() =="") {
+				$("#closestLongPoint").val(ui.item[4]);
+				$("#closestLatPoint").val(ui.item[5]);
+			}								
+			return false;
+		}
+		}).data( "ui-autocomplete" )._renderItem= function(ul, item) {		
+			return $("<li class='each'>").append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
+	                item[0] + "</span><br><span class='desc'>" +
+	                item[1] +', ' + item[2] +"</span></div>").appendTo(ul);						
+		};
+			
+		$("#customerDetails").focus(function(){
+			if (this.value == ""){
+	         $(this).autocomplete("search");
+	        }						
+	});	 
+	
+//Customer Service & ref ID in find nearest popup
+$("#serviceReference").autocomplete({
+	
+	source: function(request, response) {
+	$.ajax({
+		type: "GET",
+		contentType: "application/json; charset=utf-8",
+		url: getContext()+'/ServiceReferenceAutocomplete',
+ 		data: {
+			"search":$("#serviceReference").val(),							
+		},	              
+		dataType: "json",
+		success: function (data) {
+			if (data != null) {
+		      response(data.serviceList);	                     
+		   }
+		},
+		error: function(result) {
+		  alert("Error");
+		}
+	  });
+	}, minLength:0, maxShowItems: 40, scroll:true,
+		select: function(event, ui) {
+			this.value = (ui.item ? ui.item[0]+":"+ui.item[1]  : '');										
+			return false;
+		}
+		}).data( "ui-autocomplete" )._renderItem= function(ul, item) {		
+			return $("<li class='each'>").append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
+	                item[0] + "</span><br><span class='desc'>" +
+	                item[1] +"</span></div>").appendTo(ul);						
+		};
+			
+		$("#serviceReference").focus(function(){
+			if (this.value == ""){
+	         $(this).autocomplete("search");
+	        }						
+	});	   	  
 $("#selectHeaderSearch").on('change',function(){ 
 		$("#autoCompleteHeaderSearch").val("");
 });
@@ -5165,11 +5244,25 @@ function viewNearestPointEvent(){
 			    alert("Please enter a number in the input field.");
 			    
 			  }else{
+				
+				if (document.getElementById("serviceReference").value !== ""){
+				 serviceReq= document.getElementById("serviceReference").value.split(":")[0];
+				 serviceRef= document.getElementById("serviceReference").value.split(":")[1];
+				}
+				else {
+					serviceReq="";
+					serviceRef="";
+				}
+				
 			     urlString += "&closestLatPoint="+$("#closestLatPoint").val()+"";
 			     urlString += "&closestLongPoint="+$("#closestLongPoint").val()+"";
 			     urlString += "&closestDisRange="+$("#closestDisRange").val()+"";
 			     urlString += "&noP="+$("#noP").val()+"";
 			     urlString += "&getRelatedPoints="+$("#getRelatedPoints").val()+"";	
+				 urlString += "&CustomerID="+$("#customerDetails").val()+"";	
+			 	 urlString += "&serviceReq="+serviceReq+"";
+		 		 urlString += "&serviceRef="+serviceRef+"";
+		
 			 	 window.location.href = getContext()+"/NetworkPhysicalLayer?Checked="+checkedOption+urlString;
 			    }	
 			    	
@@ -5221,7 +5314,7 @@ function openFindNearMultySite(rowData) {
     });
 }
 
-function  openFindNearest(checkedOption,closestLatPoint,closestLongPoint,closestDisRange,noP,arrayManhole,arrayHandhole,arrayDB,arrayFibers,arrayStrands,arrayTubes,arrayNodes,getRelatedPoints,strtLng,endLng,strtLat,endLat){
+function  openFindNearest(checkedOption,closestLatPoint,closestLongPoint,closestDisRange,noP,arrayManhole,arrayHandhole,arrayDB,arrayFibers,arrayStrands,arrayTubes,arrayNodes,getRelatedPoints,strtLng,endLng,strtLat,endLat,customerID,serviceReq,serviceRef){
  
 	$("#StartEnd").prop("checked",false);
 	 document.getElementById("closestLongDiv").style.display = "block";
@@ -5255,7 +5348,10 @@ function  openFindNearest(checkedOption,closestLatPoint,closestLongPoint,closest
 			else {
 				$("#getRelatedPoints").prop('checked', false);
 			}
+			$("#customerDetails").val(customerID);
 			
+			serviceReferenceValue = serviceReq+":"+serviceRef;
+			$("#serviceReference").val(serviceReferenceValue);
 			
 					 appendNearestManholesTable(arrayManhole);
 					 appendNearestHandholesTable(arrayHandhole);					        			
@@ -5741,7 +5837,7 @@ function appendNearestFiberPathsTable(result){
 			markupNearStrand ="<tr style='height:20px;'><td>There is no result<td></tr>"
 		}else {
 			result[0].forEach((res) => 
-				markupNearStrand +="<tr ><td style='min-width:150px;' class='row-pad'>"+res[0]+"</td><td style='min-width:150px;'>"+res[13]+"</td><td style='min-width:350px;'>"+res[6]+"</td><td style='min-width:350px;'>"+res[9]+"</td></tr>"
+				markupNearStrand +="<tr ><td style='min-width:150px;' class='row-pad' name='ID'><input name='ID' style='border: none;' value='"+res[0]+"' readonly></input ></td><td style='min-width:150px;' name='name' ><input name='name' style='border: none;' value='"+res[13]+"' readonly></input ></td><td style='min-width:350px;' name='source'><input name='source' style='border: none;' value='"+res[6]+"' readonly></input ></td><td style='min-width:350px;' name='destination'><input name='destination' style='border: none;' value='"+res[9]+"' readonly></input ></td></tr>"
 				);
 		}
 		$("#nearStrandId").append(markupNearStrand);
@@ -5750,7 +5846,7 @@ function appendNearestFiberPathsTable(result){
 			markupNearTube ="<tr style='height:20px;'><td>There is no result<td></tr>"
 		}else {
 			result[1].forEach((res) => 
-		markupNearTube +="<tr ><td style='min-width: 150px;' class='row-pad'>"+res[0]+"</td><td style='min-width: 150px;'>"+res[13]+"</td><td style='min-width: 350px;'>"+res[6]+"</td><td style='min-width: 350px;'>"+res[9]+"</td></tr>"
+				markupNearTube +="<tr ><td style='min-width: 150px;' class='row-pad' name='ID'><input name='ID' style='border: none;' value='"+res[0]+"' readonly></input ></td><td style='min-width: 150px;' name='name'><input name='name' style='border: none;' value='"+res[13]+"' readonly></input ></td><td style='min-width: 350px;' name='source'><input name='source' style='border: none;' value='"+res[6]+"' readonly></input ></td><td style='min-width: 350px;' name='destination'><input name='destination' style='border: none;' value='"+res[9]+"' readonly></input ></td></tr>"
 			);
 		}						  
 		$("#nearTubeId").append(markupNearTube);
@@ -5759,7 +5855,7 @@ function appendNearestFiberPathsTable(result){
 			markupNearFiber ="<tr style='height:20px;'><td>There is no result<td></tr>"
 		}else {
 			result[2].forEach((res) => 
-				 markupNearFiber +="<tr ><td style='min-width: 150px;' class='row-pad'>"+res[4]+"</td><td style='min-width: 150px;'>"+res[13]+"</td><td style='min-width: 350px;'>"+res[6]+"</td><td style='min-width: 350px;'>"+res[9]+"</td></tr>"
+				 markupNearFiber +="<tr ><td style='min-width: 150px;' class='row-pad' name='ID'><input name='ID' style='border: none;' value='"+res[4]+"' readonly></input ></td><td style='min-width: 150px;' name='name'><input name='name' style='border: none;' value='"+res[13]+"' readonly></input ></td><td style='min-width: 350px;' name='source'><input name='source' style='border: none;' value='"+res[6]+"' readonly></input ></td><td style='min-width: 350px;' name='destination'><input name='destination' style='border: none;' value='"+res[9]+"' readonly></input ></td></tr>"
 			);
 		}						  
 		$("#nearFiberId").append(markupNearFiber);
@@ -5784,9 +5880,9 @@ function appendNearestDBoardTable(result){
 				    else{
 				    	if(result[i][10] == null || result[i][10]==""){
 							//markupDBoard +="<tr ><td style='min-width:250px;' class='row-pad'>"+result[i][0]+"</td><td style='min-width:250px;'>"+result[i][3]+"</td><td  name='LONGG' style='min-width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td style='min-width:150px;'  name='LATT'><input name='LATT' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='min-width:50px;'>"+result[i][8]/1.60934+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='SomeDeleteRowFunction(this)'>Get Distance</button> </td></tr>"
-							markupDBoard +="<tr style='height: 30px;'><td><input type='checkbox' class='DBBOQ' id=BOQ_"+result[i][0]+" ></td><td style='min-width:150px;'>"+result[i][0]+"</td><td style='min-width:150px;'>"+result[i][3]+"</td><td  name='LONGG' style='min-width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td style='min-width:150px;'  name='LATT'><input name='LATT' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='min-width:50px;'>"+result[i][9]+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistance(this)'>Get Distance</button> </td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td></tr>"
+							markupDBoard +="<tr style='height: 30px;'><td><input type='checkbox' class='DBBOQ' id=BOQ_"+result[i][0]+" ></td><td name='ID' style='min-width:150px;'><input name='ID' style='border: none;' value='"+result[i][0]+"' readonly></input ></td><td name='name' style='min-width:150px;'><input name='name' style='border: none;' value='"+result[i][3]+"' readonly></input ></td><td  name='LONGG' style='min-width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td style='min-width:150px;'  name='LATT'><input name='LATT' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td name='linearDistance' style='min-width:50px;'><input name='linearDistance' style='border: none;' value='"+result[i][9]+"' readonly></input ></td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistance(this)'>Get Distance</button> </td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td></tr>"
 						}else{
-							markupDBoard +="<tr style='height: 30px;'><td><input type='checkbox' class='DBBOQ' id=BOQ_"+result[i][0]+" ></td><td style='min-width:150px;'>"+result[i][0]+"</td><td style='min-width:150px;'>"+result[i][3]+"</td><td style='min-width:150px;'>"+result[i][1]+"</td><td style='min-width:150px;'>"+result[i][2]+"</td><td style='min-width:50px;'>"+result[i][8]+"</td><td style='min-width:90px;'> <label name='DDistance' style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'>"+(result[i][10])+"</label></td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td></tr>"
+							markupDBoard +="<tr style='height: 30px;'><td><input type='checkbox' class='DBBOQ' id=BOQ_"+result[i][0]+" ></td><td name='ID' style='min-width:150px;'><input name='ID' style='border: none;' value='"+result[i][0]+"' readonly></input></td><td name='name' 'style='min-width:150px;'><input name='name' style='border: none;' value='"+result[i][3]+"' readonly></input ></td><td name='LONGG' style='min-width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td name='LATT' style='min-width:150px;'><input name='LATT' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='min-width:50px;'>"+result[i][8]+"</td><td style='min-width:90px;'> <label name='DDistance' style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'>"+(result[i][10])+"</label></td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td></tr>"
 						}				    	
 				    }
 				}
@@ -5892,10 +5988,10 @@ function appendNearestDBoardTable(result){
 				}
 				else{
 				    	if(result[i][10] == null || result[i][10]==""){
-							markupNode +="<tr style='height: 30px;'><td><input type='checkbox' class='nodeBOQ' id=BOQ_"+result[i][0]+" ></td><td style='min-width:150px;'>"+result[i][0]+"</td><td style='min-width:150px;'>"+result[i][1]+"</td><td  name='LONGG' style='min-width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][5]+"' readonly></input ></td><td style='min-width:150px;'  name='LATT'><input name='LATT' style='border: none;' value='"+result[i][6]+"' readonly></input ></td><td style='min-width:50px;'>"+result[i][9]+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistance(this)'>Get Distance</button> </td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td></tr>"
+							markupNode +="<tr style='height: 30px;'><td><input type='checkbox' class='nodeBOQ' id=BOQ_"+result[i][0]+" ></td><td name='ID' style='min-width:150px;'><input name='ID' style='border: none;' value='"+result[i][0]+"' readonly></input ></td><td name='name' style='min-width:150px;'><input name='name' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td  name='LONGG' style='min-width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][5]+"' readonly></input ></td><td style='min-width:150px;'  name='LATT'><input name='LATT' style='border: none;' value='"+result[i][6]+"' readonly></input ></td><td name='linearDistance' style='min-width:50px;'><input name='linearDistance' style='border: none;' value='"+result[i][9]+"' readonly></input ></td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistance(this)'>Get Distance</button> </td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td></tr>"
 
 						}else{
-							markupNode +="<tr style='height: 30px;'><td><input type='checkbox' class='nodeBOQ' id=BOQ_"+result[i][0]+" ></td><td style='min-width:150px;'>"+result[i][0]+"</td><td style='min-width:150px;'>"+result[i][1]+"</td><td style='min-width:150px;'>"+result[i][5]+"</td><td style='min-width:150px;'>"+result[i][6]+"</td><td style='min-width:50px;'>"+result[i][9]+"</td><td style='min-width:90px;'> <label name='DDistance' style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'>"+(result[i][10])+"</label></td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td></tr>"
+							markupNode +="<tr style='height: 30px;'><td><input type='checkbox' class='nodeBOQ' id=BOQ_"+result[i][0]+" ></td><td name='ID' style='min-width:150px;'><input name='ID' style='border: none;' value='"+result[i][0]+"' readonly></input ></td><td name='name' style='min-width:150px;'><input name='name' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td name='LONGG' style='min-width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][5]+"' readonly></input ></td><td style='min-width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][6]+"' readonly></input ></td><td style='min-width:50px;'>"+result[i][9]+"</td><td style='min-width:90px;'> <label name='DDistance' style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'>"+(result[i][10])+"</label></td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td></tr>"
 						}
 				 }
 
@@ -6002,6 +6098,9 @@ function appendNearestDBoardTable(result){
 		var markupHandh="";		
 		document.getElementById("findNearestHandRes").innerHTML = "";
 		
+		handholeSurveyArray =[];
+
+		
 		if (result.length==0){
 			document.getElementById("findNearestHandRes").innerHTML = '<p style=" color:#ff0000;font-size: 1.4em;">There is no result</p>';
 			//markupHandh ="<tr style='height:20px;'><td>There is no result<td></tr>"
@@ -6016,11 +6115,11 @@ function appendNearestDBoardTable(result){
 			    else{
 			    	if(result[i][8] == null || result[i][8]==""){
 						//markupHandh +="<tr style='height: 30px;'><td><input type='checkbox' style='width:100px' ></td><td  >"+result[i][0]+"</td><td style='min-width:250px;'>"+result[i][1]+"</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][3]+"' readonly></input ></td><td style='width:100px;'>"+(result[i][9]/1.60934)+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='SomeDeleteRowFunction(this)'>Get Distance</button> </td></tr>"
-						markupHandh +="<tr style='height: 30px;'><td><input type='checkbox' class='HandholeBOQ' id=BOQ_"+result[i][0]+" ></td><td  >"+result[i][0]+"</td><td style='min-width:250px;'>"+result[i][1]+"</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][3]+"' readonly></input ></td><td style='width:100px;'>"+(result[i][7])+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistance(this)'>Get Distance</button> </td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td></tr>"
+						markupHandh +="<tr style='height: 30px;'><td><input type='checkbox' class='HandholeBOQ' id=BOQ_"+result[i][0]+" ></td><td name='ID'><input name='ID' style='border: none;' value='"+result[i][0]+"' readonly></input ></td><td style='min-width:250px;' name='name'><input name='name' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][3]+"' readonly></input ></td><td style='width:100px;' name='linearDistance'><input name='linearDistance' style='border: none;' value='"+result[i][7]+"' readonly></input ></td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistance(this)'>Get Distance</button> </td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td></tr>"
 
 					}else{
 						//markupHandh +="<tr style='height: 30px;' ><td><input type='checkbox' style='width:100px' ></td><td  >"+result[i][0]+"</td><td style='min-width:250px;'>"+result[i][1]+"</td><td style='width:150px;'>"+result[i][2]+"</td><td style='width:150px;'>"+result[i][3]+"</td><td style='width:100px;'>"+(result[i][9]/1.60934)+"</td><td style='min-width:90px;'> <label name='DDistance' style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'>"+(result[i][10])+"</label></td></tr>"
-						markupHandh +="<tr style='height: 30px;' ><td><input type='checkbox' class='HandholeBOQ' id=BOQ_"+result[i][0]+" ></td><td  >"+result[i][0]+"</td><td style='min-width:250px;'>"+result[i][1]+"</td><td style='width:150px;'>"+result[i][2]+"</td><td style='width:150px;'>"+result[i][3]+"</td><td style='width:100px;'>"+(result[i][7])+"</td><td style='min-width:90px;'> <label name='DDistance' style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'>"+(result[i][8])+"</label></td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td></tr>"
+						markupHandh +="<tr style='height: 30px;' ><td><input type='checkbox' class='HandholeBOQ' id=BOQ_"+result[i][0]+" ></td><td name='ID' ><input name='ID' style='border: none;' value='"+result[i][0]+"' readonly></input ></td><td name ='name' style='min-width:250px;'><input name='name' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td style='width:150px;'>"+result[i][2]+"</td><td style='width:150px;'>"+result[i][3]+"</td><td style='width:100px;'>"+(result[i][7])+"</td><td style='min-width:90px;'> <label name='DDistance' style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'>"+(result[i][8])+"</label></td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td></tr>"					
 					}
 			    	
 			    }
@@ -6159,6 +6258,8 @@ function appendNearestDBoardTable(result){
 	function appendNearestManholesTable(result){
 		var markupManh="";
 		document.getElementById("findNearestManRes").innerHTML = "";
+		
+		manholeSurveyArray =[];
 								
 		if (result.length==0){
 		document.getElementById("findNearestManRes").innerHTML = '<p style=" color:#ff0000;font-size: 1.4em;">There is no result</p>';
@@ -6168,17 +6269,16 @@ function appendNearestDBoardTable(result){
 			//alert(result[i]);
 			if($("#StartEnd").is(":checked")){
 				markupManh +="<tr style='height: 30px;'><td ><input type='checkbox' class='ManholeBOQ' id=BOQ_"+result[i][0]+" ></td><td  >"+result[i][0]+"</td><td name ='manholeId' style='min-width:250px;'>"+result[i][1]+"</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][3]+"' readonly></input ></td>"
-
 		    }
 		    else{
 			
 		    	if(result[i][9] == null || result[i][9]==""){
 				//markupManh +="<tr style='height: 30px;'><td><input type='checkbox' style='width:100px' ></td><td  >"+result[i][0]+"</td><td style='min-width:250px;'>"+result[i][1]+"</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][3]+"' readonly></input ></td><td style='width:100px;'>"+(result[i][9]/1.60934)+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='SomeDeleteRowFunction(this)'>Get Distance</button> </td></tr>"
-					markupManh +="<tr style='height: 30px;'><td ><input type='checkbox' class='ManholeBOQ' id=BOQ_"+result[i][0]+" ></td><td  >"+result[i][0]+"</td><td name ='manholeId' style='min-width:250px;'>"+result[i][1]+"</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][3]+"' readonly></input ></td><td style='width:100px;'>"+(result[i][7])+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistance(this)'>Get Distance</button> </td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td></tr>"
+					markupManh +="<tr style='height: 30px;'><td ><input type='checkbox' class='ManholeBOQ' id=BOQ_"+result[i][0]+" ></td><td name='ID' ><input name='ID' style='border: none;' value='"+result[i][0]+"' readonly></input ></td><td name='name' style='min-width:250px;'><input name='name' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][3]+"' readonly></input ></td><td style='width:100px;' name='linearDistance' ><input name='linearDistance' style='border: none;' value='"+result[i][7]+"' readonly></input ></td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistance(this)'>Get Distance</button> </td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td></tr>"
 
 			    }else{
 				//markupManh +="<tr style='height: 30px;' ><td><input type='checkbox' style='width:100px' ></td><td  >"+result[i][0]+"</td><td style='min-width:250px;'>"+result[i][1]+"</td><td style='width:150px;'>"+result[i][2]+"</td><td style='width:150px;'>"+result[i][3]+"</td><td style='width:100px;'>"+(result[i][9]/1.60934)+"</td><td style='min-width:90px;'> <label name='DDistance' style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'>"+(result[i][10])+"</label></td></tr>"
-					markupManh +="<tr style='height: 30px;' ><td><input type='checkbox' class='ManholeBOQ' id=BOQ_"+result[i][0]+" ></td><td  >"+result[i][0]+"</td><td name ='manholeId' style='min-width:250px;'>"+result[i][1]+"</td><td style='width:150px;'>"+result[i][2]+"</td><td style='width:150px;'>"+result[i][3]+"</td><td style='width:100px;'>"+(result[i][7])+"</td><td style='min-width:90px;'> <label name='DDistance' style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'>"+(result[i][8])+"</label></td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td></tr>"
+					markupManh +="<tr style='height: 30px;' ><td><input type='checkbox' class='ManholeBOQ' id=BOQ_"+result[i][0]+" ></td><td  >"+result[i][0]+"</td><td name ='manholeId' style='min-width:250px;'>"+result[i][1]+"</td><td style='width:150px;'>"+result[i][2]+"</td><td style='width:150px;'>"+result[i][3]+"</td><td style='width:100px;'>"+(result[i][7])+"</td><td style='min-width:90px;' name='DDistance'> <label name='DDistance' style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'>"+(result[i][8])+"</label></td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td></tr>"
 			    }
 		}
 
@@ -6232,7 +6332,8 @@ function appendNearestDBoardTable(result){
 		});
 
 	}
-function calculateGeoDistanceNearestPoints(tableId) {
+
+function calculateGeoDistanceNearestPoints(tableId,surveyArray) {
 		var tableRows = document.querySelectorAll("#"+tableId+" tr");
 		var longLatValues = [];
 		
@@ -6241,6 +6342,8 @@ function calculateGeoDistanceNearestPoints(tableId) {
 		var currentPointLatitude = 0;
 		var currentPointLongitude = 0;
 
+		let dictObj = {};
+		
 		  closestPointLatitude = $("#closestLatPoint").val();
 		  closestPointLongitude = $("#closestLongPoint").val();
 
@@ -6250,9 +6353,30 @@ function calculateGeoDistanceNearestPoints(tableId) {
 			currentPointLongitude = tableRows[i].querySelector("td[name='LONGG'] input").value;
 
 			var distance = (google.maps.geometry.spherical.computeDistanceBetween(new google.maps.LatLng(closestPointLatitude, closestPointLongitude), new google.maps.LatLng(currentPointLatitude, currentPointLongitude))/ 1000).toFixed(6); 			 
-			tableRows[i].querySelector("td[name='geoDistance'] label").textContent = distance;			
-		}		
+			tableRows[i].querySelector("td[name='geoDistance'] label").textContent = distance;	
+			
+		
+				// This array is used in save survey
+				dictObj.ID = tableRows[i].querySelector("td[name='ID'] input ").value;
+				dictObj.Name = tableRows[i].querySelector("td[name='name'] input").value;
+				dictObj.longitude = currentPointLongitude;
+				dictObj.latitude = currentPointLatitude;
+				dictObj.linearDistance = tableRows[i].querySelector("td[name='linearDistance'] input").value;
+				
+				if(tableRows[i].querySelector("td[name='DDistance'] label").textContent == "no Root") {
+					dictObj.drivingDistance = "0";
+				}
+				else {
+					dictObj.drivingDistance = tableRows[i].querySelector("td[name='DDistance'] label").textContent;
+				}
+				
+				dictObj.geoDistance = distance;
+				surveyArray.push(dictObj);
+				dictObj = {}; 	
+			}	
+		
 }	
+
 	function appendConnectedTable(result){
 		//console.log("array of sites "+result);
 		var markupConStrand="";
@@ -14919,4 +15043,22 @@ function treeSelectForClosePoints(idSelected,markerType) {
 			$("#"+idSelected+" > .TreeSpan").addClass("selected-span");
 			$("#"+idSelected+" > .TreeSpan").css("background-color", "#97b9cc");
 			IdSelectedTemp=idSelected;				
+}
+
+function getAllSurveyArrays(tableId,surveyArray) {
+	
+		var tableRows = document.querySelectorAll("#"+tableId+" tr");
+		let dictObj = {};
+
+		for (var i =0 ; i < tableRows.length; i++) { // start the loop with index 1 to exclude the header			
+					
+				// This array is used in save survey
+				dictObj.ID = tableRows[i].querySelector("td[name='ID'] input ").value;
+				dictObj.Name = tableRows[i].querySelector("td[name='name'] input").value;
+				dictObj.source = tableRows[i].querySelector("td[name='source'] input").value;
+				dictObj.destination = tableRows[i].querySelector("td[name='destination'] input").value;
+				
+				surveyArray.push(dictObj);
+				dictObj = {}; 	
+	  }	
 }

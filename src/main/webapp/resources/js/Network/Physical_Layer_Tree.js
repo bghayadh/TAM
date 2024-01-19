@@ -10645,6 +10645,64 @@ $("#saveHandhole").click(function () {
 					
 });
 
+
+$("#saveSurvey").on('click',function(){
+	
+	if(document.getElementById("customerDetails").value == "" ){
+		alert("Customer cannot be empty. ");
+		return false;
+    }
+	else if(document.getElementById("serviceReference").value == "" ){
+		alert("Service Reference cannot be empty. ");
+		return false;
+    }
+	else {	
+			
+		customerID = document.getElementById("customerDetails").value;
+		serviceReference = document.getElementById("serviceReference").value.split(":")[1];
+		serviceRequest = document.getElementById("serviceReference").value.split(":")[0];
+		longitude = document.getElementById("closestLongPoint").value;
+		latitude = document.getElementById("closestLatPoint").value;
+		
+		
+		 var token =  $('input[name="csrfToken"]').attr('value');
+
+		$.ajax({
+			type: "POST",
+			url: getContext()+'/saveSurvey',
+			headers: {
+				'X-CSRFToken': token 
+			},
+			data: {
+
+				"customerID":customerID,
+				"serviceReference":serviceReference,
+				"serviceRequest":serviceRequest,
+				"longitude":longitude,
+				"latitude":latitude,
+				"dictParameter":manholeSurveyArray,
+				"dictParameterHandholeSurv":handholeSurveyArray,
+				"dictParameterDbSurv":dbSurveyArray,
+				"dictParameterNodeSurv":nodeSurveyArray,
+				"dictParameterCableSurv":fiberCableSurveyArray,
+				"dictParameterTubeSurv":fiberTubesSurveyArray,
+				"dictParameterStrandSurv":fiberStrandsSurveyArray
+
+			},
+			beforeSend: function() {
+				$("#saveSurveyLoaderDiv").show();
+			},
+			dataType: "json",
+			success: function (data) {
+				$("#saveSurveyLoaderDiv").hide();
+		},
+		error: function (result) {
+			alert("Error");
+		}
+		});							   
+}
+});
+
 		$("#saveDistBoard").click(function () {
 			var dbAlertType="";
 			var dbRowsTotalNum = document.getElementById("DistributionBoardRowsNum").value;
@@ -20008,6 +20066,10 @@ $('#Manhole_AutocompleteCable'). click(function(){
 			document.getElementById("EndLongDiv").style.display = "block";
 			document.getElementById("setEndPointDiv").style.display = "block";
 			document.getElementById("setStartPointDiv").style.display = "block";
+			document.getElementById("customerNameID").style.display = "none";
+			document.getElementById("serviceRef").style.display = "none";
+			document.getElementById("saveSurv").style.display = "none";
+
 			
 			$("#searchManhTBody").empty();
 			$("#searchHanhTBody").empty();
@@ -20059,6 +20121,10 @@ $('#circleRange'). click(function(){
 			document.getElementById("EndLongDiv").style.display = "none";
 			document.getElementById("setEndPointDiv").style.display = "none";
 			document.getElementById("setStartPointDiv").style.display = "none";
+			document.getElementById("customerNameID").style.display = "block";
+			document.getElementById("serviceRef").style.display = "block";
+			document.getElementById("saveSurv").style.display = "block";
+			
 			
 			$("#searchManhTBody").empty();
 			$("#searchHanhTBody").empty();

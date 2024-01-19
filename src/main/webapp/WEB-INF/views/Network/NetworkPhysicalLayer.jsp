@@ -6587,6 +6587,11 @@ var lstModfUser;
 var updateModfUser;
 var MenuMap;
 let srcCityAutocomplete, dstCityAutocomplete;
+var manholeSurveyArray=[];
+var handholeSurveyArray=[];
+var dbSurveyArray=[];
+var nodeSurveyArray=[];var fiberCableSurveyArray=[];var fiberTubesSurveyArray=[];var fiberStrandsSurveyArray=[];
+
 
 updateModfUser=`${userFullName}`;
 //function on map clustring
@@ -6674,7 +6679,7 @@ directionsDisplay.setMap(map);
 	      CreateTree_PhysicalLayer(${physicalLayerList}['Project'],${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['fiber'],${physicalLayerList}['Distribution_Board'],${physicalLayerData}['fiber_Tubes'],${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Auxiliary'],${physicalLayerData}['tubes_Auxiliaries'],${physicalLayerData}['strands_Auxiliaries'],${physicalLayerList}['Trench'],${physicalLayerData}['trench_Auxiliary'],${physicalLayerList}['Junction_Manhole'],${physicalLayerList}['Junction_Handhole'],filterFlag,${physicalLayerList}['duct'],${physicalLayerData}['ductAuxiliary'],${physicalLayerList}['Node']);
 		  CreateMap_PhysicalLayer(${physicalLayerList}['Project'],${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['fiber'],${physicalLayerList}['Distribution_Board'],${physicalLayerData}['fiber_Tubes'],${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Auxiliary'],${physicalLayerData}['tubes_Auxiliaries'],${physicalLayerData}['strands_Auxiliaries'],${physicalLayerList}['Trench'],${physicalLayerData}['trench_Auxiliary'],${physicalLayerList}['Node']); 
 		  if(checkedOption == "circleRange"){
-			  openFindNearest(checkedOption,'${closestLatPoint}','${closestLongPoint}','${closestDisRange}','${noP}',${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['Distribution_Board'],${physicalLayerList}['fiber'],${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Tubes'],${physicalLayerList}['Node'],'${getRelatedPoints}','${startLng}','${endLng}','${startLat}','${endLat}');
+			  openFindNearest(checkedOption,'${closestLatPoint}','${closestLongPoint}','${closestDisRange}','${noP}',${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['Distribution_Board'],${physicalLayerList}['fiber'],${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Tubes'],${physicalLayerList}['Node'],'${getRelatedPoints}','${startLng}','${endLng}','${startLat}','${endLat}','${CustomerID}','${serviceReq}','${serviceRef}');
 		  }else if(checkedOption == "StartEnd"){
 			  openFindBetweenMarkers(checkedOption,'${startLongPoint}','${startLatPoint}','${endLongPoint}','${endLatPoint}',${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['Distribution_Board'],${physicalLayerList}['fiber'],${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Tubes'],${physicalLayerList}['Node'],'${getRelatedPoints}');
 		  }else if(checkedOption == "circleRange_multy"){
@@ -6693,10 +6698,13 @@ directionsDisplay.setMap(map);
 
 window.onload = function () {makeAllSortable();
 if(checkedOption == "circleRange"){ 
-	calculateGeoDistanceNearestPoints("findNearstManhole");//call the calculateGeoDistance function here after creating the map
-	calculateGeoDistanceNearestPoints("findNearstHandhole");
-	calculateGeoDistanceNearestPoints("findNearstDB");
-	calculateGeoDistanceNearestPoints("findNearstNode");
+	calculateGeoDistanceNearestPoints("findNearstHandhole",handholeSurveyArray);
+	calculateGeoDistanceNearestPoints("findNearstManhole",manholeSurveyArray);//call the calculateGeoDistance function here after creating the map
+	calculateGeoDistanceNearestPoints("findNearstDB",dbSurveyArray);
+	calculateGeoDistanceNearestPoints("findNearstNode",nodeSurveyArray);
+	getAllSurveyArrays("nearFiberId",fiberCableSurveyArray);
+	getAllSurveyArrays("nearTubeId",fiberTubesSurveyArray);
+	getAllSurveyArrays("nearStrandId",fiberStrandsSurveyArray);
 }
 };	
 </script>

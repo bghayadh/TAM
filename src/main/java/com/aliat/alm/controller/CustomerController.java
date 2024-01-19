@@ -5,9 +5,12 @@ import java.io.StringWriter;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -15,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.query.Query;
+import org.hibernate.transform.Transformers;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +36,9 @@ import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.common.Permissions;
 import com.aliat.alm.models.Customer;
+import com.aliat.alm.models.CustomerService;
+import com.aliat.alm.models.FiberAuxPoints;
+import com.aliat.alm.models.WarehouseProfitloss;
 
 @Controller
 public class CustomerController {
@@ -204,6 +211,8 @@ public class CustomerController {
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
 		String result[] = new String[4];
 		int SelectedIndex = 0;
+		List<CustomerService> custServiceList = new ArrayList<>();
+
 		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			try {
@@ -215,6 +224,11 @@ public class CustomerController {
 							formatter.format(new Timestamp(System.currentTimeMillis())).toString());
 					model.addAttribute("lastModifiedDate",
 							formatter.format(new Timestamp(System.currentTimeMillis())).toString());
+					
+					model.addAttribute("custServiceList", "addNew");
+					model.addAttribute("custSurveyList","addNew");
+
+
 					return "CustomerFormView";
 
 				} else {
@@ -222,6 +236,7 @@ public class CustomerController {
 							navAction);
 					SelectedIndex = Integer.parseInt(result[1]);
 					customerId = result[2];
+					
 					customer = (Customer) session.get(Customer.class, customerId);
 					model.addAttribute("customerID", customer.getCustomerId());
 					model.addAttribute("creationDate", formatter.format(customer.getCreatedDate()).toString());
@@ -251,6 +266,21 @@ public class CustomerController {
 					model.addAttribute("nationality", customer.getNationality());
 					model.addAttribute("email", customer.getEmail());
 					model.addAttribute("website", customer.getWebsite());
+					
+					
+					query = session.createQuery(
+							"select t.id as id,t.serviceType as serviceType, t.billingCode as billingCode, t.circuitNo as circuitNo,t.longitude as longitude,t.latitude as latitude, t.customerID as customerID, t.createdDate as createdDate, t.lastModfDate as lastModfDate, t.cat as cat, t.circuitID as circuitID, t.refID as refID, t.num as num, t.mediaType as mediaType, t.txMedia as txMedia, t.status as status, t.capacityMB as capacityMB, t.regionID as regionID, t.linkName as linkName, t.radioID as radioID, t.radioName as radioName, t.portDesc as portDesc from CustomerService t where t.customerID =:param1");
+					query.setParameter("param1", customerId);
+					custServiceList = (List<CustomerService>) query
+							.setResultTransformer(Transformers.aliasToBean(CustomerService.class)).list();
+					model.addAttribute("custServiceList", mapper.writeValueAsString(custServiceList));
+
+					
+					query = session.createQuery("select a.id, a.serviceType , a.billingCode,a.circuitNo,b.longitude,b.latitude,b.creationDate,a.customerID,b.serviceReference,b.surveyID from CustomerService a LEFT JOIN Survey b " + 
+							"ON a.id = b.serviceRequest  WHERE a.customerID =:param1 ");
+				   query.setParameter("param1", customerId);
+				   model.addAttribute("custSurveyList", mapper.writeValueAsString(query.getResultList()));
+				 
 					session.clear();
 				}
 			} catch (Exception e) {
@@ -271,7 +301,7 @@ public class CustomerController {
 	@RequestMapping(value = "/CustomerFormSave", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> CustomerFormSave(Locale locale, Model model, HttpServletRequest request,
-			HttpServletResponse response) {
+			@ModelAttribute ItemParameters itemParameters,	HttpServletResponse response) {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
@@ -282,12 +312,15 @@ public class CustomerController {
 		DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
 		Calendar calendar = new GregorianCalendar();
 		String customerID;
+		DateFormat formatter2 = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
+		String[] slctDelOrd;
+
+
 		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
 				customerID = request.getParameter("customerID");
-				System.out.println(customerID);
 				if (StringUtils.equalsIgnoreCase(customerID, "")) {
 
 					synchronized (this) {
@@ -349,7 +382,81 @@ public class CustomerController {
 							+ request.getParameter("TelNumber") + "'" + " WHERE CUSTOMER_ID='" + customerID + "'");
 					query.executeUpdate();
 				}
+				
+				slctDelOrd = request.getParameterValues("slctDelOrd[]");
+				if (slctDelOrd != null) {
+					String str = "delete CustomerService t where t.id IN (:param1) ";
+					query = session.createQuery(str);
+					query.setParameterList("param1", slctDelOrd);
+					query.executeUpdate();
 
+				}
+				
+				if (itemParameters.getDictParameter() != null) {
+					String custServiceID="";
+					CustomerService service;
+					Timestamp lastModifiedDate = new Timestamp(new Timestamp(System.currentTimeMillis()).getTime());
+					Timestamp CreationDate;
+					for (int i = 0; i < itemParameters.getDictParameter().size(); i++) {
+						
+						custServiceID = itemParameters.getDictParameter().get(i).get("custServiceID");
+						if (StringUtils.equalsIgnoreCase(custServiceID, "")) {
+							synchronized (this) {
+								
+								custServiceID = "SERVICE_"+calendar.get(Calendar.YEAR)+"_"
+								+ Integer.parseInt(
+												session.createNativeQuery("SELECT CUST_SERV_ID FROM SEQ_TABLE")
+														.uniqueResult().toString());
+								
+								query = session.createNativeQuery(
+										"UPDATE SEQ_TABLE SET CUST_SERV_ID = CUST_SERV_ID + 1 ");
+								query.executeUpdate();
+								session.createNativeQuery("commit").executeUpdate();
+							}
+							CreationDate=lastModifiedDate;
+						}
+						else {
+							 CreationDate = new Timestamp(
+									formatter2.parse(itemParameters.getDictParameter().get(i).get("creationDate")).getTime());
+
+						}
+						
+						
+							
+						
+						service = new CustomerService();
+						service.setId(custServiceID);
+						service.setServiceType(itemParameters.getDictParameter().get(i).get("serviceType"));
+						service.setCircuitNo(itemParameters.getDictParameter().get(i).get("circuitNo"));
+						service.setLongitude(itemParameters.getDictParameter().get(i).get("longitude"));
+						service.setLatitude(itemParameters.getDictParameter().get(i).get("latitude"));
+						service.setBillingCode(itemParameters.getDictParameter().get(i).get("billingCode"));
+						service.setCustomerID(customerID);
+						service.setCreatedDate(CreationDate);
+						service.setLastModfDate(lastModifiedDate);
+						service.setCat(itemParameters.getDictParameter().get(i).get("category"));
+						service.setCircuitID(itemParameters.getDictParameter().get(i).get("circuitID"));
+						service.setRefID(itemParameters.getDictParameter().get(i).get("refID"));
+						service.setNum(itemParameters.getDictParameter().get(i).get("num"));
+						service.setMediaType(itemParameters.getDictParameter().get(i).get("mediaType"));
+						service.setTxMedia(itemParameters.getDictParameter().get(i).get("txMedia"));
+						service.setStatus(itemParameters.getDictParameter().get(i).get("status"));
+						service.setCapacityMB(itemParameters.getDictParameter().get(i).get("capacityMB"));
+						service.setRegionID(itemParameters.getDictParameter().get(i).get("regionID"));
+						service.setLinkName(itemParameters.getDictParameter().get(i).get("linkName"));
+						service.setRadioID(itemParameters.getDictParameter().get(i).get("radioID"));
+						service.setRadioName(itemParameters.getDictParameter().get(i).get("radioName"));
+						service.setPortDesc(itemParameters.getDictParameter().get(i).get("portDesc"));
+
+						session.saveOrUpdate(service);
+						session.flush();
+						session.clear();
+
+
+					}
+
+					
+				}
 				rtn.put("customerID", customerID);
 				rtn.put("lstmodifdate", formatter.format(new Timestamp(System.currentTimeMillis())).toString());
 				session.flush();
@@ -391,6 +498,11 @@ public class CustomerController {
 				idList = request.getParameter("customerID");
 				query = session.createNativeQuery("delete CUSTOMER  where CUSTOMER_ID ='" + idList + "'");
 				query.executeUpdate();
+				
+				query = session.createNativeQuery("delete CUSTOMER_SERVICE  where CUSTOMER_ID ='" + idList + "'");
+				query.executeUpdate();
+				
+				
 				rtn.put("result", "Succeeded");
 				session.flush();
 				session.clear();
@@ -413,6 +525,78 @@ public class CustomerController {
 
 	}
 
+	
+	@RequestMapping(value = "/GetSurveyDetails", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> GetSurveyDetails(Locale locale, Model model, HttpServletRequest request,HttpServletResponse response) {
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+		session = AlmDbSession.getInstance().getSession();
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			try {
+				String surveyID = request.getParameter("survID");
+
+				query = session.createNativeQuery("select A.manhole_id,A.manhole_name,A.longitude,A.latitude,A.linear_distance,A.driving_distance,A.geo_distance " + 
+						"from manhole_survey A where A.survey_id =:param ");
+				query.setParameter("param", surveyID);
+				rtn.put("manholeList",query.getResultList());
+				
+				query = session.createNativeQuery("select A.handhole_id,A.handhole_name,A.longitude,A.latitude,A.linear_distance,A.driving_distance,A.geo_distance " + 
+						"from handhole_survey A where A.survey_id =:param ");
+				query.setParameter("param", surveyID);
+				rtn.put("handholeList",query.getResultList());
+				
+				query = session.createNativeQuery("select A.DB_ID,A.DB_NAME,A.longitude,A.latitude,A.linear_distance,A.driving_distance,A.geo_distance " + 
+						"from DISTRIBUTION_BOARD_SURVEY A where A.survey_id =:param ");
+				query.setParameter("param", surveyID);
+				rtn.put("dbList",query.getResultList());
+				
+				query = session.createNativeQuery("select A.NODE_ID,A.NODE_NAME,A.longitude,A.latitude,A.linear_distance,A.driving_distance,A.geo_distance " + 
+						"from NODE_SURVEY A where A.survey_id =:param ");
+				query.setParameter("param", surveyID);
+				rtn.put("nodeList",query.getResultList());
+				
+				query = session.createNativeQuery("select A.FIBER_CABLE_ID,A.FIBER_CABLE_NAME,A.SOURCE,A.DESTINATION " + 
+						"from FIBER_CABLES_SURVEY A where A.survey_id =:param ");
+				query.setParameter("param", surveyID);
+				rtn.put("cablesList",query.getResultList());
+				
+				query = session.createNativeQuery("select A.TUBE_ID,A.TUBE_NAME,A.SOURCE,A.DESTINATION " + 
+						"from FIBER_TUBES_SURVEY A where A.survey_id =:param ");
+				query.setParameter("param", surveyID);
+				rtn.put("tubesList",query.getResultList());
+				
+				query = session.createNativeQuery("select A.STRAND_ID,A.STRAND_NAME,A.SOURCE,A.DESTINATION " + 
+						"from FIBER_STRANDS_SURVEY A where A.survey_id =:param ");
+				query.setParameter("param", surveyID);
+				rtn.put("strandsList",query.getResultList());
+				
+				
+				
+			} catch (Exception e) {
+				tx.rollback();
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in GetSurveyDetails due to \n " + exceptionAsString);
+				logger.info("Error in GetSurveyDetails due to \n " + exceptionAsString);
+				rtn.put("result", "Failed");
+			} finally {
+				if (session != null && session.isOpen()) {
+					session.close();
+				}
+			}
+		}
+		return rtn;
+
+	}
+	
 	@RequestMapping(value = "/CustomerListViewDelete", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> CustomerListViewDelete(Locale locale, Model model, HttpServletRequest request,
