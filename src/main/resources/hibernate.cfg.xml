@@ -148,5 +148,16 @@
 <mapping class="com.aliat.alm.models.LCellPassive"/>
 <mapping class="com.aliat.alm.models.UCellPassive"/>
 <mapping class="com.aliat.alm.models.DiscoverNewItemNode"/>
+<mapping class="com.aliat.alm.models.CustomerService"/>
+<mapping class="com.aliat.alm.models.Survey"/>
+<mapping class="com.aliat.alm.models.ManholeSurvey"/>
+<mapping class="com.aliat.alm.models.HandholeSurvey"/>
+<mapping class="com.aliat.alm.models.DistributionBoardSurvey"/>
+<mapping class="com.aliat.alm.models.NodeSurvey"/>
+<mapping class="com.aliat.alm.models.FiberCableSurvey"/>
+<mapping class="com.aliat.alm.models.FiberStrandsSurvey"/>
+<mapping class="com.aliat.alm.models.FiberTubesSurvey"/>
+
+
    </session-factory>
 </hibernate-configuration>
