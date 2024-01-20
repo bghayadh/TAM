@@ -32,6 +32,7 @@ import com.aliat.alm.models.RevenueToAssetRatioReport;
 import com.aliat.alm.services.LoginServices;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+
 @Controller
 public class RevenueToAssetRatioReportController {
 	
@@ -45,7 +46,7 @@ public class RevenueToAssetRatioReportController {
 	private static String exceptionAsString;
 	
 	@Autowired
-	Notify notifications;
+	Notify notifications;	
 
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	@RequestMapping(value = "/RevenueToAssetRatioReport", method = RequestMethod.GET)
@@ -56,14 +57,15 @@ public class RevenueToAssetRatioReportController {
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			return "redirect:/";
 		} else {
-
-			session = AlmDbSession.getInstance().getSession();
 			
-			if (session != null && session.isOpen()) {
+			try {
+				session = AlmDbSession.getInstance().getSession();
 
-				notifications.headerNotifications(session, model);
-				try {
-				
+			    if (session != null && session.isOpen()) {
+						
+			    	notifications.headerNotifications(session, model);
+					tx = session.beginTransaction();
+
 					query = session.createNativeQuery(
 							"SELECT site as site,wareID as wareID,siteID as siteID,siteName as siteName,longitude as longitude,latitude as latitude, " + 
 							"COALESCE(SUM(voiceRevenue),0) as voiceRevenue,COALESCE(SUM(smsRevenue),0) as smsRevenue,COALESCE(SUM(dataRevneue),0) as dataRevneue,COALESCE(SUM(vasRevenue),0) as vasRevenue, " + 
@@ -82,7 +84,7 @@ public class RevenueToAssetRatioReportController {
 							"SELECT DISTINCT C.SITE_ID AS site,C.WARE_ID as wareID, C.SITE_ID AS siteID, C.WARE_NAME AS siteName , C.LONGITUDE as longitude, " + 
 							"C.LATITUDE as latitude, 0 as initCost,0 as accuDepr, 0 as netCost , '' AS FAR_ID, " + 
 							"D.VOICE_REVENUE as voiceRevenue, D.SMS_REVENUE as smsRevenue, D.DATA_REVENUE as dataRevneue,D.VAS_REVENUE as vasRevenue " + 
-							"FROM almrpt.PREPAID_PAYG_REVENUE D " + 
+							"FROM rpt_PREPAID_PAYG_REVENUE D " + 
 							"LEFT JOIN WAREHOUSE C ON C.SITE_ID = D.SITE_ID " + 
 							"WHERE D.REVENUE_DATE >=  trunc(SYSDATE - INTERVAL '1' YEAR) AND D.REVENUE_DATE < (trunc(sysdate) ) + 1  " + 
 							") WHERE (longitude is not null and longitude != '0' and longitude != 'null' and latitude is not null and latitude != '0' and latitude != 'null') GROUP BY site,wareID,siteID,siteName,longitude,latitude"
@@ -93,15 +95,12 @@ public class RevenueToAssetRatioReportController {
 							.addScalar("site").addScalar("wareID").addScalar("siteID").addScalar("siteName").addScalar("longitude")
 							.addScalar("latitude").addScalar("voiceRevenue").addScalar("smsRevenue").addScalar("dataRevneue").addScalar("vasRevenue")
 							.addScalar("totalRevenue").addScalar("initCost").addScalar("Depr").addScalar("netCost").addScalar("revenueToAssetInit").addScalar("revenueToAssetNet")
-							.setResultTransformer(Transformers.aliasToBean(RevenueToAssetRatioReport.class)).list();
-				   
-				  //System.out.println("****The RevenueToAssetRatioList is:"+mapper.writeValueAsString(RevenueToAssetRatioList));
-
-				  model.addAttribute("RevenueToAssetRatioReportList", mapper.writeValueAsString(RevenueToAssetRatioList));
-				   
-				  
+							.setResultTransformer(Transformers.aliasToBean(RevenueToAssetRatioReport.class)).list();					
+				
+				 model.addAttribute("RevenueToAssetRatioReportList", mapper.writeValueAsString(RevenueToAssetRatioList));
+ 
+					}
 				} catch (Exception e) {
-					tx.rollback();
 					sw = new StringWriter();
 					e.printStackTrace(new PrintWriter(sw));
 					exceptionAsString = sw.toString();
@@ -111,12 +110,11 @@ public class RevenueToAssetRatioReportController {
 				}
 				finally {
 					if (session != null && session.isOpen()) {
+						tx.commit();
 						session.close();
-
 					}
 				}
 			}
-		}
 		return "Reports/RevenueToAssetRatioReport";
 	}
 	
@@ -169,7 +167,7 @@ public class RevenueToAssetRatioReportController {
 					strRPT = "SELECT DISTINCT C.SITE_ID AS site,C.WARE_ID as wareID, C.SITE_ID AS siteID, C.WARE_NAME AS siteName , C.LONGITUDE as longitude, " + 
 							"C.LATITUDE as latitude, 0 as initCost,0 as accuDepr, 0 as netCost , '' AS FAR_ID, " + 
 							"D.VOICE_REVENUE as voiceRevenue, D.SMS_REVENUE as smsRevenue, D.DATA_REVENUE as dataRevneue,D.VAS_REVENUE as vasRevenue " + 
-							"FROM almrpt.PREPAID_PAYG_REVENUE D " + 
+							"FROM rpt_PREPAID_PAYG_REVENUE D " + 
 							"LEFT JOIN WAREHOUSE C ON C.SITE_ID = D.SITE_ID " + 
 							 " WHERE ( upper(C.WARE_ID) LIKE upper('%" + wareID + "%') AND upper(C.SITE_ID) LIKE upper('%" + siteId + "%') AND upper(C.WARE_NAME) LIKE upper('%" + siteName+ "%') )  ";
 										
