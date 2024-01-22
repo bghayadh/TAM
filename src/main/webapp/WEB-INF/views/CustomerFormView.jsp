@@ -841,6 +841,11 @@ border-color: #939191f5;
 										<th>Service Type</th>
 										<th>Survey ID</th>
 										<th>Survey</th>
+										<th hidden></th>
+										<th hidden></th>
+										<th hidden></th>
+										<th hidden></th>
+										<th hidden></th>
 									</tr>
 								</thead>
 								<tbody></tbody>
@@ -848,6 +853,8 @@ border-color: #939191f5;
 						</div>
 					</form>
 				</div>
+				<button type="button" class="deleteSurveyRow">Delete Row</button>
+				
 		</div>
  
      <div class="tab-pane fade" id="custom-tabs-Cust-Services" role="tabpanel" aria-labelledby="custom-tabs-Services-tab">
@@ -1259,6 +1266,8 @@ var boqArray =[];
 var dict=[];
 var slctDelArray =[];
 var surveyBoqArray =[];
+var slctSurvDelArray =[];
+
 
 
 if ('${docStatus}' == "addNew") {
@@ -1274,9 +1283,9 @@ if ('${custSurveyList}' != "addNew") {
 		  for (i = 0;i<surveyBoqArray.length;i++){	
 
 
-			  if(surveyBoqArray[i][9] !=null) {
+			  if(surveyBoqArray[i][6] !=null) {
 				  
-				createdDate = surveyBoqArray[i][6];
+				createdDate = surveyBoqArray[i][4];
 				var d = new Date(createdDate);
 
 				// Get date components
@@ -1300,16 +1309,13 @@ if ('${custSurveyList}' != "addNew") {
 				var surveyItemRow = "<tr>";
 					surveyItemRow= surveyItemRow +"<td style='text-align:center;'><input type='checkbox' name='record' style='margin-top:12px;'></td>"
 					surveyItemRow = surveyItemRow + "<td name='serviceTypeSurvey' style='text-align:center;'><input type='text' value='" + surveyBoqArray[i][1] + "' class='form-control text-input' style='margin-right: 10px;' readonly></td>";
-					surveyItemRow= surveyItemRow +"<td><input type='text' value='" + surveyBoqArray[i][9] +"' class='form-control text-input' style='width:auto' readonly></td>"
+					surveyItemRow= surveyItemRow +"<td><input type='text' value='" + surveyBoqArray[i][6] +"' class='form-control text-input' style='width:auto' readonly></td>"
 					surveyItemRow= surveyItemRow +"<td><button type = 'button'  href='#' name='popUpMenu' onclick='openSurveyPopup(this)' class='btn btn-default createSurvey'  style='position:relative;left:3px;'>Show Survey</button></td>"
-					surveyItemRow =surveyItemRow + "<td class='hidden-td' name='surveyBillingCode'><input hidden type='text' value='" + surveyBoqArray[i][2] +"' class='form-control text-input' ></td>";
-					surveyItemRow =surveyItemRow + "<td class='hidden-td' name='surveyCircuitNo'><input hidden type='text' value='" + surveyBoqArray[i][3] +"' class='form-control text-input' ></td>";
-					surveyItemRow =surveyItemRow + "<td class='hidden-td' name='surveyLongitude'><input hidden type='text' value='" + surveyBoqArray[i][4] +"' class='form-control text-input'></td>";
-					surveyItemRow =surveyItemRow + "<td class='hidden-td' name='surveyLatitude'><input hidden type='text' value='" + surveyBoqArray[i][5] +"' class='form-control text-input'></td>";
+					surveyItemRow =surveyItemRow + "<td class='hidden-td' name='surveyLongitude'><input hidden type='text' value='" + surveyBoqArray[i][2] +"' class='form-control text-input'></td>";
+					surveyItemRow =surveyItemRow + "<td class='hidden-td' name='surveyLatitude'><input hidden type='text' value='" + surveyBoqArray[i][3] +"' class='form-control text-input'></td>";
 					surveyItemRow =surveyItemRow + "<td class='hidden-td' name='surveyCreationDate'><input type='text' hidden value='" +creationDate+"' class='form-control text-input'></td>";
 					surveyItemRow =surveyItemRow + "<td class='hidden-td' name='custServiceIDSurvey'><input type='text' hidden value='" + surveyBoqArray[i][0] +"' class='form-control text-input'></td>";
-					surveyItemRow =surveyItemRow + "<td class='hidden-td' name='surveyRefID'><input type='text' hidden value='" + surveyBoqArray[i][8] +"' class='form-control text-input' ></td>";
-					surveyItemRow =surveyItemRow + "<td class='hidden-td' name='surveyID'><input type='text' hidden value='" + surveyBoqArray[i][9] +"' class='form-control text-input' ></td>";
+					surveyItemRow =surveyItemRow + "<td class='hidden-td' name='surveyID'><input type='text' hidden value='" + surveyBoqArray[i][6] +"' class='form-control text-input' ></td>";
 					surveyItemRow =surveyItemRow + "</tr>";
 				    $("#customerSurveysTable > tbody").append(surveyItemRow);
 				
@@ -1805,9 +1811,8 @@ $("#saveButton").click(  function() {
 					    "CustomerType":document.getElementById("custType").value,
 					    "TelNumber":$("#telNumber").val(),
 					    "dictParameter":dict,
-   						"slctDelOrd":slctDelArray
-					    
-											
+   						"slctDelOrd":slctDelArray,
+   						"slctSurvDelArray":slctSurvDelArray
 				},
 					success : function(data) {
 						$('#lstmodifdate').val(data.lstmodifdate)

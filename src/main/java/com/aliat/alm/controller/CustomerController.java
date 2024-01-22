@@ -276,7 +276,7 @@ public class CustomerController {
 					model.addAttribute("custServiceList", mapper.writeValueAsString(custServiceList));
 
 					
-					query = session.createQuery("select a.id, a.serviceType , a.billingCode,a.circuitNo,b.longitude,b.latitude,b.creationDate,a.customerID,b.serviceReference,b.surveyID from CustomerService a LEFT JOIN Survey b " + 
+					query = session.createQuery("select a.id, a.serviceType,b.longitude,b.latitude,b.creationDate,a.customerID,b.surveyID from CustomerService a LEFT JOIN Survey b " + 
 							"ON a.id = b.serviceRequest  WHERE a.customerID =:param1 ");
 				   query.setParameter("param1", customerId);
 				   model.addAttribute("custSurveyList", mapper.writeValueAsString(query.getResultList()));
@@ -314,6 +314,8 @@ public class CustomerController {
 		String customerID;
 		DateFormat formatter2 = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
 		String[] slctDelOrd;
+		String[] slctSurvDelArray;
+
 
 
 		session = AlmDbSession.getInstance().getSession();
@@ -383,6 +385,16 @@ public class CustomerController {
 					query.executeUpdate();
 				}
 				
+				slctSurvDelArray = request.getParameterValues("slctSurvDelArray[]");
+				if (slctSurvDelArray != null) {
+					String str = "delete Survey t where t.surveyID IN (:param1) ";
+					query = session.createQuery(str);
+					query.setParameterList("param1", slctSurvDelArray);
+					query.executeUpdate();
+
+				}
+				
+				
 				slctDelOrd = request.getParameterValues("slctDelOrd[]");
 				if (slctDelOrd != null) {
 					String str = "delete CustomerService t where t.id IN (:param1) ";
@@ -391,6 +403,7 @@ public class CustomerController {
 					query.executeUpdate();
 
 				}
+			
 				
 				if (itemParameters.getDictParameter() != null) {
 					String custServiceID="";

@@ -620,4 +620,27 @@ $("button[name='closeCustServicePopup']").on("click", function(){
       }	                 
 
    });// end delete row
+
+$(".deleteSurveyRow").click(function(){
+    var checked="false"; //when no checkbox is checked
+	var surveyPk ="";
+   
+	$("#customerSurveysTable > tbody").find('input[name="record"]').each(function(){
+	
+		if($(this).is(":checked")){
+			checked="true"; 	 
+        	surveyPk=$(this).parent().parent().children('td[name="surveyID"]').children('input').val();
+        				
+			if(surveyPk !=""){
+        		slctSurvDelArray.push(surveyPk);
+      		}   
+      		$(this).parents("tr").remove();  
+      	  } 
+      });
+     if(checked=="false"){
+       alert(' Select Row(s) to Delete');
+    	return false;
+      }	                 
+
+   });// end delete row
 })
