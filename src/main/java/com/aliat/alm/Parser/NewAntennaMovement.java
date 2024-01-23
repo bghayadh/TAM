@@ -1,6 +1,7 @@
 package com.aliat.alm.Parser;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -17,6 +18,8 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 public class NewAntennaMovement {
 
@@ -44,8 +47,12 @@ public class NewAntennaMovement {
 		
 		
 		try {
-			objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"/"+"almconfig.dat"));
-			 while ((strCurrentLine1 = objReader1.readLine()) != null){
+			//objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"/"+"almconfig.dat"));
+			Resource ConfigResource = new ClassPathResource("almconfig.dat");
+			File configfile = ConfigResource.getFile();
+			FileReader fr = new FileReader(configfile);
+			BufferedReader objReader1 = new BufferedReader(fr); 
+			while ((strCurrentLine1 = objReader1.readLine()) != null){
 				 String data = strCurrentLine1;
 				 String[] data1 ;
 				 if (data.contains("logpath")) {
@@ -196,7 +203,7 @@ public class NewAntennaMovement {
 			//for(int i=0;i<newSerial.size();i++) {
 				stmt1 = con.createStatement();
 				query = "select distinct a.node_pk,a.unique_node_id,a.node_name,a.parsing_date,a.site_id,a.ware_id,a.ware_name,a.node_type,b.serialnumber,a.circle_id,b.antenna_id,b.model"
-						+ " FROM NODE_ACTIVE a INNER JOIN NODE_ANTENNA b on a.node_pk=b.node_pk"
+						+ " FROM NODE_ACTIVE a INNER JOIN NODE_ANTENNA b on a.node_pk=b.node_pk "
 						+ "WHERE b.serialnumber IN ("+str+") and b.ACTIVE_RECORD = '1' "
 						+ " ORDER BY a.NODE_PK DESC";
 				ResultSet rsNode = stmt1.executeQuery(query);

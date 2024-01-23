@@ -1,6 +1,7 @@
 package com.aliat.alm.Parser;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -16,6 +17,9 @@ import java.util.Date;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 public class NewParsing {
 	
@@ -36,8 +40,13 @@ public class NewParsing {
 	public static void main(String[] args) {
 		
 		try {
-			objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"/"+"almconfig.dat"));
-			 while ((strCurrentLine1 = objReader1.readLine()) != null){
+			//objReader1 = new BufferedReader(new FileReader(System.getProperty("user.dir")+"/"+"almconfig.dat"));
+			Resource ConfigResource = new ClassPathResource("almconfig.dat");
+			File configfile = ConfigResource.getFile();
+			FileReader fr = new FileReader(configfile);
+			BufferedReader objReader1 = new BufferedReader(fr);
+			
+			while ((strCurrentLine1 = objReader1.readLine()) != null){
 				 String data = strCurrentLine1;
 				 String[] data1 ;
 				 if (data.contains("logpath")) {

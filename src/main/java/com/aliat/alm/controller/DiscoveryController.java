@@ -4753,7 +4753,7 @@ public String getMigrationQuery(Session session,String tableName,String primaryK
 	if(tableName.equalsIgnoreCase("NODE_ACTIVE")) {
 		migQuery ="select t.trans_id as transID,t.model as nodeModel,t.discovered_trans_type as transType,t.from_site as fromSite,t.to_site as toSite,"+
 				  "t.from_ware_id as fromWareID,t.to_ware_id as toWareID,t.from_ware_name as fromWareName,t.to_ware_name as toWareName, "+
-				  " t.old_serial_number as oldsn , t.serial_number as sn ,t.old_mac,t.mac_address " + 
+				  " t.old_serial_number as oldsn , t.serial_number as sn,t.parsing_date,t.old_mac,t.mac_address " + 
 				  " from network_transaction t  inner join "+tableName+" a on t.element_id=a."+primaryKey+ 
 				  " where t.sent_to_alm='0' and active_record='"+activeRecord+"'";
 	}else {
@@ -4768,10 +4768,10 @@ public String getMigrationQuery(Session session,String tableName,String primaryK
 	List<String> transID = new ArrayList<>();
 	List<Object[] >transIDList = session.createNativeQuery(query).list();
 	for(int i=0;i<transIDList.size();i++) {
-		if(transID.size() ==0 || !prevSN.equalsIgnoreCase(transIDList.get(i)[1].toString())) {
+		//if(transID.size() ==0 || !prevSN.equalsIgnoreCase(transIDList.get(i)[1].toString())) {
 			prevSN = transIDList.get(i)[1].toString();
 			transID.add(transIDList.get(i)[0].toString());
-		}
+		//}
 	}
 	if(transID.size() > 0) {
 		/*convert list of string from format ["data1","data2","data3"], into string of format 'data1','data2','data3'
@@ -4785,7 +4785,7 @@ public String getMigrationQuery(Session session,String tableName,String primaryK
 		
 		migQuery ="select t.trans_id as transID,t.model as Model,t.discovered_trans_type as transType,t.from_site as fromSite,t.to_site as toSite," + 
 				" t.from_ware_id as fromWareID,t.to_ware_id as toWareID,t.from_ware_name as fromWareName,t.to_ware_name as toWareName,"+
-				" t.old_serial_number as oldsn , t.serial_number as sn " + 
+				" t.old_serial_number as oldsn , t.serial_number as sn,t.parsing_date " + 
 				" from network_transaction t  inner join " +tableName+" b on t.element_id=b."+primaryKey+ 
 				" where t.sent_to_alm='0' and b.active_record='"+activeRecord+"' and t.trans_id IN ("+str1+") and t.serial_number<>'0' " + 
 				" order by t.serial_number";
@@ -4794,13 +4794,20 @@ public String getMigrationQuery(Session session,String tableName,String primaryK
 	return migQuery;
 }
 
-	public void insertDiscoveredElements(Session session,List<Object[]> element,String dnid,String elementName,String type) {
-		List<String> transElementID = new ArrayList<>();
-		List<String> transSerial = new ArrayList<>();
-		Object [] arrayList=null;
-		String trans_id = null,DniID =null,node_pk=null;
+public void insertDiscoveredElements(Session session,List<Object[]> element,String dnid,String elementName,String type) {
+	List<String> transElementID = new ArrayList<>();
+	List<String> transSerial = new ArrayList<>();
+	Object [] arrayList=null;
+	ArrayList<ArrayList<String>> insertedElementsList = new ArrayList<>();
+	ArrayList<String> insertedElement = new ArrayList<String>();
+	String trans_id = null,DniID =null,node_pk=null;
+	for(int i=0;i< element.size();i++) {
 		
-		for(int i=0;i< element.size();i++) {
+		int row=findElementIndex(insertedElementsList,(String) element.get(i)[10]);
+		 if(((containsValue(insertedElementsList,(String) element.get(i)[10])) && (!insertedElementsList.get(row).get(1).toString().equals(element.get(i)[11].toString())))
+				|| (!containsValue(insertedElementsList,(String) element.get(i)[10]))
+			){
+			
 			DiscoveryNewItem discoverynewitem = new DiscoveryNewItem();
 			arrayList=  element.get(i);
 			trans_id = arrayList[0].toString();
@@ -4841,14 +4848,20 @@ public String getMigrationQuery(Session session,String tableName,String primaryK
 			discoverynewitem.setToSerialNumber(arrayList[10].toString());
 			
 			if(elementName.equalsIgnoreCase("Node")) {
-				discoverynewitem.setOldMacAddress(arrayList[11].toString());
-				discoverynewitem.setMacAddress(arrayList[12].toString());
+				discoverynewitem.setOldMacAddress(arrayList[12].toString());
+				discoverynewitem.setMacAddress(arrayList[13].toString());
 			}
 			discoverynewitem.setDniDNID(dnid);
 			discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
 			discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
 			discoverynewitem.setDniAPPROVAL("Project Manager");
 			session.saveOrUpdate(discoverynewitem);
+			
+			insertedElement = new ArrayList<String>();
+			insertedElement.add(arrayList[10].toString());
+			insertedElement.add(arrayList[11].toString());
+			insertedElement.add(arrayList[0].toString());
+			insertedElementsList.add(insertedElement);
 			
 			String transNodequery = "Select NODE_TRANS_ID,FROM_NODE_ID,TO_NODE_ID,FROM_NODE_NAME,TO_NODE_NAME,FROM_NODE_TYPE,TO_NODE_TYPE " + 
 				"FROM NODE_TRANSACTIONS WHERE NODE_TRANS_ID=(select node_trans_id from network_transaction where trans_id='"+trans_id+"') and SENT_TO_ALM='0'";
@@ -4879,9 +4892,42 @@ public String getMigrationQuery(Session session,String tableName,String primaryK
 			}
 			
 		}
-		
-		updateNodeNetworkTranscations(session,transElementID,transSerial);
+	 	else if(containsValue(insertedElementsList,(String) element.get(i)[10])) {
+			if(row !=-1 && insertedElementsList.get(row).get(1).toString().equals(element.get(i)[11].toString())) {
+				//String tempParsingdata=insertedElementsList.get(row).get(1).toString();
+				String tempSN=element.get(i)[10].toString();
+				trans_id=element.get(i)[0].toString();
+				if(transElementID.indexOf(trans_id) < 0){transElementID.add(trans_id);}
+				
+				
+				String hql = "FROM DiscoveryNewItem WHERE toSerialNumber = :targetSerialNumber";
+	            DiscoveryNewItem entity = (DiscoveryNewItem) session.createQuery(hql)
+	                    .setParameter("targetSerialNumber", tempSN)
+	                    .uniqueResult();
+				
+	            if (entity != null) {
+					String tempTrans_id=element.get(i)[0].toString();
+	                String currentTrans_id = entity.getTransID();
+	                entity.setTransID(currentTrans_id + "," + tempTrans_id);
+
+	                session.saveOrUpdate(entity);
+	            }
+				
+				/*
+				String sql ="update discovery_new_item a set a.trans_id  = trans_id || ',' || '"+tempTrans_id+"' where a.to_serial_number='"+tempSN+"'";
+				query = session.createNativeQuery(sql);
+			    query.executeUpdate();
+			    System.out.println(sql);
+			     */
+			
+			}
+		}
 	}
+
+	updateNodeNetworkTranscations(session,transElementID,transSerial);
+	
+	
+}
 	
 	public void updateNodeNetworkTranscations(Session session,List<String> transElementID,List<String> transSerial) {
 		if(transElementID.size() > 0) {
@@ -4897,4 +4943,24 @@ public String getMigrationQuery(Session session,String tableName,String primaryK
 		}
 		
 	}
+	
+	public Integer findElementIndex(ArrayList<ArrayList<String>> twoDArrayList, String targetElement) {
+        for (int i = 0; i < twoDArrayList.size(); i++) {
+            ArrayList<String> row = twoDArrayList.get(i);
+                if (row.contains(targetElement)) {
+                    return i ;
+                }
+            
+        }
+        return -1; // Element not found
+    }
+	
+	public static boolean containsValue(ArrayList<ArrayList<String>> arrayList2D, String value) {
+        for (ArrayList<String> row : arrayList2D) {
+            if (row.contains(value)) {
+                return true; // Value found
+            }
+        }
+        return false; // Value not found
+    }
 }
