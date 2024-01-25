@@ -263,14 +263,17 @@ public class AgentsController {
 
 						String[] resultArray = ((List<Object[]>) query.list()).stream()
 								.flatMap(array -> Arrays.stream(array).map(Object::toString)).toArray(String[]::new);
-
-						if (resultArray[2] == null) {
-							resultArray[2] = "N/A";
-						}
-						areas.add(resultArray[0]);
-						areas.add(resultArray[1]);
-						areas.add(resultArray[2]);
-						areaData.add(areas);
+						
+						System.out.println("i is " +i+ " areaIDs is " +areaIDs.get(i) + " resultArray is " +mapper.writeValueAsString(resultArray));
+						if (resultArray.length > 1) {
+							if (resultArray[2] == null) {
+								resultArray[2] = "N/A";
+							}
+							areas.add(resultArray[0]);
+							areas.add(resultArray[1]);
+							areas.add(resultArray[2]);
+							areaData.add(areas);
+						}						
 					}
 				}
 
@@ -296,21 +299,21 @@ public class AgentsController {
 						// Convert list of arrays to a single array
 						String[] resultArray = listOfArrays.stream()
 								.flatMap(array -> Arrays.stream(array).map(Object::toString)).toArray(String[]::new);
-
-						if (resultArray[3] == null) {
-							resultArray[3] = "N/A";
+						if (resultArray.length > 2) {
+							if (resultArray[3] == null) {
+								resultArray[3] = "N/A";
+							}
+							System.out.println(resultArray[0]);
+							System.out.println(resultArray[1]);
+							System.out.println(resultArray[2]);
+							System.out.println(resultArray[3]);
+	
+							regions.add(resultArray[0]);
+							regions.add(resultArray[1]);
+							regions.add(resultArray[2]);
+							regions.add(resultArray[3]);
+							regionData.add(regions);
 						}
-
-						System.out.println(resultArray[0]);
-						System.out.println(resultArray[1]);
-						System.out.println(resultArray[2]);
-						System.out.println(resultArray[3]);
-
-						regions.add(resultArray[0]);
-						regions.add(resultArray[1]);
-						regions.add(resultArray[2]);
-						regions.add(resultArray[3]);
-						regionData.add(regions);
 					}
 				}
 				navAction = request.getParameter("NavAction");
