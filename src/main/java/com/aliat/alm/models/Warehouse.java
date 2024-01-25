@@ -78,6 +78,10 @@ public class Warehouse {
 	@Column(name = "REGION_NAME")
 	private String regionName;
 	
+	@Column(name = "POPULATION")
+	private Integer population;
+	
+	
 	
 
 	public Warehouse() {
@@ -101,7 +105,7 @@ public class Warehouse {
 	public Warehouse(String wareID, Timestamp wcreationDate, Timestamp wlastModifieddate, String warehouseName,
 			String wareCity, String wareLong, String wareLat, char wareSite, String wareSiteID, char tech2g, char tech3g,
 			char tech4g, char tech5g, String areaID, String areaName, String clusterID, String clusterName,
-			String address, String whStatus, String combtech, String regionID, String regionName) {
+			String address, String whStatus, String combtech, String regionID, String regionName, Integer population) {
 		super();
 		this.wareID = wareID;
 		this.wcreationDate = wcreationDate;
@@ -125,6 +129,7 @@ public class Warehouse {
 		this.combtech = combtech;
 		this.regionID = regionID;
 		this.regionName = regionName;
+		this.population = population;
 	}
 
 
@@ -366,5 +371,42 @@ public class Warehouse {
 	public void setRegionName(String regionName) {
 		this.regionName = regionName;
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	public Integer getPopulation() {
+		return population;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	public void setPopulation(Integer population) {
+		this.population = population;
+	}
+
+
+
 
 }

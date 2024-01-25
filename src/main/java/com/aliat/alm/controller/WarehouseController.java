@@ -458,7 +458,17 @@ public class WarehouseController {
 
 					model.addAttribute("wareAddress", wareh.getAddress());
 					model.addAttribute("wareCombination", wareh.getCombtech());
+					
+					
+					if (!(wareh.getPopulation() instanceof Integer)) {
+						model.addAttribute("population", "0");
 
+					}
+					else { 
+						model.addAttribute("population", wareh.getPopulation());
+
+					}
+			
 					warePassive = (WarehousePassive) session.get(WarehousePassive.class, wareID);
 
 					if (warePassive != null) {
@@ -931,6 +941,7 @@ public class WarehouseController {
 				Wareh.setClusterName(clusterName);
 				Wareh.setAddress(request.getParameter("wareAddress"));
 				Wareh.setWhStatus(request.getParameter("status"));
+				Wareh.setPopulation(Integer.parseInt(request.getParameter("population")));
 
 				session.saveOrUpdate(Wareh);
 				session.flush();

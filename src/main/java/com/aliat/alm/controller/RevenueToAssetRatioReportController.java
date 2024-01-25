@@ -67,14 +67,15 @@ public class RevenueToAssetRatioReportController {
 					tx = session.beginTransaction();
 
 					query = session.createNativeQuery(
-							"SELECT site as site,wareID as wareID,siteID as siteID,siteName as siteName,longitude as longitude,latitude as latitude, " + 
+							"SELECT site as site,wareID as wareID,siteID as siteID,siteName as siteName,longitude as longitude,latitude as latitude,COALESCE(NULLIF(population, 0), 0) as population, " + 
 							"COALESCE(SUM(voiceRevenue),0) as voiceRevenue,COALESCE(SUM(smsRevenue),0) as smsRevenue,COALESCE(SUM(dataRevneue),0) as dataRevneue,COALESCE(SUM(vasRevenue),0) as vasRevenue, " + 
 							"COALESCE(SUM(voiceRevenue)+ SUM(smsRevenue)+ SUM(dataRevneue)+ SUM(vasRevenue),0) as totalRevenue, " + 
 							"COALESCE(SUM(initCost),0) as initCost,COALESCE(SUM(accuDepr),0) as Depr,COALESCE(SUM(netCost),0) as netCost, " + 
 							"COALESCE( nullif(SUM(voiceRevenue)+ SUM(smsRevenue)+ SUM(dataRevneue)+ SUM(vasRevenue),0) / (nullif(SUM(initCost),0) * 100) ,0) as revenueToAssetInit"
-							+ " ,COALESCE( (nullif(SUM(voiceRevenue)+ SUM(smsRevenue)+ SUM(dataRevneue)+ SUM(vasRevenue),0)) / (nullif(SUM(netCost),0) *100) ,0) as revenueToAssetNet FROM ( " + 
+							+ " ,COALESCE( (nullif(SUM(voiceRevenue)+ SUM(smsRevenue)+ SUM(dataRevneue)+ SUM(vasRevenue),0)) / (nullif(SUM(netCost),0) *100) ,0) as revenueToAssetNet,"
+							+ " COALESCE( (nullif(population,0)) / (nullif(SUM(initCost),0) *100) ,0)  as populationToAssetInit , COALESCE( (nullif(population,0)) / (nullif(SUM(netCost),0) *100) ,0)  as populationToAssetNet FROM ( " + 
 							"SELECT DISTINCT C.SITE_ID AS site,C.WARE_ID as wareID, C.SITE_ID AS siteID, C.WARE_NAME AS siteName , C.LONGITUDE as longitude, " + 
-							"C.LATITUDE as latitude, A.INITIALCOST as initCost, A.NETCOST as netCost , A.ACCUMULDEPRECAMNT as accuDepr,A.FAR_ID AS FAR_ID, " + 
+							"C.LATITUDE as latitude,C.POPULATION AS population, A.INITIALCOST as initCost, A.NETCOST as netCost , A.ACCUMULDEPRECAMNT as accuDepr,A.FAR_ID AS FAR_ID, " + 
 							"0 as voiceRevenue, 0 as smsRevenue, 0 as dataRevneue, 0 as vasRevenue " + 
 							"FROM FIXED_ASSET_REGISTRY A " + 
 							"LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID " + 
@@ -82,19 +83,19 @@ public class RevenueToAssetRatioReportController {
 							"WHERE A.CREATED_DATE >=  trunc(SYSDATE - INTERVAL '1' YEAR) AND A.created_date < (trunc(sysdate) ) + 1  " + 
 							"UNION " + 
 							"SELECT DISTINCT C.SITE_ID AS site,C.WARE_ID as wareID, C.SITE_ID AS siteID, C.WARE_NAME AS siteName , C.LONGITUDE as longitude, " + 
-							"C.LATITUDE as latitude, 0 as initCost,0 as accuDepr, 0 as netCost , '' AS FAR_ID, " + 
+							"C.LATITUDE as latitude,C.POPULATION AS population, 0 as initCost,0 as accuDepr, 0 as netCost , '' AS FAR_ID, " + 
 							"D.VOICE_REVENUE as voiceRevenue, D.SMS_REVENUE as smsRevenue, D.DATA_REVENUE as dataRevneue,D.VAS_REVENUE as vasRevenue " + 
 							"FROM rpt_PREPAID_PAYG_REVENUE D " + 
 							"LEFT JOIN WAREHOUSE C ON C.SITE_ID = D.SITE_ID " + 
 							"WHERE D.REVENUE_DATE >=  trunc(SYSDATE - INTERVAL '1' YEAR) AND D.REVENUE_DATE < (trunc(sysdate) ) + 1  " + 
-							") WHERE (longitude is not null and longitude != '0' and longitude != 'null' and latitude is not null and latitude != '0' and latitude != 'null') GROUP BY site,wareID,siteID,siteName,longitude,latitude"
+							") WHERE (longitude is not null and longitude != '0' and longitude != 'null' and latitude is not null and latitude != '0' and latitude != 'null') GROUP BY site,wareID,siteID,siteName,longitude,latitude,population"
 							);
 					
 					
 				  List<RevenueToAssetRatioReport> RevenueToAssetRatioList = (List<RevenueToAssetRatioReport>) ((NativeQuery<RevenueToAssetRatioReport>) query)
 							.addScalar("site").addScalar("wareID").addScalar("siteID").addScalar("siteName").addScalar("longitude")
-							.addScalar("latitude").addScalar("voiceRevenue").addScalar("smsRevenue").addScalar("dataRevneue").addScalar("vasRevenue")
-							.addScalar("totalRevenue").addScalar("initCost").addScalar("Depr").addScalar("netCost").addScalar("revenueToAssetInit").addScalar("revenueToAssetNet")
+							.addScalar("latitude").addScalar("population").addScalar("voiceRevenue").addScalar("smsRevenue").addScalar("dataRevneue").addScalar("vasRevenue")
+							.addScalar("totalRevenue").addScalar("initCost").addScalar("Depr").addScalar("netCost").addScalar("revenueToAssetInit").addScalar("revenueToAssetNet").addScalar("populationToAssetInit").addScalar("populationToAssetNet")
 							.setResultTransformer(Transformers.aliasToBean(RevenueToAssetRatioReport.class)).list();					
 				
 				 model.addAttribute("RevenueToAssetRatioReportList", mapper.writeValueAsString(RevenueToAssetRatioList));
@@ -158,14 +159,14 @@ public class RevenueToAssetRatioReportController {
 					tx = session.beginTransaction();
 					try {	
 					strALM = "SELECT DISTINCT C.SITE_ID AS site,C.WARE_ID as wareID, C.SITE_ID AS siteID, C.WARE_NAME AS siteName , C.LONGITUDE as longitude, " + 
-							"C.LATITUDE as latitude, A.INITIALCOST as initCost, A.NETCOST as netCost , A.ACCUMULDEPRECAMNT as accuDepr,A.FAR_ID AS FAR_ID, " + 
+							"C.LATITUDE as latitude, C.POPULATION AS population, A.INITIALCOST as initCost, A.NETCOST as netCost , A.ACCUMULDEPRECAMNT as accuDepr,A.FAR_ID AS FAR_ID, " + 
 							"0 as voiceRevenue, 0 as smsRevenue, 0 as dataRevneue, 0 as vasRevenue " + 
 							"FROM FIXED_ASSET_REGISTRY A " + 
 							"LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID " + 
 							"LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID " + 
 							 " WHERE ( upper(C.WARE_ID) LIKE upper('%" + wareID + "%') AND upper(C.SITE_ID) LIKE upper('%" + siteId + "%') AND upper(C.WARE_NAME) LIKE upper('%" + siteName+ "%') )  ";
 					strRPT = "SELECT DISTINCT C.SITE_ID AS site,C.WARE_ID as wareID, C.SITE_ID AS siteID, C.WARE_NAME AS siteName , C.LONGITUDE as longitude, " + 
-							"C.LATITUDE as latitude, 0 as initCost,0 as accuDepr, 0 as netCost , '' AS FAR_ID, " + 
+							"C.LATITUDE as latitude,C.POPULATION AS population, 0 as initCost,0 as accuDepr, 0 as netCost , '' AS FAR_ID, " + 
 							"D.VOICE_REVENUE as voiceRevenue, D.SMS_REVENUE as smsRevenue, D.DATA_REVENUE as dataRevneue,D.VAS_REVENUE as vasRevenue " + 
 							"FROM rpt_PREPAID_PAYG_REVENUE D " + 
 							"LEFT JOIN WAREHOUSE C ON C.SITE_ID = D.SITE_ID " + 
@@ -265,14 +266,15 @@ public class RevenueToAssetRatioReportController {
 
 					} // end of checked strt/end coordinate checkbox
 					
-					str =  "SELECT site as site,wareID as wareID,siteID as siteID,siteName as siteName,longitude as longitude,latitude as latitude, " + 
+					str =  "SELECT site as site,wareID as wareID,siteID as siteID,siteName as siteName,longitude as longitude,latitude as latitude,COALESCE(NULLIF(population, 0), 0) as population, " + 
 							"COALESCE(SUM(voiceRevenue),0) as voiceRevenue,COALESCE(SUM(smsRevenue),0) as smsRevenue,COALESCE(SUM(dataRevneue),0) as dataRevneue,COALESCE(SUM(vasRevenue),0) as vasRevenue, " + 
 							"COALESCE(SUM(voiceRevenue)+ SUM(smsRevenue)+ SUM(dataRevneue)+ SUM(vasRevenue),0) as totalRevenue, " + 
 							"COALESCE(SUM(initCost),0) as initCost,COALESCE(SUM(accuDepr),0) as Depr,COALESCE(SUM(netCost),0) as netCost, " + 
 							"COALESCE( nullif(SUM(voiceRevenue)+ SUM(smsRevenue)+ SUM(dataRevneue)+ SUM(vasRevenue),0) / (nullif(SUM(initCost),0) * 100) ,0) as revenueToAssetInit"
-							+ " ,COALESCE( (nullif(SUM(voiceRevenue)+ SUM(smsRevenue)+ SUM(dataRevneue)+ SUM(vasRevenue),0)) / (nullif(SUM(netCost),0) *100) ,0) as revenueToAssetNet FROM ( " + 
+							+ " ,COALESCE( (nullif(SUM(voiceRevenue)+ SUM(smsRevenue)+ SUM(dataRevneue)+ SUM(vasRevenue),0)) / (nullif(SUM(netCost),0) *100) ,0) as revenueToAssetNet,"
+							+ " COALESCE( (nullif(population,0)) / (nullif(SUM(initCost),0) *100) ,0)  as populationToAssetInit , COALESCE( (nullif(population,0)) / (nullif(SUM(netCost),0) *100) ,0)  as populationToAssetNet FROM ( " + 
 							strALM+ " UNION " + strRPT
-						    + "  ) WHERE (longitude is not null and longitude != '0' and longitude != 'null' and latitude is not null and latitude != '0' and latitude != 'null') GROUP BY site,wareID,siteID,siteName,longitude,latitude ";
+						    + "  ) WHERE (longitude is not null and longitude != '0' and longitude != 'null' and latitude is not null and latitude != '0' and latitude != 'null') GROUP BY site,wareID,siteID,siteName,longitude,latitude,population ";
 
 					
 					//System.out.println("the Str is " + str);
@@ -281,8 +283,8 @@ public class RevenueToAssetRatioReportController {
 
 					RevenueToAssetRatioList = (List<RevenueToAssetRatioReport>) ((NativeQuery<RevenueToAssetRatioReport>) query)
 							.addScalar("site").addScalar("wareID").addScalar("siteID").addScalar("siteName").addScalar("longitude")
-							.addScalar("latitude").addScalar("voiceRevenue").addScalar("smsRevenue").addScalar("dataRevneue").addScalar("vasRevenue")
-							.addScalar("totalRevenue").addScalar("initCost").addScalar("Depr").addScalar("netCost").addScalar("revenueToAssetInit").addScalar("revenueToAssetNet")
+							.addScalar("latitude").addScalar("population").addScalar("voiceRevenue").addScalar("smsRevenue").addScalar("dataRevneue").addScalar("vasRevenue")
+							.addScalar("totalRevenue").addScalar("initCost").addScalar("Depr").addScalar("netCost").addScalar("revenueToAssetInit").addScalar("revenueToAssetNet").addScalar("populationToAssetInit").addScalar("populationToAssetNet")
 							.setResultTransformer(Transformers.aliasToBean(RevenueToAssetRatioReport.class)).list();
 					
 					// If circle range is checked

@@ -29,7 +29,8 @@ import javax.persistence.Table;
 		@Column(name = "LATITUDE")
 		private String latitude;
 		
-		
+		private BigDecimal population;
+
 		@Column(name = "VOICE_REVENUE")
 		private BigDecimal voiceRevenue;
 		
@@ -57,6 +58,11 @@ import javax.persistence.Table;
 
 		private BigDecimal revenueToAssetNet;
 		
+		private BigDecimal populationToAssetInit;
+		private BigDecimal populationToAssetNet;
+		
+
+		
 		//@Column(name = "REVENUE_DATE")
 		//private String startDate;
 		
@@ -68,9 +74,9 @@ import javax.persistence.Table;
 		}
 
 		public RevenueToAssetRatioReport(String site, String wareID, String siteID, String siteName, String longitude,
-				String latitude, BigDecimal voiceRevenue, BigDecimal smsRevenue, BigDecimal dataRevneue,
+				String latitude,BigDecimal population, BigDecimal voiceRevenue, BigDecimal smsRevenue, BigDecimal dataRevneue,
 				BigDecimal vasRevenue, BigDecimal totalRevenue, BigDecimal initCost, BigDecimal depr,
-				BigDecimal netCost, BigDecimal revenueToAssetInit, BigDecimal revenueToAssetNet) {
+				BigDecimal netCost, BigDecimal revenueToAssetInit, BigDecimal revenueToAssetNet,BigDecimal populationToAssetInit,BigDecimal populationToAssetNet) {
 			super();
 			this.site = site;
 			this.wareID = wareID;
@@ -78,6 +84,7 @@ import javax.persistence.Table;
 			this.siteName = siteName;
 			this.longitude = longitude;
 			this.latitude = latitude;
+			this.population = population;
 			this.voiceRevenue = voiceRevenue;
 			this.smsRevenue = smsRevenue;
 			this.dataRevneue = dataRevneue;
@@ -88,6 +95,8 @@ import javax.persistence.Table;
 			this.netCost = netCost;
 			this.revenueToAssetInit = revenueToAssetInit;
 			this.revenueToAssetNet = revenueToAssetNet;
+			this.populationToAssetInit=populationToAssetInit;
+			this.populationToAssetNet = populationToAssetNet;
 		}
 
 		public String getSite() {
@@ -136,6 +145,17 @@ import javax.persistence.Table;
 
 		public void setLatitude(String latitude) {
 			this.latitude = latitude;
+		}
+		
+		
+	
+
+		public BigDecimal getPopulation() {
+			return population;
+		}
+
+		public void setPopulation(BigDecimal population) {
+			this.population = population;
 		}
 
 		public BigDecimal getVoiceRevenue() {
@@ -218,7 +238,20 @@ import javax.persistence.Table;
 			this.revenueToAssetNet = revenueToAssetNet;
 		}
 
-		
-		
+		public BigDecimal getPopulationToAssetInit() {
+			return populationToAssetInit;
+		}
 
+		public void setPopulationToAssetInit(BigDecimal populationToAssetInit) {
+			this.populationToAssetInit = populationToAssetInit;
+		}
+
+		public BigDecimal getPopulationToAssetNet() {
+			return populationToAssetNet;
+		}
+
+		public void setPopulationToAssetNet(BigDecimal populationToAssetNet) {
+			this.populationToAssetNet = populationToAssetNet;
+		}
+				
 }
