@@ -512,6 +512,41 @@ max-width: 100%;
 														<ul class="dropdown-menu filter-dropdown-ul"></ul>
 													</li>
 												</th> 
+													<th>Revenue/Asset Initial
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> 
+														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
+														</button>
+														<ul class="dropdown-menu filter-dropdown-ul"></ul>
+													</li>
+												</th>
+												
+												<th>Revenue/Asset Net
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> 
+														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
+														</button>
+														<ul class="dropdown-menu filter-dropdown-ul"></ul>
+													</li>
+												</th>
+												<th>Population/Asset Initial
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> 
+														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
+														</button>
+														<ul class="dropdown-menu filter-dropdown-ul"></ul>
+													</li>
+												</th>
+												
+												<th>Population/Asset Net
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> 
+														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
+														</button>
+														<ul class="dropdown-menu filter-dropdown-ul"></ul>
+													</li>
+												</th>
+												
 												<th>Population
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown"> 
@@ -592,41 +627,7 @@ max-width: 100%;
 													</li>
 												</th>
 												
-												<th>Revenue/Asset Initial
-													<li class="filter-dropdown dropdown">
-														<button class="almgrid-filter" data-toggle="dropdown"> 
-														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
-														</button>
-														<ul class="dropdown-menu filter-dropdown-ul"></ul>
-													</li>
-												</th>
-												
-												<th>Revenue/Asset Net
-													<li class="filter-dropdown dropdown">
-														<button class="almgrid-filter" data-toggle="dropdown"> 
-														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
-														</button>
-														<ul class="dropdown-menu filter-dropdown-ul"></ul>
-													</li>
-												</th>
-												<th>Population/Asset Initial
-													<li class="filter-dropdown dropdown">
-														<button class="almgrid-filter" data-toggle="dropdown"> 
-														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
-														</button>
-														<ul class="dropdown-menu filter-dropdown-ul"></ul>
-													</li>
-												</th>
-												
-												<th>Population/Asset Net
-													<li class="filter-dropdown dropdown">
-														<button class="almgrid-filter" data-toggle="dropdown"> 
-														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
-														</button>
-														<ul class="dropdown-menu filter-dropdown-ul"></ul>
-													</li>
-												</th>
-												
+											
 																						
 											<tr>
 												<th><input type="text" disabled class="almgrid-search" style="display:none"></th>
@@ -1137,7 +1138,7 @@ $(document).ready(function() {
 	     		var data = [];
 	     	    exportArrayGrid = [];
 	    		data.push('\r');
-	       		data.push(["Warehouse ID","Site ID","Site Name","Longitude","Latitude","Population","VOICE Revenue","SMS Revenue","Data Revenue","VAS Revenue","Total Revenue","Initial Cost","Depreciation","Net Cost","Revenue/Asset Initial","Revenue/Asset Net",,"Population/Asset Initial","Population/Asset Net"]);
+	       		data.push(["Warehouse ID","Site ID","Site Name","Longitude","Latitude","Revenue/Asset Initial","Revenue/Asset Net",,"Population/Asset Initial","Population/Asset Net","Population","VOICE Revenue","SMS Revenue","Data Revenue","VAS Revenue","Total Revenue","Initial Cost","Depreciation","Net Cost"]);
 	       		filteredSitesGrid = dataArray; // used in draw on map 
 	       		
         for (var i = 0; i < dataArray.length; i++) {
@@ -1206,19 +1207,7 @@ $(document).ready(function() {
   	        var nbRows = $("#" + gridContainerId).find(".almgrid-pagecount").val();
   	        nbRows = parseInt(nbRows);
 
-  	      
-  	  	/*	var avrgRevToAssetInit = revToAssetInit / nbRows;
-  	  		var avrgRevToAssetNet = revToAssetNet / nbRows;
-  	  		var avrgPopToAssetInit = populationToAssetInit / nbRows;
-  	  		var avrgPopToAssetNet = populationToAssetNet / nbRows;
-  	  		
-  	        $("#avrgRevToAssetInit").val(avrgRevToAssetInit);
-  	        $("#avrgPopToAssetInit").val(avrgPopToAssetInit);
-  	        $("#avrgPopToAssetNet").val(avrgPopToAssetNet);
-  	        $("#avrgRevToAssetNet").val(avrgRevToAssetNet);*/
-  	        
-
-  	        
+  	  
 
   	        this.pagination = new Pagination({ id: paginationId, tableId: tableId, noOfRows: nbRows, columnLinkNb: columnLinkNb, dataArray: dataArray, ArrayKeys:ArrayKeys,selectCheckbox:this.selectCheckbox  });
 
@@ -1376,6 +1365,10 @@ $(document).ready(function() {
 					+'</ul></li></th><th>Site Name<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
 					+'</ul></li></th><th>Longitude<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
 					+'</ul></li></th><th>Latitude<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i	class="fa fa-list almgrid-filter-i"	aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
+					+'</ul></li></th><th>Revenue/Asset Initial<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i	class="fa fa-list almgrid-filter-i"	aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
+					+'</ul></li></th><th>Revenue/Asset Net<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i	class="fa fa-list almgrid-filter-i"	aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
+					+'</ul></li></th><th>Population/Asset Initial<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i	class="fa fa-list almgrid-filter-i"	aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
+					+'</ul></li></th><th>Population/Asset Net<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i	class="fa fa-list almgrid-filter-i"	aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
 					+'</ul></li></th><th>Population<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i	class="fa fa-list almgrid-filter-i"	aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
 					+'<th>VOICE Revenue<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
 					+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'	
@@ -1393,14 +1386,6 @@ $(document).ready(function() {
 					+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'	
 					+'<th>Net Cost<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
 					+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'
-					+'<th>Revenue/Asset Initial<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
-					+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'	
-					+'<th>Revenue/Asset Net<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
-					+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'	
-					+'<th>Population/Asset Initial<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
-					+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'	
-					+'<th>Population/Asset Net<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
-					+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'	
 					
 					+'<tr>'
 					+'<th><input type="text" disabled class="almgrid-search" style="display:none"></th>'
@@ -1496,7 +1481,7 @@ $(document).ready(function() {
          					 
          			     if (dataArray.length > 0) {
   					 
-  	                       var initCost=0,netCost=0,accuDepr=0;
+         			       var revToAssetInit=0,revToAssetNet=0,populationToAssetInit=0,populationToAssetNet=0;
   			               var ArrayKeys = Object.keys(dataArray[0]);
   			       		   var columnVal;
   			       		  
@@ -1504,7 +1489,7 @@ $(document).ready(function() {
   			       		    var data = [];
   			       	       exportArrayGrid = [];
   			       		   data.push('\r');
-  				       	   data.push(["Warehouse ID","Site ID","Site Name","Longitude","Latitude","Population","VOICE Revenue","SMS Revenue","Data Revenue","VAS Revenue","Total Revenue","Initial Cost","Depreciation","Net Cost","Revenue/Asset Initial","Revenue/Asset Net","Population/Asset Initial","Population/Asset Net"]);
+  				       	   data.push(["Warehouse ID","Site ID","Site Name","Longitude","Latitude","Revenue/Asset Initial","Revenue/Asset Net","Population/Asset Initial","Population/Asset Net","Population","VOICE Revenue","SMS Revenue","Data Revenue","VAS Revenue","Total Revenue","Initial Cost","Depreciation","Net Cost"]);
   					        filteredSitesGrid = dataArray; // used in draw on map 
   	  			       		
   			       		
@@ -1530,7 +1515,7 @@ $(document).ready(function() {
   			                // for export
 		                   exportArrayGrid.push(data);
 
-		                   var nbRow = dataArray.length;
+		                var nbRow = dataArray.length;
 		       	        nbRow = parseInt(nbRow);
 		       	      
 		       	  		var avrgRevToAssetInit = revToAssetInit / nbRow;
