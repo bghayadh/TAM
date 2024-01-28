@@ -9,6 +9,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="${pageContext.request.contextPath}/resources/js/platform.js"></script>
    <script src="${pageContext.request.contextPath}/resources/js/DiscoveryNew/DN_BoqPopup.js"></script>
+    <script src="${pageContext.request.contextPath}/resources/js/DiscoveryNew/DN_Node.js"></script>
+
+    
+    
     
 	<style>
 	
@@ -204,6 +208,21 @@ max-width: 100%;
                 background-color: #FFD966 !important;
                 color: #00757c !important;
             }
+            
+                        
+               
+.btn-pop {
+    background-color: #C2CBC0 !important;
+    border-color: #C2CBC0;
+    3
+}
+
+.btn-pop:hover {
+    color: #fff;
+    background-color: #8696A0 !important;
+    border-color: #8696A0 !important;
+}
+            
  	</style>
 </head>
 <body>
@@ -497,30 +516,142 @@ max-width: 100%;
 	<div id ="DNModal" class="modal fade  custom-class-assignedto-modal"  tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">	
 		<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
 			<div class="modal-content" >
-				<div class="modal-header" style="background-color: #FF4F4F;" >
-				<h5 id ="popupNb" class="modal-title" style="font-weight:bold; color: #3C1596;position:relative;top:4px;"></h5>
-				
-				<button type="button" name="insertBelow"  onclick="insertRowBelow()" class ="btn btn-default btn-primary BtnActive  " style="color:white;position:relative;left:50px;">Insert Below </button>
-				<button type="button" name="insertAbove"  onclick="insertRowAbove()" class ="btn btn-default btn-primary BtnActive" style="color:white;position:relative;left:60px;">Insert Above </button>
-			    <button type="button" name="deleteBoqRow"  onclick="deleteBoqRow()" class ="btn btn-default btn-primary BtnActive" style="color:white;position:relative;left:70px;">Delete</button>
-			    <button name ="previousRow" class ="btn btn-default btn-primary BtnActive" style="color:white;position:relative;left:80px;">Previous</button>
-	            <button name="nextRow" onclick="nextRow()" class ="btn btn-default btn-primary BtnActive" style="color:white;position:relative;left:90px;">Next</button>
-	            
-				<button type="button" name="closePopup" class ="close" data-dismiss ="modal"> <i class='fa fa-times'></i> </button>
-				<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change' ></i> </a>
+			<div class="modal-header" style="background-color: #2678CC ; height: 55px; ">
+			<h5 id ="popupNb" class="modal-title" style="font-weight:bold; color: #E9ECEF ;position: relative; bottom: 12px;"></h5>
+				<div style="float: right;">
+				<button  name="insertBelow"  onclick="insertRowBelow()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black; position:relative;left: -30px; font-weight: bold; margin-top: -7px;"">Insert Below </button>
+				<button  name="insertAbove"  onclick="insertRowAbove()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: -20px; font-weight: bold; margin-top: -7px;"">Insert Above </button>
+				<button  name="deleteBoqRow" onclick="deleteBoqRow()"   class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: -10px; font-weight: bold; margin-top: -7px;"">Delete</button>
+				<button  name ="previousRow" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: 0px; font-weight: bold; margin-top: -7px;"">Previous</button>
+	            <button  name="nextRow" onclick="nextRow()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: 10px; font-weight: bold; margin-top: -7px;"">Next</button> 
+				<button type="button" name="closeModPartPopup" class="close" data-dismiss="modal"><i class='fa fa-times'></i></button>
+									<a class="close modalMinimize ml-3"> <i
+										class='fa fa-minus icon-to-change'></i></a>
 				</div>
+				</div>
+	
 	<div class="modal-body">
 	<ul class="nav nav-tabs" id="myTab" role="tablist" style="background-color: #00757C;">
- 		 <li class="nav-item">
+ 		  <li class="nav-item">
    			 <a class="nav-link active" id="item-tab" style="color: gold;" data-toggle="tab" href="#item" role="tab" aria-controls="item" aria-selected="true">ITEM</a>
   		</li>
   
+  		<li class="nav-item">
+   			 <a class="nav-link " id="node-tab" style="color: gold;" data-toggle="tab" href="#node" role="tab" aria-controls="node" aria-selected="false">NODE</a>
+  		</li>
   		
+  		<li class="nav-item">
+   			 <a class="nav-link " id="slot-tab" style="color: gold;" data-toggle="tab" href="#slot" role="tab" aria-controls="slot" aria-selected="false">SLOT</a>
+  		</li>
  
 	</ul>
-            
 
 <div class="tab-content">
+
+
+
+
+<div class="tab-pane" id="slot" role="tabpanel" aria-labelledby="slot-tab">
+ <div class="container-fluid">
+ <div  style="height:30px"></div>
+	
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="form-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text" >From Slot</span>
+					<input type="text" id="popupFromSlot" class="form-control text-input"  value="" style="width:675px;"  />
+				</div>
+			</div>
+	    </div>
+	
+	
+		<div class="col-sm-6">
+			<div class="form-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text" >To Slot</span>
+					<input type="text" id="popupToSlot" class="form-control text-input"  value="" style="width:675px;"  />
+				</div>
+			</div>
+	    </div>
+	</div>
+</div>
+ </div>
+
+
+
+
+
+
+ <div class="tab-pane" id="node" role="tabpanel" aria-labelledby="node-tab">
+  <div> 
+<p></p>
+	<form>
+		<div class="table-responsive-sm"> 
+			<table id ="ToNodeTable" class="table table-striped table-bordered table-sm" style="display:block; height:290px; overflow-y: auto;">	
+				<thead>
+					<tr class="fixed-headerr">
+					<th> 
+						<button type="button" id="selectAllToNode"  on class="main">
+						<span class="sub"></span>Select</button>
+								         
+					  </th>
+					 <th width="232px">To Node Id</th>
+					 <th width="232px">To Node Name</th>
+                     <th width="232px">To Node Type</th>
+						              
+					</tr> </thead> <tbody> </tbody> </table>
+					</div>
+					  	<input type="text" id="RowIndex2" value="" hidden>
+						<button type="button" class="add-row-serial" onclick="addRowToNode()">Add Row</button>
+						<button type="button" class="delete-To-node">Delete Row</button>
+					</form>
+					</div> 
+					
+					
+					
+					<div> 
+<p></p>
+	<form>
+		<div class="table-responsive-sm"> 
+			<table id ="FromNodeTable" class="table table-striped table-bordered table-sm" style="display:block; height:290px; overflow-y: auto;">	
+				<thead>
+					<tr class="fixed-headerr">
+					<th> 
+						<button type="button" id="selectAllFromNode"  class="main">
+						<span class="sub"></span>Select</button>
+								         
+					  </th>
+					 <th width="232px">From Node Id</th>
+					 <th width="232px">From Node Name</th>
+                     <th width="232px">From Node Type</th>
+						              
+					</tr> </thead> <tbody> </tbody> </table>
+					</div>
+					  	<input type="text" id="RowIndex2" value="" hidden>
+						<button type="button" class="add-row-serial" onclick="addRowFromNode()">Add Row</button>
+						<button type="button" class="delete-From-node">Delete Row</button>
+					</form>
+					</div> 
+					
+					
+ </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   <div class="tab-pane active" id="item" role="tabpanel" aria-labelledby="item-tab">
   <p></p>
 <div class="container-fluid">
@@ -985,6 +1116,12 @@ max-width: 100%;
  
  <script type='text/javascript'>
 
+ var allDelToNodes = [];
+ var allDelFromNodes = [];
+var toNodeDel = [];
+var fromNodeDel=[];
+var allDeletedFromNodes =[];
+ var allDeletedNodes= [];
 
 /////////////////////////////////////////// SEND EMAIL  ///////////////////////////////////////////////////////////////
 if ('${docStatus}' == "addNew") {
@@ -1101,6 +1238,7 @@ function getAllItemPartNbs()
 			$("input").change(function() {
 				$("#dnStatus").text("Not Saved");
 				$('.dot').css({"background-color" : "orange"});
+			
 			});
    
 				
@@ -1706,6 +1844,7 @@ function getAllItemPartNbs()
 					},
 					success : function(data) {
 						location.replace("${pageContext.request.contextPath}/DiscoveryNewListView");
+						
 					},
 					error : function(error) {
 						console.log("The error is " + error);
@@ -1720,7 +1859,7 @@ function getAllItemPartNbs()
 	    	//return false;
 	    boqArray = [];
 	    boqArray = ${ListPRqItem};	
-		
+		console.log(boqArray);
 		 itemArray =${ListPRqItem};
 		var sumTotal  ;
 		var sumQty ;   
@@ -1937,7 +2076,9 @@ function getAllItemPartNbs()
 						     dictObj.toSN = $(this).parent().parent().children('td[name="toSN"]').children('input').val();
 						     dictObj.itemDniID = $(this).parent().parent().children('td[name="itemDniID"]').children('input').val();
 						     dictObj.description = $(this).parent().parent().children('td[name="description"]').children('input').val(); 
-	                  
+						     dictObj.toNode= ($(this).parent().parent().children('td[name="toNode"]').children('input').val() == "null" || $(this).parent().parent().children('td[name="toNode"]').children('input').val() == '{"toNodeArray":[]}') ? "" : $(this).parent().parent().children('td[name="toNode"]').children('input').val()			 
+						     dictObj.fromNode= ($(this).parent().parent().children('td[name="fromNode"]').children('input').val() == "null" || $(this).parent().parent().children('td[name="fromNode"]').children('input').val() == '{"fromNodeArray":[]}') ? "" : $(this).parent().parent().children('td[name="fromNode"]').children('input').val()			 
+															
 						dict.push(dictObj);
 						dictObj = {};
 
@@ -1999,6 +2140,8 @@ function getAllItemPartNbs()
 						    "ccmail": $("#ccmail").val(),
 						    "subject": $("#subject").val(),
 						    "message": $("#message").val(),
+						    "allDeletedToNodeArray[]":allDeletedNodes,
+						    "allDeletedFromNodeArray[]":allDeletedFromNodes ,
         				},
         				success : function(data) {
         					dncode.value=data.DNID;
@@ -2586,7 +2729,160 @@ function getAllItemPartNbs()
 	                
 }); //end ready document
 
+$('#ToNodeTable').on('focusout', function() {
+	var Data = {};
+    Data.toNodeArray = [];
+$("#ToNodeTable > tbody > tr").find('input[name="record"]').each(function () {
+           var node_Id = $(this).parent().parent().children('td[name="NodeId"]').children('input').val();
+            var node_Name = $(this).parent().parent().children('td[name="NodeName"]').children('input').val();
+            var node_Type = $(this).parent().parent().children('td[name="NodeType"]').children('input').val();
+
+            Data.toNodeArray.push({ NodeId: node_Id, NodeName: node_Name, NodeType: node_Type });
+        
+    });
+
+
+   $("#bisotab > tbody").find("tr").eq(rowindx).find('td[name="toNode"]').children('input')[0].value = JSON.stringify(Data);
+         });
+
+$('#FromNodeTable').on('focusout', function() {
+	  var Data = {};
+	    Data.fromNodeArray = [];
+
+	    $("#FromNodeTable > tbody > tr").find('input[name="record"]').each(function () {
+	           var node_Id = $(this).parent().parent().children('td[name="NodeId"]').children('input').val();
+	            var node_Name = $(this).parent().parent().children('td[name="NodeName"]').children('input').val();
+	            var node_Type = $(this).parent().parent().children('td[name="NodeType"]').children('input').val();
+
+	            Data.fromNodeArray.push({ NodeId: node_Id, NodeName: node_Name, NodeType: node_Type });
+	        
+	    });
+
+	    $("#bisotab > tbody").find("tr").eq(rowindx).find('td[name="fromNode"]').children('input')[0].value = JSON.stringify(Data);
+	    
+	 });
+
+
+$('body').on('click', '#selectAllFromNode', function  () {
+	if ($(this).hasClass('allChecked')) {
+		$('input[type="checkbox"]', '#FromNodeTable').prop('checked', false);
+	} 
+	else {
+		$('input[type="checkbox"]', '#FromNodeTable').prop('checked', true);
+	}
+	
+	$(this).toggleClass('allChecked');
+	       				
+ });
  
+$('body').on('click', '#selectAllToNode', function  () {
+	if ($(this).hasClass('allChecked')) {
+		$('input[type="checkbox"]', '#ToNodeTable').prop('checked', false);
+	} 
+	else {
+		$('input[type="checkbox"]', '#ToNodeTable').prop('checked', true);
+	}
+	
+	$(this).toggleClass('allChecked');
+	       				
+ }) 
+
+  
+  
+  
+
+
+$(".delete-To-node").click(function () {
+ 
+    var nodeId ;
+    $("#ToNodeTable > tbody").find('input[name="record"]').each(function () {
+        if ($(this).is(":checked")) {
+            nodeId = $(this).parent().parent().children('td[name="NodeId"]').children('input').val();
+            toNodeDel.push(nodeId);
+
+            if (!allDelToNodes.includes(nodeId)) {
+                allDelToNodes.push(nodeId);
+            }
+           
+        }
+    });
+    var itemDniID = $("#bisotab > tbody").find("tr").eq(rowindx).children('td[name="itemDniID"]').children('input').val();
+    allDeletedNodes.push([nodeId, itemDniID]);
+    console.log("The selected delete is " + toNodeDel);
+
+    if (toNodeDel.length == 0) {
+        alert('Select Row(s) to Delete');
+        return false;
+    }
+
+    $("#ToNodeTable > tbody").find('input[name="record"]').each(function () {
+        if ($(this).is(":checked")) {
+            $(this).parents("tr").remove();
+        }
+    });
+
+    var Data = {};
+    Data.toNodeArray = [];
+
+    $("#ToNodeTable > tbody > tr").find('input[name="record"]').each(function () {
+        var node_Id = $(this).parent().parent().children('td[name="NodeId"]').children('input').val();
+        var node_Name = $(this).parent().parent().children('td[name="NodeName"]').children('input').val();
+        var node_Type = $(this).parent().parent().children('td[name="NodeType"]').children('input').val();
+
+        Data.toNodeArray.push({ NodeId: node_Id, NodeName: node_Name, NodeType: node_Type });
+    });
+
+    $("#bisotab > tbody").find("tr").eq(rowindx).find('td[name="toNode"]').children('input')[0].value = JSON.stringify(Data);
+    console.log(allDeletedNodes);
+    console.log("zeinaaa");
+});
+
+
+
+$(".delete-From-node").click(function () {
+    var nodeId;
+    $("#FromNodeTable > tbody").find('input[name="record"]').each(function () {
+        if ($(this).is(":checked")) {
+            nodeId = $(this).parent().parent().children('td[name="NodeId"]').children('input').val();
+            fromNodeDel.push(nodeId);
+
+            if (!allDelFromNodes.includes(nodeId)) {
+                allDelFromNodes.push(nodeId);
+            }
+        }
+    });
+
+    var itemDniID = $("#bisotab > tbody").find("tr").eq(rowindx).children('td[name="itemDniID"]').children('input').val();
+    allDeletedFromNodes.push([nodeId, itemDniID]);
+    console.log("The selected delete is " + fromNodeDel);
+
+    if (fromNodeDel.length == 0) {
+        alert('Select Row(s) to Delete');
+        return false;
+    }
+
+    $("#FromNodeTable > tbody").find('input[name="record"]').each(function () {
+        if ($(this).is(":checked")) {
+            $(this).parents("tr").remove();
+        }
+    });
+
+    var Data = {};
+    Data.fromNodeArray = [];
+
+    $("#FromNodeTable > tbody > tr").find('input[name="record"]').each(function () {
+        var node_Id = $(this).parent().parent().children('td[name="NodeId"]').children('input').val();
+        var node_Name = $(this).parent().parent().children('td[name="NodeName"]').children('input').val();
+        var node_Type = $(this).parent().parent().children('td[name="NodeType"]').children('input').val();
+
+        Data.fromNodeArray.push({ NodeId: node_Id, NodeName: node_Name, NodeType: node_Type });
+    });
+
+    $("#bisotab > tbody").find("tr").eq(rowindx).find('td[name="fromNode"]').children('input')[0].value = JSON.stringify(Data);
+    console.log(allDeletedFromNodes);
+    console.log("zeinaaa");
+});
+
 </script>
  
 
