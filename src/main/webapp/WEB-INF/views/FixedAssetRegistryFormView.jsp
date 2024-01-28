@@ -963,6 +963,7 @@ max-height: 100%;
 								        <span class="sub"></span>Select</button></th>
 						                <th width="220px">Node ID</th>
 						                <th width="220px">Node Name</th>
+						                <th width="220px">Node Type</th>
 						                <th width="220px">ID</th>
 										
 
@@ -2145,6 +2146,7 @@ dictSite = [];
 
 		   		var nodeID = boqArrayNode[i].nodeID;
 		   		var nodeName = boqArrayNode[i].nodeName;
+		   		var nodeType = boqArrayNode[i].nodeType;
 		   		var farNodeID = boqArrayNode[i].nodefarId;
 
 
@@ -2160,7 +2162,8 @@ dictSite = [];
 		   		itemNodeRow= itemNodeRow + "<td><input type='checkbox' name='records'><button type = 'button' href='#' name='popUpNodeMenu' onclick='openNodePopUp(this)' class='btn btn-default'  style='position:relative;left:3px;'><i class='fas fa-desktop'></i></button></td>";
 		   		itemNodeRow =itemNodeRow + "<td name='nodeID'><input name='nodeID' id = 'nodeID"+i+"'  type='text' value='" +nodeID+ "' style='width:200px;' class='form-control input-text'/></td>";
 		   		itemNodeRow =itemNodeRow + "<td name='node_Name' style='width:200px'><input name='node_Name' id = 'node_Name"+i+"' style='width:200px'  type='text' value='"+nodeName+"' style='width:200px;' class='form-control input-text' /> </td>";
-		   		itemNodeRow =itemNodeRow + "<td name='farNodeID' style='width:200px'><input name='farNodeID' readonly style='width:200px'  type='text' value='"+farNodeID+"' style='width:200px;' class='form-control input-text' /> </td>";
+         		itemNodeRow =itemNodeRow + "<td name='nodeType'><input name='arNodeID'  type='text' value='"+nodeType+"' readonly style='width:200px;' class='form-control input-text' /> </td>";																																										
+				itemNodeRow =itemNodeRow + "<td name='farNodeID' style='width:200px'><input name='farNodeID' readonly style='width:200px'  type='text' value='"+farNodeID+"' style='width:200px;' class='form-control input-text' /> </td>";
                 itemNodeRow =itemNodeRow + "</tr>";
 
 				
