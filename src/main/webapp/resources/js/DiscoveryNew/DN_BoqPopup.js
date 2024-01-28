@@ -362,7 +362,23 @@
    	            approvedby = "Completely Approved";
         	}
 
+		var toNodeArray = [];
+  if (boqArray[i].toNodeArray != null) {
+  toNodeArray.push(boqArray[i].toNodeArray);
+  }
+  else{
+  toNodeArray.push(null);
+  }
+		var fromNodeArray = [];
+  if (boqArray[i].fromNodeArray != null) {
+  fromNodeArray.push(boqArray[i].fromNodeArray);
+  }
+  else{
+  fromNodeArray.push(null);
+  }
+ 
 
+  
                 var itemRow = "<tr>";
 		        itemRow= itemRow + "<td style='text-align:center;'><input type='checkbox' name='record' style='margin-top:12px;'><button type = 'button' href='#' name='popUpMenu' onclick='openPop(this)' class='btn btn-default'  style='position:relative;left:3px;'><i class='fas fa-desktop'></i></button></td>"
 		        itemRow =itemRow + "<td name='item'><input type='text' name='itmCode' class='form-control text-input' value='"+itemCode+"' style='width:400px;' class='ui-widget ui-widget-content ui-corner-all'/></td>";
@@ -395,6 +411,9 @@
 				itemRow =itemRow + "<td name='itemSN'><input type='text' class='form-control text-input' style='width:200px' value='"+boqArray[i].dniSN+"'></td>";
 				itemRow =itemRow + "<td name='toSN'><input type='text' class='form-control text-input' style='width:200px' value='"+boqArray[i].toSerialNumber+"'></td>";
 				itemRow =itemRow + "<td name='itemDniID'><input type='text' class='form-control text-input' style='width:150px' value='"+boqArray[i].dniDNID+"' readonly></td>";
+			    itemRow = itemRow + "<td name='toNode'><input type='text' style='width:200px; display: none;' value='" + toNodeArray[0] + "' class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>";
+                itemRow = itemRow + "<td name='fromNode'><input type='text' style='width:200px; display: none;' value='" + fromNodeArray[0] + "' class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>";
+
 		        itemRow =itemRow + "</tr>";
 		        $("#bisotab > tbody").append(itemRow);
 
@@ -456,6 +475,9 @@
 					Actionsvalue = Actions_array[j];
 				Actions_options += "<option value='"+Actionsvalue+"' >"+Actions_array[j]+"</option>";
 			}
+			var serialArrays = [];
+           serialArrays.push(null);
+ 
 			Actions_options += "</select>";
 
         	var markup = "<tr><td style='text-align:center;'><input type='checkbox' name='record' style='margin-top:12px;'><button type = 'button' href='#' name='popUpMenu' onclick='openPop(this)' class='btn btn-default'  style='position:relative;left:3px;'><i class='fas fa-desktop'></i></button></td>"
@@ -488,7 +510,10 @@
               	+"<td name='tositeID'><input type='text' name='tositeID' style='width:450px;' class='ui-widget ui-widget-content ui-corner-all form-control'/></td>"
               	+"<td name='itemSN'><input type='text' value='0' class='form-control' style='width:200px;'></td>"
               	+"<td name='toSN'><input type='text' value='0' class='form-control' style='width:200px;'></td>"
-              	+"<td name='itemDniID'><input type='text' readonly value='0' class='form-control' style='width:160px;'></td></tr>";
+             	+"<td name='itemDniID'><input type='text' readonly value='0' class='form-control' style='width:160px;'></td>"
+             	+"<td name='toNode'><input type='text'  value ='null' class='form-control' style='width:160px; display:none;'></td>"
+             	+"<td name='fromNode'><input type='text' value ='null' style='width:200px; display:none;'  class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td></tr>";		
+	       
 
 		var rowIndex = $("#bisotab tr").length;
 
@@ -514,6 +539,7 @@
 
              $('#bisotab tr td input').on('focus', function() {
 					SetIndexRow(this);
+					
 				});
 
              function customRenderItem(ul, item) {
@@ -1013,7 +1039,8 @@ else {
 			 //Open popup fct
  function openPop(element) {
 
-
+$("#ToNodeTable >tbody tr").empty();
+$("#FromNodeTable >tbody tr").empty();
 	var buttonRowIndx = $(element).closest("tr");
 	rowindx = (buttonRowIndx[0].rowIndex - 1);
 	console.log("Row index of clicked button::" +rowindx);
@@ -1073,15 +1100,46 @@ else {
 	$('#popupToSN').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="toSN"]').children('input').val());
 	$('#popupDNitmID').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemDniID"]').children('input').val());
 
-    		 $("#DNModal").modal("show");
+
+		 $("#DNModal").modal("show");
          var element = document.getElementById("popupNb");
            element.innerHTML = "Item # " +(rowindx+1);
            console.log(rowindx);
 			 SetCalcPopUp();
+   var toNode = JSON.parse($("#bisotab > tbody").find("tr").eq(rowindx).find('td[name="toNode"]').children('input').val());
+   populateNodeTable(toNode, "#ToNodeTable");
+console.log(toNode);
+   var fromNode = JSON.parse($("#bisotab > tbody").find("tr").eq(rowindx).find('td[name="fromNode"]').children('input').val());
+   populateNodeTable(fromNode, "#FromNodeTable");
+
+    
 
     		 }
 
+function populateNodeTable(node, tableSelector) {
 
+    $(tableSelector + " > tbody").html("");
+
+    if (node != null) {
+        var nodeArray = (tableSelector === "#ToNodeTable") ? node.toNodeArray : node.fromNodeArray;
+
+        $.each(nodeArray, function (i, value) {
+        console.log("zeinaaa dd");
+            var nodeId = (value.NodeId === null) ? '' : value.NodeId;
+            var NodeName = (value.NodeName === null) ? '' : value.NodeName;
+            var NodeType = (value.NodeType === null) ? '' : value.NodeType;
+console.log(nodeId);
+            var Node = "<tr>";
+            Node += "<td><input type='checkbox' style='position:relative;left:20px;top:10px' name='record'></td>";
+            Node += "<td name='NodeId'><input name='NodeId' type='text' value='" + nodeId + "' style='width:200px;position:relative;left:11px;' class='form-control text-input'/></td>";
+            Node += "<td name='NodeName' style='width:200px'><input name='NodeName' type='text' value='" + NodeName + "' style='width:200px;position:relative;left:11px;' class='form-control text-input ui-widget ui-widget-content ui-corner-all' /> </td>";
+            Node += "<td name='NodeType' style='width:200px'><input name='NodeType' type='text' value='" + NodeType + "' style='width:200px;position:relative;left:11px;' class='form-control text-input ui-widget ui-widget-content ui-corner-all' /> </td>";
+            Node += "</tr>";
+
+            $(tableSelector + " > tbody").append(Node);
+        });
+    }
+}
     	function insertRowBelow(){
 
 	console.log("ADD NEW ROW USING INSERTBELOW BUTTON");
@@ -1212,7 +1270,8 @@ else {
 
   // Next Fct in popup
  function nextRow(){
-
+$("#ToNodeTable >tbody tr").empty();
+$("#FromNodeTable >tbody tr").empty();
 	// Get total nb of rows
 	var rowCount = $("#bisotab >tbody tr").length;
 	console.log("rowCount in BoQ:" +rowCount);
@@ -1270,6 +1329,11 @@ else {
     $('#popupToSN').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="toSN"]').children('input').val());
     $('#popupDNitmID').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemDniID"]').children('input').val());
 
+var toNode = JSON.parse($("#bisotab > tbody").find("tr").eq(rowindx).find('td[name="toNode"]').children('input').val());
+   populateNodeTable(toNode, "#ToNodeTable");
+
+   var fromNode = JSON.parse($("#bisotab > tbody").find("tr").eq(rowindx).find('td[name="fromNode"]').children('input').val());
+   populateNodeTable(fromNode, "#FromNodeTable");
 
 
 			//Update popup Nb in header
@@ -1330,6 +1394,8 @@ else {
 			//Update popup Nb in header
 			var element = document.getElementById("popupNb");
 			element.innerHTML = "Item # " +(nextIndex+1);
+			
+		
 			}
 
  }// End next fct in popup
@@ -1490,7 +1556,8 @@ else {
 
 
   $("button[name='previousRow']").on("click", function(){
-
+$("#ToNodeTable >tbody tr").empty();
+$("#FromNodeTable >tbody tr").empty();
    	if(rowindx > 0) {
    		console.log("Welcome to previous!");
 		rowindx-- ;
@@ -1543,6 +1610,13 @@ else {
       $('#popupFromSN').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemSN"]').children('input').val());
       $('#popupToSN').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="toSN"]').children('input').val());
       $('#popupDNitmID').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemDniID"]').children('input').val());
+
+
+   var toNode = JSON.parse($("#bisotab > tbody").find("tr").eq(rowindx).find('td[name="toNode"]').children('input').val());
+   populateNodeTable(toNode, "#ToNodeTable");
+
+   var fromNode = JSON.parse($("#bisotab > tbody").find("tr").eq(rowindx).find('td[name="fromNode"]').children('input').val());
+   populateNodeTable(fromNode, "#FromNodeTable");
 
 	    //Update popup Nb in header
 				var element = document.getElementById("popupNb");
