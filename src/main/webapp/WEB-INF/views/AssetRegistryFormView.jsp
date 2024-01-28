@@ -1058,6 +1058,7 @@ max-height: 100%;
 		    </th>
             <th width="220px">Node Id</th>
             <th width="220px">Node Name</th>
+             <th width="220px">Node Type</th>
             <th width="220px">ID</th>
             </tr>
         </thead>
@@ -1933,7 +1934,9 @@ if ('${ListNode}' != "addNew") {
 
 		   		var nodeID = boqArrayNode[i].nodeID;
 		   		var nodeName = boqArrayNode[i].nodeName;
-				var arNodeID = boqArrayNode[i].nodearId;							   
+		   		var nodeType = boqArrayNode[i].nodeType;
+				var arNodeID = boqArrayNode[i].nodearId;
+											   
 
 
 		   		if(nodeID == null)
@@ -1948,8 +1951,9 @@ if ('${ListNode}' != "addNew") {
 		   		itemNodeRow= itemNodeRow + "<td style='text-align:center;'><input type='checkbox' name='record1'><button type = 'button' href='#' name='popNodeUpMenu' onclick='openNodePopUp(this)' class='btn btn-default'  style='position:relative;left:3px;'><i class='fas fa-desktop'></i></button></td>"
 		   		itemNodeRow =itemNodeRow + "<td name='nodeID'><input name='nodeID' id = 'nodeID"+i+"'  type='text' value='" +nodeID+ "' style='width:200px;' class='form-control input-text'/></td>";
 		   		itemNodeRow =itemNodeRow + "<td name='node_Name' style='width:200px'><input name='node_Name'  id = 'node_Name"+i+"'  style='width:200px'  type='text' value='"+nodeName+"' style='width:200px;' class='form-control input-text' /> </td>";
+				itemNodeRow =itemNodeRow + "<td name='arNodeID'><input name='arNodeID'  type='text' value='"+nodeType+"' readonly style='width:200px;' class='form-control input-text' /> </td>";																																										
 				itemNodeRow =itemNodeRow + "<td name='arNodeID'><input name='arNodeID'  type='text' value='"+arNodeID+"' readonly style='width:200px;' class='form-control input-text' /> </td>";																																										
-                itemNodeRow =itemNodeRow + "</tr>";
+	             itemNodeRow =itemNodeRow + "</tr>";
 
 				
 			$("#partnodeTab > tbody").append(itemNodeRow); 
