@@ -1374,9 +1374,7 @@ public class NetworkController {
 				arrayParam[2] = 0; // RAN
 				arrayParam[3] = 0; // core
 
-				String strSites = "SELECT DISTINCT b.SITE_ID,b.SITE_NAME,b.WARE_ID,a.LATITUDE,a.LONGITUDE,"
-						+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID "
-						+ generateDateCondition(parsingDate, "w");
+				String strSites = "SELECT DISTINCT b.SITE_ID,b.SITE_NAME,b.WARE_ID,a.LATITUDE,a.LONGITUDE ";
 
 				String strPO = "SELECT distinct a.PO_ID FROM ASSET_REGISTRY a,NODE_ACTIVE b WHERE a.PO_ID!='0' and a.PO_ID is not null and a.PO_ID!='null' AND b.NODE_ID=a.NODE_ID "
 						+ generateDateCondition(parsingDate, "b");
@@ -1399,36 +1397,21 @@ public class NetworkController {
 						arrayParam[3] = 1;
 						model.addAttribute("CoreBtn", arrayParam[3]);
 					}
-					strSites = AppendQuery("w", arrayParam, strSites);
+					
 					/*strSites = strSites
 							+ ") as countNodes,(select COUNT(*) from ASSET_REGISTRY j,NODE_ACTIVE a where j.AR_ID=b.AR_ID and j.PO_ID!='null' and j.PO_ID!='0' and j.PO_ID is not null AND j.NODE_ID=a.NODE_ID "
 							+ generateDateCondition(parsingDate, "a");*/
 					//strSites = AppendQuery("j", arrayParam, strSites);
+					
 					strSites = strSites
-							+ ") as countNodes,(select COUNT(*) FROM NODE_2GCELL c where c.NODE_PK IN (select NODE_PK from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID "
-							+ generateDateCondition(parsingDate, "o");
-					strSites = AppendQuery("o", arrayParam, strSites);
-					strSites = strSites + " ) ";
-					strSites = AppendQuery("c", arrayParam, strSites);
-					strSites = strSites
-							+ ") as countGcells,(select COUNT(*) FROM NODE_4GCELL d where d.NODE_PK IN (select NODE_PK from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID "
-							+ generateDateCondition(parsingDate, "o");
-					strSites = AppendQuery("o", arrayParam, strSites);
-					strSites = strSites + " ) ";
-					strSites = AppendQuery("d", arrayParam, strSites);
-					strSites = strSites
-							+ ") as countLcells,(select COUNT(*) FROM NODE_3GCELL e where e.NODE_PK IN (select NODE_PK from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID "
-							+ generateDateCondition(parsingDate, "o");
-					strSites = AppendQuery("o", arrayParam, strSites);
-					strSites = strSites + " ) ";
-					strSites = AppendQuery("e", arrayParam, strSites);
-					strSites = strSites
-							+ ") as countUcells FROM AR_SITE b,NODE_ACTIVE a where b.WARE_ID!='0' and b.WARE_ID is not null and b.WARE_ID!='null' "
+							+ "FROM AR_SITE b,NODE_ACTIVE a where b.WARE_ID!='0' and b.WARE_ID is not null and b.WARE_ID!='null' "
 							+ "AND a.WARE_ID=b.WARE_ID "
 							+ generateDateCondition(parsingDate, "a");
 					strSites = AppendQuery("a", arrayParam, strSites);
+					System.out.println("query "+strSites);
 					model.addAttribute("listSites",
 							mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
+					System.out.println("after query ");
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 					model.addAttribute("parsingDate", parsingDate);
 				} catch (Exception e) {
@@ -1463,7 +1446,7 @@ public class NetworkController {
 			return "Network/Network_PoSiteItem";
 		}
 	}
-
+	
 	@RequestMapping(value = "/Network_PoItemSite", method = RequestMethod.GET)
 	public String Network_PoItemSite(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -1487,9 +1470,8 @@ public class NetworkController {
 				arrayParam[2] = 0; // RAN
 				arrayParam[3] = 0; // core
 
-				String strSites = "SELECT DISTINCT b.SITE_ID,b.SITE_NAME,b.WARE_ID,a.LATITUDE,a.LONGITUDE,"
-						+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID "
-						+ generateDateCondition(parsingDate, "w");
+				String strSites = "SELECT DISTINCT b.SITE_ID,b.SITE_NAME,b.WARE_ID,a.LATITUDE,a.LONGITUDE";
+						
 
 				String strPO = "SELECT distinct a.PO_ID FROM ASSET_REGISTRY a,NODE_ACTIVE b WHERE a.PO_ID!='0' and a.PO_ID is not null and a.PO_ID!='null' AND b.NODE_ID=a.NODE_ID "
 						+ generateDateCondition(parsingDate, "b");
@@ -1512,11 +1494,11 @@ public class NetworkController {
 						arrayParam[3] = 1;
 						model.addAttribute("CoreBtn", arrayParam[3]);
 					}
-					strSites = AppendQuery("w", arrayParam, strSites);
+					
 					/*strSites = strSites
 							+ ") as countNodes,(select COUNT(*) from ASSET_REGISTRY j,NODE_ACTIVE a where j.AR_ID=b.AR_ID and j.PO_ID!='null' and j.PO_ID!='0' and j.PO_ID is not null AND j.NODE_ID=a.NODE_ID "
 							+ generateDateCondition(parsingDate, "a");
-					strSites = AppendQuery("j", arrayParam, strSites);*/
+					strSites = AppendQuery("j", arrayParam, strSites);
 					strSites = strSites
 							+ ") as countNodes,(select COUNT(*) FROM NODE_2GCELL c where c.NODE_PK IN (select NODE_PK from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID "
 							+ generateDateCondition(parsingDate, "o");
@@ -1534,9 +1516,9 @@ public class NetworkController {
 							+ generateDateCondition(parsingDate, "o");
 					strSites = AppendQuery("o", arrayParam, strSites);
 					strSites = strSites + " ) ";
-					strSites = AppendQuery("e", arrayParam, strSites);
+					strSites = AppendQuery("e", arrayParam, strSites);*/
 					strSites = strSites
-							+ ") as countUcells FROM AR_SITE b,NODE_ACTIVE a where b.WARE_ID!='0' and b.WARE_ID is not null and b.WARE_ID!='null' "
+							+ " FROM AR_SITE b,NODE_ACTIVE a where b.WARE_ID!='0' and b.WARE_ID is not null and b.WARE_ID!='null' "
 							+ "AND a.WARE_ID=b.WARE_ID "
 							+ generateDateCondition(parsingDate, "a");
 					strSites = AppendQuery("a", arrayParam, strSites);
@@ -1599,9 +1581,7 @@ public class NetworkController {
 				arrayParam[2] = 0; // RAN
 				arrayParam[3] = 0; // core
 
-				String strSites = "SELECT DISTINCT b.SITE_ID,b.SITE_NAME,b.WARE_ID,a.LATITUDE,a.LONGITUDE,"
-						+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID "
-						+ generateDateCondition(parsingDate, "w");
+				String strSites = "SELECT DISTINCT b.SITE_ID,b.SITE_NAME,b.WARE_ID,a.LATITUDE,a.LONGITUDE";
 
 				try {
 					notifications.headerNotifications(session, model);
@@ -1621,11 +1601,10 @@ public class NetworkController {
 						arrayParam[3] = 1;
 						model.addAttribute("CoreBtn", arrayParam[3]);
 					}
-					strSites = AppendQuery("w", arrayParam, strSites);
 					/*strSites = strSites
 							+ ") as countNodes,(select COUNT(*) from ASSET_REGISTRY j,NODE_ACTIVE a where j.AR_ID=b.AR_ID and j.PO_ID!='null' and j.PO_ID!='0' and j.PO_ID is not null AND j.NODE_ID=a.NODE_ID "
 							+ generateDateCondition(parsingDate, "a");
-					strSites = AppendQuery("j", arrayParam, strSites);*/
+					strSites = AppendQuery("j", arrayParam, strSites);
 					strSites = strSites
 							+ ") as countNodes,(select COUNT(*) FROM NODE_2GCELL c where c.NODE_PK IN (select NODE_PK from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID "
 							+ generateDateCondition(parsingDate, "o");
@@ -1643,9 +1622,9 @@ public class NetworkController {
 							+ generateDateCondition(parsingDate, "o");
 					strSites = AppendQuery("o", arrayParam, strSites);
 					strSites = strSites + " ) ";
-					strSites = AppendQuery("e", arrayParam, strSites);
+					strSites = AppendQuery("e", arrayParam, strSites);*/
 					strSites = strSites
-							+ ") as countUcells FROM AR_SITE b,NODE_ACTIVE a where b.WARE_ID!='0' and b.WARE_ID is not null and b.WARE_ID!='null' "
+							+ " FROM AR_SITE b,NODE_ACTIVE a where b.WARE_ID!='0' and b.WARE_ID is not null and b.WARE_ID!='null' "
 							+ "AND a.WARE_ID=b.WARE_ID "
 							+ generateDateCondition(parsingDate, "a");
 					strSites = AppendQuery("a", arrayParam, strSites);
@@ -6915,6 +6894,100 @@ public class NetworkController {
 		return BoqHM;
 	}
 
+	@RequestMapping(value = "/findMarkersInfo", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> findMarkersInfo(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) throws JsonProcessingException {
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		session = AlmDbSession.getInstance().getSession();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+		if (session != null && session.isOpen()) {
+
+			String selectedItem = request.getParameter("selectedItem");
+			String enterprise = request.getParameter("paramEnterprise");
+			String transmission = request.getParameter("paramTransmission");
+			String RAN = request.getParameter("paramRAN");
+			String core = request.getParameter("paramCore");
+			String parsingDate = request.getParameter("date");
+			String strSites ="";
+
+			int[] arrayParam = new int[4];
+			arrayParam[0] = 0; // enterprise
+			arrayParam[1] = 0; // transmission
+			arrayParam[2] = 0; // RAN
+			arrayParam[3] = 0; // core
+			
+			try {	
+			if(selectedItem.contains("WARE")) {
+			 	strSites = "SELECT DISTINCT a.SITE_ID,a.WARE_NAME,a.WARE_ID,a.LATITUDE,a.LONGITUDE,"
+				+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID='"
+				+ selectedItem + "' " + generateDateCondition(parsingDate, "w");
+		
+			
+				notifications.headerNotifications(session, model);
+				if (enterprise =="true") {
+					arrayParam[0] = 1;
+				}
+				if (transmission =="true") {
+					arrayParam[1] = 1;
+				}
+				if (RAN =="true") {
+					arrayParam[2] = 1;
+				}
+				if (core =="true") {
+					arrayParam[3] = 1;
+				}
+				strSites = AppendQuery("w", arrayParam, strSites);
+				
+				strSites = strSites
+						+ ") as countNodes,(select COUNT(*) FROM NODE_2GCELL c where c.NODE_PK IN (select NODE_PK from NODE_ACTIVE o where o.WARE_ID='"
+						+ selectedItem + "' " + generateDateCondition(parsingDate, "o");
+				strSites = AppendQuery("o", arrayParam, strSites);
+				strSites = strSites + " ) ";
+				strSites = AppendQuery("c", arrayParam, strSites);
+				strSites = strSites
+						+ ") as countGcells,(select COUNT(*) FROM NODE_4GCELL d where d.NODE_PK IN (select NODE_PK from NODE_ACTIVE o where o.WARE_ID='"
+						+ selectedItem + "' " + generateDateCondition(parsingDate, "o");
+				strSites = AppendQuery("o", arrayParam, strSites);
+				strSites = strSites + " ) ";
+				strSites = AppendQuery("d", arrayParam, strSites);
+				strSites = strSites
+						+ ") as countLcells,(select COUNT(*) FROM NODE_3GCELL e where e.NODE_PK IN (select NODE_PK from NODE_ACTIVE o where o.WARE_ID='"
+						+ selectedItem + "' " + generateDateCondition(parsingDate, "o");
+				strSites = AppendQuery("o", arrayParam, strSites);
+				strSites = strSites + " ) ";
+				strSites = AppendQuery("e", arrayParam, strSites);
+				strSites = strSites
+						+ ") as countUcells FROM NODE_ACTIVE a where a.WARE_ID='"
+						+ selectedItem + "' " + generateDateCondition(parsingDate, "a");
+				strSites = AppendQuery("a", arrayParam, strSites);
+				
+			}
+				System.out.println("query "+strSites);
+				rtn.put("siteInfo", session.createNativeQuery(strSites).list());
+			
+			}catch (Exception e) {
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest(
+						"Error in retreiving Info Data from database in method findMarkersInfo due to \n "
+								+ exceptionAsString);
+				logger.info("Error in retreiving Info Data from database in method findMarkersInfo due to \n "
+						+ exceptionAsString);
+				rtn.put("siteInfo", null);
+			} finally {
+				if (session != null && session.isOpen()) {
+					session.close();
+				}
+			}
+		}
+		return rtn;
+	}
+	
 	// PO BOQ data retrieving
 	@RequestMapping(value = "/GetPOSiteBoqList", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
