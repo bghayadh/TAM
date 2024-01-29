@@ -53,9 +53,8 @@
 		<script type="text/javascript"
 			src="${pageContext.request.contextPath}/resources/almgrid/clusterize.js"></script>
 
+	<script src="${pageContext.request.contextPath}/resources/js/Customer_Boq.js"></script>
 		
-    
-     <!--  style used for prrqitem table  -->    
     <style>
     
     	   /*Doaa's popup Email Div'*/
@@ -157,7 +156,47 @@ z-index: 9003;
         .nav-link.active {
          color: #1D3763 !important;
          }
- 	</style>
+ 	
+ 	
+.fixed-headerr {
+	opacity: 1;
+	filter: alpha(opacity = 100);
+	background: #ebf2ef;
+	position: sticky;
+	top: 0;
+	z-index: 15;
+}
+.btn-pop {
+	background-color: #C2CBC0 !important;
+	border-color: #C2CBC0;
+}
+
+.btn-pop:hover {
+	color: #fff;
+	background-color: #8696A0 !important;
+	border-color: #8696A0 !important;
+}	
+.nav-link.active {
+  background-color: #FFD966 !important;
+  color: #00757c !important;
+}
+ 	
+td.hidden-td {
+  display: none;
+}
+.createSurvey:hover{
+    color: white;
+	background-color: #007bff;
+}
+
+
+.createSurvey {
+background-color:white;
+color: #007bff;
+border-color: #939191f5;
+}
+
+ </style>
 
 
 
@@ -298,70 +337,58 @@ z-index: 9003;
 			         
 		        </div>
 			</div>
-		</div>
-
-		
-		
+		</div>			
 	</div>
-
-	
-	<div class="container-fluid">
-		
-<div class="row">
-<div class="col-12 col-sm-12 col-lg-12">	
-      <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist" style="background-color: #00757c; margin-top: auto;">
-             <li class="nav-item"><a class="nav-link active"
-						id="custom-tabs-Cust-Info-tab" data-toggle="tab"
-						href="#custom-tabs-Custinfo-home" role="tab"
-						aria-controls="custom-tabs-Custinfo-home" aria-selected="true"
-						style="color: gold;">Customer INFORMATION</a></li>
-         
-            <li class="nav-item ml-auto">
-             
-        
-       <div class="dropdown" Style="display:inline-block;">
-	           <button class="btn btn-secondary dropdown-toggle" type="button" id="notifactionDropdown" data-toggle="dropdown" 
-	            aria-haspopup="true" aria-expanded="true">Actions</button>	
-	            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-	             <a class="dropdown-item"  type="button" id="Activatewh" >Activate</a>
-	             <a class="dropdown-item" type="button" id="Deactivatewh" >Deactivate</a>
-	             <a class="dropdown-item" type="button" id="Cancelwh" >Cancel</a>
-				 <a class="dropdown-item" type="button" id="Blockwh" >Block</a>
-    	    	 <a class="dropdown-item" type="button" id="sendEmail" class="btn btn-primary BtnActive"><i class="fa fa-envelope"></i> Send Email </a>
-           	</div> 
-       </div>
-    	        
-				<button type="button" id="deleteButton"
-				class="btn btn-primary BtnActive">
-				<i class="fa fa-trash"></i> Delete
-				</button>  
-                        
-				<button type="button" id="saveButton"
-				class="btn btn-primary BtnActive">
-				<i class="fa fa-save"></i> Save
-				</button>  </li>
-							
-     </ul>
-     
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-sm-12 col-lg-12">
+            <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist" style="background-color: #00757c; margin-top: 0px;">
+                <li class="nav-item">
+                    <a class="nav-link active" id="custom-tabs-Cust-Info-tab" data-toggle="tab" href="#custom-tabs-Custinfo-home" role="tab" aria-controls="custom-tabs-Custinfo-home" aria-selected="true" style="color: gold;">
+                        Customer INFORMATION
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="custom-tabs-Services-tab" data-toggle="tab" href="#custom-tabs-Cust-Services" role="tab" aria-controls="custom-tabs-Cust-Services" aria-selected="false" style="color: gold;">
+                       SERVICES
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="custom-tabs-Survey-tab" data-toggle="tab" href="#custom-tabs-Cust-Survey" role="tab" aria-controls="custom-tabs-Cust-Survey" aria-selected="false" style="color: gold;">
+                        SURVEY
+                    </a>
+                </li>
+                <li class="nav-item ml-auto">
+                    <div class="dropdown" style="display:inline-block;">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="notifactionDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            Actions
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" type="button" id="Activatewh">Activate</a>
+                            <a class="dropdown-item" type="button" id="Deactivatewh">Deactivate</a>
+                            <a class="dropdown-item" type="button" id="Cancelwh">Cancel</a>
+                            <a class="dropdown-item" type="button" id="Blockwh">Block</a>
+                            <a class="dropdown-item" type="button" id="sendEmail" class="btn btn-primary BtnActive"><i class="fa fa-envelope"></i> Send Email </a>
+                        </div>
+                    </div>
+                    <button type="button" id="deleteButton" class="btn btn-primary BtnActive">
+                        <i class="fa fa-trash"></i> Delete
+                    </button>
+                    <button type="button" id="saveButton" class="btn btn-primary BtnActive">
+                        <i class="fa fa-save"></i> Save
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>
-</div>
-
-</div>
-
 
 <div class="container-fluid">
-
-
-
-<div class="tab-content" id="custom-tabs-Custinfo-tabContent">
-
-<div class="tab-pane fade show active" id="custom-tabs-Custinfo-home"
-	role="tabpanel" aria-labelledby="custom-tabs-Cust-Info-tab">
-	
-	
-	
-	<p></p>
-	<table width="100%" border="0" cellpadding="0" cellspacing="0" id="customerInfo_tbl">
+    <div class="tab-content" id="custom-tabs-Custinfo-tabContent">
+        <div class="tab-pane fade show active" id="custom-tabs-Custinfo-home" role="tabpanel" aria-labelledby="custom-tabs-Cust-Info-tab">
+            <!-- Customer INFORMATION Content -->
+            <p></p>
+            	<table width="100%" border="0" cellpadding="0" cellspacing="0" id="customerInfo_tbl">
 	<tr>
 	<td width=20% valign="top" class="left_col">
 			<div class="form-group">
@@ -569,16 +596,601 @@ z-index: 9003;
 			</div>
    		</td>
    	</tr>
-   
 </table>
+ </div>
+ <div class="tab-pane fade" id="custom-tabs-Cust-Survey" role="tabpanel" aria-labelledby="custom-tabs-Survey-tab">
+            <!-- Survey tab Content -->
+    <div class="container">
+	<div id="surveyPopup" class="modal fade custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+		<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+			<div class="modal-content">
+					<div class="modal-header" style="background-color: #2678CC ; height: 55px;">
+					<h5 id="surveyPopupHeader" class="modal-title" style="font-weight: bold; color: #E9ECEF;">Survey Details</h5>
+					<div style="float: right;">
+						<button type="button" name="closeCustSurveyPopup" class="close" data-dismiss="modal"><i class='fa fa-times'></i></button>
+						<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change'></i></a>
+					</div>
+				  </div>
+								
+				<div class="modal-body" style="height: 500px;">
+					<br>
+					<div class="container-fluid">
+							<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">Survey ID</span>
+										<input type="text" readonly id="popupSurveyID" class="form-control text-input"  style="height: 37px;" />
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">Creation Date</span>
+										<input type="text" readonly id="surveyPopupCreationDate" class="form-control text-input"  style="height: 37px;" />
+									</div>
+								</div>
+							</div>
+							</div></div>
+							<div class="container-fluid">
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="form-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text">Longitude</span>
+												<input type="text" readonly id="surveyPopupLongitude" class="form-control text-input"  style="height: 37px;" />
+											</div>
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<div class="form-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text">Latitude</span>
+												<input type="text" readonly id="surveyPopupLatitude" class="form-control text-input"  style="height: 37px;" />
+											</div>
+										</div>
+									</div>													
+								</div>
+						</div>					
+						<div class="container-fluid" >							
+						<ul class="nav nav-tabs" id="myTab" role="tablist" style="background-color: #00757C;">
+							<li class="nav-item"><a class="nav-link active" id="manPoint-tab" style="color: gold;" data-toggle="tab" href="#manP" role="tab" aria-controls="fiber" aria-selected="true">Manhole</a></li>
+							<li class="nav-item"><a class="nav-link " id="handPoint-tab" style="color: gold;" data-toggle="tab" href="#handP" role="tab" aria-controls="source_dest" aria-selected="false">Handhole</a></li>
+							<li class="nav-item"><a class="nav-link " id="dboardPoint-tab" style="color: gold;" data-toggle="tab" href="#dboardP" role="tab" aria-controls="conduit" aria-selected="false">Distribution Board</a></li>
+							<li class="nav-item"><a class="nav-link " id="fPaths-tab" style="color: gold;" data-toggle="tab" href="#fPaths" role="tab" aria-controls="conduit" aria-selected="false">Fiber Paths</a></li>
+							<li class="nav-item"><a class="nav-link " id="nodePoint-tab" style="color: gold;" data-toggle="tab" href="#nodeP" role="tab" aria-controls="nodes" aria-selected="false">Node</a></li>
+						</ul>
+						<div class="tab-content" style="min-height: 180px">
+						<div class="tab-pane active" id="manP" role="tabpanel" aria-labelledby="manPoint-tab">
+											<div class="container-fluid">
+												<div id="findNearestManRes"></div>
+												<div class="row" style="height: 500px;">
+													<fieldset class="field_set">
+														<legend style="width: auto;" class="fieldset_legend"></legend>
+														<table id="findNearstManhole" style="display: block; height: 500px; overflow-y: auto;" class="searchable sortable">
+														 <thead>
+															<tr>
+																<th style="min-width: 150px;" >Manhole ID</th>
+																<th style="min-width: 150px;">ManholeName</th>
+																<th style="min-width: 100px;">Longitude</th>
+																<th style="min-width: 150px;">Latitude</th>
+																<th style="min-width: 100px;">Linear Distance(km)</th>
+																<th style="min-width: 80px;">Driving Distance(km)</th>
+																<th style="min-width: 80px;">Geo Distance(km)</th>
+															</tr>
+															 </thead>
+															<tbody id="manholeSurveyRes">
+															</tbody>
+														</table>
+													</fieldset>
+												</div>
+											</div>
+									        <div id="manholeTotal" Style="Padding-top: 15px;"><b>Total Manholes:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="totalManhole" name="totalManhole" readonly>	 </div>
+										</div>
+										<div class="tab-pane" id="handP" role="tabpanel"
+											aria-labelledby="handPoint-tab">
+											<p></p>
+											<div class="container-fluid">
+												<div id="findNearestHandRes"></div>
+												<div class="row" style="height: 500px;">
+													<fieldset class="field_set">
+														<legend style="width: auto;" class="fieldset_legend"></legend>
+														<table id="findNearstHandhole" class="searchable sortable"
+															style="display: block; height: 500px; overflow-y: auto;">
+															 <thead>
+															<tr>
+																<th style="min-width: 150px;" >Handhole ID</th>
+																<th style="min-width: 150px;">HandholeName</th>
+																<th style="min-width: 100px;">Longitude</th>
+																<th style="min-width: 100px;">Latitude</th>
+																<th style="min-width: 100px;">Linear Distance(Km)</th>
+																<th style="min-width: 100px;" >Driving Distance(km)</th>
+																<th style="min-width: 80px;">Geo Distance(km)</th>
+															</tr>
+															</thead>
+															
+															<tbody id="handholeSurveyRes">
+															</tbody>
+														</table>
+													</fieldset>
 
-
-	</div>		
-</div>
-
-
-
+												</div>
+											</div>
+                                             <div id="handholeTotal" Style="Padding-top: 15px;"><b>Total Handholes:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="totalHandhole" name="totalDB" readonly>	 </div>
+										</div>
+										<div class="tab-pane" id="dboardP" role="tabpanel"
+											aria-labelledby="dboardPoint-tab">
+											<p></p>
+											<div class="container-fluid">
+												<div id="findNearestDbRes"></div>
+												<div class="row" style="height: 500px;">
+													<fieldset class="field_set">
+														<legend style="width: auto;" class="fieldset_legend"></legend>
+														<table id="findNearstDB" style="display: block; height: 500px; overflow-y: auto;">
+														 <thead>															
+															<tr>
+																<th style="min-width: 150px;" >DBoard ID</th>
+																<th style="min-width: 150px;">DBoard Name</th>
+																<th style="min-width: 100px;">Longitude</th>
+																<th style="min-width: 100px;">Latitude</th>
+																<th style="min-width: 100px;">Linear Distance(km)</th>
+																<th style="min-width: 100px;">Driving Distance(km)</th>	
+																<th style="min-width: 80px;">Geo Distance(km)</th>
+															</tr>
+															 </thead>															
+															<tbody id="dbSurveyRes">
+															</tbody>
+														</table>
+													</fieldset>
+												 </div>
+											</div>
+                                            <div id="DbTotal" Style="Padding-top: 15px;"><b>Total Distribution Boards:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="totalDB" name="totalDB" readonly>										
+                                            </div>
+										</div>
+										<div class="tab-pane" id="fPaths" role="tabpanel" aria-labelledby="fPaths-tab">
+											<p></p>
+											<div class="container-fluid">
+											<div class="row" style="height: 180px;">
+										<fieldset class="field_set">
+											<legend style="width: auto;" class="fieldset_legend"></legend>
+											<table id="" style="display: block; height: 170px; overflow-y: auto;">
+												<tr>
+													<th style="min-width: 150px;" class="row-pad">Strand ID</th>
+													<th style="min-width: 150px;">StrandName</th>
+													<th style="min-width: 350px;">Source</th>
+													<th style="min-width: 350px;">Destination</th>
+												</tr>
+												<tbody id="strandSurveyRes">
+												</tbody>
+											</table>
+										</fieldset>
+									</div>
+									<br>
+									<div class="row" style="height: 180px;">
+										<fieldset class="field_set">
+											<legend style="width: auto;" class="fieldset_legend"></legend>
+											<table id="" style="display: block; height: 170px; overflow-y: auto;">
+												<tr>
+													<th style="min-width: 150px;" class="row-pad">Tube ID</th>
+													<th style="min-width: 150px;">TubeName</th>
+													<th style="min-width: 350px;">Source</th>
+													<th style="min-width: 350px;">Destination</th>
+												</tr>
+												<tbody id="tubeSurveyRes">
+												</tbody>
+											</table>
+										</fieldset>
+									</div>
+									<br>
+									<div class="row" style="height: 180px;">
+										<fieldset class="field_set">
+											<legend style="width: auto;" class="fieldset_legend"></legend>
+											<table id="" style="display: block; height: 170px; overflow-y: auto;">
+												<tr>
+													<th style="min-width: 150px;" class="row-pad">Fiber ID</th>
+													<th style="min-width: 150px;">FiberName</th>
+													<th style="min-width: 350px;">Source</th>
+													<th style="min-width: 350px;">Destination</th>
+												</tr>
+												<tbody id="fiberSurveyRes"></tbody></table></fieldset></div></div></div>
+								<div class="tab-pane" id="nodeP" role="tabpanel" aria-labelledby="nodePoint-tab">
+											<p></p>
+											<div class="container-fluid">
+												<div id="findNearestNodeRes"></div>
+												<div class="row" style="height: 500px;">
+													<fieldset class="field_set">
+														<legend style="width: auto;" class="fieldset_legend"></legend>
+														<table id="findNearstNode" class="searchable sortable"
+															style="display: block; height: 500px; overflow-y: auto;">
+															 <thead>
+															<tr>
+																<th style="min-width: 150px;" >Node ID</th>
+																<th style="min-width: 150px;">Node Name</th>
+																<th style="min-width: 100px;">Longitude</th>
+																<th style="min-width: 100px;">Latitude</th>
+																<th style="min-width: 100px;">Linear Distance(Km)</th>
+																<th style="min-width: 100px;">Driving Distance(km)</th>
+																<th style="min-width: 80px;">Geo Distance(km)</th>
+															</tr></thead>
+															<tbody id="nodeSurveyRes"></tbody>
+														</table>
+													</fieldset>
+												</div>
+											</div>
+                                             <div id="nodeTotal" Style="Padding-top: 15px;"><b>Total Nodes:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="totalNode" name="totalNodes" readonly></div>
+										</div>
+										</div></div>					
+					</div>
+				</div>
+					<div class="modal-footer"></div>
+			</div>
+		</div>			
 	</div>
+ 				
+ 			<div>
+					<form>
+					<br>
+						<div class="table-responsive-sm">
+							<table id="customerSurveysTable" class="table table-striped table-bordered table-sm" style="display: block; height: 200px; overflow-y: auto;">
+								<thead>
+									<tr class="fixed-headerr">
+									<th>
+										<button type="button" id="selectAllSurv" class="main"><span class="sub"></span>Select</button>
+									</th>
+										<th>Service Type</th>
+										<th>Survey ID</th>
+										<th>Survey</th>
+										<th hidden></th>
+										<th hidden></th>
+										<th hidden></th>
+										<th hidden></th>
+										<th hidden></th>
+									</tr>
+								</thead>
+								<tbody></tbody>
+							</table>
+						</div>
+					</form>
+				</div>
+				<button type="button" class="deleteSurveyRow">Delete Row</button>
+				
+		</div>
+ 
+     <div class="tab-pane fade" id="custom-tabs-Cust-Services" role="tabpanel" aria-labelledby="custom-tabs-Services-tab">
+         <!-- Customer Services Content -->
+				<br>
+				<div>
+					<form>
+						<div class="table-responsive-sm">
+							<table id="customerServicesTable" class="table table-striped table-bordered table-sm" style="display: block; height: 200px; overflow-y: auto;">
+								<thead>
+									<tr class="fixed-headerr">
+										<th>
+											<button type="button" id="selectAllServ" class="main"><span class="sub"></span>Select</button>
+										</th>
+										<th>Service Type</th>
+										<th>Billing Code</th>
+										<th>Circuit No</th>
+										<th>Longitude</th>
+										<th>Latitude</th>
+										<th hidden></th>
+										<th hidden></th>
+										<th hidden></th>
+										<th hidden></th>
+										<th hidden></th>
+										<th hidden></th>
+										<th hidden></th>
+										<th hidden></th>
+										<th hidden></th>
+										<th hidden></th>
+										<th hidden></th>
+										<th hidden></th>
+										<th hidden></th>
+										<th hidden></th>
+										<th hidden></th>
+										<th hidden></th>
+										<th hidden></th>
+										<th>Survey</th>
+				
+									</tr>
+								</thead>
+								<tbody></tbody>
+							</table>
+						</div>
+
+						<input type="button" class="add-row" value="Add Row" onclick="addServiceRow('addNewRow')">
+						<button type="button" class="delete-row">Delete Row</button>
+						<input type="text" id="RowToDeleteService" hidden value="">
+					</form>
+				</div>
+				
+				<!-- customer service popup  -->
+
+				<div class="container">
+					<div id="customerServicePopup" class="modal fade custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+						<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+							<div class="modal-content">
+								<div class="modal-header" style="background-color: #2678CC;">
+									<h5 id="popupHeader" class="modal-title" style="font-weight: bold; color: #E9ECEF;"></h5>
+
+									<button type="button" name="insertServiceBelow" onclick="insertServiceBelow()" class="btn btn-default btn-primary BtnActive btn-pop" style="color:black; position: relative; left: 50px;font-weight: bold;">
+										Insert Below</button>
+									<button type="button" name="insertServiceAbove" onclick="insertServiceAbove()" class="btn btn-default btn-primary BtnActive btn-pop" style="color: black; position: relative; left: 60px;font-weight: bold;">
+										Insert Above</button>
+									<button type="button" name="deleteBoqServiceRow" onclick="deleteBoqServiceRow()" class="btn btn-default btn-primary BtnActive btn-pop" style="color: black; position: relative; left: 70px;font-weight: bold;">
+										Delete</button>
+									<button name="previousServiceRow" onclick="previousServiceRow()"  class="btn btn-default btn-primary BtnActive btn-pop" style="color: black; position: relative; left: 80px;font-weight: bold;">
+										Previous</button>
+									<button name="nextServiceRow" onclick="nextServiceRow()" class="btn btn-default btn-primary BtnActive btn-pop" style="color: black; position: relative; left: 90px;font-weight: bold;">
+										Next</button>
+
+									<button type="button" name="closeCustServicePopup" class="close" data-dismiss="modal"><i class='fa fa-times'></i></button>
+									<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change'></i></a>
+								</div>
+								
+								<div class="modal-body" style="height: 500px;">
+									<ul class="nav nav-tabs" id="myTab" role="tablist" style="background-color: #00757C;">
+										<li class="nav-item">
+										<a class="nav-link active" id="services-tab" style="color: gold;" data-toggle="tab" href="#services" role="tab" aria-controls="services" aria-selected="true">Service</a></li>
+									</ul>
+									<div class="tab-content">
+										<div class="tab-pane active" id="services" role="tabpanel" aria-labelledby="services-tab">
+											<p></p>
+											<div class="container-fluid">
+												<div class="row">
+													<div class="col-sm-6">
+														<div class="form-group">
+															<div class="input-group-prepend">
+																<span class="input-group-text">Customer Service ID</span> 
+																<input type="text" id="custServID" class="form-control text-input" readonly style="width:190px; height: 37px;" />
+															</div>
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															<div class="input-group-prepend">
+																<span class="input-group-text">Customer ID</span> 
+																<input type="text" id="popupCustomerID" class="form-control text-input" readonly style="width: 675px; height: 37px;" />
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="container-fluid">
+												<div class="row">
+													<div class="col-sm-6">
+														<div class="form-group">
+															<div class="input-group-prepend">
+																<span class="input-group-text">Creation Date</span> 
+																<input type="text"  readonly class="ui-widget ui-widget-content ui-corner-all form-control text-input" id="serviceCreationDate"  style="width: 675px; height: 37px;" />
+															</div>
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															<div class="input-group-prepend">
+																<span class="input-group-text">Last Modified Date</span>
+																 <input type="text" readonly class="ui-widget ui-widget-content ui-corner-all form-control text-input" id="servicelstModfDate" style="width: 675px; height: 37px;" />
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="container-fluid">
+												<div class="row">
+													<div class="col-sm-6">
+														<div class="form-group">
+															<div class="input-group-prepend">
+																<span class="input-group-text">Service Type</span>
+																<select name="popupServType" id="popupServiceType"  style="width:674px;height:37px;" class="form-control text-input" >
+															       <option value='BAN' selected>BAN</option>
+															       <option value='BVPN' >BVPN</option>
+															       <option value='CN' >CN</option>
+															       <option value='Easynet' >Easynet</option>
+															       <option value='Jambonet' >Jambonet</option>
+															       <option value='KEN'  >KEN</option>
+															       <option value='Kenstream' >Kenstream</option>
+															       <option value='KNL' >KNL</option>
+															       <option value='LNK' >LNK</option>
+															       <option value='MS' >MS</option>
+															       <option value='Rent' >Rent</option>
+															       <option value='SAT' >SAT</option>
+															       <option value='TEL_ISDN' >TEL_ISDN</option>
+															       </select>
+															</div>
+														</div>														
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															<div class="input-group-prepend">
+															<span class="input-group-text">Category</span>
+																<select name="popupServCat" id="popupServiceCat"  style="width:674px;height:37px;" class="form-control text-input" >
+															       <option value='Carrier' selected>Carrier</option>
+															       <option value='Data' >Data</option>
+															       <option value='ISDN' >ISDN</option>
+															       <option value='KEN&STA' >KEN & STA</option>		
+															 </select>
+															</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="container-fluid">
+												<div class="row">
+													<div class="col-sm-4">
+														<div class="form-group">
+															<div class="input-group-prepend">
+																<span class="input-group-text">Longitude</span>
+																 <input type="text" id="popupLongitude" class="form-control text-input"  style="height: 37px;" />
+															</div>
+														</div>
+													</div>
+													<div class="col-sm-4">
+														<div class="form-group">
+															<div class="input-group-prepend">
+																<span class="input-group-text">Latitude</span>
+																 <input type="text" id="popupLatitude" class="form-control text-input"  style="height: 37px;" />
+															</div>
+														</div>
+													</div>
+													<div class="col-sm-4">
+														<div class="form-group">
+															<div class="input-group-prepend">
+																<span class="input-group-text">Ref. ID</span>
+																 <input type="text" id="popupRefID" class="form-control text-input"  style="height: 37px;" />
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										<div class="container-fluid">
+												<div class="row">
+													<div class="col-sm-4">
+														<div class="form-group">
+															<div class="input-group-prepend">
+																<span class="input-group-text">Billing Code</span>
+																 <input type="text" id="popupBillingCode" class="form-control text-input" style="height: 37px;" />
+															</div>
+														</div>
+													</div>
+													<div class="col-sm-4">
+														<div class="form-group">
+															<div class="input-group-prepend">
+																<span class="input-group-text">Circuit No</span>
+																 <input type="text" id="popupCircuitNo" class="form-control text-input"  />
+															</div>
+														</div>
+													</div>
+													<div class="col-sm-4">
+														<div class="form-group">
+															<div class="input-group-prepend">
+																<span class="input-group-text">Circuit ID</span>
+																 <input type="text" id="popupCircuitID" class="form-control text-input"  style="height: 37px;" />
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+														<div class="container-fluid">
+												<div class="row">
+													<div class="col-sm-6">
+														<div class="form-group">
+															<div class="input-group-prepend">
+																<span class="input-group-text">Radio ID</span>
+																 <input type="text" id="popupRadioID" class="form-control text-input"  style="height: 37px;" />
+															</div>
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															<div class="input-group-prepend">
+																<span class="input-group-text">Radio Name</span>
+																 <input type="text" id="popupRadioName" class="form-control text-input"  style="height: 37px;" />
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="container-fluid">
+												<div class="row">
+													<div class="col-sm-6">
+														<div class="form-group">
+															<div class="input-group-prepend">
+																<span class="input-group-text">Link Name</span>
+																 <input type="text" id="popupLinkName" class="form-control text-input"  style="height: 37px;" />
+															</div>
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															<div class="input-group-prepend">
+																<span class="input-group-text">NE Port Desc</span>
+																 <input type="text" id="popupPortDesc" class="form-control text-input"  style="height: 37px;" />
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="container-fluid">
+												<div class="row">
+													<div class="col-sm-4">
+														<div class="form-group">
+															<div class="input-group-prepend">
+																<span class="input-group-text">Media Type</span>
+																	<input type="text" id="popupMediaType" class="form-control text-input"  style="height: 37px;" />
+															</div>
+														</div>
+													</div>
+													<div class="col-sm-4">
+														<div class="form-group">
+															<div class="input-group-prepend">
+															<span class="input-group-text">Tx Media</span>
+																<select name="popuptxMed" id="popupTxMedia"  style="height:37px;" class="form-control text-input" >
+																 <option value='ULR' selected>ULR</option>
+															     <option value='Fiber' >Fiber</option>	
+																</select>
+															</div>
+															</div>
+														</div>
+														<div class="col-sm-4">
+														<div class="form-group">
+															<div class="input-group-prepend">
+																<span class="input-group-text">NUM</span>
+																 <input type="text" id="popupNum" class="form-control text-input"  style="height: 37px;" />
+															</div>
+														</div>
+													</div>
+													</div>
+												</div>
+										<div class="container-fluid">
+												<div class="row">
+													<div class="col-sm-4">
+														<div class="form-group">
+															<div class="input-group-prepend">
+																<span class="input-group-text">Status</span>
+																<select name="popupStat" id="popupStatus"  style="height:37px;" class="form-control text-input" >
+																	<option value='draft' selected>Draft</option>
+															    	 <option value='approved' >Approved</option>
+															    	 <option value='activated' >Activated</option>	
+															    	  <option value='deactivated' >Deactivated</option>	
+															     </select>
+															</div>
+														</div>
+													</div>
+													<div class="col-sm-4">
+														<div class="form-group">
+															<div class="input-group-prepend">
+															<span class="input-group-text">Capacity MB</span>
+																 <input type="text" id="popupCapacityMB" class="form-control text-input"  style="height: 37px;" />
+															</div>
+															</div>
+														</div>
+														<div class="col-sm-4">
+														<div class="form-group">
+															<div class="input-group-prepend">
+																<span class="input-group-text">Region ID</span>
+																 <input type="text" id="popupRegionID" class="form-control text-input" style="height: 37px;" />
+															</div>
+														</div>
+													</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="modal-footer"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--end of popup  -->
+        </div>
+        
+
+	
 
 
           <div id="popUpDiv" style="display:none;">
@@ -650,6 +1262,14 @@ z-index: 9003;
 </body>
 
 <script>
+var boqArray =[];
+var dict=[];
+var slctDelArray =[];
+var surveyBoqArray =[];
+var slctSurvDelArray =[];
+
+
+
 if ('${docStatus}' == "addNew") {
 	$("#formStatus").text("New");
 	$('.dot').css({"background-color" : "orange"});	
@@ -657,12 +1277,213 @@ if ('${docStatus}' == "addNew") {
 	$(".pad").removeClass("hide-row ");
 }
 
+if ('${custSurveyList}' != "addNew") {
+	surveyBoqArray = ${custSurveyList};
+	  if(surveyBoqArray.length >0 ) {
+		  for (i = 0;i<surveyBoqArray.length;i++){	
+
+
+			  if(surveyBoqArray[i][6] !=null) {
+				  
+				createdDate = surveyBoqArray[i][4];
+				var d = new Date(createdDate);
+
+				// Get date components
+				var mm = ("0" + (d.getMonth() + 1)).slice(-2);
+				var dd = ("0" + d.getDate()).slice(-2);
+				var yy = d.getFullYear();
+
+				// Get time components
+				var hours = d.getHours();
+				var minutes = ("0" + d.getMinutes()).slice(-2);
+
+				// Determine AM or PM
+				var ampm = hours >= 12 ? 'PM' : 'AM';
+
+				// Convert to 12-hour format
+				hours = hours % 12;
+				hours = hours ? hours : 12;
+
+				var creationDate = dd + '-' + mm + '-' + yy + ' ' + hours + ':' + minutes + ' ' + ampm;
+			
+				var surveyItemRow = "<tr>";
+					surveyItemRow= surveyItemRow +"<td style='text-align:center;'><input type='checkbox' name='record' style='margin-top:12px;'></td>"
+					surveyItemRow = surveyItemRow + "<td name='serviceTypeSurvey' style='text-align:center;'><input type='text' value='" + surveyBoqArray[i][1] + "' class='form-control text-input' style='margin-right: 10px;' readonly></td>";
+					surveyItemRow= surveyItemRow +"<td><input type='text' value='" + surveyBoqArray[i][6] +"' class='form-control text-input' style='width:auto' readonly></td>"
+					surveyItemRow= surveyItemRow +"<td><button type = 'button'  href='#' name='popUpMenu' onclick='openSurveyPopup(this)' class='btn btn-default createSurvey'  style='position:relative;left:3px;'>Show Survey</button></td>"
+					surveyItemRow =surveyItemRow + "<td class='hidden-td' name='surveyLongitude'><input hidden type='text' value='" + surveyBoqArray[i][2] +"' class='form-control text-input'></td>";
+					surveyItemRow =surveyItemRow + "<td class='hidden-td' name='surveyLatitude'><input hidden type='text' value='" + surveyBoqArray[i][3] +"' class='form-control text-input'></td>";
+					surveyItemRow =surveyItemRow + "<td class='hidden-td' name='surveyCreationDate'><input type='text' hidden value='" +creationDate+"' class='form-control text-input'></td>";
+					surveyItemRow =surveyItemRow + "<td class='hidden-td' name='custServiceIDSurvey'><input type='text' hidden value='" + surveyBoqArray[i][0] +"' class='form-control text-input'></td>";
+					surveyItemRow =surveyItemRow + "<td class='hidden-td' name='surveyID'><input type='text' hidden value='" + surveyBoqArray[i][6] +"' class='form-control text-input' ></td>";
+					surveyItemRow =surveyItemRow + "</tr>";
+				    $("#customerSurveysTable > tbody").append(surveyItemRow);
+				
+			  }	
+		}
+	  }
+	
+}
+if ('${custServiceList}' != "addNew") {
+    boqArray = ${custServiceList};
+
+  if(boqArray.length >0 ) {
+	for (i = 0;i<boqArray.length;i++){	
+		createdDate = boqArray[i].createdDate;
+		var d = new Date(createdDate);
+
+		// Get date components
+		var mm = ("0" + (d.getMonth() + 1)).slice(-2);
+		var dd = ("0" + d.getDate()).slice(-2);
+		var yy = d.getFullYear();
+
+		// Get time components
+		var hours = d.getHours();
+		var minutes = ("0" + d.getMinutes()).slice(-2);
+
+		// Determine AM or PM
+		var ampm = hours >= 12 ? 'PM' : 'AM';
+
+		// Convert to 12-hour format
+		hours = hours % 12;
+		hours = hours ? hours : 12;
+
+		var creationDate = dd + '-' + mm + '-' + yy + ' ' + hours + ':' + minutes + ' ' + ampm;
+			
+
+		lstModfDate = boqArray[i].lastModfDate;
+		var d = new Date(lstModfDate);
+		var mm = ("0" + (d.getMonth() + 1)).slice(-2);
+		var dd = ("0" + d.getDate()).slice(-2);
+		var yy = d.getFullYear();
+		// Get time components
+		var hours = d.getHours();
+		var minutes = ("0" + d.getMinutes()).slice(-2);
+		// Determine AM or PM
+		var ampm = hours >= 12 ? 'PM' : 'AM';
+		// Convert to 12-hour format
+		hours = hours % 12;
+		hours = hours ? hours : 12;
+		var lastModfDate = dd + '-' + mm + '-' + yy + ' ' + hours + ':' + minutes + ' ' + ampm; //(US)
+
+		
+		var itemRow = "<tr>";
+		itemRow= itemRow +"<td style='text-align:center;width:100px'><input type='checkbox' name='record' style='margin-top:12px;'><button type = 'button' href='#' name='popUpMenu' onclick='openServicePopup(this)' class='btn btn-default'  style='position:relative;left:3px;'><i class='fas fa-desktop'></i></button></td>"
+        itemRow = itemRow + "<td style='width:280px' name='serviceType'><select class='form-control' name='serviceType'>";
+     	itemRow = itemRow + "<option value='None' selected>Select an Option</option>";
+     	if (boqArray[i].serviceType === 'BAN') {
+     	    itemRow = itemRow + "<option value='BAN' selected>BAN</option><option value='BVPN'>BVPN</option><option value='CN'>CN</option><option value='Easynet'>Easynet</option><option value='Jambonet'>Jambonet</option><option value='KEN'>KEN</option><option value='Kenstream'>Kenstream</option><option value='KNL'>KNL</option><option value='LNK'>LNK</option><option value='MS'>MS</option><option value='Rent'>Rent</option><option value='SAT'>SAT</option><option value='TEL_ISDN'>TEL_ISDN</option>";
+     	} else if (boqArray[i].serviceType === 'BVPN') {
+     	    itemRow = itemRow + "<option value='BAN'>BAN</option><option value='BVPN' selected>BVPN</option><option value='CN'>CN</option><option value='Easynet'>Easynet</option><option value='Jambonet'>Jambonet</option><option value='KEN'>KEN</option><option value='Kenstream'>Kenstream</option><option value='KNL'>KNL</option><option value='LNK'>LNK</option><option value='MS'>MS</option><option value='Rent'>Rent</option><option value='SAT'>SAT</option><option value='TEL_ISDN'>TEL_ISDN</option>";
+     	} else if (boqArray[i].serviceType === 'CN') {
+     	    itemRow = itemRow + "<option value='BAN'>BAN</option><option value='BVPN' >BVPN</option><option value='CN' selected>CN</option><option value='Easynet'>Easynet</option><option value='Jambonet'>Jambonet</option><option value='KEN'>KEN</option><option value='Kenstream'>Kenstream</option><option value='KNL'>KNL</option><option value='LNK'>LNK</option><option value='MS'>MS</option><option value='Rent'>Rent</option><option value='SAT'>SAT</option><option value='TEL_ISDN'>TEL_ISDN</option>";
+     	} else if (boqArray[i].serviceType === 'Easynet') {
+     	    itemRow = itemRow + "<option value='BAN'>BAN</option><option value='BVPN' >BVPN</option><option value='CN' >CN</option><option value='Easynet' selected>Easynet</option><option value='Jambonet'>Jambonet</option><option value='KEN'>KEN</option><option value='Kenstream'>Kenstream</option><option value='KNL'>KNL</option><option value='LNK'>LNK</option><option value='MS'>MS</option><option value='Rent'>Rent</option><option value='SAT'>SAT</option><option value='TEL_ISDN'>TEL_ISDN</option>";
+     	}
+     	else if (boqArray[i].serviceType === 'Jambonet') {
+     	    itemRow = itemRow + "<option value='BAN'>BAN</option><option value='BVPN' >BVPN</option><option value='CN' >CN</option><option value='Easynet' >Easynet</option><option value='Jambonet' selected>Jambonet</option><option value='KEN'>KEN</option><option value='Kenstream'>Kenstream</option><option value='KNL'>KNL</option><option value='LNK'>LNK</option><option value='MS'>MS</option><option value='Rent'>Rent</option><option value='SAT'>SAT</option><option value='TEL_ISDN'>TEL_ISDN</option>";
+     	}
+     	else if (boqArray[i].serviceType === 'KEN') {
+     	    itemRow = itemRow + "<option value='BAN'>BAN</option><option value='BVPN' >BVPN</option><option value='CN' >CN</option><option value='Easynet' >Easynet</option><option value='Jambonet' >Jambonet</option><option value='KEN' selected >KEN</option><option value='Kenstream'>Kenstream</option><option value='KNL'>KNL</option><option value='LNK'>LNK</option><option value='MS'>MS</option><option value='Rent'>Rent</option><option value='SAT'>SAT</option><option value='TEL_ISDN'>TEL_ISDN</option>";
+     	}
+     	else if (boqArray[i].serviceType === 'Kenstream') {
+     	    itemRow = itemRow + "<option value='BAN'>BAN</option><option value='BVPN' >BVPN</option><option value='CN' >CN</option><option value='Easynet' >Easynet</option><option value='Jambonet' >Jambonet</option><option value='KEN'  >KEN</option><option value='Kenstream' selected>Kenstream</option><option value='KNL'>KNL</option><option value='LNK'>LNK</option><option value='MS'>MS</option><option value='Rent'>Rent</option><option value='SAT'>SAT</option><option value='TEL_ISDN'>TEL_ISDN</option>";
+     	}
+     	else if (boqArray[i].serviceType === 'KNL') {
+     	    itemRow = itemRow + "<option value='BAN'>BAN</option><option value='BVPN' >BVPN</option><option value='CN' >CN</option><option value='Easynet' >Easynet</option><option value='Jambonet' >Jambonet</option><option value='KEN'  >KEN</option><option value='Kenstream' >Kenstream</option><option value='KNL' selected>KNL</option><option value='LNK'>LNK</option><option value='MS'>MS</option><option value='Rent'>Rent</option><option value='SAT'>SAT</option><option value='TEL_ISDN'>TEL_ISDN</option>";
+     	}
+     	else if (boqArray[i].serviceType === 'LNK') {
+     	    itemRow = itemRow + "<option value='BAN'>BAN</option><option value='BVPN' >BVPN</option><option value='CN' >CN</option><option value='Easynet' >Easynet</option><option value='Jambonet' >Jambonet</option><option value='KEN'  >KEN</option><option value='Kenstream' >Kenstream</option><option value='KNL' >KNL</option><option value='LNK' selected>LNK</option><option value='MS'>MS</option><option value='Rent'>Rent</option><option value='SAT'>SAT</option><option value='TEL_ISDN'>TEL_ISDN</option>";
+     	}
+     	else if (boqArray[i].serviceType === 'MS') {
+     	    itemRow = itemRow + "<option value='BAN'>BAN</option><option value='BVPN' >BVPN</option><option value='CN' >CN</option><option value='Easynet' >Easynet</option><option value='Jambonet' >Jambonet</option><option value='KEN'  >KEN</option><option value='Kenstream' >Kenstream</option><option value='KNL' >KNL</option><option value='LNK' >LNK</option><option value='MS' selected>MS</option><option value='Rent'>Rent</option><option value='SAT'>SAT</option><option value='TEL_ISDN'>TEL_ISDN</option>";
+     	}
+     	else if (boqArray[i].serviceType === 'Rent') {
+     	    itemRow = itemRow + "<option value='BAN'>BAN</option><option value='BVPN' >BVPN</option><option value='CN' >CN</option><option value='Easynet' >Easynet</option><option value='Jambonet' >Jambonet</option><option value='KEN'  >KEN</option><option value='Kenstream' >Kenstream</option><option value='KNL' >KNL</option><option value='LNK' >LNK</option><option value='MS' >MS</option><option value='Rent' selected>Rent</option><option value='SAT'>SAT</option><option value='TEL_ISDN'>TEL_ISDN</option>";
+     	}
+     	else if (boqArray[i].serviceType === 'SAT') {
+     	    itemRow = itemRow + "<option value='BAN'>BAN</option><option value='BVPN' >BVPN</option><option value='CN' >CN</option><option value='Easynet' >Easynet</option><option value='Jambonet' >Jambonet</option><option value='KEN'  >KEN</option><option value='Kenstream' >Kenstream</option><option value='KNL' >KNL</option><option value='LNK' >LNK</option><option value='MS' >MS</option><option value='Rent' >Rent</option><option value='SAT' selected>SAT</option><option value='TEL_ISDN'>TEL_ISDN</option>";
+     	}
+     	 else {
+      	    itemRow = itemRow + "<option value='BAN'>BAN</option><option value='BVPN' >BVPN</option><option value='CN' >CN</option><option value='Easynet' >Easynet</option><option value='Jambonet' >Jambonet</option><option value='KEN'  >KEN</option><option value='Kenstream' >Kenstream</option><option value='KNL' >KNL</option><option value='LNK' >LNK</option><option value='MS' >MS</option><option value='Rent' >Rent</option><option value='SAT' >SAT</option><option value='TEL_ISDN' selected>TEL_ISDN</option>";
+     	}
+     	itemRow = itemRow + "</select></td>";
+     	
+
+        itemRow =itemRow + "<td name='billingCode'><input type='text' value='" + boqArray[i].billingCode +"' class='form-control text-input' ></td>";
+        itemRow =itemRow + "<td name='circuitNo'><input type='text' value='" + boqArray[i].circuitNo +"' class='form-control text-input' ></td>";
+        itemRow =itemRow + "<td name='longitude'><input type='text' value='" + boqArray[i].longitude +"' class='form-control text-input'></td>";
+        itemRow =itemRow + "<td name='latitude'><input type='text' value='" + boqArray[i].latitude +"' class='form-control text-input'></td>";
+        itemRow =itemRow + "<td class='hidden-td' name='custServiceID'><input type='text' hidden value='" + boqArray[i].id +"' class='form-control text-input'></td>";
+        itemRow =itemRow + "<td class='hidden-td' name='customerID'><input type='text' hidden value='" + boqArray[i].customerID +"' class='form-control text-input'></td>";
+        itemRow =itemRow + "<td class='hidden-td' name='creationDate'><input type='text' hidden value='" +creationDate+"' class='form-control text-input'></td>";
+        itemRow =itemRow + "<td class='hidden-td' name='lastModDate'><input type='text' hidden value='" +lastModfDate+"' class='form-control text-input' ></td>";
+        itemRow =itemRow + "<td class='hidden-td' name='category'><input type='text' hidden value='" + boqArray[i].cat +"' class='form-control text-input' ></td>";
+        itemRow =itemRow + "<td class='hidden-td' name='circuitID'><input type='text' hidden value='" + boqArray[i].circuitID +"' class='form-control text-input' ></td>";
+        itemRow =itemRow + "<td class='hidden-td' name='refID'><input type='text' hidden value='" + boqArray[i].refID +"' class='form-control text-input' ></td>";
+        itemRow =itemRow + "<td class='hidden-td' name='num'><input type='text' hidden value='" + boqArray[i].num +"' class='form-control text-input' ></td>";
+        itemRow =itemRow + "<td class='hidden-td' name='mediaType'><input type='text' hidden value='" + boqArray[i].mediaType +"' class='form-control text-input' ></td>";
+        itemRow =itemRow + "<td class='hidden-td' name='txMedia'><input type='text' hidden value='" + boqArray[i].txMedia +"' class='form-control text-input' ></td>";
+        itemRow =itemRow + "<td class='hidden-td' name='status'><input type='text' hidden value='" + boqArray[i].status +"' class='form-control text-input' ></td>";
+        itemRow =itemRow + "<td class='hidden-td' name='capacityMB'><input type='text' hidden value='" + boqArray[i].capacityMB +"' class='form-control text-input' ></td>";
+        itemRow =itemRow + "<td class='hidden-td' name='regionID'><input type='text' hidden value='" + boqArray[i].regionID +"'class='form-control text-input' ></td>";
+        itemRow =itemRow + "<td class='hidden-td' name='linkName'><input type='text' hidden value='" + boqArray[i].linkName +"'class='form-control text-input' ></td>";
+        itemRow =itemRow + "<td class='hidden-td' name='radioID'><input type='text' hidden value='" + boqArray[i].radioID +"' class='form-control text-input' ></td>";
+        itemRow =itemRow + "<td class='hidden-td' name='radioName'><input type='text' hidden value='" + boqArray[i].radioName +"' class='form-control text-input' ></td>";
+        itemRow =itemRow + "<td class='hidden-td' name='portDesc'><input type='text' hidden value='" + boqArray[i].portDesc +"'class='form-control text-input' ></td>";        
+        itemRow = itemRow + "<td name='createSurvey' style='width:150px;'><button type='button' class='createSurvey' onClick='createSurvey(\"" +boqArray[i].id+ "\",\"" +boqArray[i].customerID+ "\",\"" +boqArray[i].longitude+ "\",\"" +boqArray[i].latitude+ "\",\"" +boqArray[i].refID+ "\")' >Create Survey</button></td>";
+
+          itemRow =itemRow + "</tr>";
+        $("#customerServicesTable > tbody").append(itemRow);
+
+		
+	}	
+  }
+}
+
 function getContextPath() {
 	   return window.location.pathname.substring(0, window.location.pathname.indexOf("/",2));
 }
+
+function getCustServiceArray() {
+	dict = [];
+	$("#customerServicesTable > tbody").find('input[name="record"]').each(function(){
+		dict.push({
+		         "serviceType" : $(this).parent().parent().children('td[name="serviceType"]').children('select').val(),
+			     "billingCode" : $(this).parent().parent().children('td[name="billingCode"]').children('input').val(),
+			     "circuitNo" : $(this).parent().parent().children('td[name="circuitNo"]').children('input').val(),
+			     "longitude" : $(this).parent().parent().children('td[name="longitude"]').children('input').val(),
+				 "latitude" :  $(this).parent().parent().children('td[name="latitude"]').children('input').val(),
+				 "custServiceID" : $(this).parent().parent().children('td[name="custServiceID"]').children('input').val(),
+				 "customerID" : $(this).parent().parent().children('td[name="customerID"]').children('input').val(),
+				 "creationDate" : $(this).parent().parent().children('td[name="creationDate"]').children('input').val(),
+				 "lastModDate" : $(this).parent().parent().children('td[name="lastModDate"]').children('input').val(),
+				 "category" : $(this).parent().parent().children('td[name="category"]').children('input').val(),
+				 "circuitID" : $(this).parent().parent().children('td[name="circuitID"]').children('input').val(),
+				 "refID" : $(this).parent().parent().children('td[name="refID"]').children('input').val(),
+				 "num" : $(this).parent().parent().children('td[name="num"]').children('input').val(),
+				 "mediaType" : $(this).parent().parent().children('td[name="mediaType"]').children('input').val(),
+				 "txMedia" : $(this).parent().parent().children('td[name="txMedia"]').children('input').val(),
+				 "status" : $(this).parent().parent().children('td[name="status"]').children('input').val(),
+				 "capacityMB" : $(this).parent().parent().children('td[name="capacityMB"]').children('input').val(),
+				 "regionID" : $(this).parent().parent().children('td[name="regionID"]').children('input').val(),
+				 "linkName" : $(this).parent().parent().children('td[name="linkName"]').children('input').val(),
+				 "radioID" : $(this).parent().parent().children('td[name="radioID"]').children('input').val(),
+				 "radioName" : $(this).parent().parent().children('td[name="radioName"]').children('input').val(),
+				 "portDesc" : $(this).parent().parent().children('td[name="portDesc"]').children('input').val()				 
+			});				 					
+     });
+
+    console.log("dit "+dict);
+    
+}
+
+
 var map;
 var marker;
 let markers = [];
+
+
 
 function initMap() {
 	var lat;
@@ -904,6 +1725,27 @@ $("input").change(function() {
 
 
 
+$('body').on('click', '#selectAllServ', function  () {
+
+	if ($(this).hasClass('allChecked')) {
+			$('input[name="record"]', '#customerServicesTable').prop('checked', false);
+		} else {
+			$('input[name="record"]', '#customerServicesTable').prop('checked', true);
+			}
+			$(this).toggleClass('allChecked');
+	
+})
+
+$('body').on('click', '#selectAllSurv', function  () {
+
+	if ($(this).hasClass('allChecked')) {
+			$('input[name="record"]', '#customerSurveysTable').prop('checked', false);
+		} else {
+			$('input[name="record"]', '#customerSurveysTable').prop('checked', true);
+			}
+			$(this).toggleClass('allChecked');
+	
+})
 
 $("#saveButton").click(  function() {
 	
@@ -929,6 +1771,10 @@ $("#saveButton").click(  function() {
           alert(' Modified Date is not valid');
           return false;
         }
+
+ 	 var validationCheck = validateCustomerServiceInputs(); //To check invalid input in services
+ 	 if(validationCheck =="false") {
+        getCustServiceArray();
 		
 			$.ajax({
 					type : "GET",
@@ -964,7 +1810,9 @@ $("#saveButton").click(  function() {
 					    "CustomerCategory":document.getElementById("custCategory").value,
 					    "CustomerType":document.getElementById("custType").value,
 					    "TelNumber":$("#telNumber").val(),
-											
+					    "dictParameter":dict,
+   						"slctDelOrd":slctDelArray,
+   						"slctSurvDelArray":slctSurvDelArray
 				},
 					success : function(data) {
 						$('#lstmodifdate').val(data.lstmodifdate)
@@ -978,6 +1826,8 @@ $("#saveButton").click(  function() {
 						console.log("The error is " + error);
 					}
 				});
+
+ 	 }
 
 	});
 
@@ -1140,7 +1990,6 @@ $("#deleteButton").click(  function() {
 	    	 	
 
     
-
 
 
 </script>

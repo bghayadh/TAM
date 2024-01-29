@@ -548,23 +548,19 @@ select {
 						</td>
 					</tr>
 
+				<tr>
+				    <td class="left_col">
+				        <div class="form-group">
+				            <div class="input-group-prepend">
+				                <span class="input-group-text">Combination Technology</span>
+				                <input type="text" id="warecomb" value="${wareCombination}" class="form-control text-input" readonly />
+				                <span class="input-group-text" style="margin-left: 10px;">Population</span>
+				                <input type="text" id="population" value="${population}" class="form-control text-input" />
+				            </div>
+				        </div>
+				    </td>
+				</tr>
 					<tr>
-						<td class="left_col">
-							<div class="form-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text">Combination Technology</span> <input
-										type="text" id="warecomb" value="${wareCombination}"
-										class="form-control text-input" readonly />
-								</div>
-							</div>
-						</td>
-
-					</tr>
-					<tr>
-
-
-
-
 						<td class="left_col">
 							<div class="form-group">
 								<div class="input-group-prepend">
@@ -2714,6 +2710,8 @@ function saverowsintables()
 			    "subject": $("#subject").val(),
 			    "message": $("#message").val(),
 				"slctdelWareFinance": slctdelWareFinance , 
+				"population" : $("#population").val()
+				
 			},
 			success : function(data) {
 

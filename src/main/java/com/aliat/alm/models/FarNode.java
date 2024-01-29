@@ -23,19 +23,30 @@ public class FarNode {
 	@Column(name = "FAR_ID", nullable = false)
 	private String farID;
 	
+	@Column(name = "NODE_TYPE")
+	private String nodeType;
 
 	public FarNode () {
 		}
 	
-	public FarNode(String nodeID, String nodeName, String farID , String farnodeId , String nodefarId) {
+	public FarNode(String nodeID, String nodeName, String farID , String farnodeId , String nodefarId ,String nodeType) {
 		super();
 	
 		this.nodefarId = nodefarId;
 		this.nodeID = nodeID;
 		this.nodeName = nodeName;
 		this.farID = farID;
+		this.nodeType = nodeType;
 	}
 	
+	public String getNodeType() {
+		return nodeType;
+	}
+
+	public void setNodeType(String nodeType) {
+		this.nodeType = nodeType;
+	}
+
 	public String getNodefarId() {
 		return nodefarId;
 	}

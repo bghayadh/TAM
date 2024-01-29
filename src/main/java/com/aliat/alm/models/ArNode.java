@@ -23,19 +23,30 @@ public class ArNode {
 	@Column(name = "AR_ID")
 	private String arID;
 	
+	@Column(name = "NODE_TYPE")
+	private String nodeType;
 
 	public ArNode () {
 		}
 	
-	public ArNode(String nodeID, String nodeName, String arID ,String nodearId) {
+	public ArNode(String nodeID, String nodeName, String arID ,String nodearId, String nodeType) {
 		super();
 	
 		this.nodearId = nodearId;
 		this.nodeID = nodeID;
 		this.nodeName = nodeName;
 		this.arID = arID;
+		this.nodeType=nodeType;
 	}
 	
+	public String getNodeType() {
+		return nodeType;
+	}
+
+	public void setNodeType(String nodeType) {
+		this.nodeType = nodeType;
+	}
+
 	public String getNodearId() {
 		return nodearId;
 	}

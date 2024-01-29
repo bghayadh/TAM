@@ -58,6 +58,9 @@
         <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jspdf-1.5.3-jspdf.min.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/html2canvas-1.3.2-html2canvas.min.js"></script>
        
+        <!-- To Draw Borders on map for start/end coordinates -->
+       <script src="${pageContext.request.contextPath}/resources/js/Network/BordersFindNearest.js"></script>
+       
 </head>
 <style>
 
@@ -511,6 +514,49 @@ max-width: 100%;
 														</button>
 														<ul class="dropdown-menu filter-dropdown-ul"></ul>
 													</li>
+												</th> 
+													<th>Revenue/Asset Initial
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> 
+														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
+														</button>
+														<ul class="dropdown-menu filter-dropdown-ul"></ul>
+													</li>
+												</th>
+												
+												<th>Revenue/Asset Net
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> 
+														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
+														</button>
+														<ul class="dropdown-menu filter-dropdown-ul"></ul>
+													</li>
+												</th>
+												<th>Population/Asset Initial
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> 
+														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
+														</button>
+														<ul class="dropdown-menu filter-dropdown-ul"></ul>
+													</li>
+												</th>
+												
+												<th>Population/Asset Net
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> 
+														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
+														</button>
+														<ul class="dropdown-menu filter-dropdown-ul"></ul>
+													</li>
+												</th>
+												
+												<th>Population
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> 
+														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
+														</button>
+														<ul class="dropdown-menu filter-dropdown-ul"></ul>
+													</li>
 												</th>                                             
 												<th>Voice Revenue
 													<li class="filter-dropdown dropdown">
@@ -584,27 +630,13 @@ max-width: 100%;
 													</li>
 												</th>
 												
-												<th>Revenue/Asset Initial
-													<li class="filter-dropdown dropdown">
-														<button class="almgrid-filter" data-toggle="dropdown"> 
-														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
-														</button>
-														<ul class="dropdown-menu filter-dropdown-ul"></ul>
-													</li>
-												</th>
-												
-												<th>Revenue/Asset Net
-													<li class="filter-dropdown dropdown">
-														<button class="almgrid-filter" data-toggle="dropdown"> 
-														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
-														</button>
-														<ul class="dropdown-menu filter-dropdown-ul"></ul>
-													</li>
-												</th>
-												
+											
 																						
 											<tr>
 												<th><input type="text" disabled class="almgrid-search" style="display:none"></th>
+												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
+												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
+												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
@@ -665,116 +697,51 @@ max-width: 100%;
 					</div>
 				</div>
 		
-<!--  		
- <div style="display: Block;" id="totalAllFAR">
+ <div style="display: Block;">
 	<div class="row second">	
-					<div class="col-md-1">
-						<div class="form-group">
-            <span style=" display: inline-block;width:98px;color: white; font-size: 13px; white-space: nowrap; padding: 7px 8px; background-color: #008991; border-radius: 5px;"><b>All FAR  </b></span>
-						</div>
-					</div>								
-			<div class="col-md-3">
+											
+			<div class="col-md-6">
 						<div class="form-group">
 							<div class="input-group-prepend">
-								<span class="input-group-text">Total Initial Cost</span>
-								<input type="text" id="initialCostAllFar" readonly value="${totalInitialCost}" class="form-control text-input" />
+								<span class="input-group-text">Average of Revenue/Asset Initial</span>
+								<input type="text" id="avrgRevToAssetInit" readonly class="form-control text-input" />
 							</div>
 						</div>
 					</div>
-					<div class="col-md-3">
+					<div class="col-md-6">
 						<div class="form-group">
 							<div class="input-group-prepend">
-								<span class="input-group-text">Total Net Cost</span>
-								<input type="text" id="netCostAllFar" readonly value="${totalNetCost}" class="form-control text-input" />
+								<span class="input-group-text">Average of Revenue/Asset Net</span>
+								<input type="text" id="avrgRevToAssetNet" readonly class="form-control text-input" />
 							</div>
 						</div>
 					</div>	
-					<div class="col-md-5">
-						<div class="form-group">
-							<div class="input-group-prepend">
-								<span class="input-group-text">Total Accumulated Depreciation</span>
-								<input type="text" id="accuDeprAllFar" readonly value="${totalAccumdepr}" class="form-control text-input" />
-							</div>
-						</div>
-					</div>
 					
 	</div>
 		<br>
-		
 		<div class="row second">
-
-					<div class="col-md-1">
-						<div class="form-group">
-          					  <span style="display: inline-block;width:98px;color: white; font-size: 13px; white-space: nowrap; padding: 7px 8px; background-color: #008991; border-radius: 5px;"><b>Fetched FAR </b></span>
-						</div>
-					</div>								
-			<div class="col-md-3">
+		<div class="col-md-6">
 						<div class="form-group">
 							<div class="input-group-prepend">
-								<span class="input-group-text">Total Initial Cost</span>
-								<input type="text" readonly id="initialCostFetchedFar" value="${totalInitialCostFetched}" class="form-control text-input" />
+								<span class="input-group-text">Average of Population/Asset Initial</span>
+								<input type="text" id="avrgPopToAssetInit" readonly class="form-control text-input" />
 							</div>
 						</div>
 					</div>
-					<div class="col-md-3">
+					<div class="col-md-6">
 						<div class="form-group">
 							<div class="input-group-prepend">
-								<span class="input-group-text">Total Net Cost</span>
-								<input type="text" readonly id="netCostFetchedFar"  value="${totalNetCostFetched}" class="form-control text-input" />
+								<span class="input-group-text">Average of Population/Asset Net</span>
+								<input type="text" id="avrgPopToAssetNet" readonly class="form-control text-input" />
 							</div>
 						</div>
 					</div>	
-					<div class="col-md-5">
-						<div class="form-group">
-							<div class="input-group-prepend">
-								<span class="input-group-text">Total Accumulated Depreciation</span>
-								<input type="text" readonly id="accuDeprFetchedFar" value="${totalAccumdeprFetched}" class="form-control text-input" />
-							</div>
-						</div>
-					</div>
-					
-	</div>
+		</div>			
 	<br>
-		<div class="row second">
-					<div class="col-md-1">
-						<div class="form-group">
-            				<span style="display: inline-block;width:98px;color: white; font-size: 13px; white-space: nowrap; padding: 7px 8px; background-color: #008991; border-radius: 5px;"><b>Filtered FAR </b></span>
-						</div>
-					</div>									
-			<div class="col-md-3">
-						<div class="form-group">
-							<div class="input-group-prepend">
-								<span class="input-group-text">Total Initial Cost</span>
-								<input type="text" readonly id="initialCostFilteredFar" class="form-control text-input" />
-							</div>
-						</div>
-					</div>
-					<div class="col-md-3">
-						<div class="form-group">
-							<div class="input-group-prepend">
-								<span class="input-group-text">Total Net Cost</span>
-								<input type="text" readonly id="netCostFilteredFar" class="form-control text-input" />
-							</div>
-						</div>
-					</div>	
-					<div class="col-md-5">
-						<div class="form-group">
-							<div class="input-group-prepend">
-								<span class="input-group-text">Total Accumulated Depreciation</span>
-								<input type="text" readonly  id="accuDeprFilteredFar" class="form-control text-input" />
-							</div>
-						</div>
-					</div>
-					
-	</div>	
-	
-		
-		</div>
-		-->
+		</div>	
       </div>
     </div>
   </div>
-
 
   <div class="panel panel-default" style="margin-bottom:3px;" >
   <div class="panel-heading " role="tab" id="headingTwo" >
@@ -1166,7 +1133,7 @@ $(document).ready(function() {
 	    
 	        
 	        if (dataArray.length > 0) {
-		        var initCost=0,netCost=0,accuDepr=0;
+		        var revToAssetInit=0,revToAssetNet=0,populationToAssetInit=0,populationToAssetNet=0;
         		var ArrayKeys = Object.keys(dataArray[0]);
         		var columnVal;
 
@@ -1174,7 +1141,7 @@ $(document).ready(function() {
 	     		var data = [];
 	     	    exportArrayGrid = [];
 	    		data.push('\r');
-	       		data.push(["Warehouse ID","Site ID","Site Name","Longitude","Latitude","VOICE Revenue","SMS Revenue","Data Revenue","VAS Revenue","Total Revenue","Initial Cost","Depreciation","Net Cost","Revenue/Asset Initial","Revenue/Asset Net"]);
+	       		data.push(["Warehouse ID","Site ID","Site Name","Longitude","Latitude","Revenue/Asset Initial","Revenue/Asset Net",,"Population/Asset Initial","Population/Asset Net","Population","VOICE Revenue","SMS Revenue","Data Revenue","VAS Revenue","Total Revenue","Initial Cost","Depreciation","Net Cost"]);
 	       		filteredSitesGrid = dataArray; // used in draw on map 
 	       		
         for (var i = 0; i < dataArray.length; i++) {
@@ -1188,14 +1155,45 @@ $(document).ready(function() {
         	   if(columnVal !="site") {
               	   data.push(dataArray[i][ArrayKeys[j]]);// for export 
             	}
+        	   if(columnVal =="revenueToAssetInit")  revToAssetInit+= parseFloat(dataArray[i][ArrayKeys[j]]);			                     
+               if(columnVal =="revenueToAssetNet")   revToAssetNet+= parseFloat(dataArray[i][ArrayKeys[j]]);	
+               if(columnVal =="populationToAssetInit")   populationToAssetInit+= parseFloat(dataArray[i][ArrayKeys[j]]);			
+               if(columnVal =="populationToAssetNet")   populationToAssetNet+= parseFloat(dataArray[i][ArrayKeys[j]]);			
+               		
                     
   		   }
   		}
-      
+
+       		var nbRow = dataArray.length;
+	        nbRow = parseInt(nbRow);
+	      
+	  		var avrgRevToAssetInit = revToAssetInit / nbRow;
+	  		var avrgRevToAssetNet = revToAssetNet / nbRow;
+	  		var avrgPopToAssetInit = populationToAssetInit / nbRow;
+	  		var avrgPopToAssetNet = populationToAssetNet / nbRow;
+
+	  		var formattedAvrgPopToAssetInit  = avrgPopToAssetInit  !== 0 ? avrgPopToAssetInit .toFixed(10) : avrgPopToAssetInit .toString();
+	  		var formattedAvrgPopToAssetNet  = avrgPopToAssetNet  !== 0 ? avrgPopToAssetNet .toFixed(10) : avrgPopToAssetNet .toString();
+	  		var formattedAvrgRevToAssetInit  = avrgRevToAssetInit  !== 0 ? avrgRevToAssetInit .toFixed(10) : avrgRevToAssetInit .toString();
+	  		var formattedAvrgRevToAssetNet  = avrgRevToAssetNet  !== 0 ? avrgRevToAssetNet .toFixed(10) : avrgRevToAssetNet .toString();
+	  		
+
+	        $("#avrgRevToAssetInit").val(formattedAvrgRevToAssetInit);
+	        $("#avrgRevToAssetNet").val(formattedAvrgRevToAssetNet);
+	        $("#avrgPopToAssetInit").val(formattedAvrgPopToAssetInit);
+	        $("#avrgPopToAssetNet").val(formattedAvrgPopToAssetNet);
+	        
+	
 		 exportArrayGrid.push(data);
   	   }
   		else{		 
-            filteredSitesGrid=[];			  		
+            filteredSitesGrid=[];		
+            $("#avrgRevToAssetInit").val("0");
+	        $("#avrgPopToAssetInit").val("0");
+	        $("#avrgPopToAssetNet").val("0");
+	        $("#avrgRevToAssetNet").val("0");
+	        
+		  		
 	     }
 	    	
  	        // Method for pagination almgrid-pagecount-box
@@ -1211,6 +1209,8 @@ $(document).ready(function() {
   	        // Page Rows number
   	        var nbRows = $("#" + gridContainerId).find(".almgrid-pagecount").val();
   	        nbRows = parseInt(nbRows);
+
+  	  
 
   	        this.pagination = new Pagination({ id: paginationId, tableId: tableId, noOfRows: nbRows, columnLinkNb: columnLinkNb, dataArray: dataArray, ArrayKeys:ArrayKeys,selectCheckbox:this.selectCheckbox  });
 
@@ -1342,6 +1342,12 @@ $(document).ready(function() {
 		 markerSites=[];	  
 		 mapFlag="0";
 		 document.getElementById("sitesCount").textContent = "";
+
+		//Clear the map from borders in case of start/end coordinates
+		 for (var i = 0; i < polylines.length; i++) {
+		        polylines[i].setMap(null);
+		  }
+		 polylines = [];
 		 
 
 		 //Clear the table and all inputs in show close points popup
@@ -1368,6 +1374,11 @@ $(document).ready(function() {
 					+'</ul></li></th><th>Site Name<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
 					+'</ul></li></th><th>Longitude<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
 					+'</ul></li></th><th>Latitude<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i	class="fa fa-list almgrid-filter-i"	aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
+					+'</ul></li></th><th>Revenue/Asset Initial<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i	class="fa fa-list almgrid-filter-i"	aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
+					+'</ul></li></th><th>Revenue/Asset Net<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i	class="fa fa-list almgrid-filter-i"	aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
+					+'</ul></li></th><th>Population/Asset Initial<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i	class="fa fa-list almgrid-filter-i"	aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
+					+'</ul></li></th><th>Population/Asset Net<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i	class="fa fa-list almgrid-filter-i"	aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
+					+'</ul></li></th><th>Population<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i	class="fa fa-list almgrid-filter-i"	aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
 					+'<th>VOICE Revenue<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
 					+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'	
 					+'<th>SMS Revenue<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
@@ -1384,10 +1395,6 @@ $(document).ready(function() {
 					+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'	
 					+'<th>Net Cost<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
 					+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'
-					+'<th>Revenue/Asset Initial<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
-					+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'	
-					+'<th>Revenue/Asset Net<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
-					+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'	
 					
 					+'<tr>'
 					+'<th><input type="text" disabled class="almgrid-search" style="display:none"></th>'
@@ -1406,7 +1413,10 @@ $(document).ready(function() {
 					+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
 					+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
 					+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
-			
+					+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
+					+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
+					+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
+					
 					+'</tr></thead><tbody></tbody></table>');	  
 	    
 
@@ -1435,6 +1445,10 @@ $(document).ready(function() {
 			},
 			success : function(data) {
 			  if (data != null) {
+				  
+				  if(strtEndCheckbox==true) {
+					  bordersFindNearest($("#startLongitude").val(),$("#startLatitude").val(),$("#endLongitude").val(),$("#endLatitude").val())
+				  }
                   ReportArrayGlobal = data.RevenueToAssetRatioList; 
                   if (ReportArrayGlobal.length == 0) { 
                 	  alert("There is no data to display");
@@ -1480,7 +1494,7 @@ $(document).ready(function() {
          					 
          			     if (dataArray.length > 0) {
   					 
-  	                       var initCost=0,netCost=0,accuDepr=0;
+         			       var revToAssetInit=0,revToAssetNet=0,populationToAssetInit=0,populationToAssetNet=0;
   			               var ArrayKeys = Object.keys(dataArray[0]);
   			       		   var columnVal;
   			       		  
@@ -1488,7 +1502,7 @@ $(document).ready(function() {
   			       		    var data = [];
   			       	       exportArrayGrid = [];
   			       		   data.push('\r');
-  				       	   data.push(["Warehouse ID","Site ID","Site Name","Longitude","Latitude","VOICE Revenue","SMS Revenue","Data Revenue","VAS Revenue","Total Revenue","Initial Cost","Depreciation","Net Cost","Revenue/Asset Initial","Revenue/Asset Net"]);
+  				       	   data.push(["Warehouse ID","Site ID","Site Name","Longitude","Latitude","Revenue/Asset Initial","Revenue/Asset Net","Population/Asset Initial","Population/Asset Net","Population","VOICE Revenue","SMS Revenue","Data Revenue","VAS Revenue","Total Revenue","Initial Cost","Depreciation","Net Cost"]);
   					        filteredSitesGrid = dataArray; // used in draw on map 
   	  			       		
   			       		
@@ -1502,14 +1516,46 @@ $(document).ready(function() {
 	  			            	if(columnVal !="site") { 
 	  	  			            	data.push(dataArray[i][ArrayKeys[j]]);
 	  			            	}
+
+	  			               if(columnVal =="revenueToAssetInit")  revToAssetInit+= parseFloat(dataArray[i][ArrayKeys[j]]);			                     
+	  			               if(columnVal =="revenueToAssetNet")   revToAssetNet+= parseFloat(dataArray[i][ArrayKeys[j]]);	
+	  			               if(columnVal =="populationToAssetInit")   populationToAssetInit+= parseFloat(dataArray[i][ArrayKeys[j]]);			
+	  			               if(columnVal =="populationToAssetNet")   populationToAssetNet+= parseFloat(dataArray[i][ArrayKeys[j]]);			
+	  			               	
                              }
   		          		   }
 
   			                // for export
 		                   exportArrayGrid.push(data);
+
+		                var nbRow = dataArray.length;
+		       	        nbRow = parseInt(nbRow);
+		       	      
+		       	  		var avrgRevToAssetInit = revToAssetInit / nbRow;
+		       	  		var avrgRevToAssetNet = revToAssetNet / nbRow;
+		       	  		var avrgPopToAssetInit = populationToAssetInit / nbRow;
+		       	  		var avrgPopToAssetNet = populationToAssetNet / nbRow;
+
+		       	  		var formattedAvrgPopToAssetInit  = avrgPopToAssetInit  !== 0 ? avrgPopToAssetInit .toFixed(10) : avrgPopToAssetInit .toString();
+		       	  		var formattedAvrgPopToAssetNet  = avrgPopToAssetNet  !== 0 ? avrgPopToAssetNet .toFixed(10) : avrgPopToAssetNet .toString();
+		       	  		var formattedAvrgRevToAssetInit  = avrgRevToAssetInit  !== 0 ? avrgRevToAssetInit .toFixed(10) : avrgRevToAssetInit .toString();
+		       	  		var formattedAvrgRevToAssetNet  = avrgRevToAssetNet  !== 0 ? avrgRevToAssetNet .toFixed(10) : avrgRevToAssetNet .toString();
+		       	  		
+
+		       	        $("#avrgRevToAssetInit").val(formattedAvrgRevToAssetInit);
+		       	        $("#avrgRevToAssetNet").val(formattedAvrgRevToAssetNet);
+		       	        $("#avrgPopToAssetInit").val(formattedAvrgPopToAssetInit);
+		       	        $("#avrgPopToAssetNet").val(formattedAvrgPopToAssetNet);
+		       	        
   			          	 }
   		          			else{
   	  		          			filteredSitesGrid = []; // used in draw on map 
+
+  	  		          		$("#avrgRevToAssetInit").val("0");
+	  	  		 	        $("#avrgPopToAssetInit").val("0");
+	  	  		 	        $("#avrgPopToAssetNet").val("0");
+	  	  		 	        $("#avrgRevToAssetNet").val("0");
+	  	  		 	        
 		              	 }
   				  
   		         	        // Method for pagination almgrid-pagecount-box
@@ -1845,7 +1891,18 @@ function getDrivingDistanceClosePoint(e) {
 	}
 
 }
-
+var polylines = [];
+function drawLine(color,path){
+	 var line = new google.maps.Polyline({
+	    path: path,
+	    strokeColor: color,
+	    strokeOpacity: 0.8,
+        strokeWeight: 5,
+        geodesic: true,
+	    map: map
+	});
+	    polylines.push(line);
+}
 </script>
 <script
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJXAds-Gt4I39hRFHhYHMEg3XcBqihYoo&callback=initMap&libraries=drawing&v=weekly"

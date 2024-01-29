@@ -31,6 +31,7 @@
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/context-menu.css">
 	<script src="${pageContext.request.contextPath}/resources/js/Network/NetworkElementTree.js"></script>
 	<script src="${pageContext.request.contextPath}/resources/js/Network/NetworkElementMap.js"></script>
+	<script src="${pageContext.request.contextPath}/resources/js/Network/NetworkElementMap2.js"></script>
 			
 <style>
 .tab button.active {

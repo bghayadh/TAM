@@ -139,6 +139,10 @@ public class DiscoveryNewBoq {
 	@Column(name = "TO_WARE_ID")
 	private String toWareId ;
 	
+	private String toNodeArray;
+	
+	private String fromNodeArray;
+	
 	public DiscoveryNewBoq() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -151,7 +155,8 @@ public class DiscoveryNewBoq {
 			float dniTotal, float dniTotalat, String dniSIte, String wareID, String wareName, String dniSN,
 			String dniDNID, String itemPartNb, String itemModel, String approvalStatus, String nodeID, String nodeName,
 			String position, String elementName, String notes, String fromSlot, String toSlot, String toNodeId, 
-			String toSite, String toSerialNumber, String description, String toNodeName, String nodePK, String alcFlg, String toWareName, String toWareId) {
+			String toSite, String toSerialNumber, String description, String toNodeName, String nodePK, String alcFlg, String toWareName, String toWareId, String toNodeArray,
+			String fromNodeArray) {
 		super();
 		this.discItemID = discItemID;
 		this.discItemCode = discItemCode;
@@ -195,6 +200,29 @@ public class DiscoveryNewBoq {
 		this.alcFlg = alcFlg;
 		this.toWareName = toWareName;
 		this.toWareId = toWareId;
+		this.toNodeArray=toNodeArray;
+		this.fromNodeArray=fromNodeArray;
+	
+	}
+
+
+	public String getFromNodeArray() {
+		return fromNodeArray;
+	}
+
+
+	public void setFromNodeArray(String fromNodeArray) {
+		this.fromNodeArray = fromNodeArray;
+	}
+
+
+	public String getToNodeArray() {
+		return toNodeArray;
+	}
+
+
+	public void setToNodeArray(String toNodeArray) {
+		this.toNodeArray = toNodeArray;
 	}
 
 

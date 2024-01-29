@@ -14,7 +14,6 @@ import javax.persistence.Table;
 		private String site;
 		
 		@Id
-		//@Column(name = "WARE_ID")
 		private String wareID;
 		
 		@Column(name = "SITE_ID")
@@ -29,7 +28,16 @@ import javax.persistence.Table;
 		@Column(name = "LATITUDE")
 		private String latitude;
 		
+		private BigDecimal revenueToAssetInit;
+
+		private BigDecimal revenueToAssetNet;
 		
+		private BigDecimal populationToAssetInit;
+		
+		private BigDecimal populationToAssetNet;
+		
+		private BigDecimal population;
+
 		@Column(name = "VOICE_REVENUE")
 		private BigDecimal voiceRevenue;
 		
@@ -53,24 +61,15 @@ import javax.persistence.Table;
 		//@Column(name = "NETCOST")
 		private BigDecimal netCost;
 		
-		private BigDecimal revenueToAssetInit;
-
-		private BigDecimal revenueToAssetNet;
 		
-		//@Column(name = "REVENUE_DATE")
-		//private String startDate;
-		
-		//private String endDate;
 
 		public RevenueToAssetRatioReport() {
 			super();
-			// TODO Auto-generated constructor stub
 		}
 
 		public RevenueToAssetRatioReport(String site, String wareID, String siteID, String siteName, String longitude,
-				String latitude, BigDecimal voiceRevenue, BigDecimal smsRevenue, BigDecimal dataRevneue,
-				BigDecimal vasRevenue, BigDecimal totalRevenue, BigDecimal initCost, BigDecimal depr,
-				BigDecimal netCost, BigDecimal revenueToAssetInit, BigDecimal revenueToAssetNet) {
+				String latitude,BigDecimal revenueToAssetInit, BigDecimal revenueToAssetNet,BigDecimal populationToAssetInit,BigDecimal populationToAssetNet,BigDecimal population, BigDecimal voiceRevenue, BigDecimal smsRevenue, BigDecimal dataRevneue,
+				BigDecimal vasRevenue, BigDecimal totalRevenue, BigDecimal initCost, BigDecimal depr,BigDecimal netCost) {
 			super();
 			this.site = site;
 			this.wareID = wareID;
@@ -78,6 +77,11 @@ import javax.persistence.Table;
 			this.siteName = siteName;
 			this.longitude = longitude;
 			this.latitude = latitude;
+			this.revenueToAssetInit = revenueToAssetInit;
+			this.revenueToAssetNet = revenueToAssetNet;
+			this.populationToAssetInit=populationToAssetInit;
+			this.populationToAssetNet = populationToAssetNet;
+			this.population = population;
 			this.voiceRevenue = voiceRevenue;
 			this.smsRevenue = smsRevenue;
 			this.dataRevneue = dataRevneue;
@@ -86,8 +90,6 @@ import javax.persistence.Table;
 			this.initCost = initCost;
 			this.depr = depr;
 			this.netCost = netCost;
-			this.revenueToAssetInit = revenueToAssetInit;
-			this.revenueToAssetNet = revenueToAssetNet;
 		}
 
 		public String getSite() {
@@ -136,6 +138,17 @@ import javax.persistence.Table;
 
 		public void setLatitude(String latitude) {
 			this.latitude = latitude;
+		}
+		
+		
+	
+
+		public BigDecimal getPopulation() {
+			return population;
+		}
+
+		public void setPopulation(BigDecimal population) {
+			this.population = population;
 		}
 
 		public BigDecimal getVoiceRevenue() {
@@ -218,7 +231,20 @@ import javax.persistence.Table;
 			this.revenueToAssetNet = revenueToAssetNet;
 		}
 
-		
-		
+		public BigDecimal getPopulationToAssetInit() {
+			return populationToAssetInit;
+		}
 
+		public void setPopulationToAssetInit(BigDecimal populationToAssetInit) {
+			this.populationToAssetInit = populationToAssetInit;
+		}
+
+		public BigDecimal getPopulationToAssetNet() {
+			return populationToAssetNet;
+		}
+
+		public void setPopulationToAssetNet(BigDecimal populationToAssetNet) {
+			this.populationToAssetNet = populationToAssetNet;
+		}
+				
 }
