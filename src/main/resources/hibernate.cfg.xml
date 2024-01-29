@@ -5,7 +5,7 @@
  <session-factory name="alm">
   <property name="hibernate.connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
   <property name="hibernate.connection.password">alm</property>
-  <property name="hibernate.connection.url">jdbc:oracle:thin:@localhost:1523:ALM</property>
+  <property name="hibernate.connection.url">jdbc:oracle:thin:@localhost:1521:ALM</property>
   <property name="hibernate.connection.username">alm</property>
   <property name="hibernate.default_schema">alm</property>
   <property name="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</property>  
