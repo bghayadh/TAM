@@ -58,6 +58,9 @@
         <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jspdf-1.5.3-jspdf.min.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/html2canvas-1.3.2-html2canvas.min.js"></script>
        
+        <!-- To Draw Borders on map for start/end coordinates -->
+       <script src="${pageContext.request.contextPath}/resources/js/Network/BordersFindNearest.js"></script>
+       
 </head>
 <style>
 
@@ -1339,6 +1342,12 @@ $(document).ready(function() {
 		 markerSites=[];	  
 		 mapFlag="0";
 		 document.getElementById("sitesCount").textContent = "";
+
+		//Clear the map from borders in case of start/end coordinates
+		 for (var i = 0; i < polylines.length; i++) {
+		        polylines[i].setMap(null);
+		  }
+		 polylines = [];
 		 
 
 		 //Clear the table and all inputs in show close points popup
@@ -1436,6 +1445,10 @@ $(document).ready(function() {
 			},
 			success : function(data) {
 			  if (data != null) {
+				  
+				  if(strtEndCheckbox==true) {
+					  bordersFindNearest($("#startLongitude").val(),$("#startLatitude").val(),$("#endLongitude").val(),$("#endLatitude").val())
+				  }
                   ReportArrayGlobal = data.RevenueToAssetRatioList; 
                   if (ReportArrayGlobal.length == 0) { 
                 	  alert("There is no data to display");
@@ -1878,7 +1891,18 @@ function getDrivingDistanceClosePoint(e) {
 	}
 
 }
-
+var polylines = [];
+function drawLine(color,path){
+	 var line = new google.maps.Polyline({
+	    path: path,
+	    strokeColor: color,
+	    strokeOpacity: 0.8,
+        strokeWeight: 5,
+        geodesic: true,
+	    map: map
+	});
+	    polylines.push(line);
+}
 </script>
 <script
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJXAds-Gt4I39hRFHhYHMEg3XcBqihYoo&callback=initMap&libraries=drawing&v=weekly"
