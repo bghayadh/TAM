@@ -248,7 +248,8 @@ map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
 				});
 */
 	map.setOptions({ minZoom: 3, maxZoom: 28});	
-	CreateMap(lst,map);
+	//CreateMap(lst,map);
+	CreateMap2(lst,map,arrayParam,date);
 	CreateTree_NdTpNdCell(lstNodeType,map);
 
 		}
@@ -286,9 +287,9 @@ function CreateTree_NdTpNdCell(lstNodeType,map){
 			var dFrag = document.createDocumentFragment();
 			for (j = 0; j < lst.length; j++)      //  NODE_PK, SITE_ID, NODE_NAME,NODE_MODEL
 			{			
-				if(lst[j][11] == lstNodeType[n][0]){
+				if(lst[j][7] == lstNodeType[n][0]){
 					//console.log("equals");
-					str = "<li class='Node' id='"+ lst[j][2]+"_"+lst[j][9]+"' style='display:none; margin-left:-15px'><input type='checkbox' id='" + lst[j][2]+"_"+lst[j][9]+"_"+lst[j][11]+ "' class='SingleNode' style='margin-left: 15px' onclick=\"showMarkerSingleSite('" + lst[j][2]+"_"+lst[j][9]+"_"+lst[j][11]+ "')\"></input><span class='folder' onclick=\"NdCellCore('"+lst[j][2]+"')\"> <i class='fa fa-folder' style='color: #08526D'></i></span> <span class='TreeSpan' style='width:395px' onclick=\" PanTreeSites('"+ lst[j][2]+"_"+lst[j][9]+"_"+lst[j][11]+"')\"><i class='fa fa-server'></i> "+ lst[j][10] +"</span>";
+					str = "<li class='Node' id='"+ lst[j][2]+"_"+lst[j][5]+"' style='display:none; margin-left:-15px'><input type='checkbox' id='" + lst[j][2]+"_"+lst[j][5]+"_"+lst[j][7]+ "' class='SingleNode' style='margin-left: 15px' onclick=\"showMarkerSingleSite('" + lst[j][2]+"_"+lst[j][5]+"_"+lst[j][7]+ "')\"></input><span class='folder' onclick=\"NdCellCore('"+lst[j][2]+"')\"> <i class='fa fa-folder' style='color: #08526D'></i></span> <span class='TreeSpan' style='width:395px' onclick=\" PanTreeSites('"+ lst[j][2]+"_"+lst[j][5]+"_"+lst[j][7]+"')\"><i class='fa fa-server'></i> "+ lst[j][6] +"</span>";
 					str+= "<ul><li id='" +lst[j][2]+"_f' class='CellFolder parent_li' style='display:none; margin-left:10px'><span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span> <span class='TreeSpan' style='width:395px'> Cells </span></li></ul></li></ul>"; 
 					const div = document.createElement('ul');
 					div.innerHTML = str;

@@ -541,9 +541,9 @@ public class NetworkController {
 				String parsingDate = request.getParameter("parsingDate");
 				// System.out.println("parsingDate..."+parsingDate);
 
-				String strSites = "SELECT DISTINCT b.SITE_ID,b.WARE_NAME,b.WARE_ID,b.LATITUDE,b.LONGITUDE,"
-						+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID "
-						+ generateDateCondition(parsingDate, "w");
+				String strSites = "SELECT DISTINCT b.SITE_ID,b.WARE_NAME,b.WARE_ID,b.LATITUDE,b.LONGITUDE";
+						/*+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID "
+						+ generateDateCondition(parsingDate, "w");*/
 
 				String strNodesType = "SELECT DISTINCT b.NODE_TYPE,(select COUNT(*) from NODE_ACTIVE a  where a.NODE_TYPE=b.NODE_TYPE "
 						+ generateDateCondition(parsingDate, "b");
@@ -566,6 +566,7 @@ public class NetworkController {
 						arrayParam[3] = 1;
 						model.addAttribute("CoreBtn", arrayParam[3]);
 					}
+					/*
 					strSites = AppendQuery("w", arrayParam, strSites);
 					strSites = strSites
 							+ ") as countNodes,(select COUNT(*) FROM NODE_2GCELL c where c.NODE_PK IN (select NODE_PK from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID "
@@ -584,12 +585,12 @@ public class NetworkController {
 							+ generateDateCondition(parsingDate, "o");
 					strSites = AppendQuery("o", arrayParam, strSites);
 					strSites = strSites + " ) ";
-					strSites = AppendQuery("e", arrayParam, strSites);
+					strSites = AppendQuery("e", arrayParam, strSites);*/
 					strSites = strSites
-							+ ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null "
+							+ " FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null "
 							+ generateDateCondition(parsingDate, "b");
 					strSites = AppendQuery("b", arrayParam, strSites);
-
+					System.out.println("strSites "+strSites);
 					model.addAttribute("listSites",
 							mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
@@ -1674,15 +1675,15 @@ public class NetworkController {
 				arrayParam[2] = 0; // RAN
 				arrayParam[3] = 0; // core
 
-				String strNodes = "SELECT b.SITE_ID,b.WARE_NAME,b.NODE_PK,b.LATITUDE,b.LONGITUDE,"
-						+ "(select COUNT(*) from NODE_ACTIVE w where ";
+				String strNodes = "SELECT b.SITE_ID,b.WARE_NAME,b.NODE_PK,b.LATITUDE,b.LONGITUDE,";
+						/*+ "(select COUNT(*) from NODE_ACTIVE w where ";
 				if (parsingDate == null || parsingDate.equals("")) {
 					strNodes = strNodes + " w.ACTIVE_RECORD = '1' ";
 				} else {
 					strNodes = strNodes
 							+ " TO_DATE(TO_CHAR(w.PARSING_DATE,'YYYY-MM-DD HH:MI:SS AM'),'YYYY-MM-DD HH:MI:SS AM') = TO_DATE('"
 							+ parsingDate + "','YYYY-MM-DD HH:MI:SS AM') ";
-				}
+				}*/
 
 				String strNodesType = "SELECT DISTINCT b.NODE_TYPE,(select COUNT(*) from NODE_ACTIVE a  where a.NODE_TYPE=b.NODE_TYPE "
 						+ generateDateCondition(parsingDate, "a");
@@ -1705,7 +1706,7 @@ public class NetworkController {
 						arrayParam[3] = 1;
 						model.addAttribute("CoreBtn", arrayParam[3]);
 					}
-
+					/*
 					strNodes = AppendQuery("w", arrayParam, strNodes);
 					strNodes = strNodes
 							+ ") as countNodes,(select count(*) from NODE_2GCELL e  where b.NODE_PK = e.NODE_PK "
@@ -1718,9 +1719,9 @@ public class NetworkController {
 					strNodes = strNodes
 							+ ") as countLcells,(select count(*) from NODE_3GCELL d  where b.NODE_PK = d.NODE_PK "
 							+ generateDateCondition(parsingDate, "b");
-					strNodes = AppendQuery("d", arrayParam, strNodes);
+					strNodes = AppendQuery("d", arrayParam, strNodes);*/
 					strNodes = strNodes
-							+ ") as countUcells,b.WARE_ID,b.NODE_NAME,b.NODE_TYPE FROM NODE_ACTIVE b WHERE ";
+							+ "b.WARE_ID,b.NODE_NAME,b.NODE_TYPE FROM NODE_ACTIVE b WHERE ";
 					if (parsingDate == null || parsingDate.equals("")) {
 						strNodes = strNodes + " b.ACTIVE_RECORD = '1' ";
 					} else {
@@ -1729,7 +1730,7 @@ public class NetworkController {
 								+ parsingDate + "','YYYY-MM-DD HH:MI:SS AM') ";
 					}
 					strNodes = AppendQuery("b", arrayParam, strNodes);
-
+					System.out.println("strNodes "+strNodes);
 					model.addAttribute("listNodes",
 							mapper.writeValueAsString(session.createNativeQuery(strNodes).list()));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
@@ -2307,9 +2308,9 @@ public class NetworkController {
 				arrayParam[2] = 0; // RAN
 				arrayParam[3] = 0; // core
 
-				String strSites = "SELECT DISTINCT b.SITE_ID,b.WARE_NAME,b.WARE_ID,LATITUDE,LONGITUDE,"
-						+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID "
-						+ generateDateCondition(parsingDate, "w");
+				String strSites = "SELECT DISTINCT b.SITE_ID,b.WARE_NAME,b.WARE_ID,LATITUDE,LONGITUDE ";
+						/*+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID "
+						+ generateDateCondition(parsingDate, "w");*/
 
 				String strNodesType = "SELECT DISTINCT NODE_TYPE,(select COUNT(*) from NODE_ACTIVE a  where a.NODE_TYPE=b.NODE_TYPE "
 						+ generateDateCondition(parsingDate, "a");
@@ -2332,7 +2333,7 @@ public class NetworkController {
 						arrayParam[3] = 1;
 						model.addAttribute("CoreBtn", arrayParam[3]);
 					}
-					strSites = AppendQuery("w", arrayParam, strSites);
+					/*strSites = AppendQuery("w", arrayParam, strSites);
 					strSites = strSites
 							+ ") as countNodes,(select COUNT(*) FROM NODE_2GCELL c where c.NODE_PK IN (select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID "
 							+ generateDateCondition(parsingDate, "o");
@@ -2350,12 +2351,12 @@ public class NetworkController {
 							+ generateDateCondition(parsingDate, "o");
 					strSites = AppendQuery("o", arrayParam, strSites);
 					strSites = strSites + " ) ";
-					strSites = AppendQuery("e", arrayParam, strSites);
+					strSites = AppendQuery("e", arrayParam, strSites);*/
 					strSites = strSites
-							+ ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null AND b.SUPPLIER_ID!='null' and b.SUPPLIER_ID!='0' and b.SUPPLIER_ID is not null "
+							+ "FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null AND b.SUPPLIER_ID!='null' and b.SUPPLIER_ID!='0' and b.SUPPLIER_ID is not null "
 							+ generateDateCondition(parsingDate, "b");
 					strSites = AppendQuery("b", arrayParam, strSites);
-
+					System.out.println("strSites "+strSites);
 					model.addAttribute("listSites",
 							mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
@@ -2426,9 +2427,9 @@ public class NetworkController {
 				arrayParam[2] = 0; // RAN
 				arrayParam[3] = 0; // core
 
-				String strSites = "SELECT DISTINCT b.SITE_ID,b.WARE_NAME,b.WARE_ID,LATITUDE,LONGITUDE,"
-						+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID "
-						+ generateDateCondition(parsingDate, "w");
+				String strSites = "SELECT DISTINCT b.SITE_ID,b.WARE_NAME,b.WARE_ID,LATITUDE,LONGITUDE ";
+						/*+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID "
+						+ generateDateCondition(parsingDate, "w");*/
 
 				String strNodesType = "SELECT DISTINCT NODE_TYPE,(select COUNT(*) from NODE_ACTIVE a  where a.NODE_TYPE=b.NODE_TYPE "
 						+ generateDateCondition(parsingDate, "a");
@@ -2451,6 +2452,7 @@ public class NetworkController {
 						arrayParam[3] = 1;
 						model.addAttribute("CoreBtn", arrayParam[3]);
 					}
+					/*
 					strSites = AppendQuery("w", arrayParam, strSites);
 					strSites = strSites
 							+ ") as countNodes,(select COUNT(*) FROM NODE_2GCELL c where c.NODE_PK IN (select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID "
@@ -2469,12 +2471,13 @@ public class NetworkController {
 							+ generateDateCondition(parsingDate, "o");
 					strSites = AppendQuery("o", arrayParam, strSites);
 					strSites = strSites + " ) ";
-					strSites = AppendQuery("e", arrayParam, strSites);
+					strSites = AppendQuery("e", arrayParam, strSites);*/
 					strSites = strSites
-							+ ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.VENDOR!='null' and b.VENDOR!='0' and b.VENDOR is not null "
+							+ "FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.VENDOR!='null' and b.VENDOR!='0' and b.VENDOR is not null "
 							+ generateDateCondition(parsingDate, "b");
 					strSites = AppendQuery("b", arrayParam, strSites);
-
+					
+					System.out.println("strSites "+strSites);
 					model.addAttribute("listSites",
 							mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
@@ -6912,7 +6915,7 @@ public class NetworkController {
 			String RAN = request.getParameter("paramRAN");
 			String core = request.getParameter("paramCore");
 			String parsingDate = request.getParameter("date");
-			String strSites ="";
+			String strquery ="";
 
 			int[] arrayParam = new int[4];
 			arrayParam[0] = 0; // enterprise
@@ -6920,54 +6923,82 @@ public class NetworkController {
 			arrayParam[2] = 0; // RAN
 			arrayParam[3] = 0; // core
 			
+			if (enterprise =="true") {
+				arrayParam[0] = 1;
+			}
+			if (transmission =="true") {
+				arrayParam[1] = 1;
+			}
+			if (RAN =="true") {
+				arrayParam[2] = 1;
+			}
+			if (core =="true") {
+				arrayParam[3] = 1;
+			}
+			
+			
+			
 			try {	
+				System.out.println("selectedItem "+selectedItem);
+				notifications.headerNotifications(session, model);
+
 			if(selectedItem.contains("WARE")) {
-			 	strSites = "SELECT DISTINCT a.SITE_ID,a.WARE_NAME,a.WARE_ID,a.LATITUDE,a.LONGITUDE,"
+			 	strquery = "SELECT DISTINCT a.SITE_ID,a.WARE_NAME,a.WARE_ID,a.LATITUDE,a.LONGITUDE,"
 				+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID='"
 				+ selectedItem + "' " + generateDateCondition(parsingDate, "w");
-		
 			
-				notifications.headerNotifications(session, model);
-				if (enterprise =="true") {
-					arrayParam[0] = 1;
-				}
-				if (transmission =="true") {
-					arrayParam[1] = 1;
-				}
-				if (RAN =="true") {
-					arrayParam[2] = 1;
-				}
-				if (core =="true") {
-					arrayParam[3] = 1;
-				}
-				strSites = AppendQuery("w", arrayParam, strSites);
+				strquery = AppendQuery("w", arrayParam, strquery);
 				
-				strSites = strSites
+				strquery = strquery
 						+ ") as countNodes,(select COUNT(*) FROM NODE_2GCELL c where c.NODE_PK IN (select NODE_PK from NODE_ACTIVE o where o.WARE_ID='"
 						+ selectedItem + "' " + generateDateCondition(parsingDate, "o");
-				strSites = AppendQuery("o", arrayParam, strSites);
-				strSites = strSites + " ) ";
-				strSites = AppendQuery("c", arrayParam, strSites);
-				strSites = strSites
+				strquery = AppendQuery("o", arrayParam, strquery);
+				strquery = strquery + " ) ";
+				strquery = AppendQuery("c", arrayParam, strquery);
+				strquery = strquery
 						+ ") as countGcells,(select COUNT(*) FROM NODE_4GCELL d where d.NODE_PK IN (select NODE_PK from NODE_ACTIVE o where o.WARE_ID='"
 						+ selectedItem + "' " + generateDateCondition(parsingDate, "o");
-				strSites = AppendQuery("o", arrayParam, strSites);
-				strSites = strSites + " ) ";
-				strSites = AppendQuery("d", arrayParam, strSites);
-				strSites = strSites
+				strquery = AppendQuery("o", arrayParam, strquery);
+				strquery = strquery + " ) ";
+				strquery = AppendQuery("d", arrayParam, strquery);
+				strquery = strquery
 						+ ") as countLcells,(select COUNT(*) FROM NODE_3GCELL e where e.NODE_PK IN (select NODE_PK from NODE_ACTIVE o where o.WARE_ID='"
 						+ selectedItem + "' " + generateDateCondition(parsingDate, "o");
-				strSites = AppendQuery("o", arrayParam, strSites);
-				strSites = strSites + " ) ";
-				strSites = AppendQuery("e", arrayParam, strSites);
-				strSites = strSites
+				strquery = AppendQuery("o", arrayParam, strquery);
+				strquery = strquery + " ) ";
+				strquery = AppendQuery("e", arrayParam, strquery);
+				strquery = strquery
 						+ ") as countUcells FROM NODE_ACTIVE a where a.WARE_ID='"
 						+ selectedItem + "' " + generateDateCondition(parsingDate, "a");
-				strSites = AppendQuery("a", arrayParam, strSites);
+				strquery = AppendQuery("a", arrayParam, strquery);
 				
 			}
-				System.out.println("query "+strSites);
-				rtn.put("siteInfo", session.createNativeQuery(strSites).list());
+			else if(selectedItem.contains("NODE")) {
+				strquery = "SELECT b.SITE_ID,b.WARE_NAME,b.NODE_PK,b.LATITUDE,b.LONGITUDE,"
+						+ "(select COUNT(*) from NODE_ACTIVE w where b.NODE_PK=w.NODE_PK"
+				 + generateDateCondition(parsingDate, "w");
+				strquery = AppendQuery("w", arrayParam, strquery);
+				
+				strquery = strquery
+						+ ") as countNodes,(select count(*) from NODE_2GCELL e  where b.NODE_PK = e.NODE_PK "
+						+ generateDateCondition(parsingDate, "b");
+				strquery = AppendQuery("e", arrayParam, strquery);
+				strquery = strquery
+						+ ") as countGcells,(select count(*) from NODE_4GCELL c  where b.NODE_PK = c.NODE_PK "
+						+ generateDateCondition(parsingDate, "b");
+				strquery = AppendQuery("c", arrayParam, strquery);
+				strquery = strquery
+						+ ") as countLcells,(select count(*) from NODE_3GCELL d  where b.NODE_PK = d.NODE_PK "
+						+ generateDateCondition(parsingDate, "b");
+				strquery = AppendQuery("d", arrayParam, strquery);
+				strquery = strquery
+						+ ") as countUcells,b.WARE_ID,b.NODE_NAME,b.NODE_TYPE FROM NODE_ACTIVE b WHERE b.NODE_PK='"
+						+ selectedItem + "'" + generateDateCondition(parsingDate, "b");
+				strquery = AppendQuery("b", arrayParam, strquery);
+
+			}
+				System.out.println("query "+strquery);
+				rtn.put("siteInfo", session.createNativeQuery(strquery).list());
 			
 			}catch (Exception e) {
 				sw = new StringWriter();

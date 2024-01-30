@@ -252,7 +252,8 @@ map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
 				});
 */
 	map.setOptions({ minZoom: 3, maxZoom: 28});	
-	CreateMap(lst,map);
+	//CreateMap(lst,map);
+	CreateMap2(lst,map,arrayParam,date);
 	CreateTree_NdTypStNdCell(listNodesType,lst,map);
 
 		}
@@ -327,7 +328,8 @@ NodeType = new ContextMenu({
 function AllSitesCheckFilter(){
 	//console.log(" all sites check filter");
 	markerClusterSites.clearMarkers();
-	CreateMap(lst,map);
+	//CreateMap(lst,map);
+	CreateMap2(lst,map,arrayParam,date);
 
 	$('.AllNodesType').bind("change",function() {	
 		//console.log("markersSites.length: "+markersSites.length);
