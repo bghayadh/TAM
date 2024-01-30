@@ -115,11 +115,6 @@
 						     dictObj.itemNetRate = $(this).parent().parent().children('td[name="itemNetRate"]').children('input').val();
 						     dictObj.itemTotal = $(this).parent().parent().children('td[name="itemTotal"]').children('input').val();
 						     dictObj.itemTotalAt = $(this).parent().parent().children('td[name="itemTotalAt"]').children('input').val();
-						     dictObj.itemNodeID = $(this).parent().parent().children('td[name="itemNodeID"]').children('input').val();
-						     dictObj.toNodeID = $(this).parent().parent().children('td[name="toNodeID"]').children('input').val();
-						     dictObj.itemNodeName = $(this).parent().parent().children('td[name="itemNodeName"]').children('input').val();
-						     dictObj.itemToNodeName = $(this).parent().parent().children('td[name="itemToNodeName"]').children('input').val();
-						     dictObj.alcflg = $(this).parent().parent().children('td[name="itemToNodeName"]').children('input[name="alcflg"]').val();
 						     dictObj.fromSlot = $(this).parent().parent().children('td[name="fromSlot"]').children('input').val();
 						     dictObj.itemToSlot = $(this).parent().parent().children('td[name="toSlot"]').children('input').val();
 						     dictObj.siteID = $(this).parent().parent().children('td[name="siteID"]').children('input').val();
@@ -393,10 +388,6 @@
 		        itemRow =itemRow + "<td name='approveStatus'>"+Actions_options+"<input type='text' hidden name='approvedby' value ='"+approvedby+"'></td>";
 		        itemRow =itemRow + "<td name='purchaseOrder'><input type='text' class='form-control text-input' value='"+ PurchaseOrder+"' ondrop ='return false;' name='itmPO' value='"+PurchaseOrder+"' style='width:350px;' class='ui-widget ui-widget-content ui-corner-all'></td>";
 		        itemRow =itemRow + "<td name='workOrder'><input type='text' class='form-control text-input' ondrop ='return false;' name='itmWO' value='"+ WorkOrder+"' style='width:350px;' class='ui-widget ui-widget-content ui-corner-all'></td>";
-		        itemRow =itemRow + "<td name='itemNodeID'><input type='text' class='form-control text-input' style='width:200px' value='"+boqArray[i].nodeID+"'></td>";
-		        itemRow =itemRow + "<td name='itemNodeName'><input type='text' class='form-control text-input' style='width:400px' value='"+boqArray[i].nodeName+"'></td>";
-		        itemRow =itemRow + "<td name='toNodeID'><input type='text' class='form-control text-input' style='width:200px' value='"+boqArray[i].toNodeId+"'></td>";
-		        itemRow =itemRow + "<td name='itemToNodeName'><input type='text' class='form-control text-input' style='width:400px' value='"+boqArray[i].toNodeName+"'><input name = 'alcflg' type='text' class='form-control text-input' hidden value='"+ boqArray[i].alcFlg+"'></td>";
 		        itemRow =itemRow + "<td name='fromSlot'><input type='text' class='form-control text-input' style='width:200px' value='"+boqArray[i].fromSlot+"'></td>";
 		        itemRow =itemRow + "<td name='toSlot'><input type='text' class='form-control text-input' style='width:200px' value='"+boqArray[i].toSlot+"'/></td>";
 		        itemRow =itemRow + "<td name='itemQty'><input type='text' class='form-control text-input inputWidth' value='"+ boqArray[i].dniQty+"'></td>";
@@ -493,11 +484,7 @@
               	+"<td name='approveStatus'>"+Actions_options+"<input  type='text' hidden name='approvedby' value =''></td>"
               	+"<td name='purchaseOrder'><input type='text' ondrop ='return false;' name='itmPO' value='' style='width:350px;' class='ui-widget ui-widget-content ui-corner-all form-control'/></td>"
               	+"<td name='workOrder'><input type='text' ondrop ='return false;' name='itmWO' value='' style='width:350px;' class='ui-widget ui-widget-content ui-corner-all form-control'/></td>"
-              	+"<td name='itemNodeID'><input type='text' class='form-control' style='width:200px;'></td>"
-              	+"<td name='itemNodeName'><input type='text' class='form-control' style='width:400px;'></td>"
-              	+"<td name='toNodeID'><input type='text' class='form-control' style='width:200px;'></td>"
-              	+"<td name='itemToNodeName'><input type='text' class='form-control' style='width:400px;'><input name = 'alcflg' type='text' value='0' class='form-control text-input' hidden ></td>"
-            	  +"<td name='fromSlot'><input type='text' class='form-control' style='width:200px;'/></td>"
+                +"<td name='fromSlot'><input type='text' class='form-control' style='width:200px;'/></td>"
             	  +"<td name='toSlot'><input type='text' class='form-control' style='width:200px;'/></td>"
               	+"<td name='itemQty'><input type='text' name='itemQty' value= 0 class='form-control inputWidth'></td>"
               	+"<td name='itemRate'><input type='text' value= 0 class='form-control inputWidth'></td>"
@@ -1080,11 +1067,6 @@ $("#FromNodeTable >tbody tr").empty();
 //  $("select[id = 'popupApprovalAction'] option[value ='"+approvalActionValue+"'").attr("selected","selected");
 	$('#popupPO').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="purchaseOrder"]').children('input').val());
 	$('#popupWO').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="workOrder"]').children('input').val());
-	$('#popupFromNodeID').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemNodeID"]').children('input').val());
-	$('#popupFromNodeName').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemNodeName"]').children('input').val());
-	$('#popupToNodeID').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="toNodeID"]').children('input').val());
-	$('#popupToNodeName').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemToNodeName"]').children('input').val());
-	$('#popupAlcFlg').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemToNodeName"]').children('input[name = "alcflg"]').val());
 	$('#popupFromSlot').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="fromSlot"]').children('input').val());
 	$('#popupToSlot').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="toSlot"]').children('input').val());
 	$('#popupQty').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemQty"]').children('input').val());
@@ -1174,11 +1156,6 @@ console.log(nodeId);
 //  $('#popupApprovalAction').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="approveStatus"]').children("select").children("option:selected").val());
   $('#popupPO').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="purchaseOrder"]').children('input').val());
   $('#popupWO').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="workOrder"]').children('input').val());
-  $('#popupFromNodeID').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemNodeID"]').children('input').val());
-  $('#popupFromNodeName').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemNodeName"]').children('input').val());
-  $('#popupToNodeID').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="toNodeID"]').children('input').val());
-  $('#popupToNodeName').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemToNodeName"]').children('input').val());
-  $('#popupAlcFlg').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemToNodeName"]').children('input[name = "alcflg"]').val()); 
   $('#popupFromSlot').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="fromSlot"]').children('input').val());
   $('#popupToSlot').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="toSlot"]').children('input').val());
   $('#popupQty').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemQty"]').children('input').val());
@@ -1234,12 +1211,7 @@ console.log(nodeId);
 //  $('#popupApprovalAction').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="approveStatus"]').children("select").children("option:selected").val());
   $('#popupPO').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="purchaseOrder"]').children('input').val());
   $('#popupWO').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="workOrder"]').children('input').val());
-  $('#popupFromNodeID').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemNodeID"]').children('input').val());
-  $('#popupFromNodeName').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemNodeName"]').children('input').val());
-  $('#popupToNodeID').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="toNodeID"]').children('input').val());
-  $('#popupToNodeName').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemToNodeName"]').children('input').val());
-  $('#popupAlcFlg').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemToNodeName"]').children('input[name = "alcflg"]').val()); 
-  $('#popupFromSlot').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="fromSlot"]').children('input').val());
+ $('#popupFromSlot').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="fromSlot"]').children('input').val());
   $('#popupToSlot').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="toSlot"]').children('input').val());
   $('#popupQty').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemQty"]').children('input').val());
   $('#popupRate').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemRate"]').children('input').val());
@@ -1309,12 +1281,7 @@ $("#FromNodeTable >tbody tr").empty();
     //$('#popupApprovalAction').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="approveStatus"]').children("select").children("option:selected").val());
     $('#popupPO').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="purchaseOrder"]').children('input').val());
     $('#popupWO').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="workOrder"]').children('input').val());
-    $('#popupFromNodeID').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemNodeID"]').children('input').val());
-    $('#popupFromNodeName').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemNodeName"]').children('input').val());
-    $('#popupToNodeID').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="toNodeID"]').children('input').val());
-    $('#popupToNodeName').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemToNodeName"]').children('input').val());
-	$('#popupAlcFlg').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemToNodeName"]').children('input[name = "alcflg"]').val());
-	$('#popupFromSlot').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="fromSlot"]').children('input').val());
+ 	$('#popupFromSlot').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="fromSlot"]').children('input').val());
     $('#popupToSlot').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="toSlot"]').children('input').val());
     $('#popupQty').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemQty"]').children('input').val());
     $('#popupRate').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemRate"]').children('input').val());
@@ -1371,12 +1338,7 @@ var toNode = JSON.parse($("#bisotab > tbody").find("tr").eq(rowindx).find('td[na
     //$('#popupApprovalAction').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="approveStatus"]').children("select").children("option:selected").val());
     $('#popupPO').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="purchaseOrder"]').children('input').val());
     $('#popupWO').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="workOrder"]').children('input').val());
-    $('#popupFromNodeID').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemNodeID"]').children('input').val());
-    $('#popupFromNodeName').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemNodeName"]').children('input').val());
-    $('#popupToNodeID').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="toNodeID"]').children('input').val());
-    $('#popupToNodeName').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemToNodeName"]').children('input').val());
-	$('#popupAlcFlg').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemToNodeName"]').children('input[name = "alcflg"]').val());
-	$('#popupFromSlot').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="fromSlot"]').children('input').val());
+  	$('#popupFromSlot').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="fromSlot"]').children('input').val());
     $('#popupToSlot').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="toSlot"]').children('input').val());
     $('#popupQty').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemQty"]').children('input').val());
     $('#popupRate').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemRate"]').children('input').val());
@@ -1457,12 +1419,7 @@ var toNode = JSON.parse($("#bisotab > tbody").find("tr").eq(rowindx).find('td[na
   //  $('#popupApprovalAction').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="approveStatus"]').children("select").children("option:selected").val());
     $('#popupPO').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="purchaseOrder"]').children('input').val());
     $('#popupWO').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="workOrder"]').children('input').val());
-    $('#popupFromNodeID').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemNodeID"]').children('input').val());
-    $('#popupFromNodeName').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemNodeName"]').children('input').val());
-    $('#popupToNodeID').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="toNodeID"]').children('input').val());
-    $('#popupToNodeName').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemToNodeName"]').children('input').val());
-	$('#popupAlcFlg').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemToNodeName"]').children('input[name = "alcflg"]').val());
-	$('#popupFromSlot').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="fromSlot"]').children('input').val());
+    $('#popupFromSlot').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="fromSlot"]').children('input').val());
     $('#popupToSlot').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="toSlot"]').children('input').val());
     $('#popupQty').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemQty"]').children('input').val());
     $('#popupRate').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemRate"]').children('input').val());
@@ -1514,12 +1471,7 @@ var toNode = JSON.parse($("#bisotab > tbody").find("tr").eq(rowindx).find('td[na
     //$('#popupApprovalAction').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="approveStatus"]').children("select").children("option:selected").val());
     $('#popupPO').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="purchaseOrder"]').children('input').val());
     $('#popupWO').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="workOrder"]').children('input').val());
-    $('#popupFromNodeID').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemNodeID"]').children('input').val());
-    $('#popupFromNodeName').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemNodeName"]').children('input').val());
-    $('#popupToNodeID').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="toNodeID"]').children('input').val());
-    $('#popupToNodeName').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemToNodeName"]').children('input').val());
-	$('#popupAlcFlg').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemToNodeName"]').children('input[name = "alcflg"]').val());
-	$('#popupFromSlot').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="fromSlot"]').children('input').val());
+  	$('#popupFromSlot').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="fromSlot"]').children('input').val());
     $('#popupToSlot').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="toSlot"]').children('input').val());
     $('#popupQty').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemQty"]').children('input').val());
     $('#popupRate').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemRate"]').children('input').val());
@@ -1591,12 +1543,7 @@ $("#FromNodeTable >tbody tr").empty();
     //  $('#popupApprovalAction').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="approveStatus"]').children("select").children("option:selected").val());
       $('#popupPO').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="purchaseOrder"]').children('input').val());
       $('#popupWO').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="workOrder"]').children('input').val());
-      $('#popupFromNodeID').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemNodeID"]').children('input').val());
-      $('#popupFromNodeName').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemNodeName"]').children('input').val());
-      $('#popupToNodeID').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="toNodeID"]').children('input').val());
-      $('#popupToNodeName').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemToNodeName"]').children('input').val());
-	  $('#popupAlcFlg').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemToNodeName"]').children('input[name = "alcflg"]').val()); 
-	  $('#popupFromSlot').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="fromSlot"]').children('input').val());
+       $('#popupFromSlot').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="fromSlot"]').children('input').val());
       $('#popupToSlot').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="toSlot"]').children('input').val());
       $('#popupQty').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemQty"]').children('input').val());
       $('#popupRate').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemRate"]').children('input').val());
@@ -1634,7 +1581,7 @@ $("#FromNodeTable >tbody tr").empty();
 
    	//Send input values from popup to boq when any popup input change
  $('#popupItemCode,#popupItemModel, #popupItemPartno, #popupTransType,#popupNotes,#popupDescription,#popupElementName,#popupAddress,#case,#popupApprovalStatus,#popupApprovalAction,'
- +'#popupPO,#popupWO,#popupFromNodeID,#popupFromNodeName,#popupToNodeID,#popupToNodeName,#popupAlcFlg,#popupFromSlot,#popupToSlot,#popupQty,#popupRate,#popupDiscountAmount'
+ +'#popupPO,#popupWO,#popupFromSlot,#popupToSlot,#popupQty,#popupRate,#popupDiscountAmount'
  +'#popupTax,#popupNetRate,#popupTotal,#popupTotalAT,#popupFromSite,#popupToSite,#popupFromSN,#popupToSN,#popupDNitmID').on(' focusout ', function() {
 
  	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="item"]').children('input').val($('#popupItemCode').val());
@@ -1654,12 +1601,7 @@ $("#FromNodeTable >tbody tr").empty();
 
 	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="purchaseOrder"]').children('input').val($('#popupPO').val());
 	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="workOrder"]').children('input').val($('#popupWO').val());
-	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemNodeID"]').children('input').val($('#popupFromNodeID').val());
-	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemNodeName"]').children('input').val($('#popupFromNodeName').val());
-	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="toNodeID"]').children('input').val($('#popupToNodeID').val());
-	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemToNodeName"]').children('input').val($('#popupToNodeName').val());
-	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemToNodeName"]').children('input[name = "alcflg"]').val($('#popupAlcFlg').val());
-
+	
 	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="fromSlot"]').children('input').val($('#popupFromSlot').val());
 	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="toSlot"]').children('input').val($('#popupToSlot').val());
 	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemQty"]').children('input').val($('#popupQty').val());
@@ -1699,12 +1641,7 @@ $("#FromNodeTable >tbody tr").empty();
   $("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="approveStatus"]').children('select').val($('#popupApprovalAction > select').val());}
 	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="purchaseOrder"]').children('input').val($('#popupPO').val());
 	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="workOrder"]').children('input').val($('#popupWO').val());
-	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemNodeID"]').children('input').val($('#popupFromNodeID').val());
-	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemNodeName"]').children('input').val($('#popupFromNodeName').val());
-	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="toNodeID"]').children('input').val($('#popupToNodeID').val());
-	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemToNodeName"]').children('input').val($('#popupToNodeName').val());
-	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemToNodeName"]').children('input[name = "alcflg"]').val($('#popupAlcFlg').val());
-
+	
 	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="fromSlot"]').children('input').val($('#popupFromSlot').val());
 	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="toSlot"]').children('input').val($('#popupToSlot').val());
 	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemQty"]').children('input').val($('#popupQty').val());
@@ -1748,11 +1685,6 @@ $("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="item"]').children('in
   $("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="approveStatus"]').children('select').val($('#popupApprovalAction > select').val());}
 	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="purchaseOrder"]').children('input').val($('#popupPO').val());
 	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="workOrder"]').children('input').val($('#popupWO').val());
-	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemNodeID"]').children('input').val($('#popupFromNodeID').val());
-	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemNodeName"]').children('input').val($('#popupFromNodeName').val());
-	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="toNodeID"]').children('input').val($('#popupToNodeID').val());
-	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemToNodeName"]').children('input').val($('#popupToNodeName').val());
-	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemToNodeName"]').children('input[name = "alcflg"]').val($('#popupAlcFlg').val());
 
 	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="fromSlot"]').children('input').val($('#popupFromSlot').val());
 	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="toSlot"]').children('input').val($('#popupToSlot').val());
