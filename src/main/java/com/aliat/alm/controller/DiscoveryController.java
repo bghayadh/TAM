@@ -86,10 +86,6 @@ public class DiscoveryController {
 	private static final String DN_ITEM_SN = "itemSN";
 	private static final String DN_TO_SN = "toSN";
 	private static final String DN_ITEM_ID = "itemDniID";
-	private static final String DN_ITEM_NODE_ID = "itemNodeID";
-	private static final String DN_TO_NODE_ID = "toNodeID";
-	private static final String DN_ITEM_NODE_NAME = "itemNodeName";
-	private static final String DN_ITEM_TO_NODE_NAME = "itemToNodeName";
 	private static final String DN_FROM_SLOT = "fromSlot";
 	private static final String DN_TO_SLOT = "itemToSlot";
 	private static final String DN_APPROVE = "buttonApprove";
@@ -350,10 +346,10 @@ public class DiscoveryController {
 			    "t.WO_ID AS dniWOID, t.WO_PURPOSE AS purpose, t.QTY AS dniQty, t.RATE AS dniRate, t.DISCOUNT_AMOUNT AS dniDiscamount, " +
 			    "t.TAX1 AS dniTax1, t.NET_RATE AS dniNetrate, t.TOTAL AS dniTotal, t.TOTAL_AT AS dniTotalat, t.FROM_SITE AS dniSIte, " +
 			    "t.WARE_ID AS wareID, t.WARE_NAME AS wareName, NVL(t.FROM_SERIAL_NUMBER, ' ') AS dniSN, t.DNI_ID AS dniDNID, " +
-			    "NVL(t.ITEM_MODEL, '') AS itemModel, NVL(t.ITEM_PART_NUMBER, '') AS itemPartNb, NVL(t.FROM_NODE_ID, ' ') AS nodeID, " +
-			    "NVL(t.FROM_NODE_NAME, ' ') AS nodeName, t.APPROVAL_STATUS AS approvalStatus, NVL(t.FROM_SLOT, ' ') AS fromSlot, " +
-			    "NVL(t.TO_SLOT, ' ') AS toSlot, NVL(t.TO_NODE_ID, ' ') AS toNodeId, t.TO_SITE AS toSite, t.TO_WARE_NAME AS toWareName, " +
-			    "t.TO_WARE_ID AS toWareId, NVL(t.TO_NODE_NAME, ' ') AS toNodeName, NVL(t.ALCFLG, ' ') AS alcFlg, " +
+			    "NVL(t.ITEM_MODEL, '') AS itemModel, NVL(t.ITEM_PART_NUMBER, '') AS itemPartNb,  " +
+			    " t.APPROVAL_STATUS AS approvalStatus, NVL(t.FROM_SLOT, ' ') AS fromSlot, " +
+			    "NVL(t.TO_SLOT, ' ') AS toSlot, t.TO_SITE AS toSite, t.TO_WARE_NAME AS toWareName, " +
+			    "t.TO_WARE_ID AS toWareId, NVL(t.ALCFLG, ' ') AS alcFlg, " +
 			    "NVL(t.TO_SERIAL_NUMBER, ' ') AS toSerialNumber, NVL(t.DESCRIPTION, ' ') AS description, x.toNodeArray, y.fromNodeArray " +
 			    "FROM DISCOVERY_NEW_ITEM t " +
 			    "LEFT JOIN (SELECT DISTINCT DNI_ID, json_object('toNodeArray' VALUE json_arrayagg(json_object('NodeId' VALUE TO_NODE_ID, " +
@@ -398,16 +394,12 @@ public class DiscoveryController {
 			    .addScalar("dniDNID", new StringType())
 			    .addScalar("itemModel", new StringType())
 			    .addScalar("itemPartNb", new StringType())
-			    .addScalar("nodeID", new StringType())
-			    .addScalar("nodeName", new StringType())
 			    .addScalar("approvalStatus", new StringType())
 			    .addScalar("fromSlot", new StringType())
 			    .addScalar("toSlot", new StringType())
-			    .addScalar("toNodeId", new StringType())
-			    .addScalar("toSite", new StringType())
+			     .addScalar("toSite", new StringType())
 			    .addScalar("toWareName", new StringType())
 			    .addScalar("toWareId", new StringType())
-			    .addScalar("toNodeName", new StringType())
 			    .addScalar("alcFlg", new StringType())
 			    .addScalar("toSerialNumber", new StringType())
 			    .addScalar("description", new StringType())
@@ -652,10 +644,6 @@ public class DiscoveryController {
 				String toSerialNumber= itemParameters.getDictParameter().get(i).get(DN_TO_SN);
 			    String itemModel= itemParameters.getDictParameter().get(i).get(DN_ITEM_MODEL);
 				String itemPartNb= itemParameters.getDictParameter().get(i).get(DN_ITEM_PART_NB);
-				String nodeID= itemParameters.getDictParameter().get(i).get(DN_ITEM_NODE_ID);
-				String toNodeId= itemParameters.getDictParameter().get(i).get(DN_TO_NODE_ID);
-				String nodeName= itemParameters.getDictParameter().get(i).get(DN_ITEM_NODE_NAME);
-				String toNodeName= itemParameters.getDictParameter().get(i).get(DN_ITEM_TO_NODE_NAME);
 				String fromSlot= itemParameters.getDictParameter().get(i).get(DN_FROM_SLOT);
 				String toSlot= itemParameters.getDictParameter().get(i).get(DN_TO_SLOT);
 				String transType= itemParameters.getDictParameter().get(i).get(DN_TRANS_TYPE);
@@ -712,10 +700,6 @@ public class DiscoveryController {
 					discoverynewitem.setPurpose(purpose);
 					discoverynewitem.setItemModel(itemParameters.getDictParameter().get(i).get(DN_ITEM_MODEL));
 					discoverynewitem.setItemPartNb(itemParameters.getDictParameter().get(i).get(DN_ITEM_PART_NB));
-					discoverynewitem.setNodeID(itemParameters.getDictParameter().get(i).get(DN_ITEM_NODE_ID));
-					discoverynewitem.setToNodeId(itemParameters.getDictParameter().get(i).get(DN_TO_NODE_ID));
-					discoverynewitem.setNodeName(itemParameters.getDictParameter().get(i).get(DN_ITEM_NODE_NAME));
-					discoverynewitem.setToNodeName(itemParameters.getDictParameter().get(i).get(DN_ITEM_TO_NODE_NAME));
 					discoverynewitem.setFromSlot(itemParameters.getDictParameter().get(i).get(DN_FROM_SLOT));
 					discoverynewitem.setToSlot(itemParameters.getDictParameter().get(i).get(DN_TO_SLOT));
 					discoverynewitem.setTransType(itemParameters.getDictParameter().get(i).get(DN_TRANS_TYPE));
@@ -742,15 +726,13 @@ public class DiscoveryController {
 					String dnApproveFlag = appConfig.findAllByQueryConditionByParam(DsicoveryNewItem.class, getDnApproveFlagquery,
 					paramss);
 					paramss.clear();*/
-					
-query = session.createSQLQuery("update DISCOVERY_NEW_ITEM SET ITEM_CODE ='"+itmcode+"',LAST_MODIFIED_DATE = sysdate, ITEM_NAME = '"+itmname+"', RATE = '"+dniRate+"', DISCOUNT_AMOUNT = '"+dniDiscamount+"', NET_RATE = '"+dniNetrate+"', " 
-                            + " TAX1 = '"+dniTax1+"' , TOTAL = '"+dniTotal+"' , TOTAL_AT = '"+dniTotalat+"' , WARE_ID = '"+wareID+"' , WARE_NAME = '"+wareName+"' , "
-                            + " FROM_SITE = '"+SiteID+"' , TO_WARE_ID = '"+towareID+"' , TO_WARE_NAME = '"+towareName+"' , TO_SITE = '"+toSiteID+"' , QTY = '"+dniQty+"' , DN_ID = '"+dnid+"' , "
-                            + " FROM_SERIAL_NUMBER = '"+dniSN+"' , TO_SERIAL_NUMBER = '"+toSerialNumber+"' , PO_ID = '"+PurchaseOrId+"' , SUPPLIER_ID = '"+supplierID+"' , SUPPLIER_NAME = '"+supplierName+"' , "
-                            + " TOTAL_AMOUNT = '"+TotalAmount+"' , WO_ID = '"+woId+"' , WO_PURPOSE = '"+purpose+"' , ITEM_MODEL = '"+itemModel+"' , ITEM_PART_NUMBER = '"+itemPartNb+"' , "
-                            + " FROM_NODE_ID = '"+nodeID+"', TO_NODE_ID = '"+toNodeId+"', FROM_NODE_NAME = '"+nodeName+"', TO_NODE_NAME = '"+toNodeName+"', FROM_SLOT = '"+fromSlot+"' , "
-                            + " TO_SLOT = '"+toSlot+"', TRANS_TYPE = '"+transType+"', NOTES = '"+notes+"', ELEMENT_NAME ='"+elementName+"', POSITION = '"+position+"', APPROVAL = '"+dniAPPROVAL+"', "
-                            + " APPROVAL_STATUS = '"+approvalStatus+"', DESCRIPTION = '"+Description+"', ALCFLG = '"+alcflg+"' where DNI_ID = :param1");
+					query = session.createSQLQuery("UPDATE DISCOVERY_NEW_ITEM SET ITEM_CODE = '" + itmcode + "', LAST_MODIFIED_DATE = sysdate, ITEM_NAME = '" + itmname + "', RATE = '" + dniRate + "', DISCOUNT_AMOUNT = '" + dniDiscamount + "', NET_RATE = '" + dniNetrate + "', "
+						    + "TAX1 = '" + dniTax1 + "' , TOTAL = '" + dniTotal + "' , TOTAL_AT = '" + dniTotalat + "' , WARE_ID = '" + wareID + "' , WARE_NAME = '" + wareName + "' , "
+						    + "FROM_SITE = '" + SiteID + "' , TO_WARE_ID = '" + towareID + "' , TO_WARE_NAME = '" + towareName + "' , TO_SITE = '" + toSiteID + "' , QTY = '" + dniQty + "' , DN_ID = '" + dnid + "' , "
+						    + "FROM_SERIAL_NUMBER = '" + dniSN + "' , TO_SERIAL_NUMBER = '" + toSerialNumber + "' , PO_ID = '" + PurchaseOrId + "' , SUPPLIER_ID = '" + supplierID + "' , SUPPLIER_NAME = '" + supplierName + "' , "
+						    + "TOTAL_AMOUNT = '" + TotalAmount + "' , WO_ID = '" + woId + "' , WO_PURPOSE = '" + purpose + "' , ITEM_MODEL = '" + itemModel + "' , ITEM_PART_NUMBER = '" + itemPartNb + "' , "
+						    + "FROM_SLOT = '" + fromSlot + "' , TO_SLOT = '" + toSlot + "', TRANS_TYPE = '" + transType + "', NOTES = '" + notes + "', ELEMENT_NAME = '" + elementName + "', POSITION = '" + position + "', APPROVAL = '" + dniAPPROVAL + "', "
+						    + "APPROVAL_STATUS = '" + approvalStatus + "', DESCRIPTION = '" + Description + "' WHERE DNI_ID = :param1");
 
 query.setParameter("param1", DniID);
 query.executeUpdate();
@@ -948,7 +930,7 @@ query.executeUpdate();
 
 					System.out.println("-- PROJECT MANAGER APPROVAL --");
 					
-						ApprovalProjectandAsset(trans_Type, getApproval, dnStatus,AssetRegID, ArCode, PurchaseOrId,itmcode,itmname,WorkOrder,DniID,toSiteID,supplierID,supplierName,towareID,towareName,serialnb,dnRate,itemModel,itemPartNb,toSite,toSerialNumber,toNodeId,toNodeName,toSlot,nodeID,nodeName,Site,fromSlot,SiteID);
+						ApprovalProjectandAsset(trans_Type, getApproval, dnStatus,AssetRegID, ArCode, PurchaseOrId,itmcode,itmname,WorkOrder,DniID,toSiteID,supplierID,supplierName,towareID,towareName,serialnb,dnRate,itemModel,itemPartNb,toSite,toSerialNumber,toSlot,Site,fromSlot,SiteID);
 						
 					}
 				}
@@ -962,7 +944,7 @@ query.executeUpdate();
 
 					System.out.println("-- FINANCE APPROVAL --");
 
-						ApprovalFinance(trans_Type, getApproval, dnStatus,AssetRegID, ArCode, PurchaseOrId,itmcode,itmname,WorkOrder,DniID,toSiteID,supplierID,supplierName,towareID,towareName,serialnb,dnRate,itemModel,itemPartNb,toSite,toSerialNumber,toNodeId,toNodeName,toSlot,nodeID,nodeName,Site,fromSlot,SiteID);
+						ApprovalFinance(trans_Type, getApproval, dnStatus,AssetRegID, ArCode, PurchaseOrId,itmcode,itmname,WorkOrder,DniID,toSiteID,supplierID,supplierName,towareID,towareName,serialnb,dnRate,itemModel,itemPartNb,toSite,toSerialNumber,toSlot,Site,fromSlot,SiteID);
 						
 					}
 				}
@@ -981,7 +963,7 @@ query.executeUpdate();
 
 					System.out.println("-- OPERATION MANAGER APPROVAL --");
 					
-							ApprovalOperational(trans_Type, getApproval, dnStatus,AssetRegID, ArCode, PurchaseOrId,itmcode,itmname,WorkOrder,DniID,toSiteID,supplierID,supplierName,towareID,towareName,serialnb,dnRate,itemModel,itemPartNb,toSite,toSerialNumber,toNodeId,toNodeName,toSlot,nodeID,nodeName,Site,fromSlot,SiteID);
+							ApprovalOperational(trans_Type, getApproval, dnStatus,AssetRegID, ArCode, PurchaseOrId,itmcode,itmname,WorkOrder,DniID,toSiteID,supplierID,supplierName,towareID,towareName,serialnb,dnRate,itemModel,itemPartNb,toSite,toSerialNumber,toSlot,Site,fromSlot,SiteID);
 		
 						}
 						
@@ -2033,7 +2015,6 @@ query.executeUpdate();
 						discoverynewitem.setDniDNID(dnid);
 						discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
 						discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
-						discoverynewitem.setNodePK(node_pk);
 						discoverynewitem.setDniAPPROVAL("Project Manager");
 						
 						session.saveOrUpdate(discoverynewitem);
@@ -2068,7 +2049,6 @@ query.executeUpdate();
 						discoverynewitem.setDniDNID(dnid);
 						discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
 						discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
-						discoverynewitem.setNodePK(node_pk);
 						discoverynewitem.setDniAPPROVAL("Project Manager");
 						
 						session.saveOrUpdate(discoverynewitem);
@@ -2104,7 +2084,6 @@ query.executeUpdate();
 						discoverynewitem.setDniDNID(dnid);
 						discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
 						discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
-						discoverynewitem.setNodePK(node_pk);
 						discoverynewitem.setDniAPPROVAL("Project Manager");
 						
 						session.saveOrUpdate(discoverynewitem);
@@ -2140,7 +2119,6 @@ query.executeUpdate();
 						discoverynewitem.setDniDNID(dnid);
 						discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
 						discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
-						discoverynewitem.setNodePK(node_pk);
 						discoverynewitem.setDniAPPROVAL("Project Manager");
 						
 						session.saveOrUpdate(discoverynewitem);
@@ -2176,7 +2154,6 @@ query.executeUpdate();
 						discoverynewitem.setDniDNID(dnid);
 						discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
 						discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
-						discoverynewitem.setNodePK(node_pk);
 						discoverynewitem.setDniAPPROVAL("Project Manager");
 						
 						session.saveOrUpdate(discoverynewitem);
@@ -2211,7 +2188,6 @@ query.executeUpdate();
 						discoverynewitem.setDniDNID(dnid);
 						discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
 						discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
-						discoverynewitem.setNodePK(node_pk);
 						discoverynewitem.setDniAPPROVAL("Project Manager");
 						
 						session.saveOrUpdate(discoverynewitem);
@@ -2247,7 +2223,6 @@ query.executeUpdate();
 						discoverynewitem.setDniDNID(dnid);
 						discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
 						discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
-						discoverynewitem.setNodePK(node_pk);
 						discoverynewitem.setDniAPPROVAL("Project Manager");
 						
 						session.saveOrUpdate(discoverynewitem);
@@ -2283,7 +2258,6 @@ query.executeUpdate();
 						discoverynewitem.setDniDNID(dnid);
 						discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
 						discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
-						discoverynewitem.setNodePK(node_pk);
 						discoverynewitem.setDniAPPROVAL("Project Manager");
 						
 						session.saveOrUpdate(discoverynewitem);
@@ -2319,7 +2293,6 @@ query.executeUpdate();
 						discoverynewitem.setDniDNID(dnid);
 						discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
 						discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
-						discoverynewitem.setNodePK(node_pk);
 						discoverynewitem.setDniAPPROVAL("Project Manager");
 						
 						session.saveOrUpdate(discoverynewitem);
@@ -2355,7 +2328,6 @@ query.executeUpdate();
 						discoverynewitem.setDniDNID(dnid);
 						discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
 						discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
-						discoverynewitem.setNodePK(node_pk);
 						discoverynewitem.setDniAPPROVAL("Project Manager");
 						
 						session.saveOrUpdate(discoverynewitem);
@@ -2536,16 +2508,11 @@ query.executeUpdate();
 				discoverynewitem.setTransSrc(arrayList[3].toString());
 				discoverynewitem.setFromSlot(arrayList[4].toString());
 				discoverynewitem.setToSlot(arrayList[5].toString());
-				discoverynewitem.setNodeID(arrayList[6].toString());
-				discoverynewitem.setToNodeId(arrayList[7].toString());
-				discoverynewitem.setNodeName(arrayList[8].toString());
 				discoverynewitem.setItemModel(arrayList[9].toString());
-				discoverynewitem.setNodePK(arrayList[10].toString());
 				discoverynewitem.setDniSIte(arrayList[11].toString());
 				discoverynewitem.setToSite(arrayList[12].toString());
 				discoverynewitem.setPosition(arrayList[13].toString());
 				discoverynewitem.setDescription(arrayList[14].toString());
-				discoverynewitem.setToNodeName(arrayList[16].toString());
 				discoverynewitem.setElementName("Board");
 				discoverynewitem.setDniDNID(dnid);
 				discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
@@ -2596,16 +2563,11 @@ query.executeUpdate();
 				discoverynewitem.setTransSrc(arrayList[2].toString());
 				//discoverynewitem.setFromSlot(arrayList[4].toString());
 				//discoverynewitem.setToSlot(arrayList[5].toString());
-				discoverynewitem.setNodeID(arrayList[3].toString());
-				discoverynewitem.setToNodeId(arrayList[4].toString());
-				discoverynewitem.setNodeName(arrayList[5].toString());
 				discoverynewitem.setItemModel(arrayList[6].toString());
-				discoverynewitem.setNodePK(arrayList[7].toString());
-				discoverynewitem.setDniSIte(arrayList[8].toString());
+			    discoverynewitem.setDniSIte(arrayList[8].toString());
 				discoverynewitem.setToSite(arrayList[9].toString());
 				discoverynewitem.setPosition(arrayList[10].toString());
 				discoverynewitem.setDescription(arrayList[11].toString());
-				discoverynewitem.setToNodeName(arrayList[13].toString());
 				discoverynewitem.setElementName("Cabinet");
 				discoverynewitem.setDniDNID(dnid);
 				discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
@@ -2644,16 +2606,11 @@ query.executeUpdate();
 				discoverynewitem.setTransSrc(arrayList[2].toString());
 				//discoverynewitem.setFromSlot(arrayList[4].toString());
 				//discoverynewitem.setToSlot(arrayList[5].toString());
-				discoverynewitem.setNodeID(arrayList[3].toString());
-				discoverynewitem.setToNodeId(arrayList[4].toString());
-				discoverynewitem.setNodeName(arrayList[5].toString());
 				discoverynewitem.setItemModel(arrayList[6].toString());
-				discoverynewitem.setNodePK(arrayList[7].toString());
 				discoverynewitem.setDniSIte(arrayList[8].toString());
 				discoverynewitem.setToSite(arrayList[9].toString());
 				//discoverynewitem.setPosition(arrayList[13].toString());
 				discoverynewitem.setDescription(arrayList[10].toString());
-				discoverynewitem.setToNodeName(arrayList[12].toString());
 				discoverynewitem.setElementName("Antenna");
 				discoverynewitem.setDniDNID(dnid);
 				discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis())); 
@@ -2801,12 +2758,9 @@ query.executeUpdate();
 				discoverynewitem.setDniID(DniID);
 				discoverynewitem.setDniSN(arrayList[1].toString());
 				discoverynewitem.setToSerialNumber(arrayList[2].toString());
-				discoverynewitem.setToNodeId(arrayList[4].toString());
 				discoverynewitem.setItemModel(arrayList[9].toString());
 				discoverynewitem.setToSite(arrayList[6].toString());
 				discoverynewitem.setToSlot(arrayList[7].toString());
-				discoverynewitem.setToNodeName(arrayList[8].toString());
-				discoverynewitem.setNodePK(arrayList[10].toString());
 				discoverynewitem.setDescription(arrayList[13].toString());	
 				discoverynewitem.setElementName("Board");
 				discoverynewitem.setDniDNID(dnid);
@@ -2844,12 +2798,9 @@ query.executeUpdate();
 				discoverynewitem.setDniSN(arrayList[1].toString());
 				discoverynewitem.setToSerialNumber(arrayList[2].toString());
 				discoverynewitem.setTransSrc(arrayList[3].toString());
-				discoverynewitem.setToNodeId(arrayList[4].toString());
-				discoverynewitem.setToNodeName(arrayList[5].toString());
 				discoverynewitem.setToSite(arrayList[6].toString());
 				discoverynewitem.setToSlot(arrayList[7].toString());
 				discoverynewitem.setItemModel(arrayList[9].toString());
-				discoverynewitem.setNodePK(arrayList[10].toString());
 				discoverynewitem.setDescription(arrayList[13].toString());	
 				discoverynewitem.setElementName("Cabinet");
 				discoverynewitem.setDniDNID(dnid);
@@ -2885,12 +2836,9 @@ query.executeUpdate();
 					discoverynewitem.setDniSN(arrayList[1].toString());
 					discoverynewitem.setToSerialNumber(arrayList[2].toString());
 					discoverynewitem.setTransSrc(arrayList[3].toString());
-					discoverynewitem.setToNodeId(arrayList[4].toString());
-					discoverynewitem.setToSite(arrayList[5].toString());
+			       	discoverynewitem.setToSite(arrayList[5].toString());
 					discoverynewitem.setToSlot(arrayList[6].toString());
 					discoverynewitem.setItemModel(arrayList[7].toString());
-					discoverynewitem.setToNodeName(arrayList[8].toString());
-					discoverynewitem.setNodePK(arrayList[10].toString());
 					discoverynewitem.setDescription(arrayList[12].toString());	
 					discoverynewitem.setElementName("Antenna");
 					discoverynewitem.setDniDNID(dnid);
@@ -3113,10 +3061,7 @@ query.executeUpdate();
 					discoverynewitem.setTransSrc(arrayList[2].toString());
 					//discoverynewitem.setNodeID(arrayList[3].toString());
 					//discoverynewitem.setNodeName(arrayList[4].toString());
-					discoverynewitem.setToNodeId(arrayList[3].toString());
-					discoverynewitem.setToNodeName(arrayList[4].toString());
 					discoverynewitem.setItemModel(arrayList[5].toString());
-					discoverynewitem.setNodePK(arrayList[6].toString());
 					//discoverynewitem.setDniSIte(arrayList[7].toString());
 					discoverynewitem.setPosition(arrayList[8].toString());
 					//discoverynewitem.setToSlot(arrayList[8].toString());
@@ -3159,11 +3104,8 @@ query.executeUpdate();
 					//discoverynewitem.setFromSlot(arrayList[4].toString());
 					discoverynewitem.setToSlot(arrayList[8].toString());
 					//discoverynewitem.setNodeID(arrayList[3].toString());
-					discoverynewitem.setToNodeId(arrayList[3].toString());
 					//discoverynewitem.setNodeName(arrayList[4].toString());
-					discoverynewitem.setToNodeName(arrayList[4].toString());
 					discoverynewitem.setItemModel(arrayList[5].toString());
-					discoverynewitem.setNodePK(arrayList[6].toString());
 					discoverynewitem.setDniSIte(arrayList[7].toString());
 					//discoverynewitem.setToSite(arrayList[12].toString());
 					discoverynewitem.setPosition(arrayList[8].toString());
@@ -3207,10 +3149,7 @@ query.executeUpdate();
 					//discoverynewitem.setFromSlot(arrayList[4].toString());
 					//discoverynewitem.setToSlot(arrayList[5].toString());
 					//discoverynewitem.setNodeID(arrayList[6].toString());
-					discoverynewitem.setToNodeId(arrayList[3].toString());
-					discoverynewitem.setNodeName(arrayList[5].toString());
 					discoverynewitem.setItemModel(arrayList[6].toString());
-					discoverynewitem.setNodePK(arrayList[7].toString());
 					discoverynewitem.setDniSIte(arrayList[8].toString());
 					discoverynewitem.setToSite(arrayList[9].toString());
 					//discoverynewitem.setPosition(arrayList[13].toString());
@@ -3249,10 +3188,7 @@ query.executeUpdate();
 					discoverynewitem.setDniID(DniID);
 					discoverynewitem.setDniSN(arrayList[1].toString());
 					discoverynewitem.setTransSrc(arrayList[2].toString());
-					discoverynewitem.setNodeID(arrayList[3].toString());
-					discoverynewitem.setNodeName(arrayList[4].toString());
 					discoverynewitem.setItemModel(arrayList[5].toString());
-					discoverynewitem.setNodePK(arrayList[6].toString());
 					discoverynewitem.setDniSIte(arrayList[7].toString());
 					discoverynewitem.setPosition(arrayList[8].toString());
 					discoverynewitem.setDescription(arrayList[9].toString());
@@ -3290,10 +3226,7 @@ query.executeUpdate();
 					discoverynewitem.setDniID(DniID);
 					discoverynewitem.setDniSN(arrayList[1].toString());
 					discoverynewitem.setTransSrc(arrayList[2].toString());
-					discoverynewitem.setNodeID(arrayList[3].toString());
-					discoverynewitem.setNodeName(arrayList[4].toString());
 					discoverynewitem.setItemModel(arrayList[5].toString());
-					discoverynewitem.setNodePK(arrayList[6].toString());
 					discoverynewitem.setDniSIte(arrayList[7].toString());
 					discoverynewitem.setPosition(arrayList[8].toString());
 					discoverynewitem.setDescription(arrayList[9].toString());
@@ -3331,10 +3264,7 @@ query.executeUpdate();
 					discoverynewitem.setDniID(DniID);
 					discoverynewitem.setDniSN(arrayList[1].toString());
 					discoverynewitem.setTransSrc(arrayList[2].toString());
-					discoverynewitem.setNodeID(arrayList[3].toString());
-					discoverynewitem.setNodeName(arrayList[4].toString());
 					discoverynewitem.setItemModel(arrayList[5].toString());
-					discoverynewitem.setNodePK(arrayList[6].toString());
 					discoverynewitem.setDniSIte(arrayList[7].toString());
 					discoverynewitem.setPosition(arrayList[8].toString());
 					discoverynewitem.setDescription(arrayList[9].toString());
@@ -3372,10 +3302,7 @@ query.executeUpdate();
 					discoverynewitem.setDniID(DniID);
 					discoverynewitem.setDniSN(arrayList[1].toString());
 					discoverynewitem.setTransSrc(arrayList[2].toString());
-					discoverynewitem.setNodeID(arrayList[3].toString());
-					discoverynewitem.setNodeName(arrayList[4].toString());
 					discoverynewitem.setItemModel(arrayList[5].toString());
-					discoverynewitem.setNodePK(arrayList[6].toString());
 					discoverynewitem.setDniSIte(arrayList[7].toString());
 					discoverynewitem.setPosition(arrayList[8].toString());
 					discoverynewitem.setDescription(arrayList[9].toString());
@@ -3413,10 +3340,7 @@ query.executeUpdate();
 					discoverynewitem.setDniID(DniID);
 					discoverynewitem.setDniSN(arrayList[1].toString());
 					discoverynewitem.setTransSrc(arrayList[2].toString());
-					discoverynewitem.setNodeID(arrayList[3].toString());
-					discoverynewitem.setNodeName(arrayList[4].toString());
 					discoverynewitem.setItemModel(arrayList[5].toString());
-					discoverynewitem.setNodePK(arrayList[6].toString());
 					discoverynewitem.setDniSIte(arrayList[7].toString());
 					//discoverynewitem.setPosition(arrayList[8].toString());
 					discoverynewitem.setDescription(arrayList[8].toString());
@@ -3573,10 +3497,7 @@ getAntennaMaintenance = "Select nodeAntenna.FROM_TRANS_ID, nodeAntennaTrans.FROM
 					discoverynewitem.setDniID(DniID);
 					discoverynewitem.setDniSN(arrayList[1].toString());
 					discoverynewitem.setTransSrc(arrayList[2].toString());
-					discoverynewitem.setNodeID(arrayList[3].toString());
-					discoverynewitem.setNodeName(arrayList[4].toString());
 					discoverynewitem.setItemModel(arrayList[5].toString());
-					discoverynewitem.setNodePK(arrayList[6].toString());
 					discoverynewitem.setDniSIte(arrayList[7].toString());
 					discoverynewitem.setPosition(arrayList[8].toString());
 					discoverynewitem.setDescription(arrayList[9].toString());
@@ -3621,11 +3542,7 @@ getAntennaMaintenance = "Select nodeAntenna.FROM_TRANS_ID, nodeAntennaTrans.FROM
 					discoverynewitem.setTransSrc(arrayList[3].toString());
 					discoverynewitem.setFromSlot(arrayList[4].toString());
 					discoverynewitem.setToSlot(arrayList[5].toString());
-					discoverynewitem.setNodeID(arrayList[6].toString());
-					discoverynewitem.setToNodeId(arrayList[7].toString());
-					discoverynewitem.setNodeName(arrayList[8].toString());
-					discoverynewitem.setItemModel(arrayList[9].toString());
-					discoverynewitem.setNodePK(arrayList[10].toString());
+		     		discoverynewitem.setItemModel(arrayList[9].toString());
 					discoverynewitem.setDniSIte(arrayList[11].toString());
 					discoverynewitem.setToSite(arrayList[12].toString());
 					discoverynewitem.setPosition(arrayList[13].toString());
@@ -3672,11 +3589,7 @@ getAntennaMaintenance = "Select nodeAntenna.FROM_TRANS_ID, nodeAntennaTrans.FROM
 					discoverynewitem.setTransSrc(arrayList[3].toString());
 					discoverynewitem.setFromSlot(arrayList[4].toString());
 					discoverynewitem.setToSlot(arrayList[5].toString());
-					discoverynewitem.setNodeID(arrayList[6].toString());
-					discoverynewitem.setToNodeId(arrayList[7].toString());
-					discoverynewitem.setNodeName(arrayList[8].toString());
 					discoverynewitem.setItemModel(arrayList[9].toString());
-					discoverynewitem.setNodePK(arrayList[10].toString());
 					discoverynewitem.setDniSIte(arrayList[11].toString());
 					discoverynewitem.setToSite(arrayList[12].toString());
 					discoverynewitem.setDescription(arrayList[13].toString());
@@ -3748,13 +3661,13 @@ getAntennaMaintenance = "Select nodeAntenna.FROM_TRANS_ID, nodeAntennaTrans.FROM
 
 
 // APPROVED BY project manager or asset unit
-public void ApprovalProjectandAsset(String trans_Type, String getApproval, String dnStatus, String AssetRegID, String ArCode, String PurchaseOrId, String itmcode, String itmname, String WorkOrder, String DniID, String toSiteID, String supplierID, String supplierName, String towareID, String towareName, String serialnb, float dnRate, String itemModel, String itemPartNb, String toSite, String toSerialNumber, String toNodeId, String toNodeName, String toSlot, String nodeID, String nodeName, String Site, String fromSlot, String SiteID) {
+public void ApprovalProjectandAsset(String trans_Type, String getApproval, String dnStatus, String AssetRegID, String ArCode, String PurchaseOrId, String itmcode, String itmname, String WorkOrder, String DniID, String toSiteID, String supplierID, String supplierName, String towareID, String towareName, String serialnb, float dnRate, String itemModel, String itemPartNb, String toSite, String toSerialNumber, String toSlot, String Site, String fromSlot, String SiteID) {
 	
 	Query getpoItemID = session.createSQLQuery("select PO_ITEM_ID from PURCHASE_ORDER_ITEM where ITEM_CODE = '"+itmcode+"' and PO_ID = '"+PurchaseOrId+"'");
 	getpoItemID.executeUpdate();
 	String poItemID = (String) getpoItemID.uniqueResult();
 	
-	AssetNewNode(trans_Type, getApproval, dnStatus,AssetRegID, ArCode, PurchaseOrId,itmcode,itmname,WorkOrder,DniID,toSiteID,supplierID,supplierName,towareID,towareName,serialnb,dnRate,itemModel,itemPartNb,toSite,toSerialNumber,toNodeId,toNodeName,toSlot,nodeID,nodeName,Site,fromSlot,SiteID);
+	AssetNewNode(trans_Type, getApproval, dnStatus,AssetRegID, ArCode, PurchaseOrId,itmcode,itmname,WorkOrder,DniID,toSiteID,supplierID,supplierName,towareID,towareName,serialnb,dnRate,itemModel,itemPartNb,toSite,toSerialNumber,toSlot,Site,fromSlot,SiteID);
 	
 
 	if (AssetRegID == null) {
@@ -3795,8 +3708,6 @@ public void ApprovalProjectandAsset(String trans_Type, String getApproval, Strin
 		assetregistry.setItemModel(itemModel);
 		assetregistry.setItemPartNumber(itemPartNb);
 		assetregistry.setItemSN(toSerialNumber);
-		assetregistry.setNodeID(toNodeId);
-		assetregistry.setNodeName(toNodeName);
 		assetregistry.setArStatus("Running");
 		assetregistry.setPoItemId(poItemID);
 		assetregistry.setArsiteId(AR_Site_ID);
@@ -3872,8 +3783,6 @@ public void ApprovalProjectandAsset(String trans_Type, String getApproval, Strin
 		assetRegSerialNumber.setSerialNumber(toSerialNumber);
 		assetRegSerialNumber.setModel(itemModel);
 		assetRegSerialNumber.setPartNumber(itemPartNb);
-		assetRegSerialNumber.setSnodeID(toNodeId);
-		assetRegSerialNumber.setSnodeName(toNodeName);
 		assetRegSerialNumber.setSite(toSite);
 		assetRegSerialNumber.setPosition(toSlot);
 		assetRegSerialNumber.setArID(ArCode);
@@ -3915,7 +3824,7 @@ if (AssetRegID != null) {
 	ArCode = AssetRegID;
 	
 	query = session.createSQLQuery("update ASSET_REGISTRY SET ITEM_CODE = '"+itmcode+"',LAST_MODIFIED_DATE = sysdate,ITEM_NAME = '"+itmname+"',PO_ID = '"+PurchaseOrId+"',"
-			+ "SUPPLIER_ID = '"+supplierID+"', SUPPLIER_NAME = '"+supplierName+"',ITEM_MODEL = '"+itemModel+"',ITEM_PART_NUMBER = '"+itemPartNb+"',ITEM_SN = '"+toSerialNumber+"',NODE_ID = '"+toNodeId+"',NODE_NAME = '"+toNodeName+"',PO_ITEM_ID = '"+poItemID+"' WHERE AR_ID = :param1 ");
+			+ "SUPPLIER_ID = '"+supplierID+"', SUPPLIER_NAME = '"+supplierName+"',ITEM_MODEL = '"+itemModel+"',ITEM_PART_NUMBER = '"+itemPartNb+"',ITEM_SN = '"+toSerialNumber+"', PO_ITEM_ID = '"+poItemID+"' WHERE AR_ID = :param1 ");
 	query.setParameter("param1", ArCode);
 	query.executeUpdate();
 	
@@ -4015,9 +3924,8 @@ if (AssetRegID != null) {
 	
 	// Add to AR_SERIAL_NUMBER table
 	
-	query = session.createQuery("select t.serialId from ArSerialNumber t where t.arID = :param1 and snodeID = :param2");
+	query = session.createQuery("select t.serialId from ArSerialNumber t where t.arID = :param1 ");
 	query.setParameter("param1", ArCode);
-	query.setParameter("param2", toNodeId);
 	String AR_SerialID = (String) query.uniqueResult();
 	
 	
@@ -4031,7 +3939,7 @@ if (AssetRegID != null) {
 		 //AR_SerialID = "ARSNUM_" + year + "_" + appConfig.getSequenceNbr(31);
 	}
 	
-	query = session.createSQLQuery("update AR_SERIAL_NUMBER SET SERIAL_ID = '"+AR_SerialID+"',SERIAL_NUMBER = '"+toSerialNumber+"',MODEL = '"+itemModel+"',PART_NUMBER = '"+itemPartNb+"',NODE_ID = '"+toNodeId+"',NODE_NAME = '"+toNodeName+"',SITE = '"+toSite+"',POSITION = '"+toSlot+"' "
+	query = session.createSQLQuery("update AR_SERIAL_NUMBER SET SERIAL_ID = '"+AR_SerialID+"',SERIAL_NUMBER = '"+toSerialNumber+"',MODEL = '"+itemModel+"',PART_NUMBER = '"+itemPartNb+"', SITE = '"+toSite+"',POSITION = '"+toSlot+"' "
 			+ " WHERE AR_ID = :param1 ");
 	query.setParameter("param1", ArCode);
 	query.executeUpdate();
@@ -4045,7 +3953,7 @@ if (AssetRegID != null) {
 
 // APPROVED BY Finance
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public void ApprovalFinance(String trans_Type, String getApproval, String dnStatus, String AssetRegID, String ArCode, String PurchaseOrId, String itmcode, String itmname, String WorkOrder, String DniID, String toSiteID, String supplierID, String supplierName, String towareID, String towareName, String serialnb, float dnRate, String itemModel, String itemPartNb, String toSite, String toSerialNumber, String toNodeId, String toNodeName, String toSlot, String nodeID, String nodeName, String Site, String fromSlot, String SiteID) {
+public void ApprovalFinance(String trans_Type, String getApproval, String dnStatus, String AssetRegID, String ArCode, String PurchaseOrId, String itmcode, String itmname, String WorkOrder, String DniID, String toSiteID, String supplierID, String supplierName, String towareID, String towareName, String serialnb, float dnRate, String itemModel, String itemPartNb, String toSite, String toSerialNumber, String toSlot, String Site, String fromSlot, String SiteID) {
 	
 
 
@@ -4156,9 +4064,7 @@ public void ApprovalFinance(String trans_Type, String getApproval, String dnStat
 			FixedAssetReg.setItemModel(itemModel);
 			FixedAssetReg.setItemPartNb(itemPartNb);
 			FixedAssetReg.setItemSN(toSerialNumber);
-			FixedAssetReg.setNodeID(toNodeId);
-			FixedAssetReg.setNodeName(toNodeName);
-			FixedAssetReg.setFarStatus("Running");
+		    FixedAssetReg.setFarStatus("Running");
 			FixedAssetReg.setPoItemId(poItemID);
 			FixedAssetReg.setFarsiteId(FarSiteID);
 			session.saveOrUpdate(FixedAssetReg);
@@ -4250,8 +4156,6 @@ session.saveOrUpdate(FixedAssetRegNode);
 			fixedAssetRegSerialNumber.setInputSerialNb(toSerialNumber);
 			fixedAssetRegSerialNumber.setInputModel(itemModel);
 			fixedAssetRegSerialNumber.setInputpartNumber(itemPartNb);
-			fixedAssetRegSerialNumber.setInputNodeID(toNodeId);
-			fixedAssetRegSerialNumber.setInputNodeName(toNodeName);
 			fixedAssetRegSerialNumber.setInputsite(toSite);
 			fixedAssetRegSerialNumber.setInputPosition(toSlot);
 			fixedAssetRegSerialNumber.setFarID(FarCode);
@@ -4416,7 +4320,7 @@ session.saveOrUpdate(FixedAssetRegNode);
 
 
 //APPROVED BY Operation manager
-public void ApprovalOperational(String trans_Type, String getApproval, String dnStatus, String AssetRegID, String ArCode, String PurchaseOrId, String itmcode, String itmname, String WorkOrder, String DniID, String toSiteID, String supplierID, String supplierName, String towareID, String towareName, String serialnb, float dnRate, String itemModel, String itemPartNb, String toSite, String toSerialNumber, String toNodeId, String toNodeName, String toSlot, String nodeID, String nodeName, String Site, String fromSlot, String SiteID) {
+public void ApprovalOperational(String trans_Type, String getApproval, String dnStatus, String AssetRegID, String ArCode, String PurchaseOrId, String itmcode, String itmname, String WorkOrder, String DniID, String toSiteID, String supplierID, String supplierName, String towareID, String towareName, String serialnb, float dnRate, String itemModel, String itemPartNb, String toSite, String toSerialNumber, String toSlot, String Site, String fromSlot, String SiteID) {
 	
 
 
@@ -4447,12 +4351,10 @@ public void ApprovalOperational(String trans_Type, String getApproval, String dn
 				//Add to Table AR_SERIAL_NUMBER
 				
 				query = session.createQuery(" select serialId from ArSerialNumber where arID = :param1 and serialNumber = :param2 "
-						+ " and snodeID = :param3 and snodeName = :param4");
+						);
 				
 				query.setParameter("param1", ARid);
 				query.setParameter("param2", serialnb);
-				query.setParameter("param3", toNodeId);
-				query.setParameter("param4", toNodeName);
 				String checkIfEx = (String) query.uniqueResult();
 				String arserialID="";
 				if(checkIfEx != null) {
@@ -4475,8 +4377,6 @@ public void ApprovalOperational(String trans_Type, String getApproval, String dn
 					assetRegSerialNumber.setSerialNumber(toSerialNumber);
 					assetRegSerialNumber.setModel(itemModel);
 					assetRegSerialNumber.setPartNumber(itemPartNb);
-					assetRegSerialNumber.setSnodeID(toNodeId);
-					assetRegSerialNumber.setSnodeName(toNodeName);
 					assetRegSerialNumber.setSite(toSite);
 					assetRegSerialNumber.setArID(ARid);
 					assetRegSerialNumber.setPosition(toSlot);
@@ -4538,13 +4438,11 @@ public void ApprovalOperational(String trans_Type, String getApproval, String dn
 			// Add to FAR_SERIAL_NUMBER table
 
 				query = session.createQuery(" select serialId from FarSerialNumber where farID = :param1 and inputSerialNb = :param2 "
-			+ " and inputNodeID = :param3 and inputNodeName = :param4");
+			);
 
 				query.setParameter("param1", FARid);
 				query.setParameter("param2", serialnb);
-				query.setParameter("param3", toNodeId);
-				query.setParameter("param4", toNodeName);
-			String farSerialID = (String) query.uniqueResult();
+				String farSerialID = (String) query.uniqueResult();
 			String farserialID="";
 			if(farSerialID != null) {
 			 farserialID= farSerialID;
@@ -4570,8 +4468,6 @@ public void ApprovalOperational(String trans_Type, String getApproval, String dn
 			fixedAssetRegSerialNumber.setInputSerialNb(toSerialNumber);
 			fixedAssetRegSerialNumber.setInputModel(itemModel);
 			fixedAssetRegSerialNumber.setInputpartNumber(itemPartNb);
-			fixedAssetRegSerialNumber.setInputNodeID(toNodeId);
-			fixedAssetRegSerialNumber.setInputNodeName(toNodeName);
 			fixedAssetRegSerialNumber.setInputsite(toSite);
 			fixedAssetRegSerialNumber.setFarID(FARid);
 			fixedAssetRegSerialNumber.setInputPosition(toSlot);
@@ -4581,11 +4477,9 @@ public void ApprovalOperational(String trans_Type, String getApproval, String dn
 			// Add to table FAR_NODE
 
 			query = session.createQuery(" select nodefarId from FarNode where farID = :param1  "
-			+ " and nodeID = :param2 and nodeName = :param3");
+			);
 
 			query.setParameter("param1",FARid);
-			query.setParameter("param2", toNodeId);
-			query.setParameter("param3", toNodeName);
 			String farNodeID = (String) query.uniqueResult();
 			String FAR_NodeID = "";
 			if(farNodeID != null) {
@@ -4605,8 +4499,6 @@ public void ApprovalOperational(String trans_Type, String getApproval, String dn
 			FarNode farNode = new FarNode();
 			
 			farNode.setNodefarId(FAR_NodeID);
-			farNode.setNodeID(toNodeId);
-			farNode.setNodeName(toNodeName);
 			farNode.setFarID(FARid);
 
 
@@ -4632,13 +4524,10 @@ public void ApprovalOperational(String trans_Type, String getApproval, String dn
 		{
 			
 		//Update AR_SERIAL_NUMBER
-		Query query = session.createSQLQuery("update AR_SERIAL_NUMBER set NODE_NAME = :param1, NODE_ID = :param2, POSITION = :param3, SITE = :param4 where NODE_ID = :param5 and "
+		Query query = session.createSQLQuery("update AR_SERIAL_NUMBER set  POSITION = :param3, SITE = :param4 where  "
 		+ "SERIAL_NUMBER = :param6 and POSITION = :param7 and SITE = :param8");
-		query.setParameter("param1", toNodeName);
-		query.setParameter("param2", toNodeId);
 		query.setParameter("param3", toSlot);
 		query.setParameter("param4", toSite);
-		query.setParameter("param5", nodeID );
 		query.setParameter("param6", serialnb);
 		query.setParameter("param7", fromSlot);
 		query.setParameter("param8", Site);
@@ -4653,13 +4542,10 @@ public void ApprovalOperational(String trans_Type, String getApproval, String dn
 		
 
 		//Update FAR_SERIAL_NUMBER
-		query = session.createSQLQuery("update FAR_SERIAL_NUMBER set NODE_NAME = :param1, NODE_ID = :param2, POSITION = :param3, SITE = :param4 where NODE_ID = :param5 and "
+		query = session.createSQLQuery("update FAR_SERIAL_NUMBER set POSITION = :param3, SITE = :param4 where  "
 		+ "SERIAL_NUMBER = :param6 and POSITION = :param7 and SITE = :param8");
-		query.setParameter("param1", toNodeName);
-		query.setParameter("param2", toNodeId);
 		query.setParameter("param3", toSlot);
 		query.setParameter("param4", toSite);
-		query.setParameter("param5", nodeID );
 		query.setParameter("param6", serialnb);
 		query.setParameter("param7", fromSlot);
 		query.setParameter("param8", Site);
@@ -4676,9 +4562,8 @@ public void ApprovalOperational(String trans_Type, String getApproval, String dn
 		//Update AR_NODE
 		
 		query = session.createQuery("delete from ArNode t where t.arID = :param1");
-
-	query.setParameter("param1", ArCode);
-	query.executeUpdate();
+     	query.setParameter("param1", ArCode);
+    	query.executeUpdate();
 	
 	String AR_NodeID;
     query = session.createSQLQuery("select TO_NODE_ID,TO_NODE_NAME,TO_NODE_TYPE FROM DISCOVER_NEW_ITEM_Node WHERE DNI_ID=:param1");
@@ -4925,7 +4810,7 @@ query.executeUpdate();
 
 
 //APPROVED BY project manager or asset unit
-public void AssetNewNode(String trans_Type, String getApproval, String dnStatus, String AssetRegID, String ArCode, String PurchaseOrId, String itmcode, String itmname, String WorkOrder, String DniID, String toSiteID, String supplierID, String supplierName, String towareID, String towareName, String serialnb, float dnRate, String itemModel, String itemPartNb, String toSite, String toSerialNumber, String toNodeId, String toNodeName, String toSlot, String nodeID, String nodeName, String Site, String fromSlot, String SiteID) {
+public void AssetNewNode(String trans_Type, String getApproval, String dnStatus, String AssetRegID, String ArCode, String PurchaseOrId, String itmcode, String itmname, String WorkOrder, String DniID, String toSiteID, String supplierID, String supplierName, String towareID, String towareName, String serialnb, float dnRate, String itemModel, String itemPartNb, String toSite, String toSerialNumber, String toSlot, String Site, String fromSlot, String SiteID) {
 	
 
 	
