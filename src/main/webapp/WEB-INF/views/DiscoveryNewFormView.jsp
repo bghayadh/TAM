@@ -449,10 +449,6 @@ max-width: 100%;
 						                <th><div style="width:200px">Approval Action</div></th>
 						                <th>PO</th>
 						                <th>WO</th>
-						                <th>From Node ID</th>
-						                <th>From Node Name</th>
-						                <th>To Node ID</th>
-						                <th>To Node Name</th>
 						                <th>From Slot</th>
 						                <th>To Slot</th>
 						                <th>Qty</th>
@@ -823,51 +819,10 @@ max-width: 100%;
 	</div>
 	</div>
 	</div>
-		<div class="container-fluid">
-				<div class="row">				     
-	<div class="col-6">
-		<div class="form-group">
-			<div class="input-group-prepend">
-				<span class="input-group-text" >From Node ID</span>
-				<input type="text" id="popupFromNodeID" class="form-control text-input" value=""  style="width:675px; height:37px;" />		
-			 </div>
-		</div>
-	 </div>
-
-	<div class="col-6">
-		<div class="form-group">
-			<div class="input-group-prepend" style="width:auto;">
-				<span class="input-group-text">From Node Name</span>
-				<input type="text" id="popupFromNodeName" class="form-control text-input"  value=""    />		
-			</div>
-		</div>
-	</div> 
-</div> </div>
+	
 								      
 
-<div class="container-fluid">
-	<div class="row">
-		<div class="col-sm-6">
-			<div class="form-group">
-				<div class="input-group-prepend">
-					<span class="input-group-text" >To Node ID</span>
-					<input type="text" id="popupToNodeID" class="form-control text-input"  value="" style="width:675px;"  />
-				</div>
-			</div>
-	    </div>
-	
-	
-		<div class="col-sm-6">
-			<div class="form-group">
-				<div class="input-group-prepend">
-					<span class="input-group-text" >To Node Name</span>
-					<input type="text" id="popupToNodeName" class="form-control text-input"  value="" style="width:675px;"  />
-					<input type="text" id="popupAlcFlg"  class="form-control text-input"  value="" style="width:675px;" hidden />
-				</div>
-			</div>
-	    </div>
-	</div>
-	</div>
+
 	
 	<div class="container-fluid">
 	<div class="row">
@@ -1342,10 +1297,6 @@ function getAllItemPartNbs()
 
 
 				fromsiteIDVal = $(obj).parent().parent().children('td[name="siteID"]').children('input').val();
-				fromNodeID = $(obj).parent().parent().children('td[name="itemNodeID"]').children('input').val();
-				fromNodeName = $(obj).parent().parent().children('td[name="itemNodeName"]').children('input').val();
-				toNodeID = $(obj).parent().parent().children('td[name="toNodeID"]').children('input').val();
-				toNodeName = $(obj).parent().parent().children('td[name="itemToNodeName"]').children('input').val();
 				fromSlot = $(obj).parent().parent().children('td[name="fromSlot"]').children('input').val();
 				toSlot = $(obj).parent().parent().children('td[name="toSlot"]').children('input').val();
 
@@ -1399,22 +1350,7 @@ function getAllItemPartNbs()
 			{
 				missingfields += " 'toSlot'";
 			}	
-			if(toNodeID == "")
-			{
-				missingfields += " 'toNodeID'";
-			}
-			if(toNodeName == "")
-			{
-				missingfields += " 'toNodeName'";
-			}
-			if(fromNodeID == "")
-			{
-				missingfields += " 'fromNodeID'";
-			}
-			if(fromNodeName == "")
-			{
-				missingfields += " \'fromNodeName\'";
-			}
+			
 			if(fromsiteIDVal == "")
 			{
 				missingfields += " 'fromsiteIDVal'";
@@ -1458,10 +1394,6 @@ function getAllItemPartNbs()
 				
 
 				fromsiteIDVal = $("#popupFromSite").val();
-				fromNodeID = $("#popupFromNodeID").val();
-				fromNodeName = $("#popupFromNodeName").val();
-				toNodeID = $("#popupToNodeID").val();
-				toNodeName = $("#popupToNodeName").val();
 				fromSlot = $("#popupFromSlot").val();
 				toSlot = $("#popupToSlot").val();
 
@@ -1522,22 +1454,7 @@ function getAllItemPartNbs()
 					{
 						missingfields += " 'toSlot'";
 					}	
-					if(toNodeID == "")
-					{
-						missingfields += " 'toNodeID'";
-					}
-					if(toNodeName == "")
-					{
-						missingfields += " 'toNodeName'";
-					}
-					if(fromNodeID == "")
-					{
-						missingfields += " 'fromNodeID'";
-					}
-					if(fromNodeName == "")
-					{
-						missingfields += " \'fromNodeName\'";
-					}
+				
 					if(fromsiteIDVal == "")
 					{
 						missingfields += " 'fromsiteIDVal'";
@@ -2063,11 +1980,6 @@ function getAllItemPartNbs()
 						     dictObj.itemNetRate = $(this).parent().parent().children('td[name="itemNetRate"]').children('input').val();
 						     dictObj.itemTotal = $(this).parent().parent().children('td[name="itemTotal"]').children('input').val();
 						     dictObj.itemTotalAt = $(this).parent().parent().children('td[name="itemTotalAt"]').children('input').val();
-						     dictObj.itemNodeID = $(this).parent().parent().children('td[name="itemNodeID"]').children('input').val();
-						     dictObj.toNodeID = $(this).parent().parent().children('td[name="toNodeID"]').children('input').val();
-						     dictObj.itemNodeName = $(this).parent().parent().children('td[name="itemNodeName"]').children('input').val();
-						     dictObj.itemToNodeName = $(this).parent().parent().children('td[name="itemToNodeName"]').children('input').val();
-						     dictObj.alcflg = $(this).parent().parent().children('td[name="itemToNodeName"]').children('input[name="alcflg"]').val();
 						     dictObj.fromSlot = $(this).parent().parent().children('td[name="fromSlot"]').children('input').val();
 						     dictObj.itemToSlot = $(this).parent().parent().children('td[name="toSlot"]').children('input').val();
 						     dictObj.siteID = $(this).parent().parent().children('td[name="siteID"]').children('input').val();
