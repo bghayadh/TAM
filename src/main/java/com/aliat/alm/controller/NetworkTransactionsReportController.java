@@ -1,11 +1,15 @@
 package com.aliat.alm.controller;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Notify;
+import com.aliat.alm.models.RevenueToAssetRatioReport;
 import com.aliat.alm.services.LoginServices;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -48,6 +53,15 @@ public class NetworkTransactionsReportController {
 						" FROM NETWORK_TRANSACTION a INNER JOIN NODE_TRANSACTIONS b on a.NODE_TRANS_ID=b.NODE_TRANS_ID" + 
 						" WHERE a.PARSING_DATE between systimestamp - INTERVAL '7' DAY and systimestamp" + 
 						" ORDER BY a.element_id DESC");
+				
+				/*query = session.createNativeQuery(
+						"SELECT c.site as site,c.WARE_ID as wareID,c.SITE_ID as siteID,c.WARE_NAME as siteName,c.LONGITUDE as longitude,c.LATITUDE as latitude, " + 
+						"a.ELEMENT_ID,a.ELEMENT,a.ALM_TRANS_TYPE,a.DISCOVERED_TRANS_TYPE,TO_CHAR(a.PARSING_DATE,'DD-MM-YYYY HH:mm:ss') as startdate,a.FROM_SITE,a.TO_SITE, " + 
+						" b.FROM_NODE_ID,b.TO_NODE_ID,b.FROM_NODE_TYPE,b.TO_NODE_TYPE,MODEL,a.MAC_ADDRESS,a.SERIAL_NUMBER,a.FROM_CIRCLE,a.TO_CIRCLE,a.APPROVED_BY,a.MODIFIED_BY,a.SENT_TO_ALM,a.ALM_APPROVAL_STATUS " + 
+						" FROM NETWORK_TRANSACTION a INNER JOIN NODE_TRANSACTIONS b on a.NODE_TRANS_ID=b.NODE_TRANS_ID " + 
+						" LEFT JOIN WAREHOUSE c ON c.SITE_ID = a.TO_SITE " + 
+						" WHERE a.PARSING_DATE between systimestamp - INTERVAL '7' DAY and systimestamp " + 
+						" ORDER BY a.element_id DESC ");*/
 
 				model.addAttribute("TransactionsGrid", mapper.writeValueAsString(query.getResultList()));
 				
@@ -59,7 +73,7 @@ public class NetworkTransactionsReportController {
 						" from NETWORK_TRANSACTION" + 
 						" WHERE PARSING_DATE between systimestamp - INTERVAL '7' DAY and systimestamp");
 				Object[] statisticalResult = (Object[]) query.getResultList().get(0);
-				System.out.println(mapper.writeValueAsString(statisticalResult));
+				//System.out.println(mapper.writeValueAsString(statisticalResult));
 				model.addAttribute("totalbnrTrans", statisticalResult[4]);
 				model.addAttribute("newElements", statisticalResult[0]);
 				model.addAttribute("disappearedElements", statisticalResult[1]);
@@ -71,7 +85,7 @@ public class NetworkTransactionsReportController {
 						+ " FROM NETWORK_TRANSACTION "
 						+ " WHERE PARSING_DATE between systimestamp - INTERVAL '7' DAY and systimestamp "
 						+ " order by parsing_date desc FETCH FIRST 1 ROW ONLY");
-				System.out.println(mapper.writeValueAsString(query.uniqueResult()));
+				//System.out.println(mapper.writeValueAsString(query.uniqueResult()));
 				if(query.uniqueResult() == null) {
 					model.addAttribute("lastscanDate", "N/A");
 				}else {
@@ -126,11 +140,137 @@ public class NetworkTransactionsReportController {
 			} else {
 				EndDate = EndDate.replace(" AM", "").trim();
 			}
+			
+			String strtEndCheckbox = request.getParameter("strtEndCheckbox");
+			String circleRangeCheckbox = request.getParameter("circleRangeCheckbox");
+			String startLong = request.getParameter("startLong");
+			String startLat = request.getParameter("startLat");
+			String endLong = request.getParameter("endLong");
+			String endLat = request.getParameter("endLat");
+			String longitude = request.getParameter("longitude");
+			String latitude = request.getParameter("latitude");
+			String radius = request.getParameter("radius");
+			double distance = 0.0;
+			
+			List<Object[]> siteTempList = new ArrayList<Object[]>();
+			List<RevenueToAssetRatioReport> listCircleRange = new ArrayList<RevenueToAssetRatioReport>();
+			List<RevenueToAssetRatioReport> RevenueToAssetRatioList = new ArrayList<RevenueToAssetRatioReport>();
 
 			try {
 				session = AlmDbSession.getInstance().getSession();
 				notifications.headerNotifications(session, model);
-				query = session.createNativeQuery(
+				String str = "SELECT c.site as site,c.WARE_ID as wareID,c.SITE_ID as siteID,c.WARE_NAME as siteName,c.LONGITUDE as longitude,c.LATITUDE as latitude,"
+						+ " a.ELEMENT_ID,a.ELEMENT,a.ALM_TRANS_TYPE,a.DISCOVERED_TRANS_TYPE,TO_CHAR(a.PARSING_DATE,'DD-MM-YYYY HH:mm:ss') as startdate,a.FROM_SITE,a.TO_SITE," + 
+						" b.FROM_NODE_ID,b.TO_NODE_ID,b.FROM_NODE_TYPE,b.TO_NODE_TYPE,MODEL,a.MAC_ADDRESS,a.SERIAL_NUMBER,a.FROM_CIRCLE,a.TO_CIRCLE,a.APPROVED_BY,a.MODIFIED_BY,a.SENT_TO_ALM,a.ALM_APPROVAL_STATUS" + 
+						" FROM NETWORK_TRANSACTION a LEFT JOIN NODE_TRANSACTIONS b on a.node_trans_id=b.node_trans_id "
+						+" LEFT JOIN WAREHOUSE c ON c.SITE_ID = a.TO_SITE " 
+						+ "WHERE a.PARSING_DATE between TO_DATE('" + StartDate+ "','MM/DD/YYYY HH24:MI:SS') " 
+						+ "and TO_DATE('" + EndDate + "','MM/DD/YYYY HH24:MI:SS')" ;
+				// Include the start/end long and lat in where condition in case of strt/end
+				// coordinate checkbox is checked
+				if (StringUtils.equalsIgnoreCase(strtEndCheckbox, "true")) {
+
+					// start longitude is entered && end longitude is empty
+					if (startLong != null && !startLong.equalsIgnoreCase("")
+							&& (endLong == null || endLong.equalsIgnoreCase(""))) {
+						str = str + " and to_number(SUBSTR(C.LONGITUDE,1,6)) > " + startLong;
+						str = str + " and to_number(SUBSTR(C.LONGITUDE,1,6)) > " + startLong;
+					}
+
+					// End longitude is entered && start longitude is empty
+					else if (endLong != null && !endLong.equalsIgnoreCase("")
+							&& (startLong == null || startLong.equalsIgnoreCase(""))) {
+						str = str + " and to_number(SUBSTR(C.LONGITUDE,1,6)) < " + endLong;
+					}
+
+					// Start and end longitude are both entered
+					else if (startLong != null && endLong != null) {
+						String startLng;
+						String endLng;
+
+						if (startLong != null && startLong.length() > 0
+								&& (endLong != null && endLong.length() > 0)) {
+							if (Double.parseDouble(startLong) < Double.parseDouble(endLong)) {
+								startLng = startLong;
+								endLng = endLong;
+							} else {
+								startLng = endLong;
+								endLng = startLong;
+							}
+							str = str + " and to_number(SUBSTR(C.LONGITUDE,1,6)) > " + startLng;
+							str = str + " and to_number(SUBSTR(C.LONGITUDE,1,6)) < " + endLng;
+							
+						}
+					}
+
+					// start latitude is entered && end latitude is empty
+					if (startLat != null && !startLat.equalsIgnoreCase("")
+							&& (endLat == null || endLat.equalsIgnoreCase(""))) {
+						str = str + " and to_number(SUBSTR(C.LATITUDE,1,6)) > " + startLat;
+
+					}
+
+					// start latitude is empty && end latitude is entered
+					else if (endLat != null && !endLat.equalsIgnoreCase("")
+							&& (startLat == null || startLat.equalsIgnoreCase(""))) {
+						str = str + " and to_number(SUBSTR(C.LATITUDE,1,6)) < " + endLat;
+
+					}
+					// start && end latitude are both entered
+					else if (startLat != null && endLat != null) {
+						String startlatitude;
+						String endLatitude;
+
+						if (startLat != null && startLat.length() > 0 && (endLat != null && endLat.length() > 0)) {
+							if (Double.parseDouble(startLat) < Double.parseDouble(endLat)) {
+								startlatitude = startLat;
+								endLatitude = endLat;
+
+							} else {
+								startlatitude = endLat;
+								endLatitude = startLat;
+
+							}
+							str = str + " and to_number(SUBSTR(C.LATITUDE,1,6)) > " + startlatitude;
+							str = str + " and to_number(SUBSTR(C.LATITUDE,1,6)) < " + endLatitude;
+							
+							
+						}
+					}
+
+				} // end of checked strt/end coordinate checkbox
+				str +=" ORDER BY a.PARSING_DATE DESC ";
+				query = session.createNativeQuery(str);
+				siteTempList = query.list(); // To use it in circle range calculation
+				
+				
+				// If circle range is checked
+				if (StringUtils.equalsIgnoreCase(circleRangeCheckbox, "true")) {
+
+					if ((radius != null && !radius.equalsIgnoreCase("") && Double.parseDouble(radius) > 0)
+							&& (longitude != null && !longitude.equalsIgnoreCase(""))
+							&& (latitude != null && !latitude.equalsIgnoreCase(""))) {
+
+						for (int i = 0; i < RevenueToAssetRatioList.size(); i++) {
+							distance = haversineMethod(Double.parseDouble(latitude), Double.parseDouble(longitude),
+									Double.valueOf(siteTempList.get(i)[6].toString()),
+									Double.valueOf(siteTempList.get(i)[5].toString()));
+							
+							if (distance <= Double.parseDouble(radius)) {
+								listCircleRange.add(RevenueToAssetRatioList.get(i));
+							}
+						}
+						
+						rtn.put("TransactionsGrid", listCircleRange);
+					}
+
+				}
+				else {
+					rtn.put("TransactionsGrid", query.getResultList());
+				}
+				//System.out.println(" TransactionsGrid "+mapper.writeValueAsString(query.getResultList()));
+				
+				/*query = session.createNativeQuery(
 						"SELECT a.ELEMENT_ID,a.ELEMENT,a.ALM_TRANS_TYPE,a.DISCOVERED_TRANS_TYPE,TO_CHAR(a.PARSING_DATE,'DD-MM-YYYY HH:mm:ss') as startdate,a.FROM_SITE,a.TO_SITE," + 
 						" b.FROM_NODE_ID,b.TO_NODE_ID,b.FROM_NODE_TYPE,b.TO_NODE_TYPE,MODEL,a.MAC_ADDRESS,a.SERIAL_NUMBER,a.FROM_CIRCLE,a.TO_CIRCLE,a.APPROVED_BY,a.MODIFIED_BY,a.SENT_TO_ALM,a.ALM_APPROVAL_STATUS" + 
 						" FROM NETWORK_TRANSACTION a LEFT JOIN NODE_TRANSACTIONS b on a.node_trans_id=b.node_trans_id "
@@ -138,7 +278,7 @@ public class NetworkTransactionsReportController {
 						+ "and TO_DATE('" + EndDate + "','MM/DD/YYYY HH24:MI:SS')" + " ORDER BY a.PARSING_DATE DESC");
 				System.out.println(mapper.writeValueAsString(query.getResultList()));
 				rtn.put("TransactionsGrid", query.getResultList());
-				
+				*/
 				
 				query = session.createNativeQuery("select nvl(sum (case when DISCOVERED_TRANS_TYPE LIKE '%NEW%' then 1 else 0 end),0) as newelements," + 
 						"nvl(sum (case when (DISCOVERED_TRANS_TYPE LIKE'%DISAPPEARED%') then 1 else 0 end),0) as disappeared," + 
@@ -150,7 +290,7 @@ public class NetworkTransactionsReportController {
 						" and TO_DATE('" + EndDate + "','MM/DD/YYYY HH24:MI:SS')");
 				
 				Object[] statisticalResult = (Object[]) query.getResultList().get(0);
-				System.out.println(mapper.writeValueAsString(statisticalResult));
+				//System.out.println(mapper.writeValueAsString(statisticalResult));
 				rtn.put("totalbnrTrans", statisticalResult[4]);
 				rtn.put("newElements", statisticalResult[0]);
 				rtn.put("disappearedElements", statisticalResult[1]);
@@ -164,7 +304,7 @@ public class NetworkTransactionsReportController {
 						+ " and TO_DATE('" + EndDate + "','MM/DD/YYYY HH24:MI:SS')"
 						+ " order by parsing_date desc FETCH FIRST 1 ROW ONLY");
 				rtn.put("lastscanDate", query.uniqueResult());
-				System.out.println(mapper.writeValueAsString(query.uniqueResult()));
+				//System.out.println(mapper.writeValueAsString(query.uniqueResult()));
 				
 			} catch (Exception e) {
 				logger.info("Error on NetworkTransactionsReport with a message : " + e);
@@ -187,4 +327,21 @@ public class NetworkTransactionsReportController {
 
 	}
 
+	static double haversineMethod(double latitude, double longitude, double pointLat, double pointLong) {
+
+		// distance between latitudes and longitudes
+		double dLat = Math.toRadians(pointLat - latitude);
+		double dLon = Math.toRadians(pointLong - longitude);
+
+		// convert to radians
+		latitude = Math.toRadians(latitude);
+		pointLat = Math.toRadians(pointLat);
+
+		// apply formulae
+		double a = Math.pow(Math.sin(dLat / 2), 2)
+				+ Math.pow(Math.sin(dLon / 2), 2) * Math.cos(latitude) * Math.cos(pointLat);
+		double rad = 6371;
+		double c = 2 * Math.asin(Math.sqrt(a));
+		return rad * c;
+	}
 }
