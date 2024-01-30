@@ -101,11 +101,6 @@ public class DiscoveryNewItem {
 	@Column(name = "APPROVAL_STATUS")
 	private String approvalStatus;
 	
-	@Column(name = "FROM_NODE_ID")
-	private String nodeID;
-	
-	@Column(name = "FROM_NODE_NAME")
-	private String nodeName;
 	
 	@Column(name = "NOTES")
 	private String notes ;
@@ -134,9 +129,6 @@ public class DiscoveryNewItem {
 	@Column(name = "TO_SLOT")
 	private String toSlot ;
 	
-	@Column(name = "TO_NODE_ID")
-	private String toNodeId ;
-	
 	@Column(name = "TO_SITE")
 	private String toSite ;
 	
@@ -146,11 +138,6 @@ public class DiscoveryNewItem {
 	@Column(name = "DESCRIPTION")
 	private String description ;
 	
-	@Column(name = "TO_NODE_NAME")
-	private String toNodeName ;
-	
-	@Column(name = "NODE_PK")
-	private String nodePK ;
 	
 	@Column(name = "ALCFLG")
 	private String alcFlg ;
@@ -183,10 +170,10 @@ public class DiscoveryNewItem {
 			float dniTax1, float dniTax2, float dniTotal, float dniTotalat, String dniSIte, float dniQty,
 			String dniDNID, String dniSN, String dniPOID, String dniWOID, String purpose, String transType,
 			String dniAPPROVAL, String supplierID, String supplierName, float totalAmount, String wareID,
-			String wareName, String itemPartNb, String itemModel, String approvalStatus, String nodeID, String nodeName,
+			String wareName, String itemPartNb, String itemModel, String approvalStatus,
 			String notes, String transID, String transSrc, String arID, String farID, String position,
-			String elementName, String fromSlot, String toSlot, String toNodeId, String toSite, String toSerialNumber,
-			String description, String toNodeName, String nodePK, String alcFlg, String toWareName, String toWareId,
+			String elementName, String fromSlot, String toSlot, String toSite, String toSerialNumber,
+			String description, String alcFlg, String toWareName, String toWareId,
 			String arsiteId, String farsiteId, String oldMacAddress, String macAddress) {
 		super();
 		this.dniID = dniID;
@@ -219,8 +206,6 @@ public class DiscoveryNewItem {
 		this.itemPartNb = itemPartNb;
 		this.itemModel = itemModel;
 		this.approvalStatus = approvalStatus;
-		this.nodeID = nodeID;
-		this.nodeName = nodeName;
 		this.notes = notes;
 		this.transID = transID;
 		this.transSrc = transSrc;
@@ -230,12 +215,9 @@ public class DiscoveryNewItem {
 		this.elementName = elementName;
 		this.fromSlot = fromSlot;
 		this.toSlot = toSlot;
-		this.toNodeId = toNodeId;
 		this.toSite = toSite;
 		this.toSerialNumber = toSerialNumber;
 		this.description = description;
-		this.toNodeName = toNodeName;
-		this.nodePK = nodePK;
 		this.alcFlg = alcFlg;
 		this.toWareName = toWareName;
 		this.toWareId = toWareId;
@@ -485,21 +467,7 @@ public class DiscoveryNewItem {
 		this.approvalStatus = approvalStatus;
 	}
 
-	public String getNodeID() {
-		return nodeID;
-	}
-
-	public void setNodeID(String nodeID) {
-		this.nodeID = nodeID;
-	}
-
-	public String getNodeName() {
-		return nodeName;
-	}
-
-	public void setNodeName(String nodeName) {
-		this.nodeName = nodeName;
-	}
+	
 
 	public String getNotes() {
 		return notes;
@@ -573,13 +541,7 @@ public class DiscoveryNewItem {
 		this.toSlot = toSlot;
 	}
 
-	public String getToNodeId() {
-		return toNodeId;
-	}
-
-	public void setToNodeId(String toNodeId) {
-		this.toNodeId = toNodeId;
-	}
+	
 
 	public String getToSite() {
 		return toSite;
@@ -605,22 +567,9 @@ public class DiscoveryNewItem {
 		this.description = description;
 	}
 
-	public String getToNodeName() {
-		return toNodeName;
-	}
+	
 
-	public void setToNodeName(String toNodeName) {
-		this.toNodeName = toNodeName;
-	}
-
-	public String getNodePK() {
-		return nodePK;
-	}
-
-	public void setNodePK(String nodePK) {
-		this.nodePK = nodePK;
-	}
-
+	
 	public String getAlcFlg() {
 		return alcFlg;
 	}
