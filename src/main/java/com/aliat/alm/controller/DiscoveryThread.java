@@ -175,9 +175,7 @@ public class DiscoveryThread extends Thread{
 					assetregistry.setItemModel(itemModel);
 					assetregistry.setItemPartNumber(itemPartNb);
 					assetregistry.setItemSN(toSerialNumber);
-					assetregistry.setNodeID(toNodeId);
-					assetregistry.setNodeName(toNodeName);
-					assetregistry.setArStatus("Running");
+				    assetregistry.setArStatus("Running");
 					assetregistry.setPoItemId(poItemID);
 					assetregistry.setArsiteId(AR_Site_ID);
 					session.saveOrUpdate(assetregistry);
@@ -237,9 +235,6 @@ public class DiscoveryThread extends Thread{
 					assetRegSerialNumber.setSerialNumber(toSerialNumber);
 					assetRegSerialNumber.setModel(itemModel);
 					assetRegSerialNumber.setPartNumber(itemPartNb);
-					assetRegSerialNumber.setSnodeID(toNodeId);
-					assetRegSerialNumber.setSnodeName(toNodeName);
-					assetRegSerialNumber.setSite(toSite);
 					assetRegSerialNumber.setPosition(toSlot);
 					assetRegSerialNumber.setArID(ArCode);
 					session.saveOrUpdate(assetRegSerialNumber);
@@ -279,7 +274,7 @@ public class DiscoveryThread extends Thread{
 				ArCode = AssetRegID;
 				
 				query = session.createSQLQuery("update ASSET_REGISTRY SET ITEM_CODE = '"+itmcode+"',LAST_MODIFIED_DATE = sysdate,ITEM_NAME = '"+itmname+"',PO_ID = '"+PurchaseOrId+"',"
-						+ "SUPPLIER_ID = '"+supplierID+"', SUPPLIER_NAME = '"+supplierName+"',ITEM_MODEL = '"+itemModel+"',ITEM_PART_NUMBER = '"+itemPartNb+"',ITEM_SN = '"+toSerialNumber+"',NODE_ID = '"+toNodeId+"',NODE_NAME = '"+toNodeName+"',PO_ITEM_ID = '"+poItemID+"' WHERE AR_ID = :param1 ");
+						+ "SUPPLIER_ID = '"+supplierID+"', SUPPLIER_NAME = '"+supplierName+"',ITEM_MODEL = '"+itemModel+"',ITEM_PART_NUMBER = '"+itemPartNb+"',ITEM_SN = '"+toSerialNumber+"',PO_ITEM_ID = '"+poItemID+"' WHERE AR_ID = :param1 ");
 				query.setParameter("param1", ArCode);
 				query.executeUpdate();
 				
@@ -384,7 +379,7 @@ public class DiscoveryThread extends Thread{
 							}
 				}
 				
-				query = session.createSQLQuery("update AR_SERIAL_NUMBER SET SERIAL_ID = '"+AR_SerialID+"',SERIAL_NUMBER = '"+toSerialNumber+"',MODEL = '"+itemModel+"',PART_NUMBER = '"+itemPartNb+"',NODE_ID = '"+toNodeId+"',NODE_NAME = '"+toNodeName+"',SITE = '"+toSite+"',POSITION = '"+toSlot+"' "
+				query = session.createSQLQuery("update AR_SERIAL_NUMBER SET SERIAL_ID = '"+AR_SerialID+"',SERIAL_NUMBER = '"+toSerialNumber+"',MODEL = '"+itemModel+"',PART_NUMBER = '"+itemPartNb+"',SITE = '"+toSite+"',POSITION = '"+toSlot+"' "
 						+ " WHERE AR_ID = :param1 ");
 				query.setParameter("param1", ArCode);
 				query.executeUpdate();
@@ -495,8 +490,6 @@ public class DiscoveryThread extends Thread{
 						FixedAssetReg.setItemModel(itemModel);
 						FixedAssetReg.setItemPartNb(itemPartNb);
 						FixedAssetReg.setItemSN(toSerialNumber);
-						FixedAssetReg.setNodeID(toNodeId);
-						FixedAssetReg.setNodeName(toNodeName);
 						FixedAssetReg.setFarStatus("Running");
 						FixedAssetReg.setPoItemId(poItemID);
 						FixedAssetReg.setFarsiteId(FAR_Site_ID);
@@ -586,8 +579,6 @@ public class DiscoveryThread extends Thread{
 						fixedAssetRegSerialNumber.setInputSerialNb(toSerialNumber);
 						fixedAssetRegSerialNumber.setInputModel(itemModel);
 						fixedAssetRegSerialNumber.setInputpartNumber(itemPartNb);
-						fixedAssetRegSerialNumber.setInputNodeID(toNodeId);
-						fixedAssetRegSerialNumber.setInputNodeName(toNodeName);
 						fixedAssetRegSerialNumber.setInputsite(toSite);
 						fixedAssetRegSerialNumber.setInputPosition(toSlot);
 						fixedAssetRegSerialNumber.setFarID(FarCode);
@@ -805,13 +796,10 @@ public class DiscoveryThread extends Thread{
 												
 												//Add to Table AR_SERIAL_NUMBER
 												
-												query = session.createQuery(" select serialId from ArSerialNumber where arID = :param1 and serialNumber = :param2 "
-														+ " and snodeID = :param3 and snodeName = :param4");
+												query = session.createQuery(" select serialId from ArSerialNumber where arID = :param1 and serialNumber = :param2 ");
 												
 												query.setParameter("param1", ARid);
 												query.setParameter("param2", serialnb);
-												query.setParameter("param3", toNodeId);
-												query.setParameter("param4", toNodeName);
 												String checkIfEx = (String) query.uniqueResult();
 												String arserialID="";
 												if(checkIfEx != null) {
@@ -834,9 +822,7 @@ public class DiscoveryThread extends Thread{
 													assetRegSerialNumber.setSerialNumber(toSerialNumber);
 													assetRegSerialNumber.setModel(itemModel);
 													assetRegSerialNumber.setPartNumber(itemPartNb);
-													assetRegSerialNumber.setSnodeID(toNodeId);
-													assetRegSerialNumber.setSnodeName(toNodeName);
-													assetRegSerialNumber.setSite(toSite);
+												    assetRegSerialNumber.setSite(toSite);
 													assetRegSerialNumber.setArID(ARid);
 													assetRegSerialNumber.setPosition(toSlot);
 													session.saveOrUpdate(assetRegSerialNumber);
@@ -891,14 +877,11 @@ public class DiscoveryThread extends Thread{
 
 											// Add to FAR_SERIAL_NUMBER table
 
-												query = session.createQuery(" select serialId from FarSerialNumber where farID = :param1 and inputSerialNb = :param2 "
-											+ " and inputNodeID = :param3 and inputNodeName = :param4");
+												query = session.createQuery(" select serialId from FarSerialNumber where farID = :param1 and inputSerialNb = :param2 ");
 
 												query.setParameter("param1", FARid);
 												query.setParameter("param2", serialnb);
-												query.setParameter("param3", toNodeId);
-												query.setParameter("param4", toNodeName);
-											String farSerialID = (String) query.uniqueResult();
+												String farSerialID = (String) query.uniqueResult();
 											String farserialID="";
 											if(farSerialID != null) {
 											 farserialID= farSerialID;
@@ -924,8 +907,6 @@ public class DiscoveryThread extends Thread{
 											fixedAssetRegSerialNumber.setInputSerialNb(toSerialNumber);
 											fixedAssetRegSerialNumber.setInputModel(itemModel);
 											fixedAssetRegSerialNumber.setInputpartNumber(itemPartNb);
-											fixedAssetRegSerialNumber.setInputNodeID(toNodeId);
-											fixedAssetRegSerialNumber.setInputNodeName(toNodeName);
 											fixedAssetRegSerialNumber.setInputsite(toSite);
 											fixedAssetRegSerialNumber.setFarID(FARid);
 											fixedAssetRegSerialNumber.setInputPosition(toSlot);
@@ -986,13 +967,10 @@ public class DiscoveryThread extends Thread{
 										{
 											
 										//Update AR_SERIAL_NUMBER
-										Query query = session.createSQLQuery("update AR_SERIAL_NUMBER set NODE_NAME = :param1, NODE_ID = :param2, POSITION = :param3, SITE = :param4 where NODE_ID = :param5 and "
+										Query query = session.createSQLQuery("update AR_SERIAL_NUMBER set  POSITION = :param3, SITE = :param4 where "
 										+ "SERIAL_NUMBER = :param6 and POSITION = :param7 and SITE = :param8");
-										query.setParameter("param1", toNodeName);
-										query.setParameter("param2", toNodeId);
 										query.setParameter("param3", toSlot);
 										query.setParameter("param4", toSite);
-										query.setParameter("param5", nodeID );
 										query.setParameter("param6", serialnb);
 										query.setParameter("param7", fromSlot);
 										query.setParameter("param8", Site);
@@ -1007,13 +985,10 @@ public class DiscoveryThread extends Thread{
 										
 
 										//Update FAR_SERIAL_NUMBER
-										query = session.createSQLQuery("update FAR_SERIAL_NUMBER set NODE_NAME = :param1, NODE_ID = :param2, POSITION = :param3, SITE = :param4 where NODE_ID = :param5 and "
+										query = session.createSQLQuery("update FAR_SERIAL_NUMBER set  POSITION = :param3, SITE = :param4 where "
 										+ "SERIAL_NUMBER = :param6 and POSITION = :param7 and SITE = :param8");
-										query.setParameter("param1", toNodeName);
-										query.setParameter("param2", toNodeId);
 										query.setParameter("param3", toSlot);
 										query.setParameter("param4", toSite);
-										query.setParameter("param5", nodeID );
 										query.setParameter("param6", serialnb);
 										query.setParameter("param7", fromSlot);
 										query.setParameter("param8", Site);
