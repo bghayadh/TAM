@@ -80,6 +80,12 @@ z-index: 9003;
 				
 				}
 				
+				.nav-link.active {
+                background-color: #FFD966 !important;
+                color: #00757c !important;
+            }
+            
+				
     .hide-row { display:none; }
     
 				select
@@ -810,8 +816,6 @@ max-height: 100%;
                 <th width="220px">Serial Number</th>
                 <th width="220px">Model</th>
 				<th width="220px">Part Number</th>
-				<th width="220px">Node ID</th>
-				<th width="220px">Node Name</th>
 				<th width="220px">Site</th>
 				<th width="220px">Position</th>
 				<th width="220px">ID</th>
@@ -1839,8 +1843,6 @@ dictSerialNumber = [];
 			    	"SNserialNumber" : $(this).parent().parent().children('td[name="SNserialNumber"]').children('input').val(),							   
 			    	"SNmodel" : $(this).parent().parent().children('td[name="SNmodel"]').children('input').val(),			   
 			    	"SNpartNumber" : $(this).parent().parent().children('td[name="SNpartNumber"]').children('input').val(),
-			    	"SNnodeID" : $(this).parent().parent().children('td[name="SNnodeID"]').children('input').val(),
-			    	"SNnodeName" : $(this).parent().parent().children('td[name="SNnodeName"]').children('input').val(),
 			    	"SNsite": $(this).parent().parent().children('td[name="SNsite"]').children('input').val(),
 			    	"SNposition" : $(this).parent().parent().children('td[name="SNposition"]').children('input').val(),
 			    	"arSerialID" : $(this).parent().parent().children('td[name="arSerialID"]').children('input').val()
@@ -2069,8 +2071,6 @@ if ('${ListArSerialNumber}' != "addNew") {
 		 itemSNumRow =itemSNumRow + "<td name='SNserialNumber'><input name='inputSerialNb'  id = 'inputSerialNb"+i+"'   type='text' value='" +inputSerialNb+ "' style='width:200px;' class='form-control ui-widget ui-widget-content ui-corner-all  input-text'/></td>";
 		 itemSNumRow =itemSNumRow + "<td name='SNmodel' style='width:200px'><input name='inputModel' id = 'inputModel"+i+"' style='width:200px'  type='text' value='"+inputModel+"' style='width:200px;' class='form-control input-text' /> </td>";
 		 itemSNumRow =itemSNumRow + "<td name='SNpartNumber' style='width:200px'><input name='inputpartNumber' id = 'inputpartNumber"+i+"'  style='width:200px'  type='text' value='"+inputpartNumber+"' style='width:200px;' class='form-control input-text' /> </td>";
-		 itemSNumRow =itemSNumRow + "<td name='SNnodeID' style='width:200px'><input name='inputNodeID'  id = 'inputNodeID"+i+"' style='width:200px'  type='text' value='"+inputNodeID+"' style='width:200px;' class='form-control input-text' /> </td>";
-		 itemSNumRow =itemSNumRow + "<td name='SNnodeName' style='width:200px'><input name='inputNodeName' id = 'inputNodeName"+i+"' style='width:200px'  type='text' value='"+inputNodeName+"' style='width:200px;' class='form-control input-text' /> </td>";
 		 itemSNumRow =itemSNumRow + "<td name='SNsite' style='width:200px'><input name='inputsite' id = 'inputsite"+i+"'  style='width:200px'  type='text' value='"+inputsite+"' style='width:200px;' class='form-control input-text' /> </td>";
 		 itemSNumRow =itemSNumRow + "<td name='SNposition' style='width:200px'><input name='inputPosition' style='width:200px'  type='text' value='"+inputPosition+"' style='width:200px;' class='form-control input-text' /> </td>";
 		 itemSNumRow =itemSNumRow + "<td name='arSerialID' style='width:200px'><input name='arSerialID' style='width:200px' readonly type='text' value='"+arSerialID+"' style='width:200px;' class='form-control input-text' /> </td>";
