@@ -132,11 +132,6 @@ public class FixedAssetRegistry {
 	@Column(name = "ITEM_NAME_REGISTER")
 	private String itemNameReg;
 	
-	@Column(name = "NODE_ID")
-	private String nodeID;
-	
-	@Column(name = "NODE_NAME")
-	private String nodeName;
 	
 	@Column(name = "OWNERSHIP")
 	private String ownership;
@@ -212,8 +207,7 @@ public class FixedAssetRegistry {
 			float iniCost, float deprPer,
 			float dailyPercent, float accumPer, float netCost, String salvageValue, String poId, String accumDeprCode,
 			String deprCode, float usefulLifeMon, String supplierID, String vendorNb, String projNb,
-			String itemPartNb, String assetNb, String itemModel, String dniID, String itemNameReg, String nodeID,
-			String nodeName, String ownership, Date scrapDate, String scrapStatus, String notes, String shelterVendor,
+			String itemPartNb, String assetNb, String itemModel, String dniID, String itemNameReg, String ownership, Date scrapDate, String scrapStatus, String notes, String shelterVendor,
 			String shelerRoomID, String locSubType, String locClass, String locAddress, String lastModifiedUser,
 			String objectID, String itemSN, String supplierName, float monthlyDpr,
 			String position, String poItemId, String itemRootCode, String itemCatCode, String itemCatID,
@@ -250,8 +244,6 @@ public class FixedAssetRegistry {
 		this.itemModel = itemModel;
 		this.dniID = dniID;
 		this.itemNameReg = itemNameReg;
-		this.nodeID = nodeID;
-		this.nodeName = nodeName;
 		this.ownership = ownership;
 		this.scrapDate = scrapDate;
 		this.scrapStatus = scrapStatus;
@@ -517,21 +509,7 @@ public class FixedAssetRegistry {
 		this.itemNameReg = itemNameReg;
 	}
 
-	public String getNodeID() {
-		return nodeID;
-	}
-
-	public void setNodeID(String nodeID) {
-		this.nodeID = nodeID;
-	}
-
-	public String getNodeName() {
-		return nodeName;
-	}
-
-	public void setNodeName(String nodeName) {
-		this.nodeName = nodeName;
-	}
+	
 
 	public String getOwnership() {
 		return ownership;
