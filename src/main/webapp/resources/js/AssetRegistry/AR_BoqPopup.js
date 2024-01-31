@@ -217,8 +217,6 @@ function addSerialrows(stat){
 		+"<td name = 'SNserialNumber'><input name='inputSerialNb' id = 'inputSerialNb"+RowCount+"' type='text' style='width:200px;' class='form-control ui-widget ui-widget-content ui-corner-all text-input'/></td>"
 		+"<td name = 'SNmodel'><input name='inputModel'  id = 'inputModel"+RowCount+"' type='text' style='width:200px;' class='form-control text-input'/></td>"
 		+"<td name ='SNpartNumber' ><input name='inputpartNumber' id = 'inputpartNumber"+RowCount+"' type='text' style='width:200px;' class='form-control text-input'/></td>"
-		+"<td name ='SNnodeID' ><input name='inputNodeID' id = 'inputNodeID"+RowCount+"' type='text' style='width:200px;' class='form-control text-input'/></td>"
-		+"<td name ='SNnodeName' ><input name='inputNodeName' id = 'inputNodeName"+RowCount+"' type='text' style='width:200px;' class='form-control text-input'/></td>"
 		+"<td name ='SNsite' ><input name='inputsite'  id = 'inputsite"+RowCount+"'  type='text' style='width:200px;' class='form-control text-input'/></td>"
 		+"<td name ='SNposition' ><input name='inputPosition' type='text' style='width:200px;' class='form-control text-input'/></td>"
 		+"<td name ='arSerialID' ><input name='arSerialID' readonly value = '0' type='text' style='width:200px;' class='form-control text-input'/></td></tr>"
@@ -355,8 +353,6 @@ function openSerialPopUp(element){
  	$('#popupSerialno').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNserialNumber"]').children('input').val());
     $('#popupModel').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNmodel"]').children('input').val()); 
     $('#popupPartnum').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNpartNumber"]').children('input').val());
-    $('#popupSerNodeId').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNnodeID"]').children('input').val()); 
-    $('#popupSerNodeName').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNnodeName"]').children('input').val()); 
     $('#popupSite').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNsite"]').children('input').val());
     $('#popupPosition').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNposition"]').children('input').val());
     $('#popupSerialID').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="arSerialID"]').children('input').val());
@@ -517,8 +513,6 @@ function insertModPartRowBelow(){
 		+"<td name = 'SNserialNumber'><input name='inputSerialNb' id = 'inputSerialNb"+RowCount+"' type='text' style='width:200px;' class='form-control ui-widget ui-widget-content ui-corner-all text-input'/></td>"
 		+"<td name = 'SNmodel'><input name='inputModel'  id = 'inputModel"+RowCount+"' type='text' style='width:200px;' class='form-control text-input'/></td>"
 		+"<td name ='SNpartNumber' ><input name='inputpartNumber' id = 'inputpartNumber"+RowCount+"' type='text' style='width:200px;' class='form-control text-input'/></td>"
-		+"<td name ='SNnodeID' ><input name='inputNodeID' id = 'inputNodeID"+RowCount+"' type='text' style='width:200px;' class='form-control text-input'/></td>"
-		+"<td name ='SNnodeName' ><input name='inputNodeName' id = 'inputNodeName"+RowCount+"' type='text' style='width:200px;' class='form-control text-input'/></td>"
 		+"<td name ='SNsite' ><input name='inputsite'  id = 'inputsite"+RowCount+"'  type='text' style='width:200px;' class='form-control text-input'/></td>"
 		+"<td name ='SNposition' ><input name='inputPosition' type='text' style='width:200px;' class='form-control text-input'/></td>"
 		+"<td name ='arSerialID' ><input name='arSerialID' readonly value = '0' type='text' style='width:200px;' class='form-control text-input'/></td></tr>"
@@ -533,9 +527,7 @@ function insertModPartRowBelow(){
 	$('#popupSerialno').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNserialNumber"]').children('input').val());
 	$('#popupModel').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNmodel"]').children('input').val());
 	$('#popupPartnum').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNpartNumber"]').children('input').val());
-	$('#popupSerNodeId').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNnodeID"]').children('input').val());
-	$('#popupSerNodeName').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNnodeName"]').children('input').val());
-	$('#popupSite').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNsite"]').children('input').val());
+    $('#popupSite').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNsite"]').children('input').val());
 	$('#popupPosition').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNposition"]').children('input').val());
 	$('#popupSerialID').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="arSerialID"]').children('input').val());
 
@@ -628,8 +620,6 @@ function insertSerialRowAbove(){
 		+"<td name = 'SNserialNumber'><input name='inputSerialNb' id = 'inputSerialNb"+RowCount+"' type='text' style='width:200px;' class='form-control ui-widget ui-widget-content ui-corner-all text-input'/></td>"
 		+"<td name = 'SNmodel'><input name='inputModel'  id = 'inputModel"+RowCount+"' type='text' style='width:200px;' class='form-control text-input'/></td>"
 		+"<td name ='SNpartNumber' ><input name='inputpartNumber' id = 'inputpartNumber"+RowCount+"' type='text' style='width:200px;' class='form-control text-input'/></td>"
-		+"<td name ='SNnodeID' ><input name='inputNodeID' id = 'inputNodeID"+RowCount+"' type='text' style='width:200px;' class='form-control text-input'/></td>"
-		+"<td name ='SNnodeName' ><input name='inputNodeName' id = 'inputNodeName"+RowCount+"' type='text' style='width:200px;' class='form-control text-input'/></td>"
 		+"<td name ='SNsite' ><input name='inputsite'  id = 'inputsite"+RowCount+"'  type='text' style='width:200px;' class='form-control text-input'/></td>"
 		+"<td name ='SNposition' ><input name='inputPosition' type='text' style='width:200px;' class='form-control text-input'/></td>"
 		+"<td name ='arSerialID' ><input name='arSerialID' readonly value = '0' type='text' style='width:200px;' class='form-control text-input'/></td></tr>"
@@ -641,8 +631,6 @@ function insertSerialRowAbove(){
 	$('#popupSerialno').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNserialNumber"]').children('input').val());
 	$('#popupModel').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNmodel"]').children('input').val());
 	$('#popupPartnum').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNpartNumber"]').children('input').val());
-	$('#popupSerNodeId').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNnodeID"]').children('input').val());
-	$('#popupSerNodeName').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNnodeName"]').children('input').val());
 	$('#popupSite').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNsite"]').children('input').val());
 	$('#popupPosition').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNposition"]').children('input').val());
 	$('#popupSerialID').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="arSerialID"]').children('input').val());
@@ -774,8 +762,6 @@ function nextSerialRow(){
 		$('#popupSerialno').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNserialNumber"]').children('input').val());
 		$('#popupModel').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNmodel"]').children('input').val());
 		$('#popupPartnum').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNpartNumber"]').children('input').val());
-		$('#popupSerNodeId').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNnodeID"]').children('input').val());
-		$('#popupSerNodeName').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNnodeName"]').children('input').val());
 		$('#popupSite').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNsite"]').children('input').val());
 		$('#popupPosition').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNposition"]').children('input').val());
 	    $('#popupSerialID').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="arSerialID"]').children('input').val());
@@ -793,8 +779,6 @@ function nextSerialRow(){
 		$('#popupSerialno').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNserialNumber"]').children('input').val());
 		$('#popupModel').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNmodel"]').children('input').val());
 		$('#popupPartnum').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNpartNumber"]').children('input').val());
-		$('#popupSerNodeId').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNnodeID"]').children('input').val());
-		$('#popupSerNodeName').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNnodeName"]').children('input').val());
 		$('#popupSite').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNsite"]').children('input').val());
 		$('#popupPosition').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNposition"]').children('input').val());
 		$('#popupSerialID').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="arSerialID"]').children('input').val());
@@ -956,8 +940,6 @@ function deleteSerialBoqRow() {
 		$('#popupSerialno').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNserialNumber"]').children('input').val());
 		$('#popupModel').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNmodel"]').children('input').val());
 		$('#popupPartnum').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNpartNumber"]').children('input').val());
-		$('#popupSerNodeId').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNnodeID"]').children('input').val());
-		$('#popupSerNodeName').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNnodeName"]').children('input').val());
 		$('#popupSite').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNsite"]').children('input').val());
 		$('#popupPosition').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNposition"]').children('input').val());
 		$('#popupSerialID').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="arSerialID"]').children('input').val());
@@ -974,8 +956,6 @@ function deleteSerialBoqRow() {
 		$('#popupSerialno').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNserialNumber"]').children('input').val());
 		$('#popupModel').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNmodel"]').children('input').val());
 		$('#popupPartnum').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNpartNumber"]').children('input').val());
-		$('#popupSerNodeId').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNnodeID"]').children('input').val());
-		$('#popupSerNodeName').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNnodeName"]').children('input').val());
 		$('#popupSite').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNsite"]').children('input').val());
 		$('#popupPosition').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNposition"]').children('input').val());
 	    $('#popupSerialID').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="arSerialID"]').children('input').val());
@@ -1437,7 +1417,6 @@ $("#popupItemPartno").autocomplete({
 				 },
 				 dataType: "json",
 				 success: function (data) {
-					 console.log(0000);
 					 
 					 if (data != null) {
 						 console.log(11);
@@ -1563,82 +1542,7 @@ $("#popupNodeName").focus(function(){
 		}						
 }); // End NodeName autocomplete in Nodepopup
 
- // NodeID autocomplete in Serialpopup
- $("#popupSerNodeId").autocomplete({
-	source: function(request, response) {
-	$.ajax({
-		type: "GET",
-		contentType: "application/json; charset=utf-8",
-		url: ctx+'/getAllNodes',
-		data: {
-			"requestValue" : $("#popupSerNodeId").val(),
-		},
-		dataType: "json",
-		success: function (data) {
-		if (data != null) {
-			response(data.ListNodes);
-		}
-		},
-		error: function(result) {
-			console.log("Error");
-		}
-		});
-	}, minLength:0, maxShowItems: 40, scroll:true,
-	select: function(event, ui) {
-		this.value = ui.item[0];
-		$("#popupSerNodeName").val(ui.item[1]);
-		return false;
-	}
-	  }).autocomplete("instance")._renderItem = function(ul, item) {
-		return $('<li class="each"></li>').data( "item.autocomplete", item )
-		.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
-		item[0] + "</span><br><span class='desc'>" +
-		item[1] + '</span></div>').appendTo(ul);
-	  };
-	  $("#popupSerNodeId").focus(function(){
-		  if (this.value == ""){
-			  $(this).autocomplete("search");
-              }						
-}); // End NodeID autocomplete in Nodepopup
-	
-// NodeName autocomplete in Serialpopup
-$("#popupSerNodeName").autocomplete({
-	source: function(request, response) {
-	$.ajax({
-		type: "GET",
-		contentType: "application/json; charset=utf-8",
-		url: ctx+'/getAllNodes',
-		data: {
-			"requestValue": $("#popupSerNodeName").val(),
-			},
-		dataType: "json",
-		success: function (data) {
-			if (data != null) {
-				response(data.ListNodes);
-			}
-	},
-	error: function(result) {
-		console.log("Error");
-			}
-	});
-	}, minLength:0, maxShowItems: 40, scroll:true,
-	select: function(event, ui) {
-		this.value = ui.item[1];
-		$("#popupSerNodeId").val(ui.item[0]);
-		return false;
-	}
-  }).autocomplete("instance")._renderItem = function(ul, item) {
-	return $('<li class="each"></li>').data( "item.autocomplete", item )
-	.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
-	item[1] + "</span><br><span class='desc'>" +
-	item[0] + '</span></div>').appendTo(ul);
-  };
-  $("#popupSerNodeName").focus(function(){
-	  if (this.value == ""){
-		  $(this).autocomplete("search");
-	}						
-}); // End NodeName autocomplete in Serialpopup
-
+ 
 
 
 $('#popupSite').autocomplete({
@@ -1829,8 +1733,6 @@ $("button[name='closeSerialnoPopup']").on("click", function(){
 	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNserialNumber"]').children('input').val($('#popupSerialno').val());
 	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNmodel"]').children('input').val($('#popupModel').val());
 	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNpartNumber"]').children('input').val($('#popupPartnum').val());
-	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNnodeID"]').children('input').val($('#popupSerNodeId').val());
-	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNnodeName"]').children('input').val($('#popupSerNodeName').val());
 	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNsite"]').children('input').val($('#popupSite').val());
 	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNposition"]').children('input').val($('#popupPosition').val());
 	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="arSerialID"]').children('input').val($('#popupSerialID').val());
@@ -1846,8 +1748,6 @@ document.addEventListener('keydown', function(event){
 	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNserialNumber"]').children('input').val($('#popupSerialno').val());
 	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNmodel"]').children('input').val($('#popupModel').val());
 	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNpartNumber"]').children('input').val($('#popupPartnum').val());
-	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNnodeID"]').children('input').val($('#popupSerNodeId').val());
-	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNnodeName"]').children('input').val($('#popupSerNodeName').val());
 	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNsite"]').children('input').val($('#popupSite').val());
 	$("#ARserialNumberTab >tbody").find("tr").eq(serialRowindex).find('td[name="SNposition"]').children('input').val($('#popupPosition').val());
 	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="arSerialID"]').children('input').val($('#popupSerialID').val());
@@ -1910,8 +1810,6 @@ $("button[name='previousSerialRow']").on("click", function(){
 		$('#popupSerialno').val($("#ARserialNumberTab >tbody").find("tr").eq(serialPrevIndex).find('td[name="SNserialNumber"]').children('input').val());
 		$('#popupModel').val($("#ARserialNumberTab >tbody").find("tr").eq(serialPrevIndex).find('td[name="SNmodel"]').children('input').val()); 
 		$('#popupPartnum').val($("#ARserialNumberTab >tbody").find("tr").eq(serialPrevIndex).find('td[name="SNpartNumber"]').children('input').val());
-		$('#popupSerNodeId').val($("#ARserialNumberTab >tbody").find("tr").eq(serialPrevIndex).find('td[name="SNnodeID"]').children('input').val()); 
-		$('#popupSerNodeName').val($("#ARserialNumberTab >tbody").find("tr").eq(serialPrevIndex).find('td[name="SNnodeName"]').children('input').val()); 
 		$('#popupSite').val($("#ARserialNumberTab >tbody").find("tr").eq(serialPrevIndex).find('td[name="SNsite"]').children('input').val());
 		$('#popupPosition').val($("#ARserialNumberTab >tbody").find("tr").eq(serialPrevIndex).find('td[name="SNposition"]').children('input').val());  
 		$('#popupSerialID').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="arSerialID"]').children('input').val());
@@ -1977,12 +1875,10 @@ $('#popupWareId,#popupSiteId,#popupSiteName,#popupSiteSeqID').on(' focusout ', f
 	//amountsUpdate();
 });
 
-$('#popupSerialno,#popupModel,#popupPartnum,#popupSerNodeId,#popupSerNodeName,#popupSite,#popupPosition,#popupSerialID').on(' focusout ', function() {
+$('#popupSerialno,#popupModel,#popupPartnum,#popupSite,#popupPosition,#popupSerialID').on(' focusout ', function() {
 	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNserialNumber"]').children('input').val($('#popupSerialno').val());
 	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNmodel"]').children('input').val($('#popupModel').val());
 	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNpartNumber"]').children('input').val($('#popupPartnum').val());
-	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNnodeID"]').children('input').val($('#popupSerNodeId').val());
-	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNnodeName"]').children('input').val($('#popupSerNodeName').val());
 	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNsite"]').children('input').val($('#popupSite').val());
 	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNposition"]').children('input').val($('#popupPosition').val());
 	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="arSerialID"]').children('input').val($('#popupSerialID').val());
@@ -2349,95 +2245,6 @@ $('#inputsite'+rowCnt).focus(function(){
 
 
 	// NODE ID autocomplete
-	$('#inputNodeID'+rowCnt).autocomplete({
-	source: function(request, response) {
-	
-	$.ajax({
-		type: "GET",
-		contentType: "application/json; charset=utf-8",
-		url:  ctx+'/getAllNodes',
-		data: {
-        	"requestValue" : request.term,
-		 },
-		 dataType: "json",
-		 success: function (data) {
-		 	if (data != null) {
-		 		response(data.ListNodes);
-		 	}
-		 },
-		 error: function(result) {
-		 	alert("Error");
-		 }
-		 
-	 });
-	 }, minLength:0, maxShowItems: 40, scroll:true,
-	 select: function(event, ui) {
-		this.value = ui.item[0];
-		$(this).parents("tr").find('input[name ="inputNodeName"]').val(ui.item[1]);
-		return false;
-	}
-	
-	}).autocomplete("instance")._renderItem = function(ul, item) {
-
-	return $('<li class="each"></li>').data( "item.autocomplete", item )
-	.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
-	item[0] + "</span><br><span class='desc'>" +
-	item[1] + '</span></div>').appendTo(ul);
-};
-   
-$('#inputNodeID'+rowCnt).focus(function(){
-	if (this.value == ""){
-		$(this).autocomplete("search");
-		}
-});
-
-
-
-
-
-
-
-	// NODE NAME autocomplete
-	$('#inputNodeName'+rowCnt).autocomplete({
-	source: function(request, response) {
-	
-	$.ajax({
-		type: "GET",
-		contentType: "application/json; charset=utf-8",
-		url:  ctx+'/getAllNodes',
-		data: {
-        	"requestValue" : request.term,
-		 },
-		 dataType: "json",
-		 success: function (data) {
-		 	if (data != null) {
-		 		response(data.ListNodes);
-		 	}
-		 },
-		 error: function(result) {
-		 	alert("Error");
-		 }
-		 
-	 });
-	 }, minLength:0, maxShowItems: 40, scroll:true,
-	 select: function(event, ui) {
-			this.value = ui.item[1];
-			$(this).parents("tr").find('input[name ="inputNodeID"]').val(ui.item[0]);
-			return false;
-		}
-	
-	}).autocomplete("instance")._renderItem = function(ul, item) {
-		return $('<li class="each"></li>').data( "item.autocomplete", item )
-		.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
-		item[1] + "</span><br><span class='desc'>" +
-		item[0] + '</span></div>').appendTo(ul);
-	};
-   
-$('#inputNodeName'+rowCnt).focus(function(){
-	if (this.value == ""){
-		$(this).autocomplete("search");
-		}
-});
 
 
 	
