@@ -40,11 +40,6 @@ public class AssetRegisterListView {
 	@Column(name = "PO_ID")
 	private String poID;
 	
-	@Column(name = "NODE_ID")
-	private String nodeID;
-	
-	@Column(name = "NODE_NAME")
-	private String nodeName;
 	
 	@Column(name = "SITE_ID")
 	private String siteID;
@@ -61,7 +56,7 @@ public class AssetRegisterListView {
 
 	public AssetRegisterListView(String arID, String assetID, String aritemCode, String aritemName, String itemModel,
 			String itemPartNumber, String arlastModifiedDate, String itemSN, String itemNameReg, String poID,
-			String nodeID, String nodeName, String siteID, String siteName) {
+			 String siteID, String siteName) {
 		super();
 		this.arID = arID;
 		this.assetID = assetID;
@@ -73,8 +68,6 @@ public class AssetRegisterListView {
 		this.itemSN = itemSN;
 		this.itemNameReg = itemNameReg;
 		this.poID = poID;
-		this.nodeID = nodeID;
-		this.nodeName = nodeName;
 		this.siteID = siteID;
 		this.siteName=siteName;
 	}
@@ -180,25 +173,7 @@ public class AssetRegisterListView {
 	}
 
 
-	public String getNodeID() {
-		return nodeID;
-	}
-
-
-	public void setNodeID(String nodeID) {
-		this.nodeID = nodeID;
-	}
-
-
-	public String getNodeName() {
-		return nodeName;
-	}
-
-
-	public void setNodeName(String nodeName) {
-		this.nodeName = nodeName;
-	}
-
+	
 
 	public String getSiteID() {
 		return siteID;
