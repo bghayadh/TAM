@@ -243,7 +243,8 @@ map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
 */
 			map.setOptions({ minZoom: 3, maxZoom: 28});	
 	//CreateMap_StNdCell(lst,map);
-	CreateMap(lst,map);	
+	//CreateMap(lst,map);
+	CreateMap2(lst,map,arrayParam,date);	
 	CreateTree_VnStNdCell(listVen,map);
 	
 	}
@@ -310,7 +311,8 @@ singleVen = new ContextMenu({
 
 function AllSitesCheckFilter(){
 	markerClusterSites.clearMarkers();
-	CreateMap(lst,map);
+	//CreateMap(lst,map);
+	CreateMap2(lst,map,arrayParam,date);
 
 	$('.AllVendors').bind("change",function() {	
 		//console.log("markersSites.length: "+markersSites.length);

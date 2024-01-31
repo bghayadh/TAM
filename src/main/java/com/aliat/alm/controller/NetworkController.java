@@ -803,9 +803,9 @@ public class NetworkController {
 				arrayParam[2] = 0; // RAN
 				arrayParam[3] = 0; // core
 
-				String strSites = "SELECT DISTINCT b.SITE_ID,b.WARE_NAME,b.WARE_ID,b.LATITUDE,b.LONGITUDE,"
-						+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID "
-						+ generateDateCondition(parsingDate, "w");
+				String strSites = "SELECT DISTINCT b.SITE_ID,b.WARE_NAME,b.WARE_ID,b.LATITUDE,b.LONGITUDE ";
+						/*+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID "
+						+ generateDateCondition(parsingDate, "w");*/
 
 				String strVen = "SELECT distinct a.VENDOR FROM NODE_ACTIVE a where a.WARE_ID!='0' and a.WARE_ID!='null' and a.WARE_ID is not null "
 						+ "and a.VENDOR!='null' and a.VENDOR is not null and a.VENDOR!='0' "
@@ -829,7 +829,7 @@ public class NetworkController {
 						arrayParam[3] = 1;
 						model.addAttribute("CoreBtn", arrayParam[3]);
 					}
-					strSites = AppendQuery("w", arrayParam, strSites);
+					/*strSites = AppendQuery("w", arrayParam, strSites);
 					strSites = strSites
 							+ ") as countNodes,(select COUNT(*) FROM NODE_2GCELL c where c.NODE_PK IN (select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID "
 							+ generateDateCondition(parsingDate, "o");
@@ -847,12 +847,12 @@ public class NetworkController {
 							+ generateDateCondition(parsingDate, "o");
 					strSites = AppendQuery("o", arrayParam, strSites);
 					strSites = strSites + " ) ";
-					strSites = AppendQuery("e", arrayParam, strSites);
+					strSites = AppendQuery("e", arrayParam, strSites);*/
 					strSites = strSites
-							+ ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null AND b.VENDOR!='null' and b.VENDOR!='0' and b.VENDOR is not null  "
+							+ "FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null AND b.VENDOR!='null' and b.VENDOR!='0' and b.VENDOR is not null  "
 							+ generateDateCondition(parsingDate, "b");
 					strSites = AppendQuery("b", arrayParam, strSites);
-
+					System.out.println("strSites "+strSites);
 					model.addAttribute("listSites",
 							mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
@@ -916,9 +916,9 @@ public class NetworkController {
 				arrayParam[2] = 0; // RAN
 				arrayParam[3] = 0; // core
 
-				String strSites = "SELECT DISTINCT b.SITE_ID,b.WARE_NAME,b.WARE_ID,b.LATITUDE,b.LONGITUDE,"
-						+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID "
-						+ generateDateCondition(parsingDate, "w");
+				String strSites = "SELECT DISTINCT b.SITE_ID,b.WARE_NAME,b.WARE_ID,b.LATITUDE,b.LONGITUDE ";
+						/*+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID "
+						+ generateDateCondition(parsingDate, "w");*/
 
 				String strVen = "SELECT distinct a.VENDOR FROM NODE_ACTIVE a where a.WARE_ID!='0' and a.WARE_ID!='null' and a.WARE_ID is not null and "
 						+ "a.VENDOR!='null' and a.VENDOR is not null and a.VENDOR!='0' "
@@ -942,7 +942,7 @@ public class NetworkController {
 						arrayParam[3] = 1;
 						model.addAttribute("CoreBtn", arrayParam[3]);
 					}
-					strSites = AppendQuery("w", arrayParam, strSites);
+					/*strSites = AppendQuery("w", arrayParam, strSites);
 					strSites = strSites
 							+ ") as countNodes,(select COUNT(*) FROM NODE_2GCELL c where c.NODE_PK IN (select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID "
 							+ generateDateCondition(parsingDate, "o");
@@ -960,12 +960,12 @@ public class NetworkController {
 							+ generateDateCondition(parsingDate, "o");
 					strSites = AppendQuery("o", arrayParam, strSites);
 					strSites = strSites + " ) ";
-					strSites = AppendQuery("e", arrayParam, strSites);
+					strSites = AppendQuery("e", arrayParam, strSites);*/
 					strSites = strSites
-							+ ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.VENDOR!='null' and b.VENDOR!='0' and b.VENDOR is not null  "
+							+ "FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.VENDOR!='null' and b.VENDOR!='0' and b.VENDOR is not null  "
 							+ generateDateCondition(parsingDate, "b");
 					strSites = AppendQuery("b", arrayParam, strSites);
-
+					//System.out.println("strSites "+strSites);
 					model.addAttribute("listSites",
 							mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
@@ -1261,9 +1261,9 @@ public class NetworkController {
 				arrayParam[2] = 0; // RAN
 				arrayParam[3] = 0; // core
 
-				String strSites = "SELECT DISTINCT b.SITE_ID,b.WARE_NAME,b.WARE_ID,b.LATITUDE,b.LONGITUDE,"
-						+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID "
-						+ generateDateCondition(parsingDate, "w");
+				String strSites = "SELECT DISTINCT b.SITE_ID,b.WARE_NAME,b.WARE_ID,b.LATITUDE,b.LONGITUDE ";
+						/*+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID "
+						+ generateDateCondition(parsingDate, "w");*/
 
 				String strVen = "SELECT distinct a.VENDOR FROM NODE_ACTIVE a where a.WARE_ID!='0' and a.WARE_ID!='null' and a.WARE_ID is not null and "
 						+ "a.VENDOR!='0' and a.VENDOR is not null and a.VENDOR!='null' "
@@ -1287,7 +1287,7 @@ public class NetworkController {
 						arrayParam[3] = 1;
 						model.addAttribute("CoreBtn", arrayParam[3]);
 					}
-					strSites = AppendQuery("w", arrayParam, strSites);
+					/*strSites = AppendQuery("w", arrayParam, strSites);
 					strSites = strSites
 							+ ") as countNodes,(select COUNT(*) FROM NODE_2GCELL c where c.NODE_PK IN (select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID "
 							+ generateDateCondition(parsingDate, "o");
@@ -1305,12 +1305,12 @@ public class NetworkController {
 							+ generateDateCondition(parsingDate, "o");
 					strSites = AppendQuery("o", arrayParam, strSites);
 					strSites = strSites + " ) ";
-					strSites = AppendQuery("e", arrayParam, strSites);
+					strSites = AppendQuery("e", arrayParam, strSites);*/
 					strSites = strSites
-							+ ") as countUcells FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.VENDOR!='null' and b.VENDOR!='0' and b.VENDOR is not null "
+							+ " FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.VENDOR!='null' and b.VENDOR!='0' and b.VENDOR is not null "
 							+ generateDateCondition(parsingDate, "b");
 					strSites = AppendQuery("b", arrayParam, strSites);
-
+					//System.out.println("strSites "+strSites);
 					model.addAttribute("listSites",
 							mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
