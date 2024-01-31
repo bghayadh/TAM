@@ -72,8 +72,8 @@ public class AssetRegistryController {
 				System.out.println("asset");
 				try {
 					
-					String str = "SELECT arID, assetID, aritemCode, aritemName, itemModel, itemPartNumber, arlastModifiedDate, itemSN, itemNameReg, poID, nodeID, nodeName, siteID, siteName FROM ( "
-					           + " SELECT A.AR_ID AS arID, A.AR_ID AS assetID, A.ITEM_CODE AS aritemCode, A.ITEM_NAME AS aritemName, A.ITEM_MODEL AS itemModel, A.ITEM_PART_NUMBER AS itemPartNumber, TO_CHAR(A.LAST_MODIFIED_DATE, 'YYYY-MM-DD HH24:MI:SS') AS arlastModifiedDate, A.ITEM_SN AS itemSN, A.ITEM_NAME_REGISTER AS itemNameReg, A.PO_ID AS poID, COALESCE(A.NODE_ID, ' ') AS nodeID, COALESCE(A.NODE_NAME, ' ') AS nodeName, B.SITE_ID AS siteID, B.SITE_NAME AS siteName , "
+					String str = "SELECT arID, assetID, aritemCode, aritemName, itemModel, itemPartNumber, arlastModifiedDate, itemSN, itemNameReg, poID, siteID, siteName FROM ( "
+					           + " SELECT A.AR_ID AS arID, A.AR_ID AS assetID, A.ITEM_CODE AS aritemCode, A.ITEM_NAME AS aritemName, A.ITEM_MODEL AS itemModel, A.ITEM_PART_NUMBER AS itemPartNumber, TO_CHAR(A.LAST_MODIFIED_DATE, 'YYYY-MM-DD HH24:MI:SS') AS arlastModifiedDate, A.ITEM_SN AS itemSN, A.ITEM_NAME_REGISTER AS itemNameReg, A.PO_ID AS poID, B.SITE_ID AS siteID, B.SITE_NAME AS siteName , "
 					           + " ROW_NUMBER() OVER (PARTITION BY A.AR_ID ORDER BY B.SITE_ID DESC) AS rn FROM ASSET_REGISTRY A LEFT JOIN AR_SITE B ON B.AR_ID = A.AR_ID ) WHERE rn = 1 ORDER BY arlastModifiedDate DESC";
 					
 					model.addAttribute("ListGridTable", mapper.writeValueAsString( session.createNativeQuery(str).list()));
@@ -140,15 +140,15 @@ public class AssetRegistryController {
 												+ "COALESCE(NODE_ID, ' ') as nodeID, COALESCE(NODE_NAME, ' ') as nodeName  " 
 													+ "from ASSET_REGISTRY  ";*/
 				
-				String str = "SELECT chkBox,arID,aritemCode,aritemName,itemModel,itemPartNumber,arlastModifiedDate,itemSN,itemNameReg,poID,nodeID,nodeName,siteID,siteName FROM ( SELECT 1 AS chkBox, A.AR_ID AS arID, A.ITEM_CODE AS aritemCode, A.ITEM_NAME AS aritemName, A.ITEM_MODEL AS itemModel, A.ITEM_PART_NUMBER AS itemPartNumber, "
+				String str = "SELECT chkBox,arID,aritemCode,aritemName,itemModel,itemPartNumber,arlastModifiedDate,itemSN,itemNameReg,poID,siteID,siteName FROM ( SELECT 1 AS chkBox, A.AR_ID AS arID, A.ITEM_CODE AS aritemCode, A.ITEM_NAME AS aritemName, A.ITEM_MODEL AS itemModel, A.ITEM_PART_NUMBER AS itemPartNumber, "
 						+ "TO_CHAR(A.LAST_MODIFIED_DATE, 'YYYY-MM-DD HH24:MI:SS') AS arlastModifiedDate, A.ITEM_SN AS itemSN, A.ITEM_NAME_REGISTER AS itemNameReg, A.PO_ID AS poID, "
-						+ "COALESCE(A.NODE_ID, ' ') AS nodeID, COALESCE(A.NODE_NAME, ' ') AS nodeName, B.SITE_ID as siteID, B.SITE_NAME as siteName, "
+						+ " B.SITE_ID as siteID, B.SITE_NAME as siteName, "
 						+ "ROW_NUMBER() OVER (PARTITION BY A.AR_ID ORDER BY B.SITE_ID DESC) AS rn "
 						+ "FROM ASSET_REGISTRY A LEFT JOIN AR_SITE B ON B.AR_ID = A.AR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID ";
 
 				String strTemp = "SELECT * FROM ( SELECT 1 AS chkBox, A.AR_ID AS arID, A.ITEM_CODE AS aritemCode, A.ITEM_NAME AS aritemName, A.ITEM_MODEL AS itemModel, A.ITEM_PART_NUMBER AS itemPartNumber, "
 						+ "TO_CHAR(A.LAST_MODIFIED_DATE, 'YYYY-MM-DD HH24:MI:SS') AS arlastModifiedDate, A.ITEM_SN AS itemSN, A.ITEM_NAME_REGISTER AS itemNameReg, A.PO_ID AS poID, "
-						+ "COALESCE(A.NODE_ID, ' ') AS nodeID, COALESCE(A.NODE_NAME, ' ') AS nodeName, B.SITE_ID as siteID, B.SITE_NAME as siteName,C.LONGITUDE as longitude,C.LATITUDE as latitude, "
+						+ " B.SITE_ID as siteID, B.SITE_NAME as siteName,C.LONGITUDE as longitude,C.LATITUDE as latitude, "
 						+ "ROW_NUMBER() OVER (PARTITION BY A.AR_ID ORDER BY B.SITE_ID DESC) AS rn "
 						+ "FROM ASSET_REGISTRY A LEFT JOIN AR_SITE B ON B.AR_ID = A.AR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID ";
 
@@ -591,8 +591,6 @@ public class AssetRegistryController {
 		assetreg.setArtech4G(request.getParameter("artech4G").charAt(0));
 		assetreg.setArtech5G(request.getParameter("artech5G").charAt(0));
 		assetreg.setItemNameReg(request.getParameter("itemNameReg"));
-		assetreg.setNodeID(request.getParameter("nodeID"));
-		assetreg.setNodeName(request.getParameter("node_Name"));
 		assetreg.setArSubDomain(request.getParameter("arSubDomain"));
 		assetreg.setArVendor(request.getParameter("arVendor"));
 		assetreg.setArType(request.getParameter("arType"));
@@ -736,7 +734,6 @@ public class AssetRegistryController {
 				for (int i = 0; i < itemParameters.getDictParameterserialNumber().size(); i++) {
 				arSerialNumber = new ArSerialNumber();
 				
-				
 				if(StringUtils.equalsIgnoreCase(itemParameters.getDictParameterserialNumber().get(i).get("arSerialID"), "0")) {
 					synchronized (this) {						
 						serialId = "ARSNUM_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT AR_SERIALNO FROM SEQ_TABLE").uniqueResult().toString());	
@@ -754,8 +751,6 @@ public class AssetRegistryController {
 				arSerialNumber.setSerialNumber(itemParameters.getDictParameterserialNumber().get(i).get("SNserialNumber"));
 				arSerialNumber.setModel(itemParameters.getDictParameterserialNumber().get(i).get("SNmodel"));
 				arSerialNumber.setPartNumber(itemParameters.getDictParameterserialNumber().get(i).get("SNpartNumber"));
-				arSerialNumber.setSnodeID(itemParameters.getDictParameterserialNumber().get(i).get("SNnodeID"));
-				arSerialNumber.setSnodeName(itemParameters.getDictParameterserialNumber().get(i).get("SNnodeName"));
 				arSerialNumber.setSite(itemParameters.getDictParameterserialNumber().get(i).get("SNsite"));
 				arSerialNumber.setPosition(itemParameters.getDictParameterserialNumber().get(i).get("SNposition"));
 				arSerialNumber.setArID(AssetRegID);				session.saveOrUpdate(arSerialNumber);
