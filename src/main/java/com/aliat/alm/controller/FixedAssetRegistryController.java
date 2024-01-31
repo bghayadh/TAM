@@ -99,15 +99,15 @@ public class FixedAssetRegistryController {
 				 * "from FIXED_ASSET_REGISTRY order by LAST_MODIFIED_DATE DESC";
 				 */
 
-				String str = "SELECT farID, fixedassetID, itemCode, itemName, lastModifiedDate,itemSN,itemNameRegister,poID,nodeID,nodeName,siteID,siteName FROM ( "
-						+ " SELECT A.FAR_ID as farID, A.FAR_ID as fixedassetID, A.ITEM_CODE as itemCode, A.ITEM_NAME as itemName,TO_CHAR(A.LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') as lastModifiedDate, A.ITEM_SN as itemSN,A.ITEM_NAME_REGISTER as itemNameRegister, A.PO_ID as poID,COALESCE(A.NODE_ID, ' ') as nodeID, COALESCE(A.NODE_NAME, ' ') as nodeName, B.SITE_ID AS siteID, B.SITE_NAME AS siteName , "
+				String str = "SELECT farID, fixedassetID, itemCode, itemName, lastModifiedDate,itemSN,itemNameRegister,poID,siteID,siteName FROM ( "
+						+ " SELECT A.FAR_ID as farID, A.FAR_ID as fixedassetID, A.ITEM_CODE as itemCode, A.ITEM_NAME as itemName,TO_CHAR(A.LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') as lastModifiedDate, A.ITEM_SN as itemSN,A.ITEM_NAME_REGISTER as itemNameRegister, A.PO_ID as poID, B.SITE_ID AS siteID, B.SITE_NAME AS siteName , "
 						+ " ROW_NUMBER() OVER (PARTITION BY A.FAR_ID ORDER BY B.SITE_ID DESC) AS rn FROM FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID ) WHERE rn = 1 ORDER BY lastModifiedDate DESC";
 
 				Query query = session.createNativeQuery(str);
 
 				listFAR = ((SQLQuery) query).addScalar("farID").addScalar("fixedassetID").addScalar("itemCode")
 						.addScalar("itemName").addScalar("lastModifiedDate").addScalar("itemSN")
-						.addScalar("itemNameRegister").addScalar("poID").addScalar("nodeID").addScalar("nodeName")
+						.addScalar("itemNameRegister").addScalar("poID")
 						.addScalar("siteID").addScalar("siteName")
 						.setResultTransformer(Transformers.aliasToBean(FixedAssetRegisterListView.class)).list();
 
@@ -200,15 +200,15 @@ public class FixedAssetRegistryController {
 				 * +"from FIXED_ASSET_REGISTRY " ;
 				 */
 
-				String str = "SELECT chkBox,farID,itemCode,itemName,lastModifiedDate,itemSN,itemNameRegister,poID,nodeID,nodeName,siteID,siteName FROM ( SELECT 1 as chkBox, A.FAR_ID as farID, A.ITEM_CODE as itemCode, A.ITEM_NAME as itemName, "
+				String str = "SELECT chkBox,farID,itemCode,itemName,lastModifiedDate,itemSN,itemNameRegister,poID,siteID,siteName FROM ( SELECT 1 as chkBox, A.FAR_ID as farID, A.ITEM_CODE as itemCode, A.ITEM_NAME as itemName, "
 						+ "TO_CHAR(A.LAST_MODIFIED_DATE, 'YYYY-MM-DD HH24:MI:SS') AS lastModifiedDate, A.ITEM_SN as itemSN, A.ITEM_NAME_REGISTER as itemNameRegister, A.PO_ID as poID, "
-						+ "COALESCE(A.NODE_ID, ' ') AS nodeID, COALESCE(A.NODE_NAME, ' ') AS nodeName, B.SITE_ID as siteID, B.SITE_NAME as siteName, "
+						+ " B.SITE_ID as siteID, B.SITE_NAME as siteName, "
 						+ "ROW_NUMBER() OVER (PARTITION BY A.FAR_ID ORDER BY B.SITE_ID DESC) AS rn "
 						+ "FROM FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID ";
 
 				String strTemp = "SELECT * FROM ( SELECT 1 as chkBox, A.FAR_ID as farID, A.ITEM_CODE as itemCode, A.ITEM_NAME as itemName, "
 						+ "TO_CHAR(A.LAST_MODIFIED_DATE, 'YYYY-MM-DD HH24:MI:SS') AS lastModifiedDate, A.ITEM_SN as itemSN, A.ITEM_NAME_REGISTER as itemNameRegister, A.PO_ID as poID, "
-						+ "COALESCE(A.NODE_ID, ' ') AS nodeID, COALESCE(A.NODE_NAME, ' ') AS nodeName, B.SITE_ID as siteID, B.SITE_NAME as siteName,C.LONGITUDE as longitude,C.LATITUDE as latitude, "
+						+ " B.SITE_ID as siteID, B.SITE_NAME as siteName,C.LONGITUDE as longitude,C.LATITUDE as latitude, "
 						+ "ROW_NUMBER() OVER (PARTITION BY A.FAR_ID ORDER BY B.SITE_ID DESC) AS rn "
 						+ "FROM FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID ";
 
@@ -647,8 +647,6 @@ public class FixedAssetRegistryController {
 					// fassetreg.setSideID(request.getParameter("siteID"));
 					// fassetreg.setWareName(request.getParameter("wareName"));
 					// fassetreg.setWareID(request.getParameter("wareID"));
-					fassetreg.setNodeID(request.getParameter("nodeID"));
-					fassetreg.setNodeName(request.getParameter("node_Name"));
 					fassetreg.setFarcreatedDate(CreationDate);
 					fassetreg.setFarlastModifiedDate(lastModifiedDate);
 					fassetreg.setOwnership(request.getParameter("ownership"));
@@ -886,10 +884,6 @@ public class FixedAssetRegistryController {
 									.getDictParameterFixedAssetRegistrySerialNumber().get(i).get("SNmodel"));
 							farSerialNumber.setInputpartNumber(itemParameters
 									.getDictParameterFixedAssetRegistrySerialNumber().get(i).get("SNpartNumber"));
-							farSerialNumber.setInputNodeID(itemParameters
-									.getDictParameterFixedAssetRegistrySerialNumber().get(i).get("SNnodeID"));
-							farSerialNumber.setInputNodeName(itemParameters
-									.getDictParameterFixedAssetRegistrySerialNumber().get(i).get("SNnodeName"));
 							farSerialNumber.setInputsite(itemParameters.getDictParameterFixedAssetRegistrySerialNumber()
 									.get(i).get("SNsite"));
 							farSerialNumber.setInputPosition(itemParameters
