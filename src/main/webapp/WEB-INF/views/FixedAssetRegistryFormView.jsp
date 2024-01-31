@@ -636,8 +636,6 @@ max-height: 100%;
 						                <th width="220px">Serial Number</th>
 						                <th width="220px">Model</th>
 										<th width="220px">Part Number</th>
-										<th width="100px">Node Id</th>
-										<th width="100px">Node Name</th>
 										<th width="100px">Site</th>
 										<th width="100px">Position</th>
 										<th width="100px">ID</th>
@@ -1551,24 +1549,7 @@ max-height: 100%;
 </div>
 <p></p>
 <div class="container-fluid">
-	<div class="row">
-		<div class="col-sm-6">
-			<div class="form-group">
-				<div class="input-group-prepend">
-					<span class="input-group-text">Node ID</span>
-					<input type="text" id="popupSerNodeId" value="${popupSerNodeId}" style="width:674px; height:37px"  class="ui-widget ui-widget-content ui-corner-all form-control text-input"  />
-				</div>
-			</div>
-		</div>
-		<div class="col-sm-6">
-			<div class="form-group">
-				<div class="input-group-prepend">
-					<span class="input-group-text">Node Name</span>
-					<input type="text" id="popupSerNodeName" value="${popupSerNodeName}" style="width:675px;height:37px;"  class="ui-widget ui-widget-content ui-corner-all form-control text-input"  />
-				</div>
-			</div>
-		</div>
-  </div>
+	
 </div>
 <p></p>
 <div class="container-fluid">
@@ -1863,8 +1844,6 @@ function getselectedrowsSNum(){
 	    	"SNserialNumber" : $(this).parent().parent().children('td[name="SNserialNumber"]').children('input').val(),							   
 	    	"SNmodel" : $(this).parent().parent().children('td[name="SNmodel"]').children('input').val(),			   
 	    	"SNpartNumber" : $(this).parent().parent().children('td[name="SNpartNumber"]').children('input').val(),
-	    	"SNnodeID" : $(this).parent().parent().children('td[name="SNnodeID"]').children('input').val(),
-	    	"SNnodeName" : $(this).parent().parent().children('td[name="SNnodeName"]').children('input').val(),
 	    	"SNsite": $(this).parent().parent().children('td[name="SNsite"]').children('input').val(),
 	    	"SNposition" : $(this).parent().parent().children('td[name="SNposition"]').children('input').val(),
 	    	"farSerialID" : $(this).parent().parent().children('td[name="farSerialID"]').children('input').val()
@@ -1895,8 +1874,6 @@ if('${ListFarSerialNumber}' !="addNew"){
 		var inputSerialNb = boqArraySNum[i].inputSerialNb;
 		var inputModel=boqArraySNum[i].inputModel;
 		var inputpartNumber=boqArraySNum[i].inputpartNumber;
-		var inputNodeID= boqArraySNum[i].inputNodeID;
-		var inputNodeName=boqArraySNum[i].inputNodeName;
 		var inputsite=boqArraySNum[i].inputsite;
 		var inputPosition=boqArraySNum[i].inputPosition;
 		var farSerialID=boqArraySNum[i].serialId;
@@ -1916,14 +1893,7 @@ if('${ListFarSerialNumber}' !="addNew"){
 		else inputpartNumber=boqArraySNum[i].inputpartNumber;
 		
 		
-		if(inputNodeID == null)
-		inputNodeID = "";
-		else inputNodeID=boqArraySNum[i].inputNodeID;
-
-		if(inputNodeName == null)
-		inputNodeName = "";
-		else(inputNodeName=boqArraySNum[i].inputNodeName);
-
+		
 		if(inputsite == null)
 		inputsite="";
 		else(inputsite=boqArraySNum[i].inputsite);
@@ -1937,8 +1907,6 @@ if('${ListFarSerialNumber}' !="addNew"){
 		itemSNumRow = itemSNumRow + "<td name='SNserialNumber'><input name='inputSerialNb'  id = 'inputSerialNb"+i+"' type='text' value='"+inputSerialNb+"'style='width:200px;' class='form-control text-input'/></td>";
 		itemSNumRow = itemSNumRow + "<td name='SNmodel'><input name='inputModel' id = 'inputModel"+i+"' type='text' value='"+inputModel+"' style='width:200px;' class='form-control text-input'/></td>";
 		itemSNumRow = itemSNumRow + "<td name='SNpartNumber'><input name='inputpartNumber' id = 'inputpartNumber"+i+"' type='text' value='"+inputpartNumber+"' style='width:200px;' class='form-control text-input'/></td>";
-		itemSNumRow = itemSNumRow + "<td name='SNnodeID'><input name='inputNodeID' id = 'inputNodeID"+i+"' type='text' value='"+inputNodeID+"'style='width:200px;' class='form-control text-input'/></td>";
-		itemSNumRow = itemSNumRow + "<td name='SNnodeName'><input name='inputNodeName' id = 'inputNodeName"+i+"' type='text' value='"+inputNodeName+"'style='width:200px;' class='form-control text-input'/></td>";
 		itemSNumRow = itemSNumRow + "<td name='SNsite'><input name='inputsite' id = 'inputsite"+i+"' type='text' value='"+inputsite+"'style='width:200px;' class='form-control text-input'/></td>";
 		itemSNumRow = itemSNumRow + "<td name='SNposition'><input name='inputPosition' type='text' value='"+inputPosition+"'style='width:200px;' class='form-control text-input'/></td>";
 		itemSNumRow = itemSNumRow + "<td name='farSerialID'><input name='farSerialID' type='text' readonly value='"+farSerialID+"'style='width:200px;' class='form-control text-input'/></td>";
@@ -3104,7 +3072,7 @@ $("#itmname").autocomplete({
 				
 			}
 				*/
-
+				}
 		</script>
 
  
