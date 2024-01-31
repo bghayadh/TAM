@@ -33,12 +33,7 @@ public class FixedAssetRegisterListView {
 	@Column(name = "PO_ID")
 	private String poID;
 	
-	@Column(name = "NODE_ID")
-	private String nodeID;
-	
-	@Column(name = "NODE_NAME")
-	private String nodeName;
-	
+		
 	@Column(name = "SITE_ID")
 	private String siteID;
 
@@ -51,8 +46,7 @@ public class FixedAssetRegisterListView {
 
 
 	public FixedAssetRegisterListView(String farID, String fixedassetID, String itemCode, String itemName,
-			String lastModifiedDate, String itemSN, String itemNameRegister, String poID, String nodeID,
-			String nodeName,String siteID, String siteName) {
+			String lastModifiedDate, String itemSN, String itemNameRegister, String poID, String siteID, String siteName) {
 		super();
 		this.farID = farID;
 		this.fixedassetID = fixedassetID;
@@ -62,8 +56,6 @@ public class FixedAssetRegisterListView {
 		this.itemSN = itemSN;
 		this.itemNameRegister = itemNameRegister;
 		this.poID = poID;
-		this.nodeID = nodeID;
-		this.nodeName = nodeName;
 		this.siteID = siteID;
 		this.siteName=siteName;
 	}
@@ -149,24 +141,7 @@ public class FixedAssetRegisterListView {
 	}
 
 
-	public String getNodeID() {
-		return nodeID;
-	}
-
-
-	public void setNodeID(String nodeID) {
-		this.nodeID = nodeID;
-	}
-
-
-	public String getNodeName() {
-		return nodeName;
-	}
-
-
-	public void setNodeName(String nodeName) {
-		this.nodeName = nodeName;
-	}
+	
 
 
 	public String getSiteID() {
