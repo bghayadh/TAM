@@ -445,29 +445,7 @@
 													</li>
 												</th>
 
-												<th>Node ID
-													<li class="filter-dropdown dropdown">
-														<button class="almgrid-filter" data-toggle="dropdown"> <i
-																class="fa fa-list almgrid-filter-i"
-																aria-hidden="true"></i></button>
-														<ul
-															class="dropdown-menu dropdown-menu-right filter-dropdown-ul">
-
-														</ul>
-													</li>
-												</th>
-
-												<th>Node Name
-													<li class="filter-dropdown dropdown">
-														<button class="almgrid-filter" data-toggle="dropdown"> <i
-																class="fa fa-list almgrid-filter-i"
-																aria-hidden="true"></i></button>
-														<ul
-															class="dropdown-menu dropdown-menu-right filter-dropdown-ul">
-
-														</ul>
-													</li>
-												</th>
+												
 
 												<th>Site ID
 													<li class="filter-dropdown dropdown">
@@ -492,8 +470,6 @@
 											<tr>
 												<th class="table-select-all"><input type="checkbox"
 														class="table-select-all-checkbox"></th>
-												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
-												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
@@ -649,7 +625,7 @@ download_link.click();
 function fillGrid(filledGrid){
 exportArrayGrid=[];
 exportArrayGrid.push('\r');
-exportArrayGrid.push(["FAR ID", "Item Code", "Item Name", "Last Modified Date", "Item Serial Number","Item Name Register","PO ID", "Node ID","Node Name","Site ID","Site Name"]);
+exportArrayGrid.push(["FAR ID", "Item Code", "Item Name", "Last Modified Date", "Item Serial Number","Item Name Register","PO ID", "Site ID","Site Name"]);
 var value = Object.keys(filledGrid[0]);
 for(i=0;i<filledGrid.length;i++){
 	exportArrayGrid.push('\r');
@@ -720,18 +696,12 @@ exportGrid();
 				 				+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'
 				 				+'<th>PO ID<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
 				 				+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'
-				 				+'<th>Node ID<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
-				 				+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'
-				 				+'<th>Node Name<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
-				 				+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'
-				 				+'<th>Site ID<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
+				 					+'<th>Site ID<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
 				 				+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'
 				 				+'<th>Site Name<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
 				 				+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'
 				 				+'</tr>'
 				 				+'<tr><th class="table-select-all"><input type="checkbox" class="table-select-all-checkbox"></th>'
-				 				+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
-				 				+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
 				 				+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
 				 				+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
 				 				+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
