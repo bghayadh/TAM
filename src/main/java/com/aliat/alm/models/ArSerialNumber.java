@@ -24,12 +24,6 @@ public class ArSerialNumber {
 	private String partNumber;
 	
 
-	@Column(name = "NODE_ID", nullable = false)
-	private String snodeID;
-	
-
-	@Column(name = "NODE_NAME", nullable = false)
-	private String snodeName;
 	
 	@Column(name = "SITE", nullable = false)
 	private String site;
@@ -74,22 +68,7 @@ public class ArSerialNumber {
 	public void setPartNumber(String partNumber) {
 		this.partNumber = partNumber;
 	}
-	public String getSnodeID() {
-		return snodeID;
-	}
 
-	public void setSnodeID(String snodeID) {
-		this.snodeID = snodeID;
-	}
-
-	public String getSnodeName() {
-		return snodeName;
-	}
-
-	public void setSnodeName(String snodeName) {
-		this.snodeName = snodeName;
-	}
-	
 	public String getSite() {
 		return site;
 	}
@@ -106,16 +85,13 @@ public class ArSerialNumber {
 		this.arID = arID;
 	}
 	
-	public ArSerialNumber(String serialId, String serialNumber, String Model, String partNumber, String snodeID,
-			String snodeName,String site,String position, String arID) {
+	public ArSerialNumber(String serialId, String serialNumber, String Model, String partNumber, String site,String position, String arID) {
 		super();
 		this.serialId = serialId;
 		this.serialNumber = serialNumber;
 		this.Model = Model;
 		this.partNumber = partNumber;
-		this.snodeID = snodeID;
-		this.snodeName = snodeName;
-		this.site = site;
+	this.site = site;
 		this.position = position;
 		this.arID = arID;
 	}
