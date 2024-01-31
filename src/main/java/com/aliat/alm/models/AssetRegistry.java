@@ -104,11 +104,7 @@ public class AssetRegistry {
 	@Column(name = "PO_ID")
 	private String poID;
 	
-	@Column(name = "NODE_ID")
-	private String nodeID;
 	
-	@Column(name = "NODE_NAME")
-	private String nodeName;
 /*	
 	@Column(name = "SITE_ID")
 	private String siteID;
@@ -212,7 +208,7 @@ public class AssetRegistry {
 			String aritemType, String arcableType, String arweight, String arweightUOM, String arlength, String arwidth,
 			String arheight, String arsizeUOM, char arservice, Timestamp arendOfLife, float arvaluationRate,
 			char ardisabled, String aritemImage, String arwarrantyPeriod, char artech2g, char artech3g, char artech4g,
-			char artech5g, String itemNameReg, String ardniID, String poID, String nodeID, String nodeName,
+			char artech5g, String itemNameReg, String ardniID, String poID,
 			String siteID, String supplierID, String ownership, Timestamp scrapDate, String scrapStatus, String notes,
 			String shelterVendor, String shelterRoomID, String locationSubType, String locationClass,
 			String locationAddress, String lastModUser, String objectID, String itemSN, String itemModel,
@@ -251,8 +247,6 @@ public class AssetRegistry {
 		this.itemNameReg = itemNameReg;
 		this.ardniID = ardniID;
 		this.poID = poID;
-		this.nodeID = nodeID;
-		this.nodeName = nodeName;
 //		this.siteID = siteID;
 		this.supplierID = supplierID;
 		this.ownership = ownership;
@@ -517,21 +511,7 @@ public class AssetRegistry {
 		this.poID = poID;
 	}
 
-	public String getNodeID() {
-		return nodeID;
-	}
-
-	public void setNodeID(String nodeID) {
-		this.nodeID = nodeID;
-	}
-
-	public String getNodeName() {
-		return nodeName;
-	}
-
-	public void setNodeName(String nodeName) {
-		this.nodeName = nodeName;
-	}
+	
 /*
 	public String getSiteID() {
 		return siteID;
