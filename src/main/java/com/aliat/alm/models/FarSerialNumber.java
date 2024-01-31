@@ -23,12 +23,6 @@ public class FarSerialNumber {
 	private String inputpartNumber;
 	
 
-	@Column(name = "NODE_ID", nullable = false)
-	private String inputNodeID;
-	
-
-	@Column(name = "NODE_NAME", nullable = false)
-	private String inputNodeName;
 	
 	@Column(name = "SITE", nullable = false)
 	private String inputsite;
@@ -89,27 +83,7 @@ public class FarSerialNumber {
 
 
 
-	public String getInputNodeID() {
-		return inputNodeID;
-	}
-
-
-
-	public void setInputNodeID(String inputNodeID) {
-		this.inputNodeID = inputNodeID;
-	}
-
-
-
-	public String getInputNodeName() {
-		return inputNodeName;
-	}
-
-
-
-	public void setInputNodeName(String inputNodeName) {
-		this.inputNodeName = inputNodeName;
-	}
+	
 
 
 
@@ -150,14 +124,12 @@ public class FarSerialNumber {
 
 
 	public FarSerialNumber(String serialId, String inputSerialNb, String inputModel, String inputpartNumber,
-			String inputNodeID, String inputNodeName, String inputsite, String farID, String inputPosition) {
+			 String inputsite, String farID, String inputPosition) {
 		super();
 		this.serialId = serialId;
 		this.inputSerialNb = inputSerialNb;
 		this.inputModel = inputModel;
 		this.inputpartNumber = inputpartNumber;
-		this.inputNodeID = inputNodeID;
-		this.inputNodeName = inputNodeName;
 		this.inputsite = inputsite;
 		this.farID = farID;
 		this.inputPosition = inputPosition;
