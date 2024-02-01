@@ -10,6 +10,7 @@ var Lat=${Lat};
 var listNodes=${listNodes};
 var listCells=${listCells};
 var arrayParam=${arrayParam};
+var date=$("#ParsingDate").val();
 
 
 var button ;
@@ -245,7 +246,8 @@ map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
 */
 			map.setOptions({ minZoom: 3, maxZoom: 28});	
 	//CreateMap_StNdCell(lst,map);
-	CreateMap(lst,map);	
+	//CreateMap(lst,map);	
+	CreateMap2(lst,map,arrayParam,date);
 	CreateTree_StNdCell(lst,map);
 	
 	}

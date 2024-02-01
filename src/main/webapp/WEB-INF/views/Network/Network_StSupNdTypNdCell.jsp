@@ -245,7 +245,8 @@ map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
 				});
 */
 			map.setOptions({ minZoom: 3, maxZoom: 28});	
-	CreateMap(lst,map);	
+	//CreateMap(lst,map);
+	CreateMap2(lst,map,arrayParam,date);	
 	CreateTree_StVenNdTpNdCell(lst,map);
 	
 	}
