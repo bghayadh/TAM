@@ -9,6 +9,7 @@ var lst = ${listNodes};
 //console.log("listNodes/lst...", lst);
 var arrayParam = ${arrayParam};
 //console.log("arrayParam...", arrayParam);
+var date=$("#ParsingDate").val();
 
 var button ;
 var data;
@@ -241,7 +242,8 @@ map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
 				});
 */
 	map.setOptions({ minZoom: 3, maxZoom: 28});	
-	CreateMap(lst,map);
+	//CreateMap(lst,map);
+	CreateMap2(lst,map,arrayParam,date);
 	CreateTree_Nodes(lst,map);
 
 		}
