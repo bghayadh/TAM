@@ -251,7 +251,7 @@ map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
 			map.setOptions({ minZoom: 3, maxZoom: 28});	
 	//CreateMap_StNdCell(lst,map);
 	//CreateMap(lst,map);	
-	CreateMap2(lst,map,arrayParam,date);
+	CreateMap(lst,map,arrayParam,date);
 	CreateTree_SupNdTpStNdCell(listSupp,map);
 	
 	}
@@ -315,7 +315,7 @@ singleSupp = new ContextMenu({
 function AllSitesCheckFilter(){
 	markerClusterSites.clearMarkers();
 	//CreateMap(lst,map);
-	CreateMap2(lst,map,arrayParam,date);
+	CreateMap(lst,map,arrayParam,date);
 
 	$('.AllSuppliers').bind("change",function() {	
 			if ($(this).is(':checked')){
