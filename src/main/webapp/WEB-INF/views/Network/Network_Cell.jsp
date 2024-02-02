@@ -8,6 +8,7 @@ var lst = ${listCells};
 //console.log("listCells/lst...", lst);
 var arrayParam = ${arrayParam};
 //console.log("arrayParam...", arrayParam);
+var date=$("#ParsingDate").val();
 
 var button ;
 var data;
@@ -240,7 +241,8 @@ map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
 				});
 */
 	map.setOptions({ minZoom: 3, maxZoom: 28});	
-	CreateMap(lst,map);
+	//CreateMap(lst,map);
+	CreateMap2(lst,map,arrayParam,date);
 	CreateTree_Cell(lst,map);
 
 		}
@@ -300,11 +302,22 @@ function CreateTree_Cell(lst,map){
 
 	
 	function showMarkerSingleSite(id) {
-		var Id= id.split("_SingleCell")[0];
-		
+		/*var Id= id;//split("_SingleCell")[0];
+		console.log("Id "+Id);
 		var parts = Id.split('_');			
-		var cellId = parts[0] + "_" + parts[1]+ "_" + parts[2];
-				
+		var cellId = parts[0] + "_" + parts[1]+ "_" + parts[2]+ "_" + parts[3]+ "_" + parts[4]+ "_" + parts[5];
+		console.log("cellId "+cellId);*/
+
+		var Id= id.split("_SingleCell")[0];
+		var index = id.indexOf("WARE_2");
+		var indexnull = id.indexOf("_SingleCell");
+		if (index !== -1) {
+			cellId = id.substring(0, index).slice(0, -1);
+		}else{
+			var secondLastIndex = id.lastIndexOf("_", id.lastIndexOf("_") - 1); // Find the second last index of '_'
+			var cellId = id.substring(0, secondLastIndex); // Get the substring from 0 to the second last index
+		}
+
 		if ($("#" + id).is(":checked")) {
 			var checkboxes = $('[id$="_SingleCell"]');
 			var allChecked = true;

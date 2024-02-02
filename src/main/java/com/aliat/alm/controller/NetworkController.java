@@ -2010,11 +2010,12 @@ public class NetworkController {
 							+ "LEFT JOIN NODE_3GCELL k ON b.NODE_PK = k.NODE_PK WHERE b.NODE_PK = k.NODE_PK "
 							+ generateDateCondition(parsingDate, "b");
 					strCells3 = AppendQuery("k", arrayParam, strCells3);
-
+					
 					cellResult.addAll(session.createNativeQuery(strCells1).list());
 					cellResult.addAll(session.createNativeQuery(strCells2).list());
 					cellResult.addAll(session.createNativeQuery(strCells3).list());
-
+					
+					
 					model.addAttribute("listCells", mapper.writeValueAsString(cellResult));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
 					model.addAttribute("parsingDate", parsingDate);
@@ -6923,19 +6924,18 @@ public class NetworkController {
 			arrayParam[2] = 0; // RAN
 			arrayParam[3] = 0; // core
 			
-			if (enterprise =="true") {
+			if (enterprise.equalsIgnoreCase("true")) {
 				arrayParam[0] = 1;
 			}
-			if (transmission =="true") {
+			if (transmission.equalsIgnoreCase("true")) {
 				arrayParam[1] = 1;
 			}
-			if (RAN =="true") {
+			if (RAN.equalsIgnoreCase("true")) {
 				arrayParam[2] = 1;
 			}
-			if (core =="true") {
+			if (core.equalsIgnoreCase("true")) {
 				arrayParam[3] = 1;
 			}
-			
 			
 			
 			try {	
@@ -6996,6 +6996,21 @@ public class NetworkController {
 						+ selectedItem + "'" + generateDateCondition(parsingDate, "b");
 				strquery = AppendQuery("b", arrayParam, strquery);
 
+			}
+			else if(selectedItem.contains("CELL")) {
+				strquery = "SELECT DISTINCT b.SITE_ID,b.WARE_NAME,j.GCELL_ID,b.LATITUDE,b.LONGITUDE,j.NODE_PK,j.CELLNAME,b.WARE_ID,b.NODE_NAME FROM NODE_ACTIVE b LEFT JOIN NODE_2GCELL j ON b.NODE_PK = j.NODE_PK WHERE j.GCELL_ID='"
+						+ selectedItem + "'" + generateDateCondition(parsingDate, "b");
+				strquery = AppendQuery("b", arrayParam, strquery);
+			
+				strquery =strquery
+						+" union SELECT DISTINCT b.SITE_ID,b.WARE_NAME,j.LCELL_ID,b.LATITUDE,b.LONGITUDE,j.NODE_PK,j.CELLNAME,b.WARE_ID,b.NODE_NAME FROM NODE_ACTIVE b LEFT JOIN NODE_4GCELL j ON b.NODE_PK = j.NODE_PK WHERE j.LCELL_ID='"																		
+						+ selectedItem + "'" + generateDateCondition(parsingDate, "b");
+				strquery = AppendQuery("b", arrayParam, strquery);
+			
+				strquery = strquery
+						+" union SELECT DISTINCT b.SITE_ID,b.WARE_NAME,j.UCELL_ID,b.LATITUDE,b.LONGITUDE,j.NODE_PK,j.CELLNAME,b.WARE_ID,b.NODE_NAME FROM NODE_ACTIVE b LEFT JOIN NODE_3GCELL j ON b.NODE_PK = j.NODE_PK WHERE j.UCELL_ID='"
+						+ selectedItem + "'" + generateDateCondition(parsingDate, "b");
+				strquery = AppendQuery("b", arrayParam, strquery);
 			}
 				System.out.println("query "+strquery);
 				rtn.put("siteInfo", session.createNativeQuery(strquery).list());

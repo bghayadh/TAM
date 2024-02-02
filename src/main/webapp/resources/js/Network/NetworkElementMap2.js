@@ -481,9 +481,19 @@ function CreateMarkersInfo(selectedItem,arrayParam,parsingdate,marker){
 					 data="<div>"+siteName+"</br>"+nodeType+"</br>"+nodeName+"</br>"+listCellsCount+"</div>";
 				 } else if (siteInfo[2].includes("CELL")) {
 				    //console.log("Found 'CELL'");
-				    var nodeName= "<b style='font-size:13px;'><u>Node Name: </u></b>  "+siteInfo[12];	
-				    var cellName= "<b style='font-size:13px;'><u>Cell Name: </u></b>  "+siteInfo[10];	
-					var technology= "<b style='font-size:13px;'><u>Technology: </u></b>  "+siteInfo[2].split("_")[1];	
+					 var tech="";
+					 if(siteInfo[2].includes("GCELL")) {
+						 tech="2G"	
+					    }
+					 else if(siteInfo[2].includes("UCELL")) {
+						 tech="3G"	
+					    }
+					 else if(siteInfo[2].includes("LCELL")) {
+						 tech="4G"	
+					    }
+				    var nodeName= "<b style='font-size:13px;'><u>Node Name: </u></b>  "+siteInfo[8];	
+				    var cellName= "<b style='font-size:13px;'><u>Cell Name: </u></b>  "+siteInfo[6];	
+					var technology= "<b style='font-size:13px;'><u>Technology: </u></b>  "+tech;	
 					 data="<div>"+siteName+"</br>"+nodeName+"</br>"+cellName+"</br>"+technology+"</div>";
 				}
 				InfoArray[selectedItem] = data;
