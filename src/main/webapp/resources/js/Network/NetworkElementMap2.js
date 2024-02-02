@@ -45,7 +45,7 @@ $(document).ready(function() {
 
 
 var InfoArray = {};// map used to store info data for each marker
-function CreateMap2(lst,map,arrayParam,parsingdate){	
+function CreateMap(lst,map,arrayParam,parsingdate){	
 	//console.log("create map");
 	var start = performance.now();
 	panPath = [];   // An array of points the current panning action will use

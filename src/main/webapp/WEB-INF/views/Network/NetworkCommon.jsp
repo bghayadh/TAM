@@ -30,7 +30,7 @@
 	<script src="${pageContext.request.contextPath}/resources/js/context-menu.js"></script>
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/context-menu.css">
 	<script src="${pageContext.request.contextPath}/resources/js/Network/NetworkElementTree.js"></script>
-	<script src="${pageContext.request.contextPath}/resources/js/Network/NetworkElementMap.js"></script>
+	<!-- <script src="${pageContext.request.contextPath}/resources/js/Network/NetworkElementMap.js"></script> -->
 	<script src="${pageContext.request.contextPath}/resources/js/Network/NetworkElementMap2.js"></script>
 			
 <style>
