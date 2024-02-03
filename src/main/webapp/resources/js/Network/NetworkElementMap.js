@@ -168,7 +168,7 @@ function create_Marker_Click2(Id,Name,Long,Lat,markers,marker_Cluster,arrayParam
 		
 		/*
 		google.maps.event.addListener(marker, "click", function (e) {
-			console.log("---clicked---");
+			//console.log("---clicked---");
 			var IdSelected = this.ID;
 			window.infowindow.setContent(this.data);
 	        window.infowindow.open(map, this);
@@ -332,9 +332,6 @@ function markerClicking(marker,IdSelected,data) {
 	window.infowindow.setContent(data);
     window.infowindow.open(map, marker);
 	
-	console.log("IdSelected-------"+IdSelected);
-	console.log("IdSelected-------"+data);
-	
 	var liElement = $("#network_tree").find('li[id*="' + IdSelected + '"]'); // Select the <li> element with the ID IdSelected
 	//console.log("liElement-------",liElement);
 	var spanElement = liElement.find('.TreeSpan')[0];
@@ -416,8 +413,6 @@ function markerClicking(marker,IdSelected,data) {
 	}
 function CreateMarkersInfo(selectedItem,arrayParam,parsingdate,marker){
 	
-	console.log("arrayParamm "+arrayParam);
-	
 	if(arrayParam[0]==1){
 			var paramEnterprise = true;
 		}else{
@@ -460,7 +455,6 @@ function CreateMarkersInfo(selectedItem,arrayParam,parsingdate,marker){
 			success: function (data) {		        	
 			if (data != null) {
 				var siteInfo=data.siteInfo[0];
-				 console.log("Found 'WAREedfrgtyjui'" +siteInfo);
 				infowindow = new google.maps.InfoWindow();
 				
 				const pos = new google.maps.LatLng(siteInfo[3],siteInfo[4]);

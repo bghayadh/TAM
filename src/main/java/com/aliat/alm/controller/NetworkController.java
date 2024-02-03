@@ -7012,7 +7012,7 @@ public class NetworkController {
 						+ selectedItem + "'" + generateDateCondition(parsingDate, "b");
 				strquery = AppendQuery("b", arrayParam, strquery);
 			}
-				System.out.println("query "+strquery);
+				//System.out.println("query "+strquery);
 				rtn.put("siteInfo", session.createNativeQuery(strquery).list());
 			
 			}catch (Exception e) {
