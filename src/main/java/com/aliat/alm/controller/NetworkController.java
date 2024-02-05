@@ -1377,7 +1377,7 @@ public class NetworkController {
 
 				String strSites = "SELECT DISTINCT b.SITE_ID,b.SITE_NAME,b.WARE_ID,a.LATITUDE,a.LONGITUDE ";
 
-				String strPO = "SELECT distinct a.PO_ID FROM ASSET_REGISTRY a,NODE_ACTIVE b WHERE a.PO_ID!='0' and a.PO_ID is not null and a.PO_ID!='null' AND b.NODE_ID=a.NODE_ID "
+				String strPO = "SELECT distinct a.PO_ID FROM FIXED_ASSET_REGISTRY a,NODE_ACTIVE b WHERE a.PO_ID!='0' and a.PO_ID is not null and a.PO_ID!='null' AND b.NODE_ID=a.NODE_ID "
 						+ generateDateCondition(parsingDate, "b");
 
 				try {
@@ -1405,11 +1405,10 @@ public class NetworkController {
 					//strSites = AppendQuery("j", arrayParam, strSites);
 					
 					strSites = strSites
-							+ "FROM AR_SITE b,NODE_ACTIVE a where b.WARE_ID!='0' and b.WARE_ID is not null and b.WARE_ID!='null' "
+							+ "FROM FAR_SITE b,NODE_ACTIVE a where b.WARE_ID!='0' and b.WARE_ID is not null and b.WARE_ID!='null' "
 							+ "AND a.WARE_ID=b.WARE_ID "
 							+ generateDateCondition(parsingDate, "a");
 					strSites = AppendQuery("a", arrayParam, strSites);
-					System.out.println("query "+strSites);
 					model.addAttribute("listSites",
 							mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
 					System.out.println("after query ");
@@ -1474,7 +1473,7 @@ public class NetworkController {
 				String strSites = "SELECT DISTINCT b.SITE_ID,b.SITE_NAME,b.WARE_ID,a.LATITUDE,a.LONGITUDE";
 						
 
-				String strPO = "SELECT distinct a.PO_ID FROM ASSET_REGISTRY a,NODE_ACTIVE b WHERE a.PO_ID!='0' and a.PO_ID is not null and a.PO_ID!='null' AND b.NODE_ID=a.NODE_ID "
+				String strPO = "SELECT distinct a.PO_ID FROM FIXED_ASSET_REGISTRY a,NODE_ACTIVE b WHERE a.PO_ID!='0' and a.PO_ID is not null and a.PO_ID!='null' AND b.NODE_ID=a.NODE_ID "
 						+ generateDateCondition(parsingDate, "b");
 
 				try {
@@ -1519,7 +1518,7 @@ public class NetworkController {
 					strSites = strSites + " ) ";
 					strSites = AppendQuery("e", arrayParam, strSites);*/
 					strSites = strSites
-							+ " FROM AR_SITE b,NODE_ACTIVE a where b.WARE_ID!='0' and b.WARE_ID is not null and b.WARE_ID!='null' "
+							+ " FROM FAR_SITE b,NODE_ACTIVE a where b.WARE_ID!='0' and b.WARE_ID is not null and b.WARE_ID!='null' "
 							+ "AND a.WARE_ID=b.WARE_ID "
 							+ generateDateCondition(parsingDate, "a");
 					strSites = AppendQuery("a", arrayParam, strSites);
@@ -1625,7 +1624,7 @@ public class NetworkController {
 					strSites = strSites + " ) ";
 					strSites = AppendQuery("e", arrayParam, strSites);*/
 					strSites = strSites
-							+ " FROM AR_SITE b,NODE_ACTIVE a where b.WARE_ID!='0' and b.WARE_ID is not null and b.WARE_ID!='null' "
+							+ " FROM FAR_SITE b,NODE_ACTIVE a where b.WARE_ID!='0' and b.WARE_ID is not null and b.WARE_ID!='null' "
 							+ "AND a.WARE_ID=b.WARE_ID "
 							+ generateDateCondition(parsingDate, "a");
 					strSites = AppendQuery("a", arrayParam, strSites);
@@ -5657,14 +5656,13 @@ public class NetworkController {
 			String parsingDate = request.getParameter("date");
 			// System.out.println("parsingDate..."+parsingDate);
 
-			String strSites = "SELECT DISTINCT b.SITE_ID,b.SITE_NAME,b.WARE_ID,j.PO_ID FROM AR_SITE b,ASSET_REGISTRY j,NODE_ACTIVE a WHERE j.AR_ID=b.AR_ID "
+			String strSites = "SELECT DISTINCT b.SITE_ID,b.SITE_NAME,b.WARE_ID,j.PO_ID FROM FAR_SITE b,FIXED_ASSET_REGISTRY j,NODE_ACTIVE a WHERE j.FAR_ID=b.FAR_ID "
 					+ "AND b.WARE_ID!='0' AND b.WARE_ID!='null' AND b.WARE_ID is not null AND b.WARE_ID=a.WARE_ID AND j.PO_ID='"
 					+ selectedItem + "' " + generateDateCondition(parsingDate, "a");
 
-			String strItems = "SELECT distinct a.ITEM_CODE, a.ITEM_NAME, a.PO_ID, b.WARE_ID, a.ITEM_MODEL FROM ASSET_REGISTRY a, AR_SITE b, NODE_ACTIVE c "
-					+ "WHERE a.AR_ID=b.AR_ID AND b.WARE_ID=c.WARE_ID AND b.WARE_ID='" + selectedSite + "' AND a.PO_ID='"
+			String strItems = "SELECT distinct a.ITEM_CODE, a.ITEM_NAME, a.PO_ID, b.WARE_ID, a.ITEM_MODEL FROM FIXED_ASSET_REGISTRY a, FAR_SITE b, NODE_ACTIVE c "
+					+ "WHERE a.FAR_ID=b.FAR_ID AND b.WARE_ID=c.WARE_ID AND b.WARE_ID='" + selectedSite + "' AND a.PO_ID='"
 					+ selectedItem + "' " + generateDateCondition(parsingDate, "c");
-
 			try {
 				notifications.headerNotifications(session, model);
 				if (POAlreadyCreated.equals("false")) {
@@ -5721,12 +5719,12 @@ public class NetworkController {
 			// System.out.println("parsingDate..."+parsingDate);
 
 			String strPO = "SELECT distinct a.PO_ID ,b.WARE_ID,b.SITE_NAME,b.SITE_ID,"
-					+ "(select count(*) from ASSET_REGISTRY a where a.PO_ID is not null and b.WARE_ID is not null) as countItems "
-					+ "FROM ASSET_REGISTRY a, AR_SITE b, NODE_ACTIVE c where a.AR_ID=b.AR_ID and c.WARE_ID=b.WARE_ID and b.WARE_ID='"
+					+ "(select count(*) from FIXED_ASSET_REGISTRY a where a.PO_ID is not null and b.WARE_ID is not null) as countItems "
+					+ "FROM FIXED_ASSET_REGISTRY a, FAR_SITE b, NODE_ACTIVE c where a.FAR_ID=b.FAR_ID and c.WARE_ID=b.WARE_ID and b.WARE_ID='"
 					+ selectedSite + "' " + generateDateCondition(parsingDate, "c");
 
-			String strItems = "SELECT distinct a.ITEM_CODE, a.ITEM_NAME, a.PO_ID, b.WARE_ID, a.ITEM_MODEL FROM ASSET_REGISTRY a, AR_SITE b, NODE_ACTIVE c "
-					+ "WHERE a.AR_ID=b.AR_ID AND b.WARE_ID='" + selectedSite + "' AND a.PO_ID='" + selectedPO + "' "
+			String strItems = "SELECT distinct a.ITEM_CODE, a.ITEM_NAME, a.PO_ID, b.WARE_ID, a.ITEM_MODEL FROM FIXED_ASSET_REGISTRY a, FAR_SITE b, NODE_ACTIVE c "
+					+ "WHERE a.FAR_ID=b.FAR_ID AND b.WARE_ID='" + selectedSite + "' AND a.PO_ID='" + selectedPO + "' "
 					+ generateDateCondition(parsingDate, "c");
 
 			try {
@@ -6011,10 +6009,10 @@ public class NetworkController {
 				String parsingDate = request.getParameter("date");
 				// System.out.println("parsingDate..."+parsingDate);
 
-				String strItems = "SELECT distinct a.ITEM_CODE, a.ITEM_NAME, a.PO_ID, a.ITEM_MODEL FROM ASSET_REGISTRY a, NODE_ACTIVE c WHERE c.NODE_ID=a.NODE_ID and a.PO_ID='"
+				String strItems = "SELECT distinct a.ITEM_CODE, a.ITEM_NAME, a.PO_ID, a.ITEM_MODEL FROM FIXED_ASSET_REGISTRY a, NODE_ACTIVE c WHERE c.NODE_ID=a.NODE_ID and a.PO_ID='"
 						+ selectedPo + "' " + generateDateCondition(parsingDate, "c");
 
-				String strSites = "SELECT DISTINCT b.SITE_ID,b.SITE_NAME,b.WARE_ID,j.ITEM_CODE,j.PO_ID FROM AR_SITE b,ASSET_REGISTRY j,NODE_ACTIVE a where j.AR_ID=b.AR_ID AND "
+				String strSites = "SELECT DISTINCT b.SITE_ID,b.SITE_NAME,b.WARE_ID,j.ITEM_CODE,j.PO_ID FROM FAR_SITE b,FIXED_ASSET_REGISTRY j,NODE_ACTIVE a where j.FAR_ID=b.FAR_ID AND "
 						+ "b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null AND b.WARE_ID=a.WARE_ID AND j.PO_ID='"
 						+ selectedPo + "' and j.ITEM_CODE='" + selectedItem + "' "
 						+ generateDateCondition(parsingDate, "a");
