@@ -6971,7 +6971,7 @@ public class NetworkController {
 				strquery = AppendQuery("a", arrayParam, strquery);
 				
 			}
-			else if(selectedItem.contains("NODE")) {
+			else if(selectedItem.contains("NODE") && !selectedItem.contains("CELL") ) {
 				strquery = "SELECT b.SITE_ID,b.WARE_NAME,b.NODE_PK,b.LATITUDE,b.LONGITUDE,"
 						+ "(select COUNT(*) from NODE_ACTIVE w where b.NODE_PK=w.NODE_PK"
 				 + generateDateCondition(parsingDate, "w");
