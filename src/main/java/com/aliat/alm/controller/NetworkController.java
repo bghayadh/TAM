@@ -5120,10 +5120,10 @@ public class NetworkController {
 		session = AlmDbSession.getInstance().getSession();
 		LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 		try {
-			String strEmpty = "SELECT COUNT(distinct a.WARE_ID) FROM AR_SITE a, ASSET_REGISTRY b,NODE_ACTIVE c WHERE a.AR_ID=b.AR_ID AND a.WARE_ID=c.WARE_ID and a.WARE_ID!='null' AND a.WARE_ID!='0' and a.WARE_ID is not null "
+			String strEmpty = "SELECT COUNT(distinct a.WARE_ID) FROM FAR_SITE a, FIXED_ASSET_REGISTRY b,NODE_ACTIVE c WHERE a.FAR_ID=b.FAR_ID AND a.WARE_ID=c.WARE_ID and a.WARE_ID!='null' AND a.WARE_ID!='0' and a.WARE_ID is not null "
 					+ generateDateConditionBoq(date, "c");
 			strEmpty = boqDomainVar("b", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			String strExist = "Select DISTINCT SITE_NAME From AR_SITE a,NODE_ACTIVE c where  a.WARE_ID='" + SiteId
+			String strExist = "Select DISTINCT SITE_NAME From FAR_SITE a,NODE_ACTIVE c where  a.WARE_ID='" + SiteId
 					+ "' and a.WARE_ID=c.WARE_ID " + generateDateConditionBoq(date, "c");
 			String Site_Query = SiteId == "" ? strEmpty : strExist;
 			// System.out.println(Site_Query);
@@ -5131,10 +5131,10 @@ public class NetworkController {
 			strEmpty = "";
 			strExist = "";
 
-			strEmpty = "SELECT COUNT(distinct a.PO_ID) FROM ASSET_REGISTRY a, AR_SITE b, NODE_ACTIVE c where b.AR_ID=a.AR_ID and b.WARE_ID=c.WARE_ID and b.WARE_ID!='null' AND b.WARE_ID!='0' and b.WARE_ID is not null  "
+			strEmpty = "SELECT COUNT(distinct a.PO_ID) FROM FIXED_ASSET_REGISTRY a, FAR_SITE b, NODE_ACTIVE c where b.FAR_ID=a.FAR_ID and b.WARE_ID=c.WARE_ID and b.WARE_ID!='null' AND b.WARE_ID!='0' and b.WARE_ID is not null  "
 					+ generateDateConditionBoq(date, "c");
 			strEmpty = boqDomainVar("a", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "SELECT COUNT(DISTINCT a.PO_ID) FROM ASSET_REGISTRY a, AR_SITE b, NODE_ACTIVE c where b.AR_ID=a.AR_ID and b.WARE_ID='"
+			strExist = "SELECT COUNT(DISTINCT a.PO_ID) FROM FIXED_ASSET_REGISTRY a, FAR_SITE b, NODE_ACTIVE c where b.FAR_ID=a.FAR_ID and b.WARE_ID='"
 					+ SiteId + "' and b.WARE_ID=c.WARE_ID " + generateDateConditionBoq(date, "c");
 			strExist = boqDomainVar("a", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
 			String Po_Query = SiteId == "" ? strEmpty : strExist;
@@ -5173,7 +5173,7 @@ public class NetworkController {
 			strExist = "";
 
 			if (SiteId != "") {
-				String Item_Query = "Select COUNT(DISTINCT a.ITEM_CODE) from ASSET_REGISTRY a, AR_SITE b, NODE_ACTIVE c where a.AR_ID = b.AR_ID and b.WARE_ID='"
+				String Item_Query = "Select COUNT(DISTINCT a.ITEM_CODE) from FIXED_ASSET_REGISTRY a, FAR_SITE b, NODE_ACTIVE c where a.FAR_ID = b.FAR_ID and b.WARE_ID='"
 						+ SiteId + "' AND b.WARE_ID=c.WARE_ID " + generateDateConditionBoq(date, "c");
 				Item_Query = boqDomainVar("a", paramEnterprise, paramTransmission, paramRAN, paramCore, Item_Query);
 				// System.out.println(Item_Query);
@@ -6815,10 +6815,10 @@ public class NetworkController {
 		LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 
 		try {
-			String strEmpty = "SELECT COUNT(DISTINCT a.PO_ID) FROM ASSET_REGISTRY a,NODE_ACTIVE b WHERE a.PO_ID!='null' AND a.PO_ID!='0' and a.PO_ID is not null AND a.NODE_ID=b.NODE_ID "
+			String strEmpty = "SELECT COUNT(DISTINCT a.PO_ID) FROM FIXED_ASSET_REGISTRY a,NODE_ACTIVE b WHERE a.PO_ID!='null' AND a.PO_ID!='0' and a.PO_ID is not null AND a.NODE_ID=b.NODE_ID "
 					+ generateDateConditionBoq(date, "b");
 			strEmpty = boqDomainVar("a", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			String strExist = "Select DISTINCT a.PO_ID From ASSET_REGISTRY a,NODE_ACTIVE b where a.PO_ID='" + POID
+			String strExist = "Select DISTINCT a.PO_ID From FIXED_ASSET_REGISTRY a,NODE_ACTIVE b where a.PO_ID='" + POID
 					+ "' and a.NODE_ID=b.NODE_ID " + generateDateConditionBoq(date, "b");
 			strExist = boqDomainVar("a", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
 			String PO_Query = POID == "" ? strEmpty : strExist;
@@ -6851,10 +6851,10 @@ public class NetworkController {
 			strEmpty = "";
 			strExist = "";
 
-			strEmpty = "SELECT COUNT(DISTINCT a.WARE_ID) FROM AR_SITE a, ASSET_REGISTRY b, NODE_ACTIVE c where a.AR_ID = b.AR_ID AND a.WARE_ID=c.WARE_ID "
+			strEmpty = "SELECT COUNT(DISTINCT a.WARE_ID) FROM FAR_SITE a, FIXED_ASSET_REGISTRY b, NODE_ACTIVE c where a.FAR_ID = b.FAR_ID AND a.WARE_ID=c.WARE_ID "
 					+ generateDateConditionBoq(date, "c");
 			strEmpty = boqDomainVar("b", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "Select COUNT(DISTINCT a.WARE_ID) FROM AR_SITE a, ASSET_REGISTRY b, NODE_ACTIVE c where a.AR_ID = b.AR_ID and b.PO_ID='"
+			strExist = "Select COUNT(DISTINCT a.WARE_ID) FROM FAR_SITE a, FIXED_ASSET_REGISTRY b, NODE_ACTIVE c where a.FAR_ID = b.FAR_ID and b.PO_ID='"
 					+ POID + "' AND a.WARE_ID=c.WARE_ID " + generateDateConditionBoq(date, "c");
 			strExist = boqDomainVar("b", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
 			String Site_Query = POID == "" ? strEmpty : strExist;
@@ -6864,10 +6864,10 @@ public class NetworkController {
 			strEmpty = "";
 			strExist = "";
 
-			strEmpty = "SELECT COUNT(DISTINCT a.ITEM_CODE) FROM ASSET_REGISTRY a, AR_SITE b, NODE_ACTIVE c where a.AR_ID = b.AR_ID AND b.WARE_ID=c.WARE_ID "
+			strEmpty = "SELECT COUNT(DISTINCT a.ITEM_CODE) FROM FIXED_ASSET_REGISTRY a, FAR_SITE b, NODE_ACTIVE c where a.FAR_ID = b.FAR_ID AND b.WARE_ID=c.WARE_ID "
 					+ generateDateConditionBoq(date, "c");
 			strEmpty = boqDomainVar("a", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "Select COUNT(DISTINCT a.ITEM_CODE) from ASSET_REGISTRY a, AR_SITE b, NODE_ACTIVE c where a.AR_ID = b.AR_ID and PO_ID='"
+			strExist = "Select COUNT(DISTINCT a.ITEM_CODE) from FIXED_ASSET_REGISTRY a, FAR_SITE b, NODE_ACTIVE c where a.FAR_ID = b.FAR_ID and PO_ID='"
 					+ POID + "' AND b.WARE_ID=c.WARE_ID " + generateDateConditionBoq(date, "c");
 			strExist = boqDomainVar("a", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
 			String Item_Query = POID == "" ? strEmpty : strExist;
@@ -7043,10 +7043,10 @@ public class NetworkController {
 		LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 
 		try {
-			String strEmpty = "SELECT COUNT(DISTINCT a.PO_ID) FROM ASSET_REGISTRY a,NODE_ACTIVE c WHERE a.NODE_ID=c.NODE_ID "
+			String strEmpty = "SELECT COUNT(DISTINCT a.PO_ID) FROM FIXED_ASSET_REGISTRY a,NODE_ACTIVE c WHERE a.NODE_ID=c.NODE_ID "
 					+ generateDateConditionBoq(date, "c");
 			strEmpty = boqDomainVar("a", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			String strExist = "Select DISTINCT a.PO_ID From ASSET_REGISTRY a,NODE_ACTIVE c where a.PO_ID='" + POID
+			String strExist = "Select DISTINCT a.PO_ID From FIXED_ASSET_REGISTRY a,NODE_ACTIVE c where a.PO_ID='" + POID
 					+ "' AND a.NODE_ID=c.NODE_ID " + generateDateConditionBoq(date, "c");
 			strExist = boqDomainVar("a", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
 			String PO_Query = POID == "" ? strEmpty : strExist;
@@ -7055,22 +7055,22 @@ public class NetworkController {
 			strEmpty = "";
 			strExist = "";
 
-			strEmpty = "SELECT COUNT(DISTINCT a.WARE_ID) FROM AR_SITE a, ASSET_REGISTRY b,NODE_ACTIVE c where a.AR_ID = b.AR_ID AND a.WARE_ID=c.WARE_ID "
+			strEmpty = "SELECT COUNT(DISTINCT a.WARE_ID) FROM FAR_SITE a, FIXED_ASSET_REGISTRY b,NODE_ACTIVE c where a.FAR_ID = b.FAR_ID AND a.WARE_ID=c.WARE_ID "
 					+ generateDateConditionBoq(date, "c");
 			strEmpty = boqDomainVar("b", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "Select DISTINCT a.SITE_NAME FROM AR_SITE a, ASSET_REGISTRY b,NODE_ACTIVE c where a.AR_ID = b.AR_ID and b.PO_ID='"
+			strExist = "Select COUNT(DISTINCT a.SITE_NAME) FROM FAR_SITE a, FIXED_ASSET_REGISTRY b,NODE_ACTIVE c where a.FAR_ID = b.FAR_ID and b.PO_ID='"
 					+ POID + "' AND a.WARE_ID=c.WARE_ID " + generateDateConditionBoq(date, "c");
 			strExist = boqDomainVar("b", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
 			String Site_Query = POID == "" ? strEmpty : strExist;
-			// System.out.println(Site_Query);
+			//System.out.println(Site_Query);
 			Object Site = session.createNativeQuery(Site_Query).uniqueResult();
 			strEmpty = "";
 			strExist = "";
 
-			strEmpty = "SELECT COUNT(DISTINCT a.ITEM_CODE) FROM ASSET_REGISTRY a, AR_SITE b,NODE_ACTIVE c where a.AR_ID = b.AR_ID AND b.WARE_ID=c.WARE_ID "
+			strEmpty = "SELECT COUNT(DISTINCT a.ITEM_CODE) FROM FIXED_ASSET_REGISTRY a, FAR_SITE b,NODE_ACTIVE c where a.FAR_ID = b.FAR_ID AND b.WARE_ID=c.WARE_ID "
 					+ generateDateConditionBoq(date, "c");
 			strEmpty = boqDomainVar("a", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			strExist = "Select COUNT(DISTINCT a.ITEM_CODE) from ASSET_REGISTRY a, AR_SITE b,NODE_ACTIVE c where a.AR_ID = b.AR_ID and a.PO_ID='"
+			strExist = "Select COUNT(DISTINCT a.ITEM_CODE) from FIXED_ASSET_REGISTRY a, FAR_SITE b,NODE_ACTIVE c where a.FAR_ID = b.FAR_ID and a.PO_ID='"
 					+ POID + "' AND b.WARE_ID=c.WARE_ID " + generateDateConditionBoq(date, "c");
 			strExist = boqDomainVar("a", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
 			String Item_Query = POID == "" ? strEmpty : strExist;
@@ -7082,14 +7082,14 @@ public class NetworkController {
 			BoqHM.put("PO", String.valueOf(Po));
 
 			if (POID != "") {
-				String PO_Amount_Query = "Select a.TOTAL_AMOUNT from PURCHASE_ORDER a, NODE_ACTIVE c where a.PO_ID='"
-						+ POID + "' AND a.WAREHOUSE=c.WARE_ID " + generateDateConditionBoq(date, "c");
-				// System.out.println(PO_Amount_Query);
+				String PO_Amount_Query = "Select TOTAL_AMOUNT from PURCHASE_ORDER  where PO_ID='"
+						+ POID + "'";
+				 //System.out.println(PO_Amount_Query);
 				Object PO_Amount = session.createNativeQuery(PO_Amount_Query).uniqueResult();
 				BoqHM.put("PO Amount", String.valueOf(PO_Amount));
 
-				String PO_Net_Amount_Query = "Select a.NET_TOTAL_AMOUNT from PURCHASE_ORDER a, NODE_ACTIVE c where a.PO_ID='"
-						+ POID + "' AND a.WAREHOUSE=c.WARE_ID " + generateDateConditionBoq(date, "c");
+				String PO_Net_Amount_Query = "Select NET_TOTAL_AMOUNT from PURCHASE_ORDER where PO_ID='"
+						+ POID + "'";
 				// System.out.println(PO_Net_Amount_Query);
 				Object PO_Net_Amount = session.createNativeQuery(PO_Net_Amount_Query).uniqueResult();
 				BoqHM.put("PO Net Amount", String.valueOf(PO_Net_Amount));
