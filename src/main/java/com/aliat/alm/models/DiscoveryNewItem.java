@@ -159,6 +159,10 @@ public class DiscoveryNewItem {
 	
 	@Column(name = "MAC_ADDRESS", nullable = false)
 	private String macAddress;
+	
+    private String toNodeArray;
+	
+	private String fromNodeArray;
 
 	public DiscoveryNewItem() {
 		super();
@@ -174,7 +178,8 @@ public class DiscoveryNewItem {
 			String notes, String transID, String transSrc, String arID, String farID, String position,
 			String elementName, String fromSlot, String toSlot, String toSite, String toSerialNumber,
 			String description, String alcFlg, String toWareName, String toWareId,
-			String arsiteId, String farsiteId, String oldMacAddress, String macAddress) {
+			String arsiteId, String farsiteId, String oldMacAddress, String macAddress,String toNodeArray,
+			String fromNodeArray) {
 		super();
 		this.dniID = dniID;
 		this.dnicreationDate = dnicreationDate;
@@ -225,6 +230,25 @@ public class DiscoveryNewItem {
 		FarsiteId = farsiteId;
 		this.oldMacAddress = oldMacAddress;
 		this.macAddress = macAddress;
+		this.toNodeArray=toNodeArray;
+		this.fromNodeArray=fromNodeArray;
+	
+	}
+
+	public String getToNodeArray() {
+		return toNodeArray;
+	}
+
+	public void setToNodeArray(String toNodeArray) {
+		this.toNodeArray = toNodeArray;
+	}
+
+	public String getFromNodeArray() {
+		return fromNodeArray;
+	}
+
+	public void setFromNodeArray(String fromNodeArray) {
+		this.fromNodeArray = fromNodeArray;
 	}
 
 	public String getDniID() {
