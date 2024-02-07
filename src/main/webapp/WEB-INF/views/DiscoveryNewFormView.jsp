@@ -460,6 +460,7 @@ max-width: 100%;
 						                <th>Total AT</th>
 						                <th>From Site</th>
 						                <th>To Site</th>
+						                <th>FAR Id</th>
 						                <th>From SN</th>
 						                <th>To SN</th>
 						                <th>DNitmID</th>
@@ -1245,6 +1246,17 @@ function getAllItemPartNbs()
 				   aprov.html("<p class='case'>To be Approved By Operation Manager</p>");
 				   approvedby_inp.val('Operation Manager');        
                 }
+				if(transType == "Retirement")
+				{
+
+					$(obj).parent().parent().children('td[name="FarId"]').children('input').prop('readonly', false);
+						}
+				else{
+
+
+					$(obj).parent().parent().children('td[name="FarId"]').children('input').prop('readonly', true);
+					
+					}
 
 			}			
 
@@ -1984,6 +1996,7 @@ function getAllItemPartNbs()
 						     dictObj.itemToSlot = $(this).parent().parent().children('td[name="toSlot"]').children('input').val();
 						     dictObj.siteID = $(this).parent().parent().children('td[name="siteID"]').children('input').val();
 						     dictObj.tositeID = $(this).parent().parent().children('td[name="tositeID"]').children('input').val();
+						     dictObj.FarId = $(this).parent().parent().children('td[name="FarId"]').children('input').val();
 						     dictObj.itemSN = $(this).parent().parent().children('td[name="itemSN"]').children('input').val();
 						     dictObj.toSN = $(this).parent().parent().children('td[name="toSN"]').children('input').val();
 						     dictObj.itemDniID = $(this).parent().parent().children('td[name="itemDniID"]').children('input').val();
@@ -2359,6 +2372,67 @@ function getAllItemPartNbs()
 	   	        }
 			});
 			});
+
+
+
+			$('input[name="FarId"]').each(function (i, el) {
+			    $(el).autocomplete({
+			        source: function (request, response, event, ui) {
+			            var nodeIds = [];
+			            $("#FromNodeTable > tbody > tr").find('input[name="record"]').each(function () {
+			                var node_Id = $(this).parent().parent().children('td[name="NodeId"]').children('input').val();
+			                nodeIds.push(node_Id);
+			            });
+
+			            var siteId = $("#bisotab > tbody").find("tr").eq(rowindx).find('td[name="siteID"]').children('input')[0].value;
+			            if (nodeIds.length === 0 || siteId === "") {
+			                return;
+			            }
+
+			            $.ajax({
+			                type: "GET",
+			                contentType: "application/json; charset=utf-8",
+			                url: ctx + '/GetAllFarDn',
+			                data: {
+			                    "nodeID[]": nodeIds,
+			                    "siteId": siteId,
+			                    "Far": request.term,
+			                },
+			                dataType: "json",
+			                success: function (data) {
+			                    if (data != null) {
+			                        response(data.globalList);
+			                    }
+			                },
+			                error: function (result) {
+			                    alert("Error");
+			                }
+			            });
+			        },
+			        minLength: 0,
+			        maxShowItems: 40,
+			        scroll: true,
+			        autoFocus: true, 	
+			        select: function (event, ui) {
+			            this.value = (ui.item ? ui.item[0] : '');
+			            return false;
+			        }
+			    }).autocomplete("instance")._renderItem = function (ul, item) {
+			        return $("<li class='each'>")
+			            .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
+			                item[0] + "</span><br><span class='desc'>" +
+			                item[1] + ', ' + item[2] + "</span></div>")
+			            .appendTo(ul);
+			    };
+
+			    $(el).focus(function () {
+			        if (this.value == "") {
+			            $(el).autocomplete("search");
+			        }
+			    });
+			});
+
+
 			
 	//auto complete for PO (when adding new rows)
 	$('input[name ="itmPO"]').each(function(i, el) {
@@ -2477,6 +2551,7 @@ function getAllItemPartNbs()
 	});/////////////end autocpmplete for PO
 
 
+    	  
 
 
 	$('input[name ="itmWO"]').each(function(i, el) {
@@ -2792,8 +2867,10 @@ $(".delete-From-node").click(function () {
 
     $("#bisotab > tbody").find("tr").eq(rowindx).find('td[name="fromNode"]').children('input')[0].value = JSON.stringify(Data);
     console.log(allDeletedFromNodes);
-    console.log("zeinaaa");
+  
 });
+
+
 
 </script>
  
