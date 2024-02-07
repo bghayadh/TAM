@@ -101,7 +101,7 @@
 	                    dictObj.address = $(this).parent().parent().children('td[name="address"]').children('input').val();
 	                    dictObj.approvedby = $(this).parent().parent().children('td[name="approveStatus"]').children('input[name="approvedby"]').val();
 	                    if($(this).parent().parent().children('td[name="approveStatus"]').children('select'))
-	                    	dictObj.aprovStatus =($(this).parent().parent().children('td[name="approveStatus"]').children('select').val());
+	                    dictObj.aprovStatus =($(this).parent().parent().children('td[name="approveStatus"]').children('select').val());
 						else
 							dictObj.aprovStatus = "Completely Approved";
 						     dictObj.itemModel = $(this).parent().parent().children('td[name="itemModel"]').children('input').val();
@@ -119,6 +119,7 @@
 						     dictObj.itemToSlot = $(this).parent().parent().children('td[name="toSlot"]').children('input').val();
 						     dictObj.siteID = $(this).parent().parent().children('td[name="siteID"]').children('input').val();
 						     dictObj.tositeID = $(this).parent().parent().children('td[name="tositeID"]').children('input').val();
+						     dictObj.FarId = $(this).parent().parent().children('td[name="FarId"]').children('input').val();
 						     dictObj.itemSN = $(this).parent().parent().children('td[name="itemSN"]').children('input').val();
 						     dictObj.toSN = $(this).parent().parent().children('td[name="toSN"]').children('input').val();
 						     dictObj.itemDniID = $(this).parent().parent().children('td[name="itemDniID"]').children('input').val();
@@ -168,11 +169,11 @@
         // Fill tables rows from DB
    		for (i = 0;i<boqArray.length;i++){
 
-   	   		var itemCode = boqArray[i].discItemCode;
+   	   		var itemCode = boqArray[i].dniItemcode;
    	   		if(itemCode == null)
    	   			itemCode = "";
    	   		else
-   	   			itemCode = boqArray[i].discItemCode+":"+ boqArray[i].itemName;
+   	   			itemCode = boqArray[i].dniItemcode+":"+ boqArray[i].dniItemname;
 
 
 	    	var trans_type = boqArray[i].transType;
@@ -373,7 +374,8 @@
   }
  
 
-  
+
+ 
                 var itemRow = "<tr>";
 		        itemRow= itemRow + "<td style='text-align:center;'><input type='checkbox' name='record' style='margin-top:12px;'><button type = 'button' href='#' name='popUpMenu' onclick='openPop(this)' class='btn btn-default'  style='position:relative;left:3px;'><i class='fas fa-desktop'></i></button></td>"
 		        itemRow =itemRow + "<td name='item'><input type='text' name='itmCode' class='form-control text-input' value='"+itemCode+"' style='width:400px;' class='ui-widget ui-widget-content ui-corner-all'/></td>";
@@ -399,7 +401,14 @@
 				itemRow =itemRow + "<td name='itemTotalAt'><input type='text' class='form-control text-input inputWidth' value='"  + boqArray[i].dniTotalat+"' readonly></td>";
 				itemRow =itemRow + "<td name='siteID'><input type='text' class='form-control text-input' value='"+Site+"' name='siteID' style='width:450px;' class='ui-widget ui-widget-content ui-corner-all'></td>";
 				itemRow =itemRow + "<td name='tositeID'><input type='text' class='form-control text-input' value='"+toSite+"' name='tositeID' style='width:450px;' class='ui-widget ui-widget-content ui-corner-all'></td>";
-				itemRow =itemRow + "<td name='itemSN'><input type='text' class='form-control text-input' style='width:200px' value='"+boqArray[i].dniSN+"'></td>";
+			    var farIdValue = boqArray[i].farID !== null ? boqArray[i].farID : " "; 
+          
+			    if (boqArray[i].transType === "Retirement") {
+                itemRow += "<td name='FarId'><input type='text' class='form-control text-input' value='" + farIdValue + "' name='FarId' style='width:450px;' class='ui-widget ui-widget-content ui-corner-all'></td>";
+                 } else {
+                itemRow += "<td name='FarId'><input type='text' class='form-control text-input' value='" + farIdValue+ "' name='FarId' style='width:450px;' class='ui-widget ui-widget-content ui-corner-all' readonly></td>";
+                 }
+                itemRow =itemRow + "<td name='itemSN'><input type='text' class='form-control text-input' style='width:200px' value='"+boqArray[i].dniSN+"'></td>";
 				itemRow =itemRow + "<td name='toSN'><input type='text' class='form-control text-input' style='width:200px' value='"+boqArray[i].toSerialNumber+"'></td>";
 				itemRow =itemRow + "<td name='itemDniID'><input type='text' class='form-control text-input' style='width:150px' value='"+boqArray[i].dniDNID+"' readonly></td>";
 			    itemRow = itemRow + "<td name='toNode'><input type='text' style='width:200px; display: none;' value='" + toNodeArray[0] + "' class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>";
@@ -495,6 +504,7 @@
               	+"<td name='itemTotalAt'><input type='text' value=0 readonly class='form-control inputWidth'></td>"
               	+"<td name='siteID'><input type='text' name='siteID' style='width:450px;' class='ui-widget ui-widget-content ui-corner-all form-control'/></td>"
               	+"<td name='tositeID'><input type='text' name='tositeID' style='width:450px;' class='ui-widget ui-widget-content ui-corner-all form-control'/></td>"
+                +"<td name='FarId'><input type='text' name='FarId' style='width:450px;' class='ui-widget ui-widget-content ui-corner-all form-control' readonly/></td>"
               	+"<td name='itemSN'><input type='text' value='0' class='form-control' style='width:200px;'></td>"
               	+"<td name='toSN'><input type='text' value='0' class='form-control' style='width:200px;'></td>"
              	+"<td name='itemDniID'><input type='text' readonly value='0' class='form-control' style='width:160px;'></td>"
@@ -775,6 +785,66 @@ else {
 					$(this).autocomplete("search");
 	   	        }
 			});
+			
+			
+		$('input[name="FarId"]').each(function (i, el) {
+			    $(el).autocomplete({
+			        source: function (request, response, event, ui) {
+			            var nodeIds = [];
+			            $("#FromNodeTable > tbody > tr").find('input[name="record"]').each(function () {
+			                var node_Id = $(this).parent().parent().children('td[name="NodeId"]').children('input').val();
+			                nodeIds.push(node_Id);
+			            });
+
+			            var siteId = $("#bisotab > tbody").find("tr").eq(rowindx).find('td[name="siteID"]').children('input')[0].value;
+			            if (nodeIds.length === 0 || siteId === "") {
+			                return;
+			            }
+
+			            $.ajax({
+			                type: "GET",
+			                contentType: "application/json; charset=utf-8",
+			                url: ctx + '/GetAllFarDn',
+			                data: {
+			                    "nodeID[]": nodeIds,
+			                    "siteId": siteId,
+			                    "Far": request.term,
+			                },
+			                dataType: "json",
+			                success: function (data) {
+			                    if (data != null) {
+			                        response(data.globalList);
+			                    }
+			                },
+			                error: function (result) {
+			                    alert("Error");
+			                }
+			            });
+			        },
+			        minLength: 0,
+			        maxShowItems: 40,
+			        scroll: true,
+			        autoFocus: true, 	
+			        select: function (event, ui) {
+			            this.value = (ui.item ? ui.item[0] : '');
+			            return false;
+			        }
+			    }).autocomplete("instance")._renderItem = function (ul, item) {
+			        return $("<li class='each'>")
+			            .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
+			                item[0] + "</span><br><span class='desc'>" +
+			                item[1] + ', ' + item[2] + "</span></div>")
+			            .appendTo(ul);
+			    };
+
+			    $(el).focus(function () {
+			        if (this.value == "") {
+			            $(el).autocomplete("search");
+			        }
+			    });
+			});
+
+
 
 			$('input[name ="siteID"]').eq(indexRow).autocomplete({
 			
@@ -2491,3 +2561,5 @@ $("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="item"]').children('in
 
 
    	});
+   	
+   
