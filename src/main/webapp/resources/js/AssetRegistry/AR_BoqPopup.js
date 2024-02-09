@@ -215,6 +215,7 @@ function addSerialrows(stat){
 			
 	var markup = "<tr><td style='text-align:center;'><input type='checkbox' name='chekbox_rowSerialNb'><button type='button' href='#' name='serialNoPopupMenu' onclick='openSerialPopUp(this)' class='btn btn-default'  style='position:relative;left:3px;'><i class='fas fa-desktop'></i></button></td>"
 		+"<td name = 'SNserialNumber'><input name='inputSerialNb' id = 'inputSerialNb"+RowCount+"' type='text' style='width:200px;' class='form-control ui-widget ui-widget-content ui-corner-all text-input'/></td>"
+		+"<td name = 'SNMacAddress'><input name='inputMacAddress' id = 'inputMacAddress"+RowCount+"' type='text' style='width:200px;' class='form-control ui-widget ui-widget-content ui-corner-all text-input'/></td>"
 		+"<td name = 'SNmodel'><input name='inputModel'  id = 'inputModel"+RowCount+"' type='text' style='width:200px;' class='form-control text-input'/></td>"
 		+"<td name ='SNpartNumber' ><input name='inputpartNumber' id = 'inputpartNumber"+RowCount+"' type='text' style='width:200px;' class='form-control text-input'/></td>"
 		+"<td name ='SNsite' ><input name='inputsite'  id = 'inputsite"+RowCount+"'  type='text' style='width:200px;' class='form-control text-input'/></td>"
@@ -351,6 +352,7 @@ function openSerialPopUp(element){
 	
 	//Send input values from Boq table to popup
  	$('#popupSerialno').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNserialNumber"]').children('input').val());
+    $('#popupMacAddress').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNMacAddress"]').children('input').val());
     $('#popupModel').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNmodel"]').children('input').val()); 
     $('#popupPartnum').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNpartNumber"]').children('input').val());
     $('#popupSite').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNsite"]').children('input').val());
@@ -511,6 +513,7 @@ function insertModPartRowBelow(){
 			
 	var markup = "<tr><td style='text-align:center;'><input type='checkbox' name='chekbox_rowSerialNb'><button type='button' href='#' name='serialNoPopupMenu' onclick='openSerialPopUp(this)' class='btn btn-default'  style='position:relative;left:3px;'><i class='fas fa-desktop'></i></button></td>"
 		+"<td name = 'SNserialNumber'><input name='inputSerialNb' id = 'inputSerialNb"+RowCount+"' type='text' style='width:200px;' class='form-control ui-widget ui-widget-content ui-corner-all text-input'/></td>"
+		+"<td name = 'SNMacAddress'><input name='inputMacAddress' id = 'inputMacAddress"+RowCount+"' type='text' style='width:200px;' class='form-control ui-widget ui-widget-content ui-corner-all text-input'/></td>"
 		+"<td name = 'SNmodel'><input name='inputModel'  id = 'inputModel"+RowCount+"' type='text' style='width:200px;' class='form-control text-input'/></td>"
 		+"<td name ='SNpartNumber' ><input name='inputpartNumber' id = 'inputpartNumber"+RowCount+"' type='text' style='width:200px;' class='form-control text-input'/></td>"
 		+"<td name ='SNsite' ><input name='inputsite'  id = 'inputsite"+RowCount+"'  type='text' style='width:200px;' class='form-control text-input'/></td>"
@@ -525,6 +528,7 @@ function insertModPartRowBelow(){
 
 
 	$('#popupSerialno').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNserialNumber"]').children('input').val());
+    $('#popupMacAddress').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNMacAddress"]').children('input').val());
 	$('#popupModel').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNmodel"]').children('input').val());
 	$('#popupPartnum').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNpartNumber"]').children('input').val());
     $('#popupSite').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNsite"]').children('input').val());
@@ -618,6 +622,7 @@ function insertSerialRowAbove(){
 			
 	var markup = "<tr><td style='text-align:center;'><input type='checkbox' name='chekbox_rowSerialNb'><button type='button' href='#' name='serialNoPopupMenu' onclick='openSerialPopUp(this)' class='btn btn-default'  style='position:relative;left:3px;'><i class='fas fa-desktop'></i></button></td>"
 		+"<td name = 'SNserialNumber'><input name='inputSerialNb' id = 'inputSerialNb"+RowCount+"' type='text' style='width:200px;' class='form-control ui-widget ui-widget-content ui-corner-all text-input'/></td>"
+		+"<td name = 'SNMacAddress'><input name='inputMacAddresss' id = 'inputMacAddresss"+RowCount+"' type='text' style='width:200px;' class='form-control ui-widget ui-widget-content ui-corner-all text-input'/></td>"
 		+"<td name = 'SNmodel'><input name='inputModel'  id = 'inputModel"+RowCount+"' type='text' style='width:200px;' class='form-control text-input'/></td>"
 		+"<td name ='SNpartNumber' ><input name='inputpartNumber' id = 'inputpartNumber"+RowCount+"' type='text' style='width:200px;' class='form-control text-input'/></td>"
 		+"<td name ='SNsite' ><input name='inputsite'  id = 'inputsite"+RowCount+"'  type='text' style='width:200px;' class='form-control text-input'/></td>"
@@ -629,6 +634,7 @@ function insertSerialRowAbove(){
        $("#ARserialNumberTab > tbody tr").eq(SerialRowIndex).before(markup);
 	
 	$('#popupSerialno').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNserialNumber"]').children('input').val());
+	$('#popupMacAddress').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNMacAddress"]').children('input').val());
 	$('#popupModel').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNmodel"]').children('input').val());
 	$('#popupPartnum').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNpartNumber"]').children('input').val());
 	$('#popupSite').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNsite"]').children('input').val());
@@ -760,6 +766,7 @@ function nextSerialRow(){
 	if(SerialRowIndex >= 0 && SerialRowIndex < rowSerialCount) {
 		
 		$('#popupSerialno').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNserialNumber"]').children('input').val());
+		$('#popupMacAddress').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNMacAddress"]').children('input').val());
 		$('#popupModel').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNmodel"]').children('input').val());
 		$('#popupPartnum').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNpartNumber"]').children('input').val());
 		$('#popupSite').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNsite"]').children('input').val());
@@ -777,6 +784,7 @@ function nextSerialRow(){
 		addSerialrows("addRow");
 		     
 		$('#popupSerialno').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNserialNumber"]').children('input').val());
+		$('#popupMacAddress').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNMacAddress"]').children('input').val());
 		$('#popupModel').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNmodel"]').children('input').val());
 		$('#popupPartnum').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNpartNumber"]').children('input').val());
 		$('#popupSite').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNsite"]').children('input').val());
@@ -938,6 +946,7 @@ function deleteSerialBoqRow() {
 	}
 	if(SerialRowIndex >= 0 && SerialRowIndex < rowSerialCount) {
 		$('#popupSerialno').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNserialNumber"]').children('input').val());
+		$('#popupMacAddress').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNMacAddress"]').children('input').val());
 		$('#popupModel').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNmodel"]').children('input').val());
 		$('#popupPartnum').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNpartNumber"]').children('input').val());
 		$('#popupSite').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNsite"]').children('input').val());
@@ -954,6 +963,7 @@ function deleteSerialBoqRow() {
 		SerialRowIndex--;
 		
 		$('#popupSerialno').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNserialNumber"]').children('input').val());
+		$('#popupMacAddress').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNMacAddress"]').children('input').val());
 		$('#popupModel').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNmodel"]').children('input').val());
 		$('#popupPartnum').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNpartNumber"]').children('input').val());
 		$('#popupSite').val($("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNsite"]').children('input').val());
@@ -1731,6 +1741,7 @@ document.addEventListener('keydown', function(event){
 $("button[name='closeSerialnoPopup']").on("click", function(){
 	// Send input values from popup to boq table
 	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNserialNumber"]').children('input').val($('#popupSerialno').val());
+	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNMacAddress"]').children('input').val($('#popupMacAddress').val());
 	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNmodel"]').children('input').val($('#popupModel').val());
 	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNpartNumber"]').children('input').val($('#popupPartnum').val());
 	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNsite"]').children('input').val($('#popupSite').val());
@@ -1746,6 +1757,7 @@ document.addEventListener('keydown', function(event){
 	if(event.key === "Escape"){
 	// Send input values from popup to boq table
 	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNserialNumber"]').children('input').val($('#popupSerialno').val());
+	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNMacAddress"]').children('input').val($('#popupMacAddress').val());
 	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNmodel"]').children('input').val($('#popupModel').val());
 	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNpartNumber"]').children('input').val($('#popupPartnum').val());
 	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNsite"]').children('input').val($('#popupSite').val());
@@ -1808,6 +1820,7 @@ $("button[name='previousSerialRow']").on("click", function(){
 		var serialPrevIndex = parseInt(SerialRowIndex );
 		
 		$('#popupSerialno').val($("#ARserialNumberTab >tbody").find("tr").eq(serialPrevIndex).find('td[name="SNserialNumber"]').children('input').val());
+		$('#popupMacAddress').val($("#ARserialNumberTab >tbody").find("tr").eq(serialPrevIndex).find('td[name="SNMacAddress"]').children('input').val());
 		$('#popupModel').val($("#ARserialNumberTab >tbody").find("tr").eq(serialPrevIndex).find('td[name="SNmodel"]').children('input').val()); 
 		$('#popupPartnum').val($("#ARserialNumberTab >tbody").find("tr").eq(serialPrevIndex).find('td[name="SNpartNumber"]').children('input').val());
 		$('#popupSite').val($("#ARserialNumberTab >tbody").find("tr").eq(serialPrevIndex).find('td[name="SNsite"]').children('input').val());
@@ -1877,6 +1890,7 @@ $('#popupWareId,#popupSiteId,#popupSiteName,#popupSiteSeqID').on(' focusout ', f
 
 $('#popupSerialno,#popupModel,#popupPartnum,#popupSite,#popupPosition,#popupSerialID').on(' focusout ', function() {
 	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNserialNumber"]').children('input').val($('#popupSerialno').val());
+	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNMacAddress"]').children('input').val($('#popupMacAddress').val());
 	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNmodel"]').children('input').val($('#popupModel').val());
 	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNpartNumber"]').children('input').val($('#popupPartnum').val());
 	$("#ARserialNumberTab >tbody").find("tr").eq(SerialRowIndex).find('td[name="SNsite"]').children('input').val($('#popupSite').val());
