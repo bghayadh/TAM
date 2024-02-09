@@ -461,6 +461,7 @@ max-width: 100%;
 						                <th>From Site</th>
 						                <th>To Site</th>
 						                <th>FAR Id</th>
+						                <th>MAC Address</th>
 						                <th>From SN</th>
 						                <th>To SN</th>
 						                <th>DNitmID</th>
@@ -1997,6 +1998,7 @@ function getAllItemPartNbs()
 						     dictObj.siteID = $(this).parent().parent().children('td[name="siteID"]').children('input').val();
 						     dictObj.tositeID = $(this).parent().parent().children('td[name="tositeID"]').children('input').val();
 						     dictObj.FarId = $(this).parent().parent().children('td[name="FarId"]').children('input').val();
+						     dictObj.macAddress = $(this).parent().parent().children('td[name="macAddress"]').children('input').val();
 						     dictObj.itemSN = $(this).parent().parent().children('td[name="itemSN"]').children('input').val();
 						     dictObj.toSN = $(this).parent().parent().children('td[name="toSN"]').children('input').val();
 						     dictObj.itemDniID = $(this).parent().parent().children('td[name="itemDniID"]').children('input').val();
@@ -2053,7 +2055,7 @@ function getAllItemPartNbs()
         				    "type": type,
         				    "dictParameter" : dict,
         				    "slctDelDN":slctDelDN,
-        				     "dnID" : $("#dncode").val(),
+        				    "dnID" : $("#dncode").val(),
 							"dncreationDate" : dncreationDate,
 							"dnlastmodifDate" : dnlastModifieddate,
 							"dnTotalAmount" : dnTotalAmount,                          
