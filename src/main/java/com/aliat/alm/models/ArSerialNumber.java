@@ -34,6 +34,10 @@ public class ArSerialNumber {
 	@Column(name = "AR_ID", nullable = false)
 	private String arID;
 	
+	
+	@Column(name = "MAC_ADDRESS")
+	private String macAddress;
+	
 	public ArSerialNumber() {	
 	}
 
@@ -85,15 +89,26 @@ public class ArSerialNumber {
 		this.arID = arID;
 	}
 	
-	public ArSerialNumber(String serialId, String serialNumber, String Model, String partNumber, String site,String position, String arID) {
+	
+	
+	public ArSerialNumber(String serialId, String serialNumber, String Model, String partNumber, String site,String position, String arID, String macAddress) {
 		super();
 		this.serialId = serialId;
 		this.serialNumber = serialNumber;
 		this.Model = Model;
 		this.partNumber = partNumber;
-	this.site = site;
+		this.macAddress=macAddress;
+	    this.site = site;
 		this.position = position;
 		this.arID = arID;
+	}
+
+	public String getMacAddress() {
+		return macAddress;
+	}
+
+	public void setMacAddress(String macAddress) {
+		this.macAddress = macAddress;
 	}
 
 	public String getPosition() {
