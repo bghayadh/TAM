@@ -33,6 +33,8 @@ public class FarSerialNumber {
 	@Column(name = "POSITION")
 	private String inputPosition;
 	
+	@Column(name = "MAC_ADDRESS")
+	private String macAddress;
 	
 	
 	public String getSerialId() {
@@ -124,7 +126,7 @@ public class FarSerialNumber {
 
 
 	public FarSerialNumber(String serialId, String inputSerialNb, String inputModel, String inputpartNumber,
-			 String inputsite, String farID, String inputPosition) {
+			 String inputsite, String farID, String inputPosition, String macAddress) {
 		super();
 		this.serialId = serialId;
 		this.inputSerialNb = inputSerialNb;
@@ -133,6 +135,19 @@ public class FarSerialNumber {
 		this.inputsite = inputsite;
 		this.farID = farID;
 		this.inputPosition = inputPosition;
+		this.macAddress=macAddress;
+	}
+
+
+
+	public String getMacAddress() {
+		return macAddress;
+	}
+
+
+
+	public void setMacAddress(String macAddress) {
+		this.macAddress = macAddress;
 	}
 
 
