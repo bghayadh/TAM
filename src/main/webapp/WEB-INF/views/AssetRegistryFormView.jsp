@@ -814,6 +814,7 @@ max-height: 100%;
 			        <span class="sub"></span>Select</button>
 			    </th>
                 <th width="220px">Serial Number</th>
+                <th width="220px">Mac Address</th>
                 <th width="220px">Model</th>
 				<th width="220px">Part Number</th>
 				<th width="220px">Site</th>
@@ -1348,6 +1349,7 @@ max-height: 100%;
  		 <li class="nav-item">
    			 <a class="nav-link active" id="serialno-tab" style="color: gold;" data-toggle="tab" href="#serialno" role="tab" aria-controls="serialno" aria-selected="true">SERIAL NUMBER</a>
   		</li>
+  		
 	</ul>
 	<div class="tab-content">
   <div class="tab-pane active" id="serialno" role="tabpanel" aria-labelledby="serialno-tab">
@@ -1359,6 +1361,14 @@ max-height: 100%;
   				<div class="input-group-prepend">
   					<span class="input-group-text" >Serial Number </span>
    					<input type="text" id="popupSerialno" value="${popupSerialno}" style="width:675px; height:37px" class="ui-widget ui-widget-content ui-corner-all form-control text-input" />
+  				</div>
+  			</div>
+  		</div>
+  		<div class="col-sm-6">
+  			<div class="form-group">
+  				<div class="input-group-prepend">
+  					<span class="input-group-text" >Mac Address </span>
+   					<input type="text" id="popupMacAddress" value="${popupSerialno}" style="width:675px; height:37px" class="ui-widget ui-widget-content ui-corner-all form-control text-input" />
   				</div>
   			</div>
   		</div>
@@ -1841,6 +1851,7 @@ dictSerialNumber = [];
                     dictSerialNumber.push({
 	
 			    	"SNserialNumber" : $(this).parent().parent().children('td[name="SNserialNumber"]').children('input').val(),							   
+			    	"SNMacAddress" : $(this).parent().parent().children('td[name="SNMacAddress"]').children('input').val(),							   
 			    	"SNmodel" : $(this).parent().parent().children('td[name="SNmodel"]').children('input').val(),			   
 			    	"SNpartNumber" : $(this).parent().parent().children('td[name="SNpartNumber"]').children('input').val(),
 			    	"SNsite": $(this).parent().parent().children('td[name="SNsite"]').children('input').val(),
@@ -2023,6 +2034,7 @@ if ('${ListArSerialNumber}' != "addNew") {
 	  for (i = 0;i<boqArraySNum.length;i++){
 	  	
 		   		var inputSerialNb = boqArraySNum[i].serialNumber;
+		   		var inputMacAddress = boqArraySNum[i].macAddress;
 		   		var inputModel = boqArraySNum[i].model;
 		   		var inputpartNumber = boqArraySNum[i].partNumber;
 		   		var inputNodeID = boqArraySNum[i].snodeID;
@@ -2039,6 +2051,10 @@ if ('${ListArSerialNumber}' != "addNew") {
 		   		inputSerialNb = "";
 		   	else inputSerialNb = boqArraySNum[i].serialNumber;
 
+			if(inputMacAddress == null)
+				inputMacAddress = "";
+		   	else inputMacAddress = boqArraySNum[i].macAddress;
+		   	
 		   	if(inputModel == null)
 		   		inputModel = "";
 		   	else inputModel = boqArraySNum[i].model;
@@ -2069,6 +2085,7 @@ if ('${ListArSerialNumber}' != "addNew") {
 		 var itemSNumRow = "<tr>";
 		 itemSNumRow= itemSNumRow + "<td style='text-align:center;'><input type='checkbox' name='chekbox_rowSerialNb'><button type = 'button' href='#' name='popUpMenu' onclick='openSerialPopUp(this)' class='btn btn-default'  style='position:relative;left:3px;'><i class='fas fa-desktop'></i></button></td>"
 		 itemSNumRow =itemSNumRow + "<td name='SNserialNumber'><input name='inputSerialNb'  id = 'inputSerialNb"+i+"'   type='text' value='" +inputSerialNb+ "' style='width:200px;' class='form-control ui-widget ui-widget-content ui-corner-all  input-text'/></td>";
+		 itemSNumRow =itemSNumRow + "<td name='SNMacAddress'><input name='inputMacAddress'  id = 'inputMacAddress"+i+"'   type='text' value='" +inputMacAddress+ "' style='width:200px;' class='form-control ui-widget ui-widget-content ui-corner-all  input-text'/></td>";
 		 itemSNumRow =itemSNumRow + "<td name='SNmodel' style='width:200px'><input name='inputModel' id = 'inputModel"+i+"' style='width:200px'  type='text' value='"+inputModel+"' style='width:200px;' class='form-control input-text' /> </td>";
 		 itemSNumRow =itemSNumRow + "<td name='SNpartNumber' style='width:200px'><input name='inputpartNumber' id = 'inputpartNumber"+i+"'  style='width:200px'  type='text' value='"+inputpartNumber+"' style='width:200px;' class='form-control input-text' /> </td>";
 		 itemSNumRow =itemSNumRow + "<td name='SNsite' style='width:200px'><input name='inputsite' id = 'inputsite"+i+"'  style='width:200px'  type='text' value='"+inputsite+"' style='width:200px;' class='form-control input-text' /> </td>";
