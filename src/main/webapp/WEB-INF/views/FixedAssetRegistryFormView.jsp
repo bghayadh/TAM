@@ -634,6 +634,7 @@ max-height: 100%;
 								        <button type="button" id="SelectAllSerialNumber" class="main" style="width:80px;">
 								        <span class="sub"></span>Select</button></th>
 						                <th width="220px">Serial Number</th>
+						                <th width="220px">Mac Address</th>
 						                <th width="220px">Model</th>
 										<th width="220px">Part Number</th>
 										<th width="100px">Site</th>
@@ -1523,6 +1524,14 @@ max-height: 100%;
   				</div>
   			</div>
   		</div>
+  			<div class="col-sm-6">
+  			<div class="form-group">
+  				<div class="input-group-prepend">
+  					<span class="input-group-text" >Mac Address</span>
+   					<input type="text" id="popupMacAddress" value="${popupMacAddress}" style="width:675px; height:37px" class="ui-widget ui-widget-content ui-corner-all form-control text-input" />
+  				</div>
+  			</div>
+  		</div>
 	</div>
 </div>
 <p></p>
@@ -1841,7 +1850,8 @@ function getselectedrowsSNum(){
 		
 		dictSerialNumber.push({
 			
-	    	"SNserialNumber" : $(this).parent().parent().children('td[name="SNserialNumber"]').children('input').val(),							   
+	    	"SNserialNumber" : $(this).parent().parent().children('td[name="SNserialNumber"]').children('input').val(),	
+	    	"SNMacAddress" : $(this).parent().parent().children('td[name="SNMacAddress"]').children('input').val(),							   						   
 	    	"SNmodel" : $(this).parent().parent().children('td[name="SNmodel"]').children('input').val(),			   
 	    	"SNpartNumber" : $(this).parent().parent().children('td[name="SNpartNumber"]').children('input').val(),
 	    	"SNsite": $(this).parent().parent().children('td[name="SNsite"]').children('input').val(),
@@ -1869,9 +1879,10 @@ var serialRowindex =0;
 if('${ListFarSerialNumber}' !="addNew"){
 	boqArraySNum =[];
 	boqArraySNum = ${ListFarSerialNumber};
-
+console.log(boqArraySNum);
 	for(i = 0; i<boqArraySNum.length;i++){
 		var inputSerialNb = boqArraySNum[i].inputSerialNb;
+		var inputMacAddress = boqArraySNum[i].macAddress;
 		var inputModel=boqArraySNum[i].inputModel;
 		var inputpartNumber=boqArraySNum[i].inputpartNumber;
 		var inputsite=boqArraySNum[i].inputsite;
@@ -1884,6 +1895,10 @@ if('${ListFarSerialNumber}' !="addNew"){
 		inputSerialNb="";
 		else inputSerialNb=boqArraySNum[i].inputSerialNb;
 
+		if(inputMacAddress == null)
+			inputMacAddress="";
+			else inputMacAddress=boqArraySNum[i].macAddress;
+			
 		if(inputModel == null)
 		inputModel="";
 		else inputModel=boqArraySNum[i].inputModel;
@@ -1905,6 +1920,7 @@ if('${ListFarSerialNumber}' !="addNew"){
 		var itemSNumRow ="<tr>";
 		itemSNumRow = itemSNumRow + "<td><input type='checkbox' name='done'><button type='button' href='#' name='serialNoPopupMenu' onclick='openSerialPopUp(this)' class='btn btn-default'  style='position:relative;left:3px;'><i class='fas fa-desktop'></i></button></td>"
 		itemSNumRow = itemSNumRow + "<td name='SNserialNumber'><input name='inputSerialNb'  id = 'inputSerialNb"+i+"' type='text' value='"+inputSerialNb+"'style='width:200px;' class='form-control text-input'/></td>";
+		itemSNumRow = itemSNumRow + "<td name='SNMacAddress'><input name='inputMacAddress'  id = 'inputMacAddress"+i+"' type='text' value='"+inputMacAddress+"'style='width:200px;' class='form-control text-input'/></td>";
 		itemSNumRow = itemSNumRow + "<td name='SNmodel'><input name='inputModel' id = 'inputModel"+i+"' type='text' value='"+inputModel+"' style='width:200px;' class='form-control text-input'/></td>";
 		itemSNumRow = itemSNumRow + "<td name='SNpartNumber'><input name='inputpartNumber' id = 'inputpartNumber"+i+"' type='text' value='"+inputpartNumber+"' style='width:200px;' class='form-control text-input'/></td>";
 		itemSNumRow = itemSNumRow + "<td name='SNsite'><input name='inputsite' id = 'inputsite"+i+"' type='text' value='"+inputsite+"'style='width:200px;' class='form-control text-input'/></td>";
