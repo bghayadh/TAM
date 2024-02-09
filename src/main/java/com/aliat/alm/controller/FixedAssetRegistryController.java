@@ -880,6 +880,9 @@ public class FixedAssetRegistryController {
 
 							farSerialNumber.setInputSerialNb(itemParameters
 									.getDictParameterFixedAssetRegistrySerialNumber().get(i).get("SNserialNumber"));
+							farSerialNumber.setMacAddress(itemParameters
+									.getDictParameterFixedAssetRegistrySerialNumber().get(i).get("SNMacAddress"));
+							
 							farSerialNumber.setInputModel(itemParameters
 									.getDictParameterFixedAssetRegistrySerialNumber().get(i).get("SNmodel"));
 							farSerialNumber.setInputpartNumber(itemParameters
