@@ -749,6 +749,7 @@ public class AssetRegistryController {
 				}
 				
 				arSerialNumber.setSerialNumber(itemParameters.getDictParameterserialNumber().get(i).get("SNserialNumber"));
+				arSerialNumber.setMacAddress(itemParameters.getDictParameterserialNumber().get(i).get("SNMacAddress"));
 				arSerialNumber.setModel(itemParameters.getDictParameterserialNumber().get(i).get("SNmodel"));
 				arSerialNumber.setPartNumber(itemParameters.getDictParameterserialNumber().get(i).get("SNpartNumber"));
 				arSerialNumber.setSite(itemParameters.getDictParameterserialNumber().get(i).get("SNsite"));
