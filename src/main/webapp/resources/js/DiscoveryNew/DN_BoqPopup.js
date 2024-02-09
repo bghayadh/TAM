@@ -120,6 +120,7 @@
 						     dictObj.siteID = $(this).parent().parent().children('td[name="siteID"]').children('input').val();
 						     dictObj.tositeID = $(this).parent().parent().children('td[name="tositeID"]').children('input').val();
 						     dictObj.FarId = $(this).parent().parent().children('td[name="FarId"]').children('input').val();
+						     dictObj.macAddress = $(this).parent().parent().children('td[name="macAddress"]').children('input').val();
 						     dictObj.itemSN = $(this).parent().parent().children('td[name="itemSN"]').children('input').val();
 						     dictObj.toSN = $(this).parent().parent().children('td[name="toSN"]').children('input').val();
 						     dictObj.itemDniID = $(this).parent().parent().children('td[name="itemDniID"]').children('input').val();
@@ -408,6 +409,7 @@
                  } else {
                 itemRow += "<td name='FarId'><input type='text' class='form-control text-input' value='" + farIdValue+ "' name='FarId' style='width:450px;' class='ui-widget ui-widget-content ui-corner-all' readonly></td>";
                  }
+                itemRow += "<td name='macAddress'><input type='text' class='form-control text-input' value='"+boqArray[i].macAddress+"' name='macAddress' style='width:450px;' class='ui-widget ui-widget-content ui-corner-all' ></td>";
                 itemRow =itemRow + "<td name='itemSN'><input type='text' class='form-control text-input' style='width:200px' value='"+boqArray[i].dniSN+"'></td>";
 				itemRow =itemRow + "<td name='toSN'><input type='text' class='form-control text-input' style='width:200px' value='"+boqArray[i].toSerialNumber+"'></td>";
 				itemRow =itemRow + "<td name='itemDniID'><input type='text' class='form-control text-input' style='width:150px' value='"+boqArray[i].dniDNID+"' readonly></td>";
@@ -505,6 +507,7 @@
               	+"<td name='siteID'><input type='text' name='siteID' style='width:450px;' class='ui-widget ui-widget-content ui-corner-all form-control'/></td>"
               	+"<td name='tositeID'><input type='text' name='tositeID' style='width:450px;' class='ui-widget ui-widget-content ui-corner-all form-control'/></td>"
                 +"<td name='FarId'><input type='text' name='FarId' style='width:450px;' class='ui-widget ui-widget-content ui-corner-all form-control' readonly/></td>"
+              	+"<td name='macAddress'><input type='text' name='macAddress' style='width:450px;' class='ui-widget ui-widget-content ui-corner-all form-control' ></td>"
               	+"<td name='itemSN'><input type='text' value='0' class='form-control' style='width:200px;'></td>"
               	+"<td name='toSN'><input type='text' value='0' class='form-control' style='width:200px;'></td>"
              	+"<td name='itemDniID'><input type='text' readonly value='0' class='form-control' style='width:160px;'></td>"
