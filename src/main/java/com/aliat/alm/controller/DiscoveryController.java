@@ -8,6 +8,7 @@ import com.aliat.alm.models.SerialNumber;
 import com.aliat.alm.models.ArSerialNumber;
 import com.aliat.alm.models.ArSite;
 import com.aliat.alm.models.AssetRegistry;
+import com.aliat.alm.models.DNIFormView;
 import com.aliat.alm.models.DiscoverNewItemNode;
 import com.aliat.alm.models.FixedAssetRegistry;
 import com.aliat.alm.models.DiscoveryNewListView;
@@ -57,7 +58,6 @@ import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.DiscoveryNew;
-import com.aliat.alm.models.DiscoveryNewBoq;
 import com.aliat.alm.models.DiscoveryNewItem;
 import com.aliat.alm.services.ItemParameters;
 import com.aliat.alm.services.LoginServices;
@@ -95,6 +95,8 @@ public class DiscoveryController {
 	private static final String DN_ELEMENT_NAME = "elementName";
 	private static final String DN_ADDRESS = "address";
 	private static final String DESCRIPTION = "description";
+	private static final String FarId = "FarId";
+	private static final String Mac_Address = "macAddress";
 	private static final String TO_NODE_DN = "toNode";
 	private static final String FROM_NODE_DN = "fromNode";
 	//private static final String NODE_PK = "nodePK";
@@ -340,14 +342,14 @@ public class DiscoveryController {
 
 		// add data in table discoveryNewItem
 
-		String queryStmt = "SELECT t.DNI_ID AS discItemID, t.ITEM_CODE AS discItemCode, t.ITEM_NAME AS itemName, t.TRANS_TYPE AS transType, " +
+		String queryStmt = "SELECT t.DNI_ID AS dniID, t.ITEM_CODE AS dniItemcode, t.ITEM_NAME AS dniItemname, t.TRANS_TYPE AS transType, " +
 			    "t.ELEMENT_NAME AS elementName, NVL(t.NOTES, ' ') AS notes, NVL(t.POSITION, ' ') AS position, t.APPROVAL AS dniAPPROVAL, " +
 			    "t.PO_ID AS dniPOID, t.SUPPLIER_ID AS supplierID, t.SUPPLIER_NAME AS supplierName, t.TOTAL_AMOUNT AS totalAmount, " +
 			    "t.WO_ID AS dniWOID, t.WO_PURPOSE AS purpose, t.QTY AS dniQty, t.RATE AS dniRate, t.DISCOUNT_AMOUNT AS dniDiscamount, " +
 			    "t.TAX1 AS dniTax1, t.NET_RATE AS dniNetrate, t.TOTAL AS dniTotal, t.TOTAL_AT AS dniTotalat, t.FROM_SITE AS dniSIte, " +
 			    "t.WARE_ID AS wareID, t.WARE_NAME AS wareName, NVL(t.FROM_SERIAL_NUMBER, ' ') AS dniSN, t.DNI_ID AS dniDNID, " +
 			    "NVL(t.ITEM_MODEL, '') AS itemModel, NVL(t.ITEM_PART_NUMBER, '') AS itemPartNb,  " +
-			    " t.APPROVAL_STATUS AS approvalStatus, NVL(t.FROM_SLOT, ' ') AS fromSlot, " +
+			    " t.APPROVAL_STATUS AS approvalStatus, NVL(t.FROM_SLOT, ' ') AS fromSlot, NVL(t.FAR_ID, ' ') AS farID, NVL(t.MAC_ADDRESS, ' ') AS macAddress, " +
 			    "NVL(t.TO_SLOT, ' ') AS toSlot, t.TO_SITE AS toSite, t.TO_WARE_NAME AS toWareName, " +
 			    "t.TO_WARE_ID AS toWareId, NVL(t.ALCFLG, ' ') AS alcFlg, " +
 			    "NVL(t.TO_SERIAL_NUMBER, ' ') AS toSerialNumber, NVL(t.DESCRIPTION, ' ') AS description, x.toNodeArray, y.fromNodeArray " +
@@ -365,10 +367,10 @@ public class DiscoveryController {
 		query.setParameter("param1", dnid);
 		
 
-		List<DiscoveryNewBoq> listDiscoveryNewItems = (List<DiscoveryNewBoq>) ((NativeQuery) query)
-			    .addScalar("discItemID", new StringType())
-			    .addScalar("discItemCode", new StringType())
-			    .addScalar("itemName", new StringType())
+		List<DNIFormView> listDiscoveryNewItems = (List<DNIFormView>) ((NativeQuery) query)
+			    .addScalar("dniID", new StringType())
+			    .addScalar("dniItemcode", new StringType())
+			    .addScalar("dniItemname", new StringType())
 			    .addScalar("transType", new StringType())
 			    .addScalar("elementName", new StringType())
 			    .addScalar("notes", new StringType())
@@ -401,11 +403,13 @@ public class DiscoveryController {
 			    .addScalar("toWareName", new StringType())
 			    .addScalar("toWareId", new StringType())
 			    .addScalar("alcFlg", new StringType())
+			    .addScalar("farID", new StringType())
+			    .addScalar("macAddress", new StringType())
 			    .addScalar("toSerialNumber", new StringType())
 			    .addScalar("description", new StringType())
 			    .addScalar("toNodeArray", new StringType())
 			    .addScalar("fromNodeArray", new StringType())
-			    .setResultTransformer(Transformers.aliasToBean(DiscoveryNewBoq.class))
+			    .setResultTransformer(Transformers.aliasToBean(DNIFormView.class))
 			    .list();
 
 			model.addAttribute("ListPRqItem", mapper.writeValueAsString(listDiscoveryNewItems));
@@ -653,7 +657,8 @@ public class DiscoveryController {
 				String dniAPPROVAL= itemParameters.getDictParameter().get(i).get(APPROVED_BY);
 				String approvalStatus= itemParameters.getDictParameter().get(i).get(DN_APPROVE_STATUS);
 				String Description= itemParameters.getDictParameter().get(i).get(DESCRIPTION);
-				
+				String FAR= itemParameters.getDictParameter().get(i).get(FarId);
+				String MacAddress= itemParameters.getDictParameter().get(i).get(Mac_Address);
 				
 				
 				
@@ -698,6 +703,10 @@ public class DiscoveryController {
 					discoverynewitem.setTotalAmount(TotalAmount);
 					discoverynewitem.setDniWOID(woId);
 					discoverynewitem.setPurpose(purpose);
+					if(FAR!=null) {
+					discoverynewitem.setFarID(FAR);
+					}
+					discoverynewitem.setMacAddress(MacAddress);
 					discoverynewitem.setItemModel(itemParameters.getDictParameter().get(i).get(DN_ITEM_MODEL));
 					discoverynewitem.setItemPartNb(itemParameters.getDictParameter().get(i).get(DN_ITEM_PART_NB));
 					discoverynewitem.setFromSlot(itemParameters.getDictParameter().get(i).get(DN_FROM_SLOT));
@@ -730,9 +739,9 @@ public class DiscoveryController {
 						    + "TAX1 = '" + dniTax1 + "' , TOTAL = '" + dniTotal + "' , TOTAL_AT = '" + dniTotalat + "' , WARE_ID = '" + wareID + "' , WARE_NAME = '" + wareName + "' , "
 						    + "FROM_SITE = '" + SiteID + "' , TO_WARE_ID = '" + towareID + "' , TO_WARE_NAME = '" + towareName + "' , TO_SITE = '" + toSiteID + "' , QTY = '" + dniQty + "' , DN_ID = '" + dnid + "' , "
 						    + "FROM_SERIAL_NUMBER = '" + dniSN + "' , TO_SERIAL_NUMBER = '" + toSerialNumber + "' , PO_ID = '" + PurchaseOrId + "' , SUPPLIER_ID = '" + supplierID + "' , SUPPLIER_NAME = '" + supplierName + "' , "
-						    + "TOTAL_AMOUNT = '" + TotalAmount + "' , WO_ID = '" + woId + "' , WO_PURPOSE = '" + purpose + "' , ITEM_MODEL = '" + itemModel + "' , ITEM_PART_NUMBER = '" + itemPartNb + "' , "
+						    + " TOTAL_AMOUNT = '" + TotalAmount + "' , WO_ID = '" + woId + "' , WO_PURPOSE = '" + purpose + "' , ITEM_MODEL = '" + itemModel + "' , ITEM_PART_NUMBER = '" + itemPartNb + "' , Far_ID =  '" + FAR+ "', MAC_ADDRESS = '" + MacAddress +"', " 
 						    + "FROM_SLOT = '" + fromSlot + "' , TO_SLOT = '" + toSlot + "', TRANS_TYPE = '" + transType + "', NOTES = '" + notes + "', ELEMENT_NAME = '" + elementName + "', POSITION = '" + position + "', APPROVAL = '" + dniAPPROVAL + "', "
-						    + "APPROVAL_STATUS = '" + approvalStatus + "', DESCRIPTION = '" + Description + "' WHERE DNI_ID = :param1");
+						    + "APPROVAL_STATUS = '" + approvalStatus + "', DESCRIPTION = '" + Description + "'  WHERE DNI_ID = :param1");
 
 query.setParameter("param1", DniID);
 query.executeUpdate();
@@ -930,7 +939,7 @@ query.executeUpdate();
 
 					System.out.println("-- PROJECT MANAGER APPROVAL --");
 					
-						ApprovalProjectandAsset(trans_Type, getApproval, dnStatus,AssetRegID, ArCode, PurchaseOrId,itmcode,itmname,WorkOrder,DniID,toSiteID,supplierID,supplierName,towareID,towareName,serialnb,dnRate,itemModel,itemPartNb,toSite,toSerialNumber,toSlot,Site,fromSlot,SiteID);
+						ApprovalProjectandAsset(trans_Type, getApproval, dnStatus,AssetRegID, ArCode, PurchaseOrId,itmcode,itmname,WorkOrder,DniID,toSiteID,supplierID,supplierName,towareID,towareName,serialnb,dnRate,itemModel,itemPartNb,toSite,toSerialNumber,toSlot,Site,fromSlot,SiteID, MacAddress);
 						
 					}
 				}
@@ -944,7 +953,7 @@ query.executeUpdate();
 
 					System.out.println("-- FINANCE APPROVAL --");
 
-						ApprovalFinance(trans_Type, getApproval, dnStatus,AssetRegID, ArCode, PurchaseOrId,itmcode,itmname,WorkOrder,DniID,toSiteID,supplierID,supplierName,towareID,towareName,serialnb,dnRate,itemModel,itemPartNb,toSite,toSerialNumber,toSlot,Site,fromSlot,SiteID);
+						ApprovalFinance(trans_Type, getApproval, dnStatus,AssetRegID, ArCode, PurchaseOrId,itmcode,itmname,WorkOrder,DniID,toSiteID,supplierID,supplierName,towareID,towareName,serialnb,dnRate,itemModel,itemPartNb,toSite,toSerialNumber,toSlot,Site,fromSlot,SiteID,MacAddress);
 						
 					}
 				}
@@ -963,7 +972,7 @@ query.executeUpdate();
 
 					System.out.println("-- OPERATION MANAGER APPROVAL --");
 					
-							ApprovalOperational(trans_Type, getApproval, dnStatus,AssetRegID, ArCode, PurchaseOrId,itmcode,itmname,WorkOrder,DniID,toSiteID,supplierID,supplierName,towareID,towareName,serialnb,dnRate,itemModel,itemPartNb,toSite,toSerialNumber,toSlot,Site,fromSlot,SiteID);
+							ApprovalOperational(trans_Type, getApproval, dnStatus,AssetRegID, ArCode, PurchaseOrId,itmcode,itmname,WorkOrder,DniID,toSiteID,supplierID,supplierName,towareID,towareName,serialnb,dnRate,itemModel,itemPartNb,toSite,toSerialNumber,toSlot,Site,fromSlot,SiteID, FAR, MacAddress);
 		
 						}
 						
@@ -1249,7 +1258,59 @@ query.executeUpdate();
 			return rtn; 
 			}
 	
+	@RequestMapping(value = "/GetAllFarDn", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> GetAllFarDn(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) {
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+		
+		String Site = request.getParameter("siteId");
+		String SiteId="";
+		if(Site!=null) {
+			 SiteId=Site.split(":")[2];
+		}
+		String[] idList = request.getParameterValues("nodeID[]");
+		String Far = request.getParameter("Far");
+		
+		session = AlmDbSession.getInstance().getSession();
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			
+		try {
+				
+				query = session.createNativeQuery("SELECT FAR_ID, Item_Code, Item_Name, Item_Model, Item_Part_number FROM FIXED_ASSET_REGISTRY " +
+				        "WHERE FAR_Id IN (SELECT FAR_ID FROM FAR_NODE WHERE Node_ID IN (:nodeIDs) " +
+				        "INTERSECT SELECT FAR_ID FROM FAR_SITE WHERE site_id = :site) " +
+				        "AND (FAR_ID LIKE :Far OR Item_Code LIKE :Far OR Item_Name LIKE :Far OR Item_Model LIKE :Far OR Item_Part_number LIKE :Far)");
+
+				query.setParameter("nodeIDs", Arrays.asList(idList));
+				query.setParameter("site", SiteId);
+				query.setParameter("Far", "%" + Far + "%"); 
+				query.setFirstResult(0);
+				query.setMaxResults(40);
+				rtn.put("globalList", query.list());
 	
+			}catch(Exception e) {
+				
+				logger.info(
+						"Error while getting AR using autocomplete with error message: "+ e);
+				e.printStackTrace();
+				
+			}
+			finally {
+			      if (session != null && session.isOpen()) {
+			    	  tx.commit();
+				      session.close();
+			      }
+			 }
+		}
+		return rtn;
+	}
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/GetALLWOByItem", method = RequestMethod.GET)
@@ -3661,7 +3722,7 @@ getAntennaMaintenance = "Select nodeAntenna.FROM_TRANS_ID, nodeAntennaTrans.FROM
 
 
 // APPROVED BY project manager or asset unit
-public void ApprovalProjectandAsset(String trans_Type, String getApproval, String dnStatus, String AssetRegID, String ArCode, String PurchaseOrId, String itmcode, String itmname, String WorkOrder, String DniID, String toSiteID, String supplierID, String supplierName, String towareID, String towareName, String serialnb, float dnRate, String itemModel, String itemPartNb, String toSite, String toSerialNumber, String toSlot, String Site, String fromSlot, String SiteID) {
+public void ApprovalProjectandAsset(String trans_Type, String getApproval, String dnStatus, String AssetRegID, String ArCode, String PurchaseOrId, String itmcode, String itmname, String WorkOrder, String DniID, String toSiteID, String supplierID, String supplierName, String towareID, String towareName, String serialnb, float dnRate, String itemModel, String itemPartNb, String toSite, String toSerialNumber, String toSlot, String Site, String fromSlot, String SiteID,String macAddress) {
 	
 	Query getpoItemID = session.createSQLQuery("select PO_ITEM_ID from PURCHASE_ORDER_ITEM where ITEM_CODE = '"+itmcode+"' and PO_ID = '"+PurchaseOrId+"'");
 	getpoItemID.executeUpdate();
@@ -3769,7 +3830,7 @@ public void ApprovalProjectandAsset(String trans_Type, String getApproval, Strin
     	
 		// Add to AR_SERIAL_NUMBER table
     	String AR_SerialNum_ID;
-		if(!StringUtils.equalsIgnoreCase(serialnb, "0") ) {
+		if(!StringUtils.equalsIgnoreCase(serialnb, "0") ||  !StringUtils.equalsIgnoreCase(macAddress, "0")) {
 			synchronized (this) {						
 				AR_SerialNum_ID = "ARSNUM_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT AR_SERIALNO FROM SEQ_TABLE").uniqueResult().toString());	
 				query = session.createSQLQuery("UPDATE SEQ_TABLE SET AR_SERIALNO = AR_SERIALNO + 1 ");
@@ -3781,6 +3842,7 @@ public void ApprovalProjectandAsset(String trans_Type, String getApproval, Strin
 		ArSerialNumber assetRegSerialNumber = new ArSerialNumber();
 		assetRegSerialNumber.setSerialId(AR_SerialNum_ID);
 		assetRegSerialNumber.setSerialNumber(toSerialNumber);
+		assetRegSerialNumber.setMacAddress(macAddress);
 		assetRegSerialNumber.setModel(itemModel);
 		assetRegSerialNumber.setPartNumber(itemPartNb);
 		assetRegSerialNumber.setSite(toSite);
@@ -3953,7 +4015,7 @@ if (AssetRegID != null) {
 
 // APPROVED BY Finance
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public void ApprovalFinance(String trans_Type, String getApproval, String dnStatus, String AssetRegID, String ArCode, String PurchaseOrId, String itmcode, String itmname, String WorkOrder, String DniID, String toSiteID, String supplierID, String supplierName, String towareID, String towareName, String serialnb, float dnRate, String itemModel, String itemPartNb, String toSite, String toSerialNumber, String toSlot, String Site, String fromSlot, String SiteID) {
+public void ApprovalFinance(String trans_Type, String getApproval, String dnStatus, String AssetRegID, String ArCode, String PurchaseOrId, String itmcode, String itmname, String WorkOrder, String DniID, String toSiteID, String supplierID, String supplierName, String towareID, String towareName, String serialnb, float dnRate, String itemModel, String itemPartNb, String toSite, String toSerialNumber, String toSlot, String Site, String fromSlot, String SiteID, String MacAddress) {
 	
 
 
@@ -4142,7 +4204,7 @@ session.saveOrUpdate(FixedAssetRegNode);
 			
 			//Add to FAR_SERIAL_NUMBER table
 
-			if(!StringUtils.equalsIgnoreCase(serialnb, "0") ) {
+			if(!StringUtils.equalsIgnoreCase(serialnb, "0") || (!StringUtils.equalsIgnoreCase(MacAddress, "0")) ) {
 			String FAR_SerialNum_ID;
 			synchronized (this) {						
 				FAR_SerialNum_ID = "FARSNUM_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT FAR_SERIALNO FROM SEQ_TABLE").uniqueResult().toString());	
@@ -4155,6 +4217,7 @@ session.saveOrUpdate(FixedAssetRegNode);
 			fixedAssetRegSerialNumber.setSerialId(FAR_SerialNum_ID);
 			fixedAssetRegSerialNumber.setInputSerialNb(toSerialNumber);
 			fixedAssetRegSerialNumber.setInputModel(itemModel);
+			fixedAssetRegSerialNumber.setMacAddress(MacAddress);
 			fixedAssetRegSerialNumber.setInputpartNumber(itemPartNb);
 			fixedAssetRegSerialNumber.setInputsite(toSite);
 			fixedAssetRegSerialNumber.setInputPosition(toSlot);
@@ -4320,7 +4383,7 @@ session.saveOrUpdate(FixedAssetRegNode);
 
 
 //APPROVED BY Operation manager
-public void ApprovalOperational(String trans_Type, String getApproval, String dnStatus, String AssetRegID, String ArCode, String PurchaseOrId, String itmcode, String itmname, String WorkOrder, String DniID, String toSiteID, String supplierID, String supplierName, String towareID, String towareName, String serialnb, float dnRate, String itemModel, String itemPartNb, String toSite, String toSerialNumber, String toSlot, String Site, String fromSlot, String SiteID) {
+public void ApprovalOperational(String trans_Type, String getApproval, String dnStatus, String AssetRegID, String ArCode, String PurchaseOrId, String itmcode, String itmname, String WorkOrder, String DniID, String toSiteID, String supplierID, String supplierName, String towareID, String towareName, String serialnb, float dnRate, String itemModel, String itemPartNb, String toSite, String toSerialNumber, String toSlot, String Site, String fromSlot, String SiteID, String FAR,String MacAddress) {
 	
 
 
@@ -4331,27 +4394,23 @@ public void ApprovalOperational(String trans_Type, String getApproval, String dn
 		// TRANS TYPE NEW NODE ON EXISTED HARDWARE
 		
 		if(StringUtils.equalsIgnoreCase(trans_Type, "New Node on Existed Hardware"))
+		
 		{
-				
-			
 			query = session.createQuery("select distinct arID from ArSerialNumber where serialNumber = :param1");
 
 			query.setParameter("param1", serialnb);
 			String ARid = (String) query.uniqueResult();
-			
 			
 			query = session.createSQLQuery("update DISCOVERY_NEW_ITEM set AR_ID = :param1 where DNI_ID = :param2");
 			query.setParameter("param1", ARid);
 			query.setParameter("param2", DniID);
 			query.executeUpdate();
 			
-			
 			if (ARid != null) {
 				
 				//Add to Table AR_SERIAL_NUMBER
 				
-				query = session.createQuery(" select serialId from ArSerialNumber where arID = :param1 and serialNumber = :param2 "
-						);
+				query = session.createQuery(" select serialId from ArSerialNumber where arID = :param1 and serialNumber = :param2 ");
 				
 				query.setParameter("param1", ARid);
 				query.setParameter("param2", serialnb);
@@ -4379,6 +4438,7 @@ public void ApprovalOperational(String trans_Type, String getApproval, String dn
 					assetRegSerialNumber.setPartNumber(itemPartNb);
 					assetRegSerialNumber.setSite(toSite);
 					assetRegSerialNumber.setArID(ARid);
+					assetRegSerialNumber.setMacAddress(MacAddress);
 					assetRegSerialNumber.setPosition(toSlot);
 					session.saveOrUpdate(assetRegSerialNumber);
 	        		
@@ -4387,7 +4447,7 @@ public void ApprovalOperational(String trans_Type, String getApproval, String dn
 					
 					query = session.createQuery("delete from ArNode t where t.arID = :param1");
 
-					query.setParameter("param1", ArCode);
+					query.setParameter("param1", ARid);
 					query.executeUpdate();
 					
 					String AR_NodeID;
@@ -4414,7 +4474,7 @@ public void ApprovalOperational(String trans_Type, String getApproval, String dn
 				 	assetRegNode.setNodeID(NodeId);
 				 	assetRegNode.setNodeName(result[1].toString());
 				 	assetRegNode.setNodeType(result[2].toString());
-				 	assetRegNode.setArID(ArCode);
+				 	assetRegNode.setArID(ARid);
 				 	session.saveOrUpdate(assetRegNode);
 				 
 						}
@@ -4467,6 +4527,7 @@ public void ApprovalOperational(String trans_Type, String getApproval, String dn
 			fixedAssetRegSerialNumber.setSerialId(farserialID);
 			fixedAssetRegSerialNumber.setInputSerialNb(toSerialNumber);
 			fixedAssetRegSerialNumber.setInputModel(itemModel);
+			fixedAssetRegSerialNumber.setMacAddress(MacAddress);
 			fixedAssetRegSerialNumber.setInputpartNumber(itemPartNb);
 			fixedAssetRegSerialNumber.setInputsite(toSite);
 			fixedAssetRegSerialNumber.setFarID(FARid);
@@ -4729,79 +4790,107 @@ session.saveOrUpdate(FixedAssetRegNode);
 
 		} 
 
-		
-		
+	
+	}
 		
 //TRANS TYPE RETIREMENT										
 		
-if (StringUtils.equalsIgnoreCase(trans_Type, "Retirement"))
-			
-{
-//DELETE FROM AR_SITE BOQ
-query = session.createSQLQuery("delete AR_SITE where AR_ID = :param1");
-query.setParameter("param1", arID);
-query.executeUpdate();
+ // END TRANSACTION TYPE RETIREMENT 
 
-//DELETE FROM AR_NODE BOQ
-
-query = session.createSQLQuery("delete AR_NODE where AR_ID = :param1");
-query.setParameter("param1", arID);
-query.executeUpdate();
-
-//DELETE FROM AR_SERIAL_NUMBER
-query = session.createSQLQuery("delete AR_SERIAL_NUMBER where AR_ID = :param1");
-query.setParameter("param1", arID);
-query.executeUpdate();
-
-//DELETE FROM AR_MODEL_PARTNUMBER
-
-query = session.createSQLQuery("delete AR_MODEL_PARTNUMBER where AR_ID = :param1");
-query.setParameter("param1", arID);
-query.executeUpdate();
-
-//DELETE FROM ASSET_REGISTRY
-
-query = session.createSQLQuery("delete ASSET_REGISTRY where AR_ID = :param1");
-query.setParameter("param1", arID);
-query.executeUpdate();
-
-//DELETE FROM FAR_SITE BOQ
-
-query = session.createSQLQuery("delete FAR_SITE where FAR_ID = :param1");
-query .setParameter("param1", farID);
-query .executeUpdate();
-
-//DELETE FROM FAR_NODE BOQ
-
-query = session.createSQLQuery("delete FAR_NODE where FAR_ID = :param1");
-query.setParameter("param1", farID);
-query.executeUpdate();
-
-//DELETE FROM FAR_SERIAL_NUMBER
-
-query = session.createSQLQuery("delete FAR_SERIAL_NUMBER where FAR_ID = :param1");
-query.setParameter("param1", farID);
-query.executeUpdate();
-
-//DELETE FROM FAR_MODEL_PARTNUMBER
-
-query = session.createSQLQuery("delete FAR_MODEL_PARTNUMBER where FAR_ID = :param1");
-query.setParameter("param1", farID);
-query.executeUpdate();
-
-//DELETE FROM FIXED_ASSET_REGISTRY
-
-query = session.createSQLQuery("delete FIXED_ASSET_REGISTRY where FAR_ID = :param1");
-query.setParameter("param1", farID);
-query.executeUpdate();
-
-} // END TRANSACTION TYPE RETIREMENT
-
+	if (StringUtils.equalsIgnoreCase(trans_Type, "Retirement"))
 		
-				
-	}  // serial number exist 
+	{
+		String ARid=null;
+		
+		if (!StringUtils.equalsIgnoreCase(serialnb, "0")){
+			query = session.createQuery("select distinct arID from ArSerialNumber where serialNumber = :param1");
+
+			query.setParameter("param1", serialnb);
+			 ARid = (String) query.uniqueResult();
+			 query = session.createQuery("select distinct farID from FarSerialNumber where serialNumber = :param1");
+            	query.setParameter("param1", serialnb);
+				FAR = (String) query.uniqueResult();
+		}// serial number exist 
+		
+		else if (!StringUtils.equalsIgnoreCase(MacAddress, "0")){
+			query = session.createQuery("select distinct arID from ArSerialNumber where macAddress = :param1");
+        	query.setParameter("param1", MacAddress);
+			 ARid = (String) query.uniqueResult();
+			 query = session.createQuery("select distinct farID from FarSerialNumber where macAddress = :param1");
+         	query.setParameter("param1", MacAddress);
+				FAR = (String) query.uniqueResult();
+	
+			} // Mac_Address exist
+		else if (!StringUtils.equalsIgnoreCase(FAR, "0")){
+			query = session.createQuery("select distinct ARID from FixedAssetRegistry where farID = :param1");
+
+			query.setParameter("param1", FAR);
+			 ARid = (String) query.uniqueResult();
+			} // FARId exist 
+		
+		
 	
 	
+	//DELETE FROM AR_SITE BOQ
+	query = session.createSQLQuery("delete AR_SITE where AR_ID = :param1");
+	query.setParameter("param1", ARid);
+	query.executeUpdate();
+
+	//DELETE FROM AR_NODE BOQ
+
+	query = session.createSQLQuery("delete AR_NODE where AR_ID = :param1");
+	query.setParameter("param1", ARid);
+	query.executeUpdate();
+
+	//DELETE FROM AR_SERIAL_NUMBER
+	query = session.createSQLQuery("delete AR_SERIAL_NUMBER where AR_ID = :param1");
+	query.setParameter("param1", ARid);
+	query.executeUpdate();
+
+	//DELETE FROM AR_MODEL_PARTNUMBER
+
+	query = session.createSQLQuery("delete AR_MODEL_PARTNUMBER where AR_ID = :param1");
+	query.setParameter("param1", ARid);
+	query.executeUpdate();
+
+	//DELETE FROM ASSET_REGISTRY
+
+	query = session.createSQLQuery("delete ASSET_REGISTRY where AR_ID = :param1");
+	query.setParameter("param1", ARid);
+	query.executeUpdate();
+
+	//DELETE FROM FAR_SITE BOQ
+
+	query = session.createSQLQuery("delete FAR_SITE where FAR_ID = :param1");
+	query .setParameter("param1", FAR);
+	query .executeUpdate();
+
+	//DELETE FROM FAR_NODE BOQ
+
+	query = session.createSQLQuery("delete FAR_NODE where FAR_ID = :param1");
+	query.setParameter("param1", FAR);
+	query.executeUpdate();
+
+	//DELETE FROM FAR_SERIAL_NUMBER
+
+	query = session.createSQLQuery("delete FAR_SERIAL_NUMBER where FAR_ID = :param1");
+	query.setParameter("param1", FAR);
+	query.executeUpdate();
+
+	//DELETE FROM FAR_MODEL_PARTNUMBER
+
+	query = session.createSQLQuery("delete FAR_MODEL_PARTNUMBER where FAR_ID = :param1");
+	query.setParameter("param1", FAR);
+	query.executeUpdate();
+
+	//DELETE FROM FIXED_ASSET_REGISTRY
+
+	query = session.createSQLQuery("delete FIXED_ASSET_REGISTRY where FAR_ID = :param1");
+	query.setParameter("param1", FAR);
+	query.executeUpdate();
+
+	}
+			
 	
 }
 
@@ -5028,7 +5117,7 @@ public void insertDiscoveredElements(Session session,List<Object[]> element,Stri
 			discoverynewitem.setDniSN(arrayList[9].toString());
 			discoverynewitem.setToSerialNumber(arrayList[10].toString());
 			
-			if(elementName.equalsIgnoreCase("Node")) {
+	     	if(elementName.equalsIgnoreCase("Node")) {
 				discoverynewitem.setOldMacAddress(arrayList[12].toString());
 				discoverynewitem.setMacAddress(arrayList[13].toString());
 			}

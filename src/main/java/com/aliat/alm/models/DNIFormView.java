@@ -8,7 +8,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "DISCOVERY_NEW_ITEM")
-public class DiscoveryNewItem {
+public class DNIFormView {
 	
 	@Id
 	@Column(name = "DNI_ID", nullable = false)
@@ -160,13 +160,15 @@ public class DiscoveryNewItem {
 	@Column(name = "MAC_ADDRESS", nullable = false)
 	private String macAddress;
 	
+	private String toNodeArray;
+	private String fromNodeArray;
 
-	public DiscoveryNewItem() {
+	public DNIFormView() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public DiscoveryNewItem(String dniID, Timestamp dnicreationDate, Timestamp dnilastModifieddate, String dniItemcode,
+	public DNIFormView(String dniID, Timestamp dnicreationDate, Timestamp dnilastModifieddate, String dniItemcode,
 			String dniItemname, float dniRate, float dniDiscamount, float dniDiscpercent, float dniNetrate,
 			float dniTax1, float dniTax2, float dniTotal, float dniTotalat, String dniSIte, float dniQty,
 			String dniDNID, String dniSN, String dniPOID, String dniWOID, String purpose, String transType,
@@ -175,7 +177,7 @@ public class DiscoveryNewItem {
 			String notes, String transID, String transSrc, String arID, String farID, String position,
 			String elementName, String fromSlot, String toSlot, String toSite, String toSerialNumber,
 			String description, String alcFlg, String toWareName, String toWareId,
-			String arsiteId, String farsiteId, String oldMacAddress, String macAddress) {
+			String arsiteId, String farsiteId, String oldMacAddress, String macAddress, String toNodeArray,String fromNodeArray) {
 		super();
 		this.dniID = dniID;
 		this.dnicreationDate = dnicreationDate;
@@ -226,11 +228,29 @@ public class DiscoveryNewItem {
 		FarsiteId = farsiteId;
 		this.oldMacAddress = oldMacAddress;
 		this.macAddress = macAddress;
+		this.toNodeArray=toNodeArray;
+		this.fromNodeArray=fromNodeArray;
 	
 	
 	}
 
 	
+	public String getToNodeArray() {
+		return toNodeArray;
+	}
+
+	public void setToNodeArray(String toNodeArray) {
+		this.toNodeArray = toNodeArray;
+	}
+
+	public String getFromNodeArray() {
+		return fromNodeArray;
+	}
+
+	public void setFromNodeArray(String fromNodeArray) {
+		this.fromNodeArray = fromNodeArray;
+	}
+
 	public String getDniID() {
 		return dniID;
 	}
