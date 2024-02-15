@@ -3803,8 +3803,10 @@ public void ApprovalProjectandAsset(String trans_Type, String getApproval, Strin
  		query.setParameter("param1", DniID);
  		query.executeUpdate();
  		List<Object[]> resultList = query.getResultList();
-
+ 		
+ 			
  		for (Object[] result : resultList) {
+ 			if (result[0] != null) {
  		String NodeId= result[0].toString();
  		String Name= result[1].toString();
  		String Type= result[2].toString();
@@ -3825,6 +3827,7 @@ public void ApprovalProjectandAsset(String trans_Type, String getApproval, Strin
      	session.saveOrUpdate(assetRegNode);
      
      	
+ 		}
  		}
     	
     	
@@ -3959,8 +3962,9 @@ if (AssetRegID != null) {
 		query.setParameter("param1", DniID);
 		query.executeUpdate();
 		List<Object[]> resultList = query.getResultList();
-
+			
 		for (Object[] result : resultList) {
+			if (result[0] != null) {
 		String NodeId= result[0].toString();
 		String Name= result[1].toString();
 		String Type= result[2].toString();
@@ -3981,6 +3985,7 @@ if (AssetRegID != null) {
  	assetRegNode.setArID(ArCode);
  	session.saveOrUpdate(assetRegNode);
  
+		}
 		}
 	
 	
@@ -4152,10 +4157,11 @@ public void ApprovalFinance(String trans_Type, String getApproval, String dnStat
 
 			String FAR_NodeID;
 	
-	
+			
+				
 	for (Object[] resultN : resultNList) {
 		
-	
+		if (resultN[0] != null) {
 	FAR_NodeID = "FARNODE_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT FAR_NODE FROM SEQ_TABLE").uniqueResult().toString());	
 	query = session.createSQLQuery("UPDATE SEQ_TABLE SET FAR_NODE = FAR_NODE + 1 ");
 	query.executeUpdate();
@@ -4173,6 +4179,7 @@ FixedAssetRegNode.setFarID(FarCode);
 session.saveOrUpdate(FixedAssetRegNode);
 
 }
+			}
 			
 			
 			// ADD TO FAR MODEL_PART_NB TABLE
@@ -4385,10 +4392,35 @@ session.saveOrUpdate(FixedAssetRegNode);
 //APPROVED BY Operation manager
 public void ApprovalOperational(String trans_Type, String getApproval, String dnStatus, String AssetRegID, String ArCode, String PurchaseOrId, String itmcode, String itmname, String WorkOrder, String DniID, String toSiteID, String supplierID, String supplierName, String towareID, String towareName, String serialnb, float dnRate, String itemModel, String itemPartNb, String toSite, String toSerialNumber, String toSlot, String Site, String fromSlot, String SiteID, String FAR,String MacAddress) {
 	
+String ARid=null;
 
-
-	if(!StringUtils.equalsIgnoreCase(serialnb, "0") ) // serial number exist
+	if( (!StringUtils.equalsIgnoreCase(serialnb, "0")) ||  (!StringUtils.equalsIgnoreCase(MacAddress, "0")) || (!StringUtils.equalsIgnoreCase(FAR, "0"))) // serial number exist
 	{
+		if (!StringUtils.equalsIgnoreCase(serialnb, "0")){
+			query = session.createQuery("select distinct arID from ArSerialNumber where serialNumber = :param1");
+
+			query.setParameter("param1", serialnb);
+			 ARid = (String) query.uniqueResult();
+			 query = session.createQuery("select distinct farID from FarSerialNumber where inputSerialNb = :param1");
+            	query.setParameter("param1", serialnb);
+				FAR = (String) query.uniqueResult();
+		}// serial number exist 
+		
+		else if (!StringUtils.equalsIgnoreCase(MacAddress, "0")){
+			query = session.createQuery("select distinct arID from ArSerialNumber where macAddress = :param1");
+        	query.setParameter("param1", MacAddress);
+			 ARid = (String) query.uniqueResult();
+			 query = session.createQuery("select distinct farID from FarSerialNumber where macAddress = :param1");
+         	query.setParameter("param1", MacAddress);
+				FAR = (String) query.uniqueResult();
+	
+			} // Mac_Address exist
+		else if (!StringUtils.equalsIgnoreCase(FAR, "0")){
+			query = session.createQuery("select distinct ARID from FixedAssetRegistry where farID = :param1");
+
+			query.setParameter("param1", FAR);
+			 ARid = (String) query.uniqueResult();
+			} // FARId exist 
 		
 
 		// TRANS TYPE NEW NODE ON EXISTED HARDWARE
@@ -4396,11 +4428,7 @@ public void ApprovalOperational(String trans_Type, String getApproval, String dn
 		if(StringUtils.equalsIgnoreCase(trans_Type, "New Node on Existed Hardware"))
 		
 		{
-			query = session.createQuery("select distinct arID from ArSerialNumber where serialNumber = :param1");
-
-			query.setParameter("param1", serialnb);
-			String ARid = (String) query.uniqueResult();
-			
+				
 			query = session.createSQLQuery("update DISCOVERY_NEW_ITEM set AR_ID = :param1 where DNI_ID = :param2");
 			query.setParameter("param1", ARid);
 			query.setParameter("param2", DniID);
@@ -4410,10 +4438,12 @@ public void ApprovalOperational(String trans_Type, String getApproval, String dn
 				
 				//Add to Table AR_SERIAL_NUMBER
 				
-				query = session.createQuery(" select serialId from ArSerialNumber where arID = :param1 and serialNumber = :param2 ");
+				query = session.createQuery(" select serialId from ArSerialNumber where"
+						+ " arID = :param1 and (serialNumber = :param2 OR macAddress = :param3 )");
 				
 				query.setParameter("param1", ARid);
 				query.setParameter("param2", serialnb);
+				query.setParameter("param3", MacAddress);
 				String checkIfEx = (String) query.uniqueResult();
 				String arserialID="";
 				if(checkIfEx != null) {
@@ -4455,8 +4485,9 @@ public void ApprovalOperational(String trans_Type, String getApproval, String dn
 						query.setParameter("param1", DniID);
 						query.executeUpdate();
 						List<Object[]> resultList = query.getResultList();
-
+							
 						for (Object[] result : resultList) {
+							if (result[0] != null) {
 						String NodeId= result[0].toString();
 						String Name= result[1].toString();
 						String Type= result[2].toString();
@@ -4476,32 +4507,31 @@ public void ApprovalOperational(String trans_Type, String getApproval, String dn
 				 	assetRegNode.setNodeType(result[2].toString());
 				 	assetRegNode.setArID(ARid);
 				 	session.saveOrUpdate(assetRegNode);
-				 
+						}
 						}
 			
 			}
 			
 			
 			
-			query = session.createQuery("select distinct farID from FarSerialNumber where inputSerialNb = :param1");
-			query.setParameter("param1", serialnb);
-			String FARid = (String) query.uniqueResult();
+		
 			
 			Query query = session.createSQLQuery("update DISCOVERY_NEW_ITEM set FAR_ID = :param1 where DNI_ID = :param2");
-			query.setParameter("param1", FARid);
+			query.setParameter("param1", FAR);
 			query.setParameter("param2", DniID);
 			query.executeUpdate();
 
 
-			if (FARid != null) {
+			if (FAR != null) {
 
 			// Add to FAR_SERIAL_NUMBER table
 
-				query = session.createQuery(" select serialId from FarSerialNumber where farID = :param1 and inputSerialNb = :param2 "
+				query = session.createQuery(" select serialId from FarSerialNumber where farID = :param1 and ( inputSerialNb = :param2 OR macAddress = :param3 ) "
 			);
 
-				query.setParameter("param1", FARid);
+				query.setParameter("param1", FAR);
 				query.setParameter("param2", serialnb);
+				query.setParameter("param3", MacAddress);
 				String farSerialID = (String) query.uniqueResult();
 			String farserialID="";
 			if(farSerialID != null) {
@@ -4530,7 +4560,7 @@ public void ApprovalOperational(String trans_Type, String getApproval, String dn
 			fixedAssetRegSerialNumber.setMacAddress(MacAddress);
 			fixedAssetRegSerialNumber.setInputpartNumber(itemPartNb);
 			fixedAssetRegSerialNumber.setInputsite(toSite);
-			fixedAssetRegSerialNumber.setFarID(FARid);
+			fixedAssetRegSerialNumber.setFarID(FAR);
 			fixedAssetRegSerialNumber.setInputPosition(toSlot);
 			
 			session.saveOrUpdate(fixedAssetRegSerialNumber);
@@ -4540,7 +4570,7 @@ public void ApprovalOperational(String trans_Type, String getApproval, String dn
 			query = session.createQuery(" select nodefarId from FarNode where farID = :param1  "
 			);
 
-			query.setParameter("param1",FARid);
+			query.setParameter("param1",FAR);
 			String farNodeID = (String) query.uniqueResult();
 			String FAR_NodeID = "";
 			if(farNodeID != null) {
@@ -4560,7 +4590,7 @@ public void ApprovalOperational(String trans_Type, String getApproval, String dn
 			FarNode farNode = new FarNode();
 			
 			farNode.setNodefarId(FAR_NodeID);
-			farNode.setFarID(FARid);
+			farNode.setFarID(FAR);
 
 
 			session.saveOrUpdate(farNode);
@@ -4571,15 +4601,9 @@ public void ApprovalOperational(String trans_Type, String getApproval, String dn
 			}
 		
 		//get arID
-		query = session.createQuery("select distinct arID from ArSerialNumber where serialNumber = :param1 ");
-		query.setParameter("param1",serialnb );
-		String arID = (String) query.uniqueResult();
 		
 		
-		query = session.createQuery("select distinct farID from FarSerialNumber where inputSerialNb = :param1 ");
-		query.setParameter("param1",serialnb );
-		String farID = (String) query.uniqueResult();
-
+		
 		if(StringUtils.equalsIgnoreCase(trans_Type, "Transfer from Slot to Slot") || StringUtils.equalsIgnoreCase(trans_Type, "Transfer from Node to Node") ||
 		StringUtils.equalsIgnoreCase(trans_Type, "Transfer from Site to Site"))
 		{
@@ -4598,7 +4622,7 @@ public void ApprovalOperational(String trans_Type, String getApproval, String dn
 		
 		query = session.createSQLQuery("update AR_SITE SET SITE_ID = '"+toSiteID+"',SITE_NAME = '"+towareName+"',WARE_ID = '"+towareID+"'"
 				+ " WHERE AR_ID = :param1 ");
-		query.setParameter("param1", arID);
+		query.setParameter("param1", ARid);
 		query.executeUpdate();
 		
 
@@ -4616,14 +4640,14 @@ public void ApprovalOperational(String trans_Type, String getApproval, String dn
 
 		query = session.createSQLQuery("update FAR_SITE SET SITE_ID = '"+toSiteID+"',SITE_NAME = '"+towareName+"',WARE_ID = '"+towareID+"'"
 				+ " WHERE FAR_ID = :param1 ");
-		query.setParameter("param1", farID);
+		query.setParameter("param1", FAR);
 		query.executeUpdate();
 
 
 		//Update AR_NODE
 		
 		query = session.createQuery("delete from ArNode t where t.arID = :param1");
-     	query.setParameter("param1", ArCode);
+     	query.setParameter("param1", ARid);
     	query.executeUpdate();
 	
 	String AR_NodeID;
@@ -4632,7 +4656,10 @@ public void ApprovalOperational(String trans_Type, String getApproval, String dn
 		query.executeUpdate();
 		List<Object[]> resultList = query.getResultList();
 
+			 
 		for (Object[] result : resultList) {
+			if ( result[0] != null) {
+				
 		String NodeId= result[0].toString();
 		String Name= result[1].toString();
 		String Type= result[2].toString();
@@ -4652,7 +4679,7 @@ public void ApprovalOperational(String trans_Type, String getApproval, String dn
  	assetRegNode.setNodeType(result[2].toString());
  	assetRegNode.setArID(ArCode);
  	session.saveOrUpdate(assetRegNode);
- 
+		}
 		}
 		
 		
@@ -4661,7 +4688,7 @@ public void ApprovalOperational(String trans_Type, String getApproval, String dn
 	//Update FAR_NODE 
 		
 		query = session.createSQLQuery("delete FAR_NODE where FAR_ID = :param1");
-		query.setParameter("param1", farID);
+		query.setParameter("param1", FAR);
 		query.executeUpdate();
 		  query = session.createSQLQuery("select TO_NODE_ID,TO_NODE_NAME,TO_NODE_TYPE FROM DISCOVER_NEW_ITEM_Node WHERE DNI_ID=:param1");
 			query.setParameter("param1", DniID);
@@ -4670,10 +4697,11 @@ public void ApprovalOperational(String trans_Type, String getApproval, String dn
 
 
 			String FAR_NodeID;
-	
+				
 	
 	for (Object[] resultN : resultNList) {
-		
+		if (resultN[0] != null) {
+			
 	
 	FAR_NodeID = "FARNODE_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT FAR_NODE FROM SEQ_TABLE").uniqueResult().toString());	
 	query = session.createSQLQuery("UPDATE SEQ_TABLE SET FAR_NODE = FAR_NODE + 1 ");
@@ -4687,13 +4715,13 @@ FixedAssetRegNode.setNodefarId(FAR_NodeID);
 FixedAssetRegNode.setNodeID(resultN[0].toString());
 FixedAssetRegNode.setNodeName(resultN[1].toString());
 FixedAssetRegNode.setNodeType(resultN[2].toString());
-FixedAssetRegNode.setFarID(farID);
+FixedAssetRegNode.setFarID(FAR);
 
 session.saveOrUpdate(FixedAssetRegNode);
 
 }
 	}
-
+		}
 
 		
 		
@@ -4705,23 +4733,23 @@ session.saveOrUpdate(FixedAssetRegNode);
 		{
 		
 			query = session.createSQLQuery("update DISCOVERY_NEW_ITEM set AR_ID = :param1 where DNI_ID = :param2");
-			query.setParameter("param1", arID);
+			query.setParameter("param1", FAR);
 			query.setParameter("param2", DniID);
 			query.executeUpdate();
 		          
 			query = session.createSQLQuery("update ASSET_REGISTRY set AR_STATUS = 'Disappear' where AR_ID =:param1");
-			query.setParameter("param1", arID);
+			query.setParameter("param1", FAR);
 			query.executeUpdate();
 
 
 			query = session.createSQLQuery("update DISCOVERY_NEW_ITEM set FAR_ID = :param1 where DNI_ID = :param2");
-			query.setParameter("param1", farID);
+			query.setParameter("param1", FAR);
 			query.setParameter("param2", DniID);
 			query.executeUpdate();
 		
 
 		    query = session.createSQLQuery("update FIXED_ASSET_REGISTRY set FAR_STATUS ='Disappear' where FAR_ID =:param1");
-		    query.setParameter("param1", farID);
+		    query.setParameter("param1", FAR);
 		    query.executeUpdate();
 
 		}
@@ -4737,21 +4765,21 @@ session.saveOrUpdate(FixedAssetRegNode);
 
 		
 			query = session.createSQLQuery("update DISCOVERY_NEW_ITEM set AR_ID = :param1 where DNI_ID = :param2");
-			query.setParameter("param1", arID);
+			query.setParameter("param1", ARid);
 			query.setParameter("param2", DniID);
 			query.executeUpdate();
 							             
 			query = session.createSQLQuery("update ASSET_REGISTRY set AR_STATUS = 'Maintenance' where AR_ID =:param1");
-			query.setParameter("param1", arID);
+			query.setParameter("param1", ARid);
 			query.executeUpdate();
 
 			query = session.createSQLQuery("update DISCOVERY_NEW_ITEM set FAR_ID = :param1 where DNI_ID = :param2");
-			query.setParameter("param1", farID);
+			query.setParameter("param1", FAR);
 			query.setParameter("param2", DniID);
 			query.executeUpdate();
 		
 			query = session.createSQLQuery("update FIXED_ASSET_REGISTRY set FAR_STATUS ='Maintenance' where FAR_ID =:param1");
-			query.setParameter("param1", farID);
+			query.setParameter("param1", FAR);
 			query.executeUpdate();
 
 		} 
@@ -4766,68 +4794,37 @@ session.saveOrUpdate(FixedAssetRegNode);
 		{
 		
 			query = session.createSQLQuery("update DISCOVERY_NEW_ITEM set AR_ID = :param1 where DNI_ID = :param2");
-			query.setParameter("param1", arID);
+			query.setParameter("param1", ARid);
 			query.setParameter("param2", DniID);
 			query.executeUpdate();
 		
 							             
 			query = session.createSQLQuery("update ASSET_REGISTRY set AR_STATUS = 'Running' where AR_ID =:param1");
-			query.setParameter("param1", arID);
+			query.setParameter("param1", ARid);
 			query.executeUpdate();
 
 		
 			query = session.createSQLQuery("update DISCOVERY_NEW_ITEM set FAR_ID = :param1 where DNI_ID = :param2");
-			query.setParameter("param1", farID);
+			query.setParameter("param1", FAR);
 			query.setParameter("param2", DniID);
 			query.executeUpdate();
 		
 
 
 			query = session.createSQLQuery("update FIXED_ASSET_REGISTRY set FAR_STATUS ='Running' where FAR_ID =:param1");
-			query.setParameter("param1", farID);
+			query.setParameter("param1", FAR);
 			query.executeUpdate();
 
 
 		} 
 
 	
-	}
 		
 //TRANS TYPE RETIREMENT										
-		
- // END TRANSACTION TYPE RETIREMENT 
 
 	if (StringUtils.equalsIgnoreCase(trans_Type, "Retirement"))
 		
 	{
-		String ARid=null;
-		
-		if (!StringUtils.equalsIgnoreCase(serialnb, "0")){
-			query = session.createQuery("select distinct arID from ArSerialNumber where serialNumber = :param1");
-
-			query.setParameter("param1", serialnb);
-			 ARid = (String) query.uniqueResult();
-			 query = session.createQuery("select distinct farID from FarSerialNumber where serialNumber = :param1");
-            	query.setParameter("param1", serialnb);
-				FAR = (String) query.uniqueResult();
-		}// serial number exist 
-		
-		else if (!StringUtils.equalsIgnoreCase(MacAddress, "0")){
-			query = session.createQuery("select distinct arID from ArSerialNumber where macAddress = :param1");
-        	query.setParameter("param1", MacAddress);
-			 ARid = (String) query.uniqueResult();
-			 query = session.createQuery("select distinct farID from FarSerialNumber where macAddress = :param1");
-         	query.setParameter("param1", MacAddress);
-				FAR = (String) query.uniqueResult();
-	
-			} // Mac_Address exist
-		else if (!StringUtils.equalsIgnoreCase(FAR, "0")){
-			query = session.createQuery("select distinct ARID from FixedAssetRegistry where farID = :param1");
-
-			query.setParameter("param1", FAR);
-			 ARid = (String) query.uniqueResult();
-			} // FARId exist 
-		
 		
 	
 	
@@ -4889,12 +4886,12 @@ session.saveOrUpdate(FixedAssetRegNode);
 	query.setParameter("param1", FAR);
 	query.executeUpdate();
 
-	}
+	} // END TRANSACTION TYPE RETIREMENT 
 			
 	
 }
 
-
+}
 
 
 
