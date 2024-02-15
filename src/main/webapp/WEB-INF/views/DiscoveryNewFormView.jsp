@@ -1247,15 +1247,15 @@ function getAllItemPartNbs()
 				   aprov.html("<p class='case'>To be Approved By Operation Manager</p>");
 				   approvedby_inp.val('Operation Manager');        
                 }
-				if(transType == "Retirement")
+				if(transType == "New Hardware on New Node" || transType == "New Node on New Hardware")
 				{
 
-					$(obj).parent().parent().children('td[name="FarId"]').children('input').prop('readonly', false);
-						}
+					$(obj).parent().parent().children('td[name="FarId"]').children('input').prop('readonly', true);
+							}
 				else{
 
 
-					$(obj).parent().parent().children('td[name="FarId"]').children('input').prop('readonly', true);
+					$(obj).parent().parent().children('td[name="FarId"]').children('input').prop('readonly', false);
 					
 					}
 
