@@ -404,10 +404,11 @@
 				itemRow =itemRow + "<td name='tositeID'><input type='text' class='form-control text-input' value='"+toSite+"' name='tositeID' style='width:450px;' class='ui-widget ui-widget-content ui-corner-all'></td>";
 			    var farIdValue = boqArray[i].farID !== null ? boqArray[i].farID : " "; 
           
-			    if (boqArray[i].transType === "Retirement") {
-                itemRow += "<td name='FarId'><input type='text' class='form-control text-input' value='" + farIdValue + "' name='FarId' style='width:450px;' class='ui-widget ui-widget-content ui-corner-all'></td>";
-                 } else {
+			    if (boqArray[i].transType === "New Node on New Node" || boqArray[i].transType === "New Node on New Hardware" ) {
                 itemRow += "<td name='FarId'><input type='text' class='form-control text-input' value='" + farIdValue+ "' name='FarId' style='width:450px;' class='ui-widget ui-widget-content ui-corner-all' readonly></td>";
+                } else {
+                 itemRow += "<td name='FarId'><input type='text' class='form-control text-input' value='" + farIdValue + "' name='FarId' style='width:450px;' class='ui-widget ui-widget-content ui-corner-all'></td>";
+               
                  }
                 itemRow += "<td name='macAddress'><input type='text' class='form-control text-input' value='"+boqArray[i].macAddress+"' name='macAddress' style='width:450px;' class='ui-widget ui-widget-content ui-corner-all' ></td>";
                 itemRow =itemRow + "<td name='itemSN'><input type='text' class='form-control text-input' style='width:200px' value='"+boqArray[i].dniSN+"'></td>";
