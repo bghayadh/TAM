@@ -366,6 +366,31 @@ button:focus {
 		max-width: 100%;
 	}
 }
+
+.nav-link.active {
+ background-color: #FFD966 !important;
+    color: #00757c !important;
+    }
+    
+    .case
+	{
+	text-align:center;
+	font-size: 16px;
+	color:#0000FF;
+	position:relative;
+	top:7px;
+	}
+	.btn-pop {
+    background-color: #C2CBC0 !important;
+    border-color: #C2CBC0;
+    3
+}
+
+.btn-pop:hover {
+    color: #fff;
+    background-color: #8696A0 !important;
+    border-color: #8696A0 !important;
+}
 </style>
 
 </head>
@@ -522,19 +547,26 @@ button:focus {
 		</div>
 		<p></p>
 
-	</div>
 
-	<div class="container-fluid">
 
 		<div class="row">
 			<div class="col-12 col-sm-12 col-lg-12">
 				<ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist"
 					style="background-color: #00757c; margin-top: -20px;">
-					<li class="nav-item"><a class="nav-link active"
+								
+					<li class="tab" class="nav-item"><a class="nav-link active"
 						id="custom-tabs-one-home-tab" data-toggle="tab"
 						href="#custom-tabs-one-home" role="tab"
 						aria-controls="custom-tabs-one-home" aria-selected="true"
 						style="color: gold;">INFORMATION</a></li>
+			       
+						
+					<li class="nav-item"><a class="nav-link"
+						id="custom-tabs-one-validation-tab" data-toggle="tab"
+						href="#custom-tabs-one-validation" role="tab"
+						aria-controls="custom-tabs-one-validation" aria-selected="false"
+						style="color: gold;">VALIDATION</a></li>
+			            
 
 					<li class="nav-item ml-auto">
 						<button type="button" id="sendEmail"
@@ -568,318 +600,360 @@ button:focus {
 
 
 	<div class="container-fluid">
-		<p></p>
-		<div id="left">
-			<div class="row">
-				<div class="col-md-12">
-					<div class="form-group" style="align-items: center;">
-						<div class="input-group-prepend">
-							<span class="input-group-text"
-								style="width: auto; display: block; text-align: left">Purpose</span>
-							<!--  <input type="text" id="purpose" value="${purpose}" class="form-control text-input" /> -->
-							<select name="cars" id="purpose"
-								style="width: 500px; text-align-last: center;"
-								class="form-control text-input">
-								<option value="Installation"
-									<c:if test = "${Purpose =='Installation'}"> selected </c:if>>Installation</option>
-								<option value="Maintenance"
-									<c:if test = "${Purpose =='Maintenance'}"> selected </c:if>>Maintenance</option>
-								<option value="Transfer"
-									<c:if test = "${Purpose =='Transfer'}"> selected </c:if>>Transfer</option>
-								<option value="Retirenment"
-									<c:if test = "${Purpose =='Retirenment'}"> selected </c:if>>Retirement</option>
-							</select>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-12">
-					<div class="form-group" style="align-items: center;">
-						<div class="input-group-prepend" id="datetimepicker3"
-							data-target-input="nearest">
-							<span class="input-group-text" style="width: auto;">Execution
-								Date</span> <input type="text" id="woexecutiondate"
-								value="${woExecutionDate}"
-								class="form-control datetimepicker-input"
-								data-toggle="datetimepicker" data-target="#datetimepicker3" />
-							<div class="input-group-append" data-target="#datetimepicker3"
-								data-toggle="datetimepicker">
-								<div class="input-group-text">
-									<i class="fa fa-calendar"></i>
+	
+		 <div class="tab-content" id="custom-tabs-one-tabContent">
+			<div class="tab-pane fade show active" id="custom-tabs-one-home"
+				role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+				<p></p>
+				<div id="left">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group" style="align-items: center;">
+								<div class="input-group-prepend">
+									<span class="input-group-text"
+										style="width: auto; display: block; text-align: left">Purpose</span>
+									<!--  <input type="text" id="purpose" value="${purpose}" class="form-control text-input" /> -->
+									<select name="cars" id="purpose"
+										style="width: 500px; text-align-last: center;"
+										class="form-control text-input">
+										<option value="Installation"
+											<c:if test = "${Purpose =='Installation'}"> selected </c:if>>Installation</option>
+										<option value="Maintenance"
+											<c:if test = "${Purpose =='Maintenance'}"> selected </c:if>>Maintenance</option>
+										<option value="Transfer"
+											<c:if test = "${Purpose =='Transfer'}"> selected </c:if>>Transfer</option>
+										<option value="Retirenment"
+											<c:if test = "${Purpose =='Retirenment'}"> selected </c:if>>Retirement</option>
+									</select>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-
-			</div>
-
-
-			<div class="row">
-				<div class="col-md-12">
-					<div class="form-group">
-						<div class="input-group-prepend">
-							<span class="input-group-text" style="min-width: auto;">From
-								Warehouse</span> <input type="text" id="wofrmware"
-								value="${woFromWare}" style="width: 675px; height: auto;"
-								class="ui-widget ui-widget-content ui-corner-all form-control text-input" />
-							<input type="text" id="fwLong" value="${frmwarelong}"
-								class="ui-widget ui-widget-content ui-corner-all form-control text-input"
-								hidden='true' /> <input type="text" id="fwLat"
-								value="${frmwarelat}"
-								class="ui-widget ui-widget-content ui-corner-all form-control text-input"
-								hidden='true' />
-
-						</div>
-					</div>
-				</div>
-
-				<div class="col-md-12">
-					<div class="form-group">
-						<div class="input-group-prepend">
-							<span class="input-group-text" style="width: auto;">Source
-								Site ID </span> <input type="text" id="siteid" value="${SiteId}"
-								style="width: 675px; height: auto;"
-								class="ui-widget ui-widget-content ui-corner-all form-control text-input" />
-						</div>
-					</div>
-				</div>
-				<div class="col-md-12">
-					<div class="form-group">
-						<div class="input-group-prepend">
-							<span class="input-group-text" style="width: auto;">Source
-								Warehouse Name</span> <input type="text" id="warename"
-								value="${WareName}" style="width: 675px; height: auto;"
-								class="ui-widget ui-widget-content ui-corner-all form-control text-input" />
-						</div>
-					</div>
-				</div>
-
-
-			</div>
-
-			<div class="row">
-
-				<div class="col-md-12">
-					<div class="form-group">
-						<div class="input-group-prepend">
-							<span class="input-group-text" style="width: auto;">To
-								Warehouse </span> <input type="text" id="wotoware" value="${woToWare}"
-								style="width: 675px; height: auto;"
-								class="ui-widget ui-widget-content ui-corner-all form-control text-input" />
-							<input type="text" id="twLong" value="${towarelong}"
-								class="ui-widget ui-widget-content ui-corner-all form-control text-input"
-								hidden='true' /> <input type="text" id="twLat"
-								value="${towarelat}"
-								class="ui-widget ui-widget-content ui-corner-all form-control text-input"
-								hidden='true' />
-
-						</div>
-					</div>
-				</div>
-				<div class="col-md-12">
-					<div class="form-group">
-						<div class="input-group-prepend">
-							<span class="input-group-text" style="width: auto;">Destination
-								Site ID </span> <input type="text" id="siteiddest"
-								value="${SiteIdDest}" style="width: 675px; height: auto;"
-								class="ui-widget ui-widget-content ui-corner-all form-control text-input" />
-
-						</div>
-					</div>
-				</div>
-				<div class="col-md-12">
-					<div class="form-group">
-						<div class="input-group-prepend">
-							<span class="input-group-text" style="width: auto;">Destination
-								Warehouse Name</span> <input type="text" id="warenamedest"
-								value="${WareNameDest}" style="width: 675px; height: auto;"
-								class="ui-widget ui-widget-content ui-corner-all form-control text-input" />
-						</div>
-					</div>
-				</div>
-
-			</div>
-		</div>
-		<div id="right">
-
-			<div id="collapseOne" class="panel-collapse collapse show"
-				aria-labelledby="headingOne">
-				<div class="panel-body" style="height: 82.5%; margin-left: 10%">
-
-					<div class="card-body" style='border: hidden;'>
-						<div class="btn-toolbar"
-							style="text-align: left; margin-bottom: 5px; margin-top: auto;">
-							<div class="btn-group flex-wrap" data-toggle="buttons"
-								style="row-gap: 2px;">
-								<div class=" top-btn-filter">
-									<button id="fwhbutton" name="fwhbutton" class="buttonTog">
-										<i class="fas fa-flag"></i> From WareHouse
-									</button>
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group" style="align-items: center;">
+								<div class="input-group-prepend" id="datetimepicker3"
+									data-target-input="nearest">
+									<span class="input-group-text" style="width: auto;">Execution
+										Date</span> <input type="text" id="woexecutiondate"
+										value="${woExecutionDate}"
+										class="form-control datetimepicker-input"
+										data-toggle="datetimepicker" data-target="#datetimepicker3" />
+									<div class="input-group-append" data-target="#datetimepicker3"
+										data-toggle="datetimepicker">
+										<div class="input-group-text">
+											<i class="fa fa-calendar"></i>
+										</div>
+									</div>
 								</div>
-								<div class=" top-btn-filter">
-									<button id="twhbutton" name="twhbutton" class="buttonTog"
-										style='margin-left: 10px;'>
-										<i class="fas fa-flag"></i> To WareHouse
-									</button>
-								</div>
-								<div class=" top-btn-filter">
-									<button id="deleteselected" name="deleteselected"
-										class="buttonTog" style='margin-left: 10px;'>
-										<i class="fa fa-trash"></i> Remove Selection
-									</button>
-								</div>
-
 							</div>
 						</div>
-						<div id="mapContainer" style='height: 390px;'></div>
+		
+					</div>
+		
+		
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text" style="min-width: auto;">From
+										Warehouse</span> <input type="text" id="wofrmware"
+										value="${woFromWare}" style="width: 675px; height: auto;"
+										class="ui-widget ui-widget-content ui-corner-all form-control text-input" />
+									<input type="text" id="fwLong" value="${frmwarelong}"
+										class="ui-widget ui-widget-content ui-corner-all form-control text-input"
+										hidden='true' /> <input type="text" id="fwLat"
+										value="${frmwarelat}"
+										class="ui-widget ui-widget-content ui-corner-all form-control text-input"
+										hidden='true' />
+		
+								</div>
+							</div>
+						</div>
+		
+						<div class="col-md-12">
+							<div class="form-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text" style="width: auto;">Source
+										Site ID </span> <input type="text" id="siteid" value="${SiteId}"
+										style="width: 675px; height: auto;"
+										class="ui-widget ui-widget-content ui-corner-all form-control text-input" />
+								</div>
+							</div>
+						</div>
+						<div class="col-md-12">
+							<div class="form-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text" style="width: auto;">Source
+										Warehouse Name</span> <input type="text" id="warename"
+										value="${WareName}" style="width: 675px; height: auto;"
+										class="ui-widget ui-widget-content ui-corner-all form-control text-input" />
+								</div>
+							</div>
+						</div>
+		
+		
+					</div>
+		
+					<div class="row">
+		
+						<div class="col-md-12">
+							<div class="form-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text" style="width: auto;">To
+										Warehouse </span> <input type="text" id="wotoware" value="${woToWare}"
+										style="width: 675px; height: auto;"
+										class="ui-widget ui-widget-content ui-corner-all form-control text-input" />
+									<input type="text" id="twLong" value="${towarelong}"
+										class="ui-widget ui-widget-content ui-corner-all form-control text-input"
+										hidden='true' /> <input type="text" id="twLat"
+										value="${towarelat}"
+										class="ui-widget ui-widget-content ui-corner-all form-control text-input"
+										hidden='true' />
+		
+								</div>
+							</div>
+						</div>
+						<div class="col-md-12">
+							<div class="form-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text" style="width: auto;">Destination
+										Site ID </span> <input type="text" id="siteiddest"
+										value="${SiteIdDest}" style="width: 675px; height: auto;"
+										class="ui-widget ui-widget-content ui-corner-all form-control text-input" />
+		
+								</div>
+							</div>
+						</div>
+						<div class="col-md-12">
+							<div class="form-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text" style="width: auto;">Destination
+										Warehouse Name</span> <input type="text" id="warenamedest"
+										value="${WareNameDest}" style="width: 675px; height: auto;"
+										class="ui-widget ui-widget-content ui-corner-all form-control text-input" />
+								</div>
+							</div>
+						</div>
+		
 					</div>
 				</div>
-			</div>
-
-
-		</div>
-
-		<div>
-			<form>
-
-				<div class="table-responsive-sm">
-					<label class="label"> SOURCE BOQ TABLE</label>
-					<table id="bisotab"
-						class="table table-striped table-bordered table-sm "
-						style="display: block; height: 200px; overflow-y: auto;">
-
-						<thead>
-							<tr class="fixed-headerr">
-								<th>
-									<div class="container">
-										<button type="button" id="selectAllsrc" class="main">
-											<span class="sub"></span>Select
-										</button>
+				<div id="right">
+		
+					<div id="collapseOne" class="panel-collapse collapse show"
+						aria-labelledby="headingOne">
+						<div class="panel-body" style="height: 82.5%; margin-left: 10%">
+		
+							<div class="card-body" style='border: hidden;'>
+								<div class="btn-toolbar"
+									style="text-align: left; margin-bottom: 5px; margin-top: auto;">
+									<div class="btn-group flex-wrap" data-toggle="buttons"
+										style="row-gap: 2px;">
+										<div class=" top-btn-filter">
+											<button id="fwhbutton" name="fwhbutton" class="buttonTog">
+												<i class="fas fa-flag"></i> From WareHouse
+											</button>
+										</div>
+										<div class=" top-btn-filter">
+											<button id="twhbutton" name="twhbutton" class="buttonTog"
+												style='margin-left: 10px;'>
+												<i class="fas fa-flag"></i> To WareHouse
+											</button>
+										</div>
+										<div class=" top-btn-filter">
+											<button id="deleteselected" name="deleteselected"
+												class="buttonTog" style='margin-left: 10px;'>
+												<i class="fa fa-trash"></i> Remove Selection
+											</button>
+										</div>
+		
 									</div>
-								</th>
-								<th>Item</th>
-								<th>Item Model</th>
-								<th>Item Part Number</th>
-								<th>Current Qty</th>
-								<th>Qty</th>
-								<th>From WareHouse</th>
-								<th>To WareHouse</th>
-								<th>Node ID</th>
-								<th>Node Name</th>
-								<th>GR ID</th>
-								<th>PR ID</th>
-								<th>PO ID</th>
-								<th>CIP ID</th>
-								<th>Status</th>
-								<th>Reconciled</th>
-								<th>BarCodeScanned</th>
-								<th>ID</th>
-							</tr>
-						</thead>
-						<tbody>
-
-
-						</tbody>
-					</table>
+								</div>
+								<div id="mapContainer" style='height: 390px;'></div>
+							</div>
+						</div>
+					</div>
+		
+		
 				</div>
-				<input type="text" id="RowIndex" value="" hidden>
-				<button type="button" class="add-row" value="Add Row">
-					Add Row</button>
-					<button type="button" class="delete-row-src">Delete Row</button>
-					<button type="button" class="move-row-src">
-						Move Item</button>
-						<button type="button" class="update-row-src">
-							Update</button>
-							<button type="button" class="download-row-src">
-								Download</button>
-								<button type="button" class="upload-row-src">Upload</button>
-			</form>
-		</div>
-
-		<p></p>
-		<div class="row">
-			<div class="col-md-4">
-				<div class="form-group">
-					<div class="input-group-prepend">
-						<span class="input-group-text" style="width: 150px;">Total
-							Qty</span> <input type="text" id="wostotqty" value="${wosTotalQty}"
-							readonly class="form-control text-input" />
+		
+				<div>
+					<form>
+		
+						<div class="table-responsive-sm">
+							<label class="label"> SOURCE BOQ TABLE</label>
+							<table id="bisotab"
+								class="table table-striped table-bordered table-sm "
+								style="display: block; height: 200px; overflow-y: auto;">
+		
+								<thead>
+									<tr class="fixed-headerr">
+										<th>
+											<div class="container">
+												<button type="button" id="selectAllsrc" class="main">
+													<span class="sub"></span>Select
+												</button>
+											</div>
+										</th>
+										<th>Item</th>
+										<th>Item Model</th>
+										<th>Item Part Number</th>
+										<th>Current Qty</th>
+										<th>Qty</th>
+										<th>From WareHouse</th>
+										<th>To WareHouse</th>
+										<th>Node ID</th>
+										<th>Node Name</th>
+										<th>GR ID</th>
+										<th>PR ID</th>
+										<th>PO ID</th>
+										<th>CIP ID</th>
+										<th>Status</th>
+										<th>Reconciled</th>
+										<th>BarCodeScanned</th>
+										<th>ID</th>
+									</tr>
+								</thead>
+								<tbody>
+		
+		
+								</tbody>
+							</table>
+						</div>
+						<input type="text" id="RowIndex" value="" hidden>
+						<button type="button" class="add-row" value="Add Row">
+							Add Row</button>
+							<button type="button" class="delete-row-src">Delete Row</button>
+							<button type="button" class="move-row-src">
+								Move Item</button>
+								<button type="button" class="update-row-src">
+									Update</button>
+									<button type="button" class="download-row-src">
+										Download</button>
+										<button type="button" class="upload-row-src">Upload</button>
+					</form>
+				</div>
+		
+				<p></p>
+				<div class="row">
+					<div class="col-md-4">
+						<div class="form-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text" style="width: 150px;">Total
+									Qty</span> <input type="text" id="wostotqty" value="${wosTotalQty}"
+									readonly class="form-control text-input" />
+							</div>
+						</div>
 					</div>
 				</div>
-			</div>
-		</div>
-
-
-		<p></p>
-		<div>
-			<form>
-				<div class="table-responsive-sm">
-					<label class="label">DESTINATION BOQ TABLE</label>
-					<table id="bisotab2"
-						class="table table-striped table-bordered table-sm"
-						style="display: block; height: 200px; overflow-y: auto;">
-						<thead>
-							<tr class="fixed-headerr">
-								<th>
-									<div class="container">
-										<button type="button" id="selectAlldest" class="main">
-											<span class="sub"></span>Select
-										</button>
-									</div>
-								</th>
-								<th>Item</th>
-								<th>Item Model</th>
-								<th>Item Part Number</th>
-								<th>Current Qty</th>
-								<th>Qty</th>
-								<th>From WareHouse</th>
-								<th>To WareHouse</th>
-								<th>Node ID</th>
-								<th>Node Name</th>
-								<th>GR ID</th>
-								<th>PR ID</th>
-								<th>PO ID</th>
-								<th>CIP ID</th>
-								<th>Status</th>
-								<th>Reconciled</th>
-								<th>BarCodeScanned</th>
-								<th>ID</th>
-							</tr>
-						</thead>
-						<tbody>
-
-
-						</tbody>
-					</table>
+		
+		
+				<p></p>
+				<div>
+					<form>
+						<div class="table-responsive-sm">
+							<label class="label">DESTINATION BOQ TABLE</label>
+							<table id="bisotab2"
+								class="table table-striped table-bordered table-sm"
+								style="display: block; height: 200px; overflow-y: auto;">
+								<thead>
+									<tr class="fixed-headerr">
+										<th>
+											<div class="container">
+												<button type="button" id="selectAlldest" class="main">
+													<span class="sub"></span>Select
+												</button>
+											</div>
+										</th>
+										<th>Item</th>
+										<th>Item Model</th>
+										<th>Item Part Number</th>
+										<th>Current Qty</th>
+										<th>Qty</th>
+										<th>From WareHouse</th>
+										<th>To WareHouse</th>
+										<th>Node ID</th>
+										<th>Node Name</th>
+										<th>GR ID</th>
+										<th>PR ID</th>
+										<th>PO ID</th>
+										<th>CIP ID</th>
+										<th>Status</th>
+										<th>Reconciled</th>
+										<th>BarCodeScanned</th>
+										<th>ID</th>
+									</tr>
+								</thead>
+								<tbody>
+		
+		
+								</tbody>
+							</table>
+						</div>
+						<input type="text" id="RowIndexDest" value="" hidden>
+						<button type="button" class="add-row-dest" value="Add Row">
+							Add Row</button>
+							<button type="button" class="delete-row-dest">Delete Row</button>
+							<button type="button" class="update-row-dest">
+								Update</button>
+								<button type="button" class="download-row-dest">
+									Download</button>
+									<button type="button" class="upload-row-dest">Upload</button>
+					</form>
 				</div>
-				<input type="text" id="RowIndexDest" value="" hidden>
-				<button type="button" class="add-row-dest" value="Add Row">
-					Add Row</button>
-					<button type="button" class="delete-row-dest">Delete Row</button>
-					<button type="button" class="update-row-dest">
-						Update</button>
-						<button type="button" class="download-row-dest">
-							Download</button>
-							<button type="button" class="upload-row-dest">Upload</button>
-			</form>
-		</div>
-
-		<p></p>
-		<div class="row">
-
-			<div class="col-md-4">
-				<div class="form-group">
-					<div class="input-group-prepend">
-						<span class="input-group-text">Total Qty</span> <input type="text"
-							id="wodtotqty" value="${wodTotalQty}" readonly
-							class="form-control text-input" />
+		
+				<p></p>
+				<div class="row">
+		
+					<div class="col-md-4">
+						<div class="form-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text">Total Qty</span> <input type="text"
+									id="wodtotqty" value="${wodTotalQty}" readonly
+									class="form-control text-input" />
+							</div>
+						</div>
 					</div>
+		
 				</div>
 			</div>
-
-
+		
+		<!-- here start -->
+			<div class="tab-pane fade" id="custom-tabs-one-validation"
+				role="tabpanel" aria-labelledby="custom-tabs-one-validation-tab">
+				  <div class="table-responsive-sm"> 
+						    <table id ="wotable" class="table table-striped table-bordered table-sm " style="display:block; height:400px; overflow-y: auto;">
+						        <thead>
+						            <tr class="fixed-headerr" >
+						                <th>
+								         <div style="width:80px" class="fixed-headerr"><button type="button" id="selectAll" class="fixed-headerr" >
+								          <span class="sub"></span>Select</button></div></th>
+						               	<th>DN ID</th>
+						               	<th>DN Item ID</th>
+						                <th>Item</th>
+						                <th>Item Model</th>
+						                <th>Item Part Number</th>
+						                <th>Transaction ID</th>
+						                <th>Transaction Type</div></th>
+						                <th>Element Name</div></th>
+						                <th>Approval Status</div></th>
+						                <th>FAR ID</th>
+						                <th>SN</th>
+						                <th>MAC Address</th>
+						               
+						                
+						            </tr>
+						        </thead>
+						        <tbody>
+						            
+									
+						        </tbody>
+						    </table>
+					    </div>
+			
+			</div>
+	
+	<!-- here end -->
 		</div>
 	</div>
 
@@ -1262,6 +1336,379 @@ button:focus {
 			</div>
 		</div>
 	</div>
+	
+	<!-- popup -->
+     
+     <div class="container">
+		<div id ="WOValModal" class="modal fade  custom-class-assignedto-modal"  tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">	
+			<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+				<div class="modal-content" >
+				<div class="modal-header" style="background-color: #2678CC ; height: 55px; ">
+				<h5 id ="popupNbb" class="modal-title" style="font-weight:bold; color: #E9ECEF ;position: relative; bottom: 12px;"></h5>
+					<div style="float: right;">
+					<button  name ="valpreviousRow" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: 0px; font-weight: bold; margin-top: -7px;"">Previous</button>
+	            	<button  name="valnextRow" onclick="nextValidRow(this.value)" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: 10px; font-weight: bold; margin-top: -7px;"">Next</button> 
+					<button type="button" name="closeModPartPopup" class="close" data-dismiss="modal"><i class='fa fa-times'></i></button>
+										<a class="close modalMinimize ml-3"> <i
+											class='fa fa-minus icon-to-change'></i></a>
+					</div>
+					</div>
+		
+		<div class="modal-body">
+		<ul class="nav nav-tabs" id="myTab" role="tablist" style="background-color: #00757C;">
+	 		  <li class="nav-item">
+	   			 <a class="nav-link active" id="valitem-tab" style="color: gold;" data-toggle="tab" href="#valitem" role="tab" aria-controls="valitem" aria-selected="true">ITEM</a>
+	  		</li>
+	  
+	  		<li class="nav-item">
+	   			 <a class="nav-link " id="valnode-tab" style="color: gold;" data-toggle="tab" href="#valnode" role="tab" aria-controls="valnode" aria-selected="false">NODE</a>
+	  		</li>
+	  		
+	  		<li class="nav-item">
+	   			 <a class="nav-link " id="valslot-tab" style="color: gold;" data-toggle="tab" href="#valslot" role="tab" aria-controls="valslot" aria-selected="false">SLOT</a>
+	  		</li>
+	 
+		</ul>
+	
+	<div class="tab-content">
+	
+	
+	
+	
+	<div class="tab-pane" id="valslot" role="tabpanel" aria-labelledby="valslot-tab">
+	 <div class="container-fluid">
+	 <div  style="height:30px"></div>
+		
+		<div class="row">
+			<div class="col-sm-6">
+				<div class="form-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text" >From Slot</span>
+						<input type="text" id="popupFromSlot" class="form-control text-input"  value="" style="width:675px;"  />
+					</div>
+				</div>
+		    </div>
+		
+		
+			<div class="col-sm-6">
+				<div class="form-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text" >To Slot</span>
+						<input type="text" id="popupToSlot" class="form-control text-input"  value="" style="width:675px;"  />
+					</div>
+				</div>
+		    </div>
+		</div>
+	</div>
+	 </div>
+	
+	
+	
+	
+	
+	
+	 <div class="tab-pane" id="valnode" role="tabpanel" aria-labelledby="valnode-tab">
+	  <div> 
+	<p></p>
+		<form>
+			<div class="table-responsive-sm"> 
+				<table id ="ToNodeTable" class="table table-striped table-bordered table-sm" style="display:block; height:290px; overflow-y: auto;">	
+					<thead>
+						<tr class="fixed-headerr">
+						<th> 
+							<button type="button" id="selectAllToNode"  on class="main">
+							<span class="sub"></span>Select</button>
+									         
+						  </th>
+						 <th width="232px">To Node Id</th>
+						 <th width="232px">To Node Name</th>
+	                     <th width="232px">To Node Type</th>
+							              
+						</tr> </thead> <tbody> </tbody> </table>
+						</div>
+						  	<input type="text" id="RowIndex2" value="" hidden>
+						</form>
+						</div> 
+						
+						
+						
+						<div> 
+	<p></p>
+		<form>
+			<div class="table-responsive-sm"> 
+				<table id ="FromNodeTable" class="table table-striped table-bordered table-sm" style="display:block; height:290px; overflow-y: auto;">	
+					<thead>
+						<tr class="fixed-headerr">
+						<th> 
+							<button type="button" id="selectAllFromNode"  class="main">
+							<span class="sub"></span>Select</button>
+									         
+						  </th>
+						 <th width="232px">From Node Id</th>
+						 <th width="232px">From Node Name</th>
+	                     <th width="232px">From Node Type</th>
+							              
+						</tr> </thead> <tbody> </tbody> </table>
+						</div>
+						  	<input type="text" id="RowIndex2" value="" hidden>
+						</form>
+						</div> 
+						
+						
+	 </div>
+	
+	
+	  <div class="tab-pane active" id="valitem" role="tabpanel" aria-labelledby="valitem-tab">
+	  <p></p>
+	<div class="container-fluid">
+		<div class="row">
+	  		<div class="col-sm-6">
+	  			<div class="form-group">
+	  				<div class="input-group-prepend">
+	  					<span class="input-group-text" >Item </span>
+	   					<input type="text" id="popupvalItemCode" value="" style="width:675px; height:37px" class="ui-widget ui-widget-content ui-corner-all form-control text-input" />
+	  				</div>
+	  			</div>
+	  		</div>
+	  
+			<div class="col-sm-6">
+				<div class="form-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text" >Item Model</span>
+						<input type="text" class="ui-widget ui-widget-content ui-corner-all form-control text-input" id="popupvalItemModel" value="" style="width:675px; height:37px;"  />					
+					</div>
+				</div>
+			</div></div></div>
+			
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">Item Part No</span>
+						<input type="text" class="ui-widget ui-widget-content ui-corner-all form-control text-input" id="popupvalItemPartno" value="" style="width:674px; height:37px"  />
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-sm-6">
+				<div class="form-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">Element Name</span>
+						<input type="text" id="popupElementName" class="form-control text-input"  value=""  style="width:675px;" />
+			        </div>
+		       </div>
+	       </div>	
+	  </div>
+	</div>			
+									
+	<div class="container-fluid">
+		<div class="row">
+			
+						
+			<div class="col-sm-6">
+				<div class="form-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text" >DNID</span>
+						<input type="text" id="popupDNID" class="form-control text-input" value=""  style="width:674px; height:37px;" />
+							
+					</div>
+				</div>
+			</div>
+	
+			<div class="col-sm-6">
+				<div class="form-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">DNItmID</span>
+						<input type="text" id="popupDNItmID" class="form-control text-input" value="" style="width:675px; height:37px;"  />  
+							
+					</div>
+				</div>
+			</div>
+		</div> 
+	</div>
+		
+	<div class="container-fluid">
+		<div class="row">
+		
+		<div class="col-sm-6">
+						<div class="form-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">Transaction ID</span>
+						<input type="text" class="ui-widget ui-widget-content ui-corner-all form-control text-input" id="popupTransID" value="" style="width:674px; height:37px"  />
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-sm-6">
+						<div class="form-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">Transaction Type</span>
+						<input type="text" class="ui-widget ui-widget-content ui-corner-all form-control text-input" id="popupTransType" value="" style="width:674px; height:37px"  />
+					</div>
+				</div>
+			</div>
+						
+		</div>
+	</div>
+	
+	<div class="container-fluid">
+		<div class="row">
+					
+			<div class="col-sm-6">
+				<div class="form-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text" >Approval Status</span>
+						 <!--  <input type="text" id="popupApprovalStatus" class="form-control text-input" hidden  value=""  style="width:250px; text-align: center;"  /> -->
+						<p class='case' id = "case" style = "margin-left: auto;  font-size: 13px; width:690px;">Transaction Type is Required</p>
+					</div>
+				</div>
+		    </div>	
+		    
+		    <div class="col-sm-6">
+						<div class="form-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">FAR</span>
+						<input type="text" class="ui-widget ui-widget-content ui-corner-all form-control text-input" id="popupFAR" value="" style="width:674px; height:37px"  />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 
+		<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-6">
+				<div class="form-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text" >From Slot</span>
+						<input type="text" id="popupFromSlot" class="form-control text-input"  value="" style="width:675px;"  />
+					</div>
+				</div>
+		    </div>
+		
+		
+			<div class="col-sm-6">
+				<div class="form-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text" >To Slot</span>
+						<input type="text" id="popupToSlot" class="form-control text-input"  value="" style="width:675px;"  />
+					</div>
+				</div>
+		    </div>
+		</div>
+	</div>
+	 -->
+	
+			<div class="container-fluid">
+			<div class="row">
+			<div class="col-sm-6">
+				<div class="form-group">
+					<div class="input-group-prepend">
+						<span class=" input-group-text" >From Site ID</span>
+						<input type="text" id="popupFromSiteID" class="ui-widget ui-widget-content ui-corner-all form-control text-input"  value="" style="width:675px;"  />
+					</div>
+				</div>
+		    </div>
+		
+		
+			<div class="col-sm-6">
+				<div class="form-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text" >To Site ID</span>
+						<input type="text" id="popupToSiteID" class="form-control text-input"  value="" style="width:675px;"  />
+					</div>
+				</div>
+		    </div>
+		</div>
+		</div>
+		
+		<div class="container-fluid">
+			<div class="row">
+			<div class="col-sm-6">
+				<div class="form-group">
+					<div class="input-group-prepend">
+						<span class=" input-group-text" >From Ware Name</span>
+						<input type="text" id="popupFromWareName" class="ui-widget ui-widget-content ui-corner-all form-control text-input"  value="" style="width:675px;"  />
+					</div>
+				</div>
+		    </div>
+		
+		
+			<div class="col-sm-6">
+				<div class="form-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text" >To Ware Name</span>
+						<input type="text" id="popupToWareName" class="form-control text-input"  value="" style="width:675px;"  />
+					</div>
+				</div>
+		    </div>
+		</div>
+		</div>
+		
+		<div class="container-fluid">
+			<div class="row">
+			<div class="col-sm-6">
+				<div class="form-group">
+					<div class="input-group-prepend">
+						<span class=" input-group-text" >From Ware ID</span>
+						<input type="text" id="popupFromWareID" class="ui-widget ui-widget-content ui-corner-all form-control text-input"  value="" style="width:675px;"  />
+					</div>
+				</div>
+		    </div>
+		
+		
+			<div class="col-sm-6">
+				<div class="form-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text" >To Ware IID</span>
+						<input type="text" id="popupToWareD" class="form-control text-input"  value="" style="width:675px;"  />
+					</div>
+				</div>
+		    </div>
+		</div>
+		</div>
+		
+		<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-6">
+				<div class="form-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text" >Serial Nb</span>
+						<input type="text" id="popupSN" class="form-control text-input"  value="" style="width:675px;"  />
+					</div>
+				</div>
+		    </div>
+		
+			<div class="col-sm-6">
+				<div class="form-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text" >MAC Address</span>
+						<input type="text" id="popupMAC" class="form-control text-input"  value="" style="width:675px;"  />
+					</div>
+				</div>
+		    </div>
+		</div>
+		</div>	      
+						
+	  </div>
+	
+	</div>
+	
+	  
+	  </div>
+						
+	<div class="modal-footer">
+		
+	</div>	
+									                
+		</div>
+				
+			 </div> </div>
+	</div>
+		 
+		 <!-- popup -->
+	
 
 </body>
 
@@ -1691,10 +2138,231 @@ var markerCluster = new MarkerClusterer(map,markerarray,clusterOptions, {ignoreH
 				$("#formStatus").text("Not Saved");
 				$('.dot').css({"background-color" : "orange"});
 				});
-
-
-	$(document).ready(function() {
+			
+		/////validation/////
+			 $(function(){
+		
+				if ('${docStatus}' != 'addNew') {
 	
+					//let boqArray = [];
+					boqArray=${validation};
+					//console.log("validation "+boqArray.length);
+					for (j = 0; j < boqArray.length; j++){
+	
+	
+		
+						 	var ItemCode=boqArray[j][1];
+							if(ItemCode==null){
+								ItemCode="";
+							}
+							//console.log("ItemCode "+boqArray[j][22]);
+							var ItemName=boqArray[j][2];
+							if(ItemName==null){
+								ItemName="";
+							}
+							var ItemModel=boqArray[j][11];
+							if(ItemModel==null){
+								ItemModel="";
+							}
+							var ItemPNum=boqArray[j][12];
+							if(ItemPNum==null){
+								ItemPNum="";
+							}
+							var transID=boqArray[j][3];
+							if(transID==null){
+								transID="";
+							}
+							var transType=boqArray[j][4];
+							if(transType==null){
+								transType="";
+							}
+	
+							var elementName=boqArray[j][5];
+							if(elementName==null){
+								elementName="";
+							}
+							
+							var fromSlot=boqArray[j][14];
+							if(fromSlot==null){
+								fromSlot="";
+							}
+							var toSlot=boqArray[j][17];
+							if(toSlot==null){
+								toSlot="";
+							}
+							var siteID=boqArray[j][7];
+							if(siteID==null){
+								siteID="0";
+							}
+							var wareID=boqArray[j][8];
+							if(wareID==null){
+								wareID="0";
+							}
+							var wareName=boqArray[j][9];
+							if(wareName==null){
+								wareName="0";
+							}
+
+							var fromsite=wareID+":"+wareName+":"+siteID
+							
+							var tositeID=boqArray[j][18];
+							if(tositeID==null || tositeID=='null'){
+								tositeID="0";
+							}
+
+							var towareID=boqArray[j][20];
+							if(towareID==null|| towareID=='null'){
+								towareID="0";
+							}
+							var towareName=boqArray[j][19];
+							if(towareName==null || towareName=='null'){
+								towareName="0";
+							}
+							
+							var tosite=towareID+":"+towareName+":"+tositeID
+							
+							var FarId=boqArray[j][15];
+							if(FarId==null){
+								FarId="";
+							}
+							var macAddress=boqArray[j][16];
+							if(macAddress==null){
+								macAddress="";
+							}
+							var SN=boqArray[j][10];
+							if(SN==null){
+								SN="";
+							}
+							var DnID=boqArray[j][0];
+							if(DnID==null){
+								DnID="";
+							}
+							var DniID=boqArray[j][21];
+							if(DniID==null){
+								DniID="";
+							}
+								///////////////////
+							var ApproveStatus =boqArray[j][6];
+							var trans_type = boqArray[j][4];
+				            var ApprovalAction = boqArray[j][13];
+				            
+							if(ApproveStatus == null)
+				             {
+				       		 	approval = "";
+				             }
+				            if (ApproveStatus == "Project Manager")
+				            {
+				            	if(ApprovalAction != 'Approved')
+				               	{
+				           		 	approval = "To be Approved By Project Manager";
+				               	}
+				            	else
+				               	{
+				               	  	approval = "To be Approved By Asset Unit";
+				                }
+				            }
+				        	if (ApproveStatus == "Asset Unit")
+				            {
+				            	if(ApprovalAction != 'Approved')
+				               	{
+				           			approval = "To be Approved By Asset Unit";
+				               	}
+				            	else
+				               	{
+				           			approval = "To be Approved By Finance";
+				               	}
+
+				            }
+				            if (ApproveStatus == "Operation Manager")
+				            {
+				               if(trans_type =="Retirement")                {
+				                 if(ApprovalAction != 'Approved')
+				                 {
+				            	 	approval = "be Approved By Operation Manager";
+				                 }
+				                 else
+				                 {
+				            	 	approval = "To be Approved By Finance";
+				                  }
+				                }
+
+				               else
+				               {
+				                    if(ApprovalAction != 'Approved')
+				                    {
+				            	    	approval = "To be Approved By Operation Manager";
+				                    }
+				            	    else
+				            	    {
+				            	     	approval = "Completely Approved";
+				            	    }
+				                   }
+				               }
+				            if (ApproveStatus == "Finance")
+				            {
+				            	if(ApprovalAction != 'Approved')
+				               	{
+				           			approval = "To be Approved By Finance";
+				           		}
+				            	else
+				           	    {
+				           		 	approval = "Completely Approved";
+				           	    }
+				            }
+				            if (ApproveStatus == "Completely Approved")
+				            {
+				        	    approval = "Completely Approved";
+				        	}
+
+				    		var toNodeArray = [];
+				    		  if (boqArray[j][22] != null) {
+				    		  toNodeArray.push(boqArray[j][22]);
+				    		  }
+				    		  else{
+				    		  toNodeArray.push(null);
+				    		  }
+				    				var fromNodeArray = [];
+				    		  if (boqArray[j][23] != null) {
+				    		  fromNodeArray.push(boqArray[j][23]);
+				    		  }
+				    		  else{
+				    		  fromNodeArray.push(null);
+				    		  }
+
+					 
+					var itemRow = "<tr>"
+						+"<td style='text-align:center;'><input type='checkbox' name='record' style='margin-top:12px;'><button type = 'button' href='#' name='popUpMenu' onclick='openPop3(this)' class='btn btn-default'  style='position:relative;left:3px;'><i class='fas fa-desktop'></i></button></td>"
+			         + "<td name='DnID'><input type='text' name='dnId' class='form-control text-input' value='"+DnID+"' readonly style='width:200px;' class='ui-widget ui-widget-content ui-corner-all'/></td>"
+			         + "<td name='DniID'><input type='text' name='dniId' class='form-control text-input' value='"+DniID+"' readonly style='width:200px;' class='ui-widget ui-widget-content ui-corner-all'/></td>"
+			         + "<td name='item'><input type='text' name='itmCode' class='form-control text-input' value='"+ItemCode+"' readonly style='width:200px;' class='ui-widget ui-widget-content ui-corner-all'/></td>"			
+			         + "<td name='itemModel'><input type='text' name='itmMod' class='form-control text-input' value='"+ItemModel+"' readonly style='width:200px;' class='ui-widget ui-widget-content ui-corner-all'/></td>"			
+			         + "<td name='itemPartNb'><input type='text' name='itmPartNb' class='form-control text-input' value='"+ItemPNum+"' readonly style='width:200px;' class='ui-widget ui-widget-content ui-corner-all'/></td>"			
+			         + "<td name='transID'><input type='text' name='itmTransID' class='form-control text-input' value='"+transID+"' readonly style='width:200px;' class='ui-widget ui-widget-content ui-corner-all'/></td>"			
+			         + "<td name='transType'><input type='text' name='itmTransType' class='form-control text-input' value='"+transType+"' readonly style='width:200px;' class='ui-widget ui-widget-content ui-corner-all'/></td>"			
+			         + "<td name='elementName'><input type='text' name='itmelementName' class='form-control text-input' value='"+elementName+"' readonly style='width:200px;' class='ui-widget ui-widget-content ui-corner-all'/></td>"			
+			         + "<td name='approvalStatus'><input type='text' name='approvalStatus' class='form-control text-input' value='"+approval+"' readonly style='width:350px;' class='ui-widget ui-widget-content ui-corner-all'/></td>"			
+			         + "<td name='FarId'><input type='text' name='FarId' class='form-control text-input' value='"+FarId+"' readonly style='width:200px;' class='ui-widget ui-widget-content ui-corner-all'/></td>"
+			         + "<td name='toSN'><input type='text' name='toSerialNb' class='form-control text-input' value='"+SN+"' readonly style='width:200px;' class='ui-widget ui-widget-content ui-corner-all'/></td>"
+			         + "<td name='macAddress'><input type='text' name='macAddress' class='form-control text-input' value='"+macAddress+"' readonly style='width:200px;' class='ui-widget ui-widget-content ui-corner-all'/></td>"
+			         + "<td name='toNode' style='display: none;'><input type='text' style='width:200px;' value='" + toNodeArray[0] + "' class='ui-widget ui-widget-content ui-corner-all form-control text-input'/></td>"
+		             + "<td name='fromNode' style='display: none;'><input type='text' style='width:200px;' value='" + fromNodeArray[0] + "' class='ui-widget ui-widget-content ui-corner-all form-control text-input'/></td>"
+		             + "<td name='fromSlot' style='display: none;'><input type='text' name='fromSlot' class='form-control text-input' value='"+fromSlot+"'  style='width:200px;' class='ui-widget ui-widget-content ui-corner-all'/></td>"			
+			         + "<td name='toSlot' style='display: none;'><input type='text' name='toSlot' class='form-control text-input' value='"+toSlot+"'  style='width:200px;'  class='ui-widget ui-widget-content ui-corner-all'/></td>"	
+			         + "<td name='siteID' style='display: none;'><input type='text' name='siteID' class='form-control text-input' value='"+fromsite+"'  style='width:200px;'  class='ui-widget ui-widget-content ui-corner-all'/></td>"
+			         + "<td name='tositeID' style='display: none;'><input type='text' name='tositeID' class='form-control text-input' value='"+tosite+"'  style='width:200px;' class='ui-widget ui-widget-content ui-corner-all'/></td>"
+					         
+			         +"</tr>";					
+			         		
+	
+			        $("#wotable > tbody").append(itemRow);
+		        
+					}
+				}
+					
+			});
+				
+	$(document).ready(function() {
+
 		if('${SelectedIndex}' != 'addNew'){
 			
 			var SelectedIndex = ${SelectedIndex};
@@ -1761,6 +2429,8 @@ var markerCluster = new MarkerClusterer(map,markerarray,clusterOptions, {ignoreH
 			$(".nextprvItems").addClass("hide-row ");
 	 		 $(".pad").removeClass("hide-row ");
 			}
+
+		
 
      var alertFlagSource;
      var alertFlagDest;

@@ -1301,6 +1301,103 @@ function openPop2(element) {
 	
 }
 
+function openPop3(element) {
+	var buttonRowIndx = $(element).closest("tr");
+	rowindxx = (buttonRowIndx[0].rowIndex - 1);
+	
+	getValuesValidRow(rowindxx);
+	
+	var element = document.getElementById("popupNbb");
+    element.innerHTML = "Item # " +(rowindxx+1);
+
+   }
+
+ function getValuesValidRow(rowindxx){
+		$("#ToNodeTable >tbody tr").empty();
+		$("#FromNodeTable >tbody tr").empty();
+			//var buttonRowIndx = $(element).closest("tr");
+			//rowindxx = (buttonRowIndx[0].rowIndex - 1);
+			console.log("rowindxx "+rowindxx);
+		//*************************************************************************************************************************
+			//Send input values from Boq table  to popup
+			$('#popupvalItemCode').val($("#wotable >tbody").find("tr").eq(rowindxx).find('td[name="item"]').children('input').val());
+			$('#popupvalItemModel') .val($("#wotable >tbody").find("tr").eq(rowindxx).find('td[name="itemModel"]').children('input').val());
+			$('#popupvalItemPartno').val($("#wotable >tbody").find("tr").eq(rowindxx).find('td[name="itemPartNb"]').children('input').val());
+		
+			$('#popupTransID').val($("#wotable >tbody").find("tr").eq(rowindxx).find('td[name="transID"]').children('input').val());
+			$('#popupTransType').val($("#wotable >tbody").find("tr").eq(rowindxx).find('td[name="transType"]').children('input').val());
+			$('#popupElementName').val($("#wotable >tbody").find("tr").eq(rowindxx).find('td[name="elementName"]').children('input').val());
+			//$('#popupApprovalStatus').val($("#wotable >tbody").find("tr").eq(rowindxx).find('td[name="approvalStatus"]').children('input').val());
+			$('#case').text($("#wotable >tbody").find("tr").eq(rowindxx).find('td[name="approvalStatus"]').children('input').val());//change
+			$('#popupDNID').val($("#wotable >tbody").find("tr").eq(rowindxx).find('td[name="DnID"]').children('input').val());
+			$('#popupDNItmID').val($("#wotable >tbody").find("tr").eq(rowindxx).find('td[name="DniID"]').children('input').val());
+		
+			$('#popupFromSlot').val($("#wotable >tbody").find("tr").eq(rowindxx).find('td[name="fromSlot"]').children('input').val());
+			$('#popupToSlot').val($("#wotable >tbody").find("tr").eq(rowindxx).find('td[name="toSlot"]').children('input').val());
+		
+			var Fromsite=$("#wotable >tbody").find("tr").eq(rowindxx).find('td[name="siteID"]').children('input').val();
+			var arr =[];
+			arr =Fromsite.split(":");
+			var fromsiteId=arr[2];
+			var fromwareName=arr[1];
+			var fromwareId=arr[0]
+			
+			$('#popupFromSiteID').val(fromsiteId);
+			$('#popupFromWareName').val(fromwareName);
+			$('#popupFromWareID').val(fromwareId);
+			
+			var Tosite=$("#wotable >tbody").find("tr").eq(rowindxx).find('td[name="tositeID"]').children('input').val();
+			 arr=[];
+			arr= Tosite.split(":");
+			var tositeId=arr[2];
+			var towareName=arr[1];
+			var towareId=arr[0];
+			
+			$('#popupToSiteID').val(tositeId);
+			$('#popupToWareName').val(towareName);
+			$('#popupToWareD').val(towareId);
+			
+			$('#popupSN').val($("#wotable >tbody").find("tr").eq(rowindxx).find('td[name="toSN"]').children('input').val());
+			$('#popupMAC').val($("#wotable >tbody").find("tr").eq(rowindxx).find('td[name="macAddress"]').children('input').val());
+			$('#popupFAR').val($("#wotable >tbody").find("tr").eq(rowindxx).find('td[name="FarId"]').children('input').val());
+		
+		
+			 $("#WOValModal").modal("show");
+	        // var element = document.getElementById("popupNbb");
+	         //  element.innerHTML = "Item # " +(rowindxx+1);
+				 
+	        var toNode = JSON.parse($("#wotable > tbody").find("tr").eq(rowindxx).find('td[name="toNode"]').children('input').val());
+		    populateNodeTable(toNode, "#ToNodeTable");
+		    var fromNode = JSON.parse($("#wotable > tbody").find("tr").eq(rowindxx).find('td[name="fromNode"]').children('input').val());
+		    populateNodeTable(fromNode, "#FromNodeTable");
+	 
+ }
+ 
+ function nextValidRow(){
+	// Get total number of rows in table
+	var rowCount = $("#wotable >tbody tr").length;
+	
+	// intiate new row index   	 
+	rowindxx++ ;
+	var nextIndex = parseInt(rowindxx);
+	
+	// go to the next row when rowindxx does not exceed the row count	 
+	if(rowindxx >= 0 && rowindxx < rowCount) {
+		
+	// get values from boq to popup	
+	getValuesValidRow(nextIndex);
+		
+	//Update popup number in header 
+	var element = document.getElementById("popupNbb");
+	element.innerHTML = "Item # " +(nextIndex+1);
+
+			 }
+	else {
+		$("#WOValModal").modal("hide");
+		
+	}
+ }
+
 // open popup Fct
  function openPop(element,target) {
 	if(target=="src"){
@@ -1346,6 +1443,7 @@ function openPop2(element) {
 	// Get total number of rows in table
 	var rowCount = $("#"+tableId+" >tbody tr").length;
 	console.log("Row Count in BOQ:" +rowCount);
+	console.log("tableId:" +tableId);
 	
 	// intiate new row index   	 
 	rowindx++ ;
@@ -1526,7 +1624,29 @@ function checkSerial() {
 
 	    $("#"+tablesgn+" >tbody").find("tr").eq(rowindx).find('td[name="serialNo"]').children('input').val(serialModelPartnum);
 } // end check serial fct
-	    	
+	 
+function populateNodeTable(node, tableSelector) {
+
+    $(tableSelector + " > tbody").html("");
+
+    if (node != null) {
+        var nodeArray = (tableSelector === "#ToNodeTable") ? node.toNodeArray : node.fromNodeArray;
+
+        $.each(nodeArray, function (i, value) {
+            var nodeId = (value.NodeId === null) ? '' : value.NodeId;
+            var NodeName = (value.NodeName === null) ? '' : value.NodeName;
+            var NodeType = (value.NodeType === null) ? '' : value.NodeType;
+            var Node = "<tr>";
+            Node += "<td><input type='checkbox' style='position:relative;left:20px;top:10px' name='record'></td>";
+            Node += "<td name='NodeId'><input name='NodeId' type='text' value='" + nodeId + "' style='width:200px;position:relative;left:11px;' class='form-control text-input'/></td>";
+            Node += "<td name='NodeName' style='width:200px'><input name='NodeName' type='text' value='" + NodeName + "' style='width:200px;position:relative;left:11px;' class='form-control text-input ui-widget ui-widget-content ui-corner-all' /> </td>";
+            Node += "<td name='NodeType' style='width:200px'><input name='NodeType' type='text' value='" + NodeType + "' style='width:200px;position:relative;left:11px;' class='form-control text-input ui-widget ui-widget-content ui-corner-all' /> </td>";
+            Node += "</tr>";
+
+            $(tableSelector + " > tbody").append(Node);
+        });
+    }
+}
 
  function addRowSerial(){
  
@@ -2140,7 +2260,28 @@ var ctx = getContextPath();
        	      }
    	
    	});// end Previous function in popup  
+  
+//Previous function in validation popup
+ $("button[name='valpreviousRow']").on("click", function(){
+       		        
+  	if(rowindxx > 0) {
+		rowindxx-- ;
+		
+  		var PrevIndex = parseInt(rowindxx);
 
+  		getValuesValidRow(PrevIndex);
+
+	    //Update popup Nb in header 
+		var element = document.getElementById("popupNbb");
+		element.innerHTML = "Item # " +(PrevIndex+1);
+      		 }
+      		         
+	   	// Close popup on row 0 (end of prev fct)
+      		   else if (rowindxx == 0) {
+      		    	$("#WOValModal").modal("hide");
+      	      }
+  	
+  	});// end Previous function in validation popup  
 
   });
 
