@@ -345,7 +345,7 @@ border-color: #939191f5;
             <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist" style="background-color: #00757c; margin-top: 0px;">
                 <li class="nav-item">
                     <a class="nav-link active" id="custom-tabs-Cust-Info-tab" data-toggle="tab" href="#custom-tabs-Custinfo-home" role="tab" aria-controls="custom-tabs-Custinfo-home" aria-selected="true" style="color: gold;">
-                        Customer INFORMATION
+                        INFORMATION
                     </a>
                 </li>
                 <li class="nav-item">
