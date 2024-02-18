@@ -664,37 +664,47 @@ public class AssetRegistryController {
 		}
 		
 		//Node Tab Saving
-			String nodearId = null;
-			if (itemParameters.getDictParameternode() != null) {
-				
-				for (int i = 0; i < itemParameters.getDictParameternode().size(); i++) {
-					
-					arNode = new ArNode();
-		
-					if(StringUtils.equalsIgnoreCase(itemParameters.getDictParameternode().get(i).get("arNodeID"), "0")) {
-						synchronized (this) {						
-							nodearId = "ARNODE_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT AR_NODE FROM SEQ_TABLE").uniqueResult().toString());	
-							query = session.createNativeQuery("UPDATE SEQ_TABLE SET AR_NODE = AR_NODE + 1 ");
-							query.executeUpdate();
-							session.createNativeQuery("commit").executeUpdate();
-							}
-						     //nodearId = "ARNODE_" + year + "_" + appConfig.getSequenceNbr(28);
-						     arNode.setNodearId(nodearId);
-					}
-					else {
-						    arNode.setNodearId(itemParameters.getDictParameternode().get(i).get("arNodeID"));
-					}
-					arNode.setNodeID(itemParameters.getDictParameternode().get(i).get("nodeID"));
-					arNode.setNodeName(itemParameters.getDictParameternode().get(i).get("node_Name"));
-					arNode.setArID(AssetRegID);
-					
-					
-					session.saveOrUpdate(arNode);
-			
-					
-				}
-		         
-			}	
+		if (itemParameters.getDictParameternode() != null) {
+		    for (int i = 0; i < itemParameters.getDictParameternode().size(); i++) {
+		         arNode = new ArNode();
+
+		        if(StringUtils.equalsIgnoreCase(itemParameters.getDictParameternode().get(i).get("arNodeID"), "0")) {
+		            String node_ID = itemParameters.getDictParameternode().get(i).get("nodeID");
+		            String nodearId = null;
+
+		            query = session.createSQLQuery("select NODEAR_ID from AR_NODE where Node_ID = :param1 AND AR_ID = :param2");
+		            query.setParameter("param1", node_ID);
+		            query.setParameter("param2", AssetRegID);
+
+		            Object result = query.uniqueResult();
+
+		            if (result != null) {
+		                nodearId = result.toString();
+		            }
+
+		            if (nodearId == null) {
+		                synchronized (this) {                        
+		                    nodearId = "ARNODE_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT AR_NODE FROM SEQ_TABLE").uniqueResult().toString());    
+		                    query = session.createNativeQuery("UPDATE SEQ_TABLE SET AR_NODE = AR_NODE + 1 ");
+		                    query.executeUpdate();
+		                    session.createNativeQuery("commit").executeUpdate();
+		                }
+		            }
+
+		            arNode.setNodearId(nodearId);
+		        } else {
+		            arNode.setNodearId(itemParameters.getDictParameternode().get(i).get("arNodeID"));
+		        }
+
+		        arNode.setNodeID(itemParameters.getDictParameternode().get(i).get("nodeID"));
+		        arNode.setNodeName(itemParameters.getDictParameternode().get(i).get("node_Name"));
+		        arNode.setNodeType(itemParameters.getDictParameternode().get(i).get("node_Type"));
+		        arNode.setArID(AssetRegID);
+
+		        session.merge(arNode); // Use merge instead of saveOrUpdate to handle detached entities
+		    }
+		}
+
 	
 			//Site Tab Saving
 			String arsiteId = null;
@@ -710,7 +720,6 @@ public class AssetRegistryController {
 							query.executeUpdate();
 							session.createNativeQuery("commit").executeUpdate();
 							}
-						//arsiteId = "ARSITE_" + year + "_" + appConfig.getSequenceNbr(30);
 						arSite.setArsiteId(arsiteId);
 					}
 					else {

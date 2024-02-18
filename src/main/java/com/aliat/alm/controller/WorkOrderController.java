@@ -286,6 +286,7 @@ public class WorkOrderController {
 						 model.addAttribute("docStatus", "addNew");
 						 model.addAttribute("SelectedIndex", "addNew");
 						 model.addAttribute("workOrderCount", "addNew");
+						 model.addAttribute("validation", "addNew");
 						 
 						return "WorkOrderFormView";
 					}
@@ -445,8 +446,33 @@ public class WorkOrderController {
 							 model.addAttribute("ListWorkOrderDestItem", "addNew");	
 							 
 						}
-				       	
+					   
+					   
+				/////////validation////////////
+					   String str="SELECT t.DN_ID AS dnID, t.ITEM_CODE AS dniItemcode, t.ITEM_NAME AS dniItemname,t.TRANS_ID as trans_ID, t.TRANS_TYPE AS transType, " +
+							    "t.ELEMENT_NAME AS elementName, t.APPROVAL AS dniAPPROVAL,t.FROM_SITE AS dniSIte, " +
+							    "t.WARE_ID AS wareID, t.WARE_NAME AS wareName, NVL(t.TO_SERIAL_NUMBER, ' ') AS SN, " +
+							    "NVL(t.ITEM_MODEL, '') AS itemModel, NVL(t.ITEM_PART_NUMBER, '') AS itemPartNb,  " +
+							    " t.APPROVAL_STATUS AS approvalStatus, NVL(t.FROM_SLOT, ' ') AS fromSlot, NVL(t.FAR_ID, ' ') AS farID, NVL(t.MAC_ADDRESS, ' ') AS macAddress, " +
+							    "NVL(t.TO_SLOT, ' ') AS toSlot, t.TO_SITE AS toSite, t.TO_WARE_NAME AS toWareName, " +
+							    "t.TO_WARE_ID AS toWareId,t.DNI_ID AS dniID,x.toNodeArray, y.fromNodeArray " +
+							    "FROM DISCOVERY_NEW_ITEM t "+
+							    "LEFT JOIN (SELECT DISTINCT DNI_ID, json_object('toNodeArray' VALUE json_arrayagg(json_object('NodeId' VALUE TO_NODE_ID, " +
+							    "'NodeName' VALUE TO_NODE_NAME, 'NodeType' VALUE TO_NODE_TYPE))) AS toNodeArray FROM Discover_New_Item_Node WHERE TO_NODE_ID IS NOT NULL GROUP BY DNI_ID) x " +
+							    "ON x.DNI_ID = t.DNI_ID " +
+							    "LEFT JOIN (SELECT DISTINCT DNI_ID, json_object('fromNodeArray' VALUE json_arrayagg(json_object('NodeId' VALUE FROM_NODE_ID, " +
+							    "'NodeName' VALUE FROM_NODE_NAME, 'NodeType' VALUE FROM_NODE_TYPE))) AS fromNodeArray FROM Discover_New_Item_Node WHERE FROM_NODE_ID IS NOT NULL GROUP BY DNI_ID) y " +
+							    "ON y.DNI_ID = t.DNI_ID " +
+							    " WHERE WO_ID =:param1 ";
+						
+						query = session.createNativeQuery(str);
+						query.setParameter("param1", workOrderId);
+						List<Object[]> validationList = query.list();
+						
+						model.addAttribute("validation", mapper.writeValueAsString(validationList));
+				       	////////////////////////////////////////////////////////////
 					}//End if WorkOrdId != null
+					
 					
 					    
 		  

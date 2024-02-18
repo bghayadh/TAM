@@ -282,6 +282,7 @@ RowCount =  $("#partnodeTab >tbody tr").length;
  var markup = "<tr><td style='text-align:center;'><input type='checkbox' name='record1'><button type = 'button' href='#' name='popUpNodeMenu' onclick='openNodePopUp(this)' class='btn btn-default'  style='position:relative;left:3px;'><i class='fas fa-desktop'></i></button></td>"
 	 +"<td name = 'nodeID'><input name='nodeID' id = 'nodeID"+RowCount+"' type='text' style='width:200px;' class='form-control text-input'/></td>"
 	 +"<td name = 'node_Name'><input name='node_Name' id = 'node_Name"+RowCount+"' type='text' style='width:200px;' class='form-control text-input'/></td>"
+	 +"<td name = 'node_Type'><input name='node_Type' id = 'node_Type"+RowCount+"' type='text' style='width:200px;' class='form-control text-input'/></td>"
 	 +"<td name = 'arNodeID'><input name='arNodeID' readonly value = 0 type='text' style='width:200px;' class='form-control text-input'/></td></tr>";
 
 
@@ -319,6 +320,8 @@ function openNodePopUp(element) {
 	//Send input values from Boq table to popup
 	$('#popupNodeId').val($("#partnodeTab > tbody").find("tr").eq(NodeRowIndex).find('td[name="nodeID"]').children('input').val());
 	$('#popupNodeName').val($("#partnodeTab > tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Name"]').children('input').val());
+	$('#popupNodeType').val($("#partnodeTab > tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Type"]').children('input').val());
+	
 	$('#popupNodeSeqId').val($("#partnodeTab > tbody").find("tr").eq(NodeRowIndex).find('td[name="arNodeID"]').children('input').val());
 
 	$("#nodeModal").modal("show");
@@ -402,6 +405,8 @@ RowCount =  $("#partnodeTab >tbody tr").length;
  var markup = "<tr><td style='text-align:center;'><input type='checkbox' name='record1'><button type = 'button' href='#' name='popUpNodeMenu' onclick='openNodePopUp(this)' class='btn btn-default'  style='position:relative;left:3px;'><i class='fas fa-desktop'></i></button></td>"
 	 +"<td name = 'nodeID'><input name='nodeID' id = 'nodeID"+RowCount+"' type='text' style='width:200px;' class='form-control text-input'/></td>"
 	 +"<td name = 'node_Name'><input name='node_Name' id = 'node_Name"+RowCount+"' type='text' style='width:200px;' class='form-control text-input'/></td>"
+	 +"<td name = 'node_Type'><input name='node_Name' id = 'node_Type"+RowCount+"' type='text' style='width:200px;' class='form-control text-input'/></td>"
+	
 	 +"<td name = 'arNodeID'><input name='arNodeID' readonly value = 0 type='text' style='width:200px;' class='form-control text-input'/></td></tr>";
 
 $("#partnodeTab > tbody tr").eq(NodeRowIndex).after(markup);
@@ -412,6 +417,7 @@ $("#partnodeTab > tbody tr").eq(NodeRowIndex).after(markup);
 
 	$('#popupNodeId').val($("#partnodeTab > tbody").find("tr").eq(NodeRowIndex).find('td[name="nodeID"]').children('input').val());
     $('#popupNodeName').val($("#partnodeTab > tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Name"]').children('input').val());
+	$('#popupNodeType').val($("#partnodeTab > tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Type"]').children('input').val());
 	$('#popupNodeSeqId').val($("#partnodeTab > tbody").find("tr").eq(NodeRowIndex).find('td[name="arNodeID"]').children('input').val());
 
 
@@ -558,6 +564,7 @@ RowCount =  $("#partnodeTab >tbody tr").length;
  var markup = "<tr><td style='text-align:center;'><input type='checkbox' name='record1'><button type = 'button' href='#' name='popUpNodeMenu' onclick='openNodePopUp(this)' class='btn btn-default'  style='position:relative;left:3px;'><i class='fas fa-desktop'></i></button></td>"
 	 +"<td name = 'nodeID'><input name='nodeID' id = 'nodeID"+RowCount+"' type='text' style='width:200px;' class='form-control text-input'/></td>"
 	 +"<td name = 'node_Name'><input name='node_Name' id = 'node_Name"+RowCount+"' type='text' style='width:200px;' class='form-control text-input'/></td>"
+	 +"<td name = 'node_Tye'><input name='node_Type' id = 'node_Type"+RowCount+"' type='text' style='width:200px;' class='form-control text-input'/></td>"
 	 +"<td name = 'arNodeID'><input name='arNodeID' readonly value = 0 type='text' style='width:200px;' class='form-control text-input'/></td></tr>";
 
 $("#partnodeTab > tbody tr").eq(NodeRowIndex).before(markup);
@@ -565,6 +572,7 @@ $("#partnodeTab > tbody tr").eq(NodeRowIndex).before(markup);
 	
 	$('#popupNodeId').val($("#partnodeTab > tbody").find("tr").eq(NodeRowIndex).find('td[name="nodeID"]').children('input').val());
 	$('#popupNodeName').val($("#partnodeTab > tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Name"]').children('input').val());
+	$('#popupNodeType').val($("#partnodeTab > tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Type"]').children('input').val());
 	$('#popupNodeSeqId').val($("#partnodeTab > tbody").find("tr").eq(NodeRowIndex).find('td[name="arNodeID"]').children('input').val());
 
     NodeboqAutocomplete(RowCount,"partnodeTab");
@@ -705,6 +713,7 @@ function nextNodeRow(){
 	if(NodeRowIndex >= 0 && NodeRowIndex < rowNodeCount) {
 		$('#popupNodeId').val($("#partnodeTab > tbody").find("tr").eq(NodeRowIndex).find('td[name="nodeID"]').children('input').val());
 		$('#popupNodeName').val($("#partnodeTab > tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Name"]').children('input').val());
+		$('#popupNodeType').val($("#partnodeTab > tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Type"]').children('input').val());
 		$('#popupNodeSeqId').val($("#partnodeTab > tbody").find("tr").eq(NodeRowIndex).find('td[name="arNodeID"]').children('input').val());
 
 		var element = document.getElementById("popupNbNode");
@@ -719,6 +728,7 @@ function nextNodeRow(){
 		
 		$('#popupNodeId').val($("#partnodeTab > tbody").find("tr").eq(NodeRowIndex).find('td[name="nodeID"]').children('input').val());
 		$('#popupNodeName').val($("#partnodeTab > tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Name"]').children('input').val());
+		$('#popupNodeType').val($("#partnodeTab > tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Type"]').children('input').val());
 		$('#popupNodeSeqId').val($("#partnodeTab > tbody").find("tr").eq(NodeRowIndex).find('td[name="arNodeID"]').children('input').val());
 
 		var element = document.getElementById("popupNbNode");
@@ -868,6 +878,7 @@ function deleteNodeBoqRow() {
 		  //NodeRowIndex++;
 			$('#popupNodeId').val($("#partnodeTab > tbody").find("tr").eq(NodeRowIndex).find('td[name="nodeID"]').children('input').val());
 			$('#popupNodeName').val($("#partnodeTab > tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Name"]').children('input').val());
+			$('#popupNodeType').val($("#partnodeTab > tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Type"]').children('input').val());
 			$('#popupNodeSeqId').val($("#partnodeTab > tbody").find("tr").eq(NodeRowIndex).find('td[name="arNodeID"]').children('input').val());
 
 			//Update popup Nb in header 
@@ -881,6 +892,7 @@ function deleteNodeBoqRow() {
 
 			$('#popupNodeId').val($("#partnodeTab > tbody").find("tr").eq(NodeRowIndex).find('td[name="nodeID"]').children('input').val());
 			$('#popupNodeName').val($("#partnodeTab > tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Name"]').children('input').val());
+			$('#popupNodeType').val($("#partnodeTab > tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Type"]').children('input').val());
 			$('#popupNodeSeqId').val($("#partnodeTab > tbody").find("tr").eq(NodeRowIndex).find('td[name="arNodeID"]').children('input').val());
 
 			//Update popup Nb in header 
@@ -1362,7 +1374,6 @@ $("#popupItemPartno").autocomplete({
 				 },
 				 dataType: "json",
 				 success: function (data) {
-					 console.log(0000);
 					 
 					 if (data != null) {
 						 console.log(11);
@@ -1494,17 +1505,19 @@ $("#popupNodeId").autocomplete({
 			alert("Error");
 		}
 		});
+		
 	}, minLength:0, maxShowItems: 40, scroll:true,
 	select: function(event, ui) {
-			this.value = ui.item[0];
-			$("#popupNodeName").val(ui.item[1]);
+			this.value = ui.item[2];
+			$("#popupNodeName").val(ui.item[3]);
+			$("#popupNodeType").val(ui.item[4]);
 			return false;
 		}
 	  }).autocomplete("instance")._renderItem = function(ul, item) {
 		return $('<li class="each"></li>').data( "item.autocomplete", item )
 		.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
-		item[0] + "</span><br><span class='desc'>" +
-		item[1] + '</span></div>').appendTo(ul);
+		item[2] + "</span><br><span class='desc'>" +
+	    item[3] + ', ' +item[4]+'</span></div>').appendTo(ul);
 	  };
 	  $("#popupNodeId").focus(function(){
 		  console.log("I am in the nodeID popup");
@@ -1535,16 +1548,17 @@ $("#popupNodeName").autocomplete({
 	});
 	}, minLength:0, maxShowItems: 40, scroll:true,
 	select: function(event, ui) {
-		this.value = ui.item[1];
-		$("#popupNodeId").val(ui.item[0]);
+		this.value = ui.item[3];
+		$("#popupNodeId").val(ui.item[2]);
+		$("#popupNodeType").val(ui.item[4]);
 		return false;
 
 	}
 }).autocomplete("instance")._renderItem = function(ul, item) {
 	return $('<li class="each"></li>').data( "item.autocomplete", item )
 	.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
-	item[1] + "</span><br><span class='desc'>" +
-	item[0] + '</span></div>').appendTo(ul);
+	item[3] + "</span><br><span class='desc'>" +
+	item[2] + ', ' +item[4]+'</span></div>').appendTo(ul);
 };
 $("#popupNodeName").focus(function(){
 	if (this.value == ""){
@@ -1552,7 +1566,45 @@ $("#popupNodeName").focus(function(){
 		}						
 }); // End NodeName autocomplete in Nodepopup
 
- 
+ //Node type popup autocomplete
+$("#popupNodeType").autocomplete({
+	source: function(request, response) {
+	$.ajax({
+		type: "GET",
+		contentType: "application/json; charset=utf-8",
+		url: ctx+'/GetAllNode',
+		data: {
+			"Node": $("#popupNodeType").val(),
+			},
+		dataType: "json",
+		success: function (data) {
+			if (data != null) {
+				response(data.ListNode);
+			}
+	},
+	error: function(result) {
+		console.log("Error");
+		}
+	});
+	}, minLength:0, maxShowItems: 40, scroll:true,
+	select: function(event, ui) {
+		this.value = ui.item[4];
+		$("#popupNodeId").val(ui.item[2]);
+		$("#popupNodeName").val(ui.item[3]);
+		return false;
+
+	}
+}).autocomplete("instance")._renderItem = function(ul, item) {
+	return $('<li class="each"></li>').data( "item.autocomplete", item )
+	.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
+	item[4] + "</span><br><span class='desc'>" +
+	item[2] + ', ' +item[3]+'</span></div>').appendTo(ul);
+};
+$("#popupNodeType").focus(function(){
+	if (this.value == ""){
+		$(this).autocomplete("search");
+		}						
+}); // End NodeType autocomplete in Nodepopup
 
 
 $('#popupSite').autocomplete({
@@ -1650,6 +1702,7 @@ $("button[name='closeNodePopup']").on("click", function(){
 	// Send input values from popup to boq table
 	$("#partnodeTab >tbody").find("tr").eq(NodeRowIndex).find('td[name="nodeID"]').children('input').val($('#popupNodeId').val());
 	$("#partnodeTab >tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Name"]').children('input').val($('#popupNodeName').val());
+	$("#partnodeTab >tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Type"]').children('input').val($('#popupNodeType').val());
 	$("#partnodeTab >tbody").find("tr").eq(NodeRowIndex).find('td[name="arNodeID"]').children('input').val($('#popupNodeSeqId').val());
 
 	$("#nodeModal").modal("hide");				 	
@@ -1661,6 +1714,7 @@ if(event.key === "Escape"){
 	// Send input values from popup to boq table
 	$("#partnodeTab >tbody").find("tr").eq(NodeRowIndex).find('td[name="nodeID"]').children('input').val($('#popupNodeId').val());
 	$("#partnodeTab >tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Name"]').children('input').val($('#popupNodeName').val());
+	$("#partnodeTab >tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Type"]').children('input').val($('#popupNodeType').val());
 	$("#partnodeTab >tbody").find("tr").eq(NodeRowIndex).find('td[name="arNodeID"]').children('input').val($('#popupNodeSeqId').val());
 
 	$("#nodeModal").modal("hide");
@@ -1780,6 +1834,7 @@ $("button[name='previousNodeRow']").on("click", function(){
 		var nodePrevIndex = parseInt(NodeRowIndex);
 		$('#popupNodeId').val($("#partnodeTab >tbody").find("tr").eq(NodeRowIndex).find('td[name="nodeID"]').children('input').val());
 		$('#popupNodeName').val($("#partnodeTab >tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Name"]').children('input').val()); 
+		$('#popupNodeType').val($("#partnodeTab >tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Type"]').children('input').val()); 
 		$('#popupNodeSeqId').val($("#partnodeTab > tbody").find("tr").eq(NodeRowIndex).find('td[name="arNodeID"]').children('input').val());
 
 		//Update popup Nb in header 
@@ -1872,6 +1927,7 @@ $("button[name='previousModPartRow']").on("click", function(){
 $('#popupNodeId,#popupNodeName,#popupNodeSeqId').on(' focusout ', function() {
 	$("#partnodeTab >tbody").find("tr").eq(NodeRowIndex).find('td[name="nodeID"]').children('input').val($('#popupNodeId').val());
 	$("#partnodeTab >tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Name"]').children('input').val($('#popupNodeName').val());
+	$("#partnodeTab >tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Type"]').children('input').val($('#popupNodeType').val());
 	$("#partnodeTab >tbody").find("tr").eq(NodeRowIndex).find('td[name="arNodeID"]').children('input').val($('#popupNodeSeqId').val());
 
 	//getTotalAT_SumQty();
@@ -2451,93 +2507,139 @@ function NodeboqAutocomplete(rowCnt,tableIndx){
 	
 	//NODE ID autocomplete
 	$('#nodeID'+rowCnt).autocomplete({
-	source: function(request, response) {
-			$.ajax({
-			type: "GET",
-			contentType: "application/json; charset=utf-8",
-			url: ctx+'/getAllNodes',
-			data: {
-				requestValue : request.term,
-				
-			},
-			dataType: "json",
-			success: function (data) {
-				if (data != null) {
-					console.log("Success here");
-					response(data.ListNodes);
-				}
-			},
-			error: function(result) {
-				alert("Error");
-			}
-		});
-		}, minLength:0, maxShowItems: 4, scroll:true,
-		select: function(event, ui) {
-			this.value = ui.item[0];
-			$(this).parents("tr").find('input[name ="node_Name"]').val(ui.item[1]);
-			return false;
-		}
-		}).autocomplete("instance")._renderItem = function(ul, item) {
-		return $('<li class="each"></li>').data( "item.autocomplete", item )
-		.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
-		item[0] + "</span><br><span class='desc'>" +
-		item[1] + '</span></div>').appendTo(ul);
-   };
-	$('#nodeID'+rowCnt).focus(function(){
-		if (this.value == ""){
-		    
-			$(this).autocomplete("search");
-			}
-	});
-	$('#nodeID'+rowCnt).focus();
-	
-	
-	
-	
-	
-	//NODE NAME autocomplete
-	$('#node_Name'+rowCnt).autocomplete({
-	source: function(request, response) {
-			$.ajax({
-			type: "GET",
-			contentType: "application/json; charset=utf-8",
-			url: ctx+'/getAllNodes',
-			data: {
-				requestValue : request.term,
-				
-			},
-			dataType: "json",
-			success: function (data) {
-				if (data != null) {
-					console.log("Success here");
-					response(data.ListNodes);
-				}
-			},
-			error: function(result) {
-				alert("Error");
-			}
-		});
-		}, minLength:0, maxShowItems: 4, scroll:true,
-		select: function(event, ui) {
-		this.value = ui.item[1];
-		$(this).parents("tr").find('input[name ="nodeID"]').val(ui.item[0]);
-		return false;
-	}
-		}).autocomplete("instance")._renderItem = function(ul, item) {
 
-		return $('<li class="each"></li>').data( "item.autocomplete", item )
-		.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
-		item[1] + "</span><br><span class='desc'>" +
-		item[0] + '</span></div>').appendTo(ul);
-   };
-	$('#node_Name'+rowCnt).focus(function(){
-		if (this.value == ""){
-		    
-			$(this).autocomplete("search");
-			}
-	});
-	
+   source: function (request, response) {
+            $.ajax({
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                url: ctx + '/GetAllNode',
+                data: {
+                    Node: request.term
+                },
+                dataType: "json",
+                success: function (data) {
+                    if (data != null) {
+                        response(data.ListNode);
+                    }
+                },
+                error: function (result) {
+                    console.log(222);
+                }
+            });
+        },
+        minLength: 0,
+        maxResults: 40,
+        scroll: true,
 
+        select: function (event, ui) {
+            this.value = ui.item ? ui.item[2] : '';
+            document.getElementById("node_Name" + rowCnt).value = ui.item[3];
+            document.getElementById("node_Type" + rowCnt).value = ui.item[4];
+            return false;
+        }
+    }).autocomplete("instance")._renderItem = function (ul, item) {
+        var appendString = ("<div class='acItem'><span class='desc'><b>" +
+            item[2] + "</b></span><br><span class='name' >" +
+            item[3] + ", " + item[4] + "</span></div>");
+
+        return $("<li class='each'>").append(appendString).appendTo(ul);
+    };
+
+    $('#nodeID' + rowCnt).focus(function () {
+        if (this.value == "") {
+            $(this).autocomplete("search");
+        }
+
+        
+    });
+    
+     $('#node_Name' + rowCnt).autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                url: ctx + '/GetAllNode',
+                data: {
+                    Node: request.term
+                },
+                dataType: "json",
+                success: function (data) {
+                    if (data != null) {
+                        response(data.ListNode);
+                    }
+                },
+                error: function (result) {
+                    console.log(222);
+                }
+            });
+        },
+        minLength: 0,
+        maxResults: 40,
+        scroll: true,
+
+        select: function (event, ui) {
+            this.value = ui.item ? ui.item[3] : '';
+            document.getElementById("nodeID" + rowCnt).value = ui.item[2];
+            document.getElementById("node_Type" + rowCnt).value = ui.item[4];
+            return false;
+        }
+    }).autocomplete("instance")._renderItem = function (ul, item) {
+        var appendString = ("<div class='acItem'><span class='desc'><b>" +
+            item[3] + "</b></span><br><span class='name' >" +
+            item[2] + ", " + item[4] + "</span></div>");
+
+        return $("<li class='each'>").append(appendString).appendTo(ul);
+    };
+
+    $('#node_Name' + rowCnt).focus(function () {
+        if (this.value == "") {
+            $(this).autocomplete("search");
+        }
+    });
+
+         $('#node_Type' + rowCnt).autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                url: ctx + '/GetAllNode',
+                data: {
+                    Node: request.term
+                },
+                dataType: "json",
+                success: function (data) {
+                    if (data != null) {
+                        response(data.ListNode);
+                    }
+                },
+                error: function (result) {
+                    console.log(222);
+                }
+            });
+        },
+        minLength: 0,
+        maxResults: 40,
+        scroll: true,
+
+        select: function (event, ui) {
+            this.value = ui.item ? ui.item[4] : '';
+            document.getElementById("nodeID" + rowCnt).value = ui.item[2];
+            document.getElementById("node_Name" + rowCnt).value = ui.item[3];
+            return false;
+        }
+    }).autocomplete("instance")._renderItem = function (ul, item) {
+        var appendString = ("<div class='acItem'><span class='desc'><b>" +
+            item[4] + "</b></span><br><span class='name' >" +
+            item[3] + ", " + item[2] + "</span></div>");
+
+        return $("<li class='each'>").append(appendString).appendTo(ul);
+    };
+
+    $('#node_Type' + rowCnt).focus(function () {
+        if (this.value == "") {
+            $(this).autocomplete("search");
+        }
+    });
 
 
 } // end NodeboqAutocomplete fct

@@ -345,6 +345,7 @@ function addNoderows(stat){
     var markup = "<tr><td><input type='checkbox' name='records'><button type = 'button' href='#' name='popUpNodeMenu' onclick='openNodePopUp(this)' class='btn btn-default'  style='position:relative;left:3px;'><i class='fas fa-desktop'></i></button></td>"
         +"<td name = 'nodeID'><input name='nodeID' id = 'nodeID"+RowCount+"' type='text' style='width:200px;' class='form-control text-input'/></td>"
         +"<td name = 'node_Name'><input name='node_Name' id = 'node_Name"+RowCount+"' type='text' style='width:200px;' class='form-control text-input'/></td>"
+        +"<td name = 'node_Type'><input name='node_Type' id = 'node_Type"+RowCount+"' type='text' style='width:200px;' class='form-control text-input'/></td>"
         +"<td name = 'farNodeID'><input name='farNodeID' readonly value = 0  type='text' style='width:200px;' class='form-control text-input'/></td>"
     
     $("#ahmadtab > tbody").append(markup);
@@ -517,6 +518,7 @@ console.log("Row index of clicked button::" +NodeRowIndex);
     
     $('#popupNodeId').val($("#ahmadtab > tbody").find("tr").eq(NodeRowIndex).find('td[name="nodeID"]').children('input').val());
     $('#popupNodeName').val($("#ahmadtab > tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Name"]').children('input').val());
+    $('#popupNodeType').val($("#ahmadtab > tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Type"]').children('input').val());
     $('#popupNodeSeqId').val($("#ahmadtab > tbody").find("tr").eq(NodeRowIndex).find('td[name="farNodeID"]').children('input').val());
 
     ///////////////// SHOW THE POPUP /////////////
@@ -698,6 +700,7 @@ function insertNodeRowBelow(){
     var markup = "<tr><td><input type='checkbox' name='records'><button type = 'button' href='#' name='popUpNodeMenu' onclick='openNodePopUp(this)' class='btn btn-default'  style='position:relative;left:3px;'><i class='fas fa-desktop'></i></button></td>"
         +"<td name = 'nodeID'><input name='nodeID' id = 'nodeID"+RowCount+"' type='text' style='width:200px;' class='form-control text-input'/></td>"
         +"<td name = 'node_Name'><input name='node_Name' id = 'node_Name"+RowCount+"' type='text' style='width:200px;' class='form-control text-input'/></td>"
+        +"<td name = 'node_Type'><input name='node_Type' id = 'node_Type"+RowCount+"' type='text' style='width:200px;' class='form-control text-input'/></td>"
         +"<td name = 'farNodeID'><input name='farNodeID' readonly value = 0  type='text' style='width:200px;' class='form-control text-input'/></td>"
     
     
@@ -709,6 +712,7 @@ function insertNodeRowBelow(){
 
     $('#popupNodeId').val($("#ahmadtab > tbody").find("tr").eq(NodeRowIndex).find('td[name="nodeID"]').children('input').val());
     $('#popupNodeName').val($("#ahmadtab > tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Name"]').children('input').val());
+    $('#popupNodeType').val($("#ahmadtab > tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Type"]').children('input').val());
     $('#popupNodeSeqId').val($("#ahmadtab > tbody").find("tr").eq(NodeRowIndex).find('td[name="farNodeID"]').children('input').val());
 
 
@@ -893,12 +897,14 @@ function insertNodeRowAbove(){
     var markup = "<tr><td><input type='checkbox' name='records'><button type = 'button' href='#' name='popUpNodeMenu' onclick='openNodePopUp(this)' class='btn btn-default'  style='position:relative;left:3px;'><i class='fas fa-desktop'></i></button></td>"
         +"<td name = 'nodeID'><input name='nodeID' id = 'nodeID"+RowCount+"' type='text' style='width:200px;' class='form-control text-input'/></td>"
         +"<td name = 'node_Name'><input name='node_Name' id = 'node_Name"+RowCount+"' type='text' style='width:200px;' class='form-control text-input'/></td>"
+        +"<td name = 'node_Type'><input name='node_Type' id = 'node_Type"+RowCount+"' type='text' style='width:200px;' class='form-control text-input'/></td>"
         +"<td name = 'farNodeID'><input name='farNodeID' readonly value = 0  type='text' style='width:200px;' class='form-control text-input'/></td>"
     
        $("#ahmadtab > tbody tr").eq(NodeRowIndex).before(markup);
        
      $('#popupNodeId').val($("#ahmadtab > tbody").find("tr").eq(NodeRowIndex).find('td[name="nodeID"]').children('input').val());
      $('#popupNodeName').val($("#ahmadtab > tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Name"]').children('input').val());
+     $('#popupNodeType').val($("#ahmadtab > tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Type"]').children('input').val());
      $('#popupNodeSeqId').val($("#ahmadtab > tbody").find("tr").eq(NodeRowIndex).find('td[name="farNodeID"]').children('input').val());
 
 
@@ -1137,6 +1143,7 @@ if(NodeRowIndex >= 0 && NodeRowIndex < rowNodeCount) {
 
     $('#popupNodeId').val($("#ahmadtab > tbody").find("tr").eq(NodeRowIndex).find('td[name="nodeID"]').children('input').val());
     $('#popupNodeName').val($("#ahmadtab > tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Name"]').children('input').val());
+    $('#popupNodeType').val($("#ahmadtab > tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Type"]').children('input').val());
     $('#popupNodeSeqId').val($("#ahmadtab > tbody").find("tr").eq(NodeRowIndex).find('td[name="farNodeID"]').children('input').val());
 
     var element = document.getElementById("popupNbNode");
@@ -1153,6 +1160,7 @@ else if (NodeRowIndex >= rowNodeCount) {
     
         $('#popupNodeId').val($("#ahmadtab > tbody").find("tr").eq(NodeRowIndex).find('td[name="nodeID"]').children('input').val());
         $('#popupNodeName').val($("#ahmadtab > tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Name"]').children('input').val());
+        $('#popupNodeType').val($("#ahmadtab > tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Type"]').children('input').val());
         $('#popupNodeSeqId').val($("#ahmadtab > tbody").find("tr").eq(NodeRowIndex).find('td[name="farNodeID"]').children('input').val());
 
         var element = document.getElementById("popupNbNode");
@@ -1424,6 +1432,7 @@ console.log("rowCount in BoQ:" +rowNodeCount);
         //NodeRowIndex++;
         $('#popupNodeId').val($("#ahmadtab > tbody").find("tr").eq(NodeRowIndex).find('td[name="nodeID"]').children('input').val());
         $('#popupNodeName').val($("#ahmadtab > tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Name"]').children('input').val());
+        $('#popupNodeType').val($("#ahmadtab > tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Type"]').children('input').val());
         $('#popupNodeSeqId').val($("#ahmadtab > tbody").find("tr").eq(NodeRowIndex).find('td[name="farNodeID"]').children('input').val());
 
         ////////////////// Update popup Nb in header /////////////////////////
@@ -1442,6 +1451,7 @@ console.log("rowCount in BoQ:" +rowNodeCount);
 
         $('#popupNodeId').val($("#ahmadtab > tbody").find("tr").eq(NodeRowIndex).find('td[name="nodeID"]').children('input').val());
         $('#popupNodeName').val($("#ahmadtab > tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Name"]').children('input').val());
+        $('#popupNodeType').val($("#ahmadtab > tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Type"]').children('input').val());
         $('#popupNodeSeqId').val($("#ahmadtab > tbody").find("tr").eq(NodeRowIndex).find('td[name="farNodeID"]').children('input').val());
 
         //Update popup Nb in header 
@@ -1543,65 +1553,63 @@ console.log("rowCount in BoQ:" +rowSiteCount);
 
 
 
-    ////////////////////// NODE ID AUTOCOMPLETE IN NODE PPOPUP /////////////////////////////////
+    ////////////////////// NODE ID NAME AND TYPE  AUTOCOMPLETE IN NODE PPOPUP /////////////////////////////////
+
 
 $("#popupNodeId").autocomplete({
 	source: function(request, response) {
 	$.ajax({
 		type: "GET",
 		contentType: "application/json; charset=utf-8",
-		url: ctx+'/getAllNodes',
+		url: ctx+'/GetAllNode',
 		data: {
-			"requestValue" : $("#popupNodeId").val(),
+			"Node" : $("#popupNodeId").val(),
 		},
 		dataType: "json",
 		success: function (data) {
 		if (data != null) {
-			response(data.ListNodes);
+			response(data.ListNode);
 		}
 		},
 		error: function(result) {
 			alert("Error");
 		}
 		});
+		
 	}, minLength:0, maxShowItems: 40, scroll:true,
 	select: function(event, ui) {
-			this.value = ui.item[0];
-			$("#popupNodeName").val(ui.item[1]);
+			this.value = ui.item[2];
+			$("#popupNodeName").val(ui.item[3]);
+			$("#popupNodeType").val(ui.item[4]);
 			return false;
 		}
 	  }).autocomplete("instance")._renderItem = function(ul, item) {
 		return $('<li class="each"></li>').data( "item.autocomplete", item )
 		.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
-		item[0] + "</span><br><span class='desc'>" +
-		item[1] + '</span></div>').appendTo(ul);
+		item[2] + "</span><br><span class='desc'>" +
+	    item[3] + ', ' +item[4]+'</span></div>').appendTo(ul);
 	  };
 	  $("#popupNodeId").focus(function(){
+		  console.log("I am in the nodeID popup");
 		  if (this.value == ""){
 			  $(this).autocomplete("search");
               }						
-}); 
+}); // End NodeID autocomplete in Nodepopup
 
-
-
-
-
-
-    ////////////////////// NODE NAME AUTOCOMPLETE IN NODE PPOPUP /////////////////////////////////
-
-    $("#popupNodeName").autocomplete({
+// NodeName autocomplete in Nodepopup
+$("#popupNodeName").autocomplete({
 	source: function(request, response) {
 	$.ajax({
 		type: "GET",
 		contentType: "application/json; charset=utf-8",
-		url: ctx+'/getAllNodes',
+		url: ctx+'/GetAllNode',
 		data: {
-			"requestValue": $("#popupNodeName").val(),
+			"Node": $("#popupNodeName").val(),
 			},
 		dataType: "json",
 		success: function (data) {
 			if (data != null) {
-				response(data.ListNodes);
+				response(data.ListNode);
 			}
 	},
 	error: function(result) {
@@ -1610,25 +1618,63 @@ $("#popupNodeId").autocomplete({
 	});
 	}, minLength:0, maxShowItems: 40, scroll:true,
 	select: function(event, ui) {
-		this.value = ui.item[1];
-		$("#popupNodeId").val(ui.item[0]);
+		this.value = ui.item[3];
+		$("#popupNodeId").val(ui.item[2]);
+		$("#popupNodeType").val(ui.item[4]);
 		return false;
 
 	}
 }).autocomplete("instance")._renderItem = function(ul, item) {
 	return $('<li class="each"></li>').data( "item.autocomplete", item )
 	.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
-	item[1] + "</span><br><span class='desc'>" +
-	item[0] + '</span></div>').appendTo(ul);
+	item[3] + "</span><br><span class='desc'>" +
+	item[2] + ', ' +item[4]+'</span></div>').appendTo(ul);
 };
 $("#popupNodeName").focus(function(){
 	if (this.value == ""){
 		$(this).autocomplete("search");
 		}						
-});
+}); // End NodeName autocomplete in Nodepopup
 
+ //Node type popup autocomplete
+$("#popupNodeType").autocomplete({
+	source: function(request, response) {
+	$.ajax({
+		type: "GET",
+		contentType: "application/json; charset=utf-8",
+		url: ctx+'/GetAllNode',
+		data: {
+			"Node": $("#popupNodeType").val(),
+			},
+		dataType: "json",
+		success: function (data) {
+			if (data != null) {
+				response(data.ListNode);
+			}
+	},
+	error: function(result) {
+		console.log("Error");
+		}
+	});
+	}, minLength:0, maxShowItems: 40, scroll:true,
+	select: function(event, ui) {
+		this.value = ui.item[4];
+		$("#popupNodeId").val(ui.item[2]);
+		$("#popupNodeName").val(ui.item[3]);
+		return false;
 
-
+	}
+}).autocomplete("instance")._renderItem = function(ul, item) {
+	return $('<li class="each"></li>').data( "item.autocomplete", item )
+	.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
+	item[4] + "</span><br><span class='desc'>" +
+	item[2] + ', ' +item[3]+'</span></div>').appendTo(ul);
+};
+$("#popupNodeType").focus(function(){
+	if (this.value == ""){
+		$(this).autocomplete("search");
+		}						
+}); // End NodeType autocomplete in Nodepopup
 
 
 
@@ -2356,8 +2402,9 @@ $("button[name='closeNodePopup']").on("click", function(){
     
 ///////////////////////////// Send input values from popup to boq table ////////////////////////////////////////
 
-        $("#ahmadtab >tbody").find("tr").eq(NodeRowIndex).find('td[name="nodeID"]').children('input').val($('#popupNodeId').val());
+    $("#ahmadtab >tbody").find("tr").eq(NodeRowIndex).find('td[name="nodeID"]').children('input').val($('#popupNodeId').val());
     $("#ahmadtab >tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Name"]').children('input').val($('#popupNodeName').val());
+    $("#ahmadtab >tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Type"]').children('input').val($('#popupNodeType').val());
     $("#ahmadtab >tbody").find("tr").eq(NodeRowIndex).find('td[name="farNodeID"]').children('input').val($('#popupNodeSeqId').val());
 
     $("#nodeModal").modal("hide");				 	
@@ -2374,6 +2421,7 @@ $("button[name='closeNodePopup']").on("click", function(){
     
         $("#ahmadtab >tbody").find("tr").eq(NodeRowIndex).find('td[name="nodeID"]').children('input').val($('#popupNodeId').val());
         $("#ahmadtab >tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Name"]').children('input').val($('#popupNodeName').val());
+        $("#ahmadtab >tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Type"]').children('input').val($('#popupNodeType').val());
         $("#ahmadtab >tbody").find("tr").eq(NodeRowIndex).find('td[name="farNodeID"]').children('input').val($('#popupNodeSeqId').val());
 
         $("#nodeModal").modal("hide");
@@ -2617,6 +2665,9 @@ $("#serialnoModal").modal("hide");
         var prevNodeName =$("#ahmadtab >tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Name"]').children('input').val();
         $('#popupNodeName').val(prevNodeName); 
 
+       var prevNodeType =$("#ahmadtab >tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Type"]').children('input').val();
+        $('#popupNodeType').val(prevNodeType); 
+
         var prevNodeSeqID =$("#ahmadtab >tbody").find("tr").eq(NodeRowIndex).find('td[name="farNodeID"]').children('input').val();
         $('#popupNodeSeqId').val(prevNodeSeqID);
 
@@ -2765,6 +2816,7 @@ $("button[name='previousSiteRow']").on("click", function(){
 
     $("#ahmadtab >tbody").find("tr").eq(NodeRowIndex).find('td[name="nodeID"]').children('input').val($('#popupNodeId').val());
     $("#ahmadtab >tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Name"]').children('input').val($('#popupNodeName').val());
+    $("#ahmadtab >tbody").find("tr").eq(NodeRowIndex).find('td[name="node_Type"]').children('input').val($('#popupNodeType').val());
     $("#ahmadtab >tbody").find("tr").eq(NodeRowIndex).find('td[name="farNodeID"]').children('input').val($('#popupNodeSeqId').val());
 
 
@@ -3313,7 +3365,6 @@ function SiteboqAutocomplete(rowCnt,tableIndx){
 // FUNCTION NODE TAB AUTOCOMPLETE
 
 function NodeboqAutocomplete(rowCnt,tableIndx){
-
 	var ctx=getContextPath();
 	var tableID=tableIndx;
 														 
@@ -3321,98 +3372,140 @@ function NodeboqAutocomplete(rowCnt,tableIndx){
 	
 	//NODE ID autocomplete
 	$('#nodeID'+rowCnt).autocomplete({
-	source: function(request, response) {
-			$.ajax({
-			type: "GET",
-			contentType: "application/json; charset=utf-8",
-			url: ctx+'/getAllNodes',
-			data: {
-				requestValue : request.term,
-				
-			},
-			dataType: "json",
-			success: function (data) {
-				if (data != null) {
-					console.log("Success here");
-					response(data.ListNodes);
-				}
-			},
-			error: function(result) {
-				alert("Error");
-			}
-		});
-		}, minLength:0, maxShowItems: 4, scroll:true,
-		select: function(event, ui) {
-			this.value = ui.item[0];
-			$(this).parents("tr").find('input[name ="node_Name"]').val(ui.item[1]);
-			return false;
-		}
-		}).autocomplete("instance")._renderItem = function(ul, item) {
-		return $('<li class="each"></li>').data( "item.autocomplete", item )
-		.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
-		item[0] + "</span><br><span class='desc'>" +
-		item[1] + '</span></div>').appendTo(ul);
-   };
-	$('#nodeID'+rowCnt).focus(function(){
-		if (this.value == ""){
-		    
-			$(this).autocomplete("search");
-			}
-	});
-	$('#nodeID'+rowCnt).focus();
-	
-	
-	
-	
-	
-	//NODE NAME autocomplete
-	$('#node_Name'+rowCnt).autocomplete({
-	source: function(request, response) {
-			$.ajax({
-			type: "GET",
-			contentType: "application/json; charset=utf-8",
-			url: ctx+'/getAllNodes',
-			data: {
-				requestValue : request.term,
-				
-			},
-			dataType: "json",
-			success: function (data) {
-				if (data != null) {
-					console.log("Success here");
-					response(data.ListNodes);
-				}
-			},
-			error: function(result) {
-				alert("Error");
-			}
-		});
-		}, minLength:0, maxShowItems: 4, scroll:true,
-		select: function(event, ui) {
-		this.value = ui.item[1];
-		$(this).parents("tr").find('input[name ="nodeID"]').val(ui.item[0]);
-		return false;
-	}
-		}).autocomplete("instance")._renderItem = function(ul, item) {
 
-		return $('<li class="each"></li>').data( "item.autocomplete", item )
-		.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
-		item[1] + "</span><br><span class='desc'>" +
-		item[0] + '</span></div>').appendTo(ul);
-   };
-	$('#node_Name'+rowCnt).focus(function(){
-		if (this.value == ""){
-		    
-			$(this).autocomplete("search");
-			}
-	});
-	
+   source: function (request, response) {
+            $.ajax({
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                url: ctx + '/GetAllNode',
+                data: {
+                    Node: request.term
+                },
+                dataType: "json",
+                success: function (data) {
+                    if (data != null) {
+                        response(data.ListNode);
+                    }
+                },
+                error: function (result) {
+                    console.log(222);
+                }
+            });
+        },
+        minLength: 0,
+        maxResults: 40,
+        scroll: true,
 
+        select: function (event, ui) {
+            this.value = ui.item ? ui.item[2] : '';
+            document.getElementById("node_Name" + rowCnt).value = ui.item[3];
+            document.getElementById("node_Type" + rowCnt).value = ui.item[4];
+            return false;
+        }
+    }).autocomplete("instance")._renderItem = function (ul, item) {
+        var appendString = ("<div class='acItem'><span class='desc'><b>" +
+            item[2] + "</b></span><br><span class='name' >" +
+            item[3] + ", " + item[4] + "</span></div>");
+
+        return $("<li class='each'>").append(appendString).appendTo(ul);
+    };
+
+    $('#nodeID' + rowCnt).focus(function () {
+        if (this.value == "") {
+            $(this).autocomplete("search");
+        }
+
+        
+    });
+    
+     $('#node_Name' + rowCnt).autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                url: ctx + '/GetAllNode',
+                data: {
+                    Node: request.term
+                },
+                dataType: "json",
+                success: function (data) {
+                    if (data != null) {
+                        response(data.ListNode);
+                    }
+                },
+                error: function (result) {
+                    console.log(222);
+                }
+            });
+        },
+        minLength: 0,
+        maxResults: 40,
+        scroll: true,
+
+        select: function (event, ui) {
+            this.value = ui.item ? ui.item[3] : '';
+            document.getElementById("nodeID" + rowCnt).value = ui.item[2];
+            document.getElementById("node_Type" + rowCnt).value = ui.item[4];
+            return false;
+        }
+    }).autocomplete("instance")._renderItem = function (ul, item) {
+        var appendString = ("<div class='acItem'><span class='desc'><b>" +
+            item[3] + "</b></span><br><span class='name' >" +
+            item[2] + ", " + item[4] + "</span></div>");
+
+        return $("<li class='each'>").append(appendString).appendTo(ul);
+    };
+
+    $('#node_Name' + rowCnt).focus(function () {
+        if (this.value == "") {
+            $(this).autocomplete("search");
+        }
+    });
+
+         $('#node_Type' + rowCnt).autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                url: ctx + '/GetAllNode',
+                data: {
+                    Node: request.term
+                },
+                dataType: "json",
+                success: function (data) {
+                    if (data != null) {
+                        response(data.ListNode);
+                    }
+                },
+                error: function (result) {
+                    console.log(222);
+                }
+            });
+        },
+        minLength: 0,
+        maxResults: 40,
+        scroll: true,
+
+        select: function (event, ui) {
+            this.value = ui.item ? ui.item[4] : '';
+            document.getElementById("nodeID" + rowCnt).value = ui.item[2];
+            document.getElementById("node_Name" + rowCnt).value = ui.item[3];
+            return false;
+        }
+    }).autocomplete("instance")._renderItem = function (ul, item) {
+        var appendString = ("<div class='acItem'><span class='desc'><b>" +
+            item[4] + "</b></span><br><span class='name' >" +
+            item[3] + ", " + item[2] + "</span></div>");
+
+        return $("<li class='each'>").append(appendString).appendTo(ul);
+    };
+
+    $('#node_Type' + rowCnt).focus(function () {
+        if (this.value == "") {
+            $(this).autocomplete("search");
+        }
+    });
 
 
 } // end NodeboqAutocomplete fct
-		 
-   				 	  	   	 
-  
-  
-  
+

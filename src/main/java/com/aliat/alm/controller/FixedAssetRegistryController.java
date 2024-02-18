@@ -740,16 +740,26 @@ public class FixedAssetRegistryController {
 						// slctDelNode);
 					}
 
-					String nodefarId;
+					
 					if (itemParameters.getDictParameternode() != null) {
 
 						for (int i = 0; i < itemParameters.getDictParameternode().size(); i++) {
 							FarNode farNode = new FarNode();
-							System.out.println("" + itemParameters.getDictParameternode().get(i).get("nodeID"));
-							System.out.println("" + itemParameters.getDictParameternode().get(i).get("node_Name"));
+							
+							if (StringUtils.equalsIgnoreCase(itemParameters.getDictParameternode().get(i).get("farNodeID"), "0")) {
+								  String node_ID = itemParameters.getDictParameternode().get(i).get("nodeID");
+						          String nodefarId = null;
 
-							if (StringUtils.equalsIgnoreCase(
-									itemParameters.getDictParameternode().get(i).get("farNodeID"), "0")) {
+								    query = session.createSQLQuery("select NODEFAR_ID from FAR_NODE where Node_ID = :param1 AND FAR_ID = :param2");
+						            query.setParameter("param1", node_ID);
+						            query.setParameter("param2", farcode);
+
+						            Object result = query.uniqueResult();
+
+						            if (result != null) {
+						            	nodefarId = result.toString();
+						            }
+						            if (nodefarId == null) {
 								synchronized (this) {
 									nodefarId = "FARNODE_" + year + "_"
 											+ Integer.parseInt(
@@ -759,8 +769,8 @@ public class FixedAssetRegistryController {
 									query.executeUpdate();
 									session.createNativeQuery("commit").executeUpdate();
 								}
-								// nodefarId = "FARNODE_" + year + "_" + appConfig.getSequenceNbr(27);
-								farNode.setNodefarId(nodefarId);
+						            }
+									farNode.setNodefarId(nodefarId);
 							} else {
 								farNode.setNodefarId(itemParameters.getDictParameternode().get(i).get("farNodeID"));
 
@@ -768,11 +778,11 @@ public class FixedAssetRegistryController {
 
 							farNode.setNodeID(itemParameters.getDictParameternode().get(i).get("nodeID"));
 							farNode.setNodeName(itemParameters.getDictParameternode().get(i).get("node_Name"));
+							farNode.setNodeType(itemParameters.getDictParameternode().get(i).get("node_Type"));
 							farNode.setFarID(farcode);
 
-							// appConfig.persist(farNode, FarNode.class);
-							session.saveOrUpdate(farNode);
-						}
+						     session.merge(farNode); // Use merge instead of saveOrUpdate to handle detached entities
+					}
 
 					}
 

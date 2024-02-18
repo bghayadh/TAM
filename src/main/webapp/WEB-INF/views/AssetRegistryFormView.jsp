@@ -432,6 +432,17 @@ max-height: 100%;
  max-width: 100%;
 }
 }
+.btn-pop {
+    background-color: #C2CBC0 !important;
+    border-color: #C2CBC0;
+    3
+}
+
+.btn-pop:hover {
+    color: #fff;
+    background-color: #8696A0 !important;
+    border-color: #8696A0 !important;
+}
     
 	        		 
  	</style>
@@ -1155,20 +1166,23 @@ max-height: 100%;
 <!-- Node Popup -->
 
 <div class="container">
-	<div id ="nodeModal" class="modal fade custom-class-assignedto-modal"  tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">	
+	<div id ="nodeModal"  class="modal fade  custom-class-assignedto-modal"  tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">	
 		<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
 			<div class="modal-content" >
-				<div class="modal-header" style="background-color: #FF4F4F;" >
-				<h5 id ="popupNbNode" class="modal-title" style="font-weight:bold; color: #3C1596;"></h5>
+				<div class="modal-header" style="background-color: #2678CC ; height: 55px; ">
+				<h5 id ="popupNbNode" class="modal-title" style="font-weight:bold; color: #E9ECEF ;position: relative; bottom: 12px;"></h5>
+				<div style="float: right;">
 				
-				<button type="button" name="insertNodeBelow"  onclick="insertNodeRowBelow()" class ="btn btn-default btn-primary BtnActive  " style="color:white;position:relative;left:50px;">Insert Below </button>
-				<button type="button" name="insertNodeAbove"  onclick="insertNodeRowAbove()" class ="btn btn-default btn-primary BtnActive" style="color:white;position:relative;left:60px;">Insert Above </button>
-			    <button type="button" name="deleteNodeBoqRow"  onclick="deleteNodeBoqRow()" class ="btn btn-default btn-primary BtnActive" style="color:white;position:relative;left:70px;">Delete</button>
-			    <button name ="previousNodeRow" class ="btn btn-default btn-primary BtnActive" style="color:white;position:relative;left:80px;">Previous</button>
-	            <button name="nextNodeRow" onclick="nextNodeRow()" class ="btn btn-default btn-primary BtnActive" style="color:white;position:relative;left:90px;">Next</button>
+				<button type="button" name="insertNodeBelow"  onclick="insertNodeRowBelow()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black; position:relative;left: -30px; font-weight: bold; margin-top: -7px;"">Insert Below </button>
+				<button type="button" name="insertNodeAbove"  onclick="insertNodeRowAbove()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black; position:relative;left: -20px; font-weight: bold; margin-top: -7px;"">Insert Above </button>
+			    <button type="button" name="deleteNodeBoqRow"  onclick="deleteNodeBoqRow()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black; position:relative;left: -10px; font-weight: bold; margin-top: -7px;"">Delete </button>
+			    <button name ="previousNodeRow" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: 0px; font-weight: bold; margin-top: -7px;"">Previous</button>
+	            <button name="nextNodeRow" onclick="nextNodeRow()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: 10px; font-weight: bold; margin-top: -7px;"">Next</button> 
 				
-				<button type="button" name="closeNodePopup" class ="close" data-dismiss ="modal"> <i class='fa fa-times'></i> </button>
-				<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change' ></i> </a>
+				<button type="button" name="closeNodePopup" class ="close" data-dismiss="modal"><i class='fa fa-times'></i></button>
+									<a class="close modalMinimize ml-3"> <i
+										class='fa fa-minus icon-to-change'></i></a>
+				</div>
 				</div>
 	<div class="modal-body">
 	<ul class="nav nav-tabs" id="myTab" role="tablist" style="background-color: #00757C;">
@@ -1205,7 +1219,14 @@ max-height: 100%;
   			</div>
   		</div>
 	
-
+<div class="col-sm-6">
+  			<div class="form-group">
+  				<div class="input-group-prepend">
+  					<span class="input-group-text" >Node Type</span>
+   					<input type="text" id="popupNodeType" value="${popupNodeType}" style="width:675px; height:37px" class="ui-widget ui-widget-content ui-corner-all form-control text-input" />
+  				</div>
+  			</div>
+  		</div>
   </div>
 </div>
 
@@ -1239,20 +1260,22 @@ max-height: 100%;
 
 <!-- Site Popup -->
 <div class="container">
-	<div id ="siteModal" class="modal fade custom-class-assignedto-modal"  tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">	
+	<div id ="siteModal" class="modal fade  custom-class-assignedto-modal"  tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">	
 		<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
 			<div class="modal-content" >
-				<div class="modal-header" style="background-color: #FF4F4F;" >
-				<h5 id ="popupNbSite" class="modal-title" style="font-weight:bold; color: #3C1596;"></h5>
+				<div class="modal-header" style="background-color: #2678CC ; height: 55px; ">
+				<h5 id ="popupNbSite" class="modal-title" style="font-weight:bold; color: #E9ECEF ;position: relative; bottom: 12px;"></h5>
+				<div style="float: right;">
+				<button type="button" name="insertSiteBelow"  onclick="insertSiteRowBelow()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black; position:relative;left: -30px; font-weight: bold; margin-top: -7px;"">Insert Below </button>
+				<button type="button" name="insertSiteAbove"  onclick="insertSiteRowAbove()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black; position:relative;left: -20px; font-weight: bold; margin-top: -7px;"">Insert Above </button>
+			    <button type="button" name="deleteSiteBoqRow"  onclick="deleteSiteBoqRow()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black; position:relative;left: -10px; font-weight: bold; margin-top: -7px;"">Delete </button>
+			    <button name ="previousSiteRow" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: 0px; font-weight: bold; margin-top: -7px;"">Previous</button>
+	            <button name="nextSiteRow" onclick="nextSiteRow()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: 10px; font-weight: bold; margin-top: -7px;"">Next</button> 
 				
-				<button type="button" name="insertSiteBelow"  onclick="insertSiteRowBelow()" class ="btn btn-default btn-primary BtnActive  " style="color:white;position:relative;left:50px;">Insert Below </button>
-				<button type="button" name="insertSiteAbove"  onclick="insertSiteRowAbove()" class ="btn btn-default btn-primary BtnActive" style="color:white;position:relative;left:60px;">Insert Above </button>
-			    <button type="button" name="deleteSiteBoqRow"  onclick="deleteSiteBoqRow()" class ="btn btn-default btn-primary BtnActive" style="color:white;position:relative;left:70px;">Delete</button>
-			    <button name ="previousSiteRow" class ="btn btn-default btn-primary BtnActive" style="color:white;position:relative;left:80px;">Previous</button>
-	            <button name="nextSiteRow" onclick="nextSiteRow()" class ="btn btn-default btn-primary BtnActive" style="color:white;position:relative;left:90px;">Next</button>
-				
-				<button type="button" name="closeSitePopup" class ="close" data-dismiss ="modal"> <i class='fa fa-times'></i> </button>
-				<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change' ></i> </a>
+				<button type="button" name="closeSitePopup" class="close" data-dismiss="modal"><i class='fa fa-times'></i></button>
+									<a class="close modalMinimize ml-3"> <i
+										class='fa fa-minus icon-to-change'></i></a>
+				</div>
 				</div>
 	<div class="modal-body">
 	<ul class="nav nav-tabs" id="myTab" role="tablist" style="background-color: #00757C;">
@@ -1329,20 +1352,21 @@ max-height: 100%;
 
 <!-- SerialNumber Popup -->
 <div class="container">
-	<div id ="serialnoModal" class="modal fade custom-class-assignedto-modal"  tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">	
+	<div id ="serialnoModal" class="modal fade  custom-class-assignedto-modal"  tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">	
 		<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
 			<div class="modal-content" >
-				<div class="modal-header" style="background-color: #FF4F4F;" >
-				<h5 id ="popupNbSerialno" class="modal-title" style="font-weight:bold; color: #3C1596;"></h5>
-				
-				<button type="button" name="insertSerialBelow"  onclick="insertSerialRowBelow()" class ="btn btn-default btn-primary BtnActive  " style="color:white;position:relative;left:50px;">Insert Below </button>
-				<button type="button" name="insertSerialAbove"  onclick="insertSerialRowAbove()" class ="btn btn-default btn-primary BtnActive" style="color:white;position:relative;left:60px;">Insert Above </button>
-			    <button type="button" name="deleteSerialBoqRow"  onclick="deleteSerialBoqRow()" class ="btn btn-default btn-primary BtnActive" style="color:white;position:relative;left:70px;">Delete</button>
-			    <button name ="previousSerialRow" class ="btn btn-default btn-primary BtnActive" style="color:white;position:relative;left:80px;">Previous</button>
-	            <button name="nextSerialRow" onclick="nextSerialRow()" class ="btn btn-default btn-primary BtnActive" style="color:white;position:relative;left:90px;">Next</button>
-				
-				<button type="button" name="closeSerialnoPopup" class ="close" data-dismiss ="modal"> <i class='fa fa-times'></i> </button>
-				<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change' ></i> </a>
+				<div class="modal-header" style="background-color: #2678CC ; height: 55px; ">
+				<h5 id ="popupNbSerialno" class="modal-title" style="font-weight:bold; color: #E9ECEF ;position: relative; bottom: 12px;"></h5>
+				<div style="float: right;">
+				<button type="button" name="insertSerialBelow"  onclick="insertSerialRowBelow()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black; position:relative;left: -30px; font-weight: bold; margin-top: -7px;"">Insert Below </button>
+				<button type="button" name="insertSerialAbove"  onclick="insertSerialRowAbove()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black; position:relative;left: -20px; font-weight: bold; margin-top: -7px;"">Insert Above </button>
+			    <button type="button" name="deleteSerialBoqRow"  onclick="deleteSerialBoqRow()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black; position:relative;left: -10px; font-weight: bold; margin-top: -7px;"">Delete </button>
+			    <button name ="previousSerialRow" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: 0px; font-weight: bold; margin-top: -7px;"">Previous</button>
+	            <button name="nextSerialRow" onclick="nextSerialRow()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: 10px; font-weight: bold; margin-top: -7px;"">Next</button> 
+				<button type="button" name="closeSerialnoPopup" class="close" data-dismiss="modal"><i class='fa fa-times'></i></button>
+									<a class="close modalMinimize ml-3"> <i
+										class='fa fa-minus icon-to-change'></i></a>
+				</div>
 				</div>
 	<div class="modal-body">
 	<ul class="nav nav-tabs" id="myTab" role="tablist" style="background-color: #00757C;">
@@ -1469,20 +1493,22 @@ max-height: 100%;
 
 <!-- ModelsAndPartnumbers Popup -->
 <div class="container">
-	<div id ="modPartModal" class="modal fade custom-class-assignedto-modal"  tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">	
+	<div id ="modPartModal" class="modal fade  custom-class-assignedto-modal"  tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">	
 		<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
 			<div class="modal-content" >
-				<div class="modal-header" style="background-color: #FF4F4F;" >
-				<h5 id ="popupNbModpart" class="modal-title" style="font-weight:bold; color: #3C1596;"></h5>
+				<div class="modal-header" style="background-color: #2678CC ; height: 55px; ">
+				<h5 id ="popupNbModpart" class="modal-title" style="font-weight:bold; color: #E9ECEF ;position: relative; bottom: 12px;"></h5>
 				
-				<button type="button" name="insertModPartBelow"  onclick="insertModPartRowBelow()" class ="btn btn-default btn-primary BtnActive  " style="color:white;position:relative;left:50px;">Insert Below </button>
-				<button type="button" name="insertModPartAbove"  onclick="insertModPartRowAbove()" class ="btn btn-default btn-primary BtnActive" style="color:white;position:relative;left:60px;">Insert Above </button>
-			    <button type="button" name="deleteModPartBoqRow"  onclick="deleteModPartBoqRow()" class ="btn btn-default btn-primary BtnActive" style="color:white;position:relative;left:70px;">Delete</button>
-			    <button name ="previousModPartRow" class ="btn btn-default btn-primary BtnActive" style="color:white;position:relative;left:80px;">Previous</button>
-	            <button name="nextModPartRow" onclick="nextModPartRow()" class ="btn btn-default btn-primary BtnActive" style="color:white;position:relative;left:90px;">Next</button>
+				<button type="button" name="insertModPartBelow"  onclick="insertModPartRowBelow()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black; position:relative;left: -30px; font-weight: bold; margin-top: -7px;"">Insert Below </button>
+				<button type="button" name="insertModPartAbove"  onclick="insertModPartRowAbove()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: -20px; font-weight: bold; margin-top: -7px;"">Insert Above </button>
+			    <button type="button" name="deleteModPartBoqRow"  onclick="deleteModPartBoqRow()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: -10px; font-weight: bold; margin-top: -7px;"">Delete </button>
+			    <button name ="previousModPartRow" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: 0px; font-weight: bold; margin-top: -7px;"">Previous</button>
+	            <button name="nextModPartRow" onclick="nextModPartRow()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: 10px; font-weight: bold; margin-top: -7px;"">Next</button> 
 				
-				<button type="button" name="closeModPartPopup" class ="close" data-dismiss ="modal"> <i class='fa fa-times'></i> </button>
-				<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change' ></i> </a>
+				<button type="button" name="closeModPartPopup" class="close" data-dismiss="modal"><i class='fa fa-times'></i></button>
+									<a class="close modalMinimize ml-3"> <i
+										class='fa fa-minus icon-to-change'></i></a>
+				</div>
 				</div>
 	<div class="modal-body">
 	<ul class="nav nav-tabs" id="myTab" role="tablist" style="background-color: #00757C;">
@@ -1822,7 +1848,8 @@ dictSite = [];
 				 
 			    	dictNode.push({											
 			    	"nodeID": $(this).parent().parent().children('td[name="nodeID"]').children('input').val(),												
-			    	"node_Name" : $(this).parent().parent().children('td[name="node_Name"]').children('input').val(),		
+			    	"node_Name" : $(this).parent().parent().children('td[name="node_Name"]').children('input').val(),	
+			    	"node_Type" : $(this).parent().parent().children('td[name="node_Type"]').children('input').val(),			
 			    	"arNodeID" : $(this).parent().parent().children('td[name="arNodeID"]').children('input').val()
 			    	});
 			 
@@ -1959,12 +1986,17 @@ if ('${ListNode}' != "addNew") {
 			   	if(nodeName == null)
 			   		nodeName = "";
 			   	else nodeName = boqArrayNode[i].nodeName;
-		   		
+
+
+			  	if(nodeType == null)
+			  		nodeType = "";
+			   	else nodeType = boqArrayNode[i].nodeType;
+		   	
 		   		var itemNodeRow = "<tr>";
 		   		itemNodeRow= itemNodeRow + "<td style='text-align:center;'><input type='checkbox' name='record1'><button type = 'button' href='#' name='popNodeUpMenu' onclick='openNodePopUp(this)' class='btn btn-default'  style='position:relative;left:3px;'><i class='fas fa-desktop'></i></button></td>"
 		   		itemNodeRow =itemNodeRow + "<td name='nodeID'><input name='nodeID' id = 'nodeID"+i+"'  type='text' value='" +nodeID+ "' style='width:200px;' class='form-control input-text'/></td>";
 		   		itemNodeRow =itemNodeRow + "<td name='node_Name' style='width:200px'><input name='node_Name'  id = 'node_Name"+i+"'  style='width:200px'  type='text' value='"+nodeName+"' style='width:200px;' class='form-control input-text' /> </td>";
-				itemNodeRow =itemNodeRow + "<td name='arNodeID'><input name='arNodeID'  type='text' value='"+nodeType+"' readonly style='width:200px;' class='form-control input-text' /> </td>";																																										
+		   		itemNodeRow =itemNodeRow + "<td name='node_Type' style='width:200px'><input name='node_Type'  id = 'node_Type"+i+"'  style='width:200px'  type='text' value='"+nodeType+"' style='width:200px;' class='form-control input-text' /> </td>";
 				itemNodeRow =itemNodeRow + "<td name='arNodeID'><input name='arNodeID'  type='text' value='"+arNodeID+"' readonly style='width:200px;' class='form-control input-text' /> </td>";																																										
 	             itemNodeRow =itemNodeRow + "</tr>";
 
