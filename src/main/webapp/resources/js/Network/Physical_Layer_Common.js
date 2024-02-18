@@ -5314,8 +5314,7 @@ function openFindNearMultySite(rowData) {
     });
 }
 
-function  openFindNearest(checkedOption,closestLatPoint,closestLongPoint,closestDisRange,noP,arrayManhole,arrayHandhole,arrayDB,arrayFibers,arrayStrands,arrayTubes,arrayNodes,getRelatedPoints,strtLng,endLng,strtLat,endLat,customerID,serviceReq,serviceRef){
- 
+function  openFindNearest(checkedOption,closestLatPoint,closestLongPoint,closestDisRange,noP,arrayManhole,arrayHandhole,arrayDB,arrayFibers,arrayStrands,arrayTubes,arrayNodes,getRelatedPoints,strtLng,endLng,strtLat,endLat,customerID,serviceReq,serviceRef){ 	
 	$("#StartEnd").prop("checked",false);
 	 document.getElementById("closestLongDiv").style.display = "block";
 	 document.getElementById("closestLatDiv").style.display = "block";
@@ -5349,9 +5348,10 @@ function  openFindNearest(checkedOption,closestLatPoint,closestLongPoint,closest
 				$("#getRelatedPoints").prop('checked', false);
 			}
 			$("#customerDetails").val(customerID);
-			
-			serviceReferenceValue = serviceReq+":"+serviceRef;
-			$("#serviceReference").val(serviceReferenceValue);
+			if (serviceReq != '') {
+				serviceReferenceValue = serviceReq+":"+serviceRef;
+				$("#serviceReference").val(serviceReferenceValue);
+			}
 			
 					 appendNearestManholesTable(arrayManhole);
 					 appendNearestHandholesTable(arrayHandhole);					        			
@@ -5389,10 +5389,13 @@ function  openFindNearest(checkedOption,closestLatPoint,closestLongPoint,closest
 					         map,
 					         center: myLatLng,
 					         radius: circleRadius * 1000,
+					         clickable:false					         
 					       });		
 						displayZoneMap(circ);
 				        map.setCenter(myLatLng);
 					    map.fitBounds(circ.getBounds());
+					    
+					    
 	
 				startlangPath =[new google.maps.LatLng(strtLat,strtLng), new google.maps.LatLng(endLat,strtLng)];
 				drawLine("#FF0000",startlangPath);
