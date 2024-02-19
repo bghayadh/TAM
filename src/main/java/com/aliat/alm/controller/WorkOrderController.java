@@ -104,9 +104,14 @@ public class WorkOrderController {
 				try {
 					
 				      
-				      query = session.createQuery("select a.workOrdId, a.workOrdId as ID, a.fromWare  || ':'|| a.warehouseSourceName || ':'|| siteIdSource , a.toWare || ':'|| a.warehouseNameDest || ':'|| siteIdDest , TO_CHAR(a.executionDate, 'YYYY-MM-DD HH24:MI:SS') as execDate,TO_CHAR(a.woLastModifieddate, 'YYYY-MM-DD HH24:MI:SS') as LastModifieddate, a.purpose as purp "
-								+ " from WorkOrder a ORDER BY a.woLastModifieddate desc"
+				      query = session.createQuery("select a.workOrdId, a.workOrdId as ID, a.fromWare  || ':'|| a.warehouseSourceName || ':'|| siteIdSource , a.toWare || ':'|| a.warehouseNameDest || ':'|| siteIdDest , TO_CHAR(a.executionDate, 'YYYY-MM-DD HH24:MI:SS') as execDate,TO_CHAR(a.woLastModifieddate, 'YYYY-MM-DD HH24:MI:SS') as LastModifieddate, a.purpose as purp,"
+				      		+ "CASE "
+				      		+ "WHEN (select count(*) from DiscoveryNewItem b where b.dniWOID=a.workOrdId) > 0 THEN 'YES'"
+				      		+ "ELSE 'NO'"
+				      		+ "END AS validation"
+							+ " from WorkOrder a ORDER BY a.woLastModifieddate desc"
 								);
+				      System.out.println("query "+mapper.writeValueAsString(query.list()));
 				      model.addAttribute("WorkOrderDt", mapper.writeValueAsString(query.list()));
 				      
 				      
@@ -159,7 +164,12 @@ public class WorkOrderController {
 				List<String> listWork = new ArrayList<String>();
 
 				String str = "select 1 as chkBox, ID as workOrdId, FROM_WAREHOUSE as fromWare, TO_WAREHOUSE as toWare,TO_CHAR(EXECUTION_DATE,'YYYY-MM-DD HH24:MI:SS') as executionDate ,TO_CHAR(LAST_MODIFICATION_DATE,'YYYY-MM-DD HH24:MI:SS') as lastmodifiedDate ,"
-						+ " PURPOSE as purpose  from WORK_ORDER  ";
+						+ " PURPOSE as purpose,"
+						+ "CASE "
+			      		+ "WHEN (select count(*) from DISCOVERY_NEW_ITEM b where b.WO_ID=a.ID) > 0 THEN 'YES'"
+			      		+ "ELSE 'NO'"
+			      		+ "END AS validation"
+						+ " from WORK_ORDER a ";
 				
 				
 				if (startdate != null && enddate != null) {

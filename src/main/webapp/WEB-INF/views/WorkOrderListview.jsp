@@ -308,11 +308,24 @@
 												</ul>
 										</li>
 										</th>
+										
+										<th>Validation
+											<li class="filter-dropdown dropdown">
+												<button class="almgrid-filter" data-toggle="dropdown">
+													<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
+												</button>
+												<ul class="dropdown-menu filter-dropdown-ul">
+
+												</ul>
+										</li>
+										</th>
 									</tr>
 
 									<tr>
 										<th class="table-select-all"><input type="checkbox"
 											class="table-select-all-checkbox"></th>
+										<th><input type="text" class="almgrid-search"
+											placeholder="Search"></th>
 										<th><input type="text" class="almgrid-search"
 											placeholder="Search"></th>
 										<th><input type="text" class="almgrid-search"
@@ -404,7 +417,7 @@
 						 	function fillGrid(filledGrid){
 						  		exportArrayGrid=[];
 						 		exportArrayGrid.push('\r');
-						 		exportArrayGrid.push(["Work Order ID", "From WareHouse", "To WareHouse", "Execution Date", "Last Modified Date","Purpose"]);
+						 		exportArrayGrid.push(["Work Order ID", "From WareHouse", "To WareHouse", "Execution Date", "Last Modified Date","Purpose","Validation"]);
 								for(i=0;i<filledGrid.length;i++){
 									exportArrayGrid.push('\r');
 									for(j=1;j<filledGrid[0].length;j++){
@@ -460,6 +473,7 @@
 						
 						$(".almgrid-table").on("click",".almgrid-link",function(e) {
 											var param1 = $(this).attr('id');
+											console.log("param "+param1);
 											var param = "${pageContext.request.contextPath}/WorkOrderFormView?workOrdId="+ param1+ "&NavAction=2";
 											window.location.href = param;
 											e.preventDefault();
@@ -519,8 +533,11 @@
 					 				+'<th>Last Modified Date<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
 					 				+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'
 					 				+'<th>Purpose<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
+					 				+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'
+					 				+'<th>Validation<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
 					 				+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th></tr>'
 					 				+'<tr><th class="table-select-all"><input type="checkbox" class="table-select-all-checkbox"></th>'
+					 				+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
 					 				+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
 					 				+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
 					 				+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
@@ -557,7 +574,7 @@
 
 					             		$(".almgrid-table").on("click", ".almgrid-link", function (e) {
 					             			var param1 = $(this).attr('id');
-					             			var param = "${pageContext.request.contextPath}/WorkOrderFormView?ID=" + param1 +"&NavAction=2";
+					             			var param = "${pageContext.request.contextPath}/WorkOrderFormView?workOrdId=" + param1 +"&NavAction=2";
 					             			window.location.href = param;
 					             			e.preventDefault();
 					             		});
