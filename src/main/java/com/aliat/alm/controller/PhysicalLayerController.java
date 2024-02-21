@@ -5158,15 +5158,8 @@ public class PhysicalLayerController {
 					String auxId = (String) auxData[0];
 					double auxLng = Double.parseDouble(auxData[1].toString());
 					double auxLat = Double.parseDouble(auxData[2].toString());
-
-					Map<String, Object> nearestHandhole = findNearestHandhole(auxLng, auxLat, 30.0, auxList); // Pass
-																												// 30.0
-																												// meters
-																												// as
-																												// the
-																												// maximum
-																												// distance
-
+					/* Pass 30.0 meters as the maximum distance*/					
+					Map<String, Object> nearestHandhole = findNearestHandhole(auxLng, auxLat, 30.0, auxList);
 					if (nearestHandhole != null) {
 						String handholeId = (String) nearestHandhole.get("HandholeId");
 						String handholeName = (String) nearestHandhole.get("HandholeName");
@@ -5184,12 +5177,8 @@ public class PhysicalLayerController {
 						}
 					}
 					sortedMap.putAll(resultMapHand);
-					session.flush();
-					session.clear();
-					tx.commit();
 				}
 			} catch (Exception e) {
-				tx.rollback();
 				sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
 				exceptionAsString = sw.toString();
