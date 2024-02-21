@@ -288,7 +288,7 @@ display:none;
 
               <div class="collapse navbar-collapse" id="navbarmenu">
                   <ul class="navbar-nav">
-                  <li class="nav-item"><a href="${pageContext.request.contextPath}/home" class="nav-link"><c:if test="${page == 'home'}"><span class="border-bottom active"></c:if><i class="fas fa-home"></i> Home <c:if test="${page == 'purchasing'}"></span></c:if></a></li>
+                  <li class="nav-item"><a href="${pageContext.request.contextPath}/home" class="nav-link"><c:if test="${page == 'home'}"><span class="border-bottom active"></c:if><i class="fas fa-home"></i> Home <c:if test="${page == 'home'}"></span></c:if></a></li>
                 <li class="nav-item dropdown">
         <a class="nav-link" style="text-decoration: none;" href="#"  id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <c:if test="${page == 'network'}"><span class="border-bottom active"></c:if><i class="fas fa-wifi"></i>  Network <c:if test="${page == 'network'}"></span></c:if>
@@ -485,7 +485,7 @@ display:none;
                   <c:when test="${page=='setup' }"> <li class="nav-item"><a href="${pageContext.request.contextPath}/Setup" class="nav-link "><c:if test="${page == 'setup'}"><span class="border-bottom active"></c:if><i class="fas fa-cog"></i> Setup <c:if test="${page == 'setup'}"></span></c:if></a></li></c:when>
                   <c:when test="${page=='purchasing' }"><li class="nav-item"><a href="${pageContext.request.contextPath}/Purchase" class="nav-link "><c:if test="${page == 'purchasing'}"><span class="border-bottom active"></c:if><i class="fas fa-money-check"></i> Purchasing <c:if test="${page == 'purchasing'}"></span></c:if></a></li></c:when>
                    <c:when test="${page=='troubleTickets' }"><li class="nav-item"><a href="${pageContext.request.contextPath}/TroubleTicketListView" class="nav-link "><c:if test="${page == 'troubleTickets'}"><span class="border-bottom active"></c:if><i class="fas fa-ticket-alt"></i> TroubleTickets <c:if test="${page == 'troubleTickets'}"></span></c:if></a></li></c:when>
-                  <c:otherwise><li class="nav-item"><a href="${pageContext.request.contextPath}/home" class="nav-link"><c:if test="${page == 'home'}"><span class="border-bottom active"></c:if><i class="fas fa-home"></i> Home <c:if test="${page == 'purchasing'}"></span></c:if></a></li></c:otherwise>
+                  <c:otherwise><li class="nav-item"><a href="${pageContext.request.contextPath}/home" class="nav-link"><c:if test="${page == 'home'}"><span class="border-bottom active"></c:if><i class="fas fa-home"></i> Home <c:if test="${page == 'home'}"></span></c:if></a></li></c:otherwise>
                   </c:choose>
                   
                 <li class="nav-item dropdown">
@@ -495,8 +495,7 @@ display:none;
         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink" style="margin-right:-80px;">
           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NetworkPhysicalLayer">Physical Layer</a></li>
           <div class="dropdown-divider"></div>
-          <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Network_Index">Elements</a></li>
-          <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Network_StNdCell">Elements (New)</a></li>
+          <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Network_StNdCell">Elements</a></li>
            <div class="dropdown-divider"></div>
            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NodeListView">Nodes</a></li>
          <div class="dropdown-divider"></div>
@@ -616,7 +615,7 @@ display:none;
           </a>
         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink" style="margin-right:-100px;">
         <c:choose>
-        <c:when test="${page=='setup' }"><li class="nav-item"><a class="dropdown-item" href="${pageContext.request.contextPath}/home" class="nav-link"><c:if test="${page == 'home'}"><span class="border-bottom active"></c:if><i class="fas fa-home"></i> Home <c:if test="${page == 'purchasing'}"></span></c:if></a></li>
+        <c:when test="${page=='setup' }"><li class="nav-item"><a class="dropdown-item" href="${pageContext.request.contextPath}/home" class="nav-link"><c:if test="${page == 'home'}"><span class="border-bottom active"></c:if><i class="fas fa-home"></i> Home <c:if test="${page == 'home'}"></span></c:if></a></li>
         <div class="dropdown-divider"></div>
           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/TroubleTicketListView" class="nav-link "><c:if test="${page == 'troubleTickets'}"><span id="back"></c:if><i class="fas fa-ticket-alt" ></i> TroubleTickets <c:if test="${page == 'troubleTickets'}"></span></c:if></a></li></li>
           <div class="dropdown-divider" ></div>
@@ -634,11 +633,7 @@ display:none;
           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/TroubleTicketListView" class="nav-link "><c:if test="${page == 'troubleTickets'}"><span id="back"></c:if><i class="fas fa-ticket-alt" ></i> TroubleTickets <c:if test="${page == 'troubleTickets'}"></span></c:if></a></li></li>
           <div class="dropdown-divider" ></div>
           <a class="dropdown-item" href="${pageContext.request.contextPath}/home" class="nav-link"><c:if test="${page == 'home'}"><span class="border-bottom active"></c:if><i class="fas fa-home"></i> Home <c:if test="${page == 'purchasing'}"></span></c:if></a></li>
-          
-        
         </c:when>
-        
-        
         <c:otherwise>
         <li class="nav-item"><a class="dropdown-item" href="${pageContext.request.contextPath}/Setup" class="nav-link "><c:if test="${page == 'setup'}"><span class="border-bottom active"></c:if><i class="fas fa-cog"></i> Setup <c:if test="${page == 'setup'}"></span></c:if></a></li>
         <div class="dropdown-divider"></div>
@@ -647,12 +642,10 @@ display:none;
           <li> <a class="dropdown-item" href="${pageContext.request.contextPath}/Purchase" class="nav-link "><c:if test="${page == 'purchasing'}"><span id="back"></c:if><i class="fas fa-money-check" ></i> Purchasing <c:if test="${page == 'purchasing'}"></span></c:if></a></li></li>
         </c:otherwise>
         </c:choose>
-          
-          
         </ul>
       </li>
                
-                  </ul>
+	</ul>
         <ul class="navbar-nav ml-auto ">
   
                   <li class=" dropdown nav-item"><a href="#" class="nav-link a1" data-toggle="dropdown" style="text-decoration: none;"> 
@@ -714,8 +707,6 @@ display:none;
      <div class="m3">
     <nav class="navbar navbar-expand-lg  navbar-light bg-light mynav">
 	<a class="navbar-brand">ALM</a>
-    
-
 
               <div class="collapse navbar-collapse" id="navbarmenu">
                   <ul class="navbar-nav">
@@ -724,38 +715,24 @@ display:none;
                   <c:when test="${page=='purchasing' }"><li class="nav-item"><a href="${pageContext.request.contextPath}/Purchase" class="nav-link "><c:if test="${page == 'purchasing'}"><span class="border-bottom active"></c:if><i class="fas fa-money-check"></i> Purchasing <c:if test="${page == 'purchasing'}"></span></c:if></a></li></c:when>
                    <c:when test="${page=='troubleTickets' }"><li class="nav-item"><a href="${pageContext.request.contextPath}/TroubleTicketListView" class="nav-link "><c:if test="${page == 'troubleTickets'}"><span class="border-bottom active"></c:if><i class="fas fa-ticket-alt"></i> TroubleTickets <c:if test="${page == 'troubleTickets'}"></span></c:if></a></li></c:when>
                    <c:when test="${page=='Sales' }" ><li class="nav-item"><a href="${pageContext.request.contextPath}/Sales" class="nav-link "><c:if test="${page == 'Sales'}"><span class="border-bottom active"></c:if><i class="fas fa-shopping-basket"></i> Sales <c:if test="${page == 'sales'}"></span></c:if></a></li></c:when>
-                  <c:otherwise><li class="nav-item"><a href="${pageContext.request.contextPath}/home" class="nav-link"><c:if test="${page == 'home'}"><span class="border-bottom active"></c:if><i class="fas fa-home"></i> Home <c:if test="${page == 'purchasing'}"></span></c:if></a></li></c:otherwise>
+                  <c:otherwise><li class="nav-item"><a href="${pageContext.request.contextPath}/home" class="nav-link"><c:if test="${page == 'home'}"><span class="border-bottom active"></c:if><i class="fas fa-home"></i> Home <c:if test="${page == 'home'}"></span></c:if></a></li></c:otherwise>
                   </c:choose>
                 <li class="nav-item dropdown">
         <a class="nav-link" style="text-decoration: none;" href="#"  id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <c:if test="${page == 'network'}"><span class="border-bottom active"></c:if><i class="fas fa-wifi"></i>  Network <c:if test="${page == 'network'}"></span></c:if>
-          
+          <c:if test="${page == 'network'}"><span class="border-bottom active"></c:if><i class="fas fa-wifi"></i>  Network <c:if test="${page == 'network'}"></span></c:if>          
         </a>
         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink" style="margin-right:-80px;">
           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NetworkPhysicalLayer">Physical Layer</a></li>
           <div class="dropdown-divider"></div>
-          <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Network_Index">Elements</a></li>
-          <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Network_StNdCell">Elements (New)</a></li>
+          <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Network_StNdCell">Elements</a></li>
            <div class="dropdown-divider"></div>
            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NodeListView">Nodes</a></li>
           <div class="dropdown-divider"></div>
-           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/CellListView">Cells</a></li>
-         
-        </ul>
-  <!--     <li class="nav-item"><a href="${pageContext.request.contextPath}/Account" class="nav-link "><c:if test="${page == 'account'}"><span class="border-bottom active"></c:if><i class="fas fa-book"></i> Account <c:if test="${page == 'account'}"></span></c:if></a></li> -->  
-        
-        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink" style="margin-right:-80px;">
-          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NetworkPhysicalLayer">Physical Layer</a></li>
-          <div class="dropdown-divider"></div>
-          <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Network_Index">Elements</a></li>
-          <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Network_StNdCell">Elements (New)</a></li>
-        </ul>
+           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/CellListView">Cells</a></li>         
+        </ul>        
       </li>
-               <li class="nav-item"><a href="${pageContext.request.contextPath}/Inventory" class="nav-link "><c:if test="${page == 'inventory'}"><span class="border-bottom active"></c:if><i class="fas fa-warehouse"></i> Inventory <c:if test="${page == 'inventory'}"></span></c:if></a></li>
-               
-                
-
-                       <li class="nav-item dropdown">
+      <li class="nav-item"><a href="${pageContext.request.contextPath}/Inventory" class="nav-link "><c:if test="${page == 'inventory'}"><span class="border-bottom active"></c:if><i class="fas fa-warehouse"></i> Inventory <c:if test="${page == 'inventory'}"></span></c:if></a></li>
+        <li class="nav-item dropdown">
         <a class="nav-link "  style="text-decoration: none;" href="#"  id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <c:if test="${page == 'report'}"><span class="border-bottom active"></c:if><i class="fas fa-chart-line"></i> Report <c:if test="${page == 'report'}"></span></c:if>
         </a>
@@ -994,7 +971,7 @@ display:none;
                    <c:when test="${page=='account' }" ><li class="nav-item"><a href="${pageContext.request.contextPath}/Account" class="nav-link "><c:if test="${page == 'account'}"><span class="border-bottom active"></c:if><i class="fas fa-book"></i> Account <c:if test="${page == 'account'}"></span></c:if></a></li></c:when>
                   <c:otherwise><li class="nav-item"><a href="${pageContext.request.contextPath}/home" class="nav-link"><c:if test="${page == 'home'}"><span class="border-bottom active"></c:if><i class="fas fa-home"></i> Home <c:if test="${page == 'purchasing'}"></span></c:if></a></li></c:otherwise>
                   </c:choose>
-                <li class="nav-item dropdown">
+	  <li class="nav-item dropdown">
         <a class="nav-link" style="text-decoration: none;" href="#"  id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <c:if test="${page == 'network'}"><span class="border-bottom active"></c:if><i class="fas fa-wifi"></i>  Network <c:if test="${page == 'network'}"></span></c:if>
           
@@ -1004,8 +981,7 @@ display:none;
         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink" style="margin-right:-80px;">
           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NetworkPhysicalLayer">Physical Layer</a></li>
           <div class="dropdown-divider"></div>
-          <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Network_Index">Elements</a></li>
-          <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Network_StNdCell">Elements (New)</a></li>
+          <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Network_StNdCell">Elements</a></li>
            <div class="dropdown-divider"></div>
            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NodeListView">Nodes</a></li>
           <div class="dropdown-divider"></div>
@@ -1013,14 +989,11 @@ display:none;
          
         </ul>
       </li>
-               <li class="nav-item"><a href="${pageContext.request.contextPath}/Inventory" class="nav-link "><c:if test="${page == 'inventory'}"><span class="border-bottom active"></c:if><i class="fas fa-warehouse"></i> Inventory <c:if test="${page == 'inventory'}"></span></c:if></a></li>
-               
-                
-
-                       <li class="nav-item dropdown">
-        <a class="nav-link "  style="text-decoration: none;" href="#"  id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <c:if test="${page == 'report'}"><span class="border-bottom active"></c:if><i class="fas fa-chart-line"></i> Report <c:if test="${page == 'report'}"></span></c:if>
-        </a>
+      	<li class="nav-item"><a href="${pageContext.request.contextPath}/Inventory" class="nav-link "><c:if test="${page == 'inventory'}"><span class="border-bottom active"></c:if><i class="fas fa-warehouse"></i> Inventory <c:if test="${page == 'inventory'}"></span></c:if></a></li>
+       		<li class="nav-item dropdown">
+        		<a class="nav-link "  style="text-decoration: none;" href="#"  id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          		<c:if test="${page == 'report'}"><span class="border-bottom active"></c:if><i class="fas fa-chart-line"></i> Report <c:if test="${page == 'report'}"></span></c:if>
+        		</a>
           <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink" style="margin-right:-100px;">
        <!--    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/AssetAccountingVoucher">Asset Accounting Voucher</a></li>
           <div class="dropdown-divider"></div>
