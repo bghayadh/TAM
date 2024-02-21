@@ -1377,7 +1377,7 @@ public class NetworkController {
 
 				String strSites = "SELECT DISTINCT b.SITE_ID,b.SITE_NAME,b.WARE_ID,a.LATITUDE,a.LONGITUDE ";
 
-				String strPO = "SELECT distinct a.PO_ID FROM FIXED_ASSET_REGISTRY a,NODE_ACTIVE b WHERE a.PO_ID!='0' and a.PO_ID is not null and a.PO_ID!='null' AND b.NODE_ID=a.NODE_ID "
+				String strPO = "SELECT distinct a.PO_ID FROM FIXED_ASSET_REGISTRY a,NODE_ACTIVE b, FAR_NODE c WHERE a.PO_ID!='0' and a.PO_ID is not null and a.PO_ID!='null' AND b.NODE_ID=c.NODE_ID and a.FAR_ID = c.FAR_ID "
 						+ generateDateCondition(parsingDate, "b");
 
 				try {
@@ -1472,8 +1472,7 @@ public class NetworkController {
 
 				String strSites = "SELECT DISTINCT b.SITE_ID,b.SITE_NAME,b.WARE_ID,a.LATITUDE,a.LONGITUDE";
 						
-
-				String strPO = "SELECT distinct a.PO_ID FROM FIXED_ASSET_REGISTRY a,NODE_ACTIVE b WHERE a.PO_ID!='0' and a.PO_ID is not null and a.PO_ID!='null' AND b.NODE_ID=a.NODE_ID "
+				String strPO = "SELECT distinct a.PO_ID FROM FIXED_ASSET_REGISTRY a,NODE_ACTIVE b, FAR_NODE c WHERE a.PO_ID!='0' and a.PO_ID is not null and a.PO_ID!='null' AND b.NODE_ID=c.NODE_ID and a.FAR_ID = c.FAR_ID "
 						+ generateDateCondition(parsingDate, "b");
 
 				try {
@@ -6379,7 +6378,7 @@ public class NetworkController {
 				String parsingDate = request.getParameter("date");
 				// System.out.println("parsingDate..."+parsingDate);
 
-				String strItems = "SELECT distinct a.ITEM_CODE, a.ITEM_NAME, a.PO_ID, a.ITEM_MODEL FROM FIXED_ASSET_REGISTRY a, NODE_ACTIVE c WHERE c.NODE_ID=a.NODE_ID and a.PO_ID='"
+				String strItems = "SELECT distinct a.ITEM_CODE, a.ITEM_NAME, a.PO_ID, a.ITEM_MODEL FROM FIXED_ASSET_REGISTRY a, FAR_NODE b, NODE_ACTIVE c WHERE b.NODE_ID=c.NODE_ID and a.FAR_ID = b.FAR_ID and a.PO_ID='"
 						+ selectedPo + "' " + generateDateCondition(parsingDate, "c");
 
 				String strSites = "SELECT DISTINCT b.SITE_ID,b.SITE_NAME,b.WARE_ID,j.ITEM_CODE,j.PO_ID FROM FAR_SITE b,FIXED_ASSET_REGISTRY j,NODE_ACTIVE a where j.FAR_ID=b.FAR_ID AND "
@@ -7185,11 +7184,11 @@ public class NetworkController {
 		LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 
 		try {
-			String strEmpty = "SELECT COUNT(DISTINCT a.PO_ID) FROM FIXED_ASSET_REGISTRY a,NODE_ACTIVE b WHERE a.PO_ID!='null' AND a.PO_ID!='0' and a.PO_ID is not null AND a.NODE_ID=b.NODE_ID "
+			String strEmpty = "SELECT COUNT(DISTINCT a.PO_ID) FROM FIXED_ASSET_REGISTRY a, NODE_ACTIVE b, FAR_NODE c WHERE a.PO_ID!='null' AND a.PO_ID!='0' and a.PO_ID is not null AND b.NODE_ID=c.NODE_ID and a.FAR_ID = c.FAR_ID "
 					+ generateDateConditionBoq(date, "b");
 			strEmpty = boqDomainVar("a", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			String strExist = "Select DISTINCT a.PO_ID From FIXED_ASSET_REGISTRY a,NODE_ACTIVE b where a.PO_ID='" + POID
-					+ "' and a.NODE_ID=b.NODE_ID " + generateDateConditionBoq(date, "b");
+			String strExist = "Select DISTINCT a.PO_ID From FIXED_ASSET_REGISTRY a, NODE_ACTIVE b, FAR_NODE c where a.PO_ID='" + POID
+					+ "' and b.NODE_ID=c.NODE_ID and a.FAR_ID = c.FAR_ID " + generateDateConditionBoq(date, "b");
 			strExist = boqDomainVar("a", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
 			String PO_Query = POID == "" ? strEmpty : strExist;
 			// System.out.println(PO_Query);
@@ -7413,11 +7412,11 @@ public class NetworkController {
 		LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
 
 		try {
-			String strEmpty = "SELECT COUNT(DISTINCT a.PO_ID) FROM FIXED_ASSET_REGISTRY a,NODE_ACTIVE c WHERE a.NODE_ID=c.NODE_ID "
+			String strEmpty = "SELECT COUNT(DISTINCT a.PO_ID) FROM FIXED_ASSET_REGISTRY a, FAR_NODE b, NODE_ACTIVE c WHERE b.NODE_ID=c.NODE_ID and a.FAR_ID = b.FAR_ID "
 					+ generateDateConditionBoq(date, "c");
 			strEmpty = boqDomainVar("a", paramEnterprise, paramTransmission, paramRAN, paramCore, strEmpty);
-			String strExist = "Select DISTINCT a.PO_ID From FIXED_ASSET_REGISTRY a,NODE_ACTIVE c where a.PO_ID='" + POID
-					+ "' AND a.NODE_ID=c.NODE_ID " + generateDateConditionBoq(date, "c");
+			String strExist = "Select DISTINCT a.PO_ID From FIXED_ASSET_REGISTRY a, FAR_NODE b, NODE_ACTIVE c where a.PO_ID='" + POID
+					+ "' AND b.NODE_ID=c.NODE_ID and a.FAR_ID = b.FAR_ID " + generateDateConditionBoq(date, "c");
 			strExist = boqDomainVar("a", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
 			String PO_Query = POID == "" ? strEmpty : strExist;
 			// System.out.println(PO_Query);
