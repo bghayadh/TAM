@@ -68,9 +68,13 @@ public class RevenueToAssetRatioReportController {
 
 					query = session.createNativeQuery(
 							"SELECT site as site,wareID as wareID,siteID as siteID,siteName as siteName,longitude as longitude,latitude as latitude,"
-							+"COALESCE( nullif(SUM(voiceRevenue)+ SUM(smsRevenue)+ SUM(dataRevneue)+ SUM(vasRevenue),0) / (nullif(SUM(initCost),0) * 100) ,0) as revenueToAssetInit, "
-							 +" COALESCE( (nullif(SUM(voiceRevenue)+ SUM(smsRevenue)+ SUM(dataRevneue)+ SUM(vasRevenue),0)) / (nullif(SUM(netCost),0) *100) ,0) as revenueToAssetNet,"
-							 + " COALESCE( (nullif(population,0)) / (nullif(SUM(initCost),0) *100) ,0)  as populationToAssetInit , COALESCE( (nullif(population,0)) / (nullif(SUM(netCost),0) *100) ,0)  as populationToAssetNet, " 
+							+"case (SUM(initCost)) when 0 then -1 when null then -1 else round (COALESCE (SUM(voiceRevenue)+ SUM(smsRevenue)+ SUM(dataRevneue)+ SUM(vasRevenue),0) * 100 / SUM(initCost),3) end as revenueToAssetInit,"
+//							+"COALESCE( nullif(SUM(voiceRevenue)+ SUM(smsRevenue)+ SUM(dataRevneue)+ SUM(vasRevenue),0) / (nullif(SUM(initCost),0) * 100) ,0) as revenueToAssetInit, "
+							+"case (SUM(netCost)) when 0 then -1 when null then -1 else round (COALESCE (SUM(voiceRevenue)+ SUM(smsRevenue)+ SUM(dataRevneue)+ SUM(vasRevenue),0) * 100 / SUM(netCost),3) end as revenueToAssetNet,"							
+//							 +" COALESCE( (nullif(SUM(voiceRevenue)+ SUM(smsRevenue)+ SUM(dataRevneue)+ SUM(vasRevenue),0)) / (nullif(SUM(netCost),0) *100) ,0) as revenueToAssetNet,"
+							+"case (SUM(initCost)) when 0 then -1 when null then -1 else round (COALESCE (population,0) * 100 / SUM(initCost),3) end as populationToAssetInit,"
+							+"case (SUM(netCost)) when 0 then -1 when null then -1 else round (COALESCE (population,0) * 100 / SUM(netCost),3) end as populationToAssetNet,"
+//							 + " COALESCE( (nullif(population,0)) / (nullif(SUM(initCost),0) *100) ,0)  as populationToAssetInit , COALESCE( (nullif(population,0)) / (nullif(SUM(netCost),0) *100) ,0)  as populationToAssetNet, " 
 							+ "COALESCE(NULLIF(population, 0), 0) as population, " + 
 							"COALESCE(SUM(voiceRevenue),0) as voiceRevenue,COALESCE(SUM(smsRevenue),0) as smsRevenue,COALESCE(SUM(dataRevneue),0) as dataRevneue,COALESCE(SUM(vasRevenue),0) as vasRevenue, " + 
 							"COALESCE(SUM(voiceRevenue)+ SUM(smsRevenue)+ SUM(dataRevneue)+ SUM(vasRevenue),0) as totalRevenue, " + 
@@ -81,15 +85,16 @@ public class RevenueToAssetRatioReportController {
 							"FROM FIXED_ASSET_REGISTRY A " + 
 							"LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID " + 
 							"LEFT JOIN WAREHOUSE C ON C.WARE_ID = B.WARE_ID " + 
-							"WHERE A.CREATED_DATE >=  trunc(SYSDATE - INTERVAL '1' YEAR) AND A.created_date < (trunc(sysdate) ) + 1  " + 
+							//"WHERE A.CREATED_DATE >=  trunc(SYSDATE - INTERVAL '3' YEAR) AND A.created_date < (trunc(sysdate) ) + 1  " + 
 							"UNION " + 
 							"SELECT DISTINCT C.SITE_ID AS site,C.WARE_ID as wareID, C.SITE_ID AS siteID, C.WARE_NAME AS siteName , C.LONGITUDE as longitude, " + 
 							"C.LATITUDE as latitude,C.POPULATION AS population, 0 as initCost,0 as accuDepr, 0 as netCost , '' AS FAR_ID, " + 
 							"D.VOICE_REVENUE as voiceRevenue, D.SMS_REVENUE as smsRevenue, D.DATA_REVENUE as dataRevneue,D.VAS_REVENUE as vasRevenue " + 
 							"FROM rpt_PREPAID_PAYG_REVENUE D " + 
 							"LEFT JOIN WAREHOUSE C ON C.SITE_ID = D.SITE_ID " + 
-							"WHERE D.REVENUE_DATE >=  trunc(SYSDATE - INTERVAL '1' YEAR) AND D.REVENUE_DATE < (trunc(sysdate) ) + 1  " + 
-							") WHERE (longitude is not null and longitude != '0' and longitude != 'null' and latitude is not null and latitude != '0' and latitude != 'null') GROUP BY site,wareID,siteID,siteName,longitude,latitude,population"
+							"WHERE D.REVENUE_DATE >=  trunc(SYSDATE - INTERVAL '3' YEAR) AND D.REVENUE_DATE < (trunc(sysdate) ) + 1  " + 
+							") WHERE (longitude is not null and longitude != '0' and longitude != 'null' and latitude is not null and latitude != '0' and latitude != 'null') GROUP BY site,wareID,siteID,siteName,longitude,latitude,population " +
+							"order by revenueToAssetInit desc"
 							);
 					
 					
@@ -175,8 +180,8 @@ public class RevenueToAssetRatioReportController {
 										
 					
 					if (StringUtils.equalsIgnoreCase(ignoreDate, "false")) {
-						strALM = strALM + " AND A.CREATED_DATE between TO_DATE('" + start_Date
-								+ "','MM/DD/YYYY HH:MI AM') and TO_DATE('" + end_Date + "','MM/DD/YYYY HH:MI AM')";
+						/* strALM = strALM + " AND A.CREATED_DATE between TO_DATE('" + start_Date
+								+ "','MM/DD/YYYY HH:MI AM') and TO_DATE('" + end_Date + "','MM/DD/YYYY HH:MI AM')"; */
 						
 						strRPT = strRPT + " AND D.REVENUE_DATE between TO_DATE('" + start_Date
 								+ "','MM/DD/YYYY HH:MI AM') and TO_DATE('" + end_Date + "','MM/DD/YYYY HH:MI AM')";
@@ -268,15 +273,20 @@ public class RevenueToAssetRatioReportController {
 					} // end of checked strt/end coordinate checkbox
 					
 					str =  "SELECT site as site,wareID as wareID,siteID as siteID,siteName as siteName,longitude as longitude,latitude as latitude,"
-							+"COALESCE( nullif(SUM(voiceRevenue)+ SUM(smsRevenue)+ SUM(dataRevneue)+ SUM(vasRevenue),0) / (nullif(SUM(initCost),0) * 100) ,0) as revenueToAssetInit,"
-							+ "COALESCE( (nullif(SUM(voiceRevenue)+ SUM(smsRevenue)+ SUM(dataRevneue)+ SUM(vasRevenue),0)) / (nullif(SUM(netCost),0) *100) ,0) as revenueToAssetNet,"
-							+ " COALESCE( (nullif(population,0)) / (nullif(SUM(initCost),0) *100) ,0)  as populationToAssetInit , COALESCE( (nullif(population,0)) / (nullif(SUM(netCost),0) *100) ,0)  as populationToAssetNet, " 
+							+"case (SUM(initCost)) when 0 then -1 when null then -1 else round (COALESCE (SUM(voiceRevenue)+ SUM(smsRevenue)+ SUM(dataRevneue)+ SUM(vasRevenue),0) * 100 / SUM(initCost),3) end as revenueToAssetInit,"							
+							//+"COALESCE( nullif(SUM(voiceRevenue)+ SUM(smsRevenue)+ SUM(dataRevneue)+ SUM(vasRevenue),0) / (nullif(SUM(initCost),0) * 100) ,0) as revenueToAssetInit,"
+							+"case (SUM(netCost)) when 0 then -1 when null then -1 else round (COALESCE (SUM(voiceRevenue)+ SUM(smsRevenue)+ SUM(dataRevneue)+ SUM(vasRevenue),0) * 100 / SUM(netCost),3) end as revenueToAssetNet,"							
+							//+ "COALESCE( (nullif(SUM(voiceRevenue)+ SUM(smsRevenue)+ SUM(dataRevneue)+ SUM(vasRevenue),0)) / (nullif(SUM(netCost),0) *100) ,0) as revenueToAssetNet,"
+							+"case (SUM(initCost)) when 0 then -1 when null then -1 else round (COALESCE (population,0) * 100 / SUM(initCost),3) end as populationToAssetInit,"
+							+"case (SUM(netCost)) when 0 then -1 when null then -1 else round (COALESCE (population,0) * 100 / SUM(netCost),3) end as populationToAssetNet,"							
+							//+ " COALESCE( (nullif(population,0)) / (nullif(SUM(initCost),0) *100) ,0)  as populationToAssetInit , COALESCE( (nullif(population,0)) / (nullif(SUM(netCost),0) *100) ,0)  as populationToAssetNet, " 
 							+ "COALESCE(NULLIF(population, 0), 0) as population, " + 
 							"COALESCE(SUM(voiceRevenue),0) as voiceRevenue,COALESCE(SUM(smsRevenue),0) as smsRevenue,COALESCE(SUM(dataRevneue),0) as dataRevneue,COALESCE(SUM(vasRevenue),0) as vasRevenue, " + 
 							"COALESCE(SUM(voiceRevenue)+ SUM(smsRevenue)+ SUM(dataRevneue)+ SUM(vasRevenue),0) as totalRevenue, " + 
 							"COALESCE(SUM(initCost),0) as initCost,COALESCE(SUM(accuDepr),0) as Depr,COALESCE(SUM(netCost),0) as netCost  FROM ( " + 
 							strALM+ " UNION " + strRPT
-						    + "  ) WHERE (longitude is not null and longitude != '0' and longitude != 'null' and latitude is not null and latitude != '0' and latitude != 'null') GROUP BY site,wareID,siteID,siteName,longitude,latitude,population ";
+						    + "  ) WHERE (longitude is not null and longitude != '0' and longitude != 'null' and latitude is not null and latitude != '0' and latitude != 'null') GROUP BY site,wareID,siteID,siteName,longitude,latitude,population "
+						    + "order by revenueToAssetInit desc";
 
 					
 					//System.out.println("the Str is " + str);
