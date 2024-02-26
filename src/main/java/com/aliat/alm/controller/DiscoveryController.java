@@ -3,21 +3,17 @@ package com.aliat.alm.controller;
 
 import com.aliat.alm.models.ArNode;
 import com.aliat.alm.models.ArPartNumber;
-import com.aliat.alm.models.PurchaseOrderBoq;
-import com.aliat.alm.models.SerialNumber;
 import com.aliat.alm.models.ArSerialNumber;
 import com.aliat.alm.models.ArSite;
 import com.aliat.alm.models.AssetRegistry;
 import com.aliat.alm.models.DNIFormView;
 import com.aliat.alm.models.DiscoverNewItemNode;
 import com.aliat.alm.models.FixedAssetRegistry;
-import com.aliat.alm.models.DiscoveryNewListView;
 import com.aliat.alm.models.FarNode;
 import com.aliat.alm.models.FarPartNumber;
 import com.aliat.alm.models.FarSerialNumber;
 import com.aliat.alm.models.FarSite;
 import java.io.IOException;
-import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -26,7 +22,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import org.hibernate.SQLQuery;
+import org.hibernate.query.Query;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -34,9 +32,6 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.transform.Transformers;
 import org.slf4j.Logger;
@@ -62,7 +57,6 @@ import com.aliat.alm.models.DiscoveryNewItem;
 import com.aliat.alm.services.ItemParameters;
 import com.aliat.alm.services.LoginServices;
 import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -88,7 +82,6 @@ public class DiscoveryController {
 	private static final String DN_ITEM_ID = "itemDniID";
 	private static final String DN_FROM_SLOT = "fromSlot";
 	private static final String DN_TO_SLOT = "itemToSlot";
-	private static final String DN_APPROVE = "buttonApprove";
 	private static final String DN_APPROVE_STATUS = "aprovStatus";
 	private static final String DN_TRANS_TYPE = "transType";
 	private static final String DN_NOTES = "notes";
@@ -118,6 +111,7 @@ public class DiscoveryController {
 	private static Session session = null;
 	private static Transaction tx = null;
 	private static ObjectMapper mapper = new ObjectMapper();
+	@SuppressWarnings("rawtypes")
 	private static Query query = null;
 	private static final Logger logger = LoggerFactory.getLogger(DiscoveryController.class);
 	
@@ -464,10 +458,10 @@ public class DiscoveryController {
 		
 		if (StringUtils.equalsIgnoreCase(request.getParameter("type"), "addNew")) {
 			synchronized (this) {						
-				dnid = "DND_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT DISCOVERY_NEW FROM SEQ_TABLE").uniqueResult().toString());	
-					query = session.createSQLQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW = DISCOVERY_NEW + 1 ");
+				dnid = "DND_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DISCOVERY_NEW FROM SEQ_TABLE").uniqueResult().toString());	
+					query = session.createNativeQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW = DISCOVERY_NEW + 1 ");
 					query.executeUpdate();
-					session.createSQLQuery("commit").executeUpdate();
+					session.createNativeQuery("commit").executeUpdate();
 					}
 			//dnid = "DND_" + year + "_" + appConfig.getSequenceNbr(6);
 			
@@ -513,7 +507,7 @@ public class DiscoveryController {
 		
 		
 		query = session.createQuery("select t.dniID as dniID, t.dniAPPROVAL as dniAPPROVAL from DiscoveryNewItem t where t.dniDNID =:param1");
-		query.setString("param1",dnid);
+		query.setParameter("param1",dnid);
 		
 		List<DiscoveryNewItem> listDnItems = (List<DiscoveryNewItem>) query.setResultTransformer(Transformers.aliasToBean(DiscoveryNewItem.class)).list();
 		
@@ -617,7 +611,7 @@ public class DiscoveryController {
 				//String nodePK = itemParameters.getDictParameter().get(i).get(NODE_PK);
 				/*if (nodePK != "") {
 				String QueryUpdateInNodeActive ="UPDATE NODE_ACTIVE SET SITE_ID ='"+SiteID+"', WARE_ID ='"+wareID+"' WHERE NODE_PK ='"+nodePK+"'";
-				Query qUpdate = session.createSQLQuery(QueryUpdateInNodeActive);
+				Query qUpdate = session.createNativeQuery(QueryUpdateInNodeActive);
 				System.out.println("qUpdate: "+qUpdate);
 				qUpdate.executeUpdate();
 				}*/
@@ -664,10 +658,10 @@ public class DiscoveryController {
 				
 				if (StringUtils.equalsIgnoreCase(itemParameters.getDictParameter().get(i).get(DN_ITEM_ID), "0")) {
 					synchronized (this) {						
-						DniID = "DNI_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
-							query = session.createSQLQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
+						DniID = "DNI_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
+							query = session.createNativeQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
 							query.executeUpdate();
-							session.createSQLQuery("commit").executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
 							}
 					//DniID = "DNI_" + year + "_" + appConfig.getSequenceNbr(7);
 					
@@ -735,7 +729,7 @@ public class DiscoveryController {
 					String dnApproveFlag = appConfig.findAllByQueryConditionByParam(DsicoveryNewItem.class, getDnApproveFlagquery,
 					paramss);
 					paramss.clear();*/
-					query = session.createSQLQuery("UPDATE DISCOVERY_NEW_ITEM SET ITEM_CODE = '" + itmcode + "', LAST_MODIFIED_DATE = sysdate, ITEM_NAME = '" + itmname + "', RATE = '" + dniRate + "', DISCOUNT_AMOUNT = '" + dniDiscamount + "', NET_RATE = '" + dniNetrate + "', "
+					query = session.createNativeQuery("UPDATE DISCOVERY_NEW_ITEM SET ITEM_CODE = '" + itmcode + "', LAST_MODIFIED_DATE = sysdate, ITEM_NAME = '" + itmname + "', RATE = '" + dniRate + "', DISCOUNT_AMOUNT = '" + dniDiscamount + "', NET_RATE = '" + dniNetrate + "', "
 						    + "TAX1 = '" + dniTax1 + "' , TOTAL = '" + dniTotal + "' , TOTAL_AT = '" + dniTotalat + "' , WARE_ID = '" + wareID + "' , WARE_NAME = '" + wareName + "' , "
 						    + "FROM_SITE = '" + SiteID + "' , TO_WARE_ID = '" + towareID + "' , TO_WARE_NAME = '" + towareName + "' , TO_SITE = '" + toSiteID + "' , QTY = '" + dniQty + "' , DN_ID = '" + dnid + "' , "
 						    + "FROM_SERIAL_NUMBER = '" + dniSN + "' , TO_SERIAL_NUMBER = '" + toSerialNumber + "' , PO_ID = '" + PurchaseOrId + "' , SUPPLIER_ID = '" + supplierID + "' , SUPPLIER_NAME = '" + supplierName + "' , "
@@ -873,7 +867,7 @@ query.executeUpdate();
 				            String NodeId = values[0];
 				            String dniId = values[1];
 
-				            Query query = session.createQuery("delete from DiscoverNewItemNode t where t.toNodeId = :toNodeId and t.dniId = :dniId");
+				            query = session.createQuery("delete from DiscoverNewItemNode t where t.toNodeId = :toNodeId and t.dniId = :dniId");
 				            query.setParameter("toNodeId", NodeId);
 				            query.setParameter("dniId", dniId);
 				            query.executeUpdate();
@@ -891,7 +885,7 @@ query.executeUpdate();
 				            String NodeId = values[0];
 				            String dniId = values[1];
 
-				            Query query = session.createQuery("delete from DiscoverNewItemNode t where t.fromNodeId = :fromNodeId and t.dniId = :dniId");
+				             query = session.createQuery("delete from DiscoverNewItemNode t where t.fromNodeId = :fromNodeId and t.dniId = :dniId");
 				            query.setParameter("fromNodeId", NodeId);
 				            query.setParameter("dniId", dniId);
 				            query.executeUpdate();
@@ -1034,13 +1028,13 @@ query.executeUpdate();
 	            	for(int i= 0; i<idList.length;i++) {
 						idForm=idList[i];
 						
-		            	 query = session.createSQLQuery("Delete DISCOVERY_NEW where DN_ID = '"+ idForm +"'");
+		            	 query = session.createNativeQuery("Delete DISCOVERY_NEW where DN_ID = '"+ idForm +"'");
 	                     query.executeUpdate();
 						
-		            	 query = session.createSQLQuery("Delete DISCOVERY_NEW_ITEM where DN_ID = '"+ idForm +"'");
+		            	 query = session.createNativeQuery("Delete DISCOVERY_NEW_ITEM where DN_ID = '"+ idForm +"'");
 	                     query.executeUpdate();
 						
-		            	 query = session.createSQLQuery("Delete ASSET_LIFE_CYCLE where VOUCHER_NB = '"+ idForm +"'");
+		            	 query = session.createNativeQuery("Delete ASSET_LIFE_CYCLE where VOUCHER_NB = '"+ idForm +"'");
 	                     query.executeUpdate();
 			
 	            	}
@@ -1092,13 +1086,13 @@ query.executeUpdate();
 		        		
 		        		String idForm = request.getParameter("dnID");
 		            	
-	                    query = session.createSQLQuery("delete DISCOVERY_NEW_ITEM where DN_ID = '"+ idForm +"'");
+	                    query = session.createNativeQuery("delete DISCOVERY_NEW_ITEM where DN_ID = '"+ idForm +"'");
 	                    query.executeUpdate();
 	                    
-	                    query = session.createSQLQuery("delete DISCOVERY_NEW where DN_ID = '"+ idForm +"'");
+	                    query = session.createNativeQuery("delete DISCOVERY_NEW where DN_ID = '"+ idForm +"'");
 	                    query.executeUpdate();
 
-	                    query = session.createSQLQuery("delete ASSET_LIFE_CYCLE where VOUCHER_NB = '"+ idForm +"'");
+	                    query = session.createNativeQuery("delete ASSET_LIFE_CYCLE where VOUCHER_NB = '"+ idForm +"'");
 	                    query.executeUpdate();
 	                    
 		            } catch (Exception e) {
@@ -1173,11 +1167,11 @@ query.executeUpdate();
 		
 		query = session.createQuery(str);
 		
-		if (itemModel.equalsIgnoreCase("empty") == false) {query.setString("param2", itemModel); }
+		if (itemModel.equalsIgnoreCase("empty") == false) {query.setParameter("param2", itemModel); }
 		
-		if (itemPartNb.equalsIgnoreCase("empty") == false) {query.setString("param3", itemPartNb); }
+		if (itemPartNb.equalsIgnoreCase("empty") == false) {query.setParameter("param3", itemPartNb); }
 		
-		query.setString("param4", Item_code);
+		query.setParameter("param4", Item_code);
 	}
 	 
 		else if(workOrder.equalsIgnoreCase("empty") == false) {
@@ -1198,10 +1192,10 @@ query.executeUpdate();
 			
 			query = session.createQuery(str);
 			
-			if (itemModel.equalsIgnoreCase("empty") == false) {query.setString("param2", itemModel); }
+			if (itemModel.equalsIgnoreCase("empty") == false) {query.setParameter("param2", itemModel); }
 			
-			if (itemPartNb.equalsIgnoreCase("empty") == false) {query.setString("param3", itemPartNb); }
-			query.setString("param5", workOrder);
+			if (itemPartNb.equalsIgnoreCase("empty") == false) {query.setParameter("param3", itemPartNb); }
+			query.setParameter("param5", workOrder);
 		 
 	 }
 		 
@@ -1225,14 +1219,14 @@ query.executeUpdate();
 				
 				query = session.createQuery(str);
 				
-				if (itemModel.equalsIgnoreCase("empty") == false) {query.setString("param2", itemModel); }
+				if (itemModel.equalsIgnoreCase("empty") == false) {query.setParameter("param2", itemModel); }
 				
-				if (itemPartNb.equalsIgnoreCase("empty") == false) {query.setString("param3", itemPartNb); }
+				if (itemPartNb.equalsIgnoreCase("empty") == false) {query.setParameter("param3", itemPartNb); }
 				
 		 }
 		 
 		 
-		query.setString("param1", PoID);
+		query.setParameter("param1", PoID);
 
 		
 		System.out.println("the purchase order id is " + PoID);
@@ -1365,12 +1359,12 @@ query.executeUpdate();
 			
 			query = session.createQuery(str);
 			
-			if (itemModel.equalsIgnoreCase("empty") == false) {query.setString("param2", itemModel); }
+			if (itemModel.equalsIgnoreCase("empty") == false) {query.setParameter("param2", itemModel); }
 			
-			if (itemPartNb.equalsIgnoreCase("empty") == false) {query.setString("param3", itemPartNb); }
+			if (itemPartNb.equalsIgnoreCase("empty") == false) {query.setParameter("param3", itemPartNb); }
 			
 			
-			query.setString("param4", Item_code);
+			query.setParameter("param4", Item_code);
 
 		}
 		
@@ -1396,12 +1390,12 @@ query.executeUpdate();
 			
 			query = session.createQuery(str);
 			
-			if (itemModel.equalsIgnoreCase("empty") == false) {query.setString("param2", itemModel); }
+			if (itemModel.equalsIgnoreCase("empty") == false) {query.setParameter("param2", itemModel); }
 			
-			if (itemPartNb.equalsIgnoreCase("empty") == false) {query.setString("param3", itemPartNb); }
+			if (itemPartNb.equalsIgnoreCase("empty") == false) {query.setParameter("param3", itemPartNb); }
 			
 			
-			query.setString("param4",PoID );
+			query.setParameter("param4",PoID );
 			
 			
 			
@@ -1427,15 +1421,15 @@ query.executeUpdate();
 				
 				query = session.createQuery(str);
 				
-				if (itemModel.equalsIgnoreCase("empty") == false) {query.setString("param2", itemModel); }
+				if (itemModel.equalsIgnoreCase("empty") == false) {query.setParameter("param2", itemModel); }
 				
-				if (itemPartNb.equalsIgnoreCase("empty") == false) {query.setString("param3", itemPartNb); }
+				if (itemPartNb.equalsIgnoreCase("empty") == false) {query.setParameter("param3", itemPartNb); }
 				
 			}
 		
 		
 		
-		 query.setString("param1", woID);
+		 query.setParameter("param1", woID);
 
 		
 		List<Object[]> listResult = query.list();
@@ -1573,10 +1567,10 @@ query.executeUpdate();
 				
 				//ArCode = "AR_" + year + "_" + appConfig.getSequenceNbr(9);
 				synchronized (this) {						
-					ArCode = "AR_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT ASSET_REGISTRY FROM SEQ_TABLE").uniqueResult().toString());	
-						query = session.createSQLQuery("UPDATE SEQ_TABLE SET ASSET_REGISTRY = ASSET_REGISTRY + 1 ");
+					ArCode = "AR_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT ASSET_REGISTRY FROM SEQ_TABLE").uniqueResult().toString());	
+						query = session.createNativeQuery("UPDATE SEQ_TABLE SET ASSET_REGISTRY = ASSET_REGISTRY + 1 ");
 						query.executeUpdate();
-						session.createSQLQuery("commit").executeUpdate();
+						session.createNativeQuery("commit").executeUpdate();
 						}
 
 				
@@ -1585,7 +1579,7 @@ query.executeUpdate();
 				
 				assetregistry.setArID(ArCode);
 				assetregistry.setAritemCode(itmcode);
-				 query = session.createSQLQuery("SELECT item_category, item_catcode FROM Item WHERE item_code = :param1")
+				 query = session.createNativeQuery("SELECT item_category, item_catcode FROM Item WHERE item_code = :param1")
 				                    .setParameter("param1", itmcode);
 				 result = (Object[]) query.uniqueResult();
 		        assetregistry.setItemCat(result[0].toString());
@@ -1615,8 +1609,8 @@ query.executeUpdate();
 				
 				query = session.createQuery("Select t.TOTALQTY as totalqty, t.cipID as cipID from CapitalInProgress t where t.PoId =:param1 and t.cipitemCode =:param2");
 
-				query.setString("param1", PurchaseOrId);
-				query.setString("param2", itmcode);
+				query.setParameter("param1", PurchaseOrId);
+				query.setParameter("param2", itmcode);
 			
 				List result = query.list();
 				
@@ -1649,13 +1643,13 @@ query.executeUpdate();
 							
 							query = session.createQuery("update CapitalInProgress c set c.TOTALQTY =:param1 where c.cipID =:param2");
 
-							query.setFloat("param1", updatedQty);
+							query.setParameter("param1", updatedQty);
 							query.setParameter("param2", fields[1]);
 							query.executeUpdate();
 							
 
 						}
-						query = session.createSQLQuery("select USEFULL_LIFE_MONTHS from ITEM where ITEM_CODE = '"+itmcode+"'");
+						query = session.createNativeQuery("select USEFULL_LIFE_MONTHS from ITEM where ITEM_CODE = '"+itmcode+"'");
 						query.executeUpdate();
 						String item_Usefull_LifeMonths = (String) query.uniqueResult();
 						float useful_life_month = 0;
@@ -1665,10 +1659,10 @@ query.executeUpdate();
 							useful_life_month = Float.parseFloat(item_Usefull_LifeMonths);
 						}
                           synchronized (this) {						
-							FarCode = "FAR_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT FIXED_ASSET_REGISTRY FROM SEQ_TABLE").uniqueResult().toString());	
-							query = session.createSQLQuery("UPDATE SEQ_TABLE SET FIXED_ASSET_REGISTRY = FIXED_ASSET_REGISTRY + 1 ");
+							FarCode = "FAR_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT FIXED_ASSET_REGISTRY FROM SEQ_TABLE").uniqueResult().toString());	
+							query = session.createNativeQuery("UPDATE SEQ_TABLE SET FIXED_ASSET_REGISTRY = FIXED_ASSET_REGISTRY + 1 ");
 							query.executeUpdate();
-							session.createSQLQuery("commit").executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
 							}
 						//FarCode = "FAR_" + year + "_" + appConfig.getSequenceNbr(10);
 						
@@ -1679,7 +1673,7 @@ query.executeUpdate();
 						FixedAssetReg.setARID(ArCode);
 						FixedAssetReg.setFarID(FarCode);
 						FixedAssetReg.setFaritemCode(itmcode);
-						query = session.createSQLQuery("SELECT item_category, item_catcode FROM Item WHERE item_code = :param1")
+						query = session.createNativeQuery("SELECT item_category, item_catcode FROM Item WHERE item_code = :param1")
 				                    .setParameter("param1", itmcode);
 						Object[] res = (Object[]) query.uniqueResult();
                         FixedAssetReg.setItemCat(res[0].toString());
@@ -1753,7 +1747,7 @@ query.executeUpdate();
 		String DN = "%" + request.getParameter("DN") + "%";
 		
 		query = session.createQuery("select t.dnID, t.dnStatus from DiscoveryNew t where t.dnID like :param1 or t.dnStatus like :param1 ORDER BY dnlastmodifDate DESC");
-		query.setString("param1", DN);
+		query.setParameter("param1", DN);
 		rtn.put("listDN", query.list());
 
 
@@ -2506,10 +2500,10 @@ query.executeUpdate();
 			
 				
 			
-			q = session.createSQLQuery(getTransferFromSlotToSlotsquery);
-			q2 = session.createSQLQuery(getCabinetTransfertoNewNode);
-			q3  = session.createSQLQuery(getAntennaTransferToAnotherNode);
-			//q3 = session.createSQLQuery(getTransferFromSiteToSite);
+			q = session.createNativeQuery(getTransferFromSlotToSlotsquery);
+			q2 = session.createNativeQuery(getCabinetTransfertoNewNode);
+			q3  = session.createNativeQuery(getAntennaTransferToAnotherNode);
+			//q3 = session.createNativeQuery(getTransferFromSiteToSite);
 			TransferBoardsList = q.list();
 			TransferCabinetToNewNodeList = q2.list();
 			TransferAntennaToAnotherNodeList = q3.list();
@@ -2521,10 +2515,10 @@ query.executeUpdate();
 			String dnid; DiscoveryNew discoverynew = new DiscoveryNew();
 			//dnid = "DND_" + year + "_" + appConfig.getSequenceNbr(6);
 			synchronized (this) {						
-				dnid = "DND_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT DISCOVERY_NEW FROM SEQ_TABLE").uniqueResult().toString());	
-				query = session.createSQLQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW = DISCOVERY_NEW + 1 ");
+				dnid = "DND_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DISCOVERY_NEW FROM SEQ_TABLE").uniqueResult().toString());	
+				query = session.createNativeQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW = DISCOVERY_NEW + 1 ");
 				query.executeUpdate();
-				session.createSQLQuery("commit").executeUpdate();
+				session.createNativeQuery("commit").executeUpdate();
 				}
 			System.out.println("DNI*********" + dnid);
 			
@@ -2552,10 +2546,10 @@ query.executeUpdate();
 				Object [] arrayList=  TransferBoardsList.get(i);
 				//DniID = "DNI_" + year + "_" +appConfig.getSequenceNbr(7);
 				synchronized (this) {						
-					DniID = "DNI_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
-						query = session.createSQLQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
+					DniID = "DNI_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
+						query = session.createNativeQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
 						query.executeUpdate();
-						session.createSQLQuery("commit").executeUpdate();
+						session.createNativeQuery("commit").executeUpdate();
 						}
 
 
@@ -2594,7 +2588,7 @@ query.executeUpdate();
 				//appConfig.persist(discoverynewitem, DsicoveryNewItem.class);
 				session.saveOrUpdate(discoverynewitem);
 				
-				Query updateNodetrans = session.createSQLQuery("update node_board_transactions set sent_to_alm = '1' where trans_id = :param1 and node_pk = :param2");
+				Query updateNodetrans = session.createNativeQuery("update node_board_transactions set sent_to_alm = '1' where trans_id = :param1 and node_pk = :param2");
 				updateNodetrans.setParameter("param1", trans_id);
 				updateNodetrans.setParameter("param2", node_pk);
 				updateNodetrans.executeUpdate();
@@ -2607,10 +2601,10 @@ query.executeUpdate();
 				Object [] arrayList=  TransferCabinetToNewNodeList.get(i);
 				//DniID = "DNI_" + year + "_" +appConfig.getSequenceNbr(7);
 				synchronized (this) {						
-					DniID = "DNI_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
-						query = session.createSQLQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
+					DniID = "DNI_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
+						query = session.createNativeQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
 						query.executeUpdate();
-						session.createSQLQuery("commit").executeUpdate();
+						session.createNativeQuery("commit").executeUpdate();
 						}
 
 
@@ -2639,7 +2633,7 @@ query.executeUpdate();
 				//appConfig.persist(discoverynewitem, DsicoveryNewItem.class);
 				session.saveOrUpdate(discoverynewitem);
 				
-				Query updateNodetrans = session.createSQLQuery("update node_cabinet_transactions set sent_to_alm = '1' where trans_id = :param1 and node_pk = :param2");
+				Query updateNodetrans = session.createNativeQuery("update node_cabinet_transactions set sent_to_alm = '1' where trans_id = :param1 and node_pk = :param2");
 				updateNodetrans.setParameter("param1", trans_id);
 				updateNodetrans.setParameter("param2", node_pk);
 				updateNodetrans.executeUpdate();
@@ -2650,10 +2644,10 @@ query.executeUpdate();
 				Object [] arrayList=  TransferAntennaToAnotherNodeList.get(i);
 				//DniID = "DNI_" + year + "_" +appConfig.getSequenceNbr(7);
 				synchronized (this) {						
-					DniID = "DNI_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
-						query = session.createSQLQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
+					DniID = "DNI_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
+						query = session.createNativeQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
 						query.executeUpdate();
-						session.createSQLQuery("commit").executeUpdate();
+						session.createNativeQuery("commit").executeUpdate();
 						}
 
 
@@ -2682,7 +2676,7 @@ query.executeUpdate();
 				//appConfig.persist(discoverynewitem, DsicoveryNewItem.class);
 				session.saveOrUpdate(discoverynewitem);
 				
-				Query updateNodetrans = session.createSQLQuery("update node_antenna_transactions set sent_to_alm = '1' where trans_id = :param1 and node_pk = :param2");
+				Query updateNodetrans = session.createNativeQuery("update node_antenna_transactions set sent_to_alm = '1' where trans_id = :param1 and node_pk = :param2");
 				updateNodetrans.setParameter("param1", trans_id);
 				updateNodetrans.setParameter("param2", node_pk);
 				updateNodetrans.executeUpdate();
@@ -2757,9 +2751,9 @@ query.executeUpdate();
 			
 				
 			
-			q = session.createSQLQuery(getReplaceBoards);
-			q2 = session.createSQLQuery(getReplaceCabinet);
-			q3  = session.createSQLQuery(getReplaceAntenna);
+			q = session.createNativeQuery(getReplaceBoards);
+			q2 = session.createNativeQuery(getReplaceCabinet);
+			q3  = session.createNativeQuery(getReplaceAntenna);
 		
 			ReplaceBoardsList = q.list();
 			ReplaceCabinetList = q2.list();
@@ -2773,10 +2767,10 @@ query.executeUpdate();
 			//dnid = "DND_" + year + "_" + appConfig.getSequenceNbr(6);
 			
 			synchronized (this) {						
-				dnid = "DND_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT DISCOVERY_NEW FROM SEQ_TABLE").uniqueResult().toString());	
-					query = session.createSQLQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW = DISCOVERY_NEW + 1 ");
+				dnid = "DND_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DISCOVERY_NEW FROM SEQ_TABLE").uniqueResult().toString());	
+					query = session.createNativeQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW = DISCOVERY_NEW + 1 ");
 					query.executeUpdate();
-					session.createSQLQuery("commit").executeUpdate();
+					session.createNativeQuery("commit").executeUpdate();
 					}
 
 
@@ -2807,10 +2801,10 @@ query.executeUpdate();
 				Object [] arrayList=  ReplaceBoardsList.get(i);
 				//DniID = "DNI_" + year + "_" + appConfig.getSequenceNbr(7);
 				synchronized (this) {						
-					DniID = "DNI_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
-						query = session.createSQLQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
+					DniID = "DNI_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
+						query = session.createNativeQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
 						query.executeUpdate();
-						session.createSQLQuery("commit").executeUpdate();
+						session.createNativeQuery("commit").executeUpdate();
 				}
 				trans_id = arrayList[0].toString();
 				node_pk = arrayList[10].toString();
@@ -2834,7 +2828,7 @@ query.executeUpdate();
 				//appConfig.persist(discoverynewitem, DsicoveryNewItem.class);
 				session.saveOrUpdate(discoverynewitem);
 				
-				Query updateBoardReplacement = session.createSQLQuery("update node_board_transactions set sent_to_alm = '1' where trans_id = :param1 and node_pk = :param2");
+				Query updateBoardReplacement = session.createNativeQuery("update node_board_transactions set sent_to_alm = '1' where trans_id = :param1 and node_pk = :param2");
 				updateBoardReplacement.setParameter("param1", trans_id);
 				updateBoardReplacement.setParameter("param2", node_pk);
 				updateBoardReplacement.executeUpdate();
@@ -2846,10 +2840,10 @@ query.executeUpdate();
 				DiscoveryNewItem discoverynewitem = new DiscoveryNewItem();
 				Object [] arrayList=  ReplaceCabinetList.get(i);
 				synchronized (this) {						
-					DniID = "DNI_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
-						query = session.createSQLQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
+					DniID = "DNI_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
+						query = session.createNativeQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
 						query.executeUpdate();
-						session.createSQLQuery("commit").executeUpdate();
+						session.createNativeQuery("commit").executeUpdate();
 						}
 				trans_id = arrayList[0].toString();
 				node_pk = arrayList[10].toString();
@@ -2874,7 +2868,7 @@ query.executeUpdate();
 				//appConfig.persist(discoverynewitem, DsicoveryNewItem.class);
 				session.saveOrUpdate(discoverynewitem);
 				
-				Query updateCabinetReplacement = session.createSQLQuery("update node_cabinet_transactions set sent_to_alm = '1' where trans_id = :param1 and node_pk = :param2");
+				Query updateCabinetReplacement = session.createNativeQuery("update node_cabinet_transactions set sent_to_alm = '1' where trans_id = :param1 and node_pk = :param2");
 				updateCabinetReplacement.setParameter("param1", trans_id);
 				updateCabinetReplacement.setParameter("param2", node_pk);
 				updateCabinetReplacement.executeUpdate();
@@ -2884,10 +2878,10 @@ query.executeUpdate();
 					DiscoveryNewItem discoverynewitem = new DiscoveryNewItem();
 					Object [] arrayList=  ReplaceAntennaList.get(i);
 					synchronized (this) {						
-						DniID = "DNI_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
-							query = session.createSQLQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
+						DniID = "DNI_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
+							query = session.createNativeQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
 							query.executeUpdate();
-							session.createSQLQuery("commit").executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
 							}
 					trans_id = arrayList[0].toString();
 					node_pk = arrayList[10].toString();
@@ -2912,7 +2906,7 @@ query.executeUpdate();
 					//appConfig.persist(discoverynewitem, DsicoveryNewItem.class);
 					session.saveOrUpdate(discoverynewitem);
 					
-					Query updateAntennaReplacement = session.createSQLQuery("update node_antenna_transactions set sent_to_alm = '1' where trans_id = :param1 and node_pk = :param2");
+					Query updateAntennaReplacement = session.createNativeQuery("update node_antenna_transactions set sent_to_alm = '1' where trans_id = :param1 and node_pk = :param2");
 					updateAntennaReplacement.setParameter("param1", trans_id);
 					updateAntennaReplacement.setParameter("param2", node_pk);
 					updateAntennaReplacement.executeUpdate();
@@ -3048,15 +3042,15 @@ query.executeUpdate();
 					+ " and nodeActiveTrans.SENT_TO_ALM = '0'";*/
 
 			
-			q = session.createSQLQuery(getBoardDisappear);
-			q1 = session.createSQLQuery(getCabinetDisappear);
-			q2 = session.createSQLQuery(getAntennaDisappear);
-			//q3 = session.createSQLQuery(getNodeDisappear);
-			q4 = session.createSQLQuery(getBoardDisappearForTransfer);
-			q5 = session.createSQLQuery(getBoardDisappearForMaintenance);
-			q6 = session.createSQLQuery(getCabinetDisappearForTransfer);
-			q7 = session.createSQLQuery(getCabinetDisappearForMaintenance);
-			q8 = session.createSQLQuery(getAntennaDisappearForTransfer);
+			q = session.createNativeQuery(getBoardDisappear);
+			q1 = session.createNativeQuery(getCabinetDisappear);
+			q2 = session.createNativeQuery(getAntennaDisappear);
+			//q3 = session.createNativeQuery(getNodeDisappear);
+			q4 = session.createNativeQuery(getBoardDisappearForTransfer);
+			q5 = session.createNativeQuery(getBoardDisappearForMaintenance);
+			q6 = session.createNativeQuery(getCabinetDisappearForTransfer);
+			q7 = session.createNativeQuery(getCabinetDisappearForMaintenance);
+			q8 = session.createNativeQuery(getAntennaDisappearForTransfer);
 			
 			boardDisappearList = q.list();
 			cabinetDisappearList = q1.list();
@@ -3079,10 +3073,10 @@ query.executeUpdate();
 			String dnid; DiscoveryNew discoverynew = new DiscoveryNew();
 			//dnid = "DND_" + year + "_" + appConfig.getSequenceNbr(6);
 			synchronized (this) {						
-				dnid = "DND_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT DISCOVERY_NEW FROM SEQ_TABLE").uniqueResult().toString());	
-					query = session.createSQLQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW = DISCOVERY_NEW + 1 ");
+				dnid = "DND_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DISCOVERY_NEW FROM SEQ_TABLE").uniqueResult().toString());	
+					query = session.createNativeQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW = DISCOVERY_NEW + 1 ");
 					query.executeUpdate();
-					session.createSQLQuery("commit").executeUpdate();
+					session.createNativeQuery("commit").executeUpdate();
 					}
 			System.out.println("DNI*********" + dnid);
 			
@@ -3107,10 +3101,10 @@ query.executeUpdate();
 					DiscoveryNewItem discoverynewitem = new DiscoveryNewItem();
 					Object [] arrayList=  boardDisappearList.get(i);
 					synchronized (this) {						
-						DniID = "DNI_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
-							query = session.createSQLQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
+						DniID = "DNI_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
+							query = session.createNativeQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
 							query.executeUpdate();
-							session.createSQLQuery("commit").executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
 							}
 					trans_id = arrayList[0].toString();
 					node_pk = arrayList[6].toString();
@@ -3137,7 +3131,7 @@ query.executeUpdate();
 					//appConfig.persist(discoverynewitem, DsicoveryNewItem.class);
 					session.saveOrUpdate(discoverynewitem);
 					
-					Query updateNodetrans = session.createSQLQuery("update node_board_transactions set sent_to_alm = '1' where trans_id = :param1 and node_pk = :param2");
+					Query updateNodetrans = session.createNativeQuery("update node_board_transactions set sent_to_alm = '1' where trans_id = :param1 and node_pk = :param2");
 					updateNodetrans.setParameter("param1", trans_id);
 					updateNodetrans.setParameter("param2", node_pk);
 					updateNodetrans.executeUpdate();
@@ -3149,10 +3143,10 @@ query.executeUpdate();
 					Object [] arrayList=  cabinetDisappearList.get(i);
 					//DniID = "DNI_" + year + "_" + appConfig.getSequenceNbr(7);
 					synchronized (this) {						
-						DniID = "DNI_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
-							query = session.createSQLQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
+						DniID = "DNI_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
+							query = session.createNativeQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
 							query.executeUpdate();
-							session.createSQLQuery("commit").executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
 							}
 					trans_id = arrayList[0].toString();
 					node_pk = arrayList[6].toString();
@@ -3181,7 +3175,7 @@ query.executeUpdate();
 					//appConfig.persist(discoverynewitem, DsicoveryNewItem.class);
 					session.saveOrUpdate(discoverynewitem);
 					
-					Query updateNodetrans = session.createSQLQuery("update node_cabinet_transactions set sent_to_alm = '1' where trans_id = :param1 and node_pk = :param2");
+					Query updateNodetrans = session.createNativeQuery("update node_cabinet_transactions set sent_to_alm = '1' where trans_id = :param1 and node_pk = :param2");
 					updateNodetrans.setParameter("param1", trans_id);
 					updateNodetrans.setParameter("param2", node_pk);
 					updateNodetrans.executeUpdate();
@@ -3194,10 +3188,10 @@ query.executeUpdate();
 					Object [] arrayList=  antennaDisappearList.get(i);
 					//DniID = "DNI_" + year + "_" + appConfig.getSequenceNbr(7);
 					synchronized (this) {						
-						DniID = "DNI_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
-							query = session.createSQLQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
+						DniID = "DNI_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
+							query = session.createNativeQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
 							query.executeUpdate();
-							session.createSQLQuery("commit").executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
 							}
 					trans_id = arrayList[0].toString();
 					node_pk = arrayList[7].toString();
@@ -3225,7 +3219,7 @@ query.executeUpdate();
 					//appConfig.persist(discoverynewitem, DsicoveryNewItem.class);
 					session.saveOrUpdate(discoverynewitem);
 					
-					Query updateNodetrans = session.createSQLQuery("update node_antenna_transactions set sent_to_alm = '1' where trans_id = :param1 and node_pk = :param2");
+					Query updateNodetrans = session.createNativeQuery("update node_antenna_transactions set sent_to_alm = '1' where trans_id = :param1 and node_pk = :param2");
 					updateNodetrans.setParameter("param1", trans_id);
 					updateNodetrans.setParameter("param2", node_pk);
 					updateNodetrans.executeUpdate();
@@ -3237,10 +3231,10 @@ query.executeUpdate();
 					Object [] arrayList=  boardDisappearForTransferList.get(i);
 					//DniID = "DNI_" + year + "_" + appConfig.getSequenceNbr(7);
 					synchronized (this) {						
-						DniID = "DNI_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
-							query = session.createSQLQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
+						DniID = "DNI_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
+							query = session.createNativeQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
 							query.executeUpdate();
-							session.createSQLQuery("commit").executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
 							}
 					trans_id = arrayList[0].toString();
 					node_pk = arrayList[6].toString();
@@ -3263,7 +3257,7 @@ query.executeUpdate();
 					//appConfig.persist(discoverynewitem, DsicoveryNewItem.class);
 					session.saveOrUpdate(discoverynewitem);
 					
-					Query updateNodetrans = session.createSQLQuery("update node_board_transactions set sent_to_alm = '1' where trans_id = :param1 and node_pk = :param2");
+					Query updateNodetrans = session.createNativeQuery("update node_board_transactions set sent_to_alm = '1' where trans_id = :param1 and node_pk = :param2");
 					updateNodetrans.setParameter("param1", trans_id);
 					updateNodetrans.setParameter("param2", node_pk);
 					updateNodetrans.executeUpdate();
@@ -3275,10 +3269,10 @@ query.executeUpdate();
 					Object [] arrayList=  boardDisappearForMaintenanceList.get(i);
 					//DniID = "DNI_" + year + "_" + appConfig.getSequenceNbr(7);
 					synchronized (this) {						
-						DniID = "DNI_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
-							query = session.createSQLQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
+						DniID = "DNI_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
+							query = session.createNativeQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
 							query.executeUpdate();
-							session.createSQLQuery("commit").executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
 							}
 					trans_id = arrayList[0].toString();
 					node_pk = arrayList[6].toString();
@@ -3301,7 +3295,7 @@ query.executeUpdate();
 					//appConfig.persist(discoverynewitem, DsicoveryNewItem.class);
 					session.saveOrUpdate(discoverynewitem);
 					
-					Query updateNodetrans = session.createSQLQuery("update node_board_transactions set sent_to_alm = '1' where trans_id = :param1 and node_pk = :param2");
+					Query updateNodetrans = session.createNativeQuery("update node_board_transactions set sent_to_alm = '1' where trans_id = :param1 and node_pk = :param2");
 					updateNodetrans.setParameter("param1", trans_id);
 					updateNodetrans.setParameter("param2", node_pk);
 					updateNodetrans.executeUpdate();
@@ -3313,10 +3307,10 @@ query.executeUpdate();
 					Object [] arrayList=  cabinetDisappearForTransferList.get(i);
 					//DniID = "DNI_" + year + "_" + appConfig.getSequenceNbr(7);
 					synchronized (this) {						
-						DniID = "DNI_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
-							query = session.createSQLQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
+						DniID = "DNI_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
+							query = session.createNativeQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
 							query.executeUpdate();
-							session.createSQLQuery("commit").executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
 							}
 					trans_id = arrayList[0].toString();
 					node_pk = arrayList[6].toString();
@@ -3339,7 +3333,7 @@ query.executeUpdate();
 					//appConfig.persist(discoverynewitem, DsicoveryNewItem.class);
 					session.saveOrUpdate(discoverynewitem);
 					
-					Query updateNodetrans = session.createSQLQuery("update node_cabinet_transactions set sent_to_alm = '1' where trans_id = :param1 and node_pk = :param2");
+					Query updateNodetrans = session.createNativeQuery("update node_cabinet_transactions set sent_to_alm = '1' where trans_id = :param1 and node_pk = :param2");
 					updateNodetrans.setParameter("param1", trans_id);
 					updateNodetrans.setParameter("param2", node_pk);
 					updateNodetrans.executeUpdate();
@@ -3351,10 +3345,10 @@ query.executeUpdate();
 					Object [] arrayList=  cabientDisappearForMaintenanceList.get(i);
 					//DniID = "DNI_" + year + "_" + appConfig.getSequenceNbr(7);
 					synchronized (this) {						
-						DniID = "DNI_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
-							query = session.createSQLQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
+						DniID = "DNI_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
+							query = session.createNativeQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
 							query.executeUpdate();
-							session.createSQLQuery("commit").executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
 							}
 					trans_id = arrayList[0].toString();
 					node_pk = arrayList[6].toString();
@@ -3377,7 +3371,7 @@ query.executeUpdate();
 					//appConfig.persist(discoverynewitem, DsicoveryNewItem.class);
 					session.saveOrUpdate(discoverynewitem);
 					
-					Query updateNodetrans = session.createSQLQuery("update node_cabinet_transactions set sent_to_alm = '1' where trans_id = :param1 and node_pk = :param2");
+					Query updateNodetrans = session.createNativeQuery("update node_cabinet_transactions set sent_to_alm = '1' where trans_id = :param1 and node_pk = :param2");
 					updateNodetrans.setParameter("param1", trans_id);
 					updateNodetrans.setParameter("param2", node_pk);
 					updateNodetrans.executeUpdate();
@@ -3389,10 +3383,10 @@ query.executeUpdate();
 					Object [] arrayList=  antennaDisappearForTransferList.get(i);
 					//DniID = "DNI_" + year + "_" + appConfig.getSequenceNbr(7);
 					synchronized (this) {						
-						DniID = "DNI_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
-							query = session.createSQLQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
+						DniID = "DNI_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
+							query = session.createNativeQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
 							query.executeUpdate();
-							session.createSQLQuery("commit").executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
 							}
 					trans_id = arrayList[0].toString();
 					node_pk = arrayList[6].toString();
@@ -3415,7 +3409,7 @@ query.executeUpdate();
 					//appConfig.persist(discoverynewitem, DsicoveryNewItem.class);
 					session.saveOrUpdate(discoverynewitem);
 					
-					Query updateNodetrans = session.createSQLQuery("update node_antenna_transactions set sent_to_alm = '1' where trans_id = :param1 and node_pk = :param2");
+					Query updateNodetrans = session.createNativeQuery("update node_antenna_transactions set sent_to_alm = '1' where trans_id = :param1 and node_pk = :param2");
 					updateNodetrans.setParameter("param1", trans_id);
 					updateNodetrans.setParameter("param2", node_pk);
 					updateNodetrans.executeUpdate();
@@ -3493,9 +3487,9 @@ getAntennaMaintenance = "Select nodeAntenna.FROM_TRANS_ID, nodeAntennaTrans.FROM
 
 
 
-                        q = session.createSQLQuery(getBoardMaintenance);
-			q1 = session.createSQLQuery(getCabinetMaintenance);
-			q2 = session.createSQLQuery(getAntennaMaintenance);
+                        q = session.createNativeQuery(getBoardMaintenance);
+			q1 = session.createNativeQuery(getCabinetMaintenance);
+			q2 = session.createNativeQuery(getAntennaMaintenance);
 			
 			boardMaintenenceList = q.list();
 			cabinetMaintenenceList = q1.list();
@@ -3512,10 +3506,10 @@ getAntennaMaintenance = "Select nodeAntenna.FROM_TRANS_ID, nodeAntennaTrans.FROM
                        String dnid; DiscoveryNew discoverynew = new DiscoveryNew();
 			//dnid = "DND_" + year + "_" + appConfig.getSequenceNbr(6);
 			synchronized (this) {						
-				dnid = "DND_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT DISCOVERY_NEW FROM SEQ_TABLE").uniqueResult().toString());	
-					query = session.createSQLQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW = DISCOVERY_NEW + 1 ");
+				dnid = "DND_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DISCOVERY_NEW FROM SEQ_TABLE").uniqueResult().toString());	
+					query = session.createNativeQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW = DISCOVERY_NEW + 1 ");
 					query.executeUpdate();
-					session.createSQLQuery("commit").executeUpdate();
+					session.createNativeQuery("commit").executeUpdate();
 					}
 			System.out.println("DNI*********" + dnid);
 			
@@ -3545,10 +3539,10 @@ getAntennaMaintenance = "Select nodeAntenna.FROM_TRANS_ID, nodeAntennaTrans.FROM
 					Object [] arrayList=  boardMaintenenceList.get(i);
 					//DniID = "DNI_" + year + "_" + appConfig.getSequenceNbr(7);
 					synchronized (this) {						
-						DniID = "DNI_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
-							query = session.createSQLQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
+						DniID = "DNI_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
+							query = session.createNativeQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
 							query.executeUpdate();
-							session.createSQLQuery("commit").executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
 							}
 
 					trans_id = arrayList[0].toString();
@@ -3572,7 +3566,7 @@ getAntennaMaintenance = "Select nodeAntenna.FROM_TRANS_ID, nodeAntennaTrans.FROM
 					//appConfig.persist(discoverynewitem, DsicoveryNewItem.class);
 					session.saveOrUpdate(discoverynewitem);
 					
-					Query updateNodetrans = session.createSQLQuery("update node_board_transactions set sent_to_alm = '1' where trans_id = :param1 and node_pk = :param2");
+					Query updateNodetrans = session.createNativeQuery("update node_board_transactions set sent_to_alm = '1' where trans_id = :param1 and node_pk = :param2");
 					updateNodetrans.setParameter("param1", trans_id);
 					updateNodetrans.setParameter("param2", node_pk);
 					updateNodetrans.executeUpdate();
@@ -3587,10 +3581,10 @@ getAntennaMaintenance = "Select nodeAntenna.FROM_TRANS_ID, nodeAntennaTrans.FROM
 					Object [] arrayList=  cabinetMaintenenceList.get(i);
 					//DniID = "DNI_" + year + "_" + appConfig.getSequenceNbr(7);
 					synchronized (this) {						
-						DniID = "DNI_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
-							query = session.createSQLQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
+						DniID = "DNI_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
+							query = session.createNativeQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
 							query.executeUpdate();
-							session.createSQLQuery("commit").executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
 							}
 
 					trans_id = arrayList[0].toString();
@@ -3618,7 +3612,7 @@ getAntennaMaintenance = "Select nodeAntenna.FROM_TRANS_ID, nodeAntennaTrans.FROM
 					//appConfig.persist(discoverynewitem, DsicoveryNewItem.class);
 					session.saveOrUpdate(discoverynewitem);
 					
-					Query updateNodetrans = session.createSQLQuery("update node_cabinet_transactions set sent_to_alm = '1' where trans_id = :param1 and node_pk = :param2");
+					Query updateNodetrans = session.createNativeQuery("update node_cabinet_transactions set sent_to_alm = '1' where trans_id = :param1 and node_pk = :param2");
 					updateNodetrans.setParameter("param1", trans_id);
 					updateNodetrans.setParameter("param2", node_pk);
 					updateNodetrans.executeUpdate();
@@ -3634,10 +3628,10 @@ getAntennaMaintenance = "Select nodeAntenna.FROM_TRANS_ID, nodeAntennaTrans.FROM
 					Object [] arrayList=  antennaMaintenenceList.get(i);
 					//DniID = "DNI_" + year + "_" + appConfig.getSequenceNbr(7);
 					synchronized (this) {						
-						DniID = "DNI_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
-							query = session.createSQLQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
+						DniID = "DNI_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DISCOVERY_NEW_ITEM FROM SEQ_TABLE").uniqueResult().toString());	
+							query = session.createNativeQuery("UPDATE SEQ_TABLE SET DISCOVERY_NEW_ITEM = DISCOVERY_NEW_ITEM + 1 ");
 							query.executeUpdate();
-							session.createSQLQuery("commit").executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
 							}
 
 					trans_id = arrayList[0].toString();
@@ -3664,7 +3658,7 @@ getAntennaMaintenance = "Select nodeAntenna.FROM_TRANS_ID, nodeAntennaTrans.FROM
 					//appConfig.persist(discoverynewitem, DsicoveryNewItem.class);
 					session.saveOrUpdate(discoverynewitem);
 					
-					Query updateNodetrans = session.createSQLQuery("update node_antenna_transactions set sent_to_alm = '1' where trans_id = :param1 and node_pk = :param2");
+					Query updateNodetrans = session.createNativeQuery("update node_antenna_transactions set sent_to_alm = '1' where trans_id = :param1 and node_pk = :param2");
 					updateNodetrans.setParameter("param1", trans_id);
 					updateNodetrans.setParameter("param2", node_pk);
 					updateNodetrans.executeUpdate();
@@ -3724,7 +3718,7 @@ getAntennaMaintenance = "Select nodeAntenna.FROM_TRANS_ID, nodeAntennaTrans.FROM
 // APPROVED BY project manager or asset unit
 public void ApprovalProjectandAsset(String trans_Type, String getApproval, String dnStatus, String AssetRegID, String ArCode, String PurchaseOrId, String itmcode, String itmname, String WorkOrder, String DniID, String toSiteID, String supplierID, String supplierName, String towareID, String towareName, String serialnb, float dnRate, String itemModel, String itemPartNb, String toSite, String toSerialNumber, String toSlot, String Site, String fromSlot, String SiteID,String macAddress) {
 	
-	Query getpoItemID = session.createSQLQuery("select PO_ITEM_ID from PURCHASE_ORDER_ITEM where ITEM_CODE = '"+itmcode+"' and PO_ID = '"+PurchaseOrId+"'");
+	Query getpoItemID = session.createNativeQuery("select PO_ITEM_ID from PURCHASE_ORDER_ITEM where ITEM_CODE = '"+itmcode+"' and PO_ID = '"+PurchaseOrId+"'");
 	getpoItemID.executeUpdate();
 	String poItemID = (String) getpoItemID.uniqueResult();
 	
@@ -3736,14 +3730,14 @@ public void ApprovalProjectandAsset(String trans_Type, String getApproval, Strin
 		String AR_Site_ID;
 		//ArCode = "AR_" + year + "_" + appConfig.getSequenceNbr(9);
 		synchronized (this) {						
-			ArCode = "AR_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT ASSET_REGISTRY FROM SEQ_TABLE").uniqueResult().toString());	
-			query = session.createSQLQuery("UPDATE SEQ_TABLE SET ASSET_REGISTRY = ASSET_REGISTRY + 1 ");
+			ArCode = "AR_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT ASSET_REGISTRY FROM SEQ_TABLE").uniqueResult().toString());	
+			query = session.createNativeQuery("UPDATE SEQ_TABLE SET ASSET_REGISTRY = ASSET_REGISTRY + 1 ");
 			query.executeUpdate();
-			session.createSQLQuery("commit").executeUpdate();
-			AR_Site_ID = "ARSITE_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT AR_SITE FROM SEQ_TABLE").uniqueResult().toString());	
-			query = session.createSQLQuery("UPDATE SEQ_TABLE SET AR_SITE = AR_SITE + 1 ");
+			session.createNativeQuery("commit").executeUpdate();
+			AR_Site_ID = "ARSITE_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT AR_SITE FROM SEQ_TABLE").uniqueResult().toString());	
+			query = session.createNativeQuery("UPDATE SEQ_TABLE SET AR_SITE = AR_SITE + 1 ");
 			query.executeUpdate();
-			session.createSQLQuery("commit").executeUpdate();
+			session.createNativeQuery("commit").executeUpdate();
 			}
     	//String AR_Site_ID = "AR_SITE_" + year + "_"  + appConfig.getSequenceNbr(30);
 	
@@ -3754,7 +3748,7 @@ public void ApprovalProjectandAsset(String trans_Type, String getApproval, Strin
 		assetregistry.setArID(ArCode);
 		assetregistry.setAritemCode(itmcode);
 		str = "SELECT item_category, item_catcode FROM Item WHERE item_code = :param1";
-		 query = session.createSQLQuery(str)
+		 query = session.createNativeQuery(str)
 		                    .setParameter("param1", itmcode);
 		result = (Object[]) query.uniqueResult();
         assetregistry.setItemCat(result[0].toString());
@@ -3777,7 +3771,7 @@ public void ApprovalProjectandAsset(String trans_Type, String getApproval, Strin
 
 		// UPDATE AR_ID & AR_SITE_ID IN DISCOVERY_NEW_ITEM TABLE
 		
-		query = session.createSQLQuery("update DISCOVERY_NEW_ITEM set AR_ID = :param1, AR_SITE_ID = :param2 where DNI_ID = :param3");
+		query = session.createNativeQuery("update DISCOVERY_NEW_ITEM set AR_ID = :param1, AR_SITE_ID = :param2 where DNI_ID = :param3");
 		query.setParameter("param1", ArCode);
 		query.setParameter("param2", AR_Site_ID);
 		query.setParameter("param3", DniID);
@@ -3799,7 +3793,7 @@ public void ApprovalProjectandAsset(String trans_Type, String getApproval, Strin
 		
 		// ADD TO AR_NODE TABLE
     	String AR_NodeID;
-        query = session.createSQLQuery("select TO_NODE_ID,TO_NODE_NAME,TO_NODE_TYPE FROM DISCOVER_NEW_ITEM_Node WHERE DNI_ID=:param1");
+        query = session.createNativeQuery("select TO_NODE_ID,TO_NODE_NAME,TO_NODE_TYPE FROM DISCOVER_NEW_ITEM_Node WHERE DNI_ID=:param1");
  		query.setParameter("param1", DniID);
  		query.executeUpdate();
  		List<Object[]> resultList = query.getResultList();
@@ -3808,14 +3802,12 @@ public void ApprovalProjectandAsset(String trans_Type, String getApproval, Strin
  		for (Object[] result : resultList) {
  			if (result[0] != null) {
  		String NodeId= result[0].toString();
- 		String Name= result[1].toString();
- 		String Type= result[2].toString();
-
+ 	
  		
- 			    AR_NodeID = "ARNODE_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT AR_NODE FROM SEQ_TABLE").uniqueResult().toString());	
- 				query = session.createSQLQuery("UPDATE SEQ_TABLE SET AR_NODE = AR_NODE + 1 ");
+ 			    AR_NodeID = "ARNODE_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT AR_NODE FROM SEQ_TABLE").uniqueResult().toString());	
+ 				query = session.createNativeQuery("UPDATE SEQ_TABLE SET AR_NODE = AR_NODE + 1 ");
  				query.executeUpdate();
- 				session.createSQLQuery("commit").executeUpdate();
+ 				session.createNativeQuery("commit").executeUpdate();
  			
      		
      	ArNode assetRegNode = new ArNode();
@@ -3835,10 +3827,10 @@ public void ApprovalProjectandAsset(String trans_Type, String getApproval, Strin
     	String AR_SerialNum_ID;
 		if(!StringUtils.equalsIgnoreCase(serialnb, "0") ||  !StringUtils.equalsIgnoreCase(macAddress, "0")) {
 			synchronized (this) {						
-				AR_SerialNum_ID = "ARSNUM_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT AR_SERIALNO FROM SEQ_TABLE").uniqueResult().toString());	
-				query = session.createSQLQuery("UPDATE SEQ_TABLE SET AR_SERIALNO = AR_SERIALNO + 1 ");
+				AR_SerialNum_ID = "ARSNUM_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT AR_SERIALNO FROM SEQ_TABLE").uniqueResult().toString());	
+				query = session.createNativeQuery("UPDATE SEQ_TABLE SET AR_SERIALNO = AR_SERIALNO + 1 ");
 				query.executeUpdate();
-				session.createSQLQuery("commit").executeUpdate();
+				session.createNativeQuery("commit").executeUpdate();
 				}
 			//String AR_SerialNum_ID = "ARSNUM_" + year + "_" + appConfig.getSequenceNbr(31);
 		
@@ -3862,10 +3854,10 @@ public void ApprovalProjectandAsset(String trans_Type, String getApproval, Strin
 		if(!StringUtils.equalsIgnoreCase(itemmodel, ""))
 		{
 			synchronized (this) {						
-				AR_model_partNum = "ARMP_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT AR_MODEL_PARTNO FROM SEQ_TABLE").uniqueResult().toString());	
-				query = session.createSQLQuery("UPDATE SEQ_TABLE SET AR_MODEL_PARTNO = AR_MODEL_PARTNO + 1 ");
+				AR_model_partNum = "ARMP_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT AR_MODEL_PARTNO FROM SEQ_TABLE").uniqueResult().toString());	
+				query = session.createNativeQuery("UPDATE SEQ_TABLE SET AR_MODEL_PARTNO = AR_MODEL_PARTNO + 1 ");
 				query.executeUpdate();
-				session.createSQLQuery("commit").executeUpdate();
+				session.createNativeQuery("commit").executeUpdate();
 				}
 			//String AR_model_partNum = "itmId_" + year + "_" +  appConfig.getSequenceNbr(26);
 			
@@ -3888,12 +3880,12 @@ public void ApprovalProjectandAsset(String trans_Type, String getApproval, Strin
 if (AssetRegID != null) {
 	ArCode = AssetRegID;
 	
-	query = session.createSQLQuery("update ASSET_REGISTRY SET ITEM_CODE = '"+itmcode+"',LAST_MODIFIED_DATE = sysdate,ITEM_NAME = '"+itmname+"',PO_ID = '"+PurchaseOrId+"',"
+	query = session.createNativeQuery("update ASSET_REGISTRY SET ITEM_CODE = '"+itmcode+"',LAST_MODIFIED_DATE = sysdate,ITEM_NAME = '"+itmname+"',PO_ID = '"+PurchaseOrId+"',"
 			+ "SUPPLIER_ID = '"+supplierID+"', SUPPLIER_NAME = '"+supplierName+"',ITEM_MODEL = '"+itemModel+"',ITEM_PART_NUMBER = '"+itemPartNb+"',ITEM_SN = '"+toSerialNumber+"', PO_ITEM_ID = '"+poItemID+"' WHERE AR_ID = :param1 ");
 	query.setParameter("param1", ArCode);
 	query.executeUpdate();
 	
-	query = session.createSQLQuery("update DISCOVERY_NEW_ITEM set AR_ID = :param1 where DNI_ID = :param2");
+	query = session.createNativeQuery("update DISCOVERY_NEW_ITEM set AR_ID = :param1 where DNI_ID = :param2");
 	query.setParameter("param1", ArCode);
 	query.setParameter("param2", DniID);
 	query.executeUpdate();
@@ -3909,15 +3901,15 @@ if (AssetRegID != null) {
 	if(ARModelPartNum == null)
 	{
 		synchronized (this) {						
-			ARModelPartNum = "ARMP_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT AR_MODEL_PARTNO FROM SEQ_TABLE").uniqueResult().toString());	
-			query = session.createSQLQuery("UPDATE SEQ_TABLE SET AR_MODEL_PARTNO = AR_MODEL_PARTNO + 1 ");
+			ARModelPartNum = "ARMP_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT AR_MODEL_PARTNO FROM SEQ_TABLE").uniqueResult().toString());	
+			query = session.createNativeQuery("UPDATE SEQ_TABLE SET AR_MODEL_PARTNO = AR_MODEL_PARTNO + 1 ");
 			query.executeUpdate();
-			session.createSQLQuery("commit").executeUpdate();
+			session.createNativeQuery("commit").executeUpdate();
 			}
 		 //ARModelPartNum = "itmId_" + year + "_" +  appConfig.getSequenceNbr(26);
 	}
 	
-	query = session.createSQLQuery("update AR_MODEL_PARTNUMBER SET ITM_ID = '"+ARModelPartNum+"',ITEM_PART_NUMBER = '"+itemPartNb+"',QUANTITY = 1,ITEM_MODEL = '"+itemModel+"',ITEM_CODE = '"+itmcode+"',"
+	query = session.createNativeQuery("update AR_MODEL_PARTNUMBER SET ITM_ID = '"+ARModelPartNum+"',ITEM_PART_NUMBER = '"+itemPartNb+"',QUANTITY = 1,ITEM_MODEL = '"+itemModel+"',ITEM_CODE = '"+itmcode+"',"
 			+ "PRIMARY = '1' WHERE AR_ID = :param1 ");
 	query.setParameter("param1", ArCode);
 	query.executeUpdate();
@@ -3934,15 +3926,15 @@ if (AssetRegID != null) {
 	if(AR_SiteID == null)
 	{
 		synchronized (this) {						
-			AR_SiteID = "ARSITE_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT AR_SITE FROM SEQ_TABLE").uniqueResult().toString());	
-			query = session.createSQLQuery("UPDATE SEQ_TABLE SET AR_SITE = AR_SITE + 1 ");
+			AR_SiteID = "ARSITE_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT AR_SITE FROM SEQ_TABLE").uniqueResult().toString());	
+			query = session.createNativeQuery("UPDATE SEQ_TABLE SET AR_SITE = AR_SITE + 1 ");
 			query.executeUpdate();
-			session.createSQLQuery("commit").executeUpdate();
+			session.createNativeQuery("commit").executeUpdate();
 			}
 		//AR_SiteID = "AR_SITE_" + year + "_"  + appConfig.getSequenceNbr(30);
 	}
 	
-	query = session.createSQLQuery("update AR_SITE SET ARSITE_ID = '"+AR_SiteID+"',SITE_ID = '"+toSiteID+"',SITE_NAME = '"+towareName+"',WARE_ID = '"+towareID+"'"
+	query = session.createNativeQuery("update AR_SITE SET ARSITE_ID = '"+AR_SiteID+"',SITE_ID = '"+toSiteID+"',SITE_NAME = '"+towareName+"',WARE_ID = '"+towareID+"'"
 			+ " WHERE AR_ID = :param1 ");
 	query.setParameter("param1", ArCode);
 	query.executeUpdate();
@@ -3958,7 +3950,7 @@ if (AssetRegID != null) {
 	query.executeUpdate();
 	
 	String AR_NodeID;
-    query = session.createSQLQuery("select TO_NODE_ID,TO_NODE_NAME,TO_NODE_TYPE FROM DISCOVER_NEW_ITEM_Node WHERE DNI_ID=:param1");
+    query = session.createNativeQuery("select TO_NODE_ID,TO_NODE_NAME,TO_NODE_TYPE FROM DISCOVER_NEW_ITEM_Node WHERE DNI_ID=:param1");
 		query.setParameter("param1", DniID);
 		query.executeUpdate();
 		List<Object[]> resultList = query.getResultList();
@@ -3971,10 +3963,10 @@ if (AssetRegID != null) {
 		System.out.println(result);
 
 		
-			    AR_NodeID = "ARNODE_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT AR_NODE FROM SEQ_TABLE").uniqueResult().toString());	
-				query = session.createSQLQuery("UPDATE SEQ_TABLE SET AR_NODE = AR_NODE + 1 ");
+			    AR_NodeID = "ARNODE_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT AR_NODE FROM SEQ_TABLE").uniqueResult().toString());	
+				query = session.createNativeQuery("UPDATE SEQ_TABLE SET AR_NODE = AR_NODE + 1 ");
 				query.executeUpdate();
-				session.createSQLQuery("commit").executeUpdate();
+				session.createNativeQuery("commit").executeUpdate();
 			
  		
  	ArNode assetRegNode = new ArNode();
@@ -3998,15 +3990,15 @@ if (AssetRegID != null) {
 	
 	if(AR_SerialID == null) {
 		synchronized (this) {						
-			AR_SerialID = "ARSNUM_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT AR_SERIALNO FROM SEQ_TABLE").uniqueResult().toString());	
-			query = session.createSQLQuery("UPDATE SEQ_TABLE SET AR_SERIALNO = AR_SERIALNO + 1 ");
+			AR_SerialID = "ARSNUM_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT AR_SERIALNO FROM SEQ_TABLE").uniqueResult().toString());	
+			query = session.createNativeQuery("UPDATE SEQ_TABLE SET AR_SERIALNO = AR_SERIALNO + 1 ");
 			query.executeUpdate();
-			session.createSQLQuery("commit").executeUpdate();
+			session.createNativeQuery("commit").executeUpdate();
 			}
 		 //AR_SerialID = "ARSNUM_" + year + "_" + appConfig.getSequenceNbr(31);
 	}
 	
-	query = session.createSQLQuery("update AR_SERIAL_NUMBER SET SERIAL_ID = '"+AR_SerialID+"',SERIAL_NUMBER = '"+toSerialNumber+"',MODEL = '"+itemModel+"',PART_NUMBER = '"+itemPartNb+"', SITE = '"+toSite+"',POSITION = '"+toSlot+"' "
+	query = session.createNativeQuery("update AR_SERIAL_NUMBER SET SERIAL_ID = '"+AR_SerialID+"',SERIAL_NUMBER = '"+toSerialNumber+"',MODEL = '"+itemModel+"',PART_NUMBER = '"+itemPartNb+"', SITE = '"+toSite+"',POSITION = '"+toSlot+"' "
 			+ " WHERE AR_ID = :param1 ");
 	query.setParameter("param1", ArCode);
 	query.executeUpdate();
@@ -4024,7 +4016,7 @@ public void ApprovalFinance(String trans_Type, String getApproval, String dnStat
 	
 
 
-	Query getpoItemID = session.createSQLQuery("select PO_ITEM_ID from PURCHASE_ORDER_ITEM where ITEM_CODE = '"+itmcode+"' and PO_ID = '"+PurchaseOrId+"'");
+	Query getpoItemID = session.createNativeQuery("select PO_ITEM_ID from PURCHASE_ORDER_ITEM where ITEM_CODE = '"+itmcode+"' and PO_ID = '"+PurchaseOrId+"'");
 	getpoItemID.executeUpdate();
 	String poItemID = (String) getpoItemID.uniqueResult();
 
@@ -4032,8 +4024,8 @@ public void ApprovalFinance(String trans_Type, String getApproval, String dnStat
 	query = session.createQuery(
 			"Select t.TOTALQTY as totalqty, t.cipID as cipID from CapitalInProgress t where t.PoId =:param1 and t.cipitemCode =:param2");
 
-	query.setString("param1", PurchaseOrId);
-	query.setString("param2", itmcode);
+	query.setParameter("param1", PurchaseOrId);
+	query.setParameter("param2", itmcode);
 
 	List result = query.list();
 
@@ -4063,10 +4055,10 @@ public void ApprovalFinance(String trans_Type, String getApproval, String dnStat
 			else {
 
 				 Query q5 = session.createQuery("update CapitalInProgress c set c.TOTALQTY =:param1 where c.cipID =:param2"); 
-				 q5.setFloat("param1", updatedQty); 
+				 q5.setParameter("param1", updatedQty); 
 				 q5.setParameter("param2", fields[1]); 
 				 q5.executeUpdate();
-				 query = session.createSQLQuery("commit");
+				 query = session.createNativeQuery("commit");
 				 query.executeUpdate(); 
 
 			}
@@ -4075,14 +4067,14 @@ public void ApprovalFinance(String trans_Type, String getApproval, String dnStat
 
 			//FarCode = "FAR_" + year + "_" + appConfig.getSequenceNbr(10);
 			synchronized (this) {						
-				FarCode = "FAR_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT FIXED_ASSET_REGISTRY FROM SEQ_TABLE").uniqueResult().toString());	
-				query = session.createSQLQuery("UPDATE SEQ_TABLE SET FIXED_ASSET_REGISTRY = FIXED_ASSET_REGISTRY + 1 ");
+				FarCode = "FAR_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT FIXED_ASSET_REGISTRY FROM SEQ_TABLE").uniqueResult().toString());	
+				query = session.createNativeQuery("UPDATE SEQ_TABLE SET FIXED_ASSET_REGISTRY = FIXED_ASSET_REGISTRY + 1 ");
 				query.executeUpdate();
-				session.createSQLQuery("commit").executeUpdate();
+				session.createNativeQuery("commit").executeUpdate();
 				}
 			float initialCost = dnRate;
 			
-			query = session.createSQLQuery("select USEFULL_LIFE_MONTHS from ITEM where ITEM_CODE = '"+itmcode+"'");
+			query = session.createNativeQuery("select USEFULL_LIFE_MONTHS from ITEM where ITEM_CODE = '"+itmcode+"'");
 			query.executeUpdate();
 			String item_Usefull_LifeMonths = (String) query.uniqueResult();
 			float useful_life_month = 0;
@@ -4096,10 +4088,10 @@ public void ApprovalFinance(String trans_Type, String getApproval, String dnStat
 
 			String FarSiteID;
 			synchronized (this) {						
-				FarSiteID = "FARSITE_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT FAR_SITE FROM SEQ_TABLE").uniqueResult().toString());	
-				query = session.createSQLQuery("UPDATE SEQ_TABLE SET FAR_SITE = FAR_SITE + 1 ");
+				FarSiteID = "FARSITE_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT FAR_SITE FROM SEQ_TABLE").uniqueResult().toString());	
+				query = session.createNativeQuery("UPDATE SEQ_TABLE SET FAR_SITE = FAR_SITE + 1 ");
 				query.executeUpdate();
-				session.createSQLQuery("commit").executeUpdate();
+				session.createNativeQuery("commit").executeUpdate();
 				}
 			
 			
@@ -4109,7 +4101,7 @@ public void ApprovalFinance(String trans_Type, String getApproval, String dnStat
 			FixedAssetReg.setARID(AssetRegID);
 			FixedAssetReg.setFarID(FarCode);     
 			FixedAssetReg.setFaritemCode(itmcode);
-			query = session.createSQLQuery("SELECT item_category, item_catcode FROM Item WHERE item_code = :param1")
+			query = session.createNativeQuery("SELECT item_category, item_catcode FROM Item WHERE item_code = :param1")
                     .setParameter("param1", itmcode);
 		    Object[] res = (Object[]) query.uniqueResult();
             FixedAssetReg.setItemCat(res[0].toString());
@@ -4138,7 +4130,7 @@ public void ApprovalFinance(String trans_Type, String getApproval, String dnStat
 			
 			
 			
-			query = session.createSQLQuery("update DISCOVERY_NEW_ITEM set FAR_ID = :param1,  FR_SITE_ID = :param2  where DNI_ID = :param3");
+			query = session.createNativeQuery("update DISCOVERY_NEW_ITEM set FAR_ID = :param1,  FR_SITE_ID = :param2  where DNI_ID = :param3");
 			query.setParameter("param1", FarCode);
 			query.setParameter("param2", FarSiteID);
 			query.setParameter("param3", DniID);
@@ -4149,7 +4141,7 @@ public void ApprovalFinance(String trans_Type, String getApproval, String dnStat
 			// ADD TO FAR NODE TABLE
 
 			
-            query = session.createSQLQuery("select TO_NODE_ID,TO_NODE_NAME,TO_NODE_TYPE FROM DISCOVER_NEW_ITEM_Node WHERE DNI_ID=:param1");
+            query = session.createNativeQuery("select TO_NODE_ID,TO_NODE_NAME,TO_NODE_TYPE FROM DISCOVER_NEW_ITEM_Node WHERE DNI_ID=:param1");
 			query.setParameter("param1", DniID);
 			query.executeUpdate();
 			List<Object[]> resultNList = query.getResultList();
@@ -4162,10 +4154,10 @@ public void ApprovalFinance(String trans_Type, String getApproval, String dnStat
 	for (Object[] resultN : resultNList) {
 		
 		if (resultN[0] != null) {
-	FAR_NodeID = "FARNODE_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT FAR_NODE FROM SEQ_TABLE").uniqueResult().toString());	
-	query = session.createSQLQuery("UPDATE SEQ_TABLE SET FAR_NODE = FAR_NODE + 1 ");
+	FAR_NodeID = "FARNODE_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT FAR_NODE FROM SEQ_TABLE").uniqueResult().toString());	
+	query = session.createNativeQuery("UPDATE SEQ_TABLE SET FAR_NODE = FAR_NODE + 1 ");
 	query.executeUpdate();
-	session.createSQLQuery("commit").executeUpdate();
+	session.createNativeQuery("commit").executeUpdate();
 	
 
 FarNode FixedAssetRegNode = new FarNode();
@@ -4188,10 +4180,10 @@ session.saveOrUpdate(FixedAssetRegNode);
 			{
 			String FAR_model_partNum;
 			synchronized (this) {						
-				FAR_model_partNum = "FARMP_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT FAR_MODEL_PARTNO FROM SEQ_TABLE").uniqueResult().toString());	
-				query = session.createSQLQuery("UPDATE SEQ_TABLE SET FAR_MODEL_PARTNO = FAR_MODEL_PARTNO + 1 ");
+				FAR_model_partNum = "FARMP_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT FAR_MODEL_PARTNO FROM SEQ_TABLE").uniqueResult().toString());	
+				query = session.createNativeQuery("UPDATE SEQ_TABLE SET FAR_MODEL_PARTNO = FAR_MODEL_PARTNO + 1 ");
 				query.executeUpdate();
-				session.createSQLQuery("commit").executeUpdate();
+				session.createNativeQuery("commit").executeUpdate();
 				}
 			
 			FarPartNumber farPartNumber = new FarPartNumber();
@@ -4214,10 +4206,10 @@ session.saveOrUpdate(FixedAssetRegNode);
 			if(!StringUtils.equalsIgnoreCase(serialnb, "0") || (!StringUtils.equalsIgnoreCase(MacAddress, "0")) ) {
 			String FAR_SerialNum_ID;
 			synchronized (this) {						
-				FAR_SerialNum_ID = "FARSNUM_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT FAR_SERIALNO FROM SEQ_TABLE").uniqueResult().toString());	
-				query = session.createSQLQuery("UPDATE SEQ_TABLE SET FAR_SERIALNO = FAR_SERIALNO + 1 ");
+				FAR_SerialNum_ID = "FARSNUM_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT FAR_SERIALNO FROM SEQ_TABLE").uniqueResult().toString());	
+				query = session.createNativeQuery("UPDATE SEQ_TABLE SET FAR_SERIALNO = FAR_SERIALNO + 1 ");
 				query.executeUpdate();
-				session.createSQLQuery("commit").executeUpdate();
+				session.createNativeQuery("commit").executeUpdate();
 				}
 			FarSerialNumber fixedAssetRegSerialNumber = new FarSerialNumber();
 			
@@ -4263,7 +4255,7 @@ session.saveOrUpdate(FixedAssetRegNode);
 	query = session.createQuery(getPoStatus);
 	for (Object param : params) {
 		i = params.indexOf(param) + 1;
-		query.setString("param_" + i, param.toString());
+		query.setParameter("param_" + i, param.toString());
 	}
 	if (query.uniqueResult() != null) {poStat = query.uniqueResult().toString();}
 	params.clear();
@@ -4276,7 +4268,7 @@ session.saveOrUpdate(FixedAssetRegNode);
 		query = session.createQuery(getAllGRs);
 		for (Object param : params) {
 			i = params.indexOf(param) + 1;
-			query.setString("param_" + i, param.toString());
+			query.setParameter("param_" + i, param.toString());
 		}
 		if (query.uniqueResult() != null) {allGoodsRec = query.uniqueResult().toString();}
 		params.clear();
@@ -4289,7 +4281,7 @@ session.saveOrUpdate(FixedAssetRegNode);
 		query = session.createQuery(getAllGrsApproved);
 		for (Object param : params) {
 			i = params.indexOf(param) + 1;
-			query.setString("param_" + i, param.toString());
+			query.setParameter("param_" + i, param.toString());
 		}
 		if (query.uniqueResult() != null) {allGRsApproved = query.uniqueResult().toString();}
 		params.clear();
@@ -4327,7 +4319,7 @@ session.saveOrUpdate(FixedAssetRegNode);
 						query = session.createQuery(getItemsInFAR);
 						for (Object param : params) {
 							i = params.indexOf(param) + 1;
-							query.setString("param_" + i, param.toString());
+							query.setParameter("param_" + i, param.toString());
 						}
 						if (query.uniqueResult() != null) {itemInFAR = query.uniqueResult().toString();}
 						params.clear();
@@ -4429,7 +4421,7 @@ String ARid=null;
 		
 		{
 				
-			query = session.createSQLQuery("update DISCOVERY_NEW_ITEM set AR_ID = :param1 where DNI_ID = :param2");
+			query = session.createNativeQuery("update DISCOVERY_NEW_ITEM set AR_ID = :param1 where DNI_ID = :param2");
 			query.setParameter("param1", ARid);
 			query.setParameter("param2", DniID);
 			query.executeUpdate();
@@ -4451,10 +4443,10 @@ String ARid=null;
 					}
 				else {
 					synchronized (this) {						
-						arserialID = "ARSNUM_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT AR_SERIALNO FROM SEQ_TABLE").uniqueResult().toString());	
-						query = session.createSQLQuery("UPDATE SEQ_TABLE SET AR_SERIALNO = AR_SERIALNO + 1 ");
+						arserialID = "ARSNUM_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT AR_SERIALNO FROM SEQ_TABLE").uniqueResult().toString());	
+						query = session.createNativeQuery("UPDATE SEQ_TABLE SET AR_SERIALNO = AR_SERIALNO + 1 ");
 						query.executeUpdate();
-						session.createSQLQuery("commit").executeUpdate();
+						session.createNativeQuery("commit").executeUpdate();
 						}
 					// arserialID="ARSNUM_" + year + "_" + appConfig.getSequenceNbr(31); 
 				}
@@ -4481,7 +4473,7 @@ String ARid=null;
 					query.executeUpdate();
 					
 					String AR_NodeID;
-				    query = session.createSQLQuery("select TO_NODE_ID,TO_NODE_NAME,TO_NODE_TYPE FROM DISCOVER_NEW_ITEM_Node WHERE DNI_ID=:param1");
+				    query = session.createNativeQuery("select TO_NODE_ID,TO_NODE_NAME,TO_NODE_TYPE FROM DISCOVER_NEW_ITEM_Node WHERE DNI_ID=:param1");
 						query.setParameter("param1", DniID);
 						query.executeUpdate();
 						List<Object[]> resultList = query.getResultList();
@@ -4489,15 +4481,12 @@ String ARid=null;
 						for (Object[] result : resultList) {
 							if (result[0] != null) {
 						String NodeId= result[0].toString();
-						String Name= result[1].toString();
-						String Type= result[2].toString();
-						System.out.println(result);
-
 						
-							    AR_NodeID = "ARNODE_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT AR_NODE FROM SEQ_TABLE").uniqueResult().toString());	
-								query = session.createSQLQuery("UPDATE SEQ_TABLE SET AR_NODE = AR_NODE + 1 ");
+						
+							    AR_NodeID = "ARNODE_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT AR_NODE FROM SEQ_TABLE").uniqueResult().toString());	
+								query = session.createNativeQuery("UPDATE SEQ_TABLE SET AR_NODE = AR_NODE + 1 ");
 								query.executeUpdate();
-								session.createSQLQuery("commit").executeUpdate();
+								session.createNativeQuery("commit").executeUpdate();
 							
 				 		
 				 	ArNode assetRegNode = new ArNode();
@@ -4516,7 +4505,7 @@ String ARid=null;
 			
 		
 			
-			Query query = session.createSQLQuery("update DISCOVERY_NEW_ITEM set FAR_ID = :param1 where DNI_ID = :param2");
+			query = session.createNativeQuery("update DISCOVERY_NEW_ITEM set FAR_ID = :param1 where DNI_ID = :param2");
 			query.setParameter("param1", FAR);
 			query.setParameter("param2", DniID);
 			query.executeUpdate();
@@ -4541,10 +4530,10 @@ String ARid=null;
 			else {
 			 //farserialID="FARSNUM_" + year + "_" + appConfig.getSequenceNbr(32); 
 			 synchronized (this) {						
-				 farserialID = "FARSNUM_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT FAR_SERIALNO FROM SEQ_TABLE").uniqueResult().toString());	
-					query = session.createSQLQuery("UPDATE SEQ_TABLE SET FAR_SERIALNO = FAR_SERIALNO + 1 ");
+				 farserialID = "FARSNUM_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT FAR_SERIALNO FROM SEQ_TABLE").uniqueResult().toString());	
+					query = session.createNativeQuery("UPDATE SEQ_TABLE SET FAR_SERIALNO = FAR_SERIALNO + 1 ");
 					query.executeUpdate();
-					session.createSQLQuery("commit").executeUpdate();
+					session.createNativeQuery("commit").executeUpdate();
 					}
 			}
 
@@ -4579,10 +4568,10 @@ String ARid=null;
 			else {
 			 //FAR_NodeID = "FARNODE_" + year + "_" + appConfig.getSequenceNbr(27);
 			 synchronized (this) {						
-				 FAR_NodeID = "FARNODE_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT FAR_NODE FROM SEQ_TABLE").uniqueResult().toString());	
-					query = session.createSQLQuery("UPDATE SEQ_TABLE SET FAR_NODE = FAR_NODE + 1 ");
+				 FAR_NodeID = "FARNODE_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT FAR_NODE FROM SEQ_TABLE").uniqueResult().toString());	
+					query = session.createNativeQuery("UPDATE SEQ_TABLE SET FAR_NODE = FAR_NODE + 1 ");
 					query.executeUpdate();
-					session.createSQLQuery("commit").executeUpdate();
+					session.createNativeQuery("commit").executeUpdate();
 					}
 			}
 
@@ -4609,7 +4598,7 @@ String ARid=null;
 		{
 			
 		//Update AR_SERIAL_NUMBER
-		Query query = session.createSQLQuery("update AR_SERIAL_NUMBER set  POSITION = :param3, SITE = :param4 where  "
+		query = session.createNativeQuery("update AR_SERIAL_NUMBER set  POSITION = :param3, SITE = :param4 where  "
 		+ "SERIAL_NUMBER = :param6 and POSITION = :param7 and SITE = :param8");
 		query.setParameter("param3", toSlot);
 		query.setParameter("param4", toSite);
@@ -4620,14 +4609,14 @@ String ARid=null;
 
 		//Update In AR_SITE
 		
-		query = session.createSQLQuery("update AR_SITE SET SITE_ID = '"+toSiteID+"',SITE_NAME = '"+towareName+"',WARE_ID = '"+towareID+"'"
+		query = session.createNativeQuery("update AR_SITE SET SITE_ID = '"+toSiteID+"',SITE_NAME = '"+towareName+"',WARE_ID = '"+towareID+"'"
 				+ " WHERE AR_ID = :param1 ");
 		query.setParameter("param1", ARid);
 		query.executeUpdate();
 		
 
 		//Update FAR_SERIAL_NUMBER
-		query = session.createSQLQuery("update FAR_SERIAL_NUMBER set POSITION = :param3, SITE = :param4 where  "
+		query = session.createNativeQuery("update FAR_SERIAL_NUMBER set POSITION = :param3, SITE = :param4 where  "
 		+ "SERIAL_NUMBER = :param6 and POSITION = :param7 and SITE = :param8");
 		query.setParameter("param3", toSlot);
 		query.setParameter("param4", toSite);
@@ -4638,7 +4627,7 @@ String ARid=null;
 			
 		//Update In Far_Site
 
-		query = session.createSQLQuery("update FAR_SITE SET SITE_ID = '"+toSiteID+"',SITE_NAME = '"+towareName+"',WARE_ID = '"+towareID+"'"
+		query = session.createNativeQuery("update FAR_SITE SET SITE_ID = '"+toSiteID+"',SITE_NAME = '"+towareName+"',WARE_ID = '"+towareID+"'"
 				+ " WHERE FAR_ID = :param1 ");
 		query.setParameter("param1", FAR);
 		query.executeUpdate();
@@ -4651,7 +4640,7 @@ String ARid=null;
     	query.executeUpdate();
 	
 	String AR_NodeID;
-    query = session.createSQLQuery("select TO_NODE_ID,TO_NODE_NAME,TO_NODE_TYPE FROM DISCOVER_NEW_ITEM_Node WHERE DNI_ID=:param1");
+    query = session.createNativeQuery("select TO_NODE_ID,TO_NODE_NAME,TO_NODE_TYPE FROM DISCOVER_NEW_ITEM_Node WHERE DNI_ID=:param1");
 		query.setParameter("param1", DniID);
 		query.executeUpdate();
 		List<Object[]> resultList = query.getResultList();
@@ -4661,15 +4650,12 @@ String ARid=null;
 			if ( result[0] != null) {
 				
 		String NodeId= result[0].toString();
-		String Name= result[1].toString();
-		String Type= result[2].toString();
-		System.out.println(result);
-
+	
 		
-			    AR_NodeID = "ARNODE_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT AR_NODE FROM SEQ_TABLE").uniqueResult().toString());	
-				query = session.createSQLQuery("UPDATE SEQ_TABLE SET AR_NODE = AR_NODE + 1 ");
+			    AR_NodeID = "ARNODE_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT AR_NODE FROM SEQ_TABLE").uniqueResult().toString());	
+				query = session.createNativeQuery("UPDATE SEQ_TABLE SET AR_NODE = AR_NODE + 1 ");
 				query.executeUpdate();
-				session.createSQLQuery("commit").executeUpdate();
+				session.createNativeQuery("commit").executeUpdate();
 			
  		
  	ArNode assetRegNode = new ArNode();
@@ -4687,10 +4673,10 @@ String ARid=null;
 	
 	//Update FAR_NODE 
 		
-		query = session.createSQLQuery("delete FAR_NODE where FAR_ID = :param1");
+		query = session.createNativeQuery("delete FAR_NODE where FAR_ID = :param1");
 		query.setParameter("param1", FAR);
 		query.executeUpdate();
-		  query = session.createSQLQuery("select TO_NODE_ID,TO_NODE_NAME,TO_NODE_TYPE FROM DISCOVER_NEW_ITEM_Node WHERE DNI_ID=:param1");
+		  query = session.createNativeQuery("select TO_NODE_ID,TO_NODE_NAME,TO_NODE_TYPE FROM DISCOVER_NEW_ITEM_Node WHERE DNI_ID=:param1");
 			query.setParameter("param1", DniID);
 			query.executeUpdate();
 			List<Object[]> resultNList = query.getResultList();
@@ -4703,10 +4689,10 @@ String ARid=null;
 		if (resultN[0] != null) {
 			
 	
-	FAR_NodeID = "FARNODE_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT FAR_NODE FROM SEQ_TABLE").uniqueResult().toString());	
-	query = session.createSQLQuery("UPDATE SEQ_TABLE SET FAR_NODE = FAR_NODE + 1 ");
+	FAR_NodeID = "FARNODE_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT FAR_NODE FROM SEQ_TABLE").uniqueResult().toString());	
+	query = session.createNativeQuery("UPDATE SEQ_TABLE SET FAR_NODE = FAR_NODE + 1 ");
 	query.executeUpdate();
-	session.createSQLQuery("commit").executeUpdate();
+	session.createNativeQuery("commit").executeUpdate();
 	
 
 FarNode FixedAssetRegNode = new FarNode();
@@ -4732,23 +4718,23 @@ session.saveOrUpdate(FixedAssetRegNode);
 
 		{
 		
-			query = session.createSQLQuery("update DISCOVERY_NEW_ITEM set AR_ID = :param1 where DNI_ID = :param2");
+			query = session.createNativeQuery("update DISCOVERY_NEW_ITEM set AR_ID = :param1 where DNI_ID = :param2");
 			query.setParameter("param1", FAR);
 			query.setParameter("param2", DniID);
 			query.executeUpdate();
 		          
-			query = session.createSQLQuery("update ASSET_REGISTRY set AR_STATUS = 'Disappear' where AR_ID =:param1");
+			query = session.createNativeQuery("update ASSET_REGISTRY set AR_STATUS = 'Disappear' where AR_ID =:param1");
 			query.setParameter("param1", FAR);
 			query.executeUpdate();
 
 
-			query = session.createSQLQuery("update DISCOVERY_NEW_ITEM set FAR_ID = :param1 where DNI_ID = :param2");
+			query = session.createNativeQuery("update DISCOVERY_NEW_ITEM set FAR_ID = :param1 where DNI_ID = :param2");
 			query.setParameter("param1", FAR);
 			query.setParameter("param2", DniID);
 			query.executeUpdate();
 		
 
-		    query = session.createSQLQuery("update FIXED_ASSET_REGISTRY set FAR_STATUS ='Disappear' where FAR_ID =:param1");
+		    query = session.createNativeQuery("update FIXED_ASSET_REGISTRY set FAR_STATUS ='Disappear' where FAR_ID =:param1");
 		    query.setParameter("param1", FAR);
 		    query.executeUpdate();
 
@@ -4764,21 +4750,21 @@ session.saveOrUpdate(FixedAssetRegNode);
 		{
 
 		
-			query = session.createSQLQuery("update DISCOVERY_NEW_ITEM set AR_ID = :param1 where DNI_ID = :param2");
+			query = session.createNativeQuery("update DISCOVERY_NEW_ITEM set AR_ID = :param1 where DNI_ID = :param2");
 			query.setParameter("param1", ARid);
 			query.setParameter("param2", DniID);
 			query.executeUpdate();
 							             
-			query = session.createSQLQuery("update ASSET_REGISTRY set AR_STATUS = 'Maintenance' where AR_ID =:param1");
+			query = session.createNativeQuery("update ASSET_REGISTRY set AR_STATUS = 'Maintenance' where AR_ID =:param1");
 			query.setParameter("param1", ARid);
 			query.executeUpdate();
 
-			query = session.createSQLQuery("update DISCOVERY_NEW_ITEM set FAR_ID = :param1 where DNI_ID = :param2");
+			query = session.createNativeQuery("update DISCOVERY_NEW_ITEM set FAR_ID = :param1 where DNI_ID = :param2");
 			query.setParameter("param1", FAR);
 			query.setParameter("param2", DniID);
 			query.executeUpdate();
 		
-			query = session.createSQLQuery("update FIXED_ASSET_REGISTRY set FAR_STATUS ='Maintenance' where FAR_ID =:param1");
+			query = session.createNativeQuery("update FIXED_ASSET_REGISTRY set FAR_STATUS ='Maintenance' where FAR_ID =:param1");
 			query.setParameter("param1", FAR);
 			query.executeUpdate();
 
@@ -4793,25 +4779,25 @@ session.saveOrUpdate(FixedAssetRegNode);
 
 		{
 		
-			query = session.createSQLQuery("update DISCOVERY_NEW_ITEM set AR_ID = :param1 where DNI_ID = :param2");
+			query = session.createNativeQuery("update DISCOVERY_NEW_ITEM set AR_ID = :param1 where DNI_ID = :param2");
 			query.setParameter("param1", ARid);
 			query.setParameter("param2", DniID);
 			query.executeUpdate();
 		
 							             
-			query = session.createSQLQuery("update ASSET_REGISTRY set AR_STATUS = 'Running' where AR_ID =:param1");
+			query = session.createNativeQuery("update ASSET_REGISTRY set AR_STATUS = 'Running' where AR_ID =:param1");
 			query.setParameter("param1", ARid);
 			query.executeUpdate();
 
 		
-			query = session.createSQLQuery("update DISCOVERY_NEW_ITEM set FAR_ID = :param1 where DNI_ID = :param2");
+			query = session.createNativeQuery("update DISCOVERY_NEW_ITEM set FAR_ID = :param1 where DNI_ID = :param2");
 			query.setParameter("param1", FAR);
 			query.setParameter("param2", DniID);
 			query.executeUpdate();
 		
 
 
-			query = session.createSQLQuery("update FIXED_ASSET_REGISTRY set FAR_STATUS ='Running' where FAR_ID =:param1");
+			query = session.createNativeQuery("update FIXED_ASSET_REGISTRY set FAR_STATUS ='Running' where FAR_ID =:param1");
 			query.setParameter("param1", FAR);
 			query.executeUpdate();
 
@@ -4829,60 +4815,60 @@ session.saveOrUpdate(FixedAssetRegNode);
 	
 	
 	//DELETE FROM AR_SITE BOQ
-	query = session.createSQLQuery("delete AR_SITE where AR_ID = :param1");
+	query = session.createNativeQuery("delete AR_SITE where AR_ID = :param1");
 	query.setParameter("param1", ARid);
 	query.executeUpdate();
 
 	//DELETE FROM AR_NODE BOQ
 
-	query = session.createSQLQuery("delete AR_NODE where AR_ID = :param1");
+	query = session.createNativeQuery("delete AR_NODE where AR_ID = :param1");
 	query.setParameter("param1", ARid);
 	query.executeUpdate();
 
 	//DELETE FROM AR_SERIAL_NUMBER
-	query = session.createSQLQuery("delete AR_SERIAL_NUMBER where AR_ID = :param1");
+	query = session.createNativeQuery("delete AR_SERIAL_NUMBER where AR_ID = :param1");
 	query.setParameter("param1", ARid);
 	query.executeUpdate();
 
 	//DELETE FROM AR_MODEL_PARTNUMBER
 
-	query = session.createSQLQuery("delete AR_MODEL_PARTNUMBER where AR_ID = :param1");
+	query = session.createNativeQuery("delete AR_MODEL_PARTNUMBER where AR_ID = :param1");
 	query.setParameter("param1", ARid);
 	query.executeUpdate();
 
 	//DELETE FROM ASSET_REGISTRY
 
-	query = session.createSQLQuery("delete ASSET_REGISTRY where AR_ID = :param1");
+	query = session.createNativeQuery("delete ASSET_REGISTRY where AR_ID = :param1");
 	query.setParameter("param1", ARid);
 	query.executeUpdate();
 
 	//DELETE FROM FAR_SITE BOQ
 
-	query = session.createSQLQuery("delete FAR_SITE where FAR_ID = :param1");
+	query = session.createNativeQuery("delete FAR_SITE where FAR_ID = :param1");
 	query .setParameter("param1", FAR);
 	query .executeUpdate();
 
 	//DELETE FROM FAR_NODE BOQ
 
-	query = session.createSQLQuery("delete FAR_NODE where FAR_ID = :param1");
+	query = session.createNativeQuery("delete FAR_NODE where FAR_ID = :param1");
 	query.setParameter("param1", FAR);
 	query.executeUpdate();
 
 	//DELETE FROM FAR_SERIAL_NUMBER
 
-	query = session.createSQLQuery("delete FAR_SERIAL_NUMBER where FAR_ID = :param1");
+	query = session.createNativeQuery("delete FAR_SERIAL_NUMBER where FAR_ID = :param1");
 	query.setParameter("param1", FAR);
 	query.executeUpdate();
 
 	//DELETE FROM FAR_MODEL_PARTNUMBER
 
-	query = session.createSQLQuery("delete FAR_MODEL_PARTNUMBER where FAR_ID = :param1");
+	query = session.createNativeQuery("delete FAR_MODEL_PARTNUMBER where FAR_ID = :param1");
 	query.setParameter("param1", FAR);
 	query.executeUpdate();
 
 	//DELETE FROM FIXED_ASSET_REGISTRY
 
-	query = session.createSQLQuery("delete FIXED_ASSET_REGISTRY where FAR_ID = :param1");
+	query = session.createNativeQuery("delete FIXED_ASSET_REGISTRY where FAR_ID = :param1");
 	query.setParameter("param1", FAR);
 	query.executeUpdate();
 
@@ -4906,14 +4892,14 @@ if(StringUtils.equalsIgnoreCase(dnStatus, "Approved") && StringUtils.equalsIgnor
 	
 	if(StringUtils.equalsIgnoreCase(toSerialNumber, "0")) {
 		System.out.println("update when serial is 0 for source serial");
-		Query sn1=session.createSQLQuery("UPDATE WORK_ORDER_DESTINATION_SERIAL SET RECONCILED ='1' WHERE EXISTS(SELECT * FROM WORK_ORDER_DESTINATION_SERIAL WHERE ITEM_MODEL = :param1 and ITEM_PART_NUMBER= :param2 and WO_ID = :param3)");
+		Query sn1=session.createNativeQuery("UPDATE WORK_ORDER_DESTINATION_SERIAL SET RECONCILED ='1' WHERE EXISTS(SELECT * FROM WORK_ORDER_DESTINATION_SERIAL WHERE ITEM_MODEL = :param1 and ITEM_PART_NUMBER= :param2 and WO_ID = :param3)");
 		sn1.setParameter("param1",itemModel);
 		sn1.setParameter("param2", itemPartNb);
 		sn1.setParameter("param3","WO_2021_62");
 		sn1.executeUpdate();
 		
 		System.out.println("update when serial is 0 for destination serial");
-		Query sn2=session.createSQLQuery("UPDATE WORK_ORDER_SOURCE_SERIAL SET RECONCILED ='1' WHERE EXISTS(SELECT * FROM WORK_ORDER_SOURCE_SERIAL WHERE ITEM_MODEL = :param1 and ITEM_PART_NUMBER= :param2 and WO_ID = :param3)");
+		Query sn2=session.createNativeQuery("UPDATE WORK_ORDER_SOURCE_SERIAL SET RECONCILED ='1' WHERE EXISTS(SELECT * FROM WORK_ORDER_SOURCE_SERIAL WHERE ITEM_MODEL = :param1 and ITEM_PART_NUMBER= :param2 and WO_ID = :param3)");
 		sn2.setParameter("param1",itemModel);
 		sn2.setParameter("param2", itemPartNb);
 		sn2.setParameter("param3","WO_2021_62");
@@ -4922,21 +4908,21 @@ if(StringUtils.equalsIgnoreCase(dnStatus, "Approved") && StringUtils.equalsIgnor
 	} else if (!StringUtils.equalsIgnoreCase(toSerialNumber, "0")) {
 		System.out.println("update when we have a serial");
 		
-		Query sn1=session.createSQLQuery("SELECT ID FROM WORK_ORDER_SOURCE_SERIAL WHERE SERIAL_NO = :param1");
+		Query sn1=session.createNativeQuery("SELECT ID FROM WORK_ORDER_SOURCE_SERIAL WHERE SERIAL_NO = :param1");
 		sn1.setParameter("param1",toSerialNumber);
 		 String sn1Result = (String) sn1.uniqueResult();
 			System.out.println("sn1Result"+sn1Result);
 
 		 if (sn1Result !=null) {
 			System.out.println("SERIAL IS IN WORK ORDER SOURCE TABLE");
-     		query=session.createSQLQuery("update WORK_ORDER_SOURCE_SERIAL set RECONCILED ='1' where SERIAL_NO = :param1");
+     		query=session.createNativeQuery("update WORK_ORDER_SOURCE_SERIAL set RECONCILED ='1' where SERIAL_NO = :param1");
      		query.setParameter("param1",toSerialNumber);
      		query.executeUpdate();
 			System.out.println("SERIAL IS RECONCILED IN WORK ORDER");
 
 		 } else {
 			 System.out.println("SERIAL IS NOTTTTTTT IN WORK ORDER SOURCE TABLE");
-			 query=session.createSQLQuery("update WORK_ORDER_SOURCE_SERIAL set RECONCILED ='1', SERIAL_NO = :param1 WHERE EXISTS(SELECT * FROM WORK_ORDER_SOURCE_SERIAL WHERE ITEM_CODE = :param2 and ITEM_MODEL = :param3 and ITEM_PART_NUMBER= :param4 and WO_ID = :param5 and SERIAL_NO = '0' and ROWNUM = 1)"); 
+			 query=session.createNativeQuery("update WORK_ORDER_SOURCE_SERIAL set RECONCILED ='1', SERIAL_NO = :param1 WHERE EXISTS(SELECT * FROM WORK_ORDER_SOURCE_SERIAL WHERE ITEM_CODE = :param2 and ITEM_MODEL = :param3 and ITEM_PART_NUMBER= :param4 and WO_ID = :param5 and SERIAL_NO = '0' and ROWNUM = 1)"); 
 			 query.setParameter("param1",toSerialNumber);
 			 query.setParameter("param2",itmcode);
 			 query.setParameter("param3",itemModel);
@@ -4948,21 +4934,21 @@ if(StringUtils.equalsIgnoreCase(dnStatus, "Approved") && StringUtils.equalsIgnor
 				System.out.println("SERIAL IS RECONCILED IN WORK ORDER sourceeeee");
 		 }
 		 
-		 Query sn2=session.createSQLQuery("SELECT ID FROM WORK_ORDER_DESTINATION_SERIAL WHERE SERIAL_NO = :param1");
-			sn2.setParameter("param1",toSerialNumber);
-			 String sn2Result = (String) sn2.setMaxResults(1).uniqueResult();
+		  query=session.createNativeQuery("SELECT ID FROM WORK_ORDER_DESTINATION_SERIAL WHERE SERIAL_NO = :param1");
+		  query.setParameter("param1",toSerialNumber);
+			 String sn2Result = (String) query.setMaxResults(1).uniqueResult();
 				System.out.println("sn1Result"+sn1Result);
 
 			 if (sn2Result !=null) {
 				System.out.println("SERIAL IS IN WORK ORDER DESTINATION TABLE");
-				query=session.createSQLQuery("update WORK_ORDER_DESTINATION_SERIAL set RECONCILED ='1' where SERIAL_NO = :param1");
+				query=session.createNativeQuery("update WORK_ORDER_DESTINATION_SERIAL set RECONCILED ='1' where SERIAL_NO = :param1");
 				query.setParameter("param1",toSerialNumber);
 				query.executeUpdate();
 				System.out.println("SERIAL IS RECONCILED IN WORK ORDER");
 
 			 } else {
 				 System.out.println("SERIAL IS NOTTTTTTT IN WORK ORDER DESTINATION TABLE");
-				 query=session.createSQLQuery("update WORK_ORDER_DESTINATION_SERIAL set RECONCILED ='1', SERIAL_NO = :param1 WHERE EXISTS(SELECT * FROM WORK_ORDER_SOURCE_SERIAL WHERE ITEM_CODE = :param2 and ITEM_MODEL = :param3 and ITEM_PART_NUMBER= :param4 and WO_ID = :param5 and SERIAL_NO = '0' and ROWNUM = 1)"); 
+				 query=session.createNativeQuery("update WORK_ORDER_DESTINATION_SERIAL set RECONCILED ='1', SERIAL_NO = :param1 WHERE EXISTS(SELECT * FROM WORK_ORDER_SOURCE_SERIAL WHERE ITEM_CODE = :param2 and ITEM_MODEL = :param3 and ITEM_PART_NUMBER= :param4 and WO_ID = :param5 and SERIAL_NO = '0' and ROWNUM = 1)"); 
 				 query.setParameter("param1",toSerialNumber);
 				 query.setParameter("param2",itmcode);
 				 query.setParameter("param3",itemModel);
@@ -4986,7 +4972,7 @@ query = session.createQuery(queryString);
 int i;
 for (Object param : params) {
 	i = params.indexOf(param) + 1;
-	query.setString("param_" + i, param.toString());
+	query.setParameter("param_" + i, param.toString());
 }
 
 if(query.uniqueResult() != null)
@@ -5007,7 +4993,7 @@ public  <T> void persistSingleColumn(Session session ,String queryString, List<O
 	query = session.createQuery(queryString);
 	for (Object param : params) {
 		i = params.indexOf(param) + 1;
-		query.setString("param_" + i, param.toString());
+		query.setParameter("param_" + i, param.toString());
 	}
 	query.executeUpdate();
 	//tx.commit();
