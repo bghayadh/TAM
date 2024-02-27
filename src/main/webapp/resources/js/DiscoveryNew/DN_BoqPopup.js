@@ -515,25 +515,42 @@
              	+"<td name='toNode'><input type='text'  value ='null' class='form-control' style='width:160px; display:none;'></td>"
              	+"<td name='fromNode'><input type='text' value ='null' style='width:200px; display:none;'  class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td></tr>";		
 	       
+	       var rowIndex = $("#bisotab tr").length;
 
-		var rowIndex = $("#bisotab tr").length;
+	    
 
+		
                 if (stat == "addRow")
                 {
              $("#bisotab > tbody").append(markup);
              	indexRow = rowIndex -1;
+             $('input[type="checkbox"]', '#bisotab').prop('checked', false);
+            $('input[type="checkbox"]', '#bisotab').eq(indexRow).prop('checked', true);
+            	 $("#bisotab tr").removeClass("ativeRecord")
+    	            $("#bisotab  > tbody").find("tr").eq(indexRow).addClass("ativeRecord");
+	
 			console.log("newIndex: "+indexRow);
            }
            if(stat == "addRowBelow")
            {
              $("#bisotab > tbody tr").eq(rowindx).after(markup);
 			 	var indexRow = rowindx +1;
+			 	  $('input[type="checkbox"]', '#bisotab').prop('checked', false);
+            $('input[type="checkbox"]', '#bisotab').eq(indexRow).prop('checked', true);
+            $("#bisotab tr").removeClass("ativeRecord")
+    	            $("#bisotab  > tbody").find("tr").eq(indexRow).addClass("ativeRecord");
+	
 				console.log("newIndex: "+indexRow);
            }
            if(stat == "addRowAbove")
            {
               $("#bisotab > tbody tr").eq(rowindx).before(markup);
               indexRow = rowindx ;
+              $('input[type="checkbox"]', '#bisotab').prop('checked', false);
+            $('input[type="checkbox"]', '#bisotab').eq(indexRow).prop('checked', true);
+              $("#bisotab tr").removeClass("ativeRecord")
+    	            $("#bisotab  > tbody").find("tr").eq(indexRow).addClass("ativeRecord");
+	
 			console.log("newIndex: "+indexRow);	
            }
 
@@ -2566,4 +2583,4 @@ $("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="item"]').children('in
 
    	});
    	
-   
+
