@@ -852,9 +852,9 @@ function initMap() {
 	$("#ratiosLegendDiv").toggle(); // to open the legend 
 
 	plotRevPopToAssetCharts(topSitesRevToInitList,'topRevToInitAssetChartContainer','Revenue/Asset Ratio (Initial Cost)','#008000','Top 10 Site Depending On Revenue/Asset Ratio (Initial Cost)')
-	plotRevPopToAssetCharts(leastSitesRevToInitList,'leastRevToInitAssetChartContainer','Revenue/Asset Ratio (Initial Cost)','red','Least 10 Site Depending On Revenue/Asset Ratio (Initial Cost)')
+	plotRevPopToAssetCharts(leastSitesRevToInitList,'leastRevToInitAssetChartContainer','Revenue/Asset Ratio (Initial Cost)','red','Least 200 Site Depending On Revenue/Asset Ratio (Initial Cost)')
 	plotRevPopToAssetCharts(topSitesRevToNetList,'topRevToNetAssetChartContainer','Revenue/Asset Ratio (Net Cost)','#008000','Top 10 Site Depending On Revenue/Asset Ratio (Net Cost)')
-	plotRevPopToAssetCharts(leastSitesRevToNetList,'leastRevToNetAssetChartContainer','Revenue/Asset Ratio (Net Cost)','red','Least 10 Site Depending On Revenue/Asset Ratio (Net Cost)')
+	plotRevPopToAssetCharts(leastSitesRevToNetList,'leastRevToNetAssetChartContainer','Revenue/Asset Ratio (Net Cost)','red','Least 200 Site Depending On Revenue/Asset Ratio (Net Cost)')
 	plotRevPopToAssetCharts(topSitesPopulationToInitList,'topPopulationToInitAssetChartContainer','Population/Asset Ratio (Initial Cost)','#008000','Top 10 Site Depending On Population/Asset Ratio (Initial Cost)')
 	plotRevPopToAssetCharts(leastSitesPopulationToInitList,'leastPopulationToInitAssetChartContainer','Population/Asset Ratio (Initial Cost)','red','Least 10 Site Depending On Population/Asset Ratio (Initial Cost)')	 	 
 	plotRevPopToAssetCharts(topSitesPopulationToNetList,'topPopulationToNetAssetChartContainer','Population/Asset Ratio (Net Cost)','#008000','Top 10 Site Depending On Population/Asset Ratio (Net Cost)')
@@ -1152,15 +1152,15 @@ function plotLeastNetCostChart(){
 function createSiteMarkerForRatios(list,map,target,legendCheckboxClass,infoWindow) {	
 	var siteID;	
 	var ratio;
-	var ratioTemp=list[0][1];
+	var ratioTemp=list[0][4];
 	var markersArray;
 	var iconColor;
 		
 	if(list.length!=0){		
 		for(i=0;i<list.length;i++){
-			siteID=list[i][2];				
-			ratio=list[i][1];
-			const pos = new google.maps.LatLng(list[i][4],list[i][3]);
+			siteID=list[i][1];				
+			ratio=list[i][4];
+			const pos = new google.maps.LatLng(list[i][3],list[i][2]);
 
 			// the ratioTemp is compared to ratio in case there is more than one site having a max ratio (same for min)
 			if(target == "TopSitesRevToInit" && i !=0 && ratioTemp!=ratio ) {
@@ -1287,7 +1287,7 @@ function showMarkersOnMap(markersArray,lst,map,checkboxClass,target){
 		//Show top,least,max & min sites on map
 		if(lst.length!=0){		
 			for(var x=0;x<lst.length;x++) {
-				siteID = lst[x][2];
+				siteID = lst[x][1];
 				markersArray[siteID].setMap(map);			
 			}
 		}
@@ -1590,7 +1590,7 @@ function showHideAllSitesForRatios(checkboxClass){
 					
 			if ($(this).is(':checked')){
 				for(var x=0;x<lst.length;x++) {
-					siteID = lst[x][2];
+					siteID = lst[x][1];
 					if(allMarkersArray[siteID].getMap()==null){
 						allMarkersArray[siteID].setMap(map);			
 					}
@@ -1598,7 +1598,7 @@ function showHideAllSitesForRatios(checkboxClass){
 			}
 			else {
 				for(var x=0;x<lst.length;x++) {
-					siteID = lst[x][2];
+					siteID = lst[x][1];
 					allMarkersArray[siteID].setMap(null);								
 				}
 		   }
@@ -1613,7 +1613,7 @@ function plotRevPopToAssetCharts(chartDataArray,chartContainerID,labelText,borde
     
     for (var i = 0; i < chartDataArray.length; i++) {
         siteName.push(chartDataArray[i][0]);
-        revToAssetRatio.push(chartDataArray[i][1]); 
+        revToAssetRatio.push(chartDataArray[i][4]); 
     }
     var ctxLine = document.getElementById(chartContainerID).getContext('2d');
     var myChartLine = new Chart(ctxLine, {

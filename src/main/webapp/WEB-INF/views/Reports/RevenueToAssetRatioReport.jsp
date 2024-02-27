@@ -1607,7 +1607,7 @@ $(document).ready(function() {
 			  const csvContent = 'data:text/csv;charset=utf-8,' + encodeURIComponent(exportArrayGrid);
 			  const downloadLink = document.createElement('a');
 			  downloadLink.setAttribute('href', csvContent);
-			  downloadLink.setAttribute('download', "SiteAssetGridReport");
+			  downloadLink.setAttribute('download', "SiteRevenueToAssetRatioGridReport");
 
 			  document.body.appendChild(downloadLink);
 			  downloadLink.click();

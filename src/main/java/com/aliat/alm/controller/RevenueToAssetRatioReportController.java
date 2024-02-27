@@ -2,8 +2,6 @@ package com.aliat.alm.controller;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -52,7 +50,6 @@ public class RevenueToAssetRatioReportController {
 	@RequestMapping(value = "/RevenueToAssetRatioReport", method = RequestMethod.GET)
 	public String RevenueToAssetRatioReport(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) {
-		ObjectMapper mapper = new ObjectMapper();
 
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			return "redirect:/";
@@ -78,7 +75,7 @@ public class RevenueToAssetRatioReportController {
 							+ "COALESCE(NULLIF(population, 0), 0) as population, " + 
 							"COALESCE(SUM(voiceRevenue),0) as voiceRevenue,COALESCE(SUM(smsRevenue),0) as smsRevenue,COALESCE(SUM(dataRevneue),0) as dataRevneue,COALESCE(SUM(vasRevenue),0) as vasRevenue, " + 
 							"COALESCE(SUM(voiceRevenue)+ SUM(smsRevenue)+ SUM(dataRevneue)+ SUM(vasRevenue),0) as totalRevenue, " + 
-							"COALESCE(SUM(initCost),0) as initCost,COALESCE(SUM(accuDepr),0) as Depr,COALESCE(SUM(netCost),0) as netCost FROM ( " + 
+							"COALESCE(SUM(initCost),0) as initCost,COALESCE(SUM(accuDepr),0) as Depr,COALESCE((COALESCE(SUM(initCost),0) - COALESCE(SUM(accuDepr),0)),0) as netCost FROM ( " + 
 							"SELECT DISTINCT C.SITE_ID AS site,C.WARE_ID as wareID, C.SITE_ID AS siteID, C.WARE_NAME AS siteName , C.LONGITUDE as longitude, " + 
 							"C.LATITUDE as latitude,C.POPULATION AS population, A.INITIALCOST as initCost, A.NETCOST as netCost , A.ACCUMULDEPRECAMNT as accuDepr,A.FAR_ID AS FAR_ID, " + 
 							"0 as voiceRevenue, 0 as smsRevenue, 0 as dataRevneue, 0 as vasRevenue " + 
@@ -283,7 +280,7 @@ public class RevenueToAssetRatioReportController {
 							+ "COALESCE(NULLIF(population, 0), 0) as population, " + 
 							"COALESCE(SUM(voiceRevenue),0) as voiceRevenue,COALESCE(SUM(smsRevenue),0) as smsRevenue,COALESCE(SUM(dataRevneue),0) as dataRevneue,COALESCE(SUM(vasRevenue),0) as vasRevenue, " + 
 							"COALESCE(SUM(voiceRevenue)+ SUM(smsRevenue)+ SUM(dataRevneue)+ SUM(vasRevenue),0) as totalRevenue, " + 
-							"COALESCE(SUM(initCost),0) as initCost,COALESCE(SUM(accuDepr),0) as Depr,COALESCE(SUM(netCost),0) as netCost  FROM ( " + 
+							"COALESCE(SUM(initCost),0) as initCost,COALESCE(SUM(accuDepr),0) as Depr, COALESCE((COALESCE(SUM(initCost),0) - COALESCE(SUM(accuDepr),0)),0) as netCost  FROM ( " + 
 							strALM+ " UNION " + strRPT
 						    + "  ) WHERE (longitude is not null and longitude != '0' and longitude != 'null' and latitude is not null and latitude != '0' and latitude != 'null') GROUP BY site,wareID,siteID,siteName,longitude,latitude,population "
 						    + "order by revenueToAssetInit desc";
