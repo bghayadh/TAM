@@ -15,7 +15,9 @@
     
     
 	<style>
-	
+	.ativeRecord{
+  background-color: #3394FF !important;
+}
 	   #popUpDiv {
 position:fixed;
 top: 30%;
@@ -435,7 +437,7 @@ max-width: 100%;
 						        <thead>
 						            <tr class="fixed-headerr" >
 						                <th>
-								         <div style="width:80px" class="fixed-headerr"><button type="button" id="selectAll" class="fixed-headerr" >
+								         <div  class="fixed-headerr"><button style="width:80px" type="button" id="selectAll" class="fixed-headerr" >
 								          <span class="sub"></span>Select</button></div></th>
 						                <th>Item</th>
 						                <th>Item Model</th>
@@ -2872,8 +2874,19 @@ $(".delete-From-node").click(function () {
   
 });
 
+$("table[id='bisotab'] tr").focusin(function () {
+	$("table[id='bisotab'] tr").removeClass("ativeRecord")
+	  $(this).addClass("ativeRecord");
+});	
 
 
+$(document).on('click', '#bisotab input[type="checkbox"]', function() {
+    // Remove "activeRecord" class from all rows
+    $("#bisotab tr").removeClass("ativeRecord");
+    
+    // Add "activeRecord" class to the clicked row
+    $(this).closest('tr').addClass("ativeRecord");
+});
 </script>
  
 
