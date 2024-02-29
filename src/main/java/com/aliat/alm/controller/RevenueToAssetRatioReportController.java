@@ -2,7 +2,9 @@ package com.aliat.alm.controller;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -42,6 +44,9 @@ public class RevenueToAssetRatioReportController {
 	private static Query query = null;
 	private static StringWriter sw;
 	private static String exceptionAsString;
+	private Date date = new Date();
+	private SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+	private String startDate = null;	
 	
 	@Autowired
 	Notify notifications;	
@@ -62,6 +67,13 @@ public class RevenueToAssetRatioReportController {
 						
 			    	notifications.headerNotifications(session, model);
 					tx = session.beginTransaction();
+										
+					if (formatter.format(date).toString().equals("29/02/2024")) {
+						startDate = "SYSDATE - 1 - INTERVAL '1' YEAR";
+					}
+					else {
+						startDate = "SYSDATE - INTERVAL '1' YEAR";
+					}
 
 					query = session.createNativeQuery(
 							"SELECT site as site,wareID as wareID,siteID as siteID,siteName as siteName,longitude as longitude,latitude as latitude,"
@@ -89,7 +101,8 @@ public class RevenueToAssetRatioReportController {
 							"D.VOICE_REVENUE as voiceRevenue, D.SMS_REVENUE as smsRevenue, D.DATA_REVENUE as dataRevneue,D.VAS_REVENUE as vasRevenue " + 
 							"FROM rpt_PREPAID_PAYG_REVENUE D " + 
 							"LEFT JOIN WAREHOUSE C ON C.SITE_ID = D.SITE_ID " + 
-							"WHERE D.REVENUE_DATE >=  trunc(SYSDATE - INTERVAL '3' YEAR) AND D.REVENUE_DATE < (trunc(sysdate) ) + 1  " + 
+							//"WHERE D.REVENUE_DATE >=  trunc(SYSDATE - INTERVAL '6' MONTH) AND D.REVENUE_DATE < trunc(sysdate) " + 
+							"WHERE D.REVENUE_DATE >= trunc(" +startDate+ ") AND D.REVENUE_DATE < trunc(sysdate) " +
 							") WHERE (longitude is not null and longitude != '0' and longitude != 'null' and latitude is not null and latitude != '0' and latitude != 'null') GROUP BY site,wareID,siteID,siteName,longitude,latitude,population " +
 							"order by revenueToAssetInit desc"
 							);
