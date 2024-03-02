@@ -443,29 +443,29 @@ max-width: 100%;
 						                <th>Item Model</th>
 						                <th>Item Part Number</th>
 						                <th><div style="width:280px">Transaction Type</div></th>
-						                <th>Notes</th>
-						                <th>Description</th>
+						                <th style="display:none">Notes</th>
+						                <th style="display:none">Description</th>
 						                <th><div style="width:200px">Element Name</div></th>
 						                <th>Address</th>
 						                <th><div style="width:280px">Approval Status</div></th>
 						                <th><div style="width:200px">Approval Action</div></th>
 						                <th>PO</th>
 						                <th>WO</th>
-						                <th>From Slot</th>
-						                <th>To Slot</th>
-						                <th>Qty</th>
-						                <th>Rate</th>
-						                <th><div id="discountAmount">Discount Amount</div></th>
-						                <th>Tax</th>
-						                <th>Net Rate</th>
-						                <th>Total</th>
-						                <th>Total AT</th>
+						                <th style='display:none'>From Slot</th>
+						                <th style='display:none'>To Slot</th>
+						                <th style='display:none'>Qty</th>
+						                <th style='display:none'>Rate</th>
+						                <th style='display:none'><div id="discountAmount">Discount Amount</div></th>
+						                <th style='display:none'>Tax</th>
+						                <th style='display:none'>Net Rate</th>
+						                <th style='display:none'>Total</th>
+						                <th style='display:none'>Total AT</th>
 						                <th>From Site</th>
 						                <th>To Site</th>
 						                <th>FAR Id</th>
 						                <th>MAC Address</th>
-						                <th>From SN</th>
-						                <th>To SN</th>
+						                <th style='display:none'>From SN</th>
+						                <th>Serial Number</th>
 						                <th>DNitmID</th>
 						            </tr>
 						        </thead>
@@ -955,7 +955,7 @@ max-width: 100%;
 		<div class="col-sm-6">
 			<div class="form-group">
 				<div class="input-group-prepend">
-					<span class="input-group-text" >From SN</span>
+					<span class="input-group-text" >Old Serial Number</span>
 					<input type="text" id="popupFromSN" class="form-control text-input"  value="" style="width:675px;"  />
 				</div>
 			</div>
@@ -968,7 +968,7 @@ max-width: 100%;
 		<div class="col-sm-6">
 			<div class="form-group">
 				<div class="input-group-prepend">
-					<span class="input-group-text" >To SN</span>
+					<span class="input-group-text" >Serial Number</span>
 					<input type="text" id="popupToSN" class="form-control text-input"  value="" style="width:675px;"  />
 				</div>
 			</div>
