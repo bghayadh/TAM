@@ -58,7 +58,7 @@
 <!-- ALM GRID Scripts -->
 <script type="text/javascript"
 	src="${pageContext.request.contextPath}/resources/almgrid/pagination.class.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/resources/almgrid/gridAppendRowsFinancialReport.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/almgrid/gridAppendRowsTransaction.js"></script>
 
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/resources/almgrid/almgrid.css" />
@@ -1294,7 +1294,8 @@ function DefaultZoomControl(controlDiv, map) {
 						});
 
 						NetworkTranscationsArray = ${TransactionsGrid}
-						
+						// var trimmedData = NetworkTranscationsArray.map(row => row.slice(5));
+						// console.log("trimmedData is" +trimmedData);
 						var almgrid = new AlmgridTable(
 								{
 									tableId : "gridTable",
@@ -1336,7 +1337,7 @@ function DefaultZoomControl(controlDiv, map) {
 										if (dataArray.length > 0) {
 											var ArrayKeys = Object.keys(dataArray[0]);
 								       		filteredSitesGrid = dataArray; // used in draw on map 
-				         					const keys = ["site", "wareID", "siteID", "siteName", "longitude", "latitude"];
+				         					/*const keys = ["site", "wareID", "siteID", "siteName", "longitude", "latitude"];
 				         					const resultObject = [];
 
 				         					for (var x = 0; x < filteredSitesGrid.length; x++) {
@@ -1348,8 +1349,8 @@ function DefaultZoomControl(controlDiv, map) {
 				         					  }
 				         					  resultObject[x] = currentObject; // Assuming you want to store each object in the resultObject
 				         					}
-				         					filteredSitesGrid = resultObject;
-				         					//console.log(filteredSitesGrid);
+				         					filteredSitesGrid = resultObject;*/
+				         					console.log(filteredSitesGrid);
 									       		
 										}
 										else{		 
@@ -1368,8 +1369,10 @@ function DefaultZoomControl(controlDiv, map) {
 										var dismantledCounter =0;
 										var totalCounter = 0;
 										
-									for( var i = 0; i<dataArray.length;i++){
-										for (var j = 0; j < ArrayKeys.length; j++) {
+									for( var i = 5; i<dataArray.length;i++){
+										for (var j = 5; j < ArrayKeys.length; j++) {
+											console.log("i : "+i+" j : "+j+" is "+ dataArray[i][ArrayKeys[j]]);
+											
 											 columnVal = ArrayKeys[j];
 											 if(columnVal == "9"){
 												if(dataArray[i][ArrayKeys[j]].includes("DISAPPEARED")){
@@ -1415,8 +1418,7 @@ function DefaultZoomControl(controlDiv, map) {
 
 										// Drawing for the first time
 										if (this.initFlag == 0) {
-											var tables = document
-													.getElementsByClassName('almgrid-table');
+											var tables = document.getElementsByClassName('almgrid-table');
 											for (var i = 0; i < tables.length; i++) {
 												resizableGrid(tables[i]);
 											}
@@ -1430,22 +1432,18 @@ function DefaultZoomControl(controlDiv, map) {
 							 distinctSites =[];
 							 markerClusterSites.clearMarkers();
 							 mapFlag="1";
-							console.log("///////filteredSitesGrid is "+filteredSitesGrid);
-							console.log("///////filteredSitesGrid[i][siteID] is out "+filteredSitesGrid[0]["siteID"]);	
-							console.log("///////filteredSitesGrid.length "+filteredSitesGrid.length);	
-							//console.log("///////filteredSitesGrid.length "+filteredSitesGrid.size());	
 							
 							for (var i = 0; i < filteredSitesGrid.length; i++) {
-								console.log("///////filteredSitesGrid[i][siteID] is in "+filteredSitesGrid[i]["siteID"]);			
-								if(distinctSites.includes(filteredSitesGrid[i]["siteID"])==false) {
-									console.log("///////filteredSitesGrid[i][siteID] is in "+filteredSitesGrid[i]["siteID"]);
-									distinctSites.push(filteredSitesGrid[i]["siteID"]);
-									if(!markerSites[filteredSitesGrid[i]["siteID"]]){
-										createSiteMarker(filteredSitesGrid[i]["siteID"],filteredSitesGrid[i]["longitude"],filteredSitesGrid[i]["latitude"],filteredSitesGrid[i]["siteName"]);
+								console.log("///////filteredSitesGrid[i][siteID] is in "+filteredSitesGrid[i][1]);			
+								if(distinctSites.includes(filteredSitesGrid[i][1])==false) {
+									console.log("///////filteredSitesGrid[i][siteID] is in "+filteredSitesGrid[i][1]);
+									distinctSites.push(filteredSitesGrid[i][1]);
+									if(!markerSites[filteredSitesGrid[i][1]]){
+										createSiteMarker(filteredSitesGrid[i][1],filteredSitesGrid[i][3],filteredSitesGrid[i][4],filteredSitesGrid[i][2]);
 									}
 									else {					
-										markerSites[filteredSitesGrid[i]["siteID"]].setMap(map);
-										markerClusterSites.addMarker(markerSites[""+filteredSitesGrid[i]["siteID"]]);
+										markerSites[filteredSitesGrid[i][1]].setMap(map);
+										markerClusterSites.addMarker(markerSites[""+filteredSitesGrid[i][1]]);
 
 									}
 								}
@@ -1691,7 +1689,7 @@ function DefaultZoomControl(controlDiv, map) {
 															         					 $("#totalCloseSite").val("");
 															         					 document.getElementById("findCloseSitePts").innerHTML = "";
 															         					 filteredSitesGrid = dataArray; // used in draw on map
-															         					// filteredSitesGrid = dataArray.splice(0, 6);
+															         					/*// filteredSitesGrid = dataArray.splice(0, 6);
 															         					const keys = ["site", "wareID", "siteID", "siteName", "longitude", "latitude"];
 															         					const resultObject = [];
 
@@ -1705,7 +1703,7 @@ function DefaultZoomControl(controlDiv, map) {
 															         					  resultObject[x] = currentObject; // Assuming you want to store each object in the resultObject
 															         					}
 															         					filteredSitesGrid = resultObject;
-															         					//console.log(filteredSitesGrid);
+															         					//console.log(filteredSitesGrid);*/
 															         					
 															         					 
 																					var ArrayKeys = Object.keys(dataArray[0]);
@@ -1728,10 +1726,11 @@ function DefaultZoomControl(controlDiv, map) {
 																					var totalCounter = 0;
 																					//console.log("dataArray  "+ dataArray);
 																					//console.log("ArrayKeys  "+ ArrayKeys);
-																					ArrayKeys = [0,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25];
-																					//console.log("newArr  "+ ArrayKeys);
-																				for( var i = 0; i<dataArray.length;i++){
-																					for (var j = 0; j < ArrayKeys.length; j++) {
+																					//ArrayKeys = [0,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25];
+																					console.log("newArr  "+ ArrayKeys);
+																				for( var i = 5; i<dataArray.length;i++){
+																					for (var j = 5; j < ArrayKeys.length; j++) {
+																						console.log("i : "+i+"j : "+j+" is "+ dataArray[i][ArrayKeys[j]]);
 																						 columnVal = ArrayKeys[j];
 																						 if(columnVal == "9"){
 																							if(dataArray[i][ArrayKeys[j]].includes("DISAPPEARED")){
@@ -2022,9 +2021,9 @@ $('.showHideSitesCheckbox').bind("change",function() {
 }
 function panToSite(ID,rowIndex){
 
-var longitude = filteredSitesGrid[rowIndex]["longitude"];
-var latitude = filteredSitesGrid[rowIndex]["latitude"];
-var siteName = filteredSitesGrid[rowIndex]["siteName"];
+var longitude = filteredSitesGrid[rowIndex][3];
+var latitude = filteredSitesGrid[rowIndex][4];
+var siteName = filteredSitesGrid[rowIndex][2];
 
  var latLng = new google.maps.LatLng(latitude,longitude);
  map.setZoom(15);
