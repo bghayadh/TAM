@@ -1294,8 +1294,7 @@ function DefaultZoomControl(controlDiv, map) {
 						});
 
 						NetworkTranscationsArray = ${TransactionsGrid}
-						// var trimmedData = NetworkTranscationsArray.map(row => row.slice(5));
-						// console.log("trimmedData is" +trimmedData);
+						
 						var almgrid = new AlmgridTable(
 								{
 									tableId : "gridTable",
@@ -1337,20 +1336,7 @@ function DefaultZoomControl(controlDiv, map) {
 										if (dataArray.length > 0) {
 											var ArrayKeys = Object.keys(dataArray[0]);
 								       		filteredSitesGrid = dataArray; // used in draw on map 
-				         					/*const keys = ["site", "wareID", "siteID", "siteName", "longitude", "latitude"];
-				         					const resultObject = [];
-
-				         					for (var x = 0; x < filteredSitesGrid.length; x++) {
-				         					  const currentObject = [];
-				         					  for (var y = 0; y < keys.length; y++) {
-				         					    const key = keys[y];
-				         					    const value = filteredSitesGrid[x][y];
-				         					    currentObject[key] = value;
-				         					  }
-				         					  resultObject[x] = currentObject; // Assuming you want to store each object in the resultObject
-				         					}
-				         					filteredSitesGrid = resultObject;*/
-				         					console.log(filteredSitesGrid);
+				         					//console.log(filteredSitesGrid);
 									       		
 										}
 										else{		 
@@ -1371,8 +1357,7 @@ function DefaultZoomControl(controlDiv, map) {
 										
 									for( var i = 5; i<dataArray.length;i++){
 										for (var j = 5; j < ArrayKeys.length; j++) {
-											console.log("i : "+i+" j : "+j+" is "+ dataArray[i][ArrayKeys[j]]);
-											
+											//console.log("i : "+i+" j : "+j+" is "+ dataArray[i][ArrayKeys[j]]);
 											 columnVal = ArrayKeys[j];
 											 if(columnVal == "9"){
 												if(dataArray[i][ArrayKeys[j]].includes("DISAPPEARED")){
@@ -1434,9 +1419,9 @@ function DefaultZoomControl(controlDiv, map) {
 							 mapFlag="1";
 							
 							for (var i = 0; i < filteredSitesGrid.length; i++) {
-								console.log("///////filteredSitesGrid[i][siteID] is in "+filteredSitesGrid[i][1]);			
+								//console.log("///////filteredSitesGrid[i][siteID] is in "+filteredSitesGrid[i][1]);			
 								if(distinctSites.includes(filteredSitesGrid[i][1])==false) {
-									console.log("///////filteredSitesGrid[i][siteID] is in "+filteredSitesGrid[i][1]);
+									//console.log("///////filteredSitesGrid[i][siteID] is in "+filteredSitesGrid[i][1]);
 									distinctSites.push(filteredSitesGrid[i][1]);
 									if(!markerSites[filteredSitesGrid[i][1]]){
 										createSiteMarker(filteredSitesGrid[i][1],filteredSitesGrid[i][3],filteredSitesGrid[i][4],filteredSitesGrid[i][2]);
@@ -1637,7 +1622,7 @@ function DefaultZoomControl(controlDiv, map) {
 															  bordersFindNearest($("#startLongitude").val(),$("#startLatitude").val(),$("#endLongitude").val(),$("#endLatitude").val())
 														  }
 														  
-														console.log(data.TransactionsGrid.length);
+														//console.log(data.TransactionsGrid.length);
 															if (data.TransactionsGrid.length == 0) {
 																alert("No Data found between this two dates");
 															} else {
@@ -1649,7 +1634,7 @@ function DefaultZoomControl(controlDiv, map) {
 																$("#transferredElements").val(data.transferredElements);
 																$("#dismantledElements").val(data.dismantledElements);
 																if (data.TransactionsGrid != null) {
-																	console.log(data.TransactionsGrid);
+																	//console.log(data.TransactionsGrid);
 																	NetworkTranscationsArray = data.TransactionsGrid;
 																	almgrid = new AlmgridTable(
 																			{
@@ -1724,13 +1709,10 @@ function DefaultZoomControl(controlDiv, map) {
 																					var transferredCounter=0;
 																					var dismantledCounter =0;
 																					var totalCounter = 0;
-																					//console.log("dataArray  "+ dataArray);
-																					//console.log("ArrayKeys  "+ ArrayKeys);
-																					//ArrayKeys = [0,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25];
-																					console.log("newArr  "+ ArrayKeys);
+																					
 																				for( var i = 5; i<dataArray.length;i++){
 																					for (var j = 5; j < ArrayKeys.length; j++) {
-																						console.log("i : "+i+"j : "+j+" is "+ dataArray[i][ArrayKeys[j]]);
+																						//console.log("i : "+i+"j : "+j+" is "+ dataArray[i][ArrayKeys[j]]);
 																						 columnVal = ArrayKeys[j];
 																						 if(columnVal == "9"){
 																							if(dataArray[i][ArrayKeys[j]].includes("DISAPPEARED")){
