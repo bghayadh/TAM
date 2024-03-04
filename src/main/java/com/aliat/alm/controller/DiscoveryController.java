@@ -49,7 +49,6 @@ import org.hibernate.type.StringType;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import com.aliat.alm.common.AlmDbSession;
-//import com.aliat.alm.common.ALMSessions;
 import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.DiscoveryNew;
@@ -92,7 +91,6 @@ public class DiscoveryController {
 	private static final String Mac_Address = "macAddress";
 	private static final String TO_NODE_DN = "toNode";
 	private static final String FROM_NODE_DN = "fromNode";
-	//private static final String NODE_PK = "nodePK";
 	private static final String ALC_FLG = "alcflg";
 	private static final String APPROVED_BY = "approvedby";
 	int i;
@@ -116,7 +114,7 @@ public class DiscoveryController {
 	private static final Logger logger = LoggerFactory.getLogger(DiscoveryController.class);
 	
     Calendar calendar = new GregorianCalendar();
-	 int year = calendar.get(Calendar.YEAR);
+	int year = calendar.get(Calendar.YEAR);
 	
 
 	@RequestMapping(value = "/DiscoveryNewListView", method = RequestMethod.GET)
@@ -141,9 +139,7 @@ public class DiscoveryController {
 						+ "TO_CHAR(LAST_MODIF_DATE,'YYYY-MM-DD HH24:MI:SS') as dnlastmodifDate "
 						+ "from DISCOVERY_NEW a order by LAST_MODIF_DATE DESC";
 				
-		model.addAttribute("ListGridTable", mapper.writeValueAsString(session.createNativeQuery(str).list()));
-		
-		System.out.println(mapper.writeValueAsString(mapper.writeValueAsString(session.createNativeQuery(str).list())));
+		model.addAttribute("ListGridTable", mapper.writeValueAsString(session.createNativeQuery(str).list()));		
 		
 		} catch (Exception e) {
 			logger.info("Error at DiscoveryNew ListView with a message: "+ e);
@@ -199,7 +195,6 @@ public class DiscoveryController {
 				}
 				str = str + " ORDER BY LAST_MODIF_DATE DESC ";
 				rtn.put("listNew",session.createNativeQuery(str).list());
-				System.out.println("Filtered Array: " + mapper.writeValueAsString(session.createNativeQuery(str).list()));
 			} catch (Exception e) {
 				logger.info("Error in showing the filtered Discovery New list view with a message :" + e);
 			} finally {
@@ -220,20 +215,14 @@ public class DiscoveryController {
 			return LoginServices.checkSession(request, response);
 		}
 		
-
-		
-		session = AlmDbSession.getInstance().getSession();
-		
+		session = AlmDbSession.getInstance().getSession();		
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
 			
 			try {
-
 		
 		List<DiscoveryNew> listDiscoveryNew = new ArrayList<DiscoveryNew>();
-
-
 		listDiscoveryNew = session
 				.createQuery("SELECT t.dnID AS ID,t.dnID, t.dnTotalAmount,t.dnTotalQty , t.dnStatus, TO_CHAR(LAST_MODIF_DATE,'YYYY-MM-DD HH24:MI:SS') as dnlastmodifDate from DiscoveryNew t where t.dnStatus != 'completed' and t.dnStatus != 'closed' and t.dnStatus != 'deactivated' and t.dnStatus != 'cancelled' and t.dnStatus != 'activated' or t.dnStatus is null")
 				.list();
@@ -249,10 +238,8 @@ public class DiscoveryController {
 				tx.commit();
 				session.close();
 			}
+		}			
 		}
-			
-		}
-
 
 		return "DiscoveryNewListView";
 	}
@@ -268,9 +255,8 @@ public class DiscoveryController {
 		session = AlmDbSession.getInstance().getSession();
 
 		if (session != null && session.isOpen()) {
-        tx = session.beginTransaction(); 
-       notifications.headerNotifications(session, model); 
-       
+			tx = session.beginTransaction(); 
+			notifications.headerNotifications(session, model);        
        try { 
 		
 		String navAction = "2";
@@ -285,7 +271,7 @@ public class DiscoveryController {
 
 		String dnid = request.getParameter("dnID");
 		
-		// to open discovery when click on ADD from discovery List
+		/* to open discovery when click on ADD from discovery List */
 		if (StringUtils.equalsIgnoreCase(dnid, null)) {
 			date = new Timestamp(System.currentTimeMillis());
 			model.addAttribute("dncreationDate", formatter.format(date).toString());
@@ -333,9 +319,7 @@ public class DiscoveryController {
 
 		}
 
-
-		// add data in table discoveryNewItem
-
+		/* add data in table discoveryNewItem */
 		String queryStmt = "SELECT t.DNI_ID AS dniID, t.ITEM_CODE AS dniItemcode, t.ITEM_NAME AS dniItemname, t.TRANS_TYPE AS transType, " +
 			    "t.ELEMENT_NAME AS elementName, NVL(t.NOTES, ' ') AS notes, NVL(t.POSITION, ' ') AS position, t.APPROVAL AS dniAPPROVAL, " +
 			    "t.PO_ID AS dniPOID, t.SUPPLIER_ID AS supplierID, t.SUPPLIER_NAME AS supplierName, t.TOTAL_AMOUNT AS totalAmount, " +
@@ -424,8 +408,6 @@ public class DiscoveryController {
 		return "DiscoveryNewFormView";
 	}
 	
-	
-	
 
 	@SuppressWarnings({ "unchecked", "unused" })
 	@RequestMapping(value = "/DiscoveryNewItemFormSave", method = RequestMethod.POST)
@@ -463,7 +445,7 @@ public class DiscoveryController {
 					query.executeUpdate();
 					session.createNativeQuery("commit").executeUpdate();
 					}
-			//dnid = "DND_" + year + "_" + appConfig.getSequenceNbr(6);
+			/*dnid = "DND_" + year + "_" + appConfig.getSequenceNbr(6);*/
 			
 
 			model.addAttribute("dnID", dnid);
@@ -489,11 +471,10 @@ public class DiscoveryController {
 		CreationDate = new Timestamp(date1.getTime());
 
 		Date rdate = new Timestamp(System.currentTimeMillis());
-		ModifDate = new Timestamp(rdate.getTime());
+		ModifDate = new Timestamp(rdate.getTime());		
 		
 		
-		
-		// SAVE DISCOVERY NEW
+		/* SAVE DISCOVERY NEW */
 		discoverynew.setDnID(dnid);
 		discoverynew.setDncreationDate(CreationDate);
 		discoverynew.setdnlastmodifDate(ModifDate);
@@ -502,22 +483,15 @@ public class DiscoveryController {
 		discoverynew.setDnTotalQty(Float.parseFloat(totqty));
 		
 		session.saveOrUpdate(discoverynew);
-
-		
-		
 		
 		query = session.createQuery("select t.dniID as dniID, t.dniAPPROVAL as dniAPPROVAL from DiscoveryNewItem t where t.dniDNID =:param1");
 		query.setParameter("param1",dnid);
 		
 		List<DiscoveryNewItem> listDnItems = (List<DiscoveryNewItem>) query.setResultTransformer(Transformers.aliasToBean(DiscoveryNewItem.class)).list();
 		
-		
-		
 		if (itemParameters.getDictParameter() != null) {
-
-			System.out.println("AHMAD NEW SAVE = " +itemParameters.getDictParameter());
 			
-			/// SAVE DISCOVERY NEW ITEM
+			/* SAVE DISCOVERY NEW ITEM */
 			String fullitemcode;
 			String itmcode;
 			String itmname;
@@ -560,28 +534,20 @@ public class DiscoveryController {
 				if (!PurchaseOrder.isEmpty()) {
 					n = PurchaseOrder.indexOf(":");
 					PurchaseOrId = PurchaseOrder.substring(0, n);
-					
-					
-					m = PurchaseOrder.substring(n + 1, PurchaseOrder.length());
-					
+					m = PurchaseOrder.substring(n + 1, PurchaseOrder.length());					
 					part2 = m.indexOf(":");
-					supplierID = m.substring(0, part2);
-					
+					supplierID = m.substring(0, part2);				
 					
 					g = m.substring(part2 + 1, m.length());
 					part3 = g.indexOf(":");
-					supplierName = g.substring(0, part3);
-					
+					supplierName = g.substring(0, part3);					
 					
 					String Amount = g.substring(part3 + 1, g.length());
 					TotalAmount = Float.valueOf(Amount);
 					
 				}
 				
-				
-				
 				String WorkOrder = itemParameters.getDictParameter().get(i).get(DN_WORK_ORDER);
-				
 				
 				String purpose = "";
 				String woId="";
@@ -608,8 +574,8 @@ public class DiscoveryController {
 				String alcflg = itemParameters.getDictParameter().get(i).get(ALC_FLG);
 
 				
-				//String nodePK = itemParameters.getDictParameter().get(i).get(NODE_PK);
-				/*if (nodePK != "") {
+				/* String nodePK = itemParameters.getDictParameter().get(i).get(NODE_PK);
+				if (nodePK != "") {
 				String QueryUpdateInNodeActive ="UPDATE NODE_ACTIVE SET SITE_ID ='"+SiteID+"', WARE_ID ='"+wareID+"' WHERE NODE_PK ='"+nodePK+"'";
 				Query qUpdate = session.createNativeQuery(QueryUpdateInNodeActive);
 				System.out.println("qUpdate: "+qUpdate);
@@ -663,11 +629,11 @@ public class DiscoveryController {
 							query.executeUpdate();
 							session.createNativeQuery("commit").executeUpdate();
 							}
-					//DniID = "DNI_" + year + "_" + appConfig.getSequenceNbr(7);
+					/*DniID = "DNI_" + year + "_" + appConfig.getSequenceNbr(7); */
 					
 
-					// assign the new ID
-					discoverynewitem.setDniID(DniID); // dnitmid
+					/* assign the new ID */
+					discoverynewitem.setDniID(DniID); /* dnitmid */
 
 					discoverynewitem.setDnicreationDate(new Timestamp(System.currentTimeMillis()));
 					discoverynewitem.setDnilastModifieddate(new Timestamp(System.currentTimeMillis()));
@@ -712,7 +678,7 @@ public class DiscoveryController {
 					discoverynewitem.setDniAPPROVAL(itemParameters.getDictParameter().get(i).get(APPROVED_BY));
 					discoverynewitem.setApprovalStatus(itemParameters.getDictParameter().get(i).get(DN_APPROVE_STATUS));
 					discoverynewitem.setDescription(itemParameters.getDictParameter().get(i).get(DESCRIPTION));
-					//discoverynewitem.setNodePK(itemParameters.getDictParameter().get(i).get(NODE_PK));
+					/*discoverynewitem.setNodePK(itemParameters.getDictParameter().get(i).get(NODE_PK)); */
 					discoverynewitem.setAlcFlg("0");
 					
 					session.saveOrUpdate(discoverynewitem);
@@ -758,7 +724,7 @@ query.executeUpdate();
 				            toNodeArrayList = new ArrayList((((HashMap) toNodeJSN).values()));
 				            String ToNodeId = (String) toNodeArrayList.get(0);
 
-				            // Check if a node with the same toNodeId already exists
+				            /* Check if a node with the same toNodeId already exists */
 				            nodeDn = (DiscoverNewItemNode) session
 				                .createQuery("FROM DiscoverNewItemNode WHERE toNodeId = :toNodeId AND dniId = :dniId")
 				                .setParameter("toNodeId", ToNodeId).setParameter("dniId", DniID)
@@ -769,7 +735,7 @@ query.executeUpdate();
 				                nodeDn.setToNodeType((String) toNodeArrayList.get(1));
 				                nodeDn.setLastModifiedDate(ModifDate);
 				            } else {
-				                // Node with the same toNodeId doesn't exist, create a new one
+				                /* Node with the same toNodeId doesn't exist, create a new one */
 				                String DN_NodeId;
 				                synchronized (this) {
 				                    DN_NodeId = "DNI_Node_" + year + "_" +
@@ -777,7 +743,7 @@ query.executeUpdate();
 				                                    .createNativeQuery("SELECT DNI_Node FROM SEQ_TABLE")
 				                                    .uniqueResult().toString());
 
-				                    // Update the sequence table
+				                    /* Update the sequence table */
 				                    session.createNativeQuery("UPDATE SEQ_TABLE SET DNI_Node = DNI_Node + 1 ").executeUpdate();
 				                    session.createNativeQuery("commit").executeUpdate();
 				                }
@@ -834,7 +800,7 @@ query.executeUpdate();
 				                                    .createNativeQuery("SELECT DNI_Node FROM SEQ_TABLE")
 				                                    .uniqueResult().toString());
 
-				                    // Update the sequence table
+				                    /* Update the sequence table */
 				                    session.createNativeQuery("UPDATE SEQ_TABLE SET DNI_Node = DNI_Node + 1 ").executeUpdate();
 				                    session.createNativeQuery("commit").executeUpdate();
 				                }
@@ -921,8 +887,8 @@ query.executeUpdate();
 
 
 				
-				//DiscoveryThread thread = new DiscoveryThread(trans_Type, getApproval, dnStatus,AssetRegID, ArCode, PurchaseOrId,itmcode,itmname,WorkOrder,DniID,toSiteID,supplierID,supplierName,towareID,towareName,serialnb,dnRate,itemModel,itemPartNb,toSite,toSerialNumber,toNodeId,toNodeName,toSlot,nodeID,nodeName,Site,fromSlot,SiteID);
-				//thread.start();
+				/* DiscoveryThread thread = new DiscoveryThread(trans_Type, getApproval, dnStatus,AssetRegID, ArCode, PurchaseOrId,itmcode,itmname,WorkOrder,DniID,toSiteID,supplierID,supplierName,towareID,towareName,serialnb,dnRate,itemModel,itemPartNb,toSite,toSerialNumber,toNodeId,toNodeName,toSlot,nodeID,nodeName,Site,fromSlot,SiteID);
+				thread.start(); */
 
 
 				if ((StringUtils.equalsIgnoreCase(getApproval, "Project Manager") && StringUtils.equalsIgnoreCase(dnStatus, "Approved")) || ((StringUtils.equalsIgnoreCase(getApproval,"Asset Unit") && StringUtils.equalsIgnoreCase(dnStatus, "Approved")))) {
@@ -1318,7 +1284,6 @@ query.executeUpdate();
 			return rtn;
 		}
 
-
      session = AlmDbSession.getInstance().getSession();
 		
 		if (session != null && session.isOpen()) {
@@ -1327,14 +1292,11 @@ query.executeUpdate();
 			
 			try {
 
-
 		String woID="%" + request.getParameter("woId") + "%";
 		String PoID =request.getParameter("PrOrderID");
 		String Item_code = request.getParameter("Item_code");
 		String itemModel = request.getParameter("itemModel");
 		String itemPartNb = request.getParameter("ItemPartNb");
-		
-		
 		
 		String str = "";
 		
@@ -1343,7 +1305,7 @@ query.executeUpdate();
 			 
 			str="select distinct a.workOrdId ,a.purpose from WorkOrder a,WorkOrderSource b,WorkOrderDestination c, "
 					+"Item d, ItemPartNumber t where(a.workOrdId like :param1 or a.purpose like :param1) "
-					//+"and b.itemCode = d.itemCode and c.itemCode = d.itemCode "
+					/* +"and b.itemCode = d.itemCode and c.itemCode = d.itemCode " */
 					+"and ((b.itemCode =:param4 and a.workOrdId = b.workOrdId) or (c.itemCode =:param4 and a.workOrdId = c.workOrdId)) and t.itemCode = d.itemCode ";
 
 		
@@ -1360,7 +1322,6 @@ query.executeUpdate();
 			
 			query.setParameter("param4", Item_code);
 			query.setParameter("param1", woID);
-		    System.out.println("The str query is " +query.getQueryString().toString());
 		    listResult = query.list();			
 		}
 		
@@ -1423,11 +1384,9 @@ query.executeUpdate();
 				
 			}
 		
-*/		
-				 
-		System.out.println("The list is " + mapper.writeValueAsString(listResult));
+*/						
 
-		//model.addAttribute("listResult", mapper.writeValueAsString(listResult));
+		/*model.addAttribute("listResult", mapper.writeValueAsString(listResult)); */
 		rtn.put("ListWO", listResult); 
 
 			}catch(Exception e){ 
@@ -1551,7 +1510,7 @@ query.executeUpdate();
 				
 				
 				
-				//ArCode = "AR_" + year + "_" + appConfig.getSequenceNbr(9);
+				/* ArCode = "AR_" + year + "_" + appConfig.getSequenceNbr(9); */
 				synchronized (this) {						
 					ArCode = "AR_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT ASSET_REGISTRY FROM SEQ_TABLE").uniqueResult().toString());	
 						query = session.createNativeQuery("UPDATE SEQ_TABLE SET ASSET_REGISTRY = ASSET_REGISTRY + 1 ");
@@ -1560,7 +1519,7 @@ query.executeUpdate();
 						}
 
 				
-				// assign the AR ID
+				/* assign the AR ID */
 				AssetRegistry assetregistry = new AssetRegistry();
 				
 				assetregistry.setArID(ArCode);
@@ -1590,7 +1549,7 @@ query.executeUpdate();
 			if (ApproveType.equalsIgnoreCase("3") == true) {
 				 
 
-				// check, if this itemCode related to poID, exist in CIP table (get the qty and cipID)
+				/* check, if this itemCode related to poID, exist in CIP table (get the qty and cipID) */
 				
 				
 				query = session.createQuery("Select t.TOTALQTY as totalqty, t.cipID as cipID from CapitalInProgress t where t.PoId =:param1 and t.cipitemCode =:param2");
@@ -1602,7 +1561,7 @@ query.executeUpdate();
 				
 				String FarCode;
 
-				// if exist, get only one row, with CIPqty field and cipID
+				/* if exist, get only one row, with CIPqty field and cipID */
 				if (result != null) {
 					for (Object obj : result) {
 						Object[] fields = (Object[]) obj;
@@ -1612,7 +1571,7 @@ query.executeUpdate();
 						System.out.println("updatedQty is: "+updatedQty);
 
 						if (updatedQty == 0) {
-							// delete from CIP table
+							/* delete from CIP table */
 
 							
 							query = session.createQuery("delete from CapitalInProgress c where c.cipID =:param1");
@@ -1625,7 +1584,7 @@ query.executeUpdate();
 
 						else {
 
-							// update the qty in CIP table
+							/* update the qty in CIP table */
 							
 							query = session.createQuery("update CapitalInProgress c set c.TOTALQTY =:param1 where c.cipID =:param2");
 
@@ -1650,9 +1609,9 @@ query.executeUpdate();
 							query.executeUpdate();
 							session.createNativeQuery("commit").executeUpdate();
 							}
-						//FarCode = "FAR_" + year + "_" + appConfig.getSequenceNbr(10);
+						/*FarCode = "FAR_" + year + "_" + appConfig.getSequenceNbr(10); */
 						
-						// insert the DisNewItem in FAR table
+						/* insert the DisNewItem in FAR table */
 						float initialCost = Float.parseFloat(itemParameters.getDictParameter().get(i).get(DN_RATE));
 						
 						FixedAssetRegistry FixedAssetReg = new FixedAssetRegistry();
@@ -1675,7 +1634,6 @@ query.executeUpdate();
 						FixedAssetReg.setAccumDeprCode("0");
 						FixedAssetReg.setDeprCode("0");
 						FixedAssetReg.setDniID(DNItemID);
-						//FixedAssetReg.setSideID(SiteID);
 						FixedAssetReg.setSupplierID(supplierID);
 						FixedAssetReg.setSupplierName(supplierName);
 						FixedAssetReg.setPoId(PurchaseOrId);
@@ -1784,7 +1742,7 @@ query.executeUpdate();
 				List<Object[]> boardList = new ArrayList<Object[]>(), cabinetList =  new ArrayList<Object[]>(),antennaList =  new ArrayList<Object[]>(),nodeList =  new ArrayList<Object[]>(),subrackList =  new ArrayList<Object[]>();
 				List<Object[]> boardDisList =  new ArrayList<Object[]>(), cabinetDisList =  new ArrayList<Object[]>(),antennaDisList =  new ArrayList<Object[]>(),nodeDisList =  new ArrayList<Object[]>(),subrackDisList =  new ArrayList<Object[]>();
 				
-				//getting the  new or transferred elements
+				/*getting the  new or transferred elements */
 				String getBoardsquery,getCabinetsquery, getSubRackquery, getAntennasquery,getNodesQuery ; 
 				String getDisBoardsquery,getDisCabinetsquery, getDisSubRackquery, getDisAntennasquery,getDisNodesQuery ;
 				
@@ -1871,7 +1829,7 @@ query.executeUpdate();
 		return map;
 	}
 	
-//These scripts to get the discovered items by the Auto Parser	
+/* These scripts to get the discovered items by the Auto Parser */	
 	
 	@SuppressWarnings({ "unused", "unchecked", "rawtypes" })
 	@RequestMapping(value = "/runDiscoveryNewScript", method = RequestMethod.GET)
@@ -1902,7 +1860,7 @@ query.executeUpdate();
 				List<Object[]> boardDisList, cabinetDisList,antennaDisList,nodeDisList,subrackDisList;
 				List<Object[]> ExistedNodeBoardsList; List<Object[]> ExistedNodeCabinetsList; List<Object[]> ExistedNodeAntennasList;
 				
-				//getting queries for new and transferred site for nodes,cabinets,antennas,boards and subracks
+				/* getting queries for new and transferred site for nodes,cabinets,antennas,boards and subracks */
 				getNodesQuery="select t.trans_id as transID,t.element_id as elementID,t.element as elementName,a.node_model as nodeModel," + 
 						"t.discovered_trans_type as transType,t.from_site as fromSite,t.to_site as toSite,a.node_pk," + 
 						"(select ware_id from node_active a where a.site_id=t.from_site and a.node_pk=t.element_id) as fromWareID,(select ware_id from node_active a where a.site_id=t.to_site and a.node_pk=t.element_id) as toWareID," + 
@@ -1950,7 +1908,7 @@ query.executeUpdate();
 				q=session.createNativeQuery(getSubRackquery);
 				subrackList=q.list();
 				
-				//getting queries for disappeared nodes,cabinets,antennas,boards and subracks
+				/* getting queries for disappeared nodes,cabinets,antennas,boards and subracks */
 				getDisNodesQuery="select t.trans_id as transID,t.element_id as elementID,t.element as elementName,a.node_model as nodeModel," + 
 						"t.discovered_trans_type as transType,t.from_site as fromSite,t.to_site as toSite,a.node_pk," + 
 						"(select ware_id from node_active a where a.site_id=t.from_site and a.node_pk=t.element_id) as fromWareID,(select ware_id from node_active a where a.site_id=t.to_site and a.node_pk=t.element_id) as toWareID," + 
