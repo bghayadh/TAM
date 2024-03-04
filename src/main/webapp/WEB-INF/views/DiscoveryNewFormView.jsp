@@ -224,6 +224,43 @@ max-width: 100%;
     background-color: #8696A0 !important;
     border-color: #8696A0 !important;
 }
+
+   .table-container {
+        overflow-x: auto;
+        height: 400px; /* Set maximum height for scrolling */
+    }
+
+    /* Table Styles */
+    .resizable-table {
+        border-collapse: collapse;
+        width: auto;
+    }
+
+    .resizable-table th, .resizable-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+        position: relative; /* Position relative for handle */
+        min-width: 100px; /* Minimum width for columns */
+    }
+
+    .resizable-table input[type="text"] {
+        width: calc(100% - 16px); /* Adjust for padding */
+        box-sizing: border-box;
+    }
+
+    /* Resize Handle Styles */
+    .resize-handle {
+        position: absolute;
+        top: 0;
+        right: -5px;
+        bottom: 0;
+        width: 10px;
+        cursor: col-resize;
+        background-color: #eee;
+        z-index: 1;
+        display: none; /* Initially hide resize handle */
+    }
             
  	</style>
 </head>
@@ -432,14 +469,15 @@ max-width: 100%;
 				<form>
 				
 								
-					    <div class="table-responsive-sm"> 
-						    <table id ="bisotab" class="table table-striped table-bordered table-sm " style="display:block; height:400px; overflow-y: auto;">
-						        <thead>
-						            <tr class="fixed-headerr" >
-						                <th>
-								         <div  class="fixed-headerr"><button style="width:80px" type="button" id="selectAll" class="fixed-headerr" >
-								          <span class="sub"></span>Select</button></div></th>
-						                <th>Item</th>
+					  <div class="table-container">
+   <table class="resizable-table" id ="bisotab" class="table table-striped table-bordered table-sm">
+        <thead>
+            <tr class="fixed-headerr">
+                <th>
+                    <div class="fixed-headerr"><button style="width:80px" type="button" id="selectAll" class="fixed-headerr">
+                        <span class="sub"></span>Select</button></div>
+                </th>
+                <th>Item</th>
 						                <th>Item Model</th>
 						                <th>Item Part Number</th>
 						                <th><div style="width:280px">Transaction Type</div></th>
@@ -2886,6 +2924,61 @@ $(document).on('click', '#bisotab input[type="checkbox"]', function() {
     
     // Add "activeRecord" class to the clicked row
     $(this).closest('tr').addClass("ativeRecord");
+});
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const table = document.querySelector('.resizable-table');
+    const cols = table.querySelectorAll('th');
+
+    cols.forEach(col => {
+        const resizeHandle = document.createElement('div');
+        resizeHandle.classList.add('resize-handle');
+        col.appendChild(resizeHandle);
+
+        col.addEventListener('mouseover', function(e) {
+            resizeHandle.style.display = 'block';
+        });
+
+        col.addEventListener('mouseout', function(e) {
+            resizeHandle.style.display = 'none';
+        });
+
+        resizeHandle.addEventListener('mousedown', function(e) {
+            e.preventDefault(); // Prevent text selection during resize
+            const startX = e.pageX;
+            const startWidth = col.offsetWidth;
+
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', handleMouseUp);
+
+            function handleMouseMove(e) {
+                const diffX = e.pageX - startX;
+                const newWidth = startWidth + diffX;
+                col.style.width = newWidth + 'px';
+                table.style.width = (table.offsetWidth + diffX) + 'px';
+            }
+
+            function handleMouseUp() {
+                document.removeEventListener('mousemove', handleMouseMove);
+                document.removeEventListener('mouseup', handleMouseUp);
+            }
+        });
+
+        col.addEventListener('dblclick', function(e) {
+            const colIndex = Array.from(col.parentElement.children).indexOf(col);
+            const cells = table.querySelectorAll(`tr > td:nth-child(${colIndex + 1})`);
+            let maxWidth = 0;
+            cells.forEach(cell => {
+                const cellWidth = cell.querySelector('input').scrollWidth;
+                if (cellWidth > maxWidth) {
+                    maxWidth = cellWidth;
+                }
+            });
+            col.style.width = (maxWidth + 20) + 'px'; // Add some extra padding
+        });
+    });
 });
 </script>
  
