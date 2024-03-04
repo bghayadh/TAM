@@ -379,43 +379,43 @@
  
                 var itemRow = "<tr>";
 		        itemRow= itemRow + "<td style='text-align:center;'><input type='checkbox' name='record' style='margin-top:12px;'><button type = 'button' href='#' name='popUpMenu' onclick='openPop(this)' class='btn btn-default'  style='position:relative;left:3px;'><i class='fas fa-desktop'></i></button></td>"
-		        itemRow =itemRow + "<td name='item'><input type='text' name='itmCode' class='form-control text-input' value='"+itemCode+"' style='width:400px;' class='ui-widget ui-widget-content ui-corner-all'/></td>";
-		        itemRow =itemRow + "<td name='itemModel'><input type='text' name='itmMod' class='form-control text-input'  value='"+itemModelVal+"' style='width:200px;' class='ui-widget ui-widget-content ui-corner-all'></td>";
-		        itemRow =itemRow + "<td name='itemPartNb'><input type='text' name='itmPartNb' class='form-control text-input' value='"+itemPartVal+"' style='width:200px;' class='ui-widget ui-widget-content ui-corner-all'></td>";
+		        itemRow =itemRow + "<td name='item'><input type='text' name='itmCode' class='form-control text-input' value='"+itemCode+"' style='min-width:400px;' class='ui-widget ui-widget-content ui-corner-all'/></td>";
+		        itemRow =itemRow + "<td name='itemModel'><input type='text' name='itmMod' class='form-control text-input'  value='"+itemModelVal+"' style='min-width:200px;' class='ui-widget ui-widget-content ui-corner-all'></td>";
+		        itemRow =itemRow + "<td name='itemPartNb'><input type='text' name='itmPartNb' class='form-control text-input' value='"+itemPartVal+"' style='min-width:200px;' class='ui-widget ui-widget-content ui-corner-all'></td>";
 		        itemRow =itemRow + "<td name='transType'>"+trans_options+"</td>";
 		        itemRow =itemRow + "<td  name='notes' style='display: none'><input  style='display: none' type='text' class='form-control NotesInput' value='"+boqArray[i].notes+"' ></td>";
 		        itemRow =itemRow + "<td style='display:none' name='description'><input style='display:none' type='text' class='form-control NotesInput' value='"+boqArray[i].description+"' >";
 		        itemRow =itemRow + "<td name='elementName'>"+Element_options+"</td>";
-		        itemRow =itemRow + "<td name='address'><input type='text' class='form-control inputWidth' value='"+boqArray[i].position+"' ></td>"
+		        itemRow =itemRow + "<td name='address'><input type='text' style='min-width:200px;' class='form-control inputmin-width' value='"+boqArray[i].position+"' ></td>"
 		        itemRow =itemRow + "<td name='buttonApprove'>"+buttonApprove+"</td>";
 		        itemRow =itemRow + "<td name='approveStatus'>"+Actions_options+"<input type='text' hidden name='approvedby' value ='"+approvedby+"'></td>";
-		        itemRow =itemRow + "<td name='purchaseOrder'><input type='text' class='form-control text-input' value='"+ PurchaseOrder+"' ondrop ='return false;' name='itmPO' value='"+PurchaseOrder+"' style='width:350px;' class='ui-widget ui-widget-content ui-corner-all'></td>";
-		        itemRow =itemRow + "<td name='workOrder'><input type='text' class='form-control text-input' ondrop ='return false;' name='itmWO' value='"+ WorkOrder+"' style='width:350px;' class='ui-widget ui-widget-content ui-corner-all'></td>";
-		        itemRow =itemRow + "<td style='display:none' name='fromSlot'><input style='display:none' type='text' class='form-control text-input' style='width:200px' value='"+boqArray[i].fromSlot+"'></td>";
-		        itemRow =itemRow + "<td style='display:none' name='toSlot'><input style='display:none' type='text' class='form-control text-input' style='width:200px' value='"+boqArray[i].toSlot+"'/></td>";
-		        itemRow =itemRow + "<td name='itemQty' style='display:none'><input style='display:none' type='text' class='form-control text-input inputWidth' value='"+ boqArray[i].dniQty+"'></td>";
-				itemRow =itemRow + "<td name='itemRate' style='display:none'><input style='display:none' type='text' class='form-control text-input inputWidth' value='"+ boqArray[i].dniRate+"'></td>";
-				itemRow =itemRow + "<td name='itemDAmout' style='display:none'><input style='display:none' type='text' class='form-control text-input inputWidth' value='"+ boqArray[i].dniDiscamount+"'></td>";
-				itemRow =itemRow + "<td name='itemTax' style='display:none'><input style='display:none' type='text' class='form-control text-input inputWidth' value='"+ boqArray[i].dniTax1+"'></td>";
-	 		    itemRow =itemRow + "<td name='itemNetRate' style='display:none'><input style='display:none' type='text' class='form-control text-input inputWidth' value='"+ boqArray[i].dniNetrate+"' readonly></td>";
-	 		    itemRow =itemRow + "<td name='itemTotal' style='display:none'><input style='display:none' type='text' class='form-control text-input inputWidth' value='"+ boqArray[i].dniTotal+"' readonly></td>";
-				itemRow =itemRow + "<td name='itemTotalAt' style='display:none'><input style='display:none' type='text' class='form-control text-input inputWidth' value='"  + boqArray[i].dniTotalat+"' readonly></td>";
-				itemRow =itemRow + "<td name='siteID'><input type='text' class='form-control text-input' value='"+Site+"' name='siteID' style='width:450px;' class='ui-widget ui-widget-content ui-corner-all'></td>";
-				itemRow =itemRow + "<td name='tositeID'><input type='text' class='form-control text-input' value='"+toSite+"' name='tositeID' style='width:450px;' class='ui-widget ui-widget-content ui-corner-all'></td>";
+		        itemRow =itemRow + "<td name='purchaseOrder'><input type='text' class='form-control text-input' value='"+ PurchaseOrder+"' ondrop ='return false;' name='itmPO' value='"+PurchaseOrder+"' style='min-width:350px;' class='ui-widget ui-widget-content ui-corner-all'></td>";
+		        itemRow =itemRow + "<td name='workOrder'><input type='text' class='form-control text-input' ondrop ='return false;' name='itmWO' value='"+ WorkOrder+"' style='min-width:350px;' class='ui-widget ui-widget-content ui-corner-all'></td>";
+		        itemRow =itemRow + "<td style='display:none' name='fromSlot'><input style='display:none' type='text' class='form-control text-input' style='min-width:200px' value='"+boqArray[i].fromSlot+"'></td>";
+		        itemRow =itemRow + "<td style='display:none' name='toSlot'><input style='display:none' type='text' class='form-control text-input' style='min-width:200px' value='"+boqArray[i].toSlot+"'/></td>";
+		        itemRow =itemRow + "<td name='itemQty' style='display:none'><input style='display:none' type='text' class='form-control text-input inputmin-width' value='"+ boqArray[i].dniQty+"'></td>";
+				itemRow =itemRow + "<td name='itemRate' style='display:none'><input style='display:none' type='text' class='form-control text-input inputmin-width' value='"+ boqArray[i].dniRate+"'></td>";
+				itemRow =itemRow + "<td name='itemDAmout' style='display:none'><input style='display:none' type='text' class='form-control text-input inputmin-width' value='"+ boqArray[i].dniDiscamount+"'></td>";
+				itemRow =itemRow + "<td name='itemTax' style='display:none'><input style='display:none' type='text' class='form-control text-input inputmin-width' value='"+ boqArray[i].dniTax1+"'></td>";
+	 		    itemRow =itemRow + "<td name='itemNetRate' style='display:none'><input style='display:none' type='text' class='form-control text-input inputmin-width' value='"+ boqArray[i].dniNetrate+"' readonly></td>";
+	 		    itemRow =itemRow + "<td name='itemTotal' style='display:none'><input style='display:none' type='text' class='form-control text-input inputmin-width' value='"+ boqArray[i].dniTotal+"' readonly></td>";
+				itemRow =itemRow + "<td name='itemTotalAt' style='display:none'><input style='display:none' type='text' class='form-control text-input inputmin-width' value='"  + boqArray[i].dniTotalat+"' readonly></td>";
+				itemRow =itemRow + "<td name='siteID'><input type='text' class='form-control text-input' value='"+Site+"' name='siteID' style='min-width:450px;' class='ui-widget ui-widget-content ui-corner-all'></td>";
+				itemRow =itemRow + "<td name='tositeID'><input type='text' class='form-control text-input' value='"+toSite+"' name='tositeID' style='min-width:450px;' class='ui-widget ui-widget-content ui-corner-all'></td>";
 			    var farIdValue = boqArray[i].farID !== null ? boqArray[i].farID : " "; 
           
 			    if (boqArray[i].transType === "New Node on New Node" || boqArray[i].transType === "New Node on New Hardware" ) {
-                itemRow += "<td name='FarId'><input type='text' class='form-control text-input' value='" + farIdValue+ "' name='FarId' style='width:450px;' class='ui-widget ui-widget-content ui-corner-all' readonly></td>";
+                itemRow += "<td name='FarId'><input type='text' class='form-control text-input' value='" + farIdValue+ "' name='FarId' style='min-width:450px;' class='ui-widget ui-widget-content ui-corner-all' readonly></td>";
                 } else {
-                 itemRow += "<td name='FarId'><input type='text' class='form-control text-input' value='" + farIdValue + "' name='FarId' style='width:450px;' class='ui-widget ui-widget-content ui-corner-all'></td>";
+                 itemRow += "<td name='FarId'><input type='text' class='form-control text-input' value='" + farIdValue + "' name='FarId' style='min-width:450px;' class='ui-widget ui-widget-content ui-corner-all'></td>";
                
                  }
-                itemRow += "<td name='macAddress'><input type='text' class='form-control text-input' value='"+boqArray[i].macAddress+"' name='macAddress' style='width:450px;' class='ui-widget ui-widget-content ui-corner-all' ></td>";
-                itemRow =itemRow + "<td name='itemSN' style='display:none'><input style='display:none' type='text' class='form-control text-input' style='width:200px' value='"+boqArray[i].dniSN+"'></td>";
-				itemRow =itemRow + "<td  name='toSN'><input type='text' class='form-control text-input' style='width:200px' value='"+boqArray[i].toSerialNumber+"'></td>";
-				itemRow =itemRow + "<td name='itemDniID'><input type='text' class='form-control text-input' style='width:150px' value='"+boqArray[i].dniDNID+"' readonly></td>";
-			    itemRow = itemRow + "<td name='toNode'><input type='text' style='width:200px; display: none;' value='" + toNodeArray[0] + "' class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>";
-                itemRow = itemRow + "<td name='fromNode'><input type='text' style='width:200px; display: none;' value='" + fromNodeArray[0] + "' class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>";
+                itemRow += "<td name='macAddress'><input type='text' class='form-control text-input' value='"+boqArray[i].macAddress+"' name='macAddress' style='min-width:450px;' class='ui-widget ui-widget-content ui-corner-all' ></td>";
+                itemRow =itemRow + "<td name='itemSN' style='display:none'><input style='display:none' type='text' class='form-control text-input' style='min-width:200px' value='"+boqArray[i].dniSN+"'></td>";
+				itemRow =itemRow + "<td  name='toSN'><input type='text' class='form-control text-input' style='min-width:200px' value='"+boqArray[i].toSerialNumber+"'></td>";
+				itemRow =itemRow + "<td name='itemDniID'><input type='text' class='form-control text-input' style='min-width:150px' value='"+boqArray[i].dniDNID+"' readonly></td>";
+			    itemRow = itemRow + "<td style='display:none' name='toNode'><input style='display:none' type='text' style='min-width:200px; display: none;' value='" + toNodeArray[0] + "' class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>";
+                itemRow = itemRow + "<td style='display:none' name='fromNode'><input style='display:none' type='text' style='min-width:200px; display: none;' value='" + fromNodeArray[0] + "' class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>";
 
 		        itemRow =itemRow + "</tr>";
 		        $("#bisotab > tbody").append(itemRow);
@@ -484,20 +484,20 @@
 			Actions_options += "</select>";
 
         	var markup = "<tr><td style='text-align:center;'><input type='checkbox' name='record' style='margin-top:12px;'><button type = 'button' href='#' name='popUpMenu' onclick='openPop(this)' class='btn btn-default'  style='position:relative;left:3px;'><i class='fas fa-desktop'></i></button></td>"
-              	+"<td name='item'><input type='text'  ondrop ='return false;'  name='itmCode' style='width:400px;' class='ui-widget ui-widget-content ui-corner-all form-control' /></td>"
-              	+"<td name='itemModel'><input type='text' ondrop ='return false;' name='itmMod' style='width:200px;' class='ui-widget ui-widget-content ui-corner-all form-control'></td>"
-              	+"<td name='itemPartNb'><input type='text' ondrop ='return false;' name='itmPartNb' style='width:200px;' class='ui-widget ui-widget-content ui-corner-all form-control'></td>"
+              	+"<td name='item'><input type='text'  ondrop ='return false;'  name='itmCode' style='min-width:400px;' class='ui-widget ui-widget-content ui-corner-all form-control' /></td>"
+              	+"<td name='itemModel'><input type='text' ondrop ='return false;' name='itmMod' style='min-width:200px;' class='ui-widget ui-widget-content ui-corner-all form-control'></td>"
+              	+"<td name='itemPartNb'><input type='text' ondrop ='return false;' name='itmPartNb' style='min-width:200px;' class='ui-widget ui-widget-content ui-corner-all form-control'></td>"
               	+"<td name='transType'>"+trans_options+"</td>"
               	+"<td name='notes' style='display:none'><input style='display:none' type='text' class='form-control NotesInput'></td>"
               	+"<td name='description' style='display:none'><input style='display:none' type='text' class='form-control NotesInput'></td>"
               	+"<td name='elementName'>"+Element_options+"</td>"
-              	+"<td name='address'><input type='text' class='form-control inputWidth'></td>"
+              	+"<td name='address'><input style='min-width:200px' type='text' class='form-control inputWidth'></td>"
               	+"<td name='buttonApprove'><p class='case'>Transaction Type is Required</p></td>"
               	+"<td name='approveStatus'>"+Actions_options+"<input  type='text' hidden name='approvedby' value =''></td>"
-              	+"<td name='purchaseOrder'><input type='text' ondrop ='return false;' name='itmPO' value='' style='width:350px;' class='ui-widget ui-widget-content ui-corner-all form-control'/></td>"
-              	+"<td name='workOrder'><input type='text' ondrop ='return false;' name='itmWO' value='' style='width:350px;' class='ui-widget ui-widget-content ui-corner-all form-control'/></td>"
-                +"<td style='display:none' name='fromSlot'><input style='display:none' type='text' class='form-control' style='width:200px;'/></td>"
-            	  +"<td style='display:none' name='toSlot'><input style='display:none' type='text' class='form-control' style='width:200px;'/></td>"
+              	+"<td name='purchaseOrder'><input type='text' ondrop ='return false;' name='itmPO' value='' style='min-width:350px;' class='ui-widget ui-widget-content ui-corner-all form-control'/></td>"
+              	+"<td name='workOrder'><input type='text' ondrop ='return false;' name='itmWO' value='' style='min-width:350px;' class='ui-widget ui-widget-content ui-corner-all form-control'/></td>"
+                +"<td style='display:none' name='fromSlot'><input style='display:none' type='text' class='form-control' style='min-width:200px;'/></td>"
+            	  +"<td style='display:none' name='toSlot'><input style='display:none' type='text' class='form-control' style='min-width:200px;'/></td>"
               	+"<td name='itemQty'  style='display:none'><input style='display:none' type='text' name='itemQty' value= 0 class='form-control inputWidth'></td>"
               	+"<td name='itemRate' style='display:none'><input style='display:none' type='text' value= 0 class='form-control inputWidth'></td>"
               	+"<td name='itemDAmout' style='display:none'><input style='display:none' type='text'value= 0 class='form-control inputWidth'></td>"
@@ -505,15 +505,15 @@
               	+"<td name='itemNetRate' style='display:none'><input style='display:none' type='text' value=0 readonly class='form-control inputWidth'></td>"
               	+"<td name='itemTotal' style='display:none'><input style='display:none' type='text' value=0 readonly class='form-control inputWidth' ></td>"
               	+"<td name='itemTotalAt' style='display:none'><input style='display:none' type='text' value=0 readonly class='form-control inputWidth'></td>"
-              	+"<td name='siteID'><input type='text' name='siteID' style='width:450px;' class='ui-widget ui-widget-content ui-corner-all form-control'/></td>"
-              	+"<td name='tositeID'><input type='text' name='tositeID' style='width:450px;' class='ui-widget ui-widget-content ui-corner-all form-control'/></td>"
-                +"<td name='FarId'><input type='text' name='FarId' style='width:450px;' class='ui-widget ui-widget-content ui-corner-all form-control' readonly/></td>"
-              	+"<td name='macAddress'><input type='text' name='macAddress' style='width:450px;' class='ui-widget ui-widget-content ui-corner-all form-control' ></td>"
-              	+"<td name='itemSN' style='display:none'><input style='display:none' type='text' value='0' class='form-control' style='width:200px;'></td>"
-              	+"<td name='toSN' ><input type='text' value='0' class='form-control' style='width:200px;'></td>"
-             	+"<td name='itemDniID'><input type='text' readonly value='0' class='form-control' style='width:160px;'></td>"
-             	+"<td name='toNode'><input type='text'  value ='null' class='form-control' style='width:160px; display:none;'></td>"
-             	+"<td name='fromNode'><input type='text' value ='null' style='width:200px; display:none;'  class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td></tr>";		
+              	+"<td name='siteID'><input type='text' name='siteID' style='min-width:450px;' class='ui-widget ui-widget-content ui-corner-all form-control'/></td>"
+              	+"<td name='tositeID'><input type='text' name='tositeID' style='min-width:450px;' class='ui-widget ui-widget-content ui-corner-all form-control'/></td>"
+                +"<td name='FarId'><input type='text' name='FarId' style='min-width:450px;' class='ui-widget ui-widget-content ui-corner-all form-control' readonly/></td>"
+              	+"<td name='macAddress'><input type='text' name='macAddress' style='min-width:450px;' class='ui-widget ui-widget-content ui-corner-all form-control' ></td>"
+              	+"<td name='itemSN' style='display:none'><input style='display:none' type='text' value='0' class='form-control' style='min-width:200px;'></td>"
+              	+"<td name='toSN' ><input type='text' value='0' class='form-control' style='min-width:200px;'></td>"
+             	+"<td name='itemDniID'><input type='text' readonly value='0' class='form-control' style='min-width:160px;'></td>"
+             	+"<td style='display:none;' name='toNode'><input type='text'  value ='null' class='form-control' style='min-width:160px; display:none;'></td>"
+             	+"<td style='display:none;' name='fromNode'><input type='text' value ='null' style='min-width:200px; display:none;'  class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td></tr>";		
 	       
 	       var rowIndex = $("#bisotab tr").length;
 
