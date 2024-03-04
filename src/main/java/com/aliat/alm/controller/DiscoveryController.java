@@ -1312,6 +1312,7 @@ query.executeUpdate();
 	public Map<String, Object> GetALLWOByItem(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response){
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
+		List<Object[]> listResult = new ArrayList<Object[]>();
 		if(LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
@@ -1328,7 +1329,7 @@ query.executeUpdate();
 
 
 		String woID="%" + request.getParameter("woId") + "%";
-		String PoID =request.getParameter("PrOrderID") ;
+		String PoID =request.getParameter("PrOrderID");
 		String Item_code = request.getParameter("Item_code");
 		String itemModel = request.getParameter("itemModel");
 		String itemPartNb = request.getParameter("ItemPartNb");
@@ -1338,38 +1339,33 @@ query.executeUpdate();
 		String str = "";
 		
 		 if(Item_code.equalsIgnoreCase("empty") == false){
+			 System.out.println("Passed from here as Item_code is not empty");
 			 
 			str="select distinct a.workOrdId ,a.purpose from WorkOrder a,WorkOrderSource b,WorkOrderDestination c, "
-					+"Item d, ItemPartNumber t where(a.workOrdId like :param1 or a.purpose like :param1 ) and a.workOrdId = b.workOrdId "
-					+"and a.workOrdId = c.workOrdId and b.itemCode = d.itemCode and c.itemCode = d.itemCode "
-					+"and b.itemCode =:param4 and t.itemCode = d.itemCode and c.itemCode =:param4 ";
+					+"Item d, ItemPartNumber t where(a.workOrdId like :param1 or a.purpose like :param1) "
+					//+"and b.itemCode = d.itemCode and c.itemCode = d.itemCode "
+					+"and ((b.itemCode =:param4 and a.workOrdId = b.workOrdId) or (c.itemCode =:param4 and a.workOrdId = c.workOrdId)) and t.itemCode = d.itemCode ";
 
 		
 			if (itemModel.equalsIgnoreCase("empty") == false) {
 				str += " and t.itemModel  =:param2";
 			}
-			
-			
-			
+						
 			if (itemPartNb.equalsIgnoreCase("empty") == false) {
 				str += " and t.itemPartNum =:param3";
-			}
-			
-			
-			
-			query = session.createQuery(str);
-			
-			if (itemModel.equalsIgnoreCase("empty") == false) {query.setParameter("param2", itemModel); }
-			
-			if (itemPartNb.equalsIgnoreCase("empty") == false) {query.setParameter("param3", itemPartNb); }
-			
+			}						
+			query = session.createQuery(str);					
+			if (itemModel.equalsIgnoreCase("empty") == false) {query.setParameter("param2", itemModel); }			
+			if (itemPartNb.equalsIgnoreCase("empty") == false) {query.setParameter("param3", itemPartNb); }			
 			
 			query.setParameter("param4", Item_code);
-
+			query.setParameter("param1", woID);
+		    System.out.println("The str query is " +query.getQueryString().toString());
+		    listResult = query.list();			
 		}
 		
 		
-		
+/*		
 		 else if(PoID.equalsIgnoreCase("empty") == false) {
 			
 			str="select distinct  a.workOrdId ,a.purpose from WorkOrder a,WorkOrderSource b,WorkOrderDestination c,Item d, "
@@ -1401,7 +1397,7 @@ query.executeUpdate();
 			
 		}
 		 
-		 
+
 		 
 		 else
 			{
@@ -1427,15 +1423,11 @@ query.executeUpdate();
 				
 			}
 		
-		
-		
-		 query.setParameter("param1", woID);
-
-		
-		List<Object[]> listResult = query.list();
+*/		
+				 
 		System.out.println("The list is " + mapper.writeValueAsString(listResult));
 
-		model.addAttribute("listResult", mapper.writeValueAsString(listResult));
+		//model.addAttribute("listResult", mapper.writeValueAsString(listResult));
 		rtn.put("ListWO", listResult); 
 
 			}catch(Exception e){ 
@@ -1464,17 +1456,11 @@ query.executeUpdate();
 			map.put("Login", LoginServices.checkSession(request, response));
 			return map;
 		}
-		
-
-		
-		session = AlmDbSession.getInstance().getSession();
-		
+		session = AlmDbSession.getInstance().getSession();		
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
-			notifications.headerNotifications(session, model);
-			
+			notifications.headerNotifications(session, model);			
 			try {
-
 		
 		for (int i = 0; i < itemParameters.getDictParameter().size(); i++) {
 
