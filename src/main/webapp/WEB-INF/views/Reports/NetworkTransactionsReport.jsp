@@ -409,8 +409,27 @@ max-width: 100%;
 						</div>
 					</div>
 				</div>
+				
 -->
-		<div class="col-md-12" style="float: right; padding-top:-100px;" >
+         <div class="col-md-3">
+					<div class="form-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text">Serial #</span>
+							<input type="text" id="serialNB" class="form-control text-input" />
+						</div>
+					</div>
+		</div>
+         <div class="col-md-3">
+					<div class="form-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text">Site </span>
+							<input type="text" id="site"  class="form-control text-input" />
+						</div>
+					</div>
+				</div>
+
+				
+		<div class="col-md-6" style="float: right; padding-top:-100px;" >
 			<div class="btn-group pull-right"  >
 				<button type="button"  id ="showOnMap"class="btn"  style=" margin-top:-10px;  margin-right: 15px;"  >Show on Map</button>
 		 		<button type="button"  id ="clearButton" class="btn btn-light clearButton" style=" margin-top:-10px; margin-right:-15px; "  >Clear</button>		 	
@@ -621,7 +640,7 @@ max-width: 100%;
 																</ul>
 														</li>
 														</th>
-														<th>From Site
+														<th>From Warehouse ID
 															<li class="filter-dropdown dropdown">
 																<button class="almgrid-filter" data-toggle="dropdown">
 																	<i class="fa fa-list almgrid-filter-i"
@@ -633,7 +652,104 @@ max-width: 100%;
 																</ul>
 														</li>
 														</th>
-														<th>To Site
+														<th>From Warehouse Name
+															<li class="filter-dropdown dropdown">
+																<button class="almgrid-filter" data-toggle="dropdown">
+																	<i class="fa fa-list almgrid-filter-i"
+																		aria-hidden="true"></i>
+																</button>
+																<ul
+																	class="dropdown-menu dropdown-menu-right filter-dropdown-ul">
+
+																</ul>
+														</li>
+														</th>
+														<th>From Site ID
+															<li class="filter-dropdown dropdown">
+																<button class="almgrid-filter" data-toggle="dropdown">
+																	<i class="fa fa-list almgrid-filter-i"
+																		aria-hidden="true"></i>
+																</button>
+																<ul
+																	class="dropdown-menu dropdown-menu-right filter-dropdown-ul">
+
+																</ul>
+														</li>
+														</th>
+														<th>From Site Longitude
+															<li class="filter-dropdown dropdown">
+																<button class="almgrid-filter" data-toggle="dropdown">
+																	<i class="fa fa-list almgrid-filter-i"
+																		aria-hidden="true"></i>
+																</button>
+																<ul
+																	class="dropdown-menu dropdown-menu-right filter-dropdown-ul">
+
+																</ul>
+														</li>
+														</th>
+														
+														<th>From Site Latitude
+															<li class="filter-dropdown dropdown">
+																<button class="almgrid-filter" data-toggle="dropdown">
+																	<i class="fa fa-list almgrid-filter-i"
+																		aria-hidden="true"></i>
+																</button>
+																<ul
+																	class="dropdown-menu dropdown-menu-right filter-dropdown-ul">
+
+																</ul>
+														</li>
+														</th> 
+															<th>To  Warehouse ID
+															<li class="filter-dropdown dropdown">
+																<button class="almgrid-filter" data-toggle="dropdown">
+																	<i class="fa fa-list almgrid-filter-i"
+																		aria-hidden="true"></i>
+																</button>
+																<ul
+																	class="dropdown-menu dropdown-menu-right filter-dropdown-ul">
+
+																</ul>
+														</li>
+														</th>
+															<th>To Warehouse Name
+															<li class="filter-dropdown dropdown">
+																<button class="almgrid-filter" data-toggle="dropdown">
+																	<i class="fa fa-list almgrid-filter-i"
+																		aria-hidden="true"></i>
+																</button>
+																<ul
+																	class="dropdown-menu dropdown-menu-right filter-dropdown-ul">
+
+																</ul>
+														</li>
+														</th>
+														<th>To Site ID
+															<li class="filter-dropdown dropdown">
+																<button class="almgrid-filter" data-toggle="dropdown">
+																	<i class="fa fa-list almgrid-filter-i"
+																		aria-hidden="true"></i>
+																</button>
+																<ul
+																	class="dropdown-menu dropdown-menu-right filter-dropdown-ul">
+
+																</ul>
+														</li>
+														</th>
+														<th>To Site Longitude
+															<li class="filter-dropdown dropdown">
+																<button class="almgrid-filter" data-toggle="dropdown">
+																	<i class="fa fa-list almgrid-filter-i"
+																		aria-hidden="true"></i>
+																</button>
+																<ul
+																	class="dropdown-menu dropdown-menu-right filter-dropdown-ul">
+
+																</ul>
+														</li>
+														</th>
+														<th>To Site Latitude
 															<li class="filter-dropdown dropdown">
 																<button class="almgrid-filter" data-toggle="dropdown">
 																	<i class="fa fa-list almgrid-filter-i"
@@ -817,6 +933,14 @@ max-width: 100%;
 														<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 														<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 														<th><input type="text" class="almgrid-search" placeholder="Search"></th>
+														<th><input type="text" class="almgrid-search" placeholder="Search"></th>
+														<th><input type="text" class="almgrid-search" placeholder="Search"></th>
+														<th><input type="text" class="almgrid-search" placeholder="Search"></th>
+														<th><input type="text" class="almgrid-search" placeholder="Search"></th>
+														<th><input type="text" class="almgrid-search" placeholder="Search"></th>
+														<th><input type="text" class="almgrid-search" placeholder="Search"></th>
+														<th><input type="text" class="almgrid-search" placeholder="Search"></th>
+														<th><input type="text" class="almgrid-search" placeholder="Search"></th>			
 														<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 														<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 														<th><input type="text" class="almgrid-search" placeholder="Search"></th>
@@ -1355,11 +1479,11 @@ function DefaultZoomControl(controlDiv, map) {
 										var dismantledCounter =0;
 										var totalCounter = 0;
 										
-									for( var i = 5; i<dataArray.length;i++){
-										for (var j = 5; j < ArrayKeys.length; j++) {
+									for( var i = 0; i<dataArray.length;i++){
+										for (var j = 0; j < ArrayKeys.length; j++) {
 											//console.log("i : "+i+" j : "+j+" is "+ dataArray[i][ArrayKeys[j]]);
 											 columnVal = ArrayKeys[j];
-											 if(columnVal == "9"){
+											 if(columnVal == "4"){
 												if(dataArray[i][ArrayKeys[j]].includes("DISAPPEARED")){
 													disappearedCounter++;
 
@@ -1419,16 +1543,31 @@ function DefaultZoomControl(controlDiv, map) {
 							 mapFlag="1";
 							
 							for (var i = 0; i < filteredSitesGrid.length; i++) {
-								//console.log("///////filteredSitesGrid[i][siteID] is in "+filteredSitesGrid[i][1]);			
-								if(distinctSites.includes(filteredSitesGrid[i][1])==false) {
+								//console.log("///////filteredSitesGrid[i][siteID] is in "+filteredSitesGrid[i][1]);
+								///for from site			
+								if(distinctSites.includes(filteredSitesGrid[i][8])==false) {
 									//console.log("///////filteredSitesGrid[i][siteID] is in "+filteredSitesGrid[i][1]);
-									distinctSites.push(filteredSitesGrid[i][1]);
-									if(!markerSites[filteredSitesGrid[i][1]]){
-										createSiteMarker(filteredSitesGrid[i][1],filteredSitesGrid[i][3],filteredSitesGrid[i][4],filteredSitesGrid[i][2]);
+									distinctSites.push(filteredSitesGrid[i][8]);
+									if(!markerSites[filteredSitesGrid[i][8]]){
+										createSiteMarker(filteredSitesGrid[i][8],filteredSitesGrid[i][9],filteredSitesGrid[i][10],filteredSitesGrid[i][7]);
 									}
 									else {					
-										markerSites[filteredSitesGrid[i][1]].setMap(map);
-										markerClusterSites.addMarker(markerSites[""+filteredSitesGrid[i][1]]);
+										markerSites[filteredSitesGrid[i][8]].setMap(map);
+										markerClusterSites.addMarker(markerSites[""+filteredSitesGrid[i][8]]);
+
+									}
+								}
+
+								///for to site			
+								if(distinctSites.includes(filteredSitesGrid[i][13])==false) {
+									
+									distinctSites.push(filteredSitesGrid[i][13]);
+									if(!markerSites[filteredSitesGrid[i][13]]){
+										createSiteMarker(filteredSitesGrid[i][8],filteredSitesGrid[i][14],filteredSitesGrid[i][15],filteredSitesGrid[i][12]);
+									}
+									else {					
+										markerSites[filteredSitesGrid[i][13]].setMap(map);
+										markerClusterSites.addMarker(markerSites[""+filteredSitesGrid[i][13]]);
 
 									}
 								}
@@ -1549,8 +1688,16 @@ function DefaultZoomControl(controlDiv, map) {
 									                 +'<th>ALM Trans Type <li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>' 
 									                 +'<th>Discovered Trans Type <li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>' 
 									                 +'<th>Date <li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>' 
-									                 +'<th>From Site <li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>' 
-									                 +'<th>To Site <li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i"aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>' 
+									                 +'<th>From Warehouse ID <li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>' 
+										             +'<th>From Warehouse Name <li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>' 
+									                 +'<th>From Site ID <li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>' 
+									                 +'<th>From Site Longitude <li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>' 
+									                 +'<th>From Site Latitude <li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>' 
+									                 +'<th>To Warehouse ID <li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>' 
+										             +'<th>To Warehouse Name <li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>' 
+									                 +'<th>To Site ID <li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i"aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>' 
+									                 +'<th>To Site Longitude <li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>' 
+									                 +'<th>To Site Latitude <li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>' 
 									                 +'<th>From Node <li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>' 
 									                 +'<th>To Node <li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>' 
 									                 +'<th>From Node Type <li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>' 
@@ -1587,6 +1734,15 @@ function DefaultZoomControl(controlDiv, map) {
 									                 +'<th><input type="text" class="almgrid-search" placeholder="Search"></th>' 
 									                 +'<th><input type="text" class="almgrid-search" placeholder="Search"></th>' 
 									                 +'<th><input type="text" class="almgrid-search" placeholder="Search"></th>' 
+									                 +'<th><input type="text" class="almgrid-search" placeholder="Search"></th>' 
+									                 +'<th><input type="text" class="almgrid-search" placeholder="Search"></th>' 
+									                 +'<th><input type="text" class="almgrid-search" placeholder="Search"></th>' 
+									                 +'<th><input type="text" class="almgrid-search" placeholder="Search"></th>' 
+									                 +'<th><input type="text" class="almgrid-search" placeholder="Search"></th>' 
+									                 +'<th><input type="text" class="almgrid-search" placeholder="Search"></th>' 
+									                 +'<th><input type="text" class="almgrid-search" placeholder="Search"></th>' 
+									                 +'<th><input type="text" class="almgrid-search" placeholder="Search"></th>' 
+									                 
 
 
 									                 +'</tr></thead><tbody></tbody></table>');
@@ -1674,65 +1830,50 @@ function DefaultZoomControl(controlDiv, map) {
 															         					 $("#totalCloseSite").val("");
 															         					 document.getElementById("findCloseSitePts").innerHTML = "";
 															         					 filteredSitesGrid = dataArray; // used in draw on map
-															         					/*// filteredSitesGrid = dataArray.splice(0, 6);
-															         					const keys = ["site", "wareID", "siteID", "siteName", "longitude", "latitude"];
-															         					const resultObject = [];
-
-															         					for (var x = 0; x < filteredSitesGrid.length; x++) {
-															         					  const currentObject = [];
-															         					  for (var y = 0; y < keys.length; y++) {
-															         					    const key = keys[y];
-															         					    const value = filteredSitesGrid[x][y];
-															         					    currentObject[key] = value;
-															         					  }
-															         					  resultObject[x] = currentObject; // Assuming you want to store each object in the resultObject
-															         					}
-															         					filteredSitesGrid = resultObject;
-															         					//console.log(filteredSitesGrid);*/
-															         					
+															         						         					
 															         					 
-																					var ArrayKeys = Object.keys(dataArray[0]);
-																					// Method for pagination almgrid-pagecount-box
-																					$("#"+ gridContainerId).find(".almgrid-pagecount-box").attr("id",tableId+ "_pagecount");
-																					$("#"+ gridContainerId).find(".pagination-div").attr("id",tableId+ "_pagination");
+																					     var ArrayKeys = Object.keys(dataArray[0]);
+																					     // Method for pagination almgrid-pagecount-box
+																					     $("#"+ gridContainerId).find(".almgrid-pagecount-box").attr("id",tableId+ "_pagecount");
+																					     $("#"+ gridContainerId).find(".pagination-div").attr("id",tableId+ "_pagination");
 
-																					// For global search textbox
-																					$("#"+ gridContainerId).find(".almgrid-global-search").attr("id",tableId+ "_globalsearch");
+																					     // For global search textbox
+																					     $("#"+ gridContainerId).find(".almgrid-global-search").attr("id",tableId+ "_globalsearch");
 
-																					var paginationId = tableId+ "_pagination";
+																					     var paginationId = tableId+ "_pagination";
 
-																					// Page Rows number
-																					var nbRows = $("#"+ gridContainerId).find(".almgrid-pagecount").val();
-																					nbRows = parseInt(nbRows);
-																					var disappearedCounter = 0;
-																					var newCounter = 0;
-																					var transferredCounter=0;
-																					var dismantledCounter =0;
-																					var totalCounter = 0;
+																					     // Page Rows number
+																					     var nbRows = $("#"+ gridContainerId).find(".almgrid-pagecount").val();
+																					     nbRows = parseInt(nbRows);
+																					     var disappearedCounter = 0;
+																					     var newCounter = 0;
+																					     var transferredCounter=0;
+																					     var dismantledCounter =0;
+																					     var totalCounter = 0;
 																					
-																				for( var i = 5; i<dataArray.length;i++){
-																					for (var j = 5; j < ArrayKeys.length; j++) {
-																						//console.log("i : "+i+"j : "+j+" is "+ dataArray[i][ArrayKeys[j]]);
-																						 columnVal = ArrayKeys[j];
-																						 if(columnVal == "9"){
-																							if(dataArray[i][ArrayKeys[j]].includes("DISAPPEARED")){
-																								disappearedCounter++;
+																				         for( var i = 0; i<dataArray.length;i++){
+																					        for (var j = 0; j < ArrayKeys.length; j++) {
+																						         //console.log("i : "+i+"j : "+j+" is "+ dataArray[i][ArrayKeys[j]]);
+																						         columnVal = ArrayKeys[j];
+																						         if(columnVal == "4"){
+																							       if(dataArray[i][ArrayKeys[j]].includes("DISAPPEARED")){
+																								      disappearedCounter++;
 
-																							}
-																							else if(dataArray[i][ArrayKeys[j]].includes("NEW")){
-																								newCounter++;
+																							       }
+																							       else if(dataArray[i][ArrayKeys[j]].includes("NEW")){
+																								        newCounter++;
 
-																							}else if(dataArray[i][ArrayKeys[j]].includes("Transfer")){
-																								transferredCounter++;
+																							       }else if(dataArray[i][ArrayKeys[j]].includes("Transfer")){
+																								        transferredCounter++;
 
-																							}else if(dataArray[i][ArrayKeys[j]].includes("Dismantled")){
-																								dismantledCounter++;
+																							       }else if(dataArray[i][ArrayKeys[j]].includes("Dismantled")){
+																								        dismantledCounter++;
 
-																							}
+																							       }
 																						 
-																					   }
-																					}
-																				}
+																					             }
+																					         }
+																				         }
 																					
 																					$("#totalbnrTrans").val(dataArray.length);
 																					$("#newElements").val(newCounter);
@@ -1829,7 +1970,8 @@ function DefaultZoomControl(controlDiv, map) {
 							data.push('\r');
 							data.push([ "Element ID", "Element",
 									"ALM Trans Type", "Discovered Trans Type",
-									"Date", "From Site", "To Site",
+									"Date", "From Warehouse ID", "From Warehouse Name", "From Site ID","From Site Longitude","From Site Latitude",
+									"To Warehouse ID", "To Warehouse Name","To Site ID","To Site Longitude","To Site Latitude",
 									"From Node", "To Node", "From Node","To Node Type",
 									"Model","Mac Address", "Serial Number",
 									"From Circle", "To Circle", "Approved By",
@@ -1904,11 +2046,27 @@ function DefaultZoomControl(controlDiv, map) {
 			//Loop through all sites to get the distance and filter the closest sites
 			for(var x=0;x<filteredSitesGrid.length;x++) {
 				
-				// Check if site already appended to avoid the duplication ( because filteredSitesGrid contains repeated sites)
-				if(showCloseDistinctSites.includes(filteredSitesGrid[x]["siteID"])==false) {
+				// Check if site already appended to avoid the duplication ( because filteredSitesGrid contains repeated sites) for from site
+				if(showCloseDistinctSites.includes(filteredSitesGrid[x][8])==false) {
 				
-					showCloseDistinctSites.push(filteredSitesGrid[x]["siteID"]);
-					pointDist =Number(haversineDistance(closePtLat,closePtLong,filteredSitesGrid[x]["latitude"],filteredSitesGrid[x]["longitude"]));
+					showCloseDistinctSites.push(filteredSitesGrid[x][8]);
+					pointDist =Number(haversineDistance(closePtLat,closePtLong,filteredSitesGrid[x][10],filteredSitesGrid[x][9]));
+
+				
+				if (pointDist < closePtDistRange) {
+					
+				    closePointsDataTemp = filteredSitesGrid[x];//Add all site details to the temp array
+					closePointsDataTemp.distance = (pointDist);// Append the calculated distance to the array 
+					closePointsData.push(closePointsDataTemp);// Add the temp array to the main array that will contains all closest sites to append after
+					closePointsDataTemp =[];//Clear the temp array to use it on next iteration
+				}
+			  }
+
+				// Check if site already appended to avoid the duplication ( because filteredSitesGrid contains repeated sites) for to site
+				if(showCloseDistinctSites.includes(filteredSitesGrid[x][13])==false) {
+				
+					showCloseDistinctSites.push(filteredSitesGrid[x][13]);
+					pointDist =Number(haversineDistance(closePtLat,closePtLong,filteredSitesGrid[x][15],filteredSitesGrid[x][14]));
 
 				
 				if (pointDist < closePtDistRange) {
@@ -2003,23 +2161,59 @@ $('.showHideSitesCheckbox').bind("change",function() {
 }
 function panToSite(ID,rowIndex){
 
-var longitude = filteredSitesGrid[rowIndex][3];
-var latitude = filteredSitesGrid[rowIndex][4];
-var siteName = filteredSitesGrid[rowIndex][2];
 
- var latLng = new google.maps.LatLng(latitude,longitude);
- map.setZoom(15);
- map.panTo(latLng);
+///to site
+var toSiteLongitude = filteredSitesGrid[rowIndex][14];
+var toSiteLatitude = filteredSitesGrid[rowIndex][15];
+var toSiteName = filteredSitesGrid[rowIndex][12];
+var toSiteId = filteredSitesGrid[rowIndex][13];
+console.log("toSiteId "+toSiteId+" toSiteName "+toSiteName+" toSiteLatitude "+toSiteLatitude+" toSiteLongitude "+toSiteLongitude)
+ var toSitelatLng = new google.maps.LatLng(toSiteLatitude,toSiteLongitude);
+ //map.setZoom(15);
+ map.panTo(toSitelatLng);
+
+//from site
+ var fromSiteLongitude = filteredSitesGrid[rowIndex][9];
+ var fromSiteLatitude = filteredSitesGrid[rowIndex][10];
+ var fromSiteName = filteredSitesGrid[rowIndex][7];
+ var fromSiteId = filteredSitesGrid[rowIndex][8];
+ console.log("fromSiteId "+fromSiteId+" fromSiteName "+fromSiteName+" fromSiteLatitude "+fromSiteLatitude+" fromSiteLongitude "+fromSiteLongitude)
+  var fromSitelatLng = new google.maps.LatLng(fromSiteLatitude,fromSiteLongitude);
+ // map.setZoom(15);
+  map.panTo(fromSitelatLng);
  
-	
+
+/*//to site
+var toSiteLongitude = filteredSitesGrid[rowIndex][14];
+var toSiteLatitude = filteredSitesGrid[rowIndex][15];
+var toSitelatLng = new google.maps.LatLng(toSiteLatitude,toSiteLongitude);
+
+//from site
+var fromSiteLongitude = filteredSitesGrid[rowIndex][9];
+var fromSiteLatitude = filteredSitesGrid[rowIndex][10];
+var fromSitelatLng = new google.maps.LatLng(fromSiteLatitude,fromSiteLongitude);
+
+// Calculate bounds
+var bounds = new google.maps.LatLngBounds();
+bounds.extend(toSitelatLng);
+bounds.extend(fromSitelatLng);
+
+// Pan and zoom to fit both sites
+map.fitBounds(bounds);
+*/
 	if(mapFlag=="0") { // Draw on map is not clicked before (markers are not set on map)
 		$('.showHideSitesCheckbox').prop('checked', true);
 		$(".showHideSitesCheckbox").attr('disabled', false);
          document.getElementById("sitesCount").textContent = "";      
 
-		if(!markerSites[ID]){
-			distinctSites.push(ID); //  this array is used when checking all sites from legend
-			createSiteMarker(ID,longitude,latitude,siteName);
+		if(!markerSites[fromSiteId]){
+			distinctSites.push(fromSiteId); //  this array is used when checking all sites from legend
+			createSiteMarker(fromSiteId,fromSiteLongitude,fromSiteLatitude,fromSiteName);
+		}
+
+		if(!markerSites[toSiteId]){
+			distinctSites.push(toSiteId); //  this array is used when checking all sites from legend
+			createSiteMarker(toSiteId,toSiteLongitude,toSiteLatitude,toSiteName);
 		}
 
 	}// end mapFlag condition
