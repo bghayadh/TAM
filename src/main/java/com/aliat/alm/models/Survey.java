@@ -35,6 +35,9 @@ public class Survey {
 	@Column(name = "SERVICE_REQUEST")
 	private String serviceRequest;
 	
+	@Column(name = "SERVICE_APP_NUMBER")
+	private String serviceAppNo;
+	
 	
 	public Survey() {
 		super();
@@ -42,7 +45,7 @@ public class Survey {
 
 
 	public Survey(String surveyID, String customerID, String longitude, String latitude, Timestamp creationDate,
-			String serviceReference, String serviceRequest) {
+			String serviceReference, String serviceRequest,String serviceAppNo) {
 		super();
 		this.surveyID=surveyID;
 		this.customerID=customerID;
@@ -51,6 +54,7 @@ public class Survey {
 		this.creationDate = creationDate;
 		this.serviceReference = serviceReference;
 		this.serviceRequest = serviceRequest;
+		this.serviceAppNo = serviceAppNo;
 	}
 
 
@@ -120,6 +124,16 @@ public class Survey {
 
 	public void setServiceRequest(String serviceRequest) {
 		this.serviceRequest = serviceRequest;
+	}
+
+
+	public String getServiceAppNo() {
+		return serviceAppNo;
+	}
+
+
+	public void setServiceAppNo(String serviceAppNo) {
+		this.serviceAppNo = serviceAppNo;
 	}
 
 

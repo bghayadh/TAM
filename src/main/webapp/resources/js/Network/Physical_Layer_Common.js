@@ -4,6 +4,7 @@ selectedFiberMode="";
 var showPointsType="";
 var showHidePointsArray =[];
 var allTreePoints=[];
+var surveyNearestPoint="";
 
  $(document).on("triggerListenersEvent", function () {
 $(function(){
@@ -85,7 +86,26 @@ searchConnectedButtonEvents();
     	else {
     		$(this).val('0');
     	}
-    });  
+    }); 
+
+	var button = document.getElementById('updateOnMySD');
+
+    button.addEventListener('mouseover', function() {
+        if (!button.disabled) {
+            button.style.cursor = 'pointer';
+        } else {
+            button.style.cursor = 'default';
+        }
+    });
+
+    button.addEventListener('mouseout', function() {
+        button.style.cursor = 'default';
+    });
+ 
+
+
+
+
 	$("#addManhole").on('click',function(){
 		console.log("addd manholeee");
 		document.getElementById("projectIdManhole").style.display = "block";
@@ -5883,7 +5903,7 @@ function appendNearestDBoardTable(result){
 				    else{
 				    	if(result[i][10] == null || result[i][10]==""){
 							//markupDBoard +="<tr ><td style='min-width:250px;' class='row-pad'>"+result[i][0]+"</td><td style='min-width:250px;'>"+result[i][3]+"</td><td  name='LONGG' style='min-width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td style='min-width:150px;'  name='LATT'><input name='LATT' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='min-width:50px;'>"+result[i][8]/1.60934+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='SomeDeleteRowFunction(this)'>Get Distance</button> </td></tr>"
-							markupDBoard +="<tr style='height: 30px;'><td><input type='checkbox' class='DBBOQ' id=BOQ_"+result[i][0]+" ></td><td name='ID' style='min-width:150px;'><input name='ID' style='border: none;' value='"+result[i][0]+"' readonly></input ></td><td name='name' style='min-width:150px;'><input name='name' style='border: none;' value='"+result[i][3]+"' readonly></input ></td><td  name='LONGG' style='min-width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td style='min-width:150px;'  name='LATT'><input name='LATT' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td name='linearDistance' style='min-width:50px;'><input name='linearDistance' style='border: none;' value='"+result[i][9]+"' readonly></input ></td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistance(this)'>Get Distance</button> </td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td></tr>"
+							markupDBoard +="<tr style='height: 30px;'><td><input type='checkbox' class='DBBOQ' id=BOQ_"+result[i][0]+" ></td><td name='ID' style='min-width:150px;'><input name='ID' style='border: none;' value='"+result[i][0]+"' readonly></input ></td><td name='name' style='min-width:150px;'><input name='name' style='border: none;' value='"+result[i][3]+"' readonly></input ></td><td  name='LONGG' style='min-width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td style='min-width:150px;'  name='LATT'><input name='LATT' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td name='linearDistance' style='min-width:50px;'><input name='linearDistance' style='border: none;' value='"+result[i][9]+"' readonly></input ></td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistance(this)'>Get Distance</button> </td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td><td style='width:300px; height:30px;vertical-align: top;' name='selectPointAsNearest'><button type='button' style='width:100px;font-size:10px;margin-left:20px' name='selectPointAsNearest'  onclick='selectAsNearest(this)'>Select As Nearest</button></td></tr>"
 						}else{
 							markupDBoard +="<tr style='height: 30px;'><td><input type='checkbox' class='DBBOQ' id=BOQ_"+result[i][0]+" ></td><td name='ID' style='min-width:150px;'><input name='ID' style='border: none;' value='"+result[i][0]+"' readonly></input></td><td name='name' 'style='min-width:150px;'><input name='name' style='border: none;' value='"+result[i][3]+"' readonly></input ></td><td name='LONGG' style='min-width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td name='LATT' style='min-width:150px;'><input name='LATT' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='min-width:50px;'>"+result[i][8]+"</td><td style='min-width:90px;'> <label name='DDistance' style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'>"+(result[i][10])+"</label></td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td></tr>"
 						}				    	
@@ -5991,7 +6011,7 @@ function appendNearestDBoardTable(result){
 				}
 				else{
 				    	if(result[i][10] == null || result[i][10]==""){
-							markupNode +="<tr style='height: 30px;'><td><input type='checkbox' class='nodeBOQ' id=BOQ_"+result[i][0]+" ></td><td name='ID' style='min-width:150px;'><input name='ID' style='border: none;' value='"+result[i][0]+"' readonly></input ></td><td name='name' style='min-width:150px;'><input name='name' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td  name='LONGG' style='min-width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][5]+"' readonly></input ></td><td style='min-width:150px;'  name='LATT'><input name='LATT' style='border: none;' value='"+result[i][6]+"' readonly></input ></td><td name='linearDistance' style='min-width:50px;'><input name='linearDistance' style='border: none;' value='"+result[i][9]+"' readonly></input ></td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistance(this)'>Get Distance</button> </td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td></tr>"
+							markupNode +="<tr style='height: 30px;'><td><input type='checkbox' class='nodeBOQ' id=BOQ_"+result[i][0]+" ></td><td name='ID' style='min-width:150px;'><input name='ID' style='border: none;' value='"+result[i][0]+"' readonly></input ></td><td name='name' style='min-width:150px;'><input name='name' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td  name='LONGG' style='min-width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][5]+"' readonly></input ></td><td style='min-width:150px;'  name='LATT'><input name='LATT' style='border: none;' value='"+result[i][6]+"' readonly></input ></td><td name='linearDistance' style='min-width:50px;'><input name='linearDistance' style='border: none;' value='"+result[i][9]+"' readonly></input ></td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistance(this)'>Get Distance</button> </td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td><td style='width:300px; height:30px;vertical-align: top;' name='selectPointAsNearest'><button type='button' style='width:100px;font-size:10px;margin-left:20px' name='selectPointAsNearest'  onclick='selectAsNearest(this)'>Select As Nearest</button></td></tr>"
 
 						}else{
 							markupNode +="<tr style='height: 30px;'><td><input type='checkbox' class='nodeBOQ' id=BOQ_"+result[i][0]+" ></td><td name='ID' style='min-width:150px;'><input name='ID' style='border: none;' value='"+result[i][0]+"' readonly></input ></td><td name='name' style='min-width:150px;'><input name='name' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td name='LONGG' style='min-width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][5]+"' readonly></input ></td><td style='min-width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][6]+"' readonly></input ></td><td style='min-width:50px;'>"+result[i][9]+"</td><td style='min-width:90px;'> <label name='DDistance' style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'>"+(result[i][10])+"</label></td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td></tr>"
@@ -6118,7 +6138,7 @@ function appendNearestDBoardTable(result){
 			    else{
 			    	if(result[i][8] == null || result[i][8]==""){
 						//markupHandh +="<tr style='height: 30px;'><td><input type='checkbox' style='width:100px' ></td><td  >"+result[i][0]+"</td><td style='min-width:250px;'>"+result[i][1]+"</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][3]+"' readonly></input ></td><td style='width:100px;'>"+(result[i][9]/1.60934)+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='SomeDeleteRowFunction(this)'>Get Distance</button> </td></tr>"
-						markupHandh +="<tr style='height: 30px;'><td><input type='checkbox' class='HandholeBOQ' id=BOQ_"+result[i][0]+" ></td><td name='ID'><input name='ID' style='border: none;' value='"+result[i][0]+"' readonly></input ></td><td style='min-width:250px;' name='name'><input name='name' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][3]+"' readonly></input ></td><td style='width:100px;' name='linearDistance'><input name='linearDistance' style='border: none;' value='"+result[i][7]+"' readonly></input ></td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistance(this)'>Get Distance</button> </td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td></tr>"
+						markupHandh +="<tr style='height: 30px;'><td><input type='checkbox' class='HandholeBOQ' id=BOQ_"+result[i][0]+" ></td><td name='ID'><input name='ID' style='border: none;' value='"+result[i][0]+"' readonly></input ></td><td style='min-width:250px;' name='name'><input name='name' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][3]+"' readonly></input ></td><td style='width:100px;' name='linearDistance'><input name='linearDistance' style='border: none;' value='"+result[i][7]+"' readonly></input ></td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistance(this)'>Get Distance</button> </td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td><td style='width:300px; height:30px;vertical-align: top;' name='selectPointAsNearest'><button type='button' style='width:100px;font-size:10px;margin-left:20px' name='selectPointAsNearest'  onclick='selectAsNearest(this)'>Select As Nearest</button></td></tr>"
 
 					}else{
 						//markupHandh +="<tr style='height: 30px;' ><td><input type='checkbox' style='width:100px' ></td><td  >"+result[i][0]+"</td><td style='min-width:250px;'>"+result[i][1]+"</td><td style='width:150px;'>"+result[i][2]+"</td><td style='width:150px;'>"+result[i][3]+"</td><td style='width:100px;'>"+(result[i][9]/1.60934)+"</td><td style='min-width:90px;'> <label name='DDistance' style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'>"+(result[i][10])+"</label></td></tr>"
@@ -6258,6 +6278,30 @@ function appendNearestDBoardTable(result){
 		var t = parent.getElementsByTagName('table'), i = t.length;
 		while (--i >= 0) makeSortable(t[i]);
 	}
+function autoFitTable(tableId) {
+  const table = document.getElementById(tableId);
+  if (!table) {
+    console.error('Table not found');
+    return;
+  }
+
+  const colCount = table.rows[0].cells.length;
+
+  // Calculate the maximum width for each column
+  const colWidths = Array.from({ length: colCount }, () => 0);
+  for (let i = 0; i < table.rows.length; i++) {
+    const row = table.rows[i];
+    for (let j = 0; j < colCount; j++) {
+      const cellWidth = row.cells[j].scrollWidth;
+      colWidths[j] = Math.max(colWidths[j], cellWidth);
+    }
+  }
+
+  // Set the width for each column
+  for (let i = 0; i < colCount; i++) {
+    table.rows[0].cells[i].style.width = colWidths[i] + 'px';
+  }
+}
 	function appendNearestManholesTable(result){
 		var markupManh="";
 		document.getElementById("findNearestManRes").innerHTML = "";
@@ -6277,7 +6321,7 @@ function appendNearestDBoardTable(result){
 			
 		    	if(result[i][9] == null || result[i][9]==""){
 				//markupManh +="<tr style='height: 30px;'><td><input type='checkbox' style='width:100px' ></td><td  >"+result[i][0]+"</td><td style='min-width:250px;'>"+result[i][1]+"</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][3]+"' readonly></input ></td><td style='width:100px;'>"+(result[i][9]/1.60934)+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='SomeDeleteRowFunction(this)'>Get Distance</button> </td></tr>"
-					markupManh +="<tr style='height: 30px;'><td ><input type='checkbox' class='ManholeBOQ' id=BOQ_"+result[i][0]+" ></td><td name='ID' ><input name='ID' style='border: none;' value='"+result[i][0]+"' readonly></input ></td><td name='name' style='min-width:250px;'><input name='name' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][3]+"' readonly></input ></td><td style='width:100px;' name='linearDistance' ><input name='linearDistance' style='border: none;' value='"+result[i][7]+"' readonly></input ></td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistance(this)'>Get Distance</button> </td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td></tr>"
+				markupManh +="<tr style='height: 30px;'><td ><input type='checkbox' class='ManholeBOQ' id=BOQ_"+result[i][0]+" ></td><td name='ID' ><input name='ID' style='border: none;' value='"+result[i][0]+"' readonly></input ></td><td name='name' style='min-width:250px;'><input name='name' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][3]+"' readonly></input ></td><td style='width:100px;' name='linearDistance' ><input name='linearDistance' style='border: none;' value='"+result[i][7]+"' readonly></input ></td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px;margin-left:-85px ' name='DDistanceB'  onclick='getDrivingDistance(this)'>Get Distance</button> </td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td><td style='width:300px; height:30px;vertical-align: top;' name='selectPointAsNearest'><button type='button' style='width:100px;font-size:10px;margin-left:20px' name='selectPointAsNearest'  onclick='selectAsNearest(this)'>Select As Nearest</button></td></tr>"
 
 			    }else{
 				//markupManh +="<tr style='height: 30px;' ><td><input type='checkbox' style='width:100px' ></td><td  >"+result[i][0]+"</td><td style='min-width:250px;'>"+result[i][1]+"</td><td style='width:150px;'>"+result[i][2]+"</td><td style='width:150px;'>"+result[i][3]+"</td><td style='width:100px;'>"+(result[i][9]/1.60934)+"</td><td style='min-width:90px;'> <label name='DDistance' style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'>"+(result[i][10])+"</label></td></tr>"
@@ -6293,7 +6337,9 @@ function appendNearestDBoardTable(result){
 			drivingDistance("findNearstManhole");
 		}
 		makeAllSortable();
-		
+		autoFitTable('findNearstManhole');
+
+
 		$("#selectAllManhole").click(function(){
 			if($(this).is(":checked")){
 			console.log("entered "+ $(this).attr('id'));
@@ -14853,6 +14899,15 @@ function showHideTubeStrandAuxPoints(auxiliaryArray,wareID,srcDstID,name,longitu
 			}	
 			
 		}
+		
+function selectAsNearest(e){
+		if (typeof(e) == "object") {
+			var ID = $(e).parent().parent().children('td[name="ID"]').children('input').val();
+			var distLinear = $(e).parent().parent().children('td[name="linearDistance"]').children('input').val();
+			surveyNearestPoint = ID+":"+distLinear;
+			$("#surveyNearestPt").val(surveyNearestPoint);
+		}			
+}
 function getDrivingDistanceClosePoint(e) {
 		if (typeof(e) == "object") {
 			var directionsService = new google.maps.DirectionsService();

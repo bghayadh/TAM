@@ -189,11 +189,46 @@
 												</div>
 											</div>
 										</div>
-											<div class="col-sm-4" id="serviceRef">
+										<div class="col-sm-3" id="serviceAppNum">
 											<div class="form-group">
 												<div class="input-group-prepend" style="width: auto;">
-													<span style="font-size: 12px;" class="input-group-text"><b>Service REF</b></span>
+													<span style="font-size: 12px;" class="input-group-text"><b>Service App No</b></span>
+													<input type="text" id="serviceAppNo" class="form-control text-input" />
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-4" id="survNearestPt">
+											<div class="form-group">
+												<div class="input-group-prepend" style="width: auto;">
+													<span style="font-size: 12px;" class="input-group-text"><b>Nearest Pt</b></span>
+													<input type="text" id="surveyNearestPt" class="form-control text-input" readonly />
+												</div>
+											</div>
+										</div>	
+																																					
+										</div>
+										<div class="row">
+										<div class="col-sm-3" id="serviceRef">
+											<div class="form-group">
+												<div class="input-group-prepend" style="width: auto;">
+													<span style="font-size: 12px;" class="input-group-text"><b>Service Ref.</b></span>
 													<input type="text" id="serviceReference" class="form-control text-input" />
+												</div>
+											</div>
+										</div>	
+											<div class="col-sm-2" id="price">
+											<div class="form-group">
+												<div class="input-group-prepend" style="width: auto;">
+													<span style="font-size: 12px;" class="input-group-text"><b>UPrice</b></span>
+													<input type="text" id="unitPrice" class="form-control text-input" />
+												</div>
+											</div>
+										</div>	
+										<div class="col-sm-3" id="surveyId">
+											<div class="form-group">
+												<div class="input-group-prepend" style="width: auto;">
+													<span style="font-size: 12px;" class="input-group-text"><b>Survey ID</b></span>
+													<input type="text" id="surveyID" class="form-control text-input" readonly />
 												</div>
 											</div>
 										</div>	
@@ -202,16 +237,22 @@
 												<button id="saveSurvey" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; width: 100%;">Save Survey</button>
 											</div>
 										</div>
-										</div>
-										<div class="row">
-										<div class="col-sm-9" ></div>
-										<div class="col-sm-3" >
+											<div class="col-sm-2" id="updateMysd">
+											<div class="form-group">
+												<button id="updateOnMySD" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; width: 100%;" disabled>Update on MySD</button>
+											</div>
+										</div>	
+																		
+							</div>
+						<div class="row">
+							<div class="col-sm-8" ></div>
+							<div class="col-sm-3" >
 											<div class="form-group">
 												<div class="input-group-prepend"><div id="saveSurveyLoaderDiv" style="display: none;"><img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif" width="40px" /> Saving Survey ...</div>
 											</div>	
 										</div>
-									</div>								
 									</div>	
+							</div>
 									<ul class="nav nav-tabs" id="myTab" role="tablist"
 										style="background-color: #00757C;">
 										<li class="nav-item"><a class="nav-link active"
@@ -240,22 +281,24 @@
 										<div class="tab-pane active" id="manP" role="tabpanel"
 											aria-labelledby="manPoint-tab">
 											<p></p>
-											<div class="container-fluid">
+											<div class="container-fluid" style="overflow-x: auto;">
 												<div id="findNearestManRes"></div>
 												<div class="row" style="height: 500px;">
 													<fieldset class="field_set">
 														<legend style="width: auto;" class="fieldset_legend"></legend>
 														<table id="findNearstManhole" style="display: block; height: 500px; overflow-y: auto;" class="searchable sortable">
+														
 														 <thead>
 															<tr>
 															    <th style="min-width: 30px;"><input type="checkbox" id="selectAllManhole"></th>
-																<th style="min-width: 150px;" >Manhole ID</th>
+																<th style="min-width: 150px;">Manhole ID</th>
 																<th style="min-width: 150px;">ManholeName</th>
 																<th style="min-width: 100px;">Longitude</th>
 																<th style="min-width: 150px;">Latitude</th>
 																<th style="min-width: 100px;">Linear Distance(km)</th>
 																<th style="min-width: 80px;"colspan="2">Driving Distance(km)</th>
-																<th style="min-width: 80px;"colspan="2">Geo Distance(km)</th>
+																<th style="min-width: 80px;">Geo Distance(km)</th>
+																<th style="padding-left:10px;">Select Nearest</th>
 															</tr>
 															 </thead>
 															<tbody id="searchManhTBody">
@@ -285,7 +328,9 @@
 																<th style="min-width: 100px;">Latitude</th>
 																<th style="min-width: 100px;">Linear Distance(Km)</th>
 																<th style="min-width: 100px;" colspan="2">Driving Distance(km)</th>
-																<th style="min-width: 80px;"colspan="2">Geo Distance(km)</th>
+																<th style="min-width: 80px;">Geo Distance(km)</th>
+																<th style="padding-left:10px;">Select Nearest</th>
+																
 															</tr>
 															</thead>
 															
@@ -316,7 +361,9 @@
 																<th style="min-width: 100px;">Latitude</th>
 																<th style="min-width: 100px;">Linear Distance(km)</th>
 																<th style="min-width: 100px;" colspan="2">Driving Distance(km)</th>	
-																<th style="min-width: 80px;"colspan="2">Geo Distance(km)</th>
+																<th style="min-width: 80px;">Geo Distance(km)</th>
+																<th style="padding-left:10px;">Select Nearest</th>
+																
 															</tr>
 															 </thead>															
 															<tbody id="searchDBoardTBody">
@@ -392,7 +439,9 @@
 																<th style="min-width: 100px;">Latitude</th>
 																<th style="min-width: 100px;">Linear Distance(Km)</th>
 																<th style="min-width: 100px;" colspan="2">Driving Distance(km)</th>
-																<th style="min-width: 80px;"colspan="2">Geo Distance(km)</th>
+																<th style="min-width: 80px;">Geo Distance(km)</th>
+																<th style="padding-left:10px;">Select Nearest</th>
+																
 															</tr></thead>
 															<tbody id="searchNodeTBody"></tbody>
 														</table>

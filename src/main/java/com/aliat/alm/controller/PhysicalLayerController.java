@@ -1,8 +1,17 @@
 package com.aliat.alm.controller;
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.HttpURLConnection;
+import java.net.Socket;
+import java.net.URL;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -35,6 +44,7 @@ import org.hibernate.query.NativeQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -75,6 +85,7 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonObject;
 
 @Controller
 public class PhysicalLayerController {
@@ -12714,12 +12725,11 @@ public class PhysicalLayerController {
 			FiberCableSurvey cableSurvey;
 			FiberTubesSurvey tubeSurvey;
 			FiberStrandsSurvey strandSurvey;
-
-
-			String surveyID="";
-
-			System.out.println("Enter save survey");
-
+			
+			String surveyID= request.getParameter("surveyID");
+			System.out.println("surveyID "+surveyID);
+			
+		if (StringUtils.equalsIgnoreCase(surveyID, "") || StringUtils.equalsIgnoreCase(surveyID, null)) {
 			synchronized (this) {
 				surveyID = "SURV_" + year + "_" + Integer.parseInt(session
 							.createNativeQuery("SELECT SURVEY FROM SEQ_TABLE").uniqueResult().toString());
@@ -12727,13 +12737,50 @@ public class PhysicalLayerController {
 				query.executeUpdate();
 				session.createNativeQuery("commit").executeUpdate();
 			}
-			System.out.println("Enter after save survey");
+		}
+		else {
+			query = session.createNativeQuery("DELETE FROM MANHOLE_SURVEY WHERE SURVEY_ID = '" +surveyID+ "' ");
+			query.executeUpdate();
+			session.createNativeQuery("commit").executeUpdate();
+			
+			query = session.createNativeQuery("DELETE FROM HANDHOLE_SURVEY WHERE SURVEY_ID = '" +surveyID+ "' ");
+			query.executeUpdate();
+			session.createNativeQuery("commit").executeUpdate();
+			
+			query = session.createNativeQuery("DELETE FROM DISTRIBUTION_BOARD_SURVEY WHERE SURVEY_ID = '" +surveyID+ "' ");
+			query.executeUpdate();
+			session.createNativeQuery("commit").executeUpdate();
+			
+			query = session.createNativeQuery("DELETE FROM DISTRIBUTION_BOARD_SURVEY WHERE SURVEY_ID = '" +surveyID+ "' ");
+			query.executeUpdate();
+			session.createNativeQuery("commit").executeUpdate();
+			
+			query = session.createNativeQuery("DELETE FROM NODE_SURVEY WHERE SURVEY_ID = '" +surveyID+ "' ");
+			query.executeUpdate();
+			session.createNativeQuery("commit").executeUpdate();
+			
+			query = session.createNativeQuery("DELETE FROM FIBER_CABLES_SURVEY WHERE SURVEY_ID = '" +surveyID+ "' ");
+			query.executeUpdate();
+			session.createNativeQuery("commit").executeUpdate();
+			
+			query = session.createNativeQuery("DELETE FROM FIBER_TUBES_SURVEY WHERE SURVEY_ID = '" +surveyID+ "' ");
+			query.executeUpdate();
+			session.createNativeQuery("commit").executeUpdate();
+			
+			query = session.createNativeQuery("DELETE FROM FIBER_STRANDS_SURVEY WHERE SURVEY_ID = '" +surveyID+ "' ");
+			query.executeUpdate();
+			session.createNativeQuery("commit").executeUpdate();
+			
+		}
+			rtn.put("surveyID", surveyID);
 
 			String customerID = request.getParameter("customerID");
 			String serviceReference = request.getParameter("serviceReference");
 			String serviceRequest = request.getParameter("serviceRequest");
 			String longitude = request.getParameter("longitude");
 			String latitude = request.getParameter("latitude");
+			String serviceAppNo = request.getParameter("serviceAppNo");
+
 			String manholeSurvID="",handholeSurvID="",dbSurvID="",nodeSurvID="",cableSurvID="",tubeSurvID="",strandSurvID="";				
 			Timestamp creationDate = new Timestamp(new Timestamp(System.currentTimeMillis()).getTime());				
 
@@ -12745,6 +12792,7 @@ public class PhysicalLayerController {
 			survey.setCreationDate(creationDate);
 			survey.setServiceReference(serviceReference);
 			survey.setServiceRequest(serviceRequest);
+			survey.setServiceAppNo(serviceAppNo);
 			session.saveOrUpdate(survey);
 			session.flush();
 			session.clear();
@@ -13085,6 +13133,194 @@ public class PhysicalLayerController {
 			}
 		}
 	}
+	return rtn;
+}
+
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/updateOnMySD", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> updateOnMySD(Locale locale, Model model,HttpServletRequest request, HttpServletResponse response){
+
+	Map<String, Object> rtn = new LinkedHashMap<>();
+	session = AlmDbSession.getInstance().getSession();
+	if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+		rtn.put("Login", "redirect:/");
+		return rtn;
+	}
+	if (session != null && session.isOpen()) {
+
+		tx = session.beginTransaction();
+		
+		Socket socket = null;
+		HttpURLConnection httpConnection = null;
+		OutputStream out = null;
+		BufferedWriter writer = null;
+		BufferedReader rd = null;
+		HttpURLConnection urlConnection = null;
+		Boolean connectionFailed = false;
+		String surveyID = request.getParameter("surveyID");
+		String currentUrl = request.getParameter("currentUrl");
+		String serviceAppNumber = request.getParameter("serviceAppNumber");
+		String nearestPoint = request.getParameter("nearestPoint");
+		String price = request.getParameter("totalPrice");
+
+		String api_response_code = null, response_message = null;
+
+		String data="",status="";
+		
+		try {			
+
+			
+			JsonObject postData = new JsonObject();
+			postData.addProperty("serviceAppNumber", serviceAppNumber);
+			postData.addProperty("surveyID", surveyID);
+			postData.addProperty("nearestPoint", nearestPoint);
+			postData.addProperty("url", currentUrl);
+			postData.addProperty("price", price);
+
+			
+			URL url = new URL("http://10.22.25.18:42023/api/Home/Survey/");
+			boolean portAvailable = false;
+			
+			try {
+				socket = new Socket("10.22.25.18", 42023);
+				portAvailable = true;
+			} catch (IOException e) {
+				logger.finest("port is closed.");
+				logger.info("port is closed.");
+			}
+			if (portAvailable == true) {
+				urlConnection = (HttpURLConnection) url.openConnection();
+				urlConnection.setRequestProperty("Content-Type", "application/json");
+				urlConnection.setDefaultRequestProperty("MYSdKey", "JDJhJDA0JHNaZFIDTVRGWW5ZbWVHUjJyUXhMZi4xRWU5U1h6RGNXT25PWUNoRks0bnRPNENGNXdVVXIT");
+				urlConnection.setRequestMethod("POST");
+				urlConnection.setDoOutput(true);
+				urlConnection.setDoInput(true);
+				urlConnection.setChunkedStreamingMode(0);
+				/// validate if we have access to URL
+				httpConnection = (HttpURLConnection) url.openConnection();
+				httpConnection.setConnectTimeout(5000);
+				int responseCode = httpConnection.getResponseCode();
+				logger.finest("ResponseCode in updateOnMySD is " + responseCode);
+				logger.info("ResponseCode in updateOnMySD due is " + responseCode);
+
+				String responseMessage = httpConnection.getResponseMessage();
+				logger.finest("ResponseMessage in updateOnMySD is " + responseMessage);
+				logger.info("ResponseMessage in updateOnMySD due is " + responseMessage);
+				
+				System.out.println("responseCode is"+responseCode);
+				System.out.println("ResponseMessage is"+responseMessage);
+
+				if (responseCode == 500) {
+						System.out.println("Network issue, please contact your support.");
+					//return ResponseEntity.ok().headers(responseHeaders)
+							//.body("Network issue, please contact your support.");
+				} else {
+
+					if (responseCode != 200) {
+						urlConnection.connect();
+						connectionFailed = true;
+						out = new BufferedOutputStream(urlConnection.getOutputStream());
+						writer = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
+						writer.write(postData.toString());
+						writer.flush();
+						//flag = 1;
+
+						int code = urlConnection.getResponseCode();
+						rd = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+						String line = null;
+						while ((line = rd.readLine()) != null) {
+							if (line.contains("responseCode")) {
+
+								int m = 0;
+								m = line.indexOf(";");
+								String response_code = line.substring(m + 1, line.length());
+								String[] test1 = response_code.split("[:,]");
+
+								String[] splitterString = test1[1].split("\"");
+
+								for (String s : splitterString) {
+
+									api_response_code = s;
+
+								}
+							}
+
+							if (line.contains("message")) {
+
+								int n = 0;
+								n = line.indexOf(";");
+								String message = line.substring(n + 1, line.length());
+								String[] test1 = message.split("[:,]");
+								String[] splitterString = test1[1].split("\"");
+								for (String s : splitterString) {
+									response_message = s;
+
+								}
+
+							}
+
+						}
+
+						if (rd != null) {
+							rd.close();
+						}
+						if (writer != null) {
+							writer.close();
+						}
+						if (out != null) {
+							writer.close();
+						}
+						if (socket != null) {
+							socket.close();
+						}
+
+					}
+				}
+			} else {
+				System.out.println("Service is not available");
+
+				data = "Service is not available.";
+				//return ResponseEntity.ok().headers(responseHeaders).body(data);
+			}
+			
+									
+		} catch (Exception e) {
+			e.printStackTrace();
+			//flag = 0;
+			connectionFailed = false;
+			sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			exceptionAsString = sw.toString();
+			logger.finest("Error in updateOnMySD due to \n " + exceptionAsString);
+			logger.info("Error in updateOnMySD due to \n " + exceptionAsString);
+		}
+
+		finally {
+			if (urlConnection != null) {
+				urlConnection.disconnect();
+			} else {
+				data = "0";
+			}
+
+			if (httpConnection != null) {
+				httpConnection.disconnect();
+			}
+		}
+		if (connectionFailed == true) {
+			if (response_message.contains("Success") || response_message.contains("success")
+					|| response_message.contains("SUCCESS")) {
+				status = "Success";
+			} else {
+				status = "Failed";
+			}
+
+			data = api_response_code + "!!" + response_message + "!!" + status;		
+		}
+		System.out.println(data);
+			
+	}
+
 	return rtn;
 }
 	@SuppressWarnings("unchecked")

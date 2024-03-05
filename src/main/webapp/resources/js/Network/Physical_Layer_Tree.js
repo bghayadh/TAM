@@ -65,7 +65,7 @@ var allManholesID =[]; // It is used in show close points to access the manholes
 var allHandholesID=[];
 var closePointsData=[];// It is used in show close points
 var closePointPopupFlag="notOpened"; // It is used to set the coordinates only in the first time opening the popup
-////
+
 var TargetFiber= {
 		Action :"",
 		rowAboveBelow:"rowAboveBelow",
@@ -10656,6 +10656,10 @@ $("#saveSurvey").on('click',function(){
 		alert("Service Reference cannot be empty. ");
 		return false;
     }
+	else if(document.getElementById("serviceAppNo").value == "" ){
+		alert("Service Application Number cannot be empty. ");
+		return false;
+    }
 	else {	
 			
 		customerID = document.getElementById("customerDetails").value;
@@ -10663,9 +10667,9 @@ $("#saveSurvey").on('click',function(){
 		serviceRequest = document.getElementById("serviceReference").value.split(":")[0];
 		longitude = document.getElementById("closestLongPoint").value;
 		latitude = document.getElementById("closestLatPoint").value;
-		
-		
-		 var token =  $('input[name="csrfToken"]').attr('value');
+		surveyID = document.getElementById("surveyID").value;
+		serviceAppNo = document.getElementById("serviceAppNo").value;
+		var token =  $('input[name="csrfToken"]').attr('value');
 
 		$.ajax({
 			type: "POST",
@@ -10686,7 +10690,9 @@ $("#saveSurvey").on('click',function(){
 				"dictParameterNodeSurv":nodeSurveyArray,
 				"dictParameterCableSurv":fiberCableSurveyArray,
 				"dictParameterTubeSurv":fiberTubesSurveyArray,
-				"dictParameterStrandSurv":fiberStrandsSurveyArray
+				"dictParameterStrandSurv":fiberStrandsSurveyArray,
+				"surveyID":surveyID,
+				"serviceAppNo":serviceAppNo
 
 			},
 			beforeSend: function() {
@@ -10695,6 +10701,8 @@ $("#saveSurvey").on('click',function(){
 			dataType: "json",
 			success: function (data) {
 				$("#saveSurveyLoaderDiv").hide();
+				$("#surveyID").val(data.surveyID);	
+				document.getElementById('updateOnMySD').disabled = false;
 		},
 		error: function (result) {
 			alert("Error");
@@ -10702,6 +10710,53 @@ $("#saveSurvey").on('click',function(){
 		});							   
 }
 });
+
+	$("#updateOnMySD").on('click',function(){
+	
+	if(document.getElementById("surveyNearestPt").value == "" || document.getElementById("surveyNearestPt").value == null ){
+		alert("Please select a nearest point before updating on MySD . ");
+		return false;
+    }
+	else if(document.getElementById("unitPrice").value == "" ){
+		alert("Please add unit price before updating on MySD .");
+		return false;
+    }
+	else {
+		var currentUrl = window.location.href;
+		var surveyId = document.getElementById("surveyID").value;		
+		var surveyNearestPoint = document.getElementById("surveyNearestPt").value;
+		var serviceAppNumber = document.getElementById("serviceAppNo").value;	
+
+		var unitPrice = document.getElementById("unitPrice").value;	
+		var dist = surveyNearestPoint.split(":")[1];
+		var totalPrice = unitPrice * dist;
+		console.log("totalPrice "+totalPrice)
+		
+		
+		var token =  $('input[name="csrfToken"]').attr('value');
+
+		$.ajax({
+			type: "POST",
+			url: getContext()+'/updateOnMySD',
+			headers: {
+				'X-CSRFToken': token 
+			},
+			data: {
+				"serviceAppNumber":serviceAppNumber,
+				"surveyID":surveyId,
+				"currentUrl":currentUrl,
+				"nearestPoint":surveyNearestPoint,
+				"totalPrice":totalPrice
+			},
+			dataType: "json",
+			success: function (data) {
+			},
+		error: function (result) {
+			alert("Error");
+		}
+		});							   
+	}
+	});
 
 		$("#saveDistBoard").click(function () {
 			var dbAlertType="";
@@ -20069,6 +20124,11 @@ $('#Manhole_AutocompleteCable'). click(function(){
 			document.getElementById("customerNameID").style.display = "none";
 			document.getElementById("serviceRef").style.display = "none";
 			document.getElementById("saveSurv").style.display = "none";
+			document.getElementById("updateMysd").style.display = "none";
+			document.getElementById("surveyId").style.display = "none";
+			document.getElementById("serviceAppNum").style.display = "none";
+			document.getElementById("price").style.display = "none";
+			document.getElementById("survNearestPt").style.display = "none";
 
 			
 			$("#searchManhTBody").empty();
@@ -20124,6 +20184,13 @@ $('#circleRange'). click(function(){
 			document.getElementById("customerNameID").style.display = "block";
 			document.getElementById("serviceRef").style.display = "block";
 			document.getElementById("saveSurv").style.display = "block";
+			document.getElementById("updateMysd").style.display = "block";
+			document.getElementById("surveyId").style.display = "block";
+			document.getElementById("serviceAppNum").style.display = "block";
+			document.getElementById("price").style.display = "block";
+			document.getElementById("survNearestPt").style.display = "block";
+
+
 			
 			
 			$("#searchManhTBody").empty();
