@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -381,7 +382,62 @@ public class NetworkTransactionsReportController {
 		return rtn;
 
 	}
+	/*
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/GetAllSiteAutocomplete", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> GetAllSiteAutocomplete(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) {
+		// logger.info("Welcome home! The client locale is {}.", locale);
 
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		ObjectMapper mapper = new ObjectMapper();
+		String siteId = "%" + request.getParameter("SiteId") + "%";
+
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", "redirect:/");
+			return rtn;
+		} else {
+			Session session = null;
+			Transaction tx = null;
+
+			try {
+				session = AlmDbSession.getInstance().getSession();
+
+				if (session != null && session.isOpen()) {
+
+					tx = session.beginTransaction();
+
+
+					Query q = session.createNativeQuery(
+							"SELECT  distinct (ware_name),site_id,longitude,latitude, FROM warehouse where UPPER(ware_name) like UPPER(:param1) or UPPER(site_id) like UPPER(:param1)  ");
+
+					q.setParameter("param1", siteId);
+					// q.setParameter("param2", Area);
+					q.setFirstResult(0);
+					q.setMaxResults(40);
+
+					rtn.put("listSites", q.list());
+				}
+
+			} catch (Exception e) {
+				logger.info("Error at <T>  creating session with the DataBase " + e.getMessage());
+
+			}
+
+			finally {
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+				}
+			}
+
+		}
+		return rtn;
+
+	}
+
+*/
 	static double haversineMethod(double latitude, double longitude, double pointLat, double pointLong) {
 
 		// distance between latitudes and longitudes

@@ -1393,7 +1393,7 @@ function DefaultZoomControl(controlDiv, map) {
 						var generalArray = [];
 						//Set the default Date
 						var date = new Date();
-						date.setDate(date.getDate() - 2);
+						date.setDate(date.getDate() - 7);
 
 						date.setHours(0, 0, 0, 0);
 
@@ -1541,12 +1541,13 @@ function DefaultZoomControl(controlDiv, map) {
 							 distinctSites =[];
 							 markerClusterSites.clearMarkers();
 							 mapFlag="1";
-							
+							 //console.log("///////distinctSites is "+distinctSites);
+								
 							for (var i = 0; i < filteredSitesGrid.length; i++) {
 								//console.log("///////filteredSitesGrid[i][siteID] is in "+filteredSitesGrid[i][1]);
 								///for from site			
 								if(distinctSites.includes(filteredSitesGrid[i][8])==false) {
-									//console.log("///////filteredSitesGrid[i][siteID] is in "+filteredSitesGrid[i][1]);
+									//console.log("///////filteredSitesGrid[i][siteID] is in "+filteredSitesGrid[i][8]);
 									distinctSites.push(filteredSitesGrid[i][8]);
 									if(!markerSites[filteredSitesGrid[i][8]]){
 										createSiteMarker(filteredSitesGrid[i][8],filteredSitesGrid[i][9],filteredSitesGrid[i][10],filteredSitesGrid[i][7]);
@@ -1560,10 +1561,11 @@ function DefaultZoomControl(controlDiv, map) {
 
 								///for to site			
 								if(distinctSites.includes(filteredSitesGrid[i][13])==false) {
+									//console.log("///////filteredSitesGrid[i][siteID] is in "+filteredSitesGrid[i][13]);
 									
 									distinctSites.push(filteredSitesGrid[i][13]);
 									if(!markerSites[filteredSitesGrid[i][13]]){
-										createSiteMarker(filteredSitesGrid[i][8],filteredSitesGrid[i][14],filteredSitesGrid[i][15],filteredSitesGrid[i][12]);
+										createSiteMarker(filteredSitesGrid[i][13],filteredSitesGrid[i][14],filteredSitesGrid[i][15],filteredSitesGrid[i][12]);
 									}
 									else {					
 										markerSites[filteredSitesGrid[i][13]].setMap(map);
@@ -1572,6 +1574,9 @@ function DefaultZoomControl(controlDiv, map) {
 									}
 								}
 					        } 
+
+							// console.log("///////distinctSites is "+distinctSites);
+						        
 					        if(distinctSites.length >0) {
 								$('.showHideSitesCheckbox').prop('checked', true);
 								$(".showHideSitesCheckbox").attr('disabled', false);
@@ -2169,7 +2174,7 @@ var toSiteName = filteredSitesGrid[rowIndex][12];
 var toSiteId = filteredSitesGrid[rowIndex][13];
 console.log("toSiteId "+toSiteId+" toSiteName "+toSiteName+" toSiteLatitude "+toSiteLatitude+" toSiteLongitude "+toSiteLongitude)
  var toSitelatLng = new google.maps.LatLng(toSiteLatitude,toSiteLongitude);
- //map.setZoom(15);
+ map.setZoom(15);
  map.panTo(toSitelatLng);
 
 //from site
