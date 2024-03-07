@@ -2173,9 +2173,9 @@ var toSiteLatitude = filteredSitesGrid[rowIndex][15];
 var toSiteName = filteredSitesGrid[rowIndex][12];
 var toSiteId = filteredSitesGrid[rowIndex][13];
 console.log("toSiteId "+toSiteId+" toSiteName "+toSiteName+" toSiteLatitude "+toSiteLatitude+" toSiteLongitude "+toSiteLongitude)
- var toSitelatLng = new google.maps.LatLng(toSiteLatitude,toSiteLongitude);
+/* var toSitelatLng = new google.maps.LatLng(toSiteLatitude,toSiteLongitude);
  map.setZoom(15);
- map.panTo(toSitelatLng);
+ map.panTo(toSitelatLng);*/
 
 //from site
  var fromSiteLongitude = filteredSitesGrid[rowIndex][9];
@@ -2183,10 +2183,21 @@ console.log("toSiteId "+toSiteId+" toSiteName "+toSiteName+" toSiteLatitude "+to
  var fromSiteName = filteredSitesGrid[rowIndex][7];
  var fromSiteId = filteredSitesGrid[rowIndex][8];
  console.log("fromSiteId "+fromSiteId+" fromSiteName "+fromSiteName+" fromSiteLatitude "+fromSiteLatitude+" fromSiteLongitude "+fromSiteLongitude)
-  var fromSitelatLng = new google.maps.LatLng(fromSiteLatitude,fromSiteLongitude);
+/*  var fromSitelatLng = new google.maps.LatLng(fromSiteLatitude,fromSiteLongitude);
  // map.setZoom(15);
   map.panTo(fromSitelatLng);
- 
+*/
+
+var toSitelatLng = new google.maps.LatLng(toSiteLatitude, toSiteLongitude);
+var fromSitelatLng = new google.maps.LatLng(fromSiteLatitude, fromSiteLongitude);
+
+// Create LatLngBounds object to encompass both locations
+var bounds = new google.maps.LatLngBounds();
+bounds.extend(toSitelatLng);
+bounds.extend(fromSitelatLng);
+
+// Fit the map to the bounds
+map.fitBounds(bounds);
 
 /*//to site
 var toSiteLongitude = filteredSitesGrid[rowIndex][14];
