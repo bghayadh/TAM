@@ -156,7 +156,10 @@ public class NetworkTransactionsReportController {
 			} else {
 				EndDate = EndDate.replace(" AM", "").trim();
 			}
-			
+			String wareID = request.getParameter("wareID");
+			String siteId = request.getParameter("siteId");
+			String siteName = request.getParameter("siteName");
+			String ignoreDate = request.getParameter("ignoreDate");
 			String strtEndCheckbox = request.getParameter("strtEndCheckbox");
 			String circleRangeCheckbox = request.getParameter("circleRangeCheckbox");
 			String startLong = request.getParameter("startLong");
@@ -166,6 +169,7 @@ public class NetworkTransactionsReportController {
 			String longitude = request.getParameter("longitude");
 			String latitude = request.getParameter("latitude");
 			String radius = request.getParameter("radius");
+			String serialNB = request.getParameter("serialNB");
 			double distance = 0.0;
 			
 			List<Object[]> siteTempList = new ArrayList<Object[]>();
@@ -190,9 +194,30 @@ public class NetworkTransactionsReportController {
                              " FROM NETWORK_TRANSACTION a  " +
                              " INNER JOIN NODE_TRANSACTIONS b ON a.NODE_TRANS_ID = b.NODE_TRANS_ID  " +
                              " LEFT JOIN WAREHOUSE c_from ON c_from.SITE_ID = a.FROM_SITE " +
-                             " LEFT JOIN WAREHOUSE c_to ON c_to.SITE_ID = a.TO_SITE " +
-                             "WHERE a.PARSING_DATE between TO_DATE('" + StartDate+ "','MM/DD/YYYY HH24:MI:SS') " 
-     						 + "and TO_DATE('" + EndDate + "','MM/DD/YYYY HH24:MI:SS')" ;
+                             " LEFT JOIN WAREHOUSE c_to ON c_to.SITE_ID = a.TO_SITE ";
+
+				if (StringUtils.equalsIgnoreCase(ignoreDate, "false")) {
+					str = str + " WHERE a.PARSING_DATE between TO_DATE('" + StartDate+ "','MM/DD/YYYY HH24:MI:SS') " 
+    						 + "and TO_DATE('" + EndDate + "','MM/DD/YYYY HH24:MI:SS') " ;
+					
+					if( serialNB != null && !serialNB.equalsIgnoreCase("")) {
+						str = str +" and upper(a.SERIAL_NUMBER) LIKE upper('%" + serialNB + "%') ";
+				    }
+				    if(wareID != null && !wareID.equalsIgnoreCase("")) {
+				    	str = str +" and upper(c_to.WARE_ID) LIKE upper('%" + wareID + "%') or  upper(c_from.WARE_ID) LIKE upper('%" + wareID + "%') ";
+					}
+				}else {
+					if(serialNB != null && !serialNB.equalsIgnoreCase("") && wareID != null && !wareID.equalsIgnoreCase("") ) {
+						str = str +"WHERE upper(c_to.WARE_ID) LIKE upper('%" + wareID + "%') or  upper(c_from.WARE_ID) LIKE upper('%" + wareID + "%') and upper(a.SERIAL_NUMBER) LIKE upper('%"+ serialNB +"%') ";
+						
+					}else if( serialNB != null && !serialNB.equalsIgnoreCase("") && wareID == null ) {
+							str = str +"WHERE upper(a.SERIAL_NUMBER) LIKE upper('%" + serialNB + "%') ";
+							
+					}else if(wareID != null && !wareID.equalsIgnoreCase("") && serialNB == null ) {
+							str = str +"WHERE upper(c_to.WARE_ID) LIKE upper('%" + wareID + "%') or  upper(c_from.WARE_ID) LIKE upper('%" + wareID + "%') ";
+					}
+
+				}
                             
 				// Include the start/end long and lat in where condition in case of strt/end
 				// coordinate checkbox is checked
@@ -382,18 +407,18 @@ public class NetworkTransactionsReportController {
 		return rtn;
 
 	}
-	/*
+	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/GetAllSiteAutocomplete", method = RequestMethod.GET)
+	@RequestMapping(value = "/GetAllSites", method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, Object> GetAllSiteAutocomplete(Locale locale, Model model, HttpServletRequest request,
+	public Map<String, Object> GetAllSites(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) {
 		// logger.info("Welcome home! The client locale is {}.", locale);
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
 		ObjectMapper mapper = new ObjectMapper();
-		String siteId = "%" + request.getParameter("SiteId") + "%";
-
+		String siteId = "%" + request.getParameter("site") + "%";
+		
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
 			return rtn;
@@ -410,7 +435,9 @@ public class NetworkTransactionsReportController {
 
 
 					Query q = session.createNativeQuery(
-							"SELECT  distinct (ware_name),site_id,longitude,latitude, FROM warehouse where UPPER(ware_name) like UPPER(:param1) or UPPER(site_id) like UPPER(:param1)  ");
+							//"SELECT distinct (ware_name),site_id,longitude,latitude FROM warehouse where UPPER(ware_name) like UPPER(:param1) or UPPER(site_id) like UPPER(:param1) ");
+
+							"SELECT distinct (ware_name),WARE_ID,site_id,longitude,latitude FROM warehouse where UPPER(ware_name) like UPPER(:param1) or UPPER(site_id) like UPPER(:param1) or  UPPER(WARE_ID) like UPPER(:param1)  ");
 
 					q.setParameter("param1", siteId);
 					// q.setParameter("param2", Area);
@@ -437,7 +464,7 @@ public class NetworkTransactionsReportController {
 
 	}
 
-*/
+
 	static double haversineMethod(double latitude, double longitude, double pointLat, double pointLong) {
 
 		// distance between latitudes and longitudes

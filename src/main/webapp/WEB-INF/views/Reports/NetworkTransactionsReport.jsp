@@ -346,11 +346,20 @@ max-width: 100%;
 					</div>
 				</div>
 			</div>
+            <div class="col-md-2">
+            	<div class="form-group">
+				   <div class="input-group-prepend" data-target-input="nearest">
+					<div class="input-group-text">
+      					<input type="checkbox" value="0" id="ignoreDate" name="ignoreDate">
+      					<span style="margin-left: 10px;">Ignore Date</span>
+				   </div>
+                  </div>
+			   </div>
+	     </div>	
 
 
 
-
-			<div class="col-md-4" id="col3" style="text-align: right;">
+			<div class="col-md-2" id="col3" style="text-align: right;">
 				<div class="btn-group pull-right" style="padding: 0px !important;">
 					<!-- <div class="glyph" style="padding-top: 0px; padding-right: 10px;">
 							<div class="form-group">
@@ -419,17 +428,17 @@ max-width: 100%;
 						</div>
 					</div>
 		</div>
-         <div class="col-md-3">
+         <div class="col-md-4">
 					<div class="form-group">
 						<div class="input-group-prepend">
 							<span class="input-group-text">Site </span>
-							<input type="text" id="site"  class="form-control text-input" />
+							<input type="text" id="site"  class="form-control text-input"  />
 						</div>
 					</div>
 				</div>
 
 				
-		<div class="col-md-6" style="float: right; padding-top:-100px;" >
+		<div class="col-md-5" style="float: right; padding-top:-100px;" >
 			<div class="btn-group pull-right"  >
 				<button type="button"  id ="showOnMap"class="btn"  style=" margin-top:-10px;  margin-right: 15px;"  >Show on Map</button>
 		 		<button type="button"  id ="clearButton" class="btn btn-light clearButton" style=" margin-top:-10px; margin-right:-15px; "  >Clear</button>		 	
@@ -1274,6 +1283,7 @@ function initMap() {
 
 	   
 	    $("#legendDiv").toggle(); // to open the legend 
+	    $( "#legendDiv" ).draggable(); 
 
 	 // Define the cluster
 	 markerClusterSites = new MarkerClusterer();
@@ -1318,7 +1328,7 @@ function initMap() {
 	     
 }//end initMap
 
-function ShowContextMenuGoolge(ContextMenu, eventX, eventY) {
+/*function ShowContextMenuGoolge(ContextMenu, eventX, eventY) {
 
     // Calculate the actual position for the context menu
     let x = eventX + window.scrollX;
@@ -1347,7 +1357,62 @@ function ShowContextMenuGoolge(ContextMenu, eventX, eventY) {
 function HideContextMenuGoolge(ContextMenu) {
     ContextMenu.classList.remove('show-menu');
 
+}*/
+
+function ShowContextMenuGoolge(ContextMenu, eventX, eventY) {
+    // Calculate the actual position for the context menu
+    let x = eventX + window.scrollX;
+    let y = eventY + window.scrollY;
+
+    // Adjust the position if it goes outside the window bounds
+    const mw = ContextMenu.offsetWidth;
+    const mh = ContextMenu.offsetHeight;
+
+    const windowWidth = window.innerWidth + window.scrollX;
+    const windowHeight = window.innerHeight + window.scrollY;
+
+    if (x + mw > windowWidth) {
+        x = windowWidth - mw;
+    }
+
+    if (y + mh > windowHeight) {
+        y = windowHeight - mh;
+    }
+
+    ContextMenu.style.top = y + "px";
+    ContextMenu.style.left = x + "px";
+    ContextMenu.classList.add('show-menu');
+
+    // Add event listeners for dragging
+    let offsetX, offsetY;
+    const onMouseMove = (e) => {
+        ContextMenu.style.top = e.clientY - offsetY + 'px';
+        ContextMenu.style.left = e.clientX - offsetX + 'px';
+    };
+
+    const onMouseDown = (e) => {
+        offsetX = e.clientX - ContextMenu.getBoundingClientRect().left;
+        offsetY = e.clientY - ContextMenu.getBoundingClientRect().top;
+        window.addEventListener('mousemove', onMouseMove);
+    };
+
+    const onMouseUp = () => {
+        window.removeEventListener('mousemove', onMouseMove);
+    };
+
+    window.addEventListener('mousedown', onMouseDown);
+    window.addEventListener('mouseup', onMouseUp);
 }
+
+function HideContextMenuGoolge(ContextMenu) {
+    ContextMenu.classList.remove('show-menu');
+
+    // Remove event listeners when hiding the context menu
+    window.removeEventListener('mousedown', onMouseDown);
+    window.removeEventListener('mouseup', onMouseUp);
+    window.removeEventListener('mousemove', onMouseMove);
+}
+
 
 
 //Add legend button under zoom control on map
@@ -1544,9 +1609,9 @@ function DefaultZoomControl(controlDiv, map) {
 							 //console.log("///////distinctSites is "+distinctSites);
 								
 							for (var i = 0; i < filteredSitesGrid.length; i++) {
-								//console.log("///////filteredSitesGrid[i][siteID] is in "+filteredSitesGrid[i][1]);
+								//console.log("///////filteredSitesGrid[i][siteID] is in "+filteredSitesGrid[i][8]);
 								///for from site			
-								if(distinctSites.includes(filteredSitesGrid[i][8])==false) {
+								if(distinctSites.includes(filteredSitesGrid[i][8])==false && filteredSitesGrid[i][8] != 0) {
 									//console.log("///////filteredSitesGrid[i][siteID] is in "+filteredSitesGrid[i][8]);
 									distinctSites.push(filteredSitesGrid[i][8]);
 									if(!markerSites[filteredSitesGrid[i][8]]){
@@ -1560,7 +1625,7 @@ function DefaultZoomControl(controlDiv, map) {
 								}
 
 								///for to site			
-								if(distinctSites.includes(filteredSitesGrid[i][13])==false) {
+								if(distinctSites.includes(filteredSitesGrid[i][13])==false  && filteredSitesGrid[i][13] != 0) {
 									//console.log("///////filteredSitesGrid[i][siteID] is in "+filteredSitesGrid[i][13]);
 									
 									distinctSites.push(filteredSitesGrid[i][13]);
@@ -1575,7 +1640,7 @@ function DefaultZoomControl(controlDiv, map) {
 								}
 					        } 
 
-							// console.log("///////distinctSites is "+distinctSites);
+							 console.log("///////distinctSites is "+distinctSites);
 						        
 					        if(distinctSites.length >0) {
 								$('.showHideSitesCheckbox').prop('checked', true);
@@ -1603,14 +1668,16 @@ function DefaultZoomControl(controlDiv, map) {
 					        document.getElementById('circleRangeLongitude').value = '';
 					        document.getElementById('circleRangeLatitude').value = '';
 					        document.getElementById('circleRangeRadius').value = '';
+					        document.getElementById('site').value = '';
 					       // document.getElementById('wareID').value = '';
 					       // document.getElementById('siteId').value = '';
 					       // document.getElementById('siteName').value = '';
+					       document.getElementById('serialNB').value = '';
 					        $("#strtEndCoordinate").prop("checked", false); 
 							$("#circleRange").prop("checked", false);
 							$("#row_setStartEnd").hide();
 							$("#row_Circle").hide();
-					      //  $("#ignoreDate").prop("checked", false); 	
+					        $("#ignoreDate").prop("checked", false); 	
 						}); // end clear fct
 
 
@@ -1649,9 +1716,16 @@ function DefaultZoomControl(controlDiv, map) {
 						$("#generate").click(function() {
 							 var startDate = document.getElementById("startdate").value;		  
 							  var endDate = document.getElementById("enddate").value;
-							 // var ignoreDateCheckbox = document.getElementById("ignoreDate").checked;
+							  var site = document.getElementById("site").value;
+							  var wareId = site.split(":")[1];
+							  var serialNB = document.getElementById("serialNB").value;
+							  var ignoreDateCheckbox = document.getElementById("ignoreDate").checked;
 							  var strtEndCheckbox = document.getElementById("strtEndCoordinate").checked;
 							  var circleRangeCheckbox = document.getElementById("circleRange").checked;
+                              //console.log("site is"+ site+" serialNB is "+serialNB)
+							  if (site == "" && serialNB == "" && ignoreDateCheckbox == true) {
+									alert("Must enter a site or serial number ");
+							  }else{
 
 							 //Disable and uncheck the checkbox in legend
 							 $('.showHideSitesCheckbox').prop('checked', false);
@@ -1761,10 +1835,12 @@ function DefaultZoomControl(controlDiv, map) {
 													data : {
 															"startDate" : $("#startdate").val(),
 														    "endDate" : $("#enddate").val(),
-														    //"ignoreDate":ignoreDateCheckbox,
-														    //"wareID":$("#wareID").val(),
-											                ///"siteId": $("#siteId").val(),
-											               /// "siteName":$("#siteName").val(),
+														     "ignoreDate":ignoreDateCheckbox,
+														     //"wareID":$("#wareID").val(),
+											                 ///"siteId": $("#siteId").val(),
+											                 /// "siteName":$("#siteName").val(),
+											                "serialNB":serialNB,
+											                "wareID":wareId,
 															"startLong":$("#startLongitude").val(),
 															"startLat":$("#startLatitude").val(),
 															"endLong":$("#endLongitude").val(),
@@ -1925,6 +2001,8 @@ function DefaultZoomControl(controlDiv, map) {
 
 														}
 													});
+
+						                       }
 										});
 
 						var exportArrayGrid = [];
@@ -2093,6 +2171,45 @@ function DefaultZoomControl(controlDiv, map) {
 			    
 //});
 
+
+$("#site").autocomplete({
+	
+	    	source: function(request, response) {
+		    
+	             $.ajax({
+	                 type: "GET",
+	                 contentType: "application/json; charset=utf-8",
+	                 url: '${pageContext.request.contextPath}/GetAllSites',
+	                 data: {
+							"site" : $("#site").val(),
+					 },
+	                 dataType: "json",
+	                 success: function (data) {
+	                     if (data != null) {
+	                         response(data.listSites);
+	                     }
+	                 },
+	                 error: function(result) {
+	                     alert("Error");
+	                 }
+	             });
+	         }, minLength:0, maxShowItems: 40, scroll:true,
+
+				select: function(event, ui) {
+					site.value = (ui.item ? ui.item[0] + ":" + ui.item[1] +":" + ui.item[2] : '');
+					return false;
+				}
+			}).autocomplete("instance")._renderItem = function(ul, item) {
+ 		    	return $('<li class="each">').data( "item.autocomplete", item )
+	    			.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
+                 item[0] + '</span><br><span class="desc">' + item[1]+
+                 '</span><br><span class="desc">' + item[2] + '</span></div></li>').appendTo(ul);
+		};
+				$("#site").focus(function(){
+	   	        	if (this.value == ""){
+	   	            	$(this).autocomplete("search");
+	   	        	}						
+				});
 
 
 function createSiteMarker(siteID,longitude,latitude,siteName) {
