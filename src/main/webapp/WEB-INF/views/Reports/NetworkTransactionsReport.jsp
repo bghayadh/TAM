@@ -2310,44 +2310,33 @@ var fromSitelatLng = new google.maps.LatLng(fromSiteLatitude, fromSiteLongitude)
 
 // Create LatLngBounds object to encompass both locations
 var bounds = new google.maps.LatLngBounds();
-bounds.extend(toSitelatLng);
-bounds.extend(fromSitelatLng);
+if(toSiteId != 0){
+	bounds.extend(toSitelatLng);
+}
+if(fromSiteId != 0){
+	bounds.extend(fromSitelatLng);
+}
 
 // Fit the map to the bounds
 map.fitBounds(bounds);
 
-/*//to site
-var toSiteLongitude = filteredSitesGrid[rowIndex][14];
-var toSiteLatitude = filteredSitesGrid[rowIndex][15];
-var toSitelatLng = new google.maps.LatLng(toSiteLatitude,toSiteLongitude);
-
-//from site
-var fromSiteLongitude = filteredSitesGrid[rowIndex][9];
-var fromSiteLatitude = filteredSitesGrid[rowIndex][10];
-var fromSitelatLng = new google.maps.LatLng(fromSiteLatitude,fromSiteLongitude);
-
-// Calculate bounds
-var bounds = new google.maps.LatLngBounds();
-bounds.extend(toSitelatLng);
-bounds.extend(fromSitelatLng);
-
-// Pan and zoom to fit both sites
-map.fitBounds(bounds);
-*/
 	if(mapFlag=="0") { // Draw on map is not clicked before (markers are not set on map)
 		$('.showHideSitesCheckbox').prop('checked', true);
 		$(".showHideSitesCheckbox").attr('disabled', false);
          document.getElementById("sitesCount").textContent = "";      
-
-		if(!markerSites[fromSiteId]){
-			distinctSites.push(fromSiteId); //  this array is used when checking all sites from legend
-			createSiteMarker(fromSiteId,fromSiteLongitude,fromSiteLatitude,fromSiteName);
-		}
-
-		if(!markerSites[toSiteId]){
-			distinctSites.push(toSiteId); //  this array is used when checking all sites from legend
-			createSiteMarker(toSiteId,toSiteLongitude,toSiteLatitude,toSiteName);
-		}
+        if(fromSiteId != 0){
+        	if(!markerSites[fromSiteId]){
+    			distinctSites.push(fromSiteId); //  this array is used when checking all sites from legend
+    			createSiteMarker(fromSiteId,fromSiteLongitude,fromSiteLatitude,fromSiteName);
+    		}	
+        }
+        if(toSiteId != 0){
+        	if(!markerSites[toSiteId]){
+    			distinctSites.push(toSiteId); //  this array is used when checking all sites from legend
+    			createSiteMarker(toSiteId,toSiteLongitude,toSiteLatitude,toSiteName);
+    		}
+		
+        }
 
 	}// end mapFlag condition
 	 document.getElementById("sitesCount").textContent = "("+distinctSites.length+")";      
