@@ -1613,7 +1613,8 @@ function DefaultZoomControl(controlDiv, map) {
 								///for from site			
 								if(distinctSites.includes(filteredSitesGrid[i][8])==false && filteredSitesGrid[i][8] != 0) {
 									//console.log("///////filteredSitesGrid[i][siteID] is in "+filteredSitesGrid[i][8]);
-									distinctSites.push(filteredSitesGrid[i][8]);
+									if(filteredSitesGrid[i][9] != null && filteredSitesGrid[i][10] != null){
+										distinctSites.push(filteredSitesGrid[i][8]);
 									if(!markerSites[filteredSitesGrid[i][8]]){
 										createSiteMarker(filteredSitesGrid[i][8],filteredSitesGrid[i][9],filteredSitesGrid[i][10],filteredSitesGrid[i][7]);
 									}
@@ -1622,20 +1623,22 @@ function DefaultZoomControl(controlDiv, map) {
 										markerClusterSites.addMarker(markerSites[""+filteredSitesGrid[i][8]]);
 
 									}
+								   }
 								}
 
 								///for to site			
 								if(distinctSites.includes(filteredSitesGrid[i][13])==false  && filteredSitesGrid[i][13] != 0) {
 									//console.log("///////filteredSitesGrid[i][siteID] is in "+filteredSitesGrid[i][13]);
-									
-									distinctSites.push(filteredSitesGrid[i][13]);
-									if(!markerSites[filteredSitesGrid[i][13]]){
-										createSiteMarker(filteredSitesGrid[i][13],filteredSitesGrid[i][14],filteredSitesGrid[i][15],filteredSitesGrid[i][12]);
-									}
-									else {					
-										markerSites[filteredSitesGrid[i][13]].setMap(map);
-										markerClusterSites.addMarker(markerSites[""+filteredSitesGrid[i][13]]);
+									if(filteredSitesGrid[i][14] != null && filteredSitesGrid[i][15] != null){
+										distinctSites.push(filteredSitesGrid[i][13]);
+										if(!markerSites[filteredSitesGrid[i][13]]){
+											createSiteMarker(filteredSitesGrid[i][13],filteredSitesGrid[i][14],filteredSitesGrid[i][15],filteredSitesGrid[i][12]);
+										}
+										else {					
+											markerSites[filteredSitesGrid[i][13]].setMap(map);
+											markerClusterSites.addMarker(markerSites[""+filteredSitesGrid[i][13]]);
 
+										}
 									}
 								}
 					        } 
@@ -2318,7 +2321,9 @@ if(fromSiteId != 0){
 }
 
 // Fit the map to the bounds
-map.fitBounds(bounds);
+if (fromSiteId != 0 || toSiteId != 0){
+	map.fitBounds(bounds);
+}
 
 	if(mapFlag=="0") { // Draw on map is not clicked before (markers are not set on map)
 		$('.showHideSitesCheckbox').prop('checked', true);
