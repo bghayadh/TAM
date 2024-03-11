@@ -2,6 +2,7 @@ package com.aliat.alm.services;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -64,7 +65,26 @@ public class LoginServices {
 					response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
 					response.setDateHeader("Expires", 0); // Proxies.
 					
-					return "redirect:/Dashboard";
+					Cookie[] cookies = request.getCookies();
+					String redirectUrl = null;
+					if (cookies != null) {
+					    for (Cookie cookie : cookies) {
+					        if (cookie.getName().equals("redirectUrl")) {
+					            redirectUrl = cookie.getValue();
+					            cookie.setMaxAge(0); // Remove the cookie
+					            response.addCookie(cookie);
+					            break;
+					        }
+					    }
+					}
+					if (redirectUrl==null) {
+						return "redirect:/Dashboard";
+					}
+					else {
+					    return "redirect:" + redirectUrl;
+					}
+					
+					//return "redirect:/Dashboard";
 
 				} else {
 					model.addAttribute("Message", "Invalid Password!");

@@ -35,6 +35,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -117,6 +118,18 @@ public class PhysicalLayerController {
 			HttpServletResponse response) throws JsonProcessingException {
 
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+
+			// Get the current URL before redirect
+	        String originalUrl = request.getRequestURL().toString();
+           String queryString = request.getQueryString();
+           
+           if (queryString != null) {
+           	originalUrl += "?" + queryString;
+           }
+
+			Cookie redirectCookie = new Cookie("redirectUrl", originalUrl);
+			redirectCookie.setPath("/");
+			response.addCookie(redirectCookie);
 			return "redirect:/";
 		} else {
 
