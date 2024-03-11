@@ -2042,7 +2042,6 @@ $("#popupModel").autocomplete({
                      },
                      dataType: "json",
                      success: function (data) {
-                         console.log(0000);
                          
                          if (data != null) {
                              console.log(11);
@@ -2109,7 +2108,6 @@ source: function(request, response, event, ui) {
                          },
                          dataType: "json",
                          success: function (data) {
-                             console.log(0000);
                              
                              if (data != null) {
                                  console.log(11);
