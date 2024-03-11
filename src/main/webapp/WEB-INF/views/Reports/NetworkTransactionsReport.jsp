@@ -1613,7 +1613,8 @@ function DefaultZoomControl(controlDiv, map) {
 								///for from site			
 								if(distinctSites.includes(filteredSitesGrid[i][8])==false && filteredSitesGrid[i][8] != 0) {
 									//console.log("///////filteredSitesGrid[i][siteID] is in "+filteredSitesGrid[i][8]);
-									distinctSites.push(filteredSitesGrid[i][8]);
+									if(filteredSitesGrid[i][9] != null && filteredSitesGrid[i][10] != null){
+										distinctSites.push(filteredSitesGrid[i][8]);
 									if(!markerSites[filteredSitesGrid[i][8]]){
 										createSiteMarker(filteredSitesGrid[i][8],filteredSitesGrid[i][9],filteredSitesGrid[i][10],filteredSitesGrid[i][7]);
 									}
@@ -1622,20 +1623,22 @@ function DefaultZoomControl(controlDiv, map) {
 										markerClusterSites.addMarker(markerSites[""+filteredSitesGrid[i][8]]);
 
 									}
+								   }
 								}
 
 								///for to site			
 								if(distinctSites.includes(filteredSitesGrid[i][13])==false  && filteredSitesGrid[i][13] != 0) {
 									//console.log("///////filteredSitesGrid[i][siteID] is in "+filteredSitesGrid[i][13]);
-									
-									distinctSites.push(filteredSitesGrid[i][13]);
-									if(!markerSites[filteredSitesGrid[i][13]]){
-										createSiteMarker(filteredSitesGrid[i][13],filteredSitesGrid[i][14],filteredSitesGrid[i][15],filteredSitesGrid[i][12]);
-									}
-									else {					
-										markerSites[filteredSitesGrid[i][13]].setMap(map);
-										markerClusterSites.addMarker(markerSites[""+filteredSitesGrid[i][13]]);
+									if(filteredSitesGrid[i][14] != null && filteredSitesGrid[i][15] != null){
+										distinctSites.push(filteredSitesGrid[i][13]);
+										if(!markerSites[filteredSitesGrid[i][13]]){
+											createSiteMarker(filteredSitesGrid[i][13],filteredSitesGrid[i][14],filteredSitesGrid[i][15],filteredSitesGrid[i][12]);
+										}
+										else {					
+											markerSites[filteredSitesGrid[i][13]].setMap(map);
+											markerClusterSites.addMarker(markerSites[""+filteredSitesGrid[i][13]]);
 
+										}
 									}
 								}
 					        } 
@@ -2310,32 +2313,37 @@ var fromSitelatLng = new google.maps.LatLng(fromSiteLatitude, fromSiteLongitude)
 
 // Create LatLngBounds object to encompass both locations
 var bounds = new google.maps.LatLngBounds();
-if(toSiteId != 0){
+if(toSiteId != 0 || (toSiteLongitude != null && toSiteLatitude != null )){
 	bounds.extend(toSitelatLng);
 }
-if(fromSiteId != 0){
+if(fromSiteId != 0 || (fromSiteLatitude != null && fromSiteLatitude != null )){
 	bounds.extend(fromSitelatLng);
 }
 
 // Fit the map to the bounds
-map.fitBounds(bounds);
+if (fromSiteId != 0 || toSiteId != 0){
+	map.fitBounds(bounds);
+}
 
 	if(mapFlag=="0") { // Draw on map is not clicked before (markers are not set on map)
 		$('.showHideSitesCheckbox').prop('checked', true);
 		$(".showHideSitesCheckbox").attr('disabled', false);
          document.getElementById("sitesCount").textContent = "";      
         if(fromSiteId != 0){
-        	if(!markerSites[fromSiteId]){
-    			distinctSites.push(fromSiteId); //  this array is used when checking all sites from legend
-    			createSiteMarker(fromSiteId,fromSiteLongitude,fromSiteLatitude,fromSiteName);
-    		}	
+            if(fromSiteLatitude != null && fromSiteLatitude != null){
+            	if(!markerSites[fromSiteId]){
+        			distinctSites.push(fromSiteId); //  this array is used when checking all sites from legend
+        			createSiteMarker(fromSiteId,fromSiteLongitude,fromSiteLatitude,fromSiteName);
+        		}	
+            }
         }
         if(toSiteId != 0){
-        	if(!markerSites[toSiteId]){
-    			distinctSites.push(toSiteId); //  this array is used when checking all sites from legend
-    			createSiteMarker(toSiteId,toSiteLongitude,toSiteLatitude,toSiteName);
-    		}
-		
+            if(toSiteLongitude != null && toSiteLatitude != null){
+            	if(!markerSites[toSiteId]){
+        			distinctSites.push(toSiteId); //  this array is used when checking all sites from legend
+        			createSiteMarker(toSiteId,toSiteLongitude,toSiteLatitude,toSiteName);
+        		}
+        	}
         }
 
 	}// end mapFlag condition
