@@ -2002,7 +2002,7 @@ function getAllItemPartNbs()
 			}
 
 	        
-		}
+		} //End of getselectedrowsForApproval
 
 
 		
@@ -2067,7 +2067,7 @@ function getAllItemPartNbs()
 	            	});
 					             	
 				
-					}
+					} // End of getselectedrows
 		
 		   // save Data in DB
             function saverowsintables (){
@@ -2125,7 +2125,7 @@ function getAllItemPartNbs()
       	          
 
      	}
-        //end save data
+        //end of saverowsintables - save data 
         
         function splitrow (tab1) {
          	newslct=[];
