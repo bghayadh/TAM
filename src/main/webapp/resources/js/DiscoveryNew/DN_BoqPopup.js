@@ -402,12 +402,11 @@
 				itemRow =itemRow + "<td name='itemTotalAt' style='display:none'><input style='display:none' type='text' class='form-control text-input inputmin-width' value='"  + boqArray[i].dniTotalat+"' readonly></td>";
 				itemRow =itemRow + "<td name='siteID'><input type='text' class='form-control text-input' value='"+Site+"' name='siteID' style='min-width:450px;' class='ui-widget ui-widget-content ui-corner-all'></td>";
 				itemRow =itemRow + "<td name='tositeID'><input type='text' class='form-control text-input' value='"+toSite+"' name='tositeID' style='min-width:450px;' class='ui-widget ui-widget-content ui-corner-all'></td>";
-			    var farIdValue = boqArray[i].farID !== null ? boqArray[i].farID : " "; 
-          
-			    if (boqArray[i].transType === "New Node on New Node" || boqArray[i].transType === "New Node on New Hardware" ) {
-                itemRow += "<td name='FarId'><input type='text' class='form-control text-input' value='" + farIdValue+ "' name='FarId' style='min-width:450px;' class='ui-widget ui-widget-content ui-corner-all' readonly></td>";
+			    var farIdValue = boqArray[i].farID !== null ? boqArray[i].farID : ""; 
+         	    if (boqArray[i].transType === "New Hardware on New Node" || boqArray[i].transType === "New Node on New Hardware" ) {
+                itemRow += "<td name='FarId'><input type='text' class='form-control text-input' value='"+farIdValue+"' name='FarId' style='min-width:450px;' class='ui-widget ui-widget-content ui-corner-all' readonly></td>";
                 } else {
-                 itemRow += "<td name='FarId'><input type='text' class='form-control text-input' value='" + farIdValue + "' name='FarId' style='min-width:450px;' class='ui-widget ui-widget-content ui-corner-all'></td>";
+                 itemRow += "<td name='FarId'><input type='text' class='form-control text-input'  name='FarId' style='min-width:450px;' class='ui-widget ui-widget-content ui-corner-all'></td>";
                
                  }
                 itemRow += "<td name='macAddress'><input type='text' class='form-control text-input' value='"+boqArray[i].macAddress+"' name='macAddress' style='min-width:450px;' class='ui-widget ui-widget-content ui-corner-all' ></td>";
@@ -528,7 +527,7 @@
             $('input[type="checkbox"]', '#bisotab').eq(indexRow).prop('checked', true);
             	 $("#bisotab tr").removeClass("ativeRecord")
     	            $("#bisotab  > tbody").find("tr").eq(indexRow).addClass("ativeRecord");
-	
+	           $('table#bisotab tr:eq('+(indexRow+1)+') td:nth-child(1) input').focus();
 			console.log("newIndex: "+indexRow);
            }
            if(stat == "addRowBelow")
@@ -539,7 +538,8 @@
             $('input[type="checkbox"]', '#bisotab').eq(indexRow).prop('checked', true);
             $("#bisotab tr").removeClass("ativeRecord")
     	            $("#bisotab  > tbody").find("tr").eq(indexRow).addClass("ativeRecord");
-	
+	   $('table#bisotab tr:eq('+(indexRow+1)+') td:nth-child(1) input').focus();
+		
 				console.log("newIndex: "+indexRow);
            }
            if(stat == "addRowAbove")
@@ -550,7 +550,8 @@
             $('input[type="checkbox"]', '#bisotab').eq(indexRow).prop('checked', true);
               $("#bisotab tr").removeClass("ativeRecord")
     	            $("#bisotab  > tbody").find("tr").eq(indexRow).addClass("ativeRecord");
-	
+	   $('table#bisotab tr:eq('+(indexRow+1)+') td:nth-child(1) input').focus();
+		
 			console.log("newIndex: "+indexRow);	
            }
 
@@ -808,9 +809,11 @@ else {
 			});
 			
 			
-		$('input[name="FarId"]').each(function (i, el) {
-			    $(el).autocomplete({
+		$('input[name="FarId"]').eq(indexRow).autocomplete({
 			        source: function (request, response, event, ui) {
+				 if ($('input[name="FarId"]').eq(indexRow).prop('readonly')) {
+				            return; 
+				        }
 			            var nodeIds = [];
 			            $("#FromNodeTable > tbody > tr").find('input[name="record"]').each(function () {
 			                var node_Id = $(this).parent().parent().children('td[name="NodeId"]').children('input').val();
@@ -858,11 +861,10 @@ else {
 			            .appendTo(ul);
 			    };
 
-			    $(el).focus(function () {
-			        if (this.value == "") {
-			            $(el).autocomplete("search");
-			        }
-			    });
+				$('input[name ="FarId"]').eq(indexRow).focus(function(){
+				if (this.value == ""){
+					$(this).autocomplete("search");
+	   	        }
 			});
 
 
@@ -1861,161 +1863,54 @@ $("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="item"]').children('in
 	$('#popupItemCode').autocomplete({
 
 
-			source: function(request, response, event, ui) {
-
-
-				var purchaseOrder = $('#popupPO').val();
-				if(purchaseOrder == "")
-				{
-					purchaseOrder = "empty";
-				}
-				 if(purchaseOrder != "empty")
-				 {
-					 PrOrder = purchaseOrder.split(":");
-					 PrOrderID = PrOrder[0];
-				 }
-				 else
-					 PrOrderID = purchaseOrder;
-
-
-				 var itemModel = $('#popupItemModel').val()
-				 if(itemModel == "")
-				 {
-					itemModel = "empty";
-				 }
-
-				 var itemPartNb = $('#popupItemPartno').val();
-				 if(itemPartNb == "")
-				 {
-					itemPartNb = "empty";
-				 }
-
-				 var WorkOrder = $('#popupWO').val();
-				 if(WorkOrder == "")
-				 {
-					WorkOrder = "empty";
-				 }
-				 if(WorkOrder != "empty")
-				 {
-					 WoOrder = WorkOrder.split(":");
-					 WoOrderID = WoOrder[0];
-				 }
-				 else
-					 WoOrderID = WorkOrder;
-					// console.log("*/*/WoOrderID is"+WoOrderID);
-
-
-				 $.ajax({
-					 type: "GET",
-					 contentType: "application/json; charset=utf-8",
-					 url: ctx+'/GetAllitemInDN',
-					 data: {
-							"itemCode" : request.term,
-							 "PrOrderID" : PrOrderID,
-							 "WoOrderID":WoOrderID,
-							 "itemModel" : itemModel,
-							 "itemPartNb" : itemPartNb
-					 },
-					 dataType: "json",
-					 success: function (data) {
-						 if (data != null) {
-							 response(data.ListItemprreq);
-						 }
-					 },
-					 error: function(result) {
-						 alert("Error");
-					 }
-				 });
-			}, minLength:0, maxShowItems: 4, scroll:true,
-			select: function(event, ui) {
-				this.value = (ui.item ? ui.item[0] + ":"+ ui.item[1] : '');
-
-			  $('#popupItemModel').val(ui.item[2]);
-			  $('#popupItemPartno').val(ui.item[3]);
-				ItemCode = ui.item[0];
-
-				PrOrderValue = $('#popupPO').val();
-				if(PrOrderValue != "")
-				{
-					PrOrderValue = PrOrderValue.split(":");
-					PrOrderValue = PrOrderValue[0];
-
-					var qty = $('#popupQty');
-					var rate = $('#popupRate');
-					var discountAmount = $('#popupDiscountAmount');
-					var tax = $('#popupTax');
-					var obj =$('#popupPO');
-
-					$.ajax({
-						 type: "GET",
-						 contentType: "application/json; charset=utf-8",
-						 url: ctx+'/GetPOitemDetails',
-						 data: {
-								PoID : PrOrderValue,
-								ItemCode : ItemCode,
+			    source: function(request, response, event, ui) {
+     			 
+		             $.ajax({
+		                 type: "GET",
+		                 contentType: "application/json; charset=utf-8",
+		                 url: ctx+'/getItemCode',
+		                 data: {
+		                	  requestValue : request.term,
+                              barcode : $("#barcode").val()
 						 },
-						 dataType: "json",
-						 success: function (data) {
-							 if (data != null) {
+		                 dataType: "json",
+		                 success: function (data) {
+		                     if (data != null) {
+		                         response(data.ListItemDetails);
+		                     }
+		                 },
+		                 error: function(result) {
+		                     alert("Error");
+		                 }
+		             });
+		        }, minLength:0, maxShowItems: 4, scroll:true,
+				select: function(event, ui) {
+					this.value = (ui.item ? ui.item[0] + ":" + ui.item[1] : '');
+                $('#popupItemModel').val(ui.item[2]);
+                $('#popupItemPartno').val(ui.item[3]);
 
-									qty.val(1);    // fill the qty field
-									rate.val(data.PoDetails[0][1]);  // fill the rate field
-									discountAmount.val(data.PoDetails[0][2]);   // fill the discountAmount field
-									 tax.val(data.PoDetails[0][3]);   // fill the tax field
+					return false;
+ 					}
+ 				}).autocomplete("instance")._renderItem = function(ul, item) {
+				var appendString = "<div class='acItem'><span class='name' style='font-weight:bold'>" + 
+				item[0] + "</span><br><span class='desc'>" + 
+                item[1] + "</span><span class='desc'>"; 
+                if(item[2] != '-')
+                     appendString += ","+item[2] + "</span><span class='desc'>"; 
+                      if(item[3] != '-') 
+                           appendString += ","+item[3] + "</span><span class='desc'>";
+                 if(item[4] != '-') 
+                      appendString += ","+item[4]; 
+                      appendString += "</span></div>"; 
+                return $("<li class='each'>").append(appendString).appendTo(ul);
+                
+ 			};
+ 			$('#popupItemCode').focus(function(){
+ 				if (this.value == ""){
+ 					$(this).autocomplete("search");
+ 	   	        }
+ 			});
 
-									 //SetCalc(obj);
-									 SetCalcPopUp();
-
-							 }
-						 },
-						 error: function(result) {
-							 alert("Error");
-						 }
-					 });
-				}
-
-				return false;
-			}
-		}).autocomplete("instance")._renderItem = function(ul, item) {
-				if (item[2]==null && item[3]==null){
-					return $('<li class="each"></li>').data( "item.autocomplete", item )
-					.append('<div class="acItem"><span class="name" style="font-weight:bold">'+
-
-					item[0] +'</span><br><span class="desc">'  +
-					item[1] +'</span></div>').appendTo(ul);
-
-				}
-				else if(item[3]==' '){
-					return $('<li class="each"></li>').data( "item.autocomplete", item )
-						.append('<div class="acItem"><span class="name" style="font-weight:bold">'+
-
-						item[0] +'</span><br><span class="desc">'  +
-						item[1] +'</span><span class="desc">'+";"+
-						item[2] +'</span></div>').appendTo(ul);
-				}
-				else if (item[2]==' '){
-					return $('<li class="each"></li>').data( "item.autocomplete", item )
-						.append('<div class="acItem"><span class="name" style="font-weight:bold">'+
-
-						item[0] +'</span><br><span class="desc">'  +
-						item[1] +'</span><span class="desc">'+";"+
-						item[3] +'</span></div>').appendTo(ul);
-				}
-				else{
-				return $('<li class="each"></li>').data( "item.autocomplete", item )
-			   .append('<div class="acItem"><span class="name" style="font-weight:bold">'+
-
-			   item[0] +'</span><br><span class="desc">'  +
-			   item[1] +'</span><span class="desc">'+";"+
-			   item[2] +'</span><span class="desc">'+";"+
-			   item[3] +'</span></div>').appendTo(ul);
-	 }
-	};
-	$('#popupItemCode').focus(function(){
-		if (this.value == ""){
-			$(this).autocomplete("search");
-		   }
-	});
 
 
 
@@ -2025,235 +1920,109 @@ $("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="item"]').children('in
 
 			/// Starting autocomplete for Item Model
 			$('#popupItemModel').autocomplete({
+    source: function(request, response, event, ui) {
+     			 
+		             $.ajax({
+		                 type: "GET",
+		                 contentType: "application/json; charset=utf-8",
+		                 url: ctx+'/getModel',
+		                 data: {
+		                	  requestValue : request.term,
+                              barcode : $("#barcode").val()
+						 },
+		                 dataType: "json",
+		                 success: function (data) {
+		                     if (data != null) {
+		                         response(data.ListModels);
+		                     }
+		                 },
+		                 error: function(result) {
+		                     alert("Error");
+		                 }
+		             });
+		        }, minLength:0, maxShowItems: 4, scroll:true,
+				select: function(event, ui) {
+					this.value = (ui.item[0]);
+                $('#popupItemCode').val(ui.item ? ui.item[1] + ":" + ui.item[2] : '');
+                $('#popupItemPartno').val(ui.item[3]);
 
-		    	    source: function(request, response, event, ui) {
- 					//console.log(2222);
-
-						 var Item_code = $('#popupItemCode').val();
-						 if(Item_code == "")
-						 {
-							Item_code = "empty";
-						 }
-	        			 if(Item_code != "empty")
-		        		 {
-	        				 Item_code = Item_code.split(":");
-			        		 Item_code = Item_code[0];
-			             }
-
-
-						 var itemPartNb = $('#popupItemPartno').val();
-						if(itemPartNb == "")
-						{
-							itemPartNb = "empty";
-						}
-
-						 var purchaseOrder = $('#popupPO').val();
-						 if(purchaseOrder == "")
-						 {
-							purchaseOrder = "empty";
-						 }
-	        			 if(purchaseOrder != "empty")
-		        		 {
-	        				 PrOrder = purchaseOrder.split(":");
-			        		 PrOrderID = PrOrder[0];
-			             }
-	        			 else{
-	        				 PrOrderID = purchaseOrder;
-	        			    // console.log("PrOrderID is "+PrOrderID);
-							}
-
-
-							 var WorkOrder = $('#popupWO').val();
-							 if(WorkOrder == "")
-							 {
-								WorkOrder = "empty";
-							 }
-		        			 if(WorkOrder != "empty")
-			        		 {
-		        				 WoOrder = WorkOrder.split(":");
-				        		 WoOrderID = WoOrder[0];
-				             }
-		        			 else{
-		        				 WoOrderID = WorkOrder;
-		        			     //console.log("*/*/WoOrderID is"+WoOrderID);
-								}
-
-
-
-	        			// console.log("itemPartNb is"+itemPartNb);
-
-			             $.ajax({
-			                 type: "GET",
-			                 contentType: "application/json; charset=utf-8",
-			                 url: ctx+'/GetItemModels',
-			                 data: {
-			                	 "ItemModel" : request.term,
-			                	 Item_code : Item_code,
-			                	 "WoOrderID":WoOrderID,
-			                	 itemPartNb: itemPartNb,
-			                	 PrOrderID : PrOrderID
-
-							 },
-			                 dataType: "json",
-			                 success: function (data) {
-			                     if (data != null) {
-			                         response(data.ListModels);
-			                     }
-			                 },
-			                 error: function(result) {
-			                     alert("Error");
-			                 }
-			             });
-			        }, minLength:0, maxShowItems: 40, scroll:true,
-					select: function(event, ui) {
-						this.value = (ui.item ? ui.item[0] : '');
-
-						$('#popupItemCode').val(ui.item[1]+ ":"+ ui.item[2]);
-						$('#popupItemPartno').val(ui.item[3]);
-
-							return false;
-					}
-				}).autocomplete("instance")._renderItem = function(ul, item) {
-					 if (item[3]==' '){
-        				 return $('<li class="each"></li>').data( "item.autocomplete", item )
- 		    			.append('<div class="acItem"><span class="name" style="font-weight:bold">'+
-
- 	                    item[0] +'</span><br><span class="desc">'  +
- 	                    item[1] +'</span><span class="desc">'+";"+
- 	                    item[2] +'</span></div>').appendTo(ul);
-
-	        		 }
-					 else{
-
-		    	return $('<li class="each"></li>').data( "item.autocomplete", item )
-		    			.append('<div class="acItem"><span class="name" style="font-weight:bold">'+
-
-	                    item[0] +'</span><br><span class="desc">'  +
-	                    item[1] +'</span><span class="desc">'+";"+
-	                    item[2] +'</span><span class="desc">'+";"+
-	                    item[3] +'</span></div>').appendTo(ul);
-					 }
-			};
-			$('#popupItemModel').focus(function(){
-				if (this.value == ""){
-					$(this).autocomplete("search");
-	   	        }
-			});
-			//});
-
+					return false;
+ 					}
+ 				}).autocomplete("instance")._renderItem = function(ul, item) {
+ 			var appendString = "<div class='acItem'><span class='name' style='font-weight:bold'>" + 
+ 			item[0] + "</span><br><span class='desc'>" + 
+            item[1] + "</span><span class='desc'>"+"," + 
+            item[2] + "</span><span class='desc'>"; 
+            if(item[3] != '-') 
+             appendString += ","+item[3] + "</span><span class='desc'>"; 
+            if(item[4] != '-') 
+	         appendString += ","+item[4]; 
+             appendString += "</span></div>"; 
+             
+                return $("<li class='each'>").append(appendString).appendTo(ul);
+                
+ 			};
+ 			$('#popupItemModel').focus(function(){
+ 				if (this.value == ""){
+ 					$(this).autocomplete("search");
+ 	   	        }
+ 			});
 			// ending the autocomplete of Item Model
+
+
+
+
+
 
 			/// Starting autocomplete for ItemPartNb
 			$('#popupItemPartno').autocomplete({
 				//$(el).autocomplete({
-		    	    source: function(request, response, event, ui) {
+		    	     source: function(request, response, event, ui) {
+     			 
+		             $.ajax({
+		                 type: "GET",
+		                 contentType: "application/json; charset=utf-8",
+		                 url: ctx+'/getPartNo',
+		                 data: {
+		                	  requestValue : request.term,
+                              barcode : $("#barcode").val()
+						 },
+		                 dataType: "json",
+		                 success: function (data) {
+		                     if (data != null) {
+		                         response(data.ListPartNos);
+		                     }
+		                 },
+		                 error: function(result) {
+		                     alert("Error");
+		                 }
+		             });
+		        }, minLength:0, maxShowItems: 4, scroll:true,
+				select: function(event, ui) {
+					this.value = (ui.item[0]);
+                $('#popupItemCode').val (ui.item ? ui.item[1] + ":" + ui.item[2] : '');
+                $('#popupItemModel').val(ui.item[3]);
 
-						 var Item_code = $('#popupItemCode').val();
-						 if(Item_code == "")
-						 {
-							Item_code = "empty";
-						 }
+					return false;
+ 					}
+ 				}).autocomplete("instance")._renderItem = function(ul, item) {
+			var appendString = "<div class='acItem'><span class='name' style='font-weight:bold'>" + 
+			 item[0] + "</span><br><span class='desc'>" + 
+			 item[1] + "</span><span class='desc'>"+"," + 
+			  item[2] + "</span><span class='desc'>";
 
-	        			 if(Item_code != "empty")
-		        		 {
-	        				 Item_code = Item_code.split(":");
-			        		 Item_code = Item_code[0];
-			             }
-
-
-						 var purchaseOrder = $('#popupPO').val();
-						 if(purchaseOrder == "")
-						 {
-							purchaseOrder = "empty";
-						 }
-	        			 if(purchaseOrder != "empty")
-		        		 {
-	        				 PrOrder = purchaseOrder.split(":");
-			        		 PrOrderID = PrOrder[0];
-			             }
-	        			 else
-	        				 PrOrderID = purchaseOrder;
-
-
-						 var itemModel = $('#popupItemModel').val();
-						 if(itemModel == "")
-						 {
-							itemModel = "empty";
-						 }
-
-
-						 var WorkOrder = $('#popupWO').val();
-						 if(WorkOrder == "")
-						 {
-							WorkOrder = "empty";
-						 }
-	        			 if(WorkOrder != "empty")
-		        		 {
-	        				 WoOrder = WorkOrder.split(":");
-			        		 WoOrderID = WoOrder[0];
-			             }
-	        			 else
-	        				 WoOrderID = WorkOrder;
-
-
-
-			             $.ajax({
-			                 type: "GET",
-			                 contentType: "application/json; charset=utf-8",
-			                 url:ctx+'/GetItemPartNbs',
-			                 data: {
-			                	 "ItemPartNb" : request.term,
-			                	 Item_code : Item_code,
-			                	 "itemModel" : itemModel,
-			                	 "WoOrderID":WoOrderID,
-			                	 PrOrderID : PrOrderID
-							 },
-			                 dataType: "json",
-			                 success: function (data) {
-			                     if (data != null) {
-			                         response(data.ListPartNbs);
-			                     }
-			                 },
-			                 error: function(result) {
-			                     alert("Error");
-			                 }
-			             });
-			        }, minLength:0, maxShowItems: 40, scroll:true,
-					select: function(event, ui) {
-						this.value = (ui.item ? ui.item[0] : '');
-						$('#popupItemCode').val(ui.item[1]+ ":"+ ui.item[2]);
-						$('#popupItemModel').val(ui.item[3]);
-						return false;
-					}
-				}).autocomplete("instance")._renderItem = function(ul, item) {
-					if (item[3]==' '){
-
-
-       				 return $('<li class="each"></li>').data( "item.autocomplete", item )
-		    			.append('<div class="acItem"><span class="name" style="font-weight:bold">'+
-
-	                    item[0] +'</span><br><span class="desc">'  +
-	                    item[1] +'</span><span class="desc">'+";"+
-	                    item[2] +'</span></div>').appendTo(ul);
-
-	        		 }
-					 else{
-
-		    	return $('<li class="each"></li>').data( "item.autocomplete", item )
-		    			.append('<div class="acItem"><span class="name" style="font-weight:bold">'+
-
-	                    item[0] +'</span><br><span class="desc">'  +
-	                    item[1] +'</span><span class="desc">'+";"+
-	                    item[2] +'</span><span class="desc">'+";"+
-	                    item[3] +'</span></div>').appendTo(ul);
-					 }
-			};
-			$('#popupItemPartno').focus(function(){
-				if (this.value == ""){
-					$(this).autocomplete("search");
-	   	        }
-			//});
-			});
+			  if(item[3] != '-')
+               appendString += ","+item[3] + "</span><span class='desc'>"; 
+              if(item[4] != '-') 
+	           appendString += ","+item[4];
+               appendString += "</span></div>";    return $("<li class='each'>").append(appendString).appendTo(ul);
+                
+ 			};
+ 			$('#popupItemCode').focus(function(){
+ 				if (this.value == ""){
+ 					$(this).autocomplete("search");
+ 	   	        }
+ 			});
 
 
 			//auto complete for PO (when adding new rows)

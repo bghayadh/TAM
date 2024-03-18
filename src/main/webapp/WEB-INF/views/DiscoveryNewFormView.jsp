@@ -2419,18 +2419,30 @@ function getAllItemPartNbs()
 
 			$('input[name="FarId"]').each(function (i, el) {
 			    $(el).autocomplete({
+			    
 			        source: function (request, response, event, ui) {
-			            var nodeIds = [];
-			            $("#FromNodeTable > tbody > tr").find('input[name="record"]').each(function () {
-			                var node_Id = $(this).parent().parent().children('td[name="NodeId"]').children('input').val();
-			                nodeIds.push(node_Id);
-			            });
+			        	if ($(el).prop('readonly')) {
+				            return; 
+				        }
+				       var nodeIds = [];
+				       var RowIndex = document.getElementById('RowIndex').value;
+				       var nodes = ($("#bisotab > tbody").find("tr").eq(RowIndex).find('td[name="fromNode"]').children('input').val() == "null" || $("#bisotab > tbody").find("tr").eq(RowIndex).find('td[name="fromNode"]').children('input').val() == '{"fromNodeArray":[]}') ? "" : $("#bisotab > tbody").find("tr").eq(RowIndex).find('td[name="fromNode"]').children('input').val();
 
-			            var siteId = $("#bisotab > tbody").find("tr").eq(rowindx).find('td[name="siteID"]').children('input')[0].value;
+				       if (!nodes){
+                            return;
+					       }
+								var data = JSON.parse(nodes);
+                     	var nodeIds = data.fromNodeArray.map(function(node) {
+							    return node.NodeId;
+							});
+
+							console.log(nodeIds);
+			           
+
+			            var siteId = $("#bisotab > tbody").find("tr").eq(RowIndex).find('td[name="siteID"]').children('input')[0].value;
 			            if (nodeIds.length === 0 || siteId === "") {
 			                return;
 			            }
-
 			            $.ajax({
 			                type: "GET",
 			                contentType: "application/json; charset=utf-8",
@@ -2912,10 +2924,14 @@ $(".delete-From-node").click(function () {
   
 });
 
-$("table[id='bisotab'] tr").focusin(function () {
-	$("table[id='bisotab'] tr").removeClass("ativeRecord")
-	  $(this).addClass("ativeRecord");
-});	
+$(document).on('click', '#bisotab tr', function() {
+    // Remove "activeRecord" class from all rows
+    $("#bisotab tr").removeClass("ativeRecord");
+    
+    // Add "activeRecord" class to the clicked row
+    $(this).addClass("ativeRecord");
+});
+
 
 
 $(document).on('click', '#bisotab input[type="checkbox"]', function() {
