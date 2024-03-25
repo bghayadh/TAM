@@ -889,7 +889,10 @@ query.executeUpdate();
 				
 				/* DiscoveryThread thread = new DiscoveryThread(trans_Type, getApproval, dnStatus,AssetRegID, ArCode, PurchaseOrId,itmcode,itmname,WorkOrder,DniID,toSiteID,supplierID,supplierName,towareID,towareName,serialnb,dnRate,itemModel,itemPartNb,toSite,toSerialNumber,toNodeId,toNodeName,toSlot,nodeID,nodeName,Site,fromSlot,SiteID);
 				thread.start(); */
-
+				query =session.createNativeQuery("select Trans_id from discovery_new_item  where DNI_ID=:param1");
+				query.setParameter("param1",DniID);
+				String transId = (String) query.uniqueResult();
+		
 
 				if ((StringUtils.equalsIgnoreCase(getApproval, "Project Manager") && StringUtils.equalsIgnoreCase(dnStatus, "Approved")) || ((StringUtils.equalsIgnoreCase(getApproval,"Asset Unit") && StringUtils.equalsIgnoreCase(dnStatus, "Approved")))) {
 				
@@ -900,7 +903,9 @@ query.executeUpdate();
 					System.out.println("-- PROJECT MANAGER APPROVAL --");
 					
 						ApprovalProjectandAsset(trans_Type, getApproval, dnStatus,AssetRegID, ArCode, PurchaseOrId,itmcode,itmname,WorkOrder,DniID,toSiteID,supplierID,supplierName,towareID,towareName,serialnb,dnRate,itemModel,itemPartNb,toSite,toSerialNumber,toSlot,Site,fromSlot,SiteID, MacAddress);
-						
+						if(transId != null) {
+						    transactionUpdate(transId,trans_Type,getApproval);
+					}
 					}
 				}
 				
@@ -914,7 +919,9 @@ query.executeUpdate();
 					System.out.println("-- FINANCE APPROVAL --");
 
 						ApprovalFinance(trans_Type, getApproval, dnStatus,AssetRegID, ArCode, PurchaseOrId,itmcode,itmname,WorkOrder,DniID,toSiteID,supplierID,supplierName,towareID,towareName,serialnb,dnRate,itemModel,itemPartNb,toSite,toSerialNumber,toSlot,Site,fromSlot,SiteID,MacAddress);
-						
+						if(transId != null) {
+							transactionUpdate(transId,trans_Type,getApproval);
+						}
 					}
 				}
 				
@@ -933,7 +940,9 @@ query.executeUpdate();
 					System.out.println("-- OPERATION MANAGER APPROVAL --");
 					
 							ApprovalOperational(trans_Type, getApproval, dnStatus,AssetRegID, ArCode, PurchaseOrId,itmcode,itmname,WorkOrder,DniID,toSiteID,supplierID,supplierName,towareID,towareName,serialnb,dnRate,itemModel,itemPartNb,toSite,toSerialNumber,toSlot,Site,fromSlot,SiteID, FAR, MacAddress);
-		
+							if(transId != null) {
+								transactionUpdate(transId,trans_Type,getApproval);
+							}
 						}
 						
 					}
@@ -5160,4 +5169,25 @@ public void insertDiscoveredElements(Session session,List<Object[]> element,Stri
         }
         return false; // Value not found
     }
+	
+	
+	public void transactionUpdate(String transId,String transType, String approvalType) {
+		
+		
+		  String[] transIdArray = transId.split(",");
+	        
+	        for (String id : transIdArray) {
+	        	
+	        	query = session.createNativeQuery("UPDATE Network_TRANSACTION set "
+	        			+ "ALM_TRANS_TYPE =:param1 , ALM_APPROVAL_STATUS=:param2 "
+	        			+ "where Trans_Id=:param3 ");
+	        	query.setParameter("param1", transType);
+	        	query.setParameter("param2", approvalType);
+	        	query.setParameter("param3", id);
+				query.executeUpdate();
+				session.createNativeQuery("commit").executeUpdate();
+	        }
+		
+	
+	}
 }
