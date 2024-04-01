@@ -394,6 +394,15 @@ public class AssetRegistryController {
 				model.addAttribute("supplierName", assetreg.getSupplierName());
 				model.addAttribute("arStatus", assetreg.getArStatus());
 				
+				
+				model.addAttribute("dniId", assetreg.getArdniID());
+				model.addAttribute("poId", assetreg.getPoID());
+				model.addAttribute("poItemId", assetreg.getPoItemId());
+				model.addAttribute("initialCost", assetreg.getInitialCost());
+				model.addAttribute("suppId", assetreg.getSupplierID());
+				model.addAttribute("suppName", assetreg.getSupplierName()); 
+				model.addAttribute("arSiteId", assetreg.getArsiteId());
+				
 				if (assetreg.getArcreatedDate() == null) {
 					date = new Timestamp(System.currentTimeMillis());
 				}
@@ -594,6 +603,15 @@ public class AssetRegistryController {
 		assetreg.setArSubDomain(request.getParameter("arSubDomain"));
 		assetreg.setArVendor(request.getParameter("arVendor"));
 		assetreg.setArType(request.getParameter("arType"));
+		
+		assetreg.setArdniID(request.getParameter("dniId"));
+		assetreg.setPoID(request.getParameter("poId"));
+		assetreg.setPoItemId(request.getParameter("poItemId"));
+		assetreg.setInitialCost(Float.parseFloat(request.getParameter("initialCost")));
+		assetreg.setSupplierID(request.getParameter("suppId"));
+		assetreg.setSupplierName(request.getParameter("suppName"));
+		assetreg.setArsiteId(request.getParameter("arSiteId"));
+		
 		session.saveOrUpdate(assetreg);
 		
 		
