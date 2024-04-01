@@ -104,6 +104,8 @@ public class AssetRegistry {
 	@Column(name = "PO_ID")
 	private String poID;
 	
+	@Column(name = "INITIAL_COST")
+	private float initialCost;
 	
 /*	
 	@Column(name = "SITE_ID")
@@ -214,7 +216,7 @@ public class AssetRegistry {
 			String locationAddress, String lastModUser, String objectID, String itemSN, String itemModel,
 			String itemPartNumber, String supplierName, String wareID, String wareName, String position,
 			String poItemId, String prID, String grID, String itemRootCode, String itemCatCode, String itemCatID,
-			String itemCat,String arSubDomain, String arVendor, String arType) {
+			String itemCat,String arSubDomain, String arVendor, String arType, float initialCost) {
 		super();
 		this.arID = arID;
 		ArStatus = arStatus;
@@ -277,7 +279,20 @@ public class AssetRegistry {
 		this.arSubDomain = arSubDomain;
 		this.arVendor = arVendor;
 		this.arType = arType;
+		this.initialCost=initialCost;
 	}
+
+	public float getInitialCost() {
+		return initialCost;
+	}
+
+
+
+	public void setInitialCost(float initialCost) {
+		this.initialCost = initialCost;
+	}
+
+
 
 	public String getArID() {
 		return arID;
