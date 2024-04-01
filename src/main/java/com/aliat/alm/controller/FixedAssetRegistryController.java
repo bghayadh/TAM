@@ -422,6 +422,7 @@ public class FixedAssetRegistryController {
 					model.addAttribute("itemSizeUOM", itm.getSizeUOM());
 					model.addAttribute("itemDesc", itm.getItemDescription());
 					
+					
 
 					// model.addAttribute("itemDomain",itm.getDomain());
 					model.addAttribute("itemCableType", itm.getCableType());
@@ -432,6 +433,17 @@ public class FixedAssetRegistryController {
 					model.addAttribute("usefulLifeMonth", itm.getUsefull_LifeMonths());
 					model.addAttribute("farStatus", fassetreg.getFarStatus());
 
+					model.addAttribute("dniId", fassetreg.getDniID());
+					model.addAttribute("arId", fassetreg.getARID());
+					model.addAttribute("poId", fassetreg.getPoId());
+					model.addAttribute("suppId", fassetreg.getSupplierID());
+					model.addAttribute("suppName", fassetreg.getSupplierName());
+					model.addAttribute("poItemId", fassetreg.getPoItemId());
+					model.addAttribute("farSiteId", fassetreg.getFarsiteId());
+
+
+				
+					
 					if (itm.getService() == '1') {
 						model.addAttribute("sService", "checked");
 					} else {
@@ -538,12 +550,12 @@ public class FixedAssetRegistryController {
 
 					query = session.createQuery(
 							"select t.ItemCode || ':'|| t.ItemName ,t.ItemModel,t.ItemPartNb,t.Qty, t.Rate,t.DiscAmnt ,t.Tax1, t.NetRate, t.Total, "
-									+ "t.TotalAt,t.GrNo, t.iPrNo, t.ArNo, t.iCIPNo,t.FarNo, t.pordItemId  from PurchaseOrderItem t where t.pordItemId like :param1");
-					query.setParameter("param1", farID);
-
+									+ "t.TotalAt,t.GrNo, t.iPrNo, t.ArNo, t.iCIPNo,t.FarNo, t.pordItemId  from PurchaseOrderItem t where t.ItemCode like :param1");
+					query.setParameter("param1", fassetreg.getFaritemCode());
+					listPurchaseOrderItem=query.list();
 				}
 				model.addAttribute("ListFARItem", mapper.writeValueAsString(listPurchaseOrderItem));
-
+				 System.out.println(mapper.writeValueAsString(listPurchaseOrderItem));
 			} catch (Exception e) {
 
 				logger.info("Error in Fixed Asset Register FormView with a message: " + e);
@@ -662,6 +674,15 @@ public class FixedAssetRegistryController {
 					fassetreg.setFarSubDomain(request.getParameter("farSubDomain"));
 					fassetreg.setFarVendor(request.getParameter("farVendor"));
 					fassetreg.setFarType(request.getParameter("farType"));
+					
+					fassetreg.setDniID(request.getParameter("dniId"));
+					fassetreg.setARID(request.getParameter("arId"));
+					fassetreg.setPoId(request.getParameter("poId"));
+					fassetreg.setSupplierID(request.getParameter("suppId"));
+					fassetreg.setSupplierName(request.getParameter("suppName"));
+					fassetreg.setPoItemId(request.getParameter("poItemId"));
+					fassetreg.setFarsiteId(request.getParameter("farSiteId"));
+					
 
 					if (scrapDate != "") {
 						scrDate = new Timestamp(formatterDate.parse(scrapDate).getTime());
