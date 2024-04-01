@@ -320,7 +320,7 @@ public class DiscoveryController {
 		}
 
 		/* add data in table discoveryNewItem */
-		String queryStmt = "SELECT t.DNI_ID AS dniID, t.ITEM_CODE AS dniItemcode, t.ITEM_NAME AS dniItemname, t.TRANS_TYPE AS transType, " +
+		String queryStmt = "SELECT t.DNI_ID AS dniID, t.TRANS_ID AS transID, t.ITEM_CODE AS dniItemcode, t.ITEM_NAME AS dniItemname, t.TRANS_TYPE AS transType, " +
 			    "t.ELEMENT_NAME AS elementName, NVL(t.NOTES, ' ') AS notes, NVL(t.POSITION, ' ') AS position, t.APPROVAL AS dniAPPROVAL, " +
 			    "t.PO_ID AS dniPOID, t.SUPPLIER_ID AS supplierID, t.SUPPLIER_NAME AS supplierName, t.TOTAL_AMOUNT AS totalAmount, " +
 			    "t.WO_ID AS dniWOID, t.WO_PURPOSE AS purpose, t.QTY AS dniQty, t.RATE AS dniRate, t.DISCOUNT_AMOUNT AS dniDiscamount, " +
@@ -347,6 +347,7 @@ public class DiscoveryController {
 
 		List<DNIFormView> listDiscoveryNewItems = (List<DNIFormView>) ((NativeQuery) query)
 			    .addScalar("dniID", new StringType())
+			    .addScalar("transID", new StringType())
 			    .addScalar("dniItemcode", new StringType())
 			    .addScalar("dniItemname", new StringType())
 			    .addScalar("transType", new StringType())
@@ -891,7 +892,11 @@ query.executeUpdate();
 				thread.start(); */
 				query =session.createNativeQuery("select Trans_id from discovery_new_item  where DNI_ID=:param1");
 				query.setParameter("param1",DniID);
-				String transId = (String) query.uniqueResult();
+				String transId = null;
+				if(query.uniqueResult()!=null) {
+					transId = (String) query.uniqueResult();
+				}
+				
 		
 
 				if ((StringUtils.equalsIgnoreCase(getApproval, "Project Manager") && StringUtils.equalsIgnoreCase(dnStatus, "Approved")) || ((StringUtils.equalsIgnoreCase(getApproval,"Asset Unit") && StringUtils.equalsIgnoreCase(dnStatus, "Approved")))) {
@@ -3710,6 +3715,7 @@ public void ApprovalProjectandAsset(String trans_Type, String getApproval, Strin
 		assetregistry.setArlastModifiedDate(new Timestamp(System.currentTimeMillis()));
 		assetregistry.setAritemName(itmname);
 		assetregistry.setArdniID(DniID);
+		assetregistry.setInitialCost(dnRate);
 		assetregistry.setPoID(PurchaseOrId);
 		assetregistry.setSupplierID(supplierID);
 		assetregistry.setSupplierName(supplierName);
