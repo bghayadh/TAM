@@ -754,25 +754,84 @@ max-height: 100%;
 			</div>
 	</div>
   </div>
+  
+  <div class="row">
+<div class="col-md-4">
+		<div class="form-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">DNI ID</span>
+				<input type="text" id="dniId" value="${dniId}" class="form-control text-input"  readonly/>
+				</div>
+			</div>
+	</div>
+	<div class="col-md-4">
+	<div class="form-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">PO ID</span>
+				<input type="text" id="poId" value="${poId}" class="form-control text-input"  readonly />
+				</div>
+			</div>
+			</div>
+			<div class="col-md-4">
+			<div class="form-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">PO Item Id</span>
+				<input type="text" id="poItemId" value="${poItemId}" class="form-control text-input" readonly />
+				</div>
+			</div>
+</div>
+  </div>
+  
+   <div class="row">
+
+		<div class="col-md-4">
+	
+	<div class="form-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">Initial Cost</span>
+				<input type="text" id="initialCost" value="${initialCost}" class="form-control text-input" readonly />
+				</div>
+			</div>
+			</div>
+			<div class="col-md-4">
+			<div class="form-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">Supplier Id </span>
+				<input type="text" id="suppId" value="${suppId}" class="form-control text-input"  readonly/>
+				</div>
+			</div>
+			</div>
+			
+			<div class="col-md-4">
+			<div class="form-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">Supplier Name</span>
+				<input type="text" id="suppName" value="${suppName}" class="form-control text-input"  readonly/>
+				</div>
+			</div>
+</div>
+  </div>
+  
 	<div class="row">
 
-	<div class="col-md-6">
+	<div class="col-md-4">
 				<div class="input-group-prepend">
 					<span class="input-group-text">Item Description</span>
-				</div>							
-	</div>
-	
-  </div>
-	<div class="row">
-	<div class="col-md-6">
-		<div class="input-group-prepend">
-		<textarea name="itmdescrip" cols="120" rows="7" id="itmdescrip" class="form-control text-input"> ${aritemDescription} </textarea>
+		
+		<textarea name="itmdescrip" cols="150" rows="7" id="itmdescrip" class="form-control text-input" > ${aritemDescription} </textarea>
 		</div>
 	</div>
+		<div class="col-md-4">
+<div class="form-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">AR Site Id</span>
+				<input type="text" id="arSiteId" value="${arSiteId}" class="form-control text-input"  readonly/>
+				</div>
+			</div>
+			</div>
 	
 	
-	<div class="col-md-6">
-	</div>
+	
 </div>
 
 
@@ -2360,6 +2419,18 @@ if ('${ListArSerialNumber}' != "addNew") {
 				"arDomain": $("#arDomain").val(),
 				"arSubDomain": $("#arSubDomain").val(),
 				"arVendor": $("#arVendor").val(),
+
+				"dniId": $("#dniId").val(),
+				"poId": $("#poId").val(),
+				"poItemId": $("#poItemId").val(),
+				"initialCost": $("#initialCost").val(),
+				"suppId": $("#suppId").val(),
+				"suppName": $("#suppName").val(),
+				"arSiteId": $("#arSiteId").val(),
+				
+
+
+				
 				"arType": $("#arType").val()
 				/* "email": $("#email").val(),
 				"password":$("#password").val(),
@@ -2367,6 +2438,10 @@ if ('${ListArSerialNumber}' != "addNew") {
 			    "ccmail": $("#ccmail").val(),
 			    "subject": $("#subject").val(),
 			    "message": $("#message").val(), */
+
+
+
+			    
 											
 			},
 			success : function(data) {
