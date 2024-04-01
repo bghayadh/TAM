@@ -97,6 +97,7 @@
 						dictObj.item = $(this).parent().parent().children('td[name="item"]').children('input').val();
 	                    dictObj.transType = $(this).parent().parent().children('td[name="transType"]').children('select').val();
                         dictObj.notes = $(this).parent().parent().children('td[name="notes"]').children('input').val();
+                        dictObj.transId = $(this).parent().parent().children('td[name="transId"]').children('input').val();
 	                    dictObj.elementName = $(this).parent().parent().children('td[name="elementName"]').children('select').val();
 	                    dictObj.address = $(this).parent().parent().children('td[name="address"]').children('input').val();
 	                    dictObj.approvedby = $(this).parent().parent().children('td[name="approveStatus"]').children('input[name="approvedby"]').val();
@@ -412,6 +413,8 @@
                 itemRow += "<td name='macAddress'><input type='text' class='form-control text-input' value='"+boqArray[i].macAddress+"' name='macAddress' style='min-width:450px;' class='ui-widget ui-widget-content ui-corner-all' ></td>";
                 itemRow =itemRow + "<td name='itemSN' style='display:none'><input style='display:none' type='text' class='form-control text-input' style='min-width:200px' value='"+boqArray[i].dniSN+"'></td>";
 				itemRow =itemRow + "<td  name='toSN'><input type='text' class='form-control text-input' style='min-width:200px' value='"+boqArray[i].toSerialNumber+"'></td>";
+				itemRow =itemRow + "<td name='transId'><input type='text' class='form-control text-input' style='min-width:150px' value='"+boqArray[i].transID+"' readonly></td>";
+			
 				itemRow =itemRow + "<td name='itemDniID'><input type='text' class='form-control text-input' style='min-width:150px' value='"+boqArray[i].dniDNID+"' readonly></td>";
 			    itemRow = itemRow + "<td style='display:none' name='toNode'><input style='display:none' type='text' style='min-width:200px; display: none;' value='" + toNodeArray[0] + "' class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>";
                 itemRow = itemRow + "<td style='display:none' name='fromNode'><input style='display:none' type='text' style='min-width:200px; display: none;' value='" + fromNodeArray[0] + "' class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>";
@@ -510,6 +513,8 @@
               	+"<td name='macAddress'><input type='text' name='macAddress' style='min-width:450px;' class='ui-widget ui-widget-content ui-corner-all form-control' ></td>"
               	+"<td name='itemSN' style='display:none'><input style='display:none' type='text' value='0' class='form-control' style='min-width:200px;'></td>"
               	+"<td name='toSN' ><input type='text' value='0' class='form-control' style='min-width:200px;'></td>"
+              	+"<td name='transId' ><input type='text' value='0' class='form-control' style='min-width:200px;' readonly/></td>"
+             	
              	+"<td name='itemDniID'><input type='text' readonly value='0' class='form-control' style='min-width:160px;'></td>"
              	+"<td style='display:none;' name='toNode'><input type='text'  value ='null' class='form-control' style='min-width:160px; display:none;'></td>"
              	+"<td style='display:none;' name='fromNode'><input type='text' value ='null' style='min-width:200px; display:none;'  class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td></tr>";		
