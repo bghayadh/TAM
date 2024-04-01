@@ -896,7 +896,7 @@ max-width: 100%;
                    </tr>
                		
                		     <tr >
-                   <td  class="TD">	<b>CIP Valuation Rate</b>	
+                   <td  class="TD">	<b>CIP Rate</b>	
                    <td id="cipNeetTotAll" class="TD">		
                    
                    </tr>
@@ -933,7 +933,7 @@ max-width: 100%;
                		
                		<tr>
                		
-               		<td><b>Sum of Valuation Rate</b>	
+               		<td><b>Sum of Rate</b>	
                		<td id="arValRateAll">	
                		
                		
@@ -1618,8 +1618,8 @@ $(document).trigger("triggerBoqListenersEvent");
 	            	$('#arCountAll').text(data.arCountAll);
 	            	$('#arValRateAll').text(data.arValRateAll);
 
-	            	$('#faRCountAll').text(data.arCountAll);
-	            	$('#faRValRateAll').text(data.arValRateAll);
+	            	$('#faRCountAll').text(data.faRCountAll);
+	            	$('#faRValRateAll').text(data.faRValRateAll);
 
 	            	$('#farCount').text(data.farCount);
 	            	$('#farNotRunCount').text(data.farNotRunCount);
