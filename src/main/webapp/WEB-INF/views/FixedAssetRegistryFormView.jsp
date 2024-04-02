@@ -605,27 +605,87 @@ max-height: 100%;
 				
 		</div>
 	</div>
-	<div class="row"></div>
-	<p></p>
-	<div class="row">
 	
-	<div class="col-md-6">
-		<div class="input-group-prepend">
-			<span class="input-group-text">Item Description</span>
-		</div>							
-	</div>
-	
+	 <div class="row">
+	<div class="col-md-4">
+			<div class="input-group-prepend">
+			<span class="input-group-text">DNi Id</span>
+			<input type="text" id="dniId" value="${dniId}" class="form-control text-input" readonly/>
 </div>
-<div class="row">
-	<div class="col-md-6">
+
+				
+		</div>
+	<div class="col-md-4">
+	<div class="form-group">
 		<div class="input-group-prepend">
-			<textarea name="itmdescrip" readonly="readonly" cols="220" rows="8" id="itmdescrip"> ${itemDesc} </textarea>
+			<span class="input-group-text">Ar Id</span>
+			<input type="text" id="arId" value="${arId}" class="form-control text-input" readonly/>
+		</div>	
+		</div>	
+	</div>
+		<div class="col-md-4">
+		<div class="form-group">
+			<div class="input-group-prepend">
+				<span class="input-group-text">Po Id</span>
+					<input type="text" id="poId" value="${poId}" class="form-control text-input" readonly/>
+			</div>
+</div>
+				
 		</div>
 	</div>
 	
-	
-	<div class="col-md-6">
+		 <div class="row">
+	<div class="col-md-4">
+			<div class="input-group-prepend">
+			<span class="input-group-text">Supplier Id</span>
+			<input type="text" id="suppId" value="${suppId}" class="form-control text-input" readonly/>
+</div>
+
+				
+		</div>
+	<div class="col-md-4">
+	<div class="form-group">
+		<div class="input-group-prepend">
+			<span class="input-group-text">Supplier Name</span>
+			<input type="text" id="suppName" value="${suppName}" class="form-control text-input" readonly/>
+		</div>	
+		</div>	
 	</div>
+		<div class="col-md-4">
+		<div class="form-group">
+			<div class="input-group-prepend">
+				<span class="input-group-text">Po Item Id</span>
+					<input type="text" id="poItemId" value="${poItemId}" class="form-control text-input" readonly/>
+			</div>
+</div>
+				
+		</div>
+	</div>
+	
+	<div class="row"></div>
+	<p></p>
+	
+
+	<div class="row">
+
+	<div class="col-md-4">
+				<div class="input-group-prepend">
+					<span class="input-group-text">Item Description</span>
+		
+		<textarea name="itmdescrip" cols="150" rows="7" id="itmdescrip" class="form-control text-input" > ${itemDesc} </textarea>
+		</div>
+	</div>
+		<div class="col-md-4">
+<div class="form-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">FAR Site Id</span>
+				<input type="text" id="farSiteId" value="${farSiteId}" class="form-control text-input"  readonly/>
+				</div>
+			</div>
+			</div>
+	
+	
+	
 </div>
 
 </div>
@@ -2418,6 +2478,15 @@ if ('${ListSite}' != "addNew") {
 				"farDomain": $("#farDomain").val(),
 				"farSubDomain": $("#farSubDomain").val(),
 				"farVendor": $("#farVendor").val(),
+
+				"dniId": $("#dniId").val(),
+				"arId": $("#arId").val(),
+				"poId": $("#poId").val(),
+				"suppId": $("#suppId").val(),
+				"suppName": $("#suppName").val(),
+				"poItemId": $("#poItemId").val(),
+				"farSiteId": $("#farSiteId").val(),
+				
 				"farType": $("#farType").val()
 				
 				/* "email": $("#email").val(),

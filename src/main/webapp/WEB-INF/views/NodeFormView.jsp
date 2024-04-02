@@ -196,6 +196,7 @@
    .scrollable-list {
     width: 300px; /* Set the width to your desired value */
     overflow-x: scroll;
+    overflow-y: hidden;
   }
 
   .scrollable-list ul {

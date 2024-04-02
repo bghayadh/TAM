@@ -2133,15 +2133,15 @@ public class PurchaseController {
 
 								" (select count (h.FAR_ID) FROM FIXED_ASSET_REGISTRY h "
 								+ " INNER JOIN PURCHASE_ORDER b ON h.PO_ID = b.PO_ID "
-								+ " WHERE b.PRQ_ID = t.PRQ_ID and h.FAR_STATUS !='running' ) as farNotRunCount, " +
+								+ " WHERE b.PRQ_ID = t.PRQ_ID and h.FAR_STATUS !='Running' ) as farNotRunCount, " +
 
 								" (select COALESCE(Sum(h.INITIALCOST),0) FROM FIXED_ASSET_REGISTRY h "
 								+ " INNER JOIN PURCHASE_ORDER b ON h.PO_ID = b.PO_ID "
-								+ " WHERE b.PRQ_ID = t.PRQ_ID  and h.FAR_STATUS !='running' ) as farNotRunIntCost, " +
+								+ " WHERE b.PRQ_ID = t.PRQ_ID  and h.FAR_STATUS !='Running' ) as farNotRunIntCost, " +
 
 								" (select COALESCE(Sum(h.NETCOST),0) FROM FIXED_ASSET_REGISTRY h "
 								+ " INNER JOIN PURCHASE_ORDER b ON h.PO_ID = b.PO_ID "
-								+ " WHERE b.PRQ_ID = t.PRQ_ID  and h.FAR_STATUS !='running' ) as farNotRunNetCost " +
+								+ " WHERE b.PRQ_ID = t.PRQ_ID  and h.FAR_STATUS !='Running' ) as farNotRunNetCost " +
 
 								" FROM PURCHASE_ORDER t where t.PRQ_ID='" + ID + "' GROUP BY PRQ_ID ")
 						.list();
@@ -2337,7 +2337,7 @@ public class PurchaseController {
 								" (SELECT count(b.AR_ID) FROM ASSET_REGISTRY b "
 								+ " WHERE b.PO_ID =t.PO_ID) as arCount, " +
 
-								" (SELECT COALESCE(SUM(b.VALUATION_RATE),0) FROM ASSET_REGISTRY b "
+								" (SELECT COALESCE(SUM(b.INITIAL_COST),0) FROM ASSET_REGISTRY b "
 								+ " WHERE b.PO_ID =t.PO_ID) as arValRate, " +
 
 								" (SELECT count(b.FAR_ID) FROM FIXED_ASSET_REGISTRY b "
@@ -2350,17 +2350,30 @@ public class PurchaseController {
 								+ " WHERE b.PO_ID =t.PO_ID) as farNetCost, " +
 
 								" (SELECT count(b.FAR_ID) FROM FIXED_ASSET_REGISTRY b "
-								+ " WHERE b.PO_ID =t.PO_ID and b.FAR_STATUS !='running' ) as farNotRunCount, " +
+								+ " WHERE b.PO_ID =t.PO_ID and b.FAR_STATUS !='Running' ) as farNotRunCount, " +
 
 								" (SELECT COALESCE(SUM(b.INITIALCOST),0) FROM FIXED_ASSET_REGISTRY b "
-								+ " WHERE b.PO_ID =t.PO_ID and b.FAR_STATUS !='running'  ) as farNotRunIntCost, " +
+								+ " WHERE b.PO_ID =t.PO_ID and b.FAR_STATUS !='Running'  ) as farNotRunIntCost, " +
 
 								" (SELECT COALESCE(SUM(b.NETCOST),0) FROM FIXED_ASSET_REGISTRY b "
-								+ " WHERE b.PO_ID =t.PO_ID and b.FAR_STATUS !='running' ) as farNotRunNetCost " +
+								+ " WHERE b.PO_ID =t.PO_ID and b.FAR_STATUS !='Running' ) as farNotRunNetCost " +
 
 								" FROM PURCHASE_ORDER t where t.PO_ID ='" + poId + "' ")
 						.list();
-
+				List<Object[]> CIP =null;
+				CIP = (List<Object[]>) session.createNativeQuery("Select totalQTY, PO_ITEM_ID from "
+						    + "CAPITAL_IN_PROGRESS WHERE PO_ID='" +poId+ "' ").list();
+				float cipCost=0;
+				if(CIP != null) {
+					for (Object[] obj : CIP) {
+					
+					query= session.createNativeQuery("select Rate from purchase_order_item where PO_ITEM_ID='" +obj[1]+ "' ");
+					Object rateObject = query.uniqueResult();
+					 float rate = ((Number) rateObject).floatValue();
+					 cipCost+=rate* Integer.parseInt(obj[0].toString());
+					
+				}
+				}
 				if (poList != null) {
 
 					for (Object[] obj : poList) {
@@ -2391,7 +2404,7 @@ public class PurchaseController {
 						rtn.put("dnTotQtyNotComp", obj[16]);
 
 						rtn.put("cipCouuntAll", obj[17]);
-						rtn.put("cipNeetTotAll", obj[18]);
+						rtn.put("cipNeetTotAll", cipCost);
 						rtn.put("cipTootQtyAll", obj[19]);
 
 						rtn.put("arCountAll", obj[20]);

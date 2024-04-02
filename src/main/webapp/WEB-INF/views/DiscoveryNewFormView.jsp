@@ -504,6 +504,7 @@ max-width: 100%;
 						                <th>MAC Address</th>
 						                <th style='display:none'>From SN</th>
 						                <th>Serial Number</th>
+						                <th>Trans Id</th>
 						                <th>DNitmID</th>
 						            </tr>
 						        </thead>
@@ -1892,7 +1893,8 @@ function getAllItemPartNbs()
 					itemModel = $(this).parent().parent().children('td[name="itemModel"]').children('input').val();
 					itemPartNb = $(this).parent().parent().children('td[name="itemPartNb"]').children('input').val();
 					itemSN = $(this).parent().parent().children('td[name="itemSN"]').children('input').val();
-						
+					transId = $(this).parent().parent().children('td[name="transId"]').children('input').val();
+					
 					indexRow = $(this).parent().parent().index()+1;
 
 					if(DnItemID != 0)
@@ -2015,6 +2017,7 @@ function getAllItemPartNbs()
 						dictObj.item = $(this).parent().parent().children('td[name="item"]').children('input').val(); 
 	                    dictObj.transType = $(this).parent().parent().children('td[name="transType"]').children('select').val();
 	                    dictObj.notes = $(this).parent().parent().children('td[name="notes"]').children('input').val();
+	                    dictObj.transId = $(this).parent().parent().children('td[name="transId"]').children('input').val();
 	                    dictObj.elementName = $(this).parent().parent().children('td[name="elementName"]').children('select').val();
 	                    dictObj.address = $(this).parent().parent().children('td[name="address"]').children('input').val();
 	                    dictObj.approvedby = $(this).parent().parent().children('td[name="approveStatus"]').children('input[name="approvedby"]').val();
