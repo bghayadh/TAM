@@ -253,7 +253,7 @@ z-index: 9003;
 							</li>
 
 							<li class="nav-item ml-auto" id="Buttons">
-							<!-- 	<button type="button" id="deleteButton" class="btn btn-primary BtnActive">
+								<button type="button" id="deleteButton" class="btn btn-primary BtnActive">
 									<i class="fa fa-trash"></i> Delete
 								</button>
 
@@ -261,7 +261,7 @@ z-index: 9003;
 									onclick='window.location.href = "${pageContext.request.contextPath}/PurchaseReqFormView?type=addNew"'
 									class="btn btn-primary BtnActive">
 									<i class="fa fa-plus"></i> Add
-								</button>  -->
+								</button>  
 							</li>
 
 						</ul>
@@ -478,16 +478,7 @@ var PurchaseListData = ${ ListGridTable };
 $(document).ready(function () {
 	var delList = ${delList}; var readForm = ${readForm}; var writeForm = ${writeForm}; var addForm = ${addForm};
 	console.log("delList is " +delList+" writeForm is " +writeForm+" addForm is " +addForm);
-	var deleteButton = '<button type="button" id="deleteButton" class="btn btn-primary BtnActive"><i class="fa fa-trash"></i> Delete</button>';
-	var addButton = '<button type="button" id="saveButton" onclick=\'window.location.href = "${pageContext.request.contextPath}/PurchaseReqFormView?type=addNew"\'class="btn btn-primary BtnActive"><i class="fa fa-plus"></i> Add</button>';
 	
-	if(delList == 1){
-		//$("#Buttons").prepend(deleteButton);
-		$("#Buttons").append(deleteButton);
-	}
-	if(addForm == 1){
-		$("#Buttons").append(addButton);
-	}
 
 	var colLink = [];
 
