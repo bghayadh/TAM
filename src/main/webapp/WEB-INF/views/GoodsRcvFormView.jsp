@@ -225,7 +225,10 @@ max-width: 100%;
  max-width: 100%;
 }
 }
-	        		 
+	  .nav-link.active {
+                background-color: #FFD966 !important;
+                color: #00757c !important;
+            }       		 
  	</style>
 
 
@@ -263,7 +266,7 @@ max-width: 100%;
 				<span class="input-group-text">Status</span>
 				<!--  <input type="text" id="grstat" value="${grStatus}" class="form-control text-input" style="width:500px;" />-->
 				<select id="grstat" class="form-control">
-								<option value="inprog" <c:if test = "${grStatus =='inprog'}" > selected </c:if> >In Progress</option>
+								<option value="draft" <c:if test = "${grStatus =='draft'}" > selected </c:if> >Draft</option>
 								<option value="approved" <c:if test = "${grStatus =='approved'}" > selected </c:if> >Approved</option>
 								<option value="completed" <c:if test = "${grStatus =='completed'}" > selected </c:if>>Completed</option>
 								<option value="cancelled" hidden<c:if test = "${grStatus =='cancelled'}" > selected </c:if>>Cancelled</option>
@@ -818,7 +821,7 @@ max-width: 100%;
                    
                    </tr>
                    
-               		 <tr  ><td class="TD"><b>CIP Valuation Rate</b></td>
+               		 <tr  ><td class="TD"><b>CIP Rate</b></td>
                		 <td id="grCipNetTotAll" class="TD"></tr>
                		 
                		<tr >
@@ -855,7 +858,7 @@ max-width: 100%;
                		
                		<tr>
                		
-               		<td>	<b>Sum of Valuation Rate</b>	
+               		<td>	<b>Sum of Rate</b>	
                		<td id="grArValRateAll" >		
                		
                		
@@ -1388,29 +1391,29 @@ max-width: 100%;
 	        success: function (data) {
 
 	        	$('#grPurchReqId').text(data.grPurchReqId);
-            	$('#grPrStatus').text(data.grPrStatus);
+            	$('#grPrStatus').text("Approved");
             	$('#grPrNetTot').text(data.grPrNetTot);
             	$('#grPrTotQty').text(data.grPrTotQty);
 
             	$('#grPurchOrdId').text(data.grPurchOrdId);
-            	$('#grPoStatus').text(data.grPoStatus);
+            	$('#grPoStatus').text("Approved");
             	$('#grOrdtotQty').text(data.grOrdtotQty);
             	$('#grOrdnetTot').text(data.grOrdnetTot);
 
-            	$('#dnComp').text(data.dnComp);
+            	 /*	$('#dnComp').text(data.dnComp);
             	$('#dnNetTotComp').text(data.dnNetTotComp);
             	$('#dnTotQtyComp').text(data.dnTotQtyComp);
 
-            	$('#dnNotComp').text(data.dnNotComp);
+             	$('#dnNotComp').text(data.dnNotComp);
             	$('#dnNetTotNotComp').text(data.dnNetTotNotComp);
             	$('#dnTotQtyNotComp').text(data.dnTotQtyNotComp);
 
-
+*/
             	$('#grCipCountAll').text(data.grCipCountAll);
             	$('#grCipNetTotAll').text(data.grCipNetTotAll);
             	$('#grCipTotQtyAll').text(data.grCipTotQtyAll);
 
-            	$('#grArCountAll').text(data.grArCountAll);
+       /*     	$('#grArCountAll').text(data.grArCountAll);
             	$('#grArValRateAll').text(data.grArValRateAll);
 
             	$('#grFarCountAll').text(data.grFarCountAll);
@@ -1421,7 +1424,7 @@ max-width: 100%;
             	$('#farNotRunIntCost').text(data.farNotRunIntCost);
             	$('#farNotRunNetCost').text(data.farNotRunNetCost);
 	            		
-	            	
+	       */     	
 	        },		
 	        error: function(result) {
 	            alert("errror somewhere");
@@ -1437,7 +1440,7 @@ max-width: 100%;
 			 		 $('#custom-tabs-one-tabContent :input').attr('disabled',true);
 				 	 $('#grstat').attr('disabled',true);
 			 		 $("#Approvegr").addClass('disabled'); }
-		 		else if(grStatus == 'inprog') 
+		 		else if(grStatus == 'draft') 
 			 		 $("#Approvegr").removeClass('disabled');
 		 		
 		 		else if (grStatus == 'cancelled'){
@@ -1721,7 +1724,7 @@ max-width: 100%;
 			 $("#formStatus").text("Not Saved");
 		     $('.dot').css({"background-color" : "orange"});
 			 $("#Buttons").append(saveButton);
-			 $("#grstat").val('inprog').trigger('change');
+			 $("#grstat").val('draft').trigger('change');
 			});
 		
 		
