@@ -660,7 +660,7 @@ public class PurchaseController {
 								model.addAttribute("discountPercent", pRq.getPrdiscountPercent());
 								model.addAttribute("paidAmount", pRq.getPrpaidAmount());
 								model.addAttribute("ordOutstanding", pRq.getPrOutstanding());
-								model.addAttribute("ordStatus", "inprog");
+								model.addAttribute("ordStatus", "draft");
 								model.addAttribute("netTotal", pRq.getnTotal());
 								model.addAttribute("ordponumber", pRq.getPrnettotalinWord());
 								model.addAttribute("TotalQty", pRq.getPrtotalQty());
@@ -1077,7 +1077,7 @@ public class PurchaseController {
 
 						else if (StringUtils.equalsIgnoreCase(pRqAppFlag, "0")
 								&& StringUtils.equalsIgnoreCase(pRqCnclFlg, "1")) {
-							if (StringUtils.equalsIgnoreCase(pRqStat, "inprog")) {
+							if (StringUtils.equalsIgnoreCase(pRqStat, "draft")) {
 								query = session.createQuery(
 										"update PurchaseRequest set prStatus = 'cancelled' WHERE ID = :param1");
 								query.setParameter("param1", pRqID);
@@ -1579,7 +1579,7 @@ public class PurchaseController {
 							if (grStatus.size() != 0) {
 								grStat = (Object[]) grStatus.get(0);
 								if (!StringUtils.equalsIgnoreCase((CharSequence) grStat[1], "cancelled")
-										&& !StringUtils.equalsIgnoreCase((CharSequence) grStat[1], "inprog")) {
+										&& !StringUtils.equalsIgnoreCase((CharSequence) grStat[1], "draft")) {
 									rtn.put("RevGrStatCncl", "rejected");
 									rtn.put("GRtobeCncld", grStat[0]);
 								} else {
@@ -2095,27 +2095,25 @@ public class PurchaseController {
 
 								" (SELECT count(DISTINCT b.DN_ID) FROM DISCOVERY_NEW_ITEM b "
 								+ " INNER JOIN PURCHASE_ORDER c ON b.PO_ID = c.PO_ID "
-								+ " INNER JOIN DISCOVERY_NEW a ON b.DN_ID = a.DN_ID "
-								+ " WHERE c.PRQ_ID = t.PRQ_ID and a.STATUS  !='completed' and a.STATUS !='closed') as dnNotCompCount, "
+								+ " WHERE c.PRQ_ID = t.PRQ_ID and b.Approval  !='Completely Approved' ) as dnNotCompCount, "
 								+
 
 								" (SELECT COALESCE(SUM(b.QTY),0) FROM DISCOVERY_NEW_ITEM b "
 								+ " INNER JOIN PURCHASE_ORDER c ON b.PO_ID = c.PO_ID "
-								+ " INNER JOIN DISCOVERY_NEW a ON b.DN_ID = a.DN_ID "
-								+ " WHERE c.PRQ_ID = t.PRQ_ID and a.STATUS  !='completed' and a.STATUS !='closed') as dnNotCompQty, "
+								+ " WHERE c.PRQ_ID = t.PRQ_ID and b.Approval  !='Completely Approved' ) as dnNotCompQty, "
 								+
 
 								" (SELECT COALESCE(SUM(b.TOTAL_AMOUNT),0) FROM DISCOVERY_NEW_ITEM b "
 								+ " INNER JOIN PURCHASE_ORDER c ON b.PO_ID = c.PO_ID "
 								+ " INNER JOIN DISCOVERY_NEW a ON b.DN_ID = a.DN_ID "
-								+ " WHERE c.PRQ_ID = t.PRQ_ID and a.STATUS  !='completed' and a.STATUS !='closed') as dnNotCompTotal, "
+								+ " WHERE c.PRQ_ID = t.PRQ_ID and b.Approval  !='Completely Approved' ) as dnNotCompTotal, "
 								+
 
 								" (select count (g.AR_ID) FROM ASSET_REGISTRY g "
 								+ " INNER JOIN PURCHASE_ORDER b ON g.PO_ID = b.PO_ID "
 								+ " WHERE b.PRQ_ID = t.PRQ_ID ) as arCount, " +
 
-								" (select COALESCE(Sum(g.VALUATION_RATE),0) FROM ASSET_REGISTRY g "
+								" (select COALESCE(Sum(g.INITIAL_COST),0) FROM ASSET_REGISTRY g "
 								+ " INNER JOIN PURCHASE_ORDER b ON g.PO_ID = b.PO_ID "
 								+ " WHERE b.PRQ_ID = t.PRQ_ID ) as arValRate, " +
 
@@ -2146,6 +2144,24 @@ public class PurchaseController {
 								" FROM PURCHASE_ORDER t where t.PRQ_ID='" + ID + "' GROUP BY PRQ_ID ")
 						.list();
 
+				
+				List<Object[]> CIP =null;
+				CIP = (List<Object[]>) session.createNativeQuery("Select totalQTY, PO_ITEM_ID from "
+						    + "CAPITAL_IN_PROGRESS WHERE PRQ_ID='" +ID+ "' ").list();
+				float cipCost=0;
+				if(CIP != null) {
+					for (Object[] obj : CIP) {
+					
+					query= session.createNativeQuery("select Rate from purchase_order_item where PO_ITEM_ID='" +obj[1]+ "' ");
+					Object rateObject = query.uniqueResult();
+					 float rate = ((Number) rateObject).floatValue();
+					 cipCost+=rate* Integer.parseInt(obj[0].toString());
+					
+				}
+				}
+				
+				
+				
 				if (prList != null) {
 
 					for (Object[] obj : prList) {
@@ -2167,7 +2183,7 @@ public class PurchaseController {
 						rtn.put("totqtyGRNotCom", obj[10]);
 
 						rtn.put("cipCountAll", obj[12]);
-						rtn.put("cipNetTotAll", obj[13]);
+						rtn.put("cipNetTotAll", cipCost);
 						rtn.put("cipTotQtyAll", obj[14]);
 
 						rtn.put("dnComp", obj[15]);
@@ -2311,18 +2327,15 @@ public class PurchaseController {
 								+ " WHERE b.PO_ID = t.PO_ID ) as dnQty, " +
 
 								" (SELECT count(DISTINCT a.DN_ID) FROM DISCOVERY_NEW_ITEM a "
-								+ " INNER JOIN DISCOVERY_NEW b ON a.DN_ID = b.DN_ID"
-								+ " WHERE a.PO_ID = t.PO_id and b.STATUS  !='completed' and b.STATUS !='closed' ) as dnNotCompCount, "
+								+ " WHERE a.PO_ID = t.PO_id and a.Approval  !='Completely Approved' ) as dnNotCompCount, "
 								+
 
 								" (SELECT COALESCE(SUM(a.TOTAL_AMOUNT),0) FROM DISCOVERY_NEW_ITEM a "
-								+ " INNER JOIN DISCOVERY_NEW b ON a.DN_ID = b.DN_ID"
-								+ " WHERE a.PO_ID = t.PO_id and b.STATUS  !='completed' and b.STATUS !='closed' ) as dnNotCompTotAmount, "
+								+ " WHERE a.PO_ID = t.PO_id and a.Approval  !='Completely Approved' ) as dnNotCompTotAmount, "
 								+
 
 								" (SELECT COALESCE(SUM(a.QTY),0) FROM DISCOVERY_NEW_ITEM a "
-								+ " INNER JOIN DISCOVERY_NEW b ON a.DN_ID = b.DN_ID"
-								+ " WHERE a.PO_ID = t.PO_id and b.STATUS  !='completed' and b.STATUS !='closed' ) as dnNotCompQty, "
+								+ " WHERE a.PO_ID = t.PO_id and a.Approval  !='Completely Approved' ) as dnNotCompQty, "
 								+
 
 								" (SELECT count(b.CIP_ID) FROM CAPITAL_IN_PROGRESS b "
@@ -2379,7 +2392,7 @@ public class PurchaseController {
 					for (Object[] obj : poList) {
 
 						if (obj[7] == null) {
-							obj[7] = "No Purchase Request";
+							obj[7] = "-";
 						}
 
 						rtn.put("goodsrCom", obj[1]);
