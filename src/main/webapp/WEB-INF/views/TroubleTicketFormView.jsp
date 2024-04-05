@@ -247,9 +247,8 @@ select {
 							<c:if test = "${tkStatus =='Assigned'}" > selected </c:if>>Assigned</option>
 						<option value="Completed"
 							<c:if test = "${tkStatus =='Completed'}" > selected </c:if>>Completed</option>
-						<option value="In Progress"
-							<c:if test = "${tkStatus =='In Progress'}" > selected </c:if>>In
-							Progress</option>
+						<option value="draft"
+							<c:if test = "${tkStatus =='draft'}" > selected </c:if>>Draft</option>
 						<option value="Resolved"
 							<c:if test = "${tkStatus =='Resolved'}" > selected </c:if>>Resolved</option>
 						<option value="For Adjustment"
