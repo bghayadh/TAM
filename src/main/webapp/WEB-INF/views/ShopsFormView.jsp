@@ -278,9 +278,8 @@ select {
 				<div class="input-group-prepend">
 					<span class="input-group-text" style="width: 210px;">Status</span>
 					<select id="ordstat" class="form-control">
-						<option value="inprog"
-							<c:if test = "${shopStatus =='inprog'}" > selected </c:if>>In
-							Progress</option>
+						<option value="draft"
+							<c:if test = "${shopStatus =='draft'}" > selected </c:if>>Draft</option>
 						<option value="activated"
 							<c:if test = "${shopStatus =='activated'}" > selected </c:if>>Activated</option>
 						<option value="deactivated"
