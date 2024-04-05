@@ -425,9 +425,8 @@ button:focus {
 						style="width: 350px; text-align-last: center;"
 						class="form-control text-input">
 
-						<option value="inprog"
-							<c:if test = "${woStatus =='inprog'}" > selected </c:if>>In
-							Progress</option>
+						<option value="draft"
+							<c:if test = "${woStatus =='draft'}" > selected </c:if>>Draft</option>
 						<option value="approved"
 							<c:if test = "${woStatus =='approved'}"> selected </c:if>>Approved</option>
 						<option value="completed"
