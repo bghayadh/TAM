@@ -1561,7 +1561,7 @@ max-width: 100%;
 				function getInput ( checkRead, get ){
 					
 					var statusInput = '<select onchange="prstatCheck()" id="prstat" class="form-control">'
-						+'<option value="inprog" <c:if test = "${prStatus =='inprog'}" > selected </c:if> >Draft</option>'
+						+'<option value="inprog" <c:if test = "${prStatus =='draft'}" > selected </c:if> >Draft</option>'
 						+'<option value="approved" <c:if test = "${prStatus =='approved'}" > selected </c:if>>Approved</option>'
 						+'<option value="completed" <c:if test = "${prStatus =='completed'}" > selected </c:if>>Completed</option>'
 						+'<option value="closed" <c:if test = "${prstatus =='closed'}" > selected </c:if>>Closed</option>'
