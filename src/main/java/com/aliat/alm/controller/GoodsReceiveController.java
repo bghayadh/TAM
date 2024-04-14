@@ -282,7 +282,7 @@ public class GoodsReceiveController {
 								model.addAttribute("discPercent", pRq.getPrdiscountPercent());
 								model.addAttribute("paidAmount", pRq.getPrpaidAmount());
 								model.addAttribute("grOutstanding", pRq.getPrOutstanding());
-								model.addAttribute("grStatus", pRq.getPrStatus());
+								model.addAttribute("grStatus", "Draft");
 								model.addAttribute("Nettotal", pRq.getnTotal());
 								model.addAttribute("NettotalinWord", pRq.getPrnettotalinWord());
 								model.addAttribute("TotalQty", pRq.getPrtotalQty());
@@ -330,7 +330,7 @@ public class GoodsReceiveController {
 								model.addAttribute("discPercent", pOrder.getOrddiscountPercent());
 								model.addAttribute("paidAmount", pOrder.getOrdpaidAmount());
 								model.addAttribute("grOutstanding", pOrder.getOrdOutstanding());
-								model.addAttribute("grStatus", pOrder.getOrdStatus());
+								model.addAttribute("grStatus", "Draft");
 								model.addAttribute("Nettotal", pOrder.getOrdnettotal());
 								model.addAttribute("NettotalinWord", pOrder.getOrdPonumber());
 								model.addAttribute("TotalQty", pOrder.getOrdtotalQty());
@@ -884,7 +884,7 @@ public class GoodsReceiveController {
 								query = session.createQuery("SELECT prStatus FROM PurchaseRequest WHERE ID = :param1");
 								query.setString("param1", grPRqID);
 								String processStat = query.uniqueResult().toString();
-								if (StringUtils.equalsIgnoreCase(processStat, "inprog")
+								if (StringUtils.equalsIgnoreCase(processStat, "draft")
 										|| StringUtils.equalsIgnoreCase(processStat, "cancelled")) {
 									rtn.put("RevPrStatAprv", "rejected");
 									rtn.put("PRtobeAprvd", grPRqID);
@@ -1063,20 +1063,17 @@ public class GoodsReceiveController {
 
 								" (SELECT count(DISTINCT a.DN_ID) FROM DISCOVERY_NEW_ITEM a  "
 								+ " INNER JOIN PURCHASE_ORDER b on b.PO_ID = a.PO_ID"
-								+ " INNER JOIN DISCOVERY_NEW c ON a.DN_ID = c.DN_ID"
-								+ " WHERE b.PO_ID = t.PO_ID and c.STATUS !='completed' and c.STATUS !='closed' ) as dnNotCompCount, "
+								+ " WHERE b.PO_ID = t.PO_ID and a.Approval  !='Completely Approved' ) as dnNotCompCount, "
 								+
 
 								" (SELECT COALESCE(SUM(a.QTY),0) FROM DISCOVERY_NEW_ITEM a  "
 								+ " INNER JOIN PURCHASE_ORDER b on b.PO_ID = a.PO_ID"
-								+ " INNER JOIN DISCOVERY_NEW c ON a.DN_ID = c.DN_ID"
-								+ " WHERE b.PO_ID = t.PO_ID and c.STATUS !='completed' and c.STATUS !='closed' ) as dnNotCompQty, "
+								+ " WHERE b.PO_ID = t.PO_ID and a.Approval  !='Completely Approved' ) as dnNotCompQty, "
 								+
 
 								" (SELECT COALESCE(SUM(a.TOTAL_AMOUNT),0) FROM DISCOVERY_NEW_ITEM a  "
 								+ " INNER JOIN PURCHASE_ORDER b on b.PO_ID = a.PO_ID"
-								+ " INNER JOIN DISCOVERY_NEW c ON a.DN_ID = c.DN_ID"
-								+ " WHERE b.PO_ID = t.PO_ID and c.STATUS !='completed' and c.STATUS !='closed' ) as dnNotCompTotAmount, "
+								+ " WHERE b.PO_ID = t.PO_ID and a.Approval  !='Completely Approved' ) as dnNotCompTotAmount, "
 								+
 
 								" (SELECT count(b.CIP_ID) FROM CAPITAL_IN_PROGRESS b "
@@ -1091,7 +1088,7 @@ public class GoodsReceiveController {
 								" (SELECT count(b.AR_ID) FROM ASSET_REGISTRY b "
 								+ " WHERE b.PO_ID =t.PO_ID  ) as arCount, " +
 
-								" (SELECT COALESCE(SUM(b.VALUATION_RATE),0) FROM ASSET_REGISTRY b "
+								" (SELECT COALESCE(SUM(b.INITIAL_COST),0) FROM ASSET_REGISTRY b "
 								+ " WHERE b.PO_ID =t.PO_ID  ) as arValRate, " +
 
 								" (SELECT count(b.FAR_ID) FROM FIXED_ASSET_REGISTRY b "
@@ -1104,26 +1101,45 @@ public class GoodsReceiveController {
 								+ " WHERE b.PO_ID =t.PO_ID  ) as farNetCost, " +
 
 								" (SELECT count(b.FAR_ID) FROM FIXED_ASSET_REGISTRY b "
-								+ " WHERE b.PO_ID =t.PO_ID and b.FAR_STATUS !='running' ) as farNotRunCount, " +
+								+ " WHERE b.PO_ID =t.PO_ID and b.FAR_STATUS !='Running' ) as farNotRunCount, " +
 
 								" (SELECT COALESCE(SUM(b.INITIALCOST),0) FROM FIXED_ASSET_REGISTRY b "
-								+ " WHERE b.PO_ID =t.PO_ID and b.FAR_STATUS !='running'  ) as farNotRunIntCost, " +
+								+ " WHERE b.PO_ID =t.PO_ID and b.FAR_STATUS !='Running'  ) as farNotRunIntCost, " +
 
 								" (SELECT COALESCE(SUM(b.NETCOST),0) FROM FIXED_ASSET_REGISTRY b "
-								+ " WHERE b.PO_ID =t.PO_ID and b.FAR_STATUS !='running' ) as farNotRunNetCost " +
+								+ " WHERE b.PO_ID =t.PO_ID and b.FAR_STATUS !='Running' ) as farNotRunNetCost " +
 
 								" FROM GOODS_RECEIVED t WHERE t.GR_ID ='" + GrId + "' ")
 						.list();
 
+				List<Object[]> CIP =null;
+				CIP = (List<Object[]>) session.createNativeQuery("Select totalQTY, PO_ITEM_ID from "
+						    + "CAPITAL_IN_PROGRESS WHERE GR_ID='" +GrId+ "' ").list();
+				float cipCost=0;
+				if(CIP != null) {
+					for (Object[] obj : CIP) {
+					
+					query= session.createNativeQuery("select Rate from purchase_order_item where PO_ITEM_ID='" +obj[1]+ "' ");
+					Object rateObject = query.uniqueResult();
+					 float rate = ((Number) rateObject).floatValue();
+					 cipCost+=rate* Integer.parseInt(obj[0].toString());
+					
+				}
+				}
+				
+				
+				
+				
+				
 				if (grList != null) {
 
 					for (Object[] obj : grList) {
 
 						if (obj[1] == null) {
-							obj[1] = "No Purchase Request ";
+							obj[1] = "-";
 						}
 						if (obj[5] == null) {
-							obj[5] = "No Purchase Order";
+							obj[5] = "-";
 						}
 
 						rtn.put("grPurchReqId", obj[1]);
@@ -1136,19 +1152,21 @@ public class GoodsReceiveController {
 						rtn.put("grOrdtotQty", obj[8]);
 						rtn.put("grOrdnetTot", obj[7]);
 
-						rtn.put("dnComp", obj[9]);
+						/* rtn.put("dnComp", obj[9]);
 						rtn.put("dnTotQtyComp", obj[10]);
 						rtn.put("dnNetTotComp", obj[11]);
 
 						rtn.put("dnNotComp", obj[12]);
 						rtn.put("dnNetTotNotComp", obj[14]);
 						rtn.put("dnTotQtyNotComp", obj[13]);
+						
+						*/
 
 						rtn.put("grCipCountAll", obj[15]);
-						rtn.put("grCipNetTotAll", obj[16]);
+						rtn.put("grCipNetTotAll", cipCost);
 						rtn.put("grCipTotQtyAll", obj[17]);
 
-						rtn.put("grArCountAll", obj[18]);
+					/*	rtn.put("grArCountAll", obj[18]);
 						rtn.put("grArValRateAll", obj[19]);
 
 						rtn.put("grFarCountAll", obj[21]);
@@ -1158,7 +1176,7 @@ public class GoodsReceiveController {
 						rtn.put("farNotRunCount", obj[23]);
 						rtn.put("farNotRunIntCost", obj[24]);
 						rtn.put("farNotRunNetCost", obj[25]);
-
+*/
 					}
 
 				}

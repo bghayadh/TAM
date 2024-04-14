@@ -214,9 +214,8 @@
 				<div class="input-group-prepend">
 					<span class="input-group-text" style="width: 210px;">Status</span>
 					<select id="ordstat" class="form-control">
-						<option value="inprog"
-							<c:if test = "${ordStatus =='inprog'}" > selected </c:if>>In
-							Progress</option>
+						<option value="draft"
+							<c:if test = "${ordStatus =='draft'}" > selected </c:if>>Draft</option>
 						<option value="approved"
 							<c:if test = "${ordStatus =='approved'}" > selected </c:if>>Approved</option>
 						<option value="activated"

@@ -240,7 +240,7 @@ max-width: 100%;
 				<div class="input-group-prepend">
 				<span style="width:190px;" class="input-group-text">Status</span>
 				<select  id="ordstat" class="form-control">
-								<option value="inprog" <c:if test = "${ordStatus =='inprog'}" > selected </c:if> >In Progress</option>
+								<option value="draft" <c:if test = "${ordStatus =='draft'}" > selected </c:if> >Draft</option>
 								<option value="approved" <c:if test = "${ordStatus =='approved'}" > selected </c:if>>Approved</option>
 								<option value="completed" <c:if test = "${ordStatus =='completed'}" > selected </c:if>>Completed</option>
 								<option value="cancelled" hidden<c:if test = "${ordStatus =='cancelled'}" > selected </c:if>>Cancelled</option>
@@ -1641,7 +1641,7 @@ $(document).trigger("triggerBoqListenersEvent");
 	 		$("#Approvepo").addClass('disabled');  
 	 		$("#Newgr").removeClass('disabled');  
 	 		}
- 		else if(ordStatus == 'inprog') {
+ 		else if(ordStatus == 'draft') {
 	 		 $("#Approvepo").removeClass('disabled');
 	 		 $("#Closepo").addClass('disabled');
 	 		$("#Newgr").addClass('disabled');  
@@ -1826,7 +1826,7 @@ $(document).trigger("triggerBoqListenersEvent");
 		 
  		else $("#Approvepo").removeClass('disabled');
 
-		if(ordStatus == 'inprog' || ordStatus == 'completed' || ordStatus =='closed' || ordStatus =='cancelled' ){
+		if(ordStatus == 'draft' || ordStatus == 'completed' || ordStatus =='closed' || ordStatus =='cancelled' ){
 			 $("#Closepo").addClass('disabled');
 			 $("#Newgr").addClass('disabled');
 			 
@@ -1939,7 +1939,7 @@ $(document).trigger("triggerBoqListenersEvent");
 			 $("#formStatus").text("Not Saved");
 		     $('.dot').css({"background-color" : "orange"});
 			 $("#Buttons").append(saveButton);
-			 $("#ordstat").val('inprog').trigger('change');
+			 $("#ordstat").val('draft').trigger('change');
 			});
 			
 	//start of Main Save

@@ -288,9 +288,8 @@ max-width: 100%;
 				<div class="input-group-prepend">
 				<span style="width:200px;" class="input-group-text">Status</span>
 				<select id="dnStatus" class="form-control" readonly>
-						<option value="In Progress"
-							<c:if test = "${dnStatus =='In Progress'}" > selected </c:if>>In
-							Progress</option>
+						<option value="Draft"
+							<c:if test = "${dnStatus =='Draft'}" > selected </c:if>>Draft</option>
 						<option value="Approved"
 							<c:if test = "${dnStatus =='Approved'}" > selected </c:if>>Approved</option>
 						<option value="Completed"
@@ -1354,7 +1353,7 @@ function getAllItemPartNbs()
 				fromSlot = $(obj).parent().parent().children('td[name="fromSlot"]').children('input').val();
 				toSlot = $(obj).parent().parent().children('td[name="toSlot"]').children('input').val();
 
-				if($("#dnStatus").val() == "In Progress"){
+				if($("#dnStatus").val() == "Draft"){
 					$(obj).blur();
 					alert('Status should be approved.');
 					return false;
@@ -1452,7 +1451,7 @@ function getAllItemPartNbs()
 				toSlot = $("#popupToSlot").val();
 
 				console.log($("#dnStatus").val())
-				if($("#dnStatus").val() == "In Progress"){
+				if($("#dnStatus").val() == "Draft"){
 					$(obj).blur();
 					alert('Status should be approved.');
 					return false;
@@ -1873,8 +1872,8 @@ function getAllItemPartNbs()
        		
 		function getselectedrowsForApproval(actionType)
 		{
-			if($("#dnStatus").val() == "In Progress"){
-				alert("You can't approve while the status is In Progress.")
+			if($("#dnStatus").val() == "Draft"){
+				alert("You can't approve while the status is Draft.")
 				return;
 			}
 			var ApprovDict = [];
