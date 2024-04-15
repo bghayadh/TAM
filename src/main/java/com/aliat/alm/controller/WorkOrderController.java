@@ -463,7 +463,10 @@ public class WorkOrderController {
 							    "t.ELEMENT_NAME AS elementName, t.APPROVAL AS dniAPPROVAL,t.FROM_SITE AS dniSIte, " +
 							    "t.WARE_ID AS wareID, t.WARE_NAME AS wareName, NVL(t.TO_SERIAL_NUMBER, ' ') AS SN, " +
 							    "NVL(t.ITEM_MODEL, '') AS itemModel, NVL(t.ITEM_PART_NUMBER, '') AS itemPartNb,  " +
-							    " t.APPROVAL_STATUS AS approvalStatus, NVL(t.FROM_SLOT, ' ') AS fromSlot, NVL(t.FAR_ID, ' ') AS farID, NVL(t.MAC_ADDRESS, ' ') AS macAddress, " +
+							    " t.APPROVAL_STATUS AS approvalStatus, NVL(t.FROM_SLOT, ' ') AS fromSlot, CASE WHEN t.FAR_ID like 'FAR%' THEN t.FAR_ID WHEN t.FAR_ID not like 'FAR%' AND t.TO_SERIAL_NUMBER IS NOT NULL THEN " +
+							    "(SELECT FAR_ID FROM FAR_SERIAL_NUMBER WHERE t.TO_SERIAL_NUMBER = SERIAL_NUMBER) ELSE ' ' END AS FAR_ID, "
+//							    + "NVL(t.FAR_ID, SELECT SR.FAR_ID FROM FAR_SERIAL_NUMBER SR WHERE t.TO_SERIAL_NUMBER = SR.SERIAL_NUMBER) AS farID,"
+							    + "NVL(t.MAC_ADDRESS, ' ') AS macAddress, " +
 							    "NVL(t.TO_SLOT, ' ') AS toSlot, t.TO_SITE AS toSite, t.TO_WARE_NAME AS toWareName, " +
 							    "t.TO_WARE_ID AS toWareId,t.DNI_ID AS dniID,x.toNodeArray, y.fromNodeArray " +
 							    "FROM DISCOVERY_NEW_ITEM t "+

@@ -2320,7 +2320,7 @@ public class PurchaseController {
 								" (SELECT count(DISTINCT b.DN_ID) FROM DISCOVERY_NEW_ITEM b "
 								+ " WHERE b.PO_ID = t.PO_ID ) as dnCount, " +
 
-								" (SELECT COALESCE(SUM(b.TOTAL_AMOUNT),0) FROM DISCOVERY_NEW_ITEM b "
+								" (SELECT COALESCE(SUM(b.TOTAL),0) FROM DISCOVERY_NEW_ITEM b "
 								+ " WHERE b.PO_ID = t.PO_ID ) as dnTotalAmount, " +
 
 								" (SELECT COALESCE(SUM(b.QTY),0) FROM DISCOVERY_NEW_ITEM b "
@@ -2330,7 +2330,7 @@ public class PurchaseController {
 								+ " WHERE a.PO_ID = t.PO_id and a.Approval  !='Completely Approved' ) as dnNotCompCount, "
 								+
 
-								" (SELECT COALESCE(SUM(a.TOTAL_AMOUNT),0) FROM DISCOVERY_NEW_ITEM a "
+								" (SELECT COALESCE(SUM(a.TOTAL),0) FROM DISCOVERY_NEW_ITEM a "
 								+ " WHERE a.PO_ID = t.PO_id and a.Approval  !='Completely Approved' ) as dnNotCompTotAmount, "
 								+
 
@@ -2341,8 +2341,12 @@ public class PurchaseController {
 								" (SELECT count(b.CIP_ID) FROM CAPITAL_IN_PROGRESS b "
 								+ " WHERE b.PO_ID =t.PO_ID) as cipCount, " +
 
-								" (SELECT COALESCE(SUM(b.VALUATION_RATE),0) FROM CAPITAL_IN_PROGRESS b "
-								+ " WHERE b.PO_ID =t.PO_ID) as cipValRate, " +
+//								" (SELECT COALESCE(SUM(b.VALUATION_RATE),0) FROM CAPITAL_IN_PROGRESS b "
+//								+ " WHERE b.PO_ID =t.PO_ID) as cipValRate, " +
+
+								" (SELECT COALESCE(SUM(c.NET_RATE * b.TOTALQTY),0) FROM PURCHASE_ORDER_ITEM c "
+								+ "inner join CAPITAL_IN_PROGRESS b ON c.PO_ITEM_ID = b.PO_ITEM_ID and c.PO_ID = t.PO_ID) as cipValRate, " +
+
 
 								" (SELECT COALESCE(SUM(b.TOTALQTY),0) FROM CAPITAL_IN_PROGRESS b "
 								+ " WHERE b.PO_ID =t.PO_ID) as cipQty, " +
@@ -2388,6 +2392,9 @@ public class PurchaseController {
 				}
 				}
 				if (poList != null) {
+					
+					System.out.println("poList Size is " +poList.size());
+					
 
 					for (Object[] obj : poList) {
 
@@ -2395,6 +2402,8 @@ public class PurchaseController {
 							obj[7] = "-";
 						}
 
+						System.out.println("CIP Value " +obj[18]);
+						
 						rtn.put("goodsrCom", obj[1]);
 						rtn.put("netGoodsrCom", obj[2]);
 						rtn.put("totQtyGoodsrCom", obj[3]);
@@ -2417,7 +2426,7 @@ public class PurchaseController {
 						rtn.put("dnTotQtyNotComp", obj[16]);
 
 						rtn.put("cipCouuntAll", obj[17]);
-						rtn.put("cipNeetTotAll", cipCost);
+						rtn.put("cipNeetTotAll", cipCost); // It is possible to use obj[18] and cipCost can be deleted as the query fixed.
 						rtn.put("cipTootQtyAll", obj[19]);
 
 						rtn.put("arCountAll", obj[20]);

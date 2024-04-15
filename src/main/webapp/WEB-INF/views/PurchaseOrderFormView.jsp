@@ -896,7 +896,7 @@ max-width: 100%;
                    </tr>
                		
                		     <tr >
-                   <td  class="TD">	<b>CIP Rate</b>	
+                   <td  class="TD">	<b>Total Amount</b>	
                    <td id="cipNeetTotAll" class="TD">		
                    
                    </tr>
