@@ -4269,7 +4269,7 @@ session.saveOrUpdate(FixedAssetRegNode);
 				
 				String resStatus="0";
 				params.clear();
-					if (resQTYGR < qty )
+					if (resQTYGR == qty )
 				{
 						String itemInFAR = null;
 						String getItemsInFAR = " select count(*) from FixedAssetRegistry where faritemCode = :param_1 and PoId = :param_2 ";
@@ -4287,7 +4287,7 @@ session.saveOrUpdate(FixedAssetRegNode);
 						double ItemInFAR = 0;
 						if(itemInFAR !=null) { ItemInFAR = Double.parseDouble(itemInFAR);}
 						
-					if((ItemInFAR + resQTYGR) >= qty)
+					if(ItemInFAR  == qty)
 					{
 						resStatus = "1";
 						
