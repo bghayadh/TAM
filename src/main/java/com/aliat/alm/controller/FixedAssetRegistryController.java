@@ -99,15 +99,33 @@ public class FixedAssetRegistryController {
 				 * "from FIXED_ASSET_REGISTRY order by LAST_MODIFIED_DATE DESC";
 				 */
 
-				String str = "SELECT farID, fixedassetID, itemCode, itemName, lastModifiedDate,itemSN,itemNameRegister,poID,siteID,siteName, rn1, rn2 FROM ( "
-						+ "SELECT A.FAR_ID as farID, A.FAR_ID as fixedassetID, A.ITEM_CODE as itemCode, A.ITEM_NAME as itemName,TO_CHAR(A.LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') as lastModifiedDate, C.SERIAL_NUMBER as itemSN, "
-						+ "ROW_NUMBER() OVER (PARTITION BY A.FAR_ID ORDER BY C.SERIAL_NUMBER DESC) AS rn1, A.ITEM_NAME_REGISTER as itemNameRegister, A.PO_ID as poID, B.SITE_ID AS siteID, B.SITE_NAME AS siteName , "
-						+ "ROW_NUMBER() OVER (PARTITION BY A.FAR_ID ORDER BY B.SITE_ID DESC) AS rn2 FROM FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN FAR_SERIAL_NUMBER C ON C.FAR_ID = A.FAR_ID) WHERE (rn1 = 0 or rn1 = 1) and (rn2 = 0 or rn2 = 1) ORDER BY lastModifiedDate DESC";
+				String str = "SELECT farID, fixedassetID, itemCode, itemName, lastModifiedDate, farStatus, itemSN, itemNameRegister, poID, siteID, siteName FROM ( "
+			            + "SELECT A.FAR_ID as farID, A.FAR_ID as fixedassetID, A.ITEM_CODE as itemCode, A.ITEM_NAME as itemName, A.FAR_STATUS as farStatus, TO_CHAR(A.LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') as lastModifiedDate, C.SERIAL_NUMBER as itemSN, "
+			            + "ROW_NUMBER() OVER (PARTITION BY A.FAR_ID ORDER BY C.SERIAL_NUMBER DESC) AS rn1, A.ITEM_NAME_REGISTER as itemNameRegister, A.PO_ID as poID, B.SITE_ID AS siteID, B.SITE_NAME AS siteName , "
+			            + "ROW_NUMBER() OVER (PARTITION BY A.FAR_ID ORDER BY B.SITE_ID DESC) AS rn2  FROM FIXED_ASSET_REGISTRY A LEFT JOIN FAR_SITE B ON B.FAR_ID = A.FAR_ID LEFT JOIN FAR_SERIAL_NUMBER C ON C.FAR_ID = A.FAR_ID) WHERE (rn1 = 0 or rn1 = 1) and (rn2 = 0 or rn2 = 1) ORDER BY lastModifiedDate DESC";
 
-				Query query = session.createNativeQuery(str);
+			Query query = session.createNativeQuery(str);
+
+			List<Object[]> results = query.getResultList();
+
+			for (Object[] row : results) {
+			    System.out.println("farID: " + row[0]);
+			    System.out.println("fixedassetID: " + row[1]);
+			    System.out.println("itemCode: " + row[2]);
+			    System.out.println("itemName: " + row[3]);
+			    System.out.println("lastModifiedDate: " + row[4]);
+			    System.out.println("farStatus: " + row[5]); // Assuming farStatus is the sixth column
+			    System.out.println("itemSN: " + row[6]);
+			    System.out.println("itemNameRegister: " + row[7]);
+			    System.out.println("poID: " + row[8]);
+			    System.out.println("siteID: " + row[9]);
+			    System.out.println("siteName: " + row[10]);
+			    // Adjust index accordingly for other columns
+			}
+
 
 				listFAR = ((SQLQuery) query).addScalar("farID").addScalar("fixedassetID").addScalar("itemCode")
-						.addScalar("itemName").addScalar("lastModifiedDate").addScalar("itemSN")
+						.addScalar("itemName").addScalar("farStatus").addScalar("lastModifiedDate").addScalar("itemSN")
 						.addScalar("itemNameRegister").addScalar("poID")
 						.addScalar("siteID").addScalar("siteName")
 						.setResultTransformer(Transformers.aliasToBean(FixedAssetRegisterListView.class)).list();
@@ -650,7 +668,7 @@ public class FixedAssetRegistryController {
 						netCost = Float.parseFloat(request.getParameter("netCost"));
 
 					fassetreg.setFarID(farcode);
-					fassetreg.setFarStatus("farStatus");
+					fassetreg.setFarStatus(request.getParameter("farStatus"));
 					fassetreg.setFaritemCode(request.getParameter("faritemCode"));
 					fassetreg.setFaritemName(request.getParameter("faritemName"));
 					fassetreg.setItemCat(request.getParameter("itemCategory"));
