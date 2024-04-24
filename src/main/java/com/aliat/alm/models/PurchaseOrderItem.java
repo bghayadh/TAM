@@ -23,6 +23,371 @@ public class PurchaseOrderItem {
 	@Column(name = "ITEM_CODE")
 	private String ItemCode;
 	
+	public Timestamp getCreationDate() {
+		return CreationDate;
+	}
+
+
+
+
+
+	public void setCreationDate(Timestamp creationDate) {
+		CreationDate = creationDate;
+	}
+
+
+
+
+
+	public Timestamp getModifiedDate() {
+		return ModifiedDate;
+	}
+
+
+
+
+
+	public void setModifiedDate(Timestamp modifiedDate) {
+		ModifiedDate = modifiedDate;
+	}
+
+
+
+
+
+	public String getItemCode() {
+		return ItemCode;
+	}
+
+
+
+
+
+	public void setItemCode(String itemCode) {
+		ItemCode = itemCode;
+	}
+
+
+
+
+
+	public String getItemName() {
+		return ItemName;
+	}
+
+
+
+
+
+	public void setItemName(String itemName) {
+		ItemName = itemName;
+	}
+
+
+
+
+
+	public String getItemModel() {
+		return ItemModel;
+	}
+
+
+
+
+
+	public void setItemModel(String itemModel) {
+		ItemModel = itemModel;
+	}
+
+
+
+
+
+	public String getItemPartNb() {
+		return ItemPartNb;
+	}
+
+
+
+
+
+	public void setItemPartNb(String itemPartNb) {
+		ItemPartNb = itemPartNb;
+	}
+
+
+
+
+
+	public float getRate() {
+		return Rate;
+	}
+
+
+
+
+
+	public void setRate(float rate) {
+		Rate = rate;
+	}
+
+
+
+
+
+	public float getDiscAmnt() {
+		return DiscAmnt;
+	}
+
+
+
+
+
+	public void setDiscAmnt(float discAmnt) {
+		DiscAmnt = discAmnt;
+	}
+
+
+
+
+
+	public float getDiscPercent() {
+		return DiscPercent;
+	}
+
+
+
+
+
+	public void setDiscPercent(float discPercent) {
+		DiscPercent = discPercent;
+	}
+
+
+
+
+
+	public float getNetRate() {
+		return NetRate;
+	}
+
+
+
+
+
+	public void setNetRate(float netRate) {
+		NetRate = netRate;
+	}
+
+
+
+
+
+	public float getTax1() {
+		return Tax1;
+	}
+
+
+
+
+
+	public void setTax1(float tax1) {
+		Tax1 = tax1;
+	}
+
+
+
+
+
+	public float getTax2() {
+		return Tax2;
+	}
+
+
+
+
+
+	public void setTax2(float tax2) {
+		Tax2 = tax2;
+	}
+
+
+
+
+
+	public float getTotal() {
+		return Total;
+	}
+
+
+
+
+
+	public void setTotal(float total) {
+		Total = total;
+	}
+
+
+
+
+
+	public float getTotalAt() {
+		return TotalAt;
+	}
+
+
+
+
+
+	public void setTotalAt(float totalAt) {
+		TotalAt = totalAt;
+	}
+
+
+
+
+
+	public String getGrNo() {
+		return GrNo;
+	}
+
+
+
+
+
+	public void setGrNo(String grNo) {
+		GrNo = grNo;
+	}
+
+
+
+
+
+	public String getiPrNo() {
+		return iPrNo;
+	}
+
+
+
+
+
+	public void setiPrNo(String iPrNo) {
+		this.iPrNo = iPrNo;
+	}
+
+
+
+
+
+	public String getArNo() {
+		return ArNo;
+	}
+
+
+
+
+
+	public void setArNo(String arNo) {
+		ArNo = arNo;
+	}
+
+
+
+
+
+	public String getDarNo() {
+		return DarNo;
+	}
+
+
+
+
+
+	public void setDarNo(String darNo) {
+		DarNo = darNo;
+	}
+
+
+
+
+
+	public String getFarNo() {
+		return FarNo;
+	}
+
+
+
+
+
+	public void setFarNo(String farNo) {
+		FarNo = farNo;
+	}
+
+
+
+
+
+	public String getiCIPNo() {
+		return iCIPNo;
+	}
+
+
+
+
+
+	public void setiCIPNo(String iCIPNo) {
+		this.iCIPNo = iCIPNo;
+	}
+
+
+
+
+
+	public float getQty() {
+		return Qty;
+	}
+
+
+
+
+
+	public void setQty(float qty) {
+		Qty = qty;
+	}
+
+
+
+
+
+	public String getPOId() {
+		return POId;
+	}
+
+
+
+
+
+	public void setPOId(String pOId) {
+		POId = pOId;
+	}
+
+
+
+
+
+	public String getiBarcode() {
+		return iBarcode;
+	}
+
+
+
+
+
+	public void setiBarcode(String iBarcode) {
+		this.iBarcode = iBarcode;
+	}
+
+
 	@Column(name = "ITEM_NAME")
 	private String ItemName;
 	
