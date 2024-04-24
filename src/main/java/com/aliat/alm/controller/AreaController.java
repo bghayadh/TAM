@@ -83,7 +83,9 @@ public class AreaController {
 			try {
 				notification.headerNotifications(session, model);
 				query = session.createNativeQuery(
-						"SELECT AREA_ID as id,AREA_ID as areaID, AREA_NAME as name,REGION_NAME as regionName,TO_CHAR(CREATION_DATE, 'YYYY-MM-DD HH24:MI:SS') as creationDate,TO_CHAR(LAST_MODIFICATION_DATE, 'YYYY-MM-DD HH24:MI:SS') as lastModifieddate from Area  ORDER BY LAST_MODIFICATION_DATE DESC");
+						"SELECT AREA_ID as id,AREA_ID as areaID, AREA_NAME as name,REGION_NAME as regionName, Status as arStatus, "
+						+ "TO_CHAR(CREATION_DATE, 'YYYY-MM-DD HH24:MI:SS') as creationDate, "
+						+ "TO_CHAR(LAST_MODIFICATION_DATE, 'YYYY-MM-DD HH24:MI:SS') as lastModifieddate from Area  ORDER BY LAST_MODIFICATION_DATE DESC");
 				model.addAttribute("ListGridTable", mapper.writeValueAsString(query.list()));
 			} catch (Exception e) {
 				sw = new StringWriter();
