@@ -69,7 +69,9 @@ public class RegionController {
 			try {
 				notification.headerNotifications(session, model);
 				query = session.createQuery(
-						"SELECT t.regionId AS ID, t.regionId, t.regionName, t.regionCode,TO_CHAR(t.creationDate, 'YYYY-MM-DD HH24:MI:SS'),TO_CHAR(t.lastModifieddate, 'YYYY-MM-DD HH24:MI:SS') from Region t ORDER BY lastModifieddate DESC");
+						"SELECT t.regionId AS ID, t.regionId, t.regionName, t.regionCode, t.rgnStatus,"
+						+ " TO_CHAR(t.creationDate, 'YYYY-MM-DD HH24:MI:SS'),"
+						+ "TO_CHAR(t.lastModifieddate, 'YYYY-MM-DD HH24:MI:SS') from Region t ORDER BY lastModifieddate DESC");
 				model.addAttribute("ListGridTable", mapper.writeValueAsString(query.list()));
 
 			} catch (Exception e) {
