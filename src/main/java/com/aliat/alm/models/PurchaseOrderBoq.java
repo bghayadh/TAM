@@ -8,7 +8,7 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name = "PURCHASE_ORDER_BOQ")
+@Table(name = "PURCHASE_ORDER_Item")
 public class PurchaseOrderBoq {
 	
 	@Column(name = "ITEM_CODE")
