@@ -16,7 +16,7 @@ public class FixedAssetRegistry {
 	private String farID;
 	
 	@Column(name = "FAR_STATUS", nullable = false)
-	private String FarStatus;
+	private String farStatus;
 	
 	@Column(name = "FR_SITE_ID", nullable = false)
 	private String FarsiteId;
@@ -215,7 +215,7 @@ public class FixedAssetRegistry {
 		super();
 		this.farID = farID;
 		this.ARID=ARID;
-		FarStatus = farStatus;
+		this.farStatus = farStatus;
 		this.FarsiteId = FarsiteId;
 		this.faritemCode = faritemCode;
 		this.farcreatedDate = farcreatedDate;
@@ -277,11 +277,11 @@ public class FixedAssetRegistry {
 	}
 
 	public String getFarStatus() {
-		return FarStatus;
+		return farStatus;
 	}
 
 	public void setFarStatus(String farStatus) {
-		FarStatus = farStatus;
+		this.farStatus = farStatus;
 	}
 
 	public String getFarsiteId() {
