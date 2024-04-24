@@ -44,7 +44,7 @@ import com.aliat.alm.models.GoodsReceivedItem;
 import com.aliat.alm.models.Item;
 import com.aliat.alm.models.ItemCategory;
 import com.aliat.alm.models.PurchaseOrder;
-import com.aliat.alm.models.PurchaseOrderBoq;
+
 import com.aliat.alm.models.PurchaseRequest;
 import com.aliat.alm.models.PurchaseRequestBoq;
 import com.aliat.alm.models.SerialNumber;
@@ -53,9 +53,9 @@ import com.aliat.alm.models.Warehouse;
 import com.aliat.alm.models.WorkOrder;
 import com.aliat.alm.models.WorkOrderDT;
 import com.aliat.alm.models.WorkOrderDestination;
-import com.aliat.alm.models.WorkOrderDestinationBoq;
+
 import com.aliat.alm.models.WorkOrderSource;
-import com.aliat.alm.models.WorkOrderSourceBoq;
+
 import com.aliat.alm.models.WorkOrderSourceSerial;
 import com.aliat.alm.models.WorkOrderDestinationSerial;
 import com.aliat.alm.services.LoginServices;
@@ -104,7 +104,7 @@ public class WorkOrderController {
 				try {
 					
 				      
-				      query = session.createQuery("select a.workOrdId, a.workOrdId as ID, a.fromWare  || ':'|| a.warehouseSourceName || ':'|| siteIdSource , a.toWare || ':'|| a.warehouseNameDest || ':'|| siteIdDest , TO_CHAR(a.executionDate, 'YYYY-MM-DD HH24:MI:SS') as execDate,TO_CHAR(a.woLastModifieddate, 'YYYY-MM-DD HH24:MI:SS') as LastModifieddate, a.purpose as purp,"
+				      query = session.createQuery("select a.workOrdId, a.workOrdId as ID, a.woStatus,  a.fromWare  || ':'|| a.warehouseSourceName || ':'|| siteIdSource , a.toWare || ':'|| a.warehouseNameDest || ':'|| siteIdDest , TO_CHAR(a.executionDate, 'YYYY-MM-DD HH24:MI:SS') as execDate,TO_CHAR(a.woLastModifieddate, 'YYYY-MM-DD HH24:MI:SS') as LastModifieddate, a.purpose as purp,"
 				      		+ "CASE "
 				      		+ "WHEN (select count(*) from DiscoveryNewItem b where b.dniWOID=a.workOrdId) > 0 THEN 'YES'"
 				      		+ "ELSE 'NO'"
