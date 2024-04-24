@@ -15,6 +15,9 @@ public class FixedAssetRegisterListView {
 	
 	private String fixedassetID;
 	
+	@Column(name = "FAR_STATUS", nullable = false)
+	private String farStatus;
+	
 	@Column(name = "ITEM_CODE", nullable = false)
 	private String itemCode;
 	
@@ -40,13 +43,15 @@ public class FixedAssetRegisterListView {
 	@Column(name = "SITE_NAME")
 	private String siteName;
 				
+
 	
+				
 	public FixedAssetRegisterListView() {	
 	}
 
 
 	public FixedAssetRegisterListView(String farID, String fixedassetID, String itemCode, String itemName,
-			String lastModifiedDate, String itemSN, String itemNameRegister, String poID, String siteID, String siteName) {
+			String lastModifiedDate, String itemSN, String itemNameRegister, String poID, String siteID, String siteName, String farStatus) {
 		super();
 		this.farID = farID;
 		this.fixedassetID = fixedassetID;
@@ -58,6 +63,17 @@ public class FixedAssetRegisterListView {
 		this.poID = poID;
 		this.siteID = siteID;
 		this.siteName=siteName;
+		this.farStatus=farStatus;
+	}
+
+
+	public String getFarStatus() {
+		return farStatus;
+	}
+
+
+	public void setFarStatus(String farStatus) {
+		this.farStatus = farStatus;
 	}
 
 
