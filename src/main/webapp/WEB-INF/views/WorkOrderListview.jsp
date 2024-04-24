@@ -247,6 +247,17 @@
 												</ul>
 										</li>
 										</th>
+										
+										<th>Status
+											<li class="filter-dropdown dropdown">
+												<button class="almgrid-filter" data-toggle="dropdown">
+													<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
+												</button>
+												<ul class="dropdown-menu filter-dropdown-ul">
+
+												</ul>
+										</li>
+										</th>
 
 										<th>From WareHouse
 											<li class="filter-dropdown dropdown">
@@ -327,6 +338,8 @@
 										<th><input type="text" class="almgrid-search"
 											placeholder="Search"></th>
 										<th><input type="text" class="almgrid-search"
+											placeholder="Search"></th>
+											<th><input type="text" class="almgrid-search"
 											placeholder="Search"></th>
 										<th><input type="text" class="almgrid-search"
 											placeholder="Search"></th>
@@ -524,6 +537,8 @@
 					 				+'<th class="table-select-all"></th>'
 					 				+'<th>Work Order ID<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
 					 				+'<ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
+					 				+'<th>Status<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
+					 				+'<ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
 					 				+'<th>From WareHouse<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
 					 				+'<ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
 					 				+'<th>To WareHouse	<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
@@ -537,6 +552,7 @@
 					 				+'<th>Validation<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
 					 				+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th></tr>'
 					 				+'<tr><th class="table-select-all"><input type="checkbox" class="table-select-all-checkbox"></th>'
+					 				+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
 					 				+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
 					 				+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
 					 				+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'

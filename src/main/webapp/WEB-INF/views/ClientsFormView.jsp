@@ -351,7 +351,11 @@ z-index: 9003;
     	    	 <a class="dropdown-item" type="button" id="sendEmail" class="btn btn-primary BtnActive"><i class="fa fa-envelope"></i> Send Email </a>
            	</div> 
        </div>
-    	        
+    	        <button type="button" 
+				onclick='window.location.href = "${pageContext.request.contextPath}/ClientsFormView?type=addNew"'
+						class="btn btn-primary BtnActive">
+						<i class="fa fa-plus"></i> Add
+						</button>  
 				<button type="button" id="deleteButton"
 				class="btn btn-primary BtnActive">
 				<i class="fa fa-trash"></i> Delete

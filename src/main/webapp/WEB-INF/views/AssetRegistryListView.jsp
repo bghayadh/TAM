@@ -386,6 +386,17 @@
 														</ul>
 													</li>
 												</th>
+												<th>Status
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> <i
+																class="fa fa-list almgrid-filter-i"
+																aria-hidden="true"></i></button>
+														<ul
+															class="dropdown-menu dropdown-menu-right filter-dropdown-ul">
+
+														</ul>
+													</li>
+												</th>
 
 												<th>Last Modified Date
 													<li class="filter-dropdown dropdown">
@@ -474,6 +485,8 @@
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 											    <th><input type="text" class="almgrid-search" placeholder="Search"></th>
+											        <th><input type="text" class="almgrid-search" placeholder="Search"></th>
+						
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
@@ -533,7 +546,6 @@
 
 			<script>
 				var ReportArrayGlobal = ${ ListGridTable };
-
 				$(document).ready(function () {
 
 					// TO READ FROM DATABASE
@@ -688,6 +700,8 @@ exportGrid();
 				 				+'<th>Item Model<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
 				 				+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'
 				 				+'<th>Item Part No<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
+				 				+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'
+				 				+'<th>Status<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
 				 				+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'
 				 				+'<th>Last Modified Date<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
 				 				+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'

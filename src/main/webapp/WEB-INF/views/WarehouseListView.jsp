@@ -409,6 +409,17 @@
 														</ul>
 													</li>
 												</th>
+												<th>Status
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> <i
+																class="fa fa-list almgrid-filter-i"
+																aria-hidden="true"></i></button>
+														<ul
+															class="dropdown-menu dropdown-menu-right filter-dropdown-ul">
+
+														</ul>
+													</li>
+												</th>
 												<th>Last Modified Date
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown"> <i
@@ -494,6 +505,7 @@
 											<tr>
 												<th class="table-select-all"><input type="checkbox"
 														class="table-select-all-checkbox"></th>
+												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
@@ -734,6 +746,8 @@ $(document).ready(function () {
 	     				+'<ul class="dropdown-menu filter-dropdown-ul"></ul></li></th><th>Warehouse Name<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown">'
 	     				+'<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th><th>Site ID<li class="filter-dropdown dropdown">'
 	     				+'<button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul">'
+	     				+'</ul></li></th><th>Status<li class="filter-dropdown dropdown">'
+	     				+'<button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul">'
 	     				+'</ul></li></th><th>Last Modified Date <li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th><th>Area <li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
 	     				+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th><th>Longtitude <li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown">'
 	     				+'<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'
@@ -745,6 +759,7 @@ $(document).ready(function () {
 	     				+'<th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th>'
 	     				+'<th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th>'
 	     				+'<th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th></th><th><input type="text" class="almgrid-search" placeholder="Search"></th>'
+		     				+'<th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th></th><th><input type="text" class="almgrid-search" placeholder="Search"></th>'
 	     				+'<th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th></tr></thead><tbody></tbody></table>');
 		      	
 	     		$.ajax({

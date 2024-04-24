@@ -342,6 +342,17 @@ z-index: 9003;
 														</ul>
 													</li>
 												</th>
+												<th>Status
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> <i
+																class="fa fa-list almgrid-filter-i"
+																aria-hidden="true"></i></button>
+														<ul
+															class="dropdown-menu dropdown-menu-right filter-dropdown-ul">
+
+														</ul>
+													</li>
+												</th>
 
 												<th>Total Amount
 													<li class="filter-dropdown dropdown">
@@ -617,6 +628,8 @@ var exportArrayGrid=[];
  				+'<th>Last ModifiedDate <li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
  				+'<ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
  				+'<th>Supplier<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
+ 				+'<ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
+ 				+'<th>Status<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
  				+'<ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
  				+'<th>Total Amount<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
  				+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'

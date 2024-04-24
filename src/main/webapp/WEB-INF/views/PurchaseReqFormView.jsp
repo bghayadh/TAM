@@ -449,6 +449,7 @@ max-width: 100%;
 			<a class="dropdown-item"  type="button" id="approvePRq">Approve</a>
 	             <a class="dropdown-item"  type="button" id="closePRq" >Close</a>
 	             <a class="dropdown-item" type="button" id="cancelPRq" >Cancel</a>
+	             <a class="dropdown-item"  type="button" id="completePrq" >Complete</a>
     	          <a class="dropdown-item" id="Newpo" href="${pageContext.request.contextPath}/PurchaseOrderFormView?ordPRQid=${ID}&type=addNewFromPRQ">Create Purchase Order</a>
     	          <a class="dropdown-item" id="Newgr" href="${pageContext.request.contextPath}/GoodsRcvFormView?grPRQid=${ID}&type=addNewFromPRQ">Create Goods Received </a>
     	        
@@ -1561,7 +1562,7 @@ max-width: 100%;
 				function getInput ( checkRead, get ){
 					
 					var statusInput = '<select onchange="prstatCheck()" id="prstat" class="form-control">'
-						+'<option value="inprog" <c:if test = "${prStatus =='draft'}" > selected </c:if> >Draft</option>'
+						+'<option value="draft" <c:if test = "${prStatus =='draft'}" > selected </c:if> >Draft</option>'
 						+'<option value="approved" <c:if test = "${prStatus =='approved'}" > selected </c:if>>Approved</option>'
 						+'<option value="completed" <c:if test = "${prStatus =='completed'}" > selected </c:if>>Completed</option>'
 						+'<option value="closed" <c:if test = "${prstatus =='closed'}" > selected </c:if>>Closed</option>'
@@ -1606,11 +1607,16 @@ max-width: 100%;
 			 			 $("#approvePRq").addClass('disabled');
 			 		else $("#approvePRq").removeClass('disabled');
 
-					if(prStatus == 'inprog' || prStatus == 'completed' || prStatus =='closed')
+					if(prStatus == 'draft' || prStatus == 'completed' || prStatus =='closed')
 						 $("#closePRq").addClass('disabled');
 			 		else $("#closePRq").removeClass('disabled');
-			 		
-				
+
+					if(prStatus == 'draft' || prStatus == 'completed' || prStatus =='closed')
+						 $("#completePrq").addClass('disabled');
+
+					else  $("#completePrq").removeClass('disabled');
+					
+						
 					switch(get){
 						case "statusInput": return statusInput;
 						case "supIdInput": return supIdInput;
@@ -1679,11 +1685,12 @@ max-width: 100%;
 					$('#disPercentInput').append(getInput( " readonly ", "disPercentInput" ));
 					$('#paidAmountInput').append(getInput( " readonly ", "paidAmountInput" ));
 				}
-				
+				var addNew = '<button type="button"  onclick="window.location.href = \'${pageContext.request.contextPath}/PurchaseReqFormView?type=addNew\'" class="btn btn-primary BtnActive"><i class="fa fa-plus"></i> Add</button>';
+
 				var deleteButton = '<button type="button" id="deleteButton" class="btn btn-primary BtnActive"><i class="fa fa-trash"></i> Delete </button>';
 				var saveButton = '<button type="button" id="saveButton" class="btn btn-primary BtnActive"><i class="fa fa-save"></i> Save </button>';
 				var ammendButton = '<button type="button" id="ammendButton" class="btn btn-primary BtnActive"><i class="fa fa-edit"></i> Amend </button>';
-
+				$("#Buttons").append(addNew).append(" ");
 				if(delForm == 1){
 					$("#Buttons").append(deleteButton).append(" ");
 				}
@@ -1710,7 +1717,7 @@ max-width: 100%;
 					 $("#formStatus").text("Not Saved");
 				     $('.dot').css({"background-color" : "orange"});
 					 $("#Buttons").append(saveButton);
-					 $("#prstat").val('inprog').trigger('change');
+					 $("#prstat").val('draft').trigger('change');
 					});
 				// this code is for changing from saved to not saved if any changes happened
 				
@@ -2305,6 +2312,7 @@ max-width: 100%;
 					 $("#cancelPRq").addClass('disabled');
 					 $("#approvePRq").addClass('disabled');
 					 $("#closePRq").addClass('disabled');
+					 $("#completePrq").addClass('disabled');
 					 $("#Newpo").addClass('disabled');
 					 $("#Newgr").addClass('disabled');
 		 			 $('#custom-tabs-one-tabContent :input').attr('disabled',true);
@@ -2313,14 +2321,16 @@ max-width: 100%;
 						 $('#statusInput :input').attr('disabled',true);
 						 $("#approvePRq").addClass('disabled');
 						 $("#Newpo").removeClass('disabled');
+						 $("#completePrq").removeClass('disabled');
 						 $("#Newgr").removeClass('disabled');
 						 
 			 			 $('#custom-tabs-one-tabContent :input').attr('disabled',true);
 			 			 
 				 		}
-					else if (prStatus == 'inprog'){
+					else if (prStatus == 'draft'){
 						$("#Newpo").addClass('disabled');
 						 $("#Newgr").addClass('disabled');
+						 $("#completePrq").addClass('disabled');
 						 
 			 			 
 				 		}
@@ -2329,6 +2339,7 @@ max-width: 100%;
 						 $("#approvePRq").addClass('disabled');
 						 $("#closePRq").addClass('disabled');
 						 $("#Newpo").addClass('disabled');
+						 $("#completePrq").addClass('disabled');
 						 $("#Newgr").addClass('disabled');
 						 $('#custom-tabs-one-tabContent :input').attr('disabled',true);
 				 		}
@@ -2338,6 +2349,7 @@ max-width: 100%;
 						 $("#approvePRq").addClass('disabled');
 						 $("#closePRq").addClass('disabled');
 						 $("#Newpo").addClass('disabled');
+						 $("#completePrq").addClass('disabled');
 						 $("#Newgr").addClass('disabled');
 						 
 			 			 $('#custom-tabs-one-tabContent :input').attr('disabled',true);
@@ -3230,7 +3242,7 @@ source: function(request, response) {
 	 $("#Newgr").removeClass('disabled');
 	  
 	 }
- else if(prStatus == 'inprog') {
+ else if(prStatus == 'draft') {
 	 $("#approvePRq").removeClass('disabled');
 	 $("#closePRq").addClass('disabled');
 	 $("#Newpo").addClass('disabled');
@@ -3432,11 +3444,16 @@ function prstatCheck(){
 	var prStatus = $("#prstat").val();
  	if(prStatus == 'approved'){
  		$("#Newgr").removeClass('disabled');  
-		$("#Newpo").removeClass('disabled');  	
+		$("#Newpo").removeClass('disabled');
+		$("#completePrq").removeClass('disabled');
+		
+		
  	}
  	else {
  		$("#Newgr").addClass('disabled');  
 		$("#Newpo").addClass('disabled'); 
+		$("#completePrq").addClass('disabled');
+		
 		}
  	
 }

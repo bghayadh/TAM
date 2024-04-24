@@ -213,6 +213,12 @@
             role="tab" aria-controls="custom-tabs-one-home" aria-selected="true" style="color: gold;">INFORMATION</a></li>
             
             <li class="nav-item ml-auto">
+             <li class="nav-item ml-auto">
+            	   <button type="button" 
+				onclick='window.location.href = "${pageContext.request.contextPath}/SchedulerReportFormView?type=addNew"'
+						class="btn btn-primary BtnActive">
+						<i class="fa fa-plus"></i> Add
+						</button>  
 				<button type="button" id="deleteButton"
 				class="btn btn-primary BtnActive">
 				<i class="fa fa-trash"></i> Delete

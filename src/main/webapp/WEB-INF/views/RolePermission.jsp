@@ -81,10 +81,7 @@
 		    						<label for="roles">Roles</label>
 		    						<select class="form-control" id="roles">
 		    							<option selected>Choose...</option>
-		      							<option>Manager</option>
-								    	<option>User</option>
-								    	<option>CX Agent</option>
-								    	<option>Administrator</option>
+		      							
 		    						</select>
 		    					</div>
 							</div>
@@ -161,10 +158,7 @@
   						</div>
 						<select class="custom-select" id="rolesSearch">
 							<option selected>Choose...</option>
-							<option>Manager</option>
-							<option>User</option>
-							<option>CX Agent</option>
-							<option>Administrator</option>
+							
 						</select>
 					</div>
 				</div>
@@ -288,6 +282,22 @@
 $(document).ready(function() {
 	
 	var tableData = ${ListGridTable};
+
+	var role = ${ListRole};
+
+	var selectSearch = document.getElementById("rolesSearch");
+	var select = document.getElementById("roles");
+
+	role.forEach(function(roleName) {
+	    var optionSearch = document.createElement("option");
+	    optionSearch.text = roleName;
+	    selectSearch.appendChild(optionSearch);
+
+	     var option = document.createElement("option");
+	    option.text = roleName;
+	    select.appendChild(option);
+	});
+
 	var code='';
 	var slct = [];
 	var viewType = '';

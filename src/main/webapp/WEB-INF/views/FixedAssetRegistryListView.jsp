@@ -374,7 +374,7 @@
 													</li>
 												</th>
 
-												<th>Item Code
+												<th>Status
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown"> <i
 																class="fa fa-list almgrid-filter-i"
@@ -385,6 +385,17 @@
 													</li>
 												</th>
 
+												<th>Item Code
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> <i
+																class="fa fa-list almgrid-filter-i"
+																aria-hidden="true"></i></button>
+														<ul
+															class="dropdown-menu dropdown-menu-right filter-dropdown-ul">
+
+														</ul>
+													</li>
+												</th>
 												<th>Item Name
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown"> <i
@@ -476,6 +487,8 @@
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
+														<th><input type="text" class="almgrid-search" placeholder="Search"></th>
+										
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
@@ -536,7 +549,8 @@
 
 			<script>
 				var ReportArrayGlobal = ${ ListGridTable };
-				// console.log(farListData);
+				
+				console.log(ReportArrayGlobal);
 
 				$(document).ready(function () {
 
@@ -684,7 +698,9 @@ exportGrid();
 				 				+'<th class="table-select-all"></th>'
 				 				+'<th>FAR ID<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
 				 				+'<ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
-				 				+'<th>Item Code	<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
+				 				+'<th>Status<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
+				 				+'<ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
+				 				+'<th>Item Code<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
 				 				+'<ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
 				 				+'<th>Item Name<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
 				 				+'<ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'

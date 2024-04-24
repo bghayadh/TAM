@@ -361,6 +361,11 @@ z-index: 9003;
     	    	  <button type="button" id="sendEmail" class="btn btn-primary BtnActive"><i class="fa fa-envelope"></i> Send Email </button>
            
             </div>
+               <button type="button" 
+				onclick='window.location.href = "${pageContext.request.contextPath}/SimCardFormView?type=addNew"'
+						class="btn btn-primary BtnActive">
+						<i class="fa fa-plus"></i> Add
+						</button>  
 				<button type="button" id="deleteButton"
 				class="btn btn-primary BtnActive">
 				<i class="fa fa-trash"></i> Delete

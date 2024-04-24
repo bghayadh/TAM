@@ -373,7 +373,11 @@
 								class="btn btn-primary BtnActive">
 								<i class="fa fa-envelope"></i> Send Email
 							</button>
-
+   <button type="button" 
+				onclick='window.location.href = "${pageContext.request.contextPath}/RegionFormView?type=addNew"'
+						class="btn btn-primary BtnActive">
+						<i class="fa fa-plus"></i> Add
+						</button> 
 
 						</div>
 						<button type="button" id="deleteButton"

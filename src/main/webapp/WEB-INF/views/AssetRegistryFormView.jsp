@@ -477,7 +477,7 @@ max-height: 100%;
 				<div class="input-group-prepend">
 				<span style="width:190px;" class="input-group-text">Status</span>
 				<select id="arstat" class="form-control">
-								<option value="inprog" <c:if test = "${arStatus =='inprog'}" > selected </c:if> >In Progress</option>
+								<option value="draft" <c:if test = "${arStatus =='draft'}" > selected </c:if> >Draft </option>
 								<option value="dismantled" <c:if test = "${arStatus =='dismantled'}" > selected </c:if>>Dismantled</option>
 								<option value="Disappear" <c:if test = "${arStatus =='Disappear'}" > selected </c:if>>Disappeared </option>
 								<option value="Maintenance" <c:if test = "${arStatus =='Maintenance'}" > selected </c:if>>Maintenance</option>
@@ -637,6 +637,13 @@ max-height: 100%;
     	        	 <button type="button" id="sendEmail" class="btn btn-primary BtnActive"><i class="fa fa-envelope"></i> Send Email </button>
                          
     	        </div>	
+    	        
+    	        <button type="button" 
+				onclick='window.location.href = "${pageContext.request.contextPath}/AssetRegistryFormView?type=addNew"'
+						class="btn btn-primary BtnActive">
+						<i class="fa fa-plus"></i> Add
+						</button>  
+						
 				<button type="button" id="deleteButton"
 				class="btn btn-primary BtnActive">
 				<i class="fa fa-trash"></i> Delete
@@ -646,6 +653,7 @@ max-height: 100%;
 				class="btn btn-primary BtnActive">
 				<i class="fa fa-save"></i> Save
 				</button>  </li>
+				
 							
      </ul>
      

@@ -261,7 +261,11 @@ z-index: 9003;
             <li class="nav-item ml-auto">
             
             <button type="button" id="sendEmail" class="btn btn-primary BtnActive"><i class="fa fa-envelope"></i> Send Email </button>
-                       
+                       <button type="button" 
+				onclick='window.location.href = "${pageContext.request.contextPath}/CapitalInProgressFormView?type=addNew"'
+						class="btn btn-primary BtnActive">
+						<i class="fa fa-plus"></i> Add
+						</button>  
 				<button type="button" id="deleteButton"
 				class="btn btn-primary BtnActive">
 				<i class="fa fa-trash"></i> Delete

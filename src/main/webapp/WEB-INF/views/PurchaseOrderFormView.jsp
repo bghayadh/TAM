@@ -376,6 +376,7 @@ max-width: 100%;
 	
 	            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 	            <a class="dropdown-item"  type="button" id="Approvepo">Approve</a>
+	             <a class="dropdown-item"  type="button" id="completepo">Complete</a>
 	             <a class="dropdown-item"  type="button" id="Closepo" >Close</a>
 	             <a class="dropdown-item" type="button" id="Cancelpo" >Cancel</a>
     	          <a class="dropdown-item " id="Newgr" href="${pageContext.request.contextPath}/GoodsRcvFormView?grPOid=${ID}&type=addNewFromPO">Create Goods Received </a>
@@ -389,7 +390,7 @@ max-width: 100%;
 				class="btn btn-primary BtnActive">
 				<i class="fa fa-trash"></i> Delete
 				</button>  
-		<button type="button" id="saveButton" onclick='window.location.href = "${pageContext.request.contextPath}/PurchaseOrderFormView?type=addNew"'
+		<button type="button"  onclick='window.location.href = "${pageContext.request.contextPath}/PurchaseOrderFormView?type=addNew"'
 						class="btn btn-primary BtnActive">
 						<i class="fa fa-plus"></i> Add
 						</button> 
@@ -1638,23 +1639,27 @@ $(document).trigger("triggerBoqListenersEvent");
 	 	if(ordStatus == 'approved'){		 	
 	 		 $('#custom-tabs-one-tabContent :input').attr('disabled',true);
 			 $('#ordstat').attr('disabled',true);							
-	 		$("#Approvepo").addClass('disabled');  
+	 		$("#Approvepo").addClass('disabled'); 
+	 		$("#completepo").removeClass('disabled'); 
 	 		$("#Newgr").removeClass('disabled');  
 	 		}
  		else if(ordStatus == 'draft') {
 	 		 $("#Approvepo").removeClass('disabled');
 	 		 $("#Closepo").addClass('disabled');
+	 		$("#completepo").addClass('disabled');
 	 		$("#Newgr").addClass('disabled');  
 	 		
  			}
  		else if (ordStatus == 'completed'){
 	 		$("#Approvepo").addClass('disabled');
 	 		$("#Closepo").addClass('disabled');
+	 		$("#completepo").addClass('disabled');
 	 		$("#Newgr").addClass('disabled');  
 	 		}
  		else if (ordStatus == 'closed'){ 
 	 		$("#Approvepo").addClass('disabled');
 	 		$("#Closepo").addClass('disabled');
+	 		$("#completepo").addClass('disabled');
 	 		$("#Newgr").addClass('disabled');  
 	 		}
  		
@@ -1663,6 +1668,7 @@ $(document).trigger("triggerBoqListenersEvent");
 			 $('#ordstat').attr('disabled',true);
 			 $("#Cancelpo").addClass('disabled');
 			 $("#Approvepo").addClass('disabled');
+			 $("#completepo").addClass('disabled');
 			 $("#Newgr").addClass('disabled');  
 		 		
 		
@@ -1671,7 +1677,11 @@ $(document).trigger("triggerBoqListenersEvent");
 	 		$("#Approvepo").removeClass('disabled');
 	 		$("#Closepo").addClass('disabled');
 	 		$("#Newgr").addClass('disabled');  
+	 		$("#completepo").addClass('disabled');
 	 		} 
+
+
+	 	
 
 // 	$("#formStatus").text("Not Saved");
 // 	$('.dot').css({"background-color" : "orange"});
@@ -1835,7 +1845,11 @@ $(document).trigger("triggerBoqListenersEvent");
  		else $("#Closepo").removeClass('disabled');
 
 		
-
+		if(ordStatus == 'draft' || ordStatus == 'completed' || ordStatus =='closed' || ordStatus =='cancelled' )
+			 $("#completepo").addClass('disabled');
+			
+		else $("#completepo").removeClass('disabled');
+		
 		$(window).bind('beforeunload', function() {
 		    if(unsaved){
 		        return "You have unsaved changes. Do you want to leave and discard?";		        

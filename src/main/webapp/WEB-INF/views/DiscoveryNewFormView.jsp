@@ -436,7 +436,11 @@ max-width: 100%;
     	          		<a class="dropdown-item" id="closeDN">Close</a>
     	        	</div>         
     	        		<button type="button" id="sendEmail" class="btn btn-primary BtnActive"><i class="fa fa-envelope"></i> Send Email </button>
-              
+               <button type="button" 
+				onclick='window.location.href = "${pageContext.request.contextPath}/DiscoveryNewFormView?type=addNew"'
+						class="btn btn-primary BtnActive">
+						<i class="fa fa-plus"></i> Add
+						</button> 
             
     	        </div>	
                

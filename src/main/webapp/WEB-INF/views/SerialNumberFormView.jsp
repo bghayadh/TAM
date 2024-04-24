@@ -187,6 +187,11 @@ margin-top: 10px;
             <li class="nav-item"><a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="tab" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true" style="color: gold;">INFORMATION</a></li>
             <li class="nav-item ml-auto">
             	<button type="button" id="sendEmail" class="btn btn-primary BtnActive"><i class="fa fa-envelope"></i> Send Email </button>
+            		   <button type="button" 
+				onclick='window.location.href = "${pageContext.request.contextPath}/SerialNumberFormView?type=addNew"'
+						class="btn btn-primary BtnActive">
+						<i class="fa fa-plus"></i> Add
+						</button>  
 				<button type="button" id="deleteSerialNumber" class="btn btn-primary BtnActive"><i class="fa fa-trash"></i> Delete</button>  
 				<button type="button" id="saveSerialNumber" class="btn btn-primary BtnActive"><i class="fa fa-save"></i> Save</button>  
 			</li>

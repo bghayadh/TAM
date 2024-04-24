@@ -341,6 +341,19 @@ z-index: 9003;
 														</ul>
 													</li>
 												</th>
+												
+													</th>
+												<th>Status
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> <i
+																class="fa fa-list almgrid-filter-i"
+																aria-hidden="true"></i></button>
+														<ul
+															class="dropdown-menu dropdown-menu-right filter-dropdown-ul">
+
+														</ul>
+													</li>
+												</th>
 
 												<th>Total Amount
 													<li class="filter-dropdown dropdown">
@@ -403,6 +416,7 @@ z-index: 9003;
 											<tr>
 												<th class="table-select-all"><input type="checkbox"
 														class="table-select-all-checkbox"></th>
+												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
@@ -610,6 +624,8 @@ var exportArrayGrid=[];
  				+'<th>Last Modified Date<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
  				+'<ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
  				+'<th>Supplier<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
+ 				+'<ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
+ 				+'<th>Status<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
  				+'<ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
  				+'<th>Total Amount<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
  				+'<ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul"></ul></li></th>'
