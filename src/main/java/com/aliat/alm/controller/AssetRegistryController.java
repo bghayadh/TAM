@@ -71,13 +71,14 @@ public class AssetRegistryController {
 				notifications.headerNotifications(session, model);
 				System.out.println("asset");
 				try {
-					
-					String str = "SELECT arID, assetID, aritemCode, aritemName, itemModel, itemPartNumber, arlastModifiedDate, itemSN, itemNameReg, poID, siteID, siteName FROM ( "
-					           + " SELECT A.AR_ID AS arID, A.AR_ID AS assetID, A.ITEM_CODE AS aritemCode, A.ITEM_NAME AS aritemName, A.ITEM_MODEL AS itemModel, A.ITEM_PART_NUMBER AS itemPartNumber, TO_CHAR(A.LAST_MODIFIED_DATE, 'YYYY-MM-DD HH24:MI:SS') AS arlastModifiedDate, A.ITEM_SN AS itemSN, A.ITEM_NAME_REGISTER AS itemNameReg, A.PO_ID AS poID, B.SITE_ID AS siteID, B.SITE_NAME AS siteName , "
-					           + " ROW_NUMBER() OVER (PARTITION BY A.AR_ID ORDER BY B.SITE_ID DESC) AS rn FROM ASSET_REGISTRY A LEFT JOIN AR_SITE B ON B.AR_ID = A.AR_ID ) WHERE rn = 1 ORDER BY arlastModifiedDate DESC";
-					
-					model.addAttribute("ListGridTable", mapper.writeValueAsString( session.createNativeQuery(str).list()));
-					
+				    String str = "SELECT arID, assetID, aritemCode, aritemName, itemModel, itemPartNumber, ArStatus, arlastModifiedDate, itemSN, itemNameReg, poID, siteID, siteName FROM ( "
+				                 + " SELECT A.AR_ID AS arID, A.AR_ID AS assetID, A.ITEM_CODE AS aritemCode, A.ITEM_NAME AS aritemName, A.ITEM_MODEL AS itemModel, A.ITEM_PART_NUMBER AS itemPartNumber, A.AR_STATUS as ArStatus, TO_CHAR(A.LAST_MODIFIED_DATE, 'YYYY-MM-DD HH24:MI:SS') AS arlastModifiedDate, A.ITEM_SN AS itemSN, A.ITEM_NAME_REGISTER AS itemNameReg, A.PO_ID AS poID, B.SITE_ID AS siteID, B.SITE_NAME AS siteName , "
+				                 + " ROW_NUMBER() OVER (PARTITION BY A.AR_ID ORDER BY B.SITE_ID DESC) AS rn FROM ASSET_REGISTRY A LEFT JOIN AR_SITE B ON B.AR_ID = A.AR_ID ) WHERE rn = 1 ORDER BY arlastModifiedDate DESC";
+
+				    model.addAttribute("ListGridTable", mapper.writeValueAsString(session.createNativeQuery(str).list()));
+				    List<Object[]> resultList = session.createNativeQuery(str).list();
+
+				  
 				} catch (Exception e) {
 					logger.info("Error on Asset Register ListView with a message : " + e);
 					e.printStackTrace();
@@ -573,7 +574,7 @@ public class AssetRegistryController {
 		assetreg.setItemCatCode(request.getParameter("itemCatCode"));
 		assetreg.setItemCatID(request.getParameter("itemCatID"));
 		assetreg.setItemRootCode(request.getParameter("itemRootCat"));
-		assetreg.setArStatus("arStatus");
+		assetreg.setArStatus(request.getParameter("arStatus"));
 		//assetreg.setSiteID(request.getParameter("siteID"));
 		//assetreg.setWareName(request.getParameter("wareName"));
 		//assetreg.setWareID(request.getParameter("wareID"));
@@ -607,7 +608,16 @@ public class AssetRegistryController {
 		assetreg.setArdniID(request.getParameter("dniId"));
 		assetreg.setPoID(request.getParameter("poId"));
 		assetreg.setPoItemId(request.getParameter("poItemId"));
-		assetreg.setInitialCost(Float.parseFloat(request.getParameter("initialCost")));
+		String cost =request.getParameter("initialCost");
+		float initialCost;
+
+		if (cost != null && !cost.isEmpty()) {
+			    initialCost = Float.parseFloat(cost);
+		} else {
+			    initialCost = 0;
+		}
+		assetreg.setInitialCost(initialCost);
+		
 		assetreg.setSupplierID(request.getParameter("suppId"));
 		assetreg.setSupplierName(request.getParameter("suppName"));
 		assetreg.setArsiteId(request.getParameter("arSiteId"));
