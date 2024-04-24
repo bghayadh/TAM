@@ -181,7 +181,7 @@ public class PurchaseController {
 							"Purchase Request", "Form");
 					readList = (Integer) model.asMap().get("readList");
 					listPurchaseRequest = session.createQuery(
-							"select 1,t.ID,TO_CHAR(t.lastmodifiedDate, 'YYYY-MM-DD HH24:MI:SS') ,  t.supplierName, t.TotalAmount,t.TotalQty,t.WareHouse,t.siteID , t.wareName from PurchaseRequest t  order by t.lastmodifiedDate DESC ")
+							"select 1,t.ID,TO_CHAR(t.lastmodifiedDate, 'YYYY-MM-DD HH24:MI:SS') ,  t.supplierName,t.prStatus, t.TotalAmount,t.TotalQty,t.WareHouse,t.siteID , t.wareName from PurchaseRequest t  order by t.lastmodifiedDate DESC ")
 							.list();
 					if (readList == 1) {
 						returnValue = "PurchaseReqListView";
@@ -401,7 +401,7 @@ public class PurchaseController {
 			notifications.headerNotifications(session, model);
 			try {
 				listPurchaseOrder = session.createQuery(
-						"select 1,t.ID,TO_CHAR(t.lastmodifiedDate, 'YYYY-MM-DD HH24:MI:SS'), t.supplierName , t.TotalAmount,t.TotalQty,t.WareHouse,t.siteID , t.wareName  from PurchaseOrder t order by t.lastmodifiedDate DESC ")
+						"select 1,t.ID,TO_CHAR(t.lastmodifiedDate, 'YYYY-MM-DD HH24:MI:SS'), t.supplierName ,t.ordStatus, t.TotalAmount,t.TotalQty,t.WareHouse,t.siteID , t.wareName  from PurchaseOrder t order by t.lastmodifiedDate DESC ")
 						.list();
 				model.addAttribute("ListGridTable", mapper.writeValueAsString(listPurchaseOrder));
 			} catch (Exception e) {
