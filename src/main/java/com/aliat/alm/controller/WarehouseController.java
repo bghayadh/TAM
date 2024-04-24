@@ -115,7 +115,7 @@ public class WarehouseController {
 					notifications.headerNotifications(session, model);
 					//List<WareHouseListView> listAR = new ArrayList<WareHouseListView>();
 	
-						str = "select WARE_ID as wareID,WARE_ID as warehouseID,WARE_NAME as warehouseName,SITE_ID as wareSiteID, TO_CHAR ( LAST_MODIFY_DATE , 'YYYY-MM-DD HH24:MI:SS') as wlastModifieddate,"
+						str = "select WARE_ID as wareID,WARE_ID as warehouseID,WARE_NAME as warehouseName,SITE_ID as wareSiteID,Status as whStatus, TO_CHAR ( LAST_MODIFY_DATE , 'YYYY-MM-DD HH24:MI:SS') as wlastModifieddate,"
 								+ " AREA_NAME as areaName,LONGITUDE as wareLong,LATITUDE as wareLat,"
 								+ "CITY as wareCity,REGION_NAME as regionName from WAREHOUSE order by LAST_MODIFY_DATE DESC";
 	
