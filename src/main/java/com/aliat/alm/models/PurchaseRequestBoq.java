@@ -7,7 +7,7 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name = "PURCHASE_REQUEST_BOQ")
+@Table(name = "PURCHASE_REQUEST_ITEM")
 
 
 public class PurchaseRequestBoq {
