@@ -63,6 +63,7 @@ public class RolePermissionController {
 		}
 		Transaction tx =null;
 			List<PurchaseRequest> listRolePerm = new ArrayList<PurchaseRequest>();
+			List <String> listRoles=new ArrayList<>();;
 			session = AlmDbSession.getInstance().getSession();
 
 			if (session != null && session.isOpen()) {
@@ -74,7 +75,10 @@ public class RolePermissionController {
 					listRolePerm = session.createQuery("select t.permID, t.screen, t.viewType, t.role, t.roleLevel, t.readPerm,"
 							+ " t.writePerm, t.addPerm, t.delPerm, t.savePerm, t.statusPerm, t.actionPerm, t.downloadPerm, t.exportPerm, t.secondLevelPerm,t.firstLevelPerm"
 							+ " from RolePermission t").list();
-
+					listRoles= session.createNativeQuery("select Role From  Role").list();
+					for (String role : listRoles) {
+					    System.out.println(role);
+					}
 							System.out.println("Length of listRolePerm is " +listRolePerm.size());
 					
 				}catch(Exception e){
@@ -90,6 +94,7 @@ public class RolePermissionController {
 			}
 			ObjectMapper mapper = new ObjectMapper();
 			model.addAttribute("ListGridTable", mapper.writeValueAsString(listRolePerm));
+			model.addAttribute("ListRole", mapper.writeValueAsString(listRoles));
 					
 		return "RolePermission";
 		}
