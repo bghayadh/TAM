@@ -39,14 +39,14 @@ import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.GoodsReceived;
-import com.aliat.alm.models.GoodsReceivedBoq;
+
 import com.aliat.alm.models.GoodsReceivedItem;
 import com.aliat.alm.models.Item;
 import com.aliat.alm.models.ItemCategory;
 import com.aliat.alm.models.PurchaseOrder;
 
 import com.aliat.alm.models.PurchaseRequest;
-import com.aliat.alm.models.PurchaseRequestBoq;
+
 import com.aliat.alm.models.SerialNumber;
 import com.aliat.alm.models.Supplier;
 import com.aliat.alm.models.Warehouse;

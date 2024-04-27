@@ -15,6 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -50,7 +51,6 @@ import com.aliat.alm.models.SerialNumberSimTransaction;
 import com.aliat.alm.models.Shops;
 import com.aliat.alm.models.SimCard;
 import com.aliat.alm.models.SimTransaction;
-import com.aliat.alm.models.SimTransactionBoq;
 import com.aliat.alm.models.SimTransactionItem;
 import com.aliat.alm.models.Warehouse;
 import com.aliat.alm.services.ItemParameters;
@@ -199,14 +199,25 @@ public class SimTransactionController {
 					query = session.createSQLQuery(queryString);
 					query.setParameter("param1", transID);
 					
-					List<SimTransactionBoq> listBoq = (List<SimTransactionBoq>)((SQLQuery) query).addScalar("sourceType")
-					.addScalar("source").addScalar("sourceID", new StringType()).addScalar("sourceMSISDN", new StringType())
-					.addScalar("destinationType", new StringType()).addScalar("destination", new StringType())
-					.addScalar("destinationID", new StringType()).addScalar("transactionID", new StringType()).addScalar("totalQty", new IntegerType())
-					.addScalar("creationDate", new TimestampType()).addScalar("lastModifieddate", new TimestampType())
-					.addScalar("simTransactionItemID", new StringType()).addScalar("serial_obj", new StringType())
-					.setResultTransformer(Transformers.aliasToBean(SimTransactionBoq.class)).list();
-					
+					List<Object[]> resultList = query.getResultList();
+
+				List<Map<String, Object>> listBoq = resultList.stream().map(row -> {
+					    Map<String, Object> itemMap = new HashMap<>();
+					    itemMap.put("sourceType", row[0]);
+					    itemMap.put("source", row[1]);
+					    itemMap.put("sourceID", row[2]);
+					    itemMap.put("sourceMSISDN", row[3]);
+					    itemMap.put("destinationType", row[4]);
+					    itemMap.put("destination", row[5]);
+					    itemMap.put("destinationID", row[6]);
+					    itemMap.put("transactionID", row[7]);
+					    itemMap.put("totalQty", row[8]);
+					    itemMap.put("creationDate", row[9]);
+					    itemMap.put("lastModifiedDate", row[10]);
+					    itemMap.put("simTransactionItemID", row[11]);
+					    itemMap.put("serial_obj", row[12]);
+					    return itemMap;
+					}).collect(Collectors.toList());
 				if(listBoq !=null) {
 					model.addAttribute("ListTransItem", mapper.writeValueAsString(listBoq));
 				}else {

@@ -13,6 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -42,7 +43,6 @@ import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.Cluster;
 import com.aliat.alm.models.GoodsReceived;
-import com.aliat.alm.models.GoodsReceivedBoq;
 import com.aliat.alm.models.GoodsReceivedItem;
 import com.aliat.alm.models.PurchaseOrder;
 import com.aliat.alm.models.PurchaseRequest;
@@ -289,15 +289,39 @@ public class GoodsReceiveController {
 								model.addAttribute("docStatus", "addNewFromPRQ");
 
 								// add data in table PurchasereqItem
-								queryStatement = "select t.ItemCode as ItemCode ,t.ItemName as ItemName, t.ItemModel as ItemModel , t.ItemPartNb as ItemPartNumber , t.Qty as qty, t.Rate as rate ,t.DiscAmnt as discountAmount ,t.Tax1 as tax1, t.NetRate as netRate , t.Total as total , t.TotalAt as totalAt ,t.PqNo as poQty , t.GrNo as prQty , t.ArNo as arQty , t.CipNo as cipQty , t.FarNo as farQty, '0' as grItemId  from PurchaseRequestItem t where t.PRQId like :param1";
+								queryStatement = "select t.ItemCode as itemCode ,t.ItemName as itemName, t.ItemModel as itemModel , "
+										+ "t.ItemPartNb as itemPartNumber , t.Qty as qty, t.Rate as rate ,t.DiscAmnt as discountAmount ,"
+										+ "t.Tax1 as tax1, t.NetRate as netRate , t.Total as total , t.TotalAt as totalAt ,t.PqNo as poQty ,"
+										+ "t.GrNo as prQty , t.ArNo as arQty , t.CipNo as cipQty , t.FarNo as farQty, '0' as grItemId  from "
+										+ "PurchaseRequestItem t where t.PRQId like :param1";
 
 								query = session.createQuery(queryStatement);
 								query.setParameter("param1", grId);
-								List<GoodsReceivedBoq> listGoodsReceivedBoq = (List<GoodsReceivedBoq>) query
-										.setResultTransformer(Transformers.aliasToBean(GoodsReceivedBoq.class)).list();
-
+								List<Object[]> resultList = query.getResultList();
+								
+								// Transform the result set into a list of maps
+								List<Map<String, Object>> listGoodsReceivedBoq = resultList.stream().map(row -> {
+								    Map<String, Object> itemMap = new HashMap<>();
+								    itemMap.put("itemCode", row[0]);
+								    itemMap.put("itemName", row[1]);
+								    itemMap.put("itemModel", row[2]);
+								    itemMap.put("itemPartNumber", row[3]);
+								    itemMap.put("qty", row[4]);
+								    itemMap.put("rate", row[5]);
+								    itemMap.put("discountAmount", row[6]);
+								    itemMap.put("tax1", row[7]);
+								    itemMap.put("netRate", row[8]);
+								    itemMap.put("total", row[9]);
+								    itemMap.put("totalAt", row[10]);
+								    itemMap.put("poQty", row[11]);
+								    itemMap.put("prQty", row[12]);
+								    itemMap.put("arQty", row[13]);
+								    itemMap.put("cipQty", row[14]);
+								    itemMap.put("farQty", row[15]);
+								    itemMap.put("grItemId", row[16]);
+								    return itemMap;
+								}).collect(Collectors.toList());
 								model.addAttribute("ListPRqItem", mapper.writeValueAsString(listGoodsReceivedBoq));
-
 								return "GoodsRcvFormView";
 
 							}
@@ -354,17 +378,30 @@ public class GoodsReceiveController {
 								query = session.createSQLQuery(queryStatement);
 								query.setParameter("param1", grId);
 
-								List<GoodsReceivedBoq> listGoodsReceivedBoq = (List<GoodsReceivedBoq>) ((SQLQuery) query)
-										.addScalar("itemCode").addScalar("itemName").addScalar("itemModel")
-										.addScalar("itemPartNumber").addScalar("qty", new FloatType())
-										.addScalar("rate", new FloatType()).addScalar("discountAmount", new FloatType())
-										.addScalar("tax1", new FloatType()).addScalar("netRate", new FloatType())
-										.addScalar("total", new FloatType()).addScalar("totalAt", new FloatType())
-										.addScalar("poQty", new StringType()).addScalar("prQty", new StringType())
-										.addScalar("arQty", new StringType()).addScalar("cipQty", new StringType())
-										.addScalar("farQty", new StringType()).addScalar("grItemId", new StringType())
-										.addScalar("serial_obj", new StringType())
-										.setResultTransformer(Transformers.aliasToBean(GoodsReceivedBoq.class)).list();
+								List<Object[]> resultList = query.getResultList();
+
+								List<Map<String, Object>> listGoodsReceivedBoq = resultList.stream().map(row -> {
+								    Map<String, Object> itemMap = new HashMap<>();
+								    itemMap.put("itemCode", row[0]);
+								    itemMap.put("itemName", row[1]);
+								    itemMap.put("itemModel", row[2]);
+								    itemMap.put("itemPartNumber", row[3]);
+								    itemMap.put("qty", row[4]);
+								    itemMap.put("rate", row[5]);
+								    itemMap.put("discountAmount", row[6]);
+								    itemMap.put("tax1", row[7]);
+								    itemMap.put("netRate", row[8]);
+								    itemMap.put("total", row[9]);
+								    itemMap.put("totalAt", row[10]);
+								    itemMap.put("poQty", row[11]);
+								    itemMap.put("prQty", row[12]);
+								    itemMap.put("arQty", row[13]);
+								    itemMap.put("cipQty", row[14]);
+								    itemMap.put("farQty", row[15]);
+								    itemMap.put("grItemId", row[16]);
+								    itemMap.put("serial_obj", row[17]);
+								    return itemMap;
+								}).collect(Collectors.toList());
 
 								model.addAttribute("ListPRqItem", mapper.writeValueAsString(listGoodsReceivedBoq));
 
@@ -456,19 +493,30 @@ public class GoodsReceiveController {
 
 					query = session.createSQLQuery(queryStatement);
 					query.setParameter("param1", grid);
-
-					List<GoodsReceivedBoq> listGoodsRcvBoq = (List<GoodsReceivedBoq>) ((SQLQuery) query)
-							.addScalar("itemCode").addScalar("itemName").addScalar("itemModel")
-							.addScalar("itemPartNumber").addScalar("qty", new FloatType())
-							.addScalar("rate", new FloatType()).addScalar("discountAmount", new FloatType())
-							.addScalar("tax1", new FloatType()).addScalar("netRate", new FloatType())
-							.addScalar("total", new FloatType()).addScalar("totalAt", new FloatType())
-							.addScalar("poQty", new StringType()).addScalar("prQty", new StringType())
-							.addScalar("arQty", new StringType()).addScalar("cipQty", new StringType())
-							.addScalar("farQty", new StringType()).addScalar("grItemId")
-							.addScalar("grStatus", new StringType()).addScalar("serial_obj", new StringType())
-							.setResultTransformer(Transformers.aliasToBean(GoodsReceivedBoq.class)).list();
-
+					List<Object[]> resultList = query.getResultList();
+					List<Map<String, Object>> listGoodsRcvBoq = resultList.stream().map(row -> {
+					    Map<String, Object> itemMap = new HashMap<>();
+					    itemMap.put("itemCode", row[0]);
+					    itemMap.put("itemName", row[1]);
+					    itemMap.put("itemModel", row[2]);
+					    itemMap.put("itemPartNumber", row[3]);
+					    itemMap.put("qty", row[4]);
+					    itemMap.put("rate", row[5]);
+					    itemMap.put("discountAmount", row[6]);
+					    itemMap.put("tax1", row[7]);
+					    itemMap.put("netRate", row[8]);
+					    itemMap.put("total", row[9]);
+					    itemMap.put("totalAt", row[10]);
+					    itemMap.put("poQty", row[11]);
+					    itemMap.put("prQty", row[12]);
+					    itemMap.put("arQty", row[13]);
+					    itemMap.put("cipQty", row[14]);
+					    itemMap.put("farQty", row[15]);
+					    itemMap.put("grItemId", row[16]);
+					    itemMap.put("grStatus", row[17]);
+					    itemMap.put("serial_obj", row[18]);
+					    return itemMap;
+					}).collect(Collectors.toList());
 					model.addAttribute("docStatus", "Existed");
 					model.addAttribute("ListPRqItem", mapper.writeValueAsString(listGoodsRcvBoq));
 
