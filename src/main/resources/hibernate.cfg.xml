@@ -44,9 +44,6 @@
   <mapping class="com.aliat.alm.models.Message"/>
   <mapping class="com.aliat.alm.models.User"/>
   <mapping class="com.aliat.alm.models.UserRole"/>
-  <mapping class="com.aliat.alm.models.GoodsReceivedBoq"/>
-  <mapping class="com.aliat.alm.models.PurchaseOrderBoq"/>
-  <mapping class="com.aliat.alm.models.PurchaseRequestBoq"/>
   <mapping class="com.aliat.alm.models.WorkOrder"/>
   <mapping class="com.aliat.alm.models.Capital_InProgressListView"/>
   <mapping class="com.aliat.alm.models.AssetRegistryListView"/>
@@ -93,7 +90,6 @@
   <mapping class="com.aliat.alm.models.EmailAccounts"/>
   <mapping class="com.aliat.alm.models.SimTransaction"/>
   <mapping class="com.aliat.alm.models.SimTransactionItem"/>
-  <mapping class="com.aliat.alm.models.SimTransactionBoq"/>
   <mapping class="com.aliat.alm.models.SerialNumberSimTransaction"/>
   <mapping class="com.aliat.alm.models.AreaBorder"/>
   <mapping class="com.aliat.alm.models.AgentBorder"/>
