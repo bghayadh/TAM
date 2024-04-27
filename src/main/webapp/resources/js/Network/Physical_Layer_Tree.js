@@ -10712,7 +10712,13 @@ $("#saveSurvey").on('click',function(){
 });
 
 	$("#updateOnMySD").on('click',function(){
-	
+		
+		document.getElementById("updateonMySDResult").innerText = "";
+		document.getElementById("updateonMySDResult").style.display = "none";
+		
+	 $("#updatingOnMySDLoaderDiv").show();
+
+
 	if(document.getElementById("surveyNearestPt").value == "" || document.getElementById("surveyNearestPt").value == null ){
 		alert("Please select a nearest point before updating on MySD . ");
 		return false;
@@ -10721,6 +10727,10 @@ $("#saveSurvey").on('click',function(){
 		alert("Please add unit price before updating on MySD .");
 		return false;
     }
+	else if(isNaN(document.getElementById("unitPrice").value) ==true ){
+		alert("Incorrect Format of Unit Price.");
+		return false;
+	}
 	else {
 		var currentUrl = window.location.href;
 		var surveyId = document.getElementById("surveyID").value;		
@@ -10730,7 +10740,6 @@ $("#saveSurvey").on('click',function(){
 		var unitPrice = document.getElementById("unitPrice").value;	
 		var dist = surveyNearestPoint.split(":")[1];
 		var totalPrice = unitPrice * dist;
-		console.log("totalPrice "+totalPrice)
 		
 		
 		var token =  $('input[name="csrfToken"]').attr('value');
@@ -10750,9 +10759,18 @@ $("#saveSurvey").on('click',function(){
 			},
 			dataType: "json",
 			success: function (data) {
+				$("#updatingOnMySDLoaderDiv").hide();
+
+				var div = document.getElementById("updateonMySDResult");
+				div.style.display = "block";
+				div.innerText = ""+data.updateOnMySDStatus;
+				div.style.fontWeight = "bold";
+				div.style.color = "red";
 			},
 		error: function (result) {
 			alert("Error");
+			$("#updatingOnMySDLoaderDiv").hide();
+
 		}
 		});							   
 	}

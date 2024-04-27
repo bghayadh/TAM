@@ -1,17 +1,16 @@
 package com.aliat.alm.controller;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.Socket;
-import java.net.URL;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -31,9 +30,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+
 import javax.persistence.Query;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -86,7 +83,6 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonObject;
 
 @Controller
 public class PhysicalLayerController {
@@ -13149,193 +13145,159 @@ public class PhysicalLayerController {
 	return rtn;
 }
 
+	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/updateOnMySD", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> updateOnMySD(Locale locale, Model model,HttpServletRequest request, HttpServletResponse response){
+	public Map<String, Object> updateOnMySD(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response1) {
 
-	Map<String, Object> rtn = new LinkedHashMap<>();
-	session = AlmDbSession.getInstance().getSession();
-	if (LoginServices.checkSession(request, response).equals("redirect:/")) {
-		rtn.put("Login", "redirect:/");
-		return rtn;
-	}
-	if (session != null && session.isOpen()) {
+	    Map<String, Object> rtn = new LinkedHashMap<>();
+	    session = AlmDbSession.getInstance().getSession();
+	    if (LoginServices.checkSession(request, response1).equals("redirect:/")) {
+	        rtn.put("Login", "redirect:/");
+	        return rtn;
+	    }
+	    if (session != null && session.isOpen()) {
 
-		tx = session.beginTransaction();
-		
-		Socket socket = null;
-		HttpURLConnection httpConnection = null;
-		OutputStream out = null;
-		BufferedWriter writer = null;
-		BufferedReader rd = null;
-		HttpURLConnection urlConnection = null;
-		Boolean connectionFailed = false;
-		String surveyID = request.getParameter("surveyID");
-		String currentUrl = request.getParameter("currentUrl");
-		String serviceAppNumber = request.getParameter("serviceAppNumber");
-		String nearestPoint = request.getParameter("nearestPoint");
-		String price = request.getParameter("totalPrice");
+	        tx = session.beginTransaction();
 
-		String api_response_code = null, response_message = null;
+	        Socket socket = null;
+	        HttpURLConnection httpConnection = null;
+	        String connectionStatus = "Failed";
+	        String resultMsg = "";
+	        String responseMessage = "null";
+	        int statusCode = -1;
 
-		String data="",status="";
-		
-		try {			
+	        String surveyID = request.getParameter("surveyID");
+	        String currentUrl = request.getParameter("currentUrl");
+	        String serviceAppNumber = request.getParameter("serviceAppNumber");
+	        String nearestPoint = request.getParameter("nearestPoint");
+	        String price = request.getParameter("totalPrice");
+            Timestamp creationDate = new Timestamp(new Timestamp(System.currentTimeMillis()).getTime());
 
-			
-			JsonObject postData = new JsonObject();
-			postData.addProperty("serviceAppNumber", serviceAppNumber);
-			postData.addProperty("surveyID", surveyID);
-			postData.addProperty("nearestPoint", nearestPoint);
-			postData.addProperty("url", currentUrl);
-			postData.addProperty("price", price);
 
-			
-			URL url = new URL("http://10.22.25.18:42023/api/Home/Survey/");
-			boolean portAvailable = false;
-			
-			try {
-				socket = new Socket("10.22.25.18", 42023);
-				portAvailable = true;
-			} catch (IOException e) {
-				logger.finest("port is closed.");
-				logger.info("port is closed.");
-			}
-			if (portAvailable == true) {
-				urlConnection = (HttpURLConnection) url.openConnection();
-				urlConnection.setRequestProperty("Content-Type", "application/json");
-				urlConnection.setDefaultRequestProperty("MYSdKey", "JDJhJDA0JHNaZFIDTVRGWW5ZbWVHUjJyUXhMZi4xRWU5U1h6RGNXT25PWUNoRks0bnRPNENGNXdVVXIT");
-				urlConnection.setRequestMethod("POST");
-				urlConnection.setDoOutput(true);
-				urlConnection.setDoInput(true);
-				urlConnection.setChunkedStreamingMode(0);
-				/// validate if we have access to URL
-				httpConnection = (HttpURLConnection) url.openConnection();
-				httpConnection.setConnectTimeout(5000);
-				int responseCode = httpConnection.getResponseCode();
-				logger.finest("ResponseCode in updateOnMySD is " + responseCode);
-				logger.info("ResponseCode in updateOnMySD due is " + responseCode);
 
-				String responseMessage = httpConnection.getResponseMessage();
-				logger.finest("ResponseMessage in updateOnMySD is " + responseMessage);
-				logger.info("ResponseMessage in updateOnMySD due is " + responseMessage);
-				
-				System.out.println("responseCode is"+responseCode);
-				System.out.println("ResponseMessage is"+responseMessage);
+	        try {
 
-				if (responseCode == 500) {
-						System.out.println("Network issue, please contact your support.");
-					//return ResponseEntity.ok().headers(responseHeaders)
-							//.body("Network issue, please contact your support.");
-				} else {
+	            String body = "{\"serviceAppNumber\": " + serviceAppNumber + ",\"surveyID\": \"" + surveyID + "\", \"nearestpoint\": \"" + nearestPoint + "\",  \"url\": \"" + currentUrl + "\",  \"price\": " + price + "}";
+				boolean portAvailable = false;
 
-					if (responseCode != 200) {
-						urlConnection.connect();
-						connectionFailed = true;
-						out = new BufferedOutputStream(urlConnection.getOutputStream());
-						writer = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
-						writer.write(postData.toString());
-						writer.flush();
-						//flag = 1;
+	            try {
+	                socket = new Socket("10.22.25.18", 42023);
+					portAvailable = true;
 
-						int code = urlConnection.getResponseCode();
-						rd = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-						String line = null;
-						while ((line = rd.readLine()) != null) {
-							if (line.contains("responseCode")) {
+	            } catch (IOException e) {
+	                System.out.println("Port is closed.");
+	                query = session.createNativeQuery("INSERT INTO SURVEY_LOGS VALUES (TIMESTAMP '" + creationDate+"' ,'"
+							+ surveyID+ "', '" + connectionStatus + "', 'null', '" +statusCode+"', 'Port is closed')");
+					query.executeUpdate();
+					session.createNativeQuery("commit").executeUpdate();
+					session.flush();
+					session.clear();					
+	                logger.info("Port is closed.");
+					rtn.put("updateOnMySDRes", "Failed - Port is closed");
+	                System.out.println("Port is closed.");
+	                return rtn;
+	            }
+	            
+	            
+				if (portAvailable == true) {
+					System.out.println("Enter Port available condition");
+					
+					  HttpClient client = HttpClient.newHttpClient();
+					  HttpRequest.Builder builder = HttpRequest.newBuilder();
+					  builder.uri(URI.create("http://10.22.25.18:42023/api/Home/Survey"));
+					  builder.header("Content-Type", "application/json");
+					  builder.header("MYSdKey", "JDJhJDA0JHNaZFlDTVRGWW5ZbWVHUjJyUXhMZi4xRWU5U1h6RGNXT25pWUNoRks0bnRPNENGNXdVVXlT");
+					  builder.POST(HttpRequest.BodyPublishers.ofString(body));
+						
+					  HttpRequest rqst = builder.build();
+					  HttpResponse<String> response = client.send(rqst, HttpResponse.BodyHandlers.ofString());
+					  System.out.println(" Response is " +response.body());
+					  
+					  int responseCode = response.statusCode();
+					  String responseMsg = response.body();					 
+					 
+		                if (responseCode == 500) {
+							System.out.println("Network issue, please contact your support.");
+							
+							 query = session.createNativeQuery("INSERT INTO SURVEY_LOGS VALUES (TIMESTAMP '" + creationDate+"' ,'"
+										+ surveyID+ "', '" + connectionStatus + "', '" +responseCode+"', '" +statusCode+"', 'Network issue')");
+							query.executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
+							session.flush();
+							session.clear();
+							
+							resultMsg="Failed - "+responseCode+" - Network issue";
+		                } 
+		                else {
+								System.out.println("You can proceed");
+								
+								if (responseMsg.contains("statusCode") && responseMsg.contains("responseMessage") ) {
 
-								int m = 0;
-								m = line.indexOf(";");
-								String response_code = line.substring(m + 1, line.length());
-								String[] test1 = response_code.split("[:,]");
+									 // Remove curly braces and double quotes
+							        String[] parts = responseMsg.replaceAll("[{}\"]", "").split(",");
+							        
+							        for (String part : parts) {
+							            String[] keyValue = part.split(":");
+							            String key = keyValue[0].trim();
+							            String value = keyValue[1].trim();
 
-								String[] splitterString = test1[1].split("\"");
-
-								for (String s : splitterString) {
-
-									api_response_code = s;
-
+							            if (key.equals("statusCode")) {
+							                statusCode = Integer.parseInt(value);
+							            } else if (key.equals("responseMessage")) {
+							                responseMessage = value;
+							            }
+							        }
+							        
+							        if (responseMessage.contains("Successfully saved the survey") || responseMessage.contains("Success") ) {
+							            connectionStatus = "Success";
+							        }
+							        else {
+							            connectionStatus = "Failed";
+							        }							      
 								}
-							}
+							
+				                resultMsg=connectionStatus+" - "+responseCode+":"+responseMessage;
 
-							if (line.contains("message")) {
+						        System.out.println("Insert into survey_logs ");
+								 query = session.createNativeQuery("INSERT INTO SURVEY_LOGS VALUES (TIMESTAMP '" + creationDate+"' ,'"
+											+ surveyID+ "', '" + connectionStatus + "', '" +responseCode+"', '" +statusCode+"', '" +responseMessage+"')");
+								query.executeUpdate();
+								session.createNativeQuery("commit").executeUpdate();
+								session.flush();
+								session.clear();
+								
+						        System.out.println("Insert done");
 
-								int n = 0;
-								n = line.indexOf(";");
-								String message = line.substring(n + 1, line.length());
-								String[] test1 = message.split("[:,]");
-								String[] splitterString = test1[1].split("\"");
-								for (String s : splitterString) {
-									response_message = s;
-
-								}
-
-							}
-
-						}
-
-						if (rd != null) {
-							rd.close();
-						}
-						if (writer != null) {
-							writer.close();
-						}
-						if (out != null) {
-							writer.close();
-						}
-						if (socket != null) {
-							socket.close();
-						}
-
-					}
+		                }
+		                
 				}
-			} else {
-				System.out.println("Service is not available");
+				else {
+					System.out.println("Service is not available");
+					resultMsg="Failed - Service is not available & port is closed";
+				}
+				
+				System.out.println("resultMsg is "+resultMsg);
 
-				data = "Service is not available.";
-				//return ResponseEntity.ok().headers(responseHeaders).body(data);
-			}
-			
-									
-		} catch (Exception e) {
-			e.printStackTrace();
-			//flag = 0;
-			connectionFailed = false;
-			sw = new StringWriter();
-			e.printStackTrace(new PrintWriter(sw));
-			exceptionAsString = sw.toString();
-			logger.finest("Error in updateOnMySD due to \n " + exceptionAsString);
-			logger.info("Error in updateOnMySD due to \n " + exceptionAsString);
-		}
+				rtn.put("updateOnMySDStatus", resultMsg);
+	          
 
-		finally {
-			if (urlConnection != null) {
-				urlConnection.disconnect();
-			} else {
-				data = "0";
-			}
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            connectionStatus = "Failed";
+				rtn.put("updateOnMySDRes", "Failed");
+	            StringWriter sw = new StringWriter();
+	            e.printStackTrace(new PrintWriter(sw));
+	            String exceptionAsString = sw.toString();
+	            logger.info("Error in updateOnMySD due to \n " + exceptionAsString);
+	        }
+ 
+	    }
 
-			if (httpConnection != null) {
-				httpConnection.disconnect();
-			}
-		}
-		if (connectionFailed == true) {
-			if (response_message.contains("Success") || response_message.contains("success")
-					|| response_message.contains("SUCCESS")) {
-				status = "Success";
-			} else {
-				status = "Failed";
-			}
-
-			data = api_response_code + "!!" + response_message + "!!" + status;		
-		}
-		System.out.println(data);
-			
+	    return rtn;
 	}
-
-	return rtn;
-}
+	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/SearchForSource", method = RequestMethod.GET)
 	@ResponseBody
