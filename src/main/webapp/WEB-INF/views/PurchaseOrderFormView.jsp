@@ -1367,6 +1367,7 @@ max-width: 100%;
      $(function(){
     	 
  boqArray = ${ListPoItem};
+ console.log(boqArray)
  for(i = 0; i<boqArray.length;i++ ){
  boqAutocomplete(i);
  }
