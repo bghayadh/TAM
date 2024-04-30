@@ -2922,6 +2922,27 @@ source: function(request, response) {
 		 
 		});
 
+	 $("#completePrq").click(  function() {
+		 unsaved = false;	
+		 pRqAppFlag = 1;
+		 pRqCnclFlg = 0;
+		 FormSave.push("Complete");											   
+		 //var prStatus=$("#prstat").val();
+		 $("#prstat").val('completed').trigger('change');
+		var checkSaving = true;
+		 
+		 $(function(){
+	 		checkSaving = checkedDataOnAction();
+	 		if(checkSaving !== false){
+	 			getselectedrows();
+				saverowsintables(); 
+	 		}
+		 	});
+		 
+		});
+
+		
+
 		//Cancel Action
 	 $("#cancelPRq").click(  function() {
 		 unsaved = false;	
