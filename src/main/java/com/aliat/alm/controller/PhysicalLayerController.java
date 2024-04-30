@@ -13195,7 +13195,7 @@ public class PhysicalLayerController {
 					session.flush();
 					session.clear();					
 	                logger.info("Port is closed.");
-					rtn.put("updateOnMySDRes", "Failed - Port is closed");
+					rtn.put("updateOnMySDStatus", "Failed - Port is closed");
 	                System.out.println("Port is closed.");
 	                return rtn;
 	            }
@@ -13286,7 +13286,7 @@ public class PhysicalLayerController {
 	        } catch (Exception e) {
 	            e.printStackTrace();
 	            connectionStatus = "Failed";
-				rtn.put("updateOnMySDRes", "Failed");
+				rtn.put("updateOnMySDStatus", "Failed");
 	            StringWriter sw = new StringWriter();
 	            e.printStackTrace(new PrintWriter(sw));
 	            String exceptionAsString = sw.toString();
