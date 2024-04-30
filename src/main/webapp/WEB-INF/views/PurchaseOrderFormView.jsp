@@ -1929,6 +1929,21 @@ $(document).trigger("triggerBoqListenersEvent");
 			 		}
 			 	}); 			    
 			});
+		 $("#completepo").click(  function() {
+			 var checkSaving = true;
+			 $('#ordstat').val("completed");
+			 
+			 pOrdAppFlag = 1;
+			 pOrdCnclFlg = 0;
+			 FormSave.push("Complete");
+			 $(function(){
+			 		checkSaving = checkedDataOnAction(); // to validate the data in the fields.
+			 		if(checkSaving !== false){
+						 getSelectedRows ();
+						 saveRowsInTables(); 
+			 		}
+			 	}); 			    
+			});
 			
 			//start of  Cancel Action
 		 $("#Cancelpo").click(  function() {
