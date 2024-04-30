@@ -38,7 +38,7 @@ public class AssetLifeCycleThread extends Thread {
 	private String fullItmCode = null;
 	private String itmCode = null;
 	private Query query = null;
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static final Logger logger = LoggerFactory.getLogger(AssetLifeCycleThread.class);
 
 	String formView;
 	String pRqID;

@@ -1111,15 +1111,15 @@ public class PurchaseController {
 
 						}
 
-						if (StringUtils.equalsIgnoreCase(pRqAppFlag, "1")
+/*						if (StringUtils.equalsIgnoreCase(pRqAppFlag, "1")
 								&& StringUtils.equalsIgnoreCase(pRqStat, "approved")) {
 
 							AssetLifeCycleThread InsertionALCThread = new AssetLifeCycleThread("PR", pRqID, "", "",
 									itemParameters);
 							InsertionALCThread.start(); // will occur parallel with the execution of saving PR.
-						}
+						} */
 
-						else if (StringUtils.equalsIgnoreCase(pRqAppFlag, "0")
+						if (StringUtils.equalsIgnoreCase(pRqAppFlag, "0")
 								&& StringUtils.equalsIgnoreCase(pRqCnclFlg, "1")) {
 							if (StringUtils.equalsIgnoreCase(pRqStat, "draft")) {
 								query = session.createQuery(
@@ -1145,10 +1145,6 @@ public class PurchaseController {
 												"update PurchaseRequest set prStatus = 'cancelled' WHERE ID = :param1");
 										query.setParameter("param1", pRqID);
 										query.executeUpdate();
-										/// thread
-										AssetLifeCycleCanceling ALCCancel = new AssetLifeCycleCanceling("PR", pRqID, "",
-												"");
-										ALCCancel.start();
 									}
 								} else {
 									query = session.createQuery(
@@ -1169,9 +1165,6 @@ public class PurchaseController {
 													"update PurchaseRequest set prStatus = 'cancelled' WHERE ID = :param1");
 											query.setParameter("param1", pRqID);
 											query.executeUpdate();
-											AssetLifeCycleCanceling ALCCancel = new AssetLifeCycleCanceling("PR", pRqID,
-													"", "");
-											ALCCancel.start();
 										}
 
 									} else {
@@ -1181,9 +1174,6 @@ public class PurchaseController {
 												"update PurchaseRequest set prStatus = 'cancelled' WHERE ID = :param1");
 										query.setParameter("param1", pRqID);
 										query.executeUpdate();
-										AssetLifeCycleCanceling ALCCancel = new AssetLifeCycleCanceling("PR", pRqID, "",
-												"");
-										ALCCancel.start();
 									}
 								}
 							}
