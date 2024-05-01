@@ -7,28 +7,24 @@
 <title>Login</title>
 
 <script src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>
-
-
-
 <script type="text/javascript"
-	src="${pageContext.request.contextPath}/resources/js/moment.min.js"></script>
+    src="${pageContext.request.contextPath}/resources/js/moment.min.js"></script>
 <script type="text/javascript"
-	src="${pageContext.request.contextPath}/resources/js/tempusdominus-bootstrap-4.min.js"></script>
+    src="${pageContext.request.contextPath}/resources/js/tempusdominus-bootstrap-4.min.js"></script>
 <link rel="stylesheet"
-	href="${pageContext.request.contextPath}/resources/css/tempusdominus-bootstrap-4.min.css" />
+    href="${pageContext.request.contextPath}/resources/css/tempusdominus-bootstrap-4.min.css" />
 <script type="text/javascript"
-	src="${pageContext.request.contextPath}/resources/js/bootstrap.min.js"></script>
+    src="${pageContext.request.contextPath}/resources/js/bootstrap.min.js"></script>
 <link
-	href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css"
-	rel="stylesheet">
-	<script
-	src="${pageContext.request.contextPath}/resources/js/jquery-migrate-3.0.0.min.js"></script>
-
+    href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css"
+    rel="stylesheet">
 <script
-	src="${pageContext.request.contextPath}/resources/js/jquery2-ui.js"></script>
+    src="${pageContext.request.contextPath}/resources/js/jquery-migrate-3.0.0.min.js"></script>
+<script
+    src="${pageContext.request.contextPath}/resources/js/jquery2-ui.js"></script>
 <link rel="stylesheet"
-	href="${pageContext.request.contextPath}/resources/css/jquery-ui.css"
-	rel="stylesheet" />
+    href="${pageContext.request.contextPath}/resources/css/jquery-ui.css"
+    rel="stylesheet" />
 
 <style type="text/css">
 .fo {
@@ -89,11 +85,12 @@ body{
                     <input type="checkbox" class="form-check-input" id="exampleCheck1"/>
                     <label class="form-check-label" for="exampleCheck1" >Check me out</label>
                   </div>
+                  <%-- Adding the redirectUrl parameter from the model --%>
+                  <input type="hidden" name="redirectUrl" value="${redirectUrl}" />
                   <button type="submit" class="btn btn-primary btn-block" >Login</button>
                 </form>
             </section>
         </section>
     </section>
-    
 </body>
 </html>
