@@ -44,32 +44,33 @@ public class LoginController {
 	//@PostMapping("/loginAuth")
 	@RequestMapping(value = "/loginAuth", method = RequestMethod.POST)
 	public String LoginAuthentication(@RequestParam(value = "usernameAuth", required=true, defaultValue="") String username,
-			@RequestParam(value = "PasswordAuth", required=true, defaultValue="") String password, HttpServletResponse responce, HttpServletRequest httpRequest,
+			@RequestParam(value = "PasswordAuth", required=true, defaultValue="") String password,@RequestParam(value = "redirectUrl", required=true, defaultValue="") String redirectUrl, HttpServletResponse responce, HttpServletRequest httpRequest,
 			Model model) {
 		HttpSession httpSession = httpRequest.getSession(false);
 		responce.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 		responce.setHeader("Pragma", "no-cache"); // HTTP 1.0.
 		responce.setDateHeader("Expires", 0); //
-
-		if (httpSession != null) {
-			System.out.println("session not null");
-			if (httpSession.getAttribute("userName") != null) {
-				System.out.println("user login");
-				return "redirect:/Dashboard";
-			} else {
-				System.out.println("Welcome to login Auth");
-				String navigate = loginServices.validate(username, password, responce, httpRequest, model);
-
-				System.out.println("use " + username + " pa" + password);
-				return navigate;
-
-			}
+		model.addAttribute("redirectUrl", redirectUrl);
+		if (httpSession != null && httpSession.getAttribute("userName") != null) {
+		    if (redirectUrl != null && !redirectUrl.isEmpty()) {
+		        return "redirect:" + redirectUrl;
+		    } else {
+		        return "redirect:/Dashboard";
+		    }
 		} else {
-			System.out.println("session null");			
-			return "redirect:/";
+		    String navigate = loginServices.validate(username, password, responce, httpRequest, model);
+		    if (navigate.equals("redirect:/Dashboard")) {
+		        if (redirectUrl != null && !redirectUrl.isEmpty()) {
+		            return "redirect:" + redirectUrl;
+		        } else {
+		            return navigate;
+		        }
+		    } else {
+		        return "Login";
+		    }
 		}
-
-	}
+		 
+		}
 	@RequestMapping("/logout")
 	public String logout(HttpServletResponse responce, HttpServletRequest httpRequest,
 			Model model) {
