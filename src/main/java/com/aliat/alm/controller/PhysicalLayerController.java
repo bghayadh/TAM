@@ -115,19 +115,15 @@ public class PhysicalLayerController {
 
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 
-			// Get the current URL before redirect
 	        String originalUrl = request.getRequestURL().toString();
-           String queryString = request.getQueryString();
-           
-           if (queryString != null) {
-           	originalUrl += "?" + queryString;
-           }
-
-			Cookie redirectCookie = new Cookie("redirectUrl", originalUrl);
-			redirectCookie.setPath("/");
-			response.addCookie(redirectCookie);
-			return "redirect:/";
-		} else {
+            String queryString = request.getQueryString();
+            if (queryString != null) {
+                originalUrl += "?" + queryString;
+            }
+            model.addAttribute("redirectUrl", originalUrl);
+            return "Login";
+        }
+	 else {
 
 			session = AlmDbSession.getInstance().getSession();
 
