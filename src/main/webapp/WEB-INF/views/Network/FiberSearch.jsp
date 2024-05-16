@@ -2,7 +2,47 @@
 <html>
 <head>
 <meta charset="utf-8">
+
 </head>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/almgrid/Collapse.css" />
+<style>
+
+
+
+
+.panel-body-info {
+	border: 2px grey solid;
+	padding: 4 18px;
+	border-radius: 10px;
+}
+
+
+
+#collapseOne {
+	padding-bottom: 0.9%;
+	padding-top: 0%;
+	padding-right: 7%;
+	height: 500px;
+	width: 100%;
+	float: right;
+}
+ .nav-link.active {
+                background-color: #FFD966 !important;
+                color: #00757c !important;
+            }
+
+</style>
+
+
 <body>
 	<div class="container">
 		<div id="fiberCitySearch" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  data-keyboard="false" data-backdrop="static">
@@ -175,8 +215,32 @@
 											</div>
 										</div>
 										</div>
-										<div class="row">
-										<div class="col-sm-2" style="">
+								
+										
+							
+							
+																				
+										<div class="wrapper" style="margin-top: -10px;">
+					<div class="panel-group" id="accordion" role="tablist"
+						aria-multiselectable="true">
+						<div class="panel panel-default" style="margin-bottom: 3px;">
+
+							<div class="panel-heading " role="tab" id="headingOne">
+								<h4 class="panel-title">
+									<a role="button" data-toggle="collapse"
+										data-parent="#accordion" href="#collapseThree"
+										aria-expanded="true" aria-controls="collapseThree">Customer Info </a>
+								</h4>
+							</div>
+							<div id="collapseThree" class="panel-collapse collapse show"
+								role="tabpanel" aria-labelledby="headingOne">
+								<div class="panel-body-info"
+									style='height: 100%; width: 100%; padding-top: 0%;'>
+									<div class="card-body" style="width: 100%;">
+									
+
+									<div class="row">
+									<div class="col-sm-2" style="">
 											<div class="form-group">
 												<button id="viewNearestp" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; width: 100%;">View Nearest</button>
 											</div>
@@ -207,7 +271,7 @@
 										</div>	
 																																					
 										</div>
-										<div class="row">
+	<div class="row">
 										<div class="col-sm-3" id="serviceRef">
 											<div class="form-group">
 												<div class="input-group-prepend" style="width: auto;">
@@ -234,15 +298,26 @@
 										</div>	
 										<div class="col-sm-2" id="saveSurv">
 											<div class="form-group">
-												<button id="saveSurvey" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; width: 100%;">Save Survey</button>
+												<button id="saveSurvey" class="btn btn-primary" style="color: white; font-size: 13px; height: 50px; width: 100%;">Save Survey</button>
 											</div>
 										</div>
 											<div class="col-sm-2" id="updateMysd">
 											<div class="form-group">
-												<button id="updateOnMySD" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; width: 100%;" disabled>Update on MySD</button>
+												<button id="updateOnMySD" class="btn btn-primary" style="color: white; font-size: 13px; height: 50px; width: 100%;" disabled>Update on MySD</button>
 											</div>
 										</div>	
 																		
+							</div>
+										
+									
+
+								
+									</div>
+								</div>
+							</div>
+					
+					</div>
+				</div>								
 							</div>
 						<div class="row">
 							<div class="col-sm-8" >
@@ -989,4 +1064,17 @@
 					
   					
 </body>
+<script>
+
+$('.panel-collapse').on('show.bs.collapse',function() {
+	$(this).siblings('.panel-heading').removeClass('active');
+});
+
+$('.panel-collapse').on('hide.bs.collapse',function() {
+	$(this).siblings('.panel-heading').addClass('active');
+});
+
+
+
+</script>
 </html>

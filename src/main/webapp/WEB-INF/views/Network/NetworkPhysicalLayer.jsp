@@ -81,7 +81,7 @@
 }
 </style>
 </head>
-<%@ include file="/WEB-INF/views/Network/FiberSearch.html" %> 
+<%@ include file="/WEB-INF/views/Network/FiberSearch.jsp" %> 
 <body>
 	<c:set var="pg" value="network" scope="session" />
 	<jsp:include page="../header.jsp"></jsp:include><p></p><br>
