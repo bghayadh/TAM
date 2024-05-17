@@ -464,11 +464,7 @@ function sitesMapLabel() {
 		}
 	}
 	else {
-		for(var i=0;i<allSites.length;i++) {
-			
-		
-				    alert('JJ '+siteCltSrcMarkers[allSites[i].split(":")[0]].getLabel().text);
-				
+		for(var i=0;i<allSites.length;i++) {						
 			//Show sequence is checked
 			if(siteCltSrcMarkers[allSites[i].split(":")[0]].getLabel().text.includes("/") == true) {
 				siteCltSrcMarkers[allSites[i].split(":")[0]].setLabel({text: siteCltSrcMarkers[allSites[i].split(":")[0]].getLabel().text.split("/")[0] , className:"marker-position-sequence",color:"red"});
