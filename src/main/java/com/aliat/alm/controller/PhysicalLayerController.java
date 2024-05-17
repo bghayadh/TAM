@@ -4969,13 +4969,15 @@ public class PhysicalLayerController {
 							}
 						}
 						List<Object> resultList = query.getResultList();
-						if (resultList.size() == 1 || resultList.size() == 0) {
+						//if (resultList.size() == 1 || resultList.size() == 0) {
+							if (resultList.size() == 1) {
 							String AuxName = (String) query.getSingleResult();
 							map.put(i, new ArrayList<>(Arrays.asList(
 									itemParameters.getDictParameter().get(i).get("longitude"),
 									itemParameters.getDictParameter().get(i).get("latitude"), "", AuxName, "", "")));
 
-						} else if (resultList.size() > 1) {
+						//} else if (resultList.size() > 1) {
+						} else if (resultList.size() > 1 || resultList.size() ==0) {
 							String AuxName = "null";
 							map.put(i, new ArrayList<>(Arrays.asList(
 									itemParameters.getDictParameter().get(i).get("longitude"),
