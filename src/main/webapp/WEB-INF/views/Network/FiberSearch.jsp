@@ -953,8 +953,8 @@
 																<th style="min-width: 150px;">ManholeName</th>
 																<th style="min-width: 100px;">Longitude</th>
 																<th style="min-width: 150px;">Latitude</th>
-																<th style="min-width: 100px;">Distance(km)</th>
-																<th style="min-width: 80px;"colspan="2">Driving Distance(km)</th>
+																<th style="min-width: 100px;">Distance(m)</th>
+																<th style="min-width: 80px;"colspan="2">Driving Distance(m)</th>
 															</tr>
 															 </thead>
 															<tbody id="searchCloseManhTBody">
@@ -981,8 +981,8 @@
 																<th style="min-width: 150px;">HandholeName</th>
 																<th style="min-width: 100px;">Longitude</th>
 																<th style="min-width: 100px;">Latitude</th>
-																<th style="min-width: 100px;">Distance(Km)</th>
-																<th style="min-width: 100px;" colspan="2">Driving Distance(km)</th>
+																<th style="min-width: 100px;">Distance(m)</th>
+																<th style="min-width: 100px;" colspan="2">Driving Distance(m)</th>
 																
 															</tr>
 															</thead>
@@ -1012,8 +1012,8 @@
 																<th style="min-width: 150px;">DBoard Name</th>
 																<th style="min-width: 100px;">Longitude</th>
 																<th style="min-width: 100px;">Latitude</th>
-																<th style="min-width: 100px;">Distance(km)</th>
-																<th style="min-width: 100px;" colspan="2">Driving Distance(km)</th>								
+																<th style="min-width: 100px;">Distance(m)</th>
+																<th style="min-width: 100px;" colspan="2">Driving Distance(m)</th>								
 															</tr>
 															 </thead>															
 															<tbody id="searchCloseDbTBody">
@@ -1042,8 +1042,8 @@
 																<th style="min-width: 150px;">Node Name</th>
 																<th style="min-width: 100px;">Longitude</th>
 																<th style="min-width: 100px;">Latitude</th>
-																<th style="min-width: 100px;">Distance(Km)</th>
-																<th style="min-width: 100px;" colspan="2">Driving Distance(km)</th>
+																<th style="min-width: 100px;">Distance(m)</th>
+																<th style="min-width: 100px;" colspan="2">Driving Distance(m)</th>
 															</tr></thead>
 															<tbody id="searchCloseNodeTBody"></tbody>
 														</table>

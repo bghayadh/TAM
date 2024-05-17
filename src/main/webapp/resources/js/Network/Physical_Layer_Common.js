@@ -560,7 +560,7 @@ $("#selectConnectedSearch").on('change',function(){
 
 		//Loop through all manholes to get the distance and filter the closest manholes
 		for(var x=0;x<allManholesID.length;x++) {
-			pointDist =Number(haversine_distance(closePtLat,closePtLong,window[""+allManholesID[x]][3],window[""+allManholesID[x]][2]));
+			pointDist =Number(closePointsHaversineDistance(closePtLat,closePtLong,window[""+allManholesID[x]][3],window[""+allManholesID[x]][2]));
 			
 			if (pointDist < closePtDistRange) {
 				//Add all manhole details to the temp array
@@ -580,7 +580,7 @@ $("#selectConnectedSearch").on('change',function(){
 				
 		//Loop through all HHs to get the distance and filter the closest HHs
 		for(var x=0;x<allHandholesID.length;x++) {
-			pointDist =Number(haversine_distance(closePtLat,closePtLong,window[""+allHandholesID[x]][3],window[""+allHandholesID[x]][2]));
+			pointDist =Number(closePointsHaversineDistance(closePtLat,closePtLong,window[""+allHandholesID[x]][3],window[""+allHandholesID[x]][2]));
 			
 			if (pointDist < closePtDistRange) {
 			    closePointsDataTemp = window[""+allHandholesID[x]];
@@ -595,7 +595,7 @@ $("#selectConnectedSearch").on('change',function(){
 				
 		//Loop through all DB to get the distance and filter the closest HHs
 		for(var x=0;x<allDB.length;x++) {
-			pointDist =Number(haversine_distance(closePtLat,closePtLong,window[""+allDB[x]][2],window[""+allDB[x]][1]));
+			pointDist =Number(closePointsHaversineDistance(closePtLat,closePtLong,window[""+allDB[x]][2],window[""+allDB[x]][1]));
 			
 			if (pointDist < closePtDistRange) {
 			    closePointsDataTemp = window[""+allDB[x]];
@@ -610,7 +610,7 @@ $("#selectConnectedSearch").on('change',function(){
 			
 		//Loop through all nodes to get the distance and filter the closest HHs
 		for(var x=0;x<allNodes.length;x++) {
-			pointDist =Number(haversine_distance(closePtLat,closePtLong,window[""+allNodes[x]][6],window[""+allNodes[x]][5]));
+			pointDist =Number(closePointsHaversineDistance(closePtLat,closePtLong,window[""+allNodes[x]][6],window[""+allNodes[x]][5]));
 			
 			if (pointDist < closePtDistRange) {
 			    closePointsDataTemp = window[""+allNodes[x]];
@@ -14924,7 +14924,7 @@ function getDrivingDistanceClosePoint(e) {
 			}
 			directionsService.route(request, function(response, status) {
 				if ( status == google.maps.DirectionsStatus.OK ) {
-					var resultt= ( response.routes[0].legs[0].distance.value) /1000 ;
+					var resultt= ( response.routes[0].legs[0].distance.value) ;
 
 				   }
 				else {
@@ -14947,7 +14947,9 @@ function appendManholesClosePoints(manholesClosePtArray) {
 
 		var markupManh="";
 		document.getElementById("findCloseManholePts").innerHTML = "";
-								
+		document.getElementById("searchCloseManhTBody").innerHTML = "";	
+		
+				
 		if (manholesClosePtArray.length==0){
 			document.getElementById("findCloseManholePts").innerHTML = '<p style=" color:#ff0000;font-size: 1.4em;">There is no result</p>';
 		}
@@ -14972,6 +14974,8 @@ function appendHandholesClosePoints(handholesClosePtArray) {
 
 		var markupHandhole="";
 		document.getElementById("findCloseHandholePts").innerHTML = "";
+		document.getElementById("searchCloseHandTBody").innerHTML = "";	
+
 								
 		if (handholesClosePtArray.length==0){
 			document.getElementById("findCloseHandholePts").innerHTML = '<p style=" color:#ff0000;font-size: 1.4em;">There is no result</p>';
@@ -14996,6 +15000,8 @@ function appendDbClosePoints(dbClosePtArray) {
 
 		var markupDB="";
 		document.getElementById("findCloseDbPts").innerHTML = "";
+		document.getElementById("searchCloseDbTBody").innerHTML = "";	
+
 								
 		if (dbClosePtArray.length==0){
 			document.getElementById("findCloseDbPts").innerHTML = '<p style=" color:#ff0000;font-size: 1.4em;">There is no result</p>';
@@ -15022,16 +15028,15 @@ function appendDbClosePoints(dbClosePtArray) {
 function appendNodeClosePoints(nodeClosePtArray) {
 		var markupNode="";
 		document.getElementById("findCloseNodePts").innerHTML = "";
+		document.getElementById("searchCloseNodeTBody").innerHTML = "";	
+
 								
 		if (nodeClosePtArray.length==0){
 			document.getElementById("findCloseNodePts").innerHTML = '<p style=" color:#ff0000;font-size: 1.4em;">There is no result</p>';
 		}
 		else {
 			for(var i =0 ; i<nodeClosePtArray.length;i++){
-				//markupNode +="<tr style='height: 30px;'><td ><input type='checkbox' class='closeNodeBOQ' id=closePoint_"+nodeClosePtArray[i][0]+" ></td><td  >"+nodeClosePtArray[i][0]+"</td><td name ='closeNodePk' style='min-width:250px;'>"+nodeClosePtArray[i][1]+"</td><td name ='closeNodeId' style='min-width:250px;'>"+nodeClosePtArray[i][7]+"</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+nodeClosePtArray[i][5]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+nodeClosePtArray[i][6]+"' readonly></input ></td><td style='width:100px;'>"+(nodeClosePtArray[i][9])+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistanceClosePoint(this)'>Get Distance</button> </td></tr>"
-				markupNode +="<tr style='height: 30px;'><td ><input type='checkbox' class='closeNodeBOQ' id=closePoint_"+nodeClosePtArray[i][0]+" ></td><td name ='closeNodePk' style='min-width:300px;'>"+nodeClosePtArray[i][0]+"</td><td name ='closeNodeId' style='min-width:150px;'>"+nodeClosePtArray[i][7]+"</td><td name ='closeNodeName' style='min-width:250px;'>"+nodeClosePtArray[i][1]+"</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+nodeClosePtArray[i][5]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+nodeClosePtArray[i][6]+"' readonly></input ></td><td style='width:100px;'>"+(nodeClosePtArray[i][9])+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistanceClosePoint(this)'>Get Distance</button> </td></tr>"
-				//markupNode +="<tr style='height: 30px;'><td ><input type='checkbox' class='closeNodeBOQ' id=closePoint_"+nodeClosePtArray[i][0]+" ></td><td name ='closeNodePk' style='width:auto'>"+nodeClosePtArray[i][0]+"</td><td name ='closeNodeId' style='width:auto;overflow-y: auto;'>"+nodeClosePtArray[i][7]+"</td><td name ='closeNodeName' style='width:auto'>"+nodeClosePtArray[i][1]+"</td><td name='LONGG' style='width:auto'><input name='LONGG' style='border: none;' value='"+nodeClosePtArray[i][5]+"' readonly></input ></td><td style='width:auto' name='LATT'><input name='LATT' style='border: none;' value='"+nodeClosePtArray[i][6]+"' readonly></input ></td><td style='width:auto'>"+(nodeClosePtArray[i][9])+"</td><td  style='width:auto; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:auto; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistanceClosePoint(this)'>Get Distance</button> </td></tr>"
-				
+				markupNode +="<tr style='height: 30px;'><td ><input type='checkbox' class='closeNodeBOQ' id=closePoint_"+nodeClosePtArray[i][0]+" ></td><td name ='closeNodePk' style='min-width:300px;'>"+nodeClosePtArray[i][0]+"</td><td name ='closeNodeId' style='min-width:150px;'>"+nodeClosePtArray[i][7]+"</td><td name ='closeNodeName' style='min-width:250px;'>"+nodeClosePtArray[i][1]+"</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+nodeClosePtArray[i][5]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+nodeClosePtArray[i][6]+"' readonly></input ></td><td style='width:100px;'>"+(nodeClosePtArray[i][9])+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistanceClosePoint(this)'>Get Distance</button> </td></tr>"				
 			}
 		}						  
 		$("#searchCloseNodeTBody").append(markupNode);

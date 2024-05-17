@@ -445,6 +445,7 @@ function sitesMapLabel() {
 
 	$("#sitesMapCheck_Labels").on('change',function(){
 	if($(this).prop("checked")==true){
+		
 		if (checkLabel =="checked") {
 			for(var i=0;i<allSites.length;i++) {
 				siteCltSrcMarkers[allSites[i].split(":")[0]].setLabel(null);
@@ -453,7 +454,7 @@ function sitesMapLabel() {
 		
 		for(var i=0;i<allSites.length;i++) {
 			
-			if(siteCltSrcMarkers[allSites[i].split(":")[0]].getLabel()!=undefined && siteCltSrcMarkers[allSites[i].split(":")[0]].getLabel()!=null) {
+			if(siteCltSrcMarkers[allSites[i].split(":")[0]].getLabel()!=undefined && siteCltSrcMarkers[allSites[i].split(":")[0]].getLabel()!=null) {								
 				siteCltSrcMarkers[allSites[i].split(":")[0]].setLabel({text: siteCltSrcMarkers[allSites[i].split(":")[0]].getLabel().text +" / " + allSites[i].split(":")[0]+" : "+allSites[i].split(":")[2] , className:"marker-position-site",color:"red"});
 			}
 			else {
@@ -465,6 +466,9 @@ function sitesMapLabel() {
 	else {
 		for(var i=0;i<allSites.length;i++) {
 			
+		
+				    alert('JJ '+siteCltSrcMarkers[allSites[i].split(":")[0]].getLabel().text);
+				
 			//Show sequence is checked
 			if(siteCltSrcMarkers[allSites[i].split(":")[0]].getLabel().text.includes("/") == true) {
 				siteCltSrcMarkers[allSites[i].split(":")[0]].setLabel({text: siteCltSrcMarkers[allSites[i].split(":")[0]].getLabel().text.split("/")[0] , className:"marker-position-sequence",color:"red"});
@@ -760,6 +764,26 @@ function haversine_distance(lat1,lng1,lat2,lng2) {
 	
 	var d = 2 * R * Math.asin(Math.sqrt(Math.sin(difflat/2)*Math.sin(difflat/2)+Math.cos(lat1)*Math.cos(lat2)*Math.sin(difflon/2)*Math.sin(difflon/2)));
 	return Math.round(1000*d)/1000;
+}
+
+function closePointsHaversineDistance(lat1, lng1, lat2, lng2) {
+   // Radius of the Earth in meters
+    var R = 6371000.0;
+    
+    // Convert degrees to radians
+    var radLat1 = lat1 * (Math.PI / 180);
+    var radLon1 = lng1 * (Math.PI / 180);
+    var radLat2 = lat2 * (Math.PI / 180);
+    var radLon2 = lng2 * (Math.PI / 180);
+    
+    // Haversine formula
+    var dLat = radLat2 - radLat1;
+    var dLon = radLon2 - radLon1;
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(radLat1) * Math.cos(radLat2) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var distance = R * c;
+    
+    return distance; // Return distance in meters
 }
 
 function getCoords(){
