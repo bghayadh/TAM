@@ -8817,6 +8817,59 @@ public class PhysicalLayerController {
 		}
 		return rtn;
 	}
+	
+	@RequestMapping(value = "/findCountJunction", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> findCountJunction(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException {
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		// ObjectMapper mapper = new ObjectMapper();
+		Session session = null;
+		Transaction tx = null;
+		session = AlmDbSession.getInstance().getSession();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+
+			try {
+				Object CountJunction = session
+						.createNativeQuery("SELECT count(*) FROM JUNCTION WHERE PROJECT_ID='"
+								+ request.getParameter("ProjectId") + "' and PHYSICAL_LAYER_ID is null")
+						.uniqueResult();
+
+				rtn.put("CountJunction", CountJunction);
+
+				Object CountJunctionMapping = session
+						.createNativeQuery("SELECT count(*) FROM JUNCTION_MAPPING where PHYSICAL_LAYER_ID is null ").uniqueResult();
+
+				rtn.put("CountJunctionMapping", CountJunctionMapping);
+
+				Object countAllConnections = session.createNativeQuery(
+						"SELECT SUM (JctConnectionSum) FROM ( SELECT JUNCTION_ID,SUM(CAPACITY) as JctConnectionSum FROM JUNCTION WHERE PHYSICAL_LAYER_ID is null GROUP BY JUNCTION_ID ) ")
+						.uniqueResult();
+				rtn.put("countAllConnections", countAllConnections);
+
+			} catch (Exception e) {
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in findCountJunction due to \n " + exceptionAsString);
+				logger.info("Error in findCountJunction due to \n " + exceptionAsString);
+				rtn.put("CountJunction", null);
+			} finally {
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+
+				}
+			}
+		}
+		return rtn;
+	}
 
 	@RequestMapping(value = "/findCountfiber", method = RequestMethod.GET)
 	@ResponseBody

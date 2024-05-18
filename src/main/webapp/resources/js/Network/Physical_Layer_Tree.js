@@ -5107,6 +5107,36 @@ singleProject = new ContextMenu({
 						});
 					}
 				},
+					{'icon': 'paste', 'name': 'Show BoQ', action: () => {
+						   $.ajax({
+							   type: "GET",
+							   contentType: "application/json; charset=utf-8",
+							   url: getContext()+'/findCountJunction',
+							   data: {
+								   "ProjectId": IdNodeSelectedTemp,	
+							   },
+							   dataType: "json",
+							   success: function (data) {
+								   //console.log("IdNodeSelectedTemp "+IdNodeSelectedTemp)
+								   if(data!=null){
+									   //CountDistBoard= window["distributionBoardCount_"+nodeFileId] = data.CountDistBoard;
+									   
+									   
+									 var tr ="<tr>"+"<td><b>Junction Count: </b>"+data.CountJunction+"</td></tr>"	
+				                 		+"<tr>"+"<td><b>Total Mapped: </b>"+data.CountJunctionMapping+"</td></tr>"	
+				    			        +"<tr>"+"<td><b>Total Capacity: </b>"+data.countAllConnections+"</td></tr>"																
+	
+								   showBoq();
+								   $("#boq_table").append(tr);
+								   data=null;
+								   }
+							   },
+							   error: function (result) {
+								   alert("Error");
+							   }
+						   });
+					}
+				  },
 			  ]
 			});
 

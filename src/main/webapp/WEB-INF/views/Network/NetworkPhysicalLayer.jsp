@@ -1311,7 +1311,7 @@
 									<div class="col-md-6">
 										<div class="form-group">
 											<div class="input-group-prepend">
-												<span style="width: 175px;" class="input-group-text"><b>No of junctions
+												<span style="width: 175px;" class="input-group-text"><b>No of Junctions
 														 </b></span> <input type="text" id="manholeNumberJct"
 													class="form-control text-input" />
 											</div>
@@ -1490,7 +1490,7 @@
 									<div class="col-md-6">
 										<div class="form-group">
 											<div class="input-group-prepend">
-												<span style="width: 175px;" class="input-group-text"><b>No of junctions
+												<span style="width: 175px;" class="input-group-text"><b>No of Junctions
 														 </b></span> <input type="text" id="handholeNumberJct" class="form-control text-input" />
 											</div></div></div></div>
 							<div class="row">
@@ -1653,7 +1653,7 @@
 									<div class="col-md-6">
 										<div class="form-group">
 											<div class="input-group-prepend">
-												<span style="width: 175px;" class="input-group-text"><b>No of junctions
+												<span style="width: 175px;" class="input-group-text"><b>No of Junctions
 														 </b></span> <input type="text" id="NumberJct"
 													class="form-control text-input" />
 											</div>
