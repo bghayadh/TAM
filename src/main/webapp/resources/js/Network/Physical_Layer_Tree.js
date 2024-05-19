@@ -9358,16 +9358,16 @@ singleProject = new ContextMenu({
 	   });
 	 
 	 $("#saveJunction").click(function () {
-			var alertType="";
+			//var alertType="";
 			$("#JctMappingTable > tbody").find('input[name="record"]').each(function(){
 					
 			var strandIdSideA=$(this).parent().parent().children('td[name="JctStrandIdSideA"]').children('input').val();
 			var strandIdSideB =$(this).parent().parent().children('td[name="JctStrandIdSideB"]').children('input').val();
-					
+			/*		
 			if(strandIdSideA =="" || strandIdSideB==""){
 				alertType="alertEmptyStrand";
 				return false; // breaks
-			}
+			}*/
 			});
 			markersTempo="";
 			markersJctTempo="";
@@ -9379,8 +9379,8 @@ singleProject = new ContextMenu({
 				alert("Incorrect Format of latitude.");
 				return false;
 			}	
-			else if(document.getElementById("JctName").value != "" && alertType !="alertEmptyStrand" ){
-					
+			//else if(document.getElementById("JctName").value != "" && alertType !="alertEmptyStrand" ){
+			else if(document.getElementById("JctName").value != "" ){		
 				var junctionID="";
 				junctionName = document.getElementById("JctName").value;
 				junctionLong = document.getElementById("JctLong").value;
@@ -9536,26 +9536,26 @@ singleProject = new ContextMenu({
 			
 		} // End of if statement that Junction name is not empty
 		else{
-			if(alertType=="alertEmptyStrand"){
+			/*if(alertType=="alertEmptyStrand"){
 				alert("The Strand is empty! Please enter a corresponding Strand.");
 			}
-			else{
+			else{*/
 				alert("Junction Name is empty! Please enter a junction name. ");
-			}
+			//}
 		}
 	}); // End of saveJunction 
 
 	$("#saveManholeJunction").click(function () {
-		var alertType="";
+		//var alertType="";
 		$("#manholeJctMappingTable > tbody").find('input[name="record"]').each(function(){
 				
 		var strandIdSideA=$(this).parent().parent().children('td[name="mJctStrandIdSideA"]').children('input').val();
 		var strandIdSideB =$(this).parent().parent().children('td[name="mJctStrandIdSideB"]').children('input').val();
 				
-		if(strandIdSideA =="" || strandIdSideB==""){
+		/*if(strandIdSideA =="" || strandIdSideB==""){
 			alertType="alertEmptyStrand";
 			return false; // breaks
-		}
+		}*/
 		});
 		markersTempo="";
 		markersJctTempo="";
@@ -9567,8 +9567,9 @@ singleProject = new ContextMenu({
 			alert("Incorrect Format of latitude.");
 			return false;
 		}	
-		else if(document.getElementById("manholeJctName").value != "" && alertType !="alertEmptyStrand" ){
-				
+		//else if(document.getElementById("manholeJctName").value != "" && alertType !="alertEmptyStrand" ){
+		else if(document.getElementById("manholeJctName").value != "" ){		
+		
 			var junctionID="";
 			ManholeProjectID = "";
 			junctionName = document.getElementById("manholeJctName").value;
@@ -9761,24 +9762,24 @@ singleProject = new ContextMenu({
 		
 	} // End of if statement that Junction name of the manhole is not empty
 	else{
-		if(alertType=="alertEmptyStrand"){
+		/*if(alertType=="alertEmptyStrand"){
 			alert("The Strand is empty! Please enter a corresponding Strand.");
 		}
-		else{
+		else{*/
 			alert("Junction Name is empty! Please enter a junction name. ");
-		}
+		//}
 	}
 	}); // End of saveManholeJunction 
 $("#saveHandholeJunction").click(function () {
-	var alertType="";
+	//var alertType="";
 	$("#handholeJctMappingTable > tbody").find('input[name="record"]').each(function(){
 		var strandIdSideA=$(this).parent().parent().children('td[name="hJctStrandIdSideA"]').children('input').val();
 		var strandIdSideB =$(this).parent().parent().children('td[name="hJctStrandIdSideB"]').children('input').val();
 			
-		if(strandIdSideA =="" || strandIdSideB==""){
+		/*if(strandIdSideA =="" || strandIdSideB==""){
 			alertType="alertEmptyStrand";
 			return false; // breaks
-		}
+		}*/
 	});
 	markersTempoHandhole="";
 	markersTempoHandholeJct="";
@@ -9790,7 +9791,8 @@ $("#saveHandholeJunction").click(function () {
 		alert("Incorrect Format of latitude.");
 		return false;
 	}	
-	else if(document.getElementById("handholeJctName").value !="" && alertType !="alertEmptyStrand" ){
+	//else if(document.getElementById("handholeJctName").value !="" && alertType !="alertEmptyStrand" ){
+	else if(document.getElementById("handholeJctName").value !="" ){
 		
 		var junctionID="";			
 		junctionName = document.getElementById("handholeJctName").value;
@@ -9982,13 +9984,13 @@ $("#saveHandholeJunction").click(function () {
 }
 	else{
 		
-		if(alertType=="alertEmptyStrand"){
+		/*if(alertType=="alertEmptyStrand"){
 			alert("The Strand is empty! Please enter a corresponding Strand.");
 		}
-		else{
+		else{*/
 		
 			alert("Junction Name is empty! Please enter a junction name. ");
-		}
+		//}
 	
 	
 	}
