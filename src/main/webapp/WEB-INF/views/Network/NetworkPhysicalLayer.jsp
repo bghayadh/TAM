@@ -3374,14 +3374,14 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 										<div class="col-md-6">
 											<div class="form-group">
 												<div class="input-group-prepend">
-												  <button id="getSrcCity" type="button" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; width: 40%;" onclick="getSrcCity()">get Source City</button>
+												  <button id="getSrcCity" type="button" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; width: 40%;" onclick="getSrcCity()">Get Source City</button>
 												</div>
 											</div>
 										</div>
 										<div class="col-md-6">
 											<div class="form-group">
 												<div class="input-group-prepend">
-												  <button id="getDstCity" type="button" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; width: 40%;" onclick="getDstCity()">get Destination City</button>
+												  <button id="getDstCity" type="button" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; width: 40%;" onclick="getDstCity()">Get Destination City</button>
 												</div>
 											</div>
 										</div>
