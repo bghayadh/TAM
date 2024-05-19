@@ -8871,7 +8871,7 @@ public class PhysicalLayerController {
 				rtn.put("CountJunctionMapping", CountJunctionMapping);
 
 				Object countAllConnections = session.createNativeQuery(
-						"SELECT SUM (JctConnectionSum) FROM ( SELECT JUNCTION_ID,SUM(CAPACITY) as JctConnectionSum FROM JUNCTION WHERE PHYSICAL_LAYER_ID is null GROUP BY JUNCTION_ID ) ")
+						"SELECT nvl(SUM (JctConnectionSum), '0') FROM ( SELECT JUNCTION_ID,SUM(CAPACITY) as JctConnectionSum FROM JUNCTION WHERE PHYSICAL_LAYER_ID is null GROUP BY JUNCTION_ID ) ")
 						.uniqueResult();
 				rtn.put("countAllConnections", countAllConnections);
 
