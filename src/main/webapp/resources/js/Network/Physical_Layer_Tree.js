@@ -8284,7 +8284,7 @@ singleProject = new ContextMenu({
 									$("#ClientSite").append("<table style='width:100%;'><tr>"+"<td style='width: 5%;'><input type='checkbox' checked id='" +data.ClientData[i][0]+"_ClientsChechbox'></td>"+"<td style='width: 30%'>"+data.ClientData[i][0]+"</td>"
 											+"<td style='width: 35%'> "+data.ClientData[i][1]+"</td>"
 											+"<td style='width: 25%'> "+data.ClientData[i][2]+"</td></tr></table>");
-									var markerNameClt  = data.ClientData[i][0]+":" +data.ClientData[i][1]+":"+data.ClientData[i][2];
+									var markerNameClt  = data.ClientData[i][0]+":" +data.ClientData[i][1];
 									createSiteCltMarker(data.ClientData[i][0],markerNameClt,data.ClientData[i][4],data.ClientData[i][3],siteCltSrcMarkers);
 									showMarkersCheckedClientSite(data.ClientData[i][0]+'_ClientsChechbox',data.ClientData[i][0]);
 								}
@@ -8301,7 +8301,7 @@ singleProject = new ContextMenu({
 									$("#ClientSite").append("<table style='width:100%;'><tr>"+"<td style='width: 5%;'><input type='checkbox' checked id='" +data.SiteData[i][0]+"_SitesChechbox'></td>"+"<td style='width: 20%'>"+data.SiteData[i][1]+"</td>"
 											+"<td style='width: 40%'> "+data.SiteData[i][0]+"</td>"                                         
 											+"<td style='width: 35%'> "+data.SiteData[i][2]+"</td></tr></table>");	
-									var markerNameSite  = data.SiteData[i][0]+":" +data.SiteData[i][1]+":" +data.SiteData[i][2];	
+									var markerNameSite  = data.SiteData[i][0]+":" +data.SiteData[i][2]+":" +data.SiteData[i][1];	
 									createSiteCltMarker(data.SiteData[i][0],markerNameSite,data.SiteData[i][4],data.SiteData[i][3],siteCltSrcMarkers);
 							      	showMarkersCheckedClientSite(data.SiteData[i][0]+'_SitesChechbox',data.SiteData[i][0]);
 								}

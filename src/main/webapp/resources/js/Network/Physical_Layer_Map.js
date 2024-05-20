@@ -455,7 +455,7 @@ function sitesMapLabel() {
 		for(var i=0;i<allSites.length;i++) {
 			
 			if(siteCltSrcMarkers[allSites[i].split(":")[0]].getLabel()!=undefined && siteCltSrcMarkers[allSites[i].split(":")[0]].getLabel()!=null) {								
-				siteCltSrcMarkers[allSites[i].split(":")[0]].setLabel({text: siteCltSrcMarkers[allSites[i].split(":")[0]].getLabel().text +" / " + allSites[i].split(":")[0]+" : "+allSites[i].split(":")[2] , className:"marker-position-site",color:"red"});
+				siteCltSrcMarkers[allSites[i].split(":")[0]].setLabel({text: siteCltSrcMarkers[allSites[i].split(":")[0]].getLabel().text +" // " + allSites[i].split(":")[0]+" : "+allSites[i].split(":")[2] , className:"marker-position-site",color:"red"});
 			}
 			else {
 				siteCltSrcMarkers[allSites[i].split(":")[0]].setLabel({text: allSites[i].split(":")[0]+" : "+allSites[i].split(":")[2] , className:"marker-position-site",color:"red"}); 	
@@ -466,8 +466,8 @@ function sitesMapLabel() {
 	else {
 		for(var i=0;i<allSites.length;i++) {						
 			//Show sequence is checked
-			if(siteCltSrcMarkers[allSites[i].split(":")[0]].getLabel().text.includes("/") == true) {
-				siteCltSrcMarkers[allSites[i].split(":")[0]].setLabel({text: siteCltSrcMarkers[allSites[i].split(":")[0]].getLabel().text.split("/")[0] , className:"marker-position-sequence",color:"red"});
+			if(siteCltSrcMarkers[allSites[i].split(":")[0]].getLabel().text.includes("//") == true) {
+				siteCltSrcMarkers[allSites[i].split(":")[0]].setLabel({text: siteCltSrcMarkers[allSites[i].split(":")[0]].getLabel().text.split("//")[0] , className:"marker-position-sequence",color:"red"});
 			}
 			//Show sequence is unchecked
 			else {
@@ -492,10 +492,10 @@ function clientsMapLabel() {
 		for(var i=0;i<allClients.length;i++) {
 			
 			if(siteCltSrcMarkers[allClients[i].split(":")[0]].getLabel()!=undefined && siteCltSrcMarkers[allClients[i].split(":")[0]].getLabel()!=null) {
-				siteCltSrcMarkers[allClients[i].split(":")[0]].setLabel({text: siteCltSrcMarkers[allClients[i].split(":")[0]].getLabel().text +" / " + allClients[i].split(":")[0]+":"+allClients[i].split(":")[1]+":"+allClients[i].split(":")[2] , className:"marker-position-site",color:"red"});
+				siteCltSrcMarkers[allClients[i].split(":")[0]].setLabel({text: siteCltSrcMarkers[allClients[i].split(":")[0]].getLabel().text +" // " + allClients[i].split(":")[0]+":"+allClients[i].split(":")[1] , className:"marker-position-site",color:"red"});
 			}
 			else {
-				siteCltSrcMarkers[allClients[i].split(":")[0]].setLabel({text: allClients[i].split(":")[0]+":"+allClients[i].split(":")[1]+":"+allClients[i].split(":")[2] , className:"marker-position-site",color:"red"}); 	
+				siteCltSrcMarkers[allClients[i].split(":")[0]].setLabel({text: allClients[i].split(":")[0]+":"+allClients[i].split(":")[1] , className:"marker-position-site",color:"red"}); 	
 
 			}
 		
@@ -505,8 +505,8 @@ function clientsMapLabel() {
 		for(var i=0;i<allClients.length;i++) {
 			
 			//Show sequence is checked
-			if(siteCltSrcMarkers[allClients[i].split(":")[0]].getLabel().text.includes("/") == true) {
-				siteCltSrcMarkers[allClients[i].split(":")[0]].setLabel({text: siteCltSrcMarkers[allClients[i].split(":")[0]].getLabel().text.split("/")[0] , className:"marker-position-sequence",color:"red"});
+			if(siteCltSrcMarkers[allClients[i].split(":")[0]].getLabel().text.includes("//") == true) {
+				siteCltSrcMarkers[allClients[i].split(":")[0]].setLabel({text: siteCltSrcMarkers[allClients[i].split(":")[0]].getLabel().text.split("//")[0] , className:"marker-position-sequence",color:"red"});
 			}
 			//Show sequence is unchecked
 			else {
@@ -521,7 +521,6 @@ function clientsMapLabel() {
 function filterMap_Labels(className,RelativeArray,RelativeCheckboxId,labelClassName,color){
 
 	$("#"+RelativeCheckboxId).on('change',function(){
-		console.log("changed: "+RelativeCheckboxId)
 	
 		if($(this).prop("checked")==true){
 
@@ -536,11 +535,12 @@ function filterMap_Labels(className,RelativeArray,RelativeCheckboxId,labelClassN
 				
 				if(RelativeArray[$(this).attr('id')].getLabel()!=undefined && RelativeArray[$(this).attr('id')].getLabel()!=null ) {
 					
+
 				if(className=="MANHOLE" || className=="HANDHOLE") {
-						var labelText = RelativeArray[$(this).attr('id')].getLabel().text +" / " + $(this).text().split("Junctions")[0];
+						var labelText = RelativeArray[$(this).attr('id')].getLabel().text +" // " + $(this).text().split("Junctions")[0];
 					}
 					else {
-						var labelText = RelativeArray[$(this).attr('id')].getLabel().text +" / " + $(this).text();
+						var labelText = RelativeArray[$(this).attr('id')].getLabel().text +" // " + $(this).text();
 					}
 					
 					RelativeArray[$(this).attr('id')].setLabel({text: labelText , className:labelClassName,color:color});
@@ -565,8 +565,8 @@ function filterMap_Labels(className,RelativeArray,RelativeCheckboxId,labelClassN
 			
 				$('.'+className).each(function(){
 					//Show sequence is checked
-					if(RelativeArray[$(this).attr('id')].getLabel().text.includes("/") == true) {
-						RelativeArray[$(this).attr('id')].setLabel({text: RelativeArray[$(this).attr('id')].getLabel().text.split("/")[0] , className:"marker-position-sequence",color:color});
+					if(RelativeArray[$(this).attr('id')].getLabel().text.includes("//") == true) {
+						RelativeArray[$(this).attr('id')].setLabel({text: RelativeArray[$(this).attr('id')].getLabel().text.split("//")[0] , className:"marker-position-sequence",color:color});
 					}
 					//Show sequence is unchecked
 					else {

@@ -1063,7 +1063,6 @@ function Create_FiberStrandClick_Event(strandId){
 }
 
 function createSiteCltMarker(Id,Name,Lat,Long,siteCltSrcMarkers){
-	//console.log("Id is "+Id);
 	if(Id.startsWith("null")==true || Id.startsWith("AUXILIARY_PT_")==true || Id.startsWith("AUXILIARY_TUBE_PT")==true || Id.startsWith("AUXILIARY_STRAND_PT")==true
 			|| Id.startsWith("AUXILIARY_TRENCH_PT")==true || Id.startsWith("AUXILIARY_DUCT_PT")==true) {
 		var icon = iconAuxPoint;
@@ -1089,7 +1088,7 @@ function createSiteCltMarker(Id,Name,Lat,Long,siteCltSrcMarkers){
 			allClients.push(Name);
 		}
 	}		
-			
+			//console.log("allSites "+allSites)
 	markerId=Id;		
 	const pos = new google.maps.LatLng(Lat,Long);
 	var Name=Name;				         
@@ -7788,7 +7787,7 @@ function showHideRealPoints(pathID,checkSeqWindowID,action) {
 				//Show seq if site label is checked 
 				if(window[''+checkSeqWindowID+'_'+pathID] == "checked") {
 					if(allcheckedLabels.length >0 && allcheckedLabels.includes("sitesMapCheck_Labels")==true) {
-						siteCltSrcMarkers[wareID].setLabel({text: type+" / "+wareID+" : "+showHidePointsArray[x].split(":")[1], className:"marker-position-site",color:"red"});
+						siteCltSrcMarkers[wareID].setLabel({text: type+" // "+wareID+" : "+showHidePointsArray[x].split(":")[1], className:"marker-position-site",color:"red"});
 					}
 					else {
 							siteCltSrcMarkers[wareID].setLabel({text: type , className:"marker-position-sequence",color:"red"}); 
@@ -7815,7 +7814,7 @@ function showHideRealPoints(pathID,checkSeqWindowID,action) {
 				//Show seq is checked 
 				if(window[''+checkSeqWindowID+'_'+pathID] == "checked") {
 					if(allcheckedLabels.length >0 && allcheckedLabels.includes("clientsMapCheck_Labels")==true) {
-						siteCltSrcMarkers[cltID].setLabel({text: type+" / "+showHidePointsArray[x] , className:"marker-position-site",color:"red"});
+						siteCltSrcMarkers[cltID].setLabel({text: type+" // "+showHidePointsArray[x] , className:"marker-position-site",color:"red"});
 					}
 					else {
 						siteCltSrcMarkers[cltID].setLabel({text: type, className:"marker-position-sequence",color:"red"}); 
@@ -7859,7 +7858,7 @@ function showHideRealPoints(pathID,checkSeqWindowID,action) {
 					//Show seq is checked 
 					if(window[''+checkSeqWindowID+'_'+pathID] == "checked") {
 						if(allcheckedLabels.length >0 && allcheckedLabels.includes("manholesMapCheck_Labels")==true) {
-							markersManhole[manID].setLabel({text: type +" / "+ showHidePointsArray[x].split(":")[1], className:"marker-position-manhole",color:"red"});
+							markersManhole[manID].setLabel({text: type +" // "+ showHidePointsArray[x].split(":")[1], className:"marker-position-manhole",color:"red"});
 						}
 						else {
 							markersManhole[manID].setLabel({text: type , className:"marker-position-sequence",color:"red"}); 
@@ -7891,7 +7890,7 @@ function showHideRealPoints(pathID,checkSeqWindowID,action) {
 					//Show Sequence is checked
 					if(window[''+checkSeqWindowID+'_'+pathID] == "checked") {
 						if(allcheckedLabels.length >0 && allcheckedLabels.includes("handholesMapCheck_Labels")==true) {
-							markersHandhole[handID].setLabel({text: type +" / "+ showHidePointsArray[x].split(":")[1], className:"marker-position-handhole",color:"#E5C523"});
+							markersHandhole[handID].setLabel({text: type +" // "+ showHidePointsArray[x].split(":")[1], className:"marker-position-handhole",color:"#E5C523"});
 						}
 						else {
 							markersHandhole[handID].setLabel({text: type , className:"marker-position-sequence",color:"#E5C523"}); 
@@ -7931,7 +7930,7 @@ function showHideRealPoints(pathID,checkSeqWindowID,action) {
 					}
 					if(window[''+checkSeqWindowID+'_'+pathID] == "checked") {
 						if(allcheckedLabels.length >0 && allcheckedLabels.includes("dBMapCheck_Labels")==true) {
-							markersDistBoard[dbID].setLabel({text: type+" / "+ showHidePointsArray[x].split(":")[1], className:"marker-position-dB",color:"#5665F9"});
+							markersDistBoard[dbID].setLabel({text: type+" // "+ showHidePointsArray[x].split(":")[1], className:"marker-position-dB",color:"#5665F9"});
 						}
 						else {
 							markersDistBoard[dbID].setLabel({text: type , className:"marker-position-sequence",color:"#5665F9"}); 
@@ -8067,7 +8066,6 @@ function showHideAllSequence(pathID,action) {
 			else {
 				var type =String(x);
 			}
-			console.log("The type is "+type);
 			
 			
 			if(window["mapPointsNames_"+pathID][x].startsWith("WARE_")==true) {
@@ -8075,7 +8073,7 @@ function showHideAllSequence(pathID,action) {
 				if(siteCltSrcMarkers[wareID]) {
 					//if(siteCltSrcMarkers[wareID].getLabel()!="undefined" && siteCltSrcMarkers[wareID].getLabel()!=null) {
 					if(allcheckedLabels.length >0 && allcheckedLabels.includes("sitesMapCheck_Labels")==true) {	
-						siteCltSrcMarkers[wareID].setLabel({text: type+" / "+wareID+":"+window["mapPointsNames_"+pathID][x].split(":")[1], className:"marker-position-site",color:"red"});
+						siteCltSrcMarkers[wareID].setLabel({text: type+" // "+wareID+":"+window["mapPointsNames_"+pathID][x].split(":")[1], className:"marker-position-site",color:"red"});
 					}
 					else {
 						siteCltSrcMarkers[wareID].setLabel({text: type , className:"marker-position-sequence",color:"red"});
@@ -8088,7 +8086,7 @@ function showHideAllSequence(pathID,action) {
 				if(siteCltSrcMarkers[cltID]) {
 					//if(siteCltSrcMarkers[wareID].getLabel()!="undefined" && siteCltSrcMarkers[wareID].getLabel()!=null) {
 					if(allcheckedLabels.length >0 && allcheckedLabels.includes("clientsMapCheck_Labels")==true) {	
-						siteCltSrcMarkers[cltID].setLabel({text: type+" / "+window["mapPointsNames_"+pathID][x], className:"marker-position-site",color:"red"});
+						siteCltSrcMarkers[cltID].setLabel({text: type+" // "+window["mapPointsNames_"+pathID][x], className:"marker-position-site",color:"red"});
 					}
 					else {
 						siteCltSrcMarkers[cltID].setLabel({text: type , className:"marker-position-sequence",color:"red"});
@@ -8118,7 +8116,7 @@ function showHideAllSequence(pathID,action) {
 				if(markersManhole[manID]){
 					//if(markersManhole[manID].getLabel()!=undefined && markersManhole[auxiliaryArray[A][4]].getLabel()!=null) {
 					if(allcheckedLabels.length >0 && allcheckedLabels.includes("manholesMapCheck_Labels")==true) {	
-						markersManhole[manID].setLabel({text: type+" / "+ window["mapPointsNames_"+pathID][x].split(":")[1], className:"marker-position-manhole",color:"red"});
+						markersManhole[manID].setLabel({text: type+" // "+ window["mapPointsNames_"+pathID][x].split(":")[1], className:"marker-position-manhole",color:"red"});
 					}
 					else {
 						markersManhole[manID].setLabel({text: type, className:"marker-position-sequence",color:"red"});											
@@ -8130,7 +8128,7 @@ function showHideAllSequence(pathID,action) {
 				if(markersHandhole[handID]){
 					//if(markersManhole[manID].getLabel()!=undefined && markersManhole[auxiliaryArray[A][4]].getLabel()!=null) {
 					if(allcheckedLabels.length >0 && allcheckedLabels.includes("handholesMapCheck_Labels")==true) {	
-						markersHandhole[handID].setLabel({text: type+" / "+ window["mapPointsNames_"+pathID][x].split(":")[1], className:"marker-position-handhole",color:"#E5C523"});
+						markersHandhole[handID].setLabel({text: type+" // "+ window["mapPointsNames_"+pathID][x].split(":")[1], className:"marker-position-handhole",color:"#E5C523"});
 					}
 					else {
 						markersHandhole[handID].setLabel({text: type, className:"marker-position-sequence",color:"#E5C523"});											
@@ -8141,7 +8139,7 @@ function showHideAllSequence(pathID,action) {
 			var dbID = window["mapPointsNames_"+pathID][x].split(":")[0];
 			if(markersDistBoard[dbID]){
 				if(allcheckedLabels.length >0 && allcheckedLabels.includes("dBMapCheck_Labels")==true) {	
-					markersDistBoard[dbID].setLabel({text: type+" / "+ window["mapPointsNames_"+pathID][x].split(":")[1], className:"marker-position-dB",color:"#5665F9"});
+					markersDistBoard[dbID].setLabel({text: type+" // "+ window["mapPointsNames_"+pathID][x].split(":")[1], className:"marker-position-dB",color:"#5665F9"});
 				}
 				else {
 					markersDistBoard[dbID].setLabel({text: type, className:"marker-position-sequence",color:"#5665F9"});											
@@ -8309,13 +8307,12 @@ if(window["mapPointsNames_"+pathID] != undefined) {
 			if(showHidePointsArray[x].startsWith("WARE_")==true) {
 				var wareID = showHidePointsArray[x].split(":")[0];
 				var longLat = String(window["mapPoints_"+pathID][x]).replaceAll(/[( )]/g, '');
-				
 				createSiteCltMarker(wareID,showHidePointsArray[x],longLat.split(",")[0],longLat.split(",")[1],siteCltSrcMarkers);
 			
 				//Show seq if site label is checked 
 				if(window[''+checkSeqWindowID+'_'+pathID] == "checked") {
 					if(allcheckedLabels.length >0 && allcheckedLabels.includes("sitesMapCheck_Labels")==true) {
-						siteCltSrcMarkers[wareID].setLabel({text: type+" / "+wareID+" : "+showHidePointsArray[x].split(":")[1], className:"marker-position-site",color:"red"});
+						siteCltSrcMarkers[wareID].setLabel({text: type+" // "+wareID+" : "+showHidePointsArray[x].split(":")[2], className:"marker-position-site",color:"red"});
 					}
 					else {
 							siteCltSrcMarkers[wareID].setLabel({text: type , className:"marker-position-sequence",color:"red"}); 
@@ -8324,7 +8321,7 @@ if(window["mapPointsNames_"+pathID] != undefined) {
 				//Show Seq is unchecked
 				else {
 					if(allcheckedLabels.length >0 && allcheckedLabels.includes("sitesMapCheck_Labels")==true) {
-						siteCltSrcMarkers[wareID].setLabel({text: wareID+" : "+showHidePointsArray[x].split(":")[1], className:"marker-position-site",color:"red"});
+						siteCltSrcMarkers[wareID].setLabel({text: wareID+" : "+showHidePointsArray[x].split(":")[2], className:"marker-position-site",color:"red"});
 					}
 					else {
 						if(siteCltSrcMarkers[wareID].getLabel()!="undefined") {
@@ -8342,7 +8339,7 @@ if(window["mapPointsNames_"+pathID] != undefined) {
 				//Show seq is checked 
 				if(window[''+checkSeqWindowID+'_'+pathID] == "checked") {
 					if(allcheckedLabels.length >0 && allcheckedLabels.includes("clientsMapCheck_Labels")==true) {
-						siteCltSrcMarkers[cltID].setLabel({text: type+" / "+showHidePointsArray[x], className:"marker-position-site",color:"red"});
+						siteCltSrcMarkers[cltID].setLabel({text: type+" // "+showHidePointsArray[x], className:"marker-position-site",color:"red"});
 					}
 					else {
 						siteCltSrcMarkers[cltID].setLabel({text: type, className:"marker-position-sequence",color:"red"}); 
@@ -8386,7 +8383,7 @@ if(window["mapPointsNames_"+pathID] != undefined) {
 					//Show seq is checked 
 					if(window[''+checkSeqWindowID+'_'+pathID] == "checked") {
 						if(allcheckedLabels.length >0 && allcheckedLabels.includes("manholesMapCheck_Labels")==true) {
-							markersManhole[manID].setLabel({text: type +" / "+ showHidePointsArray[x].split(":")[1], className:"marker-position-manhole",color:"red"});
+							markersManhole[manID].setLabel({text: type +" // "+ showHidePointsArray[x].split(":")[1], className:"marker-position-manhole",color:"red"});
 						}
 						else {
 							markersManhole[manID].setLabel({text: type , className:"marker-position-sequence",color:"red"}); 
@@ -8418,7 +8415,7 @@ if(window["mapPointsNames_"+pathID] != undefined) {
 					//Show Sequence is checked
 					if(window[''+checkSeqWindowID+'_'+pathID] == "checked") {
 						if(allcheckedLabels.length >0 && allcheckedLabels.includes("handholesMapCheck_Labels")==true) {
-							markersHandhole[handID].setLabel({text: type +" / "+ showHidePointsArray[x].split(":")[1], className:"marker-position-handhole",color:"#E5C523"});
+							markersHandhole[handID].setLabel({text: type +" // "+ showHidePointsArray[x].split(":")[1], className:"marker-position-handhole",color:"#E5C523"});
 						}
 						else {
 							markersHandhole[handID].setLabel({text: type , className:"marker-position-sequence",color:"#E5C523"}); 
@@ -8458,7 +8455,7 @@ if(window["mapPointsNames_"+pathID] != undefined) {
 					}
 					if(window[''+checkSeqWindowID+'_'+pathID] == "checked") {
 						if(allcheckedLabels.length >0 && allcheckedLabels.includes("dBMapCheck_Labels")==true) {
-							markersDistBoard[dbID].setLabel({text: type+" / "+ showHidePointsArray[x].split(":")[1], className:"marker-position-dB",color:"#5665F9"});
+							markersDistBoard[dbID].setLabel({text: type+" // "+ showHidePointsArray[x].split(":")[1], className:"marker-position-dB",color:"#5665F9"});
 						}
 						else {
 							markersDistBoard[dbID].setLabel({text: type , className:"marker-position-sequence",color:"#5665F9"}); 
