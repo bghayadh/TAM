@@ -918,6 +918,14 @@ public class WarehouseController {
 					clusterID = cluster.substring(0, cluster.indexOf(":"));
 					clusterName = cluster.substring((cluster.indexOf(":")) + 1, cluster.length());
 				}
+				int population;
+				if(request.getParameter("population")=="" || request.getParameter("population")==null) {
+					population=0;
+				}
+				else {
+					population= Integer.parseInt(request.getParameter("population"));
+				}
+				
 
 				Wareh.setWareID(wareID);
 				Wareh.setWcreationDate(
@@ -941,7 +949,7 @@ public class WarehouseController {
 				Wareh.setClusterName(clusterName);
 				Wareh.setAddress(request.getParameter("wareAddress"));
 				Wareh.setWhStatus(request.getParameter("status"));
-				Wareh.setPopulation(Integer.parseInt(request.getParameter("population")));
+				Wareh.setPopulation(population);
 
 				session.saveOrUpdate(Wareh);
 				session.flush();
@@ -1092,6 +1100,7 @@ public class WarehouseController {
 
 			} catch (Exception e) {
 				System.out.println("catch messsage is " + e.getMessage());
+				e.printStackTrace();
 			}
 
 			finally {

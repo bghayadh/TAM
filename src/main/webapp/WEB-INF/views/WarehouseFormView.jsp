@@ -438,7 +438,7 @@ select {
 							</button>
 
 						</div>
-                 <button type="button" id="saveButton" 
+                 <button type="button" id="addButton" 
 				onclick='window.location.href = "${pageContext.request.contextPath}/WarehouseFormView?type=addNew"'
 						class="btn btn-primary BtnActive">
 						<i class="fa fa-plus"></i> Add
@@ -2719,7 +2719,7 @@ function saverowsintables()
 			},
 			success : function(data) {
 
-				$('#wlstmodifdate').val(data.wlastModifieddate);
+				//$('#wlstmodifdate').val(data.wlastModifieddate);
 				$("#wareID").val(data.wareID);
 				var param ="${pageContext.request.contextPath}/WarehouseFormView?wareID="+$("#wareID").val()+"&NavAction=2";
 				location.replace(param);
