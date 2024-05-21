@@ -8311,7 +8311,21 @@ singleProject = new ContextMenu({
 							}
 						  });
 						}
+					},
+				 /////////////////////////////////7777777
+				 {'icon': 'paste', 'name': 'Show Related Path', action: () => {
+						//if (flag == 0 ){// in order to build for the first time the main fiber
+							//getFiberPath("showPath",'/manHandHolePath',selectedManIdContext, "<tr><td><b>Manhole ID:</b>"+selectedManIdContext+"</td></tr>");
+							//console.log("getFiberPath")
+						//}else{
+							showPath('/showRelatedPath',selectedFiberContext, "<tr><td><b>Fiber ID:</b>"+selectedFiberContext+"</td></tr>");
+							console.log("showPath "+selectedFiberContext)
+						//}
+						
+						
 					}
+				}
+				 ////////////////////////////////7777777
 			  ] // Closing the item array of singleFiber ContextMenu
 		});
 

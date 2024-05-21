@@ -3744,6 +3744,100 @@ public class PhysicalLayerController {
 		}
 		return rtn;
 	}
+	
+	//////////////////////////////77777777777777
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/showRelatedPath", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> showRelatedPath(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) throws JsonProcessingException {
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		Session session = null;
+		Transaction tx = null;
+		session = AlmDbSession.getInstance().getSession();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+
+			try {
+				String dataSel = request.getParameter("dataSel");
+
+				// DATA FOR BACKBONE NETWORKLEVEL
+				List<Object[]> BackboneCableData = session.createNativeQuery(
+						"select distinct a.FIBER_ID_SIDE_A,a.FIBER_NAME_SIDE_A,b.FIBER_NETWORK_LEVEL,b.FIBER_OWNER"
+						+ " from JUNCTION_MAPPING a left join FIBER_CABLES b on a.FIBER_ID_SIDE_A=b.FIBER_CABLE_ID"
+						+ " where FIBER_ID_SIDE_B='"+dataSel+"' and b.FIBER_NETWORK_LEVEL='backbone'"
+						+ " union "
+						+ " select distinct a.FIBER_ID_SIDE_B,a.FIBER_NAME_SIDE_B,b.FIBER_NETWORK_LEVEL,b.FIBER_OWNER"
+						+ " from JUNCTION_MAPPING a left join FIBER_CABLES b on a.FIBER_ID_SIDE_B=b.FIBER_CABLE_ID"
+						+ " where a.FIBER_ID_SIDE_A='"+dataSel+"' and b.FIBER_NETWORK_LEVEL='backbone'")
+						.getResultList();
+				rtn.put("BackboneCableData", BackboneCableData);
+				rtn.put("BackboneTubeData", "");
+				rtn.put("BackboneStrandData", "");
+
+				// DATA FOR METRO NETWORKLEVEL
+				List<Object[]> MetroCableData = session.createNativeQuery(
+						"select distinct a.FIBER_ID_SIDE_A,a.FIBER_NAME_SIDE_A,b.FIBER_NETWORK_LEVEL,b.FIBER_OWNER"
+						+ " from JUNCTION_MAPPING a left join FIBER_CABLES b on a.FIBER_ID_SIDE_A=b.FIBER_CABLE_ID"
+						+ " where FIBER_ID_SIDE_B='"+dataSel+"' and b.FIBER_NETWORK_LEVEL='metro'"
+						+ " union"
+						+ " select distinct a.FIBER_ID_SIDE_B,a.FIBER_NAME_SIDE_B,b.FIBER_NETWORK_LEVEL,b.FIBER_OWNER"
+						+ " from JUNCTION_MAPPING a left join FIBER_CABLES b on a.FIBER_ID_SIDE_B=b.FIBER_CABLE_ID"
+						+ " where a.FIBER_ID_SIDE_A='"+dataSel+"' and b.FIBER_NETWORK_LEVEL='metro'")
+						.getResultList();
+		
+				rtn.put("MetroCableData", MetroCableData);
+				rtn.put("MetroTubeData", "");
+				rtn.put("MetroStrandData", "");
+
+				// DATA FOR Access NETWORKLEVEL
+				List<Object[]> DistributionCableData = session.createNativeQuery(
+						"select distinct a.FIBER_ID_SIDE_A,a.FIBER_NAME_SIDE_A,b.FIBER_NETWORK_LEVEL,b.FIBER_OWNER"
+						+ " from JUNCTION_MAPPING a left join FIBER_CABLES b on a.FIBER_ID_SIDE_A=b.FIBER_CABLE_ID"
+						+ " where FIBER_ID_SIDE_B='"+dataSel+"' and b.FIBER_NETWORK_LEVEL='access'"
+						+ " union"
+						+ " select distinct a.FIBER_ID_SIDE_B,a.FIBER_NAME_SIDE_B,b.FIBER_NETWORK_LEVEL,b.FIBER_OWNER"
+						+ " from JUNCTION_MAPPING a left join FIBER_CABLES b on a.FIBER_ID_SIDE_B=b.FIBER_CABLE_ID"
+						+ " where a.FIBER_ID_SIDE_A='"+dataSel+"' and b.FIBER_NETWORK_LEVEL='access'")
+						.getResultList();
+				
+				rtn.put("DistributionCableData", DistributionCableData);
+				rtn.put("DistributionTubeData", "");
+				rtn.put("DistributionStrandData", "");
+
+			} catch (Exception e) {
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in showRelatedPath due to \n " + exceptionAsString);
+				logger.info("Error in showRelatedPath due to \n " + exceptionAsString);
+				rtn.put("BackboneCableData", null);
+				rtn.put("BackboneTubeData", null);
+				rtn.put("BackboneStrandData", null);
+				rtn.put("MetroCableData", null);
+				rtn.put("MetroTubeData", null);
+				rtn.put("MetroStrandData", null);
+				rtn.put("DistributionCableData", null);
+				rtn.put("DistributionTubeData", null);
+				rtn.put("DistributionStrandData", null);
+
+			} finally {
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+
+				}
+			}
+
+		}
+		return rtn;
+	}
+	//////////////////////////////777777777777
 
 	@RequestMapping(value = "/boqManhole", method = RequestMethod.GET)
 	@ResponseBody
