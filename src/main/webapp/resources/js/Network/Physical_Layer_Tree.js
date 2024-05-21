@@ -6661,7 +6661,7 @@ singleProject = new ContextMenu({
 					newTextHJct.setAttributeNS(null,"x",(colNum*100)+55);     
 					newTextHJct.setAttributeNS(null,"y",(rowNum*100)+50); 
 					newTextHJct.setAttributeNS(null,"class","text");
-					newTextHJct.setAttributeNS(null,"font-size","10");
+					newTextHJct.setAttributeNS(null,"font-size","9");
 					newTextHJct.setAttributeNS(null,"stroke","#00757C");	
 					newTextHJct.setAttributeNS(null,"cursor","pointer");	
 					newTextHJct.setAttributeNS(null,"class","sideAStrandHandJct");
@@ -6675,7 +6675,7 @@ singleProject = new ContextMenu({
 					downTextHJct.setAttributeNS(null,"x",(colNum*100)+55);     
 					downTextHJct.setAttributeNS(null,"y",(rowNum*100)+120); 
 					downTextHJct.setAttributeNS(null,"class","text");
-					downTextHJct.setAttributeNS(null,"font-size","10");
+					downTextHJct.setAttributeNS(null,"font-size","9");
 					downTextHJct.setAttributeNS(null,"stroke","#00757C");
 					downTextHJct.setAttributeNS(null,"cursor","pointer");	
 					downTextHJct.setAttributeNS(null,"class","sideBStrandHandJct");
