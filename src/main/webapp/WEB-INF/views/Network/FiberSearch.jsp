@@ -39,6 +39,10 @@
                 background-color: #FFD966 !important;
                 color: #00757c !important;
             }
+.custom-title a {
+    position: relative;
+    top: -9px; /* Adjust this value to push the "Customer Info" text up */
+}
 
 </style>
 
@@ -115,18 +119,64 @@
 													<span style="min-width: 90px; font-size: 12px;  width: 100%;" class="input-group-text"><b>Circle Range </b> 
 													<input type='checkbox' id="circleRange" style='position: relative; margin-left: 10px' checked  ></span>
 												</div></div></div>
-									<div class="col-sm-2" style="min-width:200px;">
+									<div class="col-sm-5" style="min-width: 200px;">
+                                   <div class="form-group">
+                                <div class="input-group-prepend">
+                               <span style="display: flex; align-items: center; justify-content: center; min-width: 90px; font-size: 12px; width: 100%; text-align: center;" class="input-group-text"><b>Start/End Coordinate</b>
+                          <input type='checkbox' id="StartEnd" style='position: relative; margin-left: 5px;'>
+                        </span>
+                          </div>
+                           </div>
+                          </div>
+
+									<div class="col-sm-5" style="min-width: 200px;">
+    <div class="form-group">
+        <div class="input-group-prepend">
+            <span style="display: flex; align-items: center; justify-content: center; min-width: 90px; font-size: 12px; width: 100%;" class="input-group-text"><b>Get Related Points</b>
+                <input type='checkbox' id="getRelatedPoints" style='position: relative; margin-left: 5px;' value='0'>
+            </span>
+        </div>
+    </div>
+</div>
+	
+									</div>
+									<div class="row" id="row_circleRange">
+										<div class="col-sm-2" style="" id="setCoordDiv">
+											<div class="form-group">
+												<button id="setCoordBtn" title="Get Coordinate From Map" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; width: 100%;">Set Coordinate</button>
+											</div>
+										</div>
+										<div class="col-sm-5" style="" id="closestLongDiv">
 											<div class="form-group">
 												<div class="input-group-prepend">
-													<span style="min-width: 90px; font-size: 12px; width:100%;" class="input-group-text" ><b>Start/End Coordinate </b> 
-													<input type='checkbox' id="StartEnd" style='position: relative; margin-left:15px' ></span>
-												</div></div></div>
-									<div class="col-sm-2" style="min-width:200px;margin-left:40px;">
-									<div class="form-group"><div class="input-group-prepend">
-											<span style="min-width: 90px; font-size: 12px; width:100%;" class="input-group-text" ><b>Get Related Points</b> 
-											<input type='checkbox' id="getRelatedPoints" style='position: relative; margin-left:25px'  value='0'></span>
-									</div></div></div>	
-									<div class="col-sm-3" id="NoOfPoints" style="margin-left:34px">
+													<span style="font-size: 12px;" class="input-group-text"><b>Longitude</b></span>
+													<input type="text" id="closestLongPoint" class="form-control text-input" />
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-5" style="" id="closestLatDiv">
+											<div class="form-group" >
+												<div class="input-group-prepend">
+													<span style="font-size: 12px;" class="input-group-text"><b>Latitude</b></span>
+													<input type="text" id="closestLatPoint"	class="form-control text-input" />
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-2" style="">
+											<div class="form-group">
+												<button id="viewNearestp" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; width: 100%;">View Nearest</button>
+											</div>
+										</div>
+										<div class="col-sm-5" id="closestDistanceRange">
+											<div class="form-group">
+												<div class="input-group-prepend" style="">
+													<span style="font-size: 12px;" class="input-group-text"><b>Distance Range</b></span> <input type="text" id="closestDisRange" class="form-control text-input" />
+												</div>
+											</div>
+										</div>
+																			<div class="col-sm-5" id="NoOfPoints">
 											<div class="form-group">
 												<div class="input-group-prepend" style="">
 													<span style="font-size: 12px;" class="input-group-text"><b>No Of Points</b></span> <select class="form-control" name="noP" id="noP">
@@ -138,36 +188,7 @@
 												</div>
 											</div>
 										</div>																		
-									</div>
-									<div class="row" id="row_circleRange">
-										<div class="col-sm-2" style="" id="setCoordDiv">
-											<div class="form-group">
-												<button id="setCoordBtn" title="Get Coordinate From Map" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; width: 100%;">Set Coordinate</button>
-											</div>
-										</div>
-										<div class="col-sm-3" style="" id="closestLongDiv">
-											<div class="form-group">
-												<div class="input-group-prepend">
-													<span style="font-size: 12px;" class="input-group-text"><b>Longitude</b></span>
-													<input type="text" id="closestLongPoint" class="form-control text-input" />
-												</div>
-											</div>
-										</div>
-										<div class="col-sm-3" style="" id="closestLatDiv">
-											<div class="form-group" >
-												<div class="input-group-prepend">
-													<span style="font-size: 12px;" class="input-group-text"><b>Latitude</b></span>
-													<input type="text" id="closestLatPoint"	class="form-control text-input" />
-												</div>
-											</div>
-										</div>
-										<div class="col-sm-3" id="closestDistanceRange">
-											<div class="form-group">
-												<div class="input-group-prepend" style="">
-													<span style="font-size: 12px;" class="input-group-text"><b>Distance Range</b></span> <input type="text" id="closestDisRange" class="form-control text-input" />
-												</div>
-											</div>
-										</div>
+										
 										</div>
 										<div class="row" id="row_setStart">
 										<div class="col-sm-2" style="display:none;" id="setStartPointDiv">
@@ -225,13 +246,16 @@
 						aria-multiselectable="true">
 						<div class="panel panel-default" style="margin-bottom: 3px;">
 
-							<div class="panel-heading " role="tab" id="headingOne">
-								<h4 class="panel-title">
-									<a role="button" data-toggle="collapse"
-										data-parent="#accordion" href="#collapseThree"
-										aria-expanded="true" aria-controls="collapseThree">Customer Info </a>
-								</h4>
-							</div>
+							<div class="panel-heading" role="tab" id="headingOne">
+    <h4 class="panel-title custom-title">
+        <a role="button" data-toggle="collapse"
+            data-parent="#accordion" href="#collapseThree"
+            aria-expanded="true" aria-controls="collapseThree">Customer Info</a>
+    </h4>
+</div>
+
+
+
 							<div id="collapseThree" class="panel-collapse collapse show"
 								role="tabpanel" aria-labelledby="headingOne">
 								<div class="panel-body-info"
@@ -240,11 +264,7 @@
 									
 
 									<div class="row">
-									<div class="col-sm-2" style="">
-											<div class="form-group">
-												<button id="viewNearestp" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; width: 100%;">View Nearest</button>
-											</div>
-										</div>
+									
 										<div class="col-sm-3" id="customerNameID">
 											<div class="form-group">
 												<div class="input-group-prepend" style="width: auto;">
