@@ -13395,7 +13395,7 @@ function sortingByLineOfSite(srcLng,srcLat,dstLng,dstLat,tableID,auxiliaryLat,au
 			//Calculate the distance from source to each Aux point in array 
 			var sourceFirstAuxLngth = haversine_distance(sourceLat,sourceLng,latAux,lngAux);				
 			
-			if(sourceFirstAuxLngth <= srcAuxMinLength) {
+			if(parseFloat(sourceFirstAuxLngth) <= parseFloat(srcAuxMinLength)) {
 				srcAuxMinLength=sourceFirstAuxLngth;
 				indexToSplice = count;
 			}
