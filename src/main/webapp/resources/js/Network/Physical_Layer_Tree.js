@@ -6115,13 +6115,13 @@ singleProject = new ContextMenu({
 					newTextJct.setAttributeNS(null,"x",(colNum*100)+55);     
 					newTextJct.setAttributeNS(null,"y",(rowNum*100)+50); 
 					newTextJct.setAttributeNS(null,"class","text");
-					newTextJct.setAttributeNS(null,"font-size","10");
+					newTextJct.setAttributeNS(null,"font-size","9");
 					newTextJct.setAttributeNS(null,"stroke","#00757C");	
 					newTextJct.setAttributeNS(null,"cursor","pointer");	
 					newTextJct.setAttributeNS(null,"class","sideAStrand");
 					newTextJct.setAttributeNS(null,"id","strndSideA-"+data.junctionMappingPts[i][1]);
 					
-					var textNodeJct = document.createTextNode(data.junctionMappingPts[i][2]);
+					var textNodeJct = document.createTextNode(data.junctionMappingPts[i][16]);
 					newTextJct.appendChild(textNodeJct);
 					document.getElementById("mysvgJct").appendChild(newTextJct);
 					
@@ -6131,13 +6131,13 @@ singleProject = new ContextMenu({
 					downTextJct.setAttributeNS(null,"x",(colNum*100)+55);     
 					downTextJct.setAttributeNS(null,"y",(rowNum*100)+120); 
 					downTextJct.setAttributeNS(null,"class","text");
-					downTextJct.setAttributeNS(null,"font-size","10");
+					downTextJct.setAttributeNS(null,"font-size","9");
 					downTextJct.setAttributeNS(null,"stroke","#00757C");
 					downTextJct.setAttributeNS(null,"cursor","pointer");	
 					downTextJct.setAttributeNS(null,"class","sideBStrand");
 					downTextJct.setAttributeNS(null,"id","strndSideB-"+data.junctionMappingPts[i][1]);
 						
-					var downTextNodeJct = document.createTextNode(data.junctionMappingPts[i][8]);
+					var downTextNodeJct = document.createTextNode(data.junctionMappingPts[i][17]);
 					downTextJct.appendChild(downTextNodeJct);
 					document.getElementById("mysvgJct").appendChild(downTextJct);
 					 								
@@ -6222,12 +6222,12 @@ singleProject = new ContextMenu({
 					type=window["JCT_"+jctMappingId][3];
 					
 					$("#JctKey").html("<b style='text-decoration: underline;color: #00757C'>Side A: </b>");
-					$("#JctStrandSideA").html("<b style='white-space:nowrap;'>Strand: "+window['JCT_'+jctMappingId][2]+" / "+window['JCT_'+jctMappingId][3]+" </b>");
-					$("#JctTubeSideA").html("<b style='white-space:nowrap;' >Tube: "+window['JCT_'+jctMappingId][4]+" / "+window['JCT_'+jctMappingId][5]+" </b>");
+					$("#JctStrandSideA").html("<b style='white-space:nowrap;'>Strand: "+window['JCT_'+jctMappingId][2]+" / "+window['JCT_'+jctMappingId][3]+" / "+window['JCT_'+jctMappingId][19]+" </b>");
+					$("#JctTubeSideA").html("<b style='white-space:nowrap;' >Tube: "+window['JCT_'+jctMappingId][4]+" / "+window['JCT_'+jctMappingId][5]+" / "+window['JCT_'+jctMappingId][18]+" </b>");
 					$("#JctFiberSideA").html("<b style='white-space:nowrap;' >Fiber:"+window['JCT_'+jctMappingId][6]+" / "+window['JCT_'+jctMappingId][7]+" </b>");
 					$("#JctKeySideB").html("<b style='text-decoration: underline;color: #00757C'>Side B: </b>");
-					$("#JctStrandSideB").html("<b style='white-space:nowrap;' >Strand: "+window['JCT_'+jctMappingId][8]+" / "+window['JCT_'+jctMappingId][9]+" </b>");
-					$("#JctTubeSideB").html("<b style='white-space:nowrap;' >Tube: "+window['JCT_'+jctMappingId][10]+" / "+window['JCT_'+jctMappingId][11]+"</b>");
+					$("#JctStrandSideB").html("<b style='white-space:nowrap;' >Strand: "+window['JCT_'+jctMappingId][8]+" / "+window['JCT_'+jctMappingId][9]+" / "+window['JCT_'+jctMappingId][21]+" </b>");
+					$("#JctTubeSideB").html("<b style='white-space:nowrap;' >Tube: "+window['JCT_'+jctMappingId][10]+" / "+window['JCT_'+jctMappingId][11]+" / "+window['JCT_'+jctMappingId][20]+"</b>");
 					$("#JctFiberSideB").html("<b style='white-space:nowrap;' >Fiber: "+window['JCT_'+jctMappingId][12]+" / "+window['JCT_'+jctMappingId][13]+"</b>");					
 					
 					$("#AssignedJct_TitleId").text("Junction: "+data.junctionMappingPts[0][14]);	
@@ -6666,7 +6666,7 @@ singleProject = new ContextMenu({
 					newTextHJct.setAttributeNS(null,"cursor","pointer");	
 					newTextHJct.setAttributeNS(null,"class","sideAStrandHandJct");
 					newTextHJct.setAttributeNS(null,"id","strndHandJctSideA-"+data.junctionMappingPts[i][1]);
-					var textNodeHJct = document.createTextNode(data.junctionMappingPts[i][2]);
+					var textNodeHJct = document.createTextNode(data.junctionMappingPts[i][16]);
 					newTextHJct.appendChild(textNodeHJct);
 					document.getElementById("svgHandJct").appendChild(newTextHJct);
 					
@@ -6681,7 +6681,7 @@ singleProject = new ContextMenu({
 					downTextHJct.setAttributeNS(null,"class","sideBStrandHandJct");
 					downTextHJct.setAttributeNS(null,"id","strndHandJctSideB-"+data.junctionMappingPts[i][1]);
 						
-					var downTextNodeHJct = document.createTextNode(data.junctionMappingPts[i][8]);
+					var downTextNodeHJct = document.createTextNode(data.junctionMappingPts[i][17]);
 					downTextHJct.appendChild(downTextNodeHJct);
 					document.getElementById("svgHandJct").appendChild(downTextHJct);
 					 			 	
@@ -6751,12 +6751,12 @@ singleProject = new ContextMenu({
 					jctMappingId=jctMappingId[1];
 													
 					$("#HandJctKey").html("<b style='text-decoration: underline;color: #00757C'>Side A: </b>");
-					$("#handholeJctStrandSideA").html("<b style='white-space:nowrap;' >Strand: "+window['JCT_'+jctMappingId][2]+" / "+window['JCT_'+jctMappingId][3]+" </b>");
-					$("#handholeJctTubeSideA").html("<b style='white-space:nowrap;' >Tube: "+window['JCT_'+jctMappingId][4]+" / "+window['JCT_'+jctMappingId][5]+" </b>");
+					$("#handholeJctStrandSideA").html("<b style='white-space:nowrap;' >Strand: "+window['JCT_'+jctMappingId][2]+" / "+window['JCT_'+jctMappingId][3]+" / "+window['JCT_'+jctMappingId][19]+" </b>");
+					$("#handholeJctTubeSideA").html("<b style='white-space:nowrap;' >Tube: "+window['JCT_'+jctMappingId][4]+" / "+window['JCT_'+jctMappingId][5]+" / "+window['JCT_'+jctMappingId][18]+" </b>");
 					$("#handholeJctFiberSideA").html("<b style='white-space:nowrap;' >Fiber: "+window['JCT_'+jctMappingId][6]+" / "+window['JCT_'+jctMappingId][7]+" </b>");
 					$("#handholeJctKeySideB").html("<b style='text-decoration: underline;color: #00757C'>Side B: </b>");
-					$("#handholeJctStrandSideB").html("<b style='white-space:nowrap;' >Strand: "+window['JCT_'+jctMappingId][8]+" / "+window['JCT_'+jctMappingId][9]+" </b>");
-					$("#handholeJctTubeSideB").html("<b style='white-space:nowrap;' >Tube: "+window['JCT_'+jctMappingId][10]+" / "+window['JCT_'+jctMappingId][11]+" </b>");
+					$("#handholeJctStrandSideB").html("<b style='white-space:nowrap;' >Strand: "+window['JCT_'+jctMappingId][8]+" / "+window['JCT_'+jctMappingId][9]+" / "+window['JCT_'+jctMappingId][21]+" </b>");
+					$("#handholeJctTubeSideB").html("<b style='white-space:nowrap;' >Tube: "+window['JCT_'+jctMappingId][10]+" / "+window['JCT_'+jctMappingId][11]+" / "+window['JCT_'+jctMappingId][20]+" </b>");
 					$("#handholeJctFiberSideB").html("<b style='white-space:nowrap;' >Fiber: "+window['JCT_'+jctMappingId][12]+" / "+window['JCT_'+jctMappingId][13]+" </b>");					
 					
 					$("#AssignedHandJct_TitleId").text("Junction: "+data.junctionMappingPts[0][14]);	
