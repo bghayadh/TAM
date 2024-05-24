@@ -13618,6 +13618,51 @@ public class PhysicalLayerController {
 		return rtn;
 
 	}
+	@RequestMapping(value = "/showJunctionsData", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> showJunctionsData(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException {
+
+		Map<String, Object> rtn = new LinkedHashMap<String, Object>();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+
+		session = AlmDbSession.getInstance().getSession();
+		List<Object[]> showJunctionList = new ArrayList<Object[]>();
+		List<Object[]> JunctionList = new ArrayList<Object[]>();
+
+		String cableID = request.getParameter("fiberID");
+
+
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			try {
+				
+				showJunctionList = session.createNativeQuery("SELECT A.JUNCTION_ID, A.JUNCTION_NAME,A.PHYSICAL_LAYER_ID,A.PHYSICAL_LAYER_NAME,A.JUNCTION_NUMBER,A.CAPACITY,A.CITY,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID FROM JUNCTION A LEFT JOIN JUNCTION_MAPPING B ON A.JUNCTION_ID = B.JCT_ID "
+						+ " WHERE (A.PHYSICAL_LAYER_ID IS NULL OR A.PHYSICAL_LAYER_ID = 'null') AND (B.FIBER_ID_SIDE_B = '"+cableID+"' OR B.FIBER_ID_SIDE_A = '"+cableID+"') ").getResultList();
+				rtn.put("showJunctionList", showJunctionList);
+
+				
+			} catch (Exception e) {
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in showJunctionsData due to \n " + exceptionAsString);
+				logger.info("Error in showJunctionsData due to \n " + exceptionAsString);
+				rtn.put("showJunctionList",null);
+			} finally {
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+				}
+			}
+		}
+
+		return rtn;
+
+	}
 
 
 	@InitBinder
