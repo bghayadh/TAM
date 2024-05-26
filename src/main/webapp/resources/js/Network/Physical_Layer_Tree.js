@@ -7498,6 +7498,61 @@ singleProject = new ContextMenu({
 				
 			   }
 			},
+			
+			{'icon': 'link', 'name': 'Show Client & Site ', action: () => {
+				 $("#ClientSite").empty();
+				 opentab(event, 'ClientSite');
+				 $("#CltSiteBtn").removeClass("tablinks").addClass("tablinks active");
+				 $.ajax({
+						type: "GET",
+						async: false,
+						contentType: "application/json; charset=utf-8",
+						url: getContext()+'/findDBClientSite',
+						data: {
+							"selectedDB":selectedDistBoardContext 
+						},									
+						dataType: "json",
+						success: function (data) {
+							//console.log("selectedDistBoardContextddd] "+window[selectedDistBoardContext])
+							$("#ClientSite").append("<tr><td><b>DB: </b>" +window[""+selectedDistBoardContext][3] +" / "+selectedDistBoardContext);
+							$("#ClientSite").append("<table style='width:100%;'><tr>"+"<th style='font-size:18px;width:100%;'><u>Clients</u></th></tr></table>"
+									+"<table style='width:100%;'><tr>"+"<td style='width: 5%'></td>"+"<th style='width: 30%'>ID </th>"
+									+"<th style='width: 35%'>Name </th>"
+									+"<th style='width: 25%'>Phone Number</th></tr></table>");
+							
+							for(i=0;i<data.ClientData.length;i++){		 
+								$("#ClientSite").append("<table style='width:100%;'><tr>"+"<td style='width: 5%;'><input type='checkbox' checked id='" +data.ClientData[i][0]+"_ClientsChechbox'></td>"+"<td style='width: 30%'>"+data.ClientData[i][0]+"</td>"
+										+"<td style='width: 35%'> "+data.ClientData[i][1]+"</td>"
+										+"<td style='width: 25%'> "+data.ClientData[i][2]+"</td></tr></table>");
+								var markerNameClt  = data.ClientData[i][0]+":" +data.ClientData[i][1];
+								createSiteCltMarker(data.ClientData[i][0],markerNameClt,data.ClientData[i][4],data.ClientData[i][3],siteCltSrcMarkers);
+								showMarkersCheckedClientSite(data.ClientData[i][0]+'_ClientsChechbox',data.ClientData[i][0]);
+							}
+							
+							$("#ClientSite").append("<tr>"+"<td></td>"+"<td></td>"+"<td></td></tr>");
+							
+							//site
+							$("#ClientSite").append("<table style='width:100%;'><tr>"+"<th style='font-size:18px;padding-top:25px;width:100%;'><u>Sites</u></th></tr></table>"
+									+"<table style='width:100%;'><tr>"+"<td style='width: 5%'></td>"+"<th style='width: 20%'>Site ID</th>"
+									+"<th style='width: 40%'>Warehouse ID </th>"
+									+"<th style='width: 35%'>Warehouse Name</th></tr>");
+							
+							for(i=0;i<data.SiteData.length;i++){
+								$("#ClientSite").append("<table style='width:100%;'><tr>"+"<td style='width: 5%;'><input type='checkbox' checked id='" +data.SiteData[i][0]+"_SitesChechbox'></td>"+"<td style='width: 20%'>"+data.SiteData[i][1]+"</td>"
+										+"<td style='width: 40%'> "+data.SiteData[i][0]+"</td>"                                         
+										+"<td style='width: 35%'> "+data.SiteData[i][2]+"</td></tr></table>");	
+								var markerNameSite  = data.SiteData[i][0]+":" +data.SiteData[i][2]+":" +data.SiteData[i][1];	
+								createSiteCltMarker(data.SiteData[i][0],markerNameSite,data.SiteData[i][4],data.SiteData[i][3],siteCltSrcMarkers);
+						      	showMarkersCheckedClientSite(data.SiteData[i][0]+'_SitesChechbox',data.SiteData[i][0]);
+							}
+					     },
+						error: function (result) {
+							alert("Error");
+						}
+					  });
+					}
+				},
+			
 			{'icon': 'paste', 'name': 'Show Path', action: () => {
 				
 				if (flag == 0 ){// in order to build for the first time the main fiber

@@ -3066,6 +3066,95 @@ public class PhysicalLayerController {
 		}
 		return rtn;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/findDBClientSite", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> findDBClientSite(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) {
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		String DBID = request.getParameter("selectedDB").toString();
+		session = AlmDbSession.getInstance().getSession();
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			try {
+				
+				
+				List<String> siteIds = session.createNativeQuery("select distinct site_id from ("
+						+ "select distinct fp_location as site_id from distribution_board_mapping where fp_location_type = 'Site' and DB_ID = '"+DBID+"' "
+						+ "union "
+						+ "select distinct bp_location as site_id from distribution_board_mapping where bp_location_type = 'Site' and DB_ID = '"+DBID+"' "
+						+ "union "
+						+ "select distinct WAREHOUSE as site_id  from distribution_board where DB_ID ='"+DBID+"' and warehouse LIKE 'WARE%' "
+						+ "union "
+						+ "select distinct bp_location as site_id from distribution_board_mapping "
+						+ "where (BP_EQUIPMENT='DistBoard' or FP_EQUIPMENT='DistBoard') and (BP_EQUIPMENT_ID='"+DBID+"' or FP_EQUIPMENT_ID='"+DBID+"') "
+						+ "and bp_location_type='Site' "
+						+ "union "
+						+ "select distinct fp_location as site_id from distribution_board_mapping "
+						+ "where (BP_EQUIPMENT='DistBoard' or FP_EQUIPMENT='DistBoard') and (BP_EQUIPMENT_ID='"+DBID+"' or FP_EQUIPMENT_ID='"+DBID+"') "
+						+ "and fp_location_type='Site'"
+						+ ")where site_id !='null' and site_id is not null").getResultList();
+				
+
+				session.flush();
+				session.clear();
+
+				List<String> clientIds = session.createNativeQuery("select distinct customer_id from ("
+						+ "select distinct fp_location_id as customer_id from distribution_board_mapping where fp_location_type = 'Customer' and DB_ID = '"+DBID+"' "
+						+ "union "
+						+ "select distinct bp_location_id as customer_id from distribution_board_mapping where bp_location_type = 'Customer' and DB_ID = '"+DBID+"' "
+						+ "union "
+						+ "select distinct site as customer_id from distribution_board where DB_ID ='"+DBID+"' and site LIKE 'CUST_%' "
+						+ "union "
+						+ "select distinct bp_location_id as customer_id from distribution_board_mapping "
+						+ "where (BP_EQUIPMENT='DistBoard' or FP_EQUIPMENT='DistBoard') and (BP_EQUIPMENT_ID='"+DBID+"' or FP_EQUIPMENT_ID='"+DBID+"') "
+						+ "and bp_location_type='Customer' "
+						+ "union "
+						+ "select distinct fp_location_id as customer_id from distribution_board_mapping "
+						+ "where (BP_EQUIPMENT='DistBoard' or FP_EQUIPMENT='DistBoard') and (BP_EQUIPMENT_ID='"+DBID+"' or FP_EQUIPMENT_ID='"+DBID+"') "
+						+ "and fp_location_type='Customer')").getResultList();
+
+				session.flush();
+				session.clear();
+
+				query = session.createNativeQuery(
+						"SELECT DISTINCT WARE_ID,SITE_ID,WARE_NAME,LONGITUDE,LATITUDE FROM WAREHOUSE WHERE WARE_ID IN (:param1)");
+				query.setParameter("param1", siteIds);
+				rtn.put("SiteData", query.getResultList());
+
+				session.flush();
+				session.clear();
+
+				query = session.createNativeQuery(
+						"SELECT DISTINCT CUSTOMER_ID,CUSTOMER_NAME,MOBILE_NUMBER,LONGITUDE,LATITUDE FROM CUSTOMER WHERE CUSTOMER_ID IN (:param1)");
+				query.setParameter("param1", clientIds);
+				rtn.put("ClientData", query.getResultList());
+
+				session.flush();
+				session.clear();
+				tx.commit();
+			} catch (Exception e) {
+				tx.rollback();
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				//logger.info("Error in retreiving  Data from database \n" + exceptionAsString);
+				logger.finest("Error in findDBClientSite due to \n " + exceptionAsString);
+				logger.info("Error in findDBClientSite due to \n " + exceptionAsString);
+				rtn.put("ClientData", null);
+				rtn.put("SiteData", null);
+
+			} finally {
+				if (session != null && session.isOpen()) {
+					session.close();
+				}
+			}
+		}
+		return rtn;
+	}
+	
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/findFiberDetails", method = RequestMethod.GET)
