@@ -26,6 +26,8 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			markersJctTempo="";
 			markersTempoHandholeJct="";	
 			siteCltSrcMarkers=[];
+			markersJunction=[];
+
 
 	//		map.setZoom(6);
 	
@@ -55,6 +57,10 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			
 			markerClusterGPONNodes = new MarkerClusterer();
 			markerClusterGPONNodes.setMap(map);*/
+			
+			markerClusterJunction = new MarkerClusterer();
+			markerClusterJunction.setMap(map);// to be checked !!!!
+	
 			
 	
 			kenya=new google.maps.LatLng(1,38);					
