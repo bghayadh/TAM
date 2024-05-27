@@ -26,6 +26,8 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			markersJctTempo="";
 			markersTempoHandholeJct="";	
 			siteCltSrcMarkers=[];
+			markersJunction=[];
+
 
 	//		map.setZoom(6);
 	
@@ -55,6 +57,10 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			
 			markerClusterGPONNodes = new MarkerClusterer();
 			markerClusterGPONNodes.setMap(map);*/
+			
+			markerClusterJunction = new MarkerClusterer();
+			markerClusterJunction.setMap(map);// to be checked !!!!
+	
 			
 	
 			kenya=new google.maps.LatLng(1,38);					
@@ -759,7 +765,8 @@ function haversine_distance(lat1,lng1,lat2,lng2) {
 	var difflon = (lng2-lng1) * (Math.PI/180); // Radian difference (longitudes)
 	
 	var d = 2 * R * Math.asin(Math.sqrt(Math.sin(difflat/2)*Math.sin(difflat/2)+Math.cos(lat1)*Math.cos(lat2)*Math.sin(difflon/2)*Math.sin(difflon/2)));
-	return Math.round(1000*d)/1000;
+	//return Math.round(1000*d)/1000;
+	return parseFloat(d.toFixed(8));
 }
 
 function closePointsHaversineDistance(lat1, lng1, lat2, lng2) {

@@ -36,6 +36,9 @@ function getJunction(type,url,id,tr){
     		}
     		});
     }
+	else {
+		$("#loading").remove();	
+	}
 	
 
 }
@@ -144,9 +147,9 @@ function create_Junction_Marker_Click(Id,Name,Long,Lat,markers,marker_Cluster,Ty
 
 
 function createJunction(JunctionList){
-	markersJunction = [];
+/*	markersJunction = [];
 	markerClusterJunction = new MarkerClusterer();
-	markerClusterJunction.setMap(map);// to be checked !!!!
+	markerClusterJunction.setMap(map);// to be checked !!!!*/
 	
 	if(JunctionList!=null) {
 		for(i=0;i<JunctionList.length;i++){

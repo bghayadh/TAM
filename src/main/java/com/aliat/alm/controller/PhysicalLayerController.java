@@ -3069,6 +3069,95 @@ public class PhysicalLayerController {
 		}
 		return rtn;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/findDBClientSite", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> findDBClientSite(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) {
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		String DBID = request.getParameter("selectedDB").toString();
+		session = AlmDbSession.getInstance().getSession();
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			try {
+				
+				
+				List<String> siteIds = session.createNativeQuery("select distinct site_id from ("
+						+ "select distinct fp_location as site_id from distribution_board_mapping where fp_location_type = 'Site' and DB_ID = '"+DBID+"' "
+						+ "union "
+						+ "select distinct bp_location as site_id from distribution_board_mapping where bp_location_type = 'Site' and DB_ID = '"+DBID+"' "
+						+ "union "
+						+ "select distinct WAREHOUSE as site_id  from distribution_board where DB_ID ='"+DBID+"' and warehouse LIKE 'WARE%' "
+						+ "union "
+						+ "select distinct bp_location as site_id from distribution_board_mapping "
+						+ "where (BP_EQUIPMENT='DistBoard' or FP_EQUIPMENT='DistBoard') and (BP_EQUIPMENT_ID='"+DBID+"' or FP_EQUIPMENT_ID='"+DBID+"') "
+						+ "and bp_location_type='Site' "
+						+ "union "
+						+ "select distinct fp_location as site_id from distribution_board_mapping "
+						+ "where (BP_EQUIPMENT='DistBoard' or FP_EQUIPMENT='DistBoard') and (BP_EQUIPMENT_ID='"+DBID+"' or FP_EQUIPMENT_ID='"+DBID+"') "
+						+ "and fp_location_type='Site'"
+						+ ")where site_id !='null' and site_id is not null").getResultList();
+				
+
+				session.flush();
+				session.clear();
+
+				List<String> clientIds = session.createNativeQuery("select distinct customer_id from ("
+						+ "select distinct fp_location_id as customer_id from distribution_board_mapping where fp_location_type = 'Customer' and DB_ID = '"+DBID+"' "
+						+ "union "
+						+ "select distinct bp_location_id as customer_id from distribution_board_mapping where bp_location_type = 'Customer' and DB_ID = '"+DBID+"' "
+						+ "union "
+						+ "select distinct site as customer_id from distribution_board where DB_ID ='"+DBID+"' and site LIKE 'CUST_%' "
+						+ "union "
+						+ "select distinct bp_location_id as customer_id from distribution_board_mapping "
+						+ "where (BP_EQUIPMENT='DistBoard' or FP_EQUIPMENT='DistBoard') and (BP_EQUIPMENT_ID='"+DBID+"' or FP_EQUIPMENT_ID='"+DBID+"') "
+						+ "and bp_location_type='Customer' "
+						+ "union "
+						+ "select distinct fp_location_id as customer_id from distribution_board_mapping "
+						+ "where (BP_EQUIPMENT='DistBoard' or FP_EQUIPMENT='DistBoard') and (BP_EQUIPMENT_ID='"+DBID+"' or FP_EQUIPMENT_ID='"+DBID+"') "
+						+ "and fp_location_type='Customer')").getResultList();
+
+				session.flush();
+				session.clear();
+
+				query = session.createNativeQuery(
+						"SELECT DISTINCT WARE_ID,SITE_ID,WARE_NAME,LONGITUDE,LATITUDE FROM WAREHOUSE WHERE WARE_ID IN (:param1)");
+				query.setParameter("param1", siteIds);
+				rtn.put("SiteData", query.getResultList());
+
+				session.flush();
+				session.clear();
+
+				query = session.createNativeQuery(
+						"SELECT DISTINCT CUSTOMER_ID,CUSTOMER_NAME,MOBILE_NUMBER,LONGITUDE,LATITUDE FROM CUSTOMER WHERE CUSTOMER_ID IN (:param1)");
+				query.setParameter("param1", clientIds);
+				rtn.put("ClientData", query.getResultList());
+
+				session.flush();
+				session.clear();
+				tx.commit();
+			} catch (Exception e) {
+				tx.rollback();
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				//logger.info("Error in retreiving  Data from database \n" + exceptionAsString);
+				logger.finest("Error in findDBClientSite due to \n " + exceptionAsString);
+				logger.info("Error in findDBClientSite due to \n " + exceptionAsString);
+				rtn.put("ClientData", null);
+				rtn.put("SiteData", null);
+
+			} finally {
+				if (session != null && session.isOpen()) {
+					session.close();
+				}
+			}
+		}
+		return rtn;
+	}
+	
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/findFiberDetails", method = RequestMethod.GET)
@@ -3747,6 +3836,100 @@ public class PhysicalLayerController {
 		}
 		return rtn;
 	}
+	
+	//////////////////////////////77777777777777
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/showRelatedPath", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> showRelatedPath(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) throws JsonProcessingException {
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		Session session = null;
+		Transaction tx = null;
+		session = AlmDbSession.getInstance().getSession();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+
+			try {
+				String dataSel = request.getParameter("dataSel");
+
+				// DATA FOR BACKBONE NETWORKLEVEL
+				List<Object[]> BackboneCableData = session.createNativeQuery(
+						"select distinct a.FIBER_ID_SIDE_A,a.FIBER_NAME_SIDE_A,b.FIBER_NETWORK_LEVEL,b.FIBER_OWNER"
+						+ " from JUNCTION_MAPPING a left join FIBER_CABLES b on a.FIBER_ID_SIDE_A=b.FIBER_CABLE_ID"
+						+ " where FIBER_ID_SIDE_B='"+dataSel+"' and b.FIBER_NETWORK_LEVEL='backbone'"
+						+ " union "
+						+ " select distinct a.FIBER_ID_SIDE_B,a.FIBER_NAME_SIDE_B,b.FIBER_NETWORK_LEVEL,b.FIBER_OWNER"
+						+ " from JUNCTION_MAPPING a left join FIBER_CABLES b on a.FIBER_ID_SIDE_B=b.FIBER_CABLE_ID"
+						+ " where a.FIBER_ID_SIDE_A='"+dataSel+"' and b.FIBER_NETWORK_LEVEL='backbone'")
+						.getResultList();
+				rtn.put("BackboneCableData", BackboneCableData);
+				rtn.put("BackboneTubeData", "");
+				rtn.put("BackboneStrandData", "");
+
+				// DATA FOR METRO NETWORKLEVEL
+				List<Object[]> MetroCableData = session.createNativeQuery(
+						"select distinct a.FIBER_ID_SIDE_A,a.FIBER_NAME_SIDE_A,b.FIBER_NETWORK_LEVEL,b.FIBER_OWNER"
+						+ " from JUNCTION_MAPPING a left join FIBER_CABLES b on a.FIBER_ID_SIDE_A=b.FIBER_CABLE_ID"
+						+ " where FIBER_ID_SIDE_B='"+dataSel+"' and b.FIBER_NETWORK_LEVEL='metro'"
+						+ " union"
+						+ " select distinct a.FIBER_ID_SIDE_B,a.FIBER_NAME_SIDE_B,b.FIBER_NETWORK_LEVEL,b.FIBER_OWNER"
+						+ " from JUNCTION_MAPPING a left join FIBER_CABLES b on a.FIBER_ID_SIDE_B=b.FIBER_CABLE_ID"
+						+ " where a.FIBER_ID_SIDE_A='"+dataSel+"' and b.FIBER_NETWORK_LEVEL='metro'")
+						.getResultList();
+		
+				rtn.put("MetroCableData", MetroCableData);
+				rtn.put("MetroTubeData", "");
+				rtn.put("MetroStrandData", "");
+
+				// DATA FOR Access NETWORKLEVEL
+				List<Object[]> DistributionCableData = session.createNativeQuery(
+						"select distinct a.FIBER_ID_SIDE_A,a.FIBER_NAME_SIDE_A,b.FIBER_NETWORK_LEVEL,b.FIBER_OWNER"
+						+ " from JUNCTION_MAPPING a left join FIBER_CABLES b on a.FIBER_ID_SIDE_A=b.FIBER_CABLE_ID"
+						+ " where FIBER_ID_SIDE_B='"+dataSel+"' and b.FIBER_NETWORK_LEVEL='access'"
+						+ " union"
+						+ " select distinct a.FIBER_ID_SIDE_B,a.FIBER_NAME_SIDE_B,b.FIBER_NETWORK_LEVEL,b.FIBER_OWNER"
+						+ " from JUNCTION_MAPPING a left join FIBER_CABLES b on a.FIBER_ID_SIDE_B=b.FIBER_CABLE_ID"
+						+ " where a.FIBER_ID_SIDE_A='"+dataSel+"' and b.FIBER_NETWORK_LEVEL='access'")
+						.getResultList();
+				
+				rtn.put("DistributionCableData", DistributionCableData);
+				rtn.put("DistributionTubeData", "");
+				rtn.put("DistributionStrandData", "");
+
+			} catch (Exception e) {
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in showRelatedPath due to \n " + exceptionAsString);
+				logger.info("Error in showRelatedPath due to \n " + exceptionAsString);
+				rtn.put("BackboneCableData", null);
+				rtn.put("BackboneTubeData", null);
+				rtn.put("BackboneStrandData", null);
+				rtn.put("MetroCableData", null);
+				rtn.put("MetroTubeData", null);
+				rtn.put("MetroStrandData", null);
+				rtn.put("DistributionCableData", null);
+				rtn.put("DistributionTubeData", null);
+				rtn.put("DistributionStrandData", null);
+
+			} finally {
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+
+				}
+			}
+
+		}
+		return rtn;
+	}
+	//////////////////////////////777777777777
 
 	@RequestMapping(value = "/boqManhole", method = RequestMethod.GET)
 	@ResponseBody
@@ -12060,7 +12243,7 @@ public class PhysicalLayerController {
 					List<Object[]> junctionMappingPts = session.createNativeQuery(
 							"SELECT DISTINCT SEQUENCE_NUMBER,JCT_MAPPING_ID,STRAND_ID_SIDE_A,STRAND_NAME_SIDE_A,TUBE_ID_SIDE_A,TUBE_NAME_SIDE_A,FIBER_ID_SIDE_A,FIBER_NAME_SIDE_A,STRAND_ID_SIDE_B,STRAND_NAME_SIDE_B,TUBE_ID_SIDE_B,TUBE_NAME_SIDE_B,FIBER_ID_SIDE_B,FIBER_NAME_SIDE_B,(SELECT A.JUNCTION_NAME FROM JUNCTION A WHERE A.JUNCTION_ID='"
 									+ junctionID + "'),(SELECT JUNCTION_NUMBER FROM JUNCTION  WHERE JUNCTION_ID='"
-									+ junctionID + "') FROM JUNCTION_MAPPING B WHERE B.JCT_ID='" + junctionID + "' ")
+									+ junctionID + "'),LOCATION_NAME_SIDE_A,LOCATION_NAME_SIDE_B,TUBE_NB_SIDE_A,STRAND_NB_SIDE_A,TUBE_NB_SIDE_B,STRAND_NB_SIDE_B FROM JUNCTION_MAPPING B WHERE B.JCT_ID='" + junctionID + "' ")
 							.getResultList();
 
 					if (junctionMappingPts.size() > 0) {
@@ -13524,6 +13707,51 @@ public class PhysicalLayerController {
 				}
 			}
 		}
+		return rtn;
+
+	}
+	@RequestMapping(value = "/showJunctionsData", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> showJunctionsData(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException {
+
+		Map<String, Object> rtn = new LinkedHashMap<String, Object>();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+
+		session = AlmDbSession.getInstance().getSession();
+		List<Object[]> showJunctionList = new ArrayList<Object[]>();
+		List<Object[]> JunctionList = new ArrayList<Object[]>();
+
+		String cableID = request.getParameter("fiberID");
+
+
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			try {
+				
+				showJunctionList = session.createNativeQuery("SELECT A.JUNCTION_ID, A.JUNCTION_NAME,A.PHYSICAL_LAYER_ID,A.PHYSICAL_LAYER_NAME,A.JUNCTION_NUMBER,A.CAPACITY,A.CITY,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID FROM JUNCTION A LEFT JOIN JUNCTION_MAPPING B ON A.JUNCTION_ID = B.JCT_ID "
+						+ " WHERE (A.PHYSICAL_LAYER_ID IS NULL OR A.PHYSICAL_LAYER_ID = 'null') AND (B.FIBER_ID_SIDE_B = '"+cableID+"' OR B.FIBER_ID_SIDE_A = '"+cableID+"') ").getResultList();
+				rtn.put("showJunctionList", showJunctionList);
+
+				
+			} catch (Exception e) {
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in showJunctionsData due to \n " + exceptionAsString);
+				logger.info("Error in showJunctionsData due to \n " + exceptionAsString);
+				rtn.put("showJunctionList",null);
+			} finally {
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+				}
+			}
+		}
+
 		return rtn;
 
 	}
