@@ -718,6 +718,8 @@ public class PhysicalLayerController {
 							String closestLongPoint = request.getParameter("closestLongPoint");
 							String getRelatedPoints = request.getParameter("getRelatedPoints");
 							String customerID = request.getParameter("CustomerID");
+							String customerName=request.getParameter("CustomerName");
+							
 							String serviceReq = request.getParameter("serviceReq");
 							String serviceRef = request.getParameter("serviceRef");
 
@@ -1102,7 +1104,8 @@ public class PhysicalLayerController {
 				model.addAttribute("endLng", borderCircleLongitudes[1]);
 				model.addAttribute("startLat", bordeCircleLatitudes[0]);
 				model.addAttribute("endLat", bordeCircleLatitudes[1]);	
-				model.addAttribute("CustomerID", customerID);	
+				model.addAttribute("CustomerID", customerID);
+				model.addAttribute("CustomerName",customerName);
 				model.addAttribute("serviceReq", serviceReq);	
 				model.addAttribute("serviceRef", serviceRef);	
 
