@@ -264,16 +264,24 @@
 									
 
 									<div class="row">
-									
-										<div class="col-sm-3" id="customerNameID">
+									 
+									 <div class="col-sm-4" id="customerNameID">
 											<div class="form-group">
 												<div class="input-group-prepend" style="width: auto;">
-													<span style="font-size: 12px;" class="input-group-text"><b>Customer</b></span>
+													<span style="font-size: 12px;" class="input-group-text"><b>Customer Id</b></span>
 													<input type="text" id="customerDetails" class="form-control text-input" />
 												</div>
 											</div>
 										</div>
-										<div class="col-sm-3" id="serviceAppNum">
+										<div class="col-sm-4" id="customerNameID">
+											<div class="form-group">
+												<div class="input-group-prepend" style="width: auto;">
+													<span style="font-size: 12px;" class="input-group-text"><b>Customer Name</b></span>
+													<input type="text" id="customerName" class="form-control text-input" />
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-4" id="serviceAppNum">
 											<div class="form-group">
 												<div class="input-group-prepend" style="width: auto;">
 													<span style="font-size: 12px;" class="input-group-text"><b>Service App No</b></span>
@@ -284,23 +292,40 @@
 										<div class="col-sm-4" id="survNearestPt">
 											<div class="form-group">
 												<div class="input-group-prepend" style="width: auto;">
-													<span style="font-size: 12px;" class="input-group-text"><b>Nearest Pt</b></span>
+													<span style="font-size: 12px;" class="input-group-text"><b>Nearest Pt ID</b></span>
 													<input type="text" id="surveyNearestPt" class="form-control text-input" readonly />
 												</div>
 											</div>
-										</div>	
+										</div>
+										<div class="col-sm-6" id="survNearestPt">
+											<div class="form-group">
+												<div class="input-group-prepend" style="width: auto;">
+													<span style="font-size: 12px;" class="input-group-text"><b>Nearest Pt Distance</b></span>
+													<input type="text" id="surveyNearestPtDis" class="form-control text-input" readonly />
+												</div>
+											</div>
+										</div>		
 																																					
 										</div>
 	<div class="row">
-										<div class="col-sm-3" id="serviceRef">
+	
+		                             <div class="col-sm-4" id="serviceRef">
 											<div class="form-group">
 												<div class="input-group-prepend" style="width: auto;">
-													<span style="font-size: 12px;" class="input-group-text"><b>Service Ref.</b></span>
+													<span style="font-size: 12px;" class="input-group-text"><b>Service ID</b></span>
+													<input type="text" id="serviceReferenceId" class="form-control text-input" />
+												</div>
+											</div>
+										</div>	
+										<div class="col-sm-4" id="serviceRef">
+											<div class="form-group">
+												<div class="input-group-prepend" style="width: auto;">
+													<span style="font-size: 12px;" class="input-group-text"><b>Service Ref</b></span>
 													<input type="text" id="serviceReference" class="form-control text-input" />
 												</div>
 											</div>
 										</div>	
-											<div class="col-sm-2" id="price">
+											<div class="col-sm-4" id="price">
 											<div class="form-group">
 												<div class="input-group-prepend" style="width: auto;">
 													<span style="font-size: 12px;" class="input-group-text"><b>UPrice</b></span>
@@ -308,7 +333,7 @@
 												</div>
 											</div>
 										</div>	
-										<div class="col-sm-3" id="surveyId">
+										<div class="col-sm-4" id="surveyId">
 											<div class="form-group">
 												<div class="input-group-prepend" style="width: auto;">
 													<span style="font-size: 12px;" class="input-group-text"><b>Survey ID</b></span>
@@ -316,14 +341,14 @@
 												</div>
 											</div>
 										</div>	
-										<div class="col-sm-2" id="saveSurv">
+										<div class="col-sm-3" id="saveSurv">
 											<div class="form-group">
-												<button id="saveSurvey" class="btn btn-primary" style="color: white; font-size: 13px; height: 50px; width: 100%;">Save Survey</button>
+												<button id="saveSurvey" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; width: 100%;">Save Survey</button>
 											</div>
 										</div>
-											<div class="col-sm-2" id="updateMysd">
+											<div class="col-sm-3" id="updateMysd">
 											<div class="form-group">
-												<button id="updateOnMySD" class="btn btn-primary" style="color: white; font-size: 13px; height: 50px; width: 100%;" disabled>Update on MySD</button>
+												<button id="updateOnMySD" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; width: 100%;" disabled>Update on MySD</button>
 											</div>
 										</div>	
 																		
@@ -387,7 +412,7 @@
 												<div class="row" style="height: 500px;">
 													<fieldset class="field_set">
 														<legend style="width: auto;" class="fieldset_legend"></legend>
-														<table id="findNearstManhole" style="display: block; height: 500px; overflow-y: auto;" class="searchable sortable">
+														<table id="findNearstManhole" style="display: block; height: 500px; width: 100%; overflow-y: auto;" class="searchable sortable">
 														
 														 <thead>
 															<tr>
@@ -1093,6 +1118,39 @@ $('.panel-collapse').on('show.bs.collapse',function() {
 $('.panel-collapse').on('hide.bs.collapse',function() {
 	$(this).siblings('.panel-heading').addClass('active');
 });
+
+$(document).ready(function() {
+    // Function to handle row clicks
+    $(document).on('click', '#findNearstManhole tr', function() {
+        handleRowClick('#findNearstManhole', $(this));
+    });
+
+   $(document).on('click', '#findNearstHandhole tr', function() {
+        handleRowClick('#findNearstHandhole', $(this));
+    });
+
+    // Function to handle checkbox clicks
+    $(document).on('click', '#findNearstHandhole input[type="checkbox"]', function() {
+        handleCheckboxClick('#findNearstHandhole', $(this));
+    });
+
+    // Reusable function to handle row clicks
+    function handleRowClick(tableId, clickedRow) {
+        // Remove "ativeRecord" class from all rows in the specified table
+        $(`${tableId} tr`).removeClass("ativeRecord");
+        // Add "ativeRecord" class to the clicked row
+        clickedRow.addClass("ativeRecord");
+    }
+
+    // Reusable function to handle checkbox clicks
+    function handleCheckboxClick(tableId, clickedCheckbox) {
+        // Remove "ativeRecord" class from all rows in the specified table
+        $(`${tableId} tr`).removeClass("ativeRecord");
+        // Add "ativeRecord" class to the row containing the clicked checkbox
+        clickedCheckbox.closest('tr').addClass("ativeRecord");
+    }
+});
+
 
 
 

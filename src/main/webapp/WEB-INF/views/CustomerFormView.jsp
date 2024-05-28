@@ -19,6 +19,8 @@
 	<!--  <script src="${pageContext.request.contextPath}/resources/js/jquery-1.11.3.js"></script>  -->
 	<script src="${pageContext.request.contextPath}/resources/js/jquery-migrate-3.0.0.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resources/js/platform.js"></script>
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/bootstrap-datetimepicker.min.css">
+   
 	<!-- 
 
 	<script src="${pageContext.request.contextPath}/resources/js/jquery-ui.js"></script>
@@ -874,11 +876,14 @@ border-color: #939191f5;
 										<th>
 											<button type="button" id="selectAllServ" class="main"><span class="sub"></span>Select</button>
 										</th>
+										<th>Service Id</th>
 										<th>Service Type</th>
-										<th>Billing Code</th>
-										<th>Circuit No</th>
+										<th style="display:none">Billing Code</th>
+										<th style="display:none">Circuit No</th>
 										<th>Longitude</th>
 										<th>Latitude</th>
+										<th>Creation Date</th>
+										<th>Last Modified Date</th>
 										<th hidden></th>
 										<th hidden></th>
 										<th hidden></th>
@@ -1142,7 +1147,7 @@ border-color: #939191f5;
 														<div class="col-sm-4">
 														<div class="form-group">
 															<div class="input-group-prepend">
-																<span class="input-group-text">NUM</span>
+																<span class="input-group-text">Telephone Number</span>
 																 <input type="text" id="popupNum" class="form-control text-input"  style="height: 37px;" />
 															</div>
 														</div>
@@ -1336,7 +1341,7 @@ if ('${custServiceList}' != "addNew") {
 	for (i = 0;i<boqArray.length;i++){	
 		createdDate = boqArray[i].createdDate;
 		var d = new Date(createdDate);
-
+		
 		// Get date components
 		var mm = ("0" + (d.getMonth() + 1)).slice(-2);
 		var dd = ("0" + d.getDate()).slice(-2);
@@ -1374,6 +1379,9 @@ if ('${custServiceList}' != "addNew") {
 		
 		var itemRow = "<tr>";
 		itemRow= itemRow +"<td style='text-align:center;width:100px'><input type='checkbox' name='record' style='margin-top:12px;'><button type = 'button' href='#' name='popUpMenu' onclick='openServicePopup(this)' class='btn btn-default'  style='position:relative;left:3px;'><i class='fas fa-desktop'></i></button></td>"
+		 itemRow =itemRow + "<td name='serviceId'><input type='text' value='" + boqArray[i].id +"' class='form-control text-input' ></td>";
+	      
+
         itemRow = itemRow + "<td style='width:280px' name='serviceType'><select class='form-control' name='serviceType'>";
      	itemRow = itemRow + "<option value='None' selected>Select an Option</option>";
      	if (boqArray[i].serviceType === 'BAN') {
@@ -1415,15 +1423,17 @@ if ('${custServiceList}' != "addNew") {
      	itemRow = itemRow + "</select></td>";
      	
 
-        itemRow =itemRow + "<td name='billingCode'><input type='text' value='" + boqArray[i].billingCode +"' class='form-control text-input' ></td>";
-        itemRow =itemRow + "<td name='circuitNo'><input type='text' value='" + boqArray[i].circuitNo +"' class='form-control text-input' ></td>";
+        itemRow =itemRow + "<td style='display:none' name='billingCode'><input type='text' value='" + boqArray[i].billingCode +"' class='form-control text-input' ></td>";
+        itemRow =itemRow + "<td style='display:none' name='circuitNo'><input type='text' value='" + boqArray[i].circuitNo +"' class='form-control text-input' ></td>";
         itemRow =itemRow + "<td name='longitude'><input type='text' value='" + boqArray[i].longitude +"' class='form-control text-input'></td>";
         itemRow =itemRow + "<td name='latitude'><input type='text' value='" + boqArray[i].latitude +"' class='form-control text-input'></td>";
-        itemRow =itemRow + "<td class='hidden-td' name='custServiceID'><input type='text' hidden value='" + boqArray[i].id +"' class='form-control text-input'></td>";
+        
+    		itemRow += "<td name='creationDate'><input type='text' value='" + creationDate + "' class='form-control text-input' readonly></td>";
+			itemRow += "<td name='lastModDate'><input type='text' value='" + lastModfDate + "' class='form-control text-input' readonly></td>";
+
+         itemRow =itemRow + "<td class='hidden-td' name='custServiceID'><input type='text' hidden value='" + boqArray[i].id +"' class='form-control text-input'></td>";
         itemRow =itemRow + "<td class='hidden-td' name='customerID'><input type='text' hidden value='" + boqArray[i].customerID +"' class='form-control text-input'></td>";
-        itemRow =itemRow + "<td class='hidden-td' name='creationDate'><input type='text' hidden value='" +creationDate+"' class='form-control text-input'></td>";
-        itemRow =itemRow + "<td class='hidden-td' name='lastModDate'><input type='text' hidden value='" +lastModfDate+"' class='form-control text-input' ></td>";
-        itemRow =itemRow + "<td class='hidden-td' name='category'><input type='text' hidden value='" + boqArray[i].cat +"' class='form-control text-input' ></td>";
+         itemRow =itemRow + "<td class='hidden-td' name='category'><input type='text' hidden value='" + boqArray[i].cat +"' class='form-control text-input' ></td>";
         itemRow =itemRow + "<td class='hidden-td' name='circuitID'><input type='text' hidden value='" + boqArray[i].circuitID +"' class='form-control text-input' ></td>";
         itemRow =itemRow + "<td class='hidden-td' name='refID'><input type='text' hidden value='" + boqArray[i].refID +"' class='form-control text-input' ></td>";
         itemRow =itemRow + "<td class='hidden-td' name='num'><input type='text' hidden value='" + boqArray[i].num +"' class='form-control text-input' ></td>";
@@ -1436,7 +1446,7 @@ if ('${custServiceList}' != "addNew") {
         itemRow =itemRow + "<td class='hidden-td' name='radioID'><input type='text' hidden value='" + boqArray[i].radioID +"' class='form-control text-input' ></td>";
         itemRow =itemRow + "<td class='hidden-td' name='radioName'><input type='text' hidden value='" + boqArray[i].radioName +"' class='form-control text-input' ></td>";
         itemRow =itemRow + "<td class='hidden-td' name='portDesc'><input type='text' hidden value='" + boqArray[i].portDesc +"'class='form-control text-input' ></td>";        
-        itemRow = itemRow + "<td name='createSurvey' style='width:150px;'><button type='button' class='createSurvey' onClick='createSurvey(\"" +boqArray[i].id+ "\",\"" +boqArray[i].customerID+ "\",\"" +boqArray[i].longitude+ "\",\"" +boqArray[i].latitude+ "\",\"" +boqArray[i].refID+ "\")' >Create Survey</button></td>";
+        itemRow = itemRow + "<td name='createSurvey' style='width:150px;'><button type='button' class='createSurvey' onClick='createSurvey(\"" +boqArray[i].id+ "\",\"" +boqArray[i].customerID+ "\",\""+ boqArray[i].customerName+ "\",\"" +boqArray[i].longitude+ "\",\"" +boqArray[i].latitude+ "\",\"" +boqArray[i].refID+ "\")' >Create Survey</button></td>";
 
           itemRow =itemRow + "</tr>";
         $("#customerServicesTable > tbody").append(itemRow);
@@ -1994,8 +2004,9 @@ $("#deleteButton").click(  function() {
 	           					});   //// ENd of Autocomplete for Area ID
 	    	 	
 
-    
+	           				
 
+	           				
 
 </script>
      <script async defer

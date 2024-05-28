@@ -7,15 +7,18 @@ function addServiceRow(target){
 	var rowCount= $("#customerServicesTable >tbody tr").length;
 
 	var markup = "<tr><td style='text-align:center;width:100px'><input type='checkbox' name='record' style='margin-top:12px;'><button type = 'button' href='#' name='popUpMenu' onclick='openServicePopup(this)' class='btn btn-default'  style='position:relative;left:3px;'><i class='fas fa-desktop'></i></button></td>"
+	           	+"<td  name='serviceId'><input type='text' class='form-control text-input'/></td>"
+	           
 	           	+"<td style='width:280px' name='serviceType'><select class='form-control' name='serviceType'><option value='None' selected>Select an Option</option><option value='BAN'>BAN</option><option value='BVPN' >BVPN</option><option value='CN' >CN</option><option value='Easynet' >Easynet</option><option value='Jambonet' >Jambonet</option><option value='KEN'  >KEN</option><option value='Kenstream' >Kenstream</option><option value='KNL' >KNL</option><option value='LNK' >LNK</option><option value='MS' >MS</option><option value='Rent' >Rent</option><option value='SAT' >SAT</option><option value='TEL_ISDN' >TEL_ISDN</option></select></td>"
-				+"<td name='billingCode'><input type='text' class='form-control text-input'/></td>"
-	           	+"<td name='circuitNo'><input type='text'  class='form-control text-input' /></td>"
+			
+				+"<td style='display:none' name='billingCode'><input type='text' class='form-control text-input'/></td>"
+	           	+"<td style='display:none' name='circuitNo'><input type='text'  class='form-control text-input' /></td>"
 	           	+"<td name='longitude'><input type='text'  class='form-control text-input' /></td>"
 	           	+"<td name='latitude'><input type='text' class='form-control text-input' /></td>"
 	           	+"<td class='hidden-td' name='custServiceID'><input type='text' value ='' hidden class='form-control text-input' /></td>"
 	           	+"<td class='hidden-td' name='customerID'><input type='text' hidden class='form-control text-input' /></td>"
-	           	+"<td class='hidden-td' name='creationDate'><input type='text' hidden class='form-control text-input' /></td>"
-	           	+"<td class='hidden-td' name='lastModDate'><input type='text' hidden class='form-control text-input' /></td>"
+	           	+"<td  name='creationDate'><input  type='text'  class='form-control text-input' readonly /></td>"
+	           	+"<td  name='lastModDate'><input type='text'  class='form-control text-input' readonly /></td>"
 	           	+"<td class='hidden-td' name='category'><input type='text' hidden class='form-control text-input' /></td>"
 	           	+"<td class='hidden-td' name='circuitID'><input type='text' hidden class='form-control text-input' /></td>"
 	           	+"<td class='hidden-td' name='refID'><input type='text' hidden class='form-control text-input' /></td>"
@@ -540,7 +543,7 @@ function deleteBoqServiceRow() {
 	}// End delete fct 
 	
 	
-function createSurvey(serviceID,customerID,longitude,latitude,serviceRef){
+function createSurvey(serviceID,customerID,customerName,longitude,latitude,serviceRef){
 	
 	
 	var urlString = "";
@@ -551,6 +554,7 @@ function createSurvey(serviceID,customerID,longitude,latitude,serviceRef){
 	urlString += "&noP=";
 	urlString += "&getRelatedPoints="+0+"";	 
 	urlString += "&CustomerID="+customerID+"";	
+	urlString += "&CustomerName="+customerName+"";	
 	urlString += "&serviceReq="+serviceID+"";	
 	urlString += "&serviceRef="+serviceRef+"";	
 

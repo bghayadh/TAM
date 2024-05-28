@@ -267,10 +267,20 @@ public class CustomerController {
 					model.addAttribute("email", customer.getEmail());
 					model.addAttribute("website", customer.getWebsite());
 					
-					
-					query = session.createQuery(
-							"select t.id as id,t.serviceType as serviceType, t.billingCode as billingCode, t.circuitNo as circuitNo,t.longitude as longitude,t.latitude as latitude, t.customerID as customerID, t.createdDate as createdDate, t.lastModfDate as lastModfDate, t.cat as cat, t.circuitID as circuitID, t.refID as refID, t.num as num, t.mediaType as mediaType, t.txMedia as txMedia, t.status as status, t.capacityMB as capacityMB, t.regionID as regionID, t.linkName as linkName, t.radioID as radioID, t.radioName as radioName, t.portDesc as portDesc from CustomerService t where t.customerID =:param1");
-					query.setParameter("param1", customerId);
+					Query query = session.createQuery(
+						    "select t.id as id, t.serviceType as serviceType, "
+						    + "t.billingCode as billingCode, "
+						    + "t.circuitNo as circuitNo, t.longitude as longitude, t.latitude as latitude, t.customerID as customerID, "
+						    + "t.createdDate as createdDate, t.lastModfDate as lastModfDate, "
+						    + "t.cat as cat, t.circuitID as circuitID, t.refID as refID, "
+						    + "t.num as num, t.mediaType as mediaType, t.txMedia as txMedia, t.status as status, "
+						    + "t.capacityMB as capacityMB, t.regionID as regionID, t.linkName as linkName, "
+						    + "t.radioID as radioID, t.radioName as radioName, t.portDesc as portDesc, "
+						    + "(select c.customerName from Customer c where c.customerId = t.customerID) as customerName "
+						    + "from CustomerService t "
+						    + "where t.customerID = :param1"
+						);
+	query.setParameter("param1", customerId);
 					custServiceList = (List<CustomerService>) query
 							.setResultTransformer(Transformers.aliasToBean(CustomerService.class)).list();
 					model.addAttribute("custServiceList", mapper.writeValueAsString(custServiceList));
