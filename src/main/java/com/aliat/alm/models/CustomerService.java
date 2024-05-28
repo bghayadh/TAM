@@ -78,6 +78,8 @@ public class CustomerService {
 	@Column(name = "NE_PORT_DESC")
 	private String portDesc;
 
+	@Column(name = "Customer_Name")
+	private String customerName;
 	
 	public CustomerService() {
 		super();
@@ -85,7 +87,7 @@ public class CustomerService {
 
 	public CustomerService(String id,String serviceType,String billingCode,String circuitNo,String longitude,String latitude, String customerID, Timestamp createdDate,Timestamp lastModfDate, String cat, 
 			String circuitID, String refID, 
-			String num, String mediaType, String txMedia, String status, String capacityMB,String regionID,String linkName,String radioID,String radioName,String portDesc) {
+			String num, String mediaType, String txMedia, String status, String capacityMB,String regionID,String linkName,String radioID,String radioName,String portDesc, String customerName) {
 		super();
 		this.id = id;
 		this.serviceType = serviceType;
@@ -93,6 +95,7 @@ public class CustomerService {
 		this.circuitNo = circuitNo;
 		this.longitude=longitude;
 		this.latitude=latitude;
+		this.customerName=customerName;
 		this.customerID = customerID;
 		this.createdDate = createdDate;
 		this.lastModfDate = lastModfDate;
@@ -110,6 +113,14 @@ public class CustomerService {
 		this.radioName = radioName;
 		this.portDesc = portDesc;
 		
+	}
+
+	public String getCustomerName() {
+		return customerName;
+	}
+
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
 	}
 
 	public String getId() {
