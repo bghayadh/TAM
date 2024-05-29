@@ -2937,13 +2937,28 @@ function mainPathCheckFilterEvent(Id, type){
 		}
 			
 		if(type == "parentFolderCheck__showPath") {
-			if($(".MetroFiber").is(":checked") || $(".BackboneFiber").is(":checked") || $('.AccessFiber').is(':checked') ) {	
-				$('.AllFiberCables__showPath').prop('checked', true);
+			if ($(".MetroFiber_showpath").length == 0 && $(".BackboneFiber_showpath").length == 0 && $(".AccessFiber_showpath").length == 0) {
+				
+				
+				var isChecked = $(".AllFiberCables__showPath").is(":checked");
+			    if (isChecked) {
+			    	//console.log('1111 ')
+			        $('.AllFiberCables__showPath').prop('checked', true);
+			    } else {
+			    	//console.log('2222 ')
+			        $('.AllFiberCables__showPath').prop('checked', false);
+			    }
 			}
 			else {
-				$('.AllFiberCables__showPath').prop('checked', false);
+				if($(".MetroFiber_showpath").is(":checked") || $(".BackboneFiber_showpath").is(":checked") || $('.AccessFiber_showpath').is(':checked') ) {	
+					$('.AllFiberCables__showPath').prop('checked', true);
+				}
+				else {
+					$('.AllFiberCables__showPath').prop('checked', false);
+				}
 			}
-		}			
+		}	
+		
 		else {
 			if ($('.BackboneFiber').is(':checked') && $('.MetroFiber').is(':checked') && $('.AccessFiber').is(':checked')){			
 					$('.AllFiberCables').prop('checked', true);
@@ -13181,13 +13196,13 @@ function showPath(url,dataSel,tr){
 	         
 	     /* **** Backbone ***** */
 	     if(data.BackboneCableData.length > 0 || data.BackboneTubeData.length > 0 || data.BackboneStrandData.length > 0 ){
-		      var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_backbone__showPath' style='display:none;margin-left:-20px;' class='backboneFolder'> <input type='checkbox' class='BackboneFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Backbone </span></li></ul></li></ul>";
+		      var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_backbone__showPath' style='display:none;margin-left:-20px;' class='backboneFolder'> <input type='checkbox' class='BackboneFiber_showpath checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Backbone </span></li></ul></li></ul>";
 			  $("#FiberPath_f_showPath").append(str);
 			  pathCheckFilter("initial_ul","parentFolderCheck__showPath","FiberPath_backbone__showPath","","","","","","","","","");
 	     }
 				
 	         if(data.BackboneCableData.length > 0 ){     
-			       var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_backbone_cable__showPath_f' style='display:none;margin-left:-20px;' class='backboneFolder'> <input type='checkbox' class='BackboneFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Cables </span></li></ul></li></ul>";
+			       var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_backbone_cable__showPath_f' style='display:none;margin-left:-20px;' class='backboneFolder'> <input type='checkbox' class='BackboneFiber_showpath checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Cables </span></li></ul></li></ul>";
 				   $("#FiberPath_backbone__showPath").append(str);
 				   pathCheckFilter(TargetFiber,"parentFolderCheck__showPath","FiberPath_backbone_cable__showPath","20",fiberArray,allFiberCables,directionHashmap,routeDisplay,"","","","");
 				   	        
@@ -13208,7 +13223,7 @@ function showPath(url,dataSel,tr){
 			 }
 	
 			 if(data.BackboneTubeData.length > 0){
-				  var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_backbone_tube__showPath_f' style='display:none;margin-left:-20px;' class='backboneFolder'> <input type='checkbox' class='BackboneFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Tubes </span></li></ul></li></ul>";
+				  var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_backbone_tube__showPath_f' style='display:none;margin-left:-20px;' class='backboneFolder'> <input type='checkbox' class='BackboneFiber_showpath checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Tubes </span></li></ul></li></ul>";
 			      $("#FiberPath_backbone__showPath").append(str);
 			      pathCheckFilter(TargetTube,"parentFolderCheck__showPath","FiberPath_backbone_tube__showPath","14",tubeArray,allTubes,directionHashmapTube,routeDisplayTube,"","","","");
 			        
@@ -13229,7 +13244,7 @@ function showPath(url,dataSel,tr){
 			}
 					
 			if(data.BackboneStrandData.length > 0){
-				  var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_backbone_strand__showPath_f' style='display:none;margin-left:-20px;' class='backboneFolder'> <input type='checkbox' class='BackboneFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Strands </span></li></ul></li></ul>";
+				  var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_backbone_strand__showPath_f' style='display:none;margin-left:-20px;' class='backboneFolder'> <input type='checkbox' class='BackboneFiber_showpath checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Strands </span></li></ul></li></ul>";
 			      $("#FiberPath_backbone__showPath").append(str);
 			      pathCheckFilter(TargetStrand,"parentFolderCheck__showPath","FiberPath_backbone_strand__showPath","14",strandArray,allStrands,directionHashmapStrand,routeDisplayStrand,"","","","");
 
@@ -13252,13 +13267,13 @@ function showPath(url,dataSel,tr){
 	         
 	    /* **** Metro ***** */
 		  if(data.MetroCableData.length > 0 || data.MetroTubeData.length > 0 || data.MetroStrandData.length > 0 ){
-		          var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_metro__showPath' style='display:none;margin-left:-20px;' class='metroFolder'> <input type='checkbox' class='MetroFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Metro </span></li></ul></li></ul>";
+		          var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_metro__showPath' style='display:none;margin-left:-20px;' class='metroFolder'> <input type='checkbox' class='MetroFiber_showpath checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Metro </span></li></ul></li></ul>";
 			      $("#FiberPath_f_showPath").append(str);
 			      pathCheckFilter("initial_ul","parentFolderCheck__showPath","FiberPath_metro__showPath","","","","","","","","","");      
 			}
 			  
 	        if(data.MetroCableData.length > 0){																							
-				  var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_metro_cable__showPath_f' style='display:none;margin-left:-20px;' class='metroFolder'> <input type='checkbox' class='MetroFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Cables </span></li></ul></li></ul>";
+				  var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_metro_cable__showPath_f' style='display:none;margin-left:-20px;' class='metroFolder'> <input type='checkbox' class='MetroFiber_showpath checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Cables </span></li></ul></li></ul>";
 				  $("#FiberPath_metro__showPath").append(str);
 			      pathCheckFilter(TargetFiber,"parentFolderCheck__showPath","FiberPath_metro_cable__showPath","20",fiberArray,allFiberCables,directionHashmap,routeDisplay,"","","","");
 															      
@@ -13279,7 +13294,7 @@ function showPath(url,dataSel,tr){
 			}
 						
 			if(data.MetroTubeData.length > 0){
-				  var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_metro_tube__showPath_f' style='display:none;margin-left:-20px;' class='metroFolder'> <input type='checkbox' class='MetroFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Tubes </span></li></ul></li></ul>";
+				  var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_metro_tube__showPath_f' style='display:none;margin-left:-20px;' class='metroFolder'> <input type='checkbox' class='MetroFiber_showpath checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Tubes </span></li></ul></li></ul>";
 				  $("#FiberPath_metro__showPath").append(str);
 		          pathCheckFilter(TargetTube,"parentFolderCheck__showPath","FiberPath_metro_tube__showPath","14",tubeArray,allTubes,directionHashmapTube,routeDisplayTube,"","","","");		  
 															      
@@ -13300,7 +13315,7 @@ function showPath(url,dataSel,tr){
 			}
 						
 			if(data.MetroStrandData.length > 0){
-				  var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_metro_strand__showPath_f' style='display:none;margin-left:-20px;' class='metroFolder'> <input type='checkbox' class='MetroFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Strands </span></li></ul></li></ul>";
+				  var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_metro_strand__showPath_f' style='display:none;margin-left:-20px;' class='metroFolder'> <input type='checkbox' class='MetroFiber_showpath checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Strands </span></li></ul></li></ul>";
 				  $("#FiberPath_metro__showPath").append(str);
 		         pathCheckFilter(TargetStrand,"parentFolderCheck__showPath","FiberPath_metro_strand__showPath","14",strandArray,allStrands,directionHashmapStrand,routeDisplayStrand,"","","","");
 				  
@@ -13323,12 +13338,12 @@ function showPath(url,dataSel,tr){
 						
 		/* **** Distribution **** */
 		    if(data.DistributionCableData.length > 0 || data.DistributionTubeData.length > 0 || data.DistributionStrandData.length > 0){
-		         var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_distribution__showPath' style='display:none;margin-left:-20px;' class='distributionFolder'> <input type='checkbox' class='DistributionFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Access </span></li></ul></li></ul>";
+		         var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_distribution__showPath' style='display:none;margin-left:-20px;' class='distributionFolder'> <input type='checkbox' class='AccessFiber_showpath checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Access </span></li></ul></li></ul>";
 		         $("#FiberPath_f_showPath").append(str);
 			     pathCheckFilter("initial_ul","parentFolderCheck__showPath","FiberPath_distribution__showPath","","","","","","","","","");      						         
 		    }		   
 			if(data.DistributionCableData.length > 0){
-			      var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_distribution_cable__showPath_f' style='display:none;margin-left:-20px;' class='distributionFolder'> <input type='checkbox' class='DistributionFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Cables </span></li></ul></li></ul>";
+			      var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_distribution_cable__showPath_f' style='display:none;margin-left:-20px;' class='distributionFolder'> <input type='checkbox' class='AccessFiber_showpath checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Cables </span></li></ul></li></ul>";
 				  $("#FiberPath_distribution__showPath").append(str);
 		          pathCheckFilter(TargetFiber,"parentFolderCheck__showPath","FiberPath_distribution_cable__showPath","20",fiberArray,allFiberCables,directionHashmap,routeDisplay,"","","","");
 													      
@@ -13349,7 +13364,7 @@ function showPath(url,dataSel,tr){
 			}
 						
 			if(data.DistributionTubeData.length > 0){
-				  var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_distribution_tube__showPath_f' style='display:none;margin-left:-20px;' class='distributionFolder'> <input type='checkbox' class='DistributionFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Tubes </span></li></ul></li></ul>";
+				  var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_distribution_tube__showPath_f' style='display:none;margin-left:-20px;' class='distributionFolder'> <input type='checkbox' class='AccessFiber_showpath checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Tubes </span></li></ul></li></ul>";
 				  $("#FiberPath_distribution__showPath").append(str);
               pathCheckFilter(TargetTube,"parentFolderCheck__showPath","FiberPath_distribution_tube__showPath","14",tubeArray,allTubes,directionHashmapTube,routeDisplayTube,"","","","");		  
 															      
@@ -13370,7 +13385,7 @@ function showPath(url,dataSel,tr){
 			}
 						
 			if(data.DistributionStrandData.length > 0){
-				  var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_distribution_strand__showPath_f' style='display:none;margin-left:-20px;' class='distributionFolder'> <input type='checkbox' class='DistributionFiber checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Strands </span></li></ul></li></ul>";
+				  var str="<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_distribution_strand__showPath_f' style='display:none;margin-left:-20px;' class='distributionFolder'> <input type='checkbox' class='AccessFiber_showpath checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Strands </span></li></ul></li></ul>";
 				  $("#FiberPath_distribution__showPath").append(str);
 		          pathCheckFilter(TargetStrand,"parentFolderCheck__showPath","FiberPath_distribution_strand__showPath","14",strandArray,allStrands,directionHashmapStrand,routeDisplayStrand,"","","",""); 
 															      
