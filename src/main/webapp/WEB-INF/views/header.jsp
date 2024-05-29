@@ -383,9 +383,13 @@ display:none;
             </ul>
           </li>
          
+         <div class="dropdown-divider"></div>
+          <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/StrandUtilizationReport">Strand Utilization</a>
+          </li>
         </ul>
       </li>
-       
+         
+          
                 <li class="nav-item dropdown">
         <a class="nav-link "  style="text-decoration: none;" href="${pageContext.request.contextPath}/Dashboard"  id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <c:if test="${page == 'dashboard'}"><span class="border-bottom active"></c:if><i class="fas fa-tv"></i>  Dashboard <c:if test="${page == 'dashboard'}"></span></c:if>
@@ -578,6 +582,11 @@ display:none;
             </ul>
           </li>
           
+         <div class="dropdown-divider"></div>
+          <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/StrandUtilizationReport">Strand Utilization</a>
+          </li>
+          
+           
         </ul>
       </li>
        
@@ -800,6 +809,10 @@ display:none;
               <li><a class="dropdown-item" href="${pageContext.request.contextPath}/SiteAssetReport">Site Asset Report</a></li>
                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/RevenueToAssetRatioReport">Revenue To Asset Ratio Report</a></li>
             </ul>
+          </li>
+          
+          <div class="dropdown-divider"></div>
+          <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/StrandUtilizationReport">Strand Utilization</a>
           </li>
           
         </ul>
@@ -1060,7 +1073,9 @@ display:none;
            	   <li><a class="dropdown-item" href="${pageContext.request.contextPath}/RevenueToAssetRatioReport">Revenue To Asset Ratio Report</a></li>
             </ul>
           </li>
-          
+          <div class="dropdown-divider"></div>
+          <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/StrandUtilizationReport">Strand Utilization</a>
+          </li>
         </ul>
       </li>
        
