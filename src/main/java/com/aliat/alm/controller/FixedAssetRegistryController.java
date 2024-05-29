@@ -107,7 +107,7 @@ public class FixedAssetRegistryController {
 			Query query = session.createNativeQuery(str);
 
 			List<Object[]> results = query.getResultList();
-
+/*
 			for (Object[] row : results) {
 			    System.out.println("farID: " + row[0]);
 			    System.out.println("fixedassetID: " + row[1]);
@@ -122,6 +122,7 @@ public class FixedAssetRegistryController {
 			    System.out.println("siteName: " + row[10]);
 			    // Adjust index accordingly for other columns
 			}
+*/			
 
 
 				listFAR = ((SQLQuery) query).addScalar("farID").addScalar("fixedassetID").addScalar("itemCode")

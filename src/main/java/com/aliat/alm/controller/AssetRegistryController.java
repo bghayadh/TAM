@@ -71,9 +71,20 @@ public class AssetRegistryController {
 				notifications.headerNotifications(session, model);
 				System.out.println("asset");
 				try {
-				    String str = "SELECT arID, assetID, aritemCode, aritemName, itemModel, itemPartNumber, ArStatus, arlastModifiedDate, itemSN, itemNameReg, poID, siteID, siteName FROM ( "
+/*				    String str = "SELECT arID, assetID, aritemCode, aritemName, itemModel, itemPartNumber, ArStatus, arlastModifiedDate, itemSN, itemNameReg, poID, siteID, siteName FROM ( "
 				                 + " SELECT A.AR_ID AS arID, A.AR_ID AS assetID, A.ITEM_CODE AS aritemCode, A.ITEM_NAME AS aritemName, A.ITEM_MODEL AS itemModel, A.ITEM_PART_NUMBER AS itemPartNumber, A.AR_STATUS as ArStatus, TO_CHAR(A.LAST_MODIFIED_DATE, 'YYYY-MM-DD HH24:MI:SS') AS arlastModifiedDate, A.ITEM_SN AS itemSN, A.ITEM_NAME_REGISTER AS itemNameReg, A.PO_ID AS poID, B.SITE_ID AS siteID, B.SITE_NAME AS siteName , "
 				                 + " ROW_NUMBER() OVER (PARTITION BY A.AR_ID ORDER BY B.SITE_ID DESC) AS rn FROM ASSET_REGISTRY A LEFT JOIN AR_SITE B ON B.AR_ID = A.AR_ID ) WHERE rn = 1 ORDER BY arlastModifiedDate DESC";
+*/				                 
+				    
+
+				    String str = "SELECT arID, assetID, aritemCode, aritemName, itemModel, itemPartNumber, ArStatus, arlastModifiedDate, itemSN, itemNameReg, poID, siteID, siteName FROM ("
+			                 + " SELECT A.AR_ID AS arID, A.AR_ID AS assetID, A.ITEM_CODE AS aritemCode, A.ITEM_NAME AS aritemName, D.ITEM_MODEL AS itemModel, D.ITEM_PART_NUMBER AS itemPartNumber,"
+			                 + " ROW_NUMBER() OVER (PARTITION BY A.AR_ID ORDER BY D.ITM_ID DESC) as rn1, A.AR_STATUS as ArStatus, TO_CHAR(A.LAST_MODIFIED_DATE, 'YYYY-MM-DD HH24:MI:SS') AS arlastModifiedDate, C.SERIAL_NUMBER AS itemSN,"
+			                 + " ROW_NUMBER() OVER (PARTITION BY A.AR_ID ORDER BY C.SERIAL_ID DESC) as rn2, A.ITEM_NAME_REGISTER AS itemNameReg, A.PO_ID AS poID, B.SITE_ID AS siteID, B.SITE_NAME AS siteName,"
+			                 + " ROW_NUMBER() OVER (PARTITION BY A.AR_ID ORDER BY B.SITE_ID DESC) AS rn3"
+			                 + " FROM ASSET_REGISTRY A LEFT JOIN AR_SITE B ON B.AR_ID = A.AR_ID LEFT JOIN AR_SERIAL_NUMBER C ON C.AR_ID = A.AR_ID LEFT JOIN AR_MODEL_PARTNUMBER D ON D.AR_ID = A.AR_ID)"
+			                 + " WHERE (rn1 = 0 OR rn1 = 1) and (rn2 = 0 OR rn2 = 1) and (rn3 = 0 OR rn3 = 1) ORDER BY arlastModifiedDate DESC";
+
 
 				    model.addAttribute("ListGridTable", mapper.writeValueAsString(session.createNativeQuery(str).list()));
 				    List<Object[]> resultList = session.createNativeQuery(str).list();
