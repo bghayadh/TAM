@@ -135,17 +135,7 @@ public class StrandUtilizationReportController {
 
 				if (session != null && session.isOpen()) {
 
-					List<Object[]> fiberAuxData = session.createNativeQuery(
-							"SELECT B.LONGITUDE,B.LATITUDE,B.AUXILIARY_POINT_ID,B.AUXILIARY_POINT_NAME,B.SEQ_SORTING,B.AUXILIARY_ID FROM FIBER_CABLES A,FIBER_AUXILIARY_POINTS B WHERE A.FIBER_CABLE_ID=B.FIBER_CABLE_ID AND B.FIBER_CABLE_ID ='"
-									+ fiberCableID + "' ORDER BY B.SEQ_SORTING ASC").getResultList();
-					rtn.put("fiberAuxData", fiberAuxData);
-					
-					List<Object[]> fiberList = session.createNativeQuery(
-							"SELECT SOURCE_LNG,SOURCE_LAT,DESTINATION_LNG,DESTINATION_LAT,SOURCE_WARE_ID,SOURCE_ID,SOURCE_NAME,DESTINATION_WARE_ID,DESTINATION_ID,DESTINATION_NAME FROM FIBER_CABLES WHERE FIBER_CABLE_ID =' "
-							+ fiberCableID + "' ").getResultList();
-					rtn.put("fiberList", fiberList);
-					
-					
+				
 				
 					
 					String str ="SELECT DISTINCT A.STRAND_NB_SIDE_A AS strandNo,A.TUBE_NB_SIDE_A AS tubeNo,'Junction' AS elementType,A.JCT_ID  as elementID, '' as frontBackPort,'' as portIndex,'' as portRow,'' as portColumn,A.LOCATION_TYPE_SIDE_A AS locationType,A.LOCATION_ID_SIDE_A AS locationID,A.LOCATION_NAME_SIDE_A AS locationName, "
@@ -187,6 +177,17 @@ public class StrandUtilizationReportController {
 					
 					rtn.put("listStrandsUtilization", listStrandsUtilization);
 
+					List<Object[]> fiberList = session.createNativeQuery(
+							"SELECT SOURCE_LNG,SOURCE_LAT,DESTINATION_LNG,DESTINATION_LAT,SOURCE_WARE_ID,SOURCE_ID,SOURCE_NAME,DESTINATION_WARE_ID,DESTINATION_ID,DESTINATION_NAME FROM FIBER_CABLES WHERE FIBER_CABLE_ID ='"+fiberCableID+ "' ").getResultList();
+					rtn.put("fiberList", fiberList);
+					
+					
+					List<Object[]> fiberAuxData = session.createNativeQuery(
+							"SELECT B.LONGITUDE,B.LATITUDE,B.AUXILIARY_POINT_ID,B.AUXILIARY_POINT_NAME,B.SEQ_SORTING,B.AUXILIARY_ID FROM FIBER_CABLES A,FIBER_AUXILIARY_POINTS B WHERE A.FIBER_CABLE_ID=B.FIBER_CABLE_ID AND B.FIBER_CABLE_ID ='"
+									+ fiberCableID + "' ORDER BY B.SEQ_SORTING ASC").getResultList();
+					rtn.put("fiberAuxData", fiberAuxData);
+					
+										
 
 
 				}
