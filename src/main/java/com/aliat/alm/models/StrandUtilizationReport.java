@@ -22,9 +22,11 @@ public class StrandUtilizationReport {
 
 	
 	private String frontBackPort;
+	private String status;
 	private String portIndex;
 	private String portRow;
 	private String portColumn;
+
 
 
 	
@@ -49,7 +51,7 @@ public class StrandUtilizationReport {
 	}
 
 
-	public StrandUtilizationReport(String strandNo, String tubeNo,String elementType,String elementID,String frontBackPort,String portIndex,String portRow,String portColumn,String locationType,String locationID, String locationName,
+	public StrandUtilizationReport(String strandNo, String tubeNo,String elementType,String elementID,String frontBackPort,String status,String portIndex,String portRow,String portColumn,String locationType,String locationID, String locationName,
 			String longitude, String latitude,String showLocation,String showElement) {
 		super();
 		this.strandNo=strandNo;
@@ -57,6 +59,7 @@ public class StrandUtilizationReport {
 		this.elementType=elementType;
 		this.elementID=elementID;
 		this.frontBackPort=frontBackPort;
+		this.status = status;
 		this.portIndex=portIndex;
 		this.portRow=portRow;
 		this.portColumn=portColumn;
@@ -217,6 +220,16 @@ public class StrandUtilizationReport {
 
 	public void setShowElement(String showElement) {
 		this.showElement = showElement;
+	}
+
+
+	public String getStatus() {
+		return status;
+	}
+
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 
