@@ -17,18 +17,15 @@ public class StrandUtilizationReport {
 	private String tubeNo;
 	
 	private String elementType;
-	
-	private String elementID;
-
-	
+	private String elementID;	
 	private String frontBackPort;
-	private String status;
 	private String portIndex;
 	private String portRow;
 	private String portColumn;
-
-
-
+	private String status;
+	private String equipmentType;
+	private String equipmentID;
+	private String equipmentName;
 	
 	@Column(name = "LOCATION_TYPE_SIDE_A")
 	private String locationType;
@@ -51,7 +48,7 @@ public class StrandUtilizationReport {
 	}
 
 
-	public StrandUtilizationReport(String strandNo, String tubeNo,String elementType,String elementID,String frontBackPort,String status,String portIndex,String portRow,String portColumn,String locationType,String locationID, String locationName,
+	public StrandUtilizationReport(String strandNo, String tubeNo,String elementType,String elementID,String frontBackPort,String portIndex,String portRow,String portColumn,String status,String equipmentType,String equipmentID,String equipmentName,String locationType,String locationID, String locationName,
 			String longitude, String latitude,String showLocation,String showElement) {
 		super();
 		this.strandNo=strandNo;
@@ -59,10 +56,13 @@ public class StrandUtilizationReport {
 		this.elementType=elementType;
 		this.elementID=elementID;
 		this.frontBackPort=frontBackPort;
-		this.status = status;
 		this.portIndex=portIndex;
 		this.portRow=portRow;
 		this.portColumn=portColumn;
+		this.status = status;
+		this.equipmentType=equipmentType;
+		this.equipmentID = equipmentID;
+		this.equipmentName = equipmentName;
 		this.locationType = locationType;
 		this.locationID=locationID;
 		this.locationName = locationName;
@@ -150,6 +150,35 @@ public class StrandUtilizationReport {
 
 	public void setPortColumn(String portColumn) {
 		this.portColumn = portColumn;
+	}
+
+
+	public String getEquipmentType() {
+		return equipmentType;
+	}
+
+
+	public void setEquipmentType(String equipmentType) {
+		this.equipmentType = equipmentType;
+	}
+
+	public String getEquipmentID() {
+		return equipmentID;
+	}
+
+
+	public void setEquipmentID(String equipmentID) {
+		this.equipmentID = equipmentID;
+	}
+
+
+	public String getEquipmentName() {
+		return equipmentName;
+	}
+
+
+	public void setEquipmentName(String equipmentName) {
+		this.equipmentName = equipmentName;
 	}
 
 

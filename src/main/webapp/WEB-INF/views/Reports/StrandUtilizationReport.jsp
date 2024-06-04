@@ -107,6 +107,7 @@ height: 700px;
 overflow: hidden;
 background-color: #08526d;
 padding: 10px 0px;
+text-align: center;
 }
 
 .legendContainer{
@@ -118,13 +119,13 @@ position: relative;
 width: 100%;
 height: 100%;            
 position: absolute;
-top: 20px;
+top: 70px;
 left: 0;
 }
 
 .stack-top{
 z-index: 3;
-margin: 70px; 
+margin: 120px; 
 }
 
 .title {
@@ -207,6 +208,32 @@ max-width: 100%;
 	z-index:9999;
 }
 
+.tooltip-container {
+	position: relative;
+    display: inline-block;
+}
+.tooltip-container .tooltip-text {
+	visibility: hidden;
+	width: 300px;
+	background-color: gray;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+	padding: 5px;
+	position: absolute;
+	z-index: 1;
+	bottom: 100%;
+	left: 50%;
+	margin-left: -100px;
+	opacity: 0;
+	transition: opacity 0.3s;            
+}
+
+.tooltip-container:hover .tooltip-text {
+	visibility: visible;
+	opacity: 1;
+}
+
 </style>
 <body>
   <c:set var="pg" value="report" scope="session"  />
@@ -232,10 +259,10 @@ max-width: 100%;
 					</div>
 		</div>
 		<div class="col-md-3">
-			<button type="button"  id ="showRelatedPath" class="btn mapButtons"  style=" margin-top:-0px;margin-left:142px;">Show Related Path</button>
+			<button type="button"  id ="showRelatedPath" class="btn mapButtons"  style=" margin-top:-0px;margin-left:102px;">Show Related Path</button>
 		</div>
 		<div class="col-md-2">
-			<button type="button"  id ="showOnMap" class="btn mapButtons"  style=" margin-top:-0px;"  >Show on Map</button>
+			<button type="button"  id ="showOnMap" class="btn mapButtons"   >Show on Map</button>
 		</div>
 					
 			<div class="col-md-2" id="col3" style="text-align:right;">
@@ -349,22 +376,17 @@ max-width: 100%;
 														<ul class="dropdown-menu filter-dropdown-ul"></ul>
 													</li>
 												</th>		
-												 <th>F/B or A/B
-													<li class="filter-dropdown dropdown">
-														<button class="almgrid-filter" data-toggle="dropdown"> 
-														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
-														</button>
-														<ul class="dropdown-menu filter-dropdown-ul"></ul>
-													</li>
-												</th>	
-													<th>Status
-													<li class="filter-dropdown dropdown">
-														<button class="almgrid-filter" data-toggle="dropdown"> 
-														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
-														</button>
-														<ul class="dropdown-menu filter-dropdown-ul"></ul>
-													</li>
-												</th>	
+												 <th>
+							                        <div class="tooltip-container">F/B or A/B
+							                            <span class="tooltip-text">Front/Back or Side A/Side B</span>
+							                        </div>
+							                        <li class="filter-dropdown dropdown">
+							                            <button class="almgrid-filter" data-toggle="dropdown"> 
+							                                <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
+							                            </button>
+							                            <ul class="dropdown-menu filter-dropdown-ul"></ul>
+							                        </li>
+                    							</th>
 													<th>Port Index
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown"> 
@@ -388,8 +410,39 @@ max-width: 100%;
 														</button>
 														<ul class="dropdown-menu filter-dropdown-ul"></ul>
 													</li>
-												</th>														
-
+												</th>	
+												<th>Status
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> 
+														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
+														</button>
+														<ul class="dropdown-menu filter-dropdown-ul"></ul>
+													</li>
+												</th>	
+												<th>Equipment Type
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown">
+														 <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
+														 </button>
+														<ul class="dropdown-menu filter-dropdown-ul"></ul>
+													</li>
+												</th>	
+												<th>Equipment ID
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown">
+														 <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
+														 </button>
+														<ul class="dropdown-menu filter-dropdown-ul"></ul>
+													</li>
+												</th>													
+												<th>Equipment Name
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown">
+														 <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
+														 </button>
+														<ul class="dropdown-menu filter-dropdown-ul"></ul>
+													</li>
+												</th>	
 												<th>Location Type
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown">
@@ -461,6 +514,9 @@ max-width: 100%;
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>											
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>											
+												<th><input type="text" class="almgrid-search" placeholder="Search"></th>											
+												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
+												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>											
@@ -513,11 +569,42 @@ max-width: 100%;
 							</div>
 						</div>
 					</div>
-				</div>				
+				</div>			
+
+
+		
+	<div style="display: Block;" id="totalStrandsNums">
+		<div class="row second" style="padding-left: 15px;">								
+			<div class="col-md-4">
+				<div class="form-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">Total Number of Strands</span>
+						<input readonly type="text" id="totalStrands" class="form-control text-input" style="width:120px;"/>
+					</div>
+				</div>
+		</div>
+		<div class="col-md-4">
+			<div class="form-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">Total Used Strands</span>
+					<input readonly type="text" id="totalUsedStrands" class="form-control text-input" style="width:120px;" />
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="form-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">Total Not Used Strands</span>
+					<input readonly type="text" id="totalNotUsedStrands" class="form-control text-input" style="width:120px;" />
+				</div>
+			</div>
+		</div>
+				
+	</div>
+		</div>
       </div>
     </div>
   </div>
-
 
   <div class="panel panel-default" style="margin-bottom:3px;" >
   <div class="panel-heading " role="tab" id="headingTwo" >
@@ -534,21 +621,24 @@ max-width: 100%;
 		</div>
       <div class="legendContainer">
       <div class="card-body">      
-         <div class="box stack-top" id="legendDiv" style="position: relative;top:235px;width: 280px; float:left; height:390px;  background:white; margin:37px;display: none">
+         <div class="box stack-top" id="legendDiv" style="position: relative;top:235px;width: 290px; float:left; height:448px;  background:white; margin:37px;display: none">
          <div class="legendHeader"  id="legendHeader">
- 			<h6 style="color:white;font-weight:bold; font-size:3ex;display:inline-block;position: relative;top:5px;left:10px;">MAP Legend</h6>
+ 			<h6 style="color:white;font-weight:bold; font-size:2.5ex;display:inline-block;position: relative;">Map Legend</h6>
   		</div>
   
    <div id="tableDiv">
   	<table id="strandUtilizationTableReport">
   <tr>
-    <th style="position: relative;top: 5px;left:10px;"></th>  
+    <th style="position: relative;top: 5px;left:10px;"></th>
+    <th style="position: relative;top: 5px;left:10px;"></th>    
     <th style="position: relative;top: 5px;left:10px;"></th>
     <th style="position: relative;top: 5px;left:10px;"></th>
     <th style="position: relative;top: 5px;left:10px;"></th>
     <th style="position: relative;top: 5px;left:10px;"></th>
     <th style="position: relative;top: 5px;left:10px;"></th>
     <th style="position: relative;top: 5px;left:10px;"></th>
+    <th style="position: relative;top: 5px;left:10px;"></th>
+    
   </tr>
   
   	<tr>
@@ -561,16 +651,18 @@ max-width: 100%;
   	<tr>
      <td style="position: relative;top:17px;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideAllManholesCheckbox" onclick="showHidePts('showHideAllManholesCheckbox');" value="red"/></td>
      <td style="position: relative;top:28px;left:62px;"><div><img class='image' src='${pageContext.request.contextPath}/resources/NetworkImages/manholeRed.png'></div></td>
-     <td style="position: relative;top: 28px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; ">Manholes</label></td>   
+     <td style="position: relative;top: 28px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; ">Manhole</label></td>   
      <td style="position: relative;top: 28px;left:65px;"><div style="position: relative;left:-5px;color: black;" id="manholesCount" ></div></td>
     </tr>
+    
     
     <tr>
      <td style="position: relative;top:17px;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideAllHandholesCheckbox" onclick="showHidePts('showHideAllHandholesCheckbox');" value="yellow"/></td>
      <td style="position: relative;top:28px;left:62px;"><div><img class='image' src='${pageContext.request.contextPath}/resources/NetworkImages/handholeYellow.png'></div></td>
-     <td style="position: relative;top: 28px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; ">Handholes</label></td>   
+     <td style="position: relative;top: 28px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; ">Handhole</label></td>   
      <td style="position: relative;top: 28px;left:65px;"><div style="position: relative;left:-5px;color: black;" id="handholesCount" ></div></td>
     </tr>
+     
     
     <tr>
      <td style="position: relative;top:17px;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideAllDbCheckbox" onclick="showHidePts('showHideAllDbCheckbox');" value="blue"/></td>
@@ -587,13 +679,13 @@ max-width: 100%;
       <tr>
      <td style="position: relative;top:17px;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideAllCustCheckbox" onclick="showHidePts('showHideAllCustCheckbox');" value="red"/></td>
      <td style="position: relative;top:28px;left:58px;"><div><img class='image' style="width: 30px; height: 30px;" src='${pageContext.request.contextPath}/resources/NetworkImages/customerIcon.png'></div></td>
-     <td style="position: relative;top:32px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Customers</label></td>   
+     <td style="position: relative;top:32px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Customer</label></td>   
      <td style="position: relative;top: 28px;left:65px;"><div style="position: relative;left:-5px;color: black;" id="custCount" ></div></td>
     </tr>
      <tr>
      <td style="position: relative;top:17px;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideAllSitesCheckbox" onclick="showHidePts('showHideAllSitesCheckbox');" value="pink"/></td>
      <td style="position: relative;top:28px;left:58px;"><div><img class='image' style="width: 25px; height: 30px;" src='${pageContext.request.contextPath}/resources/NetworkImages/redSiteIcon.png'></div></td>
-     <td style="position: relative;top: 28px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Sites</label></td>   
+     <td style="position: relative;top: 28px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Site</label></td>   
      <td style="position: relative;top: 28px;left:65px;"><div style="position: relative;left:-5px;color: black;" id="sitesCount" ></div></td>
     </tr>
      
@@ -850,6 +942,8 @@ function DefaultZoomControl(controlDiv, map) {
   }
 
 $(document).ready(function() {
+
+	$( "#legendDiv" ).draggable(); 
 	
 	//collapse active class	
 	$('.panel-collapse').on('show.bs.collapse',function() {
@@ -1280,11 +1374,14 @@ $(document).ready(function() {
 				+'<th>Tube #<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
 				+'<th>Element Type<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
 				+'<th>Element ID<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
-				+'<th>F/B or A/B<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
-				+'<th>Status<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
+				+'<th><div class="tooltip-container">F/B or A/B<span class="tooltip-text">Front/Back or Side A/Side B</span></div><li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
 				+'<th>Port Index<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
 				+'<th>Port Row<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
 				+'<th>Port Column<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
+				+'<th>Status<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
+				+'<th>Equipment Type<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
+				+'<th>Equipment ID<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
+				+'<th>Equipment Name<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
 				+'<th>Location Type<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
 				+'<th>Location ID<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
 				+'<th>Location Name<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
@@ -1292,7 +1389,7 @@ $(document).ready(function() {
 				+'<th>Location Latitude<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
 				+'<th><li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown" disabled style="display:none;"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
 				+'<th><li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown" disabled style="display:none;"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
-				+'<tr><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" disabled class="almgrid-search" style="display:none"></th><th><input type="text" disabled class="almgrid-search" style="display:none"></th></tr></thead><tbody></tbody></table>');
+				+'<tr><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" disabled class="almgrid-search" style="display:none"></th><th><input type="text" disabled class="almgrid-search" style="display:none"></th></tr></thead><tbody></tbody></table>');
 			
 			
 
@@ -1318,6 +1415,9 @@ $(document).ready(function() {
                ReportArrayGlobal = data.listStrandsUtilization; 
                   if (ReportArrayGlobal.length == 0) { 
                 	  alert("There is no data to display");
+					  $('#totalStrands').val('0');
+					  $('#totalUsedStrands').val('0');
+					  $('#totalNotUsedStrands').val('0');	                	  
                   }
                  	 var almgrid = new AlmgridTable({
                           tableId: "gridTable",
@@ -1397,9 +1497,10 @@ $(document).ready(function() {
   			               var ArrayKeys = Object.keys(dataArray[0]);
   			       		   var columnVal;
   			       		   var data = [];//for export
+  			       		   var jctUsedStrands=0,dbUsedStrands=0;
   			       	       exportArrayGrid = [];
   			       		   data.push('\r');
-  			       		   data.push(["Strand #","Tube #","Element Type","Element ID","F/B or A/B","Status","Port Index","Port Row","Port Column","Location Type" ,"Location ID", "Location Name","Location Longitude", "Location Latitude"]);  	  			       		
+  			       		   data.push(["Strand #","Tube #","Element Type","Element ID","F/B or A/B","Port Index","Port Row","Port Column","Status","Equipment Type","Equipment ID","Equipment Name","Location Type" ,"Location ID", "Location Name","Location Longitude", "Location Latitude"]);  	  			       		
 
   	  			       	   filteredGridData =  dataArray; // used in draw on map 
   	  			       	   
@@ -1409,8 +1510,12 @@ $(document).ready(function() {
   			            	 columnVal = ArrayKeys[j];
 	  			              if(columnVal !="showLocation" && columnVal !="showElement") { 
 	  	  			            	data.push(dataArray[i][ArrayKeys[j]]);
-	  			            	}
-  		          			   }
+	  			            	}								
+									
+								}
+	  			            	
+  		          			   
+	          			   
   		          		   }
 
 		                   exportArrayGrid.push(data);
@@ -1418,6 +1523,11 @@ $(document).ready(function() {
 		              }
   		          	else{
   		          		filteredGridData=[];
+  						$('#totalStrands').val('0');
+  					  	$('#totalUsedStrands').val('0');
+  					 	$('#totalNotUsedStrands').val('0');
+						
+  		          		
   	      			}
   				  
   		         	        // Method for pagination almgrid-pagecount-box
@@ -1477,11 +1587,13 @@ $(document).ready(function() {
 					}
 				}
 				window["mapPointsNames_"+cableID].push(dst);
-                              
+
+               
+                         
                 window["mapPoints_"+cableID]=[]; 
 				window["mapPoints_"+cableID].push(new google.maps.LatLng(data.fiberList[0][1],data.fiberList[0][0]));
 
-			
+				 
 				
 				for(i=0;i<data.fiberAuxData.length;i++){//PUSH AUXILIARY POINTS OF FIBER CABLE	
 					window["mapPoints_"+cableID].push(new google.maps.LatLng(data.fiberAuxData[i][1],data.fiberAuxData[i][0]));
@@ -1510,6 +1622,21 @@ $(document).ready(function() {
 
 				window["mapPoints_"+cableID].push(new google.maps.LatLng(data.fiberList[0][3],data.fiberList[0][2]));
 
+
+				
+				var totalStrands = parseFloat(data.fiberList[0][11]) * parseFloat(data.fiberList[0][12]);
+				$('#totalStrands').val(totalStrands);
+
+				var totalUsedStr = parseFloat(data.frontTotalUsedStrands) + parseFloat(data.backTotalUsedStrands) +parseFloat(data.jctTotalUsedStrands);
+				$('#totalUsedStrands').val(totalUsedStr);
+
+
+				var totalNotUsedStrands = parseFloat(totalStrands) - parseFloat(totalUsedStr);
+				$('#totalNotUsedStrands').val(totalNotUsedStrands);
+
+					
+
+	             
 				if(allCables.includes(cableID) ==false){
 					allCables.push(cableID);
 				}
@@ -1525,7 +1652,7 @@ $(document).ready(function() {
 							allCables.push(pathID);
 						}
 						window["mapPoints_"+pathID]=[];
-						window["mapPoints_"+pathID].push(new google.maps.LatLng(data.relatedPathCables[c][3],data.relatedPathCables[c][2]));	
+						window["mapPoints_"+pathID].push(new google.maps.LatLng(data.relatedPathCables[c][2],data.relatedPathCables[c][1]));	
 
 						for(var y=0;y<data.fiberAuxDataRelatedPath.length;y++) {
 							if(data.fiberAuxDataRelatedPath[y][0] == pathID ) {
@@ -1533,9 +1660,10 @@ $(document).ready(function() {
 							}
 
 						}
-						window["mapPoints_"+pathID].push(new google.maps.LatLng(data.relatedPathCables[c][5],data.relatedPathCables[c][4]));	
-		          		buildPath(pathID,data.relatedPathCables[c][1],window["mapPoints_"+pathID],data.relatedPathCables[c][13],0.7,4.5,'blue',13);
+						window["mapPoints_"+pathID].push(new google.maps.LatLng(data.relatedPathCables[c][4],data.relatedPathCables[c][3]));	
+		          		buildPath(pathID,data.relatedPathCables[c][11],window["mapPoints_"+pathID],data.relatedPathCables[c][12],0.7,4.5,'blue',13);
 					}
+					
 
 				//}
 
@@ -1790,6 +1918,25 @@ function showElement(concatIDLongLat,rowIndex){
 			}
 			
 		}// end mapFlag condition
+		else {
+			if(ID.includes("DB_")) {
+				if(markersDB[ID]){
+					if(markersDB[siteID].getMap()==null){
+						markersDB[siteID].setMap(map);			
+						markerClusterDB.addMarker(markersDB[siteID]);
+					}
+				}
+			}
+			else if(ID.includes("JCT_")) {
+
+				if(markersJct[ID]){
+					if(markersJct[ID].getMap()==null){
+						markersJct[ID].setMap(map);			
+						markerClusterJct.addMarker(markersJct[ID]);
+					}
+				}				
+		   }
+		}
 
 		//Scroll to the map div
 		document.getElementById("headingTwo").scrollIntoView({ behavior: "smooth" });
@@ -1804,7 +1951,7 @@ function showLocation(ID,rowIndex){
 	var locationType = filteredGridData[rowIndex]["locationType"];
 
 	 var latLng = new google.maps.LatLng(latitude,longitude);
-	 map.setZoom(15);
+	 map.setZoom(16);
 	 map.panTo(latLng);
 	 
 		
@@ -1876,6 +2023,49 @@ function showLocation(ID,rowIndex){
 			}
 			
 		}// end mapFlag condition
+		else {
+
+			if(locationType =="Customer") {
+		        if(markersCustomer[ID]){
+		        	if(markersCustomer[ID].getMap()==null){
+		        		markersCustomer[ID].setMap(map);			
+		        		markerClusterCustomers.addMarker(markersCustomer[ID]);
+					}
+				}  
+			}
+			else if(locationType =="Site") {
+		        if(markersSites[ID]){
+		        	if(markersSites[ID].getMap()==null){
+		        		markersSites[ID].setMap(map);			
+		        		markerClusterSites.addMarker(markersSites[ID]);
+					}
+				}  
+			}
+			else if(locationType =="Manhole") {
+		        if(markersManholes[ID]){
+		        	if(markersManholes[ID].getMap()==null){
+		        		markersManholes[ID].setMap(map);			
+		        		markerClusterManholes.addMarker(markersManholes[ID]);
+					}
+				}  
+			}
+			else if(locationType =="Handhole") {
+		        if(markersHandholes[ID]){
+		        	if(markersHandholes[ID].getMap()==null){
+		        		markersHandholes[ID].setMap(map);			
+		        		markerClusterHandholes.addMarker(markersHandholes[ID]);
+					}
+				}  
+			}
+			else if(locationType=="DB") {
+		        if(markersDB[ID]){
+		        	if(markersDB[ID].getMap()==null){
+		        		markersDB[ID].setMap(map);			
+		        		markerClusterDB.addMarker(markersDB[ID]);
+					} 					
+				}  
+			}			
+		}
 
 		//Scroll to the map div
 		document.getElementById("headingTwo").scrollIntoView({ behavior: "smooth" });

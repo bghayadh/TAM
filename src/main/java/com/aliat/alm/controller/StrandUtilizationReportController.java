@@ -124,6 +124,11 @@ public class StrandUtilizationReportController {
 		String fiberCableID = request.getParameter("cableID");
 
 		List<StrandUtilizationReport> listStrandsUtilization = new ArrayList<StrandUtilizationReport>();
+		List<Object[]> fiberAuxDataRelatedPath = new ArrayList<Object[]>();
+		List<Object[]> relatedPathCablesID = new ArrayList<Object[]>();
+		List<Object[]> relatedPathCablesList = new ArrayList<Object[]>();
+
+
 
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
@@ -138,7 +143,7 @@ public class StrandUtilizationReportController {
 				
 				
 					
-					String str ="SELECT * FROM ( SELECT DISTINCT A.STRAND_NB_SIDE_A AS strandNo,A.TUBE_NB_SIDE_A AS tubeNo,'Junction' AS elementType,A.JCT_ID  as elementID, 'Side A' as frontBackPort,'' AS status, CAST(A.SEQUENCE_NUMBER AS VARCHAR2(10)) as portIndex,'' as portRow,'' as portColumn,A.LOCATION_TYPE_SIDE_A AS locationType,A.LOCATION_ID_SIDE_A AS locationID,A.LOCATION_NAME_SIDE_A AS locationName, "
+					String str ="SELECT * FROM ( SELECT DISTINCT A.STRAND_NB_SIDE_A AS strandNo,A.TUBE_NB_SIDE_A AS tubeNo,'Junction' AS elementType,A.JCT_ID  as elementID, 'Side A' as frontBackPort, CAST(A.SEQUENCE_NUMBER AS VARCHAR2(10)) as portIndex,'' as portRow,'' as portColumn,'' AS status,'' as equipmentType,'' AS equipmentID,'' as equipmentName,A.LOCATION_TYPE_SIDE_A AS locationType,A.LOCATION_ID_SIDE_A AS locationID,A.LOCATION_NAME_SIDE_A AS locationName, "
 							+ " CASE WHEN A.LOCATION_TYPE_SIDE_A = 'Manhole' THEN M.longitude WHEN A.LOCATION_TYPE_SIDE_A = 'Handhole' THEN H.longitude  WHEN A.LOCATION_TYPE_SIDE_A = 'Site' THEN W.longitude  WHEN A.LOCATION_TYPE_SIDE_A = 'Customer' THEN C.longitude  WHEN A.LOCATION_TYPE_SIDE_A = 'DB' THEN D.DB_longitude  ELSE NULL END AS longitude,"
 							+ " CASE WHEN A.LOCATION_TYPE_SIDE_A = 'Manhole' THEN M.latitude  WHEN A.LOCATION_TYPE_SIDE_A = 'Handhole' THEN H.latitude WHEN A.LOCATION_TYPE_SIDE_A = 'Site' THEN W.latitude WHEN A.LOCATION_TYPE_SIDE_A = 'Customer' THEN C.latitude WHEN A.LOCATION_TYPE_SIDE_A = 'DB' THEN D.DB_latitude ELSE NULL  END AS latitude, "
 							+ " A.LOCATION_ID_SIDE_A AS showLocation,A.JCT_ID || ':' || J.LONGITUDE || ':' || J.LATITUDE || ':' || J.JUNCTION_NAME as showElement FROM JUNCTION_MAPPING A LEFT JOIN JUNCTION J ON A.JCT_ID = J.JUNCTION_ID LEFT JOIN manhole M ON A.LOCATION_ID_SIDE_A = M.manhole_id AND A.LOCATION_TYPE_SIDE_A = 'Manhole' LEFT JOIN handhole H ON A.LOCATION_ID_SIDE_A = H.handhole_id AND A.LOCATION_TYPE_SIDE_A = 'Handhole' LEFT JOIN WAREHOUSE W ON A.LOCATION_ID_SIDE_A = W.SITE_ID AND A.LOCATION_TYPE_SIDE_A = 'Site' LEFT JOIN Customer C ON A.LOCATION_ID_SIDE_A = C.CUSTOMER_ID AND A.LOCATION_TYPE_SIDE_A = 'Customer' LEFT JOIN DISTRIBUTION_BOARD D ON A.LOCATION_ID_SIDE_A = D.DB_ID AND A.LOCATION_TYPE_SIDE_A = 'DB' "
@@ -146,7 +151,7 @@ public class StrandUtilizationReportController {
 							
 							+ " UNION "
 							
-							+ " SELECT DISTINCT A.STRAND_NB_SIDE_B AS strandNo,A.TUBE_NB_SIDE_B AS tubeNo,'Junction' AS elementType,A.JCT_ID  as elementID,'Side B' as frontBackPort,'' AS status,CAST(A.SEQUENCE_NUMBER AS VARCHAR2(10)) as portIndex,'' as portRow,'' as portColumn,A.LOCATION_TYPE_SIDE_B AS locationType,A.LOCATION_ID_SIDE_B AS locationID,A.LOCATION_NAME_SIDE_B AS locationName, "
+							+ " SELECT DISTINCT A.STRAND_NB_SIDE_B AS strandNo,A.TUBE_NB_SIDE_B AS tubeNo,'Junction' AS elementType,A.JCT_ID  as elementID,'Side B' as frontBackPort,CAST(A.SEQUENCE_NUMBER AS VARCHAR2(10)) as portIndex,'' as portRow,'' as portColumn,'' AS status,'' as equipmentType,'' AS equipmentID,'' as equipmentName,A.LOCATION_TYPE_SIDE_B AS locationType,A.LOCATION_ID_SIDE_B AS locationID,A.LOCATION_NAME_SIDE_B AS locationName, "
 							+ " CASE WHEN A.LOCATION_TYPE_SIDE_B = 'Manhole' THEN M.longitude WHEN A.LOCATION_TYPE_SIDE_B = 'Handhole' THEN H.longitude  WHEN A.LOCATION_TYPE_SIDE_B = 'Site' THEN W.longitude  WHEN A.LOCATION_TYPE_SIDE_B = 'Customer' THEN C.longitude  WHEN A.LOCATION_TYPE_SIDE_B = 'DB' THEN D.DB_longitude  ELSE NULL END AS longitude,"
 							+ " CASE WHEN A.LOCATION_TYPE_SIDE_B = 'Manhole' THEN M.latitude  WHEN A.LOCATION_TYPE_SIDE_B = 'Handhole' THEN H.latitude WHEN A.LOCATION_TYPE_SIDE_B = 'Site' THEN W.latitude WHEN A.LOCATION_TYPE_SIDE_B = 'Customer' THEN C.latitude WHEN A.LOCATION_TYPE_SIDE_B= 'DB' THEN D.DB_latitude ELSE NULL  END AS latitude, "
 							+ " A.LOCATION_ID_SIDE_B AS showLocation, A.JCT_ID || ':' || J.LONGITUDE || ':' || J.LATITUDE || ':' || J.JUNCTION_NAME as showElement FROM JUNCTION_MAPPING A LEFT JOIN JUNCTION J ON A.JCT_ID = J.JUNCTION_ID LEFT JOIN manhole M ON A.LOCATION_ID_SIDE_B = M.manhole_id AND A.LOCATION_TYPE_SIDE_B = 'Manhole' LEFT JOIN handhole H ON A.LOCATION_ID_SIDE_B = H.handhole_id AND A.LOCATION_TYPE_SIDE_B = 'Handhole' LEFT JOIN WAREHOUSE W ON A.LOCATION_ID_SIDE_B = W.SITE_ID AND A.LOCATION_TYPE_SIDE_B = 'Site' LEFT JOIN Customer C ON A.LOCATION_ID_SIDE_B = C.CUSTOMER_ID AND A.LOCATION_TYPE_SIDE_B = 'Customer' LEFT JOIN DISTRIBUTION_BOARD D ON A.LOCATION_ID_SIDE_B = D.DB_ID AND A.LOCATION_TYPE_SIDE_B = 'DB' "
@@ -154,7 +159,7 @@ public class StrandUtilizationReportController {
 							
 							+ " UNION "
 							
-							+" SELECT DISTINCT A.FP_STRAND_Nb AS strandNo, A.FP_TUBE_Nb AS tubeNo, 'DB' AS elementType,A.DB_ID  as elementID, 'Front' as frontBackPort,A.FP_STATUS as status,CAST(A.ROW_COL_INDEX AS VARCHAR2(10)) as portIndex, CAST(A.ROW_NUMBER AS VARCHAR2(10)) as portRow, CAST(A.COLUMN_NUMBER AS VARCHAR2(10)) as columnRow, A.FP_LOCATION_TYPE AS locationType, A.FP_LOCATION_ID AS locationID, A.FP_LOCATION_NAME AS locationName,  "
+							+" SELECT DISTINCT A.FP_STRAND_Nb AS strandNo, A.FP_TUBE_Nb AS tubeNo, 'DB' AS elementType,A.DB_ID  as elementID, 'Front' as frontBackPort,CAST(A.ROW_COL_INDEX AS VARCHAR2(10)) as portIndex, CAST(A.ROW_NUMBER AS VARCHAR2(10)) as portRow, CAST(A.COLUMN_NUMBER AS VARCHAR2(10)) as columnRow,A.FP_STATUS as status,A.FP_EQUIPMENT as equipmentType,A.FP_EQUIPMENT_ID AS equipmentID,A.FP_EQUIPMENT_NAME as equipmentName, A.FP_LOCATION_TYPE AS locationType, A.FP_LOCATION_ID AS locationID, A.FP_LOCATION_NAME AS locationName,  "
 							+" CASE WHEN A.FP_LOCATION_TYPE = 'Manhole' THEN M.longitude WHEN A.FP_LOCATION_TYPE = 'Handhole' THEN H.longitude WHEN A.FP_LOCATION_TYPE = 'Site' THEN W.longitude WHEN A.FP_LOCATION_TYPE = 'Customer' THEN C.longitude ELSE NULL END AS longitude, "
 							+" CASE WHEN A.FP_LOCATION_TYPE = 'Manhole' THEN M.latitude WHEN A.FP_LOCATION_TYPE = 'Handhole' THEN H.latitude WHEN A.FP_LOCATION_TYPE = 'Site' THEN W.latitude WHEN A.FP_LOCATION_TYPE = 'Customer' THEN C.latitude  ELSE NULL END AS latitude, "
 							+ " A.FP_LOCATION_ID as showLocation,A.DB_ID || ':' || D.DB_LONGITUDE || ':' || D.DB_LATITUDE || ':' || D.DB_NAME as showElement  FROM distribution_board_mapping A LEFT JOIN DISTRIBUTION_BOARD D ON A.DB_ID = D.DB_ID LEFT JOIN manhole M ON A.FP_LOCATION_ID = M.manhole_id AND A.FP_LOCATION_TYPE = 'Manhole' LEFT JOIN handhole H ON A.FP_LOCATION_ID = H.handhole_id AND A.FP_LOCATION_TYPE = 'Handhole' LEFT JOIN WAREHOUSE W ON A.FP_LOCATION_ID = W.SITE_ID AND A.FP_LOCATION_TYPE = 'Site' LEFT JOIN Customer C ON A.FP_LOCATION_ID = C.CUSTOMER_ID AND A.FP_LOCATION_TYPE = 'Customer'  " 
@@ -162,7 +167,7 @@ public class StrandUtilizationReportController {
 							
 							+ " UNION "
 							
-							+" SELECT DISTINCT  A.BP_STRAND_Nb AS strandNo, A.BP_TUBE_Nb AS tubeNo, 'DB' AS elementType,A.DB_ID  as elementID,  'Back' as frontBackPort,A.BP_STATUS as status, CAST(A.ROW_COL_INDEX AS VARCHAR2(10)) as portIndex, CAST(A.ROW_NUMBER AS VARCHAR2(10)) as portRow, CAST(A.COLUMN_NUMBER AS VARCHAR2(10)) as columnRow, A.BP_LOCATION_TYPE AS locationType,  A.BP_LOCATION_ID AS locationID,  A.BP_LOCATION_NAME AS locationName,"
+							+" SELECT DISTINCT  A.BP_STRAND_Nb AS strandNo, A.BP_TUBE_Nb AS tubeNo, 'DB' AS elementType,A.DB_ID  as elementID,  'Back' as frontBackPort, CAST(A.ROW_COL_INDEX AS VARCHAR2(10)) as portIndex, CAST(A.ROW_NUMBER AS VARCHAR2(10)) as portRow, CAST(A.COLUMN_NUMBER AS VARCHAR2(10)) as columnRow,A.BP_STATUS as status,A.BP_EQUIPMENT as equipmentType,A.BP_EQUIPMENT_ID AS equipmentID,A.BP_EQUIPMENT_NAME as equipmentName, A.BP_LOCATION_TYPE AS locationType,  A.BP_LOCATION_ID AS locationID,  A.BP_LOCATION_NAME AS locationName,"
 							+ "	CASE WHEN A.BP_LOCATION_TYPE = 'Manhole' THEN M.longitude WHEN A.BP_LOCATION_TYPE = 'Handhole' THEN H.longitude WHEN A.BP_LOCATION_TYPE = 'Site' THEN W.longitude WHEN A.BP_LOCATION_TYPE = 'Customer' THEN C.longitude ELSE NULL END AS longitude, " 
 							+" CASE WHEN A.BP_LOCATION_TYPE = 'Manhole' THEN M.latitude WHEN A.BP_LOCATION_TYPE = 'Handhole' THEN H.latitude WHEN A.BP_LOCATION_TYPE = 'Site' THEN W.latitude WHEN A.BP_LOCATION_TYPE = 'Customer' THEN C.latitude ELSE NULL  END AS latitude," 
 							+" A.BP_LOCATION_ID as showLocation,A.DB_ID || ':' || D.DB_LONGITUDE || ':' || D.DB_LATITUDE || ':' || D.DB_NAME as showElement FROM distribution_board_mapping A LEFT JOIN DISTRIBUTION_BOARD D ON A.DB_ID = D.DB_ID  LEFT JOIN manhole M ON A.BP_LOCATION_ID = M.manhole_id AND A.BP_LOCATION_TYPE = 'Manhole' LEFT JOIN handhole H ON A.BP_LOCATION_ID = H.handhole_id AND A.BP_LOCATION_TYPE = 'Handhole' LEFT JOIN WAREHOUSE W ON A.BP_LOCATION_ID = W.SITE_ID AND A.BP_LOCATION_TYPE = 'Site' LEFT JOIN Customer C ON A.BP_LOCATION_ID = C.CUSTOMER_ID AND A.BP_LOCATION_TYPE = 'Customer' "  
@@ -171,14 +176,14 @@ public class StrandUtilizationReportController {
 					
 			
 					query = session.createNativeQuery(str);
-					listStrandsUtilization = ((NativeQuery<StrandUtilizationReport>) query).addScalar("strandNo").addScalar("tubeNo").addScalar("elementType").addScalar("elementID").addScalar("frontBackPort").addScalar("status").addScalar("portIndex").addScalar("portRow").addScalar("portColumn").addScalar("locationType").addScalar("locationID").addScalar("locationName")
+					listStrandsUtilization = ((NativeQuery<StrandUtilizationReport>) query).addScalar("strandNo").addScalar("tubeNo").addScalar("elementType").addScalar("elementID").addScalar("frontBackPort").addScalar("portIndex").addScalar("portRow").addScalar("portColumn").addScalar("status").addScalar("equipmentType").addScalar("equipmentID").addScalar("equipmentName").addScalar("locationType").addScalar("locationID").addScalar("locationName")
 							.addScalar("longitude").addScalar("latitude").addScalar("showLocation").addScalar("showElement").setResultTransformer(Transformers.aliasToBean(StrandUtilizationReport.class))
 							.list();
 					
 					rtn.put("listStrandsUtilization", listStrandsUtilization);
 
 					List<Object[]> fiberList = session.createNativeQuery(
-							"SELECT A.SOURCE_LNG,A.SOURCE_LAT,A.DESTINATION_LNG,A.DESTINATION_LAT,A.SOURCE_WARE_ID,A.SOURCE_ID,A.SOURCE_NAME,A.DESTINATION_WARE_ID,A.DESTINATION_ID,A.DESTINATION_NAME,(select B.FIBER_COLOR_OWNER from FIBER_OWNER_COLOR B WHERE B.FIBER_OWNER=A.FIBER_OWNER) AS FIBER_CABLE_COLOR FROM FIBER_CABLES A WHERE A.FIBER_CABLE_ID ='"+fiberCableID+ "' ").getResultList();
+							"SELECT A.SOURCE_LNG,A.SOURCE_LAT,A.DESTINATION_LNG,A.DESTINATION_LAT,A.SOURCE_WARE_ID,A.SOURCE_ID,A.SOURCE_NAME,A.DESTINATION_WARE_ID,A.DESTINATION_ID,A.DESTINATION_NAME,(select B.FIBER_COLOR_OWNER from FIBER_OWNER_COLOR B WHERE B.FIBER_OWNER=A.FIBER_OWNER) AS FIBER_CABLE_COLOR,A.NUMBER_OF_STRANDS,A.NUMBER_OF_TUBES FROM FIBER_CABLES A WHERE A.FIBER_CABLE_ID ='"+fiberCableID+ "' ").getResultList();
 					rtn.put("fiberList", fiberList);
 					
 					
@@ -188,31 +193,46 @@ public class StrandUtilizationReportController {
 					rtn.put("fiberAuxData", fiberAuxData);
 
 					
-										
-					List<Object[]> relatedPathCables = session.createNativeQuery(
-							" select distinct a.FIBER_ID_SIDE_A,a.FIBER_NAME_SIDE_A,b.SOURCE_LNG,b.SOURCE_LAT,b.DESTINATION_LNG,b.DESTINATION_LAT,b.SOURCE_WARE_ID,b.SOURCE_ID,b.SOURCE_NAME,b.DESTINATION_WARE_ID,b.DESTINATION_ID,b.DESTINATION_NAME,b.FIBER_OWNER,(select C.FIBER_COLOR_OWNER from FIBER_OWNER_COLOR C WHERE C.FIBER_OWNER=b.FIBER_OWNER) AS FIBER_CABLE_COLOR "
-							+ " from JUNCTION_MAPPING a left join FIBER_CABLES b on a.FIBER_ID_SIDE_A=b.FIBER_CABLE_ID"
-							+ " where a.FIBER_ID_SIDE_B='"+fiberCableID+"' and (b.FIBER_NETWORK_LEVEL='backbone' OR b.FIBER_NETWORK_LEVEL='metro' OR b.FIBER_NETWORK_LEVEL='access' )"
-							+ " union "
-							+" select distinct a.FIBER_ID_SIDE_A,a.FIBER_NAME_SIDE_A,b.SOURCE_LNG,b.SOURCE_LAT,b.DESTINATION_LNG,b.DESTINATION_LAT,b.SOURCE_WARE_ID,b.SOURCE_ID,b.SOURCE_NAME,b.DESTINATION_WARE_ID,b.DESTINATION_ID,b.DESTINATION_NAME,b.FIBER_OWNER,(select C.FIBER_COLOR_OWNER from FIBER_OWNER_COLOR C WHERE C.FIBER_OWNER=b.FIBER_OWNER) AS FIBER_CABLE_COLOR "
-							+ " from JUNCTION_MAPPING a left join FIBER_CABLES b on a.FIBER_ID_SIDE_B=b.FIBER_CABLE_ID"
-							+ " where a.FIBER_ID_SIDE_A='"+fiberCableID+"' and (b.FIBER_NETWORK_LEVEL='backbone' OR b.FIBER_NETWORK_LEVEL='metro' OR b.FIBER_NETWORK_LEVEL='access' ) ")
-							.getResultList();
-					rtn.put("relatedPathCables", relatedPathCables);
-
-					List<Object[]> fiberAuxDataRelatedPath = new ArrayList<Object[]>();
-
-					for(int x=0;x<relatedPathCables.size();x++) {
-						Object[] row = relatedPathCables.get(x);
+					
+					relatedPathCablesID = session.createNativeQuery("select distinct a.FIBER_ID_SIDE_A ,a.FIBER_NAME_SIDE_A " + 
+							"from JUNCTION_MAPPING a left join FIBER_CABLES b on a.FIBER_ID_SIDE_A=b.FIBER_CABLE_ID " + 
+							"where FIBER_ID_SIDE_B='"+fiberCableID+"' and (b.FIBER_NETWORK_LEVEL='access' OR b.FIBER_NETWORK_LEVEL='metro' or b.FIBER_NETWORK_LEVEL='backbone')" + 
+							"union " + 
+							"select distinct a.FIBER_ID_SIDE_B ,a.FIBER_NAME_SIDE_B " + 
+							"from JUNCTION_MAPPING a left join FIBER_CABLES b on a.FIBER_ID_SIDE_B=b.FIBER_CABLE_ID " + 
+							"where a.FIBER_ID_SIDE_A='"+fiberCableID+"' and (b.FIBER_NETWORK_LEVEL='access' OR b.FIBER_NETWORK_LEVEL='metro' or b.FIBER_NETWORK_LEVEL='backbone')").getResultList();
+					
+					for(int x=0;x<relatedPathCablesID.size();x++) {
+						Object[] row = relatedPathCablesID.get(x);
 					    String fiberId = (String) row[0]; 
+					    
 					    				
 						    query = session.createNativeQuery(
 									"SELECT A.FIBER_CABLE_ID,B.LONGITUDE,B.LATITUDE,B.AUXILIARY_POINT_ID,B.AUXILIARY_POINT_NAME,B.SEQ_SORTING,B.AUXILIARY_ID FROM FIBER_CABLES A,FIBER_AUXILIARY_POINTS B WHERE A.FIBER_CABLE_ID=B.FIBER_CABLE_ID AND B.FIBER_CABLE_ID ='"
 											+ fiberId + "' ORDER BY B.SEQ_SORTING ASC");
 						    fiberAuxDataRelatedPath.addAll(query.list());
+						    
+						    query = session.createNativeQuery(
+									"SELECT A.FIBER_CABLE_ID,A.SOURCE_LNG,A.SOURCE_LAT,A.DESTINATION_LNG,A.DESTINATION_LAT,A.SOURCE_WARE_ID,A.SOURCE_ID,A.SOURCE_NAME,A.DESTINATION_WARE_ID,A.DESTINATION_ID,A.DESTINATION_NAME,A.FIBER_CABLE_NAME,(select B.FIBER_COLOR_OWNER from FIBER_OWNER_COLOR B WHERE B.FIBER_OWNER=A.FIBER_OWNER) AS FIBER_CABLE_COLOR,A.NUMBER_OF_STRANDS,A.NUMBER_OF_TUBES FROM FIBER_CABLES A WHERE A.FIBER_CABLE_ID ='"+fiberId+ "' ");
+						    relatedPathCablesList.addAll(query.list());					
 					    
 					}
+
 					rtn.put("fiberAuxDataRelatedPath",fiberAuxDataRelatedPath);
+					rtn.put("relatedPathCables", relatedPathCablesList);
+
+										
+					List<Object[]> frontTotalUsedStrands = session.createNativeQuery(
+							"Select count(*) from distribution_board_mapping where fp_status ='Active' and (fp_equipment_id !=null or fp_equipment_id !='null' or fp_equipment_name!=null or fp_equipment_name!='null') AND fp_fiber_id ='"+fiberCableID+ "' ").getResultList();
+					rtn.put("frontTotalUsedStrands", frontTotalUsedStrands);
+					
+					List<Object[]> backTotalUsedStrands = session.createNativeQuery(
+							"Select count(*) from distribution_board_mapping where bp_status ='Active' and (bp_equipment_id !=null or bp_equipment_id !='null' or bp_equipment_name!=null or bp_equipment_name!='null') AND bp_fiber_id ='"+fiberCableID+ "' ").getResultList();
+					rtn.put("backTotalUsedStrands", backTotalUsedStrands);
+					
+					List<Object[]> jctTotalUsedStrands = session.createNativeQuery(
+							"Select count(*) from JUNCTION_MAPPING where FIBER_ID_SIDE_A ='"+fiberCableID+ "' OR FIBER_ID_SIDE_B ='"+fiberCableID+"' ").getResultList();
+					rtn.put("jctTotalUsedStrands", jctTotalUsedStrands);
 				}
 
 			} catch (Exception e) {
