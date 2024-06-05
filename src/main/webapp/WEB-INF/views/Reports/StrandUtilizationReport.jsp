@@ -257,12 +257,10 @@ max-width: 100%;
 							<input type="text" id="fiberCable" class="form-control text-input" style="width:300px;" />
 						</div>
 					</div>
-		</div>
-		<div class="col-md-3">
-			<button type="button"  id ="showRelatedPath" class="btn mapButtons"  style=" margin-top:-0px;margin-left:102px;">Show Related Path</button>
-		</div>
+		</div>		
+		<div class="col-md-3"></div>
 		<div class="col-md-2">
-			<button type="button"  id ="showOnMap" class="btn mapButtons"   >Show on Map</button>
+			<button type="button"  id ="showOnMap" class="btn mapButtons"  style="margin-left:50px;"  >Show on Map</button>
 		</div>
 					
 			<div class="col-md-2" id="col3" style="text-align:right;">
@@ -621,7 +619,7 @@ max-width: 100%;
 		</div>
       <div class="legendContainer">
       <div class="card-body">      
-         <div class="box stack-top" id="legendDiv" style="position: relative;top:235px;width: 290px; float:left; height:448px;  background:white; margin:37px;display: none">
+         <div class="box stack-top" id="legendDiv" style="position: relative;top:215px;width: 290px; float:left; height:470px;  background:white; margin:37px;display: none">
          <div class="legendHeader"  id="legendHeader">
  			<h6 style="color:white;font-weight:bold; font-size:2.5ex;display:inline-block;position: relative;">Map Legend</h6>
   		</div>
@@ -629,64 +627,81 @@ max-width: 100%;
    <div id="tableDiv">
   	<table id="strandUtilizationTableReport">
   <tr>
-    <th style="position: relative;top: 5px;left:10px;"></th>
-    <th style="position: relative;top: 5px;left:10px;"></th>    
-    <th style="position: relative;top: 5px;left:10px;"></th>
-    <th style="position: relative;top: 5px;left:10px;"></th>
-    <th style="position: relative;top: 5px;left:10px;"></th>
-    <th style="position: relative;top: 5px;left:10px;"></th>
-    <th style="position: relative;top: 5px;left:10px;"></th>
-    <th style="position: relative;top: 5px;left:10px;"></th>
-    <th style="position: relative;top: 5px;left:10px;"></th>
-    
+    <th style="position: relative;left:10px;"></th>
+    <th style="position: relative;left:10px;"></th>    
+    <th style="position: relative;left:10px;"></th>
+    <th style="position: relative;left:10px;"></th>
+    <th style="position: relative;left:10px;"></th>
+    <th style="position: relative;left:10px;"></th>
+    <th style="position: relative;left:10px;"></th>
+    <th style="position: relative;left:10px;"></th>
+    <th style="position: relative;left:10px;"></th>
+    <th style="position: relative;left:10px;"></th>
   </tr>
   
   	<tr>
-     <td style="position: relative;top:17px;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideCableCheckbox" onclick="showHideCable();" value="blue"/></td>
-     <td style="position: relative;top:28px;left:62px;"><div><img class='image' style='color: #08526D;'  src='${pageContext.request.contextPath}/resources/NetworkImages/fiber.png'></div></td>
-     <td style="position: relative;top: 28px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; ">Fiber Cable</label></td>   
-     <td style="position: relative;top: 28px;left:65px;"><div style="position: relative;left:-5px;color: black;" id="fiberCount" ></div></td>
+     <td style="position: relative;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideCableCheckbox" onclick="showHideCable();" value="blue"/></td>
+     <td style="position: relative;top:10px;left:62px;"><div><img class='image' style='color: #08526D;'  src='${pageContext.request.contextPath}/resources/NetworkImages/fiber.png'></div></td>
+     <td style="position: relative;top:8px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; ">Fiber Cable</label></td>   
+     <td style="position: relative;top:8px;left:65px;"><div style="position: relative;left:-5px;color: black;" id="fiberCount" ></div></td>
+    </tr>
+    <tr>
+     <td style="position: relative;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideRelatedCableCheckbox" onclick="showCableRelatedPath();" /></td>
+     <td style="position: relative;top:10px;left:62px;"><div><img class='image' style='color: #08526D;'  src='${pageContext.request.contextPath}/resources/NetworkImages/fiber.png'></div></td>
+     <td style="position: relative;top:8px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; ">Show Related Path</label></td>   
+     <td style="position: relative;top:8px;left:65px;"><div style="position: relative;left:-5px;color: black;" id="relatedPathCount" ></div></td>
     </tr>
     
   	<tr>
-     <td style="position: relative;top:17px;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideAllManholesCheckbox" onclick="showHidePts('showHideAllManholesCheckbox');" value="red"/></td>
-     <td style="position: relative;top:28px;left:62px;"><div><img class='image' src='${pageContext.request.contextPath}/resources/NetworkImages/manholeRed.png'></div></td>
-     <td style="position: relative;top: 28px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; ">Manhole</label></td>   
-     <td style="position: relative;top: 28px;left:65px;"><div style="position: relative;left:-5px;color: black;" id="manholesCount" ></div></td>
+     <td style="position: relative;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideAllManholesCheckbox" onclick="showHidePts('showHideAllManholesCheckbox');" value="red"/></td>
+     <td style="position: relative;top:8px;left:62px;"><div><img class='image' src='${pageContext.request.contextPath}/resources/NetworkImages/manholeRed.png'></div></td>
+     <td style="position: relative;top:8px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; ">Manhole</label></td>   
+     <td style="position: relative;top:8px;"><div style="position: relative;left:-5px;color: black;" id="manholesCount" ></div></td>
     </tr>
-    
     
     <tr>
-     <td style="position: relative;top:17px;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideAllHandholesCheckbox" onclick="showHidePts('showHideAllHandholesCheckbox');" value="yellow"/></td>
-     <td style="position: relative;top:28px;left:62px;"><div><img class='image' src='${pageContext.request.contextPath}/resources/NetworkImages/handholeYellow.png'></div></td>
-     <td style="position: relative;top: 28px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; ">Handhole</label></td>   
-     <td style="position: relative;top: 28px;left:65px;"><div style="position: relative;left:-5px;color: black;" id="handholesCount" ></div></td>
+     <td style="position: relative;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideAllManholesWithJctCheckbox" onclick="showHidePts('showHideAllManholesWithJctCheckbox');" value="red"/></td>
+     <td style="position: relative;top:8px;left:62px;"><div><img class='image' src='${pageContext.request.contextPath}/resources/NetworkImages/manholeJct.png'></div></td>
+     <td style="position: relative;top:8px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; ">Manhole with JCT</label></td>   
+     <td style="position: relative;top:8px;left:65px;"><div style="position: relative;left:-5px;color: black;" id="manholesCountWithJct" ></div></td>
     </tr>
-     
     
     <tr>
-     <td style="position: relative;top:17px;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideAllDbCheckbox" onclick="showHidePts('showHideAllDbCheckbox');" value="blue"/></td>
-     <td style="position: relative;top:28px;left:62px;"><div><img class='image' src='${pageContext.request.contextPath}/resources/NetworkImages/backboneDB.png'></div></td>
-     <td style="position: relative;top: 28px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; " >DB</label></td>   
-     <td style="position: relative;top: 28px;left:65px;"><div style="position: relative;left:-5px;color: black;" id="dbCount" ></div></td>
-    </tr>
-     <tr>
-     <td style="position: relative;top:17px;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideAllJctCheckbox" onclick="showHidePts('showHideAllJctCheckbox');" value="orange"/></td>
-     <td style="position: relative;top:28px;left:58px;"><div><img class='image' src='${pageContext.request.contextPath}/resources/NetworkImages/junctionOrange.png'></div></td>
-     <td style="position: relative;top: 28px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Junction</label></td>   
-     <td style="position: relative;top: 28px;left:65px;"><div style="position: relative;left:-5px;color: black;" id="jctCount" ></div></td>
+     <td style="position: relative;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideAllHandholesCheckbox" onclick="showHidePts('showHideAllHandholesCheckbox');" value="yellow"/></td>
+     <td style="position: relative;top:8px;left:62px;"><div><img class='image' src='${pageContext.request.contextPath}/resources/NetworkImages/handholeYellow.png'></div></td>
+     <td style="position: relative;top:8px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; ">Handhole</label></td>   
+     <td style="position: relative;top:8px;"><div style="position: relative;left:-5px;color: black;" id="handholesCount" ></div></td>
     </tr>
       <tr>
-     <td style="position: relative;top:17px;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideAllCustCheckbox" onclick="showHidePts('showHideAllCustCheckbox');" value="red"/></td>
-     <td style="position: relative;top:28px;left:58px;"><div><img class='image' style="width: 30px; height: 30px;" src='${pageContext.request.contextPath}/resources/NetworkImages/customerIcon.png'></div></td>
-     <td style="position: relative;top:32px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Customer</label></td>   
-     <td style="position: relative;top: 28px;left:65px;"><div style="position: relative;left:-5px;color: black;" id="custCount" ></div></td>
+     <td style="position: relative;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideAllHandholesWithJctCheckbox" onclick="showHidePts('showHideAllHandholesWithJctCheckbox');" value="yellow"/></td>
+     <td style="position: relative;top:8px;left:62px;"><div><img class='image' src='${pageContext.request.contextPath}/resources/NetworkImages/handholeYellowJct.png'></div></td>
+     <td style="position: relative;top:8px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; ">Handhole with JCT</label></td>   
+     <td style="position: relative;top:8px;left:65px;"><div style="position: relative;left:-5px;color: black;" id="handholesCountWithJct" ></div></td>
+    </tr>
+    
+    <tr>
+     <td style="position: relative;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideAllDbCheckbox" onclick="showHidePts('showHideAllDbCheckbox');" value="blue"/></td>
+     <td style="position: relative;top:8px;left:62px;"><div><img class='image' src='${pageContext.request.contextPath}/resources/NetworkImages/backboneDB.png'></div></td>
+     <td style="position: relative;top:8px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; " >DB</label></td>   
+     <td style="position: relative;top:8px;"><div style="position: relative;left:-5px;color: black;" id="dbCount" ></div></td>
     </tr>
      <tr>
-     <td style="position: relative;top:17px;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideAllSitesCheckbox" onclick="showHidePts('showHideAllSitesCheckbox');" value="pink"/></td>
-     <td style="position: relative;top:28px;left:58px;"><div><img class='image' style="width: 25px; height: 30px;" src='${pageContext.request.contextPath}/resources/NetworkImages/redSiteIcon.png'></div></td>
-     <td style="position: relative;top: 28px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Site</label></td>   
-     <td style="position: relative;top: 28px;left:65px;"><div style="position: relative;left:-5px;color: black;" id="sitesCount" ></div></td>
+     <td style="position: relative;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideAllJctCheckbox" onclick="showHidePts('showHideAllJctCheckbox');" value="orange"/></td>
+     <td style="position: relative;top:8px;left:58px;"><div><img class='image' src='${pageContext.request.contextPath}/resources/NetworkImages/junctionOrange.png'></div></td>
+     <td style="position: relative;top:8px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Junction</label></td>   
+     <td style="position: relative;top:8px;"><div style="position: relative;left:-5px;color: black;" id="jctCount" ></div></td>
+    </tr>
+      <tr>
+     <td style="position: relative;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideAllCustCheckbox" onclick="showHidePts('showHideAllCustCheckbox');" value="red"/></td>
+     <td style="position: relative;top:8px;left:58px;"><div><img class='image' style="width: 30px; height: 30px;" src='${pageContext.request.contextPath}/resources/NetworkImages/customerIcon.png'></div></td>
+     <td style="position: relative;top:10px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Customer</label></td>   
+     <td style="position: relative;top:8px;"><div style="position: relative;left:-5px;color: black;" id="custCount" ></div></td>
+    </tr>
+     <tr>
+     <td style="position: relative;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideAllSitesCheckbox" onclick="showHidePts('showHideAllSitesCheckbox');" value="pink"/></td>
+     <td style="position: relative;top:8px;left:58px;"><div><img class='image' style="width: 25px; height: 30px;" src='${pageContext.request.contextPath}/resources/NetworkImages/redSiteIcon.png'></div></td>
+     <td style="position: relative;top:8px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Site</label></td>   
+     <td style="position: relative;top:8px;"><div style="position: relative;left:-5px;color: black;" id="sitesCount" ></div></td>
     </tr>
      
    
@@ -717,31 +732,36 @@ var markersJct=[];
 var markersCustomer =[];
 var markersSites =[];
 var markersManholes =[];
+var markersManholesWithJct =[];
 var markersHandholes =[];
+var markersHandholesWithJct =[];
 var fiberCableArray=[];
+var relatedPathArray=[];
 var distinctDB =[]; // used in check/uncheck all db from legend
 var distinctJct =[]; // used in check/uncheck all jct from legend
 var distinctCustomers =[]; // used in check/uncheck all cust from legend
 var distinctSites =[]; // used in check/uncheck all sites from legend
 var distinctManholes =[]; 
+var distinctManholesWithJct =[]; 
+var distinctHandholesWithJct =[]; 
 var distinctHandholes =[]; 
 var allCables=[];
+var allRelatedPathCables=[];
 var markerClusterDB ;
 var markerClusterJct ;
 var markerClusterCustomers ;
 var markerClusterSites ;
 var markerClusterManholes ;
+var markerClusterManholesWithJct;
 var markerClusterHandholes ;
-
-
+var markerClusterHandholesWithJct;
+var showRelPathFlag="notOpened";
 var mapFlag="0"; // used to check if the markers are set on map
 var infoWindow;
 var cableInfoWindow;
 var MapMenu;
 var filteredGridData=[]; // used in draw on map 
 var cableID = "";
-var pathAllPoints = [];
-var pathSrcDst = [];
 
 
 function initMap() {	
@@ -855,6 +875,26 @@ function initMap() {
 	 	}                   
 	 });
 
+
+	 markerClusterManholesWithJct= new MarkerClusterer();
+	 markerClusterManholesWithJct.setMap(map);
+
+	 markerClusterManholesWithJct.setOptions( {					  					
+	 	minimumClusterSize: 2,
+	 	styles: [
+	 	         {
+	 	        	 url:'${pageContext.request.contextPath}/resources/clusterIcons/redCluster.png',
+	 		         height: 60,
+	 		         width:60,
+	 		         anchorText:[-3,-3]
+	 		      },
+	 	],
+	 	calculator: function(markers, numStyles) {
+	 	if (markers.length >= 1) return {text: markers.length, index: 3}; 
+	 	}                   
+	 });
+
+	 
 	 markerClusterManholes = new MarkerClusterer();
 	 markerClusterManholes.setMap(map);
 
@@ -873,6 +913,25 @@ function initMap() {
 	 	}                   
 	 });
 
+	 markerClusterHandholesWithJct  = new MarkerClusterer();
+	 markerClusterHandholesWithJct.setMap(map);
+
+	 markerClusterHandholesWithJct.setOptions( {					  					
+	 	minimumClusterSize: 2,
+	 	styles: [
+	 	         {
+	 	        	 url:'${pageContext.request.contextPath}/resources/clusterIcons/yellowCluster.png',
+	 		         height: 60,
+	 		         width:60,
+	 		         anchorText:[-3,-3]
+	 		      },
+	 	],
+	 	calculator: function(markers, numStyles) {
+	 	if (markers.length >= 1) return {text: markers.length, index: 3}; 
+	 	}                   
+	 });
+
+	 
 	 markerClusterHandholes = new MarkerClusterer();
 	 markerClusterHandholes.setMap(map);
 
@@ -955,19 +1014,6 @@ $(document).ready(function() {
 	});
 	
 
-	   $('#showRelatedPath'). click(function(){  
-
-		 if(fiberCableArray.length>0) {
-			   for(var v=0;v<allCables.length;v++){
-	          		fiberCableArray[allCables[v]].setMap(map);
-				}
-			 //Scroll to the map div
-			 document.getElementById("headingTwo").scrollIntoView({ behavior: "smooth" });
-				
-			}
-
-
-		});
 			
 	   $('#showOnMap'). click(function(){  
 		   distinctDB =[]; 
@@ -975,19 +1021,25 @@ $(document).ready(function() {
 		   distinctCustomers =[]; 
 		   distinctSites =[];
 		   distinctManholes =[]; 
+		   distinctManholesWithJct =[]; 
+		   distinctHandholesWithJct =[]; 
 		   distinctHandholes =[]; 
 		   
 		   markerClusterDB.clearMarkers();
 		   markerClusterJct.clearMarkers();
 		   markerClusterCustomers.clearMarkers();
 		   markerClusterHandholes.clearMarkers();
-		   markerClusterManholes.clearMarkers();	
+		   markerClusterHandholesWithJct.clearMarkers();
+		   markerClusterManholes.clearMarkers();
+		   markerClusterManholesWithJct.clearMarkers();	
 		   markerClusterSites.clearMarkers();	
 		   mapFlag="1";
 
 		showPointsArray=[];
+		
 		if(window["mapPointsNames_"+cableID] != undefined) {
 			showPointsArray = window["mapPointsNames_"+cableID];
+			
 			for(var x=0;x<showPointsArray.length;x++) {
 				if(showPointsArray[x].startsWith("WARE_")==true) {
 					var wareID = showPointsArray[x].split(":")[1];
@@ -1023,44 +1075,71 @@ $(document).ready(function() {
 				else if(showPointsArray[x].startsWith("MH_")==true) {
 					var ID = showPointsArray[x].split(":")[0];
 					var longLat = String(window["mapPoints_"+cableID][x]).replaceAll(/[( )]/g, '');
-					
-					if(distinctManholes.includes(ID)==false) {
-						distinctManholes.push(ID);
-						if(!markersManholes[ID]){
-							if(showPointsArray[x].split(":")[1].includes("_J")) {
-								var imageURL = "manholeJct.png";
+					var manholeName = showPointsArray[x].split(":")[1];
+
+					if(manholeName.endsWith("_J")) {
+
+						if(distinctManholesWithJct.includes(ID)==false) {
+							distinctManholesWithJct.push(ID);
+							if(!markersManholesWithJct[ID]){
+								createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],"manholeJct.png",markersManholesWithJct,markerClusterManholesWithJct)
 							}
-					        else {
-								var imageURL = "manholeRed.png";
+							else {					
+								markersManholesWithJct[ID].setMap(map);
+								markerClusterManholesWithJct.addMarker(markersManholesWithJct[""+ID]);
 							}
-							createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],imageURL,markersManholes,markerClusterManholes)
-						}
-						else {					
-							markersManholes[ID].setMap(map);
-							markerClusterManholes.addMarker(markersManholes[""+ID]);
 						}
 					}
+					else {
+
+						if(distinctManholes.includes(ID)==false) {
+							distinctManholes.push(ID);
+							if(!markersManholes[ID]){
+								createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],"manholeRed.png",markersManholes,markerClusterManholes)
+							}
+							else {					
+								markersManholes[ID].setMap(map);
+								markerClusterManholes.addMarker(markersManholes[""+ID]);
+							}
+						}
+						
+					}					
 				}
 				else if(showPointsArray[x].startsWith("HH_")==true) {
 					var ID = showPointsArray[x].split(":")[0];
 					var longLat = String(window["mapPoints_"+cableID][x]).replaceAll(/[( )]/g, '');
+					var handholeName = showPointsArray[x].split(":")[1];
 					
-					if(distinctHandholes.includes(ID)==false) {
-						distinctHandholes.push(ID);
-						if(!markersHandholes[ID]){
-							if(showPointsArray[x].split(":")[1].includes("_J")) {
-								var imageURL = "handholeYellowJct.png";
+					if(handholeName.endsWith("_J")) {
+
+						if(distinctHandholesWithJct.includes(ID)==false) {
+							distinctHandholesWithJct.push(ID);
+							if(!markersHandholesWithJct[ID]){
+								createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],"handholeYellowJct.png",markersHandholesWithJct,markerClusterHandholesWithJct)
 							}
-					        else {
-								var imageURL = "handholeYellow.png";
+							else {					
+								markersHandholesWithJct[ID].setMap(map);
+								markerClusterHandholesWithJct.addMarker(markersHandholesWithJct[""+ID]);
 							}
-							createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],imageURL,markersHandholes,markerClusterHandholes)
-						}
-						else {					
-							markersHandholes[ID].setMap(map);
-							markerClusterHandholes.addMarker(markersHandholes[""+ID]);
 						}
 					}
+					else {
+						if(distinctHandholes.includes(ID)==false) {
+							distinctHandholes.push(ID);
+							if(!markersHandholes[ID]){
+								createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],"handholeYellow.png",markersHandholes,markerClusterHandholes)
+							}
+							else {					
+								markersHandholes[ID].setMap(map);
+								markerClusterHandholes.addMarker(markersHandholes[""+ID]);
+							}
+						}
+						
+					}		
+
+
+					
+					
 				} 
 				else if(showPointsArray[x].startsWith("DB_")==true) {
 					var ID = showPointsArray[x].split(":")[0];
@@ -1113,43 +1192,66 @@ $(document).ready(function() {
 					}
 				}// end site case	
 				else if(filteredGridData[i]["locationType"] =="Manhole"){
-					if(distinctManholes.includes(filteredGridData[i]["locationID"])==false) {
-						ID = filteredGridData[i]["locationID"];
-						distinctManholes.push(ID);
-						if(!markersManholes[ID]){
-							if(filteredGridData[i]["locationName"].includes("_J")) {
-								var imageURL = "manholeJct.png";
+					var manholeName = filteredGridData[i]["locationName"];
+					
+					if(manholeName.endsWith("_J")) {
+						if(distinctManholesWithJct.includes(filteredGridData[i]["locationID"])==false) {
+							ID = filteredGridData[i]["locationID"];
+							distinctManholesWithJct.push(ID);
+							if(!markersManholesWithJct[ID]){
+								createMarker(ID,filteredGridData[i]["longitude"],filteredGridData[i]["latitude"],filteredGridData[i]["locationName"],"manholeJct.png",markersManholesWithJct,markerClusterManholesWithJct)
 							}
-					        else {
-								var imageURL = "manholeRed.png";
+							else {					
+								markersManholesWithJct[ID].setMap(map);
+								markerClusterManholesWithJct.addMarker(markersManholesWithJct[""+ID]);
 							}
-							createMarker(ID,filteredGridData[i]["longitude"],filteredGridData[i]["latitude"],filteredGridData[i]["locationName"],imageURL,markersManholes,markerClusterManholes)
-						}
-						else {					
-							markersManholes[ID].setMap(map);
-							markerClusterManholes.addMarker(markersManholes[""+ID]);
 						}
 					}
+					else {
+						if(distinctManholes.includes(filteredGridData[i]["locationID"])==false) {
+							ID = filteredGridData[i]["locationID"];
+							distinctManholes.push(ID);
+							if(!markersManholes[ID]){
+								createMarker(ID,filteredGridData[i]["longitude"],filteredGridData[i]["latitude"],filteredGridData[i]["locationName"], "manholeRed.png",markersManholes,markerClusterManholes)
+							}
+							else {					
+								markersManholes[ID].setMap(map);
+								markerClusterManholes.addMarker(markersManholes[""+ID]);
+							}
+						}
+				  }
 				}// end Manhole case	
 
 				else if(filteredGridData[i]["locationType"] =="Handhole"){
-					if(distinctHandholes.includes(filteredGridData[i]["locationID"])==false) {
-						ID = filteredGridData[i]["locationID"];
-						distinctHandholes.push(ID);
-						if(!markersHandholes[ID]){
-							if(filteredGridData[i]["locationName"].includes("_J")) {
-								var imageURL = "handholeYellowJct.png";
+					var handholeName = filteredGridData[i]["locationName"];
+					
+					if(handholeName.endsWith("_J")) {
+						if(distinctHandholesWithJct.includes(filteredGridData[i]["locationID"])==false) {
+							ID = filteredGridData[i]["locationID"];
+							distinctHandholesWithJct.push(ID);
+							if(!markersHandholesWithJct[ID]){
+								createMarker(ID,filteredGridData[i]["longitude"],filteredGridData[i]["latitude"],filteredGridData[i]["locationName"],"handholeYellowJct.png",markersHandholesWithJct,markerClusterHandholesWithJct)
 							}
-					        else {
-								var imageURL = "handholeYellow.png";
+							else {					
+								markersHandholesWithJct[ID].setMap(map);
+								markerClusterHandholesWithJct.addMarker(markersHandholesWithJct[""+ID]);
 							}
-							createMarker(ID,filteredGridData[i]["longitude"],filteredGridData[i]["latitude"],filteredGridData[i]["locationName"],imageURL,markersHandholes,markerClusterHandholes)
-						}
-						else {					
-							markersHandholes[ID].setMap(map);
-							markerClusterHandholes.addMarker(markersHandholes[""+ID]);
 						}
 					}
+					else {
+						if(distinctHandholes.includes(filteredGridData[i]["locationID"])==false) {
+							ID = filteredGridData[i]["locationID"];
+							distinctHandholes.push(ID);
+							if(!markersHandholes[ID]){
+								createMarker(ID,filteredGridData[i]["longitude"],filteredGridData[i]["latitude"],filteredGridData[i]["locationName"], "handholeYellow.png",markersHandholes,markerClusterHandholes)
+							}
+							else {					
+								markersHandholes[ID].setMap(map);
+								markerClusterHandholes.addMarker(markersHandholes[""+ID]);
+							}
+						}
+				  }
+
 				}// end Handhole case	
 				else if(filteredGridData[i]["locationType"] =="DB"){
 					if(distinctDB.includes(filteredGridData[i]["locationID"])==false) {
@@ -1225,6 +1327,14 @@ $(document).ready(function() {
 	        	$('.showHideAllManholesCheckbox').prop('checked', false);
 				$(".showHideAllManholesCheckbox").attr('disabled', true);
 	         } 
+	        if(distinctManholesWithJct.length >0) {
+				$('.showHideAllManholesWithJctCheckbox').prop('checked', true);
+				$(".showHideAllManholesWithJctCheckbox").attr('disabled', false);
+	        }   
+	        else {
+	        	$('.showHideAllManholesWithJctCheckbox').prop('checked', false);
+				$(".showHideAllManholesWithJctCheckbox").attr('disabled', true);
+	         } 
 	        if(distinctHandholes.length >0) {
 				$('.showHideAllHandholesCheckbox').prop('checked', true);
 				$(".showHideAllHandholesCheckbox").attr('disabled', false);
@@ -1232,6 +1342,14 @@ $(document).ready(function() {
 	        else {
 	        	$('.showHideAllHandholesCheckbox').prop('checked', false);
 				$(".showHideAllHandholesCheckbox").attr('disabled', true);
+	         }
+	        if(distinctHandholesWithJct.length >0) {
+				$('.showHideAllHandholesWithJctCheckbox').prop('checked', true);
+				$(".showHideAllHandholesWithJctCheckbox").attr('disabled', false);
+	        }   
+	        else {
+	        	$('.showHideAllHandholesWithJctCheckbox').prop('checked', false);
+				$(".showHideAllHandholesWithJctCheckbox").attr('disabled', true);
 	         }
 	        if(distinctDB.length >0) {
 				$('.showHideAllDbCheckbox').prop('checked', true);
@@ -1251,12 +1369,15 @@ $(document).ready(function() {
 	         } 
 	        document.getElementById("sitesCount").textContent = "("+distinctSites.length+")";  
 	    	document.getElementById("manholesCount").textContent = "("+distinctManholes.length+")";
+	    	document.getElementById("manholesCountWithJct").textContent = "("+distinctManholesWithJct.length+")";
 			document.getElementById("handholesCount").textContent = "("+distinctHandholes.length+")";
+			document.getElementById("handholesCountWithJct").textContent = "("+distinctHandholesWithJct.length+")";
 			document.getElementById("custCount").textContent = "("+distinctCustomers.length+")";
 			document.getElementById("jctCount").textContent = "("+distinctJct.length+")";
 			document.getElementById("dbCount").textContent = "("+distinctDB.length+")";  
-			 map.setZoom(6); 
-			 
+
+			map.fitBounds(window["bounds_"+cableID]);
+			
 			//Scroll to the map div
 			 document.getElementById("headingTwo").scrollIntoView({ behavior: "smooth" });
 			 
@@ -1314,12 +1435,19 @@ $(document).ready(function() {
 		$(".showHideAllCustCheckbox").attr('disabled', true);
 		$('.showHideAllHandholesCheckbox').prop('checked', false);
 		$(".showHideAllHandholesCheckbox").attr('disabled', true);
+		$('.showHideAllHandholesWithJctCheckbox').prop('checked', false);
+		$(".showHideAllHandholesWithJctCheckbox").attr('disabled', true);
 		$('.showHideAllManholesCheckbox').prop('checked', false);
 		$(".showHideAllManholesCheckbox").attr('disabled', true);
+		$('.showHideAllManholesWithJctCheckbox').prop('checked', false);
+		$(".showHideAllManholesWithJctCheckbox").attr('disabled', true)
 		$('.showHideAllSitesCheckbox').prop('checked', false);
 		$(".showHideAllSitesCheckbox").attr('disabled', true);
 		$('.showHideCableCheckbox').prop('checked', false);
 		$(".showHideCableCheckbox").attr('disabled', true);
+		$('.showHideRelatedCableCheckbox').prop('checked', false);
+		$(".showHideRelatedCableCheckbox").attr('disabled', false);
+		showRelPathFlag="notOpened";
 
 		infoWindow.close();
 		cableInfoWindow.close();
@@ -1338,12 +1466,18 @@ $(document).ready(function() {
 		 document.getElementById("custCount").textContent = "";
 
 		 markerClusterHandholes.clearMarkers();	
-		 markersHandholes=[];	  
+		 markerClusterHandholesWithJct.clearMarkers();
+		 markersHandholes=[];	 
+		 markersHandholesWithJct=[];	   
 		 document.getElementById("handholesCount").textContent = "";
+		 document.getElementById("handholesCountWithJct").textContent = "";
 
-		 markerClusterManholes.clearMarkers();	
-		 markersManholes=[];	  
+		 markerClusterManholes.clearMarkers();
+		 markerClusterManholesWithJct.clearMarkers();
+		 markersManholes=[];	
+		 markersManholesWithJct=[];	  
 		 document.getElementById("manholesCount").textContent = "";
+		 document.getElementById("manholesCountWithJct").textContent = "";
 
 		 markerClusterSites.clearMarkers();	
 		 markersSites=[];	  
@@ -1354,12 +1488,19 @@ $(document).ready(function() {
 	          	fiberCableArray[allCables[v]].setMap(null);
 			}
 		 }
-		 fiberCableArray=[];
-		 cableID="";	  
-		 allCables=[];
-		 pathAllPoints=[];
-		 pathSrcDst=[];
+		 if(relatedPathArray.length>0) {
+			 for(var b=0;b<allRelatedPathCables.length;b++){
+				 relatedPathArray[allRelatedPathCables[b]].setMap(null);
+			}
+		 }
 		 
+		 fiberCableArray=[];
+		 relatedPathArray=[];
+		 cableID="";	  
+		 allCables=[];		
+		 allRelatedPathCables=[];
+		 document.getElementById("relatedPathCount").textContent = "";
+		  
 			
 		 mapFlag="0";	
 		  
@@ -1446,9 +1587,15 @@ $(document).ready(function() {
           			  		if (typeof markerClusterHandholes !== 'undefined' && markerClusterHandholes !== null) {
           			  			markerClusterHandholes.clearMarkers(); 
 					   	 	 }  
+					   	 	if (typeof markerClusterHandholesWithJct !== 'undefined' && markerClusterHandholesWithJct !== null) {
+					   	 		markerClusterHandholesWithJct.clearMarkers(); 
+					   	 	 }
           			  		if (typeof markerClusterManholes !== 'undefined' && markerClusterManholes !== null) {
           						markerClusterManholes.clearMarkers(); 
-				   	  		}  	
+				   	  		} 
+          			  		if (typeof markerClusterManholesWithJct !== 'undefined' && markerClusterManholesWithJct !== null) {
+          			  			markerClusterManholesWithJct.clearMarkers(); 
+			   	  			} 
           					if (typeof markerClusterSites !== 'undefined' && markerClusterSites !== null) {
           						markerClusterSites.clearMarkers(); 
 		   	  				}  	
@@ -1459,16 +1606,22 @@ $(document).ready(function() {
 					 distinctCustomers =[];
 					 distinctSites =[]; 
 					 distinctManholes =[]; 
+					 distinctManholesWithJct =[]; 
 					 distinctHandholes =[]; 
+					 distinctHandholesWithJct =[]; 
  		   		     markersSites=[];
-    				 markersManholes=[];	  
+    				 markersManholes=[];
+    				 markersManholesWithJct=[];	  	  
      				 markersHandholes=[];	
+     				 markersHandholesWithJct=[];	
      				 markersCustomer=[];	  
      				 markersJct=[];	  
      				 markersDB=[];	  
  				 	 mapFlag="0"; 	
  					 document.getElementById("sitesCount").textContent = "";
  					 document.getElementById("manholesCount").textContent = "";
+ 					 document.getElementById("manholesCountWithJct").textContent = "";
+ 					 document.getElementById("handholesCountWithJct").textContent = "";
  					 document.getElementById("handholesCount").textContent = "";
  					 document.getElementById("custCount").textContent = "";
  					 document.getElementById("jctCount").textContent = "";
@@ -1482,8 +1635,12 @@ $(document).ready(function() {
  					$(".showHideAllCustCheckbox").attr('disabled', true);
  					$('.showHideAllHandholesCheckbox').prop('checked', false);
  					$(".showHideAllHandholesCheckbox").attr('disabled', true);
+ 					$('.showHideAllHandholesWithJctCheckbox').prop('checked', false);
+ 					$(".showHideAllHandholesWithJctCheckbox").attr('disabled', true);
  					$('.showHideAllManholesCheckbox').prop('checked', false);
  					$(".showHideAllManholesCheckbox").attr('disabled', true);
+ 					$('.showHideAllManholesWithJctCheckbox').prop('checked', false);
+ 					$(".showHideAllManholesWithJctCheckbox").attr('disabled', true);
  					$('.showHideAllSitesCheckbox').prop('checked', false);
  					$(".showHideAllSitesCheckbox").attr('disabled', true);
  							 	  		 		
@@ -1510,7 +1667,8 @@ $(document).ready(function() {
   			            	 columnVal = ArrayKeys[j];
 	  			              if(columnVal !="showLocation" && columnVal !="showElement") { 
 	  	  			            	data.push(dataArray[i][ArrayKeys[j]]);
-	  			            	}								
+	  			            	}
+
 									
 								}
 	  			            	
@@ -1560,6 +1718,7 @@ $(document).ready(function() {
 
 				window["mapPointsNames_"+cableID]=[];
 				
+				
 				//Push src
 				if(data.fiberList[0][4] !="null"){
 					src = data.fiberList[0][4]+":" +data.fiberList[0][5]+":"+data.fiberList[0][6];		
@@ -1593,10 +1752,15 @@ $(document).ready(function() {
                 window["mapPoints_"+cableID]=[]; 
 				window["mapPoints_"+cableID].push(new google.maps.LatLng(data.fiberList[0][1],data.fiberList[0][0]));
 
+				window["bounds_"+cableID] = new google.maps.LatLngBounds();			
+				window["bounds_"+cableID].extend(new google.maps.LatLng(data.fiberList[0][1],data.fiberList[0][0]));
+				window["bounds_"+cableID].extend(new google.maps.LatLng(data.fiberList[0][3],data.fiberList[0][2]));
+				
 				 
 				
 				for(i=0;i<data.fiberAuxData.length;i++){//PUSH AUXILIARY POINTS OF FIBER CABLE	
 					window["mapPoints_"+cableID].push(new google.maps.LatLng(data.fiberAuxData[i][1],data.fiberAuxData[i][0]));
+					window["bounds_"+cableID].extend(new google.maps.LatLng(data.fiberAuxData[i][1],data.fiberAuxData[i][0]));
 
 					if(data.fiberAuxData[i][2] =="") {
 						auxPoint="";
@@ -1640,16 +1804,19 @@ $(document).ready(function() {
 				if(allCables.includes(cableID) ==false){
 					allCables.push(cableID);
 				}
-          		buildPath(cableID,$("#fiberCable").val().split(":")[1],window["mapPoints_"+cableID],data.fiberList[0][10],0.7,4.5,'blue',13);
+          		buildPath(cableID,fiberCableArray,$("#fiberCable").val().split(":")[1],window["mapPoints_"+cableID],data.fiberList[0][10],0.7,4.5,'blue',13);
           		fiberCableArray[cableID].setMap(map);
           		$('.showHideCableCheckbox').prop('checked', true);
 				$(".showHideCableCheckbox").attr('disabled', false);
 
+				map.fitBounds(window["bounds_"+cableID]);
+				
+
 				//if(data.fiberAuxDataRelatedPath.length >0) {
 					for(var c =0;c<data.relatedPathCables.length;c++) {
 						var pathID = data.relatedPathCables[c][0];
-						if(allCables.includes(pathID) ==false){
-							allCables.push(pathID);
+						if(allRelatedPathCables.includes(pathID) ==false){
+							allRelatedPathCables.push(pathID);
 						}
 						window["mapPoints_"+pathID]=[];
 						window["mapPoints_"+pathID].push(new google.maps.LatLng(data.relatedPathCables[c][2],data.relatedPathCables[c][1]));	
@@ -1661,7 +1828,7 @@ $(document).ready(function() {
 
 						}
 						window["mapPoints_"+pathID].push(new google.maps.LatLng(data.relatedPathCables[c][4],data.relatedPathCables[c][3]));	
-		          		buildPath(pathID,data.relatedPathCables[c][11],window["mapPoints_"+pathID],data.relatedPathCables[c][12],0.7,4.5,'blue',13);
+		          		buildPath(pathID,relatedPathArray,data.relatedPathCables[c][11],window["mapPoints_"+pathID],data.relatedPathCables[c][12],0.7,4.5,'blue',13);
 					}
 					
 
@@ -1685,9 +1852,9 @@ $(document).ready(function() {
 	  });	  
 
 
-function buildPath(Id,Name,path,strokeColor,strokeOpacity,strokeWeight,fontColor,IdNb){
+function buildPath(Id,fiberArray,Name,path,strokeColor,strokeOpacity,strokeWeight,fontColor,IdNb){
 
-	if(!fiberCableArray[Id]){
+	if(!fiberArray[Id]){
 
 		var idInfo ="<b style='font-size:13px;'><u>ID: </u></b>"+Id;
 		var nameInfo ="<b style='font-size:13px;'><u>Name: </u></b>"+Name;
@@ -1705,8 +1872,8 @@ function buildPath(Id,Name,path,strokeColor,strokeOpacity,strokeWeight,fontColor
 			  });				 
 				
 			flightPath.metadata = { id: Id };
-			fiberCableArray[Id] = flightPath;
-			fiberCableArray.push(flightPath);
+			fiberArray[Id] = flightPath;
+			fiberArray.push(flightPath);
 
 
 				   
@@ -1829,51 +1996,111 @@ function showHideCable() {
 			
 		});	
 }
+function showCableRelatedPath(){
+
+	if(showRelPathFlag=="notOpened"){
+		showRelPathFlag="Opened";
+		document.getElementById("relatedPathCount").textContent = "("+allRelatedPathCables.length+")";
+	}
+
+	if(relatedPathArray.length>0) {
+		$('.showHideRelatedCableCheckbox').bind("change",function() {					
+			if ($(this).is(':checked')){
+					 for(var v=0;v<allRelatedPathCables.length;v++){
+						 relatedPathArray[allRelatedPathCables[v]].setMap(map);
+					}			
+			}
+			else {
+					 for(var v=0;v<allRelatedPathCables.length;v++){
+						 relatedPathArray[allRelatedPathCables[v]].setMap(null);
+					}
+			}
+			
+		});	
+	}
+	else {
+		alert("No Related Path to show or hide!")
+		
+	}
+
+}
 function showHidePts(className){
 
 	if(className=="showHideAllDbCheckbox") {
 		clusterArray = markerClusterDB;
 		markersArray = markersDB;
 		distinctArray = distinctDB;
+		clusterArray.clearMarkers();	
+		
 	}
 	else if(className=="showHideAllJctCheckbox") {
 		clusterArray = markerClusterJct;
 		markersArray = markersJct;
 		distinctArray = distinctJct;
+		clusterArray.clearMarkers();	
+		
 	}
 	else if(className=="showHideAllCustCheckbox") {
 		clusterArray = markerClusterCustomers;
 		markersArray = markersCustomer;
 		distinctArray = distinctCustomers;
+		clusterArray.clearMarkers();	
+		
 	}
 	else if(className=="showHideAllHandholesCheckbox") {
 		clusterArray = markerClusterHandholes;
 		markersArray = markersHandholes;
 		distinctArray = distinctHandholes;
 	}
+	else if(className=="showHideAllHandholesWithJctCheckbox") {
+		clusterArray = markerClusterHandholesWithJct;
+		markersArray = markersHandholesWithJct;
+		distinctArray = distinctHandholesWithJct;
+	}
 	else if(className=="showHideAllManholesCheckbox") {
 		clusterArray = markerClusterManholes;
 		markersArray = markersManholes;
 		distinctArray = distinctManholes;
+		clusterArray.clearMarkers();	
+	}
+	else if(className=="showHideAllManholesWithJctCheckbox") {
+		clusterArray = markerClusterManholesWithJct;
+		markersArray = markersManholesWithJct;
+		distinctArray = distinctManholesWithJct;
+		clusterArray.clearMarkers();	
+		
 	}
 	else if(className=="showHideAllSitesCheckbox") {
 		clusterArray = markerClusterSites;
 		markersArray = markersSites;
 		distinctArray = distinctSites;
+		clusterArray.clearMarkers();	
+		
 	}
 	
 	$('.'+className).bind("change",function() {
-		clusterArray.clearMarkers();	
 					
 			if ($(this).is(':checked')){
 				for(var x=0;x<distinctArray.length;x++) {
 					ID = distinctArray[x];
 					if(markersArray[ID].getMap()==null){
+						clusterArray.removeMarker(markersArray[ID]);
 						markersArray[ID].setMap(map);			
 						clusterArray.addMarker(markersArray[ID]);
 					}
 				}
 			}
+			/*else {
+
+				for(var x=0;x<distinctArray.length;x++) {
+					ID = distinctArray[x];
+					if(markersArray[ID].getMap()==null){
+						markersArray[ID].setMap(null);			
+						clusterArray.removeMarker(markersArray[ID]);
+					}
+				}
+
+			}*/
 			
 		});	
 }
@@ -1900,7 +2127,6 @@ function showElement(concatIDLongLat,rowIndex){
 		        document.getElementById("dbCount").textContent = "";
 		        if(!markersDB[ID]){
 					distinctDB.push(ID); //  this array is used when checking all db from legend
-					//createDbMarker(ID,longitude,latitude,Name);
 					createMarker(ID,longitude,latitude,Name,'backboneDB.png',markersDB,markerClusterDB)
 					
 				}  
@@ -1978,36 +2204,59 @@ function showLocation(ID,rowIndex){
 				document.getElementById("sitesCount").textContent = "("+distinctSites.length+")";    				
 			}
 			else if(locationType =="Manhole") {
-				$('.showHideAllManholesCheckbox').prop('checked', true);
-				$(".showHideAllManholesCheckbox").attr('disabled', false);
-		        document.getElementById("manholesCount").textContent = "";
-		        if(!markersManholes[ID]){
-		        	if(Name.includes("_J")) {
-						var imageURL = "manholeJct.png";
-					}
-			        else {
-						var imageURL = "manholeRed.png";
-					}
-		        	distinctManholes.push(ID); //  this array is used when checking all manholes from legend
-					createMarker(ID,longitude,latitude,Name,imageURL,markersManholes,markerClusterManholes)
-				}  
+			
+		        if(Name.endsWith("_J")) {
+		        	$('.showHideAllManholesWithJctCheckbox').prop('checked', true);
+					$(".showHideAllManholesWithJctCheckbox").attr('disabled', false);
+			        document.getElementById("manholesCountWithJct").textContent = "";
+			        
+					if(!markersManholesWithJct[ID]){
+			        	distinctManholesWithJct.push(ID); //  this array is used when checking all manholes from legend
+						createMarker(ID,longitude,latitude,Name,"manholeJct.png",markersManholesWithJct,markerClusterManholesWithJct)
+					} 
+					
+				}
+		        else {
+		        	$('.showHideAllManholesCheckbox').prop('checked', true);
+					$(".showHideAllManholesCheckbox").attr('disabled', false);
+			        document.getElementById("manholesCount").textContent = "";
+			        
+					if(!markersManholes[ID]){
+			        	distinctManholes.push(ID); //  this array is used when checking all manholes from legend
+						createMarker(ID,longitude,latitude,Name,"manholeRed.png",markersManholes,markerClusterManholes)
+					} 
+					
+				}
+				document.getElementById("manholesCountWithJct").textContent = "("+distinctManholesWithJct.length+")";    				
 				document.getElementById("manholesCount").textContent = "("+distinctManholes.length+")";    				
 			}
 			else if(locationType =="Handhole") {
-				$('.showHideAllHandholesCheckbox').prop('checked', true);
-				$(".showHideAllHandholesCheckbox").attr('disabled', false);
-		        document.getElementById("handholesCount").textContent = "";
-		        if(!markersHandholes[ID]){
-			        if(Name.includes("_J")) {
-						var imageURL = "handholeYellowJct.png";
-					}
-			        else {
-						var imageURL = "handholeYellow.png";
-					}
-		        	distinctHandholes.push(ID); //  this array is used when checking all handholes from legend
-					createMarker(ID,longitude,latitude,Name,imageURL,markersHandholes,markerClusterHandholes)
-				}  
-				document.getElementById("handholesCount").textContent = "("+distinctHandholes.length+")";    				
+
+				 if(Name.endsWith("_J")) {
+			        	$('.showHideAllHandholesWithJctCheckbox').prop('checked', true);
+						$(".showHideAllHandholesWithJctCheckbox").attr('disabled', false);
+				        document.getElementById("handholesCountWithJct").textContent = "";
+				        
+						if(!markersHandholesWithJct[ID]){
+				        	distinctHandholesWithJct.push(ID); 
+							createMarker(ID,longitude,latitude,Name,"handholeYellowJct.png",markersHandholesWithJct,markerClusterHandholesWithJct)
+						} 
+						
+				 }
+			     else {
+			        	$('.showHideAllHandholesCheckbox').prop('checked', true);
+						$(".showHideAllHandholesCheckbox").attr('disabled', false);
+				        document.getElementById("handholesCount").textContent = "";
+				        
+						if(!markersHandholes[ID]){
+							distinctHandholes.push(ID); //  this array is used when checking all handholes from legend
+							createMarker(ID,longitude,latitude,Name,"handholeYellow.png",markersHandholes,markerClusterHandholes)
+						} 
+				 }
+
+					document.getElementById("handholesCountWithJct").textContent = "("+distinctHandholesWithJct.length+")";    				
+					document.getElementById("handholesCount").textContent = "("+distinctHandholes.length+")";    				
+				
 			}
 			else if(locationType=="DB") {
 				$('.showHideAllDbCheckbox').prop('checked', true);
@@ -2042,20 +2291,41 @@ function showLocation(ID,rowIndex){
 				}  
 			}
 			else if(locationType =="Manhole") {
-		        if(markersManholes[ID]){
-		        	if(markersManholes[ID].getMap()==null){
-		        		markersManholes[ID].setMap(map);			
-		        		markerClusterManholes.addMarker(markersManholes[ID]);
-					}
-				}  
+		        if(Name.endsWith("_J")) {
+		        	if(markersManholesWithJct[ID]){
+			        	if(markersManholesWithJct[ID].getMap()==null){
+			        		markersManholesWithJct[ID].setMap(map);			
+			        		markerClusterManholesWithJct.addMarker(markersManholesWithJct[ID]);
+						}
+					}  
+		        }
+		        else {
+		        	if(markersManholes[ID]){
+			        	if(markersManholes[ID].getMap()==null){
+			        		markersManholes[ID].setMap(map);			
+			        		markerClusterManholes.addMarker(markersManholes[ID]);
+						}
+					}  
+			     }
+		        
 			}
 			else if(locationType =="Handhole") {
-		        if(markersHandholes[ID]){
-		        	if(markersHandholes[ID].getMap()==null){
-		        		markersHandholes[ID].setMap(map);			
-		        		markerClusterHandholes.addMarker(markersHandholes[ID]);
-					}
-				}  
+				if(Name.endsWith("_J")) {
+		        	if(markersHandholesWithJct[ID]){
+			        	if(markersHandholesWithJct[ID].getMap()==null){
+			        		markersHandholesWithJct[ID].setMap(map);			
+			        		markerClusterHandholesWithJct.addMarker(markersHandholesWithJct[ID]);
+						}
+					}  
+		        }
+		        else {
+		        	if(markersHandholes[ID]){
+			        	if(markersHandholes[ID].getMap()==null){
+			        		markersHandholes[ID].setMap(map);			
+			        		markerClusterHandholes.addMarker(markersHandholes[ID]);
+						}
+					}  
+			   }			    
 			}
 			else if(locationType=="DB") {
 		        if(markersDB[ID]){
