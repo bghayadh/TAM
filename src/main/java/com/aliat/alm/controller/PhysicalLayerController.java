@@ -13723,7 +13723,6 @@ public class PhysicalLayerController {
 
 		session = AlmDbSession.getInstance().getSession();
 		List<Object[]> showJunctionList = new ArrayList<Object[]>();
-		List<Object[]> JunctionList = new ArrayList<Object[]>();
 
 		String cableID = request.getParameter("fiberID");
 

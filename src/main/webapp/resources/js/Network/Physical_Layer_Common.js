@@ -1020,7 +1020,7 @@ function Create_FiberPath(fiberId){
 		}
 		else{
 			var fiberID=$(this).parent().attr('id');	     
-	    }
+	    }//zz
 		map.fitBounds(window["bounds_"+fiberID]);
 	});
 }
@@ -7734,6 +7734,207 @@ function FindFiberStrand(selectedStrand){
 	
 }
 
+function showHideManHandHolesWithJct(pathID) {
+	
+	//Get all junctions (not belongs man/handholes)
+	$.ajax({
+		type: "GET",
+		contentType: "application/json; charset=utf-8",
+		url: getContext()+'/showJunctionsData',
+		data: {
+			"fiberID":pathID
+		},
+		dataType: "json",
+		success: function (data) {					
+			showJunctionList = data.showJunctionList;					
+			if(showJunctionList.length >0) {
+				for(var x=0;x<showJunctionList.length;x++) {
+					var idJct = showJunctionList[x][0];		
+					if(markersJunction[idJct]) {
+						if(markersJunction[idJct].getMap() ==null) {							
+							markerClusterJunction.removeMarker(markersJunction[idJct]);	
+							markersJunction[idJct].setMap(map);
+							markerClusterJunction.addMarker(markersJunction[idJct]);	
+							$("#"+idJct).children(':checkbox').prop( "checked", true );
+						}	
+					}									
+				}// end loop
+			}												
+				
+			if(showJctFlag=="Opened"){
+				showJctFlag="notOpened";
+				$("#Junction_f_CurrentPhysicalLayer").find(' > ul > li').hide("fast");		
+			}				
+			  
+		},
+		error: function (result) {
+			alert("Error");
+		}
+	});
+		
+		
+	showManhHandJctArray=[];
+	if(window["mapPointsNames_"+pathID] != undefined) {
+		
+		if( (filterFlag==2 || filterFlag==1) && showPointsType=="0") {	//case of filter
+
+			$('#Manhole_f_CurrentPhysicalLayer').find(' > ul > li ').each(function(){		
+				var manHandDbName = $(this).text().trim();
+				if(manHandDbName.includes("Junctions")) {
+					manHandDbName=manHandDbName.split("Junctions")[0].replaceAll(' ', '');
+				}
+				allTreePoints.push($(this).attr('id')+":"+manHandDbName);
+			});
+			$('#Handhole_f_CurrentPhysicalLayer').find(' > ul > li ').each(function(){		
+				var manHandDbName = $(this).text().trim();
+				if(manHandDbName.includes("Junctions")) {
+					manHandDbName=manHandDbName.split("Junctions")[0].replaceAll(' ', '');
+				}
+				allTreePoints.push($(this).attr('id')+":"+manHandDbName);
+			});
+			
+			window["mapPointsNamesTemp"]=[];
+				for(var x=0;x<window["mapPointsNames_"+pathID].length;x++) {
+					if(window["mapPointsNames_"+pathID][x].includes("MH_") || window["mapPointsNames_"+pathID][x].includes("HH_")) {
+						
+						if(allTreePoints.includes(window["mapPointsNames_"+pathID][x])==true) {
+							window["mapPointsNamesTemp"].push(window["mapPointsNames_"+pathID][x]);
+						}
+						else {
+							window["mapPointsNamesTemp"].push("empty");
+						}
+					}
+					else {
+						window["mapPointsNamesTemp"].push(window["mapPointsNames_"+pathID][x]);
+					}		
+				}
+				
+				showManhHandJctArray=window["mapPointsNamesTemp"];
+				window["mapPointsNamesTemp"]=[];
+				allTreePoints=[];		
+		}
+		else {
+			showManhHandJctArray = window["mapPointsNames_"+pathID];
+		}
+		
+		
+		//Used to check if the labels in dropdown are checked 
+		allcheckedLabels=[];
+		if($(".checkboxSpan:checked").length >0) {
+			$(".checkboxSpan").each(function(){
+				if($(this).is(":checked")) {
+					var id = $(this).attr('id');
+					allcheckedLabels.push(id);
+				}
+			}); 
+		}
+		
+	for(var x=0;x<showManhHandJctArray.length;x++) {
+		if (x==0) {
+			var type="Source";
+		}
+		else if (x == showManhHandJctArray.length-1) {
+			var type ="Destination";
+		}
+		else {
+			var type =String(x);
+		}			
+			
+		if(showManhHandJctArray[x].startsWith("MH_")==true ) {
+			var manID = showManhHandJctArray[x].split(":")[0];
+			if(window[""+manID][1].endsWith("_J") ==true) { //case of junction
+				if(markersManhole[manID]) {
+					
+					if(markersManhole[manID].getMap() ==null) {
+						markerClusterManhole.removeMarker(markersManhole[manID]);	
+						markersManhole[manID].setMap(map);
+						markerClusterManhole.addMarker(markersManhole[manID]);	
+						$("#"+manID).children(':checkbox').prop( "checked", true );
+						$("#manholeCheckAllBoq").prop( "checked", true );
+				 	}
+				
+				//Show seq is checked 
+				if(window['fiberCheckSequence_'+pathID] == "checked") {
+					if(allcheckedLabels.length >0 && allcheckedLabels.includes("manholesMapCheck_Labels")==true) {
+						markersManhole[manID].setLabel({text: type +" // "+ showManhHandJctArray[x].split(":")[1], className:"marker-position-manhole",color:"red"});
+					}
+					else {
+						markersManhole[manID].setLabel({text: type , className:"marker-position-sequence",color:"red"}); 
+					}
+				}
+				//Show Seq is unchecked
+				else {
+						if(allcheckedLabels.length >0 && allcheckedLabels.includes("manholesMapCheck_Labels")==true) {
+							markersManhole[manID].setLabel({text: showManhHandJctArray[x].split(":")[1] , className:"marker-position-manhole",color:"red"});
+						}
+						else {
+							if(markersManhole[manID].getLabel()!="undefined") {
+								markersManhole[manID].setLabel(null);
+							}
+						}
+				}						
+				}	
+			}
+				
+			}
+		else if(showManhHandJctArray[x].startsWith("HH_")==true ) {
+			var handID = showManhHandJctArray[x].split(":")[0];
+			if(window[""+handID][1].endsWith("_J") ==true) { //case of junction
+				if(markersHandhole[handID]) {
+					
+					if(markersHandhole[handID].getMap() ==null) {
+						markerClusterHandhole.removeMarker(markersHandhole[handID]);	
+						markersHandhole[handID].setMap(map);
+						markerClusterHandhole.addMarker(markersHandhole[handID]);	
+						$("#"+handID).children(':checkbox').prop( "checked", true );
+						$("#handholeCheckAllBoq").prop( "checked", true );
+				 	}
+				
+				//Show seq is checked 
+				if(window['fiberCheckSequence_'+pathID] == "checked") {
+					if(allcheckedLabels.length >0 && allcheckedLabels.includes("handholesMapCheck_Labels")==true) {
+						markersHandhole[handID].setLabel({text: type +" // "+ showManhHandJctArray[x].split(":")[1], className:"marker-position-handhole",color:"#E5C523"});
+					}
+					else {
+						markersHandhole[handID].setLabel({text: type , className:"marker-position-sequence",color:"#E5C523"}); 
+					}
+				}
+				//Show Seq is unchecked
+				else {
+						if(allcheckedLabels.length >0 && allcheckedLabels.includes("handholesMapCheck_Labels")==true) {
+							markersHandhole[handID].setLabel({text: showManhHandJctArray[x].split(":")[1] , className:"marker-position-handhole",color:"#E5C523"});
+						}
+						else {
+							if(markersHandhole[handID].getLabel()!="undefined") {
+								markersHandhole[handID].setLabel(null);
+							}
+						}
+				}					
+					
+				}	
+			}
+				
+			}
+		}
+
+		if( $("#Manhole_f_CurrentPhysicalLayer").find(".Manhole:checked" ).length ==0){
+			$("#manholeCheckAllBoq").prop("checked",false);
+		}
+		else{
+			$("#manholeCheckAllBoq").prop("checked",true);
+		}
+		
+		if( $("#Handhole_f_CurrentPhysicalLayer").find(".Handhole:checked" ).length ==0){
+			$("#handholeCheckAllBoq").prop("checked",false);
+		}
+		else{
+			$("#handholeCheckAllBoq").prop("checked",true);
+		}
+		
+		
+	}
+}
+
 function showHideRealPoints(pathID,checkSeqWindowID,action) {
 	showHidePointsArray=[];
 	if(window["mapPointsNames_"+pathID] != undefined) {
@@ -7864,6 +8065,9 @@ function showHideRealPoints(pathID,checkSeqWindowID,action) {
 			}
 			else if(showHidePointsArray[x].startsWith("MH_")==true) {
 				var manID = showHidePointsArray[x].split(":")[0];
+				if(markersManhole[manID].icon.url.includes("manholeJct.png")){
+						console.log("hello11 jct"+manID)
+					}
 				if(markersManhole[manID]) {
 					if(markersManhole[manID].getMap() ==null) {
 						markerClusterManhole.removeMarker(markersManhole[manID]);	
