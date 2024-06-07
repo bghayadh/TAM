@@ -995,7 +995,7 @@ function DefaultZoomControl(controlDiv, map) {
     controlUI.addEventListener("click", () => {
     	var center=new google.maps.LatLng(1,38);
         map.setCenter(center);
-        map.setZoom(6);        
+		map.setZoom(7);	
      });
 
   }
