@@ -324,14 +324,14 @@ public class LoadFileEntSwitchCisco {
 						
 						 //insert into node_active 
 						 PreparedStatement stmt = con.prepareStatement(
-									"insert into NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,SUB_DOMAIN,NODE_SOURCE,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,ACTIVE_RECORD,LINE,WARE_ID,VENDOR,SUPPLIER_ID,WARE_NAME,SUPPLIER_NAME,IP_ADDRESS,MAC_ADDRESS,SERIAL_NUMBER,SOFTWARE_VERSION,PATCH_VERSION,LONGITUDE,LATITUDE,PART_NUMBER,OTHERS )"
+									"insert into NODE_ACTIVE (NODE_PK,UNIQUE_NODE_ID,NODE_ID,NODE_NAME,NODE_TYPE,DOMAIN,SUB_DOMAIN,NODE_SOURCE,NODE_MODEL,TECH_2G,TECH_3G,TECH_4G,TECH_5G,SITE_ID,CIRCLE_ID,CREATION_DATE,UPDATE_DATE,FILE_TYPE,FILENAME,STATUS,FROM_TRANS_SOURCE,TO_TRANS_SOURCE,FROM_TRANS_ID,TO_TRANS_ID,TRANS_TYPE,ACTIVE_RECORD,LINE,WARE_ID,VENDOR,SUPPLIER_ID,WARE_NAME,SUPPLIER_NAME,IP_ADDRESS,MAC_ADDRESS,SERIAL_NUMBER,SOFTWARE_VERSION,PATCH_VERSION,LONGITUDE,LATITUDE,PART_NUMBER,OTHERS,SUB_DOMAIN_TYPE )"
 											+ "values('" + vcodeid + "', '" + unique_Node_ID + "' ,'" + nodeId + "' ,'" + nodeName
 											+ "','" + nodeType + "','" + Domain +"','"+subDomain+ "','0','" + nodeModel + "','0','0','0','0','"
 											+ siteID + "','" + circleid + "',sysdate,sysdate,'" + fileType + "','" + FileName
 											+ "','','0','0','0','0','0','1','0','" + wareID + "','" + Gprovider
 											+ "','0','" + wareName + "','0','" + IPaddress + "','" + MACaddress + "','"+nodeSN+ "','"
 											+ softwareVersion + "','" + patchVersion + "','" + longi + "','" + lat + "',''"
-													+ ",'" + Others + "') ");
+													+ ",'" + Others + "',"+"'SWITCH') ");
 							stmt.executeUpdate();
 							stmt.close();
 							NodeSeq++;
