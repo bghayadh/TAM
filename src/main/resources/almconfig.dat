@@ -27,9 +27,11 @@ readfileTransIpHWfrom;C:\ALM_V2_1\Transmission\IP\HUAWEI
 copyfileTransIpHWto;C:\ALM_V2_1\Transmission_Processed\IP\HUAWEI
 readfileTransIpCiscofrom;C:\ALM_V2_1\Transmission\IP\CISCO
 copyfileTransIpCiscoto;C:\ALM_V2_1\Transmission_Processed\IP\CISCO
+readfileEntSwitchCiscofrom;C:\ALM_V2_1\Enterprise\Switch\CISCO
+copyfileEntSwitchCiscoto;C:\ALM_V2_1\Enterprise_Processed\Switch\CISCO
 readexcelTransOptSDHACLfrom;C:\ALM_V2_1\Transmission\Optics\SDH\ALCATEL
 copyexcelTransOptSDHACLto;C:\ALM_V2_1\Transmission_Processed\Optics\SDH\ALCATEL
-readfileInvRANZTEfrom;C:\ALM_V2_1\RAN\ZTE\Inventory_dumps
+readfileInvRANZTEfrom;C:\ALM_V2_19\RAN\ZTE\Inventory_dumps
 copyfileInvRANZTEto;C:\ALM_V2_1\RAN_Processed\ZTE\Inventory_dumps
 readfileCellRANZTEfrom;C:\ALM_V2_1\RAN\ZTE
 copyfileCellRANZTEto;C:\ALM_V2_1\RAN_Processed\ZTE
