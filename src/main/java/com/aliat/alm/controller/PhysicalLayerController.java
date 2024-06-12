@@ -321,7 +321,7 @@ public class PhysicalLayerController {
 								.getResultList();
 
 						NodeList = session.createNativeQuery(
-								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' ) AND (NODE_NAME LIKE '%"
+								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' OR SUB_DOMAIN_TYPE='SWITCH' ) AND (NODE_NAME LIKE '%"
 										+ request.getParameter("FilteredNode") + "%' OR NODE_PK  LIKE '%"
 										+ request.getParameter("FilteredNode") + "%')     ")
 								.getResultList();
@@ -1091,7 +1091,7 @@ public class PhysicalLayerController {
 						"SELECT DISTINCT A.JUNCTION_ID, A.JUNCTION_NAME,A.PHYSICAL_LAYER_ID,A.PHYSICAL_LAYER_NAME,A.JUNCTION_NUMBER,A.CAPACITY,A.CITY,substr(trim(replace(A.LONGITUDE,'�','')),1,6) as LONGITUDE,substr(trim(replace(A.LATITUDE,'�','')),1,6) as LATITUDE,A.PROJECT_ID FROM JUNCTION A INNER JOIN handhole B ON A.PHYSICAL_LAYER_ID = b.handhole_id ").getResultList();
 
 				List<Object[]> nodeListQuery = session.createNativeQuery(
-						"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,substr(trim(replace(LONGITUDE,'�','')),1,6) as LONGITUDE,substr(trim(replace(LATITUDE,'�','')),1,6) as LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' ) "
+						"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,substr(trim(replace(LONGITUDE,'�','')),1,6) as LONGITUDE,substr(trim(replace(LATITUDE,'�','')),1,6) as LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' OR SUB_DOMAIN_TYPE='SWITCH' ) "
 								+ " AND (LONGITUDE !='null' or LONGITUDE !=null ) AND (LATITUDE !='null' or LATITUDE !=null ) ").getResultList();
 				NodeList = findNearestArray(nodeListQuery, Double.valueOf(closestLatPoint),Double.valueOf(closestLongPoint), Double.valueOf(closestDisRange), "Nodes",noOfPoints);
 				
@@ -1132,7 +1132,7 @@ public class PhysicalLayerController {
 				String handholeStr = "SELECT DISTINCT HANDHOLE_ID,HANDHOLE_NAME,substr(trim(replace(LONGITUDE,'�','')),1,6) as LONGITUDE,substr(trim(replace(LATITUDE,'�','')),1,6) as LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=HANDHOLE_ID),DM_NAME FROM HANDHOLE ";
 				String dbStr = 	"SELECT DISTINCT DB_ID,substr(trim(replace(DB_LONGITUDE,'�','')),1,6) as DB_LONGITUDE,substr(trim(replace(DB_LATITUDE,'�','')),1,6) as DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,PROJECT_ID ,CITY,DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD ";
 				
-				String nodeStr ="SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,substr(trim(replace(LONGITUDE,'�','')),1,6) as LONGITUDE,substr(trim(replace(LATITUDE,'�','')),1,6) as LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' ) "
+				String nodeStr ="SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,substr(trim(replace(LONGITUDE,'�','')),1,6) as LONGITUDE,substr(trim(replace(LATITUDE,'�','')),1,6) as LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' OR SUB_DOMAIN_TYPE='SWITCH' ) "
 				+ " AND (LONGITUDE !='null' or LONGITUDE !=null ) AND (LATITUDE !='null' or LATITUDE !=null ) ";
 		
 				if (startLongPoint != null && !startLongPoint.equalsIgnoreCase("")  && endLongPoint != null && !endLongPoint.equalsIgnoreCase("")
@@ -2309,7 +2309,7 @@ public class PhysicalLayerController {
 								.getResultList();
 
 						NodeList = session.createNativeQuery(
-								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' )    ")
+								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' OR SUB_DOMAIN_TYPE='SWITCH' )    ")
 								.getResultList();
 
 					}
@@ -4366,9 +4366,14 @@ public class PhysicalLayerController {
 			tx = session.beginTransaction();
 			try {
 				Object MSANCount = session
-						.createNativeQuery("select count (*) from node_active where domain = 'Enterprise'")
+						.createNativeQuery("select count (*) from node_active where domain = 'Enterprise' AND SUB_DOMAIN_TYPE ='MSAN'")
 						.getResultList();
 				rtn.put("MSANCount", MSANCount);
+				
+				Object EntSwitchCount = session
+						.createNativeQuery("select count (*) from node_active where domain = 'Enterprise' AND SUB_DOMAIN_TYPE ='SWITCH'")
+						.getResultList();
+				rtn.put("EntSwitchCount", EntSwitchCount);
 
 				Object DWDMCount = session.createNativeQuery(
 						"select count (*) from node_active where domain = 'Transmission' AND SUB_DOMAIN_TYPE = 'DWDM'")
@@ -4386,7 +4391,7 @@ public class PhysicalLayerController {
 				rtn.put("GPONCount", GPONCount);
 
 				Object AllNodesCount = session.createNativeQuery(
-						"SELECT COUNT(*) FROM node_active WHERE domain IN ('Enterprise' , 'Transmission') AND SUB_DOMAIN_TYPE IN ('DWDM','SDH','GPON','MSAN')  ")
+						"SELECT COUNT(*) FROM node_active WHERE domain IN ('Enterprise' , 'Transmission') AND SUB_DOMAIN_TYPE IN ('DWDM','SDH','GPON','MSAN','SWITCH')  ")
 						.getResultList();
 				rtn.put("AllNodesCount", AllNodesCount);
 				session.clear();
@@ -7999,7 +8004,7 @@ public class PhysicalLayerController {
 			try {
 				List<Object[]> NodeList = new ArrayList<Object[]>();
 				NodeList = session.createNativeQuery(
-						"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' )    ")
+						"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' OR SUB_DOMAIN_TYPE='SWITCH' )    ")
 						.getResultList();
 
 				rtn.put("nodeList", NodeList);

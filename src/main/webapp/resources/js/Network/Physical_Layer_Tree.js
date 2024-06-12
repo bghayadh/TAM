@@ -323,6 +323,9 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
         str="<ul><li id='Entreprise_MSAN__CurrentPhysicalLayer' style='display:none;' class='EntrepriseNodeFolder'><input type='checkbox' class='EntrepriseMSAN checkFilter' id ='Entreprise__CurrentPhysicalLayer' unchecked name='filter'></input> <span class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:395px' class='TreeSpan'> MSAN </span></li></ul>";
 		$("#NodeActive_f_CurrentPhysicalLayer").append(str);
 		
+		str="<ul><li id='Entreprise_SWITCH__CurrentPhysicalLayer' style='display:none;' class='EntrepriseSwitchNodeFolder'><input type='checkbox' class='EntrepriseSwitch checkFilter' id ='EntrepriseSwitch__CurrentPhysicalLayer' unchecked name='filter'></input> <span class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:395px' class='TreeSpan'> SWITCH </span></li></ul>";
+		$("#NodeActive_f_CurrentPhysicalLayer").append(str);
+		
 		str="<ul><li id='Transmission_DWDM__CurrentPhysicalLayer' style='display:none;' class='TransmissionDWDMFolder'><input type='checkbox' class='TransmissionDWDM checkFilter' id ='TransmissionDWDM__CurrentPhysicalLayer' unchecked name='filter'></input> <span class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:395px' class='TreeSpan'> DWDM </span></li></ul>";
 		$("#NodeActive_f_CurrentPhysicalLayer").append(str);
 		
@@ -2574,6 +2577,43 @@ menuAccessDB = new ContextMenu({
   }
   ]
 });
+	
+	menuEntSwitch = new ContextMenu({
+		  'theme': 'default',
+
+		  'items' : [
+		  {'icon': 'paste', 'name': 'Show BoQ ', action: () => {
+		    $.ajax({
+		      type: "GET",
+		      contentType: "application/json; charset=utf-8",
+		      url: getContext()+'/boqNodesCount',
+		      async:false,
+		      data: {
+		        "ProjectId": IdNodeSelectedTemp,
+		      },
+		      dataType: "json",
+		      success: function (data) {
+		          if(data.EntSwitchCount!=null){
+
+		             var tr ="<tr>"+"<th>Switch Count: </th><td> "+data.EntSwitchCount+"</td></tr>"	   
+		                     showBoq();
+		                     $("#boq_table").append(tr);
+		                
+		                
+		        }
+		      },
+		      
+		     
+		      error: function (result) {
+		        alert("Error");
+		      }
+		    });
+		  
+		  
+		  }
+		  }
+		  ]
+		});
 
 menuDWDM = new ContextMenu({
   'theme': 'default',
@@ -9274,6 +9314,12 @@ singleProject = new ContextMenu({
 	           IdNodeSelectedTemp=$(this).parent().attr('id').split("Transmission_GPON__")[1];
 	           menuName=menuGPON;		
 	           openContext("","",menuGPON,event);
+           });
+           
+           $(".EntrepriseSwitchNodeFolder > .TreeSpan, .EntrepriseSwitchNodeFolder > .TreeSpan").contextmenu(function(){
+	           IdNodeSelectedTemp=$(this).parent().attr('id').split("Entreprise_SWITCH__")[1];
+	           menuName=menuEntSwitch;		
+	           openContext("","",menuEntSwitch,event);
            });
            
             

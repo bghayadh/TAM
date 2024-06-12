@@ -57,6 +57,9 @@ function createNode(nodeList){
 	markerClusterGPONNodes = new MarkerClusterer();
 	markerClusterGPONNodes.setMap(map);
 	
+	markerClusterEntSwitchNodes = new MarkerClusterer();
+	markerClusterEntSwitchNodes.setMap(map);
+	
 	for(i=0;i<nodeList.length;i++){
 	    allNodes.push(nodeList[i][0]);
 		window[""+nodeList[i][0]]=[];
@@ -69,7 +72,12 @@ function createNode(nodeList){
 			create_Node_Marker_Click(nodeList[i][0],nodeList[i][1],nodeList[i][5],nodeList[i][6],markersNodeActive,markerClusterMSANNodes,"","");				
 			 NodeActiveCheckFilter(nodeList[i][0],markerClusterMSANNodes);
 		}
-		
+		else if(nodeList[i][8]=='SWITCH') {
+			str="<ul><li id='"+nodeList[i][0]+"'  class='NodeActive' style='display:none;width:100px;'><input type='checkbox' class='Nodes checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' style='width:16px; height:16px;' src='"+getContext()+"/resources/NetworkImages/EntSwitchNodeIcon.png'> "+ nodeList[i][1]+"/"+nodeList[i][7] +" </span></li></ul>";
+			$("#Entreprise_SWITCH__CurrentPhysicalLayer").append(str);
+			create_Node_Marker_Click(nodeList[i][0],nodeList[i][1],nodeList[i][5],nodeList[i][6],markersNodeActive,markerClusterEntSwitchNodes,"","");				
+			 NodeActiveCheckFilter(nodeList[i][0],markerClusterEntSwitchNodes);
+		}
 		else if(nodeList[i][8]=='DWDM') {
 			str="<ul><li id='"+nodeList[i][0]+"'  class='NodeActive' style='display:none;width:100px;'><input type='checkbox' class='Nodes checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' style='width:16px; height:16px;' src='"+getContext()+"/resources/NetworkImages/DWDMNodeIcon.png'>"+ nodeList[i][1]+"/"+nodeList[i][7] +" </span></li></ul>";
 			$("#Transmission_DWDM__CurrentPhysicalLayer").append(str);
@@ -106,6 +114,7 @@ function createNode(nodeList){
     AllNodesTreeCheckFilter("Transmission_DWDM__CurrentPhysicalLayer",markerClusterDWDMNodes);
     AllNodesTreeCheckFilter("Transmission_SDH__CurrentPhysicalLayer",markerClusterSDHNodes);
     AllNodesTreeCheckFilter("Transmission_GPON__CurrentPhysicalLayer",markerClusterGPONNodes);
+    AllNodesTreeCheckFilter("Entreprise_SWITCH__CurrentPhysicalLayer",markerClusterEntSwitchNodes);
     AllNodesTreeCheckFilter("NodeActive_f_CurrentPhysicalLayer","");
    
 }
@@ -139,11 +148,32 @@ function create_Node_Marker_Click(Id,Name,Long,Lat,markers,marker_Cluster,Type,c
 			
 		};
 		
+		iconEntSwitchNode = {
+				url:getContext()+"/resources/NetworkImages/EntSwitchNodeIcon.png", // url
+				scaledSize: new google.maps.Size(20, 20), // scaled size
+				
+			};
+		
 		markerClusterMSANNodes.setOptions({								
 			minimumClusterSize: 2,
 			styles: [
 			         {
 			        	 url: getContext()+'/resources/clusterIcons/nodeMSANCluster.png',
+				         height: 60,
+				         width:60,
+				         anchorText:[-3,-3]
+				      },
+			],
+			calculator: function(markers, numStyles) {
+				if (markers.length >= 1) return {text: markers.length,index:1}; 
+			}                   
+		});
+		
+		markerClusterEntSwitchNodes.setOptions({								
+			minimumClusterSize: 2,
+			styles: [
+			         {
+			        	 url: getContext()+'/resources/clusterIcons/nodeEntSwitchCluster.png',
 				         height: 60,
 				         width:60,
 				         anchorText:[-3,-3]
@@ -215,6 +245,10 @@ function create_Node_Marker_Click(Id,Name,Long,Lat,markers,marker_Cluster,Type,c
 		 mapIcon = iconGPONNode; 
 		 markerType="NodeActive";
     }
+	else if (markers == markersNodeActive && marker_Cluster == markerClusterEntSwitchNodes) {
+		 mapIcon = iconEntSwitchNode; 
+		 markerType="NodeActive";
+   }
 	 
 	 
 

@@ -2252,6 +2252,8 @@ function AllDistributionBoardCheckFilter(Id,clssName) {
 			markerClusterDWDMNodes.clearMarkers();
 			markerClusterSDHNodes.clearMarkers();
 			markerClusterGPONNodes.clearMarkers();
+			markerClusterEntSwitchNodes.clearMarkers();
+			
 		}
 		else {
 			clssName.clearMarkers();	
@@ -2276,6 +2278,9 @@ function AllDistributionBoardCheckFilter(Id,clssName) {
 						else if(window[""+NodeID][8]=="GPON") {
 							className=markerClusterGPONNodes;
 						}
+						else if(window[""+NodeID][8]=="SWITCH") {
+							className=markerClusterEntSwitchNodes;
+						}
 						className.removeMarker(markersNodeActive[NodeID]);	
 						markersNodeActive[NodeID].setMap(map);	
 						className.addMarker(markersNodeActive[NodeID]);
@@ -2298,14 +2303,14 @@ function AllDistributionBoardCheckFilter(Id,clssName) {
 				 }					
 			});
 	}
-			if ($('.EntrepriseMSAN').is(':checked') && $('.TransmissionDWDM').is(':checked') && $('.TransmissionSDH').is(':checked') && $('.TransmissionGPON').is(':checked') ){			
+			if ($('.EntrepriseMSAN').is(':checked') && $('.TransmissionDWDM').is(':checked') && $('.TransmissionSDH').is(':checked') && $('.TransmissionGPON').is(':checked') && $('.EntrepriseSwitch').is(':checked')){			
             	$('.AllNodeActive').prop('checked', true);  
         	}
         	else {
             	$('.AllNodeActive').prop('checked', false);
         	}
         
-            if($(".EntrepriseMSAN").is(":checked") || $(".TransmissionDWDM").is(":checked") || $('.TransmissionSDH').is(':checked') || $('.TransmissionGPON').is(':checked') ) {	
+            if($(".EntrepriseMSAN").is(":checked") || $(".TransmissionDWDM").is(":checked") || $('.TransmissionSDH').is(':checked') || $('.TransmissionGPON').is(':checked') || $('.EntrepriseSwitch').is(':checked')) {	
             	$("#nodesActiveCheckAllBoq").prop("checked",true);
         	}
         	else {
@@ -4321,6 +4326,7 @@ function nodeLayerCheckAll(){
 	$("#TransmissionDWDM__CurrentPhysicalLayer").prop("checked",true);	
 	$("#TransmissionSDH__CurrentPhysicalLayer").prop("checked",true);
 	$("#TransmissionGPON__CurrentPhysicalLayer").prop("checked",true);	
+	$("#EntrepriseSwitch__CurrentPhysicalLayer").prop("checked",true);
 	
 	$("#NodeActive_f_CurrentPhysicalLayer").find(' > ul > li > ul >li ').each(function(){		
 	
@@ -4343,6 +4349,9 @@ function nodeLayerCheckAll(){
 			else if(window[""+nodeID][8]=="GPON") {
 				markerClusterGPONNodes.addMarker(markersNodeActive[nodeID]);
 			}	
+			else if(window[""+nodeID][8]=="SWITCH") {
+				markerClusterEntSwitchNodes.addMarker(markersNodeActive[nodeID]);
+			}	
 					
 			$("#"+nodeID).children(':checkbox').prop( "checked", true );
 		}
@@ -4364,11 +4373,13 @@ function nodeLayerUnCheckAll(){
 	$("#TransmissionDWDM__CurrentPhysicalLayer").prop("checked",false);	
 	$("#TransmissionSDH__CurrentPhysicalLayer").prop("checked",false);	
 	$("#TransmissionGPON__CurrentPhysicalLayer").prop("checked",false);	
+	$("#EntrepriseSwitch__CurrentPhysicalLayer").prop("checked",false);	
 			
 		markerClusterMSANNodes.clearMarkers();
 		markerClusterDWDMNodes.clearMarkers();
 		markerClusterSDHNodes.clearMarkers();
 		markerClusterGPONNodes.clearMarkers();
+		markerClusterEntSwitchNodes.clearMarkers();
 
 
 	$("#NodeActive_f_CurrentPhysicalLayer").find(' > ul > li >ul >li ').each(function(){			
@@ -4393,7 +4404,10 @@ function nodeLayerUnCheckAll(){
 			}	
 			else if(window[""+id][8]=="GPON") {
 				markerClusterGPONNodes.addMarker(markersNodeActive[id]);
-			}				
+			}	
+			else if(window[""+id][8]=="SWITCH") {
+				markerClusterEntSwitchNodes.addMarker(markersNodeActive[id]);
+			}
 		}		
 	});							
 
@@ -4460,6 +4474,7 @@ function allElementsCheckFilter(){
 		    markerClusterDWDMNodes.clearMarkers();
 		    markerClusterSDHNodes.clearMarkers();
 		    markerClusterGPONNodes.clearMarkers();
+		    markerClusterEntSwitchNodes.clearMarkers();
 		}
 		
 		if(junctionFlag == 1){
@@ -4479,7 +4494,7 @@ function allElementsCheckFilter(){
 		if ($(this).is(':checked')){
 			
 			$(this).parent().find('ul > li').each(function(){				
-				if(($(this).children('input:checkbox').hasClass('AllNodeActive') || $(this).children('input:checkbox').hasClass('EntrepriseMSAN') || $(this).children('input:checkbox').hasClass('TransmissionDWDM') || $(this).children('input:checkbox').hasClass('TransmissionSDH') || $(this).children('input:checkbox').hasClass('TransmissionGPON')) && nodeFlag == 0 ){
+				if(($(this).children('input:checkbox').hasClass('AllNodeActive') || $(this).children('input:checkbox').hasClass('EntrepriseMSAN') || $(this).children('input:checkbox').hasClass('TransmissionDWDM') || $(this).children('input:checkbox').hasClass('TransmissionSDH') || $(this).children('input:checkbox').hasClass('TransmissionGPON') || $(this).children('input:checkbox').hasClass('EntrepriseSwitch')) && nodeFlag == 0 ){
 			    	$(this).children('input:checkbox').prop('checked', false);
 				}else if($(this).children('input:checkbox').hasClass('AllJunctions') && junctionFlag == 0){
 					$(this).children('input:checkbox').prop('checked', false);
@@ -4555,7 +4570,10 @@ function allElementsCheckFilter(){
 							}
 							else if(window[""+id][8]=="GPON") {
 								markerClusterGPONNodes.addMarker(markersNodeActive[id]);
-							}				
+							}	
+							else if(window[""+id][8]=="SWITCH") {
+								markerClusterEntSwitchNodes.addMarker(markersNodeActive[id]);
+							}	
 							$("#nodesActiveCheckAllBoq").prop("checked",true);
 						}
 					}
@@ -6053,11 +6071,14 @@ function appendNearestDBoardTable(result){
 			$(".TransmissionGPON").prop("checked",true);
 			$(".TransmissionDWDM").prop("checked",true);
 			$(".EntrepriseMSAN").prop("checked",true);
+			$(".EntrepriseSwitch").prop("checked",true);
+			
 
 			markerClusterMSANNodes.clearMarkers();
 			markerClusterDWDMNodes.clearMarkers();
 			markerClusterSDHNodes.clearMarkers();
 			markerClusterGPONNodes.clearMarkers();
+			markerClusterEntSwitchNodes.clearMarkers();
 
 			 $("#network_tree").find(".Nodes:checked" ).each(function(){
 				id=$(this).parent().attr('id');
@@ -6074,7 +6095,10 @@ function appendNearestDBoardTable(result){
 				}
 				else if(window[""+id][8]=="GPON") {
 					markerClusterGPONNodes.addMarker(markersNodeActive[id]);
-				}										
+				}	
+				else if(window[""+id][8]=="SWITCH") {
+					markerClusterEntSwitchNodes.addMarker(markersNodeActive[id]);
+				}	
 		     });	
 			}
 			else{
@@ -6085,11 +6109,13 @@ function appendNearestDBoardTable(result){
 				$(".TransmissionGPON").prop("checked",false);
 				$(".TransmissionDWDM").prop("checked",false);
 				$(".EntrepriseMSAN").prop("checked",false);
+				$(".EntrepriseSwitch").prop("checked",false);
 
 				markerClusterMSANNodes.clearMarkers();
 				markerClusterDWDMNodes.clearMarkers();
 				markerClusterSDHNodes.clearMarkers();
 				markerClusterGPONNodes.clearMarkers();
+				markerClusterEntSwitchNodes.clearMarkers();
 			}
 			
 		});
@@ -6112,7 +6138,10 @@ function appendNearestDBoardTable(result){
 					}
 					else if(window[""+Id][8]=="GPON") {
 						markerClusterGPONNodes.addMarker(markersNodeActive[Id]);
-					}				
+					}	
+					else if(window[""+Id][8]=="SWITCH") {
+						markerClusterEntSwitchNodes.addMarker(markersNodeActive[Id]);
+					}
 				}
 				else{
 					$("#"+Id).children('input:checkbox').prop('checked', false);
@@ -6128,7 +6157,10 @@ function appendNearestDBoardTable(result){
 					}
 					else if(window[""+Id][8]=="GPON") {
 						markerClusterGPONNodes.removeMarker(markersNodeActive[Id]);
-					}			
+					}	
+					else if(window[""+Id][8]=="SWITCH") {
+						markerClusterEntSwitchNodes.removeMarker(markersNodeActive[Id]);
+					}
 				}			
 		});
 
