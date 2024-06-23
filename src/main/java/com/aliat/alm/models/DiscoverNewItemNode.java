@@ -11,7 +11,7 @@ import javax.persistence.Table;
 @Table(name = "Discover_New_Item_Node")
 public class DiscoverNewItemNode {
     @Id
-    @Column(name = "DNI_Node", nullable = false)
+    @Column(name = "DNI_NODE", nullable = false)
     private String dniNode;
 
     @Column(name = "FROM_NODE_ID")
