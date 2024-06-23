@@ -271,7 +271,7 @@ public class DiscoveryController {
 
 		String dnid = request.getParameter("dnID");
 		
-		/* to open discovery when click on ADD from discovery List */
+		
 		if (StringUtils.equalsIgnoreCase(dnid, null)) {
 			date = new Timestamp(System.currentTimeMillis());
 			model.addAttribute("dncreationDate", formatter.format(date).toString());
@@ -436,7 +436,19 @@ public class DiscoveryController {
 		calendar.setTime(date);
 		int year = calendar.get(Calendar.YEAR);
 
-		
+		  String[] delIds = request.getParameterValues("slctDelDNItem[]");
+
+
+		    if (delIds != null && delIds.length > 0) {
+		        for (String id : delIds) {
+		        	 query = session.createQuery("delete from DiscoveryNewItem t where t.dniID = :dniId");
+			            query.setParameter("dniId", id);
+			            query.executeUpdate();
+			
+		        }
+		    } else {
+		        System.out.println("No IDs selected.");
+		    } 
 		
 		
 		if (StringUtils.equalsIgnoreCase(request.getParameter("type"), "addNew")) {
@@ -739,13 +751,13 @@ query.executeUpdate();
 				                /* Node with the same toNodeId doesn't exist, create a new one */
 				                String DN_NodeId;
 				                synchronized (this) {
-				                    DN_NodeId = "DNI_Node_" + year + "_" +
+				                    DN_NodeId = "DNI_NODE_" + year + "_" +
 				                            Integer.parseInt(session
-				                                    .createNativeQuery("SELECT DNI_Node FROM SEQ_TABLE")
+				                                    .createNativeQuery("SELECT DNI_NODE FROM SEQ_TABLE")
 				                                    .uniqueResult().toString());
 
 				                    /* Update the sequence table */
-				                    session.createNativeQuery("UPDATE SEQ_TABLE SET DNI_Node = DNI_Node + 1 ").executeUpdate();
+				                    session.createNativeQuery("UPDATE SEQ_TABLE SET DNI_NODE = DNI_NODE + 1 ").executeUpdate();
 				                    session.createNativeQuery("commit").executeUpdate();
 				                }
 
@@ -796,13 +808,13 @@ query.executeUpdate();
 				            } else {
 				                String DN_NodeId;
 				                synchronized (this) {
-				                    DN_NodeId = "DNI_Node_" + year + "_" +
+				                    DN_NodeId = "DNI_NODE_" + year + "_" +
 				                            Integer.parseInt(session
-				                                    .createNativeQuery("SELECT DNI_Node FROM SEQ_TABLE")
+				                                    .createNativeQuery("SELECT DNI_NODE FROM SEQ_TABLE")
 				                                    .uniqueResult().toString());
 
 				                    /* Update the sequence table */
-				                    session.createNativeQuery("UPDATE SEQ_TABLE SET DNI_Node = DNI_Node + 1 ").executeUpdate();
+				                    session.createNativeQuery("UPDATE SEQ_TABLE SET DNI_NODE = DNI_NODE + 1 ").executeUpdate();
 				                    session.createNativeQuery("commit").executeUpdate();
 				                }
 
