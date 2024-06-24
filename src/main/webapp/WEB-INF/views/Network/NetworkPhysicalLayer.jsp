@@ -409,6 +409,20 @@
 									</div>
 								</div>
 							</div>
+							
+							<div class="row" style="display: none;">
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 150px;" class="input-group-text" style="color: green;"><b>Project Type</b> </span>
+											 <input type="text" id="ProjectType" readonly class="form-control text-input" />
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							
+							
 							</div>
 					</div>
 					<div class="modal-footer"></div>

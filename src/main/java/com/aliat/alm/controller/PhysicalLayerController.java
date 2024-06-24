@@ -189,7 +189,7 @@ public class PhysicalLayerController {
 						String showPointsType = request.getParameter("getRelatedPointsFilter");
 
 						projectList = session.createNativeQuery(
-								"SELECT DISTINCT PROJECT_ID,PROJECT_NAME, (select count(*) FROM HANDHOLE a WHERE a.PROJECT_ID = b.PROJECT_ID)  FROM PROJECT b where PROJECT_ID LIKE '%"
+								"SELECT DISTINCT PROJECT_ID,PROJECT_NAME, (select count(*) FROM HANDHOLE a WHERE a.PROJECT_ID = b.PROJECT_ID),PROJECT_LAYER  FROM PROJECT b where PROJECT_ID LIKE '%"
 										+ request.getParameter("FilteredProject") + "%' OR PROJECT_NAME LIKE '%"
 										+ request.getParameter("FilteredProject") + "%' OR PROJECT_ID LIKE '%"
 										+ request.getParameter("Checked") + "%'")
@@ -2238,7 +2238,7 @@ public class PhysicalLayerController {
 						filterFlag = 0;
 
 						projectList = session.createNativeQuery(
-								"SELECT DISTINCT PROJECT_ID,PROJECT_NAME, (select count(*) FROM HANDHOLE a WHERE a.PROJECT_ID = b.PROJECT_ID)  FROM PROJECT b ")
+								"SELECT DISTINCT PROJECT_ID,PROJECT_NAME, (select count(*) FROM HANDHOLE a WHERE a.PROJECT_ID = b.PROJECT_ID),PROJECT_LAYER  FROM PROJECT b ")
 								.getResultList();
 
 						manholeList = session.createNativeQuery(
@@ -4640,10 +4640,12 @@ public class PhysicalLayerController {
 			calendar.setTime(new Date());
 			int year = calendar.get(Calendar.YEAR);
 			String ProjectId = "";
+			String projectType=request.getParameter("projectType");
+			
 
 			if (session != null && session.isOpen()) {
 				tx = session.beginTransaction();
-
+				
 				try {
 
 					if (request.getParameter("actionProjectContext").equals("Insert")) {
@@ -4660,7 +4662,7 @@ public class PhysicalLayerController {
 						}
 						System.out.println("all gd till here>>" + ProjectId);
 						query = session.createNativeQuery("INSERT INTO PROJECT VALUES ('" + ProjectId + "','"
-								+ request.getParameter("ProjectName") + "')");
+								+ request.getParameter("ProjectName") +"','"+projectType+ "')");
 						query.executeUpdate();
 						rtn.put("ProjectId", ProjectId);
 					} else {
@@ -4675,6 +4677,7 @@ public class PhysicalLayerController {
 					}
 					// String projectNameId=ProjectId+":"+request.getParameter("ProjectName");
 					rtn.put("ProjectName", request.getParameter("ProjectName"));
+					rtn.put("projectType", projectType);
 
 				} catch (Exception e) {
 					sw = new StringWriter();
