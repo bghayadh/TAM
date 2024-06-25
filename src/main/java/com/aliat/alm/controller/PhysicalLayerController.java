@@ -13762,6 +13762,55 @@ public class PhysicalLayerController {
 		return rtn;
 
 	}
+	
+	
+	// Project details
+		@RequestMapping(value = "/moveToImplementation", method = RequestMethod.GET)
+		@ResponseBody
+		public Map<String, Object> moveToImplementation(Locale locale, Model model, HttpServletRequest request,
+				HttpServletResponse response) throws JsonProcessingException {
+			// logger.info("Welcome home! The client locale is {}.", locale);
+
+			Map<String, Object> rtn = new LinkedHashMap<>();
+			// ObjectMapper mapper = new ObjectMapper();
+			Session session = null;
+			Transaction tx = null;
+			session = AlmDbSession.getInstance().getSession();
+			if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+				rtn.put("Login", LoginServices.checkSession(request, response));
+				return rtn;
+			}
+			if (session != null && session.isOpen()) {
+				tx = session.beginTransaction();
+
+				String selectedProjectIdContext = request.getParameter("selectedProjectIdContext");
+				//System.out.println("selectedProjectIdContext "+selectedProjectIdContext);
+				try {
+					query = session.createNativeQuery("UPDATE project SET project_layer = 'Implementation' where project_id ='"+selectedProjectIdContext+"' ");
+					query.executeUpdate();
+					session.createNativeQuery("commit").executeUpdate();
+
+					rtn.put("Status", "Success");
+				} catch (Exception e) {
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in moveToImplementation due to \n " + exceptionAsString);
+					logger.info("Error in moveToImplementation due to \n " + exceptionAsString);
+					rtn.put("Status", "Failed");
+
+				} finally {
+					if (session != null && session.isOpen()) {
+						tx.commit();
+						session.close();
+					}
+				}
+			}
+			return rtn;
+		}
+	
+	
+	
 
 
 	@InitBinder

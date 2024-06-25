@@ -4763,7 +4763,7 @@ singleNodeActive = new ContextMenu({
 /////////////*********************	SINGLE Project li CONTEXT MENU  ***********************///////////////
 	//-------------------------------------------------------------------------------------------------//
 	
-singleProject = new ContextMenu({
+ 			singlePlanningProject = new ContextMenu({
 				  'theme': 'default',
 				  
 				  'items': [
@@ -4798,6 +4798,122 @@ singleProject = new ContextMenu({
                                 alert("Error");
                             }
                         });
+						$("#projectHeader").text("Project: "+window[""+selectedProjectIdContext][1] + " / " + selectedProjectIdContext);
+						$("#projectModal").modal('show');
+						$("#ProjectId").val(selectedProjectIdContext);
+						
+						if(window[""+selectedProjectIdContext][1]!=null){
+							$("#ProjectName").val(""+window[""+selectedProjectIdContext][1]);
+						}				
+						}
+					 },
+					 {'icon': 'trash', 'name': 'Delete Project', action: () => {
+						
+						deletePhysicalLayers("Project","",selectedProjectIdContext);
+					}	
+					   },
+					 {'icon': 'arrow-right', 'name': 'Move To Implementation', action: () => {
+							
+						 selectedProjectIdContext = selectedProjectIdContext.replace("Project_span_", "");
+						 
+						 
+						 $.ajax({
+								
+				              type: "GET",
+				
+				              contentType: "application/json; charset=utf-8",
+				
+				              url: getContext()+'/moveToImplementation',
+				
+				              async:false,
+				
+				              data: {
+				                  "selectedProjectIdContext":selectedProjectIdContext
+				              },
+				
+				              dataType: "json",
+				
+				              success: function (data) {
+				            	  
+				            	var liProjectChild = $("#" + selectedProjectIdContext); 
+
+								// Find the parent ul element
+								var ulProjectParent = liProjectChild.closest("ul");
+								// Detach the UL element
+								ulProjectParent.detach();
+								$("#initial_ul_Projects_Implementation").append(ulProjectParent);
+								
+								// open the Implementation folder if it closed 
+								// show the projects below Implementation 
+								var childrenInitial = $("#initial_ul_Projects_Implementation").find('> ul > li');  
+								var children = $("#"+selectedProjectIdContext).find('li.PROJECT');
+								if (!children.is(":visible")) {   
+									$("#initial_ul_Projects_Implementation > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');    
+							   }
+							   children.show('fast');						
+							   childrenInitial.show('fast');
+							   
+							   //scroll to the project
+							   $("#network_tree").animate({ scrollTop: document.getElementById(""+selectedProjectIdContext).offsetTop+document.getElementById("initial_ul_Projects_Implementation").offsetTop }, "slow");  
+								
+							// remove the selection of previous item if exist and add it to the new one
+							   if(IdSelectedTemp!=""){
+								   $("#"+IdSelectedTemp+" > .TreeSpan").removeClass("selected-span");
+								   $("#"+IdSelectedTemp+" > .TreeSpan").css("background","");
+							   }
+							   $("#"+selectedProjectIdContext+" > .TreeSpan").addClass("selected-span");
+							   $("#"+selectedProjectIdContext+" > .TreeSpan").css("background-color", "#97b9cc");
+							   IdSelectedTemp=selectedProjectIdContext;
+				                  
+				              },
+				              
+				              error: function (result) {
+				                  alert("Error");
+				              }
+				          });
+						 
+						
+						 
+						}	
+						   }
+				  ]
+			});
+
+			singleImplementationProject = new ContextMenu({
+				  'theme': 'default',
+				  
+				  'items': [
+			
+					 {'icon': 'edit','name': 'Edit or View Details',action: () => {
+						actionProjectContext="Update";						
+						$("#projectModal").find("input").val('').end();
+						selectedProjectIdContext = selectedProjectIdContext.replace("Project_span_", "");				
+			
+			          $.ajax({
+			
+			              type: "GET",
+			
+			              contentType: "application/json; charset=utf-8",
+			
+			              url: getContext()+'/findProjectDetails',
+			
+			              async:false,
+			
+			              data: {
+			                  "selectedProjectIdContext":selectedProjectIdContext
+			              },
+			
+			              dataType: "json",
+			
+			              success: function (data) {
+			                  window[""+selectedProjectIdContext]=data.ProjectDetails;
+			                  console.log("proj details is " + data.ProjectDetails);
+			              },
+			              
+			              error: function (result) {
+			                  alert("Error");
+			              }
+			          });
 						$("#projectHeader").text("Project: "+window[""+selectedProjectIdContext][1] + " / " + selectedProjectIdContext);
 						$("#projectModal").modal('show');
 						$("#ProjectId").val(selectedProjectIdContext);
@@ -9265,9 +9381,20 @@ singleProject = new ContextMenu({
 	    });	
 	    
 	    $(".PROJECT> .TreeSpan").contextmenu(function(){
-			   menuName=singleProject;							
+	    	 selectedProjectParentIdContext=$(this).parent().parent().parent().attr('id');
+	    	 
+	    	if(selectedProjectParentIdContext.includes("Planning")) {
+	    		menuName=singlePlanningProject;							
 			   selectedProjectIdContext=$(this).parent().attr('id');
-			   openContext(selectedProjectIdContext,"",singleProject,event);
+			   openContext(selectedProjectIdContext,"",singlePlanningProject,event);
+	    	}
+	    	else if(selectedProjectParentIdContext.includes("Implementation")){
+	    		menuName=singleImplementationProject;							
+			   selectedProjectIdContext=$(this).parent().attr('id');
+			   openContext(selectedProjectIdContext,"",singleImplementationProject,event);
+	    		
+	    	}
+	    	
 		});
 	    
 	    IdNodeSelectedTemp = "";
@@ -9668,9 +9795,23 @@ singleProject = new ContextMenu({
 						  
 						   // menus
 						   $("#"+data.ProjectId+"> .TreeSpan").contextmenu(function(){
+							  
+							   selectedProjectParentIdContext=$(this).parent().parent().parent().attr('id');
+						    	if(selectedProjectParentIdContext.includes("Planning")) {
+						    		menuName=singlePlanningProject;							
+								   selectedProjectIdContext=$(this).parent().attr('id');
+								   openContext(selectedProjectIdContext,"",singlePlanningProject,event);
+						    	}
+						    	else if(selectedProjectParentIdContext.includes("Implementation")){
+						    		menuName=singleImplementationProject;							
+								   selectedProjectIdContext=$(this).parent().attr('id');
+								   openContext(selectedProjectIdContext,"",singleImplementationProject,event);
+						    		
+						    	}
+							   /*
 							   menuName=singleProject;							
 							   selectedProjectIdContext=$(this).attr('id');
-							   openContext(selectedProjectIdContext,"",singleProject,event);
+							   openContext(selectedProjectIdContext,"",singleProject,event);*/
 						   });
 						   
 						   $("#Manhole_f_"+data.ProjectId+" > .TreeSpan").contextmenu(function(){   
