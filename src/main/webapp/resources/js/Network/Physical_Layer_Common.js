@@ -63,6 +63,11 @@ searchConnectedButtonEvents();
     $("#deleteTermination").click(function() {
 		$("#DeleteModal").modal('hide');
 	});
+    
+    $("#confirmClose").click(function() {
+		$("#ConfirmModal").modal('hide');
+	});
+    
     $('#getRelatedPoints'). click(function(){
     	if($(this). is(":checked")){
     		$(this).val('1');
@@ -13832,6 +13837,8 @@ else if($("#mapOperationModal").is(':visible')){
 c=$("#mapOperationModal");}
 else if($("#DeleteModal").is(':visible')){
 c=$("#DeleteModal");}
+else if($("#ConfirmModal").is(':visible')){
+c=$("#ConfirmModal");}
 else if($("#dB_MappingModal").is(':visible')){
 c=$("#dB_MappingModal");}
 else if($("#changeCableColorModal").is(':visible')){

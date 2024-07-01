@@ -13764,7 +13764,7 @@ public class PhysicalLayerController {
 	}
 	
 	
-	// Project details
+	
 		@RequestMapping(value = "/moveToImplementation", method = RequestMethod.GET)
 		@ResponseBody
 		public Map<String, Object> moveToImplementation(Locale locale, Model model, HttpServletRequest request,
@@ -13808,6 +13808,268 @@ public class PhysicalLayerController {
 			}
 			return rtn;
 		}
+		
+		
+		@RequestMapping(value = "/moveProjectToCurrentPhysicalLayer", method = RequestMethod.GET)
+		@ResponseBody
+		public Map<String, Object> moveProjectToCurrentPhysicalLayer(Locale locale, Model model, HttpServletRequest request,
+				HttpServletResponse response) throws JsonProcessingException {
+			// logger.info("Welcome home! The client locale is {}.", locale);
+
+			Map<String, Object> rtn = new LinkedHashMap<>();
+			
+			// ObjectMapper mapper = new ObjectMapper();
+			Session session = null;
+			Transaction tx = null;
+			session = AlmDbSession.getInstance().getSession();
+			if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+				rtn.put("Login", LoginServices.checkSession(request, response));
+				return rtn;
+			}
+			if (session != null && session.isOpen()) {
+				tx = session.beginTransaction();
+
+				String selectedProjectIdContext = request.getParameter("selectedProjectIdContext");
+				try {
+					
+					Map<String, Object> resultMap = getProjectElement(selectedProjectIdContext,"moveproject",session);
+					
+					// linkedHashmap instead of HashMap to return values in sequential order 
+					LinkedHashMap<String, List<?>> physicalLayerData = (LinkedHashMap<String, List<?>>) resultMap.get("physicalLayerData");
+					
+
+
+					//linkedHashmap instead of HashMap to return values 									
+					LinkedHashMap<String, List<?>> physicalLayerList = (LinkedHashMap<String, List<?>>) resultMap.get("physicalLayerList");
+					
+					rtn.put("physicalLayerList", mapper.writeValueAsString(physicalLayerList));
+					rtn.put("physicalLayerData", mapper.writeValueAsString(physicalLayerData));
+					
+					
+					
+					
+					query = session.createNativeQuery("UPDATE FIBER_CABLES SET PROJECT_ID = 'CurrentPhysicalLayer' where PROJECT_ID ='"+selectedProjectIdContext+"' ");
+					query.executeUpdate();
+					session.createNativeQuery("commit").executeUpdate();
+					
+					query = session.createNativeQuery("UPDATE TRENCH SET PROJECT_ID = 'CurrentPhysicalLayer' where PROJECT_ID ='"+selectedProjectIdContext+"' ");
+					query.executeUpdate();
+					session.createNativeQuery("commit").executeUpdate();
+					
+					query = session.createNativeQuery("UPDATE MANHOLE SET PROJECT_ID = 'CurrentPhysicalLayer' where PROJECT_ID ='"+selectedProjectIdContext+"' ");
+					query.executeUpdate();
+					session.createNativeQuery("commit").executeUpdate();
+					
+					query = session.createNativeQuery("UPDATE HANDHOLE SET PROJECT_ID = 'CurrentPhysicalLayer' where PROJECT_ID ='"+selectedProjectIdContext+"' ");
+					query.executeUpdate();
+					session.createNativeQuery("commit").executeUpdate();
+					
+					query = session.createNativeQuery("UPDATE JUNCTION SET PROJECT_ID = 'CurrentPhysicalLayer' where PROJECT_ID ='"+selectedProjectIdContext+"' ");
+					query.executeUpdate();
+					session.createNativeQuery("commit").executeUpdate();
+					
+					query = session.createNativeQuery("UPDATE DISTRIBUTION_BOARD SET PROJECT_ID = 'CurrentPhysicalLayer' where PROJECT_ID ='"+selectedProjectIdContext+"' ");
+					query.executeUpdate();
+					session.createNativeQuery("commit").executeUpdate();
+					
+					
+					
+					query = session.createNativeQuery("UPDATE project SET project_layer = 'Completed' where project_id ='"+selectedProjectIdContext+"' ");
+					query.executeUpdate();
+					session.createNativeQuery("commit").executeUpdate();
+
+					rtn.put("Status", "Success");
+				} catch (Exception e) {
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in moveProjectToCurrentPhysicalLayer due to \n " + exceptionAsString);
+					logger.info("Error in moveProjectToCurrentPhysicalLayer due to \n " + exceptionAsString);
+					rtn.put("Status", "Failed");
+
+				} finally {
+					if (session != null && session.isOpen()) {
+						tx.commit();
+						session.close();
+					}
+				}
+			}
+			return rtn;
+		}
+		
+		
+		@SuppressWarnings("unchecked")
+		public Map<String, Object> getProjectElement(String ProjectId, String Target,Session session){
+			List<Object[]> manholeList = new ArrayList<Object[]>();
+			List<Object[]> handholeList = new ArrayList<Object[]>();
+			List<Object[]> fiberList = new ArrayList<Object[]>();
+			List<Object[]> fiberAuxiliary_Data = new ArrayList<Object[]>();
+			List<Object[]> fiberTubes = new ArrayList<Object[]>();
+			List<Object[]> tubesAuxiliaries = new ArrayList<Object[]>();
+			List<Object[]> fiberStrands = new ArrayList<Object[]>();
+			List<Object[]> strandsAuxiliaries = new ArrayList<Object[]>();
+			List<Object[]> trenchList = new ArrayList<Object[]>();
+			List<Object[]> trenchAuxiliary_Data = new ArrayList<Object[]>();
+			List<Object[]> junctionManholeList = new ArrayList<Object[]>();
+			List<Object[]> junctionHandholeList = new ArrayList<Object[]>();
+			List<Object[]> distribBoardList = new ArrayList<Object[]>();
+			List<Object[]> ductList = new ArrayList<Object[]>();
+			List<Object[]> ductAuxiliary_Data = new ArrayList<Object[]>();
+			
+			List<Object[]> JunctionList = new ArrayList<Object[]>();
+			
+			
+			if(StringUtils.equalsIgnoreCase(Target, "moveproject")) {
+				fiberList = session.createNativeQuery(
+						"SELECT SOURCE_LNG,SOURCE_LAT,DESTINATION_LNG,DESTINATION_LAT,A.FIBER_CABLE_ID,A.SOURCE_WARE_ID,A.SOURCE_ID,A.SOURCE_NAME,A.DESTINATION_WARE_ID,A.DESTINATION_ID,A.DESTINATION_NAME,(SELECT COUNT(*) FROM FIBER_TUBES B WHERE B.FIBER_CABLE_ID=A.FIBER_CABLE_ID),(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.FIBER_CABLE_ID=A.FIBER_CABLE_ID),FIBER_CABLE_NAME,'CurrentPhysicalLayer' AS PROJECT_ID,SOURCE_CITY,DESTINATION_CITY,NUMBER_OF_TUBES,NUMBER_OF_STRANDS,LENGTH,DRAWING_TYPE,FIBER_NETWORK_LEVEL,FIBER_OWNER,(select B.FIBER_COLOR_OWNER from FIBER_OWNER_COLOR B WHERE B.FIBER_OWNER=A.FIBER_OWNER) AS FIBER_CABLE_COLOR FROM FIBER_CABLES A where A.PROJECT_ID ='"+ProjectId+"' ")
+						.getResultList();
+			}else {
+			fiberList = session.createNativeQuery(
+					"SELECT SOURCE_LNG,SOURCE_LAT,DESTINATION_LNG,DESTINATION_LAT,A.FIBER_CABLE_ID,A.SOURCE_WARE_ID,A.SOURCE_ID,A.SOURCE_NAME,A.DESTINATION_WARE_ID,A.DESTINATION_ID,A.DESTINATION_NAME,(SELECT COUNT(*) FROM FIBER_TUBES B WHERE B.FIBER_CABLE_ID=A.FIBER_CABLE_ID),(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.FIBER_CABLE_ID=A.FIBER_CABLE_ID),FIBER_CABLE_NAME,PROJECT_ID,SOURCE_CITY,DESTINATION_CITY,NUMBER_OF_TUBES,NUMBER_OF_STRANDS,LENGTH,DRAWING_TYPE,FIBER_NETWORK_LEVEL,FIBER_OWNER,(select B.FIBER_COLOR_OWNER from FIBER_OWNER_COLOR B WHERE B.FIBER_OWNER=A.FIBER_OWNER) AS FIBER_CABLE_COLOR FROM FIBER_CABLES A where A.PROJECT_ID ='"+ProjectId+"' ")
+					.getResultList();
+			}
+			
+
+			fiberAuxiliary_Data = session.createNativeQuery(
+					"SELECT B.LONGITUDE,B.LATITUDE,B.DISTANCE_FROM_SOURCE,B.WARE_ID,B.AUXILIARY_POINT_ID,B.AUXILIARY_POINT_NAME,B.FIBER_CABLE_ID,B.AUXILIARY_ID FROM FIBER_CABLES A,FIBER_AUXILIARY_POINTS B WHERE A.FIBER_CABLE_ID=B.FIBER_CABLE_ID and A.PROJECT_ID ='"+ProjectId+"'  ORDER BY B.SEQ_SORTING ASC")
+					.getResultList();
+			
+			fiberTubes = session.createNativeQuery(
+					"SELECT b.TUBE_ID,b.SOURCE_LONGITUDE,b.SOURCE_LATITUDE,b.DESTINATION_LONGITUDE,b.DESTINATION_LATITUDE,b.SOURCE_WARE_ID,b.SOURCE_ID,b.SOURCE_NAME,b.DESTINATION_WARE_ID,b.DESTINATION_ID,b.DESTINATION_NAME,"
+							+ "(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.TUBE_ID=b.TUBE_ID),b.FIBER_CABLE_ID,b.TUBE_NAME,b.DRAWING_TYPE,b.TUBE_NUMBER, b.TUBE_COLOR "
+							+ "FROM FIBER_TUBES b,FIBER_CABLES a WHERE a.FIBER_CABLE_ID=b.FIBER_CABLE_ID and a.PROJECT_ID ='"+ProjectId+"' ORDER BY FIBER_CABLE_ID,TUBE_NUMBER ASC")
+					.getResultList();
+
+			tubesAuxiliaries = session.createNativeQuery(
+					"SELECT c.TUBE_ID,c.LONGITUDE,c.LATITUDE,c.WARE_ID,c.AUXILIARY_POINT_ID,c.AUXILIARY_POINT_NAME,c.DISTANCE_FROM_SOURCE,c.SEQ_SORTING,c.AUXILIARY_ID,c.DRIVING_DISTANCE, c.GEO_DISTANCE FROM TUBE_AUXILIARY_POINTS c,FIBER_TUBES b,FIBER_CABLES a WHERE a.FIBER_CABLE_ID=b.FIBER_CABLE_ID and b.TUBE_ID=c.TUBE_ID and A.PROJECT_ID ='"+ProjectId+"' ORDER BY c.SEQ_SORTING ASC")
+					.getResultList();
+
+			fiberStrands = session.createNativeQuery(
+					"SELECT b.STRAND_ID,b.SOURCE_LONGITUDE,b.SOURCE_LATITUDE,b.DESTINATION_LONGITUDE,b.DESTINATION_LATITUDE,b.SOURCE_WARE_ID,b.SOURCE_ID,b.SOURCE_NAME,b.DESTINATION_WARE_ID,b.DESTINATION_ID,b.DESTINATION_NAME,b.TUBE_ID,b.FIBER_CABLE_ID,b.STRAND_NAME,b.DRAWING_TYPE,b.STRAND_NUMBER,b.STRAND_COLOR FROM FIBER_STRANDS b,FIBER_CABLES a WHERE a.FIBER_CABLE_ID=b.FIBER_CABLE_ID and A.PROJECT_ID ='"+ProjectId+"' ORDER BY STRAND_NUMBER")
+					.getResultList();
+
+			strandsAuxiliaries = session.createNativeQuery(
+					"SELECT c.STRAND_ID,c.LONGITUDE,c.LATITUDE,c.WARE_ID,c.AUXILIARY_POINT_ID,C.AUXILIARY_POINT_NAME,c.DISTANCE_FROM_SOURCE,c.SEQ_SORTING,c.AUXILIARY_ID,c.DRIVING_DISTANCE, c.GEO_DISTANCE FROM STRAND_AUXILIARY_POINTS c,FIBER_STRANDS b,FIBER_CABLES a WHERE a.FIBER_CABLE_ID=b.FIBER_CABLE_ID and b.STRAND_ID=c.STRAND_ID and A.PROJECT_ID ='"+ProjectId+"' ORDER BY c.SEQ_SORTING ASC ")
+					.getResultList();
+			
+			if(StringUtils.equalsIgnoreCase(Target, "moveproject")) {
+				manholeList = session.createNativeQuery(
+						"SELECT DISTINCT MANHOLE_ID,MANHOLE_NAME,LONGITUDE,LATITUDE,'CurrentPhysicalLayer' AS PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=MANHOLE_ID),CITY FROM MANHOLE where PROJECT_ID= '"+ProjectId+"' ")
+						.getResultList();
+			}else {
+				manholeList = session.createNativeQuery(
+						"SELECT DISTINCT MANHOLE_ID,MANHOLE_NAME,LONGITUDE,LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=MANHOLE_ID),CITY FROM MANHOLE where PROJECT_ID= '"+ProjectId+"' ")
+						.getResultList();
+			}
+
+			if(StringUtils.equalsIgnoreCase(Target, "moveproject")) {
+				handholeList = session.createNativeQuery(
+						"SELECT DISTINCT HANDHOLE_ID,HANDHOLE_NAME,LONGITUDE,LATITUDE,'CurrentPhysicalLayer' AS PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=HANDHOLE_ID),CITY FROM HANDHOLE where PROJECT_ID= '"+ProjectId+"' ")
+						.getResultList();
+			}else {
+				handholeList = session.createNativeQuery(
+						"SELECT DISTINCT HANDHOLE_ID,HANDHOLE_NAME,LONGITUDE,LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=HANDHOLE_ID),CITY FROM HANDHOLE where PROJECT_ID= '"+ProjectId+"' ")
+						.getResultList();
+			}
+			
+			if(StringUtils.equalsIgnoreCase(Target, "moveproject")) {
+				distribBoardList = session.createNativeQuery(
+						"SELECT DISTINCT DB_ID,DB_LONGITUDE,DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,'CurrentPhysicalLayer' AS PROJECT_ID ,CITY,DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD where PROJECT_ID= '"+ProjectId+"' ")
+						.getResultList();
+			}else {
+				distribBoardList = session.createNativeQuery(
+						"SELECT DISTINCT DB_ID,DB_LONGITUDE,DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,PROJECT_ID ,CITY,DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD where PROJECT_ID= '"+ProjectId+"' ")
+						.getResultList();
+			}
+			
+			if(StringUtils.equalsIgnoreCase(Target, "moveproject")) {
+				trenchList = session.createNativeQuery(
+						"SELECT TRENCH_ID,TRENCH_NAME,SOURCE_WARE_ID,SOURCE_ID,SOURCE_NAME,DESTINATION_WARE_ID,DESTINATION_ID,DESTINATION_NAME,SOURCE_LATITUDE,SOURCE_LONGITUDE,DESTINATION_LONGITUDE,DESTINATION_LATITUDE,SOURCE_CITY,DESTINATION_CITY,NUM_DUCTS,MAX_CAPACITY,LENGTH,'CurrentPhysicalLayer' AS PROJECT_ID,DRAWING_TYPE  FROM TRENCH where PROJECT_ID= '"+ProjectId+"' ")
+						.getResultList();
+			}else {
+				trenchList = session.createNativeQuery(
+						"SELECT TRENCH_ID,TRENCH_NAME,SOURCE_WARE_ID,SOURCE_ID,SOURCE_NAME,DESTINATION_WARE_ID,DESTINATION_ID,DESTINATION_NAME,SOURCE_LATITUDE,SOURCE_LONGITUDE,DESTINATION_LONGITUDE,DESTINATION_LATITUDE,SOURCE_CITY,DESTINATION_CITY,NUM_DUCTS,MAX_CAPACITY,LENGTH,PROJECT_ID,DRAWING_TYPE  FROM TRENCH where PROJECT_ID= '"+ProjectId+"' ")
+						.getResultList();
+			}
+
+			
+			trenchAuxiliary_Data = session.createNativeQuery(
+					"SELECT B.LONGITUDE,B.LATITUDE,B.WARE_ID,B.AUXILIARY_POINT_ID,B.AUXILIARY_POINT_NAME,B.TRENCH_ID,B.DISTANCE_FROM_SOURCE,B.SEQ_SORTING,B.AUXILIARY_ID  FROM TRENCH A,TRENCH_AUXILIARY_POINTS B WHERE A.TRENCH_ID=B.TRENCH_ID and A.PROJECT_ID= '"+ProjectId+"' ORDER BY B.SEQ_SORTING ASC")
+					.getResultList();
+
+			junctionManholeList = session.createNativeQuery(
+					"SELECT DISTINCT A.JUNCTION_ID, A.JUNCTION_NAME,A.PHYSICAL_LAYER_ID,A.PHYSICAL_LAYER_NAME,A.JUNCTION_NUMBER,A.CAPACITY,A.CITY,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID FROM JUNCTION A INNER JOIN manhole B ON A.PHYSICAL_LAYER_ID = B.manhole_id WHERE B.PROJECT_ID ='"+ProjectId+"' ")
+					.getResultList();
+
+			junctionHandholeList = session.createNativeQuery(
+					"SELECT DISTINCT A.JUNCTION_ID, A.JUNCTION_NAME,A.PHYSICAL_LAYER_ID,A.PHYSICAL_LAYER_NAME,A.JUNCTION_NUMBER,A.CAPACITY,A.CITY,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID FROM JUNCTION A INNER JOIN handhole B ON A.PHYSICAL_LAYER_ID = b.handhole_id WHERE B.PROJECT_ID ='"+ProjectId+"' ")
+					.getResultList();
+
+			ductList = session.createNativeQuery(
+					"SELECT B.DUCT_ID,B.DUCT_NAME,B.SOURCE_WARE_ID,B.SOURCE_ID,B.SOURCE_NAME,B.DESTINATION_WARE_ID,B.DESTINATION_ID,B.DESTINATION_NAME,B.SOURCE_LATITUDE,B.SOURCE_LONGITUDE,B.DESTINATION_LONGITUDE,B.DESTINATION_LATITUDE,B.SOURCE_CITY,B.DESTINATION_CITY,B.NUM_FIBERCABLES,B.NUM_FIBERTUBES,B.NUM_FIBERSTRANDS,B.LENGTH,B.TRENCH_ID,B.DRAWING_TYPE FROM DUCTS B,TRENCH A WHERE B.TRENCH_ID=A.TRENCH_ID and A.PROJECT_ID= '"+ProjectId+"' ")
+					.getResultList();
+
+			/*ductAuxiliary_Data = session.createNativeQuery(
+					"SELECT B.LONGITUDE,B.LATITUDE,B.WARE_ID,B.AUXILIARY_POINT_ID,B.AUXILIARY_POINT_NAME,B.DUCT_ID,B.DISTANCE_FROM_SOURCE,B.SEQ_SORTING,B.AUXILIARY_ID FROM DUCTS A,DUCT_AUXILIARY_POINTS B WHERE A.DUCT_ID=B.DUCT_ID ORDER BY B.SEQ_SORTING ASC ")
+					.getResultList();*/
+			
+			ductAuxiliary_Data = session.createNativeQuery(
+				    "SELECT B.LONGITUDE, B.LATITUDE, B.WARE_ID, B.AUXILIARY_POINT_ID, B.AUXILIARY_POINT_NAME, B.DUCT_ID, B.DISTANCE_FROM_SOURCE, B.SEQ_SORTING, B.AUXILIARY_ID " +
+				    "FROM DUCT_AUXILIARY_POINTS B " +
+				    "WHERE B.DUCT_ID IN (SELECT B.DUCT_ID " +
+				                        "FROM DUCTS B, TRENCH A " +
+				                        "WHERE B.TRENCH_ID = A.TRENCH_ID " +
+				                        "AND A.PROJECT_ID = '" + ProjectId + "') " +
+				    "ORDER BY B.SEQ_SORTING ASC")
+				    .getResultList();
+			
+			
+			if(StringUtils.equalsIgnoreCase(Target, "moveproject")) {
+				JunctionList = session.createNativeQuery("SELECT DISTINCT A.JUNCTION_ID, A.JUNCTION_NAME,A.PHYSICAL_LAYER_ID,A.PHYSICAL_LAYER_NAME,A.JUNCTION_NUMBER,A.CAPACITY,A.CITY,A.LONGITUDE,A.LATITUDE,'CurrentPhysicalLayer' AS PROJECT_ID FROM JUNCTION A where (PROJECT_ID ='"+ProjectId+"') and A.PHYSICAL_LAYER_ID IS NULL OR A.PHYSICAL_LAYER_ID = ' ' OR A.PHYSICAL_LAYER_ID = 'null' ").getResultList();
+			}else {
+				JunctionList = session.createNativeQuery("SELECT DISTINCT A.JUNCTION_ID, A.JUNCTION_NAME,A.PHYSICAL_LAYER_ID,A.PHYSICAL_LAYER_NAME,A.JUNCTION_NUMBER,A.CAPACITY,A.CITY,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID FROM JUNCTION A where (PROJECT_ID ='"+ProjectId+"') and A.PHYSICAL_LAYER_ID IS NULL OR A.PHYSICAL_LAYER_ID = ' ' OR A.PHYSICAL_LAYER_ID = 'null' ").getResultList();
+			}
+			
+			/* linkedHashmap instead of HashMap to return values in sequential order */
+			LinkedHashMap<String, List<?>> physicalLayerData = new LinkedHashMap<String, List<?>>();
+
+			/* linkedHashmap instead of HashMap to return values */					
+			LinkedHashMap<String, List<?>> physicalLayerList = new LinkedHashMap<String, List<?>>();
+			
+			
+		
+			physicalLayerList.clear();
+			physicalLayerList.put("Junction_Manhole", junctionManholeList);
+			physicalLayerList.put("Manhole", manholeList);
+			physicalLayerList.put("Junction_Handhole", junctionHandholeList);
+			physicalLayerList.put("Handhole", handholeList);
+			physicalLayerList.put("JunctionList", JunctionList);
+			physicalLayerList.put("fiber", fiberList);
+			physicalLayerList.put("Distribution_Board", distribBoardList);
+			physicalLayerList.put("Trench", trenchList);
+			physicalLayerList.put("duct", ductList);
+			
+			physicalLayerData.clear();
+			physicalLayerData.put("trench_Auxiliary", trenchAuxiliary_Data);
+			physicalLayerData.put("strands_Auxiliaries", strandsAuxiliaries);
+			physicalLayerData.put("fiber_Strands", fiberStrands);
+			physicalLayerData.put("tubes_Auxiliaries", tubesAuxiliaries);
+			physicalLayerData.put("fiber_Tubes", fiberTubes);
+			physicalLayerData.put("fiber_Auxiliary", fiberAuxiliary_Data);
+			physicalLayerData.put("ductAuxiliary", ductAuxiliary_Data);
+			
+			
+			Map<String, Object> resultMap = new HashMap<>();
+		    resultMap.put("physicalLayerList", physicalLayerList);
+		    resultMap.put("physicalLayerData", physicalLayerData);
+
+		    return resultMap;
+			
+			
+			
+			
+		}
+	
 	
 	
 	

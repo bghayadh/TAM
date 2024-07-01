@@ -4927,6 +4927,101 @@ singleNodeActive = new ContextMenu({
 						
 						deletePhysicalLayers("Project","",selectedProjectIdContext);
 					}	
+					   },
+					 
+					 {'icon': 'arrow-right', 'name': 'Move To Current Physical Layer', action: () => {
+						 selectedProjectIdContext = selectedProjectIdContext.replace("Project_span_", "");
+						// console.log("selectedProjectIdContext "+selectedProjectIdContext);
+						 
+						 
+						 
+						 
+						 $.ajax({
+								
+				              type: "GET",
+				
+				              contentType: "application/json; charset=utf-8",
+				
+				              url: getContext()+'/moveProjectToCurrentPhysicalLayer',
+				
+				              async:false,
+				
+				              data: {
+				                  "selectedProjectIdContext":selectedProjectIdContext
+				              },
+				
+				              dataType: "json",
+				
+				              success: function (data) {
+				            	 
+				            	  
+				            	  var physicalLayerList =  JSON.parse(data.physicalLayerList); // No need to parse again
+				            	  var physicalLayerData =  JSON.parse(data.physicalLayerData);
+				                 // console.log("physicalLayerListaaa "+physicalLayerList)
+				                  
+				                  
+				                  ListManhole = physicalLayerList["Manhole"]
+		                		  ListManholeJunction  = physicalLayerList["Junction_Manhole"]
+                				  ListHandhole = physicalLayerList["Handhole"]
+        						  ListHandholeJunction = physicalLayerList["Junction_Handhole"]
+								  JunctionList = physicalLayerList["JunctionList"]
+								  distribBoardList = physicalLayerList["Distribution_Board"]  
+								  trenchList = physicalLayerList["Trench"]
+								  trenchAuxiliary_Data = physicalLayerData["trench_Auxiliary"]  
+								  ductList = physicalLayerList["duct"]
+								  ductAuxiliary_Data = physicalLayerData["ductAuxiliary"] 
+								  
+								  fiberList = physicalLayerList["fiber"]
+								  fiberTubes   = physicalLayerData["fiber_Tubes"]
+								  fiberStrands = physicalLayerData["fiber_Strands"]
+								  fiberAuxiliary_Data = physicalLayerData["fiber_Auxiliary"]
+								  tubesAuxiliaries  = physicalLayerData["tubes_Auxiliaries"]
+								  strandsAuxiliaries = physicalLayerData["strands_Auxiliaries"]
+										 
+										  
+								  appendProjectElement(ListManhole,ListManholeJunction,ListHandhole,ListHandholeJunction,JunctionList,fiberList,fiberAuxiliary_Data,fiberTubes,tubesAuxiliaries,fiberStrands,strandsAuxiliaries,distribBoardList,trenchList,trenchAuxiliary_Data,ductList,ductAuxiliary_Data);
+				                  
+				            	  
+				                  
+					                var liProjectChild = $("#" + selectedProjectIdContext); 
+	
+									// Find the parent ul element
+									var ulProjectParent = liProjectChild.closest("ul");
+									// Detach the UL element
+									ulProjectParent.detach();
+									
+									
+									$('#ConfirmModal').find('input:text').val('');
+									//$("#confirmHeader").text("Confirm: ");
+									$("#confirmbody").text("The Following Element Has Been Moved To The Current Physical Layer: ");
+									
+									$("#confirm_table").empty();
+									 var tr = "<tr><td><b>Manhole: </b>"+ListManhole.length+"</td></tr>"
+												+"<tr>"+"<td><b>Handhole: </b>"+ListHandhole.length+"</td></tr>"
+												+"<tr>"+"<td><b>Junction  </b>"+JunctionList.length+"</td></tr>"
+												+"<tr>"+"<td><b>Fiber Cable: </b>"+fiberList.length+"</td></tr>"
+												+"<tr>"+"<td><b>Fiber Tube::  </b>"+fiberTubes.length+"</td></tr>"
+												+"<tr>"+"<td><b>Fiber Strand::  </b>"+fiberStrands.length+"</td></tr>"
+												+"<tr>"+"<td><b>Distribution Board: </b>"+distribBoardList.length+"</td></tr>"
+												+"<tr>"+"<td><b>Trench: </b>"+trenchList.length+"</td></tr>"
+												+"<tr>"+"<td><b>Duct: </b>"+ductList.length+"</td></tr>";
+												
+												$("#confirm_table").append(tr);
+															
+									$("#ConfirmModal").modal('show');
+				                 
+				                  
+				              },
+				              
+				              error: function (result) {
+				                  alert("Error");
+				              }
+				          });
+						 
+						 
+						 
+						 
+					}	
 					   }
 				  ]
 			});
