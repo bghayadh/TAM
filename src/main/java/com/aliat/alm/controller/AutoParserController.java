@@ -55,6 +55,7 @@ import com.aliat.alm.services.LoginServices;
 
 import com.aliat.alm.telkom.Parser.LoadFileDWDMHuawei;
 import com.aliat.alm.telkom.Parser.LoadFileDWDMTejas;
+import com.aliat.alm.telkom.Parser.LoadFileEntSwitchCisco;
 import com.aliat.alm.telkom.Parser.LoadFileIPCisco;
 import com.aliat.alm.telkom.Parser.LoadFileIPHuawei;
 import com.aliat.alm.telkom.Parser.LoadFileIPNokia;
@@ -174,6 +175,25 @@ public class AutoParserController {
 		rtn.put("Result", "Script is Done");
 		return rtn;
 	}
+	
+	@RequestMapping(value = "/loadFilesEntSWCisco", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> loadFilesEntSWCisco(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws SecurityException, IOException, InterruptedException, SQLException, ParseException {
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		System.out.println("loader cisco ent sw ");
+		System.out.println("loader cisco param "+request.getParameter("vendor")+", "+request.getParameter("domain")+", "+request.getParameter("sub_domain"));
+		LoadFileEntSwitchCisco myClass = new LoadFileEntSwitchCisco();
+		try {
+			myClass.main(null,request.getParameter("vendor"),request.getParameter("domain"),request.getParameter("sub_domain"),request.getParameter("type"));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		rtn.put("Result", "Script is Done");
+		return rtn;
+	}
+	
 	
 	@RequestMapping(value = "/loadFileDWDMhuawei", method = RequestMethod.GET)
 	@ResponseBody

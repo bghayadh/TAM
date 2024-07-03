@@ -308,6 +308,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 						markerClusterSDHNodes.repaint();
 						markerClusterDWDMNodes.repaint();
 						markerClusterGPONNodes.repaint();	
+						markerClusterEntSwitchNodes.repaint();
 				});				
 			});
 	 var end = performance.now();

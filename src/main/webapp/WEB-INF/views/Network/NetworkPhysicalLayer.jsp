@@ -32,6 +32,7 @@
 <script src="${pageContext.request.contextPath}/resources/js/Network/FiberPathCreation.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/NodeCreation.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/JunctionCreation.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/ProjectCreation.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/context-menu.js"></script>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/context-menu.css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/xlsx.full.min.js"></script>
@@ -409,6 +410,20 @@
 									</div>
 								</div>
 							</div>
+							
+							<div class="row" style="display: none;">
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 150px;" class="input-group-text" style="color: green;"><b>Project Type</b> </span>
+											 <input type="text" id="ProjectType" readonly class="form-control text-input" />
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							
+							
 							</div>
 					</div>
 					<div class="modal-footer"></div>
@@ -1212,6 +1227,40 @@
 								<button id="deleteMan" class="btn btn-delete" style="color:white; font-weight:bold; margin-right: 5px;background-color:#6AA84F">Yes</button>
 								<button id="deleteTrench" class="btn btn-delete" style="color:white; font-weight:bold; margin-right: 5px;background-color:#6AA84F">Yes</button>
 								<button id="deleteTermination" class="btn btn-delete" style="color: white; font-weight:bold; margin-left: 5px;background-color:#6AA84F; padding-left:15px; padding-right:15px">No</button>								
+							</div>								
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer"></div>
+				</div>
+			</div>
+		</div>	
+		<!-- confirmation modal -->
+		<div class="container">
+		<div id="ConfirmModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+			<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header" style="background-color: #2678CC ; height: 55px; ">
+						<h5 id="confirmHeader" class="modal-title" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px;"></h5>
+						<div style="float: right;">
+							<button  type="button" name="closePopup" class="close" id="close" onclick="ClosingConfirm()" >
+								<i class='fa fa-times'></i>
+							</button>
+							<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change'></i></a>
+						</div></div>
+					<div class="modal-body">
+						<div class="tab-content" >
+							<p id="confirmbody" style="font-weight: bold;color:#000000BB;"></p>
+							
+							<table id=confirm_table>
+									<tr>
+										
+									</tr>
+							</table>
+							
+							
+							<div style="text-align:center;">
+								<button id="confirmClose" class="btn btn-delete" style="color: white; font-weight:bold; margin-left: 5px;background-color:#6AA84F; padding-left:15px; padding-right:15px">Ok</button>								
 							</div>								
 							</div>
 						</div>

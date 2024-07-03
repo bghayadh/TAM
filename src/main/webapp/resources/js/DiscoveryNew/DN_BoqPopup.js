@@ -4,7 +4,6 @@
  var flagFrom;
  var Errorflag;
  var slctDel = [];
- var slctDelDN = [];
  
 
  // get the selected row index and save in RowIndex input
@@ -871,6 +870,11 @@ else {
 					$(this).autocomplete("search");
 	   	        }
 			});
+			
+			
+			
+				
+	
 
 
 
@@ -1176,6 +1180,8 @@ $("#FromNodeTable >tbody tr").empty();
 	$('#popupTotalAT').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemTotalAt"]').children('input').val());
 	$('#popupFromSite').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="siteID"]').children('input').val());
 	$('#popupToSite').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="tositeID"]').children('input').val());
+	$('#popupFarId').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="FarId"]').children('input').val());
+	
 	$('#popupFromSN').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemSN"]').children('input').val());
 	$('#popupToSN').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="toSN"]').children('input').val());
 	$('#popupDNitmID').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemDniID"]').children('input').val());
@@ -1265,6 +1271,8 @@ console.log(nodeId);
   $('#popupTotalAT').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemTotalAt"]').children('input').val());
   $('#popupFromSite').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="siteID"]').children('input').val());
   $('#popupToSite').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="tositeID"]').children('input').val());
+   $('#popupFarId').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="FarId"]').children('input').val());
+ 
   $('#popupFromSN').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemSN"]').children('input').val());
   $('#popupToSN').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="toSN"]').children('input').val());
   $('#popupDNitmID').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemDniID"]').children('input').val());
@@ -1320,6 +1328,8 @@ console.log(nodeId);
   $('#popupTotalAT').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemTotalAt"]').children('input').val());
   $('#popupFromSite').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="siteID"]').children('input').val());
   $('#popupToSite').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="tositeID"]').children('input').val());
+   $('#popupFarId').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="FarId"]').children('input').val());
+ 
   $('#popupFromSN').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemSN"]').children('input').val());
   $('#popupToSN').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="toSN"]').children('input').val());
   $('#popupDNitmID').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemDniID"]').children('input').val());
@@ -1390,6 +1400,7 @@ $("#FromNodeTable >tbody tr").empty();
     $('#popupTotalAT').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemTotalAt"]').children('input').val());
     $('#popupFromSite').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="siteID"]').children('input').val());
     $('#popupToSite').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="tositeID"]').children('input').val());
+    $('#popupFarId').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="FarId"]').children('input').val());
     $('#popupFromSN').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemSN"]').children('input').val());
     $('#popupToSN').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="toSN"]').children('input').val());
     $('#popupDNitmID').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemDniID"]').children('input').val());
@@ -1447,6 +1458,8 @@ var toNode = JSON.parse($("#bisotab > tbody").find("tr").eq(rowindx).find('td[na
     $('#popupTotalAT').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemTotalAt"]').children('input').val());
     $('#popupFromSite').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="siteID"]').children('input').val());
     $('#popupToSite').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="tositeID"]').children('input').val());
+     $('#popupFarId').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="FarId"]').children('input').val());
+   
     $('#popupFromSN').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemSN"]').children('input').val());
     $('#popupToSN').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="toSN"]').children('input').val());
     $('#popupDNitmID').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemDniID"]').children('input').val());
@@ -1528,6 +1541,8 @@ var toNode = JSON.parse($("#bisotab > tbody").find("tr").eq(rowindx).find('td[na
     $('#popupTotalAT').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemTotalAt"]').children('input').val());
     $('#popupFromSite').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="siteID"]').children('input').val());
     $('#popupToSite').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="tositeID"]').children('input').val());
+      $('#popupFarId').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="FarId"]').children('input').val());
+  
     $('#popupFromSN').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemSN"]').children('input').val());
     $('#popupToSN').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="toSN"]').children('input').val());
     $('#popupDNitmID').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemDniID"]').children('input').val());
@@ -1580,6 +1595,8 @@ var toNode = JSON.parse($("#bisotab > tbody").find("tr").eq(rowindx).find('td[na
     $('#popupTotalAT').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemTotalAt"]').children('input').val());
     $('#popupFromSite').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="siteID"]').children('input').val());
     $('#popupToSite').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="tositeID"]').children('input').val());
+    $('#popupFarId').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="FarId"]').children('input').val());
+   
     $('#popupFromSN').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemSN"]').children('input').val());
     $('#popupToSN').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="toSN"]').children('input').val());
     $('#popupDNitmID').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemDniID"]').children('input').val());
@@ -1652,6 +1669,8 @@ $("#FromNodeTable >tbody tr").empty();
       $('#popupTotalAT').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemTotalAt"]').children('input').val());
       $('#popupFromSite').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="siteID"]').children('input').val());
       $('#popupToSite').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="tositeID"]').children('input').val());
+      $('#popupFarId').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="FarId"]').children('input').val());
+     
       $('#popupFromSN').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemSN"]').children('input').val());
       $('#popupToSN').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="toSN"]').children('input').val());
       $('#popupDNitmID').val($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemDniID"]').children('input').val());
@@ -1680,7 +1699,7 @@ $("#FromNodeTable >tbody tr").empty();
    	//Send input values from popup to boq when any popup input change
  $('#popupItemCode,#popupItemModel, #popupItemPartno, #popupTransType,#popupNotes,#popupDescription,#popupElementName,#popupAddress,#case,#popupApprovalStatus,#popupApprovalAction,'
  +'#popupPO,#popupWO,#popupFromSlot,#popupToSlot,#popupQty,#popupRate,#popupDiscountAmount'
- +'#popupTax,#popupNetRate,#popupTotal,#popupTotalAT,#popupFromSite,#popupToSite,#popupFromSN,#popupToSN,#popupDNitmID').on(' focusout ', function() {
+ +'#popupTax,#popupNetRate,#popupTotal,#popupTotalAT,#popupFromSite,#popupToSite, #popupFarId, #popupFromSN,#popupToSN,#popupDNitmID').on(' focusout ', function() {
 
  	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="item"]').children('input').val($('#popupItemCode').val());
 	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemModel"]').children('input').val($('#popupItemModel').val());
@@ -1711,6 +1730,8 @@ $("#FromNodeTable >tbody tr").empty();
 	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemTotalAt"]').children('input').val($('#popupTotalAT').val());
 	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="siteID"]').children('input').val($('#popupFromSite').val());
 	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="tositeID"]').children('input').val($('#popupToSite').val());
+		$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="FarId"]').children('input').val($('#popupFarId').val());
+
 	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemSN"]').children('input').val($('#popupFromSN').val());
 	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="toSN"]').children('input').val($('#popupToSN').val());
 	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemDniID"]').children('input').val($('#popupDNitmID').val());
@@ -1751,6 +1772,8 @@ $("#FromNodeTable >tbody tr").empty();
 	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemTotalAt"]').children('input').val($('#popupTotalAT').val());
 	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="siteID"]').children('input').val($('#popupFromSite').val());
 	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="tositeID"]').children('input').val($('#popupToSite').val());
+	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="FarId"]').children('input').val($('#popupFarId').val());
+	
 	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemSN"]').children('input').val($('#popupFromSN').val());
 	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="toSN"]').children('input').val($('#popupToSN').val());
 	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemDniID"]').children('input').val($('#popupDNitmID').val());
@@ -1795,6 +1818,8 @@ $("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="item"]').children('in
 	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemTotalAt"]').children('input').val($('#popupTotalAT').val());
 	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="siteID"]').children('input').val($('#popupFromSite').val());
 	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="tositeID"]').children('input').val($('#popupToSite').val());
+	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="FarId"]').children('input').val($('#popupFarId').val());
+	
 	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemSN"]').children('input').val($('#popupFromSN').val());
 	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="toSN"]').children('input').val($('#popupToSN').val());
 	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="itemDniID"]').children('input').val($('#popupDNitmID').val());
@@ -2158,6 +2183,75 @@ $("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="item"]').children('in
 			//});
 			});/////////////end autocpmplete for PO
 
+
+
+
+
+	$('#popupFarId').autocomplete({
+			        source: function (request, response, event, ui) {
+				 if ($('#popupFarId').prop('readonly')) {
+				            return; 
+				        }
+			            var nodeIds = [];
+			            $("#FromNodeTable > tbody > tr").find('input[name="record"]').each(function () {
+			                var node_Id = $(this).parent().parent().children('td[name="NodeId"]').children('input').val();
+			                nodeIds.push(node_Id);
+			            });
+
+			            var siteId = $("#bisotab > tbody").find("tr").eq(rowindx).find('td[name="siteID"]').children('input')[0].value;
+			            if (nodeIds.length === 0 || siteId === "") {
+			                return;
+			            }
+
+			            $.ajax({
+			                type: "GET",
+			                contentType: "application/json; charset=utf-8",
+			                url: ctx + '/GetAllFarDn',
+			                data: {
+			                    "nodeID[]": nodeIds,
+			                    "siteId": siteId,
+			                    "Far": request.term,
+			                },
+			                dataType: "json",
+			                success: function (data) {
+			                    if (data != null) {
+			                        response(data.globalList);
+			                    }
+			                },
+			                error: function (result) {
+			                    alert("Error");
+			                }
+			            });
+			        },
+			        minLength: 0,
+			        maxShowItems: 40,
+			        scroll: true,
+			        autoFocus: true, 	
+			        select: function (event, ui) {
+			            this.value = (ui.item ? ui.item[0] : '');
+			            return false;
+			        }
+			    }).autocomplete("instance")._renderItem = function (ul, item) {
+			        return $("<li class='each'>")
+			            .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
+			                item[0] + "</span><br><span class='desc'>" +
+			                item[1] + ', ' + item[2] + "</span></div>")
+			            .appendTo(ul);
+			    };
+
+			$('#popupFarId').focus(function(){
+				if (this.value == ""){
+					$(this).autocomplete("search");
+	   	        }
+			});
+			
+
+
+
+
+
+
+
 			//Starting for Warehouse auto complete in poq table
 			$('#popupToSite').autocomplete({
 		    	    source: function(request, response, event, ui) {
@@ -2195,6 +2289,12 @@ $("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="item"]').children('in
 					$(this).autocomplete("search");
 	   	        }
 			});
+
+
+
+
+
+
 
 
 			$('#popupFromSite').autocomplete({

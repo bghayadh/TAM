@@ -993,7 +993,22 @@ max-width: 100%;
 				</div>
 			</div>
 	    </div>
+	    
+	    	<div class="col-sm-6">
+			<div class="form-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text" >FAR Id </span>
+					<input type="text" id="popupFarId" class="form-control text-input"  value="" style="width:675px;"  readonly/>
+				</div>
+			</div>
+	    </div>
 	
+	
+	</div>
+	</div>
+	
+	<div class="container-fluid">
+	<div class="row">
 		<div class="col-sm-6">
 			<div class="form-group">
 				<div class="input-group-prepend">
@@ -1002,11 +1017,6 @@ max-width: 100%;
 				</div>
 			</div>
 	    </div>
-	</div>
-	</div>
-	
-	<div class="container-fluid">
-	<div class="row">
 		<div class="col-sm-6">
 			<div class="form-group">
 				<div class="input-group-prepend">
@@ -1025,7 +1035,9 @@ max-width: 100%;
 			</div>
 	    </div>
 	</div>
-</div>	      
+</div>	     
+
+	      
 					
   </div>
 
@@ -1123,6 +1135,7 @@ var toNodeDel = [];
 var fromNodeDel=[];
 var allDeletedFromNodes =[];
  var allDeletedNodes= [];
+ var slctDelDN = [];
 
 /////////////////////////////////////////// SEND EMAIL  ///////////////////////////////////////////////////////////////
 if ('${docStatus}' == "addNew") {
@@ -1295,11 +1308,13 @@ function getAllItemPartNbs()
 				{
 
 					$(obj).parent().parent().children('td[name="FarId"]').children('input').prop('readonly', true);
+					$('#popupFarId').prop('readonly', true);
 							}
 				else{
 
 
 					$(obj).parent().parent().children('td[name="FarId"]').children('input').prop('readonly', false);
+					$('#popupFarId').prop('readonly', false);
 					
 					}
 
@@ -1437,7 +1452,6 @@ function getAllItemPartNbs()
 				
 				//tositeIDVal = $(obj).parent().parent().children('td[name="tositeID"]').children('input').val();
 				tositeIDVal = $("#popupToSite").val();
-				
 				//PoValue = $(obj).parent().parent().children('td[name="purchaseOrder"]').children('input').val();
 				PoValue = $("#popupPO").val();
 				//ItemValue = $(obj).parent().parent().children('td[name="item"]').children('input').val();
@@ -2089,7 +2103,7 @@ function getAllItemPartNbs()
 				 type = "addNew";
 			 
 	   		 var token =  $('input[name="csrfToken"]').attr('value');
-           		
+           		console.log(slctDelDN);
            		$.ajax({
         			type : "POST",
         			url : "${pageContext.request.contextPath}/DiscoveryNewItemFormSave",
@@ -2100,7 +2114,7 @@ function getAllItemPartNbs()
         				data : {
         				    "type": type,
         				    "dictParameter" : dict,
-        				    "slctDelDN":slctDelDN,
+        				    "slctDelDNItem[]": slctDelDN,
         				    "dnID" : $("#dncode").val(),
 							"dncreationDate" : dncreationDate,
 							"dnlastmodifDate" : dnlastModifieddate,

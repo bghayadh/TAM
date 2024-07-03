@@ -648,6 +648,9 @@ $("#loadFiles").click(function() {
     else if(loader_vendor=="Huawei" && loader_domain=="Enterprise"){
 		url='loadFilesEntHW';
     }
+    else if(loader_vendor=="Cisco" && loader_domain=="Enterprise"){
+		url='loadFilesEntSWCisco';
+    }
     else if(loader_vendor=="Huawei" && loader_domain=="Transmission" && loader_subdomain == "IP"){
 		url='loadFileIPHuawei';
     }
