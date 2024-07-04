@@ -143,7 +143,7 @@
 <mapping class="com.aliat.alm.models.GCellPassive"/>
 <mapping class="com.aliat.alm.models.LCellPassive"/>
 <mapping class="com.aliat.alm.models.UCellPassive"/>
-<mapping class="com.aliat.alm.models.DiscoverNewItemNode"/>
+<mapping class="com.aliat.alm.models.DiscoveryNewItemNode"/>
 <mapping class="com.aliat.alm.models.CustomerService"/>
 <mapping class="com.aliat.alm.models.Survey"/>
 <mapping class="com.aliat.alm.models.ManholeSurvey"/>
