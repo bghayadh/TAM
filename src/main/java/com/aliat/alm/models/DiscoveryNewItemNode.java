@@ -8,8 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Discover_New_Item_Node")
-public class DiscoverNewItemNode {
+@Table(name = "DISCOVERY_NEW_ITEM_NODE")
+public class DiscoveryNewItemNode {
     @Id
     @Column(name = "DNI_NODE", nullable = false)
     private String dniNode;
@@ -41,10 +41,10 @@ public class DiscoverNewItemNode {
     @Column(name = "LAST_MODIFIED_DATE")
     private Timestamp lastModifiedDate;
 
-    public DiscoverNewItemNode() {
+    public DiscoveryNewItemNode() {
     }
 
-    public DiscoverNewItemNode(String dniNode, String fromNodeId, String toNodeId, String fromNodeName, String toNodeName,
+    public DiscoveryNewItemNode(String dniNode, String fromNodeId, String toNodeId, String fromNodeName, String toNodeName,
             String fromNodeType, String toNodeType, String dniId, Timestamp creationDate, Timestamp lastModifiedDate) {
         super();
         this.dniNode = dniNode;
