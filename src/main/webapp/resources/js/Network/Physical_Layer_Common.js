@@ -4511,8 +4511,7 @@ function allElementsCheckFilter(){
 					var parentidd=$(this).children('input:checkbox').parent().attr('id');
 					if($(this).children('input:checkbox').hasClass('AllFiberCables') && !parentidd.includes('PROJECT') && flag == 0 ){
 						getFiberPath();
-						console.log("tessing    "+$(this).children('input:checkbox').parent().attr('id'))
-						console.log("here calling getfiberpath")
+						//console.log($(this).children('input:checkbox').parent().attr('id'))
 					}
 					else{
 						if($(this).hasClass('FIBER')){						

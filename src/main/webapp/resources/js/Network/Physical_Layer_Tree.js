@@ -403,7 +403,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				
 				$("#"+ListProject[iji][0]+" input[type=checkbox]").bind("change",function() {
 					if ($(this).is(':checked') && projectflag[$(this).parent().attr('id')] == 0){
-						console.log("checkbox of project "+$(this).parent().attr('id'))
+						//console.log($(this).parent().attr('id'))
 						getProject($(this).parent().attr('id'))
 					}
 				});
@@ -19031,8 +19031,8 @@ function treeCollapseFolder(selector,type,clss){
 			//console.log("passed treeCollapseFolder");
 			getJunction();
 		}else if(id.startsWith('PROJECT_') && projectflag[id] == 0 ){
-			console.log("passed treeCollapseFolder project "+id);
-			console.log("projectflag[id sss] "+projectflag[id])
+			//console.log("passed treeCollapseFolder project "+id);
+			//console.log("projectflag[id ] "+projectflag[id])
 			getProject(id);
 		}
 		var children = $(this).parent().find(' > ul > li');
