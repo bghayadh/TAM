@@ -336,15 +336,15 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 		$("#NodeActive_f_CurrentPhysicalLayer").append(str);
 		  
 		/// creat projects node 
-		 var str_Projects="<ul style='margin-left:15px;'><li id='initial_ul_Projects' class='Initial_UlProjects'><input type='checkbox' unchecked name='filter' class='allElements'></input> <span id='initial_spanFolder_Projects' class='Parentfolder'><i class='fa fa-folder' style='color: #08526D;'></i></span><span id='initial_span_Projects' class='TreeSpan' style='color:black;width:436px;'>Projects </span></li></ul>";
+		 var str_Projects="<ul style='margin-left:15px;'><li id='initial_ul_Projects' class='Initial_UlProjects'><input type='checkbox' unchecked name='filter' class='projectallElements'></input> <span id='initial_spanFolder_Projects' class='Parentfolder'><i class='fa fa-folder' style='color: #08526D;'></i></span><span id='initial_span_Projects' class='TreeSpan' style='color:black;width:436px;'>Projects </span></li></ul>";
 		
 		 $("#network_tree").append(str_Projects);
 		 
 		 //planning and Implementing layers
-		 str="<ul><li id ='initial_ul_Projects_Planning' style='display:none;' class='PlanningProjectFolder'> <input type='checkbox' class='PlanningProjectFolder checkFilter' id ='planningProject' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Under Planning </span></li></ul></li></ul>";
+		 str="<ul><li id ='initial_ul_Projects_Planning' style='display:none;' class='PlanningProjectFolder'> <input type='checkbox' class='PlanningProjectFolder checkFilter projectallElements' id ='planningProject' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Under Planning </span></li></ul></li></ul>";
 		 $("#initial_ul_Projects").append(str);
 			
-		 str="<ul><li id ='initial_ul_Projects_Implementation' style='display:none;' class='ImplementationProjectFolder'> <input type='checkbox' class='ImplementationProjectFolder checkFilter' id ='ImplementationProject' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Under Implementation </span></li></ul></li></ul>";
+		 str="<ul><li id ='initial_ul_Projects_Implementation' style='display:none;' class='ImplementationProjectFolder'> <input type='checkbox' class='ImplementationProjectFolder checkFilter projectallElements' id ='ImplementationProject' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Under Implementation </span></li></ul></li></ul>";
 		 $("#initial_ul_Projects").append(str);
 		 
 		 // if list of projects not empty 
@@ -353,8 +353,8 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 			 
 			 for(iji=0;iji<ListProject.length;iji++){
 				 window[""+ListProject[iji][0]]=ListProject[iji];
-			   
-			   str="<ul><li id='"+ListProject[iji][0]+"' class='PROJECT' style='display:none;width:100px;'><input type='checkbox' class='Project checkFilter allElements' unchecked  class='filter'  name='Element'></input><span id='Project_spanFolder_"+ListProject[iji][0]+"'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D;'></i></span><span id='Project_span_"+ListProject[iji][0]+"' class='TreeSpan' style='color:black;width:395px;'>"+ListProject[iji][1]+"</span></li></ul>";
+				 projectflag[ListProject[iji][0]]=0;
+			   str="<ul><li id='"+ListProject[iji][0]+"' class='PROJECT' style='display:none;width:100px;'><input type='checkbox' class='Project checkFilter projectallElements' unchecked  class='filter'  name='Element'></input><span id='Project_spanFolder_"+ListProject[iji][0]+"'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D;'></i></span><span id='Project_span_"+ListProject[iji][0]+"' class='TreeSpan' style='color:black;width:395px;'>"+ListProject[iji][1]+"</span></li></ul>";
 			   if (ListProject[iji][3] =="Planning") {
 				   $("#initial_ul_Projects_Planning").append(str);
 			   }
@@ -362,7 +362,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				   $("#initial_ul_Projects_Implementation").append(str);
 			   }
 
-			   var strPhysicalLayer="<ul style='margin-left:15px;'><li id='initial_ul_"+ListProject[iji][0]+"' class='Initial_projects' style='display:none;'><input type='checkbox' class='allElements' unchecked name='filter'></input><span id='initial_Span_"+ListProject[iji][0]+"' class='Parentfolder'><i class='fa fa-folder' style='color: #08526D;'></i></span><span class='TreeSpan' style='color:black;width:436px;'> Physical Layer </span></li></ul>";
+			   var strPhysicalLayer="<ul style='margin-left:15px;'><li id='initial_ul_"+ListProject[iji][0]+"' class='Initial_projects' style='display:none;'><input type='checkbox' class='projectallElements' unchecked name='filter'></input><span id='initial_Span_"+ListProject[iji][0]+"' class='Parentfolder'><i class='fa fa-folder' style='color: #08526D;'></i></span><span class='TreeSpan' style='color:black;width:436px;'> Physical Layer </span></li></ul>";
 		       $("#"+ListProject[iji][0]+"").append(strPhysicalLayer);
 		         
 			   str="<ul><li id='Manhole_f_"+ListProject[iji][0]+"' style='display:none;' class='Manhole_f_projects'><input type='checkbox' unchecked class='AllManholes checkFilter' ></input> <span id='Manhole_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Manhole_span' class='TreeSpan' style='color:black;width:395px' >Manhole </span></li></ul>";	   
@@ -400,7 +400,16 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 		
 				str="<ul><li id ='DistributionBoard_access__"+ListProject[iji][0]+"' style='display:none;' class='accessDBFolder'> <input type='checkbox' class='AccessDB checkFilter' id ='AccessDB__"+ListProject[iji][0]+"' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Access </span></li></ul></li></ul>";
 				$("#DistributionBoard_f_"+ListProject[iji][0]+"").append(str);
+				
+				$("#"+ListProject[iji][0]+" input[type=checkbox]").bind("change",function() {
+					if ($(this).is(':checked') && projectflag[$(this).parent().attr('id')] == 0){
+						console.log("checkbox of project "+$(this).parent().attr('id'))
+						getProject($(this).parent().attr('id'))
+					}
+				});
+				
 			 }
+			 allProjectElementsCheckFilter();
 		 }
 	/////////////*********************	Manholes Creation In tree	***********************///////////////
 	//-------------------------------------------------------------------------------------------------//
@@ -9809,7 +9818,8 @@ singleNodeActive = new ContextMenu({
 					   if(data!=null){ 
 						   console.log("projectTypdde"+data.projectType);
 						   if(actionProjectContext=="Insert" ){
-							   var str="<ul><li id='"+data.ProjectId+"' class='PROJECT' style='width:100px;'><input type='checkbox' class='Project checkFilter' unchecked  class='filter'  name='Element'></input><span id='Project_spanFolder_"+data.ProjectId+"'  class='folder'><i class='fa fa-folder' style='color: #08526D;'></i></span><span id='Project_span_"+data.ProjectId+"' class='TreeSpan' style='color:black;width:395px;'>"+data.ProjectName+" </span></li></ul>";
+						  
+							   var str="<ul><li id='"+data.ProjectId+"' class='PROJECT' style='width:100px;'><input type='checkbox' class='Project checkFilter projectallElements' unchecked  class='filter'  name='Element'></input><span id='Project_spanFolder_"+data.ProjectId+"'  class='folder'><i class='fa fa-folder' style='color: #08526D;'></i></span><span id='Project_span_"+data.ProjectId+"' class='TreeSpan' style='color:black;width:395px;'>"+data.ProjectName+" </span></li></ul>";
 							 
 							   if(data.projectType=="Planning") {
 								  $("#initial_ul_Projects_Planning").append(str);
@@ -9821,7 +9831,7 @@ singleNodeActive = new ContextMenu({
 							   
 							   
 							   
-							   var strPhysicalLayer="<ul style='margin-left:15px;'><li id='initial_ul_"+data.ProjectId+"' class='Initial_projects' style='display:none;'><input type='checkbox' class='allElements' unchecked name='filter'></input><span id='initial_Span_"+data.ProjectId+"' class='folder'><i class='fa fa-folder' style='color: #08526D;'></i></span><span class='TreeSpan' style='color:black;width:436px;'> Physical Layer </span></li></ul>";
+							   var strPhysicalLayer="<ul style='margin-left:15px;'><li id='initial_ul_"+data.ProjectId+"' class='Initial_projects' style='display:none;'><input type='checkbox' class='projectallElements' unchecked name='filter'></input><span id='initial_Span_"+data.ProjectId+"' class='folder'><i class='fa fa-folder' style='color: #08526D;'></i></span><span class='TreeSpan' style='color:black;width:436px;'> Physical Layer </span></li></ul>";
 						       $("#"+data.ProjectId+"").append(strPhysicalLayer);
 						         
 							   str="<ul><li id='Manhole_f_"+data.ProjectId+"' style='display:none;' class='Manhole_f_projects'><input type='checkbox' unchecked class='AllManholes checkFilter' ></input> <span id='Manhole_spanFolder'  class='folder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Manhole_span' class='TreeSpan' style='color:black;width:395px' >Manhole </span></li></ul>";	   
@@ -9995,7 +10005,7 @@ singleNodeActive = new ContextMenu({
 							 });
 						    
 						    
-							 
+						    allProjectElementsCheckFilter(data.ProjectId);
 						   tree_prop_selection("#" +data.ProjectId+ " .TreeSpan");
 						   window[""+data.ProjectId]="";
 						   window[""+data.ProjectId]=[data.ProjectId,data.ProjectName];
@@ -19020,6 +19030,10 @@ function treeCollapseFolder(selector,type,clss){
 		}else if(id == "Junction_f_CurrentPhysicalLayer" && junctionFlag == 0 ){
 			//console.log("passed treeCollapseFolder");
 			getJunction();
+		}else if(id.startsWith('PROJECT_') && projectflag[id] == 0 ){
+			console.log("passed treeCollapseFolder project "+id);
+			console.log("projectflag[id sss] "+projectflag[id])
+			getProject(id);
 		}
 		var children = $(this).parent().find(' > ul > li');
 		if (children.is(":visible")) {

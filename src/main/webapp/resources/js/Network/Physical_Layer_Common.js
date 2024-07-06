@@ -4505,9 +4505,14 @@ function allElementsCheckFilter(){
 					$(this).children('input:checkbox').prop('checked', false);
 				}
 				else {
-					$(this).children('input:checkbox').prop('checked', true);					
-					if($(this).children('input:checkbox').hasClass('AllFiberCables')  && flag == 0 ){
+					$(this).children('input:checkbox').prop('checked', true);
+					/*this is used to ensures that getFiberPath only called when the checkbox 
+					that has class 'AllFiberCables' is checked from current physical layer and not from project*/
+					var parentidd=$(this).children('input:checkbox').parent().attr('id');
+					if($(this).children('input:checkbox').hasClass('AllFiberCables') && !parentidd.includes('PROJECT') && flag == 0 ){
 						getFiberPath();
+						console.log("tessing    "+$(this).children('input:checkbox').parent().attr('id'))
+						console.log("here calling getfiberpath")
 					}
 					else{
 						if($(this).hasClass('FIBER')){						
