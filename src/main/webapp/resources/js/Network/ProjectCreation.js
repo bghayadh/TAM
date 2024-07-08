@@ -37,7 +37,7 @@ function getProject(projectId){
 						  fiberAuxiliary_Data = physicalLayerData["fiber_Auxiliary"]
 						  tubesAuxiliaries  = physicalLayerData["tubes_Auxiliaries"]
 						  strandsAuxiliaries = physicalLayerData["strands_Auxiliaries"]
-    					appendProjectElement(ListManhole,ListManholeJunction,ListHandhole,ListHandholeJunction,JunctionList,fiberList,fiberAuxiliary_Data,fiberTubes,tubesAuxiliaries,fiberStrands,strandsAuxiliaries,distribBoardList,trenchList,trenchAuxiliary_Data,ductList,ductAuxiliary_Data);
+    					appendProjectElement(ListManhole,ListManholeJunction,ListHandhole,ListHandholeJunction,JunctionList,fiberList,fiberAuxiliary_Data,fiberTubes,tubesAuxiliaries,fiberStrands,strandsAuxiliaries,distribBoardList,trenchList,trenchAuxiliary_Data,ductList,ductAuxiliary_Data,projectId);
 		                  
 		               // in order to set all markers related to this project in case we click the checkbox of project
 		                  if ($('#'+projectId+' .projectallElements:checked').length > 0) {
@@ -76,7 +76,7 @@ function getProject(projectId){
 
 
 //this method is used to build project or append project element into current physical layer 
-function appendProjectElement(ListManhole,ListManholeJunction,ListHandhole,ListHandholeJunction,JunctionList,fiberList,fiberAuxiliary_Data,fiberTubes,tubesAuxiliaries,fiberStrands,strandsAuxiliaries,distribBoardList,trenchList,trenchAuxiliary_Data,ductList,ductAuxiliary_Data){
+function appendProjectElement(ListManhole,ListManholeJunction,ListHandhole,ListHandholeJunction,JunctionList,fiberList,fiberAuxiliary_Data,fiberTubes,tubesAuxiliaries,fiberStrands,strandsAuxiliaries,distribBoardList,trenchList,trenchAuxiliary_Data,ductList,ductAuxiliary_Data,ProjectId){
 	
 	if(ListManhole!=null) {
 		for(i=0;i<ListManhole.length;i++){
@@ -703,6 +703,12 @@ function appendProjectElement(ListManhole,ListManholeJunction,ListHandhole,ListH
 			});	
 			
 		}
+		
+		AllDistributionBoardCheckFilter("DistributionBoard_backbone__"+ProjectId,markerClusterBackboneDistBoard);
+	    AllDistributionBoardCheckFilter("DistributionBoard_metro__"+ProjectId,markerClusterMetroDistBoard);
+	    AllDistributionBoardCheckFilter("DistributionBoard_access__"+ProjectId,markerClusterAccessDistBoard);
+	    AllDistributionBoardCheckFilter("DistributionBoard_f_"+ProjectId,"")
+	    console.log("ProjectId "+ProjectId)
 	}
 		
 		
@@ -1046,6 +1052,7 @@ function allProjectElementsCheckFilter(){
 					if($(this).children('input:checkbox').hasClass('Manhole')){
 						id=$(this).attr('id');
 						if(markersManhole[id].getMap()==null){
+							markerClusterManhole.removeMarker(markersManhole[id]);
 							markersManhole[id].setMap(map);			
 							markerClusterManhole.addMarker(markersManhole[id]);						
 							//$("#manholeCheckAllBoq").prop("checked",true);
@@ -1054,6 +1061,7 @@ function allProjectElementsCheckFilter(){
 					if($(this).children('input:checkbox').hasClass('Handhole')){
 						id=$(this).attr('id');
 						if(markersHandhole[id].getMap()==null){
+							markerClusterHandhole.removeMarker(markersHandhole[id]);
 							markersHandhole[id].setMap(map);			
 							markerClusterHandhole.addMarker(markersHandhole[id]);
 							//$("#handholeCheckAllBoq").prop("checked",true);
@@ -1062,6 +1070,7 @@ function allProjectElementsCheckFilter(){
 					if($(this).children('input:checkbox').hasClass('Junction')){
 						id=$(this).attr('id');
 						if(markersJunction[id].getMap()==null){
+							markerClusterJunction.removeMarker(markersJunction[id]);
 							markersJunction[id].setMap(map);			
 							markerClusterJunction.addMarker(markersJunction[id]);
 							//$("#junctionCheckAllBoq").prop("checked",true);
@@ -1072,12 +1081,15 @@ function allProjectElementsCheckFilter(){
 						if(markersDistBoard[id].getMap()==null){
 							markersDistBoard[id].setMap(map);
 							if(window[""+id][8]=="backbone") {
+								markerClusterBackboneDistBoard.removeMarker(markersDistBoard[id]);
 								markerClusterBackboneDistBoard.addMarker(markersDistBoard[id]);
 							}
 							else if(window[""+id][8]=="metro") {
+								markerClusterMetroDistBoard.removeMarker(markersDistBoard[id]);
 								markerClusterMetroDistBoard.addMarker(markersDistBoard[id]);
 							}
 							else if(window[""+id][8]=="access") {
+								markerClusterAccessDistBoard.removeMarker(markersDistBoard[id]);
 								markerClusterAccessDistBoard.addMarker(markersDistBoard[id]);
 							}			
 							//$("#distBoardCheckAllBoq").prop("checked",true);

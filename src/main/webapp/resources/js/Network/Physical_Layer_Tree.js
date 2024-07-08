@@ -4817,8 +4817,9 @@ singleNodeActive = new ContextMenu({
 						}
 					 },
 					 {'icon': 'trash', 'name': 'Delete Project', action: () => {
-						
+						 console.log("selectedProjectIdContext "+selectedProjectIdContext)
 						deletePhysicalLayers("Project","",selectedProjectIdContext);
+						
 					}	
 					   },
 					 {'icon': 'arrow-right', 'name': 'Move To Implementation', action: () => {
@@ -4988,7 +4989,7 @@ singleNodeActive = new ContextMenu({
 								  strandsAuxiliaries = physicalLayerData["strands_Auxiliaries"]
 										 
 										  
-								  appendProjectElement(ListManhole,ListManholeJunction,ListHandhole,ListHandholeJunction,JunctionList,fiberList,fiberAuxiliary_Data,fiberTubes,tubesAuxiliaries,fiberStrands,strandsAuxiliaries,distribBoardList,trenchList,trenchAuxiliary_Data,ductList,ductAuxiliary_Data);
+								  appendProjectElement(ListManhole,ListManholeJunction,ListHandhole,ListHandholeJunction,JunctionList,fiberList,fiberAuxiliary_Data,fiberTubes,tubesAuxiliaries,fiberStrands,strandsAuxiliaries,distribBoardList,trenchList,trenchAuxiliary_Data,ductList,ductAuxiliary_Data,selectedProjectIdContext);
 				                  
 				            	  
 				                  

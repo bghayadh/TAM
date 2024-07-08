@@ -19,8 +19,9 @@ function getFiberPath(type,url,id,tr){
 						if (type == "showPath"){
 							showPath(url,id,tr);
 						}else{
-						    if ($('.AllFiberCables').is(':checked') || $('.allElements').is(':checked')){// in order to check all the folders and cables under main fiber folder
+						    if ($('#FiberPath_f_CurrentPhysicalLayer > .AllFiberCables').is(':checked') || $('.allElements').is(':checked')){// in order to check all the folders and cables under main fiber folder
 								mainPathCheckFilter($("#"+"FiberPath_f_CurrentPhysicalLayer").children('input'));
+								
 							}
 							if ($('#fiberCheckAllBoq').is(':checked')){// in order to check all the folder of the boq and cables under main fiber folder
 								fiberLayerCheckAll();
