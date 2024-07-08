@@ -55,6 +55,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.aliat.alm.common.ALMSessions;
 import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Notify;
+import com.aliat.alm.common.Permissions;
 import com.aliat.alm.models.AccessCableJunction;
 import com.aliat.alm.models.DistributionBoard;
 import com.aliat.alm.models.DistributionBoardMapping;
@@ -106,7 +107,8 @@ public class PhysicalLayerController {
 
 	@Autowired
 	Notify notifications;
-
+	@Autowired
+	Permissions permissions;
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/NetworkPhysicalLayer", method = RequestMethod.GET)
 
@@ -132,6 +134,46 @@ public class PhysicalLayerController {
 				notifications.headerNotifications(session, model);
 
 				try {
+					
+					
+					 permissions.setPerms(model, permissions.getUserPermsWithSession(session, request),
+				                "Physical Layer", "Tree");
+				       String  searchPopup = ((Integer) model.asMap().get("writeTree")).toString();
+				       String  findConnedted = ((Integer) model.asMap().get("addTree")).toString();
+				       String  projects = ((Integer) model.asMap().get("saveTree")).toString();
+				       model.addAttribute("searchPopup", searchPopup);
+					   model.addAttribute("findConnedted", findConnedted);
+				       model.addAttribute("projects", projects);
+				       
+				       permissions.setPerms(model, permissions.getUserPermsWithSession(session, request),
+				                "Physical Layer Manhole", "Tree");
+				    
+				       String  readManhole = ((Integer) model.asMap().get("readTree")).toString();
+				       String  writeManhole = ((Integer) model.asMap().get("writeTree")).toString();
+				       String  addManhole = ((Integer) model.asMap().get("addTree")).toString();
+				       String  delManhole = ((Integer) model.asMap().get("delTree")).toString();
+				       String  saveManhole = ((Integer) model.asMap().get("saveTree")).toString();
+				       model.addAttribute("readManhole", readManhole);
+				       model.addAttribute("writeManhole", writeManhole);
+				       model.addAttribute("addManhole", addManhole);
+				       model.addAttribute("saveManhole", saveManhole);
+				       model.addAttribute("delManhole", delManhole);
+
+
+				       
+				       permissions.setPerms(model, permissions.getUserPermsWithSession(session, request),
+				                "Physical Layer Handhole", "Tree");
+				       String  readHandhole = ((Integer) model.asMap().get("readTree")).toString();
+				       String  writeHandhole = ((Integer) model.asMap().get("writeTree")).toString();
+				       String  addHandhole = ((Integer) model.asMap().get("addTree")).toString();
+				       String  delHandhole = ((Integer) model.asMap().get("delTree")).toString();
+				       String  saveHandhole = ((Integer) model.asMap().get("saveTree")).toString();
+				       model.addAttribute("readHandhole", readHandhole);
+				       model.addAttribute("writeHandhole", writeHandhole);
+				       model.addAttribute("addHandhole", addHandhole);
+				       model.addAttribute("saveHandhole", saveHandhole);
+				       model.addAttribute("delHandhole", delHandhole);
+				       
 					int filterFlag = 0;
 					List<?> projectList = new ArrayList<Object[]>();
 					List<Object[]> manholeList = new ArrayList<Object[]>();
@@ -187,56 +229,58 @@ public class PhysicalLayerController {
 							|| StringUtils.equalsIgnoreCase(request.getParameter("Checked"), "PROJECT")) {
 						filterFlag = 1;
 						String showPointsType = request.getParameter("getRelatedPointsFilter");
+						if ("1".equals(projects)) {
+							projectList = session.createNativeQuery(
+									"SELECT DISTINCT PROJECT_ID,PROJECT_NAME, (select count(*) FROM HANDHOLE a WHERE a.PROJECT_ID = b.PROJECT_ID),PROJECT_LAYER  FROM PROJECT b where PROJECT_ID LIKE '%"
+											+ request.getParameter("FilteredProject") + "%' OR PROJECT_NAME LIKE '%"
+											+ request.getParameter("FilteredProject") + "%' OR PROJECT_ID LIKE '%"
+											+ request.getParameter("Checked") + "%'")
+									.getResultList();
+							}
+							if("1".equals(readManhole) ) {
+							manholeList = session.createNativeQuery(
+									"SELECT DISTINCT A.MANHOLE_ID,A.MANHOLE_NAME,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=MANHOLE_ID),A.CITY FROM MANHOLE A LEFT JOIN JUNCTION B ON B.PHYSICAL_LAYER_ID = A.manhole_id and B.PROJECT_ID LIKE '%"
+											+ request.getParameter("Checked") + "%' where A.MANHOLE_ID LIKE '%"
+											+ request.getParameter("FilteredManhole") + "%' OR A.MANHOLE_NAME LIKE '%"
+											+ request.getParameter("FilteredManhole") + "%' OR B.JUNCTION_ID LIKE '%"
+											+ request.getParameter("FilteredJunction_Manhole")
+											+ "%' OR B.JUNCTION_NAME LIKE '%"
+											+ request.getParameter("FilteredJunction_Manhole")
+											+ "%' and A.PROJECT_ID LIKE '%" + request.getParameter("Checked") + "%' ")
+									.getResultList();
+							
+							junctionManholeList = session.createNativeQuery(
+									"SELECT DISTINCT A.JUNCTION_ID, A.JUNCTION_NAME,A.PHYSICAL_LAYER_ID,A.PHYSICAL_LAYER_NAME,A.JUNCTION_NUMBER,A.CAPACITY,A.CITY,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID FROM JUNCTION A LEFT JOIN manhole B ON A.PHYSICAL_LAYER_ID = B.manhole_id and (A.JUNCTION_ID LIKE '%"
+											+ request.getParameter("FilteredJunction_Manhole")
+											+ "%' OR A.JUNCTION_NAME LIKE '%"
+											+ request.getParameter("FilteredJunction_Manhole")
+											+ "%' OR B.MANHOLE_ID LIKE '%" + request.getParameter("FilteredManhole")
+											+ "%' OR B.MANHOLE_NAME LIKE '%" + request.getParameter("FilteredManhole")
+											+ "%'  ) and A.PROJECT_ID LIKE '%" + request.getParameter("Checked") + "%'  ")
+									.getResultList();
+							}
+							if("1".equals(readHandhole) ) {
+							handholeList = session.createNativeQuery(
+									"SELECT DISTINCT A.HANDHOLE_ID,A.HANDHOLE_NAME,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=HANDHOLE_ID),A.CITY FROM HANDHOLE  A LEFT JOIN JUNCTION B ON B.PHYSICAL_LAYER_ID = A.HANDHOLE_ID and B.PROJECT_ID LIKE '%"
+											+ request.getParameter("Checked") + "%' where A.HANDHOLE_ID LIKE '%"
+											+ request.getParameter("FilteredHandhole") + "%' OR A.HANDHOLE_NAME LIKE '%"
+											+ request.getParameter("FilteredHandhole") + "%' OR B.JUNCTION_ID LIKE '%"
+											+ request.getParameter("FilteredJunction_Handhole")
+											+ "%' OR B.JUNCTION_NAME LIKE '%"
+											+ request.getParameter("FilteredJunction_Handhole")
+											+ "%' and A.PROJECT_ID LIKE '%" + request.getParameter("Checked") + "%' ")
+									.getResultList();
 
-						projectList = session.createNativeQuery(
-								"SELECT DISTINCT PROJECT_ID,PROJECT_NAME, (select count(*) FROM HANDHOLE a WHERE a.PROJECT_ID = b.PROJECT_ID),PROJECT_LAYER  FROM PROJECT b where PROJECT_ID LIKE '%"
-										+ request.getParameter("FilteredProject") + "%' OR PROJECT_NAME LIKE '%"
-										+ request.getParameter("FilteredProject") + "%' OR PROJECT_ID LIKE '%"
-										+ request.getParameter("Checked") + "%'")
-								.getResultList();
-
-						manholeList = session.createNativeQuery(
-								"SELECT DISTINCT A.MANHOLE_ID,A.MANHOLE_NAME,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=MANHOLE_ID),A.CITY FROM MANHOLE A LEFT JOIN JUNCTION B ON B.PHYSICAL_LAYER_ID = A.manhole_id and B.PROJECT_ID LIKE '%"
-										+ request.getParameter("Checked") + "%' where A.MANHOLE_ID LIKE '%"
-										+ request.getParameter("FilteredManhole") + "%' OR A.MANHOLE_NAME LIKE '%"
-										+ request.getParameter("FilteredManhole") + "%' OR B.JUNCTION_ID LIKE '%"
-										+ request.getParameter("FilteredJunction_Manhole")
-										+ "%' OR B.JUNCTION_NAME LIKE '%"
-										+ request.getParameter("FilteredJunction_Manhole")
-										+ "%' and A.PROJECT_ID LIKE '%" + request.getParameter("Checked") + "%' ")
-								.getResultList();
-
-						junctionManholeList = session.createNativeQuery(
-								"SELECT DISTINCT A.JUNCTION_ID, A.JUNCTION_NAME,A.PHYSICAL_LAYER_ID,A.PHYSICAL_LAYER_NAME,A.JUNCTION_NUMBER,A.CAPACITY,A.CITY,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID FROM JUNCTION A LEFT JOIN manhole B ON A.PHYSICAL_LAYER_ID = B.manhole_id and (A.JUNCTION_ID LIKE '%"
-										+ request.getParameter("FilteredJunction_Manhole")
-										+ "%' OR A.JUNCTION_NAME LIKE '%"
-										+ request.getParameter("FilteredJunction_Manhole")
-										+ "%' OR B.MANHOLE_ID LIKE '%" + request.getParameter("FilteredManhole")
-										+ "%' OR B.MANHOLE_NAME LIKE '%" + request.getParameter("FilteredManhole")
-										+ "%'  ) and A.PROJECT_ID LIKE '%" + request.getParameter("Checked") + "%'  ")
-								.getResultList();
-
-						handholeList = session.createNativeQuery(
-								"SELECT DISTINCT A.HANDHOLE_ID,A.HANDHOLE_NAME,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=HANDHOLE_ID),A.CITY FROM HANDHOLE  A LEFT JOIN JUNCTION B ON B.PHYSICAL_LAYER_ID = A.HANDHOLE_ID and B.PROJECT_ID LIKE '%"
-										+ request.getParameter("Checked") + "%' where A.HANDHOLE_ID LIKE '%"
-										+ request.getParameter("FilteredHandhole") + "%' OR A.HANDHOLE_NAME LIKE '%"
-										+ request.getParameter("FilteredHandhole") + "%' OR B.JUNCTION_ID LIKE '%"
-										+ request.getParameter("FilteredJunction_Handhole")
-										+ "%' OR B.JUNCTION_NAME LIKE '%"
-										+ request.getParameter("FilteredJunction_Handhole")
-										+ "%' and A.PROJECT_ID LIKE '%" + request.getParameter("Checked") + "%' ")
-								.getResultList();
-
-						junctionHandholeList = session.createNativeQuery(
-								"SELECT DISTINCT A.JUNCTION_ID, A.JUNCTION_NAME,A.PHYSICAL_LAYER_ID,A.PHYSICAL_LAYER_NAME,A.JUNCTION_NUMBER,A.CAPACITY,A.CITY,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID FROM JUNCTION A INNER JOIN handhole B ON A.PHYSICAL_LAYER_ID = b.handhole_id and (A.JUNCTION_ID LIKE '%"
-										+ request.getParameter("FilteredJunction_Handhole")
-										+ "%' OR A.JUNCTION_NAME LIKE '%"
-										+ request.getParameter("FilteredJunction_Handhole")
-										+ "%' OR HANDHOLE_ID LIKE '%" + request.getParameter("FilteredHandhole")
-										+ "%' OR HANDHOLE_NAME LIKE '%" + request.getParameter("FilteredHandhole")
-										+ "%' ) and A.PROJECT_ID LIKE '%" + request.getParameter("Checked") + "%' ")
-								.getResultList();
-
+							junctionHandholeList = session.createNativeQuery(
+									"SELECT DISTINCT A.JUNCTION_ID, A.JUNCTION_NAME,A.PHYSICAL_LAYER_ID,A.PHYSICAL_LAYER_NAME,A.JUNCTION_NUMBER,A.CAPACITY,A.CITY,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID FROM JUNCTION A INNER JOIN handhole B ON A.PHYSICAL_LAYER_ID = b.handhole_id and (A.JUNCTION_ID LIKE '%"
+											+ request.getParameter("FilteredJunction_Handhole")
+											+ "%' OR A.JUNCTION_NAME LIKE '%"
+											+ request.getParameter("FilteredJunction_Handhole")
+											+ "%' OR HANDHOLE_ID LIKE '%" + request.getParameter("FilteredHandhole")
+											+ "%' OR HANDHOLE_NAME LIKE '%" + request.getParameter("FilteredHandhole")
+											+ "%' ) and A.PROJECT_ID LIKE '%" + request.getParameter("Checked") + "%' ")
+									.getResultList();
+							}
 						distribBoardList = session.createNativeQuery(
 								"SELECT DISTINCT DB_ID,DB_LONGITUDE,DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,PROJECT_ID ,CITY,DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD where DB_ID LIKE '%"
 										+ request.getParameter("FilteredDistribution_Board") + "%' OR DB_NAME LIKE '%"
@@ -1787,24 +1831,26 @@ public class PhysicalLayerController {
 								row.put("lng", lngs[i]);
 								rowData.put("row" + i, new ArrayList<>(row.values()));
 
-								List<Object[]> manholeListQuery = session.createNativeQuery(
-										"SELECT DISTINCT MANHOLE_ID,MANHOLE_NAME,LONGITUDE,LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=MANHOLE_ID),DM_NAME FROM MANHOLE  where to_number(SUBSTR(LONGITUDE,1,6)) <=  "
-												+ lng + " and  to_number(SUBSTR(LATITUDE,1,6)) <= " + lat + " ")
-										.getResultList();
+								 if(readManhole.equals("1")) {
+										List<Object[]> manholeListQuery = session.createNativeQuery(
+												"SELECT DISTINCT MANHOLE_ID,MANHOLE_NAME,LONGITUDE,LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=MANHOLE_ID),DM_NAME FROM MANHOLE  where to_number(SUBSTR(LONGITUDE,1,6)) <=  "
+														+ lng + " and  to_number(SUBSTR(LATITUDE,1,6)) <= " + lat + " ")
+												.getResultList();
 
-								manholeListPt = findNearestArray(manholeListQuery, Double.valueOf(lats[i]),
-										Double.valueOf(lngs[i]), Double.valueOf(closestDisRange), "Manhole",
-										noOfPoints);
+										manholeListPt = findNearestArray(manholeListQuery, Double.valueOf(lats[i]),
+												Double.valueOf(lngs[i]), Double.valueOf(closestDisRange), "Manhole",
+												noOfPoints);
+										 }
+										 if(readHandhole.equals("1")) {
+										List<Object[]> handholeListQuery = session.createNativeQuery(
+												"SELECT DISTINCT HANDHOLE_ID,HANDHOLE_NAME,LONGITUDE,LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=HANDHOLE_ID),DM_NAME FROM HANDHOLE  where to_number(LONGITUDE) <=  '"
+														+ lng + "' and  to_number(LATITUDE) <= '" + lat + "' ")
+												.getResultList();
 
-								List<Object[]> handholeListQuery = session.createNativeQuery(
-										"SELECT DISTINCT HANDHOLE_ID,HANDHOLE_NAME,LONGITUDE,LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=HANDHOLE_ID),DM_NAME FROM HANDHOLE  where to_number(LONGITUDE) <=  '"
-												+ lng + "' and  to_number(LATITUDE) <= '" + lat + "' ")
-										.getResultList();
-
-								handholeListPt = findNearestArray(handholeListQuery, Double.valueOf(lats[i]),
-										Double.valueOf(lngs[i]), Double.valueOf(closestDisRange), "Handhole",
-										noOfPoints);
-								
+										handholeListPt = findNearestArray(handholeListQuery, Double.valueOf(lats[i]),
+												Double.valueOf(lngs[i]), Double.valueOf(closestDisRange), "Handhole",
+												noOfPoints);
+										 }
 								List<Object[]> distribBoardListQuery = session.createNativeQuery(
 										"SELECT DISTINCT DB_ID,DB_LONGITUDE,DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,PROJECT_ID ,CITY,DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD  where to_number(SUBSTR(DB_LONGITUDE,1,6)) <=  "
 												+ lng + " and  to_number(SUBSTR(DB_LATITUDE,1,6)) <= " + lat + " ")
@@ -2233,22 +2279,25 @@ public class PhysicalLayerController {
 
 						// System.out.println("distribBoardList 2 is " +
 						// mapper.writeValueAsString(distribBoardList));
-					} else {
+					}  else {
 
 						filterFlag = 0;
-
+						if ("1".equals(projects)) {
 						projectList = session.createNativeQuery(
 								"SELECT DISTINCT PROJECT_ID,PROJECT_NAME, (select count(*) FROM HANDHOLE a WHERE a.PROJECT_ID = b.PROJECT_ID),PROJECT_LAYER  FROM PROJECT b ")
 								.getResultList();
-
+						}
+						
+						if ("1".equals(readManhole)) {
 						manholeList = session.createNativeQuery(
-								"SELECT DISTINCT MANHOLE_ID,MANHOLE_NAME,LONGITUDE,LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=MANHOLE_ID),CITY FROM MANHOLE WHERE PROJECT_ID ='CurrentPhysicalLayer' ")
+								"SELECT DISTINCT MANHOLE_ID,MANHOLE_NAME,LONGITUDE,LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=MANHOLE_ID),CITY FROM MANHOLE  ")
 								.getResultList();
-
+						}
+						if ("1".equals(readHandhole)) {
 						handholeList = session.createNativeQuery(
-								"SELECT DISTINCT HANDHOLE_ID,HANDHOLE_NAME,LONGITUDE,LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=HANDHOLE_ID),CITY FROM HANDHOLE WHERE PROJECT_ID ='CurrentPhysicalLayer'")
+								"SELECT DISTINCT HANDHOLE_ID,HANDHOLE_NAME,LONGITUDE,LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=HANDHOLE_ID),CITY FROM HANDHOLE")
 								.getResultList();
-
+						}
 						/*
 						 * fiberList = session.createNativeQuery(
 						 * "SELECT SOURCE_LNG,SOURCE_LAT,DESTINATION_LNG,DESTINATION_LAT,A.FIBER_CABLE_ID,A.SOURCE_WARE_ID,A.SOURCE_ID,A.SOURCE_NAME,A.DESTINATION_WARE_ID,A.DESTINATION_ID,A.DESTINATION_NAME,(SELECT COUNT(*) FROM FIBER_TUBES B WHERE B.FIBER_CABLE_ID=A.FIBER_CABLE_ID),(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.FIBER_CABLE_ID=A.FIBER_CABLE_ID),FIBER_CABLE_NAME,PROJECT_ID,SOURCE_CITY,DESTINATION_CITY,NUMBER_OF_TUBES,NUMBER_OF_STRANDS,LENGTH,DRAWING_TYPE,FIBER_NETWORK_LEVEL,FIBER_OWNER,(select B.FIBER_COLOR_OWNER from FIBER_OWNER_COLOR B WHERE B.FIBER_OWNER=A.FIBER_OWNER) AS FIBER_CABLE_COLOR FROM FIBER_CABLES A"
