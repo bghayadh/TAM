@@ -7,7 +7,7 @@ import com.aliat.alm.models.ArSerialNumber;
 import com.aliat.alm.models.ArSite;
 import com.aliat.alm.models.AssetRegistry;
 import com.aliat.alm.models.DNIFormView;
-import com.aliat.alm.models.DiscoverNewItemNode;
+import com.aliat.alm.models.DiscoveryNewItemNode;
 import com.aliat.alm.models.FixedAssetRegistry;
 import com.aliat.alm.models.FarNode;
 import com.aliat.alm.models.FarPartNumber;
@@ -333,10 +333,10 @@ public class DiscoveryController {
 			    "NVL(t.TO_SERIAL_NUMBER, ' ') AS toSerialNumber, NVL(t.DESCRIPTION, ' ') AS description, x.toNodeArray, y.fromNodeArray " +
 			    "FROM DISCOVERY_NEW_ITEM t " +
 			    "LEFT JOIN (SELECT DISTINCT DNI_ID, json_object('toNodeArray' VALUE json_arrayagg(json_object('NodeId' VALUE TO_NODE_ID, " +
-			    "'NodeName' VALUE TO_NODE_NAME, 'NodeType' VALUE TO_NODE_TYPE))) AS toNodeArray FROM Discover_New_Item_Node WHERE TO_NODE_ID IS NOT NULL GROUP BY DNI_ID) x " +
+			    "'NodeName' VALUE TO_NODE_NAME, 'NodeType' VALUE TO_NODE_TYPE))) AS toNodeArray FROM DISCOVERY_NEW_ITEM_NODE WHERE TO_NODE_ID IS NOT NULL GROUP BY DNI_ID) x " +
 			    "ON x.DNI_ID = t.DNI_ID " +
 			    "LEFT JOIN (SELECT DISTINCT DNI_ID, json_object('fromNodeArray' VALUE json_arrayagg(json_object('NodeId' VALUE FROM_NODE_ID, " +
-			    "'NodeName' VALUE FROM_NODE_NAME, 'NodeType' VALUE FROM_NODE_TYPE))) AS fromNodeArray FROM Discover_New_Item_Node WHERE FROM_NODE_ID IS NOT NULL GROUP BY DNI_ID) y " +
+			    "'NodeName' VALUE FROM_NODE_NAME, 'NodeType' VALUE FROM_NODE_TYPE))) AS fromNodeArray FROM DISCOVERY_NEW_ITEM_NODE WHERE FROM_NODE_ID IS NOT NULL GROUP BY DNI_ID) y " +
 			    "ON y.DNI_ID = t.DNI_ID " +
 			    "WHERE t.DN_ID = :param1";
 
@@ -730,7 +730,7 @@ query.executeUpdate();
 				    try {
 				        Object toNodeObj = new JSONParser().parse(toNodeDn);
 				        JSONArray toNodeJSNArray = (JSONArray) ((HashMap) toNodeObj).get("toNodeArray");
-				        DiscoverNewItemNode nodeDn = null;
+				        DiscoveryNewItemNode nodeDn = null;
 				        ArrayList toNodeArrayList;
 
 				        for (Object toNodeJSN : (JSONArray) toNodeJSNArray) {
@@ -738,8 +738,8 @@ query.executeUpdate();
 				            String ToNodeId = (String) toNodeArrayList.get(0);
 
 				            /* Check if a node with the same toNodeId already exists */
-				            nodeDn = (DiscoverNewItemNode) session
-				                .createQuery("FROM DiscoverNewItemNode WHERE toNodeId = :toNodeId AND dniId = :dniId")
+				            nodeDn = (DiscoveryNewItemNode) session
+				                .createQuery("FROM DiscoveryNewItemNode WHERE toNodeId = :toNodeId AND dniId = :dniId")
 				                .setParameter("toNodeId", ToNodeId).setParameter("dniId", DniID)
 				                .uniqueResult();
 
@@ -761,7 +761,7 @@ query.executeUpdate();
 				                    session.createNativeQuery("commit").executeUpdate();
 				                }
 
-				                nodeDn = new DiscoverNewItemNode();
+				                nodeDn = new DiscoveryNewItemNode();
 				                nodeDn.setToNodeId(ToNodeId);
 				                nodeDn.setToNodeName((String) toNodeArrayList.get(2));
 				                nodeDn.setToNodeType((String) toNodeArrayList.get(1));
@@ -789,15 +789,15 @@ query.executeUpdate();
 				    try {
 				        Object fromNodeObj = new JSONParser().parse(fromNodeDn);
 				        JSONArray fromNodeJSNArray = (JSONArray) ((HashMap) fromNodeObj).get("fromNodeArray");
-				        DiscoverNewItemNode nodeDn = null;
+				        DiscoveryNewItemNode nodeDn = null;
 				        ArrayList fromNodeArrayList;
 
 				        for (Object fromNodeJSN : (JSONArray) fromNodeJSNArray) {
 				            fromNodeArrayList = new ArrayList((((HashMap) fromNodeJSN).values()));
 				            String fromNodeId = (String) fromNodeArrayList.get(0);
 
-				             nodeDn = (DiscoverNewItemNode) session
-				                .createQuery("FROM DiscoverNewItemNode WHERE fromNodeId = :fromNodeId  AND dniId = :dniId")
+				             nodeDn = (DiscoveryNewItemNode) session
+				                .createQuery("FROM DiscoveryNewItemNode WHERE fromNodeId = :fromNodeId  AND dniId = :dniId")
 				                .setParameter("fromNodeId", fromNodeId).setParameter("dniId", DniID)
 				                .uniqueResult();
 
@@ -818,7 +818,7 @@ query.executeUpdate();
 				                    session.createNativeQuery("commit").executeUpdate();
 				                }
 
-				                nodeDn = new DiscoverNewItemNode();
+				                nodeDn = new DiscoveryNewItemNode();
 				                nodeDn.setFromNodeId(fromNodeId);
 				                nodeDn.setFromNodeName((String) fromNodeArrayList.get(2));
 				                nodeDn.setFromNodeType((String) fromNodeArrayList.get(1));
@@ -846,7 +846,7 @@ query.executeUpdate();
 				            String NodeId = values[0];
 				            String dniId = values[1];
 
-				            query = session.createQuery("delete from DiscoverNewItemNode t where t.toNodeId = :toNodeId and t.dniId = :dniId");
+				            query = session.createQuery("delete from DiscoveryNewItemNode t where t.toNodeId = :toNodeId and t.dniId = :dniId");
 				            query.setParameter("toNodeId", NodeId);
 				            query.setParameter("dniId", dniId);
 				            query.executeUpdate();
@@ -864,7 +864,7 @@ query.executeUpdate();
 				            String NodeId = values[0];
 				            String dniId = values[1];
 
-				             query = session.createQuery("delete from DiscoverNewItemNode t where t.fromNodeId = :fromNodeId and t.dniId = :dniId");
+				             query = session.createQuery("delete from DiscoveryNewItemNode t where t.fromNodeId = :fromNodeId and t.dniId = :dniId");
 				            query.setParameter("fromNodeId", NodeId);
 				            query.setParameter("dniId", dniId);
 				            query.executeUpdate();
@@ -3764,7 +3764,7 @@ public void ApprovalProjectandAsset(String trans_Type, String getApproval, Strin
 		
 		// ADD TO AR_NODE TABLE
     	String AR_NodeID;
-        query = session.createNativeQuery("select TO_NODE_ID,TO_NODE_NAME,TO_NODE_TYPE FROM DISCOVER_NEW_ITEM_Node WHERE DNI_ID=:param1");
+        query = session.createNativeQuery("select TO_NODE_ID,TO_NODE_NAME,TO_NODE_TYPE FROM DISCOVERY_NEW_ITEM_NODE WHERE DNI_ID=:param1");
  		query.setParameter("param1", DniID);
  		query.executeUpdate();
  		List<Object[]> resultList = query.getResultList();
@@ -3921,7 +3921,7 @@ if (AssetRegID != null) {
 	query.executeUpdate();
 	
 	String AR_NodeID;
-    query = session.createNativeQuery("select TO_NODE_ID,TO_NODE_NAME,TO_NODE_TYPE FROM DISCOVER_NEW_ITEM_Node WHERE DNI_ID=:param1");
+    query = session.createNativeQuery("select TO_NODE_ID,TO_NODE_NAME,TO_NODE_TYPE FROM DISCOVERY_NEW_ITEM_NODE WHERE DNI_ID=:param1");
 		query.setParameter("param1", DniID);
 		query.executeUpdate();
 		List<Object[]> resultList = query.getResultList();
@@ -4112,7 +4112,7 @@ public void ApprovalFinance(String trans_Type, String getApproval, String dnStat
 			// ADD TO FAR NODE TABLE
 
 			
-            query = session.createNativeQuery("select TO_NODE_ID,TO_NODE_NAME,TO_NODE_TYPE FROM DISCOVER_NEW_ITEM_Node WHERE DNI_ID=:param1");
+            query = session.createNativeQuery("select TO_NODE_ID,TO_NODE_NAME,TO_NODE_TYPE FROM DISCOVERY_NEW_ITEM_NODE WHERE DNI_ID=:param1");
 			query.setParameter("param1", DniID);
 			query.executeUpdate();
 			List<Object[]> resultNList = query.getResultList();
@@ -4444,7 +4444,7 @@ String ARid=null;
 					query.executeUpdate();
 					
 					String AR_NodeID;
-				    query = session.createNativeQuery("select TO_NODE_ID,TO_NODE_NAME,TO_NODE_TYPE FROM DISCOVER_NEW_ITEM_Node WHERE DNI_ID=:param1");
+				    query = session.createNativeQuery("select TO_NODE_ID,TO_NODE_NAME,TO_NODE_TYPE FROM DISCOVERY_NEW_ITEM_NODE WHERE DNI_ID=:param1");
 						query.setParameter("param1", DniID);
 						query.executeUpdate();
 						List<Object[]> resultList = query.getResultList();
@@ -4611,7 +4611,7 @@ String ARid=null;
     	query.executeUpdate();
 	
 	String AR_NodeID;
-    query = session.createNativeQuery("select TO_NODE_ID,TO_NODE_NAME,TO_NODE_TYPE FROM DISCOVER_NEW_ITEM_Node WHERE DNI_ID=:param1");
+    query = session.createNativeQuery("select TO_NODE_ID,TO_NODE_NAME,TO_NODE_TYPE FROM DISCOVERY_NEW_ITEM_NODE WHERE DNI_ID=:param1");
 		query.setParameter("param1", DniID);
 		query.executeUpdate();
 		List<Object[]> resultList = query.getResultList();
@@ -4647,7 +4647,7 @@ String ARid=null;
 		query = session.createNativeQuery("delete FAR_NODE where FAR_ID = :param1");
 		query.setParameter("param1", FAR);
 		query.executeUpdate();
-		  query = session.createNativeQuery("select TO_NODE_ID,TO_NODE_NAME,TO_NODE_TYPE FROM DISCOVER_NEW_ITEM_Node WHERE DNI_ID=:param1");
+		  query = session.createNativeQuery("select TO_NODE_ID,TO_NODE_NAME,TO_NODE_TYPE FROM DISCOVERY_NEW_ITEM_NODE WHERE DNI_ID=:param1");
 			query.setParameter("param1", DniID);
 			query.executeUpdate();
 			List<Object[]> resultNList = query.getResultList();
@@ -5094,7 +5094,7 @@ public void insertDiscoveredElements(Session session,List<Object[]> element,Stri
 			Object [] nodeArrayList=null;
 			if(nodeTransList.size() > 0) {
 				nodeArrayList =(Object[]) nodeTransList.get(0); 
-				DiscoverNewItemNode dniNode = new DiscoverNewItemNode();
+				DiscoveryNewItemNode dniNode = new DiscoveryNewItemNode();
 				synchronized (this) {
 					dnNodeID = "DNI_NODE_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT DNI_NODE FROM SEQ_TABLE").uniqueResult().toString());	
 						query = session.createNativeQuery("UPDATE SEQ_TABLE SET DNI_NODE = DNI_NODE + 1 ");

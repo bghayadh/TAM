@@ -2181,9 +2181,9 @@ function NodeActiveCheckFilter(Id,clusterName){
 			}
 		});
 	}
-
+/*
 function AllDistributionBoardCheckFilter(Id,clssName) {
-		
+	
 	$("#"+Id).children('input').bind("change",function() {
 		if(clssName=="") {			
 			markerClusterAccessDistBoard.clearMarkers();
@@ -2244,6 +2244,96 @@ function AllDistributionBoardCheckFilter(Id,clssName) {
         	}
         
         	if($(".BackboneDB").is(":checked") || $(".MetroDB").is(":checked") || $('.AccessDB').is(':checked') ) {	
+            	$("#distBoardCheckAllBoq").prop("checked",true);
+        	}	
+		});	
+	}*/
+
+function AllDistributionBoardCheckFilter(Id,clssName) {
+		
+	$("#"+Id).children('input').bind("change",function() {
+		/*if(clssName=="") {			
+			markerClusterAccessDistBoard.clearMarkers();
+			markerClusterMetroDistBoard.clearMarkers();
+			markerClusterBackboneDistBoard.clearMarkers();
+		}
+		else {
+			clssName.clearMarkers();	
+		}*/
+
+		if ($(this).is(':checked')){				
+				
+			$(this).parent().find('input:checkbox').each(function(){
+				$(this).prop('checked', true);
+							
+					
+			 if($(this).parent().hasClass('DistributionBoard')){
+					dbID=$(this).parent().attr('id');
+					if(markersDistBoard[dbID]){	
+					 // if(markersDistBoard[dbID].getMap()==null){	
+						
+						if(window[""+dbID][8]=="backbone") {
+							className=markerClusterBackboneDistBoard;
+						}
+						else if(window[""+dbID][8]=="metro") {
+							className=markerClusterMetroDistBoard;
+						}
+						else if(window[""+dbID][8]=="access") {
+							className=markerClusterAccessDistBoard;
+						}
+						className.removeMarker(markersDistBoard[dbID]);	
+						markersDistBoard[dbID].setMap(map);	
+						className.addMarker(markersDistBoard[dbID]);
+					 // }
+					}
+					 $("#distBoardCheckAllBoq").prop("checked",true);					
+				 }
+			});
+		}// end check  case 
+		
+		// uncheck case 
+			else{					
+				$(this).parent().find('input:checkbox').each(function(){
+				$(this).prop('checked', false);
+			 if($(this).parent().hasClass('DistributionBoard')){
+					dbID=$(this).parent().attr('id');
+					if(markersDistBoard[dbID]){	
+						
+						if(window[""+dbID][8]=="backbone") {
+							className=markerClusterBackboneDistBoard;
+						}
+						else if(window[""+dbID][8]=="metro") {
+							className=markerClusterMetroDistBoard;
+						}
+						else if(window[""+dbID][8]=="access") {
+							className=markerClusterAccessDistBoard;
+						}
+						
+						className.removeMarker(markersDistBoard[dbID]);	
+						markersDistBoard[dbID].setMap(null);	
+					}	
+				 }									
+			});			
+	}
+		if(!Id.includes("showDB")) {
+		var tempselector="";
+		if(Id.includes("CurrentPhysicalLayer")) {
+			tempselector = "DistributionBoard_f_CurrentPhysicalLayer";
+		}else if(Id.includes("PROJECT")) {
+			var startIndex = Id.indexOf('PROJECT'); // Find the index of 'PROJECT'
+		    var str = Id.substring(startIndex); // Get substring from startIndex to end
+			tempselector = "DistributionBoard_f_"+str;
+		}
+		
+			if ($('#'+tempselector+'  .BackboneDB').is(':checked') && $('#'+tempselector+'  .MetroDB').is(':checked') && $('#'+tempselector+'  .AccessDB').is(':checked')){			
+            	$('#'+tempselector+'  .AllDistBoards').prop('checked', true);  
+        	}
+        	else {
+            	$('#'+tempselector+'  .AllDistBoards').prop('checked', false);
+        	}
+		}
+        
+        	if($("#DistributionBoard_f_CurrentPhysicalLayer .BackboneDB").is(":checked") || $("#DistributionBoard_f_CurrentPhysicalLayer .MetroDB").is(":checked") || $('#DistributionBoard_f_CurrentPhysicalLayer .AccessDB').is(':checked') ) {	
             	$("#distBoardCheckAllBoq").prop("checked",true);
         	}	
 		});	
@@ -2969,7 +3059,8 @@ function mainPathCheckFilterEvent(Id, type){
 			}
 		}	
 		
-		else {
+		/*
+		 else {
 			if ($('.BackboneFiber').is(':checked') && $('.MetroFiber').is(':checked') && $('.AccessFiber').is(':checked')){			
 					$('.AllFiberCables').prop('checked', true);
 			}
@@ -2979,6 +3070,35 @@ function mainPathCheckFilterEvent(Id, type){
 			if($(".MetroFiber").is(":checked") || $(".BackboneFiber").is(":checked") || $('.AccessFiber').is(':checked') ) {	
 				$("#fiberCheckAllBoq").prop("checked",true);
 			}	
+		}
+		 */
+		
+		else {
+			//executed only for fiberpath(exclude trench case)
+			if(Id.includes("FiberPath")) {
+				var tempselector="";//used to get fiber path main folder id
+				
+				if(Id.includes("CurrentPhysicalLayer") && Id.includes("FiberPath")) {
+					tempselector="FiberPath_f_CurrentPhysicalLayer"
+				}else if(Id.includes("PROJECT") && Id.includes("FiberPath")) {
+					var startIndex = Id.indexOf('PROJECT'); // Find the index of 'PROJECT'
+				    var str = Id.substring(startIndex); // Get substring from startIndex to end
+				    tempselector="FiberPath_f_"+str
+				    	
+				}
+				
+				if ($('#'+tempselector+' .BackboneFiber').is(':checked') && $('#'+tempselector+' .MetroFiber').is(':checked') && $('#'+tempselector+' .AccessFiber').is(':checked')){			
+						$('#'+tempselector+' > .AllFiberCables').prop('checked', true);
+						console.log("hereeeddsseee")
+				}
+				else {
+					//$('.AllFiberCables').prop('checked', false);
+					$('#'+tempselector+' > .AllFiberCables').prop('checked', false);
+				}
+				if($("#FiberPath_f_CurrentPhysicalLayer .MetroFiber").is(":checked") || $("#FiberPath_f_CurrentPhysicalLayer .BackboneFiber").is(":checked") || $('#FiberPath_f_CurrentPhysicalLayer .AccessFiber').is(':checked') ) {	
+					$("#fiberCheckAllBoq").prop("checked",true);
+				}
+			}
 		}
 	});
 }
@@ -3628,10 +3748,11 @@ function boqCheckFilter(){
 					markerClusterBackboneDistBoard.clearMarkers();
 					markerClusterMetroDistBoard.clearMarkers();
 					markerClusterAccessDistBoard.clearMarkers();
-	
+					
+				var distBoardId="";
 				$("#DistributionBoard_f_CurrentPhysicalLayer").find(' > ul > li >ul >li ').each(function(){			
 				
-				var distBoardId=$(this).attr('id');
+				 distBoardId=$(this).attr('id');
 				$("#"+distBoardId).children(':checkbox').prop( "checked", false );
 				
 				markersDistBoard[distBoardId].setMap(null);	
@@ -4505,9 +4626,13 @@ function allElementsCheckFilter(){
 					$(this).children('input:checkbox').prop('checked', false);
 				}
 				else {
-					$(this).children('input:checkbox').prop('checked', true);					
-					if($(this).children('input:checkbox').hasClass('AllFiberCables')  && flag == 0 ){
+					$(this).children('input:checkbox').prop('checked', true);
+					/*this is used to ensures that getFiberPath only called when the checkbox 
+					that has class 'AllFiberCables' is checked from current physical layer and not from project*/
+					var parentidd=$(this).children('input:checkbox').parent().attr('id');
+					if($(this).children('input:checkbox').hasClass('AllFiberCables') && !parentidd.includes('PROJECT') && flag == 0 ){
 						getFiberPath();
+						//console.log($(this).children('input:checkbox').parent().attr('id'))
 					}
 					else{
 						if($(this).hasClass('FIBER')){						
@@ -9339,9 +9464,9 @@ if (subLayer==""){
     		allSelectedLayer.push(selectedIdContext);
     		// projet id
     		 if (layer=="Project"){
-           	  var allSelectedLayerProject = allSelectedLayer[0].split("Project_span_")[1];
+           	  //var allSelectedLayerProject = allSelectedLayer[0].split("Project_span_")[1];
              	  allSelectedLayer=[];
-             	  allSelectedLayer.push(allSelectedLayerProject);           	
+             	  allSelectedLayer.push(selectedIdContext);           	
     		}
     	
     	}
@@ -9425,13 +9550,13 @@ if (subLayer==""){
 					
 		}); 
 		//console.log("deleteeeeezzz allHandholeProject "+allHandholeProject);
-		$("#DistributionBoard_f_"+allSelectedLayer+"").find(' > ul > li ').each(function(){			
+		$("#DistributionBoard_f_"+allSelectedLayer+"").find(' > ul > li > ul > li ').each(function(){			
     		//console.log("yessssssss ");			
     		allDBProject.push($(this).attr('id'));
 					
 		}); 
 		//console.log("deleteeeeezzz allDBProject "+allDBProject);
-		$("#FiberPath_f_"+allSelectedLayer+"").find(' > ul > li ').each(function(){			
+		$("#FiberPath_f_"+allSelectedLayer+"").find(' > ul > li > ul > li ').each(function(){			
     		//console.log("yessssssss ");			
     		allFiberPathProject.push($(this).attr('id'));
     		for(p=0;p<allFiberPathProject.length;p++){
