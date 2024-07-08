@@ -2322,8 +2322,6 @@ function AllDistributionBoardCheckFilter(Id,clssName) {
 		}else if(Id.includes("PROJECT")) {
 			var startIndex = Id.indexOf('PROJECT'); // Find the index of 'PROJECT'
 		    var str = Id.substring(startIndex); // Get substring from startIndex to end
-		   // tempselector="FiberPath_f_"+str
-			console.log("str "+str);
 			tempselector = "DistributionBoard_f_"+str;
 		}
 		

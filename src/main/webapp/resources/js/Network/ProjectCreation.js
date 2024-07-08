@@ -708,7 +708,7 @@ function appendProjectElement(ListManhole,ListManholeJunction,ListHandhole,ListH
 	    AllDistributionBoardCheckFilter("DistributionBoard_metro__"+ProjectId,markerClusterMetroDistBoard);
 	    AllDistributionBoardCheckFilter("DistributionBoard_access__"+ProjectId,markerClusterAccessDistBoard);
 	    AllDistributionBoardCheckFilter("DistributionBoard_f_"+ProjectId,"")
-	    console.log("ProjectId "+ProjectId)
+	    //console.log("ProjectId "+ProjectId)
 	}
 		
 		

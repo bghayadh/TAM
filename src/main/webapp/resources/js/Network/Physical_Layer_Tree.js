@@ -4817,7 +4817,6 @@ singleNodeActive = new ContextMenu({
 						}
 					 },
 					 {'icon': 'trash', 'name': 'Delete Project', action: () => {
-						 console.log("selectedProjectIdContext "+selectedProjectIdContext)
 						deletePhysicalLayers("Project","",selectedProjectIdContext);
 						
 					}	
