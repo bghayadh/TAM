@@ -1,7 +1,4 @@
-
 <style>
-
- 
     li.nav-item a svg, li.dropdown a svg
     {
 /*          color:gold !important; */
@@ -289,13 +286,13 @@ display:none;
               <div class="collapse navbar-collapse" id="navbarmenu">
                   <ul class="navbar-nav">
                   <li class="nav-item"><a href="${pageContext.request.contextPath}/home" class="nav-link"><c:if test="${page == 'home'}"><span class="border-bottom active"></c:if><i class="fas fa-home"></i> Home <c:if test="${page == 'home'}"></span></c:if></a></li>
-                <li class="nav-item dropdown">
+                <li  class="nav-item dropdown">
         <a class="nav-link" style="text-decoration: none;" href="#"  id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <c:if test="${page == 'network'}"><span class="border-bottom active"></c:if><i class="fas fa-wifi"></i>  Network <c:if test="${page == 'network'}"></span></c:if>
         </a>
         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink" style="margin-right:-80px;">
-          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NetworkPhysicalLayer">Physical Layer</a></li>
-          <div class="dropdown-divider"></div>
+          <li id="physicalLayer"><a  class="dropdown-item" href="${pageContext.request.contextPath}/NetworkPhysicalLayer">Physical Layer</a></li>
+          <div id="physical" class="dropdown-divider"></div>
           <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Network_StNdCell">Elements</a></li>
             <div class="dropdown-divider"></div>
          
@@ -504,8 +501,8 @@ display:none;
           <c:if test="${page == 'network'}"><span class="border-bottom active"></c:if><i class="fas fa-wifi"></i>  Network <c:if test="${page == 'network'}"></span></c:if>
         </a>
         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink" style="margin-right:-80px;">
-          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NetworkPhysicalLayer">Physical Layer</a></li>
-          <div class="dropdown-divider"></div>
+          <li id="physicalLayer"><a class="dropdown-item" href="${pageContext.request.contextPath}/NetworkPhysicalLayer">Physical Layer</a></li>
+          <div id="physical" class="dropdown-divider"></div>
           <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Network_StNdCell">Elements</a></li>
            <div class="dropdown-divider"></div>
            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NodeListView">Nodes</a></li>
@@ -742,8 +739,8 @@ display:none;
           <c:if test="${page == 'network'}"><span class="border-bottom active"></c:if><i class="fas fa-wifi"></i>  Network <c:if test="${page == 'network'}"></span></c:if>          
         </a>
         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink" style="margin-right:-80px;">
-          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NetworkPhysicalLayer">Physical Layer</a></li>
-          <div class="dropdown-divider"></div>
+          <li id="physicalLayer"><a class="dropdown-item" href="${pageContext.request.contextPath}/NetworkPhysicalLayer">Physical Layer</a></li>
+          <div id="physical" class="dropdown-divider"></div>
           <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Network_StNdCell">Elements</a></li>
            <div class="dropdown-divider"></div>
            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NodeListView">Nodes</a></li>
@@ -1010,8 +1007,8 @@ display:none;
         
         
         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink" style="margin-right:-80px;">
-          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NetworkPhysicalLayer">Physical Layer</a></li>
-          <div class="dropdown-divider"></div>
+          <li id="physicalLayer"><a class="dropdown-item" href="${pageContext.request.contextPath}/NetworkPhysicalLayer">Physical Layer</a></li>
+          <div id="physical" class="dropdown-divider"></div>
           <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Network_StNdCell">Elements</a></li>
            <div class="dropdown-divider"></div>
            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NodeListView">Nodes</a></li>
@@ -1272,6 +1269,37 @@ display:none;
     </nav>
     </div>
     <script>
+
+    $(document).ready(function() {
+        $.ajax({
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            url: '${pageContext.request.contextPath}/PhysicalPerm',
+            success: function(data) {
+                console.log("Success response:", data); // Log the entire response object
+
+                if (data.hasOwnProperty("readTree")) {
+                    console.log("readTree:", data.readTree); 
+                    if (data.readTree == 1) {
+                        // If data.readTree is 1, show the elements
+                        $('#physicalLayer').css('display', 'block');
+                        $('#physical').css('display', 'block');
+                    } else {
+                        // Otherwise, hide the elements
+                        $('#physicalLayer').css('display', 'none');
+                        $('#physical').css('display', 'none');
+                    }
+                } else {
+                    console.log("readTree not found in response.");
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error('Error making AJAX request:', textStatus, errorThrown);
+            }
+        });
+    });
+
+
 
 function ShowUncompleted(int,String) {
 
