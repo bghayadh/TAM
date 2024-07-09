@@ -1482,20 +1482,12 @@ if (addManhole === '1') {
 					 
 	/////////////*********************	HANDHOLES li CONTEXT MENU  ***********************///////////////
 	//-------------------------------------------------------------------------------------------------//
-		menuHandhole = new ContextMenu({
-			  'theme': 'default',
-			  
-			  'items': [
-				{'icon': 'folder-plus', 'name': 'Create New Handhole', action: () => {
-	
-					$('#handholeModal').find('input:text').val('');
-					$("#handholeHeader").text("Handhole: ");
-					 $("#handholeModal").modal('show');
-					 actionHandholeContext="Insert";
-					 document.getElementById("HandholeDMDiv").style.display = "none";
-					}
-					 },
-					{'icon': 'folder-plus', 'name': 'Create New Junction', action: () => {
+		
+		
+		
+		
+		let Menus = [
+   {'icon': 'folder-plus', 'name': 'Create New Junction', action: () => {
 			
 				$.ajax({
 							type: "GET",
@@ -1534,27 +1526,7 @@ if (addManhole === '1') {
 			 }); 
 			}	
 		},
-
-				  {'icon': 'trash', 'name': 'Delete Handhole', action: () => {					
-					
-					numberofselected("AllHandholes","Handhole",IdNodeSelectedTemp);
-					deleteprop("AllHandholes","Handhole",IdNodeSelectedTemp);
-					$('#DeleteModal').find('input:text').val('');
-					$("#DeleteHeader").text("Handhole Delete: ");
-					 if (allSelectedLayer.length === 0) {
-             
-                alert("No handholes have been checked for deletion");
-                return; 
-            }
-					$("#deletebody").text("Are you sure you want to delete "+allSelectedLayer.length+"  item(s)?");
-					$("#DeleteModal").modal('show');
-					$("#deleteFiber").hide();
-					$("#deleteMan").show();
-					$("#deleteTrench").hide();
-					}
-				},
-				  
-				  {'icon': 'paste', 'name': 'Show BoQ', action: () => {					
+ {'icon': 'paste', 'name': 'Show BoQ', action: () => {					
 						
 						
 						$.ajax({
@@ -1586,8 +1558,51 @@ if (addManhole === '1') {
 							   });
 				}
 			}
-			  ]
-		});
+			  
+    
+];
+
+if (addHandhole === '1') {
+	
+	Menus.unshift({'icon': 'folder-plus', 'name': 'Create New Handhole', action: () => {
+	
+					$('#handholeModal').find('input:text').val('');
+					$("#handholeHeader").text("Handhole: ");
+					 $("#handholeModal").modal('show');
+					 actionHandholeContext="Insert";
+					 document.getElementById("HandholeDMDiv").style.display = "none";
+					}
+					 });
+}
+
+ if (delHandhole === '1') {
+    Menus.push( {'icon': 'trash', 'name': 'Delete Handhole', action: () => {					
+					
+					numberofselected("AllHandholes","Handhole",IdNodeSelectedTemp);
+					deleteprop("AllHandholes","Handhole",IdNodeSelectedTemp);
+					$('#DeleteModal').find('input:text').val('');
+					$("#DeleteHeader").text("Handhole Delete: ");
+					 if (allSelectedLayer.length === 0) {
+             
+                alert("No handholes have been checked for deletion");
+                return; 
+            }
+					$("#deletebody").text("Are you sure you want to delete "+allSelectedLayer.length+"  item(s)?");
+					$("#DeleteModal").modal('show');
+					$("#deleteFiber").hide();
+					$("#deleteMan").show();
+					$("#deleteTrench").hide();
+					}
+				});
+}
+
+
+	 menuHandhole = new ContextMenu({
+    'theme': 'default',
+    'Width': '200%', // Corrected typo: 'Width' to 'width'
+    'items': Menus
+});
+		
 		
 /////////////*********************	STRANDS FOLDER CONTEXT MENU  ***********************///////////////
 		//-------------------------------------------------------------------------------------------------//
@@ -5114,7 +5129,7 @@ singleNodeActive = new ContextMenu({
 	/////////////*********************	SINGLE MANHOLE li CONTEXT MENU  ***********************///////////////
 	//-------------------------------------------------------------------------------------------------//
 	
-			let menuItems = [
+			let menuManhole = [
     {
         'icon': 'folder-plus',
         'name': 'Create New Junction',
@@ -5252,7 +5267,7 @@ singleNodeActive = new ContextMenu({
 
 // Conditionally add 'Create New Manhole' item based on addManhole variable
 if (addManhole === '1') {
-    menuItems.unshift({
+    menuManhole.unshift({
         'icon': 'folder-plus',
         'name': 'Create New Manhole',
         action: () => {
@@ -5265,7 +5280,7 @@ if (addManhole === '1') {
     });
 }
 if (delManhole === '1') {
-    menuItems.push({
+    menuManhole.push({
         'icon': 'trash',
         'name': 'Delete Manhole',
         action: () => {
@@ -5283,27 +5298,16 @@ if (delManhole === '1') {
 // Create the ContextMenu instance with the updated items array
 singleManhole = new ContextMenu({
     'theme': 'default',
-    'items': menuItems
+    'items': menuManhole
 });
 
 	
 	/////////////*********************	SINGLE HANDHOLE li CONTEXT MENU  ***********************///////////////
 	//-------------------------------------------------------------------------------------------------//
-			singleHandhole = new ContextMenu({
-				  'theme': 'default',
-				  
-				  'items': [
-					{'icon': 'folder-plus', 'name': 'Create New Handhole', action: () => {
-	
-						$('#handholeModal').find('input:text').val('');
-						$("#handholeHeader").text("Handhole: ");
-						$("#handholeModal").modal('show');
-						actionHandholeContext="Insert";
-						document.getElementById("HandholeDMDiv").style.display = "none";
-						}						
-					},
-					
-			{'icon': 'folder-plus', 'name': 'Create New Junction', action: () => {
+			
+			let menuHandholes = [
+    
+       {'icon': 'folder-plus', 'name': 'Create New Junction', action: () => {
 						
 						document.getElementById("handholeNameJct").readOnly = true;
 								
@@ -5410,20 +5414,7 @@ singleManhole = new ContextMenu({
 
 						}
 					 },
-					 
-					  {'icon': 'trash', 'name': 'Delete Handhole', action: () => {
-						deleteprop("Handhole","",selectedHandIdContext);
-						$('#DeleteModal').find('input:text').val('');
-						$("#DeleteHeader").text("Handhole Delete: ");
-						$("#deletebody").text("Are you sure you want to delete 1 item?");
-						$("#DeleteModal").modal('show');
-						$("#deleteFiber").hide();	
-						$("#deleteMan").show();
-						$("#deleteTrench").hide();
-					}
-				},
-					  
-					  {'icon': 'paste', 'name': 'Show BoQ', action: () => {
+					   {'icon': 'paste', 'name': 'Show BoQ', action: () => {
 							
 						  $.ajax({
 								type: "GET",
@@ -5472,8 +5463,53 @@ singleManhole = new ContextMenu({
 				
 			}
 		}	 	 
-	]
-});
+];
+
+			
+		if (addHandhole === '1') {
+    menuHandholes.unshift({'icon': 'folder-plus', 'name': 'Create New Handhole', action: () => {
+	
+						$('#handholeModal').find('input:text').val('');
+						$("#handholeHeader").text("Handhole: ");
+						$("#handholeModal").modal('show');
+						actionHandholeContext="Insert";
+						document.getElementById("HandholeDMDiv").style.display = "none";
+						}						
+					});
+}	
+			
+			
+	if (delHandhole === '1') {
+    menuHandholes.push( {'icon': 'trash', 'name': 'Delete Handhole', action: () => {
+						deleteprop("Handhole","",selectedHandIdContext);
+						$('#DeleteModal').find('input:text').val('');
+						$("#DeleteHeader").text("Handhole Delete: ");
+						$("#deletebody").text("Are you sure you want to delete 1 item?");
+						$("#DeleteModal").modal('show');
+						$("#deleteFiber").hide();	
+						$("#deleteMan").show();
+						$("#deleteTrench").hide();
+					}
+				});
+}
+// Create the ContextMenu instance with the updated items array
+singleHandhole = new ContextMenu({
+    'theme': 'default',
+    'items': menuHandholes
+});		
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+	
 /////////////********************* junction and single junction CONTEXTS MENU  ***********************///////////////
 			//-------------------------------------------------------------------------------------------------//	  
 			JunctionMenu =new ContextMenu({
