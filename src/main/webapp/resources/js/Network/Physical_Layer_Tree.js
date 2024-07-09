@@ -1282,17 +1282,28 @@ Width : '200%',
 						success: function (data) {
 							
 							if(data.allPhysicalNodesCount!=null){
-								var tr = "<tr>"+"<th># Manholes 		   : </th> <td> "+data.allPhysicalNodesCount[4][1]+"</td></tr>"
-										+"<tr>"+"<th># Handholes 		   : </th> <td> "+data.allPhysicalNodesCount[2][1]+"</td></tr>"
-										+"<tr>"+"<th># Fiber Cables 		   : </th> <td> "+data.allPhysicalNodesCount[1][1]+"</td></tr>"
-										+"<tr>"+"<th># Distribution Boards 		   : </th> <td> "+data.allPhysicalNodesCount[0][1]+"</td></tr>"
-										+"<tr>"+"<th># Trenches		   : </th> <td> "+data.allPhysicalNodesCount[5][1]+"</td></tr>"
-										+"<tr>"+"<th># Junctions		   : </th> <td> "+data.allPhysicalNodesCount[3][1]+"</td></tr>"
-										+"<tr>"+"<th># Total path length (Geo)		   : </th> <td> "+data.allPhysicalNodesCount[6][1].toFixed(2)+" km</td></tr>"
-										+"<tr>"+"<th># Total path length (Line of site )		   : </th> <td> "+data.allPhysicalNodesCount[7][1].toFixed(2)+" km</td></tr>"
-										+"<tr>"+"<th># Total Strand length (Geo)		   : </th> <td> "+(data.allPhysicalNodesCount[11][1]+data.allPhysicalNodesCount[8][1]+data.allPhysicalNodesCount[10][1]).toFixed(2)+" km</td></tr>"
-										+"<tr>"+"<th># Total Strand length (Line of site)		   : </th> <td> "+(data.allPhysicalNodesCount[9][1]+data.allPhysicalNodesCount[12][1]+data.allPhysicalNodesCount[13][1]).toFixed(2)+" km</td></tr>"
-										;
+								var tr = "<tr>";
+if (readManhole === '1') {
+    tr += "<th># Manholes: </th>";
+} else {
+    tr += "<!-- Manhole th is hidden -->";
+}
+tr += "<td>" + (readManhole === '1' ? data.allPhysicalNodesCount[4][1] : "") + "</td></tr>";
+if (readHandhole === '1') {
+    tr += "<th># Handholes: </th>";
+} else {
+    tr += "<!-- Handhole th is hidden -->";
+}
+   tr += " <td> "  + (readHandhole === '1' ? data.allPhysicalNodesCount[2][1] : "") + "</td></tr>"
+    + "<tr>" + "<th># Fiber Cables: </th> <td> " + data.allPhysicalNodesCount[1][1] + "</td></tr>"
+    + "<tr>" + "<th># Distribution Boards: </th> <td> " + data.allPhysicalNodesCount[0][1] + "</td></tr>"
+    + "<tr>" + "<th># Trenches: </th> <td> " + data.allPhysicalNodesCount[5][1] + "</td></tr>"
+    + "<tr>" + "<th># Junctions: </th> <td> " + data.allPhysicalNodesCount[3][1] + "</td></tr>"
+    + "<tr>" + "<th># Total path length (Geo): </th> <td> " + data.allPhysicalNodesCount[6][1].toFixed(2) + " km</td></tr>"
+    + "<tr>" + "<th># Total path length (Line of site ): </th> <td> " + data.allPhysicalNodesCount[7][1].toFixed(2) + " km</td></tr>"
+    + "<tr>" + "<th># Total Strand length (Geo): </th> <td> " + (data.allPhysicalNodesCount[11][1] + data.allPhysicalNodesCount[8][1] + data.allPhysicalNodesCount[10][1]).toFixed(2) + " km</td></tr>"
+    + "<tr>" + "<th># Total Strand length (Line of site): </th> <td> " + (data.allPhysicalNodesCount[9][1] + data.allPhysicalNodesCount[12][1] + data.allPhysicalNodesCount[13][1]).toFixed(2) + " km</td></tr>";
+
 										
 								showBoq();
 								$("#boq_table").append(tr);							
