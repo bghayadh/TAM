@@ -67,6 +67,9 @@
 		      							<option>Item</option>
 		      							<option>Purchase Order</option>
 								    	<option>Purchase Request</option>
+								    	<option>Physical Layer</option>
+								    	<option>Physical Layer Manhole</option>
+								    	<option>Physical Layer Handhole</option>
 								    	<option>Supplier</option>
 								    	<option>User</option>
 								    	<option>Warehouse</option>
@@ -93,6 +96,7 @@
 		    							<option selected>Choose...</option>
 		      							<option>List</option>
 								    	<option>Form</option>
+								    	<option>Tree</option>
 		    						</select>
 		    					</div>
 							</div>
@@ -137,6 +141,9 @@
 							<option>Item</option>
 							<option>Purchase Order</option>
 							<option>Purchase Request</option>
+							<option>Physical Layer</option>
+							<option>Physical Layer Manhole</option>
+							<option>Physical Layer Handhole</option>
 							<option>Supplier</option>
 							<option>User</option>
 							<option>Warehouse</option>
@@ -282,7 +289,6 @@
 $(document).ready(function() {
 	
 	var tableData = ${ListGridTable};
-
 	var role = ${ListRole};
 
 	var selectSearch = document.getElementById("rolesSearch");
@@ -302,10 +308,18 @@ $(document).ready(function() {
 	var slct = [];
 	var viewType = '';
 	//console.log("tableData is " +tableData + " first item code is " +tableData[0]);
-	function checkbox(box,value){
+	function checkbox(box,value, Type){
 		var array = [];
+		var checkbox= ['Read', 'Search Popup', 'Find Connected',  'Projects']
 		for (i=0; i<box.length; i++){
+			if(Type=='Physical Layer'){
+				array [i+1] = '<input type="checkbox" class="form-check-input" value="'+value[i]+'" id="'+box[i]+'"><label style="margin-top: 0px;margin-right: 25px;font-size: 12px;float: none;">'+checkbox[i]+'</label>';	
+				
+
+				}
+			else{
 			array [i+1] = '<input type="checkbox" class="form-check-input" value="'+value[i]+'" id="'+box[i]+'"><label style="margin-top: 0px;margin-right: 25px;font-size: 12px;float: none;">'+box[i]+'</label>';	
+		}
 		}
 		array.unshift('<div class="form-check">');
 		array.push('</div>');
@@ -330,13 +344,17 @@ $(document).ready(function() {
    	      "mRender" : function ( data, type, row, meta ) {
    	    	if (type === 'display'){
    	    	  if (data === 'List'){
-   	    		  var dropDown = '<select class="custom-select" id="viewTypeDrop"><option selected>'+data+'</option><option>Form</option></select>'
+   	    		  var dropDown = '<select class="custom-select" id="viewTypeDrop"><option selected>'+data+'</option><option>Form</option><option>Tree</option></select>'
    	    			return dropDown
    	    	  }
    	    	  else if (data === 'Form'){
-				var dropDown = '<select class="custom-select" id="viewTypeDrop"><option>List</option><option selected>'+data+'</option></select>'
+				var dropDown = '<select class="custom-select" id="viewTypeDrop"><option>List</option><option selected>'+data+'</option><option>Tree</option></select>'
 				return dropDown
    	    	  }
+   	    	 else if (data === 'Tree'){
+ 				var dropDown = '<select class="custom-select" id="viewTypeDrop"><option>List</option><option>Form</option><option selected>'+data+'</option></select>'
+ 				return dropDown
+    	    	  }
    	    	}
    	    		
    	    	//console.log('table.cell(0,1) is: '+table.cell(2,1).nodes());
@@ -366,12 +384,17 @@ $(document).ready(function() {
  	        		var box = ['Read', 'Delete'];
  	        		var value = [read, del];
  	      		}
- 	        	else if(tableData[2] === 'Form'){
+ 	        	
+ 	        	else if(tableData[1] === 'Physical Layer'){
+ 	        		var box = ['Read', 'Write', 'Add',  'Save'];
+ 	        		var value = [read, write, add, save] ;
+ 	        	}
+ 	        	else {
  	        		var box = ['Read', 'Write', 'Add', 'Delete', 'Save'];
  	        		var value = [read, write, add, del, save];
  	        	}
  	    	 }
- 	            	return checkbox(box,value).join('')}
+ 	            	return checkbox(box,value,tableData[1]).join('')}
          },
          {
         	 "mData": null,

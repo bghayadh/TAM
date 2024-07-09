@@ -1,6 +1,14 @@
 package com.aliat.alm.controller;
 
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Locale;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -14,16 +22,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.aliat.alm.common.ALMSessions;
+import com.aliat.alm.common.AlmDbSession;
+import com.aliat.alm.common.Permissions;
 
-
+@RestController
 @Controller
 public class HeaderController {
 	private static final Logger logger = LoggerFactory.getLogger(HeaderController.class);
 	private int totalCount;
-	
-	
+	Session session = null;
+	Transaction tx = null;
+	@Autowired
+	Permissions permissions;
 	@Autowired
 	ALMSessions almsessions;
 	
@@ -38,8 +51,7 @@ public class HeaderController {
 	Session session = sf.openSession();
 	Transaction tx = session.beginTransaction();
 	*/
-	Session session = null;
-	Transaction tx = null;
+
 	Query q = null; String query = "";
 	
 	try {
@@ -172,7 +184,6 @@ public class HeaderController {
 
 		//Total uncompleted
 		 model.addAttribute("notnum", this.totalCount);
-
 	} catch (Exception e) {
 	logger.info("Error while getting records @ query: " + query , e);
 	}
@@ -186,8 +197,32 @@ public class HeaderController {
 	return "header";
 
 		}
-	}	
 	
+	
+
+	@RequestMapping(value = "/PhysicalPerm", method = RequestMethod.GET)
+	public Map<String, Object> physicalPerm(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> rtn = new LinkedHashMap<>();
+	
+		String readTree=null;
+	    try {
+	        session = AlmDbSession.getInstance().getSession();
+
+	        // Set permissions and other attributes in the model
+	        permissions.setPerms(model, permissions.getUserPermsWithSession(session, request),
+	                "Physical Layer", "Tree");
+	         readTree = ((Integer) model.asMap().get("readTree")).toString();
+	         rtn.put("readTree", readTree);
+	    } catch (Exception e) {
+	        logger.error("Error at permissions with error message: " + e.getMessage());
+	    } finally {
+	        if (session != null && session.isOpen()) {
+	            session.close();
+	        }
+	    }
+	    return rtn;
+	}
+}
 
 	
 

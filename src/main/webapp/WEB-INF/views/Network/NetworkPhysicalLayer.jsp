@@ -110,8 +110,18 @@
 						<input type='text' id='headerSearchLat' hidden>
 					</div>
 					<div class='col-sm-1' style='padding-left: 0px;'>
-						<button type='submit' id='searchHeaderButton' class='searchButton searchHeaderButton' style='height: 35px;'><i class='fa fa-search'></i></button>
-					</div>
+						<button type='submit' id='searchHeaderButton' class='searchButton searchHeaderButton' style='height: 35px;
+    <c:if test="${findConnedted != '1'}">
+        color: #ccc; 
+      
+        border-color: #ddd; 
+        cursor: not-allowed; 
+    </c:if>'
+    <c:if test="${findConnedted != '1'}">
+        disabled="disabled"
+    </c:if>
+><i class='fa fa-search'></i></button>
+	</div>
 				</div>
 			</div>
 			<div class="col-md-1" id="dropDownCheckDiv"style="text-align: right; margin-top: 6px;"></div>
@@ -121,8 +131,15 @@
 			<div class="col-md-4" style="text-align: right; margin-top: 4px;">
 				<div class="btn-group pull-right"><div class="glyph"><button type="button" class="btn btn-light" data-placement="top"title="Map Operations" data-toggle="modal" onclick="mapOperation()"><i class="fas fa-toolbox"></i></button>
 						<div class="dropdown-menu"><a class="dropdown-item" onclick="initMap();" id="customMap" data-map="CustomMap">Clustered Map</a><a class="dropdown-item" onclick="updateMap();" id="blankMap" data-map="BlankMap">Non Clustered Map</a></div>
-						<button type="button" class="btn btn-light" data-toggle="tooltip" data-placement="top" title="Search" id="open-popup-btn"><i class="fa fa-search"></i></button>
-						<button type="button" class="btn btn-light" id="tree" data-toggle="tooltip" data-placement="top" title=" Folder Tree"><i class="fas fa-sitemap"></i></button>
+						<c:choose>
+    <c:when test="${searchPopup != '1'}">
+        <button type="button" class="btn btn-light" style="display: none;" data-toggle="tooltip" data-placement="top" title="Search" id="open-popup-btn"><i class="fa fa-search"></i></button>
+    </c:when>
+    <c:otherwise>
+        <button type="button" class="btn btn-light" data-toggle="tooltip" data-placement="top" title="Search" id="open-popup-btn"><i class="fa fa-search"></i></button>
+    </c:otherwise>
+</c:choose>
+<button type="button" class="btn btn-light" id="tree" data-toggle="tooltip" data-placement="top" title=" Folder Tree"><i class="fas fa-sitemap"></i></button>
 						<button type="button" class="btn btn-light" id="gis" data-toggle="tooltip" data-placement="top" title=" GIS"
 							onclick='window.location.href = "${pageContext.request.contextPath}/GisPage"'><i class="fas fa-map-marked-alt"></i>
 						</button>
@@ -223,14 +240,22 @@
 							<td><input type="checkbox" id="ductCheckAllBoq" class="AllDucts" style="margin-left: 10px;"></td>
 						</tr>
 						<tr>
-							<td class="Icon "><img src="${pageContext.request.contextPath}/resources/NetworkImages/manholeRed.png"><span
+							
+					
+                      <c:if test="${readManhole == 1}">
+                     <td class="Icon " >
+                      <img src="${pageContext.request.contextPath}/resources/NetworkImages/manholeRed.png"><span
 								id="definition" style="padding-left: 4px;">MANHOLE</span></td>
-							<td><input type="checkbox" id="manholeCheckAllBoq" style="margin-left: 10px;"></td>
-						</tr>
+							<td><input type="checkbox" id="manholeCheckAllBoq" style="margin-left: 10px;" ></td>   </c:if>
+							
+							
+							
+							
 						<tr>
+						  <c:if test="${readHandhole == 1}">
 							<td class="Icon "><img src="${pageContext.request.contextPath}/resources/NetworkImages/handholeYellow.png">
 								<span id="definition">HANDHOLE</span></td>
-							<td><input type="checkbox" id="handholeCheckAllBoq" style="margin-left: 10px;"></td>
+							<td><input type="checkbox" id="handholeCheckAllBoq" style="margin-left: 10px;"></td></c:if>
 						</tr>
 						<tr>
 							<td class="Icon "><img style="width: 16px; height: 16px;" src="${pageContext.request.contextPath}/resources/NetworkImages/junctionOrange.png">
@@ -439,8 +464,13 @@
 					<div class="modal-header" style="background-color: #2678CC ; height: 55px; ">
 						<h5 id="manholeHeader" class="modal-title" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px">Manhole</h5>
 						<div style="float: right;">
-							<button id="saveManhole" class="btn btn-save" style="color: black; font-weight:bold; margin-top:-6px">Save</button>
-							<button  type="button" name="closePopup" class="close" id="close" onclick="ClosingConfirm()" >
+						<c:if test="${saveManhole == 0}">
+                        <button id="saveManhole" class="btn btn-save" style="color: black; font-weight:bold; margin-top:-6px; display:none;">Save</button>
+                         </c:if>
+                      <c:if test="${saveManhole == 1}">
+                     <button id="saveManhole" class="btn btn-save" style="color: black; font-weight:bold; margin-top:-6px;">Save</button>
+                  </c:if>
+	<button  type="button" name="closePopup" class="close" id="close" onclick="ClosingConfirm()" >
 								<i class='fa fa-times'></i>
 							</button>
 							<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change'></i>
@@ -463,7 +493,7 @@
 									<div class="form-group">
 										<div class="input-group-prepend">
 											<span style="width: 150px;" class="input-group-text"><b>Name</b></span>
-											<input type="text" id="ManholeName"  class="form-control text-input" />
+											<input type="text" id="ManholeName"  class="form-control text-input" <c:if test="${writeManhole == 0}">readonly</c:if> />
 										</div>
 									</div>
 								</div>
@@ -473,7 +503,7 @@
 									<div class="form-group">
 										<div class="input-group-prepend">
 											<span style="width: 140px;" class="input-group-text"><b>Longitude</b></span>
-											<input type="text" id="ManholeLong" class="form-control text-input" />
+											<input type="text" id="ManholeLong" class="form-control text-input" <c:if test="${writeManhole == 0}">readonly</c:if> />
 										</div>
 									</div>
 								</div>
@@ -482,7 +512,7 @@
 									<div class="form-group">
 										<div class="input-group-prepend">
 											<span style="width: 140px;" class="input-group-text"><b>Latitude</b></span>
-											<input type="text" id="ManholeLat" class="form-control text-input" />
+											<input type="text" id="ManholeLat" class="form-control text-input" <c:if test="${writeManhole == 0}">readonly</c:if> />
 										</div>
 									</div>
 								</div>
@@ -500,7 +530,7 @@
 									<div class="form-group">
 										<div class="input-group-prepend">
 											<span style="width: 140px;" class="input-group-text"><b>Model</b></span>
-											<input type="text" id="ManholeModel" class="form-control text-input" />
+											<input type="text" id="ManholeModel" class="form-control text-input" <c:if test="${writeManhole == 0}">readonly</c:if> />
 										</div>
 									</div>
 								</div>
@@ -542,7 +572,7 @@
 								<div class="col-sm-6">
 												<div class="form-group">
 													<div class="input-group-prepend">
-														<span style="width: 100px;" class="input-group-text"><b>Owner </b></span> <select id="manholeOwner" class="form-control">
+														<span style="width: 100px;" class="input-group-text"><b>Owner </b></span> <select id="manholeOwner" class="form-control" <c:if test="${writeManhole == 0}">readonly</c:if> >
 															<option value="" selected></option>
 															<option value="tkl">TKL</option>
 															<option value="ogn">OGN</option>
@@ -559,14 +589,14 @@
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="width: 120px;"
-														class="input-group-text"><b>Engineer Name </b></span> <input type="text" id="manholeEngineerName" class="form-control text-input" />
+														class="input-group-text"><b>Engineer Name </b></span> <input type="text" id="manholeEngineerName" class="form-control text-input" <c:if test="${writeManhole == 0}">readonly</c:if> />
 												</div>
 											</div>
 										</div>
 										<div class="col-sm-6">
 											<div class="form-group">
 												<div class="input-group-prepend">
-													<span style="width: 100px; " class="input-group-text"><b>Installer </b></span> <input type="text" id="manholeInstaller" class="form-control text-input" />
+													<span style="width: 100px; " class="input-group-text"><b>Installer </b></span> <input type="text" id="manholeInstaller" class="form-control text-input" <c:if test="${writeManhole == 0}">readonly</c:if> />
 												</div>
 											</div>
 										</div>
@@ -5868,7 +5898,13 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 					<div class="modal-header" style="background-color: #2678CC ; height: 55px; ">
 						<h5 id="handholeHeader" class="modal-title" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px;">Handhole: </h5>
 						<div style="float: right;">
-							<button id="saveHandhole" class="btn btn-save" style="color: black; font-weight:bold; margin-top:-6px;">Save</button>
+						
+						<c:if test="${saveHandhole == 0}">
+                      <button id="saveHandhole" class="btn btn-save" style="color: black; font-weight:bold; margin-top:-6px; display:none;">Save</button>
+							   </c:if>
+                      <c:if test="${saveHandhole == 1}">
+                   <button id="saveHandhole" class="btn btn-save" style="color: black; font-weight:bold; margin-top:-6px;">Save</button>
+							   </c:if>
 							<button type="button" name="closePopup" class="close" onclick="ClosingConfirm()" >
 								<i class='fa fa-times'></i>
 							</button>
@@ -5889,20 +5925,20 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 									<div class="form-group">
 										<div class="input-group-prepend">
 											<span style="width: 150px;" class="input-group-text"><b>Name</b></span>
-											<input type="text"  id="HandholeName" class="form-control text-input" />
+											<input type="text"  id="HandholeName" class="form-control text-input" <c:if test="${writeHandhole == 0}">readonly</c:if> />
 										</div></div></div></div>
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group">
 										<div class="input-group-prepend">
 											<span style="width: 140px;" class="input-group-text"><b>Longitude</b></span>
-											<input type="text" id="HandholeLong" class="form-control text-input" />
+											<input type="text" id="HandholeLong" class="form-control text-input" <c:if test="${writeHandhole == 0}">readonly</c:if> />
 										</div></div></div>
 								<div class="col-md-6">
 									<div class="form-group">
 										<div class="input-group-prepend">
 											<span style="width: 140px;" class="input-group-text"><b>Latitude</b></span>
-											<input type="text" id="HandholeLat" class="form-control text-input" />
+											<input type="text" id="HandholeLat" class="form-control text-input" <c:if test="${writeHandhole == 0}">readonly</c:if> />
 										</div></div></div></div>
 							<div class="row">
 								<div class="col-md-6">
@@ -5915,7 +5951,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 									<div class="form-group">
 										<div class="input-group-prepend">
 											<span style="width: 140px;" class="input-group-text"><b>Model</b></span>
-											<input type="text" id="HandholeModel" class="form-control text-input" />
+											<input type="text" id="HandholeModel" class="form-control text-input" <c:if test="${writeHandhole == 0}">readonly</c:if> />
 										</div></div></div></div>
 							<div class="row">
 								<div class="col-sm-6"><div class="form-group"><div class="input-group-prepend">
@@ -5936,7 +5972,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 								<div class="col-sm-6">
 										<div class="form-group">
 											<div class="input-group-prepend">
-													<span style="width: 100px;" class="input-group-text"><b>Owner </b></span> <select id="handholeOwner" class="form-control">
+													<span style="width: 100px;" class="input-group-text"><b>Owner </b></span> <select id="handholeOwner" class="form-control" <c:if test="${writeHandhole == 0}">readonly</c:if> >
 															<option value="" selected></option>
 															<option value="tkl">TKL</option>
 															<option value="ogn">OGN</option>
@@ -5951,14 +5987,14 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 									<div class="col-sm-6">
 										<div class="form-group">
 											<div class="input-group-prepend">
-												<span style="width: 120px;"	class="input-group-text"><b>Engineer Name </b></span> <input type="text" id="handholeEngineerName" class="form-control text-input" />
+												<span style="width: 120px;"	class="input-group-text"><b>Engineer Name </b></span> <input type="text" id="handholeEngineerName" class="form-control text-input" <c:if test="${writeHandhole == 0}">readonly</c:if> />
 											</div>
 										</div>
 									</div>
 									<div class="col-sm-6">
 											<div class="form-group">
 												<div class="input-group-prepend">
-													<span style="width: 100px; " class="input-group-text"><b>Installer </b></span> <input type="text" id="handholeInstaller" class="form-control text-input" />
+													<span style="width: 100px; " class="input-group-text"><b>Installer </b></span> <input type="text" id="handholeInstaller" class="form-control text-input" <c:if test="${writeHandhole == 0}">readonly</c:if> />
 												</div>
 							</div></div></div>	
 							<div class="row">
@@ -6643,6 +6679,51 @@ var nodeSurveyArray=[];var fiberCableSurveyArray=[];var fiberTubesSurveyArray=[]
 
 
 updateModfUser=`${userFullName}`;
+var searchPopupPerm = '${searchPopup}';
+var findConnedtedPerm='${findConnedted}';
+var projects='${projects}';
+var readManhole='${readManhole}';
+var writeManhole='${writeManhole}';
+var addManhole='${addManhole}';
+var delManhole='${delManhole}';
+var readHandhole='${readHandhole}';
+var writeHandhole='${writeHandhole}';
+var addHandhole='${addHandhole}';
+var delHandhole='${delHandhole}';
+
+document.addEventListener('DOMContentLoaded', function() {
+    var elements = {
+        fibersearchtab: document.getElementById('fiber-search-tab'),
+        customTabsFilterTab: document.getElementById('custom-tabs-filter-tab'),
+        closestSearchTab: document.getElementById('closest-search-tab'),
+        MultyClosestSearchTab: document.getElementById('MultyClosest-search-tab'),
+        connectedSearchtab: document.getElementById('connectedSearch-tab'),
+        projects: document.getElementById('initial_ul_Projects')
+    };
+
+    function toggleElementDisplay(element, permission) {
+        if (element) { // Check if element exists before accessing its style
+            if (permission === '1') {
+                element.style.display = 'block';
+            } else {
+                element.style.display = 'none';
+            }
+        }
+    }
+
+
+    toggleElementDisplay(elements.customTabsFilterTab, searchPopupPerm);
+    toggleElementDisplay(elements.closestSearchTab, searchPopupPerm);
+    toggleElementDisplay(elements.MultyClosestSearchTab, searchPopupPerm);
+    
+  
+    
+    toggleElementDisplay(elements.connectedSearchtab, findConnedtedPerm);
+});
+
+
+
+
 //function on map clustring
 function initMap() {
 

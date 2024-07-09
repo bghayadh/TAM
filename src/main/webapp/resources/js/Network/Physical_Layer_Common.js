@@ -8002,7 +8002,7 @@ function showHideManHandHolesWithJct(pathID) {
 			var type =String(x);
 		}			
 			
-		if(showManhHandJctArray[x].startsWith("MH_")==true ) {
+		if(showManhHandJctArray[x].startsWith("MH_")==true && readManhole ==='1') {
 			var manID = showManhHandJctArray[x].split(":")[0];
 			if(window[""+manID][1].endsWith("_J") ==true) { //case of junction
 				if(markersManhole[manID]) {
@@ -8039,7 +8039,7 @@ function showHideManHandHolesWithJct(pathID) {
 			}
 				
 			}
-		else if(showManhHandJctArray[x].startsWith("HH_")==true ) {
+		else if(showManhHandJctArray[x].startsWith("HH_")==true && readHandhole ==='1') {
 			var handID = showManhHandJctArray[x].split(":")[0];
 			if(window[""+handID][1].endsWith("_J") ==true) { //case of junction
 				if(markersHandhole[handID]) {
@@ -8096,13 +8096,12 @@ function showHideManHandHolesWithJct(pathID) {
 		
 	}
 }
-
 function showHideRealPoints(pathID,checkSeqWindowID,action) {
 	showHidePointsArray=[];
 	if(window["mapPointsNames_"+pathID] != undefined) {
 
 		if( (filterFlag==2 || filterFlag==1) && showPointsType=="0") {	
-
+if(readManhole === '1'){
 			$('#Manhole_f_CurrentPhysicalLayer').find(' > ul > li ').each(function(){		
 				var manHandDbName = $(this).text().trim();
 				if(manHandDbName.includes("Junctions")) {
@@ -8110,6 +8109,8 @@ function showHideRealPoints(pathID,checkSeqWindowID,action) {
 				}
 				allTreePoints.push($(this).attr('id')+":"+manHandDbName);
 			});
+			}
+			if(readHandhole === '1'){
 			$('#Handhole_f_CurrentPhysicalLayer').find(' > ul > li ').each(function(){		
 				var manHandDbName = $(this).text().trim();
 				if(manHandDbName.includes("Junctions")) {
@@ -8117,6 +8118,7 @@ function showHideRealPoints(pathID,checkSeqWindowID,action) {
 				}
 				allTreePoints.push($(this).attr('id')+":"+manHandDbName);
 			});
+			}
 			$('#DistributionBoard_f_CurrentPhysicalLayer').find(' > ul > li ').each(function(){		
 				allTreePoints.push($(this).attr('id')+":"+$(this).text().trim());
 			});
@@ -8225,7 +8227,8 @@ function showHideRealPoints(pathID,checkSeqWindowID,action) {
 					}
 				}	
 			}
-			else if(showHidePointsArray[x].startsWith("MH_")==true) {
+			else if(showHidePointsArray[x].startsWith("MH_")==true  && readManhole ==='1') {
+
 				var manID = showHidePointsArray[x].split(":")[0];
 				if(markersManhole[manID].icon.url.includes("manholeJct.png")){
 						console.log("hello11 jct"+manID)
@@ -8260,7 +8263,7 @@ function showHideRealPoints(pathID,checkSeqWindowID,action) {
 					}				
 				}			
 			}
-			else if(showHidePointsArray[x].startsWith("HH_")==true) {
+			else if(showHidePointsArray[x].startsWith("HH_")==true && readHandhole ==='1') {
 				var handID = showHidePointsArray[x].split(":")[0];
 				if(markersHandhole[handID]) {
 					if(markersHandhole[handID].getMap() ==null) {
@@ -8379,7 +8382,7 @@ function showHideRealPoints(pathID,checkSeqWindowID,action) {
 			    	siteCltSrcMarkers[idNA].setMap(null);
 			    }
 			}
-			else if(showHidePointsArray[x].startsWith("MH_")==true) {
+			else if(showHidePointsArray[x].startsWith("MH_")==true && readManhole ==='1' ) {
 				var manID = showHidePointsArray[x].split(":")[0];	
 				if(markersManhole[manID]) {
 					markersManhole[manID].setMap(null);				
@@ -8387,7 +8390,7 @@ function showHideRealPoints(pathID,checkSeqWindowID,action) {
 					$("#"+manID).children(':checkbox').prop( "checked", false );	
 				}
 			}
-			else if(showHidePointsArray[x].startsWith("HH_")==true) {
+			else if(showHidePointsArray[x].startsWith("HH_")==true && readHandhole ==='1') {
 				var handID = showHidePointsArray[x].split(":")[0];	
 				if(markersHandhole[handID]) {
 					markersHandhole[handID].setMap(null);
@@ -8494,7 +8497,7 @@ function showHideAllSequence(pathID,action) {
 					siteCltSrcMarkers[auxID].setLabel({text: type , className:"marker-position-sequence",color:"green"});	
 				}			
 			}			
-			else if(window["mapPointsNames_"+pathID][x].startsWith("MH_")==true) {
+			else if(window["mapPointsNames_"+pathID][x].startsWith("MH_")==true && readManhole ==='1') {
 				var manID = window["mapPointsNames_"+pathID][x].split(":")[0];
 				if(markersManhole[manID]){
 					//if(markersManhole[manID].getLabel()!=undefined && markersManhole[auxiliaryArray[A][4]].getLabel()!=null) {
@@ -8506,7 +8509,7 @@ function showHideAllSequence(pathID,action) {
 					}
 				}
 		 }	
-		else if(window["mapPointsNames_"+pathID][x].startsWith("HH_")==true) {
+		else if(window["mapPointsNames_"+pathID][x].startsWith("HH_")==true && readHandhole ==='1') {
 				var handID = window["mapPointsNames_"+pathID][x].split(":")[0];
 				if(markersHandhole[handID]){
 					//if(markersManhole[manID].getLabel()!=undefined && markersManhole[auxiliaryArray[A][4]].getLabel()!=null) {
@@ -8587,7 +8590,7 @@ function showHideAllSequence(pathID,action) {
 						siteCltSrcMarkers[auxID].setLabel(null);	
 					}			
 				}			
-				else if(window["mapPointsNames_"+pathID][x].startsWith("MH_")==true) {
+				else if(window["mapPointsNames_"+pathID][x].startsWith("MH_")==true && readManhole ==='1') {
 					var manID = window["mapPointsNames_"+pathID][x].split(":")[0];
 					if(markersManhole[manID]){
 						//if(markersManhole[manID].getLabel()!=undefined && markersManhole[auxiliaryArray[A][4]].getLabel()!=null) {
@@ -8599,7 +8602,7 @@ function showHideAllSequence(pathID,action) {
 						}
 					}
 			 }	
-			else if(window["mapPointsNames_"+pathID][x].startsWith("HH_")==true) {
+			else if(window["mapPointsNames_"+pathID][x].startsWith("HH_")==true && readHandhole ==='1') {
 					var handID = window["mapPointsNames_"+pathID][x].split(":")[0];
 					if(markersHandhole[handID]){
 						//if(markersManhole[manID].getLabel()!=undefined && markersManhole[auxiliaryArray[A][4]].getLabel()!=null) {
@@ -8753,7 +8756,7 @@ if(window["mapPointsNames_"+pathID] != undefined) {
 					}
 				}	
 			}
-			else if(showHidePointsArray[x].startsWith("MH_")==true) {
+			else if(showHidePointsArray[x].startsWith("MH_")==true && readManhole ==='1') {
 				var manID = showHidePointsArray[x].split(":")[0];
 				if(markersManhole[manID]) {
 					if(markersManhole[manID].getMap() ==null) {
@@ -8785,7 +8788,7 @@ if(window["mapPointsNames_"+pathID] != undefined) {
 					}				
 				}			
 			}
-			else if(showHidePointsArray[x].startsWith("HH_")==true) {
+			else if(showHidePointsArray[x].startsWith("HH_")==true && readHandhole ==='1') {
 				var handID = showHidePointsArray[x].split(":")[0];
 				if(markersHandhole[handID]) {
 					if(markersHandhole[handID].getMap() ==null) {
@@ -8921,7 +8924,7 @@ if(window["mapPointsNames_"+pathID] != undefined) {
 			    	siteCltSrcMarkers[idNA].setMap(null);
 			    }
 			}
-			else if(showHidePointsArray[x].startsWith("MH_")==true) {
+			else if(showHidePointsArray[x].startsWith("MH_")==true && readManhole ==='1') {
 				var manID = showHidePointsArray[x].split(":")[0];	
 				if(markersManhole[manID]) {
 					markersManhole[manID].setMap(null);				
@@ -8929,7 +8932,7 @@ if(window["mapPointsNames_"+pathID] != undefined) {
 					$("#"+manID).children(':checkbox').prop( "checked", false );	
 				}
 			}
-			else if(showHidePointsArray[x].startsWith("HH_")==true) {
+			else if(showHidePointsArray[x].startsWith("HH_")==true && readHandhole ==='1') {
 				var handID = showHidePointsArray[x].split(":")[0];	
 				if(markersHandhole[handID]) {
 					markersHandhole[handID].setMap(null);

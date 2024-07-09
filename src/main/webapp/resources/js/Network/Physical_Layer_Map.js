@@ -304,11 +304,13 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 						markerClusterBackboneDistBoard.repaint();	
 						markerClusterMetroDistBoard.repaint();	
 						markerClusterAccessDistBoard.repaint();	
-						markerClusterMSANNodes.repaint();
-						markerClusterSDHNodes.repaint();
-						markerClusterDWDMNodes.repaint();
-						markerClusterGPONNodes.repaint();	
-						markerClusterEntSwitchNodes.repaint();
+						if(nodeFlag == 1){
+							markerClusterMSANNodes.repaint();
+							markerClusterSDHNodes.repaint();
+							markerClusterDWDMNodes.repaint();
+							markerClusterGPONNodes.repaint();	
+							markerClusterEntSwitchNodes.repaint();
+						}
 				});				
 			});
 	 var end = performance.now();

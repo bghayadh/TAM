@@ -279,13 +279,15 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 		}
 		$("#network_tree").append(str_CurrentPhysicalLayer);
 
+		if(readManhole === '1'){
 		str="<ul><li id='Manhole_f_CurrentPhysicalLayer' style='display:none;' class='Manhole_f_CurrentPhysicalLayer'><input type='checkbox' unchecked class='AllManholes checkFilter' ></input> <span id='Manhole_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Manhole_span' class='TreeSpan' style='color:black;width:395px' >Manhole </span></li></ul>";
 			
 		$("#initial_ul_CurrentPhysicalLayer").append(str);
-
+         }
+        if(readHandhole === '1'){
 		str="<ul><li id='Handhole_f_CurrentPhysicalLayer' style='display:none;' class='Handhole_f_CurrentPhysicalLayer'><input type='checkbox' unchecked class='AllHandholes checkFilter'></input> <span id='Handhole_spanFolder' class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Handhole_span' style='color:black;width:395px' class='TreeSpan' >Handhole </span></li></ul>";
 		$("#initial_ul_CurrentPhysicalLayer").append(str);
-
+}
 		str="<ul><li id='Junction_f_CurrentPhysicalLayer' style='display:none;' class='Junction_f_CurrentPhysicalLayer'><input type='checkbox' unchecked class='AllJunctions checkFilter'></input> <span id='Junction_spanFolder' class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Junction_span' style='color:black;width:395px' class='TreeSpan' >Junction </span></li></ul>";
 		$("#initial_ul_CurrentPhysicalLayer").append(str);
 
@@ -336,6 +338,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 		$("#NodeActive_f_CurrentPhysicalLayer").append(str);
 		  
 		/// creat projects node 
+		   if(projects === '1'){
 		 var str_Projects="<ul style='margin-left:15px;'><li id='initial_ul_Projects' class='Initial_UlProjects'><input type='checkbox' unchecked name='filter' class='projectallElements'></input> <span id='initial_spanFolder_Projects' class='Parentfolder'><i class='fa fa-folder' style='color: #08526D;'></i></span><span id='initial_span_Projects' class='TreeSpan' style='color:black;width:436px;'>Projects </span></li></ul>";
 		
 		 $("#network_tree").append(str_Projects);
@@ -365,12 +368,14 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 			   var strPhysicalLayer="<ul style='margin-left:15px;'><li id='initial_ul_"+ListProject[iji][0]+"' class='Initial_projects' style='display:none;'><input type='checkbox' class='projectallElements' unchecked name='filter'></input><span id='initial_Span_"+ListProject[iji][0]+"' class='Parentfolder'><i class='fa fa-folder' style='color: #08526D;'></i></span><span class='TreeSpan' style='color:black;width:436px;'> Physical Layer </span></li></ul>";
 		       $("#"+ListProject[iji][0]+"").append(strPhysicalLayer);
 		         
+			       if(readManhole === '1'){
 			   str="<ul><li id='Manhole_f_"+ListProject[iji][0]+"' style='display:none;' class='Manhole_f_projects'><input type='checkbox' unchecked class='AllManholes checkFilter' ></input> <span id='Manhole_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Manhole_span' class='TreeSpan' style='color:black;width:395px' >Manhole </span></li></ul>";	   
 			   $("#initial_ul_"+ListProject[iji][0]+"").append(str);
-
+}
+ if(readHandhole === '1'){
 			   str="<ul><li id='Handhole_f_"+ListProject[iji][0]+"' style='display:none;' class='Handhole_f_projects'><input type='checkbox' unchecked class='AllHandholes checkFilter'></input> <span id='Handhole_spanFolder' class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Handhole_span' style='color:black;width:395px' class='TreeSpan' >Handhole </span></li></ul>";
 			   $("#initial_ul_"+ListProject[iji][0]+"").append(str);
-
+}
 			   str="<ul><li id='Junction_f_"+ListProject[iji][0]+"' style='display:none;' class='Junction_f_projects'><input type='checkbox' unchecked class='AllJunctions checkFilter'></input> <span id='Junction_spanFolder' class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Junction_span' style='color:black;width:395px' class='TreeSpan' >Junction </span></li></ul>";
 			   $("#initial_ul_"+ListProject[iji][0]+"").append(str);
 			   
@@ -410,6 +415,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 				
 			 }
 			 allProjectElementsCheckFilter();
+		 }
 		 }
 	/////////////*********************	Manholes Creation In tree	***********************///////////////
 	//-------------------------------------------------------------------------------------------------//
@@ -1276,17 +1282,28 @@ Width : '200%',
 						success: function (data) {
 							
 							if(data.allPhysicalNodesCount!=null){
-								var tr = "<tr>"+"<th># Manholes 		   : </th> <td> "+data.allPhysicalNodesCount[4][1]+"</td></tr>"
-										+"<tr>"+"<th># Handholes 		   : </th> <td> "+data.allPhysicalNodesCount[2][1]+"</td></tr>"
-										+"<tr>"+"<th># Fiber Cables 		   : </th> <td> "+data.allPhysicalNodesCount[1][1]+"</td></tr>"
-										+"<tr>"+"<th># Distribution Boards 		   : </th> <td> "+data.allPhysicalNodesCount[0][1]+"</td></tr>"
-										+"<tr>"+"<th># Trenches		   : </th> <td> "+data.allPhysicalNodesCount[5][1]+"</td></tr>"
-										+"<tr>"+"<th># Junctions		   : </th> <td> "+data.allPhysicalNodesCount[3][1]+"</td></tr>"
-										+"<tr>"+"<th># Total path length (Geo)		   : </th> <td> "+data.allPhysicalNodesCount[6][1].toFixed(2)+" km</td></tr>"
-										+"<tr>"+"<th># Total path length (Line of site )		   : </th> <td> "+data.allPhysicalNodesCount[7][1].toFixed(2)+" km</td></tr>"
-										+"<tr>"+"<th># Total Strand length (Geo)		   : </th> <td> "+(data.allPhysicalNodesCount[11][1]+data.allPhysicalNodesCount[8][1]+data.allPhysicalNodesCount[10][1]).toFixed(2)+" km</td></tr>"
-										+"<tr>"+"<th># Total Strand length (Line of site)		   : </th> <td> "+(data.allPhysicalNodesCount[9][1]+data.allPhysicalNodesCount[12][1]+data.allPhysicalNodesCount[13][1]).toFixed(2)+" km</td></tr>"
-										;
+								var tr = "<tr>";
+if (readManhole === '1') {
+    tr += "<th># Manholes: </th>";
+} else {
+    tr += "<!-- Manhole th is hidden -->";
+}
+tr += "<td>" + (readManhole === '1' ? data.allPhysicalNodesCount[4][1] : "") + "</td></tr>";
+if (readHandhole === '1') {
+    tr += "<th># Handholes: </th>";
+} else {
+    tr += "<!-- Handhole th is hidden -->";
+}
+   tr += " <td> "  + (readHandhole === '1' ? data.allPhysicalNodesCount[2][1] : "") + "</td></tr>"
+    + "<tr>" + "<th># Fiber Cables: </th> <td> " + data.allPhysicalNodesCount[1][1] + "</td></tr>"
+    + "<tr>" + "<th># Distribution Boards: </th> <td> " + data.allPhysicalNodesCount[0][1] + "</td></tr>"
+    + "<tr>" + "<th># Trenches: </th> <td> " + data.allPhysicalNodesCount[5][1] + "</td></tr>"
+    + "<tr>" + "<th># Junctions: </th> <td> " + data.allPhysicalNodesCount[3][1] + "</td></tr>"
+    + "<tr>" + "<th># Total path length (Geo): </th> <td> " + data.allPhysicalNodesCount[6][1].toFixed(2) + " km</td></tr>"
+    + "<tr>" + "<th># Total path length (Line of site ): </th> <td> " + data.allPhysicalNodesCount[7][1].toFixed(2) + " km</td></tr>"
+    + "<tr>" + "<th># Total Strand length (Geo): </th> <td> " + (data.allPhysicalNodesCount[11][1] + data.allPhysicalNodesCount[8][1] + data.allPhysicalNodesCount[10][1]).toFixed(2) + " km</td></tr>"
+    + "<tr>" + "<th># Total Strand length (Line of site): </th> <td> " + (data.allPhysicalNodesCount[9][1] + data.allPhysicalNodesCount[12][1] + data.allPhysicalNodesCount[13][1]).toFixed(2) + " km</td></tr>";
+
 										
 								showBoq();
 								$("#boq_table").append(tr);							
@@ -1309,103 +1326,121 @@ Width : '200%',
 	
 	/////////////*********************	MANHOLE li CONTEXT MENU  ***********************///////////////
 	//-------------------------------------------------------------------------------------------------//
-	
-		menu = new ContextMenu({
-			  'theme': 'default',
-			  Width: '200%',
-			  'items': [
-			 
-				{'icon': 'folder-plus', 'name': 'Create New Manhole', action: () => {
-	
-					$('#manholeModal').find('input:text').val('');
-					$("#manholeHeader").text("Manhole: ");
-					 $("#manholeModal").modal('show');
-					 actionManholeContext="Insert";
-					 document.getElementById("ManholeDMDiv").style.display = "none";
+	let Menu = [
+   
+    {
+        'icon': 'folder-plus',
+        'name': 'Create New Junction',
+        'action': () => {
+            $.ajax({
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                url: getContext() + '/findCountManHoles',
+                data: {
+                    "ProjectId": IdNodeSelectedTemp
+                },
+                dataType: "json",
+                success: function (data) {
+                    if (data.manholeCount == 0) {
+                        alert("Please enter a manhole before adding a junction! ");
+                    } else {
+                        $('#manholeJunctionModal').find('input:text').val('');
+                        $("#manholeJunctionHeader").text("Junction: ");
+                        $("#manholeJctMappingTable > tbody").empty();
+                        $("#manholeJunctionModal").modal('show');
 
-					}
-				 },
+                        document.getElementById("manholeNameJct").readOnly = false;
+                        actionManholeJct = "Insert";
+
+                        $("#manholeJctName").on("input", function () {
+                            $("#manholeJunctionHeader").text("Junction: " + $(this).val());
+                        });
+                    }
+                    data = null;
+                },
+                error: function (result) {
+                    alert("Error");
+                }
+            });
+        }
+    },
+   
+    {
+        'icon': 'paste',
+        'name': 'Show Boq',
+        'action': () => {
+            $.ajax({
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                url: getContext() + '/findCountManHoles',
+                data: {
+                    "ProjectId": IdNodeSelectedTemp
+                },
+                dataType: "json",
+                success: function (data) {
+                    if (data.manholeCount != null) {
+                        var tr = "<tr>" + "<th>Manholes Count : </th> <td> " + data.manholeCount + "</td></tr>";
+                        showBoq();
+                        $("#boq_table").append(tr);
+                        data = null;
+                    }
+                },
+                error: function (result) {
+                    alert("Error");
+                }
+            });
+        }
+    }
+];
+
+if (addManhole === '1') {
+	
+	Menu.unshift({
+		 
+        'icon': 'folder-plus',
+        'name': 'Create New Manhole',
+        'action': () => {
+            $('#manholeModal').find('input:text').val('');
+            $("#manholeHeader").text("Manhole: ");
+            $("#manholeModal").modal('show');
+            actionManholeContext = "Insert";
+            document.getElementById("ManholeDMDiv").style.display = "none";
+       }
+    });
+}
+
+ if (delManhole === '1') {
+    Menu.push({
+        'icon': 'trash',
+        'name': 'Delete Manhole',
+        'action': () => {
+            numberofselected("AllManholes", "Manhole", IdNodeSelectedTemp);
+            deleteprop("AllManholes", "Manhole", IdNodeSelectedTemp);
+            $('#DeleteModal').find('input:text').val('');
+            $("#DeleteHeader").text("Manhole Delete: ");
+            
+            if (allSelectedLayer.length === 0) {
+             
+                alert("No manholes have been checked for deletion");
+                return; 
+            }
+            
+            $("#deletebody").text("Are you sure you want to delete " + allSelectedLayer.length + " item(s)?");
+            $("#DeleteModal").modal('show');
+            $("#deleteFiber").hide();
+            $("#deleteMan").show();
+            $("#deleteTrench").hide();
+        }
+    });
+}
+
+
+	 menu = new ContextMenu({
+    'theme': 'default',
+    'Width': '200%', // Corrected typo: 'Width' to 'width'
+    'items': Menu
+});
 		
-		{'icon': 'folder-plus', 'name': 'Create New Junction', action: () => {
-			$.ajax({
-				type: "GET",
-				contentType: "application/json; charset=utf-8",
-				url: getContext()+'/findCountManHoles',
-				data: {
-					"ProjectId": IdNodeSelectedTemp, 
-				},
-				dataType: "json",
-				success: function (data) {
-					if (data.manholeCount == "0") {
-						alert("Please enter a manhole before adding a junction! ");
-					}
-					else {
-						$('#manholeJunctionModal').find('input:text').val('');
-						$("#manholeJunctionHeader").text("Junction: ");
-						$("#manholeJctMappingTable > tbody").empty();
-						$("#manholeJunctionModal").modal('show');
-								
-						document.getElementById("manholeNameJct").readOnly = false;
-						actionManholeJct="Insert";							
-																
-						$("#manholeJctName").on("input",function(){
-							$("#manholeJunctionHeader").text("Junction: "+$(this).val());
-						});
-					}
-					data = null;
-				},
-				error: function (result) {
-					alert("Error");
-				}
-			}); 
-				}
-			},
-
-				{'icon': 'trash', 'name': 'Delete Manhole', action: () => {
-					
-					numberofselected("AllManholes","Manhole",IdNodeSelectedTemp);
-					deleteprop("AllManholes","Manhole",IdNodeSelectedTemp);
-					$('#DeleteModal').find('input:text').val('');
-					$("#DeleteHeader").text("Manhole Delete: ");
-					$("#deletebody").text("Are you sure you want to delete "+allSelectedLayer.length+"  item(s)?");
-					$("#DeleteModal").modal('show');
-					$("#deleteFiber").hide();
-					$("#deleteMan").show();
-					$("#deleteTrench").hide();
-				
-				}
-			},
-				
-				{'icon': 'paste', 'name': 'Show Boq', action: () => {
-					
-					
-					$.ajax({
-						   type: "GET",
-						   contentType: "application/json; charset=utf-8",
-						   url: getContext()+'/findCountManHoles',
-						   data: {										 
-							   "ProjectId": IdNodeSelectedTemp
-						   },
-						   dataType: "json",
-						   success: function (data) {
-							   
-							   if(data.manholeCount!=null){
-								  
-								   var tr ="<tr>"+"<th>Manholes Count 		   : </th> <td> "+data.manholeCount+"</td></tr>";
-								   showBoq();
-								   $("#boq_table").append(tr);
-							   
-								   data=null;
-							   }   
-						   },
-						   error: function (result) {
-							   alert("Error");
-						   }
-					   });
-				}
-			}	
-			  ]
-		});
 		
 		menuNodes = new ContextMenu({
 			  'theme': 'default',
@@ -1447,20 +1482,12 @@ Width : '200%',
 					 
 	/////////////*********************	HANDHOLES li CONTEXT MENU  ***********************///////////////
 	//-------------------------------------------------------------------------------------------------//
-		menuHandhole = new ContextMenu({
-			  'theme': 'default',
-			  
-			  'items': [
-				{'icon': 'folder-plus', 'name': 'Create New Handhole', action: () => {
-	
-					$('#handholeModal').find('input:text').val('');
-					$("#handholeHeader").text("Handhole: ");
-					 $("#handholeModal").modal('show');
-					 actionHandholeContext="Insert";
-					 document.getElementById("HandholeDMDiv").style.display = "none";
-					}
-					 },
-					{'icon': 'folder-plus', 'name': 'Create New Junction', action: () => {
+		
+		
+		
+		
+		let Menus = [
+   {'icon': 'folder-plus', 'name': 'Create New Junction', action: () => {
 			
 				$.ajax({
 							type: "GET",
@@ -1499,22 +1526,7 @@ Width : '200%',
 			 }); 
 			}	
 		},
-
-				  {'icon': 'trash', 'name': 'Delete Handhole', action: () => {					
-					
-					numberofselected("AllHandholes","Handhole",IdNodeSelectedTemp);
-					deleteprop("AllHandholes","Handhole",IdNodeSelectedTemp);
-					$('#DeleteModal').find('input:text').val('');
-					$("#DeleteHeader").text("Handhole Delete: ");
-					$("#deletebody").text("Are you sure you want to delete "+allSelectedLayer.length+"  item(s)?");
-					$("#DeleteModal").modal('show');
-					$("#deleteFiber").hide();
-					$("#deleteMan").show();
-					$("#deleteTrench").hide();
-					}
-				},
-				  
-				  {'icon': 'paste', 'name': 'Show BoQ', action: () => {					
+ {'icon': 'paste', 'name': 'Show BoQ', action: () => {					
 						
 						
 						$.ajax({
@@ -1546,8 +1558,51 @@ Width : '200%',
 							   });
 				}
 			}
-			  ]
-		});
+			  
+    
+];
+
+if (addHandhole === '1') {
+	
+	Menus.unshift({'icon': 'folder-plus', 'name': 'Create New Handhole', action: () => {
+	
+					$('#handholeModal').find('input:text').val('');
+					$("#handholeHeader").text("Handhole: ");
+					 $("#handholeModal").modal('show');
+					 actionHandholeContext="Insert";
+					 document.getElementById("HandholeDMDiv").style.display = "none";
+					}
+					 });
+}
+
+ if (delHandhole === '1') {
+    Menus.push( {'icon': 'trash', 'name': 'Delete Handhole', action: () => {					
+					
+					numberofselected("AllHandholes","Handhole",IdNodeSelectedTemp);
+					deleteprop("AllHandholes","Handhole",IdNodeSelectedTemp);
+					$('#DeleteModal').find('input:text').val('');
+					$("#DeleteHeader").text("Handhole Delete: ");
+					 if (allSelectedLayer.length === 0) {
+             
+                alert("No handholes have been checked for deletion");
+                return; 
+            }
+					$("#deletebody").text("Are you sure you want to delete "+allSelectedLayer.length+"  item(s)?");
+					$("#DeleteModal").modal('show');
+					$("#deleteFiber").hide();
+					$("#deleteMan").show();
+					$("#deleteTrench").hide();
+					}
+				});
+}
+
+
+	 menuHandhole = new ContextMenu({
+    'theme': 'default',
+    'Width': '200%', // Corrected typo: 'Width' to 'width'
+    'items': Menus
+});
+		
 		
 /////////////*********************	STRANDS FOLDER CONTEXT MENU  ***********************///////////////
 		//-------------------------------------------------------------------------------------------------//
@@ -1678,6 +1733,11 @@ Width : '200%',
 					deleteprop("AllFiberStrands","FiberStrand",selectedStrandPath);
 					$('#DeleteModal').find('input:text').val('');
 					$("#DeleteHeader").text("Fiber Strand Delete: ");
+					 if (selectedFiberTubeStrandPath.length === 0) {
+             
+                alert("No strandes have been checked for deletion");
+                return; 
+            }
 					$("#deletebody").text("Are you sure you want to delete "+selectedFiberTubeStrandPath.length+"  item(s)?");
 					$("#DeleteModal").modal('show');
 					$("#deleteFiber").show();
@@ -1889,6 +1949,11 @@ Width : '200%',
 				deleteprop("AllFiberTubes","FiberTube",selectedTube);
 				$('#DeleteModal').find('input:text').val('');
 				$("#DeleteHeader").text("Fiber Tube Delete: ");
+				 if (selectedFiberTubeStrandPath.length === 0) {
+             
+                alert("No tubes have been checked for deletion");
+                return; 
+            }
 				$("#deletebody").text("Are you sure you want to delete "+selectedFiberTubeStrandPath.length+"  item(s)?");
 				$("#DeleteModal").modal('show');
 				$("#deleteFiber").show();
@@ -2118,6 +2183,11 @@ Width : '200%',
 					deleteprop("AllFiberCables","FiberCable",IdNodeSelectedTemp);
 					$('#DeleteModal').find('input:text').val('');
 					$("#DeleteHeader").text("Fiber Cable Delete: ");
+							 if (selectedFiberTubeStrandPath.length === 0) {
+             
+                alert("No fibers have been checked for deletion");
+                return; 
+            }
 					$("#deletebody").text("Are you sure you want to delete "+selectedFiberTubeStrandPath.length+"  item(s)?");
 					$("#DeleteModal").modal('show');
 					$("#deleteFiber").show();
@@ -2823,6 +2893,11 @@ menuNodeesActive = new ContextMenu({
 					deleteprop("AllDistBoards","DistributionBoard",IdNodeSelectedTemp);
 					$('#DeleteModal').find('input:text').val('');
 					$("#DeleteHeader").text("Distribution Board Delete: ");
+						 if (allSelectedLayer.length === 0) {
+             
+                alert("No boards have been checked for deletion");
+                return; 
+            }
 					$("#deletebody").text("Are you sure you want to delete "+allSelectedLayer.length+"  item(s)?");
 					$("#DeleteModal").modal('show');
 					$("#deleteFiber").hide();
@@ -3017,6 +3092,11 @@ menuNodeesActive = new ContextMenu({
 			deleteprop("AllTrenches","TRENCH",IdNodeSelectedTemp);
 			$('#DeleteModal').find('input:text').val('');
 			$("#DeleteHeader").text("Trench Delete: ");
+				 if (selectedTrenchesDuctsForDel.length === 0) {
+             
+                alert("No trenches have been checked for deletion");
+                return; 
+            }
 			$("#deletebody").text("Are you sure you want to delete "+selectedTrenchesDuctsForDel.length+"  item(s)?");
 			$("#DeleteModal").modal('show');
 			$("#deleteFiber").hide();
@@ -3723,6 +3803,11 @@ singleNodeActive = new ContextMenu({
 			deleteprop("trenchDucts","DUCT",selectedTrenchContext+"_f");
 			$('#DeleteModal').find('input:text').val('');
 			$("#DeleteHeader").text("Duct Delete: ");
+			if (selectedTrenchesDuctsForDel.length === 0) { 
+				
+				alert("No ducts have been checked for deletion");
+				 return; 
+				 }
 			$("#deletebody").text("Are you sure you want to delete "+selectedTrenchesDuctsForDel.length+"  item(s)?");
 			$("#DeleteModal").modal('show');
 			$("#deleteFiber").hide();
@@ -5044,193 +5129,185 @@ singleNodeActive = new ContextMenu({
 	/////////////*********************	SINGLE MANHOLE li CONTEXT MENU  ***********************///////////////
 	//-------------------------------------------------------------------------------------------------//
 	
-			singleManhole = new ContextMenu({
-				  'theme': 'default',
-				  
-				  'items': [
-					{'icon': 'folder-plus', 'name': 'Create New Manhole', action: () => {
-	
-						$('#manholeModal').find('input:text').val('');
-						$("#manholeHeader").text("Manhole: ");
-						$("#manholeModal").modal('show');
-						actionManholeContext="Insert";
-						document.getElementById("ManholeDMDiv").style.display = "none";
-				}
-			},
-					
-			{'icon': 'folder-plus', 'name': 'Create New Junction', action: () => {
-					document.getElementById("manholeNameJct").readOnly = true;
-								
-					$('#manholeJunctionModal').find('input:text').val('');
-					$("#manholeJunctionHeader").text("Junction: ");
-					$("#manholeJctMappingTable > tbody").empty();
-					$("#manholeJunctionModal").modal('show');
-					$("#manholeIdJct").val(selectedManIdContext);
+			let menuManhole = [
+    {
+        'icon': 'folder-plus',
+        'name': 'Create New Junction',
+        action: () => {
+            document.getElementById("manholeNameJct").readOnly = true;
+            $('#manholeJunctionModal').find('input:text').val('');
+            $("#manholeJunctionHeader").text("Junction: ");
+            $("#manholeJctMappingTable > tbody").empty();
+            $("#manholeJunctionModal").modal('show');
+            $("#manholeIdJct").val(selectedManIdContext);
 
-					 $.ajax({
-                         type: "GET",
-                         contentType: "application/json; charset=utf-8",
-                         url: getContext()+'/findManholeDetails',
-                         async:false,
-                         data: {
-                             "selectedManIdContext":selectedManIdContext                              
-                         },
-                         dataType: "json",
-                         success: function (data) {
+            // Example of an AJAX call
+            $.ajax({
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                url: getContext() + '/findManholeDetails',
+                async: false,
+                data: {
+                    "selectedManIdContext": selectedManIdContext
+                },
+                dataType: "json",
+                success: function (data) {
+                    $("#manholeNameJct").val(data.ManholeDetails[1]);
+                    $("#manholeJctCity").val(data.ManholeDetails[5]);
+                    $("#manholeJctLong").val(data.ManholeDetails[2]);
+                    $("#manholeJctLat").val(data.ManholeDetails[3]);
+                    data = null;
+                },
+                error: function (result) {
+                    alert("Error");
+                }
+            });
+            actionManholeJct = "Insert";
+            $("#manholeJctName").on("input", function () {
+                $("#manholeJunctionHeader").text("Junction: " + $(this).val());
+            });
+        }
+    },
+    {
+        'icon': 'edit',
+        'name': 'Edit or View Details',
+        action: () => {
+            actionManholeContext = "Update";
+            document.getElementById("projectIdManhole").style.display = "none";
+            document.getElementById("projectNameManhole").style.display = "none";
+            document.getElementById("ManholeDMDiv").style.display = 'block';
+            $("#manholeModal").find("input").val('').end();
+            $("#manholeHeader").text("Manhole: " + selectedManIdContext);
+            $("#manholeModal").modal('show');
+            $("#ManholeId").val(selectedManIdContext);
 
-                         	$("#manholeNameJct").val(data.ManholeDetails[1]);
-                         	$("#manholeJctCity").val(data.ManholeDetails[5]);
-                         	$("#manholeJctLong").val(data.ManholeDetails[2]);
-                         	$("#manholeJctLat").val(data.ManholeDetails[3]);
-                         	
-            				data = null;
-                         },
+            $("#ManholeName").on('input', function () {
+                $("#manholeHeader").text("Manhole: " + $(this).val());
+            });
 
-                         error: function (result) {
+            // Example of an AJAX call
+            $.ajax({
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                url: getContext() + '/findManholeDetails',
+                async: false,
+                data: {
+                    "selectedManIdContext": selectedManIdContext
+                },
+                dataType: "json",
+                success: function (data) {
+                    $("#ManholeName").val(data.ManholeDetails[1]);
+                    $("#ManholeModel").val(data.ManholeDetails[4]);
+                    $("#ManholeCity").val(data.ManholeDetails[5]);
+                    $("#manholeDMName").val(data.ManholeDetails[6]);
+                    $("#ManholeLong").val(data.ManholeDetails[2]);
+                    $("#ManholeLat").val(data.ManholeDetails[3]);
+                    $("#manholeCreateDate").val(data.ManholeDetails[7]);
+                    $("#manholeLastModifiedDate").val(data.ManholeDetails[8]);
+                    $("#manholeOwner").val(data.ManholeDetails[9]);
+                    $("#manholeInstaller").val(data.ManholeDetails[10]);
+                    $("#manholeEngineerName").val(data.ManholeDetails[11]);
+                    data = null;
+                },
+                error: function (result) {
+                    alert("Error");
+                }
+            });
+        }
+    },
+  
+    {
+        'icon': 'paste',
+        'name': 'Show BoQ',
+        action: () => {
+            $.ajax({
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                async: false,
+                url: getContext() + '/boqManhole',
+                data: {
+                    "ManholeId": selectedManIdContext,
+                    "ProjectId": IdNodeSelectedTemp
+                },
+                success: function (data) {
+                    showBoq();
+                    var tr = "<tr><td><b>ID: </b>" + selectedManIdContext + "</td></tr>" +
+                        "<tr><td><b>Name: </b>" + data.manholeData[0][0] + "</td></tr>" +
+                        "<tr><td><b>Num of Fiber Cables: </b>" + data.countFiberCables + "</td></tr>" +
+                        "<tr><td><b>Longitude:  </b>" + data.manholeData[0][1] + "</td></tr>" +
+                        "<tr><td><b>Latitude:  </b>" + data.manholeData[0][2] + "</td></tr>" +
+                        "<tr><td><b>City:  </b>" + data.manholeData[0][3] + "</td></tr>" +
+                        "<tr><td><b>Num of Tubes: </b>" + data.countTubes + "</td></tr>" +
+                        "<tr><td><b>Num of Strands: </b>" + data.countStrands + "</td></tr>" +
+                        "<tr><td><b>Num of Junctions: </b>" + data.countJunctions + "</td></tr>" +
+                        "<tr><td><b>DM_Name: </b>" + data.manholeData[0][4] + "</td></tr>";
 
-                             alert("Error");
+                    $("#boq_table").append(tr);
+                    data = null;
+                },
+                error: function (result) {
+                    alert("Error");
+                }
+            });
+        }
+    },
+    {
+        'icon': 'paste',
+        'name': 'Show Path',
+        action: () => {
+            if (flag == 0) {
+                // in order to build for the first time the main fiber
+                getFiberPath("showPath", '/manHandHolePath', selectedManIdContext, "<tr><td><b>Manhole ID:</b>" + selectedManIdContext + "</td></tr>");
+            } else {
+                showPath('/manHandHolePath', selectedManIdContext, "<tr><td><b>Manhole ID:</b>" + selectedManIdContext + "</td></tr>");
+            }
+        }
+    }
+];
 
-                         }
-
-                     });
-					actionManholeJct="Insert";
-					$("#manholeJctName").on("input",function(){
-						$("#manholeJunctionHeader").text("Junction: "+$(this).val());
-					});
-						
-				}
-			},
-			{'icon': 'edit','name': 'Edit or View Details',action: () => {						
-				
-				actionManholeContext="Update";
-				document.getElementById("projectIdManhole").style.display = "none";
-				document.getElementById("projectNameManhole").style.display = "none";
-				document.getElementById("ManholeDMDiv").style.display = 'block';
-				$("#manholeModal").find("input").val('').end();
-				$("#manholeHeader").text("Manhole: "+selectedManIdContext);
-				$("#manholeModal").modal('show');
-				$("#ManholeId").val(selectedManIdContext);
-				
-				$("#ManholeName").on('input',function(){  
-				  $("#manholeHeader").text("Manhole: "+$(this).val());
-			    });
-				
-				$.ajax({
-					type: "GET",
-					contentType: "application/json; charset=utf-8",
-					url: getContext()+'/findManholeDetails',
-                    async:false,
-                    data: {
-						"selectedManIdContext":selectedManIdContext
-					},
-                    dataType: "json",
-                    success: function (data) {
-						
-						$("#ManholeName").val(data.ManholeDetails[1]);
-						$("#ManholeModel").val(data.ManholeDetails[4]);
-						$("#ManholeCity").val(data.ManholeDetails[5]);
-						$("#manholeDMName").val(data.ManholeDetails[6]);
-						$("#ManholeLong").val(data.ManholeDetails[2]);
-						$("#ManholeLat").val(data.ManholeDetails[3]);
-						$("#manholeCreateDate").val(data.ManholeDetails[7]);
-						$("#manholeLastModifiedDate").val(data.ManholeDetails[8]);
-						$("#manholeOwner").val(data.ManholeDetails[9]);
-						$("#manholeInstaller").val(data.ManholeDetails[10]);
-						$("#manholeEngineerName").val(data.ManholeDetails[11]);
-						
-						data = null;
-					},
-                    error: function (result) {
-						alert("Error");
-                    }
-					});						
-				}
-			},
-			{'icon': 'trash', 'name': 'Delete Manhole', action: () => {
-				deleteprop("Manhole","",selectedManIdContext);
-				$('#DeleteModal').find('input:text').val('');
-				$("#DeleteHeader").text("Manhole Delete: ");
-				$("#deletebody").text("Are you sure you want to delete 1 item?");
-				$("#DeleteModal").modal('show');
-				$("#deleteFiber").hide();	
-				$("#deleteMan").show();	
-				$("#deleteTrench").hide();
-			}	
-		},
-					 
-					 
-					 {'icon': 'paste', 'name': 'Show BoQ', action: () => {
-						 
-											
-							$.ajax({
-								type: "GET",
-								contentType: "application/json; charset=utf-8",
-								async:false,
-								url: getContext()+'/boqManhole',
-								data: {
-								"ManholeId":selectedManIdContext,
-								"ProjectId": IdNodeSelectedTemp
-								
-							},
-								success : function(data)
-									{
-										 showBoq();
-										 var tr = "<tr><td><b>ID: </b>"+selectedManIdContext+"</td></tr>"
-													+"<tr>"+"<td><b>Name: </b>"+data.manholeData[0][0]+"</td></tr>"
-													+"<tr>"+"<td><b>Num of Fiber Cables: </b>"+data.countFiberCables+"</td></tr>"
-													+"<tr>"+"<td><b>Longitude:  </b>"+data.manholeData[0][1]+"</td></tr>"
-													+"<tr>"+"<td><b>Latitude:  </b>"+data.manholeData[0][2]+"</td></tr>"
-													+"<tr>"+"<td><b>City:  </b>"+data.manholeData[0][3]+"</td></tr>"
-													+"<tr>"+"<td><b>Num of Tubes: </b>"+data.countTubes+"</td></tr>"
-													+"<tr>"+"<td><b>Num of Strands: </b>"+data.countStrands+"</td></tr>"
-													+"<tr>"+"<td><b>Num of Junctions: </b>"+data.countJunctions+"</td></tr>"
-													+"<tr>"+"<td><b>DM_Name: </b>"+data.manholeData[0][4]+"</td></tr>";
-													
-													$("#boq_table").append(tr);
-										
-	
-													data=null;
-								},
-									error: function (result) {
-										alert("Error");
-									}
-								});
-						
-						}	
-						   },
-			{'icon': 'paste', 'name': 'Show Path', action: () => {
-				if (flag == 0 ){// in order to build for the first time the main fiber
-					getFiberPath("showPath",'/manHandHolePath',selectedManIdContext, "<tr><td><b>Manhole ID:</b>"+selectedManIdContext+"</td></tr>");
-				}else{
-					showPath('/manHandHolePath',selectedManIdContext, "<tr><td><b>Manhole ID:</b>"+selectedManIdContext+"</td></tr>");
-				}
-				
-				
-			}
-		}
-					 
-	 ]
+// Conditionally add 'Create New Manhole' item based on addManhole variable
+if (addManhole === '1') {
+    menuManhole.unshift({
+        'icon': 'folder-plus',
+        'name': 'Create New Manhole',
+        action: () => {
+            $('#manholeModal').find('input:text').val('');
+            $("#manholeHeader").text("Manhole: ");
+            $("#manholeModal").modal('show');
+            actionManholeContext = "Insert";
+            document.getElementById("ManholeDMDiv").style.display = "none";
+        }
+    });
+}
+if (delManhole === '1') {
+    menuManhole.push({
+        'icon': 'trash',
+        'name': 'Delete Manhole',
+        action: () => {
+            deleteprop("Manhole", "", selectedManIdContext);
+            $('#DeleteModal').find('input:text').val('');
+            $("#DeleteHeader").text("Manhole Delete: ");
+            $("#deletebody").text("Are you sure you want to delete 1 item?");
+            $("#DeleteModal").modal('show');
+            $("#deleteFiber").hide();
+            $("#deleteMan").show();
+            $("#deleteTrench").hide();
+        }
+    });
+}
+// Create the ContextMenu instance with the updated items array
+singleManhole = new ContextMenu({
+    'theme': 'default',
+    'items': menuManhole
 });
-	
-			
+
 	
 	/////////////*********************	SINGLE HANDHOLE li CONTEXT MENU  ***********************///////////////
 	//-------------------------------------------------------------------------------------------------//
-			singleHandhole = new ContextMenu({
-				  'theme': 'default',
-				  
-				  'items': [
-					{'icon': 'folder-plus', 'name': 'Create New Handhole', action: () => {
-	
-						$('#handholeModal').find('input:text').val('');
-						$("#handholeHeader").text("Handhole: ");
-						$("#handholeModal").modal('show');
-						actionHandholeContext="Insert";
-						document.getElementById("HandholeDMDiv").style.display = "none";
-						}						
-					},
-					
-			{'icon': 'folder-plus', 'name': 'Create New Junction', action: () => {
+			
+			let menuHandholes = [
+    
+       {'icon': 'folder-plus', 'name': 'Create New Junction', action: () => {
 						
 						document.getElementById("handholeNameJct").readOnly = true;
 								
@@ -5337,20 +5414,7 @@ singleNodeActive = new ContextMenu({
 
 						}
 					 },
-					 
-					  {'icon': 'trash', 'name': 'Delete Handhole', action: () => {
-						deleteprop("Handhole","",selectedHandIdContext);
-						$('#DeleteModal').find('input:text').val('');
-						$("#DeleteHeader").text("Handhole Delete: ");
-						$("#deletebody").text("Are you sure you want to delete 1 item?");
-						$("#DeleteModal").modal('show');
-						$("#deleteFiber").hide();	
-						$("#deleteMan").show();
-						$("#deleteTrench").hide();
-					}
-				},
-					  
-					  {'icon': 'paste', 'name': 'Show BoQ', action: () => {
+					   {'icon': 'paste', 'name': 'Show BoQ', action: () => {
 							
 						  $.ajax({
 								type: "GET",
@@ -5399,8 +5463,53 @@ singleNodeActive = new ContextMenu({
 				
 			}
 		}	 	 
-	]
-});
+];
+
+			
+		if (addHandhole === '1') {
+    menuHandholes.unshift({'icon': 'folder-plus', 'name': 'Create New Handhole', action: () => {
+	
+						$('#handholeModal').find('input:text').val('');
+						$("#handholeHeader").text("Handhole: ");
+						$("#handholeModal").modal('show');
+						actionHandholeContext="Insert";
+						document.getElementById("HandholeDMDiv").style.display = "none";
+						}						
+					});
+}	
+			
+			
+	if (delHandhole === '1') {
+    menuHandholes.push( {'icon': 'trash', 'name': 'Delete Handhole', action: () => {
+						deleteprop("Handhole","",selectedHandIdContext);
+						$('#DeleteModal').find('input:text').val('');
+						$("#DeleteHeader").text("Handhole Delete: ");
+						$("#deletebody").text("Are you sure you want to delete 1 item?");
+						$("#DeleteModal").modal('show');
+						$("#deleteFiber").hide();	
+						$("#deleteMan").show();
+						$("#deleteTrench").hide();
+					}
+				});
+}
+// Create the ContextMenu instance with the updated items array
+singleHandhole = new ContextMenu({
+    'theme': 'default',
+    'items': menuHandholes
+});		
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+	
 /////////////********************* junction and single junction CONTEXTS MENU  ***********************///////////////
 			//-------------------------------------------------------------------------------------------------//	  
 			JunctionMenu =new ContextMenu({
