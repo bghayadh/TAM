@@ -240,14 +240,22 @@
 							<td><input type="checkbox" id="ductCheckAllBoq" class="AllDucts" style="margin-left: 10px;"></td>
 						</tr>
 						<tr>
-							<td class="Icon "><img src="${pageContext.request.contextPath}/resources/NetworkImages/manholeRed.png"><span
+							
+					
+                      <c:if test="${readManhole == 1}">
+                     <td class="Icon " >
+                      <img src="${pageContext.request.contextPath}/resources/NetworkImages/manholeRed.png"><span
 								id="definition" style="padding-left: 4px;">MANHOLE</span></td>
-							<td><input type="checkbox" id="manholeCheckAllBoq" style="margin-left: 10px;"></td>
-						</tr>
+							<td><input type="checkbox" id="manholeCheckAllBoq" style="margin-left: 10px;" ></td>   </c:if>
+							
+							
+							
+							
 						<tr>
+						  <c:if test="${readHandhole == 1}">
 							<td class="Icon "><img src="${pageContext.request.contextPath}/resources/NetworkImages/handholeYellow.png">
 								<span id="definition">HANDHOLE</span></td>
-							<td><input type="checkbox" id="handholeCheckAllBoq" style="margin-left: 10px;"></td>
+							<td><input type="checkbox" id="handholeCheckAllBoq" style="margin-left: 10px;"></td></c:if>
 						</tr>
 						<tr>
 							<td class="Icon "><img style="width: 16px; height: 16px;" src="${pageContext.request.contextPath}/resources/NetworkImages/junctionOrange.png">
