@@ -161,12 +161,7 @@
 		<div id="left" style="width: 500px">
 			<input name="csrfToken" value="5965f0d244b7d32b334eff840"
 				type="hidden" />
-			<div class="searchcontainer"
-				style="margin-left: 55px; margin-bottom: 5px; margin-top: 5px; margin-right: 20px;">
-				<div class="search">
-					<input type="text" class="searchTerm" style="border-right: 3px solid #08526D; font-size: 15px;" placeholder="Search within the tree ..">
-				</div>
-			</div>
+			
 			<!-- <a style="position: absolute; margin-left: 400px; display: none; z-index: 1;" id='removeFilter' href = "${pageContext.request.contextPath}/NetworkPhysicalLayer"> 
 			<input type="image" src="${pageContext.request.contextPath}/resources/js/Network/RemoveFilter.png" style="position: absolute;" height="30" width="30" /></a>
 			 --><a style="position: absolute; margin-left: 400px; display: none; z-index: 1; cursor: pointer;" id='removeS' href = "${pageContext.request.contextPath}/NetworkPhysicalLayer"> 
@@ -6711,7 +6706,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-
+    toggleElementDisplay(elements.fibersearchtab, searchPopupPerm);
     toggleElementDisplay(elements.customTabsFilterTab, searchPopupPerm);
     toggleElementDisplay(elements.closestSearchTab, searchPopupPerm);
     toggleElementDisplay(elements.MultyClosestSearchTab, searchPopupPerm);
