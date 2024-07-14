@@ -213,7 +213,6 @@ function CreateFiberPath(fiberList,fiberTubes,fiberStrands,fiberAuxiliary_Data,t
 	}																				  
 
 	if(fiberTubes!=null){
-		console.log("fiber tube length is " ,fiberTubes.length);
 		for(i=0;i<fiberTubes.length;i++){
 			var tubeId=fiberTubes[i][0];
 			var savedTubeId = fiberTubes[i][0];//initialized here and used in save tube function
@@ -225,10 +224,8 @@ function CreateFiberPath(fiberList,fiberTubes,fiberStrands,fiberAuxiliary_Data,t
 				str="<ul><li id='"+tubeId+"' class='TUBE' style='display:none;width:100px;'><input type='checkbox' class='FiberTube checkFilter' class='filter'></input> <span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='color:black;width:274px'> <span style='font-size:12px; font-weight:bold; transform: translateY(-4px); color:"+tubeColor+"'> "+tubeNumber+"</span> <img style='color: #08526D; margin-bottom:-3px; margin-left:-25px' src='"+getContext()+"/resources/NetworkImages/core.png'> "+tubeName+" / "+tubeId+" <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' id='pushPointsStrands"+tubeId+"' class='pushPoints'> <img src='"+getContext()+"/resources/NetworkImages/remove.png' hidden style='margin-left:10px' id='cancelPointsStrands"+tubeId+"' class='clearPoints'> </span><ul><li id='"+tubeId+"_f' style='display:none;' class='strandsFolder'> <input type='checkbox' class='TubeStrands checkFilter' unchecked name='filter'></input> <span  class='folder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='color:black;width:236px'>Strands </span></li></ul></li></ul>";
 			}
 			else{
-				console.log("There is no strand for the tube");
 				str="<ul><li id='"+tubeId+"' class='TUBE' style='display:none;width:100px;'><input type='checkbox' class='FiberTube checkFilter' name='filter'></input> <span class='TreeSpan' style='color:black;width:274px'> <span style='font-size:12px; font-weight:bold; transform: translateY(-4px); color:"+tubeColor+"'> "+tubeNumber+"</span> <img style='color: #08526D; margin-bottom:-3px; margin-left:-25px' src='"+getContext()+"/resources/NetworkImages/core.png'> "+tubeName+" / "+tubeId+" <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' id='pushPointsStrands"+tubeId+"' class='pushPoints'> <img src='"+getContext()+"/resources/NetworkImages/remove.png' hidden style='margin-left:10px' id='cancelPointsStrands"+tubeId+"' class='clearPoints'> </span></li></ul>";	
 			}
-			console.log("the tube id is " +fiberTubes[i][12]);
 			$("#"+fiberTubes[i][12]+"_f").append(str);
 																		  
 			pathCheckFilter(TargetTube,"parentFolderCheck",fiberTubes[i][12],"14",tubeArray,allTubes,directionHashmapTube,routeDisplayTube,"STRAND",strandArray,directionHashmapStrand,allStrands);

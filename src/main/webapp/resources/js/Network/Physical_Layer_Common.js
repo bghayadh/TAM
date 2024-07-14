@@ -12280,6 +12280,7 @@ function changeColor(){
 		/*if(removeDuplicatesOwnerArray[r] == "tkl"){			
 			tr +="<tr ><td style='min-width:150px; font-size: 17px;' name='owner' class='row-pad'>"+removeDuplicatesOwnerArray[r].toUpperCase()+"</td><td style='min-width:150px;' name='color'><select class='ui-widget ui-corner-all form-control' id='colorOptions"+removeDuplicatesOwnerArray[r]+"' style='background-color: blue; color:white'><option value='#0080FF' style='background-color: white; color:black' selected>blue</option></select></td></tr>";
 		}else{*/
+		console.log("removeDuplicatesOwnerArray[r] is " +removeDuplicatesOwnerArray[r], " r is " +r);
 			if(window['FiberColor_'+removeDuplicatesOwnerArray[r]] == null){
 				tr +="<tr><td><input type='checkbox' style='position:relative;top:10px;' name='showFibersOwner' id='"+removeDuplicatesOwnerArray[r]+"'></td><td style='min-width:150px; font-size: 17px;' name='owner' class='row-pad'>"+removeDuplicatesOwnerArray[r].toUpperCase()+"</td><td style='min-width:150px;' name='color'><select class='ui-widget ui-corner-all form-control'  id='colorOptions"+removeDuplicatesOwnerArray[r]+"' style='background-color: white; color:black' ><option value=''>Please select a color</option><option value='#4986E7'  style='background-color: white;color:black' >blue</option><option value='#36f21d'  style='background-color: white;color:black' >green</option><option value='#ff8800'  style='background-color: white;color:black' >orange</option><option value='#ff0088'  style='background-color: white;color:black' >pink</option></select></td></tr>";	
 			}else{
@@ -12461,13 +12462,12 @@ function changeColor(){
 								 });
 								 
 								 var ownerName = $(this).attr("id");
-									 for(var f = 0 ; f < fiberIdList.length; f++) { 
+									 for(var f = 0 ; f < fiberIdList.length; f++) {
+										 //console.log("fiberIdList[f] is " +fiberIdList[f] , " f is " +f); 
 										 if(ownerName == window[''+fiberIdList[f]][22]){
 											 $("#"+fiberIdList[f]+"").children(':checkbox').prop( "checked", true );
-											// console.log("match");
 											 if(fiberArray[fiberIdList[f]]){
 												 var path=window["mapPoints_"+fiberIdList[f]]; 
-												 //console.log("path is "+window["mapPoints_"+fiberIdList[f]]);
 												 fiberArray[fiberIdList[f]].setPath(path);
 											     fiberArray[fiberIdList[f]].setMap(map);
 											 }else{

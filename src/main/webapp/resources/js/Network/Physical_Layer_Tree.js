@@ -14812,9 +14812,8 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 						 var dstWareId = "null" ;
 						 var dstId = "null";
 						 var dstName = destination;
-					 }
-					
-					window[""+data.FiberPathId]=[sourceLng,sourceLat,destinationLng,destinationLat,data.FiberPathId,srcWareId,srcId,srcName,dstWareId,dstId,dstName,numberOfAssoc_Tubes,numberOfAssoc_Strands,fiberName,IdNodeSelectedTemp,sourceCity,destinationCity,NumTubes,NumStrands,FiberLength,drawingType,fiberowner,fiberInstaller,fiberEngineerName,fiberCableSize];
+					 }					
+					window[""+data.FiberPathId]=[sourceLng,sourceLat,destinationLng,destinationLat,data.FiberPathId,srcWareId,srcId,srcName,dstWareId,dstId,dstName,numberOfAssoc_Tubes,numberOfAssoc_Strands,fiberName,IdNodeSelectedTemp,sourceCity,destinationCity,NumTubes,NumStrands,FiberLength,drawingType,fibernetlevel,fiberowner,fiberInstaller,fiberEngineerName,fiberCableSize];
 						
 					myLatLng = new google.maps.LatLng(sourceLat,sourceLng);
 					window["mapPoints_"+data.FiberPathId].push(myLatLng);
