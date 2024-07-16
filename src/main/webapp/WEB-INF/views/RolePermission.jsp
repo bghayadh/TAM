@@ -71,6 +71,7 @@
 								    	<option>Physical Layer Manhole</option>
 								    	<option>Physical Layer Handhole</option>
 								    	<option>Physical Layer Fiber</option>
+								    	<option>Physical Layer DB</option>
 								    	<option>Supplier</option>
 								    	<option>User</option>
 								    	<option>Warehouse</option>
@@ -146,6 +147,7 @@
 							<option>Physical Layer Manhole</option>
 							<option>Physical Layer Handhole</option>
 							<option>Physical Layer Fiber</option>
+							<option>Physical Layer DB</option>
 							<option>Supplier</option>
 							<option>User</option>
 							<option>Warehouse</option>
