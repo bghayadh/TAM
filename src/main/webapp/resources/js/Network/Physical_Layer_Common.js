@@ -8295,7 +8295,7 @@ if(readManhole === '1'){
 					}
 				}						
 			}
-			else if(showHidePointsArray[x].startsWith("DB_")==true) {
+				else if(showHidePointsArray[x].startsWith("DB_")==true && readDB ==='1') {
 				var dbID = showHidePointsArray[x].split(":")[0];
 				if(markersDistBoard[dbID]) {
 					if(markersDistBoard[dbID].getMap() ==null) {
@@ -8399,7 +8399,7 @@ if(readManhole === '1'){
 				}
 				
 			}
-			else if(showHidePointsArray[x].startsWith("DB_")==true) {
+				else if(showHidePointsArray[x].startsWith("DB_")==true && readDB ==='1') {
 				var dbID = showHidePointsArray[x].split(":")[0];
 				if(markersDistBoard[dbID]) {
 					markersDistBoard[dbID].setMap(null);	
@@ -8521,7 +8521,7 @@ function showHideAllSequence(pathID,action) {
 					}
 				}
 		 }	
-		else if(window["mapPointsNames_"+pathID][x].startsWith("DB_")==true) {
+	else if(window["mapPointsNames_"+pathID][x].startsWith("DB_")==true && readDB ==='1') {
 			var dbID = window["mapPointsNames_"+pathID][x].split(":")[0];
 			if(markersDistBoard[dbID]){
 				if(allcheckedLabels.length >0 && allcheckedLabels.includes("dBMapCheck_Labels")==true) {	
@@ -8614,7 +8614,7 @@ function showHideAllSequence(pathID,action) {
 						}
 					}
 			 }	
-			else if(window["mapPointsNames_"+pathID][x].startsWith("DB_")==true) {
+				else if(window["mapPointsNames_"+pathID][x].startsWith("DB_")==true && readDB ==='1') {
 				var dbID = window["mapPointsNames_"+pathID][x].split(":")[0];
 				if(markersDistBoard[dbID]){
 					if(allcheckedLabels.length >0 && allcheckedLabels.includes("dBMapCheck_Labels")==true) {	
@@ -8820,7 +8820,7 @@ if(window["mapPointsNames_"+pathID] != undefined) {
 					}
 				}						
 			}
-			else if(showHidePointsArray[x].startsWith("DB_")==true) {
+		else if(showHidePointsArray[x].startsWith("DB_")==true && readDB ==='1') {
 				var dbID = showHidePointsArray[x].split(":")[0];
 				if(markersDistBoard[dbID]) {	
 					if(markersDistBoard[dbID].getMap() ==null) {
@@ -8941,8 +8941,8 @@ if(window["mapPointsNames_"+pathID] != undefined) {
 				}
 				
 			}
-			else if(showHidePointsArray[x].startsWith("DB_")==true) {
-				var dbID = showHidePointsArray[x].split(":")[0];
+				else if(showHidePointsArray[x].startsWith("DB_")==true && readDB ==='1') {
+	        	var dbID = showHidePointsArray[x].split(":")[0];
 				if(markersDistBoard[dbID]) {
 					markersDistBoard[dbID].setMap(null);	
 					if(window[""+dbID][8]=="backbone") {
