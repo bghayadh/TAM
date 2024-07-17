@@ -210,6 +210,7 @@
 							<td class="title">View</td>
 						</tr>
 						<tr>
+						 <c:if test="${readFiber == 1}">
 							<td class="Icon "><img src="${pageContext.request.contextPath}/resources/NetworkImages/fiber.png">
 							<span id="definition">FIBER CABLE</span></td>
 							<td><input type="checkbox" class="AllFiberCables" id="fiberCheckAllBoq" style="margin-left: 10px;"></td>
@@ -222,7 +223,7 @@
 						<tr>
 							<td class="Icon "><img src="${pageContext.request.contextPath}/resources/NetworkImages/strand.png">
 							<span id="definition">FIBER STRAND</span></td>
-							<td><input type="checkbox" id="strandCheckAllBoq" style="margin-left: 10px;"></td>
+							<td><input type="checkbox" id="strandCheckAllBoq" style="margin-left: 10px;"></td> </c:if>
 						</tr>
 						<tr>
 							<td class="Icon "><img class="image" src="${pageContext.request.contextPath}/resources/NetworkImages/trench.png"
@@ -263,9 +264,10 @@
 							<td><input type="checkbox" id="nodesActiveCheckAllBoq" style="margin-left: 10px;"></td>
 						</tr>
 						<tr>
+						 <c:if test="${readDB == 1}">
 							<td class="Icon "><img src="${pageContext.request.contextPath}/resources/NetworkImages/electrical-panel.png">
 								<span id="definition">DISTRIBUTION BOARD</span></td>
-							<td><input type="checkbox" id="distBoardCheckAllBoq" style="margin-left: 10px;"></td>
+							<td><input type="checkbox" id="distBoardCheckAllBoq" style="margin-left: 10px;"></td></c:if>
 						</tr>
 						<tr>
 							<td class="Icon "><img src="${pageContext.request.contextPath}/resources/NetworkImages/google-maps.png"><span
@@ -532,11 +534,11 @@
 							</div>
 							<div class="row">
 								<div class="col-sm-6"><div class="form-group"><div class="input-group-prepend">
-									<span style="width: 120px;" class="input-group-text"><b>Creation Date</b></span>
+									<span style="width: 120px; font-size: 12px;" class="input-group-text"><b>Creation Date</b></span>
 									<input type="text" id="manholeCreateDate" class="form-control text-input" value="" readonly />
 									</div></div></div>
 								<div class="col-sm-6"><div class="form-group"><div class="input-group-prepend">
-									<span class="input-group-text"  style="width: 123px;"><b>Last Modified Date</b></span>
+									<span class="input-group-text"  style="width: 123px; font-size: 12px;"><b>Last Modified Date</b></span>
 									<input type="text" id="manholeLastModifiedDate" class="form-control text-input" value="" readonly />
 								</div></div></div></div>
 						
@@ -566,16 +568,18 @@
 								</div>
 								<div class="col-sm-6">
 												<div class="form-group">
-													<div class="input-group-prepend">
-														<span style="width: 100px;" class="input-group-text"><b>Owner </b></span> <select id="manholeOwner" class="form-control" <c:if test="${writeManhole == 0}">readonly</c:if> >
-															<option value="" selected></option>
-															<option value="tkl">TKL</option>
-															<option value="ogn">OGN</option>
-															<option value="nofbi">NOFBI</option>
-															<option value="others">Others</option>
-														</select>
-													</div>
-												</div>
+    <div class="input-group-prepend">
+        <span style="width: 100px;" class="input-group-text"><b>Owner </b></span> 
+        <select id="manholeOwner" class="form-control" <c:if test="${writeManhole == 0}">disabled</c:if>>
+            <option value="" selected></option>
+            <option value="tkl">TKL</option>
+            <option value="ogn">OGN</option>
+            <option value="nofbi">NOFBI</option>
+            <option value="others">Others</option>
+        </select>
+    </div>
+</div>
+
 											</div>
 
 							</div>
@@ -1835,7 +1839,8 @@
 					<div class="modal-header" style="background-color: #2678CC ; height: 55px">
 						<h5 id="StrandHeader" class="modal-title" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px;">Strand:</h5>
 						<div style="float: right;">
-							<button id="savefiberstrand" class="btn btn-save" style="color: black; font-weight:bold; margin-top:-6px">Save</button>
+						<c:if test="${saveFiber == 1}">
+							<button id="savefiberstrand" class="btn btn-save" style="color: black; font-weight:bold; margin-top:-6px">Save</button></c:if>
 							<button type="button" name="closePopup" class="close" onclick="ClosingConfirm()">
 								<i class='fa fa-times'></i>
 							</button>
@@ -1865,7 +1870,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="width: 120px; font-size: 12px;" class="input-group-text"><b>Name </b></span>
-													<input type="text" id="StrandName" class="form-control text-input" />
+													<input type="text" id="StrandName" class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if>/>
 												</div>
 											</div>
 										</div>
@@ -1877,7 +1882,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="width: 100px; font-size: 12px;" class="input-group-text"><b>Fiber Cable </b> </span>
-														 <input type="text" id="fibercableStrand" readonly class="form-control text-input" />
+														 <input type="text" id="fibercableStrand" readonly class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if>/>
 												</div>
 											</div>
 										</div>
@@ -1885,7 +1890,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="width: 80px; font-size: 12px;" class="input-group-text"><b>Tube </b></span> 
-														<input type="text" id="fibertubeStrand" readonly class="form-control text-input" />
+														<input type="text" id="fibertubeStrand" readonly class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if>/>
 												</div>
 											</div>
 										</div>
@@ -1897,10 +1902,10 @@
 									<div class="form-group">
 										<div class="input-group-prepend">
 											<span style="width: 100px; font-size: 12px;" class="input-group-text"><b>Length </b></span> 
-											<input type="text" id="StrandLength" class="form-control text-input" /></div></div>
+											<input type="text" id="StrandLength" class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if>/></div></div>
 								</div>
 								<div class="col-sm-6"><div class="form-group"><div class="input-group-prepend">
-								<span style="width: 150px; font-size: 12px;" class="input-group-text"><b>Driving Distance </b></span> <input type="text" id="strandDrivDist" class="form-control text-input" />
+								<span style="width: 150px; font-size: 12px;" class="input-group-text"><b>Driving Distance </b></span> <input type="text" id="strandDrivDist" class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if>/>
 							</div></div></div></div></div>
 														<div class="container-fluid">
 								<div class="row">
@@ -1908,11 +1913,11 @@
 										<div class="form-group">
 											<div class="input-group-prepend">
 												<span style="width: 110px; font-size: 12px;" class="input-group-text"><b>Strand Number </b></span> 
-												<input type="text" id="strandNumber" class="form-control text-input" /></div></div>
+												<input type="text" id="strandNumber" class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if>/></div></div>
 									</div>								
 									<div class="col-sm-6"><div class="form-group"><div class="input-group-prepend">
 										<span style="width: 120px; font-size: 12px;" class="input-group-text"><b>Strand Color </b></span>
-												<select id="strandColor" class="form-control" style="height:38px;">
+												<select id="strandColor" class="form-control" style="height:38px;" <c:if test="${writeFiber == 0}">disabled</c:if>>
 													<option value="" style="background-color: white;"></option>													
 													<option value="blue" style="background-color: white;color:black">blue</option>
 													<option value="orange" style="background-color: white;color:black">orange</option>
@@ -1938,7 +1943,7 @@
 												<div class="input-group-prepend" id="srcDivTube">
 													<span style="width: 140px; font-size: 12px;"
 														class="input-group-text"><b>Strand Type</b></span> 
-														<select id="frmstrandtype" class="form-control">
+														<select id="frmstrandtype" class="form-control" <c:if test="${writeFiber == 0}">disabled</c:if>>
 															<option value=""></option>
 															<option value="g561">G.651</option>
 															<option value="g562">G.652</option>
@@ -1951,7 +1956,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend" id="dstDivTube">
 													<span style="width: 140px; font-size: 12px;" class="input-group-text"><b>Strand Deployment</b></span> 
-														<select id="frmstranddep" class="form-control">
+														<select id="frmstranddep" class="form-control" <c:if test="${writeFiber == 0}">disabled</c:if>>
 															<option value="" selected></option>
 															<option value="aerial">Aerial</option>
 															<option value="submarine">Submarine</option>
@@ -1975,7 +1980,7 @@
 												<div class="input-group-prepend" id="dstDivTube">
 													<span style="width: 140px; font-size: 12px;"
 														class="input-group-text"><b>Strand Owner</b></span> 
-														<select id="frmstrandowner" class="form-control">
+														<select id="frmstrandowner" class="form-control" <c:if test="${writeFiber == 0}">disabled</c:if>>
 															<option value="" selected></option>
 															<option value="tkl">TKL</option>
 															<option value="nofbi">NOFBI</option>
@@ -2034,7 +2039,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 100px; font-size: 12px;" class="input-group-text"><b>By Site </b> 
-													<input type='checkbox' id="site_StrandAutoComplete" style='position: relative; margin-left: 25px' class="srcDestStrandAutoComplete" ></span>
+													<input type='checkbox' id="site_StrandAutoComplete" style='position: relative; margin-left: 25px' class="srcDestStrandAutoComplete" <c:if test="${writeFiber == 0}">disabled</c:if>></span>
 												</div>
 											</div>
 										</div>
@@ -2042,7 +2047,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 100px; font-size: 12px;" class="input-group-text"><b>By Client </b> 
-													<input type='checkbox' id="customer_StrandAutoComplete" style='position: relative; margin-left:15px' class="srcDestStrandAutoComplete"></span>
+													<input type='checkbox' id="customer_StrandAutoComplete" style='position: relative; margin-left:15px' class="srcDestStrandAutoComplete" <c:if test="${writeFiber == 0}">disabled</c:if>></span>
 												</div>
 											</div>
 										</div>
@@ -2050,7 +2055,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 110px; font-size: 12px;" class="input-group-text"><b>By Manhole </b> 
-													<input type='checkbox' id="manhole_StrandAutoComplete" style='position: relative; margin-left:10px' class="srcDestStrandAutoComplete" ></span>
+													<input type='checkbox' id="manhole_StrandAutoComplete" style='position: relative; margin-left:10px' class="srcDestStrandAutoComplete" <c:if test="${writeFiber == 0}">disabled</c:if>></span>
 												</div>
 											</div>
 										</div>
@@ -2058,7 +2063,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 120px; font-size: 12px;" class="input-group-text"><b>By Handhole </b> 
-													<input type='checkbox' id="handhole_StrandAutoComplete" style='position: relative; margin-left:15px' class="srcDestStrandAutoComplete" ></span>
+													<input type='checkbox' id="handhole_StrandAutoComplete" style='position: relative; margin-left:15px' class="srcDestStrandAutoComplete" <c:if test="${writeFiber == 0}">disabled</c:if>></span>
 												</div>
 											</div>
 										</div>
@@ -2066,7 +2071,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 100px; font-size: 12px;position: relative; margin-left:25px" class="input-group-text"><b>By DB </b> 
-													<input type='checkbox' id="db_StrandAutoComplete" style='position: relative; margin-left:25px' class="srcDestStrandAutoComplete" ></span>
+													<input type='checkbox' id="db_StrandAutoComplete" style='position: relative; margin-left:25px' class="srcDestStrandAutoComplete" <c:if test="${writeFiber == 0}">disabled</c:if>></span>
 												</div>
 											</div>
 										</div>
@@ -2078,7 +2083,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="width: 100px; font-size: 12px;" class="input-group-text"><b>Source </b> </span> 
-													<input type="text" id="sourcestrand" class="form-control text-input" />
+													<input type="text" id="sourcestrand" class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if>/>
 												</div>
 											</div>
 										</div>
@@ -2086,7 +2091,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="width: 120px; font-size: 12px;" class="input-group-text"><b>Destination </b></span> 
-													<input type="text" id="destinationstrand" class="form-control text-input" />
+													<input type="text" id="destinationstrand" class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if>/>
 												</div>
 											</div>
 										</div>
@@ -2096,7 +2101,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="width: 140px; font-size: 12px;" class="input-group-text"><b>Source Type</b></span>
-													 <input type="text" id="SourceTypeStrand" class="form-control text-input" />
+													 <input type="text" id="SourceTypeStrand" class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if>/>
 												</div>
 											</div>
 										</div>
@@ -2104,7 +2109,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="width: 140px; font-size: 12px;" class="input-group-text"><b>Destination Type </b></span>
-													 <input type="text" id="DestinationTypeStrand" class="form-control text-input" />
+													 <input type="text" id="DestinationTypeStrand" class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if>/>
 												</div>
 											</div>
 										</div>
@@ -2116,7 +2121,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend" id="sourcestranddiv">
 													<span style="width: 100px; font-size: 12px;" class="input-group-text"><b>Source Lng</b> </span>
-													 <input type="text" id="sourcelongstrand" readonly class="form-control text-input" />
+													 <input type="text" id="sourcelongstrand" readonly class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if>/>
 												</div>
 											</div>
 										</div>
@@ -2124,7 +2129,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend" id="sourcestranddiv">
 													<span style="width: 120px; font-size: 12px;" class="input-group-text"><b>Destination Lng</b></span>
-													 <input type="text" id="destinationlongstrand" readonly class="form-control text-input" />
+													 <input type="text" id="destinationlongstrand" readonly class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if>/>
 												</div>
 											</div>
 										</div>
@@ -2136,7 +2141,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend" id="sourcestranddiv">
 													<span style="width: 100px; font-size: 12px;" class="input-group-text"><b>Source Lat </b> </span> 
-													<input type="text" id="sourcelatstrand" readonly class="form-control text-input" />
+													<input type="text" id="sourcelatstrand" readonly class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if>/>
 												</div>
 											</div>
 										</div>
@@ -2144,7 +2149,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend" id="sourcestranddiv">
 													<span style="width: 120px; font-size: 12px;" class="input-group-text"><b>Destination Lat</b></span> 
-													<input type="text" id="destinationlatstrand" readonly class="form-control text-input" />
+													<input type="text" id="destinationlatstrand" readonly class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if>/>
 												</div>
 											</div>
 										</div>
@@ -2179,13 +2184,13 @@
 										<div class="col-sm-2"><div class="form-group">
 										<div class="input-group-prepend">
 									<span style="min-width: 100px; font-size: 12px;" class="input-group-text"><b>By Site </b> 
-									<input type='checkbox' id="Site_AutocompleteStrand" value='0' style='position: relative; margin-left: 25px' class="auxPtStrandAutocomplete"></span>
+									<input type='checkbox' id="Site_AutocompleteStrand" value='0' style='position: relative; margin-left: 25px' class="auxPtStrandAutocomplete" <c:if test="${writeFiber == 0}">disabled</c:if>></span>
 										</div> </div></div>
 										<div class="col-sm-2">
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 110px; font-size: 12px;position:relative; margin-left:-8px"
-														class="input-group-text"><b>By Manhole </b> <input type='checkbox' id="Manhole_AutocompleteStrand" value='0' class="auxPtStrandAutocomplete" style='position: relative; margin-left: 10px'></span>
+														class="input-group-text"><b>By Manhole </b> <input type='checkbox' id="Manhole_AutocompleteStrand" value='0' class="auxPtStrandAutocomplete" style='position: relative; margin-left: 10px' <c:if test="${writeFiber == 0}">disabled</c:if>></span>
 												</div>
 											</div>
 										</div>
@@ -2193,7 +2198,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 115px; font-size: 12px;position: relative; margin-left:-8px" class="input-group-text"><b>By Handhole </b> <input
-														type='checkbox' id="Handhole_AutocompleteStrand" value='0' class="auxPtStrandAutocomplete" style='position: relative; margin-left: 10px'></span>
+														type='checkbox' id="Handhole_AutocompleteStrand" value='0' class="auxPtStrandAutocomplete" style='position: relative; margin-left: 10px' <c:if test="${writeFiber == 0}">disabled</c:if>></span>
 												</div>
 											</div>
 										</div>
@@ -2201,7 +2206,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 80px; font-size: 12px;position: relative; margin-left:3px;"
-														class="input-group-text"><b>By DB</b> <input type='checkbox' id="DB_AutocompleteStrand" value='0' class="auxPtStrandAutocomplete" style='position: relative; margin-left:25px'></span>
+														class="input-group-text"><b>By DB</b> <input type='checkbox' id="DB_AutocompleteStrand" value='0' class="auxPtStrandAutocomplete" style='position: relative; margin-left:25px' <c:if test="${writeFiber == 0}">disabled</c:if>></span>
 												</div>
 											</div>
 										</div>
@@ -2209,7 +2214,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 150px; font-size: 12px;position: relative; margin-left:-10px"
-														class="input-group-text"><b>By Auxiliary Point </b> <input type='checkbox' id="AuxPt_AutocompleteStrand" value='0' class="auxPtStrandAutocomplete" style='position: relative; margin-left: 15px'></span>
+														class="input-group-text"><b>By Auxiliary Point </b> <input type='checkbox' id="AuxPt_AutocompleteStrand" value='0' class="auxPtStrandAutocomplete" style='position: relative; margin-left: 15px' <c:if test="${writeFiber == 0}">disabled</c:if>></span>
 												</div>
 											</div>
 										</div>
@@ -2221,6 +2226,7 @@
 										</div>
 									</div>
 										<div class="row">
+										 <c:if test="${writeFiber == 1}">
 											<div class="col-sm-5">
 											<div class="form-group">
 												<div class="input-group-prepend">
@@ -2241,6 +2247,7 @@
 												<div class="input-group-prepend"><button id="uploadStrand" class="btn btn-primary" style=" margin-top:10px;">Import</button></div>
 											</div>	
 										</div>
+										</c:if>
 										<div class="col-sm-1">
 											<div class="form-group">
 												<div class="input-group-prepend"><div id="loaderDivStrand" style="display: none; margin-top:11px;"><img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif" width="40px" /></div>
@@ -2270,9 +2277,10 @@
 												</tbody>
 											</table>
 										</div>
+											 <c:if test="${writeFiber == 1}">
 										<button type="button" id="addStrandAuxBelow">Insert Row Below</button>
 										<button type="button" id="addStrandAuxAbove">Insert Row Above</button>
-										<button type="button" id="delete_AuxStrand">Delete Row</button>
+										<button type="button" id="delete_AuxStrand">Delete Row</button></c:if>
 										<button type="button" id="sortByDistanceStrand">Sort by distance</button>
 										<button type="button"><b>Draw By </b> 
                                           <select id ="strandDrawingBy"> 
@@ -2280,10 +2288,12 @@
                                             <option value = "DRIVING">Driving</option> 
                                             <option value = "LINEOFSITE">Line of Site</option></select> 
                                           </button>
+                                          <c:if test="${writeFiber == 1}">
 										<button type="button" id="setCoordinateStrandAux" >Set Coordinate</button>
+										</c:if>
 										<button type="button" id="calculateDrivingDistanceStrand"> Calculate Driving Distance</button>
 										<button type="button" id="calculateGeoDistanceStrand"> Calculate Geo Distance</button>
-										<div> <br>
+									<br>
 											<b>Distance from last auxiliary to destination:</b>
  										 	<input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="distanceLstAuxToDestStrnd" name="distanceLstAuxToDestStrnd" readonly>
 											<br>
@@ -2310,8 +2320,10 @@
 				<div class="modal-content">
 					<div class="modal-header" style="background-color: #2678CC ; height: 55px;">
 						<h5 id="TubeHeader" class="modal-title" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px;">Tube:</h5>
-						<div style="float: right;">
-							<button id="savefibertube" class="btn btn-save" style="color: black; font-weight:bold; margin-top:-6px">Save</button>
+						   <div style="float: right;">
+						    <c:if test="${saveFiber == 1}">
+						
+							<button id="savefibertube" class="btn btn-save" style="color: black; font-weight:bold; margin-top:-6px">Save</button></c:if>
 							<button type="button" name="closePopup" class="close" onclick="ClosingConfirm()">
 								<i class='fa fa-times'></i>
 							</button>
@@ -2341,7 +2353,7 @@
 										<div class="col-sm-6">
 											<div class="form-group">
 												<div class="input-group-prepend">
-													<span style="width: 120px; font-size: 12px;" class="input-group-text"><b>Name </b></span> <input type="text" id="TubeName" class="form-control text-input" />
+													<span style="width: 120px; font-size: 12px;" class="input-group-text"><b>Name </b></span> <input type="text" id="TubeName" class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if>/>
 												</div>
 											</div>
 								</div></div></div>
@@ -2350,7 +2362,7 @@
 										<div class="col-sm-6">
 											<div class="form-group">
 												<div class="input-group-prepend">
-													<span style="width: 100px; font-size: 12px;" class="input-group-text"><b> Fiber Cable </b> </span> <input type="text" id="fiberCable" readonly class="form-control text-input" />
+													<span style="width: 100px; font-size: 12px;" class="input-group-text"><b> Fiber Cable </b> </span> <input type="text" id="fiberCable" readonly class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if>/>
 												</div>
 											</div>
 										</div>
@@ -2362,10 +2374,10 @@
 									<div class="form-group">
 										<div class="input-group-prepend">
 											<span style="width: 100px; font-size: 12px;" class="input-group-text"><b>Length </b></span> 
-											<input type="text" id="TubeLength" class="form-control text-input" /></div></div>
+											<input type="text" id="TubeLength" class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if>/></div></div>
 								</div>
 								<div class="col-sm-6"><div class="form-group"><div class="input-group-prepend">
-								<span style="width: 150px; font-size: 12px;" class="input-group-text"><b>Driving Distance </b></span> <input type="text" id="tubeDrivDist" class="form-control text-input" />
+								<span style="width: 150px; font-size: 12px;" class="input-group-text"><b>Driving Distance </b></span> <input type="text" id="tubeDrivDist" class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if>/>
 							</div></div></div></div></div>
 							<div class="container-fluid">
 								<div class="row">
@@ -2373,10 +2385,10 @@
 										<div class="form-group">
 											<div class="input-group-prepend">
 												<span style="width: 100px; font-size: 12px;" class="input-group-text"><b>Tube Number </b></span> 
-												<input type="text" id="tubeNumber" class="form-control text-input" /></div></div></div>								
+												<input type="text" id="tubeNumber" class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if>/></div></div></div>								
 									<div class="col-sm-6"><div class="form-group"><div class="input-group-prepend">
 										<span style="width: 120px; font-size: 12px;" class="input-group-text"><b>Tube Color </b></span>
-												<select id="tubeColor" class="form-control" style="height:38px;">
+												<select id="tubeColor" class="form-control" style="height:38px;" <c:if test="${writeFiber == 0}">disabled</c:if>>
 													<option value="" style="background-color: white;"></option>													
 													<option value="blue" style="background-color: white;color:black">blue</option>
 													<option value="orange" style="background-color: white;color:black">orange</option>
@@ -2401,7 +2413,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend" id="srcDivTube">
 													<span style="width: 140px; font-size: 12px;" class="input-group-text"><b>Tube Type</b></span> 
-														<select id="frmtubetype" class="form-control">
+														<select id="frmtubetype" class="form-control" <c:if test="${writeFiber == 0}">disabled</c:if>>
 															<option value=""></option>
 															<option value="g561">G.651</option>
 															<option value="g562">G.652</option>
@@ -2413,7 +2425,7 @@
 												<div class="input-group-prepend" id="dstDivTube">
 													<span style="width: 140px; font-size: 12px;"
 														class="input-group-text"><b>Tube Deployment</b></span> 
-														<select id="frmtubedep" class="form-control">
+														<select id="frmtubedep" class="form-control" <c:if test="${writeFiber == 0}">disabled</c:if>>
 															<option value="" selected></option>
 															<option value="aerial">Aerial</option>
 															<option value="submarine">Submarine</option>
@@ -2438,7 +2450,7 @@
 												<div class="input-group-prepend" id="dstDivTube">
 													<span style="width: 140px; font-size: 12px;"
 														class="input-group-text"><b>Tube Owner</b></span> 
-														<select id="frmtubeowner" class="form-control">
+														<select id="frmtubeowner" class="form-control" <c:if test="${writeFiber == 0}">disabled</c:if>>
 															<option value="" selected></option>
 															<option value="tkl">TKL</option>
 															<option value="nofbi">NOFBI</option>
@@ -2497,7 +2509,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 100px; font-size: 12px;" class="input-group-text"><b>By Site </b> 
-													<input type='checkbox' id="site_TubeAutoComplete" style='position: relative; margin-left: 25px' class="srcDestTubeAutoComplete" ></span>
+													<input type='checkbox' id="site_TubeAutoComplete" style='position: relative; margin-left: 25px' class="srcDestTubeAutoComplete" <c:if test="${writeFiber == 0}">disabled</c:if>></span>
 												</div>
 											</div>
 										</div>
@@ -2505,7 +2517,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 100px; font-size: 12px;" class="input-group-text"><b>By Client </b> 
-													<input type='checkbox' id="customer_TubeAutoComplete" style='position: relative; margin-left:15px' class="srcDestTubeAutoComplete"></span>
+													<input type='checkbox' id="customer_TubeAutoComplete" style='position: relative; margin-left:15px' class="srcDestTubeAutoComplete" <c:if test="${writeFiber == 0}">disabled</c:if>></span>
 												</div>
 											</div>
 										</div>
@@ -2513,7 +2525,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 110px; font-size: 12px;" class="input-group-text"><b>By Manhole </b> 
-													<input type='checkbox' id="manhole_TubeAutoComplete" style='position: relative; margin-left:10px' class="srcDestTubeAutoComplete" ></span>
+													<input type='checkbox' id="manhole_TubeAutoComplete" style='position: relative; margin-left:10px' class="srcDestTubeAutoComplete" <c:if test="${writeFiber == 0}">disabled</c:if>></span>
 												</div>
 											</div>
 										</div>
@@ -2521,7 +2533,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 120px; font-size: 12px;" class="input-group-text"><b>By Handhole </b> 
-													<input type='checkbox' id="handhole_TubeAutoComplete" style='position: relative; margin-left:15px' class="srcDestTubeAutoComplete" ></span>
+													<input type='checkbox' id="handhole_TubeAutoComplete" style='position: relative; margin-left:15px' class="srcDestTubeAutoComplete" <c:if test="${writeFiber == 0}">disabled</c:if>></span>
 												</div>
 											</div>
 										</div>
@@ -2529,7 +2541,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 100px; font-size: 12px;position: relative; margin-left:25px" class="input-group-text"><b>By DB </b> 
-													<input type='checkbox' id="db_TubeAutoComplete" style='position: relative; margin-left:25px' class="srcDestTubeAutoComplete" ></span>
+													<input type='checkbox' id="db_TubeAutoComplete" style='position: relative; margin-left:25px' class="srcDestTubeAutoComplete" <c:if test="${writeFiber == 0}">disabled</c:if>></span>
 												</div>
 											</div>
 										</div>
@@ -2541,7 +2553,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="width: 100px; font-size: 12px;" class="input-group-text"><b>Source </b> </span> 
-													<input type="text" id="SourceTube" class="form-control text-input" />
+													<input type="text" id="SourceTube" class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if>/>
 												</div>
 											</div>
 										</div>
@@ -2549,7 +2561,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="width: 120px; font-size: 12px;" class="input-group-text"><b>Destination </b></span> 
-													<input type="text" id="DestinationTube" class="form-control text-input" />
+													<input type="text" id="DestinationTube" class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if>/>
 												</div>
 											</div>
 										</div>
@@ -2559,7 +2571,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="width: 140px; font-size: 12px;" class="input-group-text"><b>Source Type</b></span> 
-													<input type="text" id="SourceTypeTube" class="form-control text-input" />
+													<input type="text" id="SourceTypeTube" class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if>/>
 												</div>
 											</div>
 										</div>
@@ -2567,7 +2579,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="width: 140px; font-size: 12px;" class="input-group-text"><b>Destination Type </b></span> 
-													<input type="text" id="DestinationTypeTube" class="form-control text-input" />
+													<input type="text" id="DestinationTypeTube" class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if>/>
 												</div>
 											</div>
 										</div>
@@ -2579,7 +2591,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend" id="SourceTubeDiv">
 													<span style="width: 100px; font-size: 12px;" class="input-group-text"><b>Source Lng</b> </span> 
-													<input type="text" id="sourcelong" readonly class="form-control text-input" />
+													<input type="text" id="sourcelong" readonly class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if>/>
 												</div>
 											</div>
 										</div>
@@ -2587,7 +2599,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend" id="SourceTubeDiv">
 													<span style="width: 120px; font-size: 12px;" class="input-group-text"><b>Destination Lng</b></span>
-													 <input type="text" id="destinationlong" readonly class="form-control text-input" />
+													 <input type="text" id="destinationlong" readonly class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if>/>
 												</div>
 											</div>
 										</div>
@@ -2599,7 +2611,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend" id="SourceTubeDiv">
 													<span style="width: 100px; font-size: 12px;" class="input-group-text"><b>Source Lat </b> </span>
-													 <input type="text" id="sourcelat" readonly class="form-control text-input" />
+													 <input type="text" id="sourcelat" readonly class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if>/>
 												</div>
 											</div>
 										</div>
@@ -2607,7 +2619,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend" id="DestinationTubeDiv">
 													<span style="width: 120px; font-size: 12px;" class="input-group-text"><b>Destination Lat</b></span> 
-													<input type="text" id="destinationlat" readonly class="form-control text-input" />
+													<input type="text" id="destinationlat" readonly class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if>/>
 												</div>
 											</div>
 										</div>
@@ -2637,17 +2649,18 @@
 							<div class="tab-pane " id="auxtabtube" role="tabpanel" aria-labelledby="aux-tab-tube">
 								<p></p>
 								<div class="container-fluid">
+								
 								<div class="row">
 										<div class="col-sm-2"><div class="form-group">
 										<div class="input-group-prepend">
 											<span style="min-width: 100px; font-size: 12px;" class="input-group-text"><b>By Site </b> 
-											<input type='checkbox' id="Site_AutocompleteTube" value='0' style='position: relative; margin-left: 25px' class="auxPtTubeAutocomplete"></span>
+											<input type='checkbox' id="Site_AutocompleteTube" value='0' style='position: relative; margin-left: 25px' class="auxPtTubeAutocomplete" <c:if test="${writeFiber == 0}">disabled</c:if>/></span>
 										</div> </div></div>
 										<div class="col-sm-2">
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 110px; font-size: 12px;position:relative; margin-left:-8px" class="input-group-text"><b>By Manhole </b> 
-													<input type='checkbox' id="Manhole_AutocompleteTube" value='0' class="auxPtTubeAutocomplete" style='position: relative; margin-left: 10px'></span>
+													<input type='checkbox' id="Manhole_AutocompleteTube" value='0' class="auxPtTubeAutocomplete" style='position: relative; margin-left: 10px' <c:if test="${writeFiber == 0}">disabled</c:if>/></span>
 												</div>
 											</div>
 										</div>
@@ -2655,7 +2668,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 115px; font-size: 12px;position: relative; margin-left:-8px" class="input-group-text"><b>By Handhole </b>
-													 <input type='checkbox' id="Handhole_AutocompleteTube" value='0' class="auxPtTubeAutocomplete" style='position: relative; margin-left: 10px'></span>
+													 <input type='checkbox' id="Handhole_AutocompleteTube" value='0' class="auxPtTubeAutocomplete" style='position: relative; margin-left: 10px' <c:if test="${writeFiber == 0}">disabled</c:if>/></span>
 												</div>
 											</div>
 										</div>
@@ -2663,7 +2676,7 @@
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 80px; font-size: 12px;position: relative; margin-left:3px;" class="input-group-text"><b>By DB</b> 
-													<input type='checkbox' id="DB_AutocompleteTube" value='0' class="auxPtTubeAutocomplete" style='position: relative; margin-left:25px'></span>
+													<input type='checkbox' id="DB_AutocompleteTube" value='0' class="auxPtTubeAutocomplete" style='position: relative; margin-left:25px' <c:if test="${writeFiber == 0}">disabled</c:if>/></span>
 												</div>
 											</div>
 										</div>
@@ -2671,12 +2684,14 @@
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 150px; font-size: 12px;position: relative; margin-left:-10px" class="input-group-text"><b>By Auxiliary Point </b>
-													 <input type='checkbox' id="AuxPt_AutocompleteTube" value='0' class="auxPtTubeAutocomplete" style='position: relative; margin-left: 15px'></span>
+													 <input type='checkbox' id="AuxPt_AutocompleteTube" value='0' class="auxPtTubeAutocomplete" style='position: relative; margin-left: 15px' <c:if test="${writeFiber == 0}">disabled</c:if>/></span>
 												</div>
 											</div>
 										</div>
 									</div>
+									
 										<div class="row">
+										  <c:if test="${writeFiber == 1}">
 											<div class="col-sm-5">
 											<div class="form-group">
 												<div class="input-group-prepend">
@@ -2697,6 +2712,7 @@
 												<div class="input-group-prepend"><button id="uploadTube" class="btn btn-primary" style=" margin-top:10px;">Import</button></div>
 											</div>	
 										</div>
+									</c:if>
 										<div class="col-sm-1">
 											<div class="form-group">
 												<div class="input-group-prepend"><div id="loaderDivTube" style="display: none; margin-top:11px;"><img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif" width="40px" /></div>
@@ -2726,21 +2742,23 @@
 												</tbody>
 											</table>
 										</div>
+										  <c:if test="${writeFiber == 1}">
 										<input type="text" id="Rowindexaux" value="" hidden="">
 										<button type="button" id="addTubeAuxBelow">Insert Row Below</button>
 										<button type="button" id="addTubeAuxAbove">Insert Row Above</button>
-										<button type="button" id="delete_AuxTube">Delete Row</button>
+										<button type="button" id="delete_AuxTube">Delete Row</button></c:if>
 										<button type="button" id="sortByDistanceTube">Sort by distance</button>
 										<button type="button"><b>Draw By </b> 
-                                          <select id ="tubeDrawingBy"> 
+                                         <select id ="tubeDrawingBy"> 
                                             <option value = "DEFAULT"></option>
                                             <option value = "DRIVING">Driving</option> 
                                             <option value = "LINEOFSITE">Line of Site</option></select> 
                                           </button>
-										<button type="button" id="setCoordinateTubeAux" >Set Coordinate</button>
+                                           <c:if test="${writeFiber == 1}">
+										<button type="button" id="setCoordinateTubeAux" >Set Coordinate</button></c:if>
 										<button type="button" id="calculateDrivingDistanceTube"> Calculate Driving Distance</button>
 										<button type="button" id="calculateGeoDistanceTube"> Calculate Geo Distance</button>
-										
+										<br>
 										<div>
 										<br>
 											<b>Distance from last auxiliary to destination:</b>
@@ -3014,7 +3032,8 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 	        <div class="modal-content"><div class="modal-header"style="background-color: #2678CC ; height: 55px; ">
 	         <h5  class="modal-title" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px;">Cable Color</h5>
 	          <div style="float: right;">
-							<button id="saveFiberPathColor" class="btn btn-save" style="color: black; font-weight:bold; margin-top:-6px">Save</button> 
+	          <c:if test="${saveFiber == 1}">
+							<button id="saveFiberPathColor" class="btn btn-save" style="color: black; font-weight:bold; margin-top:-6px">Save</button> </c:if>
 							<button type="button" name="closePopup" class="close" onclick="ClosingConfirm()"><i class='fa fa-times'></i></button>
 							<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change'></i></a>
 			  </div>
@@ -3047,7 +3066,8 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 					<div class="modal-header" style="background-color: #2678CC ; height: 55px;">
 						<h5 id="fiberHeader" class="modal-title" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px;">Fiber Cable</h5>
 						<div style="float: right;">
-							<button id="saveFiberPath" class="btn btn-save" style="color: black; font-weight:bold; margin-top:-6px">Save</button>
+						<c:if test="${saveFiber == 1}">
+							<button id="saveFiberPath" class="btn btn-save" style="color: black; font-weight:bold; margin-top:-6px">Save</button></c:if>
 							<button type="button" name="closePopup" class="close" onclick="ClosingConfirm()">
 								<i class='fa fa-times'></i>
 							</button>
@@ -3085,7 +3105,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 												<div class="input-group-prepend">
 													<span style="width: 120px; font-size: 12px;"
 														class="input-group-text"><b>Name </b></span> <input
-														type="text" id="fiberName" class="form-control text-input" />
+														type="text" id="fiberName" class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if> />
 												</div></div></div>
 									</div>
 								</div>
@@ -3095,7 +3115,8 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="width: 120px; font-size: 12px;"
-														class="input-group-text"><b>Item Code </b></span> <input type="text" id="ItemCodeId" class="form-control text-input" />
+														class="input-group-text"><b>Item Code </b></span> 
+														<input type="text" id="ItemCodeId" class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if> />
 												</div>
 											</div>
 										</div>
@@ -3104,7 +3125,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 												<div class="input-group-prepend">
 													<span style="width: 100px; font-size: 12px;"
 														class="input-group-text"><b>Tubes Number </b></span> <input
-														type="text" id="NumTubes" class="form-control text-input" />
+														type="text" id="NumTubes" class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if> />
 												</div>
 											</div>
 										</div>
@@ -3116,7 +3137,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="width: 100px; font-size: 12px;"
-														class="input-group-text"><b>Length </b></span> <input type="text" id="FiberLength" class="form-control text-input" />
+														class="input-group-text"><b>Length </b></span> <input type="text" id="FiberLength" class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if> />
 												</div>
 											</div>
 										</div>
@@ -3124,7 +3145,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="width: 120px; font-size: 12px;"
-														class="input-group-text"><b>Strands Number </b></span> <input type="text" id="NumStrands" class="form-control text-input" />
+														class="input-group-text"><b>Strands Number </b></span> <input type="text" id="NumStrands" class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if> />
 												</div>
 											</div>
 										</div>
@@ -3133,30 +3154,29 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 													<span style="width: 150px; font-size: 12px;"
 														class="input-group-text"><b>Driving Distance </b></span> <input
 														type="text" id="FiberDrivDist"
-														class="form-control text-input" />
+														class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if> />
 												</div></div></div>
 												<div class="col-sm-6">
-												<div class="form-group">
-													<div class="input-group-prepend">
-														<span style="width: 100px; font-size: 12px;"
-														class="input-group-text"><b>Cable Size </b></span> 
-														<select
-															id="fiberCableSize" class="form-control">
-															<option value=""></option>
-															<option value="2C">2C</option>
-															<option value="4C">4C</option>
-															<option value="8C">8C</option>
-															<option value="12C">12C</option>
-															<option value="16C">16C</option>
-															<option value="24C">24C</option>
-															<option value="48C">48C</option>
-															<option value="96C">96C</option>
-															<option value="144C">144C</option>
-															<option value="288C">288C</option>
-															<option value="576C">576C</option>
-														</select>
-													</div>
-												</div>
+											<div class="form-group">
+    <div class="input-group-prepend">
+        <span style="width: 100px; font-size: 12px;" class="input-group-text"><b>Cable Size </b></span> 
+        <select id="fiberCableSize" class="form-control" <c:if test="${writeFiber == 0}">disabled</c:if>>
+            <option value=""></option>
+            <option value="2C">2C</option>
+            <option value="4C">4C</option>
+            <option value="8C">8C</option>
+            <option value="12C">12C</option>
+            <option value="16C">16C</option>
+            <option value="24C">24C</option>
+            <option value="48C">48C</option>
+            <option value="96C">96C</option>
+            <option value="144C">144C</option>
+            <option value="288C">288C</option>
+            <option value="576C">576C</option>
+        </select>
+    </div>
+</div>
+
 											</div>		
 									</div>
 									<div class="row">
@@ -3165,17 +3185,17 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 													<div class="input-group-prepend">
 														<span style="width: 100px; font-size: 12px;"
 														class="input-group-text"><b>Fiber Type </b></span> 
-														<select
-															id="fibertype" class="form-control">
-															<option value=""></option>
-															<option value="g561">G.651</option>
-															<option value="g562">G.652</option>
-															<option value="g563">G.653</option>
-															<option value="g564">G.654</option>
-															<option value="g565">G.655</option>
-															<option value="g566">G.656</option>
-															<option value="g567">G.657</option>
-														</select>
+													<select id="fibertype" class="form-control"<c:if test="${writeFiber == 0}">disabled</c:if>>
+    <option value=""></option>
+    <option value="g561">G.651</option>
+    <option value="g562">G.652</option>
+    <option value="g563">G.653</option>
+    <option value="g564">G.654</option>
+    <option value="g565">G.655</option>
+    <option value="g566">G.656</option>
+    <option value="g567">G.657</option>
+</select>
+
 													</div>
 												</div>
 											</div>										
@@ -3183,12 +3203,13 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 												<div class="form-group">
 													<div class="input-group-prepend">
 														<span style="font-size: 12px;"
-														class="input-group-text"><b>Fiber Deployment </b></span> <select id="fiberdeployment" class="form-control">
-															<option value="" selected></option>
-															<option value="aerial">Aerial</option>
-															<option value="submarine">Submarine</option>
-															<option value="underground">Underground</option>
-														</select>
+														class="input-group-text"><b>Fiber Deployment </b></span> <select id="fiberdeployment" class="form-control" <c:if test="${writeFiber == 0}">disabled</c:if>>
+    <option value="" selected></option>
+    <option value="aerial">Aerial</option>
+    <option value="submarine">Submarine</option>
+    <option value="underground">Underground</option>
+</select>
+
 													</div>
 												</div>
 											</div>
@@ -3197,27 +3218,29 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 											<div class="col-sm-6">
 												<div class="form-group">
 													<div class="input-group-prepend">
-														<span style="font-size: 12px;" class="input-group-text"><b>Fiber Network Level </b></span> <select id="fibernetlevel" class="form-control">
-															<option value="backbone" selected >Backbone</option>
-															<option value="metro">Metro</option>
-															<option value="access">Access</option>
-					
-														</select>
+														<span style="font-size: 12px;" class="input-group-text"><b>Fiber Network Level </b></span> <select id="fibernetlevel" class="form-control" <c:if test="${writeFiber == 0}">disabled</c:if>>
+    <option value="backbone" selected>Backbone</option>
+    <option value="metro">Metro</option>
+    <option value="access">Access</option>
+</select>
+
 													</div>
 												</div>
 											</div>										
 											<div class="col-sm-6">
 												<div class="form-group">
-													<div class="input-group-prepend">
-														<span style="width: 100px; font-size: 12px;" class="input-group-text"><b>Fiber Owner </b></span> <select id="fiberowner" class="form-control">
-															<option value="" selected></option>
-															<option value="tkl">TKL</option>
-															<option value="nofbi">NOFBI</option>
-															<option value="ogn">OGN</option>
-															<option value="others">Others</option>
-														</select>
-													</div>
-												</div>
+    <div class="input-group-prepend">
+        <span style="width: 100px; font-size: 12px;" class="input-group-text"><b>Fiber Owner </b></span> 
+        <select id="fiberowner" class="form-control" <c:if test="${writeFiber == 0}">disabled</c:if>>
+            <option value="" selected></option>
+            <option value="tkl">TKL</option>
+            <option value="nofbi">NOFBI</option>
+            <option value="ogn">OGN</option>
+            <option value="others">Others</option>
+        </select>
+    </div>
+</div>
+
 											</div>
 										</div>
 										<div class="row">
@@ -3225,7 +3248,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="width: 120px; font-size: 12px;"
-														class="input-group-text"><b>Engineer Name </b></span> <input type="text" id="fiberEngineerName" class="form-control text-input" />
+														class="input-group-text"><b>Engineer Name </b></span> <input type="text" id="fiberEngineerName" class="form-control text-input" <c:if test="${writeFiber == 0}">disabled</c:if>>
 												</div>
 											</div>
 										</div>
@@ -3233,7 +3256,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="width: 100px; font-size: 12px;"
-														class="input-group-text"><b>Installer </b></span> <input type="text" id="fiberInstaller" class="form-control text-input" />
+														class="input-group-text"><b>Installer </b></span> <input type="text" id="fiberInstaller" class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if> />
 												</div>
 											</div>
 										</div>
@@ -3245,12 +3268,12 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 													<span style="min-width: 150px; font-size: 12px;"
 														class="input-group-text"><b>Single Mode </b> <input
 														type='checkbox' class="fiberMode" id="SingleMode"
-														name="Single Mode" style='position: relative; left: 20px;'></span>
+														name="Single Mode" style='position: relative; left: 20px;'<c:if test="${writeFiber == 0}">readonly</c:if> /></span>
 													<span
 														style="min-width: 150px; font-size: 12px; margin-left: 50px"
 														class="input-group-text"><b>Multimode </b> <input
 														type='checkbox' class="fiberMode" id="Multimode"
-														name="Multimode" style='position: relative; left: 20px;'></span>
+														name="Multimode" style='position: relative; left: 20px;'<c:if test="${writeFiber == 0}">readonly</c:if> /></span>
 												</div>
 											</div>
 										</div></div>
@@ -3302,14 +3325,14 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 										<div class="col-sm-6">
 											<div class="form-group">
 												<div class="input-group-prepend">
-													<span style="width: 100px; font-size: 12px;" class="input-group-text"><b>Condiut_Id </b></span> <input type="text" id="Condiut_Id" class="form-control text-input" />
+													<span style="width: 100px; font-size: 12px;" class="input-group-text"><b>Condiut_Id </b></span> <input type="text" id="Condiut_Id" class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if> />
 												</div>
 											</div>
 										</div>
 										<div class="col-sm-6">
 											<div class="form-group">
 												<div class="input-group-prepend">
-													<span style="width: 120px; font-size: 12px;" class="input-group-text"><b>Condiut_Name </b></span> <input type="text" id="Condiut_Name" class="form-control text-input" />
+													<span style="width: 120px; font-size: 12px;" class="input-group-text"><b>Condiut_Name </b></span> <input type="text" id="Condiut_Name" class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if> />
 												</div>
 											</div>
 										</div>
@@ -3325,7 +3348,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 100px; font-size: 12px;" class="input-group-text"><b>By Site </b> 
-													<input type='checkbox' id="site_CableAutoComplete" style='position: relative; margin-left: 25px' class="srcDestCableAutoComplete" ></span>
+													<input type='checkbox' id="site_CableAutoComplete" style='position: relative; margin-left: 25px' class="srcDestCableAutoComplete" <c:if test="${writeFiber == 0}">disabled</c:if> /></span>
 												</div>
 											</div>
 										</div>
@@ -3333,7 +3356,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 100px; font-size: 12px;" class="input-group-text"><b>By Client </b> 
-													<input type='checkbox' id="customer_CableAutoComplete" style='position: relative; margin-left:15px' class="srcDestCableAutoComplete"></span>
+													<input type='checkbox' id="customer_CableAutoComplete" style='position: relative; margin-left:15px' class="srcDestCableAutoComplete" <c:if test="${writeFiber == 0}">disabled</c:if> /></span>
 												</div>
 											</div>
 										</div>
@@ -3341,7 +3364,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 110px; font-size: 12px;" class="input-group-text"><b>By Manhole </b> 
-													<input type='checkbox' id="manhole_CableAutoComplete" style='position: relative; margin-left:10px' class="srcDestCableAutoComplete" ></span>
+													<input type='checkbox' id="manhole_CableAutoComplete" style='position: relative; margin-left:10px' class="srcDestCableAutoComplete" <c:if test="${writeFiber == 0}">disabled</c:if> /></span>
 												</div>
 											</div>
 										</div>
@@ -3349,7 +3372,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 120px; font-size: 12px;" class="input-group-text"><b>By Handhole </b> 
-													<input type='checkbox' id="handhole_CableAutoComplete" style='position: relative; margin-left:15px' class="srcDestCableAutoComplete" ></span>
+													<input type='checkbox' id="handhole_CableAutoComplete" style='position: relative; margin-left:15px' class="srcDestCableAutoComplete" <c:if test="${writeFiber == 0}">disabled</c:if> /></span>
 												</div>
 											</div>
 										</div>
@@ -3357,7 +3380,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 100px; font-size: 12px;position: relative; margin-left:25px" class="input-group-text"><b>By DB </b> 
-													<input type='checkbox' id="db_CableAutoComplete" style='position: relative; margin-left:25px' class="srcDestCableAutoComplete" ></span>
+													<input type='checkbox' id="db_CableAutoComplete" style='position: relative; margin-left:25px' class="srcDestCableAutoComplete" <c:if test="${writeFiber == 0}">disabled</c:if> /></span>
 												</div>
 											</div>
 										</div>
@@ -3368,14 +3391,14 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 												<div class="input-group-prepend" id="SourceDiv">
 													<span style="width: 140px; font-size: 12px;"
 														class="input-group-text"><b>Source</b></span> <input
-														type="text" id="Source" class="form-control text-input" />
+														type="text" id="Source" class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if> />
 												</div>
 											</div>
 										</div>
 										<div class="col-sm-6">
 											<div class="form-group" id="DestinationDiv">
 												<div class="input-group-prepend">
-													<span style="width: 140px; font-size: 12px;" class="input-group-text"><b>Destination </b></span> <input type="text" id="Destination" class="form-control text-input" />
+													<span style="width: 140px; font-size: 12px;" class="input-group-text"><b>Destination </b></span> <input type="text" id="Destination" class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if> />
 												</div>
 											</div>
 										</div>
@@ -3384,14 +3407,14 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 										<div class="col-sm-6">
 											<div class="form-group">
 												<div class="input-group-prepend">
-													<span style="width: 140px; font-size: 12px;" class="input-group-text"><b>Source Type</b></span> <input type="text" id="SourceType" class="form-control text-input" />
+													<span style="width: 140px; font-size: 12px;" class="input-group-text"><b>Source Type</b></span> <input type="text" id="SourceType" class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if> />
 												</div>
 											</div>
 										</div>
 										<div class="col-sm-6">
 											<div class="form-group">
 												<div class="input-group-prepend">
-													<span style="width: 140px; font-size: 12px;" class="input-group-text"><b>Destination Type </b></span> <input type="text" id="DestinationType" class="form-control text-input" />
+													<span style="width: 140px; font-size: 12px;" class="input-group-text"><b>Destination Type </b></span> <input type="text" id="DestinationType" class="form-control text-input" <c:if test="${writeFiber == 0}">readonly</c:if> />
 												</div>
 											</div>
 										</div>
@@ -3444,22 +3467,23 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 											</div>
 										</div>
 									</div>
-									<div class="row">
-										<div class="col-md-6">
-											<div class="form-group">
-												<div class="input-group-prepend">
-												  <button id="getSrcCity" type="button" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; width: 40%;" onclick="getSrcCity()">Get Source City</button>
-												</div>
-											</div>
-										</div>
-										<div class="col-md-6">
-											<div class="form-group">
-												<div class="input-group-prepend">
-												  <button id="getDstCity" type="button" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; width: 40%;" onclick="getDstCity()">Get Destination City</button>
-												</div>
-											</div>
-										</div>
-									</div>
+								<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <div class="input-group-prepend">
+                <button id="getSrcCity" type="button" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; width: 40%; <c:if test="${writeFiber != 1}">pointer-events: none; background-color: #cccccc; color: #666666;</c:if>" onclick="getSrcCity()" <c:if test="${writeFiber != 1}">disabled</c:if>>Get Source City</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <div class="input-group-prepend">
+                <button id="getDstCity" type="button" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; width: 40%; <c:if test="${writeFiber != 1}">pointer-events: none; background-color: #cccccc; color: #666666;</c:if>" onclick="getDstCity()" <c:if test="${writeFiber != 1}">disabled</c:if>>Get Destination City</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 								</div>
 							</div>
 							<div class="tab-pane " id="tubes" role="tabpanel"
@@ -3470,14 +3494,14 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 										<div class="col-sm-2"><div class="form-group">
 										<div class="input-group-prepend">
 									<span style="min-width: 100px; font-size: 12px;" class="input-group-text"><b>By Site </b> 
-									<input type='checkbox' id="Site_AutocompleteTubeFiber" value='0' style='position: relative; margin-left: 25px' class="fiberTubeAutocomplete"></span>
+									<input type='checkbox' id="Site_AutocompleteTubeFiber" value='0' style='position: relative; margin-left: 25px' class="fiberTubeAutocomplete" <c:if test="${writeFiber == 0}">disabled</c:if> /></span>
 										</div> </div></div>
 										<div class="col-sm-2">
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 110px; font-size: 12px;position: relative; margin-left:-10px"
 														class="input-group-text"><b>By Client </b> <input
-														type='checkbox' id="customer_AutocompleteTubeFiber" value='0' class="fiberTubeAutocomplete" style='position: relative; margin-left:25px'></span>
+														type='checkbox' id="customer_AutocompleteTubeFiber" value='0' class="fiberTubeAutocomplete" style='position: relative; margin-left:25px' <c:if test="${writeFiber == 0}">disabled</c:if> /></span>
 												</div>
 											</div>
 										</div>
@@ -3486,7 +3510,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 												<div class="input-group-prepend">
 													<span style="min-width: 110px; font-size: 12px;position:relative; margin-left:-8px"
 														class="input-group-text"><b>By Manhole </b> <input
-														type='checkbox' id="Manhole_AutocompleteTubeFiber" value='0' class="fiberTubeAutocomplete" style='position: relative; margin-left: 10px'></span>
+														type='checkbox' id="Manhole_AutocompleteTubeFiber" value='0' class="fiberTubeAutocomplete" style='position: relative; margin-left: 10px' <c:if test="${writeFiber == 0}">disabled</c:if> /></span>
 												</div>
 											</div>
 										</div>
@@ -3495,7 +3519,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 												<div class="input-group-prepend">
 													<span style="min-width: 115px; font-size: 12px;position: relative; margin-left:-8px"
 														class="input-group-text"><b>By Handhole </b> <input
-														type='checkbox' id="Handhole_AutocompleteTubeFiber" value='0' class="fiberTubeAutocomplete" style='position: relative; margin-left: 10px'></span>
+														type='checkbox' id="Handhole_AutocompleteTubeFiber" value='0' class="fiberTubeAutocomplete" style='position: relative; margin-left: 10px' <c:if test="${writeFiber == 0}">disabled</c:if> /></span>
 												</div>
 											</div>
 										</div>
@@ -3504,7 +3528,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 												<div class="input-group-prepend">
 													<span style="min-width: 80px; font-size: 12px;position: relative; margin-left:3px;"
 														class="input-group-text"><b>By DB</b> <input
-														type='checkbox' id="DB_AutocompleteTubeFiber" value='0' class="fiberTubeAutocomplete" style='position: relative; margin-left:25px'></span>
+														type='checkbox' id="DB_AutocompleteTubeFiber" value='0' class="fiberTubeAutocomplete" style='position: relative; margin-left:25px' <c:if test="${writeFiber == 0}">disabled</c:if> /></span>
 												</div>
 											</div>
 										</div>										
@@ -3545,8 +3569,9 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 														<th style="min-width: 150px">Drawing Type</th>
 										</tr></thead><tbody></tbody></table></div>
 										<input type="text" id="RowIndex2" value="" hidden>
+														<c:if test="${writeFiber == 1}">
 										<button type="button" id="add_Tube">Add Row</button>
-										<button type="button" id="delete_Tube">Delete Row</button>
+										<button type="button" id="delete_Tube">Delete Row</button></c:if>
 									</form></div></div>
 							<div class="tab-pane " id="strands" role="tabpanel" aria-labelledby="strands-tab"><p></p>
 								<div class="container-fluid">
@@ -3554,7 +3579,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 										<div class="col-sm-2"><div class="form-group">
 										<div class="input-group-prepend">
 									<span style="min-width: 100px; font-size: 12px;" class="input-group-text"><b>By Site </b> 
-									<input type='checkbox' id="Site_AutocompleteStrandFiber" value='0' style='position: relative; margin-left: 25px' class="fiberStrandAutocomplete"></span>
+									<input type='checkbox' id="Site_AutocompleteStrandFiber" value='0' style='position: relative; margin-left: 25px' class="fiberStrandAutocomplete" <c:if test="${writeFiber == 0}">disabled</c:if> /></span>
 										</div> </div></div>
 										<div class="col-sm-2">
 											<div class="form-group">
@@ -3562,7 +3587,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 													<span style="min-width: 110px; font-size: 12px;position: relative; margin-left:-10px"
 														class="input-group-text"><b>By Client </b> <input
 														type='checkbox' id="customer_AutocompleteStrandFiber" value='0' class="fiberStrandAutocomplete"
-														style='position: relative; margin-left:25px'></span>
+														style='position: relative; margin-left:25px' <c:if test="${writeFiber == 0}">disabled</c:if> /></span>
 												</div>
 											</div>
 										</div>
@@ -3570,7 +3595,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 110px; font-size: 12px;position:relative; margin-left:-8px"
-														class="input-group-text"><b>By Manhole </b> <input type='checkbox' id="Manhole_AutocompleteStrandFiber" value='0' class="fiberStrandAutocomplete" style='position: relative; margin-left: 10px'></span>
+														class="input-group-text"><b>By Manhole </b> <input type='checkbox' id="Manhole_AutocompleteStrandFiber" value='0' class="fiberStrandAutocomplete" style='position: relative; margin-left: 10px' <c:if test="${writeFiber == 0}">disabled</c:if> /></span>
 												</div>
 											</div>
 										</div>
@@ -3578,7 +3603,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 115px; font-size: 12px;position: relative; margin-left:-8px"
-														class="input-group-text"><b>By Handhole </b> <input type='checkbox' id="Handhole_AutocompleteStrandFiber" value='0' class="fiberStrandAutocomplete" style='position: relative; margin-left: 10px'></span>
+														class="input-group-text"><b>By Handhole </b> <input type='checkbox' id="Handhole_AutocompleteStrandFiber" value='0' class="fiberStrandAutocomplete" style='position: relative; margin-left: 10px' <c:if test="${writeFiber == 0}">disabled</c:if> /></span>
 												</div>
 											</div>
 										</div>
@@ -3586,7 +3611,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 80px; font-size: 12px;position: relative; margin-left:3px;"
-														class="input-group-text"><b>By DB</b> <input type='checkbox' id="DB_AutocompleteStrandFiber" value='0' class="fiberStrandAutocomplete" style='position: relative; margin-left:25px'></span>
+														class="input-group-text"><b>By DB</b> <input type='checkbox' id="DB_AutocompleteStrandFiber" value='0' class="fiberStrandAutocomplete" style='position: relative; margin-left:25px' <c:if test="${writeFiber == 0}">disabled</c:if> /></span>
 												</div>
 											</div>
 										</div>	
@@ -3625,20 +3650,21 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 														<th style="min-width: 180px">Strand Color</th>
 														<th style="min-width: 150px">Drawing Type</th>
 													</tr></thead><tbody></tbody></table></div>
+																	<c:if test="${writeFiber == 1}">
 										<button type="button" id="add_Strand">Add Row</button>
-										<button type="button" id="delete_Strand">Delete Row</button>
+										<button type="button" id="delete_Strand">Delete Row</button></c:if>
 									</form></div></div>
 							<div class="tab-pane " id="auxiliary" role="tabpanel" aria-labelledby="fiber_aux_tab"><p></p>
 								<div class="container-fluid"><div class="row"><div class="col-sm-2"><div class="form-group">
 									<div class="input-group-prepend">
 									<span style="min-width: 100px; font-size: 12px;" class="input-group-text"><b>By Site </b> 
-									<input type='checkbox' id=Site_AutocompleteCable value='0' style='position: relative; margin-left: 25px' class="auxPtAutocomplete"></span>
+									<input type='checkbox' id=Site_AutocompleteCable value='0' style='position: relative; margin-left: 25px' class="auxPtAutocomplete" <c:if test="${writeFiber == 0}">disabled</c:if> /></span>
 										</div> </div></div>
 										<div class="col-sm-2">
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 110px; font-size: 12px;position:relative; margin-left:-8px" class="input-group-text"><b>By Manhole </b> <input
-														type='checkbox' id=Manhole_AutocompleteCable value='0' class="auxPtAutocomplete" style='position: relative; margin-left: 10px'></span>
+														type='checkbox' id=Manhole_AutocompleteCable value='0' class="auxPtAutocomplete" style='position: relative; margin-left: 10px' <c:if test="${writeFiber == 0}">disabled</c:if> /></span>
 												</div>
 											</div>
 										</div>
@@ -3646,7 +3672,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 115px; font-size: 12px;position: relative; margin-left:-8px" class="input-group-text"><b>By Handhole </b> <input
-														type='checkbox' id="Handhole_AutocompleteCable" value='0' class="auxPtAutocomplete" style='position: relative; margin-left: 10px'></span>
+														type='checkbox' id="Handhole_AutocompleteCable" value='0' class="auxPtAutocomplete" style='position: relative; margin-left: 10px' <c:if test="${writeFiber == 0}">disabled</c:if> /></span>
 												</div>
 											</div>
 										</div>
@@ -3654,7 +3680,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 80px; font-size: 12px;position: relative; margin-left:3px;" class="input-group-text"><b>By DB</b> <input
-														type='checkbox' id=DB_AutocompleteCable value='0' class="auxPtAutocomplete" style='position: relative; margin-left:25px'></span>
+														type='checkbox' id=DB_AutocompleteCable value='0' class="auxPtAutocomplete" style='position: relative; margin-left:25px' <c:if test="${writeFiber == 0}">disabled</c:if> /></span>
 												</div>
 											</div>
 										</div>
@@ -3662,32 +3688,44 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 150px; font-size: 12px;position: relative; margin-left:-10px"class="input-group-text"><b>By Auxiliary Point </b> <input
-														type='checkbox' id="AuxPt_AutocompleteCable" value='0' class="auxPtAutocomplete" style='position: relative; margin-left: 15px'></span>
+														type='checkbox' id="AuxPt_AutocompleteCable" value='0' class="auxPtAutocomplete" style='position: relative; margin-left: 15px' <c:if test="${writeFiber == 0}">disabled</c:if> /></span>
 												</div>
 											</div>
 										</div>
 									</div>
+								
 									<div class="row">
+									  <c:if test="${writeFiber == 1}">
 										<div class="col-sm-5">
-											<div class="form-group">
-												<div class="input-group-prepend">
-<label class="file"><input type="file" style="font-size:13px" id="importAuxfile" accept=".xlsx" class="btn btn-light file"></label>
-												</div>
-											</div>	
-										</div>
+    <div class="form-group">
+
+        <div class="input-group-prepend">
+          
+            <label class="file">
+                <input type="file" style="font-size: 13px; " id="importAuxfile" accept=".xlsx" class="btn btn-light file" >
+            </label>
+        </div>
+    </div>
+</div>
+
 										<div class="col-sm-4">
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 150px; font-size: 12px; margin-top:10px" class="input-group-text"><b>Append to the existed points</b> <input
-														type='checkbox' id="AuxPt_AppendTo" value='0' style='position: relative; margin-left: 15px'></span>
+														type='checkbox' id="AuxPt_AppendTo" value='0' style='position: relative; margin-left: 15px' ></span>
 												</div>
 											</div>
 										</div>
 										<div class="col-sm-2">
-											<div class="form-group">
-												<div class="input-group-prepend"><button id="upload" class="btn btn-primary" style=" margin-top:10px;">Import</button></div>
-											</div>	
-										</div>
+    <div class="form-group">
+        <div class="input-group-prepend">
+        
+            <button id="upload" class="btn btn-primary" style="margin-top: 10px; " >Import</button>
+        </div>
+    </div>
+</div>
+</c:if>
+
 										<div class="col-sm-1">
 											<div class="form-group">
 												<div class="input-group-prepend"><div id="loaderDiv" style="display: none; margin-top:11px;"><img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif" width="40px" /></div>
@@ -3719,22 +3757,33 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 												</tbody>
 											</table>
 										</div>
-										<button type="button" id="addAuxBelow">Insert Row Below</button>
-										<button type="button" id="addAuxAbove">Insert Row Above</button>
-										<button type="button" id="delete_Aux" >Delete Row</button>
-										<button type="button" id="sortingDistance" >Sort By Distance</button>
-                                        <button type="button">
-                                         <b>Draw By </b> 
-                                          <select id = "drawingBy"> 
-                                            <option value = "DEFAULT"></option>
-                                            <option value = "DRIVING">Driving</option> 
-                                            <option value = "LINEOFSITE">Line of Site</option> 
-                                          </select> 
-                                          </button>
-										<button type="button" id="setCoordinateFiberAux" >Set Coordinate</button>
-										<button type="button" id="calculatedrivingdistance"> Calculate Driving Distance</button>
-										<button type="button" id="calculateGeodistance"> Calculate Geo Distance</button>
-										<button type="button" id="editManHand">Grab Nearest Manhole and HandHole</button>
+										<c:if test="${writeFiber == 1}">
+
+<button type="button" id="addAuxBelow" class="hide-button">Insert Row Below</button>
+
+<button type="button" id="addAuxAbove" class="hide-button">Insert Row Above</button>
+
+<button type="button" id="delete_Aux" class="hide-button">Delete Row</button></c:if>
+<c:if test="${writeFiber == 1}">
+<button type="button" id="sortingDistance" class="hide-button">Sort By Distance</button></c:if>
+
+<button type="button">
+    <b>Draw By </b> 
+    <select id="drawingBy" class="hide-button">
+        <option value="DEFAULT"></option>
+        <option value="DRIVING">Driving</option> 
+        <option value="LINEOFSITE">Line of Site</option> 
+    </select> 
+</button>
+<c:if test="${writeFiber == 1}">
+<button type="button" id="setCoordinateFiberAux" class="hide-button">Set Coordinate</button></c:if>
+
+<button type="button" id="calculatedrivingdistance" class="hide-button">Calculate Driving Distance</button>
+
+<button type="button" id="calculateGeodistance" class="hide-button">Calculate Geo Distance</button>
+<c:if test="${writeFiber == 1}">
+<button type="button" id="editManHand" class="hide-button">Grab Nearest Manhole and HandHole</button>
+</c:if>
 										<div>
 										<br>
 										<br>
@@ -5966,15 +6015,17 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 										</div></div></div>
 								<div class="col-sm-6">
 										<div class="form-group">
-											<div class="input-group-prepend">
-													<span style="width: 100px;" class="input-group-text"><b>Owner </b></span> <select id="handholeOwner" class="form-control" <c:if test="${writeHandhole == 0}">readonly</c:if> >
-															<option value="" selected></option>
-															<option value="tkl">TKL</option>
-															<option value="ogn">OGN</option>
-															<option value="nofbi">NOFBI</option>
-															<option value="others">Others</option>
-														</select>
-													</div>
+										<div class="input-group-prepend">
+    <span style="width: 100px;" class="input-group-text"><b>Owner </b></span> 
+    <select id="handholeOwner" class="form-control" <c:if test="${writeHandhole == 0}"> disabled</c:if>>
+        <option value="" selected></option>
+        <option value="tkl">TKL</option>
+        <option value="ogn">OGN</option>
+        <option value="nofbi">NOFBI</option>
+        <option value="others">Others</option>
+    </select>
+</div>
+
 												</div>
 											</div>
 										</div>
@@ -6013,7 +6064,8 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 					<div class="modal-header" style="background-color: #2678CC ; height: 55px">
 						<h5 class="modal-title" id="DistributionBoardheader" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px;"></h5>
 						<div style="float: right;">
-							<button id="saveDistBoard" class="btn btn-save" style="color: black; font-weight:bold; margin-top:-6px;">Save</button>
+						<c:if test="${saveDB == 1}">
+							<button id="saveDistBoard" class="btn btn-save" style="color: black; font-weight:bold; margin-top:-6px;">Save</button></c:if>
 							<button type="button" name="closePopup" class="close" onclick="ClosingConfirm()">
 								<i class='fa fa-times'></i>
 							</button>
@@ -6031,24 +6083,25 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 100px; font-size: 12px;" class="input-group-text"><b>By Site </b> 
-													<input type='checkbox' id="site_DBAutoComplete" style='position: relative; margin-left: 25px'  ></span>
+													<input type='checkbox' id="site_DBAutoComplete" style='position: relative; margin-left: 25px'  <c:if test="${writeDB == 0}">disabled</c:if>></span>
 												</div></div></div>
 										<div class="col-sm-2">
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 100px; font-size: 12px;" class="input-group-text"><b>By Client </b> 
-													<input type='checkbox' id="customer_DBAutoComplete" style='position: relative; margin-left:15px' ></span>
+													<input type='checkbox' id="customer_DBAutoComplete" style='position: relative; margin-left:15px' <c:if test="${writeDB == 0}">disabled</c:if>></span>
 												</div></div></div>
 												<div class="col-sm-2">
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="min-width: 170px; font-size: 12px;" class="input-group-text"><b>Custom Coordinates </b> 
-													<input type="checkbox" id="customCoordinates" value="0" style='position: relative; margin-left:5px ' ></span>
+													<input type="checkbox" id="customCoordinates" value="0" style='position: relative; margin-left:5px ' <c:if test="${writeDB == 0}">disabled</c:if>></span>
 												</div></div></div>
 												<div class="col-sm-2">
 												<div class="form-group">
 												<div class="input-group-prepend">
-													<button id="getDBCity" type="button" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; width: 100%; margin-left:25px" onclick="getDBCity()">Get City</button>
+												<c:if test="${writeDB == 1}">
+													<button id="getDBCity" type="button" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; width: 100%; margin-left:25px" onclick="getDBCity()">Get City</button></c:if>
 												</div></div></div></div>
 								<div class="row">
 									<div class="col-md-6">
@@ -6061,56 +6114,59 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 										<div class="form-group">
 											<div class="input-group-prepend">
 												<span style="width: 150px;" class="input-group-text"><b>Name</b></span>
-												<input type="text" id="DistributionBoardName" class="form-control text-input" />
+												<input type="text" id="DistributionBoardName" class="form-control text-input" <c:if test="${writeDB == 0}">readonly</c:if>/>
 											</div></div></div></div>
 								<div class="row">
 									<div class="col-md-6" id="DBSite">
 										<div class="form-group">
 											<div class="input-group-prepend">
 												<span style="width: 140px;" class="input-group-text"><b>Site ID
-												</b></span> <input type="text" id="DistributionBoardSite" class="form-control text-input" />
+												</b></span> <input type="text" id="DistributionBoardSite" class="form-control text-input" <c:if test="${writeDB == 0}">readonly</c:if>/>
 											</div></div></div>
 									<div class="col-md-6" id="DBSiteName">
 										<div class="form-group">
 											<div class="input-group-prepend">
 												<span style="width: 140px;" class="input-group-text"><b>Site Name </b></span> 
-												<input type="text" id="DistributionBoardSiteName" class="form-control text-input" />
+												<input type="text" id="DistributionBoardSiteName" class="form-control text-input" <c:if test="${writeDB == 0}">readonly</c:if>/>
 											</div></div></div>
 									<div class="col-md-6" id="DBClientId" style="display:none">
 										<div class="form-group">
 											<div class="input-group-prepend">
 												<span style="width: 140px;" class="input-group-text"><b>Client ID
 												</b></span>
-												 <input type="text" id="DistributionBoardClient" class="form-control text-input" />
+												 <input type="text" id="DistributionBoardClient" class="form-control text-input" <c:if test="${writeDB == 0}">readonly</c:if>/>
 											</div></div></div>
 									<div class="col-md-6" id="DBClientName" style="display:none">
 										<div class="form-group">
 											<div class="input-group-prepend">
-												<span style="width: 140px;" class="input-group-text"><b>Client Name </b></span> <input type="text" id="DistributionBoardClientName" class="form-control text-input" />
+												<span style="width: 140px;" class="input-group-text"><b>Client Name </b></span> 
+												<input type="text" id="DistributionBoardClientName" class="form-control text-input" <c:if test="${writeDB == 0}">readonly</c:if>/>
 											</div></div></div></div>
 								<div class="row">
 									<div class="col-md-6" id="BDWarehouse">
 										<div class="form-group">
 											<div class="input-group-prepend">
-												<span style="width: 140px;" class="input-group-text"><b>Warehouse </b></span> <input type="text" id="DistributionBoardWarehouse" class="form-control text-input" />
+												<span style="width: 140px;" class="input-group-text"><b>Warehouse </b></span> 
+												<input type="text" id="DistributionBoardWarehouse" class="form-control text-input" <c:if test="${writeDB == 0}">readonly</c:if>/>
 											</div></div></div>
                                      <div class="col-md-6" id="BDClientPhoneNb" style="display:none">
 										<div class="form-group">
 											<div class="input-group-prepend">
-												<span style="width: 140px;" class="input-group-text"><b>Client Phone# </b></span> <input type="text" id="DistributionBoardClientPhoneNb" class="form-control text-input" />
+												<span style="width: 140px;" class="input-group-text"><b>Client Phone# </b></span> 
+												<input type="text" id="DistributionBoardClientPhoneNb" class="form-control text-input" <c:if test="${writeDB == 0}">readonly</c:if>/>
 											</div></div></div>
 									<div class="col-md-6">
 										<div class="form-group">
 											<div class="input-group-prepend">
 												<span style="width: 140px;" class="input-group-text"><b>Capacity
-												</b></span> <input type="text" id="DistributionBoardCapacity" class="form-control text-input" />
+												</b></span> <input type="text" id="DistributionBoardCapacity" class="form-control text-input" <c:if test="${writeDB == 0}">readonly</c:if>/>
 											</div></div></div></div>
 								<div class="row">
 									<div class="col-md-6">
 										<div class="form-group">
 											<div class="input-group-prepend">
 												<span style="width: 140px;" class="input-group-text"><b>Longitude</b></span>
-												<input type="text" id="DistributionBoardLong" class="form-control text-input" />
+												<input type="text" id="DistributionBoardLong" class="form-control text-input" <c:if test="${writeDB == 0}">readonly</c:if>/>
 											</div>
 										</div>
 									</div>
@@ -6118,20 +6174,21 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 										<div class="form-group">
 											<div class="input-group-prepend">
 												<span style="width: 140px;" class="input-group-text"><b>Latitude</b></span>
-												<input type="text" id="DistributionBoardLat" class="form-control text-input" />
+												<input type="text" id="DistributionBoardLat" class="form-control text-input" <c:if test="${writeDB == 0}">readonly</c:if>/>
 											</div></div></div></div>			
 								<div class="row">
 									<div class="col-md-6">
 										<div class="form-group">
 											<div class="input-group-prepend">
-												<span style="width: 140px;" class="input-group-text"><b>Rows Number </b></span> <input type="text" id="DistributionBoardRowsNum" class="form-control text-input" />
+												<span style="width: 140px;" class="input-group-text"><b>Rows Number </b></span>
+												 <input type="text" id="DistributionBoardRowsNum" class="form-control text-input" <c:if test="${writeDB == 0}">readonly</c:if>/>
 											</div></div></div>
 									<div class="col-md-6">
 										<div class="form-group">
 											<div class="input-group-prepend">
 												<span style="width: 140px;" class="input-group-text"><b>Columns
 														Number </b></span> <input type="text" id="DistributionBoardColsNum"
-													class="form-control text-input" />
+													class="form-control text-input" <c:if test="${writeDB == 0}">readonly</c:if>/>
 											</div></div></div></div>
 								<div class="row">
 									<div class="col-md-6">
@@ -6152,12 +6209,14 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="width: 120px;"
-														class="input-group-text"><b>Engineer Name </b></span> <input type="text" id="DBEngineerName" class="form-control text-input" />
+														class="input-group-text"><b>Engineer Name </b></span> 
+														<input type="text" id="DBEngineerName" class="form-control text-input" <c:if test="${writeDB == 0}">readonly</c:if>/>
 											</div></div></div>
 										<div class="col-sm-6">
 											<div class="form-group">
 												<div class="input-group-prepend">
-													<span style="width: 100px; " class="input-group-text"><b>Installer </b></span> <input type="text" id="DBInstaller" class="form-control text-input" />
+													<span style="width: 100px; " class="input-group-text"><b>Installer </b></span> 
+													<input type="text" id="DBInstaller" class="form-control text-input" <c:if test="${writeDB == 0}">readonly</c:if>/>
 									    </div></div></div>
 								</div>	
 								<div class="row">
@@ -6185,7 +6244,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 										<div class="form-group">
 											<div class="input-group-prepend">
 												<span style=" width: 175px;" class="input-group-text"><b>DB Network Level </b></span> 
-														<select id="DBnetlevel" class="form-control">
+														<select id="DBnetlevel" class="form-control" <c:if test="${writeDB == 0}">disabled</c:if>/>
 															<option value="backbone" selected >Backbone</option>
 															<option value="metro">Metro</option>
 															<option value="access">Access</option>
@@ -6197,7 +6256,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 											<div class="input-group-prepend">
 												<span style="width: 140px;" class="input-group-text"><b>Project
 														Name</b></span> <input type="text" id="DBProjectName"
-													class="form-control text-input" />
+													class="form-control text-input" <c:if test="${writeDB == 0}">readonly</c:if>/>
 											</div>
 										</div>
 									</div>
@@ -6205,7 +6264,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 										<div class="form-group">
 											<div class="input-group-prepend">
 												<span style="width: 140px;" class="input-group-text"><b>Project ID</b></span>
-													<input type="text" id="DBProjectId" class="form-control text-input" />
+													<input type="text" id="DBProjectId" class="form-control text-input" <c:if test="${writeDB == 0}">readonly</c:if>/>
 										</div></div></div>
 								</div>
 								<div class="row">
@@ -6213,7 +6272,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 										<div class="form-group">
 											<div class="input-group-prepend">
 												<span style="width: 175px;" class="input-group-text"><b>DB Deployment Type  </b></span>
-												 <select id="DBDeploymentType" class="form-control">
+												 <select id="DBDeploymentType" class="form-control" <c:if test="${writeDB == 0}">disabled</c:if>/>
 															<option value="wallMount" selected >Wall Mount</option>
 															<option value=" floorMount"> Floor Mount</option>
 															<option value="rackMount">Rack Mount</option>
@@ -6223,7 +6282,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 										<div class="form-group">
 											<div class="input-group-prepend">
 												<span style=" width: 175px;" class="input-group-text"><b>DB Adaptor Panel Type  </b></span> 
-														<select id="DBAdaptorPanelType" class="form-control"> 
+														<select id="DBAdaptorPanelType" class="form-control" <c:if test="${writeDB == 0}">disabled</c:if>/>
 															<option value="SC" selected >SC</option>
 															<option value="LC">LC</option>
 															<option value="ST">ST</option>
@@ -6318,18 +6377,19 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 												</tbody>
 											</table>
 										</div>
+										<c:if test="${writeDB == 1}">
 										<button type="button" id="add_RackRow">Add Row</button>
 										<button type="button" id="delete_RackRow">Delete Row</button>
 										<button type="button" id="sortByIndex">Sort By Index</button>
 										<button type="button" id="assign_Cable">Assign Cable</button>
-										<input name="fiber_Cable" id="BP_assignCable" class="form-control text-input" type="text" style="width:150px;display: inline-block;"/>
+										<input name="fiber_Cable" id="BP_assignCable" class="form-control text-input" type="text" style="width:150px;display: inline-block;" <c:if test="${writeDB == 0}">readonly</c:if>/>
 										<button type="button" id="assign_Tube">Assign Tube</button>
-										<input name="fiber_Tube" id="BP_assignTube" class="form-control text-input" type="text" style="width:170px;display: inline-block;"/>
-										<select id="selected_Port" aria-label="Default select example" class="form-select" style="height:35px;">
+										<input name="fiber_Tube" id="BP_assignTube" class="form-control text-input" type="text" style="width:170px;display: inline-block;" <c:if test="${writeDB == 0}">readonly</c:if>/>
+										<select id="selected_Port" aria-label="Default select example" class="form-select" style="height:35px; " <c:if test="${writeDB == 0}">disabled</c:if>/>
 										  <option value="title"  selected>Front/back</option>
 										  <option value="frontPort">Front Port</option>
 										  <option value="backPort">Back Port</option>
-										</select>
+										</select></c:if>
 									</form></div></div></div></div></div></div></div></div>				
 							<div class="container">
 								<div id="distributionBoardLoaderModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
@@ -6356,7 +6416,8 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 											</div>
 											<div class="col-sm-5">
 												<div class="form-group">
-													<div class="input-group-prepend"><button id="uploadDB" class="btn btn-primary" style=" margin-top:10px;">Import</button></div>
+												<c:if test="${writeDB == 1}">
+													<div class="input-group-prepend"><button id="uploadDB" class="btn btn-primary" style=" margin-top:10px;">Import</button></div></c:if>
 												</div>	
 											</div>
 										</div>						
@@ -6685,7 +6746,14 @@ var readHandhole='${readHandhole}';
 var writeHandhole='${writeHandhole}';
 var addHandhole='${addHandhole}';
 var delHandhole='${delHandhole}';
-
+var readFiber='${readFiber}';
+var writeFiber='${writeFiber}';
+var addFiber='${addFiber}';
+var delFiber='${delFiber}';
+var readDB='${readDB}';
+var writeDB='${writeDB}';
+var addDB='${addDB}';
+var delDB='${delDB}';
 document.addEventListener('DOMContentLoaded', function() {
     var elements = {
         fibersearchtab: document.getElementById('fiber-search-tab'),
