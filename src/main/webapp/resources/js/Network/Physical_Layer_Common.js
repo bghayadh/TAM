@@ -12401,85 +12401,92 @@ function changeColor(){
 						});
 						
 						 $('table tr input[name="showFibersOwner"]').on('change', function() {// for checkbox of the owner to show related fibers
-							 if ($(this).is(":checked")) {
-								 $('.AllFiberCables').prop('checked', false);
-								 $("#FiberPath_f_CurrentPhysicalLayer").parent().find('input:checkbox').each(function(){
-									 //console.log("hii  "+$(this).attr("id"));
-										$(this).prop('checked', false);
-										if($(this).parent().hasClass('FIBER')){
-											var fiberId=$(this).parent().attr('id');
-											if(fiberId.includes("__showPath") == true ){
-												fiberId = fiberId.split("__showPath")[0];
-											}
-											if(fiberArray[fiberId]){
-												if(directionHashmap.get(fiberId) != undefined) {
-													for(ii = 0; ii < directionHashmap.get(fiberId).length; ii++) {
-														directionHashmap.get(fiberId)[ii].setMap(null); 
-									                    directionHashmap.get(fiberId).mapLabel.setMap(null);
-													}
-												}
-												fiberArray[fiberId].setMap(null);	
-												fiberArray[fiberId].mapLabel.setMap(null);
-											}
-											$("#fiberCheckAllBoq").prop("checked",false);	
+							 //if ($(this).is(":checked")) {
+							 $('.AllFiberCables').prop('checked', false);
+							 $("#FiberPath_f_CurrentPhysicalLayer").parent().find('input:checkbox').each(function(){
+							 	$(this).prop('checked', false);
+									if($(this).parent().hasClass('FIBER')){
+										var fiberId=$(this).parent().attr('id');
+										if(fiberId.includes("__showPath") == true ){
+											fiberId = fiberId.split("__showPath")[0];
 										}
-										else if($(this).parent().hasClass('TUBE')){	
-											var tubeId = $(this).parent().attr('id');
-											if(tubeId.includes("__showPath") == true ){
-												tubeId = tubeId.split("__showPath")[0];
-											}	
-											if(directionHashmapTube.get(tubeId) != undefined) {
-												for(ii = 0; ii < directionHashmapTube.get(tubeId).length; ii++) {
-													directionHashmapTube.get(tubeId)[ii].setMap(null); 
-													directionHashmapTube.get(tubeId).mapLabel.setMap(null);
+										if(fiberArray[fiberId]){
+											if(directionHashmap.get(fiberId) != undefined) {
+												for(ii = 0; ii < directionHashmap.get(fiberId).length; ii++) {
+													directionHashmap.get(fiberId)[ii].setMap(null); 
+									                directionHashmap.get(fiberId).mapLabel.setMap(null);
 												}
 											}
-											if(tubeArray[tubeId]){
-												tubeArray[tubeId].setMap(null);
-												tubeArray[tubeId].mapLabel.setMap(null);
-											}
-											
-											$("#tubeCheckAllBoq").prop("checked",false);
+											fiberArray[fiberId].setMap(null);	
+											fiberArray[fiberId].mapLabel.setMap(null);
 										}
-										else if($(this).parent().hasClass('STRAND')){	
-											var strandId = $(this).parent().attr('id');
-											if(strandId.includes("__showPath") == true ){
-												strandId = strandId.split("__showPath")[0];
+										$("#fiberCheckAllBoq").prop("checked",false);	
+									}
+									else if($(this).parent().hasClass('TUBE')){	
+										var tubeId = $(this).parent().attr('id');
+										if(tubeId.includes("__showPath") == true ){
+											tubeId = tubeId.split("__showPath")[0];
+										}	
+										if(directionHashmapTube.get(tubeId) != undefined) {
+											for(ii = 0; ii < directionHashmapTube.get(tubeId).length; ii++) {
+												directionHashmapTube.get(tubeId)[ii].setMap(null); 
+												directionHashmapTube.get(tubeId).mapLabel.setMap(null);
 											}
-											if(directionHashmapStrand.get(strandId) != undefined) {
-												for(ii = 0; ii < directionHashmapStrand.get(strandId).length; ii++) {
-													directionHashmapStrand.get(strandId)[ii].setMap(null); 
-													directionHashmapStrand.get(strandId).mapLabel.setMap(null);
-												}
-											}
-											if(strandArray[strandId]){
-												strandArray[strandId].setMap(null);
-												strandArray[strandId].mapLabel.setMap(null);
-											}
-											
-											$("#strandCheckAllBoq").prop("checked",false);				
 										}
+										if(tubeArray[tubeId]){
+											tubeArray[tubeId].setMap(null);
+											tubeArray[tubeId].mapLabel.setMap(null);
+										}
+										$("#tubeCheckAllBoq").prop("checked",false);
+									}
+									else if($(this).parent().hasClass('STRAND')){	
+										var strandId = $(this).parent().attr('id');
+										if(strandId.includes("__showPath") == true ){
+											strandId = strandId.split("__showPath")[0];
+										}
+										if(directionHashmapStrand.get(strandId) != undefined) {
+											for(ii = 0; ii < directionHashmapStrand.get(strandId).length; ii++) {
+												directionHashmapStrand.get(strandId)[ii].setMap(null); 
+												directionHashmapStrand.get(strandId).mapLabel.setMap(null);
+											}
+										}
+										if(strandArray[strandId]){
+											strandArray[strandId].setMap(null);
+											strandArray[strandId].mapLabel.setMap(null);
+										}
+										$("#strandCheckAllBoq").prop("checked",false);				
+									}
 								 });
 								 
-								 var ownerName = $(this).attr("id");
-									 for(var f = 0 ; f < fiberIdList.length; f++) {
-										 //console.log("fiberIdList[f] is " +fiberIdList[f] , " f is " +f); 
-										 if(ownerName == window[''+fiberIdList[f]][22]){
-											 $("#"+fiberIdList[f]+"").children(':checkbox').prop( "checked", true );
-											 if(fiberArray[fiberIdList[f]]){
-												 var path=window["mapPoints_"+fiberIdList[f]]; 
-												 fiberArray[fiberIdList[f]].setPath(path);
-											     fiberArray[fiberIdList[f]].setMap(map);
-											 }else{
-												 buildPath(fiberIdList[f],window["mapPoints_"+fiberIdList[f]],fiberArray,allFiberCables,"FiberPath_f_",window['FiberColor_'+window[''+fiberIdList[f]][22]],0.7,4.5,'blue',13);
-									     		 fiberArray[fiberIdList[f]].setMap(map);
-											 }
-											 
-										 }
-										
-								   }
+							 var ownerElements = $('table tr input[name="showFibersOwner"]:checked');
+							 //console.log("ownerElements length is " +ownerElements.length);
+							 var ownerNameArr = []
+							 for (var k=0; k<ownerElements.length; k++) {
+							 	ownerNameArr[k]= $(ownerElements[k]).attr("id");
 							 }
-						 });
+							 //console.log("ownerNameArr length is " +ownerNameArr.length);
+							 //console.log("ownerNameArr values is ", ownerNameArr);
+								  
+								 
+							 //var ownerName = $(this).attr("id");
+							 for(var f = 0 ; f < fiberIdList.length; f++) {
+							 	//console.log("fiberIdList[f] is " +fiberIdList[f] , " f is " +f);
+								if(ownerNameArr.includes(window[''+fiberIdList[f]][22])) { 
+								//if(ownerName == window[''+fiberIdList[f]][22]){
+									$("#"+fiberIdList[f]+"").children(':checkbox').prop( "checked", true );
+										if(fiberArray[fiberIdList[f]]){
+											var path=window["mapPoints_"+fiberIdList[f]]; 
+											fiberArray[fiberIdList[f]].setPath(path);
+											fiberArray[fiberIdList[f]].setMap(map);
+										}else{
+											buildPath(fiberIdList[f],window["mapPoints_"+fiberIdList[f]],fiberArray,allFiberCables,"FiberPath_f_",window['FiberColor_'+window[''+fiberIdList[f]][22]],0.7,4.5,'blue',13);
+									     	fiberArray[fiberIdList[f]].setMap(map);
+										} 
+								}
+							 }
+						 }
+						 //}
+						 );
 		
 
 }
