@@ -2000,7 +2000,7 @@ if (addFiber === '1') {
 	 } 
 	           });
 }
-if (delManhole === '1') {
+if (delFiber === '1') {
     menuTubes.push({'icon': 'trash', 'name': 'Delete Tube', action: () => {
 			   
 			   if(directionHashmapTube.get(selectedTube)) {
@@ -9426,7 +9426,7 @@ singleStrand = new ContextMenu({
 
 // Conditionally add 'Create New Manhole' item based on addManhole variable
 if (addFiber === '1') {
-    menuManhole.unshift({'icon': 'folder-plus', 'name': 'Create New Tube  ', action: () => {
+    menuTube.unshift({'icon': 'folder-plus', 'name': 'Create New Tube  ', action: () => {
 		
 		TubeCreatePopup();
 		document.querySelector("#tubeAuxFlag").value = 'new tube';
@@ -9639,7 +9639,7 @@ if (addFiber === '1') {
 		});
 }
 if (delFiber === '1') {
-    menuManhole.push({'icon': 'trash', 'name': 'Delete Tube', action: () => {
+    menuTube.push({'icon': 'trash', 'name': 'Delete Tube', action: () => {
 			deleteprop("FiberTube","",selectedTube);
 			$('#DeleteModal').find('input:text').val('');
 			$("#DeleteHeader").text("Fiber Tube Delete: ");
@@ -9662,7 +9662,7 @@ if (delFiber === '1') {
 
 
 if(readDB ==='1'){
-	menuManhole.push( { 'icon': 'braille', 'name': 'Show DB', action: () => {	
+	menuTube.push( { 'icon': 'braille', 'name': 'Show DB', action: () => {	
 				showDB(selectedTube,"Tube",window[""+selectedTube][13]);
 			   }
 			 });
@@ -10371,7 +10371,8 @@ singleTube = new ContextMenu({
 						"dictParameterDel":slctDelMJct,
 						"JunctionOwner" : JunctionOwner,
 						"JunctionEngineerName" : JunctionEngineerName,
-						"JunctionInstaller" :JunctionInstaller
+						"JunctionInstaller" :JunctionInstaller,
+						"updateModfUser": updateModfUser
 					},
 					dataType: "json",
 					success: function (data) {
@@ -10567,7 +10568,8 @@ singleTube = new ContextMenu({
 					"dictParameterDel":slctDelMJct,
 					"JunctionOwner" : manholeJunctionOwner,
 					"JunctionEngineerName" :  manholeJunctionEngineerName,
-					"JunctionInstaller" :  manholeJunctionInstaller
+					"JunctionInstaller" :  manholeJunctionInstaller,
+					"updateModfUser":updateModfUser
 				},
 				dataType: "json",
 				success: function (data) {
@@ -10787,7 +10789,8 @@ $("#saveHandholeJunction").click(function () {
 			"JctCreatedDate":handJctCreatedDate,
 			"JunctionOwner" : handholeJctOwner,
 			"JunctionInstaller" :handholeJctEngineerName,
-			"JunctionEngineerName":handholeJctInstaller
+			"JunctionEngineerName":handholeJctInstaller,
+			"updateModfUser" : updateModfUser
 
 	},			
 	dataType: "json",
@@ -11211,7 +11214,6 @@ $("#handholeJctDelRow").click(function () {
 		}); 	
 		
 
-
 $("#saveManhole").click(function () {
 	
 	if(isNaN(document.getElementById("ManholeLong").value) ==true ){
@@ -11272,7 +11274,8 @@ $("#saveManhole").click(function () {
 				"manholeowner":manholeowner,
 				"manholeCreatedDate": manholeCreatedDate,
 				"manholeInstaller":manholeInstaller,
-				"manholeEngineerName": manholeEngineerName
+				"manholeEngineerName": manholeEngineerName,
+				"updateModfUser": updateModfUser
 			},
 			dataType: "json",
 			success: function (data) {
@@ -11476,7 +11479,8 @@ $("#saveHandhole").click(function () {
 			"handholeCreatedDate":handholeCreatedDate,
 			"handholeOwner" : handholeOwner,
 			"handholeInstaller" : handholeInstaller,
-			"handholeEngineerName" :handholeEngineerName
+			"handholeEngineerName" :handholeEngineerName,
+			"updateModfUser": updateModfUser
 		},
 		dataType: "json",
 		success: function (data) {
@@ -14851,7 +14855,8 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 					 "otherSideLocationName"  :otherSideLocationName,
 					 "otherSideLocationCity"  :otherSideLocationCity,
 					 "otherSideLocationType"  :otherSideLocationType,
-					 "dictParameterJunct":jundict
+					 "dictParameterJunct":jundict,
+					 "updateModfUser" : updateModfUser,
 										 
 			},
 			 dataType: "json",
@@ -15795,7 +15800,8 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 					  "tubeLength":tubeLength,
 					  "tubeCreatedDate":tubeCreatedDate,
 					  "tubeNumber":tubeNumber,
-					  "tubeColor": tubeColor
+					  "tubeColor": tubeColor,
+					  "updateModfUser" : updateModfUser,
 				  },
 				  dataType: "json",
 				  success: function (data) {
