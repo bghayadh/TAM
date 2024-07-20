@@ -50,6 +50,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.aliat.alm.common.ALMSessions;
@@ -73,6 +74,7 @@ import com.aliat.alm.models.HandholeSurvey;
 import com.aliat.alm.models.ManholeSurvey;
 import com.aliat.alm.models.NodeActive;
 import com.aliat.alm.models.NodeSurvey;
+import com.aliat.alm.models.PhysicalLayerActivity;
 import com.aliat.alm.models.StrandAuxPoints;
 import com.aliat.alm.models.Survey;
 import com.aliat.alm.models.Trench;
@@ -134,8 +136,32 @@ public class PhysicalLayerController {
 				notifications.headerNotifications(session, model);
 
 				try {
+					PhysicalLayerActivity PhyAct= new PhysicalLayerActivity();
+					String ipAddress = request.getRemoteAddr();
+					String updateModfUser=request.getParameter("updateModfUser").replaceAll("^'+|'+$", "");;
+					Calendar calendar = new GregorianCalendar();
+					calendar.setTime(new Date());
+					int year = calendar.get(Calendar.YEAR);
+					DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+
+					String PhyActID=
+						 "PHY_ACT_" + year + "_"+ Integer.parseInt(session.createNativeQuery("SELECT PHY_ACT_ID FROM SEQ_TABLE").uniqueResult().toString());
+						query = session.createNativeQuery("UPDATE SEQ_TABLE SET PHY_ACT_ID = PHY_ACT_ID + 1 ");
+						query.executeUpdate();
+						session.createNativeQuery("commit").executeUpdate();
+						
+						PhyAct.setPhyActID(PhyActID);
+						PhyAct.setScreenName("Physical Layer");
+						PhyAct.setUsername(updateModfUser);
+						PhyAct.setUserIP(ipAddress);
+						PhyAct.setActivityDate(new Timestamp(System.currentTimeMillis()));
+						PhyAct.setActivityDescription("Physical Layer Access");
+						session.saveOrUpdate(PhyAct);
 					
-					
+						
+						
+						
+						
 					 permissions.setPerms(model, permissions.getUserPermsWithSession(session, request),
 				                "Physical Layer", "Tree");
 				       String  searchPopup = ((Integer) model.asMap().get("writeTree")).toString();
@@ -4813,6 +4839,9 @@ public class PhysicalLayerController {
 				try {
 
 					Timestamp lastModifiedDate = new Timestamp(new Timestamp(System.currentTimeMillis()).getTime());
+					PhysicalLayerActivity PhyAct=new PhysicalLayerActivity();
+					String updateModfUser =request.getParameter("updateModfUser");
+					String ipAddress = request.getRemoteAddr();
 
 					String manholeCreatedDate = request.getParameter("manholeCreatedDate");
 					Timestamp manholeCreationDate;
@@ -4823,7 +4852,23 @@ public class PhysicalLayerController {
 						manholeCreationDate = new Timestamp(
 								formatter.parse(request.getParameter("manholeCreatedDate")).getTime());
 					}
-
+					
+					String PhyActID=
+							 "PHY_ACT_" + year + "_"+ Integer.parseInt(session.createNativeQuery("SELECT PHY_ACT_ID FROM SEQ_TABLE").uniqueResult().toString());
+							query = session.createNativeQuery("UPDATE SEQ_TABLE SET PHY_ACT_ID = PHY_ACT_ID + 1 ");
+							query.executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
+							
+							PhyAct.setPhyActID(PhyActID);
+							PhyAct.setScreenName("Manhole");
+							PhyAct.setUsername(updateModfUser);
+							PhyAct.setUserIP(ipAddress);
+							PhyAct.setActivityDate(new Timestamp(System.currentTimeMillis()));
+							
+								
+							
+						
+							
 					if (request.getParameter("actionManholeContext").equals("Insert")) {
 						synchronized (this) {
 
@@ -4831,7 +4876,8 @@ public class PhysicalLayerController {
 									.createNativeQuery("SELECT MANHOLE FROM SEQ_TABLE").uniqueResult().toString());
 							String[] idSplit;
 							idSplit = manholeId.split("_");
-
+							
+							PhyAct.setActivityDescription("Add New Element");
 							if (request.getParameter("ManholeName").isEmpty()) {
 								manholeName = "MH_" + request.getParameter("ManholeCity") + "_" + idSplit[1] + "_"
 										+ idSplit[2];
@@ -4870,8 +4916,15 @@ public class PhysicalLayerController {
 						rtn.put("ManholeName", manholeName);
 						session.flush();
 						session.clear();
+						PhyAct.setElementID(manholeId);
+						PhyAct.setActivityDescription("Add New Element");
+						session.saveOrUpdate(PhyAct);
+						
 					} else {
 						manholeId = request.getParameter("ManholeId");
+						PhyAct.setElementID(manholeId);
+						PhyAct.setActivityDescription("Edit Existing Element");
+						session.saveOrUpdate(PhyAct);
 						String[] idSplit;
 						idSplit = manholeId.split("_");
 
@@ -4908,7 +4961,7 @@ public class PhysicalLayerController {
 						rtn.put("ManholeName", manholeName);
 						session.flush();
 						session.clear();
-
+					
 						Query updateJunction = session.createNativeQuery(
 								"UPDATE JUNCTION SET PHYSICAL_LAYER_ID= '" + request.getParameter("ManholeId")
 										+ "',PHYSICAL_LAYER_NAME= '" + request.getParameter("ManholeName")
@@ -4953,6 +5006,7 @@ public class PhysicalLayerController {
 					session.flush();
 					session.clear();
 					tx.commit();
+					
 				} catch (Exception e) {
 					tx.rollback();
 					sw = new StringWriter();
@@ -4969,6 +5023,7 @@ public class PhysicalLayerController {
 					}
 				}
 			}
+			
 			return rtn;
 		}
 	
@@ -4991,6 +5046,9 @@ public class PhysicalLayerController {
 			tx = session.beginTransaction();
 
 			try {
+				String ipAddress = request.getRemoteAddr();
+				String updateModfUser=request.getParameter("updateModfUser").replaceAll("^'+|'+$", "");
+				PhysicalLayerActivity PhyAct= new PhysicalLayerActivity();
 
 				String handholeId = "", handholeName = "";
 				Timestamp lastModifiedDate = new Timestamp(new Timestamp(System.currentTimeMillis()).getTime());
@@ -5008,7 +5066,19 @@ public class PhysicalLayerController {
 				Calendar calendar = new GregorianCalendar();
 				calendar.setTime(date);
 				int year = calendar.get(Calendar.YEAR);
-
+				 String PhyActID=
+						 "PHY_ACT_" + year + "_"+ Integer.parseInt(session.createNativeQuery("SELECT PHY_ACT_ID FROM SEQ_TABLE").uniqueResult().toString());
+						query = session.createNativeQuery("UPDATE SEQ_TABLE SET PHY_ACT_ID = PHY_ACT_ID + 1 ");
+						query.executeUpdate();
+						session.createNativeQuery("commit").executeUpdate();
+						
+						PhyAct.setPhyActID(PhyActID);
+						PhyAct.setElementID(handholeId);
+						PhyAct.setScreenName("Handhole");
+						PhyAct.setUsername(updateModfUser);
+						PhyAct.setUserIP(ipAddress);
+						PhyAct.setActivityDate(new Timestamp(System.currentTimeMillis()));
+					
 				if (request.getParameter("actionHandholeContext").equals("Insert")) {
 
 					synchronized (this) {
@@ -5032,6 +5102,7 @@ public class PhysicalLayerController {
 								handholeName += "_J";
 							}
 							System.out.print(handholeName);
+							
 						} else {
 							handholeName = request.getParameter("HandholeName");
 						}
@@ -5050,7 +5121,9 @@ public class PhysicalLayerController {
 					InsertHandhole.executeUpdate();
 					rtn.put("handholeId", handholeId);
 					rtn.put("handholeName", handholeName);
-
+					    PhyAct.setElementID(handholeId);
+					 	PhyAct.setActivityDescription("Add New Element");
+							session.saveOrUpdate(PhyAct);
 				} else {
 
 					handholeId = request.getParameter("handholeId");
@@ -5086,7 +5159,9 @@ public class PhysicalLayerController {
 					updateHandhole.executeUpdate();
 					rtn.put("handholeId", request.getParameter("handholeId"));
 					rtn.put("handholeName", handholeName);
-
+					PhyAct.setElementID(handholeId);
+				 	PhyAct.setActivityDescription("Edit Existing Element");
+					session.saveOrUpdate(PhyAct);
 					query = session.createNativeQuery("UPDATE JUNCTION SET PHYSICAL_LAYER_ID= '" + handholeId
 							+ "',PHYSICAL_LAYER_NAME= '" + request.getParameter("HandholeName") + "',LONGITUDE= '"
 							+ Float.parseFloat(request.getParameter("HandholeLong")) + "',LATITUDE= '"
@@ -6047,11 +6122,24 @@ public class PhysicalLayerController {
 			TubeAuxPoints fiberAuxtubes;
 			FiberStrands fiberStrand;
 			StrandAuxPoints fiberAuxstrands;
+			String ipAddress = request.getRemoteAddr();
+			String updateModfUser=request.getParameter("updateModfUser").replaceAll("^'+|'+$", "");
+			PhysicalLayerActivity PhyAct= new PhysicalLayerActivity();
 
 			try {
 
-
-				fibercable = new FiberCable();
+				String PhyActID=
+						 "PHY_ACT_" + year + "_"+ Integer.parseInt(session.createNativeQuery("SELECT PHY_ACT_ID FROM SEQ_TABLE").uniqueResult().toString());
+						query = session.createNativeQuery("UPDATE SEQ_TABLE SET PHY_ACT_ID = PHY_ACT_ID + 1 ");
+						query.executeUpdate();
+						session.createNativeQuery("commit").executeUpdate();
+						
+						PhyAct.setPhyActID(PhyActID);
+						PhyAct.setScreenName("Fiber Cable");
+						PhyAct.setUsername(updateModfUser);
+						PhyAct.setUserIP(ipAddress);
+						PhyAct.setActivityDate(new Timestamp(System.currentTimeMillis()));
+							fibercable = new FiberCable();
 				if (StringUtils.equalsIgnoreCase(fiberpathID, "")) {
 					synchronized (this) {
 						// fiberpathID = "FIBER" + year + "_" + appConfig.getSeqNbr(51,session);
@@ -6062,7 +6150,11 @@ public class PhysicalLayerController {
 						session.createNativeQuery("commit").executeUpdate();
 						session.flush();
 						session.clear();
+						PhyAct.setActivityDescription("Add New Element");
 					}
+				}
+				else {
+					PhyAct.setActivityDescription("Edit Existing Element");
 				}
 
 				String ItemCodeId = request.getParameter("ItemCodeId");
@@ -6275,7 +6367,9 @@ public class PhysicalLayerController {
 				session.saveOrUpdate(fibercable);
 				session.flush();
 				session.clear();
-
+				PhyAct.setElementID(fiberpathID);
+				session.saveOrUpdate(PhyAct);
+	
 				Query updateMappingJctSideAQuery = session
 						.createNativeQuery("UPDATE JUNCTION_MAPPING SET FIBER_NAME_SIDE_A = '" + fiberName
 								+ "' WHERE FIBER_ID_SIDE_A = '" + fiberpathID + "' ");
@@ -9911,7 +10005,9 @@ public class PhysicalLayerController {
 		Query physicalLayerDeleteQuery = null, fiberCableDeleteQuery = null, tubeDeleteQuery = null,
 				strandDeleteQuery = null, trenchPathDeleteQuery = null, tubePathDeleteQuery = null;
 		Object newCount = null;
-
+		String ipAddress = request.getRemoteAddr();
+		String updateModfUser=request.getParameter("updateModfUser").replaceAll("^'+|'+$", "");
+		PhysicalLayerActivity PhyAct= new PhysicalLayerActivity();
 		String[] idArray = request.getParameterValues("physicalLayerID[]");
 		System.out.println("idArray:" +idArray);
 		String physicalLayer = request.getParameter("physicalLayer");
@@ -9921,7 +10017,11 @@ public class PhysicalLayerController {
 		String manHandholeID = request.getParameter("manHandholeID");
 		String manHandoleName = request.getParameter("manHandoleName");
         List<String> idList = Arrays.asList(idArray);
-        System.out.println("idList:" +idList);
+        System.out.println("idList:" +idList);Calendar calendar = new GregorianCalendar();
+		calendar.setTime(new Date());
+		int year = calendar.get(Calendar.YEAR);
+		DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
@@ -10008,7 +10108,9 @@ public class PhysicalLayerController {
 
 					if (StringUtils.equalsIgnoreCase(physicalLayer, "Manhole")
 							|| StringUtils.equalsIgnoreCase(physicalLayer, "AllManholes")) {
-
+						
+						
+								
 						physicalLayerDeleteQuery = session
 								.createNativeQuery("delete from MANHOLE b where b.manhole_id IN (:param1)");
 						physicalLayerDeleteQuery.setParameter("param1", idList);
@@ -10028,6 +10130,24 @@ public class PhysicalLayerController {
 								.createNativeQuery("SELECT count(*) FROM MANHOLE where PROJECT_ID ='" + NodeID + "' ")
 								.uniqueResult();
 						rtn.put("newCount", newCount);
+						
+						for (int i = 0; i < idList.size(); i++) {
+							
+							String PhyActID=
+									 "PHY_ACT_" + year + "_"+ Integer.parseInt(session.createNativeQuery("SELECT PHY_ACT_ID FROM SEQ_TABLE").uniqueResult().toString());
+									query = session.createNativeQuery("UPDATE SEQ_TABLE SET PHY_ACT_ID = PHY_ACT_ID + 1 ");
+									query.executeUpdate();
+									session.createNativeQuery("commit").executeUpdate();
+									
+									PhyAct.setPhyActID(PhyActID);
+									PhyAct.setElementID(idList.get(i));
+									PhyAct.setScreenName("Manhole");
+									PhyAct.setUsername(updateModfUser);
+									PhyAct.setUserIP(ipAddress);
+									PhyAct.setActivityDate(new Timestamp(System.currentTimeMillis()));
+									PhyAct.setActivityDescription("Delete Element");
+									session.saveOrUpdate(PhyAct);
+							}
 					} else if (StringUtils.equalsIgnoreCase(physicalLayer, "Handhole")
 							|| StringUtils.equalsIgnoreCase(physicalLayer, "AllHandholes")) {
 
@@ -10050,6 +10170,24 @@ public class PhysicalLayerController {
 								.createNativeQuery("SELECT count(*) FROM HANDHOLE where  PROJECT_ID ='" + NodeID + "' ")
 								.uniqueResult();
 						rtn.put("newCount", newCount);
+						
+                          for (int i = 0; i < idList.size(); i++) {
+							
+							String PhyActID=
+									 "PHY_ACT_" + year + "_"+ Integer.parseInt(session.createNativeQuery("SELECT PHY_ACT_ID FROM SEQ_TABLE").uniqueResult().toString());
+									query = session.createNativeQuery("UPDATE SEQ_TABLE SET PHY_ACT_ID = PHY_ACT_ID + 1 ");
+									query.executeUpdate();
+									session.createNativeQuery("commit").executeUpdate();
+									
+									PhyAct.setPhyActID(PhyActID);
+									PhyAct.setElementID(idList.get(i));
+									PhyAct.setScreenName("Handhole");
+									PhyAct.setUsername(updateModfUser);
+									PhyAct.setUserIP(ipAddress);
+									PhyAct.setActivityDate(new Timestamp(System.currentTimeMillis()));
+									PhyAct.setActivityDescription("Delete Element");
+									session.saveOrUpdate(PhyAct);
+							}
 					} else if (StringUtils.equalsIgnoreCase(physicalLayer, "Junction")) {
 						System.out.println("physicalLayer:" +physicalLayer);
 						physicalLayerDeleteQuery = session
@@ -10061,7 +10199,23 @@ public class PhysicalLayerController {
 								.createNativeQuery("delete from JUNCTION_MAPPING b where b.JCT_ID IN (:param1)");
 						physicalLayerDeleteQuery.setParameter("param1", idList);
 						physicalLayerDeleteQuery.executeUpdate();
-
+                        for (int i = 0; i < idList.size(); i++) {
+							
+							String PhyActID=
+									 "PHY_ACT_" + year + "_"+ Integer.parseInt(session.createNativeQuery("SELECT PHY_ACT_ID FROM SEQ_TABLE").uniqueResult().toString());
+									query = session.createNativeQuery("UPDATE SEQ_TABLE SET PHY_ACT_ID = PHY_ACT_ID + 1 ");
+									query.executeUpdate();
+									session.createNativeQuery("commit").executeUpdate();
+									
+									PhyAct.setPhyActID(PhyActID);
+									PhyAct.setElementID(idList.get(i));
+									PhyAct.setScreenName("Junction");
+									PhyAct.setUsername(updateModfUser);
+									PhyAct.setUserIP(ipAddress);
+									PhyAct.setActivityDate(new Timestamp(System.currentTimeMillis()));
+									PhyAct.setActivityDescription("Delete Element");
+									session.saveOrUpdate(PhyAct);
+							}
 						query = session.createNativeQuery(
 								"SELECT count(*) FROM JUNCTION b WHERE PHYSICAL_LAYER_ID = '" + manHandholeID + "' ");
 						String countJunc = query.getSingleResult().toString();
@@ -10169,6 +10323,23 @@ public class PhysicalLayerController {
 								.getResultList();
 
 						rtn.put("newCount", Countfiber);
+                       for (int i = 0; i < idList.size(); i++) {
+							
+							String PhyActID=
+									 "PHY_ACT_" + year + "_"+ Integer.parseInt(session.createNativeQuery("SELECT PHY_ACT_ID FROM SEQ_TABLE").uniqueResult().toString());
+									query = session.createNativeQuery("UPDATE SEQ_TABLE SET PHY_ACT_ID = PHY_ACT_ID + 1 ");
+									query.executeUpdate();
+									session.createNativeQuery("commit").executeUpdate();
+									
+									PhyAct.setPhyActID(PhyActID);
+									PhyAct.setElementID(idList.get(i));
+									PhyAct.setScreenName("Fiber Cable");
+									PhyAct.setUsername(updateModfUser);
+									PhyAct.setUserIP(ipAddress);
+									PhyAct.setActivityDate(new Timestamp(System.currentTimeMillis()));
+									PhyAct.setActivityDescription("Delete Element");
+									session.saveOrUpdate(PhyAct);
+							}
 					} else if (StringUtils.equalsIgnoreCase(physicalLayer, "FiberTube")
 							|| StringUtils.equalsIgnoreCase(physicalLayer, "AllFiberTubes")) {
 
@@ -10197,6 +10368,23 @@ public class PhysicalLayerController {
 										+ NodeID + "' ")
 								.getResultList();
 						rtn.put("newCount", Countfiber);
+						  for (int i = 0; i < idList.size(); i++) {
+								
+								String PhyActID=
+										 "PHY_ACT_" + year + "_"+ Integer.parseInt(session.createNativeQuery("SELECT PHY_ACT_ID FROM SEQ_TABLE").uniqueResult().toString());
+										query = session.createNativeQuery("UPDATE SEQ_TABLE SET PHY_ACT_ID = PHY_ACT_ID + 1 ");
+										query.executeUpdate();
+										session.createNativeQuery("commit").executeUpdate();
+										
+										PhyAct.setPhyActID(PhyActID);
+										PhyAct.setElementID(idList.get(i));
+										PhyAct.setScreenName("Fiber Tube");
+										PhyAct.setUsername(updateModfUser);
+										PhyAct.setUserIP(ipAddress);
+										PhyAct.setActivityDate(new Timestamp(System.currentTimeMillis()));
+										PhyAct.setActivityDescription("Delete Element");
+										session.saveOrUpdate(PhyAct);
+								}
 					} else if (StringUtils.equalsIgnoreCase(physicalLayer, "FiberStrand")
 							|| StringUtils.equalsIgnoreCase(physicalLayer, "AllFiberStrands")) {
 
@@ -10679,7 +10867,22 @@ public class PhysicalLayerController {
 				TubeAuxPoints fiberAuxtubes;
 
 				String tubeID = request.getParameter("tubeId");
+				String ipAddress = request.getRemoteAddr();
+				String updateModfUser=request.getParameter("updateModfUser").replaceAll("^'+|'+$", "");
+				PhysicalLayerActivity PhyAct= new PhysicalLayerActivity();
 
+				String PhyActID=
+						 "PHY_ACT_" + year + "_"+ Integer.parseInt(session.createNativeQuery("SELECT PHY_ACT_ID FROM SEQ_TABLE").uniqueResult().toString());
+						query = session.createNativeQuery("UPDATE SEQ_TABLE SET PHY_ACT_ID = PHY_ACT_ID + 1 ");
+						query.executeUpdate();
+						session.createNativeQuery("commit").executeUpdate();
+						
+						PhyAct.setPhyActID(PhyActID);
+						PhyAct.setScreenName("Fiber Tube");
+						PhyAct.setUsername(updateModfUser);
+						PhyAct.setUserIP(ipAddress);
+						PhyAct.setActivityDate(new Timestamp(System.currentTimeMillis()));
+						
 				if (StringUtils.equalsIgnoreCase(tubeID, "")) {
 					synchronized (this) {
 						// tubeID = "TUBE_" + year + "_" + appConfig.getSeqNbr(47,session);
@@ -10689,7 +10892,13 @@ public class PhysicalLayerController {
 						query = session.createNativeQuery("UPDATE SEQ_TABLE SET FIBER_TUBE = FIBER_TUBE + 1 ");
 						query.executeUpdate();
 						session.createNativeQuery("commit").executeUpdate();
+						PhyAct.setActivityDescription("Add New Element");
+				
 					}
+					
+				}
+				else {
+					PhyAct.setActivityDescription("Edit Existing Element");
 				}
 				String strandsCount = null;
 				String tubeName = request.getParameter("tubeName");
@@ -10820,7 +11029,8 @@ public class PhysicalLayerController {
 				session.saveOrUpdate(fiberTubes);
 				session.flush();
 				session.clear();
-
+				PhyAct.setElementID(tubeID);
+				session.saveOrUpdate(PhyAct);
 				String aux_ID;
 				int auxArraySize = 0;
 				if (StringUtils.equalsIgnoreCase(tubeAuxFlag, "opened")
@@ -11516,6 +11726,9 @@ public class PhysicalLayerController {
 					String JunctionOwner = request.getParameter("JunctionOwner");
 					String JunctionInstaller = request.getParameter("JunctionInstaller");
 					String JunctionEngineerName = request.getParameter("JunctionEngineerName");
+					String ipAddress = request.getRemoteAddr();
+					String updateModfUser=request.getParameter("updateModfUser").replaceAll("^'+|'+$", "");
+					PhysicalLayerActivity PhyAct= new PhysicalLayerActivity();
 
 					if (request.getParameter("JunctionLong") != "") {
 						junctionLong = Float.parseFloat(request.getParameter("JunctionLong"));
@@ -11544,7 +11757,18 @@ public class PhysicalLayerController {
 						junctionCreationDate = new Timestamp(
 								formatter.parse(request.getParameter("JctCreatedDate")).getTime());
 					}
-
+					String PhyActID=
+							 "PHY_ACT_" + year + "_"+ Integer.parseInt(session.createNativeQuery("SELECT PHY_ACT_ID FROM SEQ_TABLE").uniqueResult().toString());
+							query = session.createNativeQuery("UPDATE SEQ_TABLE SET PHY_ACT_ID = PHY_ACT_ID + 1 ");
+							query.executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
+							
+							PhyAct.setPhyActID(PhyActID);
+							PhyAct.setScreenName("Junction");
+							PhyAct.setUsername(updateModfUser);
+							PhyAct.setUserIP(ipAddress);
+							PhyAct.setActivityDate(new Timestamp(System.currentTimeMillis()));
+						
 					if (StringUtils.equalsIgnoreCase(junctionID, "")) {
 						//System.out.println(" id is null" + junctionID);
 						synchronized (this) {
@@ -11592,7 +11816,9 @@ public class PhysicalLayerController {
 						insertJctQuery.executeUpdate();
 
 						rtn.put("ManHandholeName", physLayerNameJunction);
-
+						PhyAct.setElementID(junctionID);
+						PhyAct.setActivityDescription("Add New Element");
+						session.saveOrUpdate(PhyAct);
 					} else {
 						//System.out.println(" id is null" + junctionID);
 						Query updateJunction = session.createNativeQuery("UPDATE JUNCTION SET JUNCTION_NAME = '"
@@ -11601,6 +11827,10 @@ public class PhysicalLayerController {
 								+ ",OWNER = '"+JunctionOwner+ "',JUNC_INSTALLER = '"+JunctionInstaller+ "',JUNC_ENGINEER_NAME = '"+JunctionEngineerName
 								+ "' WHERE JUNCTION_ID = '" + junctionID + "' ");
 						updateJunction.executeUpdate();
+						PhyAct.setElementID(junctionID);
+						PhyAct.setActivityDescription("Edit Existing Element");
+						session.saveOrUpdate(PhyAct);
+				
 					}
 
 					float JctSeq = 0;
