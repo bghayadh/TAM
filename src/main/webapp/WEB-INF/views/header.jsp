@@ -289,9 +289,11 @@ display:none;
                 <li  class="nav-item dropdown">
         <a class="nav-link" style="text-decoration: none;" href="#"  id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <c:if test="${page == 'network'}"><span class="border-bottom active"></c:if><i class="fas fa-wifi"></i>  Network <c:if test="${page == 'network'}"></span></c:if>
-        </a>
-        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink" style="margin-right:-80px;">
-          <li id="physicalLayer"><a  class="dropdown-item" href="${pageContext.request.contextPath}/NetworkPhysicalLayer">Physical Layer</a></li>
+        </a><ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink" style="margin-right:-80px;"><li id="physicalLayer">
+        
+        <a class="dropdown-item" href="${pageContext.request.contextPath}/NetworkPhysicalLayer?updateModfUser=${userFullName}">Physical Layer</a>
+</li>
+
           <div id="physical" class="dropdown-divider"></div>
           <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Network_StNdCell">Elements</a></li>
             <div class="dropdown-divider"></div>
@@ -501,7 +503,7 @@ display:none;
           <c:if test="${page == 'network'}"><span class="border-bottom active"></c:if><i class="fas fa-wifi"></i>  Network <c:if test="${page == 'network'}"></span></c:if>
         </a>
         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink" style="margin-right:-80px;">
-          <li id="physicalLayer"><a class="dropdown-item" href="${pageContext.request.contextPath}/NetworkPhysicalLayer">Physical Layer</a></li>
+        <a class="dropdown-item" href="${pageContext.request.contextPath}/NetworkPhysicalLayer?updateModfUser=${userFullName}">Physical Layer</a>
           <div id="physical" class="dropdown-divider"></div>
           <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Network_StNdCell">Elements</a></li>
            <div class="dropdown-divider"></div>
@@ -739,7 +741,7 @@ display:none;
           <c:if test="${page == 'network'}"><span class="border-bottom active"></c:if><i class="fas fa-wifi"></i>  Network <c:if test="${page == 'network'}"></span></c:if>          
         </a>
         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink" style="margin-right:-80px;">
-          <li id="physicalLayer"><a class="dropdown-item" href="${pageContext.request.contextPath}/NetworkPhysicalLayer">Physical Layer</a></li>
+        <a class="dropdown-item" href="${pageContext.request.contextPath}/NetworkPhysicalLayer?updateModfUser=${userFullName}">Physical Layer</a>
           <div id="physical" class="dropdown-divider"></div>
           <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Network_StNdCell">Elements</a></li>
            <div class="dropdown-divider"></div>
@@ -1007,7 +1009,7 @@ display:none;
         
         
         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink" style="margin-right:-80px;">
-          <li id="physicalLayer"><a class="dropdown-item" href="${pageContext.request.contextPath}/NetworkPhysicalLayer">Physical Layer</a></li>
+          <a class="dropdown-item" href="${pageContext.request.contextPath}/NetworkPhysicalLayer?updateModfUser=${userFullName}">Physical Layer</a>
           <div id="physical" class="dropdown-divider"></div>
           <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Network_StNdCell">Elements</a></li>
            <div class="dropdown-divider"></div>
@@ -1300,6 +1302,7 @@ display:none;
     });
 
 
+   
 
 function ShowUncompleted(int,String) {
 
