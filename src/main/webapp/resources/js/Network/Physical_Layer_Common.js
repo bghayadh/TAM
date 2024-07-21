@@ -9596,6 +9596,8 @@ if (subLayer==""){
 				"physicalLayerID":allSelectedLayer,
 				"physicalLayer":layer,
 				"NodeId":IdNodeSelectedTemp,
+				"updateModfUser":updateModfUser,
+
 				},
 				dataType: "json",
 				success: function (data) {
@@ -9860,6 +9862,8 @@ if (subLayer==""){
 				"physicalLayerID":selectedFiberTubeStrandPath,
 				"physicalLayer":layer,
 				"NodeId":IdNodeSelectedTemp,
+				"updateModfUser":updateModfUser,
+
 				},
 				dataType: "json",
 				success: function (data) {
@@ -10093,6 +10097,8 @@ function deleteTrenchPath(layer,subLayer,selectedTrenchContext){
 		"physicalLayerID":selectedTrenchesDuctsForDel,
 		"physicalLayer":layer,
 		"NodeId":IdNodeSelectedTemp,
+		"updateModfUser":updateModfUser,
+
 		},
 		dataType: "json",
 		success: function (data) {
@@ -10210,7 +10216,9 @@ function deleteJunction(physicalLayer,subLayer,physLayerID,manHandholeId){
 				"physicalLayerID":physicalLayer_Id,
 				"physicalLayer":subLayer,
 				"manHandholeID" :manHandholeID,
-				"manHandoleName":manHandoleName
+				"manHandoleName":manHandoleName,
+				"updateModfUser":updateModfUser,
+
 				},
 				dataType: "json",
 				success: function (data) {

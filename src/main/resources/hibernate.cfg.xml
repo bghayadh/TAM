@@ -153,7 +153,7 @@
 <mapping class="com.aliat.alm.models.FiberCableSurvey"/>
 <mapping class="com.aliat.alm.models.FiberStrandsSurvey"/>
 <mapping class="com.aliat.alm.models.FiberTubesSurvey"/>
-
+<mapping class="com.aliat.alm.models.PhysicalLayerActivity"/>
 
    </session-factory>
 </hibernate-configuration>
