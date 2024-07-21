@@ -6159,7 +6159,13 @@ singleHandhole = new ContextMenu({
 						type=window["JCT_"+jctMappingId][3];
 						
 						$("#JctKey").html("<b style='text-decoration: underline;color: #00757C'>Side A: </b>");
-						$("#JctStrandSideA").html("<b style='white-space:nowrap;'>Strand: "+window['JCT_'+jctMappingId][2]+" / "+window['JCT_'+jctMappingId][3]+" / "+window['JCT_'+jctMappingId][19]+" </b>");
+						if (window['JCT_'+jctMappingId][2] != "null" && window['JCT_'+jctMappingId][3] != "null")
+						{
+							$("#JctStrandSideA").html("<b style='white-space:nowrap;'>Strand#: "+window['JCT_'+jctMappingId][19]+", "+window['JCT_'+jctMappingId][2]+" / "+window['JCT_'+jctMappingId][3]+" </b>");
+						}
+						else {
+							$("#JctStrandSideA").html("<b style='white-space:nowrap;'>Strand#: "+window['JCT_'+jctMappingId][19]+" </b>");
+						}
 						$("#JctTubeSideA").html("<b style='white-space:nowrap;' >Tube: "+window['JCT_'+jctMappingId][4]+" / "+window['JCT_'+jctMappingId][5]+" / "+window['JCT_'+jctMappingId][18]+" </b>");
 						$("#JctFiberSideA").html("<b style='white-space:nowrap;' >Fiber:"+window['JCT_'+jctMappingId][6]+" / "+window['JCT_'+jctMappingId][7]+" </b>");
 						$("#JctKeySideB").html("<b style='text-decoration: underline;color: #00757C'>Side B: </b>");
@@ -6721,12 +6727,38 @@ singleHandhole = new ContextMenu({
 					type=window["JCT_"+jctMappingId][3];
 					
 					$("#JctKey").html("<b style='text-decoration: underline;color: #00757C'>Side A: </b>");
-					$("#JctStrandSideA").html("<b style='white-space:nowrap;'>Strand: "+window['JCT_'+jctMappingId][2]+" / "+window['JCT_'+jctMappingId][3]+" / "+window['JCT_'+jctMappingId][19]+" </b>");
-					$("#JctTubeSideA").html("<b style='white-space:nowrap;' >Tube: "+window['JCT_'+jctMappingId][4]+" / "+window['JCT_'+jctMappingId][5]+" / "+window['JCT_'+jctMappingId][18]+" </b>");
+					
+					if (window['JCT_'+jctMappingId][2] != "null" && window['JCT_'+jctMappingId][3] != "null")
+					{
+						$("#JctStrandSideA").html("<b style='white-space:nowrap;'>Strand#: "+window['JCT_'+jctMappingId][19]+", "+window['JCT_'+jctMappingId][2]+" / "+window['JCT_'+jctMappingId][3]+" </b>");
+					}
+					else {
+						$("#JctStrandSideA").html("<b style='white-space:nowrap;'>Strand#: "+window['JCT_'+jctMappingId][19]+" </b>");
+					}
+					if (window['JCT_'+jctMappingId][4] != "null" && window['JCT_'+jctMappingId][5] != "null")
+					{
+						$("#JctTubeSideA").html("<b style='white-space:nowrap;' >Tube#: "+window['JCT_'+jctMappingId][18]+", "+window['JCT_'+jctMappingId][4]+" / "+window['JCT_'+jctMappingId][5]+" </b>");
+					}
+					else {
+						$("#JctTubeSideA").html("<b style='white-space:nowrap;' >Tube#: "+window['JCT_'+jctMappingId][18]+" </b>");
+					}
 					$("#JctFiberSideA").html("<b style='white-space:nowrap;' >Fiber:"+window['JCT_'+jctMappingId][6]+" / "+window['JCT_'+jctMappingId][7]+" </b>");
 					$("#JctKeySideB").html("<b style='text-decoration: underline;color: #00757C'>Side B: </b>");
-					$("#JctStrandSideB").html("<b style='white-space:nowrap;' >Strand: "+window['JCT_'+jctMappingId][8]+" / "+window['JCT_'+jctMappingId][9]+" / "+window['JCT_'+jctMappingId][21]+" </b>");
-					$("#JctTubeSideB").html("<b style='white-space:nowrap;' >Tube: "+window['JCT_'+jctMappingId][10]+" / "+window['JCT_'+jctMappingId][11]+" / "+window['JCT_'+jctMappingId][20]+"</b>");
+					if (window['JCT_'+jctMappingId][8] != "null" && window['JCT_'+jctMappingId][9] != "null")
+					{
+						$("#JctStrandSideB").html("<b style='white-space:nowrap;' >Strand#: "+window['JCT_'+jctMappingId][21]+", "+window['JCT_'+jctMappingId][8]+" / "+window['JCT_'+jctMappingId][9]+" </b>");
+					}
+					else {
+						$("#JctStrandSideB").html("<b style='white-space:nowrap;' >Strand#: "+window['JCT_'+jctMappingId][21]+" </b>");
+					}
+					if (window['JCT_'+jctMappingId][10] != "null" && window['JCT_'+jctMappingId][11] != "null") 
+					{
+						$("#JctTubeSideB").html("<b style='white-space:nowrap;' >Tube#: "+window['JCT_'+jctMappingId][20]+", "+window['JCT_'+jctMappingId][10]+" / "+window['JCT_'+jctMappingId][11]+"</b>");
+					}
+					else {
+						$("#JctTubeSideB").html("<b style='white-space:nowrap;' >Tube#: "+window['JCT_'+jctMappingId][20]+"</b>");
+					}
+					
 					$("#JctFiberSideB").html("<b style='white-space:nowrap;' >Fiber: "+window['JCT_'+jctMappingId][12]+" / "+window['JCT_'+jctMappingId][13]+"</b>");					
 					
 					$("#AssignedJct_TitleId").text("Junction: "+data.junctionMappingPts[0][14]);	
