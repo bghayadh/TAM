@@ -92,6 +92,10 @@
 	<input type="text" id="trenchAuxFlag" name="trenchAuxFlag" value="" class="form-control text-input" hidden="hidden" />	
 	<input type="text" id="ductAuxFlag" name="ductAuxFlag" value="" class="form-control text-input" hidden="hidden" />	
 	<input type="text" id="DBMappingFlag" name="DBMappingFlag" value="" class="form-control text-input" hidden="hidden" />
+	<input type="text" id="manJctAttachmentFlag" name="manJctAttachment" value="" class="form-control text-input" hidden="hidden" />
+	<input type="text" id="projectAttachmentFlag" name="projectAttachmentFlag" value="" class="form-control text-input" hidden="hidden" />
+	<input type="text" id="handJctAttachmentFlag" name="handJctAttachment" value="" class="form-control text-input" hidden="hidden" />
+	
 	<!-- End of Optional Bar  -->
 	<!--  Beginning for Search bar, Coordinates and View buttons -->
 	<div class="container-fluid" style="margin-top: 5px;">
@@ -413,7 +417,13 @@
 						</div>
 					</div>
 					<div class="modal-body">
+						<ul class="nav nav-tabs" id="myTabDb" role="tablist"
+							style="background-color: #00757C;">
+							<li class="nav-item"><a class="nav-link active" id="projectInfo-tab" style="color: gold;" data-toggle="tab" href="#projectInfo" role="tab" aria-controls="projectInfo" aria-selected="true">Information </a></li>
+							<li class="nav-item"><a class="nav-link " id="projectAttachment-tab" style="color: gold;" data-toggle="tab" href="#projectAttachment" role="tab" aria-controls="projectAttachment" aria-selected="false">Attachment</a></li>
+						</ul>
 						<div class="tab-content"><p></p>
+						  <div class="tab-pane active" id="projectInfo" role="tabpanel" 	aria-labelledby="projectInfo-tab">
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group">
@@ -443,9 +453,36 @@
 									</div>
 								</div>
 							</div>
-							
-							
-							
+						</div>
+									<div class="tab-pane" id="projectAttachment" role="tabpanel" aria-labelledby="projectAttachment-tab">
+								<div style="display: flex; flex-direction: column;">
+							        <form id="projectUploadForm" enctype="multipart/form-data" style="margin-right: 10px;">
+							            <input type="file" id="projectFileInput" name="attachment" accept="image/jpeg, image/png, application/pdf" required style="width: auto; display: inline-block;">
+							            <button type="submit" class="btn btn-light file" style="display: inline-block; margin-left: 50px;">Upload</button>
+							        </form>
+										<br>
+							        <div class="table-responsive-sm">
+							            <table id="projectAttachmentTable" class="table table-striped table-bordered table-sm" style="display: block; height: 300px; overflow-y: auto;">
+							                <thead>
+							                    <tr class="fixed-headerr">
+							                        <th>
+							                            <button type="button" id="selectAllProjectAttachment" class="main">
+							                                <span class="sub"></span>Select
+							                            </button>
+							                        </th>
+							                        <th width="300px">Attachment Download</th>
+							                        <th width="200px">Attachment Id</th>
+							                        <th width="250px">Attachment Name</th>
+							                        <th width="400px">Attachment Path</th>
+							                    </tr>
+							                </thead>
+							                <tbody>
+							                </tbody>
+							            </table>
+							        </div>
+							        <button type="button" id="deleteProjectAttachmentRow" style="width:100px;">Delete Row</button>
+    							</div>
+							</div>
 							</div>
 					</div>
 					<div class="modal-footer"></div>
@@ -1319,6 +1356,7 @@
 						<ul class="nav nav-tabs" id="myTabDb" role="tablist" style="background-color: #00757C;">
 							<li class="nav-item"><a class="nav-link active" id="junction-tab" style="color: gold;" data-toggle="tab" href="#MJCT" role="tab" aria-controls="JCT" aria-selected="true">Junction </a></li>
 							<li class="nav-item"><a class="nav-link " id="jctMapping-tab" style="color: gold;" data-toggle="tab" href="#jctMapping" role="tab" aria-controls="jctMapping" aria-selected="false">Mapping</a></li>
+							<li class="nav-item"><a class="nav-link " id="manJctAttachment-tab" style="color: gold;" data-toggle="tab" href="#manJctAttachment" role="tab" aria-controls="manJctAttachment" aria-selected="false">Attachment</a></li>
 						</ul>
 						<div class="tab-content">
 							<p></p>
@@ -1481,7 +1519,36 @@
 										<button type="button" id="addManJunMapAbove" >Insert Row Above</button>
 										<!--  <button type="button" id="manholeJctAddRow">Add Row</button>-->
 										<button type="button" id="manholeJctDelRow">Delete Row</button>
-									</form></div></div></div></div></div></div></div></div>
+									</form></div></div>
+				  <div class="tab-pane" id="manJctAttachment" role="tabpanel" aria-labelledby="manJctAttachment-tab">
+				    <div style="display: flex; flex-direction: column;">
+				        <form id="uploadForm" enctype="multipart/form-data" style="margin-right: 10px;">
+				            <input type="file" id="fileInput" name="attachment" accept="image/jpeg, image/png, application/pdf" required style="width: auto; display: inline-block;">
+				            <button type="submit" class="btn btn-light file" style="display: inline-block; margin-left: 50px;">Upload</button>
+				        </form>
+							<br>
+				        <div class="table-responsive-sm">
+				            <table id="junctionAttachmentTable" class="table table-striped table-bordered table-sm" style="display: block; height: 300px; overflow-y: auto;">
+				                <thead>
+				                    <tr class="fixed-headerr">
+				                        <th>
+				                            <button type="button" id="selectAllManJctAttachment" class="main">
+				                                <span class="sub"></span>Select
+				                            </button>
+				                        </th>
+				                        <th width="300px">Attachment Download</th>
+				                        <th width="200px">Attachment Id</th>
+				                        <th width="250px">Attachment Name</th>
+				                        <th width="400px">Attachment Path</th>
+				                    </tr>
+				                </thead>
+				                <tbody>
+				                </tbody>
+				            </table>
+				        </div>
+				        <button type="button" id="deleteJctAttachmentRow" style="width:100px;">Delete Row</button>
+				    </div>
+				</div></div></div></div></div></div></div>
 	<!-- Handhole Junction Modal -->
 	<div class="container">
 		<div id="handholeJunctionModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  data-keyboard="false" data-backdrop="static">
@@ -1503,6 +1570,7 @@
 							style="background-color: #00757C;">
 							<li class="nav-item"><a class="nav-link active" id="handholeJunction-tab" style="color: gold;" data-toggle="tab" href="#HJCT" role="tab" aria-controls="HJCT" aria-selected="true">Junction </a></li>
 							<li class="nav-item"><a class="nav-link " id="handholeJctMapping-tab" style="color: gold;" data-toggle="tab" href="#handholeJctMapping" role="tab" aria-controls="handholeJctMapping" aria-selected="false">Mapping</a></li>
+							<li class="nav-item"><a class="nav-link " id="handJctAttachment-tab" style="color: gold;" data-toggle="tab" href="#handJctAttachment" role="tab" aria-controls="handJctAttachment" aria-selected="false">Attachment</a></li>
 						</ul>
 						<div class="tab-content">
 							<p></p>
@@ -1657,7 +1725,36 @@
 													</tr></thead><tbody></tbody></table></div>
 										<button type="button" id="handholeJctAddRow">Add Row</button>
 										<button type="button" id="handholeJctDelRow">Delete Row</button>
-									</form></div></div></div></div></div></div></div></div>
+									</form></div></div>
+ <div class="tab-pane" id="handJctAttachment" role="tabpanel" aria-labelledby="handJctAttachment-tab">
+    <div style="display: flex; flex-direction: column;">
+        <form id="handJctUploadForm" enctype="multipart/form-data" style="margin-right: 10px;">
+            <input type="file" id="handJctFileInput" name="attachment" accept="image/jpeg, image/png, application/pdf" required style="width: auto; display: inline-block;">
+            <button type="submit" class="btn btn-light file" style="display: inline-block; margin-left: 50px;">Upload</button>
+        </form>
+			<br>
+        <div class="table-responsive-sm">
+            <table id="handJunctionAttachmentTable" class="table table-striped table-bordered table-sm" style="display: block; height: 300px; overflow-y: auto;">
+                <thead>
+                    <tr class="fixed-headerr">
+                        <th>
+                            <button type="button" id="selectAllHandJctAttachment" class="main">
+                                <span class="sub"></span>Select
+                            </button>
+                        </th>
+                        <th width="300px">Attachment Download</th>
+                        <th width="200px">Attachment Id</th>
+                        <th width="250px">Attachment Name</th>
+                        <th width="400px">Attachment Path</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <button type="button" id="deleteHandJctAttachmentRow" style="width:100px;">Delete Row</button>
+    </div>
+</div></div></div></div></div></div></div>
 	<!-- Junction Modal -->
 	<div class="container">
 		<div id="JunctionModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  data-keyboard="false" data-backdrop="static">
@@ -6732,6 +6829,7 @@ var manholeSurveyArray=[];
 var handholeSurveyArray=[];
 var dbSurveyArray=[];
 var nodeSurveyArray=[];var fiberCableSurveyArray=[];var fiberTubesSurveyArray=[];var fiberStrandsSurveyArray=[];
+var manholeJctAttachmentIndex=0,handholeJctAttachmentIndex=0,projectAttachmentIndex=0;
 
 
 updateModfUser=`${userFullName}`;

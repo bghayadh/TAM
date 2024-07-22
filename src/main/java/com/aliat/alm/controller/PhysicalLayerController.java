@@ -2,7 +2,7 @@ package com.aliat.alm.controller;
 
 
 import java.io.IOException;
-
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Logger;
+import java.util.Properties;
 
 
 import javax.persistence.Query;
@@ -48,16 +49,19 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.aliat.alm.common.ALMSessions;
 import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.common.Permissions;
 import com.aliat.alm.models.AccessCableJunction;
+import com.aliat.alm.models.AttachmentUpload;
 import com.aliat.alm.models.DistributionBoard;
 import com.aliat.alm.models.DistributionBoardMapping;
 import com.aliat.alm.models.DistributionBoardSurvey;
@@ -86,6 +90,10 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.SftpException;
 
 @Controller
 public class PhysicalLayerController {
@@ -14468,7 +14476,237 @@ public class PhysicalLayerController {
 		}
 	
 	
-	
+		@RequestMapping(value = "/SaveFile", method = RequestMethod.POST)
+		@ResponseBody
+		public Map<String, Object> SaveFile(Locale locale, Model model, HttpServletRequest request,@RequestParam("attachment") MultipartFile file,@RequestParam("elementID") String elementID) {
+
+			Map<String, Object> rtn = new LinkedHashMap<>();
+			String status="";
+			String attachmentID="";
+			String attachmentName =""; 
+			String attachmentPath ="";
+			String elementId ="";
+
+			session = AlmDbSession.getInstance().getSession();
+			if (session != null && session.isOpen()) {
+				tx = session.beginTransaction();
+				if (file.isEmpty()) {
+					rtn.put("Status", "Failed");
+		            return rtn;
+		        }
+				try {					
+					Map<String, String> uploadResult = uploadFile(file);
+		            
+					status = uploadResult.get("status");
+					attachmentPath = uploadResult.get("attachmentPath");
+					attachmentName = uploadResult.get("attachmentName");
+					elementId=elementID;
+					
+					Calendar calendar = new GregorianCalendar();
+					calendar.setTime(new Date());
+					
+					AttachmentUpload attachment = new AttachmentUpload();
+						
+						synchronized (this) {
+							
+							attachmentID = "ATTACHMENT_" + calendar.get(Calendar.YEAR) + "_" + Integer.parseInt(session.createNativeQuery("SELECT ATTACHMENT_UPLOAD FROM SEQ_TABLE").uniqueResult().toString());							
+							query = session.createNativeQuery("UPDATE SEQ_TABLE SET ATTACHMENT_UPLOAD  = ATTACHMENT_UPLOAD  + 1 ");
+							query.executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
+						}
+						
+						attachment.setId(attachmentID);;
+						attachment.setAttachmentPath(attachmentPath);
+						attachment.setAttachmentName(attachmentName);
+						attachment.setElementID(elementId);
+						session.saveOrUpdate(attachment);
+						
+					
+					rtn.put("Status", status);
+					rtn.put("attachmentID", attachmentID);
+					rtn.put("attachmentPath", attachmentPath);
+					rtn.put("attachmentName", attachmentName);
+					
+
+				} catch (Exception e) {
+					logger.info("Error in Save File  " + e.getMessage());
+					rtn.put("Status", "Failed");
+				} finally {
+					if (session != null && session.isOpen()) {
+						tx.commit();
+						session.close();
+					}
+				}
+			}
+
+			return rtn;
+		}
+
+		
+		public Map<String, String> uploadFile(MultipartFile file) {
+		    Map<String, String> result = new HashMap<>();
+		    String status = "";
+		    String attachmentPath = "";
+		    String attachmentName = "";
+		    
+		    try {
+		        JSch jsch = new JSch();
+		        com.jcraft.jsch.Session session = (com.jcraft.jsch.Session) jsch.getSession("USER", "localhost", 22);
+
+		        session.setPassword("zeinab123");
+		        session.setConfig("StrictHostKeyChecking", "no");
+		        session.connect();
+
+		        ChannelSftp channelSftp = (ChannelSftp) session.openChannel("sftp");
+		        channelSftp.connect();
+		      
+		        try (InputStream inputStream = file.getInputStream()) {		        	
+		        	 String remoteDirectory = "/C:/Users/User/Desktop/zeinab_test/";
+		        	
+		            channelSftp.cd(remoteDirectory);
+		            channelSftp.put(inputStream, file.getOriginalFilename());
+
+		            // Construct the full path of the uploaded image
+		            attachmentPath = remoteDirectory;
+		            attachmentName=file.getOriginalFilename();
+		            status = "Success";
+		        }
+
+		        channelSftp.disconnect();
+		        session.disconnect();
+		    } catch (JSchException | SftpException | IOException e) {
+		        //logger.error("Error in uploading Image", e);
+		        status = "Failed";
+		    }
+		    result.put("status", status);
+		    result.put("attachmentPath", attachmentPath);
+		    result.put("attachmentName", attachmentName);
+		    return result;
+		}
+
+		@RequestMapping(value = "/DeleteAttachment", method = RequestMethod.POST)
+		@ResponseBody
+		public Map<String, Object> DeleteAttachment(Locale locale, Model model, HttpServletRequest request,@RequestBody List<Map<String, String>> slctDel) {
+
+			Map<String, Object> rtn = new LinkedHashMap<>();			
+			
+			session = AlmDbSession.getInstance().getSession();
+			if (session != null && session.isOpen()) {
+				tx = session.beginTransaction();
+
+				try {
+					for (Map<String, String> attachmentData : slctDel) {
+			            String attachmentId = attachmentData.get("attachmentId");
+			            String attachmentName = attachmentData.get("attachmentName");
+			            String attachmentPath = attachmentData.get("attachmentPath");
+			            
+			            query = session.createQuery("delete AttachmentUpload  where id = :param1");
+						query.setParameter("param1", attachmentId);
+						query.executeUpdate();
+						
+						DeleteAttachmentFile(attachmentPath+attachmentName);
+			            
+			        }
+				} catch (Exception e) {
+					logger.info("Error in DeleteAttachment " + e.getMessage());
+				} finally {
+					if (session != null && session.isOpen()) {
+						tx.commit();
+						session.close();
+					}
+				}
+			}
+
+			return rtn;
+		}
+		
+		public Map<String, String> DeleteAttachmentFile(String imagePath) {
+		    Map<String, String> result = new HashMap<>();
+		  
+		    String host = "localhost";
+		    String username = "USER";
+		    String password = "zeinab123";
+		    int port = 22; // Default SFTP port
+		    String  status="";
+		    
+		    try {
+		             
+		              JSch jsch = new JSch();
+		              com.jcraft.jsch.Session session = jsch.getSession(username, host, port);
+		              session.setPassword(password);
+
+		              Properties config = new Properties();
+		              config.put("StrictHostKeyChecking", "no");
+		              session.setConfig(config);
+
+		              // Connect to SFTP server
+		              session.connect();
+
+		              // Open SFTP channel
+		              ChannelSftp channel = (ChannelSftp) session.openChannel("sftp");
+		              channel.connect();
+
+		              // Delete the image file
+		              channel.rm(imagePath);
+
+		              // Disconnect SFTP channel and session
+		              channel.disconnect();
+		              session.disconnect();
+		              status="Success";
+		    } catch (JSchException | SftpException e) {
+		        status = "Failed";
+		    }
+		    result.put("status", status);
+		    return result;
+		}
+		
+
+
+		@SuppressWarnings("unchecked")
+		@RequestMapping(value = "/GetUploadedAttachment", method = RequestMethod.GET)
+		@ResponseBody
+		public Map<String, Object> GetUploadedAttachment(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
+
+
+			Map<String, Object> rtn = new LinkedHashMap<>();
+
+			if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+				rtn.put("Login", "redirect:/");
+				return rtn;
+			} else {
+				String elementID = request.getParameter("elementID");
+				List<Object[]> listUploadedAttachment;
+				session = AlmDbSession.getInstance().getSession();
+
+				if (session != null && session.isOpen()) {
+					tx = session.beginTransaction();
+					try {
+
+						listUploadedAttachment = session.createNativeQuery(
+								"SELECT * FROM ATTACHMENT_UPLOAD WHERE ELEMENT_ID='"
+										+ elementID + "' ")
+								.getResultList();
+						rtn.put("listUploadedAttachment", listUploadedAttachment);
+
+					} catch (Exception e) {
+						sw = new StringWriter();
+						e.printStackTrace(new PrintWriter(sw));
+						exceptionAsString = sw.toString();
+						logger.finest("Error in GetUploadedAttachment due to \n " + exceptionAsString);
+						logger.info("Error in GetUploadedAttachment due to \n " + exceptionAsString);
+						rtn.put("listTrench", null);
+					} finally {
+						if (session != null && session.isOpen()) {
+							tx.commit();
+							session.close();
+						}
+					}
+				}
+				return rtn;
+			}
+		
+		}
+		
 	
 
 
