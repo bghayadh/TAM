@@ -424,6 +424,8 @@ display:none;
         </ul>
       </li>
                 <li class="nav-item"><a href="${pageContext.request.contextPath}/Setup" class="nav-link "><c:if test="${page == 'setup'}"><span class="border-bottom active"></c:if><i class="fas fa-cog"></i> Setup <c:if test="${page == 'setup'}"></span></c:if></a></li>
+                 <li class="nav-item"><a href="${pageContext.request.contextPath}/Activity" class="nav-link "><c:if test="${page == 'Activity'}"><span class="border-bottom active"></c:if><i class="fas fa-eye"></i> Activity <c:if test="${page == 'Activity'}"></span></c:if></a></li>
+                
                   </ul>
         <ul class="navbar-nav ml-auto ">
   
@@ -495,6 +497,7 @@ display:none;
                   <c:when test="${page=='setup' }"> <li class="nav-item"><a href="${pageContext.request.contextPath}/Setup" class="nav-link "><c:if test="${page == 'setup'}"><span class="border-bottom active"></c:if><i class="fas fa-cog"></i> Setup <c:if test="${page == 'setup'}"></span></c:if></a></li></c:when>
                   <c:when test="${page=='purchasing' }"><li class="nav-item"><a href="${pageContext.request.contextPath}/Purchase" class="nav-link "><c:if test="${page == 'purchasing'}"><span class="border-bottom active"></c:if><i class="fas fa-money-check"></i> Purchasing <c:if test="${page == 'purchasing'}"></span></c:if></a></li></c:when>
                    <c:when test="${page=='troubleTickets' }"><li class="nav-item"><a href="${pageContext.request.contextPath}/TroubleTicketListView" class="nav-link "><c:if test="${page == 'troubleTickets'}"><span class="border-bottom active"></c:if><i class="fas fa-ticket-alt"></i> TroubleTickets <c:if test="${page == 'troubleTickets'}"></span></c:if></a></li></c:when>
+                 <c:when test="${page=='Activity' }"><li class="nav-item"><a href="${pageContext.request.contextPath}/Activity" class="nav-link "><c:if test="${page == 'Activity'}"><span class="border-bottom active"></c:if><i class="fas fa-eye"></i> Activity <c:if test="${page == 'Activity'}"></span></c:if></a></li></c:when>
                   <c:otherwise><li class="nav-item"><a href="${pageContext.request.contextPath}/home" class="nav-link"><c:if test="${page == 'home'}"><span class="border-bottom active"></c:if><i class="fas fa-home"></i> Home <c:if test="${page == 'home'}"></span></c:if></a></li></c:otherwise>
                   </c:choose>
                   
@@ -626,7 +629,7 @@ display:none;
         </ul>
       </li>
                
-                 
+                  
                   
                                    <li class="nav-item dropdown" style="list-style-type:none;">
         <a class="nav-link " style="text-decoration: none;" href="${pageContext.request.contextPath}"  id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -639,19 +642,45 @@ display:none;
           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/TroubleTicketListView" class="nav-link "><c:if test="${page == 'troubleTickets'}"><span id="back"></c:if><i class="fas fa-ticket-alt" ></i> TroubleTickets <c:if test="${page == 'troubleTickets'}"></span></c:if></a></li></li>
           <div class="dropdown-divider" ></div>
           <li> <a class="dropdown-item" href="${pageContext.request.contextPath}/Purchase" class="nav-link "><c:if test="${page == 'purchasing'}"><span id="back"></c:if><i class="fas fa-money-check" ></i> Purchasing <c:if test="${page == 'purchasing'}"></span></c:if></a></li></li>
+          <li class="nav-item"><a href="${pageContext.request.contextPath}/Activity" class="nav-link "><c:if test="${page == 'Activity'}"><span class="border-bottom active"></c:if><i class="fas fa-eye"></i> Activity <c:if test="${page == 'Activity'}"></span></c:if></a></li>
+                
         </c:when>
         <c:when test="${page=='troubleTickets' }"> <li class="nav-item"><a class="dropdown-item" href="${pageContext.request.contextPath}/Setup" class="nav-link "><c:if test="${page == 'setup'}"><span class="border-bottom active"></c:if><i class="fas fa-cog"></i> Setup <c:if test="${page == 'setup'}"></span></c:if></a></li>
            <div class="dropdown-divider"></div>
         <li class="nav-item"><a class="dropdown-item" href="${pageContext.request.contextPath}/home" class="nav-link"><c:if test="${page == 'home'}"><span class="border-bottom active"></c:if><i class="fas fa-home"></i> Home <c:if test="${page == 'purchasing'}"></span></c:if></a></li>
            <div class="dropdown-divider"></div>
-        <li> <a class="dropdown-item" href="${pageContext.request.contextPath}/Purchase" class="nav-link "><c:if test="${page == 'purchasing'}"><span id="back"></c:if><i class="fas fa-money-check" ></i> Purchasing <c:if test="${page == 'purchasing'}"></span></c:if></a></li></li>
+       
+       <li> <a class="dropdown-item" href="${pageContext.request.contextPath}/Purchase" class="nav-link "><c:if test="${page == 'purchasing'}"><span id="back"></c:if><i class="fas fa-money-check" ></i> Purchasing <c:if test="${page == 'purchasing'}"></span></c:if></a></li></li>
+       <div class="dropdown-divider"></div>
+       <li class="nav-item"><a href="${pageContext.request.contextPath}/Activity" class="nav-link "><c:if test="${page == 'Activity'}"><span class="border-bottom active"></c:if><i class="fas fa-eye"></i> Activity <c:if test="${page == 'Activity'}"></span></c:if></a></li>
+                
         </c:when>
         <c:when test="${page=='purchasing' }">
         <li class="nav-item"><a class="dropdown-item" href="${pageContext.request.contextPath}/Setup" class="nav-link "><c:if test="${page == 'setup'}"><span class="border-bottom active"></c:if><i class="fas fa-cog"></i> Setup <c:if test="${page == 'setup'}"></span></c:if></a></li>
         <div class="dropdown-divider"></div>
           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/TroubleTicketListView" class="nav-link "><c:if test="${page == 'troubleTickets'}"><span id="back"></c:if><i class="fas fa-ticket-alt" ></i> TroubleTickets <c:if test="${page == 'troubleTickets'}"></span></c:if></a></li></li>
+          
           <div class="dropdown-divider" ></div>
-          <a class="dropdown-item" href="${pageContext.request.contextPath}/home" class="nav-link"><c:if test="${page == 'home'}"><span class="border-bottom active"></c:if><i class="fas fa-home"></i> Home <c:if test="${page == 'purchasing'}"></span></c:if></a></li>
+         
+         <a class="dropdown-item" href="${pageContext.request.contextPath}/home" class="nav-link"><c:if test="${page == 'home'}"><span class="border-bottom active"></c:if><i class="fas fa-home"></i> Home <c:if test="${page == 'purchasing'}"></span></c:if></a></li>
+        <div class="dropdown-divider"></div>
+         <li class="nav-item"><a href="${pageContext.request.contextPath}/Activity" class="nav-link "><c:if test="${page == 'Activity'}"><span class="border-bottom active"></c:if><i class="fas fa-eye"></i> Activity <c:if test="${page == 'Activity'}"></span></c:if></a></li>
+       
+        </c:when>
+        
+        
+         <c:when test="${page=='Activity' }">
+        <li class="nav-item"><a class="dropdown-item" href="${pageContext.request.contextPath}/Setup" class="nav-link "><c:if test="${page == 'setup'}"><span class="border-bottom active"></c:if><i class="fas fa-cog"></i> Setup <c:if test="${page == 'setup'}"></span></c:if></a></li>
+        <div class="dropdown-divider"></div>
+          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/TroubleTicketListView" class="nav-link "><c:if test="${page == 'troubleTickets'}"><span id="back"></c:if><i class="fas fa-ticket-alt" ></i> TroubleTickets <c:if test="${page == 'troubleTickets'}"></span></c:if></a></li></li>
+          
+          <div class="dropdown-divider" ></div>
+         
+         <a class="dropdown-item" href="${pageContext.request.contextPath}/home" class="nav-link"><c:if test="${page == 'home'}"><span class="border-bottom active"></c:if><i class="fas fa-home"></i> Home <c:if test="${page == 'purchasing'}"></span></c:if></a></li>
+            <div class="dropdown-divider"></div>
+       
+       <li> <a class="dropdown-item" href="${pageContext.request.contextPath}/Purchase" class="nav-link "><c:if test="${page == 'purchasing'}"><span id="back"></c:if><i class="fas fa-money-check" ></i> Purchasing <c:if test="${page == 'purchasing'}"></span></c:if></a></li></li>
+    
         </c:when>
         <c:otherwise>
         <li class="nav-item"><a class="dropdown-item" href="${pageContext.request.contextPath}/Setup" class="nav-link "><c:if test="${page == 'setup'}"><span class="border-bottom active"></c:if><i class="fas fa-cog"></i> Setup <c:if test="${page == 'setup'}"></span></c:if></a></li>
@@ -659,6 +688,9 @@ display:none;
           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/TroubleTicketListView" class="nav-link "><c:if test="${page == 'troubleTickets'}"><span id="back"></c:if><i class="fas fa-ticket-alt" ></i> TroubleTickets <c:if test="${page == 'troubleTickets'}"></span></c:if></a></li></li>
           <div class="dropdown-divider" ></div>
           <li> <a class="dropdown-item" href="${pageContext.request.contextPath}/Purchase" class="nav-link "><c:if test="${page == 'purchasing'}"><span id="back"></c:if><i class="fas fa-money-check" ></i> Purchasing <c:if test="${page == 'purchasing'}"></span></c:if></a></li></li>
+         <div class="dropdown-divider" ></div>
+        <li> <a class="dropdown-item" href="${pageContext.request.contextPath}/Activity" class="nav-link "><c:if test="${page == 'Activity'}"><span id="back"></c:if><i class="fas fa-eye" ></i> Activity <c:if test="${page == 'Activity'}"></span></c:if></a></li></li>
+       
         </c:otherwise>
         </c:choose>
         </ul>
@@ -733,7 +765,8 @@ display:none;
                   <c:when test="${page=='setup' }"> <li class="nav-item"><a href="${pageContext.request.contextPath}/Setup" class="nav-link "><c:if test="${page == 'setup'}"><span class="border-bottom active"></c:if><i class="fas fa-cog"></i> Setup <c:if test="${page == 'setup'}"></span></c:if></a></li></c:when>
                   <c:when test="${page=='purchasing' }"><li class="nav-item"><a href="${pageContext.request.contextPath}/Purchase" class="nav-link "><c:if test="${page == 'purchasing'}"><span class="border-bottom active"></c:if><i class="fas fa-money-check"></i> Purchasing <c:if test="${page == 'purchasing'}"></span></c:if></a></li></c:when>
                    <c:when test="${page=='troubleTickets' }"><li class="nav-item"><a href="${pageContext.request.contextPath}/TroubleTicketListView" class="nav-link "><c:if test="${page == 'troubleTickets'}"><span class="border-bottom active"></c:if><i class="fas fa-ticket-alt"></i> TroubleTickets <c:if test="${page == 'troubleTickets'}"></span></c:if></a></li></c:when>
-                   <c:when test="${page=='Sales' }" ><li class="nav-item"><a href="${pageContext.request.contextPath}/Sales" class="nav-link "><c:if test="${page == 'Sales'}"><span class="border-bottom active"></c:if><i class="fas fa-shopping-basket"></i> Sales <c:if test="${page == 'sales'}"></span></c:if></a></li></c:when>
+                   <c:when test="${page=='Activity' }"><li class="nav-item"><a href="${pageContext.request.contextPath}/Activity" class="nav-link "><c:if test="${page == 'Activity'}"><span class="border-bottom active"></c:if><i class="fas fa-eye"></i> Activity <c:if test="${page == 'Activity'}"></span></c:if></a></li></c:when>
+                    <c:when test="${page=='Sales' }" ><li class="nav-item"><a href="${pageContext.request.contextPath}/Sales" class="nav-link "><c:if test="${page == 'Sales'}"><span class="border-bottom active"></c:if><i class="fas fa-shopping-basket"></i> Sales <c:if test="${page == 'sales'}"></span></c:if></a></li></c:when>
                   <c:otherwise><li class="nav-item"><a href="${pageContext.request.contextPath}/home" class="nav-link"><c:if test="${page == 'home'}"><span class="border-bottom active"></c:if><i class="fas fa-home"></i> Home <c:if test="${page == 'home'}"></span></c:if></a></li></c:otherwise>
                   </c:choose>
                 <li class="nav-item dropdown">
@@ -861,7 +894,7 @@ display:none;
           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/Dashboard" >Auto Discovery</a></li>-->
         </ul>
       </li>
-               
+                
                   
                  <li class="nav-item dropdown" style="list-style-type:none;">
         <a class="nav-link " style="text-decoration: none;" href="${pageContext.request.contextPath}"  id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -906,7 +939,21 @@ display:none;
           <li > <a class="dropdown-item" href="${pageContext.request.contextPath}/home" class="nav-link"><c:if test="${page == 'home'}"><span class="border-bottom active"></c:if><i class="fas fa-home"></i> Home <c:if test="${page == 'purchasing'}"></span></c:if></a></li>
         
         </c:when>
+           <c:when test="${page=='Activity' }">
+        <li class="nav-item"><a class="dropdown-item" href="${pageContext.request.contextPath}/Setup" class="nav-link "><c:if test="${page == 'setup'}"><span class="border-bottom active"></c:if><i class="fas fa-cog"></i> Setup <c:if test="${page == 'setup'}"></span></c:if></a></li>
+        <div class="dropdown-divider"></div>
+          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/TroubleTicketListView" class="nav-link "><c:if test="${page == 'troubleTickets'}"><span id="back"></c:if><i class="fas fa-ticket-alt" ></i> TroubleTickets <c:if test="${page == 'troubleTickets'}"></span></c:if></a></li></li>
+          
+          <div class="dropdown-divider" ></div>
+         
+         <a class="dropdown-item" href="${pageContext.request.contextPath}/home" class="nav-link"><c:if test="${page == 'home'}"><span class="border-bottom active"></c:if><i class="fas fa-home"></i> Home <c:if test="${page == 'purchasing'}"></span></c:if></a></li>
+            <div class="dropdown-divider"></div>
+       
+       <li> <a class="dropdown-item" href="${pageContext.request.contextPath}/Purchase" class="nav-link "><c:if test="${page == 'purchasing'}"><span id="back"></c:if><i class="fas fa-money-check" ></i> Purchasing <c:if test="${page == 'purchasing'}"></span></c:if></a></li></li>
+     <div class="dropdown-divider" ></div>
+          <li ><a class="dropdown-item" href="${pageContext.request.contextPath}/Sales" class="nav-link "><c:if test="${page == 'Sales'}"><span class="border-bottom active"></c:if><i class="fas fa-shopping-basket"></i> Sales <c:if test="${page == 'sales'}"></span></c:if></a></li>
         
+        </c:when>
         
         <c:otherwise>
         <li class="nav-item"><a class="dropdown-item" href="${pageContext.request.contextPath}/Setup" class="nav-link "><c:if test="${page == 'setup'}"><span class="border-bottom active"></c:if><i class="fas fa-cog"></i> Setup <c:if test="${page == 'setup'}"></span></c:if></a></li>
@@ -916,6 +963,9 @@ display:none;
           <li> <a class="dropdown-item" href="${pageContext.request.contextPath}/Purchase" class="nav-link "><c:if test="${page == 'purchasing'}"><span id="back"></c:if><i class="fas fa-money-check" ></i> Purchasing <c:if test="${page == 'purchasing'}"></span></c:if></a></li></li>
           <div class="dropdown-divider" ></div>
           <li ><a class="dropdown-item" href="${pageContext.request.contextPath}/Sales" class="nav-link "><c:if test="${page == 'Sales'}"><span class="border-bottom active"></c:if><i class="fas fa-shopping-basket"></i> Sales <c:if test="${page == 'sales'}"></span></c:if></a></li>
+         <div class="dropdown-divider" ></div>
+          <li ><a class="dropdown-item" href="${pageContext.request.contextPath}/Activity" class="nav-link "><c:if test="${page == 'Activity'}"><span class="border-bottom active"></c:if><i class="fas fa-eye"></i> Activity <c:if test="${page == 'Activity'}"></span></c:if></a></li>
+      
         </c:otherwise>
         </c:choose>
           
@@ -999,6 +1049,8 @@ display:none;
                    <c:when test="${page=='troubleTickets' }"><li class="nav-item"><a href="${pageContext.request.contextPath}/TroubleTicketListView" class="nav-link "><c:if test="${page == 'troubleTickets'}"><span class="border-bottom active"></c:if><i class="fas fa-ticket-alt"></i> TroubleTickets <c:if test="${page == 'troubleTickets'}"></span></c:if></a></li></c:when>
                    <c:when test="${page=='Sales' }" ><li class="nav-item"><a href="${pageContext.request.contextPath}/Sales" class="nav-link "><c:if test="${page == 'Sales'}"><span class="border-bottom active"></c:if><i class="fas fa-shopping-basket"></i> Sales <c:if test="${page == 'sales'}"></span></c:if></a></li></c:when>
                    <c:when test="${page=='account' }" ><li class="nav-item"><a href="${pageContext.request.contextPath}/Account" class="nav-link "><c:if test="${page == 'account'}"><span class="border-bottom active"></c:if><i class="fas fa-book"></i> Account <c:if test="${page == 'account'}"></span></c:if></a></li></c:when>
+                   <c:when test="${page=='Activity' }"><li class="nav-item"><a href="${pageContext.request.contextPath}/Activity" class="nav-link "><c:if test="${page == 'Activity'}"><span class="border-bottom active"></c:if><i class="fas fa-eye"></i> Activity <c:if test="${page == 'Activity'}"></span></c:if></a></li></c:when>
+               
                   <c:otherwise><li class="nav-item"><a href="${pageContext.request.contextPath}/home" class="nav-link"><c:if test="${page == 'home'}"><span class="border-bottom active"></c:if><i class="fas fa-home"></i> Home <c:if test="${page == 'purchasing'}"></span></c:if></a></li></c:otherwise>
                   </c:choose>
 	  <li class="nav-item dropdown">
@@ -1129,7 +1181,7 @@ display:none;
         </ul>
       </li>
           
-          
+                 
                   <li class="nav-item dropdown" style="list-style-type:none;">
         <a class="nav-link " style="text-decoration: none;" href="${pageContext.request.contextPath}"  id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i class="fas fa-arrow-down"></i><span  >  Others </span>
@@ -1193,7 +1245,21 @@ display:none;
          <li > <a class="dropdown-item" href="${pageContext.request.contextPath}/home" class="nav-link"><c:if test="${page == 'home'}"><span class="border-bottom active"></c:if><i class="fas fa-home"></i> Home <c:if test="${page == 'purchasing'}"></span></c:if></a></li>
         
         </c:when>
-        
+         <c:when test="${page=='Activity' }">
+           <li class="nav-item"><a class="dropdown-item" href="${pageContext.request.contextPath}/Setup" class="nav-link "><c:if test="${page == 'setup'}"><span class="border-bottom active"></c:if><i class="fas fa-cog"></i> Setup <c:if test="${page == 'setup'}"></span></c:if></a></li>
+        <div class="dropdown-divider"></div>
+      
+           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/TroubleTicketListView" class="nav-link "><c:if test="${page == 'troubleTickets'}"><span id="back"></c:if><i class="fas fa-ticket-alt" ></i> TroubleTickets <c:if test="${page == 'troubleTickets'}"></span></c:if></a></li></li>
+          <div class="dropdown-divider" ></div>
+          <li> <a class="dropdown-item" href="${pageContext.request.contextPath}/Purchase" class="nav-link "><c:if test="${page == 'purchasing'}"><span id="back"></c:if><i class="fas fa-money-check" ></i> Purchasing <c:if test="${page == 'purchasing'}"></span></c:if></a></li></li>
+           <div class="dropdown-divider" ></div>
+          <li ><a class="dropdown-item" href="${pageContext.request.contextPath}/Sales" class="nav-link "><c:if test="${page == 'Sales'}"><span class="border-bottom active"></c:if><i class="fas fa-shopping-basket"></i> Sales <c:if test="${page == 'sales'}"></span></c:if></a></li>
+           <!--  <div class="dropdown-divider" ></div>
+         <li ><a class="dropdown-item" href="${pageContext.request.contextPath}/Account" class="nav-link "><c:if test="${page == 'account'}"><span class="border-bottom active"></c:if><i class="fas fa-book"></i> Account <c:if test="${page == 'account'}"></span></c:if></a></li> --> 
+        <li class="nav-item"><a class="dropdown-item" href="${pageContext.request.contextPath}/home" class="nav-link"><c:if test="${page == 'home'}"><span class="border-bottom active"></c:if><i class="fas fa-home"></i> Home <c:if test="${page == 'purchasing'}"></span></c:if></a></li>
+        <div class="dropdown-divider"></div>
+       
+        </c:when>
         <c:otherwise>
         <li class="nav-item"><a class="dropdown-item" href="${pageContext.request.contextPath}/Setup" class="nav-link "><c:if test="${page == 'setup'}"><span class="border-bottom active"></c:if><i class="fas fa-cog"></i> Setup <c:if test="${page == 'setup'}"></span></c:if></a></li>
         <div class="dropdown-divider"></div>
