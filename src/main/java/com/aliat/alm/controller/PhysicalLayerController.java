@@ -10008,6 +10008,7 @@ public class PhysicalLayerController {
 		String ipAddress = request.getRemoteAddr();
 		String updateModfUser=request.getParameter("updateModfUser").replaceAll("^'+|'+$", "");
 		PhysicalLayerActivity PhyAct= new PhysicalLayerActivity();
+		Integer phyActID = 0;
 		String[] idArray = request.getParameterValues("physicalLayerID[]");
 		System.out.println("idArray:" +idArray);
 		String physicalLayer = request.getParameter("physicalLayer");
@@ -10032,6 +10033,10 @@ public class PhysicalLayerController {
 
 			try {
 				if (idList != null) {
+					phyActID = Integer.parseInt(session.createNativeQuery("SELECT PHY_ACT_ID FROM SEQ_TABLE").uniqueResult().toString());
+					query = session.createNativeQuery("UPDATE SEQ_TABLE SET PHY_ACT_ID = PHY_ACT_ID +" +idList.size());
+					query.executeUpdate();
+					session.createNativeQuery("commit").executeUpdate();
 
 					if (StringUtils.equalsIgnoreCase(physicalLayer, "Project")) {
 
@@ -10131,15 +10136,31 @@ public class PhysicalLayerController {
 								.uniqueResult();
 						rtn.put("newCount", newCount);
 						
+/*						phyActID = Integer.parseInt(session.createNativeQuery("SELECT PHY_ACT_ID FROM SEQ_TABLE").uniqueResult().toString());
+						query = session.createNativeQuery("UPDATE SEQ_TABLE SET PHY_ACT_ID = PHY_ACT_ID +" +idList.size());
+						query.executeUpdate();
+						session.createNativeQuery("commit").executeUpdate();
+*/						
+
+						/*String PhyActID=
+								 "PHY_ACT_" + year + "_"+ Integer.parseInt(session.createNativeQuery("SELECT PHY_ACT_ID FROM SEQ_TABLE").uniqueResult().toString());
+								query = session.createNativeQuery("UPDATE SEQ_TABLE SET PHY_ACT_ID = PHY_ACT_ID + 1 ");
+								query.executeUpdate();
+								session.createNativeQuery("commit").executeUpdate(); */
+						
+						//String PhyActID;
+
+						
 						for (int i = 0; i < idList.size(); i++) {
 							
-							String PhyActID=
+/*							String PhyActID=
 									 "PHY_ACT_" + year + "_"+ Integer.parseInt(session.createNativeQuery("SELECT PHY_ACT_ID FROM SEQ_TABLE").uniqueResult().toString());
 									query = session.createNativeQuery("UPDATE SEQ_TABLE SET PHY_ACT_ID = PHY_ACT_ID + 1 ");
 									query.executeUpdate();
-									session.createNativeQuery("commit").executeUpdate();
-									
-									PhyAct.setPhyActID(PhyActID);
+									session.createNativeQuery("commit").executeUpdate(); */
+							
+									PhyAct= new PhysicalLayerActivity();
+									PhyAct.setPhyActID("PHY_ACT_" + year + "_"+ (phyActID+i));
 									PhyAct.setElementID(idList.get(i));
 									PhyAct.setScreenName("Manhole");
 									PhyAct.setUsername(updateModfUser);
@@ -10147,6 +10168,8 @@ public class PhysicalLayerController {
 									PhyAct.setActivityDate(new Timestamp(System.currentTimeMillis()));
 									PhyAct.setActivityDescription("Delete Element");
 									session.saveOrUpdate(PhyAct);
+//									session.createNativeQuery("commit").executeUpdate();
+//									session.clear();
 							}
 					} else if (StringUtils.equalsIgnoreCase(physicalLayer, "Handhole")
 							|| StringUtils.equalsIgnoreCase(physicalLayer, "AllHandholes")) {
@@ -10173,13 +10196,15 @@ public class PhysicalLayerController {
 						
                           for (int i = 0; i < idList.size(); i++) {
 							
-							String PhyActID=
+/*							String PhyActID=
 									 "PHY_ACT_" + year + "_"+ Integer.parseInt(session.createNativeQuery("SELECT PHY_ACT_ID FROM SEQ_TABLE").uniqueResult().toString());
 									query = session.createNativeQuery("UPDATE SEQ_TABLE SET PHY_ACT_ID = PHY_ACT_ID + 1 ");
 									query.executeUpdate();
 									session.createNativeQuery("commit").executeUpdate();
+*/									
 									
-									PhyAct.setPhyActID(PhyActID);
+									PhyAct= new PhysicalLayerActivity();
+									PhyAct.setPhyActID("PHY_ACT_" + year + "_"+ (phyActID+i));
 									PhyAct.setElementID(idList.get(i));
 									PhyAct.setScreenName("Handhole");
 									PhyAct.setUsername(updateModfUser);
@@ -10201,13 +10226,14 @@ public class PhysicalLayerController {
 						physicalLayerDeleteQuery.executeUpdate();
                         for (int i = 0; i < idList.size(); i++) {
 							
-							String PhyActID=
+/*							String PhyActID=
 									 "PHY_ACT_" + year + "_"+ Integer.parseInt(session.createNativeQuery("SELECT PHY_ACT_ID FROM SEQ_TABLE").uniqueResult().toString());
 									query = session.createNativeQuery("UPDATE SEQ_TABLE SET PHY_ACT_ID = PHY_ACT_ID + 1 ");
 									query.executeUpdate();
 									session.createNativeQuery("commit").executeUpdate();
+*/									
 									
-									PhyAct.setPhyActID(PhyActID);
+									PhyAct.setPhyActID("PHY_ACT_" + year + "_"+ (phyActID+i));
 									PhyAct.setElementID(idList.get(i));
 									PhyAct.setScreenName("Junction");
 									PhyAct.setUsername(updateModfUser);
@@ -10325,13 +10351,15 @@ public class PhysicalLayerController {
 						rtn.put("newCount", Countfiber);
                        for (int i = 0; i < idList.size(); i++) {
 							
-							String PhyActID=
+/*							String PhyActID=
 									 "PHY_ACT_" + year + "_"+ Integer.parseInt(session.createNativeQuery("SELECT PHY_ACT_ID FROM SEQ_TABLE").uniqueResult().toString());
 									query = session.createNativeQuery("UPDATE SEQ_TABLE SET PHY_ACT_ID = PHY_ACT_ID + 1 ");
 									query.executeUpdate();
 									session.createNativeQuery("commit").executeUpdate();
+*/									
 									
-									PhyAct.setPhyActID(PhyActID);
+									PhyAct= new PhysicalLayerActivity();									
+									PhyAct.setPhyActID("PHY_ACT_" + year + "_"+ (phyActID+i));
 									PhyAct.setElementID(idList.get(i));
 									PhyAct.setScreenName("Fiber Cable");
 									PhyAct.setUsername(updateModfUser);
@@ -10370,13 +10398,15 @@ public class PhysicalLayerController {
 						rtn.put("newCount", Countfiber);
 						  for (int i = 0; i < idList.size(); i++) {
 								
-								String PhyActID=
+/*								String PhyActID=
 										 "PHY_ACT_" + year + "_"+ Integer.parseInt(session.createNativeQuery("SELECT PHY_ACT_ID FROM SEQ_TABLE").uniqueResult().toString());
 										query = session.createNativeQuery("UPDATE SEQ_TABLE SET PHY_ACT_ID = PHY_ACT_ID + 1 ");
 										query.executeUpdate();
 										session.createNativeQuery("commit").executeUpdate();
+*/										
 										
-										PhyAct.setPhyActID(PhyActID);
+										PhyAct= new PhysicalLayerActivity();									
+										PhyAct.setPhyActID("PHY_ACT_" + year + "_"+ (phyActID+i));
 										PhyAct.setElementID(idList.get(i));
 										PhyAct.setScreenName("Fiber Tube");
 										PhyAct.setUsername(updateModfUser);
