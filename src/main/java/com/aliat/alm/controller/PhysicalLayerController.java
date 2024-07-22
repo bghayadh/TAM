@@ -7306,9 +7306,25 @@ public class PhysicalLayerController {
 				Calendar calendar = new GregorianCalendar();
 				calendar.setTime(date);
 				int year = calendar.get(Calendar.YEAR);
+				PhysicalLayerActivity PhyAct=new PhysicalLayerActivity();
+				String updateModfUser =request.getParameter("updateModfUser");
+				String ipAddress = request.getRemoteAddr();
+
 				DistributionBoard distributionBoard = new DistributionBoard();
 				String distributionBoardId = "";
 				distributionBoardId = request.getParameter("DistributionBoardId");
+				PhyAct.setElementID(distributionBoardId);
+				String PhyActID=
+						 "PHY_ACT_" + year + "_"+ Integer.parseInt(session.createNativeQuery("SELECT PHY_ACT_ID FROM SEQ_TABLE").uniqueResult().toString());
+						query = session.createNativeQuery("UPDATE SEQ_TABLE SET PHY_ACT_ID = PHY_ACT_ID + 1 ");
+						query.executeUpdate();
+						session.createNativeQuery("commit").executeUpdate();
+						PhyAct.setPhyActID(PhyActID);
+						PhyAct.setScreenName("Distribiution Board");
+						PhyAct.setUsername(updateModfUser);
+						PhyAct.setUserIP(ipAddress);
+						PhyAct.setActivityDate(new Timestamp(System.currentTimeMillis()));
+			
 				if (StringUtils.equalsIgnoreCase(distributionBoardId, "")
 						|| StringUtils.equalsIgnoreCase(distributionBoardId, null)) {
 					synchronized (this) {
@@ -7321,7 +7337,17 @@ public class PhysicalLayerController {
 						session.createNativeQuery("commit").executeUpdate();
 						session.flush();
 						session.clear();
+						PhyAct.setElementID(distributionBoardId);
+						PhyAct.setActivityDescription("Add New Element");
+					
+
 					}
+				}
+				else {
+					
+					PhyAct.setActivityDescription("Edit Existing Element");
+					
+
 				}
 
 				Timestamp boardLastModifiedDate = new Timestamp(new Timestamp(System.currentTimeMillis()).getTime());
@@ -7377,6 +7403,7 @@ public class PhysicalLayerController {
 				session.saveOrUpdate(distributionBoard);
 				session.flush();
 				session.clear();
+				session.saveOrUpdate(PhyAct);
 				rtn.put("distributionBoardId", distributionBoardId);
 
 				String distBoardMappingFlag = request.getParameter("distBoardMappingFlag");
@@ -10318,6 +10345,21 @@ public class PhysicalLayerController {
 										"SELECT count(*) FROM distribution_board where  PROJECT_ID ='" + NodeID + "' ")
 								.uniqueResult();
 						rtn.put("newCount", newCount);
+						
+						 for (int i = 0; i < idList.size(); i++) {
+								
+				 				PhyAct= new PhysicalLayerActivity();									
+				 			   PhyAct.setPhyActID("PHY_ACT_" + year + "_"+ (phyActID+i));
+				 			PhyAct.setElementID(idList.get(i));
+				 			PhyAct.setScreenName("Distribution Board");
+				 			PhyAct.setUsername(updateModfUser);
+				 			PhyAct.setUserIP(ipAddress);
+				 			PhyAct.setActivityDate(new Timestamp(System.currentTimeMillis()));
+				 			PhyAct.setActivityDescription("Delete Element");
+				 									session.saveOrUpdate(PhyAct);
+				 							}
+			
+
 					} else if (StringUtils.equalsIgnoreCase(physicalLayer, "FiberCable")
 							|| StringUtils.equalsIgnoreCase(physicalLayer, "AllFiberCables")) {
 
@@ -10442,6 +10484,21 @@ public class PhysicalLayerController {
 								.getResultList();
 
 						rtn.put("newCount", Countfiber);
+						for (int i = 0; i < idList.size(); i++) {
+							
+					           PhyAct= new PhysicalLayerActivity();
+					           PhyAct.setPhyActID("PHY_ACT_" + year + "_"+ (phyActID+i));
+							   PhyAct.setElementID(idList.get(i));
+							   PhyAct.setScreenName("Fiber Strand");
+							   PhyAct.setUsername(updateModfUser);
+							   PhyAct.setUserIP(ipAddress);
+							   PhyAct.setActivityDate(new Timestamp(System.currentTimeMillis()));
+							   PhyAct.setActivityDescription("Delete Element");
+							   session.saveOrUpdate(PhyAct);
+//																	session.createNativeQuery("commit").executeUpdate();
+//																	session.clear();
+															}
+
 					} else if (StringUtils.equalsIgnoreCase(physicalLayer, "Trench")
 							|| StringUtils.equalsIgnoreCase(physicalLayer, "AllTrenches")) {
 						trenchPathDeleteQuery = session
@@ -10588,9 +10645,24 @@ public class PhysicalLayerController {
 				Calendar calendar = new GregorianCalendar();
 				calendar.setTime(date);
 				int year = calendar.get(Calendar.YEAR);
+				PhysicalLayerActivity PhyAct=new PhysicalLayerActivity();
+				String updateModfUser =request.getParameter("updateModfUser");
+				String ipAddress = request.getRemoteAddr();
 
 				String strandID = request.getParameter("strandId");
-
+				PhyAct.setElementID(strandID);
+				String PhyActID=
+						 "PHY_ACT_" + year + "_"+ Integer.parseInt(session.createNativeQuery("SELECT PHY_ACT_ID FROM SEQ_TABLE").uniqueResult().toString());
+						query = session.createNativeQuery("UPDATE SEQ_TABLE SET PHY_ACT_ID = PHY_ACT_ID + 1 ");
+						query.executeUpdate();
+						session.createNativeQuery("commit").executeUpdate();
+						
+						PhyAct.setPhyActID(PhyActID);
+						PhyAct.setScreenName("Fiber Strand");
+						PhyAct.setUsername(updateModfUser);
+						PhyAct.setUserIP(ipAddress);
+						PhyAct.setActivityDate(new Timestamp(System.currentTimeMillis()));
+			
 				if (StringUtils.equalsIgnoreCase(strandID, "")) {
 					synchronized (this) {
 						// strandID = "STRAND" + year + "_" + appConfig.getSeqNbr(48,session);
@@ -10599,7 +10671,16 @@ public class PhysicalLayerController {
 						query = session.createNativeQuery("UPDATE SEQ_TABLE SET FIBER_STRAND = FIBER_STRAND + 1 ");
 						query.executeUpdate();
 						session.createNativeQuery("commit").executeUpdate();
+						PhyAct.setElementID(strandID);
+						PhyAct.setActivityDescription("Add New Element");
+					
+
 					}
+				}
+				else {
+					
+					PhyAct.setActivityDescription("Edit Existing Element");
+					
 				}
 				String strandName = request.getParameter("strandName");
 				String fiberCableId = request.getParameter("fiberCableId");
@@ -10740,7 +10821,7 @@ public class PhysicalLayerController {
 				session.saveOrUpdate(fiberStrand);
 				session.flush();
 				session.clear();
-
+				session.saveOrUpdate(PhyAct);
 				int auxArraySize = 0;
 				if (StringUtils.equalsIgnoreCase(strandAuxFlag, "opened")
 						|| StringUtils.equalsIgnoreCase(strandAuxFlag, "new strand")) {
