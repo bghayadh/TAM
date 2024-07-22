@@ -3016,15 +3016,18 @@
 		</div>
 	</div>
 	<menu class="menu" id="mapMenu">
+	<c:if test="${addManhole == 1}">
 		<li class="menu-item mapMenuItem">
-			<button type="button" id="addManhole" class="menu-btn"> <i class="fa fa-folder-plus"></i> <span class="menu-text">Add Manhole</span></button>
-		</li>
+			<button type="button" id="addManhole" class="menu-btn"> <i class="fa fa-folder-plus"></i> <span class="menu-text">Add Manhole</span></button> 
+		</li></c:if>
+		<c:if test="${addHandhole == 1}">
 		<li class="menu-item mapMenuItem">
 			<button type="button" id="addHandhole" class="menu-btn"> <i class="fa fa-folder-plus"></i> <span class="menu-text">Add Handhole</span></button>
-		</li>
+		</li></c:if>
+		<c:if test="${addDB == 1}">
 		<li class="menu-item mapMenuItem">
 			<button type="button" id="addDistributionBoard" class="menu-btn"> <i class="fa fa-folder-plus"></i> <span class="menu-text">Add Distribution Board</span> </button>
-		</li>
+		</li></c:if>
 		<li class="menu-item mapMenuItem">
 			<button type="button" id="getCoordinatePoint" class="menu-btn"> <i class="fa fa-folder-plus"></i> <span class="menu-text">Get Coordinate</span></button>
 		</li>
