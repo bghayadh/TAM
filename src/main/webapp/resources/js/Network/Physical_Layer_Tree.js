@@ -11968,7 +11968,8 @@ $("#saveSurvey").on('click',function(){
 									"DBAdaptorPanelType": DBAdaptorPanelType,
 									"distBoardMappingFlag" : distBoardMappingFlag,
 									"dictParameter":dict,
-									 "ProjectId": IdNodeSelectedTemp
+									 "ProjectId": IdNodeSelectedTemp,
+									  "updateModfUser" : updateModfUser,
 									   
 							},
 							dataType: "json",
@@ -15486,7 +15487,8 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 					  "lastAuxToDestDrivDistance":lastAuxToDestDrivDistance,
 					  "strandCreatedDate":strandCreatedDate,
 					  "strandNumber":strandNumber,
-				 	  "strandColor": strandColor
+				 	  "strandColor": strandColor,
+				 	   "updateModfUser" : updateModfUser,
 				 },
 				 dataType: "json",
 				 success: function (data) {
