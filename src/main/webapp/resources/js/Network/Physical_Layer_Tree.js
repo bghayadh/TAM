@@ -458,7 +458,7 @@ if(readDB === '1'){
 			window[""+manholeJctId]=[];
 			window[""+manholeJctId]=ListManholeJunction[i];
 
-			str="<ul><li id='"+ListManholeJunction[i][0]+"' class='JUNCTION' style='display:none;width:100px;'><input type='checkbox' class='JctManholes checkFilter' class='filter'></input><span  class='TreeSpan' style='color:black;width:195px'><img src='"+getContext()+"/resources/NetworkImages/junction.png'> "+manholeJctName+" </span></i></li></ul>";		
+			str="<ul><li id='"+ListManholeJunction[i][0]+"' class='JUNCTION_M' style='display:none;width:100px;'><input type='checkbox' class='JctManholes checkFilter' class='filter'></input><span  class='TreeSpan' style='color:black;width:195px'><img src='"+getContext()+"/resources/NetworkImages/junction.png'> "+manholeJctName+" </span></i></li></ul>";		
 			$("#"+ListManholeJunction[i][2]+"_f").append(str);
 			$("#Manhole_f_"+ListManholeJunction[i][2]+"").children('.folder').find('> svg').removeClass('fa-folder').addClass('fa-folder-open');					
 			$( "#"+manholeJctId+" > .TreeSpan" ).bind("contextmenu",function(){
@@ -10615,7 +10615,7 @@ singleTube = new ContextMenu({
 							//more than one children exists
 							if($("#"+manholeId+"_f").find('ul').length > 0){
 										
-								str="<ul><li id='"+data.junctionDetails[i][0]+"' class='JUNCTION' style='display:none;width:100px;'><input type='checkbox' class='JctManholes checkFilter' class='filter'></input> <span  class='TreeSpan' style='color:black;width:195px'><img src='"+getContext()+"/resources/NetworkImages/junction.png'>  "+data.junctionDetails[i][1]+" </span></li></ul>";		
+								str="<ul><li id='"+data.junctionDetails[i][0]+"' class='JUNCTION_M' style='display:none;width:100px;'><input type='checkbox' class='JctManholes checkFilter' class='filter'></input> <span  class='TreeSpan' style='color:black;width:195px'><img src='"+getContext()+"/resources/NetworkImages/junction.png'>  "+data.junctionDetails[i][1]+" </span></li></ul>";		
 								$("#"+manholeId+"_f").append(str);
 											
 								var children = $("#"+manholeId+"_f").find(' > ul > li');
@@ -10644,7 +10644,7 @@ singleTube = new ContextMenu({
 					$("#"+manholeId+" > span").unbind();
 					$("#"+manholeId+"_f > span").unbind();
 										
-					str="<ul><li id='"+data.JunctionID+"' class='JUNCTION' style='display:none;width:100px;'><input type='checkbox' class='JctManholes checkFilter' class='filter'></input> <span  class='TreeSpan' style='color:black;width:195px'><img src='"+getContext()+"/resources/NetworkImages/junction.png'> "+junctionName+"  </span></li></ul>";		
+					str="<ul><li id='"+data.JunctionID+"' class='JUNCTION_M' style='display:none;width:100px;'><input type='checkbox' class='JctManholes checkFilter' class='filter'></input> <span  class='TreeSpan' style='color:black;width:195px'><img src='"+getContext()+"/resources/NetworkImages/junction.png'> "+junctionName+"  </span></li></ul>";		
 					$("#"+manholeId+"_f").append(str);					
 					treeCollapseFolder("#" +manholeId+ " .folder","fast",".folder");
 					
@@ -11362,7 +11362,7 @@ $("#saveManhole").click(function () {
 							window[""+jctID]=data.countJct[i];
 								
 							//Append junctions to manhole
-							str="<ul><li id='"+data.countJct[i][0]+"' class='JUNCTION' style='display:none;width:100px;'><input type='checkbox' class='JctManholes checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;'><img src='"+getContext()+"/resources/NetworkImages/junction.png'>  "+data.countJct[i][1]+" </span></li></ul>";
+							str="<ul><li id='"+data.countJct[i][0]+"' class='JUNCTION_M' style='display:none;width:100px;'><input type='checkbox' class='JctManholes checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;'><img src='"+getContext()+"/resources/NetworkImages/junction.png'>  "+data.countJct[i][1]+" </span></li></ul>";
 							$("#"+data.ManholeId+"_f").append(str);	
 								
 							CreateJunctionClickEvent(jctID,"Manhole");
