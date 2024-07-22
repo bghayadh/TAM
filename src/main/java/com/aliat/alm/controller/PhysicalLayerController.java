@@ -4394,9 +4394,9 @@ public class PhysicalLayerController {
 						.getResultList();
 				rtn.put("DBData", DBData);
 				List<Object[]> countConnections = session.createNativeQuery(
-						"select NUM_ROWS,NUM_COLUMNS,(SELECT COUNT(B.FP_STATUS) FROM DISTRIBUTION_BOARD_MAPPING B WHERE B.FP_STATUS='Active' AND B.DB_ID='"
+						"select NUM_ROWS,NUM_COLUMNS,(SELECT COUNT(B.FP_STATUS) FROM DISTRIBUTION_BOARD_MAPPING B WHERE B.FP_STATUS IN ('Active', 'InActive') AND B.DB_ID='"
 								+ distBoardSel
-								+ "') AS front,(SELECT COUNT(B.BP_STATUS) FROM DISTRIBUTION_BOARD_MAPPING B WHERE B.BP_STATUS='Active' AND B.DB_ID='"
+								+ "') AS front,(SELECT COUNT(B.BP_STATUS) FROM DISTRIBUTION_BOARD_MAPPING B WHERE B.BP_STATUS IN ('Active', 'InActive') AND B.DB_ID='"
 								+ distBoardSel + "') AS back from DISTRIBUTION_BOARD b where b.DB_ID='" + distBoardSel
 								+ "'")
 						.getResultList();
