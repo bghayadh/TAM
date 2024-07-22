@@ -144,8 +144,10 @@ public class PhysicalLayerController {
 				notifications.headerNotifications(session, model);
 
 				try {
+
+
 					PhysicalLayerActivity PhyAct= new PhysicalLayerActivity();
-					String ipAddress = request.getRemoteAddr();
+					String ipAddress = getIpAddress(request);
 					String updateModfUser=request.getParameter("updateModfUser").replaceAll("^'+|'+$", "");;
 					Calendar calendar = new GregorianCalendar();
 					calendar.setTime(new Date());
@@ -4849,7 +4851,7 @@ public class PhysicalLayerController {
 					Timestamp lastModifiedDate = new Timestamp(new Timestamp(System.currentTimeMillis()).getTime());
 					PhysicalLayerActivity PhyAct=new PhysicalLayerActivity();
 					String updateModfUser =request.getParameter("updateModfUser");
-					String ipAddress = request.getRemoteAddr();
+					String ipAddress = getIpAddress(request);
 
 					String manholeCreatedDate = request.getParameter("manholeCreatedDate");
 					Timestamp manholeCreationDate;
@@ -5054,7 +5056,7 @@ public class PhysicalLayerController {
 			tx = session.beginTransaction();
 
 			try {
-				String ipAddress = request.getRemoteAddr();
+				String ipAddress = getIpAddress(request);
 				String updateModfUser=request.getParameter("updateModfUser").replaceAll("^'+|'+$", "");
 				PhysicalLayerActivity PhyAct= new PhysicalLayerActivity();
 
@@ -6130,7 +6132,7 @@ public class PhysicalLayerController {
 			TubeAuxPoints fiberAuxtubes;
 			FiberStrands fiberStrand;
 			StrandAuxPoints fiberAuxstrands;
-			String ipAddress = request.getRemoteAddr();
+			String ipAddress = getIpAddress(request);
 			String updateModfUser=request.getParameter("updateModfUser").replaceAll("^'+|'+$", "");
 			PhysicalLayerActivity PhyAct= new PhysicalLayerActivity();
 
@@ -7308,7 +7310,7 @@ public class PhysicalLayerController {
 				int year = calendar.get(Calendar.YEAR);
 				PhysicalLayerActivity PhyAct=new PhysicalLayerActivity();
 				String updateModfUser =request.getParameter("updateModfUser");
-				String ipAddress = request.getRemoteAddr();
+				String ipAddress = getIpAddress(request);
 
 				DistributionBoard distributionBoard = new DistributionBoard();
 				String distributionBoardId = "";
@@ -10040,7 +10042,7 @@ public class PhysicalLayerController {
 		Query physicalLayerDeleteQuery = null, fiberCableDeleteQuery = null, tubeDeleteQuery = null,
 				strandDeleteQuery = null, trenchPathDeleteQuery = null, tubePathDeleteQuery = null;
 		Object newCount = null;
-		String ipAddress = request.getRemoteAddr();
+		String ipAddress = getIpAddress(request);
 		String updateModfUser=request.getParameter("updateModfUser").replaceAll("^'+|'+$", "");
 		PhysicalLayerActivity PhyAct= new PhysicalLayerActivity();
 		Integer phyActID = 0;
@@ -10647,7 +10649,7 @@ public class PhysicalLayerController {
 				int year = calendar.get(Calendar.YEAR);
 				PhysicalLayerActivity PhyAct=new PhysicalLayerActivity();
 				String updateModfUser =request.getParameter("updateModfUser");
-				String ipAddress = request.getRemoteAddr();
+				String ipAddress = getIpAddress(request);
 
 				String strandID = request.getParameter("strandId");
 				PhyAct.setElementID(strandID);
@@ -10986,7 +10988,7 @@ public class PhysicalLayerController {
 				TubeAuxPoints fiberAuxtubes;
 
 				String tubeID = request.getParameter("tubeId");
-				String ipAddress = request.getRemoteAddr();
+				String ipAddress = getIpAddress(request);
 				String updateModfUser=request.getParameter("updateModfUser").replaceAll("^'+|'+$", "");
 				PhysicalLayerActivity PhyAct= new PhysicalLayerActivity();
 
@@ -11845,7 +11847,7 @@ public class PhysicalLayerController {
 					String JunctionOwner = request.getParameter("JunctionOwner");
 					String JunctionInstaller = request.getParameter("JunctionInstaller");
 					String JunctionEngineerName = request.getParameter("JunctionEngineerName");
-					String ipAddress = request.getRemoteAddr();
+					String ipAddress = getIpAddress(request);
 					String updateModfUser=request.getParameter("updateModfUser").replaceAll("^'+|'+$", "");
 					PhysicalLayerActivity PhyAct= new PhysicalLayerActivity();
 
@@ -14795,5 +14797,46 @@ public class PhysicalLayerController {
 	public void initBinder(WebDataBinder binder) {
 		binder.setAutoGrowCollectionLimit(1500);
 	}
+	private String getIpAddress(HttpServletRequest request) {
+        String ipAddress = request.getHeader("X-Forwarded-For");
+        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
+            ipAddress = request.getHeader("Proxy-Client-IP");
+        }
+        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
+            ipAddress = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
+            ipAddress = request.getHeader("HTTP_X_FORWARDED_FOR");
+        }
+        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
+            ipAddress = request.getHeader("HTTP_X_FORWARDED");
+        }
+        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
+            ipAddress = request.getHeader("HTTP_X_CLUSTER_CLIENT_IP");
+        }
+        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
+            ipAddress = request.getHeader("HTTP_CLIENT_IP");
+        }
+        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
+            ipAddress = request.getHeader("HTTP_FORWARDED_FOR");
+        }
+        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
+            ipAddress = request.getHeader("HTTP_FORWARDED");
+        }
+        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
+            ipAddress = request.getRemoteAddr();
+        }
+        
+        // Handle IPv6 local address
+        if (ipAddress.equals("0:0:0:0:0:0:0:1") || ipAddress.equals("::1")) {
+            ipAddress = "127.0.0.1"; // This is the IPv4 loopback address
+        }
+        
+        // In some cases, IP addresses may come in IPv6 format, so you might need to convert it to IPv4
+        if (ipAddress != null && ipAddress.contains(":")) {
+            ipAddress = ipAddress.split(":")[0];
+        }
 
+        return ipAddress;
+    }
 }
