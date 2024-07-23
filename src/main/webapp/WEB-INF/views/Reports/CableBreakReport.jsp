@@ -267,9 +267,13 @@ max-width: 100%;
 					</div>
 				</div>
 		    </div>	
+		    
+		    <div class="col-md-2" >
+				<button type="button"  id ="showOnMap" class="btn mapButtons"  style="margin-left:20px;"  >Show on Map</button>
+			</div>
 		    	
 					
-			<div class="col-md-2 offset-md-2 text-right" id="col3"  style="text-align:right;">
+			<div class="col-md-2" id="col3"  style="text-align:right;">
 		 		<div class="btn-group pull-right"  style="padding: 0px !important;">
 		 			
 		 			<div class="glyph" style="padding-top:0px;">
@@ -293,7 +297,7 @@ max-width: 100%;
 			</div></div></div>
 			
 			<div class="row"> 
-				<div class="col-md-3" style="margin-right:50px; margin-left:12px;">
+				<div class="col-md-3" style="margin-right:40px; margin-left:12px;">
 					<div class="form-group">
 						<div class="input-group-prepend">
 							<span class="input-group-text">Point Longitude</span>
@@ -311,9 +315,11 @@ max-width: 100%;
 					</div>
 			    </div>	
 			    
-			    <div class="col-md-2"  style="margin-left: 345px;">
-					<button type="button"  id ="showOnMap" class="btn mapButtons"  style="margin-left:50px;"  >Show on Map</button>
-				</div>		
+			    <div class="col-md-2" >
+					<button type="button"  id ="SetCableBreakCoordinate" class="btn mapButtons"  style="margin-left:40px;"  >Set Coordinate</button>
+				</div>
+			    
+			    		
 			</div>
 
 	     <div class="row">
@@ -629,6 +635,14 @@ max-width: 100%;
       </div>  
     </div>
   </div>
+  
+	 <menu class="menu" id="mapMenu">
+		<li class="menu-item mapMenuItem">
+			<button type="button" id="getCableBreakCoordinate" class="menu-btn"> <i class="fa fa-paste"></i> <span class="menu-text">Get Coordinate</span></button>
+		</li>
+	</menu>
+  
+  
 </div>
 </body>
 
@@ -664,6 +678,8 @@ var filteredGridData=[]; // used in draw on map
 var cableID = "";
 var pointLong ="";
 var pointLat ="";
+var getCoorLong ="";
+var getCoorLat ="";
 
 
 function initMap() {	
@@ -816,6 +832,22 @@ function initMap() {
 	 	}                   
 	 });
 
+
+	   MenuMap = document.getElementById("mapMenu");
+	    google.maps.event.addListener(map, 'rightclick', function (e) {
+	    	for (prop in e) {
+	    		if (e[prop] instanceof MouseEvent) {
+				       ShowContextMenuGoolge(MenuMap, e[prop].clientX,e[prop].clientY); 
+			           break;
+			        }
+			    }   
+	    e.stop();
+	    });
+
+	    google.maps.event.addListener(map, 'click', function () {	
+		       HideContextMenuGoolge(MenuMap);
+		    });	
+
 	
 	 
 	 
@@ -824,6 +856,37 @@ function initMap() {
 	 getLongLatMouseMove(map); // Add long/lat above the map	
 	     
 }//end initMap
+
+function ShowContextMenuGoolge(ContextMenu, eventX, eventY) {
+
+    // Calculate the actual position for the context menu
+    let x = eventX + window.scrollX;
+    let y = eventY + window.scrollY;
+
+    // Adjust the position if it goes outside the window bounds
+    const mw = ContextMenu.offsetWidth;
+    const mh = ContextMenu.offsetHeight;
+
+    const windowWidth = window.innerWidth + window.scrollX;
+    const windowHeight = window.innerHeight + window.scrollY;
+
+    if (x + mw > windowWidth) {
+        x = windowWidth - mw;
+    }
+
+    if (y + mh > windowHeight) {
+        y = windowHeight - mh;
+    }
+
+    ContextMenu.style.top = y + "px";
+    ContextMenu.style.left = x + "px";
+    ContextMenu.classList.add('show-menu');
+}
+
+function HideContextMenuGoolge(ContextMenu) {
+    ContextMenu.classList.remove('show-menu');
+
+}
 
 function getContext() {
 	return window.location.pathname.substring(0, window.location.pathname.indexOf("/",2));
@@ -880,6 +943,28 @@ $(document).ready(function() {
 	$('.panel-collapse').on('hide.bs.collapse',function() {
 		$(this).siblings('.panel-heading').addClass('active');
 	});
+
+	//To hide the right click menu when clicking on the page
+	$("#CableBreakReportDiv").on('click', function(){
+		HideContextMenuGoolge(MenuMap);
+	});
+
+	$("#getCableBreakCoordinate").on('click',function(){
+		
+		 getCoorLong =getCoords().split(" ")[1];
+		 getCoorLat =getCoords().split(" ")[0];
+
+		console.log("getCoorPointLong"+getCoorLong);
+		console.log("getCoorPointLat"+getCoorLat);
+
+		});
+
+	$("#SetCableBreakCoordinate").on('click',function(){
+		
+		$("#pointLong").val(getCoorLong);
+		$("#pointLat").val(getCoorLat);
+
+		});
 	
 
 			
@@ -1224,7 +1309,8 @@ $(document).ready(function() {
 			document.getElementById("jctCount").textContent = "("+distinctJct.length+")";
 			document.getElementById("dbCount").textContent = "("+distinctDB.length+")";  
 
-			map.fitBounds(window["bounds_"+cableID]);
+			console.log("cableID "+cableID)
+			//map.fitBounds(window["bounds_"+cableID]);
 			
 			//Scroll to the map div
 			 document.getElementById("headingTwo").scrollIntoView({ behavior: "smooth" });
@@ -1295,7 +1381,6 @@ $(document).ready(function() {
 		         		document.getElementById("sitesCount").textContent = "";
 
 
-
 		         		//Clear all arrays and inputs related to map when the data in grid is filtered
 			   		 	 distinctDB =[]; 
 						 distinctJct =[]; 
@@ -1303,6 +1388,7 @@ $(document).ready(function() {
 						 distinctSites =[];  
 						 distinctManholesWithJct =[]; 
 						 distinctHandholesWithJct =[]; 
+						 filteredGridData=[];
 						 	  
 					 		
 
@@ -1444,7 +1530,7 @@ $(document).ready(function() {
 		         select: function(event, ui) {
 						fiberCable.value = (ui.item ? ui.item[0]  : '');
 						fiberCableName.value = (ui.item[1]);
-						var cableID = ui.item[0];
+						cableID = ui.item[0];
 						getFiberPath(cableID);
 						return false;
 				}
@@ -2224,7 +2310,12 @@ function showLocation(ID,rowIndex){
 			
 }
 
-
+function getCoords(){
+	var coords=document.getElementById('mapLongLat');
+	coords=coords.value.slice(1,-1).split(" || ", 2); //This to remove the first and last double quote characters and create array of size 2 based on the separator.
+	coordsPrime=coords[0] + " " +coords[1];	
+	return coordsPrime;
+}
 
 function getLongLatMouseMove(map){		  
 	map.addListener("mousemove", (mapsMouseEvent) => {
