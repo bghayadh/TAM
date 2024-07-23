@@ -4988,7 +4988,8 @@ singleNodeActive = new ContextMenu({
 				              async:false,
 				
 				              data: {
-				                  "selectedProjectIdContext":selectedProjectIdContext
+				                  "selectedProjectIdContext":selectedProjectIdContext,
+				                  "updateModfUser": updateModfUser,
 				              },
 				
 				              dataType: "json",
@@ -5109,7 +5110,8 @@ singleNodeActive = new ContextMenu({
 				              async:false,
 				
 				              data: {
-				                  "selectedProjectIdContext":selectedProjectIdContext
+				                  "selectedProjectIdContext":selectedProjectIdContext,
+				                  
 				              },
 				
 				              dataType: "json",
