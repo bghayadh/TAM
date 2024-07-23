@@ -387,7 +387,8 @@ display:none;
           <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Fiber Reports
 			<span class="caret2" ></span></a>
            	<ul class="dropdown-menu dropdown-menu-left">
-          		<li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/StrandUtilizationReport">Strand Utilization</a> 
+          		<li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/StrandUtilizationReport">Strand Utilization</a></li> 
+          		<li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/CableBreakReport">Cable Break</a></li> 
             </ul>
           </li>
           
@@ -596,7 +597,8 @@ display:none;
           <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Fiber Reports
 			<span class="caret2" ></span></a>
            	<ul class="dropdown-menu dropdown-menu-left">
-         		 <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/StrandUtilizationReport">Strand Utilization</a> 
+         		 <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/StrandUtilizationReport">Strand Utilization</a></li>
+         		 <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/CableBreakReport">Cable Break</a></li>  
             </ul>
           </li>         
            
@@ -859,7 +861,8 @@ display:none;
           <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Fiber Reports
 			<span class="caret2" ></span></a>
            	<ul class="dropdown-menu dropdown-menu-left">
-         		 <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/StrandUtilizationReport">Strand Utilization</a> 
+         		 <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/StrandUtilizationReport">Strand Utilization</a> </li>
+         		 <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/CableBreakReport">Cable Break</a></li> 
             </ul>
           </li>    
           
@@ -1147,7 +1150,8 @@ display:none;
           <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Fiber Reports
 			<span class="caret2" ></span></a>
            	<ul class="dropdown-menu dropdown-menu-left">
-         		 <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/StrandUtilizationReport">Strand Utilization</a> 
+         		 <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/StrandUtilizationReport">Strand Utilization</a></li>
+         		 <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/CableBreakReport">Cable Break</a></li> 
             </ul>
           </li>              
           
