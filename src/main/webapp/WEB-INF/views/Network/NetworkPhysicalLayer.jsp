@@ -1291,8 +1291,12 @@
 							<div style="text-align:center;">
 								<button id="deleteFiber" class="btn btn-delete" style="color: white; font-weight:bold;  margin-right: 5px ; background-color:#6AA84F">Yes</button>
 								<button id="deleteMan" class="btn btn-delete" style="color:white; font-weight:bold; margin-right: 5px;background-color:#6AA84F">Yes</button>
+								<button id="deleteManjunction" class="btn btn-delete" style="color: white; font-weight:bold; margin-left: 5px;background-color:#6AA84F; padding-left:15px; padding-right:15px;display: none" >Yes</button>								
+							    <button id="deleteHandjunction" class="btn btn-delete" style="color: white; font-weight:bold; margin-left: 5px;background-color:#6AA84F; padding-left:15px; padding-right:15px;display: none" >Yes</button>								
+							
 								<button id="deleteTrench" class="btn btn-delete" style="color:white; font-weight:bold; margin-right: 5px;background-color:#6AA84F">Yes</button>
 								<button id="deleteTermination" class="btn btn-delete" style="color: white; font-weight:bold; margin-left: 5px;background-color:#6AA84F; padding-left:15px; padding-right:15px">No</button>								
+							
 							</div>								
 							</div>
 						</div>
