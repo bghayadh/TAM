@@ -14224,6 +14224,31 @@ public class PhysicalLayerController {
 					session.createNativeQuery("commit").executeUpdate();
 
 					rtn.put("Status", "Success");
+					Calendar calendar = new GregorianCalendar();
+					calendar.setTime(new Date());
+					int year = calendar.get(Calendar.YEAR);
+					DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+
+					PhysicalLayerActivity PhyAct=new PhysicalLayerActivity();
+					String updateModfUser =request.getParameter("updateModfUser");
+					String ipAddress = getIpAddress(request);
+
+                         String PhyActID=
+							 "PHY_ACT_" + year + "_"+ Integer.parseInt(session.createNativeQuery("SELECT PHY_ACT_ID FROM SEQ_TABLE").uniqueResult().toString());
+							query = session.createNativeQuery("UPDATE SEQ_TABLE SET PHY_ACT_ID = PHY_ACT_ID + 1 ");
+							query.executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
+							
+							PhyAct.setPhyActID(PhyActID);
+							PhyAct.setScreenName("Project");
+							PhyAct.setUsername(updateModfUser);
+							PhyAct.setUserIP(ipAddress);
+							PhyAct.setActivityDate(new Timestamp(System.currentTimeMillis()));
+						PhyAct.setElementID(selectedProjectIdContext);
+						PhyAct.setActivityDescription("Move To Implementation");
+						session.saveOrUpdate(PhyAct);
+
+
 				} catch (Exception e) {
 					sw = new StringWriter();
 					e.printStackTrace(new PrintWriter(sw));
@@ -14312,6 +14337,29 @@ public class PhysicalLayerController {
 					session.createNativeQuery("commit").executeUpdate();
 
 					rtn.put("Status", "Success");
+					Calendar calendar = new GregorianCalendar();
+					calendar.setTime(new Date());
+					int year = calendar.get(Calendar.YEAR);
+					DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+
+					PhysicalLayerActivity PhyAct=new PhysicalLayerActivity();
+					String updateModfUser =request.getParameter("updateModfUser");
+					String ipAddress = getIpAddress(request);
+
+                         String PhyActID=
+							 "PHY_ACT_" + year + "_"+ Integer.parseInt(session.createNativeQuery("SELECT PHY_ACT_ID FROM SEQ_TABLE").uniqueResult().toString());
+							query = session.createNativeQuery("UPDATE SEQ_TABLE SET PHY_ACT_ID = PHY_ACT_ID + 1 ");
+							query.executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
+							
+							PhyAct.setPhyActID(PhyActID);
+							PhyAct.setScreenName("Project");
+							PhyAct.setUsername(updateModfUser);
+							PhyAct.setUserIP(ipAddress);
+							PhyAct.setActivityDate(new Timestamp(System.currentTimeMillis()));
+						PhyAct.setElementID(selectedProjectIdContext);
+						PhyAct.setActivityDescription("Move To Current Physical Layer");
+						session.saveOrUpdate(PhyAct);
 				} catch (Exception e) {
 					sw = new StringWriter();
 					e.printStackTrace(new PrintWriter(sw));
@@ -14767,7 +14815,7 @@ public class PhysicalLayerController {
 
 						listUploadedAttachment = session.createNativeQuery(
 								"SELECT * FROM ATTACHMENT_UPLOAD WHERE ELEMENT_ID='"
-										+ elementID + "' ORDER BY ID ASC ")
+										+ elementID + "' ORDER BY ID DESC ")
 								.getResultList();
 						rtn.put("listUploadedAttachment", listUploadedAttachment);
 
