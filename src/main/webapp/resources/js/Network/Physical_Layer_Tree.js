@@ -22778,11 +22778,11 @@ function checkLongLatInRows(tableID,longTdName,LatTdName){
 function appendAttachmentRow(attachmentID,jctAttachmentIndex,attachmentName,attachmentPath,tableID){
 	
 	 var attachmentRow = "<tr id='"+attachmentID+"'>";
-                          attachmentRow = attachmentRow + "<td><input type='checkbox' name='record'></td>"
+                          attachmentRow = attachmentRow + "<td><input type='checkbox' name='record' style='margin-left:20px;margin-top:-5px;'></td>"
                           attachmentRow = attachmentRow + "<td name='attachmentDownload' ><button name='attachmentDownload' id='attachmentDownload"+jctAttachmentIndex+"' style='width:110px' onclick='downloadAttachment($(this).closest(\"tr\"))'  class='btn btn-primary' >Download</button></td>";
-                          attachmentRow = attachmentRow + "<td name='attachmentID'><input name='attachmentID' id='attachmentID"+jctAttachmentIndex+"' type='text' value='" +attachmentID + "' style='width:200px;' class='ui-widget ui-widget-content ui-corner-all ' /></td>";
-                          attachmentRow = attachmentRow + "<td name='attachmentName'><input name='attachmentName' id='attachmentName"+jctAttachmentIndex+"' style='width:250px; color: #0077ff; text-decoration: none;'  type='text' value='" +attachmentName + "' class='ui-widget ui-widget-content ui-corner-all' readonly /> </td>";
-                          attachmentRow = attachmentRow + "<td name='attachmentPath' ><input name='attachmentPath' id='attachmentPath"+jctAttachmentIndex+"' style='width:400px'  type='text' value='" +attachmentPath+ "'  class='ui-widget ui-widget-content ui-corner-all' readonly/> </td>";
+                          attachmentRow = attachmentRow + "<td name='attachmentID'><input name='attachmentID' id='attachmentID"+jctAttachmentIndex+"' type='text' value='" +attachmentID + "' style='width:200px;height:30px;' class='ui-widget ui-widget-content ui-corner-all ' /></td>";
+                          attachmentRow = attachmentRow + "<td name='attachmentName'><input name='attachmentName' id='attachmentName"+jctAttachmentIndex+"' style='width:250px; color: #0077ff;height:30px; text-decoration: none;'  type='text' value='" +attachmentName + "' class='ui-widget ui-widget-content ui-corner-all' readonly /> </td>";
+                          attachmentRow = attachmentRow + "<td name='attachmentPath' ><input name='attachmentPath' id='attachmentPath"+jctAttachmentIndex+"' style='width:400px;height:30px;'  type='text' value='" +attachmentPath+ "'  class='ui-widget ui-widget-content ui-corner-all' readonly/> </td>";
                           attachmentRow = attachmentRow + "</tr>";
 
    $("#"+tableID+" > tbody").append(attachmentRow);				            
