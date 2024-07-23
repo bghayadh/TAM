@@ -1436,6 +1436,8 @@ if (addManhole === '1') {
             $("#deletebody").text("Are you sure you want to delete " + allSelectedLayer.length + " item(s)?");
             $("#DeleteModal").modal('show');
             $("#deleteFiber").hide();
+            $("#deleteManjunction").hide();	
+			$("#deleteHandjunction").hide();	
             $("#deleteMan").show();
             $("#deleteTrench").hide();
         }
@@ -1598,6 +1600,8 @@ if (addHandhole === '1') {
 					$("#deletebody").text("Are you sure you want to delete "+allSelectedLayer.length+"  item(s)?");
 					$("#DeleteModal").modal('show');
 					$("#deleteFiber").hide();
+					$("#deleteManjunction").hide();	
+			        $("#deleteHandjunction").hide();	
 					$("#deleteMan").show();
 					$("#deleteTrench").hide();
 					}
@@ -1811,6 +1815,8 @@ if (delFiber === '1') {
 					$("#deletebody").text("Are you sure you want to delete "+selectedFiberTubeStrandPath.length+"  item(s)?");
 					$("#DeleteModal").modal('show');
 					$("#deleteFiber").show();
+					$("#deleteManjunction").hide();	
+			        $("#deleteHandjunction").hide();	
 					$("#deleteMan").hide();
 					$("#deleteTrench").hide();
 				}
@@ -2023,6 +2029,8 @@ if (delFiber === '1') {
 				$("#DeleteModal").modal('show');
 				$("#deleteFiber").show();
 				$("#deleteMan").hide();
+				$("#deleteManjunction").hide();	
+			    $("#deleteHandjunction").hide();	
 				$("#deleteTrench").hide();
 			}
 		});
@@ -2381,6 +2389,8 @@ if (delFiber === '1') {
 					$("#DeleteModal").modal('show');
 					$("#deleteFiber").show();
 					$("#deleteMan").hide();
+					$("#deleteManjunction").hide();	
+			        $("#deleteHandjunction").hide();	
 					$("#deleteTrench").hide();
 					}
 				});
@@ -3000,6 +3010,8 @@ if (delDB === '1') {
 					$("#deletebody").text("Are you sure you want to delete "+allSelectedLayer.length+"  item(s)?");
 					$("#DeleteModal").modal('show');
 					$("#deleteFiber").hide();
+					$("#deleteManjunction").hide();	
+			        $("#deleteHandjunction").hide();	
 					$("#deleteMan").show();	
 					$("#deleteTrench").hide();
 				}
@@ -3165,6 +3177,8 @@ menuDistribBoard = new ContextMenu({
 			$("#DeleteModal").modal('show');
 			$("#deleteFiber").hide();
 			$("#deleteMan").hide();
+			$("#deleteManjunction").hide();	
+			 $("#deleteHandjunction").hide();	
 			$("#deleteTrench").show();
 			  
 			}
@@ -3631,6 +3645,8 @@ menuDistribBoard = new ContextMenu({
 		$("#deletebody").text("Are you sure you want to delete 1 item?");
 		$("#DeleteModal").modal('show');
 		$("#deleteFiber").hide();	
+		$("#deleteManjunction").hide();	
+			    $("#deleteHandjunction").hide();	
 		$("#deleteMan").hide();
 		$("#deleteTrench").show();	
 	   }
@@ -3876,6 +3892,8 @@ singleNodeActive = new ContextMenu({
 			$("#DeleteModal").modal('show');
 			$("#deleteFiber").hide();
 			$("#deleteMan").hide();
+			$("#deleteManjunction").hide();	
+			    $("#deleteHandjunction").hide();	
 			$("#deleteTrench").show();			}
 		 },
 		
@@ -4159,6 +4177,8 @@ singleNodeActive = new ContextMenu({
 		$("#deletebody").text("Are you sure you want to delete 1 item?");
 		$("#DeleteModal").modal('show');
 		$("#deleteFiber").hide();	
+		$("#deleteManjunction").hide();	
+			    $("#deleteHandjunction").hide();	
 		$("#deleteMan").hide();
 		$("#deleteTrench").show();	   }	  
 		
@@ -5364,6 +5384,8 @@ if (delManhole === '1') {
             $("#DeleteModal").modal('show');
             $("#deleteFiber").hide();
             $("#deleteMan").show();
+            $("#deleteManjunction").hide();	
+			    $("#deleteHandjunction").hide();	
             $("#deleteTrench").hide();
         }
     });
@@ -5565,6 +5587,8 @@ singleManhole = new ContextMenu({
 						$("#deletebody").text("Are you sure you want to delete 1 item?");
 						$("#DeleteModal").modal('show');
 						$("#deleteFiber").hide();	
+						$("#deleteManjunction").hide();	
+			    $("#deleteHandjunction").hide();	
 						$("#deleteMan").show();
 						$("#deleteTrench").hide();
 					}
@@ -6207,16 +6231,17 @@ singleHandhole = new ContextMenu({
 			 },
 			 {'icon': 'trash', 'name': 'Delete Junction', action: () => {
 				 deleteprop("JUNCTION","",selectedJuncIdContext);
-				//deleteprop("AllJunctions","JUNCTION",selectedJuncIdContext);
-				// deletePhysicalLayers("AllJunctions","Junction",IdNodeSelectedTemp);
-				//deleteJunction("NoManHandhole","Junction",selectedJct,selectedManIdContext);
-			 	$('#DeleteModal').find('input:text').val('');
+				$('#DeleteModal').find('input:text').val('');
 				$("#DeleteHeader").text("Junction Delete: ");
 				$("#deletebody").text("Are you sure you want to delete 1 item?");
 				$("#DeleteModal").modal('show');
 				$("#deleteFiber").hide();	
 				$("#deleteMan").show();	
+				$("#deleteManjunction").hide();	
+			    $("#deleteHandjunction").hide();	
 				$("#deleteTrench").hide();	
+				
+				
 				}
 			},
 				 ]
@@ -6798,14 +6823,16 @@ singleHandhole = new ContextMenu({
 		 },
 		 {'icon': 'trash', 'name': 'Delete Junction', action: () => {
 		 
-			deleteJunction("Manhole","Junction",selectedManholeJct,selectedManIdContext);
+			
 		 	$('#DeleteModal').find('input:text').val('');
 			$("#DeleteHeader").text("Junction Delete: ");
 			$("#deletebody").text("Are you sure you want to delete 1 item?");
 			$("#DeleteModal").modal('show');
-			$("#deleteFiber").show();	
+			$("#deleteManjunction").show();	
+			$("#deleteHandjunction").hide();	
 			$("#deleteMan").hide();	
 			$("#deleteTrench").hide();	
+			$("#deleteFiber").hide();
 			}
 		},
 			 ]
@@ -7327,14 +7354,15 @@ singleHandhole = new ContextMenu({
 		 },
 		 {'icon': 'trash', 'name': 'Delete Junction', action: () => {
 		 
-			deleteJunction("Handhole","Junction",selectedHandholeJct,selectedHandIdContext);
-		 	$('#DeleteModal').find('input:text').val('');
+			$('#DeleteModal').find('input:text').val('');
 			$("#DeleteHeader").text("Junction Delete: ");
 			$("#deletebody").text("Are you sure you want to delete 1 item?");
 			$("#DeleteModal").modal('show');
-			$("#deleteFiber").show();	
+			$("#deleteHandjunction").show();	
+			$("#deleteManjunction").hide();	
 			$("#deleteMan").hide();	
 			$("#deleteTrench").hide();	
+			$("#deleteFiber").hide();	
 			}
 		},
 
@@ -8087,7 +8115,9 @@ if (delDB === '1') {
 				$("#DeleteHeader").text("Distribution Board Delete: ");
 				$("#deletebody").text("Are you sure you want to delete 1 item?");
 				$("#DeleteModal").modal('show');
-				$("#deleteFiber").hide();	
+				$("#deleteFiber").hide();
+				$("#deleteManjunction").hide();	
+			    $("#deleteHandjunction").hide();	
 				$("#deleteMan").show();	
 				$("#deleteTrench").hide();
 			}
@@ -8927,6 +8957,8 @@ if (delFiber === '1') {
 						$("#DeleteModal").modal('show');
 						$("#deleteFiber").show();	
 						$("#deleteMan").hide();
+						$("#deleteManjunction").hide();	
+			            $("#deleteHandjunction").hide();	
 						$("#deleteTrench").hide();
 			        
 					 	    if(directionHashmap.get(selectedFiberContext)) {
@@ -9202,7 +9234,9 @@ if (delFiber === '1') {
 				$("#DeleteHeader").text("Fiber Strand Delete: ");
 				$("#deletebody").text("Are you sure you want to delete 1 item?");
 				$("#DeleteModal").modal('show');
-				$("#deleteFiber").show();	
+				$("#deleteFiber").show();
+				$("#deleteManjunction").hide();	
+			    $("#deleteHandjunction").hide();		
 				$("#deleteMan").hide();
 				$("#deleteTrench").hide();
 			 			
@@ -9688,6 +9722,8 @@ if (delFiber === '1') {
 			$("#deletebody").text("Are you sure you want to delete 1 item?");
 			$("#DeleteModal").modal('show');
 			$("#deleteFiber").show();	
+			$("#deleteManjunction").hide();	
+			$("#deleteHandjunction").hide();	
 			$("#deleteMan").hide();
 			$("#deleteTrench").hide();
 			
@@ -19400,68 +19436,59 @@ if(window[""+orgDest].length >0) {
 	
 	
 	/////////////Start autocpmplete for project ID
-	$("#ManholeProjectId").autocomplete({
-		showHeader: true,
-        source: function(request, response) {
-                 var projectId = "";
-                 projectId = $("#ManholeProjectId").val();
-                
-             
-	             $.ajax({
-	                 type: "GET",
-	                 contentType: "application/json; charset=utf-8",
-	                 url: getContext()+'/GetAllProjectID',
-	                 data: {
-							"ProjectId" : projectId,
-							
-							
-					 },
-	                 dataType: "json",
-	                 success: function (data) {
-	                     if (data != null) {
+$("#ManholeProjectId").autocomplete({
+    showHeader: true,
+    source: function(request, response) {
+        var searchTerm = $("#ManholeProjectId").val();
 
-		                     
-	                         response(data.ListProjectId);
-	                       
-	                     }
-	                 },
-	                 error: function(result) {
-	                     alert("Error");
-	                 }
-	             });
-	         }, minLength:0, maxShowItems: 40, scroll:true,		
-               
-        
-		select: function(event, ui) {
-			
-			
-				console.log("add hereeee");
-               document.getElementById("ManholeProjectId").value = ui.item[0];
-               document.getElementById("ManholeProjectName").value = ui.item[1];
-          
-			
-
-				return false;
-					}
-		    }).autocomplete("instance")._renderItem = function(ul, item) {
-	            return $("<li class='each'>")
-                .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
+        $.ajax({
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            url: getContext() + '/GetAllProjectID',
+            data: {
+                "SearchTerm": searchTerm
+            },
+            dataType: "json",
+            success: function(data) {
+                if (data != null) {
+                    response(data.ListProjectId);
+                }
+            },
+            error: function(result) {
+                alert("Error");
+            }
+        });
+    },
+    minLength: 0,
+    maxShowItems: 40,
+    scroll: true,
+    select: function(event, ui) {
+        document.getElementById("ManholeProjectId").value = ui.item[0];
+        document.getElementById("ManholeProjectName").value = ui.item[1];
+        console.log("Item selected:", ui.item);
+        return false;
+    }
+}).autocomplete("instance")._renderItem = function(ul, item) {
+    return $("<li class='each'>")
+        .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
             item[0] + "</span><br><span class='desc'>" +
-            item[1] +  "</span></div>") .appendTo(ul);
-        	};
-			$("#ManholeProjectId").focus(function(){
-   	        	if (this.value == ""){
-   	            	$(this).autocomplete("search");
-   	        	}						
-			});
+            item[1] + "</span></div>").appendTo(ul);
+};
+
+$("#ManholeProjectId").focus(function() {
+    if (this.value == "") {
+        $(this).autocomplete("search");
+    }
+});
+
 
 /////////////start autocpmplete for project ID Handhole
 
 $("#HandholeProjectId").autocomplete({
 		showHeader: true,
         source: function(request, response) {
-                 var projectId = "";
-                 projectId = $("#HandholeProjectId").val();
+                 var searchTerm = "";
+                   searchTerm = $("#HandholeProjectId").val();
                  /*if($("#addManhole").clicked ){
                 	 console.log("add hereeee");
                 	 projectId = $("#ManholeProjectId").val();
@@ -19475,11 +19502,9 @@ $("#HandholeProjectId").autocomplete({
 	                 type: "GET",
 	                 contentType: "application/json; charset=utf-8",
 	                 url: getContext()+'/GetAllProjectID',
-	                 data: {
-							"ProjectId" : projectId,
-							
-							
-					 },
+	                data: {
+                "SearchTerm": searchTerm
+            },
 	                 dataType: "json",
 	                 success: function (data) {
 	                     if (data != null) {
@@ -19524,8 +19549,8 @@ $("#HandholeProjectId").autocomplete({
 $("#DBProjectId").autocomplete({
 		showHeader: true,
         source: function(request, response) {
-                 var projectId = "";
-                 projectId = $("#DBProjectId").val();
+                 var searchTerm = "";
+                 searchTerm = $("#DBProjectId").val();
                
              
 	             $.ajax({
@@ -19533,10 +19558,8 @@ $("#DBProjectId").autocomplete({
 	                 contentType: "application/json; charset=utf-8",
 	                 url: getContext()+'/GetAllProjectID',
 	                 data: {
-							"ProjectId" : projectId,
-							
-							
-					 },
+                "SearchTerm": searchTerm
+            },
 	                 dataType: "json",
 	                 success: function (data) {
 	                     if (data != null) {

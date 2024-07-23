@@ -571,11 +571,11 @@
 							</div>
 							<div class="row">
 								<div class="col-sm-6"><div class="form-group"><div class="input-group-prepend">
-									<span style="width: 120px; font-size: 12px;" class="input-group-text"><b>Creation Date</b></span>
+									<span style="width: 140px;" class="input-group-text"><b>Creation Date</b></span>
 									<input type="text" id="manholeCreateDate" class="form-control text-input" value="" readonly />
 									</div></div></div>
 								<div class="col-sm-6"><div class="form-group"><div class="input-group-prepend">
-									<span class="input-group-text"  style="width: 123px; font-size: 12px;"><b>Last Modified Date</b></span>
+									<span class="input-group-text"  style="width: 160px;"><b>Last Modified Date</b></span>
 									<input type="text" id="manholeLastModifiedDate" class="form-control text-input" value="" readonly />
 								</div></div></div></div>
 						
@@ -1291,8 +1291,12 @@
 							<div style="text-align:center;">
 								<button id="deleteFiber" class="btn btn-delete" style="color: white; font-weight:bold;  margin-right: 5px ; background-color:#6AA84F">Yes</button>
 								<button id="deleteMan" class="btn btn-delete" style="color:white; font-weight:bold; margin-right: 5px;background-color:#6AA84F">Yes</button>
+								<button id="deleteManjunction" class="btn btn-delete" style="color: white; font-weight:bold; margin-left: 5px;background-color:#6AA84F; padding-left:15px; padding-right:15px;display: none" >Yes</button>								
+							    <button id="deleteHandjunction" class="btn btn-delete" style="color: white; font-weight:bold; margin-left: 5px;background-color:#6AA84F; padding-left:15px; padding-right:15px;display: none" >Yes</button>								
+							
 								<button id="deleteTrench" class="btn btn-delete" style="color:white; font-weight:bold; margin-right: 5px;background-color:#6AA84F">Yes</button>
 								<button id="deleteTermination" class="btn btn-delete" style="color: white; font-weight:bold; margin-left: 5px;background-color:#6AA84F; padding-left:15px; padding-right:15px">No</button>								
+							
 							</div>								
 							</div>
 						</div>
@@ -6099,11 +6103,11 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 										</div></div></div></div>
 							<div class="row">
 								<div class="col-sm-6"><div class="form-group"><div class="input-group-prepend">
-									<span style="width: 120px; font-size: 12px;" class="input-group-text"><b>Creation Date</b></span>
+									<span style="width: 140px; " class="input-group-text"><b>Creation Date</b></span>
 									<input type="text" id="handholeCreateDate" class="form-control text-input" value="" readonly />
 									</div></div></div>
 								<div class="col-sm-6"><div class="form-group"><div class="input-group-prepend">
-									<span class="input-group-text"  style="width: 123px; font-size: 12px;"><b>Last Modified Date</b></span>
+									<span class="input-group-text"  style="width: 160px;"><b>Last Modified Date</b></span>
 									<input type="text" id="handholeLastModifiedDate" class="form-control text-input" value="" readonly />
 								</div></div></div></div>
 							<div class="row">

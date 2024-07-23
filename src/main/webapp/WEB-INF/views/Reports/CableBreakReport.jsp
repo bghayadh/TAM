@@ -267,9 +267,13 @@ max-width: 100%;
 					</div>
 				</div>
 		    </div>	
+		    
+		    <div class="col-md-2" >
+				<button type="button"  id ="showOnMap" class="btn mapButtons"  style="margin-left:20px;"  >Show on Map</button>
+			</div>
 		    	
 					
-			<div class="col-md-2 offset-md-2 text-right" id="col3"  style="text-align:right;">
+			<div class="col-md-2" id="col3"  style="text-align:right;">
 		 		<div class="btn-group pull-right"  style="padding: 0px !important;">
 		 			
 		 			<div class="glyph" style="padding-top:0px;">
@@ -293,7 +297,7 @@ max-width: 100%;
 			</div></div></div>
 			
 			<div class="row"> 
-				<div class="col-md-3" style="margin-right:50px; margin-left:12px;">
+				<div class="col-md-3" style="margin-right:40px; margin-left:12px;">
 					<div class="form-group">
 						<div class="input-group-prepend">
 							<span class="input-group-text">Point Longitude</span>
@@ -311,9 +315,11 @@ max-width: 100%;
 					</div>
 			    </div>	
 			    
-			    <div class="col-md-2"  style="margin-left: 345px;">
-					<button type="button"  id ="showOnMap" class="btn mapButtons"  style="margin-left:50px;"  >Show on Map</button>
-				</div>		
+			    <div class="col-md-2" >
+					<button type="button"  id ="SetCableBreakCoordinate" class="btn mapButtons"  style="margin-left:40px;"  >Set Coordinate</button>
+				</div>
+			    
+			    		
 			</div>
 
 	     <div class="row">
@@ -629,6 +635,14 @@ max-width: 100%;
       </div>  
     </div>
   </div>
+  
+	 <menu class="menu" id="mapMenu">
+		<li class="menu-item mapMenuItem">
+			<button type="button" id="getCableBreakCoordinate" class="menu-btn"> <i class="fa fa-paste"></i> <span class="menu-text">Get Coordinate</span></button>
+		</li>
+	</menu>
+  
+  
 </div>
 </body>
 
@@ -664,6 +678,8 @@ var filteredGridData=[]; // used in draw on map
 var cableID = "";
 var pointLong ="";
 var pointLat ="";
+var getCoorLong ="";
+var getCoorLat ="";
 
 
 function initMap() {	
@@ -816,6 +832,22 @@ function initMap() {
 	 	}                   
 	 });
 
+
+	   MenuMap = document.getElementById("mapMenu");
+	    google.maps.event.addListener(map, 'rightclick', function (e) {
+	    	for (prop in e) {
+	    		if (e[prop] instanceof MouseEvent) {
+				       ShowContextMenuGoolge(MenuMap, e[prop].clientX,e[prop].clientY); 
+			           break;
+			        }
+			    }   
+	    e.stop();
+	    });
+
+	    google.maps.event.addListener(map, 'click', function () {	
+		       HideContextMenuGoolge(MenuMap);
+		    });	
+
 	
 	 
 	 
@@ -824,6 +856,37 @@ function initMap() {
 	 getLongLatMouseMove(map); // Add long/lat above the map	
 	     
 }//end initMap
+
+function ShowContextMenuGoolge(ContextMenu, eventX, eventY) {
+
+    // Calculate the actual position for the context menu
+    let x = eventX + window.scrollX;
+    let y = eventY + window.scrollY;
+
+    // Adjust the position if it goes outside the window bounds
+    const mw = ContextMenu.offsetWidth;
+    const mh = ContextMenu.offsetHeight;
+
+    const windowWidth = window.innerWidth + window.scrollX;
+    const windowHeight = window.innerHeight + window.scrollY;
+
+    if (x + mw > windowWidth) {
+        x = windowWidth - mw;
+    }
+
+    if (y + mh > windowHeight) {
+        y = windowHeight - mh;
+    }
+
+    ContextMenu.style.top = y + "px";
+    ContextMenu.style.left = x + "px";
+    ContextMenu.classList.add('show-menu');
+}
+
+function HideContextMenuGoolge(ContextMenu) {
+    ContextMenu.classList.remove('show-menu');
+
+}
 
 function getContext() {
 	return window.location.pathname.substring(0, window.location.pathname.indexOf("/",2));
@@ -880,6 +943,28 @@ $(document).ready(function() {
 	$('.panel-collapse').on('hide.bs.collapse',function() {
 		$(this).siblings('.panel-heading').addClass('active');
 	});
+
+	//To hide the right click menu when clicking on the page
+	$("#CableBreakReportDiv").on('click', function(){
+		HideContextMenuGoolge(MenuMap);
+	});
+
+	$("#getCableBreakCoordinate").on('click',function(){
+		
+		 getCoorLong =getCoords().split(" ")[1];
+		 getCoorLat =getCoords().split(" ")[0];
+
+		console.log("getCoorPointLong"+getCoorLong);
+		console.log("getCoorPointLat"+getCoorLat);
+
+		});
+
+	$("#SetCableBreakCoordinate").on('click',function(){
+		
+		$("#pointLong").val(getCoorLong);
+		$("#pointLat").val(getCoorLat);
+
+		});
 	
 
 			
@@ -1224,13 +1309,202 @@ $(document).ready(function() {
 			document.getElementById("jctCount").textContent = "("+distinctJct.length+")";
 			document.getElementById("dbCount").textContent = "("+distinctDB.length+")";  
 
-			map.fitBounds(window["bounds_"+cableID]);
+			console.log("cableID "+cableID)
+			//map.fitBounds(window["bounds_"+cableID]);
 			
 			//Scroll to the map div
 			 document.getElementById("headingTwo").scrollIntoView({ behavior: "smooth" });
 			 
 		         	
 		});// show on map end
+
+	   function getFiberPath(cableID){
+
+			
+			 $.ajax({
+		         type: "GET",
+		         contentType: "application/json; charset=utf-8",
+		         url: getContext() + '/getCableBreakFiberPath',
+		         data: {
+		             "cableID": cableID
+		         },
+		         dataType: "json",
+		         success: function (data) {
+		        	 if (data != null) {
+
+		            	//Disable and uncheck the checkboxes in legend
+		         		$('.showHideAllDbCheckbox').prop('checked', false);
+		         		$(".showHideAllDbCheckbox").attr('disabled', true);
+		         		$('.showHideAllJctCheckbox').prop('checked', false);
+		         		$(".showHideAllJctCheckbox").attr('disabled', true);
+		         		$('.showHideAllCustCheckbox').prop('checked', false);
+		         		$(".showHideAllCustCheckbox").attr('disabled', true);
+		         		$
+		         		$('.showHideAllHandholesWithJctCheckbox').prop('checked', false);
+		         		$(".showHideAllHandholesWithJctCheckbox").attr('disabled', true);
+		         		
+		         		$('.showHideAllManholesWithJctCheckbox').prop('checked', false);
+		         		$(".showHideAllManholesWithJctCheckbox").attr('disabled', true)
+		         		$('.showHideAllSitesCheckbox').prop('checked', false);
+		         		$(".showHideAllSitesCheckbox").attr('disabled', true);
+		         		$('.showHideCableCheckbox').prop('checked', false);
+		         		$(".showHideCableCheckbox").attr('disabled', true);
+		         		
+		         		//showRelPathFlag="notOpened";
+
+		         		infoWindow.close();
+		         		cableInfoWindow.close();
+		         		
+		         		 // Clear the map and arrays related to map
+		         		 markerClusterDB.clearMarkers();	
+		         		 markersDB=[];	  
+		         		 document.getElementById("dbCount").textContent = "";
+
+		         		 markerClusterJct.clearMarkers();	
+		         		 markersJct=[];	  
+		         		 document.getElementById("jctCount").textContent = "";
+
+		         		 markerClusterCustomers.clearMarkers();	
+		         		 markersCustomer=[];	  
+		         		 document.getElementById("custCount").textContent = "";
+
+		         		 markerClusterHandholesWithJct.clearMarkers();
+		         		 markersHandholesWithJct=[];	   
+		         		 document.getElementById("handholesCountWithJct").textContent = "";
+		         		 
+		         		 markerClusterManholesWithJct.clearMarkers();
+		         		 markersManholesWithJct=[];	  
+		         		 document.getElementById("manholesCountWithJct").textContent = "";
+
+		         		 markerClusterSites.clearMarkers();	
+		         		 markersSites=[];
+		         		document.getElementById("sitesCount").textContent = "";
+
+
+		         		//Clear all arrays and inputs related to map when the data in grid is filtered
+			   		 	 distinctDB =[]; 
+						 distinctJct =[]; 
+						 distinctCustomers =[];
+						 distinctSites =[];  
+						 distinctManholesWithJct =[]; 
+						 distinctHandholesWithJct =[]; 
+						 filteredGridData=[];
+						 	  
+					 		
+
+					 	if(fiberCableArray.length>0) {
+							 for(var v=0;v<allCables.length;v++){
+					          	fiberCableArray[allCables[v]].setMap(null);
+							}
+						 }
+						 
+						 
+						 fiberCableArray=[];
+						 cableID="";	  
+						 allCables=[];
+
+						 mapFlag="0"; 	
+
+
+						window["mapPointsNames_"+cableID]=[];
+						
+						
+						//Push src
+						if(data.fiberList[0][4] !="null"){
+							src = data.fiberList[0][4]+":" +data.fiberList[0][5]+":"+data.fiberList[0][6];		
+						}
+						else {
+						 if (data.fiberList[0][5].startsWith("MH") ==true || data.fiberList[0][5].startsWith("HH") ==true  || data.fiberList[0][5].startsWith("DB") ==true  || data.fiberList[0][5].startsWith("CUST") ==true ) {
+								src  = data.fiberList[0][5]+":" +data.fiberList[0][6];	
+							}
+							else {
+								src = data.fiberList[0][6];
+							}
+						}
+						window["mapPointsNames_"+cableID].push(src);
+
+						//Push dst
+						if(data.fiberList[0][7] !="null"){
+							dst = data.fiberList[0][7]+":" +data.fiberList[0][8]+":"+data.fiberList[0][9];		
+						}
+						else {
+						 if (data.fiberList[0][8].startsWith("MH") ==true || data.fiberList[0][8].startsWith("HH") ==true  || data.fiberList[0][8].startsWith("DB") ==true  || data.fiberList[0][8].startsWith("CUST") ==true ) {
+							 dst  = data.fiberList[0][8]+":" +data.fiberList[0][9];	
+							}
+							else {
+								dst = data.fiberList[0][9];
+							}
+						}
+						window["mapPointsNames_"+cableID].push(dst);
+
+		               
+		                         
+		                window["mapPoints_"+cableID]=[]; 
+						window["mapPoints_"+cableID].push(new google.maps.LatLng(data.fiberList[0][1],data.fiberList[0][0]));
+
+						window["bounds_"+cableID] = new google.maps.LatLngBounds();			
+						window["bounds_"+cableID].extend(new google.maps.LatLng(data.fiberList[0][1],data.fiberList[0][0]));
+						window["bounds_"+cableID].extend(new google.maps.LatLng(data.fiberList[0][3],data.fiberList[0][2]));
+						
+						 
+						
+						for(i=0;i<data.fiberAuxData.length;i++){//PUSH AUXILIARY POINTS OF FIBER CABLE	
+							window["mapPoints_"+cableID].push(new google.maps.LatLng(data.fiberAuxData[i][1],data.fiberAuxData[i][0]));
+							window["bounds_"+cableID].extend(new google.maps.LatLng(data.fiberAuxData[i][1],data.fiberAuxData[i][0]));
+
+							if(data.fiberAuxData[i][2] =="") {
+								auxPoint="";
+							}
+							else if(data.fiberAuxData[i][2] !="null"){
+								auxPoint = data.fiberAuxData[i][2]+":" +data.fiberAuxData[i][3]+":"+data.fiberAuxData[i][4];		
+							}
+							else {
+								
+								if (data.fiberAuxData[i][3].startsWith("MH") ==true  || data.fiberAuxData[i][3].startsWith("HH") ==true  ||data.fiberAuxData[i][3].startsWith("DB") ==true ) {
+									auxPoint = data.fiberAuxData[i][3]+":" +data.fiberAuxData[i][4];	
+								}
+								else if (data.fiberAuxData[i][4].includes("Auxiliary_Point")==true) {
+									auxPoint = data.fiberAuxData[i][6]+":"+data.fiberAuxData[i][4];
+								}
+								else {
+									auxPoint = data.fiberAuxData[i][4];
+								}
+							}
+							window["mapPointsNames_"+cableID].splice(window["mapPointsNames_"+cableID].length-1, 0,auxPoint);// insert at before last index which is the destination
+						}
+						
+
+						window["mapPoints_"+cableID].push(new google.maps.LatLng(data.fiberList[0][3],data.fiberList[0][2]));
+
+
+						if(allCables.includes(cableID) ==false){
+							allCables.push(cableID);
+						}
+		          		buildPath(cableID,fiberCableArray,$("#fiberCable").val().split(":")[1],window["mapPoints_"+cableID],data.fiberList[0][10],0.7,4.5,'blue',13);
+		          		fiberCableArray[cableID].setMap(map);
+		          		$('.showHideCableCheckbox').prop('checked', true);
+						$(".showHideCableCheckbox").attr('disabled', false);
+
+						map.fitBounds(window["bounds_"+cableID]);
+							
+
+						
+
+
+
+
+					 	 
+
+		                 }
+		             
+		         },
+		         error: function (result) {
+		             alert("Error");
+		         }
+		     });
+			
+		}//end getfiberpath
+		
 
 	 $("#fiberCable").autocomplete({
 		source: function(request, response) {
@@ -1256,6 +1530,8 @@ $(document).ready(function() {
 		         select: function(event, ui) {
 						fiberCable.value = (ui.item ? ui.item[0]  : '');
 						fiberCableName.value = (ui.item[1]);
+						cableID = ui.item[0];
+						getFiberPath(cableID);
 						return false;
 				}
 				}).autocomplete("instance")._renderItem = function(ul, item) {
@@ -2032,6 +2308,13 @@ function showLocation(ID,rowIndex){
 		//Scroll to the map div
 		document.getElementById("headingTwo").scrollIntoView({ behavior: "smooth" });
 			
+}
+
+function getCoords(){
+	var coords=document.getElementById('mapLongLat');
+	coords=coords.value.slice(1,-1).split(" || ", 2); //This to remove the first and last double quote characters and create array of size 2 based on the separator.
+	coordsPrime=coords[0] + " " +coords[1];	
+	return coordsPrime;
 }
 
 function getLongLatMouseMove(map){		  

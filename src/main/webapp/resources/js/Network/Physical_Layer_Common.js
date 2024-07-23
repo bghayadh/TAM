@@ -47,6 +47,15 @@ searchConnectedButtonEvents();
 		$("#DeleteModal").modal('hide');
 	});
 
+ $("#deleteManjunction").click(function() {
+    	deleteJunction("Manhole","Junction",selectedManholeJct,selectedManIdContext);
+		$("#DeleteModal").modal('hide');
+	});
+	$("#deleteHandjunction").click(function() {
+    	deleteJunction("Handhole","Junction",selectedHandholeJct,selectedHandIdContext);
+		 	$("#DeleteModal").modal('hide');
+	});
+	
 	 $("#deleteFiber").click(function() {
 		deleteFiberCable(layer_arr[0],layer_arr[1],layer_arr[2]);
 		$("#DeleteModal").modal('hide');
@@ -13980,6 +13989,8 @@ else if($("#mapOperationModal").is(':visible')){
 c=$("#mapOperationModal");}
 else if($("#DeleteModal").is(':visible')){
 c=$("#DeleteModal");}
+else if($("#DeleteModalJun").is(':visible')){
+c=$("#DeleteModalJun");}
 else if($("#ConfirmModal").is(':visible')){
 c=$("#ConfirmModal");}
 else if($("#dB_MappingModal").is(':visible')){
