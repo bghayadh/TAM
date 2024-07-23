@@ -6207,16 +6207,15 @@ singleHandhole = new ContextMenu({
 			 },
 			 {'icon': 'trash', 'name': 'Delete Junction', action: () => {
 				 deleteprop("JUNCTION","",selectedJuncIdContext);
-				//deleteprop("AllJunctions","JUNCTION",selectedJuncIdContext);
-				// deletePhysicalLayers("AllJunctions","Junction",IdNodeSelectedTemp);
-				//deleteJunction("NoManHandhole","Junction",selectedJct,selectedManIdContext);
-			 	$('#DeleteModal').find('input:text').val('');
+				$('#DeleteModal').find('input:text').val('');
 				$("#DeleteHeader").text("Junction Delete: ");
 				$("#deletebody").text("Are you sure you want to delete 1 item?");
 				$("#DeleteModal").modal('show');
 				$("#deleteFiber").hide();	
 				$("#deleteMan").show();	
 				$("#deleteTrench").hide();	
+				
+				
 				}
 			},
 				 ]
@@ -6798,14 +6797,15 @@ singleHandhole = new ContextMenu({
 		 },
 		 {'icon': 'trash', 'name': 'Delete Junction', action: () => {
 		 
-			deleteJunction("Manhole","Junction",selectedManholeJct,selectedManIdContext);
+			
 		 	$('#DeleteModal').find('input:text').val('');
 			$("#DeleteHeader").text("Junction Delete: ");
 			$("#deletebody").text("Are you sure you want to delete 1 item?");
 			$("#DeleteModal").modal('show');
-			$("#deleteFiber").show();	
+			$("#deleteManjunction").show();	
 			$("#deleteMan").hide();	
 			$("#deleteTrench").hide();	
+			$("#deleteFiber").hide();
 			}
 		},
 			 ]
@@ -7327,14 +7327,14 @@ singleHandhole = new ContextMenu({
 		 },
 		 {'icon': 'trash', 'name': 'Delete Junction', action: () => {
 		 
-			deleteJunction("Handhole","Junction",selectedHandholeJct,selectedHandIdContext);
-		 	$('#DeleteModal').find('input:text').val('');
+			$('#DeleteModal').find('input:text').val('');
 			$("#DeleteHeader").text("Junction Delete: ");
 			$("#deletebody").text("Are you sure you want to delete 1 item?");
 			$("#DeleteModal").modal('show');
-			$("#deleteFiber").show();	
+			$("#deleteHandjunction").show();	
 			$("#deleteMan").hide();	
 			$("#deleteTrench").hide();	
+			$("#deleteFiber").hide();	
 			}
 		},
 
