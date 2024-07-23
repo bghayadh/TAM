@@ -7866,51 +7866,42 @@ public class PhysicalLayerController {
 
 	@RequestMapping(value = "/GetAllProjectID", method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, Object> GetAllProjectID(Locale locale, Model model, HttpServletRequest request,
-			HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException {
-		System.out.println("Passes here");
-		Map<String, Object> rtn = new LinkedHashMap<>();
-		session = AlmDbSession.getInstance().getSession();
-		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
-			rtn.put("Login", "redirect:/");
-			return rtn;
-		} else {
-
-			if (session != null && session.isOpen()) {
-				tx = session.beginTransaction();
-
-				try {
-					String projectId = request.getParameter("ProjectId");
-					System.out.println("projectId is  " + projectId);
-					query = session.createNativeQuery(
-							"SELECT DISTINCT PROJECT_ID,PROJECT_NAME FROM PROJECT WHERE lower(PROJECT_ID) LIKE lower(:param)");
-					query.setParameter("param", "%" + projectId + "%");
-					rtn.put("ListProjectId", query.getResultList());
-					session.clear();
-					tx.commit();
-
-				} catch (Exception e) {
-					tx.rollback();
-					sw = new StringWriter();
-					e.printStackTrace(new PrintWriter(sw));
-					exceptionAsString = sw.toString();
-					logger.finest("Error in saveLoadedDistributionBoard due to \n " + exceptionAsString);
-					logger.info("Error in saveLoadedDistributionBoard due to \n " + exceptionAsString);
-				}
-
-				finally {
-					if (session != null && session.isOpen()) {
-						session.close();
-
-					}
-				}
-
-			}
-		}
-
-		return rtn;
-
+	public Map<String, Object> GetAllProjectID( @RequestParam("SearchTerm") String searchTerm,  Locale locale, Model model, 
+	        HttpServletRequest request,HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException {
+	    
+	    Map<String, Object> rtn = new LinkedHashMap<>();
+	    session = AlmDbSession.getInstance().getSession();
+	    
+	    if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+	        rtn.put("Login", "redirect:/");
+	        return rtn;
+	    } else {
+	        if (session != null && session.isOpen()) {
+	            tx = session.beginTransaction();
+	            try {
+	                query = session.createNativeQuery(
+	                        "SELECT DISTINCT PROJECT_ID, PROJECT_NAME FROM PROJECT " +
+	                        "WHERE PROJECT_LAYER != 'Completed' " +
+	                        "AND (lower(PROJECT_ID) LIKE lower(:param) OR lower(PROJECT_NAME) LIKE lower(:param))");
+	                query.setParameter("param", "%" + searchTerm + "%");
+	                rtn.put("ListProjectId", query.getResultList());
+	                session.clear();
+	                tx.commit();
+	            } catch (Exception e) {
+	                tx.rollback();
+	                logger.finest("Error in GetAllProjectID due to: " + e.getMessage());
+	                rtn.put("error", "Error fetching projects.");
+	            } finally {
+	                if (session != null && session.isOpen()) {
+	                    session.close();
+	                }
+	            }
+	        }
+	    }
+	    return rtn;
 	}
+
+
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/SearchForStrand", method = RequestMethod.GET)
