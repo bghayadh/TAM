@@ -1436,6 +1436,8 @@ if (addManhole === '1') {
             $("#deletebody").text("Are you sure you want to delete " + allSelectedLayer.length + " item(s)?");
             $("#DeleteModal").modal('show');
             $("#deleteFiber").hide();
+            $("#deleteManjunction").hide();	
+			$("#deleteHandjunction").hide();	
             $("#deleteMan").show();
             $("#deleteTrench").hide();
         }
@@ -1598,6 +1600,8 @@ if (addHandhole === '1') {
 					$("#deletebody").text("Are you sure you want to delete "+allSelectedLayer.length+"  item(s)?");
 					$("#DeleteModal").modal('show');
 					$("#deleteFiber").hide();
+					$("#deleteManjunction").hide();	
+			        $("#deleteHandjunction").hide();	
 					$("#deleteMan").show();
 					$("#deleteTrench").hide();
 					}
@@ -1811,6 +1815,8 @@ if (delFiber === '1') {
 					$("#deletebody").text("Are you sure you want to delete "+selectedFiberTubeStrandPath.length+"  item(s)?");
 					$("#DeleteModal").modal('show');
 					$("#deleteFiber").show();
+					$("#deleteManjunction").hide();	
+			        $("#deleteHandjunction").hide();	
 					$("#deleteMan").hide();
 					$("#deleteTrench").hide();
 				}
@@ -2023,6 +2029,8 @@ if (delFiber === '1') {
 				$("#DeleteModal").modal('show');
 				$("#deleteFiber").show();
 				$("#deleteMan").hide();
+				$("#deleteManjunction").hide();	
+			    $("#deleteHandjunction").hide();	
 				$("#deleteTrench").hide();
 			}
 		});
@@ -2381,6 +2389,8 @@ if (delFiber === '1') {
 					$("#DeleteModal").modal('show');
 					$("#deleteFiber").show();
 					$("#deleteMan").hide();
+					$("#deleteManjunction").hide();	
+			        $("#deleteHandjunction").hide();	
 					$("#deleteTrench").hide();
 					}
 				});
@@ -3000,6 +3010,8 @@ if (delDB === '1') {
 					$("#deletebody").text("Are you sure you want to delete "+allSelectedLayer.length+"  item(s)?");
 					$("#DeleteModal").modal('show');
 					$("#deleteFiber").hide();
+					$("#deleteManjunction").hide();	
+			        $("#deleteHandjunction").hide();	
 					$("#deleteMan").show();	
 					$("#deleteTrench").hide();
 				}
@@ -3165,6 +3177,8 @@ menuDistribBoard = new ContextMenu({
 			$("#DeleteModal").modal('show');
 			$("#deleteFiber").hide();
 			$("#deleteMan").hide();
+			$("#deleteManjunction").hide();	
+			 $("#deleteHandjunction").hide();	
 			$("#deleteTrench").show();
 			  
 			}
@@ -3631,6 +3645,8 @@ menuDistribBoard = new ContextMenu({
 		$("#deletebody").text("Are you sure you want to delete 1 item?");
 		$("#DeleteModal").modal('show');
 		$("#deleteFiber").hide();	
+		$("#deleteManjunction").hide();	
+			    $("#deleteHandjunction").hide();	
 		$("#deleteMan").hide();
 		$("#deleteTrench").show();	
 	   }
@@ -3876,6 +3892,8 @@ singleNodeActive = new ContextMenu({
 			$("#DeleteModal").modal('show');
 			$("#deleteFiber").hide();
 			$("#deleteMan").hide();
+			$("#deleteManjunction").hide();	
+			    $("#deleteHandjunction").hide();	
 			$("#deleteTrench").show();			}
 		 },
 		
@@ -4159,6 +4177,8 @@ singleNodeActive = new ContextMenu({
 		$("#deletebody").text("Are you sure you want to delete 1 item?");
 		$("#DeleteModal").modal('show');
 		$("#deleteFiber").hide();	
+		$("#deleteManjunction").hide();	
+			    $("#deleteHandjunction").hide();	
 		$("#deleteMan").hide();
 		$("#deleteTrench").show();	   }	  
 		
@@ -5364,6 +5384,8 @@ if (delManhole === '1') {
             $("#DeleteModal").modal('show');
             $("#deleteFiber").hide();
             $("#deleteMan").show();
+            $("#deleteManjunction").hide();	
+			    $("#deleteHandjunction").hide();	
             $("#deleteTrench").hide();
         }
     });
@@ -5565,6 +5587,8 @@ singleManhole = new ContextMenu({
 						$("#deletebody").text("Are you sure you want to delete 1 item?");
 						$("#DeleteModal").modal('show');
 						$("#deleteFiber").hide();	
+						$("#deleteManjunction").hide();	
+			    $("#deleteHandjunction").hide();	
 						$("#deleteMan").show();
 						$("#deleteTrench").hide();
 					}
@@ -6213,6 +6237,8 @@ singleHandhole = new ContextMenu({
 				$("#DeleteModal").modal('show');
 				$("#deleteFiber").hide();	
 				$("#deleteMan").show();	
+				$("#deleteManjunction").hide();	
+			    $("#deleteHandjunction").hide();	
 				$("#deleteTrench").hide();	
 				
 				
@@ -6803,6 +6829,7 @@ singleHandhole = new ContextMenu({
 			$("#deletebody").text("Are you sure you want to delete 1 item?");
 			$("#DeleteModal").modal('show');
 			$("#deleteManjunction").show();	
+			$("#deleteHandjunction").hide();	
 			$("#deleteMan").hide();	
 			$("#deleteTrench").hide();	
 			$("#deleteFiber").hide();
@@ -7332,6 +7359,7 @@ singleHandhole = new ContextMenu({
 			$("#deletebody").text("Are you sure you want to delete 1 item?");
 			$("#DeleteModal").modal('show');
 			$("#deleteHandjunction").show();	
+			$("#deleteManjunction").hide();	
 			$("#deleteMan").hide();	
 			$("#deleteTrench").hide();	
 			$("#deleteFiber").hide();	
@@ -8087,7 +8115,9 @@ if (delDB === '1') {
 				$("#DeleteHeader").text("Distribution Board Delete: ");
 				$("#deletebody").text("Are you sure you want to delete 1 item?");
 				$("#DeleteModal").modal('show');
-				$("#deleteFiber").hide();	
+				$("#deleteFiber").hide();
+				$("#deleteManjunction").hide();	
+			    $("#deleteHandjunction").hide();	
 				$("#deleteMan").show();	
 				$("#deleteTrench").hide();
 			}
@@ -8927,6 +8957,8 @@ if (delFiber === '1') {
 						$("#DeleteModal").modal('show');
 						$("#deleteFiber").show();	
 						$("#deleteMan").hide();
+						$("#deleteManjunction").hide();	
+			            $("#deleteHandjunction").hide();	
 						$("#deleteTrench").hide();
 			        
 					 	    if(directionHashmap.get(selectedFiberContext)) {
@@ -9202,7 +9234,9 @@ if (delFiber === '1') {
 				$("#DeleteHeader").text("Fiber Strand Delete: ");
 				$("#deletebody").text("Are you sure you want to delete 1 item?");
 				$("#DeleteModal").modal('show');
-				$("#deleteFiber").show();	
+				$("#deleteFiber").show();
+				$("#deleteManjunction").hide();	
+			    $("#deleteHandjunction").hide();		
 				$("#deleteMan").hide();
 				$("#deleteTrench").hide();
 			 			
@@ -9688,6 +9722,8 @@ if (delFiber === '1') {
 			$("#deletebody").text("Are you sure you want to delete 1 item?");
 			$("#DeleteModal").modal('show');
 			$("#deleteFiber").show();	
+			$("#deleteManjunction").hide();	
+			$("#deleteHandjunction").hide();	
 			$("#deleteMan").hide();
 			$("#deleteTrench").hide();
 			
