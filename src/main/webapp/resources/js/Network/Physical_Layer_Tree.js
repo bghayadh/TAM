@@ -19436,68 +19436,59 @@ if(window[""+orgDest].length >0) {
 	
 	
 	/////////////Start autocpmplete for project ID
-	$("#ManholeProjectId").autocomplete({
-		showHeader: true,
-        source: function(request, response) {
-                 var projectId = "";
-                 projectId = $("#ManholeProjectId").val();
-                
-             
-	             $.ajax({
-	                 type: "GET",
-	                 contentType: "application/json; charset=utf-8",
-	                 url: getContext()+'/GetAllProjectID',
-	                 data: {
-							"ProjectId" : projectId,
-							
-							
-					 },
-	                 dataType: "json",
-	                 success: function (data) {
-	                     if (data != null) {
+$("#ManholeProjectId").autocomplete({
+    showHeader: true,
+    source: function(request, response) {
+        var searchTerm = $("#ManholeProjectId").val();
 
-		                     
-	                         response(data.ListProjectId);
-	                       
-	                     }
-	                 },
-	                 error: function(result) {
-	                     alert("Error");
-	                 }
-	             });
-	         }, minLength:0, maxShowItems: 40, scroll:true,		
-               
-        
-		select: function(event, ui) {
-			
-			
-				console.log("add hereeee");
-               document.getElementById("ManholeProjectId").value = ui.item[0];
-               document.getElementById("ManholeProjectName").value = ui.item[1];
-          
-			
-
-				return false;
-					}
-		    }).autocomplete("instance")._renderItem = function(ul, item) {
-	            return $("<li class='each'>")
-                .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
+        $.ajax({
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            url: getContext() + '/GetAllProjectID',
+            data: {
+                "SearchTerm": searchTerm
+            },
+            dataType: "json",
+            success: function(data) {
+                if (data != null) {
+                    response(data.ListProjectId);
+                }
+            },
+            error: function(result) {
+                alert("Error");
+            }
+        });
+    },
+    minLength: 0,
+    maxShowItems: 40,
+    scroll: true,
+    select: function(event, ui) {
+        document.getElementById("ManholeProjectId").value = ui.item[0];
+        document.getElementById("ManholeProjectName").value = ui.item[1];
+        console.log("Item selected:", ui.item);
+        return false;
+    }
+}).autocomplete("instance")._renderItem = function(ul, item) {
+    return $("<li class='each'>")
+        .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
             item[0] + "</span><br><span class='desc'>" +
-            item[1] +  "</span></div>") .appendTo(ul);
-        	};
-			$("#ManholeProjectId").focus(function(){
-   	        	if (this.value == ""){
-   	            	$(this).autocomplete("search");
-   	        	}						
-			});
+            item[1] + "</span></div>").appendTo(ul);
+};
+
+$("#ManholeProjectId").focus(function() {
+    if (this.value == "") {
+        $(this).autocomplete("search");
+    }
+});
+
 
 /////////////start autocpmplete for project ID Handhole
 
 $("#HandholeProjectId").autocomplete({
 		showHeader: true,
         source: function(request, response) {
-                 var projectId = "";
-                 projectId = $("#HandholeProjectId").val();
+                 var searchTerm = "";
+                   searchTerm = $("#HandholeProjectId").val();
                  /*if($("#addManhole").clicked ){
                 	 console.log("add hereeee");
                 	 projectId = $("#ManholeProjectId").val();
@@ -19511,11 +19502,9 @@ $("#HandholeProjectId").autocomplete({
 	                 type: "GET",
 	                 contentType: "application/json; charset=utf-8",
 	                 url: getContext()+'/GetAllProjectID',
-	                 data: {
-							"ProjectId" : projectId,
-							
-							
-					 },
+	                data: {
+                "SearchTerm": searchTerm
+            },
 	                 dataType: "json",
 	                 success: function (data) {
 	                     if (data != null) {
@@ -19560,8 +19549,8 @@ $("#HandholeProjectId").autocomplete({
 $("#DBProjectId").autocomplete({
 		showHeader: true,
         source: function(request, response) {
-                 var projectId = "";
-                 projectId = $("#DBProjectId").val();
+                 var searchTerm = "";
+                 searchTerm = $("#DBProjectId").val();
                
              
 	             $.ajax({
@@ -19569,10 +19558,8 @@ $("#DBProjectId").autocomplete({
 	                 contentType: "application/json; charset=utf-8",
 	                 url: getContext()+'/GetAllProjectID',
 	                 data: {
-							"ProjectId" : projectId,
-							
-							
-					 },
+                "SearchTerm": searchTerm
+            },
 	                 dataType: "json",
 	                 success: function (data) {
 	                     if (data != null) {
