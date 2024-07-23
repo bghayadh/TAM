@@ -220,6 +220,7 @@ public class CableBreakReportController {
 					
 				
 					
+					System.out.println("nearestAuxPtSeq "+nearestAuxPtSeq);
 					//get the auxiliary pt that is just before the nearest pt based on SEQ_SORTING
 					Object[]  previousAuxPt = (Object[]) session.createNativeQuery(
 							"SELECT B.LONGITUDE,B.LATITUDE,B.WARE_ID,B.AUXILIARY_POINT_ID,B.AUXILIARY_POINT_NAME,B.AUXILIARY_ID,B.SEQ_SORTING FROM FIBER_AUXILIARY_POINTS B "
@@ -615,6 +616,60 @@ public class CableBreakReportController {
 				exceptionAsString = sw.toString();
 				logger.finest("Error in GenerateBreakPointReport due to \n " + exceptionAsString);
 				logger.info("Error in GenerateBreakPointReport due to \n " + exceptionAsString);
+			} 
+			finally {
+				if (session != null && session.isOpen()) {
+					session.close();
+				}
+			}
+		}
+		return rtn;
+	}
+	
+	
+	
+	
+	
+	
+	@SuppressWarnings({ "unchecked", "deprecation" })
+	@RequestMapping(value = "/getCableBreakFiberPath", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> getCableBreakFiberPath(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) {
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		String fiberCableID = request.getParameter("cableID");
+		
+
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", "redirect:/");
+			return rtn;
+		} else {
+
+			try {
+				session = AlmDbSession.getInstance().getSession();
+
+				if (session != null && session.isOpen()) {
+
+					List<Object[]> fiberList = session.createNativeQuery(
+							"SELECT A.SOURCE_LNG,A.SOURCE_LAT,A.DESTINATION_LNG,A.DESTINATION_LAT,A.SOURCE_WARE_ID,A.SOURCE_ID,A.SOURCE_NAME,A.DESTINATION_WARE_ID,A.DESTINATION_ID,A.DESTINATION_NAME,(select B.FIBER_COLOR_OWNER from FIBER_OWNER_COLOR B WHERE B.FIBER_OWNER=A.FIBER_OWNER) AS FIBER_CABLE_COLOR,A.NUMBER_OF_STRANDS,A.NUMBER_OF_TUBES FROM FIBER_CABLES A WHERE A.FIBER_CABLE_ID ='"+fiberCableID+ "' ").getResultList();
+					rtn.put("fiberList", fiberList);
+					
+					
+					List<Object[]> fiberAuxData = session.createNativeQuery(
+							"SELECT B.LONGITUDE,B.LATITUDE,B.WARE_ID,B.AUXILIARY_POINT_ID,B.AUXILIARY_POINT_NAME,B.FIBER_CABLE_ID,B.AUXILIARY_ID,SEQ_SORTING FROM FIBER_CABLES A,FIBER_AUXILIARY_POINTS B WHERE A.FIBER_CABLE_ID=B.FIBER_CABLE_ID AND B.FIBER_CABLE_ID ='"
+									+ fiberCableID + "' ORDER BY B.SEQ_SORTING ASC").getResultList();
+					rtn.put("fiberAuxData", fiberAuxData);
+					    
+					  
+				}
+
+			} catch (Exception e) {
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in getCableBreakFiberPath due to \n " + exceptionAsString);
+				logger.info("Error in getCableBreakFiberPath due to \n " + exceptionAsString);
 			} 
 			finally {
 				if (session != null && session.isOpen()) {

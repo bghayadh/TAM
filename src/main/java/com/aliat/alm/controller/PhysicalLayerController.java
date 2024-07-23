@@ -294,6 +294,7 @@ public class PhysicalLayerController {
 					System.out.println("url is " + request.getParameter("Checked"));
 					if (StringUtils.equalsIgnoreCase(request.getParameter("Checked"), "CurrentPhysicalLayer")
 							|| StringUtils.equalsIgnoreCase(request.getParameter("Checked"), "PROJECT")) {
+						
 						filterFlag = 1;
 						String showPointsType = request.getParameter("getRelatedPointsFilter");
 						if ("1".equals(projects)) {
@@ -2349,7 +2350,7 @@ public class PhysicalLayerController {
 						// System.out.println("distribBoardList 2 is " +
 						// mapper.writeValueAsString(distribBoardList));
 					}  else {
-
+						
 						filterFlag = 0;
 						if ("1".equals(projects)) {
 						projectList = session.createNativeQuery(
@@ -2359,12 +2360,12 @@ public class PhysicalLayerController {
 						
 						if ("1".equals(readManhole)) {
 						manholeList = session.createNativeQuery(
-								"SELECT DISTINCT MANHOLE_ID,MANHOLE_NAME,LONGITUDE,LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=MANHOLE_ID),CITY FROM MANHOLE  ")
+								"SELECT DISTINCT MANHOLE_ID,MANHOLE_NAME,LONGITUDE,LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=MANHOLE_ID),CITY FROM MANHOLE where PROJECT_ID= 'CurrentPhysicalLayer'  ")
 								.getResultList();
 						}
 						if ("1".equals(readHandhole)) {
 						handholeList = session.createNativeQuery(
-								"SELECT DISTINCT HANDHOLE_ID,HANDHOLE_NAME,LONGITUDE,LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=HANDHOLE_ID),CITY FROM HANDHOLE")
+								"SELECT DISTINCT HANDHOLE_ID,HANDHOLE_NAME,LONGITUDE,LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=HANDHOLE_ID),CITY FROM HANDHOLE where PROJECT_ID= 'CurrentPhysicalLayer'  ")
 								.getResultList();
 						}
 						/*
@@ -14815,7 +14816,7 @@ public class PhysicalLayerController {
 
 						listUploadedAttachment = session.createNativeQuery(
 								"SELECT * FROM ATTACHMENT_UPLOAD WHERE ELEMENT_ID='"
-										+ elementID + "' ORDER BY ID ASC ")
+										+ elementID + "' ORDER BY ID DESC ")
 								.getResultList();
 						rtn.put("listUploadedAttachment", listUploadedAttachment);
 
