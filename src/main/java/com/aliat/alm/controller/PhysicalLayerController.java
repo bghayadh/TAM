@@ -14815,7 +14815,7 @@ public class PhysicalLayerController {
 
 						listUploadedAttachment = session.createNativeQuery(
 								"SELECT * FROM ATTACHMENT_UPLOAD WHERE ELEMENT_ID='"
-										+ elementID + "' ORDER BY ID ASC ")
+										+ elementID + "' ORDER BY ID DESC ")
 								.getResultList();
 						rtn.put("listUploadedAttachment", listUploadedAttachment);
 
