@@ -96,9 +96,16 @@
 	
 		<!-- jsch -->
 		<dependency>
-  			<groupId>com.jcraft</groupId>
-  			<artifactId>jsch</artifactId>
-  			<version>0.1.44-1</version>
+		    <groupId>com.jcraft</groupId>
+		    <artifactId>jsch</artifactId>
+		    <version>0.1.55</version> 
+		</dependency>
+		
+		<!--  MultipartResolver  -->
+		<dependency>
+		    <groupId>commons-fileupload</groupId>
+		    <artifactId>commons-fileupload</artifactId>
+		    <version>1.4</version>
 		</dependency>
 		
 	

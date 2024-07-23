@@ -4929,7 +4929,9 @@ singleNodeActive = new ContextMenu({
 					 {'icon': 'edit','name': 'Edit or View Details',action: () => {
 						actionProjectContext="Update";						
 						$("#projectModal").find("input").val('').end();
-						selectedProjectIdContext = selectedProjectIdContext.replace("Project_span_", "");				
+						selectedProjectIdContext = selectedProjectIdContext.replace("Project_span_", "");	
+						document.querySelector("#projectAttachmentFlag").value = "not_opened";			
+						$('#myTabDb a[href="#projectInfo"]').tab('show');
 
                         $.ajax({
 
@@ -5045,8 +5047,10 @@ singleNodeActive = new ContextMenu({
 					 {'icon': 'edit','name': 'Edit or View Details',action: () => {
 						actionProjectContext="Update";						
 						$("#projectModal").find("input").val('').end();
-						selectedProjectIdContext = selectedProjectIdContext.replace("Project_span_", "");				
-			
+						selectedProjectIdContext = selectedProjectIdContext.replace("Project_span_", "");	
+						document.querySelector("#projectAttachmentFlag").value = "not_opened";						
+						$('#myTabDb a[href="#projectInfo"]').tab('show');
+
 			          $.ajax({
 			
 			              type: "GET",
@@ -6230,6 +6234,9 @@ singleHandhole = new ContextMenu({
 			{'icon': 'edit','name': 'Edit or View Details',action: () => {
 				
 				document.getElementById("manholeNameJct").readOnly = true;
+				document.querySelector("#manJctAttachmentFlag").value = "not_opened";
+			    $('#myTabDb a[href="#MJCT"]').tab('show');
+
 						$.ajax({
 								type: "GET",
 								contentType: "application/json; charset=utf-8",
@@ -6811,7 +6818,9 @@ singleHandhole = new ContextMenu({
 			{'icon': 'edit','name': 'Edit or View Details',action: () => {
 			
 				document.getElementById("handholeNameJct").readOnly = true;
-				
+				document.querySelector("#handJctAttachmentFlag").value = "not_opened";
+				$('#myTabDb a[href="#HJCT"]').tab('show');
+
 						$.ajax({
 								type: "GET",
 								contentType: "application/json; charset=utf-8",
@@ -11959,7 +11968,8 @@ $("#saveSurvey").on('click',function(){
 									"DBAdaptorPanelType": DBAdaptorPanelType,
 									"distBoardMappingFlag" : distBoardMappingFlag,
 									"dictParameter":dict,
-									 "ProjectId": IdNodeSelectedTemp
+									 "ProjectId": IdNodeSelectedTemp,
+									  "updateModfUser" : updateModfUser,
 									   
 							},
 							dataType: "json",
@@ -15477,7 +15487,8 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 					  "lastAuxToDestDrivDistance":lastAuxToDestDrivDistance,
 					  "strandCreatedDate":strandCreatedDate,
 					  "strandNumber":strandNumber,
-				 	  "strandColor": strandColor
+				 	  "strandColor": strandColor,
+				 	   "updateModfUser" : updateModfUser,
 				 },
 				 dataType: "json",
 				 success: function (data) {
@@ -17846,7 +17857,366 @@ $('body').on('click', '#selectAll_TubesAux', function  () {
 			$(this).toggleClass('allChecked');
 								
 		});	
+	$("#selectAllManJctAttachment").on('click',function(){
+		
+			if ($(this).hasClass('allChecked')) {
+		         $('input[type="checkbox"]', '#junctionAttachmentTable').prop('checked', false);
+		    } 
+			else {
+		        $('input[type="checkbox"]', '#junctionAttachmentTable').prop('checked', true);
+		    }
+			$(this).toggleClass('allChecked');
+		
+		 });
+	
+	$("#selectAllHandJctAttachment").on('click',function(){
+		
+			if ($(this).hasClass('allChecked')) {
+		         $('input[type="checkbox"]', '#handJunctionAttachmentTable').prop('checked', false);
+		    } 
+			else {
+		        $('input[type="checkbox"]', '#handJunctionAttachmentTable').prop('checked', true);
+		    }
+			$(this).toggleClass('allChecked');
+		
+		 });
+	
+		$("#selectAllProjectAttachment").on('click',function(){
+		
+			if ($(this).hasClass('allChecked')) {
+		         $('input[type="checkbox"]', '#projectAttachmentTable').prop('checked', false);
+		    } 
+			else {
+		        $('input[type="checkbox"]', '#projectAttachmentTable').prop('checked', true);
+		    }
+			$(this).toggleClass('allChecked');
+		
+		 });
+	
+	
+	$('#uploadForm').submit(function(e) {
+		e.preventDefault();
+		var formData = new FormData();
+	    var fileInput = $('#fileInput')[0].files[0];                
+		formData.append('attachment', fileInput);
+	    formData.append('elementID', $("#junctionId").val());	
+	    var token =  $('input[name="csrfToken"]').attr('value');
+		
+		$.ajax({
+			type: "POST",
+			headers:{
+					'X-CSRFToken':token
+			},
+			url: getContext()+'/SaveFile',
+            data: formData,
+           	processData: false,
+            contentType: false,
+            success: function(data) {
+					if(data.Status == 'Success'){
+												
+						appendAttachmentRow(data.attachmentID,manholeJctAttachmentIndex,data.attachmentName,data.attachmentPath,"junctionAttachmentTable");                      
+			    	    manholeJctAttachmentIndex++;
+			    	    document.getElementById('uploadForm').reset();
+					}
+                 },
+                 error: function(xhr, status, error) {
+                     alert('Failed to upload file: ' + error);
+                 }
+             });
 
+         });
+$('#handJctUploadForm').submit(function(e) {
+		e.preventDefault();
+		var formData = new FormData();
+	    var fileInput = $('#handJctFileInput')[0].files[0];      
+          
+		formData.append('attachment', fileInput);
+	    formData.append('elementID', $("#junctionHandholeId").val());	
+	    var token =  $('input[name="csrfToken"]').attr('value');
+		
+		$.ajax({
+			type: "POST",
+			headers:{
+					'X-CSRFToken':token
+			},
+			url: getContext()+'/SaveFile',
+            data: formData,
+           	processData: false,
+            contentType: false,
+            success: function(data) {
+					if(data.Status == 'Success'){
+						appendAttachmentRow(data.attachmentID,handholeJctAttachmentIndex,data.attachmentName,data.attachmentPath,"handJunctionAttachmentTable");
+						handholeJctAttachmentIndex++;	  	            	
+			    	    document.getElementById('handJctUploadForm').reset();
+					}
+                 },
+                 error: function(xhr, status, error) {
+                     alert('Failed to upload file: ' + error);
+                 }
+             });
+
+         });
+
+$('#projectUploadForm').submit(function(e) {
+		e.preventDefault();
+		var formData = new FormData();
+	    var fileInput = $('#projectFileInput')[0].files[0];      
+          
+		formData.append('attachment', fileInput);
+	    formData.append('elementID', $("#ProjectId").val());	
+	    var token =  $('input[name="csrfToken"]').attr('value');
+		
+		$.ajax({
+			type: "POST",
+			headers:{
+					'X-CSRFToken':token
+			},
+			url: getContext()+'/SaveFile',
+            data: formData,
+           	processData: false,
+            contentType: false,
+            success: function(data) {
+					if(data.Status == 'Success'){
+						appendAttachmentRow(data.attachmentID,projectAttachmentIndex,data.attachmentName,data.attachmentPath,"projectAttachmentTable");
+						projectAttachmentIndex++;	  	            	
+			    	    document.getElementById('projectUploadForm').reset();
+					}
+                 },
+                 error: function(xhr, status, error) {
+                     alert('Failed to upload file: ' + error);
+                 }
+             });
+
+         });
+
+
+$("#deleteJctAttachmentRow").click(function () {
+	var slctDel = [];
+    $("#junctionAttachmentTable > tbody").find('input[name="record"]').each(function () {
+	
+	if ($(this).is(":checked")) {
+		var attachmentData = {
+             attachmentId: $(this).parent().parent().children('td[name="attachmentID"]').children('input').val(),
+             attachmentPath: $(this).parent().parent().children('td[name="attachmentPath"]').find('input[name="attachmentPath"]').val(),
+             attachmentName: $(this).parent().parent().children('td[name="attachmentName"]').find('input[name="attachmentName"]').val()
+        };
+		slctDel.push(attachmentData);
+     }
+    });
+
+	if (slctDel.length == 0) {
+			alert(' Select Row(s) to Delete');
+            return false;
+    }
+	var token =  $('input[name="csrfToken"]').attr('value');
+	
+	$.ajax({
+		
+		type: "POST",
+		headers:{
+					'X-CSRFToken':token
+			},
+		url: getContext()+'/DeleteAttachment',
+		contentType: "application/json",
+		data: JSON.stringify(slctDel),
+		success: function (data) {
+		},
+		error: function (error) {
+			  console.log("The error is " + error);
+        }
+	});
+	
+	 $("#junctionAttachmentTable > tbody").find('input[name="record"]').each(function () {
+		if ($(this).is(":checked")) {
+            $(this).parents("tr").remove();//remove the tr				
+         }
+            });
+      });
+
+
+$("#deleteProjectAttachmentRow").click(function () {
+	var slctDel = [];
+    $("#projectAttachmentTable > tbody").find('input[name="record"]').each(function () {
+	
+	if ($(this).is(":checked")) {
+		var attachmentData = {
+             attachmentId: $(this).parent().parent().children('td[name="attachmentID"]').children('input').val(),
+             attachmentPath: $(this).parent().parent().children('td[name="attachmentPath"]').find('input[name="attachmentPath"]').val(),
+             attachmentName: $(this).parent().parent().children('td[name="attachmentName"]').find('input[name="attachmentName"]').val()
+        };
+		slctDel.push(attachmentData);
+     }
+    });
+
+	if (slctDel.length == 0) {
+			alert(' Select Row(s) to Delete');
+            return false;
+    }
+	var token =  $('input[name="csrfToken"]').attr('value');
+	
+	$.ajax({
+		
+		type: "POST",
+		headers:{
+					'X-CSRFToken':token
+			},
+		url: getContext()+'/DeleteAttachment',
+		contentType: "application/json",
+		data: JSON.stringify(slctDel),
+		success: function (data) {
+		},
+		error: function (error) {
+			  console.log("The error is " + error);
+        }
+	});
+	
+	 $("#projectAttachmentTable > tbody").find('input[name="record"]').each(function () {
+		if ($(this).is(":checked")) {
+            $(this).parents("tr").remove();//remove the tr				
+         }
+            });
+   });
+
+
+$("#deleteHandJctAttachmentRow").click(function () {
+	var slctDel = [];
+    $("#handJunctionAttachmentTable > tbody").find('input[name="record"]').each(function () {
+	
+	if ($(this).is(":checked")) {
+		var attachmentData = {
+             attachmentId: $(this).parent().parent().children('td[name="attachmentID"]').children('input').val(),
+             attachmentPath: $(this).parent().parent().children('td[name="attachmentPath"]').find('input[name="attachmentPath"]').val(),
+             attachmentName: $(this).parent().parent().children('td[name="attachmentName"]').find('input[name="attachmentName"]').val()
+        };
+		slctDel.push(attachmentData);
+     }
+    });
+
+	if (slctDel.length == 0) {
+			alert(' Select Row(s) to Delete');
+            return false;
+    }
+	var token =  $('input[name="csrfToken"]').attr('value');
+	
+	$.ajax({
+		
+		type: "POST",
+		headers:{
+					'X-CSRFToken':token
+			},
+		url: getContext()+'/DeleteAttachment',
+		contentType: "application/json",
+		data: JSON.stringify(slctDel),
+		success: function (data) {
+		},
+		error: function (error) {
+			  console.log("The error is " + error);
+        }
+	});
+	
+	 $("#handJunctionAttachmentTable > tbody").find('input[name="record"]').each(function () {
+		if ($(this).is(":checked")) {
+            $(this).parents("tr").remove();//remove the tr				
+         }
+            });
+   });
+
+$("#manJctAttachment-tab").click(function () {
+	
+	var manJctAttachmentFlag = document.querySelector("#manJctAttachmentFlag").value;
+	if(manJctAttachmentFlag === "not_opened"){
+			
+		document.querySelector("#manJctAttachmentFlag").value = 'opened';
+	     $.ajax({
+	         type: "GET",
+	         contentType: "application/json; charset=utf-8",
+	          url: getContext()+'/GetUploadedAttachment',
+	          data: {
+					"elementID" :  $("#junctionId").val()
+			},
+			dataType: "json",
+	         success: function (data) {
+	                console.log("listUploadedAttachment "+data.listUploadedAttachment.length)
+            		document.querySelector('#junctionAttachmentTable tbody').innerHTML = '';
+					manholeJctAttachmentIndex=0;
+					var listUploadedAttachment = data.listUploadedAttachment;
+					
+					for(var x =0;x<data.listUploadedAttachment.length;x++){
+						appendAttachmentRow(listUploadedAttachment[x][0],manholeJctAttachmentIndex,listUploadedAttachment[x][1],listUploadedAttachment[x][2],"junctionAttachmentTable");                      
+			            manholeJctAttachmentIndex++;
+					}
+	          },
+				error: function(result) {
+	               alert("Error");
+	             }
+	        });
+	}
+	
+});
+$("#handJctAttachment-tab").click(function () {
+	
+	var handJctAttachmentFlag = document.querySelector("#handJctAttachmentFlag").value;
+	if(handJctAttachmentFlag === "not_opened"){
+			
+		document.querySelector("#handJctAttachmentFlag").value = 'opened';
+	     $.ajax({
+	         type: "GET",
+	         contentType: "application/json; charset=utf-8",
+	          url: getContext()+'/GetUploadedAttachment',
+	          data: {
+					"elementID" :  $("#junctionHandholeId").val()
+			},
+			dataType: "json",
+	         success: function (data) {
+            		document.querySelector('#handJunctionAttachmentTable tbody').innerHTML = '';
+					handholeJctAttachmentIndex=0;
+					var listUploadedAttachment = data.listUploadedAttachment;
+					
+					for(var x =0;x<data.listUploadedAttachment.length;x++){
+						appendAttachmentRow(listUploadedAttachment[x][0],handholeJctAttachmentIndex,listUploadedAttachment[x][1],listUploadedAttachment[x][2],"handJunctionAttachmentTable");                      
+			            handholeJctAttachmentIndex++;
+					}
+	          },
+				error: function(result) {
+	               alert("Error");
+	             }
+	        });
+	}
+	
+});
+
+
+$("#projectAttachment-tab").click(function () {
+	
+	var projectAttachmentFlag = document.querySelector("#projectAttachmentFlag").value;
+	if(projectAttachmentFlag === "not_opened"){
+			
+		document.querySelector("#projectAttachmentFlag").value = 'opened';
+	     $.ajax({
+	         type: "GET",
+	         contentType: "application/json; charset=utf-8",
+	          url: getContext()+'/GetUploadedAttachment',
+	          data: {
+					"elementID" :  $("#ProjectId").val()
+			},
+			dataType: "json",
+	         success: function (data) {
+            		document.querySelector('#projectAttachmentTable tbody').innerHTML = '';
+					projectAttachmentIndex=0;
+					var listUploadedAttachment = data.listUploadedAttachment;
+					
+					for(var x =0;x<data.listUploadedAttachment.length;x++){
+						appendAttachmentRow(listUploadedAttachment[x][0],projectAttachmentIndex,listUploadedAttachment[x][1],listUploadedAttachment[x][2],"projectAttachmentTable");                      
+						projectAttachmentIndex++;	  	            	
+					}
+	          },
+				error: function(result) {
+	               alert("Error");
+	             }
+	        });
+	}
+	
+});
 		$("#selectAll_AuxTube").on('click',function(){
 			if ($(this).hasClass('allChecked')) {
 				$('input[type="checkbox"]', '#auxiliaryTableTubes').prop('checked', false);
@@ -22359,6 +22729,28 @@ function geoDistanceFlag(){
 geoFlag=1;
 
 }
+function downloadAttachment(row) {
+    var attachmentName = row.find("input[name='attachmentName']").val();
+    var attachmentPath = row.find("input[name='attachmentPath']").val();
+
+    var downloadUrl = getContext() + '/DownloadAttachment?attachmentName=' + encodeURIComponent(attachmentName) +
+                      '&attachmentPath=' + encodeURIComponent(attachmentPath);
+
+    // Create a temporary link element
+    var link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = attachmentName;
+
+    // Append the link to the body
+    document.body.appendChild(link);
+
+    // Programmatically click the link to trigger the download
+    link.click();
+
+    // Remove the link from the document
+    document.body.removeChild(link);
+}
+
 
 function checkLongLatInRows(tableID,longTdName,LatTdName){
 	
@@ -22382,4 +22774,18 @@ function checkLongLatInRows(tableID,longTdName,LatTdName){
 		}
 	});
 	}
+}
+function appendAttachmentRow(attachmentID,jctAttachmentIndex,attachmentName,attachmentPath,tableID){
+	
+	 var attachmentRow = "<tr id='"+attachmentID+"'>";
+                          attachmentRow = attachmentRow + "<td><input type='checkbox' name='record' style='margin-left:20px;margin-top:-5px;'></td>"
+                          attachmentRow = attachmentRow + "<td name='attachmentDownload' ><button name='attachmentDownload' id='attachmentDownload"+jctAttachmentIndex+"' style='width:110px' onclick='downloadAttachment($(this).closest(\"tr\"))'  class='btn btn-primary' >Download</button></td>";
+                          attachmentRow = attachmentRow + "<td name='attachmentID'><input name='attachmentID' id='attachmentID"+jctAttachmentIndex+"' type='text' value='" +attachmentID + "' style='width:200px;height:30px;' class='ui-widget ui-widget-content ui-corner-all ' /></td>";
+                          attachmentRow = attachmentRow + "<td name='attachmentName'><input name='attachmentName' id='attachmentName"+jctAttachmentIndex+"' style='width:250px; color: #0077ff;height:30px; text-decoration: none;'  type='text' value='" +attachmentName + "' class='ui-widget ui-widget-content ui-corner-all' readonly /> </td>";
+                          attachmentRow = attachmentRow + "<td name='attachmentPath' ><input name='attachmentPath' id='attachmentPath"+jctAttachmentIndex+"' style='width:400px;height:30px;'  type='text' value='" +attachmentPath+ "'  class='ui-widget ui-widget-content ui-corner-all' readonly/> </td>";
+                          attachmentRow = attachmentRow + "</tr>";
+
+   $("#"+tableID+" > tbody").append(attachmentRow);				            
+	var myDiv = document.getElementById(""+tableID);
+	myDiv.scrollTop = myDiv.scrollHeight;
 }

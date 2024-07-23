@@ -448,7 +448,7 @@ var ActivityListData = ${ ListGridTable };
 	var almgrid = new Almgrid({
 		tableId: "ActivityListTable",
 		dataArray: ActivityListData,
-		columnLinkNb: [1],
+		columnLinkNb: [],
 		selectCheckbox: true
 	});
 	
