@@ -13944,7 +13944,7 @@ function HandManJuncFormat(ManHandhole,IdSelected,ID) {
 //	children.show('fast');
 	childrenInitial.show('fast');	
 	
-	if(IdNodeSelectedTemp=="CurrentPhysicalLayer") {
+	/*if(IdNodeSelectedTemp=="CurrentPhysicalLayer") {
 		projectOffset=$("#initial_ul_"+IdSelected).offset().top;
 	}
 	else {
@@ -13953,7 +13953,16 @@ function HandManJuncFormat(ManHandhole,IdSelected,ID) {
 	// scroll to the created handhole/manhole/jct
 	offset=$("#"+ID).offset().top;
 	offsetTotal=(offset-projectOffset);
-	$("#network_tree").animate({ scrollTop: offsetTotal}, "slow");
+	$("#network_tree").animate({ scrollTop: offsetTotal}, "slow");*/
+	
+	var targetOffsetTop = $("#" + ID).offset().top;
+    var treeOffsetTop = $("#network_tree").offset().top;
+    var currentScrollTop = $("#network_tree").scrollTop();
+    
+    var offsetTotal = targetOffsetTop - treeOffsetTop + currentScrollTop;
+    
+	// scroll to the created handhole/manhole/jct
+    $("#network_tree").animate({ scrollTop: offsetTotal }, "slow");
 }
 
 
