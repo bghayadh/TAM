@@ -269,7 +269,7 @@ max-width: 100%;
 		    </div>	
 		    
 		    <div class="col-md-2" >
-				<button type="button"  id ="showOnMap" class="btn mapButtons"  style="margin-left:20px;"  >Show on Map</button>
+				<button type="button"  id ="showOnMap" class="btn mapButtons"  style="margin-left:50px;"  >Show on Map</button>
 			</div>
 		    	
 					
@@ -297,10 +297,10 @@ max-width: 100%;
 			</div></div></div>
 			
 			<div class="row"> 
-				<div class="col-md-3" style="margin-right:40px; margin-left:12px;">
+				<div class="col-md-3" style="margin-right:50px; margin-left:12px;">
 					<div class="form-group">
 						<div class="input-group-prepend">
-							<span class="input-group-text">Point Longitude</span>
+							<span class="input-group-text">Break Point Longitude</span>
 							<input type="text" id="pointLong" class="form-control text-input" style="width:300px;" />
 						</div>
 					</div>
@@ -309,7 +309,7 @@ max-width: 100%;
 			     <div class="col-md-3">
 					<div class="form-group">
 						<div class="input-group-prepend">
-							<span class="input-group-text">Point Latitude</span>
+							<span class="input-group-text">Break Point Latitude</span>
 							<input type="text" id="pointLat" class="form-control text-input" style="width:300px;" />
 						</div>
 					</div>
@@ -680,6 +680,7 @@ var pointLong ="";
 var pointLat ="";
 var getCoorLong ="";
 var getCoorLat ="";
+let breakmarker =null;
 
 
 function initMap() {	
@@ -953,9 +954,7 @@ $(document).ready(function() {
 		
 		 getCoorLong =getCoords().split(" ")[1];
 		 getCoorLat =getCoords().split(" ")[0];
-
-		console.log("getCoorPointLong"+getCoorLong);
-		console.log("getCoorPointLat"+getCoorLat);
+		 createBreakId(getCoorLong,getCoorLat);
 
 		});
 
@@ -1309,7 +1308,6 @@ $(document).ready(function() {
 			document.getElementById("jctCount").textContent = "("+distinctJct.length+")";
 			document.getElementById("dbCount").textContent = "("+distinctDB.length+")";  
 
-			console.log("cableID "+cableID)
 			//map.fitBounds(window["bounds_"+cableID]);
 			
 			//Scroll to the map div
@@ -1389,6 +1387,11 @@ $(document).ready(function() {
 						 distinctManholesWithJct =[]; 
 						 distinctHandholesWithJct =[]; 
 						 filteredGridData=[];
+						 
+						//clear break pt marker
+						 if (breakmarker) {
+								breakmarker.setMap(null);
+					        }
 						 	  
 					 		
 
@@ -1400,7 +1403,7 @@ $(document).ready(function() {
 						 
 						 
 						 fiberCableArray=[];
-						 cableID="";	  
+						 //cableID="";	  
 						 allCables=[];
 
 						 mapFlag="0"; 	
@@ -1570,6 +1573,8 @@ $(document).ready(function() {
 				         select: function(event, ui) {
 								fiberCable.value = (ui.item ? ui.item[0]  : '');
 								fiberCableName.value = (ui.item[1]);
+								cableID = ui.item[0];
+								getFiberPath(cableID);
 								return false;
 						}
 						}).autocomplete("instance")._renderItem = function(ul, item) {
@@ -1946,6 +1951,7 @@ $(document).ready(function() {
 				$(".showHideCableCheckbox").attr('disabled', false);
 
 				map.fitBounds(window["bounds_"+cableID]);
+				createBreakId(pointLong,pointLat);
 					
 
 				}
@@ -1995,12 +2001,12 @@ function buildPath(Id,fiberArray,Name,path,strokeColor,strokeOpacity,strokeWeigh
 				   
 			
 			// Add click event listener to the polyline
-	        google.maps.event.addListener(flightPath, 'click', function(event) {
+	       /* google.maps.event.addListener(flightPath, 'click', function(event) {
 	        	cableInfoWindow.close();
 	        	cableInfoWindow.setContent(this.data); 
 	        	cableInfoWindow.setPosition(event.latLng);
 	        	cableInfoWindow.open(map);
-	        });
+	        });*/
 	        
 	        
 	}
@@ -2308,6 +2314,35 @@ function showLocation(ID,rowIndex){
 		//Scroll to the map div
 		document.getElementById("headingTwo").scrollIntoView({ behavior: "smooth" });
 			
+}
+
+function createBreakId(breakLong,breakLat){
+
+	if (breakmarker) {
+		breakmarker.setMap(null);
+    }
+	
+	markerId="break_Marker";
+	const pos = new google.maps.LatLng(breakLat,breakLong);
+
+
+
+	markerIcon = {
+		url:getContext()+"/resources/NetworkImages/BreakIcon.png", 
+		scaledSize: new google.maps.Size(25, 25),
+	};
+
+
+	elementMarker = new google.maps.Marker({
+				position: pos,
+				ID:markerId,
+				icon:markerIcon,
+		        
+		});
+	elementMarker.metadata = { id: markerId };
+	breakmarker = elementMarker;
+	breakmarker.setMap(map);
+	
 }
 
 function getCoords(){
