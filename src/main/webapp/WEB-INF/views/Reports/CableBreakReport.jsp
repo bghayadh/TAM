@@ -1535,6 +1535,7 @@ $(document).ready(function() {
 						fiberCableName.value = (ui.item[1]);
 						cableID = ui.item[0];
 						getFiberPath(cableID);
+						$('#tableGrid tbody').empty();
 						return false;
 				}
 				}).autocomplete("instance")._renderItem = function(ul, item) {
@@ -1575,6 +1576,7 @@ $(document).ready(function() {
 								fiberCableName.value = (ui.item[1]);
 								cableID = ui.item[0];
 								getFiberPath(cableID);
+								$('#tableGrid tbody').empty();
 								return false;
 						}
 						}).autocomplete("instance")._renderItem = function(ul, item) {
