@@ -5196,7 +5196,6 @@ $("#Handhole_f_" + selectedProjectIdContext + " .JUNCTION_H").each(function() {
     }
 });
 
-console.log("Checked IDs:", checkedIds);
 	var currentCenter = map.getCenter();
         var currentZoom = map.getZoom();
 						 
