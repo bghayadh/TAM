@@ -5116,7 +5116,89 @@ singleNodeActive = new ContextMenu({
 						 selectedProjectIdContext = selectedProjectIdContext.replace("Project_span_", "");
 						// console.log("selectedProjectIdContext "+selectedProjectIdContext);
 						 
-						 
+						var checkedIds = [];
+
+$("#Manhole_f_" + selectedProjectIdContext + " .MANHOLE").each(function() {
+    var id = $(this).attr('id');
+    if ($("#" + id + " input[type='checkbox']").prop('checked')) {
+        checkedIds.push(id);  // Push id into checkedIds array if checkbox is checked
+    }
+});
+
+
+$( " .HANDHOLE").each(function() {
+    var id = $(this).attr('id');
+    if ($("#" + id + " input[type='checkbox']").prop('checked')) {
+        checkedIds.push(id);  // Push id into checkedIds array if checkbox is checked
+    }
+});
+
+$("#Junction_f_" + selectedProjectIdContext + ".JUNCTION").each(function() {
+    var id = $(this).attr('id');
+    if ($("#" + id + " input[type='checkbox']").prop('checked')) {
+        checkedIds.push(id);  // Push id into checkedIds array if checkbox is checked
+    }
+});
+
+$("#DistributionBoard_f" + selectedProjectIdContext + ".DistributionBoard").each(function() {
+    var id = $(this).attr('id');
+    if ($("#" + id + " input[type='checkbox']").prop('checked')) {
+        checkedIds.push(id);  // Push id into checkedIds array if checkbox is checked
+    }
+});
+$("#FiberPath_f_" + selectedProjectIdContext + " .FIBER").each(function() {
+    var id = $(this).attr('id');
+    if ($("#" + id + " input[type='checkbox']").prop('checked')) {
+        checkedIds.push(id);  // Push id into checkedIds array if checkbox is checked
+    }
+});
+$("#FiberPath_f_" + selectedProjectIdContext + " .TUBE").each(function() {
+    var id = $(this).attr('id');
+    if ($("#" + id + " input[type='checkbox']").prop('checked')) {
+        checkedIds.push(id);  // Push id into checkedIds array if checkbox is checked
+    }
+});
+$("#FiberPath_f_" + selectedProjectIdContext +" .STRAND").each(function() {
+    var id = $(this).attr('id');
+    if ($("#" + id + " input[type='checkbox']").prop('checked')) {
+        checkedIds.push(id);  // Push id into checkedIds array if checkbox is checked
+    }
+});
+$("#Trench_f_" + selectedProjectIdContext +" .Trench").each(function() {
+    var id = $(this).attr('id');
+    if ($("#" + id + " input[type='checkbox']").prop('checked')) {
+        checkedIds.push(id);  // Push id into checkedIds array if checkbox is checked
+    }
+});
+
+$("#Trench_f_" + selectedProjectIdContext +".Duct").each(function() {
+    var id = $(this).attr('id');
+    if ($("#" + id + " input[type='checkbox']").prop('checked')) {
+        checkedIds.push(id);  // Push id into checkedIds array if checkbox is checked
+    }
+});
+$("#Junction_f_" + selectedProjectIdContext +".JUNCTION").each(function() {
+    var id = $(this).attr('id');
+    if ($("#" + id + " input[type='checkbox']").prop('checked')) {
+        checkedIds.push(id);  // Push id into checkedIds array if checkbox is checked
+    }
+});
+$("#Manhole_f_" + selectedProjectIdContext + " .JUNCTION_M").each(function() {
+    var id = $(this).attr('id');
+    if ($("#" + id + " input[type='checkbox']").prop('checked')) {
+        checkedIds.push(id);  // Push id into checkedIds array if checkbox is checked
+    }
+});
+$("#Handhole_f_" + selectedProjectIdContext + " .JUNCTION_H").each(function() {
+    var id = $(this).attr('id');
+    if ($("#" + id + " input[type='checkbox']").prop('checked')) {
+        checkedIds.push(id);  // Push id into checkedIds array if checkbox is checked
+    }
+});
+
+console.log("Checked IDs:", checkedIds);
+	var currentCenter = map.getCenter();
+        var currentZoom = map.getZoom();
 						 
 						 
 						 $.ajax({
@@ -5193,9 +5275,19 @@ singleNodeActive = new ContextMenu({
 												$("#confirm_table").append(tr);
 															
 									$("#ConfirmModal").modal('show');
-				                 
-				                  
+				                 // Assuming 'map' is your Google Map object
+                map.setCenter(currentCenter);
+                map.setZoom(currentZoom);
+
+
+// Optionally, add event listeners or perform other map setup tasks here
+
+				                  for (var i = 0; i < checkedIds.length; i++) {
+    $("#" + checkedIds[i] + " input[type='checkbox']").prop('checked', true);
+}
+
 				              },
+				              
 				              
 				              error: function (result) {
 				                  alert("Error");
