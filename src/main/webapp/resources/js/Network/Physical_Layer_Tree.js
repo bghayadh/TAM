@@ -5114,7 +5114,6 @@ singleNodeActive = new ContextMenu({
 					 
 					 {'icon': 'arrow-right', 'name': 'Move To Current Physical Layer', action: () => {
 						 selectedProjectIdContext = selectedProjectIdContext.replace("Project_span_", "");
-						// console.log("selectedProjectIdContext "+selectedProjectIdContext);
 						 
 						var checkedIds = [];
 
@@ -5195,7 +5194,7 @@ $("#Handhole_f_" + selectedProjectIdContext + " .JUNCTION_H").each(function() {
         checkedIds.push(id);  // Push id into checkedIds array if checkbox is checked
     }
 });
-
+//used to refresh the google map 
 	var currentCenter = map.getCenter();
         var currentZoom = map.getZoom();
 						 
@@ -5222,7 +5221,6 @@ $("#Handhole_f_" + selectedProjectIdContext + " .JUNCTION_H").each(function() {
 				            	  
 				            	  var physicalLayerList =  JSON.parse(data.physicalLayerList); // No need to parse again
 				            	  var physicalLayerData =  JSON.parse(data.physicalLayerData);
-				                 // console.log("physicalLayerListaaa "+physicalLayerList)
 				                  
 				                  
 				                  ListManhole = physicalLayerList["Manhole"]
@@ -5250,14 +5248,11 @@ $("#Handhole_f_" + selectedProjectIdContext + " .JUNCTION_H").each(function() {
 				                  
 					                var liProjectChild = $("#" + selectedProjectIdContext); 
 	
-									// Find the parent ul element
-									var ulProjectParent = liProjectChild.closest("ul");
-									// Detach the UL element
+										var ulProjectParent = liProjectChild.closest("ul");
 									ulProjectParent.detach();
 									
 									
 									$('#ConfirmModal').find('input:text').val('');
-									//$("#confirmHeader").text("Confirm: ");
 									$("#confirmbody").text("The Following Element Has Been Moved To The Current Physical Layer: ");
 									
 									$("#confirm_table").empty();
@@ -5274,12 +5269,13 @@ $("#Handhole_f_" + selectedProjectIdContext + " .JUNCTION_H").each(function() {
 												$("#confirm_table").append(tr);
 															
 									$("#ConfirmModal").modal('show');
-				                 // Assuming 'map' is your Google Map object
+				                
+				                
+				 //used to refresh the google map               
                 map.setCenter(currentCenter);
                 map.setZoom(currentZoom);
 
 
-// Optionally, add event listeners or perform other map setup tasks here
 
 				                  for (var i = 0; i < checkedIds.length; i++) {
     $("#" + checkedIds[i] + " input[type='checkbox']").prop('checked', true);
