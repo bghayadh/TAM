@@ -2229,6 +2229,11 @@ function showElementLocationPoints(filteredGridArray,windowMapPointsNames,window
 		}
 		map.fitBounds(window["bounds_"+cableID]);
 
+		//This is used to add the markers in cluster not around the cluster
+		var currentCenter = map.getCenter();
+		var currentZoom = map.getZoom();
+		map.setCenter(currentCenter);
+		map.setZoom(currentZoom);
 	}
 
 
