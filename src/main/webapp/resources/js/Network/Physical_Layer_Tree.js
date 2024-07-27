@@ -10211,7 +10211,8 @@ singleTube = new ContextMenu({
 					   "ProjectId"   :ProjectId,
 					   "ProjectName" :ProjectName,
 					   "projectType" :projectType,
-					   "actionProjectContext":actionProjectContext
+					   "actionProjectContext":actionProjectContext,
+					   "updateModfUser": updateModfUser, 
 				   },
 				   dataType: "json",
 				   success: function (data) {
