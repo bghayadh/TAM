@@ -359,13 +359,13 @@ public class CableBreakReportController {
 					    		+ "where "
 					    		+ "(BP_LOCATION_TYPE ='Customer' OR BP_LOCATION_TYPE ='Site') AND (BP_FIBER_ID='"+fiberCableID+"' OR FP_FIBER_ID='"+fiberCableID+"') "
 					    		+ "AND (DB_ID IN (:param3)) "
-								+ "AND  (FP_LOCATION_ID ='"+sourceID+"' OR BP_LOCATION_ID ='"+sourceID+"' OR FP_EQUIPMENT_ID ='"+sourceID+"' OR BP_EQUIPMENT_ID ='"+sourceID+"' OR FP_JUNCTION_ID IN (:param2) OR BP_JUNCTION_ID IN (:param4) ) "
+								+ "AND  (FP_LOCATION_ID ='"+sourceID+"' OR BP_LOCATION_ID ='"+sourceID+"' OR FP_EQUIPMENT_ID ='"+sourceID+"' OR BP_EQUIPMENT_ID ='"+sourceID+"' OR FP_JUNCTION_ID IN (:param4) OR BP_JUNCTION_ID IN (:param4) ) "
 					    		+ "UNION "
 			    				+ "SELECT DISTINCT FP_LOCATION_ID FROM DISTRIBUTION_BOARD_MAPPING "
 			    				+ "where "
 			    				+ "(FP_LOCATION_TYPE ='Customer' OR FP_LOCATION_TYPE ='Site') AND (BP_FIBER_ID='"+fiberCableID+"' OR FP_FIBER_ID='"+fiberCableID+"') "
 			    				+ "AND (DB_ID IN (:param3)) "
-			    				+ "AND  (FP_LOCATION_ID ='"+sourceID+"' OR BP_LOCATION_ID ='"+sourceID+"' OR FP_EQUIPMENT_ID ='"+sourceID+"' OR BP_EQUIPMENT_ID ='"+sourceID+"' OR FP_JUNCTION_ID IN (:param2) OR BP_JUNCTION_ID IN (:param4) ) "
+			    				+ "AND  (FP_LOCATION_ID ='"+sourceID+"' OR BP_LOCATION_ID ='"+sourceID+"' OR FP_EQUIPMENT_ID ='"+sourceID+"' OR BP_EQUIPMENT_ID ='"+sourceID+"' OR FP_JUNCTION_ID IN (:param4) OR BP_JUNCTION_ID IN (:param4) ) "
 					    
 					    
 					    
@@ -396,7 +396,59 @@ public class CableBreakReportController {
 			    				+ "where "
 			    				+ "(LOCATION_TYPE_SIDE_B ='Customer' OR LOCATION_TYPE_SIDE_B ='Site') AND (FIBER_ID_SIDE_A='"+fiberCableID+"' OR FIBER_ID_SIDE_B='"+fiberCableID+"') "
 			    				+ "AND (JCT_ID IN (:param2) OR PHYSICAL_LAYER_ID IN(:param2)) "
-			    				+ "AND  (LOCATION_ID_SIDE_A ='"+sourceID+"' OR LOCATION_ID_SIDE_B ='"+sourceID+"' OR LOCATION_ID_SIDE_A IN (:param4) OR LOCATION_ID_SIDE_B IN (:param4)) ";
+			    				+ "AND  (LOCATION_ID_SIDE_A ='"+sourceID+"' OR LOCATION_ID_SIDE_B ='"+sourceID+"' OR LOCATION_ID_SIDE_A IN (:param4) OR LOCATION_ID_SIDE_B IN (:param4)) "
+			    				
+			    				///cust to cust case 
+			    				/*
+			    				 to get affected customer in that case:
+			    				 -check the junction mapping of the junctions that are in the following lists: junctionAfterBreakingPt and junctionBeforeBreakingPt 
+			    				 -if the junction is before the breaking pt 
+			    				 -check junction mapping that contains fiberCableID in any side (side A and side B) and this junction is after breaking pt 
+			    				 -now if I want to check  LOCATION_ID_SIDE_A if it is affected or not then:
+			    				 	-check if LOCATION_ID_SIDE_B is found in any mapping in a junction after the breaking pt where
+			    				 		-fiberId, tube number and strand number connected to that location are the same
+			    				 		ex: _if i have junction 1 that connect customer 1 (side A)and customer 2(side B via thika cable tube 1 strand 1) and this junction is BEFORE breaking pt 
+			    				 		    -and junction 2 that connect customer 1 (side B)and customer 2(side A) and this junction is AFTER  breaking pt
+			    				 		    -Now if i want to get customer 1 from side A as affected (from junction 1) i search in junction 2 for customer 2 it is connected via same cable same tube same strand(thika cable tube 1 strand 1)
+			    				 		    -if these condition is validated then customer 1 is affcted:
+			    				 		    -we repeat this process 4 times to cover;
+			    				 		    	-SIDE A of each junction 
+			    				 		    	-Side B of each junction
+			    				 		    	-junction before breaking pt 
+			    				 		    	-junction after breaking pt 
+			    				 * */
+			    				+ "UNION "
+							    +"SELECT DISTINCT LOCATION_ID_SIDE_A FROM JUNCTION_MAPPING A "
+			    				+ "where "
+			    				+ "(A.LOCATION_TYPE_SIDE_A ='Customer' OR A.LOCATION_TYPE_SIDE_A ='Site') AND (A.FIBER_ID_SIDE_A='"+fiberCableID+"' OR A.FIBER_ID_SIDE_B='"+fiberCableID+"') "
+			    				+ "AND (A.JCT_ID IN (:param2) OR A.PHYSICAL_LAYER_ID IN(:param2)) "
+			    				+ "AND (A.LOCATION_ID_SIDE_B IN (SELECT B.LOCATION_ID_SIDE_A FROM JUNCTION_MAPPING B WHERE (B.JCT_ID IN (:param4) OR B.PHYSICAL_LAYER_ID IN(:param4)) AND ((B.FIBER_ID_SIDE_A='"+fiberCableID+"' AND B.STRAND_NB_SIDE_A =A.STRAND_NB_SIDE_B AND B.TUBE_NB_SIDE_A=A.TUBE_NB_SIDE_B ) OR (FIBER_ID_SIDE_B='"+fiberCableID+"' AND B.STRAND_NB_SIDE_B =A.STRAND_NB_SIDE_B AND B.TUBE_NB_SIDE_B=A.TUBE_NB_SIDE_B) ))   "
+			    				+ "OR   A.LOCATION_ID_SIDE_B IN (SELECT B.LOCATION_ID_SIDE_B FROM JUNCTION_MAPPING B WHERE (B.JCT_ID IN (:param4) OR B.PHYSICAL_LAYER_ID IN(:param4)) AND ((B.FIBER_ID_SIDE_A='"+fiberCableID+"' AND B.STRAND_NB_SIDE_A =A.STRAND_NB_SIDE_B AND B.TUBE_NB_SIDE_A=A.TUBE_NB_SIDE_B ) OR (FIBER_ID_SIDE_B='"+fiberCableID+"' AND B.STRAND_NB_SIDE_B =A.STRAND_NB_SIDE_B AND B.TUBE_NB_SIDE_B=A.TUBE_NB_SIDE_B) ))) "
+			    				
+			    				+ "UNION "
+							    +"SELECT DISTINCT LOCATION_ID_SIDE_B FROM JUNCTION_MAPPING A "
+			    				+ "where "
+			    				+ "(A.LOCATION_TYPE_SIDE_B ='Customer' OR A.LOCATION_TYPE_SIDE_B ='Site') AND (A.FIBER_ID_SIDE_A='"+fiberCableID+"' OR A.FIBER_ID_SIDE_B='"+fiberCableID+"') "
+			    				+ "AND (A.JCT_ID IN (:param2) OR A.PHYSICAL_LAYER_ID IN(:param2)) "
+			    				+ "AND (A.LOCATION_ID_SIDE_A IN (SELECT B.LOCATION_ID_SIDE_A FROM JUNCTION_MAPPING B WHERE (B.JCT_ID IN (:param4) OR B.PHYSICAL_LAYER_ID IN(:param4)) AND ((B.FIBER_ID_SIDE_A='"+fiberCableID+"' AND B.STRAND_NB_SIDE_A =A.STRAND_NB_SIDE_A AND B.TUBE_NB_SIDE_A=A.TUBE_NB_SIDE_A ) OR (FIBER_ID_SIDE_B='"+fiberCableID+"' AND B.STRAND_NB_SIDE_B =A.STRAND_NB_SIDE_A AND B.TUBE_NB_SIDE_B=A.TUBE_NB_SIDE_A) ))   "
+			    				+ "OR   A.LOCATION_ID_SIDE_A IN (SELECT B.LOCATION_ID_SIDE_B FROM JUNCTION_MAPPING B WHERE (B.JCT_ID IN (:param4) OR B.PHYSICAL_LAYER_ID IN(:param4)) AND ((B.FIBER_ID_SIDE_A='"+fiberCableID+"' AND B.STRAND_NB_SIDE_A =A.STRAND_NB_SIDE_A AND B.TUBE_NB_SIDE_A=A.TUBE_NB_SIDE_A ) OR (FIBER_ID_SIDE_B='"+fiberCableID+"' AND B.STRAND_NB_SIDE_B =A.STRAND_NB_SIDE_A AND B.TUBE_NB_SIDE_B=A.TUBE_NB_SIDE_A) ))) "
+			    				
+			    				
+			    				+ "UNION "
+							    +"SELECT DISTINCT LOCATION_ID_SIDE_A FROM JUNCTION_MAPPING A "
+			    				+ "where "
+			    				+ "(A.LOCATION_TYPE_SIDE_A ='Customer' OR A.LOCATION_TYPE_SIDE_A ='Site') AND (A.FIBER_ID_SIDE_A='"+fiberCableID+"' OR A.FIBER_ID_SIDE_B='"+fiberCableID+"') "
+			    				+ "AND (A.JCT_ID IN (:param4) OR A.PHYSICAL_LAYER_ID IN(:param4)) "
+			    				+ "AND (A.LOCATION_ID_SIDE_B IN (SELECT B.LOCATION_ID_SIDE_A FROM JUNCTION_MAPPING B WHERE (B.JCT_ID IN (:param2) OR B.PHYSICAL_LAYER_ID IN(:param2)) AND ((B.FIBER_ID_SIDE_A='"+fiberCableID+"' AND B.STRAND_NB_SIDE_A =A.STRAND_NB_SIDE_B AND B.TUBE_NB_SIDE_A=A.TUBE_NB_SIDE_B ) OR (FIBER_ID_SIDE_B='"+fiberCableID+"' AND B.STRAND_NB_SIDE_B =A.STRAND_NB_SIDE_B AND B.TUBE_NB_SIDE_B=A.TUBE_NB_SIDE_B) ))   "
+			    				+ "OR   A.LOCATION_ID_SIDE_B IN (SELECT B.LOCATION_ID_SIDE_B FROM JUNCTION_MAPPING B WHERE (B.JCT_ID IN (:param2) OR B.PHYSICAL_LAYER_ID IN(:param2)) AND ((B.FIBER_ID_SIDE_A='"+fiberCableID+"' AND B.STRAND_NB_SIDE_A =A.STRAND_NB_SIDE_B AND B.TUBE_NB_SIDE_A=A.TUBE_NB_SIDE_B ) OR (FIBER_ID_SIDE_B='"+fiberCableID+"' AND B.STRAND_NB_SIDE_B =A.STRAND_NB_SIDE_B AND B.TUBE_NB_SIDE_B=A.TUBE_NB_SIDE_B) ))) "
+			    				
+			    				+ "UNION "
+							    +"SELECT DISTINCT LOCATION_ID_SIDE_B FROM JUNCTION_MAPPING A "
+			    				+ "where "
+			    				+ "(A.LOCATION_TYPE_SIDE_B ='Customer' OR A.LOCATION_TYPE_SIDE_B ='Site') AND (A.FIBER_ID_SIDE_A='"+fiberCableID+"' OR A.FIBER_ID_SIDE_B='"+fiberCableID+"') "
+			    				+ "AND (A.JCT_ID IN (:param4) OR A.PHYSICAL_LAYER_ID IN(:param4)) "
+			    				+ "AND (A.LOCATION_ID_SIDE_A IN (SELECT B.LOCATION_ID_SIDE_A FROM JUNCTION_MAPPING B WHERE (B.JCT_ID IN (:param2) OR B.PHYSICAL_LAYER_ID IN(:param2)) AND ((B.FIBER_ID_SIDE_A='"+fiberCableID+"' AND B.STRAND_NB_SIDE_A =A.STRAND_NB_SIDE_A AND B.TUBE_NB_SIDE_A=A.TUBE_NB_SIDE_A ) OR (FIBER_ID_SIDE_B='"+fiberCableID+"' AND B.STRAND_NB_SIDE_B =A.STRAND_NB_SIDE_A AND B.TUBE_NB_SIDE_B=A.TUBE_NB_SIDE_A) ))   "
+			    				+ "OR   A.LOCATION_ID_SIDE_A IN (SELECT B.LOCATION_ID_SIDE_B FROM JUNCTION_MAPPING B WHERE (B.JCT_ID IN (:param2) OR B.PHYSICAL_LAYER_ID IN(:param2)) AND ((B.FIBER_ID_SIDE_A='"+fiberCableID+"' AND B.STRAND_NB_SIDE_A =A.STRAND_NB_SIDE_A AND B.TUBE_NB_SIDE_A=A.TUBE_NB_SIDE_A ) OR (FIBER_ID_SIDE_B='"+fiberCableID+"' AND B.STRAND_NB_SIDE_B =A.STRAND_NB_SIDE_A AND B.TUBE_NB_SIDE_B=A.TUBE_NB_SIDE_A) ))) ";
 					    
 						    Query query = session.createNativeQuery(str);
 						    query.setParameterList("param1", srcDBs);
@@ -406,106 +458,8 @@ public class CableBreakReportController {
 						    
 						    List<String> affectedClientSite = query.getResultList();
 					    
-					    
-					    //this query will be used in the next version to get all affected client and sites and all related info 
-					    /*
-					    String str11111 = "SELECT DISTINCT A.BP_LOCATION_ID as locationId,B.CUSTOMER_NAME as locationName,a.BP_LOCATION_Type as locationType,'' as wareId,B.LONGITUDE as locationLongitude,B.LATITUDE as locationLatitude,B.CUSTOMER_ID as showLocation,A.DB_ID || ':' || C.DB_LONGITUDE || ':' || C.DB_LATITUDE || ':' || C.DB_NAME as showElement FROM DISTRIBUTION_BOARD_MAPPING  LEFT JOIN CUSTOMER b ON A.BP_LOCATION_ID = B.CUSTOMER_ID LEFT JOIN DISTRIBUTION_BOARD C ON  A.DB_ID = C.DB_ID "
-					    		+ "where "
-					    		+ "(A.BP_LOCATION_TYPE ='Customer') AND (A.BP_FIBER_ID='"+fiberCableID+"' OR A.FP_FIBER_ID='"+fiberCableID+"') "
-					    		+ "AND (A.DB_ID IN (:param1)) "
-					    		+ "AND  (A.FP_LOCATION_ID ='"+DestID+"' OR A.BP_LOCATION_ID ='"+DestID+"' OR A.FP_EQUIPMENT_ID ='"+DestID+"' OR A.BP_EQUIPMENT_ID ='"+DestID+"' OR A.FP_JUNCTION_ID IN (:param2) OR A.BP_JUNCTION_ID IN (:param2) ) "
-					    		+ "UNION "
-					    		+"SELECT DISTINCT A.FP_LOCATION_ID as locationId,B.CUSTOMER_NAME as locationName,a.FP_LOCATION_Type as locationType,'' as wareId,B.LONGITUDE as locationLongitude,B.LATITUDE as locationLatitude,B.CUSTOMER_ID as showLocation,A.DB_ID || ':' || C.DB_LONGITUDE || ':' || C.DB_LATITUDE || ':' || C.DB_NAME as showElement FROM DISTRIBUTION_BOARD_MAPPING  LEFT JOIN CUSTOMER b ON A.FP_LOCATION_ID = B.CUSTOMER_ID LEFT JOIN DISTRIBUTION_BOARD C ON  A.DB_ID = C.DB_ID "
-			    				//+ "SELECT DISTINCT FP_LOCATION_ID FROM DISTRIBUTION_BOARD_MAPPING "
-			    				+ "where "
-			    				+ "(A.FP_LOCATION_TYPE ='Customer') AND (A.BP_FIBER_ID='"+fiberCableID+"' OR A.FP_FIBER_ID='"+fiberCableID+"') "
-			    				+ "AND (A.DB_ID IN (:param1)) "
-			    				+ "AND  (A.FP_LOCATION_ID ='"+DestID+"' OR A.BP_LOCATION_ID ='"+DestID+"' OR A.FP_EQUIPMENT_ID ='"+DestID+"' OR A.BP_EQUIPMENT_ID ='"+DestID+"' OR A.FP_JUNCTION_ID IN (:param2) OR A.BP_JUNCTION_ID IN (:param2) ) "
-					  
-					    
-							    + "UNION "
-							    +"SELECT DISTINCT A.BP_LOCATION_ID as locationId,B.CUSTOMER_NAME as locationName,a.BP_LOCATION_Type as locationType,'' as wareId,B.LONGITUDE as locationLongitude,B.LATITUDE as locationLatitude,B.CUSTOMER_ID as showLocation,A.DB_ID || ':' || C.DB_LONGITUDE || ':' || C.DB_LATITUDE || ':' || C.DB_NAME as showElement FROM DISTRIBUTION_BOARD_MAPPING  LEFT JOIN CUSTOMER b ON A.BP_LOCATION_ID = B.CUSTOMER_ID LEFT JOIN DISTRIBUTION_BOARD C ON  A.DB_ID = C.DB_ID "
-							    //+"SELECT DISTINCT BP_LOCATION_ID FROM DISTRIBUTION_BOARD_MAPPING "
-					    		+ "where "
-					    		+ "(A.BP_LOCATION_TYPE ='Customer') AND (A.BP_FIBER_ID='"+fiberCableID+"' OR A.FP_FIBER_ID='"+fiberCableID+"') "
-					    		+ "AND (A.DB_ID IN (:param3)) "
-								+ "AND  (A.FP_LOCATION_ID ='"+sourceID+"' OR A.BP_LOCATION_ID ='"+sourceID+"' OR A.FP_EQUIPMENT_ID ='"+sourceID+"' OR A.BP_EQUIPMENT_ID ='"+sourceID+"' OR A.FP_JUNCTION_ID IN (:param2) OR A.BP_JUNCTION_ID IN (:param4) ) "
-					    		+ "UNION "
-					    		+"SELECT DISTINCT A.FP_LOCATION_ID as locationId,B.CUSTOMER_NAME as locationName,a.FP_LOCATION_Type as locationType,'' as wareId,B.LONGITUDE as locationLongitude,B.LATITUDE as locationLatitude,B.CUSTOMER_ID as showLocation,A.DB_ID || ':' || C.DB_LONGITUDE || ':' || C.DB_LATITUDE || ':' || C.DB_NAME as showElement FROM DISTRIBUTION_BOARD_MAPPING  LEFT JOIN CUSTOMER b ON A.FP_LOCATION_ID = B.CUSTOMER_ID LEFT JOIN DISTRIBUTION_BOARD C ON  A.DB_ID = C.DB_ID "
-			    				//+ "SELECT DISTINCT FP_LOCATION_ID FROM DISTRIBUTION_BOARD_MAPPING "
-			    				+ "where "
-			    				+ "(A.FP_LOCATION_TYPE ='Customer') AND (A.BP_FIBER_ID='"+fiberCableID+"' OR A.FP_FIBER_ID='"+fiberCableID+"') "
-			    				+ "AND (A.DB_ID IN (:param3)) "
-			    				+ "AND  (A.FP_LOCATION_ID ='"+sourceID+"' OR A.BP_LOCATION_ID ='"+sourceID+"' OR A.FP_EQUIPMENT_ID ='"+sourceID+"' OR A.BP_EQUIPMENT_ID ='"+sourceID+"' OR A.FP_JUNCTION_ID IN (:param2) OR A.BP_JUNCTION_ID IN (:param4) ) "
-					    //////////////////////////////////////////////////////77
-			    				
-			    				+ "SELECT DISTINCT A.BP_LOCATION_ID as locationId,B.WARE_NAME as locationName,a.BP_LOCATION_Type as locationType,B.WARE_ID as wareId,B.LONGITUDE as locationLongitude,B.LATITUDE as locationLatitude,B.WARE_ID as showLocation,A.DB_ID || ':' || C.DB_LONGITUDE || ':' || C.DB_LATITUDE || ':' || C.DB_NAME as showElement FROM DISTRIBUTION_BOARD_MAPPING  LEFT JOIN WAREHOUSE b ON A.BP_LOCATION_ID = B.SITE_ID LEFT JOIN DISTRIBUTION_BOARD C ON  A.DB_ID = C.DB_ID "
-					    		+ "where "
-					    		+ "(A.BP_LOCATION_TYPE ='Customer') AND (A.BP_FIBER_ID='"+fiberCableID+"' OR A.FP_FIBER_ID='"+fiberCableID+"') "
-					    		+ "AND (A.DB_ID IN (:param1)) "
-					    		+ "AND  (A.FP_LOCATION_ID ='"+DestID+"' OR A.BP_LOCATION_ID ='"+DestID+"' OR A.FP_EQUIPMENT_ID ='"+DestID+"' OR A.BP_EQUIPMENT_ID ='"+DestID+"' OR A.FP_JUNCTION_ID IN (:param2) OR A.BP_JUNCTION_ID IN (:param2) ) "
-					    		+ "UNION "
-					    		+ "SELECT DISTINCT A.FP_LOCATION_ID as locationId,B.WARE_NAME as locationName,a.FP_LOCATION_Type as locationType,B.WARE_ID as wareId,B.LONGITUDE as locationLongitude,B.LATITUDE as locationLatitude,B.WARE_ID as showLocation,A.DB_ID || ':' || C.DB_LONGITUDE || ':' || C.DB_LATITUDE || ':' || C.DB_NAME as showElement FROM DISTRIBUTION_BOARD_MAPPING  LEFT JOIN WAREHOUSE b ON A.FP_LOCATION_ID = B.SITE_ID LEFT JOIN DISTRIBUTION_BOARD C ON  A.DB_ID = C.DB_ID "
-			    				//+ "SELECT DISTINCT FP_LOCATION_ID FROM DISTRIBUTION_BOARD_MAPPING "
-			    				+ "where "
-			    				+ "(A.FP_LOCATION_TYPE ='Customer') AND (A.BP_FIBER_ID='"+fiberCableID+"' OR A.FP_FIBER_ID='"+fiberCableID+"') "
-			    				+ "AND (A.DB_ID IN (:param1)) "
-			    				+ "AND  (A.FP_LOCATION_ID ='"+DestID+"' OR A.BP_LOCATION_ID ='"+DestID+"' OR A.FP_EQUIPMENT_ID ='"+DestID+"' OR A.BP_EQUIPMENT_ID ='"+DestID+"' OR A.FP_JUNCTION_ID IN (:param2) OR A.BP_JUNCTION_ID IN (:param2) ) "
-					  
-					    
-							    + "UNION "
-							    + "SELECT DISTINCT A.BP_LOCATION_ID as locationId,B.WARE_NAME as locationName,a.BP_LOCATION_Type as locationType,B.WARE_ID as wareId,B.LONGITUDE as locationLongitude,B.LATITUDE as locationLatitude,B.WARE_ID as showLocation,A.DB_ID || ':' || C.DB_LONGITUDE || ':' || C.DB_LATITUDE || ':' || C.DB_NAME as showElement FROM DISTRIBUTION_BOARD_MAPPING  LEFT JOIN WAREHOUSE b ON A.BP_LOCATION_ID = B.SITE_ID LEFT JOIN DISTRIBUTION_BOARD C ON  A.DB_ID = C.DB_ID "							    
-							  //+"SELECT DISTINCT BP_LOCATION_ID FROM DISTRIBUTION_BOARD_MAPPING "
-							    + "where "
-					    		+ "(A.BP_LOCATION_TYPE ='Customer') AND (A.BP_FIBER_ID='"+fiberCableID+"' OR A.FP_FIBER_ID='"+fiberCableID+"') "
-					    		+ "AND (A.DB_ID IN (:param3)) "
-								+ "AND  (A.FP_LOCATION_ID ='"+sourceID+"' OR A.BP_LOCATION_ID ='"+sourceID+"' OR A.FP_EQUIPMENT_ID ='"+sourceID+"' OR A.BP_EQUIPMENT_ID ='"+sourceID+"' OR A.FP_JUNCTION_ID IN (:param2) OR A.BP_JUNCTION_ID IN (:param4) ) "
-					    		+ "UNION "
-					    		+ "SELECT DISTINCT A.FP_LOCATION_ID as locationId,B.WARE_NAME as locationName,a.FP_LOCATION_Type as locationType,B.WARE_ID as wareId,B.LONGITUDE as locationLongitude,B.LATITUDE as locationLatitude,B.WARE_ID as showLocation,A.DB_ID || ':' || C.DB_LONGITUDE || ':' || C.DB_LATITUDE || ':' || C.DB_NAME as showElement FROM DISTRIBUTION_BOARD_MAPPING  LEFT JOIN WAREHOUSE b ON A.FP_LOCATION_ID = B.SITE_ID LEFT JOIN DISTRIBUTION_BOARD C ON  A.DB_ID = C.DB_ID "
-			    				//+ "SELECT DISTINCT FP_LOCATION_ID FROM DISTRIBUTION_BOARD_MAPPING "
-			    				+ "where "
-			    				+ "(A.FP_LOCATION_TYPE ='Customer') AND (A.BP_FIBER_ID='"+fiberCableID+"' OR A.FP_FIBER_ID='"+fiberCableID+"') "
-			    				+ "AND (A.DB_ID IN (:param3)) "
-			    				+ "AND  (A.FP_LOCATION_ID ='"+sourceID+"' OR A.BP_LOCATION_ID ='"+sourceID+"' OR A.FP_EQUIPMENT_ID ='"+sourceID+"' OR A.BP_EQUIPMENT_ID ='"+sourceID+"' OR A.FP_JUNCTION_ID IN (:param2) OR A.BP_JUNCTION_ID IN (:param4) ) "
-			    				
-			    				
-			    				
-			    				////////////////////////////////////////////////////////
-					    
-					    
-					    
-							    + "UNION "
-							    +"SELECT DISTINCT LOCATION_ID_SIDE_A FROM JUNCTION_MAPPING "
-			    				+ "where "
-			    				+ "(LOCATION_TYPE_SIDE_A ='Customer' OR LOCATION_TYPE_SIDE_A ='Site') AND (FIBER_ID_SIDE_A='"+fiberCableID+"' OR FIBER_ID_SIDE_B='"+fiberCableID+"') "
-			    				+ "AND (JCT_ID IN (:param4) OR PHYSICAL_LAYER_ID IN(:param4)) "
-			    				+ "AND  (LOCATION_ID_SIDE_A ='"+DestID+"' OR LOCATION_ID_SIDE_B ='"+DestID+"' OR LOCATION_ID_SIDE_A IN (:param2) OR LOCATION_ID_SIDE_B IN (:param2)) "
-			    				+ "UNION "
-							    +"SELECT DISTINCT LOCATION_ID_SIDE_B FROM JUNCTION_MAPPING "
-			    				+ "where "
-			    				+ "(LOCATION_TYPE_SIDE_B ='Customer' OR LOCATION_TYPE_SIDE_B ='Site') AND (FIBER_ID_SIDE_A='"+fiberCableID+"' OR FIBER_ID_SIDE_B='"+fiberCableID+"') "
-			    				+ "AND (JCT_ID IN (:param4) OR PHYSICAL_LAYER_ID IN(:param4)) "
-			    				+ "AND  (LOCATION_ID_SIDE_A ='"+DestID+"' OR LOCATION_ID_SIDE_B ='"+DestID+"' OR LOCATION_ID_SIDE_A IN (:param2) OR LOCATION_ID_SIDE_B IN (:param2)) "
-			    				
-			    				
-			    				
-			    				 + "UNION "
-							    +"SELECT DISTINCT LOCATION_ID_SIDE_A FROM JUNCTION_MAPPING "
-			    				+ "where "
-			    				+ "(LOCATION_TYPE_SIDE_A ='Customer' OR LOCATION_TYPE_SIDE_A ='Site') AND (FIBER_ID_SIDE_A='"+fiberCableID+"' OR FIBER_ID_SIDE_B='"+fiberCableID+"') "
-			    				+ "AND (JCT_ID IN (:param2) OR PHYSICAL_LAYER_ID IN(:param2)) "
-			    				+ "AND  (LOCATION_ID_SIDE_A ='"+sourceID+"' OR LOCATION_ID_SIDE_B ='"+sourceID+"' OR LOCATION_ID_SIDE_A IN (:param4) OR LOCATION_ID_SIDE_B IN (:param4)) "
-			    				+ "UNION "
-							    +"SELECT DISTINCT LOCATION_ID_SIDE_B FROM JUNCTION_MAPPING "
-			    				+ "where "
-			    				+ "(LOCATION_TYPE_SIDE_B ='Customer' OR LOCATION_TYPE_SIDE_B ='Site') AND (FIBER_ID_SIDE_A='"+fiberCableID+"' OR FIBER_ID_SIDE_B='"+fiberCableID+"') "
-			    				+ "AND (JCT_ID IN (:param2) OR PHYSICAL_LAYER_ID IN(:param2)) "
-			    				+ "AND  (LOCATION_ID_SIDE_A ='"+sourceID+"' OR LOCATION_ID_SIDE_B ='"+sourceID+"' OR LOCATION_ID_SIDE_A IN (:param4) OR LOCATION_ID_SIDE_B IN (:param4)) ";
-					    */
-					    
-					    
-					    
-					    
+		
+					      
 					    
 					    
 					    for (String  row : affectedClientSite) {
