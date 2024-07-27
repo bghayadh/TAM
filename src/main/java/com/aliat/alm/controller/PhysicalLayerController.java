@@ -4766,7 +4766,23 @@ public class PhysicalLayerController {
 				tx = session.beginTransaction();
 				
 				try {
+					String ipAddress = request.getRemoteAddr();
+					String updateModfUser=request.getParameter("updateModfUser").replaceAll("^'+|'+$", "");
+					PhysicalLayerActivity PhyAct= new PhysicalLayerActivity();
+					DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
 
+					String PhyActID=
+							 "PHY_ACT_" + year + "_"+ Integer.parseInt(session.createNativeQuery("SELECT PHY_ACT_ID FROM SEQ_TABLE").uniqueResult().toString());
+							query = session.createNativeQuery("UPDATE SEQ_TABLE SET PHY_ACT_ID = PHY_ACT_ID + 1 ");
+							query.executeUpdate();
+							session.createNativeQuery("commit").executeUpdate();
+							
+							PhyAct.setPhyActID(PhyActID);
+							PhyAct.setScreenName("Project");
+							PhyAct.setUsername(updateModfUser);
+							PhyAct.setUserIP(ipAddress);
+							PhyAct.setActivityDate(new Timestamp(System.currentTimeMillis()));
+					
 					if (request.getParameter("actionProjectContext").equals("Insert")) {
 						System.out.println(
 								"actionProjectContext insidde insert>>" + request.getParameter("actionProjectContext"));
@@ -4784,6 +4800,8 @@ public class PhysicalLayerController {
 								+ request.getParameter("ProjectName") +"','"+projectType+ "')");
 						query.executeUpdate();
 						rtn.put("ProjectId", ProjectId);
+						PhyAct.setActivityDescription("Add new Project");
+						
 					} else {
 						ProjectId = request.getParameter("ProjectId");
 						query = session.createNativeQuery(
@@ -4792,8 +4810,10 @@ public class PhysicalLayerController {
 										+ "' where PROJECT_ID='" + request.getParameter("ProjectId") + "'");
 						query.executeUpdate();
 						rtn.put("ProjectId", request.getParameter("ProjectId"));
-
+						PhyAct.setActivityDescription("Edit Existing Project");
 					}
+					PhyAct.setElementID(ProjectId);
+					session.saveOrUpdate(PhyAct);
 					// String projectNameId=ProjectId+":"+request.getParameter("ProjectName");
 					rtn.put("ProjectName", request.getParameter("ProjectName"));
 					rtn.put("projectType", projectType);
@@ -10138,6 +10158,20 @@ public class PhysicalLayerController {
 
 						newCount = session.createNativeQuery("SELECT count(*) FROM PROJECT").uniqueResult();
 						rtn.put("newCount", newCount);
+						for (int i = 0; i < idList.size(); i++) {
+							
+											
+																PhyAct= new PhysicalLayerActivity();
+																PhyAct.setPhyActID("PHY_ACT_" + year + "_"+ (phyActID+i));
+																PhyAct.setElementID(idList.get(i));
+																PhyAct.setScreenName("Project");
+																PhyAct.setUsername(updateModfUser);
+																PhyAct.setUserIP(ipAddress);
+																PhyAct.setActivityDate(new Timestamp(System.currentTimeMillis()));
+																PhyAct.setActivityDescription("Delete Project");
+																session.saveOrUpdate(PhyAct);
+																	
+					}
 					}
 
 					if (StringUtils.equalsIgnoreCase(physicalLayer, "Manhole")
