@@ -11842,7 +11842,8 @@ $("#saveSurvey").on('click',function(){
 				"dictParameterTubeSurv":fiberTubesSurveyArray,
 				"dictParameterStrandSurv":fiberStrandsSurveyArray,
 				"surveyID":surveyID,
-				"serviceAppNo":serviceAppNo
+				"serviceAppNo":serviceAppNo,
+				"updateModfUser" : updateModfUser,
 
 			},
 			beforeSend: function() {
