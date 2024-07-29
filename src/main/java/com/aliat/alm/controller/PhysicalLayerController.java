@@ -13465,7 +13465,10 @@ public class PhysicalLayerController {
 			
 			String surveyID= request.getParameter("surveyID");
 			System.out.println("surveyID "+surveyID);
-			
+			String ipAddress = request.getRemoteAddr();
+			String updateModfUser=request.getParameter("updateModfUser").replaceAll("^'+|'+$", "");
+			PhysicalLayerActivity PhyAct= new PhysicalLayerActivity();
+
 		if (StringUtils.equalsIgnoreCase(surveyID, "") || StringUtils.equalsIgnoreCase(surveyID, null)) {
 			synchronized (this) {
 				surveyID = "SURV_" + year + "_" + Integer.parseInt(session
@@ -13533,7 +13536,20 @@ public class PhysicalLayerController {
 			session.saveOrUpdate(survey);
 			session.flush();
 			session.clear();
-			
+
+			String PhyActID= "PHY_ACT_" + year + "_"+ Integer.parseInt(session.createNativeQuery("SELECT PHY_ACT_ID FROM SEQ_TABLE").uniqueResult().toString());
+											query = session.createNativeQuery("UPDATE SEQ_TABLE SET PHY_ACT_ID = PHY_ACT_ID + 1 ");
+											query.executeUpdate();
+											session.createNativeQuery("commit").executeUpdate();
+											
+											PhyAct.setPhyActID(PhyActID);
+											PhyAct.setElementID(surveyID);
+											PhyAct.setScreenName("Physical Layer");
+											PhyAct.setUsername(updateModfUser);
+											PhyAct.setUserIP(ipAddress);
+											PhyAct.setActivityDate(new Timestamp(System.currentTimeMillis()));
+											PhyAct.setActivityDescription("Save Survey");
+											session.saveOrUpdate(PhyAct);
 			if (itemParameters.getDictParameter().size() > 0) {
 				for (int i = 0; i < itemParameters.getDictParameter().size(); i++) {
 
@@ -14864,6 +14880,10 @@ public class PhysicalLayerController {
 		
 		}
 		
+		
+		
+
+	
 	
 
 
