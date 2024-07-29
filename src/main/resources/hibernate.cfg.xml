@@ -155,6 +155,7 @@
 <mapping class="com.aliat.alm.models.FiberTubesSurvey"/>
 <mapping class="com.aliat.alm.models.PhysicalLayerActivity"/>
 <mapping class="com.aliat.alm.models.AttachmentUpload"/>
+<mapping class="com.aliat.alm.models.SystemSettings"/>
 
 
    </session-factory>
