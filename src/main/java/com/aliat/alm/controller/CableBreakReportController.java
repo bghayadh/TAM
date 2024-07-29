@@ -153,6 +153,7 @@ public class CableBreakReportController {
 		 
 		 List<String> affectedClients = new ArrayList<>();
 		 List<String> affectedSites = new ArrayList<>();
+		 List<String> affectedElement = new ArrayList<>();
 
 
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
@@ -341,13 +342,13 @@ public class CableBreakReportController {
 			    		}
 					   
 					    //get affected sites and client
-					    String str = "SELECT DISTINCT BP_LOCATION_ID FROM DISTRIBUTION_BOARD_MAPPING "
+					    String str = "SELECT DISTINCT BP_LOCATION_ID,DB_ID  FROM DISTRIBUTION_BOARD_MAPPING "
 					    		+ "where "
 					    		+ "(BP_LOCATION_TYPE ='Customer' OR BP_LOCATION_TYPE ='Site') AND (BP_FIBER_ID='"+fiberCableID+"' OR FP_FIBER_ID='"+fiberCableID+"') "
 					    		+ "AND (DB_ID IN (:param1)) "
 					    		+ "AND  (FP_LOCATION_ID ='"+DestID+"' OR BP_LOCATION_ID ='"+DestID+"' OR FP_EQUIPMENT_ID ='"+DestID+"' OR BP_EQUIPMENT_ID ='"+DestID+"' OR FP_JUNCTION_ID IN (:param2) OR BP_JUNCTION_ID IN (:param2) ) "
 					    		+ "UNION "
-			    				+ "SELECT DISTINCT FP_LOCATION_ID FROM DISTRIBUTION_BOARD_MAPPING "
+			    				+ "SELECT DISTINCT FP_LOCATION_ID,DB_ID  FROM DISTRIBUTION_BOARD_MAPPING "
 			    				+ "where "
 			    				+ "(FP_LOCATION_TYPE ='Customer' OR FP_LOCATION_TYPE ='Site') AND (BP_FIBER_ID='"+fiberCableID+"' OR FP_FIBER_ID='"+fiberCableID+"') "
 			    				+ "AND (DB_ID IN (:param1)) "
@@ -355,13 +356,13 @@ public class CableBreakReportController {
 					  
 					    
 							    + "UNION "
-							    +"SELECT DISTINCT BP_LOCATION_ID FROM DISTRIBUTION_BOARD_MAPPING "
+							    +"SELECT DISTINCT BP_LOCATION_ID,DB_ID  FROM DISTRIBUTION_BOARD_MAPPING "
 					    		+ "where "
 					    		+ "(BP_LOCATION_TYPE ='Customer' OR BP_LOCATION_TYPE ='Site') AND (BP_FIBER_ID='"+fiberCableID+"' OR FP_FIBER_ID='"+fiberCableID+"') "
 					    		+ "AND (DB_ID IN (:param3)) "
 								+ "AND  (FP_LOCATION_ID ='"+sourceID+"' OR BP_LOCATION_ID ='"+sourceID+"' OR FP_EQUIPMENT_ID ='"+sourceID+"' OR BP_EQUIPMENT_ID ='"+sourceID+"' OR FP_JUNCTION_ID IN (:param4) OR BP_JUNCTION_ID IN (:param4) ) "
 					    		+ "UNION "
-			    				+ "SELECT DISTINCT FP_LOCATION_ID FROM DISTRIBUTION_BOARD_MAPPING "
+			    				+ "SELECT DISTINCT FP_LOCATION_ID,DB_ID FROM DISTRIBUTION_BOARD_MAPPING "
 			    				+ "where "
 			    				+ "(FP_LOCATION_TYPE ='Customer' OR FP_LOCATION_TYPE ='Site') AND (BP_FIBER_ID='"+fiberCableID+"' OR FP_FIBER_ID='"+fiberCableID+"') "
 			    				+ "AND (DB_ID IN (:param3)) "
@@ -371,13 +372,13 @@ public class CableBreakReportController {
 					    
 					    
 							    + "UNION "
-							    +"SELECT DISTINCT LOCATION_ID_SIDE_A FROM JUNCTION_MAPPING "
+							    +"SELECT DISTINCT LOCATION_ID_SIDE_A,JCT_ID FROM JUNCTION_MAPPING "
 			    				+ "where "
 			    				+ "(LOCATION_TYPE_SIDE_A ='Customer' OR LOCATION_TYPE_SIDE_A ='Site') AND (FIBER_ID_SIDE_A='"+fiberCableID+"' OR FIBER_ID_SIDE_B='"+fiberCableID+"') "
 			    				+ "AND (JCT_ID IN (:param4) OR PHYSICAL_LAYER_ID IN(:param4)) "
 			    				+ "AND  (LOCATION_ID_SIDE_A ='"+DestID+"' OR LOCATION_ID_SIDE_B ='"+DestID+"' OR LOCATION_ID_SIDE_A IN (:param2) OR LOCATION_ID_SIDE_B IN (:param2)) "
 			    				+ "UNION "
-							    +"SELECT DISTINCT LOCATION_ID_SIDE_B FROM JUNCTION_MAPPING "
+							    +"SELECT DISTINCT LOCATION_ID_SIDE_B,JCT_ID FROM JUNCTION_MAPPING "
 			    				+ "where "
 			    				+ "(LOCATION_TYPE_SIDE_B ='Customer' OR LOCATION_TYPE_SIDE_B ='Site') AND (FIBER_ID_SIDE_A='"+fiberCableID+"' OR FIBER_ID_SIDE_B='"+fiberCableID+"') "
 			    				+ "AND (JCT_ID IN (:param4) OR PHYSICAL_LAYER_ID IN(:param4)) "
@@ -386,13 +387,13 @@ public class CableBreakReportController {
 			    				
 			    				
 			    				 + "UNION "
-							    +"SELECT DISTINCT LOCATION_ID_SIDE_A FROM JUNCTION_MAPPING "
+							    +"SELECT DISTINCT LOCATION_ID_SIDE_A,JCT_ID FROM JUNCTION_MAPPING "
 			    				+ "where "
 			    				+ "(LOCATION_TYPE_SIDE_A ='Customer' OR LOCATION_TYPE_SIDE_A ='Site') AND (FIBER_ID_SIDE_A='"+fiberCableID+"' OR FIBER_ID_SIDE_B='"+fiberCableID+"') "
 			    				+ "AND (JCT_ID IN (:param2) OR PHYSICAL_LAYER_ID IN(:param2)) "
 			    				+ "AND  (LOCATION_ID_SIDE_A ='"+sourceID+"' OR LOCATION_ID_SIDE_B ='"+sourceID+"' OR LOCATION_ID_SIDE_A IN (:param4) OR LOCATION_ID_SIDE_B IN (:param4)) "
 			    				+ "UNION "
-							    +"SELECT DISTINCT LOCATION_ID_SIDE_B FROM JUNCTION_MAPPING "
+							    +"SELECT DISTINCT LOCATION_ID_SIDE_B,JCT_ID FROM JUNCTION_MAPPING "
 			    				+ "where "
 			    				+ "(LOCATION_TYPE_SIDE_B ='Customer' OR LOCATION_TYPE_SIDE_B ='Site') AND (FIBER_ID_SIDE_A='"+fiberCableID+"' OR FIBER_ID_SIDE_B='"+fiberCableID+"') "
 			    				+ "AND (JCT_ID IN (:param2) OR PHYSICAL_LAYER_ID IN(:param2)) "
@@ -418,7 +419,7 @@ public class CableBreakReportController {
 			    				 		    	-junction after breaking pt 
 			    				 * */
 			    				+ "UNION "
-							    +"SELECT DISTINCT LOCATION_ID_SIDE_A FROM JUNCTION_MAPPING A "
+							    +"SELECT DISTINCT LOCATION_ID_SIDE_A,JCT_ID FROM JUNCTION_MAPPING A "
 			    				+ "where "
 			    				+ "(A.LOCATION_TYPE_SIDE_A ='Customer' OR A.LOCATION_TYPE_SIDE_A ='Site') AND (A.FIBER_ID_SIDE_A='"+fiberCableID+"' OR A.FIBER_ID_SIDE_B='"+fiberCableID+"') "
 			    				+ "AND (A.JCT_ID IN (:param2) OR A.PHYSICAL_LAYER_ID IN(:param2)) "
@@ -426,7 +427,7 @@ public class CableBreakReportController {
 			    				+ "OR   A.LOCATION_ID_SIDE_B IN (SELECT B.LOCATION_ID_SIDE_B FROM JUNCTION_MAPPING B WHERE (B.JCT_ID IN (:param4) OR B.PHYSICAL_LAYER_ID IN(:param4)) AND ((B.FIBER_ID_SIDE_A='"+fiberCableID+"' AND B.STRAND_NB_SIDE_A =A.STRAND_NB_SIDE_B AND B.TUBE_NB_SIDE_A=A.TUBE_NB_SIDE_B ) OR (FIBER_ID_SIDE_B='"+fiberCableID+"' AND B.STRAND_NB_SIDE_B =A.STRAND_NB_SIDE_B AND B.TUBE_NB_SIDE_B=A.TUBE_NB_SIDE_B)) AND ((A.LOCATION_ID_SIDE_A=B.LOCATION_ID_SIDE_A) OR (A.LOCATION_ID_SIDE_A=B.LOCATION_ID_SIDE_B)))) "
 			    				
 			    				+ "UNION "
-							    +"SELECT DISTINCT LOCATION_ID_SIDE_B FROM JUNCTION_MAPPING A "
+							    +"SELECT DISTINCT LOCATION_ID_SIDE_B,JCT_ID FROM JUNCTION_MAPPING A "
 			    				+ "where "
 			    				+ "(A.LOCATION_TYPE_SIDE_B ='Customer' OR A.LOCATION_TYPE_SIDE_B ='Site') AND (A.FIBER_ID_SIDE_A='"+fiberCableID+"' OR A.FIBER_ID_SIDE_B='"+fiberCableID+"') "
 			    				+ "AND (A.JCT_ID IN (:param2) OR A.PHYSICAL_LAYER_ID IN(:param2)) "
@@ -435,7 +436,7 @@ public class CableBreakReportController {
 			    				
 			    				
 			    				+ "UNION "
-							    +"SELECT DISTINCT LOCATION_ID_SIDE_A FROM JUNCTION_MAPPING A "
+							    +"SELECT DISTINCT LOCATION_ID_SIDE_A,JCT_ID FROM JUNCTION_MAPPING A "
 			    				+ "where "
 			    				+ "(A.LOCATION_TYPE_SIDE_A ='Customer' OR A.LOCATION_TYPE_SIDE_A ='Site') AND (A.FIBER_ID_SIDE_A='"+fiberCableID+"' OR A.FIBER_ID_SIDE_B='"+fiberCableID+"') "
 			    				+ "AND (A.JCT_ID IN (:param4) OR A.PHYSICAL_LAYER_ID IN(:param4)) "
@@ -443,7 +444,7 @@ public class CableBreakReportController {
 			    				+ "OR   A.LOCATION_ID_SIDE_B IN (SELECT B.LOCATION_ID_SIDE_B FROM JUNCTION_MAPPING B WHERE (B.JCT_ID IN (:param2) OR B.PHYSICAL_LAYER_ID IN(:param2)) AND ((B.FIBER_ID_SIDE_A='"+fiberCableID+"' AND B.STRAND_NB_SIDE_A =A.STRAND_NB_SIDE_B AND B.TUBE_NB_SIDE_A=A.TUBE_NB_SIDE_B ) OR (FIBER_ID_SIDE_B='"+fiberCableID+"' AND B.STRAND_NB_SIDE_B =A.STRAND_NB_SIDE_B AND B.TUBE_NB_SIDE_B=A.TUBE_NB_SIDE_B)) AND ((A.LOCATION_ID_SIDE_A=B.LOCATION_ID_SIDE_A) OR (A.LOCATION_ID_SIDE_A=B.LOCATION_ID_SIDE_B)))) "
 			    				
 			    				+ "UNION "
-							    +"SELECT DISTINCT LOCATION_ID_SIDE_B FROM JUNCTION_MAPPING A "
+							    +"SELECT DISTINCT LOCATION_ID_SIDE_B,JCT_ID FROM JUNCTION_MAPPING A "
 			    				+ "where "
 			    				+ "(A.LOCATION_TYPE_SIDE_B ='Customer' OR A.LOCATION_TYPE_SIDE_B ='Site') AND (A.FIBER_ID_SIDE_A='"+fiberCableID+"' OR A.FIBER_ID_SIDE_B='"+fiberCableID+"') "
 			    				+ "AND (A.JCT_ID IN (:param4) OR A.PHYSICAL_LAYER_ID IN(:param4)) "
@@ -456,12 +457,31 @@ public class CableBreakReportController {
 						    query.setParameterList("param3", dstDBs);
 						    query.setParameterList("param4", junctionBeforeBreakingPt);
 						    
-						    List<String> affectedClientSite = query.getResultList();
+						    List<Object[]> affectedClientSite = query.getResultList();
 					    
 		
 					      
-					    
-					    
+						    for (Object[]  row : affectedClientSite) {
+						        String tempAfftectedLocation =  (String) row[0];
+						        String tempAfftectedElement =  (String) row[1];
+						       
+						        if(tempAfftectedLocation.startsWith("CUST_")) {
+						        	affectedClients.add(tempAfftectedLocation);
+							    	
+							    }
+						        else {
+						        	affectedSites.add(tempAfftectedLocation);
+						        }
+						        if(!affectedElement.contains(tempAfftectedElement)) {
+						        	affectedElement.add(tempAfftectedElement);
+						        }
+						      
+						    }
+						    
+						    
+						    
+						    
+					    /*
 					    for (String  row : affectedClientSite) {
 					        String tempAfftectedLocation = (String) row; // Assuming BP_LOCATION_ID is the first column
 					        if(tempAfftectedLocation.startsWith("CUST_")) {
@@ -472,7 +492,7 @@ public class CableBreakReportController {
 					        	affectedSites.add(tempAfftectedLocation);
 					        }
 					      
-					    }
+					    }*/
 					    
 					    //get all needed data of the affected site and client
 					    String  affectedstr = "SELECT CUSTOMER_ID as locationId, CUSTOMER_NAME as locationName, 'Customer' as locationType, '' as wareId,LONGITUDE as locationLongitude,LATITUDE as locationLatitude,CUSTOMER_ID as showLocation,'' as showElement " +
@@ -505,7 +525,14 @@ public class CableBreakReportController {
 					    
 					    
 					    
-					    
+						
+						String affectedElementt = "SELECT DISTINCT DB_ID as elementID,DB_NAME as elementName,DB_LONGITUDE as elementLong,DB_LATITUDE as elementLat,'DB' as elementType,'' as parentID FROM DISTRIBUTION_BOARD where DB_ID IN(:Param7) "
+								+ "UNION "
+								+ "SELECT DISTINCT JUNCTION_ID as elementID,JUNCTION_NAME as elementName,LONGITUDE as elementLong,LATITUDE as elementLat,'Junction' as elementType,PHYSICAL_LAYER_ID as parentID FROM  JUNCTION where JUNCTION_ID IN(:Param7)";
+						query = session.createNativeQuery(affectedElementt);
+					    query.setParameter("Param7", affectedElement);
+					    List<Object[]> affectedElementList =query.getResultList();
+						rtn.put("ElementList", affectedElementList);
 					    
 					    
 					    
