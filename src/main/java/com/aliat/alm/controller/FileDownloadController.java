@@ -14,10 +14,23 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
+import javax.persistence.Query;
+import com.aliat.alm.common.AlmDbSession;
+
 
 @RestController
 @RequestMapping("/DownloadAttachment")
 public class FileDownloadController {
+	private static Session session1 = null;
+	private static Query query = null;
+	private static Transaction tx = null;
+
+
 
     @GetMapping
     public ResponseEntity<InputStreamResource> downloadFile(
@@ -55,10 +68,41 @@ public class FileDownloadController {
     }
 
     private byte[] getFileContent(String attachmentPath, String attachmentName) throws JSchException, SftpException, IOException {
-        JSch jsch = new JSch();
-        com.jcraft.jsch.Session session = jsch.getSession("USER", "localhost", 22);
+       
 
-        session.setPassword("zeinab123");
+    	String username="",pass="",hostname="";
+    	
+        session1 = AlmDbSession.getInstance().getSession();
+		if (session1 != null && session1.isOpen()) {
+			tx = session1.beginTransaction();
+
+			try {
+
+    	 query = session1.createNativeQuery(
+				"select USERNAME,PASSWORD,IP_ADDRESS FROM SYSTEM_SETTINGS");
+    	List<Object[]> results = query.getResultList();
+		if(results.size()>0) {
+			for (Object[] row : results) {
+				username=(String) row[0];
+				pass=(String) row[1];
+				hostname=(String) row[2];
+			}
+		}
+			 
+			} 
+			catch (Exception e) {
+				System.out.println("Failed to fetch system settings");
+			}
+			finally {
+				if (session1 != null && session1.isOpen()) {
+					session1.close();
+				}
+			}
+		}
+    	JSch jsch = new JSch();
+        com.jcraft.jsch.Session session = jsch.getSession(username,hostname, 22);
+
+        session.setPassword(pass);
         session.setConfig("StrictHostKeyChecking", "no");
         session.connect();
 
