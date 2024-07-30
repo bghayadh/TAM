@@ -495,11 +495,11 @@ public class CableBreakReportController {
 					    }*/
 					    
 					    //get all needed data of the affected site and client
-					    String  affectedstr = "SELECT CUSTOMER_ID as locationId, CUSTOMER_NAME as locationName, 'Customer' as locationType, '' as wareId,LONGITUDE as locationLongitude,LATITUDE as locationLatitude,CUSTOMER_ID as showLocation,'' as showElement " +
+					    String  affectedstr = "SELECT CUSTOMER_ID as locationId, CUSTOMER_NAME as locationName, 'Customer' as locationType, '' as wareId,LONGITUDE as locationLongitude,LATITUDE as locationLatitude,CUSTOMER_ID as showLocation " +
 					             "FROM CUSTOMER " +
 					             "WHERE CUSTOMER_ID IN (:Param5) " +
 					             "UNION " +
-					             "SELECT SITE_ID as locationId, WARE_NAME as locationName, 'Site' as locationType, WARE_ID as wareId, LONGITUDE as locationLongitude,LATITUDE as locationLatitude,SITE_ID as showLocation,'' as showElement " +
+					             "SELECT SITE_ID as locationId, WARE_NAME as locationName, 'Site' as locationType, WARE_ID as wareId, LONGITUDE as locationLongitude,LATITUDE as locationLatitude,SITE_ID as showLocation " +
 					             "FROM WAREHOUSE " +
 					             "WHERE SITE_ID IN (:Param6)";
 
@@ -508,7 +508,7 @@ public class CableBreakReportController {
 						query.setParameter("Param6", affectedSites);
 						
 					    listAffectedClientSite = ((NativeQuery<CableBreakReport>) query).addScalar("locationId").addScalar("locationName").addScalar("locationType").addScalar("wareId")
-								.addScalar("locationLongitude").addScalar("locationLatitude").addScalar("showLocation").addScalar("showElement").setResultTransformer(Transformers.aliasToBean(CableBreakReport.class))
+								.addScalar("locationLongitude").addScalar("locationLatitude").addScalar("showLocation").setResultTransformer(Transformers.aliasToBean(CableBreakReport.class))
 								.list();
 					    
 					     

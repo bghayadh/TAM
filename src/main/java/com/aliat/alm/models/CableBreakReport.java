@@ -30,7 +30,7 @@ public class CableBreakReport {
 	
 	
 	private String showLocation;
-	private String showElement;
+	//private String showElement;
 
 
 	
@@ -39,8 +39,9 @@ public class CableBreakReport {
 
 
 
+
 	public CableBreakReport(String locationId, String locationName, String locationType, String wareId,
-			String locationLongitude, String locationLatitude, String showLocation, String showElement) {
+			String locationLongitude, String locationLatitude, String showLocation) {
 		super();
 		this.locationId = locationId;
 		this.locationName = locationName;
@@ -49,8 +50,8 @@ public class CableBreakReport {
 		this.locationLongitude = locationLongitude;
 		this.locationLatitude = locationLatitude;
 		this.showLocation = showLocation;
-		this.showElement = showElement;
 	}
+
 
 
 
@@ -136,17 +137,6 @@ public class CableBreakReport {
 		this.showLocation = showLocation;
 	}
 
-
-
-	public String getShowElement() {
-		return showElement;
-	}
-
-
-
-	public void setShowElement(String showElement) {
-		this.showElement = showElement;
-	}
 
 
 
