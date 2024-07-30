@@ -552,7 +552,7 @@ max-width: 100%;
 		</div>
       <div class="legendContainer">
       <div class="card-body">      
-         <div class="box stack-top" id="legendDiv" style="position: relative;top:215px;width: 290px; float:left; height:400px;  background:white; margin:37px;display: none">
+         <div class="box stack-top" id="legendDiv" style="position: relative;top:215px;width: 290px; float:left; height:470px;  background:white; margin:37px;display: none">
          <div class="legendHeader"  id="legendHeader">
  			<h6 style="color:white;font-weight:bold; font-size:2.5ex;display:inline-block;position: relative;">Map Legend</h6>
   		</div>
@@ -577,6 +577,13 @@ max-width: 100%;
      <td style="position: relative;top:10px;left:62px;"><div><img class='image' style='color: #08526D;'  src='${pageContext.request.contextPath}/resources/NetworkImages/fiber.png'></div></td>
      <td style="position: relative;top:8px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; ">Fiber Cable</label></td>   
      <td style="position: relative;top:8px;left:65px;"><div style="position: relative;left:-5px;color: black;" id="fiberCount" ></div></td>
+    </tr>
+    
+    <tr>
+     <td style="position: relative;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideRelatedCableCheckbox" onclick="showCableRelatedPath();" /></td>
+     <td style="position: relative;top:10px;left:62px;"><div><img class='image' style='color: #08526D;'  src='${pageContext.request.contextPath}/resources/NetworkImages/fiber.png'></div></td>
+     <td style="position: relative;top:8px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; ">Show Related Path</label></td>   
+     <td style="position: relative;top:8px;left:65px;"><div style="position: relative;left:-5px;color: black;" id="relatedPathCount" ></div></td>
     </tr>
     
     <tr>
@@ -663,6 +670,7 @@ var markersHandholesWithJct =[];
 var markersManholes =[];
 var markersHandholes =[];
 var fiberCableArray=[];
+var relatedPathArray=[];
 var distinctDB =[]; // used in check/uncheck all db from legend
 var distinctJct =[]; // used in check/uncheck all jct from legend
 var distinctCustomers =[]; // used in check/uncheck all cust from legend
@@ -672,6 +680,7 @@ var distinctHandholesWithJct =[];
 var distinctHandholes = [];
 var distinctManholes = [];
 var allCables=[];
+var allRelatedPathCables=[];
 var markerClusterDB ;
 var markerClusterJct ;
 var markerClusterCustomers ;
@@ -1026,7 +1035,6 @@ $(document).ready(function() {
 		   distinctHandholes = [];
 		   distinctManholes = []; 
 		   srcDestID = [];
-		   
 		   markerClusterDB.clearMarkers();
 		   markerClusterJct.clearMarkers();
 		   markerClusterCustomers.clearMarkers();
@@ -1036,6 +1044,12 @@ $(document).ready(function() {
 		   markerClusterManholes.clearMarkers();
 		   markerClusterHandholes.clearMarkers(); 	
 		   mapFlag="1";
+
+		   if(relatedPathArray.length>0) {
+				 for(var b=0;b<allRelatedPathCables.length;b++){
+					 relatedPathArray[allRelatedPathCables[b]].setMap(null);
+				}
+			 }
 
 		showPointsArray=[];
 		//build src dest markers
@@ -1384,6 +1398,16 @@ $(document).ready(function() {
 		         		$(".showHideCableCheckbox").attr('disabled', true);
 		         		$('.showHideSrcDestCheckbox').prop('checked', false);
 		         		$(".showHideSrcDestCheckbox").attr('disabled', true);
+
+		         		$('.showHideRelatedCableCheckbox').prop('checked', false);
+		        		$(".showHideRelatedCableCheckbox").attr('disabled', true);
+		        		document.getElementById("relatedPathCount").textContent = "";
+
+		        		if(relatedPathArray.length>0) {
+		       			 for(var b=0;b<allRelatedPathCables.length;b++){
+		       				 relatedPathArray[allRelatedPathCables[b]].setMap(null);
+		       			}
+		       		 }
 		         		
 		         		//showRelPathFlag="notOpened";
 
@@ -1662,6 +1686,9 @@ $(document).ready(function() {
 		$(".showHideCableCheckbox").attr('disabled', true);
 		$('.showHideSrcDestCheckbox').prop('checked', false);
 		$(".showHideSrcDestCheckbox").attr('disabled', true);
+
+		$('.showHideRelatedCableCheckbox').prop('checked', false);
+		$(".showHideRelatedCableCheckbox").attr('disabled', false);
 		
 		showRelPathFlag="notOpened";
 
@@ -1704,11 +1731,19 @@ $(document).ready(function() {
 	          	fiberCableArray[allCables[v]].setMap(null);
 			}
 		 }
-		 
-		 
+
+		 if(relatedPathArray.length>0) {
+			 for(var b=0;b<allRelatedPathCables.length;b++){
+				 relatedPathArray[allRelatedPathCables[b]].setMap(null);
+			}
+		 }
+	
 		 fiberCableArray=[];
+		 relatedPathArray=[];
 		 cableID="";	  
 		 allCables=[];		
+		 allRelatedPathCables=[];
+		 document.getElementById("relatedPathCount").textContent = "";		
 		 
 		 mapFlag="0";	
 		  
@@ -2026,6 +2061,26 @@ $(document).ready(function() {
 
 				map.fitBounds(window["bounds_"+cableID]);
 				createBreakId(pointLong,pointLat);
+
+
+
+				for(var c =0;c<data.relatedPathCables.length;c++) {
+					var pathID = data.relatedPathCables[c][0];
+					if(allRelatedPathCables.includes(pathID) ==false){
+						allRelatedPathCables.push(pathID);
+					}
+					window["mapPoints_"+pathID]=[];
+					window["mapPoints_"+pathID].push(new google.maps.LatLng(data.relatedPathCables[c][2],data.relatedPathCables[c][1]));	
+
+					for(var y=0;y<data.fiberAuxDataRelatedPath.length;y++) {
+						if(data.fiberAuxDataRelatedPath[y][0] == pathID ) {
+							window["mapPoints_"+pathID].push(new google.maps.LatLng(data.fiberAuxDataRelatedPath[y][2],data.fiberAuxDataRelatedPath[y][1]));	
+						}
+
+					}
+					window["mapPoints_"+pathID].push(new google.maps.LatLng(data.relatedPathCables[c][4],data.relatedPathCables[c][3]));	
+	          		buildPath(pathID,relatedPathArray,data.relatedPathCables[c][11],window["mapPoints_"+pathID],data.relatedPathCables[c][12],0.7,4.5,'blue',13);
+				}
 					
 
 				}
@@ -2192,6 +2247,36 @@ function showHideCable() {
 			
 		});	
 }
+
+function showCableRelatedPath(){
+
+	if(showRelPathFlag=="notOpened"){
+		showRelPathFlag="Opened";
+		document.getElementById("relatedPathCount").textContent = "("+allRelatedPathCables.length+")";
+	}
+
+	if(relatedPathArray.length>0) {
+		$('.showHideRelatedCableCheckbox').bind("change",function() {					
+			if ($(this).is(':checked')){
+					 for(var v=0;v<allRelatedPathCables.length;v++){
+						 relatedPathArray[allRelatedPathCables[v]].setMap(map);
+					}			
+			}
+			else {
+					 for(var v=0;v<allRelatedPathCables.length;v++){
+						 relatedPathArray[allRelatedPathCables[v]].setMap(null);
+					}
+			}
+			
+		});	
+	}
+	else {
+		alert("No Related Path to show or hide!")
+		
+	}
+
+}
+
 
 function showHideSrcDest(){
 

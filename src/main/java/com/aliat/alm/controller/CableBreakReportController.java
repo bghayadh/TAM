@@ -142,9 +142,9 @@ public class CableBreakReportController {
 		double breakPointLat = Double.parseDouble(pointLat);
 
 		List<CableBreakReport> listAffectedClientSite = new ArrayList<CableBreakReport>();
-		//List<Object[]> fiberAuxDataRelatedPath = new ArrayList<Object[]>();
-		//List<Object[]> relatedPathCablesID = new ArrayList<Object[]>();
-		//List<Object[]> relatedPathCablesList = new ArrayList<Object[]>();
+		List<Object[]> fiberAuxDataRelatedPath = new ArrayList<Object[]>();
+		List<Object[]> relatedPathCablesID = new ArrayList<Object[]>();
+		List<Object[]> relatedPathCablesList = new ArrayList<Object[]>();
 		
 		 List<String> srcDBs = new ArrayList<>();
 		 List<String> dstDBs = new ArrayList<>();
@@ -533,9 +533,80 @@ public class CableBreakReportController {
 					    query.setParameter("Param7", affectedElement);
 					    List<Object[]> affectedElementList =query.getResultList();
 						rtn.put("ElementList", affectedElementList);
+						
+						// we aim to add IDs of handhole and manhole to the affectedElement list.it will be used to filter affected related cable 
+						for (Object[]  row : affectedElementList) {
+					        String tempType = (String) row[4]; 
+					        if(tempType.equalsIgnoreCase("Junction")) {
+					        	String physicalLayerId = (String) row[5]; 
+					        	if (physicalLayerId !=null && physicalLayerId!="null") {
+					        		affectedElement.add(physicalLayerId);	
+					        	}
+					        	
+					        }
+					    }
+						
+						
+						///get related path(not all related) for the cable where there is affected client or site only
+						relatedPathCablesID = session.createNativeQuery("select distinct a.FIBER_ID_SIDE_A ,a.FIBER_NAME_SIDE_A " + 
+								"from JUNCTION_MAPPING a left join FIBER_CABLES b on a.FIBER_ID_SIDE_A=b.FIBER_CABLE_ID " + 
+								"where FIBER_ID_SIDE_B='"+fiberCableID+"' and (b.FIBER_NETWORK_LEVEL='access' OR b.FIBER_NETWORK_LEVEL='metro' or b.FIBER_NETWORK_LEVEL='backbone')" + 
+								"union " + 
+								"select distinct a.FIBER_ID_SIDE_B ,a.FIBER_NAME_SIDE_B " + 
+								"from JUNCTION_MAPPING a left join FIBER_CABLES b on a.FIBER_ID_SIDE_B=b.FIBER_CABLE_ID " + 
+								"where a.FIBER_ID_SIDE_A='"+fiberCableID+"' and (b.FIBER_NETWORK_LEVEL='access' OR b.FIBER_NETWORK_LEVEL='metro' or b.FIBER_NETWORK_LEVEL='backbone')").getResultList();
+						
+					
+
+						
+						for(int x=0;x<relatedPathCablesID.size();x++) {
+							Object[] row = relatedPathCablesID.get(x);
+						    String fiberId = (String) row[0]; 
+						    		
+						    	//get related cable aux pts
+					    		String relatedCableAuxilairyPts ="SELECT A.FIBER_CABLE_ID,B.LONGITUDE,B.LATITUDE,B.AUXILIARY_POINT_ID,B.AUXILIARY_POINT_NAME,B.SEQ_SORTING,B.AUXILIARY_ID FROM FIBER_CABLES A,FIBER_AUXILIARY_POINTS B WHERE A.FIBER_CABLE_ID=B.FIBER_CABLE_ID AND B.FIBER_CABLE_ID ='"
+										+ fiberId + "' AND (A.SOURCE_ID IN (:Param8) OR A.SOURCE_ID IN (:Param9) OR A.SOURCE_ID IN (:Param10) OR A.DESTINATION_ID IN (:Param8) OR A.DESTINATION_ID IN (:Param9) OR A.DESTINATION_ID IN (:Param10)) ORDER BY B.SEQ_SORTING ASC";	
+					    		query = session.createNativeQuery(relatedCableAuxilairyPts);
+							    query.setParameter("Param8", affectedClients);
+					    		query.setParameter("Param9", affectedSites);
+					    		query.setParameter("Param10", affectedElement);
+							    List<Object[]> tempresult1 =query.getResultList();
+								   
+							    fiberAuxDataRelatedPath.addAll(tempresult1);
+							    
+							    //get related cable 
+							    String relatedCableList = "SELECT A.FIBER_CABLE_ID,A.SOURCE_LNG,A.SOURCE_LAT,A.DESTINATION_LNG,A.DESTINATION_LAT,A.SOURCE_WARE_ID,A.SOURCE_ID,A.SOURCE_NAME,A.DESTINATION_WARE_ID,A.DESTINATION_ID,A.DESTINATION_NAME,A.FIBER_CABLE_NAME,(select B.FIBER_COLOR_OWNER from FIBER_OWNER_COLOR B WHERE B.FIBER_OWNER=A.FIBER_OWNER) AS FIBER_CABLE_COLOR,A.NUMBER_OF_STRANDS,A.NUMBER_OF_TUBES FROM FIBER_CABLES A WHERE A.FIBER_CABLE_ID ='"+fiberId+ "' "
+							    		+ " AND (A.SOURCE_ID IN (:Param11) OR A.SOURCE_ID IN (:Param12) OR A.SOURCE_ID IN (:Param13) OR A.DESTINATION_ID IN (:Param11) OR A.DESTINATION_ID IN (:Param12) OR A.DESTINATION_ID IN (:Param13))"; 
+							   
+							    query = session.createNativeQuery(relatedCableList);
+								    query.setParameter("Param11", affectedClients);
+								    query.setParameter("Param12", affectedSites);
+								    query.setParameter("Param13", affectedElement);
+								    List<Object[]> tempresult2 =query.getResultList();
+							    
+							    relatedPathCablesList.addAll(tempresult2);					
+						    
+						}
+						
+						
+						rtn.put("fiberAuxDataRelatedPath",fiberAuxDataRelatedPath);
+						rtn.put("relatedPathCables", relatedPathCablesList);
 					    
-					    
-					    
+					    /*
+						for (int i=0;i<affectedClients.size();i++) {
+					    	
+					    	System.out.println("affectedClients "+ affectedClients.get(i)); 					    		
+			    		}
+						
+						for (int i=0;i<affectedSites.size();i++) {
+					    	
+					    	System.out.println("affectedSites "+ affectedSites.get(i)); 					    		
+			    		}
+						
+						for (int i=0;i<affectedElement.size();i++) {
+							
+							System.out.println("affectedElement "+ affectedElement.get(i)); 					    		
+						}
 					    /*for testing purpose -to be deleted-
 					     * 
 					     
