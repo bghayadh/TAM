@@ -5114,9 +5114,89 @@ singleNodeActive = new ContextMenu({
 					 
 					 {'icon': 'arrow-right', 'name': 'Move To Current Physical Layer', action: () => {
 						 selectedProjectIdContext = selectedProjectIdContext.replace("Project_span_", "");
-						// console.log("selectedProjectIdContext "+selectedProjectIdContext);
 						 
-						 
+						var checkedIds = [];
+
+$("#Manhole_f_" + selectedProjectIdContext + " .MANHOLE").each(function() {
+    var id = $(this).attr('id');
+    if ($("#" + id + " input[type='checkbox']").prop('checked')) {
+        checkedIds.push(id);  // Push id into checkedIds array if checkbox is checked
+    }
+});
+
+
+$( " .HANDHOLE").each(function() {
+    var id = $(this).attr('id');
+    if ($("#" + id + " input[type='checkbox']").prop('checked')) {
+        checkedIds.push(id);  // Push id into checkedIds array if checkbox is checked
+    }
+});
+
+$("#Junction_f_" + selectedProjectIdContext + ".JUNCTION").each(function() {
+    var id = $(this).attr('id');
+    if ($("#" + id + " input[type='checkbox']").prop('checked')) {
+        checkedIds.push(id);  // Push id into checkedIds array if checkbox is checked
+    }
+});
+
+$("#DistributionBoard_f" + selectedProjectIdContext + ".DistributionBoard").each(function() {
+    var id = $(this).attr('id');
+    if ($("#" + id + " input[type='checkbox']").prop('checked')) {
+        checkedIds.push(id);  // Push id into checkedIds array if checkbox is checked
+    }
+});
+$("#FiberPath_f_" + selectedProjectIdContext + " .FIBER").each(function() {
+    var id = $(this).attr('id');
+    if ($("#" + id + " input[type='checkbox']").prop('checked')) {
+        checkedIds.push(id);  // Push id into checkedIds array if checkbox is checked
+    }
+});
+$("#FiberPath_f_" + selectedProjectIdContext + " .TUBE").each(function() {
+    var id = $(this).attr('id');
+    if ($("#" + id + " input[type='checkbox']").prop('checked')) {
+        checkedIds.push(id);  // Push id into checkedIds array if checkbox is checked
+    }
+});
+$("#FiberPath_f_" + selectedProjectIdContext +" .STRAND").each(function() {
+    var id = $(this).attr('id');
+    if ($("#" + id + " input[type='checkbox']").prop('checked')) {
+        checkedIds.push(id);  // Push id into checkedIds array if checkbox is checked
+    }
+});
+$("#Trench_f_" + selectedProjectIdContext +" .Trench").each(function() {
+    var id = $(this).attr('id');
+    if ($("#" + id + " input[type='checkbox']").prop('checked')) {
+        checkedIds.push(id);  // Push id into checkedIds array if checkbox is checked
+    }
+});
+
+$("#Trench_f_" + selectedProjectIdContext +".Duct").each(function() {
+    var id = $(this).attr('id');
+    if ($("#" + id + " input[type='checkbox']").prop('checked')) {
+        checkedIds.push(id);  // Push id into checkedIds array if checkbox is checked
+    }
+});
+$("#Junction_f_" + selectedProjectIdContext +".JUNCTION").each(function() {
+    var id = $(this).attr('id');
+    if ($("#" + id + " input[type='checkbox']").prop('checked')) {
+        checkedIds.push(id);  // Push id into checkedIds array if checkbox is checked
+    }
+});
+$("#Manhole_f_" + selectedProjectIdContext + " .JUNCTION_M").each(function() {
+    var id = $(this).attr('id');
+    if ($("#" + id + " input[type='checkbox']").prop('checked')) {
+        checkedIds.push(id);  // Push id into checkedIds array if checkbox is checked
+    }
+});
+$("#Handhole_f_" + selectedProjectIdContext + " .JUNCTION_H").each(function() {
+    var id = $(this).attr('id');
+    if ($("#" + id + " input[type='checkbox']").prop('checked')) {
+        checkedIds.push(id);  // Push id into checkedIds array if checkbox is checked
+    }
+});
+//used to refresh the google map 
+	var currentCenter = map.getCenter();
+        var currentZoom = map.getZoom();
 						 
 						 
 						 $.ajax({
@@ -5141,7 +5221,6 @@ singleNodeActive = new ContextMenu({
 				            	  
 				            	  var physicalLayerList =  JSON.parse(data.physicalLayerList); // No need to parse again
 				            	  var physicalLayerData =  JSON.parse(data.physicalLayerData);
-				                 // console.log("physicalLayerListaaa "+physicalLayerList)
 				                  
 				                  
 				                  ListManhole = physicalLayerList["Manhole"]
@@ -5169,14 +5248,11 @@ singleNodeActive = new ContextMenu({
 				                  
 					                var liProjectChild = $("#" + selectedProjectIdContext); 
 	
-									// Find the parent ul element
-									var ulProjectParent = liProjectChild.closest("ul");
-									// Detach the UL element
+										var ulProjectParent = liProjectChild.closest("ul");
 									ulProjectParent.detach();
 									
 									
 									$('#ConfirmModal').find('input:text').val('');
-									//$("#confirmHeader").text("Confirm: ");
 									$("#confirmbody").text("The Following Element Has Been Moved To The Current Physical Layer: ");
 									
 									$("#confirm_table").empty();
@@ -5193,9 +5269,20 @@ singleNodeActive = new ContextMenu({
 												$("#confirm_table").append(tr);
 															
 									$("#ConfirmModal").modal('show');
-				                 
-				                  
+				                
+				                
+				 //used to refresh the google map               
+                map.setCenter(currentCenter);
+                map.setZoom(currentZoom);
+
+
+
+				                  for (var i = 0; i < checkedIds.length; i++) {
+    $("#" + checkedIds[i] + " input[type='checkbox']").prop('checked', true);
+}
+
 				              },
+				              
 				              
 				              error: function (result) {
 				                  alert("Error");
@@ -10124,7 +10211,8 @@ singleTube = new ContextMenu({
 					   "ProjectId"   :ProjectId,
 					   "ProjectName" :ProjectName,
 					   "projectType" :projectType,
-					   "actionProjectContext":actionProjectContext
+					   "actionProjectContext":actionProjectContext,
+					   "updateModfUser": updateModfUser, 
 				   },
 				   dataType: "json",
 				   success: function (data) {
@@ -11754,7 +11842,8 @@ $("#saveSurvey").on('click',function(){
 				"dictParameterTubeSurv":fiberTubesSurveyArray,
 				"dictParameterStrandSurv":fiberStrandsSurveyArray,
 				"surveyID":surveyID,
-				"serviceAppNo":serviceAppNo
+				"serviceAppNo":serviceAppNo,
+				"updateModfUser" : updateModfUser,
 
 			},
 			beforeSend: function() {

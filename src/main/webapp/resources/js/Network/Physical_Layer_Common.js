@@ -936,10 +936,21 @@ $("#setCoordinateTubeAux").on('click',function(){
 					$("#"+markerType+"_f_"+nodeFileId+" > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
 					$("#"+markerType+"_f_"+nodeFileId+"").find(' > ul > li > .Parentfolder >svg ').removeClass('fa fa-folder').addClass('fa-folder-open');
 				
-					offset=$("#"+IdSelected).offset().top;
+					/*offset=$("#"+IdSelected).offset().top;
 					projectOffset=$("#initial_ul_"+nodeFileId).offset().top;
 					offsetTotal=(offset-projectOffset);
-					$("#network_tree").animate({ scrollTop: offsetTotal}, "slow");
+					$("#network_tree").animate({ scrollTop: offsetTotal}, "slow");*/
+					
+					var targetOffsetTop = $("#" + IdSelected).offset().top;
+				    var treeOffsetTop = $("#network_tree").offset().top;
+				    var currentScrollTop = $("#network_tree").scrollTop();
+				    
+				    var offsetTotal = targetOffsetTop - treeOffsetTop + currentScrollTop;
+				    
+					// scroll to the created handhole/manhole/jct
+				    $("#network_tree").animate({ scrollTop: offsetTotal }, "slow");
+
+
 					if(draw==true){
 						createPathh(e);
 					}
@@ -983,10 +994,20 @@ $("#setCoordinateTubeAux").on('click',function(){
 					$("#"+nodeFileId+" > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');	
 					$("#"+markerType+"_f_"+nodeFileId+" > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
 
-					offset=$("#"+IdSelected).offset().top;
+					/*offset=$("#"+IdSelected).offset().top;
 					projectOffset=$("#initial_ul_"+nodeFileId).offset().top;
 					offsetTotal=(offset-projectOffset);
-					$("#network_tree").animate({ scrollTop: offsetTotal}, "slow");
+					$("#network_tree").animate({ scrollTop: offsetTotal}, "slow");*/
+					
+					var targetOffsetTop = $("#" + IdSelected).offset().top;
+				    var treeOffsetTop = $("#network_tree").offset().top;
+				    var currentScrollTop = $("#network_tree").scrollTop();
+				    
+				    var offsetTotal = targetOffsetTop - treeOffsetTop + currentScrollTop;
+				    
+					// scroll to the created handhole/manhole/jct
+				    $("#network_tree").animate({ scrollTop: offsetTotal }, "slow");
+
 					if(draw==true){
 						createPathh(e);
 					}
