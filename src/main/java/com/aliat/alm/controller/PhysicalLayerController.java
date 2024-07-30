@@ -14721,20 +14721,37 @@ public class PhysicalLayerController {
 		    String status = "";
 		    String attachmentPath = "";
 		    String attachmentName = "";
+		    String username="",pass="",uploadPath="",hostname="";
 		    
 		    try {
+		    	query = session.createNativeQuery(
+						"select USERNAME,PASSWORD,PATH,IP_ADDRESS FROM SYSTEM_SETTINGS");
+		    	List<Object[]> results = query.getResultList();
+				if(results.size()>0) {
+					for (Object[] row : results) {
+						username=(String) row[0];
+						pass=(String) row[1];
+						uploadPath=(String) row[2];
+						hostname=(String) row[3];
+					}
+				}
+				System.out.println("username is "+username+" pass is "+pass+" path is "+uploadPath+" hostname "+hostname);
+		    	
 		        JSch jsch = new JSch();
-		        com.jcraft.jsch.Session session = (com.jcraft.jsch.Session) jsch.getSession("USER", "localhost", 22);
+		        com.jcraft.jsch.Session session = (com.jcraft.jsch.Session) jsch.getSession(username,hostname, 22);
 
-		        session.setPassword("zeinab123");
+		        session.setPassword(pass);
 		        session.setConfig("StrictHostKeyChecking", "no");
 		        session.connect();
 
 		        ChannelSftp channelSftp = (ChannelSftp) session.openChannel("sftp");
 		        channelSftp.connect();
+		        
+				System.out.println("Start uploading ...");
+
 		      
 		        try (InputStream inputStream = file.getInputStream()) {		        	
-		        	 String remoteDirectory = "/C:/Users/User/Desktop/zeinab_test/";
+		        	 String remoteDirectory = uploadPath;
 		        	
 		            channelSftp.cd(remoteDirectory);
 		            channelSftp.put(inputStream, file.getOriginalFilename());
@@ -14796,17 +14813,24 @@ public class PhysicalLayerController {
 		public Map<String, String> DeleteAttachmentFile(String imagePath) {
 		    Map<String, String> result = new HashMap<>();
 		  
-		    String host = "localhost";
-		    String username = "USER";
-		    String password = "zeinab123";
-		    int port = 22; // Default SFTP port
+		    String username="",pass="",hostname="";
 		    String  status="";
 		    
 		    try {
-		             
+		    	query = session.createNativeQuery(
+						"select USERNAME,PASSWORD,IP_ADDRESS FROM SYSTEM_SETTINGS");
+		    	List<Object[]> results = query.getResultList();
+				if(results.size()>0) {
+					for (Object[] row : results) {
+						username=(String) row[0];
+						pass=(String) row[1];
+						hostname=(String) row[2];
+					}
+				}
+				
 		              JSch jsch = new JSch();
-		              com.jcraft.jsch.Session session = jsch.getSession(username, host, port);
-		              session.setPassword(password);
+		              com.jcraft.jsch.Session session = jsch.getSession(username, hostname, 22);
+		              session.setPassword(pass);
 
 		              Properties config = new Properties();
 		              config.put("StrictHostKeyChecking", "no");
