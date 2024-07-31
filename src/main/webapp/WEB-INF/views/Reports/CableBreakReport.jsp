@@ -777,7 +777,7 @@ function initMap() {
 	 	minimumClusterSize: 2,
 	 	styles: [
 	 	         {
-	 	        	 url:'${pageContext.request.contextPath}/resources/clusterIcons/yellowCluster.png',
+	 	        	 url:'${pageContext.request.contextPath}/resources/clusterIcons/customerCluster.png',
 	 		         height: 60,
 	 		         width:60,
 	 		         anchorText:[-3,-3]
@@ -1348,6 +1348,11 @@ $(document).ready(function() {
 			document.getElementById("dbCount").textContent = "("+distinctDB.length+")";  
 
 			map.fitBounds(window["bounds_"+cableID]);
+
+			var currentCenter = map.getCenter();
+			var currentZoom = map.getZoom();
+			map.setCenter(currentCenter);
+			map.setZoom(currentZoom);
 			
 			//Scroll to the map div
 			 document.getElementById("headingTwo").scrollIntoView({ behavior: "smooth" });

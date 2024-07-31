@@ -466,11 +466,15 @@ public class CableBreakReportController {
 						        String tempAfftectedElement =  (String) row[1];
 						       
 						        if(tempAfftectedLocation.startsWith("CUST_")) {
-						        	affectedClients.add(tempAfftectedLocation);
+						        	if(!affectedClients.contains(tempAfftectedLocation)) {
+						        		affectedClients.add(tempAfftectedLocation);
+						        	}
 							    	
 							    }
 						        else {
-						        	affectedSites.add(tempAfftectedLocation);
+						        	if(!affectedSites.contains(tempAfftectedLocation)) {
+						        		affectedSites.add(tempAfftectedLocation);
+						        	}
 						        }
 						        if(!affectedElement.contains(tempAfftectedElement)) {
 						        	affectedElement.add(tempAfftectedElement);
