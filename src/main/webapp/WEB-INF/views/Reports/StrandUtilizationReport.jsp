@@ -782,6 +782,10 @@ var MapMenu;
 var filteredGridData=[]; // used in draw on map 
 var cableID = "";
 var srcDstCableList=[];
+var jctElementsIDArray=[];
+var jctElementsFlag="notOpened";
+var elementsArray=[];
+
 
 function initMap() {	
 	 map = new google.maps.Map(document.getElementById("mapContainer"), {
@@ -1055,91 +1059,53 @@ $(document).ready(function() {
 		   mapFlag="1";
 
 		   showPointsArray=[];
-		
+		   //jctElementsIDArray=[];
+			
 	   	 	var dropdownSelectedValue = document.getElementById('mapDropdown').value;
-	   	 			    
-			if(dropdownSelectedValue=="cableBased") {
-				showElementLocationPoints(filteredGridData,"mapPointsNames_","mapPoints_");	
-			}
-			else if(dropdownSelectedValue=="gridBased") {
-				processCableSrcDstArray(cableID,"mapPointsNamesBasedOnGrid_",srcDstCableList,"mapPointsBasedOnGrid_");
-				window["mapPointsBasedOnGrid_"+cableID].push(new google.maps.LatLng(srcDstCableList[0][3],srcDstCableList[0][2]));
-				showElementLocationPoints(filteredGridData,"mapPointsNamesBasedOnGrid_","mapPointsBasedOnGrid_");
-			}
-	
-	        if(distinctCustomers.length >0) {
-				$('.showHideAllCustCheckbox').prop('checked', true);
-				$(".showHideAllCustCheckbox").attr('disabled', false);
-	        }   
-	        else {
-	        	$('.showHideAllCustCheckbox').prop('checked', false);
-				$(".showHideAllCustCheckbox").attr('disabled', true);
-	         } 
-	        if(distinctSites.length >0) {
-				$('.showHideAllSitesCheckbox').prop('checked', true);
-				$(".showHideAllSitesCheckbox").attr('disabled', false);
-	        }   
-	        else {
-	        	$('.showHideAllSitesCheckbox').prop('checked', false);
-				$(".showHideAllSitesCheckbox").attr('disabled', true);
-	         } 
-	        if(distinctManholes.length >0) {
-				$('.showHideAllManholesCheckbox').prop('checked', true);
-				$(".showHideAllManholesCheckbox").attr('disabled', false);
-	        }   
-	        else {
-	        	$('.showHideAllManholesCheckbox').prop('checked', false);
-				$(".showHideAllManholesCheckbox").attr('disabled', true);
-	         } 
-	        if(distinctManholesWithJct.length >0) {
-				$('.showHideAllManholesWithJctCheckbox').prop('checked', true);
-				$(".showHideAllManholesWithJctCheckbox").attr('disabled', false);
-	        }   
-	        else {
-	        	$('.showHideAllManholesWithJctCheckbox').prop('checked', false);
-				$(".showHideAllManholesWithJctCheckbox").attr('disabled', true);
-	         } 
-	        if(distinctHandholes.length >0) {
-				$('.showHideAllHandholesCheckbox').prop('checked', true);
-				$(".showHideAllHandholesCheckbox").attr('disabled', false);
-	        }   
-	        else {
-	        	$('.showHideAllHandholesCheckbox').prop('checked', false);
-				$(".showHideAllHandholesCheckbox").attr('disabled', true);
-	         }
-	        if(distinctHandholesWithJct.length >0) {
-				$('.showHideAllHandholesWithJctCheckbox').prop('checked', true);
-				$(".showHideAllHandholesWithJctCheckbox").attr('disabled', false);
-	        }   
-	        else {
-	        	$('.showHideAllHandholesWithJctCheckbox').prop('checked', false);
-				$(".showHideAllHandholesWithJctCheckbox").attr('disabled', true);
-	         }
-	        if(distinctDB.length >0) {
-				$('.showHideAllDbCheckbox').prop('checked', true);
-				$(".showHideAllDbCheckbox").attr('disabled', false);
-	        }   
-	        else {
-	        	$('.showHideAllDbCheckbox').prop('checked', false);
-				$(".showHideAllDbCheckbox").attr('disabled', true);
-	         } 
-	        if(distinctJct.length >0) {
-				$('.showHideAllJctCheckbox').prop('checked', true);
-				$(".showHideAllJctCheckbox").attr('disabled', false);
-	        }   
-	        else {
-	        	$('.showHideAllJctCheckbox').prop('checked', false);
-				$(".showHideAllJctCheckbox").attr('disabled', true);
-	         } 
-	        document.getElementById("sitesCount").textContent = "("+distinctSites.length+")";  
-	    	document.getElementById("manholesCount").textContent = "("+distinctManholes.length+")";
-	    	document.getElementById("manholesCountWithJct").textContent = "("+distinctManholesWithJct.length+")";
-			document.getElementById("handholesCount").textContent = "("+distinctHandholes.length+")";
-			document.getElementById("handholesCountWithJct").textContent = "("+distinctHandholesWithJct.length+")";
-			document.getElementById("custCount").textContent = "("+distinctCustomers.length+")";
-			document.getElementById("jctCount").textContent = "("+distinctJct.length+")";
-			document.getElementById("dbCount").textContent = "("+distinctDB.length+")";  
+			 cableID = $("#fiberCable").val().split(":")[0];
 
+	   	 	if(jctElementsFlag=="notOpened") {// to get the junctionn details in case of element type in grid is junction
+	   	 		jctElementsFlag="Opened";
+	 		  	$.ajax({
+					type: "GET",
+	                contentType: "application/json; charset=utf-8",
+	                url: '${pageContext.request.contextPath}/getJctElementsDetails',
+	                data: {
+							"jctElementsIDArray" :jctElementsIDArray,
+							"fiberID":cableID
+					 },
+					 dataType: "json",
+			         success: function (data) {
+			        	 elementsArray=data.jctList;	
+			        	 if(dropdownSelectedValue=="cableBased") {
+			 				showElementLocationPoints(data.jctList,filteredGridData,"mapPointsNames_","mapPoints_");	
+			 			}
+			 			else if(dropdownSelectedValue=="gridBased") {
+			 				processCableSrcDstArray(cableID,"mapPointsNamesBasedOnGrid_",srcDstCableList,"mapPointsBasedOnGrid_");
+			 				window["mapPointsBasedOnGrid_"+cableID].push(new google.maps.LatLng(srcDstCableList[0][3],srcDstCableList[0][2]));
+			 				showElementLocationPoints(data.jctList,filteredGridData,"mapPointsNamesBasedOnGrid_","mapPointsBasedOnGrid_");
+			 			}
+			 	
+			          },
+			          error: function(result) {
+			              alert("Error");
+			           }
+			       });
+
+		   	}
+	   	 	else {// the elements that are junctions already have all details (ajax call before) 		    
+				if(dropdownSelectedValue=="cableBased") {
+					showElementLocationPoints(elementsArray,filteredGridData,"mapPointsNames_","mapPoints_");	
+				}
+				else if(dropdownSelectedValue=="gridBased") {
+					processCableSrcDstArray(cableID,"mapPointsNamesBasedOnGrid_",srcDstCableList,"mapPointsBasedOnGrid_");
+					window["mapPointsBasedOnGrid_"+cableID].push(new google.maps.LatLng(srcDstCableList[0][3],srcDstCableList[0][2]));
+					showElementLocationPoints(elementsArray,filteredGridData,"mapPointsNamesBasedOnGrid_","mapPointsBasedOnGrid_");
+				}
+	   	 	}
+
+	   	 	
+	       
 			//Scroll to the map div
 			 document.getElementById("headingTwo").scrollIntoView({ behavior: "smooth" });
 			 
@@ -1210,6 +1176,7 @@ $(document).ready(function() {
 		$('.showHideRelatedCableCheckbox').prop('checked', false);
 		$(".showHideRelatedCableCheckbox").attr('disabled', false);
 		showRelPathFlag="notOpened";
+		jctElementsFlag="notOpened"
 
 		infoWindow.close();
 		cableInfoWindow.close();
@@ -1425,6 +1392,8 @@ $(document).ready(function() {
   			       		   var data = [];//for export
   			       		   var jctUsedStrands=0,dbUsedStrands=0;
   			       	       exportArrayGrid = [];
+  			       	  	   jctElementsIDArray=[];
+  			       	  	   jctElementsFlag="notOpened";
   			       		   data.push('\r');
   			       		   data.push(["Strand #","Tube #","Element Type","Element ID","F/B or A/B","Port Index","Port Row","Port Column","Status","Equipment Type","Equipment ID","Equipment Name","Location Type" ,"Location ID", "Location Name","Location Longitude", "Location Latitude"]);  	  			       		
 
@@ -1437,6 +1406,12 @@ $(document).ready(function() {
 	  			              if(columnVal !="showLocation" && columnVal !="showElement") { 
 	  	  			            	data.push(dataArray[i][ArrayKeys[j]]);
 	  			            	}
+	  			            if(columnVal =="elementID") { 
+		  			            if(dataArray[i][ArrayKeys[j]].includes("JCT") ==true && jctElementsIDArray.includes(dataArray[i][ArrayKeys[j]])==false) {
+		  			            	jctElementsIDArray.push(dataArray[i][ArrayKeys[j]]);
+			  			         }
+  			            	}
+	  			            
 							}
   		          		   }
 
@@ -1807,7 +1782,6 @@ function showElement(concatIDLongLat,rowIndex){
 	var latitude = concatIDLongLat.split(":")[2].trim();
 	var Name = concatIDLongLat.split(":")[3].trim();
 
-
 	 var latLng = new google.maps.LatLng(latitude,longitude);
 	 map.setZoom(15);
 	 map.panTo(latLng);
@@ -1827,14 +1801,131 @@ function showElement(concatIDLongLat,rowIndex){
 				document.getElementById("dbCount").textContent = "("+distinctDB.length+")";    				
 			}
 			else if(ID.includes("JCT_")) {
-				$('.showHideAllJctCheckbox').prop('checked', true);
-				$(".showHideAllJctCheckbox").attr('disabled', false);
-		        document.getElementById("jctCount").textContent = "";   
-		        if(!markersJct[ID]){
+				
+		        document.getElementById("jctCount").textContent = "";  
+		        document.getElementById("manholesCountWithJct").textContent = "";  
+		        
+		        /*if(!markersJct[ID]){
 					distinctJct.push(ID); //  this array is used when checking all jct from legend
 					createMarker(ID,longitude,latitude,Name,'junctionOrange.png',markersJct,markerClusterJct)
-				}  
-				document.getElementById("jctCount").textContent = "("+distinctJct.length+")";   
+				}  */
+				
+				$.ajax({
+					type: "GET",
+	                contentType: "application/json; charset=utf-8",
+	                url: '${pageContext.request.contextPath}/getSingleJctElementsDetails',
+	                data: {
+							"ID" :ID
+					 },
+					 dataType: "json",
+			         success: function (data) {
+			        	 singleJctArray=data.singleJctList;	
+
+			          if(data.singleJctList.length >0) {
+				        for(z=0;z<singleJctArray.length;z++) {
+			 			if(singleJctArray[z][2] != null && singleJctArray[z][2] != "null" ) {
+							
+			 				 if(singleJctArray[z][2].startsWith("MH_")==true) {
+			 						var ID = singleJctArray[z][2];
+			 						var manholeName = singleJctArray[z][3];
+
+			 						if(manholeName.endsWith("_J")) {
+
+			 							if(distinctManholesWithJct.includes(ID)==false) {
+			 								distinctManholesWithJct.push(ID);
+			 								if(!markersManholesWithJct[ID]){
+			 									createMarker(ID,singleJctArray[z][4],singleJctArray[z][5],manholeName,"manholeJct.png",markersManholesWithJct,markerClusterManholesWithJct)
+			 								}
+			 								else {					
+			 									markersManholesWithJct[ID].setMap(map);
+			 									markerClusterManholesWithJct.addMarker(markersManholesWithJct[""+ID]);
+			 								}
+			 							}
+			 						}
+			 								
+			 					}
+			 				 else if(singleJctArray[z][2].startsWith("HH_")==true) {
+			 					 var ID = showPointsArray[x].split(":")[0];
+			 						var ID = singleJctArray[z][2];
+			 						var handholeName = singleJctArray[z][3];
+			 						
+			 						if(handholeName.endsWith("_J")) {
+
+			 							if(distinctHandholesWithJct.includes(ID)==false) {
+			 								distinctHandholesWithJct.push(ID);
+			 								if(!markersHandholesWithJct[ID]){
+			 									createMarker(ID,singleJctArray[z][4],singleJctArray[z][5],handholeName,"handholeYellowJct.png",markersHandholesWithJct,markerClusterHandholesWithJct)
+			 								}
+			 								else {					
+			 									markersHandholesWithJct[ID].setMap(map);
+			 									markerClusterHandholesWithJct.addMarker(markersHandholesWithJct[""+ID]);
+			 								}
+			 							}
+			 						}
+
+			 						
+			 				 }
+			 					
+
+			 			}
+			 			
+			 			else {//case of junction that does not belongs to mh or hh
+			 				
+			 				if(distinctJct.includes(singleJctArray[z][0])==false) {
+			 							ID = singleJctArray[z][0];
+			 							var longitude = singleJctArray[z][4];
+			 							var latitude = singleJctArray[z][5];
+			 							var Name = singleJctArray[z][1];
+			 							distinctJct.push(ID);
+			 							if(!markersJct[ID]){
+			 								createMarker(ID,longitude,latitude,Name,'junctionOrange.png',markersJct,markerClusterJct)
+			 							}
+			 							else {					
+			 								markersJct[ID].setMap(map);
+			 								markerClusterJct.addMarker(markersJct[""+ID]);
+			 							}
+			 				}
+			 			
+
+			 			}
+			        	 }
+			          }
+			          document.getElementById("jctCount").textContent = "("+distinctJct.length+")";   
+					  document.getElementById("manholesCountWithJct").textContent = "("+distinctManholesWithJct.length+")";
+					  if(distinctManholesWithJct.length >0) {
+							$('.showHideAllManholesWithJctCheckbox').prop('checked', true);
+							$(".showHideAllManholesWithJctCheckbox").attr('disabled', false);
+				     }   
+				     else {
+				     	$('.showHideAllManholesWithJctCheckbox').prop('checked', false);
+							$(".showHideAllManholesWithJctCheckbox").attr('disabled', true);
+				      } 
+				     if(distinctHandholesWithJct.length >0) {
+							$('.showHideAllHandholesWithJctCheckbox').prop('checked', true);
+							$(".showHideAllHandholesWithJctCheckbox").attr('disabled', false);
+				     }   
+				     else {
+				     	$('.showHideAllHandholesWithJctCheckbox').prop('checked', false);
+							$(".showHideAllHandholesWithJctCheckbox").attr('disabled', true);
+				      }
+				     if(distinctJct.length >0) {
+							$('.showHideAllJctCheckbox').prop('checked', true);
+							$(".showHideAllJctCheckbox").attr('disabled', false);
+				     }   
+				     else {
+				     	$('.showHideAllJctCheckbox').prop('checked', false);
+							$(".showHideAllJctCheckbox").attr('disabled', true);
+				      } 
+					
+
+
+			          },
+			          error: function(result) {
+			              alert("Error");
+			           }
+			       });
+				
+			 	
 			}
 			
 		}// end mapFlag condition
@@ -1853,6 +1944,18 @@ function showElement(concatIDLongLat,rowIndex){
 					if(markersJct[ID].getMap()==null){
 						markersJct[ID].setMap(map);			
 						markerClusterJct.addMarker(markersJct[ID]);
+					}
+				}
+				else if(markersManholesWithJct[ID]){
+					if(markersManholesWithJct[ID].getMap()==null){
+						markersManholesWithJct[ID].setMap(map);			
+						markerClusterManholesWithJct.addMarker(markersManholesWithJct[ID]);
+					}
+				}	
+				else if(markersHandholesWithJct[ID]){
+					if(markersHandholesWithJct[ID].getMap()==null){
+						markersHandholesWithJct[ID].setMap(map);			
+						markerClusterHandholesWithJct.addMarker(markersHandholesWithJct[ID]);
 					}
 				}				
 		   }
@@ -2105,8 +2208,83 @@ function processCableSrcDstArray(cableID,windowMapPointsNames,fiberList,windowMa
 		
 }
 
-function showElementLocationPoints(filteredGridArray,windowMapPointsNames,windowMapPoints) {
+function showElementLocationPoints(elementsDetailsArray,filteredGridArray,windowMapPointsNames,windowMapPoints) {
 
+
+	//To show the elements in grid that are junctions or belongs to mh/hh with jct in case of junction element type
+	if(elementsDetailsArray.length>0) {
+
+		for(var z=0;z<elementsDetailsArray.length;z++) {
+			
+			if(elementsDetailsArray[z][2] != null && elementsDetailsArray[z][2] != "null" ) {
+				
+			 if(elementsDetailsArray[z][2].startsWith("MH_")==true) {
+					var ID = elementsDetailsArray[z][2];
+					var manholeName = elementsDetailsArray[z][3];
+
+					if(manholeName.endsWith("_J")) {
+
+						if(distinctManholesWithJct.includes(ID)==false) {
+							distinctManholesWithJct.push(ID);
+							if(!markersManholesWithJct[ID]){
+								createMarker(ID,elementsDetailsArray[z][4],elementsDetailsArray[z][5],manholeName,"manholeJct.png",markersManholesWithJct,markerClusterManholesWithJct)
+							}
+							else {					
+								markersManholesWithJct[ID].setMap(map);
+								markerClusterManholesWithJct.addMarker(markersManholesWithJct[""+ID]);
+							}
+						}
+					}
+							
+				}
+			 else if(elementsDetailsArray[z][2].startsWith("HH_")==true) {
+				 var ID = showPointsArray[x].split(":")[0];
+					var ID = elementsDetailsArray[z][2];
+					var handholeName = elementsDetailsArray[z][3];
+					
+					if(handholeName.endsWith("_J")) {
+
+						if(distinctHandholesWithJct.includes(ID)==false) {
+							distinctHandholesWithJct.push(ID);
+							if(!markersHandholesWithJct[ID]){
+								createMarker(ID,elementsDetailsArray[z][4],elementsDetailsArray[z][5],handholeName,"handholeYellowJct.png",markersHandholesWithJct,markerClusterHandholesWithJct)
+							}
+							else {					
+								markersHandholesWithJct[ID].setMap(map);
+								markerClusterHandholesWithJct.addMarker(markersHandholesWithJct[""+ID]);
+							}
+						}
+					}
+
+					
+			 }
+				
+
+		}
+		
+		else {//case of junction that does not belongs to mh or hh
+			
+			if(distinctJct.includes(elementsDetailsArray[z][0])==false) {
+						ID = elementsDetailsArray[z][0];
+						var longitude = elementsDetailsArray[z][4];
+						var latitude = elementsDetailsArray[z][5];
+						var Name = elementsDetailsArray[z][1];
+						distinctJct.push(ID);
+						if(!markersJct[ID]){
+							createMarker(ID,longitude,latitude,Name,'junctionOrange.png',markersJct,markerClusterJct)
+						}
+						else {					
+							markersJct[ID].setMap(map);
+							markerClusterJct.addMarker(markersJct[""+ID]);
+						}
+			}
+		
+
+		}
+		}
+	}
+
+	//To show the aux points of the cable
 	if(window[""+windowMapPointsNames+cableID] != undefined) {
 		showPointsArray = window[""+windowMapPointsNames+cableID];
 		
@@ -2237,7 +2415,8 @@ function showElementLocationPoints(filteredGridArray,windowMapPointsNames,window
 	}
 
 
-	
+
+	//To show all location type in grid & the element in case of DB
 	for (var i = 0; i < filteredGridArray.length; i++) {
 
 		if(filteredGridArray[i]["locationType"] =="Customer"){
@@ -2343,7 +2522,7 @@ function showElementLocationPoints(filteredGridArray,windowMapPointsNames,window
 		}// end db case
 
 
-		//Now check the element type on each row
+		//Now check the element type on each row in case of DB (the case of jct element type is added at the beggining of the function)
 		if(filteredGridArray[i]["elementType"] =="DB"){
 			if(distinctDB.includes(filteredGridArray[i]["elementID"])==false) {
 				ID = filteredGridArray[i]["elementID"];
@@ -2360,24 +2539,82 @@ function showElementLocationPoints(filteredGridArray,windowMapPointsNames,window
 				}
 			}
 		}// end db case
-		else if(filteredGridArray[i]["elementType"] =="Junction"){
-				if(distinctJct.includes(filteredGridArray[i]["elementID"])==false) {
-					ID = filteredGridArray[i]["elementID"];
-					var longitude = filteredGridArray[i]["showElement"].split(":")[1].trim();
-					var latitude = filteredGridArray[i]["showElement"].split(":")[2].trim();
-					var Name = filteredGridArray[i]["showElement"].split(":")[3].trim();
-					distinctJct.push(ID);
-					if(!markersJct[ID]){
-						createMarker(ID,longitude,latitude,Name,'junctionOrange.png',markersJct,markerClusterJct)
-					}
-					else {					
-						markersJct[ID].setMap(map);
-						markerClusterJct.addMarker(markersJct[""+ID]);
-					}
-				}
-	}// end jct case
+
 		
 }
+	 if(distinctCustomers.length >0) {
+			$('.showHideAllCustCheckbox').prop('checked', true);
+			$(".showHideAllCustCheckbox").attr('disabled', false);
+     }   
+     else {
+     	$('.showHideAllCustCheckbox').prop('checked', false);
+			$(".showHideAllCustCheckbox").attr('disabled', true);
+      } 
+     if(distinctSites.length >0) {
+			$('.showHideAllSitesCheckbox').prop('checked', true);
+			$(".showHideAllSitesCheckbox").attr('disabled', false);
+     }   
+     else {
+     	$('.showHideAllSitesCheckbox').prop('checked', false);
+			$(".showHideAllSitesCheckbox").attr('disabled', true);
+      } 
+     if(distinctManholes.length >0) {
+			$('.showHideAllManholesCheckbox').prop('checked', true);
+			$(".showHideAllManholesCheckbox").attr('disabled', false);
+     }   
+     else {
+     	$('.showHideAllManholesCheckbox').prop('checked', false);
+			$(".showHideAllManholesCheckbox").attr('disabled', true);
+      } 
+     if(distinctManholesWithJct.length >0) {
+			$('.showHideAllManholesWithJctCheckbox').prop('checked', true);
+			$(".showHideAllManholesWithJctCheckbox").attr('disabled', false);
+     }   
+     else {
+     	$('.showHideAllManholesWithJctCheckbox').prop('checked', false);
+			$(".showHideAllManholesWithJctCheckbox").attr('disabled', true);
+      } 
+     if(distinctHandholes.length >0) {
+			$('.showHideAllHandholesCheckbox').prop('checked', true);
+			$(".showHideAllHandholesCheckbox").attr('disabled', false);
+     }   
+     else {
+     	$('.showHideAllHandholesCheckbox').prop('checked', false);
+			$(".showHideAllHandholesCheckbox").attr('disabled', true);
+      }
+     if(distinctHandholesWithJct.length >0) {
+			$('.showHideAllHandholesWithJctCheckbox').prop('checked', true);
+			$(".showHideAllHandholesWithJctCheckbox").attr('disabled', false);
+     }   
+     else {
+     	$('.showHideAllHandholesWithJctCheckbox').prop('checked', false);
+			$(".showHideAllHandholesWithJctCheckbox").attr('disabled', true);
+      }
+     if(distinctDB.length >0) {
+			$('.showHideAllDbCheckbox').prop('checked', true);
+			$(".showHideAllDbCheckbox").attr('disabled', false);
+     }   
+     else {
+     	$('.showHideAllDbCheckbox').prop('checked', false);
+			$(".showHideAllDbCheckbox").attr('disabled', true);
+      } 
+     if(distinctJct.length >0) {
+			$('.showHideAllJctCheckbox').prop('checked', true);
+			$(".showHideAllJctCheckbox").attr('disabled', false);
+     }   
+     else {
+     	$('.showHideAllJctCheckbox').prop('checked', false);
+			$(".showHideAllJctCheckbox").attr('disabled', true);
+      } 
+      
+     document.getElementById("sitesCount").textContent = "("+distinctSites.length+")";  
+ 	document.getElementById("manholesCount").textContent = "("+distinctManholes.length+")";
+ 	document.getElementById("manholesCountWithJct").textContent = "("+distinctManholesWithJct.length+")";
+	document.getElementById("handholesCount").textContent = "("+distinctHandholes.length+")";
+	document.getElementById("handholesCountWithJct").textContent = "("+distinctHandholesWithJct.length+")";
+	document.getElementById("custCount").textContent = "("+distinctCustomers.length+")";
+	document.getElementById("jctCount").textContent = "("+distinctJct.length+")";
+	document.getElementById("dbCount").textContent = "("+distinctDB.length+")";  
 
 }
 
