@@ -168,7 +168,7 @@
 			
 			<!-- <a style="position: absolute; margin-left: 400px; display: none; z-index: 1;" id='removeFilter' href = "${pageContext.request.contextPath}/NetworkPhysicalLayer"> 
 			<input type="image" src="${pageContext.request.contextPath}/resources/js/Network/RemoveFilter.png" style="position: absolute;" height="30" width="30" /></a>
-			 --><a style="position: absolute; margin-left: 400px; display: none; z-index: 1; cursor: pointer;" id='removeS' href = "${pageContext.request.contextPath}/NetworkPhysicalLayer"> 
+			 --><a style="position: absolute; margin-left: 400px; display: none; z-index: 1; cursor: pointer;" id='removeS' href = "${pageContext.request.contextPath}/NetworkPhysicalLayer?updateModfUser=${userFullName}"> 
 			<span class=''> <i class='fa fa-filter' style='color: #08526D;'></i>
 			<i class='fa fa-window-minimize' style='color: #08526D; width: 8px;'></i></span></a>
 			

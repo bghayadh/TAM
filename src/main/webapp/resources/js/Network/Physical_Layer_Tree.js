@@ -20014,7 +20014,8 @@ $("#submitFilter").click(function() {
 	 else{
 		 checkedOption = "PROJECT";
 	 }
-	 urlString += "&getRelatedPointsFilter="+$("#getRelatedPointsFilter").val()+"";	
+	 urlString += "&getRelatedPointsFilter="+$("#getRelatedPointsFilter").val()+"";
+	 urlString += "&updateModfUser="+updateModfUser;
 
 	 window.location.href = getContext()+"/NetworkPhysicalLayer?Checked="+checkedOption+urlString;
 });

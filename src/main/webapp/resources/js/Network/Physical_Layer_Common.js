@@ -5002,7 +5002,8 @@ $("#Multy_auxiliary > tbody").find('input[name="record"]').each(function(){
 			     urlString += "&lat="+lat+"";
 			     urlString += "&closestDisRange="+closestDisRange+"";
 			     urlString += "&nop="+$("#noP_Multy").val()+"";
-			     urlString += "&getRelatedPoints="+checkboxValue+"";	
+			     urlString += "&getRelatedPoints="+checkboxValue+"";
+				 urlString += "&updateModfUser="+updateModfUser;
 				 window.location.href = getContext()+"/NetworkPhysicalLayer?Checked="+checkedOption+urlString;  
 		 }
 		}); 
@@ -5474,6 +5475,7 @@ function viewNearestPointEvent(){
 				 urlString += "&CustomerID="+$("#customerDetails").val()+"";	
 			 	 urlString += "&serviceReq="+serviceReq+"";
 		 		 urlString += "&serviceRef="+serviceRef+"";
+		 		 urlString += "&updateModfUser="+updateModfUser;		 		 
 		
 			 	 window.location.href = getContext()+"/NetworkPhysicalLayer?Checked="+checkedOption+urlString;
 			    }	
@@ -5499,7 +5501,8 @@ function viewNearestPointEvent(){
 				 urlString += "&startLatPoint="+$("#startLatPoint").val()+"";
 				 urlString += "&endLongPoint="+$("#endLongPoint").val()+"";
 				 urlString += "&endLatPoint="+$("#endLatPoint").val()+"";
-				 urlString += "&getRelatedPoints="+$("#getRelatedPoints").val()+"";	
+				 urlString += "&getRelatedPoints="+$("#getRelatedPoints").val()+"";
+				 urlString += "&updateModfUser="+updateModfUser;	
 				 window.location.href = getContext()+"/NetworkPhysicalLayer?Checked="+checkedOption+urlString;
             }
 			else {
@@ -5779,7 +5782,8 @@ function searchConnectedButtonEvents(hash_Project,hash_manhole,hash_handhole,has
 		    urlString += "&connectedSearchLong="+lng+"";
 		    urlString += "&connectedSearchLat="+lat+"";
 		    urlString += "&connectedViewOnMap="+$("#viewOnMap").val()+"";
-			urlString += "&getRelatedPoints="+$("#getRelatedPointsCon").val()+"";	
+			urlString += "&getRelatedPoints="+$("#getRelatedPointsCon").val()+"";
+			urlString += "&updateModfUser="+updateModfUser;
 			window.location.href = getContext()+"/NetworkPhysicalLayer?Checked="+checkedOption+urlString;
 			});
 		
@@ -5803,7 +5807,8 @@ function searchConnectedButtonEvents(hash_Project,hash_manhole,hash_handhole,has
 		    urlString += "&connectedSearchLong="+lng+"";
 		    urlString += "&connectedSearchLat="+lat+"";
 		    urlString += "&connectedViewOnMap="+$("#viewOnMap").val()+"";
-			urlString += "&getRelatedPoints="+$("#getRelatedPointsCon").val()+"";	
+			urlString += "&getRelatedPoints="+$("#getRelatedPointsCon").val()+"";
+			urlString += "&updateModfUser="+updateModfUser;	
 			window.location.href = getContext()+"/NetworkPhysicalLayer?Checked="+checkedOption+urlString;
 			});
 		
