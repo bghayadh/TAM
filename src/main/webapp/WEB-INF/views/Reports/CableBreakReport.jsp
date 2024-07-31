@@ -777,7 +777,7 @@ function initMap() {
 	 	minimumClusterSize: 2,
 	 	styles: [
 	 	         {
-	 	        	 url:'${pageContext.request.contextPath}/resources/clusterIcons/yellowCluster.png',
+	 	        	 url:'${pageContext.request.contextPath}/resources/clusterIcons/customerCluster.png',
 	 		         height: 60,
 	 		         width:60,
 	 		         anchorText:[-3,-3]
@@ -1347,7 +1347,14 @@ $(document).ready(function() {
 			document.getElementById("jctCount").textContent = "("+distinctJct.length+")";
 			document.getElementById("dbCount").textContent = "("+distinctDB.length+")";  
 
-			map.fitBounds(window["bounds_"+cableID]);
+			if(cableID!=null && cableID!=""){
+				map.fitBounds(window["bounds_"+cableID]);
+	   		}
+
+			var currentCenter = map.getCenter();
+			var currentZoom = map.getZoom();
+			map.setCenter(currentCenter);
+			map.setZoom(currentZoom);
 			
 			//Scroll to the map div
 			 document.getElementById("headingTwo").scrollIntoView({ behavior: "smooth" });
@@ -1716,7 +1723,7 @@ $(document).ready(function() {
 	    markerClusterHandholes.clearMarkers();
 	    markersHandholes =[];
 
-		 if(fiberCableArray.length>0) {
+		 /*if(fiberCableArray.length>0) {
 			 for(var v=0;v<allCables.length;v++){
 	          	fiberCableArray[allCables[v]].setMap(null);
 			}
@@ -1740,7 +1747,7 @@ $(document).ready(function() {
 		 //Recenter the map
 		 var center=new google.maps.LatLng(1,38);
 	     map.setCenter(center);
-		 map.setZoom(6);  
+		 map.setZoom(6);  */
 		  
 		$("#gridTable").remove();
 		$("#tableGrid").append('<table id="gridTable" class="table table-striped table-bordered almgrid-table"><thead><tr class="header fixed-header">'
@@ -1769,6 +1776,34 @@ $(document).ready(function() {
 		}
 
 		else {
+			//clear cable and related cable 
+			 if(fiberCableArray.length>0) {
+				 for(var v=0;v<allCables.length;v++){
+		          	fiberCableArray[allCables[v]].setMap(null);
+				}
+			 }
+
+			 if(relatedPathArray.length>0) {
+				 for(var b=0;b<allRelatedPathCables.length;b++){
+					 relatedPathArray[allRelatedPathCables[b]].setMap(null);
+				}
+			 }
+		
+			 fiberCableArray=[];
+			 relatedPathArray=[];
+			 cableID="";	  
+			 allCables=[];		
+			 allRelatedPathCables=[];
+			 document.getElementById("relatedPathCount").textContent = "";		
+			 
+			 mapFlag="0";	
+
+			 //Recenter the map
+			 var center=new google.maps.LatLng(1,38);
+		     map.setCenter(center);
+			 map.setZoom(6);
+			////////////////////////////////////////////////////77
+			
 			$("#generateLoaderDiv").show();
 		 cableID = $("#fiberCable").val().split(":")[0];
 		 pointLong = $("#pointLong").val();
