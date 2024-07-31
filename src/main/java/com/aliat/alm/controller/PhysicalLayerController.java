@@ -148,7 +148,7 @@ public class PhysicalLayerController {
 
 					PhysicalLayerActivity PhyAct= new PhysicalLayerActivity();
 					String ipAddress = getIpAddress(request);
-					String updateModfUser=request.getParameter("updateModfUser").replaceAll("^'+|'+$", "");;
+					String updateModfUser=request.getParameter("updateModfUser");
 					Calendar calendar = new GregorianCalendar();
 					calendar.setTime(new Date());
 					int year = calendar.get(Calendar.YEAR);
@@ -823,8 +823,7 @@ public class PhysicalLayerController {
 						checkedOption = request.getParameter("Checked");
 						
 						if (StringUtils.equalsIgnoreCase(request.getParameter("Checked"), "circleRange")) {
-
-							String noOfPoints = request.getParameter("noP");
+									String noOfPoints = request.getParameter("noP");
 							String closestDisRange = request.getParameter("closestDisRange");
 							String closestLatPoint = request.getParameter("closestLatPoint");
 							String closestLongPoint = request.getParameter("closestLongPoint");
@@ -4767,7 +4766,7 @@ public class PhysicalLayerController {
 				
 				try {
 					String ipAddress = request.getRemoteAddr();
-					String updateModfUser=request.getParameter("updateModfUser").replaceAll("^'+|'+$", "");
+					String updateModfUser=request.getParameter("updateModfUser");
 					PhysicalLayerActivity PhyAct= new PhysicalLayerActivity();
 					DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
 
@@ -5078,7 +5077,7 @@ public class PhysicalLayerController {
 
 			try {
 				String ipAddress = getIpAddress(request);
-				String updateModfUser=request.getParameter("updateModfUser").replaceAll("^'+|'+$", "");
+				String updateModfUser=request.getParameter("updateModfUser");
 				PhysicalLayerActivity PhyAct= new PhysicalLayerActivity();
 
 				String handholeId = "", handholeName = "";
@@ -6154,7 +6153,7 @@ public class PhysicalLayerController {
 			FiberStrands fiberStrand;
 			StrandAuxPoints fiberAuxstrands;
 			String ipAddress = getIpAddress(request);
-			String updateModfUser=request.getParameter("updateModfUser").replaceAll("^'+|'+$", "");
+			String updateModfUser=request.getParameter("updateModfUser");
 			PhysicalLayerActivity PhyAct= new PhysicalLayerActivity();
 
 			try {
@@ -10055,7 +10054,7 @@ public class PhysicalLayerController {
 				strandDeleteQuery = null, trenchPathDeleteQuery = null, tubePathDeleteQuery = null;
 		Object newCount = null;
 		String ipAddress = getIpAddress(request);
-		String updateModfUser=request.getParameter("updateModfUser").replaceAll("^'+|'+$", "");
+		String updateModfUser=request.getParameter("updateModfUser");
 		PhysicalLayerActivity PhyAct= new PhysicalLayerActivity();
 		Integer phyActID = 0;
 		String[] idArray = request.getParameterValues("physicalLayerID[]");
@@ -11015,7 +11014,7 @@ public class PhysicalLayerController {
 
 				String tubeID = request.getParameter("tubeId");
 				String ipAddress = getIpAddress(request);
-				String updateModfUser=request.getParameter("updateModfUser").replaceAll("^'+|'+$", "");
+				String updateModfUser=request.getParameter("updateModfUser");
 				PhysicalLayerActivity PhyAct= new PhysicalLayerActivity();
 
 				String PhyActID=
@@ -11874,7 +11873,7 @@ public class PhysicalLayerController {
 					String JunctionInstaller = request.getParameter("JunctionInstaller");
 					String JunctionEngineerName = request.getParameter("JunctionEngineerName");
 					String ipAddress = getIpAddress(request);
-					String updateModfUser=request.getParameter("updateModfUser").replaceAll("^'+|'+$", "");
+					String updateModfUser=request.getParameter("updateModfUser");
 					PhysicalLayerActivity PhyAct= new PhysicalLayerActivity();
 
 					if (request.getParameter("JunctionLong") != "") {
@@ -13466,7 +13465,7 @@ public class PhysicalLayerController {
 			String surveyID= request.getParameter("surveyID");
 			System.out.println("surveyID "+surveyID);
 			String ipAddress = request.getRemoteAddr();
-			String updateModfUser=request.getParameter("updateModfUser").replaceAll("^'+|'+$", "");
+			String updateModfUser=request.getParameter("updateModfUser");
 			PhysicalLayerActivity PhyAct= new PhysicalLayerActivity();
 
 		if (StringUtils.equalsIgnoreCase(surveyID, "") || StringUtils.equalsIgnoreCase(surveyID, null)) {
@@ -14688,7 +14687,7 @@ public class PhysicalLayerController {
 							session.createNativeQuery("commit").executeUpdate();
 						}
 						
-						attachment.setId(attachmentID);;
+						attachment.setId(attachmentID);
 						attachment.setAttachmentPath(attachmentPath);
 						attachment.setAttachmentName(attachmentName);
 						attachment.setElementID(elementId);
@@ -14907,8 +14906,8 @@ public class PhysicalLayerController {
 		
 		
 
-	
-	
+		
+
 
 
 	@InitBinder
