@@ -67,7 +67,12 @@ var closePointsData=[];// It is used in show close points
 var closePointPopupFlag="notOpened"; // It is used to set the coordinates only in the first time opening the popup
 var showJctFlag="notOpened";
 var showManhHandJctArray=[];
-
+var mJctAttachPrevSelRow = "empty";
+var mJctAttachPrevSelColor = "";
+var hJctAttachPrevSelRow = "empty";
+var hJctAttachPrevSelColor = "";
+var projectAttachPrevSelRow = "empty";
+var projectAttachPrevSelColor = "";
 
 var TargetFiber= {
 		Action :"",
@@ -18044,6 +18049,60 @@ $('body').on('click', '#selectAll_TubesAux', function  () {
 		 });
 	
 
+
+	// To change the row color on row click
+	$("#junctionAttachmentTable").on('click', 'tr.changeTrColor', function() {
+	    var rowIndex = $(this).index();
+	    var color = $('#junctionAttachmentTable > tbody > tr').eq(rowIndex).css("background-color");
+	
+	    if (mJctAttachPrevSelRow == "empty") { // first time clicking (no previous row is selected)
+	        $('#junctionAttachmentTable > tbody > tr').eq(rowIndex).css('background-color', '#2678CC');
+	        mJctAttachPrevSelRow = rowIndex;
+	        mJctAttachPrevSelColor = color;
+	    } else if (mJctAttachPrevSelRow != rowIndex) {
+	        $('#junctionAttachmentTable > tbody > tr').eq(rowIndex).css('background-color', '#2678CC');
+	        $('#junctionAttachmentTable > tbody > tr').eq(mJctAttachPrevSelRow).css('background-color', mJctAttachPrevSelColor);
+	        mJctAttachPrevSelRow = rowIndex;
+	        mJctAttachPrevSelColor = color;
+	    }
+	});
+	// To change the row color on row click
+	$("#handJunctionAttachmentTable").on('click', 'tr.changeTrColor', function() {
+	    var rowIndex = $(this).index();
+	    var color = $('#handJunctionAttachmentTable > tbody > tr').eq(rowIndex).css("background-color");
+	
+	    if (hJctAttachPrevSelRow == "empty") { // first time clicking (no previous row is selected)
+	        $('#handJunctionAttachmentTable > tbody > tr').eq(rowIndex).css('background-color', '#2678CC');
+	        hJctAttachPrevSelRow = rowIndex;
+	        hJctAttachPrevSelColor = color;
+	    } else if (hJctAttachPrevSelRow != rowIndex) {
+	        $('#handJunctionAttachmentTable > tbody > tr').eq(rowIndex).css('background-color', '#2678CC');
+	        $('#handJunctionAttachmentTable > tbody > tr').eq(hJctAttachPrevSelRow).css('background-color', hJctAttachPrevSelColor);
+	        hJctAttachPrevSelRow = rowIndex;
+	        hJctAttachPrevSelColor = color;
+	    }
+	});
+	
+		// To change the row color on row click
+	$("#projectAttachmentTable").on('click', 'tr.changeTrColor', function() {
+	    var rowIndex = $(this).index();
+	    var color = $('#projectAttachmentTable > tbody > tr').eq(rowIndex).css("background-color");
+	
+	    if (projectAttachPrevSelRow == "empty") { // first time clicking (no previous row is selected)
+	        $('#projectAttachmentTable > tbody > tr').eq(rowIndex).css('background-color', '#2678CC');
+	        projectAttachPrevSelRow = rowIndex;
+	        projectAttachPrevSelColor = color;
+	    } else if (projectAttachPrevSelRow != rowIndex) {
+	        $('#projectAttachmentTable > tbody > tr').eq(rowIndex).css('background-color', '#2678CC');
+	        $('#projectAttachmentTable > tbody > tr').eq(projectAttachPrevSelRow).css('background-color', projectAttachPrevSelColor);
+	        projectAttachPrevSelRow = rowIndex;
+	        projectAttachPrevSelColor = color;
+	    }
+	});
+	
+	
+
+
 	$('#uploadForm').submit(function(e) {
 		e.preventDefault();
 		var formData = new FormData();
@@ -22915,7 +22974,7 @@ function checkLongLatInRows(tableID,longTdName,LatTdName){
 }
 function appendAttachmentRow(attachmentID,jctAttachmentIndex,attachmentName,attachmentPath,tableID){
 	
-	 var attachmentRow = "<tr id='"+attachmentID+"'>";
+	 var attachmentRow = "<tr id='"+attachmentID+"' class='changeTrColor'>";
                           attachmentRow = attachmentRow + "<td><input type='checkbox' name='record' style='margin-left:20px;margin-top:-5px;'></td>"
                           attachmentRow = attachmentRow + "<td name='attachmentDownload' ><button name='attachmentDownload' id='attachmentDownload"+jctAttachmentIndex+"' style='width:110px' onclick='downloadAttachment($(this).closest(\"tr\"))'  class='btn btn-primary' >Download</button></td>";
                           attachmentRow = attachmentRow + "<td name='attachmentID'><input name='attachmentID' id='attachmentID"+jctAttachmentIndex+"' type='text' value='" +attachmentID + "' style='width:200px;height:30px;' class='ui-widget ui-widget-content ui-corner-all ' /></td>";
