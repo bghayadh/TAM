@@ -457,7 +457,7 @@
 									<div class="tab-pane" id="projectAttachment" role="tabpanel" aria-labelledby="projectAttachment-tab">
 								<div style="display: flex; flex-direction: column;">
 							        <form id="projectUploadForm" enctype="multipart/form-data" style="margin-right: 10px;">
-							            <input type="file" id="projectFileInput" name="attachment" accept="image/jpeg, image/png, application/pdf" required style="width: auto; display: inline-block;">
+							            <input type="file" id="projectFileInput" name="attachment"  required style="width: auto; display: inline-block;">
 							            <button type="submit" class="btn btn-light file" style="display: inline-block; margin-left: 50px;">Upload</button>
 							        </form>
 										<br>
@@ -1527,7 +1527,7 @@
 				  <div class="tab-pane" id="manJctAttachment" role="tabpanel" aria-labelledby="manJctAttachment-tab">
 				    <div style="display: flex; flex-direction: column;">
 				        <form id="uploadForm" enctype="multipart/form-data" style="margin-right: 10px;">
-				            <input type="file" id="fileInput" name="attachment" accept="image/jpeg, image/png, application/pdf" required style="width: auto; display: inline-block;">
+				            <input type="file" id="fileInput" name="attachment"  required style="width: auto; display: inline-block;">
 				            <button type="submit" class="btn btn-light file" style="display: inline-block; margin-left: 50px;">Upload</button>
 				        </form>
 							<br>
@@ -1733,7 +1733,7 @@
  <div class="tab-pane" id="handJctAttachment" role="tabpanel" aria-labelledby="handJctAttachment-tab">
     <div style="display: flex; flex-direction: column;">
         <form id="handJctUploadForm" enctype="multipart/form-data" style="margin-right: 10px;">
-            <input type="file" id="handJctFileInput" name="attachment" accept="image/jpeg, image/png, application/pdf" required style="width: auto; display: inline-block;">
+            <input type="file" id="handJctFileInput" name="attachment" required style="width: auto; display: inline-block;">
             <button type="submit" class="btn btn-light file" style="display: inline-block; margin-left: 50px;">Upload</button>
         </form>
 			<br>

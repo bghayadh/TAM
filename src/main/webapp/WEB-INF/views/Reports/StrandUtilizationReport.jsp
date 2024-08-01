@@ -274,7 +274,7 @@ max-width: 100%;
 		</div>		
 		<div class="col-md-3"></div>
 		<div class="col-md-2">
-			<button type="button"  id ="showOnMap" class="btn mapButtons"  style="margin-left:50px;"  >Show on Map</button>
+			<button type="button"  id ="showOnMap" class="btn mapButtons"  style="margin-left:50px;" onclick="showOnMap()" >Show on Map</button>
 		</div>
 					
 			<div class="col-md-2" id="col3" style="text-align:right;">
@@ -1038,79 +1038,10 @@ $(document).ready(function() {
 	
 
 			
-	   $('#showOnMap'). click(function(){  
-		   distinctDB =[]; 
-		   distinctJct =[]; 
-		   distinctCustomers =[]; 
-		   distinctSites =[];
-		   distinctManholes =[]; 
-		   distinctManholesWithJct =[]; 
-		   distinctHandholesWithJct =[]; 
-		   distinctHandholes =[]; 
-		   
-		   markerClusterDB.clearMarkers();
-		   markerClusterJct.clearMarkers();
-		   markerClusterCustomers.clearMarkers();
-		   markerClusterHandholes.clearMarkers();
-		   markerClusterHandholesWithJct.clearMarkers();
-		   markerClusterManholes.clearMarkers();
-		   markerClusterManholesWithJct.clearMarkers();	
-		   markerClusterSites.clearMarkers();	
-		   mapFlag="1";
-
-		   showPointsArray=[];
-		   //jctElementsIDArray=[];
-			
-	   	 	var dropdownSelectedValue = document.getElementById('mapDropdown').value;
-			 cableID = $("#fiberCable").val().split(":")[0];
-
-	   	 	if(jctElementsFlag=="notOpened") {// to get the junctionn details in case of element type in grid is junction
-	   	 		jctElementsFlag="Opened";
-	 		  	$.ajax({
-					type: "GET",
-	                contentType: "application/json; charset=utf-8",
-	                url: '${pageContext.request.contextPath}/getJctElementsDetails',
-	                data: {
-							"jctElementsIDArray" :jctElementsIDArray,
-							"fiberID":cableID
-					 },
-					 dataType: "json",
-			         success: function (data) {
-			        	 elementsArray=data.jctList;	
-			        	 if(dropdownSelectedValue=="cableBased") {
-			 				showElementLocationPoints(data.jctList,filteredGridData,"mapPointsNames_","mapPoints_");	
-			 			}
-			 			else if(dropdownSelectedValue=="gridBased") {
-			 				processCableSrcDstArray(cableID,"mapPointsNamesBasedOnGrid_",srcDstCableList,"mapPointsBasedOnGrid_");
-			 				window["mapPointsBasedOnGrid_"+cableID].push(new google.maps.LatLng(srcDstCableList[0][3],srcDstCableList[0][2]));
-			 				showElementLocationPoints(data.jctList,filteredGridData,"mapPointsNamesBasedOnGrid_","mapPointsBasedOnGrid_");
-			 			}
-			 	
-			          },
-			          error: function(result) {
-			              alert("Error");
-			           }
-			       });
-
-		   	}
-	   	 	else {// the elements that are junctions already have all details (ajax call before) 		    
-				if(dropdownSelectedValue=="cableBased") {
-					showElementLocationPoints(elementsArray,filteredGridData,"mapPointsNames_","mapPoints_");	
-				}
-				else if(dropdownSelectedValue=="gridBased") {
-					processCableSrcDstArray(cableID,"mapPointsNamesBasedOnGrid_",srcDstCableList,"mapPointsBasedOnGrid_");
-					window["mapPointsBasedOnGrid_"+cableID].push(new google.maps.LatLng(srcDstCableList[0][3],srcDstCableList[0][2]));
-					showElementLocationPoints(elementsArray,filteredGridData,"mapPointsNamesBasedOnGrid_","mapPointsBasedOnGrid_");
-				}
-	   	 	}
-
-	   	 	
-	       
-			//Scroll to the map div
-			 document.getElementById("headingTwo").scrollIntoView({ behavior: "smooth" });
-			 
+	 //  $('#showOnMap'). click(function(){  
+	 
 		         	
-		});
+		//});
 
 	 $("#fiberCable").autocomplete({
 		source: function(request, response) {
@@ -2618,6 +2549,110 @@ function showElementLocationPoints(elementsDetailsArray,filteredGridArray,window
 
 }
 
+document.getElementById('mapDropdown').addEventListener('change', function() {
+    var selectedValue = this.value;
+
+	    if(mapFlag=="1") {
+	       distinctDB =[]; 
+	 	   distinctJct =[]; 
+	 	   distinctCustomers =[]; 
+	 	   distinctSites =[];
+	 	   distinctManholes =[]; 
+	 	   distinctManholesWithJct =[]; 
+	 	   distinctHandholesWithJct =[]; 
+	 	   distinctHandholes =[]; 
+	 	   
+	 	   markerClusterDB.clearMarkers();
+	 	   markerClusterJct.clearMarkers();
+	 	   markerClusterCustomers.clearMarkers();
+	 	   markerClusterHandholes.clearMarkers();
+	 	   markerClusterHandholesWithJct.clearMarkers();
+	 	   markerClusterManholes.clearMarkers();
+	 	   markerClusterManholesWithJct.clearMarkers();	
+	 	   markerClusterSites.clearMarkers();
+		    if(selectedValue=="cableBased") {
+				showElementLocationPoints(elementsArray,filteredGridData,"mapPointsNames_","mapPoints_");	
+			}
+			else if(selectedValue=="gridBased") {
+				processCableSrcDstArray(cableID,"mapPointsNamesBasedOnGrid_",srcDstCableList,"mapPointsBasedOnGrid_");
+				window["mapPointsBasedOnGrid_"+cableID].push(new google.maps.LatLng(srcDstCableList[0][3],srcDstCableList[0][2]));
+				showElementLocationPoints(elementsArray,filteredGridData,"mapPointsNamesBasedOnGrid_","mapPointsBasedOnGrid_");
+			}
+	    }
+	    else {
+	    	showOnMap();
+		}
+});
+function showOnMap() {   
+	   distinctDB =[]; 
+	   distinctJct =[]; 
+	   distinctCustomers =[]; 
+	   distinctSites =[];
+	   distinctManholes =[]; 
+	   distinctManholesWithJct =[]; 
+	   distinctHandholesWithJct =[]; 
+	   distinctHandholes =[]; 
+	   
+	   markerClusterDB.clearMarkers();
+	   markerClusterJct.clearMarkers();
+	   markerClusterCustomers.clearMarkers();
+	   markerClusterHandholes.clearMarkers();
+	   markerClusterHandholesWithJct.clearMarkers();
+	   markerClusterManholes.clearMarkers();
+	   markerClusterManholesWithJct.clearMarkers();	
+	   markerClusterSites.clearMarkers();	
+	   mapFlag="1";
+
+	   showPointsArray=[];
+	   //jctElementsIDArray=[];
+		
+	 	var dropdownSelectedValue = document.getElementById('mapDropdown').value;
+		 cableID = $("#fiberCable").val().split(":")[0];
+
+	 	if(jctElementsFlag=="notOpened") {// to get the junctionn details in case of element type in grid is junction
+	 		jctElementsFlag="Opened";
+		  	$.ajax({
+				type: "GET",
+             contentType: "application/json; charset=utf-8",
+             url: '${pageContext.request.contextPath}/getJctElementsDetails',
+             data: {
+						"jctElementsIDArray" :jctElementsIDArray
+				 },
+				 dataType: "json",
+		         success: function (data) {
+		        	 elementsArray=data.jctList;	
+		        	 if(dropdownSelectedValue=="cableBased") {
+		 				showElementLocationPoints(data.jctList,filteredGridData,"mapPointsNames_","mapPoints_");	
+		 			}
+		 			else if(dropdownSelectedValue=="gridBased") {
+		 				processCableSrcDstArray(cableID,"mapPointsNamesBasedOnGrid_",srcDstCableList,"mapPointsBasedOnGrid_");
+		 				window["mapPointsBasedOnGrid_"+cableID].push(new google.maps.LatLng(srcDstCableList[0][3],srcDstCableList[0][2]));
+		 				showElementLocationPoints(data.jctList,filteredGridData,"mapPointsNamesBasedOnGrid_","mapPointsBasedOnGrid_");
+		 			}
+		 	
+		          },
+		          error: function(result) {
+		              alert("Error");
+		           }
+		       });
+
+	   	}
+	 	else {// the elements that are junctions already have all details (ajax call before) 		    
+			if(dropdownSelectedValue=="cableBased") {
+				showElementLocationPoints(elementsArray,filteredGridData,"mapPointsNames_","mapPoints_");	
+			}
+			else if(dropdownSelectedValue=="gridBased") {
+				processCableSrcDstArray(cableID,"mapPointsNamesBasedOnGrid_",srcDstCableList,"mapPointsBasedOnGrid_");
+				window["mapPointsBasedOnGrid_"+cableID].push(new google.maps.LatLng(srcDstCableList[0][3],srcDstCableList[0][2]));
+				showElementLocationPoints(elementsArray,filteredGridData,"mapPointsNamesBasedOnGrid_","mapPointsBasedOnGrid_");
+			}
+	 	}
+
+	 	
+    
+		//Scroll to the map div
+		 document.getElementById("headingTwo").scrollIntoView({ behavior: "smooth" });
+	}
 </script>
 <script
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJXAds-Gt4I39hRFHhYHMEg3XcBqihYoo&callback=initMap&libraries=drawing&v=weekly"

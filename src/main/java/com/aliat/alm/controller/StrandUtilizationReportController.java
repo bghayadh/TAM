@@ -254,7 +254,6 @@ public class StrandUtilizationReportController {
 		return rtn;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/getJctElementsDetails", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> getJctElementsDetails(Locale locale, Model model, HttpServletRequest request,
@@ -269,14 +268,8 @@ public class StrandUtilizationReportController {
 		}
 		if (session != null && session.isOpen()) {
 			try {
-				String fiberID = request.getParameter("fiberID");
 				String[] jctElementsIDArray = request.getParameterValues("jctElementsIDArray[]");
 
-				/*query = session.createNativeQuery("SELECT B.LONGITUDE AS LONGITUDE, B.LATITUDE AS LATITUDE, B.WARE_ID AS WARE_ID, B.AUXILIARY_POINT_ID AS AUXILIARY_POINT_ID, B.AUXILIARY_POINT_NAME AS AUXILIARY_POINT_NAME, " + 
-						" B.FIBER_CABLE_ID AS FIBER_CABLE_ID, B.AUXILIARY_ID AS AUXILIARY_ID,B.SEQ_SORTING AS SEQ_SORTING " + 
-						" FROM FIBER_CABLES A LEFT JOIN FIBER_AUXILIARY_POINTS B ON A.FIBER_CABLE_ID = B.FIBER_CABLE_ID LEFT JOIN JUNCTION C ON C.PHYSICAL_LAYER_ID = B.AUXILIARY_POINT_ID " + 
-						" WHERE B.FIBER_CABLE_ID = '"+fiberID+"' AND C.JUNCTION_ID IN (:param1) " + 
-						" ORDER BY B.SEQ_SORTING ASC ");*/
 				query = session.createNativeQuery("SELECT JUNCTION_ID,JUNCTION_NAME,PHYSICAL_LAYER_ID,PHYSICAL_LAYER_NAME,LONGITUDE,LATITUDE"
 						+ " FROM JUNCTION WHERE JUNCTION_ID IN (:param1) ");
 						

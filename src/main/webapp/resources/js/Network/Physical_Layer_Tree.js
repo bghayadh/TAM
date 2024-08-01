@@ -1340,6 +1340,10 @@ if (readHandhole === '1') {
         'icon': 'folder-plus',
         'name': 'Create New Junction',
         'action': () => {
+	
+			document.getElementById('manJctAttachment-tab').style.display = 'none';
+			$('#myTabDb a[href="#MJCT"]').tab('show');
+
             $.ajax({
                 type: "GET",
                 contentType: "application/json; charset=utf-8",
@@ -1499,6 +1503,9 @@ if (addManhole === '1') {
 		let Menus = [
    {'icon': 'folder-plus', 'name': 'Create New Junction', action: () => {
 			
+			document.getElementById('handJctAttachment-tab').style.display = 'none';
+			$('#myTabDb a[href="#HJCT"]').tab('show');
+
 				$.ajax({
 							type: "GET",
 							contentType: "application/json; charset=utf-8",
@@ -4909,7 +4916,10 @@ singleNodeActive = new ContextMenu({
 		  $("#ProjectType").val("Planning");
 		  $("#projectModal").modal('show');
 		  actionProjectContext="Insert";
-		  console.log('planning ')
+		  console.log('planning ');
+ 		  document.getElementById('projectAttachment-tab').style.display = 'none';
+		  $('#myTabDb a[href="#projectInfo"]').tab('show');
+
 		  }
 		  
 
@@ -4930,10 +4940,11 @@ singleNodeActive = new ContextMenu({
 		  $("#projectModal").modal('show');
 		  actionProjectContext="Insert";
 		  console.log('planning ')
-		  }
-		  
+ 		  document.getElementById('projectAttachment-tab').style.display = 'none';
+		  $('#myTabDb a[href="#projectInfo"]').tab('show');
 
-		   }
+		  }
+	  }
 	]
 });	
 
@@ -4950,7 +4961,8 @@ singleNodeActive = new ContextMenu({
 						actionProjectContext="Update";						
 						$("#projectModal").find("input").val('').end();
 						selectedProjectIdContext = selectedProjectIdContext.replace("Project_span_", "");	
-						document.querySelector("#projectAttachmentFlag").value = "not_opened";			
+						document.querySelector("#projectAttachmentFlag").value = "not_opened";	
+						document.getElementById('projectAttachment-tab').style.display = 'block';		
 						$('#myTabDb a[href="#projectInfo"]').tab('show');
 
                         $.ajax({
@@ -5069,7 +5081,8 @@ singleNodeActive = new ContextMenu({
 						actionProjectContext="Update";						
 						$("#projectModal").find("input").val('').end();
 						selectedProjectIdContext = selectedProjectIdContext.replace("Project_span_", "");	
-						document.querySelector("#projectAttachmentFlag").value = "not_opened";						
+						document.querySelector("#projectAttachmentFlag").value = "not_opened";		
+						document.getElementById('projectAttachment-tab').style.display = 'block';				
 						$('#myTabDb a[href="#projectInfo"]').tab('show');
 
 			          $.ajax({
@@ -5318,6 +5331,10 @@ $("#Handhole_f_" + selectedProjectIdContext + " .JUNCTION_H").each(function() {
             $("#manholeJunctionModal").modal('show');
             $("#manholeIdJct").val(selectedManIdContext);
 
+			document.getElementById('manJctAttachment-tab').style.display = 'none';
+			$('#myTabDb a[href="#MJCT"]').tab('show');
+
+
             // Example of an AJAX call
             $.ajax({
                 type: "GET",
@@ -5498,6 +5515,10 @@ singleManhole = new ContextMenu({
 								$("#handholeJctMappingTable > tbody").empty();
 								$("#handholeJunctionModal").modal('show');
 								$("#handholeIdJct").val(selectedHandIdContext);
+								
+								document.getElementById('handJctAttachment-tab').style.display = 'none';
+								$('#myTabDb a[href="#HJCT"]').tab('show');
+
 								
 						         $.ajax({
 		                                type: "GET",
@@ -6349,6 +6370,7 @@ singleHandhole = new ContextMenu({
 				
 				document.getElementById("manholeNameJct").readOnly = true;
 				document.querySelector("#manJctAttachmentFlag").value = "not_opened";
+				document.getElementById('manJctAttachment-tab').style.display = 'block';
 			    $('#myTabDb a[href="#MJCT"]').tab('show');
 
 						$.ajax({
@@ -6935,6 +6957,7 @@ singleHandhole = new ContextMenu({
 			
 				document.getElementById("handholeNameJct").readOnly = true;
 				document.querySelector("#handJctAttachmentFlag").value = "not_opened";
+				document.getElementById('handJctAttachment-tab').style.display = 'block';
 				$('#myTabDb a[href="#HJCT"]').tab('show');
 
 						$.ajax({
@@ -18020,7 +18043,7 @@ $('body').on('click', '#selectAll_TubesAux', function  () {
 		
 		 });
 	
-	
+
 	$('#uploadForm').submit(function(e) {
 		e.preventDefault();
 		var formData = new FormData();
