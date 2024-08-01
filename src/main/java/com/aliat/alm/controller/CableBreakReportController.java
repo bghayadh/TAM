@@ -52,9 +52,22 @@ public class CableBreakReportController {
 	public String CableBreakReport(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) {
 
-		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+		/*if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			return "redirect:/";
-		} else {
+		} */
+		
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+	        String originalUrl = request.getRequestURL().toString();
+            String queryString = request.getQueryString();
+           
+            if (queryString != null) {
+                originalUrl += "?" + queryString;
+            }
+            System.out.println("originalUrl "+originalUrl);
+            model.addAttribute("redirectUrl", originalUrl);
+            return "Login";
+        }
+		else {
 
 			session = AlmDbSession.getInstance().getSession();
 
@@ -134,6 +147,8 @@ public class CableBreakReportController {
 		
 		String sourceID="";
 		String DestID="";
+		 String SrcLongStr="";
+		 String SrcLatStr ="";
 		int totalaffectd = 0;
 	    int totalaffectdClients = 0;
 	    int totalaffectdSites = 0;
@@ -178,8 +193,63 @@ public class CableBreakReportController {
 					
 					
 					
+					 //get the source and destination of the cable
+				    Object[]  fiberCableSrcDestID = (Object[]) session.createNativeQuery(
+				    		 "SELECT SOURCE_ID,SOURCE_NAME,SOURCE_WARE_ID,DESTINATION_ID,DESTINATION_NAME,DESTINATION_WARE_ID,SOURCE_LNG,SOURCE_LAT FROM FIBER_CABLES "
+						    + "WHERE "
+						    + "FIBER_CABLE_ID ='"+fiberCableID+"'").getSingleResult();
+				    
+				    // this block aims to get all DBs elated to the source and destination 
+				    if(fiberCableSrcDestID != null) {
+				    
+				    	 sourceID = (String) fiberCableSrcDestID[0];
+				    	 DestID = (String) fiberCableSrcDestID[3];
+				    	 //srcLong and srcLat will be used to get distance between src and aux pt 
+				    	 //with seq 1 in case nearest pt is the first aux pt (sorting seq =1)
+				    	  SrcLongStr = (String) fiberCableSrcDestID[6];
+						  SrcLatStr = (String) fiberCableSrcDestID[7];
+				    	
+				    	 //get the DBs related to the source
+				    	if((!"null".equals(fiberCableSrcDestID[2]) && fiberCableSrcDestID[2] != null) || sourceID.startsWith("CUST_") ) {
+				    		
+				    		List<String> TempDBList = session.createNativeQuery(
+									"SELECT DB_ID FROM DISTRIBUTION_BOARD "
+									+ "WHERE "
+									+ "SITE ='"+sourceID+"'").getResultList();
+				    		
+				    		for (String dbId  : TempDBList) {
+				    		    srcDBs.add(dbId);    					    		
+				    		}
+							
+				    	}
+				    	else if(sourceID.toString().startsWith("DB_")) {
+				    		
+				    		srcDBs.add(sourceID);
+				    		
+				    	}
+				    	
+				    	
+				    	 //get the DBs related to the destination 
+				    	if((!"null".equals(fiberCableSrcDestID[5]) && fiberCableSrcDestID[5] != null) || DestID.startsWith("CUST_") ) {
+				    		
+				    		List<String> TempDBList = session.createNativeQuery(
+									"SELECT DB_ID FROM DISTRIBUTION_BOARD "
+									+ "WHERE "
+									+ "SITE ='"+DestID+"'").getResultList();
+				    		
+				    		for (String dbId : TempDBList) {
+				    			dstDBs.add(dbId);    					    		
+				    		}
+							
+				    	}
+				    	else if(DestID.toString().startsWith("DB_")) {
+				    		dstDBs.add(DestID);
+				    		
+				    	}
+				    	
+				    }
 					
-					
+				    
 					
 				
 					// This block aim to get the nearest auxiliary pt to the break pt 
@@ -222,99 +292,77 @@ public class CableBreakReportController {
 				
 					
 					System.out.println("nearestAuxPtSeq "+nearestAuxPtSeq);
-					//get the auxiliary pt that is just before the nearest pt based on SEQ_SORTING
-					Object[]  previousAuxPt = (Object[]) session.createNativeQuery(
-							"SELECT B.LONGITUDE,B.LATITUDE,B.WARE_ID,B.AUXILIARY_POINT_ID,B.AUXILIARY_POINT_NAME,B.AUXILIARY_ID,B.SEQ_SORTING FROM FIBER_AUXILIARY_POINTS B "
-							+ "WHERE B.FIBER_CABLE_ID ='"+ fiberCableID + "' AND B.SEQ_SORTING ='"+(nearestAuxPtSeq-1)+"'").getSingleResult();
+					//get the auxiliary pt that is just before the nearest pt based on SEQ_SORTING (in case nearest pt seq  != 1)
+					if(nearestAuxPtSeq != 1) {
+						Object[]  previousAuxPt = (Object[]) session.createNativeQuery(
+								"SELECT B.LONGITUDE,B.LATITUDE,B.WARE_ID,B.AUXILIARY_POINT_ID,B.AUXILIARY_POINT_NAME,B.AUXILIARY_ID,B.SEQ_SORTING FROM FIBER_AUXILIARY_POINTS B "
+								+ "WHERE B.FIBER_CABLE_ID ='"+ fiberCableID + "' AND B.SEQ_SORTING ='"+(nearestAuxPtSeq-1)+"'").getSingleResult();
+						
+						  
+						   
+						    String prAuxPointLongStr = (String) previousAuxPt[0];
+						    String prAuxuxPointLatStr = (String) previousAuxPt[1];
+	
+						    // Parse the string values to double
+						    double prAuxPointLong = Double.parseDouble(prAuxPointLongStr);
+						    double prAuxPointLat = Double.parseDouble(prAuxuxPointLatStr);
+						    
+						    //Calculate distance between previous Aux pt and break pt 
+						    double prvToBreakdistance = haversine(prAuxPointLat, prAuxPointLong, breakPointLat, breakPointLong);
+						    //Calculate distance between previous Aux pt and nearest Aux pt
+						    double prvTonearestdistance = haversine(prAuxPointLat, prAuxPointLong, nearestPointLat, nearestPointLong);
+						   
+						    
+						    /*give the breaking pt Sequence as following:
+						     * after we the get the distance between the previous auxiliary pt and breaking pt as 'prvToBreakdistance'
+						     * and between the previous auxiliary pt and  the nearest auxiliary pt as 'prvTonearestdistance'.
+						     * 
+						     * if prvToBreakdistance is less than prvTonearestdistance this means that the breaking pt is just 
+						     * 		before the nearest auxiliary pt and thus the seq of the breaking pt wil be the seq of previous auxiliary pt 
+						     * else if prvToBreakdistance is greater than or equal prvTonearestdistance this mean the breaking pt is located 
+						     * 		after the nearest auxiliary pt and thus the seq of the breaking pt wil be the seq of nearest auxiliary pt 
+						     * */
+						    
+						    if(prvToBreakdistance<prvTonearestdistance ) {
+						    	//seq of breaking pt is previous aux pt seq
+						    	breakingPtSeq=nearestAuxPtSeq-1;
+						    	
+						    }
+						    else {
+						    	//seq of breaking pt is nearest aux pt seq
+						    	breakingPtSeq=nearestAuxPtSeq;
+						    }
+						}
 					
-					  
-					   
-					    String prAuxPointLongStr = (String) previousAuxPt[0];
-					    String prAuxuxPointLatStr = (String) previousAuxPt[1];
-
-					    // Parse the string values to double
-					    double prAuxPointLong = Double.parseDouble(prAuxPointLongStr);
-					    double prAuxPointLat = Double.parseDouble(prAuxuxPointLatStr);
-					    
-					    //Calculate distance between previous Aux pt and break pt 
-					    double prvToBreakdistance = haversine(prAuxPointLat, prAuxPointLong, breakPointLat, breakPointLong);
-					    //Calculate distance between previous Aux pt and nearest Aux pt
-					    double prvTonearestdistance = haversine(prAuxPointLat, prAuxPointLong, nearestPointLat, nearestPointLong);
-					   
-					    
-					    /*give the breaking pt Sequence as following:
-					     * after we the get the distance between the previous auxiliary pt and breaking pt as 'prvToBreakdistance'
-					     * and between the previous auxiliary pt and  the nearest auxiliary pt as 'prvTonearestdistance'.
-					     * 
-					     * if prvToBreakdistance is less than prvTonearestdistance this means that the breaking pt is just 
-					     * 		before the nearest auxiliary pt and thus the seq of the breaking pt wil be the seq of previous auxiliary pt 
-					     * else if prvToBreakdistance is greater than or equal prvTonearestdistance this mean the breaking pt is located 
-					     * 		after the nearest auxiliary pt and thus the seq of the breaking pt wil be the seq of nearest auxiliary pt 
-					     * */
-					    
-					    if(prvToBreakdistance<prvTonearestdistance ) {
-					    	//seq of breaking pt is previous aux pt seq
-					    	breakingPtSeq=nearestAuxPtSeq-1;
-					    	
-					    }
-					    else {
-					    	//seq of breaking pt is nearest aux pt seq
-					    	breakingPtSeq=nearestAuxPtSeq;
-					    	
-					    }
-					    
-					   //get the source and destination of the cable
-					    Object[]  fiberCableSrcDestID = (Object[]) session.createNativeQuery(
-					    		 "SELECT SOURCE_ID,SOURCE_NAME,SOURCE_WARE_ID,DESTINATION_ID,DESTINATION_NAME,DESTINATION_WARE_ID FROM FIBER_CABLES "
-							    + "WHERE "
-							    + "FIBER_CABLE_ID ='"+fiberCableID+"'").getSingleResult();
-					    
-					    // this block aims to get all DBs elated to the source and destination 
-					    if(fiberCableSrcDestID != null) {
-					    
-					    	 sourceID = (String) fiberCableSrcDestID[0];
-					    	 DestID = (String) fiberCableSrcDestID[3];
-					    	
-					    	 //get the DBs related to the source
-					    	if((!"null".equals(fiberCableSrcDestID[2]) && fiberCableSrcDestID[2] != null) || sourceID.startsWith("CUST_") ) {
-					    		
-					    		List<String> TempDBList = session.createNativeQuery(
-										"SELECT DB_ID FROM DISTRIBUTION_BOARD "
-										+ "WHERE "
-										+ "SITE ='"+sourceID+"'").getResultList();
-					    		
-					    		for (String dbId  : TempDBList) {
-					    		    srcDBs.add(dbId);    					    		
-					    		}
-								
-					    	}
-					    	else if(sourceID.toString().startsWith("DB_")) {
-					    		
-					    		srcDBs.add(sourceID);
-					    		
-					    	}
+						else if(nearestAuxPtSeq ==  1) {
+							//breakingPtSeq =1;
+							
 					    	
 					    	
-					    	 //get the DBs related to the destination 
-					    	if((!"null".equals(fiberCableSrcDestID[5]) && fiberCableSrcDestID[5] != null) || DestID.startsWith("CUST_") ) {
-					    		
-					    		List<String> TempDBList = session.createNativeQuery(
-										"SELECT DB_ID FROM DISTRIBUTION_BOARD "
-										+ "WHERE "
-										+ "SITE ='"+DestID+"'").getResultList();
-					    		
-					    		for (String dbId : TempDBList) {
-					    			dstDBs.add(dbId);    					    		
-					    		}
-								
-					    	}
-					    	else if(DestID.toString().startsWith("DB_")) {
-					    		dstDBs.add(DestID);
-					    		
-					    	}
-					    	
-					    }
+							double srcLong = Double.parseDouble(SrcLongStr);
+						    double srcLat = Double.parseDouble(SrcLatStr);
+						    
+						    //Calculate distance between previous Aux pt and break pt 
+						    double srcToBreakdistance = haversine(srcLat, srcLong, breakPointLat, breakPointLong);
+						    //Calculate distance between previous Aux pt and nearest Aux pt
+						    double srcTonearestdistance = haversine(srcLat, srcLong, nearestPointLat, nearestPointLong);
+						    
+						    if(srcToBreakdistance<srcTonearestdistance ) {
+						    	//seq of breaking pt is zero which means breaking pt is before the nearest pt with seq 1
+						    	//giving breaking pt seq 0 will allow to add (if exists ) the junction at seq 1 to junction list after break.
+						    	breakingPtSeq=nearestAuxPtSeq-1;
+						    	
+						    	
+						    }
+						    else {
+						    	//seq of breaking pt is nearest aux pt seq
+						    	breakingPtSeq=nearestAuxPtSeq;
+						    }
+						}
+					
+					System.out.println("breakingPtSeq "+breakingPtSeq);
 					    
+					 
 					    //get junctions from auxiliary pt table related to that cable as lists before and after break point 
 					    List<Object[]> junctionListBeforBreakingPt = session.createNativeQuery(
 								"SELECT AUXILIARY_POINT_ID FROM FIBER_AUXILIARY_POINTS "
@@ -340,7 +388,8 @@ public class CableBreakReportController {
 					    	junctionAfterBreakingPt.add(tempjJunctionId);
 					    					    		
 			    		}
-					   
+					    System.out.println("junctionAfterBreakingPt "+junctionAfterBreakingPt.size());
+					    System.out.println("junctionBeforeBreakingPt "+junctionBeforeBreakingPt.size());
 					    //get affected sites and client
 					    String str = "SELECT DISTINCT BP_LOCATION_ID,DB_ID  FROM DISTRIBUTION_BOARD_MAPPING "
 					    		+ "where "
