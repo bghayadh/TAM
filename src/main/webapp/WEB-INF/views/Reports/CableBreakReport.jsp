@@ -494,34 +494,45 @@ max-width: 100%;
 
 
 		
-	<div style="display: Block;" id="totalaffected">
-		<div class="row second" style="padding-left: 15px;">								
-			<div class="col-md-4">
-				<div class="form-group">
-					<div class="input-group-prepend">
-						<span class="input-group-text">Total Affected</span>
-						<input readonly type="text" id="totalAffected" class="form-control text-input" style="width:120px;"/>
+			<div style="display: Block;" id="totalaffected">
+				<div class="row second" style="padding-left: 15px;">								
+					<div class="col-md-4">
+						<div class="form-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text">Total Affected</span>
+								<input readonly type="text" id="totalAffected" class="form-control text-input" style="width:120px;"/>
+							</div>
+						</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text">Total Affected Clients</span>
+							<input readonly type="text" id="totalAffectedClients" class="form-control text-input" style="width:120px;" />
+						</div>
 					</div>
 				</div>
-		</div>
-		<div class="col-md-4">
-			<div class="form-group">
-				<div class="input-group-prepend">
-					<span class="input-group-text">Total Affected Clients</span>
-					<input readonly type="text" id="totalAffectedClients" class="form-control text-input" style="width:120px;" />
+				<div class="col-md-4">
+					<div class="form-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text">Total Affected Sites</span>
+							<input readonly type="text" id="totalAffectedSites" class="form-control text-input" style="width:120px;" />
+						</div>
+					</div>
 				</div>
+						
 			</div>
-		</div>
-		<div class="col-md-4">
-			<div class="form-group">
-				<div class="input-group-prepend">
-					<span class="input-group-text">Total Affected Sites</span>
-					<input readonly type="text" id="totalAffectedSites" class="form-control text-input" style="width:120px;" />
+			<div class="row second" style="padding-left: 25px;">
+			<div class="col-l-12">
+					<div class="form-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text">Breaking Point Position</span>
+							<input readonly type="text" id="breakingPtPosition"  class="form-control text-input" style="width:850px;" />
+						</div>
+					</div>
 				</div>
-			</div>
-		</div>
 				
-	</div>
+			</div>
 		</div>
       </div>
     </div>
@@ -2068,6 +2079,12 @@ $(document).ready(function() {
 
 				var totalAffectedSites =data.totalAffectdSites;
 				$('#totalAffectedSites').val(totalAffectedSites);
+
+				var breakingPtPosition =data.breakingPtSeq;
+				console.log('breakingPtPosition '+breakingPtPosition)
+				var str="The breaking point is between the auxiliary point with sequence "+breakingPtPosition+" and the auxiliary point with sequence "+(breakingPtPosition+1)
+				$('#breakingPtPosition').val(str);
+				
 
 				//get affected element list
 				affectedElement=data.ElementList;

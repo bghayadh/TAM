@@ -63,7 +63,7 @@ public class CableBreakReportController {
             if (queryString != null) {
                 originalUrl += "?" + queryString;
             }
-            System.out.println("originalUrl "+originalUrl);
+            //System.out.println("originalUrl "+originalUrl);
             model.addAttribute("redirectUrl", originalUrl);
             return "Login";
         }
@@ -147,11 +147,15 @@ public class CableBreakReportController {
 		
 		String sourceID="";
 		String DestID="";
-		 String SrcLongStr="";
-		 String SrcLatStr ="";
+		String SrcLongStr="";
+		String SrcLatStr ="";
+		String DestLongStr="";
+		String DestLatStr="";
+		
 		int totalaffectd = 0;
 	    int totalaffectdClients = 0;
 	    int totalaffectdSites = 0;
+	    int auxPtscount=0;
 		
 		double breakPointLong = Double.parseDouble(pointLong);
 		double breakPointLat = Double.parseDouble(pointLat);
@@ -191,11 +195,12 @@ public class CableBreakReportController {
 									+ fiberCableID + "' ORDER BY B.SEQ_SORTING ASC").getResultList();
 					rtn.put("fiberAuxData", fiberAuxData);
 					
+					auxPtscount =fiberAuxData.size();
 					
 					
 					 //get the source and destination of the cable
 				    Object[]  fiberCableSrcDestID = (Object[]) session.createNativeQuery(
-				    		 "SELECT SOURCE_ID,SOURCE_NAME,SOURCE_WARE_ID,DESTINATION_ID,DESTINATION_NAME,DESTINATION_WARE_ID,SOURCE_LNG,SOURCE_LAT FROM FIBER_CABLES "
+				    		 "SELECT SOURCE_ID,SOURCE_NAME,SOURCE_WARE_ID,DESTINATION_ID,DESTINATION_NAME,DESTINATION_WARE_ID,SOURCE_LNG,SOURCE_LAT,DESTINATION_LNG,DESTINATION_LAT FROM FIBER_CABLES "
 						    + "WHERE "
 						    + "FIBER_CABLE_ID ='"+fiberCableID+"'").getSingleResult();
 				    
@@ -208,6 +213,9 @@ public class CableBreakReportController {
 				    	 //with seq 1 in case nearest pt is the first aux pt (sorting seq =1)
 				    	  SrcLongStr = (String) fiberCableSrcDestID[6];
 						  SrcLatStr = (String) fiberCableSrcDestID[7];
+						//DestLong and DestLat will be used to get distance between last aux pt and dest when nearest pt is last aux pt
+						  DestLongStr = (String) fiberCableSrcDestID[8];
+						  DestLatStr = (String) fiberCableSrcDestID[9];
 				    	
 				    	 //get the DBs related to the source
 				    	if((!"null".equals(fiberCableSrcDestID[2]) && fiberCableSrcDestID[2] != null) || sourceID.startsWith("CUST_") ) {
@@ -290,27 +298,131 @@ public class CableBreakReportController {
 					}
 					
 				
-					
-					System.out.println("nearestAuxPtSeq "+nearestAuxPtSeq);
 					//get the auxiliary pt that is just before the nearest pt based on SEQ_SORTING (in case nearest pt seq  != 1)
 					if(nearestAuxPtSeq != 1) {
-						Object[]  previousAuxPt = (Object[]) session.createNativeQuery(
+						List<Object[]>  previousAuxPts =  session.createNativeQuery(
 								"SELECT B.LONGITUDE,B.LATITUDE,B.WARE_ID,B.AUXILIARY_POINT_ID,B.AUXILIARY_POINT_NAME,B.AUXILIARY_ID,B.SEQ_SORTING FROM FIBER_AUXILIARY_POINTS B "
-								+ "WHERE B.FIBER_CABLE_ID ='"+ fiberCableID + "' AND B.SEQ_SORTING ='"+(nearestAuxPtSeq-1)+"'").getSingleResult();
+								+ "WHERE B.FIBER_CABLE_ID ='"+ fiberCableID + "' AND B.SEQ_SORTING >='"+(nearestAuxPtSeq-2)+"' AND B.SEQ_SORTING <='"+(nearestAuxPtSeq+2)+"' ").getResultList();
 						
-						  
-						   
-						    String prAuxPointLongStr = (String) previousAuxPt[0];
-						    String prAuxuxPointLatStr = (String) previousAuxPt[1];
-	
-						    // Parse the string values to double
-						    double prAuxPointLong = Double.parseDouble(prAuxPointLongStr);
-						    double prAuxPointLat = Double.parseDouble(prAuxuxPointLatStr);
+						
+							   
+							double prAuxPointLong = 0.0;
+						    double prAuxPointLat =0.0;
+						    double prPrAuxPointLong = 0.0;
+						    double prPrAuxPointLat =0.0;
+						    double nxtAuxPointLong = 0.0;
+						    double nxtAuxPointLat =0.0;
+						    double nxtNxtAuxPointLong = 0.0;
+						    double nxtNxtAuxPointLat =0.0;
+						    
+						    for (Object[]  row : previousAuxPts) {
+						        String tempLongStr = (String) row[0]; 
+						        String tempLatStr = (String) row[1];
+						        
+						        double tempLong = Double.parseDouble(tempLongStr);
+						        double tempLat = Double.parseDouble(tempLatStr);
+						        
+						        Object tempSeq =  row[6];
+						        BigDecimal tempSeqDecimal = (BigDecimal) tempSeq;
+						        int seq = tempSeqDecimal.intValue();
+						        //get previous previous pt long lat
+						        if(seq ==(nearestAuxPtSeq-2)) {
+						        	prPrAuxPointLong=tempLong;
+						        	prPrAuxPointLat=tempLat;
+						        }
+						        //get previous pt long lat
+						        else if(seq ==(nearestAuxPtSeq-1)) {
+						        	prAuxPointLong=tempLong;
+						        	prAuxPointLat=tempLat;
+						        }
+						        //get next pt long lat
+						        else if(seq ==(nearestAuxPtSeq+1)) {
+						        	nxtAuxPointLong=tempLong;
+						        	nxtAuxPointLat=tempLat;
+						        	
+						        }
+						        else if(seq ==(nearestAuxPtSeq+2)) {
+						        	nxtNxtAuxPointLong=tempLong;
+						        	nxtNxtAuxPointLat=tempLat;
+						        }
+						     
+						        
+						        
+						    }
+						    
+						    //special case if there is no next aux pt (dest is next)
+						    if(nearestAuxPtSeq == auxPtscount) {
+				        		//next pt is dest
+				        		//when nearest pt is last aux pt
+				        		nxtAuxPointLong = Double.parseDouble(DestLongStr);
+				        		nxtAuxPointLat = Double.parseDouble(DestLatStr);
+				        	}
+						    
+						
 						    
 						    //Calculate distance between previous Aux pt and break pt 
 						    double prvToBreakdistance = haversine(prAuxPointLat, prAuxPointLong, breakPointLat, breakPointLong);
+						  //Calculate distance between previous previous Aux pt and break pt 
+						    double prvPrvToBreakdistance = haversine(prPrAuxPointLat, prPrAuxPointLong, breakPointLat, breakPointLong);
+						  //Calculate distance between next Aux pt and break pt 
+						    double nxtToBreakdistance = haversine(nxtAuxPointLat, nxtAuxPointLong, breakPointLat, breakPointLong);
+						  //Calculate distance between nearest Aux pt and break pt 
+						    double nearestToBreakdistance = haversine(nearestPointLat, nearestPointLong, breakPointLat, breakPointLong);
+						    
+						   //Calculate distance between next next Aux pt and break pt 
+						    double nxtNxtToBreakdistance = haversine(nxtNxtAuxPointLat, nxtNxtAuxPointLong, breakPointLat, breakPointLong);
+						    
+						    
+						  //Calculate distance between previous previous Aux pt and previous Aux pt 
+						    double prvPrvToPrvdistance = haversine(prPrAuxPointLat, prPrAuxPointLong, prAuxPointLat, prAuxPointLong);
+						    
 						    //Calculate distance between previous Aux pt and nearest Aux pt
 						    double prvTonearestdistance = haversine(prAuxPointLat, prAuxPointLong, nearestPointLat, nearestPointLong);
+						  //Calculate distance between nearest Aux pt and Next Aux pt 
+						    double nearestToNextdistance = haversine(nearestPointLat, nearestPointLong, nxtAuxPointLat, nxtAuxPointLong);
+						 
+						    //Calculate distance between nearest Aux pt and Next Aux pt 
+						    double nextToNextNextdistance = haversine(nxtNxtAuxPointLat, nxtNxtAuxPointLong, nxtAuxPointLat, nxtAuxPointLong);
+						    
+						    
+						    double ratio1=(prvToBreakdistance + nearestToBreakdistance) /prvTonearestdistance;
+						    double ratio2=(nxtToBreakdistance + nearestToBreakdistance) /nearestToNextdistance;
+						   
+						    //ratio 3 is too small in case if the nearest aux pt has seq = 2 because there is no previous aux so thats why we give it virtual value 100 
+						    double ratio3=100.0;
+						    if(nearestAuxPtSeq !=2 ) {
+						    	 ratio3=(prvPrvToBreakdistance + prvToBreakdistance) /prvPrvToPrvdistance;
+						    }
+						    
+						    //ratio 4 is too small in case if we are on last or before last aux pt  because there is no next next aux so thats why we give it virtual value 100 
+						    double ratio4=100.0;
+						    if(nearestAuxPtSeq !=auxPtscount && nearestAuxPtSeq !=auxPtscount-1) {
+						    	 ratio4=(nxtNxtToBreakdistance + nxtToBreakdistance) /nextToNextNextdistance;
+						    }
+						   
+						    if(ratio1 < ratio2 && ratio1 < ratio3 && ratio1 < ratio4) {
+						    	// previous pt 
+						    	breakingPtSeq=nearestAuxPtSeq-1;
+						    	
+						    }
+						    else if(ratio3 < ratio1 && ratio3 < ratio2 && ratio3 < ratio4) {
+						    	//prv previous
+						    	breakingPtSeq=nearestAuxPtSeq-2;
+						    }
+						    else if(ratio4 < ratio1 && ratio4 < ratio2 && ratio4 < ratio3) {
+						    	//next pt
+						    	breakingPtSeq=nearestAuxPtSeq+1;
+						    }
+						    else {
+						    	//nearest
+						    	breakingPtSeq=nearestAuxPtSeq;
+						    }
+				
+						    
+						    
+						    
+						    //Calculate distance between previous Aux pt and nearest Aux pt
+						  //  double prvTonearestdistance = haversine(prAuxPointLat, prAuxPointLong, nearestPointLat, nearestPointLong);
 						   
 						    
 						    /*give the breaking pt Sequence as following:
@@ -323,7 +435,7 @@ public class CableBreakReportController {
 						     * 		after the nearest auxiliary pt and thus the seq of the breaking pt wil be the seq of nearest auxiliary pt 
 						     * */
 						    
-						    if(prvToBreakdistance<prvTonearestdistance ) {
+						   /* if(prvToBreakdistance<prvTonearestdistance ) {
 						    	//seq of breaking pt is previous aux pt seq
 						    	breakingPtSeq=nearestAuxPtSeq-1;
 						    	
@@ -331,13 +443,11 @@ public class CableBreakReportController {
 						    else {
 						    	//seq of breaking pt is nearest aux pt seq
 						    	breakingPtSeq=nearestAuxPtSeq;
-						    }
+						    }*/
 						}
 					
 						else if(nearestAuxPtSeq ==  1) {
-							//breakingPtSeq =1;
 							
-					    	
 					    	
 							double srcLong = Double.parseDouble(SrcLongStr);
 						    double srcLat = Double.parseDouble(SrcLatStr);
@@ -360,7 +470,6 @@ public class CableBreakReportController {
 						    }
 						}
 					
-					System.out.println("breakingPtSeq "+breakingPtSeq);
 					    
 					 
 					    //get junctions from auxiliary pt table related to that cable as lists before and after break point 
@@ -388,8 +497,6 @@ public class CableBreakReportController {
 					    	junctionAfterBreakingPt.add(tempjJunctionId);
 					    					    		
 			    		}
-					    System.out.println("junctionAfterBreakingPt "+junctionAfterBreakingPt.size());
-					    System.out.println("junctionBeforeBreakingPt "+junctionBeforeBreakingPt.size());
 					    //get affected sites and client
 					    String str = "SELECT DISTINCT BP_LOCATION_ID,DB_ID  FROM DISTRIBUTION_BOARD_MAPPING "
 					    		+ "where "
@@ -573,6 +680,7 @@ public class CableBreakReportController {
 						rtn.put("totalAffectd", totalaffectd);
 						rtn.put("totalAffectdClients", totalaffectdClients);
 						rtn.put("totalAffectdSites", totalaffectdSites);
+						rtn.put("breakingPtSeq", breakingPtSeq);
 
 					   
 					    
@@ -804,6 +912,7 @@ public class CableBreakReportController {
 		return rad * c;
 
 	}
+
 	
 	
 
