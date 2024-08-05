@@ -371,7 +371,7 @@ if(readDB === '1'){
 				   $("#initial_ul_Projects_Implementation").append(str);
 			   }
 
-			   var strPhysicalLayer="<ul style='margin-left:15px;'><li id='initial_ul_"+ListProject[iji][0]+"' class='Initial_projects' style='display:none;'><input type='checkbox' class='projectallElements' unchecked name='filter'></input><span id='initial_Span_"+ListProject[iji][0]+"' class='Parentfolder'><i class='fa fa-folder' style='color: #08526D;'></i></span><span class='TreeSpan' style='color:black;width:436px;'> Physical Layer </span></li></ul>";
+			   var strPhysicalLayer="<ul><li id='initial_ul_"+ListProject[iji][0]+"' class='Initial_projects' style='display:none;'><input type='checkbox' class='projectallElements' unchecked name='filter'></input><span id='initial_Span_"+ListProject[iji][0]+"' class='Parentfolder'><i class='fa fa-folder' style='color: #08526D;'></i></span><span class='TreeSpan' style='color:black;width:436px;'> Physical Layer </span></li></ul>";
 		       $("#"+ListProject[iji][0]+"").append(strPhysicalLayer);
 		         
 			       if(readManhole === '1'){
@@ -10261,7 +10261,7 @@ singleTube = new ContextMenu({
 							   
 							   
 							   
-							   var strPhysicalLayer="<ul style='margin-left:15px;'><li id='initial_ul_"+data.ProjectId+"' class='Initial_projects' style='display:none;'><input type='checkbox' class='projectallElements' unchecked name='filter'></input><span id='initial_Span_"+data.ProjectId+"' class='folder'><i class='fa fa-folder' style='color: #08526D;'></i></span><span class='TreeSpan' style='color:black;width:436px;'> Physical Layer </span></li></ul>";
+							   var strPhysicalLayer="<ul><li id='initial_ul_"+data.ProjectId+"' class='Initial_projects' style='display:none;'><input type='checkbox' class='projectallElements' unchecked name='filter'></input><span id='initial_Span_"+data.ProjectId+"' class='folder'><i class='fa fa-folder' style='color: #08526D;'></i></span><span class='TreeSpan' style='color:black;width:436px;'> Physical Layer </span></li></ul>";
 						       $("#"+data.ProjectId+"").append(strPhysicalLayer);
 						         
 							   str="<ul><li id='Manhole_f_"+data.ProjectId+"' style='display:none;' class='Manhole_f_projects'><input type='checkbox' unchecked class='AllManholes checkFilter' ></input> <span id='Manhole_spanFolder'  class='folder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Manhole_span' class='TreeSpan' style='color:black;width:395px' >Manhole </span></li></ul>";	   
