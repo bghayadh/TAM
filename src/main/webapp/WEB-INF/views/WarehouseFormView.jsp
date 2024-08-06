@@ -651,6 +651,7 @@ select {
 									<span class="input-group-text">City </span> <input type="text"
 										id="warcity" value=
 										"${wareCity}" class="form-control text-input" />
+										<button id="getWarehouseCity" type="button" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; width: 20%; margin-left:25px" onclick="getWareCity()">Get City</button>
 								</div>
 							</div>
 						</td>
@@ -3029,6 +3030,51 @@ function haversine_distance(mk1, mk2) {
       var d = 2 * R * Math.asin(Math.sqrt(Math.sin(difflat/2)*Math.sin(difflat/2)+Math.cos(rlat1)*Math.cos(rlat2)*Math.sin(difflon/2)*Math.sin(difflon/2)));
       return d;
     }
+var geocoder;
+function getWareCity(){
+	//console.log("getDBCity ");
+	fillCityByGeocoding("warcity",$("#warlatt").val(),$("#warelng").val(),geocoder);	
+	
+}
+//geocoding get city from lat lng
+function fillCityByGeocoding(Id,lat,lng,geocoder){
+	result="";
+	
+	var latlng = new google.maps.LatLng(lat,lng);
+	geocoder = new google.maps.Geocoder();
+	geocoder.geocode({'latLng': latlng}, function(results, status) {
+		if (status == google.maps.GeocoderStatus.OK) {
+	
+			if (results[2]) {
+				
+				$("#"+Id).val(results[2].formatted_address.split(", ")[0]);
+				
+			}
+			else if (results[3]) {
+				$("#"+Id).val(results[3].formatted_address.split(", ")[0]);
+				
+			}
+			else if (results[4]) {
+				$("#"+Id).val(results[4].formatted_address.split(", ")[0]);
+				
+			}
+			else if (results[5]) {
+				$("#"+Id).val(results[5].formatted_address.split(", ")[0]);
+				
+			}
+			else {
+				alert("No results found");						
+			}
+			
+		}
+		else {
+			alert("Something went wrong");
+			
+		}
+		
+	});
+	
+}
 var markers = [];
 var zooming = 6;
 
