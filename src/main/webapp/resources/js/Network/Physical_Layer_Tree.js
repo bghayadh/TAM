@@ -73,6 +73,8 @@ var hJctAttachPrevSelRow = "empty";
 var hJctAttachPrevSelColor = "";
 var projectAttachPrevSelRow = "empty";
 var projectAttachPrevSelColor = "";
+var clientExportData = [];
+var siteExportData = [];
 
 var TargetFiber= {
 		Action :"",
@@ -8655,9 +8657,19 @@ singleDistBoard = new ContextMenu({
 								"selectedFiberContext":selectedFiberContext 
 							},									
 							dataType: "json",
-							success: function (data) {								
+							success: function (data) {
+			
+				                clientExportData = data.ClientData;
+				                siteExportData = data.SiteData;
+				                var filename =window[""+selectedFiberContext][13];
+				                filename =filename.replace(/[-\/\\]/g, "_").replace(/\s+/g, "");
+				               
 								$("#ClientSite").append("<tr><td><b>Fiber Path: </b>" +window[""+selectedFiberContext][13] +" / "+selectedFiberContext);
-								$("#ClientSite").append("<table style='width:100%;'><tr>"+"<th style='font-size:18px;width:100%;'><u>Clients</u></th></tr></table>"
+								$("#ClientSite").append("<table style='width:100%;'><tr>"+"<th style='font-size:18px;width:100%;'><u>Clients</u></th> <th><button id='exportFiberClientSite' type='button' class='btn btn-primary' " 
+										+ "style='color: white; font-size: 13px; height: 40px; width: 80%; margin-left:25px' " 
+										+ "onclick='ExportClientAndSite(\""+filename+"\")'>" 
+										+ "Export"
+										+ "</button></th> </tr></table>"
 										+"<table style='width:100%;'><tr>"+"<td style='width: 5%'></td>"+"<th style='width: 30%'>ID </th>"
 										+"<th style='width: 35%'>Name </th>"
 										+"<th style='width: 25%'>Phone Number</th></tr></table>");
@@ -22926,6 +22938,59 @@ function geoDistanceFlag(){
 geoFlag=1;
 
 }
+//Show client and site export
+function exportCSV(data, filename) {
+    var csvContent = "data:text/csv;charset=utf-8,";
+    data.forEach(rowArray => {
+        let row = rowArray.join(",");
+        csvContent += row + "\r\n";
+    });
+
+    var encodedUri = encodeURI(csvContent);
+    var link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);  // Clean up the DOM
+}
+
+function ExportClientAndSite(fileName) {
+    var clientHeaders = ["Client ID", "Client Name", "Phone Number"];
+    var siteHeaders = ["Warehouse ID", "Site ID", "Site Name"];
+
+    var clientCSVData = fillExcel(clientExportData, clientHeaders);
+    var siteCSVData = fillExcel(siteExportData, siteHeaders);
+
+    exportCSV(clientCSVData, fileName+"_ClientData.csv");
+    exportCSV(siteCSVData, fileName+"_SiteData.csv");
+}
+		
+	
+		//filling the grid with the needed data
+function fillExcel(data, headers) {
+    var csvData = [];
+    csvData.push(headers);  // Add header row
+
+    // Check if data is an array and not empty
+    if (Array.isArray(data)) {
+        data.forEach(row => {
+            csvData.push([
+                row[0] || "",  // Access data by index
+                row[1] || "",
+                row[2] || ""
+            ]);
+        });
+    } else {
+        console.error("Data is not an array:", data);
+        // Optionally handle this case, e.g., by returning an empty array
+    }
+
+    return csvData;
+}
+
+
+
 function downloadAttachment(row) {
     var attachmentName = row.find("input[name='attachmentName']").val();
     var attachmentPath = row.find("input[name='attachmentPath']").val();
