@@ -637,8 +637,8 @@ max-width: 100%;
          <div class="legendHeader"  id="legendHeader">
  			<h6 style="color:white;font-weight:bold; font-size:2.5ex;display:inline-block;position: relative;margin-left:20px;">Legend</h6>
   			 <select class="mapDropdown" id="mapDropdown">
-        			<option value="cableBased">Based on cable</option>
         			<option value="gridBased">Based on grid</option>
+        			<option value="cableBased">Based on cable</option>
     		</select>
   		
   		</div>

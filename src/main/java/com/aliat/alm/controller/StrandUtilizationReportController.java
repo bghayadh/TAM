@@ -270,12 +270,17 @@ public class StrandUtilizationReportController {
 			try {
 				String[] jctElementsIDArray = request.getParameterValues("jctElementsIDArray[]");
 
-				query = session.createNativeQuery("SELECT JUNCTION_ID,JUNCTION_NAME,PHYSICAL_LAYER_ID,PHYSICAL_LAYER_NAME,LONGITUDE,LATITUDE"
-						+ " FROM JUNCTION WHERE JUNCTION_ID IN (:param1) ");
-						
-				query.setParameter("param1", Arrays.asList(jctElementsIDArray));
-				rtn.put("jctList", query.getResultList());
-
+				if (jctElementsIDArray == null) {
+					rtn.put("jctList","");
+				} 
+				else {
+				    				
+					query = session.createNativeQuery("SELECT JUNCTION_ID,JUNCTION_NAME,PHYSICAL_LAYER_ID,PHYSICAL_LAYER_NAME,LONGITUDE,LATITUDE"
+							+ " FROM JUNCTION WHERE JUNCTION_ID IN (:param1) ");
+							
+					query.setParameter("param1", Arrays.asList(jctElementsIDArray));
+					rtn.put("jctList", query.getResultList());
+				}
 
 			} catch (Exception e) {
 				sw = new StringWriter();
