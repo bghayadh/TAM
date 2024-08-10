@@ -238,8 +238,32 @@ a{
 						</a>
 					</div>
 					</div>
+					
+					
+					<div style="margin-right:20px;"> </div>
+					<div class="col-md-2">
+					<div class="card bg-c-blue order-card">
+					<a href="${pageContext.request.contextPath}/ModuleScreenListView" style="text-decoration: none">
+						<div class="card-block">
+							<i class="fas fa-desktop" style="color:gold; width:40px; height:40px"></i>
+								<h5 class="m-b-20" id="first" style="font-size:1.3em;">Module Screen</h5>
+						</div>
+						</a>
+					</div>
+					</div>
 				</div>
-				
+				<div class="row">
+					<div style="margin-right:20px;"> </div>
+					<div class="col-md-2">
+					<div class="card bg-c-blue order-card">
+					<a href="${pageContext.request.contextPath}/ModuleFieldListView" style="text-decoration: none">
+						<div class="card-block">
+							<i class="fa fa-map" style="color:gold; width:40px; height:40px"></i>
+								<h5 class="m-b-20" id="first" style="font-size:1.3em;">Module Fields</h5>
+						</div>
+						</a>
+					</div>
+					</div></div>
 				</div>
 				</div>
 				
