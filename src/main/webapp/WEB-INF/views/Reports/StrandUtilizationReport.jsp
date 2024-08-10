@@ -869,7 +869,7 @@ function initMap() {
 	 	minimumClusterSize: 2,
 	 	styles: [
 	 	         {
-	 	        	 url:'${pageContext.request.contextPath}/resources/clusterIcons/yellowCluster.png',
+	 	        	 url:'${pageContext.request.contextPath}/resources/clusterIcons/customerCluster.png',
 	 		         height: 60,
 	 		         width:60,
 	 		         anchorText:[-3,-3]
