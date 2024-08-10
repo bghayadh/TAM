@@ -156,7 +156,8 @@
 <mapping class="com.aliat.alm.models.PhysicalLayerActivity"/>
 <mapping class="com.aliat.alm.models.AttachmentUpload"/>
 <mapping class="com.aliat.alm.models.SystemSettings"/>
-
+<mapping class="com.aliat.alm.models.ModuleField"/>
+<mapping class="com.aliat.alm.models.ModuleScreen"/>
 
    </session-factory>
 </hibernate-configuration>
