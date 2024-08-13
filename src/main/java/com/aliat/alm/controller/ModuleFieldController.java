@@ -84,7 +84,9 @@ public class ModuleFieldController {
 			return "redirect:/";
 		}
 		List<ModuleScreen> ModuleScreenList = new ArrayList<ModuleScreen>();
-		
+		String screenTable= request.getParameter("screenTable");
+		String screenName= request.getParameter("screenName");
+		System.out.println(screenTable);
 			session = AlmDbSession.getInstance().getSession();
 			if (session != null && session.isOpen()) {
 				tx = session.beginTransaction();
@@ -95,9 +97,31 @@ public class ModuleFieldController {
 							"select t.id,t.screenName, t.screenTable  from ModuleScreen t order by t.screenName ")
 							.list();
 					model.addAttribute("ListGridTable", mapper.writeValueAsString(ModuleScreenList));
-			
+			if(screenTable!="") {
 				
-				} catch (Exception e) {
+				 List<ModuleField> moduleFieldList = session.createQuery(
+	                        "SELECT t.id, t.id, t.screenName, t.screenTable, t.fieldName, " +
+	                        "TO_CHAR(t.creationDate, 'YYYY-MM-DD HH24:MI:SS'), " +
+	                        "TO_CHAR(t.lastModificationDate, 'YYYY-MM-DD HH24:MI:SS') " +
+	                        "FROM ModuleField t WHERE t.screenTable = :param1 ORDER BY t.lastModificationDate DESC")
+	                        .setParameter("param1", screenTable)
+	                        .list();
+				 
+	                if (moduleFieldList != null && !moduleFieldList.isEmpty()) {
+	                	
+	                	 model.addAttribute("screenName", screenName);
+	                	model.addAttribute("ListGrid",  mapper.writeValueAsString(moduleFieldList));
+	                	
+	                }
+	                else {
+	                	model.addAttribute("ListGrid", mapper.writeValueAsString(null));
+	                }
+	                
+	            }
+			
+			}
+				
+				 catch (Exception e) {
 					logger.info(
 							"Error on the level of purchase order list view with a message : " + e + "\n" + e.getMessage());
 					model.addAttribute("ListGridTable", "");
@@ -109,6 +133,7 @@ public class ModuleFieldController {
 					}
 				}
 			}
+			
 			return "ModuleFieldListView";
 		}
 	
@@ -397,6 +422,8 @@ public class ModuleFieldController {
 			List<String> missingColumns =new ArrayList<String>();
 			
 			try {
+				 String[] values = new String[1];
+				 values[0]="novalues";
 				if(screenId != null) {
 					
 					String TableName = (String) session.createSQLQuery(
@@ -424,7 +451,8 @@ public class ModuleFieldController {
 					model.addAttribute("missingColumns",mapper.writeValueAsString(missingColumns) );
 				    model.addAttribute("screenName", screenName);
 		            model.addAttribute("screenTable",TableName);
-		               
+		           
+		            model.addAttribute("fieldValues", mapper.writeValueAsString(values));
 					return "ModuleFieldFormView"; 
 				}
 				
@@ -432,11 +460,11 @@ public class ModuleFieldController {
 				
 				
 		       if (moduleFieldId == null) { 
-					
-					model.addAttribute("status","AddNew");
+		    	  model.addAttribute("status","AddNew");
 					model.addAttribute("SelectedIndex","addNew");
 					model.addAttribute("moduleScreenCount","addNew");
 					model.addAttribute("missingColumns",mapper.writeValueAsString(missingColumns) );
+					  model.addAttribute("fieldValues", mapper.writeValueAsString(values));
 					return "ModuleFieldFormView"; 
 					
 					}
@@ -458,6 +486,14 @@ public class ModuleFieldController {
 		                model.addAttribute("screenTable", ModuleFieldInfo.getScreenTable());
 		                model.addAttribute("fieldName", ModuleFieldInfo.getFieldName());
 		                model.addAttribute("fieldValues", ModuleFieldInfo.getFieldValues());
+		               if(ModuleFieldInfo.getFieldValues() == null) {
+		                	  model.addAttribute("fieldValues", mapper.writeValueAsString(values));
+				               
+		                }
+		                else{
+		                	  model.addAttribute("fieldValues", ModuleFieldInfo.getFieldValues());
+				               
+		                }
 		                model.addAttribute("fieldLevel", ModuleFieldInfo.getFieldLevel());
 		                model.addAttribute("fieldIndex", ModuleFieldInfo.getFieldIndex());
 
@@ -506,6 +542,38 @@ public class ModuleFieldController {
 				query = session.createQuery("delete ModuleField where ID IN (:param1)");
 				query.setParameterList("param1", idList);
 				query.executeUpdate();
+				
+				  String TableName;
+				    String ScreenId = request.getParameter("id");
+				    
+				            
+				            TableName = (String) session.createSQLQuery(
+				                    "SELECT SCREEN_TABLE FROM MODULE_SCREEN WHERE ID = :param1")
+				                    .setParameter("param1", ScreenId)
+				                    .uniqueResult();
+				            
+				            if (TableName != "" || TableName != null ) {
+				                // When TableName is found
+				                List<ModuleField> moduleFieldList = session.createQuery(
+				                        "SELECT t.id, t.id, t.screenName, t.screenTable, t.fieldName, " +
+				                        "TO_CHAR(t.creationDate, 'YYYY-MM-DD HH24:MI:SS'), " +
+				                        "TO_CHAR(t.lastModificationDate, 'YYYY-MM-DD HH24:MI:SS') " +
+				                        "FROM ModuleField t WHERE t.screenTable = :param1 ORDER BY t.lastModificationDate DESC")
+				                        .setParameter("param1", TableName)
+				                        .list();
+				                if (moduleFieldList != null && !moduleFieldList.isEmpty()) {
+				                rtn.put("ListGridTable", moduleFieldList);
+				                }
+				            } else {
+				               
+				                TableName = TableName.toUpperCase();
+				                List<String> fieldNames = session.createSQLQuery(
+				                        "SELECT COLUMN_NAME FROM ALL_TAB_COLUMNS WHERE TABLE_NAME = :param1 ORDER BY COLUMN_NAME")
+				                        .setParameter("param1", TableName)
+				                        .list();
+				                
+				                rtn.put("fieldNames", fieldNames);
+				            }
 
 				
 			} catch (Exception e) {
