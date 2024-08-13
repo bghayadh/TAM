@@ -16,17 +16,6 @@ public class StrandUtilizationReport {
 	@Column(name = "TUBE_NB_SIDE_A")
 	private String tubeNo;
 	
-	private String elementType;
-	private String elementID;	
-	private String frontBackPort;
-	private String portIndex;
-	private String portRow;
-	private String portColumn;
-	private String status;
-	private String equipmentType;
-	private String equipmentID;
-	private String equipmentName;
-	
 	@Column(name = "LOCATION_TYPE_SIDE_A")
 	private String locationType;
 	
@@ -39,6 +28,19 @@ public class StrandUtilizationReport {
 	
 	private String longitude;
 	private String latitude;
+	
+	private String elementType;
+	private String elementID;	
+	private String frontBackPort;
+	private String portIndex;
+	private String portRow;
+	private String portColumn;
+	private String status;
+	private String equipmentType;
+	private String equipmentID;
+	private String equipmentName;
+	
+	
 	private String showLocation;
 	private String showElement;
 
@@ -48,11 +50,17 @@ public class StrandUtilizationReport {
 	}
 
 
-	public StrandUtilizationReport(String strandNo, String tubeNo,String elementType,String elementID,String frontBackPort,String portIndex,String portRow,String portColumn,String status,String equipmentType,String equipmentID,String equipmentName,String locationType,String locationID, String locationName,
-			String longitude, String latitude,String showLocation,String showElement) {
+	public StrandUtilizationReport(String strandNo, String tubeNo,String locationType,String locationID, String locationName,String longitude, String latitude,String elementType,String elementID,String frontBackPort,String portIndex,String portRow,String portColumn,String status,String equipmentType,String equipmentID,String equipmentName,
+			
+			String showLocation,String showElement) {
 		super();
 		this.strandNo=strandNo;
 		this.tubeNo = tubeNo;
+		this.locationType = locationType;
+		this.locationID=locationID;
+		this.locationName = locationName;
+		this.longitude=longitude;
+		this.latitude =latitude;
 		this.elementType=elementType;
 		this.elementID=elementID;
 		this.frontBackPort=frontBackPort;
@@ -63,11 +71,6 @@ public class StrandUtilizationReport {
 		this.equipmentType=equipmentType;
 		this.equipmentID = equipmentID;
 		this.equipmentName = equipmentName;
-		this.locationType = locationType;
-		this.locationID=locationID;
-		this.locationName = locationName;
-		this.longitude=longitude;
-		this.latitude =latitude;
 		this.showLocation=showLocation;
 		this.showElement=showElement;
 	}

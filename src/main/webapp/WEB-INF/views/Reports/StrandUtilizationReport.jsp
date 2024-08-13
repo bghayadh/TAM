@@ -372,6 +372,51 @@ max-width: 100%;
 														<ul class="dropdown-menu filter-dropdown-ul"></ul>
 													</li>
 												</th>	
+												<th>Location Type
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown">
+														 <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
+														 </button>
+														<ul class="dropdown-menu filter-dropdown-ul"></ul>
+													</li>
+												</th>
+												
+												<th>Location ID
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown">
+														 <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
+														 </button>
+														<ul class="dropdown-menu filter-dropdown-ul"></ul>
+													</li>
+												</th>
+												
+												<th>Location Name
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown">
+														 <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
+														 </button>
+														<ul class="dropdown-menu filter-dropdown-ul"></ul>
+													</li>
+												</th>
+												
+												<th>Location Longitude
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown">
+														 <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
+														 </button>
+														<ul class="dropdown-menu filter-dropdown-ul"></ul>
+													</li>
+												</th>
+												
+												<th>Location Latitude
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown">
+														 <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
+														 </button>
+														<ul class="dropdown-menu filter-dropdown-ul"></ul>
+													</li>
+												</th>
+												
 												<th>Element Type
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown"> 
@@ -455,50 +500,6 @@ max-width: 100%;
 														<ul class="dropdown-menu filter-dropdown-ul"></ul>
 													</li>
 												</th>	
-												<th>Location Type
-													<li class="filter-dropdown dropdown">
-														<button class="almgrid-filter" data-toggle="dropdown">
-														 <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
-														 </button>
-														<ul class="dropdown-menu filter-dropdown-ul"></ul>
-													</li>
-												</th>
-												
-												<th>Location ID
-													<li class="filter-dropdown dropdown">
-														<button class="almgrid-filter" data-toggle="dropdown">
-														 <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
-														 </button>
-														<ul class="dropdown-menu filter-dropdown-ul"></ul>
-													</li>
-												</th>
-												
-												<th>Location Name
-													<li class="filter-dropdown dropdown">
-														<button class="almgrid-filter" data-toggle="dropdown">
-														 <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
-														 </button>
-														<ul class="dropdown-menu filter-dropdown-ul"></ul>
-													</li>
-												</th>
-												
-												<th>Location Longitude
-													<li class="filter-dropdown dropdown">
-														<button class="almgrid-filter" data-toggle="dropdown">
-														 <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
-														 </button>
-														<ul class="dropdown-menu filter-dropdown-ul"></ul>
-													</li>
-												</th>
-												
-												<th>Location Latitude
-													<li class="filter-dropdown dropdown">
-														<button class="almgrid-filter" data-toggle="dropdown">
-														 <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
-														 </button>
-														<ul class="dropdown-menu filter-dropdown-ul"></ul>
-													</li>
-												</th>
 												
 												<th>
 												<li class="filter-dropdown dropdown">
@@ -1173,6 +1174,11 @@ $(document).ready(function() {
 		$("#tableGrid").append('<table id="gridTable" class="table table-striped table-bordered almgrid-table"><thead><tr class="header fixed-header">'
 				+'<th>Strand #<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
 				+'<th>Tube #<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
+				+'<th>Location Type<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
+				+'<th>Location ID<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
+				+'<th>Location Name<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
+				+'<th>Location Longitude<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
+				+'<th>Location Latitude<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
 				+'<th>Element Type<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
 				+'<th>Element ID<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
 				+'<th><div class="tooltip-container">F/B or A/B<span class="tooltip-text">Front/Back or Side A/Side B</span></div><li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
@@ -1183,11 +1189,6 @@ $(document).ready(function() {
 				+'<th>Equipment Type<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
 				+'<th>Equipment ID<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
 				+'<th>Equipment Name<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
-				+'<th>Location Type<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
-				+'<th>Location ID<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
-				+'<th>Location Name<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
-				+'<th>Location Longitude<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
-				+'<th>Location Latitude<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
 				+'<th><li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown" disabled style="display:none;"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
 				+'<th><li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown" disabled style="display:none;"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
 				+'<tr><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" disabled class="almgrid-search" style="display:none"></th><th><input type="text" disabled class="almgrid-search" style="display:none"></th></tr></thead><tbody></tbody></table>');
@@ -1326,7 +1327,7 @@ $(document).ready(function() {
   			       	  	   jctElementsIDArray=[];
   			       	  	   jctElementsFlag="notOpened";
   			       		   data.push('\r');
-  			       		   data.push(["Strand #","Tube #","Element Type","Element ID","F/B or A/B","Port Index","Port Row","Port Column","Status","Equipment Type","Equipment ID","Equipment Name","Location Type" ,"Location ID", "Location Name","Location Longitude", "Location Latitude"]);  	  			       		
+  			       		   data.push(["Strand #","Tube #","Location Type" ,"Location ID", "Location Name","Location Longitude", "Location Latitude","Element Type","Element ID","F/B or A/B","Port Index","Port Row","Port Column","Status","Equipment Type","Equipment ID","Equipment Name"]);  	  			       		
 
   	  			       	   filteredGridData =  dataArray; // used in draw on map 
   	  			       	   
@@ -2338,11 +2339,7 @@ function showElementLocationPoints(elementsDetailsArray,filteredGridArray,window
 		}
 		map.fitBounds(window["bounds_"+cableID]);
 
-		//This is used to add the markers in cluster not around the cluster
-		var currentCenter = map.getCenter();
-		var currentZoom = map.getZoom();
-		map.setCenter(currentCenter);
-		map.setZoom(currentZoom);
+		
 	}
 
 
@@ -2545,7 +2542,13 @@ function showElementLocationPoints(elementsDetailsArray,filteredGridArray,window
 	document.getElementById("handholesCountWithJct").textContent = "("+distinctHandholesWithJct.length+")";
 	document.getElementById("custCount").textContent = "("+distinctCustomers.length+")";
 	document.getElementById("jctCount").textContent = "("+distinctJct.length+")";
-	document.getElementById("dbCount").textContent = "("+distinctDB.length+")";  
+	document.getElementById("dbCount").textContent = "("+distinctDB.length+")"; 
+
+	//This is used to add the markers in cluster not around the cluster
+	var currentCenter = map.getCenter();
+	var currentZoom = map.getZoom();
+	map.setCenter(currentCenter);
+	map.setZoom(currentZoom); 
 
 }
 
@@ -2652,6 +2655,13 @@ function showOnMap() {
     
 		//Scroll to the map div
 		 document.getElementById("headingTwo").scrollIntoView({ behavior: "smooth" });
+
+		/* var currentCenter = map.getCenter();
+			var currentZoom = map.getZoom();
+			map.setCenter(currentCenter);
+			map.setZoom(currentZoom);
+
+			alert("here we go ")*/
 	}
 </script>
 <script
