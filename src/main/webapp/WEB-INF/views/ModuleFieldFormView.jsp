@@ -451,6 +451,7 @@ max-height: 100%;
        
         #fieldValuesList {
             border: 1px solid #ced4da;
+            width: 350px;
         }
              		 
  	</style>
@@ -686,14 +687,14 @@ max-height: 100%;
         
                   <div class="col-md-4">
                 <div class="form-group">
-                    <div class="input-group mb-3">
+                  <div class="input-group-prepend">
                         <span class="input-group-text">Field Value</span>
                         <input type="text" id="fieldValueInput" class="form-control" placeholder="Enter a value">
-                    </div>
-                    <div class="d-flex justify-content-between mb-3">
-                        <button id="addButton" class="btn btn-primary">Add</button>
-                        <button id="deleteListButton" class="btn btn-danger">Delete Selected</button>
-                    </div>
+                    
+                  
+                          <button style="height:40px;" id="addButton" class="btn btn-primary">Add</button>
+                        <button style="height:40px; " id="deleteListButton" class="btn btn-danger">Delete</button>
+                      </div><br>
                     <select id="fieldValuesList" class="form-select" multiple size="10">
                       <!-- Dynamically generated options -->
                        
