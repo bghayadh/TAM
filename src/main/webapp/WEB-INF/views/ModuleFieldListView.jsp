@@ -393,10 +393,18 @@ var screenName = "${screenName}";
         option.value = item[0]; 
         option.textContent = item[1]; 
         selectElement.appendChild(option);
-      
+        if (item[1] === screenName) {
+            option.selected = true; // Select the matching option
+            screenNameSelected = true; // Flag that the screenName was found
+        }
     });
 
-   
+    // Update screenIdInput if a screenName was selected
+    if (screenNameSelected) {
+        screenIdInput.value = selectElement.value; // Set the input value to the selected option's value
+        initializeButton.disabled = false;
+        addButton.disabled = false;
+    }
 
     selectElement.addEventListener('change', function() {
         var selectedId = this.value; 
