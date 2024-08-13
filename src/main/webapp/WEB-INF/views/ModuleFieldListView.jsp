@@ -357,6 +357,18 @@
 
 
 <script>
+
+
+
+
+var data = ${ListGrid};
+if(data){
+Grid(data);
+
+}
+
+
+	
 document.addEventListener('DOMContentLoaded', function () {
     var selectElement = document.getElementById('screenTypeSearch');
     var screenIdInput = document.getElementById('screenId');
@@ -369,19 +381,22 @@ document.addEventListener('DOMContentLoaded', function () {
     addButton.disabled = true;
     var screenData = ${ListGridTable}; 
     console.log(screenData);
-
+var screenName = "${screenName}";
     var defaultOption = document.createElement('option');
     defaultOption.value = ""; // Empty value for default option
     defaultOption.textContent = "Choose Screen Name"; // Text for default option
     defaultOption.selected = true; // Make this option selected by default
     selectElement.appendChild(defaultOption);
-
+    var screenNameSelected = false;
     screenData.forEach(function(item) {
         var option = document.createElement('option');
         option.value = item[0]; 
         option.textContent = item[1]; 
         selectElement.appendChild(option);
+      
     });
+
+   
 
     selectElement.addEventListener('change', function() {
         var selectedId = this.value; 
@@ -478,17 +493,19 @@ alert ("Initialize with current index done")
     		return index === self.indexOf(elem);
     	});
     	console.log('delete now');
+    	 var screenId = $('#screenId').val();
     	$.ajax({
     		
     		type: "GET",
     		url: "${pageContext.request.contextPath}/DeleteModuleFieldListView",
     		dataType: "json",
     		data: {
-    			"ID": deleteArray
+    			"ID": deleteArray,
+    			"id": screenId,
     		},
     		success: function (data) {
-    			
-    			location.reload();
+    			clearGrid();
+    			Grid(data.ListGridTable);
     	    	
     		},
     		error: function (error) {
