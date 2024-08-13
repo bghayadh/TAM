@@ -444,15 +444,15 @@ max-height: 100%;
     background-color: #8696A0 !important;
     border-color: #8696A0 !important;
 }
-   #fieldValuesList {
-            width: 100%;
-            height: 200px;
-            overflow-y: auto;
+   
+	 .form-container {
+            margin-top: 20px;
+        }
+       
+        #fieldValuesList {
             border: 1px solid #ced4da;
-            padding: 10px;
-            box-sizing: border-box;
-        } 
-	        		 
+        }
+             		 
  	</style>
             
 </head>
@@ -569,7 +569,7 @@ max-height: 100%;
 			 				data-placement="top" title="Form View" style="background: #da6815;"> <i class="fa fa-edit"></i>
 			        	</button>
 			        	<button type="button" id="Lview"  class="btn btn-light" data-toggle="tooltip"
-			        			onclick='window.location.href = "${pageContext.request.contextPath}/ModuleFieldListView"'
+			        			onclick="listview()"
 			        			data-placement="top" title="List View"> 
 			        			<i class="fa fa-bars"></i>
 			        	</button>
@@ -684,27 +684,23 @@ max-height: 100%;
             
         <div class="row">
         
-        
-        <div class="col-md-4">
+                  <div class="col-md-4">
                 <div class="form-group">
-                    <div class="input-group-prepend">
+                    <div class="input-group mb-3">
                         <span class="input-group-text">Field Value</span>
-                        <input type="text" id="fieldValueInput" class="form-control text-input" placeholder="Enter value" />
-                        <div class="input-group-append">
-                            <button class="btn btn-primary" id="addButton">Add</button>
-                             <button class="btn btn-danger" id="deleteListButton">Delete</button>
-                             
-                       
-                        </div>
+                        <input type="text" id="fieldValueInput" class="form-control" placeholder="Enter a value">
                     </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <button id="addButton" class="btn btn-primary">Add</button>
+                        <button id="deleteListButton" class="btn btn-danger">Delete Selected</button>
+                    </div>
+                    <select id="fieldValuesList" class="form-select" multiple size="10">
+                      <!-- Dynamically generated options -->
+                       
+                    </select>
                 </div>
-                <div class="form-group mt-3">
-                
-    <textarea id="fieldValuesList" readonly>${fieldValues}</textarea>
-</div>
-
             </div>
-        
+
              <div class="col-md-4">
 		<div class="form-group">
 			<div class="input-group-prepend">
@@ -735,47 +731,69 @@ max-height: 100%;
  
 <script>
 
- 
- 
+ var valueslist= ${fieldValues};
+
+
+ if(valueslist[0] != "novalues"){
+ var selectElement = document.getElementById('fieldValuesList');
+
+ valueslist.forEach(function(value) {
+   var option = document.createElement('option');
+   option.value = value;  // Set the value attribute of the option
+   option.textContent = value;  // Set the display text of the option
+   selectElement.appendChild(option);  
+ })
+ }
+
+function listview(){
+var screenTable= $("#screenTable").val();
+var screenName= $("#screenName").val();
+var param = "${pageContext.request.contextPath}/ModuleFieldListView?screenTable="+screenTable+"&screenName="+screenName;
+location.replace(param);
+	
+} 
  	
  
- 
-        document.addEventListener("DOMContentLoaded", function() {
-            var fieldValueInput = document.getElementById("fieldValueInput");
-            var addButton = document.getElementById("addButton");
-            var deleteListButton = document.getElementById("deleteListButton");
-            var fieldValuesList = document.getElementById("fieldValuesList");
+document.addEventListener("DOMContentLoaded", function() {
+    var fieldValueInput = document.getElementById("fieldValueInput");
+    var addButton = document.getElementById("addButton");
+    var deleteListButton = document.getElementById("deleteListButton");
+    var fieldValuesList = document.getElementById("fieldValuesList");
 
-             function addValue() {
-                var value = fieldValueInput.value.trim();
-                if (value) {
-                    fieldValuesList.value += (fieldValuesList.value ? '\n' : '') + value;
-                    fieldValueInput.value = '';
-                    fieldValueInput.focus();
-                }
-            }
-             function deletevalues() {
-            	 fieldValuesList.value='';
-             }
-
-   
-            addButton.addEventListener("click", addValue);
-            deleteListButton.addEventListener("click", deletevalues);
-
-            
-            fieldValueInput.addEventListener("keypress", function(event) {
-                if (event.key === 'Enter') {
-                    event.preventDefault(); 
-                    addValue();
-                }
-            });
-        });
-    
- 
-        function getFieldValuesArray() {
-            return fieldValuesList.value.trim().split('\n').filter(value => value);
+    function addValue() {
+        var value = fieldValueInput.value.trim();
+        if (value) {
+            var option = document.createElement("option");
+            option.text = value;
+            fieldValuesList.add(option);
+            fieldValueInput.value = '';
+            fieldValueInput.focus();
         }
+    }
 
+    function deleteSelectedValues() {
+        var selectedOptions = Array.from(fieldValuesList.selectedOptions);
+        selectedOptions.forEach(option => option.remove());
+    }
+
+    addButton.addEventListener("click", addValue);
+    deleteListButton.addEventListener("click", deleteSelectedValues);
+
+    fieldValueInput.addEventListener("keypress", function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault(); 
+            addValue();
+        }
+    });
+});
+
+ 
+function getFieldValuesArray() {
+    
+    return Array.from(fieldValuesList.options)
+        .map(option => option.value)  
+        .filter(value => value);      
+}
  
  document.addEventListener("DOMContentLoaded", function() {
 
@@ -839,6 +857,7 @@ if(missingColumns.length<=0 && '${status}' == "AddNew"){
 		    var fieldType = $("#fieldType").val();
 		    var moduleFieldId = $("#moduleFieldId").val();
 		    var values = JSON.stringify(getFieldValuesArray());
+		    console.log(values);
 		    $.ajax({
  		        type: "GET",
  		        url: "${pageContext.request.contextPath}/ModuleFieldFormSave",
