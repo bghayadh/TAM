@@ -816,7 +816,9 @@ public class PhysicalLayerController {
 											+ request.getParameter("Checked") + "%' AND B.HANDHOLE_ID IN (:param)  ");
 							junctionHandholeList = query.setParameter("param", allHandIdsPointsList).getResultList();
 						}
-					} else if (StringUtils.equalsIgnoreCase(request.getParameter("Checked"), "circleRange")
+					} 
+					// Find nearest option
+					else if (StringUtils.equalsIgnoreCase(request.getParameter("Checked"), "circleRange")
 							|| StringUtils.equalsIgnoreCase(request.getParameter("Checked"), "StartEnd")
 							|| StringUtils.equalsIgnoreCase(request.getParameter("Checked"), "circleRange_multy")) {
 						filterFlag = 2;
@@ -1025,24 +1027,38 @@ public class PhysicalLayerController {
 					   }
 					   
 					//Select all MH details that are within the range
+/*					   
 					List<Object[]> manholeListQuery = session.createNativeQuery(
 							"SELECT DISTINCT MANHOLE_ID,MANHOLE_NAME,substr(trim(replace(LONGITUDE,'�','')),1,6) as LONGITUDE,substr(trim(replace(LATITUDE,'�','')),1,6) as LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=MANHOLE_ID),DM_NAME FROM MANHOLE"
 					      + " WHERE ( to_number(SUBSTR(LONGITUDE,1,6)) > "+borderCircleLongitudes[0]  +"and  to_number(SUBSTR(LATITUDE,1,6)) >  "+bordeCircleLatitudes[0] +" and to_number (SUBSTR(LONGITUDE,1,6)) < "+borderCircleLongitudes[1]+" AND to_number (SUBSTR(LATITUDE,1,6)) < " +  bordeCircleLatitudes[1]+")").getResultList();
+*/					      
 
+					List<Object[]> manholeListQuery = session.createNativeQuery(
+							"SELECT DISTINCT MANHOLE_ID,MANHOLE_NAME,trim(replace(LONGITUDE,'�','')) as LONGITUDE, trim(replace(LATITUDE,'�','')) as LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=MANHOLE_ID),DM_NAME FROM MANHOLE"
+						  + " WHERE ( to_number(SUBSTR(LONGITUDE,1,6)) > "+borderCircleLongitudes[0]  +"and  to_number(SUBSTR(LATITUDE,1,6)) >  "+bordeCircleLatitudes[0] +" and to_number (SUBSTR(LONGITUDE,1,6)) < "+borderCircleLongitudes[1]+" AND to_number (SUBSTR(LATITUDE,1,6)) < " +  bordeCircleLatitudes[1]+")").getResultList();
+					   
+					   
 					//Filter the MH that have distance < distanceRange or MH that exists in mhFilteredIDs (mhFilteredIDs contains MH that are src/dst/aux of cables,tubes,strands)
 					manholeList = findLinearDistance(mhFilteredIDs,manholeListQuery, Double.valueOf(closestLatPoint),Double.valueOf(closestLongPoint), Double.valueOf(closestDisRange),"Manhole", noOfPoints);														
 					
 					//Select all HH details that are within the range
+/*					
 					List<Object[]> handholeListQuery = session.createNativeQuery(
 							"SELECT DISTINCT HANDHOLE_ID,HANDHOLE_NAME,substr(trim(replace(LONGITUDE,'�','')),1,6) as LONGITUDE,substr(trim(replace(LATITUDE,'�','')),1,6) as LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=HANDHOLE_ID),DM_NAME FROM HANDHOLE"
 						  + " WHERE ( to_number(SUBSTR(LONGITUDE,1,6)) > "+borderCircleLongitudes[0]  +"and  to_number(SUBSTR(LATITUDE,1,6)) >  "+bordeCircleLatitudes[0] +" and to_number (SUBSTR(LONGITUDE,1,6)) < "+borderCircleLongitudes[1]+" AND to_number (SUBSTR(LATITUDE,1,6)) < " +  bordeCircleLatitudes[1]+")").getResultList();
+*/						  
+					
+					List<Object[]> handholeListQuery = session.createNativeQuery(
+							"SELECT DISTINCT HANDHOLE_ID,HANDHOLE_NAME,trim(replace(LONGITUDE,'�','')) as LONGITUDE,trim(replace(LATITUDE,'�','')) as LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=HANDHOLE_ID),DM_NAME FROM HANDHOLE"
+						  + " WHERE ( to_number(SUBSTR(LONGITUDE,1,6)) > "+borderCircleLongitudes[0]  +"and  to_number(SUBSTR(LATITUDE,1,6)) >  "+bordeCircleLatitudes[0] +" and to_number (SUBSTR(LONGITUDE,1,6)) < "+borderCircleLongitudes[1]+" AND to_number (SUBSTR(LATITUDE,1,6)) < " +  bordeCircleLatitudes[1]+")").getResultList();
+					
 				
 					//Filter the HH that have distance<distanceRange or HH that exists in hhFilteredIDs (hhFilteredIDs contains HH that are src/dst/aux of cables,tubes,strands)
 					handholeList = findLinearDistance(hhFilteredIDs,handholeListQuery, Double.valueOf(closestLatPoint),Double.valueOf(closestLongPoint), Double.valueOf(closestDisRange),"Handhole", noOfPoints);
 					
 					//Select all DB details that are within the range
 					List<Object[]> distribBoardListQuery = session.createNativeQuery(
-							"SELECT DISTINCT DB_ID,substr(trim(replace(DB_LONGITUDE,'�','')),1,6) as DB_LONGITUDE,substr(trim(replace(DB_LATITUDE,'�','')),1,6) as DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,PROJECT_ID ,CITY,DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD "
+							"SELECT DISTINCT DB_ID,trim(replace(DB_LONGITUDE,'�','')) as DB_LONGITUDE,trim(replace(DB_LATITUDE,'�','')) as DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,PROJECT_ID ,CITY,DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD "
 						  + " WHERE ( to_number(SUBSTR(DB_LONGITUDE,1,6)) > "+borderCircleLongitudes[0]  +"and  to_number(SUBSTR(DB_LATITUDE,1,6)) >  "+bordeCircleLatitudes[0] +" and to_number (SUBSTR(DB_LONGITUDE,1,6)) < "+borderCircleLongitudes[1]+" AND to_number (SUBSTR(DB_LATITUDE,1,6)) < " +  bordeCircleLatitudes[1]+")").getResultList();
 					
 					//Filter the DB that have distance<distanceRange or DB that exists in dbFilteredIDs (dbFilteredIDs contains HH that are src/dst/aux of cables/tubes/strands)			
@@ -1065,30 +1081,30 @@ public class PhysicalLayerController {
 					    
 					  //MH that are outside the range
 						query = session.createNativeQuery(
-								" SELECT * FROM (SELECT DISTINCT A.manhole_id as manhole_id ,A.manhole_name as manhole_name, substr(trim(replace(A.LONGITUDE,'�','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'�','')),1,6) as LATITUDE, A.PROJECT_ID as PROJECT_ID ,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID) as totalCount,A.CITY as city FROM MANHOLE A LEFT JOIN FIBER_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.manhole_id LEFT JOIN FIBER_CABLES C ON C.FIBER_CABLE_ID = B.FIBER_CABLE_ID where B.AUXILIARY_POINT_ID LIKE '%MH%' AND C.FIBER_CABLE_ID IN (:param1) "
+								" SELECT * FROM (SELECT DISTINCT A.manhole_id as manhole_id ,A.manhole_name as manhole_name, trim(replace(A.LONGITUDE,'�','')) as LONGITUDE, trim(replace(A.LATITUDE,'�','')) as LATITUDE, A.PROJECT_ID as PROJECT_ID ,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID) as totalCount,A.CITY as city FROM MANHOLE A LEFT JOIN FIBER_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.manhole_id LEFT JOIN FIBER_CABLES C ON C.FIBER_CABLE_ID = B.FIBER_CABLE_ID where B.AUXILIARY_POINT_ID LIKE '%MH%' AND C.FIBER_CABLE_ID IN (:param1) "
 								+ " UNION "
-								+ " SELECT DISTINCT A.manhole_id,A.manhole_name,substr(trim(replace(A.LONGITUDE,'�','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'�','')),1,6) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID),A.CITY FROM MANHOLE A LEFT JOIN FIBER_CABLES B  ON B.SOURCE_ID = A.manhole_id where B.SOURCE_ID LIKE '%MH%' AND B.FIBER_CABLE_ID IN (:param1) "
+								+ " SELECT DISTINCT A.manhole_id,A.manhole_name,trim(replace(A.LONGITUDE,'�','')) as LONGITUDE, trim(replace(A.LATITUDE,'�','')) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID),A.CITY FROM MANHOLE A LEFT JOIN FIBER_CABLES B  ON B.SOURCE_ID = A.manhole_id where B.SOURCE_ID LIKE '%MH%' AND B.FIBER_CABLE_ID IN (:param1) "
 								+ " UNION "
-								+ " SELECT DISTINCT A.manhole_id,A.manhole_name,substr(trim(replace(A.LONGITUDE,'�','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'�','')),1,6) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID),A.CITY FROM MANHOLE A LEFT JOIN FIBER_CABLES B  ON B.DESTINATION_ID = A.manhole_id where B.DESTINATION_ID LIKE '%MH%' AND B.FIBER_CABLE_ID IN (:param1)  ) ");
+								+ " SELECT DISTINCT A.manhole_id,A.manhole_name,trim(replace(A.LONGITUDE,'�','')) as LONGITUDE, trim(replace(A.LATITUDE,'�','')) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID),A.CITY FROM MANHOLE A LEFT JOIN FIBER_CABLES B  ON B.DESTINATION_ID = A.manhole_id where B.DESTINATION_ID LIKE '%MH%' AND B.FIBER_CABLE_ID IN (:param1)  ) ");
 						query.setParameter("param1",sublist);
 						manholeTempList.addAll(query.getResultList());
 						
 						// HH that are outside the range
 						query = session.createNativeQuery(
-							" SELECT * FROM (SELECT DISTINCT A.handhole_id as handhole_id ,A.handhole_name as handhole_name, substr(trim(replace(A.LONGITUDE,'�','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'�','')),1,6) as LATITUDE, A.PROJECT_ID as PROJECT_ID ,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID) as totalCount,A.DM_NAME as DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.HANDHOLE_ID LEFT JOIN FIBER_CABLES C ON C.FIBER_CABLE_ID = B.FIBER_CABLE_ID where B.AUXILIARY_POINT_ID LIKE '%HH%' AND C.FIBER_CABLE_ID IN (:param1) "
+							" SELECT * FROM (SELECT DISTINCT A.handhole_id as handhole_id ,A.handhole_name as handhole_name, trim(replace(A.LONGITUDE,'�','')) as LONGITUDE, trim(replace(A.LATITUDE,'�','')) as LATITUDE, A.PROJECT_ID as PROJECT_ID ,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID) as totalCount,A.DM_NAME as DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.HANDHOLE_ID LEFT JOIN FIBER_CABLES C ON C.FIBER_CABLE_ID = B.FIBER_CABLE_ID where B.AUXILIARY_POINT_ID LIKE '%HH%' AND C.FIBER_CABLE_ID IN (:param1) "
 							+ " UNION "
-							+ " SELECT DISTINCT A.handhole_id,A.handhole_name, substr(trim(replace(A.LONGITUDE,'�','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'�','')),1,6) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID),A.DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_CABLES B  ON B.SOURCE_ID = A.HANDHOLE_ID where B.SOURCE_ID LIKE '%HH%' AND B.FIBER_CABLE_ID IN (:param1) "
+							+ " SELECT DISTINCT A.handhole_id,A.handhole_name, trim(replace(A.LONGITUDE,'�','')) as LONGITUDE, trim(replace(A.LATITUDE,'�','')) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID),A.DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_CABLES B  ON B.SOURCE_ID = A.HANDHOLE_ID where B.SOURCE_ID LIKE '%HH%' AND B.FIBER_CABLE_ID IN (:param1) "
 							+ "UNION"
-							+ " SELECT DISTINCT A.handhole_id,A.handhole_name, substr(trim(replace(A.LONGITUDE,'�','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'�','')),1,6) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID),A.DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_CABLES B  ON B.DESTINATION_ID = A.HANDHOLE_ID where B.DESTINATION_ID LIKE '%HH%' AND B.FIBER_CABLE_ID IN (:param1) )  ");
+							+ " SELECT DISTINCT A.handhole_id,A.handhole_name, trim(replace(A.LONGITUDE,'�','')) as LONGITUDE, trim(replace(A.LATITUDE,'�','')) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID),A.DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_CABLES B  ON B.DESTINATION_ID = A.HANDHOLE_ID where B.DESTINATION_ID LIKE '%HH%' AND B.FIBER_CABLE_ID IN (:param1) )  ");
 						query.setParameter("param1",sublist);
 						handholeTempList.addAll(query.getResultList());
 						
 						query = session.createNativeQuery(
-								" SELECT * FROM ( SELECT DISTINCT A.DB_ID as DB_ID, substr(trim(replace(A.DB_LONGITUDE,'�','')),1,6) as DB_LONGITUDE, substr(trim(replace(A.DB_LATITUDE,'�','')),1,6) as DB_LATITUDE, A.DB_NAME as DB_NAME,A.MAX_CAPACITY as MAX_CAPACITY,A.SITE as SITE,A.PROJECT_ID as PROJECT_ID ,A.CITY as CITY,A.DB_NETWORK_LEVEL AS DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.DB_ID LEFT JOIN FIBER_CABLES C ON C.FIBER_CABLE_ID = B.FIBER_CABLE_ID where B.AUXILIARY_POINT_ID LIKE '%DB%' AND C.FIBER_CABLE_ID IN (:param1)   "
+								" SELECT * FROM ( SELECT DISTINCT A.DB_ID as DB_ID,trim(replace(A.DB_LONGITUDE,'�','')) as DB_LONGITUDE,trim(replace(A.DB_LATITUDE,'�','')) as DB_LATITUDE, A.DB_NAME as DB_NAME,A.MAX_CAPACITY as MAX_CAPACITY,A.SITE as SITE,A.PROJECT_ID as PROJECT_ID ,A.CITY as CITY,A.DB_NETWORK_LEVEL AS DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.DB_ID LEFT JOIN FIBER_CABLES C ON C.FIBER_CABLE_ID = B.FIBER_CABLE_ID where B.AUXILIARY_POINT_ID LIKE '%DB%' AND C.FIBER_CABLE_ID IN (:param1)   "
 										+ " UNION "
-										+ " SELECT DISTINCT A.DB_ID,substr(trim(replace(A.DB_LONGITUDE,'�','')),1,6) as DB_LONGITUDE, substr(trim(replace(A.DB_LATITUDE,'�','')),1,6) as DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_CABLES B  ON B.SOURCE_ID = A.DB_ID where B.SOURCE_ID LIKE '%DB%' AND B.FIBER_CABLE_ID IN (:param1) "
+										+ " SELECT DISTINCT A.DB_ID,trim(replace(A.DB_LONGITUDE,'�','')) as DB_LONGITUDE,trim(replace(A.DB_LATITUDE,'�','')) as DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_CABLES B  ON B.SOURCE_ID = A.DB_ID where B.SOURCE_ID LIKE '%DB%' AND B.FIBER_CABLE_ID IN (:param1) "
 										+ "UNION "
-										+ " SELECT DISTINCT A.DB_ID,substr(trim(replace(A.DB_LONGITUDE,'�','')),1,6) as DB_LONGITUDE, substr(trim(replace(A.DB_LATITUDE,'�','')),1,6) as DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_CABLES B  ON B.DESTINATION_ID = A.DB_ID where B.DESTINATION_ID LIKE '%DB%' AND B.FIBER_CABLE_ID IN (:param1) )   ");
+										+ " SELECT DISTINCT A.DB_ID,trim(replace(A.DB_LONGITUDE,'�','')) as DB_LONGITUDE,trim(replace(A.DB_LATITUDE,'�','')) as DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_CABLES B  ON B.DESTINATION_ID = A.DB_ID where B.DESTINATION_ID LIKE '%DB%' AND B.FIBER_CABLE_ID IN (:param1) )   ");
 						query.setParameter("param1",sublist);
 						dbTempList.addAll(query.getResultList());								
 					}
@@ -1101,31 +1117,31 @@ public class PhysicalLayerController {
 					    int currentListSize = Math.min(subArraySize, remaining);
 					    List<String> sublist = combinedTubeList.subList(i, i + currentListSize);
 					    
-						query = session.createNativeQuery("SELECT * FROM (SELECT DISTINCT A.manhole_id as manhole_id ,A.manhole_name as manhole_name, substr(trim(replace(A.LONGITUDE,'�','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'�','')),1,6) as LATITUDE, A.PROJECT_ID as PROJECT_ID ,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID) as totalCount,A.CITY as city FROM MANHOLE A LEFT JOIN TUBE_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.manhole_id LEFT JOIN FIBER_TUBES C ON C.TUBE_ID = B.TUBE_ID where B.AUXILIARY_POINT_ID LIKE '%MH%' AND C.TUBE_ID IN (:param1) " + 
+						query = session.createNativeQuery("SELECT * FROM (SELECT DISTINCT A.manhole_id as manhole_id ,A.manhole_name as manhole_name,trim(replace(A.LONGITUDE,'�','')) as LONGITUDE, trim(replace(A.LATITUDE,'�','')) as LATITUDE, A.PROJECT_ID as PROJECT_ID ,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID) as totalCount,A.CITY as city FROM MANHOLE A LEFT JOIN TUBE_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.manhole_id LEFT JOIN FIBER_TUBES C ON C.TUBE_ID = B.TUBE_ID where B.AUXILIARY_POINT_ID LIKE '%MH%' AND C.TUBE_ID IN (:param1) " + 
 								" UNION "
-								+ " SELECT DISTINCT A.manhole_id,A.manhole_name,substr(trim(replace(A.LONGITUDE,'�','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'�','')),1,6) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID),A.CITY FROM MANHOLE A LEFT JOIN FIBER_TUBES B  ON B.SOURCE_ID = A.manhole_id where B.SOURCE_ID LIKE '%MH%' AND B.TUBE_ID IN (:param1) " + 
+								+ " SELECT DISTINCT A.manhole_id,A.manhole_name,trim(replace(A.LONGITUDE,'�','')) as LONGITUDE, trim(replace(A.LATITUDE,'�','')) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID),A.CITY FROM MANHOLE A LEFT JOIN FIBER_TUBES B  ON B.SOURCE_ID = A.manhole_id where B.SOURCE_ID LIKE '%MH%' AND B.TUBE_ID IN (:param1) " + 
 								" UNION "
-								+ " SELECT DISTINCT A.manhole_id,A.manhole_name,substr(trim(replace(A.LONGITUDE,'�','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'�','')),1,6) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID),A.CITY FROM MANHOLE A LEFT JOIN FIBER_TUBES B  ON B.DESTINATION_ID = A.manhole_id where B.DESTINATION_ID LIKE '%MH%' AND B.TUBE_ID IN (:param1) ) ");
+								+ " SELECT DISTINCT A.manhole_id,A.manhole_name,trim(replace(A.LONGITUDE,'�','')) as LONGITUDE, trim(replace(A.LATITUDE,'�','')) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID),A.CITY FROM MANHOLE A LEFT JOIN FIBER_TUBES B  ON B.DESTINATION_ID = A.manhole_id where B.DESTINATION_ID LIKE '%MH%' AND B.TUBE_ID IN (:param1) ) ");
 						
 						query.setParameter("param1",sublist);
 						manholeTempList.addAll(query.getResultList());
 						
 						
 						query = session.createNativeQuery(
-								" SELECT * FROM (SELECT DISTINCT A.handhole_id as handhole_id ,A.handhole_name as handhole_name, substr(trim(replace(A.LONGITUDE,'�','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'�','')),1,6) as LATITUDE, A.PROJECT_ID as PROJECT_ID ,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID) as totalCount,A.DM_NAME as DM_NAME FROM HANDHOLE A LEFT JOIN TUBE_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.HANDHOLE_ID LEFT JOIN FIBER_TUBES C ON C.TUBE_ID = B.TUBE_ID where B.AUXILIARY_POINT_ID LIKE '%HH%' AND C.TUBE_ID IN (:param1) "
+								" SELECT * FROM (SELECT DISTINCT A.handhole_id as handhole_id ,A.handhole_name as handhole_name, trim(replace(A.LONGITUDE,'�','')) as LONGITUDE, trim(replace(A.LATITUDE,'�','')) as LATITUDE, A.PROJECT_ID as PROJECT_ID ,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID) as totalCount,A.DM_NAME as DM_NAME FROM HANDHOLE A LEFT JOIN TUBE_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.HANDHOLE_ID LEFT JOIN FIBER_TUBES C ON C.TUBE_ID = B.TUBE_ID where B.AUXILIARY_POINT_ID LIKE '%HH%' AND C.TUBE_ID IN (:param1) "
 								+ " UNION "
-								+ " SELECT DISTINCT A.handhole_id,A.handhole_name, substr(trim(replace(A.LONGITUDE,'�','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'�','')),1,6) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID),A.DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_TUBES B  ON B.SOURCE_ID = A.HANDHOLE_ID where B.SOURCE_ID LIKE '%HH%' AND B.TUBE_ID IN (:param1) "
+								+ " SELECT DISTINCT A.handhole_id,A.handhole_name, trim(replace(A.LONGITUDE,'�','')) as LONGITUDE, trim(replace(A.LATITUDE,'�','')) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID),A.DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_TUBES B  ON B.SOURCE_ID = A.HANDHOLE_ID where B.SOURCE_ID LIKE '%HH%' AND B.TUBE_ID IN (:param1) "
 								+ "UNION"
-								+ " SELECT DISTINCT A.handhole_id,A.handhole_name, substr(trim(replace(A.LONGITUDE,'�','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'�','')),1,6) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID),A.DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_TUBES B  ON B.DESTINATION_ID = A.HANDHOLE_ID where B.DESTINATION_ID LIKE '%HH%' AND B.TUBE_ID IN (:param1) ) ");
+								+ " SELECT DISTINCT A.handhole_id,A.handhole_name, trim(replace(A.LONGITUDE,'�','')) as LONGITUDE, trim(replace(A.LATITUDE,'�','')) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID),A.DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_TUBES B  ON B.DESTINATION_ID = A.HANDHOLE_ID where B.DESTINATION_ID LIKE '%HH%' AND B.TUBE_ID IN (:param1) ) ");
 						query.setParameter("param1",sublist);
 						handholeTempList.addAll(query.getResultList());
 						
 						query = session.createNativeQuery(
-								" SELECT * FROM ( SELECT DISTINCT A.DB_ID as DB_ID, substr(trim(replace(A.DB_LONGITUDE,'�','')),1,6) as DB_LONGITUDE, substr(trim(replace(A.DB_LATITUDE,'�','')),1,6) as DB_LATITUDE, A.DB_NAME as DB_NAME,A.MAX_CAPACITY as MAX_CAPACITY,A.SITE as SITE,A.PROJECT_ID as PROJECT_ID ,A.CITY as CITY,A.DB_NETWORK_LEVEL AS DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN TUBE_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.DB_ID LEFT JOIN FIBER_TUBES C ON C.TUBE_ID = B.TUBE_ID where B.AUXILIARY_POINT_ID LIKE '%DB%' AND C.TUBE_ID IN (:param1)   "
+								" SELECT * FROM ( SELECT DISTINCT A.DB_ID as DB_ID, trim(replace(A.DB_LONGITUDE,'�','')) as DB_LONGITUDE, trim(replace(A.DB_LATITUDE,'�','')) as DB_LATITUDE, A.DB_NAME as DB_NAME,A.MAX_CAPACITY as MAX_CAPACITY,A.SITE as SITE,A.PROJECT_ID as PROJECT_ID ,A.CITY as CITY,A.DB_NETWORK_LEVEL AS DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN TUBE_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.DB_ID LEFT JOIN FIBER_TUBES C ON C.TUBE_ID = B.TUBE_ID where B.AUXILIARY_POINT_ID LIKE '%DB%' AND C.TUBE_ID IN (:param1)   "
 										+ " UNION "
-										+ " SELECT DISTINCT A.DB_ID,substr(trim(replace(A.DB_LONGITUDE,'�','')),1,6) as DB_LONGITUDE, substr(trim(replace(A.DB_LATITUDE,'�','')),1,6) as DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_TUBES B  ON B.SOURCE_ID = A.DB_ID where B.SOURCE_ID LIKE '%DB%' AND B.TUBE_ID IN (:param1) "
+										+ " SELECT DISTINCT A.DB_ID,trim(replace(A.DB_LONGITUDE,'�','')) as DB_LONGITUDE, trim(replace(A.DB_LATITUDE,'�','')) as DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_TUBES B  ON B.SOURCE_ID = A.DB_ID where B.SOURCE_ID LIKE '%DB%' AND B.TUBE_ID IN (:param1) "
 										+ "UNION "
-										+ " SELECT DISTINCT A.DB_ID,substr(trim(replace(A.DB_LONGITUDE,'�','')),1,6) as DB_LONGITUDE, substr(trim(replace(A.DB_LATITUDE,'�','')),1,6) as DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_TUBES B  ON B.DESTINATION_ID = A.DB_ID where B.DESTINATION_ID LIKE '%DB%' AND B.TUBE_ID IN (:param1) )  ");
+										+ " SELECT DISTINCT A.DB_ID,trim(replace(A.DB_LONGITUDE,'�','')) as DB_LONGITUDE, trim(replace(A.DB_LATITUDE,'�','')) as DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_TUBES B  ON B.DESTINATION_ID = A.DB_ID where B.DESTINATION_ID LIKE '%DB%' AND B.TUBE_ID IN (:param1) )  ");
 						query.setParameter("param1",sublist);
 						dbTempList.addAll(query.getResultList());					
 					}
@@ -1138,30 +1154,30 @@ public class PhysicalLayerController {
 					    int currentListSize = Math.min(subArraySize, remaining);
 					    List<String> sublist = strandsIDs.subList(i, i + currentListSize);
 					    
-					    query = session.createNativeQuery("SELECT * FROM (SELECT DISTINCT A.manhole_id as manhole_id ,A.manhole_name as manhole_name, substr(trim(replace(A.LONGITUDE,'�','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'�','')),1,6) as LATITUDE, A.PROJECT_ID as PROJECT_ID ,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID) as totalCount,A.CITY as city FROM MANHOLE A LEFT JOIN STRAND_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.manhole_id LEFT JOIN FIBER_STRANDS C ON C.STRAND_ID = B.STRAND_ID where B.AUXILIARY_POINT_ID LIKE '%MH%' AND C.STRAND_ID IN (:param1) " + 
+					    query = session.createNativeQuery("SELECT * FROM (SELECT DISTINCT A.manhole_id as manhole_id ,A.manhole_name as manhole_name, trim(replace(A.LONGITUDE,'�','')) as LONGITUDE, trim(replace(A.LATITUDE,'�','')) as LATITUDE, A.PROJECT_ID as PROJECT_ID ,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID) as totalCount,A.CITY as city FROM MANHOLE A LEFT JOIN STRAND_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.manhole_id LEFT JOIN FIBER_STRANDS C ON C.STRAND_ID = B.STRAND_ID where B.AUXILIARY_POINT_ID LIKE '%MH%' AND C.STRAND_ID IN (:param1) " + 
 								" UNION "
-								+ " SELECT DISTINCT A.manhole_id,A.manhole_name,substr(trim(replace(A.LONGITUDE,'�','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'�','')),1,6) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID),A.CITY FROM MANHOLE A LEFT JOIN FIBER_STRANDS B  ON B.SOURCE_ID = A.manhole_id where B.SOURCE_ID LIKE '%MH%' AND B.STRAND_ID IN (:param1) " + 
+								+ " SELECT DISTINCT A.manhole_id,A.manhole_name,trim(replace(A.LONGITUDE,'�','')) as LONGITUDE, trim(replace(A.LATITUDE,'�','')) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID),A.CITY FROM MANHOLE A LEFT JOIN FIBER_STRANDS B  ON B.SOURCE_ID = A.manhole_id where B.SOURCE_ID LIKE '%MH%' AND B.STRAND_ID IN (:param1) " + 
 								" UNION "
-								+ " SELECT DISTINCT A.manhole_id,A.manhole_name,substr(trim(replace(A.LONGITUDE,'�','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'�','')),1,6) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID),A.CITY FROM MANHOLE A LEFT JOIN FIBER_STRANDS B  ON B.DESTINATION_ID = A.manhole_id where B.DESTINATION_ID LIKE '%MH%' AND B.STRAND_ID IN (:param1) ) ");
+								+ " SELECT DISTINCT A.manhole_id,A.manhole_name,trim(replace(A.LONGITUDE,'�','')) as LONGITUDE, trim(replace(A.LATITUDE,'�','')) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.MANHOLE_ID),A.CITY FROM MANHOLE A LEFT JOIN FIBER_STRANDS B  ON B.DESTINATION_ID = A.manhole_id where B.DESTINATION_ID LIKE '%MH%' AND B.STRAND_ID IN (:param1) ) ");
 						
 						query.setParameter("param1",sublist);
 						manholeTempList.addAll(query.getResultList());	
 						
 						query = session.createNativeQuery(
-								" SELECT * FROM (SELECT DISTINCT A.handhole_id as handhole_id ,A.handhole_name as handhole_name, substr(trim(replace(A.LONGITUDE,'�','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'�','')),1,6) as LATITUDE, A.PROJECT_ID as PROJECT_ID ,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID) as totalCount,A.DM_NAME as DM_NAME FROM HANDHOLE A LEFT JOIN STRAND_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.HANDHOLE_ID LEFT JOIN FIBER_STRANDS C ON C.STRAND_ID = B.STRAND_ID where B.AUXILIARY_POINT_ID LIKE '%HH%' AND C.STRAND_ID IN (:param1) "
+								" SELECT * FROM (SELECT DISTINCT A.handhole_id as handhole_id ,A.handhole_name as handhole_name, trim(replace(A.LONGITUDE,'�','')) as LONGITUDE, trim(replace(A.LATITUDE,'�','')) as LATITUDE, A.PROJECT_ID as PROJECT_ID ,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID) as totalCount,A.DM_NAME as DM_NAME FROM HANDHOLE A LEFT JOIN STRAND_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.HANDHOLE_ID LEFT JOIN FIBER_STRANDS C ON C.STRAND_ID = B.STRAND_ID where B.AUXILIARY_POINT_ID LIKE '%HH%' AND C.STRAND_ID IN (:param1) "
 								+ " UNION "
-								+ " SELECT DISTINCT A.handhole_id,A.handhole_name, substr(trim(replace(A.LONGITUDE,'�','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'�','')),1,6) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID),A.DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_STRANDS B  ON B.SOURCE_ID = A.HANDHOLE_ID where B.SOURCE_ID LIKE '%HH%' AND B.STRAND_ID IN (:param1) "
+								+ " SELECT DISTINCT A.handhole_id,A.handhole_name, trim(replace(A.LONGITUDE,'�','')) as LONGITUDE, trim(replace(A.LATITUDE,'�','')) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID),A.DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_STRANDS B  ON B.SOURCE_ID = A.HANDHOLE_ID where B.SOURCE_ID LIKE '%HH%' AND B.STRAND_ID IN (:param1) "
 								+ "UNION"
-								+ " SELECT DISTINCT A.handhole_id,A.handhole_name, substr(trim(replace(A.LONGITUDE,'�','')),1,6) as LONGITUDE, substr(trim(replace(A.LATITUDE,'�','')),1,6) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID),A.DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_STRANDS B  ON B.DESTINATION_ID = A.HANDHOLE_ID where B.DESTINATION_ID LIKE '%HH%' AND B.STRAND_ID IN (:param1) )  ");
+								+ " SELECT DISTINCT A.handhole_id,A.handhole_name, trim(replace(A.LONGITUDE,'�','')) as LONGITUDE, trim(replace(A.LATITUDE,'�','')) as LATITUDE, A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID=A.HANDHOLE_ID),A.DM_NAME FROM HANDHOLE A LEFT JOIN FIBER_STRANDS B  ON B.DESTINATION_ID = A.HANDHOLE_ID where B.DESTINATION_ID LIKE '%HH%' AND B.STRAND_ID IN (:param1) )  ");
 						query.setParameter("param1",sublist);
 						handholeTempList.addAll(query.getResultList());		
 			
 						query = session.createNativeQuery(
-								" SELECT * FROM ( SELECT DISTINCT A.DB_ID as DB_ID, substr(trim(replace(A.DB_LONGITUDE,'�','')),1,6) as DB_LONGITUDE, substr(trim(replace(A.DB_LATITUDE,'�','')),1,6) as DB_LATITUDE, A.DB_NAME as DB_NAME,A.MAX_CAPACITY as MAX_CAPACITY,A.SITE as SITE,A.PROJECT_ID as PROJECT_ID ,A.CITY as CITY,A.DB_NETWORK_LEVEL AS DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN STRAND_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.DB_ID LEFT JOIN FIBER_STRANDS C ON C.STRAND_ID = B.STRAND_ID where B.AUXILIARY_POINT_ID LIKE '%DB%' AND C.STRAND_ID IN (:param1)   "
+								" SELECT * FROM ( SELECT DISTINCT A.DB_ID as DB_ID, trim(replace(A.DB_LONGITUDE,'�','')) as DB_LONGITUDE, trim(replace(A.DB_LATITUDE,'�','')) as DB_LATITUDE, A.DB_NAME as DB_NAME,A.MAX_CAPACITY as MAX_CAPACITY,A.SITE as SITE,A.PROJECT_ID as PROJECT_ID ,A.CITY as CITY,A.DB_NETWORK_LEVEL AS DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN STRAND_AUXILIARY_POINTS B  ON B.AUXILIARY_POINT_ID = A.DB_ID LEFT JOIN FIBER_STRANDS C ON C.STRAND_ID = B.STRAND_ID where B.AUXILIARY_POINT_ID LIKE '%DB%' AND C.STRAND_ID IN (:param1)   "
 										+ " UNION "
-										+ " SELECT DISTINCT A.DB_ID,substr(trim(replace(A.DB_LONGITUDE,'�','')),1,6) as DB_LONGITUDE, substr(trim(replace(A.DB_LATITUDE,'�','')),1,6) as DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_STRANDS B  ON B.SOURCE_ID = A.DB_ID where B.SOURCE_ID LIKE '%DB%' AND B.STRAND_ID IN (:param1) "
+										+ " SELECT DISTINCT A.DB_ID,trim(replace(A.DB_LONGITUDE,'�','')) as DB_LONGITUDE, trim(replace(A.DB_LATITUDE,'�','')) as DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_STRANDS B  ON B.SOURCE_ID = A.DB_ID where B.SOURCE_ID LIKE '%DB%' AND B.STRAND_ID IN (:param1) "
 										+ "UNION "
-										+ " SELECT DISTINCT A.DB_ID,substr(trim(replace(A.DB_LONGITUDE,'�','')),1,6) as DB_LONGITUDE, substr(trim(replace(A.DB_LATITUDE,'�','')),1,6) as DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_STRANDS B  ON B.DESTINATION_ID = A.DB_ID where B.DESTINATION_ID LIKE '%DB%' AND B.STRAND_ID IN (:param1) ) ");
+										+ " SELECT DISTINCT A.DB_ID,trim(replace(A.DB_LONGITUDE,'�','')) as DB_LONGITUDE, trim(replace(A.DB_LATITUDE,'�','')) as DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN FIBER_STRANDS B  ON B.DESTINATION_ID = A.DB_ID where B.DESTINATION_ID LIKE '%DB%' AND B.STRAND_ID IN (:param1) ) ");
 						query.setParameter("param1",sublist);
 						dbTempList.addAll(query.getResultList());		
 					}
@@ -1196,13 +1212,13 @@ public class PhysicalLayerController {
 				
 			}
 				junctionManholeList = session.createNativeQuery(
-						"SELECT DISTINCT A.JUNCTION_ID, A.JUNCTION_NAME,A.PHYSICAL_LAYER_ID,A.PHYSICAL_LAYER_NAME,A.JUNCTION_NUMBER,A.CAPACITY,A.CITY,substr(trim(replace(A.LONGITUDE,'�','')),1,6) as LONGITUDE,substr(trim(replace(A.LATITUDE,'�','')),1,6) as LATITUDE,A.PROJECT_ID FROM JUNCTION A INNER JOIN manhole B ON A.PHYSICAL_LAYER_ID = B.manhole_id ").getResultList();
+						"SELECT DISTINCT A.JUNCTION_ID, A.JUNCTION_NAME,A.PHYSICAL_LAYER_ID,A.PHYSICAL_LAYER_NAME,A.JUNCTION_NUMBER,A.CAPACITY,A.CITY,trim(replace(A.LONGITUDE,'�','')) as LONGITUDE,trim(replace(A.LATITUDE,'�','')) as LATITUDE,A.PROJECT_ID FROM JUNCTION A INNER JOIN manhole B ON A.PHYSICAL_LAYER_ID = B.manhole_id ").getResultList();
 				
 				junctionHandholeList = session.createNativeQuery(
-						"SELECT DISTINCT A.JUNCTION_ID, A.JUNCTION_NAME,A.PHYSICAL_LAYER_ID,A.PHYSICAL_LAYER_NAME,A.JUNCTION_NUMBER,A.CAPACITY,A.CITY,substr(trim(replace(A.LONGITUDE,'�','')),1,6) as LONGITUDE,substr(trim(replace(A.LATITUDE,'�','')),1,6) as LATITUDE,A.PROJECT_ID FROM JUNCTION A INNER JOIN handhole B ON A.PHYSICAL_LAYER_ID = b.handhole_id ").getResultList();
+						"SELECT DISTINCT A.JUNCTION_ID, A.JUNCTION_NAME,A.PHYSICAL_LAYER_ID,A.PHYSICAL_LAYER_NAME,A.JUNCTION_NUMBER,A.CAPACITY,A.CITY,trim(replace(A.LONGITUDE,'�','')) as LONGITUDE,trim(replace(A.LATITUDE,'�','')) as LATITUDE,A.PROJECT_ID FROM JUNCTION A INNER JOIN handhole B ON A.PHYSICAL_LAYER_ID = b.handhole_id ").getResultList();
 
 				List<Object[]> nodeListQuery = session.createNativeQuery(
-						"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,substr(trim(replace(LONGITUDE,'�','')),1,6) as LONGITUDE,substr(trim(replace(LATITUDE,'�','')),1,6) as LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' OR SUB_DOMAIN_TYPE='SWITCH' ) "
+						"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,trim(replace(LONGITUDE,'�','')) as LONGITUDE,trim(replace(LATITUDE,'�','')) as LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' OR SUB_DOMAIN_TYPE='SWITCH' ) "
 								+ " AND (LONGITUDE !='null' or LONGITUDE !=null ) AND (LATITUDE !='null' or LATITUDE !=null ) ").getResultList();
 				NodeList = findNearestArray(nodeListQuery, Double.valueOf(closestLatPoint),Double.valueOf(closestLongPoint), Double.valueOf(closestDisRange), "Nodes",noOfPoints);
 				
@@ -1239,11 +1255,11 @@ public class PhysicalLayerController {
 				String strandStr = "SELECT DISTINCT b.STRAND_ID,b.SOURCE_LONGITUDE,b.SOURCE_LATITUDE,b.DESTINATION_LONGITUDE,b.DESTINATION_LATITUDE,b.SOURCE_WARE_ID,b.SOURCE_ID,b.SOURCE_NAME,b.DESTINATION_WARE_ID,b.DESTINATION_ID,b.DESTINATION_NAME,b.TUBE_ID,b.FIBER_CABLE_ID,b.STRAND_NAME,b.DRAWING_TYPE,b.STRAND_NUMBER,b.STRAND_COLOR FROM FIBER_STRANDS b "
 				+ "LEFT JOIN STRAND_AUXILIARY_POINTS a ON b.STRAND_ID=a.STRAND_ID ";
 			
-				String manholeStr =	"SELECT DISTINCT MANHOLE_ID,MANHOLE_NAME,substr(trim(replace(LONGITUDE,'�','')),1,6) as LONGITUDE,substr(trim(replace(LATITUDE,'�','')),1,6) as LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=MANHOLE_ID),DM_NAME FROM MANHOLE ";
-				String handholeStr = "SELECT DISTINCT HANDHOLE_ID,HANDHOLE_NAME,substr(trim(replace(LONGITUDE,'�','')),1,6) as LONGITUDE,substr(trim(replace(LATITUDE,'�','')),1,6) as LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=HANDHOLE_ID),DM_NAME FROM HANDHOLE ";
-				String dbStr = 	"SELECT DISTINCT DB_ID,substr(trim(replace(DB_LONGITUDE,'�','')),1,6) as DB_LONGITUDE,substr(trim(replace(DB_LATITUDE,'�','')),1,6) as DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,PROJECT_ID ,CITY,DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD ";
+				String manholeStr =	"SELECT DISTINCT MANHOLE_ID,MANHOLE_NAME,trim(replace(LONGITUDE,'�','')) as LONGITUDE,trim(replace(LATITUDE,'�','')) as LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=MANHOLE_ID),DM_NAME FROM MANHOLE ";
+				String handholeStr = "SELECT DISTINCT HANDHOLE_ID,HANDHOLE_NAME,trim(replace(LONGITUDE,'�','')) as LONGITUDE,trim(replace(LATITUDE,'�','')) as LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=HANDHOLE_ID),DM_NAME FROM HANDHOLE ";
+				String dbStr = 	"SELECT DISTINCT DB_ID,trim(replace(DB_LONGITUDE,'�','')) as DB_LONGITUDE,trim(replace(DB_LATITUDE,'�','')) as DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,PROJECT_ID ,CITY,DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD ";
 				
-				String nodeStr ="SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,substr(trim(replace(LONGITUDE,'�','')),1,6) as LONGITUDE,substr(trim(replace(LATITUDE,'�','')),1,6) as LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' OR SUB_DOMAIN_TYPE='SWITCH' ) "
+				String nodeStr ="SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,trim(replace(LONGITUDE,'�','')) as LONGITUDE,trim(replace(LATITUDE,'�','')) as LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' OR SUB_DOMAIN_TYPE='SWITCH' ) "
 				+ " AND (LONGITUDE !='null' or LONGITUDE !=null ) AND (LATITUDE !='null' or LATITUDE !=null ) ";
 		
 				if (startLongPoint != null && !startLongPoint.equalsIgnoreCase("")  && endLongPoint != null && !endLongPoint.equalsIgnoreCase("")
