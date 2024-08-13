@@ -314,8 +314,11 @@ public class LoadFilesEntHuawei  {
 					}
 					
 				      Site_ID = vhmap.get("NodeName").split("_")[0];
+				     
 						if(Site_ID != null) {
-							
+							 if(Site_ID.contains("'")) {
+								 Site_ID = Site_ID.replace("'", "");
+							 }
 								Statement stmtinit2 = conalm.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 						    	 String sqlStmtinit2 = "select DISTINCT WARE_ID,LONGITUDE,LATITUDE,WARE_NAME from WAREHOUSE where SITE_ID='"+Site_ID+"'";
 								   ResultSet rsinit2 = stmtinit2.executeQuery(sqlStmtinit2);

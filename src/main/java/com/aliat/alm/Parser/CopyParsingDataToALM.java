@@ -1625,7 +1625,8 @@ public class CopyParsingDataToALM {
 	 		 			vWareName = rs1.getString("WARE_NAME");
 	 		 			vLong= rs1.getString("LONGITUDE");
 	 		 			vLat= rs1.getString("LATITUDE");
-	 		 			if((vSiteID != null || !vSiteID.equalsIgnoreCase("0") || !vSiteID.equalsIgnoreCase("null"))
+	 		 			//if((vSiteID != null || !vSiteID.equalsIgnoreCase("0") || !vSiteID.equalsIgnoreCase("null"))
+	 		 			if((vSiteID != null || vSiteID!="0" || vSiteID!="null")
 	 		 				|| (vWareID != null || !vWareID.equalsIgnoreCase("0") || !vWareID.equalsIgnoreCase("null")) 
 	 		 				|| (vWareName != null || !vWareName.equalsIgnoreCase("0") || !vWareName.equalsIgnoreCase("null"))) {
 		 		 			if((tmpSiteID == null || tmpSiteID.equalsIgnoreCase("0") || tmpSiteID.equalsIgnoreCase("null")) 
