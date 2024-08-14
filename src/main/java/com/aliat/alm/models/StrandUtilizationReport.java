@@ -32,6 +32,7 @@ public class StrandUtilizationReport {
 	private String elementType;
 	private String elementID;	
 	private String frontBackPort;
+	private String relatedPath;
 	private String portIndex;
 	private String portRow;
 	private String portColumn;
@@ -50,7 +51,7 @@ public class StrandUtilizationReport {
 	}
 
 
-	public StrandUtilizationReport(String strandNo, String tubeNo,String locationType,String locationID, String locationName,String longitude, String latitude,String elementType,String elementID,String frontBackPort,String portIndex,String portRow,String portColumn,String status,String equipmentType,String equipmentID,String equipmentName,
+	public StrandUtilizationReport(String strandNo, String tubeNo,String locationType,String locationID, String locationName,String longitude, String latitude,String elementType,String elementID,String frontBackPort,String relatedPath,String portIndex,String portRow,String portColumn,String status,String equipmentType,String equipmentID,String equipmentName,
 			
 			String showLocation,String showElement) {
 		super();
@@ -64,6 +65,7 @@ public class StrandUtilizationReport {
 		this.elementType=elementType;
 		this.elementID=elementID;
 		this.frontBackPort=frontBackPort;
+		this.relatedPath=relatedPath;
 		this.portIndex=portIndex;
 		this.portRow=portRow;
 		this.portColumn=portColumn;
@@ -123,6 +125,16 @@ public class StrandUtilizationReport {
 
 	public void setFrontBackPort(String frontBackPort) {
 		this.frontBackPort = frontBackPort;
+	}
+
+
+	public String getRelatedPath() {
+		return relatedPath;
+	}
+
+
+	public void setRelatedPath(String relatedPath) {
+		this.relatedPath = relatedPath;
 	}
 
 

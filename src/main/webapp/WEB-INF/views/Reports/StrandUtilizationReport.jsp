@@ -432,7 +432,7 @@ max-width: 100%;
 														</button>
 														<ul class="dropdown-menu filter-dropdown-ul"></ul>
 													</li>
-												</th>		
+												</th>	
 												 <th>
 							                        <div class="tooltip-container">F/B or A/B
 							                            <span class="tooltip-text">Front/Back or Side A/Side B</span>
@@ -444,6 +444,14 @@ max-width: 100%;
 							                            <ul class="dropdown-menu filter-dropdown-ul"></ul>
 							                        </li>
                     							</th>
+                    							<th>Related Path
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> 
+														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
+														</button>
+														<ul class="dropdown-menu filter-dropdown-ul"></ul>
+													</li>
+												</th>	
 													<th>Port Index
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown"> 
@@ -528,6 +536,7 @@ max-width: 100%;
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>											
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>											
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>											
+												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
@@ -1182,6 +1191,7 @@ $(document).ready(function() {
 				+'<th>Element Type<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
 				+'<th>Element ID<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
 				+'<th><div class="tooltip-container">F/B or A/B<span class="tooltip-text">Front/Back or Side A/Side B</span></div><li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
+				+'<th>Related Path<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
 				+'<th>Port Index<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
 				+'<th>Port Row<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
 				+'<th>Port Column<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
@@ -1191,7 +1201,7 @@ $(document).ready(function() {
 				+'<th>Equipment Name<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
 				+'<th><li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown" disabled style="display:none;"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
 				+'<th><li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown" disabled style="display:none;"><i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
-				+'<tr><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" disabled class="almgrid-search" style="display:none"></th><th><input type="text" disabled class="almgrid-search" style="display:none"></th></tr></thead><tbody></tbody></table>');
+				+'<tr><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" class="almgrid-search" placeholder="Search"></th><th><input type="text" disabled class="almgrid-search" style="display:none"></th><th><input type="text" disabled class="almgrid-search" style="display:none"></th></tr></thead><tbody></tbody></table>');
 			
 			
 
@@ -1327,7 +1337,7 @@ $(document).ready(function() {
   			       	  	   jctElementsIDArray=[];
   			       	  	   jctElementsFlag="notOpened";
   			       		   data.push('\r');
-  			       		   data.push(["Strand #","Tube #","Location Type" ,"Location ID", "Location Name","Location Longitude", "Location Latitude","Element Type","Element ID","F/B or A/B","Port Index","Port Row","Port Column","Status","Equipment Type","Equipment ID","Equipment Name"]);  	  			       		
+  			       		   data.push(["Strand #","Tube #","Location Type" ,"Location ID", "Location Name","Location Longitude", "Location Latitude","Element Type","Element ID","F/B or A/B","Related Path","Port Index","Port Row","Port Column","Status","Equipment Type","Equipment ID","Equipment Name"]);  	  			       		
 
   	  			       	   filteredGridData =  dataArray; // used in draw on map 
   	  			       	   
