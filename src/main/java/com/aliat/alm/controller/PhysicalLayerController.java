@@ -2367,12 +2367,30 @@ public class PhysicalLayerController {
 						manholeList = session.createNativeQuery(
 								"SELECT DISTINCT MANHOLE_ID,MANHOLE_NAME,LONGITUDE,LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=MANHOLE_ID),CITY FROM MANHOLE where PROJECT_ID= 'CurrentPhysicalLayer'  ")
 								.getResultList();
+						
+						junctionManholeList = session.createNativeQuery(
+								"SELECT DISTINCT A.JUNCTION_ID, A.JUNCTION_NAME,A.PHYSICAL_LAYER_ID,A.PHYSICAL_LAYER_NAME,A.JUNCTION_NUMBER,A.CAPACITY,A.CITY,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID FROM JUNCTION A INNER JOIN manhole B ON A.PHYSICAL_LAYER_ID = B.manhole_id WHERE B.PROJECT_ID='CurrentPhysicalLayer'")
+								.getResultList();
+						
 						}
 						if ("1".equals(readHandhole)) {
 						handholeList = session.createNativeQuery(
 								"SELECT DISTINCT HANDHOLE_ID,HANDHOLE_NAME,LONGITUDE,LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=HANDHOLE_ID),CITY FROM HANDHOLE where PROJECT_ID= 'CurrentPhysicalLayer'  ")
 								.getResultList();
+						
+						junctionHandholeList = session.createNativeQuery(
+								"SELECT DISTINCT A.JUNCTION_ID, A.JUNCTION_NAME,A.PHYSICAL_LAYER_ID,A.PHYSICAL_LAYER_NAME,A.JUNCTION_NUMBER,A.CAPACITY,A.CITY,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID FROM JUNCTION A INNER JOIN handhole B ON A.PHYSICAL_LAYER_ID = b.handhole_id WHERE B.PROJECT_ID='CurrentPhysicalLayer'")
+								.getResultList();
+
 						}
+						
+						if ("1".equals(readDB)) {
+							
+							distribBoardList = session.createNativeQuery(
+									"SELECT DISTINCT DB_ID,DB_LONGITUDE,DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,PROJECT_ID ,CITY,DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD WHERE PROJECT_ID='CurrentPhysicalLayer'")
+									.getResultList();						
+						}
+						
 						/*
 						 * fiberList = session.createNativeQuery(
 						 * "SELECT SOURCE_LNG,SOURCE_LAT,DESTINATION_LNG,DESTINATION_LAT,A.FIBER_CABLE_ID,A.SOURCE_WARE_ID,A.SOURCE_ID,A.SOURCE_NAME,A.DESTINATION_WARE_ID,A.DESTINATION_ID,A.DESTINATION_NAME,(SELECT COUNT(*) FROM FIBER_TUBES B WHERE B.FIBER_CABLE_ID=A.FIBER_CABLE_ID),(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.FIBER_CABLE_ID=A.FIBER_CABLE_ID),FIBER_CABLE_NAME,PROJECT_ID,SOURCE_CITY,DESTINATION_CITY,NUMBER_OF_TUBES,NUMBER_OF_STRANDS,LENGTH,DRAWING_TYPE,FIBER_NETWORK_LEVEL,FIBER_OWNER,(select B.FIBER_COLOR_OWNER from FIBER_OWNER_COLOR B WHERE B.FIBER_OWNER=A.FIBER_OWNER) AS FIBER_CABLE_COLOR FROM FIBER_CABLES A"
@@ -2404,9 +2422,7 @@ public class PhysicalLayerController {
 						 * "SELECT c.STRAND_ID,c.LONGITUDE,c.LATITUDE,c.WARE_ID,c.AUXILIARY_POINT_ID,C.AUXILIARY_POINT_NAME,c.DISTANCE_FROM_SOURCE,c.SEQ_SORTING,c.AUXILIARY_ID,c.DRIVING_DISTANCE, c.GEO_DISTANCE FROM STRAND_AUXILIARY_POINTS c,FIBER_STRANDS b,FIBER_CABLES a WHERE a.FIBER_CABLE_ID=b.FIBER_CABLE_ID and b.STRAND_ID=c.STRAND_ID ORDER BY c.SEQ_SORTING ASC "
 						 * ) .getResultList();
 						 */
-						distribBoardList = session.createNativeQuery(
-								"SELECT DISTINCT DB_ID,DB_LONGITUDE,DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,PROJECT_ID ,CITY,DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD WHERE PROJECT_ID='CurrentPhysicalLayer'")
-								.getResultList();
+						
 
 						trenchList = session.createNativeQuery(
 								"SELECT TRENCH_ID,TRENCH_NAME,SOURCE_WARE_ID,SOURCE_ID,SOURCE_NAME,DESTINATION_WARE_ID,DESTINATION_ID,DESTINATION_NAME,SOURCE_LATITUDE,SOURCE_LONGITUDE,DESTINATION_LONGITUDE,DESTINATION_LATITUDE,SOURCE_CITY,DESTINATION_CITY,NUM_DUCTS,MAX_CAPACITY,LENGTH,PROJECT_ID,DRAWING_TYPE  FROM TRENCH WHERE PROJECT_ID='CurrentPhysicalLayer'")
@@ -2415,14 +2431,17 @@ public class PhysicalLayerController {
 						trenchAuxiliary_Data = session.createNativeQuery(
 								"SELECT B.LONGITUDE,B.LATITUDE,B.WARE_ID,B.AUXILIARY_POINT_ID,B.AUXILIARY_POINT_NAME,B.TRENCH_ID,B.DISTANCE_FROM_SOURCE,B.SEQ_SORTING,B.AUXILIARY_ID  FROM TRENCH A,TRENCH_AUXILIARY_POINTS B WHERE A.TRENCH_ID=B.TRENCH_ID AND A.PROJECT_ID='CurrentPhysicalLayer' ORDER BY B.SEQ_SORTING ASC")
 								.getResultList();
-
+/*
 						junctionManholeList = session.createNativeQuery(
 								"SELECT DISTINCT A.JUNCTION_ID, A.JUNCTION_NAME,A.PHYSICAL_LAYER_ID,A.PHYSICAL_LAYER_NAME,A.JUNCTION_NUMBER,A.CAPACITY,A.CITY,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID FROM JUNCTION A INNER JOIN manhole B ON A.PHYSICAL_LAYER_ID = B.manhole_id WHERE B.PROJECT_ID='CurrentPhysicalLayer'")
 								.getResultList();
+*/								
 
+/*						
 						junctionHandholeList = session.createNativeQuery(
 								"SELECT DISTINCT A.JUNCTION_ID, A.JUNCTION_NAME,A.PHYSICAL_LAYER_ID,A.PHYSICAL_LAYER_NAME,A.JUNCTION_NUMBER,A.CAPACITY,A.CITY,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID FROM JUNCTION A INNER JOIN handhole B ON A.PHYSICAL_LAYER_ID = b.handhole_id WHERE B.PROJECT_ID='CurrentPhysicalLayer'")
 								.getResultList();
+*/								
 
 						ductList = session.createNativeQuery(
 								"SELECT B.DUCT_ID,B.DUCT_NAME,B.SOURCE_WARE_ID,B.SOURCE_ID,B.SOURCE_NAME,B.DESTINATION_WARE_ID,B.DESTINATION_ID,B.DESTINATION_NAME,B.SOURCE_LATITUDE,B.SOURCE_LONGITUDE,B.DESTINATION_LONGITUDE,B.DESTINATION_LATITUDE,B.SOURCE_CITY,B.DESTINATION_CITY,B.NUM_FIBERCABLES,B.NUM_FIBERTUBES,B.NUM_FIBERSTRANDS,B.LENGTH,B.TRENCH_ID,B.DRAWING_TYPE FROM DUCTS B,TRENCH A WHERE B.TRENCH_ID=A.TRENCH_ID AND A.PROJECT_ID= 'CurrentPhysicalLayer'")
@@ -2431,10 +2450,11 @@ public class PhysicalLayerController {
 						ductAuxiliary_Data = session.createNativeQuery(
 								"SELECT B.LONGITUDE,B.LATITUDE,B.WARE_ID,B.AUXILIARY_POINT_ID,B.AUXILIARY_POINT_NAME,B.DUCT_ID,B.DISTANCE_FROM_SOURCE,B.SEQ_SORTING,B.AUXILIARY_ID FROM DUCTS A,DUCT_AUXILIARY_POINTS B WHERE A.DUCT_ID=B.DUCT_ID ORDER BY B.SEQ_SORTING ASC ")
 								.getResultList();
-
+/*
 						NodeList = session.createNativeQuery(
 								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' OR SUB_DOMAIN_TYPE='SWITCH' )    ")
 								.getResultList();
+*/								
 
 					}
 
@@ -4490,32 +4510,32 @@ public class PhysicalLayerController {
 			tx = session.beginTransaction();
 			try {
 				Object MSANCount = session
-						.createNativeQuery("select count (*) from node_active where domain = 'Enterprise' AND SUB_DOMAIN_TYPE ='MSAN'")
+						.createNativeQuery("select count (*) from node_active where domain = 'Enterprise' AND SUB_DOMAIN_TYPE ='MSAN' AND ACTIVE_RECORD =1")
 						.getResultList();
 				rtn.put("MSANCount", MSANCount);
 				
 				Object EntSwitchCount = session
-						.createNativeQuery("select count (*) from node_active where domain = 'Enterprise' AND SUB_DOMAIN_TYPE ='SWITCH'")
+						.createNativeQuery("select count (*) from node_active where domain = 'Enterprise' AND SUB_DOMAIN_TYPE ='SWITCH' AND ACTIVE_RECORD =1")
 						.getResultList();
 				rtn.put("EntSwitchCount", EntSwitchCount);
 
 				Object DWDMCount = session.createNativeQuery(
-						"select count (*) from node_active where domain = 'Transmission' AND SUB_DOMAIN_TYPE = 'DWDM'")
+						"select count (*) from node_active where domain = 'Transmission' AND SUB_DOMAIN_TYPE = 'DWDM' AND ACTIVE_RECORD =1")
 						.getResultList();
 				rtn.put("DWDMCount", DWDMCount);
 
 				Object SDHCount = session.createNativeQuery(
-						"select count (*) from node_active where domain = 'Transmission' AND SUB_DOMAIN_TYPE = 'SDH'")
+						"select count (*) from node_active where domain = 'Transmission' AND SUB_DOMAIN_TYPE = 'SDH' AND ACTIVE_RECORD =1")
 						.getResultList();
 				rtn.put("SDHCount", SDHCount);
 
 				Object GPONCount = session.createNativeQuery(
-						"select count (*) from node_active where domain = 'Transmission' AND SUB_DOMAIN_TYPE = 'GPON'")
+						"select count (*) from node_active where domain = 'Transmission' AND SUB_DOMAIN_TYPE = 'GPON' AND ACTIVE_RECORD =1")
 						.getResultList();
 				rtn.put("GPONCount", GPONCount);
 
 				Object AllNodesCount = session.createNativeQuery(
-						"SELECT COUNT(*) FROM node_active WHERE domain IN ('Enterprise' , 'Transmission') AND SUB_DOMAIN_TYPE IN ('DWDM','SDH','GPON','MSAN','SWITCH')  ")
+						"SELECT COUNT(*) FROM node_active WHERE domain IN ('Enterprise' , 'Transmission') AND SUB_DOMAIN_TYPE IN ('DWDM','SDH','GPON','MSAN','SWITCH') AND ACTIVE_RECORD =1")
 						.getResultList();
 				rtn.put("AllNodesCount", AllNodesCount);
 				session.clear();
@@ -8218,6 +8238,7 @@ public class PhysicalLayerController {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/getNode", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> getNode(Locale locale, Model model, HttpServletRequest request,
@@ -8228,8 +8249,7 @@ public class PhysicalLayerController {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
 		}
-
-		Query query;
+		
 		session = AlmDbSession.getInstance().getSession();
 
 		if (session != null && session.isOpen()) {
@@ -8237,7 +8257,9 @@ public class PhysicalLayerController {
 			try {
 				List<Object[]> NodeList = new ArrayList<Object[]>();
 				NodeList = session.createNativeQuery(
-						"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' OR SUB_DOMAIN_TYPE='SWITCH' )    ")
+						"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID,SUB_DOMAIN_TYPE"
+						+" FROM NODE_ACTIVE WHERE ((SUB_DOMAIN_TYPE IN ('MSAN', 'SDH', 'DWDM', 'GPON', 'SWITCH')"
+						+" OR NODE_TYPE IN ('MSAN', 'SDH', 'DWDM', 'GPON', 'SWITCH')) AND ACTIVE_RECORD = 1)")
 						.getResultList();
 
 				rtn.put("nodeList", NodeList);
