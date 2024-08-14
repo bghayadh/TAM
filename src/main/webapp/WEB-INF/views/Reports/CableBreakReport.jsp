@@ -119,7 +119,7 @@ position: relative;
 width: 100%;
 height: 100%;            
 position: absolute;
-top: 70px;
+top: 10px;
 left: 0;
 }
 

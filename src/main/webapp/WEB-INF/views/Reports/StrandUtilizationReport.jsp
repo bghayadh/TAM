@@ -118,7 +118,7 @@ position: relative;
 width: 100%;
 height: 100%;            
 position: absolute;
-top: 70px;
+top: 10px;
 left: 0;
 }
 
@@ -627,7 +627,6 @@ max-width: 100%;
       </div>
     </div>
   </div>
-
   <div class="panel panel-default" style="margin-bottom:3px;" >
   <div class="panel-heading " role="tab" id="headingTwo" >
       <h4 class="panel-title">
