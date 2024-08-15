@@ -2279,17 +2279,18 @@ function AllDistributionBoardCheckFilter(Id,clssName) {
 		});	
 	}*/
 
+// Checkbox event for All Distribution Board (All DBs, Backbone, Metro and Access)
 function AllDistributionBoardCheckFilter(Id,clssName) {
 		
 	$("#"+Id).children('input').bind("change",function() {
-		/*if(clssName=="") {			
+		if(clssName=="") {			
 			markerClusterAccessDistBoard.clearMarkers();
 			markerClusterMetroDistBoard.clearMarkers();
 			markerClusterBackboneDistBoard.clearMarkers();
 		}
 		else {
 			clssName.clearMarkers();	
-		}*/
+		}		
 
 		if ($(this).is(':checked')){				
 				
@@ -2322,7 +2323,7 @@ function AllDistributionBoardCheckFilter(Id,clssName) {
 		}// end check  case 
 		
 		// uncheck case 
-			else{					
+			else{									
 				$(this).parent().find('input:checkbox').each(function(){
 				$(this).prop('checked', false);
 			 if($(this).parent().hasClass('DistributionBoard')){
@@ -2339,7 +2340,7 @@ function AllDistributionBoardCheckFilter(Id,clssName) {
 							className=markerClusterAccessDistBoard;
 						}
 						
-						className.removeMarker(markersDistBoard[dbID]);	
+						//className.removeMarker(markersDistBoard[dbID]);	
 						markersDistBoard[dbID].setMap(null);	
 					}	
 				 }									
@@ -2365,7 +2366,10 @@ function AllDistributionBoardCheckFilter(Id,clssName) {
         
         	if($("#DistributionBoard_f_CurrentPhysicalLayer .BackboneDB").is(":checked") || $("#DistributionBoard_f_CurrentPhysicalLayer .MetroDB").is(":checked") || $('#DistributionBoard_f_CurrentPhysicalLayer .AccessDB').is(':checked') ) {	
             	$("#distBoardCheckAllBoq").prop("checked",true);
-        	}	
+        	}
+        	else {
+				$("#distBoardCheckAllBoq").prop("checked",false);
+			}
 		});	
 	}
 
