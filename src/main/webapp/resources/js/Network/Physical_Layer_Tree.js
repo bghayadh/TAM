@@ -300,18 +300,6 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 if(readFiber === '1'){
 		str="<ul><li id='FiberPath_f_CurrentPhysicalLayer' style='display:none;' class='FiberPath_f_CurrentPhysicalLayer'><input type='checkbox' class='AllFiberCables' class='filter checkFilter'></input> <span id='FiberPath_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='FiberPath_span' style='color:black;width:395px' class='TreeSpan'>Fiber Path <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' id='pushPointsCurrentPhysicalLayer' class='pushPoints'> <img src='"+getContext()+"/resources/NetworkImages/remove.png' hidden style='margin-left:10px' id='cancelPointsCurrentPhysicalLayer' class='clearPoints'></span></li></ul>";
 		$("#initial_ul_CurrentPhysicalLayer").append(str);
-}
-if(readDB === '1'){
-		str="<ul><li id='DistributionBoard_f_CurrentPhysicalLayer' style='display:none;' class='DistributionBoard_f_CurrentPhysicalLayer'><input type='checkbox' unchecked class='AllDistBoards checkFilter'></input> <span id='DistribBoard_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='DistribBoard_span' class='TreeSpan' style='color:black;width:395px'>Distribution Board </span></li></ul>";
-		$("#initial_ul_CurrentPhysicalLayer").append(str);
-}
-		str="<ul><li id='Trench_f_CurrentPhysicalLayer' style='display:none;' class='Trench_f_CurrentPhysicalLayer'><input type='checkbox' class='AllTrenches'></input> <span id='Trench_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Trench_span' style='color:black;width:395px' class='TreeSpan'>Trench <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' id='pushTrenchPointsCurrentPhysicalLayer' class='pushPoints'> <img src='"+getContext()+"/resources/NetworkImages/remove.png' hidden style='margin-left:10px' id='cancelTrenchPointsCurrentPhysicalLayer' class='clearPoints'></span></li></ul>";
-		$("#initial_ul_CurrentPhysicalLayer").append(str);
-		
-		str="<ul><li id='NodeActive_f_CurrentPhysicalLayer' style='display:none;' class='NodeActive_f_CurrentPhysicalLayer'><input type='checkbox' unchecked class='AllNodeActive checkFilter'></input> <span id='NodeActive_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='NodeActive_span' class='TreeSpan' style='color:black;width:395px'> Nodes </span></li></ul>";
-		$("#initial_ul_CurrentPhysicalLayer").append(str);
-		
-		
 		str="<ul><li id ='FiberPath_backbone__CurrentPhysicalLayer' style='display:none;' class='backboneFolder'> <input type='checkbox' class='BackboneFiber checkFilter' id ='Backbone__CurrentPhysicalLayer' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Backbone </span></li></ul></li></ul>";
 		$("#FiberPath_f_CurrentPhysicalLayer").append(str);
 		
@@ -319,8 +307,11 @@ if(readDB === '1'){
 		$("#FiberPath_f_CurrentPhysicalLayer").append(str);
 		
 		str="<ul><li id ='FiberPath_access__CurrentPhysicalLayer' style='display:none;' class='accessFolder'> <input type='checkbox' class='AccessFiber checkFilter' id ='Access__CurrentPhysicalLayer' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Access </span></li></ul></li></ul>";
-		$("#FiberPath_f_CurrentPhysicalLayer").append(str);
-		
+		$("#FiberPath_f_CurrentPhysicalLayer").append(str);		
+}
+if(readDB === '1'){
+		str="<ul><li id='DistributionBoard_f_CurrentPhysicalLayer' style='display:none;' class='DistributionBoard_f_CurrentPhysicalLayer'><input type='checkbox' unchecked class='AllDistBoards checkFilter'></input> <span id='DistribBoard_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='DistribBoard_span' class='TreeSpan' style='color:black;width:395px'>Distribution Board </span></li></ul>";
+		$("#initial_ul_CurrentPhysicalLayer").append(str);
         str="<ul><li id ='DistributionBoard_backbone__CurrentPhysicalLayer' style='display:none;' class='backboneDBFolder'> <input type='checkbox' class='BackboneDB checkFilter' id ='BackboneDB__CurrentPhysicalLayer' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Backbone </span></li></ul></li></ul>";
 		$("#DistributionBoard_f_CurrentPhysicalLayer").append(str);
 		
@@ -328,7 +319,13 @@ if(readDB === '1'){
 		$("#DistributionBoard_f_CurrentPhysicalLayer").append(str);
 		
 		str="<ul><li id ='DistributionBoard_access__CurrentPhysicalLayer' style='display:none;' class='accessDBFolder'> <input type='checkbox' class='AccessDB checkFilter' id ='AccessDB__CurrentPhysicalLayer' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Access </span></li></ul></li></ul>";
-		$("#DistributionBoard_f_CurrentPhysicalLayer").append(str);
+		$("#DistributionBoard_f_CurrentPhysicalLayer").append(str);		
+}
+		str="<ul><li id='Trench_f_CurrentPhysicalLayer' style='display:none;' class='Trench_f_CurrentPhysicalLayer'><input type='checkbox' class='AllTrenches'></input> <span id='Trench_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Trench_span' style='color:black;width:395px' class='TreeSpan'>Trench <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' id='pushTrenchPointsCurrentPhysicalLayer' class='pushPoints'> <img src='"+getContext()+"/resources/NetworkImages/remove.png' hidden style='margin-left:10px' id='cancelTrenchPointsCurrentPhysicalLayer' class='clearPoints'></span></li></ul>";
+		$("#initial_ul_CurrentPhysicalLayer").append(str);
+		
+		str="<ul><li id='NodeActive_f_CurrentPhysicalLayer' style='display:none;' class='NodeActive_f_CurrentPhysicalLayer'><input type='checkbox' unchecked class='AllNodeActive checkFilter'></input> <span id='NodeActive_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='NodeActive_span' class='TreeSpan' style='color:black;width:395px'> Nodes </span></li></ul>";
+		$("#initial_ul_CurrentPhysicalLayer").append(str);		
 
         str="<ul><li id='Entreprise_MSAN__CurrentPhysicalLayer' style='display:none;' class='EntrepriseNodeFolder'><input type='checkbox' class='EntrepriseMSAN checkFilter' id ='Entreprise__CurrentPhysicalLayer' unchecked name='filter'></input> <span class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:395px' class='TreeSpan'> MSAN </span></li></ul>";
 		$("#NodeActive_f_CurrentPhysicalLayer").append(str);
@@ -376,52 +373,45 @@ if(readDB === '1'){
 			   var strPhysicalLayer="<ul><li id='initial_ul_"+ListProject[iji][0]+"' class='Initial_projects' style='display:none;'><input type='checkbox' class='projectallElements' unchecked name='filter'></input><span id='initial_Span_"+ListProject[iji][0]+"' class='Parentfolder'><i class='fa fa-folder' style='color: #08526D;'></i></span><span class='TreeSpan' style='color:black;width:436px;'> Physical Layer </span></li></ul>";
 		       $("#"+ListProject[iji][0]+"").append(strPhysicalLayer);
 		         
-			       if(readManhole === '1'){
-			   str="<ul><li id='Manhole_f_"+ListProject[iji][0]+"' style='display:none;' class='Manhole_f_projects'><input type='checkbox' unchecked class='AllManholes checkFilter' ></input> <span id='Manhole_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Manhole_span' class='TreeSpan' style='color:black;width:395px' >Manhole </span></li></ul>";	   
-			   $("#initial_ul_"+ListProject[iji][0]+"").append(str);
-}
- if(readHandhole === '1'){
-			   str="<ul><li id='Handhole_f_"+ListProject[iji][0]+"' style='display:none;' class='Handhole_f_projects'><input type='checkbox' unchecked class='AllHandholes checkFilter'></input> <span id='Handhole_spanFolder' class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Handhole_span' style='color:black;width:395px' class='TreeSpan' >Handhole </span></li></ul>";
-			   $("#initial_ul_"+ListProject[iji][0]+"").append(str);
-}
+			   if(readManhole === '1'){
+			   		str="<ul><li id='Manhole_f_"+ListProject[iji][0]+"' style='display:none;' class='Manhole_f_projects'><input type='checkbox' unchecked class='AllManholes checkFilter' ></input> <span id='Manhole_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Manhole_span' class='TreeSpan' style='color:black;width:395px' >Manhole </span></li></ul>";	   
+			   		$("#initial_ul_"+ListProject[iji][0]+"").append(str);
+			   }
+ 			   if(readHandhole === '1'){
+			   		str="<ul><li id='Handhole_f_"+ListProject[iji][0]+"' style='display:none;' class='Handhole_f_projects'><input type='checkbox' unchecked class='AllHandholes checkFilter'></input> <span id='Handhole_spanFolder' class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Handhole_span' style='color:black;width:395px' class='TreeSpan' >Handhole </span></li></ul>";
+			   		$("#initial_ul_"+ListProject[iji][0]+"").append(str);
+			    }
 			   str="<ul><li id='Junction_f_"+ListProject[iji][0]+"' style='display:none;' class='Junction_f_projects'><input type='checkbox' unchecked class='AllJunctions checkFilter'></input> <span id='Junction_spanFolder' class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Junction_span' style='color:black;width:395px' class='TreeSpan' >Junction </span></li></ul>";
 			   $("#initial_ul_"+ListProject[iji][0]+"").append(str);
 			   if(readFiber === '1'){
-			   str="<ul><li id='FiberPath_f_"+ListProject[iji][0]+"' style='display:none;' class='FiberPath_f_projects'><input type='checkbox' class='AllFiberCables' class='filter checkFilter'></input> <span id='FiberPath_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='FiberPath_span' style='color:black;width:395px' class='TreeSpan'>Fiber Path <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' id='pushPoints"+ListProject[iji][0]+"' class='pushPoints'> <img src='"+getContext()+"/resources/NetworkImages/remove.png' hidden style='margin-left:10px' id='cancelPoints"+ListProject[iji][0]+"' class='clearPoints'></span></li></ul>";
-			   $("#initial_ul_"+ListProject[iji][0]+"").append(str);
-}
-  if(readDB === '1'){
-			   str="<ul><li id='DistributionBoard_f_"+ListProject[iji][0]+"' style='display:none;' class='DistributionBoard_f_projects'><input type='checkbox' unchecked class='AllDistBoards checkFilter'></input> <span id='DistribBoard_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='DistribBoard_span' class='TreeSpan' style='color:black;width:395px'>Distribution Board </span></li></ul>";
-			   $("#initial_ul_"+ListProject[iji][0]+"").append(str);
+			   		str="<ul><li id='FiberPath_f_"+ListProject[iji][0]+"' style='display:none;' class='FiberPath_f_projects'><input type='checkbox' class='AllFiberCables' class='filter checkFilter'></input> <span id='FiberPath_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='FiberPath_span' style='color:black;width:395px' class='TreeSpan'>Fiber Path <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' id='pushPoints"+ListProject[iji][0]+"' class='pushPoints'> <img src='"+getContext()+"/resources/NetworkImages/remove.png' hidden style='margin-left:10px' id='cancelPoints"+ListProject[iji][0]+"' class='clearPoints'></span></li></ul>";
+			   		$("#initial_ul_"+ListProject[iji][0]+"").append(str);
+					str="<ul><li id='FiberPath_backbone__"+ListProject[iji][0]+"' style='display:none;' class='backboneFolder'> <input type='checkbox' class='BackboneFiber checkFilter' id='Backbone__"+ListProject[iji][0]+"' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Backbone </span></li></ul></li></ul>";
+					$("#FiberPath_f_"+ListProject[iji][0]+"").append(str);				
+					str="<ul><li id='FiberPath_metro__"+ListProject[iji][0]+"' style='display:none;' class='metroFolder'> <input type='checkbox' class='MetroFiber checkFilter' id='Metro__"+ListProject[iji][0]+"' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Metro </span></li></ul></li></ul>";
+					$("#FiberPath_f_"+ListProject[iji][0]+"").append(str);
+					str="<ul><li id='FiberPath_access__"+ListProject[iji][0]+"' style='display:none;' class='accessFolder'> <input type='checkbox' class='AccessFiber checkFilter' id='Access__"+ListProject[iji][0]+"' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Access </span></li></ul></li></ul>";
+					$("#FiberPath_f_"+ListProject[iji][0]+"").append(str);			   		
+			   }
+  			   if(readDB === '1'){
+			   		str="<ul><li id='DistributionBoard_f_"+ListProject[iji][0]+"' style='display:none;' class='DistributionBoard_f_projects'><input type='checkbox' unchecked class='AllDistBoards checkFilter'></input> <span id='DistribBoard_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='DistribBoard_span' class='TreeSpan' style='color:black;width:395px'>Distribution Board </span></li></ul>";
+			   		$("#initial_ul_"+ListProject[iji][0]+"").append(str);
+				 	str="<ul><li id ='DistributionBoard_backbone__"+ListProject[iji][0]+"' style='display:none;' class='backboneDBFolder'> <input type='checkbox' class='BackboneDB checkFilter' id ='BackboneDB__"+ListProject[iji][0]+"' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Backbone </span></li></ul></li></ul>";
+				 	$("#DistributionBoard_f_"+ListProject[iji][0]+"").append(str);		
+					str="<ul><li id ='DistributionBoard_metro__"+ListProject[iji][0]+"' style='display:none;' class='metroDBFolder'> <input type='checkbox' class='MetroDB checkFilter' id ='MetroDB__"+ListProject[iji][0]+"' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Metro </span></li></ul></li></ul>";
+					$("#DistributionBoard_f_"+ListProject[iji][0]+"").append(str);
+					str="<ul><li id ='DistributionBoard_access__"+ListProject[iji][0]+"' style='display:none;' class='accessDBFolder'> <input type='checkbox' class='AccessDB checkFilter' id ='AccessDB__"+ListProject[iji][0]+"' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Access </span></li></ul></li></ul>";
+					$("#DistributionBoard_f_"+ListProject[iji][0]+"").append(str);			   		
 			   }
 			   str="<ul><li id='Trench_f_"+ListProject[iji][0]+"' style='display:none;' class='Trench_f_projects'><input type='checkbox' class='AllTrenches'></input> <span id='Trench_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Trench_span' style='color:black;width:395px' class='TreeSpan'>Trench <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' id='pushTrenchPoints"+ListProject[iji][0]+"' class='pushPoints'> <img src='"+getContext()+"/resources/NetworkImages/remove.png' hidden style='margin-left:10px' id='cancelTrenchPoints"+ListProject[iji][0]+"' class='clearPoints'></span></li></ul>";
 			   $("#initial_ul_"+ListProject[iji][0]+"").append(str);
-			
-				str="<ul><li id='FiberPath_backbone__"+ListProject[iji][0]+"' style='display:none;' class='backboneFolder'> <input type='checkbox' class='BackboneFiber checkFilter' id='Backbone__"+ListProject[iji][0]+"' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Backbone </span></li></ul></li></ul>";
-				$("#FiberPath_f_"+ListProject[iji][0]+"").append(str);
 				
-				str="<ul><li id='FiberPath_metro__"+ListProject[iji][0]+"' style='display:none;' class='metroFolder'> <input type='checkbox' class='MetroFiber checkFilter' id='Metro__"+ListProject[iji][0]+"' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Metro </span></li></ul></li></ul>";
-				$("#FiberPath_f_"+ListProject[iji][0]+"").append(str);
-				
-				str="<ul><li id='FiberPath_access__"+ListProject[iji][0]+"' style='display:none;' class='accessFolder'> <input type='checkbox' class='AccessFiber checkFilter' id='Access__"+ListProject[iji][0]+"' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Access </span></li></ul></li></ul>";
-				$("#FiberPath_f_"+ListProject[iji][0]+"").append(str);
-				
-				 str="<ul><li id ='DistributionBoard_backbone__"+ListProject[iji][0]+"' style='display:none;' class='backboneDBFolder'> <input type='checkbox' class='BackboneDB checkFilter' id ='BackboneDB__"+ListProject[iji][0]+"' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Backbone </span></li></ul></li></ul>";
-				 $("#DistributionBoard_f_"+ListProject[iji][0]+"").append(str);
-		
-				str="<ul><li id ='DistributionBoard_metro__"+ListProject[iji][0]+"' style='display:none;' class='metroDBFolder'> <input type='checkbox' class='MetroDB checkFilter' id ='MetroDB__"+ListProject[iji][0]+"' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Metro </span></li></ul></li></ul>";
-				$("#DistributionBoard_f_"+ListProject[iji][0]+"").append(str);
-		
-				str="<ul><li id ='DistributionBoard_access__"+ListProject[iji][0]+"' style='display:none;' class='accessDBFolder'> <input type='checkbox' class='AccessDB checkFilter' id ='AccessDB__"+ListProject[iji][0]+"' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Access </span></li></ul></li></ul>";
-				$("#DistributionBoard_f_"+ListProject[iji][0]+"").append(str);
-				
-				$("#"+ListProject[iji][0]+" input[type=checkbox]").bind("change",function() {
+			   $("#"+ListProject[iji][0]+" input[type=checkbox]").bind("change",function() {
 					if ($(this).is(':checked') && projectflag[$(this).parent().attr('id')] == 0){
 						//console.log($(this).parent().attr('id'))
 						getProject($(this).parent().attr('id'))
 					}
-				});
-				
+				});				
 			 }
 			 allProjectElementsCheckFilter();
 		 }
