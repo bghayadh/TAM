@@ -5533,6 +5533,7 @@ function openFindNearMultySite(rowData) {
     });
 }
 
+// To open the find nearest popup and drawing the circle, the rectangle and append the nearest points 
 function  openFindNearest(checkedOption,closestLatPoint,closestLongPoint,closestDisRange,noP,arrayManhole,arrayHandhole,arrayDB,arrayFibers,arrayStrands,arrayTubes,arrayNodes,getRelatedPoints,strtLng,endLng,strtLat,endLat,customerID,customerName,serviceReq,serviceRef){ 	
 	$("#StartEnd").prop("checked",false);
 	 document.getElementById("closestLongDiv").style.display = "block";
@@ -5600,7 +5601,10 @@ function  openFindNearest(checkedOption,closestLatPoint,closestLongPoint,closest
 							 title: "Marked",
 					});
 					//var circleRadius = closestDisRange * 1.609344;
-					var circleRadius = closestDisRange *1.609344 *1.609344;
+					console.log("circleRadius is "+circleRadius);
+					//var circleRadius = closestDisRange *1.609344 *1.609344;
+					var circleRadius = closestDisRange;
+					// Drawing find nearest circle
 					var circ = new google.maps.Circle({
 					         strokeColor: "blue",
 					         strokeOpacity: 0.8,
@@ -5617,7 +5621,7 @@ function  openFindNearest(checkedOption,closestLatPoint,closestLongPoint,closest
 					    map.fitBounds(circ.getBounds());
 					    
 					    
-	
+				// Drawing the find nearest rectangle lines.	
 				startlangPath =[new google.maps.LatLng(strtLat,strtLng), new google.maps.LatLng(endLat,strtLng)];
 				drawLine("#FF0000",startlangPath);
 				startlatgPath =[new google.maps.LatLng(strtLat,strtLng), new google.maps.LatLng(strtLat,endLng)];

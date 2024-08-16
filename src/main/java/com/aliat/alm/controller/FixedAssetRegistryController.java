@@ -1233,7 +1233,7 @@ public class FixedAssetRegistryController {
 		// apply formulae
 		double a = Math.pow(Math.sin(dLat / 2), 2)
 						+ Math.pow(Math.sin(dLon / 2), 2) * Math.cos(latitude) * Math.cos(pointLat);
-		double rad = 6371;
+		double rad = 6371; // Getting the distance in km.
 		double c = 2 * Math.asin(Math.sqrt(a));
 		return rad * c;
 

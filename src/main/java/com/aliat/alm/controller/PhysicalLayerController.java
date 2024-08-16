@@ -5827,7 +5827,8 @@ public class PhysicalLayerController {
     private static double[] calculateBorderCircleLatitudes(double centerLat, double centerLon, double distanceRange) {
 
     	 // Calculate circle radius 
-        double circleRadius = distanceRange * 1.609344 * 1.609344;
+        //double circleRadius = distanceRange * 1.609344 * 1.609344;
+        double circleRadius = distanceRange;
         
         final double EARTH_RADIUS = 6371.0;
 
@@ -5848,7 +5849,8 @@ public class PhysicalLayerController {
    
     private static double[] calculateBorderCircleLongitudes(double centerLat, double centerLon, double distanceRange) {
         // Calculate circle radius 
-        double circleRadius = distanceRange * 1.609344 * 1.609344;
+        //double circleRadius = distanceRange * 1.609344 * 1.609344;
+        double circleRadius = distanceRange;
 
         final double EARTH_RADIUS = 6371.0;
 
@@ -5886,10 +5888,12 @@ public class PhysicalLayerController {
 			if (Target == "Manhole" || Target == "Handhole") {
 				pointDist = haversine(closestLatPoint, closestLongPoint, Double.valueOf((String) objectArray[3]),
 						Double.valueOf((String) objectArray[2]));
+				System.out.println("pointDist is " +pointDist);
 			} 
 			else {
 				pointDist = haversine(closestLatPoint, closestLongPoint, Double.valueOf((String) objectArray[2]),
 						Double.valueOf((String) objectArray[1]));
+				System.out.println("pointDist is " +pointDist);
 			}
 			ID = (String) objectArray[0];
 						
@@ -13510,7 +13514,7 @@ public class PhysicalLayerController {
 
 		// apply formulae
 		double a = Math.pow(Math.sin(dLat / 2), 2) + Math.pow(Math.sin(dLon / 2), 2) * Math.cos(lat1) * Math.cos(lat2);
-		double rad = 6371;
+		double rad = 6371; // This to calculate the distance in km.
 		double c = 2 * Math.asin(Math.sqrt(a));
 		return rad * c;
 
