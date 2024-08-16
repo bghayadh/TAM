@@ -6199,25 +6199,32 @@ function appendNearestDBoardTable(result){
 																	
 	}
    
-	function appendNearestNodesTable(result){
+function appendNearestNodesTable(result){
 		var markupNode="";		
 		document.getElementById("findNearestNodeRes").innerHTML = "";
-		
+		console.log(result);
 		if (result.length==0){
 			document.getElementById("findNearestNodeRes").innerHTML = '<p style=" color:#ff0000;font-size: 1.4em;">There is no result</p>';
 		}
 		else {
 			for(var i =0 ; i<result.length;i++){
 				if($("#StartEnd").is(":checked")){
-					markupNode +="<tr style='height: 30px;'><td ><input type='checkbox' class='nodeBOQ' id=BOQ_"+result[i][0]+" ></td><td  >"+result[i][0]+"</td><td style='min-width:250px;'>"+result[i][1]+"</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][5]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][6]+"' readonly></input ></td>"
+					console.log(result);
+					console.log("zanzonaaaa");
+					markupNode +="<tr style='height: 30px;'><td ><input type='checkbox' class='nodeBOQ' id=BOQ_"+result[i][0]+" ></td><td  >"+result[i][7]+"</td><td style='min-width:250px;'>"+result[i][1]+"</td><td name='Node_Type' style='min-width:150px;'><input name='Node_Type' style='border: none;' value='"+result[i][2].split(':')[0]+
+							"' readonly></input ></td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][5]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][6]+"' readonly></input ></td>";
 
 				}
 				else{
 				    	if(result[i][10] == null || result[i][10]==""){
-							markupNode +="<tr style='height: 30px;'><td><input type='checkbox' class='nodeBOQ' id=BOQ_"+result[i][0]+" ></td><td name='ID' style='min-width:150px;'><input name='ID' style='border: none;' value='"+result[i][0]+"' readonly></input ></td><td name='name' style='min-width:150px;'><input name='name' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td  name='LONGG' style='min-width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][5]+"' readonly></input ></td><td style='min-width:150px;'  name='LATT'><input name='LATT' style='border: none;' value='"+result[i][6]+"' readonly></input ></td><td name='linearDistance' style='min-width:50px;'><input name='linearDistance' style='border: none;' value='"+result[i][9]+"' readonly></input ></td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistance(this)'>Get Distance</button> </td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td><td style='width:300px; height:30px;vertical-align: top;' name='selectPointAsNearest'><button type='button' style='width:100px;font-size:10px;margin-left:20px' name='selectPointAsNearest' class='btn btn-primary' class='btn btn-primary'  onclick='selectAsNearest(this)'>Select As Nearest</button></td></tr>"
+							markupNode +="<tr style='height: 30px;'><td><input type='checkbox' class='nodeBOQ' id=BOQ_"+result[i][0]+
+							" ></td><td name='ID' style='min-width:150px;'><input name='ID' style='border: none;' value='"+result[i][7]+
+							"' readonly></input ></td><td name='name' style='min-width:150px;'><input name='name' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td name='Node_Type' style='min-width:150px;'><input name='Node_Type' style='border: none;' value='"+result[i][2].split(':')[0]+
+							"' readonly></input ></td><td  name='LONGG' style='min-width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][5]+"' readonly></input ></td><td style='min-width:150px;'  name='LATT'><input name='LATT' style='border: none;' value='"+result[i][6]+"' readonly></input ></td><td name='linearDistance' style='min-width:50px;'><input name='linearDistance' style='border: none;' value='"+result[i][9]+"' readonly></input ></td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistance(this)'>Get Distance</button> </td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td><td style='width:300px; height:30px;vertical-align: top;' name='selectPointAsNearest'><button type='button' style='width:100px;font-size:10px;margin-left:20px' name='selectPointAsNearest' class='btn btn-primary' class='btn btn-primary'  onclick='selectAsNearest(this)'>Select As Nearest</button></td></tr>"
 
 						}else{
-							markupNode +="<tr style='height: 30px;'><td><input type='checkbox' class='nodeBOQ' id=BOQ_"+result[i][0]+" ></td><td name='ID' style='min-width:150px;'><input name='ID' style='border: none;' value='"+result[i][0]+"' readonly></input ></td><td name='name' style='min-width:150px;'><input name='name' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td name='LONGG' style='min-width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][5]+"' readonly></input ></td><td style='min-width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][6]+"' readonly></input ></td><td style='min-width:50px;'>"+result[i][9]+"</td><td style='min-width:90px;'> <label name='DDistance' style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'>"+(result[i][10])+"</label></td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td></tr>"
+							markupNode +="<tr style='height: 30px;'><td><input type='checkbox' class='nodeBOQ' id=BOQ_"+result[i][0]+" ></td><td name='ID' style='min-width:150px;'><input name='ID' style='border: none;' value='"+result[i][7]+"' readonly></input ></td><td name='name' style='min-width:150px;'><input name='name' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td name='Node_Type' style='min-width:150px;'><input name='Node_Type' style='border: none;' value='"+result[i][2].split(':')[0]+
+							"' readonly></input ></td><td name='LONGG' style='min-width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][5]+"' readonly></input ></td><td style='min-width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][6]+"' readonly></input ></td><td style='min-width:50px;'>"+result[i][9]+"</td><td style='min-width:90px;'> <label name='DDistance' style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'>"+(result[i][10])+"</label></td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td></tr>"
 						}
 				 }
 
@@ -6495,6 +6502,8 @@ function appendNearestDBoardTable(result){
 		var t = parent.getElementsByTagName('table'), i = t.length;
 		while (--i >= 0) makeSortable(t[i]);
 	}
+	
+/*
 function autoFitTable(tableId) {
   const table = document.getElementById(tableId);
   if (!table) {
@@ -6519,6 +6528,7 @@ function autoFitTable(tableId) {
     table.rows[0].cells[i].style.width = colWidths[i] + 'px';
   }
 }
+*/
 	function appendNearestManholesTable(result){
 		var markupManh="";
 		document.getElementById("findNearestManRes").innerHTML = "";
@@ -6554,7 +6564,7 @@ function autoFitTable(tableId) {
 			drivingDistance("findNearstManhole");
 		}
 		makeAllSortable();
-		autoFitTable('findNearstManhole');
+		//autoFitTable('findNearstManhole');
 
 
 		$("#selectAllManhole").click(function(){
