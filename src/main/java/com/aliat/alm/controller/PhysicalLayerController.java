@@ -433,7 +433,7 @@ public class PhysicalLayerController {
 								.getResultList();
 
 						NodeList = session.createNativeQuery(
-								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' OR SUB_DOMAIN_TYPE='SWITCH' ) AND (NODE_NAME LIKE '%"
+								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_TYPE || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' OR SUB_DOMAIN_TYPE='SWITCH' ) AND (NODE_NAME LIKE '%"
 										+ request.getParameter("FilteredNode") + "%' OR NODE_PK  LIKE '%"
 										+ request.getParameter("FilteredNode") + "%')     ")
 								.getResultList();
@@ -1208,7 +1208,7 @@ public class PhysicalLayerController {
 						"SELECT DISTINCT A.JUNCTION_ID, A.JUNCTION_NAME,A.PHYSICAL_LAYER_ID,A.PHYSICAL_LAYER_NAME,A.JUNCTION_NUMBER,A.CAPACITY,A.CITY,trim(replace(A.LONGITUDE,'�','')) as LONGITUDE,trim(replace(A.LATITUDE,'�','')) as LATITUDE,A.PROJECT_ID FROM JUNCTION A INNER JOIN handhole B ON A.PHYSICAL_LAYER_ID = b.handhole_id ").getResultList();
 
 				List<Object[]> nodeListQuery = session.createNativeQuery(
-						"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,trim(replace(LONGITUDE,'�','')) as LONGITUDE,trim(replace(LATITUDE,'�','')) as LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' OR SUB_DOMAIN_TYPE='SWITCH' ) "
+						"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_TYPE || ':'  || NODE_NAME,DOMAIN,SITE_ID,trim(replace(LONGITUDE,'�','')) as LONGITUDE,trim(replace(LATITUDE,'�','')) as LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' OR SUB_DOMAIN_TYPE='SWITCH' ) "
 								+ " AND (LONGITUDE !='null' or LONGITUDE !=null ) AND (LATITUDE !='null' or LATITUDE !=null ) ").getResultList();
 				NodeList = findNearestArray(nodeListQuery, Double.valueOf(closestLatPoint),Double.valueOf(closestLongPoint), Double.valueOf(closestDisRange), "Nodes",noOfPoints);
 				
@@ -1249,7 +1249,7 @@ public class PhysicalLayerController {
 				String handholeStr = "SELECT DISTINCT HANDHOLE_ID,HANDHOLE_NAME,trim(replace(LONGITUDE,'�','')) as LONGITUDE,trim(replace(LATITUDE,'�','')) as LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=HANDHOLE_ID),DM_NAME FROM HANDHOLE ";
 				String dbStr = 	"SELECT DISTINCT DB_ID,trim(replace(DB_LONGITUDE,'�','')) as DB_LONGITUDE,trim(replace(DB_LATITUDE,'�','')) as DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,PROJECT_ID ,CITY,DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD ";
 				
-				String nodeStr ="SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,trim(replace(LONGITUDE,'�','')) as LONGITUDE,trim(replace(LATITUDE,'�','')) as LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' OR SUB_DOMAIN_TYPE='SWITCH' ) "
+				String nodeStr ="SELECT DISTINCT NODE_PK,NODE_NAME,NODE_TYPE || ':'  || NODE_NAME,DOMAIN,SITE_ID,trim(replace(LONGITUDE,'�','')) as LONGITUDE,trim(replace(LATITUDE,'�','')) as LATITUDE,NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' OR SUB_DOMAIN_TYPE='SWITCH' ) "
 				+ " AND (LONGITUDE !='null' or LONGITUDE !=null ) AND (LATITUDE !='null' or LATITUDE !=null ) ";
 		
 				if (startLongPoint != null && !startLongPoint.equalsIgnoreCase("")  && endLongPoint != null && !endLongPoint.equalsIgnoreCase("")
@@ -1651,95 +1651,175 @@ public class PhysicalLayerController {
 			    findIDsSrcDestStrtEndCoord(fiberStrands,"Strands", mhFilteredIDs, hhFilteredIDs, dbFilteredIDs,startLongPoint,startLatPoint,endLongPoint,endLatPoint);
 			 
 			    //Get all auxiliaries of each cable
-				query = session.createNativeQuery(
-							"SELECT B.LONGITUDE,B.LATITUDE,B.DISTANCE_FROM_SOURCE,B.WARE_ID,B.AUXILIARY_POINT_ID,B.AUXILIARY_POINT_NAME,B.FIBER_CABLE_ID,B.AUXILIARY_ID FROM FIBER_CABLES A,FIBER_AUXILIARY_POINTS B WHERE A.FIBER_CABLE_ID=B.FIBER_CABLE_ID "
-						  + " AND B.FIBER_CABLE_ID IN (:param) ORDER BY B.SEQ_SORTING ASC").setParameter("param",cablesIDs);
-				fiberAuxiliary_Data = query.getResultList();
-				findIDsForAuxStrtEndCoord(fiberAuxiliary_Data, "Cables",mhFilteredIDs, hhFilteredIDs, dbFilteredIDs, startLongPoint, startLatPoint, endLongPoint,endLatPoint);
+			    int batchSize = 1000;
 
+			    if (!cablesIDs.isEmpty()) {
+			        for (int i = 0; i < cablesIDs.size(); i += batchSize) {
+			            List<String> sublist = cablesIDs.subList(i, Math.min(i + batchSize, cablesIDs.size()));
+			            
+			            Query query = session.createNativeQuery(
+			                "SELECT B.LONGITUDE, B.LATITUDE, B.DISTANCE_FROM_SOURCE, B.WARE_ID, B.AUXILIARY_POINT_ID, B.AUXILIARY_POINT_NAME, B.FIBER_CABLE_ID, B.AUXILIARY_ID " +
+			                "FROM FIBER_CABLES A, FIBER_AUXILIARY_POINTS B WHERE A.FIBER_CABLE_ID = B.FIBER_CABLE_ID " +
+			                "AND B.FIBER_CABLE_ID IN (:param) ORDER BY B.SEQ_SORTING ASC"
+			            ).setParameter("param", sublist);
+
+			            List<Object[]> results = query.getResultList();
+			            fiberAuxiliary_Data.addAll(results);  // Add results to existing list
+			        }
+			        findIDsForAuxStrtEndCoord(fiberAuxiliary_Data, "Cables", mhFilteredIDs, hhFilteredIDs, dbFilteredIDs, startLongPoint, startLatPoint, endLongPoint, endLatPoint);
+			    }
 				//Get all auxiliaries of each tube
-				query = session.createNativeQuery(
-						"SELECT DISTINCT c.TUBE_ID,c.LONGITUDE,c.LATITUDE,c.WARE_ID,c.AUXILIARY_POINT_ID,c.AUXILIARY_POINT_NAME,c.DISTANCE_FROM_SOURCE,c.SEQ_SORTING,c.AUXILIARY_ID,c.DRIVING_DISTANCE, c.GEO_DISTANCE FROM TUBE_AUXILIARY_POINTS c LEFT JOIN FIBER_TUBES b ON  b.TUBE_ID=c.TUBE_ID "
-						+ " WHERE c.TUBE_ID IN (:param) ORDER BY c.SEQ_SORTING ASC").setParameter("param",tubesIDs);
-				tubesAuxiliaries = query.getResultList();
-				findIDsForAuxStrtEndCoord(tubesAuxiliaries, "Tubes",mhFilteredIDs, hhFilteredIDs, dbFilteredIDs, startLongPoint, startLatPoint, endLongPoint,endLatPoint);
+			    if (!tubesIDs.isEmpty()) {
+			        for (int i = 0; i < tubesIDs.size(); i += batchSize) {
+			            List<String> sublist = tubesIDs.subList(i, Math.min(i + batchSize, tubesIDs.size()));
+			            
+			            Query query = session.createNativeQuery(
+			                "SELECT DISTINCT c.TUBE_ID, c.LONGITUDE, c.LATITUDE, c.WARE_ID, c.AUXILIARY_POINT_ID, c.AUXILIARY_POINT_NAME, c.DISTANCE_FROM_SOURCE, c.SEQ_SORTING, c.AUXILIARY_ID, c.DRIVING_DISTANCE, c.GEO_DISTANCE " +
+			                "FROM TUBE_AUXILIARY_POINTS c LEFT JOIN FIBER_TUBES b ON b.TUBE_ID = c.TUBE_ID " +
+			                "WHERE c.TUBE_ID IN (:param) ORDER BY c.SEQ_SORTING ASC"
+			            ).setParameter("param", sublist);
 
+			            List<Object[]> results = query.getResultList();
+			            tubesAuxiliaries.addAll(results);  // Add results to existing list
+			        }
+			        findIDsForAuxStrtEndCoord(tubesAuxiliaries, "Tubes", mhFilteredIDs, hhFilteredIDs, dbFilteredIDs, startLongPoint, startLatPoint, endLongPoint, endLatPoint);
+			    }
 				//Get all auxiliaries of each strand	
-				strandsAuxiliaries = session.createNativeQuery(
-						"SELECT DISTINCT c.STRAND_ID,c.LONGITUDE,c.LATITUDE,c.WARE_ID,c.AUXILIARY_POINT_ID,c.AUXILIARY_POINT_NAME,c.DISTANCE_FROM_SOURCE,c.SEQ_SORTING,c.AUXILIARY_ID,c.DRIVING_DISTANCE, c.GEO_DISTANCE FROM STRAND_AUXILIARY_POINTS c,FIBER_STRANDS b WHERE b.STRAND_ID=c.STRAND_ID "
-						+ " AND c.STRAND_ID IN (:param) ORDER BY c.SEQ_SORTING ASC ").setParameter("param",strandsIDs).getResultList();
-				findIDsForAuxStrtEndCoord(strandsAuxiliaries, "Strands",mhFilteredIDs, hhFilteredIDs, dbFilteredIDs, startLongPoint, startLatPoint, endLongPoint,endLatPoint);
+			    if (!strandsIDs.isEmpty()) {
+			        for (int i = 0; i < strandsIDs.size(); i += batchSize) {
+			            List<String> sublist = strandsIDs.subList(i, Math.min(i + batchSize, strandsIDs.size()));
+			            
+			            Query query = session.createNativeQuery(
+			                "SELECT DISTINCT c.STRAND_ID, c.LONGITUDE, c.LATITUDE, c.WARE_ID, c.AUXILIARY_POINT_ID, c.AUXILIARY_POINT_NAME, c.DISTANCE_FROM_SOURCE, c.SEQ_SORTING, c.AUXILIARY_ID, c.DRIVING_DISTANCE, c.GEO_DISTANCE " +
+			                "FROM STRAND_AUXILIARY_POINTS c, FIBER_STRANDS b WHERE b.STRAND_ID = c.STRAND_ID " +
+			                "AND c.STRAND_ID IN (:param) ORDER BY c.SEQ_SORTING ASC"
+			            ).setParameter("param", sublist);
 
+			            List<Object[]> results = query.getResultList();
+			            strandsAuxiliaries.addAll(results);  // Add results to existing list
+			        }
+			        findIDsForAuxStrtEndCoord(strandsAuxiliaries, "Strands", mhFilteredIDs, hhFilteredIDs, dbFilteredIDs, startLongPoint, startLatPoint, endLongPoint, endLatPoint);
+			    }
 				//Check and Select if there is tubes that are outside the range but have strands in range and not selected before
-				if(fiberStrands.size()>0) {
-		
-					query = session.createNativeQuery(
-						"SELECT DISTINCT b.TUBE_ID,b.SOURCE_LONGITUDE,b.SOURCE_LATITUDE,b.DESTINATION_LONGITUDE,b.DESTINATION_LATITUDE,b.SOURCE_WARE_ID,b.SOURCE_ID,b.SOURCE_NAME,b.DESTINATION_WARE_ID,b.DESTINATION_ID,b.DESTINATION_NAME,(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.TUBE_ID=b.TUBE_ID),b.FIBER_CABLE_ID,b.TUBE_NAME,b.DRAWING_TYPE,b.TUBE_NUMBER,b.TUBE_COLOR "
-						+ "FROM FIBER_TUBES b LEFT JOIN FIBER_STRANDS E ON E.TUBE_ID=b.TUBE_ID "
-						+ "WHERE E.STRAND_ID in (:param) and b.TUBE_ID NOT IN (:param1) ").setParameter("param",strandsIDs).setParameter("param1",tubesIDs);
-		
-					List<String> outOfRangeTubeIDs = Arrays.asList((findListId(query.getResultList(), "Tube")).length > 0 ? findListId(query.getResultList(), "Tube") : new String[] { "" });
-					combinedTubeList.addAll(outOfRangeTubeIDs);// used in get related points
-		
-					if (fiberTubes.size() > 0) {
-						fiberTubes.addAll(query.getResultList());
-					} 
-					else {
-						fiberTubes = query.getResultList();
-					}
-		
-					query = session.createNativeQuery(
-							"SELECT DISTINCT c.TUBE_ID,c.LONGITUDE,c.LATITUDE,c.WARE_ID,c.AUXILIARY_POINT_ID,c.AUXILIARY_POINT_NAME,c.DISTANCE_FROM_SOURCE,c.SEQ_SORTING,c.AUXILIARY_ID,c.DRIVING_DISTANCE, c.GEO_DISTANCE FROM TUBE_AUXILIARY_POINTS c LEFT JOIN FIBER_TUBES b ON  b.TUBE_ID=c.TUBE_ID  "
-							+ " WHERE c.TUBE_ID IN (:param) ORDER BY c.SEQ_SORTING ASC").setParameter("param",outOfRangeTubeIDs);
-		
-					if (tubesAuxiliaries.size() > 0) {
-						tubesAuxiliaries.addAll(query.getResultList());
-					} 
-					else {
-						tubesAuxiliaries = query.getResultList();
-					}
-				}
+			    if (!fiberStrands.isEmpty()) {
+			        for (int i = 0; i < strandsIDs.size(); i += batchSize) {
+			            List<String> sublistStrands = strandsIDs.subList(i, Math.min(i + batchSize, strandsIDs.size()));
+			            
+			            // Query for tubes based on strand IDs
+			            Query query = session.createNativeQuery(
+			                "SELECT DISTINCT b.TUBE_ID, b.SOURCE_LONGITUDE, b.SOURCE_LATITUDE, b.DESTINATION_LONGITUDE, b.DESTINATION_LATITUDE, " +
+			                "b.SOURCE_WARE_ID, b.SOURCE_ID, b.SOURCE_NAME, b.DESTINATION_WARE_ID, b.DESTINATION_ID, b.DESTINATION_NAME, " +
+			                "(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.TUBE_ID = b.TUBE_ID) AS Strand_Count, b.FIBER_CABLE_ID, " +
+			                "b.TUBE_NAME, b.DRAWING_TYPE, b.TUBE_NUMBER, b.TUBE_COLOR " +
+			                "FROM FIBER_TUBES b LEFT JOIN FIBER_STRANDS E ON E.TUBE_ID = b.TUBE_ID " +
+			                "WHERE E.STRAND_ID IN (:param) AND b.TUBE_ID NOT IN (:param1)"
+			            ).setParameter("param", sublistStrands).setParameter("param1", tubesIDs);
+
+			            // Get query results and convert to List<String>
+			            List<Object[]> queryResults = query.getResultList();
+			            String[] tubeIDsArray = findListId(queryResults, "Tube");
+			            List<String> outOfRangeTubeIDs = Arrays.asList(tubeIDsArray.length > 0 ? tubeIDsArray : new String[] { "" });
+			            combinedTubeList.addAll(outOfRangeTubeIDs);  // Add IDs to combined list
+			            
+			            // Add results to fiberTubes list
+			            if (!fiberTubes.isEmpty()) {
+			                fiberTubes.addAll(queryResults);
+			            } else {
+			                fiberTubes = queryResults;
+			            }
+			            
+			            // Query for auxiliary points for out-of-range tubes
+			            Query queryAux = session.createNativeQuery(
+			                "SELECT DISTINCT c.TUBE_ID, c.LONGITUDE, c.LATITUDE, c.WARE_ID, c.AUXILIARY_POINT_ID, c.AUXILIARY_POINT_NAME, " +
+			                "c.DISTANCE_FROM_SOURCE, c.SEQ_SORTING, c.AUXILIARY_ID, c.DRIVING_DISTANCE, c.GEO_DISTANCE " +
+			                "FROM TUBE_AUXILIARY_POINTS c LEFT JOIN FIBER_TUBES b ON b.TUBE_ID = c.TUBE_ID " +
+			                "WHERE c.TUBE_ID IN (:param) ORDER BY c.SEQ_SORTING ASC"
+			            ).setParameter("param", outOfRangeTubeIDs);
+
+			            List<Object[]> tubeAuxiliariesResults = queryAux.getResultList();
+			            if (!tubesAuxiliaries.isEmpty()) {
+			                tubesAuxiliaries.addAll(tubeAuxiliariesResults);
+			            } else {
+			                tubesAuxiliaries = tubeAuxiliariesResults;
+			            }
+			        }
+			    }
+
 			//Check and Select if there is cables that are outside the range but have tubes in range and not selected before
-			if(fiberTubes.size()>0) {
-		
-				query = session.createNativeQuery(
-					"SELECT distinct A.SOURCE_LNG,A.SOURCE_LAT,A.DESTINATION_LNG,A.DESTINATION_LAT, A.FIBER_CABLE_ID,A.SOURCE_WARE_ID,A.SOURCE_ID,A.SOURCE_NAME,A.DESTINATION_WARE_ID,A.DESTINATION_ID,A.DESTINATION_NAME,(SELECT COUNT(*) FROM FIBER_TUBES B WHERE B.FIBER_CABLE_ID=A.FIBER_CABLE_ID) AS Tube_Count,(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.FIBER_CABLE_ID=A.FIBER_CABLE_ID) AS Strand_Count,A.FIBER_CABLE_NAME,A.PROJECT_ID,A.SOURCE_CITY,A.DESTINATION_CITY,A.NUMBER_OF_TUBES,A.NUMBER_OF_STRANDS,A.LENGTH,A.DRAWING_TYPE,A.FIBER_NETWORK_LEVEL,A.FIBER_OWNER,(select B.FIBER_COLOR_OWNER from FIBER_OWNER_COLOR B WHERE B.FIBER_OWNER=A.FIBER_OWNER) AS FIBER_CABLE_COLOR "
-					+ "FROM FIBER_CABLES A LEFT JOIN FIBER_TUBES E ON E.FIBER_CABLE_ID=A.FIBER_CABLE_ID "
-					+ "WHERE E.TUBE_ID in (:param) and A.FIBER_CABLE_ID NOT IN (:param1) ").setParameter("param",combinedTubeList).setParameter("param1",cablesIDs);
-		
-				List<String> outOfRangeCableIDs = Arrays.asList((findListId(query.getResultList(), "FiberCable")).length > 0 ? findListId(query.getResultList(), "FiberCable") : new String[] { "" });
-				combinedCablesList.addAll(outOfRangeCableIDs);// used in get related points
-		
-				if (fiberList.size() > 0) {
-					fiberList.addAll(query.getResultList());
-				} 
-				else {
-					fiberList = query.getResultList();
-				}
-		
-				query = session.createNativeQuery(
-						"SELECT B.LONGITUDE,B.LATITUDE,B.DISTANCE_FROM_SOURCE,B.WARE_ID,B.AUXILIARY_POINT_ID,B.AUXILIARY_POINT_NAME,B.FIBER_CABLE_ID,B.AUXILIARY_ID FROM FIBER_CABLES A LEFT JOIN FIBER_AUXILIARY_POINTS B ON A.FIBER_CABLE_ID=B.FIBER_CABLE_ID "
-					  + " WHERE B.FIBER_CABLE_ID IN (:param) ORDER BY B.SEQ_SORTING ASC").setParameter("param",outOfRangeCableIDs);
-		
-				if (fiberAuxiliary_Data.size() > 0) {
-				 fiberAuxiliary_Data.addAll(query.getResultList());
-				} 
-				else {
-					fiberAuxiliary_Data = query.getResultList();
-				}
-			 }		
-			
-			manholeStr = manholeStr + " OR MANHOLE_ID IN (:param) ";
-			manholeList = session.createNativeQuery(manholeStr).setParameter("param",mhFilteredIDs).getResultList();
-			
+			    if (!fiberTubes.isEmpty()) {
+			    	 for (int i = 0; i < combinedTubeList.size(); i += batchSize) {
+			    	        List<String> sublistTubeIDs = combinedTubeList.subList(i, Math.min(i + batchSize, combinedTubeList.size()));
+			    	        
+			    	        // Process cables in batches
+			    	        for (int j = 0; j < cablesIDs.size(); j += batchSize) {
+			    	            List<String> sublistCableIDs = cablesIDs.subList(j, Math.min(j + batchSize, cablesIDs.size()));
+			    	            
+			    	            // Query for fiber cables based on tube IDs
+			    	            Query query = session.createNativeQuery(
+			    	                "SELECT DISTINCT A.SOURCE_LNG, A.SOURCE_LAT, A.DESTINATION_LNG, A.DESTINATION_LAT, A.FIBER_CABLE_ID, " +
+			    	                "A.SOURCE_WARE_ID, A.SOURCE_ID, A.SOURCE_NAME, A.DESTINATION_WARE_ID, A.DESTINATION_ID, A.DESTINATION_NAME, " +
+			    	                "(SELECT COUNT(*) FROM FIBER_TUBES B WHERE B.FIBER_CABLE_ID = A.FIBER_CABLE_ID) AS Tube_Count, " +
+			    	                "(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.FIBER_CABLE_ID = A.FIBER_CABLE_ID) AS Strand_Count, " +
+			    	                "A.FIBER_CABLE_NAME, A.PROJECT_ID, A.SOURCE_CITY, A.DESTINATION_CITY, A.NUMBER_OF_TUBES, A.NUMBER_OF_STRANDS, " +
+			    	                "A.LENGTH, A.DRAWING_TYPE, A.FIBER_NETWORK_LEVEL, A.FIBER_OWNER, " +
+			    	                "(SELECT B.FIBER_COLOR_OWNER FROM FIBER_OWNER_COLOR B WHERE B.FIBER_OWNER = A.FIBER_OWNER) AS FIBER_CABLE_COLOR " +
+			    	                "FROM FIBER_CABLES A LEFT JOIN FIBER_TUBES E ON E.FIBER_CABLE_ID = A.FIBER_CABLE_ID " +
+			    	                "WHERE E.TUBE_ID IN (:tubeParam) AND A.FIBER_CABLE_ID NOT IN (:cableParam)"
+			    	            ).setParameter("tubeParam", sublistTubeIDs).setParameter("cableParam", sublistCableIDs);
+
+			    	            // Convert the result to a list of String IDs
+			    	            List<Object[]> queryResults = query.getResultList();
+			    	            String[] cableIDsArray = findListId(queryResults, "FiberCable");
+			    	            List<String> outOfRangeCableIDs = Arrays.asList(cableIDsArray.length > 0 ? cableIDsArray : new String[] { "" });
+			    	            combinedCablesList.addAll(outOfRangeCableIDs); // Add IDs to combined list
+			    	            
+			    	            // Add results to fiberList
+			    	            fiberList.addAll(queryResults);
+			    	            
+			    	            // Query for auxiliary points for out-of-range cables
+			    	            Query queryAux = session.createNativeQuery(
+			    	                "SELECT B.LONGITUDE, B.LATITUDE, B.DISTANCE_FROM_SOURCE, B.WARE_ID, B.AUXILIARY_POINT_ID, " +
+			    	                "B.AUXILIARY_POINT_NAME, B.FIBER_CABLE_ID, B.AUXILIARY_ID " +
+			    	                "FROM FIBER_CABLES A LEFT JOIN FIBER_AUXILIARY_POINTS B ON A.FIBER_CABLE_ID = B.FIBER_CABLE_ID " +
+			    	                "WHERE B.FIBER_CABLE_ID IN (:cableAuxParam) ORDER BY B.SEQ_SORTING ASC"
+			    	            ).setParameter("cableAuxParam", outOfRangeCableIDs);
+
+			    	            List<Object[]> cableAuxiliariesResults = queryAux.getResultList();
+			    	            fiberAuxiliary_Data.addAll(cableAuxiliariesResults);
+			    	        }
+			    	    }
+			    }
+
+			    
+			 // Process mhFilteredIDs in batches
+			 for (int i = 0; i < mhFilteredIDs.size(); i += batchSize) {
+			     // Get the current batch
+			     List<String> batchList = mhFilteredIDs.subList(i, Math.min(i + batchSize, mhFilteredIDs.size()));
+			     
+			     // Build the query string for the current batch
+			      manholeStr = manholeStr + " AND MANHOLE_ID IN (:param)";
+			     
+			     // Create and execute the query
+			     Query query = session.createNativeQuery(manholeStr);
+			     query.setParameter("param", batchList);
+			     
+			     // Retrieve and accumulate results
+			     List<Object[]> batchResults = query.getResultList();
+			     manholeList.addAll(batchResults);
+			 }
 			handholeStr = handholeStr + " OR HANDHOLE_ID IN (:param) ";
 			handholeList = session.createNativeQuery(handholeStr).setParameter("param",hhFilteredIDs).getResultList();
 
 			dbStr = dbStr + " OR DB_ID IN (:param) ";
 			distribBoardList = session.createNativeQuery(dbStr).setParameter("param",dbFilteredIDs).getResultList();
 			
+			
+			nodeStr = nodeStr + " OR NODE_PK IN (:param) ";
+			NodeList = session.createNativeQuery(nodeStr).setParameter("param",NodeList).getResultList();
+			
 			// To select the data needed in show points/real points & are outside the range
 			if (getRelatedPoints.equals("1")) {
+				
 				
 				String[] manholesId = (findListId(manholeList, "all")).length > 0 ? findListId(manholeList, "all") : new String[] { "A" };										
 				String[] handholesId = (findListId(handholeList, "all")).length > 0 ? findListId(handholeList, "all") : new String[] { "A" };										
@@ -2080,6 +2160,7 @@ public class PhysicalLayerController {
 								ptPhysicalListResult.put("fiber", fiberListPt);
 								ptPhysicalListResult.put("Distribution_Board", distribBoardListPt);
 								ptPhysicalListResult.put("Trench", trenchListPt);
+								ptPhysicalListResult.put("NodeList", NodeList);
 								ptPhysicalListResult.put("duct", ductListPt);
 								ptPhysicalLayerList.put("ptList" + i, ptPhysicalListResult);
 								ptPhysicalDataResult.put("trench_Auxiliary", trenchAuxiliary_DataPt);
@@ -8257,7 +8338,7 @@ public class PhysicalLayerController {
 			try {
 				List<Object[]> NodeList = new ArrayList<Object[]>();
 				NodeList = session.createNativeQuery(
-						"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_PK || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID,SUB_DOMAIN_TYPE"
+						"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_TYPE || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,NODE_ID,SUB_DOMAIN_TYPE"
 						+" FROM NODE_ACTIVE WHERE ((SUB_DOMAIN_TYPE IN ('MSAN', 'SDH', 'DWDM', 'GPON', 'SWITCH')"
 						+" OR NODE_TYPE IN ('MSAN', 'SDH', 'DWDM', 'GPON', 'SWITCH')) AND ACTIVE_RECORD = 1)")
 						.getResultList();
