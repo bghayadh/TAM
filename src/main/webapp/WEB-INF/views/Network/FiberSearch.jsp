@@ -561,6 +561,7 @@
 																<th style="min-width: 30px;"><input type="checkbox" id="selectAllNode"></th>
 																<th style="min-width: 150px;" >Node ID</th>
 																<th style="min-width: 150px;">Node Name</th>
+																<th style="min-width: 150px;">Node Type</th>
 																<th style="min-width: 100px;">Longitude</th>
 																<th style="min-width: 100px;">Latitude</th>
 																<th style="min-width: 100px;">Linear Distance(Km)</th>
@@ -1129,10 +1130,15 @@ $(document).ready(function() {
         handleRowClick('#findNearstHandhole', $(this));
     });
 
-    // Function to handle checkbox clicks
-    $(document).on('click', '#findNearstHandhole input[type="checkbox"]', function() {
-        handleCheckboxClick('#findNearstHandhole', $(this));
-    });
+   $(document).on('click', '#findNearstDB tr', function() {
+       handleCheckboxClick('#findNearstDB', $(this));
+   });
+
+   $(document).on('click', '#findNearstNode tr', function() {
+       handleCheckboxClick('#findNearstNode', $(this));
+   });
+
+    
 
     // Reusable function to handle row clicks
     function handleRowClick(tableId, clickedRow) {
