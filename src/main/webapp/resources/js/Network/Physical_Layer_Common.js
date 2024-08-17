@@ -6206,7 +6206,7 @@ function appendNearestDBoardTable(result){
 function appendNearestNodesTable(result){
 		var markupNode="";		
 		document.getElementById("findNearestNodeRes").innerHTML = "";
-		console.log(result);
+		
 		if (result.length==0){
 			document.getElementById("findNearestNodeRes").innerHTML = '<p style=" color:#ff0000;font-size: 1.4em;">There is no result</p>';
 		}
