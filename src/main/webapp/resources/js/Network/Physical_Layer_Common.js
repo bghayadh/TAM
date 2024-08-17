@@ -6213,8 +6213,8 @@ function appendNearestNodesTable(result){
 		else {
 			for(var i =0 ; i<result.length;i++){
 				if($("#StartEnd").is(":checked")){
-					console.log(result);
-					console.log("zanzonaaaa");
+				
+					
 					markupNode +="<tr style='height: 30px;'><td ><input type='checkbox' class='nodeBOQ' id=BOQ_"+result[i][0]+" ></td><td  >"+result[i][7]+"</td><td style='min-width:250px;'>"+result[i][1]+"</td><td name='Node_Type' style='min-width:150px;'><input name='Node_Type' style='border: none;' value='"+result[i][2].split(':')[0]+
 							"' readonly></input ></td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][5]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][6]+"' readonly></input ></td>";
 
