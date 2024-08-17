@@ -507,7 +507,7 @@
 											<div class="row" style="height: 180px;">
 										<fieldset class="field_set">
 											<legend style="width: auto;" class="fieldset_legend"></legend>
-											<table id="" style="display: block; height: 170px; overflow-y: auto;">
+											<table id="nearestStrand" style="display: block; height: 170px; overflow-y: auto;">
 												<tr>
 													<th style="min-width: 150px;" class="row-pad">Strand ID</th>
 													<th style="min-width: 150px;">StrandName</th>
@@ -523,7 +523,7 @@
 									<div class="row" style="height: 180px;">
 										<fieldset class="field_set">
 											<legend style="width: auto;" class="fieldset_legend"></legend>
-											<table id="" style="display: block; height: 170px; overflow-y: auto;">
+											<table id="nearestTube" style="display: block; height: 170px; overflow-y: auto;">
 												<tr>
 													<th style="min-width: 150px;" class="row-pad">Tube ID</th>
 													<th style="min-width: 150px;">TubeName</th>
@@ -539,7 +539,7 @@
 									<div class="row" style="height: 180px;">
 										<fieldset class="field_set">
 											<legend style="width: auto;" class="fieldset_legend"></legend>
-											<table id="" style="display: block; height: 170px; overflow-y: auto;">
+											<table id="nearestFiber" style="display: block; height: 170px; overflow-y: auto;">
 												<tr>
 													<th style="min-width: 150px;" class="row-pad">Fiber ID</th>
 													<th style="min-width: 150px;">FiberName</th>
@@ -700,7 +700,7 @@
 									<div class="row" style="height: 150px;">
 										<fieldset class="field_set">
 											<legend style="width: auto;" class="fieldset_legend"></legend>
-											<table id="" style="display: block; height: 140px; overflow-y: auto;">
+											<table id="nearestStrand" style="display: block; height: 140px; overflow-y: auto;">
 												<tr>
 													<th style="min-width: 150px;" class="row-pad">Strand ID</th>
 													<th style="min-width: 300px;">StrandName</th>
@@ -711,7 +711,7 @@
 									<div class="row" style="height: 150px;">
 										<fieldset class="field_set">
 											<legend style="width: auto;" class="fieldset_legend"></legend>
-											<table id="" style="display: block; height: 140px; overflow-y: auto;">
+											<table id="nearestTube" style="display: block; height: 140px; overflow-y: auto;">
 												<tr><th style="min-width: 150px;" class="row-pad">Tube ID</th>
 													<th style="min-width: 300px;">TubeName</th>
 													<th style="min-width: 150px;">Source</th>
@@ -720,7 +720,7 @@
 									<div class="row" style="height: 150px;">
 										<fieldset class="field_set">
 											<legend style="width: auto;" class="fieldset_legend"></legend>
-											<table id="" style="display: block; height: 140px; overflow-y: auto;">
+											<table id="nearestFiber" style="display: block; height: 140px; overflow-y: auto;">
 												<tr><th style="min-width: 150px;" class="row-pad">Fiber ID</th>
 													<th style="min-width: 300px;">FiberName</th>
 													<th style="min-width: 150px;">Source</th>
@@ -728,7 +728,7 @@
 												</tr>
 												<tbody id="conFiberId"></tbody></table></fieldset></div><br>
 							<div class="row" style="height: 150px;"><fieldset class="field_set"><legend style="width: auto;" class="fieldset_legend"></legend>
-								<table id="" style="display: block; height: 140px; overflow-y: auto;">
+								<table id="nearestDB" style="display: block; height: 140px; overflow-y: auto;">
 								<tr><th style="min-width: 150px;" class="row-pad">DB ID</th>
 									<th style="min-width: 300px;">DB Name</th>
 									<th style="min-width: 350px;">City</th></tr>
@@ -872,7 +872,7 @@
 											<div class="row" style="height: 200px;">
 										<fieldset class="field_set" style="overflow-y: auto;">
 											<legend style="width: auto;" class="fieldset_legend"></legend>
-											<table id="" style="display: block; height: 100px;">
+											<table id="nearestStrand" style="display: block; height: 100px;">
 												<tr>
 													<th style="min-width: 150px;" class="row-pad">Strand ID</th>
 													<th style="min-width: 150px;">StrandName</th>
@@ -888,7 +888,7 @@
 									<div class="row" style="height: 200px;">
 										<fieldset class="field_set" style="overflow-y: auto;">
 											<legend style="width: auto;" class="fieldset_legend"></legend>
-											<table id="" style="display: block; height: 100px;">
+											<table id="nearestTube" style="display: block; height: 100px;">
 												<tr>
 													<th style="min-width: 150px;" class="row-pad">Tube ID</th>
 													<th style="min-width: 150px;">TubeName</th>
@@ -904,7 +904,7 @@
 									<div class="row" style="height: 200px;">
 										<fieldset class="field_set" style="overflow-y: auto;">
 											<legend style="width: auto;" class="fieldset_legend"></legend>
-											<table id="" style="display: block; height: 100px;">
+											<table id="nearestFiber" style="display: block; height: 100px;">
 												<tr>
 													<th style="min-width: 150px;" class="row-pad">Fiber ID</th>
 													<th style="min-width: 150px;">FiberName</th>
@@ -1137,6 +1137,19 @@ $(document).ready(function() {
    $(document).on('click', '#findNearstNode tr', function() {
        handleCheckboxClick('#findNearstNode', $(this));
    });
+
+   $(document).on('click', '#nearestStrand tr', function() {
+       handleCheckboxClick('#nearestStrand', $(this));
+   });
+
+   $(document).on('click', '#nearestTube tr', function() {
+       handleCheckboxClick('#nearestTube', $(this));
+   });
+
+   $(document).on('click', '#nearestFiber tr', function() {
+       handleCheckboxClick('#nearestFiber', $(this));
+   });
+   
 
     
 
