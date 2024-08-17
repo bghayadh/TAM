@@ -197,6 +197,7 @@
 				<div class="input-group-prepend" style="margin-left: 20px;">
 				<span class="input-group-text" >Domain</span>
 					<select id="loaderDomain" aria-label="Default select example" class="form-control">
+									<option value="" > </option>
 									<option value="Transmission" >Transmission</option>
 									<option value="RAN" >RAN</option>
 									<option value="Core">Core</option>
@@ -221,6 +222,8 @@
 					                <option value="" > </option>
 									<option value="DWDM" >DWDM</option>
 									<option value="SDH" >SDH</option>
+									<option value="MSAN" >MSAN</option>
+									<option value="SWITCH" >SWITCH</option>
 									
 					</select>
 				</div>
@@ -228,6 +231,7 @@
 				<div class="input-group-prepend" style="margin-left: 20px;">
 				<span class="input-group-text">Vendor</span>
 					<select id="loaderVendor" class="form-control">
+									<option value="" > </option>
 									<option value="Nokia" >Nokia</option>
 									<option value="Huawei" >Huawei</option>
 									<option value="ZTE">ZTE</option>
@@ -236,6 +240,8 @@
 									<option value="Alcatel">Alcatel</option>
 									<option value="NEC">NEC</option>
 									<option value="Cisco">Cisco</option>
+									<option value="Netonix">Netonix</option>
+									<option value="Verdant">Verdant</option>
 									
 									
 					</select>
@@ -650,6 +656,9 @@ $("#loadFiles").click(function() {
     }
     else if(loader_vendor=="Cisco" && loader_domain=="Enterprise"){
 		url='loadFilesEntSWCisco';
+    }
+    else if(loader_domain=="Enterprise" && loader_type=="SWITCH"){
+		url='loadFilesEntSwitch';
     }
     else if(loader_vendor=="Huawei" && loader_domain=="Transmission" && loader_subdomain == "IP"){
 		url='loadFileIPHuawei';

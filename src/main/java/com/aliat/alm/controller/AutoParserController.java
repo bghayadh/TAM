@@ -63,6 +63,7 @@ import com.aliat.alm.telkom.Parser.LoadFileMWEricsson;
 import com.aliat.alm.telkom.Parser.LoadFileSDHAlcatel;
 import com.aliat.alm.telkom.Parser.LoadFileSDHHuawei;
 import com.aliat.alm.telkom.Parser.LoadFilesEntHuawei;
+import com.aliat.alm.telkom.Parser.LoadFilesEntSwitch;
 import com.aliat.alm.telkom.Parser.LoadFilesRANZTE;
 import com.aliat.alm.telkom.Parser.LoadFilesRanHuawei;
 import com.aliat.alm.telkom.Parser.LoadFilesRanNec;
@@ -184,6 +185,24 @@ public class AutoParserController {
 		System.out.println("loader cisco ent sw ");
 		System.out.println("loader cisco param "+request.getParameter("vendor")+", "+request.getParameter("domain")+", "+request.getParameter("sub_domain"));
 		LoadFileEntSwitchCisco myClass = new LoadFileEntSwitchCisco();
+		try {
+			myClass.main(null,request.getParameter("vendor"),request.getParameter("domain"),request.getParameter("sub_domain"),request.getParameter("type"));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		rtn.put("Result", "Script is Done");
+		return rtn;
+	}
+	
+	@RequestMapping(value = "/loadFilesEntSwitch", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> loadFilesEntSwitch(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws SecurityException, IOException, InterruptedException, SQLException, ParseException {
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		System.out.println("loader cisco ent sw ");
+		System.out.println("loader cisco param "+request.getParameter("vendor")+", "+request.getParameter("domain")+", "+request.getParameter("sub_domain"));
+		LoadFilesEntSwitch myClass = new LoadFilesEntSwitch();
 		try {
 			myClass.main(null,request.getParameter("vendor"),request.getParameter("domain"),request.getParameter("sub_domain"),request.getParameter("type"));
 		} catch (Exception e) {
