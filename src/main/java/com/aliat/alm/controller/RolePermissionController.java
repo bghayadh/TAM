@@ -36,72 +36,74 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Controller
 public class RolePermissionController {
 	private Session session = null;
-	
-	
+
 	@Autowired
 	ALMSessions almsessions;
 	@Autowired
 	Notify notification;
-	
+
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rolePermission", method = RequestMethod.GET)
-	public String RolePermission(Locale locale, Model model, HttpServletRequest request,HttpServletResponse response) 
-		throws JsonGenerationException, JsonMappingException, IOException {
-		if(LoginServices.checkSession(request, response).equals("redirect:/")) {
+	public String RolePermission(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response)
+			throws JsonGenerationException, JsonMappingException, IOException {
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			return LoginServices.checkSession(request, response);
 		}
-		Transaction tx =null;
-			List<PurchaseRequest> listRolePerm = new ArrayList<PurchaseRequest>();
-			List <String> listRoles=new ArrayList<>();;
-			session = AlmDbSession.getInstance().getSession();
+		Transaction tx = null;
+		List<PurchaseRequest> listRolePerm = new ArrayList<PurchaseRequest>();
+		List<String> listRoles = new ArrayList<>();
+		;
+		session = AlmDbSession.getInstance().getSession();
 
-			if (session != null && session.isOpen()) {
-				try {
+		if (session != null && session.isOpen()) {
+			try {
 				tx = session.beginTransaction();
-				
+
 				notification.headerNotifications(session, model);
-		         
-					listRolePerm = session.createQuery("select t.permID, t.screen, t.viewType, t.role, t.roleLevel, t.readPerm,"
-							+ " t.writePerm, t.addPerm, t.delPerm, t.savePerm, t.statusPerm, t.actionPerm, t.downloadPerm, t.exportPerm, t.secondLevelPerm,t.firstLevelPerm"
-							+ " from RolePermission t").list();
-					listRoles= session.createNativeQuery("select Role From  Role").list();
-					for (String role : listRoles) {
-					    System.out.println(role);
-					}
-							System.out.println("Length of listRolePerm is " +listRolePerm.size());
-					
-				}catch(Exception e){
-					System.out.println("Error in rolePermission"+e.toString());
-				}
-				finally {
-					if (session != null && session.isOpen()) {
-						tx.commit();
-						session.close();
-					}
-				}
 
+				listRolePerm = session
+						.createQuery("select t.permID, t.screen, t.viewType, t.role, t.roleLevel, t.readPerm,"
+								+ " t.writePerm, t.addPerm, t.delPerm, t.savePerm, t.statusPerm, t.actionPerm, t.downloadPerm, t.exportPerm, t.secondLevelPerm,t.firstLevelPerm"
+								+ " from RolePermission t")
+						.list();
+				listRoles = session.createNativeQuery("select Role From  Role").list();
+				for (String role : listRoles) {
+					System.out.println(role);
+				}
+				System.out.println("Length of listRolePerm is " + listRolePerm.size());
+
+			} catch (Exception e) {
+				System.out.println("Error in rolePermission" + e.toString());
+			} finally {
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+				}
 			}
-			ObjectMapper mapper = new ObjectMapper();
-			model.addAttribute("ListGridTable", mapper.writeValueAsString(listRolePerm));
-			model.addAttribute("ListRole", mapper.writeValueAsString(listRoles));
-					
-		return "RolePermission";
-		}
 
-	@SuppressWarnings({ "rawtypes", "deprecation" })
+		}
+		ObjectMapper mapper = new ObjectMapper();
+		model.addAttribute("ListGridTable", mapper.writeValueAsString(listRolePerm));
+		model.addAttribute("ListRole", mapper.writeValueAsString(listRoles));
+
+		return "RolePermission";
+	}
+
+	
+	@SuppressWarnings("rawtypes")
 	@RequestMapping(value = "/rolePermissionSave", method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, Object> rolePermissionSave(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+	public Map<String, Object> rolePermissionSave(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
 		// logger.info("Welcome home! The client locale is {}.", locale);
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		if(LoginServices.checkSession(request, response).equals("redirect:/")) {
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
 		}
-		
-		Session session =almsessions.getSession();
+
+		Session session = almsessions.getSession();
 		Transaction tx = session.beginTransaction();
 
 		RolePermission rpData = new RolePermission();
@@ -113,13 +115,14 @@ public class RolePermissionController {
 		calendar.setTime(date);
 		int year = calendar.get(Calendar.YEAR);
 
-		synchronized (this) {						
-			permID = "PERM_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT ROLE_PERMISSION FROM SEQ_TABLE").uniqueResult().toString());	
+		synchronized (this) {
+			permID = "PERM_" + year + "_" + Integer.parseInt(
+					session.createNativeQuery("SELECT ROLE_PERMISSION FROM SEQ_TABLE").uniqueResult().toString());
 			Query query = session.createNativeQuery("UPDATE SEQ_TABLE SET ROLE_PERMISSION = ROLE_PERMISSION + 1 ");
 			query.executeUpdate();
 			session.createNativeQuery("commit").executeUpdate();
-			}
-		//permID = "PERM_" + year + "_" + appConfig.getSequenceNbr(17);
+		}
+		// permID = "PERM_" + year + "_" + appConfig.getSequenceNbr(17);
 		System.out.println("DNI*********" + permID);
 
 		model.addAttribute("permID", permID);
@@ -151,16 +154,17 @@ public class RolePermissionController {
 		// rtn.put("permID", request.getParameter("permID"));
 		return rtn;
 	}
-	
+
 	@SuppressWarnings({ "rawtypes", "deprecation" })
 	@RequestMapping(value = "/rolePermissionApply", method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, Object> rolePermissionApply(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response){
-			
+	public Map<String, Object> rolePermissionApply(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) {
+
 		// logger.info("Welcome home! The client locale is {}.", locale);
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		if(LoginServices.checkSession(request, response).equals("redirect:/")) {
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
 		}
@@ -180,34 +184,35 @@ public class RolePermissionController {
 		char Export = request.getParameter("exportPerm").charAt(0);
 		char SecondLvl = request.getParameter("secondlvlPerm").charAt(0);
 
-		//char FirstLvl = request.getParameter("firstlvlPerm").charAt(0);
-		
-		//String[] checkedList = request.getParameterValues("checked[]");
-		//String permID = checkedList[0];
-		
-		//System.out.println("Checked array is: "+checkedList);
-		
-		
-		System.out.println("Add is: "+Add);
-		System.out.println("permID is: "+permID);
-		System.out.println("Read is " +Read + " Write is " +Write + " Delete is " +Delete + " Save is " +Save);
-		
-		
-		Query q = session.createQuery("update RolePermission set readPerm = :param1, writePerm =:param2, "
-		+ "addPerm = :param3, delPerm =:param4, savePerm = :param5, statusPerm =:param6, "
-		+ "actionPerm = :param7, downloadPerm =:param8, viewType =:param9, exportPerm =:param11, secondLevelPerm =:param12, firstLevelPerm = :param13"
-		+ " where permID =:param10");
-		
-		q.setCharacter("param1", Read); q.setCharacter("param2", Write);
-		q.setCharacter("param3", Add); q.setCharacter("param4", Delete);
-		q.setCharacter("param5", Save); q.setCharacter("param6", Status);
-		q.setCharacter("param7", Action); q.setCharacter("param8", Download);
-		q.setString("param9", viewType); q.setString("param10", permID);
-		q.setCharacter("param11", Export); q.setCharacter("param12", SecondLvl);
-		q.setCharacter("param13", request.getParameter("firstlvlPerm").charAt(0));
-		
+		// char FirstLvl = request.getParameter("firstlvlPerm").charAt(0);
 
-		
+		// String[] checkedList = request.getParameterValues("checked[]");
+		// String permID = checkedList[0];
+
+		// System.out.println("Checked array is: "+checkedList);
+
+		System.out.println("Add is: " + Add);
+		System.out.println("permID is: " + permID);
+		System.out.println("Read is " + Read + " Write is " + Write + " Delete is " + Delete + " Save is " + Save);
+
+		Query q = session.createQuery("update RolePermission set readPerm = :param1, writePerm =:param2, "
+				+ "addPerm = :param3, delPerm =:param4, savePerm = :param5, statusPerm =:param6, "
+				+ "actionPerm = :param7, downloadPerm =:param8, viewType =:param9, exportPerm =:param11, secondLevelPerm =:param12, firstLevelPerm = :param13"
+				+ " where permID =:param10");
+
+		q.setCharacter("param1", Read);
+		q.setCharacter("param2", Write);
+		q.setCharacter("param3", Add);
+		q.setCharacter("param4", Delete);
+		q.setCharacter("param5", Save);
+		q.setCharacter("param6", Status);
+		q.setCharacter("param7", Action);
+		q.setCharacter("param8", Download);
+		q.setString("param9", viewType);
+		q.setString("param10", permID);
+		q.setCharacter("param11", Export);
+		q.setCharacter("param12", SecondLvl);
+		q.setCharacter("param13", request.getParameter("firstlvlPerm").charAt(0));
 
 		q.executeUpdate();
 
@@ -218,16 +223,16 @@ public class RolePermissionController {
 		// rtn.put("permID", request.getParameter("permID"));
 		return rtn;
 	}
-	
-	
+
 	@SuppressWarnings({ "rawtypes", "deprecation" })
 	@RequestMapping(value = "/rolePermissionDelete", method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, Object> rolePermissionDelete(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
-		//logger.info("Welcome home! The client locale is {}.", locale);
+	public Map<String, Object> rolePermissionDelete(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) {
+		// logger.info("Welcome home! The client locale is {}.", locale);
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		if(LoginServices.checkSession(request, response).equals("redirect:/")) {
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
 		}
@@ -235,9 +240,9 @@ public class RolePermissionController {
 		Transaction tx = session.beginTransaction();
 
 		String permID = request.getParameter("permID");
-		//System.out.println("idList array is: "+idList);
+		// System.out.println("idList array is: "+idList);
 		Query q = session.createQuery("delete RolePermission where permID = :param1");
-		
+
 		q.setString("param1", permID);
 
 		q.executeUpdate();
@@ -245,7 +250,6 @@ public class RolePermissionController {
 		tx.commit();
 		session.close();
 
-		
 		rtn.put("BassamTest", "DeleteDone");
 		return rtn;
 
