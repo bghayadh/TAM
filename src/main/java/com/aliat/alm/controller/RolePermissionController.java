@@ -2,9 +2,6 @@ package com.aliat.alm.controller;
 
 import java.io.IOException;
 
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -13,19 +10,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,8 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.aliat.alm.common.ALMSessions;
 import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Notify;
-import com.aliat.alm.models.FixedAssetRegistry;
-import com.aliat.alm.models.PurchaseOrder;
+
 import com.aliat.alm.models.PurchaseRequest;
 import com.aliat.alm.models.RolePermission;
 import com.aliat.alm.services.LoginServices;
@@ -55,6 +43,7 @@ public class RolePermissionController {
 	@Autowired
 	Notify notification;
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rolePermission", method = RequestMethod.GET)
 	public String RolePermission(Locale locale, Model model, HttpServletRequest request,HttpServletResponse response) 
 		throws JsonGenerationException, JsonMappingException, IOException {
@@ -99,6 +88,7 @@ public class RolePermissionController {
 		return "RolePermission";
 		}
 
+	@SuppressWarnings({ "rawtypes", "deprecation" })
 	@RequestMapping(value = "/rolePermissionSave", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> rolePermissionSave(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response)
@@ -124,10 +114,10 @@ public class RolePermissionController {
 		int year = calendar.get(Calendar.YEAR);
 
 		synchronized (this) {						
-			permID = "PERM_" + year + "_" + Integer.parseInt(session.createSQLQuery("SELECT ROLE_PERMISSION FROM SEQ_TABLE").uniqueResult().toString());	
-			Query query = session.createSQLQuery("UPDATE SEQ_TABLE SET ROLE_PERMISSION = ROLE_PERMISSION + 1 ");
+			permID = "PERM_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT ROLE_PERMISSION FROM SEQ_TABLE").uniqueResult().toString());	
+			Query query = session.createNativeQuery("UPDATE SEQ_TABLE SET ROLE_PERMISSION = ROLE_PERMISSION + 1 ");
 			query.executeUpdate();
-			session.createSQLQuery("commit").executeUpdate();
+			session.createNativeQuery("commit").executeUpdate();
 			}
 		//permID = "PERM_" + year + "_" + appConfig.getSequenceNbr(17);
 		System.out.println("DNI*********" + permID);
@@ -162,6 +152,7 @@ public class RolePermissionController {
 		return rtn;
 	}
 	
+	@SuppressWarnings({ "rawtypes", "deprecation" })
 	@RequestMapping(value = "/rolePermissionApply", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> rolePermissionApply(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response){
@@ -198,6 +189,9 @@ public class RolePermissionController {
 		
 		
 		System.out.println("Add is: "+Add);
+		System.out.println("permID is: "+permID);
+		System.out.println("Read is " +Read + " Write is " +Write + " Delete is " +Delete + " Save is " +Save);
+		
 		
 		Query q = session.createQuery("update RolePermission set readPerm = :param1, writePerm =:param2, "
 		+ "addPerm = :param3, delPerm =:param4, savePerm = :param5, statusPerm =:param6, "
@@ -226,6 +220,7 @@ public class RolePermissionController {
 	}
 	
 	
+	@SuppressWarnings({ "rawtypes", "deprecation" })
 	@RequestMapping(value = "/rolePermissionDelete", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> rolePermissionDelete(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
