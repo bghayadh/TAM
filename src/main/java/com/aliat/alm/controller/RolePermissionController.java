@@ -51,6 +51,7 @@ public class RolePermissionController {
 		}
 		Transaction tx = null;
 		List<PurchaseRequest> listRolePerm = new ArrayList<PurchaseRequest>();
+		//List<List<String>> listRolePerm = new ArrayList<List<String>>();
 		List<String> listRoles = new ArrayList<>();
 		;
 		session = AlmDbSession.getInstance().getSession();
@@ -82,7 +83,9 @@ public class RolePermissionController {
 			}
 
 		}
+				
 		ObjectMapper mapper = new ObjectMapper();
+		System.out.println("listRolePerm is " +mapper.writeValueAsString(listRolePerm));
 		model.addAttribute("ListGridTable", mapper.writeValueAsString(listRolePerm));
 		model.addAttribute("ListRole", mapper.writeValueAsString(listRoles));
 
