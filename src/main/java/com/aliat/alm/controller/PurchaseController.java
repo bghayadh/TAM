@@ -1,13 +1,10 @@
 package com.aliat.alm.controller;
 
 import java.sql.Timestamp;
-
 import java.text.DateFormat;
 import java.math.BigDecimal; // Add this import statement
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -17,19 +14,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import org.apache.commons.lang3.StringUtils;
-
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.hibernate.query.Query;
-import org.hibernate.query.NativeQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.transform.Transformers;
-import org.hibernate.type.FloatType;
-import org.hibernate.type.StringType;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -452,7 +442,7 @@ public class PurchaseController {
 		}
 	}
 
-	@SuppressWarnings({ "unchecked", "deprecation" })
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/PurchaseReqFormView", method = RequestMethod.GET)
 	public String PurchaseReqFormView(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -620,7 +610,7 @@ public class PurchaseController {
 
 	}
 
-	@SuppressWarnings({ "unchecked", "deprecation" })
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/PurchaseOrderFormView", method = RequestMethod.GET)
 	public String PurchaseOrderFormView(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) {

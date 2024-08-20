@@ -6,8 +6,8 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
-import org.hibernate.Query;
+import org.hibernate.query.Query;
+//import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -18,7 +18,7 @@ import org.springframework.ui.Model;
 
 @Service
 public class Permissions {
-
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public  <T> List<Object[]> getUserPerms(HttpServletRequest request) {
 		
 		HttpSession httpSession = request.getSession(false);
@@ -32,6 +32,7 @@ public class Permissions {
 		Transaction tx = session.beginTransaction();
 		
 		String roleQuery = "select rolename from UserRole where username =:param1";
+		
 		Query roleResult = session.createQuery(roleQuery);
 		roleResult.setParameter("param1", username);			
 		//Object role = roleResult.uniqueResult();
@@ -49,6 +50,8 @@ public class Permissions {
 	return permList;
 
 	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public  <T> List<Object[]> getUserPermsWithSession(Session session,HttpServletRequest request) {
 		
 		HttpSession httpSession = request.getSession(false);
@@ -58,7 +61,7 @@ public class Permissions {
 		Query roleResult = session.createQuery(roleQuery);
 		roleResult.setParameter("param1", username);			
 		//Object role = roleResult.uniqueResult();
-		@SuppressWarnings("unchecked")
+		
 		List <String> roles = roleResult.list();
 		
 		String permQuery = "select screen, viewType, roleLevel, readPerm, writePerm, addPerm, delPerm,"+ 
@@ -71,6 +74,7 @@ public class Permissions {
 
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public  <T> List<Object[]> getUserPrem(EntityManager entityManager,HttpServletRequest request) {
 		
 		HttpSession httpSession = request.getSession(false);
@@ -79,8 +83,7 @@ public class Permissions {
 		String roleQuery = "select rolename from UserRole where username =:param1";
 		Query roleResult = (Query) entityManager.createQuery(roleQuery);
 		roleResult.setParameter("param1", username);			
-		//Object role = roleResult.uniqueResult();
-		@SuppressWarnings("unchecked")
+		//Object role = roleResult.uniqueResult();		
 		List <String> roles = roleResult.list();
 		
 		String permQuery = "select screen, viewType, roleLevel, readPerm, writePerm, addPerm, delPerm,"+ 
@@ -92,6 +95,7 @@ public class Permissions {
 	return permList;
 
 	}
+	@SuppressWarnings("rawtypes")
 	public  <T> void setPerms(Model model, List<Object[]> permList, String screen, String viewType) {
 		
 		Integer read = 0; Integer write = 0; Integer add = 0; Integer delete = 0;
