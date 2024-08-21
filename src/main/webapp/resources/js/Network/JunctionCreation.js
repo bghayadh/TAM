@@ -434,7 +434,7 @@ function getSelectedRowsJctMapping() {
 				}
 				else{
 						insertJctDictArr.push({
-							"JctSeq" : mJctSeq,	
+							"JctSeq" : JctSeq,	
 							"JctLocationTypeSideA" : JctLocationTypeSideA,
 							"JctLocationIdSideA"   : JctLocationIdSideA,
 							"JctLocationNameSideA" : JctLocationNameSideA,
@@ -505,7 +505,7 @@ function getSelectedRowsJctMapping() {
 				var JctWarehouseIdSideB =$(this).parent().parent().children('td[name="JctWarehouseIdSideB"]').children('input').val();	
 				
 				insertJctDictArr.push({
-							"JctSeq" : mJctSeq,
+							"JctSeq" : JctSeq,
 							"JctLocationTypeSideA" : JctLocationTypeSideA,
 							"JctLocationIdSideA"   : JctLocationIdSideA,
 							"JctLocationNameSideA" : JctLocationNameSideA,

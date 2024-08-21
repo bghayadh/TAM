@@ -6447,7 +6447,7 @@ singleHandhole = new ContextMenu({
 								$("#manholeJunctionHeader").text("Junction: "+$(this).val());
 
 							});
-							
+							MJctBoqIndex=0;
 							// MAPPING DATA APPENDING
 							if(data.junctionMappingPts){
 							
@@ -10564,7 +10564,7 @@ singleTube = new ContextMenu({
 						"JctCreatedDate": JctCreatedDate,
 						"dictParameterTemp":updateJctDictArr,
 						"dictParameter":insertJctDictArr,
-						"dictParameterDel":slctDelMJct,
+						"dictParameterDel":slctDelJct,
 						"JunctionOwner" : JunctionOwner,
 						"JunctionEngineerName" : JunctionEngineerName,
 						"JunctionInstaller" :JunctionInstaller,
@@ -11403,6 +11403,18 @@ $("#handholeJctDelRow").click(function () {
 			} 
 			else {
 				$('input[type="checkbox"]', '#handholeJctMappingTable').prop('checked', true);
+			}
+			
+			$(this).toggleClass('allChecked');
+								
+		}); 
+		
+		$('body').on('click', '#JctSelectAll', function  () {
+			if ($(this).hasClass('allChecked')) {
+				$('input[type="checkbox"]', '#JctMappingTable').prop('checked', false);
+			} 
+			else {
+				$('input[type="checkbox"]', '#JctMappingTable').prop('checked', true);
 			}
 			
 			$(this).toggleClass('allChecked');
@@ -18993,7 +19005,7 @@ var id = $(this).attr('id');
 checkedRow = "";
 var countJunBoq=$("#manholeJctMappingTable > tbody").children().length;
 var nextSeqJun = countJunBoq+1;
-console.log(nextSeqJun+""+MJctBoqIndex);
+console.log("nextSeqJun: "+nextSeqJun+" MJctBoqIndex: "+MJctBoqIndex);
 	var markup = "<tr id='Row"+MJctBoqIndex+"'><td name='Junction'><input type='checkbox' class='rowAboveBelowJun' style='position:relative;left:20px;top:10px' name='record'></td>"
 					+"<td name='mJctSeq' class='headcol'><input name='manholeJctSeq'  class='form-control text-input' type='text' style='width:60px;position:relative;' value='"+nextSeqJun+"' readonly/></td>"
 					+"<td style='background-color:#00757C' width='-10px'></td>"
@@ -19198,18 +19210,18 @@ document.getElementById('addJunMapBelow').onclick = addJunction;
 document.getElementById('addJunMapAbove').onclick = addJunction;
 
 function addJunction(){
-	
+	console.log("add junction ind ")
 	var id = $(this).attr('id');
 	checkedRow = "";
 	var countJunBoq=$("#JctMappingTable > tbody").children().length;
 	var nextSeqJun = countJunBoq+1;
-	console.log(nextSeqJun+""+MJctBoqIndex);
-		var markup = "<tr id='Row"+MJctBoqIndex+"'><td name='Junction'><input type='checkbox' class='rowAboveBelowJun' style='position:relative;left:20px;top:10px' name='record'></td>"
+	console.log(nextSeqJun+""+JctBoqIndex);
+		var markup = "<tr id='Row"+JctBoqIndex+"'><td name='Junction'><input type='checkbox' class='rowAboveBelowJun' style='position:relative;left:20px;top:10px' name='record'></td>"
 						+"<td name='JctSeq' class='headcol'><input name='JctSeq'  class='form-control text-input' type='text' style='width:60px;position:relative;' value='"+nextSeqJun+"' readonly/></td>"
 						+"<td style='background-color:#00757C' width='-10px'></td>"
 						
 						+"<td name='JctLocationTypeSideA'>"
-								+"<select class='form-control' name='JctLocationTypeSideA' id='JctLocationTypeSideA"+MJctBoqIndex+"'>"
+								+"<select class='form-control' name='JctLocationTypeSideA' id='JctLocationTypeSideA"+JctBoqIndex+"'>"
 		 							+"<option value='None' selected>Select an Option</option>"
 		 							+"<option value='Customer'>Customer</option>"
 		 							+"<option value='Site'>Site</option>"
@@ -19218,30 +19230,30 @@ function addJunction(){
 							  		+"<option value='DB'>DB</option>"
 								+"</select>"
 							+"</td>"
-						+"<td name='JctLocationIdSideA'><input name='JctLocationIdSideA' id='JctLocationIdSideA"+MJctBoqIndex+"' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
-						+"<td name='JctLocationNameSideA'><input name='JctLocationNameSideA' id='JctLocationNameSideA"+MJctBoqIndex+"' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
-						+"<td name='JctWarehouseIdSideA'><input name='JctWarehouseIdSideA' id='JctWarehouseIdSideA"+MJctBoqIndex+"' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
+						+"<td name='JctLocationIdSideA'><input name='JctLocationIdSideA' id='JctLocationIdSideA"+JctBoqIndex+"' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
+						+"<td name='JctLocationNameSideA'><input name='JctLocationNameSideA' id='JctLocationNameSideA"+JctBoqIndex+"' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
+						+"<td name='JctWarehouseIdSideA'><input name='JctWarehouseIdSideA' id='JctWarehouseIdSideA"+JctBoqIndex+"' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
 						
 						+"<td name='JctNetworkLevelSideA'>"
-						+"<select class='form-control' name='JctNetworkLevelSideA' id='JctNetworkLevelSideA"+MJctBoqIndex+"'>"
+						+"<select class='form-control' name='JctNetworkLevelSideA' id='JctNetworkLevelSideA"+JctBoqIndex+"'>"
 								+"<option value='backbone'>BackBone</option>"
 								+"<option value='metro'>Metro</option>"
 								+"<option value='access'>Access</option>"
 							+"</select>"
 						+"</td>"
 						
-						+"<td name='JctStrandNBSideA'><input name='JctStrandNBSideA' id='JctStrandNBSideA"+MJctBoqIndex+"'  class='form-control text-input' type='text' style='width:80px;position:relative;'/></td>"
-						+"<td name='JctStrandIdSideA'><input name='JctStrandIdSideA' id='JctStrandIdSideA"+MJctBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-						+"<td name='JctStrandNameSideA'><input name='JctStrandNameSideA' id='JctStrandNameSideA"+MJctBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;'  /></td>"
-						+"<td name='JctTubeNBSideA'><input name='JctTubeNBSideA' id='JctTubeNBSideA"+MJctBoqIndex+"' class='form-control text-input' type='text' style='width:80px;position:relative;'/></td>"
-						+"<td name='JctTubeIdSideA'><input name='JctTubeIdSideA' id='JctTubeIdSideA"+MJctBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
-						+"<td name='JctTubeNameSideA'><input name='JctTubeNameSideA' id='JctTubeNameSideA"+MJctBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-						+"<td name='JctFiberIdSideA'><input name='JctFiberIdSideA' id='JctFiberIdSideA"+MJctBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-						+"<td name='JctFiberNameSideA'><input name='JctFiberNameSideA' id='JctFiberNameSideA"+MJctBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
+						+"<td name='JctStrandNBSideA'><input name='JctStrandNBSideA' id='JctStrandNBSideA"+JctBoqIndex+"'  class='form-control text-input' type='text' style='width:80px;position:relative;'/></td>"
+						+"<td name='JctStrandIdSideA'><input name='JctStrandIdSideA' id='JctStrandIdSideA"+JctBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+						+"<td name='JctStrandNameSideA'><input name='JctStrandNameSideA' id='JctStrandNameSideA"+JctBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;'  /></td>"
+						+"<td name='JctTubeNBSideA'><input name='JctTubeNBSideA' id='JctTubeNBSideA"+JctBoqIndex+"' class='form-control text-input' type='text' style='width:80px;position:relative;'/></td>"
+						+"<td name='JctTubeIdSideA'><input name='JctTubeIdSideA' id='JctTubeIdSideA"+JctBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
+						+"<td name='JctTubeNameSideA'><input name='JctTubeNameSideA' id='JctTubeNameSideA"+JctBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+						+"<td name='JctFiberIdSideA'><input name='JctFiberIdSideA' id='JctFiberIdSideA"+JctBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+						+"<td name='JctFiberNameSideA'><input name='JctFiberNameSideA' id='JctFiberNameSideA"+JctBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
 						+"<td style='background-color:#00757C' width='-10px'></td>"
 						
 						+"<td name='JctLocationTypeSideB'>"
-								+"<select class='form-control' name='JctLocationTypeSideB' id='JctLocationTypeSideB"+MJctBoqIndex+"'>"
+								+"<select class='form-control' name='JctLocationTypeSideB' id='JctLocationTypeSideB"+JctBoqIndex+"'>"
 		 							+"<option value='None' selected>Select an Option</option>"
 		 							+"<option value='Customer'>Customer</option>"
 		 							+"<option value='Site'>Site</option>"
@@ -19251,26 +19263,26 @@ function addJunction(){
 								+"</select>"
 							+"</td>"
 						
-						+"<td name='JctLocationIdSideB'><input name='JctLocationIdSideB' id='JctLocationIdSideB"+MJctBoqIndex+"' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
-						+"<td name='JctLocationNameSideB'><input name='JctLocationNameSideB' id='JctLocationNameSideB"+MJctBoqIndex+"' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
-						+"<td name='JctWarehouseIdSideB'><input name='JctWarehouseIdSideB'  id='JctWarehouseIdSideB"+MJctBoqIndex+"' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
+						+"<td name='JctLocationIdSideB'><input name='JctLocationIdSideB' id='JctLocationIdSideB"+JctBoqIndex+"' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
+						+"<td name='JctLocationNameSideB'><input name='JctLocationNameSideB' id='JctLocationNameSideB"+JctBoqIndex+"' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
+						+"<td name='JctWarehouseIdSideB'><input name='JctWarehouseIdSideB'  id='JctWarehouseIdSideB"+JctBoqIndex+"' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
 								
 						+"<td name='JctNetworkLevelSideB'>"
-						+"<select class='form-control' name='JctNetworkLevelSideB' id='JctNetworkLevelSideB"+MJctBoqIndex+"'>"
+						+"<select class='form-control' name='JctNetworkLevelSideB' id='JctNetworkLevelSideB"+JctBoqIndex+"'>"
 								+"<option value='backbone'>BackBone</option>"
 								+"<option value='metro'>Metro</option>"
 								+"<option value='access'>Access</option>"
 							+"</select>"
 						+"</td>"
 						
-						+"<td name='JctStrandNBSideB'><input name='JctStrandNBSideB' id='JctStrandNBSideB"+MJctBoqIndex+"'  class='form-control text-input' type='text' style='width:80px;position:relative;'/></td>"
-						+"<td name='JctStrandIdSideB'><input name='JctStrandIdSideB' id='JctStrandIdSideB"+MJctBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-						+"<td name='JctStrandNameSideB'><input name='JctStrandNameSideB' id='JctStrandNameSideB"+MJctBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-						+"<td name='JctTubeNBSideB'><input name='JctTubeNBSideB' id='JctTubeNBSideB"+MJctBoqIndex+"' class='form-control text-input' type='text' style='width:80px;position:relative;'/></td>"
-						+"<td name='JctTubeIdSideB'><input name='JctTubeIdSideB' id='JctTubeIdSideB"+MJctBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-						+"<td name='JctTubeNameSideB'><input name='JctTubeNameSideB' id='JctTubeNameSideB"+MJctBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-						+"<td name='JctFiberIdSideB'><input name='JctFiberIdSideB' id='JctFiberIdSideB"+MJctBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-						+"<td name='JctFiberNameSideB'><input name='JctFiberNameSideB' id='JctFiberNameSideB"+MJctBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+						+"<td name='JctStrandNBSideB'><input name='JctStrandNBSideB' id='JctStrandNBSideB"+JctBoqIndex+"'  class='form-control text-input' type='text' style='width:80px;position:relative;'/></td>"
+						+"<td name='JctStrandIdSideB'><input name='JctStrandIdSideB' id='JctStrandIdSideB"+JctBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+						+"<td name='JctStrandNameSideB'><input name='JctStrandNameSideB' id='JctStrandNameSideB"+JctBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+						+"<td name='JctTubeNBSideB'><input name='JctTubeNBSideB' id='JctTubeNBSideB"+JctBoqIndex+"' class='form-control text-input' type='text' style='width:80px;position:relative;'/></td>"
+						+"<td name='JctTubeIdSideB'><input name='JctTubeIdSideB' id='JctTubeIdSideB"+JctBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+						+"<td name='JctTubeNameSideB'><input name='JctTubeNameSideB' id='JctTubeNameSideB"+JctBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+						+"<td name='JctFiberIdSideB'><input name='JctFiberIdSideB' id='JctFiberIdSideB"+JctBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+						+"<td name='JctFiberNameSideB'><input name='JctFiberNameSideB' id='JctFiberNameSideB"+JctBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
 						
 						+"</tr>"
 		var indexBelow = 0;
@@ -19307,9 +19319,9 @@ function addJunction(){
 		    	$("#JctMappingTable > tbody").find("tr").eq(indexBel).addClass("ativeRecord");
 	    	}
 	    	
-	    	//autoCompleteJctMapping(MJctBoqIndex,"manholeJctMappingTable","Row"+MJctBoqIndex);
-			autoCompleteForMapping(MJctBoqIndex,"JctMappingTable","Row"+MJctBoqIndex,"JctWarehouseIdSideA","JctLocationIdSideA","JctLocationNameSideA","JctLocationTypeSideA","","","","","JctStrandIdSideA","JctStrandNameSideA","JctTubeIdSideA","JctTubeNameSideA","JctFiberIdSideA","JctFiberNameSideA","JctStrandNBSideA","","JctTubeNBSideA","","","","JctNetworkLevelSideA");
-			autoCompleteForMapping(MJctBoqIndex,"JctMappingTable","Row"+MJctBoqIndex,"JctWarehouseIdSideB","JctLocationIdSideB","JctLocationNameSideB","JctLocationTypeSideB","","","","","JctStrandIdSideB","JctStrandNameSideB","JctTubeIdSideB","JctTubeNameSideB","JctFiberIdSideB","JctFiberNameSideB","JctStrandNBSideB","","JctTubeNBSideB","","","","JctNetworkLevelSideB");		
+	    	//autoCompleteJctMapping(JctBoqIndex,"manholeJctMappingTable","Row"+JctBoqIndex);
+			autoCompleteForMapping(JctBoqIndex,"JctMappingTable","Row"+JctBoqIndex,"JctWarehouseIdSideA","JctLocationIdSideA","JctLocationNameSideA","JctLocationTypeSideA","","","","","JctStrandIdSideA","JctStrandNameSideA","JctTubeIdSideA","JctTubeNameSideA","JctFiberIdSideA","JctFiberNameSideA","JctStrandNBSideA","","JctTubeNBSideA","","","","JctNetworkLevelSideA");
+			autoCompleteForMapping(JctBoqIndex,"JctMappingTable","Row"+JctBoqIndex,"JctWarehouseIdSideB","JctLocationIdSideB","JctLocationNameSideB","JctLocationTypeSideB","","","","","JctStrandIdSideB","JctStrandNameSideB","JctTubeIdSideB","JctTubeNameSideB","JctFiberIdSideB","JctFiberNameSideB","JctStrandNBSideB","","JctTubeNBSideB","","","","JctNetworkLevelSideB");		
 			var position = $('#JctMappingTable tr:eq('+indexBel+')').offset().top;    		
 	    		 // Scroll to row
 			    $('#JctMappingDiv').animate({
@@ -19332,9 +19344,9 @@ function addJunction(){
 			
 	    	
 	    
-	    	//autoCompleteJctMapping(MJctBoqIndex,"manholeJctMappingTable","Row"+MJctBoqIndex);
-			autoCompleteForMapping(MJctBoqIndex,"JctMappingTable","Row"+MJctBoqIndex,"JctWarehouseIdSideA","JctLocationIdSideA","JctLocationNameSideA","JctLocationTypeSideA","","","","","JctStrandIdSideA","JctStrandNameSideA","JctTubeIdSideA","JctTubeNameSideA","JctFiberIdSideA","JctFiberNameSideA","JctStrandNBSideA","","JctTubeNBSideA","","","","JctNetworkLevelSideA");
-			autoCompleteForMapping(MJctBoqIndex,"JctMappingTable","Row"+MJctBoqIndex,"JctWarehouseIdSideB","JctLocationIdSideB","JctLocationNameSideB","JctLocationTypeSideB","","","","","JctStrandIdSideB","JctStrandNameSideB","JctTubeIdSideB","JctTubeNameSideB","JctFiberIdSideB","JctFiberNameSideB","JctStrandNBSideB","","JctTubeNBSideB","","","","JctNetworkLevelSideB");		
+	    	//autoCompleteJctMapping(JctBoqIndex,"manholeJctMappingTable","Row"+JctBoqIndex);
+			autoCompleteForMapping(JctBoqIndex,"JctMappingTable","Row"+JctBoqIndex,"JctWarehouseIdSideA","JctLocationIdSideA","JctLocationNameSideA","JctLocationTypeSideA","","","","","JctStrandIdSideA","JctStrandNameSideA","JctTubeIdSideA","JctTubeNameSideA","JctFiberIdSideA","JctFiberNameSideA","JctStrandNBSideA","","JctTubeNBSideA","","","","JctNetworkLevelSideA");
+			autoCompleteForMapping(JctBoqIndex,"JctMappingTable","Row"+JctBoqIndex,"JctWarehouseIdSideB","JctLocationIdSideB","JctLocationNameSideB","JctLocationTypeSideB","","","","","JctStrandIdSideB","JctStrandNameSideB","JctTubeIdSideB","JctTubeNameSideB","JctFiberIdSideB","JctFiberNameSideB","JctStrandNBSideB","","JctTubeNBSideB","","","","JctNetworkLevelSideB");		
 			objDiv = document.getElementById("JctMappingDiv");
 			objDiv.scrollTop = objDiv.scrollHeight;
 	    	 }
@@ -19347,9 +19359,9 @@ function addJunction(){
 				$("#JctMappingTable > tbody").find("tr").eq(0).find('td[name="Junction"]').children('input').prop("checked", true);
 			
 	    	
-	    	//autoCompleteJctMapping(MJctBoqIndex,"manholeJctMappingTable","Row"+MJctBoqIndex);
-			autoCompleteForMapping(MJctBoqIndex,"JctMappingTable","Row"+MJctBoqIndex,"JctWarehouseIdSideA","JctLocationIdSideA","JctLocationNameSideA","JctLocationTypeSideA","","","","","JctStrandIdSideA","JctStrandNameSideA","JctTubeIdSideA","JctTubeNameSideA","JctFiberIdSideA","JctFiberNameSideA","JctStrandNBSideA","","JctTubeNBSideA","","","","JctNetworkLevelSideA");
-			autoCompleteForMapping(MJctBoqIndex,"JctMappingTable","Row"+MJctBoqIndex,"JctWarehouseIdSideB","JctLocationIdSideB","JctLocationNameSideB","JctLocationTypeSideB","","","","","JctStrandIdSideB","JctStrandNameSideB","JctTubeIdSideB","JctTubeNameSideB","JctFiberIdSideB","JctFiberNameSideB","JctStrandNBSideB","","JctTubeNBSideB","","","","JctNetworkLevelSideB");	
+	    	//autoCompleteJctMapping(JctBoqIndex,"manholeJctMappingTable","Row"+JctBoqIndex);
+			autoCompleteForMapping(JctBoqIndex,"JctMappingTable","Row"+JctBoqIndex,"JctWarehouseIdSideA","JctLocationIdSideA","JctLocationNameSideA","JctLocationTypeSideA","","","","","JctStrandIdSideA","JctStrandNameSideA","JctTubeIdSideA","JctTubeNameSideA","JctFiberIdSideA","JctFiberNameSideA","JctStrandNBSideA","","JctTubeNBSideA","","","","JctNetworkLevelSideA");
+			autoCompleteForMapping(JctBoqIndex,"JctMappingTable","Row"+JctBoqIndex,"JctWarehouseIdSideB","JctLocationIdSideB","JctLocationNameSideB","JctLocationTypeSideB","","","","","JctStrandIdSideB","JctStrandNameSideB","JctTubeIdSideB","JctTubeNameSideB","JctFiberIdSideB","JctFiberNameSideB","JctStrandNBSideB","","JctTubeNBSideB","","","","JctNetworkLevelSideB");	
 			objDiv = document.getElementById("JctMappingDiv");
 			objDiv.scrollTop = objDiv.scrollHeight;
 	    	 }
@@ -19363,7 +19375,7 @@ function addJunction(){
 				$(this).parents("tr").find('input[name ="JctSeq"]').val(currentIndex+1);
 		}); 
 		 
-		$("#JctLocationTypeSideA"+MJctBoqIndex).change(function(){
+		$("#JctLocationTypeSideA"+JctBoqIndex).change(function(){
 			var thisID = $(this).attr("id");
 			var indexFor = thisID.replace('JctLocationTypeSideA','');
 			$('#JctLocationNameSideA'+indexFor).val('');
@@ -19377,7 +19389,7 @@ function addJunction(){
 			} 
 		});		
 		
-		$("#JctLocationTypeSideB"+MJctBoqIndex).change(function(){
+		$("#JctLocationTypeSideB"+JctBoqIndex).change(function(){
 			var thisID = $(this).attr("id");
 			var indexFor = thisID.replace('JctLocationTypeSideB','');
 			$('#JctLocationNameSideB'+indexFor).val('');
@@ -19391,7 +19403,7 @@ function addJunction(){
 			} 
 		});	
 		
-		MJctBoqIndex++;
+		JctBoqIndex++;
 		$("#JctMappingTable tr").focusin(function () {
 				$("#JctMappingTable tr").removeClass("ativeRecord")
 				  $(this).addClass("ativeRecord");
