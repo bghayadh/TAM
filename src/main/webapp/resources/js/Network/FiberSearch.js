@@ -1351,9 +1351,15 @@ $("#"+LocationID+ID).autocomplete({
 					"search":searchs,
 				}
 		}
-		else {
-			url='emptyUrl';
+			else if (search=="DB"){
+				url ='getDbData';
+				dataTarget = {					
+					"search":searchs,
+				}
 		}
+			else {
+				url='emptyUrl';
+			}
 	if(url !="emptyUrl") {
 		$.ajax({
 			type: "GET",
@@ -1398,7 +1404,12 @@ $("#"+LocationID+ID).autocomplete({
 				$("#"+LocationM+ID).val(ui.item ? ui.item[1] : '');
 				$("#"+LocationID+ID).val(ui.item[0]);
 				//$("#"+Location+ID).val(ui.item[2]);
-			}			
+			}	
+			else if (search=="DB"){
+				$("#"+LocationM+ID).val(ui.item ? ui.item[1] : '');
+				$("#"+LocationID+ID).val(ui.item[0]);
+				//$("#"+Location+ID).val(ui.item[2]);
+			}	
 		return false;
 	},	
 }).data( "ui-autocomplete" )._renderItem= function(ul, item) {
@@ -1465,9 +1476,15 @@ $("#"+LocationID+ID).autocomplete({
 					"search":searchs,
 				}
 		}
-		else {
-			url='emptyUrl';
+			else if (search=="DB"){
+				url ='getDbData';
+				dataTarget = {					
+					"search":searchs,
+				}
 		}
+			else {
+				url='emptyUrl';
+			}
 	if(url !="emptyUrl") {
 		$.ajax({
 			type: "GET",
@@ -1507,7 +1524,12 @@ $("#"+LocationID+ID).autocomplete({
 				$("#"+LocationM+ID).val(ui.item ? ui.item[1] : '');
 				$("#"+LocationID+ID).val(ui.item[0]);
 				//$("#"+Location+ID).val(ui.item[2]);
-			}			
+			}	
+			else if (search=="DB"){
+				$("#"+LocationM+ID).val(ui.item ? ui.item[1] : '');
+				$("#"+LocationID+ID).val(ui.item[0]);
+				//$("#"+Location+ID).val(ui.item[2]);
+			}
 		return false;
 	},	
 }).data( "ui-autocomplete" )._renderItem= function(ul, item) {
@@ -1817,7 +1839,7 @@ if(equipment !=""){
 						tubeStrandSetColor(strandColor+ID,strandNb+ID);
 						tubeStrandSetColor(tubeColor+ID,tubeNb+ID);
 					}
-					if(strandID.includes("mJct") || strandID.includes("hJct")){
+					if(strandID.includes("mJct") || strandID.includes("hJct") || strandID.includes("Jct")){
 						$(this).parents("tr").find('select[name ="'+networkLevel+'"]').val(ui.item[10]);
 					}
 					return false;
@@ -1883,7 +1905,7 @@ $("#"+strandName+ID).autocomplete({
 						tubeStrandSetColor(tubeColor+ID,tubeNb+ID);
 					}
 					
-					if(strandID.includes("mJct") || strandID.includes("hJct")){
+					if(strandID.includes("mJct") || strandID.includes("hJct") || strandID.includes("Jct")){
 						$(this).parents("tr").find('select[name ="'+networkLevel+'"]').val(ui.item[10]);
 					}
 				/*	var tubesAutocomplete=[];
@@ -1960,7 +1982,7 @@ $("#"+strandName+ID).autocomplete({
 				this.value = (ui.item ? ui.item[0] : '');
 				$(this).parents("tr").find('input[name ="'+fiberName+'"]').val(ui.item[1]);
 				
-				if(fiberID.includes("mJct") || fiberID.includes("hJct")){
+				if(fiberID.includes("mJct") || fiberID.includes("hJct") || fiberID.includes("Jct")){
 					$(this).parents("tr").find('select[name ="'+networkLevel+'"]').val(ui.item[2]);
 				}
 				return false;
@@ -2013,7 +2035,7 @@ $("#"+fiberName+ID).autocomplete({
 				this.value = (ui.item ? ui.item[1] : '');
 				$(this).parents("tr").find('input[name ="'+fiberID+'"]').val(ui.item[0]);
 				
-				if(fiberID.includes("mJct") || fiberID.includes("hJct")){
+				if(fiberID.includes("mJct") || fiberID.includes("hJct") || fiberID.includes("Jct")){
 					$(this).parents("tr").find('select[name ="'+networkLevel+'"]').val(ui.item[2]);
 				}
 				
@@ -2075,7 +2097,7 @@ $("#"+fiberName+ID).autocomplete({
 				tubeStrandSetColor(tubeColor+ID,tubeNb+ID);
 			}
 			
-			if(tubeID.includes("mJct") || tubeID.includes("hJct")){
+			if(tubeID.includes("mJct") || tubeID.includes("hJct") || tubeID.includes("Jct")){
 					$(this).parents("tr").find('select[name ="'+networkLevel+'"]').val(ui.item[6]);
 				}
 			return false;
@@ -2135,7 +2157,7 @@ $("#"+tubeName+ID).autocomplete({
 			tubeStrandSetColor(tubeColor+ID,tubeNb+ID);
 		}
 		
-		if(tubeID.includes("mJct") || tubeID.includes("hJct")){
+		if(tubeID.includes("mJct") || tubeID.includes("hJct") || tubeID.includes("Jct")){
 			$(this).parents("tr").find('select[name ="'+networkLevel+'"]').val(ui.item[6]);
 		}
 	/*	var tubesAutocomplete=[];
