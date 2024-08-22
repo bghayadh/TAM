@@ -19005,7 +19005,7 @@ var id = $(this).attr('id');
 checkedRow = "";
 var countJunBoq=$("#manholeJctMappingTable > tbody").children().length;
 var nextSeqJun = countJunBoq+1;
-console.log("nextSeqJun: "+nextSeqJun+" MJctBoqIndex: "+MJctBoqIndex);
+console.log(nextSeqJun+""+MJctBoqIndex);
 	var markup = "<tr id='Row"+MJctBoqIndex+"'><td name='Junction'><input type='checkbox' class='rowAboveBelowJun' style='position:relative;left:20px;top:10px' name='record'></td>"
 					+"<td name='mJctSeq' class='headcol'><input name='manholeJctSeq'  class='form-control text-input' type='text' style='width:60px;position:relative;' value='"+nextSeqJun+"' readonly/></td>"
 					+"<td style='background-color:#00757C' width='-10px'></td>"
