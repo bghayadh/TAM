@@ -53,6 +53,23 @@ function create_Junction_Marker_Click(Id,Name,Long,Lat,markers,marker_Cluster,Ty
 			scaledSize: new google.maps.Size(20, 20), // scaled size		
 	};
 	
+	markerClusterJunction.setOptions({								
+		minimumClusterSize: 2,
+		styles: [
+		         {
+		        	 url: getContext()+'/resources/clusterIcons/orangeCluster.png',
+			         height: 60,
+			         width:60,
+			         anchorText:[-3,-3]
+			      },
+		],
+		calculator: function(markers, numStyles) {
+			if (markers.length >= 1) return {text: markers.length,index:1}; 
+		}                   
+	});
+	
+	
+	
 	 if(markers == markersJunction && marker_Cluster == markerClusterJunction) {
 		 mapIcon = iconJunction;
 		 markerType="Junction";
