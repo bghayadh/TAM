@@ -6,8 +6,7 @@
     <title>Role Permission</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="shortcut icon" href="">
-    <!-- <script src="${pageContext.request.contextPath}/resources/js/jquery.slim.min.js" ></script>  -->
-	<script src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>
+   	<script src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resources/js/bootstrap.min.js"></script>
 	<link href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
@@ -28,6 +27,7 @@
 	    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/almgrid/Collapse.css" />
 		<script type="text/javascript" src="${pageContext.request.contextPath}/resources/almgrid/gridAppendRowsRolePermission.js"></script>
 		
+           
             
 </head>
 <style>
