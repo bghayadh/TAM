@@ -1,7 +1,7 @@
 package com.aliat.alm.controller;
 
 import java.io.IOException;
-
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -61,12 +61,13 @@ public class RolePermissionController {
 				tx = session.beginTransaction();
 
 				notification.headerNotifications(session, model);
-
+				
 				listRolePerm = session
-						.createQuery("select t.permID, t.screen, t.viewType, t.role, t.roleLevel, t.readPerm,"
-								+ " t.writePerm, t.addPerm, t.delPerm, t.savePerm, t.statusPerm, t.actionPerm, t.downloadPerm, t.exportPerm, t.secondLevelPerm,t.firstLevelPerm"
-								+ " from RolePermission t")
+						.createQuery("select t.screen, t.viewType, t.role, t.roleLevel, t.readPerm,"
+								+ " t.writePerm, t.addPerm, t.delPerm, t.savePerm, t.statusPerm, t.actionPerm, t.downloadPerm, t.exportPerm, t.secondLevelPerm,t.firstLevelPerm,t.permID,t.searchPopupPerm,t.findConnectedPerm,t.projectsPerm "
+								+ " from RolePermission t ORDER BY lastModificationDate DESC")
 						.list();
+				
 				listRoles = session.createNativeQuery("select Role From  Role").list();
 				for (String role : listRoles) {
 					System.out.println(role);
@@ -148,6 +149,12 @@ public class RolePermissionController {
 		rpData.setExportPerm(request.getParameter("exportPerm").charAt(0));
 		rpData.setSecondLevelPerm(request.getParameter("secondlvlPerm").charAt(0));
 		rpData.setFirstLevelPerm(request.getParameter("firstlvlPerm").charAt(0));
+		rpData.setSearchPopupPerm(request.getParameter("searchPopupPerm").charAt(0));
+		rpData.setFindConnectedPerm(request.getParameter("findConnectedPerm").charAt(0));
+		rpData.setProjectsPerm(request.getParameter("projectsPerm").charAt(0));
+		rpData.setCreationDate(new Timestamp((new Timestamp(System.currentTimeMillis())).getTime()));
+		rpData.setLastModificationDate(new Timestamp((new Timestamp(System.currentTimeMillis())).getTime()));
+
 		session.saveOrUpdate(rpData);
 
 		tx.commit();
@@ -186,6 +193,9 @@ public class RolePermissionController {
 		char Download = (request.getParameter("downloadPerm").charAt(0));
 		char Export = request.getParameter("exportPerm").charAt(0);
 		char SecondLvl = request.getParameter("secondlvlPerm").charAt(0);
+		char searchPopup = (request.getParameter("searchPopup").charAt(0));
+		char findConnected = request.getParameter("findConnected").charAt(0);
+		char projects = request.getParameter("projects").charAt(0);
 
 		// char FirstLvl = request.getParameter("firstlvlPerm").charAt(0);
 
@@ -198,10 +208,13 @@ public class RolePermissionController {
 		System.out.println("permID is: " + permID);
 		System.out.println("Read is " + Read + " Write is " + Write + " Delete is " + Delete + " Save is " + Save);
 
+		Timestamp lastModifiedDate = new Timestamp(new Timestamp(System.currentTimeMillis()).getTime());
+
 		Query q = session.createQuery("update RolePermission set readPerm = :param1, writePerm =:param2, "
 				+ "addPerm = :param3, delPerm =:param4, savePerm = :param5, statusPerm =:param6, "
-				+ "actionPerm = :param7, downloadPerm =:param8, viewType =:param9, exportPerm =:param11, secondLevelPerm =:param12, firstLevelPerm = :param13"
+				+ "actionPerm = :param7, downloadPerm =:param8, viewType =:param9, exportPerm =:param11, secondLevelPerm =:param12, firstLevelPerm = :param13, searchPopupPerm = :param14, findConnectedPerm = :param15,projectsPerm = :param16,lastModificationDate = :param17  "
 				+ " where permID =:param10");
+
 
 		q.setCharacter("param1", Read);
 		q.setCharacter("param2", Write);
@@ -216,7 +229,10 @@ public class RolePermissionController {
 		q.setCharacter("param11", Export);
 		q.setCharacter("param12", SecondLvl);
 		q.setCharacter("param13", request.getParameter("firstlvlPerm").charAt(0));
-
+		q.setCharacter("param14", searchPopup);
+		q.setCharacter("param15", findConnected);
+		q.setCharacter("param16", projects);
+		q.setTimestamp("param17" ,lastModifiedDate);
 		q.executeUpdate();
 
 		tx.commit();
