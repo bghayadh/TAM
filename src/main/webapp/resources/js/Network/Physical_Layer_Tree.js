@@ -5933,7 +5933,7 @@ singleHandhole = new ContextMenu({
 									   window["MAP_JCT"+data.junctionMappingPts[i][1]]=[];
 									   window["MAP_JCT"+data.junctionMappingPts[i][1]]=data.junctionMappingPts[i];			
 
-								var markup = "<tr id='"+data.junctionMappingPts[i][1]+"'><td name='Junction'><input type='checkbox' class='rowAboveBelowJun' style='position:relative;left:20px;top:10px' name='record'></td>"
+								var markup = "<tr id='"+data.junctionMappingPts[i][1]+"'><td name='Junction'><input type='checkbox' class='rowAboveBelowIndJun' style='position:relative;left:20px;top:10px' name='record'></td>"
 								+"<td name='JctSeq' class='headcol'><input name='JctSeq' value='"+data.junctionMappingPts[i][0]+"' class='form-control text-input' type='text' style='width:60px;position:relative;' readonly /></td>"
 								+"<td style='background-color:#00757C' width='-10px'></td>"
 								+"<td name='JctLocationTypeSideA'>"+locationOptions+"</td>"
@@ -19230,7 +19230,7 @@ function addJunction(){
 	var countJunBoq=$("#JctMappingTable > tbody").children().length;
 	var nextSeqJun = countJunBoq+1;
 	console.log(nextSeqJun+""+JctBoqIndex);
-		var markup = "<tr id='Row"+JctBoqIndex+"'><td name='Junction'><input type='checkbox' class='rowAboveBelowJun' style='position:relative;left:20px;top:10px' name='record'></td>"
+		var markup = "<tr id='Row"+JctBoqIndex+"'><td name='Junction'><input type='checkbox' class='rowAboveBelowIndJun' style='position:relative;left:20px;top:10px' name='record'></td>"
 						+"<td name='JctSeq' class='headcol'><input name='JctSeq'  class='form-control text-input' type='text' style='width:60px;position:relative;' value='"+nextSeqJun+"' readonly/></td>"
 						+"<td style='background-color:#00757C' width='-10px'></td>"
 						
@@ -19303,7 +19303,7 @@ function addJunction(){
 		var indexBel = 0;
 		var newRowIndxB =0;
 
-	    $('.rowAboveBelowJun').each(function() {
+	    $('.rowAboveBelowIndJun').each(function() {
 	         if (this.checked) {
 	           checkedRow ='checked';  
 	           indexBel= indexBelow ;    
@@ -19311,9 +19311,8 @@ function addJunction(){
 	         indexBelow++;
 	     
 	    });		
-	    console.log("index below is "+indexBel);
 	    if(checkedRow=="checked"){
-	    console.log("HTML is "+ $("#JctMappingTable tr").eq(indexBel+1).html());
+	    //console.log("HTML is "+ $("#JctMappingTable tr").eq(indexBel+1).html());
 	    if(id=="addJunMapBelow"){
 	    	$("#JctMappingTable tr").eq(indexBel+2).after(markup);
 	        $("#JctMappingTable > tbody").find("tr").find('td[name="Junction"]').children('input').prop("checked", false);
