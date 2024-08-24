@@ -197,7 +197,8 @@ function createJunction(JunctionList){
 
 	});
 	
-	$("#Junction_f_CurrentPhysicalLayer > .TreeSpan,  .Junction_f_projects > .TreeSpan").contextmenu(function(){				
+	/*
+	 * $("#Junction_f_CurrentPhysicalLayer > .TreeSpan,  .Junction_f_projects > .TreeSpan").contextmenu(function(){				
 		selectedJuncIdContext=$(this).parent().attr('id');
 		IdNodeSelectedTemp=$(this).parent().attr('id').split("Junction_f_")[1];	
 		menuName= JunctionMenu;
@@ -206,6 +207,7 @@ function createJunction(JunctionList){
 		
 
 	});
+	*/
 	
 	
 	

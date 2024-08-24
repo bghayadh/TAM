@@ -9954,6 +9954,16 @@ singleTube = new ContextMenu({
 		 	document.getElementById("projectNameHandhole").style.display = "none";
 																			
 	 	   });
+	   
+	   $("#Junction_f_CurrentPhysicalLayer > .TreeSpan,  .Junction_f_projects > .TreeSpan").contextmenu(function(){				
+			selectedJuncIdContext=$(this).parent().attr('id');
+			IdNodeSelectedTemp=$(this).parent().attr('id').split("Junction_f_")[1];	
+			menuName= JunctionMenu;
+			selectedJct = selectedJuncIdContext;
+			openContext(selectedJuncIdContext,"",JunctionMenu,event);
+			
+
+		});
 	 
 
 	    $(".FiberPath_f_CurrentPhysicalLayer > .TreeSpan, .FiberPath_f_projects > .TreeSpan").contextmenu(function(){
@@ -10361,7 +10371,9 @@ singleTube = new ContextMenu({
 						   });
 						   
 						   $( "#Junction_f_"+data.ProjectId+" > .TreeSpan" ).contextmenu(function(){ 
-						        IdNodeSelectedTemp=$(this).parents().eq(2).attr('id').split("Junction_f_")[1];
+						       // IdNodeSelectedTemp=$(this).parents().eq(2).attr('id').split("Junction_f_")[1];
+							   IdNodeSelectedTemp =data.ProjectId;
+						        //console.log("IdNodeSelectedTemp "+IdNodeSelectedTemp)
 						        menuName= JunctionMenu;
 						        openContext("","",JunctionMenu,event);
 						
@@ -10536,6 +10548,8 @@ singleTube = new ContextMenu({
 				JunctionEngineerName = document.getElementById("JunctionEngineerName").value;
 				JunctionInstaller = document.getElementById("JunctionInstaller").value;
 				JctCreatedDate=$("#JunctionCreateDate").val();
+				JctProjectId = IdNodeSelectedTemp;
+				//console.log("JctProjectId "+JctProjectId)
 					
 				if(actionJct=="Update"){
 					junctionID = document.getElementById("JunctionId").value;
@@ -10560,7 +10574,7 @@ singleTube = new ContextMenu({
 						"JunctionNum": junctionNum,
 						"JunctionCapacity": junctionCapacity,
 						"JunctionCity" : junctionCity,
-						"ProjectId":  "CurrentPhysicalLayer",
+						"ProjectId":  JctProjectId,
 						"JctCreatedDate": JctCreatedDate,
 						"dictParameterTemp":updateJctDictArr,
 						"dictParameter":insertJctDictArr,
@@ -10581,7 +10595,7 @@ singleTube = new ContextMenu({
 								console.log(" //////////Insert "+data.JunctionID+ ", "+junctionName);	
 								//str="<ul><li id='"+data.JunctionID+"' class='JUNCTION' style='display:none;width:100px;'><input type='checkbox' class='Junction' class='filter checkFilter' name='Element' ></input> <span class='TreeSpan' style='color:black;width:195px'><img src='"+getContext()+"/resources/NetworkImages/junction.png'> "+JunctionList[i][1]+"</span></li></ul>";
 								str="<ul><li id='"+data.JunctionID+"' class='JUNCTION' style='display:none;width:100px;'><input type='checkbox' class='Junction' class='filter checkFilter' name='Element' ></input> <span class='TreeSpan' style='color:black;width:195px'><img src='"+getContext()+"/resources/NetworkImages/junction.png'> "+junctionName+"</span></li></ul>";
-								$("#Junction_f_CurrentPhysicalLayer").append(str); 
+								$("#Junction_f_"+JctProjectId).append(str); 
 								create_Junction_Marker_Click(data.JunctionID,junctionName,junctionLong,junctionLat,markersJunction,markerClusterJunction,"Junction","");	
 								JunctionCheckFilter(data.JunctionID);
 								CreateJunctionClickEvent(data.JunctionID,"");
