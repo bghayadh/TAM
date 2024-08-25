@@ -14,7 +14,7 @@
 
         <script src="${pageContext.request.contextPath}/resources/js/printThis.min.js"></script>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+		<script src="${pageContext.request.contextPath}/resources/js/popper-1.12.9-min.js"></script>
         <script src="${pageContext.request.contextPath}/resources/js/bootstrap.min.js"></script>
         <link href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet"

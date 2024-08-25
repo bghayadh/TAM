@@ -1,0 +1,361 @@
+/* #gridTable tr:first-child td {
+    border-top: 0;
+}
+
+#gridTable tr td:first-child {
+    border-left: 0;
+}
+
+#gridTable tr:last-child td {
+    border-bottom: 0;
+}
+
+#gridTable tr td:last-child {
+    border-right: 0;
+} */
+
+/* #gridTable tr#search_by_column td {
+    padding: 8px;
+} */
+
+/* #report_table th, #report_table td {
+    text-align: left;
+    padding: 20px;
+    width: 14.75%;
+} */
+
+/* #report_table tr {
+    border-bottom: 1px solid #ddd;
+} */
+
+/* #report_table tr.header, #report_table tr:hover {
+    background-color: #f1f1f1;
+} */
+
+/* .hide td {
+    background-color: rgb(255, 0, 0);
+    display: none;
+} */
+
+/* .filter_tbl {
+    margin-top: 10px;
+    border: 0;
+} */
+
+/* .filter_tbl td {
+    padding: 5px;
+    text-align: left !important;
+} */
+
+/* .close {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+} */
+
+/* #datepicker {
+    z-index: 1600 !important;
+} */
+
+/* .input_filter {
+    width: 236px;
+    border: 1px solid blue;
+    border-radius: 5px;
+    padding: 1px 5px;
+    cursor: pointer;
+} */
+
+/* button {
+    font-size: 20px;
+    float: right;
+    border: none;
+} */
+
+/* .fa fa-list {
+    aria-hidden: true;
+    font-size: 30px;
+    color: black;
+} */
+
+/* input[type="text"] {
+    width: 100%;
+    text-align: center;
+    font-size: 15px;
+} */
+
+.almgrid-pagecount {
+    width: 170px;
+    border: 1px solid blue;
+    border-radius: 5px;
+    padding: 4px;
+    cursor: pointer;
+}
+
+.almgrid-pagecount-box {
+    /* padding-top: 20px; */
+    font-size: 15px;
+}
+
+.almgrid-pagecount {
+    border: 1px solid blue;
+    border-radius: 5px;
+    padding: 4px;
+    cursor: pointer;
+    width: 75px;
+}
+
+.almgrid-table-div {
+    /* overflow-x: unset !important; */
+    overflow: auto;
+    height: 430px;
+}
+
+.almgrid-table {
+    /* display: block; */
+    /* height: 245px; */
+    display: table;
+    height: auto;
+    /* overflow-y: auto; */
+    border-collapse: collapse;
+   /* border: 1px black !important; */
+    /* width: 100%; */
+    margin-top: 30px;
+    min-width: 100%;
+    width: max-content;
+}
+
+table.almgrid-table th {
+    /* width: 5%; */
+    text-align: center;
+    background-color:#008991; /*66CDAA    --  0B6D93 -- 6294B9 -- 008991 -- 006666*/
+    color: white;
+    font-size: 16px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  /*  border: 1px solid grey !important; */
+border: 1px black;
+    max-width: 500px;
+}
+
+.not-available-value{
+    color: #afb3b2 !important;
+    font-size: xx-large;
+}
+
+table.almgrid-table tr {
+    height: fit-content !important;
+}
+
+table.almgrid-table td:not(.checkbox-column) {
+    border: 1px solid grey !important;
+    text-align: center;
+    padding: 4px !important;
+    white-space: normal;
+    word-break: break-all;
+    max-width: 600px;
+    vertical-align: middle; /* Aligns text vertically in the center */
+}
+
+table.almgrid-table td.checkbox-column {
+  border: 1px solid grey !important;
+    padding: 4px !important;
+    white-space: normal;
+    word-break: break-all;
+    max-width: 600px;
+    vertical-align: middle; /* Aligns text vertically in the center */
+}
+
+.almgrid-filter {
+    font-size: 10px;
+    /* float: right; */
+    border: none;
+    color: black;
+    background-color: transparent;
+}
+
+.almgrid-filter-i {
+    font-size: 20px;
+}
+
+.almgrid-search {
+    width: 100%;
+    text-align: center;
+    font-size: 15px;
+}
+
+.filter-dropdown {
+    list-style: none;
+    float: right;
+    border: none;
+}
+
+.filter-dropdown-pill {
+    border: 5px solid #08526d;
+    background-color: #08526d;
+    border-radius: 2px;
+    margin: 2px;
+}
+
+.nav-pills>li>.active {
+    border: 5px solid #ced4da;
+    background-color: #ced4da;
+}
+
+.custom-filter-label {
+    margin-top: 2px !important;
+    font-size: 13px;
+}
+
+.custom-filter-search {
+    text-align: left !important;
+    font-size: 13px !important;
+    height: 30px;
+}
+
+.custom-filter-values {
+    height: 130px;
+    /* overflow-y: scroll; */
+}
+
+.clusterize-scroll {
+    height: 130px !important;
+    max-height: 130px !important;
+}
+
+.space-div {
+    margin-top: 10px;
+}
+
+.filter-dropdown-ul {
+    padding: 15px;
+    min-width: 260px;
+	margin-top: -35px;
+
+}
+
+.advanced-filter {
+    font-size: 14px !important;
+    height: 30px;
+}
+
+.advanced-filter-one-value {
+    text-align: left !important;
+    font-size: 13px !important;
+    height: 30px;
+    display: none;
+}
+
+.advanced-filter-two {
+    display: none;
+}
+
+.advanced-filter-two-value {
+    text-align: left !important;
+    font-size: 13px !important;
+    height: 30px;
+    display: none;
+}
+
+.pagination-div {
+    /* float: right; */
+}
+
+.pagination-label {
+    font-size: 15px;
+    color: #444444;
+    display: block;
+}
+
+.pagination-buttons {
+    text-align: end;
+}
+
+.pagination-previous {
+    font-size: 15px;
+    color: #444444;
+    cursor: pointer;
+    text-decoration: none !important;
+    /* display: none; */
+    margin-right: 5px;
+}
+
+.pagination-next {
+    font-size: 15px;
+    color: #444444;
+    cursor: pointer;
+    text-decoration: none !important;
+    /* float: right; */
+    /* display: none; */
+    margin-left: 5px;
+}
+
+.pagination-button:hover {
+    color: #08526d;
+    /* background-color: #e8edf1; */
+}
+
+.pagination-button:not(:hover) {
+    color: #444444;
+}
+
+.pagination-button:disabled {
+    /* color: #444444;
+    background-color: #e8edf1; */
+    cursor: no-drop;
+}
+
+.page-number-select {
+    display: inline-block;
+    width: 60px;
+    font-size: 0.9rem !important;
+    vertical-align: middle;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    /* cursor: pointer; */
+}
+
+.page-number-span {
+    display: inline-block;
+    width: 20px;
+    font-size: 0.9rem !important;
+    vertical-align: middle;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    pointer-events: none;
+    /* cursor: pointer; */
+}
+
+.page-number-group-div {
+    margin-top: 0px !important;
+    min-width: 135px;
+}
+
+.almgrid-global-search-box {
+    text-align: end;
+}
+
+.almgrid-global-search {
+    width: 175px;
+    display: inline !important;
+    font-size: 15px;
+}
+
+.prevNextbuttonHover:hover {
+      background-color:#dee2e6;
+      transition: 0.7s;
+      outline:none;
+      
+  }
+.prevNextButtons {
+	color: #007bff;
+	border-top-right-radius:.25rem;
+	border-bottom-right-radius:.25rem;
+	box-shadow: none;
+	background-color: #fff;
+	border: 2px solid #dee2e6;
+	display: block;
+	height:37px;
+	
+}

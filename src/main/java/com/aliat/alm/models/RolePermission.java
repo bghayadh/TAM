@@ -1,5 +1,7 @@
 package com.aliat.alm.models;
 
+import java.sql.Timestamp;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -58,6 +60,21 @@ public class RolePermission {
 	@Column(name = "FIRST_LEVEL_PERM")
 	private char firstLevelPerm;
 	
+	@Column(name = "SEARCH_POPUP_PERM")
+	private char searchPopupPerm;
+	
+	@Column(name = "FIND_CONNECTED_PERM")
+	private char findConnectedPerm;
+	
+	@Column(name = "PROJECTS_PERM")
+	private char projectsPerm;
+	
+	@Column(name = "CREATION_DATE")
+	private Timestamp creationDate;
+		
+	@Column(name = "LAST_MODIFICATION_DATE")
+	private Timestamp lastModificationDate;
+	
 	public RolePermission() {	
 	}
 
@@ -65,7 +82,8 @@ public class RolePermission {
 
 	public RolePermission(String permID, String screen, String viewType, String role, char roleLevel, char readPerm,
 			char writePerm, char addPerm, char delPerm, char savePerm, char statusPerm, char actionPerm,
-			char downloadPerm,char exportPerm,char secondLevelPerm,char firstLevelPerm) {
+			char downloadPerm,char exportPerm,char secondLevelPerm,char firstLevelPerm,char searchPopupPerm, char findConnectedPerm,char projectsPerm,
+			Timestamp creationDate, Timestamp lastModificationDate) {
 		super();
 		this.permID = permID;
 		this.screen = screen;
@@ -83,8 +101,12 @@ public class RolePermission {
 		this.exportPerm = exportPerm;
 		this.firstLevelPerm = firstLevelPerm;
 		this.secondLevelPerm = secondLevelPerm;
+		this.searchPopupPerm = searchPopupPerm;
+		this.findConnectedPerm = findConnectedPerm;
+		this.projectsPerm = projectsPerm;
+		this.creationDate=creationDate;
+		this.lastModificationDate=lastModificationDate;
 	}
-
 
 
 	public String getPermID() {
@@ -275,6 +297,72 @@ public class RolePermission {
 
 	public void setFirstLevelPerm(char firstLevelPerm) {
 		this.firstLevelPerm = firstLevelPerm;
+	}
+
+
+
+	public char getSearchPopupPerm() {
+		return searchPopupPerm;
+	}
+
+
+
+	public void setSearchPopupPerm(char searchPopupPerm) {
+		this.searchPopupPerm = searchPopupPerm;
+	}
+
+
+
+	public char getFindConnectedPerm() {
+		return findConnectedPerm;
+	}
+
+
+
+	public void setFindConnectedPerm(char findConnectedPerm) {
+		this.findConnectedPerm = findConnectedPerm;
+	}
+
+
+
+	public char getProjectsPerm() {
+		return projectsPerm;
+	}
+
+
+
+	public void setProjectsPerm(char projectsPerm) {
+		this.projectsPerm = projectsPerm;
+	}
+
+
+
+	public char getActionPerm() {
+		return actionPerm;
+	}
+
+
+
+	public Timestamp getCreationDate() {
+		return creationDate;
+	}
+
+
+
+	public void setCreationDate(Timestamp creationDate) {
+		this.creationDate = creationDate;
+	}
+
+
+
+	public Timestamp getLastModificationDate() {
+		return lastModificationDate;
+	}
+
+
+
+	public void setLastModificationDate(Timestamp lastModificationDate) {
+		this.lastModificationDate = lastModificationDate;
 	}
 
 	
