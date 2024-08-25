@@ -174,9 +174,9 @@ public class PhysicalLayerController {
 						
 					 permissions.setPerms(model, permissions.getUserPermsWithSession(session, request),
 				                "Physical Layer", "Tree");
-				       String  searchPopup = ((Integer) model.asMap().get("writeTree")).toString();
-				       String  findConnedted = ((Integer) model.asMap().get("addTree")).toString();
-				       String  projects = ((Integer) model.asMap().get("saveTree")).toString();
+				       String  searchPopup = ((Integer) model.asMap().get("srchPopupTree")).toString();
+				       String  findConnedted = ((Integer) model.asMap().get("findConnectedTree")).toString();
+				       String  projects = ((Integer) model.asMap().get("projectsTree")).toString();
 				       model.addAttribute("searchPopup", searchPopup);
 					   model.addAttribute("findConnedted", findConnedted);
 				       model.addAttribute("projects", projects);

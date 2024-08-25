@@ -15,8 +15,12 @@ import org.hibernate.cfg.Configuration;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @Service
 public class Permissions {
+	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public  <T> List<Object[]> getUserPerms(HttpServletRequest request) {
 		
@@ -64,11 +68,14 @@ public class Permissions {
 		List <String> roles = roleResult.list();
 		
 		String permQuery = "select screen, viewType, roleLevel, readPerm, writePerm, addPerm, delPerm,"+ 
-							" savePerm, statusPerm, actionPerm, downloadPerm,exportPerm,secondLevelPerm,firstLevelPerm from RolePermission where role IN (:param2)";
+				" savePerm, statusPerm, actionPerm, downloadPerm,exportPerm,secondLevelPerm,firstLevelPerm," +
+				" searchPopupPerm, findConnectedPerm, projectsPerm" +
+				" from RolePermission where role IN (:param2)";
+		
 		Query permResult = session.createQuery(permQuery);
 		permResult.setParameterList("param2", roles);
-		 permList = permResult.list();
-		
+		permList = permResult.list();
+		 		
 	return permList;
 
 	}
@@ -83,10 +90,14 @@ public class Permissions {
 		Query roleResult = (Query) entityManager.createQuery(roleQuery);
 		roleResult.setParameter("param1", username);			
 		//Object role = roleResult.uniqueResult();		
-		List <String> roles = roleResult.list();
+		List <String> roles = roleResult.list();		
 		
 		String permQuery = "select screen, viewType, roleLevel, readPerm, writePerm, addPerm, delPerm,"+ 
-							" savePerm, statusPerm, actionPerm, downloadPerm,exportPerm,secondLevelPerm,firstLevelPerm from RolePermission where role IN (:param2)";
+				" savePerm, statusPerm, actionPerm, downloadPerm,exportPerm,secondLevelPerm,firstLevelPerm," +
+				" searchPopupPerm, findConnectedPerm, projectsPerm" +
+				" from RolePermission where role IN (:param2)";
+
+		
 		Query permResult = (Query) entityManager.createQuery(permQuery);
 		permResult.setParameterList("param2", roles);
 		 permList = permResult.list();
@@ -99,7 +110,8 @@ public class Permissions {
 		
 		Integer read = 0; Integer write = 0; Integer add = 0; Integer delete = 0;
 		Integer save = 0; Integer status = 0; Integer action = 0; Integer download = 0;
-		Integer export = 0; Integer secondlvl = 0; Integer firstlvl = 0;
+		Integer export = 0; Integer secondlvl = 0; Integer firstlvl = 0; Integer srchPopup = 0;
+		Integer findConnected = 0; Integer projects = 0;
 
 		for (int i = 0; i<permList.size(); i++) {
 			List x = Arrays.asList(permList.get(i));
@@ -115,20 +127,24 @@ public class Permissions {
 				download += Integer.parseInt(String.valueOf(prList[10]));
 				export += Integer.parseInt(String.valueOf(prList[11]));
 				secondlvl += Integer.parseInt(String.valueOf(prList[12]));
-				firstlvl += Integer.parseInt(String.valueOf(prList[13]));
-
+				firstlvl += Integer.parseInt(String.valueOf(prList[13]));				
+				srchPopup+= Integer.parseInt(String.valueOf(prList[14]));
+				findConnected+= Integer.parseInt(String.valueOf(prList[15]));
+				projects+= Integer.parseInt(String.valueOf(prList[16]));
 			}
 		}
 		if(read > 1) {read = 1;} if(write > 1) {write = 1;} if(add > 1) {add = 1;}
 		if(delete > 1) {delete = 1;} if(save > 1) {save = 1;} if(status > 1) {status = 1;}
 		if(action > 1) {action = 1;} if(download > 1) {download = 1;}
 		if(export > 1) {export = 1;} if(secondlvl > 1) {secondlvl = 1;}
-		if(firstlvl > 1) {firstlvl = 1;}
+		if(firstlvl > 1) {firstlvl = 1;} if(srchPopup > 1) {srchPopup = 1;}
+		if(findConnected > 1) {findConnected = 1;} if(projects > 1) {projects = 1;}
 		model.addAttribute("read"+viewType, read); 	model.addAttribute("write"+viewType, write);
 		model.addAttribute("add"+viewType, add); 	model.addAttribute("del"+viewType, delete);
 		model.addAttribute("save"+viewType, save); 	model.addAttribute("status"+viewType, status);
 		model.addAttribute("action"+viewType, action); 	model.addAttribute("down"+viewType, download);
 		model.addAttribute("export"+viewType, export); 	model.addAttribute("secondlvl"+viewType, secondlvl);
-		model.addAttribute("firstlvl"+viewType, firstlvl);
+		model.addAttribute("firstlvl"+viewType, firstlvl); model.addAttribute("srchPopup"+viewType, srchPopup);
+		model.addAttribute("findConnected"+viewType, findConnected); model.addAttribute("projects"+viewType, projects);		
 	}
 }
