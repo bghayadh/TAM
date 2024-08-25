@@ -6,12 +6,11 @@
     <title>Role Permission</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="shortcut icon" href="">
-   	<script src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <!-- <script src="${pageContext.request.contextPath}/resources/js/jquery.slim.min.js" ></script>  -->
+	<script src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>
+	<script src="${pageContext.request.contextPath}/resources/js/popper-1.12.9-min.js"></script>
 	<script src="${pageContext.request.contextPath}/resources/js/bootstrap.min.js"></script>
 	<link href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
-	<script src="${pageContext.request.contextPath}/resources/js/dataTables.min.js"></script>
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/dataTables.min.css">		  		
     <script src="${pageContext.request.contextPath}/resources/js/all.min.js"></script>		
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/font-awesome.min.css">
 	<link href="${pageContext.request.contextPath}/resources/css/all.min.css" rel="stylesheet">	 	
@@ -270,7 +269,7 @@
 														<ul class="dropdown-menu filter-dropdown-ul"></ul>
 													</li>
 												</th>
-												<th>View Type 
+												<th style="width:150px;">View Type 
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown"> 
 														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
@@ -278,7 +277,7 @@
 														<ul class="dropdown-menu filter-dropdown-ul"></ul>
 													</li>
 												</th>
-												<th>Roles 
+												<th style="width:150px;">Roles 
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown"> 
 														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
@@ -304,7 +303,7 @@
 													</li>
 												</th>
 												
-												<th>Action
+												<th  style="width:140px;">Action
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown">
 														 <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
@@ -516,6 +515,10 @@ $(document).ready(function() {
 					viewType = $("option:selected", this).text();
 				});
 
+				$(jQuery('#roleLevel', $(this).closest('tr'))).each(function() {
+					roleLevelValue = $(this).val();
+				});
+
 			$.ajax({
 					type : "GET",
 					url : "${pageContext.request.contextPath}/rolePermissionApply",
@@ -537,7 +540,8 @@ $(document).ready(function() {
 						"firstlvlPerm":FirstLvL,
 						"searchPopup" : searchPopup,
 						"findConnected" : findConnected,
-						"projects":projects
+						"projects":projects,
+						"roleLevel":roleLevelValue
 					},
 					success : function(data) {
 						location.reload();
@@ -625,11 +629,11 @@ $(document).ready(function() {
 				$("#tableGrid").append('<table id="gridTable" class="table table-striped table-bordered almgrid-table">'
 						+'<thead><tr class="header fixed-header">'
 						+'<th>Screen Type<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
-							+'<th>View Type<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
-							+'</ul></li></th><th> Roles<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul">'
+							+'<th style="width:150px;">View Type<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
+							+'</ul></li></th><th style="width:150px;"> Roles<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul">'
 							+'</ul></li></th><th style="width:120px;"> Level<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul">'
 							+'</ul></li></th><th>Permissions<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
-							+'</ul></li></th><th>Action<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
+							+'</ul></li></th><th style="width:140px;">Action<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
 							+'<tr>'
 							+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
 							+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
@@ -707,11 +711,11 @@ $(document).ready(function() {
 				$("#tableGrid").append('<table id="gridTable" class="table table-striped table-bordered almgrid-table">'
 						+'<thead><tr class="header fixed-header">'
 						+'<th>Screen Type<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul"></ul></li></th>'
-							+'<th>View Type<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
-							+'</ul></li></th><th> Roles<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul">'
+							+'<th style="width:150px;">View Type<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
+							+'</ul></li></th><th style="width:150px;"> Roles<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul">'
 							+'</ul></li></th><th style="width:120px;"> Level<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu dropdown-menu-right filter-dropdown-ul">'
 							+'</ul></li></th><th>Permissions<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
-							+'</ul></li></th><th>Action<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
+							+'</ul></li></th><th style="width:140px;">Action<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button><ul class="dropdown-menu filter-dropdown-ul">'
 							+'<tr>'
 							+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'
 							+'<th><input type="text" class="almgrid-search" placeholder="Search"></th>'

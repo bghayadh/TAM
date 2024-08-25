@@ -153,6 +153,7 @@ table.almgrid-table td:not(.checkbox-column) {
     white-space: normal;
     word-break: break-all;
     max-width: 600px;
+    vertical-align: middle; /* Aligns text vertically in the center */
 }
 
 table.almgrid-table td.checkbox-column {
@@ -161,6 +162,7 @@ table.almgrid-table td.checkbox-column {
     white-space: normal;
     word-break: break-all;
     max-width: 600px;
+    vertical-align: middle; /* Aligns text vertically in the center */
 }
 
 .almgrid-filter {

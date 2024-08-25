@@ -53,7 +53,11 @@ class gridAppendRows {
 
 				}
               } 
-			 else if(j=="0" || j=="2" ||j=="3"){
+			 else if(j=="3"){
+				var value = Number(rows[i][this.ArrayKeys[j]]) || 0; // Ensure the value is numeric
+				itemRow += "<td><input type='number' min='0' style='margin-left:20px;text-align:center;width:80px;' class='form-control text-input' id='roleLevel' value='" + value + "' ></td>";				
+			 }
+			 else if(j=="0" || j=="2" ){
 				itemRow += "<td>" +rows[i][this.ArrayKeys[j]] + "</td>";
               }
 			else if(j=="15") {
