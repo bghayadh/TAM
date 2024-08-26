@@ -18,6 +18,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			markersHandhole=[];
 			//markersNodeActive=[];
 			markerClusterJunction = [];
+			markerClusterSite = [];
 			markersDistBoard=[];
 			markersDistBoardFilter=[];
 			markersTempoDistBoard="";						
@@ -27,6 +28,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			markersTempoHandholeJct="";	
 			siteCltSrcMarkers=[];
 			markersJunction=[];
+			markersSite=[];
 
 
 	//		map.setZoom(6);
@@ -60,6 +62,9 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			
 			markerClusterJunction = new MarkerClusterer();
 			markerClusterJunction.setMap(map);// to be checked !!!!
+			
+			markerClusterSite = new MarkerClusterer();
+			markerClusterSite.setMap(map);// to be checked !!!!
 	
 			
 	

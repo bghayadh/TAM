@@ -8410,6 +8410,48 @@ public class PhysicalLayerController {
 		return rtn;
 
 	}
+	
+	@RequestMapping(value = "/getSite", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> getSite(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException {
+		//System.out.println("Passes here getJunction");
+		Map<String, Object> rtn = new LinkedHashMap<String, Object>();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+
+		Query query;
+		session = AlmDbSession.getInstance().getSession();
+
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			try {
+				List<Object[]> SiteList = new ArrayList<Object[]>();
+				SiteList = session.createNativeQuery("SELECT DISTINCT A.WARE_ID, A.WARE_NAME,A.SITE_ID,A.CITY,A.LONGITUDE,A.LATITUDE FROM WAREHOUSE A ").getResultList();
+				rtn.put("SiteList", SiteList);
+				//System.out.println("SiteList "+SiteList);
+
+			} catch (Exception e) {
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in getSite due to \n " + exceptionAsString);
+				logger.info("Error in getSite due to \n " + exceptionAsString);
+				rtn.put("searchResult", "Failed");
+			} finally {
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+					//session.getSessionFactory().close();
+				}
+			}
+		}
+
+		return rtn;
+
+	}
 
 	@RequestMapping(value = "/SearchStrand", method = RequestMethod.GET)
 	@ResponseBody

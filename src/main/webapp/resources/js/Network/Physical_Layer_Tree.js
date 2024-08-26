@@ -268,6 +268,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 	allDB = [];
 	allNodes = [];
 	allJunctionsID = [];	
+	allSiteID = [];
 		
 		var str_CurrentPhysicalLayer="<ul style='margin-left:15px;'><li id='initial_ul_CurrentPhysicalLayer' class='Initial_CurrentPhysicalLayer'><input type='checkbox' class='allElements' unchecked name='filter'></input> <span id='initial_Span_CurrentPhysicalLayer' class='Parentfolder' > <i class='fa fa-folder' style='color: #08526D;'></i></span><span class='TreeSpan' style='color:black;width:436px'>Current Physical Layer </span></li></ul>";
 		//console.log("filterFlag !!!!!!!!!!! "+filterFlag);
@@ -277,6 +278,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 			flag = 1;
 			nodeFlag = 1;
 			junctionFlag = 1;
+			siteFlag = 1;
 			$('#removeS').show();
 		
 			var str_CurrentPhysicalLayer="<ul style='margin-left:15px'><li id='initial_ul_CurrentPhysicalLayer' class='Initial_CurrentPhysicalLayer'><input type='checkbox' class='allElements' unchecked name='filter'></input> <span id='initial_Span_CurrentPhysicalLayer' class='Parentfolder' > <i class='fa fa-folder' style='color: #08526D;'></i></span><span class='TreeSpan' style='color:black;width:436px'>Current Physical Layer </span></li></ul>";
@@ -341,6 +343,9 @@ if(readDB === '1'){
 		
 		str="<ul><li id='Transmission_GPON__CurrentPhysicalLayer' style='display:none;' class='TransmissionGPONFolder'><input type='checkbox' class='TransmissionGPON checkFilter' id ='TransmissionGPON__CurrentPhysicalLayer' unchecked name='filter'></input> <span class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:395px' class='TreeSpan'> GPON </span></li></ul>";
 		$("#NodeActive_f_CurrentPhysicalLayer").append(str);
+		
+		str="<ul><li id='Site_f_CurrentPhysicalLayer' style='display:none;' class='Site_f_CurrentPhysicalLayer'><input type='checkbox' unchecked class='AllSites checkFilter'></input> <span id='Site_spanFolder' class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Site_span' style='color:black;width:395px' class='TreeSpan' >Sites </span></li></ul>";
+		$("#initial_ul_CurrentPhysicalLayer").append(str);
 		  
 		/// creat projects node 
 		   if(projects === '1'){
@@ -533,6 +538,20 @@ if(readDB === '1'){
 			$("#Junction_f_CurrentPhysicalLayer input[type=checkbox]").bind("change",function() {
 				if ($(this).is(':checked')){
 					getJunction();
+				}
+			});
+		}
+		
+		/////////////////******************* site Creation in Tree
+		if(filterFlag==2 || filterFlag==1){// connected and circle range
+			//console.log("loading flag value, flag =" +flag);
+			// createSite(data.SiteList);
+		}
+		else{
+			//console.log(" //////////passed else");	
+			$("#Site_f_CurrentPhysicalLayer input[type=checkbox]").bind("change",function() {
+				if ($(this).is(':checked')){
+					getSite();
 				}
 			});
 		}
@@ -19895,6 +19914,9 @@ function treeCollapseFolder(selector,type,clss){
 		}else if(id == "Junction_f_CurrentPhysicalLayer" && junctionFlag == 0 ){
 			//console.log("passed treeCollapseFolder");
 			getJunction();
+		}else if(id == "Site_f_CurrentPhysicalLayer" && siteFlag == 0 ){
+			//console.log("passed treeCollapseFolder");
+			getSite();
 		}else if(id.startsWith('PROJECT_') && projectflag[id] == 0 ){
 			//console.log("passed treeCollapseFolder project "+id);
 			//console.log("projectflag[id ] "+projectflag[id])

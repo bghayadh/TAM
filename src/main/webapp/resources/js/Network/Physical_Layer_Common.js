@@ -3732,17 +3732,30 @@ function boqCheckFilter(){
 		})
 		
 		$("#junctionCheckAllBoq").bind("change",function(){
-	if ($(this).is(':checked')){	
-		if(junctionFlag == 0 ){
-			getJunction();
-		}else{
-			junctionLayerCheckAll();
+			if ($(this).is(':checked')){	
+				if(junctionFlag == 0 ){
+					getJunction();
+				}else{
+					junctionLayerCheckAll();
+				}
+			}
+			else{
+				junctionLayerUnCheckAll();
+			}
+		});
+	
+	$("#siteCheckAllBoq").bind("change",function(){
+		if ($(this).is(':checked')){	
+			if(siteFlag == 0 ){
+				getSite();
+			}else{
+				siteLayerCheckAll();
+			}
 		}
-	}
-	else{
-		junctionLayerUnCheckAll();
-	}
-});
+		else{
+			siteLayerUnCheckAll();
+		}
+		});
 
 
 		$("#distBoardCheckAllBoq").bind("change",function(){
@@ -4640,6 +4653,9 @@ function allElementsCheckFilter(){
 		if(junctionFlag == 1){
 			markerClusterJunction.clearMarkers();
 		}
+		if(siteFlag == 1){
+			markerClusterSite.clearMarkers();
+		}
 				
 		$("#distBoardCheckAllBoq").prop("checked",false);
 		$("#manholeCheckAllBoq").prop("checked",false);
@@ -4650,6 +4666,7 @@ function allElementsCheckFilter(){
 		$("#ranCheckAllBoq").prop("checked",false);
 		$("#nodesActiveCheckAllBoq").prop("checked",false);
 		$("#junctionCheckAllBoq").prop("checked",false);
+		$("#siteCheckAllBoq").prop("checked",false);
 			
 		if ($(this).is(':checked')){
 			
@@ -4657,6 +4674,8 @@ function allElementsCheckFilter(){
 				if(($(this).children('input:checkbox').hasClass('AllNodeActive') || $(this).children('input:checkbox').hasClass('EntrepriseMSAN') || $(this).children('input:checkbox').hasClass('TransmissionDWDM') || $(this).children('input:checkbox').hasClass('TransmissionSDH') || $(this).children('input:checkbox').hasClass('TransmissionGPON') || $(this).children('input:checkbox').hasClass('EntrepriseSwitch')) && nodeFlag == 0 ){
 			    	$(this).children('input:checkbox').prop('checked', false);
 				}else if($(this).children('input:checkbox').hasClass('AllJunctions') && junctionFlag == 0){
+					$(this).children('input:checkbox').prop('checked', false);
+				}else if($(this).children('input:checkbox').hasClass('AllSites') && siteFlag == 0){
 					$(this).children('input:checkbox').prop('checked', false);
 				}
 				else {
@@ -4740,6 +4759,14 @@ function allElementsCheckFilter(){
 							}	
 							$("#nodesActiveCheckAllBoq").prop("checked",true);
 						}
+					}
+					if($(this).children('input:checkbox').hasClass('Site')){
+						id=$(this).attr('id');
+						if(markersSite[id].getMap()==null){
+							markersSite[id].setMap(map);			
+							markerClusterSite.addMarker(markersSite[id]);
+							$("#siteCheckAllBoq").prop("checked",true);
+						}								
 					}
 					if($(this).hasClass('Trench')){
 						singleTrenchCheckFilter($(this).children('input:checkbox'));

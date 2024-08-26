@@ -32,6 +32,7 @@
 <script src="${pageContext.request.contextPath}/resources/js/Network/FiberPathCreation.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/NodeCreation.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/JunctionCreation.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/SiteCreation.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/ProjectCreation.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/context-menu.js"></script>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/context-menu.css">
@@ -266,6 +267,11 @@
 							<td class="Icon "><img style="width: 16px; height: 16px;" src="${pageContext.request.contextPath}/resources/img/NodesIcon.png">
 								<span id="definition">Nodes</span></td>
 							<td><input type="checkbox" id="nodesActiveCheckAllBoq" style="margin-left: 10px;"></td>
+						</tr>
+						<tr>
+							<td class="Icon "><img style="width: 20px; height: 20px;" src="${pageContext.request.contextPath}/resources/NetworkImages/redSiteIcon.png">
+								<span id="definition">SITE</span></td>
+							<td><input type="checkbox" id="siteCheckAllBoq" style="margin-left: 10px;"></td>
 						</tr>
 						<tr>
 						 <c:if test="${readDB == 1}">
