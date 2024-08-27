@@ -13,7 +13,8 @@ function getSite(type,url,id,tr){
     			if (data != null) {
     				if (data.searchResult != "Failed") {
 					    $("#Site_f_CurrentPhysicalLayer input[type=checkbox]").unbind();// removed 
-    				   // console.log(" //////////SiteList "+data.SiteList);	
+    				   // console.log(" //////////SiteList "+data.SiteList);
+					    console.log("markersSite "+markersSite.length)
     				    createSite(data.SiteList);
     				    if ($('#Site_f_CurrentPhysicalLayer .AllSites').is(':checked') || $('#siteCheckAllBoq').is(':checked')){
     				    	//AllSiteCheckFilter();
@@ -27,6 +28,8 @@ function getSite(type,url,id,tr){
     					children.show("fast");
     					$(this).parent('').children(".folder").find('> svg').addClass('fa-folder-open').removeClass('fa-folder');
     					siteFlag = 1;	
+    					console.log("allSiteID "+allSiteID.length)
+    					console.log("markersSite "+markersSite.length)
     				}
     				$("#loading").remove();	
     			}
@@ -170,19 +173,22 @@ function createSite(SiteList){
 /*	markersSite = [];
 	markerClusterSite = new MarkerClusterer();
 	markerClusterSite.setMap(map);// to be checked !!!!*/
-	
+	markersSite = [];
 	if(SiteList!=null) {
 		for(i=0;i<SiteList.length;i++){
 			window[""+SiteList[i][0]]=[];
 			window[""+SiteList[i][0]]=SiteList[i];
-			allSiteID.push(SiteList[i][0]);
+			//allSiteID.push(SiteList[i][0]);
 	
 			str="<ul><li id='"+SiteList[i][0]+"' class='SITE' style='display:none;width:100px;'><input type='checkbox' class='Site' class='filter checkFilter' name='Element' ></input> <span class='TreeSpan' style='color:black;width:195px'><img src='"+getContext()+"/resources/NetworkImages/redSiteIcon.png'> "+SiteList[i][1]+"</span></li></ul>";
 			$("#Site_f_CurrentPhysicalLayer").append(str); 
-			create_Site_Marker_Click(SiteList[i][0],SiteList[i][1],SiteList[i][4],SiteList[i][5],markersSite,markerClusterSite,"Site","");	
-			SiteCheckFilter(SiteList[i][0]);
-			CreateSiteClickEvent(SiteList[i][0],"");
-		}		
+			//if(!allSiteID.includes(SiteList[i][0])) {
+				allSiteID.push(SiteList[i][0]);
+				create_Site_Marker_Click(SiteList[i][0],SiteList[i][1],SiteList[i][4],SiteList[i][5],markersSite,markerClusterSite,"Site","");	
+				SiteCheckFilter(SiteList[i][0]);
+				CreateSiteClickEvent(SiteList[i][0],"");
+				//}
+			}		
 			
 	}
 	AllSiteCheckFilter();

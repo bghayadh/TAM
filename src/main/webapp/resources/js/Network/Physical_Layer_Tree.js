@@ -22900,9 +22900,23 @@ else if(type=="DB"){
 			infowindow.open(map,markersDistBoard[""+id]);
 }
 else if(type=="WARE"){
-createSiteCltMarker(id,search,Lat,Lng,siteCltSrcMarkers);
-panTo(Lat, Lng);
-map.setZoom(6);
+//createSiteCltMarker(id,search,Lat,Lng,siteCltSrcMarkers);
+	if(!allSiteID.includes(id)) {
+		//console.log("WARE")
+		allSiteID.push(id)
+		create_Site_Marker_Click(id,name,Lng,Lat,markersSite,markerClusterSite,"Site","")
+	}
+	//$("#"+id).children('input:checkbox').prop('checked', true);
+	if ($("#"+id).children('input:checkbox').length > 0) {// If checkbox inputs exist
+	    $("#"+id).children('input:checkbox').prop('checked', true);
+	    SiteCheckFilter(id);
+	}
+	$("#siteCheckAllBoq").prop('checked', true);
+	markerClusterSite.addMarker(markersSite[""+id]);
+	
+	
+	panTo(Lat, Lng);
+	map.setZoom(6);
 			if(typeof infowindow!== 'undefined'){
 				infowindow.close();
 			}
@@ -22934,30 +22948,37 @@ map.setZoom(6);
 			
 function clearMarkers(){
 
-					for(var t=0;t<siteCltSrcMarkers.length;t++) {
-						siteCltSrcMarkers[siteCltSrcMarkers[t].ID].setMap(null);
-					}
-					markerClusterManhole.clearMarkers();
-					markerClusterHandhole.clearMarkers();
-					markerClusterBackboneDistBoard.clearMarkers(); 
-					markerClusterMetroDistBoard.clearMarkers(); 
-					markerClusterAccessDistBoard.clearMarkers(); 
-					$("#manholeCheckAllBoq").prop("checked",false);
-					$("#handholeCheckAllBoq").prop("checked",false);
-					$("#distBoardCheckAllBoq").prop("checked",false);
+			for(var t=0;t<siteCltSrcMarkers.length;t++) {
+				siteCltSrcMarkers[siteCltSrcMarkers[t].ID].setMap(null);
+			}
+			markerClusterManhole.clearMarkers();
+			markerClusterHandhole.clearMarkers();
+			markerClusterBackboneDistBoard.clearMarkers(); 
+			markerClusterMetroDistBoard.clearMarkers(); 
+			markerClusterAccessDistBoard.clearMarkers(); 
+			markerClusterSite.clearMarkers();
+			$("#manholeCheckAllBoq").prop("checked",false);
+			$("#handholeCheckAllBoq").prop("checked",false);
+			$("#distBoardCheckAllBoq").prop("checked",false);
+			$("#siteCheckAllBoq").prop("checked",false);
+			
+			$('.MANHOLE').each(function(){
+				var id =$(this).attr('id');
+				$("#"+id).children(':checkbox').prop( "checked", false );
+			});
+			$('.HANDHOLE').each(function(){
+				var id =$(this).attr('id');
+				$("#"+id).children(':checkbox').prop( "checked", false );
+			});
+			$('.DistributionBoard').each(function(){
+				var id =$(this).attr('id');
+				$("#"+id).children(':checkbox').prop( "checked", false );
+			});	
+			$('.SITE').each(function(){
+				var id =$(this).attr('id');
+				$("#"+id).children(':checkbox').prop( "checked", false );
+			});
 					
-	$('.MANHOLE').each(function(){
-						var id =$(this).attr('id');
-						$("#"+id).children(':checkbox').prop( "checked", false );
-					});
-					$('.HANDHOLE').each(function(){
-						var id =$(this).attr('id');
-						$("#"+id).children(':checkbox').prop( "checked", false );
-					});
-					$('.DistributionBoard').each(function(){
-						var id =$(this).attr('id');
-						$("#"+id).children(':checkbox').prop( "checked", false );
-					});				
 }
 
 function showMarkersCheckedClientSite(CheckboxId,markerId){
