@@ -146,6 +146,19 @@ a{
 					</div> 
 			<div class="row">
 			
+					<div class="col-md-3 showRolePrem">
+				
+					<div class="card bg-c-blue order-card">
+					<a href="${pageContext.request.contextPath}/rolePermissionExcep" style="text-decoration: none">
+						<div class="card-block">
+							<i class="fa fa-key glyphicon-align-center" style="color:gold; width:40px; height:40px"></i>
+								<h5 class="m-b-20" id="first">Role Permission Exception</h5>
+						</div>
+						</a>
+					</div>
+					
+				</div>
+				<div style="margin-right:20px;"> </div>
 				<div class="col-md-3  showSetting">
 				
 					<div class="card bg-c-blue order-card">
@@ -172,7 +185,7 @@ a{
 					
 				</div>
 				<div style="margin-right:20px;"> </div>
-						<div class="col-md-3 ScheduleReport">
+						<div class="col-md-2 ScheduleReport">
 				
 					<div class="card bg-c-blue order-card">
 					<a href="${pageContext.request.contextPath}/SchedulerRulesListView" style="text-decoration: none">
@@ -183,8 +196,12 @@ a{
 						</a>
 					</div>
 					</div>
-					<div style="margin-right:20px;"> </div>
-					<div class="col-md-2 Notification">
+					
+				</div>
+				
+				<div class="row">
+		
+					<div class="col-md-3 Notification">
 				
 					<div class="card bg-c-blue order-card">
 					<a href="${pageContext.request.contextPath}/NotificationListView" style="text-decoration: none">
@@ -196,11 +213,7 @@ a{
 					</div>
 					
 				</div>
-				</div>
-				
-				<div class="row">
-		
-				
+					<div style="margin-right:20px;"> </div>
 				<div class="col-md-3 ReportsList">
 				
 					<div class="card bg-c-blue order-card">
@@ -228,7 +241,7 @@ a{
 				</div>
 				
 				<div style="margin-right:20px;"> </div>
-					<div class="col-md-3">
+					<div class="col-md-2">
 					<div class="card bg-c-blue order-card">
 					<a href="${pageContext.request.contextPath}/Loaders" style="text-decoration: none">
 						<div class="card-block">
@@ -240,8 +253,11 @@ a{
 					</div>
 					
 					
-					<div style="margin-right:20px;"> </div>
-					<div class="col-md-2">
+					
+				</div>
+				<div class="row">
+				
+					<div class="col-md-3">
 					<div class="card bg-c-blue order-card">
 					<a href="${pageContext.request.contextPath}/ModuleScreenListView" style="text-decoration: none">
 						<div class="card-block">
@@ -251,10 +267,8 @@ a{
 						</a>
 					</div>
 					</div>
-				</div>
-				<div class="row">
 					<div style="margin-right:20px;"> </div>
-					<div class="col-md-2">
+					<div class="col-md-3">
 					<div class="card bg-c-blue order-card">
 					<a href="${pageContext.request.contextPath}/ModuleFieldListView" style="text-decoration: none">
 						<div class="card-block">
