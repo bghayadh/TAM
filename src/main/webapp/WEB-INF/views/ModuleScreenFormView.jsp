@@ -797,12 +797,24 @@ max-height: 100%;
      		            "moduleScreenId": moduleScreenId,
      		        },
      		        success: function(data) {
+         		        if(data.ID){
      		        	$("#moduleScreenId").val(data.ID);
      				
      		            console.log("The returned data is " + data.BassamTest);
      		            var param = "${pageContext.request.contextPath}/ModuleScreenFormView?ID=" + $("#moduleScreenId").val() + "&NavAction=2";
      		            location.replace(param);
-     		        },
+     		        }
+         		        else{
+
+             		        alert("Screen Name already used");
+
+         		        	 var param = "${pageContext.request.contextPath}/ModuleScreenListView";
+         		        	location.replace(param);
+
+             		        }
+
+         		        }
+     		        ,
      		        error: function(error) {
      		            console.log("The error is " + error);
      		        }
