@@ -235,90 +235,95 @@ public class ModuleScreenController {
 	@RequestMapping(value = "/ModuleScreenFormSave", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> ModuleScreenFormSave(Locale locale, Model model, HttpServletRequest request, @ModelAttribute ItemParameters itemParameters, HttpServletResponse response) {
-		Map<String, Object> rtn = new LinkedHashMap<>();
-		if(LoginServices.checkSession(request, response).equals("redirect:/")) {
-			rtn.put("Login", LoginServices.checkSession(request, response));
-			return rtn;
-		}
-		
-		else
-		{
-			Calendar calendar = new GregorianCalendar();
-			calendar.setTime(new Date());
-			int year = calendar.get(Calendar.YEAR);
-			DateFormat formatterTime = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
-			
-			Timestamp CreationDate, lastModifiedDate;
-			Date date;
-			String moduleScreenId=request.getParameter("moduleScreenId");
-			String ScreenName = request.getParameter("screenName");
-			String screenTable = request.getParameter("screenTable");
-			String createdDate = request.getParameter("createdate");
-			
-		
-			session = AlmDbSession.getInstance().getSession();
-			if (session != null && session.isOpen()) {
-				tx = session.beginTransaction();
-
-				try {
-		
-						ModuleScreen moduleScreen = new ModuleScreen();
-						
-						if(createdDate == "") {
-							date = new Timestamp(System.currentTimeMillis());
-						CreationDate = new Timestamp(date.getTime());
-						}
-						else {
-							date = formatterTime.parse(createdDate);
-							CreationDate = new Timestamp(date.getTime());
-						}
-						date = new Timestamp(System.currentTimeMillis());
-						lastModifiedDate = new Timestamp(date.getTime());
-
-		
-
-		if (StringUtils.equalsIgnoreCase(moduleScreenId, "")) {
-			synchronized (this) {						
-				moduleScreenId = "Module_Screen_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT MODULE_SCREEN FROM SEQ_TABLE").uniqueResult().toString());	
-				query = session.createNativeQuery("UPDATE SEQ_TABLE SET MODULE_SCREEN = MODULE_SCREEN + 1 ");
-				query.executeUpdate();
-				session.createNativeQuery("commit").executeUpdate();
-				}
-		}
-			
-		moduleScreen.setId(moduleScreenId);
-		moduleScreen.setScreenName(ScreenName);
-		moduleScreen.setScreenTable(screenTable);
-		moduleScreen.setCreationDate(CreationDate);
-		moduleScreen.setLastModificationDate(lastModifiedDate);
-		
-		session.saveOrUpdate(moduleScreen);
-		
-	
-			tx.commit();
-			session.close();
-					
-		
-		rtn.put("ID", moduleScreenId);
-		rtn.put("lastModifiedDate", formatterTime.format(new Timestamp(System.currentTimeMillis())).toString());
-		
-		} catch (Exception e) {
-			logger.info("Error in saving Module Screen  with a message : " + e);
-			e.printStackTrace();
-		}
-
-		finally {
-			if (session != null && session.isOpen()) {
-				tx.commit();
-				session.close();
-			}
-		}
-			
+	    Map<String, Object> rtn = new LinkedHashMap<>();
+	    String loginStatus = LoginServices.checkSession(request, response);
+	    
+	    if (loginStatus.equals("redirect:/")) {
+	        rtn.put("Login", loginStatus);
+	        return rtn;
+	    }
+	    
+	    Session session = null;
+	    Transaction tx = null;
+	    
+	    try {
+	        Calendar calendar = new GregorianCalendar();
+	        calendar.setTime(new Date());
+	        int year = calendar.get(Calendar.YEAR);
+	        DateFormat formatterTime = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+	        
+	        Timestamp CreationDate, lastModifiedDate;
+	        Date date;
+	        String moduleScreenId = request.getParameter("moduleScreenId");
+	        String ScreenName = request.getParameter("screenName");
+	        String screenTable = request.getParameter("screenTable");
+	        String createdDate = request.getParameter("createdate");
+	        
+	        session = AlmDbSession.getInstance().getSession();
+	        if (session != null && session.isOpen()) {
+	            tx = session.beginTransaction();
+	            
+	            // Check if a row with the same ScreenName and ScreenTable already exists
+	            Long count = (Long) session.createQuery("SELECT COUNT(*) FROM ModuleScreen WHERE screenName = :screenName ")
+	                    .setParameter("screenName", ScreenName)
+	            
+	                    .uniqueResult();
+	            
+	            if (count > 0) {
+	                // If a row exists, do not save and return a message
+	                rtn.put("error", "A record with the same Screen Name and Screen Table already exists.");
+	                return rtn;
+	            }
+	            
+	            // Create or update the ModuleScreen record
+	            ModuleScreen moduleScreen = new ModuleScreen();
+	            
+	            if (StringUtils.isBlank(moduleScreenId)) {
+	                synchronized (this) {
+	                    moduleScreenId = "Module_Screen_" + year + "_" + Integer.parseInt(session.createNativeQuery("SELECT MODULE_SCREEN FROM SEQ_TABLE").uniqueResult().toString());    
+	                    session.createNativeQuery("UPDATE SEQ_TABLE SET MODULE_SCREEN = MODULE_SCREEN + 1 ").executeUpdate();
+	                    session.createNativeQuery("commit").executeUpdate();
+	                }
+	            }
+	            
+	            if (StringUtils.isBlank(createdDate)) {
+	                date = new Timestamp(System.currentTimeMillis());
+	                CreationDate = new Timestamp(date.getTime());
+	            } else {
+	                date = formatterTime.parse(createdDate);
+	                CreationDate = new Timestamp(date.getTime());
+	            }
+	            
+	            date = new Timestamp(System.currentTimeMillis());
+	            lastModifiedDate = new Timestamp(date.getTime());
+	            
+	            moduleScreen.setId(moduleScreenId);
+	            moduleScreen.setScreenName(ScreenName);
+	            moduleScreen.setScreenTable(screenTable);
+	            moduleScreen.setCreationDate(CreationDate);
+	            moduleScreen.setLastModificationDate(lastModifiedDate);
+	            
+	            session.saveOrUpdate(moduleScreen);
+	            
+	            tx.commit();
+	            rtn.put("ID", moduleScreenId);
+	            rtn.put("lastModifiedDate", formatterTime.format(new Timestamp(System.currentTimeMillis())).toString());
+	        }
+	    } catch (Exception e) {
+	        logger.error("Error in saving Module Screen with a message: " + e.getMessage(), e);
+	        rtn.put("error", "An error occurred while saving the record.");
+	    } finally {
+	        if (tx != null && tx.isActive()) {
+	            tx.rollback();
+	        }
+	        if (session != null && session.isOpen()) {
+	            session.close();
+	        }
+	    }
+	    
+	    return rtn;
 	}
-	return rtn;
-	}
-	
-}
+
 	
 	// getting All AR using autocomplete in navigation
 		@RequestMapping(value = "/GetAllModuleScreen", method = RequestMethod.GET)
