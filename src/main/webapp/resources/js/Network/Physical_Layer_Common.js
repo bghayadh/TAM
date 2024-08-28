@@ -8242,27 +8242,44 @@ if(readManhole === '1'){
 			
 			if(showHidePointsArray[x].startsWith("WARE_")==true) {
 				var wareID = showHidePointsArray[x].split(":")[0];
+				var wareName = showHidePointsArray[x].split(":")[1];
+				console.log("warename "+wareName)
 				var longLat = String(window["mapPoints_"+pathID][x]).replaceAll(/[( )]/g, '');
 				
-				createSiteCltMarker(wareID,showHidePointsArray[x],longLat.split(",")[0],longLat.split(",")[1],siteCltSrcMarkers);
-			
-				//Show seq if site label is checked 
-				if(window[''+checkSeqWindowID+'_'+pathID] == "checked") {
-					if(allcheckedLabels.length >0 && allcheckedLabels.includes("sitesMapCheck_Labels")==true) {
-						siteCltSrcMarkers[wareID].setLabel({text: type+" // "+wareID+" : "+showHidePointsArray[x].split(":")[1], className:"marker-position-site",color:"red"});
-					}
-					else {
-							siteCltSrcMarkers[wareID].setLabel({text: type , className:"marker-position-sequence",color:"red"}); 
-					}
+				//createSiteCltMarker(wareID,showHidePointsArray[x],longLat.split(",")[0],longLat.split(",")[1],siteCltSrcMarkers);
+				if(!allSiteID.includes(wareID)) {
+					allSiteID.push(wareID)
+					create_Site_Marker_Click(wareID,wareName,longLat.split(",")[1],longLat.split(",")[0],markersSite,markerClusterSite,"Site","")
 				}
-				//Show Seq is unchecked
-				else {
-					if(allcheckedLabels.length >0 && allcheckedLabels.includes("sitesMapCheck_Labels")==true) {
-						siteCltSrcMarkers[wareID].setLabel({text: wareID+" : "+showHidePointsArray[x].split(":")[1], className:"marker-position-site",color:"red"});
+					if(markersSite[wareID]) {
+						if(markersSite[wareID].getMap() ==null) {
+							markerClusterSite.removeMarker(markersSite[wareID]);	
+							markersSite[wareID].setMap(map);
+							markerClusterSite.addMarker(markersSite[wareID]);	
+							if ($("#"+wareID).children('input:checkbox').length > 0) {
+								$("#"+wareID).children(':checkbox').prop( "checked", true );
+							}
+							$("#siteCheckAllBoq").prop( "checked", true );
+						 }	
+				
+					//Show seq if site label is checked 
+					if(window[''+checkSeqWindowID+'_'+pathID] == "checked") {
+						if(allcheckedLabels.length >0 && allcheckedLabels.includes("sitesMapCheck_Labels")==true) {
+							markersSite[wareID].setLabel({text: type+" // "+wareID+" : "+showHidePointsArray[x].split(":")[1], className:"marker-position-site",color:"red"});
+						}
+						else {
+							markersSite[wareID].setLabel({text: type , className:"marker-position-sequence",color:"red"}); 
+						}
 					}
+					//Show Seq is unchecked
 					else {
-						if(siteCltSrcMarkers[wareID].getLabel()!="undefined") {
-							siteCltSrcMarkers[wareID].setLabel(null);
+						if(allcheckedLabels.length >0 && allcheckedLabels.includes("sitesMapCheck_Labels")==true) {
+							markersSite[wareID].setLabel({text: wareID+" : "+showHidePointsArray[x].split(":")[1], className:"marker-position-site",color:"red"});
+						}
+						else {
+							//if(markersSite[wareID].getLabel()!="undefined") {
+								markersSite[wareID].setLabel(null);
+							//}
 						}
 					}
 				}
@@ -8310,9 +8327,9 @@ if(readManhole === '1'){
 			else if(showHidePointsArray[x].startsWith("MH_")==true  && readManhole ==='1') {
 
 				var manID = showHidePointsArray[x].split(":")[0];
-				if(markersManhole[manID].icon.url.includes("manholeJct.png")){
-						console.log("hello11 jct"+manID)
-					}
+				//if(markersManhole[manID].icon.url.includes("manholeJct.png")){
+					//	console.log("hello11 jct"+manID)
+					//}
 				if(markersManhole[manID]) {
 					if(markersManhole[manID].getMap() ==null) {
 						markerClusterManhole.removeMarker(markersManhole[manID]);	
@@ -8446,9 +8463,11 @@ if(readManhole === '1'){
 			
 			if(showHidePointsArray[x].startsWith("WARE_")==true) {
 				var wareID = showHidePointsArray[x].split(":")[0];
-				if(siteCltSrcMarkers[wareID]) {
-				    siteCltSrcMarkers[wareID].setMap(null);
-				}
+				if(markersSite[wareID]) {
+					markersSite[wareID].setMap(null);				
+					markerClusterSite.removeMarker(markersSite[wareID]);	
+					$("#"+wareID).children(':checkbox').prop( "checked", false );
+			    }
 			}
 			else if(showHidePointsArray[x].startsWith("CUST_")==true) {
 				var cltID = showHidePointsArray[x].split(":")[0];
@@ -8772,26 +8791,42 @@ if(window["mapPointsNames_"+pathID] != undefined) {
 			
 			if(showHidePointsArray[x].startsWith("WARE_")==true) {
 				var wareID = showHidePointsArray[x].split(":")[0];
+				var wareName = showHidePointsArray[x].split(":")[1];
 				var longLat = String(window["mapPoints_"+pathID][x]).replaceAll(/[( )]/g, '');
-				createSiteCltMarker(wareID,showHidePointsArray[x],longLat.split(",")[0],longLat.split(",")[1],siteCltSrcMarkers);
-			
-				//Show seq if site label is checked 
-				if(window[''+checkSeqWindowID+'_'+pathID] == "checked") {
-					if(allcheckedLabels.length >0 && allcheckedLabels.includes("sitesMapCheck_Labels")==true) {
-						siteCltSrcMarkers[wareID].setLabel({text: type+" // "+wareID+" : "+showHidePointsArray[x].split(":")[2], className:"marker-position-site",color:"red"});
-					}
-					else {
-							siteCltSrcMarkers[wareID].setLabel({text: type , className:"marker-position-sequence",color:"red"}); 
-					}
+				//createSiteCltMarker(wareID,showHidePointsArray[x],longLat.split(",")[0],longLat.split(",")[1],siteCltSrcMarkers);
+				if(!allSiteID.includes(wareID)) {
+					allSiteID.push(wareID)
+					create_Site_Marker_Click(wareID,wareName,longLat.split(",")[1],longLat.split(",")[0],markersSite,markerClusterSite,"Site","")
 				}
-				//Show Seq is unchecked
-				else {
-					if(allcheckedLabels.length >0 && allcheckedLabels.includes("sitesMapCheck_Labels")==true) {
-						siteCltSrcMarkers[wareID].setLabel({text: wareID+" : "+showHidePointsArray[x].split(":")[2], className:"marker-position-site",color:"red"});
+				if(markersSite[wareID]) {
+					if(markersSite[wareID].getMap() ==null) {
+						markerClusterSite.removeMarker(markersSite[wareID]);	
+						markersSite[wareID].setMap(map);
+						markerClusterSite.addMarker(markersSite[wareID]);	
+						if ($("#"+wareID).children('input:checkbox').length > 0) {
+							$("#"+wareID).children(':checkbox').prop( "checked", true );
+						}
+						$("#siteCheckAllBoq").prop( "checked", true );
+					 }	
+					
+					//Show seq if site label is checked 
+					if(window[''+checkSeqWindowID+'_'+pathID] == "checked") {
+						if(allcheckedLabels.length >0 && allcheckedLabels.includes("sitesMapCheck_Labels")==true) {
+							markersSite[wareID].setLabel({text: type+" // "+wareID+" : "+showHidePointsArray[x].split(":")[2], className:"marker-position-site",color:"red"});
+						}
+						else {
+							markersSite[wareID].setLabel({text: type , className:"marker-position-sequence",color:"red"}); 
+						}
 					}
+					//Show Seq is unchecked
 					else {
-						if(siteCltSrcMarkers[wareID].getLabel()!="undefined") {
-							siteCltSrcMarkers[wareID].setLabel(null);
+						if(allcheckedLabels.length >0 && allcheckedLabels.includes("sitesMapCheck_Labels")==true) {
+							markersSite[wareID].setLabel({text: wareID+" : "+showHidePointsArray[x].split(":")[2], className:"marker-position-site",color:"red"});
+						}
+						else {
+							//if(markerClusterSite[wareID].getLabel()!="undefined") {
+								markersSite[wareID].setLabel(null);
+							//}
 						}
 					}
 				}
@@ -8988,8 +9023,10 @@ if(window["mapPointsNames_"+pathID] != undefined) {
 			
 			if(showHidePointsArray[x].startsWith("WARE_")==true) {
 				var wareID = showHidePointsArray[x].split(":")[0];
-				if(siteCltSrcMarkers[wareID]) {
-			    	siteCltSrcMarkers[wareID].setMap(null);
+				if(markersSite[wareID]) {
+					markersSite[wareID].setMap(null);				
+					markerClusterSite.removeMarker(markersSite[wareID]);	
+					$("#"+wareID).children(':checkbox').prop( "checked", false );
 			    }
 			}
 			else if(showHidePointsArray[x].startsWith("CUST_")==true) {

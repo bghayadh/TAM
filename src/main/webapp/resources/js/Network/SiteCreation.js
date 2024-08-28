@@ -174,6 +174,7 @@ function createSite(SiteList){
 	markerClusterSite = new MarkerClusterer();
 	markerClusterSite.setMap(map);// to be checked !!!!*/
 	markersSite = [];
+	markerClusterSite.clearMarkers();
 	if(SiteList!=null) {
 		for(i=0;i<SiteList.length;i++){
 			window[""+SiteList[i][0]]=[];
