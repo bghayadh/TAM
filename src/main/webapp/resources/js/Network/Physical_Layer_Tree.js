@@ -8177,7 +8177,7 @@ singleHandhole = new ContextMenu({
 										+"<td style='width: 25%'> "+data.ClientData[i][2]+"</td></tr></table>");
 								var markerNameClt  = data.ClientData[i][0]+":" +data.ClientData[i][1];
 								createSiteCltMarker(data.ClientData[i][0],markerNameClt,data.ClientData[i][4],data.ClientData[i][3],siteCltSrcMarkers);
-								showMarkersCheckedClientSite(data.ClientData[i][0]+'_ClientsChechbox',data.ClientData[i][0]);
+								showMarkersCheckedClientSite(data.ClientData[i][0]+'_ClientsChechbox',data.ClientData[i][0],"");
 							}
 							
 							$("#ClientSite").append("<tr>"+"<td></td>"+"<td></td>"+"<td></td></tr>");
@@ -8192,9 +8192,26 @@ singleHandhole = new ContextMenu({
 								$("#ClientSite").append("<table style='width:100%;'><tr>"+"<td style='width: 5%;'><input type='checkbox' checked id='" +data.SiteData[i][0]+"_SitesChechbox'></td>"+"<td style='width: 20%'>"+data.SiteData[i][1]+"</td>"
 										+"<td style='width: 40%'> "+data.SiteData[i][0]+"</td>"                                         
 										+"<td style='width: 35%'> "+data.SiteData[i][2]+"</td></tr></table>");	
-								var markerNameSite  = data.SiteData[i][0]+":" +data.SiteData[i][2]+":" +data.SiteData[i][1];	
+								/*var markerNameSite  = data.SiteData[i][0]+":" +data.SiteData[i][2]+":" +data.SiteData[i][1];	
 								createSiteCltMarker(data.SiteData[i][0],markerNameSite,data.SiteData[i][4],data.SiteData[i][3],siteCltSrcMarkers);
-						      	showMarkersCheckedClientSite(data.SiteData[i][0]+'_SitesChechbox',data.SiteData[i][0]);
+						      	showMarkersCheckedClientSite(data.SiteData[i][0]+'_SitesChechbox',data.SiteData[i][0]);*/
+								var wareID =data.SiteData[i][0];
+								if(!allSiteID.includes(wareID)) {
+									allSiteID.push(wareID)
+									create_Site_Marker_Click(data.SiteData[i][0],data.SiteData[i][2],data.SiteData[i][3],data.SiteData[i][4],markersSite,markerClusterSite,"Site","")
+								}
+						      	if(markersSite[wareID]) {
+									if(markersSite[wareID].getMap() ==null) {
+										markerClusterSite.removeMarker(markersSite[wareID]);	
+										markersSite[wareID].setMap(map);
+										markerClusterSite.addMarker(markersSite[wareID]);	
+										if ($("#"+wareID).children('input:checkbox').length > 0) {
+											$("#"+wareID).children(':checkbox').prop( "checked", true );
+										}
+										$("#siteCheckAllBoq").prop( "checked", true );
+									 }	
+						      	}
+						      	showMarkersCheckedClientSite(wareID+'_SitesChechbox',wareID,"site")
 							}
 					     },
 						error: function (result) {
@@ -8689,7 +8706,7 @@ singleDistBoard = new ContextMenu({
 											+"<td style='width: 25%'> "+data.ClientData[i][2]+"</td></tr></table>");
 									var markerNameClt  = data.ClientData[i][0]+":" +data.ClientData[i][1];
 									createSiteCltMarker(data.ClientData[i][0],markerNameClt,data.ClientData[i][4],data.ClientData[i][3],siteCltSrcMarkers);
-									showMarkersCheckedClientSite(data.ClientData[i][0]+'_ClientsChechbox',data.ClientData[i][0]);
+									showMarkersCheckedClientSite(data.ClientData[i][0]+'_ClientsChechbox',data.ClientData[i][0],"");
 								}
 								
 								$("#ClientSite").append("<tr>"+"<td></td>"+"<td></td>"+"<td></td></tr>");
@@ -8704,9 +8721,26 @@ singleDistBoard = new ContextMenu({
 									$("#ClientSite").append("<table style='width:100%;'><tr>"+"<td style='width: 5%;'><input type='checkbox' checked id='" +data.SiteData[i][0]+"_SitesChechbox'></td>"+"<td style='width: 20%'>"+data.SiteData[i][1]+"</td>"
 											+"<td style='width: 40%'> "+data.SiteData[i][0]+"</td>"                                         
 											+"<td style='width: 35%'> "+data.SiteData[i][2]+"</td></tr></table>");	
-									var markerNameSite  = data.SiteData[i][0]+":" +data.SiteData[i][2]+":" +data.SiteData[i][1];	
+									/*var markerNameSite  = data.SiteData[i][0]+":" +data.SiteData[i][2]+":" +data.SiteData[i][1];	
 									createSiteCltMarker(data.SiteData[i][0],markerNameSite,data.SiteData[i][4],data.SiteData[i][3],siteCltSrcMarkers);
-							      	showMarkersCheckedClientSite(data.SiteData[i][0]+'_SitesChechbox',data.SiteData[i][0]);
+							      	showMarkersCheckedClientSite(data.SiteData[i][0]+'_SitesChechbox',data.SiteData[i][0]);*/
+							       	var wareID =data.SiteData[i][0];
+									if(!allSiteID.includes(wareID)) {
+										allSiteID.push(wareID)
+										create_Site_Marker_Click(data.SiteData[i][0],data.SiteData[i][2],data.SiteData[i][3],data.SiteData[i][4],markersSite,markerClusterSite,"Site","")
+									}
+							      	if(markersSite[wareID]) {
+										if(markersSite[wareID].getMap() ==null) {
+											markerClusterSite.removeMarker(markersSite[wareID]);	
+											markersSite[wareID].setMap(map);
+											markerClusterSite.addMarker(markersSite[wareID]);	
+											if ($("#"+wareID).children('input:checkbox').length > 0) {
+												$("#"+wareID).children(':checkbox').prop( "checked", true );
+											}
+											$("#siteCheckAllBoq").prop( "checked", true );
+										 }	
+							      	}
+							      	showMarkersCheckedClientSite(wareID+'_SitesChechbox',wareID,"site")
 								}
 						     },
 							error: function (result) {
@@ -22981,14 +23015,28 @@ function clearMarkers(){
 					
 }
 
-function showMarkersCheckedClientSite(CheckboxId,markerId){
+function showMarkersCheckedClientSite(CheckboxId,markerId,type){
 	var checkboxCltSite =document.getElementById(CheckboxId);								
 	checkboxCltSite.addEventListener('change', function() {											
-			  if (this.checked) {
+		if(type=="site") {
+			if (this.checked) {
+				if(markersSite[markerId].getMap() ==null) {	
+					console.log("no marker")
+					markersSite[markerId].setMap(map);
+					markerClusterSite.addMarker(markersSite[markerId]);	
+				}
+			}else {										
+				markersSite[markerId].setMap(null);
+				markerClusterSite.removeMarker(markersSite[markerId]);	
+			}	
+		}	
+		else {
+			if (this.checked) {
 				siteCltSrcMarkers[markerId].setMap(map);
 				}else {										
 			    siteCltSrcMarkers[markerId].setMap(null);
-				}				
+				}	
+			}
 		})
 	}
 	

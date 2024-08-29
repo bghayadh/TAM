@@ -286,9 +286,10 @@ function SiteCheckFilter(Id){
 	console.log("change into "+SiteId);
 
 	if ($(this).is(':checked')){
-
-		markersSite[SiteId].setMap(map);
-		markerClusterSite.addMarker(markersSite[SiteId]);					
+		if(markersSite[SiteId].getMap() ==null) {	
+			markersSite[SiteId].setMap(map);
+			markerClusterSite.addMarker(markersSite[SiteId]);	
+		}
 		
 		$(this).parent().find('li').each(function(){
 			$(this).children('input:checkbox').prop('checked', true);		
