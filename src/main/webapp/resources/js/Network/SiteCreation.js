@@ -25,7 +25,7 @@ function getSite(type,url,id,tr){
     					tree_prop_selection("#Site_f_CurrentPhysicalLayer .TreeSpan");
     					MouseHoveringSpans("#Site_f_CurrentPhysicalLayer .TreeSpan");		//>>>>>>>>>>>> Hover event in tree elements
     					var children = $("#Site_f_CurrentPhysicalLayer").find(' > ul > li');
-    					children.show("fast");
+    					children.show();
     					$(this).parent('').children(".folder").find('> svg').addClass('fa-folder-open').removeClass('fa-folder');
     					siteFlag = 1;	
     					console.log("allSiteID "+allSiteID.length)
@@ -181,7 +181,7 @@ function createSite(SiteList){
 			window[""+SiteList[i][0]]=SiteList[i];
 			//allSiteID.push(SiteList[i][0]);
 	
-			str="<ul><li id='"+SiteList[i][0]+"' class='SITE' style='display:none;width:100px;'><input type='checkbox' class='Site' class='filter checkFilter' name='Element' ></input> <span class='TreeSpan' style='color:black;width:195px'><img src='"+getContext()+"/resources/NetworkImages/redSiteIcon.png'> "+SiteList[i][1]+"</span></li></ul>";
+			str="<ul><li id='"+SiteList[i][0]+"' class='SITE' style='display:none;width:100px;'><input type='checkbox' class='Site' class='filter checkFilter' name='Element' ></input> <span class='TreeSpan' style='color:black;width:195px'><img src='"+getContext()+"/resources/NetworkImages/redSiteIcon.png' style='width:17px; height:17px;'> "+SiteList[i][1]+"</span></li></ul>";
 			$("#Site_f_CurrentPhysicalLayer").append(str); 
 			//if(!allSiteID.includes(SiteList[i][0])) {
 				allSiteID.push(SiteList[i][0]);
