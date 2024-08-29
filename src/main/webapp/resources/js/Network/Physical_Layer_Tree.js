@@ -2140,6 +2140,7 @@ menuTubePath = new ContextMenu({
 					markerClusterBackboneDistBoard.clearMarkers();
 					markerClusterMetroDistBoard.clearMarkers();
 					markerClusterAccessDistBoard.clearMarkers();
+					markerClusterSite.clearMarkers();
 					
 					
 					for (var u =0;u<allCablesShowPoint.length;u++) {
@@ -2207,6 +2208,7 @@ menuTubePath = new ContextMenu({
 					$("#manholeCheckAllBoq").prop("checked",false);
 					$("#handholeCheckAllBoq").prop("checked",false);
 					$("#distBoardCheckAllBoq").prop("checked",false);
+					$("#siteCheckAllBoq").prop("checked",false);
 					
 					$('.MANHOLE').each(function(){
 						var id =$(this).attr('id');
@@ -2217,6 +2219,10 @@ menuTubePath = new ContextMenu({
 						$("#"+id).children(':checkbox').prop( "checked", false );
 					});
 					$('.DistributionBoard').each(function(){
+						var id =$(this).attr('id');
+						$("#"+id).children(':checkbox').prop( "checked", false );
+					});
+					$('.SITE').each(function(){
 						var id =$(this).attr('id');
 						$("#"+id).children(':checkbox').prop( "checked", false );
 					});
