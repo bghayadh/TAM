@@ -1,4 +1,6 @@
 var siteFlag = 0;
+var siteList=[];//used in boq
+var boqList=[];//used in boq
 function getSite(type,url,id,tr){
 	$('body').append('<div id="loading"><img id="loading-image" src="'+getContext()+'/resources/images/ajax-loader.gif" alt="Loading..." /><span>Loading, please wait.</span></div>')
     if(siteFlag == 0){
@@ -384,5 +386,40 @@ function CreateSiteClickEvent (siteID,physicalLayer){
 		panTo(window[""+siteID][5], window[""+siteID][4]);
 		map.setZoom(11);	
 	});
+}
+
+
+function Site_Boq(SiteId){
+	var Boq = $('#Boq');
+
+		 $.ajax({
+			type: "GET",
+			contentType: "application/json; charset=utf-8",
+			url: getContext()+'/boqSitesCount',
+			data: {
+			    "SiteId" : SiteId
+			    },
+			success : function(data)
+			    {
+				 //$('#boq_table').empty();
+				 
+				 showBoq()
+				 console.log("here boqq")
+				 
+				 siteList.push(SiteId);	          	 
+				 $.each(data , function( key, value ) {	
+					boqList.push({ SiteId,key,value });    
+					var tr = "<tr>"+
+					"<td class='title'> "+key+"</td>"+
+					"<td> "+value+" </td>"+
+					"</tr>";
+					$("#boq_table").append(tr);     		    			   			
+				});  	
+			},	
+			error: function(result) {
+				alert("Error");
+									}			
+		});	
+	       
 }
 

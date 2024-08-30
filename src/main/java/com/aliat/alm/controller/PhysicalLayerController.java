@@ -4639,6 +4639,170 @@ public class PhysicalLayerController {
 		}
 		return rtn;
 	}
+	
+
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/boqSitesCount", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+
+	public LinkedHashMap<String, String> boqSitesCount(@RequestParam String SiteId) {
+
+		session = AlmDbSession.getInstance().getSession();
+		LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
+		List<Object[]> countEachNodeTybe= new ArrayList<Object[]>();
+
+		try {
+			String strEmpty = "SELECT COUNT(DISTINCT a.WARE_ID) FROM WAREHOUSE a ";
+			String strExist = "Select distinct a.Ware_Name From NODE_ACTIVE a where a.Ware_Id='" + SiteId + "' ";
+			
+			String Site_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Site_Query);
+			Object Sites = session.createNativeQuery(Site_Query).uniqueResult();
+			strEmpty = "";
+			strExist = "";
+			////////////////////////////
+			strEmpty = "SELECT COUNT(a.NODE_PK) FROM NODE_ACTIVE a  where ACTIVE_RECORD =1";
+			
+			strExist = "SELECT COUNT(a.NODE_PK) FROM NODE_ACTIVE a where a.Ware_Id='" + SiteId + "' and  a.ACTIVE_RECORD =1 ";
+			
+			String Node_Active_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Node_Active_Query);
+			Object CountNodes_Active = session.createNativeQuery(Node_Active_Query).uniqueResult();
+			strEmpty = "";
+			strExist = "";
+			////////////////////////////
+			strEmpty = "SELECT COUNT(g.GCELL_ID) FROM NODE_2GCELL g, NODE_ACTIVE a  where g.node_pk = a.node_pk and  a.ACTIVE_RECORD =1 ";
+			strExist = "select count(ngc.gcell_id) from NODE_2GCELL ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"
+					+ SiteId + "' and   a.ACTIVE_RECORD =1" ;
+			
+			String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Node_GCell_Query);
+			Object CountNodes_G_CELL = session.createNativeQuery(Node_GCell_Query).uniqueResult();
+			strEmpty = "";
+			strExist = "";
+			/////////////////////////////
+			strEmpty = "SELECT COUNT(u.UCELL_ID) FROM NODE_3GCELL u, NODE_ACTIVE a  where u.node_pk = a.node_pk and  a.ACTIVE_RECORD =1 ";
+			strExist = "select count(nuc.ucell_id) from NODE_3GCELL nuc , node_active na where na.node_pk = nuc.node_pk and na.Ware_Id = '"
+					+ SiteId + "' and  na.ACTIVE_RECORD =1 " ;
+			
+			String Node_UCell_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Node_UCell_Query);
+			Object CountNodes_U_CELL = session.createNativeQuery(Node_UCell_Query).uniqueResult();
+			strEmpty = "";
+			strExist = "";
+			/////////////////////////////
+			strEmpty = "SELECT COUNT(l.LCELL_ID) FROM NODE_4GCELL l, NODE_ACTIVE a  where l.node_pk = a.node_pk and  a.ACTIVE_RECORD =1";
+			strExist = "select count(nlc.lcell_id) from NODE_4GCELL nlc , node_active na where na.node_pk = nlc.node_pk and na.Ware_Id = '"
+					+ SiteId + "' and  na.ACTIVE_RECORD =1 ";
+			
+			String Node_LCell_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Node_LCell_Query);
+			Object CountNodes_L_CELL = session.createNativeQuery(Node_LCell_Query).uniqueResult();
+			strEmpty = "";
+			strExist = "";
+			/////////////////////////////
+			strEmpty = "SELECT COUNT(l.BOARD_ID) FROM NODE_BOARD l, NODE_ACTIVE a  where l.node_pk = a.node_pk and  a.ACTIVE_RECORD =1 ";
+			strExist = "select count(b.BOARD_ID) from NODE_BOARD b , node_active na where na.node_pk = b.node_pk and na.Ware_Id = '"
+					+ SiteId + "' and  na.ACTIVE_RECORD =1 ";
+			
+			String Node_Board_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Node_LCell_Query);
+			Object CountNodes_Board = session.createNativeQuery(Node_Board_Query).uniqueResult();
+			strEmpty = "";
+			strExist = "";
+			/////////////////////////////
+			strEmpty = "SELECT COUNT(l.CABINET_ID) FROM NODE_CABINET l, NODE_ACTIVE a  where l.node_pk = a.node_pk and  a.ACTIVE_RECORD =1";
+			strExist = "select count(b.CABINET_ID) from NODE_CABINET b , node_active na where na.node_pk = b.node_pk and na.Ware_Id = '"
+					+ SiteId + "' and  na.ACTIVE_RECORD =1 ";
+			String Node_Cabinet_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Node_LCell_Query);
+			Object CountNodes_Cabinet = session.createNativeQuery(Node_Cabinet_Query).uniqueResult();
+			strEmpty = "";
+			strExist = "";
+			/////////////////////////////
+			strEmpty = "SELECT COUNT(l.MODULE_ID) FROM NODE_MODULE l, NODE_ACTIVE a  where l.node_pk = a.node_pk and  a.ACTIVE_RECORD =1";
+			strExist = "select count(b.MODULE_ID) from NODE_MODULE b , node_active na where na.node_pk = b.node_pk and na.Ware_Id = '"
+					+ SiteId + "' and  na.ACTIVE_RECORD =1 ";
+			String Node_Module_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Node_LCell_Query);
+			Object CountNodes_Module = session.createNativeQuery(Node_Module_Query).uniqueResult();
+			strEmpty = "";
+			strExist = "";
+			/////////////////////////////
+			strEmpty = "SELECT COUNT(l.PORT_ID) FROM NODE_PORT l, NODE_ACTIVE a  where l.node_pk = a.node_pk and  a.ACTIVE_RECORD =1";
+			strExist = "select count(b.PORT_ID) from NODE_PORT b , node_active na where na.node_pk = b.node_pk and na.Ware_Id = '"
+					+ SiteId + "' and  na.ACTIVE_RECORD =1 ";
+			String Node_Port_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Node_LCell_Query);
+			Object CountNodes_Port = session.createNativeQuery(Node_Port_Query).uniqueResult();
+			strEmpty = "";
+			strExist = "";
+			/////////////////////////////
+			strEmpty = "SELECT COUNT(l.ANTENNA_ID) FROM NODE_ANTENNA l, NODE_ACTIVE a  where l.node_pk = a.node_pk and  a.ACTIVE_RECORD =1 ";
+			strExist = "select count(b.ANTENNA_ID) from NODE_ANTENNA b , node_active na where na.node_pk = b.node_pk and na.Ware_Id = '"
+					+ SiteId + "' and  na.ACTIVE_RECORD =1 ";
+			String Node_Antenna_Query = SiteId == "" ? strEmpty : strExist;
+			// System.out.println(Node_LCell_Query);
+			Object CountNodes_Antenna = session.createNativeQuery(Node_Antenna_Query).uniqueResult();
+			strEmpty = "";
+			strExist = "";
+			/////////////////////////////
+			BoqHM.put(SiteId == "" ? "Sites" : "Site Name", String.valueOf(Sites));
+			BoqHM.put("Nodes", String.valueOf(CountNodes_Active));
+
+			if (SiteId == "") {
+				strEmpty = "SELECT COUNT(distinct a.NODE_TYPE) FROM NODE_ACTIVE a where a.ACTIVE_RECORD =1";
+				String Node_Type_Count = strEmpty;
+				Object CountNodesType = session.createNativeQuery(Node_Type_Count).uniqueResult();
+				BoqHM.put("Node Type", String.valueOf(CountNodesType));
+				
+				strEmpty = "SELECT distinct a.NODE_TYPE,COUNT(a.NODE_TYPE) from node_active a where a.ACTIVE_RECORD =1 ";
+				strEmpty = strEmpty + " GROUP BY NODE_TYPE";
+
+				countEachNodeTybe = (List<Object[]>) session.createNativeQuery(strEmpty).list();
+				for (Object[] obj : countEachNodeTybe) {
+					BoqHM.put(obj[0].toString(), obj[1].toString());
+				}				
+			} else {
+				strExist = "SELECT COUNT(distinct a.NODE_TYPE) FROM NODE_ACTIVE a where a.Ware_Id='" + SiteId + "' and  a.ACTIVE_RECORD =1";
+				//strExist = boqDomainVar("a", paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
+				String Node_Type_Count = strExist;
+				// System.out.println(Node_Type_Count);
+				Object CountNodesType = session.createNativeQuery(Node_Type_Count).uniqueResult();
+				BoqHM.put("Node Type", String.valueOf(CountNodesType));
+				strExist = "";
+				////////////////////////////////
+				strExist = "SELECT distinct a.NODE_TYPE,COUNT(a.NODE_TYPE) from node_active a where a.Ware_Id = '"
+						+ SiteId + "' and  a.ACTIVE_RECORD =1";
+				strExist = strExist + " GROUP BY NODE_TYPE";
+				countEachNodeTybe = (List<Object[]>) session.createNativeQuery(strExist).list();
+				for (Object[] obj : countEachNodeTybe) {
+					BoqHM.put(obj[0].toString(), obj[1].toString());
+				}
+			}
+			BoqHM.put("2G Cell", String.valueOf(CountNodes_G_CELL));			
+			BoqHM.put("3G Cell", String.valueOf(CountNodes_U_CELL));
+			BoqHM.put("4G Cell", String.valueOf(CountNodes_L_CELL));
+			BoqHM.put("Board", String.valueOf(CountNodes_Board));
+			BoqHM.put("Cabinet", String.valueOf(CountNodes_Cabinet));
+			BoqHM.put("Module", String.valueOf(CountNodes_Module));
+			BoqHM.put("Port", String.valueOf(CountNodes_Port));
+			BoqHM.put("Antenna", String.valueOf(CountNodes_Antenna));
+		} catch (Exception e) {
+			sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			exceptionAsString = sw.toString();
+			logger.finest(
+					"Error in retreiving Sites BOQ from database in method boqSitesCount due to \n " + exceptionAsString);
+			logger.info(
+					"Error in retreiving Sites BOQ from database in method boqSitesCount due to \n " + exceptionAsString);
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
+		return BoqHM;
+	}
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/pathDistBoard", method = RequestMethod.GET)

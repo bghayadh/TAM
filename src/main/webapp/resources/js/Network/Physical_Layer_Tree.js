@@ -2953,6 +2953,25 @@ menuNodeesActive = new ContextMenu({
 			]
 		});
 
+////////////*********************	Sites FOLDER CONTEXT MENU  ***********************///////////////
+//-------------------------------------------------------------------------------------------------//
+
+
+menuSites = new ContextMenu({
+	  'theme': 'default',
+	  
+	  'items': [
+		{'icon': 'paste', 'name': 'Show BoQ', action: () => {
+			 Site_Boq("");
+		}
+	  },
+		
+	
+	]
+});
+
+
+
 	/////////////*********************	DISTRIBUTION BOARD FOLDER CONTEXT MENU  ***********************///////////////
 	//-------------------------------------------------------------------------------------------------//
 		
@@ -10128,6 +10147,16 @@ singleTube = new ContextMenu({
 		   	menuName=menuTrenches;
 		   	openContext("","",menuTrenches,event);
 		 });
+	    
+	    $(".Site_f_CurrentPhysicalLayer > .TreeSpan ").contextmenu(function(){
+			IdNodeSelectedTemp=$(this).parent().attr('id').split("Site_f_")[1];
+						   
+	 	   	menuName=menuSites;			
+	 	   	openContext("","",menuSites,event);
+
+															 
+	 	   });
+            
 	
 	// save project name and append to projects node
 	/* $("#saveProject").click(function () {
