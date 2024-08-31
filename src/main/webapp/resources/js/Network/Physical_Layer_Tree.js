@@ -21695,9 +21695,13 @@ $('#Manhole_AutocompleteCable'). click(function(){
 		}     
 	 });
   
-     $('#manhole_operationAutoComplete'). click(function(){
+    $('#manhole_operationAutoComplete'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["site_operationAutoComplete","customer_operationAutoComplete","handhole_operationAutoComplete","db_operationAutoComplete","place_operationAutoComplete"]
+		document.getElementById('markerName').style.display = 'none';
+		document.getElementById('setCoordOperation').style.display = 'none';
+        document.getElementById('Lng').setAttribute('readonly', true);
+        document.getElementById('Lat').setAttribute('readonly', true);
+	var  checkboxesID=["site_operationAutoComplete","customer_operationAutoComplete","handhole_operationAutoComplete","db_operationAutoComplete","place_operationAutoComplete","generic_operationAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 		
@@ -21709,7 +21713,11 @@ $('#Manhole_AutocompleteCable'). click(function(){
  }); 
    $('#site_operationAutoComplete' ). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["manhole_operationAutoComplete","customer_operationAutoComplete","handhole_operationAutoComplete","db_operationAutoComplete","place_operationAutoComplete"]
+		document.getElementById('markerName').style.display = 'none';
+		document.getElementById('setCoordOperation').style.display = 'none';
+        document.getElementById('Lng').setAttribute('readonly', true);
+        document.getElementById('Lat').setAttribute('readonly', true);
+	var  checkboxesID=["manhole_operationAutoComplete","customer_operationAutoComplete","handhole_operationAutoComplete","db_operationAutoComplete","place_operationAutoComplete", "generic_operationAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -21720,7 +21728,11 @@ $('#Manhole_AutocompleteCable'). click(function(){
  }); 
     $('#customer_operationAutoComplete' ). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["manhole_operationAutoComplete","site_operationAutoComplete","handhole_operationAutoComplete","db_operationAutoComplete","place_operationAutoComplete"]
+		document.getElementById('markerName').style.display = 'none';
+		document.getElementById('setCoordOperation').style.display = 'none';
+        document.getElementById('Lng').setAttribute('readonly', true);
+        document.getElementById('Lat').setAttribute('readonly', true);
+	var  checkboxesID=["manhole_operationAutoComplete","site_operationAutoComplete","handhole_operationAutoComplete","db_operationAutoComplete","place_operationAutoComplete","generic_operationAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -21731,7 +21743,11 @@ $('#Manhole_AutocompleteCable'). click(function(){
  });
      $('#handhole_operationAutoComplete'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["manhole_operationAutoComplete","site_operationAutoComplete","customer_operationAutoComplete","db_operationAutoComplete","place_operationAutoComplete"]
+		document.getElementById('markerName').style.display = 'none';
+		document.getElementById('setCoordOperation').style.display = 'none';
+        document.getElementById('Lng').setAttribute('readonly', true);
+        document.getElementById('Lat').setAttribute('readonly', true);
+	var  checkboxesID=["manhole_operationAutoComplete","site_operationAutoComplete","customer_operationAutoComplete","db_operationAutoComplete","place_operationAutoComplete","generic_operationAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -21743,7 +21759,11 @@ $('#Manhole_AutocompleteCable'). click(function(){
  });
       $('#db_operationAutoComplete'). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["manhole_operationAutoComplete","site_operationAutoComplete","customer_operationAutoComplete","handhole_operationAutoComplete","place_operationAutoComplete"]
+		document.getElementById('markerName').style.display = 'none';
+		document.getElementById('setCoordOperation').style.display = 'none';
+        document.getElementById('Lng').setAttribute('readonly', true);
+        document.getElementById('Lat').setAttribute('readonly', true);
+	var  checkboxesID=["manhole_operationAutoComplete","site_operationAutoComplete","customer_operationAutoComplete","handhole_operationAutoComplete","place_operationAutoComplete","generic_operationAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
@@ -21755,7 +21775,27 @@ $('#Manhole_AutocompleteCable'). click(function(){
  });
        $('#place_operationAutoComplete' ). click(function(){
 	if($(this). is(":checked")){
-	var  checkboxesID=["manhole_operationAutoComplete","site_operationAutoComplete","customer_operationAutoComplete","handhole_operationAutoComplete","db_operationAutoComplete"]
+		document.getElementById('markerName').style.display = 'none';
+		document.getElementById('setCoordOperation').style.display = 'none';
+        document.getElementById('Lng').setAttribute('readonly', true);
+        document.getElementById('Lat').setAttribute('readonly', true);
+	var  checkboxesID=["manhole_operationAutoComplete","site_operationAutoComplete","customer_operationAutoComplete","handhole_operationAutoComplete","db_operationAutoComplete", "generic_operationAutoComplete"]
+		checkOnlyOneCheckbox(checkboxesID);			
+		$(this).val('1');
+	}
+	else if($(this). is(":not(:checked)")){
+		$(this).val('0');
+
+	}     
+ });
+ 
+  $('#generic_operationAutoComplete' ). click(function(){
+	if($(this). is(":checked")){
+		document.getElementById('markerName').style.display = 'block';
+        document.getElementById('setCoordOperation').style.display = 'block';
+        document.getElementById('Lng').removeAttribute('readonly');
+        document.getElementById('Lat').removeAttribute('readonly');
+	var  checkboxesID=["manhole_operationAutoComplete","site_operationAutoComplete","customer_operationAutoComplete","handhole_operationAutoComplete","db_operationAutoComplete","place_operationAutoComplete"]
 		checkOnlyOneCheckbox(checkboxesID);			
 		$(this).val('1');
 	}
