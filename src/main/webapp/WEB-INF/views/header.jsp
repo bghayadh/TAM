@@ -1199,6 +1199,10 @@ display:none;
           <li> <a class="dropdown-item" href="${pageContext.request.contextPath}/Purchase" class="nav-link "><c:if test="${page == 'purchasing'}"><span id="back"></c:if><i class="fas fa-money-check" ></i> Purchasing <c:if test="${page == 'purchasing'}"></span></c:if></a></li></li>
            <div class="dropdown-divider" ></div>
           <li ><a class="dropdown-item" href="${pageContext.request.contextPath}/Sales" class="nav-link "><c:if test="${page == 'Sales'}"><span class="border-bottom active"></c:if><i class="fas fa-shopping-basket"></i> Sales <c:if test="${page == 'sales'}"></span></c:if></a></li>
+           <div class="dropdown-divider" ></div>
+          <li ><a class="dropdown-item" href="${pageContext.request.contextPath}/Activity" class="nav-link "><c:if test="${page == 'Activity'}"><span class="border-bottom active"></c:if><i class="fas fa-eye"></i> Activity <c:if test="${page == 'Activity'}"></span></c:if></a></li>
+      
+          
            <!--  <div class="dropdown-divider" ></div>
          <li ><a class="dropdown-item" href="${pageContext.request.contextPath}/Account" class="nav-link "><c:if test="${page == 'account'}"><span class="border-bottom active"></c:if><i class="fas fa-book"></i> Account <c:if test="${page == 'account'}"></span></c:if></a></li> --> 
         </c:when>
@@ -1209,8 +1213,14 @@ display:none;
         <li> <a class="dropdown-item" href="${pageContext.request.contextPath}/Purchase" class="nav-link "><c:if test="${page == 'purchasing'}"><span id="back"></c:if><i class="fas fa-money-check" ></i> Purchasing <c:if test="${page == 'purchasing'}"></span></c:if></a></li></li>
         <div class="dropdown-divider" ></div>
           <li ><a class="dropdown-item" href="${pageContext.request.contextPath}/Sales" class="nav-link "><c:if test="${page == 'Sales'}"><span class="border-bottom active"></c:if><i class="fas fa-shopping-basket"></i> Sales <c:if test="${page == 'sales'}"></span></c:if></a></li>
+            <div class="dropdown-divider" ></div>
+          <li ><a class="dropdown-item" href="${pageContext.request.contextPath}/Activity" class="nav-link "><c:if test="${page == 'Activity'}"><span class="border-bottom active"></c:if><i class="fas fa-eye"></i> Activity <c:if test="${page == 'Activity'}"></span></c:if></a></li>
+      
+           
            <!-- <div class="dropdown-divider" ></div>
           <li ><a class="dropdown-item" href="${pageContext.request.contextPath}/Account" class="nav-link "><c:if test="${page == 'account'}"><span class="border-bottom active"></c:if><i class="fas fa-book"></i> Account <c:if test="${page == 'account'}"></span></c:if></a></li>  -->
+        
+        
         </c:when>
         <c:when test="${page=='purchasing' }">
         <li class="nav-item"><a class="dropdown-item" href="${pageContext.request.contextPath}/Setup" class="nav-link "><c:if test="${page == 'setup'}"><span class="border-bottom active"></c:if><i class="fas fa-cog"></i> Setup <c:if test="${page == 'setup'}"></span></c:if></a></li>
@@ -1220,6 +1230,10 @@ display:none;
           <a class="dropdown-item" href="${pageContext.request.contextPath}/home" class="nav-link"><c:if test="${page == 'home'}"><span class="border-bottom active"></c:if><i class="fas fa-home"></i> Home <c:if test="${page == 'purchasing'}"></span></c:if></a></li>
           <div class="dropdown-divider" ></div>
           <li ><a class="dropdown-item" href="${pageContext.request.contextPath}/Sales" class="nav-link "><c:if test="${page == 'Sales'}"><span class="border-bottom active"></c:if><i class="fas fa-shopping-basket"></i> Sales <c:if test="${page == 'sales'}"></span></c:if></a></li>
+          <div class="dropdown-divider" ></div>
+          <li ><a class="dropdown-item" href="${pageContext.request.contextPath}/Activity" class="nav-link "><c:if test="${page == 'Activity'}"><span class="border-bottom active"></c:if><i class="fas fa-eye"></i> Activity <c:if test="${page == 'Activity'}"></span></c:if></a></li>
+      
+         
           <!--  <div class="dropdown-divider" ></div>
           <li ><a class="dropdown-item" href="${pageContext.request.contextPath}/Account" class="nav-link "><c:if test="${page == 'account'}"><span class="border-bottom active"></c:if><i class="fas fa-book"></i> Account <c:if test="${page == 'account'}"></span></c:if></a></li> --> 
         
@@ -1233,6 +1247,10 @@ display:none;
           <li> <a class="dropdown-item" href="${pageContext.request.contextPath}/Purchase" class="nav-link "><c:if test="${page == 'purchasing'}"><span id="back"></c:if><i class="fas fa-money-check" ></i> Purchasing <c:if test="${page == 'purchasing'}"></span></c:if></a></li></li>
           <div class="dropdown-divider" ></div>
           <li > <a class="dropdown-item" href="${pageContext.request.contextPath}/home" class="nav-link"><c:if test="${page == 'home'}"><span class="border-bottom active"></c:if><i class="fas fa-home"></i> Home <c:if test="${page == 'purchasing'}"></span></c:if></a></li>
+          
+           <div class="dropdown-divider" ></div>
+          <li ><a class="dropdown-item" href="${pageContext.request.contextPath}/Activity" class="nav-link "><c:if test="${page == 'Activity'}"><span class="border-bottom active"></c:if><i class="fas fa-eye"></i> Activity <c:if test="${page == 'Activity'}"></span></c:if></a></li>
+      
           <!--  <div class="dropdown-divider" ></div>
          <li ><a class="dropdown-item" href="${pageContext.request.contextPath}/Account" class="nav-link "><c:if test="${page == 'account'}"><span class="border-bottom active"></c:if><i class="fas fa-book"></i> Account <c:if test="${page == 'account'}"></span></c:if></a></li>  --> 
         
@@ -1247,7 +1265,9 @@ display:none;
           <li ><a class="dropdown-item" href="${pageContext.request.contextPath}/Sales" class="nav-link "><c:if test="${page == 'Sales'}"><span class="border-bottom active"></c:if><i class="fas fa-shopping-basket"></i> Sales <c:if test="${page == 'sales'}"></span></c:if></a></li>
            <div class="dropdown-divider" ></div>
          <li > <a class="dropdown-item" href="${pageContext.request.contextPath}/home" class="nav-link"><c:if test="${page == 'home'}"><span class="border-bottom active"></c:if><i class="fas fa-home"></i> Home <c:if test="${page == 'purchasing'}"></span></c:if></a></li>
-        
+         <div class="dropdown-divider" ></div>
+          <li ><a class="dropdown-item" href="${pageContext.request.contextPath}/Activity" class="nav-link "><c:if test="${page == 'Activity'}"><span class="border-bottom active"></c:if><i class="fas fa-eye"></i> Activity <c:if test="${page == 'Activity'}"></span></c:if></a></li>
+      
         </c:when>
          <c:when test="${page=='Activity' }">
            <li class="nav-item"><a class="dropdown-item" href="${pageContext.request.contextPath}/Setup" class="nav-link "><c:if test="${page == 'setup'}"><span class="border-bottom active"></c:if><i class="fas fa-cog"></i> Setup <c:if test="${page == 'setup'}"></span></c:if></a></li>
@@ -1260,8 +1280,9 @@ display:none;
           <li ><a class="dropdown-item" href="${pageContext.request.contextPath}/Sales" class="nav-link "><c:if test="${page == 'Sales'}"><span class="border-bottom active"></c:if><i class="fas fa-shopping-basket"></i> Sales <c:if test="${page == 'sales'}"></span></c:if></a></li>
            <!--  <div class="dropdown-divider" ></div>
          <li ><a class="dropdown-item" href="${pageContext.request.contextPath}/Account" class="nav-link "><c:if test="${page == 'account'}"><span class="border-bottom active"></c:if><i class="fas fa-book"></i> Account <c:if test="${page == 'account'}"></span></c:if></a></li> --> 
+       <div class="dropdown-divider" ></div>
         <li class="nav-item"><a class="dropdown-item" href="${pageContext.request.contextPath}/home" class="nav-link"><c:if test="${page == 'home'}"><span class="border-bottom active"></c:if><i class="fas fa-home"></i> Home <c:if test="${page == 'purchasing'}"></span></c:if></a></li>
-        <div class="dropdown-divider"></div>
+      
        
         </c:when>
         <c:otherwise>
@@ -1272,6 +1293,10 @@ display:none;
           <li> <a class="dropdown-item" href="${pageContext.request.contextPath}/Purchase" class="nav-link "><c:if test="${page == 'purchasing'}"><span id="back"></c:if><i class="fas fa-money-check" ></i> Purchasing <c:if test="${page == 'purchasing'}"></span></c:if></a></li></li>
           <div class="dropdown-divider" ></div>
           <li ><a class="dropdown-item" href="${pageContext.request.contextPath}/Sales" class="nav-link "><c:if test="${page == 'Sales'}"><span class="border-bottom active"></c:if><i class="fas fa-shopping-basket"></i> Sales <c:if test="${page == 'sales'}"></span></c:if></a></li>
+         <div class="dropdown-divider" ></div>
+          <li ><a class="dropdown-item" href="${pageContext.request.contextPath}/Activity" class="nav-link "><c:if test="${page == 'Activity'}"><span class="border-bottom active"></c:if><i class="fas fa-eye"></i> Activity <c:if test="${page == 'Activity'}"></span></c:if></a></li>
+      
+        
            <!--   <div class="dropdown-divider" ></div>
         <li ><a class="dropdown-item" href="${pageContext.request.contextPath}/Account" class="nav-link "><c:if test="${page == 'account'}"><span class="border-bottom active"></c:if><i class="fas fa-book"></i> Account <c:if test="${page == 'account'}"></span></c:if></a></li> --> 
         </c:otherwise>
