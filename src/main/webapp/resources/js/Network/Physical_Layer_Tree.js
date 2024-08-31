@@ -2971,6 +2971,21 @@ menuSites = new ContextMenu({
 });
 
 
+////////////*********************	Sinle Site CONTEXT MENU  ***********************///////////////
+//-------------------------------------------------------------------------------------------------//
+
+singleSite = new ContextMenu({
+'theme': 'default',
+'items': [
+{'icon': 'braille', 'name': 'Show BoQ', action: () => {				
+	console.log("selectedSiteIdContext "+selectedSiteIdContext)
+  Site_Boq(selectedSiteIdContext);
+}	
+}
+]
+});
+
+
 
 	/////////////*********************	DISTRIBUTION BOARD FOLDER CONTEXT MENU  ***********************///////////////
 	//-------------------------------------------------------------------------------------------------//

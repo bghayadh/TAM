@@ -198,14 +198,11 @@ function createSite(SiteList){
 	$(".SITE > .TreeSpan").contextmenu(function(){				
 		selectedSiteIdContext=$(this).parent().attr('id');
 		IdNodeSelectedTemp=$(this).parents().eq(2).attr('id').split("Site_f_")[1];
-		//menuName=singleJunction;	
-		//menuName= singleJunctionMenu;
-		//selectedManholeJct = selectedSiteIdContext;
-		//selectedManIdContext = "";
+		menuName=singleSite;	
+		
 		selectedSite = selectedSiteIdContext;
-		//openContext(selectedSiteIdContext,"",singleJunctionMenu,event);
-		//openContext(selectedSiteIdContext,"",singleJunction,event);
-		//openContext(selectedManholeJct,"",singleJunction,event);
+		openContext(selectedSiteIdContext,"",singleSite,event);
+		
 
 	});
 	

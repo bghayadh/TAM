@@ -4653,7 +4653,7 @@ public class PhysicalLayerController {
 
 		try {
 			String strEmpty = "SELECT COUNT(DISTINCT a.WARE_ID) FROM WAREHOUSE a ";
-			String strExist = "Select distinct a.Ware_Name From NODE_ACTIVE a where a.Ware_Id='" + SiteId + "' ";
+			String strExist = "Select distinct a.WARE_NAME From WAREHOUSE a where a.WARE_ID='" + SiteId + "' ";
 			
 			String Site_Query = SiteId == "" ? strEmpty : strExist;
 			// System.out.println(Site_Query);
@@ -4673,7 +4673,7 @@ public class PhysicalLayerController {
 			////////////////////////////
 			strEmpty = "SELECT COUNT(g.GCELL_ID) FROM NODE_2GCELL g, NODE_ACTIVE a  where g.node_pk = a.node_pk and  a.ACTIVE_RECORD =1 ";
 			strExist = "select count(ngc.gcell_id) from NODE_2GCELL ngc , node_active na where na.node_pk = ngc.node_pk and na.Ware_Id = '"
-					+ SiteId + "' and   a.ACTIVE_RECORD =1" ;
+					+ SiteId + "' and   na.ACTIVE_RECORD =1" ;
 			
 			String Node_GCell_Query = SiteId == "" ? strEmpty : strExist;
 			// System.out.println(Node_GCell_Query);
