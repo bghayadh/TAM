@@ -3150,29 +3150,3 @@ if (this.value == ""){
   }
 }); 
 }
-
-function mapOperation(){
-	clearMapOperationFeilds();
-	$( "#mapOperationModal" ).modal('show');
-	uncheckAutoCompleteCheckboxes("mapOperationAutoComplete");
-	$("#loading").remove();
-	$("#Searchh").unbind();
-	mapOperationAutoComplete("mapOperationAutoComplete","Searchh","Lng","Lat");
-	}
-function mapFeilds(){
-	clearMapOperationFeilds();
-	document.getElementById('placeSearch').style.display = "none";
-	 document.getElementById('Searchh').style.display = "block";     
-	}
-function placeFeild(){
-	clearMapOperationFeilds();
-document.getElementById('placeSearch').style.display = "block";
-document.getElementById('Searchh').style.display = "none";
-placeAutoComplete();
-} 
-function clearMapOperationFeilds(){
-	   document.getElementById('placeSearch').value = "";
-		 document.getElementById('Searchh').value = "";
-		 document.getElementById('Lat').value = "";
-		 document.getElementById('Lng').value = "";
-}
