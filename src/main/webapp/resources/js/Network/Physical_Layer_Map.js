@@ -117,7 +117,10 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 				url:""+getContext()+"/resources/markers/Map-Marker-PNG-File.png", // url
 				scaledSize: new google.maps.Size(35, 35), // scaled size
 			};
-			
+			iconGeneric ={
+				url:""+getContext()+"/resources/NetworkImages/generic.png", // url
+				scaledSize: new google.maps.Size(40, 40), // scaled size
+			};
 			iconAuxPoint ={
 				url:""+getContext()+"/resources/NetworkImages/handholeGreen.png", // url
 				scaledSize: new google.maps.Size(10, 10), // scaled size
