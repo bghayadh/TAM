@@ -39,7 +39,7 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/xlsx.full.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jszip.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/BordersFindNearest.js"></script>
-
+<script src="${pageContext.request.contextPath}/resources/js/Network/mapOperation.js"></script>
 <style>
 .close {
   float: right;
@@ -3067,35 +3067,96 @@
 		</li>
 	</menu>	
 	<div id="mapOperationModal"class="modal fade  custom-class-assignedto-modal" tabindex="-1"role="dialog" aria-labelledby="exampleModalCenterTitle"aria-hidden="true"  data-keyboard="false" data-backdrop="static"><div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
-	<div class="modal-content"><div class="modal-header"style="background-color: #2678CC ; height: 55px; "><h5  class="modal-title"
+	<div class="modal-content" style="width: 850px;"><div class="modal-header"style="background-color: #2678CC ; height: 55px; "><h5  class="modal-title"
 style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px;">Operations</h5><div style="float: right;"><button class="btn btn-save"style="color: black; font-weight:bold; margin-top:-6px" onclick="MapOperationmarking()">Add Marker</button><button type="button"  onClick="clearMarkers()" class="btn btn-save" style=" margin-left:10px;color: black; font-weight:bold; margin-top:-6px" id="clearMarkers">Clear Markers</button>
 <button type="button" name="closePopup" class="close" onclick="ClosingConfirm()"><i class='fa fa-times'></i></button><a class="close modalMinimize ml-3"> <i
 class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><div class="tab-pane" ><p></p><div class="container-fluid">
-<div class="row"><div class="col-sm-2"><div class="form-group"><div class="input-group-prepend"><span style="min-width: 90px; font-size: 12px;" class="input-group-text"><b>By Site </b> 
-<input type='checkbox' id="site_operationAutoComplete" style='position: relative; margin-left: 15px' class="mapOperationAutoComplete" onclick="mapFeilds()"></span>
-</div></div></div><div class="col-sm-2"><div class="form-group"><div class="input-group-prepend"><span style="min-width: 90px; font-size: 12px;" class="input-group-text"><b>By Client </b> 
-<input type='checkbox' id="customer_operationAutoComplete" style='position: relative; margin-left:15px' class="mapOperationAutoComplete" onclick="mapFeilds()"></span>
-</div></div></div><div class="col-sm-2"><div class="form-group"><div class="input-group-prepend"><span style="min-width: 120px; font-size: 12px;" class="input-group-text"><b>By Manhole </b> 
-<input type='checkbox' id="manhole_operationAutoComplete" style='position: relative; margin-left:10px' class="mapOperationAutoComplete"  onclick="mapFeilds()"></span>
-</div></div></div><div class="col-sm-2"><div class="form-group"><div class="input-group-prepend"><span style="min-width: 120px; font-size: 12px;" class="input-group-text"><b>By Handhole </b> 
-<input type='checkbox' id="handhole_operationAutoComplete" style='position: relative; margin-left:15px' class="mapOperationAutoComplete" onclick="mapFeilds()"></span>
-</div></div></div><div class="col-sm-2">
-											<div class="form-group">
-												<div class="input-group-prepend">
-													<span style="min-width: 90px; font-size: 12px;position: relative; margin-left:25px" class="input-group-text"><b>By DB </b> 
-													<input type='checkbox' id="db_operationAutoComplete" style='position: relative; margin-left:15px' class="mapOperationAutoComplete" onclick="mapFeilds()"></span>
-												</div>
-											</div>
-										</div>
-									<div class="col-sm-2">
-											<div class="form-group">
-												<div class="input-group-prepend">
-													<span style="min-width: 95px; font-size: 12px;position: relative; margin-left:25px" class="input-group-text"><b>By Place </b> 
-													<input type='checkbox' id="place_operationAutoComplete" style='position: relative; margin-left:10px' class="mapOperationAutoComplete" onclick="placeFeild()"  ></span>
-												</div>
-											</div>
-										</div>										
-									</div>
+<div class="row">
+    <div  style="margin-right: 10px;">
+        <div class="form-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text" style="min-width: 90px; font-size: 12px;">
+                    <b>By Site</b>
+                    <input type="checkbox" id="site_operationAutoComplete" style="margin-left: 15px;" class="mapOperationAutoComplete" onclick="mapFeilds()">
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-right: 10px;">
+        <div class="form-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text" style="min-width: 90px; font-size: 12px;">
+                    <b>By Client</b>
+                    <input type="checkbox" id="customer_operationAutoComplete" style="margin-left: 15px;" class="mapOperationAutoComplete" onclick="mapFeilds()">
+                </span>
+            </div>
+        </div>
+    </div>
+ 
+   <div style="display: none;" id="manholeSection">
+        <div style="margin-right: 10px;">
+            <div class="form-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" style="min-width: 120px; font-size: 12px;">
+                        <b>By Manhole</b>
+                        <input type="checkbox" id="manhole_operationAutoComplete" style="margin-left: 10px;" class="mapOperationAutoComplete" onclick="mapFeilds()">
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+   <div style="display: none;" id="handholeSection">
+        <div style="margin-right: 10px;">
+            <div class="form-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" style="min-width: 120px; font-size: 12px;">
+                        <b>By Handhole</b>
+                        <input type="checkbox" id="handhole_operationAutoComplete" style="margin-left: 15px;" class="mapOperationAutoComplete" onclick="mapFeilds()">
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="display: none;" id="dbSection">
+        <div style="margin-right: 10px;">
+            <div class="form-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" style="min-width: 90px; font-size: 12px;">
+                        <b>By DB</b>
+                        <input type="checkbox" id="db_operationAutoComplete" style="margin-left: 15px;" class="mapOperationAutoComplete" onclick="mapFeilds()">
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-right: 10px;">
+        <div class="form-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text" style="min-width: 95px; font-size: 12px;">
+                    <b>By Place</b>
+                    <input type="checkbox" id="place_operationAutoComplete" style="margin-left: 10px;" class="mapOperationAutoComplete" onclick="placeFeild()">
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <div class="form-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text" style="min-width: 95px; font-size: 12px;">
+                    <b>Generic</b>
+                    <input type="checkbox" id="generic_operationAutoComplete" style="margin-left: 10px;" class="mapOperationAutoComplete" onclick="placeFeild()">
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <br>
 									<div class="row">
 										<div class="col-sm-9">
@@ -3107,8 +3168,30 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 														 <input type="text" id="placeSearch"  class="form-control text-input" style="display:none" placeholder="" />														
 												</div>
 											</div>
-										</div>										
+										</div>	
+										
+										
+											<div class="col-sm-3"  id="setCoordOperation" style="display:none;">
+											<div class="form-group">
+												<button id="setCoordOperationBtn" title="Get Coordinate From Map" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; width: 100%;">Set Coordinate</button>
+											</div>
+										</div>									
 									</div>
+									
+									
+									
+										<div class="row" >
+										<div  id="markerName" class="col-sm-9" style="display:none;">
+											<div class="form-group" >
+												<div class="input-group-prepend"  >
+													<span style="width: 200px; font-size: 12px;"
+														class="input-group-text"><b style="margin:20px">Marker Name </b></span>
+														 	<input
+														type="text" id="markerN"  class="form-control text-input"  />
+												</div>
+											</div>
+										</div>										
+									</div>			
 												<div class="row" >
 										<div class="col-md-9">
 											<div class="form-group" >
@@ -7013,6 +7096,20 @@ if(checkedOption == "circleRange"){
 	getAllSurveyArrays("nearStrandId",fiberStrandsSurveyArray);
 }
 };	
+document.addEventListener("DOMContentLoaded", function() {
+    var readDB = ${readDB}; // or fetch this value from the server if necessary
+    if (readDB == 1) {
+        document.getElementById("dbSection").style.display = "block";
+    }
+    var readManhole = ${readManhole}; // or fetch this value from the server if necessary
+    if (readManhole == 1) {
+        document.getElementById("manholeSection").style.display = "block";
+    }
+    var readHandhole = ${readHandhole}; // Fetch this value from the server if necessary
+    if (readHandhole == 1) {
+        document.getElementById("handholeSection").style.display = "block";
+    }
+});
 </script>
 <script
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJXAds-Gt4I39hRFHhYHMEg3XcBqihYoo&libraries=places&callback=initMap&amp;v=3.43&amp"></script>
