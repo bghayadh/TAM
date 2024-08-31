@@ -660,6 +660,17 @@ $("#selectConnectedSearch").on('change',function(){
 		console.log("closestLatPoint"+$("#closestLatPoint").val());
 
 		});
+		
+		$("#setCoordOperationBtn").on('click',function(){
+		
+		$("#Lng").val(window["getCoorPointLong"]);
+		$("#Lat").val(window["getCoorPointLat"]);
+
+		console.log("closestLongPoint"+$("#closestLongPoint").val());
+		console.log("closestLatPoint"+$("#closestLatPoint").val());
+
+		});
+		
 		$("#setStartPointBtn").on('click',function(){
 			$("#startLongPoint").val(window["getCoorPointLong"]);
 			$("#startLatPoint").val(window["getCoorPointLat"]);
@@ -1097,65 +1108,80 @@ function Create_FiberStrandClick_Event(strandId){
 	});	
 }
 
-function createSiteCltMarker(Id,Name,Lat,Long,siteCltSrcMarkers){
-	if(Id.startsWith("null")==true || Id.startsWith("AUXILIARY_PT_")==true || Id.startsWith("AUXILIARY_TUBE_PT")==true || Id.startsWith("AUXILIARY_STRAND_PT")==true
-			|| Id.startsWith("AUXILIARY_TRENCH_PT")==true || Id.startsWith("AUXILIARY_DUCT_PT")==true) {
-		var icon = iconAuxPoint;
-	}
-	else if(Id.startsWith("CUST")==true) {
-		//console.log("passed ");
-		var icon = iconClient;
-	}
-	else if(Id.startsWith("WARE")==true || Id.includes("N/A")==true) {	
-		var icon = iconSite;
-	}
-	else{
-	    var icon = iconPlace;
-	}
-		
-	if(Id.split("_")[0]=="WARE") {
-		if(allSites.includes(Name) == false){	
-			allSites.push(Name);
-		}
-	}
-	else if(Id.split("_")[0]=="CUST") {
-		if(allClients.includes(Name) == false){	
-			allClients.push(Name);
-		}
-	}		
-			//console.log("allSites "+allSites)
-	markerId=Id;		
-	const pos = new google.maps.LatLng(Lat,Long);
-	var Name=Name;				         
-	var data="<div>" +Name+ "</div>";
-	
-	if(!siteCltSrcMarkers[markerId]){
-		siteCltMarker = new google.maps.Marker({
-			position: pos,
-			data:data,
-			ID:markerId,
-			icon:icon,
-	});
-		
-		siteCltMarker.metadata = { id: markerId };
-		siteCltSrcMarkers[markerId] = siteCltMarker;
-		siteCltSrcMarkers.push(siteCltMarker);	
-	}
-	else{
-		if(siteCltSrcMarkers[markerId].map!=map){
-			siteCltSrcMarkers[markerId].setMap(map);
-		}				
-		siteCltSrcMarkers[markerId].setPosition(pos);
-		siteCltSrcMarkers[markerId].data=data;
-	}
-	siteCltSrcMarkers[markerId].setMap(map);
-	// for deleting from map
-	google.maps.event.addListener(siteCltSrcMarkers[markerId], "click", function (e) {
-	if(deleting == true){ 
-		deleteAuxPath(e);
-		MarkerArrayId.push(markerId);
-	}	
-	});
+function createSiteCltMarker(Id, Name, Lat, Long, siteCltSrcMarkers) {
+    let icon;
+
+    // Determine the icon based on the Id
+    if (Id.startsWith("null") || Id.startsWith("AUXILIARY_PT_") || Id.startsWith("AUXILIARY_TUBE_PT") ||
+        Id.startsWith("AUXILIARY_STRAND_PT") || Id.startsWith("AUXILIARY_TRENCH_PT") || Id.startsWith("AUXILIARY_DUCT_PT")) {
+        icon = iconAuxPoint;
+    } else if (Id.startsWith("CUST")) {
+        icon = iconClient;
+    } else if (Id.startsWith("WARE") || Id.includes("N/A")) {
+        icon = iconSite;
+    } else {
+        // If none of the conditions match, the icon assignment will be handled here
+         console.warn('Id does not match known criteria. No icon assigned.');
+        return;
+    }
+
+    // Update the allSites and allClients arrays
+    if (Id.split("_")[0] === "WARE") {
+        if (!allSites.includes(Name)) {
+            allSites.push(Name);
+        }
+    } else if (Id.split("_")[0] === "CUST") {
+        if (!allClients.includes(Name)) {
+            allClients.push(Name);
+        }
+    }
+
+    // Create marker position and data
+    const pos = new google.maps.LatLng(Lat, Long);
+    const data = "<div>" + Id + "</div>";
+
+    // Check if the marker already exists
+    if (!siteCltSrcMarkers[Id]) {
+        const siteCltMarker = new google.maps.Marker({
+            position: pos,
+            icon: icon,
+            map: map
+        });
+
+        // Attach metadata to the marker
+        siteCltMarker.metadata = { id: Id };
+        siteCltSrcMarkers[Id] = siteCltMarker;
+
+        // Create and attach the info window
+        const infowindow = new google.maps.InfoWindow({
+            content: data
+        });
+
+        google.maps.event.addListener(siteCltMarker, 'click', function () {
+            infowindow.open(map, siteCltMarker);
+        });
+    } else {
+        // Update existing marker
+        const existingMarker = siteCltSrcMarkers[Id];
+        if (existingMarker.map !== map) {
+            existingMarker.setMap(map);
+        }
+        existingMarker.setPosition(pos);
+        existingMarker.setIcon(icon);
+
+        // Update existing info window content
+        const infowindow = new google.maps.InfoWindow({
+            content: data
+        });
+
+        google.maps.event.clearListeners(existingMarker, 'click'); // Remove existing click listeners
+        google.maps.event.addListener(existingMarker, 'click', function () {
+            infowindow.open(map, existingMarker);
+        });
+    }
+
+    // Make sure the marker is added to the map
+    siteCltSrcMarkers[Id].setMap(map);
 }
 		
 	/// beginning of strand click events to create strand and and boq data/// 
@@ -14136,146 +14162,7 @@ var result= confirm('are you sure you want to close?')
 	}
 }
 
-function mapOperationAutoComplete(checkboxClass,srcID,srcLong,srcLat){
 
-	var url ="emptyUrl";
-	var dataTarget="";
-
-	if($('#'+srcID).data('ui-autocomplete') != undefined){
-		$('#'+srcID).autocomplete("destroy");
-	}
-	
-	$("#"+srcID).autocomplete({
-		source: function(request, response) {
-
-		var search= $("#"+srcID).val();
-		var checkedCheckboxAutocomplete=" ";
-		
-	//Get the id of checked checkbox
-	$('input:checkbox[class="' + checkboxClass + '"]:checked').each(function () {
-		var checkedCheckbox =  $(this).attr("id");
-		checkedCheckboxAutocomplete = checkedCheckbox.split("_");			
-		checkedCheckboxAutocomplete=checkedCheckboxAutocomplete[0]; 	
-	});
-
-	//On change , get the id of changed checked checkbox
-	$("."+checkboxClass).change(function() {
-		var checkedCheckbox = this.id;
-		checkedCheckboxAutocomplete = checkedCheckbox.split("_");			
-		checkedCheckboxAutocomplete=checkedCheckboxAutocomplete[0];
-	});
-		     
-	if(checkedCheckboxAutocomplete=="manhole") {
-
-
-		url ='getManholeData';
-		dataTarget = {					
-			"search":search,
-		}
-	}
-	else if(checkedCheckboxAutocomplete=="handhole") {
-		
-	
-		url ='getHandholeData';
-		dataTarget = {					
-			"search":search,
-		}
-	}
-	else if(checkedCheckboxAutocomplete=="db") {
-	
-		url ='getDbData';
-		dataTarget = {					
-			"search":search,
-		}
-	}
-	else if(checkedCheckboxAutocomplete=="site") {
-
-		url='GetAllWarehouse';
-		dataTarget = {
-       		"WareName":search,
-			"warehouseName" : search,
-			"SiteId":search,
-		 }
-	}
-	
-	else if(checkedCheckboxAutocomplete=="customer") {
-
-		url='GetAllNetworkCustomer';
-		dataTarget = {					
-				"search":search,
-			}
-	}
-
-  if(url !="emptyUrl") {
-		$.ajax({
-			type: "GET",
-			contentType: "application/json; charset=utf-8",
-			url: getContext()+'/'+url,
-			data: dataTarget,				
-		 	dataType: "json",
-			success: function (data) {
-				if (data != null) {
-					response(data.globalList);                   
-				}
-			},				
-			error: function(result) {
-				alert("Error");
-			}
-		});	
-	}				
-	}, minLength:0, maxShowItems: 40, scroll:true,
-		select: function (event, ui) {		   
-
-			if(ui.item[0].split("_")[0]=="MH"){
-				this.value = (ui.item ? ui.item[0]+':'+ui.item[1] : '');
-				$("#"+srcLong).val(ui.item[3]);
-				$("#"+srcLat).val(ui.item[4]);
-			}	
-			else if(ui.item[0].split("_")[0]=="HH"){
-				this.value = (ui.item ? ui.item[0]+':'+ui.item[1] : '');
-				$("#"+srcLong).val(ui.item[3]);
-				$("#"+srcLat).val(ui.item[4]);
-				}
-			else if(ui.item[0].split("_")[0]=="DB"){
-				this.value = (ui.item ? ui.item[0]+':'+ui.item[1] : '');
-				$("#"+srcLong).val(ui.item[3]);
-				$("#"+srcLat).val(ui.item[4]);
-			}		
-			else if(ui.item[0].split("_")[0]=="WARE"){
-				$("#"+srcLong).val(ui.item[3]);
-				$("#"+srcLat).val(ui.item[4]);
-				this.value = (ui.item ? ui.item[0]+':'+ui.item[1]+':'+ui.item[2] : '');
-		}	
-		else{
-			this.value = (ui.item ? ui.item[0]+':'+ui.item[1] : '');
-			$("#"+srcLong).val(ui.item[4]);
-			$("#"+srcLat).val(ui.item[5]);
-			}	
-			return false;
-		},
-			}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
-				
-					if(item[0].split("_")[0]=="WARE" || item[0].split("_")[0]=="CUST" ) {
-						 return $("<li class='each'>")
-			                .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-			                   item[0] + "</span><br><span class='desc'>" +
-			                    item[1] +', '+ item[2] + "</span></div>")
-			                .appendTo(ul);
-					}
-					else {
-						 return $("<li class='each'>")
-			                .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-			                   item[0] + "</span><br><span class='desc'>" +
-			                    item[1] + "</span></div>")
-			                .appendTo(ul);
-						}
-			};
-		$("#"+srcID).focus(function(){
-			   if (this.value == ""){
-				   $(this).autocomplete("search");
-			   }						
-		});
-} 
 function addNetworkLevel(pathID,target) {
 	 $.ajax({
         type: "GET",
@@ -14295,35 +14182,7 @@ function addNetworkLevel(pathID,target) {
     });
 	 
 }
-function placeAutoComplete() {
 
-
-	      var address = (document.getElementById('placeSearch'));
-	      var autocomplete = new google.maps.places.Autocomplete(address);
-	      autocomplete.setTypes(['geocode']);
-	      google.maps.event.addListener(autocomplete, 'place_changed', function() {
-	          var place = autocomplete.getPlace();
-	          if (!place.geometry) {
-	              return;
-	          }
-
-	      var address = '';
-	      if (place.address_components) {
-	          address = [
-	              (place.address_components[0] && place.address_components[0].short_name || ''),
-	              (place.address_components[1] && place.address_components[1].short_name || ''),
-	              (place.address_components[2] && place.address_components[2].short_name || '')
-	              ].join(' ');
-	      }
-	      document.getElementById('Lat').value = place.geometry.location.lat();
-	      document.getElementById('Lng').value = place.geometry.location.lng();
-	
-	      
-	      });
-	
-
-	 google.maps.event.addDomListener(window, 'load', placeAutoComplete);
-	 }
 	 
 function numberofselectedFiber(layer,subLayer,selectedIdContext){
 
