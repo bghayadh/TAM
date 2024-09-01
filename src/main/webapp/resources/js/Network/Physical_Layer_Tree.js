@@ -2977,10 +2977,21 @@ menuSites = new ContextMenu({
 singleSite = new ContextMenu({
 'theme': 'default',
 'items': [
-{'icon': 'braille', 'name': 'Show BoQ', action: () => {				
-	console.log("selectedSiteIdContext "+selectedSiteIdContext)
+{'icon': 'paste', 'name': 'Show BoQ', action: () => {				
+	//console.log("selectedSiteIdContext "+selectedSiteIdContext)
   Site_Boq(selectedSiteIdContext);
-}	
+	}	
+},
+
+{'icon': 'paste', 'name': 'Show Path', action: () => {				
+	
+  //Site_Boq(selectedSiteIdContext);
+	if (flag == 0 ){// in order to build for the first time the main fiber
+		getFiberPath("showPath",'/pathSite',selectedSiteIdContext, "<tr><td><b>Site NAME:</b>"+selectedSiteName+"</td></tr>");
+	}else{
+		showPath('/pathSite',selectedSiteIdContext, "<tr><td><b>Site NAME:</b>"+selectedSiteName+"</td></tr>");
+	}
+	}	
 }
 ]
 });

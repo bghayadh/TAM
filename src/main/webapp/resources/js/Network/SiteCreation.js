@@ -197,6 +197,8 @@ function createSite(SiteList){
 	AllSiteCheckFilter();
 	$(".SITE > .TreeSpan").contextmenu(function(){				
 		selectedSiteIdContext=$(this).parent().attr('id');
+		selectedSiteName = $(this).text();
+		console.log("selectedSiteName "+selectedSiteName)
 		IdNodeSelectedTemp=$(this).parents().eq(2).attr('id').split("Site_f_")[1];
 		menuName=singleSite;	
 		
@@ -401,7 +403,6 @@ function Site_Boq(SiteId){
 				 //$('#boq_table').empty();
 				 
 				 showBoq()
-				 console.log("here boqq")
 				 
 				 siteList.push(SiteId);	          	 
 				 $.each(data , function( key, value ) {	

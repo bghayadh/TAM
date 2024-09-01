@@ -4972,6 +4972,160 @@ public class PhysicalLayerController {
 		return rtn;
 
 	}
+	
+//////////////////////////////77777777777777
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/pathSite", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> pathSite(Locale locale, Model model, HttpServletRequest request,
+	HttpServletResponse response) throws JsonProcessingException {
+	
+	Map<String, Object> rtn = new LinkedHashMap<>();
+	Session session = null;
+	Transaction tx = null;
+	session = AlmDbSession.getInstance().getSession();
+	if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+		rtn.put("Login", LoginServices.checkSession(request, response));
+	return rtn;
+	}
+	if (session != null && session.isOpen()) {
+		tx = session.beginTransaction();
+	
+	try {
+		String dataSel = request.getParameter("dataSel");
+		// DATA FOR BACKBONE NETWORKLEVEL
+		List<Object[]> BackboneCableData = session.createNativeQuery(
+		"select distinct a.FIBER_CABLE_ID,a.FIBER_CABLE_NAME,a.FIBER_NETWORK_LEVEL,a.FIBER_OWNER "
+		+ "from FIBER_CABLES a "
+		+ "where (a.SOURCE_WARE_ID='"+dataSel+"' or a.DESTINATION_WARE_ID='"+dataSel+"') and a.FIBER_NETWORK_LEVEL='backbone' "
+		+ "union "
+		+ "select distinct a.FIBER_CABLE_ID,a.FIBER_CABLE_NAME,a.FIBER_NETWORK_LEVEL,a.FIBER_OWNER "
+		+ "from FIBER_CABLES a left join DISTRIBUTION_BOARD b on a.SOURCE_ID=b.DB_ID "
+		+ "where b.WAREHOUSE='"+dataSel+"' and a.FIBER_NETWORK_LEVEL='backbone' "
+		+"union "
+		+ "select distinct a.FIBER_CABLE_ID,a.FIBER_CABLE_NAME,a.FIBER_NETWORK_LEVEL,a.FIBER_OWNER "
+		+ "from FIBER_CABLES a left join DISTRIBUTION_BOARD b on a.DESTINATION_ID=b.DB_ID "
+		+ "where b.WAREHOUSE='"+dataSel+"' and a.FIBER_NETWORK_LEVEL='backbone' "
+		+ "Union "
+		+ "select distinct a.FIBER_ID_SIDE_A,a.FIBER_NAME_SIDE_A,b.FIBER_NETWORK_LEVEL,b.FIBER_OWNER "
+		+ "from JUNCTION_MAPPING a left join FIBER_CABLES b on a.FIBER_ID_SIDE_A=b.FIBER_CABLE_ID "
+		+ "where a.LOCATION_TYPE_SIDE_A ='Site' and a.WAREHOUSE_ID_SIDE_A='"+dataSel+"' and b.FIBER_NETWORK_LEVEL='backbone' "
+		+ "union "
+		+ "select distinct a.FIBER_ID_SIDE_B,a.FIBER_NAME_SIDE_B,b.FIBER_NETWORK_LEVEL,b.FIBER_OWNER "
+		+ "from JUNCTION_MAPPING a left join FIBER_CABLES b on a.FIBER_ID_SIDE_B=b.FIBER_CABLE_ID "
+		+ "where a.LOCATION_TYPE_SIDE_B='Site' and a.WAREHOUSE_ID_SIDE_B='"+dataSel+"' and b.FIBER_NETWORK_LEVEL='backbone' "
+		+ "union "
+		+ "Select DISTINCT a.FP_FIBER_ID,a.FP_FIBER_NAME,b.FIBER_NETWORK_LEVEL,b.FIBER_OWNER "
+		+ "FROM (DISTRIBUTION_BOARD_MAPPING a LEFT JOIN  FIBER_CABLES b on a.FP_FIBER_ID = b.FIBER_CABLE_ID)"
+		+ "where FP_LOCATION_TYPE ='Site' and FP_LOCATION='"+dataSel+"' and b.FIBER_NETWORK_LEVEL='backbone' "
+		+ "union "
+		+ "Select DISTINCT a.BP_FIBER_ID,a.BP_FIBER_NAME,b.FIBER_NETWORK_LEVEL,b.FIBER_OWNER "
+		+ "FROM (DISTRIBUTION_BOARD_MAPPING a LEFT JOIN  FIBER_CABLES b on a.BP_FIBER_ID = b.FIBER_CABLE_ID) "
+		+ "where BP_LOCATION_TYPE ='Site' and BP_LOCATION='"+dataSel+"' and b.FIBER_NETWORK_LEVEL='backbone' ")
+		.getResultList();
+			
+		
+		rtn.put("BackboneCableData", BackboneCableData);
+		rtn.put("BackboneTubeData", "");
+		rtn.put("BackboneStrandData", "");
+		
+		// DATA FOR METRO NETWORKLEVEL
+		List<Object[]> MetroCableData = session.createNativeQuery(
+		"select distinct a.FIBER_CABLE_ID,a.FIBER_CABLE_NAME,a.FIBER_NETWORK_LEVEL,a.FIBER_OWNER "
+		+ "from FIBER_CABLES a "
+		+ "where (a.SOURCE_WARE_ID='"+dataSel+"' or a.DESTINATION_WARE_ID='"+dataSel+"') and a.FIBER_NETWORK_LEVEL='metro' "
+		+ "union "
+		+ "select distinct a.FIBER_CABLE_ID,a.FIBER_CABLE_NAME,a.FIBER_NETWORK_LEVEL,a.FIBER_OWNER "
+		+ "from FIBER_CABLES a left join DISTRIBUTION_BOARD b on a.SOURCE_ID=b.DB_ID "
+		+ "where b.WAREHOUSE='"+dataSel+"' and a.FIBER_NETWORK_LEVEL='metro' "
+		+"union "
+		+ "select distinct a.FIBER_CABLE_ID,a.FIBER_CABLE_NAME,a.FIBER_NETWORK_LEVEL,a.FIBER_OWNER "
+		+ "from FIBER_CABLES a left join DISTRIBUTION_BOARD b on a.DESTINATION_ID=b.DB_ID "
+		+ "where b.WAREHOUSE='"+dataSel+"' and a.FIBER_NETWORK_LEVEL='metro' "
+		+ "Union "
+		+ "select distinct a.FIBER_ID_SIDE_A,a.FIBER_NAME_SIDE_A,b.FIBER_NETWORK_LEVEL,b.FIBER_OWNER "
+		+ "from JUNCTION_MAPPING a left join FIBER_CABLES b on a.FIBER_ID_SIDE_A=b.FIBER_CABLE_ID "
+		+ "where a.LOCATION_TYPE_SIDE_A ='Site' and a.WAREHOUSE_ID_SIDE_A='"+dataSel+"' and b.FIBER_NETWORK_LEVEL='metro' "
+		+ "union "
+		+ "select distinct a.FIBER_ID_SIDE_B,a.FIBER_NAME_SIDE_B,b.FIBER_NETWORK_LEVEL,b.FIBER_OWNER "
+		+ "from JUNCTION_MAPPING a left join FIBER_CABLES b on a.FIBER_ID_SIDE_B=b.FIBER_CABLE_ID "
+		+ "where a.LOCATION_TYPE_SIDE_B='Site' and a.WAREHOUSE_ID_SIDE_B='"+dataSel+"' and b.FIBER_NETWORK_LEVEL='metro' "
+		+ "union "
+		+ "Select DISTINCT a.FP_FIBER_ID,a.FP_FIBER_NAME,b.FIBER_NETWORK_LEVEL,b.FIBER_OWNER "
+		+ "FROM (DISTRIBUTION_BOARD_MAPPING a LEFT JOIN  FIBER_CABLES b on a.FP_FIBER_ID = b.FIBER_CABLE_ID)"
+		+ "where FP_LOCATION_TYPE ='Site' and FP_LOCATION='"+dataSel+"' and b.FIBER_NETWORK_LEVEL='metro' "
+		+ "union "
+		+ "Select DISTINCT a.BP_FIBER_ID,a.BP_FIBER_NAME,b.FIBER_NETWORK_LEVEL,b.FIBER_OWNER "
+		+ "FROM (DISTRIBUTION_BOARD_MAPPING a LEFT JOIN  FIBER_CABLES b on a.BP_FIBER_ID = b.FIBER_CABLE_ID) "
+		+ "where BP_LOCATION_TYPE ='Site' and BP_LOCATION='"+dataSel+"' and b.FIBER_NETWORK_LEVEL='metro' ")
+		.getResultList();
+		
+		rtn.put("MetroCableData", MetroCableData);
+		rtn.put("MetroTubeData", "");
+		rtn.put("MetroStrandData", "");
+		
+		// DATA FOR Access NETWORKLEVEL
+		List<Object[]> DistributionCableData = session.createNativeQuery(
+		"select distinct a.FIBER_CABLE_ID,a.FIBER_CABLE_NAME,a.FIBER_NETWORK_LEVEL,a.FIBER_OWNER "
+		+ "from FIBER_CABLES a "
+		+ "where (a.SOURCE_WARE_ID='"+dataSel+"' or a.DESTINATION_WARE_ID='"+dataSel+"') and a.FIBER_NETWORK_LEVEL='access' "
+		+ "union "
+		+ "select distinct a.FIBER_CABLE_ID,a.FIBER_CABLE_NAME,a.FIBER_NETWORK_LEVEL,a.FIBER_OWNER "
+		+ "from FIBER_CABLES a left join DISTRIBUTION_BOARD b on a.SOURCE_ID=b.DB_ID "
+		+ "where b.WAREHOUSE='"+dataSel+"' and a.FIBER_NETWORK_LEVEL='access' "
+		+"union "
+		+ "select distinct a.FIBER_CABLE_ID,a.FIBER_CABLE_NAME,a.FIBER_NETWORK_LEVEL,a.FIBER_OWNER "
+		+ "from FIBER_CABLES a left join DISTRIBUTION_BOARD b on a.DESTINATION_ID=b.DB_ID "
+		+ "where b.WAREHOUSE='"+dataSel+"' and a.FIBER_NETWORK_LEVEL='access' "
+		+ "Union "
+		+ "select distinct a.FIBER_ID_SIDE_A,a.FIBER_NAME_SIDE_A,b.FIBER_NETWORK_LEVEL,b.FIBER_OWNER "
+		+ "from JUNCTION_MAPPING a left join FIBER_CABLES b on a.FIBER_ID_SIDE_A=b.FIBER_CABLE_ID "
+		+ "where a.LOCATION_TYPE_SIDE_A ='Site' and a.WAREHOUSE_ID_SIDE_A='"+dataSel+"' and b.FIBER_NETWORK_LEVEL='access' "
+		+ "union "
+		+ "select distinct a.FIBER_ID_SIDE_B,a.FIBER_NAME_SIDE_B,b.FIBER_NETWORK_LEVEL,b.FIBER_OWNER "
+		+ "from JUNCTION_MAPPING a left join FIBER_CABLES b on a.FIBER_ID_SIDE_B=b.FIBER_CABLE_ID "
+		+ "where a.LOCATION_TYPE_SIDE_B='Site' and a.WAREHOUSE_ID_SIDE_B='"+dataSel+"' and b.FIBER_NETWORK_LEVEL='access' "
+		+ "union "
+		+ "Select DISTINCT a.FP_FIBER_ID,a.FP_FIBER_NAME,b.FIBER_NETWORK_LEVEL,b.FIBER_OWNER "
+		+ "FROM (DISTRIBUTION_BOARD_MAPPING a LEFT JOIN  FIBER_CABLES b on a.FP_FIBER_ID = b.FIBER_CABLE_ID)"
+		+ "where FP_LOCATION_TYPE ='Site' and FP_LOCATION='"+dataSel+"' and b.FIBER_NETWORK_LEVEL='access' "
+		+ "union "
+		+ "Select DISTINCT a.BP_FIBER_ID,a.BP_FIBER_NAME,b.FIBER_NETWORK_LEVEL,b.FIBER_OWNER "
+		+ "FROM (DISTRIBUTION_BOARD_MAPPING a LEFT JOIN  FIBER_CABLES b on a.BP_FIBER_ID = b.FIBER_CABLE_ID) "
+		+ "where BP_LOCATION_TYPE ='Site' and BP_LOCATION='"+dataSel+"' and b.FIBER_NETWORK_LEVEL='access' ")
+		.getResultList();
+		
+		rtn.put("DistributionCableData", DistributionCableData);
+		rtn.put("DistributionTubeData", "");
+		rtn.put("DistributionStrandData", "");
+	
+	} catch (Exception e) {
+		sw = new StringWriter();
+		e.printStackTrace(new PrintWriter(sw));
+		exceptionAsString = sw.toString();
+		logger.finest("Error in pathSite due to \n " + exceptionAsString);
+		logger.info("Error in pathSite due to \n " + exceptionAsString);
+		rtn.put("BackboneCableData", null);
+		rtn.put("BackboneTubeData", null);
+		rtn.put("BackboneStrandData", null);
+		rtn.put("MetroCableData", null);
+		rtn.put("MetroTubeData", null);
+		rtn.put("MetroStrandData", null);
+		rtn.put("DistributionCableData", null);
+		rtn.put("DistributionTubeData", null);
+		rtn.put("DistributionStrandData", null);
+	
+	} finally {
+		if (session != null && session.isOpen()) {
+			tx.commit();
+			session.close();
+	
+			}
+		}
+	
+	}
+	return rtn;
+	}
 
 	@RequestMapping(value = "/TrenchBoQ", method = RequestMethod.GET)
 	@ResponseBody
