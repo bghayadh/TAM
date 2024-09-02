@@ -3925,6 +3925,15 @@ public class PhysicalLayerController {
 									+ contextID + "' ")
 							.getResultList();
 
+				}else if (target.equals("Site")) {
+					System.out.println("entered site " + contextID);
+					DBData = session.createNativeQuery(
+							"SELECT DISTINCT A.DB_ID,A.DB_LONGITUDE,A.DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN DISTRIBUTION_BOARD_MAPPING B  ON B.DB_ID = A.DB_ID "
+							+ "where B.FP_LOCATION LIKE '"+ contextID + "' OR B.BP_LOCATION LIKE '" + contextID + "' " 
+							+ " UNION "
+							+ "SELECT DISTINCT A.DB_ID,A.DB_LONGITUDE,A.DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A  "
+							+ "where A.WAREHOUSE LIKE '"+ contextID + "%' ").getResultList();
+
 				}
 				rtn.put("DBData", DBData);
 				System.out.println("DBData is "+ mapper.writeValueAsString(DBData));

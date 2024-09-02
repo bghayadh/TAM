@@ -2992,7 +2992,15 @@ singleSite = new ContextMenu({
 		showPath('/pathSite',selectedSiteIdContext, "<tr><td><b>Site NAME:</b>"+selectedSiteName+"</td></tr>");
 	}
 	}	
+},
+
+{'icon': 'braille', 'name': 'Show DB', action: () => {			
+	 showDB(selectedSiteIdContext,"Site",selectedSiteName);
+	
+  }
 }
+
+
 ]
 });
 
