@@ -642,7 +642,7 @@ max-width: 100%;
 		</div>
       <div class="legendContainer">
       <div class="card-body">      
-         <div class="box stack-top" id="legendDiv" style="position: relative;top:215px;width: 290px; float:left; height:470px;  background:white; margin:37px;display: none">
+         <div class="box stack-top" id="legendDiv" style="position: relative;bottom:50px;width: 290px; float:left; height:550px;  background:white; margin:37px;display: none">
          <div class="legendHeader"  id="legendHeader">
  			<h6 style="color:white;font-weight:bold; font-size:2.5ex;display:inline-block;position: relative;margin-left:20px;">Legend</h6>
   			 <select class="mapDropdown" id="mapDropdown">
@@ -731,6 +731,11 @@ max-width: 100%;
      <td style="position: relative;top:8px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Site</label></td>   
      <td style="position: relative;top:8px;"><div style="position: relative;left:-5px;color: black;" id="sitesCount" ></div></td>
     </tr>
+        <tr>
+     <td style="position: relative;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideSrcDestCheckbox" onclick="showHideSrcDest();" value="pink"/></td>
+     <td style="position: relative;top:8px;left:58px;"><div><img class='image' style="width: 25px; height: 30px;" src='${pageContext.request.contextPath}/resources/NetworkImages/SrcDest.png'></div></td>
+     <td style="position: relative;top:8px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Src/Dest</label></td>   
+    </tr>
      
    
   </table>
@@ -794,7 +799,7 @@ var srcDstCableList=[];
 var jctElementsIDArray=[];
 var jctElementsFlag="notOpened";
 var elementsArray=[];
-
+var generateFlag="0";
 
 function initMap() {	
 	 map = new google.maps.Map(document.getElementById("mapContainer"), {
@@ -1093,7 +1098,8 @@ $(document).ready(function() {
 		 
 	  $("#generate").click(function() {
 
-
+		generateFlag="1";
+		
 		//Disable and uncheck the checkboxes in legend
 		$('.showHideAllDbCheckbox').prop('checked', false);
 		$(".showHideAllDbCheckbox").attr('disabled', true);
@@ -2115,8 +2121,12 @@ function processFiberAuxPoints(cableID,fiberAuxData,windowMapPointsNames) {
 	}
 	
 }
+
+
 function processCableSrcDstArray(cableID,windowMapPointsNames,fiberList,windowMapPoints) {
 
+	if(fiberList.length >0){
+		
 	//Push src
 	if(fiberList[0][4] !="null"){
 		src = fiberList[0][4]+":" +fiberList[0][5]+":"+fiberList[0][6];		
@@ -2148,7 +2158,7 @@ function processCableSrcDstArray(cableID,windowMapPointsNames,fiberList,windowMa
 		window[""+windowMapPoints+cableID].push(new google.maps.LatLng(fiberList[0][1],fiberList[0][0]));
 		
 }
-
+}
 function showElementLocationPoints(elementsDetailsArray,filteredGridArray,windowMapPointsNames,windowMapPoints) {
 
 
@@ -2235,6 +2245,9 @@ function showElementLocationPoints(elementsDetailsArray,filteredGridArray,window
 				var longLat = String(window[""+windowMapPoints+cableID][x]).replaceAll(/[( )]/g, '');
 				
 				if(distinctSites.includes(wareID)==false) {
+					if(x ==0 || x ==(showPointsArray.length-1)){// only src and destination 
+						srcDestID.push([wareID,"warehouse"]);
+					}
 					distinctSites.push(wareID);
 					if(!markersSites[wareID]){
 						createMarker(wareID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[2],'redSiteIcon.png',markersSites,markerClusterSites)
@@ -2251,6 +2264,9 @@ function showElementLocationPoints(elementsDetailsArray,filteredGridArray,window
 				var longLat = String(window[""+windowMapPoints+cableID][x]).replaceAll(/[( )]/g, '');
 
 				if(distinctCustomers.includes(ID)==false) {
+					if(x ==0 || x ==(showPointsArray.length-1)){// only src and destination 
+						srcDestID.push([ID,"customer"]);
+					}
 					distinctCustomers.push(ID);
 					if(!markersCustomer[ID]){
 						createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],'customerIcon.png',markersCustomer,markerClusterCustomers)
@@ -2269,6 +2285,9 @@ function showElementLocationPoints(elementsDetailsArray,filteredGridArray,window
 				if(manholeName.endsWith("_J")) {
 
 					if(distinctManholesWithJct.includes(ID)==false) {
+						if(x ==0 || x ==(showPointsArray.length-1)){// only src and destination 
+							srcDestID.push([ID,"manholewithJct"]);
+						}
 						distinctManholesWithJct.push(ID);
 						if(!markersManholesWithJct[ID]){
 							createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],"manholeJct.png",markersManholesWithJct,markerClusterManholesWithJct)
@@ -2282,6 +2301,9 @@ function showElementLocationPoints(elementsDetailsArray,filteredGridArray,window
 				else {
 
 					if(distinctManholes.includes(ID)==false) {
+						if(x ==0 || x ==(showPointsArray.length-1)){// only src and destination 
+							srcDestID.push([ID,"manhole"]);
+						}
 						distinctManholes.push(ID);
 						if(!markersManholes[ID]){
 							createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],"manholeRed.png",markersManholes,markerClusterManholes)
@@ -2302,6 +2324,9 @@ function showElementLocationPoints(elementsDetailsArray,filteredGridArray,window
 				if(handholeName.endsWith("_J")) {
 
 					if(distinctHandholesWithJct.includes(ID)==false) {
+						if(x ==0 || x ==(showPointsArray.length-1)){// only src and destination 
+							srcDestID.push([ID,"handholewithJct"]);
+						}
 						distinctHandholesWithJct.push(ID);
 						if(!markersHandholesWithJct[ID]){
 							createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],"handholeYellowJct.png",markersHandholesWithJct,markerClusterHandholesWithJct)
@@ -2314,6 +2339,9 @@ function showElementLocationPoints(elementsDetailsArray,filteredGridArray,window
 				}
 				else {
 					if(distinctHandholes.includes(ID)==false) {
+						if(x ==0 || x ==(showPointsArray.length-1)){// only src and destination 
+							srcDestID.push([ID,"handhole"]);
+						}
 						distinctHandholes.push(ID);
 						if(!markersHandholes[ID]){
 							createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],"handholeYellow.png",markersHandholes,markerClusterHandholes)
@@ -2335,6 +2363,9 @@ function showElementLocationPoints(elementsDetailsArray,filteredGridArray,window
 				var longLat = String(window[""+windowMapPoints+cableID][x]).replaceAll(/[( )]/g, '');
 				
 				if(distinctDB.includes(ID)==false) {
+					if(x ==0 || x ==(showPointsArray.length-1)){// only src and destination 
+						srcDestID.push([ID,"DB"]);
+					}
 					distinctDB.push(ID);
 					if(!markersDB[ID]){
 						createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],'backboneDB.png',markersDB,markerClusterDB)
@@ -2543,8 +2574,16 @@ function showElementLocationPoints(elementsDetailsArray,filteredGridArray,window
      	$('.showHideAllJctCheckbox').prop('checked', false);
 			$(".showHideAllJctCheckbox").attr('disabled', true);
       } 
-      
-     document.getElementById("sitesCount").textContent = "("+distinctSites.length+")";  
+     
+     if(srcDestID.length >0) {
+			$('.showHideSrcDestCheckbox').prop('checked', true);
+			$(".showHideSrcDestCheckbox").attr('disabled', false);
+     }   
+     else {
+     	$('.showHideSrcDestCheckbox').prop('checked', false);
+			$(".showHideSrcDestCheckbox").attr('disabled', true);
+      } 
+    document.getElementById("sitesCount").textContent = "("+distinctSites.length+")";  
  	document.getElementById("manholesCount").textContent = "("+distinctManholes.length+")";
  	document.getElementById("manholesCountWithJct").textContent = "("+distinctManholesWithJct.length+")";
 	document.getElementById("handholesCount").textContent = "("+distinctHandholes.length+")";
@@ -2585,7 +2624,7 @@ document.getElementById('mapDropdown').addEventListener('change', function() {
 		    if(selectedValue=="cableBased") {
 				showElementLocationPoints(elementsArray,filteredGridData,"mapPointsNames_","mapPoints_");	
 			}
-			else if(selectedValue=="gridBased") {
+			else if(selectedValue=="gridBased" && generateFlag=="1") {
 				processCableSrcDstArray(cableID,"mapPointsNamesBasedOnGrid_",srcDstCableList,"mapPointsBasedOnGrid_");
 				window["mapPointsBasedOnGrid_"+cableID].push(new google.maps.LatLng(srcDstCableList[0][3],srcDstCableList[0][2]));
 				showElementLocationPoints(elementsArray,filteredGridData,"mapPointsNamesBasedOnGrid_","mapPointsBasedOnGrid_");
@@ -2614,10 +2653,11 @@ function showOnMap() {
 	   markerClusterManholesWithJct.clearMarkers();	
 	   markerClusterSites.clearMarkers();	
 	   mapFlag="1";
-
+	   
+	   srcDestID = [];
 	   showPointsArray=[];
-	   //jctElementsIDArray=[];
-		
+
+	if(generateFlag=="1") {
 	 	var dropdownSelectedValue = document.getElementById('mapDropdown').value;
 		 cableID = $("#fiberCable").val().split(":")[0];
 
@@ -2661,17 +2701,62 @@ function showOnMap() {
 	 	}
 
 	 	
-    
+	}
 		//Scroll to the map div
 		 document.getElementById("headingTwo").scrollIntoView({ behavior: "smooth" });
-
-		/* var currentCenter = map.getCenter();
-			var currentZoom = map.getZoom();
-			map.setCenter(currentCenter);
-			map.setZoom(currentZoom);
-
-			alert("here we go ")*/
 	}
+
+function showHideSrcDest(){
+
+	$('.showHideSrcDestCheckbox').bind("change",function() {
+		console.log("srcDestID "+srcDestID.length)
+			for(var x=0;x<srcDestID.length;x++) {
+				if(srcDestID[x][1]=="warehouse"){
+					markersArray = markersSites;
+					clusterArray = markerClusterSites;
+				}
+				else if(srcDestID[x][1]=="customer"){
+					markersArray = markersCustomer;
+					clusterArray = markerClusterCustomers;
+				}
+				else if(srcDestID[x][1]=="manhole"){
+					markersArray = markersManholes;
+					clusterArray = markerClusterManholes;
+				}
+				else if(srcDestID[x][1]=="manholewithJct"){
+					markersArray = markersManholesWithJct;
+					clusterArray = markerClusterManholesWithJct;
+				}
+				else if(srcDestID[x][1]=="handhole"){
+					markersArray = markersHandholes;
+					clusterArray = markerClusterHandholes;
+				}
+				else if(srcDestID[x][1]=="handholewithJct"){
+					markersArray = markersHandholesWithJct;
+					clusterArray = markerClusterHandholesWithJct;
+				}
+				else if(srcDestID[x][1]=="DB"){
+					markersArray = markersDB;
+					clusterArray = markerClusterDB;
+				}
+				ID = srcDestID[x][0];
+				if ($(this).is(':checked')){
+					if(markersArray[ID].getMap()==null){
+						clusterArray.removeMarker(markersArray[ID]);
+						markersArray[ID].setMap(map);			
+						clusterArray.addMarker(markersArray[ID]);
+					}
+				}
+				else{
+					markersArray[ID].setMap(null);
+					clusterArray.removeMarker(markersArray[ID]);
+					}
+			}
+		
+		
+	});		
+	
+}
 </script>
 <script
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJXAds-Gt4I39hRFHhYHMEg3XcBqihYoo&callback=initMap&libraries=drawing&v=weekly"
