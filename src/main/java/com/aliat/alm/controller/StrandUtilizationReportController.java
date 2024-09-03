@@ -130,7 +130,9 @@ public class StrandUtilizationReportController {
 		List<Object[]> fiberAuxDataRelatedPath = new ArrayList<Object[]>();
 		List<Object[]> relatedPathCablesID = new ArrayList<Object[]>();
 		List<Object[]> relatedPathCablesList = new ArrayList<Object[]>();
-
+        List<String> junctionIDs = new ArrayList<>();
+		List<Object[]> manHandList = new ArrayList<Object[]>();
+        List<String> manHandoleList = new ArrayList<>();
 
 
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
@@ -204,8 +206,10 @@ public class StrandUtilizationReportController {
 					listStrandsUtilization = ((NativeQuery<StrandUtilizationReport>) query).addScalar("strandNo").addScalar("tubeNo").addScalar("locationType").addScalar("locationID").addScalar("locationName").addScalar("longitude").addScalar("latitude").addScalar("elementType").addScalar("elementID").addScalar("frontBackPort").addScalar("relatedPath").addScalar("portIndex").addScalar("portRow").addScalar("portColumn").addScalar("status").addScalar("equipmentType").addScalar("equipmentID").addScalar("equipmentName")
 							.addScalar("showLocation").addScalar("showElement").setResultTransformer(Transformers.aliasToBean(StrandUtilizationReport.class))
 							.list();
-					
 					rtn.put("listStrandsUtilization", listStrandsUtilization);
+					
+					List<Object[]> junctionList = session.createNativeQuery(str).getResultList();
+
 
 					List<Object[]> fiberList = session.createNativeQuery(
 							"SELECT A.SOURCE_LNG,A.SOURCE_LAT,A.DESTINATION_LNG,A.DESTINATION_LAT,A.SOURCE_WARE_ID,A.SOURCE_ID,A.SOURCE_NAME,A.DESTINATION_WARE_ID,A.DESTINATION_ID,A.DESTINATION_NAME,(select B.FIBER_COLOR_OWNER from FIBER_OWNER_COLOR B WHERE B.FIBER_OWNER=A.FIBER_OWNER) AS FIBER_CABLE_COLOR,A.NUMBER_OF_STRANDS,A.NUMBER_OF_TUBES FROM FIBER_CABLES A WHERE A.FIBER_CABLE_ID ='"+fiberCableID+ "' ").getResultList();
@@ -242,9 +246,36 @@ public class StrandUtilizationReportController {
 						    relatedPathCablesList.addAll(query.list());					
 					    
 					}
-
 					rtn.put("fiberAuxDataRelatedPath",fiberAuxDataRelatedPath);
 					rtn.put("relatedPathCables", relatedPathCablesList);
+					
+					
+					
+					for(int x=0;x<junctionList.size();x++) {
+						Object[] row = junctionList.get(x);
+					    String elementType = (String) row[7]; 
+					    String elementID = (String) row[8]; 
+					    
+					    if(elementType.equals("Junction")==true) {
+					    	if(junctionIDs.contains(elementID) ==false) {
+					    	junctionIDs.add(elementID);
+					    	}
+					    }					    
+					}
+				    query = session.createNativeQuery(
+							"SELECT PHYSICAL_LAYER_ID,PHYSICAL_LAYER_NAME,JUNCTION_ID,JUNCTION_NAME FROM JUNCTION B WHERE JUNCTION_ID IN (:param1) ");
+					query.setParameter("param1",junctionIDs);
+					manHandList.addAll(query.list());
+					rtn.put("manHandList", manHandList);
+				    
+					for(int x=0;x<manHandList.size();x++) {
+						Object[] row = manHandList.get(x);
+					    String ID = (String) row[0]; 					    
+					    	if(manHandoleList.contains(ID) ==false) {
+					    		manHandoleList.add(ID);
+					    }					    
+					}
+					rtn.put("manHandoleList", manHandoleList);
 
 										
 					List<Object[]> frontTotalUsedStrands = session.createNativeQuery(
@@ -258,6 +289,61 @@ public class StrandUtilizationReportController {
 					List<Object[]> jctTotalUsedStrands = session.createNativeQuery(
 							"Select count(*) from JUNCTION_MAPPING where FIBER_ID_SIDE_A ='"+fiberCableID+ "' OR FIBER_ID_SIDE_B ='"+fiberCableID+"' ").getResultList();
 					rtn.put("jctTotalUsedStrands", jctTotalUsedStrands);
+					
+					
+					String str1 ="SELECT * FROM ( "
+							+ " SELECT DISTINCT A.STRAND_NB_SIDE_A AS strandNo,A.TUBE_NB_SIDE_A AS tubeNo, A.JCT_ID  as jctID, J.JUNCTION_NAME as jctName,M.manhole_id as manID,M.manhole_name as manName "
+							+ " FROM JUNCTION_MAPPING A LEFT JOIN JUNCTION J ON A.JCT_ID = J.JUNCTION_ID LEFT JOIN manhole M ON A.LOCATION_ID_SIDE_A = M.manhole_id AND A.LOCATION_TYPE_SIDE_A = 'Manhole' "
+							+ " WHERE A.FIBER_ID_SIDE_A = '"+fiberCableID+"' AND (A.STRAND_NB_SIDE_A !=null OR A.STRAND_NB_SIDE_A !='null') AND (A.TUBE_NB_SIDE_A !=null OR A.TUBE_NB_SIDE_A !='null' ) "
+							
+							+ " UNION "
+							
+							+ " SELECT DISTINCT A.STRAND_NB_SIDE_A AS strandNo,A.TUBE_NB_SIDE_A AS tubeNo, A.JCT_ID  as jctID, J.JUNCTION_NAME as jctName,M.handhole_id as handID,M.handhole_name as handName "
+							+ " FROM JUNCTION_MAPPING A LEFT JOIN JUNCTION J ON A.JCT_ID = J.JUNCTION_ID LEFT JOIN handhole M ON A.LOCATION_ID_SIDE_A = M.handhole_id AND A.LOCATION_TYPE_SIDE_A = 'Handhole' "
+							+ " WHERE A.FIBER_ID_SIDE_A = '"+fiberCableID+"' AND (A.STRAND_NB_SIDE_A !=null OR A.STRAND_NB_SIDE_A !='null') AND (A.TUBE_NB_SIDE_A !=null OR A.TUBE_NB_SIDE_A !='null' ) "
+							
+							+ " UNION "
+
+							+ " SELECT DISTINCT A.STRAND_NB_SIDE_B AS strandNo,A.TUBE_NB_SIDE_B AS tubeNo, A.JCT_ID  as jctID, J.JUNCTION_NAME as jctName,M.manhole_id as manID,M.manhole_name as manName "
+							+ " FROM JUNCTION_MAPPING A LEFT JOIN JUNCTION J ON A.JCT_ID = J.JUNCTION_ID LEFT JOIN manhole M ON A.LOCATION_ID_SIDE_A = M.manhole_id AND A.LOCATION_TYPE_SIDE_A = 'Manhole' "
+							+ " WHERE A.FIBER_ID_SIDE_B = '"+fiberCableID+"' AND (A.STRAND_NB_SIDE_A !=null OR A.STRAND_NB_SIDE_A !='null') AND (A.TUBE_NB_SIDE_A !=null OR A.TUBE_NB_SIDE_A !='null' ) "
+									
+							+ " UNION "
+							
+							+ " SELECT DISTINCT A.STRAND_NB_SIDE_B AS strandNo,A.TUBE_NB_SIDE_B AS tubeNo, A.JCT_ID  as jctID, J.JUNCTION_NAME as jctName,M.handhole_id as handID,M.handhole_name as handName "
+							+ " FROM JUNCTION_MAPPING A LEFT JOIN JUNCTION J ON A.JCT_ID = J.JUNCTION_ID LEFT JOIN handhole M ON A.LOCATION_ID_SIDE_A = M.handhole_id AND A.LOCATION_TYPE_SIDE_A = 'Handhole' "
+							+ " WHERE A.FIBER_ID_SIDE_B = '"+fiberCableID+"' AND (A.STRAND_NB_SIDE_A !=null OR A.STRAND_NB_SIDE_A !='null') AND (A.TUBE_NB_SIDE_A !=null OR A.TUBE_NB_SIDE_A !='null' ) "
+									
+							+ " UNION "
+							
+							+ " SELECT DISTINCT A.STRAND_NB_SIDE_B AS strandNo,A.TUBE_NB_SIDE_B AS tubeNo,A.JCT_ID  as jctID,J.JUNCTION_NAME as jctName,M.manhole_id as manID,M.manhole_name as manName "
+							+ " FROM JUNCTION_MAPPING A LEFT JOIN JUNCTION J ON A.JCT_ID = J.JUNCTION_ID LEFT JOIN manhole M ON A.LOCATION_ID_SIDE_B = M.manhole_id AND A.LOCATION_TYPE_SIDE_B = 'Manhole' "
+							+ " WHERE A.FIBER_ID_SIDE_B = '"+fiberCableID+"' AND (A.STRAND_NB_SIDE_B !=null OR A.STRAND_NB_SIDE_B !='null') AND (A.TUBE_NB_SIDE_B !=null OR A.TUBE_NB_SIDE_B !='null' ) "
+
+							+ " UNION "
+							
+							+ " SELECT DISTINCT A.STRAND_NB_SIDE_B AS strandNo,A.TUBE_NB_SIDE_B AS tubeNo,A.JCT_ID  as jctID,J.JUNCTION_NAME as jctName,M.handhole_id as handID,M.handhole_name as handName "
+							+ " FROM JUNCTION_MAPPING A LEFT JOIN JUNCTION J ON A.JCT_ID = J.JUNCTION_ID LEFT JOIN handhole M ON A.LOCATION_ID_SIDE_B = M.handhole_id AND A.LOCATION_TYPE_SIDE_B = 'Handhole' "
+							+ " WHERE A.FIBER_ID_SIDE_B = '"+fiberCableID+"' AND (A.STRAND_NB_SIDE_B !=null OR A.STRAND_NB_SIDE_B !='null') AND (A.TUBE_NB_SIDE_B !=null OR A.TUBE_NB_SIDE_B !='null' ) "
+							
+							+ " UNION "
+							
+							+ " SELECT DISTINCT A.STRAND_NB_SIDE_A AS strandNo,A.TUBE_NB_SIDE_A AS tubeNo,A.JCT_ID  as jctID,J.JUNCTION_NAME as jctName,M.manhole_id as manID,M.manhole_name as manName "
+							+ " FROM JUNCTION_MAPPING A LEFT JOIN JUNCTION J ON A.JCT_ID = J.JUNCTION_ID LEFT JOIN manhole M ON A.LOCATION_ID_SIDE_B = M.manhole_id AND A.LOCATION_TYPE_SIDE_B = 'Manhole' "
+							+ " WHERE A.FIBER_ID_SIDE_A = '"+fiberCableID+"' AND (A.STRAND_NB_SIDE_B !=null OR A.STRAND_NB_SIDE_B !='null') AND (A.TUBE_NB_SIDE_B !=null OR A.TUBE_NB_SIDE_B !='null' ) "
+							
+							+ " UNION "
+							
+							+ " SELECT DISTINCT A.STRAND_NB_SIDE_A AS strandNo,A.TUBE_NB_SIDE_A AS tubeNo,A.JCT_ID  as jctID,J.JUNCTION_NAME as jctName,M.handhole_id as handID,M.handhole_name as handName "
+							+ " FROM JUNCTION_MAPPING A LEFT JOIN JUNCTION J ON A.JCT_ID = J.JUNCTION_ID LEFT JOIN handhole M ON A.LOCATION_ID_SIDE_B = M.handhole_id AND A.LOCATION_TYPE_SIDE_B = 'Handhole' "
+							+ " WHERE A.FIBER_ID_SIDE_A = '"+fiberCableID+"' AND (A.STRAND_NB_SIDE_B !=null OR A.STRAND_NB_SIDE_B !='null') AND (A.TUBE_NB_SIDE_B !=null OR A.TUBE_NB_SIDE_B !='null' ) "
+							
+							
+							+")"
+							;
+					
+					
+					
 				}
 
 			} catch (Exception e) {
