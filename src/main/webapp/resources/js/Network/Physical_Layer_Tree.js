@@ -2132,7 +2132,8 @@ menuTubePath = new ContextMenu({
 					}
 				},
 				{'icon': 'trash', 'name': 'Hide All Points', action: () => {					
-					 for(var t=0;t<siteCltSrcMarkers.length;t++) {
+					console.log("siteCltSrcMarkerss "+siteCltSrcMarkers.length)
+					for(var t=0;t<siteCltSrcMarkers.length;t++) {
 						siteCltSrcMarkers[siteCltSrcMarkers[t].ID].setMap(null);
 					}
 					markerClusterManhole.clearMarkers();
@@ -2983,7 +2984,7 @@ singleSite = new ContextMenu({
 	}	
 },
 
-{'icon': 'paste', 'name': 'Show Path', action: () => {				
+{'icon': 'route', 'name': 'Show Path', action: () => {				
 	
   //Site_Boq(selectedSiteIdContext);
 	if (flag == 0 ){// in order to build for the first time the main fiber
@@ -2998,7 +2999,66 @@ singleSite = new ContextMenu({
 	 showDB(selectedSiteIdContext,"Site",selectedSiteName);
 	
   }
+},
+
+{'icon': 'map-marker-alt', 'name': 'Show Connected Sites', action: () => {			
+	 $("#ClientSite").empty();	
+	 siteExportData =[];
+	 opentab(event, 'ClientSite');
+	 $("#CltSiteBtn").removeClass("tablinks").addClass("tablinks active");
+	 $.ajax({
+			type: "GET",
+			async: false,
+			contentType: "application/json; charset=utf-8",
+			url: getContext()+'/findConnectedSites',
+			data: {
+				"selectedSiteIdContext":selectedSiteIdContext 
+			},									
+			dataType: "json",
+			success: function (data) {
+
+                //clientExportData = data.ClientData;
+                siteExportData = data.SiteData;
+                var filename =selectedSiteName;
+                filename =filename.replace(/[-\/\\]/g, "_").replace(/\s+/g, "");
+               
+				$("#ClientSite").append("<tr><td><b>Site: </b>" +selectedSiteName+" / "+selectedSiteIdContext);
+				$("#ClientSite").append("<table style='width:100%;'><tr>"+"<th style='font-size:18px;width:100%;'><u>Sites</u></th> <th><button id='exportFiberClientSite' type='button' class='btn btn-primary' " 
+						+ "style='color: white; font-size: 13px; height: 40px; width: 80%; margin-left:25px' " 
+						+ "onclick='ExportSiteData(\""+filename+"\")'>" 
+						+ "Export"
+						+ "</button></th> </tr></table>"
+						+"<table style='width:100%;'><tr>"+"<td style='width: 5%'></td>"+"<th style='width: 35%'>Site ID </th>"
+						+"<th style='width: 30%'>Warehouse ID </th>"
+						+"<th style='width: 35%'>Warehouse Name</th></tr></table>");
+				
+				for(i=0;i<data.SiteData.length;i++){
+					$("#ClientSite").append("<table style='width:100%;'><tr>"+"<td style='width: 5%;'><input type='checkbox' checked id='" +data.SiteData[i][0]+"_SitesChechbox'></td>"+"<td style='width: 35%'>"+data.SiteData[i][1]+"</td>"
+							+"<td style='width: 30%'> "+data.SiteData[i][0]+"</td>"                                         
+							+"<td style='width: 35%'> "+data.SiteData[i][2]+"</td></tr></table>");
+			       	var wareID =data.SiteData[i][0];
+					
+			      	if(markersSite[wareID]) {
+						if(markersSite[wareID].getMap() ==null) {
+							markerClusterSite.removeMarker(markersSite[wareID]);	
+							markersSite[wareID].setMap(map);
+							markerClusterSite.addMarker(markersSite[wareID]);	
+							if ($("#"+wareID).children('input:checkbox').length > 0) {
+								$("#"+wareID).children(':checkbox').prop( "checked", true );
+							}
+							$("#siteCheckAllBoq").prop( "checked", true );
+						 }	
+			      	}
+			      	showMarkersCheckedClientSite(wareID+'_SitesChechbox',wareID,"site")
+				}
+		     },
+			error: function (result) {
+				alert("Error");
+			}
+		  });
+ }
 }
+
 
 
 ]
@@ -23178,6 +23238,15 @@ function ExportClientAndSite(fileName) {
     var siteCSVData = fillExcel(siteExportData, siteHeaders);
 
     exportCSV(clientCSVData, fileName+"_ClientData.csv");
+    exportCSV(siteCSVData, fileName+"_SiteData.csv");
+}
+
+function ExportSiteData(fileName) {
+    
+    var siteHeaders = ["Warehouse ID", "Site ID", "Site Name"];
+    
+    var siteCSVData = fillExcel(siteExportData, siteHeaders);
+
     exportCSV(siteCSVData, fileName+"_SiteData.csv");
 }
 		

@@ -5135,6 +5135,151 @@ public class PhysicalLayerController {
 	}
 	return rtn;
 	}
+	
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/findConnectedSites", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> findConnectedSites(Locale locale, Model model, HttpServletRequest request,
+	HttpServletResponse response) throws JsonProcessingException {
+	
+	Map<String, Object> rtn = new LinkedHashMap<>();
+	Session session = null;
+	Transaction tx = null;
+	session = AlmDbSession.getInstance().getSession();
+	if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+		rtn.put("Login", LoginServices.checkSession(request, response));
+	return rtn;
+	}
+	if (session != null && session.isOpen()) {
+		tx = session.beginTransaction();
+	
+	try {
+		String dataSel = request.getParameter("selectedSiteIdContext");
+		List<String> connectedSiteData = session.createNativeQuery(
+		//src and dest are both sites 
+		"select distinct a.SOURCE_WARE_ID "
+		+ "from FIBER_CABLES a "
+		+ "where (a.DESTINATION_WARE_ID='"+dataSel+"') and a.SOURCE_WARE_ID is not null and a.SOURCE_WARE_ID!='null' "
+		+ "union "
+		+"select distinct a.DESTINATION_WARE_ID "
+		+ "from FIBER_CABLES a "
+		+ "where (a.SOURCE_WARE_ID='"+dataSel+"') and a.DESTINATION_WARE_ID is not null and a.DESTINATION_WARE_ID!='null' "
+		+ "union "
+		
+		//src or dest is db located in the site we search for   
+		+ "select distinct a.SOURCE_WARE_ID "
+		+ "from FIBER_CABLES a left join DISTRIBUTION_BOARD b on a.DESTINATION_ID =b.DB_ID "
+		+ "where b.WAREHOUSE='"+dataSel+"' and a.SOURCE_WARE_ID is not null and a.SOURCE_WARE_ID!='null'  "
+		+"union "
+		+ "select distinct a.DESTINATION_WARE_ID "
+		+ "from FIBER_CABLES a left join DISTRIBUTION_BOARD b on a.SOURCE_ID=b.DB_ID "
+		+ "where b.WAREHOUSE='"+dataSel+"' and a.DESTINATION_WARE_ID is not null and a.DESTINATION_WARE_ID!='null' "
+		+ "Union "
+		
+		//src or dest is DB and other side is the site we search for
+		+"select distinct b.WAREHOUSE "
+		+ "from FIBER_CABLES a left join DISTRIBUTION_BOARD b on a.DESTINATION_ID =b.DB_ID "
+		+ "where a.SOURCE_WARE_ID='"+dataSel+"' and b.WAREHOUSE is not null and b.WAREHOUSE!='null'  "
+		+"union "
+		+"select distinct b.WAREHOUSE "
+		+ "from FIBER_CABLES a left join DISTRIBUTION_BOARD b on a.SOURCE_ID =b.DB_ID "
+		+ "where a.DESTINATION_WARE_ID='"+dataSel+"' and b.WAREHOUSE is not null and b.WAREHOUSE!='null'  "
+		+"union "
+		
+		//when both src and dest are db's
+		+"select distinct a.WAREHOUSE  from DISTRIBUTION_BOARD a where a.DB_ID IN "
+		+"(select b.SOURCE_ID  "
+		+ "from FIBER_CABLES b left join DISTRIBUTION_BOARD c on b.DESTINATION_ID =c.DB_ID "
+		+ "where c.WAREHOUSE='"+dataSel+"' ) "
+		+"union "
+		+"select distinct a.WAREHOUSE  from DISTRIBUTION_BOARD a where a.DB_ID IN "
+		+"(select b.DESTINATION_ID  "
+		+ "from FIBER_CABLES b left join DISTRIBUTION_BOARD c on b.SOURCE_ID =c.DB_ID "
+		+ "where c.WAREHOUSE='"+dataSel+"' ) "
+		+"union "
+		
+		//db mapping 
+		+ "Select DISTINCT a.BP_LOCATION "
+		+ "FROM DISTRIBUTION_BOARD_MAPPING a  "
+		+ "where a.BP_LOCATION_TYPE ='Site' and a.FP_LOCATION='"+dataSel+"' and a.BP_LOCATION is not null and a.BP_LOCATION!='null' "
+		+"union "
+		+ "Select DISTINCT a.FP_LOCATION "
+		+ "FROM DISTRIBUTION_BOARD_MAPPING a  "
+		+ "where a.FP_LOCATION_TYPE ='Site' and a.BP_LOCATION='"+dataSel+"' and a.FP_LOCATION is not null and a.FP_LOCATION!='null' "
+		+"union "
+		//junction mapping: both sides are sites 
+		+"select distinct a.WAREHOUSE_ID_SIDE_A "
+		+ "from JUNCTION_MAPPING a  "
+		+ "where a.LOCATION_TYPE_SIDE_A ='Site' and a.WAREHOUSE_ID_SIDE_B='"+dataSel+"' and a.WAREHOUSE_ID_SIDE_A is not null and a.WAREHOUSE_ID_SIDE_A !='null' "
+		+ "union "
+		+"select distinct a.WAREHOUSE_ID_SIDE_B "
+		+ "from JUNCTION_MAPPING a  "
+		+ "where a.LOCATION_TYPE_SIDE_B ='Site' and a.WAREHOUSE_ID_SIDE_A='"+dataSel+"' and a.WAREHOUSE_ID_SIDE_B is not null and a.WAREHOUSE_ID_SIDE_B !='null' "
+		+ "union "
+		
+		//junction mapping: where side A or side B is DB that located on that site  
+		+"select distinct a.WAREHOUSE_ID_SIDE_A "
+		+ "from JUNCTION_MAPPING a left join DISTRIBUTION_BOARD b on a.LOCATION_ID_SIDE_B = b.DB_ID "
+		+ "where a.LOCATION_TYPE_SIDE_A ='Site' and b.WAREHOUSE='"+dataSel+"' and a.WAREHOUSE_ID_SIDE_A is not null and a.WAREHOUSE_ID_SIDE_A !='null' "
+		+ "union "
+		+"select distinct a.WAREHOUSE_ID_SIDE_B "
+		+ "from JUNCTION_MAPPING a left join DISTRIBUTION_BOARD b on a.LOCATION_ID_SIDE_A = b.DB_ID "
+		+ "where a.LOCATION_TYPE_SIDE_B ='Site' and b.WAREHOUSE='"+dataSel+"' and a.WAREHOUSE_ID_SIDE_B is not null and a.WAREHOUSE_ID_SIDE_B !='null' "
+		+ "union "
+		
+		//junction mapping: where one side is DB and the other side is the site we search for 
+		+"select distinct b.WAREHOUSE "
+		+ "from JUNCTION_MAPPING a left join DISTRIBUTION_BOARD b on a.LOCATION_ID_SIDE_B =b.DB_ID "
+		+ "where a.WAREHOUSE_ID_SIDE_A='"+dataSel+"' and b.WAREHOUSE is not null and b.WAREHOUSE!='null'  "
+		+"union "
+		
+		+"select distinct b.WAREHOUSE "
+		+ "from JUNCTION_MAPPING a left join DISTRIBUTION_BOARD b on a.LOCATION_ID_SIDE_A =b.DB_ID "
+		+ "where a.WAREHOUSE_ID_SIDE_B='"+dataSel+"' and b.WAREHOUSE is not null and b.WAREHOUSE!='null'  "
+		+"union "
+		
+		//junction mapping: when both side are DB'S and one of them is located in the site we search for 
+		+"select distinct a.WAREHOUSE from DISTRIBUTION_BOARD a where a.DB_ID IN "
+		+"(select b.LOCATION_ID_SIDE_B  "
+		+ "from JUNCTION_MAPPING b left join DISTRIBUTION_BOARD c on b.LOCATION_ID_SIDE_A =c.DB_ID "
+		+ "where c.WAREHOUSE='"+dataSel+"' ) "
+		+"union "
+		+"select distinct a.WAREHOUSE from DISTRIBUTION_BOARD a where a.DB_ID IN "
+		+"(select b.LOCATION_ID_SIDE_A  "
+		+ "from JUNCTION_MAPPING b left join DISTRIBUTION_BOARD c on b.LOCATION_ID_SIDE_B =c.DB_ID "
+		+ "where c.WAREHOUSE='"+dataSel+"' ) ").getResultList();
+		
+		
+		
+		
+		query = session.createNativeQuery(
+				"SELECT DISTINCT WARE_ID,SITE_ID,WARE_NAME,LONGITUDE,LATITUDE FROM WAREHOUSE WHERE WARE_ID IN (:param1)");
+		query.setParameter("param1", connectedSiteData);
+		
+		rtn.put("SiteData", query.getResultList());
+			
+	
+	} catch (Exception e) {
+		sw = new StringWriter();
+		e.printStackTrace(new PrintWriter(sw));
+		exceptionAsString = sw.toString();
+		logger.finest("Error in findConnectedSites due to \n " + exceptionAsString);
+		logger.info("Error in findConnectedSites due to \n " + exceptionAsString);
+		rtn.put("SiteData", null);
+		
+	
+	} finally {
+		if (session != null && session.isOpen()) {
+			tx.commit();
+			session.close();
+	
+			}
+		}
+	
+	}
+	return rtn;
+	}
 
 	@RequestMapping(value = "/TrenchBoQ", method = RequestMethod.GET)
 	@ResponseBody
