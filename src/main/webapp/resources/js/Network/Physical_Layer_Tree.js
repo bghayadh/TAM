@@ -5140,29 +5140,27 @@ singleNodeActive = new ContextMenu({
 					}	
 					   },
 					 {'icon': 'arrow-right', 'name': 'Move To Implementation', action: () => {
-							
-						 selectedProjectIdContext = selectedProjectIdContext.replace("Project_span_", "");
-						 
-						 
-						 $.ajax({
-								
-				              type: "GET",
-				
+
+						 $("#confirmHeader").text("Moving Project To Implementation: ");
+						 $("#moveBody").text("Are you sure you want to move the selected project from planning to implementation ?");
+						 $("#MoveModal").modal("show");
+						 $("#moveCancel").click(function() {
+							$("#MoveModal").modal('hide');
+						 });
+						 $("#moveProject").click(function() {
+							$("#MoveModal").modal('hide');							
+						 	selectedProjectIdContext = selectedProjectIdContext.replace("Project_span_", "");						 
+						 	$.ajax({								
+				              type: "GET",				
 				              contentType: "application/json; charset=utf-8",
-				
-				              url: getContext()+'/moveToImplementation',
-				
-				              async:false,
-				
+				              url: getContext()+'/moveToImplementation',				
+				              async:false,				
 				              data: {
 				                  "selectedProjectIdContext":selectedProjectIdContext,
 				                  "updateModfUser": updateModfUser,
-				              },
-				
-				              dataType: "json",
-				
-				              success: function (data) {
-				            	  
+				              },				
+				              dataType: "json",				
+				              success: function (data) {				            	  
 				            	var liProjectChild = $("#" + selectedProjectIdContext); 
 
 								// Find the parent ul element
@@ -5199,11 +5197,9 @@ singleNodeActive = new ContextMenu({
 				                  alert("Error");
 				              }
 				          });
-						 
-						
-						 
+						});						 						 
 						}	
-						   }
+					}
 				  ]
 			});
 

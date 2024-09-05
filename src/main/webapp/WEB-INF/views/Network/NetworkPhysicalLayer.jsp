@@ -1310,7 +1310,36 @@
 					<div class="modal-footer"></div>
 				</div>
 			</div>
+		</div>
+
+		<div class="container">
+		<div id="MoveModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+			<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header" style="background-color: #2678CC ; height: 55px; ">
+						<h5 id="confirmHeader" class="modal-title" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px;"></h5>
+						<div style="float: right;">
+							<button  type="button" name="closePopup" class="close" id="close" onclick="ClosingConfirm()" >
+								<i class='fa fa-times'></i>
+							</button>
+							<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change'></i></a>
+						</div></div>
+					<div class="modal-body">
+						<div class="tab-content" >
+							<p id="moveBody" style="font-weight: bold;color:#000000BB;"></p>							
+							<div style="text-align:center;">
+								<button id="moveProject" class="btn btn-delete" style="color: white; font-weight:bold;  margin-right: 5px ; background-color:#6AA84F">Yes</button>							
+								<button id="moveCancel" class="btn btn-delete" style="color: white; font-weight:bold; margin-left: 5px;background-color:#6AA84F; padding-left:15px; padding-right:15px">No</button>								
+							</div>								
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer"></div>
+				</div>
+			</div>
 		</div>	
+		
+			
 		<!-- confirmation modal -->
 		<div class="container">
 		<div id="ConfirmModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">

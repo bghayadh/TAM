@@ -14152,6 +14152,8 @@ else if($("#CoreModal").is(':visible')){
 c=$("#CoreModal");}
 else if($("#RanModal").is(':visible')){
 c=$("#RanModal");}
+else if ($("#MoveModal").is(':visible')){
+c=$("#MoveModal");}
 var result= confirm('are you sure you want to close?')
 	if (result== false){
 		c.modal('show');
