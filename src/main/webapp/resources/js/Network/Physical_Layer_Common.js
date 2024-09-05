@@ -72,6 +72,15 @@ searchConnectedButtonEvents();
     $("#deleteTermination").click(function() {
 		$("#DeleteModal").modal('hide');
 	});
+	
+	$("#moveCancel").click(function() {
+		$("#MoveModal").modal('hide');
+	});
+	
+	$("#deleteProjectCancellation").click(function() {
+		$("#DeleteProjectModal").modal('hide');
+	});
+
     
     $("#confirmClose").click(function() {
 		$("#ConfirmModal").modal('hide');
@@ -14154,6 +14163,9 @@ else if($("#RanModal").is(':visible')){
 c=$("#RanModal");}
 else if ($("#MoveModal").is(':visible')){
 c=$("#MoveModal");}
+else if ($("#DeleteProjectModal").is(':visible')){
+c=$("#DeleteProjectModal");}
+
 var result= confirm('are you sure you want to close?')
 	if (result== false){
 		c.modal('show');

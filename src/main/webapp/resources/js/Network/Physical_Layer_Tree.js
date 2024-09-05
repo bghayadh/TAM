@@ -5135,20 +5135,24 @@ singleNodeActive = new ContextMenu({
 						}
 					 },
 					 {'icon': 'trash', 'name': 'Delete Project', action: () => {
-						deletePhysicalLayers("Project","",selectedProjectIdContext);
-						
+						 $("#DeleteProjectHeader").text("Deleting Under Planning Project: ");
+						 $("#deleteProjectBody").text("Are you sure you want to delete the selected under planning project?");
+						 $("#deleteImplementProject").hide();		
+						 $("#deletePlanningProject").show();				 
+						 $("#DeleteProjectModal").modal("show");
+						 $("#deletePlanningProject").click(function() {
+						 	deletePhysicalLayers("Project","",selectedProjectIdContext);
+						 	$("#DeleteProjectModal").modal("hide");
+						 });						
 					}	
 					   },
 					 {'icon': 'arrow-right', 'name': 'Move To Implementation', action: () => {
 
 						 $("#confirmHeader").text("Moving Project To Implementation: ");
-						 $("#moveBody").text("Are you sure you want to move the selected project from planning to implementation ?");
+						 $("#moveBody").text("Are you sure you want to move the selected project from planning to implementation?");
 						 $("#moveToCurrent").hide();
 						 $("#moveToImplement").show();
 						 $("#MoveModal").modal("show");
-						 $("#moveCancel").click(function() {
-							$("#MoveModal").modal('hide');
-						 });
 						 $("#moveToImplement").click(function() {
 							$("#MoveModal").modal('hide');				
 						 	selectedProjectIdContext = selectedProjectIdContext.replace("Project_span_", "");						 
@@ -5252,9 +5256,16 @@ singleNodeActive = new ContextMenu({
 						}				
 						}
 					 },
-					 {'icon': 'trash', 'name': 'Delete Project', action: () => {
-						
-						deletePhysicalLayers("Project","",selectedProjectIdContext);
+					 {'icon': 'trash', 'name': 'Delete Project', action: () => {						 
+						 $("#DeleteProjectHeader").text("Deleting Under Planning Project: ");
+						 $("#deleteProjectBody").text("Are you sure you want to delete the selected under implementation project?");
+						 $("#deletePlanningProject").hide();
+						 $("#deleteImplementProject").show();				 
+						 $("#DeleteProjectModal").modal("show");
+						 $("#deleteImplementProject").click(function() {
+							deletePhysicalLayers("Project","",selectedProjectIdContext);						 	
+						 	$("#DeleteProjectModal").modal("hide");
+						 });						
 					}	
 					   },
 					 
@@ -5265,9 +5276,6 @@ singleNodeActive = new ContextMenu({
 						 $("#moveToImplement").hide();
 						 $("#moveToCurrent").show();
 						 $("#MoveModal").modal("show");
-						 $("#moveCancel").click(function() {
-							$("#MoveModal").modal('hide');
-						 });
 						 $("#moveToCurrent").click(function() {
 							$("#MoveModal").modal('hide');						 
 						 	selectedProjectIdContext = selectedProjectIdContext.replace("Project_span_", "");						 
