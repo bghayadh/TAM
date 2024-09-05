@@ -5143,12 +5143,14 @@ singleNodeActive = new ContextMenu({
 
 						 $("#confirmHeader").text("Moving Project To Implementation: ");
 						 $("#moveBody").text("Are you sure you want to move the selected project from planning to implementation ?");
+						 $("#moveToCurrent").hide();
+						 $("#moveToImplement").show();
 						 $("#MoveModal").modal("show");
 						 $("#moveCancel").click(function() {
 							$("#MoveModal").modal('hide');
 						 });
-						 $("#moveProject").click(function() {
-							$("#MoveModal").modal('hide');							
+						 $("#moveToImplement").click(function() {
+							$("#MoveModal").modal('hide');				
 						 	selectedProjectIdContext = selectedProjectIdContext.replace("Project_span_", "");						 
 						 	$.ajax({								
 				              type: "GET",				
@@ -5257,9 +5259,19 @@ singleNodeActive = new ContextMenu({
 					   },
 					 
 					 {'icon': 'arrow-right', 'name': 'Move To Current Physical Layer', action: () => {
-						 selectedProjectIdContext = selectedProjectIdContext.replace("Project_span_", "");
 						 
-						var checkedIds = [];
+						 $("#confirmHeader").text("Moving Project To Current Physical Layer: ");
+						 $("#moveBody").text("Are you sure you want to move the selected project from implementation to current physical layer?");
+						 $("#moveToImplement").hide();
+						 $("#moveToCurrent").show();
+						 $("#MoveModal").modal("show");
+						 $("#moveCancel").click(function() {
+							$("#MoveModal").modal('hide');
+						 });
+						 $("#moveToCurrent").click(function() {
+							$("#MoveModal").modal('hide');						 
+						 	selectedProjectIdContext = selectedProjectIdContext.replace("Project_span_", "");						 
+						 	var checkedIds = [];
 
 $("#Manhole_f_" + selectedProjectIdContext + " .MANHOLE").each(function() {
     var id = $(this).attr('id');
@@ -5340,33 +5352,21 @@ $("#Handhole_f_" + selectedProjectIdContext + " .JUNCTION_H").each(function() {
 });
 //used to refresh the google map 
 	var currentCenter = map.getCenter();
-        var currentZoom = map.getZoom();
+        var currentZoom = map.getZoom();						 
 						 
-						 
-						 $.ajax({
-								
-				              type: "GET",
-				
-				              contentType: "application/json; charset=utf-8",
-				
-				              url: getContext()+'/moveProjectToCurrentPhysicalLayer',
-				
-				              async:false,
-				
+						 $.ajax({								
+				              type: "GET",				
+				              contentType: "application/json; charset=utf-8",				
+				              url: getContext()+'/moveProjectToCurrentPhysicalLayer',				
+				              async:false,				
 				              data: {
-				                  "selectedProjectIdContext":selectedProjectIdContext,
-				                  
-				              },
-				
-				              dataType: "json",
-				
-				              success: function (data) {
-				            	 
+				                  "selectedProjectIdContext":selectedProjectIdContext,				                  
+				              },				
+				              dataType: "json",				
+				              success: function (data) {				            	 
 				            	  
 				            	  var physicalLayerList =  JSON.parse(data.physicalLayerList); // No need to parse again
 				            	  var physicalLayerData =  JSON.parse(data.physicalLayerData);
-				                  
-				                  
 				                  ListManhole = physicalLayerList["Manhole"]
 		                		  ListManholeJunction  = physicalLayerList["Junction_Manhole"]
                 				  ListHandhole = physicalLayerList["Handhole"]
@@ -5376,31 +5376,21 @@ $("#Handhole_f_" + selectedProjectIdContext + " .JUNCTION_H").each(function() {
 								  trenchList = physicalLayerList["Trench"]
 								  trenchAuxiliary_Data = physicalLayerData["trench_Auxiliary"]  
 								  ductList = physicalLayerList["duct"]
-								  ductAuxiliary_Data = physicalLayerData["ductAuxiliary"] 
-								  
+								  ductAuxiliary_Data = physicalLayerData["ductAuxiliary"] 								  
 								  fiberList = physicalLayerList["fiber"]
 								  fiberTubes   = physicalLayerData["fiber_Tubes"]
 								  fiberStrands = physicalLayerData["fiber_Strands"]
 								  fiberAuxiliary_Data = physicalLayerData["fiber_Auxiliary"]
 								  tubesAuxiliaries  = physicalLayerData["tubes_Auxiliaries"]
 								  strandsAuxiliaries = physicalLayerData["strands_Auxiliaries"]
-										 
-										  
 								  appendProjectElement(ListManhole,ListManholeJunction,ListHandhole,ListHandholeJunction,JunctionList,fiberList,fiberAuxiliary_Data,fiberTubes,tubesAuxiliaries,fiberStrands,strandsAuxiliaries,distribBoardList,trenchList,trenchAuxiliary_Data,ductList,ductAuxiliary_Data,selectedProjectIdContext);
-				                  
-				            	  
-				                  
-					                var liProjectChild = $("#" + selectedProjectIdContext); 
-	
-										var ulProjectParent = liProjectChild.closest("ul");
-									ulProjectParent.detach();
-									
-									
-									$('#ConfirmModal').find('input:text').val('');
-									$("#confirmbody").text("The Following Element Has Been Moved To The Current Physical Layer: ");
-									
-									$("#confirm_table").empty();
-									 var tr = "<tr><td><b>Manhole: </b>"+ListManhole.length+"</td></tr>"
+					              var liProjectChild = $("#" + selectedProjectIdContext); 	
+								  var ulProjectParent = liProjectChild.closest("ul");
+								  ulProjectParent.detach();
+								  $('#ConfirmModal').find('input:text').val('');
+								  $("#confirmbody").text("The Following Element Has Been Moved To The Current Physical Layer: ");									
+								  $("#confirm_table").empty();
+								  var tr = "<tr><td><b>Manhole: </b>"+ListManhole.length+"</td></tr>"
 												+"<tr>"+"<td><b>Handhole: </b>"+ListHandhole.length+"</td></tr>"
 												+"<tr>"+"<td><b>Junction  </b>"+JunctionList.length+"</td></tr>"
 												+"<tr>"+"<td><b>Fiber Cable: </b>"+fiberList.length+"</td></tr>"
@@ -5410,34 +5400,24 @@ $("#Handhole_f_" + selectedProjectIdContext + " .JUNCTION_H").each(function() {
 												+"<tr>"+"<td><b>Trench: </b>"+trenchList.length+"</td></tr>"
 												+"<tr>"+"<td><b>Duct: </b>"+ductList.length+"</td></tr>";
 												
-												$("#confirm_table").append(tr);
-															
-									$("#ConfirmModal").modal('show');
-				                
+								   $("#confirm_table").append(tr);
+								   $("#ConfirmModal").modal('show');				                
 				                
 				 //used to refresh the google map               
                 map.setCenter(currentCenter);
                 map.setZoom(currentZoom);
-
-
-
-				                  for (var i = 0; i < checkedIds.length; i++) {
-    $("#" + checkedIds[i] + " input[type='checkbox']").prop('checked', true);
-}
-
-				              },
-				              
-				              
-				              error: function (result) {
-				                  alert("Error");
-				              }
-				          });
-						 
-						 
-						 
-						 
-					}	
+				for (var i = 0; i < checkedIds.length; i++) {
+    				$("#" + checkedIds[i] + " input[type='checkbox']").prop('checked', true);
+				}
+			},
+			error: function (result) {
+				alert("Error");
+			}
+			});
+		});	 
+	} // End of Move to Current Physical Layer							
 					   }
+					   
 				  ]
 			});
 	

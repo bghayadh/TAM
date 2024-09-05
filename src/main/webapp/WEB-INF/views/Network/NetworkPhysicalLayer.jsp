@@ -1328,7 +1328,8 @@
 						<div class="tab-content" >
 							<p id="moveBody" style="font-weight: bold;color:#000000BB;"></p>							
 							<div style="text-align:center;">
-								<button id="moveProject" class="btn btn-delete" style="color: white; font-weight:bold;  margin-right: 5px ; background-color:#6AA84F">Yes</button>							
+								<button id="moveToImplement" class="btn btn-delete" style="color: white; font-weight:bold;  margin-right: 5px ; background-color:#6AA84F">Yes</button>
+								<button id="moveToCurrent" class="btn btn-delete" style="color: white; font-weight:bold;  margin-right: 5px ; background-color:#6AA84F">Yes</button>														
 								<button id="moveCancel" class="btn btn-delete" style="color: white; font-weight:bold; margin-left: 5px;background-color:#6AA84F; padding-left:15px; padding-right:15px">No</button>								
 							</div>								
 							</div>
