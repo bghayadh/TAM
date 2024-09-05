@@ -5140,21 +5140,17 @@ singleNodeActive = new ContextMenu({
 						 $("#deleteImplementProject").hide();		
 						 $("#deletePlanningProject").show();				 
 						 $("#DeleteProjectModal").modal("show");
-						 $("#deletePlanningProject").click(function() {
-						 	deletePhysicalLayers("Project","",selectedProjectIdContext);
-						 	$("#DeleteProjectModal").modal("hide");
-						 });						
 					}	
 					   },
 					 {'icon': 'arrow-right', 'name': 'Move To Implementation', action: () => {
-
 						 $("#confirmHeader").text("Moving Project To Implementation: ");
 						 $("#moveBody").text("Are you sure you want to move the selected project from planning to implementation?");
 						 $("#moveToCurrent").hide();
 						 $("#moveToImplement").show();
 						 $("#MoveModal").modal("show");
-						 $("#moveToImplement").click(function() {
-							$("#MoveModal").modal('hide');				
+						 $("#moveToImplement").unbind('click');
+						 $("#moveToImplement").bind('click', function(event) {
+							$("#MoveModal").modal('hide');
 						 	selectedProjectIdContext = selectedProjectIdContext.replace("Project_span_", "");						 
 						 	$.ajax({								
 				              type: "GET",				
@@ -5222,16 +5218,11 @@ singleNodeActive = new ContextMenu({
 						document.getElementById('projectAttachment-tab').style.display = 'block';				
 						$('#myTabDb a[href="#projectInfo"]').tab('show');
 
-			          $.ajax({
-			
-			              type: "GET",
-			
-			              contentType: "application/json; charset=utf-8",
-			
-			              url: getContext()+'/findProjectDetails',
-			
-			              async:false,
-			
+			          $.ajax({			
+			              type: "GET",			
+			              contentType: "application/json; charset=utf-8",			
+			              url: getContext()+'/findProjectDetails',			
+			              async:false,		
 			              data: {
 			                  "selectedProjectIdContext":selectedProjectIdContext
 			              },
@@ -5262,21 +5253,17 @@ singleNodeActive = new ContextMenu({
 						 $("#deletePlanningProject").hide();
 						 $("#deleteImplementProject").show();				 
 						 $("#DeleteProjectModal").modal("show");
-						 $("#deleteImplementProject").click(function() {
-							deletePhysicalLayers("Project","",selectedProjectIdContext);						 	
-						 	$("#DeleteProjectModal").modal("hide");
-						 });						
 					}	
 					   },
 					 
-					 {'icon': 'arrow-right', 'name': 'Move To Current Physical Layer', action: () => {
-						 
+					 {'icon': 'arrow-right', 'name': 'Move To Current Physical Layer', action: () => {						 
 						 $("#confirmHeader").text("Moving Project To Current Physical Layer: ");
 						 $("#moveBody").text("Are you sure you want to move the selected project from implementation to current physical layer?");
 						 $("#moveToImplement").hide();
 						 $("#moveToCurrent").show();
 						 $("#MoveModal").modal("show");
-						 $("#moveToCurrent").click(function() {
+						 $("#moveToCurrent").unbind('click');
+						 $("#moveToCurrent").bind('click',function(event) {							 
 							$("#MoveModal").modal('hide');						 
 						 	selectedProjectIdContext = selectedProjectIdContext.replace("Project_span_", "");						 
 						 	var checkedIds = [];
@@ -5422,7 +5409,7 @@ $("#Handhole_f_" + selectedProjectIdContext + " .JUNCTION_H").each(function() {
 				alert("Error");
 			}
 			});
-		});	 
+		});
 	} // End of Move to Current Physical Layer							
 					   }
 					   

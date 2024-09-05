@@ -68,6 +68,17 @@ searchConnectedButtonEvents();
 		$("#DeleteModal").modal('hide');
 		
 	});
+		
+	$("#deletePlanningProject").click(function() {
+		$("#DeleteProjectModal").modal("hide");
+		deletePhysicalLayers("Project","",selectedProjectIdContext);						 	
+	});
+	
+	$("#deleteImplementProject").click(function() {
+		deletePhysicalLayers("Project","",selectedProjectIdContext);						 	
+		$("#DeleteProjectModal").modal("hide");
+	});					
+
     
     $("#deleteTermination").click(function() {
 		$("#DeleteModal").modal('hide');
@@ -9612,18 +9623,20 @@ function deletePhysicalLayers(layer,subLayer,selectedIdContext){
 	//console.log("yessssssss IdNodeSelectedTemp is "+IdNodeSelectedTemp);
 	allSelectedLayer=[];
 	checkIfLayerDel="";
-	
-if (subLayer==""){
+	//subLayer will be empty if delete was done from single element and not from the folder.
+	// Ex.: When deleting single manhole using delete manhole right click while standing in the manhole itself, it means
+	// subLayer is empty. But if deleting manhole was done from Manhole folder, then subLayer is Manhole and layer 
+	// will be AllManholes.
+if (subLayer==""){ // It means that the delete is happening from the single element (like single MH, HH, DB or project).
     	
     	// Get manhole/handole or DB using id from context menu
     		allSelectedLayer.push(selectedIdContext);
-    		// projet id
+    		// projet id    		
     		 if (layer=="Project"){
            	  //var allSelectedLayerProject = allSelectedLayer[0].split("Project_span_")[1];
              	  allSelectedLayer=[];
              	  allSelectedLayer.push(selectedIdContext);           	
-    		}
-    	
+    		}    
     	}
     	
     	// Delete from main Manhole/Handhole OR DB 
@@ -9832,9 +9845,13 @@ if (subLayer==""){
 				}
 				else if(layer=="Project"){
 					
-					for(var k=0;k<allSelectedLayer.length;k++){
-					
+					for(var k=0;k<allSelectedLayer.length;k++){						
+						console.log("Length of allSelectedLayer is " +allSelectedLayer.length);
+						console.log("k is " +k);					
 						var node = document.getElementById(allSelectedLayer[k]);
+						console.log("node id is " +node);
+						console.log("node id is " +$(node).attr('id'));
+						console.log("node id is " +$(node).html());
 						if (node.parentNode) {
 						    node.parentNode.removeChild(node);
 						}
