@@ -809,7 +809,130 @@
 			</div>
 		</div>
 	</div> 
-		<!-- Transmission Model -->
+	<!-- Site Model -->
+	<div class="container">
+		<div id="sitesModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+			<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header" style="background-color: #2678CC ; height: 55px; ">
+						<h5 id="sitesHeader" class="modal-title" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px">Site</h5>
+						<div style="float: right;">
+							<button  type="button" name="closePopup" class="close" id="close" onclick="ClosingConfirm()" >
+								<i class='fa fa-times'></i>
+							</button>
+							<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change'></i>
+							</a>
+						</div>
+					</div>
+					<div class="modal-body">
+						<div class="tab-content">
+							<p></p>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 150px;" class="input-group-text" style="color:green;"><b>Warehouse ID</b> </span> 
+											<input type="text" id="wareID" readonly class="form-control text-input" readonly/>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 150px;" class="input-group-text"><b>Site ID</b></span>
+											<input type="text" id="siteID"  class="form-control text-input" readonly/>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 150px;" class="input-group-text"><b>Warehouse Name</b></span>
+											<input type="text" id="wareName" class="form-control text-input" readonly/>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>City</b></span>
+											<input type="text" id="siteCity" class="form-control text-input" readonly/>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>Area</b></span>
+											<input type="text" id="siteArea" class="form-control text-input" readonly/>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>Region</b></span>
+											<input type="text" id="siteRegion" class="form-control text-input" readonly/>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>Longitude</b></span>
+											<input type="text" id="siteLong" class="form-control text-input" readonly />
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>Latitude</b></span>
+											<input type="text" id="siteLat" class="form-control text-input" readonly/>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>Creation Date</b></span>
+											<input type="text" id="createData_site" class="form-control text-input" readonly />
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 150px;" class="input-group-text"><b>Last Modified Date</b></span>
+											<input type="text" id="lastModifiedDate_site" class="form-control text-input" readonly/>
+										</div>
+									</div>
+								</div>
+							</div>
+						
+			
+						</div>
+					</div>
+					<div class="modal-footer"></div>
+				</div>
+			</div>
+		</div>
+	</div> 
+	
+	<!-- Transmission Model -->
 	<div class="container">
 		<div id="TransmissionModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
 			<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">

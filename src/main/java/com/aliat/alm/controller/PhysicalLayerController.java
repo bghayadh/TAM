@@ -5280,6 +5280,48 @@ public class PhysicalLayerController {
 	}
 	return rtn;
 	}
+	
+	@RequestMapping(value = "/findSitesDetails", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> findSitesDetails(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) throws JsonProcessingException {
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+
+		session = AlmDbSession.getInstance().getSession();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+
+			String selectedSiteIdContext = request.getParameter("selectedSiteIdContext");
+			try {
+				Object[] SiteDetails = (Object[]) session.createNativeQuery(
+						"SELECT WARE_ID,SITE_ID,WARE_NAME,CITY,TO_CHAR(CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(LAST_MODIFY_DATE, 'MM/dd/YYYY HH:MI AM'),LONGITUDE,LATITUDE,AREA_NAME,REGION_NAME FROM WAREHOUSE WHERE WARE_ID ='"
+								+ selectedSiteIdContext + "'")
+						.uniqueResult();
+				rtn.put("SiteDetails", SiteDetails);
+
+			} catch (Exception e) {
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in findSitesDetails due to \n " + exceptionAsString);
+				logger.info("Error in findSitesDetails due to \n " + exceptionAsString);
+				rtn.put("SiteDetails", null);
+
+			} finally {
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+
+				}
+			}
+		}
+		return rtn;
+	}
 
 	@RequestMapping(value = "/TrenchBoQ", method = RequestMethod.GET)
 	@ResponseBody

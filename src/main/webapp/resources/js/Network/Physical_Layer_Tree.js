@@ -2977,10 +2977,42 @@ menuSites = new ContextMenu({
 
 singleSite = new ContextMenu({
 'theme': 'default',
-'items': [
-{'icon': 'paste', 'name': 'Show BoQ', action: () => {				
-	//console.log("selectedSiteIdContext "+selectedSiteIdContext)
-  Site_Boq(selectedSiteIdContext);
+'items': [       
+{'icon': 'edit', 'name': 'View Site Details ', action: () => {				
+	 $("#sitesModal").modal('show');
+   $("#sitesModal").find("input").val('').end();
+	 $("#sitesHeader").text("Site: "+selectedSiteName);
+	 $("#wareID").val(selectedSiteIdContext);
+	 
+	 
+	 	$.ajax({
+				type: "GET",
+				contentType: "application/json; charset=utf-8",
+				url: getContext()+'/findSitesDetails',
+              async:false,
+              data: {
+					"selectedSiteIdContext":selectedSiteIdContext
+				},
+              dataType: "json",
+              success: function (data) {
+					
+					$("#siteID").val(data.SiteDetails[1]);
+					$("#wareName").val(data.SiteDetails[2]);
+					$("#siteCity").val(data.SiteDetails[3]);
+					$("#siteLong").val(data.SiteDetails[6]);
+					$("#siteLat").val(data.SiteDetails[7]);
+					$("#createData_site").val(data.SiteDetails[4]);
+					$("#lastModifiedDate_site").val(data.SiteDetails[5]);
+					$("#siteArea").val(data.SiteDetails[8]);
+					$("#siteRegion").val(data.SiteDetails[9]);
+					
+					
+					data = null;
+				},
+              error: function (result) {
+					alert("Error");
+              }
+				})
 	}	
 },
 
@@ -3057,6 +3089,11 @@ singleSite = new ContextMenu({
 			}
 		  });
  }
+},
+{'icon': 'paste', 'name': 'Show BoQ', action: () => {				
+	//console.log("selectedSiteIdContext "+selectedSiteIdContext)
+  Site_Boq(selectedSiteIdContext);
+	}	
 }
 
 

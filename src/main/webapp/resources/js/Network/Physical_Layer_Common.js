@@ -14172,6 +14172,8 @@ else if($("#LoaderConfirmationModal").is(':visible')){
 c=$("#LoaderConfirmationModal");}
 else if($("#nodesModal").is(':visible')){
 c=$("#nodesModal");}
+else if($("#sitesModal").is(':visible')){
+c=$("#sitesModal");}
 else if($("#TransmissionModal").is(':visible')){
 c=$("#TransmissionModal");}
 else if($("#CoreModal").is(':visible')){
