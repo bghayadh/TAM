@@ -787,7 +787,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 function savepermExcep(rowId,screenName,exceptionType,role,fieldName,fieldValue){
-
+console.log(exceptionType);
 	 $.ajax({
 			type : "GET",
 			url : "${pageContext.request.contextPath}/rolePermissionExcepSave",
