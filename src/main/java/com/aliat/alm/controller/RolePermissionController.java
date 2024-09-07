@@ -134,7 +134,23 @@ public class RolePermissionController {
 						query.executeUpdate();
 						session.createNativeQuery("commit").executeUpdate();
 					}
-					
+					String readPerm="0", writePerm="0";
+					if ("1".equals(request.getParameter("readPerm")) & "0".equals(request.getParameter("writePerm"))){
+						readPerm="1";
+						writePerm="0";
+						
+					}
+					else if ("0".equals(request.getParameter("readPerm")) & "1".equals(request.getParameter("writePerm"))){
+						readPerm="1";
+						writePerm="1";
+						
+					}
+				
+					else if ("1".equals(request.getParameter("readPerm")) & "1".equals(request.getParameter("writePerm"))){
+						readPerm="1";
+						writePerm="1";
+						
+					}
 					model.addAttribute("permID", permID);
 
 					rpData.setPermID(permID);
@@ -142,8 +158,8 @@ public class RolePermissionController {
 					rpData.setViewType(request.getParameter("viewType"));
 					rpData.setRole(request.getParameter("role"));
 					rpData.setRoleLevel(request.getParameter("roleLevel").charAt(0));
-					rpData.setReadPerm(request.getParameter("readPerm").charAt(0));
-					rpData.setWritePerm(request.getParameter("writePerm").charAt(0));
+					rpData.setReadPerm(readPerm.charAt(0));
+					rpData.setWritePerm(writePerm.charAt(0));
 					rpData.setAddPerm(request.getParameter("addPerm").charAt(0));
 					rpData.setDelPerm(request.getParameter("delPerm").charAt(0));
 					rpData.setSavePerm(request.getParameter("savePerm").charAt(0));
@@ -204,10 +220,30 @@ public class RolePermissionController {
 				tx = session.beginTransaction();
 
 				try {
+					
+					String readPerm="0", writePerm="0";
+				
+					if ("1".equals(request.getParameter("readPerm")) & "0".equals(request.getParameter("writePerm"))){
+						readPerm="1";
+						writePerm="0";
+						
+						
+					}
+					else if ("0".equals(request.getParameter("readPerm")) & "1".equals(request.getParameter("writePerm"))){
+						readPerm="1";
+						writePerm="1";
+						
+					}
+					
+					else if ("1".equals(request.getParameter("readPerm")) & "1".equals(request.getParameter("writePerm"))){
+						readPerm="1";
+						writePerm="1";
+						
+					}
 					String permID = request.getParameter("permID");
 					String viewType = request.getParameter("viewType");
-					char Read = request.getParameter("readPerm").charAt(0);
-					char Write = request.getParameter("writePerm").charAt(0);
+					char Read = readPerm.charAt(0);
+					char Write =writePerm.charAt(0);
 					char Add = (request.getParameter("addPerm").charAt(0));
 					char Delete = (request.getParameter("delPerm").charAt(0));
 					char Save = (request.getParameter("savePerm").charAt(0));
