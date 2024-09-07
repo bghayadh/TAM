@@ -293,6 +293,12 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 			
 		$("#initial_ul_CurrentPhysicalLayer").append(str);
          }
+          else if(readManhole === '0' & readExceptionMan === '1'){
+			str="<ul><li id='Manhole_f_CurrentPhysicalLayer' style='display:none;' class='Manhole_f_CurrentPhysicalLayer'><input type='checkbox' unchecked class='AllManholes checkFilter' ></input> <span id='Manhole_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Manhole_span' class='TreeSpan' style='color:black;width:395px' >Manhole </span></li></ul>";
+			
+		$("#initial_ul_CurrentPhysicalLayer").append(str);
+      
+		 }
         if(readHandhole === '1'){
 		str="<ul><li id='Handhole_f_CurrentPhysicalLayer' style='display:none;' class='Handhole_f_CurrentPhysicalLayer'><input type='checkbox' unchecked class='AllHandholes checkFilter'></input> <span id='Handhole_spanFolder' class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Handhole_span' style='color:black;width:395px' class='TreeSpan' >Handhole </span></li></ul>";
 		$("#initial_ul_CurrentPhysicalLayer").append(str);
@@ -5533,17 +5539,114 @@ $("#Handhole_f_" + selectedProjectIdContext + " .JUNCTION_H").each(function() {
                 },
                 dataType: "json",
                 success: function (data) {
-                    $("#ManholeName").val(data.ManholeDetails[1]);
-                    $("#ManholeModel").val(data.ManholeDetails[4]);
-                    $("#ManholeCity").val(data.ManholeDetails[5]);
-                    $("#manholeDMName").val(data.ManholeDetails[6]);
-                    $("#ManholeLong").val(data.ManholeDetails[2]);
-                    $("#ManholeLat").val(data.ManholeDetails[3]);
-                    $("#manholeCreateDate").val(data.ManholeDetails[7]);
-                    $("#manholeLastModifiedDate").val(data.ManholeDetails[8]);
-                    $("#manholeOwner").val(data.ManholeDetails[9]);
-                    $("#manholeInstaller").val(data.ManholeDetails[10]);
-                    $("#manholeEngineerName").val(data.ManholeDetails[11]);
+                 
+    // Mapping field names to their respective jQuery selectors
+    const fieldMapping = {
+        "MANHOLE_NAME": "#ManholeName",
+        "MANHOLE_MODEL": "#ManholeModel",
+        "CITY": "#ManholeCity",
+        "DM_NAME": "#manholeDMName",
+        "LONGITUDE": "#ManholeLong",
+        "LATITUDE": "#ManholeLat",
+        "CREATION_DATE": "#manholeCreateDate",
+        "OWNER": "#manholeOwner",
+        "LAST_MODIFIED_DATE": "#manholeLastModifiedDate",
+        "MH_INSTALLER": "#manholeInstaller",
+        "MH_ENGINEER_NAME": "#manholeEngineerName"
+    };
+ const fields = [  "#ManholeName",
+        "#ManholeModel",
+        "#manholeDMName",
+         "#ManholeLong",
+        "#ManholeLat",
+        "#manholeOwner",
+        "#manholeInstaller",
+         "#manholeEngineerName"]
+      
+    const fieldIndex = {
+        "MANHOLE_NAME": 1,
+        "MANHOLE_MODEL": 4,
+        "CITY": 5,
+        "DM_NAME": 6,
+        "LONGITUDE": 2,
+        "LATITUDE": 3,
+        "CREATION_DATE": 7,
+        "OWNER": 9,
+        "LAST_MODIFIED_DATE": 8,
+        "MH_INSTALLER": 10,
+        "MH_ENGINEER_NAME": 11
+    };
+
+    Object.keys(fieldMapping).forEach(fieldName => {
+        const index = fieldIndex[fieldName];
+        if (index !== undefined) {
+            $(fieldMapping[fieldName]).val(data.ManholeDetails[index]);
+        }
+    });
+
+  
+   function setAllFieldsReadonly() {
+    fields.forEach(field => {
+        if (field === "#manholeOwner") {
+           
+            return;
+        }
+        $(field).attr("readonly", true);
+    });
+
+    // Disable the OWNER dropdown
+    $("#manholeOwner").attr("disabled", true);
+}
+
+
+function removeReadonlyFromAllFields() {
+    fields.forEach(field => {
+        $(field).removeAttr("readonly");
+        if (field === "#manholeOwner") {
+            // Ensure OWNER dropdown is not disabled
+            $(field).removeAttr("disabled");
+        }
+    });
+}
+
+
+if (onlyReadExcep.includes(selectedManIdContext)) {
+	setAllFieldsReadonly();
+}
+else{
+	 removeReadonlyFromAllFields();
+}
+
+if(exceptionManWriteList){
+  
+    if (Array.isArray(exceptionManWriteList)) {
+        let shouldMakeEditable = exceptionManWriteList.some(item => {
+            const [FIELD_NAME, FIELD_VALUE] = item;
+
+           
+            if (FIELD_NAME && fieldMapping[FIELD_NAME] !== undefined) {
+                const index = fieldIndex[FIELD_NAME];
+                if (index !== undefined) {
+                    let valueToCompare = data.ManholeDetails[index];
+
+                 
+                    return FIELD_VALUE === valueToCompare;
+                } 
+            } 
+            return false;
+        });
+
+        console.log(`Should make editable: ${shouldMakeEditable}`);
+  if (shouldMakeEditable) {
+            removeReadonlyFromAllFields();
+        } else {
+            setAllFieldsReadonly();
+        }
+    } else {
+        console.error('exceptionManWriteList is not an array:', exceptionManWriteList);
+    }
+
+}
                     data = null;
                 },
                 error: function (result) {
