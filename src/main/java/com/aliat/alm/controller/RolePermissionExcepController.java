@@ -136,13 +136,15 @@ public class RolePermissionExcepController {
 	    String fieldName = request.getParameter("fieldName");
 	    String fieldValue = request.getParameter("fieldValue");
 	    String exceptionType = request.getParameter("exceptionType");
-
+System.out.println(exceptionType);
 	    // Check if a row with the same screenName, fieldName, and fieldValue exists
-	    String checkQuery = "SELECT COUNT(*) FROM RolePermissionException WHERE screenName = :screenName AND fieldName = :fieldName AND fieldValue = :fieldValue";
+	    String checkQuery = "SELECT COUNT(*) FROM RolePermissionException WHERE screenName = :screenName AND fieldName = :fieldName AND ACTION =: ACTION  AND fieldValue = :fieldValue AND role= :role";
 	    Long count = (Long) session.createQuery(checkQuery)
 	            .setParameter("screenName", screenName)
 	            .setParameter("fieldName", fieldName)
 	            .setParameter("fieldValue", fieldValue)
+	            .setParameter("ACTION", exceptionType)
+	            .setParameter("role", role)
 	            .uniqueResult();
 
 	    // If such a row exists, return an error message
