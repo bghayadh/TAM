@@ -690,6 +690,7 @@ display:none;
           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/TroubleTicketListView" class="nav-link "><c:if test="${page == 'troubleTickets'}"><span id="back"></c:if><i class="fas fa-ticket-alt" ></i> TroubleTickets <c:if test="${page == 'troubleTickets'}"></span></c:if></a></li></li>
           <div class="dropdown-divider" ></div>
           <li> <a class="dropdown-item" href="${pageContext.request.contextPath}/Purchase" class="nav-link "><c:if test="${page == 'purchasing'}"><span id="back"></c:if><i class="fas fa-money-check" ></i> Purchasing <c:if test="${page == 'purchasing'}"></span></c:if></a></li></li>
+        
          <div class="dropdown-divider" ></div>
         <li> <a class="dropdown-item" href="${pageContext.request.contextPath}/Activity" class="nav-link "><c:if test="${page == 'Activity'}"><span id="back"></c:if><i class="fas fa-eye" ></i> Activity <c:if test="${page == 'Activity'}"></span></c:if></a></li></li>
        
