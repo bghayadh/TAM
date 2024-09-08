@@ -7132,6 +7132,16 @@ var readDB='${readDB}';
 var writeDB='${writeDB}';
 var addDB='${addDB}';
 var delDB='${delDB}';
+
+var onlyReadExcep= '${onlyReadExcep}'
+	console.log(onlyReadExcep);
+	var exceptionManWriteList= '${exceptionManWriteList}';
+	if(exceptionManWriteList){
+	 exceptionManWriteList = JSON.parse(exceptionManWriteList);
+	 console.log(exceptionManWriteList);
+	}
+	var readExceptionMan='${readExceptionMan}';
+	
 document.addEventListener('DOMContentLoaded', function() {
     var elements = {
         fibersearchtab: document.getElementById('fiber-search-tab'),

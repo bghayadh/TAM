@@ -195,6 +195,9 @@ public class PhysicalLayerController {
 				       model.addAttribute("saveManhole", saveManhole);
 				       model.addAttribute("delManhole", delManhole);
 
+                       permissions.checkAndAddExceptions(model, readManhole, writeManhole, session,"Physical Layer Manhole",request);
+				       
+				       String readExceptionMan = (String) model.asMap().get("readExceptionMan");
 
 				       
 				       permissions.setPerms(model, permissions.getUserPermsWithSession(session, request),
@@ -326,6 +329,64 @@ public class PhysicalLayerController {
 											+ "%' OR B.MANHOLE_NAME LIKE '%" + request.getParameter("FilteredManhole")
 											+ "%'  ) and A.PROJECT_ID LIKE '%" + request.getParameter("Checked") + "%'  ")
 									.getResultList();
+							}
+							
+							else if("0".equals(readManhole) & "1".equals(writeManhole) & "1".equals(readExceptionMan) || "0".equals(readManhole) & "0".equals(writeManhole) & "1".equals(readExceptionMan)) {
+								  List<Object[]> exceptionManReadList = (List<Object[]>) model.asMap().get("exceptionManReadList");
+								  StringBuilder manholeWhereClause = new StringBuilder();
+						            for (Object[] entry : exceptionManReadList) {
+						                String fieldName = (String) entry[0];
+						                String fieldValue = (String) entry[1];
+						                if (fieldName != null && fieldValue != null) {
+						                    if (manholeWhereClause.length() > 0) {
+						                        manholeWhereClause.append(" OR ");
+						                    }
+						                    manholeWhereClause.append("A.").append(fieldName).append(" LIKE '%").append(fieldValue).append("%'");
+						                }
+						            }
+
+						            // Construct the Manhole query with dynamic WHERE clause
+						            String manholeQuery = "SELECT DISTINCT A.MANHOLE_ID, A.MANHOLE_NAME, A.LONGITUDE, A.LATITUDE, A.PROJECT_ID, "
+						                    + "(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID = A.MANHOLE_ID) AS JUNCTION_COUNT, A.CITY "
+						                    + "FROM MANHOLE A "
+						                    + "LEFT JOIN JUNCTION B ON B.PHYSICAL_LAYER_ID = A.MANHOLE_ID "
+						                    + "WHERE (A.MANHOLE_ID LIKE '%" + request.getParameter("FilteredManhole") + "%' OR "
+						                    + "A.MANHOLE_NAME LIKE '%" + request.getParameter("FilteredManhole") + "%' OR "
+						                    + "B.JUNCTION_ID LIKE '%" + request.getParameter("FilteredJunction_Manhole") + "%' OR "
+						                    + "B.JUNCTION_NAME LIKE '%" + request.getParameter("FilteredJunction_Manhole") + "%') "
+						                    + "AND A.PROJECT_ID LIKE '%" + request.getParameter("Checked") + "%' "
+						                    + (manholeWhereClause.length() > 0 ? "AND " + manholeWhereClause.toString() : "");
+
+						             manholeList = session.createNativeQuery(manholeQuery).getResultList();
+
+						            // Build dynamic WHERE clause for Junction query
+						            StringBuilder junctionWhereClause = new StringBuilder();
+						            for (Object[] entry : exceptionManReadList) {
+						                String fieldName = (String) entry[0];
+						                String fieldValue = (String) entry[1];
+						                if (fieldName != null && fieldValue != null) {
+						                    if (junctionWhereClause.length() > 0) {
+						                        junctionWhereClause.append(" OR ");
+						                    }
+						                    junctionWhereClause.append("A.").append(fieldName).append(" LIKE '%").append(fieldValue).append("%'");
+						                }
+						            }
+
+						            // Construct the Junction query with dynamic WHERE clause
+						            String junctionQuery = "SELECT DISTINCT A.JUNCTION_ID, A.JUNCTION_NAME, A.PHYSICAL_LAYER_ID, A.PHYSICAL_LAYER_NAME, "
+						                    + "A.JUNCTION_NUMBER, A.CAPACITY, A.CITY, A.LONGITUDE, A.LATITUDE, A.PROJECT_ID "
+						                    + "FROM JUNCTION A "
+						                    + "LEFT JOIN MANHOLE B ON A.PHYSICAL_LAYER_ID = B.MANHOLE_ID "
+						                    + "WHERE (A.JUNCTION_ID LIKE '%" + request.getParameter("FilteredJunction_Manhole") + "%' OR "
+						                    + "A.JUNCTION_NAME LIKE '%" + request.getParameter("FilteredJunction_Manhole") + "%' OR "
+						                    + "B.MANHOLE_ID LIKE '%" + request.getParameter("FilteredManhole") + "%' OR "
+						                    + "B.MANHOLE_NAME LIKE '%" + request.getParameter("FilteredManhole") + "%') "
+						                    + "AND A.PROJECT_ID LIKE '%" + request.getParameter("Checked") + "%' "
+						                    + (junctionWhereClause.length() > 0 ? "AND " + junctionWhereClause.toString() : "");
+
+						            junctionManholeList = session.createNativeQuery(junctionQuery).getResultList();
+
+								
 							}
 							if("1".equals(readHandhole) ) {
 							handholeList = session.createNativeQuery(
@@ -1994,6 +2055,40 @@ public class PhysicalLayerController {
 												Double.valueOf(lngs[i]), Double.valueOf(closestDisRange), "Manhole",
 												noOfPoints);
 										 }
+								 else if(readManhole.equals("0") & writeManhole.equals("1") & readExceptionMan.equals("1") || "0".equals(readManhole) & "0".equals(writeManhole) & "1".equals(readExceptionMan)) {
+										
+									 List<Object[]> exceptionManReadList = (List<Object[]>) model.asMap().get("exceptionManReadList");
+
+							            // Build dynamic WHERE clause for Manhole query
+							            StringBuilder manholeWhereClause = new StringBuilder();
+							            if (exceptionManReadList != null) {
+							                for (Object[] entry : exceptionManReadList) {
+							                    String fieldName = (String) entry[0];
+							                    String fieldValue = (String) entry[1];
+							                    if (fieldName != null && fieldValue != null) {
+							                        if (manholeWhereClause.length() > 0) {
+							                            manholeWhereClause.append(" OR ");
+							                        }
+							                        manholeWhereClause.append("A.").append(fieldName).append(" LIKE '%").append(fieldValue).append("%'");
+							                    }
+							                }
+							            }
+							             
+							            // Construct the Manhole query with dynamic WHERE clause
+							            String manholeQuery = "SELECT DISTINCT MANHOLE_ID, MANHOLE_NAME, LONGITUDE, LATITUDE, PROJECT_ID, "
+							                    + "(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID = MANHOLE_ID) AS JUNCTION_COUNT, DM_NAME "
+							                    + "FROM MANHOLE A "
+							                    + "WHERE to_number(SUBSTR(LONGITUDE,1,6)) <= " + lng + " "
+							                    + "AND to_number(SUBSTR(LATITUDE,1,6)) <= " + lat + " "
+							                    + (manholeWhereClause.length() > 0 ? "AND " + manholeWhereClause.toString() : "");
+							             
+							            // Execute the query
+							            List<Object[]> manholeListQuery = session.createNativeQuery(manholeQuery).getResultList();
+
+							            // Assuming findNearestArray is a method that processes the result
+							            manholeListPt = findNearestArray(manholeListQuery, Double.valueOf(lats[i]),
+							                    Double.valueOf(lngs[i]), Double.valueOf(closestDisRange), "Manhole",
+							                    noOfPoints);	 }
 										 if(readHandhole.equals("1")) {
 										List<Object[]> handholeListQuery = session.createNativeQuery(
 												"SELECT DISTINCT HANDHOLE_ID,HANDHOLE_NAME,LONGITUDE,LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=HANDHOLE_ID),DM_NAME FROM HANDHOLE  where to_number(LONGITUDE) <=  '"
@@ -2454,6 +2549,64 @@ public class PhysicalLayerController {
 								.getResultList();
 						
 						}
+	if("0".equals(readManhole) & "1".equals(writeManhole) & "1".equals(readExceptionMan) || "0".equals(readManhole) & "0".equals(writeManhole) & "1".equals(readExceptionMan)) {
+							
+							List<Object[]> exceptionManReadList = (List<Object[]>) model.asMap().get("exceptionManReadList");
+
+				            // Build dynamic WHERE clause for Manhole query
+				            StringBuilder manholeWhereClause = new StringBuilder();
+				            if (exceptionManReadList != null) {
+				                for (Object[] entry : exceptionManReadList) {
+				                    String fieldName = (String) entry[0];
+				                    String fieldValue = (String) entry[1];
+				                    if (fieldName != null && fieldValue != null) {
+				                        if (manholeWhereClause.length() > 0) {
+				                            manholeWhereClause.append(" OR ");
+				                        }
+				                        manholeWhereClause.append("A.").append(fieldName).append(" LIKE '%").append(fieldValue).append("%'");
+				                    }
+				                }
+				            }
+				             
+				            // Construct the Manhole query with dynamic WHERE clause
+				            String manholeQuery = "SELECT DISTINCT MANHOLE_ID, MANHOLE_NAME, LONGITUDE, LATITUDE, PROJECT_ID, "
+				                    + "(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID = MANHOLE_ID) AS JUNCTION_COUNT, CITY "
+				                    + "FROM MANHOLE A "
+				                    + "WHERE PROJECT_ID = 'CurrentPhysicalLayer' "
+				                    + (manholeWhereClause.length() > 0 ? "AND " + manholeWhereClause.toString() : "");
+
+				            // Execute the Manhole query
+				            manholeList = session.createNativeQuery(manholeQuery).getResultList();
+				             
+				            // Build dynamic WHERE clause for Junction query
+				            StringBuilder junctionWhereClause = new StringBuilder();
+				            if (exceptionManReadList != null) {
+				                for (Object[] entry : exceptionManReadList) {
+				                    String fieldName = (String) entry[0];
+				                    String fieldValue = (String) entry[1];
+				                    if (fieldName != null && fieldValue != null) {
+				                        if (junctionWhereClause.length() > 0) {
+				                            junctionWhereClause.append(" OR ");
+				                        }
+				                        junctionWhereClause.append("B.").append(fieldName).append(" LIKE '%").append(fieldValue).append("%'");
+				                    }
+				                }
+				            }
+
+				            // Construct the Junction query with dynamic WHERE clause
+				            String junctionQuery = "SELECT DISTINCT A.JUNCTION_ID, A.JUNCTION_NAME, A.PHYSICAL_LAYER_ID, A.PHYSICAL_LAYER_NAME, "
+				                    + "A.JUNCTION_NUMBER, A.CAPACITY, A.CITY, A.LONGITUDE, A.LATITUDE, A.PROJECT_ID "
+				                    + "FROM JUNCTION A "
+				                    + "INNER JOIN MANHOLE B ON A.PHYSICAL_LAYER_ID = B.MANHOLE_ID "
+				                    + "WHERE B.PROJECT_ID = 'CurrentPhysicalLayer' "
+				                    + (junctionWhereClause.length() > 0 ? "AND " + junctionWhereClause.toString() : "");
+
+				            // Execute the Junction query
+				            junctionManholeList = session.createNativeQuery(junctionQuery).getResultList();
+
+				            // Process manholeList and junctionManholeList as needed
+				        }
+				    
 						if ("1".equals(readHandhole)) {
 						handholeList = session.createNativeQuery(
 								"SELECT DISTINCT HANDHOLE_ID,HANDHOLE_NAME,LONGITUDE,LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=HANDHOLE_ID),CITY FROM HANDHOLE where PROJECT_ID= 'CurrentPhysicalLayer'  ")

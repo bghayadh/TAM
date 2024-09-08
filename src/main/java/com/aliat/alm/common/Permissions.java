@@ -1,5 +1,6 @@
 package com.aliat.alm.common;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class Permissions {
-	
+	private static ObjectMapper mapper = new ObjectMapper();
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public  <T> List<Object[]> getUserPerms(HttpServletRequest request) {
 		
@@ -147,4 +148,93 @@ public class Permissions {
 		model.addAttribute("firstlvl"+viewType, firstlvl); model.addAttribute("srchPopup"+viewType, srchPopup);
 		model.addAttribute("findConnected"+viewType, findConnected); model.addAttribute("projects"+viewType, projects);		
 	}
-}
+	
+	 @SuppressWarnings("rawtypes")
+	    public void checkAndAddExceptions(Model model, String readPerm, String writeperm, Session session, String Type,HttpServletRequest request) throws JsonProcessingException {
+		 HttpSession httpSession = request.getSession(false);
+			Object username = httpSession.getAttribute("userName");
+			List <Object[]> permList = null;
+			String roleQuery = "select rolename from UserRole where username =:param1";
+			Query roleResult = session.createQuery(roleQuery);
+			roleResult.setParameter("param1", username);			
+		
+			List <String> roles = roleResult.list();
+		
+	        if ("1".equals(readPerm) && "0".equals(writeperm) || "0".equals(readPerm) && "0".equals(writeperm)) {
+	        	
+	        	List<Object[]> exceptionWrite = session.createNativeQuery(
+	        		    "SELECT FIELD_NAME, FIELD_VALUE FROM ROLE_PERMISSION_EXCEPTION "
+	        		    + "WHERE SCREEN_NAME=:param1 AND ACTION='Write' AND ROLE IN :param2")
+	        		    .setParameter("param1", Type).setParameter("param2", roles)
+	        		    .getResultList();
+	        	
+	        	if("Physical Layer Manhole".equals(Type)) {
+	            
+				String exceptionManWriteList = mapper.writeValueAsString(exceptionWrite);
+	            model.addAttribute("exceptionManWriteList", exceptionManWriteList);
+	        }
+	        }
+	        if ("1".equals(readPerm) && "1".equals(writeperm) || "0".equals(readPerm) && "0".equals(writeperm)) {
+	        	List<Object[]> exceptionRead = session.createNativeQuery(
+		                "SELECT FIELD_NAME, FIELD_VALUE FROM ROLE_PERMISSION_EXCEPTION "
+		                + "WHERE SCREEN_NAME=:param1 AND ACTION='Read'  AND ROLE IN :param2")
+	        			  .setParameter("param1", Type).setParameter("param2", roles)
+	        			  .getResultList();
+		            
+		            if(!exceptionRead.isEmpty()) {
+		            	if("Physical Layer Manhole".equals(Type)) {
+				     model.addAttribute("exceptionManReadList", exceptionRead);
+		   
+	                model.addAttribute("readExceptionMan", "1"); 
+	                if("1".equals(readPerm) && "1".equals(writeperm)) {
+	                	
+	                	StringBuilder queryBuilder = new StringBuilder("SELECT MANHOLE_ID FROM manhole WHERE ");
+	                    List<Object> parameters = new ArrayList<>();
+
+	                    for (int i = 0; i < exceptionRead.size(); i++) {
+	                        Object[] row = exceptionRead.get(i);
+	                        String fieldName = (String) row[0];
+	                        String fieldValue = (String) row[1];
+
+	                        // Add to the query
+	                        if (i > 0) {
+	                            queryBuilder.append(" OR ");
+	                        }
+	                        queryBuilder.append(fieldName).append(" = ?").append(i);
+
+	                         parameters.add(fieldValue);
+	                    }
+
+	                    Query query = session.createNativeQuery(queryBuilder.toString());
+	                    for (int i = 0; i < parameters.size(); i++) {
+	                        query.setParameter(i, parameters.get(i));
+	                    }
+
+	                     List<String> onlyReadExcep = query.getResultList();
+	                    model.addAttribute("onlyReadExcep", onlyReadExcep); 
+	                }
+	                }
+	                
+		            }
+	          
+	            }
+	        
+	        else {
+	        	
+	        	 model.addAttribute("readExceptionMan", "0");
+	        }
+	        }    
+	       
+	        
+	        }
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	    
+
