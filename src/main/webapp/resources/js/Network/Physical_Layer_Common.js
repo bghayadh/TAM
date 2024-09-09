@@ -661,124 +661,235 @@ $("#selectConnectedSearch").on('change',function(){
 
 		});	
 
-	$("#getCoordinatePoint").on('click',function(){
-		
-		window["getCoorPointLong"]=getCoords().split(" ")[1];
-		window["getCoorPointLat"]=getCoords().split(" ")[0];
+// Click event to get coordinates and store them in localStorage
+$("#getCoordinatePoint").on('click', function() {
+    var coords = getCoords().split(" ");
+    var long = coords[1];
+    var lat = coords[0];
 
-		console.log("getCoorPointLong"+window["getCoorPointLong"]);
-		console.log("getCoorPointLat"+window["getCoorPointLat"]);
+    // Store coordinates in localStorage
+    localStorage.setItem("getCoorPointLong", long);
+    localStorage.setItem("getCoorPointLat", lat);
 
-		});
-		
-		$("#setCoordBtn").on('click',function(){
-		
-		$("#closestLongPoint").val(window["getCoorPointLong"]);
-		$("#closestLatPoint").val(window["getCoorPointLat"]);
-
-		console.log("closestLongPoint"+$("#closestLongPoint").val());
-		console.log("closestLatPoint"+$("#closestLatPoint").val());
-
-		});
-		
-		$("#setCoordOperationBtn").on('click',function(){
-		
-		$("#Lng").val(window["getCoorPointLong"]);
-		$("#Lat").val(window["getCoorPointLat"]);
-
-		console.log("closestLongPoint"+$("#closestLongPoint").val());
-		console.log("closestLatPoint"+$("#closestLatPoint").val());
-
-		});
-		
-		$("#setStartPointBtn").on('click',function(){
-			$("#startLongPoint").val(window["getCoorPointLong"]);
-			$("#startLatPoint").val(window["getCoorPointLat"]);
-		});
-		
-		$("#setEndPointBtn").on('click',function(){
-			$("#endLongPoint").val(window["getCoorPointLong"]);
-			$("#endLatPoint").val(window["getCoorPointLat"]);			
-		});
-		
-$("#setCoordinateFiberAux").on('click',function(){
-	var checkedRow;
-	
-	if($("#auxiliaryTable input[type=checkbox]:checked").length>1) {
-		alert("Please check only one row to set coordinate.")
-	}
-	else {
-	 $("#auxiliaryTable input[type=checkbox]:checked").each(function(){
-         checkedRow = $(this).closest("tr")[0].rowIndex ;
-     });
-     $("#auxiliaryTable >tbody").find("tr").eq(checkedRow-1).find('td[name="auxiliary_Longitude"]').children('input').val(window["getCoorPointLong"]);
-     $("#auxiliaryTable >tbody").find("tr").eq(checkedRow-1).find('td[name="auxiliary_Latitude"]').children('input').val(window["getCoorPointLat"]);
-	       
-	calculateDistanceSourceDestination($("#SourceLat").val(),$("#SourceLng").val(),$("#DestinationLat").val(),$("#DestinationLng").val(),"auxiliaryTable");
-	}
+    console.log("Stored getCoorPointLong: " + long);
+    console.log("Stored getCoorPointLat: " + lat);
 });
 
-$("#setCoordinateStrandAux").on('click',function(){
-	
-	  $('.rowAboveBelowStrand').each(function() {
-	        if (this.checked) {
-		        var rowIndex = $(this).closest('tr');
-				var currentIndex = rowIndex.index();
-				
-				$(this).parents("tr").find('input[name ="auxStrand_Lat"]').val(window["getCoorPointLat"]); 
-				$(this).parents("tr").find('input[name ="auxStrand_Long"]').val(window["getCoorPointLong"]); 
-				
-	        }
-	calculateDistanceSourceDestination($("#sourcelatstrand").val(),$("#sourcelongstrand").val(),$("#destinationlatstrand").val(),$("#destinationlongstrand").val(),"auxiliaryTableStrands");
-	
+// Click event to set coordinates into input fields
+$("#setCoordBtn").on('click', function() {
+    // Retrieve coordinates from localStorage
+    var long = localStorage.getItem("getCoorPointLong");
+    var lat = localStorage.getItem("getCoorPointLat");
+
+    // Check if values exist before setting
+    if (long && lat) {
+        $("#closestLongPoint").val(long);
+        $("#closestLatPoint").val(lat);
+    } else {
+        console.log("No coordinates found in localStorage.");
+    }
+
+    console.log("Set closestLongPoint: " + $("#closestLongPoint").val());
+    console.log("Set closestLatPoint: " + $("#closestLatPoint").val());
 });
+
+// Click event to use coordinates for other operations
+$("#setCoordOperationBtn").on('click', function() {
+    // Retrieve coordinates from localStorage
+    var long = localStorage.getItem("getCoorPointLong");
+    var lat = localStorage.getItem("getCoorPointLat");
+
+    console.log("Retrieved Lng from localStorage: " + long);
+    console.log("Retrieved Lat from localStorage: " + lat);
+
+    if (long && lat) {
+        $("#Lng").val(long);
+        $("#Lat").val(lat);
+    } else {
+        console.log("No coordinates found in localStorage.");
+    }
+
+    console.log("Set Lng: " + $("#Lng").val());
+    console.log("Set Lat: " + $("#Lat").val());
 });
-$("#setCoordinateTrenchAux").on('click',function(){
-	
-	  $('.rowAboveBelowTrench').each(function() {
-	        if (this.checked) {
-		        var rowIndex = $(this).closest('tr');
-				var currentIndex = rowIndex.index();
-				
-				$(this).parents("tr").find('input[name ="aux_Lattrench"]').val(window["getCoorPointLat"]); 
-				$(this).parents("tr").find('input[name ="aux_Longtrench"]').val(window["getCoorPointLong"]); 
-				
-	        }
-    	calculateDistanceSourceDestination($("#SourceTrenchLat").val(),$("#SourceTrenchLng").val(),$("#DestinationTrenchLat").val(),$("#DestinationTrenchLng").val(),"auxiliary_trenchTable");
-	
+
+	$("#setStartPointBtn").on('click', function() {
+    // Retrieve coordinates from localStorage
+    var long = localStorage.getItem("getCoorPointLong");
+    var lat = localStorage.getItem("getCoorPointLat");
+
+    // Check if values exist before setting
+    if (long && lat) {
+        $("#startLongPoint").val(long);
+        $("#startLatPoint").val(lat);
+        console.log("Set startLongPoint: " + $("#startLongPoint").val());
+        console.log("Set startLatPoint: " + $("#startLatPoint").val());
+    } else {
+        console.log("No coordinates found in localStorage.");
+    }
 });
+
+// Click event to set end point coordinates from localStorage
+$("#setEndPointBtn").on('click', function() {
+    // Retrieve coordinates from localStorage
+    var long = localStorage.getItem("getCoorPointLong");
+    var lat = localStorage.getItem("getCoorPointLat");
+
+    // Check if values exist before setting
+    if (long && lat) {
+        $("#endLongPoint").val(long);
+        $("#endLatPoint").val(lat);
+        console.log("Set endLongPoint: " + $("#endLongPoint").val());
+        console.log("Set endLatPoint: " + $("#endLatPoint").val());
+    } else {
+        console.log("No coordinates found in localStorage.");
+    }
 });
-$("#setCoordinateDuctAux").on('click',function(){
-	
-	  $('.rowAboveBelowDuct').each(function() {
-	        if (this.checked) {
-		        var rowIndex = $(this).closest('tr');
-				var currentIndex = rowIndex.index();
-				
-				$(this).parents("tr").find('input[name ="aux_Latduct"]').val(window["getCoorPointLat"]); 
-				$(this).parents("tr").find('input[name ="aux_Longduct"]').val(window["getCoorPointLong"]); 
-				
-	        }
-    	calculateDistanceSourceDestination($("#SourceDuctLat").val(),$("#SourceDuctLng").val(),$("#DestinationDuctLat").val(),$("#DestinationDuctLng").val(),"auxiliary_ductTable");
-	
+		
+// Click event to set coordinates in auxiliary table
+$("#setCoordinateFiberAux").on('click', function() {
+    var checkedRow;
+
+    if ($("#auxiliaryTable input[type=checkbox]:checked").length > 1) {
+        alert("Please check only one row to set coordinate.");
+    } else {
+        $("#auxiliaryTable input[type=checkbox]:checked").each(function() {
+            checkedRow = $(this).closest("tr")[0].rowIndex;
+        });
+
+        // Retrieve coordinates from localStorage
+        var long = localStorage.getItem("getCoorPointLong");
+        var lat = localStorage.getItem("getCoorPointLat");
+
+        // Check if values exist before setting
+        if (long && lat) {
+            $("#auxiliaryTable >tbody").find("tr").eq(checkedRow - 1).find('td[name="auxiliary_Longitude"]').children('input').val(long);
+            $("#auxiliaryTable >tbody").find("tr").eq(checkedRow - 1).find('td[name="auxiliary_Latitude"]').children('input').val(lat);
+        } else {
+            console.log("No coordinates found in localStorage.");
+        }
+
+        calculateDistanceSourceDestination(
+            $("#SourceLat").val(), $("#SourceLng").val(), 
+            $("#DestinationLat").val(), $("#DestinationLng").val(), 
+            "auxiliaryTable"
+        );
+    }
 });
+
+// Click event to set coordinates for strands
+$("#setCoordinateStrandAux").on('click', function() {
+    $('.rowAboveBelowStrand').each(function() {
+        if (this.checked) {
+            var rowIndex = $(this).closest('tr');
+            var currentIndex = rowIndex.index();
+            
+            // Retrieve coordinates from localStorage
+            var long = localStorage.getItem("getCoorPointLong");
+            var lat = localStorage.getItem("getCoorPointLat");
+
+            // Check if values exist before setting
+            if (long && lat) {
+                $(this).parents("tr").find('input[name="auxStrand_Lat"]').val(lat);
+                $(this).parents("tr").find('input[name="auxStrand_Long"]').val(long);
+            } else {
+                console.log("No coordinates found in localStorage.");
+            }
+        }
+        calculateDistanceSourceDestination(
+            $("#sourcelatstrand").val(), $("#sourcelongstrand").val(), 
+            $("#destinationlatstrand").val(), $("#destinationlongstrand").val(), 
+            "auxiliaryTableStrands"
+        );
+    });
 });
-$("#setCoordinateTubeAux").on('click',function(){
-	  $('.rowAboveBelowTube').each(function() {
-	        if (this.checked) {
-		        var rowIndex = $(this).closest('tr');
-				var currentIndex = rowIndex.index();				
-				$(this).parents("tr").find('input[name ="auxTube_Lat"]').val(window["getCoorPointLat"]); 
-				$(this).parents("tr").find('input[name ="auxTube_Long"]').val(window["getCoorPointLong"]); 				
-	        }
-		calculateDistanceSourceDestination($("#sourcelat").val(),$("#sourcelong").val(),$("#destinationlat").val(),$("#destinationlong").val(),"auxiliaryTableTubes");
+
+// Click event to set coordinates for trenches
+$("#setCoordinateTrenchAux").on('click', function() {
+    $('.rowAboveBelowTrench').each(function() {
+        if (this.checked) {
+            var rowIndex = $(this).closest('tr');
+            var currentIndex = rowIndex.index();
+            
+            // Retrieve coordinates from localStorage
+            var long = localStorage.getItem("getCoorPointLong");
+            var lat = localStorage.getItem("getCoorPointLat");
+
+            // Check if values exist before setting
+            if (long && lat) {
+                $(this).parents("tr").find('input[name="aux_Lattrench"]').val(lat);
+                $(this).parents("tr").find('input[name="aux_Longtrench"]').val(long);
+            } else {
+                console.log("No coordinates found in localStorage.");
+            }
+        }
+        calculateDistanceSourceDestination(
+            $("#SourceTrenchLat").val(), $("#SourceTrenchLng").val(), 
+            $("#DestinationTrenchLat").val(), $("#DestinationTrenchLng").val(), 
+            "auxiliary_trenchTable"
+        );
+    });
 });
+
+// Click event to set coordinates for ducts
+$("#setCoordinateDuctAux").on('click', function() {
+    $('.rowAboveBelowDuct').each(function() {
+        if (this.checked) {
+            var rowIndex = $(this).closest('tr');
+            var currentIndex = rowIndex.index();
+            
+            // Retrieve coordinates from localStorage
+            var long = localStorage.getItem("getCoorPointLong");
+            var lat = localStorage.getItem("getCoorPointLat");
+
+            // Check if values exist before setting
+            if (long && lat) {
+                $(this).parents("tr").find('input[name="aux_Latduct"]').val(lat);
+                $(this).parents("tr").find('input[name="aux_Longduct"]').val(long);
+            } else {
+                console.log("No coordinates found in localStorage.");
+            }
+        }
+        calculateDistanceSourceDestination(
+            $("#SourceDuctLat").val(), $("#SourceDuctLng").val(), 
+            $("#DestinationDuctLat").val(), $("#DestinationDuctLng").val(), 
+            "auxiliary_ductTable"
+        );
+    });
 });
-			autoCompleteSearchHeader('autoCompleteHeaderSearch','selectHeaderSearch','headerSearchLong','headerSearchLat');
-			autoCompleteSearchHeader('autoCompleteConnectedSearch','selectConnectedSearch','connectedSearchLong','connectedSearchLat');
+
+// Click event to set coordinates for tubes
+$("#setCoordinateTubeAux").on('click', function() {
+    $('.rowAboveBelowTube').each(function() {
+        if (this.checked) {
+            var rowIndex = $(this).closest('tr');
+            var currentIndex = rowIndex.index();
+            
+            // Retrieve coordinates from localStorage
+            var long = localStorage.getItem("getCoorPointLong");
+            var lat = localStorage.getItem("getCoorPointLat");
+
+            // Check if values exist before setting
+            if (long && lat) {
+                $(this).parents("tr").find('input[name="auxTube_Lat"]').val(lat);
+                $(this).parents("tr").find('input[name="auxTube_Long"]').val(long);
+            } else {
+                console.log("No coordinates found in localStorage.");
+            }
+        }
+        calculateDistanceSourceDestination(
+            $("#sourcelat").val(), $("#sourcelong").val(), 
+            $("#destinationlat").val(), $("#destinationlong").val(), 
+            "auxiliaryTableTubes"
+        );
+    });
 });
-}); // End of Trigger Event: triggerListenersEvent
- 
+
+// Call autocomplete functions (assuming these are properly defined elsewhere)
+autoCompleteSearchHeader('autoCompleteHeaderSearch', 'selectHeaderSearch', 'headerSearchLong', 'headerSearchLat');
+autoCompleteSearchHeader('autoCompleteConnectedSearch', 'selectConnectedSearch', 'connectedSearchLong', 'connectedSearchLat');
+});
+});// end trigger 
 ////>>>>>>>>>>>> function for tree --> map clicks events of <<<Manholes>>>  /////		 
 	
  selectedMarkers = [];
@@ -5056,6 +5167,13 @@ function opentab(evt, functionality) {
 
 function viewNearestMultyPointEvent(){
 	$("#viewNeareMulty").on('click', function(){
+		 var closestDisRange = document.getElementById("closestMultyDisRange").value;
+		
+		 if (closestDisRange === "" ||  isNaN(closestDisRange) ) {
+			    alert("Please enter a number in the input field.");
+			    return;
+			    
+			  }
 		var urlString = "";
 		var nop = document.getElementById("noP_Multy").value;
 		var circleRange_multy = document.getElementById("circleRange_multy").value;
@@ -14191,7 +14309,7 @@ var result= confirm('are you sure you want to close?')
 		}
 	 if (result== true){
 	   c.modal('hide');
-	   localStorage.clear();
+	   
 	}
 }
 
