@@ -239,7 +239,7 @@ max-width: 100%;
     font-size: 1.2em;
     border: 1px solid #ccc;
     border-radius: 5px;
-    background-color: #4CAF50; /* Green */
+    background-color: #4CAF50; 
     color: white;
     cursor: pointer;
 }
@@ -642,7 +642,7 @@ max-width: 100%;
 		</div>
       <div class="legendContainer">
       <div class="card-body">      
-         <div class="box stack-top" id="legendDiv" style="position: relative;bottom:50px;width: 290px; float:left; height:550px;  background:white; margin:37px;display: none">
+         <div class="box stack-top" id="legendDiv" style="position: relative;bottom:50px;width: 290px; float:left; height:570px;  background:white; margin:37px;display: none">
          <div class="legendHeader"  id="legendHeader">
  			<h6 style="color:white;font-weight:bold; font-size:2.5ex;display:inline-block;position: relative;margin-left:20px;">Legend</h6>
   			 <select class="mapDropdown" id="mapDropdown">
@@ -731,10 +731,15 @@ max-width: 100%;
      <td style="position: relative;top:8px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Site</label></td>   
      <td style="position: relative;top:8px;"><div style="position: relative;left:-5px;color: black;" id="sitesCount" ></div></td>
     </tr>
-        <tr>
-     <td style="position: relative;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideSrcDestCheckbox" onclick="showHideSrcDest();" value="pink"/></td>
+     <tr>
+     <td style="position: relative;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideSrcCheckbox" onclick="showHideSourceMarker();" value="pink"/></td>
      <td style="position: relative;top:8px;left:58px;"><div><img class='image' style="width: 25px; height: 30px;" src='${pageContext.request.contextPath}/resources/NetworkImages/SrcDest.png'></div></td>
-     <td style="position: relative;top:8px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Src/Dest</label></td>   
+     <td style="position: relative;top:8px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Source</label></td>   
+    </tr>
+     <tr>
+     <td style="position: relative;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideDstCheckbox" onclick="showHideDestinationMarker();" value="pink"/></td>
+     <td style="position: relative;top:8px;left:58px;"><div><img class='image' style="width: 25px; height: 30px;" src='${pageContext.request.contextPath}/resources/NetworkImages/SrcDest.png'></div></td>
+     <td style="position: relative;top:8px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Destination</label></td>   
     </tr>
      
    
@@ -802,6 +807,8 @@ var elementsArray=[];
 var generateFlag="0";
 var manHandList=[];
 var manHandoleList=[];
+var srcID=[];
+var dstID=[];
 
 function initMap() {	
 	 map = new google.maps.Map(document.getElementById("mapContainer"), {
@@ -1052,12 +1059,6 @@ $(document).ready(function() {
 		$(this).siblings('.panel-heading').addClass('active');
 	});
 	
-
-			
-	 //  $('#showOnMap'). click(function(){  
-	 
-		         	
-		//});
 
 	 $("#fiberCable").autocomplete({
 		source: function(request, response) {
@@ -1542,7 +1543,6 @@ function buildPath(Id,fiberArray,Name,path,strokeColor,strokeOpacity,strokeWeigh
 
 function createMarker(ID,longitude,latitude,Name,iconImg,markersArray,markerClusterArray,target) {
 
-	console.log("manHandoleList "+manHandoleList)
 	markerId=ID;	
 
 	
@@ -2261,7 +2261,6 @@ function processCableSrcDstArray(cableID,windowMapPointsNames,fiberList,windowMa
 }
 function showElementLocationPoints(elementsDetailsArray,filteredGridArray,windowMapPointsNames,windowMapPoints) {
 
-
 	//To show the elements in grid that are junctions or belongs to mh/hh with jct in case of junction element type
 	if(elementsDetailsArray.length>0) {
 
@@ -2335,20 +2334,19 @@ function showElementLocationPoints(elementsDetailsArray,filteredGridArray,window
 		}
 	}
 
+
 	//To show the aux points of the cable
 	if(window[""+windowMapPointsNames+cableID] != undefined) {
 		showPointsArray = window[""+windowMapPointsNames+cableID];
-		
+
 		for(var x=0;x<showPointsArray.length;x++) {
 			if(showPointsArray[x].startsWith("WARE_")==true) {
 				var wareID = showPointsArray[x].split(":")[1];
 				var longLat = String(window[""+windowMapPoints+cableID][x]).replaceAll(/[( )]/g, '');
-				
-				if(distinctSites.includes(wareID)==false) {
-					if(x ==0 || x ==(showPointsArray.length-1)){// only src and destination 
-						srcDestID.push([wareID,"warehouse"]);
-					}
-					distinctSites.push(wareID);
+
+				if(x ==0){// only src
+					srcID.push([wareID,"warehouse"]);
+
 					if(!markersSites[wareID]){
 						createMarker(wareID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[2],'redSiteIcon.png',markersSites,markerClusterSites,"site")
 					}
@@ -2357,16 +2355,60 @@ function showElementLocationPoints(elementsDetailsArray,filteredGridArray,window
 						markerClusterSites.addMarker(markersSites[""+wareID]);
 					}
 				}
+				else if(x ==(showPointsArray.length-1)){// only destination 
+					dstID.push([wareID,"warehouse"]);
+
+					if(!markersSites[wareID]){
+						createMarker(wareID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[2],'redSiteIcon.png',markersSites,markerClusterSites,"site")
+					}
+					else {					
+						markersSites[wareID].setMap(map);
+						markerClusterSites.addMarker(markersSites[""+wareID]);
+					}
+				}
+				else {		
+				  if(distinctSites.includes(wareID)==false) {
+					
+					distinctSites.push(wareID);
+						
+					if(!markersSites[wareID]){
+						createMarker(wareID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[2],'redSiteIcon.png',markersSites,markerClusterSites,"site")
+					}
+					else {					
+						markersSites[wareID].setMap(map);
+						markerClusterSites.addMarker(markersSites[""+wareID]);
+					}
+				}
+				}
 				
 			}
 			else if(showPointsArray[x].startsWith("CUST_")==true) {
 				var ID = showPointsArray[x].split(":")[0];
 				var longLat = String(window[""+windowMapPoints+cableID][x]).replaceAll(/[( )]/g, '');
 
-				if(distinctCustomers.includes(ID)==false) {
-					if(x ==0 || x ==(showPointsArray.length-1)){// only src and destination 
-						srcDestID.push([ID,"customer"]);
+				if(x ==0){// only src  
+					srcID.push([ID,"customer"]);
+					if(!markersCustomer[ID]){
+						createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],'customerIcon.png',markersCustomer,markerClusterCustomers,"customer")
 					}
+					else {					
+						markersCustomer[ID].setMap(map);
+						markerClusterCustomers.addMarker(markersCustomer[""+ID]);
+					}
+				}
+				else if(x ==(showPointsArray.length-1)){// only destination 
+					dstID.push([ID,"customer"]);
+					if(!markersCustomer[ID]){
+						createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],'customerIcon.png',markersCustomer,markerClusterCustomers,"customer")
+					}
+					else {					
+						markersCustomer[ID].setMap(map);
+						markerClusterCustomers.addMarker(markersCustomer[""+ID]);
+					}
+				}
+				else {
+				if(distinctCustomers.includes(ID)==false) {
+					
 					distinctCustomers.push(ID);
 					if(!markersCustomer[ID]){
 						createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],'customerIcon.png',markersCustomer,markerClusterCustomers,"customer")
@@ -2376,20 +2418,38 @@ function showElementLocationPoints(elementsDetailsArray,filteredGridArray,window
 						markerClusterCustomers.addMarker(markersCustomer[""+ID]);
 					}
 				}
+				}
 			}
 			else if(showPointsArray[x].startsWith("MH_")==true) {
 				var ID = showPointsArray[x].split(":")[0];
 				var longLat = String(window[""+windowMapPoints+cableID][x]).replaceAll(/[( )]/g, '');
 				var manholeName = showPointsArray[x].split(":")[1];
-
-				 console.log("zeinb "+showPointsArray)
 					
 				if(manholeName.endsWith("_J")) {
 
-					if(distinctManholesWithJct.includes(ID)==false) {
-						if(x ==0 || x ==(showPointsArray.length-1)){// only src and destination 
-							srcDestID.push([ID,"manholewithJct"]);
+					if(x ==0){// only src  
+						srcID.push([ID,"manholewithJct"]);
+						if(!markersManholesWithJct[ID]){
+							createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],"manholeJct.png",markersManholesWithJct,markerClusterManholesWithJct,"manholeWithJct")
 						}
+						else {					
+							markersManholesWithJct[ID].setMap(map);
+							markerClusterManholesWithJct.addMarker(markersManholesWithJct[""+ID]);
+						}
+					}
+					else if(x ==(showPointsArray.length-1)){// only destination 
+						dstID.push([ID,"manholewithJct"]);
+						if(!markersManholesWithJct[ID]){
+							createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],"manholeJct.png",markersManholesWithJct,markerClusterManholesWithJct,"manholeWithJct")
+						}
+						else {					
+							markersManholesWithJct[ID].setMap(map);
+							markerClusterManholesWithJct.addMarker(markersManholesWithJct[""+ID]);
+						}
+					}
+					else{
+					if(distinctManholesWithJct.includes(ID)==false) {
+						
 						distinctManholesWithJct.push(ID);
 						if(!markersManholesWithJct[ID]){
 							createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],"manholeJct.png",markersManholesWithJct,markerClusterManholesWithJct,"manholeWithJct")
@@ -2399,13 +2459,32 @@ function showElementLocationPoints(elementsDetailsArray,filteredGridArray,window
 							markerClusterManholesWithJct.addMarker(markersManholesWithJct[""+ID]);
 						}
 					}
+					}
 				}
 				else {
-
-					if(distinctManholes.includes(ID)==false) {
-						if(x ==0 || x ==(showPointsArray.length-1)){// only src and destination 
-							srcDestID.push([ID,"manhole"]);
+					if(x ==0 ){// only src 
+						srcID.push([ID,"manhole"]);
+						if(!markersManholes[ID]){
+							createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],"manholeRed.png",markersManholes,markerClusterManholes,"manhole")
 						}
+						else {					
+							markersManholes[ID].setMap(map);
+							markerClusterManholes.addMarker(markersManholes[""+ID]);
+						}
+					}
+					else if(x ==(showPointsArray.length-1)){// only destination 
+						dstID.push([ID,"manhole"]);
+						if(!markersManholes[ID]){
+							createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],"manholeRed.png",markersManholes,markerClusterManholes,"manhole")
+						}
+						else {					
+							markersManholes[ID].setMap(map);
+							markerClusterManholes.addMarker(markersManholes[""+ID]);
+						}
+					}
+					else {
+					if(distinctManholes.includes(ID)==false) {
+						
 						distinctManholes.push(ID);
 						if(!markersManholes[ID]){
 							createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],"manholeRed.png",markersManholes,markerClusterManholes,"manhole")
@@ -2416,7 +2495,8 @@ function showElementLocationPoints(elementsDetailsArray,filteredGridArray,window
 						}
 					}
 					
-				}					
+				}
+			  }					
 			}
 			else if(showPointsArray[x].startsWith("HH_")==true) {
 				var ID = showPointsArray[x].split(":")[0];
@@ -2425,10 +2505,29 @@ function showElementLocationPoints(elementsDetailsArray,filteredGridArray,window
 				
 				if(handholeName.endsWith("_J")) {
 
-					if(distinctHandholesWithJct.includes(ID)==false) {
-						if(x ==0 || x ==(showPointsArray.length-1)){// only src and destination 
-							srcDestID.push([ID,"handholewithJct"]);
+					if(x ==0 ){// only src  
+						srcID.push([ID,"handholewithJct"]);
+						if(!markersHandholesWithJct[ID]){
+							createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],"handholeYellowJct.png",markersHandholesWithJct,markerClusterHandholesWithJct,"handholeWithJct")
 						}
+						else {					
+							markersHandholesWithJct[ID].setMap(map);
+							markerClusterHandholesWithJct.addMarker(markersHandholesWithJct[""+ID]);
+						}
+					}
+					else if( x ==(showPointsArray.length-1)){// only  destination 
+						dstID.push([ID,"handholewithJct"]);
+						if(!markersHandholesWithJct[ID]){
+							createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],"handholeYellowJct.png",markersHandholesWithJct,markerClusterHandholesWithJct,"handholeWithJct")
+						}
+						else {					
+							markersHandholesWithJct[ID].setMap(map);
+							markerClusterHandholesWithJct.addMarker(markersHandholesWithJct[""+ID]);
+						}
+					}
+					else {
+					if(distinctHandholesWithJct.includes(ID)==false) {
+						
 						distinctHandholesWithJct.push(ID);
 						if(!markersHandholesWithJct[ID]){
 							createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],"handholeYellowJct.png",markersHandholesWithJct,markerClusterHandholesWithJct,"handholeWithJct")
@@ -2438,12 +2537,32 @@ function showElementLocationPoints(elementsDetailsArray,filteredGridArray,window
 							markerClusterHandholesWithJct.addMarker(markersHandholesWithJct[""+ID]);
 						}
 					}
+					}
 				}
 				else {
-					if(distinctHandholes.includes(ID)==false) {
-						if(x ==0 || x ==(showPointsArray.length-1)){// only src and destination 
-							srcDestID.push([ID,"handhole"]);
+					if(x ==0 ){// only src  
+						srcID.push([ID,"handhole"]);
+						if(!markersHandholes[ID]){
+							createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],"handholeYellow.png",markersHandholes,markerClusterHandholes,"handhole")
 						}
+						else {					
+							markersHandholes[ID].setMap(map);
+							markerClusterHandholes.addMarker(markersHandholes[""+ID]);
+						}
+					}
+					else if(x ==(showPointsArray.length-1)){// only destination 
+						dstID.push([ID,"handhole"]);
+						if(!markersHandholes[ID]){
+							createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],"handholeYellow.png",markersHandholes,markerClusterHandholes,"handhole")
+						}
+						else {					
+							markersHandholes[ID].setMap(map);
+							markerClusterHandholes.addMarker(markersHandholes[""+ID]);
+						}
+					}
+					else {
+					if(distinctHandholes.includes(ID)==false) {
+						
 						distinctHandholes.push(ID);
 						if(!markersHandholes[ID]){
 							createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],"handholeYellow.png",markersHandholes,markerClusterHandholes,"handhole")
@@ -2453,21 +2572,37 @@ function showElementLocationPoints(elementsDetailsArray,filteredGridArray,window
 							markerClusterHandholes.addMarker(markersHandholes[""+ID]);
 						}
 					}
-					
-				}		
-
-
-				
+					}
+				}						
 				
 			} 
 			else if(showPointsArray[x].startsWith("DB_")==true) {
 				var ID = showPointsArray[x].split(":")[0];
 				var longLat = String(window[""+windowMapPoints+cableID][x]).replaceAll(/[( )]/g, '');
-				
-				if(distinctDB.includes(ID)==false) {
-					if(x ==0 || x ==(showPointsArray.length-1)){// only src and destination 
-						srcDestID.push([ID,"DB"]);
+
+				if(x ==0 ){// only src  
+					srcID.push([ID,"DB"]);
+					if(!markersDB[ID]){
+						createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],'backboneDB.png',markersDB,markerClusterDB,"DB")
 					}
+					else {					
+						markersDB[ID].setMap(map);
+						markerClusterDB.addMarker(markersDB[""+ID]);
+					}
+				}
+				if(x ==(showPointsArray.length-1)){// only destination 
+					dstID.push([ID,"DB"]);
+					if(!markersDB[ID]){
+						createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],'backboneDB.png',markersDB,markerClusterDB,"DB")
+					}
+					else {					
+						markersDB[ID].setMap(map);
+						markerClusterDB.addMarker(markersDB[""+ID]);
+					}
+				}
+				else {
+				if(distinctDB.includes(ID)==false) {
+					
 					distinctDB.push(ID);
 					if(!markersDB[ID]){
 						createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],'backboneDB.png',markersDB,markerClusterDB,"DB")
@@ -2476,6 +2611,7 @@ function showElementLocationPoints(elementsDetailsArray,filteredGridArray,window
 						markersDB[ID].setMap(map);
 						markerClusterDB.addMarker(markersDB[""+ID]);
 					}
+				}
 				}
 			}				
 		}
@@ -2608,16 +2744,17 @@ function showElementLocationPoints(elementsDetailsArray,filteredGridArray,window
 					markerClusterDB.addMarker(markersDB[""+ID]);
 				}
 			}
-		}// end db case
-
-		
+		}// end db case		
 }
+
+ 	var dropdownSelectedValue = document.getElementById('mapDropdown').value;
+	
 	 if(distinctCustomers.length >0) {
 			$('.showHideAllCustCheckbox').prop('checked', true);
 			$(".showHideAllCustCheckbox").attr('disabled', false);
      }   
      else {
-     	$('.showHideAllCustCheckbox').prop('checked', false);
+	     	$('.showHideAllCustCheckbox').prop('checked', false);
 			$(".showHideAllCustCheckbox").attr('disabled', true);
       } 
      if(distinctSites.length >0) {
@@ -2625,7 +2762,7 @@ function showElementLocationPoints(elementsDetailsArray,filteredGridArray,window
 			$(".showHideAllSitesCheckbox").attr('disabled', false);
      }   
      else {
-     	$('.showHideAllSitesCheckbox').prop('checked', false);
+     		$('.showHideAllSitesCheckbox').prop('checked', false);
 			$(".showHideAllSitesCheckbox").attr('disabled', true);
       } 
      if(distinctManholes.length >0) {
@@ -2633,7 +2770,7 @@ function showElementLocationPoints(elementsDetailsArray,filteredGridArray,window
 			$(".showHideAllManholesCheckbox").attr('disabled', false);
      }   
      else {
-     	$('.showHideAllManholesCheckbox').prop('checked', false);
+     		$('.showHideAllManholesCheckbox').prop('checked', false);
 			$(".showHideAllManholesCheckbox").attr('disabled', true);
       } 
      if(distinctManholesWithJct.length >0) {
@@ -2641,7 +2778,7 @@ function showElementLocationPoints(elementsDetailsArray,filteredGridArray,window
 			$(".showHideAllManholesWithJctCheckbox").attr('disabled', false);
      }   
      else {
-     	$('.showHideAllManholesWithJctCheckbox').prop('checked', false);
+     		$('.showHideAllManholesWithJctCheckbox').prop('checked', false);
 			$(".showHideAllManholesWithJctCheckbox").attr('disabled', true);
       } 
      if(distinctHandholes.length >0) {
@@ -2649,7 +2786,7 @@ function showElementLocationPoints(elementsDetailsArray,filteredGridArray,window
 			$(".showHideAllHandholesCheckbox").attr('disabled', false);
      }   
      else {
-     	$('.showHideAllHandholesCheckbox').prop('checked', false);
+     		$('.showHideAllHandholesCheckbox').prop('checked', false);
 			$(".showHideAllHandholesCheckbox").attr('disabled', true);
       }
      if(distinctHandholesWithJct.length >0) {
@@ -2657,7 +2794,7 @@ function showElementLocationPoints(elementsDetailsArray,filteredGridArray,window
 			$(".showHideAllHandholesWithJctCheckbox").attr('disabled', false);
      }   
      else {
-     	$('.showHideAllHandholesWithJctCheckbox').prop('checked', false);
+     		$('.showHideAllHandholesWithJctCheckbox').prop('checked', false);
 			$(".showHideAllHandholesWithJctCheckbox").attr('disabled', true);
       }
      if(distinctDB.length >0) {
@@ -2665,7 +2802,7 @@ function showElementLocationPoints(elementsDetailsArray,filteredGridArray,window
 			$(".showHideAllDbCheckbox").attr('disabled', false);
      }   
      else {
-     	$('.showHideAllDbCheckbox').prop('checked', false);
+     		$('.showHideAllDbCheckbox').prop('checked', false);
 			$(".showHideAllDbCheckbox").attr('disabled', true);
       } 
      if(distinctJct.length >0) {
@@ -2673,18 +2810,107 @@ function showElementLocationPoints(elementsDetailsArray,filteredGridArray,window
 			$(".showHideAllJctCheckbox").attr('disabled', false);
      }   
      else {
-     	$('.showHideAllJctCheckbox').prop('checked', false);
+     		$('.showHideAllJctCheckbox').prop('checked', false);
 			$(".showHideAllJctCheckbox").attr('disabled', true);
       } 
      
-     if(srcDestID.length >0) {
-			$('.showHideSrcDestCheckbox').prop('checked', true);
-			$(".showHideSrcDestCheckbox").attr('disabled', false);
+    if(srcID.length >0) {
+
+  	  $(".showHideSrcCheckbox").attr('disabled', false);
+
+	 if(dropdownSelectedValue=="gridBased") {
+		$('.showHideSrcCheckbox').prop('checked', false);
+			
+		if(srcID[0][1]=="warehouse"){
+			markersArray = markersSites;
+			clusterArray = markerClusterSites;
+		}
+		else if(srcID[0][1]=="customer"){
+			markersArray = markersCustomer;
+			clusterArray = markerClusterCustomers;
+		}
+		else if(srcID[0][1]=="manhole"){
+			markersArray = markersManholes;
+			clusterArray = markerClusterManholes;
+		}
+		else if(srcID[0][1]=="manholewithJct"){
+			markersArray = markersManholesWithJct;
+			clusterArray = markerClusterManholesWithJct;
+		}
+		else if(srcID[0][1]=="handhole"){
+			markersArray = markersHandholes;
+			clusterArray = markerClusterHandholes;
+		}
+		else if(srcID[0][1]=="handholewithJct"){
+			markersArray = markersHandholesWithJct;
+			clusterArray = markerClusterHandholesWithJct;
+		}
+		else if(srcID[0][1]=="DB"){
+			markersArray = markersDB;
+			clusterArray = markerClusterDB;
+		}
+		ID = srcID[0][0];
+		markersArray[ID].setMap(null);
+		clusterArray.removeMarker(markersArray[ID]);
+		}
+		 else { //Case of cable based ( we should show the src and dst) 
+				$('.showHideSrcCheckbox').prop('checked', true);
+		 }
      }   
      else {
-     	$('.showHideSrcDestCheckbox').prop('checked', false);
-			$(".showHideSrcDestCheckbox").attr('disabled', true);
+     	$('.showHideSrcCheckbox').prop('checked', false);
+		$(".showHideSrcCheckbox").attr('disabled', true);
       } 
+
+     if(dstID.length >0) {
+		$(".showHideDstCheckbox").attr('disabled', false);
+
+	  if(dropdownSelectedValue=="gridBased") {
+			$('.showHideDstCheckbox').prop('checked', false);
+					
+		if(dstID[0][1]=="warehouse"){
+			markersArray = markersSites;
+			clusterArray = markerClusterSites;
+		}
+		else if(dstID[0][1]=="customer"){
+			markersArray = markersCustomer;
+			clusterArray = markerClusterCustomers;
+		}
+		else if(dstID[0][1]=="manhole"){
+			markersArray = markersManholes;
+			clusterArray = markerClusterManholes;
+		}
+		else if(dstID[0][1]=="manholewithJct"){
+			markersArray = markersManholesWithJct;
+			clusterArray = markerClusterManholesWithJct;
+		}
+		else if(dstID[0][1]=="handhole"){
+			markersArray = markersHandholes;
+			clusterArray = markerClusterHandholes;
+		}
+		else if(dstID[0][1]=="handholewithJct"){
+			markersArray = markersHandholesWithJct;
+			clusterArray = markerClusterHandholesWithJct;
+		}
+		else if(dstID[0][1]=="DB"){
+			markersArray = markersDB;
+			clusterArray = markerClusterDB;
+		}
+		ID = dstID[0][0];
+		
+		markersArray[ID].setMap(null);
+		clusterArray.removeMarker(markersArray[ID]);	
+
+	  }
+	  else { //cable based			
+		  $('.showHideDstCheckbox').prop('checked', true);
+
+		}			
+	  }   
+	  else {
+	  	$('.showHideDstCheckbox').prop('checked', false);
+		$(".showHideDstCheckbox").attr('disabled', true);
+	  } 
     document.getElementById("sitesCount").textContent = "("+distinctSites.length+")";  
  	document.getElementById("manholesCount").textContent = "("+distinctManholes.length+")";
  	document.getElementById("manholesCountWithJct").textContent = "("+distinctManholesWithJct.length+")";
@@ -2727,6 +2953,8 @@ document.getElementById('mapDropdown').addEventListener('change', function() {
 				showElementLocationPoints(elementsArray,filteredGridData,"mapPointsNames_","mapPoints_");	
 			}
 			else if(selectedValue=="gridBased" && generateFlag=="1") {
+				window["mapPointsBasedOnGrid_"+cableID]=[];
+				window["mapPointsNamesBasedOnGrid_"+cableID]=[];
 				processCableSrcDstArray(cableID,"mapPointsNamesBasedOnGrid_",srcDstCableList,"mapPointsBasedOnGrid_");
 				window["mapPointsBasedOnGrid_"+cableID].push(new google.maps.LatLng(srcDstCableList[0][3],srcDstCableList[0][2]));
 				showElementLocationPoints(elementsArray,filteredGridData,"mapPointsNamesBasedOnGrid_","mapPointsBasedOnGrid_");
@@ -2756,9 +2984,11 @@ function showOnMap() {
 	   markerClusterSites.clearMarkers();	
 	   mapFlag="1";
 	   
-	   srcDestID = [];
+	   srcID = [];
+	   dstID = [];
 	   showPointsArray=[];
 
+	
 	if(generateFlag=="1") {
 	 	var dropdownSelectedValue = document.getElementById('mapDropdown').value;
 		 cableID = $("#fiberCable").val().split(":")[0];
@@ -2779,6 +3009,8 @@ function showOnMap() {
 		 				showElementLocationPoints(data.jctList,filteredGridData,"mapPointsNames_","mapPoints_");	
 		 			}
 		 			else if(dropdownSelectedValue=="gridBased") {
+		 				window["mapPointsBasedOnGrid_"+cableID]=[];
+						window["mapPointsNamesBasedOnGrid_"+cableID]=[];
 		 				processCableSrcDstArray(cableID,"mapPointsNamesBasedOnGrid_",srcDstCableList,"mapPointsBasedOnGrid_");
 		 				window["mapPointsBasedOnGrid_"+cableID].push(new google.maps.LatLng(srcDstCableList[0][3],srcDstCableList[0][2]));
 		 				showElementLocationPoints(data.jctList,filteredGridData,"mapPointsNamesBasedOnGrid_","mapPointsBasedOnGrid_");
@@ -2796,6 +3028,8 @@ function showOnMap() {
 				showElementLocationPoints(elementsArray,filteredGridData,"mapPointsNames_","mapPoints_");	
 			}
 			else if(dropdownSelectedValue=="gridBased") {
+				window["mapPointsBasedOnGrid_"+cableID]=[];
+				window["mapPointsNamesBasedOnGrid_"+cableID]=[];
 				processCableSrcDstArray(cableID,"mapPointsNamesBasedOnGrid_",srcDstCableList,"mapPointsBasedOnGrid_");
 				window["mapPointsBasedOnGrid_"+cableID].push(new google.maps.LatLng(srcDstCableList[0][3],srcDstCableList[0][2]));
 				showElementLocationPoints(elementsArray,filteredGridData,"mapPointsNamesBasedOnGrid_","mapPointsBasedOnGrid_");
@@ -2808,40 +3042,90 @@ function showOnMap() {
 		 document.getElementById("headingTwo").scrollIntoView({ behavior: "smooth" });
 	}
 
-function showHideSrcDest(){
+function showHideSourceMarker(){
 
-	$('.showHideSrcDestCheckbox').bind("change",function() {
-		console.log("srcDestID "+srcDestID.length)
-			for(var x=0;x<srcDestID.length;x++) {
-				if(srcDestID[x][1]=="warehouse"){
+	$('.showHideSrcCheckbox').bind("change",function() {
+			for(var x=0;x<srcID.length;x++) {
+				if(srcID[x][1]=="warehouse"){
 					markersArray = markersSites;
 					clusterArray = markerClusterSites;
 				}
-				else if(srcDestID[x][1]=="customer"){
+				else if(srcID[x][1]=="customer"){
 					markersArray = markersCustomer;
 					clusterArray = markerClusterCustomers;
 				}
-				else if(srcDestID[x][1]=="manhole"){
+				else if(srcID[x][1]=="manhole"){
 					markersArray = markersManholes;
 					clusterArray = markerClusterManholes;
 				}
-				else if(srcDestID[x][1]=="manholewithJct"){
+				else if(srcID[x][1]=="manholewithJct"){
 					markersArray = markersManholesWithJct;
 					clusterArray = markerClusterManholesWithJct;
 				}
-				else if(srcDestID[x][1]=="handhole"){
+				else if(srcID[x][1]=="handhole"){
 					markersArray = markersHandholes;
 					clusterArray = markerClusterHandholes;
 				}
-				else if(srcDestID[x][1]=="handholewithJct"){
+				else if(srcID[x][1]=="handholewithJct"){
 					markersArray = markersHandholesWithJct;
 					clusterArray = markerClusterHandholesWithJct;
 				}
-				else if(srcDestID[x][1]=="DB"){
+				else if(srcID[x][1]=="DB"){
 					markersArray = markersDB;
 					clusterArray = markerClusterDB;
 				}
-				ID = srcDestID[x][0];
+				ID = srcID[x][0];
+				if ($(this).is(':checked')){
+					if(markersArray[ID].getMap()==null){
+						clusterArray.removeMarker(markersArray[ID]);
+						markersArray[ID].setMap(map);			
+						clusterArray.addMarker(markersArray[ID]);
+					}
+				}
+				else{
+					markersArray[ID].setMap(null);
+					clusterArray.removeMarker(markersArray[ID]);
+					}
+			}
+		
+		
+	});		
+	
+}
+
+function showHideDestinationMarker(){
+
+	$('.showHideDstCheckbox').bind("change",function() {
+			for(var x=0;x<dstID.length;x++) {
+				if(dstID[x][1]=="warehouse"){
+					markersArray = markersSites;
+					clusterArray = markerClusterSites;
+				}
+				else if(dstID[x][1]=="customer"){
+					markersArray = markersCustomer;
+					clusterArray = markerClusterCustomers;
+				}
+				else if(dstID[x][1]=="manhole"){
+					markersArray = markersManholes;
+					clusterArray = markerClusterManholes;
+				}
+				else if(dstID[x][1]=="manholewithJct"){
+					markersArray = markersManholesWithJct;
+					clusterArray = markerClusterManholesWithJct;
+				}
+				else if(dstID[x][1]=="handhole"){
+					markersArray = markersHandholes;
+					clusterArray = markerClusterHandholes;
+				}
+				else if(dstID[x][1]=="handholewithJct"){
+					markersArray = markersHandholesWithJct;
+					clusterArray = markerClusterHandholesWithJct;
+				}
+				else if(dstID[x][1]=="DB"){
+					markersArray = markersDB;
+					clusterArray = markerClusterDB;
+				}
+				ID = dstID[x][0];
 				if ($(this).is(':checked')){
 					if(markersArray[ID].getMap()==null){
 						clusterArray.removeMarker(markersArray[ID]);
