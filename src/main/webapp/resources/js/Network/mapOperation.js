@@ -23,8 +23,8 @@ console.log("type"+type);
 if(document.getElementById("generic_operationAutoComplete").checked){
 	
 genericMarkers=[genericId];
-createPlaceMarker(genericId,place,markerName,Lat,Lng,genericMarkers,"generic");
-console.log(createPlaceMarker);
+createPlaceMarker(genericId,place,markerName,Lat,Lng,placeMarkers,"generic");
+
 panTo(Lat, Lng);
 map.setZoom(6);
 				if(typeof infowindow!== 'undefined'){
@@ -35,7 +35,7 @@ map.setZoom(6);
 			}
 
 			infowindow.setContent(place ? place : markerName);
-			infowindow.open(map,genericMarkers[""+genericId]);
+			infowindow.open(map,placeMarkers[""+genericId]);
 		
 }
 
@@ -45,9 +45,9 @@ map.setZoom(6);
 	
  if(document.getElementById("place_operationAutoComplete").checked){
 	
-	placeMarkers=[placeId];
+	
 createPlaceMarker(placeId,place,"",Lat,Lng,placeMarkers,"place");
-console.log(createPlaceMarker);
+
 panTo(Lat, Lng);
 map.setZoom(6);
 				if(typeof infowindow!== 'undefined'){
@@ -134,7 +134,9 @@ else if(type=="DB"){
 			infowindow.open(map,markersDistBoard[""+id]);
 }
 else if(type=="WARE"){
-createSiteCltMarker(id,search,Lat,Lng,siteCltSrcMarkers);
+$("#"+id).children('input:checkbox').prop('checked', true);
+$("#siteCheckAllBoq").prop('checked', true);
+markerClusterSite.addMarker(markersSite[""+id]);	
 panTo(Lat, Lng);
 map.setZoom(6);
 			if(typeof infowindow!== 'undefined'){
@@ -334,7 +336,7 @@ function createPlaceMarker(Id, Name, markerName, Lat, Long, placeMarkers, type) 
 
         // Attach metadata to the marker
         placeMarker.metadata = { id: Id };
-        placeMarkers[Id] = placeMarker;
+       placeMarkers[Id] = placeMarker;
 
         // Create and attach the info window
         const infowindow = new google.maps.InfoWindow({
