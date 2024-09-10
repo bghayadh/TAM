@@ -5,6 +5,7 @@ var showPointsType="";
 var showHidePointsArray =[];
 var allTreePoints=[];
 var surveyNearestPoint="";
+var placeGenericMarkers=[];
 
  $(document).on("triggerListenersEvent", function () {
 $(function(){
@@ -1282,7 +1283,7 @@ function createSiteCltMarker(Id, Name, Lat, Long, siteCltSrcMarkers) {
         // Attach metadata to the marker
         siteCltMarker.metadata = { id: Id };
         siteCltSrcMarkers[Id] = siteCltMarker;
-
+console.log(siteCltSrcMarkers);
         // Create and attach the info window
         const infowindow = new google.maps.InfoWindow({
             content: data
