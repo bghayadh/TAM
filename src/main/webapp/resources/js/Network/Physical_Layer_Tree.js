@@ -53,6 +53,7 @@ var fiberStrandAction="";
 var allSites=[]; // used in dropdown site label
 var allClients=[]; // used in dropdown client label
 var allPlaces=[];
+var allGeneric=[];
 var checkLabel="";
 var originationTerminationCheck ="";// used in fire origination/termination popup
 var oldNtwLevel = ""; // used for check if network level change to decided the locations if the fiber cable (Backbone , metro , access) 
@@ -23125,146 +23126,23 @@ function appendingToAuxFromTree(modalId, auxFlag, auxPtAutocomplete, srcDestAuto
 	  }) // end of ajax	
 }
 
-function MapOperationmarking(){
-var search= document.getElementById("Searchh").value.toString();
-var search1= document.getElementById("placeSearch").value.toString();
-var placeId=Math.floor(Math.random() * 1000)+search1;
-var id=search.split(":")[0];
-var type =id.split("_")[0];
-var name=search.split(":")[1];
-var Lng=document.getElementById("Lng").value;
-var Lat=document.getElementById("Lat").value;
-console.log("typeeeeeeee"+type);
- if(document.getElementById("place_operationAutoComplete").checked){
-createSiteCltMarker(placeId,search1,Lat,Lng,siteCltSrcMarkers);
-panTo(Lat, Lng);
-map.setZoom(6);
-			
-}
 
-
-else if(type=="MH"){
-$("#"+id).children('input:checkbox').prop('checked', true);
-$("#manholeCheckAllBoq").prop('checked', true);
-markerClusterManhole.addMarker(markersManhole[""+id]);
-ManholeCheckFilter(id);	
-panTo(Lat, Lng);
-			map.setZoom(11);
-			if(typeof infowindow!== 'undefined'){
-				infowindow.close();
-			}
-			else{
-				infowindow = new google.maps.InfoWindow();
-			}
-
-			infowindow.setContent(id);
-			infowindow.open(map,markersManhole[""+id]);
-						
-			
-    	
-		
-
-
-}
-else if(type=="HH"){
-$("#"+id).children('input:checkbox').prop('checked', true);
-$("#handholeCheckAllBoq").prop('checked', true);
-markerClusterHandhole.addMarker(markersHandhole[""+id]);
-HandholeCheckFilter(id);	
-panTo(Lat, Lng);
-map.setZoom(11);
-			if(typeof infowindow!== 'undefined'){
-				infowindow.close();
-			}
-			else{
-				infowindow = new google.maps.InfoWindow();
-			}
-
-			infowindow.setContent(id);
-			infowindow.open(map,markersHandhole[""+id]);
-						
-}
-else if(type=="DB"){
-	$("#"+id).children('input:checkbox').prop('checked', true);
-	$("#distBoardCheckAllBoq").prop('checked', true);
-	
-	if(window[""+id][8]=="backbone") {
-		markerClusterBackboneDistBoard.addMarker(markersDistBoard[""+id]);
-		DistributionBoardCheckFilter(id,"",markerClusterBackboneDistBoard);	
-	}
-	else if(window[""+id][8]=="metro") {
-		markerClusterMetroDistBoard.addMarker(markersDistBoard[""+id]);
-		DistributionBoardCheckFilter(id,"",markerClusterMetroDistBoard);	
-
-	}
-	else if(window[""+id][8]=="access") {
-		markerClusterAccessDistBoard.addMarker(markersDistBoard[""+id]);
-		DistributionBoardCheckFilter(id,"",markerClusterAccessDistBoard);	
-	}
-	panTo(Lat, Lng);
-	map.setZoom(11);
-			if(typeof infowindow!== 'undefined'){
-				infowindow.close();
-			}
-			else{
-				infowindow = new google.maps.InfoWindow();
-			}
-
-			infowindow.setContent(id);
-			infowindow.open(map,markersDistBoard[""+id]);
-}
-else if(type=="WARE"){
-//createSiteCltMarker(id,search,Lat,Lng,siteCltSrcMarkers);
-	if(!allSiteID.includes(id)) {
-		//console.log("WARE")
-		allSiteID.push(id)
-		create_Site_Marker_Click(id,name,Lng,Lat,markersSite,markerClusterSite,"Site","")
-	}
-	//$("#"+id).children('input:checkbox').prop('checked', true);
-	if ($("#"+id).children('input:checkbox').length > 0) {// If checkbox inputs exist
-	    $("#"+id).children('input:checkbox').prop('checked', true);
-	    SiteCheckFilter(id);
-	}
-	$("#siteCheckAllBoq").prop('checked', true);
-	markerClusterSite.addMarker(markersSite[""+id]);
-	
-	
-	panTo(Lat, Lng);
-	map.setZoom(6);
-			if(typeof infowindow!== 'undefined'){
-				infowindow.close();
-			}
-			else{
-				infowindow = new google.maps.InfoWindow();
-			}
-
-			infowindow.setContent(id);
-			infowindow.open(map,siteCltSrcMarkers[""+id]);
-			
-}
-else if(type=="CUST"){
-createSiteCltMarker(id,search,Lat,Lng,siteCltSrcMarkers);
-panTo(Lat, Lng);
-map.setZoom(6);
-			if(typeof infowindow!== 'undefined'){
-				infowindow.close();
-			}
-			else{
-				infowindow = new google.maps.InfoWindow();
-			}
-
-			infowindow.setContent(id);
-			infowindow.open(map,siteCltSrcMarkers[""+id]);
-}
-
-
-}
 			
 function clearMarkers(){
-
-			for(var t=0;t<siteCltSrcMarkers.length;t++) {
-				siteCltSrcMarkers[siteCltSrcMarkers[t].ID].setMap(null);
-			}
+ console.log(siteCltSrcMarkers);
+	for (var key in siteCltSrcMarkers) {
+    if (siteCltSrcMarkers.hasOwnProperty(key)) {
+          var marker = siteCltSrcMarkers[key];
+        marker.setMap(null);
+    }
+    }
+    console.log(placeMarkers);
+  	for (var key in placeMarkers) {
+    if (placeMarkers.hasOwnProperty(key)) {
+          var marker = placeMarkers[key];
+        marker.setMap(null);
+    }
+    }
 			markerClusterManhole.clearMarkers();
 			markerClusterHandhole.clearMarkers();
 			markerClusterBackboneDistBoard.clearMarkers(); 
