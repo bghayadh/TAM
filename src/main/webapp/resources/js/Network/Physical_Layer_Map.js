@@ -27,6 +27,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			markersJctTempo="";
 			markersTempoHandholeJct="";	
 			siteCltSrcMarkers=[];
+			placeMarkers=[];
 			markersJunction=[];
 			markersSite=[];
 
