@@ -303,6 +303,8 @@ display:none;
            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NodeListView">Nodes</a></li>
           <div class="dropdown-divider"></div>
            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/CellListView">Cells</a></li>
+            <div class="dropdown-divider"></div>
+           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NodePortMappingListView">Node Port Mapping</a></li>
          
          
         </ul>
@@ -514,6 +516,8 @@ display:none;
            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NodeListView">Nodes</a></li>
          <div class="dropdown-divider"></div>
            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/CellListView">Cells</a></li>
+            <div class="dropdown-divider"></div>
+           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NodePortMappingListView">Node Port Mapping</a></li>
          
         </ul>
       </li>
@@ -783,7 +787,9 @@ display:none;
            <div class="dropdown-divider"></div>
            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NodeListView">Nodes</a></li>
           <div class="dropdown-divider"></div>
-           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/CellListView">Cells</a></li>         
+           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/CellListView">Cells</a></li>  
+            <div class="dropdown-divider"></div>
+           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NodePortMappingListView">Node Port Mapping</a></li>       
         </ul>        
       </li>
       <li class="nav-item"><a href="${pageContext.request.contextPath}/Inventory" class="nav-link "><c:if test="${page == 'inventory'}"><span class="border-bottom active"></c:if><i class="fas fa-warehouse"></i> Inventory <c:if test="${page == 'inventory'}"></span></c:if></a></li>
@@ -1072,6 +1078,8 @@ display:none;
            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NodeListView">Nodes</a></li>
           <div class="dropdown-divider"></div>
            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/CellListView">Cells</a></li>
+           <div class="dropdown-divider"></div>
+           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NodePortMappingListView">Node Port Mapping</a></li>
          
         </ul>
       </li>
