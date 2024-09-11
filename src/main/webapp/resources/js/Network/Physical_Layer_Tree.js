@@ -2140,9 +2140,19 @@ menuTubePath = new ContextMenu({
 				},
 				{'icon': 'trash', 'name': 'Hide All Points', action: () => {					
 					console.log("siteCltSrcMarkerss "+siteCltSrcMarkers.length)
+					
+					
+					for (var key in siteCltSrcMarkers) {
+    					if (siteCltSrcMarkers.hasOwnProperty(key)) {
+          					var marker = siteCltSrcMarkers[key];
+        					marker.setMap(null);
+    					}
+    				}
+/*					
 					for(var t=0;t<siteCltSrcMarkers.length;t++) {
 						siteCltSrcMarkers[siteCltSrcMarkers[t].ID].setMap(null);
 					}
+*/					
 					markerClusterManhole.clearMarkers();
 					markerClusterHandhole.clearMarkers();
 					markerClusterBackboneDistBoard.clearMarkers();
