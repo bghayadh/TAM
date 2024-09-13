@@ -134,21 +134,15 @@ else if(type=="DB"){
 			infowindow.open(map,markersDistBoard[""+id]);
 }
 else if(type=="WARE"){
-$("#"+id).children('input:checkbox').prop('checked', true);
-$("#siteCheckAllBoq").prop('checked', true);
-markerClusterSite.addMarker(markersSite[""+id]);	
-panTo(Lat, Lng);
-map.setZoom(6);
-			if(typeof infowindow!== 'undefined'){
-				infowindow.close();
-			}
-			else{
-				infowindow = new google.maps.InfoWindow();
-			}
+if(siteFlag == 0){
+	getSite("addMaker",id);
+	}
+	
+	else{
+		
+		sitMarker(id);
+	}
 
-			infowindow.setContent(id);
-			infowindow.open(map,siteCltSrcMarkers[""+id]);
-			
 }
 else if(type=="CUST"){
 createSiteCltMarker(id,search,Lat,Lng,siteCltSrcMarkers);
@@ -426,4 +420,24 @@ function clearMapOperationFeilds(){
 		 document.getElementById('Lng').value = "";
 		 document.getElementById('markerN').value = "";
 }
+
+function sitMarker(id){
+	
+		$("#"+id).children('input:checkbox').prop('checked', true);
+                            $("#siteCheckAllBoq").prop('checked', true);
+	
+                           markerClusterSite.addMarker(markersSite[""+id]);	
+                           panTo(Lat, Lng);
+                           map.setZoom(6);
+			if(typeof infowindow!== 'undefined'){
+				infowindow.close();
+			}
+			else{
+				infowindow = new google.maps.InfoWindow();
+			}
+
+			infowindow.setContent(id);
+			infowindow.open(map,siteCltSrcMarkers[""+id]);
+			
+						}
 
