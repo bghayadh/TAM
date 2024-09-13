@@ -3905,7 +3905,7 @@ function boqCheckFilter(){
 	$("#siteCheckAllBoq").bind("change",function(){
 		if ($(this).is(':checked')){	
 			if(siteFlag == 0 ){
-				getSite();
+				getSite(null,null);
 			}else{
 				siteLayerCheckAll();
 			}
