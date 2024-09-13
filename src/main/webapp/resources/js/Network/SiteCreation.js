@@ -1,9 +1,15 @@
 var siteFlag = 0;
 var siteList=[];//used in boq
 var boqList=[];//used in boq
-function getSite(type,url,id,tr){
-	$('body').append('<div id="loading"><img id="loading-image" src="'+getContext()+'/resources/images/ajax-loader.gif" alt="Loading..." /><span>Loading, please wait.</span></div>')
-    if(siteFlag == 0){
+
+
+function getSite(type,id){
+
+   if(siteFlag == 0){
+		//setTimeout(function() { 
+		$('body').append('<div id="loading"><img id="loading-image" src="'+getContext()+'/resources/images/ajax-loader.gif" alt="Loading..." /><span>Loading, please wait.</span></div>')
+    //return; 
+   // }, 0);
     	$.ajax({
     		type: "GET",
     		contentType: "application/json; charset=utf-8",
@@ -11,8 +17,12 @@ function getSite(type,url,id,tr){
     		data: {					
     		},
     		dataType: "json",
+    		//async: false,
     		success: function (data) {
+			
     			if (data != null) {
+						//	$('body').append('<div id="loading"><img id="loading-image" src="'+getContext()+'/resources/images/ajax-loader.gif" alt="Loading..." /><span>Loading, please wait.</span></div>')
+ 
     				if (data.searchResult != "Failed") {
 					    $("#Site_f_CurrentPhysicalLayer input[type=checkbox]").unbind();// removed 
     				   // console.log(" //////////SiteList "+data.SiteList);
@@ -23,16 +33,27 @@ function getSite(type,url,id,tr){
     				    	siteLayerCheckAll();
 						}
     					$('#Site_f_CurrentPhysicalLayer .TreeSpan').css("display", "inline"); // The purpose of this command is to let the background color width in mouse hovering or mouse select to be same span text width	
-    				    treeCollapseFolder("#Site_f_CurrentPhysicalLayer .folder","fast",".folder");
-    					tree_prop_selection("#Site_f_CurrentPhysicalLayer .TreeSpan");
-    					MouseHoveringSpans("#Site_f_CurrentPhysicalLayer .TreeSpan");		//>>>>>>>>>>>> Hover event in tree elements
-    					var children = $("#Site_f_CurrentPhysicalLayer").find(' > ul > li');
+    				 	var children = $("#Site_f_CurrentPhysicalLayer").find(' > ul > li');
+    					if(type === "collaps"){
+    					
     					children.show();
     					$(this).parent('').children(".folder").find('> svg').addClass('fa-folder-open').removeClass('fa-folder');
-    					siteFlag = 1;	
+    					}
+    					siteFlag = 1;
+    					//treeCollapseFolder("#Site_f_CurrentPhysicalLayer .parentFolder","",".folder");
+    					tree_prop_selection("#Site_f_CurrentPhysicalLayer .TreeSpan");
+    					MouseHoveringSpans("#Site_f_CurrentPhysicalLayer .TreeSpan");		//>>>>>>>>>>>> Hover event in tree elements
+    					
     					console.log("allSiteID "+allSiteID.length)
     					console.log("markersSite "+markersSite.length)
+    					
+    					if(id != null & type === "addMaker"){
+							
+							
+						sitMarker(id);
     				}
+    				}
+    				
     				$("#loading").remove();	
     			}
     		},
@@ -41,9 +62,7 @@ function getSite(type,url,id,tr){
     		}
     		});
     }
-	else {
-		$("#loading").remove();	
-	}
+	
 	
 
 }
