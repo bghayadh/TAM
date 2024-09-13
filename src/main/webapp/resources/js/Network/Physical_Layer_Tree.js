@@ -558,7 +558,7 @@ if(readDB === '1'){
 			//console.log(" //////////passed else");	
 			$("#Site_f_CurrentPhysicalLayer input[type=checkbox]").bind("change",function() {
 				if ($(this).is(':checked')){
-					getSite();
+					getSite(null,null);
 				}
 			});
 		}
@@ -20201,7 +20201,7 @@ function treeCollapseFolder(selector,type,clss){
 			getJunction();
 		}else if(id == "Site_f_CurrentPhysicalLayer" && siteFlag == 0 ){
 			//console.log("passed treeCollapseFolder");
-			getSite();
+			getSite("collaps",null);
 		}else if(id.startsWith('PROJECT_') && projectflag[id] == 0 ){
 			//console.log("passed treeCollapseFolder project "+id);
 			//console.log("projectflag[id ] "+projectflag[id])
