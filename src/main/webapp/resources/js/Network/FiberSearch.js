@@ -429,9 +429,75 @@ function autoCompleteMultiPoint(SiteID,LongID,LatID,index,checkboxclass){
 						"SiteId":searchs,
 					 } 		
 				}
-			else {
+				
+				else if(search=="Manhole"){
+										url='getManholeData';
+										dataTarget = {
+								       		"search":searchs,
+											
+										 } 		
+									}
+			  else if(search=="Customer"){
+							url='GetAllNetworkCustomer';
+							dataTarget = {
+						    "search":searchs,
+																			
+					 } 		
+				}
+				
+				else if(search=="Handhole"){
+								url='getHandholeData';
+								dataTarget = {
+							    "search":searchs,
+																				
+						 } 		
+					}		
+																	
+
+					else if(search=="db"){
+					url='getDbData';
+					dataTarget = {
+					"search":searchs,
+																									
+											 } 		
+										}								
+				
+			else if(search=="Place" || search == "Generic"){
 				url='emptyUrl';
+				
+				      var address = (document.getElementById(""+SiteID+index+""));
+				      var autocomplete = new google.maps.places.Autocomplete(address);
+				      autocomplete.setTypes(['geocode']);
+				      google.maps.event.addListener(autocomplete, 'place_changed', function() {
+				          var place = autocomplete.getPlace();
+				          if (!place.geometry) {
+				              return;
+				          }
+
+				      var address = '';
+				      if (place.address_components) {
+				          address = [
+				              (place.address_components[0] && place.address_components[0].short_name || ''),
+				              (place.address_components[1] && place.address_components[1].short_name || ''),
+				              (place.address_components[2] && place.address_components[2].short_name || '')
+				              ].join(' ');
+				      }
+				      document.getElementById(""+LongID+index+"").value = place.geometry.location.lat();
+				      document.getElementById(""+LatID+index+"").value = place.geometry.location.lng();
+
+				      
+				      });
+
+					
+				 google.maps.event.addDomListener(window, 'load', placeAutoComplete);
+				 
+				
 			}
+		
+						else{
+							url='emptyUrl';
+							
+						}
 		if(url !="emptyUrl") {
 			$.ajax({
 				type: "GET",
@@ -441,7 +507,8 @@ function autoCompleteMultiPoint(SiteID,LongID,LatID,index,checkboxclass){
 			 	dataType: "json",
 				success: function (data) {
 					if (data != null) {
-						response(data.globalList);                   
+						response(data.globalList);   
+						console.log(data.globalList)                
 					}
 				},								               
 				  error: function(result) {
@@ -458,6 +525,31 @@ function autoCompleteMultiPoint(SiteID,LongID,LatID,index,checkboxclass){
 					$("#"+LatID+index).val(ui.item[4]);
 					
 				}
+				
+				else if(ui.item[0].split("_")[0]=="MH"){
+								$("#"+SiteID+index).val(ui.item ? ui.item[0] : '');
+									$("#"+LongID+index).val(ui.item[3]);
+									$("#"+LatID+index).val(ui.item[4]);
+									
+								}
+			else if(ui.item[0].split("_")[0]=="CUST"){
+			$("#"+SiteID+index).val(ui.item ? ui.item[0] : '');
+	        $("#"+LongID+index).val(ui.item[4]);
+			$("#"+LatID+index).val(ui.item[5]);
+												}
+												
+			else if(ui.item[0].split("_")[0]=="HH"){
+			$("#"+SiteID+index).val(ui.item ? ui.item[0] : '');
+			$("#"+LongID+index).val(ui.item[3]);
+			$("#"+LatID+index).val(ui.item[4]);
+					}
+					else if(ui.item[0].split("_")[0]=="DB"){
+						$("#"+SiteID+index).val(ui.item ? ui.item[0] : '');
+						$("#"+LongID+index).val(ui.item[3]);
+						$("#"+LatID+index).val(ui.item[4]);
+								}																								
+
+								
 								
 			return false;
 		},	
@@ -469,7 +561,38 @@ function autoCompleteMultiPoint(SiteID,LongID,LatID,index,checkboxclass){
 	            item[5] +', '+ item[1] + "</span></div>")
 	        .appendTo(ul);
 		}
-	
+		
+		else if(item[0].split("_")[0]=="MH") {
+					 return $("<li class='each'>")
+			        .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
+			           item[0] + "</span><br><span class='desc'>" +
+			            item[1] +', '+ item[2] + "</span></div>")
+			        .appendTo(ul);
+				}
+				
+				else if(item[0].split("_")[0]=="CUST") {
+									 return $("<li class='each'>")
+							        .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
+							           item[0] + "</span><br><span class='desc'>" +
+							            item[1] + "</span></div>")
+							        .appendTo(ul);
+								}
+			else if(item[0].split("_")[0]=="HH") {
+		    return $("<li class='each'>")
+			.append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
+			 item[0] + "</span><br><span class='desc'>" +
+			item[1] + "</span></div>")
+			 .appendTo(ul);
+		 }
+		 else if(item[0].split("_")[0]=="DB") {
+		 	    return $("<li class='each'>")
+		 		.append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
+		 		 item[0] + "</span><br><span class='desc'>" +
+		 		item[1] + "</span></div>")
+		 		 .appendTo(ul);
+		 													}												
+														
+						
 		};		    	    
 							         
 		$("#"+SiteID+index).focus(function(){
@@ -3058,6 +3181,29 @@ if (this.value == ""){
 });  */
 
 }
+
+
+function setCoorMulty() {
+    // Retrieve longitude and latitude from localStorage
+    var long = localStorage.getItem("getCoorPointLong");
+    var lat = localStorage.getItem("getCoorPointLat");
+   if (long && lat) {
+    // Select the row with the class 'ativeRecord' in the table with ID 'Multy_auxiliary'
+    var activeRow = $('#Multy_auxiliary tr.ativeRecord');
+    
+    // Check if an active row was found
+    if (activeRow.length > 0) {
+        // Find the input fields for longitude and latitude within the active row
+        activeRow.find('input[name^="siteLng_Multy"]').val(long);
+        activeRow.find('input[name^="siteLat_Multy"]').val(lat);
+    } else {
+        console.log("No active row found.");
+    }
+	}
+}
+
+
+
 
 function autocompleteforAccessJunctions(ID){
 
