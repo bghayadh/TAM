@@ -7264,7 +7264,7 @@ directionsDisplay.setMap(map);
 		  }else if(checkedOption == "StartEnd"){
 			  openFindBetweenMarkers(checkedOption,'${startLongPoint}','${startLatPoint}','${endLongPoint}','${endLatPoint}',${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['Distribution_Board'],${physicalLayerList}['fiber'],${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Tubes'],${physicalLayerList}['Node'],'${getRelatedPoints}');
 		  }else if(checkedOption == "circleRange_multy"){
-				 openFindNearestMultySite(checkedOption,'${rowData}','${noOfPoints}','${closestDisRange}','${ptList}','${ptData}','${getRelatedPoints}');
+				 openFindNearestMultySite(checkedOption,'${rowData}','${noOfPoints}','${closestDisRange}','${ptList}','${ptData}','${getRelatedPoints}' , '${borderCircleLatitudes}' , '${borderCircleLongitudes}');
 		  }else if(checkedOption == "connected"){
 			  openSearchConnected(checkedOption,'${siteId}','${selectConnectedSearch}','${connectedSearchLong}','${connectedSearchLat}','${connectedViewOnMap}',${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Tubes'],${physicalLayerList}['fiber'],${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['Distribution_Board'],'${distribBoardListSize}','${getRelatedPoints}');
 		   }		  
