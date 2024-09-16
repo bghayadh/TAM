@@ -2028,6 +2028,29 @@ public class PhysicalLayerController {
 							String closestDisRange = request.getParameter("closestDisRange");
 							String showPointsType = request.getParameter("getRelatedPoints");
 
+							// Prepare lists to hold border latitudes and longitudes
+							List<Double> borderCircleLatitudes = new ArrayList<>();
+							List<Double> borderCircleLongitudes = new ArrayList<>();
+
+							// Loop through each point
+							for (int i = 0; i < lngs.length; i++) {
+							    // Parse the current point's latitude and longitude
+							    double lat = Double.parseDouble(lats[i]);
+							    double lng = Double.parseDouble(lngs[i]);
+							    double disRange = Double.parseDouble(closestDisRange);
+
+							    // Calculate border latitudes and longitudes
+							    double[] currentBorderCircleLatitudes = calculateBorderCircleLatitudes(lat, lng, disRange);
+							    double[] currentBorderCircleLongitudes = calculateBorderCircleLongitudes(lat, lng, disRange);
+
+							    // Add to the lists
+							    for (int j = 0; j < currentBorderCircleLatitudes.length; j++) {
+							        borderCircleLatitudes.add(currentBorderCircleLatitudes[j]);
+							        borderCircleLongitudes.add(currentBorderCircleLongitudes[j]);
+							    }
+							}
+
+							
 							LinkedHashMap<String, List<?>> rowData = new LinkedHashMap<>();
 							LinkedHashMap<String, LinkedHashMap<String, List<?>>> ptPhysicalLayerList = new LinkedHashMap<String, LinkedHashMap<String, List<?>>>();
 							LinkedHashMap<String, List<?>> ptPhysicalListResult = new LinkedHashMap<String, List<?>>();
@@ -2044,7 +2067,7 @@ public class PhysicalLayerController {
 								row.put("lat", lats[i]);
 								row.put("lng", lngs[i]);
 								rowData.put("row" + i, new ArrayList<>(row.values()));
-
+ 
 								 if(readManhole.equals("1")) {
 										List<Object[]> manholeListQuery = session.createNativeQuery(
 												"SELECT DISTINCT MANHOLE_ID,MANHOLE_NAME,LONGITUDE,LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=MANHOLE_ID),DM_NAME FROM MANHOLE  where to_number(SUBSTR(LONGITUDE,1,6)) <=  "
@@ -2271,6 +2294,9 @@ public class PhysicalLayerController {
 							model.addAttribute("getRelatedPoints", showPointsType);
 							model.addAttribute("noOfPoints", noOfPoints);
 							model.addAttribute("closestDisRange", closestDisRange);
+							model.addAttribute("borderCircleLatitudes",mapper.writeValueAsString( borderCircleLatitudes));
+							model.addAttribute("borderCircleLongitudes",mapper.writeValueAsString( borderCircleLongitudes));
+							
 							model.addAttribute("ptList", mapper.writeValueAsString(ptPhysicalLayerList));
 							model.addAttribute("ptData", mapper.writeValueAsString(ptPhysicalLayerData));
 						}
@@ -13755,6 +13781,7 @@ public class PhysicalLayerController {
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
+				System.out.println("wiwww");
 				query = session.createNativeQuery(
 						"SELECT MANHOLE_ID,MANHOLE_NAME,CITY,LONGITUDE,LATITUDE FROM MANHOLE a WHERE UPPER(MANHOLE_ID) LIKE UPPER(:param) OR UPPER(MANHOLE_NAME) LIKE UPPER(:param) ");
 
