@@ -5206,139 +5206,162 @@ $("#Multy_auxiliary > tbody").find('input[name="record"]').each(function(){
 			 }); 
 }
 
-function  openFindNearestMultySite(checkedOption,rowInfo,noP,closestDisRange,ptList,ptData,getRelatedPoints){
-	 $("#fiberCitySearch").modal("show");
-     $('a[href="#MultyClosest"]').click();
-     $("#circleRange_multy").prop("checked",true);
-     
-     $("#noP_Multy").val(noP);
-     $("#getRelatedPoints_Multy").val(getRelatedPoints);
-     $("#closestMultyDisRange").val(closestDisRange);
-     showPointsType =getRelatedPoints;
-	     if(getRelatedPoints == '1') {
-			$("#getRelatedPoints").prop('checked', true);
-		 }
-		else {
-			$("#getRelatedPoints").prop('checked', false);
-		}
-      
-   var rowData = JSON.parse(rowInfo);
-   var tableBody = $("#Multy_auxiliary > tbody");
-   tableBody.empty(); // Clear existing table rows
+function openFindNearestMultySite(checkedOption, rowInfo, noP, closestDisRange, ptList, ptData, getRelatedPoints, Lats, Longs) {
+    console.log(Lats);
+    console.log(Longs);
+    $("#fiberCitySearch").modal("show");
+    $('a[href="#MultyClosest"]').click();
+    $("#circleRange_multy").prop("checked", true);
 
-   for (var key in rowData) {
-    if (rowData.hasOwnProperty(key)) {
-      var row = rowData[key];
-      var indexSite = 0;
-      //console.log(row);
-      var markup = "<tr><td><input type='checkbox' style='position:relative;left:20px;top:10px;' name='record'></td>"
-        + "<td class='headcol' name='Seq'><input name='Seq_Multy' id='Seq_Multy" + indexSite + "' class='form-control text-input' type='text' style='max-width:60px;position:relative;' value='" + row[2] + "'></td>"
-        + "<td name='auxRefSite'><a href='#' class='auxRefSiteLink' data-index='" + indexSite + "' style='width:350px;'><p style='height:10px;margin-left:20px;color:#00757C;margin-top:10px;width:150px;'>View Result</p></a></td>"
-        + "<td name='siteId_Multy'><input name='siteId_Multy" + indexSite + "' id='siteId_Multy" + indexSite + "' class='form-control' type='text' style='width:330px;position:relative;' value='" + row[1] + "'></td>"
-        + "<td name='siteLng_Multy'><input name='siteLng_Multy" + indexSite + "' id='siteLng_Multy" + indexSite + "' class='form-control' type='text' style='width:220px;position:relative;' value='" + row[0] + "'></td>"
-        + "<td name='siteLat_Multy'><input name='siteLat_Multy" + indexSite + "' id='siteLat_Multy" + indexSite + "' class='form-control' type='text' style='width:220px;position:relative;' value='" + row[3] + "'></td></tr>";
-      tableBody.append(markup);
-      autoCompleteMultiPoint("siteId_Multy","siteLng_Multy","siteLat_Multy",indexSite,"auxPtAutocomplete");
-       indexSite++; // Increment the counter for the next row
-       
-       var lat = row[3];
-       var lng = row[0];
-       const myLatLng = {
-		  lat: parseFloat(lat),
-		  lng: parseFloat(lng)
-		};
-		
-		new google.maps.Marker({
-			 position: myLatLng,
-		     map,
-			 title: "Marked",
-		});
-		var circleRadius = closestDisRange *1.609344 *1.609344;
-		var circ = new google.maps.Circle({
-	         strokeColor: "blue",
-	         strokeOpacity: 0.8,
-	         strokeWeight: 2,
-	         fillColor: "blue",
-	         fillOpacity: 0.1,
-	         map,
-	         center: myLatLng,
-	         radius: circleRadius * 1000,
-	       });
-	       displayZoneMap(circ);
-		   map.setCenter(myLatLng);
-		   map.fitBounds(circ.getBounds());
+    $("#noP_Multy").val(noP);
+    $("#getRelatedPoints_Multy").val(getRelatedPoints);
+    $("#closestMultyDisRange").val(closestDisRange);
+    showPointsType = getRelatedPoints;
+
+    if (getRelatedPoints == '1') {
+        $("#getRelatedPoints").prop('checked', true);
+    } else {
+        $("#getRelatedPoints").prop('checked', false);
+    }
+
+    var rowData = JSON.parse(rowInfo);
+    var tableBody = $("#Multy_auxiliary > tbody");
+    tableBody.empty(); // Clear existing table rows
+
+    for (var key in rowData) {
+        if (rowData.hasOwnProperty(key)) {
+            var row = rowData[key];
+            var indexSite = 0;
+            var markup = "<tr><td><input type='checkbox' style='position:relative;left:20px;top:10px;' name='record'></td>"
+                + "<td class='headcol' name='Seq'><input name='Seq_Multy' id='Seq_Multy" + indexSite + "' class='form-control text-input' type='text' style='max-width:60px;position:relative;' value='" + row[2] + "'></td>"
+                + "<td name='auxRefSite'><a href='#' class='auxRefSiteLink' data-index='" + indexSite + "' style='width:350px;'><p style='height:10px;margin-left:20px;color:#00757C;margin-top:10px;width:150px;'>View Result</p></a></td>"
+                + "<td name='siteId_Multy'><input name='siteId_Multy" + indexSite + "' id='siteId_Multy" + indexSite + "' class='form-control' type='text' style='width:330px;position:relative;' value='" + row[1] + "'></td>"
+                + "<td name='siteLng_Multy'><input name='siteLng_Multy" + indexSite + "' id='siteLng_Multy" + indexSite + "' class='form-control' type='text' style='width:220px;position:relative;' value='" + row[0] + "'></td>"
+                + "<td name='siteLat_Multy'><input name='siteLat_Multy" + indexSite + "' id='siteLat_Multy" + indexSite + "' class='form-control' type='text' style='width:220px;position:relative;' value='" + row[3] + "'></td></tr>";
+            tableBody.append(markup);
+            autoCompleteMultiPoint("siteId_Multy", "siteLng_Multy", "siteLat_Multy", indexSite, "auxPtAutocomplete");
+            indexSite++; // Increment the counter for the next row
+
+            var lat = row[3];
+            var lng = row[0];
+            const myLatLng = {
+                lat: parseFloat(lat),
+                lng: parseFloat(lng)
+            };
+
+            new google.maps.Marker({
+                position: myLatLng,
+                map,
+                title: "Marked",
+            });
+
+            var circleRadius = closestDisRange * 1.609344 * 1000; // Convert miles to meters
+            var circle = new google.maps.Circle({
+                strokeColor: "blue",
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: "blue",
+                fillOpacity: 0.1,
+                map,
+                center: myLatLng,
+                radius: circleRadius,
+				clickable:false
+            });
+            displayZoneMap(circle);
+            map.setCenter(myLatLng);
+            map.fitBounds(circle.getBounds());
+
+            // Calculate the bounds for the rectangle
+            var bounds = circle.getBounds();
+            var ne = bounds.getNorthEast(); // LatLng of the rectangle's northeast corner
+            var sw = bounds.getSouthWest(); // LatLng of the rectangle's southwest corner
+
+            // Draw the rectangle boundary lines
+            var startlangPath = [new google.maps.LatLng(sw.lat(), sw.lng()), new google.maps.LatLng(ne.lat(), sw.lng())];
+            drawLine("#FF0000", startlangPath);
+
+            var startlatgPath = [new google.maps.LatLng(sw.lat(), sw.lng()), new google.maps.LatLng(sw.lat(), ne.lng())];
+            drawLine("#FF0000", startlatgPath);
+
+            var endlangPath = [new google.maps.LatLng(ne.lat(), sw.lng()), new google.maps.LatLng(ne.lat(), ne.lng())];
+            drawLine("#006400", endlangPath);
+
+            var endlatgPath = [new google.maps.LatLng(ne.lat(), ne.lng()), new google.maps.LatLng(sw.lat(), ne.lng())];
+            drawLine("#006400", endlatgPath);
+        }
+    }
+
+    $(document).on('click', '.auxRefSiteLink', function (e) {
+        e.preventDefault();
+        var indexSite = $(this).data('index');
+        var relSiteId = $(this).parent().parent().children('td[name="siteId_Multy"]').children('input').val();
+        var thisID = $(this).attr("id");
+
+        $("#siteModalAuxiliary").modal('show');
+        $('#siteModalAuxiliary').find('input:file').val('');
+        $('#siteModalAuxiliary').find('input:checkbox').prop("checked", false);
+        showTubeStrandAuxiliaryPopup("siteModalAuxiliary", relSiteId, "SiteIdHeader", "Site_Autocomplete_Multy");
+
+        var ptListObject = JSON.parse(ptList);
+        var ptDataObject = JSON.parse(ptData);
+        var finalArrayFibers = [];
+
+        // Loop over each ptList
+        for (var i = 0; i < Object.keys(ptListObject).length; i++) {
+            var ptListKey = "ptList" + i;
+
+            if (ptListObject.hasOwnProperty(ptListKey)) {
+                if (ptListObject[ptListKey].hasOwnProperty("Manhole")) {
+                    var arrayManhole = ptListObject[ptListKey].Manhole;
+                }
+                if (ptListObject.hasOwnProperty(ptListKey).hasOwnProperty("Handhole")) {
+                    var arrayHandhole = ptListObject[ptListKey].Handhole;
+                }
+                if (ptListObject.hasOwnProperty(ptListKey).hasOwnProperty("Distribution_Board")) {
+                    var arrayDB = ptListObject[ptListKey].Distribution_Board;
+                }
+                if (ptListObject.hasOwnProperty(ptListKey).hasOwnProperty("fiber")) {
+                    var arrayFibers = ptListObject[ptListKey].fiber;
+                }
+            }
+        }
+
+        // Loop over each ptData
+        for (var i = 0; i < Object.keys(ptDataObject).length; i++) {
+            var ptDataKey = "ptData" + i;
+
+            if (ptDataObject.hasOwnProperty(ptDataKey)) {
+                if (ptDataObject[ptDataKey].hasOwnProperty("fiber_Tubes")) {
+                    var arrayTubes = ptDataObject[ptDataKey].fiber_Tubes;
+                }
+                if (ptDataObject.hasOwnProperty(ptDataKey).hasOwnProperty("fiber_Strands")) {
+                    var arrayStrands = ptDataObject[ptDataKey].fiber_Strands;
+                }
+            }
+        }
+        finalArrayFibers.push(arrayStrands);
+        finalArrayFibers.push(arrayTubes);
+        finalArrayFibers.push(arrayFibers);
+        appendNearestFiberPathsTableMulty(finalArrayFibers);
+        appendNearestManholesTableMulty(arrayManhole);
+        appendNearestHandholesTableMulty(arrayHandhole);
+        appendNearestDBoardTableMulty(arrayDB);
+
+        $("#totalManhole_multy").val(arrayManhole.length);
+        $("#totalHandhole_multy").val(arrayHandhole.length);
+        $("#totalDB_Multy").val(arrayDB.length);
+    });
+
+    $("#siteModalAuxiliary").on('hidden.bs.modal', function () {
+        $("#searchManhTBody_multy").empty();
+        $("#searchHanhTBody_multy").empty();
+        $("#searchDBoardTBody_multy").empty();
+        $("#nearStrandId_multy").empty();
+        $("#nearTubeId_multy").empty();
+        $("#nearFiberId_multy").empty();
+    });
 }
-}  
-    //  $("#auxRefSite"+indexSite).on('click', function(e){
-		$(document).on('click', '.auxRefSiteLink', function(e) {
-		           e.preventDefault();
-                       var indexSite = $(this).data('index');
-					   var relSiteId=$(this).parent().parent().children('td[name="siteId_Multy"]').children('input').val();
-					   var thisID = $(this).attr("id");
-					 
-						    $("#siteModalAuxiliary").modal('show');	
-							$('#siteModalAuxiliary').find('input:file').val('');
-		                    $('#siteModalAuxiliary').find('input:checkbox').prop("checked",false);
-						    showTubeStrandAuxiliaryPopup("siteModalAuxiliary",relSiteId,"SiteIdHeader","Site_Autocomplete_Multy");
-					    
-						var ptListObject = JSON.parse(ptList);
-						var ptDataObject = JSON.parse(ptData);
-						var finalArrayFibers = [];
-						
-						// Loop over each ptList
-						for (var i = 0; i < Object.keys(ptListObject).length; i++) {
-						  var ptListKey = "ptList" + i;
-						  
-						  if (ptListObject.hasOwnProperty(ptListKey)) {
-							  if (ptListObject[ptListKey].hasOwnProperty("Manhole")) {
-							        var arrayManhole = ptListObject[ptListKey].Manhole;
-							  } 
-						      if (ptListObject[ptListKey].hasOwnProperty("Handhole")) {
-						           var arrayHandhole = ptListObject[ptListKey].Handhole;
-							  } 
-							  if (ptListObject[ptListKey].hasOwnProperty("Distribution_Board")) {
-						           var arrayDB = ptListObject[ptListKey].Distribution_Board;
-							  }  
-							   if (ptListObject[ptListKey].hasOwnProperty("fiber")) {
-						           var arrayFibers = ptListObject[ptListKey].fiber;
-							}
-							}
-						}
-						// Loop over each ptData
-						for (var i = 0; i < Object.keys(ptDataObject).length; i++) {
-						  var ptDataKey = "ptData" + i;
-						  
-						  if (ptDataObject.hasOwnProperty(ptDataKey)) {
-							  if (ptDataObject[ptDataKey].hasOwnProperty("fiber_Tubes")) {
-							        var arrayTubes = ptDataObject[ptDataKey].fiber_Tubes;
-							  } 
-							   if (ptDataObject[ptDataKey].hasOwnProperty("fiber_Strands")) {
-							        var arrayStrands = ptDataObject[ptDataKey].fiber_Strands;
-							 	} 
-							 	}
-							}
-								 finalArrayFibers.push(arrayStrands);
-								 finalArrayFibers.push(arrayTubes);
-								 finalArrayFibers.push(arrayFibers);
-								 appendNearestFiberPathsTableMulty(finalArrayFibers);
-								 appendNearestManholesTableMulty(arrayManhole);
-					       	     appendNearestHandholesTableMulty(arrayHandhole);
-					       	     appendNearestDBoardTableMulty(arrayDB);
-									
-								 $("#totalManhole_multy").val(arrayManhole.length);
-								 $("#totalHandhole_multy").val(arrayHandhole.length);
-								 $("#totalDB_Multy").val(arrayDB.length);
-				  });
-				  
-							  $("#siteModalAuxiliary").on('hidden.bs.modal', function() {
-								     $("#searchManhTBody_multy").empty();
-								     $("#searchHanhTBody_multy").empty();
-								     $("#searchDBoardTBody_multy").empty();
-								     $("#nearStrandId_multy").empty();
-								     $("#nearTubeId_multy").empty();
-								     $("#nearFiberId_multy").empty();
-								});	 
-}
+
 
 
 function appendNearestManholesTableMulty(result){
