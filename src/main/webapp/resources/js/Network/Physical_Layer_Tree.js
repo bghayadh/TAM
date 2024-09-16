@@ -22020,6 +22020,91 @@ $('#Manhole_AutocompleteCable'). click(function(){
 
 	}     
  });
+ 
+ 
+ $('#Manhole_Autocomplete_Multy'). click(function(){
+ if($(this). is(":checked")){
+ var  checkboxesID=["Site_Autocomplete_Multy","Customer_Autocomplete_Multy","Handhole_Autocomplete_Multy","db_Autocomplete_Multy","Place_Autocomplete_Multy","Generic_Autocomplete_Multy"]
+ 		checkOnlyOneCheckbox(checkboxesID);			
+ 	$(this).val('1');
+ 	
+ }
+ else if($(this). is(":not(:checked)")){
+ 	$(this).val('0');
+
+ }     
+ }); 
+
+
+   $('#Site_Autocomplete_Multy' ). click(function(){
+ if($(this). is(":checked")){
+ var  checkboxesID=["Manhole_Autocomplete_Multy","Customer_Autocomplete_Multy","Handhole_Autocomplete_Multy","db_Autocomplete_Multy","Place_Autocomplete_Multy","Generic_Autocomplete_Multy"]
+ checkOnlyOneCheckbox(checkboxesID);			
+ 	$(this).val('1');
+ }
+ else if($(this). is(":not(:checked)")){
+ 	$(this).val('0');
+
+ }     
+ }); 
+    $('#Customer_Autocomplete_Multy' ). click(function(){
+ if($(this). is(":checked")){
+ var  checkboxesID=["Manhole_Autocomplete_Multy","Site_Autocomplete_Multy","Handhole_Autocomplete_Multy","db_Autocomplete_Multy","Place_Autocomplete_Multy","Generic_Autocomplete_Multy"]
+ checkOnlyOneCheckbox(checkboxesID);			
+ 	$(this).val('1');
+ }
+ else if($(this). is(":not(:checked)")){
+ 	$(this).val('0');
+
+ }     
+ });
+     $('#Handhole_Autocomplete_Multy'). click(function(){
+ if($(this). is(":checked")){
+ var  checkboxesID=["Manhole_Autocomplete_Multy","Site_Autocomplete_Multy","Customer_Autocomplete_Multy","db_Autocomplete_Multy","Place_Autocomplete_Multy","Generic_Autocomplete_Multy"]
+ checkOnlyOneCheckbox(checkboxesID);			
+ 	$(this).val('1');
+ }
+ 	
+ else if($(this). is(":not(:checked)")){
+ 	$(this).val('0');
+
+ }     
+ });
+      $('#db_Autocomplete_Multy'). click(function(){
+ if($(this). is(":checked")){
+ var  checkboxesID=["Manhole_Autocomplete_Multy","Site_Autocomplete_Multy","Customer_Autocomplete_Multy","Handhole_Autocomplete_Multy","Place_Autocomplete_Multy","Generic_Autocomplete_Multy"]
+   	checkOnlyOneCheckbox(checkboxesID);			
+ 	$(this).val('1');
+ }
+
+ else if($(this). is(":not(:checked)")){
+ 	$(this).val('0');
+
+ }     
+ });
+       $('#Place_Autocomplete_Multy' ). click(function(){
+ if($(this). is(":checked")){
+ var  checkboxesID=["Manhole_Autocomplete_Multy","Site_Autocomplete_Multy","Customer_Autocomplete_Multy","Handhole_Autocomplete_Multy","db_Autocomplete_Multy","Generic_Autocomplete_Multy"]
+ 	 	checkOnlyOneCheckbox(checkboxesID);			
+ 	$(this).val('1');
+ }
+ else if($(this). is(":not(:checked)")){
+ 	$(this).val('0');
+
+ }     
+ });
+
+  $('#Generic_Autocomplete_Multy' ). click(function(){
+ if($(this). is(":checked")){
+ var  checkboxesID=["Manhole_Autocomplete_Multy","Site_Autocomplete_Multy","Customer_Autocomplete_Multy","Handhole_Autocomplete_Multy","db_Autocomplete_Multy","Place_Autocomplete_Multy"]
+ checkOnlyOneCheckbox(checkboxesID);			
+ 	$(this).val('1');
+ }
+ else if($(this). is(":not(:checked)")){
+ 	$(this).val('0');
+
+ }     
+ });
        $('#site_DBAutoComplete'). click(function(){
    		if($(this). is(":checked")){
    			document.getElementById("customer_DBAutoComplete").checked = false;
