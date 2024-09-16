@@ -623,15 +623,101 @@
 										</div>		
 									</div>	
 								<div class="container-fluid">
+								
+								
+								
 								<div class="row">
-								<div class="col-sm-2">
-								<div class="form-group">
-									<div class="input-group-prepend" >
-									<span style="font-size: 12px;" class="input-group-text"><b>By Site </b> 
-									<input type='checkbox' id=Site_Autocomplete_Multy value='0' style='position: relative; margin-left: 25px' class="auxPtAutocomplete"></span>
-										</div> 
-										</div>
-										</div>
+    <div  style="margin-right: 10px;">
+        <div class="form-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text" style="min-width: 90px; font-size: 12px;">
+                    <b>By Site</b>
+          <input type='checkbox' id=Site_Autocomplete_Multy value='0' style='position: relative; margin-left: 25px' class="auxPtAutocomplete"></span>
+								       </span>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-right: 10px;">
+        <div class="form-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text" style="min-width: 90px; font-size: 12px;">
+                    <b>By Client</b>
+                    <input type="checkbox" id="Customer_Autocomplete_Multy" style="margin-left: 15px;" class="auxPtAutocomplete" onclick="mapFeilds()">
+                </span>
+            </div>
+        </div>
+    </div>
+ 
+   <div style="display: none;" id="manholesSection">
+        <div style="margin-right: 10px;">
+            <div class="form-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" style="min-width: 120px; font-size: 12px;">
+                        <b>By Manhole</b>
+                        <input type="checkbox" id="Manhole_Autocomplete_Multy" style="margin-left: 10px;" class="auxPtAutocomplete" onclick="mapFeilds()">
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+   <div style="display: none;" id="handholesSection">
+        <div style="margin-right: 10px;">
+            <div class="form-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" style="min-width: 120px; font-size: 12px;">
+                        <b>By Handhole</b>
+                        <input type="checkbox" id="Handhole_Autocomplete_Multy" style="margin-left: 15px;" class="auxPtAutocomplete" onclick="mapFeilds()">
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="display: none;" id="dbsSection">
+        <div style="margin-right: 10px;">
+            <div class="form-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" style="min-width: 90px; font-size: 12px;">
+                        <b>By DB</b>
+                        <input type="checkbox" id="db_Autocomplete_Multy" style="margin-left: 15px;" class="auxPtAutocomplete" onclick="mapFeilds()">
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-right: 10px;">
+        <div class="form-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text" style="min-width: 95px; font-size: 12px;">
+                    <b>By Place</b>
+                    <input type="checkbox" id="Place_Autocomplete_Multy" style="margin-left: 10px;" class="auxPtAutocomplete" onclick="placeFeild()">
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div>
+  
+        <div class="form-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text" style="min-width: 95px; font-size: 12px; margin-right: 3px;"">
+                    <b>Generic</b>
+                    <input type="checkbox" id="Generic_Autocomplete_Multy" style="margin-left: 10px;" class="auxPtAutocomplete" onclick="placeFeild()">
+                </span>
+                				<button  onclick= "setCoorMulty()" id="setCoorMulti" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; display:none">Set Coordinates</button>
+		
+        </div>
+        </div>
+        
+        
+    </div>
+</div>
+							
+										
+										
 									</div>
 									<div class="row">
 									<form>
@@ -659,6 +745,7 @@
 										 </div>
 										<button type="button" id="add_Multy">Add Row </button>
 										<button type="button" id="delet_Multy" >Delete Row</button>
+								
 										<div>
 										<br>
 									    <br>
@@ -1126,6 +1213,10 @@ $(document).ready(function() {
         handleRowClick('#findNearstManhole', $(this));
     });
 
+    $(document).on('click', '#Multy_auxiliary tr', function() {
+        handleRowClick('#Multy_auxiliary', $(this));
+    });
+
    $(document).on('click', '#findNearstHandhole tr', function() {
         handleRowClick('#findNearstHandhole', $(this));
     });
@@ -1170,8 +1261,42 @@ $(document).ready(function() {
     }
 });
 
+document.addEventListener("DOMContentLoaded", function() {
+    var readDB = ${readDB}; // or fetch this value from the server if necessary
+    if (readDB == 1) {
+        document.getElementById("dbsSection").style.display = "block";
+    }
+    var readManhole = ${readManhole}; // or fetch this value from the server if necessary
+    if (readManhole == 1) {
+        document.getElementById("manholesSection").style.display = "block";
+    }
+    var readHandhole = ${readHandhole}; // Fetch this value from the server if necessary
+    if (readHandhole == 1) {
+        document.getElementById("handholesSection").style.display = "block";
+    }
+});
 
+document.addEventListener("DOMContentLoaded", function() {
+    const genericCheckbox = document.getElementById("Generic_Autocomplete_Multy");
+    const otherCheckboxes = document.querySelectorAll(".auxPtAutocomplete:not(#Generic_Autocomplete_Multy)");
+    const button = document.getElementById("setCoorMulti");
 
+    // Function to toggle button visibility based on checkbox states
+    function toggleButtonVisibility() {
+        const anyOtherChecked = Array.from(otherCheckboxes).some(checkbox => checkbox.checked);
+
+        if (genericCheckbox.checked && !anyOtherChecked) {
+            button.style.display = "block";
+        } else {
+            button.style.display = "none";
+        }
+    }
+
+    toggleButtonVisibility();
+
+    genericCheckbox.addEventListener("change", toggleButtonVisibility);
+    otherCheckboxes.forEach(checkbox => checkbox.addEventListener("change", toggleButtonVisibility));
+});
 
 </script>
 </html>
