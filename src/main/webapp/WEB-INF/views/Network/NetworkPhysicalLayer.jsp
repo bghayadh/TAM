@@ -40,6 +40,7 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jszip.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/BordersFindNearest.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/mapOperation.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/findNearest.js"></script>
 <style>
 .close {
   float: right;
