@@ -482,8 +482,8 @@ function autoCompleteMultiPoint(SiteID,LongID,LatID,index,checkboxclass){
 				              (place.address_components[2] && place.address_components[2].short_name || '')
 				              ].join(' ');
 				      }
-				      document.getElementById(""+LongID+index+"").value = place.geometry.location.lat();
-				      document.getElementById(""+LatID+index+"").value = place.geometry.location.lng();
+				      document.getElementById(""+LongID+index+"").value = place.geometry.location.lng ();
+				      document.getElementById(""+LatID+index+"").value = place.geometry.location.lat();
 
 				      
 				      });
