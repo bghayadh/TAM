@@ -378,7 +378,6 @@ color: #007bff;
     		</button>
 
     		<button type="button" id="saveButton" disabled
-		        onclick='window.location.href = "${pageContext.request.contextPath}/NodePortMappingFormView?type=addNew"'
 		        class="btn btn-primary BtnActive">
 		        <i class="fa fa-plus"></i> Add
 		    </button>
@@ -622,7 +621,7 @@ color: #007bff;
         			$(".almgrid-table").on("click", ".almgrid-link", function (e) {
             			
             				var param1 = $(this).parents('tr').find('td').eq(1).text();
-        					var param = "${pageContext.request.contextPath}/NodePortMappingFormView?NodePk=" + param1 +"&NavAction=2";
+        					var param = "${pageContext.request.contextPath}/NodePortMappingFormView?NodeID=" + param1 +"&NavAction=2";
         					window.location.href = param;
         					e.preventDefault();
                 	
@@ -638,6 +637,12 @@ color: #007bff;
               		}
               		exportGrid();
               	});   
+
+
+				$( "#Fview" ).click(function() {
+					var id =  $(".almgrid-link").closest('tr').find('td').eq(1).text();
+					location.href= "${pageContext.request.contextPath}/NodePortMappingFormView?NodeID=" + id +"&NavAction=2";
+				});
               	   		
         		function fillGrid(filledGrid){
         			exportArrayGrid=[];

@@ -425,11 +425,11 @@ public class NodeActiveController {
 	    if (session != null && session.isOpen()) {
 	        tx = session.beginTransaction();
 	        try {
-	        	query = session.createQuery("SELECT t1.nodeName, t1.nodePK, t1.uniNodeID,t1.nodeName,t1.nodeType"
+	        	query = session.createQuery("SELECT t1.nodeName, t1.nodePK, t1.uniNodeID,t1.nodeName,t1.nodeType,t1.nodeID"
 	        			+ " FROM NodeActive t1"
-	        	        + " WHERE LOWER(t1.nodeName) LIKE LOWER(:Node) OR LOWER(t1.nodePK) "
+	        	        + " WHERE (LOWER(t1.nodeName) LIKE LOWER(:Node) OR LOWER(t1.nodePK) "
 	        	        + "LIKE LOWER(:Node) OR LOWER(t1.uniNodeID) LIKE LOWER(:Node) "
-	        	        + "OR LOWER(t1.nodeName) LIKE LOWER(:Node) OR LOWER(t1.nodeType) LIKE LOWER(:Node)");
+	        	        + "OR LOWER(t1.nodeName) LIKE LOWER(:Node) OR LOWER(t1.nodeType) LIKE LOWER(:Node)) AND activeRec =1");
 	        query.setParameter("Node", Node); 
 	        	query.setFirstResult(0);
 				query.setMaxResults(40);
