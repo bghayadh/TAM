@@ -159,6 +159,7 @@
 <mapping class="com.aliat.alm.models.ModuleField"/>
 <mapping class="com.aliat.alm.models.ModuleScreen"/>
 <mapping class="com.aliat.alm.models.RolePermissionException"/>
+<mapping class="com.aliat.alm.models.NodePortMapping"/>
 
 
    </session-factory>

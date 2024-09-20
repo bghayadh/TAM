@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.hibernate.query.Query;
 import org.hibernate.query.NativeQuery;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.transform.Transformers;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.aliat.alm.services.ItemParameters;
 import com.aliat.alm.services.LoginServices;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Form;
@@ -37,6 +39,7 @@ import com.aliat.alm.common.Notify;
 import com.aliat.alm.common.Permissions;
 import com.aliat.alm.models.NodePortMappingListView;
 import com.aliat.alm.models.NodePassive;
+import com.aliat.alm.models.NodePortMapping;
 
 @Controller
 public class NodePortMappingController {
@@ -106,6 +109,322 @@ public class NodePortMappingController {
 
 		return "NodePortMappingListView";
 	}
+	
+	
+	@RequestMapping(value = "/NodePortMappingFormView", method = RequestMethod.GET)
+
+	public String NodePortMappingFormView(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
+
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			return "redirect:/";
+		}
+		String NodeID,NodePK,NodeName, navAction="2";
+		int SelectedIndex;
+
+
+		session = AlmDbSession.getInstance().getSession();
+		if (session != null && session.isOpen()) {
+
+			tx = session.beginTransaction();
+			notification.headerNotifications(session, model);
+
+			try {
+
+				NodeID = request.getParameter("NodeID");
+				navAction = request.getParameter("NavAction");
+				//get node_pk used in navigation 
+				query = session.createNativeQuery(
+						"Select NODE_ID,NODE_PK FROM NODE_ACTIVE WHERE NODE_ID =:param1 AND ACTIVE_RECORD=1");
+				query.setParameter("param1", NodeID);
+				
+				Object[] row = (Object[]) query.getSingleResult();
+				NodePK="";
+				if (row != null) {
+					
+					NodePK = (String) row[1]; 
+				   
+				    System.out.println("NodePK1: " + NodePK);
+				    System.out.println("NodeID1: " + NodeID);
+				}
+				String Result[] = new String[4];
+				
+				Result = form.NavigationNP(session, "Node_Active", "Node_PK", NodePK, "UPDATE_DATE", navAction);
+
+				SelectedIndex = Integer.parseInt(Result[1]);
+				NodePK= Result[2];
+				 System.out.println("NodePK22: " + NodePK);
+				query = session.createNativeQuery(
+						"Select NODE_ID,NODE_NAME,NODE_PK,UNIQUE_NODE_ID,TO_CHAR(CREATION_DATE,'YYYY-MM-DD HH24:MI:SS'),TO_CHAR(UPDATE_DATE,'YYYY-MM-DD HH24:MI:SS') FROM NODE_ACTIVE WHERE NODE_PK =:param1 AND ACTIVE_RECORD=1");
+				query.setParameter("param1", NodePK);
+				
+				 row = (Object[]) query.getSingleResult();
+				NodePK="";
+				if (row != null) {
+					
+					NodePK = (String) row[2]; 
+					NodeID=(String) row[0];
+					model.addAttribute("node_id", NodeID);
+					model.addAttribute("creation_date", row[4]);
+					model.addAttribute("update_date", row[5]);
+					model.addAttribute("node_name", row[1]);
+					
+				   
+				    System.out.println("NodePK2: " + NodePK);
+				    System.out.println("NodeID2: " + NodeID);
+				}
+				model.addAttribute("SelectedIndex",SelectedIndex);
+				model.addAttribute("nodeCount", Integer.parseInt(Result[0]));
+
+				if (NodeID != null) {
+					model.addAttribute("Status", "old");
+					
+		
+					query = session.createNativeQuery(
+							"SELECT MACADDR,SERIALNUMBER,UNITPOSITION,STATUS "
+							+ "FROM NODE_PORT WHERE NODE_PK =:param1");
+					query.setParameter("param1", NodePK);
+					model.addAttribute("listActivePort", mapper.writeValueAsString(query.list()));
+					
+					query = session.createNativeQuery(
+							"SELECT PORT_MAPPING_ID,MAC_ADDRESS,SERIAL_NUMBER,UNITPOSITION,STATUS,PORT_NUMBER,RECORD_TYPE,"
+							+ "LOCATION_TYPE,LOCATION_ID,LOCATION_NAME,WARE_ID,FIBER_ID,FIBER_NAME,TX_STRAND_NB,TX_TUBE_NB,"
+							+ "RX_STRAND_NB,RX_TUBE_NB,TX_STRAND_COLOR,TX_TUBE_COLOR,RX_STRAND_COLOR,RX_TUBE_COLOR,CABLE_LENGTH,CABLE_TYPE,TO_CHAR(CREATION_DATE,'YYYY-MM-DD HH24:MI:SS'),TO_CHAR(LAST_MODIFIED_DATE,'YYYY-MM-DD HH24:MI:SS') "
+							+ "FROM NODE_PORT_MAPPING WHERE NODE_ID =:param2");
+					query.setParameter("param2", NodeID);
+					model.addAttribute("listPassivePort", mapper.writeValueAsString(query.list()));
+
+				}
+
+				else {
+					model.addAttribute("Status", "new");
+
+				}
+				
+
+
+			} catch (Exception e) {
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in NodePortMappingFormView due to \n " + exceptionAsString);
+				logger.info("Error in NodePortMappingFormView due to \n " + exceptionAsString);
+			} finally {
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+				}
+			}
+		}
+
+		return "NodePortMappingFormView";
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/NodePortMappingFormViewSave", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> NodePortMappingFormViewSave(Locale locale, Model model,
+			@ModelAttribute ItemParameters itemParameters, HttpServletRequest request, HttpServletResponse response)
+			throws JsonProcessingException {
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+
+		session = AlmDbSession.getInstance().getSession();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			// String boardCity = request.getParameter("boardCity");
+			try {
+				Date date = new Date();
+				Calendar calendar = new GregorianCalendar();
+				calendar.setTime(date);
+				int year = calendar.get(Calendar.YEAR);
+				String nodeID = request.getParameter("nodeID");
+				String nodeName = request.getParameter("nodeName");
+
+				String portMappingID = "";
+
+					
+					NodePortMapping nodePortMapping;
+					
+					if (itemParameters.getDictParameter().size() > 0) {
+						/*
+						query = session.createNativeQuery(
+								"delete from NODE_PORT_MAPPING where NODE_ID = '" + nodeID + "'");
+						query.executeUpdate();*/
+						
+						for (int i = 0; i < itemParameters.getDictParameter().size(); i++) {
+							System.out.println("in "+i);
+							nodePortMapping = new NodePortMapping();
+							
+							Timestamp lastModifiedDate = new Timestamp(new Timestamp(System.currentTimeMillis()).getTime());
+							Timestamp creationDate;
+							if (StringUtils.equalsIgnoreCase(itemParameters.getDictParameter().get(i).get("creationDate"), "") || StringUtils.equalsIgnoreCase(itemParameters.getDictParameter().get(i).get("creationDate"), null) || StringUtils.equalsIgnoreCase(itemParameters.getDictParameter().get(i).get("creationDate"), "null")) {
+								creationDate = lastModifiedDate;
+							} else {
+								DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+								creationDate = new Timestamp(
+										formatter.parse(request.getParameter("creationDate")).getTime());
+							}
+							
+							
+							String MacAddres=itemParameters.getDictParameter().get(i).get("MACAddress");
+							String serialNb=itemParameters.getDictParameter().get(i).get("serialNb");
+							String portAddress=itemParameters.getDictParameter().get(i).get("portAddress");
+							String status=itemParameters.getDictParameter().get(i).get("portStatus");
+							String portNb=itemParameters.getDictParameter().get(i).get("portNb");
+							String recordType=itemParameters.getDictParameter().get(i).get("recordType");
+							String locationType=itemParameters.getDictParameter().get(i).get("locationType");
+							String locationId=itemParameters.getDictParameter().get(i).get("locationID");
+							String locationName=itemParameters.getDictParameter().get(i).get("locationName");
+							String wareID=itemParameters.getDictParameter().get(i).get("wareID");
+							String cableType=itemParameters.getDictParameter().get(i).get("cableType");
+							String fiberID=itemParameters.getDictParameter().get(i).get("cableID");
+							String fiberName=itemParameters.getDictParameter().get(i).get("cableName");
+							String TXStrandNb=itemParameters.getDictParameter().get(i).get("txStrandNb");
+							String TXTubeNb=itemParameters.getDictParameter().get(i).get("txTubeNb");
+							String RXStrandNb=itemParameters.getDictParameter().get(i).get("rxStrandNb");
+							String RXTubeNb=itemParameters.getDictParameter().get(i).get("rxTubeNb");
+							String TXStrandColor=itemParameters.getDictParameter().get(i).get("txStrandColor");
+							String TXTubeColor=itemParameters.getDictParameter().get(i).get("txTubeColor");
+							String RXStrandColor=itemParameters.getDictParameter().get(i).get("rxStrandColor");
+							String RXTubeColor=itemParameters.getDictParameter().get(i).get("rxTubeColor");
+							String cableLength=itemParameters.getDictParameter().get(i).get("cableLength");
+							//insert case
+							if (StringUtils.equalsIgnoreCase(itemParameters.getDictParameter().get(i).get("port_Mapping_ID"), "")
+									|| StringUtils.equalsIgnoreCase(
+											itemParameters.getDictParameter().get(i).get("port_Mapping_ID"), null)) {
+								synchronized (this) {
+									// db_Port_Id = "DB_PORT_" + year + "_" + appConfig.getSeqNbr(62,session);
+									portMappingID = "NODE_PORT_MAPPING_" + year + "_"
+											+ Integer
+													.parseInt(session.createNativeQuery("SELECT NODE_PORT_MAPPING FROM SEQ_TABLE")
+															.uniqueResult().toString());
+									query = session.createNativeQuery("UPDATE SEQ_TABLE SET NODE_PORT_MAPPING = NODE_PORT_MAPPING + 1 ");
+									query.executeUpdate();
+									session.createNativeQuery("commit").executeUpdate();
+									// System.out.println("the db port is " + db_Port_Id);
+									
+									//insert new record
+									nodePortMapping.setPortMappingID(portMappingID);
+									
+									nodePortMapping.setNodeID(nodeID);
+									nodePortMapping.setNodeName(nodeName);
+							
+
+								
+									nodePortMapping.setMACAddr(MacAddres != "" ? MacAddres : "");
+									
+									nodePortMapping.setSerialNB(serialNb != "" ? serialNb : "");
+									
+									nodePortMapping.setUnitPosition(portAddress != "" ? portAddress : "");
+									
+									nodePortMapping.setStatus(status != "" ? status : "");
+									
+									nodePortMapping.setPortNB(Integer.parseInt(portNb));
+									
+									nodePortMapping.setRecordType(recordType != "" ? recordType : "");
+									
+									nodePortMapping.setLocationType(locationType != "" ? locationType : "");
+									
+									nodePortMapping.setLocationID(locationId != "" ? locationId : "");
+									
+									nodePortMapping.setLocationName(locationName != "" ? locationName : "");
+									
+									nodePortMapping.setWareID(wareID != "" ? wareID : "");
+									
+									nodePortMapping.setCableType(cableType != "" ? cableType : "");
+									
+									nodePortMapping.setFiberID(fiberID != "" ? fiberID : "");
+
+									nodePortMapping.setFiberName(fiberName != "" ? fiberName : "");
+									
+									nodePortMapping.setCableLength(Double.parseDouble(cableLength));
+									
+									nodePortMapping.setTxStrandNB(TXStrandNb != "" ? TXStrandNb : "");
+									
+									nodePortMapping.setTxTubeNB(TXTubeNb != "" ? TXTubeNb : "");
+									
+									nodePortMapping.setRxStrandNB(RXStrandNb != "" ? RXStrandNb : "");
+									
+									nodePortMapping.setRxTubeNB(RXTubeNb != "" ? RXTubeNb : "");
+									
+									nodePortMapping.setTxStrandColor(TXStrandColor != "" ? TXStrandColor : "");
+									
+									nodePortMapping.setTxTubeColor(TXTubeColor != "" ? TXTubeColor : "");
+									
+									nodePortMapping.setRxStrandColor(RXStrandColor != "" ? RXStrandColor : "");
+									
+									nodePortMapping.setRxTubeColor(RXTubeColor != "" ? RXTubeColor : "");
+									
+									nodePortMapping.setCreatedDate(creationDate);
+									nodePortMapping.setLastModifiedDate(lastModifiedDate);
+									
+									
+									
+
+									session.saveOrUpdate(nodePortMapping);
+									session.flush();
+									session.clear();
+									
+									
+									
+								}
+							} else {//update case
+								portMappingID = itemParameters.getDictParameter().get(i).get("port_Mapping_ID");
+						
+								
+								 query = session.createNativeQuery("UPDATE NODE_PORT_MAPPING SET MAC_ADDRESS = '"
+										+ MacAddres + "',SERIAL_NUMBER = '" + serialNb + "',UNITPOSITION ='"
+										+ portAddress + "', LAST_MODIFIED_DATE= TIMESTAMP '" + lastModifiedDate + "' "
+										+ ",STATUS = '"+status+ "',PORT_NUMBER = '"+portNb+ "',RECORD_TYPE = '"+recordType
+										+ "', LOCATION_TYPE = '"+ locationType + "',LOCATION_ID = '" + locationId + "',LOCATION_NAME ='"
+										+ locationName + "' ,WARE_ID = '"
+										+ wareID + "',CABLE_TYPE = '" + cableType + "',FIBER_ID ='"
+										+ fiberID + "',FIBER_NAME = '"+fiberName+ "',TX_STRAND_NB = '"+TXStrandNb+ "',TX_TUBE_NB = '"+TXTubeNb
+										+ "', RX_STRAND_NB = '"+ RXStrandNb + "',RX_TUBE_NB = '" + RXTubeNb + "',TX_STRAND_COLOR ='"
+										+ TXStrandColor + "' ,TX_TUBE_COLOR = '"
+										+ TXTubeColor + "',RX_STRAND_COLOR = '" + RXStrandColor + "',RX_TUBE_COLOR ='"
+										+ RXTubeColor + "', CABLE_LENGTH ='"+cableLength+"' "
+										+ " WHERE PORT_MAPPING_ID = '" + portMappingID + "' ");
+								 query.executeUpdate();
+							
+							}
+						}
+
+					}
+					//delete
+					for (int i = 0; i < itemParameters.getDictParameterDel().size(); i++) {
+						System.out.println("in delete "+i);
+						 query = session
+								.createNativeQuery("DELETE FROM NODE_PORT_MAPPING WHERE PORT_MAPPING_ID='"
+										+ itemParameters.getDictParameterDel().get(i).get("portMappingID") + "'");
+						 query.executeUpdate();
+					}
+					
+
+				
+				tx.commit();
+			} catch (Exception e) {
+				tx.rollback();
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in NodePortMappingFormViewSave due to \n " + exceptionAsString);
+				logger.info("Error in NodePortMappingFormViewSave due to \n " + exceptionAsString);
+				rtn.put("distributionBoardId", null);
+			} finally {
+				if (session != null && session.isOpen()) {
+					session.close();
+
+				}
+			}
+		}
+		return rtn;
+	}
+	
 /*
 	@RequestMapping(value = "/NodeFormView", method = RequestMethod.GET)
 
@@ -341,115 +660,8 @@ public class NodePortMappingController {
 		return "NodeFormView";
 	}
 
-	@RequestMapping(value = "/NodeFormViewSave", method = RequestMethod.GET)
-	@ResponseBody
-	public Map<String, Object> NodeFormViewSave(Locale locale, Model model, HttpServletRequest request,
-			@ModelAttribute ItemParameters itemParameters, HttpServletResponse response) throws Exception {
-
-		Map<String, Object> rtn = new LinkedHashMap<>();
-		String nodePk = null;
-
-		session = AlmDbSession.getInstance().getSession();
-		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
-			notification.headerNotifications(session, model);
-			try {
-				nodePk = request.getParameter("nodepk");
-				NodePassive nodePassive = new NodePassive();
-				String passivePk;
-				Timestamp CreationDate;
-				Calendar calendar = new GregorianCalendar();
-				DateFormat inputFormatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
-				DateFormat outputFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				System.out.println(request.getParameter("passivePk"));
-				if (request.getParameter("passivePk") == "") {
-					passivePk = "Passive_" + calendar.get(Calendar.YEAR) + "_" + Integer.parseInt(
-							session.createNativeQuery("SELECT NODE_PASSIVE FROM SEQ_TABLE").uniqueResult().toString());
-					CreationDate = new Timestamp((new Timestamp(System.currentTimeMillis())).getTime());
-				} else {
-					passivePk = request.getParameter("passivePk");
-					CreationDate = (new Timestamp(
-							(outputFormatter.parse(request.getParameter("creationDate"))).getTime()));
-
-				}
-				session.createNativeQuery("UPDATE SEQ_TABLE SET NODE_PASSIVE = NODE_PASSIVE + 1 ").executeUpdate();
-				session.createNativeQuery("commit").executeUpdate();
-				nodePassive.setPassivePk(passivePk);
-				nodePassive.setNodeId(request.getParameter("uniqueNodeId"));
-				nodePassive.setNodeName(request.getParameter("nodeName"));
-				nodePassive.setSiteType(request.getParameter("siteType"));
-				nodePassive.setSwap(request.getParameter("swap"));
-				nodePassive.setSwapDate(request.getParameter("SwapDate"));
-				nodePassive.setStatus(request.getParameter("status"));
-				nodePassive.setCircleId(request.getParameter("circleId"));
-				nodePassive.setDiscoveryDate(Timestamp
-						.valueOf(outputFormatter.format(inputFormatter.parse(request.getParameter("discoveryDate")))));
-				nodePassive.setLastShownDate(Timestamp
-						.valueOf(outputFormatter.format(inputFormatter.parse(request.getParameter("shownDate")))));
-				nodePassive.setLastModifiedDate(new Timestamp((new Timestamp(System.currentTimeMillis())).getTime()));
-				nodePassive.setCreationDate(CreationDate);
-
-				session.saveOrUpdate(nodePassive);
-				System.out.println(nodePk);
-			}
-
-			catch (Exception e) {
-				sw = new StringWriter();
-				e.printStackTrace(new PrintWriter(sw));
-				exceptionAsString = sw.toString();
-				logger.finest("Error in NodeFormView due to \n " + exceptionAsString);
-				logger.info("Error in NodeFormView due to \n " + exceptionAsString);
-			} finally {
-				if (session != null && session.isOpen()) {
-					tx.commit();
-					session.close();
-				}
-			}
-			rtn.put("nodePK", nodePk);
-		}
-
-		return rtn;
-
-	}
 	
-	@RequestMapping(value = "/GetAllNode", method = RequestMethod.GET)
-	@ResponseBody
-	public Map<String, Object> GetAllNode(Locale locale, Model model, HttpServletRequest request,
-	        HttpServletResponse response) {
-
-	    Map<String, Object> rtn = new LinkedHashMap<>();
-
-	    String Node = "%" + request.getParameter("Node") + "%";
-	    System.out.println("Node is " +Node);
-	    session = AlmDbSession.getInstance().getSession();
-	    if (session != null && session.isOpen()) {
-	        tx = session.beginTransaction();
-	        try {
-	        	query = session.createQuery("SELECT t1.nodeName, t1.nodePK, t1.uniNodeID,t1.nodeName,t1.nodeType"
-	        			+ " FROM NodeActive t1"
-	        	        + " WHERE LOWER(t1.nodeName) LIKE LOWER(:Node) OR LOWER(t1.nodePK) "
-	        	        + "LIKE LOWER(:Node) OR LOWER(t1.uniNodeID) LIKE LOWER(:Node) "
-	        	        + "OR LOWER(t1.nodeName) LIKE LOWER(:Node) OR LOWER(t1.nodeType) LIKE LOWER(:Node)");
-	        query.setParameter("Node", Node); 
-	        	query.setFirstResult(0);
-				query.setMaxResults(40);
-	        	
-				System.out.println("ListNode is " +mapper.writeValueAsString(query.list()));
-	        	rtn.put("ListNode", query.list());
-	   } catch (Exception e) {
-	            sw = new StringWriter();
-	            e.printStackTrace(new PrintWriter(sw));
-	            exceptionAsString = sw.toString();
-	            logger.finest("Error in GetAllNode due to \n " + exceptionAsString);
-	            logger.info("Error in GetAllNode due to \n " + exceptionAsString);
-	        } finally {
-	            if (session != null && session.isOpen()) {
-	                tx.commit();
-	                session.close();
-	            }
-	        }
-	    }
-	    return rtn;
-	}*/
+	
+	*/
 
 }
