@@ -24,7 +24,7 @@
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/header.css">
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/jquerysctipttop.css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/bootstrap-datetimepicker.min.css">
-   <!--  <script src="${pageContext.request.contextPath}/resources/js/PurchaseOrder/PO_BoqPopup.js"></script> -->
+   <script src="${pageContext.request.contextPath}/resources/js/NodePortMapping/nodePortMapping_BoqPopup.js"></script>
     <style>
 
     
@@ -526,7 +526,7 @@ max-width: 100%;
 			  			<div class="form-group">
 			  				<div class="input-group-prepend">
 			  					<span class="input-group-text" >Port ID </span>
-			   					<input type="text" id="popupportMappingID" value="${popupItemCode}" style="width:675px; height:37px" class="ui-widget ui-widget-content ui-corner-all form-control text-input" />
+			   					<input type="text" id="popupportMappingID" value="${popupItemCode}" readonly style="width:675px; height:37px" class="ui-widget ui-widget-content ui-corner-all form-control text-input" />
 			  				</div>
 			  			</div>
 			  		</div>
@@ -574,12 +574,22 @@ max-width: 100%;
 							</div>
 						</div>
 					</div>
+					
+				<div class="col-sm-6">
+					<div class="form-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text" >Port Status</span>
+								<input type="text" id="popupPortStatus" class="form-control text-input" value="${popupCat2}" style="width:674px; height:37px" />
+										
+						</div>
+					</div>
+				</div>
 										
 			<div class="col-sm-6">
 				<div class="form-group">
 					<div class="input-group-prepend">
 						<span class="input-group-text" >Port Number</span>
-							<input type="text" id="popupPortNb" class="form-control text-input" value="${popupCat2}" style="width:674px; height:37px" />
+							<input type="number" id="popupPortNb" class="form-control text-input" value="${popupCat2}" style="width:674px; height:37px" />
 									
 					</div>
 				</div>
@@ -589,8 +599,11 @@ max-width: 100%;
 				<div class="form-group">
 					<div class="input-group-prepend">
 						<span class="input-group-text">Location Type</span>
-							<input type="text" id="popupLocType" class="form-control text-input" value="${popupCat3}" style="width:674px; height:37px"  />  
-									
+						 <select id="popupLocType" class="form-control" style="width:674px; height:37px;">
+							 <option value=''></option>
+							 <option value='Customer'>Customer</option>
+							 <option value='Site'>Site</option>	
+						</select>	
 					</div>
 				</div>
 			</div>
@@ -624,65 +637,95 @@ max-width: 100%;
 				</div>
 			</div>
 			
+			<div class="col-sm-6">
+						<div class="form-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text">Cable Type</span>
+									<select id="popupCableType" class="form-control" style="width:674px; height:37px;">
+										 <option value='Outdoor'>Outdoor</option>
+										 <option value='Indoor'>Indoor</option>
+										 
+									</select>			
+							</div>
+						</div>
+					</div>
+			
 				</div> </div>							
 			<div class="container-fluid">
 				<div class="row">
 					<div class="col-sm-6">
 						<div class="form-group">
 							<div class="input-group-prepend">
-								<span class="input-group-text">Cable Type</span>
-									<input type="text" id="popupCableType" class="form-control text-input" value="${popupBarcode}" style="width:674px; height:37px"  />  
-											
-							</div>
+							<span class="input-group-text" >TX Strand NB</span>
+							<input type="text" id="popupTXStrandNb" class="form-control text-input" value="${popupQty}" style="width:674px; height:37px" />
+						</div>
+				    </div>
+				  </div>
+				  
+				  <div class="col-sm-6">
+				    <div class="form-group">
+				        <div class="input-group-prepend">
+				            <span class="input-group-text">TX Strand Color</span>
+				            <select id="popupTXStrandColor" class="form-control" style="width:674px; height:37px;">
+				                <option value="" style="background-color: white;"></option>
+				                <option value="blue" style="background-color: white; color:black;">blue</option>
+				                <option value="orange" style="background-color: white; color:black;">orange</option>
+				                <option value="green" style="background-color: white; color:black;">green</option>
+				                <option value="brown" style="background-color: white; color:black;">brown</option>
+				                <option value="gray" style="background-color: white; color:black;">gray</option>
+				                <option value="white" style="background-color: white; color:black;">white</option>
+				                <option value="red" style="background-color: white; color:black;">red</option>
+				                <option value="black" style="background-color: white; color:black;">black</option>
+				                <option value="yellow" style="background-color: white; color:black;">yellow</option>
+				                <option value="violet" style="background-color: white; color:black;">violet</option>
+				                <option value="pink" style="background-color: white; color:black;">pink</option>
+				                <option value="aqua" style="background-color: white; color:black;">aqua</option>
+				            </select>
+				        </div>
+				    </div>
+				</div>
+					
+			</div> 
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="form-group">
+						<div class="input-group-prepend">
+						<span class="input-group-text" >RX Strand NB</span>
+						<input type="text" id="popupRXStrandNb" class="form-control text-input" value="${popupQty}" style="width:674px; height:39px" />
+					</div>
+			    </div>
+			  </div>
+							
+				<div class="col-sm-6">
+					<div class="form-group">
+						<div class="input-group-prepend">
+							 <span class="input-group-text">RX Strand Color</span>
+				            <select id="popupRXStrandColor" class="form-control" style="width:674px; height:37px;">
+				                <option value="" style="background-color: white;"></option>
+				                <option value="blue" style="background-color: white; color:black;">blue</option>
+				                <option value="orange" style="background-color: white; color:black;">orange</option>
+				                <option value="green" style="background-color: white; color:black;">green</option>
+				                <option value="brown" style="background-color: white; color:black;">brown</option>
+				                <option value="gray" style="background-color: white; color:black;">gray</option>
+				                <option value="white" style="background-color: white; color:black;">white</option>
+				                <option value="red" style="background-color: white; color:black;">red</option>
+				                <option value="black" style="background-color: white; color:black;">black</option>
+				                <option value="yellow" style="background-color: white; color:black;">yellow</option>
+				                <option value="violet" style="background-color: white; color:black;">violet</option>
+				                <option value="pink" style="background-color: white; color:black;">pink</option>
+				                <option value="aqua" style="background-color: white; color:black;">aqua</option>
+				            </select>
+								
 						</div>
 					</div>
 				</div>
-				<div class="row">
-					<div class="col-sm-6">
-						<div class="form-group">
-							<div class="input-group-prepend">
-							<span class="input-group-text" >TX Strand NB</span>
-							<input type="text" id="popupTXStrandNb" class="form-control text-input" value="${popupQty}" style="width:120px; height:39px" />
-						</div>
-				    </div>
-				  </div>
-								
-					<div class="col-sm-6">
-						<div class="form-group">
-							<div class="input-group-prepend">
-								<span class="input-group-text" >TX Strand Color</span>
-								<input type="text" id="popupTXStrandColor" class="form-control text-input" value="${popupDiscountAmount}" style="width:200px;" />
-									
-							</div>
-						</div>
-					</div>
-				</div> 
-				<div class="row">
-					<div class="col-sm-6">
-						<div class="form-group">
-							<div class="input-group-prepend">
-							<span class="input-group-text" >RX Strand NB</span>
-							<input type="text" id="popupRXStrandNb" class="form-control text-input" value="${popupQty}" style="width:120px; height:39px" />
-						</div>
-				    </div>
-				  </div>
-								
-					<div class="col-sm-6">
-						<div class="form-group">
-							<div class="input-group-prepend">
-								<span class="input-group-text" >RX Strand Color</span>
-								<input type="text" id="popupRXStrandColor" class="form-control text-input" value="${popupDiscountAmount}" style="width:200px;" />
-									
-							</div>
-						</div>
-					</div>
-				</div> 
+			</div> 
 				<div class="row">
 					<div class="col-sm-6">
 						<div class="form-group">
 							<div class="input-group-prepend">
 							<span class="input-group-text" >TX Tube NB</span>
-							<input type="text" id="popupTXTubeNb" class="form-control text-input" value="${popupQty}" style="width:120px; height:39px" />
+							<input type="text" id="popupTXTubeNb" class="form-control text-input" value="${popupQty}" style="width:674px; height:37px" />
 						</div>
 				    </div>
 				  </div>
@@ -691,8 +734,21 @@ max-width: 100%;
 						<div class="form-group">
 							<div class="input-group-prepend">
 								<span class="input-group-text" >TX Tube Color</span>
-								<input type="text" id="popupTXTubeColor" class="form-control text-input" value="${popupDiscountAmount}" style="width:200px;" />
-									
+					            <select id="popupTXTubeColor" class="form-control" style="width:674px; height:37px;">
+					                <option value="" style="background-color: white;"></option>
+					                <option value="blue" style="background-color: white; color:black;">blue</option>
+					                <option value="orange" style="background-color: white; color:black;">orange</option>
+					                <option value="green" style="background-color: white; color:black;">green</option>
+					                <option value="brown" style="background-color: white; color:black;">brown</option>
+					                <option value="gray" style="background-color: white; color:black;">gray</option>
+					                <option value="white" style="background-color: white; color:black;">white</option>
+					                <option value="red" style="background-color: white; color:black;">red</option>
+					                <option value="black" style="background-color: white; color:black;">black</option>
+					                <option value="yellow" style="background-color: white; color:black;">yellow</option>
+					                <option value="violet" style="background-color: white; color:black;">violet</option>
+					                <option value="pink" style="background-color: white; color:black;">pink</option>
+					                <option value="aqua" style="background-color: white; color:black;">aqua</option>
+					            </select>	
 							</div>
 						</div>
 					</div>
@@ -702,7 +758,7 @@ max-width: 100%;
 						<div class="form-group">
 							<div class="input-group-prepend">
 							<span class="input-group-text" >RX Tube NB</span>
-							<input type="text" id="popupRXTubeNb" class="form-control text-input" value="${popupQty}" style="width:120px; height:39px" />
+							<input type="text" id="popupRXTubeNb" class="form-control text-input" value="${popupQty}" style="width:674px; height:37px" />
 						</div>
 				    </div>
 				  </div>
@@ -711,8 +767,22 @@ max-width: 100%;
 						<div class="form-group">
 							<div class="input-group-prepend">
 								<span class="input-group-text" >RX Tube Color</span>
-								<input type="text" id="popupRXTubeColor" class="form-control text-input" value="${popupDiscountAmount}" style="width:200px;" />
-									
+								<select id="popupRXTubeColor" class="form-control" style="width:674px; height:37px;">
+					                <option value="" style="background-color: white;"></option>
+					                <option value="blue" style="background-color: white; color:black;">blue</option>
+					                <option value="orange" style="background-color: white; color:black;">orange</option>
+					                <option value="green" style="background-color: white; color:black;">green</option>
+					                <option value="brown" style="background-color: white; color:black;">brown</option>
+					                <option value="gray" style="background-color: white; color:black;">gray</option>
+					                <option value="white" style="background-color: white; color:black;">white</option>
+					                <option value="red" style="background-color: white; color:black;">red</option>
+					                <option value="black" style="background-color: white; color:black;">black</option>
+					                <option value="yellow" style="background-color: white; color:black;">yellow</option>
+					                <option value="violet" style="background-color: white; color:black;">violet</option>
+					                <option value="pink" style="background-color: white; color:black;">pink</option>
+					                <option value="aqua" style="background-color: white; color:black;">aqua</option>
+
+					            </select>		
 							</div>
 						</div>
 					</div>
@@ -722,7 +792,7 @@ max-width: 100%;
 						<div class="form-group">
 							<div class="input-group-prepend">
 							<span class="input-group-text" >Cable ID</span>
-							<input type="text" id="popupCableID" class="form-control text-input" value="${popupQty}" style="width:120px; height:39px" />
+							<input type="text" id="popupCableID" class="form-control text-input" value="${popupQty}" style="width:674px; height:39px" />
 						</div>
 				    </div>
 				  </div>
@@ -731,7 +801,7 @@ max-width: 100%;
 						<div class="form-group">
 							<div class="input-group-prepend">
 								<span class="input-group-text" >Cable Name</span>
-								<input type="text" id="popupCableName" class="form-control text-input" value="${popupDiscountAmount}" style="width:200px;" />
+								<input type="text" id="popupCableName" class="form-control text-input" value="${popupDiscountAmount}" style="width:674px;" />
 									
 							</div>
 						</div>
@@ -742,7 +812,7 @@ max-width: 100%;
 						<div class="form-group">
 							<div class="input-group-prepend">
 							<span class="input-group-text" >Cable Length</span>
-							<input type="text" id="popupCableLength" class="form-control text-input" value="${popupQty}" style="width:120px; height:39px" />
+							<input type="number" id="popupCableLength" class="form-control text-input" value="${popupQty}" style="width:674px; height:37px" />
 						</div>
 				    </div>
 				  </div>
@@ -889,9 +959,8 @@ var allPortList =[];
 
 
 		var cableTypeOptions =
-		"<option value=''></option>"
-		+"<option value='Indoor'>Indoor</option>"
-		+"<option value='Outdoor'>Outdoor</option>";
+			"<option value='Outdoor'>Outdoor</option>"
+		+"<option value='Indoor'>Indoor</option>";
 		
 		var colorOptions='<option value='+'""'+' style='+'"background-color: white;"'+'></option>'+	
 				'<option value='+'"blue"'+' style='+'"background-color: white; color:black"'+'>blue</option>'+
@@ -1077,33 +1146,34 @@ var allPortList =[];
 					
 			     if(allPortList[i].cableType !=null){
 						$("#cableType"+portBoqIndex).val(allPortList[i].cableType);
+			     }
+						
+				if(allPortList[i].cableType ==="Indoor" || allPortList[i].cableType ===null || allPortList[i].cableType === "null" || allPortList[i].cableType ===""){
+		    		 $('#txStrandNb' + portBoqIndex).attr('readonly', true);
+		    		 $('#rxStrandNb' + portBoqIndex).attr('readonly', true);
+		    		 $('#txTubeNb' + portBoqIndex).attr('readonly', true);
+		    		 $('#rxTubeNb' + portBoqIndex).attr('readonly', true);
+		    		 $('#txStrandColor' + portBoqIndex).prop('disabled', true);
+		    		 $('#rxStrandColor' + portBoqIndex).prop('disabled', true);
+		    		 $('#txTubeColor' + portBoqIndex).prop('disabled', true);
+		    		 $('#rxTubeColor' + portBoqIndex).prop('disabled', true);
+		    		 $('#cableID' + portBoqIndex).attr('readonly', true);
 
-						if(allPortList[i].cableType ==="Indoor"){
-				    		 $('#txStrandNb' + portBoqIndex).attr('readonly', true);
-				    		 $('#rxStrandNb' + portBoqIndex).attr('readonly', true);
-				    		 $('#txTubeNb' + portBoqIndex).attr('readonly', true);
-				    		 $('#rxTubeNb' + portBoqIndex).attr('readonly', true);
-				    		 $('#txStrandColor' + portBoqIndex).prop('disabled', true);
-				    		 $('#rxStrandColor' + portBoqIndex).prop('disabled', true);
-				    		 $('#txTubeColor' + portBoqIndex).prop('disabled', true);
-				    		 $('#rxTubeColor' + portBoqIndex).prop('disabled', true);
-				    		 $('#cableID' + portBoqIndex).attr('readonly', true);
+		    		 $('#txStrandColor'+portBoqIndex).val('');
+			    	 $('#txStrandNb'+portBoqIndex).val('');
+			    	 $('#rxStrandColor'+portBoqIndex).val('');
+			    	 $('#rxStrandNb'+portBoqIndex).val('');
 
-				    		 $('#txStrandColor'+portBoqIndex).val('');
-					    	 $('#txStrandNb'+portBoqIndex).val('');
-					    	 $('#rxStrandColor'+portBoqIndex).val('');
-					    	 $('#rxStrandNb'+portBoqIndex).val('');
+			    	 $('#txTubeColor'+portBoqIndex).val('');
+			    	 $('#txTubeNb'+portBoqIndex).val('');
+			    	 $('#rxTubeColor'+portBoqIndex).val('');
+			    	 $('#rxTubeNb'+portBoqIndex).val('');
 
-					    	 $('#txTubeColor'+portBoqIndex).val('');
-					    	 $('#txTubeNb'+portBoqIndex).val('');
-					    	 $('#rxTubeColor'+portBoqIndex).val('');
-					    	 $('#rxTubeNb'+portBoqIndex).val('');
-
-					    	 $('#cableID'+portBoqIndex).val('');
-				    		
-					    	 
-					    	 }
-					}
+			    	 $('#cableID'+portBoqIndex).val('');
+		    		
+			    	 
+			    	 }
+					
 
 			     $("#locationType"+portBoqIndex).change(function(){
 			    	 var thisID = $(this).attr("id");
@@ -1136,7 +1206,7 @@ var allPortList =[];
 			    	 $('#cableID'+indexFor).val('');
 			    	 $('#cableName'+indexFor).val('');
 			    	 $('#cableLength'+indexFor).val('');
-			    	 if($(this).val()==="Indoor"){
+			    	 if($(this).val()==="Indoor" || $(this).val()===null|| $(this).val()==="null"|| $(this).val()===""){
 			    		 $('#txStrandNb' + indexFor).attr('readonly', true);
 			    		 $('#rxStrandNb' + indexFor).attr('readonly', true);
 			    		 $('#txTubeNb' + indexFor).attr('readonly', true);
@@ -1421,9 +1491,8 @@ var allPortList =[];
 
 
 				var cableTypeOptions =
-				"<option value=''></option>"
-				+"<option value='Indoor'>Indoor</option>"
-				+"<option value='Outdoor'>Outdoor</option>";
+				"<option value='Outdoor'>Outdoor</option>"
+				+"<option value='Indoor'>Indoor</option>";
 				
 				var colorOptions='<option value='+'""'+' style='+'"background-color: white;"'+'></option>'+	
 						'<option value='+'"blue"'+' style='+'"background-color: white; color:black"'+'>blue</option>'+
@@ -1493,153 +1562,8 @@ var allPortList =[];
 
 			     $("#bisotab > tbody").append(portRow);
 			     
+			     addRowEvents();
 
-
-			     $("#locationType"+portBoqIndex).change(function(){
-			    	 var thisID = $(this).attr("id");
-					var indexFor = thisID.replace('locationType','');
-			    	 $('#locationID'+indexFor).val('');
-			    	 $('#locationName'+indexFor).val('');
-			    	 $('#wareID'+indexFor).val('');
-
-			    	 if($(this).val()=="Customer"){
-						 $('#wareID' + indexFor).attr('readonly', true);
-						}
-					else {
-						 $('#wareID' + indexFor).attr('readonly', false);
-						}
-			    								 
-					});
-
-			     $("#cableType"+portBoqIndex).change(function(){
-			    	 var thisID = $(this).attr("id");
-					var indexFor = thisID.replace('cableType','');
-			    	 $('#txStrandColor'+indexFor).val('');
-			    	 $('#txStrandNb'+indexFor).val('');
-			    	 $('#rxStrandColor'+indexFor).val('');
-			    	 $('#rxStrandNb'+indexFor).val('');
-
-			    	 $('#txTubeColor'+indexFor).val('');
-			    	 $('#txTubeNb'+indexFor).val('');
-			    	 $('#rxTubeColor'+indexFor).val('');
-			    	 $('#rxTubeNb'+indexFor).val('');
-
-			    	 $('#cableID'+indexFor).val('');
-			    	 $('#cableName'+indexFor).val('');
-			    	 $('#cableLength'+indexFor).val('');
-			    	 if($(this).val()==="Indoor"){
-			    		 $('#txStrandNb' + indexFor).attr('readonly', true);
-			    		 $('#rxStrandNb' + indexFor).attr('readonly', true);
-			    		 $('#txTubeNb' + indexFor).attr('readonly', true);
-			    		 $('#rxTubeNb' + indexFor).attr('readonly', true);
-			    		 $('#txStrandColor' + indexFor).prop('disabled', true);
-			    		 $('#rxStrandColor' + indexFor).prop('disabled', true);
-			    		 $('#txTubeColor' + indexFor).prop('disabled', true);
-			    		 $('#rxTubeColor' + indexFor).prop('disabled', true);
-			    		 $('#cableID' + indexFor).attr('readonly', true);
-			    		
-				    	 
-				    	 }
-			    	 if($(this).val()==="Outdoor"){
-			    		 $('#txStrandNb' + indexFor).attr('readonly', false);
-			    		 $('#rxStrandNb' + indexFor).attr('readonly', false);
-			    		 $('#txTubeNb' + indexFor).attr('readonly', false);
-			    		 $('#rxTubeNb' + indexFor).attr('readonly', false);
-			    		
-			    		 $('#txStrandColor' + indexFor).prop('disabled', false);
-			    		 $('#rxStrandColor' + indexFor).prop('disabled', false);
-			    		 $('#txTubeColor' + indexFor).prop('disabled', false);
-			    		 $('#rxTubeColor' + indexFor).prop('disabled', false);
-			    		 $('#cableID' + indexFor).attr('readonly', false);
-			    		 
-				    	 
-				    	 }
-			    	 
-			    								 
-					});
-
-			     $("#txStrandColor"+portBoqIndex).change(function(){
-						var thisID = $(this).attr("id");
-						//var indexFor = parseInt(thisID.substr(thisID.length-1));
-						var indexFor = thisID.replace('txStrandColor','');
-						colorId="txStrandColor"+indexFor;
-						numberId="txStrandNb"+indexFor;
-						tubeStrandPortMappingSetColor(colorId,numberId);	 
-					});
-
-			     $("#rxStrandColor"+portBoqIndex).change(function(){
-						var thisID = $(this).attr("id");
-						//var indexFor = parseInt(thisID.substr(thisID.length-1));
-						var indexFor = thisID.replace('rxStrandColor','');
-						colorId="rxStrandColor"+indexFor;
-						numberId="rxStrandNb"+indexFor;
-						tubeStrandPortMappingSetColor(colorId,numberId);	 
-					});
-
-			     $("#txTubeColor"+portBoqIndex).change(function(){
-						var thisID = $(this).attr("id");
-						//var indexFor = parseInt(thisID.substr(thisID.length-1));
-						var indexFor = thisID.replace('txTubeColor','');
-						colorId="txTubeColor"+indexFor;
-						numberId="txTubeNb"+indexFor;
-						tubeStrandPortMappingSetColor(colorId,numberId);	 
-					});
-
-
-			     $("#rxTubeColor"+portBoqIndex).change(function(){
-						var thisID = $(this).attr("id");
-						//var indexFor = parseInt(thisID.substr(thisID.length-1));
-						var indexFor = thisID.replace('rxTubeColor','');
-						colorId="rxTubeColor"+indexFor;
-						numberId="rxTubeNb"+indexFor;
-						tubeStrandPortMappingSetColor(colorId,numberId);	 
-					});
-
-			     document.getElementById("txStrandNb"+portBoqIndex).addEventListener ("input" ,function() {
-						var thisID = $(this).attr("id");
-						//var indexFor = parseInt(thisID.substr(thisID.length-1));
-						var indexFor = thisID.replace('txStrandNb','');
-						colorId="txStrandColor"+indexFor;
-						numberId="txStrandNb"+indexFor;
-						number=document.getElementById(numberId).value;
-						strandTubePortMappingSetColor(number,colorId);
-					
-					});
-
-			     document.getElementById("rxStrandNb"+portBoqIndex).addEventListener ("input" ,function() {
-						var thisID = $(this).attr("id");
-						//var indexFor = parseInt(thisID.substr(thisID.length-1));
-						var indexFor = thisID.replace('rxStrandNb','');
-						colorId="rxStrandColor"+indexFor;
-						numberId="rxStrandNb"+indexFor;
-						number=document.getElementById(numberId).value;
-						strandTubePortMappingSetColor(number,colorId);
-					
-					});
-
-			     document.getElementById("rxTubeNb"+portBoqIndex).addEventListener ("input" ,function() {
-						var thisID = $(this).attr("id");
-						//var indexFor = parseInt(thisID.substr(thisID.length-1));
-						var indexFor = thisID.replace('rxTubeNb','');
-						colorId="rxTubeColor"+indexFor;
-						numberId="rxTubeNb"+indexFor;
-						number=document.getElementById(numberId).value;
-						strandTubePortMappingSetColor(number,colorId);
-					
-					});
-
-			     document.getElementById("txTubeNb"+portBoqIndex).addEventListener ("input" ,function() {
-						var thisID = $(this).attr("id");
-						//var indexFor = parseInt(thisID.substr(thisID.length-1));
-						var indexFor = thisID.replace('txTubeNb','');
-						colorId="txTubeColor"+indexFor;
-						numberId="txTubeNb"+indexFor;
-						number=document.getElementById(numberId).value;
-						strandTubePortMappingSetColor(number,colorId);
-					
-					});
-
-			     autoCompleteForPortMapping(portBoqIndex,"bisotab","wareID","locationID","locationName","locationType","cableID","cableName","cableType","txStrandNb","rxStrandNb","txStrandColor","rxStrandColor","txTubeNb","rxTubeNb","txTubeColor","rxTubeColor");
 			     portBoqIndex++;
 
 	});
@@ -1824,7 +1748,7 @@ var allPortList =[];
      		      		      }, delay);
      		      		    };
      		      		  };
-
+/*
      		      		function tubeStrandPortMappingSetColor(colorID,numberID) {
 
      		      			if (document.getElementById(colorID).value=="blue"){
@@ -1957,7 +1881,7 @@ var allPortList =[];
      		      	  		 document.getElementById(ID).style.color = "";	
      		      		 }			 
 
-     		      	}
+     		      	} */
 
      		      	 function updateContainerHeight() {
      				       // Get the table and container elements
@@ -2328,287 +2252,7 @@ var allPortList =[];
 		    });
 		}
 
-		function autoCompleteForPortMapping(ID,tableID,wareId,LocationID,LocationName,LocationType,fiberID,fiberName,cableType,txstrandNb,rxstrandNb,txstrandColor,rxstrandColor,txtubeNb,rxtubeNb,txtubeColor,rxtubeColor){
-			var url ="emptyUrl";
-			var dataTarget="";
-			var search="";				
-			//console.log("mapping autocomplete");
-		$("#"+LocationID+ID).autocomplete({
-			source: debounce(function(request, response,event,ui) {
-			    var searchs=$("#"+LocationID+ID).val();
-				var line;
-			    search= $("#"+LocationType+ID).val();
-			    console.log("debounce");
-				if(search=="Customer"){
-						url='GetAllNetworkCustomer';
-						dataTarget = {					
-							"search":searchs,
-						}
-					}
-					else if(search=="Site"){
-						url='GetAllWarehouse';
-						dataTarget = {
-				       		"WareName":searchs,
-							"warehouseName" : searchs,
-							"SiteId":searchs,
-						 }
-					}
-					else {
-						url='emptyUrl';
-					}
-			if(url !="emptyUrl") {
-				$.ajax({
-					type: "GET",
-					contentType: "application/json; charset=utf-8",
-					//url: getContext()+'/'+url,
-					 url: '${pageContext.request.contextPath}/'+url,
-					data: dataTarget,				
-				 	dataType: "json",
-					success: function (data) {
-						if (data != null) {
-							response(data.globalList);  
-							                 
-						}
-					},								               
-					  error: function(result) {
-		                  alert("Error");
-		              }
-		          });						               
-				} 
-		/*END FUNCTION*/	},900), minLength:0, maxShowItems: 40, scroll:true,
-		 		select: function(event, ui) {
-		 			
-					if(search=="Customer"){
-						$("#"+LocationID+ID).val(ui.item ? ui.item[0] : '');
-						$("#"+LocationName+ID).val(ui.item[1]);
-						//$("#"+Location+ID).val(ui.item[3]);
-					}
-					else if(search=="Site"){
-						$("#"+LocationName+ID).val(ui.item ? ui.item[1] : '');
-						$("#"+LocationID+ID).val(ui.item[2]);
-						console.log("Location is " +ui.item[0]);
-						console.log("ID is " +ID);
-						$("#"+wareId+ID).val(ui.item[0]);
-						
-					}	
-				return false;
-			},	
-		}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
-			
-			if(item[0].split("_")[0]=="CUST" ) {
-				 return $("<li class='each'>")
-		            .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-		               item[0] + "</span><br><span class='desc'>" +
-		                item[1] +', '+ item[2]+ "</span></div>")
-		            .appendTo(ul);
-			}
-			else if(item[0].split("_")[0]=="WARE") {
-				 return $("<li class='each'>")
-		        .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-		           item[2] + "</span><br><span class='desc'>" +
-		            item[0] +', '+ item[1] + "</span></div>")
-		        .appendTo(ul);
-			}
-			
-			};		    	    
-								         
-			$("#"+LocationID+ID).focus(function(){
-				if (this.value == ""){
-					$(this).autocomplete("search");
-			        }
-			});		
-
-			// autocomplete for locacation name
-			$("#"+LocationName+ID).autocomplete({
-			source: debounce( function(request, response,event,ui) {
-			    var searchs=$("#"+LocationName+ID).val();
-				var line;
-			    search= $("#"+LocationType+ID).val();
-			    console.log("no debounce");
-				if(search=="Customer"){
-						url='GetAllNetworkCustomer';
-						dataTarget = {					
-							"search":searchs,
-						}
-					}
-					else if(search=="Site"){
-						url='GetAllWarehouse';
-						dataTarget = {
-				       		"WareName":searchs,
-							"warehouseName" : searchs,
-							"SiteId":searchs,
-						 }
-					}
-					else {
-						url='emptyUrl';
-					}
-			if(url !="emptyUrl") {
-				$.ajax({
-					type: "GET",
-					contentType: "application/json; charset=utf-8",
-					//url: getContext()+'/'+url,
-					url: '${pageContext.request.contextPath}/'+url,
-					data: dataTarget,				
-				 	dataType: "json",
-					success: function (data) {
-						if (data != null) {
-							response(data.globalList);                   
-						}
-					},								               
-					  error: function(result) {
-		                  alert("Error");
-		              }
-		          });						               
-				} 
-			},900), minLength:0, maxShowItems: 40, scroll:true,
-		 		select: function(event, ui) {
-		 			if(search=="Customer"){
-		 				$("#"+LocationID+ID).val(ui.item ? ui.item[0] : '');
-						$("#"+LocationName+ID).val(ui.item[1]);
-						//$("#"+Location+ID).val(ui.item[3]);
-					}
-					else if(search=="Site"){
-						$("#"+LocationName+ID).val(ui.item ? ui.item[1] : '');
-						$("#"+LocationID+ID).val(ui.item[2]);
-						$("#"+wareId+ID).val(ui.item[0]);
-					}
-					
-				return false;
-			},	
-		}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
-			
-			if(item[0].split("_")[0]=="CUST" ) {
-				 return $("<li class='each'>")
-		            .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-		               item[1] + "</span><br><span class='desc'>" +
-		                item[0] +', '+item[2]+ "</span></div>")
-		            .appendTo(ul);
-			}
-			else if(item[0].split("_")[0]=="WARE") {
-				 return $("<li class='each'>")
-		       .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-		          item[1] + "</span><br><span class='desc'>" +
-		           item[0] +', '+ item[2] + "</span></div>")
-		       .appendTo(ul);
-			}
-			};		    	    
-								         
-			$("#"+LocationName+ID).focus(function(){
-				if (this.value == ""){
-					$(this).autocomplete("search");
-			        }
-			});			
-					    	    
-				
-				$("#"+fiberID+ID).autocomplete({
-		   	    source: debounce(function(request, response,event, ui) {
-		   	    	console.log("fiber id");
-
-		   	    		var searchId= $("#"+fiberID+ID).val();
-		   	    		if($("#"+cableType+ID).val()==="Outdoor"){
-						url='SearchFiber';
-						}
-		   	    		else{
-		   	    			url='emptyUrl';
-			   	    		}
-						 
-						 if(url !="emptyUrl") {
-				             $.ajax({
-				                 type: "GET",
-				                 contentType: "application/json; charset=utf-8", 
-				                 url: '${pageContext.request.contextPath}/'+url,
-				                 data: {
-									"searchId" : searchId,
-								 },
-				                 dataType: "json",
-				                 success: function (data) {
-				                     if (data != null) {
-				                         response(data.glist);
-				                         console.log(data.glist);
-				                     }
-				                 },
-				                 error: function(result) {
-				                     alert("Error");
-				                 }
-				             }); 
-		   	    		}     
-			        },900), minLength:0, maxShowItems: 4, scroll:true,
-					select: function(event, ui) {			
-						this.value = (ui.item ? ui.item[0] : '');
-						$(this).parents("tr").find('input[name ="'+fiberName+'"]').val(ui.item[1]);
-						
-						
-						return false;
-					}
-				}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
-		   	return $('<li class="each"></li>').data( "ui-autocomplete-item", item )
-		   			.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
-		               item[0] + '</span><br><span class="desc">' +
-		               item[1] + '</span></div>').appendTo(ul);
-			};
-			$("#"+fiberID+ID).focus(function(){
-				if (this.value == ""){
-					$(this).autocomplete("search");
-			        }
-			});
-		///////////////////////////////
-		$("#"+fiberName+ID).autocomplete({
-		   	    source: debounce(function(request, response,event, ui) {
-						var searchId= $("#"+fiberName+ID).val();
-						if($("#"+cableType+ID).val()==="Outdoor"){
-							url='SearchFiber';
-							}
-			   	    		else{
-			   	    			url='emptyUrl';
-				   	    		}
-							 
-							 if(url !="emptyUrl") {
-				            	 $.ajax({
-				                 type: "GET",
-				                 contentType: "application/json; charset=utf-8",
-				                 
-				                // url: getContext()+'/SearchFiber',
-				                 url: '${pageContext.request.contextPath}/SearchFiber',
-				                 
-				                 data: {
-									"searchId" : searchId,
-								 },
-				                 dataType: "json",
-				                 success: function (data) {
-				                     if (data != null) {
-				                         response(data.glist);
-				                     }
-				                 },
-				                 error: function(result) {
-				                     alert("Error");
-				                 }
-				             });  
-						 }      
-			        },900), minLength:0, maxShowItems: 4, scroll:true,
-					select: function(event, ui) {
-						
-						this.value = (ui.item ? ui.item[1] : '');
-						$(this).parents("tr").find('input[name ="'+fiberID+'"]').val(ui.item[0]);
-						
-						
-						
-							return false;
-					}
-				}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
-		   	return $('<li class="each"></li>').data( "ui-autocomplete-item", item )
-		   			.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
-		               item[1] + '</span><br><span class="desc">' +
-		               item[0] + '</span></div>').appendTo(ul);
-			};
-			$("#"+fiberName+ID).focus(function(){
-				if (this.value == ""){
-					$(this).autocomplete("search");
-			        }
-			});
-
-			
-		
-		}
+	
 
 
      		      		  
