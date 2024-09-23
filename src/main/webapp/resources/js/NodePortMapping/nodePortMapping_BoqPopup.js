@@ -10,20 +10,17 @@ var ctx = getContextPath();
  	
 	var buttonRowIndx = $(element).closest("tr");
 	rowindx = (buttonRowIndx[0].rowIndex - 1);
-	//console.log("5555" );
 	     
-	    
 	//Send input values from Boq table  to popup
 	sendValBoqToPopup(rowindx);
-	console.log("rowindx "+rowindx)
 	$("#poModal").modal("show");
-  //  AutocompleteOnLoad();
+  
 	autoCompleteForPortMapping("","","popupWareID","popupLocID","popupLocName","popupLocType","popupCableID","popupCableName","popupCableType","popupTXStrandNb","popupRXStrandNb","popupTXStrandColor","popupRXStrandColor","popupTXTubeNb","popupRXTubeNb","popupTXTubeColor","popupRXTubeColor");
 
 }// end open popup fct
      
 function sendValBoqToPopup(indxRow){
-	console.log("sendValBoqToPopup indxRow "+indxRow)
+	
 	//Send input values from Boq table  to popup
 	$('#popupportMappingID').val($("#bisotab >tbody").find("tr").eq(indxRow).attr('id'));
 	$('#popupportRecordType') .val($("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="recordType"]').children('input').val()); 
@@ -32,7 +29,7 @@ function sendValBoqToPopup(indxRow){
 	$('#popupMacAddress').val($("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="MACAddress"]').children('input').val());
 	var isMacReadonly = $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="MACAddress"]').children('input').is('[readonly]');
 	$('#popupMacAddress').prop('readonly', isMacReadonly);
-	console.log("isMacReadonly "+isMacReadonly)
+	
 	
 	$('#popupSerialNb').val($("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="serialNb"]').children('input').val());
 	var isSNReadonly = $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="serialNb"]').children('input').is('[readonly]');
@@ -92,7 +89,7 @@ function sendValBoqToPopup(indxRow){
 } //end sendValBoqToPopup fct
 
 function sendValPopupToBoq(indxRow){
-	console.log("sendValPopupToBoq indxRow "+indxRow)
+	
 // Send input values from popup to boq table
 	 $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="recordType"]').children('input').val($('#popupportRecordType').val());
 	 $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="MACAddress"]').children('input').val($('#popupMacAddress').val());
@@ -136,12 +133,10 @@ function sendValPopupToBoq(indxRow){
 		
 		var idd = $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="MACAddress"]').children('input').attr('id');
 		 var colorindex =idd.replace('MACAddress','');
-		 console.log("colorindex "+colorindex)
 		tubeStrandPortMappingSetColor("txStrandColor"+colorindex,"txStrandNb"+colorindex);
 	    tubeStrandPortMappingSetColor("rxStrandColor"+colorindex,"rxStrandNb"+colorindex);
 	    tubeStrandPortMappingSetColor("txTubeColor"+colorindex,"txTubeNb"+colorindex);
 	    tubeStrandPortMappingSetColor("rxTubeColor"+colorindex,"rxTubeNb"+colorindex);
-	    console.log("color indxRow "+indxRow)
 									 
 	
  			
@@ -151,7 +146,6 @@ function sendValPopupToBoq(indxRow){
 
 
 function htmlBOQRowInsertion(name){
-	console.log("htmlBOQRowInsertion")
 	var locationTypeOptions= 
 	 "<option value=''></option>"
 	+"<option value='Customer'>Customer</option>"
@@ -302,7 +296,6 @@ function nextRow(){
 					 
 	// Add new row when rowindx exceed the row count
 	else if (rowindx >= rowCount) {
-		console.log("next ")
 		addNewRow("next");	  
 	 	sendValBoqToPopup(nextIndex); 
 	}	
@@ -332,13 +325,11 @@ function insertRowAbove(){
  // Delete row fct
  function deleteBoqRow() {
 
-	console.log("RowIndx" +rowindx);
 	rowindx++;
 	$("tr").eq(rowindx).remove();
 	
 	// Get Nb of rows after delete 
 	var rowCount = $("#bisotab >tbody tr").length;
-	console.log("rowCount in BoQ:" +rowCount);
 	   	 
 	 rowindx--;
 	 
@@ -372,7 +363,6 @@ function getContextPath() {
 	}
 
 function addRowEvents() {
-	console.log("portBoqIndex "+portBoqIndex)
 	 $("#locationType"+portBoqIndex).change(function(){
     	 var thisID = $(this).attr("id");
 		var indexFor = thisID.replace('locationType','');
@@ -680,7 +670,7 @@ $("#"+LocationID+ID).autocomplete({
 	    var searchs=$("#"+LocationID+ID).val();
 		var line;
 	    search= $("#"+LocationType+ID).val();
-	    console.log("debounce");
+	   // console.log("debounce");
 		if(search=="Customer"){
 				url='GetAllNetworkCustomer';
 				dataTarget = {					
@@ -728,8 +718,7 @@ $("#"+LocationID+ID).autocomplete({
 			else if(search=="Site"){
 				$("#"+LocationName+ID).val(ui.item ? ui.item[1] : '');
 				$("#"+LocationID+ID).val(ui.item[2]);
-				console.log("Location is " +ui.item[0]);
-				console.log("ID is " +ID);
+				
 				$("#"+wareId+ID).val(ui.item[0]);
 				
 			}	
@@ -766,7 +755,7 @@ $("#"+LocationID+ID).autocomplete({
 	    var searchs=$("#"+LocationName+ID).val();
 		var line;
 	    search= $("#"+LocationType+ID).val();
-	    console.log("no debounce");
+	   
 		if(search=="Customer"){
 				url='GetAllNetworkCustomer';
 				dataTarget = {					
@@ -844,7 +833,6 @@ $("#"+LocationID+ID).autocomplete({
 		
 		$("#"+fiberID+ID).autocomplete({
    	    source: debounce(function(request, response,event, ui) {
-   	    	console.log("fiber id");
 
    	    		var searchId= $("#"+fiberID+ID).val();
    	    		if($("#"+cableType+ID).val()==="Outdoor"){
@@ -867,7 +855,6 @@ $("#"+LocationID+ID).autocomplete({
 		                 success: function (data) {
 		                     if (data != null) {
 		                         response(data.glist);
-		                         console.log(data.glist);
 		                     }
 		                 },
 		                 error: function(result) {
