@@ -465,33 +465,36 @@ function sitesMapLabel() {
 	if($(this).prop("checked")==true){
 		
 		if (checkLabel =="checked") {
-			for(var i=0;i<allSites.length;i++) {
-				siteCltSrcMarkers[allSites[i].split(":")[0]].setLabel(null);
-			}
+			$('.SITE').each(function(){
+				markersSite[$(this).attr('id')].setLabel(null);
+			});
 		}
 		
-		for(var i=0;i<allSites.length;i++) {
+			$('.SITE').each(function(){
 			
-			if(siteCltSrcMarkers[allSites[i].split(":")[0]].getLabel()!=undefined && siteCltSrcMarkers[allSites[i].split(":")[0]].getLabel()!=null) {								
-				siteCltSrcMarkers[allSites[i].split(":")[0]].setLabel({text: siteCltSrcMarkers[allSites[i].split(":")[0]].getLabel().text +" // " + allSites[i].split(":")[0]+" : "+allSites[i].split(":")[2] , className:"marker-position-site",color:"red"});
+			if(markersSite[$(this).attr('id')].getLabel()!=undefined && markersSite[$(this).attr('id')].getLabel()!=null) {
+				var labelText =markersSite[$(this).attr('id')].getLabel().text +" // " + $(this).text();
+				markersSite[$(this).attr('id')].setLabel({text: labelText, className:"marker-position-site",color:"red"});
 			}
 			else {
-				siteCltSrcMarkers[allSites[i].split(":")[0]].setLabel({text: allSites[i].split(":")[0]+" : "+allSites[i].split(":")[2] , className:"marker-position-site",color:"red"}); 	
+				var labelText =$(this).text();
+				markersSite[$(this).attr('id')].setLabel({text: labelText  , className:"marker-position-site",color:"red"}); 	
 			}
 		
-		}
+		});
 	}
 	else {
-		for(var i=0;i<allSites.length;i++) {						
+		//for(var i=0;i<allSites.length;i++) {	
+			$('.SITE').each(function(){
 			//Show sequence is checked
-			if(siteCltSrcMarkers[allSites[i].split(":")[0]].getLabel().text.includes("//") == true) {
-				siteCltSrcMarkers[allSites[i].split(":")[0]].setLabel({text: siteCltSrcMarkers[allSites[i].split(":")[0]].getLabel().text.split("//")[0] , className:"marker-position-sequence",color:"red"});
+			if(markersSite[$(this).attr('id')].getLabel().text.includes("//") == true) {
+				markersSite[$(this).attr('id')].setLabel({text: markersSite[$(this).attr('id')].getLabel().text.split("//")[0] , className:"marker-position-sequence",color:"red"});
 			}
 			//Show sequence is unchecked
 			else {
-				siteCltSrcMarkers[allSites[i].split(":")[0]].setLabel(null);
+				markersSite[$(this).attr('id')].setLabel(null);
 			}
-		}
+		});
 	}
 	});
  	

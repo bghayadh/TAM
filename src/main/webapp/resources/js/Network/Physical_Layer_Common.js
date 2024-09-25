@@ -8319,7 +8319,7 @@ if(window["mapPointsNames_"+pathID] != undefined) {
 					//Show seq if site label is checked 
 					if(window[''+checkSeqWindowID+'_'+pathID] == "checked") {
 						if(allcheckedLabels.length >0 && allcheckedLabels.includes("sitesMapCheck_Labels")==true) {
-							markersSite[wareID].setLabel({text: type+" // "+wareID+" : "+showHidePointsArray[x].split(":")[2], className:"marker-position-site",color:"red"});
+							markersSite[wareID].setLabel({text: type+" // "+wareID+" : "+showHidePointsArray[x].split(":")[1], className:"marker-position-site",color:"red"});
 						}
 						else {
 							markersSite[wareID].setLabel({text: type , className:"marker-position-sequence",color:"red"}); 
@@ -8328,7 +8328,7 @@ if(window["mapPointsNames_"+pathID] != undefined) {
 					//Show Seq is unchecked
 					else {
 						if(allcheckedLabels.length >0 && allcheckedLabels.includes("sitesMapCheck_Labels")==true) {
-							markersSite[wareID].setLabel({text: wareID+" : "+showHidePointsArray[x].split(":")[2], className:"marker-position-site",color:"red"});
+							markersSite[wareID].setLabel({text: wareID+" : "+showHidePointsArray[x].split(":")[1], className:"marker-position-site",color:"red"});
 						}
 						else {
 							//if(markerClusterSite[wareID].getLabel()!="undefined") {
