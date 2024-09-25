@@ -754,7 +754,7 @@
 								</div>
 							</div>
 							</div>
-							</div>	
+							
 							
 							<div class="tab-pane" id="connectedS" role="tabpanel" aria-labelledby="connectedSearch"><p></p>
 								<div class="container-fluid">
