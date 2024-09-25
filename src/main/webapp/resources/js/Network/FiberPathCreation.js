@@ -462,4 +462,7 @@ function CreateFiberPath(fiberList,fiberTubes,fiberStrands,fiberAuxiliary_Data,t
 	   }
    }
 	fiberList = [],fiberTubes = [] ,fiberStrands = [],fiberAuxiliary_Data = [] ,tubesAuxiliaries = [] ,strandsAuxiliaries = [];
+	filterMap_CableLabels("FIBER",fiberArray,"fiberMapCheck_Labels");
+	filterMap_CableLabels("TUBE",tubeArray,"tubeMapCheck_Labels");
+	filterMap_CableLabels("STRAND",strandArray,"strandMapCheck_Labels")
 }

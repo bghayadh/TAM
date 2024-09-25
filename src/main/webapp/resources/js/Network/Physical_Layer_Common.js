@@ -3380,17 +3380,23 @@ function singleFiberCheckFilter(selector) {
 	// Show and Hide the label of each cable depending on the checkLabel dropdown
 	if($("#fiberMapCheck_Labels").prop("checked")==true){
 		var fiberId=$(this).parent().attr('id');
-		if(fiberId.includes("__showPath") == true ){
+		if(fiberId && fiberId.includes("__showPath")){
 			fiberId = fiberId.split("__showPath")[0];
 		}
-		fiberArray[fiberId].mapLabel.setMap(map);
+		//fiberArray[fiberId].mapLabel.setMap(map);
+		if (fiberArray[fiberId] && fiberArray[fiberId].mapLabel) {
+		    fiberArray[fiberId].mapLabel.setMap(map);
+		}
 	}
 	else {
 		fiberArray[fiberId].mapLabel.setMap(null);
 	}
 	// Show and Hide the label of each cable depending on the checkLabel dropdown
 	if($("#fiberMapCheck_Labels").prop("checked")==true){
-		fiberArray[fiberId].mapLabel.setMap(map);
+		//fiberArray[fiberId].mapLabel.setMap(map);
+		if (fiberArray[fiberId] && fiberArray[fiberId].mapLabel) {
+		    fiberArray[fiberId].mapLabel.setMap(map);
+		}
 	}
 	else {
 		fiberArray[fiberId].mapLabel.setMap(null);
@@ -3402,7 +3408,7 @@ function singleFiberCheckFilter(selector) {
 function singleTubeCheckFilter(selector) {
 	
 	var tubeId=$(selector).parent().attr('id');
-	if(tubeId.includes("__showPath") == true ){
+	if(tubeId && tubeId.includes("__showPath") ){
 		tubeId = tubeId.split("__showPath")[0];
 	}
 	if(directionHashmapTube.get(tubeId) != undefined) {
@@ -3422,10 +3428,14 @@ function singleTubeCheckFilter(selector) {
 	// Show and Hide the label of each tube depending on the checkLabel dropdown
 	if($("#tubeMapCheck_Labels").prop("checked")==true){
 		var tubeId=$(this).parent().attr('id');
-		if(tubeId.includes("__showPath") == true ){
-		tubeId = tubeId.split("__showPath")[0];
+		//if(tubeId.includes("__showPath") == true ){
+		if(tubeId && tubeId.includes("__showPath")){
+			tubeId = tubeId.split("__showPath")[0];
 		}
-		tubeArray[tubeId].mapLabel.setMap(map);
+		//tubeArray[tubeId].mapLabel.setMap(map);
+		if (tubeArray[tubeId] && tubeArray[tubeId].mapLabel) {
+		    tubeArray[tubeId].mapLabel.setMap(map);
+		}
 	}
 	else {
 		tubeArray[tubeId].mapLabel.setMap(null);
@@ -3456,10 +3466,14 @@ function singleStrandCheckFilter(selector) {
 	// Show and Hide the label of each strand depending on the checkLabel dropdown
 	if($("#strandMapCheck_Labels").prop("checked")==true){
 	    var strandId=$(this).parent().attr('id');
-		if(strandId.includes("__showPath") == true){
-		strandId = strandId.split("__showPath")[0];
+		//if(strandId.includes("__showPath") == true){
+		if (strandId && strandId.includes("__showPath")) {
+			strandId = strandId.split("__showPath")[0];
 		}
-		strandArray[strandId].mapLabel.setMap(map);
+		//strandArray[strandId].mapLabel.setMap(map);
+		if (strandArray[strandId] && strandArray[strandId].mapLabel) {
+		    strandArray[strandId].mapLabel.setMap(map);
+		}
 	}
 	else {
 		strandArray[strandId].mapLabel.setMap(null);

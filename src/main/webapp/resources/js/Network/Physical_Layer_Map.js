@@ -424,10 +424,12 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			filterMap_Labels("MANHOLE",markersManhole,"manholesMapCheck_Labels","marker-position-manhole","red");
 			filterMap_Labels("HANDHOLE",markersHandhole,"handholesMapCheck_Labels","marker-position-handhole","#E5C523");	
 			filterMap_Labels("DistributionBoard",markersDistBoard,"dBMapCheck_Labels","marker-position-dB","#5665F9");
-			filterMap_CableLabels("FIBER",fiberArray,"fiberMapCheck_Labels");
+			/////////////called from CreateFiberPath()/////////////////7
+			//filterMap_CableLabels("FIBER",fiberArray,"fiberMapCheck_Labels");
+			//filterMap_CableLabels("TUBE",tubeArray,"tubeMapCheck_Labels");
+			//filterMap_CableLabels("STRAND",strandArray,"strandMapCheck_Labels");
+			
 			//filterMap_CableLabels("FIBER",directionHashmap,"fiberMapCheck_Labels");
-			filterMap_CableLabels("TUBE",tubeArray,"tubeMapCheck_Labels");
-			filterMap_CableLabels("STRAND",strandArray,"strandMapCheck_Labels");
 			filterMapTrenchDuctLabels("TRENCH",trenchArray,"trenchMapCheck_Labels");
 			filterMapTrenchDuctLabels("DUCT",ductArray,"ductMapCheck_Labels");
 
@@ -603,7 +605,6 @@ function filterMap_Labels(className,RelativeArray,RelativeCheckboxId,labelClassN
 function filterMapTrenchDuctLabels(className,RelativeArray,RelativeCheckboxId){
 	
 	$("#"+RelativeCheckboxId).on('change',function(){
-
 		if($(this).prop("checked")==true){	
 			
 			$('.'+className).each(function(){
@@ -652,11 +653,9 @@ function filterMapTrenchDuctLabels(className,RelativeArray,RelativeCheckboxId){
 }
 //filter from map fiber,tubes,and strands labels
 function filterMap_CableLabels(className,RelativeArray,RelativeCheckboxId){
-		
 	$("#"+RelativeCheckboxId).on('change',function(){
 		
 		if($(this).prop("checked")==true){	
-			
 			$('.'+className).each(function(){
 				
 				//Case of line of site
