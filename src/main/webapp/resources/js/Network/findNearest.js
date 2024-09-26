@@ -343,30 +343,7 @@ $("#saveSurvey").on('click',function(){
 	});
 	
 
-		$("#connectedSearch").on('click',function(){
-			urlString = "", siteId = "", selectedOp = "",lng = "", lat = "";
-		     $("#conStrandId").html("");
-		     $("#conFiberId").html("");
-		     $("#conTubeId").html("");
-			 $("#conDBId").html("");
-			 
-			console.log("selectConnectedSearch "+document.querySelector('#autoCompleteConnectedSearch').value);
-			siteId = document.querySelector('#autoCompleteConnectedSearch').value;
-			lng =$("#connectedSearchLong").val();
-			lat	= $("#connectedSearchLat").val();
-			selectedOp = document.querySelector('#selectConnectedSearch').value;
-
-			checkedOption = "connected";
-		    urlString += "&siteId="+siteId+"";
-		    urlString += "&selectConnectedSearch="+selectedOp+"";
-		    urlString += "&connectedSearchLong="+lng+"";
-		    urlString += "&connectedSearchLat="+lat+"";
-		    urlString += "&connectedViewOnMap="+$("#viewOnMap").val()+"";
-			urlString += "&getRelatedPoints="+$("#getRelatedPointsCon").val()+"";
-			urlString += "&updateModfUser="+updateModfUser;	
-			window.location.href = getContext()+"/NetworkPhysicalLayer?Checked="+checkedOption+urlString;
-			});
-			
+		
 			
 			
 function selectAsNearest(e){
