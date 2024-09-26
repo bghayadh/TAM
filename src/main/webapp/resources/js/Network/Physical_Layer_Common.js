@@ -5788,31 +5788,28 @@ function searchConnectedButtonEvents(hash_Project,hash_manhole,hash_handhole,has
 		 }
 	});
 	 var urlString = "", siteId = "", selectedOp = "",lng = "", lat = "";
-		//console.log("ENTEREDDDDD");
-		$("#searchHeaderButton").on('click',function(){
-			 urlString = "", siteId = "", selectedOp = "",lng = "", lat = "";
-		     $("#conStrandId").html("");
-		     $("#conFiberId").html("");
-		     $("#conTubeId").html("");
-			 $("#conDBId").html("");
-				
-			console.log("autoCompleteHeaderSearch "+ document.querySelector('#autoCompleteHeaderSearch').value);
-			siteId = document.querySelector('#autoCompleteHeaderSearch').value;
-			lng =$("#headerSearchLong").val();
-			lat	= $("#headerSearchLat").val();
-			selectedOp = document.querySelector('#selectHeaderSearch').value;
-			
-			checkedOption = "connected";
-		    urlString += "&siteId="+siteId+"";
-		    urlString += "&selectConnectedSearch="+selectedOp+"";
-		    urlString += "&connectedSearchLong="+lng+"";
-		    urlString += "&connectedSearchLat="+lat+"";
-		    urlString += "&connectedViewOnMap="+$("#viewOnMap").val()+"";
-			urlString += "&getRelatedPoints="+$("#getRelatedPointsCon").val()+"";
-			urlString += "&updateModfUser="+updateModfUser;
-			window.location.href = getContext()+"/NetworkPhysicalLayer?Checked="+checkedOption+urlString;
-			});
-		
+	 
+		$("#searchHeaderButton, #connectedSearch").on('click', function() {
+		    const isHeaderSearch = this.id === "searchHeaderButton";
+		    const prefix = isHeaderSearch ? 'HeaderSearch' : 'ConnectedSearch';
+
+		    // Reset fields
+		    $("#conStrandId, #conFiberId, #conTubeId, #conDBId").html("");
+
+		    const siteId = document.querySelector(`#autoComplete${prefix}`).value;
+		    const lng = $(`#${prefix.toLowerCase()}Long`).val();
+		    const lat = $(`#${prefix.toLowerCase()}Lat`).val();
+		    const selectedOp = document.querySelector(`#select${prefix}`).value;
+
+		    let urlString = `&siteId=${siteId}&selectConnectedSearch=${selectedOp}` +
+		                    `&connectedSearchLong=${lng}&connectedSearchLat=${lat}` +
+		                    `&connectedViewOnMap=${$("#viewOnMap").val()}` +
+		                    `&getRelatedPoints=${$("#getRelatedPointsCon").val()}` +
+		                    `&updateModfUser=${updateModfUser}`;
+
+		    window.location.href = `${getContext()}/NetworkPhysicalLayer?Checked=connected${urlString}`;
+		});
+
 	
 		
 }
