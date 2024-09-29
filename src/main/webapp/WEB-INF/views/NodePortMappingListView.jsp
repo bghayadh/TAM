@@ -48,6 +48,7 @@
        <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/html2canvas-1.3.2-html2canvas.min.js"></script>
 			
 		
+	<script src="${pageContext.request.contextPath}/resources/js/NodePortMapping/nodePortMapping_ViewMapping.js"></script>
 		
 		
 		
@@ -364,6 +365,76 @@ color: #007bff;
 </div>
 </div>
 
+<div class="container" style="width: auto">
+		<div id="node_MappingModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  data-keyboard="false" data-backdrop="static">
+			<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+				<div class="modal-content" id="contentNodeMappingModal">
+					<div class="modal-header" style="background-color: #2678CC ; height: 55px; ">
+						<h5 class="modal-title" id="node_TitleId" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px;"></h5>
+						<div style="float:right;">
+							<button type="button" name="closePopup" class="close" data-dismiss="modal">
+								<i class='fa fa-times'></i>
+							</button>
+							<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change'></i>
+							</a></div></div>
+					<div class="modal-body">
+						<div class="tab-content">
+							<div id="node_tabContentPortsMap" style="min-width: 800px; min-height: 600px"></div>
+						</div></div>
+					<div class="modal-footer"></div></div></div></div></div>
+	<div id="AssignedNodePortsModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered " >
+			<div class="modal-content" style="width: 650px" >
+				<div class="modal-header" style="background-color: #2678CC ; height: 55px; ">
+					<h5 class="modal-title" id="AssignedNode_TitleId" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px;"></h5>
+					<div style="float:right">
+						<button type="button" name="closePopup" class="close" data-dismiss="modal">
+							<i class='fa fa-times'></i>
+						</button>
+						<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change'></i>
+						</a>
+					</div></div>
+				<div class="modal-body" style="height: auto; width: auto;">
+					<div class="tab-content">
+						<div id="node_tabAssignedPorts" style="float: center; border: solid black 1px; padding: 10px; border-radius: 25px; background: #E9ECEF; color: #ffd700; border: 2px solid #ffd700; width: 600px; height: fit-content;">
+							<div>
+								<p style="font-size: 20px; color: #00757C">
+									<b> Node Ports Details:</b>
+								</p>
+									<div style="column-count: 2;  column-gap: 60px; width: 600px;">
+										
+										<label id="recordTypeLabel" style="color: #DC143C;"></label><br />
+										<label id="macAddrLabel" style="color: #DC143C;"></label><br/> 
+										<label id="serialNbLabel" style="color: #DC143C;"></label><br/>
+										<label id="portAddrLabel" style="color: #DC143C;"></label><br/>
+										<label id="portStatusLabel" style="color: #DC143C;"></label><br/>
+										<label id="locationTypeLabel" style="color: #DC143C;"></label><br/>
+										<label id="locationIDLabel" style="color: #DC143C;"></label><br/>
+										<label id="locationNameLabel" style="color: #DC143C;"></label><br/> 
+										<label id="WareIDLabel" style="color: #DC143C;"></label><br/> 
+										<label id="cableTypeLabel" style="color: #DC143C;"></label><br/>
+										<label id="txStrandNbLabel" style="color: #DC143C;"></label><br/> 
+										<label id="txStrandColorLabel" style="color: #DC143C;"></label><br/>
+										<label id="rxStrandNbLabel" style="color: #DC143C;"></label><br/>
+										<label id="rxStrandColorLabel" style="color: #DC143C;"></label><br/>
+										<label id="txTubeNbLabel" style="color: #DC143C;"></label><br/>
+										<label id="txTubeColorLabel" style="color: #DC143C;"></label><br/>
+										<label id="rxTubeNbLabel" style="color: #DC143C;"></label><br/> 
+										<label id="rxTubeColorLabel" style="color: #DC143C;"></label><br/>
+										<label id="cableIDLabel" style="color: #DC143C;"></label><br/>
+										<label id="cableNameLabel" style="color: #DC143C;"></label><br/>
+										<label id="cableLengthLabel" style="color: #DC143C;"></label><br/>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer" style="background-color: #E9ECEF;">
+				</div>
+			</div>
+		</div>
+	</div>
+
 </div> 
 <p></p>
 <div class="row">
@@ -670,7 +741,9 @@ color: #007bff;
         			
         			
         			
-
+        			$('#node_MappingModal').draggable({
+        		        handle: '.modal-header' // Makes only the header draggable
+        		    });
         			
 				});
 

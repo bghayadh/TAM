@@ -418,6 +418,7 @@ max-width: 100%;
 				                <th>Serial Number</th>
 				                <th>Port Address</th>
 				                <th>Port Status</th>
+				                <th>Reference Status</th>
 				                <th>Port Number</th>
 				                <th>Record Type</th>
 				                <th>Location Type</th>
@@ -931,11 +932,11 @@ var allPortList =[];
 		 listPassivePort = ${ listPassivePort };
 		 console.log("listActivePort length "+ listActivePort.length)
 		  console.log("listPassivePort tlength "+ listPassivePort.length)
-		 
+		 console.log("listActivePort "+ JSON.stringify(listActivePort, null, 2))
 		 getActiveRecord();
 		 console.log("allPortList length "+ allPortList.length)
-		 //console.log("allPortList "+ JSON.stringify(allPortList, null, 2))
 		 sortAllPortListByPortNb();
+		 console.log("allPortList "+ JSON.stringify(allPortList, null, 2))
 		 //console.log("allPortList after sorting  "+ JSON.stringify(allPortList, null, 2))
 			//console.log("allPortList length "+ allPortList[0].portNb)
 		
@@ -961,6 +962,12 @@ var allPortList =[];
 		var cableTypeOptions =
 			"<option value='Outdoor'>Outdoor</option>"
 		+"<option value='Indoor'>Indoor</option>";
+
+		var referenceStatusOptions =
+		"<option value=''></option>"
+		+"<option value='Up'>Up</option>"
+		+"<option value='Down'>Down</option>"
+		+"<option value='AdminDown'>Administratively Down</option>";
 		
 		var colorOptions='<option value='+'""'+' style='+'"background-color: white;"'+'></option>'+	
 				'<option value='+'"blue"'+' style='+'"background-color: white; color:black"'+'>blue</option>'+
@@ -1052,6 +1059,9 @@ var allPortList =[];
 			     +"<td name='serialNb'><input name='serialNb' value='"+portSerialNb+"' id='serialNb"+portBoqIndex+"' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
 			     +"<td name='portAddress'><input name='portAddress' value='"+portAddress+"' id='portAddress"+portBoqIndex+"' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
 			     +"<td name='portStatus'><input name='portStatus' value='"+portStatus+"' id='portStatus"+portBoqIndex+"' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
+			     +"<td name='refStatus'>"
+					+"<select class='form-control' style='width:220px;position:relative;' name='refStatus' id='refStatus"+portBoqIndex+"'>"+referenceStatusOptions+"</select>"
+				+ "</td>"
 			     +"<td name='portNb'><input name='portNb' value='"+allPortList[i].portNb+"' id='portNb"+portBoqIndex+"' class='form-control' type='number' style='width:190px;position:relative;'/></td>"
 
 
@@ -1115,7 +1125,7 @@ var allPortList =[];
 
 	     		if(portStatusFieldStatus ==="read"){
 			    	 $('#portStatus' + portBoqIndex).attr('readonly', true);
-
+			    	 $('#refStatus' + portBoqIndex).attr('disabled', true);
 				     }
 
 			     if(allPortList[i].locationType !=null){
@@ -1125,9 +1135,21 @@ var allPortList =[];
 							$('#wareID' + portBoqIndex).val('');
 						}
 					}
-
-			     
-
+				//set value of ref Status
+			     if(allPortList[i].refPortStatus !=null && allPortList[i].refPortStatus !="null" && allPortList[i].refPortStatus !=""){
+					$("#refStatus"+portBoqIndex).val(allPortList[i].refPortStatus);
+					}
+			     else{
+				     var tempStatus =$('#portStatus' + portBoqIndex).val();
+				     if(tempStatus =="1" || tempStatus.toLowerCase() =='up' || tempStatus.toLowerCase() =='connected'){
+						$("#refStatus"+portBoqIndex).val("Up");
+	     				}
+					else{
+						$("#refStatus"+portBoqIndex).val("Down");
+						}
+			    	
+				     }
+				//strand/tube color 
 			     if(allPortList[i].txStrandColor !=null){
 						$("#txStrandColor"+portBoqIndex).val(allPortList[i].txStrandColor);
 					}
@@ -1386,6 +1408,7 @@ var allPortList =[];
 					     "serialNb" : $(this).parent().parent().children('td[name="serialNb"]').children('input').val(),
 					     "portAddress" : $(this).parent().parent().children('td[name="portAddress"]').children('input').val(),
 						 "portStatus" :  $(this).parent().parent().children('td[name="portStatus"]').children('input').val(),
+						 "refPortStatus" :  $(this).parent().parent().children('td[name="refStatus"]').children('select').val(),
 						 "portNb" : $(this).parent().parent().children('td[name="portNb"]').children('input').val(),
 						 "recordType" : $(this).parent().parent().children('td[name="recordType"]').children('input').val(),
 
@@ -1493,6 +1516,12 @@ var allPortList =[];
 				var cableTypeOptions =
 				"<option value='Outdoor'>Outdoor</option>"
 				+"<option value='Indoor'>Indoor</option>";
+
+				var referenceStatusOptions =
+					"<option value=''></option>"
+					+"<option value='Up'>Up</option>"
+					+"<option value='Down'>Down</option>"
+					+"<option value='AdminDown'>Administratively Down</option>";
 				
 				var colorOptions='<option value='+'""'+' style='+'"background-color: white;"'+'></option>'+	
 						'<option value='+'"blue"'+' style='+'"background-color: white; color:black"'+'>blue</option>'+
@@ -1516,6 +1545,9 @@ var allPortList =[];
 			     +"<td name='serialNb'><input name='serialNb' value='' id='serialNb"+portBoqIndex+"' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
 			     +"<td name='portAddress'><input name='portAddress' value='' id='portAddress"+portBoqIndex+"' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
 			     +"<td name='portStatus'><input name='portStatus' value='' id='portStatus"+portBoqIndex+"' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
+			     +"<td name='refStatus'>"
+					+"<select class='form-control' style='width:220px;position:relative;' name='refStatus' id='refStatus"+portBoqIndex+"'>"+referenceStatusOptions+"</select>"
+				+ "</td>"
 			     +"<td name='portNb'><input name='portNb' value='' id='portNb"+portBoqIndex+"' class='form-control' type='number' style='width:190px;position:relative;'/></td>"
 
 
@@ -2167,7 +2199,8 @@ var allPortList =[];
      		      	            "cableLength": passiveRow[21],
      		      	            "cableType": passiveRow[22],
      		      	         	"createdDate": passiveRow[23],
-     		      	     		"lastModifiedDate": passiveRow[24]
+     		      	     		"lastModifiedDate": passiveRow[24],
+     		      	     		"refPortStatus": passiveRow[25]
      		      	        });
      		      	    } else if (condition === "noPassive") {
      		      	        allPortList.push({
@@ -2198,8 +2231,9 @@ var allPortList =[];
      		      	            "rxTubeColor": "",
      		      	            "cableLength": "",
      		      	            "cableType": "",
-     		      	         "createdDate":"",
-  		      	     		"lastModifiedDate": ""
+     		      	         	"createdDate":"",
+  		      	     			"lastModifiedDate": "",
+  		      	     			"refPortStatus": ""
      		      	        });
      		      	    } else if (condition === "noActive") {
      		      	        allPortList.push({
@@ -2231,7 +2265,8 @@ var allPortList =[];
      		      	            "cableLength": passiveRow[21],
      		      	            "cableType": passiveRow[22],
      		      	         	"createdDate": passiveRow[23],
-  		      	     			"lastModifiedDate": passiveRow[24]
+  		      	     			"lastModifiedDate": passiveRow[24],
+  		      	     			"refPortStatus": passiveRow[25]
      		      	        });
      		      	    }
      		      	}

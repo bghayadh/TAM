@@ -94,6 +94,9 @@ public class NodePortMapping {
 	@Column(name = "LAST_MODIFIED_DATE")
 	private Timestamp lastModifiedDate;
 	
+	@Column(name = "REF_STATUS")
+	private String refStatus;
+	
 	
 
 	public NodePortMapping() {
@@ -107,7 +110,7 @@ public class NodePortMapping {
 			String locationName, String wareID, String cableType, String fiberID, String fiberName, String txStrandNB,
 			String rxStrandNB, String txTubeNB, String rxTubeNB, String txStrandColor, String rxStrandColor,
 			String txTubeColor, String rxTubeColor, double cableLength, Timestamp createdDate,
-			Timestamp lastModifiedDate) {
+			Timestamp lastModifiedDate, String refStatus) {
 		super();
 		this.portMappingID = portMappingID;
 		this.nodeID = nodeID;
@@ -136,16 +139,8 @@ public class NodePortMapping {
 		this.cableLength = cableLength;
 		this.createdDate = createdDate;
 		this.lastModifiedDate = lastModifiedDate;
+		this.refStatus = refStatus;
 	}
-
-
-
-
-
-
-
-
-
 
 
 
@@ -478,6 +473,18 @@ public class NodePortMapping {
 	public void setCableType(String cableType) {
 		this.cableType = cableType;
 	}
+
+
+	public String getRefStatus() {
+		return refStatus;
+	}
+
+
+	public void setRefStatus(String refStatus) {
+		this.refStatus = refStatus;
+	}
+	
+	
 	
 	
 	
