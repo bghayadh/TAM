@@ -41,7 +41,11 @@ function sendValBoqToPopup(indxRow){
 	
 	$('#popupPortStatus').val($("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="portStatus"]').children('input').val());
 	var isPortStatusReadonly = $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="portStatus"]').children('input').is('[readonly]');
+	
+	$('#popupRefPortStatus').val($("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="refStatus"]').children('select').val());
+	
 	$('#popupPortStatus').prop('readonly', isPortStatusReadonly);
+	$('#popupRefPortStatus').prop('disabled', isPortStatusReadonly);
 	
 	$('#popupPortNb').val($("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="portNb"]').children('input').val());
 	$('#popupLocType').val($("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="locationType"]').children('select').val());
@@ -96,6 +100,7 @@ function sendValPopupToBoq(indxRow){
 	 $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="serialNb"]').children('input').val($('#popupSerialNb').val());
 	 $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="portAddress"]').children('input').val($('#popupPortAddress').val());
 	 $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="portStatus"]').children('input').val($('#popupPortStatus').val());
+	 $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="refStatus"]').children('select').val($('#popupRefPortStatus').val());
 	 $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="portNb"]').children('input').val($('#popupPortNb').val());
 	 
 	 $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="locationType"]').children('select').val($('#popupLocType').val());
@@ -157,6 +162,12 @@ var cableTypeOptions =
 +"<option value='Indoor'>Indoor</option>"
 +"<option value='Outdoor'>Outdoor</option>";
 
+var referenceStatusOptions =
+"<option value=''></option>"
++"<option value='Up'>Up</option>"
++"<option value='Down'>Down</option>"
++"<option value='AdminDown'>Administratively Down</option>";
+
 var colorOptions='<option value='+'""'+' style='+'"background-color: white;"'+'></option>'+	
 		'<option value='+'"blue"'+' style='+'"background-color: white; color:black"'+'>blue</option>'+
 		'<option value='+'"orange"'+' style='+'"background-color: white; color:black"'+'>orange</option>'+
@@ -179,6 +190,9 @@ markup = "<tr>"
 +"<td name='serialNb'><input name='serialNb' value='' id='serialNb"+portBoqIndex+"' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
 +"<td name='portAddress'><input name='portAddress' value='' id='portAddress"+portBoqIndex+"' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
 +"<td name='portStatus'><input name='portStatus' value='' id='portStatus"+portBoqIndex+"' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
++"<td name='refStatus'>"
+	+"<select class='form-control' style='width:220px;position:relative;' name='refStatus' id='refStatus"+portBoqIndex+"'>"+referenceStatusOptions+"</select>"
++ "</td>"
 +"<td name='portNb'><input name='portNb' value='' id='portNb"+portBoqIndex+"' class='form-control' type='number' style='width:190px;position:relative;'/></td>"
 
 

@@ -527,7 +527,7 @@ max-width: 100%;
 			  			<div class="form-group">
 			  				<div class="input-group-prepend">
 			  					<span class="input-group-text" >Port ID </span>
-			   					<input type="text" id="popupportMappingID" value="${popupItemCode}" readonly style="width:675px; height:37px" class="ui-widget ui-widget-content ui-corner-all form-control text-input" />
+			   					<input type="text" id="popupportMappingID" value="" readonly style="width:675px; height:37px" class="ui-widget ui-widget-content ui-corner-all form-control text-input" />
 			  				</div>
 			  			</div>
 			  		</div>
@@ -535,7 +535,7 @@ max-width: 100%;
 			  			<div class="form-group">
 			  				<div class="input-group-prepend">
 			  					<span class="input-group-text" >Record Type </span>
-			   					<input type="text" id="popupportRecordType" value="${popupItemCode}" style="width:675px; height:37px" class="ui-widget ui-widget-content ui-corner-all form-control text-input" />
+			   					<input type="text" id="popupportRecordType" value="" style="width:675px; height:37px" class="ui-widget ui-widget-content ui-corner-all form-control text-input" />
 			  				</div>
 			  			</div>
 			  		</div>
@@ -548,7 +548,7 @@ max-width: 100%;
 						<div class="form-group">
 							<div class="input-group-prepend">
 								<span class="input-group-text" >MAC Address</span>
-								<input type="text" class="ui-widget ui-widget-content ui-corner-all form-control text-input" id="popupMacAddress" value="${popupItemModel}" style="width:675px; height:37px"  />					
+								<input type="text" class="ui-widget ui-widget-content ui-corner-all form-control text-input" id="popupMacAddress" value="" style="width:675px; height:37px"  />					
 							</div>
 						</div>
 					</div>
@@ -557,7 +557,7 @@ max-width: 100%;
 						<div class="form-group">
 							<div class="input-group-prepend">
 								<span class="input-group-text">Serial Number</span>
-								<input type="text" class="ui-widget ui-widget-content ui-corner-all form-control text-input" id="popupSerialNb" value="${popupItemPart}" style="width:674px; height:37px"  />
+								<input type="text" class="ui-widget ui-widget-content ui-corner-all form-control text-input" id="popupSerialNb" value="" style="width:674px; height:37px"  />
 							</div>
 						</div>
 					</div>
@@ -571,7 +571,17 @@ max-width: 100%;
 						<div class="form-group">
 							<div class="input-group-prepend">
 								<span class="input-group-text" >Port Address</span>
-									<input type="text" id="popupPortAddress" class="form-control text-input" value="${popupCat1}" style="width:674px; height:37px" />
+									<input type="text" id="popupPortAddress" class="form-control text-input" value="" style="width:674px; height:37px" />
+							</div>
+						</div>
+					</div>
+					
+					<div class="col-sm-6">
+						<div class="form-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text" >Port Number</span>
+									<input type="number" id="popupPortNb" class="form-control text-input" value="" style="width:674px; height:37px" />
+											
 							</div>
 						</div>
 					</div>
@@ -580,21 +590,28 @@ max-width: 100%;
 					<div class="form-group">
 						<div class="input-group-prepend">
 							<span class="input-group-text" >Port Status</span>
-								<input type="text" id="popupPortStatus" class="form-control text-input" value="${popupCat2}" style="width:674px; height:37px" />
+								<input type="text" id="popupPortStatus" class="form-control text-input" value="" style="width:674px; height:37px" />
 										
 						</div>
 					</div>
 				</div>
-										
-			<div class="col-sm-6">
-				<div class="form-group">
-					<div class="input-group-prepend">
-						<span class="input-group-text" >Port Number</span>
-							<input type="number" id="popupPortNb" class="form-control text-input" value="${popupCat2}" style="width:674px; height:37px" />
-									
+				
+				
+				<div class="col-sm-6">
+					<div class="form-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text">Reference Status</span>
+							 <select id="popupRefPortStatus" class="form-control" style="width:674px; height:37px;">
+								 <option value=''></option>
+								 <option value='Up'>Up</option>
+								 <option value='Down'>Down</option>	
+								 <option value='AdminDown'>Administratively Down</option>	
+							</select>	
+						</div>
 					</div>
 				</div>
-			</div>
+										
+			
 			
 			<div class="col-sm-6">
 				<div class="form-group">
@@ -613,7 +630,7 @@ max-width: 100%;
 				<div class="form-group">
 					<div class="input-group-prepend">
 						<span class="input-group-text">Location ID</span>
-							<input type="text" id="popupLocID" class="form-control text-input" value="${popupCat4}" style="width:674px; height:37px"  />  
+							<input type="text" id="popupLocID" class="form-control text-input" value="" style="width:674px; height:37px"  />  
 									
 					</div>
 				</div>
@@ -623,7 +640,7 @@ max-width: 100%;
 				<div class="form-group">
 					<div class="input-group-prepend">
 						<span class="input-group-text">Location Name</span>
-							<input type="text" id="popupLocName" class="form-control text-input" value="${popupSeq}" style="width:674px; height:37px"  />  
+							<input type="text" id="popupLocName" class="form-control text-input" value="" style="width:674px; height:37px"  />  
 									
 					</div>
 				</div>
@@ -632,24 +649,34 @@ max-width: 100%;
 				<div class="form-group">
 					<div class="input-group-prepend">
 						<span class="input-group-text">Warehouse ID</span>
-							<input type="text" id="popupWareID" class="form-control text-input" value="${popupBarcode}" style="width:674px; height:37px"  />  
+							<input type="text" id="popupWareID" class="form-control text-input" value="" style="width:674px; height:37px"  />  
 									
 					</div>
 				</div>
 			</div>
 			
 			<div class="col-sm-6">
-						<div class="form-group">
-							<div class="input-group-prepend">
-								<span class="input-group-text">Cable Type</span>
-									<select id="popupCableType" class="form-control" style="width:674px; height:37px;">
-										 <option value='Outdoor'>Outdoor</option>
-										 <option value='Indoor'>Indoor</option>
-										 
-									</select>			
-							</div>
-						</div>
+				<div class="form-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">Cable Type</span>
+							<select id="popupCableType" class="form-control" style="width:674px; height:37px;">
+								 <option value='Outdoor'>Outdoor</option>
+								 <option value='Indoor'>Indoor</option>
+								 
+							</select>			
 					</div>
+				</div>
+			</div>
+			
+			<div class="col-sm-6">
+				<div class="form-group">
+					<div class="input-group-prepend">
+					<span class="input-group-text" >Cable Length</span>
+					<input type="number" id="popupCableLength" class="form-control text-input" value="" style="width:674px; height:37px" />
+				</div>
+		    </div>
+		  </div>
+			
 			
 				</div> </div>							
 			<div class="container-fluid">
@@ -658,7 +685,7 @@ max-width: 100%;
 						<div class="form-group">
 							<div class="input-group-prepend">
 							<span class="input-group-text" >TX Strand NB</span>
-							<input type="text" id="popupTXStrandNb" class="form-control text-input" value="${popupQty}" style="width:674px; height:37px" />
+							<input type="text" id="popupTXStrandNb" class="form-control text-input" value="" style="width:674px; height:37px" />
 						</div>
 				    </div>
 				  </div>
@@ -692,7 +719,7 @@ max-width: 100%;
 					<div class="form-group">
 						<div class="input-group-prepend">
 						<span class="input-group-text" >RX Strand NB</span>
-						<input type="text" id="popupRXStrandNb" class="form-control text-input" value="${popupQty}" style="width:674px; height:39px" />
+						<input type="text" id="popupRXStrandNb" class="form-control text-input" value="" style="width:674px; height:39px" />
 					</div>
 			    </div>
 			  </div>
@@ -726,7 +753,7 @@ max-width: 100%;
 						<div class="form-group">
 							<div class="input-group-prepend">
 							<span class="input-group-text" >TX Tube NB</span>
-							<input type="text" id="popupTXTubeNb" class="form-control text-input" value="${popupQty}" style="width:674px; height:37px" />
+							<input type="text" id="popupTXTubeNb" class="form-control text-input" value="" style="width:674px; height:37px" />
 						</div>
 				    </div>
 				  </div>
@@ -759,7 +786,7 @@ max-width: 100%;
 						<div class="form-group">
 							<div class="input-group-prepend">
 							<span class="input-group-text" >RX Tube NB</span>
-							<input type="text" id="popupRXTubeNb" class="form-control text-input" value="${popupQty}" style="width:674px; height:37px" />
+							<input type="text" id="popupRXTubeNb" class="form-control text-input" value="" style="width:674px; height:37px" />
 						</div>
 				    </div>
 				  </div>
@@ -793,7 +820,7 @@ max-width: 100%;
 						<div class="form-group">
 							<div class="input-group-prepend">
 							<span class="input-group-text" >Cable ID</span>
-							<input type="text" id="popupCableID" class="form-control text-input" value="${popupQty}" style="width:674px; height:39px" />
+							<input type="text" id="popupCableID" class="form-control text-input" value="" style="width:674px; height:39px" />
 						</div>
 				    </div>
 				  </div>
@@ -802,21 +829,14 @@ max-width: 100%;
 						<div class="form-group">
 							<div class="input-group-prepend">
 								<span class="input-group-text" >Cable Name</span>
-								<input type="text" id="popupCableName" class="form-control text-input" value="${popupDiscountAmount}" style="width:674px;" />
+								<input type="text" id="popupCableName" class="form-control text-input" value="" style="width:674px;" />
 									
 							</div>
 						</div>
 					</div>
 				</div> 
 				<div class="row">
-					<div class="col-sm-6">
-						<div class="form-group">
-							<div class="input-group-prepend">
-							<span class="input-group-text" >Cable Length</span>
-							<input type="number" id="popupCableLength" class="form-control text-input" value="${popupQty}" style="width:674px; height:37px" />
-						</div>
-				    </div>
-				  </div>
+					
 				</div>
 				
 			</div>
@@ -1136,19 +1156,19 @@ var allPortList =[];
 						}
 					}
 				//set value of ref Status
-			     if(allPortList[i].refPortStatus !=null && allPortList[i].refPortStatus !="null" && allPortList[i].refPortStatus !=""){
+			   /*  if(allPortList[i].refPortStatus !=null && allPortList[i].refPortStatus !="null" && allPortList[i].refPortStatus !=""){
 					$("#refStatus"+portBoqIndex).val(allPortList[i].refPortStatus);
 					}
-			     else{
-				     var tempStatus =$('#portStatus' + portBoqIndex).val();
-				     if(tempStatus =="1" || tempStatus.toLowerCase() =='up' || tempStatus.toLowerCase() =='connected'){
-						$("#refStatus"+portBoqIndex).val("Up");
-	     				}
-					else{
-						$("#refStatus"+portBoqIndex).val("Down");
-						}
+			     else{*/
+			     var tempStatus =$('#portStatus' + portBoqIndex).val();
+			     if(tempStatus =="1" || tempStatus.toLowerCase() =='up' || tempStatus.toLowerCase() =='connected' || tempStatus.toLowerCase() =='active'){
+					$("#refStatus"+portBoqIndex).val("Up");
+     				}
+				else if(tempStatus =="0" || tempStatus.toLowerCase() =='down' || tempStatus.toLowerCase() =='disconnected' || tempStatus.toLowerCase() =='inactive'){
+					$("#refStatus"+portBoqIndex).val("Down");
+					}
 			    	
-				     }
+				     
 				//strand/tube color 
 			     if(allPortList[i].txStrandColor !=null){
 						$("#txStrandColor"+portBoqIndex).val(allPortList[i].txStrandColor);
