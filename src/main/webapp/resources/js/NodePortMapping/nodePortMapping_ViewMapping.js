@@ -322,28 +322,8 @@ function getContextPath() {
 		line= makeSVGNode('line', {x1: 100, y1: (nodePortNumRows+2)*100, x2:(nodePortNumCols+1.2)*100,y2:(nodePortNumRows+2)*100, stroke: 'red', 'stroke-width': 1, fill: 'red'});
 		document.getElementById('mysvgNode').appendChild(line);
 		
-		
-														
-//////DRAWING JUNCTION MAPPING RELATIVE TO EACh ROW AND COLUMN ///////
-
-		for(i=0;i<allPortList.length;i++){
-									  
-		var colNum=0;
-		var rowNum=0;
-		
-		
-		//getting port row 
-		var portNb =parseFloat(allPortList[i].portNb)
-		rowNum =Math.ceil(portNb / 12)
-		
-		// Calculate colNum dynamically based on the value
-		if (portNb >= 1) {
-			colNum = ((portNb - 1) % 12) + 1; // Map 1-12, 13-24, 25-36, etc. to columns 1-12
-		} 
-		
-		
 		svgNodeNS = "http://www.w3.org/2000/svg";
-		
+		//nb of ports
 		var newText = document.createElementNS(svgNodeNS,"text");
 		newText.setAttributeNS(null,"x",20);     
 		newText.setAttributeNS(null,"y",30);  
@@ -353,14 +333,89 @@ function getContextPath() {
 		var textNode = document.createTextNode("Number of Ports : "+allPortList.length);
 		newText.appendChild(textNode);
 		document.getElementById("mysvgNode").appendChild(newText);
-							
-		//Drawing green circle to represent the junction
 		
+		//connected
+		var circle = document.createElementNS(svgNodeNS, "circle");
+		circle.setAttributeNS(null, "cx", "190");
+		circle.setAttributeNS(null, "cy", "25");
+		circle.setAttributeNS(null, "r",  11);
+		circle.setAttributeNS(null, "fill", "green");
+		document.getElementById("mysvgNode").appendChild(circle);
+		
+		newText = document.createElementNS(svgNodeNS,"text");
+		newText.setAttributeNS(null,"x","210");     
+		newText.setAttributeNS(null,"y","30");  
+		newText.setAttributeNS(null,"font-size","15");
+		newText.setAttributeNS(null,"stroke","#00757C");
+		
+		textNode = document.createTextNode("Connected");
+		newText.appendChild(textNode);
+		document.getElementById("mysvgNode").appendChild(newText);
+		
+		//disconnected
+		var circle = document.createElementNS(svgNodeNS, "circle");
+		circle.setAttributeNS(null, "cx", "320");
+		circle.setAttributeNS(null, "cy", "25");
+		circle.setAttributeNS(null, "r",  11);
+		circle.setAttributeNS(null, "fill", "#FF7F50");
+		document.getElementById("mysvgNode").appendChild(circle);
+		
+		newText = document.createElementNS(svgNodeNS,"text");
+		newText.setAttributeNS(null,"x","340");     
+		newText.setAttributeNS(null,"y","30");  
+		newText.setAttributeNS(null,"font-size","15");
+		newText.setAttributeNS(null,"stroke","#00757C");
+		
+		textNode = document.createTextNode("Disconnected");
+		newText.appendChild(textNode);
+		document.getElementById("mysvgNode").appendChild(newText);
+		
+		
+														
+//////DRAWING Node Port MAPPING RELATIVE TO EACh ROW AND COLUMN ///////
+
+		for(i=0;i<allPortList.length;i++){
+									  
+		var colNum=0;
+		var rowNum=0;
+		
+		//getting port row 
+		var portNb =parseFloat(allPortList[i].portNb)
+		rowNum =Math.ceil(portNb / 12)
+		
+		// Calculate colNum dynamically based on the value
+		if (portNb >= 1) {
+			colNum = ((portNb - 1) % 12) + 1; // Map 1-12, 13-24, 25-36, etc. to columns 1-12
+		} 
+		//get ref status of the port 
+		var ref_status="";
+		var tempStatus ="";
+		if(allPortList.activePortStatus && allPortList.activePortStatus !== "null") {
+			 tempStatus =allPortList[i].activePortStatus;
+		}
+		else {
+			 tempStatus =allPortList[i].passivePortStatus;
+		}
+		
+	     if(tempStatus =="1" || tempStatus.toLowerCase() =='up' || tempStatus.toLowerCase() =='connected' || tempStatus.toLowerCase() =='active'){
+	    	  ref_status="Up";
+	     }
+	     else {
+	    	 ref_status="Down";
+	     }
+		svgNodeNS = "http://www.w3.org/2000/svg";
+							
+		//Drawing green circle to represent the Port
 		var circle = document.createElementNS(svgNodeNS, "circle");
 		circle.setAttributeNS(null, "cx", (colNum*100)+100);
 		circle.setAttributeNS(null, "cy", (rowNum*100)+80);
-		circle.setAttributeNS(null, "r",  13);
-		circle.setAttributeNS(null, "fill", "green");
+		circle.setAttributeNS(null, "r",  15);
+		if(ref_status =="Up") {
+			circle.setAttributeNS(null, "fill", "green");
+		}
+		else {
+			circle.setAttributeNS(null, "fill", "#FF4D00");
+		}
 		circle.setAttributeNS(null,"class","nodeImage");
 		circle.setAttributeNS(null,"id","U-"+allPortList[i].port_Mapping_ID);
 		circle.setAttributeNS(null,"cursor","pointer");	
@@ -370,27 +425,17 @@ function getContextPath() {
 		// Create the text element
 		var text = document.createElementNS(svgNodeNS, "text");
 		text.setAttributeNS(null, "x", (colNum * 100) + 100); // Center horizontally
-		text.setAttributeNS(null, "y", (rowNum * 100) + 80 + 5); // Center vertically (adjust as needed)
+		text.setAttributeNS(null, "y", (rowNum * 100) + 80 + 3); // Center vertically (adjust as needed)
 		text.setAttributeNS(null, "fill", "white"); // Color of the text
-		text.setAttributeNS(null, "font-size", "10"); // Font size
+		text.setAttributeNS(null, "font-size", "12"); // Font size
 		text.setAttributeNS(null, "text-anchor", "middle"); // Center the text horizontally
 
 		// Set the number to be displayed inside the circle
 		text.textContent = allPortList[i].portNb; 
 		document.getElementById("mysvgNode").appendChild(text);
 		
-		//Drawing line inside the junction green circle 
-		var upLine = document.createElementNS(svgNodeNS, "line");
-		upLine.setAttributeNS(null, "x1", (colNum*100)+100);
-		upLine.setAttributeNS(null, "y1", (rowNum*100)+100);
-		upLine.setAttributeNS(null, "x2", (colNum*100)+100);
-		upLine.setAttributeNS(null, "y2", (rowNum*100)+60);					
-		upLine.setAttributeNS(null, "stroke", "black");
-		upLine.setAttributeNS(null, "stroke-width", "2");
-		//document.getElementById("mysvgNode").appendChild(upLine);
 		
-		
-			//Show the strand id of side A
+		//set port address
 		var newTextNode = document.createElementNS(svgNodeNS,"text");
 		newTextNode.setAttributeNS(null,"x",(colNum*100)+55);     
 		newTextNode.setAttributeNS(null,"y",(rowNum*100)+50); 
@@ -504,7 +549,7 @@ function getContextPath() {
 		
 	}
 	
-	function makeSVGNode(tag, attrs,val) { //used in View Junction Mapping
+	function makeSVGNode(tag, attrs,val) { 
 	var el= document.createElementNS('http://www.w3.org/2000/svg', tag);
 	for (var k in attrs)
 	el.setAttribute(k, attrs[k]);
