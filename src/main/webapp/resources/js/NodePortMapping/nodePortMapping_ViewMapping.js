@@ -292,7 +292,7 @@ function getContextPath() {
 
 		  	
 		var minWidth="800";									
-		var width = (nodePortNumCols+2.2)*103.5, height =(nodePortNumRows+2)*100;
+		var width = (nodePortNumCols+2.2)*97, height =(nodePortNumRows+2)*100;
 		var totWidth=width;
 		
 		if(totWidth>1366.1999999999998){

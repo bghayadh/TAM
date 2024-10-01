@@ -367,7 +367,7 @@ color: #007bff;
 
 <div class="container" style="width: auto">
 		<div id="node_MappingModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  data-keyboard="false" data-backdrop="static">
-			<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+			<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
 				<div class="modal-content" id="contentNodeMappingModal">
 					<div class="modal-header" style="background-color: #2678CC ; height: 55px; ">
 						<h5 class="modal-title" id="node_TitleId" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px;"></h5>
@@ -375,11 +375,11 @@ color: #007bff;
 							<button type="button" name="closePopup" class="close" data-dismiss="modal">
 								<i class='fa fa-times'></i>
 							</button>
-							<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change'></i>
+							<a class="close modalMinimize ml-3 btn-text-right"> <i class='fa fa-minus icon-to-change'></i>
 							</a></div></div>
 					<div class="modal-body">
 						<div class="tab-content">
-							<div id="node_tabContentPortsMap" style="min-width: 800px; min-height: 600px"></div>
+							<div id="node_tabContentPortsMap" style="min-width: 700px; min-height: 600px"></div>
 						</div></div>
 					<div class="modal-footer"></div></div></div></div></div>
 	<div id="AssignedNodePortsModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  data-keyboard="false" data-backdrop="static">
