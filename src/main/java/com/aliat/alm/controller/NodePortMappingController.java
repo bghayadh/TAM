@@ -137,27 +137,27 @@ public class NodePortMappingController {
 						"Select NODE_ID,NODE_PK FROM NODE_ACTIVE WHERE NODE_ID =:param1 AND ACTIVE_RECORD=1");
 				query.setParameter("param1", NodeID);
 				
-				Object[] row = (Object[]) query.getSingleResult();
+				//Object[] row = (Object[]) query.getSingleResult();
+				List<Object[]> data = query.getResultList();
 				NodePK="";
-				if (row != null) {
-					
-					NodePK = (String) row[1]; 
-				   
-				    System.out.println("NodePK1: " + NodePK);
-				    System.out.println("NodeID1: " + NodeID);
+				if (!data.isEmpty()) {
+					 // Only one result
+				    Object[] row = data.get(0);
+				    NodePK = (String) row[1];
 				}
+			
 				String Result[] = new String[4];
 				
-				Result = form.NavigationNP(session, "Node_Active", "Node_PK", NodePK, "UPDATE_DATE", navAction);
+				Result = form.NodeNavigationNP(session, "Node_Active", "Node_PK", NodePK, "UPDATE_DATE", navAction);
 
 				SelectedIndex = Integer.parseInt(Result[1]);
 				NodePK= Result[2];
-				 System.out.println("NodePK22: " + NodePK);
+				 //System.out.println("NodePK22: " + NodePK);
 				query = session.createNativeQuery(
 						"Select NODE_ID,NODE_NAME,NODE_PK,UNIQUE_NODE_ID,TO_CHAR(CREATION_DATE,'YYYY-MM-DD HH24:MI:SS'),TO_CHAR(UPDATE_DATE,'YYYY-MM-DD HH24:MI:SS') FROM NODE_ACTIVE WHERE NODE_PK =:param1 AND ACTIVE_RECORD=1");
 				query.setParameter("param1", NodePK);
 				
-				 row = (Object[]) query.getSingleResult();
+				Object[] row = (Object[]) query.getSingleResult();
 				NodePK="";
 				if (row != null) {
 					
@@ -167,10 +167,8 @@ public class NodePortMappingController {
 					model.addAttribute("creation_date", row[4]);
 					model.addAttribute("update_date", row[5]);
 					model.addAttribute("node_name", row[1]);
-					
-				   
-				    System.out.println("NodePK2: " + NodePK);
-				    System.out.println("NodeID2: " + NodeID);
+				 //   System.out.println("NodePK2: " + NodePK);
+				//    System.out.println("NodeID2: " + NodeID);
 				}
 				model.addAttribute("SelectedIndex",SelectedIndex);
 				model.addAttribute("nodeCount", Integer.parseInt(Result[0]));
