@@ -25,6 +25,7 @@
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/jquerysctipttop.css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/bootstrap-datetimepicker.min.css">
    <script src="${pageContext.request.contextPath}/resources/js/NodePortMapping/nodePortMapping_BoqPopup.js"></script>
+   <script src="${pageContext.request.contextPath}/resources/js/NodePortMapping/nodePortMapping_ViewMapping.js"></script>
     <style>
 
     
@@ -326,6 +327,11 @@ max-width: 100%;
 			 				data-placement="top" title="Form View" style="background: #da6815;"> 
 			 				<i class="fa fa-edit"></i>
 			        	</button>
+			        	<button type="button" id="viewPortMapping"  class="btn btn-light" data-toggle="tooltip"
+			        			data-placement="top" title="View Port Mapping"> 
+			        			<i class="fa fa-project-diagram"></i>
+			        	</button>
+			        	
 			        	<button type="button" id="Lview"  class="btn btn-light" data-toggle="tooltip"
 			        			onclick='window.location.href = "${pageContext.request.contextPath}/NodePortMappingListView"'
 			        			data-placement="top" title="List View"> 
@@ -857,7 +863,81 @@ max-width: 100%;
  		</div>
 	</div>
 </div>
-        
+  <div class="container-fluid">   
+    <div class="container" style="width: auto">
+		<div id="node_MappingModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  data-keyboard="false" data-backdrop="static">
+			<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+				<div class="modal-content" id="contentNodeMappingModal">
+					<div class="modal-header" style="background-color: #2678CC ; height: 55px; ">
+						<h5 class="modal-title" id="node_TitleId" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px;"></h5>
+						<div style="float:right;">
+							<button type="button" name="closePopup" class="close" data-dismiss="modal">
+								<i class='fa fa-times'></i>
+							</button>
+							<a class="close modalMinimize ml-3 btn-text-right"> <i class='fa fa-minus icon-to-change'></i>
+							</a></div></div>
+					<div class="modal-body">
+						<div class="tab-content">
+							<div id="node_tabContentPortsMap" style="min-width: 700px; min-height: 600px"></div>
+						</div></div>
+					<div class="modal-footer"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="AssignedNodePortsModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered " >
+			<div class="modal-content" style="width: 650px" >
+				<div class="modal-header" style="background-color: #2678CC ; height: 55px; ">
+					<h5 class="modal-title" id="AssignedNode_TitleId" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px;"></h5>
+					<div style="float:right">
+						<button type="button" name="closePopup" class="close" data-dismiss="modal">
+							<i class='fa fa-times'></i>
+						</button>
+						<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change'></i>
+						</a>
+					</div></div>
+				<div class="modal-body" style="height: auto; width: auto;">
+					<div class="tab-content">
+						<div id="node_tabAssignedPorts" style="float: center; border: solid black 1px; padding: 10px; border-radius: 25px; background: #E9ECEF; color: #ffd700; border: 2px solid #ffd700; width: 600px; height: fit-content;">
+							<div>
+								<p style="font-size: 20px; color: #00757C">
+									<b> Node Ports Details:</b>
+								</p>
+									<div style="column-count: 2;  column-gap: 60px; width: 600px;">
+										
+										<label id="recordTypeLabel" style="color: #DC143C;"></label><br />
+										<label id="macAddrLabel" style="color: #DC143C;"></label><br/> 
+										<label id="serialNbLabel" style="color: #DC143C;"></label><br/>
+										<label id="portAddrLabel" style="color: #DC143C;"></label><br/>
+										<label id="portStatusLabel" style="color: #DC143C;"></label><br/>
+										<label id="locationTypeLabel" style="color: #DC143C;"></label><br/>
+										<label id="locationIDLabel" style="color: #DC143C;"></label><br/>
+										<label id="locationNameLabel" style="color: #DC143C;"></label><br/> 
+										<label id="WareIDLabel" style="color: #DC143C;"></label><br/> 
+										<label id="cableTypeLabel" style="color: #DC143C;"></label><br/>
+										<label id="txStrandNbLabel" style="color: #DC143C;"></label><br/> 
+										<label id="txStrandColorLabel" style="color: #DC143C;"></label><br/>
+										<label id="rxStrandNbLabel" style="color: #DC143C;"></label><br/>
+										<label id="rxStrandColorLabel" style="color: #DC143C;"></label><br/>
+										<label id="txTubeNbLabel" style="color: #DC143C;"></label><br/>
+										<label id="txTubeColorLabel" style="color: #DC143C;"></label><br/>
+										<label id="rxTubeNbLabel" style="color: #DC143C;"></label><br/> 
+										<label id="rxTubeColorLabel" style="color: #DC143C;"></label><br/>
+										<label id="cableIDLabel" style="color: #DC143C;"></label><br/>
+										<label id="cableNameLabel" style="color: #DC143C;"></label><br/>
+										<label id="cableLengthLabel" style="color: #DC143C;"></label><br/>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer" style="background-color: #E9ECEF;">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
   <div id="popUpDiv" style="display:none;">
 	  <div class="sendEmail" style="margin-top:50px;" >
@@ -1619,8 +1699,7 @@ var allPortList =[];
 			     portBoqIndex++;
 
 	});
-
-
+			
 			$("#deletePortRow").click(function () {
 				 slctDelPort = [];  // Initialize the array
 
@@ -1934,6 +2013,11 @@ var allPortList =[];
      		      		 }			 
 
      		      	} */
+
+     		      	$("#viewPortMapping").click(function () {
+						console.log("viewPortMapping "+allPortList.length)
+						viewDiagram(allPortList,$("#nodeID").val());
+         		      	});
 
      		      	 function updateContainerHeight() {
      				       // Get the table and container elements
