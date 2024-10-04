@@ -337,7 +337,85 @@ function insertRowAbove(){
 }// End insertRowAbove fct in popup   
 
  // Delete row fct
- function deleteBoqRow() {
+function deleteBoqRow() {
+	var rowCount;
+  if($("#popupportRecordType").val() =="passive") {
+	rowindx++;
+	$("tr").eq(rowindx).remove();
+	slctDelPort.push({"portMappingID":  $("#popupportMappingID").val()});
+	 rowCount = $("#bisotab >tbody tr").length;
+  	 
+	 rowindx--;
+  }
+  else if($("#popupportRecordType").val() =="active") {
+	  
+	  if(!$("#popupMacAddress").is('[readonly]')) {
+		  $("#popupMacAddress").val("");
+	  }
+	  
+	  if(!$("#popupSerialNb").is('[readonly]')) {
+		  $("#popupSerialNb").val("");
+	  }
+	  
+	  if(!$("#popupPortAddress").is('[readonly]')) {
+		  $("#popupPortAddress").val("");
+	  }
+	  
+	  if(!$("#popupPortStatus").is('[readonly]')) {
+		  $("#popupPortStatus").val("");
+	  }
+	  
+	  $("#popupRefPortStatus").val("");
+	  $("#popupLocType").val("");
+	  $("#popupLocID").val("");
+	  $("#popupLocName").val("");
+	  $("#popupWareID").val("");
+	  $("#popupCableType").val("");
+	  $("#popupCableLength").val("0");
+	  $("#popupPortNb").val("0");
+	  $("#popupTXStrandNb").val("");
+	  $("#popupRXStrandNb").val("");
+	  $("#popupTXStrandColor").val("");
+	  $("#popupRXStrandColor").val("");
+	  $("#popupTXTubeNb").val("");
+	  $("#popupRXTubeNb").val("");
+	  $("#popupTXTubeColor").val("");
+	  $("#popupRXTubeColor").val("");
+	  $("#popupCableID").val("");
+	  $("#popupCableName").val("");
+	  sendValPopupToBoq(rowindx)
+	  
+	  
+  }
+	// Get Nb of rows after delete 
+/*	var rowCount = $("#bisotab >tbody tr").length;
+	   	 
+	 rowindx--;
+	 */
+	 if (rowindx == 0 && rowCount ==0) {
+		$("#poModal").modal("hide");
+		$("#bisotab > tbody > tr").each(function(i, row){
+
+	
+       });
+		
+	}
+ 
+	else if(rowindx >= 0 && rowindx < rowCount) {
+		sendValBoqToPopup(rowindx);
+	
+	}
+
+   // Show previous record 
+	else if (rowindx >= rowCount){
+
+		rowindx--;
+		sendValBoqToPopup(rowindx);
+	}
+
+}
+
+/* function deleteBoqRow() {
 
 	rowindx++;
 	$("tr").eq(rowindx).remove();
@@ -368,7 +446,7 @@ function insertRowAbove(){
 		sendValBoqToPopup(rowindx);
 	}
  
- } // End delete fct
+ } // End delete fct*/
  
     	
  

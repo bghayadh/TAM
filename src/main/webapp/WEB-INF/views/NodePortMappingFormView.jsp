@@ -1706,24 +1706,49 @@ var allPortList =[];
 			   
 			    $("#bisotab").find('input[name="record"]').each(function () {
 			        let portMappingID = $(this).parent().parent().attr('id'); // Get the ID of the parent row
+			        let recordType = $(this).parent().parent().children('td[name="recordType"]').children('input').val();
+			        
 			        
 			        if ($(this).is(":checked")) {
-			            slctDelPort.push({"portMappingID": portMappingID});
+			        	console.log("recordType "+recordType)
+			        	if(recordType =="active"){
+				        	for(var i=1 ;i<=4 ;i++){
+			        			 if( !($(this).closest('tr').find('td').eq(i).children('input').is('[readonly]'))){
+			        				 $(this).closest('tr').find('td').eq(i).children('input').val("");
+				        			 }
+			        		}
+			        		for(var i=5 ; i<=23 ;i++){
+			        			 if ([5, 8, 12, 14,16,18,20].includes(i)) {//reset dropdown
+			        				 $(this).closest('tr').find('td').eq(i).children('select').val("");
+				        			 }
+			        			 else if([6,23].includes(i)){//set portnb and cable length to zero
+			        				 $(this).closest('tr').find('td').eq(i).children('input').val(0);
+				        			 }
+			        			 else if(i!=7){//set other field to ""-- except record type
+			        				 $(this).closest('tr').find('td').eq(i).children('input').val("");
+				        			 }
+			        		}
+			        	}
+			           
+						if(recordType =="passive"){
+							slctDelPort.push({"portMappingID": portMappingID});
+			        	   $(this).closest("tr").remove();
+						}
 			        }
 			    });
 
 				 
 			    if (slctDelPort.length === 0) {
-			        alert('Select Row(s) to Delete');
+			        alert('No Passive Record(s) to Delete');
 			        return false;
 			    }
 
 			    
-			    $("#bisotab").find('input[name="record"]').each(function () {
+			   /* $("#bisotab").find('input[name="record"]').each(function () {
 			        if ($(this).is(":checked")) {
 			            $(this).closest("tr").remove();  // Use closest to find the row and remove it
 			        }
-			    });
+			    });*/
 			});
 
 			$('body').on('click', '#selectAll', function  () {
