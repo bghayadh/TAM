@@ -5585,11 +5585,48 @@ public class NetworkController {
 						Node_Module_Query);
 				Object CountNodesModule = session.createNativeQuery(Node_Module_Query).uniqueResult();
 				/////////////////////////////////////////
-				String Node_Port_Query = "select count(p.PORT_ID) from NODE_PORT p , node_active na where na.node_pk = p.node_pk and (na.Ware_Id is null or na.Ware_Id='0') "
+				String Node_Port_Query ="";
+				String Node_Connected_Port_Query="";
+				String Node_Disconnected_Port_Query="";
+				 Node_Port_Query = "select count(p.PORT_MAPPING_ID) from NODE_PORT_MAPPING p , node_active na where na.NODE_ID = p.NODE_ID and (na.Ware_Id is null or na.Ware_Id='0') "
 						+ " and na.NODE_PK = '" + NodeId + "' " + generateDateCondition(date, "na");
 				Node_Port_Query = boqDomainVar("p", paramEnterprise, paramTransmission, paramRAN, paramCore,
 						Node_Port_Query);
+				
 				Object CountNodesPort = session.createNativeQuery(Node_Port_Query).uniqueResult();
+				 int nodePortCount = ((Number) CountNodesPort).intValue();
+				 
+				if(nodePortCount >0) {
+				 Node_Connected_Port_Query = "select count(p.PORT_MAPPING_ID) from NODE_PORT_MAPPING p , node_active na where na.NODE_ID = p.NODE_ID and (na.Ware_Id is null or na.Ware_Id='0') "
+						+ " and p.REF_STATUS ='Up' and na.NODE_PK = '" + NodeId + "' " + generateDateCondition(date, "na");
+				Node_Connected_Port_Query = boqDomainVar("p", paramEnterprise, paramTransmission, paramRAN, paramCore,
+						Node_Connected_Port_Query);
+				
+				 Node_Disconnected_Port_Query = "select count(p.PORT_MAPPING_ID) from NODE_PORT_MAPPING p , node_active na where na.NODE_ID = p.NODE_ID and (na.Ware_Id is null or na.Ware_Id='0') "
+						+ " and p.REF_STATUS ='Down' and na.NODE_PK = '" + NodeId + "' " + generateDateCondition(date, "na");
+				Node_Disconnected_Port_Query = boqDomainVar("p", paramEnterprise, paramTransmission, paramRAN, paramCore,
+						Node_Disconnected_Port_Query);
+				}
+				else if(nodePortCount==0) {
+					Node_Port_Query = "select count(p.PORT_ID) from NODE_PORT p , node_active na where na.node_pk = p.node_pk and (na.Ware_Id is null or na.Ware_Id='0') "
+							+ " and na.NODE_PK = '" + NodeId + "' " + generateDateCondition(date, "na");
+					Node_Port_Query = boqDomainVar("p", paramEnterprise, paramTransmission, paramRAN, paramCore,
+							Node_Port_Query);
+					
+					Node_Connected_Port_Query = "select count(p.PORT_ID) from NODE_PORT p , node_active na where na.node_pk = p.node_pk and (na.Ware_Id is null or na.Ware_Id='0') "
+							+ " and (LOWER(p.STATUS) = 'up' OR LOWER(p.STATUS) = 'active' OR LOWER(p.STATUS) = 'connected' OR LOWER(p.STATUS) = '1') and na.NODE_PK = '" + NodeId + "' " + generateDateCondition(date, "na");
+					Node_Connected_Port_Query = boqDomainVar("p", paramEnterprise, paramTransmission, paramRAN, paramCore,
+							Node_Connected_Port_Query);
+					
+					Node_Disconnected_Port_Query = "select count(p.PORT_ID) from NODE_PORT p , node_active na where na.node_pk = p.node_pk and (na.Ware_Id is null or na.Ware_Id='0') "
+							+ " and (LOWER(p.STATUS) = 'down' OR LOWER(p.STATUS) = 'inactive' OR LOWER(p.STATUS) = 'disconnected' OR LOWER(p.STATUS) = 'unknown' OR LOWER(p.STATUS) = '0') and na.NODE_PK = '" + NodeId + "' " + generateDateCondition(date, "na");
+					Node_Disconnected_Port_Query = boqDomainVar("p", paramEnterprise, paramTransmission, paramRAN, paramCore,
+							Node_Disconnected_Port_Query);
+				}
+				
+				CountNodesPort = session.createNativeQuery(Node_Port_Query).uniqueResult();
+				Object CountConnectedNodesPort = session.createNativeQuery(Node_Connected_Port_Query).uniqueResult();
+				Object CountDisconnectedNodesPort = session.createNativeQuery(Node_Disconnected_Port_Query).uniqueResult();
 				/////////////////////////////////////////
 				String Node_Antenna_Query = "select count(a.ANTENNA_ID) from NODE_ANTENNA a , node_active na where na.node_pk = a.node_pk and (na.Ware_Id is null or na.Ware_Id='0') "
 						+ " and na.NODE_PK = '" + NodeId + "' " + generateDateCondition(date, "na");
@@ -5606,6 +5643,8 @@ public class NetworkController {
 				BoqHM.put("Cabinet", String.valueOf(CountNodesCabinet));
 				BoqHM.put("Module", String.valueOf(CountNodesModule));
 				BoqHM.put("Port", String.valueOf(CountNodesPort));
+				BoqHM.put("Connected Port", String.valueOf(CountConnectedNodesPort));
+				BoqHM.put("Disconnected Port", String.valueOf(CountDisconnectedNodesPort));
 				BoqHM.put("Antenna", String.valueOf(CountNodesAntenna));
 			} else {
 				System.out.println("warehouse not null "+WareId);
@@ -5656,11 +5695,51 @@ public class NetworkController {
 						Node_Module_Query);
 				Object CountNodesModule = session.createNativeQuery(Node_Module_Query).uniqueResult();
 				///////////////////////////////////
-				String Node_Port_Query = "select count(p.PORT_ID) from NODE_PORT p , node_active na where na.node_pk = p.node_pk and na.Ware_Id = '"
-						+ WareId + "' and na.NODE_PK = '" + NodeId + "' " + generateDateCondition(date, "na");
+				String Node_Port_Query= "";
+				String Node_Connected_Port_Query="";
+				String Node_Disconnected_Port_Query="";
+				 Node_Port_Query = "select count(p.PORT_MAPPING_ID) from NODE_PORT_MAPPING p , node_active na where na.NODE_ID = p.NODE_ID and na.Ware_Id = '"
+						 + WareId + "' and na.NODE_PK = '" + NodeId + "' " + generateDateCondition(date, "na");
 				Node_Port_Query = boqDomainVar("p", paramEnterprise, paramTransmission, paramRAN, paramCore,
 						Node_Port_Query);
+				
 				Object CountNodesPort = session.createNativeQuery(Node_Port_Query).uniqueResult();
+				 int nodePortCount = ((Number) CountNodesPort).intValue();
+				 if(nodePortCount >0) {
+					 Node_Connected_Port_Query = "select count(p.PORT_MAPPING_ID) from NODE_PORT_MAPPING p , node_active na where na.NODE_ID = p.NODE_ID and na.Ware_Id = '"
+							 + WareId + "' and p.REF_STATUS ='Up' and na.NODE_PK = '" + NodeId + "' " + generateDateCondition(date, "na");
+					 Node_Connected_Port_Query = boqDomainVar("p", paramEnterprise, paramTransmission, paramRAN, paramCore,
+							 Node_Connected_Port_Query);
+					
+					 Node_Disconnected_Port_Query = "select count(p.PORT_MAPPING_ID) from NODE_PORT_MAPPING p , node_active na where na.NODE_ID = p.NODE_ID and na.Ware_Id = '"
+							 + WareId + "' and p.REF_STATUS ='Down' and na.NODE_PK = '" + NodeId + "' " + generateDateCondition(date, "na");
+					 Node_Disconnected_Port_Query = boqDomainVar("p", paramEnterprise, paramTransmission, paramRAN, paramCore,
+							 Node_Disconnected_Port_Query);
+					 
+				 }
+				 else if(nodePortCount ==0) {
+					 Node_Port_Query = "select count(p.PORT_ID) from NODE_PORT p , node_active na where na.node_pk = p.node_pk and na.Ware_Id = '"
+								+ WareId + "' and na.NODE_PK = '" + NodeId + "' " + generateDateCondition(date, "na");
+						Node_Port_Query = boqDomainVar("p", paramEnterprise, paramTransmission, paramRAN, paramCore,
+								Node_Port_Query);
+						
+						Node_Connected_Port_Query = "select count(p.PORT_ID) from NODE_PORT p , node_active na where na.node_pk = p.node_pk and na.Ware_Id = '"
+									+ WareId + "' and (LOWER(p.STATUS) = 'up' OR LOWER(p.STATUS) = 'active' OR LOWER(p.STATUS) = 'connected' OR LOWER(p.STATUS) = '1') and na.NODE_PK = '" + NodeId + "' " + generateDateCondition(date, "na");
+						Node_Connected_Port_Query = boqDomainVar("p", paramEnterprise, paramTransmission, paramRAN, paramCore,
+								Node_Connected_Port_Query);
+						
+						Node_Disconnected_Port_Query = "select count(p.PORT_ID) from NODE_PORT p , node_active na where na.node_pk = p.node_pk and na.Ware_Id = '"
+								+ WareId + "' and (LOWER(p.STATUS) = 'down' OR LOWER(p.STATUS) = 'inactive' OR LOWER(p.STATUS) = 'disconnected' OR LOWER(p.STATUS) = 'unknown' OR LOWER(p.STATUS) = '0') and na.NODE_PK = '" + NodeId + "' " + generateDateCondition(date, "na");
+						Node_Disconnected_Port_Query = boqDomainVar("p", paramEnterprise, paramTransmission, paramRAN, paramCore,
+								Node_Disconnected_Port_Query);
+				 }
+				
+				
+				
+				
+				 CountNodesPort = session.createNativeQuery(Node_Port_Query).uniqueResult();
+				 Object CountConnectedNodesPort = session.createNativeQuery(Node_Connected_Port_Query).uniqueResult();
+				 Object CountDisconnectedNodesPort = session.createNativeQuery(Node_Disconnected_Port_Query).uniqueResult();
 				///////////////////////////////////
 				String Node_Antenna_Query = "select count(a.ANTENNA_ID) from NODE_ANTENNA a , node_active na where na.node_pk = a.node_pk and na.Ware_Id = '"
 						+ WareId + "' and na.NODE_PK = '" + NodeId + "' " + generateDateCondition(date, "na");
@@ -5678,6 +5757,8 @@ public class NetworkController {
 				BoqHM.put("Cabinet", String.valueOf(CountNodesCabinet));
 				BoqHM.put("Module", String.valueOf(CountNodesModule));
 				BoqHM.put("Port", String.valueOf(CountNodesPort));
+				BoqHM.put("Connected Port", String.valueOf(CountConnectedNodesPort));
+				BoqHM.put("Disconnected Port", String.valueOf(CountDisconnectedNodesPort));
 				BoqHM.put("Antenna", String.valueOf(CountNodesAntenna));
 			}			
 		} catch (Exception e) {
