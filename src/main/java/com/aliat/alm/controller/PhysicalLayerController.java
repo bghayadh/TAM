@@ -6096,7 +6096,12 @@ public class PhysicalLayerController {
 							+ "union select 'zzzx', coalesce(sum(total_geo_distance),0) from fiber_tubes "
 							+ "union select 'zzzy', coalesce(sum(total_geo_distance),0) from fiber_strands "
 							+ "union select 'zzzzx', coalesce(sum(Length),0) from fiber_tubes "
-							+ "union select 'zzzzy', coalesce(sum(Length),0) from fiber_strands ")
+							+ "union select 'zzzzy', coalesce(sum(Length),0) from fiber_strands "
+							+ "union select 'zzzzzyNODES', count (*) from NODE_ACTIVE "
+							+ "WHERE domain IN ('Enterprise' , 'Transmission') AND SUB_DOMAIN_TYPE IN ('DWDM','SDH','GPON','MSAN','SWITCH') AND ACTIVE_RECORD =1 "
+							+ "union select 'zzzzzzSITES', count (*) from WAREHOUSE "
+					
+					)
 					.getResultList();
 
 			rtn.put("allPhysicalNodesCount", allPhysicalNodesCount);

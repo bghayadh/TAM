@@ -1326,9 +1326,11 @@ if (readHandhole === '1') {
     }
     tr+= "<td> " +(readFiber === '1' ? data.allPhysicalNodesCount[1][1] : "") + "</td></tr>"
     if (readDB === '1') {
-    + "<tr>" + "<th># Distribution Boards: </th> <td> " + data.allPhysicalNodesCount[0][1] + "</td></tr>";}
+    	 tr+= "<tr>" + "<th># Distribution Boards: </th> <td> " + data.allPhysicalNodesCount[0][1] + "</td></tr>";}
    tr += "<tr>" + "<th># Trenches: </th> <td> " + data.allPhysicalNodesCount[5][1] + "</td></tr>"
     + "<tr>" + "<th># Junctions: </th> <td> " + data.allPhysicalNodesCount[3][1] + "</td></tr>"
+    + "<tr>" + "<th># Nodes: </th> <td> " + data.allPhysicalNodesCount[14][1] + "</td></tr>"
+    + "<tr>" + "<th># Sites: </th> <td> " + data.allPhysicalNodesCount[15][1] + "</td></tr>"
     if (readFiber === '1') {
     + "<tr>" + "<th># Total path length (Geo): </th> <td> " + data.allPhysicalNodesCount[6][1].toFixed(2) + " km</td></tr>"
     + "<tr>" + "<th># Total path length (Line of site ): </th> <td> " + data.allPhysicalNodesCount[7][1].toFixed(2) + " km</td></tr>"
