@@ -4760,6 +4760,119 @@ public class PhysicalLayerController {
 		}
 		return rtn;
 	}
+	
+	@RequestMapping(value = "/singleNodeBoq", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+	public Map<String, Object> singleNodeBoq(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) {
+		
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		
+		session = AlmDbSession.getInstance().getSession();
+		ObjectMapper map = new ObjectMapper();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+		try {
+			String NodeId = request.getParameter("selectedNodeAcvtiveContext").toString();
+			
+			String Site_Query = "Select Ware_Name From NODE_ACTIVE where NODE_PK='" + NodeId + "' ";
+			Object Sites = session.createNativeQuery(Site_Query).uniqueResult();
+
+
+			///////////////////////////board
+			String Node_Board_Query = "select count(nlc.BOARD_ID) from NODE_BOARD nlc , node_active na where na.node_pk = nlc.node_pk "
+					+ " and na.NODE_PK = '" + NodeId + "' AND na.ACTIVE_RECORD=1" ;
+			
+			Object CountNodesBoard = session.createNativeQuery(Node_Board_Query).uniqueResult();
+			///////////////////////////cabinet
+			String Node_Cabinet_Query = "select count(nlc.CABINET_ID) from NODE_CABINET nlc , node_active na where na.node_pk = nlc.node_pk "
+					+ " and na.NODE_PK = '" + NodeId + "' AND na.ACTIVE_RECORD=1" ;
+			
+			Object CountNodesCabinet = session.createNativeQuery(Node_Cabinet_Query).uniqueResult();
+			///////////////////////////node_type
+			String NodesType_Query = "Select a.NODE_TYPE From NODE_ACTIVE a where a.NODE_PK = '" + NodeId
+					+ "' AND a.ACTIVE_RECORD=1" ;
+			Object CountNodes_NodeType = session.createNativeQuery(NodesType_Query).uniqueResult();
+			////////////////////////////////////////module
+			String Node_Module_Query = "select count(m.MODULE_ID) from NODE_MODULE m , node_active na where na.node_pk = m.node_pk "
+					+ " and na.NODE_PK = '" + NodeId + "' AND na.ACTIVE_RECORD=1" ;
+			
+			Object CountNodesModule = session.createNativeQuery(Node_Module_Query).uniqueResult();
+			/////////////////////////////////////////port
+			String Node_Port_Query ="";
+			String Node_Connected_Port_Query="";
+			String Node_Disconnected_Port_Query="";
+			 Node_Port_Query = "select count(p.PORT_MAPPING_ID) from NODE_PORT_MAPPING p , node_active na where na.NODE_ID = p.NODE_ID  "
+					+ " and na.NODE_PK = '" + NodeId + "' AND na.ACTIVE_RECORD=1" ;
+			
+			
+			Object CountNodesPort = session.createNativeQuery(Node_Port_Query).uniqueResult();
+			 int nodePortCount = ((Number) CountNodesPort).intValue();
+			 
+			if(nodePortCount >0) {
+			 Node_Connected_Port_Query = "select count(p.PORT_MAPPING_ID) from NODE_PORT_MAPPING p , node_active na where na.NODE_ID = p.NODE_ID  "
+					+ " and p.REF_STATUS ='Up' and na.NODE_PK = '" + NodeId + "' AND na.ACTIVE_RECORD=1";
+			
+			
+			 Node_Disconnected_Port_Query = "select count(p.PORT_MAPPING_ID) from NODE_PORT_MAPPING p , node_active na where na.NODE_ID = p.NODE_ID  "
+					+ " and p.REF_STATUS ='Down' and na.NODE_PK = '" + NodeId + "' AND na.ACTIVE_RECORD=1" ;
+			
+			}
+			else if(nodePortCount==0) {
+				Node_Port_Query = "select count(p.PORT_ID) from NODE_PORT p , node_active na where na.node_pk = p.node_pk "
+						+ " and na.NODE_PK = '" + NodeId + "' AND na.ACTIVE_RECORD=1" ;
+				
+				
+				Node_Connected_Port_Query = "select count(p.PORT_ID) from NODE_PORT p , node_active na where na.node_pk = p.node_pk "
+						+ " and (LOWER(p.STATUS) = 'up' OR LOWER(p.STATUS) = 'active' OR LOWER(p.STATUS) = 'connected' OR LOWER(p.STATUS) = '1') and na.NODE_PK = '" + NodeId + "' AND na.ACTIVE_RECORD=1" ;
+				
+				
+				Node_Disconnected_Port_Query = "select count(p.PORT_ID) from NODE_PORT p , node_active na where na.node_pk = p.node_pk "
+						+ " and (LOWER(p.STATUS) = 'down' OR LOWER(p.STATUS) = 'inactive' OR LOWER(p.STATUS) = 'disconnected' OR LOWER(p.STATUS) = 'unknown' OR LOWER(p.STATUS) = '0') and na.NODE_PK = '" + NodeId + "' AND na.ACTIVE_RECORD=1" ;
+				
+			}
+			
+			CountNodesPort = session.createNativeQuery(Node_Port_Query).uniqueResult();
+			Object CountConnectedNodesPort = session.createNativeQuery(Node_Connected_Port_Query).uniqueResult();
+			Object CountDisconnectedNodesPort = session.createNativeQuery(Node_Disconnected_Port_Query).uniqueResult();
+			//////////////////////////////////////////////////77
+			rtn.put("Site_Name", String.valueOf(Sites));
+			rtn.put("Node_Type", String.valueOf(CountNodes_NodeType));
+			rtn.put("Board", String.valueOf(CountNodesBoard));
+			rtn.put("Cabinet", String.valueOf(CountNodesCabinet));
+			rtn.put("Module", String.valueOf(CountNodesModule));
+			rtn.put("Port", String.valueOf(CountNodesPort));
+			rtn.put("Connected_Port", String.valueOf(CountConnectedNodesPort));
+			rtn.put("Disconnected_Port", String.valueOf(CountDisconnectedNodesPort));
+			//}			
+		} catch (Exception e) {
+			tx.rollback();
+			sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			exceptionAsString = sw.toString();
+			logger.finest("Error in singleNodeBoq due to \n " + exceptionAsString);
+			logger.info("Error in singleNodeBoq due to \n " + exceptionAsString);
+			rtn.put("Site_Name", null);
+			rtn.put("Node_Type", null);
+			rtn.put("Board", null);
+			rtn.put("Cabinet", null);
+			rtn.put("Module", null);
+			rtn.put("Port", null);
+			rtn.put("Connected_Port", null);
+			rtn.put("Disconnected_Port", null);
+			
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+				}
+			}
+		}
+		return rtn;
+	}
 
 	@RequestMapping(value = "/boqNodesCount", method = RequestMethod.GET)
 	@ResponseBody

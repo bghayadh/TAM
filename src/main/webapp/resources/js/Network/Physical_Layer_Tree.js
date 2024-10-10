@@ -3966,6 +3966,42 @@ singleNodeActive = new ContextMenu({
 		 
 		}		
 	},
+    {'icon': 'paste', 'name': 'Show BoQ', action: () => {
+        
+		 var node_info =$("#"+selectedNodeAcvtiveContext).text();
+		 	$.ajax({
+					type: "GET",
+					contentType: "application/json; charset=utf-8",
+					url: getContext()+'/singleNodeBoq',
+                   async:false,
+                   data: {
+						"selectedNodeAcvtiveContext":selectedNodeAcvtiveContext
+					},
+                   dataType: "json",
+                   success: function (data) {
+						showBoq();
+						
+						var tr ="<tr>"+
+						"<td class='title'> Node:</td>"+
+						"<td>"+node_info+"</td>"+
+						"</tr>";
+						$("#boq_table").append(tr);
+						
+						$.each(data , function( key, value ) {	
+							tr = "<tr>"+
+							"<td class='title'> "+key+"</td>"+
+							"<td>"+value+"</td>"+
+							"</tr>";
+							$("#boq_table").append(tr);
+						});
+					},
+                   error: function (result) {
+						alert("Error");
+                   }
+					})
+		 
+		}		
+	},
 ]
 })
 
