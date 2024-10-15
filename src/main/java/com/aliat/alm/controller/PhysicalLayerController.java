@@ -6612,8 +6612,8 @@ public class PhysicalLayerController {
 					.anyMatch(auxData -> auxData[4].toString().equals(manholeId));
 			
 			if (!manholeExistsInAuxList && distance <= maxDistance && distance < minDistance) {
-				System.out.println("manholee "+manholeName);
-				System.out.println("manholeExistsInAuxList "+manholeExistsInAuxList);
+				//System.out.println("manholee "+manholeName);
+				//System.out.println("manholeExistsInAuxList "+manholeExistsInAuxList);
 				minDistance = distance;
 				nearestManhole = new HashMap<>();
 				nearestManhole.put("ManholeId", manholeId);
