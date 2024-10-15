@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.Socket;
 import java.net.URI;
@@ -6456,6 +6457,244 @@ public class PhysicalLayerController {
 
 			try {
 				List<Object[]> auxList = session.createNativeQuery(
+						"SELECT AUXILIARY_ID, LONGITUDE, LATITUDE, AUXILIARY_POINT_NAME,AUXILIARY_POINT_ID FROM FIBER_AUXILIARY_POINTS WHERE FIBER_CABLE_ID ='"
+								+ selectedFiberContext + "'")
+						.getResultList();
+				
+				
+					double maxLongitude = Double.MIN_VALUE;
+				    double minLongitude = Double.MAX_VALUE;
+				    double maxLatitude = Double.MIN_VALUE;
+				    double minLatitude = Double.MAX_VALUE;
+				//get min/max long and lat
+				    List<Object[]> minMaxAux = session.createNativeQuery(
+				    	    "SELECT MAX(TO_NUMBER(LONGITUDE)), MIN(TO_NUMBER(LONGITUDE)), " +
+				    	    "MAX(TO_NUMBER(LATITUDE)), MIN(TO_NUMBER(LATITUDE)) " +
+				    	    "FROM FIBER_AUXILIARY_POINTS " +
+				    	    "WHERE FIBER_CABLE_ID = :selectedFiberContext")
+				    	    .setParameter("selectedFiberContext", selectedFiberContext)
+				    	    .getResultList();
+
+				    if (!minMaxAux.isEmpty()) {
+				        Object[] row = minMaxAux.get(0);
+				        
+				        // Cast to BigDecimal
+				        BigDecimal maxLongitudeBD = (BigDecimal) row[0];
+				        BigDecimal minLongitudeBD = (BigDecimal) row[1];
+				        BigDecimal maxLatitudeBD = (BigDecimal) row[2];
+				        BigDecimal minLatitudeBD = (BigDecimal) row[3];
+
+				        // Convert BigDecimal to double, handling potential nulls
+				        maxLongitude = maxLongitudeBD != null ? maxLongitudeBD.doubleValue() : Double.NaN;
+				        minLongitude = minLongitudeBD != null ? minLongitudeBD.doubleValue() : Double.NaN;
+				        maxLatitude = maxLatitudeBD != null ? maxLatitudeBD.doubleValue() : Double.NaN;
+				        minLatitude = minLatitudeBD != null ? minLatitudeBD.doubleValue() : Double.NaN;
+
+				    }
+
+				    //add 40 meter on all directions
+					maxLongitude = maxLongitude+0.000354 ;
+					minLongitude = minLongitude -0.000354;
+					maxLatitude = maxLatitude + 0.000359;
+					minLatitude = minLatitude - 0.000359;
+					
+					
+				// Create a set to store unique manhole Id
+				Set<String> addedManholeNames = new HashSet<>();
+				for (Object[] auxData : auxList) {
+					String auxId = (String) auxData[0];
+					double auxLng = Double.parseDouble(auxData[1].toString());
+					double auxLat = Double.parseDouble(auxData[2].toString());
+					String auxPointName = (String) auxData[3];
+
+					Map<String, Object> nearestManhole = findNearestManhole(auxLng, auxLat, 30.0, auxList,maxLongitude,minLongitude,maxLatitude,minLatitude); // Pass 30.0
+																											// meters as
+																											// the
+																											// maximum
+																											// distance
+
+					if (nearestManhole != null) {
+						String manholeId = (String) nearestManhole.get("ManholeId");
+						String manholeName = (String) nearestManhole.get("ManholeName");
+						String combinedValue = manholeId + ":" + manholeName;
+						double manholeLng = (Double) nearestManhole.get("ManholeLng");
+						double manholeLat = (Double) nearestManhole.get("ManholeLat");
+
+						if (!addedManholeNames.contains(manholeId)) {
+							resultManhole.put(auxId,
+									new ArrayList<>(Arrays.asList(manholeLng, manholeLat, "", combinedValue, "", "")));
+							addedManholeNames.add(manholeId);
+							System.out.println("Nearest Manhole IS : " + combinedValue);
+							System.out.println("Distance: " + nearestManhole.get("Distance") + " meters");
+							System.out.println("--------------------------------------------------------------");
+						}
+					}
+					sortedMap.putAll(resultManhole);
+				}
+
+				// Create a set to store unique handhole Id
+				Set<String> addedHandholeNames = new HashSet<>();
+				for (Object[] auxData : auxList) {
+					String auxId = (String) auxData[0];
+					double auxLng = Double.parseDouble(auxData[1].toString());
+					double auxLat = Double.parseDouble(auxData[2].toString());
+					/* Pass 30.0 meters as the maximum distance*/					
+					Map<String, Object> nearestHandhole = findNearestHandhole(auxLng, auxLat, 30.0, auxList,maxLongitude,minLongitude,maxLatitude,minLatitude);
+					if (nearestHandhole != null) {
+						String handholeId = (String) nearestHandhole.get("HandholeId");
+						String handholeName = (String) nearestHandhole.get("HandholeName");
+						String combinedValue = handholeId + ":" + handholeName;
+						double handholeLng = (Double) nearestHandhole.get("HandholeLng");
+						double handholeLat = (Double) nearestHandhole.get("HandholeLat");
+
+						if (!addedHandholeNames.contains(handholeId)) {
+							resultMapHand.put(auxId, new ArrayList<>(
+									Arrays.asList(handholeLng, handholeLat, "", combinedValue, "", "")));
+							addedHandholeNames.add(handholeId);
+							System.out.println("Nearest HandHole IS : " + combinedValue);
+							System.out.println("Distance: " + nearestHandhole.get("Distance") + " meters");
+							System.out.println("--------------------------------------------------------------");
+						}
+					}
+					sortedMap.putAll(resultMapHand);
+				}
+				System.out.println("sortedMap "+sortedMap.size());
+			} catch (Exception e) {
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in UpdateAuxPoints due to \n " + exceptionAsString);
+				logger.info("Error in UpdateAuxPoints due to \n " + exceptionAsString);
+				e.printStackTrace();
+
+			} finally {
+				if (session != null && session.isOpen()) {
+					session.close();
+
+				}
+			}
+		}
+		return sortedMap;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private Map<String, Object> findNearestManhole(double auxLng, double auxLat, double maxDistance,
+			List<Object[]> auxList,double maxLongitude,double minLongitude,double maxLatitude,double minLatitude) {
+		Map<String, Object> nearestManhole = null;
+		double minDistance = maxDistance + 1;
+
+		/*List<Object[]> manholeList = session
+				.createNativeQuery("SELECT DISTINCT MANHOLE_ID,MANHOLE_NAME,LONGITUDE,LATITUDE FROM MANHOLE ")
+				.getResultList();*/
+		List<Object[]> manholeList = session
+			    .createNativeQuery("SELECT DISTINCT MANHOLE_ID, MANHOLE_NAME, LONGITUDE, LATITUDE " +
+			                        "FROM MANHOLE " +
+			                        "WHERE TO_NUMBER(LONGITUDE) BETWEEN :minLongitude AND :maxLongitude " +
+			                        "AND TO_NUMBER(LATITUDE) BETWEEN :minLatitude AND :maxLatitude")
+			    .setParameter("minLongitude", minLongitude)
+			    .setParameter("maxLongitude", maxLongitude)
+			    .setParameter("minLatitude", minLatitude)
+			    .setParameter("maxLatitude", maxLatitude)
+			    .getResultList();
+		//System.out.println("manholeList size "+manholeList.size());
+		for (Object[] manholeData : manholeList) {
+			String manholeId = (String) manholeData[0];
+			String manholeName = (String) manholeData[1];
+			double manholeLng = Double.parseDouble(manholeData[2].toString());
+			double manholeLat = Double.parseDouble(manholeData[3].toString());
+
+			double distance = calculateDistance(auxLat, auxLng, manholeLat, manholeLng); // Swap lat and lng in
+																							// calculateDistance
+																							// function
+
+			// Check if manholeID exists in auxList
+			boolean manholeExistsInAuxList = auxList.stream()
+					.anyMatch(auxData -> auxData[4].toString().equals(manholeId));
+			
+			if (!manholeExistsInAuxList && distance <= maxDistance && distance < minDistance) {
+				System.out.println("manholee "+manholeName);
+				System.out.println("manholeExistsInAuxList "+manholeExistsInAuxList);
+				minDistance = distance;
+				nearestManhole = new HashMap<>();
+				nearestManhole.put("ManholeId", manholeId);
+				nearestManhole.put("ManholeName", manholeName);
+				nearestManhole.put("ManholeLng", manholeLng);
+				nearestManhole.put("ManholeLat", manholeLat);
+				nearestManhole.put("Distance", distance);
+			}
+		}
+
+		return nearestManhole;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private Map<String, Object> findNearestHandhole(double auxLng, double auxLat, double maxDistance,
+			List<Object[]> auxList,double maxLongitude,double minLongitude,double maxLatitude,double minLatitude) {
+		Map<String, Object> nearestHandhole = null;
+		double minDistance = maxDistance + 1;
+
+		/*List<Object[]> handholeList = session
+				.createNativeQuery("SELECT DISTINCT HANDHOLE_ID,HANDHOLE_NAME,LONGITUDE,LATITUDE FROM HANDHOLE")
+				.getResultList();*/
+		
+		List<Object[]> handholeList = session
+			    .createNativeQuery("SELECT DISTINCT HANDHOLE_ID, HANDHOLE_NAME, LONGITUDE, LATITUDE " +
+			                        "FROM HANDHOLE " +
+			                        "WHERE TO_NUMBER(LONGITUDE) BETWEEN :minLongitude AND :maxLongitude " +
+			                        "AND TO_NUMBER(LATITUDE) BETWEEN :minLatitude AND :maxLatitude")
+			    .setParameter("minLongitude", minLongitude)
+			    .setParameter("maxLongitude", maxLongitude)
+			    .setParameter("minLatitude", minLatitude)
+			    .setParameter("maxLatitude", maxLatitude)
+			    .getResultList();
+
+		for (Object[] handholeData : handholeList) {
+			String handholeId = (String) handholeData[0];
+			String handholeName = (String) handholeData[1];
+			double handholeLng = Double.parseDouble(handholeData[2].toString());
+			double handholeLat = Double.parseDouble(handholeData[3].toString());
+
+			double distance = calculateDistance(auxLat, auxLng, handholeLat, handholeLng); // Swap lat and lng in
+																							// calculateDistance
+																							// function
+
+			// Check if handholeId exists in auxList
+			boolean handholeExistsInAuxList = auxList.stream()
+					.anyMatch(auxData -> auxData[4].toString().equals(handholeId));
+
+			if (!handholeExistsInAuxList && distance <= maxDistance && distance < minDistance) {
+				minDistance = distance;
+				nearestHandhole = new HashMap<>();
+				nearestHandhole.put("HandholeId", handholeId);
+				nearestHandhole.put("HandholeName", handholeName);
+				nearestHandhole.put("HandholeLng", handholeLng);
+				nearestHandhole.put("HandholeLat", handholeLat);
+				nearestHandhole.put("Distance", distance);
+			}
+		}
+
+		return nearestHandhole;
+	}
+	
+	/*
+	 * 
+	 * @SuppressWarnings("unchecked")
+	@RequestMapping(value = "/GrabManHand", method = RequestMethod.POST)
+	@ResponseBody
+	public TreeMap<Object, Object> GrabManHand(HttpServletRequest request,
+			@ModelAttribute ItemParameters itemParameters) {
+
+		TreeMap<Object, Object> resultManhole = new TreeMap<>();
+		TreeMap<Object, Object> resultMapHand = new TreeMap<>();
+		TreeMap<Object, Object> sortedMap = new TreeMap<>();
+		session = AlmDbSession.getInstance().getSession();
+
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			String selectedFiberContext = request.getParameter("ID");
+
+			try {
+				List<Object[]> auxList = session.createNativeQuery(
 						"SELECT AUXILIARY_ID, LONGITUDE, LATITUDE, AUXILIARY_POINT_NAME FROM FIBER_AUXILIARY_POINTS WHERE FIBER_CABLE_ID ='"
 								+ selectedFiberContext + "'")
 						.getResultList();
@@ -6499,7 +6738,7 @@ public class PhysicalLayerController {
 					String auxId = (String) auxData[0];
 					double auxLng = Double.parseDouble(auxData[1].toString());
 					double auxLat = Double.parseDouble(auxData[2].toString());
-					/* Pass 30.0 meters as the maximum distance*/					
+					// Pass 30.0 meters as the maximum distance					
 					Map<String, Object> nearestHandhole = findNearestHandhole(auxLng, auxLat, 30.0, auxList);
 					if (nearestHandhole != null) {
 						String handholeId = (String) nearestHandhole.get("HandholeId");
@@ -6535,8 +6774,11 @@ public class PhysicalLayerController {
 			}
 		}
 		return sortedMap;
-	}
-
+	}*/
+	
+	
+	
+/*
 	@SuppressWarnings("unchecked")
 	private Map<String, Object> findNearestManhole(double auxLng, double auxLat, double maxDistance,
 			List<Object[]> auxList) {
@@ -6574,8 +6816,10 @@ public class PhysicalLayerController {
 
 		return nearestManhole;
 	}
-
-	@SuppressWarnings("unchecked")
+	
+	*
+	*
+@SuppressWarnings("unchecked")
 	private Map<String, Object> findNearestHandhole(double auxLng, double auxLat, double maxDistance,
 			List<Object[]> auxList) {
 		Map<String, Object> nearestHandhole = null;
@@ -6584,6 +6828,7 @@ public class PhysicalLayerController {
 		List<Object[]> handholeList = session
 				.createNativeQuery("SELECT DISTINCT HANDHOLE_ID,HANDHOLE_NAME,LONGITUDE,LATITUDE FROM HANDHOLE")
 				.getResultList();
+		
 
 		for (Object[] handholeData : handholeList) {
 			String handholeId = (String) handholeData[0];
@@ -6612,6 +6857,9 @@ public class PhysicalLayerController {
 
 		return nearestHandhole;
 	}
+	*/
+
+
 
 	private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
 		// Convert latitude and longitude from degrees to radians
