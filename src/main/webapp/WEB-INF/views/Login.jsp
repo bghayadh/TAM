@@ -27,10 +27,22 @@
     rel="stylesheet" />
 
 <style type="text/css">
+
+.navbar-brand {
+    font-family:fantasy;
+/*    color:red !important; */
+    color:#ffdf00 !important;
+    font-style:italic;
+    width:4rem;
+/*    width:90px; */
+    font-size:60px;
+    margin-left: 30px;
+}
+
 .fo {
      height:400px;
     width:300px;
-    margin-top:60px;
+    margin-top:20px;
     background-color:#000;
     opacity:0.7;
     padding:30px;
@@ -63,8 +75,9 @@ body{
 }
 </style>
 </head>
-<body>
-    <section class="container-fluid  bg" style="padding-top: 70px;">
+<body>	
+	<a class="navbar-brand">TAM</a>
+    <section class="container-fluid  bg">
         <section class="row justify-content-center">
             <section ="col-12 col-sm-6 col-md-3">
                 
@@ -92,5 +105,6 @@ body{
             </section>
         </section>
     </section>
+    
 </body>
 </html>

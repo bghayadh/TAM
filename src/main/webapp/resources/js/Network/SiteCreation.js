@@ -28,7 +28,8 @@ function getSite(type,id){
     				   // console.log(" //////////SiteList "+data.SiteList);
 					    console.log("markersSite "+markersSite.length)
     				    createSite(data.SiteList);
-    				    if ($('#Site_f_CurrentPhysicalLayer .AllSites').is(':checked') || $('#siteCheckAllBoq').is(':checked')){
+    				    if ($('#Site_f_CurrentPhysicalLayer .AllSites').is(':checked')){    				    
+    				    //if ($('#Site_f_CurrentPhysicalLayer .AllSites').is(':checked') || $('#siteCheckAllBoq').is(':checked')){
     				    	//AllSiteCheckFilter();
     				    	siteLayerCheckAll();
 						}
@@ -193,7 +194,9 @@ function create_Site_Marker_Click(Id,Name,Long,Lat,markers,marker_Cluster,Type,c
 function createSite(SiteList){
 /*	markersSite = [];
 	markerClusterSite = new MarkerClusterer();
-	markerClusterSite.setMap(map);// to be checked !!!!*/
+	markerClusterSite.setMap(map);// to be checked !!!!*/	
+	allSiteID = [];
+	markersSiteTemp = markersSite; 
 	markersSite = [];
 	markerClusterSite.clearMarkers();
 	if(SiteList!=null) {
@@ -212,6 +215,9 @@ function createSite(SiteList){
 				//}
 			}		
 			
+	}
+	for (i=0; i<markersSiteTemp.length; i++) {		
+		markerClusterSite.addMarker(markersSite[markersSiteTemp[i].get("ID")]);		
 	}
 	AllSiteCheckFilter();
 	$(".SITE > .TreeSpan").contextmenu(function(){				

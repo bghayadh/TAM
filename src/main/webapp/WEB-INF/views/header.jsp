@@ -276,7 +276,7 @@ display:none;
 
 <div class="m1">
 <nav class="navbar navbar-expand-lg  navbar-light bg-light mynav">
-	<a class="navbar-brand">ALM</a>
+	<a class="navbar-brand">TAM</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarmenu">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -490,7 +490,7 @@ display:none;
     </div>
     <div class = "m2">
     <nav class="navbar navbar-expand-lg  navbar-light bg-light mynav">
-	<a class="navbar-brand">ALM</a>
+	<a class="navbar-brand">TAM</a>
     
 
 
@@ -764,7 +764,7 @@ display:none;
     </div>
      <div class="m3">
     <nav class="navbar navbar-expand-lg  navbar-light bg-light mynav">
-	<a class="navbar-brand">ALM</a>
+	<a class="navbar-brand">TAM</a>
 
               <div class="collapse navbar-collapse" id="navbarmenu">
                   <ul class="navbar-nav">
@@ -1047,7 +1047,7 @@ display:none;
     
     <div class="m4">
     <nav class="navbar navbar-expand-lg  navbar-light bg-light mynav">
-	<a class="navbar-brand">ALM</a>
+	<a class="navbar-brand">TAM</a>
     
 
 
