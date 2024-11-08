@@ -7044,6 +7044,13 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 </body>
 
 <script>
+// Parse them into JavaScript objects
+var circleDraw = '${circleDraw}';
+var squareDraw= '${squareDraw}';
+var locationNum= '${locationNumber}';
+var LastlocationNumber= '${LastlocationNumber}';
+console.log(LastlocationNumber);
+
 var newHandHole= [];
 var newManHole= [];
 var newFiber= [];
@@ -7265,7 +7272,7 @@ directionsDisplay.setMap(map);
 		  }else if(checkedOption == "StartEnd"){
 			  openFindBetweenMarkers(checkedOption,'${startLongPoint}','${startLatPoint}','${endLongPoint}','${endLatPoint}',${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['Distribution_Board'],${physicalLayerList}['fiber'],${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Tubes'],${physicalLayerList}['Node'],'${getRelatedPoints}');
 		  }else if(checkedOption == "circleRange_multy"){
-				 openFindNearestMultySite(checkedOption,'${rowData}','${noOfPoints}','${closestDisRange}','${ptList}','${ptData}','${getRelatedPoints}' , '${borderCircleLatitudes}' , '${borderCircleLongitudes}');
+				 openFindNearestMultySite(checkedOption,'${rowData}','${noOfPoints}','${closestDisRange}',`${ptList}`,'${ptData}','${getRelatedPoints}' , '${borderCircleLatitudes}' , '${borderCircleLongitudes}', circleDraw, squareDraw,locationNum);
 		  }else if(checkedOption == "connected"){
 			  openSearchConnected(checkedOption,'${siteId}','${selectConnectedSearch}','${connectedSearchLong}','${connectedSearchLat}','${connectedViewOnMap}',${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Tubes'],${physicalLayerList}['fiber'],${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['Distribution_Board'],'${distribBoardListSize}','${getRelatedPoints}');
 		   }		  
