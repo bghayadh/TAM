@@ -5193,8 +5193,6 @@ function viewNearestMultyPointEvent(){
 		var nop = document.getElementById("noP_Multy").value;
 		var circleRange_multy = document.getElementById("circleRange_multy").value;
 		var closestDisRange = document.getElementById("closestMultyDisRange").value;
-		var checkbox = document.getElementById("getRelatedPoints_Multy");
-        var checkboxValue = checkbox.checked ? '1' : '0';
 		
 $("#Multy_auxiliary > tbody").find('input[name="record"]').each(function(){
   var $row = $(this).closest('tr');
@@ -5203,24 +5201,30 @@ $("#Multy_auxiliary > tbody").find('input[name="record"]').each(function(){
   var name = $row.find('td[name="siteId_Multy"] input').val();
   var lng = $row.find('td[name="siteLng_Multy"] input').val();
   var lat = $row.find('td[name="siteLat_Multy"] input').val();
-  
+  var locationNum = $row.find('td[name="location_number"] input').val(); // Get the location number
+  var circleDraw = $row.find('input[name="circleRange' + indexSite + '"]').prop('checked') ? 1 : 0;
+  var squareDraw = $row.find('input[name="squareRange' + indexSite + '"]').prop('checked') ? 1 : 0;
+
 		 if($("#circleRange_multy").prop('checked')){
 		     checkedOption = "circleRange_multy";  
 			     urlString += "&seq="+seq+"";
 			     urlString += "&name="+name+"";
 			     urlString += "&lng="+lng+"";
 			     urlString += "&lat="+lat+"";
+				 urlString += "&locationNum="+locationNum+"";
+				 urlString += "&circleDraw="+circleDraw+"";
+				 urlString += "&squareDraw="+squareDraw+"";
+				 		   
 			     urlString += "&closestDisRange="+closestDisRange+"";
 			     urlString += "&nop="+$("#noP_Multy").val()+"";
-			     urlString += "&getRelatedPoints="+checkboxValue+"";
-				 urlString += "&updateModfUser="+updateModfUser;
+			     urlString += "&updateModfUser="+updateModfUser;
 				 window.location.href = getContext()+"/NetworkPhysicalLayer?Checked="+checkedOption+urlString;  
 		 }
 		}); 
 			 }); 
 }
-
-function openFindNearestMultySite(checkedOption, rowInfo, noP, closestDisRange, ptList, ptData, getRelatedPoints, Lats, Longs) {
+var ptListObject, ptDataObject;
+function openFindNearestMultySite(checkedOption, rowInfo, noP, closestDisRange, ptList, ptData, getRelatedPoints, Lats, Longs, circleDraw , squareDraw,locationNum) {
     console.log(Lats);
     console.log(Longs);
     $("#fiberCitySearch").modal("show");
@@ -5239,211 +5243,498 @@ function openFindNearestMultySite(checkedOption, rowInfo, noP, closestDisRange, 
     }
 
     var rowData = JSON.parse(rowInfo);
+	var drawCircle= JSON.parse(circleDraw);
+	var drawSquare= JSON.parse(squareDraw);
+	var locationNum= JSON.parse(locationNum);
     var tableBody = $("#Multy_auxiliary > tbody");
     tableBody.empty(); // Clear existing table rows
+	ptList = ptList.replace(/[\n\t\r]/g, '');  // Remove control characters
+	ptData = ptData.replace(/[\n\t\r]/g, '');
+	 ptListObject = JSON.parse(ptList);  // Assuming ptList is passed as JSON string
+	 ptDataObject = JSON.parse(ptData);  // Assuming ptData is passed as JSON string
+console.log(ptListObject);
+	
+	// Initialize indexSite counter
+	var indexSite = 0;
 
-    for (var key in rowData) {
-        if (rowData.hasOwnProperty(key)) {
-            var row = rowData[key];
-            var indexSite = 0;
-            var markup = "<tr><td><input type='checkbox' style='position:relative;left:20px;top:10px;' name='record'></td>"
-                + "<td class='headcol' name='Seq'><input name='Seq_Multy' id='Seq_Multy" + indexSite + "' class='form-control text-input' type='text' style='max-width:60px;position:relative;' value='" + row[2] + "'></td>"
+	for (var key in rowData) {
+	    if (rowData.hasOwnProperty(key)) {
+	        var row = rowData[key];
+	        console.log(drawCircle);
+	        console.log(drawSquare[0]);
+	        
+	        var circleChecked = Number(drawCircle[indexSite]) === 1 ? "checked" : ""; // Check if the first index of drawCircle is 1
+	        var squareChecked = Number(drawSquare[indexSite]) === 1 ? "checked" : ""; // Check if the first index of drawSquare is 1
+
+	        // Create the markup for each row
+	        var markup = "<tr><td><input type='checkbox' style='position:relative;left:20px;top:10px;' name='record'></td>"
+	            + "<td class='headcol' name='Seq'><input name='Seq_Multy' id='Seq_Multy" + indexSite + "' class='form-control text-input' type='text' style='max-width:60px;position:relative;' value='" + row[2] + "'></td>"
+				+ "<td><input type='checkbox' class='dataCheckbox' onchange='viewOnMap(this, ptListObject[\"ptList" + locationNum[indexSite] + "\"], ptDataObject[\"ptData" + locationNum[indexSite] + "\"] )' name='dataCheckbox" + indexSite + "' style='position:relative;top:10px; width:100px;'></td>"
                 + "<td name='auxRefSite'><a href='#' class='auxRefSiteLink' data-index='" + indexSite + "' style='width:350px;'><p style='height:10px;margin-left:20px;color:#00757C;margin-top:10px;width:150px;'>View Result</p></a></td>"
-                + "<td name='siteId_Multy'><input name='siteId_Multy" + indexSite + "' id='siteId_Multy" + indexSite + "' class='form-control' type='text' style='width:330px;position:relative;' value='" + row[1] + "'></td>"
-                + "<td name='siteLng_Multy'><input name='siteLng_Multy" + indexSite + "' id='siteLng_Multy" + indexSite + "' class='form-control' type='text' style='width:220px;position:relative;' value='" + row[0] + "'></td>"
-                + "<td name='siteLat_Multy'><input name='siteLat_Multy" + indexSite + "' id='siteLat_Multy" + indexSite + "' class='form-control' type='text' style='width:220px;position:relative;' value='" + row[3] + "'></td></tr>";
-            tableBody.append(markup);
-            autoCompleteMultiPoint("siteId_Multy", "siteLng_Multy", "siteLat_Multy", indexSite, "auxPtAutocomplete");
-            indexSite++; // Increment the counter for the next row
+	            + "<td name='siteId_Multy'><input name='siteId_Multy" + indexSite + "' id='siteId_Multy" + indexSite + "' class='form-control' type='text' style='width:330px;position:relative;' value='" + row[1] + "'></td>"
+	            + "<td name='siteLng_Multy'><input name='siteLng_Multy" + indexSite + "' id='siteLng_Multy" + indexSite + "' class='form-control' type='text' style='width:220px;position:relative;' value='" + row[0] + "'></td>"
+	            + "<td name='siteLat_Multy'><input name='siteLat_Multy" + indexSite + "' id='siteLat_Multy" + indexSite + "' class='form-control' type='text' style='width:220px;position:relative;' value='" + row[3] + "'></td>"
+	            + "<td name='circleRange'><input class='circleRange' type='checkbox' name='circleRange" + indexSite + "' class='form-check-input' style='position:relative;left:20px;top:10px;' data-lat='" + row[3] + "' data-lng='" + row[0] + "' " + circleChecked + "></td>"
+	            + "<td name='squareRange'><input type='checkbox' class='squareRange' name='squareRange" + indexSite + "' class='form-check-input' style='position:relative;left:20px;top:10px;' data-lat='" + row[3] + "' data-lng='" + row[0] + "' " + squareChecked + "></td>"
+				+ "<td name='location_number'><input type='text' name='location_number' class='form-control' value='" + locationNum[indexSite] + "'  readonly style='width:100px;'></td></tr>";// Add location number input
+				 
+	        tableBody.append(markup);
+	        
+	        // Correctly bind the change event for dataCheckbox checkboxes
+	       
 
-            var lat = row[3];
-            var lng = row[0];
-            const myLatLng = {
-                lat: parseFloat(lat),
-                lng: parseFloat(lng)
-            };
+	
+			// Ensure that autocomplete functionality is maintained
+			autoCompleteMultiPoint("siteId_Multy", "siteLng_Multy", "siteLat_Multy", indexSite, "auxPtAutocomplete");
 
-            new google.maps.Marker({
-                position: myLatLng,
-                map,
-                title: "Marked",
-            });
+            // Increment the index for the next row
+        
 
-            var circleRadius = closestDisRange * 1.609344 * 1000; // Convert miles to meters
-            var circle = new google.maps.Circle({
-                strokeColor: "blue",
-                strokeOpacity: 0.8,
-                strokeWeight: 2,
-                fillColor: "blue",
-                fillOpacity: 0.1,
-                map,
-                center: myLatLng,
-                radius: circleRadius,
-				clickable:false
-            });
-            displayZoneMap(circle);
-            map.setCenter(myLatLng);
-            map.fitBounds(circle.getBounds());
+			var lat = row[3];
+			var lng = row[0];
+			const myLatLng = {
+			    lat: parseFloat(lat),
+			    lng: parseFloat(lng)
+			};
+			new google.maps.Marker({
+			               position: myLatLng,
+			               map,
+			               title: ` ${locationNum[indexSite]}`, // Set title to include location number
+			           });
+			// Check if the circle checkbox is checked
+			var isCircleChecked = $("input[name='circleRange" + indexSite + "']").is(':checked');
+			var circleRadius = closestDisRange * 1.609344 * 1000; // Convert miles to meters
 
-            // Calculate the bounds for the rectangle
-            var bounds = circle.getBounds();
-            var ne = bounds.getNorthEast(); // LatLng of the rectangle's northeast corner
-            var sw = bounds.getSouthWest(); // LatLng of the rectangle's southwest corner
+			// Calculate the bounds of the circle even if not displayed
+			var bounds;
+			if (isCircleChecked) {
+			    var circle = new google.maps.Circle({
+			        center: myLatLng,
+			        radius: circleRadius
+			    });
 
-            // Draw the rectangle boundary lines
-            var startlangPath = [new google.maps.LatLng(sw.lat(), sw.lng()), new google.maps.LatLng(ne.lat(), sw.lng())];
-            drawLine("#FF0000", startlangPath);
+			    // Get the bounds of the circle
+			    bounds = circle.getBounds();
 
-            var startlatgPath = [new google.maps.LatLng(sw.lat(), sw.lng()), new google.maps.LatLng(sw.lat(), ne.lng())];
-            drawLine("#FF0000", startlatgPath);
+			    // If the circle is checked, display it
+			    circle.setOptions({
+			        strokeColor: "blue",
+			        strokeOpacity: 0.8,
+			        strokeWeight: 2,
+			        fillColor: "blue",
+			        fillOpacity: 0.1,
+			        map,
+			        clickable: false
+			    });
+			    displayZoneMap(circle);
+			    map.setCenter(myLatLng);
+			    map.fitBounds(bounds);
+			} else {
+			    // Manually calculate the circle bounds without showing it on the map
+			    var circle = new google.maps.Circle({
+			        center: myLatLng,
+			        radius: circleRadius
+			    });
+			    bounds = circle.getBounds(); // Get the bounds of the "invisible" circle
+			}
 
-            var endlangPath = [new google.maps.LatLng(ne.lat(), sw.lng()), new google.maps.LatLng(ne.lat(), ne.lng())];
-            drawLine("#006400", endlangPath);
+			// Check if the square checkbox is checked
+			var isSquareChecked = $("input[name='squareRange" + indexSite + "']").is(':checked');
+			if (isSquareChecked && bounds) {
+			    // Draw boundary lines using the circle's bounds
+			    var ne = bounds.getNorthEast(); // LatLng of the rectangle's northeast corner
+			    var sw = bounds.getSouthWest(); // LatLng of the rectangle's southwest corner
 
-            var endlatgPath = [new google.maps.LatLng(ne.lat(), ne.lng()), new google.maps.LatLng(sw.lat(), ne.lng())];
-            drawLine("#006400", endlatgPath);
+			    var startlangPath = [new google.maps.LatLng(sw.lat(), sw.lng()), new google.maps.LatLng(ne.lat(), sw.lng())];
+			    drawLine("#FF0000", startlangPath);
+
+			    var startlatgPath = [new google.maps.LatLng(sw.lat(), sw.lng()), new google.maps.LatLng(sw.lat(), ne.lng())];
+			    drawLine("#FF0000", startlatgPath);
+
+			    var endlangPath = [new google.maps.LatLng(ne.lat(), sw.lng()), new google.maps.LatLng(ne.lat(), ne.lng())];
+			    drawLine("#006400", endlangPath);
+
+			    var endlatgPath = [new google.maps.LatLng(ne.lat(), ne.lng()), new google.maps.LatLng(sw.lat(), ne.lng())];
+			    drawLine("#006400", endlatgPath);
+			}
+
         }
+		indexSite++;
     }
-
+    // Click handler for the 'View Result' links
     $(document).on('click', '.auxRefSiteLink', function (e) {
+		$('input[type="checkbox"]').prop('checked', false);
         e.preventDefault();
-        var indexSite = $(this).data('index');
-        var relSiteId = $(this).parent().parent().children('td[name="siteId_Multy"]').children('input').val();
-        var thisID = $(this).attr("id");
+		console.log(markerClusterHandhole);
+	   clearMarkers();
+	   if (tubeArray && Object.keys(tubeArray).length > 0) {
+	       for (let tubeId in tubeArray) {
+	           if (tubeArray.hasOwnProperty(tubeId)) {
+	               // Remove the marker from the map
+	               tubeArray[tubeId].setMap(null);
+	               // Hide the map label
+	               if (tubeArray[tubeId].mapLabel) {
+	                   tubeArray[tubeId].mapLabel.setMap(null);
+	               }
+	           }
+	       }
+	   }
+	   
+	   if (fiberArray && Object.keys(fiberArray).length > 0) {
+	          for (let fiberId in fiberArray) {
+	              if (fiberArray.hasOwnProperty(fiberId)) {
+	                  // Remove the marker from the map
+	                  fiberArray[fiberId].setMap(null);
+	                  // Hide the map label
+	                  if (fiberArray[fiberId].mapLabel) {
+	                      fiberArray[fiberId].mapLabel.setMap(null);
+	                  }
+	              }
+	          }
+	      }
+		  
+		  if (strandArray && Object.keys(strandArray).length > 0) {
+		            for (let strandId in strandArray) {
+		                if (strandArray.hasOwnProperty(strandId)) {
+		                    // Remove the marker from the map
+		                    strandArray[strandId].setMap(null);
+		                    // Hide the map label
+		                    if (strandArray[strandId].mapLabel) {
+		                        strandArray[strandId].mapLabel.setMap(null);
+		                    }
+		                }
+		            }
+		        }
+	    $("#NodeActive_f_CurrentPhysicalLayer").find(".Nodes:checked").each(function() {
+	       $(this).prop("checked", false);
+	   });
+		markerClusterMSANNodes.clearMarkers();
+		markerClusterDWDMNodes.clearMarkers();
+		markerClusterSDHNodes.clearMarkers();
+		markerClusterGPONNodes.clearMarkers();
+		markerClusterEntSwitchNodes.clearMarkers();
+		
+		 var indexSite = $(this).data('index'); 
+        console.log("Clicked row index: " + indexSite);
 
+        // Show modal and clear previous content
         $("#siteModalAuxiliary").modal('show');
-        $('#siteModalAuxiliary').find('input:file').val('');
-        $('#siteModalAuxiliary').find('input:checkbox').prop("checked", false);
-        showTubeStrandAuxiliaryPopup("siteModalAuxiliary", relSiteId, "SiteIdHeader", "Site_Autocomplete_Multy");
+        clearModalContent();
 
-        var ptListObject = JSON.parse(ptList);
-        var ptDataObject = JSON.parse(ptData);
+        // Get the ptList and ptData for the clicked row
+		ptList = ptList.replace(/[\n\t\r]/g, '');  // Remove control characters
+		ptData = ptData.replace(/[\n\t\r]/g, '');
+		 
+        var ptListObject = JSON.parse(ptList);  // Assuming ptList is passed as JSON string
+        var ptDataObject = JSON.parse(ptData);  // Assuming ptData is passed as JSON string
+
+		var $row = $(this).closest('tr'); // Get the closest row
+		    var locationNumber = $row.find('input[name="location_number"]').val(); // Get the location_number from the row
+
+		   // Construct the keys using the location number
+		   var ptListKey = "ptList" + locationNumber;   // Example: ptListlocation_1
+		   var ptDataKey = "ptData" + locationNumber;   // Example: ptDatalocation_1
+		   if (ptListObject.hasOwnProperty(ptListKey)) {
+		          console.log(`Fetched ${ptListKey}:`, ptListObject[ptListKey]);
+		      } else {
+		          console.log(`${ptListKey} not found in ptListObject.`);
+		      }
+        // Arrays to store combined data for the clicked row only
         var finalArrayFibers = [];
+		var finalArrayTubes = [];
+		var finalArrayStrands= [];
+        var finalArrayManholes = [];
+        var finalArrayHandholes = [];
+        var finalArrayDB = [];
+		var finalArrayNodes= [];
 
-        // Loop over each ptList
-        for (var i = 0; i < Object.keys(ptListObject).length; i++) {
-            var ptListKey = "ptList" + i;
-
-            if (ptListObject.hasOwnProperty(ptListKey)) {
-                if (ptListObject[ptListKey].hasOwnProperty("Manhole")) {
-                    var arrayManhole = ptListObject[ptListKey].Manhole;
-                }
-                if (ptListObject.hasOwnProperty(ptListKey).hasOwnProperty("Handhole")) {
-                    var arrayHandhole = ptListObject[ptListKey].Handhole;
-                }
-                if (ptListObject.hasOwnProperty(ptListKey).hasOwnProperty("Distribution_Board")) {
-                    var arrayDB = ptListObject[ptListKey].Distribution_Board;
-                }
-                if (ptListObject.hasOwnProperty(ptListKey).hasOwnProperty("fiber")) {
-                    var arrayFibers = ptListObject[ptListKey].fiber;
-                }
+        // Process ptList for the clicked row (ptListKey)
+        if (ptListObject.hasOwnProperty(ptListKey)) {
+            if (ptListObject[ptListKey].hasOwnProperty("Manhole")) {
+                var arrayManhole = ptListObject[ptListKey].Manhole;
+                finalArrayManholes = finalArrayManholes.concat(arrayManhole);
             }
-        }
 
-        // Loop over each ptData
-        for (var i = 0; i < Object.keys(ptDataObject).length; i++) {
-            var ptDataKey = "ptData" + i;
-
-            if (ptDataObject.hasOwnProperty(ptDataKey)) {
-                if (ptDataObject[ptDataKey].hasOwnProperty("fiber_Tubes")) {
-                    var arrayTubes = ptDataObject[ptDataKey].fiber_Tubes;
-                }
-                if (ptDataObject.hasOwnProperty(ptDataKey).hasOwnProperty("fiber_Strands")) {
-                    var arrayStrands = ptDataObject[ptDataKey].fiber_Strands;
-                }
+            if (ptListObject[ptListKey].hasOwnProperty("Handhole")) {
+                var arrayHandhole = ptListObject[ptListKey].Handhole;
+                finalArrayHandholes = finalArrayHandholes.concat(arrayHandhole);
             }
-        }
-        finalArrayFibers.push(arrayStrands);
-        finalArrayFibers.push(arrayTubes);
-        finalArrayFibers.push(arrayFibers);
-        appendNearestFiberPathsTableMulty(finalArrayFibers);
-        appendNearestManholesTableMulty(arrayManhole);
-        appendNearestHandholesTableMulty(arrayHandhole);
-        appendNearestDBoardTableMulty(arrayDB);
 
-        $("#totalManhole_multy").val(arrayManhole.length);
-        $("#totalHandhole_multy").val(arrayHandhole.length);
-        $("#totalDB_Multy").val(arrayDB.length);
+            if (ptListObject[ptListKey].hasOwnProperty("Distribution_Board")) {
+                var arrayDB = ptListObject[ptListKey].Distribution_Board;
+                finalArrayDB = finalArrayDB.concat(arrayDB);
+            }
+
+			if (ptListObject[ptListKey].hasOwnProperty("fiber")) {
+			           var arrayFibers = ptListObject[ptListKey].fiber;
+			           finalArrayFibers = finalArrayFibers.concat(arrayFibers);
+			       }
+				   
+			if (ptListObject[ptListKey].hasOwnProperty("NodeList")) {
+			    var arrayNodes = ptListObject[ptListKey].NodeList;
+				   finalArrayNodes = finalArrayNodes.concat(arrayNodes);
+				   		       }
+			   }
+			   
+        // Process ptData for the clicked row (ptDataKey)
+		if (ptDataObject.hasOwnProperty(ptDataKey)) {
+		       if (ptDataObject[ptDataKey].hasOwnProperty("fiber_Tubes")) {
+		           var arrayTubes = ptDataObject[ptDataKey].fiber_Tubes;
+		           finalArrayTubes = finalArrayTubes.concat(arrayTubes);
+		       }
+
+		       if (ptDataObject[ptDataKey].hasOwnProperty("fiber_Strands")) {
+		           var arrayStrands = ptDataObject[ptDataKey].fiber_Strands;
+		           finalArrayStrands = finalArrayStrands.concat(arrayStrands);
+		       }
+		   }
+
+        // Append the data for the clicked row only
+		appendNearestFiberPathsTableMulty(finalArrayFibers, finalArrayTubes, finalArrayStrands);
+	    appendNearestManholesTableMulty(finalArrayManholes);
+        appendNearestHandholesTableMulty(finalArrayHandholes);
+        appendNearestDBoardTableMulty(finalArrayDB);
+		appendNearestNodeTableMulty(finalArrayNodes);
+        // Update the counts for this specific row
+        $("#totalManhole_multy").val(finalArrayManholes.length);
+        $("#totalHandhole_multy").val(finalArrayHandholes.length);
+        $("#totalDB_Multy").val(finalArrayDB.length);
     });
 
-    $("#siteModalAuxiliary").on('hidden.bs.modal', function () {
+    // Function to clear modal content
+    function clearModalContent() {
         $("#searchManhTBody_multy").empty();
         $("#searchHanhTBody_multy").empty();
         $("#searchDBoardTBody_multy").empty();
         $("#nearStrandId_multy").empty();
         $("#nearTubeId_multy").empty();
         $("#nearFiberId_multy").empty();
+		$("#searchNodeTBody_multy").empty();
+    }
+
+    // Clear the modal when closed
+    $("#siteModalAuxiliary").on('hidden.bs.modal', function () {
+        clearModalContent();
     });
 }
+// Global maps to hold circles and squares for each site
+const circlesMap = {};
+const squaresMap = {};
+
+// Function to handle checkbox changes
+function onCheckboxChange(indexSite, circleRadius, lat, lng) {
+    const myLatLng = { lat: parseFloat(lat), lng: parseFloat(lng) };
+
+    // Handle the circle checkbox
+    const isCircleChecked = $(`input[name='circleRange${indexSite}']`).is(':checked');
+
+    // Create the circle if it doesn't exist
+    if (!circlesMap[indexSite]) {
+        circlesMap[indexSite] = new google.maps.Circle({
+            center: myLatLng,
+            radius: circleRadius,
+            strokeColor: "blue",
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: "blue",
+            fillOpacity: 0.1,
+            map: null, // Initially not displayed on the map
+            clickable: false
+        });
+    }
+
+    // Show or hide the circle based on checkbox state
+    if (isCircleChecked) {
+        circlesMap[indexSite].setMap(map); // Show the circle
+    } else {
+        circlesMap[indexSite].setMap(null); // Hide the circle
+    }
+
+    // Handle the square checkbox independently
+    const isSquareChecked = $(`input[name='squareRange${indexSite}']`).is(':checked');
+
+    if (isSquareChecked) {
+        // Use the circle to determine the bounds for the square
+        const bounds = circlesMap[indexSite].getBounds();
+        const ne = bounds.getNorthEast();
+        const sw = bounds.getSouthWest();
+
+        // Define the paths for the square lines
+        const startLangPath = [
+            new google.maps.LatLng(sw.lat(), sw.lng()),
+            new google.maps.LatLng(ne.lat(), sw.lng())
+        ];
+        const startLatgPath = [
+            new google.maps.LatLng(sw.lat(), sw.lng()),
+            new google.maps.LatLng(sw.lat(), ne.lng())
+        ];
+        const endLangPath = [
+            new google.maps.LatLng(ne.lat(), sw.lng()),
+            new google.maps.LatLng(ne.lat(), ne.lng())
+        ];
+        const endLatgPath = [
+            new google.maps.LatLng(ne.lat(), ne.lng()),
+            new google.maps.LatLng(sw.lat(), ne.lng())
+        ];
+
+        // Check if squares have already been drawn
+        if (!squaresMap[indexSite]) {
+            // Draw and store lines in squaresMap
+            squaresMap[indexSite] = [
+                drawLine("#FF0000", startLangPath),
+                drawLine("#FF0000", startLatgPath),
+                drawLine("#006400", endLangPath),
+                drawLine("#006400", endLatgPath)
+            ];
+			console.log(squaresMap);
+        }
+    } else {
+        // Remove the square lines if they exist
+        if (squaresMap[indexSite]) {
+            squaresMap[indexSite].forEach(line => {
+                if (line) {
+                    line.setMap(null); // Remove each line from the map
+                }
+            });
+            delete squaresMap[indexSite]; // Clean up the reference
+        }
+    }
+}
+
+// Event listener for the checkboxes
+$(document).on('change', 'input.circleRange, input.squareRange', function () {
+    const indexSite = $(this).attr('name').replace(/^\D+/g, ''); // Extract index from checkbox name
+    const circleRadius = $("#closestMultyDisRange").val() * 1.609344 * 1000; // Convert miles to meters
+    const lat = $(`#siteLat_Multy${indexSite}`).val();
+    const lng = $(`#siteLng_Multy${indexSite}`).val();
+
+    // Call onCheckboxChange with required parameters
+    onCheckboxChange(indexSite, circleRadius, lat, lng);
+});
 
 
 
-function appendNearestManholesTableMulty(result){
-		var markupManh="";
-		document.getElementById("findNearestManRes_Multy");
-						
-		if (result.length==0){
-		document.getElementById("findNearestManRes_Multy").innerHTML = '<p style=" color:#ff0000;font-size: 1.4em;">There is no result</p>';
+
+
+
+function appendNearestManholesTableMulty(result) {
+    var markupManh = "";
+    var nearestManResMulty = document.getElementById("findNearestManRes_multy");
+
+    // Check if the element exists
+    if (nearestManResMulty) {
+        if (result.length == 0) {
+            nearestManResMulty.innerHTML = '<p style="color:#ff0000;font-size: 1.4em;">There is no result</p>';
+        } else {
+            for (var i = 0; i < result.length; i++) {
+                if ($("#circleRange_multy").is(":checked")) {
+                    markupManh += "<tr style='height: 30px;'><td><input type='checkbox' class='ManholeBOQ' id=BOOQ_" + result[i][0] + " ></td><td>" + result[i][0] + "</td><td name='manholeId' style='min-width:250px;'>" + result[i][1] + "</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='" + result[i][2] + "' readonly></input></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='" + result[i][3] + "' readonly></input></td>";
+                } else {
+                    if (result[i][9] == null || result[i][9] == "") {
+                        markupManh += "<tr style='height: 30px;'><td><input type='checkbox' class='ManholeBOQ' id=BOOQ_" + result[i][0] + " ></td><td>" + result[i][0] + "</td><td name='manholeId' style='min-width:250px;'>" + result[i][1] + "</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='" + result[i][2] + "' readonly></input></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='" + result[i][3] + "' readonly></input></td><td style='width:100px;'>" + (result[i][7]) + "</td><td style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance' style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px;' name='DDistanceB' onclick='getDrivingDistance(this)'>Get Distance</button></td></tr>";
+                    } else {
+                        markupManh += "<tr style='height: 30px;'><td><input type='checkbox' class='ManholeBOQ' id=BOOQ_" + result[i][0] + " ></td><td>" + result[i][0] + "</td><td name='manholeId' style='min-width:250px;'>" + result[i][1] + "</td><td style='width:150px;'>" + result[i][2] + "</td><td style='width:150px;'>" + result[i][3] + "</td><td style='width:100px;'>" + (result[i][7]) + "</td><td style='min-width:90px;'><label name='DDistance' style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'>" + (result[i][8]) + "</label></td></tr>";
+                    }
+                }
+            }
+
+            // Append the rows to the table
+            $("#searchManhTBody_multy").append(markupManh);
+        }
+    } else {
+        console.error("Element with ID 'findNearestManRes_Multy' not found.");
+    }
+
+    // Other function logic
+    if ($("#circleRange_multy").is(":checked")) {
+        drivingDistance("findNearstManhole_multy");
+    }
+    makeAllSortable();
+
+	$("#selectAllManhole_multy").click(function () {
+	    var manholeIds = [];
+	    var isChecked = $(this).is(":checked");
+	    $('.ManholeBOQ').prop('checked', isChecked);
+
+	    if (isChecked) {
+	        console.log("Collecting IDs of checked checkboxes...");
+
+	        $('.ManholeBOQ:checked').each(function () {
+	            var id = $(this).attr('id');
+	            console.log("Checkbox ID:", id);
+	            if (id && id.startsWith("BOOQ_")) {
+	                manholeIds.push(id.slice(5)); // Adjust slicing as needed
+	            }
+	        });
+
+	        console.log("Collected IDs:", manholeIds);
+
+	        // Clear previous markers
+	        markerClusterManhole.clearMarkers();
+
+	        // Check corresponding manhole checkboxes in the tree and add markers
+	        manholeIds.forEach(function(manholeId) {
+	              $("#" + manholeId).children('input:checkbox').prop('checked', true); // Check the checkbox in the tree
+	            console.log("Checking tree checkbox for ID:", "Manhole_f_" + manholeId);
+
+	            // Add marker to map
+	            // Use just manholeId here since it doesn't need the 'Manhole_f_' prefix
+	            if (markersManhole[manholeId]) {
+	                console.log("Adding marker to map for ID:", manholeId);
+	                markersManhole[manholeId].setMap(map);
+	                markerClusterManhole.addMarker(markersManhole[manholeId]);
+	            } else {
+	                console.warn("No marker found for ID:", manholeId); // Update this to use manholeId only
+	            }
+	        });
+	    } else {
+	        // Uncheck the corresponding manhole checkboxes in the tree
+	        $('.ManholeBOQ:checked').each(function () {
+	            var id = $(this).attr('id');
+	            if (id && id.startsWith("BOOQ_")) {
+					console.log("wowww");
+	                var manholeId = id.slice(5);
+	                $("#network_tree").find("input[type='checkbox'][id='Manhole_f_" + manholeId + "']").prop('checked', false);
+	            }
+	        });
+
+	        // Clear markers if any manholes are unchecked
+	        markerClusterManhole.clearMarkers();
+	    }
 		
-		}else {
-		   for(var i =0 ; i<result.length;i++){
-			if($("#circleRange_multy").is(":checked")){
-				markupManh +="<tr style='height: 30px;'><td ><input type='checkbox' class='ManholeBOQ' id=BOOQ_"+result[i][0]+" ></td><td  >"+result[i][0]+"</td><td name ='manholeId' style='min-width:250px;'>"+result[i][1]+"</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][3]+"' readonly></input ></td>"
-		    }
-		    else{
-			
-		    	if(result[i][9] == null || result[i][9]==""){
-				markupManh +="<tr style='height: 30px;'><td ><input type='checkbox' class='ManholeBOQ' id=BOOQ_"+result[i][0]+" ></td><td  >"+result[i][0]+"</td><td name ='manholeId' style='min-width:250px;'>"+result[i][1]+"</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][3]+"' readonly></input ></td><td style='width:100px;'>"+(result[i][7])+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistance(this)'>Get Distance</button> </td></tr>"
-			    }else{
-				markupManh +="<tr style='height: 30px;' ><td><input type='checkbox' class='ManholeBOQ' id=BOOQ_"+result[i][0]+" ></td><td  >"+result[i][0]+"</td><td name ='manholeId' style='min-width:250px;'>"+result[i][1]+"</td><td style='width:150px;'>"+result[i][2]+"</td><td style='width:150px;'>"+result[i][3]+"</td><td style='width:100px;'>"+(result[i][7])+"</td><td style='min-width:90px;'> <label name='DDistance' style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'>"+(result[i][8])+"</label></td></tr>"
-			    }
-		}
-		}
-}			  
-		$("#searchManhTBody_multy").append(markupManh);
-		if($("#circleRange_multy").is(":checked")){
-			drivingDistance("findNearstManhole_multy");
-		}
-		makeAllSortable();
-		
-		$("#selectAllManhole_multy").click(function(){
-			if($(this).is(":checked")){
-			
-			$('input[type="checkbox"]', '#findNearstManhole_multy').prop('checked', true);
-			$(".Manhole").prop('checked', true);
-			$(".AllManholes").prop("checked",true);
-			markerClusterManhole.clearMarkers();
-			$("#network_tree").find(".Manhole:checked" ).each(function(){
-				id=$(this).parent().attr('id');
-				markersManhole[id].setMap(map);			
-				markerClusterManhole.addMarker(markersManhole[id]);
-						
-			});
-			}
-			else{
-				$('input[type="checkbox"]', '#findNearstManhole_multy').prop('checked', false);
-				$(".Manhole").prop('checked', false);
-				$(".AllManholes").prop("checked",false);
-				markerClusterManhole.clearMarkers();
-			}
-		});
-		
-		// checking single row checbox from boq
-		$('.ManholeBOQ').click(function(){
-				var ManId = $(this).attr('id').split("BOOQ_")[1];
-				if ($(this).is(':checked')){
-					$("#"+ManId).children('input:checkbox').prop('checked', true);
-					markersManhole[ManId].setMap(map);
-					markerClusterManhole.addMarker(markersManhole[ManId]);
-				}
-				else{
-					$("#"+ManId).children('input:checkbox').prop('checked', false);
-		    		markersManhole[ManId].setMap(null);				
-					markerClusterManhole.removeMarker(markersManhole[ManId]);
-				}
-		});
-	}	
+		if ( $(".Manhole").length === $(".Manhole:checked").length){
+
+		       // Check the AllManholes checkbox if all are checked
+		       $(".AllManholes").prop('checked', true);
+}
+
+else{
+	$(".AllManholes").prop('checked', false);
 	
+}
+	});
+
+	// Single row checkbox logic remains the same
+	$('.ManholeBOQ').click(function () {
+	    var ManId = $(this).attr('id').split("BOOQ_")[1];
+	    if ($(this).is(':checked')) {
+	        $("#" + ManId).children('input:checkbox').prop('checked', true);
+	        markersManhole[ManId].setMap(map);
+	        markerClusterManhole.addMarker(markersManhole[ManId]);
+	    } else {
+	        $("#" + ManId).children('input:checkbox').prop('checked', false);
+	        markersManhole[ManId].setMap(null);
+	        markerClusterManhole.removeMarker(markersManhole[ManId]);
+	    }
+	});
+
+
+
+
+
+ 
+}
+
 function appendNearestHandholesTableMulty(result){
 		var markupHandh="";		
 		document.getElementById("findNearestHandRes_Multy");
@@ -5471,25 +5762,65 @@ function appendNearestHandholesTableMulty(result){
 		}
 		makeAllSortable();
 		
-		$("#selectAllHandhole_multy").click(function(){
-			if($(this).is(":checked")){
-			$('input[type="checkbox"]', '#findNearstHandhole_multy').prop('checked', true);
-			$(".Handhole").prop('checked', true);
-			$(".AllHandholes").prop("checked",true);
-			markerClusterHandhole.clearMarkers();
-			 $("#network_tree").find(".Handhole:checked" ).each(function(){
-				id=$(this).parent().attr('id');
-				markersHandhole[id].setMap(map);			
-				markerClusterHandhole.addMarker(markersHandhole[id]);		
-		     });	
-			}
-			else{
-				$('input[type="checkbox"]', '#findNearstHandhole_multy').prop('checked', false);
-				$(".Handhole").prop('checked', false);
-				$(".AllHandholes").prop("checked",false);
-				markerClusterHandhole.clearMarkers();
-			}
+		$("#selectAllHandhole_multy").click(function () {
+		    var handholeIds = [];
+		    var isChecked = $(this).is(":checked");
+		    $('.HandholeBOQ').prop('checked', isChecked);
+
+		    if (isChecked) {
+		        console.log("Collecting IDs of checked checkboxes...");
+
+		        $('.HandholeBOQ:checked').each(function () {
+		            var id = $(this).attr('id');
+		            console.log("Checkbox ID:", id);
+		            if (id && id.startsWith("BOQ_")) {
+		                handholeIds.push(id.slice(4)); // Adjust slicing as needed
+		            }
+		        });
+
+		        console.log("Collected IDs:", handholeIds);
+
+		        // Clear previous markers
+		        markerClusterHandhole.clearMarkers();
+
+		        // Check corresponding handhole checkboxes in the tree and add markers
+		        handholeIds.forEach(function(handholeId) {
+		            $("#" + handholeId).children('input:checkbox').prop('checked', true); // Check the checkbox in the tree
+		            console.log("Checking tree checkbox for ID:", "Handhole_f_" + handholeId);
+
+		            // Add marker to map
+		            if (markersHandhole[handholeId]) {
+		                console.log("Adding marker to map for ID:", handholeId);
+		                markersHandhole[handholeId].setMap(map);
+		                markerClusterHandhole.addMarker(markersHandhole[handholeId]);
+		            } else {
+		                console.warn("No marker found for ID:", handholeId);
+		            }
+		        });
+		    } else {
+		        // Uncheck the corresponding handhole checkboxes in the tree
+		        $('.HandholeBOQ:checked').each(function () {
+		            var id = $(this).attr('id');
+		            if (id && id.startsWith("BOOQ_")) {
+		                var handholeId = id.slice(5);
+		                $("#network_tree").find("input[type='checkbox'][id='Handhole_f_" + handholeId + "']").prop('checked', false);
+		            }
+		        });
+
+		        // Clear markers if any handholes are unchecked
+		        markerClusterHandhole.clearMarkers();
+		    }
+
+		    // Check if all Handhole checkboxes are checked
+		    if ($(".Handhole").length === $(".Handhole:checked").length) {
+		        // Check the AllHandholes checkbox if all are checked
+		        $(".AllHandholes").prop('checked', true);
+		    } else {
+		        // Uncheck the AllHandholes checkbox
+		        $(".AllHandholes").prop('checked', false);
+		    }
 		});
+
 		
 		// checking single row checbox from boq
 		$('.HandholeBOQ').click(function(){
@@ -5507,6 +5838,139 @@ function appendNearestHandholesTableMulty(result){
 		});
 
 }
+function appendNearestNodeTableMulty(result){
+		var markupNode="";
+		document.getElementById("findNearestNodeRes_Multy");
+			
+		if (result.length==0){
+			document.getElementById("findNearestNodeRes_Multy").innerHTML = '<p style=" color:#ff0000;font-size: 1.4em;">There is no result</p>';
+		}
+		else { 
+				for(var i =0 ; i<result.length;i++){
+					if($("#circleRange_multy").is(":checked")){
+						markupNode +="<tr style='height: 30px;'><td ><input type='checkbox' class='NodeBOQ' id=BOQ_"+result[i][0]+" ></td><td  >"+result[i][0]+"</td><td style='min-width:250px;'>"+result[i][1]+"</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][5]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][6]+"' readonly></input ></td>"
+				    }
+				    else{
+				    	if(result[i][10] == null || result[i][10]==""){
+							markupNode +="<tr style='height: 30px;'><td><input type='checkbox' class='NodeBOQ' id=BOQ_"+result[i][0]+" ></td><td style='min-width:150px;'>"+result[i][0]+"</td><td style='min-width:150px;'>"+result[i][1]+"</td><td  name='LONGG' style='min-width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][5]+"' readonly></input ></td><td style='min-width:150px;'  name='LATT'><input name='LATT' style='border: none;' value='"+result[i][6]+"' readonly></input ></td><td style='min-width:50px;'>"+result[i][9]+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistance(this)'>Get Distance</button> </td></tr>"
+						}
+				    }
+				}
+		}
+		$("#searchNodeTBody_multy").append(markupNode);
+	
+    
+    if ($("#circleRange_multy").is(":checked")) {
+        drivingDistance("findNearstNode_multy");
+    }
+    
+    makeAllSortable();
+
+    $("#selectAllNode_multy").click(function () {
+        var nodeIds = [];
+        var isChecked = $(this).is(":checked");
+        $('.NodeBOQ').prop('checked', isChecked);
+
+        if (isChecked) {
+            $('.NodeBOQ:checked').each(function () {
+                var id = $(this).attr('id');
+                if (id && id.startsWith("BOQ_")) {
+                    nodeIds.push(id.slice(4));
+                }
+            });
+
+            // Clear all markers before adding new ones
+            markerClusterMSANNodes.clearMarkers();
+            markerClusterDWDMNodes.clearMarkers();
+            markerClusterSDHNodes.clearMarkers();
+            markerClusterGPONNodes.clearMarkers();
+            markerClusterEntSwitchNodes.clearMarkers();
+
+            nodeIds.forEach(function (nodeId) {
+                $("#" + nodeId).children('input:checkbox').prop('checked', true);
+                
+                if (markersNodeActive[nodeId]) {
+                    markersNodeActive[nodeId].setMap(map);
+                    const type = window[nodeId][8];
+
+                    if (type === "MSAN") markerClusterMSANNodes.addMarker(markersNodeActive[nodeId]);
+                    else if (type === "DWDM") markerClusterDWDMNodes.addMarker(markersNodeActive[nodeId]);
+                    else if (type === "SDH") markerClusterSDHNodes.addMarker(markersNodeActive[nodeId]);
+                    else if (type === "GPON") markerClusterGPONNodes.addMarker(markersNodeActive[nodeId]);
+                    else if (type === "SWITCH") markerClusterEntSwitchNodes.addMarker(markersNodeActive[nodeId]);
+                } else {
+                    console.warn("No marker found for ID:", nodeId);
+                }
+            });
+        } else {
+			$('.NodeBOQ').each(function () {
+			                var id = $(this).attr('id');
+			                if (id && id.startsWith("BOQ_")) {
+			                    nodeIds.push(id.slice(4));
+			                }
+			            });
+						
+						nodeIds.forEach(function (nodeId) {
+						                $("#" + nodeId).children('input:checkbox').prop('checked', false);
+						             });
+				 
+            // Clear markers if unchecked
+            markerClusterMSANNodes.clearMarkers();
+            markerClusterDWDMNodes.clearMarkers();
+            markerClusterSDHNodes.clearMarkers();
+            markerClusterGPONNodes.clearMarkers();
+            markerClusterEntSwitchNodes.clearMarkers();
+        }
+    });
+
+    $('.NodeBOQ').click(function () {  
+        var nodeId = $(this).attr('id').split("BOQ_")[1];
+        if ($(this).is(':checked')) {
+            $("#" + nodeId).children('input:checkbox').prop('checked', true);
+            markersNodeActive[nodeId].setMap(map);
+            const type = window[nodeId][8];
+
+            if (type === "MSAN") markerClusterMSANNodes.addMarker(markersNodeActive[nodeId]);
+            else if (type === "DWDM") markerClusterDWDMNodes.addMarker(markersNodeActive[nodeId]);
+            else if (type === "SDH") markerClusterSDHNodes.addMarker(markersNodeActive[nodeId]);
+            else if (type === "GPON") markerClusterGPONNodes.addMarker(markersNodeActive[nodeId]);
+            else if (type === "SWITCH") markerClusterEntSwitchNodes.addMarker(markersNodeActive[nodeId]);
+        } else {
+            $("#" + nodeId).children('input:checkbox').prop('checked', false);
+            markersNodeActive[nodeId].setMap(null);
+            const type = window[nodeId][8];
+
+            if (type === "MSAN") markerClusterMSANNodes.removeMarker(markersNodeActive[nodeId]);
+            else if (type === "DWDM") markerClusterDWDMNodes.removeMarker(markersNodeActive[nodeId]);
+            else if (type === "SDH") markerClusterSDHNodes.removeMarker(markersNodeActive[nodeId]);
+            else if (type === "GPON") markerClusterGPONNodes.removeMarker(markersNodeActive[nodeId]);
+            else if (type === "SWITCH") markerClusterEntSwitchNodes.removeMarker(markersNodeActive[nodeId]);
+        }
+    });
+}
+
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function appendNearestDBoardTableMulty(result){
 		var markupDBoard="";
@@ -5535,39 +5999,76 @@ function appendNearestDBoardTableMulty(result){
 		}
         makeAllSortable();
 
-		$("#selectAllDB_multy").click(function(){
-			if($(this).is(":checked")){
-			$('input[type="checkbox"]', '#findNearstDB_multy').prop('checked', true);
-			$(".DistBoard").prop('checked', true);
-			$(".AllDistBoards").prop("checked",true);
-			markerClusterBackboneDistBoard.clearMarkers(); 
-			markerClusterMetroDistBoard.clearMarkers(); 
-			markerClusterAccessDistBoard.clearMarkers(); 
+		$("#selectAllDB_multy").click(function () {
+		    var distBoardIds = [];
+		    var isChecked = $(this).is(":checked");
+		    $('.DBBOQ').prop('checked', isChecked); // Assuming your checkboxes have a class DistBoardBOQ
 
-			$("#network_tree").find(".DistBoard:checked" ).each(function(){
-				id=$(this).parent().attr('id');
-				markersDistBoard[id].setMap(map);
-				if(window[""+id][8]=="backbone") {
-					markerClusterBackboneDistBoard.addMarker(markersDistBoard[id]);
-				}
-				else if(window[""+id][8]=="metro") {
-					markerClusterMetroDistBoard.addMarker(markersDistBoard[id]);
-				}
-				else if(window[""+id][8]=="access") {
-					markerClusterAccessDistBoard.addMarker(markersDistBoard[id]);
-				}			
-			});	
-			}
-			else{
-				$('input[type="checkbox"]', '#findNearstDB_multy').prop('checked', false);
-				$(".DistBoard").prop('checked', false);
-				$(".AllDistBoards").prop("checked",false);
-				markerClusterBackboneDistBoard.clearMarkers(); 
-				markerClusterMetroDistBoard.clearMarkers(); 
-				markerClusterAccessDistBoard.clearMarkers(); 
-			}
-			
+		    if (isChecked) {
+		        console.log("Collecting IDs of checked checkboxes...");
+
+		        $('.DBBOQ:checked').each(function () {
+		            var id = $(this).attr('id');
+		            console.log("Checkbox ID:", id);
+		            if (id && id.startsWith("BOQ_")) {
+		                distBoardIds.push(id.slice(4)); // Adjust slicing as needed
+		            }
+		        });
+
+		        console.log("Collected IDs:", distBoardIds);
+
+		        // Clear previous markers
+		        markerClusterBackboneDistBoard.clearMarkers();
+		        markerClusterMetroDistBoard.clearMarkers();
+		        markerClusterAccessDistBoard.clearMarkers();
+
+		        // Check corresponding DistBoard checkboxes in the tree and add markers
+		        distBoardIds.forEach(function(distBoardId) {
+		            $("#" + distBoardId).children('input:checkbox').prop('checked', true); // Check the checkbox in the tree
+		            console.log("Checking tree checkbox for ID:", "DistBoard_f_" + distBoardId);
+
+		            // Add marker to map based on type
+		            if (markersDistBoard[distBoardId]) {
+		                console.log("Adding marker to map for ID:", distBoardId);
+		                markersDistBoard[distBoardId].setMap(map);
+		                if (window[distBoardId][8] === "backbone") {
+		                    markerClusterBackboneDistBoard.addMarker(markersDistBoard[distBoardId]);
+		                } else if (window[distBoardId][8] === "metro") {
+		                    markerClusterMetroDistBoard.addMarker(markersDistBoard[distBoardId]);
+		                } else if (window[distBoardId][8] === "access") {
+		                    markerClusterAccessDistBoard.addMarker(markersDistBoard[distBoardId]);
+		                }
+		            } else {
+		                console.warn("No marker found for ID:", distBoardId);
+		            }
+					
+					
+					
+					
+		        });
+		    } else {
+		   
+				$('.DistBoardBOQ').each(function () {
+							                var id = $(this).attr('id');
+							                if (id && id.startsWith("BOQ_")) {
+							                   distBoardIds.push(id.slice(4));
+							                }
+							            });
+										
+										distBoardIds.forEach(function (distBoardId) {
+										                $("#" + distBoardId).children('input:checkbox').prop('checked', false);
+										             });
+							
+		        // Clear markers if any DistBoards are unchecked
+		        markerClusterBackboneDistBoard.clearMarkers();
+		        markerClusterMetroDistBoard.clearMarkers();
+		        markerClusterAccessDistBoard.clearMarkers();
+		    }
+
+		    
+		    
 		});
+
 		
 		// checking single row checbox from boq
 		$('.DBBOQ').click(function(){		
@@ -5601,47 +6102,63 @@ function appendNearestDBoardTableMulty(result){
 		});
 																	
 	}
-	
-function appendNearestFiberPathsTableMulty(result){
-		var markupNearStrand="";
-		var markupNearTube="";
-		var markupNearFiber="";		
+	function appendNearestFiberPathsTableMulty(finalArrayFibers, finalArrayTubes, finalArrayStrands) {
+	    console.log("Final Tubes Array:", finalArrayTubes); // Check the contents of the tubes array
+	    
+	    // Clear previous rows in each table
+	    $("#nearestFiber tbody tr:not(:first)").remove();
+	    $("#nearestTube tbody tr:not(:first)").remove();
+	    $("#nearestStrand tbody tr:not(:first)").remove();
+	    
+	    // Append fibers
+	    let fiberRows = "";
+	    if (finalArrayFibers.length === 0) {
+			$("#fiberMulty").html("<p style='color:red; font-size: 1.4em; text-align: left;'>There is no result</p>");
+				  } else {
+	        finalArrayFibers.forEach(function(fiber) {
+	            fiberRows += "<tr>" +
+	                "<td>" + fiber[4] + "</td>" + // ID from index 4
+	                "<td>" + fiber[13] + "</td>" + // Name from index 13
+	                "<td>" + fiber[6] + "</td>" + // Source from index 6
+	                "<td>" + fiber[9] + "</td>" + // Additional data from index 9
+	            "</tr>";
+	        });
+	    }
+	    $("#nearFiberId_multy").append(fiberRows);
+	    
+	    // Append tubes
+	    let tubeRows = "";
+	    if (finalArrayTubes.length === 0) {
+			  $("#tubeMulty").html("<p style='color:red; font-size: 1.4em; text-align: left;'>There is no result</p>");
+			} else {
+	        finalArrayTubes.forEach(function(tube) {
+	            console.log("Adding Tube:", tube); // Debug log for tube
+	            tubeRows += "<tr>" +
+	                "<td>" + tube[0] + "</td>" + // ID from index 0
+	                "<td>" + tube[13] + "</td>" + // Name from index 13
+	                "<td>" + tube[6] + "</td>" + // Source from index 6
+	                "<td>" + tube[9] + "</td>" + // Destination from index 9
+	            "</tr>";
+	        });
+	    }
+	    $("#nearTubeId_multy").append(tubeRows);
 
-		if (result.length==0){
-			markupNearStrand ="<tr style='height:20px;'><td>There is no result<td></tr>"
-		}else {
-		   if (result[0]) {
-			result[0].forEach((res) => 
-				markupNearStrand +="<tr ><td style='min-width:150px;' class='row-pad'>"+res[0]+"</td><td style='min-width:150px;'>"+res[13]+"</td><td style='min-width:350px;'>"+res[6]+"</td><td style='min-width:350px;'>"+res[9]+"</td></tr>"
-				);
-				}
-		}
-		$("#nearStrandId_multy").append(markupNearStrand);
-		
-		if (result.length==0){
-			markupNearTube ="<tr style='height:20px;'><td>There is no result<td></tr>"
-		}else {
-		  if (result[1]) {
-			result[1].forEach((res) => 
-		markupNearTube +="<tr ><td style='min-width: 150px;' class='row-pad'>"+res[0]+"</td><td style='min-width: 150px;'>"+res[13]+"</td><td style='min-width: 350px;'>"+res[6]+"</td><td style='min-width: 350px;'>"+res[9]+"</td></tr>"
-			);
-			}
-		}						  
-		$("#nearTubeId_multy").append(markupNearTube);
-		
-		if (result.length==0){
-			markupNearFiber ="<tr style='height:20px;'><td>There is no result<td></tr>"
-		}else {
-		  if (result[2]) {
-			result[2].forEach((res) => 
-				 markupNearFiber +="<tr ><td style='min-width: 150px;' class='row-pad'>"+res[4]+"</td><td style='min-width: 150px;'>"+res[13]+"</td><td style='min-width: 350px;'>"+res[6]+"</td><td style='min-width: 350px;'>"+res[9]+"</td></tr>"
-			);
-			}
-		}						  
-		$("#nearFiberId_multy").append(markupNearFiber);
-																	
-}	
-
+	    // Append strands
+	    let strandRows = "";
+	    if (finalArrayStrands.length === 0) {
+		$("#strandMulty").html("<p style='color:red; font-size: 1.4em; text-align: left;'>There is no result</p>");
+			} else {
+	        finalArrayStrands.forEach(function(strand) {
+	            strandRows += "<tr>" +
+	                "<td>" + strand[0] + "</td>" + // ID from index 0
+	                "<td>" + strand[13] + "</td>" + // Name from index 13
+	                "<td>" + strand[6] + "</td>" + // Source from index 6
+	                "<td>" + strand[9] + "</td>" + // Destination from index 9
+	            "</tr>";
+	        });
+	    }
+	    $("#nearStrandId_multy").append(strandRows);
+	}
 
 
  var rowData = {};
@@ -5776,7 +6293,9 @@ function drawLine(color,path){
 	    map: map
 	});
 	
-}
+
+	    return line; // Return the line object
+	}
 
 function searchConnectedButtonEvents(hash_Project,hash_manhole,hash_handhole,hash_fiber,hash_DBoard,hash_fiberTubes,hash_FiberStrands,hash_FiberAuxiliaries,hash_TubeAuxiliaries,hash_strandsAuxiliaries,hash_trensh,hash_trenchAuxiliary){
 	
@@ -14975,3 +15494,200 @@ function getAllSurveyArrays(tableId,surveyArray) {
 				dictObj = {}; 	
 	  }	
 }
+function viewOnMap(checkbox, ptList, ptData) {
+	 checkbox = checkbox.checked;
+    let ManholeIds = [];
+    let HandholeIds = [];
+    let DBIds = [];
+    let fiberIds = [];
+    let nodeIds = [];
+    let tubeIds = [];
+    let strandIds = [];
+	function removeDistributionBoardMarker(id, markerObj) {
+	      const type = window["" + id][8];
+	      if (type === "backbone") markerClusterBackboneDistBoard.removeMarker(markerObj[id]);
+	      else if (type === "metro") markerClusterMetroDistBoard.removeMarker(markerObj[id]);
+	      else if (type === "access") markerClusterAccessDistBoard.removeMarker(markerObj[id]);
+	  }
+	  function addDistributionBoardMarker(id, markerObj) {
+	         const type = window["" + id][8];
+	         if (type === "backbone") markerClusterBackboneDistBoard.addMarker(markerObj[id]);
+	         else if (type === "metro") markerClusterMetroDistBoard.addMarker(markerObj[id]);
+	         else if (type === "access") markerClusterAccessDistBoard.addMarker(markerObj[id]);
+	     }
+		 function addNodeMarker(id, markerObj) {
+		         const type = window["" + id][8];
+			
+		         if (type === "MSAN") markerClusterMSANNodes.addMarker(markerObj[id]);
+		         else if (type === "DWDM") markerClusterDWDMNodes.addMarker(markerObj[id]);
+		         else if (type === "SDH") markerClusterSDHNodes.addMarker(markerObj[id]);
+		         else if (type === "GPON") markerClusterGPONNodes.addMarker(markerObj[id]);
+		         else if (type === "SWITCH") markerClusterEntSwitchNodes.addMarker(markerObj[id]);
+		     }
+
+		     function removeNodeMarker(id, markerObj) {
+		         const type = window["" + id][8];
+				
+		         if (type === "MSAN") markerClusterMSANNodes.removeMarker(markerObj[id]);
+		         else if (type === "DWDM") markerClusterDWDMNodes.removeMarker(markerObj[id]);
+		         else if (type === "SDH") markerClusterSDHNodes.removeMarker(markerObj[id]);
+		         else if (type === "GPON") markerClusterGPONNodes.removeMarker(markerObj[id]);
+		         else if (type === "SWITCH") markerClusterEntSwitchNodes.removeMarker(markerObj[id]);
+		     }
+    // Helper function to toggle markers based on checkbox state
+
+	function toggleMarker(id, mapObj, markerObj, clusterObj, isChecked, Class, folder, markerType) {
+	    if (checkbox && !isChecked) {
+
+	        // Main checkbox checked, check the individual box and add the marker
+	        $("#" + id).children('input:checkbox').prop('checked', true);
+	        markerObj[id].setMap(mapObj);
+	        if (markerType === "DistBoard") {
+	            addDistributionBoardMarker(id, markerObj);
+	        } else if (markerType === "NodeList") {
+	            addNodeMarker(id, markerObj);
+	        } else {
+	            clusterObj.addMarker(markerObj[id]);
+	        }
+	    } else if (!checkbox && isChecked) {
+
+	        // Main checkbox unchecked, uncheck the individual box and remove the marker
+	        $("#" + id).children('input:checkbox').prop('checked', false);
+	        markerObj[id].setMap(null);
+	        if (markerType === "DistBoard") {
+	            removeDistributionBoardMarker(id, markerObj);
+	        } else if (markerType === "NodeList") {
+	            removeNodeMarker(id, markerObj);
+	        } else {
+	            clusterObj.removeMarker(markerObj[id]);
+	        }
+	    } 
+
+	    // Update folder checkbox based on checked items
+	    $(folder).prop('checked', $(Class).length === $(Class + ":checked").length);
+	}
+
+    // Process Manhole markers
+	if (ptList.Manhole.length > 0) {
+	    for (let i = 0; i < ptList.Manhole.length; i++) {
+	        const ManId = ptList.Manhole[i][0];
+	        const isChecked = $("#" + ManId).children('input:checkbox').is(':checked');
+
+	        // Toggle Manhole markers based on the checkbox state
+	        toggleMarker(ManId, map, markersManhole, markerClusterManhole, isChecked, ".Manhole", ".AllManholes", "default");
+
+	        ManholeIds.push(ManId);
+	    }
+	}
+
+    // Process Handhole markers
+    if (ptList.Handhole.length > 0) {
+        for (let i = 0; i < ptList.Handhole.length; i++) {
+            const HandId = ptList.Handhole[i][0];
+            const isChecked = $("#" + HandId).children('input:checkbox').is(':checked');
+
+              toggleMarker(HandId, map, markersHandhole, markerClusterHandhole, isChecked, ".Handhole", ".AllHandholes", "default");
+           
+            HandholeIds.push(HandId);
+        }
+    }
+
+    // Process Distribution Board markers
+    if (ptList.Distribution_Board.length > 0) {
+        for (let i = 0; i < ptList.Distribution_Board.length; i++) {
+            const DBId = ptList.Distribution_Board[i][0];
+            const isChecked = $("#" + DBId).children('input:checkbox').is(':checked');
+
+               toggleMarker(DBId, map, markersDistBoard, null, isChecked, ".DistributionBoard", ".AllDistributionBoards", "DistBoard");
+           
+            DBIds.push(DBId);
+        }
+    }
+
+    // Process NodeList markers
+    if (ptList.NodeList.length > 0) {
+        for (let i = 0; i < ptList.NodeList.length; i++) {
+            const NodeId = ptList.NodeList[i][0];
+            const isChecked = $("#" + NodeId).children('input:checkbox').is(':checked');
+
+                toggleMarker(NodeId, map, markersNodeActive, null, isChecked, ".Node", ".AllNodes", "NodeList");
+           
+            nodeIds.push(NodeId);
+        }
+    }
+
+    // Extract IDs from fiber markers
+    if (ptList.fiber.length > 0) {
+        for (let i = 0; i < ptList.fiber.length; i++) {
+            const fiberId = ptList.fiber[i][4];
+            const isChecked = $("#" + fiberId).children('input:checkbox').is(':checked');
+
+            if (checkbox && !isChecked) {
+                $("#" + fiberId).children('input:checkbox').prop('checked', false);
+                $("#" + fiberId).children('input:checkbox').prop('checked', true);
+                const path = window["mapPoints_" + fiberId];							 
+                buildPath(
+                    fiberId,
+                    path,
+                    fiberArray,
+                    allFiberCables,
+                    "FiberPath_f_",
+                    window['FiberColor_' + window[fiberId][22]],
+                    0.7,
+                    4.5,
+                    'blue',
+                    13
+                );
+                fiberArray[fiberId].setMap(map);
+            } else if (!checkbox && isChecked) {
+                    $("#" + fiberId).children('input:checkbox').prop('checked', false);
+                    fiberArray[fiberId].setMap(null);
+                    fiberArray[fiberId].mapLabel.setMap(null);
+                }
+            
+        }
+    }
+
+	
+    // Process fiber tubes and strands (if needed)
+    if (ptData.fiber_Tubes.length > 0) {
+        for (let i = 0; i < ptData.fiber_Tubes.length; i++) {
+            const tubeId = ptData.fiber_Tubes[i][0];
+			const isChecked = $("#" + tubeId).children('input:checkbox').is(':checked');
+
+			          if (checkbox && !isChecked) {
+			             $("#" + tubeId).children('input:checkbox').prop('checked', false);
+			             $("#" + tubeId).children('input:checkbox').prop('checked', true);
+			             buildPath(tubeId,window["mapPoints_"+tubeId],tubeArray,allTubes,"Tube",'green',0.7,3.3,'green',0);
+						 tubeArray[tubeId].setMap(map);
+
+			         }else if (!checkbox && isChecked) {
+			                 $("#" + tubeId).children('input:checkbox').prop('checked', false);
+			                  tubeArray[tubeId].setMap(null);
+			                  tubeArray[tubeId].mapLabel.setMap(null);
+			             }
+			         
+			     }
+			 }
+
+    if (ptData.fiber_Strands.length > 0) {
+        for (let i = 0; i < ptData.fiber_Strands.length; i++) {
+            const strandId = ptData.fiber_Strands[i][0];
+			const isChecked = $("#" + strandId).children('input:checkbox').is(':checked');
+
+						         if (checkbox && !isChecked) {
+						             $("#" + strandId).children('input:checkbox').prop('checked', false);
+						             $("#" + strandId).children('input:checkbox').prop('checked', true);
+									 buildPath(strandId,window["mapPoints_"+strandId],strandArray,allStrands,"Strand",'purple',0.7,2.8,'purple',0);
+									 strandArray[strandId].setMap(map);
+									 							
+						         } else if (!checkbox && isChecked) {
+						             
+						                 $("#" + strandId).children('input:checkbox').prop('checked', false);
+						                  strandArray[strandId].setMap(null);
+						                  strandArray[strandId].mapLabel.setMap(null);
+						             }
+						         }
+						     }
+						 }
+						 
