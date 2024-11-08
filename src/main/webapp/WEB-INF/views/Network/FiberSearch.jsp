@@ -393,6 +393,9 @@
 											id="dboardPoint-tab" style="color: gold;" data-toggle="tab"
 											href="#dboardP" role="tab" aria-controls="conduit"
 											aria-selected="false">Distribution Board</a></li>
+											
+										
+											
 										<li class="nav-item"><a class="nav-link "
 											id="fPaths-tab" style="color: gold;" data-toggle="tab"
 											href="#fPaths" role="tab" aria-controls="conduit"
@@ -501,6 +504,11 @@
                                             <div id="DbTotal" Style="Padding-top: 15px;"><b>Total Distribution Boards:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="totalDB" name="totalDB" readonly>										
                                             </div>
 										</div>
+										
+										
+										
+										
+										
 										<div class="tab-pane" id="fPaths" role="tabpanel" aria-labelledby="fPaths-tab">
 											<p></p>
 											<div class="container-fluid">
@@ -592,8 +600,7 @@
 									<div class="col-sm-1"></div>
 									<div class="col-sm-3">
 									<div class="form-group"><div class="input-group-prepend">
-											<span style="min-width: 90px; font-size: 12px; width:100%;" class="input-group-text" ><b>Get Related Points</b> 
-											<input type='checkbox' id="getRelatedPoints_Multy" style='position: relative; margin-left:25px'  value='0'></span>
+									
 									</div></div></div></div>
 								
 										<div class="row">
@@ -724,7 +731,7 @@
 									  	<div class="table-responsive-sm" id="Multy_auxiliaryDiv"> 
 											<table id="Multy_auxiliary"
 												class="table table-striped table-bordered table-sm"
-												style="display: block; height: 430px; overflow: auto; width:930px; margin-right:20px">
+												style="display: block; height: 430px; overflow: auto; width:950px; margin-right:20px">
 												<thead style="background: #E9ECEF;">
 													<tr class="fixed-headerr">
 														<th >
@@ -732,11 +739,16 @@
 																<span class="sub"></span>Select
 															</button>
 														</th>
+														
 														<th width="60px" class="headcol">Sequence</th>
-														<th width="150px" >Site Pointes</th>
-														<th width=330px>Site Name</th>
-														<th width=220px>Site Longitude</th>
-														<th width=220px>Site Latitude</th>
+													<th>	View on Map
+												</th>
+														<th width="150px" >Location points</th>
+														<th width=330px>Location Name </th>
+														<th width=220px>Location Longitude</th>
+														<th width=220px>Location Latitude</th>
+														<th width=220px>Circle </th>
+														<th width=220px> Square </th>
 													</tr>
 												</thead>
 												<tbody>
@@ -838,6 +850,7 @@
 							<li class="nav-item"><a class="nav-link active" id="SiteAux-tab" style="color: gold;" data-toggle="tab" href="#SiteAux" role="tab" aria-labelledby="SiteAux" aria-selected="true">Site Auxiliary Points</a></li>
 						</ul>
 						<br>
+						<div></div>
 						<br>
 							<ul class="nav nav-tabs" id="myTab" role="tablist" style="background-color: #00757C;">
 										<li class="nav-item"><a class="nav-link active"
@@ -854,6 +867,11 @@
 											id="dboardPoint-tab_multy" style="color: gold;" data-toggle="tab"
 											href="#dboardP_multy" role="tab" aria-controls="conduit"
 											aria-selected="false">Distribution Board</a></li>
+											
+											<li class="nav-item"><a class="nav-link "
+											id="node-tab_multy" style="color: gold;" data-toggle="tab"
+											href="#nodes_multy" role="tab" aria-controls="conduit"
+											aria-selected="false">Node</a></li>
 											
 										<li class="nav-item"><a class="nav-link "
 											id="fPaths-tab_multy" style="color: gold;" data-toggle="tab"
@@ -951,11 +969,42 @@
                                             <div id="DbTotal" Style="Padding-top: 25px;"><b>Total Distribution Boards:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="totalDB_Multy" name="totalDB_Multy" readonly>										
                                             </div>
 										</div>
+										
+												<div class="tab-pane" id="nodes_multy" role="tabpanel"
+											aria-labelledby="node-tab_multy">
+											<p></p>
+											<div class="container-fluid">
+												<div id="findNearestNodeRes_Multy"></div>
+												<div class="row" style="height: 300px;">
+													<fieldset class="field_set" style="overflow-y: auto;">
+														<legend style="width: auto;" class="fieldset_legend"></legend>
+														<table id="findNearstNode_multy" style="display: block; height: 150px;">
+														 <thead>															
+															<tr>
+																<th style="min-width: 30px;"><input type="checkbox" id="selectAllNode_multy"></th>
+																<th style="min-width: 150px;" >Node ID</th>
+																<th style="min-width: 150px;">Node Name</th>
+																<th style="min-width: 100px;">Longitude</th>
+																<th style="min-width: 100px;">Latitude</th>
+																<th style="min-width: 100px;">Distance(km)</th>
+																<th style="min-width: 100px;" colspan="2">Driving Distance(km)</th>								
+															</tr>
+															 </thead>															
+															<tbody id="searchNodeTBody_multy">
+															</tbody>
+														</table>
+													</fieldset>
+												 </div>
+											</div>
+                                            <div id="NodeTotal" Style="Padding-top: 25px;"><b>Total Nodes:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="totalNode_Multy" name="totalNode_Multy" readonly>										
+                                            </div>
+										</div>
 												
 
 										<div class="tab-pane" id="fPaths_multy" role="tabpanel" aria-labelledby="fPaths-tab_multy">
 											<p></p>
 											<div class="container-fluid">
+											<div id="strandMulty"></div>
 											<div class="row" style="height: 200px;">
 										<fieldset class="field_set" style="overflow-y: auto;">
 											<legend style="width: auto;" class="fieldset_legend"></legend>
@@ -972,6 +1021,7 @@
 										</fieldset>
 									</div>
 									<br>
+									<div id="tubeMulty"></div>
 									<div class="row" style="height: 200px;">
 										<fieldset class="field_set" style="overflow-y: auto;">
 											<legend style="width: auto;" class="fieldset_legend"></legend>
@@ -989,6 +1039,7 @@
 									</div>
 									<br>
 									<div class="row" style="height: 200px;">
+									<div id="fiberMulty"></div>
 										<fieldset class="field_set" style="overflow-y: auto;">
 											<legend style="width: auto;" class="fieldset_legend"></legend>
 											<table id="nearestFiber" style="display: block; height: 100px;">
@@ -1297,6 +1348,7 @@ document.addEventListener("DOMContentLoaded", function() {
     genericCheckbox.addEventListener("change", toggleButtonVisibility);
     otherCheckboxes.forEach(checkbox => checkbox.addEventListener("change", toggleButtonVisibility));
 });
+
 
 </script>
 </html>
