@@ -16674,154 +16674,154 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 			});
 }
 	
-function updateMarker(locationNum) {
-    const row = $(`#Multy_auxiliary input[name='location_number'][value='${locationNum}']`).closest('tr');
-    const lat = parseFloat(row.find(`input[name^='siteLat_Multy']`).val());
-    const lng = parseFloat(row.find(`input[name^='siteLng_Multy']`).val());
-
-    if (!isNaN(lat) && !isNaN(lng)) {
-        const locationData = locationsArray[locationNum];
-        if (locationData) {
-            locationData.marker.setPosition({ lat, lng });
-            locationData.lat = lat;
-            locationData.lng = lng;
-            console.log(`Updated marker for ${locationNum} to new position:`, { lat, lng });
-        } else {
-            console.error(`Marker not found for location number: ${locationNum}`);
-        }
-    } else {
-        console.error('Invalid latitude or longitude:', lat, lng);
-    }
-}
 
  // Array to store markers
-let indexSite = 0; // Initialize indexSite globally
- // Ensure LastlocationNumber is defined
+ let indexSite = 0; // Initialize indexSite globally
+ 	 // Ensure LastlocationNumber is defined
 
-$("#add_Multy").on('click', function() {
-    // Handle location number logic
-    if (LastlocationNumber !== '') {
-        location_number = Number(LastlocationNumber);
-        LastlocationNumber = '';
-    } else {
-        location_number++;
-    }
+ 	$("#add_Multy").on('click', function() {
+ 	    // Handle location number logic
+ 	    if (LastlocationNumber !== '') {
+ 	        location_number = Number(LastlocationNumber);
+ 	        LastlocationNumber = '';
+ 	    } else {
+ 	        location_number++;
+ 	    }
 
-    const markup = `<tr>
-        <td><input type='checkbox' style='margin-left: 20px;' name='record'></td>
-        <td class='headcol' name='Seq'><input name='Seq_Multy' id='Seq_Multy${indexSite}' class='form-control text-input' type='text' style='max-width:60px;'/></td>
-        <td style='width:100px; text-align:center;'><input type='checkbox' style='vertical-align: middle; width:100px'></td>
-        <td name='auxRefSite' style='background-color: #778899;'><a href='#' id='auxRefSite${indexSite}' style='width:350px; pointer-events: none;'><p style='height:10px; margin-left:20px; color:white; background-color: #778899; margin-top:10px; width:150px;'>View Result</p></a></td>
-        <td name='siteId_Multy'><input name='siteId_Multy${indexSite}' id='siteId_Multy${indexSite}' class='form-control' type='text' style='width:330px;'/></td>
-        <td name='siteLng_Multy'><input name='siteLng_Multy${indexSite}' id='siteLng_Multy${indexSite}' class='form-control latLngInput' type='text' style='width:220px;' data-location-number='${location_number}'/></td>
-        <td name='siteLat_Multy'><input name='siteLat_Multy${indexSite}' id='siteLat_Multy${indexSite}' class='form-control latLngInput' type='text' style='width:220px;' data-location-number='${location_number}'/></td>
-        <td name='squareRange'><input class='circleRange' type='checkbox' style='margin-left: 20px;' name='circle' data-lng='lng${indexSite}' data-lat='lat${indexSite}'></td>
-        <td name='squareRange'><input class='squareRange' type='checkbox' style='margin-left: 20px;' name='square' data-lng='lng${indexSite}' data-lat='lat${indexSite}'></td>
-        <td name='location_number'><input type='text' name='location_number' class='form-control' value='location_${location_number}' readonly style='width:100px;'/></td>
-    </tr>`;
+ 	    const markup = `<tr>
+ 	        <td><input type='checkbox' style='margin-left: 20px;' name='record'></td>
+ 	        <td class='headcol' name='Seq'><input name='Seq_Multy' id='Seq_Multy${indexSite}' class='form-control text-input' type='text' style='max-width:60px;'/></td>
+ 	        <td style='width:100px; text-align:center;'><input type='checkbox' style='vertical-align: middle; width:100px'></td>
+ 	        <td name='auxRefSite' style='background-color: #778899;'><a href='#' id='auxRefSite${indexSite}' style='width:350px; pointer-events: none;'><p style='height:10px; margin-left:20px; color:white; background-color: #778899; margin-top:10px; width:150px;'>View Result</p></a></td>
+ 	        <td name='siteId_Multy'><input name='siteId_Multy${indexSite}' id='siteId_Multy${indexSite}' class='form-control' type='text' style='width:330px;'/></td>
+ 	        <td name='siteLng_Multy'><input name='siteLng_Multy${indexSite}' id='siteLng_Multy${indexSite}' class='form-control latLngInput' type='text' style='width:220px;' data-location-number='${location_number}'/></td>
+ 	        <td name='siteLat_Multy'><input name='siteLat_Multy${indexSite}' id='siteLat_Multy${indexSite}' class='form-control latLngInput' type='text' style='width:220px;' data-location-number='${location_number}'/></td>
+ 	        <td name='squareRange'><input class='circleRange' type='checkbox' style='margin-left: 20px;' name='circle' data-lng='lng${indexSite}' data-lat='lat${indexSite}'></td>
+ 	        <td name='squareRange'><input class='squareRange' type='checkbox' style='margin-left: 20px;' name='square' data-lng='lng${indexSite}' data-lat='lat${indexSite}'></td>
+ 	        <td name='location_number'><input type='text' name='location_number' class='form-control' value='location_${location_number}' readonly style='width:100px;'/></td>
+ 	    </tr>`;
 
-    $("#Multy_auxiliary > tbody").append(markup);
+ 	    $("#Multy_auxiliary > tbody").append(markup);
 
-    const myLatLng = { lat: 0, lng: 0 };
-    const marker = new google.maps.Marker({
-        position: myLatLng,
-        map: map,
-        title: `Location: ${location_number}`,
-    });
+ 	    const myLatLng = { lat: 0, lng: 0 };
+ 	    const marker = new google.maps.Marker({
+ 	        position: myLatLng,
+ 	        map: map,
+ 	        title: `Location: ${location_number}`,
+ 	    });
 
-    // Store marker and coordinates in locationsArray
-    locationsArray[`location_${location_number}`] = {
-        marker: marker,
-        lat: 0,
-        lng: 0,
-    };
+ 	    // Store marker and coordinates in locationsArray
+ 	    locationsArray[`location_${location_number}`] = {
+ 	        marker: marker,
+ 	        lat: 0,
+ 	        lng: 0,
+ 	    };
 
-    // Event handler for lat/lng input changes
-    $(".latLngInput").off('change input').on('change input', function() {
-        const locationNum = $(this).closest('tr').find("input[name='location_number']").val();
-        updateMarker(locationNum);
-    });
+ 	    // Event handler for lat/lng input changes
+ 	    $(".latLngInput").off('change input').on('change input', function() {
+ 	        const locationNum = $(this).closest('tr').find("input[name='location_number']").val();
+ 	        updateMarker(locationNum);
+ 	    });
 
-    // Update sequence numbers
-    $("#Multy_auxiliary").find('input[name="record"]').each(function() {
-        const rowIndex = $(this).closest('tr');
-        const currentIndex = rowIndex.index();
-        $(this).parents("tr").find('input[name="Seq_Multy"]').val(currentIndex + 1);
-    });
+ 	    // Update sequence numbers
+ 	    $("#Multy_auxiliary").find('input[name="record"]').each(function() {
+ 	        const rowIndex = $(this).closest('tr');
+ 	        const currentIndex = rowIndex.index();
+ 	        $(this).parents("tr").find('input[name="Seq_Multy"]').val(currentIndex + 1);
+ 	    });
 
-    // Call autocomplete function for the new row
-    autoCompleteMultiPoint("siteId_Multy", "siteLng_Multy", "siteLat_Multy", indexSite, "auxPtAutocomplete");
+ 	    // Call autocomplete function for the new row
+ 	    autoCompleteMultiPoint("siteId_Multy", "siteLng_Multy", "siteLat_Multy", indexSite, "auxPtAutocomplete");
 
-    // Event for auxiliary reference link
-    $("#auxRefSite" + indexSite).click(function() {
-        const relSiteId = $(this).closest('tr').find("input[name='siteId_Multy']").val();
-        $('#siteModalAuxiliary').find('input:file').val('');
-        $('#siteModalAuxiliary').find('input:checkbox').prop("checked", false);
-        $("#siteModalAuxiliary").modal('show');	
-        showTubeStrandAuxiliaryPopup("siteModalAuxiliary", relSiteId, "SiteIdHeader", "Site_Autocomplete_Multy");
-    });
+ 	    // Event for auxiliary reference link
+ 	    $("#auxRefSite" + indexSite).click(function() {
+ 	        const relSiteId = $(this).closest('tr').find("input[name='siteId_Multy']").val();
+ 	        $('#siteModalAuxiliary').find('input:file').val('');
+ 	        $('#siteModalAuxiliary').find('input:checkbox').prop("checked", false);
+ 	        $("#siteModalAuxiliary").modal('show');	
+ 	        showTubeStrandAuxiliaryPopup("siteModalAuxiliary", relSiteId, "SiteIdHeader", "Site_Autocomplete_Multy");
+ 	    });
 
-    // Increment indexSite once per row addition
-    indexSite++;
+ 	    // Increment indexSite once per row addition
+ 	    indexSite++;
 
-    // Auto-scroll to the bottom of the table
-    const objDiv = document.getElementById("Multy_auxiliary");
-    objDiv.scrollTop = objDiv.scrollHeight;	
-});
+ 	    // Auto-scroll to the bottom of the table
+ 	    const objDiv = document.getElementById("Multy_auxiliary");
+ 	    objDiv.scrollTop = objDiv.scrollHeight;	
+ 	});
 
-$("#delet_Multy").click(function () {
-    slectDelTemp = [];
-    const locationNumbersToDelete = [];
+ 	$("#delet_Multy").click(function () {
+ 	    slectDelTemp = [];
+ 	    const locationNumbersToDelete = [];
 
-    // Collect selected rows and location numbers for deletion
-    $("#Multy_auxiliary > tbody").find('input[name="record"]').each(function() {
-        if ($(this).is(":checked")) {
-            const row = $(this).closest('tr');
-            const portId = row.attr('id'); // Assuming portId is assigned to the row's ID
-            const locationNumber = row.find('input[name="location_number"]').val(); // This should return something like "location_anynumber"
+ 	    // Collect selected rows and location numbers for deletion
+ 	    $("#Multy_auxiliary > tbody").find('input[name="record"]').each(function() {
+ 	        if ($(this).is(":checked")) {
+ 	            const row = $(this).closest('tr');
+ 	            const portId = row.attr('id'); // Assuming portId is assigned to the row's ID
+ 	            const locationNumber = row.find('input[name="location_number"]').val(); // This should return something like "location_anynumber"
 
-            // Add location number and portId to arrays for deletion
-            locationNumbersToDelete.push(locationNumber); // Keep the full key (e.g., "location_1")
-            slectDelTemp.push({ "portId": portId });
-        }
-    });
+ 	            // Add location number and portId to arrays for deletion
+ 	            locationNumbersToDelete.push(locationNumber); // Keep the full key (e.g., "location_1")
+ 	            slectDelTemp.push({ "portId": portId });
+ 	        }
+ 	    });
 
-    if (slectDelTemp.length === 0) {
-        alert('Select Row(s) to Delete');
-        return false;
-    }
+ 	    if (slectDelTemp.length === 0) {
+ 	        alert('Select Row(s) to Delete');
+ 	        return false;
+ 	    }
 
-    // Remove markers from locationsArray based on location numbers
-    locationNumbersToDelete.forEach(function(locationKey) {
-        if (locationsArray[locationKey]) {
-            const markerData = locationsArray[locationKey];
-            if (markerData && markerData.marker) {
-                markerData.marker.setMap(null); // Remove marker from the map
-                delete locationsArray[locationKey]; // Remove from array
-                console.log(`Removed marker for ${locationKey}`);
-            } else {
-                console.error(`No marker found for ${locationKey}`);
-            }
-        } else {
-            console.error(`No entry in locationsArray for key: ${locationKey}`);
-        }
-    });
+ 	    // Remove markers from locationsArray based on location numbers
+ 	    locationNumbersToDelete.forEach(function(locationKey) {
+ 	        if (locationsArray[locationKey]) {
+ 	            const markerData = locationsArray[locationKey];
+ 	            if (markerData && markerData.marker) {
+ 	                markerData.marker.setMap(null); // Remove marker from the map
+ 	                delete locationsArray[locationKey]; // Remove from array
+ 	                console.log(`Removed marker for ${locationKey}`);
+ 	            } else {
+ 	                console.error(`No marker found for ${locationKey}`);
+ 	            }
+ 	        } else {
+ 	            console.error(`No entry in locationsArray for key: ${locationKey}`);
+ 	        }
+ 	    });
 
-    // Remove checked rows from the table
-    $("#Multy_auxiliary > tbody").find('input[name="record"]').each(function() {
-        if ($(this).is(":checked")) {
-            $(this).closest("tr").remove();
-        }
-    });
+ 	    // Remove checked rows from the table
+ 	    $("#Multy_auxiliary > tbody").find('input[name="record"]').each(function() {
+ 	        if ($(this).is(":checked")) {
+ 	            $(this).closest("tr").remove();
+ 	        }
+ 	    });
 
-    // Update sequence numbers after deletion
-    $("#Multy_auxiliary").find('input[name="record"]').each(function() {
-        const rowIndex = $(this).closest('tr');
-        const currentIndex = rowIndex.index();
-        rowIndex.find('input[name="Seq_Multy"]').val(currentIndex + 1);
-    });
-});
-					
+ 	    // Update sequence numbers after deletion
+ 	    $("#Multy_auxiliary").find('input[name="record"]').each(function() {
+ 	        const rowIndex = $(this).closest('tr');
+ 	        const currentIndex = rowIndex.index();
+ 	        rowIndex.find('input[name="Seq_Multy"]').val(currentIndex + 1);
+ 	    });
+ 	});
+ 	function updateMarker(locationNum) {
+ 	    const row = $(`#Multy_auxiliary input[name='location_number'][value='${locationNum}']`).closest('tr');
+ 	    const lat = parseFloat(row.find(`input[name^='siteLat_Multy']`).val());
+ 	    const lng = parseFloat(row.find(`input[name^='siteLng_Multy']`).val());
+
+ 	    if (!isNaN(lat) && !isNaN(lng)) {
+ 	        const locationData = locationsArray[locationNum];
+ 	        if (locationData) {
+ 	            locationData.marker.setPosition({ lat, lng });
+ 	            locationData.lat = lat;
+ 	            locationData.lng = lng;
+ 	            console.log(`Updated marker for ${locationNum} to new position:`, { lat, lng });
+ 	        } else {
+ 	            console.error(`Marker not found for location number: ${locationNum}`);
+ 	        }
+ 	    } else {
+ 	        console.error('Invalid latitude or longitude:', lat, lng);
+ 	    }
+ 	}
+			
 	 	
 		$("#add_RackRow").on('click',function(){
 
