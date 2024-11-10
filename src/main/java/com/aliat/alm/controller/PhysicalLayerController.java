@@ -1677,9 +1677,6 @@ public class PhysicalLayerController {
 			    String[] squareDraw = request.getParameterValues("squareDraw");
 			    
 			    
-			    System.out.println(mapper.writeValueAsString(locationNum));
-			    System.out.println("square "+mapper.writeValueAsString(squareDraw));
-			    System.out.println("circle "+mapper.writeValueAsString(circleDraw));
 			    String noOfPoints = request.getParameter("nop");
 			    String closestDisRange = request.getParameter("closestDisRange");
 			    String getRelatedPoints = "0";
@@ -2044,8 +2041,7 @@ public class PhysicalLayerController {
 
 			    // Now you can send this incremented numericValue to your model
 			    model.addAttribute("LastlocationNumber", numericValue);
-		        System.out.println(mapper.writeValueAsString(ptPhysicalListResult));
-			    } catch (Exception e) {
+		  	    } catch (Exception e) {
 		            if (txfind != null) {
 		                txfind.rollback();
 		            }
@@ -13920,7 +13916,6 @@ public class PhysicalLayerController {
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
-				System.out.println("wiwww");
 				query = session.createNativeQuery(
 						"SELECT MANHOLE_ID,MANHOLE_NAME,CITY,LONGITUDE,LATITUDE FROM MANHOLE a WHERE UPPER(MANHOLE_ID) LIKE UPPER(:param) OR UPPER(MANHOLE_NAME) LIKE UPPER(:param) ");
 
@@ -16377,7 +16372,7 @@ resultMap.put("distribBoardList", distribBoardList);
 resultMap.put("NodeList", NodeList);
 resultMap.put("junctionManholeList", junctionManholeList);
 resultMap.put("junctionHandholeList", junctionHandholeList);
-System.out.println("wo"+mapper.writeValueAsString(manholeList));
+
 return resultMap;
 
 	}
