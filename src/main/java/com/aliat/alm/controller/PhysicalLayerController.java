@@ -905,8 +905,12 @@ public class PhysicalLayerController {
 							HashMap<String, List<Object[]>> Result= circleRangeData(noOfPoints,closestDisRange,closestLatPoint,closestLongPoint,getRelatedPoints,session,tx);
 							
 					
+				
 							
-							fiberAuxiliary_Data = Result.get("fiberAuxiliaryData");
+							
+							
+							
+							fiberAuxiliary_Data = Result.get("fiberAuxiliary_Data");
 							fiberList = Result.get("fiberList");
                             fiberTubes = Result.get("fiberTubes");
 							tubesAuxiliaries = Result.get("tubesAuxiliaries");
@@ -1742,9 +1746,9 @@ public class PhysicalLayerController {
 			                   System.out.println("Processing: " + seqs[i]);
                         HashMap<String, List<Object[]>> Result= circleRangeData(noOfPoints,closestDisRange,lats[i],lngs[i],getRelatedPoints,findnearest,txfind);
 							
-					
+                        
 							
-                        if (Result.get("fiberAuxiliaryData") != null) {
+                        if (Result.get("fiberAuxiliary_Data") != null) {
                             for (Object item : Result.get("fiberAuxiliaryData")) {
                                 Object[] newItem = (Object[]) item; // Assuming each item is an Object array
                                 boolean found = false;
@@ -2590,6 +2594,8 @@ public class PhysicalLayerController {
 					physicalLayerData.put("tubes_Auxiliaries", tubesAuxiliaries);
 					physicalLayerData.put("fiber_Tubes", fiberTubes);
 					physicalLayerData.put("fiber_Auxiliary", fiberAuxiliary_Data);
+					System.out.println("wowww");
+					System.out.println(mapper.writeValueAsString(fiberAuxiliary_Data));
 					physicalLayerData.put("ductAuxiliary", ductAuxiliary_Data);
 
 					model.addAttribute("physicalLayerList", mapper.writeValueAsString(physicalLayerList));
@@ -16362,6 +16368,8 @@ NodeList = findNearestArray(nodeListQuery, Double.valueOf(closestLatPoint),Doubl
 
 resultMap.put("fiberList", fiberList);
 resultMap.put("fiberAuxiliary_Data", fiberAuxiliary_Data);
+System.out.println("zeinaa darwish");
+System.out.println(mapper.writeValueAsString(fiberAuxiliary_Data));
 resultMap.put("fiberTubes", fiberTubes);
 resultMap.put("tubesAuxiliaries", tubesAuxiliaries);
 resultMap.put("strandsAuxiliaries", strandsAuxiliaries);
