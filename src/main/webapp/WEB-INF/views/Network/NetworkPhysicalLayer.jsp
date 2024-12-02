@@ -3848,15 +3848,20 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
     <div class="col-md-6">
         <div class="form-group">
             <div class="input-group-prepend">
-                <button id="getSrcCity" type="button" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; width: 40%; <c:if test="${writeFiber != 1}">pointer-events: none; background-color: #cccccc; color: #666666;</c:if>" onclick="getSrcCity()" <c:if test="${writeFiber != 1}">disabled</c:if>>Get Source City</button>
-            </div>
+				<button id="getSrcCity" type="button" class="btn btn-primary" 
+				        style="color: white; font-size: 13px; height: 40px; width: 40%;" 
+				        onclick="getSrcCity()">Get Source City</button>
+
+  </div>
         </div>
     </div>
     <div class="col-md-6">
         <div class="form-group">
             <div class="input-group-prepend">
-                <button id="getDstCity" type="button" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; width: 40%; <c:if test="${writeFiber != 1}">pointer-events: none; background-color: #cccccc; color: #666666;</c:if>" onclick="getDstCity()" <c:if test="${writeFiber != 1}">disabled</c:if>>Get Destination City</button>
-            </div>
+				<button id="getDstCity" type="button" class="btn btn-primary" 
+				        style="color: white; font-size: 13px; height: 40px; width: 40%;" 
+				        onclick="getDstCity()">Get Destination City</button>
+   </div>
         </div>
     </div>
 </div>
@@ -3946,9 +3951,14 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 														<th style="min-width: 150px">Drawing Type</th>
 										</tr></thead><tbody></tbody></table></div>
 										<input type="text" id="RowIndex2" value="" hidden>
-														<c:if test="${writeFiber == 1}">
-										<button type="button" id="add_Tube">Add Row</button>
-										<button type="button" id="delete_Tube">Delete Row</button></c:if>
+													<c:if test="${writeFiber == 1}">
+    <button type="button" id="add_Tube">Add Row</button>
+    <button type="button" id="delete_Tube">Delete Row</button>
+</c:if>
+<c:if test="${writeFiber == 0}">
+    <button type="button" id="add_Tube" disabled>Add Row</button>
+    <button type="button" id="delete_Tube" disabled>Delete Row</button>
+</c:if>
 									</form></div></div>
 							<div class="tab-pane " id="strands" role="tabpanel" aria-labelledby="strands-tab"><p></p>
 								<div class="container-fluid">
@@ -4027,9 +4037,15 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 														<th style="min-width: 180px">Strand Color</th>
 														<th style="min-width: 150px">Drawing Type</th>
 													</tr></thead><tbody></tbody></table></div>
-																	<c:if test="${writeFiber == 1}">
-										<button type="button" id="add_Strand">Add Row</button>
-										<button type="button" id="delete_Strand">Delete Row</button></c:if>
+																<c:if test="${writeFiber == 1}">
+    <button type="button" id="add_Strand">Add Row</button>
+    <button type="button" id="delete_Strand">Delete Row</button>
+</c:if>
+<c:if test="${writeFiber == 0}">
+    <button type="button" id="add_Strand" disabled>Add Row</button>
+    <button type="button" id="delete_Strand" disabled>Delete Row</button>
+</c:if>
+
 									</form></div></div>
 							<div class="tab-pane " id="auxiliary" role="tabpanel" aria-labelledby="fiber_aux_tab"><p></p>
 								<div class="container-fluid"><div class="row"><div class="col-sm-2"><div class="form-group">
@@ -7050,7 +7066,7 @@ var circleDraw = '${circleDraw}';
 var squareDraw= '${squareDraw}';
 var locationNum= '${locationNumber}';
 var LastlocationNumber= '${LastlocationNumber}';
-console.log(LastlocationNumber);
+
 
 var newHandHole= [];
 var newManHole= [];
@@ -7142,15 +7158,49 @@ var writeDB='${writeDB}';
 var addDB='${addDB}';
 var delDB='${delDB}';
 
-var onlyReadExcep= '${onlyReadExcep}'
-	console.log(onlyReadExcep);
+var onlyReadManExcep= '${onlyReadManExcep}'
+
 	var exceptionManWriteList= '${exceptionManWriteList}';
-	if(exceptionManWriteList){
+		if(exceptionManWriteList){
 	 exceptionManWriteList = JSON.parse(exceptionManWriteList);
-	 console.log(exceptionManWriteList);
+
 	}
 	var readExceptionMan='${readExceptionMan}';
+	var treeExceptionMan='${treeExceptionMan}';
+
+	var onlyReadHandExcep= '${onlyReadHandExcep}';
+		var exceptionHandWriteList= '${exceptionHandWriteList}';
+		if(exceptionHandWriteList){
+		 exceptionHandWriteList = JSON.parse(exceptionHandWriteList);
+
+		}
+		
+		var readExceptionHand='${readExceptionHand}';
+		var treeExceptionHand='${treeExceptionHand}';
+		
+		
+
 	
+		var onlyReadDBExcep= '${onlyReadDBExcep}';
+			
+			var exceptionDBWriteList= '${exceptionDBWriteList}';
+			if(exceptionDBWriteList){
+			 exceptionDBWriteList = JSON.parse(exceptionDBWriteList);
+			}
+			var readExceptionDB='${readExceptionDB}';
+			var treeExceptionDB='${TtreeExceptionDB}';
+			
+
+			
+			var onlyReadFiberExcep= '${onlyReadFiberExcep}';
+				
+				var exceptionFiberWriteList= '${exceptionFiberWriteList}';
+				if(exceptionFiberWriteList){
+				 exceptionFiberWriteList = JSON.parse(exceptionFiberWriteList);
+				}
+				var readExceptionFiber='${readExceptionFiber}';
+	
+			
 document.addEventListener('DOMContentLoaded', function() {
     var elements = {
         fibersearchtab: document.getElementById('fiber-search-tab'),
