@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import java.util.Properties;
 
 
@@ -203,6 +204,8 @@ public class PhysicalLayerController {
 				       
 				       permissions.setPerms(model, permissions.getUserPermsWithSession(session, request),
 				                "Physical Layer Handhole", "Tree");
+				       
+				       
 				       String  readHandhole = ((Integer) model.asMap().get("readTree")).toString();
 				       String  writeHandhole = ((Integer) model.asMap().get("writeTree")).toString();
 				       String  addHandhole = ((Integer) model.asMap().get("addTree")).toString();
@@ -214,7 +217,11 @@ public class PhysicalLayerController {
 				       model.addAttribute("saveHandhole", saveHandhole);
 				       model.addAttribute("delHandhole", delHandhole);
 				       
+                      permissions.checkAndAddExceptions(model, readHandhole, writeHandhole, session,"Physical Layer Handhole",request);
 				       
+				       String readExceptionHand = (String) model.asMap().get("readExceptionHand");
+
+				     
 				       
 				       permissions.setPerms(model, permissions.getUserPermsWithSession(session, request),
 				                "Physical Layer Fiber", "Tree");
@@ -230,6 +237,11 @@ public class PhysicalLayerController {
 				       model.addAttribute("delFiber", delFiber);
 				       model.addAttribute("saveFiber", saveFiber);
 				       
+                       permissions.checkAndAddExceptions(model, readFiber, writeFiber, session,"Physical Layer Fiber",request);
+				       
+				       String readExceptionFiber = (String) model.asMap().get("readExceptionFiber");
+				       model.addAttribute("readExceptionFiber", readExceptionFiber); 
+
 				       
 				       permissions.setPerms(model, permissions.getUserPermsWithSession(session, request),
 				                "Physical Layer DB", "Tree");
@@ -244,6 +256,16 @@ public class PhysicalLayerController {
 				       model.addAttribute("addDB", addDB);
 				       model.addAttribute("delDB", delDB);
 				       model.addAttribute("saveDB", saveDB);
+				       
+                       permissions.checkAndAddExceptions(model, readDB, writeDB, session,"Physical Layer DB",request);
+				       
+				       String readExceptionDB = (String) model.asMap().get("readExceptionDB");
+
+				       
+				       
+				       
+				       
+				       
 				       
 					int filterFlag = 0;
 					List<?> projectList = new ArrayList<Object[]>();
@@ -332,6 +354,8 @@ public class PhysicalLayerController {
 									.getResultList();
 							}
 							
+							
+							
 							else if("0".equals(readManhole) & "1".equals(writeManhole) & "1".equals(readExceptionMan) || "0".equals(readManhole) & "0".equals(writeManhole) & "1".equals(readExceptionMan)) {
 								  List<Object[]> exceptionManReadList = (List<Object[]>) model.asMap().get("exceptionManReadList");
 								  StringBuilder manholeWhereClause = new StringBuilder();
@@ -389,6 +413,12 @@ public class PhysicalLayerController {
 
 								
 							}
+							if(manholeList !=null && !manholeList.isEmpty() ) {
+							 model.addAttribute("treeExceptionMan", "1");
+							}
+							else {
+								 model.addAttribute("treeExceptionMan", "0");
+							}
 							if("1".equals(readHandhole) ) {
 							handholeList = session.createNativeQuery(
 									"SELECT DISTINCT A.HANDHOLE_ID,A.HANDHOLE_NAME,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=HANDHOLE_ID),A.CITY FROM HANDHOLE  A LEFT JOIN JUNCTION B ON B.PHYSICAL_LAYER_ID = A.HANDHOLE_ID and B.PROJECT_ID LIKE '%"
@@ -411,13 +441,131 @@ public class PhysicalLayerController {
 											+ "%' ) and A.PROJECT_ID LIKE '%" + request.getParameter("Checked") + "%' ")
 									.getResultList();
 							}
+							
+							else if("0".equals(readHandhole) & "1".equals(writeHandhole) & "1".equals(readExceptionHand) || "0".equals(readHandhole) & "0".equals(writeHandhole) & "1".equals(readExceptionHand)) {
+								  List<Object[]> exceptionHandReadList = (List<Object[]>) model.asMap().get("exceptionHandReadList");
+								  StringBuilder handholeWhereClause = new StringBuilder();
+						            for (Object[] entry : exceptionHandReadList) {
+						                String fieldName = (String) entry[0];
+						                String fieldValue = (String) entry[1];
+						                if (fieldName != null && fieldValue != null) {
+						                    if (handholeWhereClause.length() > 0) {
+						                        handholeWhereClause.append(" OR ");
+						                    }
+						                    handholeWhereClause.append("A.").append(fieldName).append(" LIKE '%").append(fieldValue).append("%'");
+						                }
+						            }
+
+						            // Construct the Manhole query with dynamic WHERE clause
+						            String handholeQuery = "SELECT DISTINCT A.HANDHOLE_ID, A.HANDHOLE_NAME, A.LONGITUDE, A.LATITUDE, A.PROJECT_ID, "
+						                    + "(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID = A.HANDHOLE_ID) AS JUNCTION_COUNT, A.CITY "
+						                    + "FROM HANDHOLE A "
+						                    + "LEFT JOIN JUNCTION B ON B.PHYSICAL_LAYER_ID = A.HANDHOLE_ID "
+						                    + "WHERE (A.HANDHOLE_ID LIKE '%" + request.getParameter("FilteredHandhole") + "%' OR "
+						                    + "A.MANHOLE_NAME LIKE '%" + request.getParameter("FilteredHandhole") + "%' OR "
+						                    + "B.JUNCTION_ID LIKE '%" + request.getParameter("FilteredJunction_Handhole") + "%' OR "
+						                    + "B.JUNCTION_NAME LIKE '%" + request.getParameter("FilteredJunction_Handhole") + "%') "
+						                    + "AND A.PROJECT_ID LIKE '%" + request.getParameter("Checked") + "%' "
+						                    + (handholeWhereClause.length() > 0 ? "AND " + handholeWhereClause.toString() : "");
+
+						             handholeList = session.createNativeQuery(handholeQuery).getResultList();
+
+						            // Build dynamic WHERE clause for Junction query
+						            StringBuilder junctionWhereClause = new StringBuilder();
+						            for (Object[] entry : exceptionHandReadList) {
+						                String fieldName = (String) entry[0];
+						                String fieldValue = (String) entry[1];
+						                if (fieldName != null && fieldValue != null) {
+						                    if (junctionWhereClause.length() > 0) {
+						                        junctionWhereClause.append(" OR ");
+						                    }
+						                    junctionWhereClause.append("A.").append(fieldName).append(" LIKE '%").append(fieldValue).append("%'");
+						                }
+						            }
+
+						            // Construct the Junction query with dynamic WHERE clause
+						            String junctionQuery = "SELECT DISTINCT A.JUNCTION_ID, A.JUNCTION_NAME, A.PHYSICAL_LAYER_ID, A.PHYSICAL_LAYER_NAME, "
+						                    + "A.JUNCTION_NUMBER, A.CAPACITY, A.CITY, A.LONGITUDE, A.LATITUDE, A.PROJECT_ID "
+						                    + "FROM JUNCTION A "
+						                    + "LEFT JOIN HANDHOLE B ON A.PHYSICAL_LAYER_ID = B.HANDHOLE_ID "
+						                    + "WHERE (A.JUNCTION_ID LIKE '%" + request.getParameter("FilteredJunction_Handhole") + "%' OR "
+						                    + "A.JUNCTION_NAME LIKE '%" + request.getParameter("FilteredJunction_Handhole") + "%' OR "
+						                    + "B.HANDHOLE_ID LIKE '%" + request.getParameter("FilteredHandhole") + "%' OR "
+						                    + "B.HANDHOLE_NAME LIKE '%" + request.getParameter("FilteredHandhole") + "%') "
+						                    + "AND A.PROJECT_ID LIKE '%" + request.getParameter("Checked") + "%' "
+						                    + (junctionWhereClause.length() > 0 ? "AND " + junctionWhereClause.toString() : "");
+
+						            junctionManholeList = session.createNativeQuery(junctionQuery).getResultList();
+
+								
+							}
+							
+							
+							if(handholeList !=null && !handholeList.isEmpty() ) {
+								 model.addAttribute("treeExceptionHand", "1");
+								}
+								else {
+									 model.addAttribute("treeExceptionHand", "0");
+								}
+							
+							
+							
+							
+							
+							
+							if("1".equals(readDB) ) {
+							
 						distribBoardList = session.createNativeQuery(
 								"SELECT DISTINCT DB_ID,DB_LONGITUDE,DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,PROJECT_ID ,CITY,DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD where DB_ID LIKE '%"
 										+ request.getParameter("FilteredDistribution_Board") + "%' OR DB_NAME LIKE '%"
 										+ request.getParameter("FilteredDistribution_Board")
 										+ "%' and PROJECT_ID LIKE '%" + request.getParameter("Checked") + "%' ")
 								.getResultList();
-						if("1".equals(readFiber) ) {
+							}
+							
+							
+							else if ("0".equals(readDB) & "1".equals(writeDB) & "1".equals(readExceptionDB) || 
+							         "0".equals(readDB) & "0".equals(writeDB) & "1".equals(readExceptionDB)) {
+							    
+							    List<Object[]> exceptionDBReadList = (List<Object[]>) model.asMap().get("exceptionDBReadList");
+							    StringBuilder dbWhereClause = new StringBuilder();
+
+							    for (Object[] entry : exceptionDBReadList) {
+							        String fieldName = (String) entry[0];
+							        String fieldValue = (String) entry[1];
+							        if (fieldName != null && fieldValue != null) {
+							            if (dbWhereClause.length() > 0) {
+							                dbWhereClause.append(" OR ");
+							            }
+							            dbWhereClause.append("A.").append(fieldName).append(" LIKE '%").append(fieldValue).append("%'");
+							        }
+							    }
+
+							    // Construct the Distribution Board query with dynamic WHERE clause
+							    String dbQuery = "SELECT DISTINCT A.DB_ID, A.DB_LONGITUDE, A.DB_LATITUDE, A.DB_NAME, A.MAX_CAPACITY, " +
+						                 "A.SITE, A.PROJECT_ID, A.CITY, A.DB_NETWORK_LEVEL " +
+						                 "FROM DISTRIBUTION_BOARD A " +
+						                 "WHERE (A.DB_ID LIKE '%" + request.getParameter("FilteredDistribution_Board") + "%' OR " +
+						                 "A.DB_NAME LIKE '%" + request.getParameter("FilteredDistribution_Board") + "%') " +
+						                 "AND A.PROJECT_ID LIKE '%" + request.getParameter("Checked") + "%' " +
+						                 (dbWhereClause.length() > 0 ? "AND (" + dbWhereClause.toString() + ")" : "");
+
+							    distribBoardList = session.createNativeQuery(dbQuery).getResultList();
+							    
+							     System.out.println(distribBoardList);
+							}
+
+							
+							if (distribBoardList != null && !distribBoardList.isEmpty()) {
+							    // Add the attribute to the model
+							    model.addAttribute("treeExceptionDB", "1");
+							}
+							else {
+								 model.addAttribute("treeExceptionDB", "1");
+							}
+							
+							
+					
 						fiberList = session.createNativeQuery(
 								"SELECT SOURCE_LNG,SOURCE_LAT,DESTINATION_LNG,DESTINATION_LAT,A.FIBER_CABLE_ID,A.SOURCE_WARE_ID,A.SOURCE_ID,A.SOURCE_NAME,A.DESTINATION_WARE_ID,A.DESTINATION_ID,A.DESTINATION_NAME,(SELECT COUNT(*) FROM FIBER_TUBES B WHERE B.FIBER_CABLE_ID=A.FIBER_CABLE_ID),(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.FIBER_CABLE_ID=A.FIBER_CABLE_ID),FIBER_CABLE_NAME,PROJECT_ID,SOURCE_CITY,DESTINATION_CITY,NUMBER_OF_TUBES,NUMBER_OF_STRANDS,LENGTH,DRAWING_TYPE,FIBER_NETWORK_LEVEL,FIBER_OWNER,(select B.FIBER_COLOR_OWNER from FIBER_OWNER_COLOR B WHERE B.FIBER_OWNER=A.FIBER_OWNER) AS FIBER_CABLE_COLOR FROM FIBER_CABLES A where FIBER_CABLE_ID LIKE '%"
 										+ request.getParameter("Filteredfiber") + "%' OR FIBER_CABLE_NAME LIKE '%"
@@ -458,7 +606,8 @@ public class PhysicalLayerController {
 										+ request.getParameter("Filteredfiber") + "%' and a.PROJECT_ID LIKE '%"
 										+ request.getParameter("Checked") + "%' ORDER BY c.SEQ_SORTING ASC ")
 								.getResultList();
-						}
+					
+						
 						trenchList = session.createNativeQuery(
 								"SELECT DISTINCT A.TRENCH_ID,A.TRENCH_NAME,A.SOURCE_WARE_ID,A.SOURCE_ID,A.SOURCE_NAME,A.DESTINATION_WARE_ID,A.DESTINATION_ID,A.DESTINATION_NAME,A.SOURCE_LATITUDE,A.SOURCE_LONGITUDE,A.DESTINATION_LONGITUDE,A.DESTINATION_LATITUDE,A.SOURCE_CITY,A.DESTINATION_CITY,A.NUM_DUCTS,A.MAX_CAPACITY,A.LENGTH,A.PROJECT_ID,A.DRAWING_TYPE FROM DUCTS B,TRENCH A WHERE B.TRENCH_ID=A.TRENCH_ID and (A.TRENCH_ID LIKE '%"
 										+ request.getParameter("FilteredTrench") + "%' OR A.TRENCH_NAME LIKE '%"
@@ -2377,7 +2526,7 @@ public class PhysicalLayerController {
 
 				            // Execute the Manhole query
 				            manholeList = session.createNativeQuery(manholeQuery).getResultList();
-				             
+				    
 				            // Build dynamic WHERE clause for Junction query
 				            StringBuilder junctionWhereClause = new StringBuilder();
 				            if (exceptionManReadList != null) {
@@ -2406,7 +2555,12 @@ public class PhysicalLayerController {
 
 				            // Process manholeList and junctionManholeList as needed
 				        }
-				    
+	if(manholeList !=null && !manholeList.isEmpty() ) {
+		 model.addAttribute("treeExceptionMan", "1");
+		}
+		else {
+			 model.addAttribute("treeExceptionMan", "0");
+		}
 						if ("1".equals(readHandhole)) {
 						handholeList = session.createNativeQuery(
 								"SELECT DISTINCT HANDHOLE_ID,HANDHOLE_NAME,LONGITUDE,LATITUDE,PROJECT_ID,(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID=HANDHOLE_ID),CITY FROM HANDHOLE where PROJECT_ID= 'CurrentPhysicalLayer'  ")
@@ -2418,11 +2572,114 @@ public class PhysicalLayerController {
 
 						}
 						
+	if("0".equals(readHandhole) & "1".equals(writeHandhole) & "1".equals(readExceptionHand) || "0".equals(readHandhole) & "0".equals(writeHandhole) & "1".equals(readExceptionHand)) {
+							
+							List<Object[]> exceptionHandReadList = (List<Object[]>) model.asMap().get("exceptionHandReadList");
+
+				            // Build dynamic WHERE clause for Manhole query
+				            StringBuilder handholeWhereClause = new StringBuilder();
+				            if (exceptionHandReadList != null) {
+				                for (Object[] entry : exceptionHandReadList) {
+				                    String fieldName = (String) entry[0];
+				                    String fieldValue = (String) entry[1];
+				                    if (fieldName != null && fieldValue != null) {
+				                        if (handholeWhereClause.length() > 0) {
+				                        	handholeWhereClause.append(" OR ");
+				                        }
+				                        handholeWhereClause.append("A.").append(fieldName).append(" LIKE '%").append(fieldValue).append("%'");
+				                    }
+				                }
+				            }
+				             
+				            // Construct the Manhole query with dynamic WHERE clause
+				            String handholeQuery = "SELECT DISTINCT HANDHOLE_ID, HANDHOLE_NAME, LONGITUDE, LATITUDE, PROJECT_ID, "
+				                    + "(SELECT COUNT(*) FROM JUNCTION B WHERE B.PHYSICAL_LAYER_ID = HANDHOLE_ID) AS JUNCTION_COUNT, CITY "
+				                    + "FROM HANDHOLE A "
+				                    + "WHERE PROJECT_ID = 'CurrentPhysicalLayer' "
+				                    + (handholeWhereClause.length() > 0 ? "AND " + handholeWhereClause.toString() : "");
+
+				            // Execute the Manhole query
+				            handholeList = session.createNativeQuery(handholeQuery).getResultList();
+				             
+				            // Build dynamic WHERE clause for Junction query
+				            StringBuilder junctionWhereClause = new StringBuilder();
+				            if (exceptionHandReadList != null) {
+				                for (Object[] entry : exceptionHandReadList) {
+				                    String fieldName = (String) entry[0];
+				                    String fieldValue = (String) entry[1];
+				                    if (fieldName != null && fieldValue != null) {
+				                        if (junctionWhereClause.length() > 0) {
+				                            junctionWhereClause.append(" OR ");
+				                        }
+				                        junctionWhereClause.append("B.").append(fieldName).append(" LIKE '%").append(fieldValue).append("%'");
+				                    }
+				                }
+				            }
+
+				            // Construct the Junction query with dynamic WHERE clause
+				            String junctionQuery = "SELECT DISTINCT A.JUNCTION_ID, A.JUNCTION_NAME, A.PHYSICAL_LAYER_ID, A.PHYSICAL_LAYER_NAME, "
+				                    + "A.JUNCTION_NUMBER, A.CAPACITY, A.CITY, A.LONGITUDE, A.LATITUDE, A.PROJECT_ID "
+				                    + "FROM JUNCTION A "
+				                    + "INNER JOIN HANDHOLE B ON A.PHYSICAL_LAYER_ID = B.HANDHOLE_ID "
+				                    + "WHERE B.PROJECT_ID = 'CurrentPhysicalLayer' "
+				                    + (junctionWhereClause.length() > 0 ? "AND " + junctionWhereClause.toString() : "");
+
+				            // Execute the Junction query
+				            junctionHandholeList = session.createNativeQuery(junctionQuery).getResultList();
+
+				            // Process manholeList and junctionManholeList as needed
+				        }
+	if(handholeList !=null && !handholeList.isEmpty() ) {
+		 model.addAttribute("treeExceptionHand", "1");
+		}
+		else {
+			 model.addAttribute("treeExceptionHand", "0");
+		}
 						if ("1".equals(readDB)) {
 							
 							distribBoardList = session.createNativeQuery(
 									"SELECT DISTINCT DB_ID,DB_LONGITUDE,DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,PROJECT_ID ,CITY,DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD WHERE PROJECT_ID='CurrentPhysicalLayer'")
 									.getResultList();						
+						}
+						else if ("0".equals(readDB) & "1".equals(writeDB) & "1".equals(readExceptionDB) || 
+						         "0".equals(readDB) & "0".equals(writeDB) & "1".equals(readExceptionDB)) {
+						    
+						    List<Object[]> exceptionDBReadList = (List<Object[]>) model.asMap().get("exceptionDBReadList");
+System.out.println(mapper.writeValueAsString(exceptionDBReadList));
+						    // Build dynamic WHERE clause for Distribution Board query
+						    StringBuilder dbWhereClause = new StringBuilder();
+						    if (exceptionDBReadList != null) {
+						        for (Object[] entry : exceptionDBReadList) {
+						            String fieldName = (String) entry[0];
+						            String fieldValue = (String) entry[1];
+						            if (fieldName != null && fieldValue != null) {
+						                if (dbWhereClause.length() > 0) {
+						                    dbWhereClause.append(" OR ");
+						                }
+						                dbWhereClause.append("A.").append(fieldName).append(" LIKE '%").append(fieldValue).append("%'");
+						            }
+						        }
+						    }
+
+						    // Construct the Distribution Board query with dynamic WHERE clause
+						    String dbQuery = "SELECT DISTINCT A.DB_ID, A.DB_LONGITUDE, A.DB_LATITUDE, A.DB_NAME, A.MAX_CAPACITY, " +
+					                 "A.SITE, A.PROJECT_ID, A.CITY, A.DB_NETWORK_LEVEL " +
+					                 "FROM DISTRIBUTION_BOARD A " +
+					                 "WHERE A.PROJECT_ID = 'CurrentPhysicalLayer' " +
+					                 (dbWhereClause.length() > 0 ? "AND (" + dbWhereClause.toString() + ")" : "");
+
+						    // Execute the Distribution Board query
+						    distribBoardList = session.createNativeQuery(dbQuery).getResultList();
+						    System.out.println(distribBoardList);
+						   
+						    // Process distribBoardList and junctionDBList as needed
+						}
+						if (distribBoardList != null && !distribBoardList.isEmpty()) {
+						    // Add the attribute to the model
+						    model.addAttribute("treeExceptionDB", "1");
+						}
+						else {
+							 model.addAttribute("treeExceptionDB", "0");
 						}
 						
 						/*
@@ -2594,8 +2851,6 @@ public class PhysicalLayerController {
 					physicalLayerData.put("tubes_Auxiliaries", tubesAuxiliaries);
 					physicalLayerData.put("fiber_Tubes", fiberTubes);
 					physicalLayerData.put("fiber_Auxiliary", fiberAuxiliary_Data);
-					System.out.println("wowww");
-					System.out.println(mapper.writeValueAsString(fiberAuxiliary_Data));
 					physicalLayerData.put("ductAuxiliary", ductAuxiliary_Data);
 
 					model.addAttribute("physicalLayerList", mapper.writeValueAsString(physicalLayerList));
@@ -9102,6 +9357,28 @@ public class PhysicalLayerController {
 				List<Object[]> tubesAuxiliaries = new ArrayList<Object[]>();
 				List<Object[]> fiberStrands = new ArrayList<Object[]>();
 				List<Object[]> strandsAuxiliaries = new ArrayList<Object[]>();
+				
+				  permissions.setPerms(model, permissions.getUserPermsWithSession(session, request),
+			                "Physical Layer Fiber", "Tree");
+			       
+			       String  readFiber = ((Integer) model.asMap().get("readTree")).toString();
+			       String  writeFiber = ((Integer) model.asMap().get("writeTree")).toString();
+			       String  addFiber = ((Integer) model.asMap().get("addTree")).toString();
+			       String  delFiber = ((Integer) model.asMap().get("delTree")).toString();
+			       String  saveFiber = ((Integer) model.asMap().get("saveTree")).toString();
+			       model.addAttribute("readFiber", readFiber);
+			       model.addAttribute("writeFiber", writeFiber);
+			       model.addAttribute("addFiber", addFiber);
+			       model.addAttribute("delFiber", delFiber);
+			       model.addAttribute("saveFiber", saveFiber);
+			       System.out.println("read"+readFiber);
+			       System.out.println("write"+writeFiber);
+			      
+                 permissions.checkAndAddExceptions(model, readFiber, writeFiber, session,"Physical Layer Fiber",request);
+			       
+			       String readExceptionFiber = (String) model.asMap().get("readExceptionFiber");
+			     
+			       if("1".equals(readFiber) ) {
 				fiberList = session.createNativeQuery(
 						"SELECT SOURCE_LNG,SOURCE_LAT,DESTINATION_LNG,DESTINATION_LAT,A.FIBER_CABLE_ID,A.SOURCE_WARE_ID,A.SOURCE_ID,A.SOURCE_NAME,A.DESTINATION_WARE_ID,A.DESTINATION_ID,A.DESTINATION_NAME,(SELECT COUNT(*) FROM FIBER_TUBES B WHERE B.FIBER_CABLE_ID=A.FIBER_CABLE_ID),(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.FIBER_CABLE_ID=A.FIBER_CABLE_ID),FIBER_CABLE_NAME,PROJECT_ID,SOURCE_CITY,DESTINATION_CITY,NUMBER_OF_TUBES,NUMBER_OF_STRANDS,LENGTH,DRAWING_TYPE,FIBER_NETWORK_LEVEL,FIBER_OWNER,(select B.FIBER_COLOR_OWNER from FIBER_OWNER_COLOR B WHERE B.FIBER_OWNER=A.FIBER_OWNER) AS FIBER_CABLE_COLOR FROM FIBER_CABLES A WHERE A.PROJECT_ID='CurrentPhysicalLayer'")
 						.getResultList();
@@ -9118,7 +9395,11 @@ public class PhysicalLayerController {
 				// System.out.println("fb >>" + mapper.writeValueAsString(fiberTubes));
 
 				tubesAuxiliaries = session.createNativeQuery(
-						"SELECT c.TUBE_ID,c.LONGITUDE,c.LATITUDE,c.WARE_ID,c.AUXILIARY_POINT_ID,c.AUXILIARY_POINT_NAME,c.DISTANCE_FROM_SOURCE,c.SEQ_SORTING,c.AUXILIARY_ID,c.DRIVING_DISTANCE, c.GEO_DISTANCE FROM TUBE_AUXILIARY_POINTS c,FIBER_TUBES b,FIBER_CABLES a WHERE a.FIBER_CABLE_ID=b.FIBER_CABLE_ID and b.TUBE_ID=c.TUBE_ID and a.PROJECT_ID='CurrentPhysicalLayer' ORDER BY c.SEQ_SORTING ASC")
+						"SELECT c.TUBE_ID,c.LONGITUDE,c.LATITUDE,c.WARE_ID,c.AUXILIARY_POINT_ID,"
+						+ "c.AUXILIARY_POINT_NAME,c.DISTANCE_FROM_SOURCE,c.SEQ_SORTING,c.AUXILIARY_ID,"
+						+ "c.DRIVING_DISTANCE, c.GEO_DISTANCE FROM TUBE_AUXILIARY_POINTS c,FIBER_TUBES "
+						+ "b,FIBER_CABLES a WHERE a.FIBER_CABLE_ID=b.FIBER_CABLE_ID "
+						+ "and b.TUBE_ID=c.TUBE_ID and a.PROJECT_ID='CurrentPhysicalLayer' ORDER BY c.SEQ_SORTING ASC")
 						.getResultList();
 
 				fiberStrands = session.createNativeQuery(
@@ -9130,13 +9411,112 @@ public class PhysicalLayerController {
 						"SELECT c.STRAND_ID,c.LONGITUDE,c.LATITUDE,c.WARE_ID,c.AUXILIARY_POINT_ID,C.AUXILIARY_POINT_NAME,c.DISTANCE_FROM_SOURCE,c.SEQ_SORTING,c.AUXILIARY_ID,c.DRIVING_DISTANCE, c.GEO_DISTANCE FROM STRAND_AUXILIARY_POINTS c,FIBER_STRANDS b,FIBER_CABLES a WHERE a.FIBER_CABLE_ID=b.FIBER_CABLE_ID and b.STRAND_ID=c.STRAND_ID and a.PROJECT_ID='CurrentPhysicalLayer' ORDER BY c.SEQ_SORTING ASC ")
 						.getResultList();
 
-				rtn.put("fiber", fiberList);
-				rtn.put("strands_Auxiliaries", strandsAuxiliaries);
-				rtn.put("fiber_Strands", fiberStrands);
-				rtn.put("tubes_Auxiliaries", tubesAuxiliaries);
-				rtn.put("fiber_Tubes", fiberTubes);
-				rtn.put("fiber_Auxiliary", fiberAuxiliary_Data);
+				
 
+			}
+			       else if ("0".equals(readFiber) & "1".equals(writeFiber) & "1".equals(readExceptionFiber) || 
+					         "0".equals(readFiber) & "0".equals(writeFiber) & "1".equals(readExceptionFiber)) {
+					    
+					    // Get exception criteria
+					    List<Object[]> exceptionFiberReadList = (List<Object[]>) model.asMap().get("exceptionFiberReadList");
+					    StringBuilder FiberWhereClause = new StringBuilder();
+
+
+					    for (Object[] entry : exceptionFiberReadList) {
+					        String fieldName = (String) entry[0];
+					        String fieldValue = (String) entry[1];
+					        if (fieldName != null && fieldValue != null) {
+					            if (FiberWhereClause.length() > 0) {
+					                FiberWhereClause.append(" OR ");
+					            }
+					            FiberWhereClause.append("A.").append(fieldName).append(" LIKE '%").append(fieldValue).append("%'");
+					        }
+					    }
+
+					      
+					     
+					    fiberList = session.createNativeQuery(
+								"SELECT SOURCE_LNG,SOURCE_LAT,DESTINATION_LNG,DESTINATION_LAT,A.FIBER_CABLE_ID,A.SOURCE_WARE_ID,A.SOURCE_ID,A.SOURCE_NAME,A.DESTINATION_WARE_ID,"
+								+ "A.DESTINATION_ID,A.DESTINATION_NAME,(SELECT COUNT(*) FROM FIBER_TUBES B WHERE B.FIBER_CABLE_"
+								+ "ID=A.FIBER_CABLE_ID),(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.FIBER_CABLE_ID=A.FIBER_CABLE_ID),"
+								+ "FIBER_CABLE_NAME,PROJECT_ID,SOURCE_CITY,DESTINATION_CITY,NUMBER_OF_TUBES,NUMBER_OF_STRANDS,LENGTH,DRAWING_TYPE,"
+								+ "FIBER_NETWORK_LEVEL,FIBER_OWNER,(select B.FIBER_COLOR_OWNER from FIBER_OWNER_COLOR B WHERE B.FIBER_OWNER=A.FIBER_OWNER)"
+								+ " AS FIBER_CABLE_COLOR FROM FIBER_CABLES A WHERE A.PROJECT_ID='CurrentPhysicalLayer' "+
+								  (FiberWhereClause.length() > 0 ? "AND (" + FiberWhereClause.toString() + ") " : "")
+						    	).list();
+								System.out.println("its fiber" + fiberList);
+								fiberAuxiliary_Data = session.createNativeQuery(
+									    "SELECT B.LONGITUDE, B.LATITUDE, B.DISTANCE_FROM_SOURCE, B.WARE_ID, B.AUXILIARY_POINT_ID, " +
+									    "B.AUXILIARY_POINT_NAME, B.FIBER_CABLE_ID, B.AUXILIARY_ID, A.SOURCE_LNG, A.SOURCE_LAT, " +
+									    "A.DESTINATION_LNG, A.DESTINATION_LAT, A.SOURCE_WARE_ID AS SOURCE_WARE_ID_FC, A.SOURCE_ID AS SOURCE_ID_FC, " +
+									    "A.SOURCE_NAME AS SOURCE_NAME_FC, A.DESTINATION_WARE_ID AS DEST_WARE_ID_FC, A.DESTINATION_ID AS DEST_ID_FC, " +
+									    "A.DESTINATION_NAME AS DEST_NAME_FC, (SELECT COUNT(*) FROM FIBER_TUBES C WHERE C.FIBER_CABLE_ID = A.FIBER_CABLE_ID) AS TUBE_COUNT, " +
+									    "(SELECT COUNT(*) FROM FIBER_STRANDS D WHERE D.FIBER_CABLE_ID = A.FIBER_CABLE_ID) AS STRAND_COUNT, " +
+									    "A.FIBER_CABLE_NAME, A.PROJECT_ID, A.SOURCE_CITY, A.DESTINATION_CITY, A.NUMBER_OF_TUBES, " +
+									    "A.NUMBER_OF_STRANDS, A.LENGTH, A.DRAWING_TYPE, A.FIBER_NETWORK_LEVEL, A.FIBER_OWNER, " +
+									    "(SELECT B.FIBER_COLOR_OWNER FROM FIBER_OWNER_COLOR B WHERE B.FIBER_OWNER = A.FIBER_OWNER) AS FIBER_CABLE_COLOR " +
+									    "FROM FIBER_CABLES A JOIN FIBER_AUXILIARY_POINTS B ON A.FIBER_CABLE_ID = B.FIBER_CABLE_ID " +
+									    "WHERE A.PROJECT_ID = 'CurrentPhysicalLayer' " +
+									    (FiberWhereClause.length() > 0 ? "AND (" + FiberWhereClause.toString() + ") " : "") +
+									    "ORDER BY B.SEQ_SORTING ASC"
+									).getResultList();
+								
+								fiberTubes = session.createNativeQuery(
+									    "SELECT b.TUBE_ID, b.SOURCE_LONGITUDE, b.SOURCE_LATITUDE, b.DESTINATION_LONGITUDE, b.DESTINATION_LATITUDE, " +
+									    "b.SOURCE_WARE_ID, b.SOURCE_ID, b.SOURCE_NAME, b.DESTINATION_WARE_ID, b.DESTINATION_ID, b.DESTINATION_NAME, " +
+									    "(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.TUBE_ID = b.TUBE_ID), b.FIBER_CABLE_ID, b.TUBE_NAME, " +
+									    "b.DRAWING_TYPE, b.TUBE_NUMBER, b.TUBE_COLOR " +
+									    "FROM FIBER_TUBES b, FIBER_CABLES a " +
+									    "WHERE a.FIBER_CABLE_ID = b.FIBER_CABLE_ID " +
+									    "AND a.PROJECT_ID = 'CurrentPhysicalLayer' " +
+									    (FiberWhereClause.length() > 0 ? "AND (" + FiberWhereClause.toString() + ") " : "") +
+									    "ORDER BY FIBER_CABLE_ID, TUBE_NUMBER ASC"
+									).getResultList();
+
+									tubesAuxiliaries = session.createNativeQuery(
+									    "SELECT c.TUBE_ID, c.LONGITUDE, c.LATITUDE, c.WARE_ID, c.AUXILIARY_POINT_ID, " +
+									    "c.AUXILIARY_POINT_NAME, c.DISTANCE_FROM_SOURCE, c.SEQ_SORTING, c.AUXILIARY_ID, " +
+									    "c.DRIVING_DISTANCE, c.GEO_DISTANCE " +
+									    "FROM TUBE_AUXILIARY_POINTS c, FIBER_TUBES b, FIBER_CABLES a " +
+									    "WHERE a.FIBER_CABLE_ID = b.FIBER_CABLE_ID " +
+									    "AND b.TUBE_ID = c.TUBE_ID " +
+									    "AND a.PROJECT_ID = 'CurrentPhysicalLayer' " +
+									    (FiberWhereClause.length() > 0 ? "AND (" + FiberWhereClause.toString() + ") " : "") +
+									    "ORDER BY c.SEQ_SORTING ASC"
+									).getResultList();
+									fiberStrands = session.createNativeQuery(
+										    "SELECT b.STRAND_ID, b.SOURCE_LONGITUDE, b.SOURCE_LATITUDE, b.DESTINATION_LONGITUDE, b.DESTINATION_LATITUDE, " +
+										    "b.SOURCE_WARE_ID, b.SOURCE_ID, b.SOURCE_NAME, b.DESTINATION_WARE_ID, b.DESTINATION_ID, b.DESTINATION_NAME, " +
+										    "b.TUBE_ID, b.FIBER_CABLE_ID, b.STRAND_NAME, b.DRAWING_TYPE, b.STRAND_NUMBER, b.STRAND_COLOR " +
+										    "FROM FIBER_STRANDS b, FIBER_CABLES a " +
+										    "WHERE a.FIBER_CABLE_ID = b.FIBER_CABLE_ID " +
+										    "AND a.PROJECT_ID = 'CurrentPhysicalLayer' " +
+										    (FiberWhereClause.length() > 0 ? "AND (" + FiberWhereClause.toString() + ") " : "") +
+										    "ORDER BY STRAND_NUMBER"
+										).getResultList();
+
+										strandsAuxiliaries = session.createNativeQuery(
+										    "SELECT c.STRAND_ID, c.LONGITUDE, c.LATITUDE, c.WARE_ID, c.AUXILIARY_POINT_ID, c.AUXILIARY_POINT_NAME, " +
+										    "c.DISTANCE_FROM_SOURCE, c.SEQ_SORTING, c.AUXILIARY_ID, c.DRIVING_DISTANCE, c.GEO_DISTANCE " +
+										    "FROM STRAND_AUXILIARY_POINTS c, FIBER_STRANDS b, FIBER_CABLES a " +
+										    "WHERE a.FIBER_CABLE_ID = b.FIBER_CABLE_ID " +
+										    "AND b.STRAND_ID = c.STRAND_ID " +
+										    "AND a.PROJECT_ID = 'CurrentPhysicalLayer' " +
+										    (FiberWhereClause.length() > 0 ? "AND (" + FiberWhereClause.toString() + ") " : "") +
+										    "ORDER BY c.SEQ_SORTING ASC"
+										).getResultList();
+
+										
+
+						}
+					
+			 
+			rtn.put("fiber", fiberList);
+			rtn.put("strands_Auxiliaries", strandsAuxiliaries);
+			rtn.put("fiber_Strands", fiberStrands);
+			rtn.put("tubes_Auxiliaries", tubesAuxiliaries);
+			rtn.put("fiber_Tubes", fiberTubes);
+			rtn.put("fiber_Auxiliary", fiberAuxiliary_Data);
 			} catch (Exception e) {
 				sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
@@ -16368,8 +16748,6 @@ NodeList = findNearestArray(nodeListQuery, Double.valueOf(closestLatPoint),Doubl
 
 resultMap.put("fiberList", fiberList);
 resultMap.put("fiberAuxiliary_Data", fiberAuxiliary_Data);
-System.out.println("zeinaa darwish");
-System.out.println(mapper.writeValueAsString(fiberAuxiliary_Data));
 resultMap.put("fiberTubes", fiberTubes);
 resultMap.put("tubesAuxiliaries", tubesAuxiliaries);
 resultMap.put("strandsAuxiliaries", strandsAuxiliaries);
