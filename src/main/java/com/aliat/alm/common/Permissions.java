@@ -173,6 +173,26 @@ public class Permissions {
 				String exceptionManWriteList = mapper.writeValueAsString(exceptionWrite);
 	            model.addAttribute("exceptionManWriteList", exceptionManWriteList);
 	        }
+	        	
+	        	else if("Physical Layer Handhole".equals(Type)) {
+		            
+					String exceptionHandWriteList = mapper.writeValueAsString(exceptionWrite);
+			        model.addAttribute("exceptionHandWriteList", exceptionHandWriteList);
+		        }
+	        	
+                   else if("Physical Layer DB".equals(Type)) {
+		            
+					String exceptionDBWriteList = mapper.writeValueAsString(exceptionWrite);
+					 
+				      model.addAttribute("exceptionDBWriteList", exceptionDBWriteList);
+		        }
+	        	
+                   else if("Physical Layer Fiber".equals(Type)) {
+   		            
+   					String exceptionFiberWriteList = mapper.writeValueAsString(exceptionWrite);
+   					 
+   					  model.addAttribute("exceptionFiberWriteList", exceptionFiberWriteList);
+   		        }
 	        }
 	        if ("1".equals(readPerm) && "1".equals(writeperm) || "0".equals(readPerm) && "0".equals(writeperm)) {
 	        	List<Object[]> exceptionRead = session.createNativeQuery(
@@ -184,8 +204,9 @@ public class Permissions {
 		            if(!exceptionRead.isEmpty()) {
 		            	if("Physical Layer Manhole".equals(Type)) {
 				     model.addAttribute("exceptionManReadList", exceptionRead);
-		   
-	                model.addAttribute("readExceptionMan", "1"); 
+				     model.addAttribute("readExceptionMan", "1"); 
+		             
+	                
 	                if("1".equals(readPerm) && "1".equals(writeperm)) {
 	                	
 	                	StringBuilder queryBuilder = new StringBuilder("SELECT MANHOLE_ID FROM manhole WHERE ");
@@ -211,10 +232,110 @@ public class Permissions {
 	                    }
 
 	                     List<String> onlyReadExcep = query.getResultList();
-	                    model.addAttribute("onlyReadExcep", onlyReadExcep); 
+	                    model.addAttribute("onlyReadManExcep", onlyReadExcep); 
 	                }
 	                }
-	                
+		            	else  	if("Physical Layer Handhole".equals(Type)) {
+						     model.addAttribute("exceptionHandReadList", exceptionRead);
+						     model.addAttribute("readExceptionHand", "1"); 
+					             
+				                  if("1".equals(readPerm) && "1".equals(writeperm)) {
+				                	
+				                	StringBuilder queryBuilder = new StringBuilder("SELECT HANDHOLE_ID FROM HANDHOLE WHERE ");
+				                    List<Object> parameters = new ArrayList<>();
+
+				                    for (int i = 0; i < exceptionRead.size(); i++) {
+				                        Object[] row = exceptionRead.get(i);
+				                        String fieldName = (String) row[0];
+				                        String fieldValue = (String) row[1];
+
+				                        // Add to the query
+				                        if (i > 0) {
+				                            queryBuilder.append(" OR ");
+				                        }
+				                        queryBuilder.append(fieldName).append(" = ?").append(i);
+
+				                         parameters.add(fieldValue);
+				                    }
+
+				                    Query query = session.createNativeQuery(queryBuilder.toString());
+				                    for (int i = 0; i < parameters.size(); i++) {
+				                        query.setParameter(i, parameters.get(i));
+				                    }
+
+				                     List<String> onlyReadExcep = query.getResultList();
+				                    model.addAttribute("onlyReadHandExcep", onlyReadExcep); 
+				                }
+				                }
+		            	
+		             	else  if("Physical Layer DB".equals(Type)) {
+						     model.addAttribute("exceptionDBReadList", exceptionRead);
+						     model.addAttribute("readExceptionDB", "1"); 
+					           
+				           
+				                if("1".equals(readPerm) && "1".equals(writeperm)) {
+				                	
+				                	StringBuilder queryBuilder = new StringBuilder("SELECT DB_ID FROM DISTRIBUTION_BOARD WHERE ");
+				                    List<Object> parameters = new ArrayList<>();
+
+				                    for (int i = 0; i < exceptionRead.size(); i++) {
+				                        Object[] row = exceptionRead.get(i);
+				                        String fieldName = (String) row[0];
+				                        String fieldValue = (String) row[1];
+
+				                        // Add to the query
+				                        if (i > 0) {
+				                            queryBuilder.append(" OR ");
+				                        }
+				                        queryBuilder.append(fieldName).append(" = ?").append(i);
+
+				                         parameters.add(fieldValue);
+				                    }
+
+				                    Query query = session.createNativeQuery(queryBuilder.toString());
+				                    for (int i = 0; i < parameters.size(); i++) {
+				                        query.setParameter(i, parameters.get(i));
+				                    }
+
+				                     List<String> onlyReadExcep = query.getResultList();
+				                    model.addAttribute("onlyReadDBExcep", onlyReadExcep); 
+				                }
+				                }
+		            	
+		            	
+		            	
+		            	else  if("Physical Layer Fiber".equals(Type)) {
+						     model.addAttribute("exceptionFiberReadList", exceptionRead);
+					           model.addAttribute("readExceptionFiber", "1"); 
+				                   
+				                if("1".equals(readPerm) && "1".equals(writeperm)) {
+				                	
+				                	StringBuilder queryBuilder = new StringBuilder("SELECT FIBER_CABLE_ID FROM FIBER_CABLES WHERE ");
+				                    List<Object> parameters = new ArrayList<>();
+
+				                    for (int i = 0; i < exceptionRead.size(); i++) {
+				                        Object[] row = exceptionRead.get(i);
+				                        String fieldName = (String) row[0];
+				                        String fieldValue = (String) row[1];
+
+				                        // Add to the query
+				                        if (i > 0) {
+				                            queryBuilder.append(" OR ");
+				                        }
+				                        queryBuilder.append(fieldName).append(" = ?").append(i);
+
+				                         parameters.add(fieldValue);
+				                    }
+
+				                    Query query = session.createNativeQuery(queryBuilder.toString());
+				                    for (int i = 0; i < parameters.size(); i++) {
+				                        query.setParameter(i, parameters.get(i));
+				                    }
+
+				                     List<String> onlyReadExcep = query.getResultList();
+				                    model.addAttribute("onlyReadFiberExcep", onlyReadExcep); 
+				                }
+				                }
 		            }
 	          
 	            }
@@ -222,6 +343,10 @@ public class Permissions {
 	        else {
 	        	
 	        	 model.addAttribute("readExceptionMan", "0");
+	        	 model.addAttribute("readExceptionHand", "0");
+	        	 model.addAttribute("readExceptionDB", "0");
+	        	 model.addAttribute("readExceptionFiber", "0");
+	        	
 	        }
 	        }    
 	       
