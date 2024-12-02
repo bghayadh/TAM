@@ -296,7 +296,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 			
 		$("#initial_ul_CurrentPhysicalLayer").append(str);
          }
-          else if(readManhole === '0' & readExceptionMan === '1'){
+          else if(readManhole === '0' & treeExceptionMan === '1'){
 			str="<ul><li id='Manhole_f_CurrentPhysicalLayer' style='display:none;' class='Manhole_f_CurrentPhysicalLayer'><input type='checkbox' unchecked class='AllManholes checkFilter' ></input> <span id='Manhole_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Manhole_span' class='TreeSpan' style='color:black;width:395px' >Manhole </span></li></ul>";
 			
 		$("#initial_ul_CurrentPhysicalLayer").append(str);
@@ -306,9 +306,13 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 		str="<ul><li id='Handhole_f_CurrentPhysicalLayer' style='display:none;' class='Handhole_f_CurrentPhysicalLayer'><input type='checkbox' unchecked class='AllHandholes checkFilter'></input> <span id='Handhole_spanFolder' class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Handhole_span' style='color:black;width:395px' class='TreeSpan' >Handhole </span></li></ul>";
 		$("#initial_ul_CurrentPhysicalLayer").append(str);
 }
+else if(readHandhole === '0' & treeExceptionHand === '1'){
+		str="<ul><li id='Handhole_f_CurrentPhysicalLayer' style='display:none;' class='Handhole_f_CurrentPhysicalLayer'><input type='checkbox' unchecked class='AllHandholes checkFilter'></input> <span id='Handhole_spanFolder' class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Handhole_span' style='color:black;width:395px' class='TreeSpan' >Handhole </span></li></ul>";
+		$("#initial_ul_CurrentPhysicalLayer").append(str);
+}
 		str="<ul><li id='Junction_f_CurrentPhysicalLayer' style='display:none;' class='Junction_f_CurrentPhysicalLayer'><input type='checkbox' unchecked class='AllJunctions checkFilter'></input> <span id='Junction_spanFolder' class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Junction_span' style='color:black;width:395px' class='TreeSpan' >Junction </span></li></ul>";
 		$("#initial_ul_CurrentPhysicalLayer").append(str);
-if(readFiber === '1'){
+
 		str="<ul><li id='FiberPath_f_CurrentPhysicalLayer' style='display:none;' class='FiberPath_f_CurrentPhysicalLayer'><input type='checkbox' class='AllFiberCables' class='filter checkFilter'></input> <span id='FiberPath_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='FiberPath_span' style='color:black;width:395px' class='TreeSpan'>Fiber Path <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' id='pushPointsCurrentPhysicalLayer' class='pushPoints'> <img src='"+getContext()+"/resources/NetworkImages/remove.png' hidden style='margin-left:10px' id='cancelPointsCurrentPhysicalLayer' class='clearPoints'></span></li></ul>";
 		$("#initial_ul_CurrentPhysicalLayer").append(str);
 		str="<ul><li id ='FiberPath_backbone__CurrentPhysicalLayer' style='display:none;' class='backboneFolder'> <input type='checkbox' class='BackboneFiber checkFilter' id ='Backbone__CurrentPhysicalLayer' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Backbone </span></li></ul></li></ul>";
@@ -319,8 +323,22 @@ if(readFiber === '1'){
 		
 		str="<ul><li id ='FiberPath_access__CurrentPhysicalLayer' style='display:none;' class='accessFolder'> <input type='checkbox' class='AccessFiber checkFilter' id ='Access__CurrentPhysicalLayer' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Access </span></li></ul></li></ul>";
 		$("#FiberPath_f_CurrentPhysicalLayer").append(str);		
-}
+
+
+
 if(readDB === '1'){
+		str="<ul><li id='DistributionBoard_f_CurrentPhysicalLayer' style='display:none;' class='DistributionBoard_f_CurrentPhysicalLayer'><input type='checkbox' unchecked class='AllDistBoards checkFilter'></input> <span id='DistribBoard_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='DistribBoard_span' class='TreeSpan' style='color:black;width:395px'>Distribution Board </span></li></ul>";
+		$("#initial_ul_CurrentPhysicalLayer").append(str);
+        str="<ul><li id ='DistributionBoard_backbone__CurrentPhysicalLayer' style='display:none;' class='backboneDBFolder'> <input type='checkbox' class='BackboneDB checkFilter' id ='BackboneDB__CurrentPhysicalLayer' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Backbone </span></li></ul></li></ul>";
+		$("#DistributionBoard_f_CurrentPhysicalLayer").append(str);
+		
+		str="<ul><li id ='DistributionBoard_metro__CurrentPhysicalLayer' style='display:none;' class='metroDBFolder'> <input type='checkbox' class='MetroDB checkFilter' id ='MetroDB__CurrentPhysicalLayer' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Metro </span></li></ul></li></ul>";
+		$("#DistributionBoard_f_CurrentPhysicalLayer").append(str);
+		
+		str="<ul><li id ='DistributionBoard_access__CurrentPhysicalLayer' style='display:none;' class='accessDBFolder'> <input type='checkbox' class='AccessDB checkFilter' id ='AccessDB__CurrentPhysicalLayer' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Access </span></li></ul></li></ul>";
+		$("#DistributionBoard_f_CurrentPhysicalLayer").append(str);		
+}
+else if(readDB === '0' & treeExceptionDB === '1'){
 		str="<ul><li id='DistributionBoard_f_CurrentPhysicalLayer' style='display:none;' class='DistributionBoard_f_CurrentPhysicalLayer'><input type='checkbox' unchecked class='AllDistBoards checkFilter'></input> <span id='DistribBoard_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='DistribBoard_span' class='TreeSpan' style='color:black;width:395px'>Distribution Board </span></li></ul>";
 		$("#initial_ul_CurrentPhysicalLayer").append(str);
         str="<ul><li id ='DistributionBoard_backbone__CurrentPhysicalLayer' style='display:none;' class='backboneDBFolder'> <input type='checkbox' class='BackboneDB checkFilter' id ='BackboneDB__CurrentPhysicalLayer' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Backbone </span></li></ul></li></ul>";
@@ -387,17 +405,17 @@ if(readDB === '1'){
 			   var strPhysicalLayer="<ul><li id='initial_ul_"+ListProject[iji][0]+"' class='Initial_projects' style='display:none;'><input type='checkbox' class='projectallElements' unchecked name='filter'></input><span id='initial_Span_"+ListProject[iji][0]+"' class='Parentfolder'><i class='fa fa-folder' style='color: #08526D;'></i></span><span class='TreeSpan' style='color:black;width:436px;'> Physical Layer </span></li></ul>";
 		       $("#"+ListProject[iji][0]+"").append(strPhysicalLayer);
 		         
-			   if(readManhole === '1'){
+			   if(readManhole === '1' || readManhole === '0' && treeExceptionMan === '1'){
 			   		str="<ul><li id='Manhole_f_"+ListProject[iji][0]+"' style='display:none;' class='Manhole_f_projects'><input type='checkbox' unchecked class='AllManholes checkFilter' ></input> <span id='Manhole_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Manhole_span' class='TreeSpan' style='color:black;width:395px' >Manhole </span></li></ul>";	   
 			   		$("#initial_ul_"+ListProject[iji][0]+"").append(str);
 			   }
- 			   if(readHandhole === '1'){
+			   if(readHandhole === '1' || readHandhole === '0' && treeExceptionHand === '1'){
 			   		str="<ul><li id='Handhole_f_"+ListProject[iji][0]+"' style='display:none;' class='Handhole_f_projects'><input type='checkbox' unchecked class='AllHandholes checkFilter'></input> <span id='Handhole_spanFolder' class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Handhole_span' style='color:black;width:395px' class='TreeSpan' >Handhole </span></li></ul>";
 			   		$("#initial_ul_"+ListProject[iji][0]+"").append(str);
 			    }
 			   str="<ul><li id='Junction_f_"+ListProject[iji][0]+"' style='display:none;' class='Junction_f_projects'><input type='checkbox' unchecked class='AllJunctions checkFilter'></input> <span id='Junction_spanFolder' class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Junction_span' style='color:black;width:395px' class='TreeSpan' >Junction </span></li></ul>";
 			   $("#initial_ul_"+ListProject[iji][0]+"").append(str);
-			   if(readFiber === '1'){
+			   if(readFiber === '1'|| readFiber  === '0' && readExceptionFiber === '1'){
 			   		str="<ul><li id='FiberPath_f_"+ListProject[iji][0]+"' style='display:none;' class='FiberPath_f_projects'><input type='checkbox' class='AllFiberCables' class='filter checkFilter'></input> <span id='FiberPath_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='FiberPath_span' style='color:black;width:395px' class='TreeSpan'>Fiber Path <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' id='pushPoints"+ListProject[iji][0]+"' class='pushPoints'> <img src='"+getContext()+"/resources/NetworkImages/remove.png' hidden style='margin-left:10px' id='cancelPoints"+ListProject[iji][0]+"' class='clearPoints'></span></li></ul>";
 			   		$("#initial_ul_"+ListProject[iji][0]+"").append(str);
 					str="<ul><li id='FiberPath_backbone__"+ListProject[iji][0]+"' style='display:none;' class='backboneFolder'> <input type='checkbox' class='BackboneFiber checkFilter' id='Backbone__"+ListProject[iji][0]+"' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Backbone </span></li></ul></li></ul>";
@@ -407,7 +425,7 @@ if(readDB === '1'){
 					str="<ul><li id='FiberPath_access__"+ListProject[iji][0]+"' style='display:none;' class='accessFolder'> <input type='checkbox' class='AccessFiber checkFilter' id='Access__"+ListProject[iji][0]+"' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Access </span></li></ul></li></ul>";
 					$("#FiberPath_f_"+ListProject[iji][0]+"").append(str);			   		
 			   }
-  			   if(readDB === '1'){
+  			   if(readDB === '1' || readDB === '0' && treeExceptionDB === '1'){
 			   		str="<ul><li id='DistributionBoard_f_"+ListProject[iji][0]+"' style='display:none;' class='DistributionBoard_f_projects'><input type='checkbox' unchecked class='AllDistBoards checkFilter'></input> <span id='DistribBoard_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='DistribBoard_span' class='TreeSpan' style='color:black;width:395px'>Distribution Board </span></li></ul>";
 			   		$("#initial_ul_"+ListProject[iji][0]+"").append(str);
 				 	str="<ul><li id ='DistributionBoard_backbone__"+ListProject[iji][0]+"' style='display:none;' class='backboneDBFolder'> <input type='checkbox' class='BackboneDB checkFilter' id ='BackboneDB__"+ListProject[iji][0]+"' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Backbone </span></li></ul></li></ul>";
@@ -5563,6 +5581,7 @@ $("#Handhole_f_" + selectedProjectIdContext + " .JUNCTION_H").each(function() {
         }
     },
     {
+		
         'icon': 'edit',
         'name': 'Edit or View Details',
         action: () => {
@@ -5661,7 +5680,8 @@ function removeReadonlyFromAllFields() {
 }
 
 
-if (onlyReadExcep.includes(selectedManIdContext)) {
+if (onlyReadManExcep.includes(selectedManIdContext)) {
+	
 	setAllFieldsReadonly();
 }
 else{
@@ -5691,6 +5711,7 @@ if(exceptionManWriteList){
   if (shouldMakeEditable) {
             removeReadonlyFromAllFields();
         } else {
+			
             setAllFieldsReadonly();
         }
     } else {
@@ -5849,71 +5870,152 @@ singleManhole = new ContextMenu({
 					},	
 					
 	
-					 {'icon': 'edit','name': 'Edit or View Details',action: () => {
-						
-						
-						actionHandholeContext="Update";
-						document.getElementById("projectIdHandhole").style.display = "none";
-						document.getElementById("projectNameHandhole").style.display = "none";
-						document.getElementById("HandholeDMDiv").style.display = 'block';	
-						$("#handholeModal").find("input").val('').end();
-						$("#handholeModal").modal('show');
+	{
+	    'icon': 'edit',
+	    'name': 'Edit or View Details',
+	    action: () => {
+	        actionHandholeContext = "Update";
+	        
+	        // Hide project-related elements
+	        document.getElementById("projectIdHandhole").style.display = "none";
+	        document.getElementById("projectNameHandhole").style.display = "none";
+	        
+	        // Show Handhole details section
+	        document.getElementById("HandholeDMDiv").style.display = 'block';
+	        
+	        // Clear modal input fields and open modal
+	        $("#handholeModal").find("input").val('').end();
+	        $("#handholeModal").modal('show');
+	        
+	        // Set header text
+	        $("#handholeHeader").text("Handhole: " + selectedHandIdContext);
+	        $("#HandholeId").val(selectedHandIdContext);
+	        
+	        // Update header on name input change
+	        $("#HandholeName").on("input", function() {
+	            $("#handholeHeader").text("Handhole: " + $(this).val());
+	        });
 
-						$("#handholeHeader").text("Handhole: "+selectedHandIdContext);
-						$("#HandholeId").val(selectedHandIdContext);
-					
-                        $("#HandholeName").on("input",function(){
-				        $("#handholeHeader").text("Handhole: "+$(this).val());
-	
-			            });
-                            $.ajax({
+	        // Fetch Handhole details using AJAX
+	        $.ajax({
+	            type: "GET",
+	            contentType: "application/json; charset=utf-8",
+	            url: getContext() + '/findHandholeDetails',
+	            async: false,
+	            data: {
+	                "selectedHandIdContext": selectedHandIdContext
+	            },
+	            dataType: "json",
+	            success: function (data) {
+	                // Mapping Handhole details to form fields
+	                const fieldMapping = {
+	                    "HANDHOLE_NAME": "#HandholeName",
+	                    "HANDHOLE_MODEL": "#HandholeModel",
+	                    "CITY": "#HandholeCity",
+	                    "DM_NAME": "#HandholeDMName",
+	                    "LONGITUDE": "#HandholeLong",
+	                    "LATITUDE": "#HandholeLat",
+	                    "CREATION_DATE": "#handholeCreateDate",
+	                    "LAST_MODIFIED_DATE": "#handholeLastModifiedDate",
+	                    "OWNER": "#handholeOwner",
+	                    "MH_INSTALLER": "#handholeInstaller",
+	                    "MH_ENGINEER_NAME": "#handholeEngineerName"
+	                };
 
-                                type: "GET",
+	                const fields = [
+	                    "#HandholeName", "#HandholeModel", "#HandholeDMName", 
+	                    "#HandholeLong", "#HandholeLat", "#handholeOwner", 
+	                    "#handholeInstaller", "#handholeEngineerName"
+	                ];
+	                
+	                const fieldIndex = {
+	                    "HANDHOLE_NAME": 1,
+	                    "HANDHOLE_MODEL": 4,
+	                    "CITY": 5,
+	                    "DM_NAME": 6,
+	                    "LONGITUDE": 2,
+	                    "LATITUDE": 3,
+	                    "CREATION_DATE": 7,
+	                    "LAST_MODIFIED_DATE": 8,
+	                    "OWNER": 9,
+	                    "MH_INSTALLER": 10,
+	                    "MH_ENGINEER_NAME": 11
+	                };
 
-                                contentType: "application/json; charset=utf-8",
+	                // Fill form fields with fetched data
+	                Object.keys(fieldMapping).forEach(fieldName => {
+	                    const index = fieldIndex[fieldName];
+	                    if (index !== undefined) {
+	                        $(fieldMapping[fieldName]).val(data.HandholeDetails[index]);
+	                    }
+	                });
 
-                                url: getContext()+'/findHandholeDetails',
+	                // Set fields as readonly except for owner dropdown
+	                function setAllFieldsReadonly() {
+	                    fields.forEach(field => {
+	                        if (field === "#handholeOwner") {
+	                            return;
+	                        }
+	                        $(field).attr("readonly", true);
+	                    });
 
-                                async:false,
+	                    // Disable the OWNER dropdown
+	                    $("#handholeOwner").attr("disabled", true);
+	                }
 
-                                data: {
+	                // Remove readonly and enable all fields
+	                function removeReadonlyFromAllFields() {
+	                    fields.forEach(field => {
+	                        $(field).removeAttr("readonly");
+	                        if (field === "#handholeOwner") {
+	                            // Enable OWNER dropdown
+	                            $(field).removeAttr("disabled");
+	                        }
+	                    });
+	                }
 
-       
+	                // Apply conditions to set fields readonly or editable
+	                if (onlyReadHandExcep.includes(selectedHandIdContext)) {
+	                    setAllFieldsReadonly();
+	                } else {
+	                    removeReadonlyFromAllFields();
+	                }
 
-                                    "selectedHandIdContext":selectedHandIdContext  
+	                if (exceptionHandWriteList) {
+	                    if (Array.isArray(exceptionHandWriteList)) {
+	                        let shouldMakeEditable = exceptionHandWriteList.some(item => {
+	                            const [FIELD_NAME, FIELD_VALUE] = item;
+	                            if (FIELD_NAME && fieldMapping[FIELD_NAME] !== undefined) {
+	                                const index = fieldIndex[FIELD_NAME];
+	                                if (index !== undefined) {
+	                                    let valueToCompare = data.HandholeDetails[index];
+	                                    return FIELD_VALUE === valueToCompare;
+	                                }
+	                            }
+	                            return false;
+	                        });
 
-                                   
-
-                                },
-
-                                dataType: "json",
-
-                                success: function (data) {
-
-                                	$("#HandholeName").val(data.HandholeDetails[1]);
-                                	$("#HandholeModel").val(data.HandholeDetails[4]);
-                                	$("#HandholeCity").val(data.HandholeDetails[5]);
-                                	$("#HandholeDMName").val(data.HandholeDetails[6]);
-            						$("#HandholeLong").val(data.HandholeDetails[2]);
-            						$("#HandholeLat").val(data.HandholeDetails[3]);
-            						$("#handholeCreateDate").val(data.HandholeDetails[7]);
-            						$("#handholeLastModifiedDate").val(data.HandholeDetails[8]);
-            						$("#handholeOwner").val(data.HandholeDetails[9]);
-            						$("#handholeInstaller").val(data.HandholeDetails[10]);
-            						$("#handholeEngineerName").val(data.HandholeDetails[11]);
-            						
-                                },
-
-                                error: function (result) {
-
-                                    alert("Error");
-
-                                }
-
-                            });
-
-						}
-					 },
+	                        console.log(`Should make editable: ${shouldMakeEditable}`);
+	                        
+	                        if (shouldMakeEditable) {
+	                            removeReadonlyFromAllFields();
+	                        } else {
+	                            setAllFieldsReadonly();
+	                        }
+	                    } else {
+	                        console.error('exceptionHandWriteList is not an array:', exceptionHandWriteList);
+	                    }
+	                }
+	                
+	                // Clean up data to prevent memory issues
+	                data = null;
+	            },
+	            error: function (result) {
+	                alert("Error");
+	            }
+	        });
+	    }
+	},
 					   {'icon': 'paste', 'name': 'Show BoQ', action: () => {
 							
 						  $.ajax({
@@ -7788,56 +7890,72 @@ singleHandhole = new ContextMenu({
 	
 	
 	let menuDB = [
-		{'icon': 'edit','name': 'Edit or View Details',action: () => {
-						
-						 document.getElementById("projectIdDB").style.display = "none";
-						 document.getElementById("projectNameDB").style.display = "none";
-						 document.querySelector("#DBMappingFlag").value = "not_opened"
-						 var dbNtLevel = document.getElementById("DBnetlevel");
-						 $.ajax({
-								type: "GET",
-								contentType: "application/json; charset=utf-8",
-								url: getContext()+'/findDistBoardDetails',
-								data: {
-									  "selectedDistBoardContext":selectedDistBoardContext 
-								},
-								dataType: "json",
-								success: function (data) {									
-									$("#DbMappingTable > tbody").empty();
-									actiondistBoardContext="Update";  
-									$("#DBnetlevel").val(data.DBnetLevel);
-									DBoldNtwLevel = $("#DBnetlevel").val();
-									dbNtLevel.value = data.DBnetLevel;
-									
-									//project id
-									if(data.DBnetLevel == "backbone"){
-								    	IdNodeSelectedTemp = $("#"+selectedDistBoardContext).parents().eq(1).attr('id').split("DistributionBoard_backbone__")[1];	
-									}else if (data.DBnetLevel == "metro"){							
-									    IdNodeSelectedTemp = $("#"+selectedDistBoardContext).parents().eq(1).attr('id').split("DistributionBoard_metro__")[1];
-									}else if (data.DBnetLevel == "access"){
-								        IdNodeSelectedTemp = $("#"+selectedDistBoardContext).parents().eq(1).attr('id').split("DistributionBoard_access__")[1];
-								    }
-								    									
-									console.log(IdNodeSelectedTemp);
-									$("#distributionBoardModal").find("input").val('').end();
-									
-									$("#DistributionBoardheader").text("Distribution Board: "+data.DistBoardDetails[0][0]);
-									
-									$("#DistributionBoardId").val(selectedDistBoardContext);
-									if(data.DistBoardDetails[0][1]!=null){
-										if(data.DistBoardDetails[0][1].split("_")[0] == "CUST"){//for check box site or client
-											document.getElementById("customer_DBAutoComplete").checked = true;
-											$('#customer_DBAutoComplete').val('1');
-											document.getElementById("site_DBAutoComplete").checked = false;
-											$('#site_DBAutoComplete').val('0');
-											document.getElementById("BDWarehouse").style.display = "none";
-											document.getElementById("DBSite").style.display = "none";
-											document.getElementById("DBSiteName").style.display = "none";
-											document.getElementById("DBClientId").style.display = "block";
-											document.getElementById("DBClientName").style.display = "block";
-											document.getElementById("BDClientPhoneNb").style.display = "block";
-											
-										}else{
+			{'icon': 'edit','name': 'Edit or View Details',action: () => {
+							
+							 document.getElementById("projectIdDB").style.display = "none";
+							 document.getElementById("projectNameDB").style.display = "none";
+							 document.querySelector("#DBMappingFlag").value = "not_opened"
+							 var dbNtLevel = document.getElementById("DBnetlevel");
+							 $("#distributionBoardModal").modal('show');
+							 $.ajax({
+									type: "GET",
+									contentType: "application/json; charset=utf-8",
+									url: getContext()+'/findDistBoardDetails',
+									data: {
+										  "selectedDistBoardContext":selectedDistBoardContext 
+									},
+									dataType: "json",
+									success: function (data) {
+										console.log(data);									
+										$("#DbMappingTable > tbody").empty();
+										actiondistBoardContext="Update";  
+										$("#DBnetlevel").val(data.DBnetLevel);
+										DBoldNtwLevel = $("#DBnetlevel").val();
+										dbNtLevel.value = data.DBnetLevel;
+										
+										//project id
+										if(data.DBnetLevel == "backbone"){
+									    	IdNodeSelectedTemp = $("#"+selectedDistBoardContext).parents().eq(1).attr('id').split("DistributionBoard_backbone__")[1];	
+										}else if (data.DBnetLevel == "metro"){							
+										    IdNodeSelectedTemp = $("#"+selectedDistBoardContext).parents().eq(1).attr('id').split("DistributionBoard_metro__")[1];
+										}else if (data.DBnetLevel == "access"){
+									        IdNodeSelectedTemp = $("#"+selectedDistBoardContext).parents().eq(1).attr('id').split("DistributionBoard_access__")[1];
+									    }
+									    									
+										console.log(IdNodeSelectedTemp);
+										$("#distributionBoardModal").find("input").val('').end();
+										
+										$("#DistributionBoardheader").text("Distribution Board: "+data.DistBoardDetails[0][0]);
+										
+										$("#DistributionBoardId").val(selectedDistBoardContext);
+										if(data.DistBoardDetails[0][1]!=null){
+											if(data.DistBoardDetails[0][1].split("_")[0] == "CUST"){//for check box site or client
+												document.getElementById("customer_DBAutoComplete").checked = true;
+												$('#customer_DBAutoComplete').val('1');
+												document.getElementById("site_DBAutoComplete").checked = false;
+												$('#site_DBAutoComplete').val('0');
+												document.getElementById("BDWarehouse").style.display = "none";
+												document.getElementById("DBSite").style.display = "none";
+												document.getElementById("DBSiteName").style.display = "none";
+												document.getElementById("DBClientId").style.display = "block";
+												document.getElementById("DBClientName").style.display = "block";
+												document.getElementById("BDClientPhoneNb").style.display = "block";
+												
+											}else{
+												document.getElementById("site_DBAutoComplete").checked = true;
+												$('#site_DBAutoComplete').val('1');
+												document.getElementById("customer_DBAutoComplete").checked = false;
+												$('#customer_DBAutoComplete').val('0');
+												document.getElementById("DBClientId").style.display = "none";
+												document.getElementById("DBClientName").style.display = "none";
+												document.getElementById("BDClientPhoneNb").style.display = "none";
+												document.getElementById("BDWarehouse").style.display = "block";
+												document.getElementById("DBSite").style.display = "block";
+												document.getElementById("DBSiteName").style.display = "block";
+											}
+										}
+										//
+										if(data.DistBoardDetails[0][1] == null){
 											document.getElementById("site_DBAutoComplete").checked = true;
 											$('#site_DBAutoComplete').val('1');
 											document.getElementById("customer_DBAutoComplete").checked = false;
@@ -7849,134 +7967,227 @@ singleHandhole = new ContextMenu({
 											document.getElementById("DBSite").style.display = "block";
 											document.getElementById("DBSiteName").style.display = "block";
 										}
-									}
-									//
-									if(data.DistBoardDetails[0][1] == null){
-										document.getElementById("site_DBAutoComplete").checked = true;
-										$('#site_DBAutoComplete').val('1');
-										document.getElementById("customer_DBAutoComplete").checked = false;
-										$('#customer_DBAutoComplete').val('0');
-										document.getElementById("DBClientId").style.display = "none";
-										document.getElementById("DBClientName").style.display = "none";
-										document.getElementById("BDClientPhoneNb").style.display = "none";
-										document.getElementById("BDWarehouse").style.display = "block";
-										document.getElementById("DBSite").style.display = "block";
-										document.getElementById("DBSiteName").style.display = "block";
-									}
-									//
-									if(data.DistBoardDetails[0][0]!=null){
-										$("#DistributionBoardName").val(""+data.DistBoardDetails[0][0]);
-									}
-									if(data.DistBoardDetails[0][1]!=null){
-										if(data.DistBoardDetails[0][1].split("_")[0] == "CUST"){
-											 $("#DistributionBoardClient").val(""+data.DistBoardDetails[0][1]);
+										//
+										if(data.DistBoardDetails[0][0]!=null){
+											$("#DistributionBoardName").val(""+data.DistBoardDetails[0][0]);
 										}
-										else{
-											 $("#DistributionBoardSite").val(""+data.DistBoardDetails[0][1]);
-										}
-									}
-									
-									if(data.DistBoardDetails[0][2]!=null){
-										$("#DistributionBoardCapacity").val(""+data.DistBoardDetails[0][2]);
-									}
-
-									if(data.DistBoardDetails[0][3]!=null){
-										$("#DistributionBoardLong").val(""+data.DistBoardDetails[0][3]);
-									}
-									if(data.DistBoardDetails[0][4]!=null){
-										$("#DistributionBoardLat").val(""+data.DistBoardDetails[0][4]);
-									}
-									if(data.DistBoardDetails[0][5]!=null){
-										$("#DistributionBoardRowsNum").val(""+data.DistBoardDetails[0][5]);
-									}
-									if(data.DistBoardDetails[0][6]!=null){
-										$("#DistributionBoardColsNum").val(""+data.DistBoardDetails[0][6]);
-									}
-									if(data.DistBoardDetails[0][7]!=null){
-										$("#DistributionBoardFront").val(""+data.DistBoardDetails[0][7]);
-									}
-									if(data.DistBoardDetails[0][8]!=null){
-										$("#DistributionBoardBack").val(""+data.DistBoardDetails[0][8]);
-									}
-									if(data.DistBoardDetails[0][9]!=null){
-										$("#boardCity").val(""+data.DistBoardDetails[0][9]);
-									}
-									
-									if(data.DistBoardDetails[0][10]!=null){ 
-										if(data.DistBoardDetails[0][1] !=null){
+										if(data.DistBoardDetails[0][1]!=null){
 											if(data.DistBoardDetails[0][1].split("_")[0] == "CUST"){
-												   $("#DistributionBoardClientName").val(""+data.DistBoardDetails[0][10]);
+												 $("#DistributionBoardClient").val(""+data.DistBoardDetails[0][1]);
+											}
+											else{
+												 $("#DistributionBoardSite").val(""+data.DistBoardDetails[0][1]);
+											}
+										}
+										
+										if(data.DistBoardDetails[0][2]!=null){
+											$("#DistributionBoardCapacity").val(""+data.DistBoardDetails[0][2]);
+										}
+
+										if(data.DistBoardDetails[0][3]!=null){
+											$("#DistributionBoardLong").val(""+data.DistBoardDetails[0][3]);
+										}
+										if(data.DistBoardDetails[0][4]!=null){
+											$("#DistributionBoardLat").val(""+data.DistBoardDetails[0][4]);
+										}
+										if(data.DistBoardDetails[0][5]!=null){
+											$("#DistributionBoardRowsNum").val(""+data.DistBoardDetails[0][5]);
+										}
+										if(data.DistBoardDetails[0][6]!=null){
+											$("#DistributionBoardColsNum").val(""+data.DistBoardDetails[0][6]);
+										}
+										if(data.DistBoardDetails[0][7]!=null){
+											$("#DistributionBoardFront").val(""+data.DistBoardDetails[0][7]);
+										}
+										if(data.DistBoardDetails[0][8]!=null){
+											$("#DistributionBoardBack").val(""+data.DistBoardDetails[0][8]);
+										}
+										if(data.DistBoardDetails[0][9]!=null){
+											$("#boardCity").val(""+data.DistBoardDetails[0][9]);
+										}
+										
+										if(data.DistBoardDetails[0][10]!=null){ 
+											if(data.DistBoardDetails[0][1] !=null){
+												if(data.DistBoardDetails[0][1].split("_")[0] == "CUST"){
+													   $("#DistributionBoardClientName").val(""+data.DistBoardDetails[0][10]);
+													}
+													else{
+														$("#DistributionBoardSiteName").val(""+data.DistBoardDetails[0][10]);
 												}
-												else{
+										}
+											else{
 													$("#DistributionBoardSiteName").val(""+data.DistBoardDetails[0][10]);
 											}
-									}
-										else{
-												$("#DistributionBoardSiteName").val(""+data.DistBoardDetails[0][10]);
 										}
-									}
-									
-									
-									if(data.DistBoardDetails[0][11]!=null ){
-										if(data.DistBoardDetails[0][1] !=null){
-											if(data.DistBoardDetails[0][1].split("_")[0] == "CUST"){
-												   $("#DistributionBoardClientPhoneNb").val(""+data.DistBoardDetails[0][11]);
-											}
-												else{
-													$("#DistributionBoardWarehouse").val(""+data.DistBoardDetails[0][11]);
+										
+										
+										if(data.DistBoardDetails[0][11]!=null ){
+											if(data.DistBoardDetails[0][1] !=null){
+												if(data.DistBoardDetails[0][1].split("_")[0] == "CUST"){
+													   $("#DistributionBoardClientPhoneNb").val(""+data.DistBoardDetails[0][11]);
 												}
+													else{
+														$("#DistributionBoardWarehouse").val(""+data.DistBoardDetails[0][11]);
+													}
+												
+											}
+											else{
+												$("#DistributionBoardWarehouse").val(""+data.DistBoardDetails[0][11]);
+											}
+										}
+										
+										
+										if(data.DistBoardDetails[0][12]!=null){
+											$("#boardCreationDate").val(data.DistBoardDetails[0][12]);
+										}
+										
+										if(data.DistBoardDetails[0][13]!=null){
+											$("#boardLastModifiedDate").val(data.DistBoardDetails[0][13]);
+										}
+										//console.log("DB_INSTALLER "+data.DistBoardDetails[0][14]+"DB_ENGINEER_NAME "+data.DistBoardDetails[0][15]+);
+										if(data.DistBoardDetails[0][14]!=null){
+											$("#DBInstaller").val(data.DistBoardDetails[0][14]);
+										}
+										if(data.DistBoardDetails[0][15]!=null){
+											$("#DBEngineerName").val(data.DistBoardDetails[0][15]);
+										}
+										if(data.DistBoardDetails[0][16]!=null){
+											$("#DBDeploymentType").val(data.DistBoardDetails[0][16]);
+										}
+										if(data.DistBoardDetails[0][17]!=null){
+											$("#DBAdaptorPanelType").val(data.DistBoardDetails[0][17]);
+										}
+										$("#DistributionBoardName").on("input",function(){
+
+										$("#DistributionBoardheader").text("Distribution Board: "+$(this).val());
+
+										});
+										
+										 // active the first tab
+										$('#distributionBoardModal ul.nav-tabs li a').removeClass('active');
+										$('#distributionBoardModal ul.nav-tabs li:first-child a').addClass('active');
+				
+										// active the first form
+										$('#distributionBoardModal .tab-pane').removeClass('active');
+										$('#distributionBoardModal #D_Board').addClass('active');
+										
+										// Define 'fieldMappings' first
+										const fieldsToKeepDisabled = [
+										       "#DistributionBoardId", 
+										       "#DistributionBoardFront", 
+										       "#DistributionBoardBack", 
+										       "#boardCity", 
+										       "#boardCreationDate", 
+										       "#boardLastModifiedDate"
+										   ];
+
+										   const fieldMappings = [
+										       { fieldId: "#DistributionBoardId", databaseName: "DB_ID", value: selectedDistBoardContext },  
+										       { fieldId: "#site_DBAutoComplete", databaseName: "", value: '' },  
+										       { fieldId: "#customer_DBAutoComplete", databaseName: " ", value: '' },  
+										       { fieldId: "#customCoordinates", databaseName: "", value: '' },  
+										       { fieldId: "#DistributionBoardLong", databaseName: "DB_LONGITUDE", value: data.DistBoardDetails[0][3] },
+										       { fieldId: "#DBnetlevel", databaseName: "DB_NETWORK_LEVEL", value: data.DBnetLevel },
+										       { fieldId: "#DistributionBoardLat", databaseName: "DB_LATITUDE", value: data.DistBoardDetails[0][4] },
+										       { fieldId: "#DistributionBoardName", databaseName: "DB_NAME", value: data.DistBoardDetails[0][0] },
+										       { fieldId: "#DistributionBoardCapacity", databaseName: "MAX_CAPACITY", value: data.DistBoardDetails[0][6] },
+										       { fieldId: "#DBInstaller", databaseName: "DB_INSTALLER", value: data.DistBoardDetails[0][14] },
+										       { fieldId: "#DBEngineerName", databaseName: "DB_ENGINEER_NAME", value: data.DistBoardDetails[0][15] },
+										       { fieldId: "#DBDeploymentType", databaseName: "DB_DEPLOYMENT_TYPE", value: data.DistBoardDetails[0][16] },
+										       { fieldId: "#DBAdaptorPanelType", databaseName: "DB_ADAPTOR_PANEL_TYPE", value: data.DistBoardDetails[0][17] },
+										       { fieldId: "#boardCreationDate", databaseName: "CREATION_DATE", value: data.DistBoardDetails[0][12] },
+										       { fieldId: "#boardLastModifiedDate", databaseName: "LAST_MODIFIED_DATE", value: data.DistBoardDetails[0][13] },
+										       { fieldId: "#DistributionBoardSite", databaseName: "SITE", value: data.DistBoardDetails[0][1] },
+										       { fieldId: "#DistributionBoardRowsNum", databaseName: "NUM_ROWS", value: data.DistBoardDetails[0][5] },
+										       { fieldId: "#DistributionBoardColsNum", databaseName: "NUM_COLUMNS", value: data.DistBoardDetails[0][6] },
+										       { fieldId: "#DistributionBoardFront", databaseName: "FRONT_PORTS_CONNECTED", value: data.DistBoardDetails[0][7] },
+										       { fieldId: "#DistributionBoardBack", databaseName: "BACK_PORTS_CONNECTED", value: data.DistBoardDetails[0][8] },
+										       { fieldId: "#boardCity", databaseName: "CITY", value: data.DistBoardDetails[0][9] },
+										       { fieldId: "#DistributionBoardSiteName", databaseName: "SITE_NAME", value: data.DistBoardDetails[0][10] },
+										       { fieldId: "#DistributionBoardWarehouse", databaseName: "WAREHOUSE", value: data.DistBoardDetails[0][11] }
+										   ];
+
+										   // Functions to manage read-only state for DistributionBoard fields
+										   function setAllDBFieldsReadonly() {
+										       fieldMappings.forEach(mapping => {
+										           const fieldElement = document.querySelector(mapping.fieldId);
+
+										           // If the field is not in fieldsToKeepDisabled, set it as readonly
+										           if (fieldElement && !fieldsToKeepDisabled.includes(mapping.fieldId)) {
+										               if (fieldElement.tagName === "SELECT" || fieldElement.type === "checkbox") {
+										                   fieldElement.disabled = true;
+										               } else {
+										                   fieldElement.disabled = true;
+										                   fieldElement.setAttribute("readonly", "true");
+										               }
+										           }
+										       });
+										   }
+
+										   function removeReadonlyFromAllDBFields() {
+										       fieldMappings.forEach(mapping => {
+										           const fieldElement = document.querySelector(mapping.fieldId);
+
+										           // If the field is not in fieldsToKeepDisabled, remove readonly and enable it
+										           if (fieldElement && !fieldsToKeepDisabled.includes(mapping.fieldId)) {
+										               if (fieldElement.tagName === "SELECT" || fieldElement.type === "checkbox") {
+										                   fieldElement.disabled = false;
+										               } else {
+										                   fieldElement.disabled = false;
+										                   fieldElement.removeAttribute("readonly");
+										               }
+										           }
+										       });
+										   }
+
+										   // Check if onlyReadDBExcep includes selectedDistBoardContext
+										   if (onlyReadDBExcep.includes(selectedDistBoardContext)) {
+										       setAllDBFieldsReadonly();
+										   } else {
+										       removeReadonlyFromAllDBFields();
+										   }
+
+										   // Handle exceptions for DistributionBoard write access
+										   if (exceptionDBWriteList) {
+											if (Array.isArray(exceptionDBWriteList)) {
+										       let shouldMakeEditable = false;
+
+										       // Loop through exceptionDBWriteList and check if any entry matches the fieldMappings
+										       exceptionDBWriteList.forEach(item => {
+										           const [FIELD_NAME, FIELD_VALUE] = item;
+
+										           fieldMappings.forEach(mapping => {
+										               if (FIELD_NAME === mapping.databaseName && FIELD_VALUE === mapping.value) {
+										                   shouldMakeEditable = true;
+										               }
+										           });
+										       });
+
+										       // If a match is found, enable all fields except the ones that should remain disabled
+										       if (shouldMakeEditable) {
+										           removeReadonlyFromAllDBFields();
+										       } else {
+										           // If no match is found, set all fields as readonly except the ones that should remain disabled
+										           setAllDBFieldsReadonly();
+										       }
+										   }
+										   else {
 											
-										}
-										else{
-											$("#DistributionBoardWarehouse").val(""+data.DistBoardDetails[0][11]);
-										}
-									}
-									
-									
-									if(data.DistBoardDetails[0][12]!=null){
-										$("#boardCreationDate").val(data.DistBoardDetails[0][12]);
-									}
-									
-									if(data.DistBoardDetails[0][13]!=null){
-										$("#boardLastModifiedDate").val(data.DistBoardDetails[0][13]);
-									}
-									//console.log("DB_INSTALLER "+data.DistBoardDetails[0][14]+"DB_ENGINEER_NAME "+data.DistBoardDetails[0][15]+);
-									if(data.DistBoardDetails[0][14]!=null){
-										$("#DBInstaller").val(data.DistBoardDetails[0][14]);
-									}
-									if(data.DistBoardDetails[0][15]!=null){
-										$("#DBEngineerName").val(data.DistBoardDetails[0][15]);
-									}
-									if(data.DistBoardDetails[0][16]!=null){
-										$("#DBDeploymentType").val(data.DistBoardDetails[0][16]);
-									}
-									if(data.DistBoardDetails[0][17]!=null){
-										$("#DBAdaptorPanelType").val(data.DistBoardDetails[0][17]);
-									}
-									$("#DistributionBoardName").on("input",function(){
+											setAllDBFieldsReadonly();
 
-									$("#DistributionBoardheader").text("Distribution Board: "+$(this).val());
-
-									});
-									
-									 // active the first tab
-									$('#distributionBoardModal ul.nav-tabs li a').removeClass('active');
-									$('#distributionBoardModal ul.nav-tabs li:first-child a').addClass('active');
-			
-									// active the first form
-									$('#distributionBoardModal .tab-pane').removeClass('active');
-									$('#distributionBoardModal #D_Board').addClass('active');
-									$("#distributionBoardModal").modal('show');
-	
-							},
-							error: function (result) {
-								alert("Error");
-							}
-						}); 
-					
-	
-					}
-				 },
+										   }
+}
+										
+		
+								},
+								error: function (result) {
+									alert("Error");
+								}
+							}); 
+						
+		
+						}
+					 },
 	/////////////*********************	PORTS Mapping  ***********************///////////////
 	//-------------------------------------------------------------------------------------------------//	         
 			{'icon': 'braille', 'name': 'View Board Mapping', action: () => {
@@ -8574,7 +8785,7 @@ singleDistBoard = new ContextMenu({
 	//-------------------------------------------------------------------------------------------------//	  
 	
 	
-	
+	//darwish
 	let menuFiber = [
     	{'icon': 'edit','name': 'Edit or View Details',action: () => {
 							
