@@ -6024,7 +6024,6 @@ $("#DBProjectId").autocomplete({
 function FindFiberData(selectedFiberContext){
 
 	console.log("data fiber here");
-
 	$('#fiberPathModal').find('input:text').val('');
 	$('#fiberPathModal').find('input:file').val('');
 	$('#fiberPathModal').find('input:checkbox').prop("checked",false);
@@ -6045,6 +6044,188 @@ function FindFiberData(selectedFiberContext){
 		},
 		dataType: "json",
 		success: function (data) {
+			
+			const fieldsToKeepDisabled = [
+			    "#CreationDate",
+			    "#LastModifiedDate",
+			    "#CreatedBy",
+			    "#LastModifiedBy",
+			    "#SourceLng",
+			    "#DestinationLng",
+			    "#SourceLat",
+			    "#DestinationLat",
+			    "#SourceCity",
+			    "#DestinationCity"
+			];
+
+			const fieldMappings = [
+			    { fieldId: "#site_CableAutoComplete", databaseName: "", value: '' },
+			    { fieldId: "#customer_CableAutoComplete", databaseName: "", value: '' },
+			    { fieldId: "#manhole_CableAutoComplete", databaseName: "", value: '' },
+			    { fieldId: "#handhole_CableAutoComplete", databaseName: "", value: '' },
+			    { fieldId: "#db_CableAutoComplete", databaseName: "", value: '' },
+				
+				{ fieldId: "#DB_AutocompleteStrandFiber", databaseName: "", value: '' },
+				{ fieldId: "#Handhole_AutocompleteStrandFiber", databaseName: "", value: '' },
+				{ fieldId: "#Manhole_AutocompleteStrandFiber", databaseName: "", value: '' },
+				{ fieldId: "#customer_AutocompleteStrandFiber", databaseName: "", value: '' },
+				{ fieldId: "#Site_AutocompleteStrandFiber", databaseName: "", value: '' },
+							
+				{ fieldId: "#customer_AutocompleteTubeFiber", databaseName: "", value: '' },
+				{ fieldId: "#Manhole_AutocompleteTubeFiber", databaseName: "", value: '' },
+			    { fieldId: "#Handhole_AutocompleteTubeFiber", databaseName: "", value: '' },
+				{ fieldId: "#DB_AutocompleteTubeFiber", databaseName: "", value: '' },
+				
+				{ fieldId: "#Site_AutocompleteCable", databaseName: "", value: '' },
+				{ fieldId: "#Manhole_AutocompleteCable", databaseName: "", value: '' },
+				{ fieldId: "#Handhole_AutocompleteCable", databaseName: "", value: '' },
+				{ fieldId: "#DB_AutocompleteCable", databaseName: "", value: '' },
+				{ fieldId: "#AuxPt_AutocompleteCable", databaseName: "", value: '' },				
+				
+				
+				{ fieldId: "#Site_AutocompleteTubeFiber", databaseName: "", value: '' },
+				{ fieldId: "#customer_AutocompleteTubeFiber", databaseName: "", value: '' },
+				{ fieldId: "#Manhole_AutocompleteTubeFiber", databaseName: "", value: '' },
+				{ fieldId: "#Handhole_AutocompleteTubeFiber", databaseName: "", value: '' },
+				{ fieldId: "#DB_AutocompleteTubeFiber", databaseName: "", value: '' },
+				
+				{ fieldId: "#add_Tube", databaseName: "", value: '' },
+				{ fieldId: "#delete_Tube", databaseName: "", value: '' },
+				
+				{ fieldId: "#add_Strand", databaseName: "", value: '' },
+				{ fieldId: "#delete_Strand", databaseName: "", value: '' },
+								 
+				{ fieldId: "#SourceType", databaseName: "", value: '' },
+				{ fieldId: "#DestinationType", databaseName: "", value: '' },
+												
+				
+				   { fieldId: "#Source", databaseName: "SOURCE_WARE_ID", value: data.fiberDetails[0][0] },
+			    { fieldId: "#SourceId", databaseName: "SOURCE_ID", value: data.fiberDetails[0][1] },
+			    { fieldId: "#SourceName", databaseName: "SOURCE_NAME", value: data.fiberDetails[0][2] },
+			    { fieldId: "#Destination", databaseName: "DESTINATION_WARE_ID", value: data.fiberDetails[0][3] },
+			    { fieldId: "#DestinationId", databaseName: "DESTINATION_ID", value: data.fiberDetails[0][4] },
+			    { fieldId: "#DestinationName", databaseName: "DESTINATION_NAME", value: data.fiberDetails[0][5] },
+			    { fieldId: "#ItemCodeId", databaseName: "ITEM_CODE", value: data.fiberDetails[0][6] },
+			    { fieldId: "#NumStrands", databaseName: "NUMBER_OF_STRANDS", value: data.fiberDetails[0][7] },
+			    { fieldId: "#NumTubes", databaseName: "NUMBER_OF_TUBES", value: data.fiberDetails[0][8] },
+			    { fieldId: "#FiberLength", databaseName: "LENGTH", value: data.fiberDetails[0][9] },
+			    { fieldId: "#Condiut_Id", databaseName: "CONDUIT_ID", value: data.fiberDetails[0][10] },
+			    { fieldId: "#Condiut_Name", databaseName: "CONDUIT_NAME", value: data.fiberDetails[0][11] },
+			    { fieldId: "#SourceLng", databaseName: "SOURCE_LNG", value: data.fiberDetails[0][12] },
+			    { fieldId: "#SourceLat", databaseName: "SOURCE_LAT", value: data.fiberDetails[0][13] },
+			    { fieldId: "#DestinationLng", databaseName: "DESTINATION_LNG", value: data.fiberDetails[0][14] },
+			    { fieldId: "#DestinationLat", databaseName: "DESTINATION_LAT", value: data.fiberDetails[0][15] },
+			    { fieldId: "#SingleMode", databaseName: "CABLE_MODE", value: data.fiberDetails[0][16] },
+			    { fieldId: "#fiberName", databaseName: "FIBER_CABLE_NAME", value: data.fiberDetails[0][17] },
+			    { fieldId: "#srcCity", databaseName: "SOURCE_CITY", value: data.fiberDetails[0][18] },
+			    { fieldId: "#dstCity", databaseName: "DESTINATION_CITY", value: data.fiberDetails[0][19] },
+			    { fieldId: "#fibertype", databaseName: "FIBER_TYPE", value: data.fiberDetails[0][20] },
+			    { fieldId: "#fiberdeployment", databaseName: "FIBER_DEPLOYMENT", value: data.fiberDetails[0][21] },
+			    { fieldId: "#fibernetlevel", databaseName: "FIBER_NETWORK_LEVEL", value: data.fiberDetails[0][22] },
+			    { fieldId: "#fiberowner", databaseName: "FIBER_OWNER", value: data.fiberDetails[0][23] },
+			    { fieldId: "#crtdByFiberCable", databaseName: "CREATED_BY", value: data.fiberDetails[0][24] },
+			    { fieldId: "#modifiedByFiberCable", databaseName: "LAST_MODIFIED_BY", value: data.fiberDetails[0][25] },
+			    { fieldId: "#popupCreateDateFiber", databaseName: "CREATION_DATE", value: data.fiberDetails[0][26] },
+			    { fieldId: "#popupLastModifiedDateFiber", databaseName: "LAST_MODIFIED_DATE", value: data.fiberDetails[0][27] },
+			    { fieldId: "#FiberDrivDist", databaseName: "TOTAL_DRIVING_DISTANCE", value: data.fiberDetails[0][28] },
+			    { fieldId: "#TotalGeoDistance", databaseName: "TOTAL_GEO_DISTANCE", value: data.fiberDetails[0][29] },
+			    { fieldId: "#DrawingType", databaseName: "DRAWING_TYPE", value: data.fiberDetails[0][30] },
+			    { fieldId: "#AuxiliaryToDestinationDistance", databaseName: "LAST_AUXILIARY_TO_DESTINATION_DISTANCE", value: data.fiberDetails[0][31] },
+			    { fieldId: "#AuxiliaryToDestinationDrivingDistance", databaseName: "LAST_AUXILIARY_TO_DESTINATION_DRIVING_DISTANCE", value: data.fiberDetails[0][32] },
+			    { fieldId: "#RelatedStrandNumber", databaseName: "RELATED_STRAND_NUMBER", value: data.fiberDetails[0][33] },
+			    { fieldId: "#RelatedStrandColor", databaseName: "RELATED_STRAND_COLOR", value: data.fiberDetails[0][34] },
+			    { fieldId: "#RelatedStrandId", databaseName: "RELATED_STRAND_ID", value: data.fiberDetails[0][35] },
+			    { fieldId: "#RelatedStrandName", databaseName: "RELATED_STRAND_NAME", value: data.fiberDetails[0][36] },
+			    { fieldId: "#RelatedTubeNumber", databaseName: "RELATED_TUBE_NUMBER", value: data.fiberDetails[0][37] },
+			    { fieldId: "#RelatedTubeColor", databaseName: "RELATED_TUBE_COLOR", value: data.fiberDetails[0][38] },
+			    { fieldId: "#RelatedTubeId", databaseName: "RELATED_TUBE_ID", value: data.fiberDetails[0][39] },
+			    { fieldId: "#RelatedTubeName", databaseName: "RELATED_TUBE_NAME", value: data.fiberDetails[0][40] },
+			    { fieldId: "#RelatedCableId", databaseName: "RELATED_CABLE_ID", value: data.fiberDetails[0][41] },
+			    { fieldId: "#RelatedCableName", databaseName: "RELATED_CABLE_NAME", value: data.fiberDetails[0][42] },
+			    { fieldId: "#OthersideLastMileId", databaseName: "OTHERSIDE_LASTMILE_ID", value: data.fiberDetails[0][43] },
+			    { fieldId: "#OthersideLastMileName", databaseName: "OTHERSIDE_LASTMILE_NAME", value: data.fiberDetails[0][44] },
+			    { fieldId: "#OthersideLocationId", databaseName: "OTHERSIDE_LOCATION_ID", value: data.fiberDetails[0][45] },
+			    { fieldId: "#OthersideLocationName", databaseName: "OTHERSIDE_LOCATION_NAME", value: data.fiberDetails[0][46] },
+			    { fieldId: "#OthersideLocationCity", databaseName: "OTHERSIDE_LOCATION_CITY", value: data.fiberDetails[0][47] },
+			    { fieldId: "#OthersideLocationType", databaseName: "OTHERSIDE_LOCATION_TYPE", value: data.fiberDetails[0][48] },
+			    { fieldId: "#fiberCableSize", databaseName: "FIBER_CABLE_SIZE", value: data.fiberDetails[0][49] },
+			    { fieldId: "#fiberEngineerName", databaseName: "FIBER_ENGINEER_NAME", value: data.fiberDetails[0][50] },
+			    { fieldId: "#fiberInstaller", databaseName: "FIBER_INSTALLER", value: data.fiberDetails[0][51] }
+			];
+			// Ensure the functions are declared after the variable initialization
+											function setAllFieldsReadonly() {
+											    fieldMappings.forEach(mapping => {
+											        const fieldElement = document.querySelector(mapping.fieldId);
+
+											        // If the field is not in fieldsToKeepDisabled, set it as readonly
+											        if (fieldElement && !fieldsToKeepDisabled.includes(mapping.fieldId)) {
+											            if (fieldElement.tagName === "SELECT" || fieldElement.type === "checkbox") {
+											                fieldElement.disabled = true;
+											            } else {
+											                fieldElement.disabled = true;
+											                fieldElement.setAttribute("readonly", "true");
+											            }
+											        }
+											    });
+											}
+
+											function removeReadonlyFromAllFields() {
+											    fieldMappings.forEach(mapping => {
+											        const fieldElement = document.querySelector(mapping.fieldId);
+												  // If the field is not in fieldsToKeepDisabled, remove readonly and enable it
+											        if (fieldElement && !fieldsToKeepDisabled.includes(mapping.fieldId)) {
+											            if (fieldElement.tagName === "SELECT" || fieldElement.type === "checkbox") {
+											                fieldElement.disabled = false;
+											            } else {
+											                fieldElement.disabled = false;
+											                fieldElement.removeAttribute("readonly");
+											            }
+											        }
+											    });
+											}
+
+											// Check if onlyReadDBExcep includes selectedDistBoardContext
+											if (onlyReadFiberExcep.includes(selectedFiberContext)) {
+											    setAllFieldsReadonly();
+											} else {
+											    removeReadonlyFromAllFields();
+											}
+
+											// Now handle exceptionDBWriteList if it's not empty
+											if (exceptionFiberWriteList) {
+											if (Array.isArray(exceptionFiberWriteList)) {
+											let shouldMakeEditable = false;
+
+											    // Loop through exceptionDBWriteList and check if any entry matches the fieldMappings
+											    exceptionFiberWriteList.forEach(item => {
+											        const [FIELD_NAME, FIELD_VALUE] = item;
+
+											        fieldMappings.forEach(mapping => {
+											            if (FIELD_NAME === mapping.databaseName && FIELD_VALUE === mapping.value) {
+											                shouldMakeEditable = true;
+											            }
+											        });
+											    });
+
+											    // If a match is found, enable all fields except the ones that should remain disabled
+											    if (shouldMakeEditable) {
+											        removeReadonlyFromAllFields();
+											    } else {
+											        // If no match is found, set all fields as readonly except the ones that should remain disabled
+											        setAllFieldsReadonly();
+											    }
+											}
+											else{
+											setAllFieldsReadonly();
+																						}
+											}
+											
+
+
+			
+console.log(fieldMappings);
+			
+			
 			$("#tubesTable > tbody").empty();
 			$("#strandsTable > tbody").empty();										
 			$("#auxiliaryTable > tbody").empty();
@@ -6817,6 +6998,8 @@ function FindFiberData(selectedFiberContext){
 		$("#strand_length"+indexStrand).val(td);						
 		indexStrand++;
 		}
+		
+		
 	}	
 				data = null;
 		},
