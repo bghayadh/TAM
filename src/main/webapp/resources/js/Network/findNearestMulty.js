@@ -509,8 +509,7 @@ function appendNearestManholesTableMulty(result) {
 	        $('.ManholeBOQ:checked').each(function () {
 	            var id = $(this).attr('id');
 	            if (id && id.startsWith("BOOQ_")) {
-					console.log("wowww");
-	                var manholeId = id.slice(5);
+				    var manholeId = id.slice(5);
 	                $("#network_tree").find("input[type='checkbox'][id='Manhole_f_" + manholeId + "']").prop('checked', false);
 	            }
 	        });
