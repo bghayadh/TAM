@@ -1906,6 +1906,11 @@ public class PhysicalLayerController {
 			    LinkedHashMap<String, LinkedHashMap<String, List<?>>> ptPhysicalLayerData = new LinkedHashMap<>();
 			    LinkedHashMap<String, List<?>> ptPhysicalDataResult = new LinkedHashMap<>();
 			   
+			    
+			    
+			 // It is not possible to use database session in any loop if the session was previously used in query.
+			 // So it is required to close this used session and create new one without doing any query before the loop.
+			 // This new clean session can be used within the loop.
 			    if (session != null && session.isOpen()) {
 			      session.close();
 			    }
