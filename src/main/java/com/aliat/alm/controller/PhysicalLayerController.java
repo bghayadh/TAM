@@ -200,7 +200,7 @@ public class PhysicalLayerController {
                        permissions.checkAndAddExceptions(model, readManhole, writeManhole, session,"Physical Layer Manhole",request);
 				       
 				       String readExceptionMan = (String) model.asMap().get("readExceptionMan");
-
+				       String writeExceptionMan = (String) model.asMap().get("writeExceptionMan");
 				       
 				       permissions.setPerms(model, permissions.getUserPermsWithSession(session, request),
 				                "Physical Layer Handhole", "Tree");
@@ -220,7 +220,8 @@ public class PhysicalLayerController {
                       permissions.checkAndAddExceptions(model, readHandhole, writeHandhole, session,"Physical Layer Handhole",request);
 				       
 				       String readExceptionHand = (String) model.asMap().get("readExceptionHand");
-
+				       String writeExceptionHand = (String) model.asMap().get("writeExceptionHand");
+				       
 				     
 				       
 				       permissions.setPerms(model, permissions.getUserPermsWithSession(session, request),
@@ -240,8 +241,9 @@ public class PhysicalLayerController {
                        permissions.checkAndAddExceptions(model, readFiber, writeFiber, session,"Physical Layer Fiber",request);
 				       
 				       String readExceptionFiber = (String) model.asMap().get("readExceptionFiber");
+				       String writeExceptionFiber = (String) model.asMap().get("writeExceptionFiber");
 				       model.addAttribute("readExceptionFiber", readExceptionFiber); 
-
+				       
 				       
 				       permissions.setPerms(model, permissions.getUserPermsWithSession(session, request),
 				                "Physical Layer DB", "Tree");
@@ -260,7 +262,8 @@ public class PhysicalLayerController {
                        permissions.checkAndAddExceptions(model, readDB, writeDB, session,"Physical Layer DB",request);
 				       
 				       String readExceptionDB = (String) model.asMap().get("readExceptionDB");
-
+				       String writeExceptionDB = (String) model.asMap().get("writeExceptionDB");
+					      
 				       
 				       
 				       
@@ -356,9 +359,10 @@ public class PhysicalLayerController {
 							
 							
 							
-							else if("0".equals(readManhole) & "1".equals(writeManhole) & "1".equals(readExceptionMan) || "0".equals(readManhole) & "0".equals(writeManhole) & "1".equals(readExceptionMan)) {
+							else if(("0".equals(readManhole) & "1".equals(writeManhole) & "1".equals(readExceptionMan)) ||( "0".equals(readManhole) & "0".equals(writeManhole) & ("1".equals(readExceptionMan)) || "1".equals(writeExceptionMan))) {
 								  List<Object[]> exceptionManReadList = (List<Object[]>) model.asMap().get("exceptionManReadList");
 								  StringBuilder manholeWhereClause = new StringBuilder();
+                               if (exceptionManReadList != null) {
 						            for (Object[] entry : exceptionManReadList) {
 						                String fieldName = (String) entry[0];
 						                String fieldValue = (String) entry[1];
@@ -368,6 +372,20 @@ public class PhysicalLayerController {
 						                    }
 						                    manholeWhereClause.append("A.").append(fieldName).append(" LIKE '%").append(fieldValue).append("%'");
 						                }
+						            }
+                               }
+						            List<Object[]> exceptionManWriteList = (List<Object[]>) model.asMap().get("exceptionManWriteList");
+						            if (exceptionManWriteList != null) {
+						            for (Object[] entry : exceptionManWriteList) {
+						                String fieldName = (String) entry[0];
+						                String fieldValue = (String) entry[1];
+						                if (fieldName != null && fieldValue != null) {
+						                    if (manholeWhereClause.length() > 0) {
+						                        manholeWhereClause.append(" OR ");
+						                    }
+						                    manholeWhereClause.append("A.").append(fieldName).append(" LIKE '%").append(fieldValue).append("%'");
+						                }
+						            }
 						            }
 
 						            // Construct the Manhole query with dynamic WHERE clause
@@ -442,9 +460,10 @@ public class PhysicalLayerController {
 									.getResultList();
 							}
 							
-							else if("0".equals(readHandhole) & "1".equals(writeHandhole) & "1".equals(readExceptionHand) || "0".equals(readHandhole) & "0".equals(writeHandhole) & "1".equals(readExceptionHand)) {
+							else if(("0".equals(readHandhole) & "1".equals(writeHandhole) &( "1".equals(readExceptionHand) ||  "1".equals(writeExceptionHand) )) || ("0".equals(readHandhole) & "0".equals(writeHandhole) & ("1".equals(readExceptionHand) || "1".equals(writeExceptionHand) ))) {
 								  List<Object[]> exceptionHandReadList = (List<Object[]>) model.asMap().get("exceptionHandReadList");
 								  StringBuilder handholeWhereClause = new StringBuilder();
+								  if (exceptionHandReadList != null) {
 						            for (Object[] entry : exceptionHandReadList) {
 						                String fieldName = (String) entry[0];
 						                String fieldValue = (String) entry[1];
@@ -455,7 +474,20 @@ public class PhysicalLayerController {
 						                    handholeWhereClause.append("A.").append(fieldName).append(" LIKE '%").append(fieldValue).append("%'");
 						                }
 						            }
-
+								  }
+						      	  List<Object[]> exceptionHandWriteList = (List<Object[]>) model.asMap().get("exceptionHanWriteList");
+						      	  if (exceptionHandWriteList != null) {
+						      	for (Object[] entry : exceptionHandWriteList) {
+					                String fieldName = (String) entry[0];
+					                String fieldValue = (String) entry[1];
+					                if (fieldName != null && fieldValue != null) {
+					                    if (handholeWhereClause.length() > 0) {
+					                        handholeWhereClause.append(" OR ");
+					                    }
+					                    handholeWhereClause.append("A.").append(fieldName).append(" LIKE '%").append(fieldValue).append("%'");
+					                }
+					            }
+						      	  }
 						            // Construct the Manhole query with dynamic WHERE clause
 						            String handholeQuery = "SELECT DISTINCT A.HANDHOLE_ID, A.HANDHOLE_NAME, A.LONGITUDE, A.LATITUDE, A.PROJECT_ID, "
 						                    + "(SELECT COUNT(*) FROM JUNCTION C WHERE C.PHYSICAL_LAYER_ID = A.HANDHOLE_ID) AS JUNCTION_COUNT, A.CITY "
@@ -524,12 +556,12 @@ public class PhysicalLayerController {
 							}
 							
 							
-							else if ("0".equals(readDB) & "1".equals(writeDB) & "1".equals(readExceptionDB) || 
-							         "0".equals(readDB) & "0".equals(writeDB) & "1".equals(readExceptionDB)) {
-							    
+							else if (("0".equals(readDB) & "1".equals(writeDB) & ("1".equals(readExceptionDB)|| "1".equals(writeExceptionDB)) ) || 
+							         ("0".equals(readDB) & "0".equals(writeDB) & ("1".equals(readExceptionDB) || "1".equals(writeExceptionDB) ))) {
+							     
 							    List<Object[]> exceptionDBReadList = (List<Object[]>) model.asMap().get("exceptionDBReadList");
 							    StringBuilder dbWhereClause = new StringBuilder();
-
+							    if (exceptionDBReadList != null) {
 							    for (Object[] entry : exceptionDBReadList) {
 							        String fieldName = (String) entry[0];
 							        String fieldValue = (String) entry[1];
@@ -540,7 +572,20 @@ public class PhysicalLayerController {
 							            dbWhereClause.append("A.").append(fieldName).append(" LIKE '%").append(fieldValue).append("%'");
 							        }
 							    }
-
+							    }
+							    List<Object[]> exceptionDBWriteList = (List<Object[]>) model.asMap().get("exceptionDBWriteList");
+							    if (exceptionDBWriteList != null) {
+							    for (Object[] entry : exceptionDBWriteList) {
+							        String fieldName = (String) entry[0];
+							        String fieldValue = (String) entry[1];
+							        if (fieldName != null && fieldValue != null) {
+							            if (dbWhereClause.length() > 0) {
+							                dbWhereClause.append(" OR ");
+							            }
+							            dbWhereClause.append("A.").append(fieldName).append(" LIKE '%").append(fieldValue).append("%'");
+							        }
+							    }
+							    }
 							    // Construct the Distribution Board query with dynamic WHERE clause
 							    String dbQuery = "SELECT DISTINCT A.DB_ID, A.DB_LONGITUDE, A.DB_LATITUDE, A.DB_NAME, A.MAX_CAPACITY, " +
 						                 "A.SITE, A.PROJECT_ID, A.CITY, A.DB_NETWORK_LEVEL " +
@@ -2498,8 +2543,8 @@ public class PhysicalLayerController {
 								.getResultList();
 						
 						}
-	if("0".equals(readManhole) & "1".equals(writeManhole) & "1".equals(readExceptionMan) || "0".equals(readManhole) & "0".equals(writeManhole) & "1".equals(readExceptionMan)) {
-							
+						else if(("0".equals(readManhole) & "1".equals(writeManhole) & "1".equals(readExceptionMan)) ||( "0".equals(readManhole) & "0".equals(writeManhole) & ("1".equals(readExceptionMan)) || "1".equals(writeExceptionMan))) {
+													
 							List<Object[]> exceptionManReadList = (List<Object[]>) model.asMap().get("exceptionManReadList");
 
 				            // Build dynamic WHERE clause for Manhole query
@@ -2515,6 +2560,19 @@ public class PhysicalLayerController {
 				                        manholeWhereClause.append("A.").append(fieldName).append(" LIKE '%").append(fieldValue).append("%'");
 				                    }
 				                }
+				            }
+				            List<Object[]> exceptionManWriteList = (List<Object[]>) model.asMap().get("exceptionManWriteList");
+				            if (exceptionManWriteList != null) {
+				            for (Object[] entry : exceptionManWriteList) {
+				                String fieldName = (String) entry[0];
+				                String fieldValue = (String) entry[1];
+				                if (fieldName != null && fieldValue != null) {
+				                    if (manholeWhereClause.length() > 0) {
+				                        manholeWhereClause.append(" OR ");
+				                    }
+				                    manholeWhereClause.append("A.").append(fieldName).append(" LIKE '%").append(fieldValue).append("%'");
+				                }
+				            }
 				            }
 				             
 				            // Construct the Manhole query with dynamic WHERE clause
@@ -2572,11 +2630,11 @@ public class PhysicalLayerController {
 
 						}
 						
-	if("0".equals(readHandhole) & "1".equals(writeHandhole) & "1".equals(readExceptionHand) || "0".equals(readHandhole) & "0".equals(writeHandhole) & "1".equals(readExceptionHand)) {
-							
+						else if(("0".equals(readHandhole) & "1".equals(writeHandhole) &( "1".equals(readExceptionHand) ||  "1".equals(writeExceptionHand) )) || ("0".equals(readHandhole) & "0".equals(writeHandhole) & ("1".equals(readExceptionHand) || "1".equals(writeExceptionHand) ))) {
+													
 							List<Object[]> exceptionHandReadList = (List<Object[]>) model.asMap().get("exceptionHandReadList");
 
-				            // Build dynamic WHERE clause for Manhole query
+				            // Build dynamic WHERE clause for Manhole query  
 				            StringBuilder handholeWhereClause = new StringBuilder();
 				            if (exceptionHandReadList != null) {
 				                for (Object[] entry : exceptionHandReadList) {
@@ -2590,6 +2648,20 @@ public class PhysicalLayerController {
 				                    }
 				                }
 				            }
+				    		List<Object[]> exceptionHandWriteList = (List<Object[]>) model.asMap().get("exceptionHandWriteList");
+				    		 if (exceptionHandWriteList != null) {
+					                for (Object[] entry : exceptionHandWriteList
+					                		) {
+					                    String fieldName = (String) entry[0];
+					                    String fieldValue = (String) entry[1];
+					                    if (fieldName != null && fieldValue != null) {
+					                        if (handholeWhereClause.length() > 0) {
+					                        	handholeWhereClause.append(" OR ");
+					                        }
+					                        handholeWhereClause.append("A.").append(fieldName).append(" LIKE '%").append(fieldValue).append("%'");
+					                    }
+					                }
+					            }
 				             
 				            // Construct the Manhole query with dynamic WHERE clause
 				            String handholeQuery = "SELECT DISTINCT HANDHOLE_ID, HANDHOLE_NAME, LONGITUDE, LATITUDE, PROJECT_ID, "
@@ -2641,15 +2713,28 @@ public class PhysicalLayerController {
 									"SELECT DISTINCT DB_ID,DB_LONGITUDE,DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,PROJECT_ID ,CITY,DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD WHERE PROJECT_ID='CurrentPhysicalLayer'")
 									.getResultList();						
 						}
-						else if ("0".equals(readDB) & "1".equals(writeDB) & "1".equals(readExceptionDB) || 
-						         "0".equals(readDB) & "0".equals(writeDB) & "1".equals(readExceptionDB)) {
+						else if (("0".equals(readDB) & "1".equals(writeDB) & ("1".equals(readExceptionDB)|| "1".equals(writeExceptionDB)) ) || 
+						         ("0".equals(readDB) & "0".equals(writeDB) & ("1".equals(readExceptionDB) || "1".equals(writeExceptionDB) ))) {
 						    
+					    
 						    List<Object[]> exceptionDBReadList = (List<Object[]>) model.asMap().get("exceptionDBReadList");
-System.out.println(mapper.writeValueAsString(exceptionDBReadList));
 						    // Build dynamic WHERE clause for Distribution Board query
 						    StringBuilder dbWhereClause = new StringBuilder();
 						    if (exceptionDBReadList != null) {
 						        for (Object[] entry : exceptionDBReadList) {
+						            String fieldName = (String) entry[0];
+						            String fieldValue = (String) entry[1];
+						            if (fieldName != null && fieldValue != null) {
+						                if (dbWhereClause.length() > 0) {
+						                    dbWhereClause.append(" OR ");
+						                }
+						                dbWhereClause.append("A.").append(fieldName).append(" LIKE '%").append(fieldValue).append("%'");
+						            }
+						        }
+						    }
+						    List<Object[]> exceptionDBWriteList = (List<Object[]>) model.asMap().get("exceptionDBWriteList");
+						    if (exceptionDBWriteList != null) {
+						        for (Object[] entry : exceptionDBWriteList) {
 						            String fieldName = (String) entry[0];
 						            String fieldValue = (String) entry[1];
 						            if (fieldName != null && fieldValue != null) {
@@ -9377,7 +9462,8 @@ System.out.println(mapper.writeValueAsString(exceptionDBReadList));
                  permissions.checkAndAddExceptions(model, readFiber, writeFiber, session,"Physical Layer Fiber",request);
 			       
 			       String readExceptionFiber = (String) model.asMap().get("readExceptionFiber");
-			     
+			       String writeExceptionFiber = (String) model.asMap().get("writeExceptionFiber");
+				     
 			       if("1".equals(readFiber) ) {
 				fiberList = session.createNativeQuery(
 						"SELECT SOURCE_LNG,SOURCE_LAT,DESTINATION_LNG,DESTINATION_LAT,A.FIBER_CABLE_ID,A.SOURCE_WARE_ID,A.SOURCE_ID,A.SOURCE_NAME,A.DESTINATION_WARE_ID,A.DESTINATION_ID,A.DESTINATION_NAME,(SELECT COUNT(*) FROM FIBER_TUBES B WHERE B.FIBER_CABLE_ID=A.FIBER_CABLE_ID),(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.FIBER_CABLE_ID=A.FIBER_CABLE_ID),FIBER_CABLE_NAME,PROJECT_ID,SOURCE_CITY,DESTINATION_CITY,NUMBER_OF_TUBES,NUMBER_OF_STRANDS,LENGTH,DRAWING_TYPE,FIBER_NETWORK_LEVEL,FIBER_OWNER,(select B.FIBER_COLOR_OWNER from FIBER_OWNER_COLOR B WHERE B.FIBER_OWNER=A.FIBER_OWNER) AS FIBER_CABLE_COLOR FROM FIBER_CABLES A WHERE A.PROJECT_ID='CurrentPhysicalLayer'")
@@ -9414,14 +9500,14 @@ System.out.println(mapper.writeValueAsString(exceptionDBReadList));
 				
 
 			}
-			       else if ("0".equals(readFiber) & "1".equals(writeFiber) & "1".equals(readExceptionFiber) || 
-					         "0".equals(readFiber) & "0".equals(writeFiber) & "1".equals(readExceptionFiber)) {
-					    
-					    // Get exception criteria
-					    List<Object[]> exceptionFiberReadList = (List<Object[]>) model.asMap().get("exceptionFiberReadList");
+			       else if (("0".equals(readFiber) & "1".equals(writeFiber) &( "1".equals(readExceptionFiber) || "1".equals(writeExceptionFiber) )) || 
+					         ("0".equals(readFiber) & "0".equals(writeFiber) & ( "1".equals(readExceptionFiber) || "1".equals(writeExceptionFiber) ))){
+					   
+			    	   List<Object[]> exceptionFiberReadList = (List<Object[]>) model.asMap().get("exceptionFiberReadList");
 					    StringBuilder FiberWhereClause = new StringBuilder();
 
-
+                       if (exceptionFiberReadList != null) {
+					       
 					    for (Object[] entry : exceptionFiberReadList) {
 					        String fieldName = (String) entry[0];
 					        String fieldValue = (String) entry[1];
@@ -9432,8 +9518,22 @@ System.out.println(mapper.writeValueAsString(exceptionDBReadList));
 					            FiberWhereClause.append("A.").append(fieldName).append(" LIKE '%").append(fieldValue).append("%'");
 					        }
 					    }
-
-					      
+                       }
+                       List<Object[]> exceptionFiberWriteList = (List<Object[]>) model.asMap().get("exceptionFiberWriteList");
+   					
+                       if (exceptionFiberWriteList != null) {
+					       
+   					    for (Object[] entry : exceptionFiberWriteList) {
+   					        String fieldName = (String) entry[0];
+   					        String fieldValue = (String) entry[1];
+   					        if (fieldName != null && fieldValue != null) {
+   					            if (FiberWhereClause.length() > 0) {
+   					                FiberWhereClause.append(" OR ");
+   					            }
+   					            FiberWhereClause.append("A.").append(fieldName).append(" LIKE '%").append(fieldValue).append("%'");
+   					        }
+   					    }
+                          }
 					     
 					    fiberList = session.createNativeQuery(
 								"SELECT SOURCE_LNG,SOURCE_LAT,DESTINATION_LNG,DESTINATION_LAT,A.FIBER_CABLE_ID,A.SOURCE_WARE_ID,A.SOURCE_ID,A.SOURCE_NAME,A.DESTINATION_WARE_ID,"
@@ -16762,6 +16862,65 @@ resultMap.put("junctionHandholeList", junctionHandholeList);
 return resultMap;
 
 	}
+	
+	
+	
+	@RequestMapping(value = "/getCableBreakAuxPoint", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> getCableBreakAuxPoint(Locale locale, Model model, HttpServletRequest request,
+	        HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException {
+	    System.out.println("getCableBreakAuxPoint");
+	    Map<String, Object> rtn = new LinkedHashMap<>();
+	    if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+	        rtn.put("Login", LoginServices.checkSession(request, response));
+	        return rtn;
+	    }
+
+	    session = AlmDbSession.getInstance().getSession();
+	    if (session != null && session.isOpen()) {
+	        tx = session.beginTransaction();
+	        try {
+	            String fiberCable = request.getParameter("fiberCable");
+	           
+	            // Native SQL Query
+	            String sql = "SELECT LONGITUDE, LATITUDE, SEQ_SORTING " +
+	                         "FROM FIBER_AUXILIARY_POINTS " +
+	                         "WHERE FIBER_CABLE_ID = :fiberCableId " +
+	                         "ORDER BY SEQ_SORTING";
+
+	            // Execute the query
+	            List<Object[]> resultList = session.createNativeQuery(sql)
+	                                               .setParameter("fiberCableId", fiberCable)
+	                                               .getResultList();
+
+	            // Process results into a list of arrays
+	            List<double[]> pointsList = new ArrayList<>();
+	            for (Object[] row : resultList) {
+	                double[] point = new double[3];
+	                point[0] = Double.parseDouble(row[0].toString()); // LONGITUDE
+	                point[1] = Double.parseDouble(row[1].toString()); // LATITUDE
+	                point[2] = ((Number) row[2]).doubleValue();       // SEQ_SORTING
+	                pointsList.add(point);
+	            }
+
+	          
+	            // Prepare response
+	            rtn.put("fiberAux", pointsList);
+	            session.clear();
+	            tx.commit();
+	        } catch (Exception e) {
+	            if (tx != null) tx.rollback();
+	            e.printStackTrace();
+	            rtn.put("flist", null);
+	        } finally {
+	            if (session != null && session.isOpen()) {
+	                session.close();
+	            }
+	        }
+	    }
+	    return rtn;
+	}
+
 
 
 
