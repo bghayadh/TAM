@@ -1097,13 +1097,6 @@ public class PhysicalLayerController {
 							double[] borderCircleLongitudes = calculateBorderCircleLongitudes(Double.valueOf(closestLatPoint), Double.valueOf(closestLongPoint),  Double.valueOf(closestDisRange));
 									
 							HashMap<String, List<Object[]>> Result= circleRangeData(noOfPoints,closestDisRange,closestLatPoint,closestLongPoint,getRelatedPoints,session,tx);
-							
-					
-				
-							
-							
-							
-							
 							fiberAuxiliary_Data = Result.get("fiberAuxiliary_Data");
 							fiberList = Result.get("fiberList");
                             fiberTubes = Result.get("fiberTubes");
@@ -1944,10 +1937,7 @@ public class PhysicalLayerController {
 			
 			                   System.out.println("Processing: " + seqs[i]);
                         HashMap<String, List<Object[]>> Result= circleRangeData(noOfPoints,closestDisRange,lats[i],lngs[i],getRelatedPoints,findnearest,txfind);
-							
-                        
-							
-                        if (Result.get("fiberAuxiliary_Data") != null) {
+				         if (Result.get("fiberAuxiliary_Data") != null) {
                             for (Object item : Result.get("fiberAuxiliaryData")) {
                                 Object[] newItem = (Object[]) item; // Assuming each item is an Object array
                                 boolean found = false;
