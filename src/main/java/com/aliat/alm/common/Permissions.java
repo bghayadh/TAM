@@ -169,29 +169,38 @@ public class Permissions {
 	        		    .getResultList();
 	        	
 	        	if("Physical Layer Manhole".equals(Type)) {
-	            
+	        	model.addAttribute("exceptionManWriteList", exceptionWrite);
+	 	           
 				String exceptionManWriteList = mapper.writeValueAsString(exceptionWrite);
-	            model.addAttribute("exceptionManWriteList", exceptionManWriteList);
+	            model.addAttribute("exceptionManWriteList1", exceptionManWriteList);
+	              model.addAttribute("writeExceptionMan", "1"); 
 	        }
 	        	
 	        	else if("Physical Layer Handhole".equals(Type)) {
-		            
+	        		model.addAttribute("exceptionHandWriteList", exceptionWrite);
+	      		       
 					String exceptionHandWriteList = mapper.writeValueAsString(exceptionWrite);
-			        model.addAttribute("exceptionHandWriteList", exceptionHandWriteList);
+			        model.addAttribute("exceptionHandWriteList1", exceptionHandWriteList);
+			        model.addAttribute("writeExceptionHand", "1"); 
 		        }
 	        	
                    else if("Physical Layer DB".equals(Type)) {
-		            
+                	model.addAttribute("exceptionDBWriteList", exceptionWrite);
+        	 	       
 					String exceptionDBWriteList = mapper.writeValueAsString(exceptionWrite);
 					 
-				      model.addAttribute("exceptionDBWriteList", exceptionDBWriteList);
+				      model.addAttribute("exceptionDBWriteList1", exceptionDBWriteList);
+				      model.addAttribute("writeExceptionDB", "1"); 
+					    
 		        }
 	        	
                    else if("Physical Layer Fiber".equals(Type)) {
-   		            
+                	   model.addAttribute("exceptionFiberWriteList", exceptionWrite);
+            	 	   
    					String exceptionFiberWriteList = mapper.writeValueAsString(exceptionWrite);
    					 
-   					  model.addAttribute("exceptionFiberWriteList", exceptionFiberWriteList);
+   					  model.addAttribute("exceptionFiberWriteList1", exceptionFiberWriteList);
+   					 model.addAttribute("writeExceptionFiber", "1"); 
    		        }
 	        }
 	        if ("1".equals(readPerm) && "1".equals(writeperm) || "0".equals(readPerm) && "0".equals(writeperm)) {

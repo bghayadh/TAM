@@ -7,8 +7,8 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
@@ -18,7 +18,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import java.util.logging.Logger;
@@ -47,6 +47,7 @@ public class ItemCategoryController {
 	private static Session session = null;
 	private static Transaction tx = null;
 	private static ObjectMapper mapper = new ObjectMapper();
+	@SuppressWarnings("rawtypes")
 	private static Query query = null;
 	private static StringWriter sw;
 	private static String exceptionAsString;
@@ -170,7 +171,7 @@ public class ItemCategoryController {
 				if (catcode != null && !catcode.equalsIgnoreCase("")) {
 					str = str + " and (upper(CODE) LIKE upper('%" + catcode + "%') )";
 				}
-				query = session.createSQLQuery(str);				
+				query = session.createNativeQuery(str);				
 				rtn.put("listitemcat", query.list());
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -204,7 +205,7 @@ public class ItemCategoryController {
 			model.addAttribute("DBConnStat", "successed");
 			try {
 				if (itemsList != null && itemsList.equals("itemcatList")) {
-					query = session.createSQLQuery("SELECT ID FROM ITEM_CAT_TREE");
+					query = session.createNativeQuery("SELECT ID FROM ITEM_CAT_TREE");
 					if (query.list() != null) {
 						model.addAttribute("listItemsNav", mapper.writeValueAsString(query.list()));
 					}
@@ -240,7 +241,7 @@ public class ItemCategoryController {
 					} else {
 						date = itemcat.getLastModified();
 					}
-					query = session.createSQLQuery("SELECT CODE FROM ITEM_CAT_TREE WHERE ID=:paramID");
+					query = session.createNativeQuery("SELECT CODE FROM ITEM_CAT_TREE WHERE ID=:paramID");
 					query.setParameter("paramID", itemcat.getParentId());
 					String Catdetails = (String) query.uniqueResult();
 					String ParentCat = itemcat.getParent() + ":" + Catdetails;
@@ -277,7 +278,6 @@ public class ItemCategoryController {
 		return "ItemCategoryFormView";
 	}
 
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ItemCategoryFormSave", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> ItemCategoryFormSave(Locale locale, Model model, HttpServletRequest request,
@@ -295,12 +295,17 @@ public class ItemCategoryController {
 				notifications.headerNotifications(session, model);
 				try {
 					ItemCategoryTree itemcat = new ItemCategoryTree();
+					String itemcatName = request.getParameter("itemcatName");
+					String itemcatParent = request.getParameter("itemcatParent");
+					String itemcatDescription = request.getParameter("itemcatDescription");
+					String itemCatCode = request.getParameter("itemCode");
+					String categoryName = request.getParameter("itemcatName");
+
 					DateFormat formatter1 = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
 					Date date1 = null;
 					Date date2 = null;
 					String createdDate = request.getParameter("creationDate");
 					String dateOfModification = request.getParameter("lastModifieddate");
-
 					date1 = formatter1.parse(createdDate);
 					Timestamp CreationDate = new Timestamp(date1.getTime());
 					date2 = formatter1.parse(dateOfModification);
@@ -315,11 +320,11 @@ public class ItemCategoryController {
 					synchronized (this) {
 						// String ItemCatID = appConfig.getSequenceNbr(23);
 						ItemCatID = "ITMCAT" + "-" + calendar.get(Calendar.YEAR) + "-" + Integer.parseInt(
-								session.createSQLQuery("SELECT ITEM_CAT_ID FROM SEQ_TABLE").uniqueResult().toString());
+								session.createNativeQuery("SELECT ITEM_CAT_ID FROM SEQ_TABLE").uniqueResult().toString());
 						System.out.println("item cat id is " + ItemCatID);
-						query = session.createSQLQuery("UPDATE SEQ_TABLE SET ITEM_CAT_ID = ITEM_CAT_ID + 1 ");
+						query = session.createNativeQuery("UPDATE SEQ_TABLE SET ITEM_CAT_ID = ITEM_CAT_ID + 1 ");
 						query.executeUpdate();
-						session.createSQLQuery("commit").executeUpdate();
+						session.createNativeQuery("commit").executeUpdate();
 					}
 
 					String categoryId = request.getParameter("categoryId");
@@ -327,7 +332,7 @@ public class ItemCategoryController {
 
 					query = session
 							.createQuery("SELECT t.title, t.lft, t.rgt FROM ItemCategoryTree t where t.id = :paramId ");
-					query.setString("paramId", categoryId);
+					query.setParameter("paramId", categoryId);
 
 					Object[] Result = (Object[]) query.uniqueResult();
 
@@ -345,15 +350,9 @@ public class ItemCategoryController {
 							.createQuery("UPDATE ItemCategoryTree t SET t.lft = (t.lft+2) WHERE t.lft > :paramLft");
 					query.setParameter("paramLft", leftOfLastChild);
 					query.executeUpdate();
-					List<String> codeList = new ArrayList<String>();
-					String itemcatName = request.getParameter("itemcatName");
+					
 
-					String itemcatParent = request.getParameter("itemcatParent");
-
-					String itemcatDescription = request.getParameter("itemcatDescription");
-					String itemCode = request.getParameter("itemCode");
-
-					query = session.createSQLQuery("SELECT CODE FROM ITEM_CAT_TREE START WITH TITLE IN "
+					/*query = session.createSQLQuery("SELECT CODE FROM ITEM_CAT_TREE START WITH TITLE IN "
 							+ "(SELECT TITLE FROM ITEM_CAT_TREE WHERE TITLE = :paramTitle) "
 							+ "CONNECT BY TITLE = PRIOR PARENT");
 					query.setParameter("paramTitle", itemcatParent);
@@ -368,24 +367,39 @@ public class ItemCategoryController {
 						parentCode += "-";
 					}
 					parentCode += itemCode;
+					*/
 					// parentCode = parentCode.substring(0, parentCode.length() - 1);
-					System.out.println("ParentCode in insert is: " + parentCode);
+					
+					String parentCode = "";
+					query = session.createNativeQuery("SELECT parentcode FROM ITEM_CAT_TREE WHERE ID = :param1 ");
+					query.setParameter("param1", categoryId);
+					
+					Object res = query.uniqueResult();
+					if (res != null) {
+					    parentCode = res.toString()+"-"+itemCatCode; 
+					} 
+					else {
+					    parentCode = itemCatCode;
+					}					
+					String level1 = null,level2 = null, level3 = null, level4 = null;
 					if (parentCode.contains("-") == true) {
 						String arr[] = parentCode.split("-");
+
 						level1 = arr[0];
 						level2 = arr[1];
 						if (arr.length == 3 || arr.length == 4)
 							level3 = arr[2];
 						if (arr.length == 4)
 							level4 = arr[3];
-					} else
+					} 
+					else {
 						level1 = parentCode;
-					String categoryName = request.getParameter("itemcatName");
+					}				
 
 					query = session.createQuery(
 							"SELECT count(*) FROM ItemCategoryTree t WHERE t.parentcode = :parentcode AND t.title =:param2");
-					query.setString("parentcode", parentCode);
-					query.setString("param2", categoryName);
+					query.setParameter("parentcode", parentCode);
+					query.setParameter("param2", categoryName);
 					Object countList = query.uniqueResult();
 					int count = 0;
 					if (!(countList == null || Integer.parseInt(countList.toString()) == 0)) {
@@ -401,7 +415,7 @@ public class ItemCategoryController {
 					itemcat.setCreationDate(CreationDate);
 					itemcat.setLastModified(lastModifiedDate);
 					itemcat.setTitle(itemcatName);
-					itemcat.setCode(itemCode);
+					itemcat.setCode(itemCatCode);
 					itemcat.setParentCode(parentCode);
 					itemcat.setParent(itemcatParent);
 					itemcat.setDescription(itemcatDescription);
@@ -511,7 +525,6 @@ public class ItemCategoryController {
 		return rtn;
 	}
 
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/InsertCategory", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> InsertCategory(Locale locale, Model model, HttpServletRequest request,
@@ -527,6 +540,9 @@ public class ItemCategoryController {
 		String categoryName = request.getParameter("categoryName");
 		String categoryCode = request.getParameter("categoryCode");
 		String categoryLevel;
+		Date date = null;
+		date = new Timestamp(System.currentTimeMillis());
+		Timestamp lastModifiedDate = new Timestamp(date.getTime());	
 
 		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
@@ -536,12 +552,9 @@ public class ItemCategoryController {
 				Calendar calendar = new GregorianCalendar();
 				query = session.createQuery(
 						"SELECT t.id, t.title, t.lft, t.rgt FROM ItemCategoryTree t WHERE t.id = :paramId");
-
-				query.setString("paramId", categoryID);
+				query.setParameter("paramId", categoryID);
 
 				Object[] Result = (Object[]) query.uniqueResult();
-
-				String parentID = Result[0].toString();
 				String parentName = Result[1].toString();
 				int rgt = Integer.parseInt(Result[3].toString());
 				int leftOfLastChild = rgt - 1;
@@ -549,8 +562,7 @@ public class ItemCategoryController {
 				int lftNode = leftOfLastChild + 1; // lft of new cat
 				int rgtNode = leftOfLastChild + 2;
 
-				List<String> codeList = new ArrayList<String>();
-
+				/*List<String> codeList = new ArrayList<String>();
 				query = session.createSQLQuery("SELECT CODE FROM ITEM_CAT_TREE START WITH ID = :paramID "
 						+ "CONNECT BY TITLE = PRIOR PARENT AND ID = PRIOR PARENTID ");
 
@@ -576,9 +588,36 @@ public class ItemCategoryController {
 					if (arr.length == 4)
 						level4 = arr[3];
 				} else
-					level1 = parentCode;
+					level1 = parentCode;*/
+				String parentCode = "";
+				String level1 = null,level2 = null, level3 = null, level4 = null;
 
-				System.out.println(level1 + " , " + level2 + " , " + level3 + " , " + level4);
+				query = session.createNativeQuery("SELECT parentcode FROM ITEM_CAT_TREE WHERE ID = :param1 ");
+				query.setParameter("param1", categoryID);
+				Object res = query.uniqueResult();
+				if (res != null) {
+				    parentCode = res.toString()+"-"+categoryCode; 
+				} 
+				else {
+				    parentCode = categoryCode;
+				}
+								
+				if (parentCode.contains("-") == true) {
+					String arr[] = parentCode.split("-");
+					categoryLevel = Integer.toString(arr.length);
+					
+					level1 = arr[0];
+					level2 = arr[1];
+					if (arr.length == 3 || arr.length == 4)
+						level3 = arr[2];
+					if (arr.length == 4)
+						level4 = arr[3];
+				} 
+				else {
+					level1 = parentCode;
+					categoryLevel = "1";
+				}
+
 				query = session.createQuery("UPDATE ItemCategoryTree t SET t.rgt = (t.rgt+2) WHERE t.rgt > :paramRgt");
 				query.setParameter("paramRgt", leftOfLastChild);
 				query.executeUpdate();
@@ -591,11 +630,11 @@ public class ItemCategoryController {
 				synchronized (this) {
 					// String ItemCatID = appConfig.getSequenceNbr(23);
 					ItemCatID = "ITMCAT" + "-" + calendar.get(Calendar.YEAR) + "-" + Integer.parseInt(
-							session.createSQLQuery("SELECT ITEM_CAT_ID FROM SEQ_TABLE").uniqueResult().toString());
+							session.createNativeQuery("SELECT ITEM_CAT_ID FROM SEQ_TABLE").uniqueResult().toString());
 					System.out.println("item cat id is " + ItemCatID);
-					query = session.createSQLQuery("UPDATE SEQ_TABLE SET ITEM_CAT_ID = ITEM_CAT_ID + 1 ");
+					query = session.createNativeQuery("UPDATE SEQ_TABLE SET ITEM_CAT_ID = ITEM_CAT_ID + 1 ");
 					query.executeUpdate();
-					session.createSQLQuery("commit").executeUpdate();
+					session.createNativeQuery("commit").executeUpdate();
 				}
 				ItemCategoryTree CatTree = new ItemCategoryTree();
 				CatTree.setId(ItemCatID);
@@ -606,6 +645,8 @@ public class ItemCategoryController {
 				CatTree.setCode(categoryCode);
 				CatTree.setLvl(Integer.parseInt(categoryLevel));
 				CatTree.setParentCode(parentCode);
+				CatTree.setCreationDate(lastModifiedDate);
+				CatTree.setLastModified(lastModifiedDate);
 				CatTree.setParentId(categoryID);
 				CatTree.setCat1(level1);
 				CatTree.setCat2(level2);
@@ -632,7 +673,6 @@ public class ItemCategoryController {
 		return rtn;
 	}
 
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/EditCategory", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> EditCategory(Locale locale, Model model, HttpServletRequest request,
@@ -660,7 +700,7 @@ public class ItemCategoryController {
 				String parentName = (String) query.uniqueResult();
 
 				/* Get All Parents For Added Category to Store it in Parent Code */
-				List<String> codeList = new ArrayList<String>();
+				/*List<String> codeList = new ArrayList<String>();
 
 				query = session.createSQLQuery("SELECT CODE FROM ITEM_CAT_TREE START WITH TITLE IN "
 						+ "(SELECT TITLE FROM ITEM_CAT_TREE WHERE TITLE = :paramTitle) "
@@ -674,10 +714,50 @@ public class ItemCategoryController {
 					parentCode += codeList.get(i).toString();
 					parentCode += "-";
 				}
-				parentCode += categoryCode;
+				parentCode += categoryCode;*/
+				
+				String parentCode = "";
+				query = session.createNativeQuery("SELECT parentcode FROM ITEM_CAT_TREE WHERE ID = :param1 ");
+				query.setParameter("param1", categoryID);
+				Object res = query.uniqueResult();
+				if (res != null) {
+					if(res.toString().contains("-")) {
+						String input = res.toString();
+						String[] parts = input.split("-");
+						// Reassemble the parentCode without the last part
+						parentCode = String.join("-", Arrays.copyOfRange(parts, 0, parts.length - 1));
+						parentCode = parentCode +"-"+categoryCode;
+					}
+					else {
+						parentCode = res.toString(); 
+					}
+				}
+				else {					
+					parentCode = categoryCode;
+				}
+				String level1 = null,level2 = null, level3 = null, level4 = null;
+				if (parentCode.contains("-") == true) {
+					String arr[] = parentCode.split("-");
+
+					level1 = arr[0];
+					level2 = arr[1];
+					if (arr.length == 3 || arr.length == 4)
+						level3 = arr[2];
+					if (arr.length == 4)
+						level4 = arr[3];
+				} 
+				else {
+					level1 = parentCode;
+				}				
+				
+				
 				query = session.createQuery(
-						"UPDATE ItemCategoryTree t SET t.title = :paramTitle, t.code = :paramCode WHERE t.id = :paramId");
+						"UPDATE ItemCategoryTree t SET t.title = :paramTitle,t.cat1 = :paramCat1,t.cat2 = :paramCat2,t.cat3 = :paramCat3,t.cat4 = :paramCat4, t.code = :paramCode WHERE t.id = :paramId");
 				query.setParameter("paramTitle", categoryName);
+				query.setParameter("paramCat1", level1);
+				query.setParameter("paramCat2", level2);
+				query.setParameter("paramCat3", level3);
+				query.setParameter("paramCat4", level4);
 				query.setParameter("paramCode", categoryCode);
 				query.setParameter("paramId", categoryID);
 				query.executeUpdate();
@@ -813,14 +893,14 @@ public class ItemCategoryController {
 			try {
 
 				query = session.createQuery("SELECT t.title FROM ItemCategoryTree t WHERE t.id = :paramId");
-				query.setString("paramId", categoryID);
+				query.setParameter("paramId", categoryID);
 
 				String parentName = (String) query.uniqueResult();
 
 				query = session.createQuery(
 						"SELECT count(*) FROM ItemCategoryTree t WHERE t.parent = :paramparent AND t.title =:param2");
-				query.setString("paramparent", parentName);
-				query.setString("param2", categoryName);
+				query.setParameter("paramparent", parentName);
+				query.setParameter("param2", categoryName);
 				Object countList = query.uniqueResult();
 				System.out.println("countList is" + countList);
 				rtn.put("countList", countList);				
@@ -861,7 +941,7 @@ public class ItemCategoryController {
 				query = session.createQuery("SELECT t1.title, t1.code, t1.parentcode, t1.id FROM ItemCategoryTree t1"
 						+ " WHERE LOWER(t1.title) LIKE LOWER(:paramTitle) OR t1.parentcode LIKE :paramTitle");
 
-				query.setString("paramTitle", itemCategory);
+				query.setParameter("paramTitle", itemCategory);
 				rtn.put("ListItemCategory", query.list());
 
 			} catch (Exception e) {
@@ -902,15 +982,15 @@ public class ItemCategoryController {
 				String ItemCat3 = "%" + request.getParameter("ItemCat3") + "%";
 				String ItemCat4 = "%" + request.getParameter("ItemCat4") + "%";
 
-				query = session.createSQLQuery(" SELECT TITLE FROM Item_Cat_Tree where code like :param1 "
+				query = session.createNativeQuery(" SELECT TITLE FROM Item_Cat_Tree where code like :param1 "
 						+ "union SELECT TITLE FROM Item_Cat_Tree where code like :param2 "
 						+ "union SELECT TITLE FROM Item_Cat_Tree where code like :param3 "
 						+ "union SELECT TITLE FROM Item_Cat_Tree where code like :param4 ");
 
-				query.setString("param1", ItemCat1);
-				query.setString("param2", ItemCat2);
-				query.setString("param3", ItemCat3);
-				query.setString("param4", ItemCat4);
+				query.setParameter("param1", ItemCat1);
+				query.setParameter("param2", ItemCat2);
+				query.setParameter("param3", ItemCat3);
+				query.setParameter("param4", ItemCat4);
 				query.setFirstResult(0);
 				query.setMaxResults(40);
 				rtn.put("ListInfos", query.list());
@@ -970,18 +1050,17 @@ public class ItemCategoryController {
 							+ "SELECT PARENTID from item_cat_tree where lvl = '4' and title like :param4) " + "))";
 				}
 
-				query = session.createSQLQuery(str);
-
-				query.setString("param1", "%" + c1 + "%");
+				query = session.createNativeQuery(str);
+				query.setParameter("param1", "%" + c1 + "%");
 
 				if (!StringUtils.equalsIgnoreCase(c2, ""))
-					query.setString("param2", "%" + c2 + "%");
+					query.setParameter("param2", "%" + c2 + "%");
 
 				if (!StringUtils.equalsIgnoreCase(c3, ""))
-					query.setString("param3", "%" + c3 + "%");
+					query.setParameter("param3", "%" + c3 + "%");
 
 				if (!StringUtils.equalsIgnoreCase(c4, ""))
-					query.setString("param4", "%" + c4 + "%");
+					query.setParameter("param4", "%" + c4 + "%");
 
 				query.setFirstResult(0);
 				query.setMaxResults(40);
@@ -1046,15 +1125,15 @@ public class ItemCategoryController {
 								+ "select PARENTID from item_cat_tree  where title like :param4 and lvl = '4') " + ")";
 					}
 
-					query = session.createSQLQuery(str);
-					query.setString("param1", "%" + c1 + "%");
-					query.setString("param2", "%" + c2 + "%");
+					query = session.createNativeQuery(str);
+					query.setParameter("param1", "%" + c1 + "%");
+					query.setParameter("param2", "%" + c2 + "%");
 
 					if (!StringUtils.equalsIgnoreCase(c3, ""))
-						query.setString("param3", "%" + c3 + "%");
+						query.setParameter("param3", "%" + c3 + "%");
 
 					if (!StringUtils.equalsIgnoreCase(c4, ""))
-						query.setString("param4", "%" + c4 + "%");
+						query.setParameter("param4", "%" + c4 + "%");
 
 					query.setFirstResult(0);
 					query.setMaxResults(40);
@@ -1114,13 +1193,13 @@ public class ItemCategoryController {
 						str += "and a.ID in ( select b.PARENTID from item_cat_tree b where b.title like :param4 and b.lvl = '4')";
 					}
 
-					query = session.createSQLQuery(str);
+					query = session.createNativeQuery(str);
 
-					query.setString("param1", "%" + c1 + "%");
-					query.setString("param2", "%" + c2 + "%");
-					query.setString("param3", "%" + c3 + "%");
+					query.setParameter("param1", "%" + c1 + "%");
+					query.setParameter("param2", "%" + c2 + "%");
+					query.setParameter("param3", "%" + c3 + "%");
 					if (!StringUtils.equalsIgnoreCase(c4, "")) {
-						query.setString("param4", "%" + c4 + "%");
+						query.setParameter("param4", "%" + c4 + "%");
 					}
 
 					query.setFirstResult(0);
@@ -1169,7 +1248,7 @@ public class ItemCategoryController {
 					c3 = request.getParameter("cat3Input") == "" ? null : request.getParameter("cat3Input");
 					c4 = request.getParameter("cat4Input") == "" ? null : "%" + request.getParameter("cat4Input") + "%";
 
-					query = session.createSQLQuery(
+					query = session.createNativeQuery(
 							"select a.title,a.code,a.PARENT,a.parentcode from item_cat_tree a where a.lvl ='4' and (UPPER(a.title) like COALESCE(UPPER(:param4),'%%') OR UPPER(a.code) like COALESCE(UPPER(:param4),'%%')) "
 									+ "and a.PARENTID in ( "
 									+ "select a.ID as parent from item_cat_tree a where a.title like COALESCE(:param3,'%%') and a.lvl = '3'   "
@@ -1177,10 +1256,10 @@ public class ItemCategoryController {
 									+ "select g.ID as parent from item_cat_tree g where g.lvl = '3' and g.PARENTID IN (select ID from item_cat_tree where lvl = '2' and title like COALESCE(:param2,'%%')) "
 									+ ") and a.PARENTID in ( "
 									+ "select ID from item_cat_tree where lvl = '3' and PARENTID IN (select ID from item_cat_tree where lvl = '2' and PARENTID IN (select ID from item_cat_tree where lvl = '1' and title like COALESCE(:param1,'%%'))))");
-					query.setString("param1", c1);
-					query.setString("param2", c2);
-					query.setString("param3", c3);
-					query.setString("param4", c4);
+					query.setParameter("param1", c1);
+					query.setParameter("param2", c2);
+					query.setParameter("param3", c3);
+					query.setParameter("param4", c4);
 					query.setFirstResult(0);
 					query.setMaxResults(40);
 
