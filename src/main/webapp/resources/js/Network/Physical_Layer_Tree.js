@@ -296,7 +296,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 			
 		$("#initial_ul_CurrentPhysicalLayer").append(str);
          }
-          else if(readManhole === '0' & treeExceptionMan === '1'){
+          else if(readManhole === '0' & (treeExceptionMan === '1'|| writeExceptionMan ==='1' )){
 			str="<ul><li id='Manhole_f_CurrentPhysicalLayer' style='display:none;' class='Manhole_f_CurrentPhysicalLayer'><input type='checkbox' unchecked class='AllManholes checkFilter' ></input> <span id='Manhole_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Manhole_span' class='TreeSpan' style='color:black;width:395px' >Manhole </span></li></ul>";
 			
 		$("#initial_ul_CurrentPhysicalLayer").append(str);
@@ -306,7 +306,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 		str="<ul><li id='Handhole_f_CurrentPhysicalLayer' style='display:none;' class='Handhole_f_CurrentPhysicalLayer'><input type='checkbox' unchecked class='AllHandholes checkFilter'></input> <span id='Handhole_spanFolder' class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Handhole_span' style='color:black;width:395px' class='TreeSpan' >Handhole </span></li></ul>";
 		$("#initial_ul_CurrentPhysicalLayer").append(str);
 }
-else if(readHandhole === '0' & treeExceptionHand === '1'){
+else if(readHandhole === '0' & (treeExceptionHand === '1' || writeExceptionHand === '1')){
 		str="<ul><li id='Handhole_f_CurrentPhysicalLayer' style='display:none;' class='Handhole_f_CurrentPhysicalLayer'><input type='checkbox' unchecked class='AllHandholes checkFilter'></input> <span id='Handhole_spanFolder' class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Handhole_span' style='color:black;width:395px' class='TreeSpan' >Handhole </span></li></ul>";
 		$("#initial_ul_CurrentPhysicalLayer").append(str);
 }
@@ -338,7 +338,7 @@ if(readDB === '1'){
 		str="<ul><li id ='DistributionBoard_access__CurrentPhysicalLayer' style='display:none;' class='accessDBFolder'> <input type='checkbox' class='AccessDB checkFilter' id ='AccessDB__CurrentPhysicalLayer' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Access </span></li></ul></li></ul>";
 		$("#DistributionBoard_f_CurrentPhysicalLayer").append(str);		
 }
-else if(readDB === '0' & treeExceptionDB === '1'){
+else if(readDB === '0' & (treeExceptionDB === '1' || writeExceptionDB === '1')){
 		str="<ul><li id='DistributionBoard_f_CurrentPhysicalLayer' style='display:none;' class='DistributionBoard_f_CurrentPhysicalLayer'><input type='checkbox' unchecked class='AllDistBoards checkFilter'></input> <span id='DistribBoard_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='DistribBoard_span' class='TreeSpan' style='color:black;width:395px'>Distribution Board </span></li></ul>";
 		$("#initial_ul_CurrentPhysicalLayer").append(str);
         str="<ul><li id ='DistributionBoard_backbone__CurrentPhysicalLayer' style='display:none;' class='backboneDBFolder'> <input type='checkbox' class='BackboneDB checkFilter' id ='BackboneDB__CurrentPhysicalLayer' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Backbone </span></li></ul></li></ul>";
@@ -405,17 +405,17 @@ else if(readDB === '0' & treeExceptionDB === '1'){
 			   var strPhysicalLayer="<ul><li id='initial_ul_"+ListProject[iji][0]+"' class='Initial_projects' style='display:none;'><input type='checkbox' class='projectallElements' unchecked name='filter'></input><span id='initial_Span_"+ListProject[iji][0]+"' class='Parentfolder'><i class='fa fa-folder' style='color: #08526D;'></i></span><span class='TreeSpan' style='color:black;width:436px;'> Physical Layer </span></li></ul>";
 		       $("#"+ListProject[iji][0]+"").append(strPhysicalLayer);
 		         
-			   if(readManhole === '1' || readManhole === '0' && treeExceptionMan === '1'){
+			   if(readManhole === '1' || (readManhole === '0' && (treeExceptionMan === '1' || writeExceptionMan ==='1' ))){
 			   		str="<ul><li id='Manhole_f_"+ListProject[iji][0]+"' style='display:none;' class='Manhole_f_projects'><input type='checkbox' unchecked class='AllManholes checkFilter' ></input> <span id='Manhole_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Manhole_span' class='TreeSpan' style='color:black;width:395px' >Manhole </span></li></ul>";	   
 			   		$("#initial_ul_"+ListProject[iji][0]+"").append(str);
 			   }
-			   if(readHandhole === '1' || readHandhole === '0' && treeExceptionHand === '1'){
+			   if(readHandhole === '1' ||(readHandhole === '0' && (treeExceptionHand === '1' || writeExceptionHand === '1'))){
 			   		str="<ul><li id='Handhole_f_"+ListProject[iji][0]+"' style='display:none;' class='Handhole_f_projects'><input type='checkbox' unchecked class='AllHandholes checkFilter'></input> <span id='Handhole_spanFolder' class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Handhole_span' style='color:black;width:395px' class='TreeSpan' >Handhole </span></li></ul>";
 			   		$("#initial_ul_"+ListProject[iji][0]+"").append(str);
 			    }
 			   str="<ul><li id='Junction_f_"+ListProject[iji][0]+"' style='display:none;' class='Junction_f_projects'><input type='checkbox' unchecked class='AllJunctions checkFilter'></input> <span id='Junction_spanFolder' class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Junction_span' style='color:black;width:395px' class='TreeSpan' >Junction </span></li></ul>";
 			   $("#initial_ul_"+ListProject[iji][0]+"").append(str);
-			   if(readFiber === '1'|| readFiber  === '0' && readExceptionFiber === '1'){
+			   if(readFiber === '1'|| (readFiber  === '0' &&( readExceptionFiber === '1' || writeExceptionFiber ==='1'))){
 			   		str="<ul><li id='FiberPath_f_"+ListProject[iji][0]+"' style='display:none;' class='FiberPath_f_projects'><input type='checkbox' class='AllFiberCables' class='filter checkFilter'></input> <span id='FiberPath_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='FiberPath_span' style='color:black;width:395px' class='TreeSpan'>Fiber Path <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' id='pushPoints"+ListProject[iji][0]+"' class='pushPoints'> <img src='"+getContext()+"/resources/NetworkImages/remove.png' hidden style='margin-left:10px' id='cancelPoints"+ListProject[iji][0]+"' class='clearPoints'></span></li></ul>";
 			   		$("#initial_ul_"+ListProject[iji][0]+"").append(str);
 					str="<ul><li id='FiberPath_backbone__"+ListProject[iji][0]+"' style='display:none;' class='backboneFolder'> <input type='checkbox' class='BackboneFiber checkFilter' id='Backbone__"+ListProject[iji][0]+"' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Backbone </span></li></ul></li></ul>";
@@ -425,7 +425,7 @@ else if(readDB === '0' & treeExceptionDB === '1'){
 					str="<ul><li id='FiberPath_access__"+ListProject[iji][0]+"' style='display:none;' class='accessFolder'> <input type='checkbox' class='AccessFiber checkFilter' id='Access__"+ListProject[iji][0]+"' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Access </span></li></ul></li></ul>";
 					$("#FiberPath_f_"+ListProject[iji][0]+"").append(str);			   		
 			   }
-  			   if(readDB === '1' || readDB === '0' && treeExceptionDB === '1'){
+  			   if(readDB === '1' || (readDB === '0' && (treeExceptionDB === '1' || writeExceptionDB === '1'))){
 			   		str="<ul><li id='DistributionBoard_f_"+ListProject[iji][0]+"' style='display:none;' class='DistributionBoard_f_projects'><input type='checkbox' unchecked class='AllDistBoards checkFilter'></input> <span id='DistribBoard_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='DistribBoard_span' class='TreeSpan' style='color:black;width:395px'>Distribution Board </span></li></ul>";
 			   		$("#initial_ul_"+ListProject[iji][0]+"").append(str);
 				 	str="<ul><li id ='DistributionBoard_backbone__"+ListProject[iji][0]+"' style='display:none;' class='backboneDBFolder'> <input type='checkbox' class='BackboneDB checkFilter' id ='BackboneDB__"+ListProject[iji][0]+"' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Backbone </span></li></ul></li></ul>";

@@ -7160,16 +7160,18 @@ var delDB='${delDB}';
 
 var onlyReadManExcep= '${onlyReadManExcep}'
 
-	var exceptionManWriteList= '${exceptionManWriteList}';
+	var exceptionManWriteList= '${exceptionManWriteList1}';
 		if(exceptionManWriteList){
 	 exceptionManWriteList = JSON.parse(exceptionManWriteList);
 
 	}
+		console.log(exceptionManWriteList);
 	var readExceptionMan='${readExceptionMan}';
 	var treeExceptionMan='${treeExceptionMan}';
-
+	var writeExceptionMan='${writeExceptionMan}';
+	console.log(writeExceptionMan);
 	var onlyReadHandExcep= '${onlyReadHandExcep}';
-		var exceptionHandWriteList= '${exceptionHandWriteList}';
+		var exceptionHandWriteList= '${exceptionHandWriteList1}';
 		if(exceptionHandWriteList){
 		 exceptionHandWriteList = JSON.parse(exceptionHandWriteList);
 
@@ -7177,29 +7179,29 @@ var onlyReadManExcep= '${onlyReadManExcep}'
 		
 		var readExceptionHand='${readExceptionHand}';
 		var treeExceptionHand='${treeExceptionHand}';
-		
+		var writeExceptionHand= '${writeExceptionHand}';
 		
 
 	
 		var onlyReadDBExcep= '${onlyReadDBExcep}';
 			
-			var exceptionDBWriteList= '${exceptionDBWriteList}';
+			var exceptionDBWriteList= '${exceptionDBWriteList1}';
 			if(exceptionDBWriteList){
 			 exceptionDBWriteList = JSON.parse(exceptionDBWriteList);
 			}
 			var readExceptionDB='${readExceptionDB}';
 			var treeExceptionDB='${TtreeExceptionDB}';
-			
+			var writeExceptionDB= '${writeExceptionDB}';
 
 			
 			var onlyReadFiberExcep= '${onlyReadFiberExcep}';
 				
-				var exceptionFiberWriteList= '${exceptionFiberWriteList}';
+				var exceptionFiberWriteList= '${exceptionFiberWriteList1}';
 				if(exceptionFiberWriteList){
 				 exceptionFiberWriteList = JSON.parse(exceptionFiberWriteList);
 				}
 				var readExceptionFiber='${readExceptionFiber}';
-	
+				var writeExceptionFiber= '${writeExceptionFiber}';
 			
 document.addEventListener('DOMContentLoaded', function() {
     var elements = {
