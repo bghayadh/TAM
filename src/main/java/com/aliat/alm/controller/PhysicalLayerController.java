@@ -191,9 +191,7 @@ public class PhysicalLayerController {
 				       String readExceptionMan = (String) model.asMap().get("readExceptionMan");
 				       String writeExceptionMan = (String) model.asMap().get("writeExceptionMan");
 				       
-				       permissions.setPerms(model, permissions.getUserPermsWithSession(session, request),
-				                "Physical Layer Handhole", "Tree");
-				       
+				       permissions.setPerms(model, permissions.getUserPermsWithSession(session, request), "Physical Layer Handhole", "Tree");
 				       
 				       String  readHandhole = ((Integer) model.asMap().get("readTree")).toString();
 				       String  writeHandhole = ((Integer) model.asMap().get("writeTree")).toString();
@@ -207,14 +205,13 @@ public class PhysicalLayerController {
 				       model.addAttribute("delHandhole", delHandhole);
 				       
                       permissions.checkAndAddExceptions(model, readHandhole, writeHandhole, session,"Physical Layer Handhole",request);
-				       
+                      
 				       String readExceptionHand = (String) model.asMap().get("readExceptionHand");
 				       String writeExceptionHand = (String) model.asMap().get("writeExceptionHand");
 				       
 				     
 				       
-				       permissions.setPerms(model, permissions.getUserPermsWithSession(session, request),
-				                "Physical Layer Fiber", "Tree");
+				       permissions.setPerms(model, permissions.getUserPermsWithSession(session, request),"Physical Layer Fiber", "Tree");
 				       
 				       String  readFiber = ((Integer) model.asMap().get("readTree")).toString();
 				       String  writeFiber = ((Integer) model.asMap().get("writeTree")).toString();
@@ -229,13 +226,9 @@ public class PhysicalLayerController {
 				       
                        permissions.checkAndAddExceptions(model, readFiber, writeFiber, session,"Physical Layer Fiber",request);
 				       
-				       String readExceptionFiber = (String) model.asMap().get("readExceptionFiber");
-				       String writeExceptionFiber = (String) model.asMap().get("writeExceptionFiber");
-				       model.addAttribute("readExceptionFiber", readExceptionFiber); 
 				       
 				       
-				       permissions.setPerms(model, permissions.getUserPermsWithSession(session, request),
-				                "Physical Layer DB", "Tree");
+				       permissions.setPerms(model, permissions.getUserPermsWithSession(session, request),"Physical Layer DB", "Tree");
 				       
 				       String  readDB = ((Integer) model.asMap().get("readTree")).toString();
 				       String  writeDB = ((Integer) model.asMap().get("writeTree")).toString();
@@ -252,14 +245,10 @@ public class PhysicalLayerController {
 				       
 				       String readExceptionDB = (String) model.asMap().get("readExceptionDB");
 				       String writeExceptionDB = (String) model.asMap().get("writeExceptionDB");
-					      
+				
 				       
 				       
-				       
-				       
-				       
-				       
-					int filterFlag = 0;
+				       int filterFlag = 0;
 					List<?> projectList = new ArrayList<Object[]>();
 					List<Object[]> manholeList = new ArrayList<Object[]>();
 					List<Object[]> manholeListPt = new ArrayList<Object[]>();
@@ -292,19 +281,14 @@ public class PhysicalLayerController {
 					List<Object[]> ductAuxiliary_Data = new ArrayList<Object[]>();
 					List<Object[]> ductAuxiliary_DataPt = new ArrayList<Object[]>();
 					List<Object[]> newList = new ArrayList<Object[]>();
-					List<Object[]> newListPt = new ArrayList<Object[]>();
 					List<Object[]> NodeList = new ArrayList<Object[]>();
 					List<String> mhFilteredIDs = new ArrayList<>();
 				    List<String> hhFilteredIDs = new ArrayList<>();
 				    List<String> dbFilteredIDs = new ArrayList<>();							 
 				    List<String> combinedTubeList = new ArrayList<>();
 				    List<String> combinedCablesList = new ArrayList<>();
-					List<Object[]> manholeTempList = new ArrayList<Object[]>();
-					List<Object[]> handholeTempList = new ArrayList<Object[]>();
-					List<Object[]> dbTempList = new ArrayList<Object[]>();
 					List<Object[]> tempList = new ArrayList<Object[]>();
-					List<Object[]> tempDataList = new ArrayList<Object[]>();
-
+				
 
 
 					// System.out.println("url is "+request.getParameter("selectedField"));
@@ -1913,14 +1897,7 @@ public class PhysicalLayerController {
 			        row.put("lng", lng);
 			        rowData.put("row" + i, new ArrayList<>(row.values()));
 
-			        double[] bordeCircleLatitudes = calculateBorderCircleLatitudes(
-			            Double.valueOf(lat), Double.valueOf(lng),
-			            Double.valueOf(closestDisRange));
-			        
-			        double[] borderCircleLongitudes1 = calculateBorderCircleLongitudes(
-			            Double.valueOf(lat), Double.valueOf(lng),
-			            Double.valueOf(closestDisRange));
-			        List<String> strandsIDs = new ArrayList<>();
+			       
 			        // Open session and transaction for fiberListFindNearst
 			       
 			
@@ -16410,6 +16387,7 @@ public class PhysicalLayerController {
 
         return ipAddress;
     }
+	@SuppressWarnings("unchecked")
 	public HashMap<String, List<Object[]>> circleRangeData(String noOfPoints,String closestDisRange,String closestLatPoint,
 			String closestLongPoint,String getRelatedPoints, Session findnearest,Transaction txfind) throws JsonProcessingException {
 		HashMap<String, List<Object[]>> resultMap = new HashMap<>();
