@@ -30,22 +30,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import java.util.Properties;
-
-
 import javax.persistence.Query;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang3.StringUtils;
 //import org.hibernate.query.Query;
-import org.hibernate.query.NativeQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -57,8 +50,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.aliat.alm.common.ALMSessions;
 import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.common.Permissions;
@@ -104,7 +95,6 @@ public class PhysicalLayerController {
 	private static Session session = null;
 	private static Transaction tx = null;
 	private static ObjectMapper mapper = new ObjectMapper();
-	@SuppressWarnings("rawtypes")
 	private static Query query = null;
 	private static StringWriter sw;
 	private static String exceptionAsString;
@@ -154,7 +144,6 @@ public class PhysicalLayerController {
 					Calendar calendar = new GregorianCalendar();
 					calendar.setTime(new Date());
 					int year = calendar.get(Calendar.YEAR);
-					DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
 
 					String PhyActID=
 						 "PHY_ACT_" + year + "_"+ Integer.parseInt(session.createNativeQuery("SELECT PHY_ACT_ID FROM SEQ_TABLE").uniqueResult().toString());
