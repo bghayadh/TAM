@@ -6686,8 +6686,6 @@ public class PhysicalLayerController {
 				.createNativeQuery("SELECT DISTINCT MANHOLE_ID,MANHOLE_NAME,LONGITUDE,LATITUDE FROM MANHOLE ")
 				.getResultList();*/
 		
-		System.out.println("minLog is " +minLongitude + " maxLongitude is " +maxLongitude + " minLatitude is " +minLatitude + " maxLatitude is " + maxLatitude);
-		
 		List<Object[]> manholeList = session
 			    .createNativeQuery("SELECT DISTINCT MANHOLE_ID, MANHOLE_NAME, LONGITUDE, LATITUDE " +
 			                        "FROM MANHOLE " +
