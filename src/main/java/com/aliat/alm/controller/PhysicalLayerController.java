@@ -6685,11 +6685,14 @@ public class PhysicalLayerController {
 		/*List<Object[]> manholeList = session
 				.createNativeQuery("SELECT DISTINCT MANHOLE_ID,MANHOLE_NAME,LONGITUDE,LATITUDE FROM MANHOLE ")
 				.getResultList();*/
+		
+		System.out.println("minLog is " +minLongitude + " maxLongitude is " +maxLongitude + " minLatitude is " +minLatitude + " maxLatitude is " + maxLatitude);
+		
 		List<Object[]> manholeList = session
 			    .createNativeQuery("SELECT DISTINCT MANHOLE_ID, MANHOLE_NAME, LONGITUDE, LATITUDE " +
 			                        "FROM MANHOLE " +
-			                        "WHERE TO_NUMBER(LONGITUDE) BETWEEN :minLongitude AND :maxLongitude " +
-			                        "AND TO_NUMBER(LATITUDE) BETWEEN :minLatitude AND :maxLatitude")
+			                        "WHERE TO_NUMBER(SUBSTR(LONGITUDE,1,9)) BETWEEN :minLongitude AND :maxLongitude " +
+			                        "AND TO_NUMBER(SUBSTR(LATITUDE,1,9)) BETWEEN :minLatitude AND :maxLatitude")
 			    .setParameter("minLongitude", minLongitude)
 			    .setParameter("maxLongitude", maxLongitude)
 			    .setParameter("minLatitude", minLatitude)
@@ -6739,8 +6742,8 @@ public class PhysicalLayerController {
 		List<Object[]> handholeList = session
 			    .createNativeQuery("SELECT DISTINCT HANDHOLE_ID, HANDHOLE_NAME, LONGITUDE, LATITUDE " +
 			                        "FROM HANDHOLE " +
-			                        "WHERE TO_NUMBER(LONGITUDE) BETWEEN :minLongitude AND :maxLongitude " +
-			                        "AND TO_NUMBER(LATITUDE) BETWEEN :minLatitude AND :maxLatitude")
+			                        "WHERE TO_NUMBER(SUBSTR(LONGITUDE,1,9)) BETWEEN :minLongitude AND :maxLongitude " +
+			                        "AND TO_NUMBER(SUBSTR(LATITUDE,1,9)) BETWEEN :minLatitude AND :maxLatitude")
 			    .setParameter("minLongitude", minLongitude)
 			    .setParameter("maxLongitude", maxLongitude)
 			    .setParameter("minLatitude", minLatitude)
