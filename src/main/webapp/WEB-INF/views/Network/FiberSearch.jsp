@@ -268,7 +268,7 @@
 									 <div class="col-sm-4" id="customerNameID">
 											<div class="form-group">
 												<div class="input-group-prepend" style="width: auto;">
-													<span style="font-size: 12px;" class="input-group-text"><b>Customer Id</b></span>
+													<span style="font-size: 12px;" class="input-group-text"><b>Customer ID</b></span>
 													<input type="text" id="customerDetails" class="form-control text-input" />
 												</div>
 											</div>
@@ -393,9 +393,6 @@
 											id="dboardPoint-tab" style="color: gold;" data-toggle="tab"
 											href="#dboardP" role="tab" aria-controls="conduit"
 											aria-selected="false">Distribution Board</a></li>
-											
-										
-											
 										<li class="nav-item"><a class="nav-link "
 											id="fPaths-tab" style="color: gold;" data-toggle="tab"
 											href="#fPaths" role="tab" aria-controls="conduit"
@@ -781,7 +778,7 @@
 													</select></div></div></div>
 										<div class="col-sm-3" style="padding-left: 0px; padding-right: 0px;">
 											<input type="text" id="autoCompleteConnectedSearch" class="form-control text-input" placeholder="search..." />
-											<input type='text' id='connectedSearchLong' hidden /> <input type='text' id='connectedSearchLat' hidden />
+											<input type='text' id='connectedSearchLong'  hidden/> <input type='text' id='connectedSearchLat'  hidden/>
 										</div>
 										<div class="col-sm-3">
 											<div class="input-group-prepend">
@@ -794,44 +791,132 @@
 									</div></div></div>
 										<div class="col-sm-1" style="">
 											<div class="form-group">
-												<button id="connectedSearch" class="btn btn-primary searchHeaderButton" style="color: white; font-size: 13px; height: 38px; margin-left:10px;">View
+												<button id="connectedSearch" class="btn btn-primary searchHeaderButton" style="color: white; font-size: 13px; height: 38px; margin-left:10px;">Find
 												</button></div></div></div>
-									<div class="row" style="height: 150px;">
-										<fieldset class="field_set">
-											<legend style="width: auto;" class="fieldset_legend"></legend>
-											<table id="nearestStrand" style="display: block; height: 140px; overflow-y: auto;">
-												<tr>
-													<th style="min-width: 150px;" class="row-pad">Strand ID</th>
-													<th style="min-width: 300px;">StrandName</th>
-													<th style="min-width: 150px;">Source</th>
-													<th style="min-width: 150px;">Destination</th>
+									<ul class="nav nav-tabs" id="connInfoTab" role="tablist" style="background-color: #00757C;">
+    <li class="nav-item">
+        <a class="nav-link active" id="path-tab" style="color: gold;" data-toggle="tab" href="#pathInfo" role="tab" aria-controls="fiber" aria-selected="true">Path</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="dB-tab" style="color: gold;" data-toggle="tab" href="#dBInfo" role="tab" aria-controls="source_dest" aria-selected="false">DB</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="junction-tab" style="color: gold;" data-toggle="tab" href="#junctionInfo" role="tab" aria-controls="conduit" aria-selected="false">Junction</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="node-tab" style="color: gold;" data-toggle="tab" href="#nodeInfo" role="tab" aria-controls="nodes" aria-selected="false">Node</a>
+    </li>
+</ul>
+
+<div class="tab-content" style="min-height: 180px;">
+    <!-- Path Tab -->
+    <div class="tab-pane active" id="pathInfo" role="tabpanel" aria-labelledby="path-tab">
+        <p></p>
+        <div class="container-fluid" style="overflow-x: auto;">
+            <div id="findNearestManRes"></div>
+            <div class="row" style="height: 500px;">
+                <fieldset class="field_set">
+                    <legend class="fieldset_legend" style="width: auto;"></legend>
+                   	<table id="connFiber" style="display: block; height: 500px; overflow-y: auto;">
+												<tr class="fixed-headerr"><th style="min-width: 200px;" class="row-pad">Fiber ID</th>
+													<th style="min-width: 200px;height:50px">Fiber Name</th>
+													<th style="min-width: 200px;height:50px">Tube #</th>
+													<th style="min-width: 200px;height:50px">Tube ID</th>
+													<th style="min-width: 200px;height:50px">Tube Name</th>
+													<th style="min-width: 200px;height:50px">Strand #</th>
+													<th style="min-width: 200px;height:50px">Strand ID</th>
+													<th style="min-width: 200px;height:50px">Strand Name</th>
 												</tr>
-												<tbody id="conStrandId"></tbody></table></fieldset></div><br>
-									<div class="row" style="height: 150px;">
-										<fieldset class="field_set">
-											<legend style="width: auto;" class="fieldset_legend"></legend>
-											<table id="nearestTube" style="display: block; height: 140px; overflow-y: auto;">
-												<tr><th style="min-width: 150px;" class="row-pad">Tube ID</th>
-													<th style="min-width: 300px;">TubeName</th>
-													<th style="min-width: 150px;">Source</th>
-													<th style="min-width: 150px;">Destination</th></tr>
-												<tbody id="conTubeId"></tbody></table></fieldset></div><br>
-									<div class="row" style="height: 150px;">
-										<fieldset class="field_set">
-											<legend style="width: auto;" class="fieldset_legend"></legend>
-											<table id="nearestFiber" style="display: block; height: 140px; overflow-y: auto;">
-												<tr><th style="min-width: 150px;" class="row-pad">Fiber ID</th>
-													<th style="min-width: 300px;">FiberName</th>
-													<th style="min-width: 150px;">Source</th>
-													<th style="min-width: 150px;">Destination</th>
-												</tr>
-												<tbody id="conFiberId"></tbody></table></fieldset></div><br>
-							<div class="row" style="height: 150px;"><fieldset class="field_set"><legend style="width: auto;" class="fieldset_legend"></legend>
-								<table id="nearestDB" style="display: block; height: 140px; overflow-y: auto;">
-								<tr><th style="min-width: 150px;" class="row-pad">DB ID</th>
-									<th style="min-width: 300px;">DB Name</th>
-									<th style="min-width: 350px;">City</th></tr>
-									<tbody id="conDBId"></tbody></table></fieldset></div></div></div></div></div>
+												<tbody id="conFiberId"></tbody></table>
+                </fieldset>
+            </div>
+        </div>
+    
+    </div>
+
+    <!-- DB Tab -->
+    <div class="tab-pane" id="dBInfo" role="tabpanel" aria-labelledby="dB-tab">
+        <p></p>
+        <div class="container-fluid">
+            <div id="findNearestHandRes"></div>
+            <div class="row" style="height: 500px;">
+                <fieldset class="field_set">
+                    <legend class="fieldset_legend" style="width: auto;"></legend>
+                  <table id="connDB" style="display: block; height: 500px; overflow-y: auto;">
+								<tr class="fixed-headerr"><th style="min-width: 350px;" class="row-pad">DB ID</th>
+									<th style="min-width: 350px; height:50px">DB Name</th>
+									<th style="min-width: 350px; height:50px">City</th></tr>
+									<tbody id="conDBId"></tbody></table>
+                </fieldset>
+            </div>
+        </div>
+       
+    </div>
+
+    <!-- Junction Tab -->
+    <div class="tab-pane" id="junctionInfo" role="tabpanel" aria-labelledby="junction-tab">
+        <p></p>
+        <div class="container-fluid">
+            <div id="findNearestDbRes"></div>
+            <div class="row" style="height: 500px;">
+                <fieldset class="field_set">
+                    <legend class="fieldset_legend" style="width: auto;"></legend>
+                    <table id="connJunc" style="display: block; height: 500px; overflow-y: auto;">
+                        <thead>
+                            <tr>
+                              
+                            </tr>
+                        </thead>
+                        <tbody id="conJuncId"></tbody>
+                    </table>
+                </fieldset>
+            </div>
+        </div>
+       
+    </div>
+
+    <!-- Node Tab -->
+    <div class="tab-pane" id="nodeInfo" role="tabpanel" aria-labelledby="node-tab">
+        <p></p>
+        <div class="container-fluid">
+            <div id="findNearestNodeRes"></div>
+            <div class="row" style="height: 500px;">
+                <fieldset class="field_set">
+                    <legend class="fieldset_legend" style="width: auto;"></legend>
+                    <table id="connNode" class="searchable sortable" style="display: block; height: 500px; overflow-y: auto;">
+                        <thead>
+                            <tr class="fixed-headerr">
+                           <tr class="fixed-headerr"><th style="min-width: 350px;" class="row-pad">Node ID</th>
+                                <th style="min-width: 350px; height:50px">Node Name</th>
+                                <th style="min-width: 350px;height:50px">Node Type</th>
+                             
+                            </tr>
+                        </thead>
+                        <tbody id="conNodeId"></tbody>
+                    </table>
+                </fieldset>
+            </div>
+        </div>
+      
+    </div>
+</div>
+
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
+								
+					
+									
+										</div></div></div></div>
 					<div class="modal-footer"></div></div></div></div></div>
 
 <div class="container">
@@ -1292,7 +1377,20 @@ $(document).ready(function() {
        handleCheckboxClick('#nearestFiber', $(this));
    });
    
+   $(document).on('click', '#connFiber tr', function() {
+       handleCheckboxClick('#connFiber', $(this));
+   });
+   $(document).on('click', '#connDB tr', function() {
+       handleCheckboxClick('#connDB', $(this));
+   });
 
+   $(document).on('click', '#connJunc tr', function() {
+       handleCheckboxClick('#connJunc', $(this));
+   });
+
+   $(document).on('click', '#connNode tr', function() {
+       handleCheckboxClick('#connNode', $(this));
+   });
     
 
     // Reusable function to handle row clicks
