@@ -296,6 +296,65 @@ max-width: 100%;
 					</div>
 			</div></div></div>
 			
+				<div class="row"> 
+				<div class="col-md-3" style="margin-right:50px; margin-left:12px;">
+					<div class="form-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text">OTDR Point Longitude</span>
+							<input type="text" id="OTDRLong" class="form-control text-input" style="width:300px;" />
+						</div>
+					</div>
+			    </div>	
+			    
+			     <div class="col-md-3">
+					<div class="form-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text">OTDR Point Latitude</span>
+							<input type="text" id="OTDRLat" class="form-control text-input" style="width:300px;" />
+						</div>
+					</div>
+			    </div>	
+			    
+			    <div >
+					<button type="button"  id ="SetOTDRCoordinate" class="btn mapButtons"  style="margin-left:20px;"  >Set OTDR Coordinate</button>
+				</div>
+			    
+			  
+			    		
+			</div>
+			
+			<div class="row"> 
+				<div  style="margin-right:25px; margin-left:27px;">
+					<div class="form-group">
+						<div class="input-group-prepend">
+								<span class="input-group-text">OTDR Distance (Km)</span>
+							<input type="text" id="OTDRDis" class="form-control text-input" style="width:227px;" />
+						</div>
+					</div>
+			    </div>	
+			    
+			     <div class="col-sm-4" style="min-width: 100px;">
+                                   <div class="form-group">
+                                <div class="input-group-prepend">
+                               <span style="display: flex; align-items: center; justify-content: center; min-width: 90px; font-size: 12px; width: 79%; text-align: center;" class="input-group-text">
+                          <input type='checkbox' id="Seq" style='position: relative; margin-right: 5px;'><b> With Sequence Direction</b>
+                        </span>
+                          </div>
+                           </div>
+                          </div>
+			    
+			  
+			    		
+			</div>
+			
+			
+			
+			
+			
+			
+			
+			
+			
 			<div class="row"> 
 				<div class="col-md-3" style="margin-right:50px; margin-left:12px;">
 					<div class="form-group">
@@ -315,8 +374,12 @@ max-width: 100%;
 					</div>
 			    </div>	
 			    
-			    <div class="col-md-2" >
-					<button type="button"  id ="SetCableBreakCoordinate" class="btn mapButtons"  style="margin-left:40px;"  >Set Coordinate</button>
+			    <div >
+					<button type="button"  id ="SetCableBreakCoordinate" class="btn mapButtons"  style="margin-left:20px;"  >Set Break Coordinate</button>
+				</div>
+			    
+			    <div class="col-md-3" >
+					<button type="button"  id ="CalCableBreakCoordinate" class="btn mapButtons"  style="margin-left:40px;"  >Calculate Break Coordinate</button>
 				</div>
 			    
 			    		
@@ -651,7 +714,10 @@ max-width: 100%;
   
 	 <menu class="menu" id="mapMenu">
 		<li class="menu-item mapMenuItem">
-			<button type="button" id="getCableBreakCoordinate" class="menu-btn"> <i class="fa fa-paste"></i> <span class="menu-text">Get Coordinate</span></button>
+			<button type="button" id="getCableBreakCoordinate" class="menu-btn"> <i class="fa fa-paste"></i> <span class="menu-text">Get Break Coordinate</span></button>
+		</li>
+		<li class="menu-item mapMenuItem">
+			<button type="button" id="getOTDRCoordinate" class="menu-btn"> <i class="fa fa-paste"></i> <span class="menu-text">Get OTDR Coordinate</span></button>
 		</li>
 	</menu>
   
@@ -702,7 +768,10 @@ var pointLong ="";
 var pointLat ="";
 var getCoorLong ="";
 var getCoorLat ="";
+var getOTDRCoorLong ="";
+var getOTDRCoorLat ="";
 let breakmarker =null;
+let OTDRmarker =null;
 var srcDestID = [];
 
 
@@ -1013,17 +1082,163 @@ $(document).ready(function() {
 		
 		 getCoorLong =getCoords().split(" ")[1];
 		 getCoorLat =getCoords().split(" ")[0];
+		 localStorage.setItem("getCoorCableLong", getCoorLong);
+		 localStorage.setItem("getCoorCableLat", getCoorLat);
 		 createBreakId(getCoorLong,getCoorLat);
 
+			});
+
+	$("#getOTDRCoordinate").on('click',function(){
+		
+		 getOTDRCoorLong =getCoords().split(" ")[1];
+		 getOTDRCoorLat =getCoords().split(" ")[0];
+		   localStorage.setItem("getCoorOTDRLong", getOTDRCoorLong);
+		    localStorage.setItem("getCoorOTDRLat", getOTDRCoorLat);
+		 
+		 createOTDRId(getOTDRCoorLong,getOTDRCoorLat);
+
 		});
 
-	$("#SetCableBreakCoordinate").on('click',function(){
-		
-		$("#pointLong").val(getCoorLong);
-		$("#pointLat").val(getCoorLat);
 
+$("#SetOTDRCoordinate").on('click',function(){
+
+	   var Long = localStorage.getItem("getCoorOTDRLong");
+	    var Lat = localStorage.getItem("getCoorOTDRLat");
+	    
+	    if (Long && Lat) {
+	        $("#OTDRLong").val(Long);
+	        $("#OTDRLat").val(Lat);
+	    } else {
+	        console.log("No coordinates found in localStorage.");
+	    }
+	    OTDRCoorChange();
 		});
 	
+
+	$("#SetCableBreakCoordinate").on('click',function(){
+
+
+		 var Long1 = localStorage.getItem("getCoorCableLong");
+		 var Lat1 = localStorage.getItem("getCoorCableLat");
+
+
+		  if (Long1 && Lat1) {
+		        $("#pointLong").val(Long1);
+		        $("#pointLat").val(Lat1);
+		    } else {
+		        console.log("No coordinates found in localStorage.");
+		    }
+
+		  BreakCoorChange();
+			});
+		
+	$("#CalCableBreakCoordinate").on('click', function () {
+	    // Get OTDR coordinates and distance
+	    const OTDRLong = parseFloat(document.getElementById("OTDRLong").value);
+	    const OTDRLat = parseFloat(document.getElementById("OTDRLat").value);
+	    const OTDRDistance = parseFloat(document.getElementById("OTDRDis").value);
+	    const fiberCable = document.getElementById("fiberCable").value;
+	    const withSequence = document.getElementById("Seq").checked;
+
+	    if (isNaN(OTDRLong) || isNaN(OTDRLat) || isNaN(OTDRDistance)) {
+	        console.log("Error: OTDR coordinates or distance are missing or invalid.");
+	        alert("OTDR coordinates or distance are missing or invalid.")
+	        return;
+	    }
+
+	    // Send AJAX request to fetch fiberAux data
+	    $.ajax({
+	        type: "GET",
+	        contentType: "application/json; charset=utf-8",
+	        url: getContext() + '/getCableBreakAuxPoint',
+	        data: {
+	            "fiberCable": fiberCable,
+	        },
+	        dataType: "json",
+	        success: function (data) {
+	            if (data && data.fiberAux) {
+	             
+	                const distances = [];
+
+	                // Loop through each fiberAux point and calculate the distance
+	                data.fiberAux.forEach(function (point) {
+	                    const fiberLong = point[0];
+	                    const fiberLat = point[1];
+	                    const seq = point[2];
+
+	                    const distance = computeGoogleDistance(OTDRLat, OTDRLong, fiberLat, fiberLong);
+
+	                    distances.push({ seq: seq, distance: distance });
+	                });
+
+	                // Sort the distances array
+	                distances.sort((a, b) => a.distance - b.distance);
+	              
+	                // Get the two closest points
+	                const closestPoints = distances.slice(0, 2);
+	                const seq1 = closestPoints[0].seq;
+	                const seq2 = closestPoints[1].seq;
+
+	           
+	                // Choose the sequence
+	                const chosenSeq = withSequence ? Math.max(seq1, seq2) : Math.min(seq1, seq2);
+	            
+	                // Create a new list based on the chosen sequence
+	                let newList = [];
+	                if (withSequence) {
+	                    newList = data.fiberAux.filter(point => point[2] >= chosenSeq);
+	                } else {
+	                    newList = data.fiberAux.filter(point => point[2] <= chosenSeq);
+	                }
+	                  // Calculate cumulative geodistance
+	                let cumulativeDistance = 0;
+	                for (let i = 0; i < newList.length - 1; i++) {
+	                    const point1 = newList[i];
+	                    const point2 = newList[i + 1];
+
+	                    const segmentDistance = computeGoogleDistance(point1[1], point1[0], point2[1], point2[0]);
+	                    cumulativeDistance += parseFloat(segmentDistance);
+
+	                      if (cumulativeDistance >= OTDRDistance) {
+	                        const overshoot = cumulativeDistance - OTDRDistance;
+	                        const segmentLength = parseFloat(segmentDistance);
+
+	                        const fraction = (segmentLength - overshoot) / segmentLength;
+
+	                        const exactLat = point1[1] + fraction * (point2[1] - point1[1]);
+	                        const exactLong = point1[0] + fraction * (point2[0] - point1[0]);
+
+	                   
+	                        $("#pointLong").val(exactLong);
+	                        $("#pointLat").val(exactLat);
+	                        createBreakId(exactLong, exactLat);
+
+	                        break;
+	                    }
+	                }
+	            } else {
+	                console.log("No fiberAux data returned.");
+	            }
+	        },
+	        error: function (result) {
+	            console.log("Error while fetching fiberAux data.");
+	            alert("Error");
+	        }
+	    });
+	});
+
+	// Function to calculate geodistance using Google Maps API's computeDistanceBetween
+	function computeGoogleDistance(lat1, lng1, lat2, lng2) {
+	    const point1 = new google.maps.LatLng(lat1, lng1);
+	    const point2 = new google.maps.LatLng(lat2, lng2);
+
+	    const distanceInMeters = google.maps.geometry.spherical.computeDistanceBetween(point1, point2);
+	    const distanceInKm = (distanceInMeters / 1000).toFixed(3);
+
+	    return distanceInKm;
+	}
+
+
 
 			
 	   $('#showOnMap'). click(function(){  
@@ -1362,6 +1577,9 @@ $(document).ready(function() {
 				map.fitBounds(window["bounds_"+cableID]);
 	   		}
 
+	   		
+
+			  
 			var currentCenter = map.getCenter();
 			var currentZoom = map.getZoom();
 			map.setCenter(currentCenter);
@@ -2592,6 +2810,36 @@ function createBreakId(breakLong,breakLat){
 	
 }
 
+
+function createOTDRId(OTDRLong,OTDRLat){
+
+	if (OTDRmarker) {
+		OTDRmarker.setMap(null);
+    }
+	
+	markerId="OTDR_Marker";
+	const pos = new google.maps.LatLng(OTDRLat,OTDRLong);
+
+
+
+	markerIcon = {
+		url:getContext()+"/resources/NetworkImages/OTDR.png", 
+		scaledSize: new google.maps.Size(25, 25),
+	};
+
+
+	elementMarker = new google.maps.Marker({
+				position: pos,
+				ID:markerId,
+				icon:markerIcon,
+		        
+		});
+	elementMarker.metadata = { id: markerId };
+	OTDRmarker = elementMarker;
+	OTDRmarker.setMap(map);
+	
+} 
+
 function getCoords(){
 	var coords=document.getElementById('mapLongLat');
 	coords=coords.value.slice(1,-1).split(" || ", 2); //This to remove the first and last double quote characters and create array of size 2 based on the separator.
@@ -2605,8 +2853,46 @@ function getLongLatMouseMove(map){
 	    	    +mapsMouseEvent.latLng.toJSON().lng.toFixed(13), null, 2));	    
 	});					 
 }
+document.getElementById("OTDRLong").addEventListener("change", function() {
+	OTDRCoorChange();
+	});
 
+	document.getElementById("OTDRLat").addEventListener("change", function() {
+		OTDRCoorChange();
+	  
+	});
 
+	document.getElementById("pointLong").addEventListener("change", function() {
+		BreakCoorChange();
+		});
+
+		document.getElementById("pointLat").addEventListener("change", function() {
+			BreakCoorChange();
+		  
+		});
+function OTDRCoorChange(){
+	const OTDRLong = parseFloat(document.getElementById("OTDRLong").value);
+	  const OTDRLat = parseFloat(document.getElementById("OTDRLat").value);
+
+	  if (!isNaN(OTDRLong) && !isNaN(OTDRLat)) {
+	    createOTDRId(OTDRLong, OTDRLat);
+	    console.log("OTDR icon updated.");
+	  } else {
+	    console.log("OTDR Longitude or Latitude is missing or invalid.");
+	  }
+}
+
+function BreakCoorChange(){
+	const BreakLong = parseFloat(document.getElementById("pointLong").value);
+	  const BreakLat = parseFloat(document.getElementById("pointLat").value);
+
+	  if (!isNaN(BreakLong) && !isNaN(BreakLat)) {
+		  createBreakId(BreakLong, BreakLat);
+		  console.log("Break point icon updated.");
+	  } else {
+	    console.log("Break Longitude or Latitude is missing or invalid.");
+	  }
+}
 </script>
 <script
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJXAds-Gt4I39hRFHhYHMEg3XcBqihYoo&callback=initMap&libraries=drawing&v=weekly"
