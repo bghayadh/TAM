@@ -425,48 +425,59 @@ $("#open-popup-btn").click(function() {
    	$("#fiberCitySearch").modal('show');	 	
 	   
 });
-//Customer ID in find nearest popup
 $("#customerDetails").autocomplete({
-	
-	source: function(request, response) {
-	$.ajax({
-		type: "GET",
-		contentType: "application/json; charset=utf-8",
-		url: getContext()+'/GetAllNetworkCustomer',
- 		data: {
-			"search":$("#customerDetails").val(),							
-		},	              
-		dataType: "json",
-		success: function (data) {
-			if (data != null) {
-		      response(data.globalList);	                     
-		   }
-		},
-		error: function(result) {
-		  alert("Error");
-		}
-	  });
-	}, minLength:0, maxShowItems: 40, scroll:true,
-		select: function(event, ui) {
-			this.value = (ui.item ? ui.item[0]  : '');
-			
-			if($("#closestLongPoint").val() =="" || $("#closestLatPoint").val() =="") {
-				$("#closestLongPoint").val(ui.item[4]);
-				$("#closestLatPoint").val(ui.item[5]);
-			}								
-			return false;
-		}
-		}).data( "ui-autocomplete" )._renderItem= function(ul, item) {		
-			return $("<li class='each'>").append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-	                item[0] + "</span><br><span class='desc'>" +
-	                item[1] +', ' + item[2] +"</span></div>").appendTo(ul);						
-		};
-			
-		$("#customerDetails").focus(function(){
-			if (this.value == ""){
-	         $(this).autocomplete("search");
-	        }						
-	});	 
+    source: function (request, response) {
+        $.ajax({
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            url: getContext() + '/GetAllNetworkCustomer',
+            data: {
+                "search": $("#customerDetails").val(),
+            },
+            dataType: "json",
+            success: function (data) {
+                if (data && data.globalList) {
+                    response(data.globalList);
+                } else {
+                    response([]); // Return empty array if no data
+                }
+            },
+            error: function () {
+                alert("Error fetching data");
+            }
+        });
+    },
+    minLength: 0,
+    maxShowItems: 40,
+    scroll: true,
+    select: function (event, ui) {
+        if (ui.item) {
+            // Update fields based on the selected item
+            $("#customerDetails").val(ui.item[0]); // Customer ID
+            $("#closestLongPoint").val(ui.item[4]); // Longitude
+            $("#closestLatPoint").val(ui.item[5]);  // Latitude
+            $("#customerName").val(ui.item[1]);     // Customer Name
+        } else {
+            alert("No item selected!");
+        }
+
+        return false; // Prevent default behavior of autocomplete
+    }
+}).data("ui-autocomplete")._renderItem = function (ul, item) {
+    return $("<li class='each'>")
+        .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
+            item[0] + "</span><br><span class='desc'>" +
+            item[1] + ', ' + item[2] + "</span></div>")
+        .appendTo(ul);
+};
+
+// Automatically trigger autocomplete when the input is focused and empty
+$("#customerDetails").focus(function () {
+    if (this.value === "") {
+        $(this).autocomplete("search");
+    }
+});
+
 	
 //Customer Service & ref ID in find nearest popup
 $("#serviceReference").autocomplete({
@@ -5336,8 +5347,8 @@ function searchConnectedButtonEvents(hash_Project,hash_manhole,hash_handhole,has
 		    $("#conStrandId, #conFiberId, #conTubeId, #conDBId").html("");
 
 		    const siteId = document.querySelector(`#autoComplete${prefix}`).value;
-		    const lng = $(`#${prefix.toLowerCase()}Long`).val();
-		    const lat = $(`#${prefix.toLowerCase()}Lat`).val();
+		    const lng = document.getElementById('connectedSearchLong').value
+		    const lat = document.getElementById('connectedSearchLat').value
 		    const selectedOp = document.querySelector(`#select${prefix}`).value;
 
 		    let urlString = `&siteId=${siteId}&selectConnectedSearch=${selectedOp}` +
@@ -5353,68 +5364,78 @@ function searchConnectedButtonEvents(hash_Project,hash_manhole,hash_handhole,has
 		
 }
 
-function openSearchConnected(checkedOption,siteId,selectConnectedSearch,connectedSearchLong,connectedSearchLat,connectedViewOnMap,arrayStrands,arrayTubes,arrayFibers,arrayManhole,arrayHandhole,arrayDB,distribBoardListSize,getRelatedPoints){
-	//console.log("selectConnectedSearch "+selectConnectedSearch);
-	$('a[href="#connectedS"]').click();
-	$("#fiberCitySearch").modal('show');
- 	$("#selectConnectedSearch").val(selectConnectedSearch);
- 	$("#autoCompleteConnectedSearch").val(siteId);
- 	$("#connectedSearchLong").val(connectedSearchLong);
- 	$("#connectedSearchLat").val(connectedSearchLat);
- 	
- 	$("#selectHeaderSearch").val(selectConnectedSearch);
- 	$("#autoCompleteHeaderSearch").val(siteId);
-	$("#headerSearchLong").val(connectedSearchLong);
-    $("#headerSearchLat").val(connectedSearchLat);
-	
- 	showPointsType =getRelatedPoints;
-    if(getRelatedPoints == '1') {
-		$("#getRelatedPointsCon").prop('checked', true);
-	 }
-	else {
-		$("#getRelatedPointsCon").prop('checked', false);
-	}
-	//console.log("lat:"+ parseFloat(connectedSearchLat)+", lng:"+ parseFloat(connectedSearchLong));
+function openSearchConnected(checkedOption, siteId, selectConnectedSearch, connectedSearchLong, connectedSearchLat, connectedViewOnMap, 
+    arrayStrands, arrayTubes,  arrayFibers, arrayManhole, arrayHandhole, arrayDB, distribBoardListSize, getRelatedPoints, fpPath, bpPath, NodeList ) {
+    // Show modal
+    $('a[href="#connectedS"]').click();
+    $("#fiberCitySearch").modal('show');
 
- 	const myLatLng = { lat: parseFloat(connectedSearchLat), lng: parseFloat(connectedSearchLong) };
- 	 var siteArray = [];
- 	siteArray.push(arrayStrands);
- 	siteArray.push(arrayTubes);
- 	siteArray.push(arrayFibers);
- 	siteArray.push(arrayDB.splice(0,distribBoardListSize));
- 	appendConnectedTable(siteArray);
- 	
- 	//console.log("id is "+ $("#autoCompleteConnectedSearch").val().split(":")[0]);
- 	var markerName = $("#autoCompleteConnectedSearch").val().split(":")[1]+":" +$("#autoCompleteConnectedSearch").val().split(":")[0]+":"+$("#autoCompleteConnectedSearch").val().split(":")[2];
-	createSiteCltMarker($("#autoCompleteConnectedSearch").val().split(":")[0],markerName,connectedSearchLat,connectedSearchLong,siteCltSrcMarkers);	  
-	//siteCltSrcMarkers[wareID].setLabel({text: type , className:"marker-position-sequence",color:"red"}); 
-	
- 	if (connectedViewOnMap == "true") {
-		$("#viewOnMap").prop("checked",true);
-	  
- 	    	//var markerName = $("#autoCompleteConnectedSearch").val().split(":")[1]+":" +$("#autoCompleteConnectedSearch").val().split(":")[0]+":"+$("#autoCompleteConnectedSearch").val().split(":")[2];
-			//createSiteCltMarker($("#autoCompleteConnectedSearch").val().split(":")[1],markerName,connectedSearchLat,connectedSearchLong,siteCltSrcMarkers);	  
-				
-			var circ = new google.maps.Circle({
-		         strokeColor: "blue",
-		         strokeOpacity: 0.8,
-		         strokeWeight: 2,
-		         fillColor: "blue",
-		         fillOpacity: 0.1,
-		         map,
-		         center: myLatLng,
-		         radius: 500,
-		       });		
-		 displayZoneMap(circ);
-		 map.setCenter(myLatLng);
-		 map.fitBounds(circ.getBounds());
-		 
-		
-     } else {
-    	 $("#viewOnMap").prop("checked",false);
-     }
-	
+	console.log(connectedSearchLong);
+	console.log(connectedSearchLat);
+    // Set input values
+    $("#selectConnectedSearch").val(selectConnectedSearch);
+    $("#autoCompleteConnectedSearch").val(siteId);
+    $("#connectedSearchLong").val(connectedSearchLong);
+    $("#connectedSearchLat").val(connectedSearchLat);
+
+    $("#selectHeaderSearch").val(selectConnectedSearch);
+    $("#autoCompleteHeaderSearch").val(siteId);
+    $("#headerSearchLong").val(connectedSearchLong);
+    $("#headerSearchLat").val(connectedSearchLat);
+
+    // Handle "Get Related Points" checkbox
+    showPointsType = getRelatedPoints;
+    $("#getRelatedPointsCon").prop('checked', getRelatedPoints === '1');
+
+    // Parse coordinates
+    const myLatLng = { lat: parseFloat(connectedSearchLat), lng: parseFloat(connectedSearchLong) };
+
+    // Create siteArray with the provided arrays
+    const siteArray = [
+        arrayStrands,
+        arrayTubes,
+        arrayFibers,
+        arrayDB.slice(0, distribBoardListSize),
+		fpPath,
+		bpPath,
+		NodeList  // Don't modify original array
+    ];
+
+    appendConnectedTable(siteArray);
+
+    // Split siteId once and store it for reuse
+    const siteIdParts = $("#autoCompleteConnectedSearch").val().split(":");
+    const markerName = `${siteIdParts[1]}:${siteIdParts[0]}:${siteIdParts[2]}`;
+
+    // Create marker on the map
+    createSiteCltMarker(siteIdParts[0], markerName, connectedSearchLat, connectedSearchLong, siteCltSrcMarkers);
+
+    // Handle "View On Map" checkbox
+    if (connectedViewOnMap === "true") {
+        $("#viewOnMap").prop("checked", true);
+
+        // Create a circle around the location
+        const circ = new google.maps.Circle({
+            strokeColor: "blue",
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: "blue",
+            fillOpacity: 0.1,
+            map,
+            center: myLatLng,
+            radius: 500
+        });
+
+        displayZoneMap(circ);
+
+        // Adjust map view
+        map.setCenter(myLatLng);
+        map.fitBounds(circ.getBounds());
+    } else {
+        $("#viewOnMap").prop("checked", false);
+    }
 }
+
 
 function calculateDistanceSourceDestination(sLat,sLng,dLat,dLng,tId){
 		var auxArrayP=[];
@@ -5741,52 +5762,156 @@ function calculateGeoDistanceNearestPoints(tableId,surveyArray) {
 		
 }	
 
-	function appendConnectedTable(result){
-		//console.log("array of sites "+result);
-		var markupConStrand="";
-		var markupConTube="";
-		var markupConFiber="";
-	    var markupConDb="";
+function appendConnectedTable(result) {
+    // Helper function to handle null and "null" values
+    const sanitizeValue = (value) => {
+        return value === null || value === undefined || value === "null" ? '' : value.toString();
+    };
 
-	    if (result.length==0){
-	    	markupConStrand ="<tr style='height:20px;'><td>There is no result<td></tr>"
-		}else {
-			result[0].forEach((res) => 
-			markupConStrand +="<tr ><td style='min-width:150px;' class='row-pad'>"+result[0][0][0]+"</td><td style='min-width:150px;'>"+result[0][0][9]+"</td><td style='min-width:300px;'>"+result[0][0][5]+"</td><td style='min-width:300px;'>"+result[0][0][6]+"</td></tr>"
-			
-		    );
-		}
-	    $("#conStrandId").append(markupConStrand);
-		
-		if (result.length==0){
-			markupConTube ="<tr style='height:20px;'><td>There is no result<td></tr>"
-		}else {
-			result[1].forEach((res) => 
-			markupConTube +="<tr ><td style='min-width:150px;' class='row-pad'>"+res[0]+"</td><td style='min-width:150px;'>"+res[10]+"</td><td style='min-width:300px;'>"+res[6]+"</td><td style='min-width:300px;'>"+res[9]+"</td></tr>"
-		
-			);
-		}						  
-		$("#conTubeId").append(markupConTube);
-		
-		if (result.length==0){
-			markupConFiber ="<tr style='height:20px;'><td>There is no result<td></tr>"
-		}else {
-			result[2].forEach((res) => 
-			markupConFiber +="<tr ><td style='min-width:150px;' class='row-pad'>"+res[4]+"</td><td style='min-width:150px;'>"+res[13]+"</td><td style='min-width:300px;'>"+res[6]+"</td><td style='min-width:300px;'>"+res[9]+"</td></tr>"
-			);
-		}						  
-		$("#conFiberId").append(markupConFiber);
-																	
+    // result[0]: Tubes, result[1]: Strands, result[2]: Fibers
+    const tubes = result[1] || [];
+    const strands = result[0] || [];
+    const fibers = result[2] || [];
+    let fpPath = result[4] ? JSON.parse(result[4]) : [];
+    let bpPath = result[5] ? JSON.parse(result[5]) : [];
+    let markupConFiber = "";
+    let markupConDb = "";
+	let markupConNode = "";
 
-		if (result.length==0){
-			markupConDb ="<tr style='height:20px;'><td>There is no result<td></tr>"
-		}else {
-			result[3].forEach((res) => 
-		    markupConDb +="<tr ><td style='min-width:150px;' class='row-pad'>"+res[0]+"</td><td style='min-width:150px;'>"+res[3]+"</td><td style='min-width:500px;'>"+res[7]+"</td></tr>"
-			);
-		}						  
-		$("#conDBId").append(markupConDb);	
-	}
+    // Handle empty results
+    if (fibers.length === 0 && fpPath.length === 0 && bpPath.length === 0) {
+        markupConFiber = "<tr style='height:20px;'><td colspan='10'>There is no result</td></tr>";
+    } else {
+        fibers.forEach((fiber) => {
+            const fiberId = sanitizeValue(fiber[4]);
+            const fiberName = sanitizeValue(fiber[13]);
+            const relatedTubes = tubes.filter(tube => sanitizeValue(tube[12]) === fiberId);
+
+            if (relatedTubes.length === 0) {
+                markupConFiber += `
+                    <tr>
+                        <td style='min-width:200px; height:50px'>${fiberId}</td>
+                        <td style='min-width:200px; height:50px'>${fiberName}</td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+                    </tr>`;
+            } else {
+                relatedTubes.forEach((tube) => {
+                    const tubeId = sanitizeValue(tube[0]);
+                    const tubeNumber = sanitizeValue(tube[15]);
+                    const tubeName = sanitizeValue(tube[14]);
+                    const relatedStrands = strands.filter(strand => sanitizeValue(strand[12]) === fiberId);
+
+                    if (relatedStrands.length === 0) {
+                        markupConFiber += `
+                            <tr>
+                                <td style='min-width:200px; height:50px'>${fiberId}</td>
+                                <td style='min-width:200px; height:50px'>${fiberName}</td>
+                                <td style='min-width:200px; height:50px'>${tubeNumber}</td>
+                                <td style='min-width:200px; height:50px'>${tubeId}</td>
+                                <td style='min-width:200px; height:50px'>${tubeName}</td>
+                            </tr>`;
+                    } else {
+                        relatedStrands.forEach((strand) => {
+                            const strandNumber = sanitizeValue(strand[15]);
+                            const strandId = sanitizeValue(strand[0]);
+                            const strandName = sanitizeValue(strand[14]);
+
+                            markupConFiber += `
+                                <tr>
+                                    <td style='min-width:200px; height:50px'>${fiberId}</td>
+                                    <td style='min-width:200px; height:50px'>${fiberName}</td>
+                                    <td style='min-width:200px; height:50px'>${tubeNumber}</td>
+                                    <td style='min-width:200px; height:50px'>${tubeId}</td>
+                                    <td style='min-width:200px; height:50px'>${tubeName}</td>
+                                    <td style='min-width:200px; height:50px'>${strandNumber}</td>
+                                    <td style='min-width:200px; height:50px'>${strandId}</td>
+                                    <td style='min-width:200px; height:50px'>${strandName}</td>
+                                </tr>`;
+                        });
+                    }
+                });
+            }
+        });
+
+        // Append additional data for fpPath and bpPath
+        [fpPath, bpPath].forEach(path => {
+            path.forEach((fiber) => {
+                const fiberId = sanitizeValue(fiber[0]);
+                const fiberName = sanitizeValue(fiber[1]);
+                const tubeNumber = sanitizeValue(fiber[2]);
+                const tubeId = sanitizeValue(fiber[3]);
+                const tubeName = sanitizeValue(fiber[4]);
+                const strandNumber = sanitizeValue(fiber[5]);
+                const strandId = sanitizeValue(fiber[6]);
+                const strandName = sanitizeValue(fiber[7]);
+
+                markupConFiber += `
+                    <tr>
+                        <td style='min-width:200px; height:50px'>${fiberId}</td>
+                        <td style='min-width:200px; height:50px'>${fiberName}</td>
+                        <td style='min-width:200px; height:50px'>${tubeNumber}</td>
+                        <td style='min-width:200px; height:50px'>${tubeId}</td>
+                        <td style='min-width:200px; height:50px'>${tubeName}</td>
+                        <td style='min-width:200px; height:50px'>${strandNumber}</td>
+                        <td style='min-width:200px; height:50px'>${strandId}</td>
+                        <td style='min-width:200px; height:50px'>${strandName}</td>
+                    </tr>`;
+            });
+        });
+    }
+
+    // Append fibers to table
+    $("#conFiberId").append(markupConFiber);
+
+    // Handle database result
+    if (!result[3] || result[3].length === 0) {
+        markupConDb = "<tr style='height:20px;'><td colspan='3'>There is no result</td></tr>";
+    } else {
+        result[3].forEach((res) => {
+            const resCol1 = sanitizeValue(res[0]);
+            const resCol2 = sanitizeValue(res[3]);
+            const resCol3 = sanitizeValue(res[7]);
+
+            markupConDb += `
+                <tr>
+                    <td style='min-width:150px; height:50px' class='row-pad'>${resCol1}</td>
+                    <td style='min-width:150px; height:50px'>${resCol2}</td>
+                    <td style='min-width:500px; height:50px'>${resCol3}</td>
+                </tr>`;
+        });
+    }
+
+    // Append database results to table
+    $("#conDBId").append(markupConDb);
+	
+	
+	if (!result[6] || result[6].length === 0) {
+	       markupConNode = "<tr style='height:20px;'><td colspan='3'>There is no result</td></tr>";
+	   } else {
+	       result[6].forEach((res) => {
+	           const id = sanitizeValue(res[7]);
+	           const name = sanitizeValue(res[1]);
+	           const type = sanitizeValue(res[8]);
+
+	           markupConNode += `
+	               <tr >
+	                   <td style='min-width:150px; height:50px' class='row-pad'>${id}</td>
+	                   <td style='min-width:150px;  height:50px''>${name}</td>
+	                   <td style='min-width:500px;  height:50px''>${type}</td>
+	               </tr>`;
+	       });
+	   }
+
+	   // Append database results to table
+	   $("#conNodeId").append(markupConNode);
+	   console.log(markupConNode);
+}
+
 	
 
 function autoCompleteSearchHeader(ID,searchTarget,longitude,latitude){

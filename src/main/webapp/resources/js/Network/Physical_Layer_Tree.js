@@ -22388,14 +22388,14 @@ $('#Manhole_AutocompleteCable'). click(function(){
 			document.getElementById("EndLongDiv").style.display = "block";
 			document.getElementById("setEndPointDiv").style.display = "block";
 			document.getElementById("setStartPointDiv").style.display = "block";
-			document.getElementById("customerNameID").style.display = "none";
-			document.getElementById("serviceRef").style.display = "none";
-			document.getElementById("saveSurv").style.display = "none";
-			document.getElementById("updateMysd").style.display = "none";
-			document.getElementById("surveyId").style.display = "none";
-			document.getElementById("serviceAppNum").style.display = "none";
-			document.getElementById("price").style.display = "none";
-			document.getElementById("survNearestPt").style.display = "none";
+			document.getElementById("customerNameID").style.display = "block";
+			document.getElementById("serviceRef").style.display = "block";
+			document.getElementById("saveSurv").style.display = "block";
+			document.getElementById("updateMysd").style.display = "block";
+			document.getElementById("surveyId").style.display = "block";
+			document.getElementById("serviceAppNum").style.display = "block";
+			document.getElementById("price").style.display = "block";
+			document.getElementById("survNearestPt").style.display = "block";
 
 			
 			$("#searchManhTBody").empty();
