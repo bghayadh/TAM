@@ -2235,7 +2235,6 @@ public class PhysicalLayerController {
 						checkedOption = request.getParameter("Checked");
 						String siteId = request.getParameter("siteId").split(":")[0];
 						String showPointsType = request.getParameter("getRelatedPoints");
-
 						// String headerSearchlong = request.getParameter("headerSearchLong");
 						// String headerSearchlat = request.getParameter("headerSearchLat");
 						// System.out.println("siteId " + request.getParameter("siteId"));
@@ -2360,6 +2359,8 @@ public class PhysicalLayerController {
 								Arrays.asList((findListId(fiberStrands, "Strand")).length > 0 ? findListId(fiberStrands, "Strand")
 										: new String[] { "" }));
 						strandsAuxiliaries = strandsAuxiliariesQuery.getResultList();
+						System.out.println("fiber Strandss " + mapper.writeValueAsString(fiberStrands));
+
 
 						distribBoardList = session.createNativeQuery(
 								"SELECT DISTINCT A.DB_ID,A.DB_LONGITUDE,A.DB_LATITUDE,A.DB_NAME,A.MAX_CAPACITY,A.SITE,A.PROJECT_ID ,A.CITY,A.DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD A LEFT JOIN DISTRIBUTION_BOARD_MAPPING B  ON B.DB_ID = A.DB_ID  where A.WAREHOUSE LIKE '%"
@@ -2474,7 +2475,20 @@ public class PhysicalLayerController {
 								"SELECT DISTINCT A.JUNCTION_ID, A.JUNCTION_NAME,A.PHYSICAL_LAYER_ID,A.PHYSICAL_LAYER_NAME,A.JUNCTION_NUMBER,A.CAPACITY,A.CITY,A.LONGITUDE,A.LATITUDE,A.PROJECT_ID FROM JUNCTION A INNER JOIN handhole B ON A.PHYSICAL_LAYER_ID = b.handhole_id where b.handhole_id in(:param) ");
 
 						junctionHandholeList = query.setParameter("param", Arrays.asList(allHandIdsPointsArray)).getResultList();
-
+						query= session.createNativeQuery("SELECT DISTINCT FP_FIBER_ID ,FP_FIBER_Name, FP_TUBE_NB, FP_TUBE_ID, FP_TUBE_NAME, FP_STRAND_NB, "
+								+ "FP_STRAND_ID, FP_STRAND_NAME FROM DISTRIBUTION_BOARD_MAPPING WHERE FP_LOCATION =:param");
+						List fpPath = query.setParameter("param", siteId).getResultList();
+						query= session.createNativeQuery("\n"
+								+ "SELECT DISTINCT BP_FIBER_ID , BP_FIBER_Name, BP_TUBE_NB, BP_TUBE_ID,BP_TUBE_NAME, BP_STRAND_NB, "
+								+ "BP_STRAND_ID, BP_STRAND_NAME FROM DISTRIBUTION_BOARD_MAPPING WHERE BP_LOCATION =:param");
+						List bpPath = query.setParameter("param", siteId).getResultList();
+						NodeList = session.createNativeQuery(
+								"SELECT DISTINCT NODE_PK,NODE_NAME,NODE_TYPE || ':'  || NODE_NAME,DOMAIN,SITE_ID,LONGITUDE,LATITUDE,"
+								+ "NODE_ID,SUB_DOMAIN_TYPE FROM NODE_ACTIVE WHERE (SUB_DOMAIN_TYPE='MSAN' OR SUB_DOMAIN_TYPE='SDH' OR"
+								+ " SUB_DOMAIN_TYPE='DWDM' OR SUB_DOMAIN_TYPE='GPON' OR SUB_DOMAIN_TYPE='SWITCH' ) AND (WARE_ID=:param1) AND (DOMAIN = 'Enterprise' OR DOMAIN = 'Transmission')")
+								.setParameter("param1", siteId).getResultList();
+					
+					
 						model.addAttribute("siteId", request.getParameter("siteId"));
 						model.addAttribute("connectedSearchLong", request.getParameter("connectedSearchLong"));
 						model.addAttribute("connectedSearchLat", request.getParameter("connectedSearchLat"));
@@ -2482,6 +2496,8 @@ public class PhysicalLayerController {
 						model.addAttribute("connectedViewOnMap", request.getParameter("connectedViewOnMap"));
 						model.addAttribute("distribBoardListSize", distribBoardListSize);
 						model.addAttribute("getRelatedPoints", showPointsType);
+						model.addAttribute("fpPath", mapper.writeValueAsString(fpPath));
+						model.addAttribute("bpPath", mapper.writeValueAsString(bpPath));
 
 						// System.out.println("distribBoardList 2 is " +
 						// mapper.writeValueAsString(distribBoardList));
