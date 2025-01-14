@@ -1904,7 +1904,7 @@ public class PhysicalLayerController {
 			                   System.out.println("Processing: " + seqs[i]);
                         HashMap<String, List<Object[]>> Result= circleRangeData(noOfPoints,closestDisRange,lats[i],lngs[i],getRelatedPoints,findnearest,txfind);
 				         if (Result.get("fiberAuxiliary_Data") != null) {
-                            for (Object item : Result.get("fiberAuxiliaryData")) {
+                            for (Object item : Result.get("fiberAuxiliary_Data")) {
                                 Object[] newItem = (Object[]) item; // Assuming each item is an Object array
                                 boolean found = false;
                                 
