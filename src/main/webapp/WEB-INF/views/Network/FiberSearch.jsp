@@ -413,23 +413,25 @@
 													<fieldset class="field_set">
 														<legend style="width: auto;" class="fieldset_legend"></legend>
 														<table id="findNearstManhole" style="display: block; height: 500px; width: 100%; overflow-y: auto;" class="searchable sortable">
-														
-														 <thead>
-															<tr>
-															    <th style="min-width: 30px;"><input type="checkbox" id="selectAllManhole"></th>
-																<th style="min-width: 150px;">Manhole ID</th>
-																<th style="min-width: 150px;">ManholeName</th>
-																<th style="min-width: 100px;">Longitude</th>
-																<th style="min-width: 150px;">Latitude</th>
-																<th style="min-width: 100px;">Linear Distance(km)</th>
-																<th style="min-width: 80px;"colspan="2">Driving Distance(km)</th>
-																<th style="min-width: 80px;">Geo Distance(km)</th>
-																<th style="padding-left:10px;">Select Nearest</th>
-															</tr>
-															 </thead>
-															<tbody id="searchManhTBody">
-															</tbody>
-														</table>
+																												
+																												 <thead>
+																													<tr>
+																													    <th style="min-width: 30px;"><input type="checkbox" id="selectAllManhole"></th>
+																														<th style="min-width: 150px;">Manhole ID</th>
+																														<th style="min-width: 150px;">ManholeName</th>
+																														<th style="min-width: 100px;">Longitude</th>
+																														<th style="min-width: 150px;">Latitude</th>
+																														<th style="min-width: 100px;">Linear Distance(km)</th>
+																														<th style="min-width: 80px;"colspan="2">Driving Distance(km)</th>
+																														<th style="min-width: 80px;">Geo Distance(km)</th>
+																														<th style="padding-left:10px;">Select Nearest</th>
+																													</tr>
+																													 </thead>
+																													<tbody id="searchManhTBody">
+																													</tbody>
+																												</table>
+																															
+													
 													</fieldset>
 												</div>
 											</div>
@@ -812,22 +814,33 @@
     <!-- Path Tab -->
     <div class="tab-pane active" id="pathInfo" role="tabpanel" aria-labelledby="path-tab">
         <p></p>
-        <div class="container-fluid" style="overflow-x: auto;">
+        <div class="container-fluid" style="overflow-x: auto;  border:none;">
             <div id="findNearestManRes"></div>
-            <div class="row" style="height: 500px;">
-                <fieldset class="field_set">
+            <div class="row" style="height: 500px; border:none">
+                <fieldset class="field_set" style=" border:none">
                     <legend class="fieldset_legend" style="width: auto;"></legend>
-                   	<table id="connFiber" style="display: block; height: 500px; overflow-y: auto;">
-												<tr class="fixed-headerr"><th style="min-width: 200px;" class="row-pad">Fiber ID</th>
-													<th style="min-width: 200px;height:50px">Fiber Name</th>
-													<th style="min-width: 200px;height:50px">Tube #</th>
-													<th style="min-width: 200px;height:50px">Tube ID</th>
-													<th style="min-width: 200px;height:50px">Tube Name</th>
-													<th style="min-width: 200px;height:50px">Strand #</th>
-													<th style="min-width: 200px;height:50px">Strand ID</th>
-													<th style="min-width: 200px;height:50px">Strand Name</th>
-												</tr>
-												<tbody id="conFiberId"></tbody></table>
+                    	<table id="connFiber"
+												class="table table-striped table-bordered table-sm"
+												style="display: block; height: 400px; overflow: auto; max-width:850px; margin-right:20px; margin-left:10px">
+												<thead style="background: #E9ECEF;">
+													<tr class="fixed-headerr">
+														
+													<th style="min-width: 80px; text-align: center;">Fiber ID</th>
+                                                    <th style="width: 250px; text-align: center;">Fiber Name</th>
+                                                    <th style="width: 150px; text-align: center;">Tube #</th>
+                                                    <th style="width: 150px; text-align: center;">Tube ID</th>
+                                                    <th style="width: 150px; text-align: center;">Tube Name</th>
+                                                    <th style="width: 150px; text-align: center;">Strand #</th>
+                                                    <th style="width: 200px; text-align: center;">Strand ID</th>
+                                                     <th style="width: 200px; text-align: center;">Strand Name</th>
+
+														
+													</tr>
+												</thead>
+												<tbody>
+												</tbody>
+											</table>
+                
                 </fieldset>
             </div>
         </div>
@@ -842,11 +855,29 @@
             <div class="row" style="height: 500px;">
                 <fieldset class="field_set">
                     <legend class="fieldset_legend" style="width: auto;"></legend>
-                  <table id="connDB" style="display: block; height: 500px; overflow-y: auto;">
-								<tr class="fixed-headerr"><th style="min-width: 350px;" class="row-pad">DB ID</th>
-									<th style="min-width: 350px; height:50px">DB Name</th>
-									<th style="min-width: 350px; height:50px">City</th></tr>
-									<tbody id="conDBId"></tbody></table>
+                    
+                                <legend class="fieldset_legend" style="width: auto;"></legend>
+                                
+                                <table id="connDB"
+												class="table table-striped table-bordered table-sm"
+												style="display: block; height: 400px; overflow: auto; max-width:850px; margin-right:20px; margin-left:10px">
+												<thead style="background: #E9ECEF;">
+													<tr class="fixed-headerr">
+														
+													<th style="min-width: 80px; text-align: center;">DB ID</th>
+                                                    <th style="width: 300px; text-align: center;">DB Name</th>
+                                                    <th style="width: 300px; text-align: center;">City</th>
+                                                 
+
+														
+													</tr>
+												</thead>
+												<tbody>
+												</tbody>
+											</table>
+                
+               
+                  
                 </fieldset>
             </div>
         </div>
@@ -883,17 +914,25 @@
             <div class="row" style="height: 500px;">
                 <fieldset class="field_set">
                     <legend class="fieldset_legend" style="width: auto;"></legend>
-                    <table id="connNode" class="searchable sortable" style="display: block; height: 500px; overflow-y: auto;">
-                        <thead>
-                            <tr class="fixed-headerr">
-                           <tr class="fixed-headerr"><th style="min-width: 350px;" class="row-pad">Node ID</th>
-                                <th style="min-width: 350px; height:50px">Node Name</th>
-                                <th style="min-width: 350px;height:50px">Node Type</th>
-                             
-                            </tr>
-                        </thead>
-                        <tbody id="conNodeId"></tbody>
-                    </table>
+                           
+                                <table id="connNode"
+												class="table table-striped table-bordered table-sm"
+												style="display: block; height: 400px; overflow: auto; max-width:850px; margin-right:20px; margin-left:10px">
+												<thead style="background: #E9ECEF;">
+													<tr class="fixed-headerr">
+														
+													<th style="min-width: 80px; text-align: center;">Node ID</th>
+                                                    <th style="width: 300px; text-align: center;">Node Name</th>
+                                                    <th style="width: 300px; text-align: center;">Node Type</th>
+                                                 
+
+														
+													</tr>
+												</thead>
+												<tbody>
+												</tbody>
+											</table>
+                   
                 </fieldset>
             </div>
         </div>
