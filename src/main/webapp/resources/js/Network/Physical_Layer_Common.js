@@ -5414,23 +5414,59 @@ function openSearchConnected(checkedOption, siteId, selectConnectedSearch, conne
     if (connectedViewOnMap === "true") {
         $("#viewOnMap").prop("checked", true);
 
+	
+
+		idArray=[];
+		        console.log("Collecting IDs of checked checkboxes...");
+				let treeContainerSelector = "#initial_ul_CurrentPhysicalLayer"; // Adjust the selector as needed
+
+				// Traverse `li` elements within the specified tree and collect their IDs
+				$(treeContainerSelector + " li").each(function() {
+					    
+				    let id = $(this).attr("id"); // Get the ID of the current `li`
+				    if (id) { // Check if the ID exists
+				        idArray.push(id);
+						console.log(id);
+			     	if (id.startsWith("MH")) {
+						$("#"+id).children(':checkbox').prop( "checked", true );
+						if (markersManhole[id]) {
+							console.log("uesss");
+						               markersManhole[id].setMap(map);
+															
+						 // Add it to the array
+				    }}}
+										
+					
+				}); 
+				console.log(idArray);
+		var bounds;
+			
+					    var circle = new google.maps.Circle({
+					        center: myLatLng,
+					        radius: 500
+					    });
+
+					    // Get the bounds of the circle
+					    bounds = circle.getBounds();
+
+					    // If the circle is checked, display it
+					    circle.setOptions({
+					        strokeColor: "blue",
+					        strokeOpacity: 0.8,
+					        strokeWeight: 2,
+					        fillColor: "blue",
+					        fillOpacity: 0.1,
+					        map,
+					        clickable: false
+					    });
+					    displayZoneMap(circle);
+					    map.setCenter(myLatLng);
+					    map.fitBounds(bounds);
+				
+		
+		
         // Create a circle around the location
-        const circ = new google.maps.Circle({
-            strokeColor: "blue",
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: "blue",
-            fillOpacity: 0.1,
-            map,
-            center: myLatLng,
-            radius: 500
-        });
-
-        displayZoneMap(circ);
-
-        // Adjust map view
-        map.setCenter(myLatLng);
-        map.fitBounds(circ.getBounds());
+      
     } else {
         $("#viewOnMap").prop("checked", false);
     }
@@ -5618,40 +5654,40 @@ function calculateDistanceAuxTube(sLat,sLng,dLat,dLng,tId,cId,indexForAuxs){
 	}
 	
 	function getDrivingDistance(e) {
-		if (typeof(e) == "object") {
-			var directionsService = new google.maps.DirectionsService();
-			
-			var lat = $(e).parent().parent().children('td[name="LATT"]').children('input').val();
-			var lng = $(e).parent().parent().children('td[name="LONGG"]').children('input').val();
-			
-			const originept = {lat: parseFloat(parseFloat($("#closestLatPoint").val())), lng: parseFloat(parseFloat($("#closestLongPoint").val()))};
-			const nextpt = {lat: parseFloat(lat), lng: parseFloat(lng)};
-			var request  = {
-				origin: originept,
-				destination: nextpt,
-				travelMode  : google.maps.DirectionsTravelMode.DRIVING
-			}
-			directionsService.route(request, function(response, status) {
-				if ( status == google.maps.DirectionsStatus.OK ) {
-					var resultt= ( response.routes[0].legs[0].distance.value) /1000 ;
-
-				   }
-				else {
-					resultt= "no Root";
-					//alert("no resultt ");
+			if (typeof(e) == "object") {
+				var directionsService = new google.maps.DirectionsService();
+				
+				var lat = $(e).parent().parent().children('td[name="LATT"]').children('input').val();
+				var lng = $(e).parent().parent().children('td[name="LONGG"]').children('input').val();
+				
+				const originept = {lat: parseFloat(parseFloat($("#closestLatPoint").val())), lng: parseFloat(parseFloat($("#closestLongPoint").val()))};
+				const nextpt = {lat: parseFloat(lat), lng: parseFloat(lng)};
+				var request  = {
+					origin: originept,
+					destination: nextpt,
+					travelMode  : google.maps.DirectionsTravelMode.DRIVING
 				}
-				$(e).parent().parent().children('td[name="DDistanceB"]').children('button').hide();
-				$(e).parent().parent().children('td[name="DDistance"]').children('input').show();
-				$(e).parent().parent().children('td[name="DDistance"]').children('label').empty();
-				$(e).parent().parent().children('td[name="DDistance"]').children('label').append(resultt);
-				makeAllSortable();
-			  });
-			  
-		} else {
-			return false;
-		}
+				directionsService.route(request, function(response, status) {
+					if ( status == google.maps.DirectionsStatus.OK ) {
+						var resultt= ( response.routes[0].legs[0].distance.value) /1000 ;
 
-	}
+					   }
+					else {
+						resultt= "no Root";
+						//alert("no resultt ");
+					}
+					$(e).parent().parent().children('td[name="DDistanceB"]').children('button').hide();
+					$(e).parent().parent().children('td[name="DDistance"]').children('input').show();
+					$(e).parent().parent().children('td[name="DDistance"]').children('label').empty();
+					$(e).parent().parent().children('td[name="DDistance"]').children('label').append(resultt);
+					makeAllSortable();
+				  });
+				  
+			} else {
+				return false;
+			}
+
+		}
 
 	
 	function sortTable(table, col, reverse) {
@@ -5776,29 +5812,19 @@ function appendConnectedTable(result) {
     let bpPath = result[5] ? JSON.parse(result[5]) : [];
     let markupConFiber = "";
     let markupConDb = "";
-	let markupConNode = "";
+	let markupConNode= "";
 
     // Handle empty results
     if (fibers.length === 0 && fpPath.length === 0 && bpPath.length === 0) {
         markupConFiber = "<tr style='height:20px;'><td colspan='10'>There is no result</td></tr>";
     } else {
-        fibers.forEach((fiber) => {
+        fibers.forEach((fiber, indexFiber) => {
             const fiberId = sanitizeValue(fiber[4]);
             const fiberName = sanitizeValue(fiber[13]);
             const relatedTubes = tubes.filter(tube => sanitizeValue(tube[12]) === fiberId);
 
             if (relatedTubes.length === 0) {
-                markupConFiber += `
-                    <tr>
-                        <td style='min-width:200px; height:50px'>${fiberId}</td>
-                        <td style='min-width:200px; height:50px'>${fiberName}</td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-                    </tr>`;
+                markupConFiber += createFiberRow(indexFiber, fiberId, fiberName);
             } else {
                 relatedTubes.forEach((tube) => {
                     const tubeId = sanitizeValue(tube[0]);
@@ -5807,31 +5833,13 @@ function appendConnectedTable(result) {
                     const relatedStrands = strands.filter(strand => sanitizeValue(strand[12]) === fiberId);
 
                     if (relatedStrands.length === 0) {
-                        markupConFiber += `
-                            <tr>
-                                <td style='min-width:200px; height:50px'>${fiberId}</td>
-                                <td style='min-width:200px; height:50px'>${fiberName}</td>
-                                <td style='min-width:200px; height:50px'>${tubeNumber}</td>
-                                <td style='min-width:200px; height:50px'>${tubeId}</td>
-                                <td style='min-width:200px; height:50px'>${tubeName}</td>
-                            </tr>`;
+                        markupConFiber += createFiberRow(indexFiber, fiberId, fiberName, tubeId, tubeNumber, tubeName);
                     } else {
                         relatedStrands.forEach((strand) => {
-                            const strandNumber = sanitizeValue(strand[15]);
                             const strandId = sanitizeValue(strand[0]);
                             const strandName = sanitizeValue(strand[14]);
-
-                            markupConFiber += `
-                                <tr>
-                                    <td style='min-width:200px; height:50px'>${fiberId}</td>
-                                    <td style='min-width:200px; height:50px'>${fiberName}</td>
-                                    <td style='min-width:200px; height:50px'>${tubeNumber}</td>
-                                    <td style='min-width:200px; height:50px'>${tubeId}</td>
-                                    <td style='min-width:200px; height:50px'>${tubeName}</td>
-                                    <td style='min-width:200px; height:50px'>${strandNumber}</td>
-                                    <td style='min-width:200px; height:50px'>${strandId}</td>
-                                    <td style='min-width:200px; height:50px'>${strandName}</td>
-                                </tr>`;
+                            const strandNumber = sanitizeValue(strand[15]);
+                            markupConFiber += createFiberRow(indexFiber, fiberId, fiberName, tubeId, tubeNumber, tubeName, strandId, strandNumber, strandName);
                         });
                     }
                 });
@@ -5840,7 +5848,7 @@ function appendConnectedTable(result) {
 
         // Append additional data for fpPath and bpPath
         [fpPath, bpPath].forEach(path => {
-            path.forEach((fiber) => {
+            path.forEach((fiber, indexFiber) => {
                 const fiberId = sanitizeValue(fiber[0]);
                 const fiberName = sanitizeValue(fiber[1]);
                 const tubeNumber = sanitizeValue(fiber[2]);
@@ -5849,47 +5857,49 @@ function appendConnectedTable(result) {
                 const strandNumber = sanitizeValue(fiber[5]);
                 const strandId = sanitizeValue(fiber[6]);
                 const strandName = sanitizeValue(fiber[7]);
-
-                markupConFiber += `
-                    <tr>
-                        <td style='min-width:200px; height:50px'>${fiberId}</td>
-                        <td style='min-width:200px; height:50px'>${fiberName}</td>
-                        <td style='min-width:200px; height:50px'>${tubeNumber}</td>
-                        <td style='min-width:200px; height:50px'>${tubeId}</td>
-                        <td style='min-width:200px; height:50px'>${tubeName}</td>
-                        <td style='min-width:200px; height:50px'>${strandNumber}</td>
-                        <td style='min-width:200px; height:50px'>${strandId}</td>
-                        <td style='min-width:200px; height:50px'>${strandName}</td>
-                    </tr>`;
+                markupConFiber += createFiberRow(indexFiber, fiberId, fiberName, tubeId, tubeNumber, tubeName, strandId, strandNumber, strandName);
             });
         });
     }
 
     // Append fibers to table
-    $("#conFiberId").append(markupConFiber);
+    $("#connFiber > tbody").append(markupConFiber);
 
-    // Handle database result
-    if (!result[3] || result[3].length === 0) {
-        markupConDb = "<tr style='height:20px;'><td colspan='3'>There is no result</td></tr>";
-    } else {
-        result[3].forEach((res) => {
-            const resCol1 = sanitizeValue(res[0]);
-            const resCol2 = sanitizeValue(res[3]);
-            const resCol3 = sanitizeValue(res[7]);
+	// Handle database result
+	 if (!result[3] || result[3].length === 0) {
+	     markupConDb = "<tr style='height:20px;'><td colspan='3'>There is no result</td></tr>";
+	 } else {
+	     result[3].forEach((res) => {
+	         const resCol1 = sanitizeValue(res[0]);
+	         const resCol2 = sanitizeValue(res[3]);
+	         const resCol3 = sanitizeValue(res[7]);
+	const indexFiber= 0;
+			markupConDb += 
+			`<tr id="fiber_Row${indexFiber}" style="height: 40px;">
+						    <td style="min-width:250px;">
+						        <input id="fiberId${indexFiber}" class="form-control text-input"
+						               style="width:100%;  position:relative; background-color: white;"
+						               value="${resCol1}" readonly>
+						    </td>
+						    <td style="min-width:250px;">
+						        <input id="fiberName${indexFiber}" class="form-control text-input"
+						               style="width:100%; position:relative; background-color: white;"
+						               value="${resCol2}" readonly>
+						    </td>
+						    <td style="min-width:100px;">
+						        <input id="fiberStatus${indexFiber}" class="form-control text-input"
+						               style="width:100%;  position:relative; text-align:center; background-color: white;"
+						               value="${resCol3}"  readonly>
+						    </td>
+						  </tr>`;
 
-            markupConDb += `
-                <tr>
-                    <td style='min-width:150px; height:50px' class='row-pad'>${resCol1}</td>
-                    <td style='min-width:150px; height:50px'>${resCol2}</td>
-                    <td style='min-width:500px; height:50px'>${resCol3}</td>
-                </tr>`;
-        });
-    }
+	  });
+	 }
 
-    // Append database results to table
-    $("#conDBId").append(markupConDb);
-	
-	
+	 // Append database results to table
+	 $("#connDB").append(markupConDb);
+
+
 	if (!result[6] || result[6].length === 0) {
 	       markupConNode = "<tr style='height:20px;'><td colspan='3'>There is no result</td></tr>";
 	   } else {
@@ -5897,19 +5907,82 @@ function appendConnectedTable(result) {
 	           const id = sanitizeValue(res[7]);
 	           const name = sanitizeValue(res[1]);
 	           const type = sanitizeValue(res[8]);
+			   const indexFiber= 0;
+			markupConNode += 
+			   			`<tr id="fiber_Row${indexFiber}" style="height: 40px;">
+			   						    <td style="min-width:250px;">
+			   						        <input id="fiberId${indexFiber}" class="form-control text-input"
+			   						               style="width:100%; position:relative; background-color: white;"
+			   						               value="${id}" readonly>
+			   						    </td>
+			   						    <td style="min-width:250px;">
+			   						        <input id="fiberName${indexFiber}" class="form-control text-input"
+			   						               style="width:100%; position:relative; background-color: white;"
+			   						               value="${name}" readonly>
+			   						    </td>
+			   						    <td style="min-width:100px;">
+			   						        <input id="fiberStatus${indexFiber}" class="form-control text-input"
+			   						               style="width:100%;  position:relative; text-align:center; background-color: white;"
+			   						               value="${type}"  readonly>
+			   						    </td>
+			   						  </tr>`;
 
-	           markupConNode += `
-	               <tr >
-	                   <td style='min-width:150px; height:50px' class='row-pad'>${id}</td>
-	                   <td style='min-width:150px;  height:50px''>${name}</td>
-	                   <td style='min-width:500px;  height:50px''>${type}</td>
-	               </tr>`;
+
 	       });
 	   }
 
 	   // Append database results to table
-	   $("#conNodeId").append(markupConNode);
-	   console.log(markupConNode);
+	   $("#connNode").append(markupConNode);
+	  
+}
+
+// Helper function to create fiber rows
+function createFiberRow(indexFiber, fiberId, fiberName, tubeId = "", tubeNumber = "", tubeName = "", strandId = "", strandNumber = "", strandName = "") {
+    return `
+	<tr id="fiber_Row${indexFiber}" style="height: 40px;">
+	    <td style="min-width:250px;">
+	        <input id="fiberId${indexFiber}" class="form-control text-input"
+	               style="width:100%; position:relative; background-color: white;"
+	               value="${fiberId}" readonly>
+	    </td>
+	    <td style="min-width:250px;">
+	        <input id="fiberName${indexFiber}" class="form-control text-input"
+	               style="width:100%; position:relative; background-color: white;"
+	               value="${fiberName}" readonly>
+	    </td>
+	    <td style="min-width:100px;">
+	        <input id="fiberStatus${indexFiber}" class="form-control text-input"
+	               style="width:100%; position:relative; text-align:center; background-color: white;"
+	               value="${tubeNumber || ""}" readonly>
+	    </td>
+	    <td style="min-width:250px;">
+	        <input id="fiberLongitude${indexFiber}" class="form-control text-input"
+	               style="width:100%; position:relative; background-color: white;"
+	               value="${tubeId || ""}" readonly>
+	    </td>
+	    <td style="min-width:250px;">
+	        <input id="fiberLatitude${indexFiber}" class="form-control text-input"
+	               style="width:100%; position:relative; background-color: white;"
+	               value="${tubeName || ""}" readonly>
+	    </td>
+	    <td style="min-width:100px;">
+	        <input id="fiberLength${indexFiber}" class="form-control text-input"
+	               style="width:100%; position:relative; text-align:center; background-color: white;"
+	               value="${strandNumber || ""}" readonly>
+	    </td>
+	    <td style="min-width:250px;">
+	        <input id="fiberDrivingDistance${indexFiber}" class="form-control text-input"
+	               style="width:100%; position:relative; background-color: white;"
+	               value="${strandId || ""}" readonly>
+	    </td>
+	    <td style="min-width:250px;">
+	        <input id="fiberGeoDistance${indexFiber}" class="form-control text-input"
+	               style="width:100%; position:relative; background-color: white;"
+	               value="${strandName || ""}" readonly>
+	    </td>
+	</tr>
+
+`;
 }
 
 	
