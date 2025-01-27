@@ -36,7 +36,7 @@ $("#Multy_auxiliary > tbody").find('input[name="record"]').each(function(){
 			     urlString += "&closestDisRange="+closestDisRange+"";
 			     urlString += "&nop="+$("#noP_Multy").val()+"";
 			     urlString += "&updateModfUser="+updateModfUser;
-				 window.location.href = getContext()+"/NetworkPhysicalLayer?Checked="+checkedOption+urlString;  
+				 window.location.href = getContext()+"/findNearestMulty?Checked="+checkedOption+urlString;  
 		 }
 		}); 
 			 }); 
