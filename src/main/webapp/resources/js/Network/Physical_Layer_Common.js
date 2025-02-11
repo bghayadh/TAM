@@ -14896,6 +14896,7 @@ function getAllSurveyArrays(tableId,surveyArray) {
 	  }	
 }
 function viewOnMap(checkbox, ptList, ptData) {
+	console.log(ptList);
 	 checkbox = checkbox.checked;
     let ManholeIds = [];
     let HandholeIds = [];
@@ -14944,10 +14945,13 @@ function viewOnMap(checkbox, ptList, ptData) {
 	        $("#" + id).children('input:checkbox').prop('checked', true);
 	        markerObj[id].setMap(mapObj);
 	        if (markerType === "DistBoard") {
+				removeDistributionBoardMarker(id, markerObj);
 	            addDistributionBoardMarker(id, markerObj);
 	        } else if (markerType === "NodeList") {
+				removeNodeMarker(id, markerObj);
 	            addNodeMarker(id, markerObj);
 	        } else {
+				clusterObj.removeMarker(markerObj[id]);
 	            clusterObj.addMarker(markerObj[id]);
 	        }
 	    } else if (!checkbox && isChecked) {
@@ -15039,6 +15043,8 @@ function viewOnMap(checkbox, ptList, ptData) {
                     'blue',
                     13
                 );
+				fiberArray[fiberId].setMap(null);
+				fiberArray[fiberId].mapLabel.setMap(null);
                 fiberArray[fiberId].setMap(map);
             } else if (!checkbox && isChecked) {
                     $("#" + fiberId).children('input:checkbox').prop('checked', false);
@@ -15060,6 +15066,8 @@ function viewOnMap(checkbox, ptList, ptData) {
 			             $("#" + tubeId).children('input:checkbox').prop('checked', false);
 			             $("#" + tubeId).children('input:checkbox').prop('checked', true);
 			             buildPath(tubeId,window["mapPoints_"+tubeId],tubeArray,allTubes,"Tube",'green',0.7,3.3,'green',0);
+						 tubeArray[tubeId].setMap(null);
+						 tubeArray[tubeId].mapLabel.setMap(null);
 						 tubeArray[tubeId].setMap(map);
 
 			         }else if (!checkbox && isChecked) {
@@ -15080,6 +15088,8 @@ function viewOnMap(checkbox, ptList, ptData) {
 						             $("#" + strandId).children('input:checkbox').prop('checked', false);
 						             $("#" + strandId).children('input:checkbox').prop('checked', true);
 									 buildPath(strandId,window["mapPoints_"+strandId],strandArray,allStrands,"Strand",'purple',0.7,2.8,'purple',0);
+									 strandArray[strandId].setMap(null);
+								     strandArray[strandId].mapLabel.setMap(null);
 									 strandArray[strandId].setMap(map);
 									 							
 						         } else if (!checkbox && isChecked) {
