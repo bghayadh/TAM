@@ -787,7 +787,7 @@
 										<div class="col-sm-3">
 											<div class="input-group-prepend">
 												<span style="font-size: 12px; background-color: white;" class="input-group-text">View on Map <label class="switch"> 
-												<input type="checkbox" id="viewOnMap" value="false"> <span class="slider"></span>
+												<input type="checkbox" id="viewOnMap" value="off" > <span class="slider"></span>
 												</label></span></div></div>
 										<div class="col-sm-3"><div class="form-group"><div class="input-group-prepend">
 											<span style="background-color: white;font-size: 12px;" class="input-group-text" ><b>Get Related Points</b> 
