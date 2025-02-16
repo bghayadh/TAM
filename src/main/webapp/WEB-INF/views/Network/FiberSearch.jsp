@@ -596,7 +596,9 @@
 													<input type='checkbox' id="circleRange_multy" style='position: relative; margin-left: 10px' checked  ></span>
 												</div></div></div>
 								
-									<div class="col-sm-1"></div>
+									<div  class="col-sm-1">
+									<button   id="uncheckAll" class="btn btn-primary" style="color: white; font-size: 13px; height: 40px; width:100px;">Uncheck All</button>
+		</div>
 									<div class="col-sm-3">
 									<div class="form-group"><div class="input-group-prepend">
 									
@@ -959,7 +961,7 @@
 					<div class="modal-footer"></div></div></div></div></div>
 
 <div class="container">
-		<div id="siteModalAuxiliary" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  data-keyboard="false" data-backdrop="static">
+		<div id="siteModalAuxiliary" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"   data-keyboard="false" data-backdrop="static">
 			<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
 				<div class="modal-content" style="height: 600px;">
 				
@@ -1006,56 +1008,69 @@
 						<div class="tab-content" style="min-height: 180px">
 							<div class="tab-pane active" id="manP_multy" role="tabpanel" aria-labelledby="manPoint-tab_multy">
 								<p></p>
-											<div class="container-fluid">
-												<div id="findNearestManRes_multy"></div>
-												<div class="row" style="height: 300px;">
-													<fieldset class="field_set"  style="overflow-y: auto;">
-														<legend style="width: auto;" class="fieldset_legend"></legend>
-														<table id="findNearstManhole_multy" style="display: block; height: 150px; " class="searchable sortable">
-														 <thead>
-															<tr>
-															    <th style="min-width: 30px;"><input type="checkbox" id="selectAllManhole_multy"></th>
-																<th style="min-width: 150px;" >Manhole ID</th>
-																<th style="min-width: 150px;">ManholeName</th>
-																<th style="min-width: 100px;">Longitude</th>
-																<th style="min-width: 150px;">Latitude</th>
-																<th style="min-width: 100px;">Distance(km)</th>
-																<th style="min-width: 80px;"colspan="2">Driving Distance(km)</th>
-															</tr>
-															 </thead>
-															<tbody id="searchManhTBody_multy">
-															</tbody>
-														</table>
-													</fieldset>
-												</div>
+										
+										 <div class="container-fluid" style="overflow-x: auto;  border:none;">
+           
+												<div id="findNearestManRes_multy" style="border:none"></div>
+												            <div class="row" style="height: 500px; border:none">
+                <fieldset >
+                    <legend class="fieldset_legend" style="width: auto;"></legend>
+                    	<table id="findNearstManhole_multy"
+												class="table table-striped table-bordered table-sm"
+												style="display: block; height: 400px; overflow: auto; max-width:850px; margin-right:20px; margin-left:px">
+												<thead style="background: #E9ECEF;">
+													<tr class="fixed-headerr">
+														
+																<th style="min-width: 30px;"><input type="checkbox" id="selectAllManhole_multy"></th>
+													<th style="min-width: 80px; text-align: center;">Manhole ID</th>
+                                                    <th style="width: 250px; text-align: center;">Manhole Name</th>
+                                                    <th style="width: 150px; text-align: center;">Longitude</th>
+                                                    <th style="width: 150px; text-align: center;">Latitude</th>
+                                                    <th style="width: 150px; text-align: center;">Distance(km)</th>
+                                                    <th style="width: 150px; text-align: center;">Driving Distance(km)</th>
+                                                 
+														
+													</tr>
+												</thead>
+												<tbody id= "searchManhTBody_multy">
+												</tbody>
+											</table>
+                
+                </fieldset>
+            </div>
 											</div>
 									        <div id="manholeTotal" Style="Padding-top: 25px;"><b>Total Manholes:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="totalManhole_multy" name="totalManhole_multy" readonly>	 </div>
 										</div>
 										<div class="tab-pane" id="handP_multy" role="tabpanel"
 											aria-labelledby="handPoint-tab_multy">
 											<p></p>
-											<div class="container-fluid">
-												<div id="findNearestHandRes_Multy"></div>
-												<div class="row" style="height: 300px;">
-													<fieldset class="field_set" style="overflow-y: auto;">
-														<legend style="width: auto;" class="fieldset_legend"></legend>
-														<table id="findNearstHandhole_multy" class="searchable sortable"
-															style="display: block; height: 150px;">
-															 <thead>
-															<tr>
-																<th style="min-width: 30px;"><input type="checkbox" id="selectAllHandhole_multy"></th>
-																<th style="min-width: 150px;" >Handhole ID</th>
-																<th style="min-width: 150px;">HandholeName</th>
-																<th style="min-width: 100px;">Longitude</th>
-																<th style="min-width: 100px;">Latitude</th>
-																<th style="min-width: 100px;">Distance(Km)</th>
-																<th style="min-width: 100px;" colspan="2">Driving Distance(km)</th>
-																
-															</tr>
-															</thead>
-															
-															<tbody id="searchHanhTBody_multy">
-															</tbody>
+											
+											 <div class="container-fluid" style="overflow-x: auto;  border:none;">
+           
+												<div id="findNearestHandRes_Multy" style="border:none"></div>
+												            <div class="row" style="height: 500px; border:none">
+                <fieldset >
+                    <legend class="fieldset_legend" style="width: auto;"></legend> 
+													<table id="findNearstHandhole_multy"
+												class="table table-striped table-bordered table-sm"
+												style="display: block; height: 400px; overflow: auto; max-width:850px; margin-right:20px; margin-left:px">
+												<thead style="background: #E9ECEF;">
+													<tr class="fixed-headerr">
+														
+													<th style="min-width: 30px;"><input type="checkbox" id="selectAllHandhole_multy"></th>
+													<th style="min-width: 80px; text-align: center;">Handhole ID</th>
+                                                    <th style="width: 250px; text-align: center;">Handhole Name</th>
+                                                    <th style="width: 150px; text-align: center;">Longitude</th>
+                                                    <th style="width: 150px; text-align: center;">Latitude</th>
+                                                    <th style="width: 150px; text-align: center;">Distance(km)</th>
+                                                    <th style="width: 150px; text-align: center;">Driving Distance(km)</th>
+                                                 
+														
+													</tr>
+												</thead>
+												<tbody id= "searchHanhTBody_multy">
+												</tbody>
+								
 														</table>
 													</fieldset>
 
@@ -1067,59 +1082,77 @@
 										<div class="tab-pane" id="dboardP_multy" role="tabpanel"
 											aria-labelledby="dboardPoint-tab_multy">
 											<p></p>
-											<div class="container-fluid">
-												<div id="findNearestDbRes_Multy"></div>
-												<div class="row" style="height: 300px;">
-													<fieldset class="field_set" style="overflow-y: auto;">
-														<legend style="width: auto;" class="fieldset_legend"></legend>
-														<table id="findNearstDB_multy" style="display: block; height: 150px;">
-														 <thead>															
-															<tr>
-																<th style="min-width: 30px;"><input type="checkbox" id="selectAllDB_multy"></th>
-																<th style="min-width: 150px;" >DBoard ID</th>
-																<th style="min-width: 150px;">DBoard Name</th>
-																<th style="min-width: 100px;">Longitude</th>
-																<th style="min-width: 100px;">Latitude</th>
-																<th style="min-width: 100px;">Distance(km)</th>
-																<th style="min-width: 100px;" colspan="2">Driving Distance(km)</th>								
-															</tr>
-															 </thead>															
-															<tbody id="searchDBoardTBody_multy">
-															</tbody>
+											 <div class="container-fluid" style="overflow-x: auto;  border:none;">
+           
+												<div id="findNearestDbRes_Multy" style="border:none"></div>
+												            <div class="row" style="height: 500px; border:none">
+                <fieldset >
+                    <legend class="fieldset_legend" style="width: auto;"></legend> 
+													<table id="findNearstDB_multy"
+												class="table table-striped table-bordered table-sm"
+												style="display: block; height: 400px; overflow: auto; max-width:850px; margin-right:20px; margin-left:px">
+												<thead style="background: #E9ECEF;">
+													<tr class="fixed-headerr">
+														
+													<th style="min-width: 30px;"><input type="checkbox" id="selectAllDB_multy"></th>
+													<th style="min-width: 80px; text-align: center;">DBoard ID</th>
+                                                    <th style="width: 250px; text-align: center;">DBoard Name</th>
+                                                    <th style="width: 150px; text-align: center;">Longitude</th>
+                                                    <th style="width: 150px; text-align: center;">Latitude</th>
+                                                    <th style="width: 150px; text-align: center;">Distance(km)</th>
+                                                    <th style="width: 150px; text-align: center;">Driving Distance(km)</th>
+                                                 
+														
+													</tr>
+												</thead>
+												<tbody id= "searchDBoardTBody_multy">
+												</tbody>
+								
 														</table>
 													</fieldset>
-												 </div>
+
+												</div>
 											</div>
-                                            <div id="DbTotal" Style="Padding-top: 25px;"><b>Total Distribution Boards:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="totalDB_Multy" name="totalDB_Multy" readonly>										
+										
+										    <div id="DbTotal" Style="Padding-top: 25px;"><b>Total Distribution Boards:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="totalDB_Multy" name="totalDB_Multy" readonly>										
                                             </div>
 										</div>
 										
 												<div class="tab-pane" id="nodes_multy" role="tabpanel"
 											aria-labelledby="node-tab_multy">
 											<p></p>
-											<div class="container-fluid">
-												<div id="findNearestNodeRes_Multy"></div>
-												<div class="row" style="height: 300px;">
-													<fieldset class="field_set" style="overflow-y: auto;">
-														<legend style="width: auto;" class="fieldset_legend"></legend>
-														<table id="findNearstNode_multy" style="display: block; height: 150px;">
-														 <thead>															
-															<tr>
-																<th style="min-width: 30px;"><input type="checkbox" id="selectAllNode_multy"></th>
-																<th style="min-width: 150px;" >Node ID</th>
-																<th style="min-width: 150px;">Node Name</th>
-																<th style="min-width: 100px;">Longitude</th>
-																<th style="min-width: 100px;">Latitude</th>
-																<th style="min-width: 100px;">Distance(km)</th>
-																<th style="min-width: 100px;" colspan="2">Driving Distance(km)</th>								
-															</tr>
-															 </thead>															
-															<tbody id="searchNodeTBody_multy">
-															</tbody>
+											 <div class="container-fluid" style="overflow-x: auto;  border:none;">
+           
+												<div id="findNearestNodeRes_Multy" style="border:none"></div>
+												            <div class="row" style="height: 500px; border:none">
+                <fieldset >
+                    <legend class="fieldset_legend" style="width: auto;"></legend> 
+													<table id="findNearstNode_multy"
+												class="table table-striped table-bordered table-sm"
+												style="display: block; height: 400px; overflow: auto; max-width:850px; margin-right:20px; margin-left:px">
+												<thead style="background: #E9ECEF;">
+													<tr class="fixed-headerr">
+														
+													<th style="min-width: 30px;"><input type="checkbox" id="selectAllNode_multy"></th>
+													<th style="min-width: 80px; text-align: center;">Node ID</th>
+                                                    <th style="width: 250px; text-align: center;">Node Name</th>
+                                                    <th style="width: 150px; text-align: center;">Longitude</th>
+                                                    <th style="width: 150px; text-align: center;">Latitude</th>
+                                                    <th style="width: 150px; text-align: center;">Distance(km)</th>
+                                                    <th style="width: 150px; text-align: center;">Driving Distance(km)</th>
+                                                 
+														
+													</tr>
+												</thead>
+												<tbody id= "searchNodeTBody_multy">
+												</tbody>
+								
 														</table>
 													</fieldset>
-												 </div>
+
+												</div>
 											</div>
+								
                                             <div id="NodeTotal" Style="Padding-top: 25px;"><b>Total Nodes:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="totalNode_Multy" name="totalNode_Multy" readonly>										
                                             </div>
 										</div>
@@ -1127,53 +1160,109 @@
 
 										<div class="tab-pane" id="fPaths_multy" role="tabpanel" aria-labelledby="fPaths-tab_multy">
 											<p></p>
-											<div class="container-fluid">
-											<div id="strandMulty"></div>
-											<div class="row" style="height: 200px;">
-										<fieldset class="field_set" style="overflow-y: auto;">
-											<legend style="width: auto;" class="fieldset_legend"></legend>
-											<table id="nearestStrand" style="display: block; height: 100px;">
-												<tr>
-													<th style="min-width: 150px;" class="row-pad">Strand ID</th>
-													<th style="min-width: 150px;">StrandName</th>
-													<th style="min-width: 350px;">Source</th>
-													<th style="min-width: 350px;">Destination</th>
-												</tr>
-												<tbody id="nearStrandId_multy">
+											
+											
+													 <div class="container-fluid" style="overflow-x: auto;  border:none;">
+           
+												<div id="strandMulty" style="border:none"></div>
+												            <div class="row" style="height: 200px; border:none">
+                <fieldset >
+                    <legend class="fieldset_legend" style="width: auto;"></legend> 
+													<table id="nearestStrand"
+												class="table table-striped table-bordered table-sm"
+												style="display: block; height: 200px; overflow: auto; max-width:850px; margin-right:20px; margin-left:px">
+												<thead style="background: #E9ECEF;">
+													<tr class="fixed-headerr">
+														
+													<th style="min-width: 30px;"><input type="checkbox" id="selectAllStrand_multy"></th>
+													<th style="min-width: 80px; text-align: center;">Strand ID</th>
+                                                    <th style="width: 250px; text-align: center;">Strand Name</th>
+                                                    <th style="width: 150px; text-align: center;">Source</th>
+                                                    <th style="width: 150px; text-align: center;">Destination</th>
+                                               
+                                                 
+														
+													</tr>
+												</thead>
+												<tbody id= "nearStrandId_multy">
 												</tbody>
-											</table>
-										</fieldset>
-									</div>
-									<br>
-									<div id="tubeMulty"></div>
-									<div class="row" style="height: 200px;">
-										<fieldset class="field_set" style="overflow-y: auto;">
-											<legend style="width: auto;" class="fieldset_legend"></legend>
-											<table id="nearestTube" style="display: block; height: 100px;">
-												<tr>
-													<th style="min-width: 150px;" class="row-pad">Tube ID</th>
-													<th style="min-width: 150px;">TubeName</th>
-													<th style="min-width: 350px;">Source</th>
-													<th style="min-width: 350px;">Destination</th>
-												</tr>
-												<tbody id="nearTubeId_multy">
+								
+														</table>
+													</fieldset>
+
+												</div>
+												<br>
+												
+													<div id="tubeMulty" style="border:none"></div>
+												            <div class="row" style="height: 200px; border:none">
+                <fieldset >
+                    <legend class="fieldset_legend" style="width: auto;"></legend> 
+													<table id="nearestTube"
+												class="table table-striped table-bordered table-sm"
+												style="display: block; height: 200px; overflow: auto; max-width:850px; margin-right:20px; margin-left:px">
+												<thead style="background: #E9ECEF;">
+													<tr class="fixed-headerr">
+														
+													<th style="min-width: 30px;"><input type="checkbox" id="selectAllTube_multy"></th>
+													<th style="min-width: 80px; text-align: center;">Tube ID</th>
+                                                    <th style="width: 250px; text-align: center;">Tube Name</th>
+                                                    <th style="width: 150px; text-align: center;">Source</th>
+                                                    <th style="width: 150px; text-align: center;">Destination</th>
+                                               
+                                                 
+														
+													</tr>
+												</thead>
+												<tbody id= "nearTubeId_multy">
 												</tbody>
-											</table>
-										</fieldset>
-									</div>
-									<br>
-									<div class="row" style="height: 200px;">
-									<div id="fiberMulty"></div>
-										<fieldset class="field_set" style="overflow-y: auto;">
-											<legend style="width: auto;" class="fieldset_legend"></legend>
-											<table id="nearestFiber" style="display: block; height: 100px;">
-												<tr>
-													<th style="min-width: 150px;" class="row-pad">Fiber ID</th>
-													<th style="min-width: 150px;">FiberName</th>
-													<th style="min-width: 350px;">Source</th>
-													<th style="min-width: 350px;">Destination</th>
-												</tr>
-												<tbody id="nearFiberId_multy"></tbody></table></fieldset></div></div></div></div></div></div>
+								
+														</table>
+													</fieldset>
+
+												</div>
+												<br>
+												<div id="fiberMulty" style="border:none"></div>
+												            <div class="row" style="height: 500px; border:none">
+                <fieldset >
+                    <legend class="fieldset_legend" style="width: auto;"></legend> 
+													<table id="nearestFiber"
+												class="table table-striped table-bordered table-sm"
+												style="display: block; height: 400px; overflow: auto; max-width:850px; margin-right:20px; margin-left:px">
+												<thead style="background: #E9ECEF;">
+													<tr class="fixed-headerr">
+														
+													<th style="min-width: 30px;"><input type="checkbox" id="selectAllFiber_multy"></th>
+													<th style="min-width: 80px; text-align: center;">Fiber ID</th>
+                                                    <th style="width: 250px; text-align: center;">Fiber Name</th>
+                                                    <th style="width: 150px; text-align: center;">Source</th>
+                                                    <th style="width: 150px; text-align: center;">Destination</th>
+                                               
+                                                 
+														
+													</tr>
+												</thead>
+												<tbody id= "nearFiberId_multy">
+												</tbody>
+								
+														</table>
+													</fieldset>
+
+												</div>
+												
+												
+												
+												
+												
+												
+											</div>
+											
+											
+											
+											
+											
+											
+											
+										</div></div></div></div>
 					<div class="modal-footer"></div></div></div></div></div>
 					
  
