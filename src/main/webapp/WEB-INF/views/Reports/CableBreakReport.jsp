@@ -1142,7 +1142,7 @@ $("#SetOTDRCoordinate").on('click',function(){
 
 	    if (isNaN(OTDRLong) || isNaN(OTDRLat) || isNaN(OTDRDistance)) {
 	        console.log("Error: OTDR coordinates or distance are missing or invalid.");
-	        alert("OTDR coordinates or distance are missing or invalid.")
+	        alert("OTDR coordinates or distance are missing or invalid.");
 	        return;
 	    }
 
@@ -1157,7 +1157,6 @@ $("#SetOTDRCoordinate").on('click',function(){
 	        dataType: "json",
 	        success: function (data) {
 	            if (data && data.fiberAux) {
-	             
 	                const distances = [];
 
 	                // Loop through each fiberAux point and calculate the distance
@@ -1171,26 +1170,27 @@ $("#SetOTDRCoordinate").on('click',function(){
 	                    distances.push({ seq: seq, distance: distance });
 	                });
 
-	                // Sort the distances array
+	                // Sort by nearest distance
 	                distances.sort((a, b) => a.distance - b.distance);
-	              
+
 	                // Get the two closest points
 	                const closestPoints = distances.slice(0, 2);
 	                const seq1 = closestPoints[0].seq;
 	                const seq2 = closestPoints[1].seq;
 
-	           
-	                // Choose the sequence
+	                // Determine the chosen sequence
 	                const chosenSeq = withSequence ? Math.max(seq1, seq2) : Math.min(seq1, seq2);
-	            
-	                // Create a new list based on the chosen sequence
+
+	                // Create a new list based on direction
 	                let newList = [];
 	                if (withSequence) {
 	                    newList = data.fiberAux.filter(point => point[2] >= chosenSeq);
 	                } else {
 	                    newList = data.fiberAux.filter(point => point[2] <= chosenSeq);
+	                    newList.reverse(); // Reverse for opposite direction
 	                }
-	                  // Calculate cumulative geodistance
+
+	                // Calculate cumulative geodistance
 	                let cumulativeDistance = 0;
 	                for (let i = 0; i < newList.length - 1; i++) {
 	                    const point1 = newList[i];
@@ -1199,7 +1199,7 @@ $("#SetOTDRCoordinate").on('click',function(){
 	                    const segmentDistance = computeGoogleDistance(point1[1], point1[0], point2[1], point2[0]);
 	                    cumulativeDistance += parseFloat(segmentDistance);
 
-	                      if (cumulativeDistance >= OTDRDistance) {
+	                    if (cumulativeDistance >= OTDRDistance) {
 	                        const overshoot = cumulativeDistance - OTDRDistance;
 	                        const segmentLength = parseFloat(segmentDistance);
 
@@ -1208,7 +1208,6 @@ $("#SetOTDRCoordinate").on('click',function(){
 	                        const exactLat = point1[1] + fraction * (point2[1] - point1[1]);
 	                        const exactLong = point1[0] + fraction * (point2[0] - point1[0]);
 
-	                   
 	                        $("#pointLong").val(exactLong);
 	                        $("#pointLat").val(exactLat);
 	                        createBreakId(exactLong, exactLat);

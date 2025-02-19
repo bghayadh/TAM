@@ -6,7 +6,8 @@ var showHidePointsArray =[];
 var allTreePoints=[];
 var surveyNearestPoint="";
 var placeGenericMarkers=[];
-
+let myLatLng = null;
+let mapCircle = null;
  $(document).on("triggerListenersEvent", function () {
 $(function(){
 	
@@ -5370,8 +5371,8 @@ function openSearchConnected(checkedOption, siteId, selectConnectedSearch, conne
     $('a[href="#connectedS"]').click();
     $("#fiberCitySearch").modal('show');
 
-	console.log(connectedSearchLong);
-	console.log(connectedSearchLat);
+    console.log(connectedSearchLong);
+    console.log(connectedSearchLat);
     // Set input values
     $("#selectConnectedSearch").val(selectConnectedSearch);
     $("#autoCompleteConnectedSearch").val(siteId);
@@ -5388,7 +5389,7 @@ function openSearchConnected(checkedOption, siteId, selectConnectedSearch, conne
     $("#getRelatedPointsCon").prop('checked', getRelatedPoints === '1');
 
     // Parse coordinates
-    const myLatLng = { lat: parseFloat(connectedSearchLat), lng: parseFloat(connectedSearchLong) };
+     myLatLng = { lat: parseFloat(connectedSearchLat), lng: parseFloat(connectedSearchLong) };
 
     // Create siteArray with the provided arrays
     const siteArray = [
@@ -5396,9 +5397,9 @@ function openSearchConnected(checkedOption, siteId, selectConnectedSearch, conne
         arrayTubes,
         arrayFibers,
         arrayDB.slice(0, distribBoardListSize),
-		fpPath,
-		bpPath,
-		NodeList  // Don't modify original array
+        fpPath,
+        bpPath,
+        NodeList  // Don't modify original array
     ];
 
     appendConnectedTable(siteArray);
@@ -5411,67 +5412,73 @@ function openSearchConnected(checkedOption, siteId, selectConnectedSearch, conne
     createSiteCltMarker(siteIdParts[0], markerName, connectedSearchLat, connectedSearchLong, siteCltSrcMarkers);
 
     // Handle "View On Map" checkbox
-    if (connectedViewOnMap === "true") {
-        $("#viewOnMap").prop("checked", true);
-
-	
-
-		idArray=[];
-		        console.log("Collecting IDs of checked checkboxes...");
-				let treeContainerSelector = "#initial_ul_CurrentPhysicalLayer"; // Adjust the selector as needed
-
-				// Traverse `li` elements within the specified tree and collect their IDs
-				$(treeContainerSelector + " li").each(function() {
-					    
-				    let id = $(this).attr("id"); // Get the ID of the current `li`
-				    if (id) { // Check if the ID exists
-				        idArray.push(id);
-						console.log(id);
-			     	if (id.startsWith("MH")) {
-						$("#"+id).children(':checkbox').prop( "checked", true );
-						if (markersManhole[id]) {
-							console.log("uesss");
-						               markersManhole[id].setMap(map);
-															
-						 // Add it to the array
-				    }}}
-										
-					
-				}); 
-				console.log(idArray);
-		var bounds;
-			
-					    var circle = new google.maps.Circle({
-					        center: myLatLng,
-					        radius: 500
-					    });
-
-					    // Get the bounds of the circle
-					    bounds = circle.getBounds();
-
-					    // If the circle is checked, display it
-					    circle.setOptions({
-					        strokeColor: "blue",
-					        strokeOpacity: 0.8,
-					        strokeWeight: 2,
-					        fillColor: "blue",
-					        fillOpacity: 0.1,
-					        map,
-					        clickable: false
-					    });
-					    displayZoneMap(circle);
-					    map.setCenter(myLatLng);
-					    map.fitBounds(bounds);
-				
-		
-		
-        // Create a circle around the location
-      
-    } else {
-        $("#viewOnMap").prop("checked", false);
-    }
+    handleViewOnMapClick(connectedViewOnMap, myLatLng);
 }
 
+function handleViewOnMapClick(connectedViewOnMap, myLatLng) {
+    let viewOnMapCheckbox = $("#viewOnMap");
+    
+    if (connectedViewOnMap === "true" || connectedViewOnMap === "on") {
+        viewOnMapCheckbox.prop("checked", true);
+        
+        let idArray = [];
+        console.log("Collecting IDs of checked checkboxes...");
+        let treeContainerSelector = "#initial_ul_CurrentPhysicalLayer";
+        
+        $(treeContainerSelector + " li").each(function() {
+            let id = $(this).attr("id");
+            if (id) {
+                idArray.push(id);
+               
+                if (id.startsWith("MH")) {
+                    $("#" + id).children(':checkbox').prop("checked", true);
+                    if (markersManhole[id]) {
+                        console.log("uesss");
+                        markersManhole[id].setMap(map);
+                    }
+                }
+            }
+        });
+        
+      
+        
+        if (mapCircle) {
+            mapCircle.setMap(null); // Remove previous circle if exists
+        }
+        
+        mapCircle = new google.maps.Circle({
+            center: myLatLng,
+            radius: 500,
+            strokeColor: "blue",
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: "blue",
+            fillOpacity: 0.1,
+            map,
+            clickable: false
+        });
+        
+        displayZoneMap(mapCircle);
+        map.setCenter(myLatLng);
+        map.fitBounds(mapCircle.getBounds());
+    } else {
+        viewOnMapCheckbox.prop("checked", false);
+        
+        if (mapCircle) {
+            mapCircle.setMap(null); // Remove circle when unchecked
+            mapCircle = null;
+        }
+    }
+}
+$(document).ready(function() {
+    $("#viewOnMap").on("change", function() {
+        if (myLatLng) {
+            handleViewOnMapClick($(this).prop("checked") ? "on" : "off", myLatLng);
+        } else {
+            console.warn("myLatLng is not set yet.");
+        }
+    });
+});
 
 function calculateDistanceSourceDestination(sLat,sLng,dLat,dLng,tId){
 		var auxArrayP=[];
@@ -6033,6 +6040,10 @@ function autoCompleteSearchHeader(ID,searchTarget,longitude,latitude){
 			}, minLength:0, maxShowItems: 40, scroll:true,
 				select: function(event, ui) {
 					this.value = (ui.item ? ui.item[0]+':'+ui.item[1] : '');
+					$("#autoCompleteConnectedSearch").val($("#"+ID).val());
+										$("#connectedSearchLong").val(ui.item[3]);
+										$("#connectedSearchLat").val(ui.item[4]);
+									
 					if(ui.item[0].split("_")[0]=="WARE") {
 						$("#"+longitude).val(ui.item[3]);
 						$("#"+latitude).val(ui.item[4]);
