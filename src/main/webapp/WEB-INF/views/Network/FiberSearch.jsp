@@ -407,100 +407,127 @@
 										<div class="tab-pane active" id="manP" role="tabpanel"
 											aria-labelledby="manPoint-tab">
 											<p></p>
-											<div class="container-fluid" style="overflow-x: auto;">
-												<div id="findNearestManRes"></div>
-												<div class="row" style="height: 500px;">
-													<fieldset class="field_set">
-														<legend style="width: auto;" class="fieldset_legend"></legend>
-														<table id="findNearstManhole" style="display: block; height: 500px; width: 100%; overflow-y: auto;" class="searchable sortable">
-																												
-																												 <thead>
-																													<tr>
-																													    <th style="min-width: 30px;"><input type="checkbox" id="selectAllManhole"></th>
-																														<th style="min-width: 150px;">Manhole ID</th>
-																														<th style="min-width: 150px;">ManholeName</th>
-																														<th style="min-width: 100px;">Longitude</th>
-																														<th style="min-width: 150px;">Latitude</th>
-																														<th style="min-width: 100px;">Linear Distance(km)</th>
-																														<th style="min-width: 80px;"colspan="2">Driving Distance(km)</th>
-																														<th style="min-width: 80px;">Geo Distance(km)</th>
-																														<th style="padding-left:10px;">Select Nearest</th>
-																													</tr>
-																													 </thead>
-																													<tbody id="searchManhTBody">
-																													</tbody>
-																												</table>
-																															
-													
-													</fieldset>
-												</div>
-											</div>
+												<p></p>
+											<div class="container-fluid" style="overflow-x: auto;  border:none;">
+            <div id="findNearestManRes"></div>
+            <div class="row" style="height: 500px; border:none">
+                <fieldset class="field_set" style=" border:none">
+                    <legend class="fieldset_legend" style="width: auto;"></legend>
+                    	<table id="findNearstManhole"
+												class="table table-striped table-bordered table-sm"
+												style="display: block; height: 400px; overflow: auto; max-width:850px; margin-right:20px; margin-left:10px">
+												<thead style="background: #E9ECEF;">
+													<tr class="fixed-headerr">
+														
+														
+														
+									    			 <th style="min-width: 30px;text-align: center;"><input type="checkbox" id="selectAllManhole"></th>
+													<th style="min-width: 80px; text-align: center;">Manhole ID</th>
+                                                    <th style="width: 250px; text-align: center;">Manhole Name</th>
+                                                    <th style="width: 150px; text-align: center;">Longitude</th>
+                                                    <th style="width: 150px; text-align: center;">Latitude</th>
+                                                    <th style="width: 150px; text-align: center;">Linear Distance(km)</th>
+                                                    <th style="width: 150px; text-align: center;">Driving Distance(km)</th>
+                                                    <th style="width: 200px; text-align: center;">Geo Distance(km)</th>
+                                                     <th style="width: 200px; text-align: center;">Select Nearest</th>
+
+														
+													</tr>
+												</thead>
+												<tbody id="searchManhTBody">
+												</tbody>
+											</table>
+                
+                </fieldset>
+            </div>
+        </div>
+											
 									        <div id="manholeTotal" Style="Padding-top: 15px;"><b>Total Manholes:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="totalManhole" name="totalManhole" readonly>	 </div>
 										</div>
 										<div class="tab-pane" id="handP" role="tabpanel"
 											aria-labelledby="handPoint-tab">
 											<p></p>
-											<div class="container-fluid">
-												<div id="findNearestHandRes"></div>
-												<div class="row" style="height: 500px;">
-													<fieldset class="field_set">
-														<legend style="width: auto;" class="fieldset_legend"></legend>
-														<table id="findNearstHandhole" class="searchable sortable"
-															style="display: block; height: 500px; overflow-y: auto;">
-															 <thead>
-															<tr>
-																<th style="min-width: 30px;"><input type="checkbox" id="selectAllHandhole"></th>
-																<th style="min-width: 150px;" >Handhole ID</th>
-																<th style="min-width: 150px;">HandholeName</th>
-																<th style="min-width: 100px;">Longitude</th>
-																<th style="min-width: 100px;">Latitude</th>
-																<th style="min-width: 100px;">Linear Distance(Km)</th>
-																<th style="min-width: 100px;" colspan="2">Driving Distance(km)</th>
-																<th style="min-width: 80px;">Geo Distance(km)</th>
-																<th style="padding-left:10px;">Select Nearest</th>
-																
-															</tr>
-															</thead>
-															
-															<tbody id="searchHanhTBody">
-															</tbody>
-														</table>
-													</fieldset>
+											
+			
+											
+											
+											
+																	<div class="container-fluid" style="overflow-x: auto;  border:none;">
+            <div id="findNearestHandRes"></div>
+            <div class="row" style="height: 500px; border:none">
+                <fieldset class="field_set" style=" border:none">
+                    <legend class="fieldset_legend" style="width: auto;"></legend>
+                    	<table id="findNearstHandhole"
+												class="table table-striped table-bordered table-sm"
+												style="display: block; height: 400px; overflow: auto; max-width:850px; margin-right:20px; margin-left:10px">
+												<thead style="background: #E9ECEF;">
+													<tr class="fixed-headerr">
+														
+														
+														
+									    			 <th style="min-width: 30px; text-align: center;"><input type="checkbox" id="selectAllHandhole"></th>
+													<th style="min-width: 80px; text-align: center;">Handhole ID</th>
+                                                    <th style="width: 250px; text-align: center;">Handhole Name</th>
+                                                    <th style="width: 150px; text-align: center;">Longitude</th>
+                                                    <th style="width: 150px; text-align: center;">Latitude</th>
+                                                    <th style="width: 150px; text-align: center;">Linear Distance(km)</th>
+                                                    <th style="width: 150px; text-align: center;">Driving Distance(km)</th>
+                                                    <th style="width: 200px; text-align: center;">Geo Distance(km)</th>
+                                                     <th style="width: 200px; text-align: center;">Select Nearest</th>
 
-												</div>
-											</div>
-                                             <div id="handholeTotal" Style="Padding-top: 15px;"><b>Total Handholes:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="totalHandhole" name="totalDB" readonly>	 </div>
+														
+													</tr>
+												</thead>
+												<tbody id="searchHanhTBody">
+												</tbody>
+											</table>
+                
+                </fieldset>
+            </div>
+        </div>		
+				                       <div id="handholeTotal" Style="Padding-top: 15px;"><b>Total Handholes:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="totalHandhole" name="totalDB" readonly>	 </div>
 										</div>
 										<div class="tab-pane" id="dboardP" role="tabpanel"
 											aria-labelledby="dboardPoint-tab">
 											<p></p>
-											<div class="container-fluid">
-												<div id="findNearestDbRes"></div>
-												<div class="row" style="height: 500px;">
-													<fieldset class="field_set">
-														<legend style="width: auto;" class="fieldset_legend"></legend>
-														<table id="findNearstDB" style="display: block; height: 500px; overflow-y: auto;">
-														 <thead>															
-															<tr>
-																<th style="min-width: 30px;"><input type="checkbox" id="selectAllDB"></th>
-																<th style="min-width: 150px;" >DBoard ID</th>
-																<th style="min-width: 150px;">DBoard Name</th>
-																<th style="min-width: 100px;">Longitude</th>
-																<th style="min-width: 100px;">Latitude</th>
-																<th style="min-width: 100px;">Linear Distance(km)</th>
-																<th style="min-width: 100px;" colspan="2">Driving Distance(km)</th>	
-																<th style="min-width: 80px;">Geo Distance(km)</th>
-																<th style="padding-left:10px;">Select Nearest</th>
-																
-															</tr>
-															 </thead>															
-															<tbody id="searchDBoardTBody">
-															</tbody>
-														</table>
-													</fieldset>
-												 </div>
-											</div>
-                                            <div id="DbTotal" Style="Padding-top: 15px;"><b>Total Distribution Boards:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="totalDB" name="totalDB" readonly>										
+											
+																			
+																	<div class="container-fluid" style="overflow-x: auto;  border:none;">
+            <div id="findNearestDbRes"></div>
+            <div class="row" style="height: 500px; border:none">
+                <fieldset class="field_set" style=" border:none">
+                    <legend class="fieldset_legend" style="width: auto;"></legend>
+                    	<table id="findNearstDB"
+												class="table table-striped table-bordered table-sm"
+												style="display: block; height: 400px; overflow: auto; max-width:850px; margin-right:20px; margin-left:10px">
+												<thead style="background: #E9ECEF;">
+													<tr class="fixed-headerr">
+														
+														
+														
+									    			 <th style="min-width: 30px;text-align: center;"><input type="checkbox" id="selectAllDB"></th>
+													<th style="min-width: 80px; text-align: center;">DBoard ID</th>
+                                                    <th style="width: 250px; text-align: center;">DBoard Name</th>
+                                                    <th style="width: 150px; text-align: center;">Longitude</th>
+                                                    <th style="width: 150px; text-align: center;">Latitude</th>
+                                                    <th style="width: 150px; text-align: center;">Linear Distance(km)</th>
+                                                    <th style="width: 150px; text-align: center;">Driving Distance(km)</th>
+                                                    <th style="width: 200px; text-align: center;">Geo Distance(km)</th>
+                                                     <th style="width: 200px; text-align: center;">Select Nearest</th>
+
+														
+													</tr>
+												</thead>
+												<tbody id="searchDBoardTBody">
+												</tbody>
+											</table>
+                
+                </fieldset>
+            </div>
+        </div>	
+											
+		
+									     <div id="DbTotal" Style="Padding-top: 15px;"><b>Total Distribution Boards:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="totalDB" name="totalDB" readonly>										
                                             </div>
 										</div>
 										
@@ -510,77 +537,135 @@
 										
 										<div class="tab-pane" id="fPaths" role="tabpanel" aria-labelledby="fPaths-tab">
 											<p></p>
-											<div class="container-fluid">
-											<div class="row" style="height: 180px;">
-										<fieldset class="field_set">
-											<legend style="width: auto;" class="fieldset_legend"></legend>
-											<table id="nearestStrand" style="display: block; height: 170px; overflow-y: auto;">
-												<tr>
-													<th style="min-width: 150px;" class="row-pad">Strand ID</th>
-													<th style="min-width: 150px;">StrandName</th>
-													<th style="min-width: 350px;">Source</th>
-													<th style="min-width: 350px;">Destination</th>
-												</tr>
+											
+																											<div class="container-fluid" style="overflow-x: auto;  border:none;">
+																											<div id="findNearestStrandRes"></div>
+             <div class="row" style="height: 500px; border:none">
+                <fieldset class="field_set" style=" border:none">
+                    <legend class="fieldset_legend" style="width: auto;"></legend>
+                    	<table id="nearestStrand"
+												class="table table-striped table-bordered table-sm"
+												style="display: block; height: 400px; overflow: auto; max-width:850px; margin-right:20px; margin-left:10px">
+												<thead style="background: #E9ECEF;">
+													<tr class="fixed-headerr">
+														
+														
+														
+									    			 <th style="min-width: 80px; text-align: center;">Strand ID</th>
+                                                    <th style="width: 250px; text-align: center;">Strand Name</th>
+                                                    <th style="width: 150px; text-align: center;">Source</th>
+                                                    <th style="width: 150px; text-align: center;">Destination</th>
+                                                   
+														
+													</tr>
+												</thead>
 												<tbody id="nearStrandId">
 												</tbody>
 											</table>
-										</fieldset>
-									</div>
+                
+                </fieldset>
+            </div>
+       
+											
+			
 									<br>
-									<div class="row" style="height: 180px;">
-										<fieldset class="field_set">
-											<legend style="width: auto;" class="fieldset_legend"></legend>
-											<table id="nearestTube" style="display: block; height: 170px; overflow-y: auto;">
-												<tr>
-													<th style="min-width: 150px;" class="row-pad">Tube ID</th>
-													<th style="min-width: 150px;">TubeName</th>
-													<th style="min-width: 350px;">Source</th>
-													<th style="min-width: 350px;">Destination</th>
-												</tr>
+									<div id="findNearestTubeRes"></div>
+								           <div class="row" style="height: 500px; border:none">
+                <fieldset class="field_set" style=" border:none">
+                    <legend class="fieldset_legend" style="width: auto;"></legend>
+                    	<table id="nearestTube"
+												class="table table-striped table-bordered table-sm"
+												style="display: block; height: 400px; overflow: auto; max-width:850px; margin-right:20px; margin-left:10px">
+												<thead style="background: #E9ECEF;">
+													<tr class="fixed-headerr">
+														
+														
+														
+									    			 <th style="min-width: 80px; text-align: center;">Tube ID</th>
+                                                    <th style="width: 250px; text-align: center;">Tube Name</th>
+                                                    <th style="width: 150px; text-align: center;">Source</th>
+                                                    <th style="width: 150px; text-align: center;">Destination</th>
+                                                   
+														
+													</tr>
+												</thead>
 												<tbody id="nearTubeId">
 												</tbody>
 											</table>
-										</fieldset>
-									</div>
+                
+                </fieldset>
+            </div>
 									<br>
-									<div class="row" style="height: 180px;">
-										<fieldset class="field_set">
-											<legend style="width: auto;" class="fieldset_legend"></legend>
-											<table id="nearestFiber" style="display: block; height: 170px; overflow-y: auto;">
-												<tr>
-													<th style="min-width: 150px;" class="row-pad">Fiber ID</th>
-													<th style="min-width: 150px;">FiberName</th>
-													<th style="min-width: 350px;">Source</th>
-													<th style="min-width: 350px;">Destination</th>
-												</tr>
-												<tbody id="nearFiberId"></tbody></table></fieldset></div></div></div>
+									<div id="findNearestFiberRes"></div>
+									           <div class="row" style="height: 500px; border:none">
+                <fieldset class="field_set" style=" border:none">
+                    <legend class="fieldset_legend" style="width: auto;"></legend>
+                    	<table id="nearestFiber"
+												class="table table-striped table-bordered table-sm"
+												style="display: block; height: 400px; overflow: auto; max-width:850px; margin-right:20px; margin-left:10px">
+												<thead style="background: #E9ECEF;">
+													<tr class="fixed-headerr">
+														
+														
+														
+									    			 <th style="min-width: 80px; text-align: center;">Fiber ID</th>
+                                                    <th style="width: 250px; text-align: center;">Fiber Name</th>
+                                                    <th style="width: 150px; text-align: center;">Source</th>
+                                                    <th style="width: 150px; text-align: center;">Destination</th>
+                                                   
+														
+													</tr>
+												</thead>
+												<tbody id="nearFiberId">
+												</tbody>
+											</table>
+                
+                </fieldset>
+            </div></div></div> 	
 								<div class="tab-pane" id="nodeP" role="tabpanel" aria-labelledby="nodePoint-tab">
 											<p></p>
 											<div class="container-fluid">
 												<div id="findNearestNodeRes"></div>
-												<div class="row" style="height: 500px;">
-													<fieldset class="field_set">
-														<legend style="width: auto;" class="fieldset_legend"></legend>
-														<table id="findNearstNode" class="searchable sortable"
-															style="display: block; height: 500px; overflow-y: auto;">
-															 <thead>
-															<tr>
-																<th style="min-width: 30px;"><input type="checkbox" id="selectAllNode"></th>
-																<th style="min-width: 150px;" >Node ID</th>
-																<th style="min-width: 150px;">Node Name</th>
-																<th style="min-width: 150px;">Node Type</th>
-																<th style="min-width: 100px;">Longitude</th>
-																<th style="min-width: 100px;">Latitude</th>
-																<th style="min-width: 100px;">Linear Distance(Km)</th>
-																<th style="min-width: 100px;" colspan="2">Driving Distance(km)</th>
-																<th style="min-width: 80px;">Geo Distance(km)</th>
-																<th style="padding-left:10px;">Select Nearest</th>
-																
-															</tr></thead>
-															<tbody id="searchNodeTBody"></tbody>
-														</table>
-													</fieldset>
-												</div>
+											
+											     <div class="row" style="height: 500px; border:none">
+                <fieldset class="field_set" style=" border:none">
+                    <legend class="fieldset_legend" style="width: auto;"></legend>
+                    	<table id="findNearstNode"
+												class="table table-striped table-bordered table-sm"
+												style="display: block; height: 400px; overflow: auto; max-width:850px; margin-right:20px; margin-left:10px">
+												<thead style="background: #E9ECEF;">
+													<tr class="fixed-headerr">
+														
+														
+														
+									    			 <th style="min-width: 30px; text-align: center;"><input type="checkbox" id="selectAllDB"></th>
+													<th style="min-width: 80px; text-align: center;">Node ID</th>
+                                                    <th style="width: 250px; text-align: center;">Node Name</th>
+                                                    <th style="width: 150px; text-align: center;">Longitude</th>
+                                                    <th style="width: 150px; text-align: center;">Latitude</th>
+                                                    <th style="width: 150px; text-align: center;">Linear Distance(km)</th>
+                                                    <th style="width: 150px; text-align: center;">Driving Distance(km)</th>
+                                                    <th style="width: 200px; text-align: center;">Geo Distance(km)</th>
+                                                     <th style="width: 200px; text-align: center;">Select Nearest</th>
+
+														
+													</tr>
+												</thead>
+												<tbody id="searchNodeTBody">
+												</tbody>
+											</table>
+                
+                </fieldset>
+            </div>
+											
+											
+											
+											
+											
+											
+											
+											
+										
 											</div>
                                              <div id="nodeTotal" Style="Padding-top: 15px;"><b>Total Nodes:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="totalNode" name="totalNodes" readonly></div>
 										</div>
