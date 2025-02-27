@@ -13,7 +13,7 @@ function viewNearestMultyPointEvent(){
 		var nop = document.getElementById("noP_Multy").value;
 		var circleRange_multy = document.getElementById("circleRange_multy").value;
 		var closestDisRange = document.getElementById("closestMultyDisRange").value;
-		
+		console.log("zeinaaa");
 $("#Multy_auxiliary > tbody").find('input[name="record"]').each(function(){
   var $row = $(this).closest('tr');
   var indexSite = $row.index();
@@ -24,7 +24,7 @@ $("#Multy_auxiliary > tbody").find('input[name="record"]').each(function(){
   var locationNum = $row.find('td[name="location_number"] input').val(); // Get the location number
   var circleDraw = $row.find('input[name="circleRange' + indexSite + '"]').prop('checked') ? 1 : 0;
   var squareDraw = $row.find('input[name="squareRange' + indexSite + '"]').prop('checked') ? 1 : 0;
-
+  var indexx=  indexSite;
 		 if($("#circleRange_multy").prop('checked')){
 		     checkedOption = "circleRange_multy";  
 			     urlString += "&seq="+seq+"";
@@ -38,6 +38,7 @@ $("#Multy_auxiliary > tbody").find('input[name="record"]').each(function(){
 			     urlString += "&closestDisRange="+closestDisRange+"";
 			     urlString += "&nop="+$("#noP_Multy").val()+"";
 			     urlString += "&updateModfUser="+updateModfUser;
+				 urlString += "&indexx="+indexx;
 				 window.location.href = getContext()+"/findNearestMulty?Checked="+checkedOption+urlString;  
 		 }
 		}); 
@@ -78,9 +79,9 @@ function uncheckAll(ptListObject,ptDataObject) {
 }
 
 var ptListObject, ptDataObject;
-function openFindNearestMultySite(checkedOption, rowInfo, noP, closestDisRange, ptList, ptData, getRelatedPoints, Lats, Longs, circleDraw , squareDraw,locationNum) {
+function openFindNearestMultySite(checkedOption, rowInfo, noP, closestDisRange, ptList, ptData, getRelatedPoints, Lats, Longs, circleDraw , squareDraw,locationNum, indexx) {
    
-	
+	console.log(indexx);
 	
     $("#fiberCitySearch").modal("show");
     $('a[href="#MultyClosest"]').click();
@@ -116,6 +117,8 @@ function openFindNearestMultySite(checkedOption, rowInfo, noP, closestDisRange, 
 			});
 			
 	// Initialize indexSite counter
+
+
 	var indexSite = 0;
 
 	for (var key in rowData) {
