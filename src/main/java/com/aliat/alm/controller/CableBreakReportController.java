@@ -4,7 +4,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -13,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.hibernate.query.Query;
 import org.hibernate.query.NativeQuery;
-import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +24,8 @@ import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.services.LoginServices;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.util.logging.Logger;
 import com.aliat.alm.models.CableBreakReport;
-import java.util.stream.Collectors;
 
 
 @Controller
@@ -93,6 +89,8 @@ public class CableBreakReportController {
 		}
 		return "Reports/CableBreakReport";
 	}
+	
+	// Auto complete for fiber cables.
 
 	@RequestMapping(value = "/getBreakFiberCable", method = RequestMethod.GET)
 	@ResponseBody
@@ -133,7 +131,18 @@ public class CableBreakReportController {
 		return rtn;
 	}
 
+	/* 1) Get selected cable information.
+	 * 2) Get the DB's in source and destination. 
+	 * 3) Get Breaking Sequence.
+	 * 4) Get junctions before breaking point and after breaking point.
+	 * 5) Get effected sites and clients as IDs.
+	 * 6) Get detailed information of the sites and clients based on the obtained IDs.	 
+	 * 
+	 * We are missing (until date 1st of March 2025) to include the junctions in the source and destination.
+	 */
+		
 	
+
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	@RequestMapping(value = "/GenerateBreakPointReport", method = RequestMethod.GET)
 	@ResponseBody
@@ -184,6 +193,8 @@ public class CableBreakReportController {
 				session = AlmDbSession.getInstance().getSession();
 
 				if (session != null && session.isOpen()) {
+					
+					// Getting information of the selected cable from the auto complete
 
 					List<Object[]> fiberList = session.createNativeQuery(
 							"SELECT A.SOURCE_LNG,A.SOURCE_LAT,A.DESTINATION_LNG,A.DESTINATION_LAT,A.SOURCE_WARE_ID,A.SOURCE_ID,A.SOURCE_NAME,A.DESTINATION_WARE_ID,A.DESTINATION_ID,A.DESTINATION_NAME,(select B.FIBER_COLOR_OWNER from FIBER_OWNER_COLOR B WHERE B.FIBER_OWNER=A.FIBER_OWNER) AS FIBER_CABLE_COLOR,A.NUMBER_OF_STRANDS,A.NUMBER_OF_TUBES FROM FIBER_CABLES A WHERE A.FIBER_CABLE_ID ='"+fiberCableID+ "' ").getResultList();
@@ -204,7 +215,7 @@ public class CableBreakReportController {
 						    + "WHERE "
 						    + "FIBER_CABLE_ID ='"+fiberCableID+"'").getSingleResult();
 				    
-				    // this block aims to get all DBs elated to the source and destination 
+				    // this block aims to get all DBs related to the source and destination 
 				    if(fiberCableSrcDestID != null) {
 				    
 				    	 sourceID = (String) fiberCableSrcDestID[0];
@@ -224,6 +235,8 @@ public class CableBreakReportController {
 									"SELECT DB_ID FROM DISTRIBUTION_BOARD "
 									+ "WHERE "
 									+ "SITE ='"+sourceID+"'").getResultList();
+				    		
+				    		// srcDBs.addAll(TempDBList); to be checked
 				    		
 				    		for (String dbId  : TempDBList) {
 				    		    srcDBs.add(dbId);    					    		
@@ -245,6 +258,8 @@ public class CableBreakReportController {
 									+ "WHERE "
 									+ "SITE ='"+DestID+"'").getResultList();
 				    		
+				    		// dstDBs.addAll(TempDBList); to be checked
+				    		
 				    		for (String dbId : TempDBList) {
 				    			dstDBs.add(dbId);    					    		
 				    		}
@@ -260,13 +275,14 @@ public class CableBreakReportController {
 				    
 					
 				
-					// This block aim to get the nearest auxiliary pt to the break pt 
+					// This block aim to get the nearest auxiliary pt to the break pt
+				    
 					Object[] nearestPoint = null;
+					double nearestPointLong = 0; 
+					double nearestPointLat = 0; 
 					int nearestAuxPtSeq=0;
 					int breakingPtSeq=0;
 					double minDistance = Double.MAX_VALUE;
-					double nearestPointLong = 0; 
-					double nearestPointLat = 0; 
 					
 					
 					/*iterate over the auxiliary pt and get the distance between the break pt and each auxiliary pt
@@ -279,8 +295,14 @@ public class CableBreakReportController {
 					    // Parse the string values to double
 					    double auxPointLong = Double.parseDouble(auxPointLongStr);
 					    double auxPointLat = Double.parseDouble(auxPointLatStr);
+					    
+					    /* Why not to try as following:
+					     * auxPointLong = Double.parseDouble((String) auxPoint[0]);					     
+					     * 
+					     */
+					    
 
-					    // Calculate distance
+					    // Calculate linear (not geo) distance
 					    double distance = haversine(auxPointLat, auxPointLong, breakPointLat, breakPointLong);
 
 					    // Check if this point is nearest
@@ -298,12 +320,13 @@ public class CableBreakReportController {
 					}
 					
 				
-					//get the auxiliary pt that is just before the nearest pt based on SEQ_SORTING (in case nearest pt seq  != 1)
+					//get the auxiliary points that are previous and previous previous and next and next next of the nearest auxiliary point of the breaking point based on SEQ_SORTING (in case nearest pt seq  != 1)
 					if(nearestAuxPtSeq != 1) {
-						List<Object[]>  previousAuxPts =  session.createNativeQuery(
+						List<Object[]>  prevAndNextAuxPts =  session.createNativeQuery(
 								"SELECT B.LONGITUDE,B.LATITUDE,B.WARE_ID,B.AUXILIARY_POINT_ID,B.AUXILIARY_POINT_NAME,B.AUXILIARY_ID,B.SEQ_SORTING FROM FIBER_AUXILIARY_POINTS B "
 								+ "WHERE B.FIBER_CABLE_ID ='"+ fiberCableID + "' AND B.SEQ_SORTING >='"+(nearestAuxPtSeq-2)+"' AND B.SEQ_SORTING <='"+(nearestAuxPtSeq+2)+"' ").getResultList();
-						
+						// Using nearestAuxPtSeq-2 to get previous and previous previous.
+						// Using nearestAuxPtSeq+2 to get next and next next.
 						
 							   
 							double prAuxPointLong = 0.0;
@@ -315,7 +338,7 @@ public class CableBreakReportController {
 						    double nxtNxtAuxPointLong = 0.0;
 						    double nxtNxtAuxPointLat =0.0;
 						    
-						    for (Object[]  row : previousAuxPts) {
+						    for (Object[]  row : prevAndNextAuxPts) { 
 						        String tempLongStr = (String) row[0]; 
 						        String tempLatStr = (String) row[1];
 						        
@@ -341,12 +364,11 @@ public class CableBreakReportController {
 						        	nxtAuxPointLat=tempLat;
 						        	
 						        }
+						        //get next next pt long lat
 						        else if(seq ==(nearestAuxPtSeq+2)) {
 						        	nxtNxtAuxPointLong=tempLong;
 						        	nxtNxtAuxPointLat=tempLat;
 						        }
-						     
-						        
 						        
 						    }
 						    
@@ -357,8 +379,7 @@ public class CableBreakReportController {
 				        		nxtAuxPointLong = Double.parseDouble(DestLongStr);
 				        		nxtAuxPointLat = Double.parseDouble(DestLatStr);
 				        	}
-						    
-						
+						    						
 						    
 						    //Calculate distance between previous Aux pt and break pt 
 						    double prvToBreakdistance = haversine(prAuxPointLat, prAuxPointLong, breakPointLat, breakPointLong);
@@ -367,28 +388,26 @@ public class CableBreakReportController {
 						  //Calculate distance between next Aux pt and break pt 
 						    double nxtToBreakdistance = haversine(nxtAuxPointLat, nxtAuxPointLong, breakPointLat, breakPointLong);
 						  //Calculate distance between nearest Aux pt and break pt 
-						    double nearestToBreakdistance = haversine(nearestPointLat, nearestPointLong, breakPointLat, breakPointLong);
-						    
+						    double nearestToBreakdistance = haversine(nearestPointLat, nearestPointLong, breakPointLat, breakPointLong);						    
 						   //Calculate distance between next next Aux pt and break pt 
-						    double nxtNxtToBreakdistance = haversine(nxtNxtAuxPointLat, nxtNxtAuxPointLong, breakPointLat, breakPointLong);
+						    double nxtNxtToBreakdistance = haversine(nxtNxtAuxPointLat, nxtNxtAuxPointLong, breakPointLat, breakPointLong);						    
 						    
-						    
-						  //Calculate distance between previous previous Aux pt and previous Aux pt 
+						    //Calculate distance between previous previous Aux pt and previous Aux pt 
 						    double prvPrvToPrvdistance = haversine(prPrAuxPointLat, prPrAuxPointLong, prAuxPointLat, prAuxPointLong);
 						    
 						    //Calculate distance between previous Aux pt and nearest Aux pt
 						    double prvTonearestdistance = haversine(prAuxPointLat, prAuxPointLong, nearestPointLat, nearestPointLong);
-						  //Calculate distance between nearest Aux pt and Next Aux pt 
+						    //Calculate distance between nearest Aux pt and Next Aux pt 
 						    double nearestToNextdistance = haversine(nearestPointLat, nearestPointLong, nxtAuxPointLat, nxtAuxPointLong);
 						 
-						    //Calculate distance between nearest Aux pt and Next Aux pt 
+						    //Calculate distance between next Aux pt and Next Next Aux pt 
 						    double nextToNextNextdistance = haversine(nxtNxtAuxPointLat, nxtNxtAuxPointLong, nxtAuxPointLat, nxtAuxPointLong);
 						    
 						    
 						    double ratio1=(prvToBreakdistance + nearestToBreakdistance) /prvTonearestdistance;
 						    double ratio2=(nxtToBreakdistance + nearestToBreakdistance) /nearestToNextdistance;
 						   
-						    //ratio 3 is too small in case if the nearest aux pt has seq = 2 because there is no previous aux so thats why we give it virtual value 100 
+						    //ratio 3 is too small in case if the nearest aux pt has seq = 2 because there is no previous previous aux so thats why we give it virtual value 100 
 						    double ratio3=100.0;
 						    if(nearestAuxPtSeq !=2 ) {
 						    	 ratio3=(prvPrvToBreakdistance + prvToBreakdistance) /prvPrvToPrvdistance;
@@ -402,7 +421,7 @@ public class CableBreakReportController {
 						   
 						    if(ratio1 < ratio2 && ratio1 < ratio3 && ratio1 < ratio4) {
 						    	// previous pt 
-						    	breakingPtSeq=nearestAuxPtSeq-1;
+						    	breakingPtSeq=nearestAuxPtSeq-1; // For angel less than 45 degree.
 						    	
 						    }
 						    else if(ratio3 < ratio1 && ratio3 < ratio2 && ratio3 < ratio4) {
@@ -472,7 +491,8 @@ public class CableBreakReportController {
 					
 					    
 					 
-					    //get junctions from auxiliary pt table related to that cable as lists before and after break point 
+					    //get junctions from auxiliary pt table related to that cable as lists before and after break point
+					
 					    List<Object[]> junctionListBeforBreakingPt = session.createNativeQuery(
 								"SELECT AUXILIARY_POINT_ID FROM FIBER_AUXILIARY_POINTS "
 								+ "WHERE "
@@ -607,7 +627,7 @@ public class CableBreakReportController {
 			    				+ "AND (A.LOCATION_ID_SIDE_A IN (SELECT B.LOCATION_ID_SIDE_A FROM JUNCTION_MAPPING B WHERE (B.JCT_ID IN (:param2) OR B.PHYSICAL_LAYER_ID IN(:param2)) AND ((B.FIBER_ID_SIDE_A='"+fiberCableID+"' AND B.STRAND_NB_SIDE_A =A.STRAND_NB_SIDE_A AND B.TUBE_NB_SIDE_A=A.TUBE_NB_SIDE_A ) OR (FIBER_ID_SIDE_B='"+fiberCableID+"' AND B.STRAND_NB_SIDE_B =A.STRAND_NB_SIDE_A AND B.TUBE_NB_SIDE_B=A.TUBE_NB_SIDE_A)) AND ((A.LOCATION_ID_SIDE_B=B.LOCATION_ID_SIDE_A) OR (A.LOCATION_ID_SIDE_B=B.LOCATION_ID_SIDE_B)))   "
 			    				+ "OR   A.LOCATION_ID_SIDE_A IN (SELECT B.LOCATION_ID_SIDE_B FROM JUNCTION_MAPPING B WHERE (B.JCT_ID IN (:param2) OR B.PHYSICAL_LAYER_ID IN(:param2)) AND ((B.FIBER_ID_SIDE_A='"+fiberCableID+"' AND B.STRAND_NB_SIDE_A =A.STRAND_NB_SIDE_A AND B.TUBE_NB_SIDE_A=A.TUBE_NB_SIDE_A ) OR (FIBER_ID_SIDE_B='"+fiberCableID+"' AND B.STRAND_NB_SIDE_B =A.STRAND_NB_SIDE_A AND B.TUBE_NB_SIDE_B=A.TUBE_NB_SIDE_A)) AND ((A.LOCATION_ID_SIDE_B=B.LOCATION_ID_SIDE_A) OR (A.LOCATION_ID_SIDE_B=B.LOCATION_ID_SIDE_B)))) ";
 					    
-						    Query query = session.createNativeQuery(str);
+						    query = session.createNativeQuery(str);
 						    query.setParameterList("param1", srcDBs);
 						    query.setParameterList("param2", junctionAfterBreakingPt);
 						    query.setParameterList("param3", dstDBs);
@@ -842,9 +862,9 @@ public class CableBreakReportController {
 	
 	
 	
+	//To get cable data to draw the cable in the google map once selected from the auto complete
 	
-	
-	@SuppressWarnings({ "unchecked", "deprecation" })
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/getCableBreakFiberPath", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> getCableBreakFiberPath(Locale locale, Model model, HttpServletRequest request,
