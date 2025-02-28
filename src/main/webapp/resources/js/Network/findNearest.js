@@ -396,30 +396,47 @@ function appendNearestFiberPathsTable(result){
 		var markupNearStrand="";
 		var markupNearTube="";
 		var markupNearFiber="";		
-
-		if (result.length==0){
-			markupNearStrand ="<tr style='height:20px;'><td>There is no result<td></tr>"
-		}else {
+		document.getElementById("findNearestStrandRes").innerHTML = "";
+				
+			if (result[0].length==0){
+				document.getElementById("findNearestStrandRes").innerHTML = '<p style=" color:#ff0000;font-size: 1.4em;">There is no result</p>';
+				//markupDBoard ="<tr style='height:20px;'><td>There is no result<td></tr>"
+			}
+		else {
+			
+			
+														
 			result[0].forEach((res) => 
-				markupNearStrand +="<tr ><td style='min-width:150px;' class='row-pad' name='ID'><input name='ID' style='border: none;' value='"+res[0]+"' readonly></input ></td><td style='min-width:150px;' name='name' ><input name='name' style='border: none;' value='"+res[13]+"' readonly></input ></td><td style='min-width:350px;' name='source'><input name='source' style='border: none;' value='"+res[6]+"' readonly></input ></td><td style='min-width:350px;' name='destination'><input name='destination' style='border: none;' value='"+res[9]+"' readonly></input ></td></tr>"
+				markupNearStrand +="<tr ><td style='min-width:150px;' class='row-pad' name='ID'style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='ID' style='border: none;' value='"+res[0]+"' readonly></input ></td>"+
+			"<td style='min-width:150px;' name='name'style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='name' style='border: none;' value='"+res[13]+"' readonly></input ></td>"+
+			"<td style='min-width:350px;' name='source'style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;'  name='source' style='border: none;' value='"+res[6]+"' readonly></input ></td>"+
+			"<td style='min-width:350px;' name='destination'style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;'  name='destination' style='border: none;' value='"+res[9]+"' readonly></input ></td></tr>"
 				);
 		}
 		$("#nearStrandId").append(markupNearStrand);
 		
-		if (result.length==0){
-			markupNearTube ="<tr style='height:20px;'><td>There is no result<td></tr>"
-		}else {
+		if (result[1].length==0){
+						document.getElementById("findNearestTubeRes").innerHTML = '<p style=" color:#ff0000;font-size: 1.4em;">There is no result</p>';
+						//markupDBoard ="<tr style='height:20px;'><td>There is no result<td></tr>"
+					}else {
 			result[1].forEach((res) => 
-				markupNearTube +="<tr ><td style='min-width: 150px;' class='row-pad' name='ID'><input name='ID' style='border: none;' value='"+res[0]+"' readonly></input ></td><td style='min-width: 150px;' name='name'><input name='name' style='border: none;' value='"+res[13]+"' readonly></input ></td><td style='min-width: 350px;' name='source'><input name='source' style='border: none;' value='"+res[6]+"' readonly></input ></td><td style='min-width: 350px;' name='destination'><input name='destination' style='border: none;' value='"+res[9]+"' readonly></input ></td></tr>"
+				markupNearTube +="<tr ><td style='min-width: 150px;' class='row-pad' name='ID'style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;'  name='ID' style='border: none;' value='"+res[0]+"' readonly></input ></td>"+
+			"<td style='min-width: 150px;' name='name' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;'t name='name' style='border: none;' value='"+res[13]+"' readonly></input ></td>"+
+			"<td style='min-width: 350px;' name='source' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='source' style='border: none;' value='"+res[6]+"' readonly></input ></td>"+
+			"<td style='min-width: 350px;' name='destination' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='destination' style='border: none;' value='"+res[9]+"' readonly></input ></td></tr>"
 			);
 		}						  
 		$("#nearTubeId").append(markupNearTube);
 		
-		if (result.length==0){
-			markupNearFiber ="<tr style='height:20px;'><td>There is no result<td></tr>"
-		}else {
+		if (result[2].length==0){
+						document.getElementById("findNearestFiberRes").innerHTML = '<p style=" color:#ff0000;font-size: 1.4em;">There is no result</p>';
+						//markupDBoard ="<tr style='height:20px;'><td>There is no result<td></tr>"
+					}else {
 			result[2].forEach((res) => 
-				 markupNearFiber +="<tr ><td style='min-width: 150px;' class='row-pad' name='ID'><input name='ID' style='border: none;' value='"+res[4]+"' readonly></input ></td><td style='min-width: 150px;' name='name'><input name='name' style='border: none;' value='"+res[13]+"' readonly></input ></td><td style='min-width: 350px;' name='source'><input name='source' style='border: none;' value='"+res[6]+"' readonly></input ></td><td style='min-width: 350px;' name='destination'><input name='destination' style='border: none;' value='"+res[9]+"' readonly></input ></td></tr>"
+				 markupNearFiber +="<tr ><td style='min-width: 150px;' class='row-pad' name='ID' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='ID' style='border: none;' value='"+res[4]+"' readonly></input ></td>"+
+			"<td style='min-width: 150px;' name='name' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='name' style='border: none;' value='"+res[13]+"' readonly></input ></td>"+
+			"<td style='min-width: 350px;' name='source' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='source' style='border: none;' value='"+res[6]+"' readonly></input ></td>"+
+			"<td style='min-width: 350px;' name='destination' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='destination' style='border: none;' value='"+res[9]+"' readonly></input ></td></tr>"
 			);
 		}						  
 		$("#nearFiberId").append(markupNearFiber);
@@ -438,15 +455,46 @@ function appendNearestDBoardTable(result){
 				for(var i =0 ; i<result.length;i++){
 					//alert(result[i]);
 					if($("#StartEnd").is(":checked")){
-						markupDBoard +="<tr style='height: 30px;'><td ><input type='checkbox' class='DBBOQ' id=BOQ_"+result[i][0]+" ></td><td  >"+result[i][0]+"</td><td style='min-width:250px;'>"+result[i][3]+"</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][2]+"' readonly></input ></td>"
-
+							
+						
+						
+						
+						
+						markupDBoard +="<tr style='height: 30px;'><td style='text-align: center;'><input type='checkbox' class='DBBOQ' id=BOQ_"+result[i][0]+" ></td>"+
+													"<td name='ID' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='ID' style='border: none;' value='"+result[i][0]+"' readonly></input ></td>"+
+													"<td name='name' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='name' style='border: none;' value='"+result[i][3]+"' readonly></input ></td>"+
+													"<td  name='LONGG' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='LONGG' style='border: none;' value='"+result[i][1]+"' readonly></input ></td>"+
+													"<td   name='LATT' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='LATT' style='border: none;' value='"+result[i][2]+"' readonly></input ></td>"+
+													"<td    style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='LATT' style='border: none;' value='' readonly></input ></td>"+
+													"<td    style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='LATT' style='border: none;' value='' readonly></input ></td>"+
+													"<td    style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='LATT' style='border: none;' value='' readonly></input ></td>"+
+													"<td    style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='LATT' style='border: none;' value='' readonly></input ></td>"+
+													"<td    style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='LATT' style='border: none;' value='' readonly></input ></td>";
+															
 				    }
 				    else{
 				    	if(result[i][10] == null || result[i][10]==""){
 							//markupDBoard +="<tr ><td style='min-width:250px;' class='row-pad'>"+result[i][0]+"</td><td style='min-width:250px;'>"+result[i][3]+"</td><td  name='LONGG' style='min-width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td style='min-width:150px;'  name='LATT'><input name='LATT' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='min-width:50px;'>"+result[i][8]/1.60934+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='SomeDeleteRowFunction(this)'>Get Distance</button> </td></tr>"
-							markupDBoard +="<tr style='height: 30px;'><td><input type='checkbox' class='DBBOQ' id=BOQ_"+result[i][0]+" ></td><td name='ID' style='min-width:150px;'><input name='ID' style='border: none;' value='"+result[i][0]+"' readonly></input ></td><td name='name' style='min-width:150px;'><input name='name' style='border: none;' value='"+result[i][3]+"' readonly></input ></td><td  name='LONGG' style='min-width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td style='min-width:150px;'  name='LATT'><input name='LATT' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td name='linearDistance' style='min-width:50px;'><input name='linearDistance' style='border: none;' value='"+result[i][9]+"' readonly></input ></td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistance(this)'>Get Distance</button> </td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td><td style='width:300px; height:30px;vertical-align: top;' name='selectPointAsNearest'><button  type='button' style='width:100px;font-size:10px;margin-left:20px' name='selectPointAsNearest' class='btn btn-primary'  onclick='selectAsNearest(this)'>Select As Nearest</button></td></tr>"
+							markupDBoard +="<tr style='height: 30px;'><td style='text-align: center;'><input type='checkbox' class='DBBOQ' id=BOQ_"+result[i][0]+" ></td>"+
+							"<td name='ID' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='ID' style='border: none;' value='"+result[i][0]+"' readonly></input ></td>"+
+							"<td name='name' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='name' style='border: none;' value='"+result[i][3]+"' readonly></input ></td>"+
+							"<td  name='LONGG' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='LONGG' style='border: none;' value='"+result[i][1]+"' readonly></input ></td>"+
+							"<td   name='LATT' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='LATT' style='border: none;' value='"+result[i][2]+"' readonly></input ></td>"+
+							"<td name='linearDistance' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='linearDistance' style='border: none;' value='"+result[i][9]+"' readonly></input ></td>"+
+							"<td style='width:300px; height:30px; vertical-align: top;' name='DDistance'>"+
+							    "<button type='button' style='width:75px; font-size:9px;' name='DDistanceB' onclick='getDrivingDistance(this)'>Get Distance</button>"+
+							    "<label name='DDistance' style='border: none; width:80px; font-size:14px; margin-left:10px;' id='dDistanceResult'></label>"+
+							"</td>"+
+                         	"<td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td>"+
+							"<td style='width:300px; height:30px;vertical-align: top;' name='selectPointAsNearest'><button  type='button' style='width:100px;font-size:10px;margin-left:20px' name='selectPointAsNearest' class='btn btn-primary'  onclick='selectAsNearest(this)'>Select As Nearest</button></td></tr>"
 						}else{
-							markupDBoard +="<tr style='height: 30px;'><td><input type='checkbox' class='DBBOQ' id=BOQ_"+result[i][0]+" ></td><td name='ID' style='min-width:150px;'><input name='ID' style='border: none;' value='"+result[i][0]+"' readonly></input></td><td name='name' 'style='min-width:150px;'><input name='name' style='border: none;' value='"+result[i][3]+"' readonly></input ></td><td name='LONGG' style='min-width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td name='LATT' style='min-width:150px;'><input name='LATT' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='min-width:50px;'>"+result[i][8]+"</td><td style='min-width:90px;'> <label name='DDistance' style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'>"+(result[i][10])+"</label></td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td></tr>"
+							markupDBoard 							+="<tr style='height: 30px;'><td style='text-align: center;'><input type='checkbox' class='DBBOQ' id=BOQ_"+result[i][0]+" ></td>"+
+														"<td name='ID' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='ID' style='border: none;' value='"+result[i][0]+"' readonly></input ></td>"+
+														"<td name='name' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='name' style='border: none;' value='"+result[i][3]+"' readonly></input ></td>"+
+														"<td  name='LONGG' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='LONGG' style='border: none;' value='"+result[i][1]+"' readonly></input ></td>"+
+														"<td   name='LATT' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='LATT' style='border: none;' value='"+result[i][2]+"' readonly></input ></td>"+
+															"<td style='min-width:50px;'>"+result[i][8]+"</td><td style='min-width:90px;'> <label name='DDistance' style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'>"+(result[i][10])+"</label></td>"+
+							"<td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td></tr>"
 						}				    	
 				    }
 				}
@@ -547,22 +595,43 @@ function appendNearestNodesTable(result){
 		else {
 			for(var i =0 ; i<result.length;i++){
 				if($("#StartEnd").is(":checked")){
-				
+																		
 					
-					markupNode +="<tr style='height: 30px;'><td ><input type='checkbox' class='nodeBOQ' id=BOQ_"+result[i][0]+" ></td><td  >"+result[i][7]+"</td><td style='min-width:250px;'>"+result[i][1]+"</td><td name='Node_Type' style='min-width:150px;'><input name='Node_Type' style='border: none;' value='"+result[i][2].split(':')[0]+
-							"' readonly></input ></td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][5]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][6]+"' readonly></input ></td>";
-
+					markupNode +="<tr style='height: 30px;'><td style='text-align: center;'><input type='checkbox' class='nodeBOQ' id=BOQ_"+result[i][0]+" ></td>"+
+											"<td name='ID' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='ID' style='border: none;' value='"+result[i][7]+"' readonly></input ></td>"+
+											"<td name='name' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='name' style='border: none;' value='"+result[i][1]+"' readonly></input ></td>"+
+											"<td name='Node_Type' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='Node_Type' style='border: none;' value='"+result[i][2].split(':')[0]+"' readonly></input ></td>"+
+											"<td  name='LONGG' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='LONGG' style='border: none;' value='"+result[i][5]+"' readonly></input ></td>"+
+                                            "<td  style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;'t  style='border: none;' value='' readonly></input ></td>"+
+											"<td  name='LATT'style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;'t name='LATT' style='border: none;' value='"+result[i][6]+"' readonly></input ></td>"+
+											"<td  name='LATT'style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;'t name='LATT' style='border: none;' value='"+result[i][6]+"' readonly></input ></td>"+
+											"<td  name='LATT'style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;'t name='LATT' style='border: none;' value='"+result[i][6]+"' readonly></input ></td>";
 				}
 				else{
 				    	if(result[i][10] == null || result[i][10]==""){
-							markupNode +="<tr style='height: 30px;'><td><input type='checkbox' class='nodeBOQ' id=BOQ_"+result[i][0]+
-							" ></td><td name='ID' style='min-width:150px;'><input name='ID' style='border: none;' value='"+result[i][7]+
-							"' readonly></input ></td><td name='name' style='min-width:150px;'><input name='name' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td name='Node_Type' style='min-width:150px;'><input name='Node_Type' style='border: none;' value='"+result[i][2].split(':')[0]+
-							"' readonly></input ></td><td  name='LONGG' style='min-width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][5]+"' readonly></input ></td><td style='min-width:150px;'  name='LATT'><input name='LATT' style='border: none;' value='"+result[i][6]+"' readonly></input ></td><td name='linearDistance' style='min-width:50px;'><input name='linearDistance' style='border: none;' value='"+result[i][9]+"' readonly></input ></td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistance(this)'>Get Distance</button> </td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td><td style='width:300px; height:30px;vertical-align: top;' name='selectPointAsNearest'><button type='button' style='width:100px;font-size:10px;margin-left:20px' name='selectPointAsNearest' class='btn btn-primary' class='btn btn-primary'  onclick='selectAsNearest(this)'>Select As Nearest</button></td></tr>"
+							markupNode +="<tr style='height: 30px;'><td style='text-align: center;'><input type='checkbox' class='nodeBOQ' id=BOQ_"+result[i][0]+" ></td>"+
+							"<td name='ID' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='ID' style='border: none;' value='"+result[i][7]+"' readonly></input ></td>"+
+							"<td name='name' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='name' style='border: none;' value='"+result[i][1]+"' readonly></input ></td>"+
+							"<td name='Node_Type' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='Node_Type' style='border: none;' value='"+result[i][2].split(':')[0]+"' readonly></input ></td>"+
+							"<td  name='LONGG' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='LONGG' style='border: none;' value='"+result[i][5]+"' readonly></input ></td>"+
+							"<td  name='LATT'style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;'t name='LATT' style='border: none;' value='"+result[i][6]+"' readonly></input ></td>"+
+							"<td name='linearDistance' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='linearDistance' style='border: none;' value='"+result[i][9]+"' readonly></input ></td>"+
+							"<td style='width:300px; height:30px; vertical-align: top;' name='DDistance'>"+
+							 "<label name='DDistance' style='border: none; width:80px; font-size:14px;' id='dDistanceResult'></label>"+
+							   "<button type='button' style='width:75px; font-size:9px; margin-left:10px;' name='DDistanceB' onclick='getDrivingDistance(this)'>Get Distance</button>"+
+							"</td>"
+	"<td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td><td style='width:300px; height:30px;vertical-align: top;' name='selectPointAsNearest'><button type='button' style='width:100px;font-size:10px;margin-left:20px' name='selectPointAsNearest' class='btn btn-primary' class='btn btn-primary'  onclick='selectAsNearest(this)'>Select As Nearest</button></td></tr>"
 
 						}else{
-							markupNode +="<tr style='height: 30px;'><td><input type='checkbox' class='nodeBOQ' id=BOQ_"+result[i][0]+" ></td><td name='ID' style='min-width:150px;'><input name='ID' style='border: none;' value='"+result[i][7]+"' readonly></input ></td><td name='name' style='min-width:150px;'><input name='name' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td name='Node_Type' style='min-width:150px;'><input name='Node_Type' style='border: none;' value='"+result[i][2].split(':')[0]+
-							"' readonly></input ></td><td name='LONGG' style='min-width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][5]+"' readonly></input ></td><td style='min-width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][6]+"' readonly></input ></td><td style='min-width:50px;'>"+result[i][9]+"</td><td style='min-width:90px;'> <label name='DDistance' style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'>"+(result[i][10])+"</label></td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td></tr>"
+							markupNode +="<tr style='height: 30px;'><td style='text-align: center;'><input type='checkbox' class='nodeBOQ' id=BOQ_"+result[i][0]+" ></td>"+
+														"<td name='ID' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='ID' style='border: none;' value='"+result[i][7]+"' readonly></input ></td>"+
+														"<td name='name' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='name' style='border: none;' value='"+result[i][1]+"' readonly></input ></td>"+
+														"<td name='Node_Type' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='Node_Type' style='border: none;' value='"+result[i][2].split(':')[0]+"' readonly></input ></td>"+
+														"<td  name='LONGG' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='LONGG' style='border: none;' value='"+result[i][5]+"' readonly></input ></td>"+
+														"<td  name='LATT'style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;'t name='LATT' style='border: none;' value='"+result[i][6]+"' readonly></input ></td>"+
+														"<td name='linearDistance' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='linearDistance' style='border: none;' value='"+result[i][9]+"' readonly></input ></td>"+
+												"<td style='min-width:90px;'> <label name='DDistance' style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'>"+(result[i][10])+"</label></td>"+
+							"<td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td></tr>"
 						}
 				 }
 
@@ -694,17 +763,44 @@ function appendNearestNodesTable(result){
 			for(var i =0 ; i<result.length;i++){
 			//alert(result[i]);
 				if($("#StartEnd").is(":checked")){
-					markupHandh +="<tr style='height: 30px;'><td ><input type='checkbox' class='HandholeBOQ' id=BOQ_"+result[i][0]+" ></td><td  >"+result[i][0]+"</td><td name ='handholeId' style='min-width:250px;'>"+result[i][1]+"</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][3]+"' readonly></input ></td>"
-
+					markupHandh +="<tr style='height: 30px;'><td style='text-align: center;'><input type='checkbox' class='HandholeBOQ' id=BOQ_"+result[i][0]+" ></td>"+
+										"<td name='ID'style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='ID' style='border: none;' value='"+result[i][0]+"' readonly></input ></td>"+
+										"<td style='min-width:250px;' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='name' style='border: none;' value='"+result[i][1]+"' readonly></input ></td>"+
+										"<td name='LONGG' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='LONGG' style='border: none;' value='"+result[i][2]+"' readonly></input ></td>"+
+										"<td  name='LATT' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;'  name='LATT' style='border: none;' value='"+result[i][3]+"' readonly></input ></td>"+
+										"<td  style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;'  name='LATT' style='border: none;' value='' readonly></input ></td>"+
+										"<td  style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;'  name='LATT' style='border: none;' value='' readonly></input ></td>"+
+										"<td  style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;'  name='LATT' style='border: none;' value='' readonly></input ></td>"+
+										"<td  style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;'  name='LATT' style='border: none;' value='' readonly></input ></td>"+
+										"<td  style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;'  name='LATT' style='border: none;' value='' readonly></input ></td>";
+																													
 			    }
 			    else{
 			    	if(result[i][8] == null || result[i][8]==""){
 						//markupHandh +="<tr style='height: 30px;'><td><input type='checkbox' style='width:100px' ></td><td  >"+result[i][0]+"</td><td style='min-width:250px;'>"+result[i][1]+"</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][3]+"' readonly></input ></td><td style='width:100px;'>"+(result[i][9]/1.60934)+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='SomeDeleteRowFunction(this)'>Get Distance</button> </td></tr>"
-						markupHandh +="<tr style='height: 30px;'><td><input type='checkbox' class='HandholeBOQ' id=BOQ_"+result[i][0]+" ></td><td name='ID'><input name='ID' style='border: none;' value='"+result[i][0]+"' readonly></input ></td><td style='min-width:250px;' name='name'><input name='name' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][3]+"' readonly></input ></td><td style='width:100px;' name='linearDistance'><input name='linearDistance' style='border: none;' value='"+result[i][7]+"' readonly></input ></td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistance(this)'>Get Distance</button> </td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td><td style='width:300px; height:30px;vertical-align: top;' name='selectPointAsNearest'><button type='button' style='width:100px;font-size:10px;margin-left:20px' name='selectPointAsNearest'  class='btn btn-primary' onclick='selectAsNearest(this)'>Select As Nearest</button></td></tr>"
+						markupHandh +="<tr style='height: 30px;'><td style='text-align: center;'><input type='checkbox' class='HandholeBOQ' id=BOQ_"+result[i][0]+" ></td>"+
+																"<td name='ID'style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='ID' style='border: none;' value='"+result[i][0]+"' readonly></input ></td>"+
+																"<td style='min-width:250px;' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='name' style='border: none;' value='"+result[i][1]+"' readonly></input ></td>"+
+																"<td name='LONGG' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='LONGG' style='border: none;' value='"+result[i][2]+"' readonly></input ></td>"+
+																"<td  name='LATT' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;'  name='LATT' style='border: none;' value='"+result[i][3]+"' readonly></input ></td>"+
+						"<td style='min-width:250px;' name='linearDistance'><input  class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='linearDistance' style='border: none;' value='"+result[i][7]+"' readonly></input ></td>"+
+						"<td style='width:300px; height:30px; vertical-align: top;' name='DDistance'>"+
+																		    "<button type='button' style='width:75px; font-size:9px;' name='DDistanceB' onclick='getDrivingDistance(this)'>Get Distance</button>"+
+																		    "<label name='DDistance' style='border: none; width:80px; font-size:14px; margin-left:10px;' id='dDistanceResult'></label>"+
+																		"</td>"+
+											                         "<td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px; margin-right=100px;' id='geoDistance'></label></td>"+
+											"<td style='min-width:150px; height:30px;vertical-align: top;' name='selectPointAsNearest'><button type='button' style='width:100px;font-size:10px;margin-left:20px' name='selectPointAsNearest' class='btn btn-primary' onclick='selectAsNearest(this)'>Select As Nearest</button></td></tr>"
 
 					}else{
 						//markupHandh +="<tr style='height: 30px;' ><td><input type='checkbox' style='width:100px' ></td><td  >"+result[i][0]+"</td><td style='min-width:250px;'>"+result[i][1]+"</td><td style='width:150px;'>"+result[i][2]+"</td><td style='width:150px;'>"+result[i][3]+"</td><td style='width:100px;'>"+(result[i][9]/1.60934)+"</td><td style='min-width:90px;'> <label name='DDistance' style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'>"+(result[i][10])+"</label></td></tr>"
-						markupHandh +="<tr style='height: 30px;' ><td><input type='checkbox' class='HandholeBOQ' id=BOQ_"+result[i][0]+" ></td><td name='ID' ><input name='ID' style='border: none;' value='"+result[i][0]+"' readonly></input ></td><td name ='name' style='min-width:250px;'><input name='name' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td style='width:150px;'>"+result[i][2]+"</td><td style='width:150px;'>"+result[i][3]+"</td><td style='width:100px;'>"+(result[i][7])+"</td><td style='min-width:90px;'> <label name='DDistance' style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'>"+(result[i][8])+"</label></td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td></tr>"					
+						markupHandh +=						"<tr style='height: 30px;'><td style='text-align: center;'><input type='checkbox' class='HandholeBOQ' id=BOQ_"+result[i][0]+" ></td>"+
+																						"<td name='ID'style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='ID' style='border: none;' value='"+result[i][0]+"' readonly></input ></td>"+
+																						"<td style='min-width:250px;' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='name' style='border: none;' value='"+result[i][1]+"' readonly></input ></td>"+
+						"<td name='LONGG' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='LONGG' style='border: none;' value='"+result[i][2]+"' readonly></input ></td>"+
+						"<td  name='LATT' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;'  name='LATT' style='border: none;' value='"+result[i][3]+"' readonly></input ></td>"+
+						"<td style='width:100px;'>"+(result[i][7])+"</td>"+
+						"<td style='min-width:90px;'> <label name='DDistance' style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'>"+(result[i][8])+"</label></td>"+
+						"<td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td></tr>"					
 					}
 			    	
 			    }
@@ -715,6 +811,7 @@ function appendNearestNodesTable(result){
 	
 
 		}
+	
 		$("#searchHanhTBody").append(markupHandh);
 		if($("#circleRange").is(":checked")){
 			drivingDistance("findNearstHandhole");
@@ -774,17 +871,54 @@ function appendNearestNodesTable(result){
 			else {for(var i =0 ; i<result.length;i++){
 				//alert(result[i]);
 				if($("#StartEnd").is(":checked")){
-					markupManh +="<tr style='height: 30px;'><td ><input type='checkbox' class='ManholeBOQ' id=BOQ_"+result[i][0]+" ></td><td  >"+result[i][0]+"</td><td name ='manholeId' style='min-width:250px;'>"+result[i][1]+"</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][3]+"' readonly></input ></td>"
-			    }
+					markupManh +=					"<tr style='height: 30px;'>"+
+										"<td style='min-width:50px; text-align: center;'><input type='checkbox' class='ManholeBOQ' id=BOQ_"+result[i][0]+" ></td>"+
+										"<td name='ID' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='ID' style='border: none;' value='"+result[i][0]+"' readonly></input ></td>"+
+										"<td name='name' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='name' style='border: none;' value='"+result[i][1]+"' readonly></input ></td>"+
+										"<td name='LONGG' style='min-width:200px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='LONGG' style='border: none;' value='"+result[i][2]+"' readonly></input ></td>"+
+										"<td style='min-width:200px;' ><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='LATT' style='border: none;' value='"+result[i][3]+"' readonly></input ></td>"+
+										"<td style='min-width:200px;' ><input class='form-control text-input' style='width:100%; position:relative; background-color: white;'  style='border: none;' value='' readonly></input ></td>"+
+										"<td style='min-width:200px;' '><input class='form-control text-input' style='width:100%; position:relative; background-color: white;'  style='border: none;' value='' readonly></input ></td>"+
+										"<td style='min-width:200px;' ><input class='form-control text-input' style='width:100%; position:relative; background-color: white;'  style='border: none;' value='' readonly></input ></td>"+
+										"<td style='min-width:200px;' ><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' style='border: none;' value='' readonly></input ></td>";
+																				
+									
+									
+									
+											    }
 			    else{
 				
 			    	if(result[i][9] == null || result[i][9]==""){
+						
+						
+						
+					
 					//markupManh +="<tr style='height: 30px;'><td><input type='checkbox' style='width:100px' ></td><td  >"+result[i][0]+"</td><td style='min-width:250px;'>"+result[i][1]+"</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][3]+"' readonly></input ></td><td style='width:100px;'>"+(result[i][9]/1.60934)+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='SomeDeleteRowFunction(this)'>Get Distance</button> </td></tr>"
-					markupManh +="<tr style='height: 30px;'><td ><input type='checkbox' class='ManholeBOQ' id=BOQ_"+result[i][0]+" ></td><td name='ID' ><input name='ID' style='border: none;' value='"+result[i][0]+"' readonly></input ></td><td name='name' style='min-width:250px;'><input name='name' style='border: none;' value='"+result[i][1]+"' readonly></input ></td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+result[i][2]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+result[i][3]+"' readonly></input ></td><td style='width:100px;' name='linearDistance' ><input name='linearDistance' style='border: none;' value='"+result[i][7]+"' readonly></input ></td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px;margin-left:-85px ' name='DDistanceB'  onclick='getDrivingDistance(this)'>Get Distance</button> </td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td><td style='width:300px; height:30px;vertical-align: top;' name='selectPointAsNearest'><button type='button' style='width:100px;font-size:10px;margin-left:20px' name='selectPointAsNearest' class='btn btn-primary' onclick='selectAsNearest(this)'>Select As Nearest</button></td></tr>"
+					markupManh +="<tr style='height: 30px;'>"+
+					"<td style='min-width:50px;text-align: center;'><input type='checkbox' class='ManholeBOQ' id=BOQ_"+result[i][0]+" ></td>"+
+					"<td name='ID' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='ID' style='border: none;' value='"+result[i][0]+"' readonly></input ></td>"+
+					"<td name='name' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='name' style='border: none;' value='"+result[i][1]+"' readonly></input ></td>"+
+					"<td name='LONGG' style='min-width:200px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='LONGG' style='border: none;' value='"+result[i][2]+"' readonly></input ></td>"+
+					"<td style='min-width:200px;' name='LATT'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='LATT' style='border: none;' value='"+result[i][3]+"' readonly></input ></td>"+
+					"<td style='min-width:200px;' name='linearDistance' ><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='linearDistance' style='border: none;' value='"+result[i][7]+"' readonly></input ></td>"+
+					"<td style='width:300px; height:30px; vertical-align: top;' name='DDistance'>"+
+												    "<button type='button' style='width:75px; font-size:9px;' name='DDistanceB' onclick='getDrivingDistance(this)'>Get Distance</button>"+
+												    "<label name='DDistance' style='border: none; width:80px; font-size:14px; margin-left:10px;' id='dDistanceResult'></label>"+
+												"</td>"+
+					                         "<td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px; margin-right=100px;' id='geoDistance'></label></td>"+
+					"<td style='min-width:150px; height:30px;vertical-align: top;' name='selectPointAsNearest'><button type='button' style='width:100px;font-size:10px;margin-left:20px' name='selectPointAsNearest' class='btn btn-primary' onclick='selectAsNearest(this)'>Select As Nearest</button></td></tr>"
 
 				    }else{
 					//markupManh +="<tr style='height: 30px;' ><td><input type='checkbox' style='width:100px' ></td><td  >"+result[i][0]+"</td><td style='min-width:250px;'>"+result[i][1]+"</td><td style='width:150px;'>"+result[i][2]+"</td><td style='width:150px;'>"+result[i][3]+"</td><td style='width:100px;'>"+(result[i][9]/1.60934)+"</td><td style='min-width:90px;'> <label name='DDistance' style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'>"+(result[i][10])+"</label></td></tr>"
-						markupManh +="<tr style='height: 30px;' ><td><input type='checkbox' class='ManholeBOQ' id=BOQ_"+result[i][0]+" ></td><td  >"+result[i][0]+"</td><td name ='manholeId' style='min-width:250px;'>"+result[i][1]+"</td><td style='width:150px;'>"+result[i][2]+"</td><td style='width:150px;'>"+result[i][3]+"</td><td style='width:100px;'>"+(result[i][7])+"</td><td style='min-width:90px;' name='DDistance'> <label name='DDistance' style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'>"+(result[i][8])+"</label></td><td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td></tr>"
+						markupManh +=					"<tr style='height: 30px;'>"+
+										"<td style='min-width:50px;text-align: center;'><input type='checkbox' class='ManholeBOQ' id=BOQ_"+result[i][0]+" ></td>"+
+										"<td name='ID' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='ID' style='border: none;' value='"+result[i][0]+"' readonly></input ></td>"+
+										"<td name='name' style='min-width:250px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='name' style='border: none;' value='"+result[i][1]+"' readonly></input ></td>"+
+										"<td name='LONGG' style='min-width:200px;'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='LONGG' style='border: none;' value='"+result[i][2]+"' readonly></input ></td>"+
+										"<td style='min-width:200px;' name='LATT'><input class='form-control text-input' style='width:100%; position:relative; background-color: white;' name='LATT' style='border: none;' value='"+result[i][3]+"' readonly></input ></td>"+
+										"<td style='width:100px;'>"+(result[i][7])+"</td>"+
+						"<td style='min-width:90px;' name='DDistance'> <label name='DDistance' style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'>"+(result[i][8])+"</label></td>"+
+						"<td name='geoDistance'><label name='geoDistance' style='border: none;width:80px;font-size: 14px;' id='geoDistance'></label></td></tr>"
 				    }
 			}
 

@@ -1,4 +1,4 @@
-package com.aliat.alm.controller;
+package com.aliat.alm.physLayer;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -142,6 +142,7 @@ public class findNearestMulty {
 					Calendar calendar = new GregorianCalendar();
 					calendar.setTime(new Date());
 					int year = calendar.get(Calendar.YEAR);
+					
 
 					
 					int filterFlag = 2;
@@ -454,6 +455,7 @@ public class findNearestMulty {
 										ptPhysicalDataResult.clear();
 
 									}
+									model.addAttribute("indexx",request.getParameter("indexx"));
 
 									model.addAttribute("squareDraw", mapper.writeValueAsString(squareDraw));
 									model.addAttribute("circleDraw", mapper.writeValueAsString(circleDraw));

@@ -4818,7 +4818,7 @@ function junctionLayerUnCheckAll(){
 
 
 //Event for tree-Map view/hide from Map for all elements 	
-function allElementsCheckFilter(){
+function allElementsCheckFilter(){//zeinaa
 	$(".allElements").bind("change",function() {
 		var start=Date.now();
 		markerClusterManhole.clearMarkers();
@@ -5399,7 +5399,7 @@ function openSearchConnected(checkedOption, siteId, selectConnectedSearch, conne
         arrayDB.slice(0, distribBoardListSize),
         fpPath,
         bpPath,
-        NodeList  // Don't modify original array
+		NodeList // Don't modify original array
     ];
 
     appendConnectedTable(siteArray);
@@ -5420,7 +5420,9 @@ function handleViewOnMapClick(connectedViewOnMap, myLatLng) {
     
     if (connectedViewOnMap === "true" || connectedViewOnMap === "on") {
         viewOnMapCheckbox.prop("checked", true);
-        
+		$(".allElements").prop("checked", true).trigger("change");
+	 allElementsCheckFilter();//zeinaa
+	 	
         let idArray = [];
         console.log("Collecting IDs of checked checkboxes...");
         let treeContainerSelector = "#initial_ul_CurrentPhysicalLayer";
@@ -5463,7 +5465,8 @@ function handleViewOnMapClick(connectedViewOnMap, myLatLng) {
         map.fitBounds(mapCircle.getBounds());
     } else {
         viewOnMapCheckbox.prop("checked", false);
-        
+		$(".allElements").prop("checked", false).trigger("change");
+	allElementsCheckFilter();//zeinaa
         if (mapCircle) {
             mapCircle.setMap(null); // Remove circle when unchecked
             mapCircle = null;
@@ -5661,39 +5664,48 @@ function calculateDistanceAuxTube(sLat,sLng,dLat,dLng,tId,cId,indexForAuxs){
 	}
 	
 	function getDrivingDistance(e) {
-			if (typeof(e) == "object") {
-				var directionsService = new google.maps.DirectionsService();
-				
-				var lat = $(e).parent().parent().children('td[name="LATT"]').children('input').val();
-				var lng = $(e).parent().parent().children('td[name="LONGG"]').children('input').val();
-				
-				const originept = {lat: parseFloat(parseFloat($("#closestLatPoint").val())), lng: parseFloat(parseFloat($("#closestLongPoint").val()))};
-				const nextpt = {lat: parseFloat(lat), lng: parseFloat(lng)};
-				var request  = {
-					origin: originept,
-					destination: nextpt,
-					travelMode  : google.maps.DirectionsTravelMode.DRIVING
-				}
-				directionsService.route(request, function(response, status) {
-					if ( status == google.maps.DirectionsStatus.OK ) {
-						var resultt= ( response.routes[0].legs[0].distance.value) /1000 ;
+		    if (typeof e === "object") {
+		        var directionsService = new google.maps.DirectionsService();
+		        var row = $(e).closest('tr'); // Gets the closest parent row
 
-					   }
-					else {
-						resultt= "no Root";
-						//alert("no resultt ");
-					}
-					$(e).parent().parent().children('td[name="DDistanceB"]').children('button').hide();
-					$(e).parent().parent().children('td[name="DDistance"]').children('input').show();
-					$(e).parent().parent().children('td[name="DDistance"]').children('label').empty();
-					$(e).parent().parent().children('td[name="DDistance"]').children('label').append(resultt);
-					makeAllSortable();
-				  });
-				  
-			} else {
-				return false;
-			}
+		        var lat = row.find('td[name="LATT"] input').val();
+		        var lng = row.find('td[name="LONGG"] input').val();
 
+		        const origin = {
+		            lat: parseFloat($("#closestLatPoint").val()), 
+		            lng: parseFloat($("#closestLongPoint").val())
+		        };
+		        const destination = {
+		            lat: parseFloat(lat), 
+		            lng: parseFloat(lng)
+		        };
+
+		        var request = {
+		            origin: origin,
+		            destination: destination,
+		            travelMode: google.maps.DirectionsTravelMode.DRIVING
+		        };
+
+		        directionsService.route(request, function(response, status) {
+		            var result = "No Route"; // Default message
+
+		            if (status === google.maps.DirectionsStatus.OK) {
+		                result = (response.routes[0].legs[0].distance.value) / 1000;
+		            } else {
+		                console.error("Error fetching route:", status);
+		            }
+
+		            // Update the merged td
+		            var distanceCell = row.find('td[name="DDistance"]');
+		            distanceCell.find('button').hide(); // Hide button
+		            distanceCell.find('label').text(result); // Display result
+
+		            makeAllSortable();
+		        });
+
+		    } else {
+		        return false;
+		    }
 		}
 
 	
@@ -5761,49 +5773,79 @@ function autoFitTable(tableId) {
 */
 	
 
-function calculateGeoDistanceNearestPoints(tableId,surveyArray) {
-		var tableRows = document.querySelectorAll("#"+tableId+" tr");
-		var longLatValues = [];
-		
-		var closestPointLatitude = 0;
-		var closestPointLongitude = 0;
-		var currentPointLatitude = 0;
-		var currentPointLongitude = 0;
+function calculateGeoDistanceNearestPoints(tableId, surveyArray) {
+    
+    var tableRows = document.querySelectorAll("#" + tableId + " tr");
+  
+    var closestPointLatitude = parseFloat($("#closestLatPoint").val());
+    var closestPointLongitude = parseFloat($("#closestLongPoint").val());
 
-		let dictObj = {};
-		
-		  closestPointLatitude = $("#closestLatPoint").val();
-		  closestPointLongitude = $("#closestLongPoint").val();
+ 
+    let dictObj = {};
 
-		for (var i = 1; i < tableRows.length; i++) { // start the loop with index 1 to exclude the header			
-			
-			currentPointLatitude = tableRows[i].querySelector("td[name='LATT'] input").value;
-			currentPointLongitude = tableRows[i].querySelector("td[name='LONGG'] input").value;
+    for (var i = 1; i < tableRows.length; i++) { // Start from 1 to exclude the header row
+     
+        var row = tableRows[i];
 
-			var distance = (google.maps.geometry.spherical.computeDistanceBetween(new google.maps.LatLng(closestPointLatitude, closestPointLongitude), new google.maps.LatLng(currentPointLatitude, currentPointLongitude))/ 1000).toFixed(6); 			 
-			tableRows[i].querySelector("td[name='geoDistance'] label").textContent = distance;	
-			
-		
-				// This array is used in save survey
-				dictObj.ID = tableRows[i].querySelector("td[name='ID'] input ").value;
-				dictObj.Name = tableRows[i].querySelector("td[name='name'] input").value;
-				dictObj.longitude = currentPointLongitude;
-				dictObj.latitude = currentPointLatitude;
-				dictObj.linearDistance = tableRows[i].querySelector("td[name='linearDistance'] input").value;
-				
-				if(tableRows[i].querySelector("td[name='DDistance'] label").textContent == "no Root") {
-					dictObj.drivingDistance = "0";
-				}
-				else {
-					dictObj.drivingDistance = tableRows[i].querySelector("td[name='DDistance'] label").textContent;
-				}
-				
-				dictObj.geoDistance = distance;
-				surveyArray.push(dictObj);
-				dictObj = {}; 	
-			}	
-		
-}	
+        // Ensure the row and required elements exist
+        if (!row) {
+            continue;
+        }
+
+        var latInput = row.querySelector("td[name='LATT'] input");
+        var longInput = row.querySelector("td[name='LONGG'] input");
+
+        if (!latInput || !longInput) {
+            continue;
+        }
+
+        var currentPointLatitude = parseFloat(latInput.value);
+        var currentPointLongitude = parseFloat(longInput.value);
+
+      
+        if (isNaN(currentPointLatitude) || isNaN(currentPointLongitude)) {
+             continue;
+        }
+
+        // Calculate geographic distance
+        try {
+            var distance = (google.maps.geometry.spherical.computeDistanceBetween(
+                new google.maps.LatLng(closestPointLatitude, closestPointLongitude),
+                new google.maps.LatLng(currentPointLatitude, currentPointLongitude)
+            ) / 1000).toFixed(6);
+
+             row.querySelector("td[name='geoDistance'] label").textContent = distance;
+        } catch (error) {
+              continue;
+        }
+
+        // Check other required fields
+        var idInput = row.querySelector("td[name='ID'] input");
+        var nameInput = row.querySelector("td[name='name'] input");
+        var linearDistInput = row.querySelector("td[name='linearDistance'] input");
+        var dDistanceLabel = row.querySelector("td[name='DDistance'] label");
+
+        if (!idInput || !nameInput || !linearDistInput || !dDistanceLabel) {
+             continue;
+        }
+
+        // Populate the dictionary object
+        dictObj.ID = idInput.value;
+        dictObj.Name = nameInput.value;
+        dictObj.longitude = currentPointLongitude;
+        dictObj.latitude = currentPointLatitude;
+        dictObj.linearDistance = linearDistInput.value;
+
+        dictObj.drivingDistance = dDistanceLabel.textContent.trim() === "no Root" ? "0" : dDistanceLabel.textContent.trim();
+        dictObj.geoDistance = distance;
+
+      
+        surveyArray.push(dictObj);
+        dictObj = {}; // Reset for the next iteration
+    }
+
+   
+}
 
 function appendConnectedTable(result) {
     // Helper function to handle null and "null" values
@@ -5817,6 +5859,7 @@ function appendConnectedTable(result) {
     const fibers = result[2] || [];
     let fpPath = result[4] ? JSON.parse(result[4]) : [];
     let bpPath = result[5] ? JSON.parse(result[5]) : [];
+
     let markupConFiber = "";
     let markupConDb = "";
 	let markupConNode= "";
@@ -5907,40 +5950,43 @@ function appendConnectedTable(result) {
 	 $("#connDB").append(markupConDb);
 
 
-	if (!result[6] || result[6].length === 0) {
-	       markupConNode = "<tr style='height:20px;'><td colspan='3'>There is no result</td></tr>";
-	   } else {
-	       result[6].forEach((res) => {
-	           const id = sanitizeValue(res[7]);
-	           const name = sanitizeValue(res[1]);
-	           const type = sanitizeValue(res[8]);
-			   const indexFiber= 0;
-			markupConNode += 
-			   			`<tr id="fiber_Row${indexFiber}" style="height: 40px;">
-			   						    <td style="min-width:250px;">
-			   						        <input id="fiberId${indexFiber}" class="form-control text-input"
-			   						               style="width:100%; position:relative; background-color: white;"
-			   						               value="${id}" readonly>
-			   						    </td>
-			   						    <td style="min-width:250px;">
-			   						        <input id="fiberName${indexFiber}" class="form-control text-input"
-			   						               style="width:100%; position:relative; background-color: white;"
-			   						               value="${name}" readonly>
-			   						    </td>
-			   						    <td style="min-width:100px;">
-			   						        <input id="fiberStatus${indexFiber}" class="form-control text-input"
-			   						               style="width:100%;  position:relative; text-align:center; background-color: white;"
-			   						               value="${type}"  readonly>
-			   						    </td>
-			   						  </tr>`;
+	 console.log(result[6]);
+	 // Check if result[6] has data, otherwise display "no result"
+	 if (!result[6] || result[6].length === 0) {
+	     markupConNode = "<tr style='height:20px;'><td colspan='3'>There is no result</td></tr>";
+	 } else {
+	     // Loop through result[6] to create rows
+	     result[6].forEach((res, indexFiber) => {
+	         const id = sanitizeValue(res[7]);
+	         const name = sanitizeValue(res[1]);
+	         const type = sanitizeValue(res[8]);
+	         
+	         markupConNode += `
+	             <tr id="fiber_Row${indexFiber}" style="height: 40px;">
+	                 <td style="min-width:250px;">
+	                     <input id="fiberId${indexFiber}" class="form-control text-input"
+	                            style="width:100%; position:relative; background-color: white;"
+	                            value="${id}" readonly>
+	                 </td>
+	                 <td style="min-width:250px;">
+	                     <input id="fiberName${indexFiber}" class="form-control text-input"
+	                            style="width:100%; position:relative; background-color: white;"
+	                            value="${name}" readonly>
+	                 </td>
+	                 <td style="min-width:100px;">
+	                     <input id="fiberStatus${indexFiber}" class="form-control text-input"
+	                            style="width:100%;  position:relative; text-align:center; background-color: white;"
+	                            value="${type}" readonly>
+	                 </td>
+	             </tr>`;
+	     });
+	 }
 
+	 // Fetch NodeMapping from result[7]
+	
+	 // Append the markup to the table
+	 $("#connNode").append(markupConNode);
 
-	       });
-	   }
-
-	   // Append database results to table
-	   $("#connNode").append(markupConNode);
-	  
 }
 
 // Helper function to create fiber rows
