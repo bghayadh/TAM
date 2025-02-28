@@ -139,6 +139,31 @@ public class CableBreakReportController {
 	 * 6) Get detailed information of the sites and clients based on the obtained IDs.	 
 	 * 
 	 * We are missing (until date 1st of March 2025) to include the junctions in the source and destination.
+	 * 
+	 * 
+	 * Below is the logic to determine the breaking sequence:
+	 * We will have 4 ratios, and the smallest ratio will be the consider ratio and based on it, the breaking
+	 * sequence will be determined:
+	 * 
+	 * ratio1=(prvToBreakdistance + nearestToBreakdistance) /prvTonearestdistance;
+	 * ratio2=(nxtToBreakdistance + nearestToBreakdistance) /nearestToNextdistance;
+	 * ratio3=(prvPrvToBreakdistance + prvToBreakdistance) /prvPrvToPrvdistance;
+	 * ratio4=(nxtNxtToBreakdistance + nxtToBreakdistance) /nextToNextNextdistance;
+	 * 
+	 * if ratio 1 is the smallest -> breaking point sequence is previous sequence.
+	 * if ratio 2 is the smallest -> breaking point sequence is the nearest point sequence.
+	 * If ratio 3 is the smallest -> breaking point sequence is the previous previous sequence (nearest sequence - 2).
+	 * If ratio 4 is the smallest -> breaking point sequence is the next sequence (nearest sequence + 1).
+	 * 
+	 * And these ratios results are depending on the shape of the cable.
+	 * Basically the angles that are related to the ratios as following: 
+	 * ratio 1 is applied for angles > 90 degree which is obtuse angle and breaking is just before to the nearest.
+	 * ratio 2 is applied for angles > 90 degree which is obtuse angle and breaking is just after the nearest.
+	 * ratio 3 is applied for acute and right angles.
+	 * ratio 4 is applied for acute and right angles. Review document to know the different between ratio 3 and ratio 4 cases.
+	 * 
+	 * 
+	 * 
 	 */
 		
 	
