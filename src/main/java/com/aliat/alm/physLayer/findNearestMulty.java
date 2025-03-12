@@ -455,7 +455,7 @@ public class findNearestMulty {
 										ptPhysicalDataResult.clear();
 
 									}
-									model.addAttribute("indexx",request.getParameter("indexx"));
+									model.addAttribute("rowMultyIndex",request.getParameter("rowMultyIndex"));
 
 									model.addAttribute("squareDraw", mapper.writeValueAsString(squareDraw));
 									model.addAttribute("circleDraw", mapper.writeValueAsString(circleDraw));

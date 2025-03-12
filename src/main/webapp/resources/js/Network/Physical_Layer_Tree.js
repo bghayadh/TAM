@@ -16887,7 +16887,7 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
 	
 
  // Array to store markers
- let indexSite = Number(indexx)+1; // Initialize indexSite globally
+ let indexSite = Number(rowMultyIndex)+1; // Initialize indexSite globally
  	 // Ensure LastlocationNumber is defined
 
  	$("#add_Multy").on('click', function() {

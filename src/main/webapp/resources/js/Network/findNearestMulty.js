@@ -24,7 +24,7 @@ $("#Multy_auxiliary > tbody").find('input[name="record"]').each(function(){
   var locationNum = $row.find('td[name="location_number"] input').val(); // Get the location number
   var circleDraw = $row.find('input[name="circleRange' + indexSite + '"]').prop('checked') ? 1 : 0;
   var squareDraw = $row.find('input[name="squareRange' + indexSite + '"]').prop('checked') ? 1 : 0;
-  var indexx=  indexSite;
+  var rowMultyIndex=  indexSite;
 		 if($("#circleRange_multy").prop('checked')){
 		     checkedOption = "circleRange_multy";  
 			     urlString += "&seq="+seq+"";
@@ -38,7 +38,7 @@ $("#Multy_auxiliary > tbody").find('input[name="record"]').each(function(){
 			     urlString += "&closestDisRange="+closestDisRange+"";
 			     urlString += "&nop="+$("#noP_Multy").val()+"";
 			     urlString += "&updateModfUser="+updateModfUser;
-				 urlString += "&indexx="+indexx;
+				 urlString += "&rowMultyIndex="+rowMultyIndex;
 				 window.location.href = getContext()+"/findNearestMulty?Checked="+checkedOption+urlString;  
 		 }
 		}); 
@@ -79,9 +79,8 @@ function uncheckAll(ptListObject,ptDataObject) {
 }
 
 var ptListObject, ptDataObject;
-function openFindNearestMultySite(checkedOption, rowInfo, noP, closestDisRange, ptList, ptData, getRelatedPoints, Lats, Longs, circleDraw , squareDraw,locationNum, indexx) {
+function openFindNearestMultySite(checkedOption, rowInfo, noP, closestDisRange, ptList, ptData, getRelatedPoints, Lats, Longs, circleDraw , squareDraw,locationNum, rowMultyIndex) {
    
-	console.log(indexx);
 	
     $("#fiberCitySearch").modal("show");
     $('a[href="#MultyClosest"]').click();

@@ -1269,18 +1269,20 @@ $("#SetOTDRCoordinate").on('click',function(){
 		showPointsArray=[];
 		//build src dest markers
 		if(window["mapPointsNames_"+cableID] != undefined) {
+			v=[];
 			showPointsArray = window["mapPointsNames_"+cableID];
 			//console.log("showPointsArray "+showPointsArray)
 			for(var x=0;x<showPointsArray.length;x++) {
 				if(x ==0 || x ==(showPointsArray.length-1)){// only src and destination 
 				if(showPointsArray[x].startsWith("WARE_")==true) {
 					var wareID = showPointsArray[x].split(":")[1];
+					
 					var longLat = String(window["mapPoints_"+cableID][x]).replaceAll(/[( )]/g, '');
 					srcDestID.push([wareID,"warehouse"]);
 					if(distinctSites.includes(wareID)==false) {
 						distinctSites.push(wareID);
 						if(!markersSites[wareID]){
-							createMarker(wareID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[2],'redSiteIcon.png',markersSites,markerClusterSites)
+							createMarker(wareID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[2],'redSiteIcon.png',markersSites,markerClusterSites,v)
 						}
 						else {					
 							markersSites[wareID].setMap(map);
@@ -1296,7 +1298,7 @@ $("#SetOTDRCoordinate").on('click',function(){
 					if(distinctCustomers.includes(ID)==false) {
 						distinctCustomers.push(ID);
 						if(!markersCustomer[ID]){
-							createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],'customerIcon.png',markersCustomer,markerClusterCustomers)
+							createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],'customerIcon.png',markersCustomer,markerClusterCustomers,v)
 						}
 						else {					
 							markersCustomer[ID].setMap(map);
@@ -1309,13 +1311,12 @@ $("#SetOTDRCoordinate").on('click',function(){
 					var ID = showPointsArray[x].split(":")[0];
 					var longLat = String(window["mapPoints_"+cableID][x]).replaceAll(/[( )]/g, '');
 					var manholeName = showPointsArray[x].split(":")[1];
-					
 					if(manholeName.endsWith("_J")) {
 						srcDestID.push([ID,"manholewithJct"]);
 						if(distinctManholesWithJct.includes(ID)==false) {
 							distinctManholesWithJct.push(ID);
 							if(!markersManholesWithJct[ID]){
-								createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],"manholeJct.png",markersManholesWithJct,markerClusterManholesWithJct)
+								createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],"manholeJct.png",markersManholesWithJct,markerClusterManholesWithJct, v)
 							}
 							else {					
 								markersManholesWithJct[ID].setMap(map);
@@ -1328,7 +1329,7 @@ $("#SetOTDRCoordinate").on('click',function(){
 						if(distinctManholes.includes(ID)==false) {
 							distinctManholes.push(ID);
 							if(!markersManholes[ID]){
-								createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],"manholeRed.png",markersManholes,markerClusterManholes)
+								createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],"manholeRed.png",markersManholes,markerClusterManholes, v)
 							}
 							else {					
 								markersManholes[ID].setMap(map);
@@ -1347,7 +1348,7 @@ $("#SetOTDRCoordinate").on('click',function(){
 						if(distinctHandholesWithJct.includes(ID)==false) {
 							distinctHandholesWithJct.push(ID);
 							if(!markersHandholesWithJct[ID]){
-								createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],"handholeYellowJct.png",markersHandholesWithJct,markerClusterHandholesWithJct)
+								createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],"handholeYellowJct.png",markersHandholesWithJct,markerClusterHandholesWithJct,v)
 							}
 							else {					
 								markersHandholesWithJct[ID].setMap(map);
@@ -1360,7 +1361,7 @@ $("#SetOTDRCoordinate").on('click',function(){
 						if(distinctHandholes.includes(ID)==false) {
 							distinctHandholes.push(ID);
 							if(!markersHandholes[ID]){
-								createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],"handholeYellow.png",markersHandholes,markerClusterHandholes)
+								createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],"handholeYellow.png",markersHandholes,markerClusterHandholes,v)
 							}
 							else {					
 								markersHandholes[ID].setMap(map);
@@ -1381,7 +1382,7 @@ $("#SetOTDRCoordinate").on('click',function(){
 					if(distinctDB.includes(ID)==false) {
 						distinctDB.push(ID);
 						if(!markersDB[ID]){
-							createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],'backboneDB.png',markersDB,markerClusterDB)
+							createMarker(ID,longLat.split(",")[1],longLat.split(",")[0],showPointsArray[x].split(":")[1],'backboneDB.png',markersDB,markerClusterDB, v)
 						}
 						else {					
 							markersDB[ID].setMap(map);
@@ -1394,7 +1395,14 @@ $("#SetOTDRCoordinate").on('click',function(){
 
 		}
 				   
-			
+	var sDIds=[]; //source and distination ids 
+
+		    for (let i = 0; i < srcDestID.length; i++) {
+		    	sDIds.push(srcDestID[i][0]); // Extract the first element and add it to result
+		    }
+
+
+
 		
 			for (var i = 0; i < filteredGridData.length; i++) {
 
@@ -1403,7 +1411,7 @@ $("#SetOTDRCoordinate").on('click',function(){
 						ID = filteredGridData[i]["locationId"];
 						distinctCustomers.push(ID);
 						if(!markersCustomer[ID]){
-							createMarker(ID,filteredGridData[i]["locationLongitude"],filteredGridData[i]["locationLatitude"],filteredGridData[i]["locationName"],'customerIcon.png',markersCustomer,markerClusterCustomers)
+							createMarker(ID,filteredGridData[i]["locationLongitude"],filteredGridData[i]["locationLatitude"],filteredGridData[i]["locationName"],'customerIcon.png',markersCustomer,markerClusterCustomers,v)
 						}
 						else {					
 							markersCustomer[ID].setMap(map);
@@ -1416,7 +1424,7 @@ $("#SetOTDRCoordinate").on('click',function(){
 						ID = filteredGridData[i]["locationId"];
 						distinctSites.push(ID);
 						if(!markersSites[ID]){
-							createMarker(ID,filteredGridData[i]["locationLongitude"],filteredGridData[i]["locationLatitude"],filteredGridData[i]["locationName"],'redSiteIcon.png',markersSites,markerClusterSites)
+							createMarker(ID,filteredGridData[i]["locationLongitude"],filteredGridData[i]["locationLatitude"],filteredGridData[i]["locationName"],'redSiteIcon.png',markersSites,markerClusterSites,v)
 						}
 						else {					
 							markersSites[ID].setMap(map);
@@ -1427,8 +1435,9 @@ $("#SetOTDRCoordinate").on('click',function(){
 				
 	        } 
 			////////////////7
+			
 			//show affected element on the map
-			for (var i = 0; i < affectedElement.length; i++) {
+			for (var i = 0; i < affectedElement.length; i++) {//zeinaa 
 				if(affectedElement[i][4] =="DB"){
 					if(distinctDB.includes(affectedElement[i][0])==false) {
 						ID = affectedElement[i][0];
@@ -1448,6 +1457,7 @@ $("#SetOTDRCoordinate").on('click',function(){
 
 				else if(affectedElement[i][4] =="Junction"){
 					if(affectedElement[i][5].startsWith("MH")){
+					if(sDIds.includes(affectedElement[i][5])==false ){
 						if(distinctManholesWithJct.includes(affectedElement[i][0])==false) {
 							ID = affectedElement[i][0];
 							var longitude = affectedElement[i][2];
@@ -1455,7 +1465,7 @@ $("#SetOTDRCoordinate").on('click',function(){
 							var Name = affectedElement[i][1];
 							distinctManholesWithJct.push(ID);
 							if(!markersManholesWithJct[ID]){
-								createMarker(ID,longitude,latitude,Name,"manholeJct.png",markersManholesWithJct,markerClusterManholesWithJct)
+								createMarker(ID,longitude,latitude,Name,"manholeJct.png",markersManholesWithJct,markerClusterManholesWithJct,affectedElement[i],v)
 							}
 							else {					
 								markersManholesWithJct[ID].setMap(map);
@@ -1463,8 +1473,9 @@ $("#SetOTDRCoordinate").on('click',function(){
 							}
 						}
 					}
+					}
 					else if(affectedElement[i][5].startsWith("HH")){
-
+						if(sDIds.includes(affectedElement[i][5])==false ){
 						if(distinctHandholesWithJct.includes(affectedElement[i][0])==false) {
 							ID = affectedElement[i][0];
 							var longitude = affectedElement[i][2];
@@ -1472,7 +1483,7 @@ $("#SetOTDRCoordinate").on('click',function(){
 							var Name = affectedElement[i][1];
 							distinctHandholesWithJct.push(ID);
 							if(!markersHandholesWithJct[ID]){
-								createMarker(ID,longitude,latitude,Name,"handholeYellowJct.png",markersHandholesWithJct,markerClusterHandholesWithJct)
+								createMarker(ID,longitude,latitude,Name,"handholeYellowJct.png",markersHandholesWithJct,markerClusterHandholesWithJct,affectedElement[i],v)
 							}
 							else {					
 								markersHandholesWithJct[ID].setMap(map);
@@ -1482,7 +1493,7 @@ $("#SetOTDRCoordinate").on('click',function(){
 
 
 						}
-
+					}
 					//independent junctions 
 					else{
 						if(distinctJct.includes(affectedElement[i][0])==false) {
@@ -1492,7 +1503,7 @@ $("#SetOTDRCoordinate").on('click',function(){
 							var Name = affectedElement[i][1];
 							distinctJct.push(ID);
 							if(!markersJct[ID]){
-								createMarker(ID,longitude,latitude,Name,'junctionOrange.png',markersJct,markerClusterJct)
+								createMarker(ID,longitude,latitude,Name,'junctionOrange.png',markersJct,markerClusterJct,affectedElement[i],v)
 							}
 							else {					
 								markersJct[ID].setMap(map);
@@ -2417,7 +2428,7 @@ function buildPath(Id,fiberArray,Name,path,strokeColor,strokeOpacity,strokeWeigh
 
 
 
-function createMarker(ID,longitude,latitude,Name,iconImg,markersArray,markerClusterArray) {
+function createMarker(ID,longitude,latitude,Name,iconImg,markersArray,markerClusterArray, v) {
 
 	markerId=ID;		
 	const pos = new google.maps.LatLng(latitude,longitude);
@@ -2446,11 +2457,73 @@ function createMarker(ID,longitude,latitude,Name,iconImg,markersArray,markerClus
 				scaledSize: new google.maps.Size(20, 20),
 		};
 	}
-	var idInfo ="<b style='font-size:13px;'><u>ID: </u></b>"+ID;
-	var nameInfo ="<b style='font-size:13px;'><u>Name: </u></b>"+Name;
-	var data="<div></br>"+idInfo+"</br>"+nameInfo+"</div>";			
-		   
-	
+	if(iconImg== "manholeJct.png"){
+		if(v.length === 0){
+			var idInfo ="<b style='font-size:13px;'><u>Manhole ID: </u></b>"+ID;
+			var nameInfo ="<b style='font-size:13px;'><u>Manhole Name: </u></b>"+Name;
+				var data="<div></br>"+idInfo+"</br>"+nameInfo+"</br></div>";		
+
+			}
+		else{
+		var idInfo ="<b style='font-size:13px;'><u>Manhole ID: </u></b>"+v[5];
+		var nameInfo ="<b style='font-size:13px;'><u>Manhole Name: </u></b>"+v[6];
+		var idInfo1 ="<b style='font-size:13px;'><u>Junction ID: </u></b>"+ID;
+		var nameInfo1 ="<b style='font-size:13px;'><u>Junction Name: </u></b>"+Name;
+		var data="<div></br>"+idInfo+"</br>"+nameInfo+"</br>"+idInfo1+"</br>"+nameInfo1+"</div>";		
+
+		}
+	}
+	else if(iconImg== "manholeRed.png"){
+		var idInfo ="<b style='font-size:13px;'><u>Manhole ID: </u></b>"+ID;
+		var nameInfo ="<b style='font-size:13px;'><u>Manhole Name: </u></b>"+Name;
+		var data="<div></br>"+idInfo+"</br>"+nameInfo+"</div>";		
+
+		}
+	else if(iconImg== "handholeYellowJct.png"){
+		if(v.length === 0){
+			var idInfo ="<b style='font-size:13px;'><u>Handhole ID: </u></b>"+v[5];
+			var nameInfo ="<b style='font-size:13px;'><u>Handhole Name: </u></b>"+v[6];
+				var data="<div></br>"+idInfo+"</br>"+nameInfo+"</br></div>";		
+
+			}
+		else{
+		var idInfo ="<b style='font-size:13px;'><u>Handhole ID: </u></b>"+v[5];
+		var nameInfo ="<b style='font-size:13px;'><u>Handhole Name: </u></b>"+v[6];
+		var idInfo1 ="<b style='font-size:13px;'><u>Junction ID: </u></b>"+ID;
+		var nameInfo1 ="<b style='font-size:13px;'><u>Junction Name: </u></b>"+Name;
+		var data="<div></br>"+idInfo+"</br>"+nameInfo+"</br>"+idInfo1+"</br>"+nameInfo1+"</div>";		
+		}
+		}
+	else if(iconImg== "handholeYellow.png"){
+		var idInfo ="<b style='font-size:13px;'><u>Handhole ID: </u></b>"+ID;
+		var nameInfo ="<b style='font-size:13px;'><u>Handhole Name: </u></b>"+Name;
+		var data="<div></br>"+idInfo+"</br>"+nameInfo+"</div>";		
+
+		}
+	else if(iconImg== "backboneDB.png"){
+		var idInfo ="<b style='font-size:13px;'><u>DB ID: </u></b>"+ID;
+		var nameInfo ="<b style='font-size:13px;'><u>DB Name: </u></b>"+Name;
+		var data="<div></br>"+idInfo+"</br>"+nameInfo+"</div>";		
+
+		}
+	else if(iconImg== "junctionOrange.png"){
+		var idInfo ="<b style='font-size:13px;'><u>Junction ID: </u></b>"+ID;
+		var nameInfo ="<b style='font-size:13px;'><u>Junction Name: </u></b>"+Name;
+		var data="<div></br>"+idInfo+"</br>"+nameInfo+"</div>";		
+
+		}
+	else if(iconImg== "redSiteIcon.png"){
+		var idInfo ="<b style='font-size:13px;'><u>Site ID: </u></b>"+ID;
+		var nameInfo ="<b style='font-size:13px;'><u>Site Name: </u></b>"+Name;
+		var data="<div></br>"+idInfo+"</br>"+nameInfo+"</div>";		
+
+		}
+	else if(iconImg== "customerIcon.png"){
+		var idInfo ="<b style='font-size:13px;'><u>Customer ID: </u></b>"+ID;
+		var nameInfo ="<b style='font-size:13px;'><u>Customer Name: </u></b>"+Name;
+		var data="<div></br>"+idInfo+"</br>"+nameInfo+"</div>";		
+
+		}
 	if(!markersArray[markerId]){
 		elementMarker = new google.maps.Marker({
 			position: pos,
@@ -2728,14 +2801,14 @@ function showLocation(ID,rowIndex){
 	 
 		
 		if(mapFlag=="0") { // Show on map is not clicked before (markers are not set on map)
-
+a=[];
 			if(locationType =="Customer") {
 				$('.showHideAllCustCheckbox').prop('checked', true);
 				$(".showHideAllCustCheckbox").attr('disabled', false);
 		        document.getElementById("custCount").textContent = "";
 		        if(!markersCustomer[ID]){
 		        	distinctCustomers.push(ID); //  this array is used when checking all cust from legend
-					createMarker(ID,longitude,latitude,Name,'customerIcon.png',markersCustomer,markerClusterCustomers)
+					createMarker(ID,longitude,latitude,Name,'customerIcon.png',markersCustomer,markerClusterCustomers,a)
 				}  
 				document.getElementById("custCount").textContent = "("+distinctCustomers.length+")";    				
 			}
@@ -2745,7 +2818,7 @@ function showLocation(ID,rowIndex){
 		        document.getElementById("sitesCount").textContent = "";
 		        if(!markersSites[ID]){
 		        	distinctSites.push(ID); //  this array is used when checking all sites from legend
-					createMarker(ID,longitude,latitude,Name,'redSiteIcon.png',markersSites,markerClusterSites)
+					createMarker(ID,longitude,latitude,Name,'redSiteIcon.png',markersSites,markerClusterSites, a)
 				}  
 				document.getElementById("sitesCount").textContent = "("+distinctSites.length+")";    				
 			}
