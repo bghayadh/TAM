@@ -522,7 +522,14 @@ public class CableBreakReportController {
 								"SELECT AUXILIARY_POINT_ID FROM FIBER_AUXILIARY_POINTS "
 								+ "WHERE "
 								+ "FIBER_CABLE_ID ='"+fiberCableID+"' AND (AUXILIARY_POINT_NAME LIKE '%_J' OR AUXILIARY_POINT_ID like 'JCT%' OR AUXILIARY_POINT_ID like 'MH%' OR AUXILIARY_POINT_ID like 'HH%') AND SEQ_SORTING <= "+breakingPtSeq+"").getResultList();
-					
+					if(junctionListBeforBreakingPt.isEmpty()) {
+						junctionListBeforBreakingPt = session.createNativeQuery(
+								"SELECT SOURCE_ID FROM FIBER_CABLES "
+								+ "WHERE "
+								+ "FIBER_CABLE_ID ='"+fiberCableID+"'").getResultList();
+			
+						
+					}
 					    
 					    for (int i=0;i<junctionListBeforBreakingPt.size();i++) {
 					    	String tempjJunctionId = String.valueOf(junctionListBeforBreakingPt.get(i));
@@ -535,7 +542,14 @@ public class CableBreakReportController {
 								"SELECT AUXILIARY_POINT_ID FROM FIBER_AUXILIARY_POINTS "
 								+ "WHERE "
 								+ "FIBER_CABLE_ID ='"+fiberCableID+"' AND (AUXILIARY_POINT_NAME LIKE '%_J' OR AUXILIARY_POINT_ID like 'JCT%' OR AUXILIARY_POINT_ID like 'MH%' OR AUXILIARY_POINT_ID like 'HH%') AND SEQ_SORTING > "+breakingPtSeq+"").getResultList();
-					
+						if(junctionListAfterBreakingPt.isEmpty()) {
+							junctionListAfterBreakingPt = session.createNativeQuery(
+									"SELECT DESTINATION_ID FROM FIBER_CABLES "
+									+ "WHERE "
+									+ "FIBER_CABLE_ID ='"+fiberCableID+"'").getResultList();
+				
+							
+						}
 					    
 					    for (int i=0;i<junctionListAfterBreakingPt.size();i++) {
 					    	String tempjJunctionId = String.valueOf(junctionListAfterBreakingPt.get(i));
@@ -732,12 +746,13 @@ public class CableBreakReportController {
 					    
 					    
 						
-						String affectedElementt = "SELECT DISTINCT DB_ID as elementID,DB_NAME as elementName,DB_LONGITUDE as elementLong,DB_LATITUDE as elementLat,'DB' as elementType,'' as parentID FROM DISTRIBUTION_BOARD where DB_ID IN(:Param7) "
+						String affectedElementt = "SELECT DISTINCT DB_ID as elementID,DB_NAME as elementName,DB_LONGITUDE as elementLong,DB_LATITUDE as elementLat,'DB' as elementType,'' as parentID, '' as parentName FROM DISTRIBUTION_BOARD where DB_ID IN(:Param7) "
 								+ "UNION "
-								+ "SELECT DISTINCT JUNCTION_ID as elementID,JUNCTION_NAME as elementName,LONGITUDE as elementLong,LATITUDE as elementLat,'Junction' as elementType,PHYSICAL_LAYER_ID as parentID FROM  JUNCTION where JUNCTION_ID IN(:Param7)";
+								+ "SELECT DISTINCT JUNCTION_ID as elementID,JUNCTION_NAME as elementName,LONGITUDE as elementLong,LATITUDE as elementLat,'Junction' as elementType,PHYSICAL_LAYER_ID as parentID, PHYSICAL_LAYER_NAME as parentName FROM  JUNCTION where JUNCTION_ID IN(:Param7)";
 						query = session.createNativeQuery(affectedElementt);
 					    query.setParameter("Param7", affectedElement);
 					    List<Object[]> affectedElementList =query.getResultList();
+
 						rtn.put("ElementList", affectedElementList);
 						
 						// we aim to add IDs of handhole and manhole to the affectedElement list.it will be used to filter affected related cable 
