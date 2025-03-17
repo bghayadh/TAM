@@ -688,7 +688,7 @@ function updateCheckedCount(locationNumber, totalCount, isChecked, manholeId) {
     const checkedItemsCount = checkedCounts[locationNumber].length;
 
     // Log the number of checked items / total count
-    console.log(`Location ${locationNumber}: Checked ${checkedItemsCount} / ${totalCount}`);
+  
 
     // After updating the checked IDs, compare the array length with totalCount
     if (checkedItemsCount ===Number(totalCount)) {  
@@ -1293,6 +1293,8 @@ function appendNearestDBoardTableMulty(result, totalCount, locationNumber){
 												
 			            if (id && id.startsWith("BOOQ_")) {
 			                var fiberId = id.slice(5);
+							$("#" + fiberId).children('input:checkbox').prop('checked', false); // Check the checkbox in the tree
+										          
 			                $("#network_tree").find("input[type='checkbox'][id='FiberPath_f_" + fiberId + "']").prop('checked', false);
 			            }
 			        });
