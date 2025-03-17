@@ -539,11 +539,11 @@
 											<p></p>
 											
 																											<div class="container-fluid" style="overflow-x: auto;  border:none;">
-																											<div id="findNearestStrandRes"></div>
-             <div class="row" style="height: 500px; border:none">
+																												<div id="findNearestFiberRes"></div>
+									           <div class="row" style="height: 500px; border:none">
                 <fieldset class="field_set" style=" border:none">
                     <legend class="fieldset_legend" style="width: auto;"></legend>
-                    	<table id="nearestStrand"
+                    	<table id="nearestFiber"
 												class="table table-striped table-bordered table-sm"
 												style="display: block; height: 400px; overflow: auto; max-width:850px; margin-right:20px; margin-left:10px">
 												<thead style="background: #E9ECEF;">
@@ -551,20 +551,21 @@
 														
 														
 														
-									    			 <th style="min-width: 80px; text-align: center;">Strand ID</th>
-                                                    <th style="width: 250px; text-align: center;">Strand Name</th>
+									    			 <th style="min-width: 80px; text-align: center;">Fiber ID</th>
+                                                    <th style="width: 250px; text-align: center;">Fiber Name</th>
                                                     <th style="width: 150px; text-align: center;">Source</th>
                                                     <th style="width: 150px; text-align: center;">Destination</th>
                                                    
 														
 													</tr>
 												</thead>
-												<tbody id="nearStrandId">
+												<tbody id="nearFiberId">
 												</tbody>
 											</table>
                 
                 </fieldset>
             </div>
+						
        
 											
 			
@@ -596,11 +597,13 @@
                 </fieldset>
             </div>
 									<br>
-									<div id="findNearestFiberRes"></div>
-									           <div class="row" style="height: 500px; border:none">
+																																
+																											
+																											<div id="findNearestStrandRes"></div>
+             <div class="row" style="height: 500px; border:none">
                 <fieldset class="field_set" style=" border:none">
                     <legend class="fieldset_legend" style="width: auto;"></legend>
-                    	<table id="nearestFiber"
+                    	<table id="nearestStrand"
 												class="table table-striped table-bordered table-sm"
 												style="display: block; height: 400px; overflow: auto; max-width:850px; margin-right:20px; margin-left:10px">
 												<thead style="background: #E9ECEF;">
@@ -608,20 +611,21 @@
 														
 														
 														
-									    			 <th style="min-width: 80px; text-align: center;">Fiber ID</th>
-                                                    <th style="width: 250px; text-align: center;">Fiber Name</th>
+									    			 <th style="min-width: 80px; text-align: center;">Strand ID</th>
+                                                    <th style="width: 250px; text-align: center;">Strand Name</th>
                                                     <th style="width: 150px; text-align: center;">Source</th>
                                                     <th style="width: 150px; text-align: center;">Destination</th>
                                                    
 														
 													</tr>
 												</thead>
-												<tbody id="nearFiberId">
+												<tbody id="nearStrandId">
 												</tbody>
 											</table>
                 
                 </fieldset>
-            </div></div></div> 	
+            </div>
+								</div></div> 	
 								<div class="tab-pane" id="nodeP" role="tabpanel" aria-labelledby="nodePoint-tab">
 											<p></p>
 											<div class="container-fluid">
@@ -1249,19 +1253,19 @@
 											
 													 <div class="container-fluid" style="overflow-x: auto;  border:none;">
            
-												<div id="strandMulty" style="border:none"></div>
-												            <div class="row" style="height: 200px; border:none">
+												<div id="fiberMulty" style="border:none"></div>
+												            <div class="row" style="height: 500px; border:none">
                 <fieldset >
                     <legend class="fieldset_legend" style="width: auto;"></legend> 
-													<table id="nearestStrand"
+													<table id="nearestFiber"
 												class="table table-striped table-bordered table-sm"
-												style="display: block; height: 200px; overflow: auto; max-width:850px; margin-right:20px; margin-left:px">
+												style="display: block; height: 400px; overflow: auto; max-width:850px; margin-right:20px; margin-left:px">
 												<thead style="background: #E9ECEF;">
 													<tr class="fixed-headerr">
 														
-													<th style="min-width: 30px;"><input type="checkbox" id="selectAllStrand_multy"></th>
-													<th style="min-width: 80px; text-align: center;">Strand ID</th>
-                                                    <th style="width: 250px; text-align: center;">Strand Name</th>
+													<th style="min-width: 30px;"><input type="checkbox" id="selectAllFiber_multy"></th>
+													<th style="min-width: 80px; text-align: center;">Fiber ID</th>
+                                                    <th style="width: 250px; text-align: center;">Fiber Name</th>
                                                     <th style="width: 150px; text-align: center;">Source</th>
                                                     <th style="width: 150px; text-align: center;">Destination</th>
                                                
@@ -1269,13 +1273,14 @@
 														
 													</tr>
 												</thead>
-												<tbody id= "nearStrandId_multy">
+												<tbody id= "nearFiberId_multy">
 												</tbody>
 								
 														</table>
 													</fieldset>
 
 												</div>
+												
 												<br>
 												
 													<div id="tubeMulty" style="border:none"></div>
@@ -1306,19 +1311,20 @@
 
 												</div>
 												<br>
-												<div id="fiberMulty" style="border:none"></div>
-												            <div class="row" style="height: 500px; border:none">
+												
+												<div id="strandMulty" style="border:none"></div>
+												            <div class="row" style="height: 200px; border:none">
                 <fieldset >
                     <legend class="fieldset_legend" style="width: auto;"></legend> 
-													<table id="nearestFiber"
+													<table id="nearestStrand"
 												class="table table-striped table-bordered table-sm"
-												style="display: block; height: 400px; overflow: auto; max-width:850px; margin-right:20px; margin-left:px">
+												style="display: block; height: 200px; overflow: auto; max-width:850px; margin-right:20px; margin-left:px">
 												<thead style="background: #E9ECEF;">
 													<tr class="fixed-headerr">
 														
-													<th style="min-width: 30px;"><input type="checkbox" id="selectAllFiber_multy"></th>
-													<th style="min-width: 80px; text-align: center;">Fiber ID</th>
-                                                    <th style="width: 250px; text-align: center;">Fiber Name</th>
+													<th style="min-width: 30px;"><input type="checkbox" id="selectAllStrand_multy"></th>
+													<th style="min-width: 80px; text-align: center;">Strand ID</th>
+                                                    <th style="width: 250px; text-align: center;">Strand Name</th>
                                                     <th style="width: 150px; text-align: center;">Source</th>
                                                     <th style="width: 150px; text-align: center;">Destination</th>
                                                
@@ -1326,7 +1332,7 @@
 														
 													</tr>
 												</thead>
-												<tbody id= "nearFiberId_multy">
+												<tbody id= "nearStrandId_multy">
 												</tbody>
 								
 														</table>
@@ -1334,11 +1340,7 @@
 
 												</div>
 												
-												
-												
-												
-												
-												
+						
 											</div>
 											
 											
