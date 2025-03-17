@@ -17,7 +17,14 @@ function viewNearestMultyPointEvent(){
 $("#Multy_auxiliary > tbody").find('input[name="record"]').each(function(){
   var $row = $(this).closest('tr');
   var indexSite = $row.index();
-  var seq = $row.find('input[id="Seq_Multy' + indexSite + '"]').val();
+  var valuesArray = [];  // Create an empty array to store the values
+
+  // Assuming you want to loop through multiple elements with the same pattern
+  $('input[id^="Seq_Multy"]').each(function(index) {
+      var seq = $(this).val();  // Get the value of each input
+      valuesArray.push(seq);  // Push the value to the array
+  });
+
   var name = $row.find('td[name="siteId_Multy"] input').val();
   var lng = $row.find('td[name="siteLng_Multy"] input').val();
   var lat = $row.find('td[name="siteLat_Multy"] input').val();
@@ -27,7 +34,7 @@ $("#Multy_auxiliary > tbody").find('input[name="record"]').each(function(){
   var rowMultyIndex=  indexSite;
 		 if($("#circleRange_multy").prop('checked')){
 		     checkedOption = "circleRange_multy";  
-			     urlString += "&seq="+seq+"";
+			     urlString += "&seq="+valuesArray+"";
 			     urlString += "&name="+name+"";
 			     urlString += "&lng="+lng+"";
 			     urlString += "&lat="+lat+"";
@@ -158,7 +165,7 @@ function openFindNearestMultySite(checkedOption, rowInfo, noP, closestDisRange, 
 
 		
 			// Assuming you already calculated the totalCount
-	
+	console.log(row);
 			var markup = "<tr><td><input type='checkbox' style='position:relative;left:20px;top:10px;' name='record'></td>"
 			            + "<td class='headcol' name='Seq'><input name='Seq_Multy' id='Seq_Multy" + indexSite + "' class='form-control text-input' type='text' style='max-width:60px;position:relative;' value='" + row[2] + "'></td>"
 						+ "<td><input type='checkbox' class='dataCheckbox' onchange='viewOnMap(this, ptListObject[\"ptList" + locationNum[indexSite] + "\"], ptDataObject[\"ptData" + locationNum[indexSite] + "\"] )' name='dataCheckbox" + locationNum[indexSite] + "' style='position:relative;top:10px; width:100px;'></td>"
