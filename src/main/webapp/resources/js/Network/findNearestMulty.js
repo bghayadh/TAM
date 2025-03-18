@@ -1595,122 +1595,172 @@ function appendNearestDBoardTableMulty(result, totalCount, locationNumber){
 	}
 				
 	function autoCompleteMultiPoint(SiteID, LongID, LatID, index, checkboxclass) {
-	    $("#" + SiteID + index).autocomplete({
-	        source: function(request, response) {
-	            var searchValue = $("#" + SiteID + index).val();
-	            var selectedType = "";
 
-	            // Determine the selected checkbox type
-	            $('input:checkbox[class="' + checkboxclass + '"]:checked').each(function() {
-	                selectedType = $(this).attr("id").split("_")[0]; // Get the prefix (Site, Manhole, etc.)
-	            });
+	    // Track the autocomplete instance globally for each input field
+	    var autocompleteInstance = null;
 
-	            var url, dataTarget = {};
-	            switch (selectedType) {
-	                case "Site":
-	                    url = 'GetAllWarehouse';
-	                    dataTarget = { "WareName": searchValue, "warehouseName": searchValue, "SiteId": searchValue };
-	                    break;
-	                case "Manhole":
-	                    url = 'getManholeData';
-	                    dataTarget = { "search": searchValue };
-	                    break;
-	                case "Customer":
-	                    url = 'GetAllNetworkCustomer';
-	                    dataTarget = { "search": searchValue };
-	                    break;
-	                case "Handhole":
-	                    url = 'getHandholeData';
-	                    dataTarget = { "search": searchValue };
-	                    break;
-	                case "db":
-	                    url = 'getDbData';
-	                    dataTarget = { "search": searchValue };
-	                    break;
-	                case "Place":
-	                case "Generic":
-	                    var addressInput = document.getElementById(SiteID + index);
-	                    var autocomplete = new google.maps.places.Autocomplete(addressInput);
-	                    autocomplete.setTypes(['geocode']);
-	                    google.maps.event.addListener(autocomplete, 'place_changed', function() {
-	                        var place = autocomplete.getPlace();
-	                        if (!place.geometry) return;
+	    // Track the input field value
+	    var previousValue = $("#" + SiteID + index).val();
 
-	                        // Set latitude and longitude
-	                        $("#" + LongID + index).val(place.geometry.location.lng());
-	                        $("#" + LatID + index).val(place.geometry.location.lat());
+	    // Create a function to recreate the input field with the same value
+	    function recreateInputField() {
+	        // Get the old input field and remove it
+	        var oldInput = $("#" + SiteID + index);
+	        var parent = oldInput.parent();  // Get the parent element to reinsert the new input
+	        var inputValue = oldInput.val();  // Get the value before deleting
+			if (inputValue === "Enter a location") {
+			        inputValue = "";  // Remove the placeholder value
+			    }
 
-							
-	                    });
-	                    return; // Prevent further AJAX calls
-	                default:
-	                    url = 'emptyUrl'; // Default case
-	            }
+	        // Remove the old input field
+	        oldInput.remove();
 
-	            // Make AJAX call if a valid URL is set
-	            if (url !== "emptyUrl") {
-	                $.ajax({
-	                    type: "GET",
-	                    contentType: "application/json; charset=utf-8",
-	                    url: getContext() + '/' + url,
-	                    data: dataTarget,
-	                    dataType: "json",
-	                    success: function(data) {
-	                        if (data) {
-	                            response(data.globalList);
-	                           
-	                        }
-	                    },
-	                    error: function() {
-	                        alert("Error occurred while fetching data.");
-	                    }
+	        // Create a new input element
+	        var newInput = $("<input/>", {
+	            type: "text",
+	            id: SiteID + index,
+	            value: inputValue,
+	            name: SiteID + index,
+				style: 'width:330px; position:relative;',
+	            class: oldInput.attr("class"),  // Retain the class of the old input field
+	            placeholder: oldInput.attr("placeholder"),  // Retain the placeholder of the old input
+	        });
+
+	        // Append the new input element back to the parent element
+	        parent.append(newInput);
+
+	        // Reapply the previous value
+	        newInput.val(inputValue);
+
+	        // Reinitialize autocomplete
+	        applyAutocomplete(newInput);
+	    }
+
+	    function applyAutocomplete(inputElement) {
+	        $(inputElement).autocomplete({
+	            source: function(request, response) {
+	                var searchValue = inputElement.val();
+	                var selectedType = "";
+
+	                // Determine the selected checkbox type
+	                $('input:checkbox[class="' + checkboxclass + '"]:checked').each(function() {
+	                    selectedType = $(this).attr("id").split("_")[0]; // Get the prefix (Site, Manhole, etc.)
 	                });
+
+	                var url, dataTarget = {};
+	                switch (selectedType) {
+	                    case "Site":
+	                        url = 'GetAllWarehouse';
+	                        dataTarget = { "WareName": searchValue, "warehouseName": searchValue, "SiteId": searchValue };
+	                        break;
+	                    case "Manhole":
+	                        url = 'getManholeData';
+	                        dataTarget = { "search": searchValue };
+	                        break;
+	                    case "Customer":
+	                        url = 'GetAllNetworkCustomer';
+	                        dataTarget = { "search": searchValue };
+	                        break;
+	                    case "Handhole":
+	                        url = 'getHandholeData';
+	                        dataTarget = { "search": searchValue };
+	                        break;
+	                    case "db":
+	                        url = 'getDbData';
+	                        dataTarget = { "search": searchValue };
+	                        break;
+	                    case "Place":
+	                    case "Generic":
+	                        var addressInput = document.getElementById(SiteID + index);
+	                        var autocomplete = new google.maps.places.Autocomplete(addressInput);
+	                        autocomplete.setTypes(['geocode']);
+	                        google.maps.event.addListener(autocomplete, 'place_changed', function() {
+	                            var place = autocomplete.getPlace();
+	                            if (!place.geometry) return;
+
+	                            // Set latitude and longitude
+	                            $("#" + LongID + index).val(place.geometry.location.lng());
+	                            $("#" + LatID + index).val(place.geometry.location.lat());
+	                        });
+	                        return; // Prevent further AJAX calls
+	                    default:
+	                        url = 'emptyUrl'; // Default case
+	                }
+
+	                // Make AJAX call if a valid URL is set
+	                if (url !== "emptyUrl") {
+	                    $.ajax({
+	                        type: "GET",
+	                        contentType: "application/json; charset=utf-8",
+	                        url: getContext() + '/' + url,
+	                        data: dataTarget,
+	                        dataType: "json",
+	                        success: function(data) {
+	                            if (data) {
+	                                response(data.globalList);
+	                            }
+	                        },
+	                        error: function() {
+	                            alert("Error occurred while fetching data.");
+	                        }
+	                    });
+	                }
+	            },
+	            minLength: 0,
+	            maxShowItems: 40,
+	            scroll: true,
+	            select: function(event, ui) {
+	                let lat, lng;
+	                const prefix = ui.item[0].split("_")[0];
+
+	                // Extract latitude and longitude based on the prefix
+	                if (["WARE", "MH", "HH", "DB"].includes(prefix)) {
+	                    lat = ui.item[4];
+	                    lng = ui.item[3];
+	                } else if (prefix === "CUST") {
+	                    lat = ui.item[5];
+	                    lng = ui.item[4];
+	                }
+
+	                $("#" + SiteID + index).val(ui.item[0]);
+	                $("#" + LongID + index).val(lng);
+	                $("#" + LatID + index).val(lat);
+
+	                const locationNum = $(this).closest('tr').find("input[name='location_number']").val();
+	                console.log(locationNum);
+
+	                updateMarker(locationNum);
+	                return false;  // Prevent default behavior
 	            }
-	        },
-	        minLength: 0,
-	        maxShowItems: 40,
-	        scroll: true,
-	        select: function(event, ui) {
-	            let lat, lng;
-	            const prefix = ui.item[0].split("_")[0];
+	        }).data("ui-autocomplete")._renderItem = function(ul, item) {
+	            const prefix = item[0].split("_")[0];
+	            let listItem;
 
-	            // Extract latitude and longitude based on the prefix
-	            if (["WARE", "MH", "HH", "DB"].includes(prefix)) {
-	                lat = ui.item[4];
-	                lng = ui.item[3];
-	            } else if (prefix === "CUST") {
-	                lat = ui.item[5];
-	                lng = ui.item[4];
+	            // Render the autocomplete list item based on the prefix
+	            listItem = $("<li class='each'>").append(
+	                "<div class='acItem'><span class='name' style='font-weight:bold'>" + item[0] + "</span><br><span class='desc'>" + item[1] + (item[2] ? ', ' + item[2] : '') + "</span></div>"
+	            );
+
+	            return listItem.appendTo(ul);
+	        };
+
+	        $(inputElement).focus(function() {
+	            if (this.value === "") {
+	                $(this).autocomplete("search", "");
 	            }
+	        });
+	    }
 
-	            $("#" + SiteID + index).val(ui.item[0]);
-	            $("#" + LongID + index).val(lng);
-	            $("#" + LatID + index).val(lat);
-
-				const locationNum = $(this).closest('tr').find("input[name='location_number']").val();
-				console.log(locationNum);
-		
-				updateMarker(locationNum);
-	            return false; // Prevent default behavior
-	        }
-	    }).data("ui-autocomplete")._renderItem = function(ul, item) {
-	        const prefix = item[0].split("_")[0];
-	        let listItem;
-
-	        // Render the autocomplete list item based on the prefix
-	        listItem = $("<li class='each'>").append(
-	            "<div class='acItem'><span class='name' style='font-weight:bold'>" + item[0] + "</span><br><span class='desc'>" + item[1] + (item[2] ? ', ' + item[2] : '') + "</span></div>"
-	        );
-
-	        return listItem.appendTo(ul);
-	    };
-
-	    $("#" + SiteID + index).focus(function() {
-	        if (this.value === "") {
-	            $(this).autocomplete("search", "");
-	        }
+	    // Handle checkbox change event to recreate input
+	    $('input:checkbox[class="' + checkboxclass + '"]').change(function() {
+	        // If Place or Generic is unchecked, delete and recreate the input field
+	        recreateInputField();
 	    });
+
+	    // Initially apply autocomplete to the existing input
+	    applyAutocomplete($("#" + SiteID + index));
 	}
+
 
 	// Function to update the marker position
 
