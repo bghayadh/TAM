@@ -642,7 +642,7 @@
 														
 														
 														
-									    			 <th style="min-width: 30px; text-align: center;"><input type="checkbox" id="selectAllDB"></th>
+									    			 <th style="min-width: 30px; text-align: center;"><input type="checkbox" id="selectAllNode"></th>
 													<th style="min-width: 80px; text-align: center;">Node ID</th>
                                                     <th style="width: 250px; text-align: center;">Node Name</th>
                                                     <th style="width: 150px; text-align: center;">Longitude</th>
@@ -816,8 +816,12 @@
 										
 										
 									</div>
+									<button type="button" id="add_Multy">Add Row </button>
+										<button type="button" id="delet_Multy" >Delete Row</button>
+								<br><br>
+							
 									<div class="row">
-									<form>
+											<form>
 									  	<div class="table-responsive-sm" id="Multy_auxiliaryDiv"> 
 											<table id="Multy_auxiliary"
 												class="table table-striped table-bordered table-sm"
@@ -845,9 +849,7 @@
 												</tbody>
 											</table>
 										 </div>
-										<button type="button" id="add_Multy">Add Row </button>
-										<button type="button" id="delet_Multy" >Delete Row</button>
-								
+										
 										<div>
 										<br>
 									    <br>
@@ -1590,6 +1592,22 @@ $(document).ready(function() {
 
    $(document).on('click', '#nearestFiber tr', function() {
        handleCheckboxClick('#nearestFiber', $(this));
+   });
+
+   $(document).on('click', '#findNearstNode_multy tr', function() {
+       handleCheckboxClick('#findNearstNode_multy', $(this));
+   });
+
+   $(document).on('click', '#findNearstDB_multy tr', function() {
+       handleCheckboxClick('#findNearstDB_multy', $(this));
+   });
+
+   $(document).on('click', '#findNearstHandhole_multy tr', function() {
+       handleCheckboxClick('#findNearstHandhole_multy', $(this));
+   });
+
+   $(document).on('click', '#findNearstManhole_multy tr', function() {
+       handleCheckboxClick('#findNearstManhole_multy', $(this));
    });
    
    $(document).on('click', '#connFiber tr', function() {
