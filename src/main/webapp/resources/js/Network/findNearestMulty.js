@@ -105,6 +105,7 @@ function openFindNearestMultySite(checkedOption, rowInfo, noP, closestDisRange, 
     }
 
     var rowData = JSON.parse(rowInfo);
+	
 	var drawCircle= JSON.parse(circleDraw);
 	var drawSquare= JSON.parse(squareDraw);
 	var locationNum= JSON.parse(locationNum);
@@ -130,7 +131,8 @@ function openFindNearestMultySite(checkedOption, rowInfo, noP, closestDisRange, 
 	for (var key in rowData) {
 	    if (rowData.hasOwnProperty(key)) {
 	        var row = rowData[key];
-	        
+			let seq=[];
+			 seq = row[2].split(',');
 	        var circleChecked = Number(drawCircle[indexSite]) === 1 ? "checked" : ""; // Check if the first index of drawCircle is 1
 	        var squareChecked = Number(drawSquare[indexSite]) === 1 ? "checked" : ""; // Check if the first index of drawSquare is 1
 	
@@ -165,9 +167,9 @@ function openFindNearestMultySite(checkedOption, rowInfo, noP, closestDisRange, 
 
 		
 			// Assuming you already calculated the totalCount
-	console.log(row);
+
 			var markup = "<tr><td><input type='checkbox' style='position:relative;left:20px;top:10px;' name='record'></td>"
-			            + "<td class='headcol' name='Seq'><input name='Seq_Multy' id='Seq_Multy" + indexSite + "' class='form-control text-input' type='text' style='max-width:60px;position:relative;' value='" + row[2] + "'></td>"
+			            + "<td class='headcol' name='Seq'><input name='Seq_Multy' id='Seq_Multy" + indexSite + "' class='form-control text-input' type='text' style='max-width:60px;position:relative;' value='" + seq[indexSite] + "'></td>"
 						+ "<td><input type='checkbox' class='dataCheckbox' onchange='viewOnMap(this, ptListObject[\"ptList" + locationNum[indexSite] + "\"], ptDataObject[\"ptData" + locationNum[indexSite] + "\"] )' name='dataCheckbox" + locationNum[indexSite] + "' style='position:relative;top:10px; width:100px;'></td>"
 						+ "<td name='auxRefSite'><a href='#' data-total-count='" + totalCount + "'class='auxRefSiteLink' data-index='" + indexSite + "' style='width:350px;'><p style='height:10px;margin-left:20px;color:#00757C;margin-top:10px;width:150px;'>View Result</p></a></td>"
 					    + "<td name='siteId_Multy'><input name='siteId_Multy" + indexSite + "' id='siteId_Multy" + indexSite + "' class='form-control' type='text' style='width:330px;position:relative;' value='" + row[1] + "'></td>"
