@@ -29,6 +29,7 @@ $("#Multy_auxiliary > tbody").find('input[name="record"]').each(function(){
   var lng = $row.find('td[name="siteLng_Multy"] input').val();
   var lat = $row.find('td[name="siteLat_Multy"] input').val();
   var locationNum = $row.find('td[name="location_number"] input').val(); // Get the location number
+  console.log(locationNum);
   var circleDraw = $row.find('input[name="circleRange' + indexSite + '"]').prop('checked') ? 1 : 0;
   var squareDraw = $row.find('input[name="squareRange' + indexSite + '"]').prop('checked') ? 1 : 0;
   var rowMultyIndex=  indexSite;
@@ -88,7 +89,7 @@ function uncheckAll(ptListObject,ptDataObject) {
 var ptListObject, ptDataObject;
 function openFindNearestMultySite(checkedOption, rowInfo, noP, closestDisRange, ptList, ptData, getRelatedPoints, Lats, Longs, circleDraw , squareDraw,locationNum, rowMultyIndex) {
    
-	
+	console.log(locationNum);
     $("#fiberCitySearch").modal("show");
     $('a[href="#MultyClosest"]').click();
     $("#circleRange_multy").prop("checked", true);
@@ -1773,6 +1774,8 @@ function appendNearestDBoardTableMulty(result, totalCount, locationNumber){
 
 	    if (!isNaN(lat) && !isNaN(lng)) {
 	        const locationData = locationsArray[locationNum];
+			console.log("zeinaaa");
+			console.log(locationsArray);
 	        if (locationData) {
 	            locationData.marker.setPosition({ lat, lng });
 	            locationData.lat = lat;

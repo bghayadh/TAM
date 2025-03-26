@@ -16890,44 +16890,60 @@ calculateGeoDistance("FiberPathId","SourceLng","SourceLat","DestinationLng","Des
  let indexSite = Number(rowMultyIndex)+1; // Initialize indexSite globally
  	 // Ensure LastlocationNumber is defined
 
- 	$("#add_Multy").on('click', function() {
- 	    // Handle location number logic
- 	    if (LastlocationNumber !== '') {
- 	        location_number = Number(LastlocationNumber);
- 	        LastlocationNumber = '';
- 	    } else {
- 	        location_number++;
- 	    }
+	 $("#add_Multy").on('click', function () {
+	     // First, collect existing rows' data into locationsArray
+	     $("#Multy_auxiliary tbody tr").each(function () {
+	         let locNum = $(this).find("input[name='location_number']").val(); // Get location number
+	         let lng = $(this).find("input[name^='siteLng_Multy']").val() || 0; // Get longitude, default to 0 if empty
+	         let lat = $(this).find("input[name^='siteLat_Multy']").val() || 0; // Get latitude, default to 0 if empty
+console.log(locNum);
+	         if (locNum && !locationsArray[locNum]) { 
+	             // Add existing row data to locationsArray if not already present
+	             locationsArray[locNum] = {
+	                 marker: new google.maps.Marker({
+	                     position: { lat: parseFloat(lat), lng: parseFloat(lng) },
+	                     map: map,
+	                     title: `Location: ${locNum}`,
+	                 }),
+	                 lat: parseFloat(lat),
+	                 lng: parseFloat(lng),
+	             };
+	         }
+	     });
 
- 	    const markup = `<tr>
- 	        <td><input type='checkbox' style='margin-left: 20px;' name='record'></td>
- 	        <td class='headcol' name='Seq'><input name='Seq_Multy' id='Seq_Multy${indexSite}' class='form-control text-input' type='text' style='max-width:60px;'/></td>
- 	        <td style='width:100px; text-align:center;'><input type='checkbox' style='vertical-align: middle; width:100px'></td>
- 	        <td name='auxRefSite' style='background-color: #778899;'><a href='#' id='auxRefSite${indexSite}' style='width:350px; pointer-events: none;'><p style='height:10px; margin-left:20px; color:white; background-color: #778899; margin-top:10px; width:150px;'>View Result</p></a></td>
- 	        <td name='siteId_Multy'><input name='siteId_Multy${indexSite}' id='siteId_Multy${indexSite}' class='form-control' type='text' style='width:330px;'/></td>
- 	        <td name='siteLng_Multy'><input name='siteLng_Multy${indexSite}' id='siteLng_Multy${indexSite}' class='form-control latLngInput' type='text' style='width:220px;' data-location-number='${location_number}'/></td>
- 	        <td name='siteLat_Multy'><input name='siteLat_Multy${indexSite}' id='siteLat_Multy${indexSite}' class='form-control latLngInput' type='text' style='width:220px;' data-location-number='${location_number}'/></td>
- 	        <td name='squareRange'><input class='circleRange' type='checkbox' style='margin-left: 20px;' name='circle' data-lng='lng${indexSite}' data-lat='lat${indexSite}'></td>
- 	        <td name='squareRange'><input class='squareRange' type='checkbox' style='margin-left: 20px;' name='square' data-lng='lng${indexSite}' data-lat='lat${indexSite}'></td>
- 	        <td name='location_number'><input type='text' name='location_number' class='form-control' value='location_${location_number}' readonly style='width:100px;'/></td>
- 	    </tr>`;
+	     // Handle location number logic
+	     if (LastlocationNumber !== '') {
+	         location_number = Number(LastlocationNumber);
+	         LastlocationNumber = '';
+	     } else {
+	         location_number++;
+	     }
 
- 	    $("#Multy_auxiliary > tbody").append(markup);
+	     const markup = `<tr>
+	         <td><input type='checkbox' style='margin-left: 20px;' name='record'></td>
+	         <td class='headcol' name='Seq'><input name='Seq_Multy' id='Seq_Multy${indexSite}' class='form-control text-input' type='text' style='max-width:60px;'/></td>
+	         <td style='width:100px; text-align:center;'><input type='checkbox' style='vertical-align: middle; width:100px'></td>
+	         <td name='auxRefSite' style='background-color: #778899;'><a href='#' id='auxRefSite${indexSite}' style='width:350px; pointer-events: none;'><p style='height:10px; margin-left:20px; color:white; background-color: #778899; margin-top:10px; width:150px;'>View Result</p></a></td>
+	         <td name='siteId_Multy'><input name='siteId_Multy${indexSite}' id='siteId_Multy${indexSite}' class='form-control' type='text' style='width:330px;'/></td>
+	         <td name='siteLng_Multy'><input name='siteLng_Multy${indexSite}' id='siteLng_Multy${indexSite}' class='form-control latLngInput' type='text' style='width:220px;' data-location-number='${location_number}'/></td>
+	         <td name='siteLat_Multy'><input name='siteLat_Multy${indexSite}' id='siteLat_Multy${indexSite}' class='form-control latLngInput' type='text' style='width:220px;' data-location-number='${location_number}'/></td>
+	         <td name='squareRange'><input class='circleRange' type='checkbox' style='margin-left: 20px;' name='circle' data-lng='lng${indexSite}' data-lat='lat${indexSite}'></td>
+	         <td name='squareRange'><input class='squareRange' type='checkbox' style='margin-left: 20px;' name='square' data-lng='lng${indexSite}' data-lat='lat${indexSite}'></td>
+	         <td name='location_number'><input type='text' name='location_number' class='form-control' value='location_${location_number}' readonly style='width:100px;'/></td>
+	     </tr>`;
 
- 	    const myLatLng = { lat: 0, lng: 0 };
- 	    const marker = new google.maps.Marker({
- 	        position: myLatLng,
- 	        map: map,
- 	        title: `Location: ${location_number}`,
- 	    });
+	     $("#Multy_auxiliary > tbody").append(markup);
 
- 	    // Store marker and coordinates in locationsArray
- 	    locationsArray[`location_${location_number}`] = {
- 	        marker: marker,
- 	        lat: 0,
- 	        lng: 0,
- 	    };
-
+	     // Add the new row's default location to locationsArray
+	     locationsArray[`location_${location_number}`] = {
+	         marker: new google.maps.Marker({
+	             position: { lat: 0, lng: 0 },
+	             map: map,
+	             title: `Location: ${location_number}`,
+	         }),
+	         lat: 0,
+	         lng: 0,
+	     };
  	    // Event handler for lat/lng input changes
  	    $(".latLngInput").off('change input').on('change input', function() {
  	        const locationNum = $(this).closest('tr').find("input[name='location_number']").val();

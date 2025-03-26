@@ -2930,6 +2930,7 @@ else {
 				}
 				else {
 					var path=window["mapPoints_"+Id];
+					console.log(path);
 					if(Target.Trgt == "FiberPath_f_"){
 						console.log("entered if Target "+Target.Trgt);
 						buildPath(Id,path,pathArray,allPathArray,Target.Trgt,window['FiberColor_'+window[''+Id][22]],0.7,Target.strokeWeight,Target.color,Target.IdNb);	
