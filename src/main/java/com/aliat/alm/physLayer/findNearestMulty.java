@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -232,7 +233,7 @@ public class findNearestMulty {
 										if (Result.get("fiberAuxiliary_Data") != null) {
 											fiberAuxiliary_Data.addAll(Result.get("fiberAuxiliary_Data"));
 										}
-
+										
 										if (Result.get("fiberList") != null) {
 											for (Object item : Result.get("fiberList")) {
 												Object[] newItem = (Object[]) item; 
@@ -247,7 +248,7 @@ public class findNearestMulty {
 												}
 
 												if (!found) {
-													System.out.println("Adding new item to fiberList");
+												
 													fiberList.add(newItem);
 												}
 											}
@@ -267,7 +268,8 @@ public class findNearestMulty {
 												}
 
 												if (!found) {
-													System.out.println("Adding new item to fiberTubes");
+												
+													
 													fiberTubes.add(newItem);
 												}
 											}
@@ -291,7 +293,7 @@ public class findNearestMulty {
 												}
 
 												if (!found) {
-													System.out.println("Adding new item to fiberStrands");
+													
 													fiberStrands.add(newItem);
 												}
 											}
@@ -315,7 +317,7 @@ public class findNearestMulty {
 												}
 
 												if (!found) {
-													System.out.println("Adding new item to manholeList");
+												
 													manholeList.add(newItem);
 												}
 											}
@@ -335,7 +337,7 @@ public class findNearestMulty {
 												}
 
 												if (!found) {
-													System.out.println("Adding new item to junctionManholeList");
+													
 													junctionManholeList.add(newItem);
 												}
 											}
@@ -356,7 +358,7 @@ public class findNearestMulty {
 												}
 
 												if (!found) {
-													System.out.println("Adding new item to handholeList");
+											
 													handholeList.add(newItem);
 												}
 											}
@@ -376,7 +378,7 @@ public class findNearestMulty {
 												}
 
 												if (!found) {
-													System.out.println("Adding new item to junctionHandholeList");
+													
 													junctionHandholeList.add(newItem);
 												}
 											}
@@ -396,7 +398,7 @@ public class findNearestMulty {
 												}
 
 												if (!found) {
-													System.out.println("Adding new item to distribBoardList");
+										
 													distribBoardList.add(newItem);
 												}
 											}
@@ -416,7 +418,7 @@ public class findNearestMulty {
 												}
 
 												if (!found) {
-													System.out.println("Adding new item to NodeList");
+												
 													NodeList.add(newItem);
 												}
 											}
@@ -431,20 +433,9 @@ public class findNearestMulty {
 										ptPhysicalListResult.put("Handhole", Result.get("handholeList"));
 										ptPhysicalListResult.put("fiber", Result.get("fiberList"));
 										ptPhysicalListResult.put("Distribution_Board", Result.get("distribBoardList"));
-										ptPhysicalListResult.put("Trench", trenchListPt);
 										ptPhysicalListResult.put("NodeList", Result.get("NodeList"));
-										ptPhysicalListResult.put("duct", ductListPt);
-
-										ptPhysicalListResult.put("duct", ductListPt);
-										ptPhysicalDataResult.put("trench_Auxiliary", trenchAuxiliary_DataPt);
-										ptPhysicalDataResult.put("strands_Auxiliaries",
-												Result.get("strandsAuxiliaries"));
 										ptPhysicalDataResult.put("fiber_Strands", Result.get("fiberStrands"));
-										ptPhysicalDataResult.put("tubes_Auxiliaries", Result.get("tubesAuxiliaries"));
 										ptPhysicalDataResult.put("fiber_Tubes", Result.get("fiberTubes"));
-										ptPhysicalDataResult.put("fiber_Auxiliary", Result.get("fiberAuxiliaryData"));
-										ptPhysicalDataResult.put("ductAuxiliary", ductAuxiliary_DataPt);
-
 										ptPhysicalLayerList.put("ptList" + locationNum[i],
 												new LinkedHashMap<>(ptPhysicalListResult));
 										ptPhysicalLayerData.put("ptData" + locationNum[i],
@@ -610,6 +601,10 @@ public class findNearestMulty {
 
 							/* linkedHashmap instead of HashMap to return values */
 							LinkedHashMap<String, List<?>> physicalLayerList = new LinkedHashMap<String, List<?>>();
+							
+							removeDuplicatesByIndex(fiberAuxiliary_Data, 7);
+					        removeDuplicatesByIndex(tubesAuxiliaries, 8);
+					        removeDuplicatesByIndex(strandsAuxiliaries, 8);	
                   	physicalLayerData.clear();
 					physicalLayerList.clear();
 					physicalLayerList.put("Project", projectList);
@@ -826,6 +821,7 @@ public class findNearestMulty {
 								+ " AND B.FIBER_CABLE_ID IN (:param) ORDER BY B.SEQ_SORTING ASC")
 						.setParameter("param", sublist);
 				fiberAuxiliary_Data.addAll(query.getResultList());
+				
 			}
 		}
 
@@ -1234,8 +1230,6 @@ public class findNearestMulty {
 
 		resultMap.put("fiberList", fiberList);
 		resultMap.put("fiberAuxiliary_Data", fiberAuxiliary_Data);
-		System.out.println("zeinaa");
-		System.out.println(mapper.writeValueAsString(fiberAuxiliary_Data));
 		resultMap.put("fiberTubes", fiberTubes);
 		resultMap.put("tubesAuxiliaries", tubesAuxiliaries);
 		resultMap.put("strandsAuxiliaries", strandsAuxiliaries);
@@ -1514,4 +1508,23 @@ public class findNearestMulty {
 		return result;
 
 	}
+	public static void removeDuplicatesByIndex(List<Object[]> dataList, int index) {
+        HashSet<String> seenValues = new HashSet<>();
+        
+        for (int i = 0; i < dataList.size(); i++) {
+            Object[] array = dataList.get(i);
+            Object valueAtIndex = array[index];
+            
+            if (valueAtIndex instanceof String) {
+                String valueAsString = (String) valueAtIndex;
+                
+                if (seenValues.contains(valueAsString)) {
+                    dataList.remove(i);
+                    i--; // Adjust index after removal
+                } else {
+                    seenValues.add(valueAsString);
+                }
+            }
+        }
+}
 }
