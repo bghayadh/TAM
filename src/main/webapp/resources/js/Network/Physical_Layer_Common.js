@@ -3385,7 +3385,8 @@ function singleFiberCheckFilter(selector) {
 		fiberArray[fiberId].setMap(map);	 
 	}
 	else{   														
-		var path=window["mapPoints_"+fiberId];							 
+		var path=window["mapPoints_"+fiberId];	
+		console.log("yessss");						 
 		buildPath(fiberId,path,fiberArray,allFiberCables,"FiberPath_f_",window['FiberColor_'+window[''+fiberId][22]],0.7,4.5,'blue',13);
 		fiberArray[fiberId].setMap(map);
 	}
@@ -5355,7 +5356,7 @@ function searchConnectedButtonEvents(hash_Project,hash_manhole,hash_handhole,has
 
 		    let urlString = `&siteId=${siteId}&selectConnectedSearch=${selectedOp}` +
 		                    `&connectedSearchLong=${lng}&connectedSearchLat=${lat}` +
-		                    `&connectedViewOnMap=${$("#viewOnMap").val()}` +
+		                    `&connectedViewOnMap=off` +
 		                    `&getRelatedPoints=${$("#getRelatedPointsCon").val()}` +
 		                    `&updateModfUser=${updateModfUser}`;
 
@@ -5422,8 +5423,7 @@ function handleViewOnMapClick(connectedViewOnMap, myLatLng) {
     if (connectedViewOnMap === "true" || connectedViewOnMap === "on") {
         viewOnMapCheckbox.prop("checked", true);
 		$(".allElements").prop("checked", true).trigger("change");
-	 allElementsCheckFilter();//zeinaa
-	 	
+		
         let idArray = [];
         console.log("Collecting IDs of checked checkboxes...");
         let treeContainerSelector = "#initial_ul_CurrentPhysicalLayer";
@@ -5467,8 +5467,7 @@ function handleViewOnMapClick(connectedViewOnMap, myLatLng) {
     } else {
         viewOnMapCheckbox.prop("checked", false);
 		$(".allElements").prop("checked", false).trigger("change");
-	allElementsCheckFilter();//zeinaa
-        if (mapCircle) {
+	    if (mapCircle) {
             mapCircle.setMap(null); // Remove circle when unchecked
             mapCircle = null;
         }
@@ -6076,7 +6075,8 @@ function autoCompleteSearchHeader(ID,searchTarget,longitude,latitude){
 		         dataType: "json",
 		         success: function (data) {
 		            if (data != null) {
-		              response(data.globalList);	                     
+		              response(data.globalList);
+					                       
 		             }
 		        },
 		        error: function(result) {
@@ -6088,9 +6088,18 @@ function autoCompleteSearchHeader(ID,searchTarget,longitude,latitude){
 				select: function(event, ui) {
 					this.value = (ui.item ? ui.item[0]+':'+ui.item[1] : '');
 					$("#autoCompleteConnectedSearch").val($("#"+ID).val());
-										$("#connectedSearchLong").val(ui.item[3]);
-										$("#connectedSearchLat").val(ui.item[4]);
-									
+					if(url ==="GetAllNetworkCustomer"){
+										$("#connectedSearchLong").val(ui.item[4]);
+										$("#connectedSearchLat").val(ui.item[5]);
+										console.log(ui.item);
+									}
+					else{
+						
+						$("#connectedSearchLong").val(ui.item[3]);
+						$("#connectedSearchLat").val(ui.item[4]);
+						console.log(ui.item);
+						
+					}
 					if(ui.item[0].split("_")[0]=="WARE") {
 						$("#"+longitude).val(ui.item[3]);
 						$("#"+latitude).val(ui.item[4]);
