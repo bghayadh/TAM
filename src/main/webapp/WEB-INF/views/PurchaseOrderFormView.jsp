@@ -93,7 +93,6 @@ z-index: 9003;
 				  	position: sticky;
 				  	top: 0;
 				  	z-index: 15;
-				
 					}
 				
  .hide-row { display:none; }
@@ -585,13 +584,10 @@ max-width: 100%;
 						        <thead>
 						            <tr id="bisotr" class="fixed-headerr">
 						                <th>
-						                <div class="container">
-						                
-								          <button type="button" id="selectAll" class="main">
-								          
+						                <div class="container">                
+								          <button type="button" id="selectAll" class="main">								          
 								          <span class="sub"></span>Select</button>
-								         
-								          </th>
+								        </th>
 						                <th>Item</th>
 						                <th>Item Model</th>
 						                <th>Item Part Number</th>

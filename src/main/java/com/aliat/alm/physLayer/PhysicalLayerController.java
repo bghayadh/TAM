@@ -8001,7 +8001,7 @@ public class PhysicalLayerController {
 					fiberTubes.setDestCity(itemParameters.getDictParameterTubes().get(i).get("DestCity"));
 					fiberTubes.setTubeType(tubetype);
 					fiberTubes.setTubeDeployment(tubedeployment);
-					fiberTubes.setTubefiberNetLevel(fibernetlevel);
+					fiberTubes.setTubefiberNetLevel(tubenetlevel);
 					fiberTubes.setTubeOwner(tubeowner);
 					fiberTubes.setCreationDate(cableCreationDate);
 					fiberTubes.setLastModifieddate(lastModifiedDate);
@@ -9544,6 +9544,7 @@ public class PhysicalLayerController {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/getJunction", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> getJunction(Locale locale, Model model, HttpServletRequest request,
@@ -9555,7 +9556,6 @@ public class PhysicalLayerController {
 			return rtn;
 		}
 
-		Query query;
 		session = AlmDbSession.getInstance().getSession();
 
 		if (session != null && session.isOpen()) {

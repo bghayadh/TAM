@@ -210,6 +210,7 @@
     display: inline;
     margin-right: 5px; /* Reduce margin to fit content within width */
   }
+  
         </style>
 
     </head>
@@ -340,14 +341,15 @@
                                 </button>
                             </div>
                         </div>
-                    </div>
+                    </div>                
+                </div>
                 </div>
 
-          
- <div class="row">
+<div class="container-fluid">          
+<div class="row">
   <div class="col-12 col-sm-12 col-lg-12">
-    <div class="scrollable-list" style="width: 70%; background-color: #00757c; float: left; ">
-      <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist" style="background-color: #00757c; margin-top: 0px; display: flex; flex-wrap: nowrap;">
+    <div class="scrollable-list" style="width: 100%; background-color: #00757c; float: left; ">
+      <ul class="nav nav-tabs" id="custom-tabs-one-tab-scroll" role="tablist" style="background-color: #00757c; display: flex; flex-wrap: nowrap;">
        <li class="tab" class="nav-item"><a class="nav-link active" id="custom-tabs-one-home-tab"
                                     data-toggle="tab" href="#custom-tabs-one-home" role="tab"
                                     aria-controls="custom-tabs-one-home" aria-selected="true"
@@ -402,18 +404,10 @@
                                     aria-selected="false" style="color: gold;">HOST VERSION</a>
                             </li>
 
-</ul>
-     
-    </div>
-
-                          
-                          
-                           <div style="width:30%; float:left;">
-                        <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist"
-                            style="background-color: #00757c; margin-top: 0px;" >
+                           
                     
-                            <li class="nav-item ml-auto">
-                                <div class="dropdown" Style="display: inline-block;">
+                            <li class="nav-item ml-auto" style="position: sticky; right: 0; opacity: 1; background-color: #00757c;" id="actionMenus">
+                                <div class="dropdown" Style="display: inline-block; ">
                                     <button disabled class="btn btn-secondary dropdown-toggle" type="button"
                                         id="notifactionDropdown" data-toggle="dropdown" aria-haspopup="true"
                                         aria-expanded="false">Actions</button>
@@ -436,314 +430,246 @@
                                     <i class="fa fa-save"></i> Save
                                 </button>
                             </li>
-                        </ul>
-                    </div>
-                    </div>
-                </div>
+	  </ul>
+	</div>
+   </div>
+</div>
+</div>
             
 
-            <div class="container-fluid">
-                <div class="tab-content" id="custom-tabs-one-tabContent">
-                    <div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel"
-                        aria-labelledby="custom-tabs-one-home-tab">
-                        <p></p>
-                        <div style="height: 20px;"></div>
-                <table width="90%" border="0" cellpadding="0" cellspacing="0" id="warehouseInfo_tbl">
-    <tr>
-        <td width="33%" valign="top" class="left_col">
+<div class="container-fluid">
+	<div class="tab-content tab-pane fade show active" id="custom-tabs-one-tabContent">
+		<div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+<p></p>
+    		<div class="row">
+			<div class="col-md-4">                
             <div class="form-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text">Node Id</span>
-                    <input type="text" id="nodeId" value="${node_id}" class="form-control text-input" readonly />
+                    <input type="text" id="nodeId" value="${node_id}" style="width:500px; height: 37px;" class="form-control text-input" readonly />
                 </div>
             </div>
-        </td>
-       
-        <td width="33%" valign="top" class="left_col">
+            </div>
+        	<div class="col-md-4">
             <div class="form-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text">Unique Node Id</span>
                     <input type="text" id="uniqueNodeId" value="${unique_node_id}" class="form-control text-input" readonly />
                 </div>
             </div>
-        </td>
-        <td width="33%" valign="top" class="left_col">
+            </div>
+        	<div class="col-md-4">        
             <div class="form-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text">Node Name</span>
                     <input type="text" id="nodeName" value="${node_name}" class="form-control text-input" readonly />
                 </div>
             </div>
-        </td>
-    </tr>
-                            <tr>
-                                <td width="20%" valign="top" class="left_col">
-                                    <div class="form-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">Node Type</span> <input type="text"
-                                                id="warepname" value="${node_type}" class="form-control text-input"
-                                                readonly />
-                                        </div>
-                                    </div>
-                                </td>
-                               
-                                <td width="20%" valign="top" class="left_col">
-
-                                    <div class="form-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">Node Model</span> <input type="text"
-                                                id="warepname" value="${node_model}" class="form-control text-input"
-                                                readonly />
-                                        </div>
-                                    </div>
-                                </td>
-                                 <td width="60%" valign="top" class="left_col">
-                                    <div class="form-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">Site Id</span> <input type="text"
-                                                id="warepname" value="${site_id}" class="form-control text-input"
-                                                readonly />
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                               
-                               
-                                <td width="20%" valign="top" class="left_col">
-
-                                    <div class="form-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">Site Name</span> <input type="text"
-                                                id="warepname" value="${ware_name}" class="form-control text-input"
-                                                readonly />
-                                        </div>
-                                    </div>
-                                </td>
-                            
-                                <td width="20%" valign="top" class="left_col">
-                                    <div class="form-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">Vendor</span> <input type="text"
-                                                id="warepname" value="${vendor}" class="form-control text-input"
-                                                readonly />
-                                        </div>
-                                    </div>
-                                </td>
-                                
-                                <td width="45%" valign="top" class="left_col">
-
-                                    <div class="form-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">Domain</span> <input type="text"
-                                                id="warepname" value="${domain}" class="form-control text-input"
-                                                readonly />
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-
-
-                    </div>
+            </div>
+            </div>
+            
+    		<div class="row">
+			<div class="col-md-4">                            
+			<div class="form-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">Node Type</span>
+					<input type="text" id="warepname" value="${node_type}" class="form-control text-input" readonly />
+				</div>
+			</div>
+			</div>
+						
+			<div class="col-md-4">
+			<div class="form-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">Node Model</span>
+					<input type="text" id="warepname" value="${node_model}" class="form-control text-input" readonly />
+				</div>
+			</div>
+			</div>
+			
+			
+			<div class="col-md-4">
+			<div class="form-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">Site Id</span>
+					<input type="text" id="warepname" value="${site_id}" class="form-control text-input" readonly />
+				</div>
+			</div>
+			</div>
+			</div>
+			
+    		<div class="row">
+			<div class="col-md-4">                            
+			<div class="form-group">
+				<div class="input-group-prepend">
+				<span class="input-group-text">Site Name</span>
+				<input type="text" id="warepname" value="${ware_name}" class="form-control text-input" readonly />
+				</div>
+			</div>
+			</div>
+			                                    
+			<div class="col-md-4">                                    
+			<div class="form-group">
+				<div class="input-group-prepend">
+				<span class="input-group-text">Vendor</span>
+				<input type="text" id="warepname" value="${vendor}" class="form-control text-input" readonly />
+				</div>
+			</div>
+			</div>
+			
+			<div class="col-md-4">                                    
+			<div class="form-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">Domain</span>
+					<input type="text" id="warepname" value="${domain}" class="form-control text-input" readonly />
+				</div>
+			</div>
+			</div>
+			</div>
+		</div>                 
                     
-                    
-                      <div class="tab-pane fade" id="custom-tabs-one-pass" role="tabpanel"
-                        aria-labelledby="custom-tabs-one-pass-tab">
-                        
-                     <div style="height:10px;"></div>
-                      <table width="90%" border="0" cellpadding="0" cellspacing="0" id="warehouseInfo_tbl">
-                      
-                      
-                      
-                        <tr>
-                                <td width="45%" valign="top" class="left_col">
-                                    <div class="form-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">Passive PK</span> <input type="text"
-                                                id="passivePk" value="${passivePk}" class="form-control text-input"
-                                                readonly />
-                                        </div>
-                                    </div>
-                                </td>
-                                <td width="10%" valign="top" class="left_col"></td>
+	<div class="tab-pane fade" id="custom-tabs-one-pass" role="tabpanel" aria-labelledby="custom-tabs-one-pass-tab">
+                                                        
+    		<div class="row">
+			<div class="col-md-4">                                                            
+			<div class="form-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">Passive PK</span>
+					<input type="text" id="passivePk" value="${passivePk}" class="form-control text-input" readonly />
+				</div>
+			</div>
+			</div>
 
-                                <td width="45%" valign="top" class="left_col">
+			<div class="col-md-4">
+			<div class="form-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">Site Type</span>
+					<input type="text" id="siteType" value="${siteType}" class="form-control text-input"/>
+				</div>
+			</div>
+			</div>
 
-                                    <div class="form-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">Site Type</span> <input type="text"
-                                                id="siteType" value="${siteType}" class="form-control text-input"
-                                                 />
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td width="45%" valign="top" class="left_col">
-                                    <div class="form-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">Swap</span> <input type="text"
-                                                id="swap" value="${swap}" class="form-control text-input"
-                                                 />
-                                        </div>
-                                    </div>
-                                </td>
-                                <td width="10%" valign="top" class="left_col"></td>
+			<div class="col-md-4">
+			<div class="form-group">
+				<div class="input-group-prepend">
+				<span class="input-group-text">Swap</span>
+				<input type="text" id="swap" value="${swap}" class="form-control text-input"/>
+				</div>
+			</div>
+			</div>
+			</div>
+			
+    		<div class="row">
+			<div class="col-md-4">                                                            
+			<div class="form-group">
+				<div class="input-group-prepend">
+				<span class="input-group-text">Swap Date</span>
+				<input type="text" id="SwapDate" value="${swapDate}" class="form-control text-input"/>
+				</div>
+			</div>
+			</div>
+			
+			<div class="col-md-4">
+			<div class="form-group">
+				<div class="input-group-prepend">
+				<span class="input-group-text">Status</span>
+				<input type="text" id="status" value="${status}" class="form-control text-input"/>
+				</div>
+			</div>
+			</div>
+			
+			<div class="col-md-4">
+			<div class="form-group">
+				<div class="input-group-prepend">
+				<span class="input-group-text">Circle Id</span>
+				<input type="text" id="circleId" value="${circleId}" class="form-control text-input"/>
+				</div>
+			</div>
+			</div>
+			</div>
+			
+    		<div class="row">
+			<div class="col-md-4">                                                            
+			<div class="form-group">
+				<div class="input-group-prepend" id="datetimepicker3" data-target-input="nearest">
+				<span class="input-group-text">Discovery Date</span>
+				<input type="text" id="discoveryDate" value="${discoveryDate}" class="form-control datetimepicker-input"
+					data-toggle="datetimepicker" data-target="#datetimepicker3" />
+				<div class="input-group-append" data-target="#datetimepicker3" data-toggle="datetimepicker">
+				<div class="input-group-text"><i class="fa fa-calendar"></i></div>
+				</div>
+				</div>
+			</div>
+			</div>
+			
+			<div class="col-md-4">
+			<div class="form-group">
+				<div class="input-group-prepend" id="datetimepicker9" data-target-input="nearest">
+				<span class="input-group-text">Last Shown Date</span>
+				<input type="text" id="shownDate" value="${shownDate}" class="form-control datetimepicker-input"
+				data-toggle="datetimepicker"  />
+				<div class="input-group-append" data-toggle="datetimepicker" data-target="#datetimepicker9">
+				<div class="input-group-text" data-target="#datetimepicker9"><i class="fa fa-calendar"></i></div>
+				</div>
+				</div>
+			</div>
+			</div>
+			
+			<div class="col-md-4">
+			<div class="form-group">
+				<div class="input-group-prepend">
+				<span class="input-group-text">Creation Date</span>
+				<input type="text" id="creationDate" value="${creationDate}"  class="form-control text-input" readonly/>
+				</div>
+			</div>
+			</div>
 
-                                <td width="45%" valign="top" class="left_col">
-
-                                    <div class="form-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">Swap Date</span> <input type="text"
-                                                id="SwapDate" value="${swapDate}" class="form-control text-input"
-                                                 />
-                                        </div>
-                                    </div>
-                                    
-                                </td>
-                            </tr>
-                            <tr>
-                                <td width="45%" valign="top" class="left_col">
-                                    <div class="form-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">Status</span> <input type="text"
-                                                id="status" value="${status}" class="form-control text-input"
-                                                 />
-                                        </div>
-                                    </div>
-                                </td>
-                                <td width="10%" valign="top" class="left_col"></td>
-
-                                <td width="45%" valign="top" class="left_col">
-
-                                    <div class="form-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">Circle Id</span> <input type="text"
-                                                id="circleId" value="${circleId}" class="form-control text-input"
-                                                 />
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td width="45%" valign="top" class="left_col">
-                                   <div class="col-md-10">
-						<div class="form-group">
-							<div class="input-group-prepend" id="datetimepicker3"
-								data-target-input="nearest">
-								<span class="input-group-text">Discovery Date</span> <input
-									type="text" id="discoveryDate" value="${discoveryDate}"
-									class="form-control datetimepicker-input"
-									data-toggle="datetimepicker" data-target="#datetimepicker3" />
-								<div class="input-group-append" data-target="#datetimepicker3"
-									data-toggle="datetimepicker">
-									<div class="input-group-text">
-										<i class="fa fa-calendar"></i>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-                                </td>
-                                <td width="10%" valign="top" class="left_col"></td>
-
-                                <td width="45%" valign="top" class="left_col">
-
-                                     <div class="col-md-10">
-						<div class="form-group">
-							<div class="input-group-prepend" id="datetimepicker9"
-								data-target-input="nearest">
-								<span class="input-group-text">Last Shown Date</span> <input
-									type="text" id="shownDate" value="${shownDate}"
-									class="form-control datetimepicker-input"
-									data-toggle="datetimepicker"  />
-								<div class="input-group-append" 
-									data-toggle="datetimepicker" data-target="#datetimepicker9">
-									<div class="input-group-text" data-target="#datetimepicker9">
-										<i class="fa fa-calendar"></i>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td width="45%" valign="top" class="left_col">
-                                    <div class="form-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">Creation Date</span> <input type="text"
-                                                id="creationDate" value="${creationDate}"  class="form-control text-input"
-                                              readonly   />
-                                        </div>
-                                    </div>
-                                </td>
-                                <td width="10%" valign="top" class="left_col"></td>
-
-                                <td width="45%" valign="top" class="left_col">
-
-                                    <div class="form-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">Last Modified Date</span> <input type="text"
-                                                id="modifiedDate" value="${modifiedDate}"  class="form-control text-input"
-                                             readonly   />
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                     
-                     
-                     
-                     
-                     
-                        
-                      </div>
-                        
-                   
-                    <div class="tab-pane fade" id="custom-tabs-one-cell" role="tabpanel"
-                        aria-labelledby="custom-tabs-one-cell-tab">
-                        <caption>2G CELLS</caption>
-                        <table id="GCellTable" class="table table-striped table-bordered table-sm"
-                            style="display: block; height: 300px; overflow: auto;">
-
-                            <thead>
-                                <tr class="fixed-headerr">
-                                    <th>GCELL_ID</th>
-                                    <th>CELLID</th>
-                                    <th>CELLNAME</th>
-                                    <th>MCC</th>
-                                    <th>MNC</th>
-                                    <th>LAC</th>
-                                    <th>CI</th>
-                                    <th>NCC</th>
-                                    <th>BCC</th>
-                                    <th>TYPE</th>
-                                    <th>BCCHNO</th>
-                                    <th>BASEBANDPOLICY</th>
-                                    <th>BASEBANDEQMID</th>
-                                    <th>GBTSFUNCTIONNAME</th>
-                                    <th>UPDATE_DATE</th>
-                                    <th>GLOCELLID</th>
-                                    <th>STATUS</th>
-                                    <th>CREATION_DATE</th>
-                                    <th>DOMAIN</th>
-                                    <th>VENDOR</th>
-
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                        
-                        <div style="height:10px;"></div>
-                        <caption><b>3G CELLS</b></caption>
-
-                        <table id="UCellTable" class="table table-striped table-bordered table-sm"
-                            style="display: block; height: 400px; overflow-y: auto;">
-                            <thead>
-                                <tr>
+			<div class="col-md-4">
+			<div class="form-group">
+				<div class="input-group-prepend">
+				<span class="input-group-text">Last Modified Date</span>
+				<input type="text" id="modifiedDate" value="${modifiedDate}"  class="form-control text-input" readonly/>
+				</div>
+			</div>                        
+			</div>
+			</div>
+			</div>
+                                           
+	<div class="tab-pane fade" id="custom-tabs-one-cell" role="tabpanel" aria-labelledby="custom-tabs-one-cell-tab">
+		<caption>2G CELLS</caption>
+		<table id="GCellTable" class="table table-striped table-bordered table-sm" style="display: block; height: 300px; overflow: auto;">
+			<thead>
+				<tr class="fixed-headerr">
+					<th>GCELL_ID</th>
+					<th>CELLID</th>
+                    <th>CELLNAME</th>
+					<th>MCC</th>
+					<th>MNC</th>
+					<th>LAC</th>
+					<th>CI</th>
+					<th>NCC</th>
+					<th>BCC</th>
+					<th>TYPE</th>
+					<th>BCCHNO</th>
+					<th>BASEBANDPOLICY</th>
+					<th>BASEBANDEQMID</th>
+					<th>GBTSFUNCTIONNAME</th>
+					<th>UPDATE_DATE</th>
+					<th>GLOCELLID</th>
+					<th>STATUS</th>
+					<th>CREATION_DATE</th>
+					<th>DOMAIN</th>
+					<th>VENDOR</th>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+	</table>                   
+	<div style="height:10px;"></div>
+	<caption>3G CELLS</caption>
+	<table id="UCellTable" class="table table-striped table-bordered table-sm" style="display: block; height: 400px; overflow-y: auto;">
+		<thead>
+			<tr>
                                     <th>UCELL_ID</th>
                                     <th>CELLID</th>
                                     <th>CELLNAME</th>
@@ -1147,7 +1073,7 @@
                 <!-- end -->
             </div>
             </div>
-
+</div>
             <div id="imgpopUpDiv" style="display: none;">
                 <div id="imagedisplay"></div>
                 <div>
