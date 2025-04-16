@@ -4549,7 +4549,7 @@ public class NetworkController {
 		return BoqHM;
 	}
 
-	// Sites BOQ data retrieving
+	// Sites BOQ data retrieving: Getting the BoQ based on the vendor (Vendor BoQ).
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/GetVenBoqList", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
@@ -4665,12 +4665,14 @@ public class NetworkController {
 				BoqHM.put("Node Type", String.valueOf(CountNodesType));
 				strExist = "";
 				////////////////////////////////
-				strExist = "SELECT distinct a.NODE_TYPE,COUNT(DISTINCT a.NODE_TYPE) from node_active a where a.VENDOR = '"
-						+ VenId + "' " + generateDateCondition(date, "a");
+				strExist = "SELECT distinct a.NODE_TYPE,COUNT(a.NODE_TYPE) from node_active a where a.VENDOR = '"
+						+ VenId + "' AND a.WARE_ID !='null' AND a.WARE_ID != '0' AND a.WARE_ID is not null" 
+						+ generateDateCondition(date, "a");
 				strExist = boqDomain(paramEnterprise, paramTransmission, paramRAN, paramCore, strExist);
 				strExist = strExist + " GROUP BY NODE_TYPE";
 				// System.out.println(strExist);
 				List<Object[]> CountNodesteach_Active = (List<Object[]>) session.createNativeQuery(strExist).list();
+				System.out.println("CountNodesteach_Active is " +mapper.writeValueAsString(CountNodesteach_Active));
 				List<Object[]> result = new ArrayList<>();
 				for (Object[] obj : CountNodesteach_Active) {
 					result.add(obj);
