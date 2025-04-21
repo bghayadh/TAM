@@ -66,7 +66,9 @@
 		    							<option selected>Choose...</option>
 		      							<option>Asset Registry</option>
 		      							<option>Capital in Progress</option>
-		      							<option>Discovery New</option>
+		      							<option>Discovery New Project Manger</option>
+		      							<option>Discovery New Asset Manger</option>
+		      							<option>Discovery New Finance Manger</option>
 		      							<option>Fixed Asset Registry</option>
 		      							<option>Goods Received</option>
 		      							<option>Item</option>
@@ -142,8 +144,10 @@
 							<option selected>Choose...</option>
 							<option>Asset Registry</option>
 							<option>Capital in Progress</option>
-							<option>Discovery New</option>
-							<option>Fixed Asset Registry</option>
+						    <option>Discovery New Project Manger</option>
+		      				<option>Discovery New Asset Manger</option>
+		      				<option>Discovery New Finance Manger</option>
+		      				<option>Fixed Asset Registry</option>
 							<option>Goods Received</option>
 							<option>Item</option>
 							<option>Purchase Order</option>
@@ -457,7 +461,7 @@ $(document).ready(function() {
 				console.log("permID iis "+permID)
 				var Read = 0; var Write = 0; var Add = 0; var Delete = 0; var Save = 0;
 				var Status = 0; var Action = 0; var Download = 0; var Export = 0; var SecondLvL =0; var FirstLvL =0;
-				var searchPopup =0; var findConnected=0; var projects =0;
+				var searchPopup =0; var findConnected=0; var projects =0; var approveReject=0;
 				$(jQuery('input[type="checkbox"]', $(this).closest('tr'))).each(function() {
 					if ($(this).val() == 1) {
 						switch ($(this).attr('id')){
@@ -502,7 +506,10 @@ $(document).ready(function() {
 								break;
 							case 'Projects':
 								projects = 1;
-								break;						
+								break;	
+							case 'Approve/Reject':
+								approveReject = 1;
+								break;					
 					  }
 					}
 					else{
@@ -541,7 +548,8 @@ $(document).ready(function() {
 						"searchPopup" : searchPopup,
 						"findConnected" : findConnected,
 						"projects":projects,
-						"roleLevel":roleLevelValue
+						"roleLevel":roleLevelValue,
+						"approveReject":approveReject
 					},
 					success : function(data) {
 						location.reload();
