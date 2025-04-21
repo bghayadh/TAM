@@ -76,7 +76,19 @@ class gridAppendRows {
                     rows[i][this.ArrayKeys[14]], // firstlvl
                     rows[i][this.ArrayKeys[13]]  // secondlvl
                 ];
-            } else if (rows[i][this.ArrayKeys[1]] == 'List') {
+            }else if ((rows[i][this.ArrayKeys[0]] == 'Discovery New Project Manger' ||  rows[i][this.ArrayKeys[0]] == 'Discovery New Asset Manger' ||
+				rows[i][this.ArrayKeys[0]] == 'Discovery New Finance Manger' )&& rows[i][this.ArrayKeys[1]] == 'Tree') {
+				                box = ['Read', 'Write', 'Add', 'Approve/Reject', 'Delete' , 'Save'];
+				                value = [
+				                    rows[i][this.ArrayKeys[4]], // read
+				                    rows[i][this.ArrayKeys[5]], // exports
+				                    rows[i][this.ArrayKeys[6]], // firstlvl
+				                    rows[i][this.ArrayKeys[19]],
+									rows[i][this.ArrayKeys[7]], 
+									rows[i][this.ArrayKeys[8]],   // secondlvl
+				                ];
+				            }
+							 else if (rows[i][this.ArrayKeys[1]] == 'List') {
                 box = ['Read', 'Delete'];
                 value = [
                     rows[i][this.ArrayKeys[4]], // read
