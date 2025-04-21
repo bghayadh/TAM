@@ -73,7 +73,9 @@ public class RolePermissionController {
 				notification.headerNotifications(session, model);
 
 				listRolePerm = session.createNativeQuery("select SCREEN as screen, VIEW_TYPE as viewType, ROLE as role, ROLE_LEVEL as roleLevel, READ_PERM as readPerm,"
-								+ " WRITE_PERM as writePerm, ADD_PERM as addPerm, DELETE_PERM as delPerm, SAVE_PERM as savePerm, STATUS_PERM as statusPerm, ACTION_PERM as actionPerm, DOWNLOAD_PERM as downloadPerm, EXPORT_PERM as exportPerm,  SECOND_LEVEL_PERM as secondLevelPerm, FIRST_LEVEL_PERM as firstLevelPerm, PERM_ID as permID,SEARCH_POPUP_PERM as searchPopupPerm,FIND_CONNECTED_PERM as findConnectedPerm,PROJECTS_PERM as projectsPerm "
+								+ " WRITE_PERM as writePerm, ADD_PERM as addPerm, DELETE_PERM as delPerm, SAVE_PERM as savePerm, STATUS_PERM as statusPerm, ACTION_PERM as actionPerm, DOWNLOAD_PERM as downloadPerm, "
+								+ "EXPORT_PERM as exportPerm,  SECOND_LEVEL_PERM as secondLevelPerm, FIRST_LEVEL_PERM as firstLevelPerm, PERM_ID as permID,"
+								+ "SEARCH_POPUP_PERM as searchPopupPerm,FIND_CONNECTED_PERM as findConnectedPerm,PROJECTS_PERM as projectsPerm,  APPROVEREJECT_PERM as approveRejectPerm"
 								+ " from ROLE_PERMISSIONS t ORDER BY LAST_MODIFICATION_DATE DESC,SCREEN ASC").list();
 				listRoles = session.createNativeQuery("select Role From  Role").list();
 				for (String role : listRoles) {
@@ -255,13 +257,14 @@ public class RolePermissionController {
 					char searchPopup = (request.getParameter("searchPopup").charAt(0));
 					char findConnected = request.getParameter("findConnected").charAt(0);
 					char projects = request.getParameter("projects").charAt(0);
+					char approveReject=request.getParameter("approveReject").charAt(0);
 					Timestamp lastModifiedDate = new Timestamp(new Timestamp(System.currentTimeMillis()).getTime());
 					String roleLevel = request.getParameter("roleLevel");
 
 					query = session.createNativeQuery(
 							"UPDATE ROLE_PERMISSIONS SET READ_PERM= '" +Read+ "',WRITE_PERM= '" +Write+ "',ADD_PERM= '" +Add+ "',DELETE_PERM= '" +Delete+ "',SAVE_PERM= '" +Save+ "',STATUS_PERM= '" +Status
 									+ "',ACTION_PERM= '" +Action+ "',DOWNLOAD_PERM= '" +Download+ "',VIEW_TYPE= '" +viewType+ "',EXPORT_PERM= '" +Export+ "',SECOND_LEVEL_PERM= '" +SecondLvl+ "',FIRST_LEVEL_PERM= '" +request.getParameter("firstlvlPerm").charAt(0)
-									+ "',SEARCH_POPUP_PERM= '" +searchPopup+ "',FIND_CONNECTED_PERM= '" +findConnected+ "',PROJECTS_PERM= '" +projects+ "',LAST_MODIFICATION_DATE= TIMESTAMP '" +lastModifiedDate+"',ROLE_LEVEL= '" +roleLevel+ "' WHERE PERM_ID = '"+permID+"' ");
+									+ "',SEARCH_POPUP_PERM= '" +searchPopup+ "',FIND_CONNECTED_PERM= '" +findConnected+ "',PROJECTS_PERM= '" +projects+ "',APPROVEREJECT_PERM= '"+approveReject+"',LAST_MODIFICATION_DATE= TIMESTAMP '" +lastModifiedDate+"',ROLE_LEVEL= '" +roleLevel+ "' WHERE PERM_ID = '"+permID+"' ");
 
 					query.executeUpdate();
 					session.flush();
