@@ -69,6 +69,21 @@ public class RolePermission {
 	@Column(name = "PROJECTS_PERM")
 	private char projectsPerm;
 	
+	@Column(name = "APPROVEREJECT_PERM")
+	private char approveRejectPerm;
+	
+	public char getApproveRejectPerm() {
+		return approveRejectPerm;
+	}
+
+
+
+	public void setApproveRejectPerm(char approveRejectPerm) {
+		this.approveRejectPerm = approveRejectPerm;
+	}
+
+
+
 	@Column(name = "CREATION_DATE")
 	private Timestamp creationDate;
 		
@@ -83,7 +98,7 @@ public class RolePermission {
 	public RolePermission(String permID, String screen, String viewType, String role, char roleLevel, char readPerm,
 			char writePerm, char addPerm, char delPerm, char savePerm, char statusPerm, char actionPerm,
 			char downloadPerm,char exportPerm,char secondLevelPerm,char firstLevelPerm,char searchPopupPerm, char findConnectedPerm,char projectsPerm,
-			Timestamp creationDate, Timestamp lastModificationDate) {
+			Timestamp creationDate, Timestamp lastModificationDate, char approveRejectPerm) {
 		super();
 		this.permID = permID;
 		this.screen = screen;
@@ -99,6 +114,7 @@ public class RolePermission {
 		this.actionPerm = actionPerm;
 		this.downloadPerm = downloadPerm;
 		this.exportPerm = exportPerm;
+		this.approveRejectPerm=approveRejectPerm;
 		this.firstLevelPerm = firstLevelPerm;
 		this.secondLevelPerm = secondLevelPerm;
 		this.searchPopupPerm = searchPopupPerm;
