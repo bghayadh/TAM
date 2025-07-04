@@ -70,7 +70,7 @@ public class Permissions {
 		
 		String permQuery = "select screen, viewType, roleLevel, readPerm, writePerm, addPerm, delPerm,"+ 
 				" savePerm, statusPerm, actionPerm, downloadPerm,exportPerm,secondLevelPerm,firstLevelPerm," +
-				" searchPopupPerm, findConnectedPerm, projectsPerm" +
+				" searchPopupPerm, findConnectedPerm, projectsPerm, approveRejectPerm" +
 				" from RolePermission where role IN (:param2)";
 		
 		Query permResult = session.createQuery(permQuery);
@@ -95,14 +95,13 @@ public class Permissions {
 		
 		String permQuery = "select screen, viewType, roleLevel, readPerm, writePerm, addPerm, delPerm,"+ 
 				" savePerm, statusPerm, actionPerm, downloadPerm,exportPerm,secondLevelPerm,firstLevelPerm," +
-				" searchPopupPerm, findConnectedPerm, projectsPerm" +
+				" searchPopupPerm, findConnectedPerm, projectsPerm, approveRejectPerm" +
 				" from RolePermission where role IN (:param2)";
 
 		
 		Query permResult = (Query) entityManager.createQuery(permQuery);
 		permResult.setParameterList("param2", roles);
 		 permList = permResult.list();
-		
 	return permList;
 
 	}
@@ -112,7 +111,7 @@ public class Permissions {
 		Integer read = 0; Integer write = 0; Integer add = 0; Integer delete = 0;
 		Integer save = 0; Integer status = 0; Integer action = 0; Integer download = 0;
 		Integer export = 0; Integer secondlvl = 0; Integer firstlvl = 0; Integer srchPopup = 0;
-		Integer findConnected = 0; Integer projects = 0;
+		Integer findConnected = 0; Integer projects = 0; Integer approveReject=0;
 
 		for (int i = 0; i<permList.size(); i++) {
 			List x = Arrays.asList(permList.get(i));
@@ -132,6 +131,8 @@ public class Permissions {
 				srchPopup+= Integer.parseInt(String.valueOf(prList[14]));
 				findConnected+= Integer.parseInt(String.valueOf(prList[15]));
 				projects+= Integer.parseInt(String.valueOf(prList[16]));
+				approveReject+= Integer.parseInt(String.valueOf(prList[17]));
+				
 			}
 		}
 		if(read > 1) {read = 1;} if(write > 1) {write = 1;} if(add > 1) {add = 1;}
@@ -140,6 +141,7 @@ public class Permissions {
 		if(export > 1) {export = 1;} if(secondlvl > 1) {secondlvl = 1;}
 		if(firstlvl > 1) {firstlvl = 1;} if(srchPopup > 1) {srchPopup = 1;}
 		if(findConnected > 1) {findConnected = 1;} if(projects > 1) {projects = 1;}
+		if(approveReject > 1) {approveReject = 1;}
 		model.addAttribute("read"+viewType, read); 	model.addAttribute("write"+viewType, write);
 		model.addAttribute("add"+viewType, add); 	model.addAttribute("del"+viewType, delete);
 		model.addAttribute("save"+viewType, save); 	model.addAttribute("status"+viewType, status);
@@ -147,6 +149,7 @@ public class Permissions {
 		model.addAttribute("export"+viewType, export); 	model.addAttribute("secondlvl"+viewType, secondlvl);
 		model.addAttribute("firstlvl"+viewType, firstlvl); model.addAttribute("srchPopup"+viewType, srchPopup);
 		model.addAttribute("findConnected"+viewType, findConnected); model.addAttribute("projects"+viewType, projects);		
+		model.addAttribute("approveReject"+viewType, approveReject); 
 	}
 	
 	 @SuppressWarnings("rawtypes")
