@@ -82,6 +82,9 @@
                         <!-- 
                         <li class="b"><a href="${pageContext.request.contextPath}/DiscoveryNewListView" style="position:relative;left:-30px;"><i class="fas fa-file-invoice-dollar"style="color:#DCF8C6"></i> Discovery New Item </a></li>
                        -->
+                                  
+                        <li class="b"><a href="${pageContext.request.contextPath}/DiscoveryNewApprovalListView" style="position:relative;left:-30px;"><i class="fas fa-search-plus"style="color:#DCF8C6"></i> Discovery New </a>
+                        <span class="circle1" style="position:relative;left:-30px;">${DniAll}</span> <span class="circle2" style="position:relative;left:-30px;">${DniUnCmp}</span></li>
                        <li class="b"><a href="${pageContext.request.contextPath}/SimTransactionListView" style="position:relative;left:-30px;"><i class="fas fa-arrows-alt-h"style="color:#DCF8C6"></i> Sim Card Transaction </a></li>
                     </ul>
                 </div>

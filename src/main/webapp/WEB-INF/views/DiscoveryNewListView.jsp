@@ -104,8 +104,25 @@
 							<div class="glyph">
 							 <button class="btn btn-secondary" type="button" id="export">Export</button>
 								<button type="button" id="Fview" class="btn btn-light" data-toggle="tooltip"
-									data-placement="top" title="Form View"> <i class="fa fa-edit"></i>
+									data-placement="top" title="Form View" > <i class="fa fa-edit"></i>
 								</button>
+		<c:choose>
+    <c:when test="${readProjectM == 0 && readAssetM == 0 && readFinanceM == 0}">
+        <button type="button" class="btn btn-light" data-toggle="tooltip" data-placement="top" title="Tree View" 
+        onclick='window.location.href = "${pageContext.request.contextPath}/DiscoveryNewTreeView"'
+						 disabled>
+            <i class="fas fa-sitemap"></i>
+        </button>
+    </c:when>
+    <c:otherwise>
+        <button type="button" class="btn btn-light" data-toggle="tooltip" data-placement="top" title="Tree View"
+        onclick='window.location.href = "${pageContext.request.contextPath}/DiscoveryNewTreeView"'>
+						
+            <i class="fas fa-sitemap"></i>
+        </button>
+    </c:otherwise>
+</c:choose>
+
 								<button type="button" id="Lview" class="btn btn-danger" data-toggle="tooltip"
 									data-placement="top" title="List View" style="background: #da6815;">
 									<i class="fa fa-bars"></i>
