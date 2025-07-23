@@ -91,8 +91,8 @@ public class Form {
 	///// DN pending nav //////////////
 	
 	@SuppressWarnings("rawtypes")
-	@RequestMapping(value = "/dnNavigation", method = RequestMethod.GET)
-	public String[] dnNavigation(Session session, String queryBase, String moduleIDName, String moduleIDValue, String moduleLMD, String navAction) throws ParseException {
+	@RequestMapping(value = "/customNavigation", method = RequestMethod.GET)
+	public String[] customNavigation(Session session, String queryBase, String moduleIDName, String moduleIDValue, String moduleLMD, String navAction) throws ParseException {
 	    String[] result = new String[3];
 	    int currentIndex;
 	    int lastIndex;
