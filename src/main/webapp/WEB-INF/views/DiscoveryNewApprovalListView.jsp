@@ -104,7 +104,7 @@
 							<div class="glyph">
 							 <button class="btn btn-secondary" type="button" id="export">Export</button>
 								<button type="button" id="Fview" class="btn btn-light" data-toggle="tooltip"
-									data-placement="top" title="Form View"> <i class="fa fa-edit"></i>
+									data-placement="top" title="Form View" > <i class="fa fa-edit"></i>
 								</button>
 								<c:choose>
     <c:when test="${readProjectM == 0 && readAssetM == 0 && readFinanceM == 0}">
@@ -127,10 +127,7 @@
 									data-placement="top" title="List View" style="background: #da6815;">
 									<i class="fa fa-bars"></i>
 								</button>
-								<button type="button" id="searchdiscovery" class="btn btn-light" data-toggle="tooltip" data-placement="top"
-									title="Search">
-									<i class="fa fa-search"></i>
-								</button>
+								
 							</div>
 						</div>
 					</div>
@@ -239,11 +236,11 @@
 									<i class="fa fa-trash"></i> Delete
 								</button>
 
-								<button type="button" id="saveButton"
-									onclick='window.location.href = "${pageContext.request.contextPath}/DiscoveryNewFormView?type=addNew"'
+							<!--	<button type="button" id="saveButton"
+									onclick='window.location.href = "${pageContext.request.contextPath}/DiscoveryNewApprovalFormView?type=addNew"'
 									class="btn btn-primary BtnActive">
 									<i class="fa fa-plus"></i> Add
-								</button>
+								</button> -->
 							</li>
 
 						</ul>
@@ -284,7 +281,7 @@
 											<tr class="header">
 												<th class="table-select-all">
 												</th>
-												<th>Discovery ID
+												<th>Discovery Item ID
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown"> <i
 																class="fa fa-list almgrid-filter-i"
@@ -295,7 +292,7 @@
 													</li>
 												</th>
 
-												<th>Total Amount
+												<th>Transaction ID
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown"> <i
 																class="fa fa-list almgrid-filter-i"
@@ -306,7 +303,7 @@
 													</li>
 												</th>
 
-												<th>Total Qty
+												<th>Transaction Type
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown"> <i
 																class="fa fa-list almgrid-filter-i"
@@ -318,7 +315,7 @@
 													</li>
 												</th>
 
-												<th>Status
+												<th>Pending Approval
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown"> <i
 																class="fa fa-list almgrid-filter-i"
@@ -329,7 +326,7 @@
 														</ul>
 													</li>
 												</th>
-												<th onmouseover="displayInputName(this)" onmouseout="hideTooltip()">Pending PM Approval
+												<th > From Site 
 												<div id="tooltip"></div>
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown"> <i
@@ -342,7 +339,7 @@
 													</li>
 												</th>
 												
-												<th onmouseover="displayInputName(this)" onmouseout="hideTooltip()">Pending AM Approval
+												<th >To Site
 												<div id="tooltip"></div>
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown"> <i
@@ -355,7 +352,7 @@
 													</li>
 												</th>
 												
-												<th onmouseover="displayInputName(this)" onmouseout="hideTooltip()">Pending FM Approval
+												<th>PO ID
 												<div id="tooltip"></div>
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown"> <i
@@ -450,7 +447,11 @@
 
 
 			<script>
-
+			$( "#Fview" ).click(function() {	
+				var id =  $('#discoverygridtable tbody tr:eq(0) td:eq(1)').text();
+				
+				location.href="${pageContext.request.contextPath}/DiscoveryNewApprovalFormView?dniID="+id+"&NavAction=2";
+			}); 
 				var ReportArrayGlobal = ${ ListGridTable };
 				
 
@@ -529,10 +530,10 @@ exportGrid();
 
 						$.ajax({
 							type: "GET",
-							url: "${pageContext.request.contextPath}/DiscoveryNewListViewDelete",
+							url: "${pageContext.request.contextPath}/DiscoveryNewApprovalListViewDelete",
 							dataType: "json",
 							data: {
-								"dnID": deleteArray
+								"slctDelDNItem": deleteArray
 							},
 							success: function (data) {
 								location.reload();
@@ -547,11 +548,26 @@ exportGrid();
 
 
 					$(".almgrid-table").on("click", ".almgrid-link", function (e) {
-						var param1 = $(this).attr('id');
-						var param = "${pageContext.request.contextPath}/DiscoveryNewFormView?dnID="+param1+"&NavAction=2";
-						window.location.href = param;
-						e.preventDefault();
+					    e.preventDefault();
+
+					    var param1 = $(this).attr('id');
+
+					    // Get the current row
+					    var $row = $(this).closest('tr');
+
+					    // Find the index of the "Pending Approval" column
+					    var pendingApprovalIndex = $(".almgrid-table thead th").filter(function () {
+					        return $(this).clone().children().remove().end().text().trim() === "Pending Approval";
+					    }).index();
+
+					    // Get the cell value from the clicked row at that column index
+					    var param2 = $row.find("td").eq(pendingApprovalIndex).text().trim();
+
+					    // Build the redirect URL
+					    var param = "${pageContext.request.contextPath}/DiscoveryNewApprovalFormView?dniID=" + param1 + "&NavAction=2&status=" + encodeURIComponent(param2);
+					    window.location.href = param;
 					});
+
 
 				  	$("#searchdiscovery").click(function() {
 				 		$("#poModal").modal("show");

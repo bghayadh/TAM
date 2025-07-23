@@ -77,6 +77,40 @@
 
 
 
+<script src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/moment.min.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/tempusdominus-bootstrap-4.min.js"></script>
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/tempusdominus-bootstrap-4.min.css" />	
+																											  
+	  <script src="${pageContext.request.contextPath}/resources/js/popper-1.12.9-min.js"></script>
+	<script src="${pageContext.request.contextPath}/resources/js/bootstrap.min.js"></script>
+	<link href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
+	<script src="${pageContext.request.contextPath}/resources/js/dataTables.min.js"></script>
+
+	<script src="${pageContext.request.contextPath}/resources/js/jquery-migrate-3.0.0.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resources/js/platform.js"></script>
+
+	
+	<script src="${pageContext.request.contextPath}/resources/js/jquery2-ui.js"></script>	 
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/jquery-ui.css" rel="stylesheet"/>
+	<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+	
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/dataTables.min.css">
+    <script src="${pageContext.request.contextPath}/resources/js/all.min.js"></script>
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/font-awesome.min.css">
+	<link href="${pageContext.request.contextPath}/resources/css/all.min.css" rel="stylesheet">
+	
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/ListView.css">
+	
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/header.css">
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/jquerysctipttop.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/bootstrap-datetimepicker.min.css">
+	
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/header.css">
+	
+
+
+
 
 
 
@@ -166,7 +200,7 @@
 			        	</button>
 			        	<button type="button" id="Lview"  class="btn btn-light" data-toggle="tooltip"
 			        			data-placement="top" title="List View"
-			        			onclick='window.location.href = "${pageContext.request.contextPath}/DiscoveryNewListView"'
+			        			onclick='window.location.href = "${pageContext.request.contextPath}/DiscoveryNewApprovalListView"'
 			        			> 
 			        			<i class="fa fa-bars"></i>
 			        	</button>
@@ -729,11 +763,73 @@
 
 
 
+var slctToNodeDel = [];
+var slctFromNodeDel = [];
 
 
+$(".delete-To-node").click(function () {
+	   // Array to store selected Node IDs for deletion
+	    $("#toNodes > tbody").find('input[name="record"]').each(function () {
+			
+	        if ($(this).is(":checked")) {
+				const row = $(this).closest("tr");
+				     const nodeId = row.find('input[name="NodeToId"]').val();
+	            // Get the NodeId value from the row and add it to slctDel
+	             slctToNodeDel.push(nodeId);
+	            console.log("The selecteds delete is " + slctToNodeDel);
 
+	            // Add to allDelSerials if not already included
+	           
+	        }
+	    });
 
+	    console.log("The selected delete after is " + slctToNodeDel);
 
+	    // Check if no rows were selected
+	    if (slctToNodeDel.length === 0) {
+	        alert('Select Row(s) to Delete');
+	        return false;
+	    }
+
+	    // Remove selected rows from the table
+	    $("#toNodes > tbody").find('input[name="record"]').each(function () {
+	        if ($(this).is(":checked")) {
+	            $(this).parents("tr").remove();
+	        }
+	    });
+	});
+
+	// Delete selected rows from the "From Nodes" table
+	$(".delete-From-node").click(function () {
+	    $("#fromNodes > tbody").find('input[name="record"]').each(function () {
+	        if ($(this).is(":checked")) {
+	        	const row = $(this).closest("tr");
+	    		
+	            // Get the NodeId value from the row and add it to slctDel
+	                const nodeId = row.find('input[name="NodeFromId"]').val();
+	                slctFromNodeDel.push(nodeId);
+	            console.log("The selected delete is " + slctFromNodeDel);
+
+	            // Add to allDelSerials if not already included
+	           
+	        }
+	    });
+
+	    console.log("The selected delete after is " + slctFromNodeDel);
+
+	    // Check if no rows were selected
+	    if (slctFromNodeDel.length === 0) {
+	        alert('Select Row(s) to Delete');
+	        return false;
+	    }
+
+	    // Remove selected rows from the table
+	    $("#fromNodes > tbody").find('input[name="record"]').each(function () {
+	        if ($(this).is(":checked")) {
+	            $(this).parents("tr").remove();
+	        }
+	    });
+	});
 
 
 disableAllFields();
