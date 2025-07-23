@@ -26,6 +26,11 @@ public class DiscoveryNewItem {
 	@Column(name = "ITEM_NAME")
 	private String dniItemname;
 	
+
+	
+	
+	
+	
 	@Column(name = "RATE")
 	private float dniRate;
 	
@@ -183,6 +188,7 @@ public class DiscoveryNewItem {
 		this.dniItemcode = dniItemcode;
 		this.dniItemname = dniItemname;
 		this.dniRate = dniRate;
+		
 		this.dniDiscamount = dniDiscamount;
 		this.dniDiscpercent = dniDiscpercent;
 		this.dniNetrate = dniNetrate;
@@ -231,6 +237,8 @@ public class DiscoveryNewItem {
 	}
 
 	
+	
+
 	public String getDniID() {
 		return dniID;
 	}
