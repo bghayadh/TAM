@@ -325,26 +325,187 @@ function CreateTree_DiscoveryNew(listProjectManager,listAssetManager,listFinance
 		   return window.location.pathname.substring(0, window.location.pathname.indexOf("/",2));
 		}
 		function addRowToNode() {
-		    checkToNode();
-		    var rowcountNodes = $("#ToNodeTable >tbody tr").length; // Count existing rows
-		    console.log("rowcountNode:" + rowcountNodes);
-			var rowcountNode= rowcountNodes+1;
+    checkToNode();
+    var rowcountNodes = $("#toNodes >tbody tr").length;// Count existing rows
+    console.log("rowcountNode:" + rowcountNodes);
+	var rowcountNode= rowcountNodes+1;
+	console.log(rowcountNode);
+    var ctx = getContextPath();
+
+    // Dynamically create a new row
+    var markup =
+        "<tr><td style='text-align:center;'><input type='checkbox' name='record' id='record_" + rowcountNode + "'></td>" +
+        "<td name='NodeId'>" +
+        "<input name='NodeToId' class='form-control text-input' type='text' id='NodeToId_" + rowcountNode + "' style='width:100%;box-sizing:border-box;'/></td>" +
+        "<td name='NodeName'>" +
+        "<input name='NodeToName' id='NodeToName_" + rowcountNode + "' style='width:100%;box-sizing:border-box;' type='text' class='form-control text-input ui-widget ui-widget-content ui-corner-all'/></td>" +
+        "<td name='NodeType'>" +
+        "<input name='NodeToType' id='NodeToType_" + rowcountNode + "' style='width:100%;box-sizing:border-box;' type='text' class='form-control text-input ui-widget ui-widget-content ui-corner-all'/></td></tr>";
+
+    $("#toNodes > tbody").append(markup);
+
+    // NodeId autocomplete setup
+    $('#NodeToId_' + rowcountNode).autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                url: ctx + '/GetAllNode',
+                data: { Node: request.term },
+                dataType: "json",
+                success: function (data) {
+                    if (data != null) {
+                        response(data.ListNode);
+                    }
+                },
+                error: function (result) {
+                    console.log("Error fetching autocomplete data");
+                }
+            });
+        },
+        minLength: 0,
+        select: function (event, ui) {
+            this.value = ui.item ? ui.item[2] : '';
+            document.getElementById("NodeToName_" + rowcountNode).value = ui.item[3];
+            document.getElementById("NodeToType_" + rowcountNode).value = ui.item[4];
+            return false;
+        }
+    }).autocomplete("instance")._renderItem = function (ul, item) {
+        var appendString = "<div class='acItem'><span class='desc'><b>" +
+            item[2] + "</b></span><br><span class='name'>" +
+            item[3] + ", " + item[4] + "</span></div>";
+
+        return $("<li class='each'>").append(appendString).appendTo(ul);
+    };
+
+    // NodeName autocomplete setup
+    $('#NodeToName_' + rowcountNode).autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                url: ctx + '/GetAllNode',
+                data: { Node: request.term },
+                dataType: "json",
+                success: function (data) {
+                    if (data != null) {
+                        response(data.ListNode);
+                    }
+                },
+                error: function (result) {
+                    console.log("Error fetching autocomplete data");
+                }
+            });
+        },
+        minLength: 0,
+        select: function (event, ui) {
+            this.value = ui.item ? ui.item[3] : '';
+            document.getElementById("NodeToId_" + rowcountNode).value = ui.item[2];
+            document.getElementById("NodeToType_" + rowcountNode).value = ui.item[4];
+            return false;
+        }
+    }).autocomplete("instance")._renderItem = function (ul, item) {
+        var appendString = "<div class='acItem'><span class='desc'><b>" +
+            item[3] + "</b></span><br><span class='name'>" +
+            item[2] + ", " + item[4] + "</span></div>";
+
+        return $("<li class='each'>").append(appendString).appendTo(ul);
+    };
+
+    // NodeType autocomplete setup
+    $('#NodeToType_' + rowcountNode).autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                url: ctx + '/GetAllNode',
+                data: { Node: request.term },
+                dataType: "json",
+                success: function (data) {
+                    if (data != null) {
+                        response(data.ListNode);
+                    }
+                },
+                error: function (result) {
+                    console.log("Error fetching autocomplete data");
+                }
+            });
+        },
+        minLength: 0,
+        select: function (event, ui) {
+            this.value = ui.item ? ui.item[4] : '';
+            document.getElementById("NodeToId_" + rowcountNode).value = ui.item[2];
+            document.getElementById("NodeToName_" + rowcountNode).value = ui.item[3];
+            return false;
+        }
+    }).autocomplete("instance")._renderItem = function (ul, item) {
+        var appendString = "<div class='acItem'><span class='desc'><b>" +
+            item[4] + "</b></span><br><span class='name'>" +
+            item[2] + ", " + item[3] + "</span></div>";
+
+        return $("<li class='each'>").append(appendString).appendTo(ul);
+    };
+
+    // Focus triggers autocomplete search
+    ['NodeToId', 'NodeToName', 'NodeToType'].forEach(function (field) {
+        $('#'+field+'_' + rowcountNode).focus(function () {
+            if (this.value === "") {
+                $(this).autocomplete("search");
+            }
+        });
+    });
+
+    // Aggregate the data for all rows
+    var Data = { toNodeArray: [] };
+    $("#toNodes  > tbody > tr").find('input[name="record"]').each(function () {
+        var node_Id = $(this).parent().parent().children('td[name="NodeToId"]').children('input').val();
+        var node_Name = $(this).parent().parent().children('td[name="NodeToName"]').children('input').val();
+        var node_Type = $(this).parent().parent().children('td[name="NodeToType"]').children('input').val();
+
+        Data.toNodeArray.push({ NodeId: node_Id, NodeName: node_Name, NodeType: node_Type });
+    });
+
+    
+}
+function checkFromNode() {
+    var Data = {};
+    Data.fromNodeArray = [];
+
+    $("#fromNodes > tbody > tr").find('input[name="record"]').each(function () {
+        var ID = $(this).parent().parent().children('td[name="NodeId"]').children('input')[0].value;
+        if (ID === '') {
+            $(this).parents("tr").remove();
+        } else {
+            var node_Id = $(this).parent().parent().children('td[name="NodeFromId"]').children('input').val();
+            var node_Name = $(this).parent().parent().children('td[name="NodeFromName"]').children('input').val();
+            var node_Type = $(this).parent().parent().children('td[name="NodeFromType"]').children('input').val();
+
+            Data.fromNodeArray.push({ NodeId: node_Id, NodeName: node_Name, NodeType: node_Type });
+        }
+    });
+
+}
+
+function addRowFromNode() {
+	checkFromNode();
+		    var rowcountNodes = $("#fromNodes >tbody tr").length; // Count existing rows
+		 	var rowcountNode= rowcountNodes+1;
 		    var ctx = getContextPath();
 
 		    // Dynamically create a new row
 		    var markup =
 		        "<tr><td style='text-align:center;'><input type='checkbox' name='record' id='record_" + rowcountNode + "'></td>" +
 		        "<td name='NodeId'>" +
-		        "<input name='NodeId' class='form-control text-input' type='text' id='NodeId_" + rowcountNode + "' style='width:100%;box-sizing:border-box;'/></td>" +
+		        "<input name='NodeFromId' class='form-control text-input' type='text' id='NodeFromId_" + rowcountNode + "' style='width:100%;box-sizing:border-box;'/></td>" +
 		        "<td name='NodeName'>" +
-		        "<input name='NodeName' id='NodeName_" + rowcountNode + "' style='width:100%;box-sizing:border-box;' type='text' class='form-control text-input ui-widget ui-widget-content ui-corner-all'/></td>" +
+		        "<input name='NodeFromName' id='NodeFromName_" + rowcountNode + "' style='width:100%;box-sizing:border-box;' type='text' class='form-control text-input ui-widget ui-widget-content ui-corner-all'/></td>" +
 		        "<td name='NodeType'>" +
-		        "<input name='NodeType' id='NodeType_" + rowcountNode + "' style='width:100%;box-sizing:border-box;' type='text' class='form-control text-input ui-widget ui-widget-content ui-corner-all'/></td></tr>";
+		        "<input name='NodeFromType' id='NodeFromType_" + rowcountNode + "' style='width:100%;box-sizing:border-box;' type='text' class='form-control text-input ui-widget ui-widget-content ui-corner-all'/></td></tr>";
 
-		    $("#toNodes > tbody").append(markup);
+		    $("#fromNodes > tbody").append(markup);
 
 		    // NodeId autocomplete setup
-		    $('#NodeId_' + rowcountNode).autocomplete({
+		    $('#NodeFromId_' + rowcountNode).autocomplete({
 		        source: function (request, response) {
 		            $.ajax({
 		                type: "GET",
@@ -365,8 +526,8 @@ function CreateTree_DiscoveryNew(listProjectManager,listAssetManager,listFinance
 		        minLength: 0,
 		        select: function (event, ui) {
 		            this.value = ui.item ? ui.item[2] : '';
-		            document.getElementById("NodeName_" + rowcountNode).value = ui.item[3];
-		            document.getElementById("NodeType_" + rowcountNode).value = ui.item[4];
+		            document.getElementById("NodeFromName_" + rowcountNode).value = ui.item[3];
+		            document.getElementById("NodeFromType_" + rowcountNode).value = ui.item[4];
 		            return false;
 		        }
 		    }).autocomplete("instance")._renderItem = function (ul, item) {
@@ -378,7 +539,7 @@ function CreateTree_DiscoveryNew(listProjectManager,listAssetManager,listFinance
 		    };
 
 		    // NodeName autocomplete setup
-		    $('#NodeName_' + rowcountNode).autocomplete({
+		    $('#NodeFromName_' + rowcountNode).autocomplete({
 		        source: function (request, response) {
 		            $.ajax({
 		                type: "GET",
@@ -399,8 +560,8 @@ function CreateTree_DiscoveryNew(listProjectManager,listAssetManager,listFinance
 		        minLength: 0,
 		        select: function (event, ui) {
 		            this.value = ui.item ? ui.item[3] : '';
-		            document.getElementById("NodeId_" + rowcountNode).value = ui.item[2];
-		            document.getElementById("NodeType_" + rowcountNode).value = ui.item[4];
+		            document.getElementById("NodeFromId_" + rowcountNode).value = ui.item[2];
+		            document.getElementById("NodeFromType_" + rowcountNode).value = ui.item[4];
 		            return false;
 		        }
 		    }).autocomplete("instance")._renderItem = function (ul, item) {
@@ -412,7 +573,7 @@ function CreateTree_DiscoveryNew(listProjectManager,listAssetManager,listFinance
 		    };
 
 		    // NodeType autocomplete setup
-		    $('#NodeType_' + rowcountNode).autocomplete({
+		    $('#NodeFromType_' + rowcountNode).autocomplete({
 		        source: function (request, response) {
 		            $.ajax({
 		                type: "GET",
@@ -433,8 +594,8 @@ function CreateTree_DiscoveryNew(listProjectManager,listAssetManager,listFinance
 		        minLength: 0,
 		        select: function (event, ui) {
 		            this.value = ui.item ? ui.item[4] : '';
-		            document.getElementById("NodeId_" + rowcountNode).value = ui.item[2];
-		            document.getElementById("NodeName_" + rowcountNode).value = ui.item[3];
+		            document.getElementById("NodeFromId_" + rowcountNode).value = ui.item[2];
+		            document.getElementById("NodeFromName_" + rowcountNode).value = ui.item[3];
 		            return false;
 		        }
 		    }).autocomplete("instance")._renderItem = function (ul, item) {
@@ -446,7 +607,7 @@ function CreateTree_DiscoveryNew(listProjectManager,listAssetManager,listFinance
 		    };
 
 		    // Focus triggers autocomplete search
-		    ['NodeId', 'NodeName', 'NodeType'].forEach(function (field) {
+		    ['NodeFromId', 'NodeFromName', 'NodeFromType'].forEach(function (field) {
 		        $('#'+field+'_' + rowcountNode).focus(function () {
 		            if (this.value === "") {
 		                $(this).autocomplete("search");
@@ -456,158 +617,16 @@ function CreateTree_DiscoveryNew(listProjectManager,listAssetManager,listFinance
 
 		    // Aggregate the data for all rows
 		    var Data = { toNodeArray: [] };
-		    $("#ToNodeTable > tbody > tr").find('input[name="record"]').each(function () {
-		        var node_Id = $(this).parent().parent().children('td[name="NodeId"]').children('input').val();
-		        var node_Name = $(this).parent().parent().children('td[name="NodeName"]').children('input').val();
-		        var node_Type = $(this).parent().parent().children('td[name="NodeType"]').children('input').val();
+		    $("#fromNodes > tbody > tr").find('input[name="record"]').each(function () {
+		        var node_Id = $(this).parent().parent().children('td[name="NodeFromId"]').children('input').val();
+		        var node_Name = $(this).parent().parent().children('td[name="NodeFromName"]').children('input').val();
+		        var node_Type = $(this).parent().parent().children('td[name="NodeFromType"]').children('input').val();
 
 		        Data.toNodeArray.push({ NodeId: node_Id, NodeName: node_Name, NodeType: node_Type });
 		    });
 
 		    
 		}
-		
-		function addRowFromNode() {
-				    checkToNode();
-				    var rowcountNodes = $("#FromNodeTable >tbody tr").length; // Count existing rows
-				 	var rowcountNode= rowcountNodes+1;
-				    var ctx = getContextPath();
-
-				    // Dynamically create a new row
-				    var markup =
-				        "<tr><td style='text-align:center;'><input type='checkbox' name='record' id='record_" + rowcountNode + "'></td>" +
-				        "<td name='NodeId'>" +
-				        "<input name='NodeId' class='form-control text-input' type='text' id='NodeId_" + rowcountNode + "' style='width:100%;box-sizing:border-box;'/></td>" +
-				        "<td name='NodeName'>" +
-				        "<input name='NodeName' id='NodeName_" + rowcountNode + "' style='width:100%;box-sizing:border-box;' type='text' class='form-control text-input ui-widget ui-widget-content ui-corner-all'/></td>" +
-				        "<td name='NodeType'>" +
-				        "<input name='NodeType' id='NodeType_" + rowcountNode + "' style='width:100%;box-sizing:border-box;' type='text' class='form-control text-input ui-widget ui-widget-content ui-corner-all'/></td></tr>";
-
-				    $("#fromNodes > tbody").append(markup);
-
-				    // NodeId autocomplete setup
-				    $('#NodeId_' + rowcountNode).autocomplete({
-				        source: function (request, response) {
-				            $.ajax({
-				                type: "GET",
-				                contentType: "application/json; charset=utf-8",
-				                url: ctx + '/GetAllNode',
-				                data: { Node: request.term },
-				                dataType: "json",
-				                success: function (data) {
-				                    if (data != null) {
-				                        response(data.ListNode);
-				                    }
-				                },
-				                error: function (result) {
-				                    console.log("Error fetching autocomplete data");
-				                }
-				            });
-				        },
-				        minLength: 0,
-				        select: function (event, ui) {
-				            this.value = ui.item ? ui.item[2] : '';
-				            document.getElementById("NodeName_" + rowcountNode).value = ui.item[3];
-				            document.getElementById("NodeType_" + rowcountNode).value = ui.item[4];
-				            return false;
-				        }
-				    }).autocomplete("instance")._renderItem = function (ul, item) {
-				        var appendString = "<div class='acItem'><span class='desc'><b>" +
-				            item[2] + "</b></span><br><span class='name'>" +
-				            item[3] + ", " + item[4] + "</span></div>";
-
-				        return $("<li class='each'>").append(appendString).appendTo(ul);
-				    };
-
-				    // NodeName autocomplete setup
-				    $('#NodeName_' + rowcountNode).autocomplete({
-				        source: function (request, response) {
-				            $.ajax({
-				                type: "GET",
-				                contentType: "application/json; charset=utf-8",
-				                url: ctx + '/GetAllNode',
-				                data: { Node: request.term },
-				                dataType: "json",
-				                success: function (data) {
-				                    if (data != null) {
-				                        response(data.ListNode);
-				                    }
-				                },
-				                error: function (result) {
-				                    console.log("Error fetching autocomplete data");
-				                }
-				            });
-				        },
-				        minLength: 0,
-				        select: function (event, ui) {
-				            this.value = ui.item ? ui.item[3] : '';
-				            document.getElementById("NodeId_" + rowcountNode).value = ui.item[2];
-				            document.getElementById("NodeType_" + rowcountNode).value = ui.item[4];
-				            return false;
-				        }
-				    }).autocomplete("instance")._renderItem = function (ul, item) {
-				        var appendString = "<div class='acItem'><span class='desc'><b>" +
-				            item[3] + "</b></span><br><span class='name'>" +
-				            item[2] + ", " + item[4] + "</span></div>";
-
-				        return $("<li class='each'>").append(appendString).appendTo(ul);
-				    };
-
-				    // NodeType autocomplete setup
-				    $('#NodeType_' + rowcountNode).autocomplete({
-				        source: function (request, response) {
-				            $.ajax({
-				                type: "GET",
-				                contentType: "application/json; charset=utf-8",
-				                url: ctx + '/GetAllNode',
-				                data: { Node: request.term },
-				                dataType: "json",
-				                success: function (data) {
-				                    if (data != null) {
-				                        response(data.ListNode);
-				                    }
-				                },
-				                error: function (result) {
-				                    console.log("Error fetching autocomplete data");
-				                }
-				            });
-				        },
-				        minLength: 0,
-				        select: function (event, ui) {
-				            this.value = ui.item ? ui.item[4] : '';
-				            document.getElementById("NodeId_" + rowcountNode).value = ui.item[2];
-				            document.getElementById("NodeName_" + rowcountNode).value = ui.item[3];
-				            return false;
-				        }
-				    }).autocomplete("instance")._renderItem = function (ul, item) {
-				        var appendString = "<div class='acItem'><span class='desc'><b>" +
-				            item[4] + "</b></span><br><span class='name'>" +
-				            item[2] + ", " + item[3] + "</span></div>";
-
-				        return $("<li class='each'>").append(appendString).appendTo(ul);
-				    };
-
-				    // Focus triggers autocomplete search
-				    ['NodeId', 'NodeName', 'NodeType'].forEach(function (field) {
-				        $('#'+field+'_' + rowcountNode).focus(function () {
-				            if (this.value === "") {
-				                $(this).autocomplete("search");
-				            }
-				        });
-				    });
-
-				    // Aggregate the data for all rows
-				    var Data = { toNodeArray: [] };
-				    $("#FromNodeTable > tbody > tr").find('input[name="record"]').each(function () {
-				        var node_Id = $(this).parent().parent().children('td[name="NodeId"]').children('input').val();
-				        var node_Name = $(this).parent().parent().children('td[name="NodeName"]').children('input').val();
-				        var node_Type = $(this).parent().parent().children('td[name="NodeType"]').children('input').val();
-
-				        Data.toNodeArray.push({ NodeId: node_Id, NodeName: node_Name, NodeType: node_Type });
-				    });
-
-				    
-				}
 				
 		
 
@@ -676,26 +695,26 @@ $(document).ready(function () {
         // Collect 'toNodes' table data
 		// For 'toNodes'
 		var toNodes = [];
-		$('#toNodes tbody tr').each(function () {
-		    var nodeId = $(this).find('input[name="NodeId"]').val();
-		    var nodeName = $(this).find('input[name="NodeName"]').val();
-		    var nodeType = $(this).find('input[name="NodeType"]').val();
-		    // Only add if at least one field is present
-		    if (nodeId || nodeName || nodeType) {
-		        toNodes.push([nodeId, nodeName, nodeType]);
-		    }
-		});
+			$('#toNodes tbody tr').each(function () {
+			    var nodeId = $(this).find('input[name="NodeToId"]').val();
+			    var nodeName = $(this).find('input[name="NodeToName"]').val();
+			    var nodeType = $(this).find('input[name="NodeToType"]').val();
+			    // Only add if at least one field is present
+			    if (nodeId || nodeName || nodeType) {
+			        toNodes.push([nodeId, nodeName, nodeType]);
+			    }
+			});
 
-		// For 'fromNodes'
-		var fromNodes = [];
-		$('#fromNodes tbody tr').each(function () {
-		    var nodeId = $(this).find('input[name="NodeId"]').val();
-		    var nodeName = $(this).find('input[name="NodeName"]').val();
-		    var nodeType = $(this).find('input[name="NodeType"]').val();
-		    if (nodeId || nodeName || nodeType) {
-		        fromNodes.push([nodeId, nodeName, nodeType]);
-		    }
-		});
+			// For 'fromNodes'
+			var fromNodes = [];
+			$('#fromNodes tbody tr').each(function () {
+			    var nodeId = $(this).find('input[name="NodeFromId"]').val();
+			    var nodeName = $(this).find('input[name="NodeFromName"]').val();
+			    var nodeType = $(this).find('input[name="NodeFromType"]').val();
+			    if (nodeId || nodeName || nodeType) {
+			        fromNodes.push([nodeId, nodeName, nodeType]);
+			    }
+			});
       
 
         // Get context path (ensure this function is defined elsewhere in your code)
@@ -737,7 +756,9 @@ $(document).ready(function () {
 				        DnItemNotes: $('#DnItemNotes').val(),
 						toNodes: JSON.stringify(toNodes),
 						fromNodes: JSON.stringify(fromNodes),
-					    action : action,
+						slctFromNodeDel : JSON.stringify(slctFromNodeDel),
+						slctToNodeDel : JSON.stringify(slctToNodeDel),
+						action : action,
 					    getApproval : getApproval,
 					    readProjectM: readProjectM,
 					   readAssetM:   readAssetM, 
@@ -803,6 +824,7 @@ function toggleSelectAllFromNodes() {
     });
 }
 	function populateForm(data, index) {
+		console.log("ye");
 	    function setValue(id, value) {
 	        const el = document.getElementById(id);
 	        if (el) el.value = value || '';
@@ -839,12 +861,13 @@ function toggleSelectAllFromNodes() {
 		setValue('transId', data[index][1]);
 
 	    // Populate the To and From Nodes tables
-	    populateNodesTable(data, index);
+	    populateNodesTable(data[index][42], data[index][43]);
 	}
 	function toSafeNumber(val) {
 	  return val === null || val === undefined || val === '' ? '0' : String(val);
 	}
-	function populateNodesTable(data, index) {
+	 function populateNodesTable(toNode, fromNode) {
+		console.log("yess");
 	    const toNodesTableBody = document.querySelector('#toNodes tbody');
 	    const fromNodesTableBody = document.querySelector('#fromNodes tbody');
 	    let rowcountNode = 0; // Initialize row counter for unique ID generation
@@ -854,11 +877,12 @@ function toggleSelectAllFromNodes() {
 	    fromNodesTableBody.innerHTML = '';
 
 	    // Parse and Populate "To Nodes" table
-	    const toNodeArrayStr = data[index][42]; // JSON string for toNodeArray
+	    const toNodeArrayStr = toNode; // JSON string for toNodeArray
 	    let toNodeArray = [];
 		if(toNodeArrayStr!=null){
 	    try {
 	        toNodeArray = JSON.parse(toNodeArrayStr).toNodeArray || [];
+			console.log(toNodeArray);
 	    } catch (e) {
 	        console.error('Error parsing toNodeArray:', e);
 	    }
@@ -866,24 +890,26 @@ function toggleSelectAllFromNodes() {
 
 	    if (toNodeArray && Array.isArray(toNodeArray)) {
 	        toNodeArray.forEach(node => {
+					if (!(node.NodeId === " " && node.NodeName === " " && node.NodeType === " ")) {
 	            const markup = `
-	                <tr>
-	                    <td style="width:5%; text-align:center;">
-	                        <input type="checkbox" name="record" id="${node.NodeId || ''}" style="margin-top:10px">
-	                    </td>
-	                    <td name="NodeId" style="width:31%;">
-	                        <input name="NodeId" class="form-control text-input" type="text" id="NodeId_${rowcountNode}" value="${node.NodeId || ''}" style="width:100%;box-sizing:border-box;">
-	                    </td>
-	                    <td name="NodeName" style="width:31%;">
-	                        <input name="NodeName" id="NodeName_${rowcountNode}" value="${node.NodeName || ''}" style="width:100%;box-sizing:border-box;" type="text" class="form-control text-input ui-widget ui-widget-content ui-corner-all">
-	                    </td>
-	                    <td name="NodeType" style="width:31%;">
-	                        <input name="NodeType" id="NodeType_${rowcountNode}" value="${node.NodeType || ''}" style="width:100%;box-sizing:border-box;" type="text" class="form-control text-input ui-widget ui-widget-content ui-corner-all">
-	                    </td>
-	                </tr>
+				<tr>
+				                           <td style="width:5%; text-align:center;">
+				                               <input type="checkbox" name="record" id="${node.NodeId}" style="margin-top:10px">
+				                           </td>
+				                           <td name="NodeId" style="width:31%;">
+				                               <input name="NodeToId" class="form-control text-input" type="text" id="NodeToId_${rowcountNode}" value="${node.NodeId}" style="width:100%;box-sizing:border-box;">
+				                           </td>
+				                           <td name="NodeName" style="width:31%;">
+				                               <input name="NodeToName" id="NodeToName_${rowcountNode}" value="${node.NodeName}" style="width:100%;box-sizing:border-box;" type="text" class="form-control text-input ui-widget ui-widget-content ui-corner-all">
+				                           </td>
+				                           <td name="NodeType" style="width:31%;">
+				                               <input name="NodeToType" id="NodeToType_${rowcountNode}" value="${node.NodeType}" style="width:100%;box-sizing:border-box;" type="text" class="form-control text-input ui-widget ui-widget-content ui-corner-all">
+				                           </td>
+				                       </tr>
 	            `;
 	            toNodesTableBody.innerHTML += markup;
-	            rowcountNode++; // Increment row counter for unique IDs
+	            rowcountNode++;
+				} // Increment row counter for unique IDs
 	        });
 	    }
 }
@@ -891,7 +917,7 @@ function toggleSelectAllFromNodes() {
 	    rowcountNode = 0;
 
 	    // Parse and Populate "From Nodes" table
-	    const fromNodeArrayStr = data[index][43]; // JSON string for fromNodeArray
+	    const fromNodeArrayStr = fromNode; // JSON string for fromNodeArray
 	    let fromNodeArray = [];
 		if(fromNodeArrayStr !=null){
 	    try {
@@ -903,89 +929,32 @@ function toggleSelectAllFromNodes() {
 
 	    if (fromNodeArray && Array.isArray(fromNodeArray)) {
 	        fromNodeArray.forEach(node => {
+				if (!(node.NodeId === " " && node.NodeName === " " && node.NodeType === " ")) {
 	            const markup = `
-	                <tr>
-	                    <td style="width:5%; text-align:center;">
-	                        <input type="checkbox" name="record" id="${node.NodeId || ''}" style="margin-top:10px">
-	                    </td>
-	                    <td name="NodeId" style="width:31%;">
-	                        <input name="NodeId" class="form-control text-input" type="text" id="NodeId_${rowcountNode}" value="${node.NodeId || ''}" style="width:100%;box-sizing:border-box;">
-	                    </td>
-	                    <td name="NodeName" style="width:31%;">
-	                        <input name="NodeName" id="NodeName_${rowcountNode}" value="${node.NodeName || ''}" style="width:100%;box-sizing:border-box;" type="text" class="form-control text-input ui-widget ui-widget-content ui-corner-all">
-	                    </td>
-	                    <td name="NodeType" style="width:31%;">
-	                        <input name="NodeType" id="NodeType_${rowcountNode}" value="${node.NodeType || ''}" style="width:100%;box-sizing:border-box;" type="text" class="form-control text-input ui-widget ui-widget-content ui-corner-all">
-	                    </td>
-	                </tr>
+				<tr>
+				                            <td style="width:5%; text-align:center;">
+				                                <input type="checkbox" name="record" id="${node.NodeId}" style="margin-top:10px">
+				                            </td>
+				                            <td name="NodeId" style="width:31%;">
+				                                <input name="NodeFromId" class="form-control text-input" type="text" id="NodeFromId_${rowcountNode}" value="${node.NodeId}" style="width:100%;box-sizing:border-box;">
+				                            </td>
+				                            <td name="NodeName" style="width:31%;">
+				                                <input name="NodeFromName" id="NodeFromName_${rowcountNode}" value="${node.NodeName}" style="width:100%;box-sizing:border-box;" type="text" class="form-control text-input ui-widget ui-widget-content ui-corner-all">
+				                            </td>
+				                            <td name="NodeType" style="width:31%;">
+				                                <input name="NodeFromType" id="NodeFromType_${rowcountNode}" value="${node.NodeType}" style="width:100%;box-sizing:border-box;" type="text" class="form-control text-input ui-widget ui-widget-content ui-corner-all">
+				                            </td>
+				                        </tr>
 	            `;
 	            fromNodesTableBody.innerHTML += markup;
-	            rowcountNode++; // Increment row counter for unique IDs
+	            rowcountNode++; 
+				}// Increment row counter for unique IDs
 	        });
 	    }
 		}
 	}
 	// Delete selected rows from the "To Nodes" table
-	$(".delete-To-node").click(function () {
-	    let slctDel = []; // Array to store selected Node IDs for deletion
-	    $("#toNodes > tbody").find('input[name="record"]').each(function () {
-	        if ($(this).is(":checked")) {
-	            // Get the NodeId value from the row and add it to slctDel
-	            const nodeId = $(this).parent().parent().children('td[name="NodeId"]').children('input').val();
-	            slctDel.push(nodeId);
-	            console.log("The selected delete is " + slctDel);
 
-	            // Add to allDelSerials if not already included
-	           
-	        }
-	    });
-
-	    console.log("The selected delete after is " + slctDel);
-
-	    // Check if no rows were selected
-	    if (slctDel.length === 0) {
-	        alert('Select Row(s) to Delete');
-	        return false;
-	    }
-
-	    // Remove selected rows from the table
-	    $("#toNodes > tbody").find('input[name="record"]').each(function () {
-	        if ($(this).is(":checked")) {
-	            $(this).parents("tr").remove();
-	        }
-	    });
-	});
-
-	// Delete selected rows from the "From Nodes" table
-	$(".delete-From-node").click(function () {
-	    let slctDel = []; // Array to store selected Node IDs for deletion
-	    $("#fromNodes > tbody").find('input[name="record"]').each(function () {
-	        if ($(this).is(":checked")) {
-	            // Get the NodeId value from the row and add it to slctDel
-	            const nodeId = $(this).parent().parent().children('td[name="NodeId"]').children('input').val();
-	            slctDel.push(nodeId);
-	            console.log("The selected delete is " + slctDel);
-
-	            // Add to allDelSerials if not already included
-	           
-	        }
-	    });
-
-	    console.log("The selected delete after is " + slctDel);
-
-	    // Check if no rows were selected
-	    if (slctDel.length === 0) {
-	        alert('Select Row(s) to Delete');
-	        return false;
-	    }
-
-	    // Remove selected rows from the table
-	    $("#fromNodes > tbody").find('input[name="record"]').each(function () {
-	        if ($(this).is(":checked")) {
-	            $(this).parents("tr").remove();
-	        }
-	    });
-	});
 	
 function afterSave(response){
 	//zeina 
