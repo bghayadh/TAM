@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<%@page import="com.aliat.alm.models.*"%>
 <html lang="en">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
