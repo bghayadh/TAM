@@ -36,39 +36,15 @@ import com.aliat.alm.services.LoginServices;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
-public class ManualMethodController {
+public class DepreciationController {
 
 	@Autowired
 	ALMSessions almsessions;
 	@Autowired
 	Notify notifications;
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static final Logger logger = LoggerFactory.getLogger(DepreciationController.class);
 	private static Session session = null;
-	private static Transaction tx = null;
-	/**
-	 * Simply selects the home view to render by returning its name.
-	 */
-	@RequestMapping(value = "/ManualMethod", method = RequestMethod.GET)
-	public String ManualMethod(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
-		logger.info("Welcome home! The client locale is {}.", locale);
-		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
-			return LoginServices.checkSession(request, response);
-		} else {
-			System.out.println("Mr. Bassam Eid.");
-			session = almsessions.getSession(); 
-			if (session != null && session.isOpen()) {
-				tx = session.beginTransaction();
-				notifications.headerNotifications(session, model);
-				if (session != null && session.isOpen()) {
-					tx.commit();
-					session.close();
-					session.getSessionFactory().close();
-				}
-			}
-			return "ManualMethod";
-		}
-	}
-	
+	private static Transaction tx = null;	
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@RequestMapping(value = "/CalculateDepreciation", method = RequestMethod.GET)
