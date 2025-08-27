@@ -13,6 +13,13 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -112,6 +119,8 @@ import com.aliat.alm.DM.WarehouseDM;
 import com.aliat.alm.DM.WindowsDesktop2Item;
 import com.aliat.alm.DM.WindowsServer2Item;
 import com.aliat.alm.DM.moveToALC;
+import com.aliat.alm.common.AlmDbSession;
+import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.ReadXlsUsingPOI;
 import com.aliat.alm.services.LoginServices;
 import com.aliat.mobile.restapi.AirtimeRequest;
@@ -122,19 +131,34 @@ import com.aliat.mobile.restapi.getClientCredentials;
 public class DataMigrationController {
 
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static Session session = null;
+	private static Transaction tx = null;
+
+	@Autowired
+	Notify notifications;	
 
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
-	@RequestMapping(value = "/DataMigration", method = RequestMethod.GET)
-	public String DataMigration(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
-		logger.info("Welcome home! The client locale is {}.", locale);
-		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+	@RequestMapping(value = "/SampleDataMigration", method = RequestMethod.GET)
+	public String SampleDataMigration(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
+		logger.info("Welcome SampleDataMigration ! The client locale is {}.", locale);
+
+		if(LoginServices.checkSession(request, response).equals("redirect:/")) {
 			return LoginServices.checkSession(request, response);
-		} else {
-			System.out.println("Mr. Bassam Eid.");
-			return "DataMigration";
+		}else {
+			session = AlmDbSession.getInstance().getSession(); 
+			System.out.println("HashCode Setup: "+AlmDbSession.getInstance().hashCode());
+			if (session != null && session.isOpen()) {
+				tx = session.beginTransaction();
+				notifications.headerNotifications(session, model);
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+				}
+			}
 		}
+		return "SampleDataMigration";
 	}
 
 	@RequestMapping(value = "/readfinance", method = RequestMethod.GET)

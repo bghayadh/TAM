@@ -28,5 +28,6 @@
 	<context:component-scan base-package="com.aliat.alm.models" />	
 	<context:component-scan base-package="com.aliat.alm.securepassword" />	
 	<context:component-scan base-package="com.aliat.alm.physLayer" />	
-	<context:component-scan base-package="com.aliat.alm.discoveryNew" />	
+	<context:component-scan base-package="com.aliat.alm.discoveryNew" />
+	<context:component-scan base-package="com.aliat.alm.discoveryProc" />
 </beans:beans>

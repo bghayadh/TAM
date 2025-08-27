@@ -50,6 +50,7 @@ public class LoginController {
 		responce.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 		responce.setHeader("Pragma", "no-cache"); // HTTP 1.0.
 		responce.setDateHeader("Expires", 0); //
+		System.out.println("redirectUrl is " +redirectUrl);
 		model.addAttribute("redirectUrl", redirectUrl);
 		if (httpSession != null && httpSession.getAttribute("userName") != null) {
 		    if (redirectUrl != null && !redirectUrl.isEmpty()) {
