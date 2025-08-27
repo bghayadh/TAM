@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<%@page import="com.aliat.alm.models.*"%>
 <html lang="en">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
@@ -16,7 +15,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/ListView.css">
     
    
-<title>Manual Method</title>
+<title>Dumps Processing</title>
 <style>
 .cadr {
    border: 0.1em solid #08526d;
@@ -129,7 +128,7 @@
 	border-left:5px solid gold;
 	-webkit-transition: all 0.3s ease-in-out;
 	transition: all 0.3s ease-in-out;
-	width: 15rem;
+	width: 18rem;
 	background-color: #dc143c;   
 }
 
@@ -203,22 +202,22 @@ font-size: 14px;
 <hr style="margin-top: 0rem;">
 <div class="container-fluid assetfinance" >
 	<div class="row">
-		<div class="col-md-4 showMethod" >
+		<div class="col-md-6 showMethod d-flex justify-content-center align-items-center">
 			<div class="card1 bg-c-blue order-card">
-				<a href="${pageContext.request.contextPath}/DataMigration" style="text-decoration: none">
+				<a href="${pageContext.request.contextPath}/SampleDataMigration" style="text-decoration: none">
 				<div class="card-block">
 					<i class="fas fa-life-ring fa-spin" style="color:gold; width:40px; height:40px"></i>
-					<h5 class="m-b-20" id="dataMigration" >Data Migration</h5>
+					<h5 class="m-b-20">Sample Data Migration</h5>
 				</div>
 				</a>
 			</div>
 		</div>
-		<div class="col-md-4 showMethod" >
+		<div class="col-md-6 showMethod d-flex justify-content-center align-items-center" >
 			<div class="card1 bg-c-blue order-card">
 				<a href="${pageContext.request.contextPath}/AutoParser" style="text-decoration: none">
 				<div class="card-block">
 					<i class="fa fa-cogs fa-spin fa-3x fa-fw" style="color:gold; width:40px; height:40px"></i>
-					<h5 class="m-b-20" id="first" >Auto Parser</h5>
+					<h5 class="m-b-20">Auto Parser</h5>
 				</div>
 				</a>
 			</div>

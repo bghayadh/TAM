@@ -13,10 +13,9 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/bootstrap.min.js"></script>
     <link href="${pageContext.request.contextPath}/resources/css/Inventory.css" rel="stylesheet" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/header.css">
+     
     
-  
-    
-   <style>
+<style>
 
 .center {
   text-align:center;
@@ -41,7 +40,10 @@
 	border-left:5px solid gold;
 	-webkit-transition: all 0.3s ease-in-out;
 	transition: all 0.3s ease-in-out;
-	width: 15rem;
+	width: 100%;
+	max-width: 400px;
+	height: 150px;
+/*	width: 15rem; */
 /*	background-color: #dc143c; */
     background-color: #006868;
    
@@ -58,14 +60,22 @@ m-b-20{
 --font-family-monospace: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;		
 color:#DCF8C6;
 font-size: 14px;
-   
 }
+
+@media only screen and (max-width: 972px) {
+	.showRolePremExcep h5 {
+		font-size: 18px;
+	}
+}
+
 .card .card-block {
- justify-content: center;
+ 	justify-content: center;
 	padding: 20px;
-	 margin: auto;
+	margin: auto;
 	text-align: center;
-	
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	white-space: normal;		
 }
 
 
@@ -86,206 +96,170 @@ a{
 <%-- 	<%@ include file="header.html" %> --%>
 <jsp:include page="header.jsp"></jsp:include>
 		 
-<div style="margin-top:40px;margin-right:150px;margin-left:150px;" >
-		<div class="container" style="margin-right:20px;margin-left:20px;">
-		
-		<div class="row" >
-				<div class="col-md-3  showUser"  >
-				
-					<div class="card bg-c-blue order-card"   >
-					<a href="${pageContext.request.contextPath}/UserListView" style="text-decoration: none">
-						<div class="card-block">
-							<i class="fa fa-user glyphicon-align-center" style="color:gold; width:40px; height:40px"></i>
-							<h5 class="m-b-20" id="first" style="justify-content: center;" >Users</h5>
-						</div>
-						</a>
-					</div>
-					
-				</div>
-			<div style="margin-right:20px;"> </div>
-					<div class="col-md-3 showRole">
-				
-					<div class="card bg-c-blue order-card">
-					<a href="${pageContext.request.contextPath}/RoleListView" style="text-decoration: none">
-						<div class="card-block" >
-							<i class="fas fa-tag" style=" color:gold; width:40px; height:40px"></i>
-							<h5 class="m-b-20" id="first">Role</h5>
-						</div>
-						</a>
-					</div>
-					
-				</div>
-				<div style="margin-right:20px;"> </div>
-				<div class="col-md-3 ">
-				
-					<div class="card bg-c-blue order-card">
-					<a href="${pageContext.request.contextPath}/importSettings" style="text-decoration: none">
-						<div class="card-block">
-							<i class="fas fa-file-download glyphicon-align-center" style="color:gold; width:40px; height:40px"></i>
-						    	<h5 class="m-b-20" id="first" > Import </h5>
-						</div>
-						</a>
-					</div>
-					
-				</div>
-				<div style="margin-right:20px;"> </div>
-					<div class="col-md-2 showRolePrem">
-				
-					<div class="card bg-c-blue order-card">
-					<a href="${pageContext.request.contextPath}/rolePermission" style="text-decoration: none">
-						<div class="card-block">
-							<i class="fa fa-key glyphicon-align-center" style="color:gold; width:40px; height:40px"></i>
-								<h5 class="m-b-20" id="first">Role Permission</h5>
-						</div>
-						</a>
-					</div>
-					
-				</div>
-				
-					</div> 
-			<div class="row">
-			
-					<div class="col-md-3 showRolePrem">
-				
-					<div class="card bg-c-blue order-card">
-					<a href="${pageContext.request.contextPath}/rolePermissionExcep" style="text-decoration: none">
-						<div class="card-block">
-							<i class="fa fa-key glyphicon-align-center" style="color:gold; width:40px; height:40px"></i>
-								<h5 class="m-b-20" id="first">Role Permission Exception</h5>
-						</div>
-						</a>
-					</div>
-					
-				</div>
-				<div style="margin-right:20px;"> </div>
-				<div class="col-md-3  showSetting">
-				
-					<div class="card bg-c-blue order-card">
-					<a href="${pageContext.request.contextPath}/systemSettings" style="text-decoration: none">
-				<div class="card-block">
-							<i class="fa fa-wrench glyphicon-align-center" style="color:gold; width:40px; height:40px"></i>
-								<h5 class="m-b-20" id="first" >System Settings</h5>
-						</div>
-						</a>
-					</div>
-					
-				</div>
-				<div style="margin-right:20px;"> </div>
-				<div class="col-md-3 showMethod">
-				
-					<div class="card bg-c-blue  order-card">
-					<a href="${pageContext.request.contextPath}/ManualMethod" style="text-decoration: none">
-						<div class="card-block">
-							<i class="fas fa-hand-paper" style="color:gold; width:40px; height:40px"></i>
-								<h5 class="m-b-20" id="first">Manual Methods</h5>
-						</div>
-						</a>
-					</div>
-					
-				</div>
-				<div style="margin-right:20px;"> </div>
-						<div class="col-md-2 ScheduleReport">
-				
-					<div class="card bg-c-blue order-card">
-					<a href="${pageContext.request.contextPath}/SchedulerRulesListView" style="text-decoration: none">
-						<div class="card-block">
-							<i class="fas fa-clock glyphicon-align-center" style="color:gold; width:40px; height:40px"></i>
-								<h5 class="m-b-20" id="first" style="font-size:1.3em;">Scheduled  Reports</h5>
-						</div>
-						</a>
-					</div>
-					</div>
-					
-				</div>
-				
-				<div class="row">
-		
-					<div class="col-md-3 Notification">
-				
-					<div class="card bg-c-blue order-card">
-					<a href="${pageContext.request.contextPath}/NotificationListView" style="text-decoration: none">
-						<div class="card-block">
-							<i class="fas fa-bell glyphicon-align-center" style="color:gold; width:40px; height:40px"></i>
-								<h5 class="m-b-20" id="first">Notification</h5>
-						</div>
-						</a>
-					</div>
-					
-				</div>
-					<div style="margin-right:20px;"> </div>
-				<div class="col-md-3 ReportsList">
-				
-					<div class="card bg-c-blue order-card">
-					<a href="${pageContext.request.contextPath}/ReportListView" style="text-decoration: none">
-						<div class="card-block">
-							<i class="fas fa-clipboard-list glyphicon-align-center" style="color:gold; width:40px; height:40px"></i>
-								<h5 class="m-b-20" id="first">Reports</h5>
-						</div>
-						</a>
-					</div>
-					
-				</div>
-					<div style="margin-right:20px;"> </div>
-					<div class="col-md-3 Notification">
-				
-					<div class="card bg-c-blue order-card">
-					<a href="${pageContext.request.contextPath}/EmailAccountsListView" style="text-decoration: none">
-						<div class="card-block">
-							<i class="fas fa-users glyphicon-align-center" style="color:gold; width:40px; height:40px"></i>
-								<h5 class="m-b-20" id="first">Email Accounts</h5>
-						</div>
-						</a>
-					</div>
-					
-				</div>
-				
-				<div style="margin-right:20px;"> </div>
-					<div class="col-md-2">
-					<div class="card bg-c-blue order-card">
-					<a href="${pageContext.request.contextPath}/Loaders" style="text-decoration: none">
-						<div class="card-block">
-							<i class="fas fa-life-ring fa-spin glyphicon-align-center" style="color:gold; width:40px; height:40px"></i>
-								<h5 class="m-b-20" id="first" style="font-size:1.3em;">Loaders</h5>
-						</div>
-						</a>
-					</div>
-					</div>
-					
-					
-					
-				</div>
-				<div class="row">
-				
-					<div class="col-md-3">
-					<div class="card bg-c-blue order-card">
-					<a href="${pageContext.request.contextPath}/ModuleScreenListView" style="text-decoration: none">
-						<div class="card-block">
-							<i class="fas fa-desktop" style="color:gold; width:40px; height:40px"></i>
-								<h5 class="m-b-20" id="first" style="font-size:1.3em;">Module Screen</h5>
-						</div>
-						</a>
-					</div>
-					</div>
-					<div style="margin-right:20px;"> </div>
-					<div class="col-md-3">
-					<div class="card bg-c-blue order-card">
-					<a href="${pageContext.request.contextPath}/ModuleFieldListView" style="text-decoration: none">
-						<div class="card-block">
-							<i class="fa fa-map" style="color:gold; width:40px; height:40px"></i>
-								<h5 class="m-b-20" id="first" style="font-size:1.3em;">Module Fields</h5>
-						</div>
-						</a>
-					</div>
-					</div></div>
-				</div>
-				</div>
-				
-	
+<!-- <div style="margin-top:40px;margin-right:150px;margin-left:150px;" >  -->
 
-		
-
-
-
+<!-- 		<div class="container" style="margin-right:20px;margin-left:20px;">  -->
+<div class="container_fluid" style="margin-left: 15px; margin-right: 10px;">		
+	<div class="row" >
+		<div class="col-md-3 showUser"  >				
+			<div class="card bg-c-blue order-card"   >
+				<a href="${pageContext.request.contextPath}/UserListView" style="text-decoration: none">
+					<div class="card-block">
+						<i class="fa fa-user glyphicon-align-center" style="color:gold; width:40px; height:40px"></i>
+						<h5 class="m-b-20" style="justify-content: center;" >Users</h5>
+					</div>
+				</a>
+			</div>					
+		</div>
+		<div class="col-md-3 showRole">				
+			<div class="card bg-c-blue order-card">
+				<a href="${pageContext.request.contextPath}/RoleListView" style="text-decoration: none">
+					<div class="card-block" >
+						<i class="fas fa-tag" style=" color:gold; width:40px; height:40px"></i>
+						<h5 class="m-b-20">Role</h5>
+					</div>
+				</a>
+			</div>
+		</div>
+		<div class="col-md-3 showRolePrem">				
+			<div class="card bg-c-blue order-card">
+				<a href="${pageContext.request.contextPath}/rolePermission" style="text-decoration: none">
+					<div class="card-block">
+						<i class="fa fa-key glyphicon-align-center" style="color:gold; width:40px; height:40px"></i>
+						<h5 class="m-b-20">Role Permission</h5>
+					</div>
+				</a>
+			</div>
+		</div>
+		<div class="col-md-3 showRolePremExcep">
+			<div class="card bg-c-blue order-card">
+				<a href="${pageContext.request.contextPath}/rolePermissionExcep" style="text-decoration: none">
+					<div class="card-block">
+						<i class="fa fa-key glyphicon-align-center" style="color:gold; width:40px; height:40px"></i>
+						<h5 class="m-b-20">Role Permission Exception</h5>
+					</div>
+				</a>
+			</div>					
+		</div>				
+	</div>
+	<div class="row">			
+		<div class="col-md-3">
+			<div class="card bg-c-blue order-card">
+				<a href="${pageContext.request.contextPath}/ModuleScreenListView" style="text-decoration: none">
+					<div class="card-block">
+						<i class="fas fa-desktop" style="color:gold; width:40px; height:40px"></i>
+						<h5 class="m-b-20" style="font-size:1.3em;">Module Screen</h5>
+					</div>
+				</a>
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div class="card bg-c-blue order-card">
+				<a href="${pageContext.request.contextPath}/ModuleFieldListView" style="text-decoration: none">
+					<div class="card-block">
+						<i class="fa fa-map" style="color:gold; width:40px; height:40px"></i>
+						<h5 class="m-b-20" style="font-size:1.3em;">Module Fields</h5>
+					</div>
+				</a>
+			</div>
+		</div>						
+		<div class="col-md-3 showSetting">				
+			<div class="card bg-c-blue order-card">
+				<a href="${pageContext.request.contextPath}/systemSettings" style="text-decoration: none">
+					<div class="card-block">
+						<i class="fa fa-wrench glyphicon-align-center" style="color:gold; width:40px; height:40px"></i>
+						<h5 class="m-b-20">System Settings</h5>
+					</div>
+				</a>
+			</div>
+		</div>
+		<div class="col-md-3 showMethod">				
+			<div class="card bg-c-blue  order-card">
+				<a href="${pageContext.request.contextPath}/DiscoveryListView" style="text-decoration: none">
+					<div class="card-block">
+<!--  						<i class="fas fa-hand-paper" style="color:gold; width:40px; height:40px"></i> -->
+						<i class="fas fa-life-ring fa-spin" style="color:gold; width:40px; height:40px"></i>						
+						<h5 class="m-b-20">Discovery</h5>
+					</div>
+				</a>
+			</div>
+		</div>
+	</div>	
+	<div class="row">
+		<div class="col-md-3">
+			<div class="card bg-c-blue order-card">
+				<a href="${pageContext.request.contextPath}/Loaders" style="text-decoration: none">
+					<div class="card-block">
+						<i class="fa fa-download" style="color:gold; width:40px; height:40px"></i>
+						<h5 class="m-b-20" style="font-size:1.3em;">Loaders</h5>
+					</div>
+				</a>
+			</div>
+		</div>
+		<div class="col-md-3 ">				
+			<div class="card bg-c-blue order-card">
+				<a href="${pageContext.request.contextPath}/importSettings" style="text-decoration: none">
+					<div class="card-block">
+						<i class="fas fa-file-download glyphicon-align-center" style="color:gold; width:40px; height:40px"></i>
+				    	<h5 class="m-b-20"> Import </h5>
+					</div>
+				</a>
+			</div>
+		</div>
+		<div class="col-md-3 DataMigration">
+			<div class="card bg-c-blue order-card">
+				<a href="${pageContext.request.contextPath}/DumpsProcessing" style="text-decoration: none">
+					<div class="card-block">
+						<i class="fa fa-table" style="color:gold; width:40px; height:40px"></i>
+						<h5 class="m-b-20">Data Migration</h5>
+					</div>
+				</a>
+			</div>					
+		</div>		
+		<div class="col-md-3 Notification">
+			<div class="card bg-c-blue order-card">
+				<a href="${pageContext.request.contextPath}/EmailAccountsListView" style="text-decoration: none">
+					<div class="card-block">
+						<i class="fas fa-users glyphicon-align-center" style="color:gold; width:40px; height:40px"></i>
+						<h5 class="m-b-20">Email Accounts</h5>
+					</div>
+				</a>
+			</div>					
+		</div>		
+	</div>
+	<div class="row">		
+		<div class="col-md-3 ReportsList">				
+			<div class="card bg-c-blue order-card">
+				<a href="${pageContext.request.contextPath}/ReportListView" style="text-decoration: none">
+					<div class="card-block">
+						<i class="fas fa-clipboard-list glyphicon-align-center" style="color:gold; width:40px; height:40px"></i>
+						<h5 class="m-b-20">Reports</h5>
+					</div>
+				</a>
+			</div>					
+		</div>
+		<div class="col-md-3 ScheduleReport">				
+			<div class="card bg-c-blue order-card">
+				<a href="${pageContext.request.contextPath}/SchedulerRulesListView" style="text-decoration: none">
+					<div class="card-block">
+					<i class="fas fa-clock glyphicon-align-center" style="color:gold; width:40px; height:40px"></i>
+					<h5 class="m-b-20" style="font-size:1.3em;">Scheduled  Reports</h5>
+					</div>
+				</a>
+			</div>
+		</div>
+		<div class="col-md-3 Notification">				
+			<div class="card bg-c-blue order-card">
+				<a href="${pageContext.request.contextPath}/NotificationListView" style="text-decoration: none">
+					<div class="card-block">
+						<i class="fas fa-bell glyphicon-align-center" style="color:gold; width:40px; height:40px"></i>
+						<h5 class="m-b-20">Notification</h5>
+					</div>
+				</a>
+			</div>
+		</div>
+	</div>
+ </div>
 <script>
 
 if('${showDash}' == 'false'){
@@ -314,102 +288,13 @@ if('${showDash}' == 'false'){
 		}
 	if("${ScheduleReport}" == '0'){
 		$(".ScheduleReport").hide();
-    }
-
-	if("${circlePerm}" == '0'){
-		$("#circleIdHead").hide();
-		
-		}
+    }	
 		
 	if("${taskNotificationPerm}" == '0'){
 		$("#notifactionDropdown").hide();
 		
     }
 	
-    
-    
-	$(this)
-			.ready(
-					function() {
-						$.get("${pageContext.request.contextPath}/getNotificationData",
-								function(data) {
-
-									console.log(data["totalNode"]);
-									$("#bellCounter").attr("data-count",
-											data["totalCounter"]);
-									$("#siteTask").html(
-											data["siteMissPassive"]);
-									$("#nodeTask").html(
-											data["nodeMissPassive"]);
-									$("#cellTask").html(
-											data["cellMissPassive"]);
-									$("#taskCount").html(
-											data["pendingTasks"]);
-
-								});
-
-						$("#notifactionDropdown")
-								.click(
-										function() {
-											$
-													.get(
-															"${pageContext.request.contextPath}/getNotificationData",
-															function(data) {
-
-																console
-																		.log(data["pendingTasks"]);
-																$(
-																		"#bellCounter")
-																		.attr(
-																				"data-count",
-																				data["totalCounter"]);
-																$(
-																		"#siteTask")
-																		.html(
-																				data["siteMissPassive"]);
-																$(
-																		"#nodeTask")
-																		.html(
-																				data["nodeMissPassive"]);
-																$(
-																		"#cellTask")
-																		.html(
-																				data["cellMissPassive"]);
-																$(
-																		"#taskCount")
-																		.html(
-																				data["pendingTasks"]);
-
-															});
-										});
-
-					});
-
-	<!-----------circle change ajax------------->
-
-	$("#circleIdHead").on("change",function(){
-		var circle = $("#circleIdHead option:selected").text();
-		console.log("the value is "+circle);
-		$.ajax({
-			type : "GET",
-			url : "${pageContext.request.contextPath}/changeUserCircle",
-			dataType : "json",
-			data : {
-				"circleId" : circle,
-//					"circleId" : $("#circleId").val()
-			},
-			success : function(data) {
-	        
- console.log("circle has benn changs"+data) ;
- location.reload();
-	        
-			},
-			error : function(error) {
-	        	 console.log("The error is " +error[0]);
-	        }	
-	});	
-		});
-				
 </script>
 
 </body>
