@@ -700,7 +700,7 @@ td {
 						<div class="input-group-prepend">
 							<textarea name="suppdescrip" cols="220"
 								class="form-control text-input" style="margin-top: 5px;"
-								rows="8" id="itmdescrip"> ${itemDescription} </textarea>
+								rows="8" id="itmdescrip">${itemDescription}</textarea>
 						</div>
 					</div>
 				</div>
