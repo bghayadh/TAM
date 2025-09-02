@@ -1,8 +1,6 @@
 var DBFlag = 0;
 
-markerClusterMetroDistBoard = new MarkerClusterer();
-markerClusterBackboneDistBoard = new MarkerClusterer();
-markerClusterAccessDistBoard = new MarkerClusterer();
+
 
 function getDB(type,url,id,tr,showDBflag){
 	$('body').append('<div id="loading"><img id="loading-image" src="'+getContext()+'/resources/images/ajax-loader.gif" alt="Loading..." /><span>Loading, please wait.</span></div>')
@@ -186,11 +184,11 @@ function createDB(distribBoardList, transfer){
 
 
 	for(i=0;i<distribBoardList.length;i++){
-		console.log("okayy");
+		
 		if(transfer =="1"){
 			
 			if(distribBoardList[i][8]=="backbone"){
-				console.log("yes");
+				
 				
 				markersDistBoard[distribBoardList[i][0]].setMap(null);
 				markerClusterBackboneDistBoard.removeMarker(markersDistBoard[distribBoardList[i][0]]);
@@ -199,15 +197,13 @@ function createDB(distribBoardList, transfer){
 				
 			}
 			else if (distribBoardList[i][8]=="metro"){
-				console.log("yes");
+	
 				markersDistBoard[distribBoardList[i][0]].setMap(null);
 							markerClusterMetroDistBoard.removeMarker(markersDistBoard[distribBoardList[i][0]]);
 						
 			}
 			
-			else {
-				console.log("yes");
-				markersDistBoard[distribBoardList[i][0]].setMap(null);
+			else {		markersDistBoard[distribBoardList[i][0]].setMap(null);
 							markerClusterAccessDistBoard.removeMarker(markersDistBoard[distribBoardList[i][0]]);
 						
 				
@@ -503,8 +499,7 @@ function DBCheckFilter(Id,clusterName){
 			if ($(this).is(':checked')){
 				markersDistBoard[Id].setMap(map);					
 				clusterName.addMarker(markersDistBoard[Id]);
-				console.log(markersDistBoard[Id]);	
-			}
+				}
 			else{
 				if(folderID == "initial_ul_CurrentPhysicalLayer"){
 					$("#DistributionBoard_f_CurrentPhysicalLayer > .AllDistBoards").prop("checked",false);				
@@ -513,7 +508,6 @@ function DBCheckFilter(Id,clusterName){
                     $("#DistributionBoard_f_"+folderID+ " > .AllDistBoards").prop("checked",false);				
             }				
 				markersDistBoard[Id].setMap(null);	
-				console.log(markersDistBoard[Id]);							
 				clusterName.removeMarker(markersDistBoard[Id]);			
 			}
 		 	if ($(this).parents().eq(2).find('.DistributionBoard :checked').length == $(this).parents().eq(2).find('.DistributionBoard').length) {
@@ -788,8 +782,7 @@ function controllerLayerUnCheckAll(layer) {
 	            const IdSelected = this.ID;
 
 	            dbFileId = $("#" + IdSelected).parent().parent().attr('id').split("__")[1];
-				console.log(dbFileId);
-	            const childrenInitial = $("#initial_ul_" + dbFileId + "").find(' > ul > li ');
+			   const childrenInitial = $("#initial_ul_" + dbFileId + "").find(' > ul > li ');
 				var children =  $("#DistributionBoard_f_"+dbFileId+"").find(' > ul > li > ul >li');
 			    const networkLevelFolder = $("#DistributionBoard_f_"+dbFileId+"").find(' > ul > li > ul > li  ul > li');
 

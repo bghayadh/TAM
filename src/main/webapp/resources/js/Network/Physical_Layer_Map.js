@@ -40,7 +40,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			markerClusterHandhole = new MarkerClusterer();
 			markerClusterHandhole.setMap(map);// to be checked !!!!
 			
-	/*	
+	
 			markerClusterBackboneDistBoard = new MarkerClusterer();
 			markerClusterBackboneDistBoard.setMap(map);
 			
@@ -50,7 +50,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			markerClusterAccessDistBoard = new MarkerClusterer();
 			markerClusterAccessDistBoard.setMap(map);
 			
-			markerClusterMSANNodes = new MarkerClusterer();
+		/*	markerClusterMSANNodes = new MarkerClusterer();
 			markerClusterMSANNodes.setMap(map);
 			
 			markerClusterDWDMNodes = new MarkerClusterer();
